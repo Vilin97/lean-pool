@@ -6,16 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixNormalization
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedResidualEquation
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCommonRadius
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketExponentialTail
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteApproximationBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixNormalization
 
 /-! The actual derivative of the zero-history initialized normalized approximation
 has a source-dependent Gevrey bound uniform in the truncation frequency.
 The time derivative of the inverse deformation is included explicitly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,16 +26,17 @@ namespace EulerPacketTerminalDatum
 
 open Set Filter EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
   EulerPacketCylinderField EulerPacketProfileRecursion EulerPacketTimeProfile
-  EulerPacketCoarseMajorant EulerPacketSourceFrequency EulerParameterWordGevrey
+  EulerPacketCoarseMajorant  EulerParameterWordGevrey
   EulerPacketCoordinates EulerPacketCorrectionCoefficients
 open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized normalized derivative field, constructed using `coordinateTimeField`. -/
 def forwardInitializedNormalizedDerivativeField (N : ℕ) (k : ℝ) :=
   coordinateTimeField D
     (forwardInitializedVelocityField M D hTime δ hδ ξ hs α N k⁻¹)
@@ -64,16 +67,16 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.g)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.g)
 
 include NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem forwardInitializedNormalizedDerivativeField_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (forwardInitializedNormalizedDerivativeField M D hTime δ hδ ξ hs α N k).WordBound
-      6 (4*L.R) (6*NB.blockAmplitude*
+      6 (4*L.R) (6*NB.blockAmplitude *
         (fixedVelocityGradeCost L.R S.H0 1+fixedVelocityGradeCost L.R S.H0 2+1)) 0 := by
   let G : ∀ i, i ≤ N → ProfileRegularity period M.T M.T_pos.le D.support
       (forwardInitializedProfiles M D δ hδ ξ hs α i) :=
@@ -106,7 +109,7 @@ theorem forwardInitializedNormalizedDerivativeField_bound (N : ℕ) (hN : 1 ≤ 
     (fun n a => (NB.coefficient_bounds.2.2 n a).1) ht
     (by have := L.radius_one; linarith) hKR hk
     (tailBase_nonneg L.R S.H0 BC.termCost BC.termCost_nonneg N) hbase hlow1 hlow2
-  have hh := (ha.add hb).of_raw_eq
+  have hh := (ha.add hb).ofRawEq
     (forwardInitializedNormalizedDerivativeField M D hTime δ hδ ξ hs α N k)
     (fun _ _ _ => smul_add _ _ _)
   convert hh using 1

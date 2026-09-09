@@ -7,24 +7,32 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleActual
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleActivation
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+
+/-! Numerical guard consequences for the literal scale sequences. -/
 
 @[expose] public section
 
-/-! Numerical guard consequences for the literal scale sequences. -/
 
 noncomputable section
 
 
 namespace EulerPacketSourceScaleGuards
 
-open Real Filter EulerScale EulerPacketScaleGeometry EulerPacketScaleActivation
+open Real Filter EulerScale EulerPacketScaleActivation
   EulerPacketSourceScales EulerPacketSourceTime EulerPacketSourceScaleChoice
   EulerPacketSourceScaleSequence EulerPacketSourceScaleActual
 
 open scoped Topology
 
 theorem actualTimeRatio_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
-    (hbase : X^1000 ≤ exp (X/((J-1:ℕ):ℝ)^7)) (n : ℕ) :
+    (hbase : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7)) (n : ℕ) :
     timeWidth J X (n+1)/timeWidth J X n ≤ sourceTimeRatio J (scaleSequence J X) n := by
   apply (div_le_iff₀ (timeWidth_pos J hJ hX n)).mpr
   rw [timeWidth_succ_eq, source_time_ratio_identity]
@@ -33,9 +41,9 @@ theorem actualTimeRatio_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
   positivity
 
 theorem actualExtraTime_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
-    (hbase : X^1000 ≤ exp (X/((J-1:ℕ):ℝ)^7)) (n : ℕ) (a : ℝ) (ha : 0 ≤ a) :
+    (hbase : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7)) (n : ℕ) (a : ℝ) (ha : 0 ≤ a) :
     2*sqrt (a*previousShear J X n)*timeWidth J X (n+1) ≤
-      2*sqrt (a*exp (scaleSequence J X n/((J-1+n:ℕ):ℝ)^7))*
+      2*sqrt (a*exp (scaleSequence J X n/((J-1+n:ℕ):ℝ)^7)) *
         sourceNextTimeWidth J (scaleSequence J X) n := by
   have hh := sqrt_le_sqrt (mul_le_mul_of_nonneg_left (previousShear_le_normal J hJ X hbase n) ha)
   have hm := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hh (by norm_num : (0:ℝ) ≤ 2))
@@ -43,10 +51,10 @@ theorem actualExtraTime_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
   simpa only [timeWidth_succ_eq] using hm
 
 theorem actualParentRatio_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
-    (hbase : X^1000 ≤ exp (X/((J-1:ℕ):ℝ)^7)) (n : ℕ) :
+    (hbase : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7)) (n : ℕ) :
     previousShear J X n^2/shear J X n ≤ parentSquareRatio J (scaleSequence J X) n := by
   have hh := pow_le_pow_left₀ (previousShear_pos J hX n).le (previousShear_le_normal J hJ X hbase
-    n) 2
+      n) 2
   have he : exp (scaleSequence J X n/((J-1+n:ℕ):ℝ)^7)^2 =
       exp (2*scaleSequence J X n/((J-1+n:ℕ):ℝ)^7) := by
     rw [pow_two, ← exp_add]
@@ -56,11 +64,12 @@ theorem actualParentRatio_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
   exact div_le_div_of_nonneg_right hh (exp_pos _).le
 
 theorem actualGoodCost_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ)
-    (hbase : X^1000 ≤ exp (X/((J-1:ℕ):ℝ)^7)) (n : ℕ) :
+    (hbase : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7)) (n : ℕ) :
     spike J X n*shear J X n*previousShear J X n ≤ goodCost J (scaleSequence J X) n := by
   exact mul_le_mul_of_nonneg_left (previousShear_le_normal J hJ X hbase n)
     (mul_nonneg (exp_pos _).le (exp_pos _).le)
 
+/-- Actual extra time, given by `2*sqrt (a*previousShear J X n)*timeWidth J X (n+1)`. -/
 def actualExtraTime (J : ℕ) (X a : ℝ) (n : ℕ) : ℝ :=
   2*sqrt (a*previousShear J X n)*timeWidth J X (n+1)
 
@@ -68,8 +77,8 @@ theorem actualExtraTime_small (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
     (hC : 1 ≤ C) (hX : 8 ≤ X) (hb : ActualBounds J D C c X δ)
     (n : ℕ) (a : ℝ) (ha : 0 ≤ a) (ha₂ : a ≤ 2) :
     actualExtraTime J X a n * sourceTheta J C (scaleSequence J X) n^60 ≤ δ := by
-  have hx1 := quadratic_growth_one_le J (by omega) (scaleSequence J X) (by change 1 ≤ X; linarith
-    only [hX])
+  have hx1 := quadratic_growth_one_le J (by
+      omega) (scaleSequence J X) (by change 1 ≤ X; linarith only [hX])
     (scaleSequence_succ J X)
   have hθ : 0 ≤ sourceTheta J C (scaleSequence J X) n :=
     le_trans zero_le_one (sourceTheta_bounds (by omega : 1 ≤ J) hC hx1 n).1
@@ -79,7 +88,7 @@ theorem actualExtraTime_small (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
   exact hfirst.trans ((hb.normal.extraTime (fun _ => a) (fun _ => ha) (fun _ => ha₂)).term_le n)
 
 theorem actualWidths_contract (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
-    (hX : 8 ≤ X) (hb : ActualBounds J D C c X δ) (hδ : δ ≤ 1/2) (n : ℕ) :
+    (hX : 8 ≤ X) (hb : ActualBounds J D C c X δ) (hδ : δ ≤ 1 / 2) (n : ℕ) :
     timeWidth J X (n+1) ≤ timeWidth J X n/2 := by
   have hh := (actualTimeRatio_le J (by omega) X (by linarith only [hX]) hb.initial_shear n).trans
     ((hb.normal.width.term_le n).trans hδ)
@@ -91,8 +100,8 @@ theorem coefficient_small (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
     (a : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
     (A : ℕ) (hA : A ≤ 60) (n : ℕ) :
     geometryError J D C c X a n * sourceTheta J C (scaleSequence J X) n^A ≤ δ := by
-  have hx1 := quadratic_growth_one_le J (by omega) (scaleSequence J X) (by change 1 ≤ X; linarith
-    only [hX])
+  have hx1 := quadratic_growth_one_le J (by
+      omega) (scaleSequence J X) (by change 1 ≤ X; linarith only [hX])
     (scaleSequence_succ J X)
   have hθ := (sourceTheta_bounds (by omega : 1 ≤ J) hC hx1 n).1
   have hh := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hθ hA)
@@ -102,9 +111,9 @@ theorem coefficient_small (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
 /-- The strong coefficient-error guard already implies compression
 domination; no independent scale choice is required for it. -/
 theorem compression_of_error_small {a ε Θ target G d : ℝ}
-    (ha : 1/2 ≤ a) (hε : 0 ≤ ε) (hΘ : 0 ≤ Θ) (htarget : target ≤ Θ)
+    (ha : 1 / 2 ≤ a) (hε : 0 ≤ ε) (hΘ : 0 ≤ Θ) (htarget : target ≤ Θ)
     (hG : 1 ≤ G) (hd : 0 ≤ d)
-    (herr : 16*(ε*Θ*(4*G)^2+d) ≤ 1) : 60*(G+d)*target*ε < a := by
+    (herr : 16 * (ε * Θ * (4 * G) ^ 2 + d) ≤ 1) : 60*(G+d)*target*ε < a := by
   have hprod : 0 ≤ ε*Θ*G^2 := mul_nonneg (mul_nonneg hε hΘ) (sq_nonneg G)
   have hd1 : d ≤ 1 := by nlinarith only [herr, hprod]
   have hG₀ : 0 ≤ G := le_trans zero_le_one hG
@@ -123,10 +132,14 @@ theorem scaleSequence_ge_initial (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 ≤ 
     rw [scaleSequence_succ]
     exact ih.trans (le_mul_of_one_le_left (hX.trans ih) (one_le_pow₀ hj))
 
+/-- Target time, given by `scaleSequence J X (n+1)/sqrt β`. -/
 def targetTime (J : ℕ) (X β : ℝ) (n : ℕ) : ℝ := scaleSequence J X (n+1)/sqrt β
 
+/-- Horizon, given by `targetTime J X β n+actualExtraTime J X a n`. -/
 def horizon (J : ℕ) (X a β : ℝ) (n : ℕ) : ℝ := targetTime J X β n+actualExtraTime J X a n
 
+/-- Stage guards data, collecting `epsilon_pos`, `epsilon_small`, `sigma_pos`, `sigma_small`,
+`reciprocal_pos`, `reciprocal_small` and their compatibility conditions. -/
 structure StageGuards (J D : ℕ) (C c X K : ℝ) (a β : ℕ → ℝ) (n : ℕ) : Prop where
   epsilon_pos : 0 < epsilon J X (a n) n
   epsilon_small : epsilon J X (a n) n ≤ 1
@@ -141,16 +154,16 @@ structure StageGuards (J D : ℕ) (C c X K : ℝ) (a β : ℕ → ℝ) (n : ℕ)
     1/sourceTheta J C (scaleSequence J X) n^60
   next_width : timeWidth J X (n+1) ≤ timeWidth J X n/2
   geometry_small : 1000000*K*geometryError J D C c X a n*sourceTheta J C (scaleSequence J X) n^40 ≤
-    1
-  compression : 60*((1+olderShear J X n)+(priorError J D X n+neighborError J D X c n))*
+      1
+  compression : 60*((1+olderShear J X n)+(priorError J D X n+neighborError J D X c n)) *
     targetTime J X (β n) n*epsilon J X (a n) n < a n
 
 theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
-    (hC : 4 ≤ C) (hX : 8 ≤ X) (hK : 1 ≤ K) (hδ : δ ≤ 1/2)
-    (hδK : 1000000*K*δ ≤ 1) (hb : ActualBounds J D C c X δ)
-    (a β : ℕ → ℝ) (ha : ∀ n, 1/2 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
-    (hβ : ∀ n, 1/2 ≤ β n*scaleSequence J X n^2)
-    (hβ₂ : ∀ n, β n*scaleSequence J X n^2 ≤ 2) (n : ℕ) :
+    (hC : 4 ≤ C) (hX : 8 ≤ X) (hK : 1 ≤ K) (hδ : δ ≤ 1 / 2)
+    (hδK : 1000000 * K * δ ≤ 1) (hb : ActualBounds J D C c X δ)
+    (a β : ℕ → ℝ) (ha : ∀ n, 1 / 2 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
+    (hβ : ∀ n, 1 / 2 ≤ β n * scaleSequence J X n ^ 2)
+    (hβ₂ : ∀ n, β n * scaleSequence J X n ^ 2 ≤ 2) (n : ℕ) :
     StageGuards J D C c X K a β n := by
   have hJ1 : 1 ≤ J := by omega
   have hC1 : 1 ≤ C := by linarith only [hC]
@@ -172,7 +185,7 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
   have hextra := actualExtraTime_small J D hJ C c X δ hC1 hX hb n (a n) (ha₀ n) (ha₂ n)
   have hextra1 : actualExtraTime J X (a n) n ≤ 1 := by
     have hh := mul_le_mul_of_nonneg_left (one_le_pow₀ hθ : 1 ≤ sourceTheta J C (scaleSequence J X)
-      n^60) hextra₀
+        n^60) hextra₀
     nlinarith only [hh, hextra, hδ]
   have hpow : 0 < sourceTheta J C (scaleSequence J X) n^60 := pow_pos hθp 60
   have hextraSharp : actualExtraTime J X (a n) n ≤ 1/sourceTheta J C (scaleSequence J X) n^60 :=
@@ -193,8 +206,8 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
     norm_num only [pow_zero, mul_one] at hh
     linarith only [hh, hδ]
   have heps1 : epsilon J X (a n) n ≤ 1 := by
-    have hG : 1 ≤ (4*(1+olderShear J X n))^2 := by nlinarith only [hg, sq_nonneg (1+olderShear J X
-      n-1)]
+    have hG : 1 ≤ (4*(1+olderShear J X n))^2 := by
+        nlinarith only [hg, sq_nonneg (1+olderShear J X n-1)]
     have htG : 1 ≤ sourceTheta J C (scaleSequence J X) n*(4*(1+olderShear J X n))^2 :=
       one_le_mul_of_one_le_of_one_le hθ hG
     have hh := mul_le_mul_of_nonneg_left htG heps.le
@@ -202,8 +215,8 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
     nlinarith only [he0, hh, hd]
   have htθ : targetTime J X (β n) n ≤ sourceTheta J C (scaleSequence J X) n := by
     have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 := by positivity
-    have hm := mul_le_mul_of_nonneg_right hC (by linarith only [hnonneg] : 0 ≤
-      1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
+    have hm := mul_le_mul_of_nonneg_right hC (by
+        linarith only [hnonneg] : 0 ≤ 1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
     unfold sourceTheta
     nlinarith only [hm, hnonneg, ht]
   refine ⟨heps, heps1, hact.2.2.1, hact.2.2.2.1, ?_, ?_, ?_, ?_, ?_, ?_,
@@ -213,8 +226,8 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
   · simpa only [targetTime, scaleSequence_succ] using hact.2.2.2.2.1
   · exact le_add_of_nonneg_right hextra₀
   · have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 := by positivity
-    have hm := mul_le_mul_of_nonneg_right hC (by linarith only [hnonneg] : 0 ≤
-      1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
+    have hm := mul_le_mul_of_nonneg_right hC (by
+        linarith only [hnonneg] : 0 ≤ 1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
     unfold horizon sourceTheta
     nlinarith only [hm, hnonneg, ht, hextra1]
   · simpa only [horizon, add_sub_cancel_left] using hextraSharp

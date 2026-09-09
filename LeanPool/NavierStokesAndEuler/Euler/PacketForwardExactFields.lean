@@ -9,16 +9,19 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedExactLifted
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCorrectionPotential
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureCovector
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalGevrey
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureCovector
 
 /-! The exact zero-history packet has its literal finite velocity and scalar
 pressure plus the actual correction. These identities use the canonical
 pressure potential and therefore also identify its Hessian. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,7 +33,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
   EulerPacketCoarseMajorant EulerCylinderPhysicalTensor EulerCylinderSobolevSpace
   EulerLiftedGradientSpace EulerGraphPressurePotential EulerAllOrderDriftCorrection
   EulerPacketCoordinates EulerPacketCorrectionCoefficients EulerPacketPhysicalGevrey
-  EulerPacketPressure EulerPacketGraphHessian EulerGraphPullback EulerPacketInverseFlowGevrey
+  EulerPacketPressure  EulerGraphPullback EulerPacketInverseFlowGevrey
 open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
@@ -41,8 +44,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (Q : Budget period D.T_pos
     (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k hk))
 
+/-- Forward initialized exact physical velocity as an element of `Space`. -/
 def forwardInitializedExactPhysicalVelocity (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space) :
-  Space :=
+    Space :=
   k⁻¹ • D.F.field t (Y x)
     ((forwardInitializedExactPacket M D hTime δ hδ ξ hs α Cagree N hN k hk Q).velocity.pointField
       t (cylinderGraph period k D.m₀ (Y x)))
@@ -50,26 +54,26 @@ def forwardInitializedExactPhysicalVelocity (t : Icc (0 : ℝ) D.T) (Y : Space �
 /-- The approximation is exactly the finite physical velocity after
 undoing its true normalized coordinate transformation. -/
 theorem forwardInitializedExactPhysicalVelocity_eq (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x :
-  Space) :
+    Space) :
     forwardInitializedExactPhysicalVelocity M D hTime δ hδ ξ hs α Cagree N hN k hk Q t Y x =
       forwardInitializedVelocity M D δ hδ ξ hs α N k⁻¹
         (t,(Y x,k*inner ℝ D.m₀ (Y x))) +
       k⁻¹ • D.F.field t (Y x) (Q.pointField period t (cylinderGraph period k D.m₀ (Y x))) := by
   have hk0 : k ≠ 0 := by linarith
   have ha : (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k hk).approximation
-    =
+      =
       (coordinateField D (forwardInitializedVelocityField M D hTime δ hδ ξ hs α N k⁻¹)
-        k).toFieldTower :=
+          k).toFieldTower :=
     forwardInitializedNormalizedField_tower_eq M D hTime δ hδ ξ hs α N k
   change k⁻¹ • D.F.field t (Y x)
     ((exactPacketOfResidual period Q
       (forwardInitializedApproximationResidual M D hTime δ hδ ξ hs α Cagree N hN k
-        hk)).velocity.pointField
+          hk)).velocity.pointField
         t (cylinderGraph period k D.m₀ (Y x))) = _
   rw [exactPacketOfResidual_velocity_pointField,ha,map_add,smul_add]
   congr 1
   have he := (coordinateField D (forwardInitializedVelocityField M D hTime δ hδ ξ hs α N k⁻¹)
-    k).toFieldTower_pointField_raw
+      k).toFieldTower_pointField_raw
     t (Y x) (k*inner ℝ D.m₀ (Y x))
   rw [show cylinderGraph period k D.m₀ (Y x) =
       (Y x,((k*inner ℝ D.m₀ (Y x) : ℝ) : AddCircle period)) from rfl,he]
@@ -99,12 +103,14 @@ theorem forwardInitializedExactPhysicalVelocity_fderiv (t : Icc (0 : ℝ) D.T)
   rw [hfun]
   exact fderiv_fun_add hw he
 
+/-- Forward initialized exact physical pressure, given by `(forwardInitializedExactPacket M D
+hTime δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘ Y`. -/
 def forwardInitializedExactPhysicalPressure (t : Icc (0 : ℝ) D.T) (Y : Space → Space) : Space → ℝ :=
   (forwardInitializedExactPacket M D hTime δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘ Y
 
 variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-  (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
+  (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
 
 include hX hXY hY in
 theorem forwardInitializedExactPhysicalPressure_gradient
@@ -127,10 +133,10 @@ theorem forwardInitializedExactPhysicalPressure_gradient
       coordinatePressure D k (forwardInitializedPressure M D δ hδ ξ hs α N k⁻¹)
         (t,(Y t x,k*⟪D.m₀,Y t x⟫_ℝ)) :=
     (forwardInitializedCoordinatePressureField M D hTime δ hδ ξ hs α N k
-      hk0).toFieldTower_pointField_raw
+        hk0).toFieldTower_pointField_raw
       t (Y t x) (k*⟪D.m₀,Y t x⟫_ℝ)
   have hp := ((forwardInitializedPressureWitness M D hTime δ hδ ξ hs α N k⁻¹).changeTime
-    hTime).smooth t
+      hTime).smooth t
   change gradient (S.graphPotential k t ∘ Y t) x = _
   rw [EulerLagrangian.gradient_pullback _ _ _ _
     (continuousInverse_hasFDerivAt D X Y hX hXY hY t x)
@@ -159,7 +165,7 @@ theorem forwardInitializedExactPhysicalPressure_hessian
   have hkk : k*(forwardInitializedCorrectionData M D hTime δ hδ ξ hs α
       Cagree N hN k hk).κ=1 := mul_inv_cancel₀ hk0
   have hp := ((forwardInitializedPressureWitness M D hTime δ hδ ξ hs α N k⁻¹).changeTime
-    hTime).smooth t
+      hTime).smooth t
   have hYc := continuousInverse_contDiff D X Y hX hXY hY t
   have hfinite : ContDiff ℝ ∞ (fun y => forwardInitializedPressure M D δ hδ ξ hs α N k⁻¹
       (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ))) := hp.comp ((graphMap k D.m₀).contDiff.comp hYc)

@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GradientReflection
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderReflection
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.GradientReflection
+
+/-! Joint reflection on the actual complete cylinder Sobolev spaces. -/
 
 @[expose] public section
 
-/-! Joint reflection on the actual complete cylinder Sobolev spaces. -/
 
 noncomputable section
 
@@ -35,9 +38,9 @@ theorem reflectionArray_mem (q : ℕ) (u : SobolevSpace period q) :
   intro e
   have hd := word_hasDerivAt period u e.1.isLt e.2.1 e.2.2
   have hr := (reflection_hasDerivAt period (standardDirection e.2.2) hd).const_smul ((-1 : ℝ) ^
-    e.1.val)
+      e.1.val)
   change HasDerivAt (fun t => translation period (translationPath period (standardDirection e.2.2)
-    t)
+      t)
     (((-1 : ℝ) ^ e.1.val) • reflection period (u.val (edgeParent e))))
     (((-1 : ℝ) ^ (e.1.val + 1)) • reflection period (u.val (edgeChild e))) 0
   convert! hr using 1
@@ -127,8 +130,8 @@ theorem oddReflection_involutive {q : ℕ} (u : SobolevSpace period q) :
 
 /-- The signed reflection preserves the Sobolev norm. -/
 theorem oddReflection_norm {q : ℕ} (u : SobolevSpace period q) :
-    ‖oddReflection period q u‖ = ‖u‖ := by rw [oddReflection_apply, norm_neg,
-      sobolevReflection_norm]
+    ‖oddReflection period q u‖ = ‖u‖ := by
+        rw [oddReflection_apply, norm_neg, sobolevReflection_norm]
 
 /-- Signed reflection preserves the genuine weak divergence constraint. -/
 theorem oddReflection_divergenceFree {q : ℕ} (κ : ℝ) (m : Vector3) (u : SobolevSpace period q)

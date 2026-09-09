@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Normed.Operator.Prod
+
+/-! Actual mixed coefficient jets in the uniform-time L² operator norm. -/
 
 @[expose] public section
 
-/-! Actual mixed coefficient jets in the uniform-time L² operator norm. -/
 
 noncomputable section
 
@@ -25,33 +29,63 @@ variable (P : ℝ) [Fact (0 < P)] {E F K : Type*}
   [NormedAddCommGroup F] [InnerProductSpace ℝ F]
   [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P F) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P F) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P F) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P F) := inferInstance
-private local instance : NormedAddCommGroup C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds1 : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds2 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderPathBounds3 : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderPathBounds4 : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →ᵇ E →L[ℝ] F)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderPathBounds5 : NormedAddCommGroup C(K,Space →ᵇ E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderPathBounds6 : NormedSpace ℝ C(K,Space →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderPathBounds7 : NormedAddCommGroup (CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds8 : NormedSpace ℝ (CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderPathBounds9 : NormedAddCommGroup (CylinderL2 P F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds10 : NormedSpace ℝ (CylinderL2 P F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P F)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds11 : NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P
+    F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P F)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderPathBounds12 : NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P F) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds13 : NormedAddCommGroup C(K,CylinderL2 P E →L[ℝ] CylinderL2
+    P F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderPathBounds14 : NormedSpace ℝ C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F)
+    := inferInstance
 
-def mixedOperatorPath (A : C(K,Space →ᵇ E →L[ℝ] F)) (a : LiftTangent) :
+/-- Mixed operator path, given by `fullPathMap P (translateCoefficientPath A a.1)`. -/
+def mixedOperatorPath (A : C(K, Space →ᵇ E →L[ℝ] F)) (a : LiftTangent) :
     C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F) := fullPathMap P (translateCoefficientPath A a.1)
 
-theorem mixedOperatorPath_contDiff (A : C(K,Space →ᵇ E →L[ℝ] F))
+theorem mixedOperatorPath_contDiff (A : C(K, Space →ᵇ E →L[ℝ] F))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A)) :
     ContDiff ℝ ∞ (mixedOperatorPath P A) :=
   (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
     (E := C(K,Space →ᵇ E →L[ℝ] F)) (F := C(K,CylinderL2 P E →L[ℝ] CylinderL2 P F))
     (fullPathMap P)).comp (hA.comp (ContinuousLinearMap.fst ℝ Space ℝ).contDiff)
 
-theorem mixedOperatorPath_bound (A : C(K,Space →ᵇ E →L[ℝ] F))
+theorem mixedOperatorPath_bound (A : C(K, Space →ᵇ E →L[ℝ] F))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A)) (n : ℕ) (C : ℝ)
     (hb : ∀ a, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) a‖ ≤ C) (a : LiftTangent) :
     ‖iteratedFDeriv ℝ n (mixedOperatorPath P A) a‖ ≤ C := by

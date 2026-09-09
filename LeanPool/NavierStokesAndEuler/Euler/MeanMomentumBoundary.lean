@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanMomentumRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakBoundary
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanDisplacementRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseMomentumRegularity
+import LeanPool.NavierStokesAndEuler.Euler.TimeWeakBoundary
 
 /-!
 # The mean variational solve determines its actual initial momentum trace
@@ -18,6 +17,9 @@ All solenoidal terminal-H¹ tests, including those nonzero initially, identify
 an explicit AC momentum representative. Its initial value is the adjoint
 frame applied to the original `M0 + L A` boundary force.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,12 +31,27 @@ open MeasureTheory Set InnerProductSpace ContinuousLinearMap EulerTimeLp
   EulerTimeH1OperatorProduct EulerTransverseMomentumRegularity EulerTimeWeakBoundary
 
 -- Cache the nested Hilbert-space instances used throughout the operator identities.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanMomentumBoundary1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanMomentumBoundary2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanMomentumBoundary3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanMomentumBoundary4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanMomentumBoundary5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanMomentumBoundary6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (FInv F F' : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
@@ -54,15 +71,15 @@ theorem meanMomentum_full_weak
     (H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
     (u : meanDerivatives T hT FInv) (f : TimeLp T L2)
     (hu : ∀ w : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ+
+      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv w⟫_ℝ)
     (v : TimeLp T solenoidalSpace) :
-    ⟪momentum T hT (solenoidalFrame T F) (u : TimeLp T L2), v⟫_ℝ+
+    ⟪momentum T hT (solenoidalFrame T F) (u : TimeLp T L2), v⟫_ℝ +
       ⟪momentumForcing T hT (solenoidalFrame T F) (solenoidalFrame T F') H
-        (u : TimeLp T L2) f, primitiveTimeLp T hT v⟫_ℝ+
+        (u : TimeLp T L2) f, primitiveTimeLp T hT v⟫_ℝ +
       ⟪meanBoundaryFlux T hT FInv F M0 A L u, initialTrace T hT v⟫_ℝ = 0 := by
   have h := hu (meanTestMap T hT FInv F F' hF hInv v)
   have htrace := meanTestMap_trace T hT FInv F F' hF hInv v
@@ -77,11 +94,11 @@ theorem meanMomentum_full_weak
   have hm := congrArg (fun x : L2 => ⟪M0 (meanTrace T hT FInv u), x⟫_ℝ) htrace
   have ha := congrArg (fun x : L2 => L*⟪A (meanTrace T hT FInv u), x⟫_ℝ) htrace
   have htest :
-      ⟪(u : TimeLp T L2), productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F') v⟫_ℝ-
+      ⟪(u : TimeLp T L2), productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F') v⟫_ℝ -
         ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u),
-          timeMultiplier T hT (solenoidalFrame T F) (primitiveTimeLp T hT v)⟫_ℝ+
+          timeMultiplier T hT (solenoidalFrame T F) (primitiveTimeLp T hT v)⟫_ℝ +
         ⟪M0 (meanTrace T hT FInv u),
-          solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace T hT v)⟫_ℝ+
+          solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace T hT v)⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u),
           solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace T hT v)⟫_ℝ =
         -⟪f, timeMultiplier T hT (solenoidalFrame T F) (primitiveTimeLp T hT v)⟫_ℝ := by
@@ -101,9 +118,9 @@ theorem meanMomentum_with_initial
     (H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
     (u : meanDerivatives T hT FInv) (f : TimeLp T L2)
     (hu : ∀ w : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ+
+      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv w⟫_ℝ) :
     ∃ p : ℝ → solenoidalSpace, AbsolutelyContinuousOnInterval p 0 T ∧

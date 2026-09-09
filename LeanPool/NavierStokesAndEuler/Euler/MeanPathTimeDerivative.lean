@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialTimeDerivative
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-!
 # Commuting actual spatial derivatives with the time derivative
@@ -22,6 +23,9 @@ Sobolev arrays transfer the actual time derivative to the smooth spatial
 representatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanPathTimeDerivative
@@ -32,12 +36,24 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
   EulerSobolevPointEvaluation
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup L2 := inferInstance
-private local instance : NormedSpace ℝ L2 := inferInstance
-private local instance : AddCommGroup L2 := (inferInstance : NormedAddCommGroup L2).toAddCommGroup
-private local instance : Module ℝ L2 := (inferInstance : NormedSpace ℝ L2).toModule
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup L2` instance to shorten typeclass synthesis. -/
+local instance instMeanPathTimeDerivative1 : NormedAddCommGroup L2 := inferInstance
+/-- Cache the standard `NormedSpace ℝ L2` instance to shorten typeclass synthesis. -/
+local instance instMeanPathTimeDerivative2 : NormedSpace ℝ L2 := inferInstance
+/-- Cache the standard `AddCommGroup L2` instance to shorten typeclass synthesis. -/
+local instance instMeanPathTimeDerivative3 : AddCommGroup L2 := (inferInstance : NormedAddCommGroup
+    L2).toAddCommGroup
+/-- Cache the standard `Module ℝ L2` instance to shorten typeclass synthesis. -/
+local instance instMeanPathTimeDerivative4 : Module ℝ L2 := (inferInstance : NormedSpace ℝ
+    L2).toModule
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPathTimeDerivative5 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPathTimeDerivative6 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,L2) :=
+    inferInstance
 
 /-- The constant path with the same initial value, as an actual bounded linear map. -/
 def initialValueMap (T : ℝ) (hT : 0 ≤ T) :
@@ -45,7 +61,7 @@ def initialValueMap (T : ℝ) (hT : 0 ≤ T) :
   (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)).comp
     (ContinuousMap.evalCLM ℝ (⟨0, le_rfl, hT⟩ : Icc (0 : ℝ) T))
 
-variable (T : ℝ) (hT : 0 ≤ T) (p q : C(Icc (0 : ℝ) T,L2))
+variable (T : ℝ) (hT : 0 ≤ T) (p q : C(Icc (0 : ℝ) T, L2))
   (hder : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
 
@@ -118,7 +134,7 @@ private theorem hasDerivWithinAt_submodule_iff {E : Type*} [NormedAddCommGroup E
   rw [hasDerivWithinAt_iff_tendsto, hasDerivWithinAt_iff_tendsto]
   rfl
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanPathTimeDerivative7 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 include hder hp hq in
 /-- The complete finite Sobolev array has the actual time derivative; no

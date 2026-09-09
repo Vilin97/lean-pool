@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVariationalInverse
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
 
-@[expose] public section
-
 /-!
 # Genuine H¹ label displacements and mean variational tests
 
@@ -19,6 +17,9 @@ inverse deformation converts its terminal primitive to an actual H¹ solenoidal
 label path, with a constructed Bochner L² derivative.  Conversely, each genuine
 solenoidal terminal primitive yields an admissible physical test through F.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

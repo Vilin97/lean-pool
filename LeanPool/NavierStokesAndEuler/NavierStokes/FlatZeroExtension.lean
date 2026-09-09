@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-
-@[expose] public section
 
 /-!
 # Jointly smooth zero extension from locally uniform Gaussian bounds
@@ -20,6 +17,9 @@ Every tensor is extended by zero. One extra inverse power in the Gaussian
 bound proves that its derivative at the edge is zero, using
 `δ ≤ ‖(p,δ) - (p₀,0)‖`. No pointwise-to-joint limit inference is used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

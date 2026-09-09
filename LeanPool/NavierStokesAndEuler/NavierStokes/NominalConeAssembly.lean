@@ -6,18 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalProfile
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MatchingDebtBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatSwitchCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalHistoryBridge
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TrueConeLoop
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MatchingConeBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PreparedOutgoing
-public import LeanPool.NavierStokesAndEuler.NavierStokes.RepairConeBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.RepairConeBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalHistoryBridge
 
 /-!
 # Cone coordinates of one actual nominal profile
@@ -26,6 +20,9 @@ The physical coordinates below are computed from the genuine smooth profile
 and its axis-integrated histories. The outgoing convention for axial shear
 has the opposite sign to the signed shear used by the modulation theorem.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,6 +35,7 @@ open NavierStokes.StressActivation
 
 namespace NavierStokes.NominalConeAssembly
 
+/-- Is true, constructed using `ActivationContinuation.IsRelaxed`. -/
 noncomputable def IsTrue {D : RadialDomain} (P : Profiles D) (h : ℝ) (p : Point) : Prop :=
   ActivationContinuation.IsRelaxed P h p ∧
     2 < ActivationContinuation.shearSize
@@ -63,6 +61,7 @@ theorem p2_eq_stock {D : RadialDomain} (P : Profiles D) (h : ℝ) (p : Point) :
 
 /-! ## Local smooth coordinates for the modulation annulus -/
 
+/-- Tilt, given by `ActivationContinuation.shearB P p / ActivationContinuation.shearA P p`. -/
 noncomputable def tilt {D : RadialDomain} (P : Profiles D) (p : Point) : ℝ :=
   ActivationContinuation.shearB P p / ActivationContinuation.shearA P p
 
@@ -90,7 +89,7 @@ theorem stocks_smoothAt {D : RadialDomain} (P : Profiles D) (h : ℝ) {p : Point
   have hLc : ContDiffAt ℝ ∞ (fun q : Point => NaturalAxisData.L h q.2) p :=
     contDiffAt_const.sub ((contDiffAt_const.mul contDiffAt_const).mul (contDiffAt_snd.pow 2))
   exact ⟨(contDiffAt_fst.mul (P.angularLag_smoothAt h hp hX.ne' (P.H_ne_zero hX.ne' hf))).div hLc
-    hL,
+      hL,
     (contDiffAt_fst.mul ((P.axialLag_smoothAt h hp hX.ne').div hLc hL)).div
       (physicalE_smoothAt P hp hX) (P.E_ne_zero hX hf)⟩
 
@@ -170,13 +169,13 @@ theorem controls_seed_coordinates {F : Profile} {A : AxisStage F} (c : Controls 
     (hsmall : SmallDebt F c.debt p.2) (hX : 0 < p.1) (hXi : p.1 ≤ NominalProfile.Xi)
     (heta : p.2 ∈ HeatedOutgoing.parameterDomain) :
     ActivationContinuation.shearA (c.profiles hsep) p = ActivationContinuation.shearA
-      c.seedProfiles p ∧
-      ActivationContinuation.shearB (c.profiles hsep) p = ActivationContinuation.shearB
         c.seedProfiles p ∧
+      ActivationContinuation.shearB (c.profiles hsep) p = ActivationContinuation.shearB
+          c.seedProfiles p ∧
       ReferenceBounds.p1 (c.profiles hsep) F.data.h p = ReferenceBounds.p1 c.seedProfiles F.data.h
-        p ∧
+          p ∧
       ReferenceBounds.p2 (c.profiles hsep) F.data.h p = ReferenceBounds.p2 c.seedProfiles F.data.h
-        p := by
+          p := by
   apply coordinates_of_prefix (c.profiles hsep) c.seedProfiles F.data.h isOpen_univ rfl
     (fun q _ hq => c.f_before_Xi hq) (fun q _ hq => (c.physical_before_Xi hsep hq).1)
     (c.admissible_nonnegative hX.le (NominalProfile.physical_band_in_parameterInterval heta) hsmall)
@@ -194,10 +193,11 @@ theorem continuation_first_at_Xi {F : Profile} {A : AxisStage F} {N : ℕ} {eps 
     2 < ReferenceBounds.p1 ((Controls.ofContinuation A w T hT).profiles hsep)
       F.data.h (NominalProfile.Xi, eta) := by
   rw [(controls_seed_coordinates (Controls.ofContinuation A w T hT) hsep (p := (NominalProfile.Xi,
-    eta)) hsmall
+      eta)) hsmall
     NominalProfile.Xi_pos le_rfl heta).2.2.1]
   exact w.final_first 110 ⟨w.parameters.hold_lt_final.le, le_rfl⟩ eta heta
 
+/-- History index as an element of `Fin 5`. -/
 noncomputable def historyIndex (r : HistoryRow) : Fin 5 := by
   classical
   exact if r = .mass then 0 else if r = .angular then 1 else
@@ -282,19 +282,19 @@ theorem prefix_relaxed {p : Point} (hX : 0 < p.1) (hR : p.1 ≤ W.controls.heatJ
 theorem seed_coordinates {p : Point} (hX : 0 < p.1) (hXi : p.1 ≤ NominalProfile.Xi)
     (heta : p.2 ∈ HeatedOutgoing.parameterDomain) :
     ActivationContinuation.shearA W.profiles p = ActivationContinuation.shearA
-      W.controls.seedProfiles p ∧
-      ActivationContinuation.shearB W.profiles p = ActivationContinuation.shearB
         W.controls.seedProfiles p ∧
+      ActivationContinuation.shearB W.profiles p = ActivationContinuation.shearB
+          W.controls.seedProfiles p ∧
       ReferenceBounds.p1 W.profiles F.data.h p = ReferenceBounds.p1 W.controls.seedProfiles
-        F.data.h p ∧
+          F.data.h p ∧
       ReferenceBounds.p2 W.profiles F.data.h p = ReferenceBounds.p2 W.controls.seedProfiles
-        F.data.h p := by
+          F.data.h p := by
   apply coordinates_of_prefix W.profiles W.controls.seedProfiles F.data.h isOpen_univ rfl
     (fun q _ hq => (W.controls.extended_seed_fields W.heat.coefficients W.separated hq).1)
     (fun q _ hq => (W.controls.extended_seed_fields W.heat.coefficients W.separated hq).2)
     (W.domain_contains hX.le heta) _ hX hXi (mem_univ _)
   · exact (W.controls.seedF_positive (NominalProfile.physical_band_in_parameterInterval heta)
-    hX.le).ne'
+      hX.le).ne'
   · exact ⟨lt_of_lt_of_le (by norm_num) (mul_nonneg W.axis.scale_pos.le hX.le),
       NominalProfile.physical_band_in_parameterInterval heta⟩
 
@@ -338,7 +338,7 @@ theorem history_after (r : HistoryRow) {X eta : ℝ}
     profileHistory W.profiles r (X, eta) = profileInitial W.profiles r eta +
       NominalProfile.moments (HeatedOutgoing.U F W.controls.radius)
         (HeatedOutgoing.E F W.controls.radius W.heat.physical.coefficients) X eta (historyIndex r)
-          := by
+            := by
   rw [history_eq_moment W.profiles r (W.controls.heatJoin_pos.le.trans hX),
     moments_eq_profile_moments W, W.moments_after hX heta]
 
@@ -346,6 +346,7 @@ end Witness
 
 /-! ## Literal physical moments in the logarithmic chart -/
 
+/-- Chart, given by `(XR * Real.exp p.1, p.2)`. -/
 noncomputable def chart (XR : ℝ) (p : Point) : Point := (XR * Real.exp p.1, p.2)
 
 theorem chart_positive {XR : ℝ} (hXR : 0 < XR) (p : Point) : 0 < (chart XR p).1 :=
@@ -426,7 +427,7 @@ theorem heated_I_chart (F : Profile) {XR : ℝ} (hXR : 0 < XR)
       (XR * Real.exp y) eta 1 =
       (XR * Real.sqrt (2 * XR)) * HeatSwitchCone.logI F XR coef (y, eta) := by
   change (∫ x in Ioc 0 (XR * Real.exp y), Real.sqrt (2 * x) * HeatedOutgoing.E F XR coef (x, eta))
-    = _
+      = _
   rw [integral_log_chart _ hXR, (HeatSwitchCone.logI_eq_past_integral F hXR coef heta y).2,
     mul_assoc]
   congr 1
@@ -434,7 +435,7 @@ theorem heated_I_chart (F : Profile) {XR : ℝ} (hXR : 0 < XR)
   apply setIntegral_congr_fun measurableSet_Iic
   intro t _
   change Real.exp t * (Real.sqrt (2 * (XR * Real.exp t)) * HeatedOutgoing.E F XR coef (XR *
-    Real.exp t, eta)) = _
+      Real.exp t, eta)) = _
   dsimp only
   rw [sqrt_chart hXR, show 3 * t / 2 = t + t / 2 by ring, Real.exp_add]
   unfold HeatSwitchCone.logE
@@ -465,7 +466,7 @@ theorem heated_J_chart (F : Profile) {XR : ℝ} (hXR : 0 < XR)
     apply setIntegral_congr_fun measurableSet_Ioc
     intro x _
     change HeatedOutgoing.U F XR (x, eta) * Real.sqrt (2 * x) * HeatedOutgoing.E F XR coef (x, eta)
-      = _
+        = _
     unfold HeatedOutgoing.H
     ring
   rw [he, HeatedOutgoing.J_unchanged F XR coef eta _ hXR, outgoing_J_chart F hXR]
@@ -477,12 +478,12 @@ variable {F : Profile} (W : NominalProfile.Witness F)
 theorem log_histories {p : Point} (hp : W.controls.heatJoin ≤ (chart W.controls.radius p).1)
     (heta : p.2 ∈ HeatedOutgoing.parameterDomain) :
     W.profiles.M (chart W.controls.radius p) = W.controls.radius * OutgoingHistories.M F.data F.amp
-      p ∧
+        p ∧
     W.profiles.I (chart W.controls.radius p) = (W.controls.radius * Real.sqrt (2 *
-      W.controls.radius)) *
+        W.controls.radius)) *
       HeatSwitchCone.logI F W.controls.radius W.heat.coefficients p ∧
     W.profiles.J (chart W.controls.radius p) = (W.controls.radius * Real.sqrt (2 *
-      W.controls.radius)) *
+        W.controls.radius)) *
       OutgoingHistories.J F.reset F.amp p ∧
     W.profiles.S (chart W.controls.radius p) = W.controls.radius *
       HeatSwitchCone.logS F W.controls.radius W.heat.coefficients p := by
@@ -558,7 +559,7 @@ theorem shear_dilation_cancel {r z f : ℝ} (hr : r ≠ 0) (hz : z ≠ 0) (hf : 
   rw [show (2 : ℝ) * (r * (z * (1 / 2)) * f + r * z * (df * X)) =
     (r * z) * (f + 2 * df * X) by ring,
     mul_div_mul_left _ _ (mul_ne_zero hr hz)]
-  field_simp [hf] ; ring
+  field_simp [hf]; ring
 
 /-- The logarithmic radial chart changes actual derivatives, not independent
 formal jets. This statement is also valid for the matching profile before
@@ -596,7 +597,7 @@ theorem physical_shear_cancel {r f X : ℝ} (hr : r ≠ 0) (hf : f ≠ 0)
     1 - 2 * X * (1 / (2 * r) * (2 * 1) * f + r * df) / (r * f) = -2 * X * df / f := by
   have hx : X = r ^ 2 / 2 := by linarith
   rw [hx]
-  field_simp ; ring
+  field_simp; ring
 
 theorem modulated_shears_eq {D : RadialDomain} (P : Profiles D) {p : Point}
     (hp : p ∈ D.carrier) (hX : 0 < p.1) (hf : P.f p ≠ 0) :
@@ -629,32 +630,32 @@ theorem log_history_parameters {p : Point}
     parameterPartial W.profiles.I (chart W.controls.radius p) =
       (W.controls.radius * Real.sqrt (2 * W.controls.radius)) *
         derivWithin (fun eta => HeatSwitchCone.logI F W.controls.radius W.heat.coefficients (p.1,
-          eta))
+            eta))
           HeatedOutgoing.parameterDomain p.2 ∧
     parameterPartial W.profiles.J (chart W.controls.radius p) =
       (W.controls.radius * Real.sqrt (2 * W.controls.radius)) *
         OutgoingHistories.dEta (OutgoingHistories.J F.reset F.amp) p ∧
     parameterPartial W.profiles.S (chart W.controls.radius p) = W.controls.radius *
         derivWithin (fun eta => HeatSwitchCone.logS F W.controls.radius W.heat.coefficients (p.1,
-          eta))
+            eta))
           HeatedOutgoing.parameterDomain p.2 ∧
     parameterPartial W.profiles.pressure (chart W.controls.radius p) =
         derivWithin (fun eta => HeatSwitchCone.logPi F W.controls.radius W.heat.coefficients (p.1,
-          eta))
+            eta))
           HeatedOutgoing.parameterDomain p.2 := by
   have hmem := W.domain_contains (chart_positive W.controls.radius_pos p).le heta
   have hroot : W.controls.radius * Real.sqrt (2 * W.controls.radius) ≠ 0 :=
     mul_ne_zero W.controls.radius_pos.ne'
       (Real.sqrt_pos.2 (mul_pos (by norm_num) W.controls.radius_pos)).ne'
   have hm := parameterPartial_eq_scaled_within W.profiles.M_smooth hmem heta
-    W.controls.radius_pos.ne'
+      W.controls.radius_pos.ne'
     (fun eta he => (log_histories W (p := (p.1, eta)) hp.le he).1)
   have hi := parameterPartial_eq_scaled_within W.profiles.I_smooth hmem heta hroot
     (fun eta he => (log_histories W (p := (p.1, eta)) hp.le he).2.1)
   have hj := parameterPartial_eq_scaled_within W.profiles.J_smooth hmem heta hroot
     (fun eta he => (log_histories W (p := (p.1, eta)) hp.le he).2.2.1)
   have hs := parameterPartial_eq_scaled_within W.profiles.S_smooth hmem heta
-    W.controls.radius_pos.ne'
+      W.controls.radius_pos.ne'
     (fun eta he => (log_histories W (p := (p.1, eta)) hp.le he).2.2.2)
   have hP := parameterPartial_eq_scaled_within W.profiles.pressure_smooth hmem heta
     (show (1 : ℝ) ≠ 0 by norm_num) (fun eta he => by
@@ -669,9 +670,9 @@ theorem log_fields {p : Point} (hp : W.controls.heatJoin < (chart W.controls.rad
     (heta : p.2 ∈ HeatedOutgoing.parameterDomain) :
     W.profiles.U (chart W.controls.radius p) = F.logU p ∧
     W.profiles.E (chart W.controls.radius p) = HeatSwitchCone.logE F W.controls.radius
-      W.heat.coefficients p ∧
+        W.heat.coefficients p ∧
     W.profiles.H (chart W.controls.radius p) = Real.sqrt (2 * W.controls.radius) * Real.exp (p.1 /
-      2) *
+        2) *
       HeatSwitchCone.logE F W.controls.radius W.heat.coefficients p := by
   have hx := chart_positive W.controls.radius_pos p
   have he : W.profiles.E (chart W.controls.radius p) =
@@ -700,7 +701,7 @@ theorem log_transport {p : Point} (hp : W.controls.heatJoin < (chart W.controls.
   convert! hf using 1 <;>
     dsimp only [chart, ActivationStocks.massFlux, OutgoingHistories.XW, OutgoingHistories.X,
       NaturalAxisData.D, NaturalAxisData.d, StressAlgebra.axialExponent,
-        StressAlgebra.coordinateFactor] <;> ring
+          StressAlgebra.coordinateFactor] <;> ring
 
 theorem log_lags {p : Point} (hp : W.controls.heatJoin < (chart W.controls.radius p).1)
     (heta : p.2 ∈ HeatedOutgoing.parameterDomain) :
@@ -740,9 +741,9 @@ theorem log_stocks {p : Point} (hp : W.controls.heatJoin < (chart W.controls.rad
         HeatSwitchCone.stressScale F W.controls.radius W.heat.coefficients p ∧
     ReferenceBounds.p2 W.profiles F.data.h (chart W.controls.radius p) =
         W.controls.radius * Real.exp p.1 * HeatSwitchCone.Ns F W.controls.radius
-          W.heat.coefficients p /
+            W.heat.coefficients p /
           (NaturalAxisData.L F.data.h p.2 * HeatSwitchCone.logE F W.controls.radius
-            W.heat.coefficients p) := by
+              W.heat.coefficients p) := by
   have hh := log_lags W hp heta
   constructor
   · rw [ReferenceBounds.p1, hh.1]
@@ -770,9 +771,9 @@ theorem log_shears {p : Point} (hp : W.controls.heatJoin < (chart W.controls.rad
   have hfp := (radialPartial_hasDerivAt W.domain W.profiles.f_smooth hmem).comp p.1 hchart
   have hup := (radialPartial_hasDerivAt W.domain W.profiles.U_smooth hmem).comp p.1 hchart
   have hroot := (((hasDerivAt_id p.1).div_const 2).exp).const_mul (Real.sqrt (2 *
-    W.controls.radius))
+      W.controls.radius))
   have heq : (fun y => HeatSwitchCone.logE F W.controls.radius W.heat.coefficients (y, p.2)) =ᶠ[𝓝
-    p.1]
+      p.1]
       (fun y => (Real.sqrt (2 * W.controls.radius) * Real.exp (y / 2)) *
         W.profiles.f (W.controls.radius * Real.exp y, p.2)) := by
     filter_upwards [hnear] with y hy
@@ -822,13 +823,14 @@ theorem relaxed_scaled_coordinates {a b s r : ℝ} (ha : 0 < a)
     simp only [ActivationContinuation.shearSize, neg_div, neg_sq]
   exact ⟨ha, hP ▸ hp, by rwa [hV, hP, hJ]⟩
 
+/-- Heat relaxed at, constructed using `0`. -/
 noncomputable def HeatRelaxedAt (F : Profile) (XR : ℝ) (coef : ℝ → HeatedOutgoing.Coeff)
     (p : Point) : Prop :=
   0 < HeatSwitchCone.Qs F XR coef p ∧ 0 < HeatSwitchCone.radialA F XR coef p ∧
     2 < HeatSwitchCone.normalP F XR coef p ∧
     HeatSwitchCone.normalV F XR coef p <
       ConeAlgebra.coneBound (HeatSwitchCone.normalP F XR coef p) (HeatSwitchCone.normalJ F XR coef
-        p)
+          p)
 
 /-- The pressure cancellation and all preceding histories are retained
 before the first compensation patch, for every parameter. -/
@@ -999,9 +1001,13 @@ end Witness
 
 /-! ## A compensation bound chosen before the entrance radius -/
 
+/-- Compensated family data, collecting `bound`, `bound_pos`, `radiusFloor`, `radiusFloor_pos`,
+`branches`, `true_from_hold`. -/
 structure CompensatedFamily (F : Profile) where
+  /-- Bound of `CompensatedFamily`, of type `ℝ`. -/
   bound : ℝ
   bound_pos : 0 < bound
+  /-- Radius floor of `CompensatedFamily`, of type `ℝ`. -/
   radiusFloor : ℝ
   radiusFloor_pos : 0 < radiusFloor
   branches : ∀ XR : ℝ, radiusFloor ≤ XR → Nonempty (ExtendedHeatedOutgoing.Witness F XR bound)
@@ -1028,7 +1034,7 @@ noncomputable def assemble {D : ℝ} (hF : OutgoingProfile.Specification F D)
     (A : AxisStage F) (c : Controls A) (hr : G.radiusFloor ≤ c.radius)
     (hsep : c.separation ≤ Real.exp (-8))
     (hs : ∀ eta ∈ HeatedOutgoing.parameterDomain, SmallDebt F c.debt eta) : NominalProfile.Witness
-      F :=
+        F :=
   ⟨A, c, D, hF, G.bound, Classical.choice (G.branches c.radius hr), hsep, hs⟩
 
 theorem assemble_axis {D : ℝ} (hF : OutgoingProfile.Specification F D)
@@ -1103,7 +1109,7 @@ noncomputable def assemblePrepared {D : ℝ} (hF : OutgoingProfile.Specification
     (hr : G.radiusFloor ≤ radiusFloor) : NominalProfile.Witness F :=
   G.assemble hF M.axis M.controls (hr.trans M.bounds.radius_large)
     M.bounds.matching.separation.le (fun _eta heta => M.bounds.matching.smallDebt
-      M.bounds.debt_radius heta)
+        M.bounds.debt_radius heta)
 
 theorem prepared_continuation_relaxed {D : ℝ} (hF : OutgoingProfile.Specification F D)
     {N : ℕ} {delta radiusFloor : ℝ}
@@ -1113,7 +1119,7 @@ theorem prepared_continuation_relaxed {D : ℝ} (hF : OutgoingProfile.Specificat
     (hp : p.1 ∈ Icc M.continuation.parameters.startRadius (110 : ℝ)) :
     ActivationContinuation.IsRelaxed (G.assemblePrepared hF M hr).profiles F.data.h p :=
   Witness.continuation_relaxed (G.assemblePrepared hF M hr) M.continuation M.shapeTime_pos rfl heta
-    hp
+      hp
 
 theorem prepared_shape_relaxed {D : ℝ} (hF : OutgoingProfile.Specification F D)
     {N : ℕ} {delta radiusFloor : ℝ}
@@ -1149,7 +1155,7 @@ theorem physical_initial_shears {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Anal
     let z : Point := (radius N.endpoint y, η)
     ActivationContinuation.shearA r.profiles z = actualP1 r.actTime r.kappa L (y, η) ∧
       ActivationContinuation.shearB r.profiles z = actualP2 r.actTime r.kappa N.endpoint L U (y, η)
-        := by
+          := by
   let N := ReferencePath.Input.ofNatural hΛ E.profile.family
   let L := StressActivation.FromReference.refLog N r.refTime
   let U := StressActivation.FromReference.refAxial N r.refTime
@@ -1165,10 +1171,10 @@ theorem physical_initial_shears {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Anal
       r.widthU_pos r.widthA_pos hη hx
   change (z.1 * radialPartial P.f z / P.f z =
       TransitionRamp.angularSlope r.actTime r.kappa R.bigTime r.widthU r.widthA R.angularStock
-        (R.logPoint z)) ∧
+          (R.logPoint z)) ∧
     (z.1 * radialPartial P.U z =
       TransitionRamp.axialSlope r.actTime r.kappa R.bigTime r.widthU R.axialStock (R.logPoint z))
-        at hd
+          at hd
   rw [hlog] at hd
   have hs := TransitionRamp.ofNatural_stock_slopes E.profile.family hΛ hsmall
     r.refTime_pos r.refTime_bound hP0 y hy hη
@@ -1181,7 +1187,7 @@ theorem physical_initial_shears {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Anal
   have hf : P.f z = activatedAngular r.actTime r.kappa L (y, η) :=
     (r.initial_fields hη hR).1.trans
       (StressActivation.FromReference.f_logPullback N r.actTime_pos r.refTime_pos r.refTime_bound
-        r.kappa y hη)
+          r.kappa y hη)
   have hE : P.E z = velocity N.endpoint (activatedAngular r.actTime r.kappa L) (y, η) := by
     change Real.sqrt (2 * z.1) * P.f z = _
     rw [hf]
@@ -1214,7 +1220,7 @@ theorem physical_initial_shears {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Anal
       _ = _ := by
         unfold actualP2
         rw [(controlled_hasDerivAt r.actTime r.kappa ReferencePath.parameterInterval_open hU y
-          hη).deriv]
+            hη).deriv]
 
 /-- Positivity from this same constructed entrance profile. -/
 theorem referenceP1_positive_initial {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
@@ -1226,7 +1232,7 @@ theorem referenceP1_positive_initial {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d :
       (ReferencePath.Input.ofNatural hΛ E.profile.family) r.refTime) (y, η) := by
   let N := ReferencePath.Input.ofNatural hΛ E.profile.family
   rw [ActivationCone.referenceP1_natural N r.refTime_pos r.refTime_bound hy
-    (original_interval_interior hη)]
+      (original_interval_interior hη)]
   apply E.slope_positive
   · change (Λ * (N.fromLog (y, η)).1, η) ∈ NaturalEntrance.entranceSet
     have hyT : y < ReferencePath.rampLimit := by linarith [r.refTime_pos, r.refTime_bound]
@@ -1321,7 +1327,7 @@ theorem activation_cone {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
       ReferencePath.parameterInterval_open
       (StressActivation.FromReference.refLog_smooth N r.refTime_pos r.refTime_bound) y
       (original_interval_interior heta) (referenceP1_positive_initial E r (hy.trans r.actTime_le)
-        heta)
+          heta)
   have hsize (y eta : ℝ) (hy : y ≤ r.actTime) (heta : eta ∈ Icc (-1 : ℝ) 1) :
       ActivationContinuation.shearSize
         (ActivationContinuation.shearA r.profiles (radius N.endpoint y, eta))
@@ -1375,8 +1381,10 @@ end Initial
 
 /-! ## The active annulus and one common ordered choice -/
 
+/-- Active left, given by `4 / W.axis.scale`. -/
 noncomputable def activeLeft {F : Profile} (W : NominalProfile.Witness F) : ℝ := 4 / W.axis.scale
 
+/-- Active right, given by `W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)`. -/
 noncomputable def activeRight {F : Profile} (W : NominalProfile.Witness F) : ℝ :=
   W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)
 
@@ -1418,7 +1426,7 @@ structure Certificate {F : Profile} (W : NominalProfile.Witness F) : Prop where
       IsTrue W.profiles F.data.h (chart (activeLeft W) (y, eta))
   outgoing : ∀ y eta : ℝ, F.data.core.holdStart ≤ y → y < OutgoingTail.tailEnd F.data →
     eta ∈ HeatedOutgoing.parameterDomain → IsTrue W.profiles F.data.h (chart W.controls.radius (y,
-      eta))
+        eta))
 
 theorem Certificate.coordinates_smoothAt {F : Profile} {W : NominalProfile.Witness F}
     (hW : Certificate W) {p : Point} (hl : activeLeft W < p.1) (hr : p.1 < activeRight W)
@@ -1436,16 +1444,21 @@ theorem Certificate.coordinates_smoothAt {F : Profile} {W : NominalProfile.Witne
 coefficients. The existence theorem below constructs every cone field in
 this record from the already proved estimates. -/
 structure Assembly (d : PreparedOutgoing.PreparedProfile) where
+  /-- Family of `Assembly`, of type `CompensatedFamily d.profile`. -/
   family : CompensatedFamily d.profile
+  /-- Delta of `Assembly`, of type `ℝ`. -/
   delta : ℝ
+  /-- Radius floor of `Assembly`, of type `ℝ`. -/
   radiusFloor : ℝ
+  /-- Matching of `Assembly`, of type `MatchingConeBounds.PreparedWitness d.profile 1 delta
+  radiusFloor`. -/
   matching : MatchingConeBounds.PreparedWitness d.profile 1 delta radiusFloor
   family_floor : family.radiusFloor ≤ radiusFloor
   terminal_floor : TerminalCone.radiusThreshold d.profile ≤ matching.controls.radius
   clean : OutgoingCone.ProfileCleanCone d.profile matching.controls.radius (-5)
   repair : ∀ p : Point,
     p.1 ∈ Icc (matching.controls.radius * Real.exp (-8)) (matching.controls.radius * Real.exp (-5))
-      →
+        →
     p.2 ∈ HeatedOutgoing.parameterDomain →
     ActivationContinuation.IsRelaxed
       (matching.controls.profiles matching.bounds.matching.separation.le) d.profile.data.h p
@@ -1454,6 +1467,7 @@ namespace Assembly
 
 variable {d : PreparedOutgoing.PreparedProfile} (A : Assembly d)
 
+/-- Witness, given by `A.family.assemblePrepared d.specification A.matching A.family_floor`. -/
 noncomputable def witness : NominalProfile.Witness d.profile :=
   A.family.assemblePrepared d.specification A.matching A.family_floor
 
@@ -1476,11 +1490,11 @@ theorem outer_relaxed {p : Point} (hXi : NominalProfile.Xi ≤ p.1)
   have hlo := lt_log_chart A.matching.controls.radius_pos (lt_of_not_ge hrepair)
   have hhi := log_chart_lt A.matching.controls.radius_pos hx hend
   have hc := A.family.assemble_profile_relaxed_outer d.specification A.matching.axis
-    A.matching.controls
+      A.matching.controls
     (A.family_floor.trans A.matching.bounds.radius_large) A.matching.bounds.matching.separation.le
     (fun _eta hη => A.matching.bounds.matching.smallDebt A.matching.bounds.debt_radius hη)
     d.terminal A.terminal_floor A.clean (p := (Real.log (p.1 / A.matching.controls.radius), p.2))
-      hlo hhi heta
+        hlo hhi heta
   rwa [chart_log A.matching.controls.radius_pos hx] at hc
 
 theorem initial_cones :
@@ -1539,9 +1553,9 @@ theorem assembly_exists (d : PreparedOutgoing.PreparedProfile) : Nonempty (Assem
   have hanchor : 0 < cleanFloor + 1 := by linarith
   obtain ⟨G⟩ := exists_compensatedFamily d.profile (hclean (cleanFloor + 1) (by linarith)) hanchor
   obtain ⟨delta, repairFloor, hdelta, _hrepairFloor, hrepair⟩ :=
-    RepairConeBounds.exists_repair_cone d.profile
+      RepairConeBounds.exists_repair_cone d.profile
   let floor := max G.radiusFloor (max (cleanFloor + 1) (max repairFloor
-    (TerminalCone.radiusThreshold d.profile)))
+      (TerminalCone.radiusThreshold d.profile)))
   obtain ⟨M⟩ := MatchingConeBounds.preparedWitness_exists d.profile d.amplitude_lower d.height_upper
     1 le_rfl hdelta floor
   have hG : G.radiusFloor ≤ floor := le_max_left _ _
@@ -1562,7 +1576,7 @@ theorem assembly_exists (d : PreparedOutgoing.PreparedProfile) : Nonempty (Assem
   · intro p hp heta
     exact hrepair M.axis M.controls M.bounds.matching.separation.le hendpoint M.bounds.coefficients
       (hR.trans M.bounds.radius_large) p hp heta (M.bounds.matching.smallDebt M.bounds.debt_radius
-        heta)
+          heta)
 
 /-- Any one prepared outgoing profile has a nominal witness with the
 complete actual cone certificate. No cone or matching-debt assumption is

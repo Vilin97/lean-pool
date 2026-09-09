@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
+import LeanPool.NavierStokesAndEuler.Euler.CoerciveEndpointBounds
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Polynomial size and coefficient sensitivity of the actual source (10) generator. -/
 
 @[expose] public section
 
-/-! Polynomial size and coefficient sensitivity of the actual source (10) generator. -/
 
 noncomputable section
 
@@ -20,7 +21,7 @@ noncomputable section
 namespace EulerTransverseGeneratorDifference
 
 open Set ContinuousLinearMap InnerProductSpace
-  EulerTransverseGramInverse EulerTransverseGramPath EulerTransverseStrongEstimates
+  EulerTransverseGramInverse EulerTransverseGramPath
   EulerTransverseForwardInverse EulerCoerciveEndpointBounds EulerCoerciveProjection
 
 variable {U E : Type*}
@@ -39,7 +40,7 @@ theorem gram_sub_norm_le (A B : U →L[ℝ] E) (q : ℝ)
     (mul_le_mul_of_nonneg_right hB (norm_nonneg _))).trans_eq (by ring)
 
 theorem gramInverse_sub_norm_le (A B : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
-    (hA : ∀ u, c * ‖u‖^2 ≤ ‖A u‖^2) (hB : ∀ u, c * ‖u‖^2 ≤ ‖B u‖^2)
+    (hA : ∀ u, c * ‖u‖ ^ 2 ≤ ‖A u‖ ^ 2) (hB : ∀ u, c * ‖u‖ ^ 2 ≤ ‖B u‖ ^ 2)
     (q : ℝ) (hAn : ‖A‖ ≤ q) (hBn : ‖B‖ ≤ q) :
     ‖gramInverse A c hc hA - gramInverse B c hc hB‖ ≤
       2 * (c⁻¹)^2 * q * ‖A-B‖ := by
@@ -51,8 +52,8 @@ theorem gramInverse_sub_norm_le (A B : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
 
 variable (T : ℝ) (Q Q₁ P P₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (c : ℝ) (hc : 0 < c)
-  (hQ : ∀ t u, c * ‖u‖^2 ≤ ‖Q t u‖^2)
-  (hP : ∀ t u, c * ‖u‖^2 ≤ ‖P t u‖^2)
+  (hQ : ∀ t u, c * ‖u‖ ^ 2 ≤ ‖Q t u‖ ^ 2)
+  (hP : ∀ t u, c * ‖u‖ ^ 2 ≤ ‖P t u‖ ^ 2)
 
 theorem generator_norm_le (q r : ℝ) (hQn : ‖Q‖ ≤ q) (hQ₁n : ‖Q₁‖ ≤ r) :
     ‖generator T Q Q₁ c hc hQ‖ ≤ 2 * c⁻¹ * q * r := by

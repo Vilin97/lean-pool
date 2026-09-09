@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PressureStream
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanMomentBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanMomentBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # Changes of the literal mean equations under an actual mean increment
@@ -22,6 +20,9 @@ mean cross term.  The unchanged wave covariance and virtual flux cancel
 only after an exact residual-difference identity.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.MeanIncrementBounds
@@ -31,47 +32,72 @@ open scoped ContDiff Topology
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Field: an abbreviation for `ℕ → D → ℝ`. -/
 abbrev Field (D : Type) := ℕ → D → ℝ
 
+/-- Triple data, collecting `radial`, `angular`, `axial`. -/
 structure Triple (D : Type) where
+  /-- Radial of `Triple`, of type `Field D`. -/
   radial : Field D
+  /-- Angular of `Triple`, of type `Field D`. -/
   angular : Field D
+  /-- Axial of `Triple`, of type `Field D`. -/
   axial : Field D
 
+/-- Updated, given by `⟨m.radial + h.radial, m.angular + h.angular, m.axial + h.axial⟩`. -/
 noncomputable def updated (m h : Triple D) : Triple D :=
   ⟨m.radial + h.radial, m.angular + h.angular, m.axial + h.axial⟩
 
+/-- Operators data, collecting `epsilon`, `radialFrequency`, `fastCoefficient`, `radius`,
+`radialProfile`, `eR` and their compatibility conditions. -/
 structure Operators (D : Type) where
+  /-- The smallness parameter at each stage. -/
   epsilon : ℕ → ℝ
+  /-- Radial frequency of `Operators`, of type `ℕ → ℝ`. -/
   radialFrequency : ℕ → ℝ
+  /-- Fast coefficient of `Operators`, of type `ℕ → ℝ`. -/
   fastCoefficient : ℕ → ℝ
+  /-- Radius of `Operators`, of type `D → ℝ`. -/
   radius : D → ℝ
+  /-- Radial profile of `Operators`, of type `D → ℝ`. -/
   radialProfile : D → ℝ
+  /-- E R of `Operators`, of type `D`. -/
   eR : D
+  /-- E Z of `Operators`, of type `D`. -/
   eZ : D
+  /-- E T of `Operators`, of type `D`. -/
   eT : D
+  /-- V R of `Operators`, of type `D`. -/
   vR : D
+  /-- V T of `Operators`, of type `D`. -/
   vT : D
 
 namespace Operators
 
+/-- Inv radius, defined pointwise by `(o.radius x)⁻¹`. -/
 noncomputable def invRadius (o : Operators D) : Field D := fun _ x => (o.radius x)⁻¹
 
+/-- Dr, given by `graphDerivative o.radialFrequency o.radialProfile o.eR o.vR f`. -/
 noncomputable def dr (o : Operators D) (f : Field D) : Field D :=
   graphDerivative o.radialFrequency o.radialProfile o.eR o.vR f
 
+/-- Dz, defined pointwise by `o.epsilon n * fderiv ℝ (f n) x o.eZ`. -/
 noncomputable def dz (o : Operators D) (f : Field D) : Field D :=
   fun n x => o.epsilon n * fderiv ℝ (f n) x o.eZ
 
+/-- Slow time, defined pointwise by `-(o.epsilon n * fderiv ℝ (f n) x o.eT)`. -/
 noncomputable def slowTime (o : Operators D) (f : Field D) : Field D :=
   fun n x => -(o.epsilon n * fderiv ℝ (f n) x o.eT)
 
+/-- Fast time, defined pointwise by `o.fastCoefficient n * fderiv ℝ (f n) x o.vT`. -/
 noncomputable def fastTime (o : Operators D) (f : Field D) : Field D :=
   fun n x => o.fastCoefficient n * fderiv ℝ (f n) x o.vT
 
+/-- Time, given by `o.slowTime f + o.fastTime f`. -/
 noncomputable def time (o : Operators D) (f : Field D) : Field D :=
   o.slowTime f + o.fastTime f
 
+/-- Radial div, given by `o.dr f + c • (o.invRadius * f)`. -/
 noncomputable def radialDiv (o : Operators D) (c : ℝ) (f : Field D) : Field D :=
   o.dr f + c • (o.invRadius * f)
 
@@ -83,7 +109,9 @@ noncomputable def viscosity (o : Operators D) (c : ℝ) (f : Field D) : Field D 
 
 end Operators
 
+/-- Smooth on, given by `∀ n, ContDiffOn ℝ ∞ (f n) U`. -/
 def SmoothOn (U : Set D) (f : Field D) : Prop := ∀ n, ContDiffOn ℝ ∞ (f n) U
+/-- Agree, given by `∀ n, EqOn (f n) (g n) U`. -/
 def Agree (U : Set D) (f g : Field D) : Prop := ∀ n, EqOn (f n) (g n) U
 
 namespace SmoothOn
@@ -207,6 +235,8 @@ theorem viscosity_add {U : Set D} (hU : IsOpen U) (o : Operators D)
 
 end Operators
 
+/-- Operator bounds data, collecting `epsilon_eq`, `radialProfile`, `invRadius`,
+`radialFrequency`, `fastCoefficient`, `kappa_nonneg` and their compatibility conditions. -/
 structure OperatorBounds (s : StripData D) (o : Operators D) (κ : ℝ) : Prop where
   epsilon_eq : o.epsilon = s.epsilon
   radialProfile : UnweightedClass s 0 (fun _ => o.radialProfile)
@@ -317,88 +347,118 @@ theorem viscosity (ho : OperatorBounds s o κ) {f : Field D} (hf : MeanClass s �
 
 end OperatorBounds
 
+/-- Theta radial, given by `b.radial * m.angular + m.radial * b.angular + m.radial * m.angular`. -/
 noncomputable def thetaRadial (b m : Triple D) : Field D :=
   b.radial * m.angular + m.radial * b.angular + m.radial * m.angular
 
+/-- Theta axial, given by `b.axial * m.angular + b.angular * m.axial + m.axial * m.angular`. -/
 noncomputable def thetaAxial (b m : Triple D) : Field D :=
   b.axial * m.angular + b.angular * m.axial + m.axial * m.angular
 
+/-- Axial radial, given by `b.radial * m.axial + m.radial * b.axial + m.radial * m.axial`. -/
 noncomputable def axialRadial (b m : Triple D) : Field D :=
   b.radial * m.axial + m.radial * b.axial + m.radial * m.axial
 
+/-- Axial axial, given by `(2 : ℝ) • (b.axial * m.axial) + m.axial * m.axial`. -/
 noncomputable def axialAxial (b m : Triple D) : Field D :=
   (2 : ℝ) • (b.axial * m.axial) + m.axial * m.axial
 
+/-- Radial radial, given by `(2 : ℝ) • (b.radial * m.radial) + m.radial * m.radial`. -/
 noncomputable def radialRadial (b m : Triple D) : Field D :=
   (2 : ℝ) • (b.radial * m.radial) + m.radial * m.radial
 
+/-- Radial angular, given by `(2 : ℝ) • (b.angular * m.angular) + m.angular * m.angular`. -/
 noncomputable def radialAngular (b m : Triple D) : Field D :=
   (2 : ℝ) • (b.angular * m.angular) + m.angular * m.angular
 
+/-- Theta residual, constructed using `o.time`. -/
 noncomputable def thetaResidual (o : Operators D) (b m : Triple D)
     (W : Fin 3 → Fin 3 → Field D) (T : Field D) : Field D :=
   o.time m.angular + o.radialDiv 2 (thetaRadial b m + W 0 1) +
     o.dz (thetaAxial b m + W 2 1) - o.viscosity 1 m.angular - o.radialDiv 2 T
 
+/-- Axial residual, constructed using `o.time`. -/
 noncomputable def axialResidual (o : Operators D) (b m : Triple D)
     (W : Fin 3 → Fin 3 → Field D) (p T : Field D) : Field D :=
   o.time m.axial + o.radialDiv 1 (axialRadial b m + W 0 2) +
     o.dz (axialAxial b m + W 2 2 + p) - o.viscosity 0 m.axial - o.radialDiv 1 T
 
+/-- Gr as an element of `Field D`. -/
 noncomputable def gr (o : Operators D) (b m : Triple D)
     (W : Fin 3 → Fin 3 → Field D) : Field D :=
   -(o.time m.radial + o.radialDiv 1 (radialRadial b m + W 0 0) +
     o.dz (axialRadial b m + W 2 0) -
     o.invRadius * (radialAngular b m + W 1 1) - o.viscosity 1 m.radial)
 
+/-- Delta theta radial, given by `b.radial * h.angular + h.radial * b.angular + m.radial *
+h.angular + h.radial * m.angular + h.radial * h.angular`. -/
 noncomputable def deltaThetaRadial (b m h : Triple D) : Field D :=
   b.radial * h.angular + h.radial * b.angular + m.radial * h.angular +
     h.radial * m.angular + h.radial * h.angular
 
+/-- Delta theta axial, given by `b.axial * h.angular + b.angular * h.axial + m.axial * h.angular
++ h.axial * m.angular + h.axial * h.angular`. -/
 noncomputable def deltaThetaAxial (b m h : Triple D) : Field D :=
   b.axial * h.angular + b.angular * h.axial + m.axial * h.angular +
     h.axial * m.angular + h.axial * h.angular
 
+/-- Delta axial radial, given by `b.radial * h.axial + h.radial * b.axial + m.radial * h.axial +
+h.radial * m.axial + h.radial * h.axial`. -/
 noncomputable def deltaAxialRadial (b m h : Triple D) : Field D :=
   b.radial * h.axial + h.radial * b.axial + m.radial * h.axial +
     h.radial * m.axial + h.radial * h.axial
 
+/-- Delta axial axial, given by `(2 : ℝ) • (b.axial * h.axial) + (2 : ℝ) • (m.axial * h.axial) +
+h.axial * h.axial`. -/
 noncomputable def deltaAxialAxial (b m h : Triple D) : Field D :=
   (2 : ℝ) • (b.axial * h.axial) + (2 : ℝ) • (m.axial * h.axial) + h.axial * h.axial
 
+/-- Delta radial radial, given by `(2 : ℝ) • (b.radial * h.radial) + (2 : ℝ) • (m.radial *
+h.radial) + h.radial * h.radial`. -/
 noncomputable def deltaRadialRadial (b m h : Triple D) : Field D :=
   (2 : ℝ) • (b.radial * h.radial) + (2 : ℝ) • (m.radial * h.radial) + h.radial * h.radial
 
+/-- Radial angular remainder, given by `(2 : ℝ) • (m.angular * h.angular) + h.angular *
+h.angular`. -/
 noncomputable def radialAngularRemainder (m h : Triple D) : Field D :=
   (2 : ℝ) • (m.angular * h.angular) + h.angular * h.angular
 
+/-- Leading radial, given by `o.invRadius * ((2 : ℝ) • (b.angular * h.angular))`. -/
 noncomputable def leadingRadial (o : Operators D) (b h : Triple D) : Field D :=
   o.invRadius * ((2 : ℝ) • (b.angular * h.angular))
 
+/-- Radial remainder as an element of `Field D`. -/
 noncomputable def radialRemainder (o : Operators D) (b m h : Triple D) : Field D :=
   -o.time h.radial - o.radialDiv 1 (deltaRadialRadial b m h) -
     o.dz (deltaAxialRadial b m h) + o.invRadius * radialAngularRemainder m h +
     o.viscosity 1 h.radial
 
+/-- Theta remainder, given by `o.slowTime h.angular + o.radialDiv 2 (deltaThetaRadial b m h) +
+o.dz (deltaThetaAxial b m h) - o.viscosity 1 h.angular`. -/
 noncomputable def thetaRemainder (o : Operators D) (b m h : Triple D) : Field D :=
   o.slowTime h.angular + o.radialDiv 2 (deltaThetaRadial b m h) +
     o.dz (deltaThetaAxial b m h) - o.viscosity 1 h.angular
 
+/-- Axial remainder, given by `o.slowTime h.axial + o.radialDiv 1 (deltaAxialRadial b m h) +
+o.dz (deltaAxialAxial b m h + δp) - o.viscosity 0 h.axial`. -/
 noncomputable def axialRemainder (o : Operators D) (b m h : Triple D)
     (δp : Field D) : Field D :=
   o.slowTime h.axial + o.radialDiv 1 (deltaAxialRadial b m h) +
     o.dz (deltaAxialAxial b m h + δp) - o.viscosity 0 h.axial
 
+/-- Base bounds data, collecting `radial`, `angular`, `axial`. -/
 structure BaseBounds (s : StripData D) (b : Triple D) : Prop where
   radial : UnweightedClass s 1 b.radial
   angular : UnweightedClass s 0 b.angular
   axial : UnweightedClass s 0 b.axial
 
+/-- Cumulative bounds data, collecting `radial`, `angular`, `axial`. -/
 structure CumulativeBounds (s : StripData D) (m : Triple D) : Prop where
   radial : MeanClass s (19 / 10) m.radial
   angular : MeanClass s (9 / 10) m.angular
   axial : MeanClass s (9 / 10) m.axial
 
+/-- Increment bounds data, collecting `radial`, `angular`, `axial`. -/
 structure IncrementBounds (s : StripData D) (H : ℝ) (h : Triple D) : Prop where
   radial : MeanClass s (H + 1) h.radial
   angular : MeanClass s H h.angular
@@ -412,9 +472,9 @@ variable {s : StripData D} {o : Operators D} {κ H : ℝ} {b m h : Triple D}
 include ho hb hm hh hH in
 theorem deltaThetaRadial_mem : MeanClass s (H + 1) (deltaThetaRadial b m h) := by
   have h1 := (Class.coefficient_mul hb.radial hh.angular).mono_exponent (show H + 1 ≤ 1 + H by
-    linarith)
-  have h2 := (Class.mul_coefficient hh.radial hb.angular).mono_exponent (show H + 1 ≤ (H + 1) + 0
-    by simp)
+      linarith)
+  have h2 := (Class.mul_coefficient hh.radial hb.angular).mono_exponent (show H + 1 ≤ (H + 1) + 0 by
+      simp)
   have h3 := (Class.product hm.radial hh.angular ho.weight_le_one).mono_exponent
     (show H + 1 ≤ 19 / 10 + H by linarith)
   have h4 := (Class.product hh.radial hm.angular ho.weight_le_one).mono_exponent
@@ -438,9 +498,9 @@ theorem deltaThetaAxial_mem : MeanClass s H (deltaThetaAxial b m h) := by
 include ho hb hm hh hH in
 theorem deltaAxialRadial_mem : MeanClass s (H + 1) (deltaAxialRadial b m h) := by
   have h1 := (Class.coefficient_mul hb.radial hh.axial).mono_exponent (show H + 1 ≤ 1 + H by
-    linarith)
+      linarith)
   have h2 := (Class.mul_coefficient hh.radial hb.axial).mono_exponent (show H + 1 ≤ (H + 1) + 0 by
-    simp)
+      simp)
   have h3 := (Class.product hm.radial hh.axial ho.weight_le_one).mono_exponent
     (show H + 1 ≤ 19 / 10 + H by linarith)
   have h4 := (Class.product hh.radial hm.axial ho.weight_le_one).mono_exponent
@@ -523,6 +583,7 @@ theorem axialRemainder_mem {δp : Field D} (hp : MeanClass s H δp) :
 
 end Bounds
 
+/-- Smooth triple data, collecting `radial`, `angular`, `axial`. -/
 structure SmoothTriple (U : Set D) (b : Triple D) : Prop where
   radial : SmoothOn U b.radial
   angular : SmoothOn U b.angular
@@ -895,7 +956,7 @@ theorem pressureMass_sub {a b : ℝ} {f g : PressureStream.Lift P → ℝ}
       fun p => PressureStream.pressureMass f p - PressureStream.pressureMass g p := by
   funext p
   simp only [PressureStream.pressureMass, PressureStream.torusAverage_sub hf.continuous
-    hg.continuous]
+      hg.continuous]
   exact integral_sub (PressureStream.torusAverage_slice_integrable hf hsf p)
     (PressureStream.torusAverage_slice_integrable hg hsg p)
 
@@ -1015,6 +1076,8 @@ theorem meanClass_meanPressure_change
   intro n x _
   exact (congrFun (meanPressure_sub ha hab hd (hf n) (hg n) (hsf n) (hsg n) (M n) (v n)) x).symm
 
+/-- Reconstructed pressure, defined pointwise by `PressureStream.meanPressure d a b (M n) hab (v
+n) (gr o base mean W n)`. -/
 noncomputable def reconstructedPressure (d a b : ℝ) (hab : a < b)
     (M : ℕ → ℝ) (v : ℕ → PressureStream.Plane) (o : Operators (PressureStream.Lift P))
     (base mean : Triple (PressureStream.Lift P))
@@ -1141,11 +1204,14 @@ noncomputable def physicalOperators : Operators SpaceTime where
   vR := 0
   vT := 0
 
+/-- Physical field, defined pointwise by `f`. -/
 noncomputable def physicalField (f : MeanResidual.Scalar) : Field SpaceTime := fun _ => f
 
+/-- Physical triple, given by `⟨physicalField (b 0), physicalField (b 1), physicalField (b 2)⟩`. -/
 noncomputable def physicalTriple (b : MeanResidual.Components) : Triple SpaceTime :=
   ⟨physicalField (b 0), physicalField (b 1), physicalField (b 2)⟩
 
+/-- Physical covariance, defined pointwise by `physicalField (MeanResidual.covariance w i j)`. -/
 noncomputable def physicalCovariance (w : MeanResidual.Components) :
     Fin 3 → Fin 3 → Field SpaceTime := fun i j => physicalField (MeanResidual.covariance w i j)
 
@@ -1181,7 +1247,7 @@ theorem physical_viscosity (c : ℝ) (f : Field SpaceTime) (n : ℕ) (q : SpaceT
       MeanResidual.meanLaplacian (f n) q - c * (f n q / MeanResidual.radius q ^ 2) := by
   simp only [Operators.viscosity, physical_dr, physical_dz]
   simp only [Operators.invRadius, physicalOperators, one_mul, MeanResidual.meanLaplacian,
-    div_eq_mul_inv]
+      div_eq_mul_inv]
   ring
 
 private theorem physical_thetaRadial (b m w : MeanResidual.Components) :

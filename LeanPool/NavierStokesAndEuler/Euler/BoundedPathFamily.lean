@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Uniform bounds on a genuine time derivative turn a continuous family
 of paths into a continuous path of bounded fields. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,13 +27,15 @@ open Set EulerVolterraConvolution
 
 variable {X V : Type*} [TopologicalSpace X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
-  (T : ℝ) (hT : 0 ≤ T) (f q : X → C(Icc (0 : ℝ) T,V))
+  (T : ℝ) (hT : 0 ≤ T) (f q : X → C(Icc (0 : ℝ) T, V))
   (hf : Continuous f) (C D : ℝ)
   (hC : ∀ t x, ‖f x t‖ ≤ C)
   (hD : 0 ≤ D) (hq : ∀ t x, ‖q x t‖ ≤ D)
   (hd : ∀ x (t : Icc (0 : ℝ) T),
     HasDerivWithinAt (extendPath T hT (f x)) (q x t) (Icc (0 : ℝ) T) t)
 
+/-- Bounded slice, given by `BoundedContinuousFunction.ofNormedAddCommGroup (fun x => f x t)
+((ContinuousMap.evalCLM ℝ t).continuous.comp hf) C (hC t)`. -/
 def boundedSlice (t : Icc (0 : ℝ) T) : X →ᵇ V :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fun x => f x t)
     ((ContinuousMap.evalCLM ℝ t).continuous.comp hf) C (hC t)
@@ -52,6 +58,7 @@ theorem boundedSlice_lipschitz :
     projIcc_of_mem hT t.property, projIcc_of_mem hT s.property,
     dist_eq_norm, Subtype.dist_eq] using h
 
+/-- Bounded path, bundling `toFun`, `continuous_toFun`. -/
 def boundedPath : C(Icc (0 : ℝ) T,X →ᵇ V) where
   toFun := boundedSlice T f hf C hC
   continuous_toFun := (boundedSlice_lipschitz T hT f q hf C D hC hD hq hd).continuous

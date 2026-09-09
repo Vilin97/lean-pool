@@ -6,22 +6,24 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FrameWronskian
-public import LeanPool.NavierStokesAndEuler.Euler.CurlMatrixSymmetry
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSymmetry
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerState
+import LeanPool.NavierStokesAndEuler.Euler.CurlMatrixSymmetry
+import LeanPool.NavierStokesAndEuler.Euler.FrameWronskian
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSymmetry
 
 /-! Zero initial vorticity remains zero along every genuine finite-stage
 particle trajectory. The proof uses the conserved antisymmetric pairing
 of the particle frame and its time derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerParentPacketFrames.Evolution
 
 open Set InnerProductSpace EulerSmoothLimit EulerMeanBoundary EulerVectorCalculus
-  EulerMeanCutoffCurl
+    EulerMeanCutoffCurl
   EulerVolterraConvolution EulerPacketCofactor Euler.ComparatorBridge
 open scoped ContDiff
 
@@ -60,7 +62,7 @@ theorem strain_symmetric_along_label (x : Space)
 /-- This statement needs only the actual parent Euler evolution, with no
 additional Sobolev regularity or support hypotheses. -/
 theorem curl_eq_zero_along_position (a : Space)
-    (hzero : vectorCurl (fun x => E.velocity (0,x)) a = 0)
+    (hzero : vectorCurl (fun x => E.velocity (0, x)) a = 0)
     (t : Icc (0 : ℝ) A.T) :
     vectorCurl (fun x => E.velocity (t,x)) (A.position t a) = 0 := by
   have hscale : A.ell • (A.ell⁻¹ • a) = a := by

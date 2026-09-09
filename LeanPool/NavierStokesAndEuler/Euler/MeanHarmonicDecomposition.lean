@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCurlIntegration
 
-@[expose] public section
-
 /-!
 The localized weak Newtonian potential produces the source's actual curl field `w`.
 Its complement is distributionally harmonic wherever the cutoff is one.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,6 +37,7 @@ theorem l2_test_pairing (u : L2) (f : Test) :
   filter_upwards [testValue_ae f] with x hx
   rw [hx]
 
+/-- Divergence gradient, constructed using `EulerMeanSolenoidal.testGradient`. -/
 def divergenceGradient (f : Test) : L2 :=
   EulerMeanSolenoidal.testGradient (divergence (f : Space → Space))
     (divergence_compact f f.smooth f.compact) (divergence_smooth f f.smooth)
@@ -52,7 +54,7 @@ theorem testValue_curlcurl (f : Test) :
   apply Lp.ext
   filter_upwards [testValue_ae (curlTest (curlTest f)), divergenceGradient_ae f,
     testValue_ae (laplacianTest f), Lp.coeFn_sub (divergenceGradient f) (testValue (laplacianTest
-      f))]
+        f))]
     with x hcc hg hl hs
   rw [hcc, hs]
   change vectorCurl (vectorCurl (f : Space → Space)) x =

@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Compact support approximation in Schwartz space
@@ -19,6 +18,9 @@ compactly supported Schwartz function. Each seminorm of its error is bounded
 by a fixed constant divided by R. Consequently compactly supported Schwartz
 functions are dense, and continuous identities extend from compact tests.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -164,14 +166,15 @@ theorem truncate_error_weighted_le (ψ : SchwartzMap Space ℂ) {R : ℝ}
           rw [← mul_add]
           apply mul_le_mul_of_nonneg_left _ (by positivity)
           rw [iteratedFDeriv_add_apply ((truncate ψ R hR).smooth _).contDiffAt ((-ψ).smooth
-            _).contDiffAt]
+              _).contDiffAt]
           exact norm_add_le _ _
       _ = ‖x‖ ^ k * ‖iteratedFDeriv ℝ m (truncate ψ R hR) x‖ +
           ‖x‖ ^ k * ‖iteratedFDeriv ℝ m ψ x‖ := by
         exact congrArg
           (fun z : ℝ => ‖x‖ ^ k * ‖iteratedFDeriv ℝ m (truncate ψ R hR) x‖ + z)
-          (by change ‖x‖ ^ k * ‖iteratedFDeriv ℝ m (-(ψ : Space → ℂ)) x‖ = _; rw
-            [iteratedFDeriv_neg_apply, norm_neg])
+          (by
+              change ‖x‖ ^ k * ‖iteratedFDeriv ℝ m (-(ψ : Space → ℂ)) x‖ = _; rw
+                  [iteratedFDeriv_neg_apply, norm_neg])
       _ ≤ productTailBound ψ k m / R + SchwartzMap.seminorm ℂ (k + 1) m ψ / R :=
         add_le_add (truncate_weighted_derivative_le ψ hR hRone k m hx')
           (weighted_tail_le ψ hR k m hx')

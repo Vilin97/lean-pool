@@ -6,15 +6,26 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardOutputCosts
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowExplicitBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedFlowAndShear
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCanonicalRadius
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardExactFields
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedTimeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimaryShear
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedOutputCosts
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardExactPressureError
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardOutputCosts
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowExplicitBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 
 /-! A single polynomial comparison gives the actual canonical correction,
 the physical shear and pressure errors, and the three flow fields. Only
 the displayed numerical frequency margins are independent extra guards. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +43,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
   (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
@@ -42,18 +53,18 @@ variable (M : EulerMeanPacketProvider.Data)
   (W : ℝ)
   (hW : EulerPacketForwardRadius.RadiusPrimitives L LM NB
     (forwardCoefficientBudget period M D hTime NB) δ ξ W)
-  (hprofile : ∀ t, α*L.g t ≤ W)
+  (hprofile : ∀ t, α * L.g t ≤ W)
   (k : ℝ) (hk : 4 ≤ k) (hX : 64 ≤ expansion k) (hlog : 1 ≤ Real.log k)
-  (hfrequency : EulerPacketInitializedOutputCost.uniformConstant*
-    W^EulerPacketInitializedOutputCost.uniformPower ≤ smallPower k)
-  (hdelta : delta (expansion k) ≤ k^(-(3 : ℝ)))
-  (hroot : 16 ≤ k^(1/4 : ℝ))
-  (htrace : max 71 (Real.sqrt (2/period+2*period)) ≤ k^(1/24 : ℝ))
+  (hfrequency : EulerPacketInitializedOutputCost.uniformConstant *
+    W ^ EulerPacketInitializedOutputCost.uniformPower ≤ smallPower k)
+  (hdelta : delta (expansion k) ≤ k ^ (-(3 : ℝ)))
+  (hroot : 16 ≤ k ^ (1 / 4 : ℝ))
+  (htrace : max 71 (Real.sqrt (2 / period + 2 * period)) ≤ k ^ (1 / 24 : ℝ))
   (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hXs : ∀ t, ContDiff ℝ ∞ (X t))
   (hF : ∀ t x, fderiv ℝ (X t) x = D.F.field t x)
-  (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
-  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+  (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
+  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
 include hδ1 hα L NB LM hW hprofile hX hlog hfrequency hdelta hroot htrace hXs hF hXY hY hdet
 
@@ -78,7 +89,7 @@ theorem forward_uniform_flow_and_shear :
         weightedNorm period 6 n (Q.initialRadius/4) ((Q.pressureTower period).realization s t) ≤
           EulerPacketInitializedCost.weightSize W*delta (expansion k) ∧
         weightedNorm period 6 n (Q.initialRadius/4) ((Q.timeDerivativeTower period).realization s
-          t) ≤
+            t) ≤
           EulerPacketInitializedCost.weightSize W*delta (expansion k)) ∧
       (∀ (t : Icc (0 : ℝ) D.T) (x : Space),
         ‖fderiv ℝ (forwardInitializedExactPhysicalVelocity M D hTime δ hδ ξ hs α
@@ -137,7 +148,7 @@ theorem forward_uniform_flow_and_shear :
     L NB LM Cagree W hW hprofile k hk hX hlog hold X hXs hF hdet
   let C0 := velocity L'.R S.H0 BC.multiplierCost
   let Cn := normal L'.R S.H0 BC.multiplierCost
-  let Ch := 6*N'.blockAmplitude*
+  let Ch := 6*N'.blockAmplitude *
     (fixedVelocityGradeCost L'.R S.H0 1+fixedVelocityGradeCost L'.R S.H0 2+1)
   let Rf := physicalInputRadius (4*L'.R) (4*L'.R) (ρ0/4)
   let Av := liftedInputConstant period*(C0+Cn)
@@ -194,7 +205,7 @@ theorem forward_uniform_flow_and_shear :
     ((hweighted (n+6) n le_rfl t).2.2).trans
       ((mul_le_mul_of_nonneg_left (delta_le_one _) hCw.le).trans_eq (mul_one _))
   have hsize : physicalInputSize period k C0 Cn (Cw*delta (expansion k)) = liftedAmplitude Av Ev k
-    := by
+      := by
     dsimp [physicalInputSize,liftedAmplitude,Av,Ev]
     ring
   let G := Q.physicalFlowData period V Vt rfl
@@ -229,7 +240,7 @@ theorem forward_uniform_flow_and_shear :
   · intro t z
     change graphConstraint k D.m₀
       (EulerMetricTransport.transportDirection k⁻¹ D.m₀ ((Q.packetCoefficient period V).field t
-        z))=0
+          z))=0
     exact graphConstraint_transport k k⁻¹ (mul_inv_cancel₀ hk0.ne') D.m₀ _
   · intro t x
     constructor

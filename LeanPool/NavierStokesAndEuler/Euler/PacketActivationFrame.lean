@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseActivationSelection
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationData
 
 /-! Source activation in the actual physical tangent plane.  Ambient
 strain error and compression bounds imply the compressed terminal-matrix
 hypotheses, so no abstract endpoint matrix or plane isometry is supplied. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +29,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
 theorem terminalPerturbation_compression (T : ℝ) (hT : 0 ≤ T)
-    (R : V →ₗᵢ[ℝ] Space) (M : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) (p q : V) (h : ℝ) :
+    (R : V →ₗᵢ[ℝ] Space) (M : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) (p q : V) (h : ℝ) :
     terminalPerturbation T hT R M p q h =
       R.toContinuousLinearMap.adjoint.comp
         ((M ⟨T,hT,le_rfl⟩-h • rankOne ℝ (R q) (R p)).comp R.toContinuousLinearMap) := by
@@ -38,7 +42,7 @@ theorem terminalPerturbation_compression (T : ℝ) (hT : 0 ≤ T)
     LinearIsometry.coe_toContinuousLinearMap,R.inner_map_map]
 
 theorem terminalPerturbation_norm_le (T : ℝ) (hT : 0 ≤ T)
-    (R : V →ₗᵢ[ℝ] Space) (M : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) (p q : V) (h : ℝ) :
+    (R : V →ₗᵢ[ℝ] Space) (M : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) (p q : V) (h : ℝ) :
     ‖terminalPerturbation T hT R M p q h‖ ≤ ‖M ⟨T,hT,le_rfl⟩-h • rankOne ℝ (R q) (R p)‖ := by
   rw [terminalPerturbation_compression]
   have hR := R.norm_toContinuousLinearMap_le
@@ -54,8 +58,8 @@ theorem terminalPerturbation_norm_le (T : ℝ) (hT : 0 ≤ T)
     _ = _ := mul_one _
 
 theorem terminalPerturbation_diagonal (T : ℝ) (hT : 0 ≤ T)
-    (R : V →ₗᵢ[ℝ] Space) (M : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) (p q : V) (h : ℝ)
-    (hpq : ⟪p,q⟫_ℝ=0) :
+    (R : V →ₗᵢ[ℝ] Space) (M : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) (p q : V) (h : ℝ)
+    (hpq : ⟪p, q⟫_ℝ = 0) :
     ⟪terminalPerturbation T hT R M p q h p,p⟫_ℝ = ⟪M ⟨T,hT,le_rfl⟩ (R p),R p⟫_ℝ := by
   have hqp : ⟪q,p⟫_ℝ=0 := by rwa [real_inner_comm]
   simp only [terminalPerturbation,sub_apply,comp_apply,smul_apply,rankOne_apply,
@@ -67,16 +71,16 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 
 theorem select_physical_history_coordinate
     (hHs : ∀ t, (B.H.field t 0).IsSymmetric)
-    (h CM CH ε : ℝ) (hh : 0 < h) (hLayer : 1 ≤ h*D.T)
+    (h CM CH ε : ℝ) (hh : 0 < h) (hLayer : 1 ≤ h * D.T)
     (hCM : 0 ≤ CM) (hCH : 0 ≤ CH) (hε : 0 ≤ ε)
-    (hM : ∀ t, ‖D.M.field t 0‖ ≤ CM*h)
-    (hHnorm : ‖B.coefficients.labelHessian 0‖ ≤ CH*h^2)
-    (p q : Space) (hp : ‖p‖=1) (hq : ‖q‖=1) (hpq : ⟪p,q⟫_ℝ=0)
-    (hpm : ⟪D.normal.field ⟨D.T,D.T_pos.le,le_rfl⟩ 0,p⟫_ℝ=0)
-    (hqm : ⟪D.normal.field ⟨D.T,D.T_pos.le,le_rfl⟩ 0,q⟫_ℝ=0)
-    (hεsmall : 16*(activationConstant CM CH+1)*ε ≤ 1)
-    (hB : ‖D.M.field ⟨D.T,D.T_pos.le,le_rfl⟩ 0-h • rankOne ℝ q p‖ ≤ ε*h)
-    (hBpp : ⟪D.M.field ⟨D.T,D.T_pos.le,le_rfl⟩ 0 p,p⟫_ℝ < 0) :
+    (hM : ∀ t, ‖D.M.field t 0‖ ≤ CM * h)
+    (hHnorm : ‖B.coefficients.labelHessian 0‖ ≤ CH * h ^ 2)
+    (p q : Space) (hp : ‖p‖ = 1) (hq : ‖q‖ = 1) (hpq : ⟪p, q⟫_ℝ = 0)
+    (hpm : ⟪D.normal.field ⟨D.T, D.T_pos.le, le_rfl⟩ 0, p⟫_ℝ = 0)
+    (hqm : ⟪D.normal.field ⟨D.T, D.T_pos.le, le_rfl⟩ 0, q⟫_ℝ = 0)
+    (hεsmall : 16 * (activationConstant CM CH + 1) * ε ≤ 1)
+    (hB : ‖D.M.field ⟨D.T, D.T_pos.le, le_rfl⟩ 0 - h • rankOne ℝ q p‖ ≤ ε * h)
+    (hBpp : ⟪D.M.field ⟨D.T, D.T_pos.le, le_rfl⟩ 0 p, p⟫_ℝ < 0) :
     ∃ ξ : U, ξ ≠ 0 ∧
       ⟪B.coefficients.labelVelocity 0 ξ ⟨D.T,D.T_pos.le,le_rfl⟩,q⟫_ℝ=1 ∧
       -8*(activationConstant CM CH+1) ≤
@@ -92,7 +96,7 @@ theorem select_physical_history_coordinate
   have he : ‖terminalPerturbation D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p' q' h‖ ≤ ε*h :=
     (terminalPerturbation_norm_le D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p' q' h).trans hB
   have hc : ⟪terminalPerturbation D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p' q' h p',p'⟫_ℝ <
-    0 := by
+      0 := by
     rw [terminalPerturbation_diagonal D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p' q' h hpq]
     exact hBpp
   exact select_history_coordinate B R hR hHs h CM CH ε hh hLayer hCM hCH hε hM hHnorm

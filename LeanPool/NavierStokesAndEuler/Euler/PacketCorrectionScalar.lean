@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionConstants
-public import Mathlib.Analysis.Real.Sqrt
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Explicit scalar choices for the actual drift-aware correction budget.
 The error target is exp(-sqrt X), with X=k^ϑ in the source construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,10 +24,13 @@ namespace EulerPacketCorrectionScalar
 
 open Set
 
+/-- Delta, given by `Real.exp (-Real.sqrt X)`. -/
 def delta (X : ℝ) : ℝ := Real.exp (-Real.sqrt X)
 
+/-- Residual, given by `2*Real.exp (-(7/10)*X*Real.log k)`. -/
 def residual (k X : ℝ) : ℝ := 2*Real.exp (-(7/10)*X*Real.log k)
 
+/-- Initial radius, given by `1/(1+8*R+4*M*Rc+Rc)`. -/
 def initialRadius (R M Rc : ℝ) : ℝ := 1/(1+8*R+4*M*Rc+Rc)
 
 theorem delta_pos (X : ℝ) : 0 < delta X := Real.exp_pos _
@@ -34,7 +41,7 @@ theorem delta_le_one (X : ℝ) : delta X ≤ 1 :=
 theorem residual_pos (k X : ℝ) : 0 < residual k X :=
   mul_pos (by norm_num) (Real.exp_pos _)
 
-/-- One polynomial inverse radius meets both packet-series and pressure-
+/-- One polynomial inverse radius meets both packet-series and pressure -
 inverse absorption requirements. -/
 theorem initialRadius_bounds (R M Rc : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) (hRc : 0 ≤ Rc) :
     0 < initialRadius R M Rc ∧ initialRadius R M Rc*(4*R) ≤ 1/2 ∧
@@ -54,7 +61,7 @@ theorem initialRadius_bounds (R M Rc : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) (hRc :
 /-- The actual residual envelope wins over the Gronwall factor with an
 explicit linear bound on the source growth cost. -/
 theorem residual_small (C T k X : ℝ) (hX : 64 ≤ X) (hk : 1 ≤ Real.log k)
-    (hgrowth : 3*C*T ≤ X/4) :
+    (hgrowth : 3 * C * T ≤ X / 4) :
     2*residual k X*Real.exp (3*C*T) ≤ delta X/2 := by
   have hX0 : 0 ≤ X := by linarith
   have hs : Real.sqrt X ≤ X/8 :=
@@ -72,8 +79,8 @@ theorem residual_small (C T k X : ℝ) (hX : 64 ≤ X) (hk : 1 ≤ Real.log k)
 /-- The two elementary frequency guards control the radius loss caused
 by the actual O(1/k) drift and the chosen error target. -/
 theorem radius_decay (C T D ρ0 k X : ℝ) (hk : 0 < k)
-    (hfrequency : 8*C*T*D ≤ ρ0*k)
-    (herror : 8*C*T ≤ ρ0*Real.exp (Real.sqrt X)) :
+    (hfrequency : 8 * C * T * D ≤ ρ0 * k)
+    (herror : 8 * C * T ≤ ρ0 * Real.exp (Real.sqrt X)) :
     2*C*(D/k+delta X)*T ≤ ρ0/2 := by
   have hf : 8*C*T*(D/k) ≤ ρ0 := by
     calc
@@ -84,12 +91,14 @@ theorem radius_decay (C T D ρ0 k X : ℝ) (hk : 0 < k)
     exact (div_le_iff₀ (Real.exp_pos _)).mpr herror
   nlinarith only [hf,he]
 
+/-- Radius, given by `⟨fun t => ρ0-2*C*(D/k+delta X)*t.val, continuous_const.sub
+(continuous_const.mul continuous_subtype_val)⟩`. -/
 def radius (T C D ρ0 k X : ℝ) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => ρ0-2*C*(D/k+delta X)*t.val,
     continuous_const.sub (continuous_const.mul continuous_subtype_val)⟩
 
 theorem radius_bounds (T C D ρ0 k X : ℝ) (hC : 0 ≤ C) (hD : 0 ≤ D) (hk : 0 < k)
-    (hdecay : 2*C*(D/k+delta X)*T ≤ ρ0/2) (t : Icc (0 : ℝ) T) :
+    (hdecay : 2 * C * (D / k + delta X) * T ≤ ρ0 / 2) (t : Icc (0 : ℝ) T) :
     ρ0/2 ≤ radius T C D ρ0 k X t ∧ radius T C D ρ0 k X t ≤ ρ0 := by
   have hs : 0 ≤ 2*C*(D/k+delta X) := by
     exact mul_nonneg (mul_nonneg (by norm_num) hC)

@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerEndpoint
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerEndpoint
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
 
 /-! The maximal positive horizon of a fixed ordinary Euler datum.
 Existence below the supremum and failure above it follow from restriction;
 membership of the endpoint is deliberately left to a continuation theorem. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,6 +23,8 @@ namespace EulerOrdinarySobolev
 
 open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
 
+/-- Has euler evolution, given by `∃ hT : 0 < T, ∃ U : Evolution T hT.le, U.velocity
+⟨0,le_rfl,hT.le⟩=A`. -/
 def HasEulerEvolution (A : SmoothL2Field Space) (T : ℝ) : Prop :=
   ∃ hT : 0 < T, ∃ U : Evolution T hT.le, U.velocity ⟨0,le_rfl,hT.le⟩=A
 
@@ -37,6 +42,7 @@ theorem HasEulerEvolution.lt_of_failure {A : SmoothL2Field Space} {T B : ℝ}
 /-- A compatible family of smooth solutions on every strictly shorter
 positive interval, with no solution on any longer interval. -/
 structure FiniteLifespan (A : SmoothL2Field Space) where
+  /-- Duration of `FiniteLifespan`, of type `ℝ`. -/
   duration : ℝ
   duration_pos : 0 < duration
   shorter : ∀ S, 0 < S → S < duration → HasEulerEvolution A S
@@ -67,6 +73,7 @@ namespace FiniteLifespan
 
 variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 
+/-- Evolution, given by `(L.shorter S hS hST).choose_spec.choose`. -/
 def evolution (S : ℝ) (hS : 0 < S) (hST : S < L.duration) : Evolution S hS.le :=
   (L.shorter S hS hST).choose_spec.choose
 

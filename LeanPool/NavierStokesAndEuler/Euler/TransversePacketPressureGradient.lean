@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradient
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureRegularity
+
+/-! The actual normalized transverse pressure supplies the literal next-grade pressure gradient. -/
 
 @[expose] public section
 
-/-! The actual normalized transverse pressure supplies the literal next-grade pressure gradient. -/
 
 noncomputable section
 

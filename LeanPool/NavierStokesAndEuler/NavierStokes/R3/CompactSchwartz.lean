@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-
-@[expose] public section
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 
 /-!
 # Compact smooth test functions as Schwartz functions
@@ -18,6 +16,9 @@ Compact support is preserved by iterated derivatives. Consequently each
 polynomially weighted derivative norm is continuous with compact support and
 is bounded, giving a Schwartz map with the original function as its coercion.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

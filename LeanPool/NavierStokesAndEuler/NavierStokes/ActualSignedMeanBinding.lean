@@ -6,14 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCovariance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BandReindexedSignedMeanGain
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCrossDefectClass
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCrossDefectClass
 
 /-!
 # The actual signed mean cross and its physical scale
@@ -24,6 +18,9 @@ The physical partition scale is `Q n * q_normalized`; finite low bands retain
 their partition factor.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedMeanBinding
@@ -32,11 +29,18 @@ open Set Function Filter
 open scoped ContDiff Topology BigOperators
 open CorrectionInitialization.ActualPrimary ActualPrimaryCovariance
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Full point: an abbreviation for `Point × ℝ`. -/
 abbrev FullPoint := Point × ℝ
+/-- Vec2: an abbreviation for `SignedWaveUpdate.Vec2`. -/
 abbrev Vec2 := SignedWaveUpdate.Vec2
+/-- Mat2: an abbreviation for `SignedWaveUpdate.Mat2`. -/
 abbrev Mat2 := SignedWaveUpdate.Mat2
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Frequency: an abbreviation for `TorusInverse.Frequency /-! ## The legacy normalized-tail
+input cannot describe this chart -/`. -/
 abbrev Frequency := TorusInverse.Frequency
 
 /-! ## The legacy normalized-tail input cannot describe this chart -/
@@ -49,7 +53,7 @@ theorem Q_le_half {n : ℕ} (hn : 1 ≤ n) : ChartScales.Q n ≤ 1 / 2 := by
     _ = 1 / 2 := by norm_num
 
 theorem legacy_nativeData_excludes_strip (B : SignedMeanGain.NativeData
-  ActualInitialization.geometry)
+    ActualInitialization.geometry)
     {x : Point} (hx : x ∈ ActualInitialization.geometry.strip.domain) : False := by
   have hs := ActualInitialization.geometry.strip_subset hx
   have hlarge : (1 / 2 : ℝ) < SimilarityCoordinates.coordinateQ (2 * h) x.2.1 := hs.2.1
@@ -78,7 +82,7 @@ theorem actual_strip_nonempty : ActualInitialization.geometry.strip.domain.Nonem
     constructor <;> linarith [G.patch.a_lt_b]
 
 theorem no_legacy_nativeData : IsEmpty (SignedMeanGain.NativeData ActualInitialization.geometry) :=
-  by
+    by
   obtain ⟨x, hx⟩ := actual_strip_nonempty
   exact ⟨fun B => legacy_nativeData_excludes_strip B hx⟩
 
@@ -86,19 +90,27 @@ theorem no_legacy_nativeData : IsEmpty (SignedMeanGain.NativeData ActualInitiali
 
 variable {B N0 : ℕ}
 
+/-- Velocity scale, given by `PhysicalParticularWave.velocityWeight h (ChartScales.Q n)
+(ChartScales.Q (BaseChartJets.cellBand L))`. -/
 noncomputable def velocityScale (L : Label B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.velocityWeight h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-    L))
+      L))
 
+/-- Common matrix, given by `covariance B N0 L (nativePoint n x L)`. -/
 noncomputable def commonMatrix (L : Label B N0) (n : ℕ) (x : Point) : Mat2 :=
   covariance B N0 L (nativePoint n x L)
 
+/-- Reference target, defined pointwise by `PrimaryTargetBounds.actualTarget modulation
+(nativePoint n x L) i`. -/
 noncomputable def referenceTarget (L : Label B N0) (n : ℕ) (x : Point) : Vec2 :=
   fun i => PrimaryTargetBounds.actualTarget modulation (nativePoint n x L) i
 
+/-- Common target, given by `(ActualSignedStageControls.coefficientScale (L, (0 : Fin 2)) n) ^ 2
+• referenceTarget L n x`. -/
 noncomputable def commonTarget (L : Label B N0) (n : ℕ) (x : Point) : Vec2 :=
   (ActualSignedStageControls.coefficientScale (L, (0 : Fin 2)) n) ^ 2 • referenceTarget L n x
 
+/-- Signed ratio, constructed using `SignedCovariance.increment`. -/
 noncomputable def signedRatio (request : ℕ → FullPoint → Vec2) (L : Label B N0)
     (n : ℕ) (x : Point) (j : Fin 2) : ℝ :=
   SignedCovariance.increment (commonMatrix L n x) (commonTarget L n x) (request n (x, 0)) j /
@@ -111,7 +123,7 @@ theorem velocityScale_eq (L : Label B N0) (n : ℕ) :
     velocityScale L n = ChartScales.Q n ^ CoordinateAlgebra.A h *
       ChartScales.Q (BaseChartJets.cellBand L) ^ (-CoordinateAlgebra.A h) := by
   simp only [velocityScale, PhysicalParticularWave.velocityWeight,
-    PhysicalParticularWave.ratioPower,
+      PhysicalParticularWave.ratioPower,
     Real.rpow_neg (ChartScales.Q_pos _).le, div_eq_mul_inv]
 
 theorem commonMatrix_eq (L : Label B N0) (n : ℕ) (x : Point) (j : Fin 2) (k : Frequency) :
@@ -165,7 +177,7 @@ theorem localized_amplitude_ratio (request : ℕ → FullPoint → Vec2) (L : La
     (n : ℕ) {x : Point} (hx : x ∈ ActualInitialization.geometry.strip.domain)
     (j : Fin 2) (k : Frequency) :
     (((ActualSignedStageControls.parameters (L, j)).copyData ActualInitialization.geometry.strip
-      request).localized k).amplitude
+        request).localized k).amplitude
       n (x, 0) =
       signedRatio request L n x j • (velocityScale L n •
         CurlClassBounds.complexify (cutVelocity j L
@@ -180,7 +192,7 @@ theorem localized_amplitude_ratio (request : ℕ → FullPoint → Vec2) (L : La
   rw [hr]
   simp only [ActualSignedStageControls.cutoff, ActualSignedStageControls.fundamental,
     ActualSignedStageControls.nativePoint, cutVelocity, rawVelocity,
-      PartitionedCovariance.amplitude,
+        PartitionedCovariance.amplitude,
     map_smul, smul_smul]
   congr 1
   simp only [commonMatrix, nativePoint]
@@ -191,12 +203,12 @@ theorem localized_amplitude_ratio (request : ℕ → FullPoint → Vec2) (L : La
 theorem signed_common_amplitude_ratio (request : ℕ → FullPoint → Vec2) (L : Label B N0)
     (n : ℕ) {x : Point} (hx : x ∈ ActualInitialization.geometry.strip.domain) (j : Fin 2) :
     ((ActualSignedStageControls.parameters (L, j)).copyData ActualInitialization.geometry.strip
-      request).common.amplitude
+        request).common.amplitude
       n (x, 0) = signedRatio request L n x j • cutAmplitude j L n (x, 0) := by
   rw [cutAmplitude_eq_common j L n hx 0, ← velocityScale_eq]
   change (∑' k : Frequency,
     (((ActualSignedStageControls.parameters (L, j)).copyData ActualInitialization.geometry.strip
-      request).localized k).amplitude
+        request).localized k).amplitude
       n (x, 0)) = _
   unfold commonAmplitude
   rw [← tsum_const_smul'', ← tsum_const_smul'']
@@ -206,7 +218,7 @@ theorem primaryBlock_eq_model (L : Label B N0) (j : Fin 2) :
     ActualInitialization.tangentBlock (L, j) = SignedWaveUpdate.blockOfCoefficients
       ((chartCoefficients j L).withCutoff (chartCutoff j L))
       (fun _ => PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared j
-        L) := rfl
+          L) := rfl
 
 theorem primary_tangent_band (l : Label B N0 × Fin 2) :
     (ActualInitialization.tangentBlock l).BandLimited 1 :=
@@ -215,14 +227,14 @@ theorem primary_tangent_band (l : Label B N0 × Fin 2) :
 theorem actual_sameCarrier (request : ℕ → FullPoint → Vec2) (L : Label B N0) (j : Fin 2) :
     LabelSumBounds.SameCarrier (ActualInitialization.tangentBlock (L, j))
       ((ActualSignedStageControls.parameters (L, j)).tangentBlock
-        ActualInitialization.geometry.strip request) :=
+          ActualInitialization.geometry.strip request) :=
   ⟨rfl, rfl, rfl⟩
 
 theorem signed_tangent_ratio (request : ℕ → FullPoint → Vec2) (L : Label B N0)
     (n : ℕ) {x : Point} (hx : x ∈ ActualInitialization.geometry.strip.domain)
     (j : Fin 2) (theta : ℝ) (i : Fin 3) :
     ((ActualSignedStageControls.parameters (L, j)).tangentBlock ActualInitialization.geometry.strip
-      request).oscillation
+        request).oscillation
       n (x, theta) i = signedRatio request L n x j *
       (ActualInitialization.tangentBlock (L, j)).oscillation n (x, theta) i := by
   rw [primaryBlock_eq_model]
@@ -230,7 +242,7 @@ theorem signed_tangent_ratio (request : ℕ → FullPoint → Vec2) (L : Label B
   rw [SignedWaveUpdate.coefficientBlock_velocity, SignedWaveUpdate.coefficientBlock_velocity,
     signed_common_amplitude_ratio request L n hx j]
   simp only [PeriodizedWaveBounds.CopyData.common,
-    CorrectionStep.PeriodizedSignedParameters.copyData,
+      CorrectionStep.PeriodizedSignedParameters.copyData,
     ActualSignedStageControls.parameters, LinearWaveBounds.WaveCoefficients.withCutoff,
     cutAmplitude, Pi.smul_apply, Complex.real_smul,
     ← mul_assoc, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
@@ -270,7 +282,7 @@ theorem primary_cross_zero (n : ℕ) {x : Point}
     (Y : TorusInverse.Plane) (theta : ℝ) (i : Fin 2) :
     (ActualInitialization.tangentBlock l).oscillation n ((x.1, (x.2.1, Y)), theta) 0 *
       (ActualInitialization.tangentBlock m).oscillation n ((x.1, (x.2.1, Y)), theta) i.succ = 0 :=
-        by
+          by
   rw [primary_mode_view n hx, primary_mode_view n hx]
   have hz := viewTangent_cross_zero n hx hlm Y theta i
   calc
@@ -342,25 +354,34 @@ theorem primary_diagonal_average (n : ℕ) {x : Point}
 
 /-! ## The literal requested field and its finite covariance sum -/
 
+/-- Actual request, constructed using `LocalSignedRequest.fullRequest`. -/
 noncomputable def actualRequest (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) : ℕ → FullPoint → Vec2 :=
   LocalSignedRequest.fullRequest ActualInitialization.geometry.strip
     ActualInitialization.geometry.patch ActualInitialization.geometry.coord c u
 
+/-- Actual signed block, given by `(ActualSignedStageControls.parameters l).tangentBlock
+ActualInitialization.geometry.strip (actualRequest c u)`. -/
 noncomputable def actualSignedBlock (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) (l : Label B N0 × Fin 2) :=
   (ActualSignedStageControls.parameters l).tangentBlock ActualInitialization.geometry.strip
     (actualRequest c u)
 
+/-- Actual primary field, given by `LabelSumBounds.fieldSum (activeLabels standardRegion B N0)
+(fun l => (ActualInitialization.tangentBlock l).oscillation)`. -/
 noncomputable def actualPrimaryField (B N0 : ℕ) : CorrectionState.Oscillation Point :=
   LabelSumBounds.fieldSum (activeLabels standardRegion B N0)
     (fun l => (ActualInitialization.tangentBlock l).oscillation)
 
+/-- Actual signed field, given by `LabelSumBounds.fieldSum (activeLabels standardRegion B N0)
+(fun l => (actualSignedBlock c u l).oscillation)`. -/
 noncomputable def actualSignedField (B N0 : ℕ) (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) : CorrectionState.Oscillation Point :=
   LabelSumBounds.fieldSum (activeLabels standardRegion B N0)
     (fun l => (actualSignedBlock c u l).oscillation)
 
+/-- Actual cross, given by `LabelSumBounds.symmetricCovariance (actualPrimaryField B N0)
+(actualSignedField B N0 c u)`. -/
 noncomputable def actualCross (B N0 : ℕ) (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) : LabelSumBounds.Tensor Point :=
   LabelSumBounds.symmetricCovariance (actualPrimaryField B N0) (actualSignedField B N0 c u)
@@ -388,7 +409,7 @@ theorem actual_cross_diagonal (c : CorrectionState.Context Point)
       (2 * signedRatio (actualRequest c u) l.1 n x l.2) *
         ((ActualInitialization.tangentBlock l).oscillation n ((x.1, (x.2.1, Y)), theta) 0 *
          (ActualInitialization.tangentBlock l).oscillation n ((x.1, (x.2.1, Y)), theta) i.succ) :=
-           by
+             by
   classical
   simp only [actualPrimaryField, actualSignedField, LabelSumBounds.fieldSum,
     actualSignedBlock_fiber c u _ n hx]
@@ -605,7 +626,7 @@ theorem cycle_cross_eq
     (hlabels : v.labels = activeLabels standardRegion B N0) :
     LabelSumBounds.symmetricCovariance
       (LabelSumBounds.fieldSum v.labels (fun l => (ActualInitialization.tangentBlock
-        l).oscillation))
+          l).oscillation))
       (LabelSumBounds.fieldSum v.labels
         (fun l => ((cycleParameters particular).signedTangent v c u l).oscillation)) =
       actualCross B N0 c ((cycleParameters particular).afterParticular v c u) := by
@@ -620,12 +641,12 @@ theorem cycle_requested_cross_tail
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2) :
     StateMomentBalances.meanBar (LabelSumBounds.symmetricCovariance
       (LabelSumBounds.fieldSum v.labels (fun l => (ActualInitialization.tangentBlock
-        l).oscillation))
+          l).oscillation))
       (LabelSumBounds.fieldSum v.labels
         (fun l => ((cycleParameters particular).signedTangent v c u l).oscillation)) 0 i.succ) n x =
       LocalSignedRequest.requestedStress ActualInitialization.geometry.patch
         ActualInitialization.geometry.coord c ((cycleParameters particular).afterParticular v c u)
-          n x i := by
+            n x i := by
   rw [cycle_cross_eq particular v c u hlabels]
   exact requested_cross_tail B N0 c _ hn hx i
 
@@ -636,7 +657,7 @@ theorem fixed_requested_cross_tail
     (hx : x ∈ ActualInitialization.geometry.strip.domain) (i : Fin 2) :
     StateMomentBalances.meanBar (LabelSumBounds.symmetricCovariance
       (LabelSumBounds.fieldSum v.labels (fun l => (ActualInitialization.tangentBlock
-        l).oscillation))
+          l).oscillation))
       (LabelSumBounds.fieldSum v.labels
         (fun l => ((ActualCycleParameters.fixedParameters B N0).signedTangent v c u l).oscillation))
           0 i.succ) n x =
@@ -662,7 +683,7 @@ theorem literal_requested_cross_tail (state : CycleState (Label B N0 × Fin 2))
             state.coefficients (commonContext B) state.state) n x i := by
   rw [parameters_eq_cycle]
   exact cycle_requested_cross_tail _ state.coefficients (commonContext B) state.state hlabels hn hx
-    i
+      i
 
 section Family
 
@@ -709,11 +730,11 @@ theorem family_defects_all_exponents (c : Context Point) (u : State Point) {σ �
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b c u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge c u).pressure
-      = u.pressure)
+        = u.pressure)
     (hθ : WeightedClasses.MeanClass ActualInitialization.geometry.strip (1 + σ - κ)
-      (u.thetaResidual c))
+        (u.thetaResidual c))
     (hz : WeightedClasses.MeanClass ActualInitialization.geometry.strip (1 + σ - κ)
-      (u.axialResidual c)) :
+        (u.axialResidual c)) :
     ∀ γ : ℝ,
       WeightedClasses.MeanClass ActualInitialization.geometry.strip γ
         (StateMomentBalances.meanBar (SignedMeanGain.crossTensor f a 0 1) -

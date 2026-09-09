@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderEquation
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderForwardSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
 
 /-!
 # The profile estimate belongs to the actual unnormalized PDE solution
@@ -19,6 +17,9 @@ The weighted construction is exactly division of the genuine solution with
 physical forcing g f by g. This is an algebraic identity of continuous paths;
 it does not differentiate g or introduce its extrema into any estimate.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,9 +36,9 @@ variable (period : ℝ) [Fact (0 < period)]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-  (f : C(Icc (0 : ℝ) T,Supported period E S hS)) (a₀ : Supported period U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+  (f : C(Icc (0 : ℝ) T, Supported period E S hS)) (a₀ : Supported period U S hS)
 
 /-- The normalized coordinate estimate is for this exact raw Duhamel solution. -/
 theorem coordinates_weight_eq :
@@ -67,7 +68,7 @@ theorem velocity_weight_eq :
 full-cylinder orbit of the actual physical solution. -/
 theorem normalized_full_velocity_eq :
     normalize g hg (includePath period S hS (velocity period S hS T hT Q Q₁ c hc hQ (weight g f)
-      a₀)) =
+        a₀)) =
       includePath period S hS (normalizedVelocity period T hT S hS Q Q₁ c hc hQ g hg f a₀) := by
   rw [velocity_weight_eq,include_weight,normalize_weight]
 

@@ -7,12 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryDifference
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! Uniform bounds for actual cutoff difference quotients from classical derivative bounds. -/
 
 @[expose] public section
 
-/-! Uniform bounds for actual cutoff difference quotients from classical derivative bounds. -/
 
 noncomputable section
 
@@ -102,6 +102,8 @@ theorem differenceQuotient_support (χ : Cutoff) (R : ℝ)
       image_eq_zero_of_notMem_tsupport hyout, sub_self, mul_zero]
   exact hx hzero
 
+/-- Cutoff difference constant, given by `3 * cutoffCurlConstant * (M₁ + M₂ * (volume
+(Metric.closedBall (0 : Space) (R+1))).toReal ^ (1/3 : ℝ))`. -/
 def cutoffDifferenceConstant (R M₁ M₂ : ℝ) : ℝ :=
   3 * cutoffCurlConstant *
     (M₁ + M₂ * (volume (Metric.closedBall (0 : Space) (R+1))).toReal ^ (1/3 : ℝ))
@@ -134,7 +136,7 @@ theorem cutoffBound_differenceQuotient (χ : Cutoff) (R M₁ M₂ : ℝ)
   simp only [ENNReal.toReal_top, div_zero, Real.rpow_zero, mul_one] at h₀
   have h₁ := lpNorm_le_bound_volume (fderiv ℝ (χ.differenceQuotient a h).field)
     (((χ.differenceQuotient a h).smooth.fderiv_right (m := ∞) (by
-      simp)).continuous.aestronglyMeasurable)
+        simp)).continuous.aestronglyMeasurable)
     K hK (M₂ * ‖a‖) (mul_nonneg hM₂ (norm_nonneg a)) hdb hdz 3
   norm_num only [ENNReal.toReal_ofNat] at h₁
   unfold cutoffBound

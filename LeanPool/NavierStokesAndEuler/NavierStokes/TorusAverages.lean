@@ -9,13 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothFourierData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothLoop
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseCovariance
-public import Mathlib.MeasureTheory.Measure.Haar.Unique
-public import Mathlib.Dynamics.Ergodic.MeasurePreserving
-public import Mathlib.MeasureTheory.Group.FundamentalDomain
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 /-!
 # Actual torus and native-coordinate averages
@@ -23,6 +18,9 @@ public import Mathlib.MeasureTheory.Function.LocallyIntegrable
 The integer covering is treated as an actual surjective additive homomorphism
 of the compact torus. Haar invariance is a conclusion, not an assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,9 +31,9 @@ namespace NavierStokes.TorusAverages
 
 open TorusInverse SmoothFourierData
 
-local instance : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
+local instance instTorusAverages1 : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
 
-local instance : Measure.IsAddHaarMeasure torusMeasure := by
+local instance instTorusAverages2 : Measure.IsAddHaarMeasure torusMeasure := by
   unfold torusMeasure
   infer_instance
 
@@ -43,12 +41,14 @@ local instance planeVolumeHaar : Measure.IsAddHaarMeasure (volume : Measure Plan
   change Measure.IsAddHaarMeasure ((volume : Measure ℝ).prod (volume : Measure ℝ))
   infer_instance
 
+/-- Quotient point, given by `((z.1 : UnitAddCircle), (z.2 : UnitAddCircle))`. -/
 noncomputable def quotientPoint (z : Plane) : Torus := ((z.1 : UnitAddCircle), (z.2 :
-  UnitAddCircle))
+    UnitAddCircle))
 
 /-- The manuscript's real covering matrix `[[3,1],[1,5]]`. -/
 noncomputable def covering (z : Plane) : Plane := (3 * z.1 + z.2, z.1 + 5 * z.2)
 
+/-- Torus covering, bundling `toFun`, `map_zero`, `map_add`. -/
 noncomputable def torusCovering : Torus →+ Torus where
   toFun z := ((3 : ℕ) • z.1 + z.2, z.1 + (5 : ℕ) • z.2)
   map_zero' := by simp
@@ -108,6 +108,7 @@ theorem integral_torusCovering_iterate {V : Type*} [NormedAddCommGroup V]
   have hp := torusCovering_measurePreserving.iterate n
   rw [← integral_map hp.measurable.aemeasurable hf.aestronglyMeasurable, hp.map_eq]
 
+/-- Square average, given by `∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)`. -/
 noncomputable def squareAverage {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (f : Plane → V) : V := ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)
 
@@ -148,6 +149,7 @@ theorem squareAverage_covering_iterate_real {f : Plane → ℝ}
 
 /-! ## Lattice periodization and its actual integral -/
 
+/-- Lattice point, given by `((k.1 : ℝ), (k.2 : ℝ))`. -/
 noncomputable def latticePoint (k : Frequency) : Plane := ((k.1 : ℝ), (k.2 : ℝ))
 
 theorem latticePoint_add (k l : Frequency) :
@@ -219,6 +221,7 @@ theorem latticeTranslate_unique {s : Set Plane} (hs : InjOn quotientPoint s)
   apply add_right_cancel (b := z)
   exact hs hk hl (by rw [quotientPoint_lattice_add, quotientPoint_lattice_add])
 
+/-- The `AddAction Frequency Plane` structure used in torus averages. -/
 local instance latticeAddAction : AddAction Frequency Plane where
   vadd k z := latticePoint k + z
   zero_vadd z := by
@@ -228,14 +231,16 @@ local instance latticeAddAction : AddAction Frequency Plane where
     change latticePoint (k + l) + z = latticePoint k + (latticePoint l + z)
     simp [latticePoint, Prod.add_def, add_assoc]
 
-local instance : MeasurableVAdd Frequency Plane where
+local instance instTorusAverages3 : MeasurableVAdd Frequency Plane where
   measurable_const_vadd _ := measurable_const.add measurable_id
   measurable_vadd_const _ := measurable_of_countable _
 
-local instance : VAddInvariantMeasure Frequency Plane (volume : Measure Plane) where
+local instance instTorusAverages4 : VAddInvariantMeasure Frequency Plane (volume : Measure Plane)
+    where
   measure_preimage_vadd k s _ :=
     measure_preimage_add (volume : Measure Plane) (latticePoint k) s
 
+/-- Fundamental square, given by `Ico (0 : ℝ) 1 ×ˢ Ico (0 : ℝ) 1`. -/
 noncomputable def fundamentalSquare : Set Plane := Ico (0 : ℝ) 1 ×ˢ Ico (0 : ℝ) 1
 
 /-- The half-open unit square is proved to tile the plane, using integer floors. -/
@@ -495,7 +500,7 @@ theorem det_slotLinearMap (vr vt : Plane) :
 noncomputable def slotChart (vr vt : Plane) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) :
     Plane ≃L[ℝ] Plane :=
   ((slotLinearMap vr vt).equivOfDetNeZero ((det_slotLinearMap vr vt).trans_ne
-    hdet)).toContinuousLinearEquiv
+      hdet)).toContinuousLinearEquiv
 
 theorem slotChart_apply (vr vt : Plane) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (z : Plane) :
     slotChart vr vt hdet z = z.1 • vr + z.2 • vt := slotLinearMap_apply vr vt z
@@ -649,7 +654,7 @@ theorem angularMean_cos_sq_harmonic (j : ℤ) (hj : j ≠ 0) (phase : ℝ) :
   rw [intervalIntegral.integral_comp_mul_add (fun θ => Real.cos θ ^ 2) hjR phase,
     integral_cos_sq]
   simp only [mul_zero, zero_add, hs, hc, smul_eq_mul]
-  field_simp [hjR, Real.pi_ne_zero] ; ring
+  field_simp [hjR, Real.pi_ne_zero]; ring
 
 theorem squareAverage_const_mul (c : ℝ) (f : Plane → ℝ) :
     squareAverage (fun z => c * f z) = c * squareAverage f := by

@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialInvariance
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
+
+/-! Compact high profiles and angle-independent means make the exterior nonlinear forcing constant
+in angle. -/
 
 @[expose] public section
 
-/-! Compact high profiles and angle-independent means make the exterior nonlinear forcing constant
-  in angle. -/
 
 noncomputable section
 
@@ -20,6 +22,7 @@ namespace EulerPacketCylinderField
 
 open Set Finset EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion EulerFiniteGrades
 
+/-- Prefix locality data, collecting `high_zero`, `corrector_zero`, `mean_angle`. -/
 structure PrefixLocality (T : ℝ) (p : ℕ) (a : ℕ → Profile) (S : Set Space) : Prop where
   high_zero : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ : ℝ,
     (a i).high (t,(x,θ)) = 0

@@ -7,19 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalReflection
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+
+/-! Genuine spatial reflection on the mean time Hilbert spaces. -/
 
 @[expose] public section
 
-/-! Genuine spatial reflection on the mean time Hilbert spaces. -/
 
 noncomputable section
 
 namespace EulerMeanTimeReflection
 
 open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerMeanSolenoidal
-  EulerTimeLp EulerTerminalTimePrimitive EulerTimeLpBoundedMap EulerTimeH1Reconstruction
+  EulerTimeLp EulerTerminalTimePrimitive EulerTimeLpBoundedMap
 
 /-- Reflection restricted to the actual ordinary solenoidal subspace. -/
 def solenoidalReflection : solenoidalSpace →ₗᵢ[ℝ] solenoidalSpace where
@@ -34,9 +34,11 @@ def solenoidalReflection : solenoidalSpace →ₗᵢ[ℝ] solenoidalSpace where
     solenoidalReflection (solenoidalReflection u) = u :=
   Subtype.ext (reflection_involutive (u : L2))
 
+/-- Time reflection, given by `timeLiftIsometry T reflection`. -/
 def timeReflection (T : ℝ) : TimeLp T L2 →ₗᵢ[ℝ] TimeLp T L2 :=
   timeLiftIsometry T reflection
 
+/-- Time solenoidal reflection, given by `timeLiftIsometry T solenoidalReflection`. -/
 def timeSolenoidalReflection (T : ℝ) :
     TimeLp T solenoidalSpace →ₗᵢ[ℝ] TimeLp T solenoidalSpace :=
   timeLiftIsometry T solenoidalReflection

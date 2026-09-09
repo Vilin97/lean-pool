@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarTime
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! Equality of actual cylinder L² slices identifies their continuous representatives everywhere. -/
 
 @[expose] public section
 
-/-! Equality of actual cylinder L² slices identifies their continuous representatives everywhere. -/
 
 noncomputable section
 
@@ -24,7 +26,7 @@ variable (P : ℝ) [Fact (0 < P)]
   {K L : Type*} [TopologicalSpace K] [CompactSpace K]
   [TopologicalSpace L] [CompactSpace L]
 
-theorem pointField_eq_of_slice_eq (p : C(K,LiftL2 P)) (q : C(L,LiftL2 P))
+theorem pointField_eq_of_slice_eq (p : C(K, LiftL2 P)) (q : C(L, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p))
     (hq : ContDiff ℝ ∞ (fun a => pathTranslate P a q))
     (t : K) (s : L) (he : p t = q s) : pointField P p hp t = pointField P q hq s := by
@@ -34,7 +36,7 @@ theorem pointField_eq_of_slice_eq (p : C(K,LiftL2 P)) (q : C(L,LiftL2 P))
     (smoothField_continuous P _ (pointField_smooth P p hp t))
     (smoothField_continuous P _ (pointField_smooth P q hq s))
 
-theorem scalarPointField_eq_of_slice_eq (p : C(K,CylinderL2 P ℝ)) (q : C(L,CylinderL2 P ℝ))
+theorem scalarPointField_eq_of_slice_eq (p : C(K, CylinderL2 P ℝ)) (q : C(L, CylinderL2 P ℝ))
     (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p))
     (hq : ContDiff ℝ ∞ (fun a => pathTranslate P a q))
     (t : K) (s : L) (he : p t = q s) : scalarPointField P p hp t = scalarPointField P q hq s := by

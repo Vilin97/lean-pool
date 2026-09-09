@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTailLinearBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTailNonlinearBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketResidualTailFields
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketTailLinearBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketTailNonlinearBounds
+
+/-! Each surviving grade of the literal packet residual has a fixed-radius estimate. -/
 
 @[expose] public section
 
-/-! Each surviving grade of the literal packet residual has a fixed-radius estimate. -/
 
 noncomputable section
 
@@ -21,7 +26,7 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
   EulerPacketTimeProfile EulerPacketShiftArithmetic EulerParameterWordGevrey
 
 variable {P T : ℝ} [Fact (0 < P)] {N : ℕ} {a : ℕ → Profile}
-  {F : PrefixFields P T (N+1) a} {hT : 0 ≤ T}
+  {F : PrefixFields P T (N + 1) a} {hT : 0 ≤ T}
   {S : Scales (Icc (0 : ℝ) T)} {R : ℝ} (B : PrefixBound F hT S R)
   {O : Operators} {C : CoefficientData P T O} (BC : CoefficientBudget C)
 
@@ -29,12 +34,12 @@ include B
 
 theorem tail_grade_bound (hTime : 0 < T) (hN : 1 ≤ N) (hR : 1 ≤ R)
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
-    {corrector_t : VectorField} (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hTime.le (F.corrector N (by omega)) Ct)
+    {correctorT : VectorField} (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hTime.le (F.corrector N (Nat.lt_succ_self N)) Ct)
     (pressure : Field P T (pressureGradient (a N).highPressure))
     (hCtB : (Ct.normalized hT (S.high N) (S.high_pos N)).WordBound 6 R 1 (highShift N))
     (hpB : (pressure.normalized hT (S.high N) (S.high_pos N)).WordBound 6 R 1 (highShift N))
-    (ha : a 0=0) (hb : (a 1).mean=0) (n : ℕ) (hn : N+1 ≤ n) :
+    (ha : a 0 = 0) (hb : (a 1).mean = 0) (n : ℕ) (hn : N + 1 ≤ n) :
     (F.tailGradeField C hTime Ct hCt pressure ha n hn).WordBound 6 R
       ((1+18*((N+2 : ℕ) : ℝ)^2)*BC.termCost*S.H0^(2*n+2)) (110*(n+1)) := by
   have hc : (a 0).corrector=0 := by rw [ha]; rfl

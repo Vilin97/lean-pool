@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentStageHorizon
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
 
 /-! The next literal activation and horizon are constructed from the
 current actual frame. Restriction preserves the actual Euler state,
 low bounds and frame before the next packet is added. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,11 +29,14 @@ open Set Real EulerSmoothLimit EulerParentPacketFrames EulerPacketSourceGeometry
 
 variable {c B : ℝ} {S : Scales c B} {n : ℕ} (P : Stage S n)
 
+/-- Step, given by `stepLength S.J S.X (fun _ => P.frame.a) (fun _ => P.frame.sigma^2) n`. -/
 def step : ℝ :=
   stepLength S.J S.X (fun _ => P.frame.a) (fun _ => P.frame.sigma^2) n
 
+/-- Next time, given by `P.time+P.step`. -/
 def nextTime : ℝ := P.time+P.step
 
+/-- Next horizon, given by `P.nextTime+2*timeWidth S.J S.X (n+1)`. -/
 def nextHorizon : ℝ := P.nextTime+2*timeWidth S.J S.X (n+1)
 
 theorem step_bounds : timeWidth S.J S.X n/6 ≤ P.step ∧
@@ -89,15 +96,23 @@ theorem physical_target_eq_nextTime :
     P.coupling_pos.le (sq_nonneg _) rfl P.frame_shear
     (sqrt_sq P.sigma_nonneg).symm
 
+/-- Restricted parent, given by `P.parent.restrictTime P.nextHorizon P.nextHorizon_pos
+P.nextHorizon_le`. -/
 def restrictedParent : Parent :=
   P.parent.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le
 
+/-- Restricted state, given by `P.state.restrictTime P.nextHorizon P.nextHorizon_pos
+P.nextHorizon_le`. -/
 def restrictedState : SmoothState P.restrictedParent :=
   P.state.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le
 
+/-- Restricted low, given by `P.low.restrictTime P.nextHorizon P.nextHorizon_pos
+P.nextHorizon_le`. -/
 def restrictedLow : LowBounds P.restrictedParent :=
   P.low.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le
 
+/-- Restricted frame, given by `P.frame.restrictTime P.nextHorizon P.nextHorizon_pos
+P.nextHorizon_le P.time_nonneg`. -/
 def restrictedFrame : ParentFrame (frameData P.restrictedParent) P.time :=
   P.frame.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le P.time_nonneg
 

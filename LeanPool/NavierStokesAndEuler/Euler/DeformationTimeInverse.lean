@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketNormalTimeMap
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+
+/-! Genuine time derivatives of the inverse deformation and its transported normal. -/
 
 @[expose] public section
 
-/-! Genuine time derivatives of the inverse deformation and its transported normal. -/
 
 noncomputable section
 
@@ -19,9 +22,14 @@ namespace EulerDeformationTime
 
 open Set ContinuousLinearMap EulerSmoothLimit
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instDeformationTimeInverse1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instDeformationTimeInverse2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
+/-- Inverse unit, bundling `val`, `inv`, `val_inv`, `inv_val`. -/
 def inverseUnit (F G : Space →L[ℝ] Space)
     (hFG : F.comp G = ContinuousLinearMap.id ℝ Space)
     (hGF : G.comp F = ContinuousLinearMap.id ℝ Space) : (Space →L[ℝ] Space)ˣ where
@@ -53,6 +61,7 @@ theorem inverse_strain_hasDerivWithinAt (s : Set ℝ) (t : ℝ) (ht : t ∈ s)
   have h := inverse_hasDerivWithinAt s t ht F G (M.comp (F t)) hFG hGF hF
   rwa [ContinuousLinearMap.comp_assoc M (F t) (G t), hFG t ht, ContinuousLinearMap.comp_id] at h
 
+/-- Adjoint vector as an element of `(Space →L[ℝ] Space) →L[ℝ] Space`. -/
 def adjointVector (m₀ : Space) : (Space →L[ℝ] Space) →L[ℝ] Space :=
   (ContinuousLinearMap.apply ℝ Space m₀).comp
     (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap

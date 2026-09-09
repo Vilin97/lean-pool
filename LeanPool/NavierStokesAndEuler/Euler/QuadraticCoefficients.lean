@@ -7,10 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.QuadraticSource
+public import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Continuous coefficient data for the correction source, with proved uniform ball bounds. -/
 
 @[expose] public section
 
-/-! Continuous coefficient data for the correction source, with proved uniform ball bounds. -/
 
 noncomputable section
 
@@ -25,9 +32,13 @@ variable {X Y T : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 /-- Actual continuous data for the pressure-projected quadratic source. -/
 structure Coefficients (T : Type*) [TopologicalSpace T] (X Y : Type*)
     [NormedAddCommGroup X] [NormedSpace ℝ X] [NormedAddCommGroup Y] [NormedSpace ℝ Y] where
+  /-- Projection of `Coefficients`, of type `C(T, Y →L[ℝ] Y)`. -/
   projection : C(T, Y →L[ℝ] Y)
+  /-- Forcing of `Coefficients`, of type `C(T, Y)`. -/
   forcing : C(T, Y)
+  /-- Linear of `Coefficients`, of type `C(T, X →L[ℝ] Y)`. -/
   linear : C(T, X →L[ℝ] Y)
+  /-- Quadratic of `Coefficients`, of type `C(T, X →L[ℝ] X →L[ℝ] Y)`. -/
   quadratic : C(T, X →L[ℝ] X →L[ℝ] Y)
 
 /-- Evaluate the genuine projected source. -/
@@ -38,20 +49,22 @@ def Coefficients.apply (C : Coefficients T X Y) (t : T) (u : X) : Y :=
 theorem Coefficients.continuous (C : Coefficients T X Y) :
     Continuous (fun p : T × X => C.apply p.1 p.2) :=
   source_continuous _ _ _ _ C.projection.continuous C.forcing.continuous C.linear.continuous
-    C.quadratic.continuous
+      C.quadratic.continuous
 
 /-- Restrict coefficient data along any continuous parameter map. -/
-def Coefficients.comp {U : Type*} [TopologicalSpace U] (C : Coefficients T X Y) (f : C(U,T)) :
-  Coefficients U X Y where
+def Coefficients.comp {U : Type*} [TopologicalSpace U] (C : Coefficients T X Y) (f : C(U, T)) :
+    Coefficients U X Y where
   projection := C.projection.comp f
   forcing := C.forcing.comp f
   linear := C.linear.comp f
   quadratic := C.quadratic.comp f
 
 @[simp] theorem Coefficients.comp_apply {U : Type*} [TopologicalSpace U]
-    (C : Coefficients T X Y) (f : C(U,T)) (t : U) (u : X) : (C.comp f).apply t u = C.apply (f t) u
-      := rfl
+    (C : Coefficients T X Y) (f : C(U, T)) (t : U) (u : X) : (C.comp f).apply t u = C.apply (f t) u
+        := rfl
 
+/-- Cache the standard `SeminormedAddCommGroup (X →L[ℝ] X →L[ℝ] Y)` instance to shorten
+typeclass synthesis. -/
 local instance nestedGroup : SeminormedAddCommGroup (X →L[ℝ] X →L[ℝ] Y) := inferInstance
 
 variable [CompactSpace T]
@@ -70,7 +83,8 @@ theorem Coefficients.ballBound_nonneg (C : Coefficients T X Y) (R : ℝ) (hR : 0
 theorem Coefficients.ballLipschitz_nonneg (C : Coefficients T X Y) (R : ℝ) (hR : 0 ≤ R) :
     0 ≤ C.ballLipschitz R := by unfold Coefficients.ballLipschitz; positivity
 
-/-- The uniform source bound follows from actual operator norms, with no assumed nonlinear estimate. -/
+/-- The uniform source bound follows from actual operator norms, with no assumed nonlinear estimate.
+-/
 theorem Coefficients.apply_bound (C : Coefficients T X Y) (R : ℝ) (hR : 0 ≤ R)
     (t : T) (u : X) (hu : ‖u‖ ≤ R) : ‖C.apply t u‖ ≤ C.ballBound R :=
   source_uniform_bound _ _ _ _ _ _ _ _ R

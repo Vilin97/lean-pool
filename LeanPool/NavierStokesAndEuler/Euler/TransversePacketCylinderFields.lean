@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorSupport
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorSupport
+
+/-! Actual cylinder-path witnesses for the constructed transverse solution and corrector. -/
 
 @[expose] public section
 
-/-! Actual cylinder-path witnesses for the constructed transverse solution and corrector. -/
 
 noncomputable section
 
@@ -24,6 +27,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
+/-- Vector field, bundling `path`, `orbit`, `raw_eq`. -/
 def vectorField : Field P D.T (G.vector I) where
   path := G.fullVelocityPath I
   orbit := G.velocityPath_orbit I
@@ -32,6 +36,7 @@ def vectorField : Field P D.T (G.vector I) where
       (D.clamp t) (x,(θ : AddCircle P)) = _
     rw [Data.clamp_coe]
 
+/-- Vector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
 def vectorDerivativeField : Field P D.T (G.vectorDerivative I) where
   path := G.fullDerivativePath I
   orbit := G.derivativePath_orbit I
@@ -41,9 +46,10 @@ def vectorDerivativeField : Field P D.T (G.vectorDerivative I) where
     rw [Data.clamp_coe]
 
 theorem vectorField_time : TimeDerivative D.T_pos.le (G.vectorField I) (G.vectorDerivativeField I)
-  :=
+    :=
   G.fullVelocityPath_time I
 
+/-- Corrector field, bundling `path`, `orbit`, `raw_eq`. -/
 def correctorField : Field P D.T (G.corrector I) where
   path := G.correctorPath I
   orbit := G.correctorPath_orbit I
@@ -52,6 +58,7 @@ def correctorField : Field P D.T (G.corrector I) where
       (D.clamp t) (x,(θ : AddCircle P)) = _
     rw [Data.clamp_coe]
 
+/-- Corrector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
 def correctorDerivativeField : Field P D.T (G.correctorDerivative I) where
   path := G.correctorTimePath I
   orbit := G.correctorTimePath_orbit I

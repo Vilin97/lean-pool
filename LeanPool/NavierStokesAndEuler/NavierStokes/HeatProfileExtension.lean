@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialHeatProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BorelExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EndpointExtension
 
-@[expose] public section
-
 /-!
 # A genuine smooth extension of the radial heat profile
 
@@ -21,6 +19,9 @@ these jets on the negative side. Gluing the two branches preserves the actual
 heat profile on the entire nonnegative half-line and gives a globally smooth
 function. No kernel formula at a negative argument is used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -245,6 +246,7 @@ theorem scaledProfile_sub_one_bound {a : ℝ} (ha : 1 < a) {X : ℝ} (hX : 0 < X
       rw [abs_div, abs_mul, abs_of_pos hX, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
       ring
 
+/-- Physical profile, given by `scaledProfile a X (1 - η ^ 2)`. -/
 noncomputable def physicalProfile (a X η : ℝ) : ℝ := scaledProfile a X (1 - η ^ 2)
 
 /-- The physical profile now has an ordinary smooth neighborhood beyond

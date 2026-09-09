@@ -10,10 +10,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialJet
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAdvection
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 
+/-! The literal linear, pressure and nonlinear jet expressions have actual cylinder-path witnesses.
+-/
+
 @[expose] public section
 
-/-! The literal linear, pressure and nonlinear jet expressions have actual cylinder-path witnesses.
-  -/
 
 noncomputable section
 
@@ -27,6 +28,8 @@ namespace SpatialJetField
 
 variable {P T : ℝ} [Fact (0 < P)] {J K : Domain → VectorJet}
 
+/-- Slow advection as an element of `Field P T (fun z => EulerPacketPointJets.slowAdvection
+(inverse z) (J z) (K z))`. -/
 def slowAdvection {inverse : Domain → Space →L[ℝ] Space}
     (A : MatrixCoefficient T inverse) (G : SpatialJetField P T J) (H : SpatialJetField P T K) :
     Field P T (fun z => EulerPacketPointJets.slowAdvection (inverse z) (J z) (K z)) :=
@@ -36,6 +39,8 @@ def slowAdvection {inverse : Domain → Space →L[ℝ] Space}
     rw [G.value_eq]
     exact H.spatial_eq t x θ (inverse (t,(x,θ)) (G.raw (t,(x,θ))),0))
 
+/-- Fast advection as an element of `Field P T (fun z => EulerPacketPointJets.fastAdvection
+(normal z) (J z) (K z))`. -/
 def fastAdvection {normal : VectorField} (N : VectorCoefficient T normal)
     (G : SpatialJetField P T J) (H : SpatialJetField P T K) :
     Field P T (fun z => EulerPacketPointJets.fastAdvection (normal z) (J z) (K z)) :=
@@ -57,6 +62,7 @@ namespace Field
 
 variable {P T : ℝ} [Fact (0 < P)]
 
+/-- Slow pressure, given by `(A.adjoint.multiply G).congr (fun _ _ _ => rfl)`. -/
 def slowPressure {inverse : Domain → Space →L[ℝ] Space}
     (A : MatrixCoefficient T inverse) (p : ScalarField) (G : Field P T (pressureGradient p)) :
     Field P T (fun z => EulerPacketPointJets.slowPressure (inverse z) (pressureJet p z)) :=

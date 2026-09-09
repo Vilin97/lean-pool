@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
-public import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
+import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
+
+/-! The actual cylinder heat kernel in the singular Volterra existence theorem. -/
 
 @[expose] public section
 
-/-! The actual cylinder heat kernel in the singular Volterra existence theorem. -/
 
 noncomputable section
 
@@ -58,7 +59,7 @@ theorem heatKernel_joint_continuous (q : ℕ) (ν : ℝ) (hν : 0 < ν) :
 
 /-- The free viscous heat evolution is an actual continuous path in every Sobolev space. -/
 def freeHeatPath (q : ℕ) (ν T : ℝ) (u₀ : SobolevSpace period q) : C(Icc (0 : ℝ) T, SobolevSpace
-  period q) where
+    period q) where
   toFun t := heatOperator period q (2 * ν * t.val).toNNReal u₀
   continuous_toFun := (heatOperator_continuous period u₀).comp
     (continuous_real_toNNReal.comp (continuous_const.mul continuous_subtype_val))
@@ -70,7 +71,8 @@ theorem freeHeatPath_bound (q : ℕ) (ν T : ℝ) (u₀ : SobolevSpace period q)
   intro t
   exact heatOperator_bound period _ u₀
 
-/-- The actual viscous heat equation has a local mild solution for every continuous locally Lipschitz derivative-losing source satisfying the explicit time budget. -/
+/-- The actual viscous heat equation has a local mild solution for every continuous locally
+Lipschitz derivative-losing source satisfying the explicit time budget. -/
 theorem exists_viscous_mild_solution (q : ℕ) (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 ≤ T)
     (u₀ : SobolevSpace period (q + 1))
     (F : Icc (0 : ℝ) T → SobolevSpace period (q + 1) → SobolevSpace period q)

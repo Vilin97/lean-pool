@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Constants supplied by the compactly supported comparison solution
@@ -18,6 +18,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 These bounds are consequences of joint smoothness and one fixed compact
 spatial support. They impose no condition on the competing solution.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

@@ -9,12 +9,17 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalL2Scaling
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Concrete smooth L² fields obtained from the periodic cover, its
 oscillating graph, a linear projection and the physical label dilation.
 The resulting bounds apply to the literal derivatives of those fields. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,6 +45,7 @@ theorem HasJetBound.map_contracting {A : SmoothL2Field V} {C R : ℝ}
   exact (norm_jetLp_map_le L A n).trans ((mul_le_mul_of_nonneg_right hL (norm_nonneg _)).trans
     (by simpa only [one_mul] using h n))
 
+/-- Scale field, bundling `field`, `smooth`, `integrable`. -/
 def scaleField (ell : ℝ) (hell : 0 < ell) (A : SmoothL2Field V) : SmoothL2Field V where
   field := scale ell A.field
   smooth := scale_contDiff ell A.field A.smooth
@@ -66,11 +72,11 @@ theorem HasJetBound.scale {A : SmoothL2Field V} {C R : ℝ}
 
 theorem scale_sup_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (f : Space → V) (hf : ContDiff ℝ ∞ f) (B R : ℝ)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (scale ell f) x‖ ≤ B*(ell⁻¹*R)^n*(n.factorial : ℝ)^2 := by
-  rw [iteratedFDeriv_scale ell f hf,norm_smul,Real.norm_of_nonneg (by positivity : 0 ≤
-    ell*(ell⁻¹)^n)]
+  rw [iteratedFDeriv_scale ell f hf,norm_smul,Real.norm_of_nonneg (by
+      positivity : 0 ≤ ell*(ell⁻¹)^n)]
   have hscale : ell*(ell⁻¹)^n ≤ (ell⁻¹)^n := by
     simpa only [one_mul] using
       mul_le_mul_of_nonneg_right hell1 (pow_nonneg (inv_nonneg.mpr hell.le) n)
@@ -92,12 +98,13 @@ open scoped ContDiff
 variable {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
   (P : ℝ) [Fact (0 < P)] (f : LiftTangent → V)
-  (hperiod : ∀ (c : AddSubgroup.zmultiples P) z, f (z.1,(c : ℝ)+z.2)=f z)
+  (hperiod : ∀ (c : AddSubgroup.zmultiples P) z, f (z.1, (c : ℝ) + z.2) = f z)
   (hf : ContDiff ℝ ∞ f) (k : ℝ) (m : Vector3) (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
   (hLp : ∀ n, MemLp (fun q => jetSeries P f q n) 2 (liftMeasure P))
   (hn : ∀ n, (eLpNorm (fun q => jetSeries P f q n) 2 (liftMeasure P)).toReal ≤
-    C*R^n*(n.factorial : ℝ)^2)
+    C * R ^ n * (n.factorial : ℝ) ^ 2)
 
+/-- Graph field, bundling `field`, `smooth`, `integrable`. -/
 def graphField : SmoothL2Field V where
   field := f ∘ graphMap k m
   smooth := hf.comp (graphMap k m).contDiff
@@ -110,6 +117,8 @@ theorem graphField_bound :
   rw [norm_jetLp]
   exact (graph_Lp_bound P f hperiod hf k m C R hC hR hLp hn n).2
 
+/-- Physical field, given by `scaleField ell hell (mapField L (graphField P f hperiod hf k m C R
+hC hR hLp hn))`. -/
 def physicalField (ell : ℝ) (hell : 0 < ell) (L : V →L[ℝ] W) : SmoothL2Field W :=
   scaleField ell hell (mapField L (graphField P f hperiod hf k m C R hC hR hLp hn))
 
@@ -126,7 +135,7 @@ theorem physicalField_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
 
 theorem physicalField_sup_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (L : V →L[ℝ] W) (hL : ‖L‖ ≤ 1) (B S : ℝ)
-    (hb : ∀ n z, ‖iteratedFDeriv ℝ n f z‖ ≤ B*S^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n z, ‖iteratedFDeriv ℝ n f z‖ ≤ B * S ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (x : Vector3) :
     ‖iteratedFDeriv ℝ n (physicalField P f hperiod hf k m C R hC hR hLp hn ell hell L).field x‖ ≤
       B*(ell⁻¹*(S*graphFactor k m))^n*(n.factorial : ℝ)^2 := by

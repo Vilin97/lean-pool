@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualGaussianCoverage
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalClassBounds
 
 /-!
 # Ordinary jets of the selected primary phase
@@ -20,6 +18,9 @@ values need not be bounded, but their positive derivatives have a uniform
 bound.  The remaining expression has polynomial slow jets on the same
 native phase cells used to construct the primary waves.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -56,22 +57,26 @@ theorem norm_positive_jet_affine {E F : Type*}
 
 variable {B N0 : ℕ}
 
+/-- Signed label: an abbreviation for `ActualPrimaryBounds.SignedLabel B N0`. -/
 abbrev SignedLabel (B N0 : ℕ) := ActualPrimaryBounds.SignedLabel B N0
 
 /-- Both signs share the actual, unmodified analytic phase cells. -/
 noncomputable def slowDomain : Domain (SignedLabel B N0) PhaseCalculus.Slow where
   scale l := ChartScales.S (BaseChartJets.cellBand l.2)
   carrier l := (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-    N0).prepared.N).carrier l.2
+      N0).prepared.N).carrier l.2
   isOpen l := (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-    N0).prepared.N).isOpen l.2
+      N0).prepared.N).isOpen l.2
   one_le_scale l := (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-    N0).prepared.N).one_le_scale l.2
+      N0).prepared.N).one_le_scale l.2
 
+/-- Jet domain, given by `slowDomain.slot (fun l => (ActualPrimary.phases B N0 l.1).V l.2) (fun
+l => (ActualPrimary.phases B N0 l.1).openV l.2)`. -/
 noncomputable def jetDomain : Domain (SignedLabel B N0) (PhaseCalculus.Slow × ℝ) :=
   slowDomain.slot (fun l => (ActualPrimary.phases B N0 l.1).V l.2)
     (fun l => (ActualPrimary.phases B N0 l.1).openV l.2)
 
+/-- Phase size, given by `(ActualPrimary.phases B N0 0).M + (ActualPrimary.phases B N0 1).M`. -/
 noncomputable def phaseSize (B N0 : ℕ) : ℝ :=
   (ActualPrimary.phases B N0 0).M + (ActualPrimary.phases B N0 1).M
 
@@ -98,9 +103,9 @@ theorem phase_constants_bound (l : SignedLabel B N0) :
 noncomputable def nativeRemainder (l : SignedLabel B N0) (z : PhaseCalculus.Slow × ℝ) : ℝ :=
   (ActualPrimary.phases B N0 l.1).phase.x0 l.2 * z.1.1 -
     z.2 * ((ActualPrimary.phases B N0 l.1).phase.p l.2 * (ActualPrimary.phases B N0 l.1).phase.F
-      l.2 z.1 +
+        l.2 z.1 +
       (ActualPrimary.phases B N0 l.1).phase.pz l.2 * (ActualPrimary.phases B N0 l.1).phase.G l.2
-        z.1)
+          z.1)
 
 /-- All orders follow from the actual constructed F/G jets and bounded
 native constants; this contains no phase-jet hypothesis. -/
@@ -119,11 +124,11 @@ theorem nativeRemainder_polynomial :
     PolynomialJets.const_uniform _ one_le_phaseSize
       (fun l => by simpa only [Real.norm_eq_abs] using (phase_constants_bound l).1)
   have hpz : PolynomialJets (D.slot V hV) (fun l _ => (ActualPrimary.phases B N0 l.1).phase.pz l.2)
-    :=
+      :=
     PolynomialJets.const_uniform _ one_le_phaseSize
       (fun l => by simpa only [Real.norm_eq_abs] using (phase_constants_bound l).2.1)
   have hx0 : PolynomialJets (D.slot V hV) (fun l _ => (ActualPrimary.phases B N0 l.1).phase.x0 l.2)
-    :=
+      :=
     PolynomialJets.const_uniform _ one_le_phaseSize
       (fun l => by simpa only [Real.norm_eq_abs] using (phase_constants_bound l).2.2)
   have hR : PolynomialJets D (fun _ (p : PhaseCalculus.Slow) => p.1) := by
@@ -132,7 +137,7 @@ theorem nativeRemainder_polynomial :
         (fun _ => 0) (m := 0) (one_le_phaseSize (B := B) (N0 := N0))
         (fun l p hp => by
           simpa only [ContinuousLinearMap.coe_fst', add_zero, pow_zero, mul_one, Real.norm_eq_abs]
-            using
+              using
             ((ActualPrimary.phases B N0 l.1).radius l.2 p hp).2.trans (signSize_le l.1)))
   have ht : PolynomialJets (D.slot V hV) (fun _ (z : PhaseCalculus.Slow × ℝ) => z.2) := by
     simpa only [ContinuousLinearMap.coe_snd', add_zero] using
@@ -149,6 +154,7 @@ theorem nativeRemainder_polynomial :
 
 /-! ## Ordinary pullback jets on the actual native copy -/
 
+/-- Copy index: an abbreviation for `SignedLabel B N0 × TorusInverse.Frequency`. -/
 abbrev CopyIndex (B N0 : ℕ) := SignedLabel B N0 × TorusInverse.Frequency
 
 /-- Only the genuine analytic cell and clock core are required.  In
@@ -212,7 +218,7 @@ theorem polynomial_copy_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace �
   have hscale : jetDomain.scale i.1 ≤ 25 * ChartScales.S n :=
     ActualSignedGeometry.S_window_le hx.1.1 (ActualPrimaryBounds.near_distance hx.1).2
   have hlin0 : ‖ActualPrimaryBounds.slotLinear i.1 n‖ ≤ ActualPrimaryBounds.copyCost *
-    ChartScales.S n := by
+      ChartScales.S n := by
     simpa only [slow_eq_S hx.1.1] using ActualPrimaryBounds.slotLinear_bound hx.1
   have hlin : ‖ActualPrimaryBounds.slotLinear i.1 n‖ ^ j ≤
       ActualPrimaryBounds.copyCost ^ m * ChartScales.S n ^ m := by
@@ -252,6 +258,7 @@ theorem nativeZ_norm : ‖nativeZ‖ ≤ 1 := by
   rw [one_mul]
   exact (norm_fst_le x.1.2).trans ((norm_snd_le x.1).trans (norm_fst_le x))
 
+/-- Phase linear as an element of `ActualPrimary.FullPoint →L[ℝ] ℝ`. -/
 noncomputable def phaseLinear (l : SignedLabel B N0) (n : ℕ) :
     ActualPrimary.FullPoint →L[ℝ] ℝ :=
   (ActualPrimary.phases B N0 l.1).phase.p l.2 •
@@ -260,11 +267,13 @@ noncomputable def phaseLinear (l : SignedLabel B N0) (n : ℕ) :
       ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand l.2)) •
       (nativeZ.comp (ActualPrimaryBounds.slotLinear l n))
 
+/-- Phase offset as an element of `ℝ`. -/
 noncomputable def phaseOffset (n : ℕ) (i : CopyIndex B N0) : ℝ :=
   ((ActualPrimary.phases B N0 i.1.1).phase.pz i.1.2 /
       ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand i.1.2)) *
     nativeZ (ActualPrimaryBounds.slotOfNative (ActualPrimaryBounds.copyPoint i.1 n i.2 0))
 
+/-- Local phase, constructed using `PhaseCalculus.phase`. -/
 noncomputable def localPhase (n : ℕ) (i : CopyIndex B N0) (x : ActualPrimary.FullPoint) : ℝ :=
   PhaseCalculus.phase (ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand i.1.2))
     ((ActualPrimary.phases B N0 i.1.1).phase.p i.1.2)
@@ -410,9 +419,9 @@ theorem localPhase_positive_jets (m : ℕ) :
           ((ActualPrimaryBounds.fullCopy i.1 n i.2 y).1,
             (ActualPrimaryBounds.fullCopy i.1 n i.2 y).2.2)) x‖ := norm_add_le _ _
     _ ≤ A * ChartScales.S n * (ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand
-      i.1.2))⁻¹ +
+        i.1.2))⁻¹ +
         C * ChartScales.S n ^ p := add_le_add (ha.trans (phaseLinear_bound hx.1)) (hb n i x hx j
-          hjm)
+            hjm)
     _ ≤ A * ChartScales.S n ^ (p + 1) *
           (ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand i.1.2))⁻¹ +
         C * ChartScales.S n ^ (p + 1) *
@@ -436,7 +445,7 @@ theorem weightedPhase_germ {n : ℕ} {i : CopyIndex B N0} {x : ActualPrimary.Ful
         localPhase n i y := by
   have hcore : (ActualPhaseDefect.nativeCopy i.1.1 i.1.2 n i.2 x).2 ∈
       (ActualSignedGeometry.clockWindow ActualPrimary.slots (BaseChartJets.cellBand i.1.2)).core :=
-        by
+          by
     simp only [← ActualPrimaryBounds.clock_eq i.1]
     exact hx.2.2
   have he := ActualPhaseDefect.chart_phase_germ i.1.1 i.1.2 n
@@ -494,12 +503,12 @@ theorem weightedPhase_positive_jets (m : ℕ) :
   have hd :
       ‖iteratedFDeriv ℝ j (fun y =>
         (ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand i.1.2) : ℝ) * localPhase n i
-          y) x‖ ≤
+            y) x‖ ≤
       (ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand i.1.2) : ℝ) *
         ‖iteratedFDeriv ℝ j (localPhase n i) x‖ := by
     change ‖iteratedFDeriv ℝ j
       ((ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand i.1.2) : ℝ) • localPhase n i)
-        x‖ ≤ _
+          x‖ ≤ _
     rw [iteratedFDeriv_const_smul_apply ((localPhase_smooth hx).of_le (nat_le_infty j))]
     have hk0 : 0 ≤ (ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand i.1.2) : ℝ) :=
       Nat.cast_nonneg _

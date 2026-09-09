@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorBridge
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCandidateAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CandidateConsequences
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorDefinitions
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCandidateAssembly
+import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorBridge
 
 /-!
 # The constructed candidate implies option (D)
@@ -23,6 +22,9 @@ global viscosity-one solution, contradicting the existing maximal-lifespan theor
 
 No result here uses any of the comparator's unproved statements.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

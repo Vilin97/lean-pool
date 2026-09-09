@@ -8,13 +8,18 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryBudget
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPaths
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointUnitBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBounds
 
 /-!
 Unit-terminal-data estimates for the actual joined primary. The same
 external radius controls its history, actual trace, and weighted future.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -65,7 +70,7 @@ theorem future_velocity_bound (n : ℕ) :
         (3*sobolevCoefficientAmplitude ι q L.Rc L.C₀)*majorant L.R (d+3) n := by
   have hf (j : ℕ) : block directions q (fun a => pathTranslate P a
       (normalize L.g L.positive (HistoryData.forcingPath (zeroForcing (P := P) (D.tail τ hτ.le
-        hτT)))))
+          hτT)))))
         j 0 ≤ 0*majorant L.R (d+2) j := by
     simp only [HistoryData.forcingPath,zeroForcing,map_zero,zero_mul]
     erw [map_zero]
@@ -74,7 +79,7 @@ theorem future_velocity_bound (n : ℕ) :
   rw [show d+3=d+2+1 by omega]
   exact
     (zeroForcing (D.tail τ hτ.le hτT)).source_velocity_normalized_bound (forwardInitial τ hτ hτT B
-      Y)
+        Y)
       L.g L.positive directions hdir q L.neighborhood L.neighborhood_measurable L.neighborhood_open
       L.support_subset L.neighborhood_halfball L.initial_one
       L.C H.endpointBudget.coordinateCost 0 L.Rc L.C₀ L.C₁ L.Ri L.R
@@ -91,7 +96,7 @@ theorem future_derivative_bound (n : ℕ) :
         EulerSourceCylinderTimeBounds.physicalCost ι q L.Ri L.C₀ L.C₁ 0 1*majorant L.R (d+3) n := by
   have hf (j : ℕ) : block directions q (fun a => pathTranslate P a
       (normalize L.g L.positive (HistoryData.forcingPath (zeroForcing (P := P) (D.tail τ hτ.le
-        hτT)))))
+          hτT)))))
         j 0 ≤ 0*majorant L.R (d+2) j := by
     simp only [HistoryData.forcingPath,zeroForcing,map_zero,zero_mul]
     erw [map_zero]
@@ -100,7 +105,7 @@ theorem future_derivative_bound (n : ℕ) :
   rw [show d+3=d+2+1 by omega]
   exact
     (zeroForcing (D.tail τ hτ.le hτT)).source_derivative_normalized_bound (forwardInitial τ hτ hτT
-      B Y)
+        B Y)
       L.g L.positive directions hdir q L.neighborhood L.neighborhood_measurable L.neighborhood_open
       L.support_subset L.neighborhood_halfball L.initial_one
       L.C H.endpointBudget.coordinateCost 0 L.Rc L.C₀ L.C₁ L.Ri L.R
@@ -123,8 +128,8 @@ theorem velocity_unit_bound (n : ℕ) :
       (sobolevCoefficientAmplitude_nonneg q L.Rc L.C₀ L.Rc_nonneg L.C₀_nonneg))
       H.endpointBudget.coordinateCost_nonneg
   have hp := (H.past_velocity_bound Y directions hdir d hYb n).trans
-    (mul_le_mul_of_nonneg_left (majorant_mono_shift L.R L.radius_bounds.1 (d+2) (d+3) n (by omega))
-      hC)
+    (mul_le_mul_of_nonneg_left (majorant_mono_shift L.R L.radius_bounds.1 (d+2) (d+3) n (by
+        omega)) hC)
   exact hb.trans (by
     simpa only [velocityCost,add_mul] using
       add_le_add hp (H.future_velocity_bound Y directions hdir d hYb n))

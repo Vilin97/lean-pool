@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketFrames
+public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleFieldBounds
+import LeanPool.NavierStokesAndEuler.Euler.ChildParticleFieldTime
+import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildStructure
-public import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
-public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleFieldTime
-
-@[expose] public section
 
 /-! The actual composed child coefficients form the next parent data.
 The next spatial scale can be chosen independently of the current scale. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,16 +29,17 @@ variable (A : EulerParentPacketFrames.Parent)
 
 theorem displacement_det_one (t : Icc (0 : ℝ) A.T) (x : Space) :
     (ContinuousLinearMap.id ℝ Space + fderiv ℝ (A.displacement.field t : Space → Space) x).det=1 :=
-      by
+        by
   have h := A.determinant t (A.ell⁻¹ • x)
   have hx : A.ell • (A.ell⁻¹ • x)=x := by
     rw [smul_smul,mul_inv_cancel₀ A.ell_pos.ne',one_smul]
   simpa only [hx,operatorMatrix_det] using h
 
 variable {P : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P A.T)
-  (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+  (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
 
+/-- Child, bundling `T`, `T_pos`, `ell`, `ell_pos` and the required compatibility proofs. -/
 def child : EulerParentPacketFrames.Parent where
   T := A.T
   T_pos := A.T_pos
@@ -77,18 +80,18 @@ theorem child_particleMap (t : Icc (0 : ℝ) A.T) (x : Space) :
 
 theorem child_fields_match
     (E : Icc (0 : ℝ) A.T → EulerChildParticleFieldBounds.Data)
-    (hD : ∀ t x, (E t).parentDisplacement.field x=A.displacement.field t x)
-    (hV : ∀ t x, (E t).parentVelocity.field x=A.velocity.field t x)
-    (hW : ∀ t x, (E t).parentAcceleration.field x=A.acceleration.field t x)
-    (hd : ∀ t, (E t).displacement=G.displacementField k m A.ell A.ell_pos t)
-    (hv : ∀ t, (E t).velocity=G.velocityField k m A.ell A.ell_pos t)
-    (hw : ∀ t, (E t).acceleration=G.accelerationFieldL2 k m A.ell A.ell_pos t)
+    (hD : ∀ t x, (E t).parentDisplacement.field x = A.displacement.field t x)
+    (hV : ∀ t x, (E t).parentVelocity.field x = A.velocity.field t x)
+    (hW : ∀ t x, (E t).parentAcceleration.field x = A.acceleration.field t x)
+    (hd : ∀ t, (E t).displacement = G.displacementField k m A.ell A.ell_pos t)
+    (hv : ∀ t, (E t).velocity = G.velocityField k m A.ell A.ell_pos t)
+    (hw : ∀ t, (E t).acceleration = G.accelerationFieldL2 k m A.ell A.ell_pos t)
     (t : Icc (0 : ℝ) A.T) (x : Space) :
     (E t).childDisplacement.field x=(A.child G k m hgraph nextEll hnext hnext1).displacement.field
-      t x ∧
+        t x ∧
     (E t).childVelocity.field x=(A.child G k m hgraph nextEll hnext hnext1).velocity.field t x ∧
     (E t).childAcceleration.field x=(A.child G k m hgraph nextEll hnext hnext1).acceleration.field
-      t x := by
+        t x := by
   let H : EulerChildParticleTime.Representation E A.displacement A.velocity A.acceleration
       (G.physicalDisplacementCoefficient k m A.ell)
       (G.physicalVelocityCoefficient k m A.ell)
@@ -110,12 +113,14 @@ theorem child_fields_match
         exact (G.physicalAccelerationCoefficient_eq k m A.ell A.ell_pos u y).symm }
   exact ⟨H.childDisplacement t x,H.childVelocity t x,H.childAcceleration t x⟩
 
+/-- Child inverse, given by `(flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A
+A.ell)).backward t (Y t x)`. -/
 def childInverse (Y : Icc (0 : ℝ) A.T → Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   (flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).backward t (Y t x)
 
 theorem childInverse_left (Y : Icc (0 : ℝ) A.T → Space → Space)
-    (hYX : ∀ t x, Y t (x+A.displacement.field t x)=x)
+    (hYX : ∀ t x, Y t (x + A.displacement.field t x) = x)
     (t : Icc (0 : ℝ) A.T) (x : Space) :
     A.childInverse G k m Y t
       (x+(A.child G k m hgraph nextEll hnext hnext1).displacement.field t x)=x := by
@@ -126,9 +131,9 @@ theorem childInverse_left (Y : Icc (0 : ℝ) A.T → Space → Space)
   exact (flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).backward_forward t x
 
 theorem childInverse_right (Y : Icc (0 : ℝ) A.T → Space → Space)
-    (hXY : ∀ t x, Y t x+A.displacement.field t (Y t x)=x)
+    (hXY : ∀ t x, Y t x + A.displacement.field t (Y t x) = x)
     (t : Icc (0 : ℝ) A.T) (x : Space) :
-    A.childInverse G k m Y t x+
+    A.childInverse G k m Y t x +
       (A.child G k m hgraph nextEll hnext hnext1).displacement.field t
         (A.childInverse G k m Y t x)=x := by
   rw [A.child_particleMap G k m hgraph nextEll hnext hnext1]
@@ -138,7 +143,7 @@ theorem childInverse_right (Y : Icc (0 : ℝ) A.T → Space → Space)
       A.displacement.field t
         ((flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).forward t
           ((flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).backward t (Y t
-            x)))=x
+              x)))=x
   rw [(flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).forward_backward]
   exact hXY t x
 
@@ -146,15 +151,15 @@ theorem childInverse_joint_continuous (Y : Icc (0 : ℝ) A.T → Space → Space
     (hY : Continuous (Function.uncurry Y)) :
     Continuous (Function.uncurry (A.childInverse G k m Y)) :=
   (flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A
-    A.ell)).backward_joint_continuous.comp
+      A.ell)).backward_joint_continuous.comp
     ((continuous_subtype_val.comp continuous_fst).prodMk hY)
 
 theorem child_particleMap_measurePreserving
-    (hparent : ∀ t, MeasurePreserving (fun x => x+A.displacement.field t x) volume volume)
+    (hparent : ∀ t, MeasurePreserving (fun x => x + A.displacement.field t x) volume volume)
     (t : Icc (0 : ℝ) A.T) :
     MeasurePreserving
       (fun x => x+(A.child G k m hgraph nextEll hnext hnext1).displacement.field t x) volume volume
-        := by
+          := by
   have he : (fun x => x+(A.child G k m hgraph nextEll hnext hnext1).displacement.field t x) =
       (fun y => y+A.displacement.field t y) ∘
         (flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).forward t :=

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-public import Mathlib.Geometry.Euclidean.Angle.Unoriented.CrossProduct
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.LinearAlgebra.CrossProduct
+import Mathlib.Geometry.Euclidean.Angle.Unoriented.CrossProduct
+
+/-! The ordinary Euclidean cross product as an actual bounded linear operator. -/
 
 @[expose] public section
 
-/-! The ordinary Euclidean cross product as an actual bounded linear operator. -/
 
 noncomputable section
 
@@ -19,6 +21,7 @@ namespace EulerPacketCrossProduct
 
 open EulerSmoothLimit InnerProductSpace Matrix WithLp
 
+/-- Cross, given by `toLp 2 (crossProduct (ofLp a) (ofLp b))`. -/
 def cross (a b : Space) : Space := toLp 2 (crossProduct (ofLp a) (ofLp b))
 
 theorem cross_norm_le (a b : Space) : ‖cross a b‖ ≤ ‖a‖*‖b‖ := by
@@ -26,11 +29,13 @@ theorem cross_norm_le (a b : Space) : ‖cross a b‖ ≤ ‖a‖*‖b‖ := by
   exact mul_le_of_le_one_right (mul_nonneg (norm_nonneg _) (norm_nonneg _))
     (Real.sin_le_one _)
 
+/-- Cross linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def crossLinear (a : Space) : Space →ₗ[ℝ] Space where
   toFun := cross a
   map_add' b c := by simp [cross, map_add]
   map_smul' c b := by simp [cross, map_smul]
 
+/-- Cross left, given by `(crossLinear a).mkContinuous ‖a‖ (cross_norm_le a)`. -/
 def crossLeft (a : Space) : Space →L[ℝ] Space :=
   (crossLinear a).mkContinuous ‖a‖ (cross_norm_le a)
 
@@ -49,7 +54,7 @@ theorem cross_cross (m a : Space) :
     toLp_ofLp, dot_eq_inner, real_inner_self_eq_norm_sq]
 
 theorem cross_negative_normalized (m a : Space) (hm : m ≠ 0)
-    (ha : ⟪m,a⟫_ℝ=0) : cross m (-((‖m‖^2)⁻¹) • cross m a)=a := by
+    (ha : ⟪m, a⟫_ℝ = 0) : cross m (-((‖m‖^2)⁻¹) • cross m a)=a := by
   change crossLeft m (-((‖m‖^2)⁻¹) • cross m a)=a
   rw [map_smul, crossLeft_apply, cross_cross, ha, zero_smul, zero_sub, smul_neg,
     smul_smul]
@@ -64,7 +69,7 @@ theorem potentialMultiplier_apply (m a : Space) :
     potentialMultiplier m a=(-((‖m‖^2)⁻¹)) • cross m a := rfl
 
 theorem cross_potentialMultiplier (m a : Space) (hm : m ≠ 0)
-    (ha : ⟪m,a⟫_ℝ=0) : cross m (potentialMultiplier m a)=a :=
+    (ha : ⟪m, a⟫_ℝ = 0) : cross m (potentialMultiplier m a)=a :=
   cross_negative_normalized m a hm ha
 
 end EulerPacketCrossProduct

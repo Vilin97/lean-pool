@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryNeighbor
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHessianSymmetry
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHessianSymmetry
 
 /-! The scalar induction guards apply to the actual parent source data.
 History norms and symmetry are derived from the parent fields, and the
 neighbor error is the computed, ell-scaled coefficient expression. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,7 +31,7 @@ theorem activation_normal_le (hτ : 0 < τ) (hτT : τ < D.T) :
     ⟪D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 (unit (P.m τ)),unit (P.m τ)⟫_ℝ ≤
       ⟪P.B τ (unit (P.m τ)),unit (P.m τ)⟫_ℝ+P.error := by
   let t : Icc (0 : ℝ) D.T := ⟨τ,hτ.le,hτT.le⟩
-  let E := D.M.field t 0-P.B τ-
+  let E := D.M.field t 0-P.B τ -
     P.shear • rankOne ℝ (unit (P.v τ)) (unit (P.m τ))
   have hn : ‖unit (P.m τ)‖=1 := unit_norm (P.ray_nonzero τ ⟨le_rfl,hτT.le⟩)
   have ht : ⟪unit (P.v τ),unit (P.m τ)⟫_ℝ=0 := by
@@ -47,7 +48,7 @@ theorem activation_normal_le (hτ : 0 < τ) (hτT : τ < D.T) :
       norm_inner_le_norm (𝕜 := ℝ) (E (unit (P.m τ))) (unit (P.m τ))
   have hi := (le_abs_self ⟪E (unit (P.m τ)),unit (P.m τ)⟫_ℝ).trans (habs.trans hu)
   have he : ⟪E (unit (P.m τ)),unit (P.m τ)⟫_ℝ =
-      ⟪D.M.field t 0 (unit (P.m τ)),unit (P.m τ)⟫_ℝ-
+      ⟪D.M.field t 0 (unit (P.m τ)),unit (P.m τ)⟫_ℝ -
       ⟪P.B τ (unit (P.m τ)),unit (P.m τ)⟫_ℝ := by
     simp only [E,sub_apply,smul_apply,rankOne_apply,inner_sub_left,
       real_inner_smul_left,ht,mul_zero,sub_zero]
@@ -56,7 +57,7 @@ theorem activation_normal_le (hτ : 0 < τ) (hτT : τ < D.T) :
 
 theorem activation_compression_of_previous (hτ : 0 < τ) (hτT : τ < D.T)
     (e : ℝ) (he : P.error ≤ e)
-    (hprevious : ⟪P.B τ (unit (P.m τ)),unit (P.m τ)⟫_ℝ+e < 0) :
+    (hprevious : ⟪P.B τ (unit (P.m τ)), unit (P.m τ)⟫_ℝ + e < 0) :
     ⟪D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 (unit (P.m τ)),unit (P.m τ)⟫_ℝ < 0 :=
   (P.activation_normal_le hτ hτT).trans_lt ((add_le_add_right he _).trans_lt hprevious)
 
@@ -74,7 +75,7 @@ open scoped BoundedContinuousFunction ContDiff
 
 variable {G : Parent} (L : LabelData G)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S) (H : LowBounds G)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
 
@@ -117,30 +118,31 @@ def geometryGuardsOfStage
     (hacc : ∀ t x, G.acceleration.field t x = -(gradient (p t) (G.position t x)))
     (J D : ℕ) (C c X : ℝ) (a β : ℕ → ℝ) (n : ℕ) (hX : 0 < X)
     (CF : ℝ) (hCF : 1 ≤ CF)
-    (stage : StageGuards J D C c X (neighborStabilityConstant*CF^2) a β n)
-    (ha : 1/2 ≤ a n) (ha_match : P.a=a n)
-    (hshear : P.shear=previousShear J X n)
-    (hsigma : P.sigma=Real.sqrt (β n))
-    (htime : P.horizon=EulerPacketSourceScaleGuards.horizon J X (a n) (β n) n)
-    (hG : P.G ≤ CF*(1+olderShear J X n))
+    (stage : StageGuards J D C c X (neighborStabilityConstant * CF ^ 2) a β n)
+    (ha : 1 / 2 ≤ a n) (ha_match : P.a = a n)
+    (hshear : P.shear = previousShear J X n)
+    (hsigma : P.sigma = Real.sqrt (β n))
+    (htime : P.horizon = EulerPacketSourceScaleGuards.horizon J X (a n) (β n) n)
+    (hG : P.G ≤ CF * (1 + olderShear J X n))
     (herr : P.error ≤ priorError J D X n)
     (CM CH ζ ρ δ hchild : ℝ)
     (hCM : 0 ≤ CM) (hCH : 0 ≤ CH) (hζ : 0 ≤ ζ) (hρ : 0 ≤ ρ)
     (hδ : 0 ≤ δ) (hhchild : 0 ≤ hchild)
-    (hneighbor : L.neighborScaleCost m hm R S hS H τ hτ hτT P CM CH*G.ell*ρ ≤
+    (hneighbor : L.neighborScaleCost m hm R S hS H τ hτ hτT P CM CH * G.ell * ρ ≤
       neighborError J D X c n)
-    (hnormal : m=activationDirection
-      ((G.transverseData m hm R S hS).deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
+    (hnormal : m =
+ activationDirection
+      ((G.transverseData m hm R S hS).deformationEquiv ⟨τ, hτ.le, hτT.le⟩ 0)
       (EulerPacketCrossProduct.cross (unit (P.m τ)) (unit (P.v τ))))
-    (hlayer : 1 ≤ previousShear J X n*τ)
+    (hlayer : 1 ≤ previousShear J X n * τ)
     (hstrain : ‖EulerTransverseSourceCoefficientPath.pathEvaluation 0
-      ((G.transverseData m hm R S hS).initial τ hτ hτT.le).M.field‖ ≤ CM*previousShear J X n)
+      ((G.transverseData m hm R S hS).initial τ hτ hτT.le).M.field‖ ≤ CM * previousShear J X n)
     (hhessian : ‖(G.historyOn H m hm R S hS τ hτ hτT).coefficients.labelHessian 0‖ ≤
-      CH*(previousShear J X n)^2)
-    (hactivation : 16*(activationConstant CM CH+1)*ζ ≤ 1)
-    (hactivationError : CF*(1+olderShear J X n)+priorError J D X n ≤ ζ*previousShear J X n)
+      CH * (previousShear J X n) ^ 2)
+    (hactivation : 16 * (activationConstant CM CH + 1) * ζ ≤ 1)
+    (hactivationError : CF * (1 + olderShear J X n) + priorError J D X n ≤ ζ * previousShear J X n)
     (hpreviousCompression :
-      ⟪P.B τ (unit (P.m τ)),unit (P.m τ)⟫_ℝ+priorError J D X n < 0) :
+      ⟪P.B τ (unit (P.m τ)), unit (P.m τ)⟫_ℝ + priorError J D X n < 0) :
     Guards hτ hτT P (G.historyOn H m hm R S hS τ hτ hτT) := by
   have hshearPos : 0 < P.shear := by
     simpa only [hshear] using previousShear_pos J hX n
@@ -180,15 +182,15 @@ def geometryGuardsOfStage
   have herror0 : 0 ≤ P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ :=
     add_nonneg P.error_nonneg (mul_nonneg hcost hρ)
   have hcoef :
-      16*(P.epsilon*P.horizon*(4*P.G)^2+
+      16*(P.epsilon*P.horizon*(4*P.G)^2 +
         P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ) ≤
       CF^2*geometryError J D C c X a n := by
     have hmain : P.epsilon*P.horizon*(4*P.G)^2 ≤
-        CF^2*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n*
+        CF^2*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n *
           (4*(1+olderShear J X n))^2) := by
       rw [hepsilon]
       calc
-        _ ≤ epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n*
+        _ ≤ epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n *
             (4*(CF*(1+olderShear J X n)))^2 :=
           mul_le_mul (mul_le_mul_of_nonneg_left hhorθ stage.epsilon_pos.le)
             (pow_le_pow_left₀ (by positivity [P.G_lower])
@@ -198,11 +200,11 @@ def geometryGuardsOfStage
     have hE := herror.trans (le_mul_of_one_le_left (herror0.trans herror)
       (one_le_pow₀ hCF : 1 ≤ CF^2))
     calc
-      _ ≤ 16*(CF^2*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n*
+      _ ≤ 16*(CF^2*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n *
           (4*(1+olderShear J X n))^2)+CF^2*(priorError J D X n+neighborError J D X c n)) :=
         mul_le_mul_of_nonneg_left (add_le_add hmain hE) (by norm_num)
       _ = _ := by unfold geometryError; ring
-  have hcoef0 : 0 ≤ 16*(P.epsilon*P.horizon*(4*P.G)^2+
+  have hcoef0 : 0 ≤ 16*(P.epsilon*P.horizon*(4*P.G)^2 +
       P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ) := by
     positivity
   have hN1 : 1 ≤ 1000000*neighborStabilityConstant := by
@@ -211,26 +213,26 @@ def geometryGuardsOfStage
     nlinarith only [he]
   have hN : 0 ≤ 1000000*neighborStabilityConstant := zero_le_one.trans hN1
   have hsmall :
-      1000000*neighborStabilityConstant*
-        (16*(P.epsilon*P.horizon*(4*P.G)^2+
+      1000000*neighborStabilityConstant *
+        (16*(P.epsilon*P.horizon*(4*P.G)^2 +
           P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ))*P.horizon^40 ≤ 1 := by
     calc
-      _ ≤ 1000000*neighborStabilityConstant*(CF^2*geometryError J D C c X a n)*
+      _ ≤ 1000000*neighborStabilityConstant*(CF^2*geometryError J D C c X a n) *
           sourceTheta J C (scaleSequence J X) n^40 :=
         mul_le_mul (mul_le_mul_of_nonneg_left hcoef hN)
           (pow_le_pow_left₀ (zero_le_one.trans hhor) hhorθ 40)
           (pow_nonneg (zero_le_one.trans hhor) 40) (mul_nonneg hN (hcoef0.trans hcoef))
-      _ = 1000000*(neighborStabilityConstant*CF^2)*geometryError J D C c X a n*
+      _ = 1000000*(neighborStabilityConstant*CF^2)*geometryError J D C c X a n *
           sourceTheta J C (scaleSequence J X) n^40 := by ring
       _ ≤ 1 := stage.geometry_small
-  have hplain : 16*(P.epsilon*P.horizon*(4*P.G)^2+
+  have hplain : 16*(P.epsilon*P.horizon*(4*P.G)^2 +
       P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ) ≤ 1 := by
     have hh : 1 ≤ 1000000*neighborStabilityConstant*P.horizon^40 :=
       one_le_mul_of_one_le_of_one_le hN1 (one_le_pow₀ hhor)
     have hb := mul_le_mul_of_nonneg_right hh hcoef0
     nlinarith only [hb,hsmall]
   have hcompress :
-      60*(P.G+P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ)*
+      60*(P.G+P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ) *
         (targetTime J X (β n) n)*P.epsilon < P.a :=
     compression_of_error_small (by simpa only [ha_match] using ha) hepsPos.le
       (zero_le_one.trans hhor) htarget_le P.G_lower herror0 hplain

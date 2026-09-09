@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedWaveUpdate
 
-@[expose] public section
-
 /-!
 # Initial primary residual classes
 
@@ -18,6 +16,9 @@ The primary coefficient and its Gaussian error are the actual cutoff/curl
 construction. The improved nonlinear bound uses the exact divergence of that
 curl, before projecting the literal residual into its finite harmonics.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -165,7 +166,7 @@ theorem AngularData.constructedGood {a : LinearWaveBounds.WaveCoefficients (D ×
   obtain ⟨m, hm⟩ := ha.phase n
   have hc : Invariant ((0 : D), 1)
       (((a.withCutoff ψ).curlCorrection (HarmonicWaveInteraction.productStrip s) (directions c)) n)
-        :=
+          :=
     curlRemainder_invariant (ha.radius n) (directions_radial_invariant c n)
       (Invariant.const _) (Invariant.const _)
       (coefficient_invariant (ha.radius n) (directions_radial_invariant c n)
@@ -201,44 +202,50 @@ structure Inputs (s : StripData D) (P : ℕ → D → ℝ) (κ : ℝ)
     (a.normal (HarmonicWaveInteraction.productStrip s) (directions c))
   normal_bounds : ∃ b M : ℝ, 0 < b ∧
     (∀ n p, p.1 ∈ s.domain → b ≤ ‖a.normal (HarmonicWaveInteraction.productStrip s) (directions c)
-      n p‖) ∧
+        n p‖) ∧
     (∀ n p, p.1 ∈ s.domain → ‖a.normal (HarmonicWaveInteraction.productStrip s) (directions c) n p‖
-      ≤ M)
+        ≤ M)
   inverse_frequency : BandBound (HarmonicWaveInteraction.productStrip s) (1 / 2)
     (fun n => 1 / a.frequency n)
   geometry : ∀ n, CurlClassBounds.CylindricalGeometry (HarmonicWaveInteraction.productStrip
-    s).domain
+      s).domain
     (a.radius n) ((directions c).radialField n) (fun _ => (directions c).angular)
     ((directions c).axialField (HarmonicWaveInteraction.productStrip s) n)
   tangent : ∀ n p, p.1 ∈ s.domain →
     normalDot (a.normal (HarmonicWaveInteraction.productStrip s) (directions c) n p) (a.amplitude n
-      p) = 0
+        p) = 0
   principal_zero : ∀ n p, p.1 ∈ s.domain → ψ n p ≠ 0 →
     a.principal (HarmonicWaveInteraction.productStrip s) (directions c) n p = 0
   profile_nonneg : ∀ n x, x ∈ s.domain → 0 ≤ P n x
   profile_le_one : ∀ n x, x ∈ s.domain → P n x ≤ 1
   radius_pos : ∀ x ∈ s.domain, 0 < c.operators.radius x
 
+/-- Corrected, given by `a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ`. -/
 noncomputable def corrected (s : StripData D) (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :=
   a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ
 
+/-- Primary block, given by `SignedWaveUpdate.blockOfCoefficients (corrected s c a ψ) kp`. -/
 noncomputable def primaryBlock (s : StripData D) (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) (kp : ℕ → ℤ) :=
   SignedWaveUpdate.blockOfCoefficients (corrected s c a ψ) kp
 
+/-- Gaussian coefficients, defined pointwise by `ErrorHarmonics.conjugatePair 1 (fun x =>
+LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n (x, 0) i)`. -/
 noncomputable def gaussianCoefficients (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :
     HarmonicResidual.BlockCoefficients D :=
   fun n i => ErrorHarmonics.conjugatePair 1
     (fun x => LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n (x, 0) i)
 
+/-- Good coefficients, defined pointwise by `ErrorHarmonics.conjugatePair 1 (fun x =>
+a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n (x, 0) i)`. -/
 noncomputable def goodCoefficients (s : StripData D) (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :
     HarmonicResidual.BlockCoefficients D :=
   fun n i => ErrorHarmonics.conjugatePair 1
     (fun x => a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n (x, 0)
-      i)
+        i)
 
 theorem wave_slice {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ} {f : ℕ → D × ℝ → E}
@@ -306,14 +313,14 @@ theorem normal_ne (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
 theorem corrected_divergence (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
     cylindricalDivergence (a.radius n) ((directions c).radialField n)
       (fun _ => (directions c).angular) ((directions c).axialField
-        (HarmonicWaveInteraction.productStrip s) n)
+          (HarmonicWaveInteraction.productStrip s) n)
       (vectorMode (a.frequency n) (a.phase n) ((corrected s c a ψ).amplitude n)) p = 0 :=
   LinearWaveBounds.corrected_divergence h.coefficients h.cutoff n (h.geometry n)
     (h.frequency_ne n) (h.phase_smooth n) (h.normal_ne n) (h.tangent n) hp
 
 theorem linear_identity (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
     (corrected s c a ψ).harmonicResidual (HarmonicWaveInteraction.productStrip s) (directions c) n
-      p =
+        p =
       vectorMode (a.frequency n) (a.phase n)
         (a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n) p +
       vectorMode (a.frequency n) (a.phase n)
@@ -329,15 +336,15 @@ theorem linear_identity (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
   have hcut := LinearWaveBounds.principal_cutoff h.coefficients ψ 0 n hp
     (((h.cutoff.smooth n).contDiffAt
       ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-        simp))
+          simp))
   have hzero : ψ n p • a.principal (HarmonicWaveInteraction.productStrip s) (directions c) n p = 0
-    := by
+      := by
     by_cases hψ : ψ n p = 0
     · rw [hψ, zero_smul]
     · rw [h.principal_zero n p hp hψ, smul_zero]
   simp only [Pi.zero_apply, add_zero, hzero, zero_add] at hcut
   have he : (corrected s c a ψ).principal (HarmonicWaveInteraction.productStrip s) (directions c) n
-    p +
+      p +
       (corrected s c a ψ).remainder (HarmonicWaveInteraction.productStrip s) (directions c) n p =
       a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n p +
         LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n p := by
@@ -358,6 +365,7 @@ theorem linear_identity (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
 
 end Inputs
 
+/-- Real projection, given by `Complex.ofRealCLM.comp Complex.reCLM`. -/
 noncomputable def realProjection : ℂ →L[ℝ] ℂ := Complex.ofRealCLM.comp Complex.reCLM
 
 @[simp] theorem realProjection_apply (z : ℂ) : realProjection z = (z.re : ℂ) := rfl
@@ -380,7 +388,7 @@ theorem linearResidual_realProjection {X : Type} [NormedAddCommGroup X] [NormedS
     (LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt (LinearWaveResidual.realLift B)
       (fun y j => realProjection (v y j)) (fun y => realProjection (p y)) x i).re =
     (LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt (LinearWaveResidual.realLift B) v p x i).re
-      := by
+        := by
   have h0 := LinearWaveResidual.realMap_linearResidual Complex.reCLM ε R Vt hU hVr hVθ hVz
     hv hB hp hx
   have h1 := LinearWaveResidual.realMap_linearResidual Complex.reCLM ε R Vt hU hVr hVθ hVz
@@ -404,7 +412,7 @@ theorem pair_field_of_invariant {X : Type} [NormedAddCommGroup X] [NormedSpace �
 theorem excluded_invariant {a : LinearWaveBounds.WaveCoefficients (D × ℝ)}
     {ψ : ℕ → D × ℝ → ℝ} (ha : AngularData a ψ) (c : CorrectionState.Context D) (n : ℕ) :
     Invariant ((0 : D), 1) (LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n) :=
-      by
+        by
   have hf : Invariant ((0 : D), 1) ((directions c).fastField n) :=
     Invariant.const ((directions c).fastScale n • (directions c).fast)
   intro x t
@@ -425,7 +433,7 @@ theorem primary_field (n : ℕ) (p : D × ℝ) (i : Fin 3) :
       (fun x => a.phase n (x, 0)) (kp n) p =
     realProjection (vectorMode (a.frequency n) (a.phase n) ((corrected s c a ψ).amplitude n) p i) :=
   pair_field_of_invariant _ _ ((h.angular.corrected_amplitude s c n).component i) (h.phase_split n)
-    p
+      p
 
 theorem pressure_field (n : ℕ) (p : D × ℝ) :
     field ((primaryBlock s c a ψ kp).pressure n) (a.frequency n)
@@ -475,12 +483,13 @@ theorem raw_pressure_smooth (n : ℕ) :
 
 end Inputs
 
+/-- Linear coefficients as an element of `HarmonicResidual.BlockCoefficients D`. -/
 noncomputable def linearCoefficients (s : StripData D) (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) (kp : ℕ → ℤ) :
     HarmonicResidual.BlockCoefficients D := fun n =>
   HarmonicResidual.linearResidual (HarmonicResidual.contextFrame c n) (a.frequency n)
     (fun x => a.phase n (x, 0)) (kp n) (HarmonicResidual.constantVector
-      (HarmonicResidual.contextBase c n))
+        (HarmonicResidual.contextBase c n))
     (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n)
     (HarmonicResidual.realCoefficients ((primaryBlock s c a ψ kp).pressure n))
 
@@ -543,9 +552,9 @@ theorem harmonicResidual_context (n : ℕ) :
     ((directions c).radialField n) (fun _ => (directions c).angular)
     ((directions c).axialField (HarmonicWaveInteraction.productStrip s) n)
     (LinearWaveResidual.timeDirection (s.epsilon n) ((directions c).fastField n) (fun _ =>
-      (directions c).slow))
+        (directions c).slow))
     (LinearWaveResidual.complexBase (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase
-      n))
+        n))
     _ _ = _
   have ht := directions_time s c h.matching.epsilon n
   change LinearWaveResidual.timeDirection (s.epsilon n) ((directions c).fastField n)
@@ -559,7 +568,7 @@ theorem linear_field_re (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) (i : Fi
     (field (linearCoefficients s c a ψ kp n i) (a.frequency n)
       (fun x => a.phase n (x, 0)) (kp n) p).re =
     ((corrected s c a ψ).harmonicResidual (HarmonicWaveInteraction.productStrip s) (directions c) n
-      p i).re := by
+        p i).re := by
   have he := HarmonicResidual.field_linearResidual s.isOpen_domain
     (HarmonicResidual.contextFrame c n) (h.radial_smooth n) (h.axial_smooth n)
     (B := HarmonicResidual.constantVector (HarmonicResidual.contextBase c n))
@@ -598,12 +607,12 @@ theorem linear_field_re (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) (i : Fi
     (fun j => (((Complex.reCLM.contDiff.comp_contDiffOn
       ((h.base_smooth n j).comp contDiffOn_fst (fun _ hx => hx))).contDiffAt
         ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-          simp)))
+            simp)))
     (((h.raw_pressure_smooth n).contDiffAt
       ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-        simp)) hp i
+          simp)) hp i
   have hbase' : LinearWaveResidual.realLift (fun (y : D × ℝ) j => (HarmonicResidual.contextBase c n
-    y.1 j).re) =
+      y.1 j).re) =
       fun y => HarmonicResidual.contextBase c n y.1 := by
     funext y j
     fin_cases j <;> simp [HarmonicResidual.contextBase, LinearWaveResidual.realLift]
@@ -645,7 +654,7 @@ theorem full_primary_divergence (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain)
   rw [he, divergence_map realProjection _ _ _ _ (fun i =>
     ((h.raw_velocity_smooth n i).contDiffAt
       ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-        simp))]
+          simp))]
   have hd := h.corrected_divergence n p hp
   rw [h.matching.radius, directions_radial, directions_axial s c h.matching.epsilon] at hd
   change cylindricalDivergence _ _ HarmonicResidual.angularDirection _ _ p = 0 at hd
@@ -680,7 +689,7 @@ theorem convection_class (j : ℤ) (i : Fin 3) :
     (primary_zeroMode (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp))
     (primary_band (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp))
     h.phase_slow_smooth h.frequency_ne h.primary_modeSolenoidal h.profile_nonneg h.profile_le_one j
-      i
+        i
   convert! hc using 1
   ring
 
@@ -700,8 +709,8 @@ theorem initial_residual_class (u : CorrectionState.State D)
     (HarmonicResidual.residualBlock c u (primaryBlock s c a ψ kp)
       (gaussianCoefficients c a ψ) A).WaveBounds s P (7 / 10) := by
   intro i j hj
-  have hl := (h.linear_good_class j i).mono_exponent (show (7 / 10 : ℝ) ≤ 1 - 3 * κ by linarith
-    [h.loss_le])
+  have hl := (h.linear_good_class j i).mono_exponent (show (7 / 10 : ℝ) ≤ 1 - 3 * κ by
+      linarith [h.loss_le])
   have hc (m : ℤ) := (h.convection_class m i).mono_exponent
     (show (7 / 10 : ℝ) ≤ 1 - κ by linarith [h.loss_le])
   have hcr := HarmonicMeanInteraction.realCoefficient_class
@@ -717,11 +726,11 @@ theorem initial_residual_class (u : CorrectionState.State D)
     fin_cases k <;> simp [HarmonicResidual.stateMean, hmean]
   change _ = HarmonicResidual.nonconstant
     ((HarmonicResidual.ofBlock (primaryBlock s c a ψ kp) (gaussianCoefficients c a ψ) A
-      n).residualCoefficients
+        n).residualCoefficients
       (HarmonicResidual.contextFrame c n) (HarmonicResidual.contextBase c n)
-        (HarmonicResidual.stateMean u n) i) j x
+          (HarmonicResidual.stateMean u n) i) j x
   rw [HarmonicMeanInteraction.nonconstant_apply_of_ne _ hj, hz,
-    HarmonicResidual.LabelData.residualCoefficients]
+      HarmonicResidual.LabelData.residualCoefficients]
   simp only [add_zero]
   let L := linearCoefficients s c a ψ kp n i
   let T := HarmonicResidual.transport (HarmonicResidual.contextFrame c n)

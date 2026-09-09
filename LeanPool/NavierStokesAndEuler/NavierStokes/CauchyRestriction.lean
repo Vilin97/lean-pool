@@ -6,15 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Topology.ContinuousMap.Compact
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.Calculus.DiffContOnCl
+public import Mathlib.Analysis.SpecialFunctions.Complex.CircleMap
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Bounded Cauchy differentiation between closed disks
@@ -24,6 +20,9 @@ of the smaller disk. It is defined on all continuous outer-disk functions;
 on holomorphic inputs it agrees with the actual complex derivative.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Metric Complex MeasureTheory
@@ -31,6 +30,7 @@ open scoped Topology Interval ContDiff
 
 namespace NavierStokes.CauchyRestriction
 
+/-- Disk: an abbreviation for `↥(closedBall c r)`. -/
 abbrev Disk (c : ℂ) (r : ℝ) := ↥(closedBall c r)
 
 instance diskCompactSpace (c : ℂ) (r : ℝ) : CompactSpace (Disk c r) :=
@@ -38,10 +38,12 @@ instance diskCompactSpace (c : ℂ) (r : ℝ) : CompactSpace (Disk c r) :=
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
+/-- Inclusion, bundling `toFun`, `continuous_toFun`. -/
 noncomputable def inclusion (c : ℂ) {ρ σ : ℝ} (h : ρ ≤ σ) : C(Disk c ρ, Disk c σ) where
   toFun z := ⟨z.1, closedBall_subset_closedBall h z.2⟩
   continuous_toFun := continuous_subtype_val.subtype_mk _
 
+/-- Restriction linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def restrictionLinear (c : ℂ) {ρ σ : ℝ} (h : ρ ≤ σ) :
     C(Disk c σ, E) →ₗ[ℂ] C(Disk c ρ, E) where
   toFun f := f.comp (inclusion c h)
@@ -54,6 +56,8 @@ theorem norm_restrictionLinear_le (c : ℂ) {ρ σ : ℝ} (h : ρ ≤ σ)
   intro z
   exact f.norm_coe_le_norm _
 
+/-- Restriction continuous linear map, given by `(restrictionLinear c h).mkContinuous 1 (by
+intro f simpa only [one_mul] using norm_restrictionLinear_le c h f)`. -/
 def restrictionCLM (c : ℂ) {ρ σ : ℝ} (h : ρ ≤ σ) :
     C(Disk c σ, E) →L[ℂ] C(Disk c ρ, E) :=
   (restrictionLinear c h).mkContinuous 1 (by
@@ -86,11 +90,13 @@ theorem translated_mem (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
     _ ≤ ‖circleMap 0 (σ - ρ) θ‖ + ρ := add_le_add_right z.2 _
     _ = σ := by rw [norm_circleMap_zero, abs_of_pos (sub_pos.mpr hgap)]; ring
 
+/-- Sample, bundling `toFun`, `continuous_toFun`. -/
 def sample (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ) (θ : ℝ) :
     C(Disk c ρ, Disk c σ) where
   toFun z := ⟨z.1 + circleMap 0 (σ - ρ) θ, translated_mem c hgap z θ⟩
   continuous_toFun := (continuous_subtype_val.add continuous_const).subtype_mk _
 
+/-- Weight, given by `I / circleMap 0 δ θ`. -/
 def weight (δ θ : ℝ) : ℂ := I / circleMap 0 δ θ
 
 theorem continuous_weight {δ : ℝ} (hδ : 0 < δ) : Continuous (weight δ) :=
@@ -99,6 +105,7 @@ theorem continuous_weight {δ : ℝ} (hδ : 0 < δ) : Continuous (weight δ) :=
 theorem norm_weight {δ : ℝ} (hδ : 0 < δ) (θ : ℝ) : ‖weight δ θ‖ = δ⁻¹ := by
   simp [weight, norm_circleMap_zero, abs_of_pos hδ, one_div]
 
+/-- Integrand, given by `weight (σ - ρ) θ • f.comp (sample c hgap θ)`. -/
 def integrand (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
     (f : C(Disk c σ, E)) (θ : ℝ) : C(Disk c ρ, E) :=
   weight (σ - ρ) θ • f.comp (sample c hgap θ)
@@ -123,13 +130,15 @@ theorem norm_integrand_le (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
   rw [norm_smul, norm_weight (sub_pos.mpr hgap)]
   exact mul_le_mul_of_nonneg_left (f.norm_coe_le_norm _) (by positivity)
 
+/-- Cauchy map, given by `(2 * Real.pi * I : ℂ)⁻¹ • ∫ θ : ℝ in (0)..(2 * Real.pi), integrand c
+hgap f θ`. -/
 def cauchyMap (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
     (f : C(Disk c σ, E)) : C(Disk c ρ, E) :=
   (2 * Real.pi * I : ℂ)⁻¹ • ∫ θ : ℝ in (0)..(2 * Real.pi), integrand c hgap f θ
 
 theorem cauchyMap_add (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
     (f g : C(Disk c σ, E)) : cauchyMap c hgap (f + g) = cauchyMap c hgap f + cauchyMap c hgap g :=
-      by
+        by
   have heq : integrand c hgap (f + g) = fun θ => integrand c hgap f θ + integrand c hgap g θ := by
     funext θ
     ext z
@@ -164,6 +173,7 @@ theorem norm_cauchyMap_le (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
       rw [sub_zero, abs_of_pos Real.two_pi_pos]
       field_simp
 
+/-- Derivative continuous linear map as an element of `C(Disk c σ, E) →L[ℂ] C(Disk c ρ, E)`. -/
 def derivativeCLM (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ) :
     C(Disk c σ, E) →L[ℂ] C(Disk c ρ, E) :=
   ({ toFun := cauchyMap c hgap
@@ -246,6 +256,7 @@ theorem derivativeCLM_apply_of_eq (c : ℂ) {ρ σ : ℝ} (hgap : ρ < σ)
   simpa only [zpow_neg, zpow_two, pow_two, one_div] using
     circle_kernel_identity (sub_pos.mpr hgap) z θ (F (circleMap z (σ - ρ) θ))
 
+/-- Of continuous on, given by `⟨fun z => F z, hF.domRestrict⟩`. -/
 noncomputable def ofContinuousOn (c : ℂ) (r : ℝ) (F : ℂ → E)
     (hF : ContinuousOn F (closedBall c r)) : C(Disk c r, E) :=
   ⟨fun z => F z, hF.domRestrict⟩

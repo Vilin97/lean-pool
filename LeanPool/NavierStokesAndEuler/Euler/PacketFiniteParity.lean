@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketResidualTailFields
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileFields
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveCancellation
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketResidualTailFields
 
 /-! Actual finite packet velocities and residual tails preserve the joint
 odd parity of the constructed profiles. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,7 +41,7 @@ theorem sum {ι : Type*} (s : Finset ι) (f : ι → VectorField)
   exact sum_congr rfl (fun i hi => hf i hi t x θ)
 
 theorem matrix_apply (hf : JointOdd T f) (A : Domain → Space →L[ℝ] Space)
-    (hA : ∀ (t : Icc (0 : ℝ) T) x θ, A (t,(-x,-θ)) = A (t,(x,θ))) :
+    (hA : ∀ (t : Icc (0 : ℝ) T) x θ, A (t, (-x, -θ)) = A (t, (x, θ))) :
     JointOdd T (fun z => A z (f z)) := by
   intro t x θ
   change A (t,(-x,-θ)) (f (t,(-x,-θ))) = -(A (t,(x,θ)) (f (t,(x,θ))))
@@ -74,9 +77,9 @@ variable {P T : ℝ} [Fact (0 < P)]
 theorem Field.linearPart_odd {f ft : VectorField} (G : Field P T f)
     (Gt : Field P T ft) (hT : 0 < T) (hdt : TimeDerivative hT.le G Gt)
     (hf : JointOdd T f) (M : Domain → Space →L[ℝ] Space)
-    (hM : ∀ (t : Icc (0 : ℝ) T) x θ, M (t,(-x,-θ)) = M (t,(x,θ))) :
+    (hM : ∀ (t : Icc (0 : ℝ) T) x θ, M (t, (-x, -θ)) = M (t, (x, θ))) :
     JointOdd T (fun z => EulerPacketPointJets.linearPart (M z) (slicedJet (Icc (0 : ℝ) T) f z)) :=
-      by
+        by
   have ht := G.timeDerivative_odd Gt hT hdt hf
   intro t x θ
   change (slicedJet (Icc (0 : ℝ) T) f (t,(-x,-θ))).2 timeDirection +
@@ -86,7 +89,7 @@ theorem Field.linearPart_odd {f ft : VectorField} (G : Field P T f)
 
 theorem slowPressure_odd (f : ScalarField) (I : Domain → Space →L[ℝ] Space)
     (hf : JointOdd T (pressureGradient f))
-    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, I (t,(-x,-θ)) = I (t,(x,θ))) :
+    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, I (t, (-x, -θ)) = I (t, (x, θ))) :
     JointOdd T (fun z => slowPressure (I z) (pressureJet f z)) := by
   intro t x θ
   change (I (t,(-x,-θ))).adjoint (pressureGradient f (t,(-x,-θ))) =
@@ -98,7 +101,7 @@ variable {O : Operators} {p : ℕ} {a : ℕ → Profile}
 theorem PrefixFields.nonlinearGrade_odd (F : PrefixFields P T p a) (H : PrefixOdd T p a)
     (hp : 1 ≤ p) (E : CoefficientEven T O) (M n : ℕ) :
     JointOdd T (fun z => nonlinearGrade M n (O.inverseFrame z) (O.normal z) (knownJets O p a z)) :=
-      by
+        by
   have hs (i j : ℕ) := (F.knownJet O hp j).slowAdvection_odd O.inverseFrame E.inverse
     (H.knownJet_value_odd (O := O) hp i) (H.knownJet_value_odd (O := O) hp j)
   have ha (i j : ℕ) := (F.knownJet O hp j).fastAdvection_odd O.normal E.normal
@@ -129,7 +132,7 @@ variable {N : ℕ} {S : Set Space} (hT : 0 < T)
 
 include hT G H C E ha
 
-theorem recursiveTail_odd (n : ℕ) (hn : N+1 ≤ n) :
+theorem recursiveTail_odd (n : ℕ) (hn : N + 1 ≤ n) :
     JointOdd T (fun z => recursiveGrade O N a z n) := by
   let F := prefixThrough hT G
   let Hpre : PrefixOdd T (N+1) a :=

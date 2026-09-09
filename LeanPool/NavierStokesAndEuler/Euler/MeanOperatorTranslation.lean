@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.MeanDisplacementRegularity
 
-@[expose] public section
-
 /-!
 # Actual translated coefficient operators for the mean equation
 
@@ -18,6 +16,9 @@ The translated operator is literal conjugation by spatial translation on
 ordinary L². Its Bochner multiplier and H¹ frame derivative obey exact
 covariance, including the terminal primitive and initial trace.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -133,9 +134,9 @@ theorem frameDerivative_translate (T : ℝ) (hT : 0 ≤ T) (a : Space)
       timeTranslation T a
         (productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F₁) u) := by
   change timeMultiplier T hT (solenoidalFrame T (translatePath T a F₁))
-      (primitiveTimeLp T hT (timeSolenoidalTranslation T a u))+
+      (primitiveTimeLp T hT (timeSolenoidalTranslation T a u)) +
     timeMultiplier T hT (solenoidalFrame T (translatePath T a F)) (timeSolenoidalTranslation T a u)
-      = _
+        = _
   have h₁ := (congrArg (timeMultiplier T hT (solenoidalFrame T (translatePath T a F₁)))
     (timeSolenoidalTranslation_primitiveTimeLp T hT a u)).trans
     (frameMultiplier_translate T hT a F₁ (primitiveTimeLp T hT u))

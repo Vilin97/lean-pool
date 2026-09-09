@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakCurl
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanWeakCurl
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-! Pressure cancellation against compactly supported solenoidal vector tests.
 
 The scalar pressure needs only ordinary smoothness. In particular, neither
 the pressure nor its gradient is assumed to be globally square integrable.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,7 +45,7 @@ theorem compact_vector_gradient_integration_by_parts (φ : Space → Space)
       (hφi i).continuous).integrable_of_hasCompactSupport (hci i).mul_left
   have hi₂ (i : Fin 3) : Integrable (fun x => p x * partialDerivative (φi i) i x) :=
     (hp.continuous.mul (contDiff_partialDerivative _ (hφi i)
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
         ((hci i).fderiv_apply ℝ (EuclideanSpace.single i 1)).mul_left
   have hibp (i : Fin 3) : (∫ x, partialDerivative p i x * φi i x) =
       -∫ x, p x * partialDerivative (φi i) i x :=

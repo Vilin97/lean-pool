@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveBase
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientProperties
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighForcing
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorSupport
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientProperties
+
+/-! The genuine homogeneous high-mode solution supplies the primary profile's regularity. -/
 
 @[expose] public section
 
-/-! The genuine homogeneous high-mode solution supplies the primary profile's regularity. -/
 
 noncomputable section
 
@@ -23,6 +26,7 @@ open Set MeasureTheory EulerSmoothLimit EulerPacketPointJets EulerPacketProfileR
 
 variable {P T : ℝ} [Fact (0 < P)]
 
+/-- Change time as an element of `ProfileRegularity P T' hT' S a`. -/
 def ProfileRegularity.changeTime {T' : ℝ} {hT : 0 ≤ T} {S : Set Space} {a : Profile}
     (G : ProfileRegularity P T hT S a) (h : T = T') (hT' : 0 ≤ T') :
     ProfileRegularity P T' hT' S a := by
@@ -32,6 +36,8 @@ def ProfileRegularity.changeTime {T' : ℝ} {hT : 0 ≤ T} {S : Set Space} {a : 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : EulerTransversePacketProvider.Data U} {raw : VectorField}
 
+/-- Primary, bundling `high`, `mean`, `corrector`, `pressure` and the required compatibility
+proofs. -/
 def ProfileRegularity.primary (G : EulerTransversePacketProvider.Forcing P D raw)
     (I : EulerTransversePacketProvider.InitialData P D) (O : Operators)
     (hcorrector : O.curlCorrector = D.curlCorrector P) :
@@ -42,9 +48,9 @@ def ProfileRegularity.primary (G : EulerTransversePacketProvider.Forcing P D raw
     change O.curlCorrector (G.vector I) _ = D.curlCorrector P (G.vector I) _
     rw [hcorrector])
   pressure := G.scalarGradientField I
-  high_t := G.vectorDerivative I
-  mean_t := 0
-  corrector_t := G.correctorDerivative I
+  highT := G.vectorDerivative I
+  meanT := 0
+  correctorT := G.correctorDerivative I
   highDerivative := G.vectorDerivativeField I
   meanDerivative := Field.zero P D.T
   correctorDerivative := G.correctorDerivativeField I
@@ -64,11 +70,15 @@ def homogeneousForcing (D : EulerTransversePacketProvider.Data U) :
     EulerTransversePacketProvider.Forcing P D (0 : VectorField) :=
   (Field.zero P D.T).transverseForcingOfRaw D (fun _ _ _ _ => rfl) (fun _ _ => by simp)
 
+/-- Homogeneous primary, given by `primaryProfile O ((homogeneousForcing (P := P) D).vector I)
+((homogeneousForcing (P := P) D).scalar I)`. -/
 def homogeneousPrimary (D : EulerTransversePacketProvider.Data U)
     (I : EulerTransversePacketProvider.InitialData P D) (O : Operators) : Profile :=
   primaryProfile O ((homogeneousForcing (P := P) D).vector I) ((homogeneousForcing (P := P)
-    D).scalar I)
+      D).scalar I)
 
+/-- Homogeneous primary regularity, given by `ProfileRegularity.primary (homogeneousForcing D) I
+O hcorrector`. -/
 def homogeneousPrimaryRegularity (D : EulerTransversePacketProvider.Data U)
     (I : EulerTransversePacketProvider.InitialData P D) (O : Operators)
     (hcorrector : O.curlCorrector = D.curlCorrector P) :

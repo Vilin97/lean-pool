@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ExponentLedger
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageBounds
 
-@[expose] public section
-
 /-!
 # The arithmetic ledger for actual correction stages
 
@@ -20,6 +18,9 @@ The gain and all physical offsets below are fixed before the stage index.
 This module does not assert the existence of correction cycles or their
 native class estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -145,11 +146,14 @@ frequency can give an additional half power, which is not needed here. -/
 noncomputable def waveNative (κ : ℝ) (j : ℕ) : ℝ :=
   ExponentLedger.waveExponent (inputSigma j) - κ
 
+/-- Wave pressure native, given by `waveNative κ j + 1 / 2`. -/
 noncomputable def wavePressureNative (κ : ℝ) (j : ℕ) : ℝ := waveNative κ j + 1 / 2
 
+/-- Mean native, given by `ExponentLedger.meanUpdateExponent (inputSigma j) κ`. -/
 noncomputable def meanNative (κ : ℝ) (j : ℕ) : ℝ :=
   ExponentLedger.meanUpdateExponent (inputSigma j) κ
 
+/-- Radial native, given by `meanNative κ j + 1`. -/
 noncomputable def radialNative (κ : ℝ) (j : ℕ) : ℝ := meanNative κ j + 1
 
 theorem waveNative_formula (κ : ℝ) {j : ℕ} (hj : 1 ≤ j) :
@@ -165,7 +169,7 @@ theorem wavePressureNative_formula (κ : ℝ) {j : ℕ} (hj : 1 ≤ j) :
 theorem meanNative_formula (κ : ℝ) {j : ℕ} (hj : 1 ≤ j) :
     meanNative κ j = (j : ℝ) / 10 + (11 / 10 - 2 * κ) := by
   rw [meanNative, ExponentLedger.meanUpdateExponent, ExponentLedger.meanExponent,
-    inputSigma_formula hj]
+      inputSigma_formula hj]
   ring
 
 theorem radialNative_formula (κ : ℝ) {j : ℕ} (hj : 1 ≤ j) :
@@ -212,11 +216,18 @@ theorem gain_le_radial {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000) {j 
   unfold radialNative
   nlinarith
 
+/-- Offsets data, collecting `wavePotential`, `meanStream`, `directAngular`, `wavePressure`,
+`meanPressure`. -/
 structure Offsets where
+  /-- Wave potential of `Offsets`, of type `ℝ`. -/
   wavePotential : ℝ
+  /-- Mean stream of `Offsets`, of type `ℝ`. -/
   meanStream : ℝ
+  /-- Direct angular of `Offsets`, of type `ℝ`. -/
   directAngular : ℝ
+  /-- Wave pressure of `Offsets`, of type `ℝ`. -/
   wavePressure : ℝ
+  /-- Mean pressure of `Offsets`, of type `ℝ`. -/
   meanPressure : ℝ
 
 /-- These five constants do not depend on an increment or derivative index. -/
@@ -229,16 +240,18 @@ theorem fixed_offset_inequalities {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 
     gain h j ≤ h * meanNative κ j + (offsets h).meanStream ∧
     gain h j ≤ h * meanNative κ j + (offsets h).directAngular ∧
     gain h j ≤ h * wavePressureNative κ j + (-(2 * CoordinateAlgebra.A h)) + (offsets
-      h).wavePressure ∧
+        h).wavePressure ∧
     gain h j ≤ h * meanNative κ j + (offsets h).meanPressure := by
   simpa only [offsets, add_assoc, neg_add_cancel, add_zero] using
     And.intro (gain_le_wave hh hκ hj) (And.intro (gain_le_mean hh hκ hj)
       (And.intro (gain_le_mean hh hκ hj) (And.intro (gain_le_wavePressure hh hκ hj) (gain_le_mean
-        hh hκ hj))))
+          hh hκ hj))))
 
 /-! ## Residual indexing after a finite number of cycles -/
 
+/-- Residual wave, given by `ExponentLedger.waveExponent (sigma J)`. -/
 noncomputable def residualWave (J : ℕ) : ℝ := ExponentLedger.waveExponent (sigma J)
+/-- Residual mean, given by `ExponentLedger.meanExponent (sigma J)`. -/
 noncomputable def residualMean (J : ℕ) : ℝ := ExponentLedger.meanExponent (sigma J)
 
 theorem residualWave_formula (J : ℕ) : residualWave J = (J : ℝ) / 10 + 7 / 10 := by
@@ -299,6 +312,7 @@ stage-dependent loss. -/
 noncomputable def residualLoss (h beta : ℝ) (m : ℕ) : ℝ :=
   PhysicalGraphBounds.graphLoss m + 1 + (2 * CoordinateAlgebra.A h + 1 / 2) + beta * m
 
+/-- Residual rate, given by `h * residualWave J - residualLoss h beta m`. -/
 noncomputable def residualRate (h beta : ℝ) (J m : ℕ) : ℝ :=
   h * residualWave J - residualLoss h beta m
 
@@ -437,7 +451,7 @@ theorem fixed_ledger {h : ℝ} (hh : 0 < h) :
       gain h j ≤ h * meanNative kappa j + (offsets h).meanStream ∧
       gain h j ≤ h * meanNative kappa j + (offsets h).directAngular ∧
       gain h j ≤ h * wavePressureNative kappa j + (-(2 * CoordinateAlgebra.A h)) + (offsets
-        h).wavePressure ∧
+          h).wavePressure ∧
       gain h j ≤ h * meanNative kappa j + (offsets h).meanPressure) :=
   ⟨kappa_admissible, sigma_zero, sigma_succ, gain_zero h, fun _ hj => gain_pos hh hj,
     gain_monotone hh.le, gain_tendsto_atTop hh,

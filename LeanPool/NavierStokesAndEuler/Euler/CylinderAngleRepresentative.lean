@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAnglePrimitive
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveKernel
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveKernel
+
+/-! The genuine cylinder L² angular operator represents the literal classical primitive. -/
 
 @[expose] public section
 
-/-! The genuine cylinder L² angular operator represents the literal classical primitive. -/
 
 noncomputable section
 
@@ -30,7 +32,7 @@ theorem sobolevKernel_continuous {q : ℕ} (u : SobolevSpace P q) :
 /-- The lifted operator is also the actual Bochner integral in the Sobolev space. -/
 theorem sobolevPrimitive_eq_integral {q : ℕ} (u : SobolevSpace P q) :
     sobolevPrimitive P q u = P⁻¹ • (∫ s in (0 : ℝ)..P, s • sobolevTranslation P q (angleShift P s)
-      u) := by
+        u) := by
   apply value_injective P
   change primitive P (value P u) = (valueOperator P q)
     (P⁻¹ • (∫ s in (0 : ℝ)..P, s • sobolevTranslation P q (angleShift P s) u))
@@ -46,7 +48,7 @@ theorem pointEvaluation_translation (u : SobolevSpace P 3) (a x : LiftDomain P) 
     ((representative_continuous P u).comp (continuous_id.add continuous_const))
   filter_upwards [translation_ae P a (value P u),
     (measurePreserving_translation P a).quasiMeasurePreserving.ae (representative_ae P u)] with y
-      hy hr
+        hy hr
   change translation P a (value P u) y = _
   exact hy.trans hr
 
@@ -66,8 +68,8 @@ theorem pointEvaluation_primitive_kernel (u : SobolevSpace P 3) (x : LiftDomain 
 /-- Evaluation of the constructed L² operator gives the actual normalized integral. -/
 theorem pointEvaluation_primitive_classical (u : SobolevSpace P 3)
     (f : LiftDomain P → Vector3) (hf : Continuous f)
-    (hrep : (value P u : LiftDomain P → Vector3)=ᵐ[liftMeasure P] f)
-    (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P)))=0)
+    (hrep : (value P u : LiftDomain P → Vector3) =ᵐ[liftMeasure P] f)
+    (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y, (s : AddCircle P))) = 0)
     (y : Vector3) (θ : ℝ) :
     pointEvaluation P (y,(θ : AddCircle P)) (sobolevPrimitive P 3 u) =
       EulerAngleMeanZeroPrimitive.primitive P (fun s => f (y,(s : AddCircle P))) θ := by
@@ -84,10 +86,10 @@ theorem pointEvaluation_primitive_classical (u : SobolevSpace P 3)
 /-- Classical identification holds as equality of actual L² representatives. -/
 theorem primitive_ae_classical (u : SobolevSpace P 3)
     (f q : LiftDomain P → Vector3) (hf : Continuous f)
-    (hrep : (value P u : LiftDomain P → Vector3)=ᵐ[liftMeasure P] f)
-    (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P)))=0)
-    (hq : ∀ (y : Vector3) (θ : ℝ), q (y,(θ : AddCircle P)) =
-      EulerAngleMeanZeroPrimitive.primitive P (fun s => f (y,(s : AddCircle P))) θ) :
+    (hrep : (value P u : LiftDomain P → Vector3) =ᵐ[liftMeasure P] f)
+    (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y, (s : AddCircle P))) = 0)
+    (hq : ∀ (y : Vector3) (θ : ℝ), q (y, (θ : AddCircle P)) =
+      EulerAngleMeanZeroPrimitive.primitive P (fun s => f (y, (s : AddCircle P))) θ) :
     (primitive P (value P u) : LiftDomain P → Vector3)=ᵐ[liftMeasure P] q := by
   have he (x : LiftDomain P) : representative P (sobolevPrimitive P 3 u) x = q x := by
     obtain ⟨θ,hθ⟩ := QuotientAddGroup.mk_surjective x.2

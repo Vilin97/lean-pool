@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketRay
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Exact finite-dimensional algebra of the source ray/velocity scaling. -/
 
 @[expose] public section
 
-/-! Exact finite-dimensional algebra of the source ray/velocity scaling. -/
 
 noncomputable section
 
@@ -19,6 +21,7 @@ namespace EulerPacketMovingFrame
 
 open EulerPacketRay
 
+/-- Velocity scale, with branches according to `i = 1`. -/
 def velocityScale (ε : ℝ) (i : Fin 3) : ℝ := if i = 1 then 1 else ε
 
 theorem velocityScale_ne_zero {ε : ℝ} (hε : ε ≠ 0) (i : Fin 3) : velocityScale ε i ≠ 0 := by
@@ -60,13 +63,14 @@ theorem scaling_velocity_rate {a ε s₀ D : ℝ}
     norm_num [Fin.sum_univ_three, velocityScale, rayScale, scaledVelocityEntry, Fin.ext_iff] <;>
     field_simp
 
+/-- Scaled velocity rhs as an element of `ℝ`. -/
 def scaledVelocityRhs (A C : Fin 3 → Fin 3 → ℝ) (ε : ℝ) (R V : Fin 3 → ℝ) (i : Fin 3) : ℝ :=
   -(∑ j : Fin 3, C i j*V j) + 2*(rayScale ε i)^2*R i *
     velocityNumerator A (R 0) (R 1) (R 2) (V 0) (V 1) (V 2) /
       rayDenominator ε (R 0) (R 1) (R 2)
 
 theorem thirdVelocity_of_pairing (R V : Fin 3 → ℝ) (hN : R 2 ≠ 0)
-    (hRV : R 0*V 0+R 1*V 1+R 2*V 2 = 0) :
+    (hRV : R 0 * V 0 + R 1 * V 1 + R 2 * V 2 = 0) :
     V 2 = velocityThird (R 0) (R 1) (R 2) (V 0) (V 1) := by
   unfold velocityThird
   apply (eq_div_iff hN).2

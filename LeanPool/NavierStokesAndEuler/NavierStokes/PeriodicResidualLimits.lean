@@ -8,10 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JointResidualLimits
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialLocalization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CandidateFromLimits
-public import Mathlib.Algebra.Order.Round
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactForceDecay
+import LeanPool.NavierStokesAndEuler.NavierStokes.CandidateFromLimits
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
 
 /-!
 # Actual residual limits after spatial localization and periodization
@@ -23,6 +23,9 @@ of the periodized residual are constructed, including at every nonzero
 lattice copy of the origin. No residual identity or residual limit after
 periodization is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -156,6 +159,7 @@ theorem periodicResidual_jets_eq_cut (A : VelocityField) (p : PressureField)
 be assumed to preserve continuity of the constructed boundary tensors. -/
 noncomputable def nearestIndex (x : Space) : Fin 3 → ℤ := fun i => round (x i)
 
+/-- Representative, given by `x - CompactForceDecay.integerShift (nearestIndex x)`. -/
 noncomputable def representative (x : Space) : Space :=
   x - CompactForceDecay.integerShift (nearestIndex x)
 
@@ -178,7 +182,7 @@ theorem spatial_sub_tendsto_past (a x : Space) :
   apply tendsto_nhdsWithin_iff.mpr
   constructor
   · exact (continuous_fst.prodMk (continuous_snd.sub
-    continuous_const)).continuousAt.tendsto.mono_left
+      continuous_const)).continuousAt.tendsto.mono_left
       nhdsWithin_le_nhds
   · filter_upwards [self_mem_nhdsWithin] with z hz
     exact ⟨hz.1, mem_univ _⟩
@@ -204,6 +208,8 @@ theorem periodicResidual_jets_locally_cut (A : VelocityField) (p : PressureField
 
 /-! ## The constructed boundary series -/
 
+/-- Boundary limits, given by `JointResidualLimits.boundaryLimits (cutResidual A p)
+(cutResidual_awayExtensions eA ep) (representative x)`. -/
 noncomputable def boundaryLimits (A : VelocityField) (p : PressureField)
     (eA : JointResidualLimits.AwayExtensions A)
     (ep : JointResidualLimits.AwayExtensions p) (x : Space) :

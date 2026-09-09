@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentFrameReframe
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.PacketNestedHorizons
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
 
 /-! Restricting the actual parent frame to the next packet horizon,
 and identifying its physical and scaled times with the literal scales. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,13 +26,14 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketMovingFrame EulerTimeIntervalRestriction
 
 variable {A : Parent} {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  {m : Space} {hm : ‖m‖=1} {R : U ≃ₗᵢ[ℝ] referencePlane m}
+  {m : Space} {hm : ‖m‖ = 1} {R : U ≃ₗᵢ[ℝ] referencePlane m}
   {support : Set Space} {hSupport : IsCompact support} {τ : ℝ}
   (P : ParentFrame (A.transverseData m hm R support hSupport) τ)
   (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) (hτ : 0 ≤ τ)
 
+/-- Restrict time, bundling `B`, `B₁`, `m`, `v` and the required compatibility proofs. -/
 def restrictTime : ParentFrame ((A.restrictTime S hS hST).transverseData m hm R support hSupport) τ
-  where
+    where
   B := P.B
   B₁ := P.B₁
   m := P.m
@@ -43,7 +46,7 @@ def restrictTime : ParentFrame ((A.restrictTime S hS hST).transverseData m hm R 
   B_derivative t ht := (P.B_derivative t ⟨ht.1,ht.2.trans hST⟩).mono (Icc_subset_Icc le_rfl hST)
   ray_equation t ht := (P.ray_equation t ⟨ht.1,ht.2.trans hST⟩).mono (Icc_subset_Icc le_rfl hST)
   velocity_equation t ht := (P.velocity_equation t ⟨ht.1,ht.2.trans hST⟩).mono (Icc_subset_Icc
-    le_rfl hST)
+      le_rfl hST)
   ray_nonzero t ht := P.ray_nonzero t ⟨ht.1,ht.2.trans hST⟩
   velocity_nonzero t ht := P.velocity_nonzero t ⟨ht.1,ht.2.trans hST⟩
   tangent t ht := P.tangent t ⟨ht.1,ht.2.trans hST⟩
@@ -55,7 +58,7 @@ def restrictTime : ParentFrame ((A.restrictTime S hS hST).transverseData m hm R 
     have h := P.remainder_bound t ⟨ht.1,ht.2.trans hST⟩
     rw [Data.clamp_coe (A.transverseData m hm R support hSupport) ta] at h
     change ‖(A.restrictTime S hS hST).strain.field
-      (((A.restrictTime S hS hST).transverseData m hm R support hSupport).clamp t) 0-
+      (((A.restrictTime S hS hST).transverseData m hm R support hSupport).clamp t) 0 -
       P.B t-primaryShear P.c P.m P.v t •
         rankOne ℝ (EulerPacketNormalizedPrimary.unit (P.v t))
           (EulerPacketNormalizedPrimary.unit (P.m t))‖ ≤ P.error
@@ -121,24 +124,24 @@ open Set EulerSmoothLimit EulerParentPacketFrames EulerTransversePacketProvider
   EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence EulerPacketNestedHorizons
 
 variable {A : Parent} {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  {m : Space} {hm : ‖m‖=1} {R : U ≃ₗᵢ[ℝ] referencePlane m}
+  {m : Space} {hm : ‖m‖ = 1} {R : U ≃ₗᵢ[ℝ] referencePlane m}
   {support : Set Space} {hSupport : IsCompact support} {τ : ℝ}
   (P : ParentFrame (A.transverseData m hm R support hSupport) τ)
 
 theorem target_on_scales (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ)
-    (ha : 0 ≤ a n) (hβ : 0 ≤ β n) (haMatch : P.a=a n)
-    (hShear : P.shear=previousShear J X n) (hSigma : P.sigma=Real.sqrt (β n)) :
-    physicalTime τ P.a P.epsilon (scaleSequence J X (n+1)/P.sigma)=
+    (ha : 0 ≤ a n) (hβ : 0 ≤ β n) (haMatch : P.a = a n)
+    (hShear : P.shear = previousShear J X n) (hSigma : P.sigma = Real.sqrt (β n)) :
+    physicalTime τ P.a P.epsilon (scaleSequence J X (n+1)/P.sigma) =
       τ+stepLength J X a β n := by
   simp only [ParentFrame.epsilon,haMatch,hShear,hSigma,stepLength]
   exact physical_target_identity ha hβ τ _
 
 theorem restricted_horizon_on_scales (J : ℕ) (X : ℝ) (hX : 0 < X) (a β : ℕ → ℝ) (n : ℕ)
-    (ha : 0 < a n) (hβ : 0 < β n) (haMatch : P.a=a n)
-    (hShear : P.shear=previousShear J X n)
+    (ha : 0 < a n) (hβ : 0 < β n) (haMatch : P.a = a n)
+    (hShear : P.shear = previousShear J X n)
     (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) (hτ : 0 ≤ τ)
-    (hSMatch : S=τ+stepLength J X a β n+2*timeWidth J X (n+1)) :
-    (P.restrictTime S hS hST hτ).horizon=
+    (hSMatch : S = τ + stepLength J X a β n + 2 * timeWidth J X (n + 1)) :
+    (P.restrictTime S hS hST hτ).horizon =
       EulerPacketSourceScaleGuards.horizon J X (a n) (β n) n := by
   rw [P.restrictTime_horizon,ParentFrame.epsilon,haMatch,hShear,hSMatch]
   exact scaled_horizon_identity ha (previousShear_pos J hX n) hβ τ

@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GlobalInviscidGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionCompatibility
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyData
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
+
+/-! Coherent prescribed cylinder data at every finite Sobolev order. -/
 
 @[expose] public section
 
-/-! Coherent prescribed cylinder data at every finite Sobolev order. -/
 
 noncomputable section
 
@@ -24,7 +25,8 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- A single actual coefficient field with genuine derivative jets and continuous multiplier action at every finite order. -/
+/-- A single actual coefficient field with genuine derivative jets and continuous multiplier action
+at every finite order. -/
 structure CoefficientTower (T : ℝ) where
   /-- The actual smooth bounded coefficient at each time. -/
   coefficient : Icc (0 : ℝ) T → SmoothCoefficient period
@@ -50,10 +52,11 @@ theorem FieldTower.truncate {T : ℝ} (f : FieldTower period T) (q : ℕ) :
   intro t
   apply value_injective period
   change value period (truncateOperator period q (f.realization (q+1) t))=value period
-    (f.realization q t)
+      (f.realization q t)
   rw [value_truncateOperator,f.value_eq,f.value_eq]
 
-/-- Actual all-order prescribed coefficient, approximation and residual data; no correction solution or energy estimate is contained here. -/
+/-- Actual all-order prescribed coefficient, approximation and residual data; no correction solution
+or energy estimate is contained here. -/
 structure Data (T : ℝ) where
   /-- The fixed spatial scale in the lifted derivative. -/
   κ : ℝ
@@ -107,7 +110,8 @@ theorem Data.lower_atOrder {T : ℝ} (A : Data period T) (q : ℕ) :
   · exact A.approximation.truncate period (q+1)
   · exact A.residual.truncate period q
 
-/-- A single actual inverse-metric budget applies to every finite realization of the same coefficient field. -/
+/-- A single actual inverse-metric budget applies to every finite realization of the same
+coefficient field. -/
 def Data.metricBudget {T : ℝ} (A : Data period T) (hT : 0 ≤ T)
     (K : MetricBudget period T hT (A.atOrder period 1)) (q : ℕ) :
     MetricBudget period T hT (A.atOrder period (q+1)) where

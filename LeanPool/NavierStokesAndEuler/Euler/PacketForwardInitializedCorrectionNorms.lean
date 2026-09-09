@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldDrift
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevDriftNorm
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldDrift
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolevBudget
 
 /-! Cutoff-independent background, derivative, drift and residual budgets
 for the actual zero-history correction data. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +29,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
   (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
@@ -38,20 +41,20 @@ variable (M : EulerMeanPacketProvider.Data)
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.g)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.g)
   (Cagree : SourceCoefficientAgreement M D)
   (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-  (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+  (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
 
 include NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth hbase
 
-theorem forwardInitializedCorrection_background (s Q : ℕ) (hQ : Q+6 ≤ s)
-    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ*(4*L.R) ≤ 1/2) (t : Icc (0 : ℝ) D.T) :
+theorem forwardInitializedCorrection_background (s Q : ℕ) (hQ : Q + 6 ≤ s)
+    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ * (4 * L.R) ≤ 1 / 2) (t : Icc (0 : ℝ) D.T) :
     weightedNorm period 6 Q ρ
       ((forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k
-        hk).approximation.realization s t)
+          hk).approximation.realization s t)
         ≤ 2*velocity L.R S.H0 BC.multiplierCost := by
   have hz := forwardInitializedNormalizedField_bound M D hTime δ hδ ξ hs α
     L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase
@@ -59,11 +62,11 @@ theorem forwardInitializedCorrection_background (s Q : ℕ) (hQ : Q+6 ≤ s)
     (velocity_nonneg L.R S.H0 BC.multiplierCost (zero_le_one.trans L.radius_one)
       BC.multiplierCost_nonneg) s Q hQ ρ hρ hsmall t
 
-theorem forwardInitializedCorrection_background_derivative (s Q : ℕ) (hQ : Q+6 ≤ s)
-    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ*(4*L.R) ≤ 1/2) (t : Icc (0 : ℝ) D.T) :
+theorem forwardInitializedCorrection_background_derivative (s Q : ℕ) (hQ : Q + 6 ≤ s)
+    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ * (4 * L.R) ≤ 1 / 2) (t : Icc (0 : ℝ) D.T) :
     (∑ i : Fin 4, weightedNorm period 6 Q ρ (derivativeOperator period s i
       ((forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k
-        hk).approximation.realization (s+1) t)))
+          hk).approximation.realization (s+1) t)))
         ≤ 12*velocity L.R S.H0 BC.multiplierCost*(4*L.R) := by
   have hz := forwardInitializedNormalizedField_bound M D hTime δ hδ ξ hs α
     L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase
@@ -71,11 +74,11 @@ theorem forwardInitializedCorrection_background_derivative (s Q : ℕ) (hQ : Q+6
     (velocity_nonneg L.R S.H0 BC.multiplierCost (zero_le_one.trans L.radius_one)
       BC.multiplierCost_nonneg) s Q hQ ρ hρ hsmall t
 
-theorem forwardInitializedCorrection_drift (s Q : ℕ) (hQ : Q+6 ≤ s)
-    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ*(4*L.R) ≤ 1/2) (t : Icc (0 : ℝ) D.T) :
+theorem forwardInitializedCorrection_drift (s Q : ℕ) (hQ : Q + 6 ≤ s)
+    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ * (4 * L.R) ≤ 1 / 2) (t : Icc (0 : ℝ) D.T) :
     weightedDriftNorm period 6 Q ρ (velocityMap (velocityComponents k⁻¹ D.m₀))
       ((forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k
-        hk).approximation.realization s t)
+          hk).approximation.realization s t)
         ≤ drift L.R S.H0 BC.multiplierCost/k := by
   have hz := forwardInitializedNormalizedField_bound M D hTime δ hδ ξ hs α
     L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase
@@ -90,12 +93,12 @@ theorem forwardInitializedCorrection_drift (s Q : ℕ) (hQ : Q+6 ≤ s)
   exact hd.trans_eq (drift_div_frequency L.R S.H0 BC.multiplierCost k hk0)
 
 theorem forwardInitializedCorrection_residual (X : ℝ)
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ)) (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ))
-    (s Q : ℕ) (hQ : Q+6 ≤ s) (ρ : ℝ) (hρ : 0 < ρ)
-    (hsmall : ρ*(4*L.R) ≤ 1/2) (t : Icc (0 : ℝ) D.T) :
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ)) (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ))
+    (s Q : ℕ) (hQ : Q + 6 ≤ s) (ρ : ℝ) (hρ : 0 < ρ)
+    (hsmall : ρ * (4 * L.R) ≤ 1 / 2) (t : Icc (0 : ℝ) D.T) :
     weightedNorm period 6 Q ρ
       ((forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k
-        hk).residual.realization s t)
+          hk).residual.realization s t)
         ≤ 2*Real.exp (-(7/10)*X*Real.log k) := by
   have hr := forwardInitializedNormalizedResidualField_bound M D hTime δ hδ ξ hs α
     L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth Cagree N hN k X hk hbase hcoef hX hNX

@@ -6,15 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
 public import LeanPool.NavierStokesAndEuler.Euler.NoIncomingVorticity
-public import LeanPool.NavierStokesAndEuler.Euler.ReversedVorticityTransport
 public import LeanPool.NavierStokesAndEuler.Euler.TruncationFamily
 public import LeanPool.NavierStokesAndEuler.Euler.TruncatedBackwardFlow
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
 public import LeanPool.NavierStokesAndEuler.Euler.LocalFlowTrap
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+public import LeanPool.NavierStokesAndEuler.Euler.ReversedVorticityTransport
+import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
 
 /-!
 # Short-time compact vorticity from finite-energy truncations
@@ -23,6 +22,9 @@ The auxiliary characteristics are global flows of compact solenoidal
 truncations. The construction does not require global trajectories of the
 untruncated Comparator velocity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -69,7 +71,7 @@ theorem exists_local_trapping_constants
 
 
 omit h in
-private theorem truncation_realField_agrees
+theorem truncation_realField_agrees
     (F : ComparatorBridge.FiniteEnergyTruncationFamily v)
     (R : ℝ) (hR : 0 < R) (r : ℝ) (hr : r ∈ Icc 0 1)
     (x : Space) (hx : ‖x‖ < R) :
@@ -154,10 +156,11 @@ def locallyTrappedBackwardFlows
     have hz := EulerComparatorLocalFlow.norm_lt_of_local_speed_bound
       Z ((C R).realField 1 zero_le_one) hM.le (by linarith : A < A + 1) hsmall
       (ComparatorBridge.TruncatedBackwardFlow.endpointPath_continuous (C R) T hT.1 hT1
-        a).continuousOn
+          a).continuousOn
       (ComparatorBridge.TruncatedBackwardFlow.endpointPath_hasDerivAt (C R) T hT.1 hT1 a)
-      (by simpa only [Z, ComparatorBridge.TruncatedBackwardFlow.endpointPath_zero] using hAbound a
-        ha)
+      (by
+          simpa only [Z, ComparatorBridge.TruncatedBackwardFlow.endpointPath_zero] using hAbound a
+              ha)
       (by
         intro r hr x hx
         rw [truncation_realField_agrees F (ρ R) (hρ R) r ⟨hr.1, hr.2.trans hT1⟩ x

@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+
+/-! Coefficient-only Sobolev costs for the actual acceleration right side. -/
 
 @[expose] public section
 
-/-! Coefficient-only Sobolev costs for the actual acceleration right side. -/
 
 noncomputable section
 
@@ -20,9 +21,11 @@ namespace EulerParameterWordGevrey
 open EulerGevrey
 open scoped ContDiff
 
+/-- Acceleration block amplitude, given by `3*sobolevCoefficientAmplitude ι q Rc CA *
+(Cf+6*sobolevCoefficientAmplitude ι q Rc CB*Cv)`. -/
 def accelerationBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
     (Rc CA CB Cf Cv : ℝ) : ℝ :=
-  3*sobolevCoefficientAmplitude ι q Rc CA*
+  3*sobolevCoefficientAmplitude ι q Rc CA *
     (Cf+6*sobolevCoefficientAmplitude ι q Rc CB*Cv)
 
 theorem accelerationBlockAmplitude_nonneg {ι : Type*} [Fintype ι] (q : ℕ)
@@ -48,11 +51,11 @@ theorem block_acceleration_forcing_of_tensor (directions : ι → P)
     (hf : ContDiff ℝ ∞ f) (hv : ContDiff ℝ ∞ v)
     (Rc R CA CB Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hCA : 0 ≤ CA) (hCB : 0 ≤ CB) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hbA : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ CA*majorant Rc 0 n)
-    (hbB : ∀ n x, ‖iteratedFDeriv ℝ n B x‖ ≤ CB*majorant Rc 0 n)
+    (hbA : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ CA * majorant Rc 0 n)
+    (hbB : ∀ n x, ‖iteratedFDeriv ℝ n B x‖ ≤ CB * majorant Rc 0 n)
     (d : ℕ)
-    (hbf : ∀ n x, block directions q f n x ≤ Cf*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ Cv*majorant R d n)
+    (hbf : ∀ n x, block directions q f n x ≤ Cf * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => A y (f y-(2 : ℝ) • B y (v y))) n x ≤
       accelerationBlockAmplitude ι q Rc CA CB Cf Cv*majorant R d n :=

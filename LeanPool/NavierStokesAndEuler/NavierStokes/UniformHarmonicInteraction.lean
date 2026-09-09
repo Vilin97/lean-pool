@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedMeanInteraction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedWaveBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedMeanInteraction
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
 
 /-!
 # Uniform estimates for the actual harmonic interaction
@@ -18,6 +18,9 @@ The finite-jet constants are chosen before the spatial label and band.
 The nonlinear estimate uses exact mode solenoidality to remove the phase
 normal. Only the fixed signed harmonic ratio remains in that cancellation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -185,7 +188,7 @@ theorem blockAmplitude_uniform {a : ι → CorrectionState.HarmonicBlock D}
   have h := ((ha i j hj).add ((ha i (-j) (neg_ne_zero.mpr hj)).map
     (Complex.conjCLE : ℂ →L[ℝ] ℂ))).map (ContinuousLinearMap.mul ℝ ℂ (2 : ℂ)⁻¹)
   simp only [amplitude, blockAmplitude, HarmonicResidual.realCoefficients_apply,
-    ContinuousLinearMap.mul_apply'] at h ⊢
+      ContinuousLinearMap.mul_apply'] at h ⊢
   exact h
 
 /-- The genuine ordered coefficient has a uniform class before summing
@@ -278,12 +281,12 @@ theorem transport_uniform_raw
   intro l n x hx
   exact (transport_convolution _ _ _ _ _ _ (harmonicRange M)
     (fun r => band_support_range (HarmonicResidual.band_realCoefficients ((hM l).1 n r))) m x
-      i).symm
+        i).symm
 
 theorem square_weight_wave {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {γ : ℝ} {f : ι → ℕ → D → E}
-    (hf : UniformClass s (fun l n x => (Real.sqrt (s.zeta x)*P l n x) *
-      (Real.sqrt (s.zeta x)*P l n x)) γ f)
+    (hf : UniformClass s (fun l n x => (Real.sqrt (s.zeta x) * P l n x) *
+      (Real.sqrt (s.zeta x) * P l n x)) γ f)
     (hζ : ∀ x ∈ s.domain, s.zeta x ≤ 1)
     (hP0 : ∀ l n x, x ∈ s.domain → 0 ≤ P l n x)
     (hP1 : ∀ l n x, x ∈ s.domain → P l n x ≤ 1) : UniformWaveClass s P γ f := by
@@ -387,7 +390,7 @@ has one finite-jet bound uniform over labels and bands. Phase normals and
 frequencies are required only on the genuine support patch of each wave. -/
 theorem interactionBlock_uniform
     (c : CorrectionState.Context D) (ho : MeanIncrementBounds.OperatorBounds s c.operators κ)
-    (hκ : κ ≤ 1/2) (hR : ∀ x ∈ s.domain, 0 < c.operators.radius x)
+    (hκ : κ ≤ 1 / 2) (hR : ∀ x ∈ s.domain, 0 < c.operators.radius x)
     {u : CorrectionState.State D} (hmean : MeanIncrementBounds.IncrementBounds s μ u.mean)
     {a b : ι → CorrectionState.HarmonicBlock D} {M N : ℕ}
     (ha : UniformVelocity s P α a) (hb : UniformVelocity s P β b)
@@ -400,9 +403,9 @@ theorem interactionBlock_uniform
     {C : ℕ → ι → Set D}
     (hNormal : ∀ i, LocalizedWaveBounds.LocalUnweighted s C 0
       (fun n l x => slowNormal c ho hR (a l).phase n x i))
-    (hFreq : LocalizedWaveBounds.LocalUnweighted s C (-(1/2))
+    (hFreq : LocalizedWaveBounds.LocalUnweighted s C (-(1 / 2))
       (fun n l _ => (a l).frequency n))
-    (hAng : LocalizedWaveBounds.LocalUnweighted s C (-(1/2))
+    (hAng : LocalizedWaveBounds.LocalUnweighted s C (-(1 / 2))
       (fun n l _ => ((a l).angularFrequency n : ℝ)))
     (hz : ∀ n l x, x ∈ s.domain → x ∉ C n l →
       ∀ i j, j ≠ 0 → (b l).velocity n i j =ᶠ[𝓝 x] fun _ => 0)
@@ -423,7 +426,7 @@ theorem interactionBlock_uniform
   intro l n x hx
   change _ = HarmonicResidual.nonconstant (HarmonicResidual.realCoefficients
     (meanCross c u.mean (withCarrier (a l) (b l)) n i + nonlinearCoefficients c (a l) (b l) n i)) j
-      x
+        x
   rw [nonconstant_apply_of_ne _ hj, realCoefficients_add]
   rfl
 

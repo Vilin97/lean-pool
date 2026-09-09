@@ -7,17 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStageEstimates
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceLow
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceRenewal
-public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceInitial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStageEstimates
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceInitial
+public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalScaleApplication
 
 /-! The positive-history normal step. One actual correction constructs
 the next Euler state, localized low bounds, renewed frame and exact
 initial increment, without any premise about a future stage. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,9 +43,12 @@ local notation "k" => frequency S.J S.X n
 local notation "hk" => S.normal_frequency n
 local notation "ell" => supportScale S.J S.X (n+1)
 
+/-- Joined choice: an abbreviation for `GeometryJoinedChoice I P.restrictedState k hk ell
+(S.support_pos (n+1)) (S.support_one (n+1))`. -/
 abbrev JoinedChoice :=
   GeometryJoinedChoice I P.restrictedState k hk ell (S.support_pos (n+1)) (S.support_one (n+1))
 
+/-- Choose joined, choosing the witness provided by `Joined`. -/
 def chooseJoined : P.JoinedChoice hn hq hB := by
   have hsec := S.secondary_frequency n P.restrictedState.labels.K P.label_eq.le
   exact Classical.choice (exists_geometryJoinedChoice I P.restrictedState k hk ell
@@ -51,22 +57,25 @@ def chooseJoined : P.JoinedChoice hn hq hB := by
 
 local notation "F" => P.chooseJoined hn hq hB
 
+/-- Joined parent, given by `(F).parent`. -/
 def joinedParent : Parent := (F).parent
 
+/-- Joined state, given by `GeometryJoinedChoice.state I P.restrictedState k hk ell
+(S.support_pos (n+1)) (S.support_one (n+1)) F symmetric`. -/
 def joinedState : SmoothState (P.joinedParent hn hq hB) :=
   GeometryJoinedChoice.state I P.restrictedState k hk ell
     (S.support_pos (n+1)) (S.support_one (n+1)) F symmetric
 
 theorem joined_smallness :
-    (P.restrictedLow.K+2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*
-        ((G).δ*goodRatio+(G).badRatio)+k^(-(1/4 : ℝ)))*(P.nextHorizon^2/2)+
-      (P.restrictedLow.Be+((G).hchild*(G).badRatio+k^(-(1/4 : ℝ))))*P.nextHorizon+
-      boundaryLocalizationC2*(P.restrictedLow.Bc+((G).hchild*(G).badRatio+k^(-(1/4 : ℝ))))*
+    (P.restrictedLow.K+2*(gradientConstant*previousShear S.J S.X n)*(G).hchild *
+        ((G).δ*goodRatio+(G).badRatio)+k^(-(1/4 : ℝ)))*(P.nextHorizon^2/2) +
+      (P.restrictedLow.Be+((G).hchild*(G).badRatio+k^(-(1/4 : ℝ))))*P.nextHorizon +
+      boundaryLocalizationC2*(P.restrictedLow.Bc+((G).hchild*(G).badRatio+k^(-(1/4 : ℝ)))) *
         P.restrictedLow.r^3*P.nextHorizon ≤ 1/2 := by
   have he : 0 ≤ k^(-(1/4 : ℝ)) := rpow_nonneg (hk).pos.le _
   have h := P.next_localized P.nextHorizon
     ((G).hchild*(G).badRatio+k^(-(1/4 : ℝ)))
-    (2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*
+    (2*(gradientConstant*previousShear S.J S.X n)*(G).hchild *
       ((G).δ*goodRatio+(G).badRatio)+k^(-(1/4 : ℝ)))
     P.nextHorizon_pos.le P.nextHorizon_le_base
     (by positivity [(G).child_nonneg,(G).badRatio_nonneg])
@@ -76,11 +85,14 @@ theorem joined_smallness :
   rw [restrictedLow_pressure,restrictedLow_exterior,restrictedLow_core,restrictedLow_radius]
   convert h using 1; ring
 
+/-- Joined low as an element of `LowBounds (P.joinedParent hn hq hB)`. -/
 def joinedLow : LowBounds (P.joinedParent hn hq hB) :=
   (F).lowBounds (gradientConstant*previousShear S.J S.X n)
     (hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n)
     P.restricted_gradient_bound P.restricted_hessian_bound (P.joined_smallness hn hq hB)
 
+/-- Joined renewal as an element of `ParentFrame (frameData (P.joinedParent hn hq hB))
+(P.joinedGeometry hn hq hB).targetTime`. -/
 def joinedRenewal : ParentFrame (frameData (P.joinedParent hn hq hB))
     (P.joinedGeometry hn hq hB).targetTime :=
   (F).renewal symmetric (gradientConstant*previousShear S.J S.X n)
@@ -88,7 +100,7 @@ def joinedRenewal : ParentFrame (frameData (P.joinedParent hn hq hB))
     (frameConstant*(1+previousShear S.J S.X n))
     (mul_nonneg gradient_nonneg (zero_le_one.trans (S.previousShear_one n)))
     (next_frame_bounds (S := S) (n := n)).1 (next_frame_bounds (S := S) (n := n)).2.1
-      (next_frame_bounds (S := S) (n := n)).2.2
+        (next_frame_bounds (S := S) (n := n)).2.2
     P.restricted_gradient_bound P.restricted_hessian_bound
     firstNormal firstNormal_unit firstFrame support compact
 
@@ -99,13 +111,16 @@ theorem joinedRenewal_matches :
     (frameConstant*(1+previousShear S.J S.X n))
     (mul_nonneg gradient_nonneg (zero_le_one.trans (S.previousShear_one n)))
     (next_frame_bounds (S := S) (n := n)).1 (next_frame_bounds (S := S) (n := n)).2.1
-      (next_frame_bounds (S := S) (n := n)).2.2
+        (next_frame_bounds (S := S) (n := n)).2.2
     P.restricted_gradient_bound P.restricted_hessian_bound
     firstNormal firstNormal_unit firstFrame support compact
 
+/-- Joined next frame, given by `(P.joinedRenewal hn hq hB).changeActivation
+(P.joinedGeometry_targetTime hn hq hB)`. -/
 def joinedNextFrame : ParentFrame (frameData (P.joinedParent hn hq hB)) P.nextTime :=
   (P.joinedRenewal hn hq hB).changeActivation (P.joinedGeometry_targetTime hn hq hB)
 
+/-- Joined next as an element of `Stage S (n+1)`. -/
 def joinedNext : Stage S (n+1) := by
   have hbad : 2*gradientConstant*previousShear S.J S.X n*shear S.J S.X n*(G).badRatio ≤
       EulerPacketPressureScale.badCost S.J 4 gradientConstant gradientConstant hessianConstant 80
@@ -155,14 +170,14 @@ def joinedNext : Stage S (n+1) := by
     have h := ((F).physical_bounds symmetric _ _ P.restricted_gradient_bound
       P.restricted_hessian_bound t x).2
     apply h.trans
-    change hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n+
-      2*(gradientConstant*previousShear S.J S.X n)*shear S.J S.X n*
+    change hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n +
+      2*(gradientConstant*previousShear S.J S.X n)*shear S.J S.X n *
         (goodRatio+(G).badRatio)+k^(-(1/4 : ℝ)) ≤
       hessianConstant*shear S.J S.X n*previousShear S.J S.X n
     nlinarith only [habsorb.2]
   · exact (P.initial_step_bound _ (P.joined_initial_cost hn hq hB)).1
   · exact (P.initial_step_bound _ (P.joined_initial_cost hn hq hB)).2
-  · change P.low.K+2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*
+  · change P.low.K+2*(gradientConstant*previousShear S.J S.X n)*(G).hchild *
       ((G).δ*goodRatio+(G).badRatio)+k^(-(1/4 : ℝ)) ≤ _
     have h := P.pressure_step_bound _ (P.joined_pressure_cost hn hq hB)
     convert h using 1; ring
@@ -185,7 +200,7 @@ def joinedNext : Stage S (n+1) := by
       (priorError S.J S.D S.X (n+1)) (S.priorError_one (n+1))
     change ⟪((P.joinedRenewal hn hq hB).changeActivation _).B P.nextTime
         (unit (((P.joinedRenewal hn hq hB).changeActivation _).m P.nextTime)),
-      unit (((P.joinedRenewal hn hq hB).changeActivation _).m P.nextTime)⟫_ℝ+
+      unit (((P.joinedRenewal hn hq hB).changeActivation _).m P.nextTime)⟫_ℝ +
         priorError S.J S.D S.X (n+1) < 0
     rw [ParentFrame.changeActivation_B,ParentFrame.changeActivation_m]
     simpa only [← P.joinedGeometry_targetTime hn hq hB] using hc
@@ -193,7 +208,7 @@ def joinedNext : Stage S (n+1) := by
 theorem joinedNext_time : (P.joinedNext hn hq hB).time=P.nextTime := rfl
 
 theorem joinedNext_initial_increment :
-    (fun x => (P.joinedNext hn hq hB).state.evolution.velocity (0,x)-
+    (fun x => (P.joinedNext hn hq hB).state.evolution.velocity (0,x) -
       P.state.evolution.velocity (0,x)) = (I).high k+(I).mean k :=
   GeometryJoinedChoice.initial_increment_eq I P.restrictedState k hk ell
     (S.support_pos (n+1)) (S.support_one (n+1)) F symmetric

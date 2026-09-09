@@ -6,17 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialMeanEquation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryDynamics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialExcluded
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialMean
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeRadialResidualBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualBaseResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialMeanEquation
+import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeRadialResidualBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 
 /-!
 # The actual initialized correction state
@@ -26,6 +20,9 @@ This consumer uses the single primary family selected by
 Gaussian errors and common-cover chart representations.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualInitialization
@@ -33,51 +30,60 @@ namespace NavierStokes.ActualInitialization
 open Set Function Filter CorrectionState CorrectionInitialization
 open scoped ContDiff Topology BigOperators
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Index: an abbreviation for `ActualPrimary.Label B N0 × Fin 2`. -/
 abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 
 variable {B N0 : ℕ}
 
+/-- Primary piece, given by `ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1`. -/
 noncomputable def primaryPiece (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
   ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1
 
+/-- Phase, given by `(primaryPiece l).coefficients.phase n (x, 0)`. -/
 noncomputable def phase (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
   (primaryPiece l).coefficients.phase n (x, 0)
 
+/-- Angular mode, constructed using `PrimaryGeometryAssembly.angularMode`. -/
 noncomputable def angularMode (l : Index B N0) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode ActualPrimary.certificate ActualPrimary.modulation
-    (ActualPrimary.choice B N0).prepared l.2 l.1
+      (ActualPrimary.choice B N0).prepared l.2 l.1
 
+/-- Primary block, given by `(primaryPiece l).harmonicBlock (phase l) (angularMode l)`. -/
 noncomputable def primaryBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).harmonicBlock (phase l) (angularMode l)
 
+/-- Tangent block, given by `(primaryPiece l).tangentBlock (phase l) (angularMode l)`. -/
 noncomputable def tangentBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).tangentBlock (phase l) (angularMode l)
 
+/-- Curl block, given by `(primaryPiece l).differenceBlock (phase l) (angularMode l)`. -/
 noncomputable def curlBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).differenceBlock (phase l) (angularMode l)
 
+/-- Gaussian block, given by `(primaryPiece l).excludedBlock (phase l) (angularMode l)`. -/
 noncomputable def gaussianBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).excludedBlock (phase l) (angularMode l)
 
 theorem angularMode_ne_zero (l : Index B N0) (n : ℕ) : angularMode l n ≠ 0 :=
   PrimaryGeometryAssembly.angularMode_ne_zero ActualPrimary.certificate ActualPrimary.modulation
-    (ActualPrimary.choice B N0).prepared l.2 l.1
+      (ActualPrimary.choice B N0).prepared l.2 l.1
 
 theorem phase_split (l : Index B N0) (n : ℕ) (x : Point) (theta : ℝ) :
     (primaryPiece l).coefficients.frequency n * (primaryPiece l).coefficients.phase n (x, theta) =
       (primaryPiece l).coefficients.frequency n * phase l n x + (angularMode l n : ℝ) * theta := by
   change (ActualPrimary.chartCoefficients l.2 l.1).frequency n * (ActualPrimary.chartCoefficients
-    l.2 l.1).phase n (x, theta) =
+      l.2 l.1).phase n (x, theta) =
     (ActualPrimary.chartCoefficients l.2 l.1).frequency n * (ActualPrimary.chartCoefficients l.2
-      l.1).phase n (x, 0) + _
+        l.1).phase n (x, 0) + _
   rw [ActualPrimary.chartCoefficients_phase, ActualPrimary.chartCoefficients_phase]
   simp only [ActualPrimary.absolutePhase, angularMode, mul_zero, zero_add]
   ring
 
 theorem cutoff_smooth (l : Index B N0) (n : ℕ) : ContDiff ℝ ∞ ((primaryPiece l).cutoff n) :=
   (ActualPrimary.periodicGaussian_smooth l.2 l.1).comp ((ActualPrimary.toAbsolute_smooth
-    n).snd.comp contDiff_fst)
+      n).snd.comp contDiff_fst)
 
 theorem amplitude_angle (l : Index B N0) :
     ErrorHarmonics.AngleIndependent (primaryPiece l).coefficients.amplitude := fun _ _ _ => rfl
@@ -91,7 +97,7 @@ theorem exact_amplitude_angle (l : Index B N0) :
   exact CopyAngularInvariance.invariant_eq_zeroSlice
     ((ActualPrimary.chartCoefficients_angular l.2 l.1).corrected_amplitude
       (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion)
-        (ActualPrimary.commonContext B) n) x theta
+          (ActualPrimary.commonContext B) n) x theta
 
 theorem exact_pressure_angle (l : Index B N0) :
     ErrorHarmonics.AngleIndependent (primaryPiece l).exactCoefficients.pressure := by
@@ -99,12 +105,12 @@ theorem exact_pressure_angle (l : Index B N0) :
   exact CopyAngularInvariance.invariant_eq_zeroSlice
     ((ActualPrimary.chartCoefficients_angular l.2 l.1).corrected_pressure
       (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion)
-        (ActualPrimary.commonContext B) n) x theta
+          (ActualPrimary.commonContext B) n) x theta
 
 theorem tangent_amplitude_angle (l : Index B N0) :
     ErrorHarmonics.AngleIndependent
       ((primaryPiece l).coefficients.withCutoff (primaryPiece l).cutoff).amplitude := fun _ _ _ =>
-        rfl
+          rfl
 
 theorem primaryBlock_represents (l : Index B N0) :
     (primaryBlock l).oscillation = (primaryPiece l).velocity ∧
@@ -145,6 +151,8 @@ theorem primaryBlock_band (l : Index B N0) : (primaryBlock l).BandLimited 1 :=
 theorem gaussianBlock_band (l : Index B N0) : (gaussianBlock l).BandLimited 1 :=
   ErrorHarmonics.gaussianBlock_band _ _ _ _ 1 _ _ _
 
+/-- Coefficients, bundling `labels`, `blocks`, `gaussian`, `aliasCoefficients` and the required
+compatibility proofs. -/
 noncomputable def coefficients (B N0 : ℕ) : CorrectionStep.CycleCoefficients (Index B N0) where
   labels := ActualPrimary.activeLabels ActualPrimary.standardRegion B N0
   blocks := primaryBlock
@@ -169,35 +177,46 @@ theorem gaussian_coefficientField (l : Index B N0) :
   rfl
 
 
+/-- Base error, given by `ActualBaseResidual.baseError ActualPrimary.certificate
+ActualPrimary.modulation ActualPrimary.upper B`. -/
 noncomputable def baseError (B : ℕ) : Oscillation Point :=
   ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
-    ActualPrimary.upper B
+      ActualPrimary.upper B
 
+/-- Source state, given by `bandSeed (coefficients B N0).labels primaryPiece (baseError B)`. -/
 noncomputable def sourceState (B N0 : ℕ) : State Point :=
   bandSeed (coefficients B N0).labels primaryPiece (baseError B)
 
+/-- Primary state, given by `VariableGaugeMean.reconstructState ActualPrimary.commonGauge
+(ActualPrimary.commonContext B) (sourceState B N0)`. -/
 noncomputable def primaryState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.reconstructState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
-    (sourceState B N0)
+      (sourceState B N0)
 
+/-- Axial, given by `((0, 1), 0)`. -/
 noncomputable def axial : TorusInverse.Plane × TorusInverse.Plane := ((0, 1), 0)
 
+/-- Temporal state, constructed using `VariableGaugeMean.temporalStageState`. -/
 noncomputable def temporalState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.temporalStageState ActualPrimary.commonGauge ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B) (primaryState B N0)
 
+/-- Rank state, constructed using `VariableGaugeMean.rankStageState`. -/
 noncomputable def rankState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.rankStageState ActualPrimary.commonGauge ActualPrimary.rankData axial
     (ActualPrimary.commonContext B) (temporalState B N0)
 
+/-- Initial state, given by `GaugeInitialization.retainPressureAlias ActualPrimary.commonGauge
+(ActualPrimary.commonContext B) (rankState B N0)`. -/
 noncomputable def initialState (B N0 : ℕ) : State Point :=
   GaugeInitialization.retainPressureAlias ActualPrimary.commonGauge (ActualPrimary.commonContext B)
     (rankState B N0)
 
+/-- Initial alias as an element of `CorrectionStep.AxisymmetricAlias`. -/
 noncomputable def initialAlias (B N0 : ℕ) : CorrectionStep.AxisymmetricAlias :=
   fun n x i => VariableGaugeMean.temporalAliasState ActualPrimary.commonGauge ActualPrimary.h
       (CommonWindow.index ActualPrimary.h) (ActualPrimary.commonContext B) (primaryState B N0) n
-        (x,0) i +
+          (x,0) i +
     VariableGaugeMean.pressureAliasState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
       (rankState B N0) n (x,0) i
 
@@ -210,7 +229,7 @@ noncomputable def initialCycleState (B N0 : ℕ) : CorrectionStep.CycleState (In
 
 theorem initialState_eq_bands (B N0 : ℕ) :
     initialState B N0 = GaugeInitialization.initializedBands ActualPrimary.commonGauge
-      ActualPrimary.rankData
+        ActualPrimary.rankData
       ActualPrimary.h (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B)
       (coefficients B N0).labels primaryPiece (baseError B) := rfl
 
@@ -225,7 +244,7 @@ theorem initialState_error_components (B N0 : ℕ) :
   refine ⟨he.1, he.2.1, ?_⟩
   have ha := he.2.2
   simp only [initialAlias, VariableGaugeMean.temporalAliasState,
-    VariableGaugeMean.pressureAliasState] at ha ⊢
+      VariableGaugeMean.pressureAliasState] at ha ⊢
   exact ha
 
 theorem initialCycleState_represents (B N0 : ℕ) :
@@ -235,7 +254,7 @@ theorem initialCycleState_represents (B N0 : ℕ) :
   · intro n x i
     have he := congrArg (fun f : Oscillation Point => f n x i)
       (GaugeInitialization.initializedBands_oscillation ActualPrimary.commonGauge
-        ActualPrimary.rankData
+          ActualPrimary.rankData
         ActualPrimary.h (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B)
         (coefficients B N0).labels primaryPiece (baseError B))
     change (initialState B N0).oscillation n x i = _ at he
@@ -252,7 +271,7 @@ theorem initialCycleState_represents (B N0 : ℕ) :
       simp [initialState, rankState, temporalState, primaryState, sourceState, bandSeed,
         GaugeInitialization.retainPressureAlias, VariableGaugeMean.rankStageState,
         VariableGaugeMean.temporalStageState, VariableGaugeMean.reconstructState,
-          State.addIncrement]
+            State.addIncrement]
     rw [he]
     apply Finset.sum_congr rfl
     intro l hl
@@ -279,7 +298,7 @@ open scoped ContDiff Topology BigOperators
 variable {B N0 : ℕ}
 
 theorem primaryBlock_zeroMode (l : Index B N0) : HarmonicWaveInteraction.ZeroMode (primaryBlock l)
-  :=
+    :=
   (SignedWaveUpdate.coefficientBlock_zero_coefficient
     (primaryPiece l).coefficients.frequency (phase l) (angularMode l)
     (fun n x => (primaryPiece l).exactCoefficients.amplitude n (x,0))
@@ -348,7 +367,7 @@ theorem zeroMean_residual_uniform
     {s : StripData D} {P : ι → ℕ → D → ℝ} {κ α γ : ℝ}
     (c : Context D) (ho : MeanIncrementBounds.OperatorBounds s c.operators κ)
     (hR : ∀ x ∈ s.domain, 0 < c.operators.radius x)
-    (u : State D) (hm : u.mean = ⟨0,0,0⟩)
+    (u : State D) (hm : u.mean = ⟨0, 0, 0⟩)
     (b : ι → HarmonicBlock D) (G A : ι → HarmonicResidual.BlockCoefficients D)
     (hb : UniformVelocity s P α b)
     (hzero : ∀ l, ZeroMode (b l)) {M : ℕ}
@@ -406,9 +425,12 @@ namespace NavierStokes.ActualInitialization
 open Set Function Filter CorrectionState CorrectionInitialization WeightedClasses
 open scoped ContDiff Topology BigOperators
 
+/-- Strip, given by `BaseContextAssembly.nativeStrip ActualPrimary.nominal
+ActualPrimary.standardRegion`. -/
 noncomputable def strip : StripData Point :=
   BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion
 
+/-- Slow strip, constructed using `PhysicalMeanDomain.localSlowStripData`. -/
 noncomputable def slowStrip : StripData TorusInverse.Plane :=
   PhysicalMeanDomain.localSlowStripData ActualPrimary.standardRegion.carrier
     ActualPrimary.standardRegion.isOpen (ChartScales.epsilon ActualPrimary.h)
@@ -416,6 +438,7 @@ noncomputable def slowStrip : StripData TorusInverse.Plane :=
     (ChartScales.epsilon_le_one ActualPrimary.h ActualPrimary.outgoing.data.h_pos.le)
     BaseContextAssembly.one_le_slowScale
 
+/-- Envelope, given by `ActualPrimaryBounds.meanEnvelope (l.2,l.1)`. -/
 noncomputable def envelope {B N0 : ℕ} (l : Index B N0) : ℕ → Point → ℝ :=
   ActualPrimaryBounds.meanEnvelope (l.2,l.1)
 
@@ -427,10 +450,10 @@ theorem envelope_le_one {B N0 : ℕ} (l : Index B N0) (n : ℕ) (x : Point) :
 
 theorem operators (B : ℕ) :
     MeanIncrementBounds.OperatorBounds strip (ActualPrimary.commonContext B).operators
-      ChartScales.kappa :=
+        ChartScales.kappa :=
   CommonBaseContext.context_operator_bounds ActualPrimary.certificate ActualPrimary.modulation
     ActualPrimary.upper B ActualPrimary.standardRegion (CommonWindow.index_le_native
-      ActualPrimary.h)
+        ActualPrimary.h)
 
 theorem base_bounds (B : ℕ) :
     MeanIncrementBounds.BaseBounds strip (ActualPrimary.commonContext B).base :=
@@ -464,6 +487,7 @@ open scoped ContDiff Topology BigOperators
 
 variable {B N0 : ℕ}
 
+/-- Good block, constructed using `SignedWaveUpdate.coefficientBlock`. -/
 noncomputable def goodBlock (l : Index B N0) : HarmonicBlock Point :=
   SignedWaveUpdate.coefficientBlock (primaryPiece l).coefficients.frequency
     (phase l) (angularMode l) (fun n x => (primaryPiece l).linearGood n (x,0)) 0
@@ -521,7 +545,7 @@ theorem linearBlockField_eq_piece (l : Index B N0) (n : ℕ)
       (HarmonicResidual.liftDomain strip.domain))
     {x : Point × ℝ} (hx : x ∈ HarmonicResidual.liftDomain strip.domain) (i : Fin 3) :
     CorrectionStep.linearBlockField (ActualPrimary.commonContext B) (primaryBlock l) (primaryBlock
-      l) n x i =
+        l) n x i =
       (primaryPiece l).linearResidual n x i := by
   have he := CorrectionStep.linearBlockField_eq_modeResidual strip.isOpen_domain
     (ActualPrimary.commonContext B) (primaryBlock l) (primaryBlock l)
@@ -544,10 +568,10 @@ open scoped ContDiff Topology
 order at least nine tenths.  The retained axisymmetric aliases do not enter
 the nonzero harmonic coefficients. -/
 theorem initial_residual_uniform_of_primary (B N0 : ℕ)
-    (hprimary : UniformVelocity strip envelope (1/2) (primaryBlock (B := B) (N0 := N0)))
-    (hlinear : UniformVelocity strip envelope (7/10)
+    (hprimary : UniformVelocity strip envelope (1 / 2) (primaryBlock (B := B) (N0 := N0)))
+    (hlinear : UniformVelocity strip envelope (7 / 10)
       (fun l : Index B N0 => linearGoodBlock (CorrectionInitialization.ActualPrimary.commonContext
-        B)
+          B)
         (primaryBlock l) (primaryBlock l) (gaussianBlock l).velocity))
     (hphase : ∀ (l : Index B N0) n, ContDiffOn ℝ ∞ (phase l n) strip.domain)
     (hdiv : ∀ l : Index B N0, ModeSolenoidal strip
@@ -573,7 +597,7 @@ theorem initial_residual_uniform_of_primary (B N0 : ℕ)
       primaryBlock (fun l => (gaussianBlock l).velocity) 0 hprimary primaryBlock_zeroMode
       primaryBlock_band hphase
       (fun l n => (CorrectionInitialization.ActualPrimary.chartCoefficients_frequency_pos l.2 l.1
-        n).ne')
+          n).ne')
       hdiv (fun l n x _ => envelope_nonneg l n x) (fun l n x _ => envelope_le_one l n x)
       (fun _ _ _ _ _ => rfl) hlinear (by norm_num [ChartScales.kappa])
   have he : (initialState B N0).mean =
@@ -600,6 +624,7 @@ open Set Filter Function WeightedClasses CorrectionState
 open HarmonicMeanInteraction HarmonicWaveInteraction UniformHarmonicInteraction
 open scoped ContDiff Topology
 
+/-- Zero block, given by `{ primaryBlock l with velocity := 0, pressure := 0 }`. -/
 noncomputable def zeroBlock {B N0 : ℕ} (l : Index B N0) : HarmonicBlock Point :=
   { primaryBlock l with velocity := 0, pressure := 0 }
 
@@ -607,12 +632,12 @@ theorem zeroBlock_oscillation {B N0 : ℕ} (l : Index B N0) :
     (zeroBlock l).oscillation = 0 := by
   funext n x i
   simp [zeroBlock, HarmonicBlock.oscillation, HarmonicFields.field, HarmonicFields.evaluate,
-    HarmonicFields.Coefficients.sum]
+      HarmonicFields.Coefficients.sum]
 
 /-- Extract the actual linear-good coefficient from the proved primary
 field identity, retaining its literal Gaussian coefficient. -/
 theorem linearGood_uniform_of_identity (B N0 : ℕ) {γ : ℝ}
-    (hprimary : UniformVelocity strip envelope (1/2) (primaryBlock (B := B) (N0 := N0)))
+    (hprimary : UniformVelocity strip envelope (1 / 2) (primaryBlock (B := B) (N0 := N0)))
     (hphase : ∀ (l : Index B N0) n, ContDiffOn ℝ ∞ ((primaryPiece l).coefficients.phase n)
       (HarmonicResidual.liftDomain strip.domain))
     (hamp : ∀ (l : Index B N0) n i,
@@ -627,14 +652,14 @@ theorem linearGood_uniform_of_identity (B N0 : ℕ) {γ : ℝ}
         (primaryPiece l).linearGoodField n x i + (primaryPiece l).excluded n x i) :
     UniformVelocity strip envelope γ
       (fun l : Index B N0 => linearGoodBlock (CorrectionInitialization.ActualPrimary.commonContext
-        B)
+          B)
         (primaryBlock l) (primaryBlock l) (gaussianBlock l).velocity) := by
   have hphi (l : Index B N0) (n : ℕ) : ContDiffOn ℝ ∞ (phase l n) strip.domain :=
     (hphase l n).comp (HarmonicWaveInteraction.inclusion (D := Point)).contDiff.contDiffOn
       (fun _ hx => ⟨hx, trivial⟩)
   have hh := CorrectionStep.linearGoodBlock_cancel_uniform
     (CorrectionInitialization.ActualPrimary.commonContext B) primaryBlock primaryBlock zeroBlock
-      goodBlock
+        goodBlock
     (fun l : Index B N0 => (gaussianBlock l).velocity)
     (fun n => (slowGeometry (CorrectionInitialization.ActualPrimary.commonContext B)
       (operators B) (radius_pos B)).radial_class.smooth n)
@@ -645,7 +670,7 @@ theorem linearGood_uniform_of_identity (B N0 : ℕ) {γ : ℝ}
     (fun _ _ _ _ _ => by simp [zeroBlock]) goodBlock_symmetric hgood ?_
   · intro i j hj
     simpa only [zeroBlock, Pi.zero_apply, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply,
-      zero_add] using hh i j hj
+        zero_add] using hh i j hj
   · intro l n x hx theta i
     change CorrectionStep.linearBlockField _ (primaryBlock l) (primaryBlock l) n (x,theta) i +
       (zeroBlock l).oscillation n (x,theta) i =
@@ -691,7 +716,7 @@ noncomputable def geometry : SignedMeanGain.Geometry where
   inner_eq := rfl
   outer_eq := rfl
   exponent_pos := ChartScales.radialExponent_pos ActualPrimary.h
-    ActualPrimary.outgoing.data.h_pos.le
+      ActualPrimary.outgoing.data.h_pos.le
   length_eq := fun _ => rfl
   fast := CommonBaseContext.fastCoefficient ActualPrimary.h (CommonWindow.index ActualPrimary.h)
   axial := (0, 1)
@@ -701,7 +726,7 @@ noncomputable def geometry : SignedMeanGain.Geometry where
 theorem geometry_strip : geometry.strip = strip := rfl
 theorem geometry_slowStrip : geometry.slowStrip = slowStrip := rfl
 theorem geometry_operators (B : ℕ) : geometry.operators = (ActualPrimary.commonContext B).operators
-  := rfl
+    := rfl
 
 theorem initial_primitive (B N0 : ℕ) :
     MeanStateRegularity.PrimitiveData geometry.region geometry.patch.a geometry.patch.b
@@ -742,7 +767,7 @@ theorem initial_base_angular (B N0 n : ℕ) (x : Point) (hx : x ∈ geometry.dom
 
 theorem phase_smooth_full {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((primaryPiece l).coefficients.phase n) (HarmonicResidual.liftDomain
-      strip.domain) :=
+        strip.domain) :=
   (ActualPrimaryCoherence.piece_phase_smooth ActualPrimary.standardRegion l.2 l.1 n).mono
     (fun _ hx => hx.1)
 
@@ -759,14 +784,14 @@ theorem exact_amplitude_smooth_full {B N0 : ℕ} (l : Index B N0) (n : ℕ) (i :
     intro x hx
     exact ⟨mul_pos (Real.sqrt_pos.mpr (ChartScales.Q_pos n))
         (BaseContextAssembly.nativeStrip_radius ActualPrimary.nominal ActualPrimary.standardRegion
-          hx.1),
+            hx.1),
       mul_pos (ChartScales.Q_pos n) (strip_time x.1 hx.1)⟩
   have he : (primaryPiece l).exactCoefficients.amplitude n =
       fun x => ChartScales.Q n ^ CoordinateAlgebra.A ActualPrimary.h •
         ActualPrimaryCoherence.absoluteExactAmplitude l.2 l.1 (ActualPrimaryCoherence.absoluteChart
-          n x) :=
+            n x) :=
     funext (ActualPrimaryCoherence.exactAmplitude_representation ActualPrimary.standardRegion l.2
-      l.1 n)
+        l.1 n)
   rw [he]
   exact contDiffOn_pi.mp (((ActualPrimaryCoherence.absoluteExactAmplitude_smooth l.2 l.1).comp
     (ActualPrimaryCoherence.absoluteChart n).contDiff.contDiffOn hm).const_smul _) i
@@ -847,9 +872,9 @@ theorem gaussian_coefficients_smooth {B N0 : ℕ} (l : Index B N0) (n : ℕ) (i 
       (primaryPiece l).coefficients.amplitude 0 n =
       fun x => ChartScales.Q n ^ (2 * CoordinateAlgebra.A ActualPrimary.h + 1/2) •
         ActualPrimaryCoherence.absoluteGaussianCoefficient l.2 l.1
-          (ActualPrimaryCoherence.absoluteChart n x) :=
+            (ActualPrimaryCoherence.absoluteChart n x) :=
     funext (ActualPrimaryCoherence.gaussianCoefficient_representation ActualPrimary.standardRegion
-      l.2 l.1 n)
+        l.2 l.1 n)
   have hs : ContDiffOn ℝ ∞ (LinearWaveBounds.excludedSlotError (primaryPiece l).directions
       (primaryPiece l).cutoff (primaryPiece l).coefficients.amplitude 0 n)
       (HarmonicResidual.liftDomain strip.domain) := by
@@ -904,11 +929,11 @@ theorem initial_extraction_regular (B N0 n : ℕ) :
     have hm := (initial_primitive B N0).mean
     fin_cases i
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((hm.radial.smooth n).mono
-      geometry.strip_subset)
+        geometry.strip_subset)
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((hm.angular.smooth n).mono
-      geometry.strip_subset)
+        geometry.strip_subset)
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((hm.axial.smooth n).mono
-      geometry.strip_subset)
+        geometry.strip_subset)
   · exact (((initial_primitive B N0).pressure geometry.inner_pos geometry.exponent_pos
       geometry.length_eq rfl).smooth n).mono geometry.strip_subset
   · intro l hl
@@ -951,7 +976,7 @@ theorem local_slice_union {D E I J K : Type}
     {f : J → ℕ → D × ℝ → E} (e : I → J)
     (hs : ∀ l n, ContDiffOn ℝ ∞ (f l n) (productStrip s).domain)
     (hf : LocalizedWaveBounds.LocalUnweighted (D := D × ℝ) (E := E) (I := J × K) (productStrip s) C
-      alpha
+        alpha
       (fun (n : ℕ) (i : J × K) (x : D × ℝ) => f i.1 n x)) :
     LocalizedWaveBounds.LocalUnweighted (D := D) (E := E) (I := I) s
       (fun n i => {x | ∃ k, (x, 0) ∈ C n (e i, k)}) alpha
@@ -970,6 +995,8 @@ theorem local_slice_union {D E I J K : Type}
     exact (hh.trans (mul_le_of_le_one_right (norm_nonneg _) hp)).trans
       (hb n (e i, k) (x, 0) hx hk j hj)
 
+/-- Full normal, given by `(primaryPiece l).coefficients.normal (primaryPiece l).strip
+(primaryPiece l).directions n`. -/
 noncomputable def fullNormal {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
     Point × ℝ → ProblemStatement.Space :=
   (primaryPiece l).coefficients.normal (primaryPiece l).strip (primaryPiece l).directions n
@@ -987,7 +1014,8 @@ theorem phase_slice_derivative {B N0 : ℕ} (l : Index B N0) (n : ℕ)
   have hd := ((phase_smooth_full l n).contDiffAt
     ((HarmonicResidual.liftDomain_open strip.isOpen_domain).mem_nhds
       (show (x, 0) ∈ HarmonicResidual.liftDomain strip.domain from ⟨hx,
-        trivial⟩))).differentiableAt (by simp)
+          trivial⟩))).differentiableAt (by
+          simp)
   have he := (hd.hasFDerivAt.comp x (inclusion (D := Point)).hasFDerivAt).fderiv
   exact congrArg (fun L : Point →L[ℝ] ℝ => L v) he
 
@@ -1007,7 +1035,7 @@ theorem slowNormal_component {B N0 : ℕ} (l : Index B N0) (n : ℕ)
   · change fderiv ℝ (phase l n) x _ = fderiv ℝ ((primaryPiece l).coefficients.phase n) (x,0) _
     change fderiv ℝ (phase l n) x _ = fderiv ℝ ((primaryPiece l).coefficients.phase n) (x,0)
       ((PrimaryResidualClass.directions (ActualPrimary.commonContext B)).axialField (productStrip
-        strip) n (x,0))
+          strip) n (x,0))
     rw [hz]
     exact phase_slice_derivative l n hx _
 
@@ -1017,7 +1045,7 @@ theorem phase_angular_affine {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
       ((primaryPiece l).coefficients.phase n) := by
   intro x t
   change (ActualPrimary.absolutePhase l.2 l.1 (ActualPrimary.toAbsolute n (x.1 + t • 0), x.2 + t *
-    1) /
+      1) /
       (ChartScales.carrier ActualPrimary.h n : ℝ)) = _
   simp only [smul_zero, add_zero, mul_one]
   simp only [ActualPrimary.absolutePhase, angularMode]
@@ -1028,23 +1056,24 @@ theorem phase_angular_affine {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
 theorem angularMode_from_normal {B N0 : ℕ} (l : Index B N0) (n : ℕ)
     {x : Point} (hx : x ∈ strip.domain) :
     (angularMode l n : ℝ) = (primaryPiece l).coefficients.frequency n * x.1 * fullNormal l n (x, 0)
-      1 := by
+        1 := by
   have hd := (phase_angular_affine l n).directional_eq
     (((phase_smooth_full l n).contDiffAt
       ((HarmonicResidual.liftDomain_open strip.isOpen_domain).mem_nhds
         (show (x, 0) ∈ HarmonicResidual.liftDomain strip.domain from ⟨hx,
-          trivial⟩))).differentiableAt (by simp))
+            trivial⟩))).differentiableAt (by
+            simp))
   have hn : fullNormal l n (x,0) 1 =
       ((angularMode l n : ℝ) / (primaryPiece l).coefficients.frequency n) / x.1 := by
     have hc := congrArg (fun a : ℝ => a / x.1) hd
     simp only [fullNormal, LinearWaveBounds.WaveCoefficients.normal, phaseNormal, along,
-      Matrix.cons_val_one, Matrix.cons_val_zero, ActualPrimary.piece,
+        Matrix.cons_val_one, Matrix.cons_val_zero, ActualPrimary.piece,
       PrimaryResidualClass.directions, primaryPiece] at hc ⊢
     exact hc
   rw [hn]
   have hK := (ActualPrimary.chartCoefficients_frequency_pos l.2 l.1 n).ne'
   have hR := (BaseContextAssembly.nativeStrip_radius ActualPrimary.nominal
-    ActualPrimary.standardRegion hx).ne'
+      ActualPrimary.standardRegion hx).ne'
   have hK' : (primaryPiece l).coefficients.frequency n ≠ 0 := hK
   field_simp [hK', hR]
 
@@ -1056,6 +1085,8 @@ open Set Function Filter WeightedClasses CorrectionState CorrectionInitializatio
 open HarmonicWaveInteraction HarmonicMeanInteraction UniformHarmonicInteraction
 open scoped ContDiff Topology
 
+/-- Mean control cell, given by `{x | ∃ k : TorusInverse.Frequency, (x,0) ∈
+ActualPrimaryBounds.controlCell n ((l.2,l.1), k)}`. -/
 noncomputable def meanControlCell {B N0 : ℕ} (n : ℕ) (l : Index B N0) : Set Point :=
   {x | ∃ k : TorusInverse.Frequency, (x,0) ∈ ActualPrimaryBounds.controlCell n ((l.2,l.1), k)}
 
@@ -1064,7 +1095,7 @@ theorem fullNormal_slice_local (B N0 : ℕ) (i : Fin 3) :
       (fun n (l : Index B N0) x => fullNormal l n (x,0) i) := by
   have hs (l : ActualPrimaryBounds.SignedLabel B N0) (n : ℕ) :
       ContDiffOn ℝ ∞ (fun x => ActualPrimaryBounds.chartNormal l n x i) (productStrip strip).domain
-        := by
+          := by
     exact (contDiffOn_piLp 2).mp (fullNormal_smooth (l.2,l.1) n) i
   exact local_slice_union (s := strip) (C := ActualPrimaryBounds.controlCell)
     (f := fun l n x => ActualPrimaryBounds.chartNormal l n x i) Prod.swap hs
@@ -1101,10 +1132,10 @@ theorem angularFrequency_local (B N0 : ℕ) :
   have hm := LocalizedWaveBounds.unweighted_mul
     (LocalizedWaveBounds.unweighted_mul (frequency_local B N0)
       (LocalizedWaveBounds.LocalClass.of_global (K := meanControlCell) hr)) (fullNormal_slice_local
-        B N0 1)
+          B N0 1)
   have hm' : LocalizedWaveBounds.LocalUnweighted strip meanControlCell (-(1/2 : ℝ))
       (fun n (l : Index B N0) x => (primaryBlock l).frequency n * x.1 * fullNormal l n (x,0) 1) :=
-        by
+          by
     simpa only [add_zero] using hm
   apply hm'.congr_germ
   intro n l x hx hc
@@ -1119,7 +1150,7 @@ theorem primary_zero_germ_outside_control {B N0 : ℕ} (n : ℕ) (l : Index B N0
     · exact (hc ⟨k,hk⟩).elim
     · exact ((ActualPrimaryBounds.actualFamily (B := B) (N0 := N0)).outputs_zero_germs
         ActualPrimaryBounds.fullStrip (ActualPrimaryBounds.directions B) (i := ((l.2,l.1),0)) ha
-          hp).2.1
+            hp).2.1
   have hz := hzero.comp_tendsto (inclusion (D := Point)).continuous.continuousAt
   filter_upwards [hz] with y hy
   change (primaryPiece l).exactCoefficients.amplitude n (y,0) = 0 at hy
@@ -1140,7 +1171,7 @@ theorem primary_uniform (B N0 : ℕ) :
 theorem difference_coefficients_uniform (B N0 : ℕ) (i : Fin 3) (j : ℤ) :
     LabelSumBounds.UniformWaveClass strip envelope (17/25)
       (fun l : Index B N0 => fun n x => (primaryBlock l).velocity n i j x - (tangentBlock
-        l).velocity n i j x) := by
+          l).velocity n i j x) := by
   have hd : LabelSumBounds.UniformWaveClass (productStrip strip)
       (fun l : Index B N0 => fun n x => envelope l n x.1) (1 - ChartScales.kappa)
       (fun l n x => (primaryPiece l).exactCoefficients.amplitude n x -
@@ -1148,7 +1179,7 @@ theorem difference_coefficients_uniform (B N0 : ℕ) (i : Fin 3) (j : ℤ) :
     (ActualPrimaryBounds.chart_difference_uniform (B := B) (N0 := N0)).reindex Prod.swap
   have hs := (UniformBlockBounds.uniform_slice (s := strip)
     (w := fun l n x => Real.sqrt (strip.zeta x) * envelope l n x) hd).map (ContinuousLinearMap.proj
-      i)
+        i)
   have hp := (UniformBlockBounds.pair_uniform hs 1 j).mono_exponent
     (show (17/25 : ℝ) ≤ 1 - ChartScales.kappa by norm_num [ChartScales.kappa])
   apply hp.congr
@@ -1156,7 +1187,7 @@ theorem difference_coefficients_uniform (B N0 : ℕ) (i : Fin 3) (j : ℤ) :
   exact UniformBlockBounds.pair_sub_apply 1 j
     (fun y => (primaryPiece l).exactCoefficients.amplitude n (y,0) i)
     (fun y => ((primaryPiece l).coefficients.withCutoff (primaryPiece l).cutoff).amplitude n (y,0)
-      i) x
+        i) x
 
 theorem good_coefficients_uniform (B N0 : ℕ) (i : Fin 3) (j : ℤ) :
     LabelSumBounds.UniformWaveClass strip envelope (7/10)
@@ -1167,7 +1198,7 @@ theorem good_coefficients_uniform (B N0 : ℕ) (i : Fin 3) (j : ℤ) :
     (ActualPrimaryBounds.chart_good_uniform (B := B) (N0 := N0)).reindex Prod.swap
   have hs := (UniformBlockBounds.uniform_slice (s := strip)
     (w := fun l n x => Real.sqrt (strip.zeta x) * envelope l n x) hg).map (ContinuousLinearMap.proj
-      i)
+        i)
   exact (UniformBlockBounds.pair_uniform hs 1 j).mono_exponent
     (show (7/10 : ℝ) ≤ 1 - 3 * ChartScales.kappa by norm_num [ChartScales.kappa])
 
@@ -1188,6 +1219,7 @@ namespace NavierStokes.ActualInitialization
 open Set Function Filter WeightedClasses CorrectionState CorrectionInitialization
 open scoped ContDiff Topology
 
+/-- Label carrier, given by `ActualInitialExcluded.labelCarrier (l.2, l.1) n`. -/
 noncomputable def labelCarrier {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
   ActualInitialExcluded.labelCarrier (l.2, l.1) n
 
@@ -1230,27 +1262,27 @@ theorem cut_amplitude_source_support {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
       intro hz
       apply hx
       change ActualPrimary.chartCutoff l.2 l.1 n x • (ActualPrimary.chartCoefficients l.2
-        l.1).amplitude n x = 0
+          l.1).amplitude n x = 0
       rw [hpsi, hz, zero_smul]
     have hv : ActualPrimary.attachedRawVelocity l.2 l.1 (ActualPrimaryDynamics.copyPoint l.2 l.1 n
-      k x) ≠ 0 := by
+        k x) ≠ 0 := by
       intro hz
       apply hx
       change ActualPrimary.chartCutoff l.2 l.1 n x • (ActualPrimary.chartCoefficients l.2
-        l.1).amplitude n x = 0
+          l.1).amplitude n x = 0
       rw [ha]
       simp only [ActualPrimaryDynamics.copyAmplitude, hz, map_zero, smul_zero]
     have hr : ActualPrimary.rawVelocity l.2 l.1 (ActualPrimaryDynamics.copyPoint l.2 l.1 n k x) ≠ 0
-      := by
+        := by
       intro hz
       exact hv (by simp [ActualPrimary.attachedRawVelocity, WaveEdgeExtension.nativeExtension,
         WaveEdgeExtension.extension, ActualPrimary.outerRawVelocity, hz])
     exact ⟨k, native_source_core l _ hg hr⟩
   · have hz := (ActualPrimaryDynamics.coefficient_zero_germs l.2 l.1 n (not_exists.mp
-    hc)).1.eq_of_nhds
+      hc)).1.eq_of_nhds
     exact (hx (by
       change ActualPrimary.chartCutoff l.2 l.1 n x • (ActualPrimary.chartCoefficients l.2
-        l.1).amplitude n x = 0
+          l.1).amplitude n x = 0
       rw [hz, smul_zero])).elim
 
 theorem cut_pressure_source_support {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
@@ -1265,28 +1297,28 @@ theorem cut_pressure_source_support {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
       intro hz
       apply hx
       change ActualPrimary.chartCutoff l.2 l.1 n x • (ActualPrimary.chartCoefficients l.2
-        l.1).pressure n x = 0
+          l.1).pressure n x = 0
       rw [hpsi, hz, zero_smul]
     have hv : ActualPrimary.attachedRawPressure l.2 l.1 (ActualPrimaryDynamics.copyPoint l.2 l.1 n
-      k x) ≠ 0 := by
+        k x) ≠ 0 := by
       intro hz
       apply hx
       change ActualPrimary.chartCutoff l.2 l.1 n x • (ActualPrimary.chartCoefficients l.2
-        l.1).pressure n x = 0
+          l.1).pressure n x = 0
       rw [hp]
       simp only [ActualPrimaryDynamics.copyPressure, hz, smul_zero]
     have hr : ActualPrimary.rawVelocity l.2 l.1 (ActualPrimaryDynamics.copyPoint l.2 l.1 n k x) ≠ 0
-      := by
+        := by
       intro hz
       have hzp := ActualPrimary.rawPressure_zero_of_velocity_zero l.2 l.1 _ hz
       exact hv (by simp [ActualPrimary.attachedRawPressure, WaveEdgeExtension.nativeExtension,
         WaveEdgeExtension.extension, ActualPrimary.outerRawPressure, hzp])
     exact ⟨k, native_source_core l _ hg hr⟩
   · have hz := (ActualPrimaryDynamics.coefficient_zero_germs l.2 l.1 n (not_exists.mp
-    hc)).2.eq_of_nhds
+      hc)).2.eq_of_nhds
     exact (hx (by
       change ActualPrimary.chartCutoff l.2 l.1 n x • (ActualPrimary.chartCoefficients l.2
-        l.1).pressure n x = 0
+          l.1).pressure n x = 0
       rw [hz, smul_zero])).elim
 
 theorem primary_velocity_zero_outside_source {B N0 : ℕ} (l : Index B N0) (n : ℕ)
@@ -1379,7 +1411,7 @@ theorem exact_amplitude_positive_smooth {B N0 : ℕ} (l : Index B N0) (n : ℕ) 
     (ActualPrimaryCoherence.absoluteChart n).contDiff.contDiffOn hm).const_smul
       (ChartScales.Q n ^ CoordinateAlgebra.A ActualPrimary.h)).congr
     (fun x _ => ActualPrimaryCoherence.exactAmplitude_representation ActualPrimary.standardRegion
-      l.2 l.1 n x)
+        l.2 l.1 n x)
 
 theorem exact_pressure_positive_smooth {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((primaryPiece l).exactCoefficients.pressure n)
@@ -1404,7 +1436,7 @@ theorem gaussian_positive_smooth {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
     (ActualPrimaryCoherence.absoluteChart n).contDiff.contDiffOn hm).const_smul
       (ChartScales.Q n ^ (2 * CoordinateAlgebra.A ActualPrimary.h + 1/2))).congr
     (fun x _ => ActualPrimaryCoherence.gaussianCoefficient_representation
-      ActualPrimary.standardRegion l.2 l.1 n x)
+        ActualPrimary.standardRegion l.2 l.1 n x)
 
 theorem primary_coefficients_smooth_domain {B N0 : ℕ} (l : Index B N0) (n : ℕ) (i : Fin 3) (j : ℤ) :
     ContDiffOn ℝ ∞ ((primaryBlock l).velocity n i j) geometry.domain := by
@@ -1421,7 +1453,7 @@ theorem pressure_coefficients_smooth_domain {B N0 : ℕ} (l : Index B N0) (n : �
       (fun x hx => geometry.region.time_pos x.2.1 hx)
 
 theorem gaussian_coefficients_smooth_domain {B N0 : ℕ} (l : Index B N0) (n : ℕ) (i : Fin 3) (j : ℤ)
-  :
+    :
     ContDiffOn ℝ ∞ ((gaussianBlock l).velocity n i j) geometry.domain := by
   apply smooth_conjugatePair
   exact (contDiffOn_pi.mp (gaussian_positive_smooth l n) i).comp
@@ -1475,7 +1507,7 @@ theorem initial_axis_flat (B N0 : ℕ) (beta : ℝ) : MeanClass strip beta (init
 
 theorem initial_meanHypotheses (B N0 : ℕ) :
     LiftedMeanResidual.MeanHypotheses strip.domain (ActualPrimary.commonContext B) (initialState B
-      N0) :=
+        N0) :=
   ActualInitialMeanEquation.initialized_meanHypotheses B N0
 
 theorem initial_residual_uniform (B N0 : ℕ) :
@@ -1508,7 +1540,7 @@ theorem initial_invariant (B N0 : ℕ) :
   representation := initialCycleState_represents B N0
   bands := coefficients_band B N0
   realCoefficients := ⟨primaryBlock_symmetric, primary_pressure_symmetric,
-    gaussian_coefficients_symmetric⟩
+      gaussian_coefficients_symmetric⟩
   inputSupport := initial_inputSupport
   sourceBand := initialResidualBlock_band
   zeroVelocity := primaryBlock_zeroMode

@@ -6,19 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
+import LeanPool.NavierStokesAndEuler.Euler.CylinderTranslationAdjoint
+
+/-! The actual history solve commutes with all mixed spatial/angular translations. -/
 
 @[expose] public section
 
-/-! The actual history solve commutes with all mixed spatial/angular translations. -/
 
 noncomputable section
 
 namespace EulerLpCylinderRectangular
 
 open Set ContinuousLinearMap EulerLiftedGradientSpace EulerLpCylinderTranslation
-  EulerMeanCoefficients
+    EulerMeanCoefficients
 open scoped BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] {U E : Type*}
@@ -80,7 +83,7 @@ theorem shifted_frame (a : LiftTangent) (t : Icc (0 : ℝ) T) (u : CylinderL2 P 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem shifted_frameDerivative (a : LiftTangent) (t : Icc (0 : ℝ) T) (u : CylinderL2 P U) :
     (D.shifted a.1).frameDerivative P t (translate P a u) = translate P a (D.frameDerivative P t u)
-      :=
+        :=
   fullOperator_translation P a (D.Q₁ t) u
 
 omit [CompleteSpace U] [CompleteSpace E] in
@@ -107,7 +110,7 @@ theorem velocityLp_translation (a : LiftTangent) (f : TimeLp T (CylinderL2 P E))
     (D.shifted_frame_back P a) (D.shifted_frameDerivative_back P a) (D.shifted_hessian P a) f
 
 theorem velocityPath_translation (a : LiftTangent) (f : TimeLp T (CylinderL2 P E)) (t : Icc (0 : ℝ)
-  T) :
+    T) :
     (D.shifted a.1).velocityPath P (timeLift T (translate P a).toContinuousLinearMap f) t =
       translate P a (D.velocityPath P f t) :=
   D.velocityPath_intertwines P (D.shifted a.1)
@@ -116,7 +119,7 @@ theorem velocityPath_translation (a : LiftTangent) (f : TimeLp T (CylinderL2 P E
     (D.shifted_frame_back P a) (D.shifted_frameDerivative_back P a) (D.shifted_hessian P a) f t
 
 theorem continuousVelocity_translation (a : LiftTangent)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+    (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     (D.shifted a.1).velocityPath P (pathLp T D.time_pos.le (pathTranslate P a f)) t =
       translate P a (D.velocityPath P (pathLp T D.time_pos.le f) t) :=
   D.continuousVelocity_intertwines P (D.shifted a.1)
@@ -125,27 +128,27 @@ theorem continuousVelocity_translation (a : LiftTangent)
     (D.shifted_frame_back P a) (D.shifted_frameDerivative_back P a) (D.shifted_hessian P a) f t
 
 theorem accelerationPath_translation (a : LiftTangent)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+    (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     (D.shifted a.1).accelerationPath P (pathTranslate P a f) t = translate P a (D.accelerationPath
-      P f t) :=
+        P f t) :=
   D.accelerationPath_intertwines P (D.shifted a.1)
     (translate P a).toContinuousLinearMap (translate P a).toContinuousLinearMap
     (D.shifted_frame P a) (D.shifted_frameDerivative P a)
     (D.shifted_frame_back P a) (D.shifted_frameDerivative_back P a) (D.shifted_hessian P a) f t
 
 theorem physicalVelocity_translation (a : LiftTangent)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+    (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     (D.shifted a.1).physicalVelocity P (pathTranslate P a f) t = translate P a (D.physicalVelocity
-      P f t) :=
+        P f t) :=
   D.physicalVelocity_intertwines P (D.shifted a.1)
     (translate P a).toContinuousLinearMap (translate P a).toContinuousLinearMap
     (D.shifted_frame P a) (D.shifted_frameDerivative P a)
     (D.shifted_frame_back P a) (D.shifted_frameDerivative_back P a) (D.shifted_hessian P a) f t
 
 theorem physicalDerivative_translation (a : LiftTangent)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+    (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     (D.shifted a.1).physicalDerivative P (pathTranslate P a f) t = translate P a
-      (D.physicalDerivative P f t) :=
+        (D.physicalDerivative P f t) :=
   D.physicalDerivative_intertwines P (D.shifted a.1)
     (translate P a).toContinuousLinearMap (translate P a).toContinuousLinearMap
     (D.shifted_frame P a) (D.shifted_frameDerivative P a)

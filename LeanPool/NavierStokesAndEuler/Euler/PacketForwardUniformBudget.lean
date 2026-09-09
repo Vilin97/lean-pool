@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedAllOrderBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileEnvelope
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressureBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformCosts
 
 /-! The actual zero-history correction from the same fixed polynomial
 frequency comparison, together with its uniform weighted output bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +29,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
   (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
@@ -38,15 +39,16 @@ variable (M : EulerMeanPacketProvider.Data)
   (W : ℝ)
   (hW : EulerPacketForwardRadius.RadiusPrimitives L LM NB
     (forwardCoefficientBudget period M D hTime NB) δ ξ W)
-  (hprofile : ∀ t, α*L.g t ≤ W)
+  (hprofile : ∀ t, α * L.g t ≤ W)
   (k : ℝ) (hk : 4 ≤ k) (hX : 64 ≤ expansion k) (hlog : 1 ≤ Real.log k)
   (hfrequency :
-    EulerPacketInitializedCost.uniformConstant*W^EulerPacketInitializedCost.uniformPower ≤
+      EulerPacketInitializedCost.uniformConstant * W ^ EulerPacketInitializedCost.uniformPower ≤
     smallPower k)
   (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
-  (hF : ∀ t x, fderiv ℝ (Ξ t) x=D.F.field t x)
-  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+  (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
+  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
+/-- Forward uniform budget used in packet forward uniform budget. -/
 def forwardUniformBudget : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree
       (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
@@ -76,7 +78,7 @@ theorem forwardUniformBudget_delta :
 
 theorem forwardUniformBudget_initialRadius :
     (forwardUniformBudget M D hTime δ hδ hδ1 ξ hs α hα L NB LM Cagree
-      W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).initialRadius=
+      W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).initialRadius =
       initialRadius
         (forwardInitializedRadius LM L NB (forwardCoefficientBudget period M D hTime NB) δ ξ)
         (L.correctionCoefficients NB period).M (L.correctionCoefficients NB period).Rc := rfl
@@ -87,13 +89,13 @@ open EulerPacketCorrectionOutput EulerSobolevGevreyOperators EulerAllOrderDriftC
 local notation "Q" => forwardUniformBudget M D hTime δ hδ hδ1 ξ hs α hα
   L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet
 
-theorem forwardUniformBudget_weighted (s N : ℕ) (hN : N+6 ≤ s) (t : Icc (0 : ℝ) D.T) :
+theorem forwardUniformBudget_weighted (s N : ℕ) (hN : N + 6 ≤ s) (t : Icc (0 : ℝ) D.T) :
     weightedNorm period 6 N ((Q).initialRadius/4) (((Q).fieldTower period).realization s t) ≤
       EulerPacketInitializedCost.weightSize W*delta (expansion k) ∧
     weightedNorm period 6 N ((Q).initialRadius/4) (((Q).pressureTower period).realization s t) ≤
       EulerPacketInitializedCost.weightSize W*delta (expansion k) ∧
     weightedNorm period 6 N ((Q).initialRadius/4) (((Q).timeDerivativeTower period).realization s
-      t) ≤
+        t) ≤
       EulerPacketInitializedCost.weightSize W*delta (expansion k) := by
   let BC := forwardCoefficientBudget period M D hTime NB
   let R := forwardInitializedRadius LM L NB BC δ ξ
@@ -112,9 +114,9 @@ theorem forwardUniformBudget_weighted (s N : ℕ) (hN : N+6 ≤ s) (t : Icc (0 :
     change EulerGevreyMetricEstimate.metricAmplification D.inverseBound⁻¹*(delta (expansion k)/2)=_
     unfold correctionBase
     ring
-  have hpressure : (Q).pressureCost period (N+6) (by omega)=
+  have hpressure : (Q).pressureCost period (N+6) (by omega) =
       correctionPressureCost D period Kc R S.H0 BC.multiplierCost := by rfl
-  have htime : (Q).timeDerivativeCost period (N+6) (by omega)=
+  have htime : (Q).timeDerivativeCost period (N+6) (by omega) =
       correctionTimeCost D period Kc R S.H0 BC.multiplierCost := by rfl
   have hqe := (Q).fieldTower_reducedNorm period s N hN t
   have hqp := (Q).pressureTower_reducedNorm_delta period (N+6) (by omega) N (by omega) s hN t

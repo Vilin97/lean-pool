@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NilpotentVolterra
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraParity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CauchyRestriction
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactSmoothFamily
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import LeanPool.NavierStokesAndEuler.NavierStokes.CompactSmoothFamily
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Radial smoothness for the actual regular Volterra integral
@@ -27,6 +25,9 @@ do not identify the clamped extension of a positive path with a smooth
 extension across zero.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.VolterraRegularity
@@ -35,6 +36,7 @@ open Set Filter MeasureTheory
 open scoped Topology ContDiff
 open NilpotentVolterra
 
+/-- Radial domain: an abbreviation for `Metric.ball 0 R`. -/
 abbrev radialDomain (R : ℝ) : Set ℝ := Metric.ball 0 R
 
 theorem scaled_mem_radialDomain {R r t : ℝ} (hr : r ∈ radialDomain R)
@@ -560,7 +562,7 @@ theorem cauchyJetCurve_contDiffOn (center : ℂ) (ρ : ℕ → ℝ)
   | succ k ih =>
       intro j
       exact ((CauchyRestriction.derivativeCLM (E := E) center (hρ j)).restrictScalars
-        ℝ).contDiff.comp_contDiffOn (ih (j + 1))
+          ℝ).contDiff.comp_contDiffOn (ih (j + 1))
 
 theorem holomorphic_iteratedDeriv {U : Set ℂ} (hU : IsOpen U) {F : ℂ → E}
     (hF : DifferentiableOn ℂ F U) (k : ℕ) :

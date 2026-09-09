@@ -6,20 +6,12 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # Rapid radial modulation
@@ -30,6 +22,9 @@ in particular to positive integer frequencies. All derivatives are genuine
 `deriv`/`fderiv` derivatives, rather than formal differential symbols.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.RadialModulation
@@ -37,18 +32,27 @@ namespace NavierStokes.RadialModulation
 open Set MeasureTheory
 open scoped ContDiff Topology
 
+/-- Phase point: an abbreviation for `ℝ × ℝ × ℝ`. -/
 abbrev PhasePoint := ℝ × ℝ × ℝ
+/-- Base profile: an abbreviation for `ℝ → ℝ → ℝ`. -/
 abbrev BaseProfile := ℝ → ℝ → ℝ
+/-- Primitive profile: an abbreviation for `PhasePoint → ℝ`. -/
 abbrev PrimitiveProfile := PhasePoint → ℝ
 
+/-- Phase point, given by `(X, η, n * Real.log X)`. -/
 def phasePoint (n X η : ℝ) : PhasePoint := (X, η, n * Real.log X)
+/-- Partial X, given by `fderiv ℝ A z (1, 0, 0)`. -/
 def partialX (A : PrimitiveProfile) (z : PhasePoint) : ℝ := fderiv ℝ A z (1, 0, 0)
+/-- Partial eta, given by `fderiv ℝ A z (0, 1, 0)`. -/
 def partialEta (A : PrimitiveProfile) (z : PhasePoint) : ℝ := fderiv ℝ A z (0, 1, 0)
+/-- Partial theta, given by `fderiv ℝ A z (0, 0, 1)`. -/
 def partialTheta (A : PrimitiveProfile) (z : PhasePoint) : ℝ := fderiv ℝ A z (0, 0, 1)
 
+/-- Modulated E, given by `E X η * Real.exp (A (phasePoint n X η) / n)`. -/
 def modulatedE (n : ℝ) (E : BaseProfile) (A : PrimitiveProfile) (X η : ℝ) : ℝ :=
   E X η * Real.exp (A (phasePoint n X η) / n)
 
+/-- Modulated U, given by `U X η + B (phasePoint n X η) / n`. -/
 def modulatedU (n : ℝ) (U : BaseProfile) (B : PrimitiveProfile) (X η : ℝ) : ℝ :=
   U X η + B (phasePoint n X η) / n
 
@@ -287,7 +291,9 @@ theorem exists_primitive_of_prescribed_mean
 /-- Coordinates are amplitude, radius, parameter, periodic angle. -/
 abbrev FamilyPoint := ℝ × PhasePoint
 
+/-- Eta direction, given by `(0, 0, 1, 0)`. -/
 def etaDirection : FamilyPoint := (0, 0, 1, 0)
+/-- Amplitude direction, given by `(1, 0, 0, 0)`. -/
 def amplitudeDirection : FamilyPoint := (1, 0, 0, 0)
 
 /-- Iterated genuine directional derivatives in the parameter coordinate. -/
@@ -371,9 +377,11 @@ theorem uniform_periodic_family_eta_jets
   have h := hlocal (1 / n) hε X hX η hη (Int.fract θ) hθ
   simpa only [mul_one_div] using h
 
+/-- Angular family, given by `E z.2.1 z.2.2.1 * Real.exp (z.1 * A z.2)`. -/
 def angularFamily (E : BaseProfile) (A : PrimitiveProfile) (z : FamilyPoint) : ℝ :=
   E z.2.1 z.2.2.1 * Real.exp (z.1 * A z.2)
 
+/-- Axial family, given by `U z.2.1 z.2.2.1 + z.1 * B z.2`. -/
 def axialFamily (U : BaseProfile) (B : PrimitiveProfile) (z : FamilyPoint) : ℝ :=
   U z.2.1 z.2.2.1 + z.1 * B z.2
 

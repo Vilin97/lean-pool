@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
 
-@[expose] public section
-
 /-! Operator-norm continuity into a finite Sobolev space is equivalent
 to continuity of all its actual derivative-coordinate operators. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +23,7 @@ open EulerLiftedGradientSpace
 variable (P : ℝ) [Fact (0 < P)] {E : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Word composition, defined pointwise by `(wordOperator P w).comp A`. -/
 def wordComposition (q : ℕ) (A : E →L[ℝ] SobolevSpace P q) :
     SobolevWord q → E →L[ℝ] LiftL2 P := fun w => (wordOperator P w).comp A
 
@@ -71,8 +73,8 @@ theorem continuous_of_valueComposition {K : Type*} [TopologicalSpace K]
   exact hA
 
 theorem continuous_of_value_and_derivatives {K : Type*} [TopologicalSpace K]
-    (q : ℕ) (A : K → E →L[ℝ] SobolevSpace P (q+1))
-    (hA : Continuous (fun t => (valueOperator P (q+1)).comp (A t)))
+    (q : ℕ) (A : K → E →L[ℝ] SobolevSpace P (q + 1))
+    (hA : Continuous (fun t => (valueOperator P (q + 1)).comp (A t)))
     (hD : ∀ i : Fin 4, Continuous (fun t => (derivativeOperator P q i).comp (A t))) :
     Continuous A := by
   apply continuous_of_wordCompositions P (q+1) A

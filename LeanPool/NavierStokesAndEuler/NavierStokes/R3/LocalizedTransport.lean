@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Transport and pressure with a compact spatial weight
@@ -16,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
 Only the scalar weight has compact support. The velocity, transported field,
 and pressure may be arbitrary smooth functions on Euclidean three-space.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -68,7 +72,7 @@ theorem integral_weighted_fderiv_apply {χ f : Space → ℝ} {v : Space → Spa
   have h := CompactEnergy.integral_fderiv_apply hf (hχ.smul hv)
     (show HasCompactSupport (fun x => χ x • v x) from hcχ.smul_right)
   change (∫ x, fderiv ℝ f x (χ x • v x)) = -(∫ x, f x * ∑ i : Fin 3, spatialPartial i (fun y => χ y
-    • v y) x i) at h
+      • v y) x i) at h
   simpa only [map_smul, smul_eq_mul, divergence_weighted hχ hv, hdiv,
     mul_zero, add_zero] using h
 

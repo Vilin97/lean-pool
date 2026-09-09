@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Bounded linear images of genuine uniformly smooth coefficient paths. -/
 
 @[expose] public section
 
-/-! Bounded linear images of genuine uniformly smooth coefficient paths. -/
 
 noncomputable section
 
@@ -44,7 +47,7 @@ theorem map_derivative_bound (L : V →L[ℝ] W) (hL : ‖L‖ ≤ 1) (A : Smoot
     (hb : ∀ t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C) (t : K) (x : Space) :
     ‖iteratedFDeriv ℝ n ((map L A).field t : Space → W) x‖ ≤ C := by
   have h := L.norm_iteratedFDeriv_comp_left ((A.smooth t).contDiffAt (x := x)) (n := n) (by simp)
-  exact h.trans ((mul_le_mul_of_nonneg_right hL (norm_nonneg _)).trans (by simpa only [one_mul]
-    using hb t x))
+  exact h.trans ((mul_le_mul_of_nonneg_right hL (norm_nonneg _)).trans (by
+      simpa only [one_mul] using hb t x))
 
 end EulerMeanCoefficients.SmoothCoefficientPath

@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizer
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedFlow
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Commutator
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
 /-! The actual regularized Euler right-hand side converges to the
 projected Euler right-hand side, uniformly on bounded H⁴ sets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +28,7 @@ open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothL
 open scoped ContDiff Topology
 
 theorem regularizer_error_words (n : ℕ) (A : SmoothL2Field Space)
-    (hA : A.toLp ∈ solenoidalSpace) (q : ℕ) (M : ℝ) (hM : WordBound (q+1) M A) :
+    (hA : A.toLp ∈ solenoidalSpace) (q : ℕ) (M : ℝ) (hM : WordBound (q + 1) M A) :
     WordBound q (regularizerError n*M) (fieldSub ((regularizer n).field A.toLp) A) := by
   intro k hk w
   simp only [fieldSub,wordField_add,wordField_neg,toLp_addField,toLp_fieldNeg,
@@ -52,6 +55,7 @@ theorem advection_low_words (A : SmoothL2Field Space) (M : ℝ) (hM : WordBound 
     (mul_le_mul_of_nonneg_right hcoef h3ProductConstant_nonneg) (wordBound_nonneg hM))
     (wordBound_nonneg hM)).trans_eq (by ring)
 
+/-- Regularization cost, given by `(6*h3ProductConstant+399*smoothEmbeddingConstant)*M^2`. -/
 def regularizationCost (M : ℝ) : ℝ := (6*h3ProductConstant+399*smoothEmbeddingConstant)*M^2
 
 theorem regularizationCost_nonneg (M : ℝ) : 0 ≤ regularizationCost M := by
@@ -73,7 +77,7 @@ theorem regularized_rhs_error (n : ℕ) (A : SmoothL2Field Space)
   have he1 : ‖B.jetLp 1-A.jetLp 1‖ ≤ 3*(regularizerError n*M) := by
     simpa only [jetLp_fieldSub,pow_one] using wordBound_jet_norm he (le_refl 1)
   have hadv : ‖(advectionField B B).toLp-(advectionField A A).toLp‖ ≤
-      ((360*smoothEmbeddingConstant)*M)*(regularizerError n*M)+
+      ((360*smoothEmbeddingConstant)*M)*(regularizerError n*M) +
       ((13*smoothEmbeddingConstant)*M)*(3*(regularizerError n*M)) := by
     apply (advection_sub_norm B A _ _ (wordBound_gradient (wordBound_mono hB (by omega)))
       (wordBound_pointwise (wordBound_mono hM (by omega)))).trans
@@ -82,12 +86,12 @@ theorem regularized_rhs_error (n : ℕ) (A : SmoothL2Field Space)
       (mul_le_mul_of_nonneg_left he1
       (mul_nonneg (mul_nonneg (by norm_num) smoothEmbeddingConstant_nonneg) (wordBound_nonneg hM)))
   have hp := regularizer_error_wordBound n (advectionField B B) _ (advection_low_words B M hB)
-  have hq : ‖solenoidalProjection (advectionField B B).toLp-
+  have hq : ‖solenoidalProjection (advectionField B B).toLp -
       solenoidalProjection (advectionField A A).toLp‖ ≤
       ‖(advectionField B B).toLp-(advectionField A A).toLp‖ := by
     rw [← map_sub]
     exact solenoidalProjection_apply_norm_le _
-  have heq : ((regularizer n).rhs A.toLp).toLp-(projectedRhs A).toLp=
+  have heq : ((regularizer n).rhs A.toLp).toLp-(projectedRhs A).toLp =
       -(S.op (advectionField B B).toLp-solenoidalProjection (advectionField A A).toLp) := by
     simp only [SmoothingOperator.rhs_toLp,SmoothingOperator.quadratic_apply,projectedRhs_toLp,S,B]
     abel

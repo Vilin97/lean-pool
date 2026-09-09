@@ -7,16 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalSize
-public import LeanPool.NavierStokesAndEuler.Euler.PacketOrientedCoordinates
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFrameRenewalAlgebra
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
+import LeanPool.NavierStokesAndEuler.Euler.PacketFrameRenewalAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.PacketOrientedCoordinates
 
 /-!
 The source's next-frame scalar formulas represent the actual normalized
 physical ray and velocity.  Orientation, physical norms, and pressure
 numerators are identified exactly before any quantitative estimate is used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,7 +31,7 @@ open EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketCrossProduct
 theorem physical_pressure_ratio (M : Space →L[ℝ] Space) (m v r w : ℝ → Space)
     {s₀ t₀ a ε τ : ℝ} (ha : a ≠ 0) (hs₀ : s₀ ≠ 0) (hε : ε ≠ 0)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hV : scaledVelocity m v w t₀ a ε τ 1 ≠ 0) :
     let R := scaledRay m v r s₀ t₀ a ε τ
     let V := scaledVelocity m v w t₀ a ε τ
@@ -44,7 +46,7 @@ theorem physical_pressure_ratio (M : Space →L[ℝ] Space) (m v r w : ℝ → S
 theorem physical_cross_ratio (M : Space →L[ℝ] Space) (m v r w : ℝ → Space)
     {s₀ t₀ a ε τ : ℝ} (ha : a ≠ 0) (hs₀ : s₀ ≠ 0) (hε : ε ≠ 0)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hV : scaledVelocity m v w t₀ a ε τ 1 ≠ 0) :
     let R := scaledRay m v r s₀ t₀ a ε τ
     let V := scaledVelocity m v w t₀ a ε τ
@@ -91,7 +93,7 @@ theorem physical_cross_ratio (M : Space →L[ℝ] Space) (m v r w : ℝ → Spac
 theorem physical_frame_formulas (M : Space →L[ℝ] Space) (m v r w : ℝ → Space)
     {s₀ t₀ a ε τ : ℝ} (ha : a ≠ 0) (hs₀ : 0 < s₀) (hε : ε ≠ 0)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hr : r (physicalTime t₀ a ε τ) ≠ 0)
     (hV : 0 < scaledVelocity m v w t₀ a ε τ 1) :
     let R := scaledRay m v r s₀ t₀ a ε τ
@@ -147,7 +149,7 @@ theorem physical_frame_formulas (M : Space →L[ℝ] Space) (m v r w : ℝ → S
     field_simp
   · by_cases hJ : J = 0
     · have hz : normalizedCoupling M (r (physicalTime t₀ a ε τ)) (w (physicalTime t₀ a ε τ)) = 0 :=
-      by
+        by
         rw [normalizedCoupling_eq, hflux, hJ, mul_zero, zero_div]
       simp only [normalizedTilt, hz, hJ, zero_mul, div_zero]
     · have hfluxne : ⟪r (physicalTime t₀ a ε τ),M (w (physicalTime t₀ a ε τ))⟫_ℝ ≠ 0 := by

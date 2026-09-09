@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
-public import LeanPool.NavierStokesAndEuler.Euler.EulerSingularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVorticity
 
 /-! The extended spatial suprema in the independent challenge agree with the
 ordinary development's bounded-function norms on every smooth Sobolev slice. -/
+
+@[expose] public section
+
 
 noncomputable section
 

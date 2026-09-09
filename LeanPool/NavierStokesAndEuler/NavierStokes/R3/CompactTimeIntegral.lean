@@ -7,12 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # Time derivatives of integrals with uniform compact spatial support
@@ -20,6 +16,9 @@ public import Mathlib.Analysis.Calculus.Deriv.Comp
 The public statements use the ordinary volume integral over all of R³.
 Uniform compact support supplies integrability and a local dominating function.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

@@ -7,11 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicInteriorEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.MeanScalarProductDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicCutoffEnergy
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarProductDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import Mathlib.Algebra.Order.Star.Real
+
+/-! The actual second-derivative estimate for the localized harmonic function. -/
 
 @[expose] public section
 
-/-! The actual second-derivative estimate for the localized harmonic function. -/
 
 noncomputable section
 
@@ -60,6 +64,7 @@ theorem localized_second_pointwise (h : Space → ℝ) (hh : ContDiff ℝ ∞ h)
     (innerCutoff x * partialDerivative (partialDerivative h i) i x)
   nlinarith
 
+/-- Interior second energy constant, constructed using `3`. -/
 def interiorSecondEnergyConstant : ℝ :=
   3 * (innerSecondBound ^ 2 + 16 * innerDerivativeBound ^ 2 * outerDerivativeBound ^ 2 +
     16 * middleDerivativeBound ^ 2 * outerDerivativeBound ^ 2)
@@ -77,7 +82,7 @@ theorem localized_second_memLp (h : Space → ℝ) (hh : ContDiff ℝ ∞ h) (i 
     hc₁.fderiv_apply (𝕜 := ℝ) (EuclideanSpace.single i 1)
   exact (contDiff_partialDerivative _
     (contDiff_partialDerivative _ (inner_smooth.mul hh) i) i).continuous.memLp_of_hasCompactSupport
-      hc₂
+        hc₂
 
 theorem localized_second_energy_le (h : Space → ℝ) (hh : ContDiff ℝ ∞ h)
     (hLp : MemLp h 2 volume) (hharmonic : ∀ x ∈ Metric.ball 0 (1 : ℝ), Δ h x = 0)
@@ -88,7 +93,7 @@ theorem localized_second_energy_le (h : Space → ℝ) (hh : ContDiff ℝ ∞ h)
   have hiL := (memLp_two_iff_integrable_sq hL.aestronglyMeasurable).1 hL
   have hi₀ := (memLp_two_iff_integrable_sq hLp.aestronglyMeasurable).1 hLp
   have hi₁ := integrable_weighted_gradient_square outerCutoff h outer_compact
-    outer_smooth.continuous hh
+      outer_smooth.continuous hh
   have hi₂ := integrable_weighted_gradient_square middleCutoff (partialDerivative h i)
     middle_compact middle_smooth.continuous (contDiff_partialDerivative h hh i)
   have hiA := hi₀.const_mul (innerSecondBound ^ 2)

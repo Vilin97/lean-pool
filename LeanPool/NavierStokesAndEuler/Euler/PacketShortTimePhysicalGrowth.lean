@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketShortTimePropagator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketParentForwardBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePropagator
+import LeanPool.NavierStokesAndEuler.Euler.ShortTimeLinearGrowth
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The source tangent equation is a reflection of the strain applied to
 the velocity. Its actual norm is therefore unchanged by the normal factor.
 A short interval controlled by the low strain norm supplies H3 with g=1. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -62,22 +66,26 @@ theorem physicalGrowth_one_of_short (S : Set Space) (C : ℝ) (hC : 0 ≤ C)
   simpa only [mul_one,div_one] using
     EulerShortTimeLinearGrowth.norm_le_two D.T C hC w f' hd' hb hshort s t hst
 
-private local instance : NormedRing (U →L[ℝ] U) := inferInstance
-private local instance : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instPacketShortTimePhysicalGrowth1 : NormedRing (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketShortTimePhysicalGrowth2 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
 
 /-- A low strain bound on the H3 ball suffices for the entire source
 forward budget. The coordinate propagation cost is the polynomial 6 C³. -/
 def shortPhysicalForwardBudget (q : ℕ) (R C C₁ CM : ℝ)
     (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hCM : 0 ≤ CM)
-    (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det=1)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C*majorant R
-      0 n)
-    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C₁*majorant
-      R 0 n)
-    (hM : ∀ t x, ‖x‖ ≤ (1/2 : ℝ) → ‖D.M.field t x‖ ≤ CM)
+    (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C * majorant R
+        0 n)
+    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C₁ *
+        majorant
+        R 0 n)
+    (hM : ∀ t x, ‖x‖ ≤ (1 / 2 : ℝ) → ‖D.M.field t x‖ ≤ CM)
     (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-    (hsub : D.support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
-    (hshort : CM*D.T ≤ 1/2) :
+    (hsub : D.support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
+    (hshort : CM * D.T ≤ 1 / 2) :
     EulerTransversePacketForward.Budget D (Fin 4) q := by
   have hf (r : Icc (0 : ℝ) D.T) (y : Space) : ‖D.F.field r y‖ ≤ C := by
     simpa only [norm_iteratedFDeriv_zero,majorant,Nat.zero_add,Nat.factorial_zero,

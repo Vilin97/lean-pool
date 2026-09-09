@@ -6,16 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
-public import LeanPool.NavierStokesAndEuler.Euler.ParentStageHorizon
-public import LeanPool.NavierStokesAndEuler.Euler.ParentStageDirection
-public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketFrame
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalPrefix
 
 /-! The invariant for a finite, actually constructed packet stage.
 All fields refer to its genuine Euler state, source guards and frame.
 The cumulative bounds use only earlier indices. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,13 +27,21 @@ open Set Finset Real InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
   EulerPacketSourceScaleSequence EulerPacketSourceScaleActual EulerPacketBaseGuardScales
   EulerParentRenewalScale EulerMeanHarmonic
 
+/-- Frame data, given by `A.transverseData firstNormal firstNormal_unit firstFrame support
+compact`. -/
 def frameData (A : Parent) : EulerTransversePacketProvider.Data FirstPlane :=
   A.transverseData firstNormal firstNormal_unit firstFrame support compact
 
+/-- Stage data, collecting `parent`, `state`, `low`, `time`, `time_nonneg`, `time_zero` and
+their compatibility conditions. -/
 structure Stage {c B : ℝ} (S : Scales c B) (n : ℕ) where
+  /-- Parent of `Stage`, of type `Parent`. -/
   parent : Parent
+  /-- State of `Stage`, of type `SmoothState parent`. -/
   state : SmoothState parent
+  /-- Low of `Stage`, of type `LowBounds parent`. -/
   low : LowBounds parent
+  /-- Time of `Stage`, of type `ℝ`. -/
   time : ℝ
   time_nonneg : 0 ≤ time
   time_zero : n=0 → time=0
@@ -50,10 +58,11 @@ structure Stage {c B : ℝ} (S : Scales c B) (n : ℕ) where
       hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n
   exterior_bound : low.Be ≤ initialCoefficientCost+∑ i ∈ range n, initialIncrement S.J S.X i
   core_bound : low.Bc ≤ gradientConstant*S.X^1000+∑ i ∈ range n, initialIncrement S.J S.X i
-  pressure_bound : low.K ≤ initialCoefficientCost+literalInitialPressureCost S.D S.X+
+  pressure_bound : low.K ≤ initialCoefficientCost+literalInitialPressureCost S.D S.X +
     ∑ i ∈ range n, pressureIncrement S.J S.X i
   boundary_eq : low.L=boundaryLocalizationC1*low.Bc+1
   radius_eq : low.r=baseRadius S.X
+  /-- Frame of `Stage`, of type `ParentFrame (frameData parent) time`. -/
   frame : ParentFrame (frameData parent) time
   frame_shear : frame.shear=previousShear S.J S.X n
   frame_bound : frame.G ≤ frameConstant*(1+olderShear S.J S.X n)

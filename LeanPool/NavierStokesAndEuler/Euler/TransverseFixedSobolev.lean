@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGevreyInverse
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevTensorInverse
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedEvolution
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
+import LeanPool.NavierStokesAndEuler.Euler.TransverseParameterRegularity
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Same-radius fixed-Sobolev estimates for the actual transverse history
@@ -22,6 +24,9 @@ tensor bounds are converted to word sums; forcing and solution use the same
 external radius and base order. The recurrence is applied to the actual
 coercive inverse, with its proved polynomial norm bound.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,9 +38,13 @@ open Set ContinuousLinearMap InnerProductSpace EulerTimeLp EulerVolterraConvolut
   EulerTransverseGramInverse EulerOperatorGevreyCalculus EulerParameterWordGevrey EulerGevrey
 open scoped ContDiff
 
+/-- Forcing block amplitude, given by `3*sobolevCoefficientAmplitude ι q Rc (T*derivativeCost T
+C₀ C₁)*Cf`. -/
 def forcingBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ Cf : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q Rc (T*derivativeCost T C₀ C₁)*Cf
 
+/-- Block cost, given by `inverseBlockCost ι q (inverseCost T C₀ C₁ c) Rc (formCost T C₀ C₁ CH)
+(forcingBlockAmplitude ι q T Rc C₀ C₁ Cf)`. -/
 def blockCost (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ CH c Cf : ℝ) : ℝ :=
   inverseBlockCost ι q (inverseCost T C₀ C₁ c) Rc (formCost T C₀ C₁ CH)
     (forcingBlockAmplitude ι q T Rc C₀ C₁ Cf)
@@ -66,11 +75,11 @@ variable {X U E ι : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 /-- The actual weak forcing pullback has coefficient-only tensor bounds. -/
 theorem forcingOperator_bound (T : ℝ) (hT : 0 ≤ T)
-    (Q Q₁ : X → C(Icc (0 : ℝ) T,U →L[ℝ] E))
+    (Q Q₁ : X → C(Icc (0 : ℝ) T, U →L[ℝ] E))
     (hQ : ContDiff ℝ ∞ Q) (hQ₁ : ContDiff ℝ ∞ Q₁)
     (Rc C₀ C₁ : ℝ) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (n : ℕ) (x : X) :
     ‖iteratedFDeriv ℝ n (fun y => -(fixedFramePrimitive T hT (Q y) (Q₁ y)).adjoint) x‖ ≤
       (T*derivativeCost T C₀ C₁)*majorant Rc 0 n :=
@@ -83,27 +92,27 @@ theorem forcingOperator_bound (T : ℝ) (hT : 0 ≤ T)
 
 variable (directions : ι → X) (hdir : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
   (T : ℝ) (hT : 0 ≤ T)
-  (Q Q₁ : X → C(Icc (0 : ℝ) T,U →L[ℝ] E))
-  (H : X → C(Icc (0 : ℝ) T,E →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+  (Q Q₁ : X → C(Icc (0 : ℝ) T, U →L[ℝ] E))
+  (H : X → C(Icc (0 : ℝ) T, E →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
   (hd : ∀ x (t : Icc (0 : ℝ) T),
     HasDerivWithinAt (extendPath T hT (Q x)) (Q₁ x t) (Icc (0 : ℝ) T) t)
-  (K : ℝ) (hK : 0 ≤ K) (hPotential : ∀ x t v, ⟪H x t v,v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+  (K : ℝ) (hK : 0 ≤ K) (hPotential : ∀ x t v, ⟪H x t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
   (hQ : ContDiff ℝ ∞ Q) (hQ₁ : ContDiff ℝ ∞ Q₁) (hH : ContDiff ℝ ∞ H)
   (Rc C₀ C₁ CH Cf R : ℝ) (hRc : 0 ≤ Rc)
   (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCH : 0 ≤ CH) (hCf : 0 ≤ Cf)
-  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-  (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
-  (hbH : ∀ n x, ‖iteratedFDeriv ℝ n H x‖ ≤ CH*majorant Rc 0 n)
-  (hR : 2*blockCost ι q T Rc C₀ C₁ CH c Cf*(sobolevCoefficientRadius ι Rc+1) ≤ R)
+  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+  (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
+  (hbH : ∀ n x, ‖iteratedFDeriv ℝ n H x‖ ≤ CH * majorant Rc 0 n)
+  (hR : 2 * blockCost ι q T Rc C₀ C₁ CH c Cf * (sobolevCoefficientRadius ι Rc + 1) ≤ R)
 
 include hdir hQ hQ₁ hH hRc hC₀ hC₁ hCH hCf hbQ hbQ₁ hbH hR
 
 /-- The genuine zero-trace coordinate solver gains one factorial shift at
 the identical external radius and fixed base Sobolev order. -/
 theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d : ℕ)
-    (hfb : ∀ n x, block directions q f n x ≤ Cf*majorant R d n) (n : ℕ) (x : X) :
+    (hfb : ∀ n x, block directions q f n x ≤ Cf * majorant R d n) (n : ℕ) (x : X) :
     block directions q (fun y => fixedFrameSolver T hT (Q y) (Q₁ y) (H y)
       c hc (hLower y) (hd y) K hK (hPotential y) hsmall (f y)) n x ≤ majorant R (d+1) n := by
   let A := fun y => fixedFrameOperator T hT (Q y) (Q₁ y) (H y)
@@ -145,7 +154,7 @@ theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d 
   have hJb (k y) : ‖iteratedFDeriv ℝ k J y‖ ≤ (T*derivativeCost T C₀ C₁)*majorant Rc 0 k :=
     forcingOperator_bound T hT Q Q₁ hQ hQ₁ Rc C₀ C₁ hRc hC₀ hC₁ hbQ hbQ₁ k y
   have hJB (k y) : coefficientBlock directions q J k y ≤
-      sobolevCoefficientAmplitude ι q Rc (T*derivativeCost T C₀ C₁)*
+      sobolevCoefficientAmplitude ι q Rc (T*derivativeCost T C₀ C₁) *
         majorant (sobolevCoefficientRadius ι Rc) 0 k :=
     coefficientBlock_of_tensor_bound directions hdir q J hJ Rc _ hRc hCJ hJb k y
   have hrhsb (k y) : block directions q rhs k y ≤
@@ -162,7 +171,7 @@ theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d 
 /-- Forgetting the zero-trace subtype is a contraction, so the actual
 coordinate L² velocity has the identical word estimate. -/
 theorem velocityLp_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d : ℕ)
-    (hfb : ∀ n x, block directions q f n x ≤ Cf*majorant R d n) (n : ℕ) (x : X) :
+    (hfb : ∀ n x, block directions q f n x ≤ Cf * majorant R d n) (n : ℕ) (x : X) :
     block directions q (fun y => EulerTransverseFixedEvolution.velocityLp T hT (Q y) (Q₁ y) (H y)
       c hc (hLower y) (hd y) K hK (hPotential y) hsmall (f y)) n x ≤ majorant R (d+1) n := by
   let v := fun y => fixedFrameSolver T hT (Q y) (Q₁ y) (H y)

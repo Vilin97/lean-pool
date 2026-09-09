@@ -8,13 +8,7 @@ module
 
 public import Mathlib.Analysis.Real.Sqrt
 public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Two signed covariance slots
@@ -28,6 +22,9 @@ The actual integrated columns in the manuscript include approximation errors.
 This file does not identify those columns with the exact model, or prove the
 Gaussian, parameter-derivative, or flat-edge estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpLinearity
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Continuous time-path application and its exact Bochner compatibility. -/
 
 @[expose] public section
 
-/-! Continuous time-path application and its exact Bochner compatibility. -/
 
 noncomputable section
 
@@ -34,7 +35,8 @@ theorem pathLp_timePathApply (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E 
     pathLp T hT (timePathApply T A u) = timeMultiplier T hT A (pathLp T hT u) :=
   (timeMultiplier_pathLp T hT A u).symm
 
-/-- Strong L² convergence of actual continuous field paths survives a fixed continuous time-dependent operator. -/
+/-- Strong L² convergence of actual continuous field paths survives a fixed continuous
+time-dependent operator. -/
 theorem timePathApply_tendsto (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F))
     (u : ℕ → C(Icc (0 : ℝ) T, E)) (U : TimeLp T E)
     (hu : Filter.Tendsto (fun n => pathLp T hT (u n)) Filter.atTop (𝓝 U)) :

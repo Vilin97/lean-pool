@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
 public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.NormNum.GCD
+
+/-! Pointwise multilinear L² fields define genuine bounded multilinear maps into L². -/
 
 @[expose] public section
 
-/-! Pointwise multilinear L² fields define genuine bounded multilinear maps into L². -/
 
 noncomputable section
 
@@ -25,6 +29,7 @@ variable {X P V : Type*} [MeasurableSpace X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   (μ : Measure X) (n : ℕ)
 
+/-- Multilinear bundling as an element of `Lp (P [×n]→L[ℝ] V) 2 μ →L[ℝ] (P [×n]→L[ℝ] Lp V 2 μ)`. -/
 def multilinearBundling : Lp (P [×n]→L[ℝ] V) 2 μ →L[ℝ] (P [×n]→L[ℝ] Lp V 2 μ) := by
   let ev : P [×n]→L[ℝ] ((P [×n]→L[ℝ] V) →L[ℝ] V) :=
     (ContinuousLinearMap.id ℝ (P [×n]→L[ℝ] V)).flipMultilinear

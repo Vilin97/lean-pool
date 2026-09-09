@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageGuards
-public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalScaleApplication
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryPressureCosts
+import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalScaleApplication
 
 /-! The actual stage guards satisfy the fixed pressure, initial-gradient
 and frame-renewal budgets used by the induction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,20 +48,22 @@ theorem history_inverse_shear : P.time⁻¹ ≤ previousShear S.J S.X n := by
 theorem joined_bad_cost :
     2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*(G).badRatio ≤
       badCost S.J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence S.J S.X) n
-        :=
+          :=
   P.restrictedState.labels.joined_bad_pressure_cost_bound (P.joinedNormal hn) (P.joinedNormal_unit
-    hn)
-    R support compact P.restrictedLow P.time (P.time_pos hn) P.time_lt_nextHorizon (P.joinedFrame
       hn)
+    R support compact P.restrictedLow P.time (P.time_pos hn) P.time_lt_nextHorizon (P.joinedFrame
+        hn)
     G P.time⁻¹ P.time_one le_rfl S.J S.D S.stage_large S.X 4 gradientConstant gradientConstant
-    hessianConstant 80 S.x_one (by norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by
-      norm_num)
+    hessianConstant 80 S.x_one (by
+        norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by norm_num)
     S.actual.initial_shear S.actual.initial_frequency n (gradientConstant*previousShear S.J S.X n)
-    (by rw [rpow_ofNat]; exact P.label_eq.le) (P.history_inverse_shear hn) (P.joinedGuards_CM hn hq
-      hB).le
+    (by
+        rw [rpow_ofNat]; exact P.label_eq.le) (P.history_inverse_shear hn) (P.joinedGuards_CM hn hq
+            hB).le
     (P.joinedGuards_CH hn hq hB).le (P.joined_horizon_bound hn)
-    (by erw [P.joinedFrame_sigma]; exact P.normalized_sigma) (P.joinedGuards_shear hn hq hB).le
-      le_rfl
+    (by
+        erw [P.joinedFrame_sigma]; exact P.normalized_sigma) (P.joinedGuards_shear hn hq hB).le
+            le_rfl
 
 theorem joined_initial_cost :
     (G).hchild*(G).badRatio+(frequency S.J S.X n)^(-(1/4 : ℝ)) ≤ initialIncrement S.J S.X n := by
@@ -74,7 +77,7 @@ theorem joined_initial_cost :
   nlinarith only [hb,hh]
 
 theorem joined_pressure_cost :
-    2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*((G).δ*goodRatio+(G).badRatio)+
+    2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*((G).δ*goodRatio+(G).badRatio) +
       (frequency S.J S.X n)^(-(1/4 : ℝ)) ≤ pressureIncrement S.J S.X n := by
   have h := P.restrictedState.labels.joined_upper_pressure_cost_bound
     (P.joinedNormal hn) (P.joinedNormal_unit hn) R support compact P.restrictedLow P.time
@@ -82,8 +85,9 @@ theorem joined_pressure_cost :
     S.J S.D S.stage_large S.X 4 gradientConstant gradientConstant hessianConstant 80 S.x_one
     (by norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by norm_num)
     S.actual.initial_shear S.actual.initial_frequency n (gradientConstant*previousShear S.J S.X n)
-    (by rw [rpow_ofNat]; exact P.label_eq.le) (P.history_inverse_shear hn) (P.joinedGuards_CM hn hq
-      hB).le
+    (by
+        rw [rpow_ofNat]; exact P.label_eq.le) (P.history_inverse_shear hn) (P.joinedGuards_CM hn hq
+            hB).le
     (P.joinedGuards_CH hn hq hB).le (P.joined_horizon_bound hn)
     (by erw [P.joinedFrame_sigma]; exact P.normalized_sigma)
     (P.joinedGuards_shear hn hq hB).le le_rfl (P.joinedGuards_delta hn hq hB).le
@@ -112,17 +116,17 @@ variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B} (P : Stage S 0)
 local notation "G" => P.forwardGuards hq hB
 
 theorem forward_horizon_bound : P.forwardFrame.horizon ≤ sourceTheta S.J 4 (scaleSequence S.J S.X)
-  0 := by
+    0 := by
   rw [P.forwardFrame_horizon,P.restrictedFrame_horizon]
   exact P.source_stage.horizon_le_Theta
 
 theorem forward_bad_cost :
     2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild*(G).earlyRatio ≤
       badCost S.J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence S.J S.X) 0
-        := by
+          := by
   apply (G).bad_pressure_cost_bound S.J S.stage_large S.X 4 gradientConstant gradientConstant
-    hessianConstant 80 S.x_one (by norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by
-      norm_num)
+    hessianConstant 80 S.x_one (by
+        norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by norm_num)
     S.actual.initial_shear 0 (gradientConstant*previousShear S.J S.X 0) P.forward_horizon_bound
     _ le_rfl le_rfl
   rw [P.forwardFrame_sigma]
@@ -140,11 +144,11 @@ theorem forward_initial_cost :
   nlinarith only [hb,hh]
 
 theorem forward_pressure_cost :
-    2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild*((G).δ*goodRatio+(G).earlyRatio)+
+    2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild*((G).δ*goodRatio+(G).earlyRatio) +
       (frequency S.J S.X 0)^(-(1/4 : ℝ)) ≤ pressureIncrement S.J S.X 0 := by
   have h := (G).upper_pressure_cost_bound S.J S.stage_large S.X 4 gradientConstant gradientConstant
-    hessianConstant 80 S.x_one (by norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by
-      norm_num)
+    hessianConstant 80 S.x_one (by
+        norm_num) gradient_nonneg gradient_nonneg hessian_nonneg (by norm_num)
     S.actual.initial_shear 0 (gradientConstant*previousShear S.J S.X 0) P.forward_horizon_bound
     (by rw [P.forwardFrame_sigma]; exact P.normalized_sigma) le_rfl le_rfl le_rfl
   unfold pressureIncrement initialIncrement

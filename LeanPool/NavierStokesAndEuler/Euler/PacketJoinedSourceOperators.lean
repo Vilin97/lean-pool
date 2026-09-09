@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceOperators
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
 
+/-! Literal source operators with the complete positive-history-time high inverse. -/
+
 @[expose] public section
 
-/-! Literal source operators with the complete positive-history-time high inverse. -/
 
 noncomputable section
 
@@ -25,6 +26,8 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : EulerTransversePacketProvider.HistoryData (D.initial τ hτ hτT.le))
 
+/-- Joined source operators, bundling `interval`, `period`, `inverseFrame`, `strain` and the
+required compatibility proofs. -/
 def joinedSourceOperators : Operators where
   interval := Icc (0 : ℝ) M.T
   period := P
@@ -35,15 +38,17 @@ def joinedSourceOperators : Operators where
   highSolve := EulerTransversePacketJoin.highSolve (P := P) τ hτ hτT B
   curlCorrector := D.curlCorrector P
 
+/-- Joined source coefficient data, bundling `period_eq`, `interval_eq`, `inverse`, `strain` and
+the required compatibility proofs. -/
 def joinedSourceCoefficientData (hT : M.T = D.T) :
     CoefficientData P M.T (joinedSourceOperators P M D τ hτ hτT B) where
   period_eq := rfl
   interval_eq := rfl
   inverse := (sourceCoefficientData P M D (EulerTransversePacketProvider.InitialData.zero P D)
-    hT).inverse
+      hT).inverse
   strain := (sourceCoefficientData P M D (EulerTransversePacketProvider.InitialData.zero P D)
-    hT).strain
+      hT).strain
   normal := (sourceCoefficientData P M D (EulerTransversePacketProvider.InitialData.zero P D)
-    hT).normal
+      hT).normal
 
 end EulerPacketCylinderField

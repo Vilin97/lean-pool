@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
 public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! A genuine ordinary-space cutoff-curl dual estimate. All spatial norms and
 integrals in this file use Lebesgue measure on Euclidean three-space. -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLifespan
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
 
 /-! The genuine zero Euler solution rules out zero initial data for a
 positive finite maximal lifespan. -/
+
+@[expose] public section
+
 
 noncomputable section
 

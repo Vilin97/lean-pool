@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPotentialCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalGeometry
 
 /-!
 # Zeros of the actual signed physical coefficients
@@ -20,6 +19,9 @@ band.  This file transfers that literal zero to the canonical physical
 copy family and to every current-band representation of the same label.
 The current state and the native reference requests are arbitrary.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,9 +33,13 @@ open ActualSignedExterior
 open scoped Topology ContDiff BigOperators
 
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Point: an abbreviation for `ActualSignedCoherence.Point`. -/
 abbrev Point := ActualSignedCoherence.Point
+/-- Full point: an abbreviation for `ActualSignedCoherence.FullPoint`. -/
 abbrev FullPoint := ActualSignedCoherence.FullPoint
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
 
 variable {B N0 : ℕ}
@@ -158,15 +164,15 @@ theorem current_nativeSlow_reference (l : Label B N0) (n : ℕ) (k : Frequency)
       (ActualSignedPotentialCoherence.nativePoint n z)).1 =
       BaseContextAssembly.slowCoordinates
         (ActualSignedPotentialCoherence.nativePoint (ActualSignedPhysicalBinding.reference l) z).1
-          := by
+            := by
   have he := congrArg Prod.fst
     ((ActualSignedPotentialCoherence.nativePoint_absolute n z hr).trans
       (ActualSignedPotentialCoherence.nativePoint_absolute
         (ActualSignedPhysicalBinding.reference l) z hr).symm)
   change toAbsolute n (ActualSignedPotentialCoherence.nativePoint n z).1 =
     toAbsolute (ActualSignedPhysicalBinding.reference l)
-      (ActualSignedPotentialCoherence.nativePoint (ActualSignedPhysicalBinding.reference l) z).1 at
-        he
+      (ActualSignedPotentialCoherence.nativePoint (ActualSignedPhysicalBinding.reference l) z).1
+          at he
   change nativeSlow l.1 (toAbsolute n (ActualSignedPotentialCoherence.nativePoint n z).1) = _
   rw [he]
   exact nativeSlow_toAbsolute l.1 _
@@ -307,7 +313,7 @@ theorem current_raw_zero_of_exterior (l : Label B N0) (u : CorrectionState.State
       (ActualSignedCoherence.copies l u).pressure n k
         (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
   rcases primary_mask_or_target_zero l n (ActualSignedPhysicalBinding.reference l) hw hout with hm
-    | ht
+      | ht
   · apply (ActualSignedStageControls.parameters l).raw_zero_of_mask
     change ActualSignedStageControls.mask l k n (ActualSignedPotentialCoherence.nativePoint n z) = 0
     rw [current_mask_physicalLift l n k z hr, hm]

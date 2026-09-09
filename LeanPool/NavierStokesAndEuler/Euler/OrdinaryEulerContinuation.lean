@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLocalExistence
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerConcatenation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLifespan
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerConcatenation
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLocalExistence
 
 /-! Genuine continuation of every closed smooth Euler evolution, and
 the resulting gradient blowup criterion at a finite maximal horizon. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -106,7 +108,7 @@ theorem gradient_unbounded_near_endpoint (τ K : ℝ) (hτ : τ < L.duration) :
   let C := ‖(L.evolution R hR hRL).gradientNormPath‖
   obtain ⟨S,hS,hSL,t,x,hx⟩ := L.gradient_unbounded (max C K)
   apply (not_lt_of_ge (show ‖fderiv ℝ ((L.evolution S hS hSL).velocity t).field x‖ ≤ max C K from
-    ?_)) hx
+      ?_)) hx
   by_cases ht : (t : ℝ) ≤ R
   · have he := L.evolution_agrees_at S R hS hR hSL hRL t t.property.1 t.property.2 ht
     rw [he]
@@ -118,18 +120,18 @@ theorem gradient_unbounded_near_endpoint (τ K : ℝ) (hτ : τ < L.duration) :
 theorem gradientIntegral_agrees (S T : ℝ) (hS : 0 < S) (hT : 0 < T)
     (hSL : S < L.duration) (hTL : T < L.duration) (hST : S ≤ T)
     (t : Icc (0 : ℝ) S) :
-    (L.evolution S hS hSL).gradientIntegral t=
+    (L.evolution S hS hSL).gradientIntegral t =
       (L.evolution T hT hTL).gradientIntegral ⟨t,t.property.1,t.property.2.trans hST⟩ := by
   apply intervalIntegral.integral_congr
   intro r hr
   have hrs : r ∈ Icc (0 : ℝ) (t : ℝ) := by simpa only [uIcc_of_le t.property.1] using hr
   have hrS : r ∈ Icc (0 : ℝ) S := ⟨hrs.1,hrs.2.trans t.property.2⟩
   have hrT : r ∈ Icc (0 : ℝ) T := ⟨hrs.1,hrS.2.trans hST⟩
-  change (L.evolution S hS hSL).gradientNormPath (projIcc 0 S hS.le r)=
+  change (L.evolution S hS hSL).gradientNormPath (projIcc 0 S hS.le r) =
     (L.evolution T hT hTL).gradientNormPath (projIcc 0 T hT.le r)
   rw [projIcc_of_mem hS.le hrS,projIcc_of_mem hT.le hrT]
   change ‖EulerMeanSobolevBoundedField.finiteField ((L.evolution S hS hSL).velocity
-    ⟨r,hrS⟩).derivative‖=
+      ⟨r,hrS⟩).derivative‖=
     ‖EulerMeanSobolevBoundedField.finiteField ((L.evolution T hT hTL).velocity ⟨r,hrT⟩).derivative‖
   rw [L.evolution_agrees_at S T hS hT hSL hTL r hrs.1 hrS.2 hrT.2]
 

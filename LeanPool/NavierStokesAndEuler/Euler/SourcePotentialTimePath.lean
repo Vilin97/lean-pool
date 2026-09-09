@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SourcePotentialTime
+public import LeanPool.NavierStokesAndEuler.Euler.SourcePotentialTimeCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+
+/-! The potential time coefficient from an actual continuous, translation-smooth normal derivative
+path. -/
 
 @[expose] public section
 
-/-! The potential time coefficient from an actual continuous, translation-smooth normal derivative
-  path. -/
 
 noncomputable section
 
@@ -23,32 +25,78 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (Space →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space) := inferInstance
-private local instance : NormedAddCommGroup (ℝ →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (ℝ →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ ℝ →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ ℝ →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →ᵇ Space) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →ᵇ ℝ →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →ᵇ ℝ →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedAddCommGroup NormalField := inferInstance
-private local instance : NormedSpace ℝ NormalField := inferInstance
-private local instance : NormedAddCommGroup C(K,NormalField) := inferInstance
-private local instance : NormedSpace ℝ C(K,NormalField) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup PotentialField := inferInstance
-private local instance : NormedSpace ℝ PotentialField := inferInstance
-private local instance : NormedAddCommGroup C(K,PotentialField) := inferInstance
-private local instance : NormedSpace ℝ C(K,PotentialField) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath1 : NormedAddCommGroup (Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space)` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath2 : NormedSpace ℝ (Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (ℝ →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath3 : NormedAddCommGroup (ℝ →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (ℝ →L[ℝ] Space)` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath4 : NormedSpace ℝ (ℝ →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ ℝ →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instSourcePotentialTimePath5 : NormedAddCommGroup (Space →ᵇ ℝ →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ ℝ →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath6 : NormedSpace ℝ (Space →ᵇ ℝ →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath7 : NormedAddCommGroup C(K,Space →ᵇ Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath8 : NormedSpace ℝ C(K,Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →ᵇ ℝ →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instSourcePotentialTimePath9 : NormedAddCommGroup C(K,Space →ᵇ ℝ →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →ᵇ ℝ →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath10 : NormedSpace ℝ C(K,Space →ᵇ ℝ →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath11 : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] ℝ)` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath12 : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup NormalField` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath13 : NormedAddCommGroup NormalField := inferInstance
+/-- Cache the standard `NormedSpace ℝ NormalField` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath14 : NormedSpace ℝ NormalField := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,NormalField)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath15 : NormedAddCommGroup C(K,NormalField) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,NormalField)` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath16 : NormedSpace ℝ C(K,NormalField) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath17 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath18 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup PotentialField` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath19 : NormedAddCommGroup PotentialField := inferInstance
+/-- Cache the standard `NormedSpace ℝ PotentialField` instance to shorten typeclass synthesis. -/
+local instance instSourcePotentialTimePath20 : NormedSpace ℝ PotentialField := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,PotentialField)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath21 : NormedAddCommGroup C(K,PotentialField) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,PotentialField)` instance to shorten typeclass
+synthesis. -/
+local instance instSourcePotentialTimePath22 : NormedSpace ℝ C(K,PotentialField) := inferInstance
 
+/-- Column path, given by `mapCoefficientPath (ContinuousLinearMap.toSpanSingletonLIE ℝ
+Space).toLinearIsometry.toContinuousLinearMap`. -/
 def columnPath : C(K,Space →ᵇ Space) →L[ℝ] C(K,Space →ᵇ ℝ →L[ℝ] Space) :=
   mapCoefficientPath (ContinuousLinearMap.toSpanSingletonLIE ℝ
-    Space).toLinearIsometry.toContinuousLinearMap
+      Space).toLinearIsometry.toContinuousLinearMap
 
 theorem columnPath_norm : ‖columnPath (K := K)‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -63,7 +111,7 @@ theorem columnPath_norm : ‖columnPath (K := K)‖ ≤ 1 := by
   exact ((A t).norm_coe_le_norm y).trans (A.norm_coe_le_norm t)
 
 omit [CompactSpace K] in
-theorem columnPath_translation (A : C(K,Space →ᵇ Space)) (a : Space) :
+theorem columnPath_translation (A : C(K, Space →ᵇ Space)) (a : Space) :
     translateCoefficientPath (columnPath A) a = columnPath (translateCoefficientPath A a) := by
   apply ContinuousMap.ext
   intro t
@@ -73,9 +121,11 @@ theorem columnPath_translation (A : C(K,Space →ᵇ Space)) (a : Space) :
 
 section Coefficient
 
-variable (m : SmoothCoefficientPath K Space) (m₁ : C(K,Space →ᵇ Space))
-  (c : ℝ) (hc : 0 < c) (hm : ∀ t y, c ≤ ‖m.field t y‖^2)
+variable (m : SmoothCoefficientPath K Space) (m₁ : C(K, Space →ᵇ Space))
+  (c : ℝ) (hc : 0 < c) (hm : ∀ t y, c ≤ ‖m.field t y‖ ^ 2)
 
+/-- Potential time path, given by `potentialPathMap (timeNormalPath (normalFunctional m c hc hm)
+(columnPath m₁))`. -/
 def potentialTimePath : C(K,PotentialField) :=
   potentialPathMap (timeNormalPath (normalFunctional m c hc hm) (columnPath m₁))
 
@@ -110,8 +160,8 @@ theorem potentialTimePath_orbit (h₁ : ContDiff ℝ ∞ (translateCoefficientPa
 theorem potentialTimePath_bound (h₁ : ContDiff ℝ ∞ (translateCoefficientPath m₁))
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hbN : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath (normalFunctional m c hc hm)) a‖ ≤
-      C*majorant R 0 n)
-    (hb₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath m₁) a‖ ≤ D*majorant R 0 n)
+      C * majorant R 0 n)
+    (hb₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath m₁) a‖ ≤ D * majorant R 0 n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (potentialTimePath m m₁ c hc hm)) a‖ ≤
       (27*C^2*D)*majorant R 0 n := by
@@ -130,8 +180,8 @@ end Coefficient
 section Time
 
 variable (T : ℝ) (hT : 0 ≤ T) (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
-  (m₁ : C(Icc (0 : ℝ) T,Space →ᵇ Space))
-  (c : ℝ) (hc : 0 < c) (hm : ∀ t y, c ≤ ‖m.field t y‖^2)
+  (m₁ : C(Icc (0 : ℝ) T, Space →ᵇ Space))
+  (c : ℝ) (hc : 0 < c) (hm : ∀ t y, c ≤ ‖m.field t y‖ ^ 2)
   (hmt : ∀ t ∈ Icc (0 : ℝ) T, ∀ y : Space,
     HasDerivWithinAt (fun r => extendPath T hT m.field r y)
       (extendPath T hT m₁ t y) (Icc (0 : ℝ) T) t)

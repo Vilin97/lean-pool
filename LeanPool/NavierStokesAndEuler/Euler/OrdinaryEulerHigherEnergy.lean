@@ -7,13 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTameEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! Every integer Sobolev order propagates on the same interval on which
 the actual H³ norm is bounded. There is no order-dependent shortening
 of time and no postulated energy differential inequality. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +29,7 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerMeanClassical EulerVolterraConvolution Finset
 open scoped ContDiff Topology
 
+/-- Word count, given by `∑ n ∈ range (m+1), (3 : ℝ)^n`. -/
 def wordCount (m : ℕ) : ℝ := ∑ n ∈ range (m+1), (3 : ℝ)^n
 
 theorem wordCount_nonneg (m : ℕ) : 0 ≤ wordCount m := sum_nonneg (fun _ _ => by positivity)
@@ -43,9 +49,13 @@ namespace Evolution
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Integer energy path, given by `⟨fun t => wordEnergy m (U.velocity t),wordEnergy_continuous
+U.velocity U.velocity_continuous m⟩`. -/
 def integerEnergyPath (U : Evolution T hT) (m : ℕ) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => wordEnergy m (U.velocity t),wordEnergy_continuous U.velocity U.velocity_continuous m⟩
 
+/-- Integer energy derivative, given by `integerEnergyProduction m (U.velocity t) (U.derivative
+t)`. -/
 def integerEnergyDerivative (U : Evolution T hT) (m : ℕ) (t : Icc (0 : ℝ) T) : ℝ :=
   integerEnergyProduction m (U.velocity t) (U.derivative t)
 
@@ -73,7 +83,7 @@ theorem integerEnergyDerivative_bound (U : Evolution T hT) (m : ℕ) (hm : 3 ≤
 
 theorem integer_energy_bound (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (M : ℝ) (hM : ∀ t, WordBound 3 M (U.velocity t)) (t : Icc (0 : ℝ) T) :
-    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (tameEnergyConstant m*M*t) := by
   have hd (r : ℝ) (hr : r ∈ Ico 0 T) :
       HasDerivWithinAt (extendPath T hT (U.integerEnergyPath m))
@@ -93,7 +103,7 @@ theorem integer_energy_bound (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
 
 theorem integer_energy_uniform (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (M : ℝ) (hM : ∀ t, WordBound 3 M (U.velocity t)) (t : Icc (0 : ℝ) T) :
-    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (tameEnergyConstant m*M*T) := by
   apply (U.integer_energy_bound m hm M hM t).trans
   apply mul_le_mul_of_nonneg_left _ (wordEnergy_nonneg m _)
@@ -103,14 +113,14 @@ theorem integer_energy_uniform (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
 
 theorem tensorNorm_uniform (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (M : ℝ) (hM : ∀ t, WordBound 3 M (U.velocity t)) (t : Icc (0 : ℝ) T) :
-    tensorNorm m (U.velocity t) ≤ wordCount m*
+    tensorNorm m (U.velocity t) ≤ wordCount m *
       Real.sqrt (wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*Real.exp (tameEnergyConstant m*M*T)) :=
   (tensorNorm_le_energy _ m).trans (mul_le_mul_of_nonneg_left
     (Real.sqrt_le_sqrt (U.integer_energy_uniform m hm M hM t)) (wordCount_nonneg m))
 
 theorem higher_energy_of_h3 (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (M : ℝ) (hM : ∀ t, tensorNorm 3 (U.velocity t) ≤ M) (t : Icc (0 : ℝ) T) :
-    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (tameEnergyConstant m*M*T) := by
   apply U.integer_energy_uniform m hm M _ t
   intro s n hn w

@@ -7,15 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldParity
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowParity
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketReflection
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowParity
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldParity
 
 /-! Oddness of the actual displacement propagates to its true velocity
 and acceleration, fixes the origin, and gives every even source
 coefficient used by the packet. The genuine child flow preserves it. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,6 +39,7 @@ namespace EulerParentPacketFrames
 open Set ContinuousLinearMap EulerSmoothLimit EulerGraphInvariantFlow EulerSmoothBanachFlow
   EulerTimeIntervalRestriction
 
+/-- Odd data, collecting `displacement`. -/
 structure OddData (A : Parent) : Prop where
   displacement : ∀ t, Function.Odd (A.displacement.field t : Space → Space)
 
@@ -52,7 +53,7 @@ theorem velocity (t : Icc (0 : ℝ) A.T) : Function.Odd (A.velocity.field t : Sp
   A.displacement_time.odd A.T_pos O.displacement t
 
 theorem acceleration (t : Icc (0 : ℝ) A.T) : Function.Odd (A.acceleration.field t : Space → Space)
-  :=
+    :=
   A.velocity_time.odd A.T_pos O.velocity t
 
 theorem position_odd (t : Icc (0 : ℝ) A.T) : Function.Odd (A.position t) := by
@@ -67,35 +68,35 @@ theorem position_zero (t : Icc (0 : ℝ) A.T) : A.position t 0=0 := by
   exact hi.map_zero
 
 theorem frame_even (t : Icc (0 : ℝ) A.T) : Function.Even (A.frame.field t : Space → Space →L[ℝ]
-  Space) := by
+    Space) := by
   intro x
   rw [A.frame_apply,A.frame_apply,smul_neg,
     SmoothTimeField.fderiv_even_of_odd _ (A.displacement.smooth t) (O.displacement t) (A.ell • x)]
 
 theorem first_even (t : Icc (0 : ℝ) A.T) : Function.Even (A.first.field t : Space → Space →L[ℝ]
-  Space) := by
+    Space) := by
   intro x
   rw [A.first_apply,A.first_apply,smul_neg,
     SmoothTimeField.fderiv_even_of_odd _ (A.velocity.smooth t) (O.velocity t) (A.ell • x)]
 
 theorem second_even (t : Icc (0 : ℝ) A.T) : Function.Even (A.second.field t : Space → Space →L[ℝ]
-  Space) := by
+    Space) := by
   intro x
   rw [A.second_apply,A.second_apply,smul_neg,
     SmoothTimeField.fderiv_even_of_odd _ (A.acceleration.smooth t) (O.acceleration t) (A.ell • x)]
 
 theorem inverse_even (t : Icc (0 : ℝ) A.T) : Function.Even (A.inverse.field t : Space → Space →L[ℝ]
-  Space) := by
+    Space) := by
   intro x
   rw [A.inverse_apply,A.inverse_apply,O.frame_even t x]
 
 theorem strain_even (t : Icc (0 : ℝ) A.T) : Function.Even (A.strain.field t : Space → Space →L[ℝ]
-  Space) := by
+    Space) := by
   intro x
   rw [A.strain_apply,A.strain_apply,O.first_even t x,O.inverse_even t x]
 
 theorem curvature_even (t : Icc (0 : ℝ) A.T) : Function.Even (A.curvature.field t : Space → Space
-  →L[ℝ] Space) := by
+    →L[ℝ] Space) := by
   intro x
   rw [A.curvature_apply,A.curvature_apply,O.second_even t x,O.inverse_even t x]
 
@@ -115,8 +116,8 @@ theorem restrictTime (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) : OddData (A.restr
 
 theorem child {P : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P A.T)
     (ho : ∀ t, Function.Odd (G.A.field t : EulerLiftedGradientSpace.LiftTangent →
-      EulerLiftedGradientSpace.LiftTangent))
-    (k : ℝ) (m : Space) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+        EulerLiftedGradientSpace.LiftTangent))
+    (k : ℝ) (m : Space) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
     (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1) :
     OddData (A.child G k m hgraph nextEll hnext hnext1) := by
   have hcover (t : Icc (0 : ℝ) A.T) :
@@ -131,12 +132,12 @@ theorem child {P : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P 
     physicalCoefficient_odd k m A.T G.coverDisplacementCoefficient A.ell hcover t
   constructor
   intro t x
-  change A.displacement.field t (-x+(G.physicalDisplacementCoefficient k m A.ell).field t (-x))+
+  change A.displacement.field t (-x+(G.physicalDisplacementCoefficient k m A.ell).field t (-x)) +
     (G.physicalDisplacementCoefficient k m A.ell).field t (-x) =
-      -(A.displacement.field t (x+(G.physicalDisplacementCoefficient k m A.ell).field t x)+
+      -(A.displacement.field t (x+(G.physicalDisplacementCoefficient k m A.ell).field t x) +
         (G.physicalDisplacementCoefficient k m A.ell).field t x)
   rw [hd t x,← neg_add,O.displacement t (x+(G.physicalDisplacementCoefficient k m A.ell).field t
-    x),neg_add]
+      x),neg_add]
 
 end OddData
 

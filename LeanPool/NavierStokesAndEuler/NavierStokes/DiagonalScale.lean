@@ -6,14 +6,8 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Topology.Order.LeftRightNhds
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-!
 # Diagonal cutoff scales from actual logarithmic limits
@@ -24,6 +18,9 @@ Mathlib's exponential asymptotic, not assumed as a cutoff-schedule hypothesis.
 The resulting schedule enforces every requested finite collection of jet bounds.
 It does not construct the analytic increments or prove their PDE estimates.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.DiagonalScale
 

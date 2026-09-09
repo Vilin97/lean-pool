@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual Bochner L² time spaces and continuous-path embeddings used by maximal regularity. -/
 
 @[expose] public section
 
-/-! Actual Bochner L² time spaces and continuous-path embeddings used by maximal regularity. -/
 
 noncomputable section
 
@@ -53,7 +54,7 @@ theorem pathLp_ae (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) :
 theorem pathLp_bound (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) :
     ‖pathLp T hT f‖ ≤ (measureUnivNNReal (timeMeasure T) : ℝ) ^ (1/2 : ℝ) * ‖f‖ := by
   have hh : ‖pathLp T hT f‖ ≤ (measureUnivNNReal (timeMeasure T) : ℝ) ^ (ENNReal.toReal 2)⁻¹ * ‖f‖
-    := by
+      := by
     apply Lp.norm_le_of_ae_bound (norm_nonneg f)
     filter_upwards [pathLp_ae T hT f] with t ht
     rw [ht]
@@ -85,7 +86,8 @@ theorem pathLp_tendsto (T : ℝ) (hT : 0 ≤ T) (f : ℕ → C(Icc (0 : ℝ) T, 
   apply squeeze_zero (fun _ => norm_nonneg _) hb
   simpa only [mul_zero] using hn.const_mul ((measureUnivNNReal (timeMeasure T) : ℝ) ^ (1/2 : ℝ))
 
-/-- The actual Bochner L² norm squared is the integral of the squared pointwise norm, also for Banach targets. -/
+/-- The actual Bochner L² norm squared is the integral of the squared pointwise norm, also for
+Banach targets. -/
 theorem norm_sq_eq_integral (T : ℝ) (f : TimeLp T E) :
     ‖f‖^2 = ∫ t, ‖f t‖^2 ∂timeMeasure T := by
   rw [Lp.norm_def, MemLp.eLpNorm_eq_integral_rpow_norm (by norm_num : (2 : ℝ≥0∞) ≠ 0)

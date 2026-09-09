@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeSuperposition
-public import Mathlib.Analysis.Calculus.FDeriv.Partial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import Mathlib.Analysis.Calculus.FDeriv.Partial
 
 /-! Actual time derivatives and the genuine spatial jets give joint C¹
 regularity on the interior of the time interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +29,7 @@ variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   (T : ℝ) (hT : 0 ≤ T) (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) E V)
 
+/-- Real field, given by `extendPath T hT A.field t x`. -/
 def realField (t : ℝ) (x : E) : V := extendPath T hT A.field t x
 
 @[simp] theorem realField_apply (t : Icc (0 : ℝ) T) (x : E) :
@@ -38,9 +41,13 @@ theorem realField_joint_continuous : Continuous (Function.uncurry (A.realField T
   change Continuous (fun p : ℝ × E => extendPath T hT A.field p.1 p.2)
   fun_prop
 
+/-- Time derivative, given by `∀ t : Icc (0 : ℝ) T, ∀ x : E, HasDerivWithinAt (fun s =>
+A.realField T hT s x) (A₁.field t x) (Icc (0 : ℝ) T) t`. -/
 def TimeDerivative : Prop := ∀ t : Icc (0 : ℝ) T, ∀ x : E,
   HasDerivWithinAt (fun s => A.realField T hT s x) (A₁.field t x) (Icc (0 : ℝ) T) t
 
+/-- Joint derivative, given by `(ContinuousLinearMap.toSpanSingleton ℝ (A₁.realField T hT t
+x)).coprod (A.derivative.realField T hT t x)`. -/
 def jointDerivative (t : ℝ) (x : E) : (ℝ × E) →L[ℝ] V :=
   (ContinuousLinearMap.toSpanSingleton ℝ (A₁.realField T hT t x)).coprod
     (A.derivative.realField T hT t x)

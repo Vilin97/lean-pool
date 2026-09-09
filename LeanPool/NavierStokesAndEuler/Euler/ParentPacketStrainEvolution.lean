@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketPhysicalCoefficients
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldChain
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketSourceData
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldChain
 
 /-! The actual parent strain obeys the matrix Riccati equation. Its
 inverse derivative is derived from the polynomial cofactor construction
 and the genuine frame identity, including the time-interval endpoints. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +28,7 @@ namespace Parent
 
 variable (G : Parent)
 
+/-- Inverse derivative as an element of `SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace`. -/
 def inverseDerivative : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   (SmoothTimeField.bilinear (compL ℝ Space Space Space) G.inverse
     (SmoothTimeField.bilinear (compL ℝ Space Space Space) G.first G.inverse)).map
@@ -37,7 +39,7 @@ def inverseDerivative : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
       -((G.inverse.field t x).comp ((G.first.field t x).comp (G.inverse.field t x))) := rfl
 
 theorem inverse_time : SmoothTimeField.TimeDerivative G.T G.T_pos.le G.inverse G.inverseDerivative
-  := by
+    := by
   let J := (SmoothTimeField.bilinear cofactorBilinear G.first G.frame).add
     (SmoothTimeField.bilinear cofactorBilinear G.frame G.first)
   have hJ : SmoothTimeField.TimeDerivative G.T G.T_pos.le G.inverse J :=
@@ -53,7 +55,7 @@ theorem inverse_time : SmoothTimeField.TimeDerivative G.T G.T_pos.le G.inverse G
     exact G.inverse_left (projIcc 0 G.T G.T_pos.le s) x v
   rw [he] at hd
   simp only [SmoothTimeField.realField_apply] at hd
-  have hz : (J.field t x).comp (G.frame.field t x)+
+  have hz : (J.field t x).comp (G.frame.field t x) +
       (G.inverse.field t x).comp (G.first.field t x)=0 :=
     (hd.derivWithin (uniqueDiffOn_Icc G.T_pos t t.property)).symm.trans
       ((hasDerivWithinAt_const (t : ℝ) (Icc (0 : ℝ) G.T)
@@ -66,6 +68,7 @@ theorem inverse_time : SmoothTimeField.TimeDerivative G.T G.T_pos.le G.inverse G
   simp only [add_apply,comp_apply,G.inverse_right,zero_apply] at hv
   simpa only [neg_apply,comp_apply] using eq_neg_of_add_eq_zero_left hv
 
+/-- Strain derivative as an element of `SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace`. -/
 def strainDerivative : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   ((SmoothTimeField.bilinear (compL ℝ Space Space Space) G.strain G.strain).add G.curvature).map
     (-ContinuousLinearMap.id ℝ EndSpace)
@@ -77,11 +80,11 @@ def strainDerivative : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   abel
 
 theorem strain_time : SmoothTimeField.TimeDerivative G.T G.T_pos.le G.strain G.strainDerivative :=
-  by
+    by
   have h := G.first_time.bilinear (compL ℝ Space Space Space) G.inverse_time
   apply h.congr_fields (fun _ _ => rfl)
   intro t x
-  change (G.second.field t x).comp (G.inverse.field t x)+
+  change (G.second.field t x).comp (G.inverse.field t x) +
     (G.first.field t x).comp (G.inverseDerivative.field t x)=G.strainDerivative.field t x
   rw [G.strainDerivative_apply,G.inverseDerivative_apply,G.strain_apply,G.curvature_apply]
   apply ContinuousLinearMap.ext
@@ -113,12 +116,15 @@ theorem strainDerivative_norm_bound (CM CH : ℝ) (hCM : 0 ≤ CM)
   apply (G.strainDerivative_norm_le t x).trans
   simpa only [pow_two] using add_le_add (mul_le_mul hM hM (norm_nonneg _) hCM) hH
 
+/-- Center strain, given by `extendPath G.T G.T_pos.le G.strain.field t 0`. -/
 def centerStrain (t : ℝ) : EndSpace :=
   extendPath G.T G.T_pos.le G.strain.field t 0
 
+/-- Center curvature, given by `extendPath G.T G.T_pos.le G.curvature.field t 0`. -/
 def centerCurvature (t : ℝ) : EndSpace :=
   extendPath G.T G.T_pos.le G.curvature.field t 0
 
+/-- Center strain derivative, given by `extendPath G.T G.T_pos.le G.strainDerivative.field t 0`. -/
 def centerStrainDerivative (t : ℝ) : EndSpace :=
   extendPath G.T G.T_pos.le G.strainDerivative.field t 0
 
@@ -141,7 +147,7 @@ follows from the actual strain/curvature bounds and one scalar guard. -/
 theorem centerStrainDerivative_bound (τ CM CH K : ℝ) (hτ : 0 ≤ τ) (hCM : 0 ≤ CM)
     (hM : ∀ t ∈ Icc τ G.T, ‖G.centerStrain t‖ ≤ CM)
     (hH : ∀ t ∈ Icc τ G.T, ‖G.centerCurvature t‖ ≤ CH)
-    (hK : CM^2+CH ≤ K^2) (t : ℝ) (ht : t ∈ Icc τ G.T) :
+    (hK : CM ^ 2 + CH ≤ K ^ 2) (t : ℝ) (ht : t ∈ Icc τ G.T) :
     ‖G.centerStrainDerivative t‖ ≤ K^2 := by
   have ht0 : t ∈ Icc (0 : ℝ) G.T := ⟨hτ.trans ht.1,ht.2⟩
   have hm := hM t ht
@@ -153,7 +159,7 @@ theorem centerStrainDerivative_bound (τ CM CH K : ℝ) (hτ : 0 ≤ τ) (hCM : 
 section Transverse
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S)
 
 theorem transverse_strain_within (t : Icc (0 : ℝ) G.T) (x : Space) :

@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialJet
 
+/-! Literal known-grade jet data are reconstructed from only the genuine prefix fields. -/
+
 @[expose] public section
 
-/-! Literal known-grade jet data are reconstructed from only the genuine prefix fields. -/
 
 noncomputable section
 
@@ -18,9 +19,13 @@ namespace EulerPacketCylinderField
 
 open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
 
+/-- Prefix fields data, collecting `high`, `mean`, `corrector`. -/
 structure PrefixFields (P T : ℝ) [Fact (0 < P)] (p : ℕ) (a : ℕ → Profile) where
+  /-- High-frequency field of `PrefixFields`, of type `∀ i, i < p → Field P T (a i).high`. -/
   high : ∀ i, i < p → Field P T (a i).high
+  /-- Mean field of `PrefixFields`, of type `∀ i, i < p → Field P T (a i).mean`. -/
   mean : ∀ i, i < p → Field P T (a i).mean
+  /-- Correction field of `PrefixFields`, of type `∀ i, i < p → Field P T (a i).corrector`. -/
   corrector : ∀ i, i < p → Field P T (a i).corrector
 
 variable {P T : ℝ} [Fact (0 < P)] {p : ℕ} {a : ℕ → Profile}

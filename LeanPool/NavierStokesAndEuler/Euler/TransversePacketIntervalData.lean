@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientTimeRestriction
 
-@[expose] public section
-
 /-!
 # Actual source data on the history and forward time intervals
 
@@ -18,6 +16,9 @@ These constructions restrict the given deformation and its inverse. The
 time derivative follows by restriction or by the affine change t = τ+s;
 spatial derivatives are retained literally by continuous precomposition.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,10 +31,22 @@ open scoped BoundedContinuousFunction ContDiff
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketIntervalData1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketIntervalData2 : NormedSpace ℝ (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketIntervalData3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketIntervalData4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 namespace Data
 
@@ -87,7 +100,7 @@ def tail (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T) : Data U where
       D.frame.field (initialInclusion D.T τ hτT t) x v := rfl
 
 @[simp] theorem tail_frame_apply (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T)
-    (t : Icc (0 : ℝ) (D.T-τ)) (x : Space) (v : U) :
+    (t : Icc (0 : ℝ) (D.T - τ)) (x : Space) (v : U) :
     (D.tail τ hτ hτT).frame.field t x v =
       D.frame.field (tailInclusion D.T τ hτ t) x v := rfl
 

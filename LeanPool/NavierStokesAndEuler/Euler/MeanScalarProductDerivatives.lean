@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicEnergy
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Scalar coordinate product rules for the localized harmonic estimates. -/
 
 @[expose] public section
 
-/-! Scalar coordinate product rules for the localized harmonic estimates. -/
 
 noncomputable section
 
@@ -29,7 +33,7 @@ theorem partialDerivative_add {f g : Space → ℝ} {x : Space}
 theorem partialDerivative_mul {f g : Space → ℝ} {x : Space}
     (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) (i : Fin 3) :
     partialDerivative (f * g) i x = g x * partialDerivative f i x + f x * partialDerivative g i x
-      := by
+        := by
   rw [← gradient_coordinate, gradient_mul hf hg]
   simp only [PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, gradient_coordinate]
 

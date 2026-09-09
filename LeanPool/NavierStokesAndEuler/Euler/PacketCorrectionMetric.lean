@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCorrectionCoefficients
 
-@[expose] public section
-
 /-! Positivity and the literal inverse identity for the pressure metric.
 Both follow from the prescribed deformation and its two-sided inverse. -/
+
+@[expose] public section
+
 
 noncomputable section
 

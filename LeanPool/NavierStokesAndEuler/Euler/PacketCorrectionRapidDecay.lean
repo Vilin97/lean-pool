@@ -7,10 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+
+/-! The actual correction target absorbs every fixed power of the frequency. -/
 
 @[expose] public section
 
-/-! The actual correction target absorbs every fixed power of the frequency. -/
 
 noncomputable section
 

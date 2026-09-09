@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOrbit
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevProduct
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathComposition
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathComposition
 
 /-!
 # Actual nonlinear products of smooth continuous cylinder paths
@@ -19,6 +20,9 @@ The existing complete H6 multiplication constructs the product. Its real
 mixed translation orbit is smooth because each input has a smooth H6 orbit.
 The output representative is the literal pointwise product at every point.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,23 +41,35 @@ section Bilinear
 variable {E F G : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G]
 
-private local instance : NormedAddCommGroup (F →L[ℝ] G) := inferInstance
-private local instance : NormedSpace ℝ (F →L[ℝ] G) := inferInstance
-private local instance : NormedAddCommGroup C(K,E) := inferInstance
-private local instance : NormedSpace ℝ C(K,E) := inferInstance
-private local instance : NormedAddCommGroup C(K,F) := inferInstance
-private local instance : NormedSpace ℝ C(K,F) := inferInstance
-private local instance : NormedAddCommGroup C(K,G) := inferInstance
-private local instance : NormedSpace ℝ C(K,G) := inferInstance
-private local instance : NormedAddCommGroup (C(K,F) →L[ℝ] C(K,G)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,F) →L[ℝ] C(K,G)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (F →L[ℝ] G)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct1 : NormedAddCommGroup (F →L[ℝ] G) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (F →L[ℝ] G)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct2 : NormedSpace ℝ (F →L[ℝ] G) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,E)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct3 : NormedAddCommGroup C(K,E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,E)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct4 : NormedSpace ℝ C(K,E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,F)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct5 : NormedAddCommGroup C(K,F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,F)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct6 : NormedSpace ℝ C(K,F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,G)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct7 : NormedAddCommGroup C(K,G) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,G)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProduct8 : NormedSpace ℝ C(K,G) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,F) →L[ℝ] C(K,G))` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderPathProduct9 : NormedAddCommGroup (C(K,F) →L[ℝ] C(K,G)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,F) →L[ℝ] C(K,G))` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderPathProduct10 : NormedSpace ℝ (C(K,F) →L[ℝ] C(K,G)) := inferInstance
 
 /-- A genuine bounded bilinear map acts pointwise on continuous paths. -/
 def pathBilinear (B : E →L[ℝ] F →L[ℝ] G) : C(K,E) →L[ℝ] C(K,F) →L[ℝ] C(K,G) :=
   coefficientMap.comp (B.compLeftContinuous ℝ K)
 
 @[simp] theorem pathBilinear_apply (B : E →L[ℝ] F →L[ℝ] G)
-    (p : C(K,E)) (q : C(K,F)) (t : K) : pathBilinear B p q t = B (p t) (q t) := rfl
+    (p : C(K, E)) (q : C(K, F)) (t : K) : pathBilinear B p q t = B (p t) (q t) := rfl
 
 theorem pathBilinear_norm (B : E →L[ℝ] F →L[ℝ] G) :
     ‖pathBilinear (K := K) B‖ ≤ ‖B‖ :=
@@ -61,7 +77,7 @@ theorem pathBilinear_norm (B : E →L[ℝ] F →L[ℝ] G) :
     (norm_nonneg _) (by norm_num)).trans_eq (one_mul _))
 
 theorem contDiff_pathBilinear {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    (B : E →L[ℝ] F →L[ℝ] G) (f : X → C(K,E)) (g : X → C(K,F))
+    (B : E →L[ℝ] F →L[ℝ] G) (f : X → C(K, E)) (g : X → C(K, F))
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) :
     ContDiff ℝ ∞ (fun x => pathBilinear B (f x) (g x)) :=
   ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
@@ -70,7 +86,7 @@ theorem contDiff_pathBilinear {X : Type*} [NormedAddCommGroup X] [NormedSpace �
 end Bilinear
 
 variable (P : ℝ) [Fact (0 < P)] (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
-  (p q : C(K,LiftL2 P))
+  (p q : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
 
@@ -104,7 +120,7 @@ theorem scalarProductPath_orbit_formula (a : LiftTangent) :
 /-- Smoothness is for the actual output translation orbit, not an auxiliary family. -/
 theorem scalarProductPath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (scalarProductPath P L hL p q hp hq)) :=
-      by
+        by
   have he := funext (scalarProductPath_orbit_formula P L hL p q hp hq)
   rw [he]
   apply (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
@@ -125,7 +141,7 @@ theorem scalarProductPath_ae (t : K) :
 /-- The output smooth representative equals the literal nonlinear product everywhere. -/
 theorem pointField_scalarProductPath (t : K) (x : LiftDomain P) :
     pointField P (scalarProductPath P L hL p q hp hq) (scalarProductPath_orbit P L hL p q hp hq) t
-      x =
+        x =
       L (pointField P p hp t x) • pointField P q hq t x := by
   have he := Measure.eq_of_ae_eq
     ((pointField_ae P _ (scalarProductPath_orbit P L hL p q hp hq) t).symm.trans

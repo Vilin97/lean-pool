@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketData
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceFixedInverse
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 
 /-! Explicit polynomial bounds for the actual mean Gram and time-form
 inverse constants, derived from a determinant-one parent deformation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,16 +27,31 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerPacketP
   EulerPacketCofactor EulerMeanSolenoidal EulerMeanVariationalInverse
   EulerMeanSourceFixedInverse EulerMeanFixedSpaceInverse EulerTimeH1FrameTransport
 
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentMeanCoercivity1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentMeanCoercivity2 : InnerProductSpace ℝ solenoidalSpace :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketParentMeanCoercivity3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (solenoidalSpace →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentMeanCoercivity4 : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
+/-- Gram inverse envelope, given by `(3*C^2+1)^2`. -/
 def gramInverseEnvelope (C : ℝ) : ℝ := (3*C^2+1)^2
 
+/-- Transport envelope, given by `1+(2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope
+C*C₁)+gramInverseEnvelope C*C`. -/
 def transportEnvelope (C C₁ : ℝ) : ℝ :=
   1+(2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)+gramInverseEnvelope C*C
 
+/-- Inverse envelope, given by `2*(transportEnvelope C C₁)^2`. -/
 def inverseEnvelope (C C₁ : ℝ) : ℝ := 2*(transportEnvelope C C₁)^2
 
 theorem transportEnvelope_nonneg (C C₁ : ℝ) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) :
@@ -76,10 +95,10 @@ theorem transport_bound (hT : D.T ≤ 1) :
   have hi0 : 0 ≤ gramInverseEnvelope C := by unfold gramInverseEnvelope; positivity
   change 1+((2*(D.frameLower⁻¹)^2*‖solenoidalFrame D.T D.opF‖^2*‖solenoidalFrame D.T D.opF₁‖+
       D.frameLower⁻¹*‖solenoidalFrame D.T D.opF₁‖)*D.T+D.frameLower⁻¹*‖solenoidalFrame D.T D.opF‖)
-        ≤ _
+          ≤ _
   unfold transportEnvelope
   calc
-    _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)*1+
+    _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)*1 +
         gramInverseEnvelope C*C) := by gcongr
     _ = _ := by ring
 

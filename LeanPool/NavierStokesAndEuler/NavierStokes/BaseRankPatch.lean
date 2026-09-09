@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseChartJets
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanRankUpdate
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
-
-@[expose] public section
 
 /-!
 # The reserved mean-rank patch of the actual summed base
@@ -22,6 +18,9 @@ have already been cut off there.  The full summed tangential base therefore
 has the exact shaped power required by the five-row mean inverse.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.BaseRankPatch
@@ -29,6 +28,7 @@ namespace NavierStokes.BaseRankPatch
 open Set Filter Function BaseChartJets
 open scoped ContDiff Topology BigOperators
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 theorem positive_before_mean (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) :
@@ -87,7 +87,7 @@ theorem modulated_radial_mean_fields {R eta : ℝ}
           (ReservedPatches.radialAmplitude F W.controls.radius eta) R := by
   have hx := ReservedPatches.radial_mem_window F W.controls.radius W.controls.radius_pos .mean hR
   have hp := (ReservedPatches.radialLeft_pos F W.controls.radius W.controls.radius_pos .mean).trans
-    hR.1
+      hR.1
   have hf := modulated_mean_fields v (p := (R ^ 2 / 2, eta)) hx heta
   refine ⟨hf.1, ?_⟩
   rw [hf.2, ReservedPatches.square_half_power _ _ hp]
@@ -119,15 +119,20 @@ section RankParameters
 noncomputable def rankScale (h : ℝ) (s : ℝ × ℝ) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) s
 
+/-- Rank eta, given by `SimilarityCoordinates.coordinateEta (2 * h) s`. -/
 noncomputable def rankEta (h : ℝ) (s : ℝ × ℝ) : ℝ :=
   SimilarityCoordinates.coordinateEta (2 * h) s
 
+/-- Rank coefficient, given by `MeanRankUpdate.shapedAmplitude (ReservedPatches.radialAmplitude
+F XR 0) (rankEta F.data.h s)`. -/
 noncomputable def rankCoefficient (F : OutgoingProfile.Profile) (XR : ℝ) (s : ℝ × ℝ) : ℝ :=
   MeanRankUpdate.shapedAmplitude (ReservedPatches.radialAmplitude F XR 0) (rankEta F.data.h s)
 
+/-- Rank length, given by `Real.sqrt (rankScale h s)`. -/
 noncomputable def rankLength (h : ℝ) (s : ℝ × ℝ) : ℝ :=
   Real.sqrt (rankScale h s)
 
+/-- Rank velocity, given by `rankScale h s ^ (-CoordinateAlgebra.A h)`. -/
 noncomputable def rankVelocity (h : ℝ) (s : ℝ × ℝ) : ℝ :=
   rankScale h s ^ (-CoordinateAlgebra.A h)
 
@@ -273,6 +278,8 @@ noncomputable def angularSlice (upper : ℝ) (B : ℕ) (Q : ℝ) (s : ℝ × ℝ
   R * frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) Q (R, (s.2, s.1))
 
+/-- Axial slice, given by `axial (FinalSlowBase.scales H v upper B) F.data.h
+(FinalSlowBase.coefficients H v) Q (R, (s.2, s.1))`. -/
 noncomputable def axialSlice (upper : ℝ) (B : ℕ) (Q : ℝ) (s : ℝ × ℝ) (R : ℝ) : ℝ :=
   axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) Q (R, (s.2, s.1))

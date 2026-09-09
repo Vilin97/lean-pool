@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-public import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketCoefficientControl
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Normalized coefficient motion from genuine one-sided time derivatives. -/
 
 @[expose] public section
 
-/-! Normalized coefficient motion from genuine one-sided time derivatives. -/
 
 noncomputable section
 

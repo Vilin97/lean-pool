@@ -8,14 +8,17 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketParity
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketJoinedInput
-public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionData
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedParity
 
 /-! Actual odd parent fields supply the parity data for both initialized
 packet branches. The resulting corrected coefficient, and hence the
 actual next particle map, retain oddness without a new symmetry premise. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +31,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerPacketTerminalDatum
 
 variable {A : Parent} (O : OddData A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (hSym : ∀ x, -x ∈ S ↔ x ∈ S)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ S) (α : ℝ)
 
@@ -58,9 +61,9 @@ theorem joinedCorrectionParity (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
 omit hSym [CompleteSpace U] in
 theorem childOfPacket {P : ℝ} [Fact (0 < P)] {C : EulerAllOrderCorrectionData.Data P A.T}
     (B : Budget P A.T_pos C) (E : ParityData P C)
-    {raw : VectorField} (V : Field P A.T raw) (hV : C.approximation=V.toFieldTower)
-    (G : EulerPhysicalGraphFlowBounds.Data P A.T) (hG : G.A=B.liftedPacketCoefficient P V)
-    (k : ℝ) (hgraph : ∀ t z, graphConstraint k C.direction (G.A.field t z)=0)
+    {raw : VectorField} (V : Field P A.T raw) (hV : C.approximation = V.toFieldTower)
+    (G : EulerPhysicalGraphFlowBounds.Data P A.T) (hG : G.A = B.liftedPacketCoefficient P V)
+    (k : ℝ) (hgraph : ∀ t z, graphConstraint k C.direction (G.A.field t z) = 0)
     (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1) :
     OddData (A.child G k C.direction hgraph nextEll hnext hnext1) := by
   apply O.child G _ k C.direction hgraph nextEll hnext hnext1

@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 
 /-! A continuous, already constructed solution of a smooth identity is
 smooth when the derivative in its value variable is invertible. The local
 inverse theorem proves regularity; no new solution is postulated. -/
+
+@[expose] public section
+
 
 noncomputable section
 

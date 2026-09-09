@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Keeping the physical label scale in the coefficient bounds gives one
 factor ell for each normalized spatial derivative. This factor is needed
 in the neighboring-label estimates of the induction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +28,7 @@ variable {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem scalar_precomp_bound (f : E → V) (hf : ContDiff ℝ ∞ f)
     (C R ell : ℝ) (hell : 0 ≤ ell)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*majorant R 0 n) (n : ℕ) (x : E) :
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C * majorant R 0 n) (n : ℕ) (x : E) :
     ‖iteratedFDeriv ℝ n (fun y => f (ell • y)) x‖ ≤ C*majorant (ell*R) 0 n := by
   rw [iteratedFDeriv_comp_const_smul ell (hf.of_le (by simp)),norm_smul,
     Real.norm_eq_abs,abs_of_nonneg (pow_nonneg hell n)]
@@ -45,6 +46,7 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {G : Parent} (L : LabelData G)
 
+/-- Scaled radius, given by `G.ell*coefficientRadius L.K`. -/
 def scaledRadius : ℝ := G.ell*coefficientRadius L.K
 
 theorem scaledRadius_nonneg : 0 ≤ L.scaledRadius :=
@@ -64,12 +66,12 @@ theorem scaled_gradient_bound (A : SmoothL2Field Space) (hA : HasLabelBound L.K 
 theorem frame_scaled_bound (n : ℕ) (t : Icc (0 : ℝ) G.T) (x : Space) :
     ‖iteratedFDeriv ℝ n (G.frame.field t : Space → EndSpace) x‖ ≤
       frameAmplitude L.K*majorant L.scaledRadius 0 n := by
-  have he : (G.frame.field t : Space → EndSpace)=
+  have he : (G.frame.field t : Space → EndSpace) =
       fun y => ContinuousLinearMap.id ℝ Space+fderiv ℝ (L.displacement t).field (G.ell • y) :=
     funext (L.frame_match t)
   rw [he]
   apply scalar_precomp_bound (fun y => ContinuousLinearMap.id ℝ Space+fderiv ℝ (L.displacement
-    t).field y)
+      t).field y)
     (contDiff_const.add ((L.displacement t).smooth.fderiv_right (m := ∞) (by simp)))
     (frameAmplitude L.K) (coefficientRadius L.K) G.ell G.ell_pos.le
   intro j y
@@ -82,7 +84,7 @@ theorem frame_scaled_bound (n : ℕ) (t : Icc (0 : ℝ) G.T) (x : Space) :
 theorem first_scaled_bound (n : ℕ) (t : Icc (0 : ℝ) G.T) (x : Space) :
     ‖iteratedFDeriv ℝ n (G.first.field t : Space → EndSpace) x‖ ≤
       gradientAmplitude L.K*majorant L.scaledRadius 0 n := by
-  have he : (G.first.field t : Space → EndSpace)=
+  have he : (G.first.field t : Space → EndSpace) =
       fun y => fderiv ℝ (L.velocity t).field (G.ell • y) := funext (L.first_match t)
   rw [he]
   exact L.scaled_gradient_bound (L.velocity t) (L.velocity_bound t) n x
@@ -90,7 +92,7 @@ theorem first_scaled_bound (n : ℕ) (t : Icc (0 : ℝ) G.T) (x : Space) :
 theorem second_scaled_bound (n : ℕ) (t : Icc (0 : ℝ) G.T) (x : Space) :
     ‖iteratedFDeriv ℝ n (G.second.field t : Space → EndSpace) x‖ ≤
       gradientAmplitude L.K*majorant L.scaledRadius 0 n := by
-  have he : (G.second.field t : Space → EndSpace)=
+  have he : (G.second.field t : Space → EndSpace) =
       fun y => fderiv ℝ (L.acceleration t).field (G.ell • y) := funext (L.second_match t)
   rw [he]
   exact L.scaled_gradient_bound (L.acceleration t) (L.acceleration_bound t) n x
@@ -99,7 +101,7 @@ theorem inverse_scaled_bound (n : ℕ) (t : Icc (0 : ℝ) G.T) (x : Space) :
     ‖iteratedFDeriv ℝ n (G.inverse.field t : Space → EndSpace) x‖ ≤
       (9*(frameAmplitude L.K)^2)*majorant L.scaledRadius 0 n :=
   coefficientInverse_bound G.frame.toSmoothCoefficientPath G.inverse.field G.frame_det
-    G.inverse_left
+      G.inverse_left
     L.scaledRadius (frameAmplitude L.K) L.scaledRadius_nonneg (frameAmplitude_nonneg L.K)
     L.frame_scaled_bound n t x
 

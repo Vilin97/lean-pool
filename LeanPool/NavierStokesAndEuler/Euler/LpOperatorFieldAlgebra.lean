@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpOperatorFieldPath
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LpOperatorField
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Algebra and coercivity of actual full-space L² multipliers
@@ -20,6 +19,9 @@ space. Measurable spatial cutoffs are self-adjoint and commute with these
 rectangular multipliers. Thus support preservation of a variational inverse
 can be proved by its actual uniqueness theorem.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -76,7 +78,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- A pointwise lower frame bound is a lower bound on genuine full-space L². -/
 theorem full_norm_sq_lower (A : α →ᵇ E →L[ℝ] F) (c : ℝ) (hc : 0 ≤ c)
-    (hA : ∀ x v, c*‖v‖^2 ≤ ‖A x v‖^2) (u : Lp E 2 μ) :
+    (hA : ∀ x v, c * ‖v‖ ^ 2 ≤ ‖A x v‖ ^ 2) (u : Lp E 2 μ) :
     c*‖u‖^2 ≤ ‖full μ A u‖^2 := by
   have hroot : (Real.sqrt c)^2 = c := Real.sq_sqrt hc
   have h : ‖Real.sqrt c • u‖ ≤ ‖full μ A u‖ := by
@@ -92,7 +94,7 @@ theorem full_norm_sq_lower (A : α →ᵇ E →L[ℝ] F) (c : ℝ) (hc : 0 ≤ c
 
 /-- The actual L² Hessian inherits its pointwise quadratic upper bound. -/
 theorem full_quadratic_upper (A : α →ᵇ E →L[ℝ] E) (C : ℝ)
-    (hA : ∀ x v, ⟪A x v,v⟫_ℝ ≤ C*‖v‖^2) (u : Lp E 2 μ) :
+    (hA : ∀ x v, ⟪A x v, v⟫_ℝ ≤ C * ‖v‖ ^ 2) (u : Lp E 2 μ) :
     ⟪full μ A u,u⟫_ℝ ≤ C*‖u‖^2 := by
   rw [← real_inner_self_eq_norm_sq,L2.inner_def,L2.inner_def,← integral_const_mul]
   apply integral_mono_ae (L2.integrable_inner (full μ A u) u)

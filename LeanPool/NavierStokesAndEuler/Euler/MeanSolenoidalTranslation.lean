@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Translation invariance of the ordinary solenoidal projection
@@ -18,6 +17,9 @@ actual R³ L² space, preserve its weak divergence constraint, and commute with
 the orthogonal solenoidal projection.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanSolenoidal
@@ -25,6 +27,8 @@ namespace EulerMeanSolenoidal
 open MeasureTheory InnerProductSpace EulerSmoothLimit
 open scoped ContDiff
 
+/-- Translation, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x + a)
+(measurePreserving_add_right (volume : Measure Space) a)`. -/
 def translation (a : Space) : L2 →ₗᵢ[ℝ] L2 :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x + a)
     (measurePreserving_add_right (volume : Measure Space) a)

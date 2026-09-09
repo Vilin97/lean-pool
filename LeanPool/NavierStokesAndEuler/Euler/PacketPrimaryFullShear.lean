@@ -7,12 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryShearIdentity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketNormalizedPrimary
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryShearIdentity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
 
 /-! Exact rank-one primary shear throughout the joined history and forward
 interval, obtained from the proved factorization of the actual primary. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +34,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support)
 
+/-- Full wave, given by `(α/k) • vector τ hτ hτT B (initialData D δ hδ ξ hs)
+(t,(y,k*⟪D.m₀,y⟫_ℝ))`. -/
 def fullWave (α k : ℝ) (t : Icc (0 : ℝ) D.T) (y : Space) : Space :=
   (α/k) • vector τ hτ hτT B (initialData D δ hδ ξ hs) (t,(y,k*⟪D.m₀,y⟫_ℝ))
 
@@ -67,7 +74,7 @@ theorem fullWave_hasFDerivAt (α k : ℝ) (hk : k ≠ 0) (t : Icc (0 : ℝ) D.T)
 theorem fullWave_physical_hasFDerivAt (α k : ℝ) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     HasFDerivAt (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x))
       ((α/δ) • rankOne ℝ (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0)
         (D.normal.field t 0)) (X 0) := by
@@ -90,7 +97,7 @@ theorem fullWave_physical_hasFDerivAt (α k : ℝ) (hk : k ≠ 0)
 theorem fullWave_physical_norm (α k : ℝ) (hα : 0 ≤ α) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     ‖fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0)‖ =
       (α/δ) * (‖D.normal.field t 0‖ * ‖envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0‖) := by
   rw [(fullWave_physical_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t X Y hX hY hleft).fderiv,
@@ -102,19 +109,19 @@ geometry record, with c=α/δ and the actual primary velocity. -/
 theorem fullWave_physical_normalized_gradient (α k : ℝ) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y)
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y)
     (hv : envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0 ≠ 0) :
     fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0) =
       ((α/δ)*(‖D.normal.field t 0‖*‖envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0‖)) •
         rankOne ℝ (unit (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0)) (unit (D.normal.field t 0))
-          := by
+            := by
   rw [(fullWave_physical_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t X Y hX hY hleft).fderiv]
   exact rankOne_normalized _ _ _ hv (HistoryData.normal_ne_zero t 0)
 
 theorem fullWave_physical_canonical_gradient (α k : ℝ) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0) =
       (α/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0) := by
   rw [(fullWave_physical_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t X Y hX hY hleft).fderiv,
@@ -124,7 +131,7 @@ theorem fullWave_physical_canonical_gradient (α k : ℝ) (hk : k ≠ 0)
 theorem fullWave_physical_canonical_norm (α k : ℝ) (hα : 0 ≤ α) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     ‖fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0)‖ =
       (α/δ) * (‖D.normal.field t 0‖ * ‖canonicalVelocity τ hτ hτT B ξ hs t 0‖) := by
   rw [fullWave_physical_norm τ hτ hτT B δ hδ ξ hs α k hα hk t X Y hX hY hleft,
@@ -137,11 +144,11 @@ choice uses the velocity independent of the narrow profile δ. -/
 theorem fullWave_target_shear (h k : ℝ) (hh : 0 ≤ h) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y)
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y)
     (hv : canonicalVelocity τ hτ hτT B ξ hs t 0 ≠ 0) :
     ‖fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs
       (δ*h/(‖D.normal.field t 0‖*‖canonicalVelocity τ hτ hτT B ξ hs t 0‖)) k t (Y x)) (X 0)‖ = h :=
-        by
+          by
   have hm : ‖D.normal.field t 0‖ ≠ 0 := norm_ne_zero_iff.mpr (HistoryData.normal_ne_zero t 0)
   have hw : ‖canonicalVelocity τ hτ hτT B ξ hs t 0‖ ≠ 0 := norm_ne_zero_iff.mpr hv
   rw [fullWave_physical_canonical_norm τ hτ hτT B δ hδ ξ hs _ k

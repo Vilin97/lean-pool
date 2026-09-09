@@ -7,12 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrequencyBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The physical pressure force κF⁻ᵀp has the same fixed polynomial
 frequency losses as the velocity correction. The inverse-transpose
 coefficient bounds follow from the actual determinant-one deformation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +33,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (e : Icc (0 : ℝ) D.T → LiftDomain P → Space)
   (he : ∀ t x, ContDiff ℝ ∞ (localFieldLift P (e t) x))
 
+/-- Graph pressure force, given by `κ • (D.FInv.field t x).adjoint (physicalField P k D.m₀ (e t)
+x)`. -/
 def graphPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   κ • (D.FInv.field t x).adjoint (physicalField P k D.m₀ (e t) x)
 
@@ -38,11 +45,11 @@ theorem graphPressureForce_contDiff (t : Icc (0 : ℝ) D.T) :
     (physicalField_contDiff P k D.m₀ (e t) (he t))).const_smul κ
 
 variable (R C A S : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hA : 0 ≤ A) (hS : 0 ≤ S)
-  (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det=1)
+  (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
   (hb : ∀ n t x, (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w (e t) x‖) ≤
-    A*S^n*(n.factorial : ℝ)^2)
+    A * S ^ n * (n.factorial : ℝ) ^ 2)
 
 include hR hC hdet hF in
 theorem inverseTranspose_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
@@ -50,7 +57,7 @@ theorem inverseTranspose_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
       (9*C^2)*majorant R 0 n :=
   adjoint_bound (D.FInv.field t) (D.FInv.smooth t) R (9*C^2) hR (by positivity) 0
     (fun j y => coefficientInverse_bound D.F D.FInv.field hdet D.inverse_left R C hR hC hF j t y) n
-      x
+        x
 
 include he hR hC hA hS hdet hF hb in
 theorem graphPressureForce_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
@@ -60,7 +67,7 @@ theorem graphPressureForce_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) 
   have hRg : 0 ≤ Rg := add_nonneg hR (mul_nonneg (frequencyFactor_nonneg k D.m₀) hS)
   have hFR : ∀ n x, ‖iteratedFDeriv ℝ n (fun y => (D.FInv.field t y).adjoint) x‖ ≤
       (9*C^2)*majorant Rg 0 n := fun n x => (inverseTranspose_gevrey D R C hR hC hdet hF n t
-        x).trans
+          x).trans
     (mul_le_mul_of_nonneg_left (majorant_radius_mono R Rg hR
       (le_add_of_nonneg_right (mul_nonneg (frequencyFactor_nonneg k D.m₀) hS)) 0 n) (by positivity))
   have heR : ∀ n x, ‖iteratedFDeriv ℝ n (physicalField P k D.m₀ (e t)) x‖ ≤
@@ -71,21 +78,22 @@ theorem graphPressureForce_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) 
   have hI : ContDiff ℝ ∞ (fun y => (D.FInv.field t y).adjoint) :=
     (realAdjoint (U := Space) (E := Space)).contDiff.comp (D.FInv.smooth t)
   have hprod := clm_apply_bound (fun y => (D.FInv.field t y).adjoint) (physicalField P k D.m₀ (e t))
-    hI (physicalField_contDiff P k D.m₀ (e t) (he t)) Rg (9*C^2) A hRg (by positivity) hA 0 0 hFR
-      heR n x
+    hI (physicalField_contDiff P k D.m₀ (e t) (he t)) Rg (9*C^2) A hRg (by
+        positivity) hA 0 0 hFR heR n x
   change ‖iteratedFDeriv ℝ n (fun y => κ • ((D.FInv.field t y).adjoint
     (physicalField P k D.m₀ (e t) y))) x‖ ≤ _
   rw [iteratedFDeriv_const_smul_apply'
     ((hI.clm_apply (physicalField_contDiff P k D.m₀ (e t) (he t))).contDiffAt.of_le
       (by simp : (n : ℕ∞ω) ≤ ∞)),norm_smul,Real.norm_eq_abs]
-  exact (mul_le_mul_of_nonneg_left hprod (abs_nonneg κ)).trans_eq (by simp only [Nat.zero_add];
-    ring)
+  exact (mul_le_mul_of_nonneg_left hprod (abs_nonneg κ)).trans_eq (by
+      simp only [Nat.zero_add]; ring)
 
 variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
   (hY : ∀ t, Differentiable ℝ (Y t))
-  (hXY : ∀ t x, X t (Y t x)=x)
+  (hXY : ∀ t x, X t (Y t x) = x)
 
+/-- Physical pressure force, given by `graphPressureForce D P κ k e t (Y t x)`. -/
 def physicalPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   graphPressureForce D P κ k e t (Y t x)
 

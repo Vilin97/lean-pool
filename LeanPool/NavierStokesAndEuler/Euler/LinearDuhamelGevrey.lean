@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelParameter
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeighted
-public import LeanPool.NavierStokesAndEuler.Euler.FrozenEvolutionGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import LeanPool.NavierStokesAndEuler.Euler.FrozenEvolutionGevrey
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelParameter
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Actual all-order profile estimates for the forward initial value problem
@@ -20,6 +23,9 @@ Quantitative differentiation instead freezes the evolution and uses its
 profile-normalized Green operator, whose norm is bounded by `C*T` directly.
 The profile's extrema never enter the factorial radius or amplitude.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,21 +38,38 @@ open scoped ContDiff
 
 variable {P E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-variable (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T,E →L[ℝ] E))
+variable (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T, E →L[ℝ] E))
   (U : ∀ x, Evolution T hT (B x))
-  (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-  (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E)
+  (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+  (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → E)
 
-private local instance : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E)) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelGevrey1 : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelGevrey2 : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelGevrey3 : NormedAddCommGroup C(Icc (0 : ℝ) T,E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelGevrey4 : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E)` instance to shorten
+typeclass synthesis. -/
+local instance instLinearDuhamelGevrey5 : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelGevrey6 : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))`
+instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelGevrey7 : NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 :
+    ℝ) T,E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))` instance to
+shorten typeclass synthesis. -/
+local instance instLinearDuhamelGevrey8 : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ)
+    T,E)) :=
+    inferInstance
 
 /-- Normalization by a fixed profile preserves actual parameter regularity. -/
 theorem weightedSolution_contDiff {n : ℕ∞ω} (hB : ContDiff ℝ n B)
@@ -66,11 +89,11 @@ theorem weightedSolution_contDiff {n : ℕ∞ω} (hB : ContDiff ℝ n B)
 profile norm, with the same homogeneous and Green operators at every order. -/
 theorem weightedSolution_derivative_recurrence
     (hB : ContDiff ℝ ∞ B) (hf : ContDiff ℝ ∞ f) (ha₀ : ContDiff ℝ ∞ a₀)
-    (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C : ℝ) (hC : 0 ≤ C)
-    (hU : ∀ x (t s : Icc (0 : ℝ) T), s ≤ t → ‖(U x).propagator t s‖ ≤ C*g t/g s)
+    (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C : ℝ) (hC : 0 ≤ C)
+    (hU : ∀ x (t s : Icc (0 : ℝ) T), s ≤ t → ‖(U x).propagator t s‖ ≤ C * g t / g s)
     (x : P) (n : ℕ) :
     ‖iteratedFDeriv ℝ n (fun y => (U y).weightedSolution g hg (f y) (a₀ y)) x‖ ≤
-      C*‖iteratedFDeriv ℝ n a₀ x‖ + (C*T)*
+      C*‖iteratedFDeriv ℝ n a₀ x‖ + (C*T) *
         (‖iteratedFDeriv ℝ n f x‖ + ∑ j ∈ range n,
           (n.choose (j+1) : ℝ) * ‖iteratedFDeriv ℝ (j+1) (fun y => multiplier (B y)) x‖ *
             ‖iteratedFDeriv ℝ (n-(j+1))
@@ -98,13 +121,14 @@ def forwardCost (T C A D CB : ℝ) : ℝ := 1 + C*A + C*T*(D+CB)
 contains only the propagator, coefficient and data amplitudes, and time length. -/
 theorem weightedSolution_gevrey
     (hB : ContDiff ℝ ∞ B) (hf : ContDiff ℝ ∞ f) (ha₀ : ContDiff ℝ ∞ a₀)
-    (hg₀ : g ⟨0,le_rfl,hT⟩ = 1)
+    (hg₀ : g ⟨0, le_rfl, hT⟩ = 1)
     (C A D CB Rc R : ℝ) (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hCB : 0 ≤ CB)
-    (hRc : 0 ≤ Rc) (hR : 2*forwardCost T C A D CB*(Rc+1) ≤ R)
-    (hU : ∀ x (t s : Icc (0 : ℝ) T), s ≤ t → ‖(U x).propagator t s‖ ≤ C*g t/g s)
-    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j+1) B x‖ ≤ CB*(Rc^(j+1)*((j+1).factorial : ℝ)^2))
-    (d : ℕ) (hforce : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D*majorant R d n)
-    (hinitial : ∀ n x, ‖iteratedFDeriv ℝ n a₀ x‖ ≤ A*majorant R d n)
+    (hRc : 0 ≤ Rc) (hR : 2 * forwardCost T C A D CB * (Rc + 1) ≤ R)
+    (hU : ∀ x (t s : Icc (0 : ℝ) T), s ≤ t → ‖(U x).propagator t s‖ ≤ C * g t / g s)
+    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j + 1) B x‖ ≤ CB * (Rc ^ (j + 1) * ((j + 1).factorial : ℝ)
+        ^ 2))
+    (d : ℕ) (hforce : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n)
+    (hinitial : ∀ n x, ‖iteratedFDeriv ℝ n a₀ x‖ ≤ A * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => (U y).weightedSolution g hg (f y) (a₀ y)) x‖ ≤
       majorant R (d+1) n := by

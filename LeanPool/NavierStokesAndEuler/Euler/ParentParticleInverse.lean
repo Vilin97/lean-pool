@@ -8,23 +8,27 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentNormalizedGeometry
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketRestriction
-public import LeanPool.NavierStokesAndEuler.Euler.FlowL2Transport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.FlowL2Transport
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DeformationVolume
 
 /-! The inverse carried by the physical particle map. Preservation of
 volume follows from the actual determinant, and both time restriction
 and the packet child propagate the two inverse laws. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerParentPacketFrames
 
 open Set MeasureTheory EulerSmoothLimit EulerTimeIntervalRestriction
-  EulerGraphInvariantFlow EulerPacketVolumeDivergence
+  EulerGraphInvariantFlow
 open scoped ContDiff
 
+/-- Particle inverse data, collecting `field`, `left_inverse`, `right_inverse`, `continuous`. -/
 structure ParticleInverse (A : Parent) where
+  /-- Underlying field of `ParticleInverse`, of type `Icc (0 : ℝ) A.T → Space → Space`. -/
   field : Icc (0 : ℝ) A.T → Space → Space
   left_inverse : ∀ t x, field t (A.position t x)=x
   right_inverse : ∀ t x, A.position t (field t x)=x
@@ -74,6 +78,7 @@ theorem field_measurePreserving (t : Icc (0 : ℝ) A.T) :
     (A.position_hasFDerivAt t) (I.left_inverse t) (I.right_inverse t)
     (Continuous.uncurry_left t I.continuous) (A.displacement_det_one t)
 
+/-- Normalized, given by `A.packetInverse I.field (t,x)`. -/
 def normalized (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   A.packetInverse I.field (t,x)
 
@@ -89,6 +94,7 @@ theorem normalized_continuous : Continuous (Function.uncurry I.normalized) :=
   (A.packetInverse_joint_continuous I.field I.continuous).comp
     ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
 
+/-- Restrict time, bundling `field`, `left_inverse`, `right_inverse`, `continuous`. -/
 def restrictTime (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) :
     ParticleInverse (A.restrictTime S hS hST) where
   field t := I.field (initialInclusion A.T S hST t)
@@ -97,8 +103,9 @@ def restrictTime (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) :
   continuous := I.continuous.comp
     (((initialInclusion A.T S hST).continuous.comp continuous_fst).prodMk continuous_snd)
 
+/-- Child, bundling `field`, `left_inverse`, `right_inverse`, `continuous`. -/
 def child {P : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P A.T)
-    (k : ℝ) (m : Space) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+    (k : ℝ) (m : Space) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
     (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1) :
     ParticleInverse (A.child G k m hgraph nextEll hnext hnext1) where
   field := A.childInverse G k m I.field

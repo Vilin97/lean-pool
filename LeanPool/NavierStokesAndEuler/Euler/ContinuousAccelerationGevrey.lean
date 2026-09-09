@@ -7,10 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramAcceleration
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationForcing
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramPath
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramGevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 
 /-!
 # Uniform-time regularity of actual acceleration
@@ -19,6 +20,9 @@ The continuous acceleration is the already constructed Gram inverse applied
 to its literal forcing. Smoothness and factorial estimates therefore apply
 to the actual continuous path, including its endpoint values.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,9 +37,9 @@ variable {P U E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-variable (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T,U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
-  (v : P → C(Icc (0 : ℝ) T,U)) (f : P → C(Icc (0 : ℝ) T,E))
+variable (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
+  (v : P → C(Icc (0 : ℝ) T, U)) (f : P → C(Icc (0 : ℝ) T, E))
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 /-- The continuous acceleration is the genuine continuous Gram solve. -/
@@ -64,12 +68,12 @@ theorem acceleration_gevrey
     (hv : ContDiff ℝ ∞ v) (hf : ContDiff ℝ ∞ f)
     (Rc R C₀ C₁ Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hR : 0 ≤ R) (hRcR : Rc ≤ R)
     (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hstrong : 2*gramCost c C₀ (3*C₀*(Cf+6*C₁*Cv))*(Rc+1) ≤ R)
-    (hQb : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-    (hQ₁b : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+    (hstrong : 2 * gramCost c C₀ (3 * C₀ * (Cf + 6 * C₁ * Cv)) * (Rc + 1) ≤ R)
+    (hQb : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+    (hQ₁b : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (d : ℕ)
-    (hfb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ Cf*majorant R d n)
-    (hvb : ∀ n x, ‖iteratedFDeriv ℝ n v x‖ ≤ Cv*majorant R d n)
+    (hfb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ Cf * majorant R d n)
+    (hvb : ∀ n x, ‖iteratedFDeriv ℝ n v x‖ ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n
       (fun y => accelerationPath T (Q y) (Q₁ y) c hc (hLower y) (v y) (f y)) x‖ ≤

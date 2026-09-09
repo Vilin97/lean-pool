@@ -7,17 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionOutputPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketWeightedPhysicalErrors
 public import LeanPool.NavierStokesAndEuler.Euler.PacketExactGlobalShear
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedHessianError
-public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedFlowData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedCoefficientBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketRadiusCostPolynomial
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
 
 /-! Fixed polynomial envelopes for the physical remainder, correction
 error and lifted-flow input costs. All spatial derivative orders here are
 fixed (H6 and one physical derivative). -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,37 +31,53 @@ open EulerSmoothLimit EulerPacketTerminalDatum EulerPacketProfileRecursion
   EulerAllOrderDriftCorrection EulerPacketGraphHessian EulerPolynomialCost
   EulerParameterWordGevrey
 
+/-- Coordinate cost, given by `‖coordinateEquiv.symm.toContinuousLinearMap‖`. -/
 def coordinateCost : ℝ := ‖coordinateEquiv.symm.toContinuousLinearMap‖
 
+/-- Physical envelope, given by `3*X*((1+18*X^2*X)*(9*X^2*(X+coordinateCost*2*S)+2))`. -/
 def physicalEnvelope (X S : ℝ) : ℝ :=
   3*X*((1+18*X^2*X)*(9*X^2*(X+coordinateCost*2*S)+2))
 
+/-- Shear envelope as an element of `ℝ`. -/
 def shearEnvelope (X : ℝ) : ℝ :=
-  coordinateCost*(sobolevEmbeddingConstant period 3*fixedVelocityGradeCost X X 1*(4*X))*X+
+  coordinateCost*(sobolevEmbeddingConstant period 3*fixedVelocityGradeCost X X 1*(4*X))*X +
     (8*coordinateCost*sobolevEmbeddingConstant period 3*X*(fixedVelocityGradeCost X X 2+2))*X
 
+/-- Hessian envelope, constructed using `sobolevEmbeddingConstant`. -/
 def hessianEnvelope (X : ℝ) : ℝ :=
-  sobolevEmbeddingConstant period 3*fixedVelocityGradeCost X X 1*X^2*(X+coordinateCost*(4*X))+
+  sobolevEmbeddingConstant period 3*fixedVelocityGradeCost X X 1*X^2*(X+coordinateCost*(4*X)) +
     9*X*physicalEnvelope X (4*X)*sobolevEmbeddingConstant period 3*(fixedVelocityGradeCost X X 2+2)
 
+/-- Time envelope, given by `6*EulerPacketRadiusPolynomial.normalEnvelope X *
+(fixedVelocityGradeCost X X 1+fixedVelocityGradeCost X X 2+1)`. -/
 def timeEnvelope (X : ℝ) : ℝ :=
-  6*EulerPacketRadiusPolynomial.normalEnvelope X*
+  6*EulerPacketRadiusPolynomial.normalEnvelope X *
     (fixedVelocityGradeCost X X 1+fixedVelocityGradeCost X X 2+1)
 
+/-- Radius envelope, given by `1+coordinateCost*(4*X+4*inverseRadiusEnvelope X)`. -/
 def radiusEnvelope (X : ℝ) : ℝ := 1+coordinateCost*(4*X+4*inverseRadiusEnvelope X)
 
+/-- Velocity input envelope, given by `liftedInputConstant period*(velocity X X X+normal X X
+X)`. -/
 def velocityInputEnvelope (X : ℝ) : ℝ := liftedInputConstant period*(velocity X X X+normal X X X)
+/-- Error input envelope, given by `2*liftedInputConstant period*outputEnvelope period X`. -/
 def errorInputEnvelope (X : ℝ) : ℝ := 2*liftedInputConstant period*outputEnvelope period X
+/-- Time input envelope, given by `2*liftedInputConstant period*(timeEnvelope X+outputEnvelope
+period X)`. -/
 def timeInputEnvelope (X : ℝ) : ℝ := 2*liftedInputConstant period*(timeEnvelope X+outputEnvelope
-  period X)
+    period X)
+/-- Weighted error envelope, given by `(1+9*X)*physicalEnvelope X (4*inverseRadiusEnvelope
+X)*sobolevEmbeddingConstant period 3 * outputEnvelope period X`. -/
 def weightedErrorEnvelope (X : ℝ) : ℝ :=
-  (1+9*X)*physicalEnvelope X (4*inverseRadiusEnvelope X)*sobolevEmbeddingConstant period 3*
+  (1+9*X)*physicalEnvelope X (4*inverseRadiusEnvelope X)*sobolevEmbeddingConstant period 3 *
     outputEnvelope period X
 
+/-- Extra envelope as an element of `ℝ`. -/
 def extraEnvelope (X : ℝ) : ℝ :=
-  1+outputEnvelope period X+radiusEnvelope X+velocityInputEnvelope X+errorInputEnvelope X+
+  1+outputEnvelope period X+radiusEnvelope X+velocityInputEnvelope X+errorInputEnvelope X +
     timeInputEnvelope X+weightedErrorEnvelope X+shearEnvelope X+hessianEnvelope X
 
+/-- Extra polynomial as an element of `Polynomial ℝ`. -/
 def extraPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let c := Polynomial.C coordinateCost
@@ -89,13 +106,15 @@ theorem extraPolynomial_eval (X : ℝ) : extraPolynomial.eval X=extraEnvelope X 
     Polynomial.eval_ofNat,Polynomial.eval_C,Polynomial.eval_pow,Polynomial.eval_X,
     outputPolynomial_eval,gradePolynomial_eval,velocityPolynomial_eval,coefficientPolynomial_eval]
 
+/-- Extra constant, given by `coefficientCost extraPolynomial`. -/
 def extraConstant : ℝ := coefficientCost extraPolynomial
+/-- Extra power, given by `extraPolynomial.natDegree`. -/
 def extraPower : ℕ := extraPolynomial.natDegree
 
 theorem extraConstant_pos : 0 < extraConstant := coefficientCost_pos _
 
 theorem extraEnvelope_power (X : ℝ) (hX : 1 ≤ X) : extraEnvelope X ≤ extraConstant*X^extraPower :=
-  by
+    by
   rw [← extraPolynomial_eval]
   exact (le_abs_self _).trans (eval_bound extraPolynomial X hX)
 

@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+
+/-! An isometric embedding of ordinary R³ L² into the angle-independent part of the unit cylinder.
+-/
 
 @[expose] public section
 
-/-! An isometric embedding of ordinary R³ L² into the angle-independent part of the unit cylinder.
-  -/
 
 noncomputable section
 
@@ -21,9 +24,10 @@ open MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerLiftedGradientSpace
   EulerMetricTransport
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanOrdinaryLift1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
-private local instance : IsProbabilityMeasure (volume : Measure (AddCircle (1 : ℝ))) := by
+local instance instMeanOrdinaryLift2 : IsProbabilityMeasure (volume : Measure (AddCircle (1 : ℝ)))
+    := by
   constructor
   simp only [AddCircle.measure_univ, ENNReal.ofReal_one]
 

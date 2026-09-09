@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSpaceInverse
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEquation
 
-@[expose] public section
-
 /-!
 # The actual fixed-coordinate Dirichlet inverse satisfies the strong equation
 
@@ -18,6 +16,9 @@ This version uses the range of the frame directly. It applies to supported
 spatial or cylinder L² spaces, where a pointwise transverse constraint must
 not be replaced by orthogonality to a single Hilbert-space vector.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,12 +34,12 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T)
-  (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+  (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
-  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v,v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- The actual derivative of the physical displacement from the fixed inverse. -/
 def physicalDerivative : TimeLp T E →L[ℝ] TimeLp T E :=
@@ -70,7 +71,7 @@ theorem momentum_weak (f : TimeLp T E) (v : TimeLp T U)
     (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) f v
   exact fixedFrameSolver_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall f ⟨v,hv⟩
 
-variable (Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
+variable (Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (hd₁ : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q₁) (Q₂ t) (Icc (0 : ℝ) T) t)
   (hframe : ∀ t, Q₂ t = -((H t).comp (Q t)))
@@ -94,8 +95,8 @@ theorem exists_strong (hTpos : 0 < T) (f : TimeLp T E) :
     hframe (momentum_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
   refine ⟨v,hv,?_,hder,heq⟩
   change (coordinateDerivative T hT Q Q₁ c hc hQ
-    (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) : ℝ → U) =ᵐ[timeMeasure T] v at
-      hrep
+    (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) : ℝ → U) =ᵐ[timeMeasure T] v
+        at hrep
   rw [coordinateDerivative_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall f] at hrep
   exact hrep
 

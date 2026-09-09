@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPointwiseGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPointwiseGevrey
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
 
 /-! Pointwise physical graph bounds for the actual packet fields. The
 estimates use the constructed Sobolev tower and its canonical representative. -/
+
+@[expose] public section
+
 
 noncomputable section
 

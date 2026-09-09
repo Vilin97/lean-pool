@@ -6,20 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MixedWordProduct
+public import LeanPool.NavierStokesAndEuler.Euler.MixedH5Product
+import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearProduct
+import LeanPool.NavierStokesAndEuler.Euler.MixedWordProduct
+
+/-! The actual base Sobolev transport commutator with no uncontrolled extra derivative. -/
 
 @[expose] public section
 
-/-! The actual base Sobolev transport commutator with no uncontrolled extra derivative. -/
 
 noncomputable section
 
 namespace EulerBaseTransportCommutator
 
 open MeasureTheory EulerSobolev EulerLiftedGradientSpace EulerMetricTransport
-  EulerTransportDerivatives
-  EulerCylinderSobolev EulerRealCylinder EulerVectorCylinder EulerGeneralCylinderAlgebra
-    EulerH6Nonlinear
+    EulerTransportDerivatives
+  EulerCylinderSobolev
+      EulerH6Nonlinear
   EulerMixedH5Product
 open scoped ContDiff ENNReal Topology
 
@@ -37,20 +40,20 @@ theorem gradientFiveNorm_nonneg {F : Type*} [NormedAddCommGroup F] [NormedSpace 
 theorem derivative_le_gradientFiveNorm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (f : LiftDomain period → F) (i : Fin 4) :
     liftSobolevNorm period 5 (fieldDerivative period (standardDirection i) f) ≤ gradientFiveNorm
-      period f :=
+        period f :=
   Finset.single_le_sum (f := fun j : Fin 4 => liftSobolevNorm period 5 (fieldDerivative period
-    (standardDirection j) f))
+      (standardDirection j) f))
     (fun j _ => liftSobolevNorm_nonneg period 5 (fieldDerivative period (standardDirection j) f))
-      (Finset.mem_univ i)
+        (Finset.mem_univ i)
 
 /-- Six actual derivatives of a field give five derivatives of each first derivative. -/
 theorem derivative_memLp_five {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (f : LiftDomain period → F)
     (hfL : ∀ j ≤ 6, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (i : Fin 4) : ∀ j ≤ 5, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w (fieldDerivative period (standardDirection i) f)) 2
-        (liftMeasure period) := by
+          (liftMeasure period) := by
   intro j hj w
   exact word_memLp period (by omega : 1+j ≤ 6) w (fun _ : Fin 1 => i) f hfL
 
@@ -62,7 +65,7 @@ def scalarCommutator {n : ℕ} (w : Fin n → Fin 4)
 
 omit [Fact (0 < period)] in
 /-- Exact commutator recurrence isolates one actual derivative of the scalar coefficient. -/
-theorem scalarCommutator_recurrence {n : ℕ} (w : Fin (n+1) → Fin 4)
+theorem scalarCommutator_recurrence {n : ℕ} (w : Fin (n + 1) → Fin 4)
     (f : LiftDomain period → ℝ) (g : LiftDomain period → Vector3)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
@@ -70,7 +73,7 @@ theorem scalarCommutator_recurrence {n : ℕ} (w : Fin (n+1) → Fin 4)
       iteratedFieldDerivative period (Fin.init w)
         (fun x => fieldDerivative period (standardDirection (w (Fin.last n))) f x • g x) +
       scalarCommutator period (Fin.init w) f (fieldDerivative period (standardDirection (w
-        (Fin.last n))) g) := by
+          (Fin.last n))) g) := by
   unfold scalarCommutator
   rw [word_init_last period w, fieldDerivative_smul period _ f g hf hg]
   have hleft : ∀ x, ContDiff ℝ ∞ (localFieldLift period
@@ -85,21 +88,21 @@ theorem scalarCommutator_recurrence {n : ℕ} (w : Fin (n+1) → Fin 4)
   abel
 
 /-- The commutator cancels its apparent highest derivative before the L² estimate is applied. -/
-theorem mixed_scalarCommutator_bound {n l : ℕ} (hnl : n+l ≤ 6)
+theorem mixed_scalarCommutator_bound {n l : ℕ} (hnl : n + l ≤ 6)
     (w : Fin n → Fin 4) (v : Fin l → Fin 4)
     (f : LiftDomain period → ℝ) (g : LiftDomain period → Vector3)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL : ∀ j ≤ 6, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure
-      period))
+        period))
     (hgL : ∀ j ≤ 5, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (scalarCommutator period w f (iteratedFieldDerivative period v g)) 2 (liftMeasure period)
-      ∧
+        ∧
     (eLpNorm (scalarCommutator period w f (iteratedFieldDerivative period v g)) 2 (liftMeasure
-      period)).toReal ≤
+        period)).toReal ≤
       ((2 : ℝ)^n-1) * mixedConstant period * gradientFiveNorm period f * liftSobolevNorm period 5 g
-        := by
+          := by
   induction n generalizing l with
   | zero => simp [scalarCommutator, iteratedFieldDerivative_zero]
   | succ n ih =>
@@ -112,9 +115,9 @@ theorem mixed_scalarCommutator_bound {n l : ℕ} (hnl : n+l ≤ 6)
     have h2 := ih (by omega : n+(l+1) ≤ 6) (Fin.init w) (Fin.cons i v)
     have h3 : (eLpNorm (iteratedFieldDerivative period (Fin.init w)
         (fun x => fieldDerivative period (standardDirection i) f x • iteratedFieldDerivative period
-          v g x))
+            v g x))
         2 (liftMeasure period)).toReal ≤ (2 : ℝ)^n * mixedConstant period * gradientFiveNorm period
-          f * liftSobolevNorm period 5 g :=
+            f * liftSobolevNorm period 5 g :=
       h1.2.trans (mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left (derivative_le_gradientFiveNorm period f i)
           (mul_nonneg (pow_nonneg (by norm_num) n) (mixedConstant_nonneg period)))
@@ -129,13 +132,13 @@ theorem scalarCommutator_bound {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL : ∀ j ≤ 6, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure
-      period))
+        period))
     (hgL : ∀ j ≤ 5, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (scalarCommutator period w f g) 2 (liftMeasure period) ∧
     (eLpNorm (scalarCommutator period w f g) 2 (liftMeasure period)).toReal ≤
       ((2 : ℝ)^n-1) * mixedConstant period * gradientFiveNorm period f * liftSobolevNorm period 5 g
-        := by
+          := by
   exact mixed_scalarCommutator_bound period (by omega : n+0 ≤ 6) w Fin.elim0 f g hf hg hfL hgL
 
 end EulerBaseTransportCommutator

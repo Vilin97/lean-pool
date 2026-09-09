@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicResidualLimits
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DirectAngularDiagonal
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.CandidateFromLimits
 
 /-!
 # Spatial localization of a curl field and a direct angular field
@@ -26,6 +25,9 @@ one-sided extensions, and the joint residual limits as inputs.  They construct
 the periodic fields and their residual limits.  They do not establish the
 correction iteration or the existence of singular incoming fields.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,13 +49,18 @@ def periodicVelocity (A v : VelocityField) : VelocityField :=
   fun z => SpatialLocalization.periodicVelocity A z +
     PeriodicLocalization.periodize (SpatialLocalization.cutPotential v) z
 
+/-- Original residual, defined pointwise by `navierStokesResidual (velocity A v) p z.1 z.2`. -/
 def originalResidual (A v : VelocityField) (p : PressureField) : VelocityField :=
   fun z => navierStokesResidual (velocity A v) p z.1 z.2
 
+/-- Cut residual, defined pointwise by `navierStokesResidual (cutVelocity A v)
+(SpatialLocalization.cutPressure p) z.1 z.2`. -/
 def cutResidual (A v : VelocityField) (p : PressureField) : VelocityField :=
   fun z => navierStokesResidual (cutVelocity A v)
     (SpatialLocalization.cutPressure p) z.1 z.2
 
+/-- Periodic residual, defined pointwise by `navierStokesResidual (periodicVelocity A v)
+(SpatialLocalization.periodicPressure p) z.1 z.2`. -/
 def periodicResidual (A v : VelocityField) (p : PressureField) : VelocityField :=
   fun z => navierStokesResidual (periodicVelocity A v)
     (SpatialLocalization.periodicPressure p) z.1 z.2

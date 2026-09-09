@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalPhysicalCopyBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
-public import Mathlib.Algebra.Order.Archimedean.Basic
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Physical jets of coherent mean fields
@@ -21,6 +19,9 @@ derivative estimates are derived from the actual physical graph and radius map.
 The final restriction is a single coherent physical field, not a sum over bands.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PhysicalMeanJetBounds
@@ -28,6 +29,7 @@ namespace NavierStokes.PhysicalMeanJetBounds
 open Set Function Filter ProblemStatement PhysicalWaveSum LocalPhysicalCopyBounds
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `PressureStream.Lift PhysicalGraphBounds.Plane`. -/
 abbrev Point := PressureStream.Lift PhysicalGraphBounds.Plane
 
 /-- The unscaled physical cylindrical point with the actual auxiliary graph. -/
@@ -117,7 +119,7 @@ theorem common_stripped_physical_bound_local {h a b : ℝ}
     (Δ m : ℕ) (g e A : ℝ) (hA : 0 ≤ A) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ n : ℕ, 4 ≤ n → ∀ d : ℕ, d ≤ Δ →
       ∀ w : SpaceTime, PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a b →
-        |w.1| ≤ 1 →
+          |w.1| ≤ 1 →
       ∀ q : ℝ, 0 < q → q / 2 ≤ ChartScales.Q n → ChartScales.Q n ≤ 2 * q →
       ∀ f : LiftPoint → E, SmoothNear f (commonLift h n d w) →
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i f (commonLift h n d w)‖ ≤
@@ -130,7 +132,7 @@ theorem common_stripped_physical_bound_local {h a b : ℝ}
   intro n hn d hd w hann ht q hq hlo hhi f hf hjet
   obtain ⟨F, hF, he⟩ := hf.exists_global_germ
   have haxis := PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-    hann)
+      hann)
   have he' := he.comp_tendsto (commonLift_smoothAt h n d haxis).continuousAt
   rw [iteratedFDeriv_eq_of_eventuallyEq he' m]
   apply hb n hn d hd w hann ht q hq hlo hhi F hF
@@ -138,9 +140,11 @@ theorem common_stripped_physical_bound_local {h a b : ℝ}
   rw [← iteratedFDeriv_eq_of_eventuallyEq he i]
   exact hjet i hi
 
+/-- Band field, defined pointwise by `(ChartScales.Q n ^ (-degree)) • f (graph h n d w)`. -/
 noncomputable def bandField (h : ℝ) (n d : ℕ) (degree : ℝ) (f : Point → E) : SpaceTime → E :=
   fun w => (ChartScales.Q n ^ (-degree)) • f (graph h n d w)
 
+/-- Loss, given by `PhysicalGraphBounds.graphLoss m + 1 + degree`. -/
 noncomputable def loss (degree : ℝ) (m : ℕ) : ℝ :=
   PhysicalGraphBounds.graphLoss m + 1 + degree
 
@@ -151,7 +155,7 @@ theorem bandField_jet_bound {h a b : ℝ}
     (Δ m : ℕ) (gain degree e A : ℝ) (hA : 0 ≤ A) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ n : ℕ, 4 ≤ n → ∀ d : ℕ, d ≤ Δ →
       ∀ w : SpaceTime, PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a b →
-        |w.1| ≤ 1 →
+          |w.1| ≤ 1 →
       ∀ q : ℝ, 0 < q → q / 2 ≤ ChartScales.Q n → ChartScales.Q n ≤ 2 * q →
       ∀ f : Point → E, SmoothNear f (graph h n d w) →
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i f (graph h n d w)‖ ≤
@@ -171,7 +175,7 @@ theorem bandField_jet_bound {h a b : ℝ}
       (PhysicalClassBounds.cylindricalDomain a b) :=
     hF.comp_contDiffOn (PhysicalClassBounds.cylindricalMap_smooth ha)
   let u : LiftPoint → E := fun x => (ChartScales.Q n ^ (-degree)) • F
-    (PhysicalClassBounds.cylindricalMap x)
+      (PhysicalClassBounds.cylindricalMap x)
   have hu : SmoothNear u (commonLift h n d w) :=
     SmoothNear.of_open (PhysicalClassBounds.cylindricalDomain_open a b)
       (hg.const_smul _) hx
@@ -245,7 +249,7 @@ theorem graph_time_pos (h : ℝ) (n d : ℕ) {w : SpaceTime} (hw : w ∈ preterm
 theorem graph_q_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (n d : ℕ)
     {w : SpaceTime} (hw : w ∈ preterminal) :
     SimilarityCoordinates.coordinateQ (2 * h) (graph h n d w).2.1 = physicalQ h w / ChartScales.Q n
-      := by
+        := by
   rw [graph_slow, physicalQ_eq]
   have hp : ChartScales.Q n ^ (-CoordinateAlgebra.D h) =
       (ChartScales.Q n)⁻¹ ^ CoordinateAlgebra.D h := by
@@ -311,8 +315,11 @@ theorem graph_length_bounds {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (n d : ℕ)
 not define a sum of band fields and contain no physical derivative estimate. -/
 structure CoherentFamily (h degree : ℝ) (N Δ : ℕ) (U : Set PhysicalGraphBounds.Plane)
     (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] where
+  /-- Native of `CoherentFamily`, of type `ℕ → Point → E`. -/
   native : ℕ → Point → E
+  /-- Physical of `CoherentFamily`, of type `Point → E`. -/
   physical : Point → E
+  /-- Gap of `CoherentFamily`, of type `ℕ → ℕ`. -/
   gap : ℕ → ℕ
   gap_le : ∀ n ≥ N, gap n ≤ Δ
   gap_native : ∀ n ≥ N, gap n ≤ ChartScales.nativeIndex h n
@@ -321,6 +328,7 @@ structure CoherentFamily (h degree : ℝ) (N Δ : ℕ) (U : Set PhysicalGraphBou
     physical z = (ChartScales.Q n ^ (-degree)) •
       native n (VariableGaugeMean.physicalToChartTZ h n (ChartScales.nativeIndex h n - gap n) z)
 
+/-- Field, given by `D.physical ∘ physicalPoint h`. -/
 noncomputable def CoherentFamily.field {h degree : ℝ} {N Δ : ℕ} {U : Set PhysicalGraphBounds.Plane}
     (D : CoherentFamily h degree N Δ U E) : SpaceTime → E := D.physical ∘ physicalPoint h
 
@@ -517,16 +525,16 @@ theorem CoherentFamily.field_smooth (D : CoherentFamily h degree N Δ U E)
 
 @[simp] theorem loss_velocity (h : ℝ) (m : ℕ) :
     loss (CoordinateAlgebra.A h) m = PhysicalGraphBounds.graphLoss m + 1 + CoordinateAlgebra.A h :=
-      rfl
+        rfl
 
-@[simp] theorem loss_stream (h : ℝ) (m : ℕ) :
+theorem loss_stream (h : ℝ) (m : ℕ) :
     loss (CoordinateAlgebra.A h - 1 / 2) m = PhysicalGraphBounds.graphLoss m + 1 + h := by
   unfold loss CoordinateAlgebra.A
   ring
 
 @[simp] theorem loss_pressure (h : ℝ) (m : ℕ) :
     loss (2 * CoordinateAlgebra.A h) m = PhysicalGraphBounds.graphLoss m + 1 + 2 *
-      CoordinateAlgebra.A h := rfl
+        CoordinateAlgebra.A h := rfl
 
 /-! ## The actual Cartesian angular frame -/
 
@@ -632,7 +640,7 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
     (Δ m : ℕ) (gain degree e A : ℝ) (hA : 0 ≤ A) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ n : ℕ, 4 ≤ n → ∀ d : ℕ, d ≤ Δ →
       ∀ w : SpaceTime, PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a b →
-        |w.1| ≤ 1 →
+          |w.1| ≤ 1 →
       ∀ q : ℝ, 0 < q → q / 2 ≤ ChartScales.Q n → ChartScales.Q n ≤ 2 * q →
       ∀ f : Point → ℝ, SmoothNear f (graph h n d w) →
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i f (graph h n d w)‖ ≤
@@ -710,7 +718,7 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
 /-- The actual Cartesian vector associated with the coherent scalar
 field.  The formula applies both to angular velocity and stream potential. -/
 noncomputable def CoherentFamily.angularField (D : CoherentFamily h degree N Δ U ℝ) : VelocityField
-  :=
+    :=
   fun w => D.field w • angularVector (PhysicalGraphBounds.radialProjection w)
 
 theorem CoherentFamily.angularField_formula (D : CoherentFamily h degree N Δ U ℝ) (w : SpaceTime) :

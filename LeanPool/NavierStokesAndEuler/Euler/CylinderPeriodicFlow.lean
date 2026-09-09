@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverDescent
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFlowPeriodicity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BoundedLipschitzFlow
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFlowContinuity
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFlowPeriodicity
 
 /-! The actual flow of a periodic cover velocity descends to a genuine
 continuous cylinder flow with two-sided inverse. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,7 +25,7 @@ open Set Function MeasureTheory EulerLiftedGradientSpace EulerCylinderCoverDesce
 
 variable (P : ℝ) [Fact (0 < P)] (V : EulerBoundedLipschitzFlow.Data LiftTangent)
   (hV : ∀ (c : AddSubgroup.zmultiples P) t z,
-    V.velocity t (z.1,(c : ℝ)+z.2)=V.velocity t z)
+    V.velocity t (z.1, (c : ℝ) + z.2) = V.velocity t z)
 
 include hV in
 omit [Fact (0 < P)] in
@@ -36,6 +39,7 @@ theorem flow_deck (s t : ℝ) (c : AddSubgroup.zmultiples P) (z : LiftTangent) :
     exact hV c r w
   simpa only [shift] using V.flow_add_eq (0,(c : ℝ)) hp s t z
 
+/-- Flow, given by `descendMap P (V.flow s t)`. -/
 def flow (s t : ℝ) : LiftDomain P → LiftDomain P := descendMap P (V.flow s t)
 
 include hV in
@@ -63,6 +67,8 @@ theorem flow_cocycle (r s t : ℝ) (q : LiftDomain P) :
   obtain ⟨z,rfl⟩ := (coveringMap_isOpenQuotient P).surjective q
   rw [flow_cover P V hV,flow_cover P V hV,flow_cover P V hV,V.flow_cocycle]
 
+/-- Flow homeomorph, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
+compatibility proofs. -/
 def flowHomeomorph (s t : ℝ) : LiftDomain P ≃ₜ LiftDomain P where
   toFun := flow P V s t
   invFun := flow P V t s
@@ -80,7 +86,7 @@ theorem forward_joint_continuous : Continuous (fun z : ℝ × LiftDomain P => fl
 
 include hV in
 theorem backward_joint_continuous : Continuous (fun z : ℝ × LiftDomain P => flow P V z.1 0 z.2) :=
-  by
+    by
   have hf : Continuous (fun z : ℝ × LiftTangent => coveringMap P (V.backward z.1 z.2)) :=
     (coveringMap_isOpenQuotient P).continuous.comp V.backward_joint_continuous
   exact descend_joint_continuous P (fun t z => coveringMap P (V.backward t z)) hf

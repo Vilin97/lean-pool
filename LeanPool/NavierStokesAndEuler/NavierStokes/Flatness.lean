@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Normed.Group.Continuity
-public import Mathlib.Analysis.Normed.Field.Basic
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.Analysis.Normed.Group.Continuity
 
 /-!
 # Scalar flatness and fixed power losses
@@ -22,6 +20,9 @@ jets nor the existence, compatibility, or smooth extension of those jets.
 All powers here have natural exponents. Constants and neighborhoods may depend
 on the requested power, as they do in a flatness statement.
 -/
+
+@[expose] public section
+
 
 open Filter Topology
 

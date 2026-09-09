@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialDerivative
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialDerivative
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
 
 /-!
 # Genuine classical spatial words have exactly the strong L² word norms
@@ -20,6 +21,9 @@ the corresponding actual L² translation derivative. Consequently finite
 Hq sums and external ordered-word sums transfer with constant one, including
 uniform time evaluation. There is no tensor-to-word radius conversion.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -62,7 +66,7 @@ theorem ordinaryWord_translation (directions : ι → Space) (u : L2) (hu : Smoo
     have ho : ordinaryWord directions u w =
         ordinaryWord directions (orbitDerivative u (directions (w (Fin.last n)))) (Fin.init w) := by
       simpa only [Fin.snoc_init_self] using ordinaryWord_snoc directions u hu (Fin.init w) (w
-        (Fin.last n))
+          (Fin.last n))
     rw [ho, ih _ (orbitDerivative_smooth u hu _) (Fin.init w)]
     have he : directional directions (fun b : Space => translation b u) (w (Fin.last n)) =
         fun b : Space => translation b (orbitDerivative u (directions (w (Fin.last n)))) :=
@@ -98,14 +102,14 @@ theorem representative_word (directions : ι → Space) (u : L2) (hu : SmoothOrb
     have ho : ordinaryWord directions u w =
         ordinaryWord directions (orbitDerivative u (directions (w (Fin.last n)))) (Fin.init w) := by
       simpa only [Fin.snoc_init_self] using ordinaryWord_snoc directions u hu (Fin.init w) (w
-        (Fin.last n))
+          (Fin.last n))
     have he : directional directions (representative u hu) (w (Fin.last n)) =
         representative (orbitDerivative u (directions (w (Fin.last n)))) (orbitDerivative_smooth u
-          hu _) :=
+            hu _) :=
       funext (fun y => fderiv_representative_apply u hu _ y)
     have hw : wordDerivative directions (representative u hu) w x =
         wordDerivative directions (directional directions (representative u hu) (w (Fin.last n)))
-          (Fin.init w) x := by
+            (Fin.init w) x := by
       simpa only [Fin.snoc_init_self] using wordDerivative_snoc directions (representative u hu)
         (representative_smooth u hu) (Fin.init w) (w (Fin.last n)) x
     rw [hw, he, ih _ (orbitDerivative_smooth u hu _) (Fin.init w)]
@@ -145,7 +149,7 @@ def classicalBaseSize (directions : ι → Space) (q : ℕ) (u : L2) (hu : Smoot
 
 theorem classicalBaseSize_eq (directions : ι → Space) (q : ℕ) (u : L2) (hu : SmoothOrbit u) :
     classicalBaseSize directions q u hu = baseSize directions q (fun a : Space => translation a u)
-      0 := by
+        0 := by
   simp only [classicalBaseSize, classicalWordLp_eq, ordinaryWord, baseSize, wordSum]
 
 /-- Sum of actual classical Hq sizes of the external derivative fields.
@@ -156,9 +160,9 @@ def classicalBlockSize (directions : ι → Space) (q : ℕ) (u : L2) (hu : Smoo
 
 /-- Exact identification with the blocks used by the genuine inverse estimate. -/
 theorem classicalBlockSize_eq (directions : ι → Space) (q : ℕ) (u : L2) (hu : SmoothOrbit u) (n :
-  ℕ) :
+    ℕ) :
     classicalBlockSize directions q u hu n = block directions q (fun a : Space => translation a u)
-      n 0 := by
+        n 0 := by
   unfold classicalBlockSize block
   apply sum_congr rfl
   intro w _
@@ -169,7 +173,7 @@ theorem classicalBlockSize_eq (directions : ι → Space) (q : ℕ) (u : L2) (hu
 /-- Uniform time evaluation transfers all genuine classical Hq derivative
 words with constant one, and without a radius change. -/
 theorem path_classicalBlockSize_le (directions : ι → Space) (q : ℕ)
-    (T : ℝ) (p : C(Icc (0 : ℝ) T,L2))
+    (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (t : Icc (0 : ℝ) T) (n : ℕ) :
     classicalBlockSize directions q (p t) (pathTranslation_evaluation_contDiff T p hp t) n ≤

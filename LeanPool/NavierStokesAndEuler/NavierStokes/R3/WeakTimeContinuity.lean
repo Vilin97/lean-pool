@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
-public import Mathlib.Analysis.Normed.Group.ZeroAtInfty
-public import Mathlib.Topology.UniformSpace.UniformApproximation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
+import Mathlib.Analysis.Normed.Group.ZeroAtInfty
 
 /-!
 # Weak time continuity from uniform spatial `L¹` bounds
@@ -21,6 +18,9 @@ has continuous pairings with every continuous test vanishing at infinity.
 Only the test is approximated by compactly supported functions; no support or
 derivative bound is imposed on the field.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

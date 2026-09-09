@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualGaussianCoverage
 
-@[expose] public section
-
 /-!
 # Jets of the literal transported native cutoff
 
@@ -19,6 +17,9 @@ neighborhood, including at the closed transverse endpoints. Its exact germ
 therefore transfers the Gaussian clock estimates without assumptions about a
 source, correction state, or modal-control output.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -100,7 +101,7 @@ theorem literalCutoff_gaussian_germ (l : Label) (n : ℕ) (k : Frequency)
 only quantitative input beyond the primitive phase and clock is the
 polynomial bound for the actual affine geometry. -/
 theorem literalCutoff_uniformLocalJets {u0 : ℝ}
-    (hu0 : 0 < u0) (hu : ∀ l n, F.u (l,n) = u0)
+    (hu0 : 0 < u0) (hu : ∀ l n, F.u (l, n) = u0)
     (hcost : ∃ K : ℝ, 1 ≤ K ∧ ∃ p : ℕ, ∀ l n,
       CommonCoverClass.argumentCost (g l n) ≤ K * s.slow n ^ p) :
     UniformLocalJets (CommonCoverClass.sourceStrip s) (fun _ _ _ => 1) 0

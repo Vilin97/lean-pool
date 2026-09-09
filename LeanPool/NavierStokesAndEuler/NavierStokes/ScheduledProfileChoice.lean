@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ExtendedHeatedOutgoing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalCone
 
-@[expose] public section
-
 /-!
 # A common scheduled profile below caller-supplied parameter bounds
 
@@ -18,6 +16,9 @@ The reset coefficient bound is selected before lambda. The caller's lambda
 cap is intersected with the existing reset and energy thresholds before any
 profile is constructed. The actual core is then fixed before choosing h.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -104,7 +105,7 @@ theorem heightCap_bounds (core : OutgoingSchedule.Parameters) (extra : ℝ) :
   have hl : heightCap core extra ≤ core.lam / 4 := min_le_left _ _
   have hr : heightCap core extra ≤
       min extra (min (1 / 1000) (min (1 / 4) (1 / (1 + TerminalCone.releaseBudget core)))) :=
-        min_le_right _ _
+          min_le_right _ _
   have hrest := hr.trans (min_le_right _ _)
   have hlast := hrest.trans (min_le_right _ _)
   exact ⟨by linarith [core.lam_pos], hr.trans (min_le_left _ _),

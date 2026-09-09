@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
 
 /-! A genuine derivative at one Sobolev order gives the same derivative at
 all lower orders of the coherent towers. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,8 +24,14 @@ open Set EulerCylinderSobolevSpace EulerVolterraConvolution
 variable {P T : ℝ} [Fact (0 < P)]
   (A B : EulerAllOrderCorrectionData.FieldTower P T)
 
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace P q)` instance to shorten typeclass
+synthesis. -/
 local instance restrictionGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace P q) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace P q)` instance to shorten typeclass
+synthesis. -/
 local instance restrictionSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace P q) := inferInstance
+/-- Cache the standard `TopologicalSpace (SobolevSpace P q)` instance to shorten typeclass
+synthesis. -/
 local instance restrictionTopology (q : ℕ) : TopologicalSpace (SobolevSpace P q) :=
   (inferInstance : PseudoMetricSpace (SobolevSpace P q)).toUniformSpace.toTopologicalSpace
 

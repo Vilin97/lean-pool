@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
 
-@[expose] public section
-
 /-!
 # Bounded maps commute with the genuine time-H¹ reconstruction
 
@@ -19,6 +17,9 @@ Bochner fields before reconstructing the continuous time representative.
 It is an equality of the constructed operators, independent of any smoothness
 assumption on their inputs.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

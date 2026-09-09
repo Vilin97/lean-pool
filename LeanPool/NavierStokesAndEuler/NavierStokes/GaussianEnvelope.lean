@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseGrowth
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Gaussian bounds from a decreasing instantaneous rate
@@ -20,6 +18,9 @@ The integral is oriented: a point before the midpoint reverses the integration
 limits.  The main theorem proves the same quadratic bounds on both sides,
 under local differentiability and derivative bounds on a convex domain.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.GaussianEnvelope
 

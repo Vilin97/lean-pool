@@ -6,12 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-public import Mathlib.Data.Nat.Choose.Bounds
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Data.Nat.Choose.Bounds
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Exact shift gains and the final coarse factorial splitting for finite packets. -/
 
 @[expose] public section
 
-/-! Exact shift gains and the final coarse factorial splitting for finite packets. -/
 
 namespace EulerGevrey
 

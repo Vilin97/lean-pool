@@ -7,15 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.AbsoluteValue.Basic
-public import Mathlib.Data.Rat.Floor
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Exact core and carrier scaling
@@ -25,6 +17,9 @@ Proposition A.2 and Remark 8.6 of the candidate manuscript. These are scalar
 scaling facts; they do not supply a Navier--Stokes solution or analytic estimates
 for its profiles. The arbitrary envelope is kept in the carrier Reynolds product.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

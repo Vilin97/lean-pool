@@ -7,10 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
+public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+import LeanPool.NavierStokesAndEuler.Euler.H6PressureInverse
+
+/-! Source18 for the actual coercively constructed pressure of the nonlinear transport source. -/
 
 @[expose] public section
 
-/-! Source18 for the actual coercively constructed pressure of the nonlinear transport source. -/
 
 noncomputable section
 
@@ -23,7 +28,8 @@ open scoped ContDiff ENNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Actual strong-jet Hq blocks equal the classical external-word Hq norms of any smooth representative. -/
+/-- Actual strong-jet Hq blocks equal the classical external-word Hq norms of any smooth
+representative. -/
 theorem blockNorm_eq_classical {s q n : ℕ} {U : LiftL2 period}
     (J : EulerSpatialSobolevInverse.SpatialJet period standardDirection s U) (h : n + q ≤ s)
     (f : LiftDomain period → Vector3)
@@ -54,11 +60,11 @@ theorem nonlinear_pressure_shifted_bound {s : ℕ} {A : SmoothCoefficient period
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period))
+        period))
     (hsource : (F : LiftDomain period → Vector3) =ᵐ[liftMeasure period] transportField period 3 b
-      e) :
+        e) :
     (∑ n ∈ Finset.range (N+1), ((n+1 : ℕ) : ℝ) * weight ρ (n+1) *
       blockNorm period (J.solvePressure K κ m c hc hpos) 6 n) ≤
       4 * M * productConstant period 3 *
@@ -68,7 +74,7 @@ theorem nonlinear_pressure_shifted_bound {s : ℕ} {A : SmoothCoefficient period
     apply smooth_sum period Finset.univ
     intro i _ x
     exact (postcomp_smooth period (coordinate 4 i) b hb x).smul (fieldDerivative_smooth period _ e
-      he x)
+        he x)
   have heq : (∑ n ∈ Finset.range (N+1), ((n+1 : ℕ) : ℝ) * weight ρ (n+1) * blockNorm period J 6 n) =
       ∑ n ∈ Finset.range (N+1), ((n+1 : ℕ) : ℝ) * weight ρ (n+1) *
         wordSobolevNorm period 6 n (transportField period 3 b e) := by

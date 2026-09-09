@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualNaturality
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SubcoverPeriodicity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialCoherence
 
 /-!
 # Native reference data from the actual common-cover state
@@ -22,6 +19,9 @@ This file changes the free auxiliary coordinate before forming the reference
 source.  The change acts on the entire current residual, including its
 Gaussian and alias inputs.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,13 +39,17 @@ section Pullback
 variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Pull field, defined pointwise by `f n (e x)`. -/
 noncomputable def pullField (e : D ≃L[ℝ] E) (f : MeanIncrementBounds.Field E) :
     MeanIncrementBounds.Field D := fun n x => f n (e x)
 
+/-- Pull triple, given by `⟨pullField e v.radial, pullField e v.angular, pullField e v.axial⟩`. -/
 noncomputable def pullTriple (e : D ≃L[ℝ] E) (v : MeanIncrementBounds.Triple E) :
     MeanIncrementBounds.Triple D :=
   ⟨pullField e v.radial, pullField e v.angular, pullField e v.axial⟩
 
+/-- Pull operators, bundling `epsilon`, `radialFrequency`, `fastCoefficient`, `radius` and the
+required compatibility proofs. -/
 noncomputable def pullOperators (e : D ≃L[ℝ] E) (o : MeanIncrementBounds.Operators E) :
     MeanIncrementBounds.Operators D where
   epsilon := o.epsilon
@@ -59,18 +63,24 @@ noncomputable def pullOperators (e : D ≃L[ℝ] E) (o : MeanIncrementBounds.Ope
   vR := e.symm o.vR
   vT := e.symm o.vT
 
+/-- Pull context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
 noncomputable def pullContext (e : D ≃L[ℝ] E) (c : Context E) : Context D where
   operators := pullOperators e c.operators
   base := pullTriple e c.base
   virtualTheta := pullField e c.virtualTheta
   virtualAxial := pullField e c.virtualAxial
 
+/-- Pull oscillation, defined pointwise by `u n (e x.1, x.2)`. -/
 noncomputable def pullOscillation (e : D ≃L[ℝ] E) (u : Oscillation E) : Oscillation D :=
   fun n x => u n (e x.1, x.2)
 
+/-- Pull errors, given by `⟨pullOscillation e u.base, pullOscillation e u.gaussian,
+pullOscillation e u.aliasError⟩`. -/
 noncomputable def pullErrors (e : D ≃L[ℝ] E) (u : ExcludedErrors E) : ExcludedErrors D :=
   ⟨pullOscillation e u.base, pullOscillation e u.gaussian, pullOscillation e u.aliasError⟩
 
+/-- Pull state, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the
+required compatibility proofs. -/
 noncomputable def pullState (e : D ≃L[ℝ] E) (u : State E) : State D where
   mean := pullTriple e u.mean
   pressure := pullField e u.pressure
@@ -78,6 +88,8 @@ noncomputable def pullState (e : D ≃L[ℝ] E) (u : State E) : State D where
   oscillatoryPressure n x := u.oscillatoryPressure n (e x.1, x.2)
   errors := pullErrors e u.errors
 
+/-- Pull coefficients, given by `AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ =>
+fun x => f (e x)) rfl a.coeff)`. -/
 noncomputable def pullCoefficients (e : D ≃L[ℝ] E) (a : Coefficients E) : Coefficients D :=
   AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ => fun x => f (e x)) rfl a.coeff)
 
@@ -104,6 +116,8 @@ theorem pullCoefficients_field (e : D ≃L[ℝ] E) (a : Coefficients E)
       field a K Phi kp (e x.1, x.2) := by
   simp only [field, evaluate, Finsupp.sum, pullCoefficients_support, pullCoefficients_apply]
 
+/-- Pull block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def pullBlock (e : D ≃L[ℝ] E) (b : HarmonicBlock E) : HarmonicBlock D where
   velocity n i := pullCoefficients e (b.velocity n i)
   pressure n := pullCoefficients e (b.pressure n)
@@ -111,6 +125,7 @@ noncomputable def pullBlock (e : D ≃L[ℝ] E) (b : HarmonicBlock E) : Harmonic
   phase n x := b.phase n (e x)
   angularFrequency := b.angularFrequency
 
+/-- Pull block coefficients, defined pointwise by `pullCoefficients e (a n i)`. -/
 noncomputable def pullBlockCoefficients (e : D ≃L[ℝ] E)
     (a : HarmonicResidual.BlockCoefficients E) : HarmonicResidual.BlockCoefficients D :=
   fun n i => pullCoefficients e (a n i)
@@ -128,6 +143,8 @@ theorem pullBlock_pressure (e : D ≃L[ℝ] E) (b : HarmonicBlock E)
   congrArg Complex.re (pullCoefficients_field e (b.pressure n)
     (b.frequency n) (b.phase n) (b.angularFrequency n) x)
 
+/-- Pull frame, bundling `radius`, `radial`, `axial`, `time` and the required compatibility
+proofs. -/
 noncomputable def pullFrame (e : D ≃L[ℝ] E) (g : HarmonicResidual.Frame E) :
     HarmonicResidual.Frame D where
   radius x := g.radius (e x)
@@ -188,6 +205,8 @@ theorem pull_residualSource (e : D ≃L[ℝ] E) (c : Context E) (u : State E)
   simp only [one_mul, one_smul] at he
   exact he
 
+/-- Pull strip, bundling `domain`, `isOpen_domain`, `epsilon`, `epsilon_pos` and the required
+compatibility proofs. -/
 noncomputable def pullStrip (e : D ≃L[ℝ] E) (s : StripData E) : StripData D where
   domain := e ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage e.continuous
@@ -202,6 +221,8 @@ noncomputable def pullStrip (e : D ≃L[ℝ] E) (s : StripData E) : StripData D 
   zeta_smooth := s.zeta_smooth.comp e.contDiff.contDiffOn (fun _ hx => hx)
   zeta_nonneg x hx := s.zeta_nonneg (e x) hx
 
+/-- Pull wave, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the required
+compatibility proofs. -/
 noncomputable def pullWave (e : D ≃L[ℝ] E) (a : LinearWaveBounds.WaveCoefficients E) :
     LinearWaveBounds.WaveCoefficients D where
   radius n x := a.radius n (e x)
@@ -213,6 +234,8 @@ noncomputable def pullWave (e : D ≃L[ℝ] E) (a : LinearWaveBounds.WaveCoeffic
   pressure n x := a.pressure n (e x)
   frequency := a.frequency
 
+/-- Pull directions, bundling `radial`, `auxiliary`, `axial`, `angular` and the required
+compatibility proofs. -/
 noncomputable def pullDirections (e : D ≃L[ℝ] E) (d : LinearWaveBounds.GraphDirections E) :
     LinearWaveBounds.GraphDirections D where
   radial := e.symm d.radial
@@ -241,6 +264,7 @@ end Pullback
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Inverse cover, given by `(ContinuousLinearEquiv.refl ℝ P).prodCongr (coverPower k).symm`. -/
 noncomputable def inverseCover (k : ℕ) : (P × Plane) ≃L[ℝ] (P × Plane) :=
   (ContinuousLinearEquiv.refl ℝ P).prodCongr (coverPower k).symm
 
@@ -293,23 +317,27 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 
 variable {B N0 : ℕ}
 
+/-- Reference residual source as an element of `PhysicalResidualNaturality.Associated →
+ComplexVector`. -/
 noncomputable def referenceResidualSource
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) :
     PhysicalResidualNaturality.Associated → ComplexVector :=
   fun z => ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x
-    l).context
+      l).context
     (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-      l).carrierBlock
+        l).carrierBlock
     (ActualParticularStageControls.assembly x l).gaussianInput
-      (ActualParticularStageControls.assembly x l).aliasInput
+        (ActualParticularStageControls.assembly x l).aliasInput
     j (BaseChartJets.cellBand l.2)
     (z.1, (coverPower (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))).symm z.2)
 
+/-- Native assembly, given by `rebaseAssembly (ActualParticularStageControls.assembly x l)
+(ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))`. -/
 noncomputable def nativeAssembly
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) : ParticularWaveAssembly.AssemblyData Parameter
-      :=
+        :=
   rebaseAssembly (ActualParticularStageControls.assembly x l)
     (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))
 
@@ -322,7 +350,7 @@ theorem nativeAssembly_source
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) :
     PhysicalParticularWave.referenceSource (nativeAssembly x l) j = referenceResidualSource x l j
-      := by
+        := by
   funext z
   exact rebaseAssembly_source (ActualParticularStageControls.assembly x l)
     (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2)) j
@@ -417,21 +445,21 @@ theorem associatedContext_frame (B n : ℕ) :
       CommonBaseContext.operators, CorrectionState.graphOperators, CommonBaseContext.reconstruction,
       CommonBaseContext.radialFrequency, PhysicalResidualBridge.ScaledGraph.radial,
       PhysicalResidualBridge.commonGraph, GraphCalculus.radialSpeed, RadialPullback.radialJacobian,
-        PhysicalGraphBounds.radialDirection, TorusInverse.vector, StateReindex.vector,
-        ParticularWaveBounds.reindexVector,
+          PhysicalGraphBounds.radialDirection, TorusInverse.vector, StateReindex.vector,
+              ParticularWaveBounds.reindexVector,
       PhysicalResidualNaturality.associatedToLift_apply]
     rfl
   · funext x
     simp [HarmonicResidual.contextFrame, commonContext, CommonBaseContext.context,
       CommonBaseContext.operators, CorrectionState.graphOperators, ChartScales.epsilon,
       PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualBridge.commonGraph,
-        StateReindex.vector, ParticularWaveBounds.reindexVector]
+          StateReindex.vector, ParticularWaveBounds.reindexVector]
   · funext x
     simp [HarmonicResidual.contextFrame, commonContext, CommonBaseContext.context,
       CommonBaseContext.operators, CorrectionState.graphOperators,
-        CommonBaseContext.fastCoefficient,
+          CommonBaseContext.fastCoefficient,
       PhysicalResidualBridge.ScaledGraph.temporal, PhysicalResidualBridge.commonGraph,
-        StateReindex.vector, ParticularWaveBounds.reindexVector,
+          StateReindex.vector, ParticularWaveBounds.reindexVector,
       PhysicalGraphBounds.timeDirection, TorusInverse.vector, ChartScales.epsilon]
 
 theorem nativeAssembly_frame
@@ -483,8 +511,8 @@ theorem nativeAssembly_background_phase
     ActualSignedGeometry.preparedPhase certificate modulation slots (choice B N0).prepared l.1 l.2
       (cylinderChange h (ChartScales.Q m) (ChartScales.Q m) k
         (waveEquiv.symm (inverseCover k z))) = _
-  rw [div_self (by exact_mod_cast (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos h
-    m)).ne'), one_mul,
+  rw [div_self (by
+      exact_mod_cast (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos h m)).ne'), one_mul,
     cylinderChange_inverseCover h (ChartScales.Q_pos m)]
 
 /-! ## Dependence of a copy solve on one complete parameter fiber -/
@@ -498,7 +526,7 @@ variable {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem real_copySolve_source_congr (t : TangentData Q ProblemStatement.Space)
     (f g : Q × Plane → ComplexVector) (G : Geometry) {a b : ℝ} (hab : a ≤ b)
-    (q : Q) (hf : ∀ Y, f (q,Y) = g (q,Y)) (copy : Frequency) (Y : Plane) :
+    (q : Q) (hf : ∀ Y, f (q, Y) = g (q, Y)) (copy : Frequency) (Y : Plane) :
     (realData t f).linearData.copySolve G hab copy (q,Y) =
       (realData t g).linearData.copySolve G hab copy (q,Y) := by
   apply CopySolveCompatibility.anchoredSolve_eq_of_sameInputs
@@ -511,7 +539,7 @@ theorem real_copySolve_source_congr (t : TangentData Q ProblemStatement.Space)
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem imag_copySolve_source_congr (t : TangentData Q ProblemStatement.Space)
     (f g : Q × Plane → ComplexVector) (G : Geometry) {a b : ℝ} (hab : a ≤ b)
-    (q : Q) (hf : ∀ Y, f (q,Y) = g (q,Y)) (copy : Frequency) (Y : Plane) :
+    (q : Q) (hf : ∀ Y, f (q, Y) = g (q, Y)) (copy : Frequency) (Y : Plane) :
     (imagData t f).linearData.copySolve G hab copy (q,Y) =
       (imagData t g).linearData.copySolve G hab copy (q,Y) := by
   apply CopySolveCompatibility.anchoredSolve_eq_of_sameInputs
@@ -524,7 +552,7 @@ theorem imag_copySolve_source_congr (t : TangentData Q ProblemStatement.Space)
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem copyVelocity_source_congr (t : TangentData Q ProblemStatement.Space)
     (f g : Q × Plane → ComplexVector) (G : Geometry) {a b : ℝ} (hab : a ≤ b)
-    (q : Q) (hf : ∀ Y, f (q,Y) = g (q,Y)) (copy : Frequency) (Y : Plane) :
+    (q : Q) (hf : ∀ Y, f (q, Y) = g (q, Y)) (copy : Frequency) (Y : Plane) :
     complexCopyVelocity t f G hab copy (q,Y) = complexCopyVelocity t g G hab copy (q,Y) := by
   simp only [complexCopyVelocity, copyVelocity, real_copySolve_source_congr t f g G hab q hf,
     imag_copySolve_source_congr t f g G hab q hf]
@@ -532,7 +560,7 @@ theorem copyVelocity_source_congr (t : TangentData Q ProblemStatement.Space)
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem copyPressure_source_congr (t : TangentData Q ProblemStatement.Space)
     (f g : Q × Plane → ComplexVector) (G : Geometry) {a b : ℝ} (hab : a ≤ b)
-    (q : Q) (hf : ∀ Y, f (q,Y) = g (q,Y)) (copy : Frequency) (K : ℝ) (Y : Plane) :
+    (q : Q) (hf : ∀ Y, f (q, Y) = g (q, Y)) (copy : Frequency) (K : ℝ) (Y : Plane) :
     complexCopyPressure t f G hab copy K (q,Y) = complexCopyPressure t g G hab copy K (q,Y) := by
   simp only [complexCopyPressure, copyPressure, copyPressureReal,
     real_copySolve_source_congr t f g G hab q hf,
@@ -542,7 +570,7 @@ theorem copyPressure_source_congr (t : TangentData Q ProblemStatement.Space)
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem commonVelocity_source_congr (t : TangentData Q ProblemStatement.Space)
     (f g : Q × Plane → ComplexVector) (G : Geometry) {a b : ℝ} (hab : a ≤ b)
-    (cutoff : Plane → ℝ) (q : Q) (hf : ∀ Y, f (q,Y) = g (q,Y)) (Y : Plane) :
+    (cutoff : Plane → ℝ) (q : Q) (hf : ∀ Y, f (q, Y) = g (q, Y)) (Y : Plane) :
     ParticularWaveBounds.commonVelocity t f G hab cutoff (q,Y) =
       ParticularWaveBounds.commonVelocity t g G hab cutoff (q,Y) := by
   apply tsum_congr
@@ -553,7 +581,7 @@ theorem commonVelocity_source_congr (t : TangentData Q ProblemStatement.Space)
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem commonPressure_source_congr (t : TangentData Q ProblemStatement.Space)
     (f g : Q × Plane → ComplexVector) (G : Geometry) {a b : ℝ} (hab : a ≤ b)
-    (cutoff : Plane → ℝ) (K : ℝ) (q : Q) (hf : ∀ Y, f (q,Y) = g (q,Y)) (Y : Plane) :
+    (cutoff : Plane → ℝ) (K : ℝ) (q : Q) (hf : ∀ Y, f (q, Y) = g (q, Y)) (Y : Plane) :
     ParticularWaveBounds.commonPressure t f G hab cutoff K (q,Y) =
       ParticularWaveBounds.commonPressure t g G hab cutoff K (q,Y) := by
   apply tsum_congr
@@ -565,6 +593,8 @@ end FiberLocality
 
 /-! ## Actual common-band comparison, without truncated reverse gaps -/
 
+/-- Common reference chart as an element of `PhysicalResidualNaturality.Associated ≃L[ℝ]
+PhysicalResidualNaturality.Associated`. -/
 noncomputable def commonReferenceChart (l : ActualParticularStageControls.Label B N0) (n : ℕ) :
     PhysicalResidualNaturality.Associated ≃L[ℝ] PhysicalResidualNaturality.Associated :=
   (PhysicalResidualNaturality.associatedChart h (ChartScales.Q_pos n)
@@ -581,7 +611,7 @@ noncomputable def commonReferenceChart (l : ActualParticularStageControls.Label 
 theorem associatedChart_stateChart (n m k : ℕ) (z : PhysicalResidualNaturality.Associated) :
     CorrectionStep.cycleAssoc.symm
       (PhysicalResidualNaturality.associatedChart h (ChartScales.Q_pos n) (ChartScales.Q_pos m) k
-        z) =
+          z) =
       GaugeStateCoherence.bandChartEquiv h n m k (CorrectionStep.cycleAssoc.symm z) := by
   simp only [PhysicalResidualNaturality.associatedChart_apply, cycleAssoc_symm_apply,
     GaugeStateCoherence.bandChartEquiv_apply, GaugeStateCoherence.bandSlowEquiv_apply,
@@ -610,9 +640,9 @@ theorem assembly_source
     (z : PhysicalResidualNaturality.Associated) :
     ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j n z = ParticularWaveAssembly.residualSource (commonContext B) x.state
         (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)
         j n (CorrectionStep.cycleAssoc.symm z) := by
@@ -630,7 +660,7 @@ theorem transportedSource_eq_commonReference
       sourceWeight h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) •
         ParticularWaveAssembly.residualSource (commonContext B) x.state (x.coefficients.blocks l)
           (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) j
-            (BaseChartJets.cellBand l.2)
+              (BaseChartJets.cellBand l.2)
           (CorrectionStep.cycleAssoc.symm (commonReferenceChart l n z)) := by
   rw [PhysicalParticularWave.transportedResidualSource_apply _ h (ChartScales.Q_pos n)
     (ChartScales.Q_pos (BaseChartJets.cellBand l.2)), nativeAssembly_source]
@@ -664,21 +694,21 @@ theorem source_forward
       (x.coefficients.blocks l) (x.coefficients.blocks l)
       (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)
       (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) n (BaseChartJets.cellBand
-        l.2))
+          l.2))
     (j : ℤ) (z : PhysicalResidualNaturality.Associated) (hz : z.1.2 ∈ V) :
     ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j n z = PhysicalParticularWave.transportedResidualSource (nativeAssembly x l) h
-        (ChartScales.Q n)
+          (ChartScales.Q n)
         (ChartScales.Q (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n) j z :=
-          by
+            by
   have he := HS.source (ActualInitialCoherence.context_band B htime n (BaseChartJets.cellBand l.2)
-    k hi)
+      k hi)
     (PhysicalMeanDomain.slowDomain_open hV) (GaugeStateCoherence.bandScale_pos n
-      (BaseChartJets.cellBand l.2)).ne'
+        (BaseChartJets.cellBand l.2)).ne'
       HB j (x := CorrectionStep.cycleAssoc.symm z) hz
   rw [state_sourceWeight] at he
   rw [assembly_source, transportedSource_eq_commonReference, commonReferenceChart_forward l n k hi]
@@ -686,6 +716,7 @@ theorem source_forward
 
 /-! The reference operator identities hold on the entire free lift. -/
 
+/-- Angle embed, given by `((v.1, 0), v.2)`. -/
 noncomputable def angleEmbed (v : PhysicalResidualNaturality.Associated) : WaveSpace :=
   ((v.1, 0), v.2)
 
@@ -702,7 +733,7 @@ theorem associatedDirections_radial (B n : ℕ) (z : WaveSpace) :
 theorem associatedDirections_axial (B n : ℕ) (z : WaveSpace) :
     (ActualParticularStageControls.directions (B := B)).axialField
       (CorrectionStep.ParticularParameters.nativeStrip
-        ActualParticularStageControls.associatedStrip) n z =
+          ActualParticularStageControls.associatedStrip) n z =
       angleEmbed ((HarmonicResidual.contextFrame
         (ActualParticularStageControls.associatedContext (B := B)) n).axial (z.1.1,z.2)) := by
   change (ChartScales.Q n ^ h) •
@@ -716,9 +747,9 @@ theorem nativeDirections_radial
     (l : ActualParticularStageControls.Label B N0) (n : ℕ) (z : WaveSpace) :
     (nativeAssembly x l).directions.radialField n z =
       angleEmbed ((HarmonicResidual.contextFrame (nativeAssembly x l).context n).radial
-        (z.1.1,z.2)) := by
+          (z.1.1,z.2)) := by
   change (pullDirections (inverseCover (ActualParticularStageControls.gap l (BaseChartJets.cellBand
-    l.2)))
+      l.2)))
     (ActualParticularStageControls.directions (B := B))).radialField n z = _
   rw [pullDirections_radial, associatedDirections_radial]
   change _ = angleEmbed ((HarmonicResidual.contextFrame
@@ -732,13 +763,13 @@ theorem nativeDirections_axial
     (l : ActualParticularStageControls.Label B N0) (n : ℕ) (z : WaveSpace) :
     (nativeAssembly x l).directions.axialField (nativeAssembly x l).strip n z =
       angleEmbed ((HarmonicResidual.contextFrame (nativeAssembly x l).context n).axial (z.1.1,z.2))
-        := by
+          := by
   change (pullDirections (inverseCover (ActualParticularStageControls.gap l (BaseChartJets.cellBand
-    l.2)))
+      l.2)))
     (ActualParticularStageControls.directions (B := B))).axialField
       (pullStrip (inverseCover (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2)))
         (CorrectionStep.ParticularParameters.nativeStrip
-          ActualParticularStageControls.associatedStrip)) n z = _
+            ActualParticularStageControls.associatedStrip)) n z = _
   rw [pullDirections_axial, associatedDirections_axial]
   change _ = angleEmbed ((HarmonicResidual.contextFrame
     (pullContext (inverseCover (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2)))
@@ -760,13 +791,13 @@ theorem nativeAssembly_referenceChart
     (l : ActualParticularStageControls.Label B N0) :
     PhysicalParticularWave.ReferenceChart (nativeAssembly x l) h
       (ChartScales.Q (BaseChartJets.cellBand l.2)) (ChartScales.nativeIndex h
-        (BaseChartJets.cellBand l.2)) := by
+          (BaseChartJets.cellBand l.2)) := by
   refine ⟨nativeAssembly_identity x l, ?_, ?_, ?_, ?_⟩
   · rfl
   · funext z
     apply waveEquiv.injective
     change (nativeAssembly x l).directions.radialField (BaseChartJets.cellBand l.2) (waveEquiv z) =
-      _
+        _
     rw [nativeDirections_radial, nativeAssembly_frame]
     rfl
   · rw [nativeDirections_angular]
@@ -795,7 +826,7 @@ theorem commonReferenceChart_backward (l : ActualParticularStageControls.Label B
     (z : PhysicalResidualNaturality.Associated) :
     GaugeStateCoherence.bandChartEquiv h (BaseChartJets.cellBand l.2) n k
       (CorrectionStep.cycleAssoc.symm (commonReferenceChart l n z)) =
-        CorrectionStep.cycleAssoc.symm z := by
+          CorrectionStep.cycleAssoc.symm z := by
   have hg : ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2) =
       ActualParticularStageControls.gap l n + k := by
     unfold ActualParticularStageControls.gap
@@ -804,21 +835,23 @@ theorem commonReferenceChart_backward (l : ActualParticularStageControls.Label B
   apply congrArg CorrectionStep.cycleAssoc.symm
   rw [PhysicalResidualNaturality.associatedChart_apply, commonReferenceChart_apply,
     parameterChange_inverse h (ChartScales.Q_pos n) (ChartScales.Q_pos (BaseChartJets.cellBand
-      l.2))]
+        l.2))]
   apply Prod.ext
   · rfl
   · change coverPower k ((coverPower (ActualParticularStageControls.gap l (BaseChartJets.cellBand
-    l.2))).symm
+      l.2))).symm
       (coverPower (ActualParticularStageControls.gap l n) z.2)) = z.2
     apply (coverPower (ActualParticularStageControls.gap l n)).injective
     rw [← CopySolveCompatibility.coverPower_add, ← hg, ContinuousLinearEquiv.apply_symm_apply]
 
+/-- State comparison type used in actual reference rebase. -/
 abbrev StateComparison (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (V : Set Plane) (n m k : ℕ) : Prop :=
   PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain V)
     (GaugeStateCoherence.bandChartEquiv h n m k) (GaugeStateCoherence.bandVelocityScale h n m)
     (GaugeStateCoherence.bandScale n m) x.state x.state n m
 
+/-- Block comparison type used in actual reference rebase. -/
 abbrev BlockComparison (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (V : Set Plane) (n m k : ℕ) : Prop :=
   PhysicalResidualNaturality.BlockFieldsOn (PhysicalMeanDomain.slowDomain V)
@@ -839,26 +872,26 @@ theorem source_backward
     (hz : (commonReferenceChart l n z).1.2 ∈ V) :
     ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j n z = PhysicalParticularWave.transportedResidualSource (nativeAssembly x l) h
-        (ChartScales.Q n)
+          (ChartScales.Q n)
         (ChartScales.Q (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n) j z :=
-          by
+            by
   have he := HS.source (ActualInitialCoherence.context_band B htime (BaseChartJets.cellBand l.2) n
-    k hi)
+      k hi)
     (PhysicalMeanDomain.slowDomain_open hV) (GaugeStateCoherence.bandScale_pos
-      (BaseChartJets.cellBand l.2) n).ne'
+        (BaseChartJets.cellBand l.2) n).ne'
       HB j (x := CorrectionStep.cycleAssoc.symm (commonReferenceChart l n z)) hz
   rw [state_sourceWeight, commonReferenceChart_backward l n k hi hn] at he
   have he' := congrArg (fun v : ComplexVector =>
     sourceWeight h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) • v) he
   rw [smul_smul, show sourceWeight h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2))
-    *
+      *
       sourceWeight h (ChartScales.Q (BaseChartJets.cellBand l.2)) (ChartScales.Q n) = 1 from
         ratioPower_reverse_mul (ChartScales.Q_pos n) (ChartScales.Q_pos (BaseChartJets.cellBand
-          l.2)) _, one_smul] at he'
+            l.2)) _, one_smul] at he'
   rw [assembly_source, transportedSource_eq_commonReference]
   exact he'.symm
 
@@ -869,10 +902,10 @@ theorem referenceResidualSource_smooth
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (V : Set Parameter)
     (hf : ContDiffOn ℝ ∞ (ParticularWaveAssembly.residualSource
       (ActualParticularStageControls.assembly x l).context (ActualParticularStageControls.assembly
-        x l).state
+          x l).state
       (ActualParticularStageControls.assembly x l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j (BaseChartJets.cellBand l.2)) (V ×ˢ univ)) :
     ContDiffOn ℝ ∞ (referenceResidualSource x l j) (V ×ˢ univ) :=
   hf.comp (inverseCover (P := Parameter)
@@ -884,13 +917,13 @@ theorem referenceResidualSource_support
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) :
     support (referenceResidualSource x l j) =
       inverseCover (P := Parameter) (ActualParticularStageControls.gap l (BaseChartJets.cellBand
-        l.2)) ⁻¹'
+          l.2)) ⁻¹'
         support (ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x
-          l).context
+            l).context
           (ActualParticularStageControls.assembly x l).state
-            (ActualParticularStageControls.assembly x l).carrierBlock
+              (ActualParticularStageControls.assembly x l).carrierBlock
           (ActualParticularStageControls.assembly x l).gaussianInput
-            (ActualParticularStageControls.assembly x l).aliasInput
+              (ActualParticularStageControls.assembly x l).aliasInput
           j (BaseChartJets.cellBand l.2)) := rfl
 
 /-! ## The unchanged target solve uses this native reference -/
@@ -899,8 +932,8 @@ theorem residualBandAmplitude_rebase_at (D : ParticularWaveAssembly.AssemblyData
     (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (kr gap : ℕ)
     (K : ℝ) (j : ℤ) (n : ℕ) (p : Parameter)
     (hf : ∀ Y, ParticularWaveAssembly.residualSource D.context D.state D.carrierBlock
-      D.gaussianInput D.aliasInput j n (p,Y) =
-        PhysicalParticularWave.transportedResidualSource (rebaseAssembly D kr) h Q Qr gap j (p,Y))
+      D.gaussianInput D.aliasInput j n (p, Y) =
+        PhysicalParticularWave.transportedResidualSource (rebaseAssembly D kr) h Q Qr gap j (p, Y))
     (Y : Plane) :
     PhysicalParticularWave.residualBandAmplitude D h hQ hQr gap K j n (p,Y) =
       PhysicalParticularWave.bandAmplitude (rebaseAssembly D kr) h hQ hQr gap K j (p,Y) := by
@@ -912,8 +945,8 @@ theorem residualBandPressure_rebase_at (D : ParticularWaveAssembly.AssemblyData 
     (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (kr gap : ℕ)
     (K : ℝ) (j : ℤ) (n : ℕ) (p : Parameter)
     (hf : ∀ Y, ParticularWaveAssembly.residualSource D.context D.state D.carrierBlock
-      D.gaussianInput D.aliasInput j n (p,Y) =
-        PhysicalParticularWave.transportedResidualSource (rebaseAssembly D kr) h Q Qr gap j (p,Y))
+      D.gaussianInput D.aliasInput j n (p, Y) =
+        PhysicalParticularWave.transportedResidualSource (rebaseAssembly D kr) h Q Qr gap j (p, Y))
     (Y : Plane) :
     PhysicalParticularWave.residualBandPressure D h hQ hQr gap K j n (p,Y) =
       PhysicalParticularWave.bandPressure (rebaseAssembly D kr) h hQ hQr gap K j (p,Y) := by
@@ -925,10 +958,10 @@ theorem residualBandPressure_rebase_at (D : ParticularWaveAssembly.AssemblyData 
 noncomputable def actualCoefficients
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) : LinearWaveBounds.WaveCoefficients
-      WaveSpace :=
+        WaveSpace :=
   ((ActualParticularStageControls.parameters x l).copyData
     (ActualParticularStageControls.assembly x l).context (ActualParticularStageControls.assembly x
-      l).state
+        l).state
     (ActualParticularStageControls.assembly x l).carrierBlock
     (ActualParticularStageControls.assembly x l).gaussianInput
     (ActualParticularStageControls.assembly x l).aliasInput j).common
@@ -937,15 +970,15 @@ theorem actualAmplitude_rebase_at
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (n : ℕ) (p : Parameter)
     (hf : ∀ Y, ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x
-      l).context
+        l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
-      j n (p,Y) = PhysicalParticularWave.transportedResidualSource (nativeAssembly x l) h
-        (ChartScales.Q n)
+          (ActualParticularStageControls.assembly x l).aliasInput
+      j n (p, Y) = PhysicalParticularWave.transportedResidualSource (nativeAssembly x l) h
+          (ChartScales.Q n)
         (ChartScales.Q (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n) j
-          (p,Y))
+            (p, Y))
     (theta : ℝ) (Y : Plane) :
     (actualCoefficients x l j).amplitude n ((p,theta),Y) =
       PhysicalParticularWave.bandAmplitude (nativeAssembly x l) h (ChartScales.Q_pos n)
@@ -953,11 +986,11 @@ theorem actualAmplitude_rebase_at
         ((j : ℝ) * (x.coefficients.blocks l).frequency n) j (p,Y) := by
   have he := congrFun (CorrectionStep.ParticularParameters.fromReference_amplitude
     (ActualParticularStageControls.assembly x l) h (ActualParticularStageControls.gap l) j n)
-      ((p,theta),Y)
+        ((p,theta),Y)
   exact he.trans (residualBandAmplitude_rebase_at (ActualParticularStageControls.assembly x l) h
     (ChartScales.Q_pos n) (ChartScales.Q_pos (BaseChartJets.cellBand l.2))
     (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))
-      (ActualParticularStageControls.gap l n)
+        (ActualParticularStageControls.gap l n)
     ((j : ℝ) * (x.coefficients.blocks l).frequency n) j n p hf Y)
 
 theorem actualPressure_rebase_at
@@ -965,15 +998,15 @@ theorem actualPressure_rebase_at
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (n : ℕ) (p : Parameter)
     (hK : (j : ℝ) * (x.coefficients.blocks l).frequency n ≠ 0)
     (hf : ∀ Y, ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly x
-      l).context
+        l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
-      j n (p,Y) = PhysicalParticularWave.transportedResidualSource (nativeAssembly x l) h
-        (ChartScales.Q n)
+          (ActualParticularStageControls.assembly x l).aliasInput
+      j n (p, Y) = PhysicalParticularWave.transportedResidualSource (nativeAssembly x l) h
+          (ChartScales.Q n)
         (ChartScales.Q (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n) j
-          (p,Y))
+            (p, Y))
     (theta : ℝ) (Y : Plane) :
     (actualCoefficients x l j).pressure n ((p,theta),Y) =
       PhysicalParticularWave.bandPressure (nativeAssembly x l) h (ChartScales.Q_pos n)
@@ -981,11 +1014,11 @@ theorem actualPressure_rebase_at
         ((j : ℝ) * (x.coefficients.blocks l).frequency n) j (p,Y) := by
   have he := congrFun (CorrectionStep.ParticularParameters.fromReference_pressure
     (ActualParticularStageControls.assembly x l) h (ActualParticularStageControls.gap l) j n hK)
-      ((p,theta),Y)
+        ((p,theta),Y)
   exact he.trans (residualBandPressure_rebase_at (ActualParticularStageControls.assembly x l) h
     (ChartScales.Q_pos n) (ChartScales.Q_pos (BaseChartJets.cellBand l.2))
     (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))
-      (ActualParticularStageControls.gap l n)
+        (ActualParticularStageControls.gap l n)
     ((j : ℝ) * (x.coefficients.blocks l).frequency n) j n p hf Y)
 
 theorem actualAmplitude_forward
@@ -1001,7 +1034,7 @@ theorem actualAmplitude_forward
         (ChartScales.Q_pos (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n)
         ((j : ℝ) * (x.coefficients.blocks l).frequency n) j (p,Y) :=
   actualAmplitude_rebase_at x l j n p (fun Z => source_forward x l hV htime n k hi HS HB j (p,Z)
-    hp) theta Y
+      hp) theta Y
 
 theorem actualPressure_forward
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
@@ -1017,7 +1050,7 @@ theorem actualPressure_forward
         (ChartScales.Q_pos (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n)
         ((j : ℝ) * (x.coefficients.blocks l).frequency n) j (p,Y) :=
   actualPressure_rebase_at x l j n p hK (fun Z => source_forward x l hV htime n k hi HS HB j (p,Z)
-    hp) theta Y
+      hp) theta Y
 
 theorem actualAmplitude_backward
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
@@ -1029,14 +1062,14 @@ theorem actualAmplitude_backward
     (HB : BlockComparison x l V (BaseChartJets.cellBand l.2) n k)
     (j : ℤ) (p : Parameter)
     (hp : (parameterChange h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) p).2 ∈
-      V)
+        V)
     (theta : ℝ) (Y : Plane) :
     (actualCoefficients x l j).amplitude n ((p,theta),Y) =
       PhysicalParticularWave.bandAmplitude (nativeAssembly x l) h (ChartScales.Q_pos n)
         (ChartScales.Q_pos (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n)
         ((j : ℝ) * (x.coefficients.blocks l).frequency n) j (p,Y) :=
   actualAmplitude_rebase_at x l j n p (fun Z => source_backward x l hV htime n k hi hn HS HB j
-    (p,Z) hp) theta Y
+      (p,Z) hp) theta Y
 
 theorem actualPressure_backward
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
@@ -1049,14 +1082,14 @@ theorem actualPressure_backward
     (j : ℤ) (hK : (j : ℝ) * (x.coefficients.blocks l).frequency n ≠ 0)
     (p : Parameter)
     (hp : (parameterChange h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) p).2 ∈
-      V)
+        V)
     (theta : ℝ) (Y : Plane) :
     (actualCoefficients x l j).pressure n ((p,theta),Y) =
       PhysicalParticularWave.bandPressure (nativeAssembly x l) h (ChartScales.Q_pos n)
         (ChartScales.Q_pos (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n)
         ((j : ℝ) * (x.coefficients.blocks l).frequency n) j (p,Y) :=
   actualPressure_rebase_at x l j n p hK (fun Z => source_backward x l hV htime n k hi hn HS HB j
-    (p,Z) hp) theta Y
+      (p,Z) hp) theta Y
 
 /-! The full carrier uses the same rebase, including the angular integer. -/
 
@@ -1078,10 +1111,10 @@ theorem actualPhase_rebase_at
     (hm : (x.coefficients.blocks l).frequency (BaseChartJets.cellBand l.2) ≠ 0)
     (p : Parameter) (Y : Plane)
     (hp : (x.coefficients.blocks l).frequency n *
-        (x.coefficients.blocks l).phase n (CorrectionStep.cycleAssoc.symm (p,Y)) =
+        (x.coefficients.blocks l).phase n (CorrectionStep.cycleAssoc.symm (p, Y)) =
       (x.coefficients.blocks l).frequency (BaseChartJets.cellBand l.2) *
         (x.coefficients.blocks l).phase (BaseChartJets.cellBand l.2)
-          (CorrectionStep.cycleAssoc.symm (commonReferenceChart l n (p,Y))))
+          (CorrectionStep.cycleAssoc.symm (commonReferenceChart l n (p, Y))))
     (ha : (x.coefficients.blocks l).angularFrequency n =
       (x.coefficients.blocks l).angularFrequency (BaseChartJets.cellBand l.2)) (theta : ℝ) :
     PhysicalParticularWave.bandPhase (nativeAssembly x l) h (ChartScales.Q n)
@@ -1096,7 +1129,7 @@ theorem actualPhase_rebase_at
         (x.coefficients.blocks l).frequency (BaseChartJets.cellBand l.2) * theta) =
     (x.coefficients.blocks l).phase n (CorrectionStep.cycleAssoc.symm (p,Y)) +
       ((x.coefficients.blocks l).angularFrequency n : ℝ) / (x.coefficients.blocks l).frequency n *
-        theta
+          theta
   rw [ha]
   exact carrier_phase_rebase hn hm (by exact_mod_cast hj) hp
 
@@ -1126,7 +1159,7 @@ theorem actualPhase_backward
     (hm : (x.coefficients.blocks l).frequency (BaseChartJets.cellBand l.2) ≠ 0)
     (p : Parameter)
     (hp : (parameterChange h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) p).2 ∈
-      V)
+        V)
     (theta : ℝ) (Y : Plane) :
     PhysicalParticularWave.bandPhase (nativeAssembly x l) h (ChartScales.Q n)
       (ChartScales.Q (BaseChartJets.cellBand l.2)) (ActualParticularStageControls.gap l n)
@@ -1144,33 +1177,33 @@ theorem referenceResidualSource_subcoverPeriodic
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (p : Parameter)
     (hf : PeriodicAt (ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly
-      x l).context
+        x l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j (BaseChartJets.cellBand l.2)) p) :
     SubcoverPeriodicity.SubcoverPeriodicAt
       (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2)) (referenceResidualSource x
-        l j) p :=
+          l j) p :=
   SubcoverPeriodicity.inverseCoverSource_subcoverPeriodic _ _ p hf
 
 theorem nativeRaw_subcoverPeriodic
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (p : Parameter)
     (hf : PeriodicAt (ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly
-      x l).context
+        x l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j (BaseChartJets.cellBand l.2)) p) :
     SubcoverPeriodicity.SubcoverPeriodicAt
       (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))
       (ParticularWaveBounds.commonVelocity ((ActualParticularStageControls.reference l).tangent j)
         (referenceResidualSource x l j) (ActualParticularStageControls.reference l).geometry
         (ActualParticularStageControls.reference l).length_pos.le
-          (ActualParticularStageControls.reference l).cutoff) p :=
+            (ActualParticularStageControls.reference l).cutoff) p :=
   SubcoverPeriodicity.commonVelocity_subcoverPeriodic _ _ _ _ _ _ p
     (referenceResidualSource_subcoverPeriodic x l j p hf)
 
@@ -1178,18 +1211,18 @@ theorem nativePressure_subcoverPeriodic
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (p : Parameter)
     (hf : PeriodicAt (ParticularWaveAssembly.residualSource (ActualParticularStageControls.assembly
-      x l).context
+        x l).context
       (ActualParticularStageControls.assembly x l).state (ActualParticularStageControls.assembly x
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly x l).gaussianInput
-        (ActualParticularStageControls.assembly x l).aliasInput
+          (ActualParticularStageControls.assembly x l).aliasInput
       j (BaseChartJets.cellBand l.2)) p) :
     SubcoverPeriodicity.SubcoverPeriodicAt
       (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))
       (ParticularWaveBounds.commonPressure ((ActualParticularStageControls.reference l).tangent j)
         (referenceResidualSource x l j) (ActualParticularStageControls.reference l).geometry
         (ActualParticularStageControls.reference l).length_pos.le
-          (ActualParticularStageControls.reference l).cutoff
+            (ActualParticularStageControls.reference l).cutoff
         (PhysicalParticularWave.referenceFrequency (nativeAssembly x l) j)) p :=
   SubcoverPeriodicity.commonPressure_subcoverPeriodic _ _ _ _ _ _ _ p
     (referenceResidualSource_subcoverPeriodic x l j p hf)

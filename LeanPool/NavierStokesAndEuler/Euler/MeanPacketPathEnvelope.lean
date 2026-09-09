@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketEnvelopeBounds
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathLpBlocks
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketSobolevData
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketEnvelopeBounds
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathLpBlocks
+
+/-! A single uniform-time forcing bound suffices for the normalized mean estimates. -/
 
 @[expose] public section
 
-/-! A single uniform-time forcing bound suffices for the normalized mean estimates. -/
 
 noncomputable section
 

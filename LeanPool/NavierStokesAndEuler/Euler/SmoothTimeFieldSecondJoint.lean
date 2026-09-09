@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
 
 /-! Two actual time-derivative pairs give genuine joint C² regularity
 for a smooth spatial coefficient path on interior times. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,7 +35,7 @@ theorem jointDerivative_contDiffAt_one
   have hJ := realField_contDiffAt_one T hT A.derivative A₁.derivative
     (TimeDerivative.derivative T hT A A₁ hA) t ht x
   have hs := (ContinuousLinearMap.toSpanSingletonLIE ℝ
-    V).toContinuousLinearEquiv.contDiff.contDiffAt.comp
+      V).toContinuousLinearEquiv.contDiff.contDiffAt.comp
     (t,x) hq
   let L : ((ℝ →L[ℝ] V) × (E →L[ℝ] V)) →L[ℝ] ((ℝ × E) →L[ℝ] V) :=
     (ContinuousLinearMap.coprodEquivL (𝕜 := ℝ) (E := ℝ) (F := E) (G := V) ℝ).toContinuousLinearMap

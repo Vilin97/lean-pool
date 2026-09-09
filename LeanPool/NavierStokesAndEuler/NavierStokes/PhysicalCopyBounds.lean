@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalClassBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
 
-@[expose] public section
-
 /-!
 # Physical bounds for locally finite native copies
 
@@ -20,6 +18,9 @@ locally finite, disjoint native cells give an actual single-copy germ.  The
 physical estimate is then the center-independent single-carrier estimate,
 followed by the existing bounded overlap estimate for the outer labels.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -79,13 +80,18 @@ end Germs
 /-- The lattice copy is a separate index.  In particular, neither the center
 nor the phase profiles have to agree between different copies. -/
 structure CopyFamily (H : ℕ) (K : Type*) where
+  /-- Gap of `CopyFamily`, of type `BandLabel → ℕ`. -/
   gap : BandLabel → ℕ
+  /-- Carrier of `CopyFamily`, of type `K → BandLabel → CarrierData`. -/
   carrier : K → BandLabel → CarrierData
+  /-- Amplitude of `CopyFamily`, of type `K → WaveIndex H → LiftPoint → ℂ`. -/
   amplitude : K → WaveIndex H → LiftPoint → ℂ
 
+/-- Copy, given by `⟨f.gap, f.carrier k, f.amplitude k⟩`. -/
 noncomputable def CopyFamily.copy {H : ℕ} {K : Type*} (f : CopyFamily H K) (k : K) :
     WaveFamily H := ⟨f.gap, f.carrier k, f.amplitude k⟩
 
+/-- Term, given by `(f.copy k).term a h r0 I`. -/
 noncomputable def CopyFamily.term {H : ℕ} {K : Type*} (f : CopyFamily H K)
     (a h r0 : ℝ) (I : WaveIndex H) (k : K) : SpaceTime → ℂ :=
   (f.copy k).term a h r0 I
@@ -95,6 +101,7 @@ noncomputable def CopyFamily.periodized {H : ℕ} {K : Type*} (f : CopyFamily H 
     (a h r0 : ℝ) (I : WaveIndex H) (w : SpaceTime) : ℂ :=
   ∑' k, f.term a h r0 I k w
 
+/-- Sum, given by `∑ᶠ I, f.periodized a h r0 I w`. -/
 noncomputable def CopyFamily.sum {H : ℕ} {K : Type*} (f : CopyFamily H K)
     (a h r0 : ℝ) (w : SpaceTime) : ℂ :=
   ∑ᶠ I, f.periodized a h r0 I w
@@ -109,6 +116,7 @@ structure RegularFamily {H : ℕ} {K : Type*} (f : CopyFamily H K)
 /-- Native support cells can depend on the outer label.  Their index is
 independent of both the harmonic and the physical point. -/
 structure SupportCells {H : ℕ} {K : Type*} (f : CopyFamily H K) where
+  /-- Cells of `SupportCells`, of type `BandLabel → PeriodizedWaveBounds.Cells LiftPoint K`. -/
   cells : BandLabel → PeriodizedWaveBounds.Cells LiftPoint K
   support : ∀ I k, support (f.amplitude k I) ⊆ (cells I.1).carrier I.1.val.1 k
 
@@ -300,7 +308,7 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
       obtain ⟨mode, hmode⟩ := (hr.copy k).angular_integer I.1
       let chart := chooseChart a (PhysicalGraphBounds.scaledRadial I.1.val.1 w)
       have hchart : PhysicalGraphBounds.scaledRadial I.1.val.1 w ∈ PolarCharts.chartDomain a chart
-        :=
+          :=
         chooseChart_valid ha hgeo.1
       have he := globalWave_eventually_common (r0 := r0) ha I.1.val.1 (f.gap I.1)
         (f.carrier k I.1) (f.amplitude k I) I.2.val mode hmode
@@ -346,8 +354,11 @@ through the common-coordinate map.  Only the map's positive jets are bounded;
 its values and the copy centers may be unbounded. -/
 structure CommonChart (f : CopyFamily H K) (hc : SupportCells f)
     (a b h σ : ℝ) (source : ι → ℕ → D → ℂ) where
+  /-- Source index of `CommonChart`, of type `K → WaveIndex H → ι`. -/
   sourceIndex : K → WaveIndex H → ι
+  /-- Map of `CommonChart`, of type `K → WaveIndex H → LiftPoint → D`. -/
   map : K → WaveIndex H → LiftPoint → D
+  /-- Domain of `CommonChart`, of type `K → WaveIndex H → Set LiftPoint`. -/
   domain : K → WaveIndex H → Set LiftPoint
   open_domain : ∀ k I, IsOpen (domain k I)
   smooth : ∀ k I, ContDiffOn ℝ ∞ (map k I) (domain k I)
@@ -375,12 +386,12 @@ theorem CommonChart.amplitude_bound {s : StripData D} {α σ : ℝ}
   obtain ⟨B, hB, q, hq⟩ := hchart.positive_jets m
   refine ⟨(m.factorial : ℝ) * A * B ^ m, by positivity, p + q * m, ?_⟩
   intro k I x hx j hj
-  have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by have := I.1.property;
-    omega)
+  have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by
+      have := I.1.property; omega)
   have hQ := ChartScales.Q_pos I.1.val.1
   have hS0 : 0 ≤ ChartScales.S I.1.val.1 := zero_le_one.trans hS
   have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p := by
-    positivity
+      positivity
   have hB0 : 1 ≤ B * ChartScales.S I.1.val.1 ^ q :=
     one_le_mul_of_one_le_of_one_le hB (one_le_pow₀ hS)
   have hjb := PhysicalClassBounds.composition_jet_bound
@@ -405,6 +416,7 @@ theorem CommonChart.amplitude_bound {s : StripData D} {α σ : ℝ}
       mul_le_mul_of_nonneg_left hjb (Real.rpow_pos_of_pos hQ σ).le
     _ = _ := by rw [Real.rpow_add hQ, pow_add, mul_pow, ← pow_mul]; ring
 
+/-- Copy band domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def copyBandDomain {V : Type*} [NormedAddCommGroup V]
     (U : K → BandLabel → Set V) (hU : ∀ k L, IsOpen (U k L)) :
     PhaseJetBounds.Domain (K × BandLabel) V where
@@ -416,6 +428,7 @@ noncomputable def copyBandDomain {V : Type*} [NormedAddCommGroup V]
 /-- The carrier profiles are estimated on their actual local slow regions.
 The regions need contain a point only when that point belongs to this copy. -/
 structure CarrierBounds (f : CopyFamily H K) (hc : SupportCells f) (a b h r0 : ℝ) where
+  /-- Region of `CarrierBounds`, of type `K → BandLabel → Set PhysicalGraphBounds.Slow`. -/
   region : K → BandLabel → Set PhysicalGraphBounds.Slow
   open_region : ∀ k L, IsOpen (region k L)
   jets : PhaseJetBounds.PolynomialJets (copyBandDomain region open_region)
@@ -502,6 +515,7 @@ section NativeCells
 
 open CommonCoverSolve
 
+/-- Native center, given by `g.center + TorusAverages.latticePoint k`. -/
 noncomputable def nativeCenter (g : Geometry) (k : TorusInverse.Frequency) : Plane :=
   g.center + TorusAverages.latticePoint k
 
@@ -532,7 +546,7 @@ theorem physical_native_width (g : Geometry) (k : TorusInverse.Frequency)
     (hU : ∀ z ∈ U, |PhysicalGraphBounds.etaCoordinate (g.basis z)| ≤ r0)
     (w : SpaceTime) (hw : g.coordinates k (commonLift h n d w).2 ∈ U) :
     |PhysicalGraphBounds.etaCoordinate (PhysicalGraphBounds.nativeGraph h n w - nativeCenter g k)|
-      ≤ r0 := by
+        ≤ r0 := by
   rw [physical_native_offset g k h n d hgap w]
   exact hU _ hw
 
@@ -633,6 +647,7 @@ theorem RegularFamily.sum_support (hr : RegularFamily f a b h r0 Z Δ)
   exact ⟨I, k, ha, ((hr.copy k).geometry_support I w ha).1,
     (hr.copy k).term_support I w hw hk⟩
 
+/-- Vector sum, given by `∑ i : Fin 3, realCoordinate i ((f i).sum a h r0 w)`. -/
 noncomputable def vectorSum (f : Fin 3 → CopyFamily H K) (a h r0 : ℝ)
     (w : SpaceTime) : Space := ∑ i : Fin 3, realCoordinate i ((f i).sum a h r0 w)
 
@@ -654,7 +669,7 @@ theorem vectorSum_jet_bound {f : Fin 3 → CopyFamily H K}
     ((hr i).sum_smooth (hc i) ha hh hh1).contDiffAt (preterminal_open.mem_nhds hw)
   unfold vectorSum
   rw [iteratedFDeriv_finset_sum_at (f := fun i y => realCoordinate i ((f i).sum a h r0 y))
-    Finset.univ
+      Finset.univ
     (fun i _ => ((realCoordinate i).contDiff.contDiffAt.comp w (hs i)).of_le
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl m))]
   calc

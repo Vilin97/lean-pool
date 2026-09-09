@@ -7,17 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
-public import LeanPool.NavierStokesAndEuler.Euler.LpParameterIntegral
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.LpParameterIntegral
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 The normalized Gaussian on ordinary three-dimensional space.  The estimates
 below concern the literal Bochner integral, including its L²-to-uniform bound.
 The parameterization exp(-|x|²/t) has heat generator one quarter of the Laplacian.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,8 +30,10 @@ namespace EulerWholeSpaceGaussian
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerLpTranslation Filter
 open scoped ContDiff ENNReal RealInnerProductSpace
 
+/-- Normalization, given by `(Real.pi*t)^(-(3:ℝ)/2)`. -/
 def normalization (t : ℝ) : ℝ := (Real.pi*t)^(-(3:ℝ)/2)
 
+/-- Kernel, given by `normalization t * Real.exp (-t⁻¹*‖x‖^2)`. -/
 def kernel (t : ℝ) (x : Space) : ℝ :=
   normalization t * Real.exp (-t⁻¹*‖x‖^2)
 
@@ -124,7 +130,7 @@ theorem average_integrable_of_bound {t : ℝ} (ht : 0 < t)
     Integrable (fun y : Space => kernel t y • f (x+y)) := by
   apply ((kernel_integrable ht).mul_const C).mono'
     (((kernel_smooth t).continuous.smul (hf.comp (continuous_const.add
-      continuous_id))).aestronglyMeasurable)
+        continuous_id))).aestronglyMeasurable)
   apply Eventually.of_forall
   intro y
   change ‖kernel t y • f (x+y)‖ ≤ kernel t y * C

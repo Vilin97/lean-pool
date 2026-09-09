@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Scalar absorption for the whole-space comparison estimate
@@ -20,6 +17,9 @@ The constants in these estimates are uniform in the cutoff radius and in the
 nonnegative quantity that will represent a weighted gradient norm. All
 fractional powers have real exponents.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

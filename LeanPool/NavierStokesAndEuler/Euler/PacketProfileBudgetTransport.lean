@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
 
+/-! Quantitative profile estimates do not depend on the particular regularity witness. -/
+
 @[expose] public section
 
-/-! Quantitative profile estimates do not depend on the particular regularity witness. -/
 
 namespace EulerPacketCylinderField.ProfileBudget
 

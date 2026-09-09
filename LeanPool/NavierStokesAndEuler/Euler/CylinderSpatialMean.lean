@@ -8,18 +8,18 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialEmbedding
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-! A genuine bounded cylinder-to-spatial mean, defined by the adjoint of constant extension. -/
 
 @[expose] public section
 
-/-! A genuine bounded cylinder-to-spatial mean, defined by the adjoint of constant extension. -/
 
 noncomputable section
 
 namespace EulerCylinderSpatialMean
 
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
-  EulerLiftedGradientSpace
+    EulerLiftedGradientSpace
   EulerLpCylinderTranslation EulerCylinderSpatialEmbedding EulerCylinderAngleAverage
 
 variable (P : ℝ) [Fact (0 < P)]
@@ -41,6 +41,7 @@ theorem embedding_translate (a : LiftTangent) (u : SpatialL2 V) :
   rw [hu, he, hs]
   rfl
 
+/-- Mean, given by `P⁻¹ • (embedding P).adjoint`. -/
 def mean : CylinderL2 P V →L[ℝ] SpatialL2 V := P⁻¹ • (embedding P).adjoint
 
 @[simp] theorem mean_apply (u : CylinderL2 P V) :
@@ -70,7 +71,7 @@ theorem spatial_translation_inner (a : Space) (u v : SpatialL2 V) :
     inner ℝ (EulerLpTranslation.translation a u) v =
       inner ℝ u (EulerLpTranslation.translation (-a) v) := by
   have h := (EulerLpTranslation.translation a).inner_map_map u (EulerLpTranslation.translation (-a)
-    v)
+      v)
   rw [EulerLpTranslation.translation_add, add_neg_cancel, EulerLpTranslation.translation_zero] at h
   exact h
 

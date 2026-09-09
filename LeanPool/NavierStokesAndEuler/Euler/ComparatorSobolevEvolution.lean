@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
 public import LeanPool.NavierStokesAndEuler.Euler.EulerSingularity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 
 /-! Repackaging the reference's ordinary functions as the development's smooth
 L² fields. The scalar Euler equations and time-regularity hypotheses coincide. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -66,6 +68,7 @@ namespace Euler.SobolevSmoothOn
 
 variable {I : Set ℝ} {v : Space → ℝ → Space} (h : SobolevSmoothOn I v)
 
+/-- Field, bundling `field`, `smooth`, `integrable`. -/
 def field (t : I) : SmoothL2Field Space where
   field := (v · (t : ℝ))
   smooth := h.spatial_smooth t t.property
@@ -110,9 +113,11 @@ theorem hasScalarEulerEvolution_of_sobolev
     funext x
     exact h.initial_condition x
 
+/-- Evolution velocity, given by `(U.velocity (projIcc 0 T hT t)).field x`. -/
 def evolutionVelocity {T : ℝ} {hT : 0 ≤ T} (U : Evolution T hT)
     (x : Space) (t : ℝ) : Space := (U.velocity (projIcc 0 T hT t)).field x
 
+/-- Evolution pressure, given by `U.scalarPressure (projIcc 0 T hT t) x`. -/
 def evolutionPressure {T : ℝ} {hT : 0 ≤ T} (U : Evolution T hT)
     (x : Space) (t : ℝ) : ℝ := U.scalarPressure (projIcc 0 T hT t) x
 

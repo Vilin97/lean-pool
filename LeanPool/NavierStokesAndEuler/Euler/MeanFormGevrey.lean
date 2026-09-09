@@ -8,9 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVariationalOperator
 public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveTransport
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Polynomial factorial bounds for the full mean variational form
@@ -20,6 +22,9 @@ operator contributes through its proved operator norm, just as the time
 primitive does. The estimates keep the coefficient amplitudes outside the
 factorial radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -76,7 +81,7 @@ theorem meanOperator_bound (hH : ContDiff ℝ ∞ H) (hC : ContDiff ℝ ∞ C)
       (hC.clm_comp contDiff_const) r (‖R‖*CC) hr (mul_nonneg (norm_nonneg _) hCC) 0 hCR k y
     simpa only [LinearIsometryEquiv.norm_map, pow_two, mul_assoc] using h
   have hId := const_bound (P := P) (ContinuousLinearMap.id ℝ W) r 1 hr (norm_id_le :
-    ‖ContinuousLinearMap.id ℝ W‖ ≤ 1)
+      ‖ContinuousLinearMap.id ℝ W‖ ≤ 1)
   have hsub := sub_bound (fun _ : P => ContinuousLinearMap.id ℝ W)
     (fun p => J.adjoint.comp ((H p).comp J)) contDiff_const
     (contDiff_const.clm_comp (hH.clm_comp contDiff_const)) r 1 (‖J‖^2*CH) 0 hId hJHJ

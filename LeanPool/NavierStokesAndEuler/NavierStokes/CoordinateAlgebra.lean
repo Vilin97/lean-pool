@@ -7,11 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
 
 /-!
 # Algebra of the manuscript coordinates
@@ -21,13 +16,20 @@ smooth inverse coordinate chart, a Navier--Stokes solution, or a singularity.
 `q ^ b` below denotes the real power, while `η ^ 2` is a natural power.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.CoordinateAlgebra
 
 noncomputable section
 
+/-- A, given by `1 / 2 + h`. -/
 def A (h : ℝ) : ℝ := 1 / 2 + h
+/-- D, given by `1 / 2 - h`. -/
 def D (h : ℝ) : ℝ := 1 / 2 - h
+/-- D, given by `1 - η ^ 2`. -/
 def d (η : ℝ) : ℝ := 1 - η ^ 2
+/-- L, given by `1 - 2 * h * η ^ 2`. -/
 def L (h η : ℝ) : ℝ := 1 - 2 * h * η ^ 2
 
 theorem A_add_D (h : ℝ) : A h + D h = 1 := by
@@ -145,11 +147,17 @@ theorem rates_unique {q h η q' η' τ' z' : ℝ} (hq : 0 < q)
   · rw [← hτ, ← hz]
     exact (inverseEta_recover hq hL q' η').symm
 
+/-- Q time, given by `-1 / L h η`. -/
 def qTime (h η : ℝ) : ℝ := -1 / L h η
+/-- Eta time, given by `D h * η / (q * L h η)`. -/
 def etaTime (q h η : ℝ) : ℝ := D h * η / (q * L h η)
+/-- X time, given by `X / (q * L h η)`. -/
 def xTime (q h η X : ℝ) : ℝ := X / (q * L h η)
+/-- Q axial, given by `2 * η * q / (q ^ D h * L h η)`. -/
 def qAxial (q h η : ℝ) : ℝ := 2 * η * q / (q ^ D h * L h η)
+/-- Eta axial, given by `d η / (q ^ D h * L h η)`. -/
 def etaAxial (q h η : ℝ) : ℝ := d η / (q ^ D h * L h η)
+/-- X axial, given by `-2 * η * X / (q ^ D h * L h η)`. -/
 def xAxial (q h η X : ℝ) : ℝ := -2 * η * X / (q ^ D h * L h η)
 
 theorem time_rates (q h η : ℝ) :

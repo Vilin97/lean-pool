@@ -9,22 +9,23 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildParent
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketPhysicalCoefficients
 
-@[expose] public section
-
 /-! The constructed child particle velocity is the Eulerian pushforward
 of the actual graph velocity. The normalized packet formula follows
 from the literal lifted coefficient, with the physical scale explicit. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPhysicalGraphFlowBounds.Data
 
 open Set EulerLiftedGradientSpace EulerGraphInvariantFlow EulerSmoothBanachFlow
-  EulerSmoothFlowGevrey
+    EulerSmoothFlowGevrey
 
 variable {P T : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P T)
   (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell)
-  (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+  (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
 
 include hgraph hell in
 theorem physicalDisplacementCoefficient_position (t : Icc (0 : ℝ) T) (x : Vector3) :
@@ -51,19 +52,20 @@ open Set EulerSmoothLimit EulerLiftedGradientSpace EulerGraphInvariantFlow Euler
 
 variable (A : EulerParentPacketFrames.Parent)
   {P : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P A.T)
-  (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+  (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
 
+/-- Graph pushforward velocity, constructed using `u`. -/
 def graphPushforwardVelocity (Y u : Icc (0 : ℝ) A.T → Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   u t x + (ContinuousLinearMap.id ℝ Space + fderiv ℝ (A.displacement.field t : Space → Space) (Y t
-    x))
+      x))
     ((physicalCoefficient k m A.T G.A A.ell).field t (Y t x))
 
 theorem child_position (t : Icc (0 : ℝ) A.T) (x : Space) :
     (A.child G k m hgraph nextEll hnext hnext1).position t x =
       A.position t ((flowData A.T G.time_nonneg (physicalCoefficient k m A.T G.A A.ell)).forward t
-        x) :=
+          x) :=
   A.child_particleMap G k m hgraph nextEll hnext hnext1 t x
 
 theorem child_velocity_formula (t : Icc (0 : ℝ) A.T) (x : Space) :
@@ -74,7 +76,7 @@ theorem child_velocity_formula (t : Icc (0 : ℝ) A.T) (x : Space) :
           ((physicalCoefficient k m A.T G.A A.ell).field t y) := by
   change (EulerChildParticleTime.velocity A.displacement A.velocity
     (G.physicalDisplacementCoefficient k m A.ell) (G.physicalVelocityCoefficient k m A.ell)).field
-      t x=_
+        t x=_
   rw [EulerChildParticleTime.velocity_apply,
     G.physicalDisplacementCoefficient_position k m A.ell A.ell_pos hgraph,
     G.physicalVelocityCoefficient_material k m A.ell A.ell_pos hgraph]
@@ -82,8 +84,8 @@ theorem child_velocity_formula (t : Icc (0 : ℝ) A.T) (x : Space) :
   abel
 
 theorem child_velocity_pushforward (Y u : Icc (0 : ℝ) A.T → Space → Space)
-    (hYX : ∀ t x, Y t (A.position t x)=x)
-    (hvelocity : ∀ t x, A.velocity.field t x=u t (A.position t x))
+    (hYX : ∀ t x, Y t (A.position t x) = x)
+    (hvelocity : ∀ t x, A.velocity.field t x = u t (A.position t x))
     (t : Icc (0 : ℝ) A.T) (x : Space) :
     (A.child G k m hgraph nextEll hnext hnext1).velocity.field t x =
       A.graphPushforwardVelocity G k m Y u t
@@ -96,7 +98,7 @@ theorem child_velocity_pushforward (Y u : Icc (0 : ℝ) A.T → Space → Space)
 theorem graphPushforwardVelocity_packet
     (Y u : Icc (0 : ℝ) A.T → Space → Space) (κ : ℝ)
     (z : Icc (0 : ℝ) A.T → LiftTangent → Space)
-    (hlift : ∀ t q, G.A.field t q=transportDirection κ m (z t q))
+    (hlift : ∀ t q, G.A.field t q = transportDirection κ m (z t q))
     (t : Icc (0 : ℝ) A.T) (x : Space) :
     A.graphPushforwardVelocity G k m Y u t x =
       u t x + A.ell • (κ • A.frame.field t (A.ell⁻¹ • Y t x)

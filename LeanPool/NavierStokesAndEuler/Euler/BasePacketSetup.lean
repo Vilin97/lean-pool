@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseSmoothState
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketForwardInput
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSign
 
 /-! Concrete support, transverse coordinate and short-time source
 budgets for the first packet over the compact base Euler solution. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,6 +22,7 @@ namespace EulerPacketSupport
 
 open Set EulerSmoothLimit EulerSpatialCutoffs
 
+/-- Support, given by `tsupport innerCutoff`. -/
 def support : Set Space := tsupport innerCutoff
 
 theorem compact : IsCompact support := innerCutoff_compactSupport
@@ -46,14 +49,18 @@ namespace EulerBaseDatum
 open Set InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
   EulerTransverseFrameCoordinates EulerBaseEulerGuards EulerPacketSupport
 
+/-- First normal, given by `EuclideanSpace.single 0 1`. -/
 def firstNormal : Space := EuclideanSpace.single 0 1
 
 theorem firstNormal_unit : ‖firstNormal‖=1 := by simp [firstNormal]
 
+/-- First plane: an abbreviation for `referencePlane firstNormal`. -/
 abbrev FirstPlane := referencePlane firstNormal
 
+/-- First frame, given by `LinearIsometryEquiv.refl ℝ _`. -/
 def firstFrame : FirstPlane ≃ₗᵢ[ℝ] referencePlane firstNormal := LinearIsometryEquiv.refl ℝ _
 
+/-- First coordinate as an element of `FirstPlane`. -/
 def firstCoordinate : FirstPlane := ⟨EuclideanSpace.single 1 1,by
   rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
   simp [firstNormal,EuclideanSpace.inner_single_left]⟩
@@ -67,12 +74,16 @@ theorem firstCoordinate_norm : ‖firstCoordinate‖=1 := by
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   (T : ℝ) (hT : 0 < T) (hTB : T ≤ initialTime)
 
+/-- Packet base parent, given by `(initialParent β hβ ell hell hell1).restrictTime T hT hTB`. -/
 def packetBaseParent : Parent :=
   (initialParent β hβ ell hell hell1).restrictTime T hT hTB
 
+/-- Packet base state, given by `(initialState β hβ ell hell hell1).restrictTime T hT hTB`. -/
 def packetBaseState : SmoothState (packetBaseParent β hβ ell hell hell1 T hT hTB) :=
   (initialState β hβ ell hell hell1).restrictTime T hT hTB
 
+/-- Packet base low bounds, given by `(initialLowBounds β hβ ell hell hell1).restrictTime T hT
+hTB`. -/
 def packetBaseLowBounds : LowBounds (packetBaseParent β hβ ell hell hell1 T hT hTB) :=
   (initialLowBounds β hβ ell hell hell1).restrictTime T hT hTB
 
@@ -90,23 +101,23 @@ theorem packetBase_short : initialCoefficientCost*T ≤ 1/2 :=
 include hTB in
 theorem packetBase_sign_short :
     EulerPacketFirstPressureSign.firstSignRate initialCoefficientCost initialCoefficientCost*T ≤
-      1/2 := by
+        1/2 := by
   have hnonneg : 0 ≤ EulerPacketFirstPressureSign.firstSignRate initialCoefficientCost
-    initialCoefficientCost := by
+      initialCoefficientCost := by
     unfold EulerPacketFirstPressureSign.firstSignRate
     positivity [initialCoefficientCost_nonneg]
   exact ((mul_le_mul_of_nonneg_left hTB hnonneg).trans initialTime_small.2).trans (by norm_num)
 
 theorem packetBase_strain_bound (t : Icc (0 : ℝ) T) (x : Space) :
     ‖(packetBaseParent β hβ ell hell hell1 T hT hTB).strain.field t x‖ ≤ initialCoefficientCost :=
-      by
+        by
   change ‖((initialParent β hβ ell hell hell1).restrictTime T hT hTB).strain.field t x‖ ≤ _
   erw [Parent.restrictTime_strain]
   exact initial_strain_bound β hβ ell hell hell1 _ x
 
 theorem packetBase_curvature_bound (t : Icc (0 : ℝ) T) (x : Space) :
     ‖(packetBaseParent β hβ ell hell hell1 T hT hTB).curvature.field t x‖ ≤ initialCoefficientCost
-      := by
+        := by
   change ‖((initialParent β hβ ell hell hell1).restrictTime T hT hTB).curvature.field t x‖ ≤ _
   erw [Parent.restrictTime_curvature]
   exact initial_curvature_bound β hβ ell hell hell1 _ x
@@ -120,6 +131,7 @@ theorem packetBase_initialStrain (x : Space) (hx : x ∈ support) :
   have hx' := norm_lt x hx
   nlinarith only [hb,hx']
 
+/-- First packet inputs used in base packet setup. -/
 def firstPacketInputs :
     ForwardInputs
       ((packetBaseParent β hβ ell hell hell1 T hT hTB).meanData

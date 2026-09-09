@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LoopMoments
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.Topology.Order.MonotoneContinuity
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # Smooth periodic tilt functions and their actual integral moments
@@ -29,6 +26,9 @@ The positive exponential tilt used by the manuscript is also treated below.
 Neither a smooth variance-inversion theorem nor a full true-cone result is
 assumed or asserted.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.SmoothLoop
 
@@ -187,7 +187,7 @@ theorem angular_variance_identity (t : ℝ → ℝ) (m : ℝ)
     funext θ
     ring
   rw [heq, angularMean_add _ _ ((ht.fun_pow 2).fun_sub (continuous_const.fun_mul ht))
-    continuous_const,
+      continuous_const,
     angularMean_sub _ _ (ht.fun_pow 2) (continuous_const.fun_mul ht), angularMean_const_mul,
     angularMean_const, hmean]
   ring
@@ -249,6 +249,7 @@ theorem expNormalizer_pos (s : ℝ) : 0 < expNormalizer s := by
 theorem expNormalizer_zero : expNormalizer 0 = 1 := by
   simp only [expNormalizer, zero_mul, Real.exp_zero, angularMean_const]
 
+/-- Normalized exp, given by `Real.exp (s * Real.cos θ) / expNormalizer s`. -/
 def normalizedExp (s θ : ℝ) : ℝ := Real.exp (s * Real.cos θ) / expNormalizer s
 
 theorem normalizedExp_pos (s θ : ℝ) : 0 < normalizedExp s θ :=
@@ -363,7 +364,8 @@ theorem extendedExpTilt_projection_positive (p₁ p₂ m d μ : ℝ)
     ∀ θ, 2 < p₁ + p₂ * extendedExpTilt m d μ p₂ θ := by
   intro θ
   by_cases hp : p₂ = 0
-  · simp only [hp, zero_mul, add_zero] at hmargin ⊢
+  · simp only [hp, zero_mul, add_zero]
+      at hmargin ⊢
     linarith
   · simp only [extendedExpTilt, ite_eq_right hp]
     exact lt_of_le_of_lt hmargin (expTilt_projection_lower p₁ p₂ m d μ hp hd θ)
@@ -372,12 +374,14 @@ theorem extendedExpTilt_projection_positive (p₁ p₂ m d μ : ℝ)
 function on its universal covering line. The construction `densityOfTilt`
 below supplies these data from the already proved moment identity. -/
 structure CircleDensity where
+  /-- Rate of `CircleDensity`, of type `ℝ → ℝ`. -/
   rate : ℝ → ℝ
   smooth : ContDiff ℝ (∞ : WithTop ℕ∞) rate
   positive : ∀ θ, 0 < rate θ
   periodic : Function.Periodic rate (2 * Real.pi)
   integral_one : (∫ θ in (0 : ℝ)..(2 * Real.pi), rate θ) = 1
 
+/-- Phase map, given by `∫ x in (0 : ℝ)..θ, d.rate x`. -/
 def phaseMap (d : CircleDensity) (θ : ℝ) : ℝ := ∫ x in (0 : ℝ)..θ, d.rate x
 
 theorem phaseMap_hasDerivAt (d : CircleDensity) (θ : ℝ) :
@@ -456,6 +460,7 @@ theorem phaseInverse_add_one (d : CircleDensity) (φ : ℝ) :
   change φ + 1 = phaseHomeomorph d ((phaseHomeomorph d).symm φ) + 1
   rw [(phaseHomeomorph d).apply_symm_apply]
 
+/-- Rephase, given by `f ((phaseHomeomorph d).symm φ)`. -/
 def rephase (d : CircleDensity) (f : ℝ → ℝ) (φ : ℝ) : ℝ :=
   f ((phaseHomeomorph d).symm φ)
 
@@ -484,9 +489,11 @@ theorem integral_rephase (d : CircleDensity) (f : ℝ → ℝ) (hf : Continuous 
     (g := rephase d f) (fun θ _ => phaseMap_hasDerivAt d θ)
     d.smooth.continuous.continuousOn (hf.comp (phaseHomeomorph d).symm.continuous)
   simpa only [Function.comp_apply, rephase_phaseMap, phaseMap_zero, phaseMap_fullTurn] using
-    hsub.symm
+      hsub.symm
 
 open LoopMoments in
+/-- Density of tilt, bundling `rate`, `smooth`, `positive`, `periodic` and the required
+compatibility proofs. -/
 def densityOfTilt (t : ℝ → ℝ) (a m ρ v : ℝ)
     (ha : 0 < a) (hv : 0 < v) (ht : ContDiff ℝ (∞ : WithTop ℕ∞) t)
     (hperiodic : Function.Periodic t (2 * Real.pi))

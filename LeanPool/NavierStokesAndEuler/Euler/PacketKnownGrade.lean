@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTriangular
-public import LeanPool.NavierStokesAndEuler.Euler.PeriodicDerivativeMean
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.PeriodicDerivativeMean
+
+/-! The known forcing at a recursive grade uses only previously constructed coefficients. -/
 
 @[expose] public section
 
-/-! The known forcing at a recursive grade uses only previously constructed coefficients. -/
 
 noncomputable section
 
@@ -19,23 +21,24 @@ namespace EulerPacketPointJets
 
 open EulerSmoothLimit EulerFiniteGrades InnerProductSpace
 
+/-- History, with branches according to `i<p`. -/
 def history (p : ℕ) (u : ℕ → VectorJet) (previousCorrector : VectorJet) (i : ℕ) : VectorJet :=
   if i<p then u i else if i=p then previousCorrector else 0
 
 /-- No unspecified coefficient at or above p enters the known part. -/
 theorem history_congr (p : ℕ) (u v : ℕ → VectorJet) (c : VectorJet)
-    (huv : ∀ i<p, u i=v i) : history p u c=history p v c := by
+    (huv : ∀ i < p, u i = v i) : history p u c=history p v c := by
   funext i
   by_cases hi : i<p
   · simp only [history, hi, ite_true, huv i hi]
   · simp only [history, hi, ite_false]
 
 /-- The only new nonlinear term is the mean coefficient against the primary angular derivative. -/
-theorem nonlinearGrade_eq_history (M p : ℕ) (hp : 2 ≤ p) (hMp : p+1 ≤ M)
+theorem nonlinearGrade_eq_history (M p : ℕ) (hp : 2 ≤ p) (hMp : p + 1 ≤ M)
     (FInv : Space →L[ℝ] Space) (m : Space) (u : ℕ → VectorJet)
-    (A B c : VectorJet) (hu0 : u 0=0) (hnew : u p=c+(A+B))
-    (hprimary : ⟪m,(u 1).1⟫_ℝ=0) (hA : ⟪m,A.1⟫_ℝ=0) :
-    nonlinearGrade M p FInv m u = nonlinearGrade M p FInv m (history p u c)+
+    (A B c : VectorJet) (hu0 : u 0 = 0) (hnew : u p = c + (A + B))
+    (hprimary : ⟪m, (u 1).1⟫_ℝ = 0) (hA : ⟪m, A.1⟫_ℝ = 0) :
+    nonlinearGrade M p FInv m u = nonlinearGrade M p FInv m (history p u c) +
       fastAdvection m B (u 1) := by
   have h0 : history p u c 0=0 := by simp [history, show 0<p by omega, hu0]
   have h1 : history p u c 1=u 1 := by simp [history, show 1<p by omega]

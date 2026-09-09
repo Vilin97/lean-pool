@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionCoherence
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionCoherence
+import LeanPool.NavierStokesAndEuler.Euler.GlobalInviscidGevrey
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+
+/-! Concrete uniform Gevrey budgets for one coherent family of prescribed data. -/
 
 @[expose] public section
 
-/-! Concrete uniform Gevrey budgets for one coherent family of prescribed data. -/
 
 noncomputable section
 
@@ -24,7 +29,8 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Actual all-order data budgets with common radius, error size and time interval; these are coefficient/background/residual inequalities, not solution or energy hypotheses. -/
+/-- Actual all-order data budgets with common radius, error size and time interval; these are
+coefficient/background/residual inequalities, not solution or energy hypotheses. -/
 structure Budget {T : ℝ} (hT : 0 < T) (A : Data period T) where
   /-- The common actual inverse metric and its genuine time derivative. -/
   metric : MetricBudget period T hT.le (A.atOrder period 1)
@@ -59,7 +65,8 @@ structure Budget {T : ℝ} (hT : 0 < T) (A : Data period T) where
   /-- The prescribed approximate field is genuinely lifted divergence-free. -/
   divergence : ∀ t, A.approximation.field t ∈ divergenceFreeSpace period A.κ A.direction
 
-/-- The concrete all-order budgets construct an actual finite-order inviscid correction, with retained Gevrey energy and its actual equation. -/
+/-- The concrete all-order budgets construct an actual finite-order inviscid correction, with
+retained Gevrey energy and its actual equation. -/
 theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) :
     ∃ e : C(Icc (0 : ℝ) T,SobolevSpace period (q+1)),
@@ -73,7 +80,7 @@ theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget per
   have h := exists_global_inviscid_gevrey_PDE period hq T hT (A.atOrder period ((q+1)+1))
     (A.metric.jet (q+1)) (A.linear.jet (q+1)) (fun i => (A.quadratic i).jet (q+1))
     (A.metric.continuous (q+1)) (A.linear.continuous (q+1)) (fun i => (A.quadratic i).continuous
-      (q+1))
+        (q+1))
     (A.metric.jet q) (A.linear.jet q) (fun i => (A.quadratic i).jet q)
     (A.metric.continuous q) (A.linear.continuous q) (fun i => (A.quadratic i).continuous q)
     A.metric_continuous (q-4) (by omega) (by omega) B.radius (B.spatial q hq)

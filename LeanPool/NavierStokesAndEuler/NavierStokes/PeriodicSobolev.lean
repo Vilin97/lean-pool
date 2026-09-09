@@ -6,12 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # A concrete periodic H³ supremum bound
@@ -20,6 +20,9 @@ Coordinate fundamental-theorem-of-calculus estimates are iterated over the
 unit cube. All derivatives below are the ordinary Frechet coordinate
 derivatives on `ProblemStatement.Space`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +36,7 @@ open ProblemStatement PeriodicIntegration
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le
 
+/-- Replace coord, given by `x + (s - x i) • coordinateVector i`. -/
 def replaceCoord (i : Fin 3) (x : Space) (s : ℝ) : Space :=
   x + (s - x i) • coordinateVector i
 
@@ -129,7 +133,7 @@ private theorem scalar_le_average_add_average_bound
       IntervalIntegrable (fun y => f y + ∫ s in (0 : ℝ)..1, h s) volume 0 1)
     (fun y hy => by linarith [hdiff y hy])
   simpa [intervalIntegral.integral_add (hf.intervalIntegrable _ _) intervalIntegrable_const] using
-    havg
+      havg
 
 private theorem curve_energy_bound {f f' : ℝ → Space}
     (hf : Continuous f) (hf' : Continuous f')
@@ -149,6 +153,7 @@ private theorem curve_energy_bound {f f' : ℝ → Space}
     (fun s => sq_nonneg ‖f' s‖)
   linarith
 
+/-- Sq field, given by `‖f x‖ ^ 2`. -/
 def sqField (f : Space → Space) (x : Space) : ℝ := ‖f x‖ ^ 2
 
 theorem continuous_sqField {f : Space → Space} (hf : Continuous f) : Continuous (sqField f) :=
@@ -201,6 +206,7 @@ theorem twice_averaged_line_energy_bound {f : Space → Space} (hf : ContDiff �
   rw [average_const_mul, average_add ha hb] at hm
   exact hm
 
+/-- Cube point, given by `toSpace ![a, b, c]`. -/
 def cubePoint (a b c : ℝ) : Space := toSpace ![a, b, c]
 
 /-- An explicit iterated product Lebesgue integral on the unit cube. -/
@@ -292,6 +298,7 @@ def derivativeH3Energy (f : Space → Space) : ℝ :=
     (∑ i : Fin 3, ∑ j : Fin 3, ∑ k : Fin 3,
       boxIntegral (sqField (spatialPartial i (spatialPartial j (spatialPartial k f)))))
 
+/-- Derivative H3 norm, given by `Real.sqrt (derivativeH3Energy f)`. -/
 def derivativeH3Norm (f : Space → Space) : ℝ := Real.sqrt (derivativeH3Energy f)
 
 theorem mixedEnergy_le_derivativeH3Energy (f : Space → Space) :
@@ -334,6 +341,8 @@ theorem norm_le_three_derivativeH3Norm {f : Space → Space}
     nlinarith
   exact (sq_le_sq₀ (norm_nonneg _) (mul_nonneg (by norm_num) (derivativeH3Norm_nonneg f))).mp hs
 
+/-- Derivative H3 unbounded at one, given by `∀ M : ℝ, 0 < M → ∀ δ : ℝ, 0 < δ → ∃ t : ℝ, t ∈ Ioo
+(1 - δ) 1 ∧ M < derivativeH3Norm (fun x => u (t, x))`. -/
 def DerivativeH3UnboundedAtOne (u : VelocityField) : Prop :=
   ∀ M : ℝ, 0 < M → ∀ δ : ℝ, 0 < δ →
     ∃ t : ℝ, t ∈ Ioo (1 - δ) 1 ∧ M < derivativeH3Norm (fun x => u (t, x))

@@ -6,15 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketExactSourceEquation
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentFlowDifferentiation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
+import LeanPool.NavierStokesAndEuler.Euler.PacketExactSourceEquation
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentFlowDifferentiation
 
 /-! The constructed exact lifted packet gives the actual momentum equation
 after the genuine parent-flow change of coordinates. The scalar pressure
 is the normalized radial potential of the constructed pressure tower. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +37,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 from the exact lifted solution. Only the actual parent flow and its inverse
 enter as geometric data. -/
 theorem exact_source_momentum
-    (k : ℝ) (hk : k*κ=1)
+    (k : ℝ) (hk : k * κ = 1)
     (F : ℝ × Space → Space →L[ℝ] Space)
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ) (X Y : ℝ × Space → Space)
     (hmatch : ∀ s : Icc (0 : ℝ) D.T, ∀ y, F (s,y) = D.F.field s y)

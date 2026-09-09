@@ -7,13 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerClassicalClass
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryCauchyInterpolation
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
-public import LeanPool.NavierStokesAndEuler.Euler.WeakHilbertODE
-public import LeanPool.NavierStokesAndEuler.Euler.WeakTimeContinuity
-public import LeanPool.NavierStokesAndEuler.Euler.DevelopmentBridge
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.WeakHilbertODE
+import LeanPool.NavierStokesAndEuler.Euler.WeakTimeContinuity
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Time regularity from the projected weak equation
@@ -23,6 +21,9 @@ continuity to continuity of every spatial jet. This is the interpolation
 step in the Comparator bridge. In particular, its higher Sobolev
 continuity conclusion is not assumed in any of its hypotheses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

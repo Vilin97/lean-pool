@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderAlgebra
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Actual cylinder Sobolev multiplication at every fixed integer order q ≥ 6. -/
 
 @[expose] public section
 
-/-! Actual cylinder Sobolev multiplication at every fixed integer order q ≥ 6. -/
 
 noncomputable section
 
@@ -27,14 +31,14 @@ def lowDerivativeConstant (q : ℕ) : ℝ := (4 : ℝ) ^ q * 85 * cylinderEmbedd
 
 /-- The low-derivative embedding constant is nonnegative. -/
 theorem lowDerivativeConstant_nonneg (q : ℕ) : 0 ≤ lowDerivativeConstant period q :=
-  mul_nonneg (mul_nonneg (pow_nonneg (by norm_num) _) (by norm_num))
-    (cylinderEmbeddingConstant_nonneg period)
+  mul_nonneg (mul_nonneg (pow_nonneg (by
+      norm_num) _) (by norm_num)) (cylinderEmbeddingConstant_nonneg period)
 
 /-- Three additional derivatives control the H³ norm of an arbitrary derivative word. -/
 theorem word_H3_le_Hq {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     {q m : ℕ} (hm : m + 3 ≤ q) (w : Fin m → Fin 4) (f : LiftDomain period → F) :
     liftSobolevNorm period 3 (iteratedFieldDerivative period w f) ≤ 85 * liftSobolevNorm period q f
-      := by
+        := by
   have hA : (∑ n ∈ Finset.range (3 + 1), ∑ v : Fin n → Fin 4,
       (eLpNorm (iteratedFieldDerivative period v (iteratedFieldDerivative period w f)) 2
         (liftMeasure period)).toReal) ≤
@@ -109,9 +113,9 @@ theorem product_tensor_term_le {q n j : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (hj :
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ k ≤ q, ∀ w : Fin k → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ w : Fin k → Fin 4, MemLp (iteratedFieldDerivative period w g) 2 (liftMeasure
-      period))
+        period))
     (x : LiftDomain period) :
     ‖iteratedFDeriv ℝ j (euclideanLift period f x) 0‖ *
       ‖iteratedFDeriv ℝ (n - j) (euclideanLift period g x) 0‖ ≤
@@ -121,18 +125,18 @@ theorem product_tensor_term_le {q n j : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (hj :
       (tensor_le_totalMagnitude period (by omega : n - j ≤ q) g hg x) (norm_nonneg _)
       (mul_nonneg (lowDerivativeConstant_nonneg period q) (liftSobolevNorm_nonneg period q f))
     have hB : liftSobolevNorm period q f * totalMagnitude period q g x ≤ productEnvelope period q f
-      g x :=
+        g x :=
       le_add_of_nonneg_right (mul_nonneg (liftSobolevNorm_nonneg period q g) (totalMagnitude_nonneg
-        period q f x))
+          period q f x))
     rw [mul_assoc] at hA
     exact hA.trans (mul_le_mul_of_nonneg_left hB (lowDerivativeConstant_nonneg period q))
   · have hA := mul_le_mul (tensor_le_totalMagnitude period (by omega : j ≤ q) f hf x)
       (tensor_low_le_Hq period (by omega : n - j + 3 ≤ q) g hg hgL2 x) (norm_nonneg _)
       (totalMagnitude_nonneg period q f x)
     have hB : liftSobolevNorm period q g * totalMagnitude period q f x ≤ productEnvelope period q f
-      g x :=
+        g x :=
       le_add_of_nonneg_left (mul_nonneg (liftSobolevNorm_nonneg period q f) (totalMagnitude_nonneg
-        period q g x))
+          period q g x))
     have hC := mul_le_mul_of_nonneg_left hB (lowDerivativeConstant_nonneg period q)
     exact hA.trans ((by ring : _ = lowDerivativeConstant period q *
       (liftSobolevNorm period q g * totalMagnitude period q f x)).trans_le hC)
@@ -143,9 +147,9 @@ theorem product_word_pointwise_le {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (w :
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period))
+        period))
     (x : LiftDomain period) :
     ‖iteratedFieldDerivative period w (f * g) x‖ ≤
       (2 : ℝ) ^ q * lowDerivativeConstant period q * productEnvelope period q f g x := by
@@ -182,9 +186,9 @@ theorem product_word_pointwise_le {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (w :
 /-- The actual low/high envelope is square-integrable. -/
 theorem productEnvelope_memLp (q : ℕ) (f g : LiftDomain period → ℂ)
     (hfL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (productEnvelope period q f g) 2 (liftMeasure period) :=
   ((totalMagnitude_memLp period q g hgL2).const_smul (liftSobolevNorm period q f)).add
     ((totalMagnitude_memLp period q f hfL2).const_smul (liftSobolevNorm period q g))
@@ -192,25 +196,25 @@ theorem productEnvelope_memLp (q : ℕ) (f g : LiftDomain period → ℂ)
 /-- The L² norm of the low/high envelope is bounded by twice the product of Sobolev norms. -/
 theorem productEnvelope_L2_le (q : ℕ) (f g : LiftDomain period → ℂ)
     (hfL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     ‖(productEnvelope_memLp period q f g hfL2 hgL2).toLp (productEnvelope period q f g)‖ ≤
       2 * liftSobolevNorm period q f * liftSobolevNorm period q g := by
   change ‖liftSobolevNorm period q f • (totalMagnitude_memLp period q g hgL2).toLp _ +
     liftSobolevNorm period q g • (totalMagnitude_memLp period q f hfL2).toLp _‖ ≤ _
   have hA := norm_add_le
     (liftSobolevNorm period q f • (totalMagnitude_memLp period q g hgL2).toLp (totalMagnitude
-      period q g))
+        period q g))
     (liftSobolevNorm period q g • (totalMagnitude_memLp period q f hfL2).toLp (totalMagnitude
-      period q f))
+        period q f))
   simp only [norm_smul, Real.norm_of_nonneg (liftSobolevNorm_nonneg period q f),
     Real.norm_of_nonneg (liftSobolevNorm_nonneg period q g)] at hA
   have hB := add_le_add
     (mul_le_mul_of_nonneg_left (totalMagnitude_L2_le period q g hgL2) (liftSobolevNorm_nonneg
-      period q f))
+        period q f))
     (mul_le_mul_of_nonneg_left (totalMagnitude_L2_le period q f hfL2) (liftSobolevNorm_nonneg
-      period q g))
+        period q g))
   exact hA.trans (hB.trans_eq (by ring))
 
 /-- Every derivative word through order q of the actual product belongs to L². -/
@@ -219,26 +223,27 @@ theorem product_word_memLp {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (w : Fin n 
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (iteratedFieldDerivative period w (f * g)) 2 (liftMeasure period) := by
   apply (productEnvelope_memLp period q f g hfL2 hgL2).of_le_mul
     ((smoothField_continuous period _ (iteratedFieldDerivative_smooth period w (f * g)
       (EulerCylinderAlgebra.product_smooth period f g hf hg))).aestronglyMeasurable)
-  filter_upwards [] with x
-  rw [Real.norm_of_nonneg (productEnvelope_nonneg period q f g x)]
-  exact product_word_pointwise_le period hq hn w f g hf hg hfL2 hgL2 x
+  · filter_upwards [] with x
+    rw [Real.norm_of_nonneg (productEnvelope_nonneg period q f g x)]
+    exact product_word_pointwise_le period hq hn w f g hf hg hfL2 hgL2 x
 
-/-- Every product derivative has an explicit L² bound by the product of fixed-order Sobolev norms. -/
+/-- Every product derivative has an explicit L² bound by the product of fixed-order Sobolev norms.
+-/
 theorem product_word_L2_le {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (w : Fin n → Fin 4)
     (f g : LiftDomain period → ℂ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     (eLpNorm (iteratedFieldDerivative period w (f * g)) 2 (liftMeasure period)).toReal ≤
       ((2 : ℝ) ^ q * lowDerivativeConstant period q * 2) *
         liftSobolevNorm period q f * liftSobolevNorm period q g := by
@@ -266,17 +271,17 @@ def algebraConstant (q : ℕ) : ℝ :=
 theorem algebraConstant_nonneg (q : ℕ) : 0 ≤ algebraConstant period q := by
   unfold algebraConstant
   exact mul_nonneg (Finset.sum_nonneg fun _ _ => pow_nonneg (by norm_num) _)
-    (mul_nonneg (mul_nonneg (pow_nonneg (by norm_num) _) (lowDerivativeConstant_nonneg period q))
-      (by norm_num))
+    (mul_nonneg (mul_nonneg (pow_nonneg (by
+        norm_num) _) (lowDerivativeConstant_nonneg period q)) (by norm_num))
 
 /-- The genuine complex cylinder Sobolev algebra estimate at every integer order q≥6. -/
 theorem cylinder_Hq_algebra {q : ℕ} (hq : 6 ≤ q) (f g : LiftDomain period → ℂ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ k ≤ q, ∀ v : Fin k → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     liftSobolevNorm period q (f * g) ≤
       algebraConstant period q * liftSobolevNorm period q f * liftSobolevNorm period q g := by
   have hA : liftSobolevNorm period q (f * g) ≤
@@ -287,8 +292,8 @@ theorem cylinder_Hq_algebra {q : ℕ} (hq : 6 ≤ q) (f g : LiftDomain period �
     intro n hn
     apply Finset.sum_le_sum
     intro w _
-    exact product_word_L2_le period hq (by have := Finset.mem_range.1 hn; omega) w f g hf hg hfL2
-      hgL2
+    exact product_word_L2_le period hq (by
+        have := Finset.mem_range.1 hn; omega) w f g hf hg hfL2 hgL2
   apply hA.trans_eq
   simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fun, Fintype.card_fin,
     nsmul_eq_mul, Nat.cast_pow, Nat.cast_ofNat]

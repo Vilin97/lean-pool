@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WeightedCylinderEnergy
 
+/-! Exact triangle inequalities for the actual finite Hilbert forcing families. -/
+
 @[expose] public section
 
-/-! Exact triangle inequalities for the actual finite Hilbert forcing families. -/
 
 noncomputable section
 
@@ -46,13 +47,13 @@ theorem familyNorm_neg (v : β → H) : familyNorm (-v) = familyNorm v := by
 /-- Weighted forcing is subadditive without any cardinality factor. -/
 theorem weightedForcingSum_add_le (ρ : ℝ) (hρ : 0 < ρ) (order : α → ℕ) (f g : α → β → H) :
     weightedForcingSum ρ order (f+g) ≤ weightedForcingSum ρ order f + weightedForcingSum ρ order g
-      := by
+        := by
   unfold weightedForcingSum
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_le_sum
   intro i _
   exact (mul_le_mul_of_nonneg_left (familyNorm_add_le (f i) (g i)) (weight_pos hρ (order
-    i)).le).trans_eq (mul_add ..)
+      i)).le).trans_eq (mul_add ..)
 
 /-- Weighted forcing is invariant under the overall sign. -/
 theorem weightedForcingSum_neg (ρ : ℝ) (order : α → ℕ) (f : α → β → H) :

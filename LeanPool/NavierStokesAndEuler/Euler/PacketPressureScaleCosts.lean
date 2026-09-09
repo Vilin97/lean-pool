@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketBadRatioPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleSequence
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
 
 /-! Literal good- and bad-interval upper-Hessian costs fit the existing
 summable scale family. The good contribution retains its factor delta. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +26,7 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceTime
   EulerParentBadRatio
 open scoped Topology
 
+/-- Bad coefficient, given by `1+2*CM*badConstant*(4+CMn+CHn)^degree*(2*Cθ)^5`. -/
 def badCoefficient (Cθ CM CMn CHn : ℝ) : ℝ :=
   1+2*CM*badConstant*(4+CMn+CHn)^degree*(2*Cθ)^5
 
@@ -32,10 +35,13 @@ theorem badCoefficient_pos (Cθ CM CMn CHn : ℝ) (hθ : 0 ≤ Cθ)
   unfold badCoefficient
   positivity [badConstant_pos]
 
+/-- Bad cost, given by `monomialCost J 1 4 0 (1/8) ((degree : ℝ)*c+2) (badCoefficient Cθ CM CMn
+CHn) 10 10 x n`. -/
 def badCost (J : ℕ) (Cθ CM CMn CHn c : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   monomialCost J 1 4 0 (1/8) ((degree : ℝ)*c+2)
     (badCoefficient Cθ CM CMn CHn) 10 10 x n
 
+/-- Bad cost spec, bundling `d`, `B`, `N`, `a` and the required compatibility proofs. -/
 def badCostSpec (Cθ CM CMn CHn c : ℝ) (hθ : 0 ≤ Cθ)
     (hM : 0 ≤ CM) (hMn : 0 ≤ CMn) (hHn : 0 ≤ CHn) : CostSpec where
   d := 1
@@ -54,7 +60,7 @@ def badCostSpec (Cθ CM CMn CHn c : ℝ) (hθ : 0 ≤ Cθ)
   b_pos := by norm_num
   C_pos := badCoefficient_pos Cθ CM CMn CHn hθ hM hMn hHn
 
-theorem sigma_exponential_bound (σ x : ℝ) (hσ : 0 < σ) (hσx : σ*x ≤ 2) :
+theorem sigma_exponential_bound (σ x : ℝ) (hσ : 0 < σ) (hσx : σ * x ≤ 2) :
     exp (-(1/(4*σ))) ≤ exp (-x/8) := by
   have hdiv : x/8 ≤ 1/(4*σ) := (le_div_iff₀ (by positivity : 0 < 4*σ)).2 (by nlinarith)
   apply exp_le_exp.mpr
@@ -72,11 +78,11 @@ theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
     (x : ℕ → ℝ) (hx : ∀ n, 1 ≤ x n) (n : ℕ)
     (M hchild r Q Θ σ : ℝ) (hh0 : 0 ≤ hchild) (hr0 : 0 ≤ r)
     (hQ0 : 0 ≤ Q) (hΘ0 : 0 ≤ Θ) (hσ : 0 < σ)
-    (hMb : M ≤ CM*exp (x n/((J-1+n : ℕ) : ℝ)^7))
-    (hhb : hchild ≤ exp (x n/((J+n : ℕ) : ℝ)^5))
-    (hQ : Q ≤ (4+CMn+CHn)*exp (c*(x n/((J-1+n : ℕ) : ℝ)^4)))
-    (hΘ : Θ ≤ sourceTheta J Cθ x n) (hσx : σ*x n ≤ 2)
-    (hr : r ≤ badConstant*Q^degree*Θ^5*exp (-(1/(4*σ)))) :
+    (hMb : M ≤ CM * exp (x n / ((J - 1 + n : ℕ) : ℝ) ^ 7))
+    (hhb : hchild ≤ exp (x n / ((J + n : ℕ) : ℝ) ^ 5))
+    (hQ : Q ≤ (4 + CMn + CHn) * exp (c * (x n / ((J - 1 + n : ℕ) : ℝ) ^ 4)))
+    (hΘ : Θ ≤ sourceTheta J Cθ x n) (hσx : σ * x n ≤ 2)
+    (hr : r ≤ badConstant * Q ^ degree * Θ ^ 5 * exp (-(1 / (4 * σ)))) :
     2*M*hchild*r ≤ badCost J Cθ CM CMn CHn c x n := by
   let j : ℝ := (J+n : ℕ)
   let p : ℝ := (J-1+n : ℕ)
@@ -101,11 +107,11 @@ theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
   have hcθ := zero_le_one.trans hθ
   have hbad := badConstant_pos.le
   have hQ' : Q ≤ (4+CMn+CHn)*exp (c*z) := hQ
-  have hr' : r ≤ badConstant*((4+CMn+CHn)*exp (c*z))^degree*
+  have hr' : r ≤ badConstant*((4+CMn+CHn)*exp (c*z))^degree *
       (2*Cθ*j^2*(x n)^2)^5*exp (-x n/8) := by
     apply hr.trans
     gcongr
-  have hfirst : 2*M*hchild*r ≤ 2*(CM*exp z)*exp z*
+  have hfirst : 2*M*hchild*r ≤ 2*(CM*exp z)*exp z *
       (badConstant*((4+CMn+CHn)*exp (c*z))^degree*(2*Cθ*j^2*(x n)^2)^5*exp (-x n/8)) := by
     gcongr
   have hexp : (exp z)^2*(exp (c*z))^degree*exp (-x n/8) =
@@ -116,14 +122,14 @@ theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
     ring
   let B := 2*CM*badConstant*(4+CMn+CHn)^degree*(2*Cθ)^5
   calc
-    _ ≤ 2*(CM*exp z)*exp z*
+    _ ≤ 2*(CM*exp z)*exp z *
         (badConstant*((4+CMn+CHn)*exp (c*z))^degree*(2*Cθ*j^2*(x n)^2)^5*exp (-x n/8)) := hfirst
     _ = B*j^10*(x n)^10*((exp z)^2*(exp (c*z))^degree*exp (-x n/8)) := by
       dsimp [B]
       simp only [mul_pow,← pow_mul]
       ring
     _ = B*j^10*(x n)^10*exp (-(1/8)*(x n/j^0)+((degree : ℝ)*c+2)*z) := by rw [hexp]
-    _ ≤ badCoefficient Cθ CM CMn CHn*j^10*(x n)^10*
+    _ ≤ badCoefficient Cθ CM CMn CHn*j^10*(x n)^10 *
         exp (-(1/8)*(x n/j^0)+((degree : ℝ)*c+2)*z) := by
       gcongr
       change B ≤ 1+B
@@ -133,8 +139,8 @@ theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
 
 theorem goodCost_bound (J : ℕ) (hJ : 1 ≤ J) (X CM M δ hchild : ℝ)
     (hM : 0 ≤ CM) (hδ : 0 ≤ δ) (hh : 0 ≤ hchild)
-    (hbase : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7)) (n : ℕ)
-    (hMb : M ≤ CM*previousShear J X n) (hδb : δ ≤ spike J X n) (hhb : hchild ≤ shear J X n) :
+    (hbase : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7)) (n : ℕ)
+    (hMb : M ≤ CM * previousShear J X n) (hδb : δ ≤ spike J X n) (hhb : hchild ≤ shear J X n) :
     2*M*hchild*(δ*goodRatio) ≤ 2*CM*goodRatio*goodCost J (scaleSequence J X) n := by
   have hg := goodRatio_pos.le
   have hsp := (exp_pos (-scaleSequence J X n/((J+n : ℕ) : ℝ)^3)).le
@@ -150,10 +156,10 @@ theorem goodCost_bound (J : ℕ) (hJ : 1 ≤ J) (X CM M δ hchild : ℝ)
 
 theorem parameters_le_source_exponential (J D : ℕ) (hJ : 3 ≤ J) (X c : ℝ)
     (hX : 1 ≤ X) (hc : 1 ≤ c)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
     (n : ℕ) (K Ti Hi cm ch CMn CHn : ℝ)
-    (hK : K ≤ previousFrequency J D X n^c) (hTi : Ti ≤ previousShear J X n)
+    (hK : K ≤ previousFrequency J D X n ^ c) (hTi : Ti ≤ previousShear J X n)
     (hHi : Hi ≤ 1) (hcm : cm ≤ CMn) (hch : ch ≤ CHn)
     (hMn : 0 ≤ CMn) (hHn : 0 ≤ CHn) :
     1+K+Ti+Hi+cm+ch ≤ (4+CMn+CHn)*exp (c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^4)) := by

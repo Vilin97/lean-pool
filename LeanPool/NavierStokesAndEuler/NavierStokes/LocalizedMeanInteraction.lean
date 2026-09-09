@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
 
-@[expose] public section
-
 /-!
 # Mean interactions from support-local phase estimates
 
@@ -18,6 +16,9 @@ The phase normal is estimated only on the genuine native phase patch.
 Outside that patch the wave coefficients have zero germs, which force
 the actual mean interaction to have a zero germ as well.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,9 +33,11 @@ variable {D : Type} {I E : Type*}
   [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Local mean: an abbreviation for `LocalClass s C (fun _ _ x => s.zeta x) α f`. -/
 abbrev LocalMean (s : StripData D) (C : ℕ → I → Set D) (α : ℝ)
     (f : ℕ → I → D → E) : Prop := LocalClass s C (fun _ _ x => s.zeta x) α f
 
+/-- Local mean vector, constructed using `LocalMean`. -/
 noncomputable def LocalMeanVector (s : StripData D) (C : ℕ → I → Set D) (H : ℝ)
     (m : ℕ → I → D → ComplexVector) : Prop :=
   LocalMean s C (H + 1) (fun n l x => m n l x 0) ∧
@@ -452,13 +455,16 @@ theorem residualBlock_mean_update_class {s : StripData D} {C : ℕ → Set D}
   apply residualBlock_axisymmetric_alias_update c s₀ s₁ h he b G A₀ A₁ hA n
   · intro t
     exact ((tripleField_smooth hbase n t).contDiffAt (s.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · intro t
     exact ((tripleField_smooth hmean n t).contDiffAt (s.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · intro t
     exact ((tripleField_smooth hh.smooth n t).contDiffAt (s.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · exact hj
 
 theorem residualDifferenceBlock_class {s : StripData D} {C : ℕ → Set D}

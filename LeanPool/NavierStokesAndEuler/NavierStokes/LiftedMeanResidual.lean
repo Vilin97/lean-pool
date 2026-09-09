@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveResidual
+import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 /-!
 # Exact angular averages of the lifted correction residual
@@ -18,6 +18,9 @@ Angular integration is over the actual circle variable. All differentiation
 uses Fréchet derivatives on an open lifted strip; the graph operators are
 instantiated from `CorrectionState.Context.operators`.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.LiftedMeanResidual
 
@@ -29,6 +32,7 @@ open scoped ContDiff Topology BigOperators
 variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Cylinder, given by `U ×ˢ univ`. -/
 noncomputable def cylinder (U : Set D) : Set (D × ℝ) := U ×ˢ univ
 
 omit [NormedSpace ℝ D] in
@@ -113,7 +117,7 @@ theorem parameterIntegral_smooth_nat {U : Set D} (hU : IsOpen U) (m : ℕ) :
     rw [show (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) = (m : WithTop ℕ∞) + 1 by simp]
     apply (contDiffOn_succ_iff_fderiv_of_isOpen hU).mpr
     refine ⟨fun x hx => (parameterIntegral_hasFDerivAt hU hf a b
-      hx).differentiableAt.differentiableWithinAt,
+        hx).differentiableAt.differentiableWithinAt,
       (by simp), ?_⟩
     exact (ih (parameterDerivative_smooth hU hf) a b).congr
       (fun x hx => (parameterIntegral_hasFDerivAt hU hf a b hx).fderiv)
@@ -123,17 +127,22 @@ theorem parameterIntegral_smooth [CompleteSpace E] {U : Set D} (hU : IsOpen U)
     ContDiffOn ℝ ∞ (fun x => ∫ θ in a..b, f (x, θ)) U :=
   contDiffOn_infty.mpr (fun m => parameterIntegral_smooth_nat hU m hf a b)
 
+/-- Period, given by `2 * Real.pi`. -/
 noncomputable def period : ℝ := 2 * Real.pi
 
 theorem period_ne : period ≠ 0 := mul_ne_zero (by norm_num) Real.pi_ne_zero
 
+/-- Avg, given by `(∫ θ in (0 : ℝ)..period, f (x, θ)) / period`. -/
 noncomputable def avg (f : D × ℝ → ℝ) (x : D) : ℝ :=
   (∫ θ in (0 : ℝ)..period, f (x, θ)) / period
 
+/-- Lift direction, given by `(V p.1, 0)`. -/
 noncomputable def liftDirection (V : D → D) (p : D × ℝ) : D × ℝ := (V p.1, 0)
 
+/-- Angular direction, given by `(0, 1)`. -/
 noncomputable def angularDirection (_p : D × ℝ) : D × ℝ := (0, 1)
 
+/-- Lift scalar, given by `f p.1`. -/
 noncomputable def liftScalar (f : D → ℝ) (p : D × ℝ) : ℝ := f p.1
 
 theorem liftDirection_smooth {U : Set D} {V : D → D} (hV : ContDiffOn ℝ ∞ V U) :
@@ -158,7 +167,7 @@ theorem avg_add {f g : D × ℝ → ℝ} {x : D}
     (hf : Continuous (fun θ : ℝ => f (x, θ))) (hg : Continuous (fun θ : ℝ => g (x, θ))) :
     avg (fun p => f p + g p) x = avg f x + avg g x := by
   rw [avg, intervalIntegral.integral_add (hf.intervalIntegrable _ _) (hg.intervalIntegrable _ _),
-    add_div]
+      add_div]
   rfl
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -166,7 +175,7 @@ theorem avg_sub {f g : D × ℝ → ℝ} {x : D}
     (hf : Continuous (fun θ : ℝ => f (x, θ))) (hg : Continuous (fun θ : ℝ => g (x, θ))) :
     avg (fun p => f p - g p) x = avg f x - avg g x := by
   rw [avg, intervalIntegral.integral_sub (hf.intervalIntegrable _ _) (hg.intervalIntegrable _ _),
-    sub_div]
+      sub_div]
   rfl
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -202,7 +211,7 @@ theorem along_avg {U : Set D} (hU : IsOpen U) {f : D × ℝ → ℝ}
   rw [ContinuousLinearMap.intervalIntegral_apply]
   · rfl
   · exact (continuous_slice hU (parameterDerivative_smooth hU hf).continuousOn
-    hx).intervalIntegrable _ _
+      hx).intervalIntegrable _ _
 
 theorem avg_along_twice {U : Set D} (hU : IsOpen U) {f : D × ℝ → ℝ}
     (hf : ContDiffOn ℝ ∞ f (cylinder U)) {V : D → D} (hV : ContDiffOn ℝ ∞ V U)
@@ -212,6 +221,7 @@ theorem avg_along_twice {U : Set D} (hU : IsOpen U) {f : D × ℝ → ℝ}
   rw [← along_avg hU (contDiffOn_along (cylinder_open hU) (liftDirection_smooth hV) hf) V hx]
   exact along_congr hU (fun y hy => (along_avg hU hf V hy).symm) hx
 
+/-- Periodic on, given by `∀ x ∈ U, ∀ θ : ℝ, f (x, θ + period) = f (x, θ)`. -/
 def PeriodicOn (U : Set D) (f : D × ℝ → E) : Prop :=
   ∀ x ∈ U, ∀ θ : ℝ, f (x, θ + period) = f (x, θ)
 
@@ -286,47 +296,62 @@ theorem theta_lift_zero {f : D → ℝ} {x : D} (hf : DifferentiableAt ℝ f x) 
   change fderiv ℝ f x 0 = 0
   exact map_zero _
 
+/-- Radial vector, given by `o.eR + (o.radialFrequency n * o.radialProfile x) • o.vR`. -/
 noncomputable def radialVector (o : MeanIncrementBounds.Operators D) (n : ℕ) (x : D) : D :=
   o.eR + (o.radialFrequency n * o.radialProfile x) • o.vR
 
+/-- Axial vector, given by `o.epsilon n • o.eZ`. -/
 noncomputable def axialVector (o : MeanIncrementBounds.Operators D) (n : ℕ) (_x : D) : D :=
   o.epsilon n • o.eZ
 
+/-- Temporal vector, given by `o.fastCoefficient n • o.vT - o.epsilon n • o.eT`. -/
 noncomputable def temporalVector (o : MeanIncrementBounds.Operators D) (n : ℕ) (_x : D) : D :=
   o.fastCoefficient n • o.vT - o.epsilon n • o.eT
 
+/-- Radial direction, given by `liftDirection (radialVector c.operators n)`. -/
 noncomputable def radialDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
   liftDirection (radialVector c.operators n)
 
+/-- Axial direction, given by `liftDirection (axialVector c.operators n)`. -/
 noncomputable def axialDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
   liftDirection (axialVector c.operators n)
 
+/-- Time direction, given by `liftDirection (temporalVector c.operators n)`. -/
 noncomputable def timeDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
   liftDirection (temporalVector c.operators n)
 
+/-- Complex base, given by `![(c.base.radial n x.1 : ℂ), (c.base.angular n x.1 : ℂ),
+(c.base.axial n x.1 : ℂ)]`. -/
 noncomputable def complexBase (c : CorrectionState.Context D) (n : ℕ) (x : D × ℝ) : ComplexVector :=
   ![(c.base.radial n x.1 : ℂ), (c.base.angular n x.1 : ℂ), (c.base.axial n x.1 : ℂ)]
 
+/-- Complex perturbation as an element of `ComplexVector`. -/
 noncomputable def complexPerturbation (u : CorrectionState.State D) (n : ℕ) (x : D × ℝ) :
-  ComplexVector :=
+    ComplexVector :=
   ![(u.mean.radial n x.1 + u.oscillation n x 0 : ℝ),
     (u.mean.angular n x.1 + u.oscillation n x 1 : ℝ),
     (u.mean.axial n x.1 + u.oscillation n x 2 : ℝ)]
 
+/-- Complex pressure, given by `(u.totalPressureIncrement n x : ℝ)`. -/
 noncomputable def complexPressure (u : CorrectionState.State D) (n : ℕ) (x : D × ℝ) : ℂ :=
   (u.totalPressureIncrement n x : ℝ)
 
+/-- Virtual divergence, given by `![0, -(c.operators.radialDiv 2 c.virtualTheta n x.1),
+-(c.operators.radialDiv 1 c.virtualAxial n x.1)]`. -/
 noncomputable def virtualDivergence (c : CorrectionState.Context D) (n : ℕ) (x : D × ℝ) : Fin 3 → ℝ
-  :=
+    :=
   ![0, -(c.operators.radialDiv 2 c.virtualTheta n x.1),
     -(c.operators.radialDiv 1 c.virtualAxial n x.1)]
 
+/-- Nonlinear residual, given by `LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x +
+LinearWaveResidual.transport R Vr Vθ Vz a a x`. -/
 noncomputable def nonlinearResidual (ε : ℝ) (R : (D × ℝ) → ℝ)
     (Vr Vθ Vz Vt : D × ℝ → D × ℝ) (B a : D × ℝ → ComplexVector)
     (p : D × ℝ → ℂ) (x : D × ℝ) : ComplexVector :=
   LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x +
     LinearWaveResidual.transport R Vr Vθ Vz a a x
 
+/-- Full residual as an element of `CorrectionState.Oscillation D`. -/
 noncomputable def fullResidual (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     CorrectionState.Oscillation D := fun n x i =>
   (nonlinearResidual (c.operators.epsilon n) (fun y : D × ℝ => c.operators.radius y.1)
@@ -334,27 +359,35 @@ noncomputable def fullResidual (c : CorrectionState.Context D) (u : CorrectionSt
     (complexBase c n) (complexPerturbation u n) (complexPressure u n) x i).re +
       virtualDivergence c n x i + u.errors.base n x i
 
+/-- Full good residual, given by `fullResidual c u - u.errors.total`. -/
 noncomputable def fullGoodResidual (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     CorrectionState.Oscillation D := fullResidual c u - u.errors.total
 
+/-- Angular mean vector, defined pointwise by `CorrectionState.angularAverage (fun k p => f k p
+i) n x`. -/
 noncomputable def angularMeanVector (f : CorrectionState.Oscillation D) :
-  CorrectionState.MeanVector D :=
+    CorrectionState.MeanVector D :=
   fun n x i => CorrectionState.angularAverage (fun k p => f k p i) n x
 
+/-- Real divergence, given by `along Vr (fun y => a y 0) p + a p 0 / R p + along Vθ (fun y => a
+y 1) p / R p + along Vz (fun y => a y 2) p`. -/
 noncomputable def realDivergence (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
     (a : D × ℝ → Fin 3 → ℝ) (p : D × ℝ) : ℝ :=
   along Vr (fun y => a y 0) p + a p 0 / R p +
     along Vθ (fun y => a y 1) p / R p + along Vz (fun y => a y 2) p
 
+/-- Quadratic flux, given by `B p i * a p j + a p i * B p j + a p i * a p j`. -/
 noncomputable def quadraticFlux (B a : D × ℝ → Fin 3 → ℝ) (i j : Fin 3) (p : D × ℝ) : ℝ :=
   B p i * a p j + a p i * B p j + a p i * a p j
 
+/-- Advection increment, constructed using `LinearWaveResidual.realTransport`. -/
 noncomputable def advectionIncrement (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
     (B a : D × ℝ → Fin 3 → ℝ) (p : D × ℝ) : Fin 3 → ℝ :=
   LinearWaveResidual.realTransport R Vr Vθ Vz B a p +
     LinearWaveResidual.realTransport R Vr Vθ Vz a B p +
     LinearWaveResidual.realTransport R Vr Vθ Vz a a p
 
+/-- Conservative flux as an element of `Fin 3 → ℝ`. -/
 noncomputable def conservativeFlux (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
     (J : Fin 3 → Fin 3 → D × ℝ → ℝ) (p : D × ℝ) : Fin 3 → ℝ :=
   ![along Vr (J 0 0) p + J 0 0 p / R p + along Vθ (J 1 0) p / R p +
@@ -381,14 +414,14 @@ theorem advectionIncrement_conservative (R : D × ℝ → ℝ) (Vr Vθ Vz : D ×
         (along V (fun y => a y j) p * a p k + a p j * along V (fun y => a y k) p) := by
     unfold quadraticFlux
     rw [along_add V (((hB j).fun_mul (ha k)).fun_add ((ha j).fun_mul (hB k))) ((ha j).fun_mul (ha
-      k)),
+        k)),
       along_add V ((hB j).fun_mul (ha k)) ((ha j).fun_mul (hB k)),
       LinearWaveResidual.along_mul_real V (hB j) (ha k),
       LinearWaveResidual.along_mul_real V (ha j) (hB k),
       LinearWaveResidual.along_mul_real V (ha j) (ha k)]
   fin_cases i <;>
     simp [advectionIncrement, LinearWaveResidual.realTransport,
-      LinearWaveResidual.realAngularGenerator,
+        LinearWaveResidual.realAngularGenerator,
       conservativeFlux, realDivergence, hd, quadraticFlux] <;> ring
 
 theorem advectionIncrement_eq_conservative (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
@@ -402,6 +435,8 @@ theorem advectionIncrement_eq_conservative (R : D × ℝ → ℝ) (Vr Vθ Vz : D
   rw [advectionIncrement_conservative R Vr Vθ Vz hB ha i, hBd, had]
   ring
 
+/-- Regular data, collecting `isOpen`, `radius_smooth`, `radius_ne`, `radial_smooth`,
+`axial_smooth`, `time_smooth`. -/
 structure Regular (U : Set D) (R : D → ℝ) (Vr Vz Vt : D → D) : Prop where
   isOpen : IsOpen U
   radius_smooth : ContDiffOn ℝ ∞ R U
@@ -432,6 +467,7 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem avg_const_mul (c : ℝ) (f : D × ℝ → ℝ) (x : D) :
     avg (fun p => c * f p) x = c * avg f x := avg_mul_left (fun _ => c) f x
 
+/-- Mean conservative flux as an element of `Fin 3 → ℝ`. -/
 noncomputable def meanConservativeFlux (R : D → ℝ) (Vr Vz : D → D)
     (J : Fin 3 → Fin 3 → D → ℝ) (x : D) : Fin 3 → ℝ :=
   ![along Vr (J 0 0) x + J 0 0 x / R x + along Vz (J 2 0) x - J 1 1 x / R x,
@@ -448,10 +484,10 @@ theorem avg_conservativeFlux {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
   have hJc j k := continuous_slice G.isOpen (hJ j k).continuousOn hx
   have hrc j k := continuous_slice G.isOpen
     (contDiffOn_along (cylinder_open G.isOpen) (liftDirection_smooth G.radial_smooth) (hJ j
-      k)).continuousOn hx
+        k)).continuousOn hx
   have hzc j k := continuous_slice G.isOpen
     (contDiffOn_along (cylinder_open G.isOpen) (liftDirection_smooth G.axial_smooth) (hJ j
-      k)).continuousOn hx
+        k)).continuousOn hx
   have hθc j k : Continuous (fun θ => along angularDirection (J j k) (x, θ)) :=
     continuous_slice G.isOpen
       (contDiffOn_along (cylinder_open G.isOpen) contDiffOn_const (hJ j k)).continuousOn hx
@@ -487,6 +523,8 @@ theorem avg_conservativeFlux {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
     simp only [one_mul] at h
     exact h
 
+/-- Mean scalar laplacian, given by `along Vr (along Vr f) x + (R x)⁻¹ * along Vr f x + along Vz
+(along Vz f) x`. -/
 noncomputable def meanScalarLaplacian (R : D → ℝ) (Vr Vz : D → D) (f : D → ℝ) (x : D) : ℝ :=
   along Vr (along Vr f) x + (R x)⁻¹ * along Vr f x + along Vz (along Vz f) x
 
@@ -495,7 +533,7 @@ theorem avg_scalarLaplacian {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
     (hf : ContDiffOn ℝ ∞ f (cylinder U)) (hp : PeriodicOn U f)
     {x : D} (hx : x ∈ U) :
     avg (cylindricalLaplacian (liftScalar R) (liftDirection Vr) angularDirection (liftDirection Vz)
-      f) x =
+        f) x =
       meanScalarLaplacian R Vr Vz (avg f) x := by
   have hVr := liftDirection_smooth G.radial_smooth
   have hVz := liftDirection_smooth G.axial_smooth
@@ -578,6 +616,7 @@ theorem Regular.frameLaplacian_smooth {U : Set D} {R : D → ℝ} {Vr Vz Vt : D 
   exact (G.scalarLaplacian_smooth (ha i)).add
     (hr.mul (((hj i).const_smul (2 : ℝ)).add (hjj i)))
 
+/-- Mean frame laplacian, constructed using `meanScalarLaplacian`. -/
 noncomputable def meanFrameLaplacian (R : D → ℝ) (Vr Vz : D → D)
     (a : D → Fin 3 → ℝ) (x : D) (i : Fin 3) : ℝ :=
   meanScalarLaplacian R Vr Vz (fun y => a y i) x + (R x ^ 2)⁻¹ *
@@ -625,9 +664,9 @@ theorem Regular.conservativeFlux_smooth {U : Set D} {R : D → ℝ} {Vr Vz Vt : 
     ContDiffOn ℝ ∞ (fun p => conservativeFlux (liftScalar R) (liftDirection Vr)
       angularDirection (liftDirection Vz) J p i) (cylinder U) := by
   have hr j k := contDiffOn_along (cylinder_open G.isOpen) (liftDirection_smooth G.radial_smooth)
-    (hJ j k)
+      (hJ j k)
   have hz j k := contDiffOn_along (cylinder_open G.isOpen) (liftDirection_smooth G.axial_smooth)
-    (hJ j k)
+      (hJ j k)
   have hθ j k : ContDiffOn ℝ ∞ (along angularDirection (J j k)) (cylinder U) :=
     contDiffOn_along (cylinder_open G.isOpen) contDiffOn_const (hJ j k)
   have hR := liftScalar_smooth G.radius_smooth
@@ -639,10 +678,12 @@ theorem Regular.conservativeFlux_smooth {U : Set D} {R : D → ℝ} {Vr Vz Vt : 
       ((hθ 1 1).div hR hn)).add (hz 2 1)
   · exact (((hr 0 2).add ((hJ 0 2).div hR hn)).add ((hθ 1 2).div hR hn)).add (hz 2 2)
 
+/-- Real gradient, given by `![along Vr p x, (R x)⁻¹ * along Vθ p x, along Vz p x]`. -/
 noncomputable def realGradient (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
     (p : D × ℝ → ℝ) (x : D × ℝ) : Fin 3 → ℝ :=
   ![along Vr p x, (R x)⁻¹ * along Vθ p x, along Vz p x]
 
+/-- Mean gradient, given by `![along Vr p x, 0, along Vz p x]`. -/
 noncomputable def meanGradient (Vr Vz : D → D) (p : D → ℝ) (x : D) : Fin 3 → ℝ :=
   ![along Vr p x, 0, along Vz p x]
 
@@ -670,6 +711,8 @@ theorem avg_gradient {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
     rw [avg_mul_left (fun y => (R y)⁻¹) _ x, avg_theta_zero G.isOpen hp hper hx, mul_zero]
   · exact (along_avg G.isOpen hp Vz hx).symm
 
+/-- Real nonlinear residual, given by `LinearWaveResidual.realComponentLinearResidual ε R Vr Vθ
+Vz Vt B a p x + LinearWaveResidual.realTransport R Vr Vθ Vz a a x`. -/
 noncomputable def realNonlinearResidual (ε : ℝ) (R : D × ℝ → ℝ)
     (Vr Vθ Vz Vt : D × ℝ → D × ℝ) (B a : D × ℝ → Fin 3 → ℝ)
     (p : D × ℝ → ℝ) (x : D × ℝ) : Fin 3 → ℝ :=
@@ -713,12 +756,14 @@ theorem realNonlinearResidual_conservative (ε : ℝ) (R : D × ℝ → ℝ)
     realNonlinearResidual ε R Vr Vθ Vz Vt B a p x i =
       along Vt (fun y => a y i) x + conservativeFlux R Vr Vθ Vz (quadraticFlux B a) x i +
       realGradient R Vr Vθ Vz p x i - ε * LinearWaveResidual.realFrameLaplacian R Vr Vθ Vz a x i :=
-        by
+          by
   rw [← congrFun (advectionIncrement_eq_conservative R Vr Vθ Vz hB ha hBd had) i]
   simp only [realNonlinearResidual, LinearWaveResidual.realComponentLinearResidual,
     advectionIncrement, realGradient, Pi.add_apply]
   ring
 
+/-- Mean expression, given by `along Vt (fun y => a y i) x + meanConservativeFlux R Vr Vz J x i
++ meanGradient Vr Vz p x i - ε * meanFrameLaplacian R Vr Vz a x i`. -/
 noncomputable def meanExpression (ε : ℝ) (R : D → ℝ) (Vr Vz Vt : D → D)
     (a : D → Fin 3 → ℝ) (p : D → ℝ) (J : Fin 3 → Fin 3 → D → ℝ)
     (x : D) (i : Fin 3) : ℝ :=
@@ -751,7 +796,7 @@ theorem avg_realNonlinearResidual {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → 
   have hg := continuous_slice G.isOpen (G.gradient_smooth hp i).continuousOn hx
   have hl := continuous_slice G.isOpen (G.frameLaplacian_smooth ha i).continuousOn hx
   have he : EqOn (fun y => realNonlinearResidual ε (liftScalar R) (liftDirection Vr)
-    angularDirection
+      angularDirection
       (liftDirection Vz) (liftDirection Vt) B a p y i)
       (fun y => along (liftDirection Vt) (fun z => a z i) y +
         conservativeFlux (liftScalar R) (liftDirection Vr) angularDirection (liftDirection Vz)
@@ -805,12 +850,15 @@ theorem viscosity_eq (o : MeanIncrementBounds.Operators D) (c : ℝ)
     MeanIncrementBounds.Operators.invRadius, hr, hz, meanScalarLaplacian]
   ring
 
+/-- Triple vector, given by `![m.radial n x, m.angular n x, m.axial n x]`. -/
 noncomputable def tripleVector (m : MeanIncrementBounds.Triple D) (n : ℕ) (x : D) : Fin 3 → ℝ :=
   ![m.radial n x, m.angular n x, m.axial n x]
 
+/-- Base lift, given by `tripleVector c.base n p.1`. -/
 noncomputable def baseLift (c : CorrectionState.Context D) (n : ℕ) (p : D × ℝ) : Fin 3 → ℝ :=
   tripleVector c.base n p.1
 
+/-- Perturbation, given by `tripleVector u.mean n p.1 + u.oscillation n p`. -/
 noncomputable def perturbation (u : CorrectionState.State D) (n : ℕ) (p : D × ℝ) : Fin 3 → ℝ :=
   tripleVector u.mean n p.1 + u.oscillation n p
 
@@ -844,7 +892,7 @@ theorem tripleVector_smooth {U : Set D} {m : MeanIncrementBounds.Triple D}
 /-- Primitive hypotheses on the actual state. The mean-PDE identity is a
 conclusion, and is not a field of this structure. -/
 structure MeanHypotheses (U : Set D) (c : CorrectionState.Context D) (u : CorrectionState.State D)
-  : Prop where
+    : Prop where
   isOpen : IsOpen U
   radius_smooth : ContDiffOn ℝ ∞ c.operators.radius U
   radius_ne : ∀ x ∈ U, c.operators.radius x ≠ 0
@@ -859,7 +907,7 @@ structure MeanHypotheses (U : Set D) (c : CorrectionState.Context D) (u : Correc
   oscillation_mean_zero : ∀ n x, x ∈ U → ∀ i,
     CorrectionState.angularAverage (fun k p => u.oscillation k p i) n x = 0
   oscillatoryPressure_mean_zero : ∀ n x, x ∈ U → CorrectionState.angularAverage
-    u.oscillatoryPressure n x = 0
+      u.oscillatoryPressure n x = 0
   base_divergence : ∀ n p, p ∈ cylinder U → realDivergence
     (liftScalar c.operators.radius) (radialDirection c n) angularDirection (axialDirection c n)
       (baseLift c n) p = 0
@@ -870,7 +918,7 @@ structure MeanHypotheses (U : Set D) (c : CorrectionState.Context D) (u : Correc
   excluded_continuous : ∀ n x, x ∈ U → ∀ i, Continuous (fun θ : ℝ => u.errors.total n (x, θ) i)
 
 theorem MeanHypotheses.regular {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) :
     Regular U c.operators.radius (radialVector c.operators n) (axialVector c.operators n)
       (temporalVector c.operators n) where
@@ -883,19 +931,19 @@ theorem MeanHypotheses.regular {U : Set D} {c : CorrectionState.Context D} {u :
   time_smooth := contDiffOn_const
 
 theorem MeanHypotheses.baseLift_smooth {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) (i : Fin 3) :
     ContDiffOn ℝ ∞ (fun p => baseLift c n p i) (cylinder U) :=
   liftScalar_smooth (tripleVector_smooth H.base_smooth n i)
 
 theorem MeanHypotheses.perturbation_smooth {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) (i : Fin 3) :
     ContDiffOn ℝ ∞ (fun p => perturbation u n p i) (cylinder U) :=
   (liftScalar_smooth (tripleVector_smooth H.mean_smooth n i)).add (H.oscillation_smooth n i)
 
 theorem MeanHypotheses.pressureIncrement_smooth {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) :
     ContDiffOn ℝ ∞ (u.totalPressureIncrement n) (cylinder U) :=
   (liftScalar_smooth (H.pressure_smooth n)).add (H.oscillatoryPressure_smooth n)
@@ -911,16 +959,18 @@ theorem realDivergence_add (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D ×
   ring
 
 theorem MeanHypotheses.perturbation_divergence {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {p : D × ℝ} (hp : p ∈ cylinder U) :
     realDivergence (liftScalar c.operators.radius) (radialDirection c n) angularDirection
       (axialDirection c n) (perturbation u n) p = 0 := by
   have hd := H.total_divergence n p hp
   rw [totalVelocity_eq, realDivergence_add _ _ _ _
     (fun i => ((H.baseLift_smooth n i).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-      hp)).differentiableAt (by simp))
+        hp)).differentiableAt (by
+        simp))
     (fun i => ((H.perturbation_smooth n i).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-      hp)).differentiableAt (by simp)),
+        hp)).differentiableAt (by
+        simp)),
     H.base_divergence n p hp, zero_add] at hd
   exact hd
 
@@ -929,17 +979,17 @@ theorem periodic_lift (U : Set D) (f : D → ℝ) : PeriodicOn U (liftScalar f) 
   fun _ _ _ => rfl
 
 theorem MeanHypotheses.baseLift_periodic {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (_H : MeanHypotheses U c u) (n : ℕ) (i : Fin 3) : PeriodicOn U (fun p => baseLift c n p i) :=
   periodic_lift U (fun x => tripleVector c.base n x i)
 
 theorem MeanHypotheses.perturbation_periodic {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) (i : Fin 3) : PeriodicOn U (fun p => perturbation u n p i) :=
   (periodic_lift U (fun x => tripleVector u.mean n x i)).add (H.oscillation_periodic n i)
 
 theorem MeanHypotheses.pressureIncrement_periodic {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) : PeriodicOn U (u.totalPressureIncrement n) :=
   (periodic_lift U (u.pressure n)).add (H.oscillatoryPressure_periodic n)
 
@@ -972,7 +1022,7 @@ theorem avg_affine_product (a b : D → ℝ) {f g : D × ℝ → ℝ} {x : D}
   ring
 
 theorem MeanHypotheses.avg_perturbation {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3) :
     avg (fun p => perturbation u n p i) x = tripleVector u.mean n x i := by
   exact avg_affine (fun y => tripleVector u.mean n y i) (f := fun p => u.oscillation n p i)
@@ -980,13 +1030,14 @@ theorem MeanHypotheses.avg_perturbation {U : Set D} {c : CorrectionState.Context
     (H.oscillation_mean_zero n x hx i)
 
 theorem MeanHypotheses.avg_pressureIncrement {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) :
     avg (u.totalPressureIncrement n) x = u.pressure n x := by
   exact avg_affine (u.pressure n) (f := u.oscillatoryPressure n) (x := x)
     (continuous_slice H.isOpen (H.oscillatoryPressure_smooth n).continuousOn hx)
     (H.oscillatoryPressure_mean_zero n x hx)
 
+/-- State flux, constructed using `tripleVector`. -/
 noncomputable def stateFlux (c : CorrectionState.Context D) (u : CorrectionState.State D)
     (i j : Fin 3) (n : ℕ) (x : D) : ℝ :=
   tripleVector c.base n x i * tripleVector u.mean n x j +
@@ -994,7 +1045,7 @@ noncomputable def stateFlux (c : CorrectionState.Context D) (u : CorrectionState
     tripleVector u.mean n x i * tripleVector u.mean n x j + u.covariance i j n x
 
 theorem MeanHypotheses.avg_quadraticFlux {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i j : Fin 3) :
     avg (quadraticFlux (baseLift c n) (perturbation u n) i j) x = stateFlux c u i j n x := by
   have hac k := continuous_slice H.isOpen (H.perturbation_smooth n k).continuousOn hx
@@ -1003,7 +1054,7 @@ theorem MeanHypotheses.avg_quadraticFlux {U : Set D} {c : CorrectionState.Contex
       tripleVector u.mean n x i * tripleVector u.mean n x j + u.covariance i j n x :=
     avg_affine_product (fun y => tripleVector u.mean n y i) (fun y => tripleVector u.mean n y j)
       (f := fun p => u.oscillation n p i) (g := fun p => u.oscillation n p j) (x := x) (hoc i) (hoc
-        j)
+          j)
       (H.oscillation_mean_zero n x hx i) (H.oscillation_mean_zero n x hx j)
   change avg (fun p => tripleVector c.base n p.1 i * perturbation u n p j +
       perturbation u n p i * tripleVector c.base n p.1 j +
@@ -1020,16 +1071,16 @@ theorem MeanHypotheses.avg_quadraticFlux {U : Set D} {c : CorrectionState.Contex
   ring
 
 theorem MeanHypotheses.covariance_smooth {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (i j : Fin 3) : MeanIncrementBounds.SmoothOn U (u.covariance i j) :=
-      by
+        by
   intro n
   exact avg_smooth H.isOpen ((H.oscillation_smooth n i).mul (H.oscillation_smooth n j))
 
 theorem MeanHypotheses.stateFlux_smooth {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (i j : Fin 3) : MeanIncrementBounds.SmoothOn U (stateFlux c u i j)
-      := by
+        := by
   intro n
   have hb k := tripleVector_smooth H.base_smooth n k
   have hm k := tripleVector_smooth H.mean_smooth n k
@@ -1103,7 +1154,7 @@ theorem stateFlux_22 (c : CorrectionState.Context D) (u : CorrectionState.State 
   ring
 
 theorem meanExpression_state {U : Set D} {c : CorrectionState.Context D} {u : CorrectionState.State
-  D}
+    D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3) :
     meanExpression (c.operators.epsilon n) c.operators.radius (radialVector c.operators n)
       (axialVector c.operators n) (temporalVector c.operators n) (tripleVector u.mean n)
@@ -1113,38 +1164,46 @@ theorem meanExpression_state {U : Set D} {c : CorrectionState.Context D} {u : Co
   have h11 := congrFun (congrFun (stateFlux_11 c u) n) x
   simp only [Pi.add_apply] at h11
   fin_cases i
-  · simp [CorrectionState.State.reducedMeanResidual, CorrectionState.State.radialResidual,
-      CorrectionState.State.gr, MeanIncrementBounds.gr, Matrix.cons_val_zero, Pi.sub_apply,
-        Pi.add_apply, Pi.mul_apply]
+  · simp only [Fin.zero_eta, Fin.isValue, CorrectionState.State.reducedMeanResidual,
+      CorrectionState.State.radialResidual, CorrectionState.State.gr, MeanIncrementBounds.gr,
+          neg_sub, Pi.sub_apply,
+      Pi.add_apply, Pi.mul_apply, Matrix.cons_val_zero]
     rw [← stateFlux_00, ← stateFlux_20, ← h11]
-    simp [time_eq_along, radialDiv_eq, dz_eq_along, viscosity_eq, dr_eq_along,
-      meanExpression, meanConservativeFlux, meanGradient, meanFrameLaplacian, tripleVector,
-      virtualDivergence, LinearWaveResidual.realAngularGenerator,
-      Matrix.cons_val_zero, Matrix.cons_val_one,
-      MeanIncrementBounds.Operators.invRadius]
+    simp only [meanExpression, tripleVector, Fin.isValue, Matrix.cons_val_zero,
+        meanConservativeFlux,
+      meanGradient, meanFrameLaplacian, LinearWaveResidual.realAngularGenerator,
+          Matrix.cons_val_one, mul_neg,
+      virtualDivergence, radialDiv_eq, neg_add_rev, one_mul, add_zero, dr_eq_along, viscosity_eq,
+          time_eq_along,
+      dz_eq_along, MeanIncrementBounds.Operators.invRadius]
     ring
-
-  · simp [CorrectionState.State.reducedMeanResidual, CorrectionState.State.thetaResidual,
-      MeanIncrementBounds.thetaResidual, Matrix.cons_val_one, Matrix.cons_val_zero, Pi.sub_apply,
-        Pi.add_apply]
+  · simp only [Fin.mk_one, Fin.isValue, CorrectionState.State.reducedMeanResidual,
+      CorrectionState.State.thetaResidual, MeanIncrementBounds.thetaResidual, Pi.sub_apply,
+          Pi.add_apply,
+      Matrix.cons_val_one, Matrix.cons_val_zero]
     rw [← stateFlux_01, ← stateFlux_21]
-    simp [time_eq_along, radialDiv_eq, dz_eq_along, viscosity_eq,
-      meanExpression, meanConservativeFlux, meanGradient, meanFrameLaplacian, tripleVector,
-      virtualDivergence, LinearWaveResidual.realAngularGenerator,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+    simp only [meanExpression, tripleVector, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero,
+      meanConservativeFlux, meanGradient, add_zero, meanFrameLaplacian,
+          LinearWaveResidual.realAngularGenerator, mul_neg,
+      virtualDivergence, radialDiv_eq, neg_add_rev, one_mul, time_eq_along, dz_eq_along,
+          viscosity_eq]
     ring
-  · simp [CorrectionState.State.reducedMeanResidual, CorrectionState.State.axialResidual,
-      MeanIncrementBounds.axialResidual, Matrix.cons_val_two,
-      Matrix.head_cons, Matrix.tail_cons, Pi.sub_apply, Pi.add_apply]
+  · simp only [Fin.reduceFinMk, Fin.isValue, CorrectionState.State.reducedMeanResidual,
+      CorrectionState.State.axialResidual, MeanIncrementBounds.axialResidual, Pi.sub_apply,
+          Pi.add_apply,
+      Matrix.cons_val_two, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.tail_cons, Matrix.head_cons]
     rw [← stateFlux_02, ← stateFlux_22, hz]
-    simp [time_eq_along, radialDiv_eq, dz_eq_along, viscosity_eq,
-      meanExpression, meanConservativeFlux, meanGradient, meanFrameLaplacian, tripleVector,
-      virtualDivergence, LinearWaveResidual.realAngularGenerator,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-        Matrix.tail_cons,
-      zero_mul, mul_zero, sub_zero, add_zero]
+    simp only [meanExpression, tripleVector, Fin.isValue, Matrix.cons_val_two, Nat.succ_eq_add_one,
+        Nat.reduceAdd,
+      Matrix.tail_cons, Matrix.head_cons, meanConservativeFlux, meanGradient, meanFrameLaplacian,
+      LinearWaveResidual.realAngularGenerator, Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero,
+          add_zero,
+      virtualDivergence, radialDiv_eq, neg_add_rev, one_mul, time_eq_along, Pi.add_apply,
+          dz_eq_along, viscosity_eq,
+      zero_mul, sub_zero]
     ring
 
+/-- Nonlinear field as an element of `CorrectionState.Oscillation D`. -/
 noncomputable def nonlinearField (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     CorrectionState.Oscillation D := fun n p i =>
   (nonlinearResidual (c.operators.epsilon n) (liftScalar c.operators.radius)
@@ -1152,7 +1211,7 @@ noncomputable def nonlinearField (c : CorrectionState.Context D) (u : Correction
     (complexBase c n) (complexPerturbation u n) (complexPressure u n) p i).re
 
 theorem MeanHypotheses.nonlinearField_eq_real {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {p : D × ℝ} (hp : p ∈ cylinder U) (i : Fin 3) :
     nonlinearField c u n p i =
       realNonlinearResidual (c.operators.epsilon n) (liftScalar c.operators.radius)
@@ -1164,7 +1223,7 @@ theorem MeanHypotheses.nonlinearField_eq_real {U : Set D} {c : CorrectionState.C
     (H.perturbation_smooth n) (H.pressureIncrement_smooth n) hp i
 
 theorem MeanHypotheses.nonlinearField_continuous {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3) :
     Continuous (fun θ : ℝ => nonlinearField c u n (x, θ) i) := by
   let G := H.regular n
@@ -1174,9 +1233,9 @@ theorem MeanHypotheses.nonlinearField_continuous {U : Set D} {c : CorrectionStat
     (contDiffOn_along (cylinder_open H.isOpen) (liftDirection_smooth G.time_smooth)
       (H.perturbation_smooth n i)).continuousOn hx
   have hg := continuous_slice H.isOpen (G.gradient_smooth (H.pressureIncrement_smooth n)
-    i).continuousOn hx
+      i).continuousOn hx
   have hl := continuous_slice H.isOpen (G.frameLaplacian_smooth (H.perturbation_smooth n)
-    i).continuousOn hx
+      i).continuousOn hx
   have he : (fun θ : ℝ => nonlinearField c u n (x, θ) i) = fun θ =>
       along (timeDirection c n) (fun y => perturbation u n y i) (x, θ) +
       conservativeFlux (liftScalar c.operators.radius) (radialDirection c n) angularDirection
@@ -1185,21 +1244,23 @@ theorem MeanHypotheses.nonlinearField_continuous {U : Set D} {c : CorrectionStat
         (axialDirection c n) (u.totalPressureIncrement n) (x, θ) i -
       c.operators.epsilon n * LinearWaveResidual.realFrameLaplacian (liftScalar c.operators.radius)
         (radialDirection c n) angularDirection (axialDirection c n) (perturbation u n) (x, θ) i :=
-          by
+            by
     funext θ
     have hp : (x, θ) ∈ cylinder U := ⟨hx, mem_univ θ⟩
     rw [H.nonlinearField_eq_real n hp i]
     exact realNonlinearResidual_conservative _ _ _ _ _ _ _
       (fun j => ((H.baseLift_smooth n j).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-        hp)).differentiableAt (by simp))
+          hp)).differentiableAt (by
+          simp))
       (fun j => ((H.perturbation_smooth n j).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-        hp)).differentiableAt (by simp))
+          hp)).differentiableAt (by
+          simp))
       (H.base_divergence n (x, θ) hp) (H.perturbation_divergence n hp) i
   rw [he]
   exact ((ht.add hc).add hg).sub (constant_mul_continuous (c.operators.epsilon n) hl)
 
 theorem MeanHypotheses.avg_nonlinearField {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3) :
     avg (fun p => nonlinearField c u n p i) x =
       meanExpression (c.operators.epsilon n) c.operators.radius (radialVector c.operators n)
@@ -1230,14 +1291,14 @@ theorem avg_virtualDivergence (c : CorrectionState.Context D) (n : ℕ) (x : D) 
 /-- The actual full residual averages to equation (32) plus exactly the
 stored base error. -/
 theorem angularMean_fullResidual {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3) :
     angularMeanVector (fullResidual c u) n x i = u.meanResidual c n x i := by
   have hv : Continuous (fun θ : ℝ => virtualDivergence c n (x, θ) i) := by
     change Continuous (fun _ : ℝ => virtualDivergence c n (x, 0) i)
     exact continuous_const
   change avg (fun p => nonlinearField c u n p i + virtualDivergence c n p i + u.errors.base n p i)
-    x = _
+      x = _
   rw [avg_add ((H.nonlinearField_continuous n hx i).add hv) (H.base_error_continuous n x hx i),
     avg_add (H.nonlinearField_continuous n hx i) hv,
     H.avg_nonlinearField n hx i, avg_virtualDivergence, meanExpression_state H n hx i]
@@ -1246,7 +1307,7 @@ theorem angularMean_fullResidual {U : Set D} {c : CorrectionState.Context D} {u 
 /-- No Gaussian or alias term is silently discarded: the exact angular mean
 of the explicitly subtracted total is removed on both sides. -/
 theorem angularMean_fullGoodResidual {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3) :
     angularMeanVector (fullGoodResidual c u) n x i = u.meanGoodResidual c n x i := by
   have hv : Continuous (fun θ : ℝ => virtualDivergence c n (x, θ) i) := by
@@ -1277,7 +1338,7 @@ theorem meanGoodResidual_errors (c : CorrectionState.Context D) (u : CorrectionS
   ring
 
 theorem angularMean_fullGoodResidual_errors {U : Set D} {c : CorrectionState.Context D} {u :
-  CorrectionState.State D}
+    CorrectionState.State D}
     (H : MeanHypotheses U c u) (n : ℕ) {x : D} (hx : x ∈ U) (i : Fin 3)
     (hg : Continuous (fun θ : ℝ => u.errors.gaussian n (x, θ) i))
     (ha : Continuous (fun θ : ℝ => u.errors.aliasError n (x, θ) i)) :
@@ -1294,7 +1355,7 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 /-- The actual power-graph profile is smooth on every positive radial strip. -/
 theorem graphOperators_profile_smooth (r : CorrectionState.ReconstructionData)
     (epsilon fast : ℕ → ℝ) (axial slowTime : S × PressureStream.Plane) (temporal :
-      PressureStream.Plane)
+        PressureStream.Plane)
     {U : Set (PressureStream.Lift S)} (hpos : ∀ x ∈ U, 0 < x.1) :
     ContDiffOn ℝ ∞
       (CorrectionState.graphOperators r epsilon fast axial slowTime temporal).radialProfile U := by
@@ -1304,7 +1365,7 @@ theorem graphOperators_profile_smooth (r : CorrectionState.ReconstructionData)
 /-- Direct instantiation by the genuine graph operators used by the state. -/
 theorem graphOperators_regular (r : CorrectionState.ReconstructionData)
     (epsilon fast : ℕ → ℝ) (axial slowTime : S × PressureStream.Plane) (temporal :
-      PressureStream.Plane)
+        PressureStream.Plane)
     {U : Set (PressureStream.Lift S)} (hU : IsOpen U) (hpos : ∀ x ∈ U, 0 < x.1) (n : ℕ) :
     let o := CorrectionState.graphOperators r epsilon fast axial slowTime temporal
     Regular U o.radius (radialVector o n) (axialVector o n) (temporalVector o n) := by

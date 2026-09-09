@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalPhysicalCopyBounds
 
-@[expose] public section
-
 /-!
 # Cartesian source classes for actual native copies
 
@@ -17,6 +15,9 @@ The cylindrical radius and the Cartesian rotation are evaluated directly on
 the lift. Their derivatives are bounded on a fixed annulus, and the original
 flat weight is pulled back exactly.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,9 +28,13 @@ namespace NavierStokes.CartesianCopySource
 
 open WeightedClasses LabelSumBounds PhysicalClassBounds
 
+/-- Plane: an abbreviation for `PhysicalGraphBounds.Plane`. -/
 abbrev Plane := PhysicalGraphBounds.Plane
+/-- Lift point: an abbreviation for `PhysicalWaveSum.LiftPoint`. -/
 abbrev LiftPoint := PhysicalWaveSum.LiftPoint
+/-- Native: an abbreviation for `PhysicalClassBounds.CylindricalPoint`. -/
 abbrev Native := PhysicalClassBounds.CylindricalPoint
+/-- Complex vector: an abbreviation for `HarmonicCalculus.ComplexVector`. -/
 abbrev ComplexVector := HarmonicCalculus.ComplexVector
 
 private theorem nat_le_infty (m : ℕ) : (m : WithTop ℕ∞) ≤ ∞ :=
@@ -42,10 +47,10 @@ theorem cylindricalMap_continuous : Continuous cylindricalMap :=
 /-- Restriction to a padded annulus and the genuine native domain. The
 weight, edge distance, viscosity and slow scales are unchanged by pullback. -/
 noncomputable def pullStrip (s : StripData Native) (a b : ℝ) (ha : 0 < a) : StripData LiftPoint
-  where
+    where
   domain := cylindricalDomain a b ∩ cylindricalMap ⁻¹' s.domain
   isOpen_domain := (cylindricalDomain_open a b).inter (s.isOpen_domain.preimage
-    cylindricalMap_continuous)
+      cylindricalMap_continuous)
   epsilon := s.epsilon
   epsilon_pos := s.epsilon_pos
   epsilon_le_one := s.epsilon_le_one
@@ -55,7 +60,7 @@ noncomputable def pullStrip (s : StripData Native) (a b : ℝ) (ha : 0 < a) : St
   delta_pos _ hx := s.delta_pos _ hx.2
   zeta x := s.zeta (cylindricalMap x)
   zeta_smooth := s.zeta_smooth.comp ((cylindricalMap_smooth ha).mono inter_subset_left) (fun _ hx
-    => hx.2)
+      => hx.2)
   zeta_nonneg _ hx := s.zeta_nonneg _ hx.2
 
 @[simp] theorem pullStrip_zeta (s : StripData Native) (a b : ℝ) (ha : 0 < a) (x : LiftPoint) :
@@ -89,8 +94,9 @@ theorem uniform_pullback (hf : UniformClass s w α f) :
     (pullStrip s a b ha).isOpen_domain s.isOpen_domain (hf.smooth l n)
     ((cylindricalMap_smooth ha).mono inter_subset_left) (fun _ hz => hz.2) hx m hA hB
     (hbound l n _ hx.2) (hmap x hx.1) j hj
-  exact hb.trans_eq (by change _ = (m.factorial : ℝ) * C * B ^ m * s.epsilon n ^ α * s.growth n
-    (cylindricalMap x) ^ p * w l n (cylindricalMap x); unfold majorant; ring)
+  exact hb.trans_eq (by
+      change _ = (m.factorial : ℝ) * C * B ^ m * s.epsilon n ^ α * s.growth n (cylindricalMap x) ^
+          p * w l n (cylindricalMap x); unfold majorant; ring)
 
 variable {cL cR L : ℝ} {ρ : Native → ℝ}
 
@@ -112,15 +118,22 @@ end Pullback
 
 /-! ## Actual Cartesian rotation -/
 
+/-- Horizontal, given by `ContinuousLinearMap.pi ![ContinuousLinearMap.proj 0,
+ContinuousLinearMap.proj 1, 0]`. -/
 noncomputable def horizontal : ComplexVector →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi ![ContinuousLinearMap.proj 0, ContinuousLinearMap.proj 1, 0]
 
+/-- Connection, given by `ContinuousLinearMap.pi ![-ContinuousLinearMap.proj 1,
+ContinuousLinearMap.proj 0, 0]`. -/
 noncomputable def connection : ComplexVector →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi ![-ContinuousLinearMap.proj 1, ContinuousLinearMap.proj 0, 0]
 
+/-- Vertical, given by `ContinuousLinearMap.pi ![0, 0, ContinuousLinearMap.proj 2]`. -/
 noncomputable def vertical : ComplexVector →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi ![0, 0, ContinuousLinearMap.proj 2]
 
+/-- Rotation map, given by `(y.1 / cartesianRadius y) • horizontal + (y.2 / cartesianRadius y) •
+connection + vertical`. -/
 noncomputable def rotationMap (y : Plane) : ComplexVector →L[ℝ] ComplexVector :=
   (y.1 / cartesianRadius y) • horizontal + (y.2 / cartesianRadius y) • connection + vertical
 
@@ -152,7 +165,7 @@ theorem rotationMap_jets {a b : ℝ} (ha : 0 < a) (m : ℕ) :
     refine ⟨?_, hx.1.le⟩
     simpa only [Metric.mem_closedBall, dist_zero_right] using hx.2.le
   exact (PhysicalGraphBounds.norm_jet_comp_linear PhysicalGraphBounds.axisFree_open
-    rotationMap_smooth
+      rotationMap_smooth
     PhysicalGraphBounds.liftXY (cylindricalDomain_axisFree ha hx) j).trans
     ((mul_le_mul (hb j hj _ hann)
       (pow_le_one₀ (norm_nonneg _) PhysicalGraphBounds.norm_liftXY_le)
@@ -163,13 +176,15 @@ theorem rotation_uniform {ι : Type*} (s : StripData Native) {a b : ℝ} (ha : 0
       (fun _ _ x => rotationMap (PhysicalGraphBounds.liftXY x)) := by
   refine ⟨fun _ _ _ _ => zero_le_one, fun _ _ => rotationMap_smooth.comp
     PhysicalGraphBounds.liftXY.contDiff.contDiffOn (fun _ hx => cylindricalDomain_axisFree ha
-      hx.1), ?_⟩
+        hx.1), ?_⟩
   intro m
   obtain ⟨C, hC, hb⟩ := rotationMap_jets (b := b) ha m
   refine ⟨C, zero_le_one.trans hC, 0, ?_⟩
   intro l n x hx j hj
   simpa only [majorant, Real.rpow_zero, pow_zero, mul_one] using hb x hx.1 j hj
 
+/-- Rotated source, given by `rotationMap (PhysicalGraphBounds.liftXY x) (f l n (cylindricalMap
+x))`. -/
 noncomputable def rotatedSource {ι : Type*} (f : ι → ℕ → Native → ComplexVector)
     (l : ι) (n : ℕ) (x : LiftPoint) : ComplexVector :=
   rotationMap (PhysicalGraphBounds.liftXY x) (f l n (cylindricalMap x))
@@ -178,11 +193,11 @@ theorem uniform_rotated {ι : Type*} {s : StripData Native} {w : ι → ℕ → 
     {f : ι → ℕ → Native → ComplexVector} {α a b : ℝ} (ha : 0 < a)
     (hf : UniformClass s w α f) :
     UniformClass (pullStrip s a b ha) (fun l n x => w l n (cylindricalMap x)) α (rotatedSource f)
-      := by
+        := by
   have he := (rotation_uniform (ι := ι) s (b := b) ha).bilinear (uniform_pullback ha hf)
     (ContinuousLinearMap.apply ℝ ComplexVector).flip
-  simp only [one_mul, zero_add, ContinuousLinearMap.flip_apply, ContinuousLinearMap.apply_apply] at
-    he ⊢
+  simp only [one_mul, zero_add, ContinuousLinearMap.flip_apply, ContinuousLinearMap.apply_apply]
+      at he ⊢
   exact he
 
 theorem sourceBounds_rotated {ι : Type*} {s : StripData Native} {w : ι → ℕ → Native → ℝ}

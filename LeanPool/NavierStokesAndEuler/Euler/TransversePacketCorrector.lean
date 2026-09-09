@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlTime
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTime
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
+
+/-! The potential and slow curl of the actual transverse solution, with their genuine time
+derivatives. -/
 
 @[expose] public section
 
-/-! The potential and slow curl of the actual transverse solution, with their genuine time
-  derivatives. -/
 
 noncomputable section
 
@@ -22,7 +24,7 @@ namespace EulerTransversePacketProvider
 
 open Set ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace EulerMeanCoefficients
   EulerLpCylinderTranslation EulerLpCylinderPaths EulerCylinderSmoothOrbit
-    EulerSourcePotentialCoefficient
+      EulerSourcePotentialCoefficient
   EulerPacketProfileRecursion EulerVolterraConvolution EulerMetricTransport
 open scoped ContDiff BoundedContinuousFunction
 
@@ -30,13 +32,29 @@ namespace Data
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup PotentialField := inferInstance
-private local instance : NormedSpace ℝ PotentialField := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,PotentialField) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,PotentialField) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCorrector1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCorrector2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup PotentialField` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCorrector3 : NormedAddCommGroup PotentialField := inferInstance
+/-- Cache the standard `NormedSpace ℝ PotentialField` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCorrector4 : NormedSpace ℝ PotentialField := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,PotentialField)` instance to
+shorten typeclass synthesis. -/
+local instance instTransversePacketCorrector5 : NormedAddCommGroup C(Icc (0 : ℝ)
+    D.T,PotentialField) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,PotentialField)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketCorrector6 : NormedSpace ℝ C(Icc (0 : ℝ) D.T,PotentialField) :=
+    inferInstance
 
+/-- Potential coefficient path: an abbreviation for `potentialCoefficient D.normal D.normalLower
+D.normalLower_pos D.normal_lower`. -/
 abbrev potentialCoefficientPath :=
   potentialCoefficient D.normal D.normalLower D.normalLower_pos D.normal_lower
 
@@ -59,16 +77,34 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup (Supported P Space D.support D.support_measurable) :=
-  inferInstance
-private local instance : NormedSpace ℝ (Supported P Space D.support D.support_measurable) :=
-  inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCorrector7 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCorrector8 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported P Space D.support D.support_measurable)`
+instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCorrector9 : NormedAddCommGroup (Supported P Space D.support
+    D.support_measurable) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported P Space D.support D.support_measurable)`
+instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCorrector10 : NormedSpace ℝ (Supported P Space D.support
+    D.support_measurable) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,LiftL2 P)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketCorrector11 : NormedAddCommGroup C(Icc (0 : ℝ) D.T,LiftL2 P) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCorrector12 : NormedSpace ℝ C(Icc (0 : ℝ) D.T,LiftL2 P) :=
+    inferInstance
 
+/-- Full velocity path: an abbreviation for `includePath P D.support D.support_measurable
+(G.velocityPath I)`. -/
 abbrev fullVelocityPath := includePath P D.support D.support_measurable (G.velocityPath I)
+/-- Full derivative path: an abbreviation for `includePath P D.support D.support_measurable
+(G.derivativePath I)`. -/
 abbrev fullDerivativePath := includePath P D.support D.support_measurable (G.derivativePath I)
 
 theorem fullVelocityPath_time (t : Icc (0 : ℝ) D.T) :
@@ -77,9 +113,12 @@ theorem fullVelocityPath_time (t : Icc (0 : ℝ) D.T) :
   (Supported P Space D.support D.support_measurable).subtypeL.hasFDerivAt.comp_hasDerivWithinAt
     (t : ℝ) (G.velocityPath_time I t)
 
+/-- Potential path, given by `EulerCylinderPotential.potentialPath P D.potentialCoefficientPath
+(G.fullVelocityPath I)`. -/
 def potentialPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialPath P D.potentialCoefficientPath (G.fullVelocityPath I)
 
+/-- Potential time path, constructed using `EulerCylinderPotential.potentialDerivative`. -/
 def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialDerivative P D.T D.potentialCoefficientPath D.potentialDerivative
     (G.fullVelocityPath I) (G.fullDerivativePath I)
@@ -87,16 +126,16 @@ def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
 theorem potentialPath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.potentialPath I)) :=
   EulerCylinderPotential.potentialPath_orbit P D.potentialCoefficientPath
-    D.potentialCoefficientPath_orbit
+      D.potentialCoefficientPath_orbit
     (G.fullVelocityPath I) (G.velocityPath_orbit I)
 
 theorem potentialTimePath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.potentialTimePath I)) :=
   EulerCylinderPotential.potentialDerivative_orbit P D.T D.potentialCoefficientPath
-    D.potentialDerivative
+      D.potentialDerivative
     D.potentialCoefficientPath_orbit D.potentialDerivative_orbit
     (G.fullVelocityPath I) (G.fullDerivativePath I) (G.velocityPath_orbit I)
-      (G.derivativePath_orbit I)
+        (G.derivativePath_orbit I)
 
 theorem potentialPath_time (t : Icc (0 : ℝ) D.T) :
     HasDerivWithinAt (extendPath D.T D.T_pos.le (G.potentialPath I))
@@ -105,9 +144,12 @@ theorem potentialPath_time (t : Icc (0 : ℝ) D.T) :
     D.potentialCoefficientPath D.potentialDerivative (G.fullVelocityPath I) (G.fullDerivativePath I)
     D.potentialCoefficientPath_time (G.fullVelocityPath_time I) t
 
+/-- Corrector path, given by `EulerCylinderSlowCurl.path P D.FInv.field (G.potentialPath I)`. -/
 def correctorPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.path P D.FInv.field (G.potentialPath I)
 
+/-- Corrector time path, given by `EulerCylinderSlowCurl.derivative P D.T D.FInv.field
+D.inverseDerivative (G.potentialPath I) (G.potentialTimePath I)`. -/
 def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.derivative P D.T D.FInv.field D.inverseDerivative
     (G.potentialPath I) (G.potentialTimePath I)
@@ -121,7 +163,7 @@ theorem correctorTimePath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.correctorTimePath I)) :=
   EulerCylinderSlowCurl.derivative_orbit P D.T D.FInv.field D.inverseDerivative
     D.FInv.translation_contDiff D.inverseDerivative_orbit (G.potentialPath I) (G.potentialTimePath
-      I)
+        I)
     (G.potentialPath_orbit I) (G.potentialTimePath_orbit I)
 
 theorem correctorPath_time (t : Icc (0 : ℝ) D.T) :
@@ -129,13 +171,17 @@ theorem correctorPath_time (t : Icc (0 : ℝ) D.T) :
       (G.correctorTimePath I t) (Icc (0 : ℝ) D.T) t :=
   EulerCylinderSlowCurl.path_hasDerivWithinAt P D.T D.T_pos.le D.FInv.field D.inverseDerivative
     (G.potentialPath I) (G.potentialTimePath I) (G.potentialPath_orbit I)
-      (G.potentialTimePath_orbit I)
+        (G.potentialTimePath_orbit I)
     D.inverse_hasDerivWithinAt (G.potentialPath_time I) t
 
+/-- Corrector, defined pointwise by `pointField P (G.correctorPath I) (G.correctorPath_orbit I)
+(D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def corrector : VectorField := fun z =>
   pointField P (G.correctorPath I) (G.correctorPath_orbit I)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Corrector derivative, defined pointwise by `pointField P (G.correctorTimePath I)
+(G.correctorTimePath_orbit I) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def correctorDerivative : VectorField := fun z =>
   pointField P (G.correctorTimePath I) (G.correctorTimePath_orbit I)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
@@ -145,15 +191,15 @@ theorem corrector_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ
       (G.correctorDerivative I (t,(x,θ))) (Icc (0 : ℝ) D.T) t := by
   have h := pointField_hasDerivWithinAt P D.T D.T_pos.le (G.correctorPath I) (G.correctorTimePath I)
     (G.correctorPath_orbit I) (G.correctorTimePath_orbit I) (G.correctorPath_time I) t (x,(θ :
-      AddCircle P))
+        AddCircle P))
   simpa only [corrector, correctorDerivative, Data.clamp, projIcc_of_mem D.T_pos.le t.property]
-    using h
+      using h
 
 theorem fullVelocityPath_mean_zero (t : Icc (0 : ℝ) D.T) (x : Space) :
     (∫ θ in (0 : ℝ)..P, pointField P (G.fullVelocityPath I) (G.velocityPath_orbit I)
       t (x,(θ : AddCircle P))) = 0 := by
   simpa only [vector, EulerSourceCylinderClassical.field, Data.clamp_coe] using G.vector_mean_zero
-    I t x
+      I t x
 
 /-- This potential is exactly the manuscript's normalized angular integral of −m×A/|m|². -/
 theorem potentialPath_eq_periodic (t : Icc (0 : ℝ) D.T) :

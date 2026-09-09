@@ -6,13 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAxisymmetricResidual
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Module
-public import Mathlib.Tactic.LinearCombination
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidual
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Actual Cartesian differential operators in cylindrical coordinates
@@ -21,6 +16,9 @@ The chart is `(r,theta,z) ↦ (r cos theta,r sin theta,z)`.  Coordinate
 derivatives are actual Fréchet derivatives. Pulling Cartesian fields back
 through this chart avoids choosing a global inverse angular coordinate.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.CylindricalResidual
 
@@ -39,6 +37,7 @@ variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 noncomputable def chart (q : Space) : Space :=
   pack (q 0 * Real.cos (q 1)) (q 0 * Real.sin (q 1)) (q 2)
 
+/-- Horizontal, given by `packDerivative (projection 0) (projection 1) 0`. -/
 noncomputable def horizontal : Space →L[ℝ] Space :=
   packDerivative (projection 0) (projection 1) 0
 
@@ -46,9 +45,11 @@ noncomputable def horizontal : Space →L[ℝ] Space :=
 noncomputable def connection : Space →L[ℝ] Space :=
   packDerivative (-(projection 1)) (projection 0) 0
 
+/-- Vertical, given by `packDerivative 0 0 (projection 2)`. -/
 noncomputable def vertical : Space →L[ℝ] Space :=
   packDerivative 0 0 (projection 2)
 
+/-- Frame, given by `Real.cos θ • horizontal + Real.sin θ • connection + vertical`. -/
 noncomputable def frame (θ : ℝ) : Space →L[ℝ] Space :=
   Real.cos θ • horizontal + Real.sin θ • connection + vertical
 
@@ -80,6 +81,8 @@ theorem frame_inverse (θ : ℝ) (v : Space) : frame (-θ) (frame θ v) = v := b
 theorem frame_inverse' (θ : ℝ) (v : Space) : frame θ (frame (-θ) v) = v := by
   simpa only [neg_neg] using frame_inverse (-θ) v
 
+/-- Chart jacobian, given by `(frame (q 1)).comp (packDerivative (projection 0) (q 0 •
+projection 1) (projection 2))`. -/
 noncomputable def chartJacobian (q : Space) : Space →L[ℝ] Space :=
   (frame (q 1)).comp (packDerivative (projection 0) (q 0 • projection 1) (projection 2))
 
@@ -101,12 +104,16 @@ theorem contDiff_chart {n : WithTop ℕ∞} : ContDiff ℝ n chart := by
     (((projection 0).contDiff.mul (projection 1).contDiff.sin).smul contDiff_const)).add
     ((projection 2).contDiff.smul contDiff_const)
 
+/-- D coord, given by `fderiv ℝ f q (coordinateVector i)`. -/
 noncomputable def dCoord (i : Fin 3) (f : Space → E) (q : Space) : E :=
   fderiv ℝ f q (coordinateVector i)
 
+/-- Euclidean laplacian, given by `∑ i : Fin 3, dCoord i (dCoord i f) x`. -/
 noncomputable def euclideanLaplacian (f : Space → E) (x : Space) : E :=
   ∑ i : Fin 3, dCoord i (dCoord i f) x
 
+/-- Scalar laplacian, given by `dCoord 0 (dCoord 0 f) q + (q 0)⁻¹ • dCoord 0 f q + ((q 0) ^ 2)⁻¹
+• dCoord 1 (dCoord 1 f) q + dCoord 2 (dCoord 2 f) q`. -/
 noncomputable def scalarLaplacian (f : Space → E) (q : Space) : E :=
   dCoord 0 (dCoord 0 f) q + (q 0)⁻¹ • dCoord 0 f q +
     ((q 0) ^ 2)⁻¹ • dCoord 1 (dCoord 1 f) q + dCoord 2 (dCoord 2 f) q
@@ -349,7 +356,8 @@ theorem scalarLaplacian_encode {w : Space → Space} {q : Space}
   rw [dCoord_dCoord_encode hw 0, dCoord_dCoord_encode hw 1,
     dCoord_dCoord_encode hw 2, dCoord_encode (hw.differentiableAt (by norm_num)) 0]
   simp only [coordinateVector, PiLp.single_apply, ↓reduceIte, Fin.reduceEq, mul_zero, zero_smul,
-    zero_pow (by norm_num : 2 ≠ 0),
+      zero_pow (by
+      norm_num : 2 ≠ 0),
     add_zero, mul_one, one_pow, one_smul, map_add, map_smul]
   simp only [scalarLaplacian, map_add, map_smul]
   module
@@ -397,6 +405,8 @@ theorem cartesianDerivative_components {f : Space → Space} {q : Space}
   simp only [chartVector, frame_inverse, fderiv_pack, pack_one]
   module
 
+/-- Vector advection, given by `w q 0 • dCoord 0 w q + (w q 1 / q 0) • (dCoord 1 w q +
+connection (w q)) + w q 2 • dCoord 2 w q`. -/
 noncomputable def vectorAdvection (w : Space → Space) (q : Space) : Space :=
   w q 0 • dCoord 0 w q + (w q 1 / q 0) • (dCoord 1 w q + connection (w q)) +
     w q 2 • dCoord 2 w q
@@ -411,9 +421,12 @@ theorem cartesianAdvection_components {f : Space → Space} {q : Space}
   unfold vectorAdvection
   rw [← h, frame_inverse']
 
+/-- Euclidean divergence, given by `∑ i : Fin 3, (fderiv ℝ f x (coordinateVector i)) i`. -/
 noncomputable def euclideanDivergence (f : Space → Space) (x : Space) : ℝ :=
   ∑ i : Fin 3, (fderiv ℝ f x (coordinateVector i)) i
 
+/-- Vector divergence, given by `(dCoord 0 w q) 0 + w q 0 / q 0 + (dCoord 1 w q) 1 / q 0 +
+(dCoord 2 w q) 2`. -/
 noncomputable def vectorDivergence (w : Space → Space) (q : Space) : ℝ :=
   (dCoord 0 w q) 0 + w q 0 / q 0 + (dCoord 1 w q) 1 / q 0 + (dCoord 2 w q) 2
 
@@ -433,9 +446,11 @@ theorem cartesianDivergence_components {f : Space → Space} {q : Space}
   simp [Fin.sum_univ_three, vectorDivergence, coordinateVector, connection_apply]
   ring
 
+/-- Euclidean gradient, given by `∑ i : Fin 3, dCoord i f x • coordinateVector i`. -/
 noncomputable def euclideanGradient (f : Space → ℝ) (x : Space) : Space :=
   ∑ i : Fin 3, dCoord i f x • coordinateVector i
 
+/-- Scalar gradient, given by `pack (dCoord 0 f q) (dCoord 1 f q / q 0) (dCoord 2 f q)`. -/
 noncomputable def scalarGradient (f : Space → ℝ) (q : Space) : Space :=
   pack (dCoord 0 f q) (dCoord 1 f q / q 0) (dCoord 2 f q)
 
@@ -462,9 +477,11 @@ theorem cartesianGradient_pullback {f : Space → ℝ} {q : Space}
 noncomputable def velocityComponents (u : VelocityField) : VelocityField :=
   fun tq => components (fun x => u (tq.1, x)) tq.2
 
+/-- Pressure pullback, defined pointwise by `p (tq.1, chart tq.2)`. -/
 noncomputable def pressurePullback (p : PressureField) : PressureField :=
   fun tq => p (tq.1, chart tq.2)
 
+/-- Cylindrical residual, constructed using `temporalDerivative`. -/
 noncomputable def cylindricalResidual (w : VelocityField) (p : PressureField)
     (t : ℝ) (q : Space) : Space :=
   temporalDerivative w t q + vectorAdvection (fun y => w (t, y)) q -

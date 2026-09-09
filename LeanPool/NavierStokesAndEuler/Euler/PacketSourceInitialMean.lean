@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketInitialZero
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketContract
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketInitialZero
 
 /-! All actual source mean profiles have the same localized initial
 support. When L=0 every mean profile starts from zero. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,12 +53,12 @@ theorem joinedSource_mean_initial_support (p : ℕ) (θ : ℝ) :
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_meanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceMeanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   unfold joinedSourceProfiles
   rw [profiles_step _ _ p hp]
   exact EulerMeanPacketProvider.meanSolve_initial_support M _ h θ
 
-theorem joinedSource_mean_initial_zero (hL : M.L=0) (p : ℕ) (x : Space) (θ : ℝ) :
+theorem joinedSource_mean_initial_zero (hL : M.L = 0) (p : ℕ) (x : Space) (θ : ℝ) :
     (joinedSourceProfiles P M D τ hτ hτT B primary p).mean (0,(x,θ)) = 0 := by
   by_cases hp0 : p=0
   · subst p
@@ -69,7 +71,7 @@ theorem joinedSource_mean_initial_zero (hL : M.L=0) (p : ℕ) (x : Space) (θ : 
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_meanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceMeanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   unfold joinedSourceProfiles
   rw [profiles_step _ _ p hp]
   exact EulerMeanPacketProvider.meanSolve_zero_initial M hL _ h x θ
@@ -98,12 +100,12 @@ theorem source_mean_initial_support (p : ℕ) (θ : ℝ) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_meanForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceMeanForcing P M D hT I Iprimary p hp⟩
   unfold sourceProfiles
   rw [profiles_step _ _ p hp]
   exact EulerMeanPacketProvider.meanSolve_initial_support M _ h θ
 
-theorem source_mean_initial_zero (hL : M.L=0) (p : ℕ) (x : Space) (θ : ℝ) :
+theorem source_mean_initial_zero (hL : M.L = 0) (p : ℕ) (x : Space) (θ : ℝ) :
     (sourceProfiles P M D I Iprimary p).mean (0,(x,θ)) = 0 := by
   by_cases hp0 : p=0
   · subst p
@@ -116,7 +118,7 @@ theorem source_mean_initial_zero (hL : M.L=0) (p : ℕ) (x : Space) (θ : ℝ) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_meanForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceMeanForcing P M D hT I Iprimary p hp⟩
   unfold sourceProfiles
   rw [profiles_step _ _ p hp]
   exact EulerMeanPacketProvider.meanSolve_zero_initial M hL _ h x θ

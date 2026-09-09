@@ -9,14 +9,18 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldComposition
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldBilinear
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
-public import LeanPool.NavierStokesAndEuler.Euler.SeparatingTimeDerivative
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SeparatingTimeDerivative
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! Genuine time product and chain rules for the constructed smooth
 bounded coefficient paths. The closed-interval statements include both
 one-sided endpoints, obtained from the actual Bochner integral identity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +37,7 @@ variable {K E V W : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
+/-- Apply field, given by `bilinear (ContinuousLinearMap.id ℝ (V →L[ℝ] W)) A B`. -/
 def applyField (A : SmoothTimeField K E (V →L[ℝ] W)) (B : SmoothTimeField K E V) :
     SmoothTimeField K E W :=
   bilinear (ContinuousLinearMap.id ℝ (V →L[ℝ] W)) A B
@@ -52,8 +57,8 @@ variable {E V W Z : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 theorem TimeDerivative.congr_fields
     {A A₁ B B₁ : SmoothTimeField (Icc (0 : ℝ) T) E V}
     (hA : TimeDerivative T hT A A₁)
-    (he : ∀ t x, A.field t x=B.field t x)
-    (he₁ : ∀ t x, A₁.field t x=B₁.field t x) :
+    (he : ∀ t x, A.field t x = B.field t x)
+    (he₁ : ∀ t x, A₁.field t x = B₁.field t x) :
     TimeDerivative T hT B B₁ := by
   intro t x
   have hf : (fun s => B.realField T hT s x) = (fun s => A.realField T hT s x) := by
@@ -93,7 +98,8 @@ theorem compDisplacement_time_interior
   have ho := realField_hasFDerivAt T hT A A₁ hA (t : ℝ) ht (x+D.realField T hT t x)
   have h := ho.comp_hasDerivAt (t : ℝ) hi
   change HasDerivAt (fun s => A.realField T hT s (x+D.realField T hT s x)) _ _
-  simpa only [Function.comp_def,Function.uncurry_def,id_eq,jointDerivative,ContinuousLinearMap.coprod_apply,
+  simpa only [Function.comp_def, Function.uncurry_def, id_eq, jointDerivative,
+      ContinuousLinearMap.coprod_apply,
     ContinuousLinearMap.toSpanSingleton_apply,one_smul,realField_apply] using h
 
 variable [CompleteSpace V]
@@ -104,11 +110,11 @@ theorem TimeDerivative.compDisplacement
     (hA : TimeDerivative T hT A A₁) (hD : TimeDerivative T hT D D₁) :
     TimeDerivative T hT (A.compDisplacement D)
       ((A₁.compDisplacement D).add (SmoothTimeField.applyField (A.derivative.compDisplacement D)
-        D₁)) := by
+          D₁)) := by
   intro t x
   let C := A.compDisplacement D
   let C₁ := (A₁.compDisplacement D).add (SmoothTimeField.applyField (A.derivative.compDisplacement
-    D) D₁)
+      D) D₁)
   have hh := EulerSeparatingTimeDerivative.hasDerivWithinAt T hT
     (sliceFamily T C x) (sliceFamily T C₁ x)
     (fun _ : Unit => ContinuousLinearMap.id ℝ V)

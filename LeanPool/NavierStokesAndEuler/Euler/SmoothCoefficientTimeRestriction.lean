@@ -6,10 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 # Restricting the time parameter of genuine smooth coefficient fields
@@ -19,6 +20,9 @@ most one. In particular it does not enlarge the spatial factorial radius
 when a source field is restricted to a history interval or shifted to a
 forward interval.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,49 +35,59 @@ variable {K L V : Type*} [TopologicalSpace K] [CompactSpace K]
   [TopologicalSpace L] [CompactSpace L]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothCoefficientTimeRestriction1 : NormedAddCommGroup (Space →ᵇ V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothCoefficientTimeRestriction2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothCoefficientTimeRestriction3 (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space
+    [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothCoefficientTimeRestriction4 (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space
+    [×n]→L[ℝ] V)) := inferInstance
 
 namespace SmoothCoefficientPath
 
 /-- Actual time precomposition, including every spatial jet. -/
-def comp (A : SmoothCoefficientPath K V) (φ : C(L,K)) : SmoothCoefficientPath L V where
+def comp (A : SmoothCoefficientPath K V) (φ : C(L, K)) : SmoothCoefficientPath L V where
   field := A.field.comp φ
   smooth t := A.smooth (φ t)
   jet n := (A.jet n).comp φ
   jet_eq n t x := A.jet_eq n (φ t) x
 
-@[simp] theorem comp_apply (A : SmoothCoefficientPath K V) (φ : C(L,K)) (t : L) (x : Space) :
+@[simp] theorem comp_apply (A : SmoothCoefficientPath K V) (φ : C(L, K)) (t : L) (x : Space) :
     (A.comp φ).field t x = A.field (φ t) x := rfl
 
-theorem comp_norm_le (A : SmoothCoefficientPath K V) (φ : C(L,K)) :
+theorem comp_norm_le (A : SmoothCoefficientPath K V) (φ : C(L, K)) :
     ‖(A.comp φ).field‖ ≤ ‖A.field‖ := by
   apply (ContinuousMap.norm_le _ (norm_nonneg _)).2
   intro t
   exact A.field.norm_coe_le_norm (φ t)
 
-theorem comp_jet_norm_le (A : SmoothCoefficientPath K V) (φ : C(L,K)) (n : ℕ) :
+theorem comp_jet_norm_le (A : SmoothCoefficientPath K V) (φ : C(L, K)) (n : ℕ) :
     ‖(A.comp φ).jet n‖ ≤ ‖A.jet n‖ := by
   apply (ContinuousMap.norm_le _ (norm_nonneg _)).2
   intro t
   exact (A.jet n).norm_coe_le_norm (φ t)
 
-theorem comp_translation (A : SmoothCoefficientPath K V) (φ : C(L,K)) (a : Space) :
+theorem comp_translation (A : SmoothCoefficientPath K V) (φ : C(L, K)) (a : Space) :
     translateCoefficientPath (A.comp φ).field a =
       (translateCoefficientPath A.field a).comp φ := rfl
 
 /-- A continuous change of time parameter preserves each literal spatial
 derivative bound with exactly the same constant. -/
-theorem comp_derivative_bound (A : SmoothCoefficientPath K V) (φ : C(L,K))
+theorem comp_derivative_bound (A : SmoothCoefficientPath K V) (φ : C(L, K))
     (n : ℕ) (C : ℝ)
     (hb : ∀ t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C)
     (t : L) (x : Space) :
     ‖iteratedFDeriv ℝ n ((A.comp φ).field t : Space → V) x‖ ≤ C :=
   hb (φ t) x
 
-theorem comp_translation_bound (A : SmoothCoefficientPath K V) (φ : C(L,K))
+theorem comp_translation_bound (A : SmoothCoefficientPath K V) (φ : C(L, K))
     (n : ℕ) (C : ℝ) (hC : 0 ≤ C)
     (hb : ∀ t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C)
     (a : Space) :
@@ -91,17 +105,23 @@ open Set EulerVolterraConvolution
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Initial inclusion, given by `⟨fun t => ⟨t,t.property.1,t.property.2.trans hτS⟩,
+continuous_subtype_val.subtype_mk _⟩`. -/
 def initialInclusion (S τ : ℝ) (hτS : τ ≤ S) : C(Icc (0 : ℝ) τ,Icc (0 : ℝ) S) :=
   ⟨fun t => ⟨t,t.property.1,t.property.2.trans hτS⟩,
     continuous_subtype_val.subtype_mk _⟩
 
+/-- Tail inclusion, given by `⟨fun t => ⟨τ+t,add_nonneg hτ t.property.1,by linarith
+[t.property.2]⟩, (continuous_const.add continuous_subtype_val).subtype_mk _⟩`. -/
 def tailInclusion (S τ : ℝ) (hτ : 0 ≤ τ) : C(Icc (0 : ℝ) (S-τ),Icc (0 : ℝ) S) :=
   ⟨fun t => ⟨τ+t,add_nonneg hτ t.property.1,by linarith [t.property.2]⟩,
     (continuous_const.add continuous_subtype_val).subtype_mk _⟩
 
+/-- Initial path, given by `ContinuousMap.compCLM ℝ V (initialInclusion S τ hτS)`. -/
 def initialPath (S τ : ℝ) (hτS : τ ≤ S) : C(Icc (0 : ℝ) S,V) →L[ℝ] C(Icc (0 : ℝ) τ,V) :=
   ContinuousMap.compCLM ℝ V (initialInclusion S τ hτS)
 
+/-- Tail path, given by `ContinuousMap.compCLM ℝ V (tailInclusion S τ hτ)`. -/
 def tailPath (S τ : ℝ) (hτ : 0 ≤ τ) : C(Icc (0 : ℝ) S,V) →L[ℝ] C(Icc (0 : ℝ) (S-τ),V) :=
   ContinuousMap.compCLM ℝ V (tailInclusion S τ hτ)
 
@@ -122,7 +142,7 @@ theorem tailPath_norm (S τ : ℝ) (hτ : 0 ≤ τ) : ‖tailPath (V := V) S τ 
   exact A.norm_coe_le_norm _
 
 theorem initial_extend (S τ : ℝ) (hS : 0 ≤ S) (hτ : 0 ≤ τ) (hτS : τ ≤ S)
-    (A : C(Icc (0 : ℝ) S,V)) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) τ) :
+    (A : C(Icc (0 : ℝ) S, V)) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) τ) :
     extendPath τ hτ (initialPath S τ hτS A) t = extendPath S hS A t := by
   simp only [extendPath, projIcc_of_mem hτ ht, initialPath, ContinuousMap.compCLM_apply,
     ContinuousMap.comp_apply, initialInclusion]
@@ -130,17 +150,17 @@ theorem initial_extend (S τ : ℝ) (hS : 0 ≤ S) (hτ : 0 ≤ τ) (hτS : τ �
   rfl
 
 theorem tail_extend (S τ : ℝ) (hS : 0 ≤ S) (hτ : 0 ≤ τ) (hτS : τ ≤ S)
-    (A : C(Icc (0 : ℝ) S,V)) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) (S-τ)) :
+    (A : C(Icc (0 : ℝ) S, V)) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) (S - τ)) :
     extendPath (S-τ) (sub_nonneg.mpr hτS) (tailPath S τ hτ A) t = extendPath S hS A (τ+t) := by
   have hs : τ+t ∈ Icc (0 : ℝ) S := ⟨add_nonneg hτ ht.1,by linarith [ht.2]⟩
   simp only [extendPath, projIcc_of_mem (sub_nonneg.mpr hτS) ht, tailPath,
-    ContinuousMap.compCLM_apply,
+      ContinuousMap.compCLM_apply,
     ContinuousMap.comp_apply, tailInclusion, projIcc_of_mem hS hs]
   rfl
 
 /-- A true within-time derivative restricts to the closed history interval. -/
 theorem initialPath_hasDerivWithinAt (S τ : ℝ) (hS : 0 ≤ S) (hτ : 0 ≤ τ) (hτS : τ ≤ S)
-    (A A₁ : C(Icc (0 : ℝ) S,V))
+    (A A₁ : C(Icc (0 : ℝ) S, V))
     (hd : ∀ t ∈ Icc (0 : ℝ) S, HasDerivWithinAt (extendPath S hS A)
       (extendPath S hS A₁ t) (Icc (0 : ℝ) S) t)
     (t : ℝ) (ht : t ∈ Icc (0 : ℝ) τ) :
@@ -153,10 +173,10 @@ theorem initialPath_hasDerivWithinAt (S τ : ℝ) (hS : 0 ≤ S) (hτ : 0 ≤ τ
 /-- Translation of the time variable has derivative one, including the
 within-derivatives at both ends of the forward interval. -/
 theorem tailPath_hasDerivWithinAt (S τ : ℝ) (hS : 0 ≤ S) (hτ : 0 ≤ τ) (hτS : τ ≤ S)
-    (A A₁ : C(Icc (0 : ℝ) S,V))
+    (A A₁ : C(Icc (0 : ℝ) S, V))
     (hd : ∀ t ∈ Icc (0 : ℝ) S, HasDerivWithinAt (extendPath S hS A)
       (extendPath S hS A₁ t) (Icc (0 : ℝ) S) t)
-    (t : ℝ) (ht : t ∈ Icc (0 : ℝ) (S-τ)) :
+    (t : ℝ) (ht : t ∈ Icc (0 : ℝ) (S - τ)) :
     HasDerivWithinAt (extendPath (S-τ) (sub_nonneg.mpr hτS) (tailPath S τ hτ A))
       (extendPath (S-τ) (sub_nonneg.mpr hτS) (tailPath S τ hτ A₁) t) (Icc (0 : ℝ) (S-τ)) t := by
   have hm : MapsTo (fun s : ℝ => τ+s) (Icc (0 : ℝ) (S-τ)) (Icc (0 : ℝ) S) := by

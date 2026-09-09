@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceVariationalInverse
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongInverse
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryPhysicalSupport
+public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEquation
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryPhysicalSupport
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongInverse
+
+/-! The actual strong mean inverse under the manuscript's spatial hypotheses. -/
 
 @[expose] public section
 
-/-! The actual strong mean inverse under the manuscript's spatial hypotheses. -/
 
 noncomputable section
 
@@ -29,7 +31,7 @@ theorem sourceMeanSolver_strong (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 <
     (M : Space → Space →L[ℝ] Space) (hM : AEStronglyMeasurable M volume)
     (C : ℝ≥0) (hC : ∀ x, ‖M x‖ ≤ C)
     (Be Bc L r : ℝ) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc)
-    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4)
+    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4)
     (hext : ∀ x, r ≤ ‖ℓ • x‖ → ∀ v : Space, -Be * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
     (hcore : ∀ x, ‖ℓ • x‖ < r → ∀ v : Space, -Bc * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
     (FInv F F₁ F₂ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (K : ℝ) (hK : 0 ≤ K)

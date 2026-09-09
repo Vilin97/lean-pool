@@ -8,32 +8,33 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FamilyNormTime
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
-public import LeanPool.NavierStokesAndEuler.Euler.MetricPathConvergence
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual finite weighted forcing norms in the Bochner time space. -/
 
 @[expose] public section
 
-/-! Actual finite weighted forcing norms in the Bochner time space. -/
 
 noncomputable section
 
 namespace EulerWeightedForcingTime
 
 open MeasureTheory Set EulerTimeLp EulerVolterraConvolution EulerFamilyNormTime
-  EulerFiniteMetricEnergy
+    EulerFiniteMetricEnergy
 open scoped Topology
 
 variable {A I H : Type*} [Fintype A] [Fintype I] [NormedAddCommGroup H] [NormedSpace ℝ H]
 
 /-- Multiplication by a continuous scalar time weight as a genuine Bochner operator. -/
 def scalarTimeMultiplier (T : ℝ) (hT : 0 ≤ T) (w : C(Icc (0 : ℝ) T, ℝ)) : TimeLp T ℝ →L[ℝ] TimeLp T
-  ℝ :=
+    ℝ :=
   timeMultiplier T hT (⟨fun t => w t • ContinuousLinearMap.id ℝ ℝ,
     w.continuous.smul continuous_const⟩ : C(Icc (0 : ℝ) T, ℝ →L[ℝ] ℝ))
 
 /-- The actual scalar multiplier has its literal weighted representative. -/
 theorem scalarTimeMultiplier_ae (T : ℝ) (hT : 0 ≤ T) (w : C(Icc (0 : ℝ) T, ℝ)) (u : TimeLp T ℝ) :
     (scalarTimeMultiplier T hT w u : ℝ → ℝ) =ᵐ[timeMeasure T] fun t => extendPath T hT w t * u t :=
-      by
+        by
   exact timeMultiplier_ae T hT
     (⟨fun t => w t • ContinuousLinearMap.id ℝ ℝ, w.continuous.smul continuous_const⟩ :
       C(Icc (0 : ℝ) T, ℝ →L[ℝ] ℝ)) u
@@ -52,7 +53,7 @@ theorem weightedForcingTime_ae (T : ℝ) (hT : 0 ≤ T) (w : A → C(Icc (0 : �
       (scalarTimeMultiplier T hT (w i) (familyNormTime T (F i)) : ℝ → ℝ) =ᵐ[timeMeasure T]
         fun t => extendPath T hT (w i) t * familyNorm (F i t) := by
     filter_upwards [scalarTimeMultiplier_ae T hT (w i) (familyNormTime T (F i)), familyNormTime_ae
-      T (F i)]
+        T (F i)]
       with t h1 h2
     rw [h1, h2]
   filter_upwards [Lp.coeFn_fun_finsetSum (Finset.univ : Finset A)
@@ -81,13 +82,14 @@ theorem weightedForcingPath_apply (T : ℝ) (w : A → C(Icc (0 : ℝ) T, ℝ))
     (F : A → C(Icc (0 : ℝ) T, I → H)) (t : Icc (0 : ℝ) T) :
     weightedForcingPath T w F t = ∑ i, w i t * familyNorm (F i t) := by
   simp only [weightedForcingPath, ContinuousMap.sum_apply, ContinuousMap.mul_apply,
-    ContinuousMap.coe_mk]
+      ContinuousMap.coe_mk]
 
-/-- Continuous forcing paths have exactly the same weighted norm in the genuine Bochner construction. -/
+/-- Continuous forcing paths have exactly the same weighted norm in the genuine Bochner
+construction. -/
 theorem weightedForcingTime_pathLp (T : ℝ) (hT : 0 ≤ T) (w : A → C(Icc (0 : ℝ) T, ℝ))
     (F : A → C(Icc (0 : ℝ) T, I → H)) :
     weightedForcingTime T hT w (fun i => pathLp T hT (F i)) = pathLp T hT (weightedForcingPath T w
-      F) := by
+        F) := by
   apply Lp.ext
   filter_upwards [weightedForcingTime_ae T hT w (fun i => pathLp T hT (F i)),
     ae_all_iff.mpr (fun i => pathLp_ae T hT (F i)), pathLp_ae T hT (weightedForcingPath T w F)]
@@ -97,6 +99,6 @@ theorem weightedForcingTime_pathLp (T : ℝ) (hT : 0 ≤ T) (w : A → C(Icc (0 
     weightedForcingPath T w F (projIcc 0 T hT t)
   rw [weightedForcingPath_apply]
   exact Finset.sum_congr rfl (fun i _ => congrArg (fun x => extendPath T hT (w i) t * familyNorm x)
-    (h2 i))
+      (h2 i))
 
 end EulerWeightedForcingTime

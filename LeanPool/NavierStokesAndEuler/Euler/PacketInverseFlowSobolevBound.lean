@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
 
-@[expose] public section
-
 /-! A finite-order Sobolev composition constant obtained from the actual
 parent deformation. No inverse-flow derivative budget is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,6 +21,7 @@ namespace EulerPacketInverseFlowGevrey
 open Set EulerSmoothLimit EulerGevrey EulerPacketPiola
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Finite order constant, given by `1+9*C^2*(sourceInverseRadius C R)^n*(n.factorial : ℝ)^2`. -/
 def finiteOrderConstant (C R : ℝ) (n : ℕ) : ℝ :=
   1+9*C^2*(sourceInverseRadius C R)^n*(n.factorial : ℝ)^2
 
@@ -45,7 +47,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
   (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
 
 include hX hY hXY hR hC hdet hF in
 theorem inverseFlow_finiteOrderBound (n i : ℕ) (hi : 1 ≤ i) (hin : i ≤ n)

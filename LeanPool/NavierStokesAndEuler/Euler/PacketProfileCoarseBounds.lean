@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoarseMajorant
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderProfileChange
+import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+
+/-! Removing the bounded time profile and performing the one final coarse factorial split. -/
 
 @[expose] public section
 
-/-! Removing the bounded time profile and performing the one final coarse factorial split. -/
 
 noncomputable section
 
@@ -24,7 +26,7 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField} {G : Field P T raw}
   {q d : ℕ} {R A : ℝ}
 
 theorem WordBound.remove_profile (hT : 0 ≤ T)
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     (hG : (G.normalized hT g hg).WordBound q R A d)
     (C : ℝ) (hC : 0 ≤ C) (hbound : ∀ t, g t ≤ C) : G.WordBound q R (C*A) d := by
   have h := hG.changeProfile hT (ContinuousMap.const (Icc (0 : ℝ) T) 1) (fun _ => zero_lt_one)
@@ -33,11 +35,11 @@ theorem WordBound.remove_profile (hT : 0 ≤ T)
   simpa only [one_mul] using hh
 
 theorem WordBound.coarse_grade (hG : G.WordBound q R A d) (hR : 1 ≤ R) (hA : 0 ≤ A)
-    (N p : ℕ) (hN : 1 ≤ N) (hp : p ≤ 2*N+2) (hd : d ≤ 110*(p+1)) :
+    (N p : ℕ) (hN : 1 ≤ N) (hp : p ≤ 2 * N + 2) (hd : d ≤ 110 * (p + 1)) :
     G.WordBound q (4*R) (A*(gradeBase R N)^(p+1)) 0 := by
   intro n
   exact (hG n).trans ((mul_le_mul_of_nonneg_left (majorant_grade_bound R hR N p d n hN hp hd)
-    hA).trans_eq
+      hA).trans_eq
     (by ring))
 
 end EulerPacketCylinderField.Field
@@ -62,7 +64,7 @@ end EulerPacketTimeProfile.Scales
 namespace EulerPacketCylinderField.ProfileBudget
 
 open Set EulerSmoothLimit EulerPacketProfileRecursion EulerPacketTimeProfile
-  EulerPacketShiftArithmetic
+    EulerPacketShiftArithmetic
 
 variable {P T : ℝ} [Fact (0 < P)] {hT : 0 ≤ T} {support : Set Space} {a : Profile}
   {G : ProfileRegularity P T hT support a} {S : Scales (Icc (0 : ℝ) T)} {R : ℝ} {p : ℕ}
@@ -84,12 +86,12 @@ theorem mean_unnormalized : G.mean.WordBound 6 R (S.H0^(2*p)) (meanShift p) := b
     (S.H0^(2*p)) (pow_nonneg S.H0_pos.le _) (S.mean_le_coarse p)
 
 theorem meanDerivative_unnormalized : G.meanDerivative.WordBound 6 R (S.H0^(2*p)) (meanShift p) :=
-  by
+    by
   simpa only [mul_one] using B.meanDerivative.remove_profile hT (S.mean p) (S.mean_pos p)
     (S.H0^(2*p)) (pow_nonneg S.H0_pos.le _) (S.mean_le_coarse p)
 
 theorem corrector_unnormalized (hp : 1 ≤ p) : G.corrector.WordBound 6 R (S.H0^(2*p)) (highShift p)
-  := by
+    := by
   simpa only [mul_one] using B.corrector.remove_profile hT (S.high p) (S.high_pos p)
     (S.H0^(2*p)) (pow_nonneg S.H0_pos.le _) (S.high_le_coarse p hp)
 
@@ -99,7 +101,7 @@ theorem correctorDerivative_unnormalized (hp : 1 ≤ p) :
     (S.H0^(2*p)) (pow_nonneg S.H0_pos.le _) (S.high_le_coarse p hp)
 
 theorem pressure_unnormalized (hp : 1 ≤ p) : G.pressure.WordBound 6 R (S.H0^(2*p)) (highShift p) :=
-  by
+    by
   simpa only [mul_one] using B.pressure.remove_profile hT (S.high p) (S.high_pos p)
     (S.H0^(2*p)) (pow_nonneg S.H0_pos.le _) (S.high_le_coarse p hp)
 

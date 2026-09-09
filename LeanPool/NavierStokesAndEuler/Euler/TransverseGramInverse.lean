@@ -6,9 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.InverseRegularity
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # The genuine transverse Gram inverse
@@ -17,6 +22,9 @@ The inverse of `Q*Q`, for `Q = F R⊥`, is constructed from the lower frame
 bound.  Its inverse identities and derivative follow from the already proved
 coercive operator inverse, not from an assumed matrix inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

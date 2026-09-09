@@ -9,8 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseCoordinateRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FieldProduct
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseMomentumRegularity
+import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 
 /-!
 # Strong transverse evolution from the actual variational solve
@@ -20,6 +20,9 @@ The constructed Gram inverse then upgrades the coordinate derivative to H¹.
 Differentiating the momentum identity and using `Q_tt = -H Q` gives the literal
 projected equation (10), with no assumed acceleration or differential inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

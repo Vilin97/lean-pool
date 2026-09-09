@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeMomentBalances
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSumBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalRankDefect
 
-@[expose] public section
-
 /-!
 # The mean gain of the actual signed wave update
 
@@ -20,6 +18,9 @@ pressure is recomputed by the moving-gauge operator.  The removed physical
 bumps are controlled by actual moment identities; the complete covariance
 remainder retains the signed square and the curl terms.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,16 +32,21 @@ open WeightedClasses MeanIncrementBounds CorrectionState
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Scalar field: an abbreviation for `MeanIncrementBounds.Field D`. -/
 abbrev ScalarField (D : Type) := MeanIncrementBounds.Field D
+/-- Tensor: an abbreviation for `Fin 3 → Fin 3 → ScalarField D`. -/
 abbrev Tensor (D : Type) := Fin 3 → Fin 3 → ScalarField D
 
 /-- These are changes of the literal covariance terms in (32). -/
 noncomputable def thetaCovarianceChange (o : Operators D) (X : Tensor D) : ScalarField D :=
   o.radialDiv 2 (X 0 1) + o.dz (X 2 1)
 
+/-- Axial covariance change, given by `o.radialDiv 1 (X 0 2) + o.dz (X 2 2)`. -/
 noncomputable def axialCovarianceChange (o : Operators D) (X : Tensor D) : ScalarField D :=
   o.radialDiv 1 (X 0 2) + o.dz (X 2 2)
 
+/-- Radial covariance change, given by `-o.radialDiv 1 (X 0 0) - o.dz (X 2 0) + o.invRadius * X
+1 1`. -/
 noncomputable def radialCovarianceChange (o : Operators D) (X : Tensor D) : ScalarField D :=
   -o.radialDiv 1 (X 0 0) - o.dz (X 2 0) + o.invRadius * X 1 1
 
@@ -150,6 +156,7 @@ end CovarianceBounds
 
 /-! ## Literal state and covariance increments -/
 
+/-- Zero triple, given by `⟨0, 0, 0⟩`. -/
 noncomputable def zeroTriple : Triple D := ⟨0, 0, 0⟩
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -157,6 +164,8 @@ theorem updated_zeroTriple (m : Triple D) : updated m zeroTriple = m := by
   cases m
   simp [updated, zeroTriple]
 
+/-- Covariance increment, given by `bilinearCovariance (u + w) (u + w) - bilinearCovariance u
+u`. -/
 noncomputable def covarianceIncrement (u w : Oscillation D) : Tensor D :=
   bilinearCovariance (u + w) (u + w) - bilinearCovariance u u
 
@@ -175,12 +184,15 @@ section ActualState
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Wave stage, given by `VariableGaugeMean.reconstructState g c (u.addIncrement zeroTriple 0 w
+q ⟨0, gaussian, 0⟩)`. -/
 noncomputable def waveStage (g : VariableGaugeMean.GaugeData S)
     (c : Context (PressureStream.Lift S)) (u : State (PressureStream.Lift S))
     (w : Oscillation (PressureStream.Lift S)) (q : OscillatoryScalar (PressureStream.Lift S))
     (gaussian : Oscillation (PressureStream.Lift S)) : State (PressureStream.Lift S) :=
   VariableGaugeMean.reconstructState g c (u.addIncrement zeroTriple 0 w q ⟨0, gaussian, 0⟩)
 
+/-- Pressure change, given by `(waveStage g c u w q gaussian).pressure - u.pressure`. -/
 noncomputable def pressureChange (g : VariableGaugeMean.GaugeData S)
     (c : Context (PressureStream.Lift S)) (u : State (PressureStream.Lift S))
     (w : Oscillation (PressureStream.Lift S)) (q : OscillatoryScalar (PressureStream.Lift S))
@@ -198,7 +210,7 @@ theorem waveStage_covariance (g : VariableGaugeMean.GaugeData S)
     (w : Oscillation (PressureStream.Lift S)) (q : OscillatoryScalar (PressureStream.Lift S))
     (gaussian : Oscillation (PressureStream.Lift S)) :
     (waveStage g c u w q gaussian).covariance = u.covariance + covarianceIncrement u.oscillation w
-      := by
+        := by
   change bilinearCovariance (u.oscillation + w) (u.oscillation + w) = _
   unfold covarianceIncrement State.covariance
   abel
@@ -220,7 +232,7 @@ theorem waveStage_theta_change {U : Set (PressureStream.Lift S)} (hU : IsOpen U)
       (thetaCovarianceChange c.operators (covarianceIncrement u.oscillation w)) := by
   change Agree U (MeanIncrementBounds.thetaResidual c.operators c.base
     (waveStage g c u w q gaussian).mean (waveStage g c u w q gaussian).covariance c.virtualTheta -
-      _) _
+        _) _
   rw [waveStage_mean, waveStage_covariance]
   exact thetaResidual_covariance_change hU c.operators hb hm u.covariance
     (covarianceIncrement u.oscillation w) hW hX c.virtualTheta
@@ -364,7 +376,8 @@ theorem native_radialDiv_slow_on (r : ReconstructionData) (ε fast : ℕ → ℝ
         (0, (0, r.radialDirection)) 0 := by
       have he := (hasDerivAt_const (0 : ℝ) x).fun_add
         ((hasDerivAt_id (0 : ℝ)).smul_const (0, (0, r.radialDirection)))
-      simp at he ⊢
+      simp only [Prod.smul_mk, smul_eq_mul, mul_zero, smul_zero, hasDerivAt_const_add_iff, id_eq,
+          one_smul, zero_add] at he ⊢
       exact he
     have hf0 : HasFDerivAt (liftSlow F n) (fderiv ℝ (liftSlow F n) x)
         (x + (0 : ℝ) • (0, (0, r.radialDirection))) := by simpa using hdiff.hasFDerivAt
@@ -374,7 +387,7 @@ theorem native_radialDiv_slow_on (r : ReconstructionData) (ε fast : ℕ → ℝ
       funext q
       simp [liftSlow]
     simpa only [zero_smul, add_zero, zero_add, one_smul, hc, Function.comp_def, deriv_const] using
-      hh.deriv.symm
+        hh.deriv.symm
   simp only [Operators.radialDiv, Operators.dr, graphDerivative, Operators.invRadius,
     Pi.add_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, nativeOperators, graphOperators,
     hv, mul_zero, add_zero, liftSlow, IntegratedMeanBalances.radialDivergence, hdr,
@@ -393,17 +406,26 @@ variable {ι : Type} {s : StripData D} {P : ι → ℕ → D → ℝ} {α δ β 
 /-- Primitive geometry of the active label assembly; the overlap estimate
 is derived by `LabelSumBounds` independently of the size of `labels n`. -/
 structure Assembly (f : SignedFamily s P α δ β η) where
+  /-- Width of `Assembly`, of type `ℝ`. -/
   width : ℝ
+  /-- Exponent of `Assembly`, of type `ℝ`. -/
   exponent : ℝ
+  /-- Vr of `Assembly`, of type `TorusInverse.Plane`. -/
   vr : TorusInverse.Plane
+  /-- Vt of `Assembly`, of type `TorusInverse.Plane`. -/
   vt : TorusInverse.Plane
+  /-- Slots of `Assembly`, of type `PartitionedCovariance.SlotSystem width exponent vr vt`. -/
   slots : PartitionedCovariance.SlotSystem width exponent vr vt
+  /-- Label type of `Assembly`, of type `ℕ → Finset ι`. -/
   labels : ℕ → Finset ι
+  /-- Label of `Assembly`, of type `ℕ → ι → SlotColoring.Label`. -/
   label : ℕ → ι → SlotColoring.Label
   injective : ∀ n, Set.InjOn (label n) (labels n : Set ι)
   level : ∀ n l, l ∈ labels n → 1 ≤ (label n l).1
+  /-- Window of `Assembly`, of type `ℕ → D → WindowPoint`. -/
   window : ℕ → D → WindowPoint
   window_continuous : ∀ n, ContinuousOn (window n) s.domain
+  /-- Auxiliary of `Assembly`, of type `ℕ → D → TorusInverse.Plane`. -/
   auxiliary : ℕ → D → TorusInverse.Plane
   primary_support : SupportedOscillations slots label window auxiliary s.domain
     (fun l => (f.primary l).oscillation)
@@ -414,18 +436,27 @@ structure Assembly (f : SignedFamily s P α δ β η) where
   curl_support : SupportedOscillations slots label window auxiliary s.domain
     (fun l => (f.curl l).oscillation)
 
+/-- Primary field, given by `fieldSum a.labels (fun l => (f.primary l).oscillation)`. -/
 noncomputable def primaryField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.primary l).oscillation)
+/-- Old field, given by `fieldSum a.labels (fun l => (f.old l).oscillation)`. -/
 noncomputable def oldField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.old l).oscillation)
+/-- Tangent field, given by `fieldSum a.labels (fun l => (f.tangent l).oscillation)`. -/
 noncomputable def tangentField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.tangent l).oscillation)
+/-- Curl field, given by `fieldSum a.labels (fun l => (f.curl l).oscillation)`. -/
 noncomputable def curlField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.curl l).oscillation)
+/-- Remainder tensor, given by `signedRemainder (primaryField f a) (oldField f a) (tangentField
+f a) (curlField f a)`. -/
 noncomputable def remainderTensor (f : SignedFamily s P α δ β η) (a : Assembly f) : Tensor D :=
   signedRemainder (primaryField f a) (oldField f a) (tangentField f a) (curlField f a)
+/-- Cross tensor, given by `symmetricCovariance (primaryField f a) (tangentField f a)`. -/
 noncomputable def crossTensor (f : SignedFamily s P α δ β η) (a : Assembly f) : Tensor D :=
   symmetricCovariance (primaryField f a) (tangentField f a)
+/-- Increment tensor, given by `covarianceIncrement (oldField f a) (tangentField f a + curlField
+f a)`. -/
 noncomputable def incrementTensor (f : SignedFamily s P α δ β η) (a : Assembly f) : Tensor D :=
   covarianceIncrement (oldField f a) (tangentField f a + curlField f a)
 
@@ -542,54 +573,75 @@ end Native
 
 /-! ## One moving chart and its measured debts -/
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
 
+/-- Geometry data, collecting `coord`, `region`, `patch`, `leftWeight`, `rightWeight`,
+`left_pos` and their compatibility conditions. -/
 structure Geometry where
+  /-- Coord of `Geometry`, of type `ℝ`. -/
   coord : ℝ
+  /-- Region of `Geometry`, of type `LocalSignedRequest.SlowRegion coord`. -/
   region : LocalSignedRequest.SlowRegion coord
+  /-- Patch of `Geometry`, of type `SignedStressPrimitive.Patch`. -/
   patch : SignedStressPrimitive.Patch
+  /-- Left weight of `Geometry`, of type `ℝ`. -/
   leftWeight : ℝ
+  /-- Right weight of `Geometry`, of type `ℝ`. -/
   rightWeight : ℝ
   left_pos : 0 < leftWeight
   right_pos : 0 < rightWeight
+  /-- Epsilon of `Geometry`, of type `ℕ → ℝ`. -/
   epsilon : ℕ → ℝ
+  /-- Slow of `Geometry`, of type `ℕ → ℝ`. -/
   slow : ℕ → ℝ
   epsilon_pos : ∀ n, 0 < epsilon n
   epsilon_le_one : ∀ n, epsilon n ≤ 1
   slow_ge_one : ∀ n, 1 ≤ slow n
+  /-- Gauge of `Geometry`, of type `VariableGaugeMean.GaugeData Plane`. -/
   gauge : VariableGaugeMean.GaugeData Plane
   inner_eq : gauge.radial.inner = patch.a
   outer_eq : gauge.radial.outer = patch.b
   exponent_pos : 0 < gauge.radial.exponent
   length_eq : ∀ n, gauge.length n = VariableGaugeMean.qLength coord
+  /-- Fast of `Geometry`, of type `ℕ → ℝ`. -/
   fast : ℕ → ℝ
+  /-- Axial of `Geometry`, of type `Plane`. -/
   axial : Plane
+  /-- Time of `Geometry`, of type `Plane`. -/
   time : Plane
+  /-- Temporal of `Geometry`, of type `Plane`. -/
   temporal : Plane
 
 namespace Geometry
 
+/-- Strip, constructed using `LocalSignedRequest.movingStripData`. -/
 noncomputable def strip (G : Geometry) : StripData Point :=
   LocalSignedRequest.movingStripData G.region G.patch.a G.patch.b G.leftWeight G.rightWeight
     G.patch.a_pos G.left_pos G.right_pos G.epsilon G.slow G.epsilon_pos
     G.epsilon_le_one G.slow_ge_one
 
+/-- Slow strip, constructed using `PhysicalMeanDomain.localSlowStripData`. -/
 noncomputable def slowStrip (G : Geometry) : StripData Plane :=
   PhysicalMeanDomain.localSlowStripData G.region.carrier G.region.isOpen G.epsilon G.slow
     G.epsilon_pos G.epsilon_le_one G.slow_ge_one
 
+/-- Domain, given by `PhysicalMeanDomain.slowDomain G.region.carrier`. -/
 noncomputable def domain (G : Geometry) : Set Point := PhysicalMeanDomain.slowDomain
-  G.region.carrier
+    G.region.carrier
 
+/-- Operators, given by `StateMomentBalances.nativeOperators G.gauge.radial G.epsilon G.fast
+G.axial G.time G.temporal`. -/
 noncomputable def operators (G : Geometry) : Operators Point :=
   StateMomentBalances.nativeOperators G.gauge.radial G.epsilon G.fast G.axial G.time G.temporal
 
-theorem inner_pos (G : Geometry) : 0 < G.gauge.radial.inner := by rw [G.inner_eq]; exact
-  G.patch.a_pos
+theorem inner_pos (G : Geometry) : 0 < G.gauge.radial.inner := by
+    rw [G.inner_eq]; exact G.patch.a_pos
 
 theorem domain_open (G : Geometry) : IsOpen G.domain := PhysicalMeanDomain.slowDomain_open
-  G.region.isOpen
+    G.region.isOpen
 
 theorem strip_subset (G : Geometry) : G.strip.domain ⊆ G.domain := by
   intro x hx
@@ -616,7 +668,7 @@ theorem strip_radius_pos (G : Geometry) {x : Point} (hx : x ∈ G.strip.domain) 
   exact (div_pos_iff.mp hp).resolve_right (fun hn => (not_lt_of_ge hq.le) hn.2) |>.1
 
 theorem local_operators (G : Geometry) : LocalRankDefect.LocalOperators G.region.carrier
-  G.operators :=
+    G.operators :=
   ⟨rfl, (StateMomentBalances.nativeOperators_positive G.gauge.radial G.epsilon G.fast
     G.axial G.time G.temporal).radialProfile.mono (fun _ hx => hx.1)⟩
 
@@ -650,7 +702,7 @@ theorem slowClass_lift (G : Geometry) {α : ℝ} {f : ℕ → Plane → ℝ}
     hpopen.uniqueDiffOn hx (ENat.natCast_le_of_coe_top_le_withTop le_rfl j)
   change iteratedFDerivWithin ℝ j (f n ∘ pr) (pr ⁻¹' G.region.carrier) x =
     (iteratedFDerivWithin ℝ j (f n) G.region.carrier (pr x)).compContinuousLinearMap (fun _ => pr)
-      at he
+        at he
   rw [iteratedFDerivWithin_of_isOpen j hpopen hx,
     iteratedFDerivWithin_of_isOpen (f := f n) j G.region.isOpen
       (show pr x ∈ G.region.carrier from hx)] at he
@@ -677,7 +729,7 @@ namespace MovingField
 theorem sub {G : Geometry} {f g : ScalarField Point} (hf : MovingField G f) (hg : MovingField G g) :
     MovingField G (f - g) := by
   refine ⟨fun n => (hf.smooth n).sub (hg.smooth n), fun n => (hf.supported n).sub (hg.supported n),
-    ?_⟩
+      ?_⟩
   intro n r z hz Y k
   exact congrArg₂ (· - ·) (hf.periodic n r z hz Y k) (hg.periodic n r z hz Y k)
 
@@ -703,11 +755,14 @@ end MovingField
 
 /-! ## Actual pressure recomputation and the physical cancellation -/
 
+/-- Physical sigma, defined pointwise by `SignedStressPrimitive.physicalBarSigma G.patch e
+(SimilarityCoordinates.coordinateQ G.coord) (f n) (x.1, x.2.1)`. -/
 noncomputable def physicalSigma (G : Geometry) (e : ℕ) (f : ScalarField Point) : ScalarField Point
-  :=
+    :=
   fun n x => SignedStressPrimitive.physicalBarSigma G.patch e
     (SimilarityCoordinates.coordinateQ G.coord) (f n) (x.1, x.2.1)
 
+/-- Removed bump as an element of `ScalarField Point`. -/
 noncomputable def removedBump (G : Geometry) (e : ℕ) (f : ScalarField Point) : ScalarField Point :=
   fun n x => SignedStressPrimitive.physicalBump G.patch e
     (SimilarityCoordinates.coordinateQ G.coord) (PressureStream.torusAverage (f n)) (x.1, x.2.1)
@@ -753,7 +808,7 @@ theorem pressureChange_mem (G : Geometry) (c : Context Point) (u : State Point)
 theorem physicalSigma_smooth (G : Geometry) (e : ℕ) {f : ScalarField Point}
     (hf : SmoothOn G.domain f)
     (hs : ∀ n, LocalSignedRequest.MovingSupport G.patch.a G.patch.b G.coord G.region.carrier (f n))
-      :
+        :
     SmoothOn G.domain (physicalSigma G e f) := fun n =>
   LocalSignedRequest.physicalBarSigma_contDiffOn G.region G.patch e (hf n) (hs n)
 
@@ -788,7 +843,7 @@ theorem cross_cancels (G : Geometry) (e : ℕ) (he : e = 2 ∨ e = 1)
     (hcross : Agree G.strip.domain (StateMomentBalances.meanBar X) (physicalSigma G e f))
     (n : ℕ) {x : Point} (hx : x ∈ G.strip.domain) :
     StateMomentBalances.meanBar f n x + StateMomentBalances.meanBar (G.operators.radialDiv (e : ℝ)
-      X) n x =
+        X) n x =
       removedBump G e f n x := by
   rw [meanBar_radialDiv_on G.region.isOpen G.operators rfl
     (fun _ _ _ => rfl) hX.smooth hX.periodic (e : ℝ) n (G.strip_subset hx),
@@ -814,7 +869,7 @@ theorem removed_bumps_mem (G : Geometry) (c : Context Point) (u : State Point) {
   simp only [debt, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val] at hP hθ hz
   constructor
   · exact GaugeMomentBalances.state_angular_bump_improvedClass G.region G.patch G.left_pos
-    G.right_pos
+      G.right_pos
       G.patch.a_pos G.patch.a_lt_b G.gauge.radial G.epsilon G.fast G.slow G.epsilon_pos
       G.epsilon_le_one G.slow_ge_one G.axial G.time G.temporal c u α ho Hθ hmθ hθ
   · apply GaugeMomentBalances.state_axial_bump_improvedClass G.region G.patch G.left_pos G.right_pos
@@ -832,18 +887,22 @@ end Geometry
 
 /-! ## The literal averaged residual after the update -/
 
+/-- Theta remainder field, given by `thetaCovarianceChange G.operators E + G.operators.dz (S 2
+1)`. -/
 noncomputable def thetaRemainderField (G : Geometry) (S E : Tensor Point) : ScalarField Point :=
   thetaCovarianceChange G.operators E + G.operators.dz (S 2 1)
 
+/-- Axial remainder field, given by `axialCovarianceChange G.operators E + G.operators.dz (S 2
+2) + G.operators.dz p`. -/
 noncomputable def axialRemainderField (G : Geometry) (S E : Tensor Point) (p : ScalarField Point) :
     ScalarField Point := axialCovarianceChange G.operators E + G.operators.dz (S 2 2) +
-      G.operators.dz p
+        G.operators.dz p
 
 /-- These hypotheses concern local regularity and the actual incoming
 state. None is a bound or a cancellation assertion about the updated residual. -/
 structure LocalData (G : Geometry) (c : Context Point) (u : State Point)
     (w : Oscillation Point) (q : OscillatoryScalar Point) (gaussian : Oscillation Point) : Prop
-      where
+        where
   operators_eq : c.operators = G.operators
   base : SmoothTriple G.strip.domain c.base
   mean : SmoothTriple G.strip.domain u.mean
@@ -893,7 +952,7 @@ theorem pressureChange_mem {α κ : ℝ} (ho : OperatorBounds G.strip G.operator
     (hX : TensorClass G.strip α (covarianceIncrement u.oscillation w)) :
     MeanClass G.strip (α - κ) (pressureChange G.gauge c u w q gaussian) := by
   apply SignedMeanGain.pressureChange_mem G c u w q gaussian H.reconstructed H.source
-    H.updated_source
+      H.updated_source
   apply class_congr (radialCovarianceChange_mem ho hX)
   simpa only [H.operators_eq] using waveStage_gr_change G.strip.isOpen_domain
     G.gauge c u w q gaussian H.base H.mean H.covariance (fun i j => (hX i j).smooth)
@@ -953,21 +1012,21 @@ theorem averaged_residual_decomposition (G : Geometry) (c : Context Point) (u : 
     (hcrossz : Agree G.strip.domain (StateMomentBalances.meanBar (S 0 2))
       (physicalSigma G 1 (u.axialResidual c))) :
     Agree G.strip.domain (StateMomentBalances.meanBar ((waveStage G.gauge c u w q
-      gaussian).thetaResidual c))
+        gaussian).thetaResidual c))
       (removedBump G 2 (u.thetaResidual c) + StateMomentBalances.meanBar (thetaRemainderField G S
-        E)) ∧
+          E)) ∧
     Agree G.strip.domain (StateMomentBalances.meanBar ((waveStage G.gauge c u w q
-      gaussian).axialResidual c))
+        gaussian).axialResidual c))
       (removedBump G 1 (u.axialResidual c) +
         StateMomentBalances.meanBar (axialRemainderField G S E (pressureChange G.gauge c u w q
-          gaussian))) := by
+            gaussian))) := by
   have hSs := fun i j n => ((hS i j).smooth n).mono G.strip_subset
   have hEs := fun i j n => ((hE i j).smooth n).mono G.strip_subset
   have hRestθ : SmoothOn G.domain (thetaRemainderField G S E) :=
     (MovingField.covariance_flux_smooth hE).1.add (SmoothOn.dz (hS 2 1).smooth G.domain_open
-      G.operators)
+        G.operators)
   have hRestz : SmoothOn G.domain (axialRemainderField G S E (pressureChange G.gauge c u w q
-    gaussian)) :=
+      gaussian)) :=
     ((MovingField.covariance_flux_smooth hE).2.1.add
       (SmoothOn.dz (hS 2 2).smooth G.domain_open G.operators)).add
         (H.pressureChange_smooth.dz G.domain_open G.operators)
@@ -1091,7 +1150,7 @@ theorem signed_mean_gain_of_cross
       · exact (ho.dz (hSi 2 2)).mono_exponent (by linarith)
     · exact (ho.dz hp).mono_exponent (by linarith)
   have hRestθs : SmoothOn G.domain (thetaRemainderField G (crossTensor f a) (remainderTensor f a))
-    :=
+      :=
     (MovingField.covariance_flux_smooth hEc).1.add
       (SmoothOn.dz (hS 2 1).smooth G.domain_open G.operators)
   have hRestzs : SmoothOn G.domain (axialRemainderField G (crossTensor f a) (remainderTensor f a)
@@ -1100,7 +1159,7 @@ theorem signed_mean_gain_of_cross
       (SmoothOn.dz (hS 2 2).smooth G.domain_open G.operators)).add
         (H.pressureChange_smooth.dz G.domain_open G.operators)
   have hdebt : ∀ i : Fin 3, UnweightedClass G.slowStrip (1 + σ - κ) (fun n z => debt c u n z i) :=
-    by
+      by
     intro i
     convert! hd i using 1
     ring
@@ -1122,30 +1181,49 @@ theorem signed_mean_gain_of_cross
 
 /-! ## A shared native construction, before any signed output is known -/
 
+/-- Native index: an abbreviation for `PartitionedCovariance.UnsignedLabel × Fin 2`. -/
 abbrev NativeIndex := PartitionedCovariance.UnsignedLabel × Fin 2
 
 /-- All matches concern the common matrix, unit fundamental, mask and
 carrier. The signed coefficient is constructed below from the measured
 physical request, not included as a realization hypothesis. -/
 structure NativeData (G : Geometry) where
+  /-- Width of `NativeData`, of type `ℝ`. -/
   width : ℝ
+  /-- Exponent of `NativeData`, of type `ℝ`. -/
   exponent : ℝ
+  /-- Vr of `NativeData`, of type `Plane`. -/
   vr : Plane
+  /-- Vt of `NativeData`, of type `Plane`. -/
   vt : Plane
+  /-- Slots of `NativeData`, of type `PartitionedCovariance.SlotSystem width exponent vr vt`. -/
   slots : PartitionedCovariance.SlotSystem width exponent vr vt
   determinant : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0
+  /-- Index of `NativeData`, of type `ℕ → ℕ`. -/
   index : ℕ → ℕ
   index_pos : ∀ n, 1 ≤ index n
+  /-- Pairs supplied by `NativeData`. -/
   pairs : (n : ℕ) → (ℝ × Plane) → (l : PartitionedCovariance.UnsignedLabel) →
     PartitionedCovariance.PairData slots (PartitionedCovariance.tailLabel (index n) l)
+  /-- Position of `NativeData`, of type `ℕ → (ℝ × Plane) → SlotColoring.Position`. -/
   position : ℕ → (ℝ × Plane) → SlotColoring.Position
+  /-- Model target of `NativeData`, of type `ℕ → (ℝ × Plane) → SignedWaveUpdate.Vec2`. -/
   modelTarget : ℕ → (ℝ × Plane) → SignedWaveUpdate.Vec2
+  /-- Matrix of `NativeData`, of type `PartitionedCovariance.UnsignedLabel → ℕ → Point →
+  SignedWaveUpdate.Mat2`. -/
   matrix : PartitionedCovariance.UnsignedLabel → ℕ → Point → SignedWaveUpdate.Mat2
+  /-- Target of `NativeData`, of type `PartitionedCovariance.UnsignedLabel → ℕ → Point →
+  SignedWaveUpdate.Vec2`. -/
   target : PartitionedCovariance.UnsignedLabel → ℕ → Point → SignedWaveUpdate.Vec2
+  /-- Mask of `NativeData`, of type `PartitionedCovariance.UnsignedLabel → ℕ → Point → ℝ`. -/
   mask : PartitionedCovariance.UnsignedLabel → ℕ → Point → ℝ
+  /-- Unit of `NativeData`, of type `NativeIndex → ℕ → Point → SignedWaveUpdate.Space`. -/
   unit : NativeIndex → ℕ → Point → SignedWaveUpdate.Space
+  /-- Frequency of `NativeData`, of type `NativeIndex → ℕ → ℝ`. -/
   frequency : NativeIndex → ℕ → ℝ
+  /-- Phase of `NativeData`, of type `NativeIndex → ℕ → Point → ℝ`. -/
   phase : NativeIndex → ℕ → Point → ℝ
+  /-- Angular of `NativeData`, of type `NativeIndex → ℕ → ℤ`. -/
   angular : NativeIndex → ℕ → ℤ
   matrix_match : ∀ l n x, x ∈ G.strip.domain →
     matrix l n x = (pairs n (x.1, x.2.1) l).matrix
@@ -1168,6 +1246,7 @@ structure NativeData (G : Geometry) where
     SmoothCovariance.StrictCone (pairs n (x.1, x.2.1) l).matrix
       (PartitionedCovariance.chartTarget exponent (SimilarityCoordinates.coordinateQ G.coord x.2.1)
         (index n) (modelTarget n (x.1, x.2.1)) l)
+  /-- Label type of `NativeData`, of type `ℕ → Finset NativeIndex`. -/
   labels : ℕ → Finset NativeIndex
   coverage : ∀ n x, x ∈ G.strip.domain → ∀ l, l ∉ labels n →
     PartitionedCovariance.mask width (PartitionedCovariance.tailLabel (index n) l.1)
@@ -1177,8 +1256,9 @@ namespace NativeData
 
 variable {G : Geometry} (B : NativeData G)
 
+/-- Block, constructed using `SignedWaveUpdate.coefficientBlock`. -/
 noncomputable def block (A : PartitionedCovariance.UnsignedLabel → ℕ → Point →
-  SignedWaveUpdate.Vec2)
+    SignedWaveUpdate.Vec2)
     (l : NativeIndex) : HarmonicBlock Point :=
   SignedWaveUpdate.coefficientBlock (B.frequency l) (B.phase l) (B.angular l)
     (fun n x => CurlClassBounds.complexify
@@ -1186,11 +1266,14 @@ noncomputable def block (A : PartitionedCovariance.UnsignedLabel → ℕ → Poi
         (Real.sqrt (PartitionedCovariance.physicalViscosity B.exponent (B.index n) l.1) *
           A l.1 n x l.2 * B.mask l.1 n x)) • B.unit l n x)) 0
 
+/-- Primary blocks, given by `B.block (fun l n x => SmoothCovariance.amplitudes (B.matrix l n x)
+(B.target l n x))`. -/
 noncomputable def primaryBlocks : NativeIndex → HarmonicBlock Point :=
   B.block (fun l n x => SmoothCovariance.amplitudes (B.matrix l n x) (B.target l n x))
 
+/-- Signed blocks, constructed using `B.block`. -/
 noncomputable def signedBlocks (c : Context Point) (u : State Point) : NativeIndex → HarmonicBlock
-  Point :=
+    Point :=
   B.block (fun l n x => SignedCovariance.increment (B.matrix l n x) (B.target l n x)
     (SignedCovariance.chartStress B.exponent (B.index n)
       (LocalSignedRequest.requestedStress G.patch G.coord c u n x) l))
@@ -1217,7 +1300,7 @@ theorem primary_realization (l : NativeIndex) (n : ℕ) {x : Point} (hx : x ∈ 
         (PartitionedCovariance.physicalViscosity B.exponent (B.index n) l.1)
         (SmoothCovariance.amplitudes (B.pairs n (x.1, x.2.1) l.1).matrix
           (PartitionedCovariance.chartTarget B.exponent (SimilarityCoordinates.coordinateQ G.coord
-            x.2.1)
+              x.2.1)
             (B.index n) (B.modelTarget n (x.1, x.2.1)) l.1))
         (SimilarityCoordinates.coordinateQ G.coord x.2.1)
         (B.position n (x.1, x.2.1)) l.2).oscillation 0 (x.2.2, θ) i := by
@@ -1232,7 +1315,7 @@ theorem signed_realization (c : Context Point) (u : State Point)
         (PartitionedCovariance.physicalViscosity B.exponent (B.index n) l.1)
         (SignedCovariance.increment (B.pairs n (x.1, x.2.1) l.1).matrix
           (PartitionedCovariance.chartTarget B.exponent (SimilarityCoordinates.coordinateQ G.coord
-            x.2.1)
+              x.2.1)
             (B.index n) (B.modelTarget n (x.1, x.2.1)) l.1)
           (SignedCovariance.chartStress B.exponent (B.index n)
             (LocalSignedRequest.requestedStress G.patch G.coord c u n x) l.1))
@@ -1271,9 +1354,9 @@ theorem NativeData.requested_cross {G : Geometry} (B : NativeData G)
   intro n x hx
   rw [meanBar_symmetricCovariance _ _
     (LabelSumBounds.fieldSum_angularContinuous _ _ (fun _ => LabelSumBounds.block_angularContinuous
-      _))
+        _))
     (LabelSumBounds.fieldSum_angularContinuous _ _ (fun _ => LabelSumBounds.block_angularContinuous
-      _))]
+        _))]
   have hp (Y : Plane) (θ : ℝ) (j : Fin 3) :
       LabelSumBounds.fieldSum B.labels (fun l => (B.primaryBlocks l).oscillation)
         n ((x.1, (x.2.1, Y)), θ) j =
@@ -1282,7 +1365,7 @@ theorem NativeData.requested_cross {G : Geometry} (B : NativeData G)
         (PartitionedCovariance.physicalViscosity B.exponent (B.index n))
         (fun l => SmoothCovariance.amplitudes (B.pairs n (x.1, x.2.1) l).matrix
           (PartitionedCovariance.chartTarget B.exponent (SimilarityCoordinates.coordinateQ G.coord
-            x.2.1)
+              x.2.1)
             (B.index n) (B.modelTarget n (x.1, x.2.1)) l))
         (SimilarityCoordinates.coordinateQ G.coord x.2.1) (B.position n (x.1, x.2.1)) Y θ j := by
     rw [nativeAssembly_eq_finite _ _ _ _ _ _ _ (B.labels n) (B.coverage n x hx)]
@@ -1297,7 +1380,7 @@ theorem NativeData.requested_cross {G : Geometry} (B : NativeData G)
         (PartitionedCovariance.physicalViscosity B.exponent (B.index n))
         (fun l => SignedCovariance.increment (B.pairs n (x.1, x.2.1) l).matrix
           (PartitionedCovariance.chartTarget B.exponent (SimilarityCoordinates.coordinateQ G.coord
-            x.2.1)
+              x.2.1)
             (B.index n) (B.modelTarget n (x.1, x.2.1)) l)
           (SignedCovariance.chartStress B.exponent (B.index n)
             (LocalSignedRequest.requestedStress G.patch G.coord c u n x) l))
@@ -1392,7 +1475,7 @@ theorem native_signed_mean_gain
     MeanClass G.strip (1 + σ + 17 / 100) (StateMomentBalances.meanBar (v.axialResidual c)) := by
   obtain ⟨hcθ, hcz⟩ := native_family_cross G B c u f a hl hp hcp ht hct
   exact signed_mean_gain_of_cross G c u hσ hκ hκsmall f a q gaussian hold H ho hX hS hθ hz hd hcθ
-    hcz
+      hcz
 
 /-- The excluded Gaussian field is carried by the very same output state.
 The raw mean estimate does not set this field or its average to zero. -/

@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerStability
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientTimeRestriction
 
-@[expose] public section
-
 /-! Restriction of a genuine ordinary Euler evolution to an initial
 closed interval. The reference size of the original solution still
 bounds every restricted velocity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +26,8 @@ open scoped Topology
 variable {T : ℝ} {hT : 0 ≤ T} (U : Evolution T hT)
   (S : ℝ) (hS : 0 ≤ S) (hST : S ≤ T)
 
+/-- Restrict time, bundling `velocity`, `pressureForce`, `velocity_continuous`,
+`pressure_continuous` and the required compatibility proofs. -/
 def restrictTime : Evolution S hS where
   velocity t := U.velocity (initialInclusion T S hST t)
   pressureForce t := U.pressureForce (initialInclusion T S hST t)

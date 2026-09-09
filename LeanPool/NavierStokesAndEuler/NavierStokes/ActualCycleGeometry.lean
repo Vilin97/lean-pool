@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleExcluded
 
-@[expose] public section
-
 /-!
 # The actual fixed geometry for every correction cycle
 
@@ -19,12 +17,16 @@ The numerical data, strip, gauge, and operators below are the ones used by
 estimates is proved independently of the particular and signed wave choices.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCycleGeometry
 
 open CorrectionInitialization CorrectionStep WeightedClasses
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
 
 /-- Initialization supplies all numerical hypotheses of the similarity
@@ -46,9 +48,9 @@ noncomputable def similarityData : ActualCycleExcluded.SimilarityData where
   index := CommonWindow.index ActualPrimary.h
   gap := CommonWindow.gap ActualPrimary.h
   index_lower := CommonWindow.native_le_index_add ActualPrimary.h
-    ActualPrimary.outgoing.data.h_pos.le
+      ActualPrimary.outgoing.data.h_pos.le
   index_upper := fun n => (CommonWindow.index_le_native ActualPrimary.h n).trans (Nat.le_add_right
-    _ _)
+      _ _)
   slow := BaseContextAssembly.slowScale
   slow_one := BaseContextAssembly.one_le_slowScale
   slow_scale := fun _ => le_max_right _ _

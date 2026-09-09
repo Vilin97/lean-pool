@@ -8,13 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketSourceData
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildParent
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentLabelBudgets
-
-@[expose] public section
 
 /-! The literal physical-label bounds feed the source coefficient factory.
 The constructed child inherits this interface from its proved three-field
 estimate; frame and coefficient identifications are not extra hypotheses. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,11 +24,17 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerLpTrans
   EulerPacketParentLabelBounds EulerMeanClassicalWordBounds EulerPacketCofactor
   EulerPacketPiola EulerGraphInvariantFlow
 
+/-- Label data, collecting `K`, `K_one`, `displacement`, `velocity`, `acceleration`,
+`displacement_match` and their compatibility conditions. -/
 structure LabelData (G : Parent) where
+  /-- K of `LabelData`, of type `ℝ`. -/
   K : ℝ
   K_one : 1 ≤ K
+  /-- Displacement of `LabelData`, of type `Icc (0 : ℝ) G.T → SmoothL2Field Space`. -/
   displacement : Icc (0 : ℝ) G.T → SmoothL2Field Space
+  /-- Velocity field of `LabelData`, of type `Icc (0 : ℝ) G.T → SmoothL2Field Space`. -/
   velocity : Icc (0 : ℝ) G.T → SmoothL2Field Space
+  /-- Acceleration of `LabelData`, of type `Icc (0 : ℝ) G.T → SmoothL2Field Space`. -/
   acceleration : Icc (0 : ℝ) G.T → SmoothL2Field Space
   displacement_match : ∀ t x, (displacement t).field x=G.displacement.field t x
   velocity_match : ∀ t x, (velocity t).field x=G.velocity.field t x
@@ -43,7 +49,7 @@ variable {G : Parent} (L : LabelData G)
 
 theorem frame_match (t : Icc (0 : ℝ) G.T) (x : Space) :
     G.frame.field t x=ContinuousLinearMap.id ℝ Space+fderiv ℝ (L.displacement t).field (G.ell • x)
-      := by
+        := by
   rw [G.frame_apply,← funext (L.displacement_match t)]
 
 theorem first_match (t : Icc (0 : ℝ) G.T) (x : Space) :
@@ -54,8 +60,9 @@ theorem second_match (t : Icc (0 : ℝ) G.T) (x : Space) :
     G.second.field t x=fderiv ℝ (L.acceleration t).field (G.ell • x) := by
   rw [G.second_apply,← funext (L.acceleration_match t)]
 
+/-- Normal budget, constructed using `EulerPacketParentLabelBudgets.normalBudget`. -/
 def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-    (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+    (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
     (S : Set Space) (hS : IsCompact S) (q : ℕ) :
     EulerTransversePacketJoin.NormalBudget (G.transverseData m hm R S hS) q
       (EulerPacketParentNormalBudget.radius (coefficientRadius L.K)
@@ -64,6 +71,7 @@ def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     L.displacement L.velocity G.ell L.K G.ell_pos.le G.ell_le_one (zero_le_one.trans L.K_one)
     L.displacement_bound L.velocity_bound L.frame_match L.first_match G.frame_det
 
+/-- Mean budget, constructed using `EulerPacketParentLabelBudgets.meanBudget`. -/
 def meanBudget (H : LowBounds G) (q : ℕ) (Ti : ℝ) (hT : G.T ≤ 1) (hTi : G.T⁻¹ ≤ Ti) :
     EulerMeanPacketProvider.Budget (G.meanData H) q
       (EulerPacketParentMeanBudget.radius q G.T Ti (coefficientRadius L.K)
@@ -75,30 +83,31 @@ def meanBudget (H : LowBounds G) (q : ℕ) (Ti : ℝ) (hT : G.T ≤ 1) (hTi : G.
 
 theorem block_nonneg (A : SmoothL2Field Space) (n : ℕ) :
     0 ≤ classicalBlockSize EulerPacketParentLabelBounds.direction 6 A.toLp A.translation_contDiff n
-      := by
+        := by
   unfold classicalBlockSize classicalBaseSize
   positivity
 
 variable {P : ℝ} [Fact (0 < P)] (B : EulerPhysicalGraphFlowBounds.Data P G.T)
-  (k : ℝ) (m : Space) (hgraph : ∀ t z, graphConstraint k m (B.A.field t z)=0)
+  (k : ℝ) (m : Space) (hgraph : ∀ t z, graphConstraint k m (B.A.field t z) = 0)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
   (E : Icc (0 : ℝ) G.T → EulerChildParticleFieldBounds.Data)
-  (hD : ∀ t, (E t).parentDisplacement=L.displacement t)
-  (hV : ∀ t, (E t).parentVelocity=L.velocity t)
-  (hW : ∀ t, (E t).parentAcceleration=L.acceleration t)
-  (hd : ∀ t, (E t).displacement=B.displacementField k m G.ell G.ell_pos t)
-  (hv : ∀ t, (E t).velocity=B.velocityField k m G.ell G.ell_pos t)
-  (hw : ∀ t, (E t).acceleration=B.accelerationFieldL2 k m G.ell G.ell_pos t)
+  (hD : ∀ t, (E t).parentDisplacement = L.displacement t)
+  (hV : ∀ t, (E t).parentVelocity = L.velocity t)
+  (hW : ∀ t, (E t).parentAcceleration = L.acceleration t)
+  (hd : ∀ t, (E t).displacement = B.displacementField k m G.ell G.ell_pos t)
+  (hv : ∀ t, (E t).velocity = B.velocityField k m G.ell G.ell_pos t)
+  (hw : ∀ t, (E t).acceleration = B.accelerationFieldL2 k m G.ell G.ell_pos t)
 
+/-- Child as an element of `LabelData (G.child B k m hgraph nextEll hnext hnext1)`. -/
 def child (K : ℝ) (hK : 1 ≤ K)
     (hb : ∀ t n,
       classicalBlockSize direction 6 (E t).childDisplacement.toLp (E
-        t).childDisplacement.translation_contDiff n+
+          t).childDisplacement.translation_contDiff n +
       classicalBlockSize direction 6 (E t).childVelocity.toLp (E
-        t).childVelocity.translation_contDiff n+
+          t).childVelocity.translation_contDiff n +
       classicalBlockSize direction 6 (E t).childAcceleration.toLp (E
-        t).childAcceleration.translation_contDiff n ≤
-        K^(n+1)*(n.factorial : ℝ)^2) :
+          t).childAcceleration.translation_contDiff n ≤
+        K ^ (n + 1) * (n.factorial : ℝ) ^ 2) :
     LabelData (G.child B k m hgraph nextEll hnext hnext1) := by
   have hmatch := G.child_fields_match B k m hgraph nextEll hnext hnext1 E
     (fun t x => by rw [hD]; exact L.displacement_match t x)

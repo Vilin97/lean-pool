@@ -8,10 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.Topology.Algebra.Support
-
-@[expose] public section
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 /-!
 # The whole-space assertion of Part II, Theorem 1.1
@@ -36,6 +35,9 @@ every finite differentiability order.
 assert that it has a proof or supply a witness.
 -/
 
+@[expose] public section
+
+
 
 noncomputable section
 
@@ -50,7 +52,9 @@ abbrev Space := NavierStokes.ProblemStatement.Space
 /-- Spacetime, with time first. -/
 abbrev SpaceTime := NavierStokes.ProblemStatement.SpaceTime
 
+/-- Velocity field: an abbreviation for `NavierStokes.ProblemStatement.VelocityField`. -/
 abbrev VelocityField := NavierStokes.ProblemStatement.VelocityField
+/-- Pressure field: an abbreviation for `NavierStokes.ProblemStatement.PressureField`. -/
 abbrev PressureField := NavierStokes.ProblemStatement.PressureField
 
 /-- The physical domain before the asserted singular time. -/
@@ -120,9 +124,13 @@ structure CandidateProperties (ν : ℝ) (u : VelocityField) (p : PressureField)
 
 /-- Data realizing the primary existence assertion at one viscosity. -/
 structure Candidate (ν : ℝ) where
+  /-- Velocity field of `Candidate`, of type `VelocityField`. -/
   velocity : VelocityField
+  /-- Pressure field of `Candidate`, of type `PressureField`. -/
   pressure : PressureField
+  /-- Force of `Candidate`, of type `VelocityField`. -/
   force : VelocityField
+  /-- Support set of `Candidate`, of type `Set Space`. -/
   support : Set Space
   properties : CandidateProperties ν velocity pressure force support
 
@@ -133,7 +141,9 @@ There are no support, periodicity, pressure-growth, derivative-growth, or energy
 inequality assumptions on a competitor. The square-integrability requirement
 and its uniform energy bound use all of R³ and all nonnegative times. -/
 structure GlobalFiniteEnergySolution (ν : ℝ) (f : VelocityField) where
+  /-- Velocity field of `GlobalFiniteEnergySolution`, of type `VelocityField`. -/
   velocity : VelocityField
+  /-- Pressure field of `GlobalFiniteEnergySolution`, of type `PressureField`. -/
   pressure : PressureField
   velocity_smooth : ContDiffOn ℝ ∞ velocity futureDomain
   pressure_smooth : ContDiffOn ℝ ∞ pressure futureDomain

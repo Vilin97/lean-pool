@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointVelocity
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseActivationTrial
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DNSelection
 
 /-!
 Source (26) for the actual stationary transverse solution.  The endpoint
@@ -17,6 +16,9 @@ matrix is the constructed Dirichlet-to-Neumann operator and its norm is
 derived from the explicit moving-projection trial.  The selected velocity is
 the genuine derivative η_t minus Mη, not a separately prescribed matrix output.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +35,7 @@ variable {U E V : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
+/-- Activation constant, given by `4 + 64 * CM ^ 2 + 2 * CH`. -/
 def activationConstant (CM CH : ℝ) : ℝ := 4 + 64 * CM ^ 2 + 2 * CH
 
 /-- The actual terminal matrix after subtracting the prescribed shear. -/

@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformCosts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitiveBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
 
 /-! Reusable bounds for the actual parameters entering the canonical
 correction. They all use the same fixed polynomial envelope. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,7 +54,7 @@ theorem actual_parameters (W H0 : ℝ) (hδ : 0 < δ)
     CorrectionBounds D period (L.correctionCoefficients NB period) (envelope W) := by
   obtain ⟨h1,hW,hR,hP⟩ := envelope_bounds W (zero_le_one.trans H.one)
   have hr := (EulerPacketRadiusPolynomial.initializedRadius_le_envelope LM L NB BC δ ξ W hδ
-    H).trans hR
+      H).trans hR
   have hc : BC.multiplierCost ≤ W := by
     have ht := BC.twice_multiplierCost_le
     have hn := BC.multiplierCost_nonneg

@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorSobolevEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.ComparatorMaximalFields
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorSobolevEvolution
 
 /-! The canonical maximal solution in the reference's ordinary-function
 Sobolev class. All regularity is inherited from its existing shorter evolutions. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +25,7 @@ namespace Euler.ComparatorBridge
 
 variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 
+/-- Maximal derivative field, given by `eulerRhs (L.maximalField t) (L.maximalPressureField t)`. -/
 def maximalDerivativeField (t : L.Time) : SmoothL2Field Space :=
   eulerRhs (L.maximalField t) (L.maximalPressureField t)
 
@@ -41,6 +43,7 @@ theorem maximalDerivativeField_jet_continuous (n : ℕ) :
   simp only [maximalDerivativeField_eq_evolution L S hS hSL]
   exact (L.evolution S hS hSL).derivative_continuous n
 
+/-- Maximal derivative extension, with branches according to `ht : t ∈ Ico (0 : ℝ) L.duration`. -/
 def maximalDerivativeExtension (x : Space) (t : ℝ) : Space :=
   if ht : t ∈ Ico (0 : ℝ) L.duration then (maximalDerivativeField L ⟨t, ht⟩).field x else 0
 

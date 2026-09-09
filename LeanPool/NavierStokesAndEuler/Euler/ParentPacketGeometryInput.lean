@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketJoinedInput
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryJoinedBudget
 
-@[expose] public section
-
 /-! The actual activation geometry fills the remaining propagator input
 in the parent-to-packet constructor. All three source budgets share one
 radius and retain the growth profile derived from that geometry. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,16 +24,17 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketSourceGeometr
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {G : Parent} (L : LabelData G) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (P : ParentFrame (G.transverseData m hm R S hS) τ)
   (J : Guards hτ hτT P (G.historyOn H m hm R S hS τ hτ hτT))
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (Ti TiTotal : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
   (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
+/-- Geometry inputs, constructed using `L.joinedInputs`. -/
 def geometryInputs :
     JoinedInputs (G.meanData H) (G.transverseData m hm R S hS) τ hτ hτT
       (G.historyOn H m hm R S hS τ hτ hτT) :=

@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVorticity
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
 
 /-! Actual vorticity supremum norms and their partial integrals on a
 half-open maximal Euler interval. All quantities agree exactly with
 the genuine smooth solutions on every shorter closed interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,14 +31,14 @@ variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 theorem vorticityIntegral_agrees (S T : ℝ) (hS : 0 < S) (hT : 0 < T)
     (hSL : S < L.duration) (hTL : T < L.duration) (hST : S ≤ T)
     (t : Icc (0 : ℝ) S) :
-    (L.evolution S hS hSL).vorticityIntegral t=
+    (L.evolution S hS hSL).vorticityIntegral t =
       (L.evolution T hT hTL).vorticityIntegral ⟨t,t.property.1,t.property.2.trans hST⟩ := by
   apply intervalIntegral.integral_congr
   intro r hr
   have hrs : r ∈ Icc (0 : ℝ) (t : ℝ) := by simpa only [uIcc_of_le t.property.1] using hr
   have hrS : r ∈ Icc (0 : ℝ) S := ⟨hrs.1,hrs.2.trans t.property.2⟩
   have hrT : r ∈ Icc (0 : ℝ) T := ⟨hrs.1,hrS.2.trans hST⟩
-  change vorticityNorm ((L.evolution S hS hSL).velocity (projIcc 0 S hS.le r))=
+  change vorticityNorm ((L.evolution S hS hSL).velocity (projIcc 0 S hS.le r)) =
     vorticityNorm ((L.evolution T hT hTL).velocity (projIcc 0 T hT.le r))
   rw [projIcc_of_mem hS.le hrS,projIcc_of_mem hT.le hrT,
     L.evolution_agrees_at S T hS hT hSL hTL r hrs.1 hrS.2 hrT.2]
@@ -51,6 +52,7 @@ theorem vorticityIntegral_agrees_at (S T : ℝ) (hS : 0 < S) (hT : 0 < T)
   · exact L.vorticityIntegral_agrees S T hS hT hSL hTL hST ⟨t,ht0,htS⟩
   · exact (L.vorticityIntegral_agrees T S hT hS hTL hSL hTS ⟨t,ht0,htT⟩).symm
 
+/-- Maximal vorticity norm, given by `vorticityNorm (L.maximalField t)`. -/
 def maximalVorticityNorm (t : L.Time) : ℝ := vorticityNorm (L.maximalField t)
 
 theorem maximalVorticityNorm_nonneg (t : L.Time) : 0 ≤ L.maximalVorticityNorm t :=
@@ -70,13 +72,14 @@ theorem maximalVorticityNorm_eq_evolution (S : ℝ) (hS : 0 < S) (hSL : S < L.du
   rw [L.maximalField_eq_evolution S hS hSL t]
   rfl
 
+/-- Maximal vorticity integral as an element of `ℝ`. -/
 def maximalVorticityIntegral (t : L.Time) : ℝ :=
   (L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos t)
     (L.intermediateHorizon_lt t)).vorticityIntegral (L.intermediateTime t)
 
 theorem maximalVorticityIntegral_eq_evolution (S : ℝ) (hS : 0 < S) (hSL : S < L.duration)
     (t : Icc (0 : ℝ) S) :
-    L.maximalVorticityIntegral (L.shorterTime S hSL t)=
+    L.maximalVorticityIntegral (L.shorterTime S hSL t) =
       (L.evolution S hS hSL).vorticityIntegral t :=
   L.vorticityIntegral_agrees_at (L.intermediateHorizon (L.shorterTime S hSL t)) S
     (L.intermediateHorizon_pos (L.shorterTime S hSL t)) hS
@@ -94,7 +97,7 @@ theorem maximalVorticityIntegral_initial : L.maximalVorticityIntegral L.initialT
 theorem maximalVorticityIntegral_continuous : Continuous L.maximalVorticityIntegral := by
   apply L.continuous_of_shorter_restrictions
   intro S hS hSL
-  have he : (fun t : Icc (0 : ℝ) S => L.maximalVorticityIntegral (L.shorterTime S hSL t))=
+  have he : (fun t : Icc (0 : ℝ) S => L.maximalVorticityIntegral (L.shorterTime S hSL t)) =
       (L.evolution S hS hSL).vorticityIntegral :=
     funext (L.maximalVorticityIntegral_eq_evolution S hS hSL)
   rw [he]

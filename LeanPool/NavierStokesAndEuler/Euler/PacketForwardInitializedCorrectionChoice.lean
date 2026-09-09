@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedAllOrderBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCommonRadius
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCommonRadius
+import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! The zero-history source data construct actual correction budgets for all
 sufficiently large frequencies. All primary, coefficient, radius and frequency
 guards follow from the fixed source data. -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryCopyBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalClassBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatZeroExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalClassBounds
 
 /-!
 # Smooth zero extension across both moving radial edges
@@ -20,6 +17,9 @@ The raw coefficient is used only inside the annulus. Gaussian bounds on
 its actual full derivative tensors prove that its literal zero extension
 has all derivatives zero on both moving boundary hypersurfaces.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,12 +31,15 @@ open scoped Topology ContDiff
 variable {D E : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Window, given by `{x | a < ρ x ∧ ρ x < b}`. -/
 noncomputable def window (ρ : D → ℝ) (a b : ℝ) : Set D :=
   {x | a < ρ x ∧ ρ x < b}
 
+/-- Window domain, given by `Ω ∩ window ρ a b`. -/
 noncomputable def windowDomain (Ω : Set D) (ρ : D → ℝ) (a b : ℝ) : Set D :=
   Ω ∩ window ρ a b
 
+/-- Extension as an element of `E`. -/
 noncomputable def extension (ρ : D → ℝ) (a b : ℝ) (f : D → E) (x : D) : E :=
   by classical exact if x ∈ window ρ a b then f x else 0
 
@@ -122,6 +125,7 @@ theorem hasFDerivAt_extension_boundary {ρ d : D → ℝ} {a b c : ℝ}
   · rw [extension_outside ρ a b g hi, norm_zero]
     exact mul_nonneg hε.le (norm_nonneg _)
 
+/-- Log coordinate, given by `WeightedRadialPrimitive.logPosition a (ρ x)`. -/
 noncomputable def logCoordinate (ρ : D → ℝ) (a : ℝ) (x : D) : ℝ :=
   WeightedRadialPrimitive.logPosition a (ρ x)
 
@@ -133,6 +137,7 @@ theorem logCoordinate_differentiableAt {ρ : D → ℝ} {a : ℝ} (ha : 0 < a) {
     simpa only [div_eq_mul_inv] using hρ.mul_const a⁻¹
   exact hdiv.log (div_ne_zero hx.ne' ha.ne')
 
+/-- Boundary controls as an element of `Prop`. -/
 def BoundaryControls (Ω : Set D) (ρ : D → ℝ) (a b cL cR : ℝ) (f : D → E) : Prop :=
   (∀ n x, x ∈ Ω → ρ x = a →
     EdgeControl ρ a b (logCoordinate ρ a) cL (iteratedFDeriv ℝ n f) x) ∧
@@ -140,6 +145,7 @@ def BoundaryControls (Ω : Set D) (ρ : D → ℝ) (a b cL cR : ℝ) (f : D → 
     EdgeControl ρ a b (fun y => WeightedRadialPrimitive.logLength a b - logCoordinate ρ a y)
       cR (iteratedFDeriv ℝ n f) x)
 
+/-- Extended jets, defined pointwise by `extension ρ a b (iteratedFDeriv ℝ n f) x`. -/
 noncomputable def extendedJets (ρ : D → ℝ) (a b : ℝ) (f : D → E) (x : D) :
     FormalMultilinearSeries ℝ D E := fun n => extension ρ a b (iteratedFDeriv ℝ n f) x
 
@@ -171,13 +177,13 @@ theorem extendedJets_hasFDerivAt {Ω : Set D} (hΩ : IsOpen Ω) {ρ : D → ℝ}
     rw [extension_outside ρ a b _ hn, hcurry]
     simpa using (hasFDerivAt_const (0 : D[×n]→L[ℝ] E) x).congr_of_eventuallyEq
       (extension_germ_left a b _ hρc hleft)
-  · have hn : x ∉ window ρ a b := by simp only [window, Set.mem_ofPred_eq, heq, lt_self_iff_false,
-    false_and, not_false_eq_true]
+  · have hn : x ∉ window ρ a b := by
+      simp only [window, Set.mem_ofPred_eq, heq, lt_self_iff_false, false_and, not_false_eq_true]
     rw [extension_outside ρ a b _ hn, hcurry]
     have hlog := logCoordinate_differentiableAt ha hρd (by simpa only [heq] using ha)
     have hzero : logCoordinate ρ a x = 0 := by
       simp only [logCoordinate, WeightedRadialPrimitive.logPosition, heq, div_self ha.ne',
-        Real.log_one]
+          Real.log_one]
     simpa using hasFDerivAt_extension_boundary hcL hn hlog hzero (hB.1 n x hx heq)
   · rcases lt_trichotomy (ρ x) b with hright | heq | hright
     · have hin : x ∈ window ρ a b := ⟨hleft, hright⟩
@@ -285,12 +291,16 @@ theorem half_weight_right {cL cR L t : ℝ} (hcL : 0 ≤ cL) (ht : t < L)
   simpa only [WeightedRadialPrimitive.delta, WeightedRadialPrimitive.zeta,
     sub_sub_cancel, min_comm (L - t) t, mul_comm] using h
 
+/-- Flat weight, given by `WeightedRadialPrimitive.zeta cL cR (WeightedRadialPrimitive.logLength
+a b) (logCoordinate ρ a x)`. -/
 noncomputable def flatWeight (ρ : D → ℝ) (a b cL cR : ℝ) (x : D) : ℝ :=
   WeightedRadialPrimitive.zeta cL cR (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a x)
 
+/-- Edge growth, given by `max 1 (WeightedRadialPrimitive.delta
+(WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a x))⁻¹`. -/
 noncomputable def edgeGrowth (ρ : D → ℝ) (a b : ℝ) (x : D) : ℝ :=
   max 1 (WeightedRadialPrimitive.delta (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a
-    x))⁻¹
+      x))⁻¹
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem edgeGrowth_one_le (ρ : D → ℝ) (a b : ℝ) (x : D) : 1 ≤ edgeGrowth ρ a b x :=
@@ -340,7 +350,7 @@ theorem boundaryControls_of_majorants {Ω : Set D} (hΩ : IsOpen Ω) {ρ P : D �
       ((hρ.contDiffAt (hΩ.mem_nhds hx)).differentiableAt (by simp)) (by simpa only [hxa] using ha)
     have hzero : logCoordinate ρ a x = 0 := by
       simp only [logCoordinate, WeightedRadialPrimitive.logPosition, hxa, div_self ha.ne',
-        Real.log_one]
+          Real.log_one]
     apply edgeControl_of_factor (H := fun y => edgeGrowth ρ a b y ^ N *
       Real.sqrt (flatWeight ρ a b cL cR y)) hC ((hP x hx).continuousAt (hΩ.mem_nhds hx))
     · intro y
@@ -361,8 +371,8 @@ theorem boundaryControls_of_majorants {Ω : Set D} (hΩ : IsOpen Ω) {ρ P : D �
   · intro m x hx hxb
     obtain ⟨C, hC, N, hbound⟩ := hb m
     have hd := logCoordinate_differentiableAt ha
-      ((hρ.contDiffAt (hΩ.mem_nhds hx)).differentiableAt (by simp)) (by simpa only [hxb] using
-        ha.trans hab)
+      ((hρ.contDiffAt (hΩ.mem_nhds hx)).differentiableAt (by
+          simp)) (by simpa only [hxb] using ha.trans hab)
     have hd' := (differentiableAt_const (WeightedRadialPrimitive.logLength a b)).fun_sub hd
     have hzero : WeightedRadialPrimitive.logLength a b - logCoordinate ρ a x = 0 := by
       simp only [logCoordinate, hxb, WeightedRadialPrimitive.logPosition,
@@ -445,16 +455,19 @@ theorem NativeJets.moving_zero_extension {V : JetDomain ι X} {Ω : Set X}
   exact ⟨extension_contDiffOn hΩ hρ ha hab (half_pos hcL) (half_pos hcR) hs hB,
     fun n x hx => iteratedFDeriv_extension hΩ hρ ha hab (half_pos hcL) (half_pos hcR) hs hB n hx,
     fun n x hx he => iteratedFDeriv_extension_edge hΩ hρ ha hab (half_pos hcL) (half_pos hcR) hs hB
-      n hx he⟩
+        n hx he⟩
 
 end NativeBounds
 
 /-! ## The actual moving radial profile in native coordinates -/
 
+/-- Native point: an abbreviation for `PhaseCalculus.Slow × TorusInverse.Plane`. -/
 abbrev NativePoint := PhaseCalculus.Slow × TorusInverse.Plane
 
+/-- Native slow domain, given by `{x | 0 < x.1.2.2}`. -/
 noncomputable def nativeSlowDomain : Set NativePoint := {x | 0 < x.1.2.2}
 
+/-- Native radius, given by `PrimaryTargetBounds.profileRadius h x.1`. -/
 noncomputable def nativeRadius (h : ℝ) (x : NativePoint) : ℝ :=
   PrimaryTargetBounds.profileRadius h x.1
 
@@ -474,29 +487,31 @@ theorem nativeRadius_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
   have hc := (BaseChartJets.normalizedCoordinates_smoothAt hh hh1 hx).comp x contDiffAt_fst
   exact (contDiffAt_fst.fst.div (hc.fst.sqrt hq.ne') (Real.sqrt_pos.mpr hq).ne').contDiffWithinAt
 
+/-- Native extension, given by `extension (nativeRadius F.data.h)
+(PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W) f`. -/
 noncomputable def nativeExtension {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (f : NativePoint → E) : NativePoint → E :=
   extension (nativeRadius F.data.h) (PrimaryTargetBounds.leftRadius W)
-    (PrimaryTargetBounds.rightRadius W) f
+      (PrimaryTargetBounds.rightRadius W) f
 
 theorem native_flatWeight {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) (x :
-  NativePoint) :
+    NativePoint) :
     flatWeight (nativeRadius F.data.h) (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (FinalSlowBase.edgeExponent W / 4) 1 x = PrimaryTargetBounds.movingWeight W x.1 := rfl
 
 omit [NormedSpace ℝ E] in
 theorem nativeExtension_inside {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (f : NativePoint → E) {x : NativePoint}
     (hx : nativeRadius F.data.h x ∈ Ioo (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)) :
+        (PrimaryTargetBounds.rightRadius W)) :
     nativeExtension W f x = f x := extension_inside _ _ _ _ hx
 
 omit [NormedSpace ℝ E] in
 theorem nativeExtension_outside {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (f : NativePoint → E) {x : NativePoint}
     (hx : nativeRadius F.data.h x ∉ Ioo (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)) :
+        (PrimaryTargetBounds.rightRadius W)) :
     nativeExtension W f x = 0 := extension_outside _ _ _ _ hx
 
 omit [NormedSpace ℝ E] in
@@ -512,11 +527,11 @@ theorem nativeExtension_nonpositive {F : OutgoingProfile.Profile} (W : NominalPr
 /-- Direct adapter for the exact moving weight used by the primary and
 signed constructions, in the native `(R,Z,T,u,v)` variable ordering. -/
 theorem NativeJets.native_zero_extension {F : OutgoingProfile.Profile} (W : NominalProfile.Witness
-  F)
+    F)
     {ι : Type*} {V : JetDomain ι NativePoint} {A S : ι → ℝ}
     {P : ι → NativePoint → ℝ} {f : ι → NativePoint → E}
     (hf : NativeJets V (fun i x => A i * Real.sqrt (PrimaryTargetBounds.movingWeight W x.1) * P i
-      x) f)
+        x) f)
     (hA : ∀ i, 0 ≤ A i) (hS : ∀ i, 1 ≤ S i)
     (hP : ∀ i, ContinuousOn (P i) nativeSlowDomain)
     (hP0 : ∀ i x, x ∈ nativeSlowDomain → 0 ≤ P i x)
@@ -537,7 +552,7 @@ theorem NativeJets.native_zero_extension {F : OutgoingProfile.Profile} (W : Nomi
       (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)
       (FinalSlowBase.edgeExponent W / 4) 1 x) * P i x) f := hf
   exact NativeJets.moving_zero_extension nativeSlowDomain_open (nativeRadius_smooth F.data.h_pos
-    F.data.h_lt_half)
+      F.data.h_lt_half)
     (PrimaryTargetBounds.leftRadius_pos W) (PrimaryTargetBounds.radii_ordered W)
     (div_pos (FinalSlowBase.edgeExponent_pos W) (by norm_num)) (by norm_num)
     hclass hA hS hP hP0 hdom q hG
@@ -602,16 +617,16 @@ theorem inner_edgeGrowth_le_native {F : OutgoingProfile.Profile} (W : NominalPro
   have hd := WeightedRadialPrimitive.delta_pos ht
   have hcomp : WeightedRadialPrimitive.delta
       (WeightedRadialPrimitive.logLength (PrimaryTargetBounds.leftRadius W)
-        (PrimaryTargetBounds.rightRadius W))
+          (PrimaryTargetBounds.rightRadius W))
       (WeightedRadialPrimitive.logPosition (PrimaryTargetBounds.leftRadius W) (nativeRadius
-        F.data.h x)) ≤
+          F.data.h x)) ≤
       min 1 (min
         (2 * WeightedRadialPrimitive.logPosition (PrimaryTargetBounds.leftRadius W) (nativeRadius
-          F.data.h x))
+            F.data.h x))
         (2 * (WeightedRadialPrimitive.logLength (PrimaryTargetBounds.leftRadius W)
-          (PrimaryTargetBounds.rightRadius W) -
+            (PrimaryTargetBounds.rightRadius W) -
           WeightedRadialPrimitive.logPosition (PrimaryTargetBounds.leftRadius W) (nativeRadius
-            F.data.h x)))) := by
+              F.data.h x)))) := by
     apply min_le_min le_rfl
     apply min_le_min <;> linarith [ht.1, ht.2]
   apply max_le_max le_rfl
@@ -633,7 +648,7 @@ theorem NativeRegularity.jet_inside {F : OutgoingProfile.Profile} {W : NominalPr
     {f : NativePoint → E} (h : NativeRegularity W f) (n : ℕ) {x : NativePoint}
     (hx : x ∈ nativeSlowDomain)
     (hi : nativeRadius F.data.h x ∈ Ioo (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)) :
+        (PrimaryTargetBounds.rightRadius W)) :
     iteratedFDeriv ℝ n (nativeExtension W f) x = iteratedFDeriv ℝ n f x := by
   rw [h.jets n x hx, nativeExtension_inside W _ hi]
 
@@ -641,16 +656,16 @@ theorem NativeRegularity.jet_outside {F : OutgoingProfile.Profile} {W : NominalP
     {f : NativePoint → E} (h : NativeRegularity W f) (n : ℕ) {x : NativePoint}
     (hx : x ∈ nativeSlowDomain)
     (hi : nativeRadius F.data.h x ∉ Ioo (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)) :
+        (PrimaryTargetBounds.rightRadius W)) :
     iteratedFDeriv ℝ n (nativeExtension W f) x = 0 := by
   rw [h.jets n x hx, nativeExtension_outside W _ hi]
 
 theorem NativeJets.native_regular_of_inner_growth {F : OutgoingProfile.Profile} (W :
-  NominalProfile.Witness F)
+    NominalProfile.Witness F)
     {ι : Type*} {V : JetDomain ι NativePoint} {A S : ι → ℝ}
     {P : ι → NativePoint → ℝ} {f : ι → NativePoint → E}
     (hf : NativeJets V (fun i x => A i * Real.sqrt (PrimaryTargetBounds.movingWeight W x.1) * P i
-      x) f)
+        x) f)
     (hA : ∀ i, 0 ≤ A i) (hS : ∀ i, 1 ≤ S i)
     (hP : ∀ i, ContinuousOn (P i) nativeSlowDomain)
     (hP0 : ∀ i x, x ∈ nativeSlowDomain → 0 ≤ P i x)
@@ -682,7 +697,7 @@ theorem pulseEnvelope_continuousOn {ι : Type*} {U : PhaseJetBounds.Domain ι Ph
     ContinuousOn (pulseEnvelope F χ j i) nativeSlowDomain := by
   have hc : Continuous (PrimaryPulseBounds.referenceP ((F j).lam i) ((F j).u i) ((F j).L i)) :=
     continuous_iff_continuousAt.mpr (fun t => (PrimaryPulseBounds.referenceP_hasDerivAt _ _ _
-      t).continuousAt)
+        t).continuousAt)
   exact hc.comp_continuousOn (continuousOn_const.mul (hχ i))
 
 theorem pulseEnvelope_nonneg {ι : Type*} {U : PhaseJetBounds.Domain ι PhaseCalculus.Slow}
@@ -694,7 +709,7 @@ theorem pulseEnvelope_nonneg {ι : Type*} {U : PhaseJetBounds.Domain ι PhaseCal
 homogeneous pulse. The only raw regularity premise is its already-derived
 native interior jet estimate. -/
 theorem primaryVelocity_native_regular {F₀ : OutgoingProfile.Profile} (W : NominalProfile.Witness
-  F₀)
+    F₀)
     {ι : Type*} {U : PhaseJetBounds.Domain ι PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → NativePoint → PhaseCalculus.Slow × ℝ)
@@ -779,7 +794,7 @@ theorem NativeJets.native_regular_of_zero_germ_cover
     {ι : Type*} {V : JetDomain ι NativePoint} {A S : ι → ℝ}
     {P : ι → NativePoint → ℝ} {f : ι → NativePoint → E}
     (hf : NativeJets V (fun i x => A i * Real.sqrt (PrimaryTargetBounds.movingWeight W x.1) * P i
-      x) f)
+        x) f)
     (hA : ∀ i, 0 ≤ A i)
     (hP : ∀ i, ContinuousOn (P i) nativeSlowDomain)
     (hP0 : ∀ i x, x ∈ nativeSlowDomain → 0 ≤ P i x)
@@ -800,7 +815,7 @@ theorem NativeJets.native_regular_of_zero_germ_cover
       _ ≤ max (V.scale i) (S i) * (max 1 (FinalSlowBase.edgeDistance W
           (BaseChartJets.normalizedCoordinates F.data.h x.1).2)⁻¹) ^ q :=
         mul_le_mul_of_nonneg_right (le_max_right _ _) (pow_nonneg (zero_le_one.trans (le_max_left _
-          _)) _)
+            _)) _)
       _ ≤ _ := mul_le_mul_of_nonneg_left
         (pow_le_pow_left₀ (zero_le_one.trans (le_max_left _ _))
           (inner_edgeGrowth_le_native W hx.1 hx.2) q)
@@ -896,6 +911,7 @@ theorem nativeRadius_meanNative {F : OutgoingProfile.Profile} (x : LocalSignedRe
   rw [meanNative_apply, PrimaryTargetBounds.meanPoint_scalar]
   rfl
 
+/-- Mean extension, given by `nativeExtension W f (meanNative x)`. -/
 noncomputable def meanExtension {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (f : NativePoint → E) (x : LocalSignedRequest.Point) : E := nativeExtension W f (meanNative x)
 
@@ -933,7 +949,7 @@ theorem NativeRegularity.mean_edge {F : OutgoingProfile.Profile} {W : NominalPro
       (LocalSignedRequest.profileMap (2 * F.data.h) x).1 = PrimaryTargetBounds.rightRadius W) :
     iteratedFDeriv ℝ n (meanExtension W f) x = 0 := by
   apply norm_eq_zero.mp
-  rw [meanExtension_jet_norm, h.edge n (meanNative x) hx (by rwa [nativeRadius_meanNative]),
-    norm_zero]
+  rw [meanExtension_jet_norm, h.edge n (meanNative x) hx (by
+      rwa [nativeRadius_meanNative]), norm_zero]
 
 end NavierStokes.WaveEdgeExtension

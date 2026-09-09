@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderOrbit
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
 
 /-!
 # Genuine cylinder Sobolev jets and smooth representatives from mixed L² orbits
@@ -21,13 +21,16 @@ existing Sobolev arrays and a smooth representative; no spatial regularity of
 the solution is assumed separately.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerCylinderSmoothOrbit
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerSpatialSobolevInverse EulerCylinderSobolev EulerPressureSpatialRegularity
-    EulerMetricTransport
+      EulerMetricTransport
   EulerLpCylinderTranslation EulerCylinderSobolevSpace EulerParameterWordGevrey
 open scoped ContDiff
 
@@ -62,9 +65,9 @@ theorem orbitDerivative_smooth (u : LiftL2 period) (hu : SmoothOrbit period u) (
 
 /-- These derivatives are exactly the existing strong cylinder directional derivatives. -/
 theorem orbitDerivative_hasDerivAt (u : LiftL2 period) (hu : SmoothOrbit period u) (v :
-  LiftTangent) :
+    LiftTangent) :
     HasDerivAt (fun t : ℝ => EulerLiftedGradientSpace.translation period (translationPath period v
-      t) u)
+        t) u)
       (orbitDerivative period u v) 0 := by
   have h := (hu.differentiable (by simp) (0 : LiftTangent)).hasFDerivAt
   have ht : HasDerivAt (fun t : ℝ => t • v) v 0 := by
@@ -115,14 +118,14 @@ theorem exists_smooth_representative (u : LiftL2 period) (hu : SmoothOrbit perio
       (∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) ∧
       (u : LiftDomain period → Space) =ᵐ[liftMeasure period] g :=
   EulerSmoothPressureRepresentative.exists_smooth_representative period u (fun q => spatialJet
-    period q u hu)
+      period q u hu)
 
 /-- A genuine smooth cylinder representative of the solved L² field. -/
 def representative (u : LiftL2 period) (hu : SmoothOrbit period u) : LiftDomain period → Space :=
   Classical.choose (exists_smooth_representative period u hu)
 
 theorem representative_smooth (u : LiftL2 period) (hu : SmoothOrbit period u) (x : LiftDomain
-  period) :
+    period) :
     ContDiff ℝ ∞ (localFieldLift period (representative period u hu) x) :=
   (Classical.choose_spec (exists_smooth_representative period u hu)).1 x
 

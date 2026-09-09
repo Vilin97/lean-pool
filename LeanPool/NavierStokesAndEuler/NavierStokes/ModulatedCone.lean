@@ -6,13 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricModulation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.StressActivation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedStockBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedHistories
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # The true cone after radial modulation
@@ -21,6 +18,9 @@ The error estimates below concern the genuine derivatives of the realized
 profiles. Their constants are obtained from the constructed periodic
 primitives on compact sets, independently of the modulation frequency.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -86,6 +86,7 @@ theorem slowRadial_periodic (Q : RadialParameter × ℝ → ℝ) (hQ : ContDiff 
 
 variable {a m p₁ p₂ : RadialParameter → ℝ} {K B : Set RadialParameter}
 
+/-- Angular error factor, given by `-2 * z.1.1 * slowRadial r.angularPrimitive z`. -/
 noncomputable def angularErrorFactor (r : TrueConeRealization a m p₁ p₂ K B)
     (z : RadialParameter × ℝ) : ℝ :=
   -2 * z.1.1 * slowRadial r.angularPrimitive z
@@ -232,11 +233,14 @@ theorem realized_shears_uniform_bound
 /-- The two stocks and two signed shears before conversion to `(P,J,v)`. -/
 abbrev StockShearDatum := (ℝ × ℝ) × (ℝ × ℝ)
 
+/-- Cone coordinates, given by `(z.1.1 + z.1.2 * (z.2.2 / z.2.1), z.1.2 - z.1.1 * (z.2.2 /
+z.2.1), z.2.1 * (1 + (z.2.2 / z.2.1) ^ 2))`. -/
 noncomputable def coneCoordinates (z : StockShearDatum) : UniformCone.ConeDatum :=
   (z.1.1 + z.1.2 * (z.2.2 / z.2.1),
     z.1.2 - z.1.1 * (z.2.2 / z.2.1),
     z.2.1 * (1 + (z.2.2 / z.2.1) ^ 2))
 
+/-- Stock shear cone, given by `{z | TrueConeLoop.InTrueCone z.1.1 z.1.2 z.2.1 z.2.2}`. -/
 noncomputable def stockShearCone : Set StockShearDatum :=
   {z | TrueConeLoop.InTrueCone z.1.1 z.1.2 z.2.1 z.2.2}
 
@@ -384,7 +388,7 @@ theorem quotient_perturbation_bound {μ M ε x y e f : ℝ}
   have he0 : 0 < e := hμ.trans_le he
   have hf0 : 0 < f := hμ.trans_le hf
   have hid : y / f - x / e = (y - x) / f + x * (e - f) / (f * e) := by
-    field_simp ; ring
+    field_simp; ring
   have hef' : |e - f| ≤ ε := by rwa [abs_sub_comm]
   have hden : μ * μ ≤ f * e := mul_le_mul hf he hμ.le hf0.le
   calc
@@ -634,6 +638,8 @@ namespace Localized
 
 open ProfileHistories StressActivation
 
+/-- History index as an element of `HistoryRow → Fin 5 | .mass => 0 | .angular => 1 | .transport
+=> 2 | .energy => 3 | .pressure => 4`. -/
 noncomputable def historyIndex : HistoryRow → Fin 5
   | .mass => 0
   | .angular => 1
@@ -670,7 +676,7 @@ theorem fields_uniform_bound (W : ModulatedHistories.Window)
     simp only [iteratedDeriv_zero] at hf' hu'
     simpa only [ModulatedHistories.localizedF, ModulatedHistories.localizedU,
       ModulatedHistories.splice, ite_eq_left hX, ModulatedHistories.rawF, ModulatedHistories.rawU]
-        using
+          using
       And.intro (hf'.trans (div_le_div_of_nonneg_right (le_max_left _ _) hn0))
         (hu'.trans (div_le_div_of_nonneg_right (le_max_right _ _) hn0))
   · simp only [ModulatedHistories.localizedF, ModulatedHistories.localizedU,
@@ -692,7 +698,7 @@ theorem profileHistory_difference {D D' : RadialDomain}
       ModulatedHistories.historyDifference W r f E U n p.1 p.2 (historyIndex row) := by
   rw [profileHistory_eq_row, profileHistory_eq_row]
   change (ModulatedHistories.profileRows P p - ModulatedHistories.profileRows Q p) (historyIndex
-    row) = _
+      row) = _
   rw [ModulatedHistories.profileRows_sub P Q hP0, hPf, hPU, hQf, hQU,
     ModulatedHistories.axisHistory_localized_sub W r f E U ha hm hp₂ hf hE hU n p.1 p.2 hX]
 
@@ -711,7 +717,7 @@ theorem profileHistory_uniform_bound {D D' : RadialDomain}
       p ∈ D.carrier → p ∈ D'.carrier → ∀ row : HistoryRow,
       |profileHistory (P n) row p - profileHistory Q row p| ≤ C / n ∧
       |parameterPartial (profileHistory (P n) row) p - parameterPartial (profileHistory Q row) p| ≤
-        C / n := by
+          C / n := by
   obtain ⟨C, hC, hb⟩ := ModulatedHistories.historyDifference_scalar_jets
     W r f E U ha hm hp₂ hf hE hU J hJ 1
   refine ⟨C, hC, ?_⟩
@@ -746,9 +752,9 @@ theorem profile_stocks_rate {D D' : RadialDomain}
     ∃ N : ℕ, ∃ C : ℝ, 0 < N ∧ 0 ≤ C ∧ ∀ n : ℝ, (N : ℝ) ≤ n → ∀ p ∈ T,
       0 < (P n).f p ∧
       |ActivationStocks.profileStockOne (P n) h p - ActivationStocks.profileStockOne Q h p| ≤ C / n
-        ∧
+          ∧
       |ActivationStocks.profileStockTwo (P n) h p - ActivationStocks.profileStockTwo Q h p| ≤ C / n
-        := by
+          := by
   obtain ⟨Cf, hCf, hfb⟩ := fields_uniform_bound W r f E U ha hm hp₂ hf hE hU J hJ
   obtain ⟨CH, hCH, hHb⟩ := profileHistory_uniform_bound W r f E U ha hm hp₂ hf hE hU P Q
     hPf hPU hQf hQU hP0 J hJ
@@ -1022,7 +1028,7 @@ theorem profileRepair_radial_germs {D : RadialDomain} (P : Profiles D)
     (hp : p.1 ∉ Ioo patch.left patch.right) :
     ((fun X => (profileRepair P patch A c hA hc).E (X, p.2)) =ᶠ[𝓝 p.1] fun X => P.E (X, p.2)) ∧
       ((fun X => (profileRepair P patch A c hA hc).U (X, p.2)) =ᶠ[𝓝 p.1] fun X => P.U (X, p.2)) :=
-        by
+          by
   have hg := ModulatedHistories.repair_preserves_radial_germ patch A c P.f P.U p.1 p.2 hp
   constructor
   · filter_upwards [hg.1] with X hX
@@ -1031,6 +1037,8 @@ theorem profileRepair_radial_germs {D : RadialDomain} (P : Profiles D)
     rfl
   · exact hg.2
 
+/-- Rows eta, given by `![parameterPartial P.M p, parameterPartial P.I p, parameterPartial P.J
+p, parameterPartial P.S p, parameterPartial P.pressure p]`. -/
 noncomputable def rowsEta {D : RadialDomain} (P : Profiles D) (p : Point) : Fin 5 → ℝ :=
   ![parameterPartial P.M p, parameterPartial P.I p, parameterPartial P.J p,
     parameterPartial P.S p, parameterPartial P.pressure p]
@@ -1060,7 +1068,7 @@ theorem rows_first_jet_bound {D D' : RadialDomain} (P : Profiles D) (Q : Profile
     (hη : p.2 ∈ J) (row : HistoryRow) :
     |profileHistory P row p - profileHistory Q row p| ≤ ε ∧
       |parameterPartial (profileHistory P row) p - parameterPartial (profileHistory Q row) p| ≤ ε
-        := by
+          := by
   have hv : ‖ModulatedHistories.profileRows P p - ModulatedHistories.profileRows Q p‖ ≤ ε :=
     hjet.norm_le hη
   have hd : ‖rowsEta P p - rowsEta Q p‖ ≤ ε := by
@@ -1077,7 +1085,7 @@ theorem rows_first_jet_bound {D D' : RadialDomain} (P : Profiles D) (Q : Profile
           (Localized.historyIndex row)).trans hv
   · rw [profileHistory_eta_eq_row, profileHistory_eta_eq_row]
     exact (show |rowsEta P p (Localized.historyIndex row) - rowsEta Q p (Localized.historyIndex
-      row)| ≤
+        row)| ≤
         ‖rowsEta P p - rowsEta Q p‖ from by
       simpa only [Pi.sub_apply, Real.norm_eq_abs] using
         norm_le_pi_norm (rowsEta P p - rowsEta Q p) (Localized.historyIndex row)).trans hd
@@ -1104,12 +1112,12 @@ theorem shears_unchanged_outside {D D' : RadialDomain} (P : Profiles D) (Q : Pro
 
 theorem radialDerivative_add (F G : Field) (hF : ContDiff ℝ ∞ F) (hG : ContDiff ℝ ∞ G)
     (p : Point) : radialDerivative (fun q => F q + G q) p = radialDerivative F p + radialDerivative
-      G p := by
+        G p := by
   exact deriv_fun_add
-    ((hF.differentiable (by simp) p).comp p.1 (differentiableAt_id.prodMk (differentiableAt_const
-      p.2)))
-    ((hG.differentiable (by simp) p).comp p.1 (differentiableAt_id.prodMk (differentiableAt_const
-      p.2)))
+    ((hF.differentiable (by
+        simp) p).comp p.1 (differentiableAt_id.prodMk (differentiableAt_const p.2)))
+    ((hG.differentiable (by
+        simp) p).comp p.1 (differentiableAt_id.prodMk (differentiableAt_const p.2)))
 
 /-- On a patch where the base profile is nominal, the actual physical
 repair has exactly its prescribed additive value and derivative errors. -/
@@ -1122,9 +1130,9 @@ theorem field_difference_identities {D D' : RadialDomain} (P : Profiles D) (Q : 
     {p : Point} (hp : 0 < p.1) (hbaseE : Q.E =ᶠ[𝓝 p] E) (hbaseU : Q.U =ᶠ[𝓝 p] U) :
     P.E p - E p = ModulatedHistories.editE patch A c p ∧
       radialDerivative P.E p - radialDerivative E p = radialDerivative (ModulatedHistories.editE
-        patch A c) p ∧
+          patch A c) p ∧
       radialDerivative P.U p - radialDerivative U p = radialDerivative (ModulatedHistories.editU
-        patch A c) p := by
+          patch A c) p := by
   have hEg : P.E =ᶠ[𝓝 p] (fun q => E q + ModulatedHistories.editE patch A c q) := by
     have hn : {q : Point | 0 < q.1} ∈ 𝓝 p :=
       (isOpen_lt continuous_const continuous_fst).mem_nhds hp
@@ -1145,9 +1153,9 @@ theorem field_difference_identities {D D' : RadialDomain} (P : Profiles D) (Q : 
   have hEd := (hEg.comp_tendsto hrad).deriv_eq
   have hUd := (hUg.comp_tendsto hrad).deriv_eq
   change radialDerivative P.E p = radialDerivative (fun q => E q + ModulatedHistories.editE patch A
-    c q) p at hEd
+      c q) p at hEd
   change radialDerivative P.U p = radialDerivative (fun q => U q + ModulatedHistories.editU patch A
-    c q) p at hUd
+      c q) p at hUd
   rw [radialDerivative_add E _ hE (ModulatedHistories.editE_contDiff patch A c hA hc) p] at hEd
   rw [radialDerivative_add U _ hUs (ModulatedHistories.editU_contDiff patch A c hA hc) p] at hUd
   exact ⟨by linarith [hEg.eq_of_nhds], by linarith, by linarith⟩
@@ -1219,7 +1227,7 @@ theorem profile_data_bound (W : ModulatedHistories.Window)
       Q.f = f → Q.U = U → P.pressure0 = Q.pressure0 →
       ∀ p : Point, 0 ≤ p.1 → p.2 ∈ J → p ∈ D.carrier → p ∈ D'.carrier →
       ‖ModulatedStockBounds.profileData P p - ModulatedStockBounds.profileData Q p‖ ≤ C₁ / n + C₂ *
-        ε := by
+          ε := by
   obtain ⟨δ, CH₁, CH₂, hδ, hCH₁, hCH₂, hhistory⟩ := ModulatedHistories.repaired_axisHistory_jets
     W r f E U ha hm hp₂ hf hE hU patch hgap A hA J hJ 1
   obtain ⟨Cf, hCf, hfield⟩ := Localized.fields_uniform_bound W r f E U ha hm hp₂ hf hE hU J hJ
@@ -1245,7 +1253,7 @@ theorem profile_data_bound (W : ModulatedHistories.Window)
         ModulatedHistories.axisHistory
           (ModulatedHistories.applyRepairF patch A c (ModulatedHistories.localizedF W r f n))
           (ModulatedHistories.applyRepairU patch A c (ModulatedHistories.localizedU W r E U n))
-            (p.1, η) -
+              (p.1, η) -
         ModulatedHistories.axisHistory f U (p.1, η)) := by
       funext η
       rw [ModulatedHistories.profileRows_sub P Q hP0, hPf, hPU, hQf, hQU]
@@ -1254,22 +1262,24 @@ theorem profile_data_bound (W : ModulatedHistories.Window)
   apply ModulatedStockBounds.profileData_error_bound P Q p (by positivity)
   · rw [hPf, hQf]
     change |ModulatedHistories.localizedF W r f n p + ModulatedHistories.editF patch A c p - f p| ≤
-      _
+        _
     calc
       _ = |(ModulatedHistories.localizedF W r f n p - f p) + ModulatedHistories.editF patch A c p|
-        := by congr 1; ring
+          := by
+          congr 1; ring
       _ ≤ |ModulatedHistories.localizedF W r f n p - f p| + |ModulatedHistories.editF patch A c p|
-        := abs_add_le _ _
+          := abs_add_le _ _
       _ ≤ Cf / n + Ce * ε := add_le_add hF.1 hEbound.1
       _ ≤ _ := hfb
   · rw [hPU, hQU]
     change |ModulatedHistories.localizedU W r E U n p + ModulatedHistories.editU patch A c p - U p|
-      ≤ _
+        ≤ _
     calc
       _ = |(ModulatedHistories.localizedU W r E U n p - U p) + ModulatedHistories.editU patch A c
-        p| := by congr 1; ring
+          p| := by
+          congr 1; ring
       _ ≤ |ModulatedHistories.localizedU W r E U n p - U p| + |ModulatedHistories.editU patch A c
-        p| := abs_add_le _ _
+          p| := abs_add_le _ _
       _ ≤ Cf / n + Ce * ε := add_le_add hF.2 hEbound.2
       _ ≤ _ := hfb
   · intro row
@@ -1289,9 +1299,9 @@ theorem profile_stocks_rate {D D' : RadialDomain}
     (hcoeff : ∀ n : ℝ, n₀ ≤ n → 1 ≤ n → JetBounds.FiniteJetBound 1 (c n) J (Cc / n))
     (P : ℝ → Profiles D) (Q : Profiles D')
     (hPf : ∀ n, (P n).f = ModulatedHistories.applyRepairF patch A (c n)
-      (ModulatedHistories.localizedF W r f n))
+        (ModulatedHistories.localizedF W r f n))
     (hPU : ∀ n, (P n).U = ModulatedHistories.applyRepairU patch A (c n)
-      (ModulatedHistories.localizedU W r E U n))
+        (ModulatedHistories.localizedU W r E U n))
     (hQf : Q.f = f) (hQU : Q.U = U) (hP0 : ∀ n, (P n).pressure0 = Q.pressure0)
     (T : Set Point) (hT : IsCompact T) (hTJ : ∀ p ∈ T, p.2 ∈ J)
     (hTD : T ⊆ D.carrier) (hTD' : T ⊆ D'.carrier)
@@ -1300,9 +1310,9 @@ theorem profile_stocks_rate {D D' : RadialDomain}
     ∃ N : ℕ, ∃ C : ℝ, 0 < N ∧ 0 ≤ C ∧ ∀ n : ℝ, (N : ℝ) ≤ n → ∀ p ∈ T,
       0 < (P n).f p ∧
       |ActivationStocks.profileStockOne (P n) h p - ActivationStocks.profileStockOne Q h p| ≤ C / n
-        ∧
+          ∧
       |ActivationStocks.profileStockTwo (P n) h p - ActivationStocks.profileStockTwo Q h p| ≤ C / n
-        := by
+          := by
   obtain ⟨δr, C₁, C₂, hδr, hC₁, hC₂, hdata⟩ := profile_data_bound
     W r f E U ha hm hp₂ hf hE hU patch hgap A hA J hJ
   obtain ⟨δs, Cs, hδs, hCs, hstock⟩ := ModulatedStockBounds.profile_stocks_lipschitz
@@ -1326,14 +1336,14 @@ theorem profile_stocks_rate {D D' : RadialDomain}
     apply (div_le_iff₀ hnpos).mpr
     have hb : Ddata / δs ≤ n :=
       ((le_max_right _ _).trans ((le_max_right _ _).trans (le_max_right _ _))).trans (hN.le.trans
-        hn)
+          hn)
     have := (div_le_iff₀ hδs).mp hb
     nlinarith
   have hdatap := hdata n hn1 (c n) (hc n) (Cc / n) (div_nonneg hCc hnpos.le) hsmallr
     (hcoeff n hnr hn1) (P n) Q (hPf n) (hPU n) hQf hQU (hP0 n) p (hX p hp).le
     (hTJ p hp) (hTD hp) (hTD' hp)
   have hd : ‖ModulatedStockBounds.profileData (P n) p - ModulatedStockBounds.profileData Q p‖ ≤
-    Ddata / n := by
+      Ddata / n := by
     convert! hdatap using 1
     dsimp [Ddata]
     ring
@@ -1379,7 +1389,7 @@ theorem profiles_trueCone {D D' : RadialDomain}
       let R := profileRepair (P n) patch A (c n) hA (hc n)
       0 < R.f p ∧ TrueConeLoop.InTrueCone (ActivationStocks.profileStockOne R h p)
         (ActivationStocks.profileStockTwo R h p) (angularShear R.E p) (signedAxialShear R.E R.U p)
-          := by
+            := by
   let R : ℝ → Profiles D := fun n => profileRepair (P n) patch A (c n) hA (hc n)
   have hX : ∀ p ∈ K ∪ S, 0 < p.1 := by
     intro p hp
@@ -1487,9 +1497,9 @@ theorem exists_with_moment_repair {D D' : RadialDomain}
     ∃ (N : ℕ) (c : ℝ → ModulatedHistories.Coeff) (hc : ContDiff ℝ ∞ c), 0 < N ∧
       let R := profileRepair (P N) patch A c hA hc
       (∀ p ∈ Icc W.left patch.right ×ˢ J, 0 < R.f p ∧ TrueConeLoop.InTrueCone
-        (ActivationStocks.profileStockOne R h p)
+          (ActivationStocks.profileStockOne R h p)
         (ActivationStocks.profileStockTwo R h p) (angularShear R.E p) (signedAxialShear R.E R.U p))
-          ∧
+            ∧
       (∀ η ∈ J, ∀ X : ℝ, patch.right ≤ X →
         ModulatedHistories.profileRows R (X, η) = ModulatedHistories.profileRows Q (X, η)) ∧
       (∀ p : Point, p.1 ∉ Ioo patch.left patch.right →

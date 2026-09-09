@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
 
+/-! The adjoint of the genuine mixed cylinder translation is its inverse. -/
+
 @[expose] public section
 
-/-! The adjoint of the genuine mixed cylinder translation is its inverse. -/
 
 noncomputable section
 
@@ -45,7 +46,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The actual continuous-time embedding commutes with bounded spatial maps. -/
 theorem pathLp_timeLift (T : ℝ) (hT : 0 ≤ T) (A : E →L[ℝ] F)
-    (f : C(Icc (0 : ℝ) T,E)) :
+    (f : C(Icc (0 : ℝ) T, E)) :
     pathLp T hT ((A.compLeftContinuous ℝ (Icc (0 : ℝ) T)) f) =
       timeLift T A (pathLp T hT f) := by
   apply Lp.ext

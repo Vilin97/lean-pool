@@ -7,16 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFrameCoefficients
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientMotion
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledRay
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketCoefficientControl
+import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientMotion
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 Physical operator bounds and the actual homogeneous primary imply the
 small scaled matrix errors used in source propagation.  The fixed numerical
 loss absorbs rotation of the normalized frame.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,11 +30,14 @@ namespace EulerPacketMovingFrame
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
   EulerPacketCoefficientControl InnerProductSpace ContinuousLinearMap
 
+/-- Rescaled frame, given by `frameMatrix (B (physicalTime t₀ a ε τ)) (unit (m (physicalTime t₀
+a ε τ))) (unit (v (physicalTime t₀ a ε τ)))`. -/
 def rescaledFrame (B : ℝ → Space →L[ℝ] Space) (m v : ℝ → Space)
     (t₀ a ε τ : ℝ) : Fin 3 → Fin 3 → ℝ :=
   frameMatrix (B (physicalTime t₀ a ε τ))
     (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε τ)))
 
+/-- Rescaled shear, given by `primaryShear c m v (physicalTime t₀ a ε τ)`. -/
 def rescaledShear (c : ℝ) (m v : ℝ → Space) (t₀ a ε τ : ℝ) : ℝ :=
   primaryShear c m v (physicalTime t₀ a ε τ)
 
@@ -40,31 +47,31 @@ appears as a hypothesis. -/
 theorem physical_matrix_errors
     {B B₁ M E : ℝ → Space →L[ℝ] Space} {m v : ℝ → Space}
     {c t₀ a ε Θ G d β : ℝ} {S : Set ℝ}
-    (ha : 1/2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
-    (hsmall : 16*(ε*Θ*(4*G)^2+d) ≤ 1)
+    (ha : 1 / 2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
+    (hsmall : 16 * (ε * Θ * (4 * G) ^ 2 + d) ≤ 1)
     (hmap : MapsTo (physicalTime t₀ a ε) (Icc 0 Θ) S)
     (hBd : ∀ t ∈ S, HasDerivWithinAt B (B₁ t) S t)
     (hmd : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
-    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t)+
-      (2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) S t)
+    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t) +
+      (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : ∀ t ∈ S, m t ≠ 0) (hv0 : ∀ t ∈ S, v t ≠ 0)
-    (hmv : ∀ t ∈ S, ⟪m t,v t⟫_ℝ = 0)
-    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G^2)
+    (hmv : ∀ t ∈ S, ⟪m t, v t⟫_ℝ = 0)
+    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G ^ 2)
     (hE : ∀ t ∈ S, ‖E t‖ ≤ d)
-    (hparent : ∀ t ∈ S, M t = B t+
-      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))+E t)
+    (hparent : ∀ t ∈ S, M t = B t +
+      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t)) + E t)
     (hb0 : rescaledFrame B m v t₀ a ε 0 0 1 = a)
-    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a*β)
-    (hh0 : rescaledShear c m v t₀ a ε 0 = a/ε^2) :
+    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a * β)
+    (hh0 : rescaledShear c m v t₀ a ε 0 = a / ε ^ 2) :
     let e := 16*(ε*Θ*(4*G)^2+d)
     ε ≤ e ∧ ∀ τ ∈ Icc 0 Θ,
       (∀ i j, |scaledRayEntry a ε (rescaledFrame M m v t₀ a ε τ)
         (frameSkew (rescaledFrame B m v t₀ a ε τ)) i j-idealRayEntry β i j| ≤ 4*e) ∧
-      (∀ i j, |scaledVelocityEntry a ε (rescaledFrame M m v t₀ a ε τ) i j-
+      (∀ i j, |scaledVelocityEntry a ε (rescaledFrame M m v t₀ a ε τ) i j -
         idealVelocityEntry β i j| ≤ 3*e) ∧
-      (∀ j, |scaledVelocityEntry a ε (fun i j => rescaledFrame M m v t₀ a ε τ i j+
+      (∀ j, |scaledVelocityEntry a ε (fun i j => rescaledFrame M m v t₀ a ε τ i j +
           frameSkew (rescaledFrame B m v t₀ a ε τ) i j) 0 j-idealUnprojectedEntry 0 j| ≤ 5*e ∧
-        |scaledVelocityEntry a ε (fun i j => rescaledFrame M m v t₀ a ε τ i j+
+        |scaledVelocityEntry a ε (fun i j => rescaledFrame M m v t₀ a ε τ i j +
           frameSkew (rescaledFrame B m v t₀ a ε τ) i j) 1 j-idealUnprojectedEntry 1 j| ≤ 5*e) := by
   let e := 16*(ε*Θ*(4*G)^2+d)
   let Bf := rescaledFrame B m v t₀ a ε

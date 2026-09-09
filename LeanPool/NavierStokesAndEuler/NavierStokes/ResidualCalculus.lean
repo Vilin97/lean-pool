@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-!
 # Calculus of the physical Navier--Stokes residual
@@ -21,6 +18,9 @@ PDE target in `ProblemStatement`. The velocity hypotheses give two continuous
 spatial derivatives on the time slice and a differentiable time slice at the
 point in question. No abstract differential operators are assumed linear.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

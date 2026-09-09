@@ -8,9 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderPaths
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedConstructedEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-!
 # Angle-independent coefficients acting on the genuine cylinder L²
@@ -21,6 +23,9 @@ The homogeneous evolution is constructed from the spatial coefficient's
 Banach-algebra fundamental fields. Its H3 bound is used only on spatial
 support; no angular regularity or global extension of H3 is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,26 +40,47 @@ open scoped BoundedContinuousFunction ContDiff
 variable (period : ℝ) [Fact (0 < period)]
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
-private local instance : NormedRing (V →L[ℝ] V) := inferInstance
-private local instance : NormedRing (Space →ᵇ V →L[ℝ] V) := inferInstance
-private local instance : NormedRing (LiftDomain period →ᵇ V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficients1 : NormedRing (V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ V →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderCoefficients2 : NormedRing (Space →ᵇ V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (LiftDomain period →ᵇ V →L[ℝ] V)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderCoefficients3 : NormedRing (LiftDomain period →ᵇ V →L[ℝ] V) :=
+    inferInstance
 
 variable (S : Set Space) (hS : MeasurableSet S)
 
-private local instance : NormedAddCommGroup (Supported period V S hS) := inferInstance
-private local instance : InnerProductSpace ℝ (Supported period V S hS) := inferInstance
-private local instance : NormedAddCommGroup (Supported period V S hS →L[ℝ] Supported period V S hS)
-  := inferInstance
-private local instance : NormedSpace ℝ (Supported period V S hS →L[ℝ] Supported period V S hS) :=
-  inferInstance
-private local instance : NormedRing (Supported period V S hS →L[ℝ] Supported period V S hS) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period V S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderCoefficients4 : NormedAddCommGroup (Supported period V S hS) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (Supported period V S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderCoefficients5 : InnerProductSpace ℝ (Supported period V S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period V S hS →L[ℝ] Supported period V S
+hS)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficients6 : NormedAddCommGroup (Supported period V S hS →L[ℝ]
+    Supported period V S hS)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period V S hS →L[ℝ] Supported period V S hS)`
+instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficients7 : NormedSpace ℝ (Supported period V S hS →L[ℝ] Supported
+    period V S hS) :=
+    inferInstance
+/-- Cache the standard `NormedRing (Supported period V S hS →L[ℝ] Supported period V S hS)`
+instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficients8 : NormedRing (Supported period V S hS →L[ℝ] Supported
+    period V S hS) :=
+    inferInstance
 
 /-- The actual cylinder operator of a spatial coefficient. -/
 def liftedOperator (A : Space →ᵇ V →L[ℝ] V) : Supported period V S hS →L[ℝ] Supported period V S hS
-  :=
+    :=
   operator (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
-    (fieldLift period A)
+      (fieldLift period A)
 
 omit [CompleteSpace V] in
 /-- Mixed translation intertwines the actual spatial multiplication operators. -/
@@ -64,40 +90,40 @@ theorem operator_intertwines (Ω : Set Space) (hΩ : MeasurableSet Ω)
     liftedOperator period Ω hΩ (translated A a.1)
         (EulerLpCylinderTranslation.intoLarger period a S Ω hS hΩ ha u) =
       EulerLpCylinderTranslation.intoLarger period a S Ω hS hΩ ha (liftedOperator period S hS A u)
-        := by
+          := by
   apply Subtype.ext
   apply Lp.ext
   filter_upwards [full_ae (liftMeasure period) (fieldLift period (translated A a.1))
       (translate period a (u : CylinderL2 period V)),
     translate_ae period a (u : CylinderL2 period V),
     translate_ae period a (full (liftMeasure period) (fieldLift period A) (u : CylinderL2 period
-      V)),
+        V)),
     (measurePreserving_translation period (coveringMap period a)).quasiMeasurePreserving.ae
       (full_ae (liftMeasure period) (fieldLift period A) (u : CylinderL2 period V))]
     with x hl hu hr hA
   change (full (liftMeasure period) (fieldLift period (translated A a.1))
     (translate period a (u : CylinderL2 period V))) x =
       (translate period a (full (liftMeasure period) (fieldLift period A) (u : CylinderL2 period
-        V))) x
+          V))) x
   rw [hl,hu,hr,hA]
   rfl
 
 variable (T : ℝ)
 
 /-- The entire coefficient time path, acting on the supported cylinder. -/
-def liftedOperatorPath (A : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V)) :
+def liftedOperatorPath (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
     C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS) :=
   operatorPath (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS) T
     (fieldPathLift period A)
 
 omit [CompleteSpace V] in
 /-- Pointwise operator lifting does not enlarge the uniform coefficient norm. -/
-theorem liftedOperatorPath_norm (A : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V)) :
+theorem liftedOperatorPath_norm (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
     ‖liftedOperatorPath period S hS T A‖ ≤ ‖A‖ := by
   apply (ContinuousMap.norm_le _ (norm_nonneg A)).2
   intro t
   exact (operator_norm_le (liftMeasure period) (spatialSet period S) (spatialSet_measurable period
-    S hS)
+      S hS)
     (fieldLift period (A t)) ‖A t‖ (norm_nonneg _)
     (fun x _ => (A t).norm_coe_le_norm x.1)).trans (A.norm_coe_le_norm t)
 
@@ -109,13 +135,13 @@ def liftedOperatorPathLinear : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →
     apply ContinuousMap.ext
     intro t
     exact operator_add (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-      hS)
+        hS)
       (fieldLift period (A t)) (fieldLift period (D t))
   map_smul' r A := by
     apply ContinuousMap.ext
     intro t
     exact operator_smul (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-      hS)
+        hS)
       r (fieldLift period (A t))
 
 /-- Lifting spatial coefficient paths to actual cylinder operators is a linear contraction. -/
@@ -126,7 +152,7 @@ def liftedOperatorPathMap : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →L[�
     exact (liftedOperatorPath_norm period S hS T A).trans_eq (one_mul ‖A‖).symm)
 
 omit [CompleteSpace V] in
-@[simp] theorem liftedOperatorPathMap_apply (A : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V)) :
+@[simp] theorem liftedOperatorPathMap_apply (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
     liftedOperatorPathMap (V := V) period S hS T A = liftedOperatorPath period S hS T A := rfl
 
 omit [CompleteSpace V] in
@@ -165,9 +191,10 @@ theorem mixedOperator_bound (B : SmoothCoefficientPath (Icc (0 : ℝ) T) (V →L
       _ ≤ ‖iteratedFDeriv ℝ n f a.1‖ * ∏ _i : Fin n, (1 : ℝ) := by
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
         exact Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun _ _ =>
-          ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
-      _ ≤ C := by simpa only [Finset.prod_const_one, mul_one] using
-        B.norm_iteratedFDeriv_translation_le n C hC hb a.1
+            ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
+      _ ≤ C := by
+          simpa only [Finset.prod_const_one, mul_one] using B.norm_iteratedFDeriv_translation_le n
+              C hC hb a.1
   have hleft := ContinuousLinearMap.norm_iteratedFDeriv_comp_left (𝕜 := ℝ) (E := LiftTangent)
     (F := C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
     (G := C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS))
@@ -176,12 +203,12 @@ theorem mixedOperator_bound (B : SmoothCoefficientPath (Icc (0 : ℝ) T) (V →L
   exact hleft.trans ((mul_le_mul_of_nonneg_right (liftedOperatorPathMap_norm period S hS T)
     (norm_nonneg _)).trans (by simpa only [one_mul] using hright))
 
-variable (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
+variable (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
 
 /-- The cylinder evolution is constructed from the genuine spatial fundamental fields. -/
 def constructedEvolution : Evolution T hT (liftedOperatorPath (V := V) period S hS T B) :=
   liftEvolution (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-    hS) T hT
+      hS) T hT
     (fieldPathLift period B)
     (fieldPathLift period (fundamentalPath T hT B).forward)
     (fieldPathLift period (fundamentalPath T hT B).backward)
@@ -196,7 +223,7 @@ theorem constructedEvolution_propagator_norm
     (g : Icc (0 : ℝ) T → ℝ) (hg : ∀ t, 0 < g t) (C : ℝ) (hC : 0 ≤ C)
     (hprop : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ∀ x ∈ S,
       ‖((fundamentalPath T hT B).forward t x).comp ((fundamentalPath T hT B).backward s x)‖ ≤ C*g
-        t/g s)
+          t/g s)
     (t s : Icc (0 : ℝ) T) (hst : s ≤ t) :
     ‖(constructedEvolution period S hS T hT B).propagator t s‖ ≤ C*g t/g s := by
   change ‖(operator (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
@@ -205,7 +232,7 @@ theorem constructedEvolution_propagator_norm
       (fieldLift period ((fundamentalPath T hT B).backward s)))‖ ≤ _
   rw [← operator_mul]
   exact operator_norm_le (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-    hS)
+      hS)
     _ (C*g t/g s) (div_nonneg (mul_nonneg hC (hg t).le) (hg s).le)
     (fun x hx => hprop t s hst x.1 hx)
 

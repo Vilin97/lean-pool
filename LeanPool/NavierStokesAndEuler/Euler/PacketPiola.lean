@@ -7,15 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-!
 The actual curl Piola identity for a determinant-one coordinate map.
 The derivative of the Jacobian cancels by symmetry of the genuine second
 Fréchet derivative.  No curl identity or commutation relation is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,8 +29,12 @@ open EulerSmoothLimit EulerMeanBoundary EulerMeanCutoffCurl EulerVectorCalculus
   InnerProductSpace ContinuousLinearMap EulerTransverseGramInverse
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketPiola1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketPiola2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 theorem adjoint_apply_coordinate (A : Space →L[ℝ] Space) (q : Space) (i : Fin 3) :
     (A.adjoint q) i = ⟪A (EuclideanSpace.single i 1), q⟫_ℝ := by

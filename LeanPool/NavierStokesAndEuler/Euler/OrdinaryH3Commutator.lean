@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Products
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTransportCancellation
+
+/-! The actual ordinary H³ transport commutator, without derivative loss. -/
 
 @[expose] public section
 
-/-! The actual ordinary H³ transport commutator, without derivative loss. -/
 
 noncomputable section
 
@@ -32,8 +32,10 @@ theorem advection_directional (A B : SmoothL2Field Space) (v : Space) :
   rw [directionalField_field,he,addField_field,advectionField_field,advectionField_field]
   exact directional_transport_commutator v A.field B.field A.smooth B.smooth x
 
+/-- Transport commutator, given by `fieldSub (wordField (advectionField A B) w) (advectionField
+A (wordField B w))`. -/
 def transportCommutator (A B : SmoothL2Field Space) {n : ℕ} (w : Fin n → Fin 3) : SmoothL2Field
-  Space :=
+    Space :=
   fieldSub (wordField (advectionField A B) w) (advectionField A (wordField B w))
 
 theorem transportCommutator_zero (A B : SmoothL2Field Space) (w : Fin 0 → Fin 3) :
@@ -53,7 +55,7 @@ theorem transportCommutator_snoc (A B : SmoothL2Field Space)
 
 theorem gradient_advection_outer (A B : SmoothL2Field Space) (M N : ℝ)
     (hA : WordBound 3 M A) (hB : WordBound 3 N B)
-    {n k l : ℕ} (hk : 1 ≤ k) (horder : n+k+l ≤ 3)
+    {n k l : ℕ} (hk : 1 ≤ k) (horder : n + k + l ≤ 3)
     (a : Fin n → Fin 3) (w : Fin k → Fin 3) (v : Fin l → Fin 3) :
     ‖(wordField (advectionField (wordField A w) (wordField B v)) a).toLp‖ ≤
       3*(2 : ℝ)^n*h3ProductConstant*M*N := by
@@ -85,17 +87,17 @@ theorem source_advection_outer (A B : SmoothL2Field Space) (M N : ℝ)
 
 theorem transportCommutator_word_bound (A B : SmoothL2Field Space) (M N : ℝ)
     (hA : WordBound 3 M A) (hB : WordBound 3 N B)
-    {n l : ℕ} (horder : n+l ≤ 3) (a : Fin n → Fin 3) (v : Fin l → Fin 3) :
+    {n l : ℕ} (horder : n + l ≤ 3) (a : Fin n → Fin 3) (v : Fin l → Fin 3) :
     ‖(transportCommutator A (wordField B v) a).toLp‖ ≤
       3*((2 : ℝ)^n-1)*h3ProductConstant*M*N := by
   induction n generalizing l with
-  | zero => simp only
-    [transportCommutator_zero,norm_zero,pow_zero,sub_self,mul_zero,zero_mul,le_refl]
+  | zero =>
+      simp only [transportCommutator_zero,norm_zero,pow_zero,sub_self,mul_zero,zero_mul,le_refl]
   | succ n ih =>
     have he : transportCommutator A (wordField B v) a =
         addField
           (wordField (advectionField (A.directionalField (axis (a (Fin.last n)))) (wordField B v))
-            (Fin.init a))
+              (Fin.init a))
           (transportCommutator A (wordField B (Fin.cons (a (Fin.last n)) v)) (Fin.init a)) := by
       simpa only [Fin.snoc_init_self,wordField_cons] using
         transportCommutator_snoc A (wordField B v) (Fin.init a) (a (Fin.last n))

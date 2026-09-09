@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
 
+/-! The constructed forward transverse provider in the literal packet jet equation. -/
+
 @[expose] public section
 
-/-! The constructed forward transverse provider in the literal packet jet equation. -/
 
 noncomputable section
 
@@ -54,10 +55,10 @@ theorem slicedJet_time (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 /-- This exact high-frequency equation is the interface used in the grade recursion. -/
 theorem jet_equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) (G.vector I) (t,(x,θ)))+
+    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) (G.vector I) (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ))) (pressureJet (G.scalar I) (t,(x,θ))) = raw (t,(x,θ))
-        := by
-  change (slicedJet (Icc (0 : ℝ) D.T) (G.vector I) (t,(x,θ))).2 timeDirection+
+          := by
+  change (slicedJet (Icc (0 : ℝ) D.T) (G.vector I) (t,(x,θ))).2 timeDirection +
     D.strain (t,(x,θ)) (G.vector I (t,(x,θ)))+_ = _
   rw [G.slicedJet_time I,fastPressure_pressureJet _ (G.scalar I) t x θ
     ((G.scalar_spatial_smooth I t).differentiable (by simp) (x,θ))]
@@ -68,7 +69,7 @@ end Forcing
 theorem highSolve_jet_equation (D : Data U) (I : InitialData P D) (raw : VectorField)
     (h : Nonempty (Forcing P D raw)) (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     linearPart (D.strain (t,(x,θ)))
-        (slicedJet (Icc (0 : ℝ) D.T) (highSolve P D I raw).1 (t,(x,θ)))+
+        (slicedJet (Icc (0 : ℝ) D.T) (highSolve P D I raw).1 (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ)))
         (pressureJet (highSolve P D I raw).2 (t,(x,θ))) = raw (t,(x,θ)) := by
   rw [highSolve_of_admissible D I raw h]

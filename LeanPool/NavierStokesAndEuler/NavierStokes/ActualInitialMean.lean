@@ -7,12 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualBaseResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCovariance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 
 /-!
 # Mean estimates for the chosen initial primary family
@@ -23,6 +21,9 @@ stored base error is the actual base residual, whose angular continuity is
 used only on the positive-time domain.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualInitialMean
@@ -31,12 +32,17 @@ open Set Filter CorrectionState CorrectionInitialization WeightedClasses
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Index: an abbreviation for `ActualPrimary.Label B N0 × Fin 2`. -/
 abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 
+/-- Strip, given by `BaseContextAssembly.nativeStrip ActualPrimary.nominal
+ActualPrimary.standardRegion`. -/
 noncomputable def strip : StripData Point :=
   BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion
 
+/-- Slow strip, constructed using `PhysicalMeanDomain.localSlowStripData`. -/
 noncomputable def slowStrip : StripData TorusInverse.Plane :=
   PhysicalMeanDomain.localSlowStripData ActualPrimary.standardRegion.carrier
     ActualPrimary.standardRegion.isOpen (ChartScales.epsilon ActualPrimary.h)
@@ -44,35 +50,47 @@ noncomputable def slowStrip : StripData TorusInverse.Plane :=
     (ChartScales.epsilon_le_one ActualPrimary.h ActualPrimary.outgoing.data.h_pos.le)
     BaseContextAssembly.one_le_slowScale
 
+/-- Primary piece, given by `ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1`. -/
 noncomputable def primaryPiece {B N0 : ℕ} (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
   ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1
 
+/-- Base error, given by `ActualBaseResidual.baseError ActualPrimary.certificate
+ActualPrimary.modulation ActualPrimary.upper B`. -/
 noncomputable def baseError (B : ℕ) : Oscillation Point :=
   ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
-    ActualPrimary.upper B
+      ActualPrimary.upper B
 
+/-- Seed, given by `bandSeed (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0)
+primaryPiece (baseError B)`. -/
 noncomputable def seed (B N0 : ℕ) : State Point :=
   bandSeed (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0) primaryPiece (baseError B)
 
+/-- Axial, given by `((0, 1), 0)`. -/
 noncomputable def axial : TorusInverse.Plane × TorusInverse.Plane := ((0, 1), 0)
 
+/-- Primary, given by `VariableGaugeMean.reconstructState ActualPrimary.commonGauge
+(ActualPrimary.commonContext B) (seed B N0)`. -/
 noncomputable def primary (B N0 : ℕ) : State Point :=
   VariableGaugeMean.reconstructState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
-    (seed B N0)
+      (seed B N0)
 
+/-- Temporal, constructed using `VariableGaugeMean.temporalStageState`. -/
 noncomputable def temporal (B N0 : ℕ) : State Point :=
   VariableGaugeMean.temporalStageState ActualPrimary.commonGauge ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B) (primary B N0)
 
+/-- Ranked, constructed using `VariableGaugeMean.rankStageState`. -/
 noncomputable def ranked (B N0 : ℕ) : State Point :=
   VariableGaugeMean.rankStageState ActualPrimary.commonGauge ActualPrimary.rankData axial
     (ActualPrimary.commonContext B) (temporal B N0)
 
+/-- Initialized, constructed using `GaugeInitialization.initializedBands`. -/
 noncomputable def initialized (B N0 : ℕ) : State Point :=
   GaugeInitialization.initializedBands ActualPrimary.commonGauge ActualPrimary.rankData
     ActualPrimary.h (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B)
     (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0) primaryPiece (baseError B)
 
+/-- Initial alias, constructed using `VariableGaugeMean.temporalAliasState`. -/
 noncomputable def initialAlias (B N0 : ℕ) (n : ℕ) (x : Point) : Fin 3 → ℝ :=
   VariableGaugeMean.temporalAliasState ActualPrimary.commonGauge ActualPrimary.h
       (CommonWindow.index ActualPrimary.h) (ActualPrimary.commonContext B) (primary B N0) n (x, 0) +
@@ -83,9 +101,11 @@ section AngularBookkeeping
 
 variable {B N0 : ℕ}
 
+/-- Phase, given by `(primaryPiece l).coefficients.phase n (x, 0)`. -/
 noncomputable def phase (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
   (primaryPiece l).coefficients.phase n (x, 0)
 
+/-- Angular mode, constructed using `PrimaryGeometryAssembly.angularMode`. -/
 noncomputable def angularMode (l : Index B N0) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode ActualPrimary.certificate ActualPrimary.modulation
     (ActualPrimary.choice B N0).prepared l.2 l.1
@@ -126,7 +146,7 @@ theorem exact_amplitude_angle (l : Index B N0) :
 theorem tangent_amplitude_angle (l : Index B N0) :
     ErrorHarmonics.AngleIndependent
       ((primaryPiece l).coefficients.withCutoff (primaryPiece l).cutoff).amplitude := fun _ _ _ =>
-        rfl
+          rfl
 
 theorem gaussian_mean_zero (l : Index B N0) :
     CorrectionStep.angularMeanVector (primaryPiece l).excluded = 0 :=
@@ -159,7 +179,7 @@ theorem meanGoodResidual_at {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D
 theorem initialized_meanGood (B N0 n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (i : Fin 3) :
     (initialized B N0).meanGoodResidual (ActualPrimary.commonContext B) n x i =
       (initialized B N0).reducedMeanResidual (ActualPrimary.commonContext B) n x i - initialAlias B
-        N0 n x i := by
+          N0 n x i := by
   obtain ⟨hb, hg, ha⟩ := GaugeInitialization.initializedBands_error_components
     ActualPrimary.commonGauge ActualPrimary.rankData ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B)
@@ -197,6 +217,7 @@ section CovarianceInputs
 
 variable {B N0 : ℕ}
 
+/-- Envelope, given by `ActualPrimaryBounds.fullEnvelope (l.2, l.1) n (x, 0)`. -/
 noncomputable def envelope (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
   ActualPrimaryBounds.fullEnvelope (l.2, l.1) n (x, 0)
 
@@ -224,13 +245,13 @@ theorem tangent_amplitude_uniform :
 theorem seed_angularSmooth (B N0 : ℕ) :
     WaveStateRegularity.AngularSmooth
       (PhysicalMeanDomain.slowDomain ActualPrimary.standardRegion.carrier) (seed B N0).oscillation
-        := by
+          := by
   intro n i
   change ContDiffOn ℝ ∞ (fun p =>
       ∑ l ∈ ActualPrimary.activeLabels ActualPrimary.standardRegion B N0 n,
         (primaryPiece l).velocity n p i)
     (HarmonicResidual.liftDomain (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier))
+        ActualPrimary.standardRegion.carrier))
   apply ContDiffOn.sum
   intro l _
   exact (contDiffOn_pi.mp (ActualPrimaryCoherence.piece_velocity_smooth
@@ -239,7 +260,7 @@ theorem seed_angularSmooth (B N0 : ℕ) :
 
 theorem seed_covariance_smooth (B N0 : ℕ) (i j : Fin 3) :
     MeanIncrementBounds.SmoothOn (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       ((seed B N0).covariance i j) :=
   WaveStateRegularity.bilinearCovariance_smooth
     (PhysicalMeanDomain.slowDomain_open ActualPrimary.standardRegion.isOpen)
@@ -258,7 +279,7 @@ theorem tangent_angularSmooth (B N0 : ℕ) :
 
 theorem tangent_covariance_smooth (B N0 : ℕ) (i j : Fin 3) :
     MeanIncrementBounds.SmoothOn (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       (ActualPrimaryCovariance.tangentCovariance B N0 i j) :=
   WaveStateRegularity.bilinearCovariance_smooth
     (PhysicalMeanDomain.slowDomain_open ActualPrimary.standardRegion.isOpen)
@@ -297,7 +318,7 @@ theorem seed_velocity_periodic (B N0 n : ℕ) (R : ℝ) (s : TorusInverse.Plane)
   apply Finset.sum_congr rfl
   intro l hl
   have he := congrFun (ActualPrimaryCoherence.piece_velocity_periodic ActualPrimary.standardRegion
-    l.2 l.1 n
+      l.2 l.1 n
     (active_index_le hl) k ((R, (s, Y)), theta)) i
   simp only [ActualPrimaryCoherence.chartDeck, TorusAverages.latticePoint,
     Prod.add_def, add_zero] at he
@@ -387,7 +408,7 @@ theorem meanBar_mem {alpha : ℝ} {f : ScalarField Point}
 theorem matched_fluxes_of_covariance (B N0 : ℕ)
     (hr : ∀ i j, MeanIncrementBounds.SmoothOn
       (PhysicalMeanDomain.slowDomain ActualPrimary.standardRegion.carrier) ((seed B N0).covariance
-        i j))
+          i j))
     (ht : ∀ i j, MeanIncrementBounds.SmoothOn
       (PhysicalMeanDomain.slowDomain ActualPrimary.standardRegion.carrier)
       (ActualPrimaryCovariance.tangentCovariance B N0 i j))
@@ -407,7 +428,7 @@ theorem matched_fluxes_of_covariance (B N0 : ℕ)
     intro n x hx
     have he := SignedMeanGain.meanBar_sub_on (hr 0 1) (ht 0 1) n
       ((BaseContextAssembly.nativeStrip_mem ActualPrimary.nominal ActualPrimary.standardRegion
-        x).mp hx).1
+          x).mp hx).1
     change _ = StateMomentBalances.meanBar
       ((seed B N0).covariance 0 1 - ActualPrimaryCovariance.tangentCovariance B N0 0 1) n x + _
     rw [he]
@@ -418,7 +439,7 @@ theorem matched_fluxes_of_covariance (B N0 : ℕ)
     intro n x hx
     have he := SignedMeanGain.meanBar_sub_on (hr 0 2) (ht 0 2) n
       ((BaseContextAssembly.nativeStrip_mem ActualPrimary.nominal ActualPrimary.standardRegion
-        x).mp hx).1
+          x).mp hx).1
     change _ = StateMomentBalances.meanBar
       ((seed B N0).covariance 0 2 - ActualPrimaryCovariance.tangentCovariance B N0 0 2) n x + _
     rw [he]
@@ -430,6 +451,7 @@ end CovarianceInputs
 /-! The fixed base and the actual common index supply all the non-primary
 fields of the initialization estimates. -/
 
+/-- Primary data, constructed using `MovingInitialization.PrimaryMeanData`. -/
 noncomputable def PrimaryData (B N0 : ℕ) : Prop :=
   MovingInitialization.PrimaryMeanData
     (cL := FinalSlowBase.edgeExponent ActualPrimary.nominal / 4) (cR := 1)
@@ -494,18 +516,18 @@ theorem primaryData_of_covariance (B N0 : ℕ)
     theta_periodic := fun n => (hs n).2.1
     axial_periodic := fun n => (hs n).2.2.1
     theta_support := fun n => movingSupport_supportedGauge ActualPrimary.standardRegion (hs
-      n).2.2.2.1
+        n).2.2.2.1
     axial_support := fun n => movingSupport_supportedGauge ActualPrimary.standardRegion (hs
-      n).2.2.2.2 }
+        n).2.2.2.2 }
 
 theorem initialized_mean_bounds_of_rank (B N0 : ℕ) {sigma : ℝ}
     (htheta : MeanClass strip (1 + sigma) ((ranked B N0).thetaResidual (ActualPrimary.commonContext
-      B)))
+        B)))
     (haxial : MeanClass strip (1 + sigma) (fun n x =>
       (ranked B N0).axialResidual (ActualPrimary.commonContext B) n x -
         VariableGaugeMean.temporalAliasState ActualPrimary.commonGauge ActualPrimary.h
           (CommonWindow.index ActualPrimary.h) (ActualPrimary.commonContext B) (primary B N0) n (x,
-            0) 2)) :
+              0) 2)) :
     MeanResidualBounds strip sigma (ActualPrimary.commonContext B) (initialized B N0) := by
   constructor
   · apply MeanIncrementBounds.class_congr htheta
@@ -537,7 +559,7 @@ theorem initial_bounds_of_primaryData (B N0 : ℕ) (d : PrimaryData B N0)
       MeanResidualBounds strip (1 / 5) (ActualPrimary.commonContext B) (initialized B N0) ∧
       DefectBounds slowStrip (1 / 5) (ActualPrimary.commonContext B) (initialized B N0) ∧
       GaugeMassPreservation.ZeroMassesOn ActualPrimary.standardRegion.carrier (initialized B N0) :=
-        by
+          by
   unfold PrimaryData at d
   have ht := d.temporal_bounds ActualPrimary.outgoing.data.h_pos.le
     (fun n => le_max_right 1 (ChartScales.S n)) (CommonWindow.index ActualPrimary.h)
@@ -573,7 +595,7 @@ theorem curl_amplitude_uniform {B N0 : ℕ} :
       (1 - ChartScales.kappa)
       (fun l : ActualPrimaryBounds.SignedLabel B N0 => fun n x =>
         ((ActualPrimary.chartCoefficients l.1 l.2).withCutoff (ActualPrimary.chartCutoff l.1
-          l.2)).curlCorrection
+            l.2)).curlCorrection
           (HarmonicWaveInteraction.productStrip strip)
           (PrimaryResidualClass.directions (ActualPrimary.commonContext B)) n (x, 0)) :=
     UniformBlockBounds.uniform_slice hh
@@ -594,24 +616,24 @@ theorem primary_bounds (B N0 : ℕ) :
     MeanClass strip (1 - ChartScales.kappa) ((primary B N0).gr (ActualPrimary.commonContext B)) ∧
       MeanClass strip (1 - ChartScales.kappa) (primary B N0).pressure ∧
       MeanClass strip (1 - ChartScales.kappa) ((primary B N0).thetaResidual
-        (ActualPrimary.commonContext B)) ∧
+          (ActualPrimary.commonContext B)) ∧
       MeanClass strip (1 - ChartScales.kappa) ((primary B N0).axialResidual
-        (ActualPrimary.commonContext B)) ∧
+          (ActualPrimary.commonContext B)) ∧
       CumulativeBounds strip (primary B N0) := by
   have d := primary_mean_data B N0
   unfold PrimaryData at d
   exact MovingInitialization.zeroMean_reconstructed_bounds
     (cL := FinalSlowBase.edgeExponent ActualPrimary.nominal / 4) (cR := 1)
-      ActualPrimary.standardRegion
+        ActualPrimary.standardRegion
     ActualPrimary.commonGauge (PrimaryTargetBounds.leftRadius_pos ActualPrimary.nominal)
-    d.exponent_pos (div_pos (FinalSlowBase.edgeExponent_pos ActualPrimary.nominal) (by norm_num))
-      zero_lt_one
+    d.exponent_pos (div_pos (FinalSlowBase.edgeExponent_pos ActualPrimary.nominal) (by
+        norm_num)) zero_lt_one
     (ChartScales.epsilon ActualPrimary.h) BaseContextAssembly.slowScale
     (ChartScales.epsilon_pos ActualPrimary.h)
     (ChartScales.epsilon_le_one ActualPrimary.h ActualPrimary.outgoing.data.h_pos.le)
     BaseContextAssembly.one_le_slowScale d.gauge_length (ActualPrimary.commonContext B) (seed B N0)
     d.operators d.localOperators d.mean_zero d.covariance d.covariance_smooth d.covariance_support
-      d.theta d.axial
+        d.theta d.axial
 
 theorem matched_fluxes (B N0 : ℕ) :
     MeanClass strip (3 / 2 - ChartScales.kappa)
@@ -691,25 +713,25 @@ theorem initial_zeroMasses (B N0 : ℕ) :
 
 theorem initial_mean_smooth (B N0 : ℕ) :
     MeanIncrementBounds.SmoothTriple (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       (initialized B N0).mean :=
   (rank_bounds B N0).mean_smooth
 
 theorem initial_mean_support (B N0 : ℕ) :
     CorrectionStep.GaugeSupportedTriple ActualPrimary.commonGauge.radial.inner
-      ActualPrimary.commonGauge.radial.outer
+        ActualPrimary.commonGauge.radial.outer
       (VariableGaugeMean.qLength (2 * ActualPrimary.h)) ActualPrimary.standardRegion.carrier
       (initialized B N0).mean :=
   (rank_bounds B N0).mean_support
 
 theorem initialized_formula (B N0 : ℕ) :
     initialized B N0 = GaugeInitialization.initializedBands ActualPrimary.commonGauge
-      ActualPrimary.rankData
+        ActualPrimary.rankData
       ActualPrimary.h (CommonWindow.index ActualPrimary.h) ((0, 1), 0) (ActualPrimary.commonContext
-        B)
+          B)
       (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0)
       (fun l => ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1)
       (ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B) := rfl
+          ActualPrimary.upper B) := rfl
 
 end NavierStokes.ActualInitialMean

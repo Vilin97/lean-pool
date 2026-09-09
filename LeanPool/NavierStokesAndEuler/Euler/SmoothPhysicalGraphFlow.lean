@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothGraphFlow
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothScaledFlow
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
 
 /-! The true physical graph flow and its first two time derivatives.
 The change of labels is an actual ODE conjugacy, and the resulting
 three-dimensional flow preserves ordinary Lebesgue volume. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +27,7 @@ open scoped ContDiff
 
 variable (k : ℝ) (m : Vector3) (T : ℝ) (hT : 0 ≤ T)
   (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
-  (hgraph : ∀ t z, graphConstraint k m (A.field t z)=0)
+  (hgraph : ∀ t z, graphConstraint k m (A.field t z) = 0)
 
 include hgraph in
 theorem graph_materialVelocity_eq (t : Icc (0 : ℝ) T) (x : Vector3) :
@@ -50,7 +52,7 @@ theorem graph_accelerationField_eq (t : Icc (0 : ℝ) T) (x : Vector3) :
     apply Prod.ext
     · rfl
     · exact (sub_eq_zero.mp (hgraph t (J x))).symm
-  change (A₁.field t (J x)).1+
+  change (A₁.field t (J x)).1 +
     fderiv ℝ ((graphCoefficient k m T A).field t : Vector3 → Vector3) x (A.field t (J x)).1 = _
   rw [hd,comp_apply,comp_apply,hval]
   rfl
@@ -66,12 +68,13 @@ theorem graph_materialAcceleration_eq (t : Icc (0 : ℝ) T) (x : Vector3) :
   rw [← graph_flow_cover k m T hT A hgraph]
   rfl
 
+/-- Physical coefficient, given by `scaledCoefficient T (graphCoefficient k m T A) ell`. -/
 def physicalCoefficient (ell : ℝ) : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   scaledCoefficient T (graphCoefficient k m T A) ell
 
 @[simp] theorem physicalCoefficient_apply (ell : ℝ) (t : Icc (0 : ℝ) T) (x : Vector3) :
     (physicalCoefficient k m T A ell).field t x = ell • (A.field t (graphLinear k m (ell⁻¹ • x))).1
-      := rfl
+        := rfl
 
 theorem physicalCoefficient_timeDerivative (ell : ℝ)
     (htime : SmoothTimeField.TimeDerivative T hT A A₁) :
@@ -108,14 +111,15 @@ include hgraph in
 theorem physical_materialAcceleration_eq (ell : ℝ) (hell : ell ≠ 0)
     (t : Icc (0 : ℝ) T) (x : Vector3) :
     materialAcceleration T hT (physicalCoefficient k m T A ell) (physicalCoefficient k m T A₁ ell)
-      t x =
+        t x =
       ell • (materialAcceleration T hT A A₁ t (graphLinear k m (ell⁻¹ • x))).1 := by
   rw [physicalCoefficient,physicalCoefficient,
     scaled_materialAcceleration_eq T hT (graphCoefficient k m T A) ell
       (graphCoefficient k m T A₁) hell,graph_materialAcceleration_eq k m T hT A A₁ hgraph]
 
 variable (hdiv : ∀ t z,
-  LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) z).toLinearMap=0)
+  LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) z).toLinearMap =
+      0)
 
 include hgraph hdiv in
 theorem physicalCoefficient_trace_zero (ell : ℝ) (hell : ell ≠ 0)
@@ -128,7 +132,7 @@ theorem physicalCoefficient_trace_zero (ell : ℝ) (hell : ell ≠ 0)
 include hgraph hdiv in
 theorem physical_forward_measurePreserving (ell : ℝ) (hell : ell ≠ 0) (t : Icc (0 : ℝ) T) :
     MeasurePreserving ((flowData T hT (physicalCoefficient k m T A ell)).forward t) volume volume
-      := by
+        := by
   exact forward_measurePreserving T hT (physicalCoefficient k m T A ell)
     (physicalCoefficient_trace_zero k m T A hgraph hdiv ell hell) volume t
 

@@ -6,9 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Genuine derivative estimates for bounded inverses on normed spaces
@@ -17,6 +19,9 @@ The triangular derivative estimate only needs an actual bounded left inverse
 of the frozen operator. This form applies to continuous path spaces as well
 as Hilbert spaces, without assigning a Hilbert structure to a uniform norm.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,19 +41,19 @@ theorem solution_gevrey
     (heq : ∀ x, A x (u x) = f x)
     (inverse : P → E →L[ℝ] E) (hleft : ∀ x v, inverse x (A x v) = v)
     (I C D M Rc R : ℝ) (hC : 0 ≤ C) (hD : 0 ≤ D)
-    (hM : 1 ≤ M) (hMC : I*C ≤ M) (hMD : I*D ≤ M)
-    (hRc : 0 ≤ Rc) (hR : 2*M*(Rc+1) ≤ R)
+    (hM : 1 ≤ M) (hMC : I * C ≤ M) (hMD : I * D ≤ M)
+    (hRc : 0 ≤ Rc) (hR : 2 * M * (Rc + 1) ≤ R)
     (hinverse : ∀ x, ‖inverse x‖ ≤ I)
-    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j+1) A x‖ ≤
-      C*(Rc^(j+1)*((j+1).factorial : ℝ)^2))
-    (d : ℕ) (hforce : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D*majorant R d n)
+    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j + 1) A x‖ ≤
+      C * (Rc ^ (j + 1) * ((j + 1).factorial : ℝ) ^ 2))
+    (d : ℕ) (hforce : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n u x‖ ≤ majorant R (d+1) n := by
   have hR0 : 0 ≤ R := by nlinarith
   apply triangular_inverse_majorant M Rc R hM hRc hR d
     (fun k => majorant R d k) (fun k => ‖iteratedFDeriv ℝ k u x‖) (fun _ => le_rfl) _ n
   intro k
-  let S : ℝ := ∑ j ∈ range k, (k.choose (j+1) : ℝ)*Rc^(j+1)*
+  let S : ℝ := ∑ j ∈ range k, (k.choose (j+1) : ℝ)*Rc^(j+1) *
     ((j+1).factorial : ℝ)^2*‖iteratedFDeriv ℝ (k-(j+1)) u x‖
   have hS : 0 ≤ S := by dsimp [S]; positivity
   have hsum : (∑ j ∈ range k,

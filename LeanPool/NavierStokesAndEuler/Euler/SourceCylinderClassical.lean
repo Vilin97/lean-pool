@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderRegularity
 
 /-!
 # The solved forward field as an actual smooth cylinder field
@@ -19,6 +17,9 @@ The representative is recovered by bounded H3 evaluation of the genuine
 L² solution. It is jointly continuous, spatially and angularly smooth,
 compactly supported, and has the true pointwise within-time derivative.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,8 +34,8 @@ variable (period : ℝ) [Fact (0 < period)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (S : Set Space) (hS : MeasurableSet S) (hSc : IsCompact S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported period Space S hS)) (a₀ : Supported period U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported period Space S hS)) (a₀ : Supported period U S hS)
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS f)))
   (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U)))
 
@@ -46,7 +47,7 @@ def field (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Space :=
 /-- The reconstructed actual product-rule time derivative. -/
 def derivativeField (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Space :=
   pointField period (includePath period S hS (velocityDerivative period S hS T hT Q Q₁ c hc hQ f
-    a₀))
+      a₀))
     (velocityDerivative_contDiff period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀) t x
 
 theorem field_joint_continuous :
@@ -56,12 +57,12 @@ theorem field_joint_continuous :
 
 theorem field_smooth (t : Icc (0 : ℝ) T) (x : LiftDomain period) :
     ContDiff ℝ ∞ (localFieldLift period (field period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ t) x)
-      :=
+        :=
   pointField_smooth period _ _ t x
 
 theorem derivativeField_smooth (t : Icc (0 : ℝ) T) (x : LiftDomain period) :
     ContDiff ℝ ∞ (localFieldLift period (derivativeField period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf
-      ha₀ t) x) :=
+        ha₀ t) x) :=
   pointField_smooth period _ _ t x
 
 theorem field_ae (t : Icc (0 : ℝ) T) :
@@ -72,10 +73,10 @@ theorem field_ae (t : Icc (0 : ℝ) T) :
 
 theorem derivativeField_ae (t : Icc (0 : ℝ) T) :
     (velocityDerivative period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period Space)
-      =ᵐ[liftMeasure period]
+        =ᵐ[liftMeasure period]
       derivativeField period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ t :=
   pointField_ae period (includePath period S hS (velocityDerivative period S hS T hT Q Q₁ c hc hQ f
-    a₀))
+      a₀))
     (velocityDerivative_contDiff period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀) t
 
 theorem field_tsupport_subset (t : Icc (0 : ℝ) T) :
@@ -114,7 +115,7 @@ theorem field_hasDerivWithinAt
         (extendPath T hT Q₁.field t x) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) :
     HasDerivWithinAt (fun s => field period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ (projIcc 0 T hT
-      s) x)
+        s) x)
       (derivativeField period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ t x) (Icc (0 : ℝ) T) t :=
   pointField_hasDerivWithinAt period T hT
     (includePath period S hS (velocity period S hS T hT Q Q₁ c hc hQ f a₀))

@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceSmoothField
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFieldTower
 
-@[expose] public section
-
 /-! Actual Eulerian reconstructions have every spatial derivative in L²,
 continuously in time. Sobolev embedding also supplies bounded smooth
 coefficient paths for the velocity and pressure force. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +28,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   (κ : ℝ) (Z : FieldTower P D.T)
 
+/-- Pressure force tower, given by `(Z.multiply ((inverseCoefficient
+D).adjoint.toCoefficientTower P)).smul κ`. -/
 def pressureForceTower : FieldTower P D.T :=
   (Z.multiply ((inverseCoefficient D).adjoint.toCoefficientTower P)).smul κ
 
@@ -43,10 +46,12 @@ variable (k : ℝ) (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hXY : ∀ t, Function.RightInverse (Y t) (X t))
   (hY : Continuous (Function.uncurry Y))
   (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-  (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det=1)
+  (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
 
+/-- Eulerian smooth field, given by `EulerPacketSourceVolumeSobolev.smoothField D
+(reconstructedTower D P κ Z) k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF t`. -/
 def eulerianSmoothField (t : Icc (0 : ℝ) D.T) : SmoothL2Field Space :=
   EulerPacketSourceVolumeSobolev.smoothField D (reconstructedTower D P κ Z) k D.m₀
     X Y hX hYX hXY hY R C hR hC hdet hF t
@@ -62,6 +67,8 @@ theorem eulerianSmoothField_jetLp_continuous (n : ℕ) :
   EulerPacketSourceVolumeSobolev.smoothField_jetLp_continuous D (reconstructedTower D P κ Z)
     k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF n
 
+/-- Eulerian coefficient path, given by `EulerPacketSourceVolumeSobolev.smoothCoefficientPath D
+(reconstructedTower D P κ Z) k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF`. -/
 def eulerianCoefficientPath : SmoothCoefficientPath (Icc (0 : ℝ) D.T) Space :=
   EulerPacketSourceVolumeSobolev.smoothCoefficientPath D (reconstructedTower D P κ Z)
     k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF
@@ -73,6 +80,8 @@ theorem eulerianCoefficientPath_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     reconstructedTower_pointField]
   rfl
 
+/-- Pressure force smooth field, given by `EulerPacketSourceVolumeSobolev.smoothField D
+(pressureForceTower D P κ Z) k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF t`. -/
 def pressureForceSmoothField (t : Icc (0 : ℝ) D.T) : SmoothL2Field Space :=
   EulerPacketSourceVolumeSobolev.smoothField D (pressureForceTower D P κ Z) k D.m₀
     X Y hX hYX hXY hY R C hR hC hdet hF t
@@ -89,6 +98,9 @@ theorem pressureForceSmoothField_jetLp_continuous (n : ℕ) :
   EulerPacketSourceVolumeSobolev.smoothField_jetLp_continuous D (pressureForceTower D P κ Z)
     k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF n
 
+/-- Pressure force coefficient path, given by
+`EulerPacketSourceVolumeSobolev.smoothCoefficientPath D (pressureForceTower D P κ Z) k D.m₀
+X Y hX hYX hXY hY R C hR hC hdet hF`. -/
 def pressureForceCoefficientPath : SmoothCoefficientPath (Icc (0 : ℝ) D.T) Space :=
   EulerPacketSourceVolumeSobolev.smoothCoefficientPath D (pressureForceTower D P κ Z)
     k D.m₀ X Y hX hYX hXY hY R C hR hC hdet hF

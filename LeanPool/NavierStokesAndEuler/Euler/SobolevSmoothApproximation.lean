@@ -10,16 +10,17 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeat
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDensity
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 
+/-! Smooth high-regularity approximations converging contractively in the original Sobolev order. -/
+
 @[expose] public section
 
-/-! Smooth high-regularity approximations converging contractively in the original Sobolev order. -/
 
 noncomputable section
 
 namespace EulerCylinderSobolevSpace
 
 open MeasureTheory EulerLiftedGradientSpace EulerMetricTransport EulerCylinderSobolev
-  EulerCylinderMollifier
+    EulerCylinderMollifier
   EulerMollifierRepresentative EulerSobolevHeat EulerGaussianCylinderHeat EulerNoncompactTransport
 open scoped Topology ContDiff NNReal
 
@@ -33,13 +34,13 @@ def heatGainThree (q : ℕ) (v : ℝ≥0) (hv : 0 < v) :
 /-- Its underlying field is exactly heat evolution with three times the variance. -/
 theorem heatGainThree_value {q : ℕ} (v : ℝ≥0) (hv : 0 < v) (u : SobolevSpace period q) :
     value period (heatGainThree period q v hv u) = cylinderHeat period (v+(v+v)) (value period u)
-      := by
+        := by
   simp only [heatGainThree, ContinuousLinearMap.comp_apply, heatGain_value, cylinderHeat_semigroup]
 
 /-- Forgetting the three gained derivatives recovers the usual contractive heat operator. -/
 theorem restrict_heatGainThree {q : ℕ} (v : ℝ≥0) (hv : 0 < v) (u : SobolevSpace period q) :
-    restrictOperator period (by omega : q ≤ q+3) (heatGainThree period q v hv u) = heatOperator
-      period q (v+(v+v)) u := by
+    restrictOperator period (by
+        omega : q ≤ q+3) (heatGainThree period q v hv u) = heatOperator period q (v+(v+v)) u := by
   apply value_injective period
   rw [value_restrictOperator, heatGainThree_value, heatOperator_value]
 
@@ -47,7 +48,7 @@ theorem restrict_heatGainThree {q : ℕ} (v : ℝ≥0) (hv : 0 < v) (u : Sobolev
 def smoothingVariance (n : ℕ) : ℝ≥0 := (cutoffScale n).toNNReal
 
 theorem smoothingVariance_pos (n : ℕ) : 0 < smoothingVariance n := Real.toNNReal_pos.mpr
-  (cutoffScale_pos n)
+    (cutoffScale_pos n)
 
 theorem smoothingVariance_tendsto : Filter.Tendsto smoothingVariance Filter.atTop (𝓝 0) := by
   change Filter.Tendsto (fun n => (cutoffScale n).toNNReal) Filter.atTop (𝓝 (0 : ℝ≥0))
@@ -66,7 +67,7 @@ theorem restrict_smoothApprox {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
         (smoothingVariance n+(smoothingVariance n+smoothingVariance n)) u) := by
   apply value_injective period
   change mollify period n (value period (heatGainThree period q (smoothingVariance n)
-    (smoothingVariance_pos n) u)) = _
+      (smoothingVariance_pos n) u)) = _
   rw [heatGainThree_value]
   rfl
 
@@ -87,7 +88,7 @@ theorem contractive_comp_dist {X : Type*} [NormedAddCommGroup X] [NormedSpace �
 theorem smoothApprox_dist {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
     dist (restrictOperator period (by omega : q ≤ q+3) (smoothApprox period q n u)) u ≤
       dist (heatOperator period q (smoothingVariance n+(smoothingVariance n+smoothingVariance n))
-        u) u +
+          u) u +
         dist (sobolevMollifier period q n u) u := by
   rw [restrict_smoothApprox]
   exact contractive_comp_dist (sobolevMollifier period q n) (sobolevMollifier_bound period n)
@@ -95,13 +96,13 @@ theorem smoothApprox_dist {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
 
 /-- The smooth high-regularity approximations converge in the complete original Sobolev norm. -/
 theorem smoothApprox_tendsto {q : ℕ} (u : SobolevSpace period q) :
-    Filter.Tendsto (fun n => restrictOperator period (by omega : q ≤ q+3) (smoothApprox period q n
-      u))
+    Filter.Tendsto (fun n => restrictOperator period (by
+        omega : q ≤ q+3) (smoothApprox period q n u))
       Filter.atTop (𝓝 u) := by
   have hv : Filter.Tendsto (fun n => smoothingVariance n+(smoothingVariance n+smoothingVariance n))
       Filter.atTop (𝓝 0) := by
     simpa only [add_zero] using smoothingVariance_tendsto.add (smoothingVariance_tendsto.add
-      smoothingVariance_tendsto)
+        smoothingVariance_tendsto)
   have hh := (heatOperator_continuous period u).continuousAt.tendsto.comp hv
   rw [heatOperator_zero] at hh
   have hm := sobolevMollifier_tendsto period u
@@ -112,7 +113,7 @@ theorem smoothApprox_tendsto {q : ℕ} (u : SobolevSpace period q) :
       (smoothingVariance n+(smoothingVariance n+smoothingVariance n)) u) u) Filter.atTop (𝓝 0) := by
     simpa only [Function.comp_apply, dist_self] using hh.dist hc
   have hm' : Filter.Tendsto (fun n => dist (sobolevMollifier period q n u) u) Filter.atTop (𝓝 0) :=
-    by
+      by
     simpa only [dist_self] using hm.dist hc
   simpa only [add_zero] using hh'.add hm'
 
@@ -120,7 +121,7 @@ theorem smoothApprox_tendsto {q : ℕ} (u : SobolevSpace period q) :
 theorem smoothApprox_representative {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
     ∃ f : LiftDomain period → Vector3,
       (value period (smoothApprox period q n u) : LiftDomain period → Vector3) =ᵐ[liftMeasure
-        period] f ∧
+          period] f ∧
       ∀ x, ContDiff ℝ ∞ (localFieldLift period f x) := by
   let U := heatGainThree period q (smoothingVariance n) (smoothingVariance_pos n) u
   exact ⟨smoothMollifier period n (value period U), sobolevMollifier_representative period n U,

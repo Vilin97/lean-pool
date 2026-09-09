@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
+import Mathlib.Algebra.Order.Star.Real
 
 /-! A fixed polynomial frequency loss for every actual physical spatial
 derivative of a reconstructed lifted field. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,8 +28,10 @@ open scoped ContDiff
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
 
+/-- Physical radius cost, given by `sourceInverseRadius C R*(9*C^2*(R +
+(‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖D.m₀‖))*S)+2)`. -/
 def physicalRadiusCost (R C S : ℝ) : ℝ :=
-  sourceInverseRadius C R*(9*C^2*(R+
+  sourceInverseRadius C R*(9*C^2*(R +
     (‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖D.m₀‖))*S)+2)
 
 theorem physicalRadiusCost_nonneg (R C S : ℝ) (hR : 0 ≤ R) (hS : 0 ≤ S) :
@@ -56,6 +60,7 @@ theorem physicalRadius_le_linear (k R C S : ℝ) (hk : 1 ≤ k) (hR : 0 ≤ R) (
     dsimp only [χ]
     ring)
 
+/-- Physical fixed cost, given by `3*C*(physicalRadiusCost D R C S)^n*(n.factorial : ℝ)^2`. -/
 def physicalFixedCost (R C S : ℝ) (n : ℕ) : ℝ :=
   3*C*(physicalRadiusCost D R C S)^n*(n.factorial : ℝ)^2
 
@@ -70,9 +75,9 @@ variable (P κ k : ℝ) (e : Icc (0 : ℝ) D.T → LiftDomain P → Space)
   (he : ∀ t x, ContDiff ℝ ∞ (localFieldLift P (e t) x))
   (R C A S : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hA : 0 ≤ A) (hS : 0 ≤ S)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
   (hb : ∀ n t x, (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w (e t) x‖) ≤
-    A*S^n*(n.factorial : ℝ)^2)
+    A * S ^ n * (n.factorial : ℝ) ^ 2)
   (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
   (hY : ∀ t, Differentiable ℝ (Y t))

@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowBounds
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowDeformation
 
-@[expose] public section
-
 /-! Actual continuous bounded coefficient paths for the graph-flow
 displacement, velocity, and acceleration. No extra supremum estimate on
 the time derivative of the lifted velocity is required. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,12 +25,17 @@ open Set EulerLiftedGradientSpace EulerSmoothBanachFlow EulerSmoothFlowGevrey
 
 variable {P T : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P T)
 
+/-- Cover displacement coefficient, given by `displacementCoefficient T G.time_nonneg G.A G.B
+G.R G.B_nonneg G.R_pos G.small G.sup_bound`. -/
 def coverDisplacementCoefficient : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent :=
   displacementCoefficient T G.time_nonneg G.A G.B G.R G.B_nonneg G.R_pos G.small G.sup_bound
 
+/-- Cover velocity coefficient, given by `G.A.compDisplacement G.coverDisplacementCoefficient`. -/
 def coverVelocityCoefficient : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent :=
   G.A.compDisplacement G.coverDisplacementCoefficient
 
+/-- Cover acceleration coefficient, given by `accelerationCoefficient T G.time_nonneg G.A G.B
+G.R G.B_nonneg G.R_pos G.small G.sup_bound G.A₁`. -/
 def coverAccelerationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent :=
   accelerationCoefficient T G.time_nonneg G.A G.B G.R G.B_nonneg G.R_pos G.small G.sup_bound G.A₁
 
@@ -48,7 +54,7 @@ def coverAccelerationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent
 @[simp] theorem coverAccelerationCoefficient_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     G.coverAccelerationCoefficient.field t x = accelerationFamily T G.time_nonneg G.A G.A₁ x t :=
   accelerationCoefficient_apply T G.time_nonneg G.A G.B G.R G.B_nonneg G.R_pos G.small G.sup_bound
-    G.A₁ t x
+      G.A₁ t x
 
 theorem coverDisplacementCoefficient_time : SmoothTimeField.TimeDerivative T G.time_nonneg
     G.coverDisplacementCoefficient G.coverVelocityCoefficient := by
@@ -68,14 +74,20 @@ theorem coverVelocityCoefficient_time : SmoothTimeField.TimeDerivative T G.time_
   rw [he,G.coverAccelerationCoefficient_apply]
   exact velocityFamily_time_derivative T G.time_nonneg G.A G.A₁ G.time_derivative x t
 
+/-- Physical displacement coefficient, given by `physicalCoefficient k m T
+G.coverDisplacementCoefficient ell`. -/
 def physicalDisplacementCoefficient (k : ℝ) (m : Vector3) (ell : ℝ) :
     SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   physicalCoefficient k m T G.coverDisplacementCoefficient ell
 
+/-- Physical velocity coefficient, given by `physicalCoefficient k m T
+G.coverVelocityCoefficient ell`. -/
 def physicalVelocityCoefficient (k : ℝ) (m : Vector3) (ell : ℝ) :
     SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   physicalCoefficient k m T G.coverVelocityCoefficient ell
 
+/-- Physical acceleration coefficient, given by `physicalCoefficient k m T
+G.coverAccelerationCoefficient ell`. -/
 def physicalAccelerationCoefficient (k : ℝ) (m : Vector3) (ell : ℝ) :
     SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   physicalCoefficient k m T G.coverAccelerationCoefficient ell
@@ -85,7 +97,7 @@ theorem physicalDisplacementCoefficient_time (k : ℝ) (m : Vector3) (ell : ℝ)
       (G.physicalDisplacementCoefficient k m ell) (G.physicalVelocityCoefficient k m ell) :=
   physicalCoefficient_timeDerivative k m T G.time_nonneg
     G.coverDisplacementCoefficient G.coverVelocityCoefficient ell
-      G.coverDisplacementCoefficient_time
+        G.coverDisplacementCoefficient_time
 
 theorem physicalVelocityCoefficient_time (k : ℝ) (m : Vector3) (ell : ℝ) :
     SmoothTimeField.TimeDerivative T G.time_nonneg
@@ -96,8 +108,9 @@ theorem physicalVelocityCoefficient_time (k : ℝ) (m : Vector3) (ell : ℝ) :
 theorem physicalDisplacementCoefficient_eq (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell)
     (t : Icc (0 : ℝ) T) (x : Vector3) :
     (G.physicalDisplacementCoefficient k m ell).field t x = (G.displacementField k m ell hell
-      t).field x := by
-  rw [physicalDisplacementCoefficient,physicalCoefficient_apply,G.coverDisplacementCoefficient_apply]
+        t).field x := by
+  rw [physicalDisplacementCoefficient, physicalCoefficient_apply,
+      G.coverDisplacementCoefficient_apply]
   change ell • ((flowData T G.time_nonneg G.A).forward t _ - _).1 =
     ell • (displacement T G.time_nonneg G.A t _).1
   rw [displacement_eq]
@@ -106,15 +119,16 @@ theorem physicalDisplacementCoefficient_eq (k : ℝ) (m : Vector3) (ell : ℝ) (
 theorem physicalVelocityCoefficient_eq (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell)
     (t : Icc (0 : ℝ) T) (x : Vector3) :
     (G.physicalVelocityCoefficient k m ell).field t x = (G.velocityField k m ell hell t).field x :=
-      by
+        by
   rw [physicalVelocityCoefficient,physicalCoefficient_apply,G.coverVelocityCoefficient_apply]
   rfl
 
 theorem physicalAccelerationCoefficient_eq (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell)
     (t : Icc (0 : ℝ) T) (x : Vector3) :
     (G.physicalAccelerationCoefficient k m ell).field t x = (G.accelerationFieldL2 k m ell hell
-      t).field x := by
-  rw [physicalAccelerationCoefficient,physicalCoefficient_apply,G.coverAccelerationCoefficient_apply]
+        t).field x := by
+  rw [physicalAccelerationCoefficient, physicalCoefficient_apply,
+      G.coverAccelerationCoefficient_apply]
   rw [accelerationFamily_apply]
   rfl
 

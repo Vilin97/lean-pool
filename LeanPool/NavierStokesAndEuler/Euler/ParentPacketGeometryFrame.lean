@@ -7,15 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStrainEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHessianSymmetry
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardFactorization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryShearIdentity
 
 /-! Actual parent source trajectories supply the older geometric frame.
 Its matrix derivative is derived from the parent curvature, and its ray
 and primary velocity are the constructed source trajectories. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +32,7 @@ namespace Parent
 
 variable (G : Parent)
 
+/-- Source normal, given by `(G.inverse.realField G.T G.T_pos.le t 0).adjoint m`. -/
 def sourceNormal (m : Space) (t : ℝ) : Space :=
   (G.inverse.realField G.T G.T_pos.le t 0).adjoint m
 
@@ -65,9 +67,11 @@ theorem sourceNormal_ne_zero (m : Space) (hm : m ≠ 0) (t : Icc (0 : ℝ) G.T) 
   exact hm hc.symm
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S)
 
+/-- Source velocity, given by `EulerPacketForwardFactorization.uncutVelocity (G.transverseData m
+hm R S hS) η t 0`. -/
 def sourceVelocity (η : U) (t : ℝ) : Space :=
   EulerPacketForwardFactorization.uncutVelocity (G.transverseData m hm R S hS) η t 0
 
@@ -85,7 +89,7 @@ theorem source_strain_eq (t : Icc (0 : ℝ) G.T) :
 
 theorem sourceVelocity_equation (η : U) (t : Icc (0 : ℝ) G.T) :
     HasDerivWithinAt (G.sourceVelocity m hm R S hS η)
-      (-(G.centerStrain t) (G.sourceVelocity m hm R S hS η t)+
+      (-(G.centerStrain t) (G.sourceVelocity m hm R S hS η t) +
         (2*⟪G.sourceNormal m t,(G.centerStrain t) (G.sourceVelocity m hm R S hS η t)⟫_ℝ/
           ‖G.sourceNormal m t‖^2) • G.sourceNormal m t) (Icc (0 : ℝ) G.T) t := by
   have h := EulerPacketForwardFactorization.uncutVelocity_equation
@@ -132,14 +136,14 @@ is supplied as a hypothesis. -/
 def geometryFrameOfCenterExpansion (η : U) (hη : η ≠ 0)
     (w : ℝ → Space → Space) (c CM CH K error : ℝ)
     (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
-    (hMK : CM ≤ K) (hHK : CM^2+CH ≤ K^2)
+    (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
     (hM : ∀ t ∈ Icc τ D.T, ‖G.centerStrain t‖ ≤ CM)
     (hH : ∀ t ∈ Icc τ D.T, ‖G.centerCurvature t‖ ≤ CH)
     (hupdate : ∀ t : Icc (0 : ℝ) D.T,
       D.M.field t 0 = G.centerStrain t+fderiv ℝ (w t) 0)
     (hpacket : ∀ t ∈ Icc τ D.T,
       ‖fderiv ℝ (w t) 0-c • rankOne ℝ (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
-        error) :
+          error) :
     ParentFrame D τ where
   B := G.centerStrain
   B₁ := G.centerStrainDerivative

@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Smooth substitution of a continuous path into a smooth coefficient field
@@ -18,6 +18,9 @@ The derivative is the actual pointwise derivative multiplier.  A uniform
 second-derivative remainder proves Fréchet differentiability in the path
 sup norm, and iteration gives smoothness at every order.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,12 +37,28 @@ variable {K E : Type u} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
   {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup C(K, E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ C(K, E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeSuperposition1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeSuperposition2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeSuperposition3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeSuperposition4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K, E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothTimeSuperposition5 (n : ℕ) : NormedAddCommGroup C(K, E →ᵇ (E [×n]→L[ℝ] V))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K, E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeSuperposition6 (n : ℕ) : NormedSpace ℝ C(K, E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
 omit [TopologicalSpace K] [CompactSpace K] in
 private theorem quadratic_taylor_bound
@@ -63,25 +82,28 @@ private theorem quadratic_taylor_bound
     (by simp) (by simp [dist_eq_norm])
   simpa only [add_sub_cancel_left, pow_two, mul_assoc] using H
 
+/-- Superposition, bundling `toFun`, `continuous_toFun`. -/
 def superposition (A : SmoothTimeField K E V) (u : C(K, E)) : C(K,V) where
   toFun t := A.field t (u t)
   continuous_toFun := by fun_prop
 
 @[simp] theorem superposition_apply (A : SmoothTimeField K E V)
-    (u : C(K,E)) (t : K) : A.superposition u t = A.field t (u t) := rfl
+    (u : C(K, E)) (t : K) : A.superposition u t = A.field t (u t) := rfl
 
-def superpositionDerivative (A : SmoothTimeField K E V) (u : C(K,E)) :
+/-- Superposition derivative, given by `EulerContinuousTimeIntegral.multiplier
+(A.derivative.superposition u)`. -/
+def superpositionDerivative (A : SmoothTimeField K E V) (u : C(K, E)) :
     C(K,E) →L[ℝ] C(K,V) :=
   EulerContinuousTimeIntegral.multiplier (A.derivative.superposition u)
 
 theorem superpositionDerivative_apply (A : SmoothTimeField K E V)
-    (u h : C(K,E)) (t : K) :
+    (u h : C(K, E)) (t : K) :
     A.superpositionDerivative u h t = fderiv ℝ (A.field t : E → V) (u t) (h t) := by
   change A.derivativeField t (u t) (h t) = _
   rw [A.derivativeField_eq]
 
 theorem superposition_taylor_bound (A : SmoothTimeField K E V)
-    (u v : C(K,E)) :
+    (u v : C(K, E)) :
     ‖A.superposition v - A.superposition u - A.superpositionDerivative u (v-u)‖ ≤
       ‖A.jet 2‖ * ‖v-u‖^2 := by
   apply (ContinuousMap.norm_le _ (by positivity)).2
@@ -99,7 +121,7 @@ theorem superposition_taylor_bound (A : SmoothTimeField K E V)
   exact h.trans (mul_le_mul_of_nonneg_left
     (pow_le_pow_left₀ (norm_nonneg _) hv 2) (norm_nonneg _))
 
-theorem superposition_hasFDerivAt (A : SmoothTimeField K E V) (u : C(K,E)) :
+theorem superposition_hasFDerivAt (A : SmoothTimeField K E V) (u : C(K, E)) :
     HasFDerivAt A.superposition (A.superpositionDerivative u) u := by
   apply hasFDerivAt_iff_tendsto.mpr
   apply squeeze_zero

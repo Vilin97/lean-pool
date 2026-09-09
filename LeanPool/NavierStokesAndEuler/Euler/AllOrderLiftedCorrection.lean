@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionFamily
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+
+/-! A common actual lifted inviscid correction with genuine jets of every order and smooth spatial
+representatives. -/
 
 @[expose] public section
 
-/-! A common actual lifted inviscid correction with genuine jets of every order and smooth spatial
-  representatives. -/
 
 noncomputable section
 
@@ -21,18 +23,19 @@ namespace EulerAllOrderLiftedCorrection
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerAllOrderCorrectionData
   EulerAllOrderCorrectionBudget EulerAllOrderCorrectionFamily EulerVolterraConvolution
-  EulerMetricTransport EulerLiftedCurl EulerSmoothPressureRepresentative EulerClassicalDivergence
-    EulerTransportDerivatives
+  EulerMetricTransport  EulerSmoothPressureRepresentative EulerClassicalDivergence
+      EulerTransportDerivatives
   EulerGevreyMetricEstimate
 open scoped Topology ContDiff
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The independently constructed finite-order corrections all represent the same actual L² field. -/
+/-- The independently constructed finite-order corrections all represent the same actual L² field.
+-/
 theorem solution_value_base {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     value period (solution period hT A B q hq t) = value period (solution period hT A B 6 le_rfl t)
-      := by
+        := by
   exact Nat.le_induction (P := fun n hn => value period (solution period hT A B n hn t) =
       value period (solution period hT A B 6 le_rfl t)) rfl
     (fun n hn ih => (solution_value_succ period hT A B n hn t).trans ih) q hq
@@ -63,7 +66,7 @@ theorem commonPath_divergence {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Bu
 /-- An actual strong derivative jet of any prescribed order for the common nonlinear solution. -/
 def commonJet {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (n : ℕ) (t : Icc (0 : ℝ) T) : SpatialJet period standardDirection n (commonPath period hT A B
-      t) := by
+        t) := by
   rw [← solution_value_common period hT A B (n+6) (by omega) t]
   exact EulerH6Pressure.SpatialJet.restrict
     (toJet period (solution period hT A B (n+6) (by omega) t)) n (by omega)
@@ -83,10 +86,11 @@ theorem commonPath_hasDerivAt {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Bu
         ⟨t,ht.1.le,ht.2.le⟩ (solution period hT A B 6 le_rfl ⟨t,ht.1.le,ht.2.le⟩))) t :=
   solution_hasDerivAt period hT A B 6 le_rfl t ht
 
-/-- Actual coherent all-order data and their concrete budgets construct a common inviscid correction with genuine jets at every order and spatially smooth, pointwise divergence-free representatives.
+/-- Actual coherent all-order data and their concrete budgets construct a common inviscid correction
+with genuine jets at every order and spatially smooth, pointwise divergence-free representatives.
 No correction solution, energy estimate, convergence, or all-order compatibility is assumed. -/
 theorem exists_smooth_lifted_correction {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period
-  hT A) :
+    hT A) :
     ∃ (U : C(Icc (0 : ℝ) T,LiftL2 period)) (g : Icc (0 : ℝ) T → LiftDomain period → Vector3),
       U ⟨0,le_rfl,hT.le⟩=0 ∧
       (∀ n t, Nonempty (SpatialJet period standardDirection n (U t))) ∧
@@ -94,7 +98,7 @@ theorem exists_smooth_lifted_correction {T : ℝ} (hT : 0 < T) (A : Data period 
       (∀ t x, ContDiff ℝ ∞ (localFieldLift period (g t) x)) ∧
       (∀ t, (U t : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g t) ∧
       (∀ t x, (∑ i : Fin 3, (fieldDerivative period (coordinateDirection A.κ A.direction i) (g t)
-        x) i)=0) ∧
+          x) i)=0) ∧
       ∀ t (ht : t ∈ Ioo 0 T), HasDerivAt (extendPath T hT.le U)
         (value period (((A.atOrder period 6).coefficients period le_rfl).apply
           ⟨t,ht.1.le,ht.2.le⟩ (solution period hT A B 6 le_rfl ⟨t,ht.1.le,ht.2.le⟩))) t := by

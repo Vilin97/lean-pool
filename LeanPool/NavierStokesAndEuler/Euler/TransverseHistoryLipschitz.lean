@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryBounds
 
+/-! The explicit history perturbation estimate yields actual coefficient Lipschitz control. -/
+
 @[expose] public section
 
-/-! The explicit history perturbation estimate yields actual coefficient Lipschitz control. -/
 
 noncomputable section
 
@@ -43,7 +44,7 @@ theorem historyDifferenceCost_nonneg (T c q q₁ d a r x y z : ℝ)
 theorem historyDifferenceCost_le_scale (T c q q₁ d a r x y z L₀ L₁ LH s : ℝ)
     (hT : 0 ≤ T) (hc : 0 ≤ c) (hq : 0 ≤ q) (hq₁ : 0 ≤ q₁)
     (hd : 0 ≤ d) (ha : 0 ≤ a) (hr : 0 ≤ r)
-    (hx : x ≤ L₀*s) (hy : y ≤ L₁*s) (hz : z ≤ LH*s) :
+    (hx : x ≤ L₀ * s) (hy : y ≤ L₁ * s) (hz : z ≤ LH * s) :
     historyDifferenceCost T c q q₁ d a r x y z ≤
       historyDifferenceCost T c q q₁ d a r L₀ L₁ LH * s := by
   have h₀ := historyDifferenceCost_nonneg T c q q₁ d a r 1 0 0 hT hc hq hq₁ hd ha hr
@@ -83,7 +84,7 @@ theorem historyVelocity_sub_norm_le_of_coefficient_bounds (hTpos : 0 < T) (q q�
     (hD : T * ‖Q₁‖ + ‖Q‖ ≤ d) (hD' : T * ‖P₁‖ + ‖P‖ ≤ d)
     (hA : 1 + T ^ 2 * ‖H‖ ≤ a) (hA' : 1 + T ^ 2 * ‖G‖ ≤ a)
     (hr : transportCost T Q Q₁ c ≤ r) (hr' : transportCost T P P₁ c ≤ r)
-    (L₀ L₁ LH s : ℝ) (h₀ : ‖Q-P‖ ≤ L₀*s) (h₁ : ‖Q₁-P₁‖ ≤ L₁*s) (hHdiff : ‖H-G‖ ≤ LH*s) :
+    (L₀ L₁ LH s : ℝ) (h₀ : ‖Q - P‖ ≤ L₀ * s) (h₁ : ‖Q₁ - P₁‖ ≤ L₁ * s) (hHdiff : ‖H - G‖ ≤ LH * s) :
     ‖historyVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall -
       historyVelocity T hT P P₁ G c hc hP hp K hK hG hsmall‖ ≤
       historyDifferenceCost T c q q₁ d a r L₀ L₁ LH * s := by

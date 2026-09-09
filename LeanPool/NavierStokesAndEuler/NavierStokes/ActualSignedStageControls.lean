@@ -6,16 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedControl
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhaseDefect
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryDynamics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedDynamics
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NativePrincipalEquations
 
 /-!
 # Native controls for the actual signed correction
@@ -25,6 +18,9 @@ The raw signed mask contains only the slow spatial factor.  Both compact
 native factors belong to the cutoff, so no time cutoff is declared frozen
 along the fast field.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,70 +32,91 @@ open WeightedClasses
 
 open CorrectionInitialization
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Full point: an abbreviation for `Point × ℝ`. -/
 abbrev FullPoint := Point × ℝ
+/-- Native: an abbreviation for `ActualSignedGeometry.Native`. -/
 abbrev Native := ActualSignedGeometry.Native
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Signed label: an abbreviation for `ActualPrimary.Label B N0 × Fin 2`. -/
 abbrev SignedLabel (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 
 variable {B N0 : ℕ}
 
+/-- Directions, given by `PrimaryResidualClass.directions (ActualPrimary.commonContext B)`. -/
 noncomputable def directions (B : ℕ) := PrimaryResidualClass.directions
-  (ActualPrimary.commonContext B)
+    (ActualPrimary.commonContext B)
 
+/-- Native point as an element of `Native`. -/
 noncomputable def nativePoint (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
     (x : FullPoint) : Native :=
   (ActualPrimary.nativeSlow l.1 (ActualPrimary.toAbsolute n x.1),
     (ActualPrimary.geometry l.2 l.1).coordinates k (ActualPrimary.toAbsolute n x.1).2)
 
+/-- Coefficient scale, constructed using `PhysicalSignedWave.coefficientScale`. -/
 noncomputable def coefficientScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalSignedWave.coefficientScale (ChartScales.epsilon ActualPrimary.h n)
     (ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand l.1))
     (PhysicalParticularWave.velocityWeight ActualPrimary.h (ChartScales.Q n)
       (ChartScales.Q (BaseChartJets.cellBand l.1)))
 
+/-- Normal scale, constructed using `PhysicalParticularWave.normalWeight`. -/
 noncomputable def normalScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.normalWeight (ChartScales.Q n)
     (ChartScales.Q (BaseChartJets.cellBand l.1)) (ChartScales.carrier ActualPrimary.h n)
     (ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand l.1))
 
+/-- Clock scale, given by `PhysicalParticularWave.clockWeight ActualPrimary.h (ChartScales.Q n)
+(ChartScales.Q (BaseChartJets.cellBand l.1))`. -/
 noncomputable def clockScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight ActualPrimary.h (ChartScales.Q n)
     (ChartScales.Q (BaseChartJets.cellBand l.1))
 
+/-- Matrix, given by `ActualPrimary.covariance B N0 l.1 (nativePoint l n k x).1`. -/
 noncomputable def matrix (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : SignedWaveUpdate.Mat2 :=
   ActualPrimary.covariance B N0 l.1 (nativePoint l n k x).1
 
+/-- Target, given by `coefficientScale l n ^ 2 • (fun q => PrimaryTargetBounds.actualTarget
+ActualPrimary.modulation (nativePoint l n k x).1 q)`. -/
 noncomputable def target (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : SignedWaveUpdate.Vec2 :=
   coefficientScale l n ^ 2 •
     (fun q => PrimaryTargetBounds.actualTarget ActualPrimary.modulation (nativePoint l n k x).1 q)
 
+/-- Mask, given by `ActualPrimary.spatialMask l.1 (nativePoint l n k x).1`. -/
 noncomputable def mask (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : ℝ := ActualPrimary.spatialMask l.1 (nativePoint l n k x).1
 
+/-- Fundamental, constructed using `PrimaryPulseBounds.normalizedPulse`. -/
 noncomputable def fundamental (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : Space :=
   PrimaryPulseBounds.normalizedPulse ((ActualPrimary.phases B N0 l.2).frame l.1)
     ((ActualPrimary.phases B N0 l.2).lam l.1) ((ActualPrimary.phases B N0 l.2).u l.1)
     ((ActualPrimary.phases B N0 l.2).L l.1) (ActualPrimary.pulseCoordinates l.1 (nativePoint l n k
-      x))
+        x))
 
+/-- Normal motion as an element of `Space`. -/
 noncomputable def normalMotion (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : Space :=
   (normalScale l n * clockScale l n) • (ActualPrimary.phases B N0 l.2).phase.velocity l.1
     (ActualPrimary.phasePoint l.1 (nativePoint l n k x))
 
+/-- Action, constructed using `clockScale`. -/
 noncomputable def action (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : Space →L[ℝ] Space :=
   clockScale l n • PrimaryCopyBridge.baseOperator
     ((ActualPrimary.phases B N0 l.2).phase.F l.1 (nativePoint l n k x).1)
     ((ActualPrimary.phases B N0 l.2).phase.shear l.1 (ActualPrimary.phasePoint l.1 (nativePoint l n
-      k x)))
+        k x)))
 
+/-- Cutoff, constructed using `PartitionedCovariance.cutoff`. -/
 noncomputable def cutoff (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : ℝ :=
   PartitionedCovariance.cutoff ActualPrimary.slots.radius (nativePoint l n k x).2.1 *
@@ -108,7 +125,7 @@ noncomputable def cutoff (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
 /-- The literal raw data accepted by the correction stage.  The same
 selected primary frame is used for the matrix, unit pulse, and pressure. -/
 noncomputable def parameters (l : SignedLabel B N0) : CorrectionStep.PeriodizedSignedParameters
-  Point Frequency where
+    Point Frequency where
   base := ActualPrimary.chartCoefficients l.2 l.1
   directions := directions B
   matrix := matrix l
@@ -119,7 +136,7 @@ noncomputable def parameters (l : SignedLabel B N0) : CorrectionStep.PeriodizedS
   action := action l
   cutoff := cutoff l
   angularFrequency _ := PrimaryGeometryAssembly.angularMode ActualPrimary.certificate
-    ActualPrimary.modulation
+      ActualPrimary.modulation
     (ActualPrimary.choice B N0).prepared l.2 l.1
   column := l.2
 
@@ -127,7 +144,7 @@ theorem parameters_raw (l : SignedLabel B N0) (s : StripData Point)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) (k : Frequency) :
     ((parameters l).copyData s request).raw k = SignedWaveUpdate.coefficients
       (ActualPrimary.chartCoefficients l.2 l.1) (HarmonicWaveInteraction.productStrip s)
-        (directions B)
+          (directions B)
       (matrix l k) (target l k) request (mask l k) (fundamental l k)
       (normalMotion l k) (action l k) l.2 := rfl
 
@@ -148,7 +165,7 @@ theorem nativePoint_angle (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
   simp only [nativePoint, Prod.fst_add, Prod.smul_fst, smul_zero, add_zero]
 
 theorem directions_fast (B : ℕ) : (directions B).fast = ((0, (0, ActualPrimary.temporalVector)), 0)
-  := rfl
+    := rfl
 
 theorem matrix_frozen (l : SignedLabel B N0) (k : Frequency) :
     SignedWaveUpdate.FrozenAlong (directions B).fast (matrix l k) := by
@@ -171,7 +188,7 @@ theorem mask_frozen (l : SignedLabel B N0) (k : Frequency) :
 theorem request_frozen (s : StripData Point) (P : SignedStressPrimitive.Patch) (coord : ℝ)
     (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     SignedWaveUpdate.FrozenAlong (directions B).fast (LocalSignedRequest.fullRequest s P coord c u)
-      := by
+        := by
   rw [directions_fast]
   exact LocalSignedRequest.fullRequest_torus_frozen s P coord c u ActualPrimary.temporalVector
 
@@ -218,8 +235,10 @@ theorem fullRequest_jets_from_invariant {ι : Type} (G : SignedMeanGain.Geometry
 
 open PhaseJetBounds PrimaryCopyBounds
 
+/-- Pulse label: an abbreviation for `Fin 2 × ActualPrimary.Label B N0`. -/
 abbrev PulseLabel (B N0 : ℕ) := Fin 2 × ActualPrimary.Label B N0
 
+/-- Slow jet domain, bundling `toDomain`, `growth`, `scale_le_growth`. -/
 noncomputable def slowJetDomain (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h)) :
     JetDomain (PulseLabel B N0) PhaseCalculus.Slow where
   toDomain := ActualPhaseDefect.reducedSlowDomain U
@@ -245,7 +264,7 @@ theorem slow_inverse_edge (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.
     (hp : p ∈ (slowJetDomain U).carrier l) :
     (FinalSlowBase.edgeDistance ActualPrimary.nominal
       (BaseChartJets.normalizedCoordinates ActualPrimary.h p).2)⁻¹ ≤ (slowJetDomain U).growth l p
-        := by
+          := by
   let st := BaseContextAssembly.nativeStrip ActualPrimary.nominal U
   have hm := (BaseContextAssembly.nativeStrip_mem ActualPrimary.nominal U _).mp hp.2
   have ht : 0 < p.2.2 := U.time_pos _ hm.1
@@ -256,7 +275,7 @@ theorem slow_inverse_edge (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.
   rw [PrimaryTargetBounds.profileRadius_sq (F := ActualPrimary.outgoing) ht] at hle
   have heq : PrimaryTargetBounds.profileRadius ActualPrimary.h p =
       (LocalSignedRequest.profileMap (2 * ActualPrimary.h) (BaseContextAssembly.insertSlow p)).1 :=
-        by
+          by
     unfold PrimaryTargetBounds.profileRadius
     rw [BaseChartJets.normalizedCoordinates_eq]
     rfl
@@ -278,7 +297,7 @@ theorem native_target_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary
 
 theorem native_matrix_jets (r c : Fin 2) :
     PolynomialJets (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-      N0).prepared.N)
+        N0).prepared.N)
       (fun l p => ActualPrimary.covariance B N0 l p r c) := by
   rw [ActualPrimary.covariance_eq_integral]
   exact PrimaryPulseBounds.primaryCovariance_entry_polynomial _ ActualPrimary.prefactor
@@ -293,7 +312,7 @@ theorem native_matrix_jets (r c : Fin 2) :
     (fun j => (ActualPrimary.phases B N0 j).L_pos) r c
 
 theorem native_matrix_slot_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h)) (r c :
-  Fin 2) :
+    Fin 2) :
     PolynomialJets (ActualPhaseDefect.reducedJetDomain (B := B) (N0 := N0) U)
       (fun l z => ActualPrimary.covariance B N0 l.2 z.1 r c) := by
   have h : PolynomialJets (slowJetDomain (B := B) (N0 := N0) U).toDomain
@@ -311,15 +330,15 @@ theorem native_mask_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h
   have hq := hcoord.clm (ContinuousLinearMap.fst ℝ ℝ SlowBorelBase.Inner)
   have hdy : PolynomialJets (slowJetDomain (B := B) (N0 := N0) U).toDomain
       (fun _ p => SquaredPartition.dyadicProfile (BaseChartJets.normalizedCoordinates
-        ActualPrimary.h p).1) := by
+          ActualPrimary.h p).1) := by
     apply hq.compact_comp isOpen_univ SquaredPartition.dyadicProfile_smooth.contDiffOn
       (isCompact_Icc : IsCompact (Icc (U.qlo / 2) (BaseContextAssembly.geometryUpper U)))
-        (subset_univ _)
+          (subset_univ _)
     intro l p hp
     exact ⟨((slow_geometry U).q_range l p hp).1.le, ((slow_geometry U).q_range l p hp).2.le⟩
   have hm := nativeMask_jets (slowJetDomain (B := B) (N0 := N0) U).toDomain
     (fun l => BaseChartJets.cellBand l.2) (fun l => (PrimaryGeometryAssembly.label
-      ActualPrimary.nominal l.2).2)
+        ActualPrimary.nominal l.2).2)
     (fun l => l.2.val.property.1) (fun _ => rfl)
   apply (hdy.mul hm).congr
   intro l p _
@@ -327,6 +346,7 @@ theorem native_mask_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h
   simp only [BaseChartJets.normalizedCoordinates_eq]
   exact he
 
+/-- Unit domain, bundling `toDomain`, `growth`, `scale_le_growth`. -/
 noncomputable def unitDomain : JetDomain (ActualPrimary.Label B N0) (PhaseCalculus.Slow × ℝ) where
   toDomain := PrimaryPulseBounds.productDomain
     (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B N0).prepared.N)
@@ -334,11 +354,13 @@ noncomputable def unitDomain : JetDomain (ActualPrimary.Label B N0) (PhaseCalcul
   growth l _ := ChartScales.S (BaseChartJets.cellBand l)
   scale_le_growth _ _ _ := le_rfl
 
+/-- Native unit, constructed using `PrimaryPulseBounds.normalizedPulse`. -/
 noncomputable def nativeUnit (l : PulseLabel B N0) : PhaseCalculus.Slow × ℝ → Space :=
   PrimaryPulseBounds.normalizedPulse ((ActualPrimary.phases B N0 l.1).frame l.2)
     ((ActualPrimary.phases B N0 l.1).lam l.2) ((ActualPrimary.phases B N0 l.1).u l.2)
     ((ActualPrimary.phases B N0 l.1).L l.2)
 
+/-- Native envelope, constructed using `PrimaryPulseBounds.referenceP`. -/
 noncomputable def nativeEnvelope (l : PulseLabel B N0) (z : PhaseCalculus.Slow × ℝ) : ℝ :=
   PrimaryPulseBounds.referenceP ((ActualPrimary.phases B N0 l.1).lam l.2)
     ((ActualPrimary.phases B N0 l.1).u l.2) ((ActualPrimary.phases B N0 l.1).L l.2)
@@ -362,6 +384,7 @@ theorem native_unit_jets : NativeJets (signDomain (unitDomain (B := B) (N0 := N0
       ((ActualPrimary.phases B N0 j).L l))
     (fun j => NativeJets.of_envelope (ActualPrimary.phases B N0 j).pulse_jets)
 
+/-- Native phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
 noncomputable def nativePhase : PhaseFamily (PulseLabel B N0) where
   epsilon l := (ActualPrimary.phases B N0 l.1).phase.epsilon l.2
   p l := (ActualPrimary.phases B N0 l.1).phase.p l.2
@@ -374,9 +397,9 @@ noncomputable def nativePhase : PhaseFamily (PulseLabel B N0) where
 theorem native_phase_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h)) :
     PolynomialJets (ActualPhaseDefect.reducedJetDomain U) (nativePhase (B := B) (N0 := N0)).normal ∧
     PolynomialJets (ActualPhaseDefect.reducedJetDomain U) (nativePhase (B := B) (N0 :=
-      N0)).velocity ∧
+        N0)).velocity ∧
     PolynomialJets (ActualPhaseDefect.reducedJetDomain U) (nativePhase (B := B) (N0 := N0)).shear
-      := by
+        := by
   let D := ActualPhaseDefect.reducedSlowDomain (B := B) (N0 := N0) U
   let M := (ActualPrimary.phases B N0 0).M + (ActualPrimary.phases B N0 1).M
   let r := min (ActualPrimary.phases B N0 0).r (ActualPrimary.phases B N0 1).r
@@ -421,10 +444,13 @@ theorem native_action_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary
 
 /-! ## The actual band scalars -/
 
+/-- Coefficient lower as an element of `ℝ`. -/
 noncomputable def coefficientLower : ℝ :=
   (1 / ActualSignedGeometry.powerBound (CoordinateAlgebra.A ActualPrimary.h)) *
     (1 / ActualSignedGeometry.powerBound (-(ActualPrimary.h / 2)))
 
+/-- Coefficient upper, given by `ActualSignedGeometry.powerBound (CoordinateAlgebra.A
+ActualPrimary.h) * ActualSignedGeometry.powerBound (-(ActualPrimary.h / 2))`. -/
 noncomputable def coefficientUpper : ℝ :=
   ActualSignedGeometry.powerBound (CoordinateAlgebra.A ActualPrimary.h) *
     ActualSignedGeometry.powerBound (-(ActualPrimary.h / 2))
@@ -468,44 +494,47 @@ theorem normalScale_eq_dynamics (l : SignedLabel B N0) (n : ℕ) :
 
 /-! ## One family of support cells in every band -/
 
+/-- Absolute native, given by `(ActualPrimary.nativeSlow l.1 (ActualPrimary.toAbsolute n x.1),
+(ActualPrimary.toAbsolute n x.1).2)`. -/
 noncomputable def absoluteNative (l : SignedLabel B N0) (n : ℕ) (x : FullPoint) : Native :=
   (ActualPrimary.nativeSlow l.1 (ActualPrimary.toAbsolute n x.1), (ActualPrimary.toAbsolute n
-    x.1).2)
+      x.1).2)
 
 theorem absoluteNative_smooth (l : SignedLabel B N0) (n : ℕ) :
     ContDiff ℝ ∞ (absoluteNative l n) :=
   ((ActualPrimary.nativeSlow_smooth l.1).comp ((ActualPrimary.toAbsolute_smooth n).comp
-    contDiff_fst)).prodMk
+      contDiff_fst)).prodMk
     (((ActualPrimary.toAbsolute_smooth n).comp contDiff_fst).snd)
 
+/-- Absolute cells, constructed using `PeriodizedWaveBounds.nativeCells`. -/
 noncomputable def absoluteCells (l : SignedLabel B N0) : PeriodizedWaveBounds.Cells Native
-  Frequency :=
+    Frequency :=
   PeriodizedWaveBounds.nativeCells (fun _ => ActualPrimary.geometry l.2 l.1)
     (fun _ => (ActualPrimary.clockWindow l.1).core) (fun _ => (ActualPrimary.clockWindow
-      l.1).core_compact)
+        l.1).core_compact)
     (fun _ => by
       have hg : ActualPrimary.geometry l.2 l.1 = ActualSignedGeometry.slotGeometry
           ActualPrimary.slots ActualPrimary.vectors_det
           (PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label ActualPrimary.nominal
-            l.1) l.2)
+              l.1) l.2)
           (ChartScales.nativeIndex ActualPrimary.h (BaseChartJets.cellBand l.1)) := rfl
       have hc : ActualPrimary.clockWindow l.1 = ActualSignedGeometry.clockWindow
           ActualPrimary.slots (BaseChartJets.cellBand l.1) := rfl
       rw [hg, hc]
       exact (ActualSignedGeometry.clockWindow_injective ActualPrimary.slots
-        ActualPrimary.vectors_det
+          ActualPrimary.vectors_det
         ActualPrimary.outgoing.data.h_pos.le
         (l := PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
-          ActualPrimary.nominal l.1) l.2)
+            ActualPrimary.nominal l.1) l.2)
         ((ActualPrimary.choice B N0).prepared.large _ l.1.property).four_le
         (ChartScales.nativeIndex ActualPrimary.h (BaseChartJets.cellBand l.1))).mono
           (Set.image_mono (ActualSignedGeometry.clockWindow ActualPrimary.slots
-            _).core_subset_outer))
+              _).core_subset_outer))
 
 /-- The copy cells use the fixed absolute primary geometry even in bands
 where the label is inactive.  No truncated negative cover gap occurs. -/
 noncomputable def cells (l : SignedLabel B N0) : PeriodizedWaveBounds.Cells FullPoint Frequency
-  where
+    where
   carrier n k := absoluteNative l n ⁻¹' (absoluteCells l).carrier n k
   closed n k := ((absoluteCells l).closed n k).preimage (absoluteNative_smooth l n).continuous
   locallyFinite n := by
@@ -519,11 +548,12 @@ noncomputable def cells (l : SignedLabel B N0) : PeriodizedWaveBounds.Cells Full
 
 theorem cells_mem (l : SignedLabel B N0) (n : ℕ) (k : Frequency) (x : FullPoint) :
     x ∈ (cells l).carrier n k ↔ (nativePoint l n k x).2 ∈ (ActualPrimary.clockWindow l.1).core :=
-      Iff.rfl
+        Iff.rfl
 
 theorem nativePoint_smooth (l : SignedLabel B N0) (n : ℕ) (k : Frequency) :
     ContDiff ℝ ∞ (nativePoint l n k) := ActualPrimaryDynamics.copyPoint_smooth l.2 l.1 n k
 
+/-- Native time, given by `(ActualPrimary.pulseCoordinates l.1 (nativePoint l n k x)).2`. -/
 noncomputable def nativeTime (l : SignedLabel B N0) (n : ℕ) (k : Frequency) (x : FullPoint) : ℝ :=
   (ActualPrimary.pulseCoordinates l.1 (nativePoint l n k x)).2
 
@@ -540,7 +570,7 @@ theorem cutoff_support (l : SignedLabel B N0) (n : ℕ) (k : Frequency) :
     support (cutoff l k n) ⊆ (cells l).carrier n k := by
   intro x hx
   have hu : PartitionedCovariance.cutoff ActualPrimary.slots.radius (nativePoint l n k x).2.1 ≠ 0
-    := by
+      := by
     intro hz
     exact hx (by simp only [cutoff, hz, zero_mul])
   have hg : GaussianTailFlat.profile (nativeTime l n k x) ≠ 0 := by
@@ -555,7 +585,7 @@ theorem cutoff_support (l : SignedLabel B N0) (n : ℕ) (k : Frequency) :
   apply (cells_mem l n k x).mpr
   have hu' := hu
   change (nativePoint l n k x).2.1 ∈ support (PartitionedCovariance.cutoff
-    ActualPrimary.slots.radius) at hu'
+      ActualPrimary.slots.radius) at hu'
   rw [PartitionedCovariance.cutoff_support ActualPrimary.slots.radius_pos] at hu'
   refine ⟨⟨hu'.1.le, hu'.2.le⟩, ?_⟩
   change (nativePoint l n k x).2.2 ∈ Icc 0 ((ActualPrimary.phases B N0 0).L l.1)
@@ -581,11 +611,15 @@ theorem cutoff_zero_germ_outside_time (l : SignedLabel B N0) (n : ℕ) (k : Freq
 
 /-! ## Uniform transport on the actual closed control cells -/
 
+/-- Full strip, given by `ActualPrimaryBounds.fullStrip`. -/
 noncomputable def fullStrip : StripData FullPoint := ActualPrimaryBounds.fullStrip
 
+/-- Envelope, given by `ActualPrimaryBounds.fullEnvelope (l.2, l.1)`. -/
 noncomputable def envelope (l : SignedLabel B N0) : ℕ → FullPoint → ℝ :=
   ActualPrimaryBounds.fullEnvelope (l.2, l.1)
 
+/-- Phase cell, given by `{x | x ∈ ActualPrimaryBounds.controlCell n ((l.2, l.1), k) ∧
+nativeTime l n k x ∈ Icc (1 / 10 : ℝ) (9 / 10)}`. -/
 noncomputable def phaseCell (l : SignedLabel B N0) (n : ℕ) (k : Frequency) : Set FullPoint :=
   {x | x ∈ ActualPrimaryBounds.controlCell n ((l.2, l.1), k) ∧
     nativeTime l n k x ∈ Icc (1 / 10 : ℝ) (9 / 10)}
@@ -679,7 +713,7 @@ theorem native_jets_on_phaseCell {J D E : Type} [NormedAddCommGroup D] [NormedSp
 
 theorem matrix_local_jets (r c : Fin 2) :
     PeriodizedWaveBounds.UniformLocalJets fullStrip (fun _ _ _ => 1) 0 (phaseCell (B := B) (N0 :=
-      N0))
+        N0))
       (fun l n k x => matrix l k n x r c) := by
   have hp := uniform_of_primary (w := fun _ _ _ => 1) (ActualPrimaryBounds.polynomial_on_control
     (native_matrix_slot_jets (B := B) (N0 := N0) ActualPhaseDefect.paddedRegion r c))
@@ -688,9 +722,11 @@ theorem matrix_local_jets (r c : Fin 2) :
   dsimp only [matrix]
   rw [nativePoint_eq_fullCopy l n k hc.1.1]
 
+/-- Slow linear, given by `(ContinuousLinearMap.fst ℝ PhaseCalculus.Slow ℝ).comp
+(ActualPrimaryBounds.slotLinear (l.2, l.1) n)`. -/
 noncomputable def slowLinear (l : SignedLabel B N0) (n : ℕ) : FullPoint →L[ℝ] PhaseCalculus.Slow :=
   (ContinuousLinearMap.fst ℝ PhaseCalculus.Slow ℝ).comp (ActualPrimaryBounds.slotLinear (l.2, l.1)
-    n)
+      n)
 
 theorem slowLinear_bound {l : SignedLabel B N0} {n : ℕ}
     (hn : ActualPrimaryBounds.near (l.2, l.1) n) :
@@ -722,9 +758,9 @@ theorem copied_target_jets :
     PeriodizedWaveBounds.UniformLocalJets fullStrip (fun _ _ x => fullStrip.zeta x) 0
       (phaseCell (B := B) (N0 := N0))
       (fun l n k x => PrimaryTargetBounds.actualTarget ActualPrimary.modulation (nativePoint l n k
-        x).1) := by
+          x).1) := by
   have hh := native_jets_on_phaseCell (native_target_jets (B := B) (N0 := N0)
-    ActualPhaseDefect.paddedRegion)
+      ActualPhaseDefect.paddedRegion)
     (fun l _ => (l.2, l.1)) (fun l n _ => slowLinear l n)
     (fun l n k => (ActualPrimaryBounds.fullCopy (l.2, l.1) n k 0).1)
     (fun _ _ x => fullStrip.zeta x) (A := 25) (H := ActualPrimaryBounds.copyCost)
@@ -772,7 +808,7 @@ theorem coefficientSquare_local_jets :
       (phaseCell (B := B) (N0 := N0)) (fun l n _ (_ : FullPoint) => coefficientScale l n ^ 2) := by
   have hh : LocalizedWaveBounds.LocalUnweighted fullStrip ActualPrimaryBounds.controlCell 0
       (fun n (i : ActualPrimaryBounds.CopyIndex B N0) (_ : FullPoint) => coefficientScale (i.1.2,
-        i.1.1) n ^ 2) := by
+          i.1.1) n ^ 2) := by
     apply ActualPrimaryBounds.local_constant (sq_nonneg coefficientUpper)
     intro n i x _ hx
     have hh := coefficientScale_bounds (i.1.2, i.1.1)
@@ -807,9 +843,9 @@ theorem mask_local_jets :
 
 theorem fullStrip_zeta_pos {x : FullPoint} (hx : x ∈ fullStrip.domain) : 0 < fullStrip.zeta x := by
   have hr := (BaseContextAssembly.nativeStrip_mem ActualPrimary.nominal ActualPrimaryBounds.region
-    x.1).mp hx
+      x.1).mp hx
   have hT := BaseContextAssembly.nativeStrip_time ActualPrimary.nominal ActualPrimaryBounds.region
-    hx
+      hx
   have hi : (ActualSignedGeometry.meanEquiv.symm x.1) ∈
       NativeBandExtension.radialInterior ActualPrimary.nominal := ⟨hT, hr.2⟩
   have hp := (NativeBandExtension.radialInterior_spec ActualPrimary.nominal hi).2.2.2
@@ -833,7 +869,7 @@ theorem covariance_margins {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x :
   have hi : ActualPrimaryBounds.fullCopy (l.2, l.1) n k x ∈
       NativeBandExtension.radialInterior ActualPrimary.nominal := ⟨hrad.1, hrad.2⟩
   have hq : NativeBandExtension.nativeQ ActualPrimary.h (ActualPrimaryBounds.fullCopy (l.2, l.1) n
-    k x) ∈
+      k x) ∈
       Icc (1 / 2 : ℝ) 2 := hc.1.2.2.2
   have hz := ActualPrimary.covariance_bounds B N0 l.1 _
     (NativeBandExtension.reference_of_closed_band ActualPrimary.nominal hi hq) hc.1.2.1
@@ -862,7 +898,7 @@ theorem covariance_margins {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x :
 matrix and leading target, including both closed dyadic endpoints. -/
 noncomputable def nativeCovariance (B N0 : ℕ) :
     SignedCopyBounds.UniformNativeCovariance fullStrip (phaseCell (B := B) (N0 := N0)) matrix
-      target where
+        target where
   matrix_jets := matrix_local_jets
   target_jets := target_local_jets
   zeta_pos := fun _ hx => fullStrip_zeta_pos hx
@@ -870,14 +906,16 @@ noncomputable def nativeCovariance (B N0 : ℕ) :
   entryBound := 5 * (ActualPrimary.choice B N0).entryBound
   primaryLower := coefficientLower ^ 2 * (ActualPrimary.choice B N0).inverseLower
   gap_pos := mul_pos (by norm_num) (ActualPrimary.choice B N0).detGap_pos
-  entry_one := one_le_mul_of_one_le_of_one_le (by norm_num) (ActualPrimary.choice B
-    N0).entryBound_ge_one
+  entry_one := one_le_mul_of_one_le_of_one_le (by
+      norm_num) (ActualPrimary.choice B N0).entryBound_ge_one
   lower_pos := mul_pos (sq_pos_of_pos coefficientLower_pos) (ActualPrimary.choice B
-    N0).inverseLower_pos
+      N0).inverseLower_pos
   determinant := fun _ _ _ _ hx hc => (covariance_margins hx hc).1
   entries := fun _ _ _ _ hx hc => (covariance_margins hx hc).2.1
   lower := fun _ _ _ _ hx hc => (covariance_margins hx hc).2.2
 
+/-- Normalize native, given by `(ContinuousLinearMap.fst ℝ PhaseCalculus.Slow Plane).prod
+(ActualPrimaryBounds.timeProjection L)`. -/
 noncomputable def normalizeNative (L : ActualPrimary.Label B N0) :
     Native →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (ContinuousLinearMap.fst ℝ PhaseCalculus.Slow Plane).prod
@@ -900,6 +938,8 @@ theorem normalizeNative_norm (L : ActualPrimary.Label B N0) :
   · exact (ContinuousLinearMap.le_opNorm _ x).trans
       (mul_le_mul_of_nonneg_right (ActualPrimaryBounds.timeProjection_norm L) (norm_nonneg x))
 
+/-- Pulse linear, given by `(normalizeNative l.1).comp ((ActualPrimaryBounds.copyLinear (l.2,
+l.1) n).comp ActualPrimaryBounds.nativeOfFull)`. -/
 noncomputable def pulseLinear (l : SignedLabel B N0) (n : ℕ) :
     FullPoint →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (normalizeNative l.1).comp
@@ -909,7 +949,7 @@ theorem pulseLinear_bound {l : SignedLabel B N0} {n : ℕ}
     (hn : ActualPrimaryBounds.near (l.2, l.1) n) :
     ‖pulseLinear l n‖ ≤
       ((ActualPrimary.choice B N0).prepared.M * ActualPrimaryBounds.copyCost) * fullStrip.slow n :=
-        by
+          by
   calc
     _ ≤ ‖normalizeNative l.1‖ *
         (‖ActualPrimaryBounds.copyLinear (l.2, l.1) n‖ * ‖ActualPrimaryBounds.nativeOfFull‖) :=
@@ -939,7 +979,7 @@ theorem nativeEnvelope_copy (l : SignedLabel B N0) (n : ℕ) (k : Frequency) (x 
     nativeEnvelope (l.2, l.1)
       (ActualPrimary.pulseCoordinates l.1 (ActualPrimaryBounds.fullCopy (l.2, l.1) n k x)) =
       ActualPrimaryBounds.pulseEnvelope (l.2, l.1) (ActualPrimaryBounds.fullCopy (l.2, l.1) n k
-        x).2.2 := by
+          x).2.2 := by
   change PrimaryPulseBounds.referenceP _ _ _
     (((ActualPrimary.phases B N0 l.2).L l.1) *
       ((ActualPrimaryBounds.fullCopy (l.2, l.1) n k x).2.2 / (ActualPrimary.phases B N0 0).L l.1)) =
@@ -954,7 +994,7 @@ theorem fundamental_local_jets :
   have hh := native_jets_on_phaseCell (native_unit_jets (B := B) (N0 := N0))
     (fun l _ => (l.2, l.1)) (fun l n _ => pulseLinear l n)
     (fun l n k => ActualPrimary.pulseCoordinates l.1 (ActualPrimaryBounds.fullCopy (l.2, l.1) n k
-      0))
+        0))
     envelope (A := 25) (H := (ActualPrimary.choice B N0).prepared.M * ActualPrimaryBounds.copyCost)
     (by norm_num) (one_le_mul_of_one_le_of_one_le (ActualPrimary.choice B N0).prepared.one_le_M
       ActualPrimaryBounds.copyCost_one)
@@ -991,14 +1031,14 @@ theorem clockScale_local_jets :
       (phaseCell (B := B) (N0 := N0)) (fun l n _ (_ : FullPoint) => clockScale l n) := by
   have hh : LocalizedWaveBounds.LocalUnweighted fullStrip ActualPrimaryBounds.controlCell 0
       (fun n (i : ActualPrimaryBounds.CopyIndex B N0) (_ : FullPoint) => clockScale (i.1.2, i.1.1)
-        n) := by
+          n) := by
     apply ActualPrimaryBounds.local_constant
       (zero_le_one.trans (ActualSignedGeometry.powerBound_one (CoordinateAlgebra.A ActualPrimary.h
-        + 1 / 2)))
+          + 1 / 2)))
     intro n i x _ hc
     change |PhysicalParticularWave.ratioPower (ChartScales.Q n)
       (ChartScales.Q (BaseChartJets.cellBand i.1.2)) (CoordinateAlgebra.A ActualPrimary.h + 1 / 2)|
-        ≤ _
+          ≤ _
     rw [abs_of_pos (PhysicalParticularWave.ratioPower_pos
       (ChartScales.Q_pos n) (ChartScales.Q_pos _) _)]
     exact ActualSignedGeometry.dyadic_ratioPower_le
@@ -1053,7 +1093,7 @@ theorem action_local_jets :
   change clockScale l n •
       PrimaryCopyBridge.baseOperator
         ((nativePhase (B := B) (N0 := N0)).F (l.2, l.1) (ActualPrimaryBounds.fullCopy (l.2, l.1) n
-          k y).1)
+            k y).1)
         ((nativePhase (B := B) (N0 := N0)).shear (l.2, l.1)
           ((ActualPrimaryBounds.fullCopy (l.2, l.1) n k y).1,
             (ActualPrimaryBounds.fullCopy (l.2, l.1) n k y).2.2)) = action l k n y
@@ -1061,6 +1101,8 @@ theorem action_local_jets :
   rw [nativePoint_eq_fullCopy l n k hc.1.1]
   rfl
 
+/-- Transverse projection, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).comp
+(ContinuousLinearMap.snd ℝ PhaseCalculus.Slow Plane)`. -/
 noncomputable def transverseProjection : Native →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ PhaseCalculus.Slow Plane)
 
@@ -1076,7 +1118,7 @@ theorem native_cutoff_jets :
       ActualPrimary.modulation (ActualPrimary.choice B N0).prepared)) (fun _ _ => 1)
       (fun l : PulseLabel B N0 => fun x : Native =>
         PartitionedCovariance.cutoff ActualPrimary.slots.radius x.2.1 * ActualPrimary.gaussian l.2
-          x) := by
+            x) := by
   have ht := affine_profile_jets
     (signDomain (NativeBandExtension.radialDomain ActualPrimary.certificate
       ActualPrimary.modulation (ActualPrimary.choice B N0).prepared)).toDomain
@@ -1086,7 +1128,7 @@ theorem native_cutoff_jets :
       obtain ⟨C, hC, hb⟩ := SquaredPartition.exists_uniform_jet_bound
         (SquaredPartition.gridMask_smooth ActualPrimary.slots.radius 0)
         (SquaredPartition.gridMask_compactSupport ActualPrimary.slots.radius
-          ActualPrimary.slots.radius_pos 0) m
+            ActualPrimary.slots.radius_pos 0) m
       exact ⟨C, hC.le, hb⟩)
     (fun _ : PulseLabel B N0 => transverseProjection) (fun _ => 0) (K := 1) le_rfl 0
     (fun _ => by simpa only [pow_zero, mul_one] using transverseProjection_norm)
@@ -1094,11 +1136,13 @@ theorem native_cutoff_jets :
       (signDomain (NativeBandExtension.radialDomain ActualPrimary.certificate
         ActualPrimary.modulation (ActualPrimary.choice B N0).prepared)).toDomain
       (fun _ : PulseLabel B N0 => fun x : Native => PartitionedCovariance.cutoff
-        ActualPrimary.slots.radius x.2.1) := by
+          ActualPrimary.slots.radius x.2.1) := by
     simpa only [transverseProjection, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd', add_zero] using ht
   exact NativeJets.of_polynomial (ht'.mul ActualPrimaryBounds.gaussian_polynomial)
 
+/-- Full copy linear, given by `(ActualPrimaryBounds.copyLinear (l.2, l.1) n).comp
+ActualPrimaryBounds.nativeOfFull`. -/
 noncomputable def fullCopyLinear (l : SignedLabel B N0) (n : ℕ) : FullPoint →L[ℝ] Native :=
   (ActualPrimaryBounds.copyLinear (l.2, l.1) n).comp ActualPrimaryBounds.nativeOfFull
 
@@ -1184,20 +1228,20 @@ theorem raw_coefficients_jets {β : ℝ} {request : ℕ → FullPoint → Signed
       (fun _ n _ x => request n x q)) :
     PeriodizedWaveBounds.UniformLocalJets fullStrip
       (fun (l : SignedLabel B N0) n x => Real.sqrt (fullStrip.zeta x) * envelope l n x) (β + 1 / 2)
-        phaseCell
+          phaseCell
       (fun l n k => (((parameters l).copyData ActualPrimaryBounds.strip request).raw k).amplitude
-        n) ∧
+          n) ∧
     PeriodizedWaveBounds.UniformLocalJets fullStrip
       (fun (l : SignedLabel B N0) n x => Real.sqrt (fullStrip.zeta x) * envelope l n x) (β + 1)
-        phaseCell
+          phaseCell
       (fun l n k => (((parameters l).copyData ActualPrimaryBounds.strip request).raw k).pressure n)
-        := by
+          := by
   classical
   cases isEmpty_or_nonempty (SignedLabel B N0) with
   | inl h =>
       let := h
       constructor <;> refine ⟨fun l => isEmptyElim l, fun _ => ⟨0, le_rfl, 0, fun l => isEmptyElim
-        l⟩⟩
+          l⟩⟩
   | inr h =>
       let := h
       have hw : ∀ l n x, x ∈ fullStrip.domain → 0 ≤ envelope (B := B) (N0 := N0) l n x :=
@@ -1247,7 +1291,9 @@ theorem actual_raw_coefficients_jets (G : SignedMeanGain.Geometry)
   simpa only [show α - 1 + 1 / 2 = α - 1 / 2 by ring, sub_add_cancel] using
     raw_coefficients_jets hr'
 
-noncomputable def covariance_at_label (l : SignedLabel B N0) :
+/-- Covariance at label, bundling `matrix_jets`, `target_jets`, `zeta_pos`, `determinantGap` and
+the required compatibility proofs. -/
+noncomputable def covarianceAtLabel (l : SignedLabel B N0) :
     SignedCopyBounds.NativeCovariance fullStrip (phaseCell l) (matrix l) (target l) where
   matrix_jets a b := ((nativeCovariance B N0).matrix_jets a b).each l
   target_jets a := ((nativeCovariance B N0).target_jets a).each l
@@ -1292,7 +1338,7 @@ theorem phaseCell_slow {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x : Ful
     (hc : x ∈ phaseCell l n k) :
     (nativePoint l n k x).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.1 := by
+          N0).prepared.N).carrier l.1 := by
   rw [nativePoint_eq_fullCopy l n k hc.1.1]
   exact hc.1.2.1
 
@@ -1306,7 +1352,7 @@ theorem phaseCell_unitTime {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x :
     (hc : x ∈ phaseCell l n k) :
     (nativePoint l n k x).2.2 / (ActualPrimary.phases B N0 l.2).L l.1 ∈ Ioo (0 : ℝ) 1 := by
   simpa only [nativeTime, ActualPrimary.pulseCoordinates, ActualPrimary.length_sign] using
-    phaseCell_time hc
+      phaseCell_time hc
 
 theorem actual_unit_ode {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x : FullPoint}
     (hx : x ∈ fullStrip.domain) (hc : x ∈ phaseCell l n k) :
@@ -1330,7 +1376,7 @@ theorem actual_unit_action {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x :
         ((ActualPrimary.chartCoefficients l.2 l.1).frequencyBase n)
         ((ActualPrimary.chartCoefficients l.2 l.1).axialBase n)
         ((directions B).radialField n) (fun y => CurlClassBounds.complexify (fundamental l k n y))
-          x := by
+            x := by
   rw [fundamental_eq_unitPulse, action_eq_unitAction]
   exact ActualSignedDynamics.unitPulse_action l.2 l.1 n k
     (BaseContextAssembly.nativeStrip_radius ActualPrimary.nominal ActualPrimaryBounds.region hx)
@@ -1352,7 +1398,7 @@ theorem raw_tangent_germ (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x : FullPoint}
     (hx : x ∈ fullStrip.domain) (hc : x ∈ phaseCell l n k) :
     (fun y => normalDot ((ActualPrimary.chartCoefficients l.2 l.1).normal fullStrip (directions B)
-      n y)
+        n y)
       ((((parameters l).copyData ActualPrimaryBounds.strip request).raw k).amplitude n y))
       =ᶠ[𝓝 x] fun _ => 0 := by
   filter_upwards [actual_unit_tangent_germ hx hc] with y hy
@@ -1377,7 +1423,7 @@ theorem raw_principal_zero {β : ℝ} {request : ℕ → FullPoint → SignedWav
     (dirs := fun _ : Frequency => directions B)
     (R := fun _ : Frequency => request) (v := fundamental l)
     (Ndot := normalMotion l) (A := action l)
-    (covariance_at_label l) (fun q => (hR q).each l) (mask_local_jets.each l)
+    (covarianceAtLabel l) (fun q => (hR q).each l) (mask_local_jets.each l)
     (fundamental_local_jets.each l) l.2 n k hx hc
     (matrix_frozen l k) (target_frozen l k) hfrozen (mask_frozen l k)
     (Scaling.carrier_frequency_pos (fullStrip.epsilon_pos n)).ne'
@@ -1393,7 +1439,7 @@ theorem fullRequest_principal_zero {β : ℝ} (s : StripData Point)
     (hx : x ∈ fullStrip.domain) (hc : x ∈ phaseCell l n k) :
     (((parameters l).copyData ActualPrimaryBounds.strip
       (LocalSignedRequest.fullRequest s P coord c u)).raw k).principal fullStrip (directions B) n x
-        = 0 :=
+          = 0 :=
   raw_principal_zero hR (request_frozen s P coord c u) hx hc
 
 /-- The current residuals provide every request estimate needed by the

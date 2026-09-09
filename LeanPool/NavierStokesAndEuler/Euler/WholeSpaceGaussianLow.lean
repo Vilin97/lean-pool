@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-! The low-frequency derivative of the true Gaussian average is controlled
 by the ordinary L² norm of the original field. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -68,6 +72,7 @@ theorem integral_firstKernel_sq_bound {t : ℝ} (ht : 0 < t) (a : Space) :
         ((wideKernel_integrable ht).const_mul _) (firstKernel_sq_bound ht a)
     _ = _ := by rw [integral_const_mul, integral_wideKernel ht]; ring
 
+/-- Low cost, given by `Real.sqrt (8*normalization 1*(2:ℝ)^((3:ℝ)/2))`. -/
 def lowCost : ℝ := Real.sqrt (8*normalization 1*(2:ℝ)^((3:ℝ)/2))
 
 theorem lowCost_nonneg : 0 ≤ lowCost := Real.sqrt_nonneg _

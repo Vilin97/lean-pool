@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MildWordEquation
+public import LeanPool.NavierStokesAndEuler.Euler.DuhamelDifferentiation
+
+/-! Exact restart identities for the genuine cylinder heat and Bochner Duhamel integrals. -/
 
 @[expose] public section
 
-/-! Exact restart identities for the genuine cylinder heat and Bochner Duhamel integrals. -/
 
 noncomputable section
 
@@ -47,7 +48,8 @@ theorem heatFlow_duhamel_history {q : ℕ} (ν : ℝ) (hν : 0 ≤ ν) (T : ℝ)
     (extendPath T hT f s)
   simpa only [sub_add_sub_cancel] using hh
 
-/-- The actual Bochner Duhamel integral splits into propagated history and forcing after the restart time. -/
+/-- The actual Bochner Duhamel integral splits into propagated history and forcing after the restart
+time. -/
 theorem duhamel_restart {q : ℕ} (ν : ℝ) (hν : 0 ≤ ν) (T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (a t : ℝ) (ha : 0 ≤ a) (hat : a ≤ t) :
     duhamel period ν T hT f t = heatFlow period q ν (t-a) (duhamel period ν T hT f a) +

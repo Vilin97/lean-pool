@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 /-!
 # Conditional maximal classical lifespan of the candidate
@@ -19,6 +19,9 @@ for a continuous periodic field across time one. It assumes no general
 Navier--Stokes existence theorem and never identifies pressure gauges.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set
@@ -28,6 +31,7 @@ namespace NavierStokes.MaximalLifespan
 
 open ProblemStatement PeriodicIntegration
 
+/-- Lifespan domain, given by `Ico 0 T ×ˢ univ`. -/
 noncomputable def lifespanDomain (T : ℝ) : Set SpaceTime := Ico 0 T ×ˢ univ
 
 /-- A finite, positive classical lifespan for the exact viscosity-one PDE.
@@ -45,6 +49,7 @@ structure ClassicalSolution (f : VelocityField) (initial : Space → Space)
   navier_stokes : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x : Space,
     navierStokesResidual u p t x = f (t, x)
 
+/-- Velocity agrees on, given by `∀ t ∈ Ico (0 : ℝ) T, ∀ x : Space, u (t, x) = v (t, x)`. -/
 noncomputable def VelocityAgreesOn (T : ℝ) (u v : VelocityField) : Prop :=
   ∀ t ∈ Ico (0 : ℝ) T, ∀ x : Space, u (t, x) = v (t, x)
 
@@ -56,6 +61,8 @@ noncomputable def HasClassicalExtension (f : VelocityField) (initial : Space →
   ∃ S : ℝ, ∃ v : VelocityField, ∃ q : PressureField,
     T < S ∧ ClassicalSolution f initial S v q ∧ VelocityAgreesOn T u v
 
+/-- Is maximal classical solution, given by `ClassicalSolution f initial T u p ∧
+¬HasClassicalExtension f initial T u`. -/
 noncomputable def IsMaximalClassicalSolution (f : VelocityField) (initial : Space → Space)
     (T : ℝ) (u : VelocityField) (p : PressureField) : Prop :=
   ClassicalSolution f initial T u p ∧ ¬HasClassicalExtension f initial T u

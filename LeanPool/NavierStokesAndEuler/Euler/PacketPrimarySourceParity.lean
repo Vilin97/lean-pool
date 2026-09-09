@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimarySourceRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveBase
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryField
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryCorrector
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
 
 /-! Joint parity of the actual terminal-history primary and its continuation.
 The compact terminal wave supplies the odd input without an additional
 assumption on the constructed solution. -/
+
+@[expose] public section
+
 
 noncomputable section
 

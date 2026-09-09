@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NormalScaling
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CopySolveCompatibility
+import LeanPool.NavierStokesAndEuler.NavierStokes.NormalScaling
 
 /-!
 # Normal and clock transport of the actual tangent inverse
@@ -18,6 +17,9 @@ The native clock, its zero-entry anchor, the normal and the source are
 transported together.  Velocity and pressure below are outputs of the
 actual copy-path Volterra inverse, with no output compatibility hypothesis.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,20 +37,20 @@ theorem coordinates_transport (g : Geometry) (gap : ℕ) (shift rate : ℝ)
       ((CopySolveCompatibility.transportGeometry g gap shift rate hrate).coordinates copy Y) =
         g.coordinates copy (coverPower gap Y) := by
   rw [CopySolveCompatibility.transportGeometry, CopySolveCompatibility.coordinates_refine,
-    CopySolveCompatibility.coordinates_timeGeometry]
+      CopySolveCompatibility.coordinates_timeGeometry]
 
 theorem path_transport (g : Geometry) (gap : ℕ) (shift rate : ℝ)
     (hrate : rate ≠ 0) (copy : Frequency) (Y : Plane) (t : ℝ) :
     coverPower gap ((CopySolveCompatibility.transportGeometry g gap shift rate hrate).path copy Y
-      t) =
+        t) =
       g.path copy (coverPower gap Y) (shift + rate * t) := by
   rw [CopySolveCompatibility.transportGeometry, CopySolveCompatibility.path_refine,
-    CopySolveCompatibility.path_timeGeometry]
+      CopySolveCompatibility.path_timeGeometry]
 
 theorem slotDirection_transport (g : Geometry) (gap : ℕ) (shift rate : ℝ)
     (hrate : rate ≠ 0) :
     coverPower gap (slotDirection (CopySolveCompatibility.transportGeometry g gap shift rate
-      hrate)) =
+        hrate)) =
       rate • slotDirection g := by
   apply (coverPower g.gap).injective
   change coverPower g.gap
@@ -61,7 +63,7 @@ theorem slotDirection_transport (g : Geometry) (gap : ℕ) (shift rate : ℝ)
 theorem current_slot_iff (g : Geometry) (gap : ℕ) (shift rate : ℝ)
     (hrate : 0 < rate) (copy : Frequency) (Y : Plane) (a b : ℝ) :
     ((CopySolveCompatibility.transportGeometry g gap shift rate hrate.ne').coordinates copy Y).2 ∈
-      Icc a b ↔
+        Icc a b ↔
       (g.coordinates copy (coverPower gap Y)).2 ∈
         Icc (shift + rate * a) (shift + rate * b) := by
   have he := congrArg Prod.snd (coordinates_transport g gap shift rate hrate.ne' copy Y)
@@ -81,7 +83,7 @@ theorem finite_transported_copy_cutoffs (g : Geometry) (gap : ℕ) (shift rate :
     ∃ I : Finset Frequency, ∀ Y : Plane, ‖Y‖ ≤ R → ∀ copy : Frequency, copy ∉ I →
       (cutoff ∘ CopySolveCompatibility.nativeTimeMap shift rate)
         ((CopySolveCompatibility.transportGeometry g gap shift rate hrate).coordinates copy Y) = 0
-          := by
+            := by
   obtain ⟨I, hI⟩ := g.finite_copy_cutoffs hcutoff ((6 : ℝ) ^ gap * R)
   refine ⟨I, ?_⟩
   intro Y hY copy hcopy
@@ -101,7 +103,7 @@ scales in its slot derivative. -/
 noncomputable def transportTangent (t : TangentData P H) (parameter : Q → P)
     (gap : ℕ) (shift rate amplitude normalScale : ℝ) : TangentData Q H where
   normal z := normalScale • t.normal (parameter z.1, CopySolveCompatibility.nativeTimeMap shift
-    rate z.2)
+      rate z.2)
   normalDot z := (normalScale * rate) •
     t.normalDot (parameter z.1, CopySolveCompatibility.nativeTimeMap shift rate z.2)
   action z := rate • t.action (parameter z.1, CopySolveCompatibility.nativeTimeMap shift rate z.2)
@@ -147,17 +149,17 @@ theorem copySolve_of_compatibleInputs (d : LinearData P V H) (e : LinearData Q V
     (hB : ContinuousOn d.forcingMap (U ×ˢ univ))
     (hf : ContinuousOn d.source (U ×ˢ univ)) (q : Q) (hq : parameter q ∈ U)
     (hi : CopySolveCompatibility.SameInputsAt e (CopySolveCompatibility.transportData d parameter
-      gap shift rate amplitude) q)
+        gap shift rate amplitude) q)
     (copy : Frequency) (Y : Plane)
     (hslot : ((CopySolveCompatibility.transportGeometry g gap shift rate hrate.ne').coordinates
-      copy Y).2 ∈
+        copy Y).2 ∈
       Icc a b) :
     e.copySolve (CopySolveCompatibility.transportGeometry g gap shift rate hrate.ne') hab copy (q,
-      Y) =
+        Y) =
       amplitude • d.copySolve g (CopySolveCompatibility.time_interval_mono shift hrate hab) copy
         (parameter q, coverPower gap Y) := by
   have he : e.copySolve (CopySolveCompatibility.transportGeometry g gap shift rate hrate.ne') hab
-    copy (q, Y) =
+      copy (q, Y) =
       (CopySolveCompatibility.transportData d parameter gap shift rate amplitude).copySolve
         (CopySolveCompatibility.transportGeometry g gap shift rate hrate.ne') hab copy (q, Y) := by
     exact CopySolveCompatibility.anchoredSolve_eq_of_sameInputs _ _ _ hab q hi copy Y _
@@ -167,7 +169,7 @@ theorem copySolve_of_compatibleInputs (d : LinearData P V H) (e : LinearData Q V
   congr 1
   apply CopySolveCompatibility.copySolve_timeData d g shift rate hrate hab hA hB hf copy hq
   simpa only [CopySolveCompatibility.transportGeometry, CopySolveCompatibility.coordinates_refine]
-    using hslot
+      using hslot
 
 end CopyInputCompatibility
 

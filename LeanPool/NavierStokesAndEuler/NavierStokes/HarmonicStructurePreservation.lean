@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
 
-@[expose] public section
-
 /-!
 # Structure preserved by actual harmonic block addition
 
@@ -18,6 +16,9 @@ Smoothness of its input coefficient functions justifies linearity of the
 Fréchet derivatives in the cylindrical divergence. No output divergence
 condition, nonzero frequency, or nonzero angular frequency is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -133,7 +134,8 @@ theorem modeSolenoidal_addBlock_withCarrier {s : StripData D}
     ((singleMode_contDiffOn ha hphase j n i).contDiffAt hnb).differentiableAt (by simp)
   have hsb (i : Fin 3) : DifferentiableAt ℝ (fun q => singleMode (withCarrier a b) j n q i) p :=
     ((singleMode_contDiffOn (b := withCarrier a b) hb hphase j n i).contDiffAt
-      hnb).differentiableAt (by simp)
+        hnb).differentiableAt (by
+        simp)
   rw [singleMode_addBlock, cylindricalDivergence_add _ _ _ _ hsa hsb,
     hda j hj n p hp, hdb j hj n p hp, add_zero]
 

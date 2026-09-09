@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.DivCurlRecovery
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-! Joint spatial coordinate derivatives and uniform energy bounds for
 families supported in a fixed compact set. -/
+
+@[expose] public section
+
 
 noncomputable section
 

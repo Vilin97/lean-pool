@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.DriftGevreyInviscidEnergyCompactness
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLimitEquation
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
+public import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBudget
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionLimitEquation
+import LeanPool.NavierStokesAndEuler.Euler.DriftGevreyInviscidEnergyCompactness
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+
+/-! Drift-aware version: Whole-interval inviscid correction retaining quantitative Gevrey bounds and
+its actual finite-Sobolev pressure equation. -/
 
 @[expose] public section
 
-/-! Drift-aware version: Whole-interval inviscid correction retaining quantitative Gevrey bounds
-  and its actual finite-Sobolev pressure equation. -/
 
 noncomputable section
 
@@ -21,21 +25,22 @@ namespace EulerDriftGlobalInviscidGevrey
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerSobolevCoefficientPressure
-    EulerCorrectionLowerData
+      EulerCorrectionLowerData
   EulerCorrectionEnergyData EulerCorrectionEnergyMajorants EulerGevreyMetricEstimate
   EulerQuadraticSource EulerPacketWeights EulerDriftGevreyInviscidEnergyCompactness
-    EulerCorrectionLimitEquation EulerVolterraConvolution
+      EulerCorrectionLimitEquation EulerVolterraConvolution
   EulerInviscidSobolevEvolution
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Concrete Gevrey data construct an actual global inviscid correction, retaining both quantitative energy bounds at every surviving cutoff, with its literal signed-pressure derivative in Hq. -/
+/-- Concrete Gevrey data construct an actual global inviscid correction, retaining both quantitative
+energy bounds at every surviving cutoff, with its literal signed-pressure derivative in Hq. -/
 theorem exists_global_inviscid_gevrey_PDE {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS : 0 < S)
-    (D : CorrectionData period ((q+1)+1) (Icc (0 : ℝ) S))
-    (KG1 : ∀ t, CoefficientJet period standardDirection (q+1) (D.metric.coefficient t))
-    (KL1 : ∀ t, CoefficientJet period standardDirection (q+1) (D.linear.coefficient t))
-    (KQ1 : ∀ i t, CoefficientJet period standardDirection (q+1) ((D.quadratic i).coefficient t))
+    (D : CorrectionData period ((q + 1) + 1) (Icc (0 : ℝ) S))
+    (KG1 : ∀ t, CoefficientJet period standardDirection (q + 1) (D.metric.coefficient t))
+    (KL1 : ∀ t, CoefficientJet period standardDirection (q + 1) (D.linear.coefficient t))
+    (KQ1 : ∀ i t, CoefficientJet period standardDirection (q + 1) ((D.quadratic i).coefficient t))
     (hG1 : Continuous (fun t => coefficientSobolevOperator period (KG1 t)))
     (hL1 : Continuous (fun t => coefficientSobolevOperator period (KL1 t)))
     (hQ1 : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ1 i t)))
@@ -46,14 +51,14 @@ theorem exists_global_inviscid_gevrey_PDE {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS
     (hL0 : Continuous (fun t => coefficientSobolevOperator period (KL0 t)))
     (hQ0 : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ0 i t)))
     (hG : Continuous (fun t => (D.metric.coefficient t).operator))
-    (N : ℕ) (hN : N+6 ≤ (q+1)+1) (hNfull : (q+1)+1 ≤ N+6) (R : C(Icc (0 : ℝ) S,ℝ))
+    (N : ℕ) (hN : N + 6 ≤ (q + 1) + 1) (hNfull : (q + 1) + 1 ≤ N + 6) (R : C(Icc (0 : ℝ) S, ℝ))
     (B : EulerDriftCorrectionBudget.Budget period (hq.trans (Nat.le_succ q) |>.trans (Nat.le_succ
-      (q+1))) D N R) (K : MetricBudget period S hS.le D)
+        (q + 1))) D N R) (K : MetricBudget period S hS.le D)
     (C Δ ρ0 : ℝ) (hC : combinedConstant period B.full K ≤ C) (hΔ : 0 < Δ) (hΔ1 : Δ ≤ 1) (hρ0 : 0 <
-      ρ0)
-    (hdecay : 2*C*(B.drift+Δ)*S ≤ ρ0/2) (hscale : ρ0*B.full.Rc ≤ 1)
-    (hsmall : 2*B.full.residual*Real.exp (3*C*S) ≤ Δ/2)
-    (hR : ∀ t, R t = ρ0-2*C*(B.drift+Δ)*t.val)
+        ρ0)
+    (hdecay : 2 * C * (B.drift + Δ) * S ≤ ρ0 / 2) (hscale : ρ0 * B.full.Rc ≤ 1)
+    (hsmall : 2 * B.full.residual * Real.exp (3 * C * S) ≤ Δ / 2)
+    (hR : ∀ t, R t = ρ0 - 2 * C * (B.drift + Δ) * t.val)
     (hz : ∀ t, value period (D.approximation t) ∈ divergenceFreeSpace period D.κ D.direction) :
     let Dlow := lowerData period (lowerData period D KG1 KL1 KQ1 hG1 hL1 hQ1)
       KG0 KL0 KQ0 hG0 hL0 hQ0
@@ -71,7 +76,8 @@ theorem exists_global_inviscid_gevrey_PDE {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS
             coefficientSobolevOperator period (Dlow.metric.jet ⟨t,ht.1.le,ht.2.le⟩)
               (Dlow.pressure period hq ⟨t,ht.1.le,ht.2.le⟩ (e ⟨t,ht.1.le,ht.2.le⟩))) t := by
   obtain ⟨u,e,hu,hconv,hi,hd,hM,hE⟩ :=
-    EulerDriftGevreyInviscidEnergyCompactness.exists_gevrey_inviscid_energy_limit period (q := q+1)
+      EulerDriftGevreyInviscidEnergyCompactness.exists_gevrey_inviscid_energy_limit period (q :=
+          q+1)
     (hq.trans (Nat.le_succ q)) S hS D KG1 KL1 KQ1 hG1 hL1 hQ1 hG
     N hN hNfull R B K C Δ ρ0 hC hΔ hΔ1 hρ0 hdecay hscale hsmall hR hz
   refine ⟨e,hi,hd,hM,hE,?_⟩

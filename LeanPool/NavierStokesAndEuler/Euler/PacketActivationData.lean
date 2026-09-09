@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationHistory
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseActivationSelection
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
 
 /-! Actual activation data for the packet's own stationary history.  The
 terminal coordinate and its signed velocity components are constructed
 from the source Dirichlet-to-Neumann argument. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,10 +25,10 @@ namespace EulerPacketActivationHistory
 open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerTransversePacketProvider EulerTimeLp EulerInitialTimePrimitive
   EulerVolterraConvolution EulerTransverseEndpointEnergy EulerTransverseEndpointVelocity
-  EulerTransverseEndpointUniqueness EulerTransverseEndpointParameter
-    EulerTransverseEndpointCoordinates
+   EulerTransverseEndpointParameter
+      EulerTransverseEndpointCoordinates
   EulerTransverseInitialCoordinates EulerTransverseFrameCoordinates
-    EulerTransverseSourceCoefficientPath
+      EulerTransverseSourceCoefficientPath
   EulerTransverseActivationSelection EulerTransverseActivationTrial
 
 variable {U V : Type*}
@@ -34,16 +38,16 @@ variable {U V : Type*}
 
 theorem select_history_coordinate
     (R : V →ₗᵢ[ℝ] Space)
-    (hR : ∀ Y, ⟪D.normal.field ⟨D.T,D.T_pos.le,le_rfl⟩ 0,R Y⟫_ℝ=0)
+    (hR : ∀ Y, ⟪D.normal.field ⟨D.T, D.T_pos.le, le_rfl⟩ 0, R Y⟫_ℝ = 0)
     (hHs : ∀ t, (B.H.field t 0).IsSymmetric)
-    (h CM CH ε : ℝ) (hh : 0 < h) (hLayer : 1 ≤ h*D.T)
+    (h CM CH ε : ℝ) (hh : 0 < h) (hLayer : 1 ≤ h * D.T)
     (hCM : 0 ≤ CM) (hCH : 0 ≤ CH) (hε : 0 ≤ ε)
-    (hM : ∀ t, ‖D.M.field t 0‖ ≤ CM*h)
-    (hHnorm : ‖B.coefficients.labelHessian 0‖ ≤ CH*h^2)
-    (p q : V) (hp : ‖p‖=1) (hq : ‖q‖=1) (hpq : ⟪p,q⟫_ℝ=0)
-    (hεsmall : 16*(activationConstant CM CH+1)*ε ≤ 1)
-    (hB : ‖terminalPerturbation D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p q h‖ ≤ ε*h)
-    (hBpp : ⟪terminalPerturbation D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p q h p,p⟫_ℝ < 0) :
+    (hM : ∀ t, ‖D.M.field t 0‖ ≤ CM * h)
+    (hHnorm : ‖B.coefficients.labelHessian 0‖ ≤ CH * h ^ 2)
+    (p q : V) (hp : ‖p‖ = 1) (hq : ‖q‖ = 1) (hpq : ⟪p, q⟫_ℝ = 0)
+    (hεsmall : 16 * (activationConstant CM CH + 1) * ε ≤ 1)
+    (hB : ‖terminalPerturbation D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p q h‖ ≤ ε * h)
+    (hBpp : ⟪terminalPerturbation D.T D.T_pos.le R (pathEvaluation 0 D.M.field) p q h p, p⟫_ℝ < 0) :
     ∃ ξ : U, ξ ≠ 0 ∧
       ⟪B.coefficients.labelVelocity 0 ξ ⟨D.T,D.T_pos.le,le_rfl⟩,R q⟫_ℝ=1 ∧
       -8*(activationConstant CM CH+1) ≤

@@ -7,11 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientSpatial
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryTranslation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryMixed
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryTranslation
 
 /-!
 # Identification of the translated mean coefficients
@@ -21,6 +20,9 @@ matrix fields and the actual smooth compact cutoffs in the Newtonian boundary
 operator. These identities connect the fixed inverse to spatial coefficient
 calculus.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

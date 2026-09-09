@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPeriodicPotential
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveMap
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveMap
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+
+/-! The literal periodic vector potential as an actual continuous cylinder L² path. -/
 
 @[expose] public section
 
-/-! The literal periodic vector potential as an actual continuous cylinder L² path. -/
 
 noncomputable section
 
@@ -27,10 +31,11 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (B : C(K,Space →ᵇ Space →L[ℝ] Space))
+  (B : C(K, Space →ᵇ Space →L[ℝ] Space))
   (hB : ContDiff ℝ ∞ (translateCoefficientPath B))
-  (p : C(K,LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
+/-- Potential path, given by `fullMultiplierMap P B (pathPrimitive P p)`. -/
 def potentialPath : C(K,LiftL2 P) := fullMultiplierMap P B (pathPrimitive P p)
 
 include hB hp in
@@ -38,13 +43,15 @@ theorem potentialPath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (potentialPath P B p)) :=
   product_orbit_contDiff P B hB (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp)
 
+/-- Potential field, given by `pointField P (potentialPath P B p) (potentialPath_orbit P B hB p
+hp) t`. -/
 def potentialField (t : K) : LiftDomain P → Space :=
   pointField P (potentialPath P B p) (potentialPath_orbit P B hB p hp) t
 
 theorem potentialPath_ae (t : K) :
     (potentialPath P B p t : LiftDomain P → Space) =ᵐ[liftMeasure P]
       fun x => B t x.1 (pointField P (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t x)
-        := by
+          := by
   filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (B t))
       (pathPrimitive P p t),
     pointField_ae P (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t] with x hB hp
@@ -52,7 +59,7 @@ theorem potentialPath_ae (t : K) :
 
 /-- The canonical representative is the coefficient times the literal angular primitive. -/
 theorem potentialField_formula
-    (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P))) = 0)
+    (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y, (s : AddCircle P))) = 0)
     (t : K) (y : Space) (θ : ℝ) :
     potentialField P B hB p hp t (y,(θ : AddCircle P)) =
       B t y (EulerAngleMeanZeroPrimitive.primitive P
@@ -71,7 +78,7 @@ theorem potentialField_formula
   rw [pointField_primitive_formula P p hp hmean t y θ]
 
 theorem potentialField_source_formula
-    (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P))) = 0)
+    (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y, (s : AddCircle P))) = 0)
     (m : K → Space → Space) (hBm : ∀ t y, B t y = potentialMultiplier (m t y))
     (t : K) (y : Space) (θ : ℝ) :
     potentialField P B hB p hp t (y,(θ : AddCircle P)) =
@@ -84,11 +91,11 @@ theorem potentialField_source_formula
 
 /-- The L² construction is the same actual field used in the compact Piola construction. -/
 theorem potentialField_eq_periodic
-    (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P))) = 0)
+    (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y, (s : AddCircle P))) = 0)
     (m : K → Space → Space) (hBm : ∀ t y, B t y = potentialMultiplier (m t y))
     (t : K) :
     potentialField P B hB p hp t = EulerPacketPeriodicPotential.field P (m t) (pointField P p hp t)
-      := by
+        := by
   funext x
   obtain ⟨θ,hθ⟩ := QuotientAddGroup.mk_surjective x.2
   have hx : x=(x.1,(θ : AddCircle P)) := by
@@ -107,7 +114,7 @@ theorem potentialPath_block_bound {ι : Type*} [Fintype ι]
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius ι Rc ≤ R)
-    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C*majorant Rc 0 n)
+    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ) (hbp : ∀ n, block directions q (fun a : LiftTangent => pathTranslate P a p) n 0 ≤
       D*majorant R d n) (n : ℕ) :
     block directions q (fun a : LiftTangent => pathTranslate P a (potentialPath P B p)) n 0 ≤

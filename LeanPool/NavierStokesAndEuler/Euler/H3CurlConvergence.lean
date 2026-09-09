@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerStability
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerStability
 
 /-! Convergence of ordinary Euler velocities in the initial H³ norm gives
 pointwise convergence of their curls at every time in their common interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 

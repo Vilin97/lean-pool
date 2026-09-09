@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualStability
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurlGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Real oscillatory curl realization
@@ -21,6 +19,9 @@ public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 The potential and curl below use actual Euclidean spatial derivatives. The
 oscillatory carrier is kept separate from the stripped remainder coefficient.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,6 +41,7 @@ def crossLinear : Space →L[ℝ] Space →L[ℝ] Space :=
   (EuclideanSpace.proj 0).smulRight ((EuclideanSpace.proj 1).smulRight (coordinateVector 2)) -
   (EuclideanSpace.proj 1).smulRight ((EuclideanSpace.proj 0).smulRight (coordinateVector 2))
 
+/-- Cross, given by `crossLinear u v`. -/
 def cross (u v : Space) : Space := crossLinear u v
 
 
@@ -116,6 +118,7 @@ theorem curl_smul {f : Space → ℝ} {B : Space → Space} {x : Space}
   rw [fderiv_fun_smul hf hB, map_add, map_smul, curlLinear_smulRight]
   exact add_comm _ _
 
+/-- Carrier, given by `-Real.sin (k * s) / k`. -/
 def carrier (k s : ℝ) : ℝ := -Real.sin (k * s) / k
 
 theorem carrier_hasDerivAt {k : ℝ} (hk : k ≠ 0) (s : ℝ) :
@@ -136,6 +139,7 @@ theorem phaseNormal_eq_pressureGradient (Φ : PressureField) (z : SpaceTime) :
     phaseNormal Φ z = pressureGradient Φ z.1 z.2 := by
   simp [phaseNormal, gradientLinear, pressureGradient]
 
+/-- Coefficient, defined pointwise by `normalCoefficient (phaseNormal Φ z) (a z)`. -/
 def coefficient (Φ : PressureField) (a : VelocityField) : VelocityField :=
   fun z => normalCoefficient (phaseNormal Φ z) (a z)
 
@@ -143,6 +147,7 @@ def coefficient (Φ : PressureField) (a : VelocityField) : VelocityField :=
 def potential (k : ℝ) (Φ : PressureField) (a : VelocityField) : VelocityField :=
   fun z => carrier k (Φ z) • coefficient Φ a z
 
+/-- Wave, given by `SpatialCurl.spatialCurl (potential k Φ a)`. -/
 def wave (k : ℝ) (Φ : PressureField) (a : VelocityField) : VelocityField :=
   SpatialCurl.spatialCurl (potential k Φ a)
 
@@ -183,7 +188,7 @@ theorem wave_eq {U : Set SpaceTime} {Φ : PressureField} {a : VelocityField}
   rw [curl_smul hcarrier.differentiableAt hBslice, hcarrier.fderiv, map_smul,
     cross_smul_left]
   change (-Real.cos (k * Φ z)) • cross (phaseNormal Φ z) (normalCoefficient (phaseNormal Φ z) (a
-    z)) +
+      z)) +
     carrier k (Φ z) • SpatialCurl.spatialCurl (coefficient Φ a) z = _
   rw [cross_normalCoefficient (hn z hz) (htangent z hz)]
   simp only [neg_smul, smul_neg, neg_neg, carrier, neg_div, sub_eq_add_neg]
@@ -303,7 +308,7 @@ theorem strippedRemainder_jet_bound {U : Set SpaceTime} {B : VelocityField}
   unfold strippedRemainder
   rw [iteratedFDeriv_const_smul_apply' (hcurl.of_le
     (ENat.natCast_le_of_coe_top_le_withTop le_rfl m)), norm_smul, Real.norm_eq_abs, abs_div,
-      abs_one]
+        abs_one]
   calc
     _ ≤ (1 / |k|) * (‖SpatialCurl.curlLinear.comp (ResidualStability.spaceRestriction Space)‖ *
         ‖iteratedFDeriv ℝ (m + 1) B z‖) :=

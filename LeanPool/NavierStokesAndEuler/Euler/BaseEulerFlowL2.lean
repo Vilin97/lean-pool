@@ -7,15 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerParent
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
-public import LeanPool.NavierStokesAndEuler.Euler.LpParameterIntegral
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpParameterIntegral
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
 
 /-! Actual ordinary L² displacement, material velocity and acceleration
 for the base flow. The displacement estimate integrates the real spatial
 jets of the flow, and the other two estimates use volume preservation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,20 +26,39 @@ open Set MeasureTheory Filter EulerSmoothLimit EulerSmoothBanachFlow
   EulerSmoothFlowGevrey EulerLpTranslation EulerGevrey EulerVolterraConvolution
 open scoped ContDiff BoundedContinuousFunction Interval
 
-private local instance (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instBaseEulerFlowL21 (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instBaseEulerFlowL22 (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to
+shorten typeclass synthesis. -/
+local instance instBaseEulerFlowL23 (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space))
+    :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instBaseEulerFlowL24 (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
+    inferInstance
 
+/-- L² data, collecting `velocity`, `derivative`, `velocity_match`, `derivative_match`, `C`, `S`
+and their compatibility conditions. -/
 structure L2Data (I : Input) where
+  /-- Velocity field of `L2Data`, of type `Icc (0 : ℝ) I.T → SmoothL2Field Space`. -/
   velocity : Icc (0 : ℝ) I.T → SmoothL2Field Space
+  /-- Derivative field of `L2Data`, of type `Icc (0 : ℝ) I.T → SmoothL2Field Space`. -/
   derivative : Icc (0 : ℝ) I.T → SmoothL2Field Space
   velocity_match : ∀ t x, (velocity t).field x=I.field.field t x
   derivative_match : ∀ t x, (derivative t).field x=I.derivative.field t x
+  /-- Bound coefficient of `L2Data`, of type `ℝ`. -/
   C : ℝ
+  /-- Parameter `S` of `L2Data`, of type `ℝ`. -/
   S : ℝ
+  /-- First-derivative bound coefficient of `L2Data`, of type `ℝ`. -/
   C₁ : ℝ
+  /-- Parameter `S₁` of `L2Data`, of type `ℝ`. -/
   S₁ : ℝ
   C_nonneg : 0 ≤ C
   S_nonneg : 0 ≤ S
@@ -51,6 +71,7 @@ namespace L2Data
 
 variable {I : Input} (L : L2Data I)
 
+/-- Velocity radius, given by `flowRadius I.B I.R I.T L.S`. -/
 def velocityRadius : ℝ := flowRadius I.B I.R I.T L.S
 
 theorem velocityRadius_nonneg : 0 ≤ L.velocityRadius := by
@@ -61,6 +82,7 @@ theorem velocityRadius_nonneg : 0 ≤ L.velocityRadius := by
   dsimp [velocityRadius,flowRadius]
   positivity
 
+/-- Velocity field, constructed using `SmoothL2Field.composeField`. -/
 def velocityField (t : Icc (0 : ℝ) I.T) : SmoothL2Field Space :=
   SmoothL2Field.composeField ((flowData I.T I.T_pos.le I.field).forward t)
     (forward_contDiff I.T I.T_pos.le I.field t)
@@ -109,7 +131,7 @@ theorem displacement_jet_integral (n : ℕ) (t : Icc (0 : ℝ) I.T) (x : Space) 
   simp only [extendPath,projIcc_of_mem I.T_pos.le t.property,
     projIcc_of_mem I.T_pos.le (show (0 : ℝ) ∈ Icc 0 I.T from ⟨le_rfl,I.T_pos.le⟩),hz,
     zero_add,EulerContinuousTimeIntegral.integral_apply,EulerContinuousTimeIntegral.realIntegral]
-      at h
+        at h
   exact h
 
 theorem displacement_memLp_and_bound (n : ℕ) (t : Icc (0 : ℝ) I.T) :
@@ -148,6 +170,7 @@ theorem displacement_memLp_and_bound (n : ℕ) (t : Icc (0 : ℝ) I.T) :
       (sq_nonneg (n.factorial : ℝ)))
   exact ht.trans_eq (by ring)
 
+/-- Displacement field, bundling `field`, `smooth`, `integrable`. -/
 def displacementField (t : Icc (0 : ℝ) I.T) : SmoothL2Field Space where
   field := I.displacement.field t
   smooth := I.displacement.smooth t
@@ -159,6 +182,7 @@ theorem displacementField_bound (t : Icc (0 : ℝ) I.T) :
   rw [SmoothL2Field.norm_jetLp]
   exact (L.displacement_memLp_and_bound n t).2
 
+/-- Acceleration source radius, given by `4*I.R+L.S+L.S₁`. -/
 def accelerationSourceRadius : ℝ := 4*I.R+L.S+L.S₁
 
 theorem accelerationSourceRadius_nonneg : 0 ≤ L.accelerationSourceRadius := by
@@ -170,13 +194,14 @@ theorem accelerationSourceRadius_nonneg : 0 ≤ L.accelerationSourceRadius := by
 
 theorem field_derivative_bound (t : Icc (0 : ℝ) I.T) :
     HasSupBound (fderiv ℝ (I.field.field t : Space → Space)) (I.B*I.R) L.accelerationSourceRadius
-      := by
+        := by
   have h : HasSupBound (I.field.field t : Space → Space) I.B I.R :=
     fun n x => field_jet_bound I.T I.field I.B I.R I.bound n t x
   exact (h.derivative I.B_nonneg I.R_pos.le).mono (mul_nonneg I.B_nonneg I.R_pos.le)
     (mul_nonneg (by norm_num) I.R_pos.le) le_rfl
     (by dsimp [accelerationSourceRadius]; linarith [L.S_nonneg,L.S₁_nonneg])
 
+/-- Acceleration product, constructed using `SmoothL2Field.productField`. -/
 def accelerationProduct (t : Icc (0 : ℝ) I.T) : SmoothL2Field Space :=
   SmoothL2Field.productField (fderiv ℝ (I.field.field t : Space → Space))
     ((I.field.smooth t).fderiv_right (m := ∞) (by simp)) (L.velocity t)
@@ -185,9 +210,12 @@ def accelerationProduct (t : Icc (0 : ℝ) I.T) : SmoothL2Field Space :=
     ((L.velocity_bound t).mono L.C_nonneg L.S_nonneg le_rfl
       (by dsimp [accelerationSourceRadius]; linarith [I.R_pos,L.S₁_nonneg]))
 
+/-- Acceleration source, given by `SmoothL2Field.addField (L.derivative t)
+(L.accelerationProduct t)`. -/
 def accelerationSource (t : Icc (0 : ℝ) I.T) : SmoothL2Field Space :=
   SmoothL2Field.addField (L.derivative t) (L.accelerationProduct t)
 
+/-- Acceleration amplitude, given by `L.C₁+3*(I.B*I.R)*L.C`. -/
 def accelerationAmplitude : ℝ := L.C₁+3*(I.B*I.R)*L.C
 
 theorem accelerationAmplitude_nonneg : 0 ≤ L.accelerationAmplitude := by
@@ -205,6 +233,7 @@ theorem accelerationSource_bound (t : Icc (0 : ℝ) I.T) :
       (by dsimp [accelerationSourceRadius]; linarith [I.R_pos,L.S_nonneg])
   · exact SmoothL2Field.productField_bound _ _ _ _ _ _ _ _ _ _ _
 
+/-- Acceleration radius, given by `flowRadius I.B I.R I.T L.accelerationSourceRadius`. -/
 def accelerationRadius : ℝ := flowRadius I.B I.R I.T L.accelerationSourceRadius
 
 theorem accelerationRadius_nonneg : 0 ≤ L.accelerationRadius := by
@@ -215,6 +244,7 @@ theorem accelerationRadius_nonneg : 0 ≤ L.accelerationRadius := by
   dsimp [accelerationRadius,flowRadius]
   positivity
 
+/-- Acceleration field, constructed using `SmoothL2Field.composeField`. -/
 def accelerationField (t : Icc (0 : ℝ) I.T) : SmoothL2Field Space :=
   SmoothL2Field.composeField ((flowData I.T I.T_pos.le I.field).forward t)
     (forward_contDiff I.T I.T_pos.le I.field t)

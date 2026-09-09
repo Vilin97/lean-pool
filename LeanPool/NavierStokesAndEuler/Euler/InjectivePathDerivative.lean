@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.IntegralPathLimit
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Lifting an actual continuous evolution equation through an injective bounded linear map. -/
 
 @[expose] public section
 
-/-! Lifting an actual continuous evolution equation through an injective bounded linear map. -/
 
 noncomputable section
 
@@ -24,14 +26,15 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace
 
 /-- A bounded linear map commutes with the integral of an actual continuous time path. -/
 theorem map_pathIntegral (L : E →L[ℝ] F) (T : ℝ) (hT : 0 ≤ T) (a b : ℝ)
-    (f : C(Icc (0 : ℝ) T,E)) :
+    (f : C(Icc (0 : ℝ) T, E)) :
     L (pathIntegralOperator T hT a b f) =
       pathIntegralOperator T hT a b (L.compLeftContinuous ℝ (Icc (0 : ℝ) T) f) := by
   exact (L.intervalIntegral_comp_comm ((extendPath_continuous T hT f).intervalIntegrable a b)).symm
 
-/-- An evolution equation in the weaker space gives its exact integral equation in the stronger space when the embedding is injective and the proposed derivative is continuous there. -/
+/-- An evolution equation in the weaker space gives its exact integral equation in the stronger
+space when the embedding is injective and the proposed derivative is continuous there. -/
 theorem integral_equation_of_injective_map (L : E →L[ℝ] F) (hL : Function.Injective L)
-    (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T,E))
+    (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t ∈ Ioo 0 T, HasDerivAt (fun r => L (extendPath T hT u r))
       (L (extendPath T hT f t)) t) (t : Icc (0 : ℝ) T) :
     u t = u ⟨0,le_rfl,hT⟩ + pathIntegralOperator T hT 0 t.val f := by
@@ -40,9 +43,10 @@ theorem integral_equation_of_injective_map (L : E →L[ℝ] F) (hL : Function.In
   exact integral_equation_of_hasDerivAt T hT (L.compLeftContinuous ℝ (Icc (0 : ℝ) T) u)
     (L.compLeftContinuous ℝ (Icc (0 : ℝ) T) f) hd t
 
-/-- A continuous stronger-space right-hand side lifts a genuine derivative equation through an injective bounded embedding, without assuming the stronger derivative exists. -/
+/-- A continuous stronger-space right-hand side lifts a genuine derivative equation through an
+injective bounded embedding, without assuming the stronger derivative exists. -/
 theorem hasDerivAt_of_injective_map (L : E →L[ℝ] F) (hL : Function.Injective L)
-    (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T,E))
+    (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t ∈ Ioo 0 T, HasDerivAt (fun r => L (extendPath T hT u r))
       (L (extendPath T hT f t)) t) (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (extendPath T hT u) (extendPath T hT f t) t := by

@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorOperator
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 
 /-! The Hessian multiplier bound follows from the actual second time
 derivative of the deformation and the Jacobi equation.  Uniqueness of
 within-interval derivatives includes both endpoints of the interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,8 +46,8 @@ theorem second_eq_jacobi (t : Icc (0 : ℝ) D.T) (x v : Space) :
 theorem curvature_bound_of_second (R C C₂ : ℝ)
     (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₂ : 0 ≤ C₂)
     (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-    (hF₂ : ∀ n t x, ‖iteratedFDeriv ℝ n (F₂.field t : Space → EndSpace) x‖ ≤ C₂*majorant R 0 n)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+    (hF₂ : ∀ n t x, ‖iteratedFDeriv ℝ n (F₂.field t : Space → EndSpace) x‖ ≤ C₂ * majorant R 0 n)
     (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖iteratedFDeriv ℝ n (B.H.field t : Space → EndSpace) x‖ ≤
       (27*C^2*C₂)*majorant R 0 n :=

@@ -7,16 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PressureDatum
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.FunProp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # The fixed real natural-axis data
@@ -27,6 +19,9 @@ negativity, and derivative-sign hypotheses; its construction and complex
 analytic estimates are separate results.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.NaturalAxisData
@@ -34,17 +29,27 @@ namespace NavierStokes.NaturalAxisData
 open Set
 open scoped ContDiff Topology
 
+/-- D, given by `1 / 2 - h`. -/
 def D (h : ℝ) : ℝ := 1 / 2 - h
+/-- A, given by `1 / 2 + h`. -/
 def A (h : ℝ) : ℝ := 1 / 2 + h
+/-- D, given by `1 - η ^ 2`. -/
 def d (η : ℝ) : ℝ := 1 - η ^ 2
+/-- L, given by `1 - 2 * h * η ^ 2`. -/
 def L (h η : ℝ) : ℝ := 1 - 2 * h * η ^ 2
+/-- U, given by `4 * η + j`. -/
 def U (j η : ℝ) : ℝ := 4 * η + j
+/-- H, given by `D h * η + d η * U j η`. -/
 def H (h j η : ℝ) : ℝ := D h * η + d η * U j η
+/-- W, given by `1 - 4 * d η - 2 * D h * η * U j η`. -/
 def W (h j η : ℝ) : ℝ := 1 - 4 * d η - 2 * D h * η * U j η
+/-- Z, given by `-A h * (1 - 2 * η * U j η) * U j η - H h j η * 4 - d η * deriv P η + 4 * A h *
+η * P η`. -/
 def Z (h j : ℝ) (P : ℝ → ℝ) (η : ℝ) : ℝ :=
   -A h * (1 - 2 * η * U j η) * U j η - H h j η * 4 -
     d η * deriv P η + 4 * A h * η * P η
 
+/-- Chi, given by `(H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)`. -/
 def chi (h j σ η : ℝ) : ℝ := (H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)
 
 /-- A concrete range of choices permitted by the manuscript's smallness order. -/

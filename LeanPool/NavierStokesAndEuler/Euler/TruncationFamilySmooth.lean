@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteEnergyTruncation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Time dependence of the radial truncation
@@ -20,6 +18,9 @@ is globally smooth. Pulling this family back along the continuous square
 root recovers the original truncation, which is sufficient for the
 continuous-in-time spatial-jet interface of `SmoothTimeField`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

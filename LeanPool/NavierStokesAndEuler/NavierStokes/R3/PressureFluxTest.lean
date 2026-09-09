@@ -8,8 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
 
 /-!
 # The compact test function in the pressure flux
@@ -18,6 +19,9 @@ The identity `φ² r = D(φ⁸)[w]` places the localized pressure flux in the
 commutator form.  Its estimates use only the unweighted velocity energy and
 the weighted velocity and gradient norms.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

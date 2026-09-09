@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LiftedMeanResidual
 
-@[expose] public section
-
 /-!
 # Isometric reindexing of the actual correction state
 
@@ -19,6 +17,9 @@ Pullback along `e : D ≃ₗᵢ[ℝ] E` sends fields on `E` to fields on `D`.
 Vector directions are transported by `e.symm`.  The final specialization is
 the existing associator from `PressureStream.Lift S` to `((ℝ × S) × Plane)`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +31,7 @@ open scoped Topology ContDiff BigOperators ComplexConjugate
 variable {D E F : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Cylinder, bundling `toLinearEquiv`, `norm_map`. -/
 noncomputable def cylinder (e : D ≃ₗᵢ[ℝ] E) : (D × ℝ) ≃ₗᵢ[ℝ] (E × ℝ) where
   toLinearEquiv := e.toLinearEquiv.prodCongr (LinearEquiv.refl ℝ ℝ)
   norm_map' x := by
@@ -42,6 +44,7 @@ noncomputable def cylinder (e : D ≃ₗᵢ[ℝ] E) : (D × ℝ) ≃ₗᵢ[ℝ] 
 @[simp] theorem cylinder_symm_apply (e : D ≃ₗᵢ[ℝ] E) (x : E × ℝ) :
     (cylinder e).symm x = (e.symm x.1, x.2) := rfl
 
+/-- Vector, given by `ParticularWaveBounds.reindexVector e V`. -/
 noncomputable def vector (e : D ≃ₗᵢ[ℝ] E) (V : E → E) : D → D :=
   ParticularWaveBounds.reindexVector e V
 
@@ -75,12 +78,16 @@ theorem norm_iteratedFDeriv_pull (e : D ≃ₗᵢ[ℝ] E) (f : E → F) (m : ℕ
     ‖iteratedFDeriv ℝ m (fun y => f (e y)) x‖ = ‖iteratedFDeriv ℝ m f (e x)‖ :=
   e.norm_iteratedFDeriv_comp_right f x m
 
+/-- Field, defined pointwise by `f n (e x)`. -/
 noncomputable def field (e : D ≃ₗᵢ[ℝ] E) (f : MeanIncrementBounds.Field E) :
     MeanIncrementBounds.Field D := fun n x => f n (e x)
 
+/-- Triple, given by `⟨field e b.radial, field e b.angular, field e b.axial⟩`. -/
 noncomputable def triple (e : D ≃ₗᵢ[ℝ] E) (b : MeanIncrementBounds.Triple E) :
     MeanIncrementBounds.Triple D := ⟨field e b.radial, field e b.angular, field e b.axial⟩
 
+/-- Operators, bundling `epsilon`, `radialFrequency`, `fastCoefficient`, `radius` and the
+required compatibility proofs. -/
 noncomputable def operators (e : D ≃ₗᵢ[ℝ] E) (o : MeanIncrementBounds.Operators E) :
     MeanIncrementBounds.Operators D where
   epsilon := o.epsilon
@@ -94,6 +101,7 @@ noncomputable def operators (e : D ≃ₗᵢ[ℝ] E) (o : MeanIncrementBounds.Op
   vR := e.symm o.vR
   vT := e.symm o.vT
 
+/-- Context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
 noncomputable def context (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context E) :
     CorrectionState.Context D where
   operators := operators e c.operators
@@ -101,15 +109,20 @@ noncomputable def context (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
   virtualTheta := field e c.virtualTheta
   virtualAxial := field e c.virtualAxial
 
+/-- Oscillation, defined pointwise by `u n (cylinder e x)`. -/
 noncomputable def oscillation (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.Oscillation E) :
     CorrectionState.Oscillation D := fun n x => u n (cylinder e x)
 
+/-- Errors, given by `⟨oscillation e a.base, oscillation e a.gaussian, oscillation e
+a.aliasError⟩`. -/
 noncomputable def errors (e : D ≃ₗᵢ[ℝ] E) (a : CorrectionState.ExcludedErrors E) :
     CorrectionState.ExcludedErrors D :=
   ⟨oscillation e a.base, oscillation e a.gaussian, oscillation e a.aliasError⟩
 
+/-- State, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the required
+compatibility proofs. -/
 noncomputable def state (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.State E) : CorrectionState.State D
-  where
+    where
   mean := triple e u.mean
   pressure := field e u.pressure
   oscillation := oscillation e u.oscillation
@@ -173,6 +186,8 @@ theorem totalPressure_pull (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.State E
 
 /-! ## Finite harmonic coefficients -/
 
+/-- Coefficients, given by `AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ => fun x
+=> f (e x)) rfl a.coeff)`. -/
 noncomputable def coefficients (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficients E) :
     HarmonicFields.Coefficients D :=
   AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ => fun x => f (e x)) rfl a.coeff)
@@ -243,7 +258,7 @@ theorem harmonicField_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coeffici
 
 theorem coefficientMass_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficients E) (x : D) :
     HarmonicFields.coefficientMass (coefficients e a) x = HarmonicFields.coefficientMass a (e x) :=
-      by
+        by
   simp only [HarmonicFields.coefficientMass, coefficients_support, coefficients_apply]
 
 theorem bandLimited_pull (e : D ≃ₗᵢ[ℝ] E) {a : HarmonicFields.Coefficients E} {N : ℕ}
@@ -280,6 +295,8 @@ theorem nonconstant_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficien
     simp [HarmonicResidual.nonconstant, coefficients_apply]
   · simp [HarmonicResidual.nonconstant, coefficients_apply, hj]
 
+/-- Block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required compatibility
+proofs. -/
 noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlock E) :
     CorrectionState.HarmonicBlock D where
   velocity n i := coefficients e (b.velocity n i)
@@ -288,6 +305,7 @@ noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBl
   phase n x := b.phase n (e x)
   angularFrequency := b.angularFrequency
 
+/-- Block coefficients, defined pointwise by `coefficients e (a n i)`. -/
 noncomputable def blockCoefficients (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicResidual.BlockCoefficients E) :
     HarmonicResidual.BlockCoefficients D := fun n i => coefficients e (a n i)
 
@@ -305,8 +323,9 @@ theorem block_pressure (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlo
 
 /-! ## The actual coefficient residual -/
 
+/-- Frame, bundling `radius`, `radial`, `axial`, `time` and the required compatibility proofs. -/
 noncomputable def frame (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual.Frame E) : HarmonicResidual.Frame D
-  where
+    where
   radius := fun x => g.radius (e x)
   radial := vector e g.radial
   axial := vector e g.axial
@@ -333,7 +352,7 @@ theorem vectorLaplacian_pull (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual.Fram
       fun i => coefficients e (HarmonicResidual.vectorLaplacian g k Phi kp a i) := by
   funext i
   simp only [HarmonicResidual.vectorLaplacian, scalarLaplacian_pull, angularDifferentiate_pull,
-    rotate_pull]
+      rotate_pull]
   simp only [frame, coefficients_add,
     coefficients_mul, coefficients_constant]
 
@@ -382,6 +401,8 @@ theorem constantVector_pull (e : D ≃ₗᵢ[ℝ] E) (B : E → ComplexVector) :
   funext i
   exact (coefficients_constant e (fun x => B x i)).symm
 
+/-- Label, bundling `frequency`, `phase`, `angularFrequency`, `velocity` and the required
+compatibility proofs. -/
 noncomputable def label (e : D ≃ₗᵢ[ℝ] E) (d : HarmonicResidual.LabelData E) :
     HarmonicResidual.LabelData D where
   frequency := d.frequency
@@ -415,14 +436,14 @@ theorem labelWaveResidual_pull (e : D ≃ₗᵢ[ℝ] E) (d : HarmonicResidual.La
 
 theorem contextFrame_pull (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context E) (n : ℕ) :
     HarmonicResidual.contextFrame (context e c) n = frame e (HarmonicResidual.contextFrame c n) :=
-      by
+        by
   unfold HarmonicResidual.contextFrame context operators frame
   congr 1 <;> funext x <;>
     simp only [vector, ParticularWaveBounds.reindexVector, map_add, map_smul, map_sub]
 
 theorem contextBase_pull (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context E) (n : ℕ) :
     HarmonicResidual.contextBase (context e c) n = fun x => HarmonicResidual.contextBase c n (e x)
-      := rfl
+        := rfl
 
 theorem stateMean_pull (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.State E) (n : ℕ) :
     HarmonicResidual.stateMean (state e u) n = fun x => HarmonicResidual.stateMean u n (e x) := rfl
@@ -447,6 +468,7 @@ theorem residualBlock_pull (e : D ≃ₗᵢ[ℝ] E)
   · funext n
     rw [ofBlock_pull, contextFrame_pull, contextBase_pull, stateMean_pull, labelWaveResidual_pull]
     rfl
+  · simp only [HarmonicResidual.residualBlock, coefficients_zero]
 
 /-! ## The full differential residual -/
 
@@ -505,7 +527,7 @@ theorem axialDirection_pull (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Contex
   funext x
   simp only [LiftedMeanResidual.axialDirection, LiftedMeanResidual.liftDirection,
     LiftedMeanResidual.axialVector, context, operators, vector, ParticularWaveBounds.reindexVector,
-      cylinder_symm_apply, map_smul]
+        cylinder_symm_apply, map_smul]
 
 theorem timeDirection_pull (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context E) (n : ℕ) :
     LiftedMeanResidual.timeDirection (context e c) n =
@@ -513,7 +535,7 @@ theorem timeDirection_pull (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context
   funext x
   simp only [LiftedMeanResidual.timeDirection, LiftedMeanResidual.liftDirection,
     LiftedMeanResidual.temporalVector, context, operators, vector,
-      ParticularWaveBounds.reindexVector, cylinder_symm_apply, map_sub, map_smul]
+        ParticularWaveBounds.reindexVector, cylinder_symm_apply, map_sub, map_smul]
 
 theorem angularDirection_pull (e : D ≃ₗᵢ[ℝ] E) :
     vector (cylinder e) (LiftedMeanResidual.angularDirection (D := E)) =
@@ -566,7 +588,7 @@ theorem fullResidual_pull (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
   change ((LinearWaveResidual.linearResidual (c.operators.epsilon n)
     (fun y : D × ℝ => c.operators.radius (cylinder e y).1)
     (vector (cylinder e) (LiftedMeanResidual.radialDirection c n))
-      LiftedMeanResidual.angularDirection
+        LiftedMeanResidual.angularDirection
     (vector (cylinder e) (LiftedMeanResidual.axialDirection c n))
     (vector (cylinder e) (LiftedMeanResidual.timeDirection c n))
     _ _ _ x + LinearWaveResidual.transport _ _ _ _ _ _ x) i).re + _ + _ = _
@@ -624,6 +646,7 @@ theorem context_roundtrip (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
 
 /-! ## The same weighted classes, without loss of exponents -/
 
+/-- Strip, given by `ParticularWaveBounds.reindexStrip e s`. -/
 noncomputable def strip (e : D ≃ₗᵢ[ℝ] E) (s : WeightedClasses.StripData E) :
     WeightedClasses.StripData D := ParticularWaveBounds.reindexStrip e s
 
@@ -756,6 +779,7 @@ section Association
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Associated: an abbreviation for `(ℝ × S) × TorusInverse.Plane`. -/
 abbrev Associated (S : Type) := (ℝ × S) × TorusInverse.Plane
 
 /-- The actual auxiliary torus integral in the associated layout. -/
@@ -782,7 +806,7 @@ theorem radialMoment_liftAssoc (k : ℕ) (f : MeanIncrementBounds.Field (Associa
 theorem covarianceMass_liftAssoc (k : ℕ) (u : CorrectionState.State (Associated S))
     (i j : Fin 3) (n : ℕ) (s : S) :
     CorrectionState.radialMoment k ((state (ParticularWaveBounds.liftAssoc S) u).covariance i j) n
-      s =
+        s =
       associatedMass (fun x => x.1.1 ^ k * u.covariance i j n x) s := rfl
 
 /-- A current state sent into the assembly and returned has exactly its

@@ -6,15 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CompactSpatialJets
-public import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+import LeanPool.NavierStokesAndEuler.Euler.CompactSpatialJets
+import LeanPool.NavierStokesAndEuler.Euler.DivCurlRecovery
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
 
 /-! Uniform spatial derivative energies for a Comparator solution whose
 vorticity stays in one compact set on a finite time interval. Ordinary joint
 smoothness supplies the compact source bounds, and elliptic recovery supplies
 the velocity derivative bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 

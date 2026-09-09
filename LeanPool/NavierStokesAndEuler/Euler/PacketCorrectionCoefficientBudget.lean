@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCoefficientGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientTowerBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCoefficientGevrey
 
 /-!
 One quantitative coefficient budget for the actual source correction data.
@@ -17,6 +15,9 @@ Every constant is independent of the jet order, truncation level and frequency.
 The assumptions are the original deformation and inverse-deformation derivative
 bounds; all stored coefficient and pressure estimates are derived from them.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,10 +34,15 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 orders and all Fourier scales with absolute value at most one. -/
 structure CorrectionCoefficientBudget (D : EulerTransversePacketProvider.Data U)
     (P : ℝ) [Fact (0 < P)] where
+  /-- Rc of `CorrectionCoefficientBudget`, of type `ℝ`. -/
   Rc : ℝ
+  /-- M of `CorrectionCoefficientBudget`, of type `ℝ`. -/
   M : ℝ
+  /-- Bound parameter of `CorrectionCoefficientBudget`, of type `ℝ`. -/
   B : ℝ
+  /-- A0 of `CorrectionCoefficientBudget`, of type `ℝ`. -/
   A0 : ℝ
+  /-- A2 of `CorrectionCoefficientBudget`, of type `ℝ`. -/
   A2 : ℝ
   Rc_nonneg : 0 ≤ Rc
   M_one_le : 1 ≤ M
@@ -45,7 +51,7 @@ structure CorrectionCoefficientBudget (D : EulerTransversePacketProvider.Data U)
   A2_nonneg : 0 ≤ A2
   inverse_five : ∀ s (hs : 6 ≤ s) t,
     (EulerH6Pressure.CoefficientJet.restrict ((metricTower D P).jet s t) 5 (by
-      omega)).pressureConstant
+        omega)).pressureConstant
       D.normalLower ≤ M
   inverse_six : ∀ s (hs : 6 ≤ s) t,
     (EulerH6Pressure.CoefficientJet.restrict ((metricTower D P).jet s t) 6 hs).pressureConstant
@@ -58,25 +64,35 @@ structure CorrectionCoefficientBudget (D : EulerTransversePacketProvider.Data U)
   quadratic : ∀ κ, |κ| ≤ 1 → ∀ s N ρ, 0 < ρ → 4*M*(ρ*Rc) ≤ 1 → ∀ t,
     (∑ i : Fin 3, weightedCoefficient P ((quadraticTower D P κ i).jet s t) 6 N ρ) ≤ A2
 
+/-- Correction metric envelope, given by `sobolevCoefficientAmplitude (Fin 4) 6 (4*R)
+(3*CI*CI)`. -/
 def correctionMetricEnvelope (R CI : ℝ) : ℝ :=
   sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (3*CI*CI)
 
+/-- Correction linear envelope, given by `2*sobolevCoefficientAmplitude (Fin 4) 6 (4*R)
+(6*CI*C1)`. -/
 def correctionLinearEnvelope (R C1 CI : ℝ) : ℝ :=
   2*sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (6*CI*C1)
 
+/-- Correction quadratic envelope, given by `6*sobolevCoefficientAmplitude (Fin 4) 6 (4*R)
+(3*CI*(C0*R))`. -/
 def correctionQuadraticEnvelope (R C0 CI : ℝ) : ℝ :=
   6*sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (3*CI*(C0*R))
 
+/-- Correction coefficient radius, given by `max 1 (max (normalizedCoefficientRadius 6 (4*R)
+(3*CI*CI)) (sobolevCoefficientRadius (Fin 4) (4*R)))`. -/
 def correctionCoefficientRadius (R CI : ℝ) : ℝ :=
   max 1 (max (normalizedCoefficientRadius 6 (4*R) (3*CI*CI))
     (sobolevCoefficientRadius (Fin 4) (4*R)))
 
+/-- Correction pressure envelope, given by `max 1 (max (pressureCost c (correctionMetricEnvelope
+R CI) 5) (pressureCost c (correctionMetricEnvelope R CI) 6))`. -/
 def correctionPressureEnvelope (c R CI : ℝ) : ℝ :=
   max 1 (max (pressureCost c (correctionMetricEnvelope R CI) 5)
     (pressureCost c (correctionMetricEnvelope R CI) 6))
 
 private theorem series_radius_small (ρ Rc M B : ℝ) (hρ : 0 ≤ ρ) (hB : 0 ≤ B)
-    (hBR : B ≤ Rc) (hM : 1 ≤ M) (hg : 4*M*(ρ*Rc) ≤ 1) : ρ*B ≤ 1/2 := by
+    (hBR : B ≤ Rc) (hM : 1 ≤ M) (hg : 4 * M * (ρ * Rc) ≤ 1) : ρ*B ≤ 1/2 := by
   have hR : 0 ≤ Rc := hB.trans hBR
   have hp : 0 ≤ ρ*Rc := mul_nonneg hρ hR
   have hm := mul_le_mul_of_nonneg_right hM hp
@@ -85,12 +101,15 @@ private theorem series_radius_small (ρ Rc M B : ℝ) (hρ : 0 ≤ ρ) (hB : 0 �
 
 variable (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   (R C0 C1 CI : ℝ) (hR : 0 ≤ R) (hC0 : 0 ≤ C0) (hC1 : 0 ≤ C1) (hCI : 0 ≤ CI)
-  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C0*majorant R 0
-    n)
-  (hF1 : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C1*majorant R
-    0 n)
-  (hFI : ∀ n t x, ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤ CI*majorant
-    R 0 n)
+  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C0 * majorant R
+      0
+      n)
+  (hF1 : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C1 * majorant
+      R
+      0 n)
+  (hFI : ∀ n t x, ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤ CI *
+      majorant
+      R 0 n)
 
 include hR hC0 hC1 hCI hF hF1 hFI
 
@@ -154,7 +173,8 @@ def correctionCoefficientBudget : CorrectionCoefficientBudget D P where
     calc
       _ ≤ ∑ i : Fin 3, 2*sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (3*CI*(C0*R)) :=
         sum_le_sum (fun i _ => h i)
-      _ = _ := by simp only
-        [sum_const,Fintype.card_fin,card_univ,nsmul_eq_mul,correctionQuadraticEnvelope]; ring
+      _ = _ := by
+          simp only [sum_const, Fintype.card_fin, card_univ, nsmul_eq_mul,
+              correctionQuadraticEnvelope]; ring
 
 end EulerPacketCorrectionCoefficients

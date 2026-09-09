@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularCopyBounds
 
-@[expose] public section
-
 /-!
 # Curl realization on native phase patches
 
@@ -19,6 +17,9 @@ wave is used. The cutoff coefficient has a zero germ elsewhere in its
 copy cell. The actual common potential and corrected wave inherit the
 local curl and divergence identities through those germs.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

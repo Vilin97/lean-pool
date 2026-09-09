@@ -6,18 +6,14 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
-public import Mathlib.Topology.Instances.Int
-public import Mathlib.Data.Rat.Cast.Order
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Abel
-
-@[expose] public section
+public import Mathlib.Analysis.Normed.Group.Constructions
+public import Mathlib.Analysis.Normed.Group.Real
+public import Mathlib.Topology.Algebra.Ring.Real
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Analysis.Normed.Group.Continuity
+import Mathlib.Analysis.Normed.MulAction
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Rational auxiliary slots separated under bounded covering powers
@@ -28,6 +24,9 @@ Finite-dimensional continuity then gives a single positive rectangle radius,
 including padding and injectivity modulo the integer lattice.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SlotGeometry
@@ -35,6 +34,7 @@ namespace NavierStokes.SlotGeometry
 open Set
 open scoped Topology
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
 
 /-- The actual integer covering matrix from the manuscript. -/
@@ -102,6 +102,7 @@ theorem cover_pow_second_positive {n : ℕ} (hn : 0 < n) (x : Plane)
   dsimp
   linarith [hp.1, hp.2]
 
+/-- Denominator, given by `((m : ℝ) + 1) * (6 : ℝ) ^ D`. -/
 def denominator (m D : ℕ) : ℝ := ((m : ℝ) + 1) * (6 : ℝ) ^ D
 
 theorem denominator_pos (m D : ℕ) : 0 < denominator m D := by
@@ -145,6 +146,7 @@ theorem center_injective (m D : ℕ) : Function.Injective (center m D) := by
   apply Fin.ext
   exact_mod_cast (add_right_cancel hnum)
 
+/-- Lattice, given by `(Set.range (Int.cast : ℤ → ℝ)) ×ˢ (Set.range (Int.cast : ℤ → ℝ))`. -/
 def lattice : Set Plane := (Set.range (Int.cast : ℤ → ℝ)) ×ˢ (Set.range (Int.cast : ℤ → ℝ))
 
 /-- Equality on the torus, stated on its universal cover. -/

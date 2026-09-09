@@ -7,10 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientMotion
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Comp
+
+/-! Actual shear motion, exposed for the compression scale guard. -/
 
 @[expose] public section
 
-/-! Actual shear motion, exposed for the compression scale guard. -/
 
 noncomputable section
 
@@ -18,25 +22,25 @@ noncomputable section
 namespace EulerPacketMovingFrame
 
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
-  EulerPacketCoefficientControl InnerProductSpace ContinuousLinearMap
+   InnerProductSpace ContinuousLinearMap
 
 theorem physical_shear_motion_bound
     {B B₁ E : ℝ → Space →L[ℝ] Space} {m v : ℝ → Space}
     {c t₀ a ε Θ G d β : ℝ} {S : Set ℝ}
-    (ha : 1/2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
-    (hsmall : 16*(ε*Θ*(4*G)^2+d) ≤ 1)
+    (ha : 1 / 2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
+    (hsmall : 16 * (ε * Θ * (4 * G) ^ 2 + d) ≤ 1)
     (hmap : MapsTo (physicalTime t₀ a ε) (Icc 0 Θ) S)
     (hBd : ∀ t ∈ S, HasDerivWithinAt B (B₁ t) S t)
     (hmd : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
-    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t)+
-      (2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) S t)
+    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t) +
+      (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : ∀ t ∈ S, m t ≠ 0) (hv0 : ∀ t ∈ S, v t ≠ 0)
-    (hmv : ∀ t ∈ S, ⟪m t,v t⟫_ℝ = 0)
-    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G^2)
+    (hmv : ∀ t ∈ S, ⟪m t, v t⟫_ℝ = 0)
+    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G ^ 2)
     (hE : ∀ t ∈ S, ‖E t‖ ≤ d)
     (hb0 : rescaledFrame B m v t₀ a ε 0 0 1 = a)
-    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a*β)
-    (hh0 : rescaledShear c m v t₀ a ε 0 = a/ε^2) :
+    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a * β)
+    (hh0 : rescaledShear c m v t₀ a ε 0 = a / ε ^ 2) :
     let e := 16*(ε*Θ*(4*G)^2+d)
     ε ≤ e ∧ ∀ τ ∈ Icc 0 Θ, |ε^2*rescaledShear c m v t₀ a ε τ/a-1| ≤ e := by
   let e := 16*(ε*Θ*(4*G)^2+d)

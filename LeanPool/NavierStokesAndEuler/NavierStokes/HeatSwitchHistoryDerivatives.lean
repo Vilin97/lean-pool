@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatSwitchCone
 
-@[expose] public section
-
 /-!
 # Derivatives of the actual compensated heat histories
 
@@ -17,6 +15,9 @@ The first radial identities come from the actual finite integrals. Joint
 smoothness and parameter differentiation of those integrals then give the
 mixed identities on the open physical parameter band.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +28,7 @@ open NavierStokes.HeatSwitchCone
 
 namespace NavierStokes.HeatSwitchHistoryDerivatives
 
+/-- Interior domain, bundling `carrier`, `isOpen`, `scale_mem`. -/
 noncomputable def interiorDomain : ProfileHistories.RadialDomain where
   carrier := univ ×ˢ Ioo (-1) 1
   isOpen := isOpen_univ.prod isOpen_Ioo
@@ -118,10 +120,13 @@ theorem logPi_hasDerivAt (F : Profile) {XR C : ℝ} (w : HeatedOutgoing.Compensa
   simp only [OutgoingHistories.E, OutgoingProfile.Profile.logE, Prod.mk.eta]
   ring
 
+/-- Angular weight, given by `Real.exp (3 * p.1 / 2) * logE F XR c p`. -/
 noncomputable def angularWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   Real.exp (3 * p.1 / 2) * logE F XR c p
+/-- Energy weight, given by `Real.exp p.1 * (F.logU p ^ 2 - logE F XR c p ^ 2 / 2)`. -/
 noncomputable def energyWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   Real.exp p.1 * (F.logU p ^ 2 - logE F XR c p ^ 2 / 2)
+/-- Pressure weight, given by `logE F XR c p ^ 2 / 2`. -/
 noncomputable def pressureWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   logE F XR c p ^ 2 / 2
 
@@ -228,7 +233,7 @@ theorem angularWeight_parameter (F : Profile) {XR C : ℝ}
   exact (ProfileHistories.parameterPartial_hasDerivAt interiorDomain
     (angularWeight_contDiffOn F w) hp).unique
       ((ProfileHistories.parameterPartial_hasDerivAt interiorDomain (logE_contDiffOn F w)
-        hp).const_mul
+          hp).const_mul
         (Real.exp (3 * p.1 / 2)))
 
 theorem energyWeight_parameter (F : Profile) {XR C : ℝ}

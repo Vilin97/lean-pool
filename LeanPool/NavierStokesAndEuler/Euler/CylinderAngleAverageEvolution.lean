@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficientTime
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelNaturality
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelOperator
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelNaturality
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelOperator
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficientTime
+
+/-! The actual supported Duhamel solution preserves zero angular mean. -/
 
 @[expose] public section
 
-/-! The actual supported Duhamel solution preserves zero angular mean. -/
 
 noncomputable section
 
@@ -46,24 +48,43 @@ variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   (S : Set Space) (hS : MeasurableSet S)
 
-private local instance : NormedAddCommGroup (Supported P V S hS) := inferInstance
-private local instance : NormedSpace ℝ (Supported P V S hS) := inferInstance
-private local instance : NormedAddCommGroup C(K,Supported P V S hS) := inferInstance
-private local instance : NormedSpace ℝ C(K,Supported P V S hS) := inferInstance
-private local instance : NormedAddCommGroup (C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS))
-  := inferInstance
-private local instance : NormedSpace ℝ (C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported P V S hS)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderAngleAverageEvolution1 : NormedAddCommGroup (Supported P V S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported P V S hS)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderAngleAverageEvolution2 : NormedSpace ℝ (Supported P V S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Supported P V S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderAngleAverageEvolution3 : NormedAddCommGroup C(K,Supported P V S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Supported P V S hS)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderAngleAverageEvolution4 : NormedSpace ℝ C(K,Supported P V S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S
+hS))` instance to shorten typeclass synthesis. -/
+local instance instCylinderAngleAverageEvolution5 : NormedAddCommGroup (C(K,Supported P V S hS)
+    →L[ℝ] C(K,Supported P V S hS))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS))`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderAngleAverageEvolution6 : NormedSpace ℝ (C(K,Supported P V S hS) →L[ℝ]
+    C(K,Supported P V S hS)) :=
+    inferInstance
 
+/-- Supported path average, given by `(supportedAverage P S hS).compLeftContinuous ℝ K`. -/
 def supportedPathAverage : C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS) :=
   (supportedAverage P S hS).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem supportedPathAverage_apply (p : C(K,Supported P V S hS)) (t : K) :
+@[simp] theorem supportedPathAverage_apply (p : C(K, Supported P V S hS)) (t : K) :
     supportedPathAverage P S hS p t = supportedAverage P S hS (p t) := rfl
 
 omit [CompactSpace K] in
-theorem include_supportedPathAverage (p : C(K,Supported P V S hS)) :
+theorem include_supportedPathAverage (p : C(K, Supported P V S hS)) :
     includePath P S hS (supportedPathAverage P S hS p) = pathAverage P (includePath P S hS p) := rfl
 
 theorem supportedPathAverage_norm : ‖supportedPathAverage (K := K) (V := V) P S hS‖ ≤ 1 := by
@@ -80,11 +101,11 @@ section Evolution
 
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
-  (B : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
+  (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
   (U : Evolution T hT (liftedOperatorPath P S hS T B))
 
 /-- Averaging the genuine forced solution equals solving with averaged data. -/
-theorem solution_average (f : C(Icc (0 : ℝ) T,Supported P V S hS)) (a₀ : Supported P V S hS) :
+theorem solution_average (f : C(Icc (0 : ℝ) T, Supported P V S hS)) (a₀ : Supported P V S hS) :
     supportedPathAverage P S hS (U.solution f a₀) =
       U.solution (supportedPathAverage P S hS f) (supportedAverage P S hS a₀) := by
   apply (U.solution_map U (supportedAverage P S hS) _ f a₀).symm
@@ -95,7 +116,7 @@ theorem solution_average (f : C(Icc (0 : ℝ) T,Supported P V S hS)) (a₀ : Sup
   exact (supportedAverage_operator P S hS (B t) u).symm
 
 /-- Zero mean of the data propagates by the proved uniqueness of the actual ODE. -/
-theorem solution_average_zero (f : C(Icc (0 : ℝ) T,Supported P V S hS))
+theorem solution_average_zero (f : C(Icc (0 : ℝ) T, Supported P V S hS))
     (a₀ : Supported P V S hS)
     (hf : ∀ t, supportedAverage P S hS (f t) = 0)
     (ha₀ : supportedAverage P S hS a₀ = 0) (t : Icc (0 : ℝ) T) :
@@ -110,7 +131,7 @@ theorem solution_average_zero (f : C(Icc (0 : ℝ) T,Supported P V S hS))
   exact congrArg (fun p : C(Icc (0 : ℝ) T,Supported P V S hS) => p t) he
 
 /-- The same theorem in the ordinary cylinder L² space used by the classical representatives. -/
-theorem solution_full_average_zero (f : C(Icc (0 : ℝ) T,Supported P V S hS))
+theorem solution_full_average_zero (f : C(Icc (0 : ℝ) T, Supported P V S hS))
     (a₀ : Supported P V S hS)
     (hf : ∀ t, average P (f t : CylinderL2 P V) = 0)
     (ha₀ : average P (a₀ : CylinderL2 P V) = 0) (t : Icc (0 : ℝ) T) :

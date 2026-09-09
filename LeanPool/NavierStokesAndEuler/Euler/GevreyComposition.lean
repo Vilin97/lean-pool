@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionPartitions
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Composition preserves the Gevrey-two factorial bound
@@ -19,6 +19,9 @@ unbounded coordinate changes such as a flow on all of Euclidean space.
 The Faà di Bruno partition estimate gives the fixed output radius
 `R * (B*S + 2)`, independently of the derivative order.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,8 +50,8 @@ derivatives that occur in its order-`n` Faà di Bruno formula. -/
 theorem norm_taylorComp_le
     (q : FormalMultilinearSeries ℝ F G) (p : FormalMultilinearSeries ℝ E F)
     (n : ℕ) (A B R S : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S)
-    (hq : ∀ j ≤ n, ‖q j‖ ≤ A * S^j * (j.factorial : ℝ)^2)
-    (hp : ∀ j, 0 < j → j ≤ n → ‖p j‖ ≤ B * R^j * (j.factorial : ℝ)^2) :
+    (hq : ∀ j ≤ n, ‖q j‖ ≤ A * S ^ j * (j.factorial : ℝ) ^ 2)
+    (hp : ∀ j, 0 < j → j ≤ n → ‖p j‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2) :
     ‖q.taylorComp p n‖ ≤ A * (R*(B*S+2))^n * (n.factorial : ℝ)^2 := by
   have hterm (c : OrderedFinpartition n) :
       ‖q.compAlongOrderedFinpartition p c‖ ≤ A * R^n * partitionWeight (B*S) c := by
@@ -99,14 +102,15 @@ does not grow with `n` and the outer amplitude remains linear. -/
 theorem norm_iteratedFDeriv_comp_gevrey
     (f : E → F) (g : F → G) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (A B R S : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S)
-    (hgjet : ∀ j y, ‖iteratedFDeriv ℝ j g y‖ ≤ A * S^j * (j.factorial : ℝ)^2)
+    (hgjet : ∀ j y, ‖iteratedFDeriv ℝ j g y‖ ≤ A * S ^ j * (j.factorial : ℝ) ^ 2)
     (hfjet : ∀ j, 0 < j → ∀ x,
-      ‖iteratedFDeriv ℝ j f x‖ ≤ B * R^j * (j.factorial : ℝ)^2)
+      ‖iteratedFDeriv ℝ j f x‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2)
     (n : ℕ) (x : E) :
     ‖iteratedFDeriv ℝ n (g ∘ f) x‖ ≤
       A * (R*(B*S+2))^n * (n.factorial : ℝ)^2 := by
   apply norm_iteratedFDeriv_comp_gevrey_at f g n x
-    (hf.contDiffAt.of_le (by simp)) (hg.contDiffAt.of_le (by simp))
+    (hf.contDiffAt.of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl _)) (hg.contDiffAt.of_le
+        (ENat.natCast_le_of_coe_top_le_withTop le_rfl _))
     A B R S hA hB hR hS
   · exact fun j _ => hgjet j (f x)
   · exact fun j hj _ => hfjet j hj x

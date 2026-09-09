@@ -8,21 +8,23 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BoundaryAxisJets
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeGluing
-public import Mathlib.Topology.MetricSpace.Thickening
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricEvenDescent
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-!
 # Joint smooth extension of even radial profiles
 
 The input is a genuinely smooth even function of the signed radius on an
-open parameter strip.  A fixed parameter window is chosen independently of
+open parameter strip. A fixed parameter window is chosen independently of
 the profile.  Its squared-radius descent is smooth on the closed half-plane.
 The proved joint Taylor--Borel extension is applied after reflecting this
 half-plane and adding unused spatial coordinates.  Restriction gives a
 global smooth function of `(X, eta)` with exactly the original physical
 values.  No constant continuation at negative `X` is differentiated.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +33,7 @@ open scoped Topology ContDiff
 
 namespace NavierStokes.ParametricRadialExtension
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
@@ -40,7 +43,9 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 
 /-- The same window can be used for every order and every field component. -/
 structure ParameterWindow (S : Set ℝ) where
+  /-- Inner of `ParameterWindow`, of type `ℝ`. -/
   inner : ℝ
+  /-- Outer of `ParameterWindow`, of type `ℝ`. -/
   outer : ℝ
   one_lt_inner : 1 < inner
   inner_lt_outer : inner < outer
@@ -63,6 +68,7 @@ theorem exists_parameterWindow {S : Set ℝ} (hS : IsOpen S)
       linarith [hy.2]
     · exact ⟨y, ⟨le_of_not_gt hl, le_of_not_gt hr⟩, by simpa using hδ⟩
 
+/-- Parameter window, given by `Classical.choice (exists_parameterWindow hS hI)`. -/
 noncomputable def parameterWindow {S : Set ℝ} (hS : IsOpen S)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) : ParameterWindow S :=
   Classical.choice (exists_parameterWindow hS hI)
@@ -74,12 +80,14 @@ variable {S : Set ℝ} (w : ParameterWindow S)
 theorem inner_pos : 0 < w.inner := zero_lt_one.trans w.one_lt_inner
 theorem outer_pos : 0 < w.outer := w.inner_pos.trans w.inner_lt_outer
 
+/-- Bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 noncomputable def bump : ContDiffBump (0 : ℝ) where
   rIn := w.inner
   rOut := w.outer
   rIn_pos := w.inner_pos
   rIn_lt_rOut := w.inner_lt_outer
 
+/-- Parameter map, given by `w.bump eta * eta`. -/
 noncomputable def parameterMap (eta : ℝ) : ℝ := w.bump eta * eta
 
 theorem parameterMap_contDiff : ContDiff ℝ ∞ w.parameterMap :=
@@ -137,6 +145,7 @@ theorem regularize_even {S : Set ℝ} (w : ParameterWindow S) {F : Plane → E}
     regularize w F (-r, eta) = regularize w F (r, eta) :=
   he _ (w.parameterMap_mem eta) r
 
+/-- Descent, given by `F (Real.sqrt (2 * p.1), p.2)`. -/
 noncomputable def descent (F : Plane → E) (p : Plane) : E :=
   F (Real.sqrt (2 * p.1), p.2)
 
@@ -173,6 +182,7 @@ theorem halfPlaneLift_contDiffOn {g : Plane → E}
     linarith
   · exact mem_univ _
 
+/-- Half plane extension, constructed using `SpacetimeGluing.smoothExtension`. -/
 noncomputable def halfPlaneExtension (g : Plane → E)
     (hg : ContDiffOn ℝ ∞ g (Ici 0 ×ˢ (univ : Set ℝ))) (p : Plane) : E :=
   SpacetimeGluing.smoothExtension 0 (halfPlaneLift g) (halfPlaneLift_contDiffOn hg)

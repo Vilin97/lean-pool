@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketPhysicalCoefficients
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketIntervalData
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-! The actual scalar pressure gives a symmetric curvature operator.
 Symmetry of the source history Hessian is consequently a theorem about
 the constructed parent data, rather than an independent hypothesis. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -58,7 +60,7 @@ theorem curvature_symmetric (t : Icc (0 : ℝ) G.T) (x : Space) :
   exact hessian_isSymmetric (p t) ((hp t).of_le (by simp)) _
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S) (H : LowBounds G)
 
 theorem history_symmetric (t : Icc (0 : ℝ) G.T) (x : Space) :

@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
 
+/-! The ordinary curl as a bounded antisymmetrization of actual L² gradient tensors. -/
+
 @[expose] public section
 
-/-! The ordinary curl as a bounded antisymmetrization of actual L² gradient tensors. -/
 
 noncomputable section
 
@@ -20,6 +21,8 @@ open MeasureTheory EulerSmoothLimit EulerVectorCalculus EulerMeanSolenoidal
   EulerMeanCutoffCurl EulerMeanGradientTest EulerMeanBoundary
 open scoped ContDiff ENNReal NNReal
 
+/-- Coordinate insertion, given by `(EuclideanSpace.proj j).smulRight (EuclideanSpace.single i
+1)`. -/
 def coordinateInsertion (i j : Fin 3) : Space →L[ℝ] Space :=
   (EuclideanSpace.proj j).smulRight (EuclideanSpace.single i 1)
 
@@ -27,8 +30,9 @@ theorem coordinateInsertion_norm_le (i j : Fin 3) : ‖coordinateInsertion i j�
   apply ContinuousLinearMap.opNorm_le_bound _ (by norm_num)
   intro v
   simpa [coordinateInsertion, ContinuousLinearMap.smulRight_apply, norm_smul] using
-    PiLp.norm_apply_le v j
+      PiLp.norm_apply_le v j
 
+/-- Coordinate L², given by `(coordinateInsertion i j).compLpL 2 volume`. -/
 def coordinateL2 (i j : Fin 3) : L2 →L[ℝ] L2 :=
   (coordinateInsertion i j).compLpL 2 volume
 
@@ -39,7 +43,7 @@ theorem coordinateL2_ae (i j : Fin 3) (u : L2) :
 theorem coordinateL2_apply_norm_le (i j : Fin 3) (u : L2) : ‖coordinateL2 i j u‖ ≤ ‖u‖ := by
   refine ((coordinateInsertion i j).norm_compLp_le u).trans ?_
   simpa only [one_mul] using mul_le_mul_of_nonneg_right (coordinateInsertion_norm_le i j)
-    (norm_nonneg u)
+      (norm_nonneg u)
 
 /-- Each output component is the difference of the two off-diagonal derivative entries. -/
 def curlTensor : GradientTensor →L[ℝ] L2 :=

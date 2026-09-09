@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatedOutgoing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalEdgeFactor
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalPressure
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalHeatCoordinates
 
 /-!
 # The full fully-switched terminal cone
@@ -19,6 +19,9 @@ The closed profile band is treated with the actual smooth heat extension,
 not with a compact subset of a physical chart.  The compensation witness is
 arbitrary throughout.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,15 +33,20 @@ namespace NavierStokes.TerminalCone
 /-- The clock at which the heat switch is complete. -/
 noncomputable def terminalStart (d : OutgoingTail.TailData) : ℝ := OutgoingTail.tailStart d + 1 / 2
 
+/-- Normalization, given by `TerminalPressure.releasedNormalization F.data
+(OutgoingDilation.switchRadius F XR)`. -/
 noncomputable def normalization (F : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
   TerminalPressure.releasedNormalization F.data (OutgoingDilation.switchRadius F XR)
 
+/-- Shift, given by `Real.log (OutgoingDilation.switchRadius F XR) - 1 / 5`. -/
 noncomputable def shift (F : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
   Real.log (OutgoingDilation.switchRadius F XR) - 1 / 5
 
+/-- Edge distance, given by `OutgoingTail.tailEnd F.data - y`. -/
 noncomputable def edgeDistance (F : OutgoingProfile.Profile) (y : ℝ) : ℝ :=
   OutgoingTail.tailEnd F.data - y
 
+/-- Profile point, given by `(eta, edgeDistance F y)`. -/
 noncomputable def profilePoint (F : OutgoingProfile.Profile) (y eta : ℝ) : ℝ × ℝ :=
   (eta, edgeDistance F y)
 
@@ -47,11 +55,15 @@ the terminal exponent is chosen. -/
 noncomputable def releaseTime (c : OutgoingSchedule.Parameters) : ℝ :=
   c.endpoint + OutgoingTail.flattenLength + 30 * Real.log (1 / c.lam)
 
+/-- Release amplitude, given by `OutgoingSchedule.radialAmplitude c.P c.dropLength c.lam
+(releaseTime c) / 2`. -/
 noncomputable def releaseAmplitude (c : OutgoingSchedule.Parameters) : ℝ :=
   OutgoingSchedule.radialAmplitude c.P c.dropLength c.lam (releaseTime c) / 2
 
+/-- Annulus ratio, given by `Real.exp 3`. -/
 noncomputable def annulusRatio : ℝ := Real.exp 3
 
+/-- Release budget, given by `16 * annulusRatio * (annulusRatio - 1) * releaseAmplitude c`. -/
 noncomputable def releaseBudget (c : OutgoingSchedule.Parameters) : ℝ :=
   16 * annulusRatio * (annulusRatio - 1) * releaseAmplitude c
 
@@ -63,7 +75,7 @@ def SmallTail (d : OutgoingTail.TailData) : Prop :=
 theorem releaseAmplitude_eq (d : OutgoingTail.TailData) :
     releaseAmplitude d.core = OutgoingTail.finalAngular d (d.releaseStart, 0) := by
   rw [OutgoingTail.finalAngular_uniform_wait d 0 (OutgoingTail.releaseStart_gt_flattenEnd d).le
-    le_rfl]
+      le_rfl]
   rfl
 
 theorem normalization_pos (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) :
@@ -79,7 +91,7 @@ theorem edgeDistance_bounds (F : OutgoingProfile.Profile) {y : ℝ}
 theorem shift_log (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) :
     shift F XR = Real.log XR + OutgoingTail.tailStart F.data := by
   rw [shift, OutgoingDilation.switchRadius_eq, Real.log_mul hXR.ne' (Real.exp_ne_zero _),
-    Real.log_exp]
+      Real.log_exp]
   ring
 
 theorem profileS_clock (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) (y : ℝ) :
@@ -125,6 +137,8 @@ theorem eta_sq_lt_one {eta : ℝ} (heta : eta ∈ Ioo (-1 : ℝ) 1) : eta ^ 2 < 
 
 /-! ## Uniform small-argument heat slope, including zero diffusion -/
 
+/-- Heat slope, given by `-z * deriv (HeatProfileExtension.extension (1 + d.h)) z /
+HeatProfileExtension.extension (1 + d.h) z`. -/
 noncomputable def heatSlope (d : OutgoingTail.TailData) (z : ℝ) : ℝ :=
   -z * deriv (HeatProfileExtension.extension (1 + d.h)) z /
     HeatProfileExtension.extension (1 + d.h) z
@@ -140,8 +154,8 @@ theorem heatSlope_bounds (d : OutgoingTail.TailData) (hh : d.h ≤ 1 / 4)
     {z : ℝ} (hz : 0 ≤ z) (hz1 : z ≤ 1 / 16) :
     0 ≤ heatSlope d z ∧ heatSlope d z ≤ d.h / 4 := by
   have hH := HeatProfileExtension.extension_pos (a := 1 + d.h) (by linarith [d.h_pos]) hz
-  have hder := RadialHeatProfile.profile_first_derivative_bound (a := 1 + d.h) (by linarith
-    [d.h_pos]) hz
+  have hder := RadialHeatProfile.profile_first_derivative_bound (a := 1 + d.h) (by
+      linarith [d.h_pos]) hz
   have hneg := RadialHeatProfile.profile_derivWithin_neg (a := 1 + d.h) (by linarith [d.h_pos]) hz
   rw [← extension_deriv_eq d hz] at hder hneg
   have hdev := RadialHeatProfile.profile_h_sub_one_bound d.h_pos hz
@@ -214,7 +228,8 @@ theorem normalized_X (d : OutgoingTail.TailData) (y0 δ : ℝ) {eta : ℝ} (heta
       (TerminalEdgeFactor.profileRadius y0 δ) eta) = TerminalEdgeFactor.profileS y0 δ := by
   rw [show TerminalStress.radiusPoint (eta ^ 2) (TerminalEdgeFactor.profileRadius y0 δ) eta =
       PhysicalHeatCoordinates.normalizedSection (TerminalEdgeFactor.profileRadius y0 δ ^ 2 / 2) eta
-        by rfl,
+          by
+          rfl,
     PhysicalHeatCoordinates.X_normalizedSection d.h_pos d.h_lt_half heta,
     TerminalEdgeFactor.profileRadius_square]
   ring
@@ -266,6 +281,7 @@ theorem normalized_axialStress (C : ℝ) (d : OutgoingTail.TailData) (y0 δ : �
     TerminalEdgeFactor.radius_normalizedParam d y0 δ heta] at he
   exact he
 
+/-- Profile mass as an element of `ℝ`. -/
 noncomputable def profileMass (C : ℝ) (d : OutgoingTail.TailData) (y0 δ eta : ℝ) : ℝ :=
   (TerminalEdgeFactor.profileRadius y0 δ * TerminalEdgeFactor.profileCarrier C d y0 (eta, 0) /
     (2 * TerminalEdgeFactor.profileL d eta)) * (1 - OutgoingTail.tailShape d (3 - δ))
@@ -294,11 +310,11 @@ theorem profileMass_le_stress {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailData)
   have hm := TerminalPressure.terminalStress_ge_mass hC d.h_pos d.h_lt_half he2
     (TerminalEdgeFactor.profileRadius_pos y0 δ) (profileRadius_le_outer y0 hδ.le)
     (TerminalPressure.outgoingTaper_contDiff d y0) (TerminalPressure.outgoingTaper_deriv_nonneg d
-      y0)
+        y0)
     (TerminalPressure.outgoingTaper_plateau d y0) hR
   rw [normalized_carrier C d y0 0 he2, normalized_denominator d he2,
     normalized_angularStress C d y0 δ he2, TerminalPressure.outgoingTaper, normalized_logX d y0 δ
-      he2,
+        he2,
     show y0 + 3 - δ - y0 = 3 - δ by ring] at hm
   exact hm
 
@@ -508,7 +524,7 @@ theorem E_eq_profileAngularVelocity (F : OutgoingProfile.Profile) {XR : ℝ}
         (profilePoint F y eta) := by
   have hX := mul_pos hXR (Real.exp_pos y)
   have hfull : 1 / 2 ≤ Real.log ((XR * Real.exp y) / OutgoingDilation.switchRadius F XR) + 1 / 5 :=
-    by
+      by
     rw [tailTime_clock F hXR y]
     dsimp only [terminalStart] at hy
     linarith
@@ -517,14 +533,14 @@ theorem E_eq_profileAngularVelocity (F : OutgoingProfile.Profile) {XR : ℝ}
   simp only [TerminalEdgeFactor.profileAngularVelocity, TerminalEdgeFactor.profileCarrier,
     TerminalEdgeFactor.profileZ, profilePoint, profileS_clock F hXR y]
   have hz : 0 ≤ 2 * (1 - eta ^ 2) / (XR * Real.exp y) :=
-    div_nonneg (mul_nonneg (by norm_num) (sub_nonneg.mpr (TerminalEdgeFactor.eta_sq_le_one heta)))
-      hX.le
+    div_nonneg (mul_nonneg (by
+        norm_num) (sub_nonneg.mpr (TerminalEdgeFactor.eta_sq_le_one heta))) hX.le
   rw [HeatProfileExtension.extension_eq_profile (1 + F.data.h) hz,
     show 3 - edgeDistance F y = y - OutgoingTail.tailStart F.data by
       unfold edgeDistance OutgoingTail.tailEnd
       ring]
   simp only [normalization, TerminalPressure.releasedNormalization,
-    OutgoingDilation.carrierAmplitude,
+      OutgoingDilation.carrierAmplitude,
     TerminalPressure.amplitudeExponent, HeatTailEdit.exponent, RadialHeatProfile.spatialProfile,
     ParametricHeatTail.diffusion]
   ring
@@ -555,14 +571,14 @@ theorem full_interval_true_cone (F : OutgoingProfile.Profile) {XR y eta : ℝ}
     (hy : terminalStart F.data ≤ y) (hy' : y < OutgoingTail.tailEnd F.data)
     (heta : eta ∈ Icc (-1 : ℝ) 1) :
     2 < TerminalEdgeFactor.profileP (normalization F XR) F.data (shift F XR) (profilePoint F y eta)
-      ∧
+        ∧
     TerminalEdgeFactor.profileSpeed (normalization F XR) F.data (shift F XR) (profilePoint F y eta)
-      <
+        <
       ConeAlgebra.coneBound
         (TerminalEdgeFactor.profileP (normalization F XR) F.data (shift F XR) (profilePoint F y
-          eta))
+            eta))
         (TerminalEdgeFactor.profileJ (normalization F XR) F.data (shift F XR) (profilePoint F y
-          eta)) := by
+            eta)) := by
   have hδ := edgeDistance_bounds F hy hy'
   exact profile_full_true_cone F.data hsmall (switchRadius_ge_32 F hXR) hδ.1 hδ.2 heta
 
@@ -596,14 +612,14 @@ theorem same_witness_full_cone (F : OutgoingProfile.Profile) {XR C y eta : ℝ}
         (profilePoint F y eta) ∧
     HeatedOutgoing.U F XR (XR * Real.exp y, eta) = 0 ∧
     2 < TerminalEdgeFactor.profileP (normalization F XR) F.data (shift F XR) (profilePoint F y eta)
-      ∧
+        ∧
     TerminalEdgeFactor.profileSpeed (normalization F XR) F.data (shift F XR) (profilePoint F y eta)
-      <
+        <
       ConeAlgebra.coneBound
         (TerminalEdgeFactor.profileP (normalization F XR) F.data (shift F XR) (profilePoint F y
-          eta))
+            eta))
         (TerminalEdgeFactor.profileJ (normalization F XR) F.data (shift F XR) (profilePoint F y
-          eta)) :=
+            eta)) :=
   ⟨E_eq_profileAngularVelocity F w.coefficients w.radius_pos hy heta,
     U_eq_zero F w.radius_pos hy, full_interval_true_cone F hsmall hXR hy hy' heta⟩
 

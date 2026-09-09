@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCopyBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityApproach
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TailGaugePotential
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityApproach
 
 /-!
 # Terminal extensions from a common shrinking outer support
@@ -23,6 +22,9 @@ the spatial curl, and requires neither a lower support radius nor estimates
 on the individual summands.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AnnularEndpoint
@@ -30,7 +32,9 @@ namespace NavierStokes.AnnularEndpoint
 open Set Filter Function
 open scoped Topology ContDiff BigOperators
 
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- The actual Cartesian distance to the symmetry axis. -/
@@ -257,10 +261,10 @@ theorem regularFamily_term_support {H : ℕ} {f : PhysicalWaveSum.WaveFamily H}
     (I : PhysicalWaveSum.WaveIndex H) :
     ShrinkingSupport h (2 * b * Real.sqrt 2) (f.term a h r0 I) := by
   apply shrinkingSupport_of_normalized_annulus
-  intro w ht hn
-  exact ⟨I.1.val.1, (hf.geometry_support I w
-    (PhysicalWaveSum.globalWave_ne_zero_amp hn)).1,
-    (PhysicalWaveSum.labelRegion_active_relation (hf.term_support I w ht hn)).2⟩
+  · intro w ht hn
+    exact ⟨I.1.val.1, (hf.geometry_support I w
+      (PhysicalWaveSum.globalWave_ne_zero_amp hn)).1,
+      (PhysicalWaveSum.labelRegion_active_relation (hf.term_support I w ht hn)).2⟩
 
 theorem regularFamily_sum_support {H : ℕ} {f : PhysicalWaveSum.WaveFamily H}
     {a b h r0 Z : ℝ} {Δ : ℕ}
@@ -275,9 +279,9 @@ theorem copyFamily_sum_support {H Δ : ℕ} {K : Type*}
     (hf : PhysicalCopyBounds.RegularFamily f a b h r0 Z Δ) :
     ShrinkingSupport h (2 * b * Real.sqrt 2) (f.sum a h r0) := by
   apply shrinkingSupport_of_normalized_annulus
-  intro w ht hn
-  obtain ⟨I, _, _, ha, hm⟩ := hf.sum_support ht hn
-  exact ⟨I.1.val.1, ha, (PhysicalWaveSum.labelRegion_active_relation hm).2⟩
+  · intro w ht hn
+    obtain ⟨I, _, _, ha, hm⟩ := hf.sum_support ht hn
+    exact ⟨I.1.val.1, ha, (PhysicalWaveSum.labelRegion_active_relation hm).2⟩
 
 theorem copyFamily_real_sum_support {H Δ : ℕ} {K : Type*}
     {f : PhysicalCopyBounds.CopyFamily H K} {a b h r0 Z : ℝ}
@@ -338,7 +342,7 @@ theorem jets_zero_of_eqOn {f : SpaceTime → V} {U : Set SpaceTime}
       (U ∩ SpacetimeEndpoint.openPast 1) := by
   intro w hw
   have he := (SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (zero_germ_of_eqOn hU hf hw.1 hw.2.1)
-    m).self_of_nhds
+      m).self_of_nhds
   simpa only [iteratedFDeriv_fun_zero, Pi.zero_apply] using he
 
 /-- The extension is the literal zero function on an actual ambient open
@@ -576,7 +580,7 @@ theorem final_diagonal_extensions (upper : ℝ) (B : ℕ) {C : ℝ}
       Nonempty (JointResidualLimits.OneSidedExtension p' x) ∧
       Nonempty (JointResidualLimits.OneSidedExtension
         (fun w => ProblemStatement.navierStokesResidual (SpatialCurl.spatialCurl A') p' w.1 w.2) x)
-          := by
+            := by
   obtain ⟨eA0⟩ := TailGaugePotential.finalPotential_awayExtensions H v upper B x hx
   obtain ⟨ep0⟩ := (SlowBaseEndpoint.final_fields_awayExtensions H v upper B).2 x hx
   obtain ⟨eA⟩ := diagonal_addition_extension F.data.h_pos F.data.h_lt_half hA a q hx hz eA0

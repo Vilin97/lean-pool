@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Dependence of the actual Bochner multiplier on its coefficient
@@ -18,6 +16,9 @@ The coefficient-to-operator map is constructed as a bounded linear map. Thus
 parameter derivatives of time-dependent coefficients give actual operator-norm
 derivatives, rather than an assumed regular family of solution operators.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

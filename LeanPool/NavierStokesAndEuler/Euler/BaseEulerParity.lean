@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerParent
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketParity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowParity
 
 /-! Oddness of the genuine base velocity propagates through its actual
 flow to the base parent, using ODE uniqueness. -/
+
+@[expose] public section
+
 
 noncomputable section
 

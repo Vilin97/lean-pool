@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFieldSobolevTime
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
 /-! Strong time differentiation of every actual ordinary L² word,
 derived from the pointwise evolution and continuous L² spatial jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,22 +27,24 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerSmoothFieldSobolevTime EulerVolterraConvolution Finset
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instOrdinaryWordTime1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
+/-- Ordinary word operator, given by `ordinaryLift.toContinuousLinearMap.adjoint.comp
+(wordOperator 1 ⟨⟨n, Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)`. -/
 def ordinaryWordOperator {n : ℕ} (w : Fin n → Fin 3) :
     SobolevSpace 1 n →L[ℝ] EulerMeanSolenoidal.L2 :=
   ordinaryLift.toContinuousLinearMap.adjoint.comp
     (wordOperator 1 ⟨⟨n, Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)
 
 theorem ordinaryWordOperator_apply (A : SmoothL2Field Space) {n : ℕ} (w : Fin n → Fin 3) :
-    ordinaryWordOperator w (ordinarySobolev n A.toLp A.translation_contDiff)=
+    ordinaryWordOperator w (ordinarySobolev n A.toLp A.translation_contDiff) =
       (wordField A w).toLp := by
   change ordinaryLift.toContinuousLinearMap.adjoint
     ((ordinarySobolev n A.toLp A.translation_contDiff).val
       ⟨⟨n,Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)=_
   erw [ordinarySobolev_coordinate]
   have he (u : EulerMeanSolenoidal.L2) : ordinaryLift.toContinuousLinearMap.adjoint (ordinaryLift
-    u)=u :=
+      u)=u :=
     congrArg (fun L : EulerMeanSolenoidal.L2 →L[ℝ] EulerMeanSolenoidal.L2 => L u)
       ordinaryLift.adjoint_comp_self
   rw [he,word_toLp_eq_orbit]
@@ -55,6 +58,8 @@ theorem ordinaryWordOperator_apply (A : SmoothL2Field Space) {n : ℕ} (w : Fin 
 
 variable {K : Type*} [TopologicalSpace K]
 
+/-- Ordinary word path, given by `⟨fun t => ordinaryWordOperator w (sobolevPath A hA n t),
+(ordinaryWordOperator w).continuous.comp (sobolevPath A hA n).continuous⟩`. -/
 def ordinaryWordPath (A : K → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) {n : ℕ} (w : Fin n → Fin 3) :
     C(K,EulerMeanSolenoidal.L2) :=
@@ -83,7 +88,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (hB : ∀ n, Continuous (fun t => (B t).jetLp n))
   (hd : ∀ t (ht : t ∈ Ioo 0 T) x,
     HasDerivAt (fun r => (A (projIcc 0 T hT r)).field x)
-      ((B ⟨t,ht.1.le,ht.2.le⟩).field x) t)
+      ((B ⟨t, ht.1.le, ht.2.le⟩).field x) t)
 
 include hA hB hd in
 theorem ordinaryWord_hasDerivWithinAt {n : ℕ} (w : Fin n → Fin 3) (t : Icc (0 : ℝ) T) :

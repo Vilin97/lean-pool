@@ -7,20 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GaussianCylinderHeat
-public import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
+import Mathlib.Algebra.Order.Star.Real
+
+/-! A genuine one-derivative Gaussian smoothing estimate for cylinder L² fields. -/
 
 @[expose] public section
 
-/-! A genuine one-derivative Gaussian smoothing estimate for cylinder L² fields. -/
 
 noncomputable section
 
 namespace EulerGaussianCylinderHeat
 
 open MeasureTheory ProbabilityTheory InnerProductSpace EulerLiftedGradientSpace
-  EulerPressureSpatialRegularity EulerLiftedWeakDerivative EulerCylinderMollifier
-  EulerClosedTranslationGraph EulerSpatialSobolevInverse EulerCylinderCoordinates
+  EulerPressureSpatialRegularity
+  EulerClosedTranslationGraph
 open scoped ENNReal NNReal Topology ContDiff
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -76,14 +77,14 @@ theorem gaussianId_integrable (v : ℝ≥0) : Integrable (fun x : ℝ => x) (gau
 theorem gaussianAbsMoment_scale (v : ℝ≥0) :
     gaussianAbsMoment v = Real.sqrt (v : ℝ) * gaussianAbsMoment 1 := by
   have hmap : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianReal 0 1) = gaussianReal 0 v :=
-    by
+      by
     have h := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt (v : ℝ))
     convert h using 2
     · simp
     · ext
       simp [Real.sq_sqrt v.coe_nonneg]
-  rw [gaussianAbsMoment, ← hmap, integral_map_of_stronglyMeasurable (by fun_prop)
-    continuous_abs.stronglyMeasurable]
+  rw [gaussianAbsMoment, ← hmap, integral_map_of_stronglyMeasurable (by
+      fun_prop) continuous_abs.stronglyMeasurable]
   simp_rw [abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)]
   rw [integral_const_mul]
   rfl
@@ -108,14 +109,14 @@ theorem lineHeatDerivative_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 p
     (f := fun x : ℝ => x • lineOrbit period a f x)
     (Filter.Eventually.of_forall (fun x => by simp only [norm_smul, lineOrbit_norm]; exact le_rfl))
   have hb : ‖∫ x : ℝ, x • lineOrbit period a f x ∂gaussianReal 0 v‖ ≤ gaussianAbsMoment v * ‖f‖ :=
-    by
+      by
     simpa only [integral_mul_const, Real.norm_eq_abs, gaussianAbsMoment] using hi
   rw [lineHeatDerivative, norm_smul, Real.norm_of_nonneg (inv_nonneg.mpr v.coe_nonneg)]
   exact (mul_le_mul_of_nonneg_left hb (inv_nonneg.mpr v.coe_nonneg)).trans_eq (mul_assoc ..).symm
 
 /-- The true parabolic one-derivative bound, with inverse square root of variance. -/
 theorem lineHeatDerivative_smoothing_bound (a : LiftTangent) {v : ℝ≥0} (hv : 0 < v) (f : LiftL2
-  period) :
+    period) :
     ‖lineHeatDerivative period a v f‖ ≤
       (gaussianAbsMoment 1 / Real.sqrt (v : ℝ)) * ‖f‖ := by
   have hvR : 0 < (v : ℝ) := NNReal.coe_pos.mpr hv
@@ -141,14 +142,15 @@ theorem lineHeat_strongDerivative (a b : LiftTangent) (v : ℝ≥0) (f g : LiftL
   rw [he] at h
   exact h
 
-/-- Gaussian integration by parts identifies the averaged strong derivative with the bounded moment operator. -/
+/-- Gaussian integration by parts identifies the averaged strong derivative with the bounded moment
+operator. -/
 theorem lineHeat_derivative_identity (a : LiftTangent) {v : ℝ≥0} (hv : v ≠ 0)
     (f g : LiftL2 period) (hD : HasDerivAt (lineOrbit period a f) g 0) :
     lineHeat period a v g = lineHeatDerivative period a v f := by
   have hp := kernelOrbit_integrable period a f (gaussianPDFReal 0 v) (integrable_gaussianPDFReal 0
-    v)
+      v)
   have hpg := kernelOrbit_integrable period a g (gaussianPDFReal 0 v) (integrable_gaussianPDFReal 0
-    v)
+      v)
   have hdp := kernelOrbit_integrable period a f
     (fun x => -(x/(v : ℝ)) * gaussianPDFReal 0 v x) ((gaussianMomentKernel_integrable v).neg.congr
       (Filter.Eventually.of_forall (fun x => by simp only [Pi.neg_apply]; ring)))
@@ -161,7 +163,7 @@ theorem lineHeat_derivative_identity (a : LiftTangent) {v : ℝ≥0} (hv : v ≠
   rw [show (∫ x, gaussianPDFReal 0 v x • lineOrbit period a g x) =
       -(∫ x, (-(x/(v : ℝ)) * gaussianPDFReal 0 v x) • lineOrbit period a f x) from hIBP]
   rw [lineHeatDerivative, integral_gaussianReal_eq_integral_smul hv, ← integral_smul, ←
-    integral_neg]
+      integral_neg]
   apply integral_congr_ae
   apply Filter.Eventually.of_forall
   intro x

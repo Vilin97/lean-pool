@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
 
 /-!
 # Pairings for the double Riesz transform on test functions
@@ -19,6 +18,9 @@ The operator in this file is the inverse Fourier integral from
 transpose identity and the Hermitian Fourier pairing. No extension to an
 operator on all of `L²` is used.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

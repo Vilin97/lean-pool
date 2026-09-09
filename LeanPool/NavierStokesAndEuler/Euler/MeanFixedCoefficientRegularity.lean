@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedSpaceInverse
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Genuine parameter regularity of the fixed mean form
@@ -19,6 +18,9 @@ Restricting a coefficient to the ordinary solenoidal space is itself a bounded
 linear map. The actual time multipliers, H¹ transport, trace, and full mean
 form therefore inherit parameter regularity from the coefficient paths.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,18 +32,46 @@ open Set ContinuousLinearMap EulerTimeLp EulerTerminalTimePrimitive EulerMeanSol
   EulerHilbertCoerciveTransport EulerVolterraConvolution
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientRegularity1 : NormedAddCommGroup solenoidalSpace :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientRegularity2 : InnerProductSpace ℝ solenoidalSpace :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedCoefficientRegularity3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (solenoidalSpace →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientRegularity4 : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (L2 →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientRegularity5 : NormedAddCommGroup (L2 →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (L2 →L[ℝ] L2)` instance to shorten typeclass synthesis. -/
+local instance instMeanFixedCoefficientRegularity6 : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedCoefficientRegularity7 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2
+    →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedCoefficientRegularity8 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2
+    →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance
+to shorten typeclass synthesis. -/
+local instance instMeanFixedCoefficientRegularity9 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance to
+shorten typeclass synthesis. -/
+local instance instMeanFixedCoefficientRegularity10 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
 /-- The actual continuous linear restriction of spatial operators to L²σ. -/
 def frameRestriction : (L2 →L[ℝ] L2) →L[ℝ] (solenoidalSpace →L[ℝ] L2) :=

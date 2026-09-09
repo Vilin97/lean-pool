@@ -8,8 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedSubspace
 public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-
-@[expose] public section
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Rectangular coefficient fields acting on actual spatial L²
@@ -19,6 +21,9 @@ classes, with their literal pointwise representatives. The action restricts
 to the closed supported spaces, where its norm needs a bound only on the
 support region. This supplies the physical frame and projected forcing maps.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,16 +36,30 @@ variable {α E F : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace
   [SecondCountableTopology α] (μ : Measure α)
   [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
 
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ (E →L[ℝ] F)) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ (E →L[ℝ] F)) := inferInstance
-private local instance : NormedAddCommGroup (Lp E 2 μ) := inferInstance
-private local instance : NormedSpace ℝ (Lp E 2 μ) := inferInstance
-private local instance : NormedAddCommGroup (Lp F 2 μ) := inferInstance
-private local instance : NormedSpace ℝ (Lp F 2 μ) := inferInstance
-private local instance : NormedAddCommGroup (Lp E 2 μ →L[ℝ] Lp F 2 μ) := inferInstance
-private local instance : NormedSpace ℝ (Lp E 2 μ →L[ℝ] Lp F 2 μ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorField1 : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorField2 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ (E →L[ℝ] F))` instance to shorten typeclass
+synthesis. -/
+local instance instLpOperatorField3 : NormedAddCommGroup (α →ᵇ (E →L[ℝ] F)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ (E →L[ℝ] F))` instance to shorten typeclass
+synthesis. -/
+local instance instLpOperatorField4 : NormedSpace ℝ (α →ᵇ (E →L[ℝ] F)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Lp E 2 μ)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorField5 : NormedAddCommGroup (Lp E 2 μ) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Lp E 2 μ)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorField6 : NormedSpace ℝ (Lp E 2 μ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Lp F 2 μ)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorField7 : NormedAddCommGroup (Lp F 2 μ) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Lp F 2 μ)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorField8 : NormedSpace ℝ (Lp F 2 μ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Lp E 2 μ →L[ℝ] Lp F 2 μ)` instance to shorten
+typeclass synthesis. -/
+local instance instLpOperatorField9 : NormedAddCommGroup (Lp E 2 μ →L[ℝ] Lp F 2 μ) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Lp E 2 μ →L[ℝ] Lp F 2 μ)` instance to shorten typeclass
+synthesis. -/
+local instance instLpOperatorField10 : NormedSpace ℝ (Lp E 2 μ →L[ℝ] Lp F 2 μ) := inferInstance
 
 /-- Literal coefficient application is genuinely square integrable. -/
 theorem apply_memLp (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
@@ -58,13 +77,14 @@ def applyField (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) : Lp F 2 μ :=
 theorem applyField_ae (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
     applyField μ A u =ᵐ[μ] fun x => A x (u x) := (apply_memLp μ A u).coeFn_toLp
 
+/-- Full linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def fullLinear (A : α →ᵇ (E →L[ℝ] F)) : Lp E 2 μ →ₗ[ℝ] Lp F 2 μ where
   toFun := applyField μ A
   map_add' u v := by
     apply Lp.ext
     filter_upwards [applyField_ae μ A (u+v), applyField_ae μ A u, applyField_ae μ A v,
       Lp.coeFn_add u v, Lp.coeFn_add (applyField μ A u) (applyField μ A v)] with x huv hu hv hsum
-        hout
+          hout
     simp only [Pi.add_apply] at hsum hout
     rw [huv,hout,hu,hv,hsum,map_add]
   map_smul' r u := by
@@ -110,7 +130,7 @@ theorem full_smul (r : ℝ) (A : α →ᵇ (E →L[ℝ] F)) : full μ (r • A) 
   change full μ (r • A) u = r • full μ A u
   apply Lp.ext
   filter_upwards [full_ae μ (r • A) u, full_ae μ A u, Lp.coeFn_smul r (full μ A u)] with x hr ha
-    hout
+      hout
   simp only [Pi.smul_apply] at hout
   rw [hr,hout,ha]
   rfl

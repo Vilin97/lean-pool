@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakCurl
 public import LeanPool.NavierStokesAndEuler.Euler.CanonicalGraphPotential
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientMultipliers
-public import Mathlib.LinearAlgebra.BilinearForm.Properties
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+import LeanPool.NavierStokesAndEuler.Euler.MeanWeakCurl
+
+/-! A canonically normalized actual scalar potential for ordinary mean pressure gradients. -/
 
 @[expose] public section
 
-/-! A canonically normalized actual scalar potential for ordinary mean pressure gradients. -/
 
 noncomputable section
 
@@ -29,7 +30,7 @@ theorem symmetry_of_coordinates (L : Space →L[ℝ] Space)
   let B : LinearMap.BilinForm ℝ Space := (innerₗ Space).comp L.toLinearMap
   have hB : LinearMap.BilinForm.IsSymm B :=
     (LinearMap.BilinForm.isSymm_iff_basis (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis).2 (fun i j
-      => by
+        => by
       change ⟪L ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis i),
           (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis j⟫_ℝ =
         ⟪L ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis j),
@@ -47,7 +48,8 @@ theorem gradientSpace_has_potential (p : L2) (hp : p ∈ gradientSpace)
   exact symmetry_of_coordinates (fderiv ℝ g x)
     (gradientSpace_classical_curl_zero p hp g hrep hg x) a b
 
-/-- The concrete radial integral gives a fixed additive normalization, not just an existential pressure. -/
+/-- The concrete radial integral gives a fixed additive normalization, not just an existential
+pressure. -/
 theorem gradientSpace_radial_potential (p : L2) (hp : p ∈ gradientSpace)
     (g : Space → Space) (hrep : p =ᵐ[volume] g) (hg : ContDiff ℝ ∞ g) :
     ContDiff ℝ ∞ (radialPotential g) ∧ radialPotential g 0 = 0 ∧

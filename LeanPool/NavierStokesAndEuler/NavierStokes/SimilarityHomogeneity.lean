@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.Scaling
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Homogeneity of the actual similarity coordinates
@@ -22,6 +21,9 @@ function of `R` alone. Profile weights are transported exactly by a change
 of band scale.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SimilarityHomogeneity
@@ -29,6 +31,7 @@ namespace NavierStokes.SimilarityHomogeneity
 open SimilarityCoordinates
 open scoped ContDiff
 
+/-- D: an abbreviation for `CoordinateAlgebra.D`. -/
 abbrev D := CoordinateAlgebra.D
 
 /-- The scalar defining equation has the required anisotropic homogeneity. -/
@@ -150,18 +153,22 @@ theorem pullback_physicalScale {h Q b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     Real.mul_rpow hQ.le (SimilarityProfile.q_pos hh hh1 hp).le]
   ring
 
+/-- Chart point: an abbreviation for `ℝ × (ℝ × ℝ)`. -/
 abbrev ChartPoint := ℝ × (ℝ × ℝ)
 
 /-- A band chart is ordered `(R,(Z,T))`. -/
 noncomputable def chartQ (h : ℝ) (p : ChartPoint) : ℝ :=
   coordinateQ (2 * h) (p.2.2, p.2.1)
 
+/-- Chart eta, given by `coordinateEta (2 * h) (p.2.2, p.2.1)`. -/
 noncomputable def chartEta (h : ℝ) (p : ChartPoint) : ℝ :=
   coordinateEta (2 * h) (p.2.2, p.2.1)
 
+/-- Chart X, given by `coordinateX (2 * h) (p.1 ^ 2 / 2) (p.2.2, p.2.1)`. -/
 noncomputable def chartX (h : ℝ) (p : ChartPoint) : ℝ :=
   coordinateX (2 * h) (p.1 ^ 2 / 2) (p.2.2, p.2.1)
 
+/-- Chart inner, given by `(chartX h p, chartEta h p)`. -/
 noncomputable def chartInner (h : ℝ) (p : ChartPoint) : ℝ × ℝ :=
   (chartX h p, chartEta h p)
 
@@ -346,6 +353,7 @@ theorem chartProfile_transition {E : Type*} {h Q Q' : ℝ}
     F (chartInner h (chartTransition h Q Q' p)) = F (chartInner h p) := by
   rw [chartInner_transition hh hh1 hQ hQ' hp]
 
+/-- Chart weight, given by `ζ (chartX h p)`. -/
 noncomputable def chartWeight {E : Type*} (h : ℝ) (ζ : ℝ → E) (p : ChartPoint) : E :=
   ζ (chartX h p)
 
@@ -366,6 +374,7 @@ theorem profileLogDistance_pos {left right X : ℝ} (hl : 0 < left)
   exact lt_min zero_lt_one (lt_min (sub_pos.mpr (Real.log_lt_log hl hLX))
     (sub_pos.mpr (Real.log_lt_log (hl.trans hLX) hXR)))
 
+/-- Chart log distance, given by `profileLogDistance left right (chartX h p)`. -/
 noncomputable def chartLogDistance (h left right : ℝ) (p : ChartPoint) : ℝ :=
   profileLogDistance left right (chartX h p)
 

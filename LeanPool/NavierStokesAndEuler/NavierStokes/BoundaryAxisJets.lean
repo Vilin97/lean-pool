@@ -7,13 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EvenSmoothDescent
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricEvenDescent
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
-public import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraRegularity
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
+import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraRegularity
+import Mathlib.Analysis.Complex.LocallyUniformLimit
 
 /-!
 # Canonical axis jets without a negative squared-radius extension
@@ -22,6 +19,9 @@ The squared-radius jets are the iterates of the integral Hadamard operator
 on the signed radial variable.  They are genuine right derivatives at the
 axis and genuine ordinary derivatives at positive squared radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,9 +32,11 @@ namespace NavierStokes.BoundaryAxisJets
 
 variable {E P : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Radial jet, given by `EvenSmoothDescent.radialIterate (fun s => F (s, z)) k r`. -/
 noncomputable def radialJet (F : ℝ × P → E) (k : ℕ) (r : ℝ) (z : P) : E :=
   EvenSmoothDescent.radialIterate (fun s => F (s, z)) k r
 
+/-- Axis jet, given by `radialJet F k (Real.sqrt p.1) p.2`. -/
 noncomputable def axisJet (F : ℝ × P → E) (k : ℕ) (p : ℝ × P) : E :=
   radialJet F k (Real.sqrt p.1) p.2
 
@@ -143,6 +145,7 @@ theorem radialJet_congr {R : ℝ} {F G : ℝ × P → E} {z : P}
     rw [radialJet_succ, radialJet_succ]
     exact radialDerivative_congr (fun s hs => ih s hs) hr
 
+/-- Localized, given by `EvenSmoothDescent.localized R (fun r => F (r, p.2)) p.1`. -/
 noncomputable def localized (R : ℝ) (F : ℝ × P → E) (p : ℝ × P) : E :=
   EvenSmoothDescent.localized R (fun r => F (r, p.2)) p.1
 
@@ -226,9 +229,11 @@ section Joint
 
 variable [NormedAddCommGroup P] [NormedSpace ℝ P] [ProperSpace P]
 
+/-- Radial partial, given by `deriv (fun r => F (r, p.2)) p.1`. -/
 noncomputable def radialPartial (F : ℝ × P → E) (p : ℝ × P) : E :=
   deriv (fun r => F (r, p.2)) p.1
 
+/-- Reduce family, given by `EvenSmoothDescent.radialDerivative (fun r => F (r, p.2)) p.1`. -/
 noncomputable def reduceFamily (F : ℝ × P → E) (p : ℝ × P) : E :=
   EvenSmoothDescent.radialDerivative (fun r => F (r, p.2)) p.1
 
@@ -253,6 +258,7 @@ theorem reduceFamily_integral (F : ℝ × P → E) (p : ℝ × P) :
     radialPartial, show (2 : ℕ) = 1 + 1 from rfl, iteratedDeriv_succ,
     iteratedDeriv_zero]
 
+omit [CompleteSpace E] in
 theorem reduceFamily_contDiffOn {U : Set P} (hU : IsOpen U) {F : ℝ × P → E}
     (hF : ContDiffOn ℝ ∞ F (univ ×ˢ U)) :
     ContDiffOn ℝ ∞ (reduceFamily F) (univ ×ˢ U) := by
@@ -268,6 +274,7 @@ theorem reduceFamily_contDiffOn {U : Set P} (hU : IsOpen U) {F : ℝ × P → E}
   rw [hEq]
   exact hi.const_smul (1 / 2 : ℝ)
 
+omit [CompleteSpace E] in
 theorem radialJet_joint_contDiffOn {U : Set P} (hU : IsOpen U) {F : ℝ × P → E}
     (hF : ContDiffOn ℝ ∞ F (univ ×ˢ U)) (k : ℕ) :
     ContDiffOn ℝ ∞ (fun p : ℝ × P => radialJet F k p.1 p.2) (univ ×ˢ U) := by
@@ -295,6 +302,7 @@ theorem localized_joint_contDiffOn {R : ℝ} (hR : 0 < R) {U : Set P} (hU : IsOp
     simp only [mul_one] at hq
     simp only [localized, EvenSmoothDescent.localized, hq, zero_smul]
 
+omit [CompleteSpace E] in
 theorem radialJet_joint_contDiffOn_local {R : ℝ} (hR : 0 < R) {U : Set P} (hU : IsOpen U)
     {F : ℝ × P → E} (hF : ContDiffOn ℝ ∞ F (Ioo (-R) R ×ˢ U)) (k : ℕ) :
     ContDiffOn ℝ ∞ (fun p : ℝ × P => radialJet F k p.1 p.2)
@@ -325,6 +333,7 @@ theorem axisJet_square_local {R : ℝ} (hR : 0 < R) {F : ℝ × P → E} {z : P}
   · rw [abs_of_nonneg hs]
   · rw [abs_of_neg hs, radialJet_even_local hR he k hr]
 
+omit [CompleteSpace E] in
 /-- The input needed by positive-order lower sources: every canonical
 squared-radius jet has a genuinely smooth, even signed radial pullback. -/
 theorem axisJet_pullback_contDiffOn_local {R : ℝ} (hR : 0 < R) {U : Set P} (hU : IsOpen U)
@@ -397,8 +406,10 @@ theorem radialPartial_holomorphic {U : Set ℂ} (hU : IsOpen U) {F : ℝ × ℂ 
   have hdiff := hlim.tendstoLocallyUniformlyOn.differentiableOn hQ isOpen_ball
   exact (hdiff.differentiableAt (Metric.ball_mem_nhds z hσ)).differentiableWithinAt
 
+/-- Segment: an abbreviation for `↥(Icc (0 : ℝ) 1)`. -/
 abbrev Segment := ↥(Icc (0 : ℝ) 1)
 
+/-- Segment extend, given by `f (projIcc 0 1 zero_le_one t)`. -/
 noncomputable def segmentExtend (f : C(Segment, B)) (t : ℝ) : B :=
   f (projIcc 0 1 zero_le_one t)
 
@@ -518,9 +529,11 @@ theorem axisJet_pullback_holomorphic_local {R : ℝ} (hR : 0 < R) {U : Set ℂ} 
 
 /-! ## Actual mixed parameter jets -/
 
+/-- Complex partial, given by `deriv (fun z => F (p.1, z)) p.2`. -/
 noncomputable def complexPartial (F : ℝ × ℂ → B) (p : ℝ × ℂ) : B :=
   deriv (fun z => F (p.1, z)) p.2
 
+/-- Complex jet, given by `iteratedDeriv m (fun z => F (p.1, z)) p.2`. -/
 noncomputable def complexJet (F : ℝ × ℂ → B) (m : ℕ) (p : ℝ × ℂ) : B :=
   iteratedDeriv m (fun z => F (p.1, z)) p.2
 
@@ -548,7 +561,7 @@ theorem complexPartial_contDiffOn {S : Set ℝ} {U : Set ℂ} (hS : IsOpen S) (h
     hG.fderiv contDiffAt_snd (by simp)
   apply ContDiffAt.contDiffWithinAt
   apply (hD.clm_apply (contDiffAt_const : ContDiffAt ℝ ∞ (fun _ : ℝ × ℂ => (1 : ℂ))
-    p)).congr_of_eventuallyEq
+      p)).congr_of_eventuallyEq
   filter_upwards [(hS.prod hU).mem_nhds hp] with q hq
   exact complexPartial_eq_real_fderiv hU (hhol q.1 hq.1) hq.2
 
@@ -567,6 +580,7 @@ theorem complexJet_contDiffOn {S : Set ℝ} {U : Set ℂ} (hS : IsOpen S) (hU : 
     rw [heq]
     exact complexPartial_contDiffOn hS hU ih hh
 
+/-- Mixed axis jet, given by `iteratedDeriv m (fun z => axisJet F k (p.1, z)) p.2`. -/
 noncomputable def mixedAxisJet (F : ℝ × ℂ → B) (k m : ℕ) (p : ℝ × ℂ) : B :=
   iteratedDeriv m (fun z => axisJet F k (p.1, z)) p.2
 
@@ -608,7 +622,7 @@ theorem mixedAxisJet_eq_within_local {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : 
     {X : ℝ} (hX : X ∈ Ico (0 : ℝ) ((R / 4) ^ 2)) {z : ℂ} (hz : z ∈ U) :
     mixedAxisJet F k m (X, z) =
       iteratedDeriv m (fun w => iteratedDerivWithin k (fun Y => F (Real.sqrt Y, w)) (Ici 0) X) z :=
-        by
+          by
   have heq : (fun w => axisJet F k (X, w)) =ᶠ[𝓝 z]
       (fun w => iteratedDerivWithin k (fun Y => F (Real.sqrt Y, w)) (Ici 0) X) := by
     filter_upwards [hU.mem_nhds hz] with w hw
@@ -631,12 +645,14 @@ theorem mixedAxisJet_eq_ordinary_local {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU 
 
 /-! ## Interior localization retaining the full radial domain -/
 
+/-- Interior bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 noncomputable def interiorBump {R S : ℝ} (hS : 0 < S) (hSR : S < R) : ContDiffBump (0 : ℝ) where
   rIn := S
   rOut := (S + R) / 2
   rIn_pos := hS
   rIn_lt_rOut := by linarith
 
+/-- Interior cutoff, given by `interiorBump hS hSR r * interiorBump hS hSR (-r)`. -/
 noncomputable def interiorCutoff {R S : ℝ} (hS : 0 < S) (hSR : S < R) (r : ℝ) : ℝ :=
   interiorBump hS hSR r * interiorBump hS hSR (-r)
 
@@ -669,6 +685,7 @@ theorem interiorCutoff_eventually_zero {R S r : ℝ} (hS : 0 < S) (hSR : S < R) 
   change interiorBump hS hSR t = 0 at ht
   simp only [interiorCutoff, ht, zero_mul]
 
+/-- Interior localized, given by `interiorCutoff hS hSR p.1 • F p`. -/
 noncomputable def interiorLocalized {R S : ℝ} (hS : 0 < S) (hSR : S < R)
     (F : ℝ × ℂ → B) (p : ℝ × ℂ) : B := interiorCutoff hS hSR p.1 • F p
 
@@ -721,6 +738,7 @@ theorem radialJet_interiorLocalized_eq {R S : ℝ} (hS : 0 < S) (hSR : S < R)
     radialJet (interiorLocalized hS hSR F) k r z = radialJet F k r z :=
   radialJet_congr (fun _ hs => interiorLocalized_eq hS hSR (abs_lt.mpr hs).le F z) k r hr
 
+omit [CompleteSpace B] in
 /-- No radial radius is lost: localization is chosen around each interior
 point while the canonical jet itself remains unchanged. -/
 theorem radialJet_joint_contDiffOn_full {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
@@ -772,6 +790,7 @@ theorem axisJet_square_full {R : ℝ} (hR : 0 < R) {F : ℝ × ℂ → B} {z : �
   · rw [abs_of_nonneg hs]
   · rw [abs_of_neg hs, radialJet_even_full hR he k hr]
 
+omit [CompleteSpace B] in
 theorem axisJet_pullback_contDiffOn_full {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
     {F : ℝ × ℂ → B} (hF : ContDiffOn ℝ ∞ F (Ioo (-R) R ×ˢ U))
     (he : ∀ z ∈ U, ∀ r ∈ Ioo (-R) R, F (-r, z) = F (r, z)) (k : ℕ) :
@@ -881,7 +900,7 @@ theorem mixedAxisJet_eq_within_full {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : I
     {X : ℝ} (hX : X ∈ Ico (0 : ℝ) (R ^ 2)) {z : ℂ} (hz : z ∈ U) :
     mixedAxisJet F k m (X, z) =
       iteratedDeriv m (fun w => iteratedDerivWithin k (fun Y => F (Real.sqrt Y, w)) (Ici 0) X) z :=
-        by
+          by
   have heq : (fun w => axisJet F k (X, w)) =ᶠ[𝓝 z]
       (fun w => iteratedDerivWithin k (fun Y => F (Real.sqrt Y, w)) (Ici 0) X) := by
     filter_upwards [hU.mem_nhds hz] with w hw

@@ -7,13 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ScalarParticularSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierTransport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCoreSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierTransport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
+import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSupportPreservation
 
 /-!
 # The actual finite signed-wave assembly
@@ -24,6 +21,9 @@ Support comes from the canonical source carrier and the actual native
 mask/cutoff product.  Quantitative wave bounds are separate inputs.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCycleAssembly
@@ -32,7 +32,9 @@ open Set Function Filter WeightedClasses CorrectionState CorrectionStep Correcti
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
 /-- The same label map used by the actual primary covariance. -/
@@ -50,10 +52,10 @@ support predicate.  This applies to any real oscillatory field. -/
 theorem supported_of_zero_outside {B N0 : ℕ}
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (u : Index B N0 → Oscillation Point)
     (hz : ∀ l n x, x ∈ ActualInitialization.geometry.strip.domain → x ∉
-      ActualInitialization.labelCarrier l n →
+        ActualInitialization.labelCarrier l n →
       ∀ θ i, u l n (x, θ) i = 0) :
     LabelSumBounds.SupportedOscillations ActualPrimary.slots label
-      ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
+        ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
       ActualInitialization.geometry.strip.domain u := by
   intro l n x hx θ i hn
   have hc : x ∈ ActualInitialization.labelCarrier l n := by
@@ -68,7 +70,7 @@ theorem oscillation_zero_of_inputSupport
     (b : HarmonicBlock Point) (G A : HarmonicResidual.BlockCoefficients Point)
     {U : Set Point} {K : ℕ → Set Point}
     (hs : HarmonicSourceSupport.InputSupportOn U K b G A) (hzero : HarmonicWaveInteraction.ZeroMode
-      b)
+        b)
     (n : ℕ) {x : Point} (hx : x ∈ U) (hn : x ∉ K n) (θ : ℝ) (i : Fin 3) :
     b.oscillation n (x, θ) i = 0 := by
   have hcoeff (j : ℤ) : HarmonicResidual.realCoefficients (b.velocity n i) j x = 0 := by
@@ -89,10 +91,10 @@ theorem supported_of_inputSupport {B N0 : ℕ}
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (b : Index B N0 → HarmonicBlock Point)
     (G A : Index B N0 → HarmonicResidual.BlockCoefficients Point)
     (hs : ∀ l, HarmonicSourceSupport.InputSupportOn ActualInitialization.geometry.domain
-      (ActualInitialization.labelCarrier l) (b l) (G l) (A l))
+        (ActualInitialization.labelCarrier l) (b l) (G l) (A l))
     (hzero : ∀ l, HarmonicWaveInteraction.ZeroMode (b l)) :
     LabelSumBounds.SupportedOscillations ActualPrimary.slots label
-      ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
+        ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
       ActualInitialization.geometry.strip.domain (fun l => (b l).oscillation) := by
   apply supported_of_zero_outside hN
   intro l n x hx hn θ i
@@ -101,9 +103,9 @@ theorem supported_of_inputSupport {B N0 : ℕ}
 
 theorem primary_supported {B N0 : ℕ} :
     LabelSumBounds.SupportedOscillations ActualPrimary.slots label
-      ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
+        ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
       ActualInitialization.geometry.strip.domain (fun l : Index B N0 =>
-        (ActualInitialization.tangentBlock l).oscillation) := by
+          (ActualInitialization.tangentBlock l).oscillation) := by
   intro l n x hx θ i hn
   apply ActualPrimaryCovariance.piece_support l n x hx θ
   apply subset_closure
@@ -175,9 +177,9 @@ theorem signed_localized_zero (l : Index B N0) (s : StripData Point)
     (n : ℕ) (k : TorusInverse.Frequency) {x : Point × ℝ}
     (hx : x.1 ∉ ActualInitialization.labelCarrier l n) :
     ((((ActualSignedStageControls.parameters l).copyData s request).localized k).amplitude n x = 0)
-      ∧
+        ∧
     ((((ActualSignedStageControls.parameters l).copyData s request).localized k).pressure n x = 0)
-      := by
+        := by
   rcases signed_mask_or_cutoff_zero l n k hx with hm | hc
   · have hh := PeriodizedSignedParameters.raw_zero_of_mask
       (p := ActualSignedStageControls.parameters l) (s := s) request n k x hm
@@ -224,7 +226,7 @@ theorem signed_common_zero_germs (l : Index B N0) (s : StripData Point)
   let a := (ActualSignedStageControls.parameters l).copyData s request
   have hn : ∀ᶠ y : Point × ℝ in 𝓝 x, y.1 ∉ ActualInitialization.labelCarrier l n :=
     ((ActualInitialization.labelCarrier_closed l n).preimage continuous_fst).isOpen_compl.mem_nhds
-      hx
+        hx
   have ha : a.common.amplitude n =ᶠ[𝓝 x] fun _ => 0 := by
     filter_upwards [hn] with y hy
     exact (signed_common_zero l s request n hy).1
@@ -237,7 +239,7 @@ theorem signed_common_zero_germs (l : Index B N0) (s : StripData Point)
     ((ActualSignedStageControls.parameters l).directions.radialField n)
     (fun _ => (ActualSignedStageControls.parameters l).directions.angular)
     ((ActualSignedStageControls.parameters l).directions.axialField
-      (HarmonicWaveInteraction.productStrip s) n)
+        (HarmonicWaveInteraction.productStrip s) n)
     (a.background.phase n)
   simp only [PeriodizedWaveBounds.realizedCoefficient_zero] at he
   exact he
@@ -305,13 +307,13 @@ theorem curl_inputSupport (l : Index B N0) (s : StripData Point)
 theorem tangent_zeroMode (l : Index B N0) (s : StripData Point)
     (request : ℕ → Point × ℝ → SignedWaveUpdate.Vec2) :
     HarmonicWaveInteraction.ZeroMode ((ActualSignedStageControls.parameters l).tangentBlock s
-      request) :=
+        request) :=
   (SignedWaveUpdate.coefficientBlock_zero_coefficient _ _ _ _ _).1
 
 theorem curl_zeroMode (l : Index B N0) (s : StripData Point)
     (request : ℕ → Point × ℝ → SignedWaveUpdate.Vec2) :
     HarmonicWaveInteraction.ZeroMode ((ActualSignedStageControls.parameters l).curlBlock s request)
-      := by
+        := by
   intro n i
   change ((ActualSignedStageControls.parameters l).exactBlock s request).velocity n i 0 -
     ((ActualSignedStageControls.parameters l).tangentBlock s request).velocity n i 0 = 0
@@ -323,7 +325,7 @@ theorem tangent_supported (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
       ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
       ActualInitialization.geometry.strip.domain
       (fun l : Index B N0 => ((ActualSignedStageControls.parameters l).tangentBlock s
-        request).oscillation) :=
+          request).oscillation) :=
   supported_of_inputSupport hN _ (fun _ => 0) (fun _ => 0)
     (fun l => tangent_inputSupport l s request) (fun l => tangent_zeroMode l s request)
 
@@ -333,7 +335,7 @@ theorem curl_supported (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
       ActualPrimaryCovariance.physicalWindow ActualPrimaryCovariance.absoluteAuxiliary
       ActualInitialization.geometry.strip.domain
       (fun l : Index B N0 => ((ActualSignedStageControls.parameters l).curlBlock s
-        request).oscillation) :=
+          request).oscillation) :=
   supported_of_inputSupport hN _ (fun _ => 0) (fun _ => 0)
     (fun l => curl_inputSupport l s request) (fun l => curl_zeroMode l s request)
 
@@ -395,7 +397,7 @@ theorem signed_cutoff_or_mask_germ (l : Index B N0) (n : ℕ)
   · right
     exact PeriodizedWaveBounds.zero_germ_of_support
       ((ActualGaussianCoverage.actualSlowCore_closed ActualPrimary.certificate
-        ActualPrimary.modulation
+          ActualPrimary.modulation
         (ActualPrimary.choice B N0).prepared l.1).preimage
           (ActualSignedStageControls.nativePoint_smooth l n k).continuous.fst)
       (fun y hy => ActualPrimary.spatialMask_native_support l.1
@@ -409,7 +411,7 @@ theorem signed_exact_gaussian_zero_germs (l : Index B N0) (s : StripData Point)
       (ActualSignedStageControls.parameters l).directions).amplitude n =ᶠ[𝓝 x] fun _ => 0) ∧
     (a.common.pressure n =ᶠ[𝓝 x] fun _ => 0) ∧
     (a.globalGaussian (ActualSignedStageControls.parameters l).directions n =ᶠ[𝓝 x] fun _ => 0) :=
-      by
+        by
   dsimp only
   apply LabelSupportPreservation.common_zero_germs_of_native _ (ActualSignedStageControls.cells l)
     (ActualSignedStageControls.cutoff_support l) _ _
@@ -432,10 +434,10 @@ theorem refined_signed_localized_zero (l : Index B N0) (s : StripData Point)
     (hn : x.1 ∉ ActualCoreSupport.refinedCarrier l n) :
     (((ActualSignedStageControls.parameters l).copyData s request).localized k).amplitude n x = 0 ∧
     (((ActualSignedStageControls.parameters l).copyData s request).localized k).pressure n x = 0 :=
-      by
+        by
   by_cases hb : x.1 ∈ ActualInitialization.labelCarrier l n
   · have hfull : x ∈ ActualWaveRegularity.fullDomain ActualPrimary.standardRegion := ⟨hx, mem_univ
-    _⟩
+      _⟩
     by_cases hr : ActualCoreSupport.radialRatio x.1 ∈
         Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
           (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)
@@ -500,7 +502,7 @@ theorem refined_signed_common_zero_germs (l : Index B N0) (s : StripData Point)
     ((ActualSignedStageControls.parameters l).directions.radialField n)
     (fun _ => (ActualSignedStageControls.parameters l).directions.angular)
     ((ActualSignedStageControls.parameters l).directions.axialField
-      (HarmonicWaveInteraction.productStrip s) n)
+        (HarmonicWaveInteraction.productStrip s) n)
     (a.background.phase n)
   simp only [PeriodizedWaveBounds.realizedCoefficient_zero] at he
   exact he
@@ -513,7 +515,7 @@ theorem refined_signed_gaussian_zero (l : Index B N0) (s : StripData Point)
       (ActualSignedStageControls.parameters l).directions n x = 0 := by
   by_cases hb : x.1 ∈ ActualInitialization.labelCarrier l n
   · have hfull : x ∈ ActualWaveRegularity.fullDomain ActualPrimary.standardRegion := ⟨hx, mem_univ
-    _⟩
+      _⟩
     by_cases hr : ActualCoreSupport.radialRatio x.1 ∈
         Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
           (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)
@@ -524,14 +526,14 @@ theorem refined_signed_gaussian_zero (l : Index B N0) (s : StripData Point)
       have hh :
           ((((ActualSignedStageControls.parameters l).copyData s request).commonCorrected
             (HarmonicWaveInteraction.productStrip s) (ActualSignedStageControls.parameters
-              l).directions).amplitude n
+                l).directions).amplitude n
               =ᶠ[𝓝 x] fun _ => 0) ∧
           (((ActualSignedStageControls.parameters l).copyData s request).common.pressure n
               =ᶠ[𝓝 x] fun _ => 0) ∧
           (((ActualSignedStageControls.parameters l).copyData s request).globalGaussian
             (ActualSignedStageControls.parameters l).directions n =ᶠ[𝓝 x] fun _ => 0) := by
         apply LabelSupportPreservation.common_zero_germs_of_native _
-          (ActualSignedStageControls.cells l)
+            (ActualSignedStageControls.cells l)
           (ActualSignedStageControls.cutoff_support l) _ _
         · exact Filter.Eventually.of_forall (fun _ => rfl)
         · intro k _
@@ -545,7 +547,7 @@ theorem refined_signed_gaussian_zero (l : Index B N0) (s : StripData Point)
     · have hz := fun k => (ActualWaveRegularityData.signed_raw_zero_outside l s request n k hfull
         (fun ho => hr ⟨ho.1.le, ho.2.le⟩)).1
       simp only [PeriodizedWaveBounds.CopyData.globalGaussian,
-        PeriodizedWaveBounds.CopyData.globalTail,
+          PeriodizedWaveBounds.CopyData.globalTail,
         PeriodizedWaveBounds.copySum, PeriodizedWaveBounds.CopyData.localTail,
         PeriodizedSignedParameters.copyData] at *
       simp only [hz, smul_zero, tsum_zero, add_zero]
@@ -652,7 +654,7 @@ theorem associated_inputSupport
     HarmonicSourceSupport.InputSupportOn (ActualCarrierTransport.parameterDomain ×ˢ Set.univ)
       (ActualCarrierTransport.canonicalSourceRegion l) (StateReindex.block cycleAssoc.symm b)
       (StateReindex.blockCoefficients cycleAssoc.symm G) (StateReindex.blockCoefficients
-        cycleAssoc.symm A) := by
+          cycleAssoc.symm A) := by
   apply inputSupport_reindex_on cycleAssoc.symm hs
   · intro z hz
     exact hz.1
@@ -671,7 +673,7 @@ theorem canonical_copyData_eq_scalar
         (ActualCarrierTransport.geometry l) (fun _ => ActualPrimary.slots.radius)
         (fun _ => ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l)
         (fun _ => ActualPrimary.slots.radius_pos) (fun _ =>
-          ActualCarrierTransport.referenceLength_pos l)
+            ActualCarrierTransport.referenceLength_pos l)
         (ActualCarrierTransport.clock_pos l) := by
   dsimp only
   unfold ParticularParameters.copyData ScalarParticularSupport.scalarData
@@ -681,6 +683,7 @@ theorem canonical_copyData_eq_scalar
   exact congrFun (ActualCarrierTransport.canonical_cutoff l n)
     ((ActualCarrierTransport.geometry l n).coordinates k z.2)
 
+/-- Particular cells, constructed using `ScalarParticularSupport.scalarCells`. -/
 noncomputable def particularCells :
     PeriodizedWaveBounds.Cells ((CycleSlow × ℝ) × TorusInverse.Plane) TorusInverse.Frequency :=
   ScalarParticularSupport.scalarCells (ActualCarrierTransport.geometry l)
@@ -693,7 +696,7 @@ theorem canonical_cutoff_support
     (G A : HarmonicResidual.BlockCoefficients (CycleSlow × TorusInverse.Plane)) (j : ℤ)
     (n : ℕ) (k : TorusInverse.Frequency) :
     support (((ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData c u b G A
-      j).cutoff n k) ⊆
+        j).cutoff n k) ⊆
       (particularCells l).carrier n k := by
   rw [canonical_copyData_eq_scalar]
   exact ScalarParticularSupport.scalarData_cutoff_support _ _ _ _ _ _ _ _ _ _
@@ -713,7 +716,7 @@ theorem canonical_source_zero_germ (j : ℤ) (n : ℕ)
     ParticularWaveAssembly.sourceFamily (StateReindex.context cycleAssoc.symm c)
       (StateReindex.state cycleAssoc.symm u) (StateReindex.block cycleAssoc.symm b)
       (StateReindex.blockCoefficients cycleAssoc.symm G) (StateReindex.blockCoefficients
-        cycleAssoc.symm A)
+          cycleAssoc.symm A)
       j n =ᶠ[𝓝 z] fun _ => 0 :=
   ActualGaussianCoverage.sourceFamily_zero_germ _ _ _ _ _ (parameterDomain_open.prod isOpen_univ)
     (ActualCarrierTransport.canonicalSourceRegion_closed l) (associated_inputSupport hN l hs)
@@ -748,7 +751,7 @@ variable {B N0 : ℕ} (l : Index B N0)
     (hK : ∀ n, IsClosed (K n))
     (hfactor : ∀ n p, p ∈ ActualCarrierTransport.parameterDomain → ∀ Y,
       ActualCarrierTransport.associatedPoint p Y ∈ K n ↔
-        (p,Y) ∈ ActualGaussianCoverage.sourceRegion (slowCarrier n)
+        (p, Y) ∈ ActualGaussianCoverage.sourceRegion (slowCarrier n)
           (ActualCarrierTransport.geometry l n) ActualPrimary.slots.radius
           (ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l n))
     (c : Context Point) (u : State Point) (b : HarmonicBlock Point)
@@ -762,13 +765,13 @@ whole-path source germs, including additional refined slow constraints. -/
 theorem source_zero_germ_of_factorization (j : ℤ) (n : ℕ)
     {z : (CycleSlow × ℝ) × TorusInverse.Plane}
     (hz : z.1.1 ∈ ActualCarrierTransport.parameterDomain)
-    (hn : (z.1.1,z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
+    (hn : (z.1.1, z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
       (ActualCarrierTransport.geometry l n) ActualPrimary.slots.radius
       (ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l n)) :
     ParticularWaveAssembly.sourceFamily (StateReindex.context cycleAssoc.symm c)
       (StateReindex.state cycleAssoc.symm u) (StateReindex.block cycleAssoc.symm b)
       (StateReindex.blockCoefficients cycleAssoc.symm G) (StateReindex.blockCoefficients
-        cycleAssoc.symm A)
+          cycleAssoc.symm A)
       j n =ᶠ[𝓝 z] fun _ => 0 := by
   have hass : HarmonicSourceSupport.InputSupportOn
       (ActualCarrierTransport.parameterDomain ×ˢ Set.univ)
@@ -788,7 +791,7 @@ theorem native_zero_alternative_of_factorization (j : ℤ) (n : ℕ)
     (k : TorusInverse.Frequency) {z : (CycleSlow × ℝ) × TorusInverse.Plane}
     (hz : z.1.1 ∈ ActualCarrierTransport.parameterDomain)
     (hk : z ∈ (particularCells l).carrier n k)
-    (hn : (z.1.1,z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
+    (hn : (z.1.1, z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
       (ActualCarrierTransport.geometry l n) ActualPrimary.slots.radius
       (ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l n)) :
     let a := (ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData
@@ -826,7 +829,7 @@ theorem native_zero_alternative_of_factorization (j : ℤ) (n : ℕ)
 theorem common_raw_zero_germ_of_factorization (j : ℤ) (n : ℕ)
     {z : (CycleSlow × ℝ) × TorusInverse.Plane}
     (hz : z.1.1 ∈ ActualCarrierTransport.parameterDomain)
-    (hn : (z.1.1,z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
+    (hn : (z.1.1, z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
       (ActualCarrierTransport.geometry l n) ActualPrimary.slots.radius
       (ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l n)) :
     let a := (ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData
@@ -858,7 +861,7 @@ theorem copy_zero_germs_of_factorization (j : ℤ)
     (d : LinearWaveBounds.GraphDirections ((CycleSlow × ℝ) × TorusInverse.Plane))
     (n : ℕ) {z : (CycleSlow × ℝ) × TorusInverse.Plane}
     (hz : z.1.1 ∈ ActualCarrierTransport.parameterDomain)
-    (hn : (z.1.1,z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
+    (hn : (z.1.1, z.2) ∉ ActualGaussianCoverage.sourceRegion (slowCarrier n)
       (ActualCarrierTransport.geometry l n) ActualPrimary.slots.radius
       (ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l n)) :
     let a := (ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData
@@ -882,11 +885,11 @@ theorem associated_update_inputSupport (s : StripData (CycleSlow × TorusInverse
         (ActualCarrierTransport.geometry l n) ActualPrimary.slots.radius
         (ActualCarrierTransport.referenceLength l) (ActualCarrierTransport.clock l n))
       (p.updateBlock s (StateReindex.context cycleAssoc.symm c) (StateReindex.state cycleAssoc.symm
-        u)
+          u)
         (StateReindex.block cycleAssoc.symm b) (StateReindex.blockCoefficients cycleAssoc.symm G)
         (StateReindex.blockCoefficients cycleAssoc.symm A) N)
       (p.gaussianBlock (StateReindex.context cycleAssoc.symm c) (StateReindex.state cycleAssoc.symm
-        u)
+          u)
         (StateReindex.block cycleAssoc.symm b) (StateReindex.blockCoefficients cycleAssoc.symm G)
         (StateReindex.blockCoefficients cycleAssoc.symm A) N).velocity 0 := by
   dsimp only
@@ -894,17 +897,17 @@ theorem associated_update_inputSupport (s : StripData (CycleSlow × TorusInverse
   · intro j hj n x hx hn
     exact (copy_zero_germs_of_factorization l K slowCarrier hK hfactor c u b G A hs j
       (ParticularParameters.nativeStrip s) (ActualParticularStageControls.canonicalParameters
-        (l.2,l.1)).directions
+          (l.2,l.1)).directions
       n (z := ((x.1,0),x.2)) hx.1 hn).1.self_of_nhds
   · intro j hj n x hx hn
     exact (copy_zero_germs_of_factorization l K slowCarrier hK hfactor c u b G A hs j
       (ParticularParameters.nativeStrip s) (ActualParticularStageControls.canonicalParameters
-        (l.2,l.1)).directions
+          (l.2,l.1)).directions
       n (z := ((x.1,0),x.2)) hx.1 hn).2.1.self_of_nhds
   · intro j hj n x hx hn
     exact (copy_zero_germs_of_factorization l K slowCarrier hK hfactor c u b G A hs j
       (ParticularParameters.nativeStrip s) (ActualParticularStageControls.canonicalParameters
-        (l.2,l.1)).directions
+          (l.2,l.1)).directions
       n (z := ((x.1,0),x.2)) hx.1 hn).2.2.self_of_nhds
 
 /-- The literal finite particular update and its Gaussian error preserve
@@ -919,7 +922,7 @@ theorem particular_inputSupport_of_factorization (s : StripData Point) (N : ℕ)
           (StateReindex.blockCoefficients cycleAssoc.symm A) N))
       (StateReindex.block cycleAssoc
         (p.gaussianBlock (StateReindex.context cycleAssoc.symm c) (StateReindex.state
-          cycleAssoc.symm u)
+            cycleAssoc.symm u)
           (StateReindex.block cycleAssoc.symm b) (StateReindex.blockCoefficients cycleAssoc.symm G)
           (StateReindex.blockCoefficients cycleAssoc.symm A) N)).velocity 0 := by
   have hass := associated_update_inputSupport l K slowCarrier hK hfactor c u b G A hs
@@ -938,6 +941,7 @@ section ConcreteCarriers
 
 variable {B N0 : ℕ}
 
+/-- Refined slow core, constructed using `ActualCarrierTransport.activeSlowCore`. -/
 noncomputable def refinedSlowCore (l : Index B N0) (n : ℕ) : Set CycleSlow :=
   ActualCarrierTransport.activeSlowCore l n ∩ {p |
     ActualCoreSupport.radialRatio (ActualCarrierTransport.associatedPoint p 0) ∈
@@ -974,12 +978,12 @@ theorem cycle_particular_inputSupport (hN : ActualCarrierGeometry.geometricThres
       (ActualInitialization.labelCarrier l)
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients c x.state l)
       ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock x.coefficients c
-        x.state l).velocity 0 :=
+          x.state l).velocity 0 :=
   particular_inputSupport_of_factorization l (ActualInitialization.labelCarrier l)
     (ActualCarrierTransport.activeSlowCore l) (ActualInitialization.labelCarrier_closed l)
     (fun n _p hp Y => ActualCarrierTransport.labelCarrier_iff_canonicalSourceRegion hN l n hp Y)
     c x.state (x.coefficients.blocks l) (x.coefficients.gaussian l)
-      (x.coefficients.aliasCoefficients l)
+        (x.coefficients.aliasCoefficients l)
     (hs l) ActualInitialization.geometry.strip x.coefficients.residualBand
 
 theorem cycle_refined_particular_inputSupport (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
@@ -991,12 +995,12 @@ theorem cycle_refined_particular_inputSupport (hN : ActualCarrierGeometry.geomet
       (ActualCoreSupport.refinedCarrier l)
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients c x.state l)
       ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock x.coefficients c
-        x.state l).velocity 0 :=
+          x.state l).velocity 0 :=
   particular_inputSupport_of_factorization l (ActualCoreSupport.refinedCarrier l)
     (refinedSlowCore l) (ActualCoreSupport.refinedCarrier_closed l)
     (refined_carrier_factorization hN l)
     c x.state (x.coefficients.blocks l) (x.coefficients.gaussian l)
-      (x.coefficients.aliasCoefficients l)
+        (x.coefficients.aliasCoefficients l)
     (hs l) ActualInitialization.geometry.strip x.coefficients.residualBand
 
 /-- All four actual common fields have zero germs off the refined
@@ -1012,7 +1016,7 @@ theorem refined_particular_zero_germs (hN : ActualCarrierGeometry.geometricThres
     (hn : ActualCarrierTransport.associatedPoint z.1.1 z.2 ∉ ActualCoreSupport.refinedCarrier l n) :
     let p := ActualParticularStageControls.canonicalParameters (l.2,l.1)
     let a := p.copyData (StateReindex.context cycleAssoc.symm c) (StateReindex.state
-      cycleAssoc.symm u)
+        cycleAssoc.symm u)
       (StateReindex.block cycleAssoc.symm b) (StateReindex.blockCoefficients cycleAssoc.symm G)
       (StateReindex.blockCoefficients cycleAssoc.symm A) j
     (a.common.amplitude n =ᶠ[𝓝 z] fun _ => 0) ∧
@@ -1040,7 +1044,7 @@ theorem cycle_refined_signed_inputSupport (x : CycleState (Index B N0)) (c : Con
       (ActualCoreSupport.refinedCarrier l)
       ((ActualCycleParameters.fixedParameters B N0).signedBlock x.coefficients c x.state l)
       ((ActualCycleParameters.fixedParameters B N0).signedGaussianBlock x.coefficients c x.state
-        l).velocity 0 :=
+          l).velocity 0 :=
   refined_signed_inputSupport l ActualInitialization.geometry.strip
     ((ActualCycleParameters.fixedParameters B N0).signedRequest x.coefficients c x.state)
 
@@ -1055,21 +1059,23 @@ variable {B N0 : ℕ} {σ κ : ℝ}
     (H : CycleAnalyticInvariant ActualInitialization.geometry (ActualPrimary.commonContext B)
       ActualInitialization.tangentBlock P carrier σ x)
     (hσ : 1 / 5 ≤ σ)
-    (hpart : ∀ i j, LabelSumBounds.UniformWaveClass ActualInitialization.geometry.strip P (1/2+σ)
+    (hpart : ∀ i j, LabelSumBounds.UniformWaveClass ActualInitialization.geometry.strip P (1 / 2 +
+        σ)
       (fun l n z => ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients
         (ActualPrimary.commonContext B) x.state l).velocity n i j z))
     (htangent : ∀ i j, LabelSumBounds.UniformWaveClass ActualInitialization.geometry.strip P
-      (1/2+σ-κ)
+        (1 / 2 + σ - κ)
       (fun l n z => ((ActualCycleParameters.fixedParameters B N0).signedTangent x.coefficients
         (ActualPrimary.commonContext B) x.state l).velocity n i j z))
-    (hcurl : ∀ i j, LabelSumBounds.UniformWaveClass ActualInitialization.geometry.strip P (1+σ-2*κ)
+    (hcurl : ∀ i j, LabelSumBounds.UniformWaveClass ActualInitialization.geometry.strip P (1 +
+        σ - 2 * κ)
       (fun l n z => ((ActualCycleParameters.fixedParameters B N0).signedCurl x.coefficients
         (ActualPrimary.commonContext B) x.state l).velocity n i j z))
     (hP0 : ∀ l n z, z ∈ ActualInitialization.geometry.strip.domain → 0 ≤ P l n z)
     (hP1 : ∀ l n z, z ∈ ActualInitialization.geometry.strip.domain → P l n z ≤ 1)
 
 theorem primary_tangent_band (l : Index B N0) : (ActualInitialization.tangentBlock l).BandLimited 1
-  :=
+    :=
   PrimaryHarmonics.block_band _ _ _
 
 /-- The family is the literal cycle constructor, using the current
@@ -1080,7 +1086,7 @@ noncomputable def family :
   (ActualCycleParameters.fixedParameters B N0).signedFamily x.coefficients
     (ActualPrimary.commonContext B) x.state ActualInitialization.tangentBlock P hσ 1
     primary_tangent_band H.bands H.carrier
-      (ActualCycleParameters.invariant_fixedParameters_signed_carrier H)
+        (ActualCycleParameters.invariant_fixedParameters_signed_carrier H)
     H.wave H.difference hpart htangent hcurl hP0 hP1 H.angular
 
 theorem inputSupport_mono {U : Set Point} {K T : ℕ → Set Point}
@@ -1162,7 +1168,7 @@ noncomputable def assemblyOfParticularSupport :
 
 theorem assemblyOfParticularSupport_labels :
     (assemblyOfParticularSupport x H hσ hpart htangent hcurl hP0 hP1 hN hcarrier
-      hpartSupport).labels =
+        hpartSupport).labels =
       x.coefficients.labels := rfl
 
 /-- The actual geometric constructor. Incoming primitive support is

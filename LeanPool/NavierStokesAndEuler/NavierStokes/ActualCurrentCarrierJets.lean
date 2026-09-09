@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhaseJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularPaddedBackground
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalPhysicalCopyBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
-
-@[expose] public section
 
 /-!
 # Uniform phase jets for the actual current-chart copies
@@ -21,6 +18,9 @@ Positive jets have a fixed `Q^(-2h)` loss, uniformly before the label and
 band are selected. No bound on the unbounded phase value is asserted.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCurrentCarrierJets
@@ -28,8 +28,11 @@ namespace NavierStokes.ActualCurrentCarrierJets
 open Set Function Filter CorrectionInitialization
 open scoped Topology ContDiff
 
+/-- Label: an abbreviation for `ActualPrimaryBounds.SignedLabel B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualPrimaryBounds.SignedLabel B N0
+/-- Native: an abbreviation for `ActualParticularBackground.Native`. -/
 abbrev Native := ActualParticularBackground.Native
+/-- Full point: an abbreviation for `ActualPrimary.FullPoint`. -/
 abbrev FullPoint := ActualPrimary.FullPoint
 
 variable {B N0 : ℕ}

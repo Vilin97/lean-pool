@@ -6,13 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalExistence
-
-@[expose] public section
+public import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A short-interval estimate for actual differentiable trajectories.
 The proof uses the supremum norm and the mean value inequality, so the
 constant is two under the stated smallness condition. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,8 +33,8 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 theorem norm_le_two (T L : ℝ) (hL : 0 ≤ L)
     (f f' : ℝ → E)
     (hd : ∀ t ∈ Icc (0 : ℝ) T, HasDerivWithinAt f (f' t) (Icc (0 : ℝ) T) t)
-    (hb : ∀ t ∈ Icc (0 : ℝ) T, ‖f' t‖ ≤ L*‖f t‖)
-    (hshort : L*T ≤ 1/2)
+    (hb : ∀ t ∈ Icc (0 : ℝ) T, ‖f' t‖ ≤ L * ‖f t‖)
+    (hshort : L * T ≤ 1 / 2)
     (s t : Icc (0 : ℝ) T) (hst : s ≤ t) :
     ‖f t‖ ≤ 2*‖f s‖ := by
   have hT : 0 ≤ T := s.property.1.trans s.property.2

@@ -6,12 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanAccelerationGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpAccelerationSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.MeanGramTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramSobolev
+import LeanPool.NavierStokesAndEuler.Euler.MeanAccelerationGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpAccelerationSobolev
+
+/-! The genuine mean acceleration estimate in fixed-Hq external word blocks. -/
 
 @[expose] public section
 
-/-! The genuine mean acceleration estimate in fixed-Hq external word blocks. -/
 
 noncomputable section
 
@@ -25,18 +31,43 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerParameterWordGevrey EulerGevrey
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanAccelerationSobolev1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanAccelerationSobolev2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanAccelerationSobolev3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (solenoidalSpace →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanAccelerationSobolev4 : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (L2 →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanAccelerationSobolev5 : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (L2 →L[ℝ] L2)` instance to shorten typeclass synthesis. -/
+local instance instMeanAccelerationSobolev6 : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanAccelerationSobolev7 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ]
+    L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanAccelerationSobolev8 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance
+to shorten typeclass synthesis. -/
+local instance instMeanAccelerationSobolev9 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance to
+shorten typeclass synthesis. -/
+local instance instMeanAccelerationSobolev10 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
 
 variable {ι : Type*} [Fintype ι]
@@ -46,7 +77,7 @@ relative to its input blocks, at the same fixed Sobolev order and radius. -/
 theorem meanAcceleration_translation_block_gevrey
     (directions : ι → Space) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (T : ℝ) (hT : 0 ≤ T) (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
     (v : TimeLp T solenoidalSpace) (f : TimeLp T L2)
     (hF : ContDiff ℝ ∞ (fun a : Space => translatePath T a F))
     (hF₁ : ContDiff ℝ ∞ (fun a : Space => translatePath T a F₁))
@@ -54,17 +85,17 @@ theorem meanAcceleration_translation_block_gevrey
     (hf : ContDiff ℝ ∞ (fun a : Space => timeTranslation T a f))
     (Rc R CF CF₁ Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hstrong : 2*gramBlockCost ι q c Rc CF (accelerationBlockAmplitude ι q Rc CF CF₁ Cf Cv)*
+    (hstrong : 2*gramBlockCost ι q c Rc CF (accelerationBlockAmplitude ι q Rc CF CF₁ Cf Cv) *
       (sobolevCoefficientRadius ι Rc+1) ≤ R)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant Rc 0
-      n)
+        n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant Rc
-      0 n)
+        0 n)
     (d : ℕ)
     (hfb : ∀ n a, block directions q (fun b : Space => timeTranslation T b f) n a ≤ Cf*majorant R d
-      n)
+        n)
     (hvb : ∀ n a, block directions q (fun b : Space => timeSolenoidalTranslation T b v) n a ≤
-      Cv*majorant R d n)
+        Cv*majorant R d n)
     (n : ℕ) (a : Space) :
     block directions q (fun b : Space =>
       timeSolenoidalTranslation T b (meanAcceleration T hT F F₁ c hc hLower v f)) n a ≤

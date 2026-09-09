@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMap
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 
 /-!
 Actual pointwise representatives for coordinate spaces embedded in Space.
@@ -17,6 +16,9 @@ A fixed bounded embedding and left inverse transfer the proved H³ point
 evaluation. This will apply to the two-dimensional reference plane, without
 identifying an L² normal with a pointwise normal vector.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,9 +32,11 @@ variable (P : ℝ) [Fact (0 < P)] {U : Type*}
   [NormedAddCommGroup U] [NormedSpace ℝ U]
   (J : U →L[ℝ] Space) (L : Space →L[ℝ] U)
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (p : C(K,CylinderL2 P U))
+  (p : C(K, CylinderL2 P U))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
+/-- Point field, given by `L (EulerCylinderSmoothOrbit.pointField P (pathMap P J p)
+(pathMap_orbit_contDiff P J p hp) t x)`. -/
 def pointField (t : K) (x : LiftDomain P) : U :=
   L (EulerCylinderSmoothOrbit.pointField P (pathMap P J p) (pathMap_orbit_contDiff P J p hp) t x)
 
@@ -49,6 +53,7 @@ theorem pointField_smooth (t : K) (x : LiftDomain P) :
 theorem pointField_continuous (t : K) : Continuous (pointField P J L p hp t) :=
   smoothField_continuous P _ (pointField_smooth P J L p hp t)
 
+/-- Point path as an element of `C(K,U)`. -/
 def pointPath (x : LiftDomain P) : C(K,U) :=
   ⟨fun t => pointField P J L p hp t x,
     L.continuous.comp ((EulerSobolevPointEvaluation.pointEvaluation P x).continuous.comp
@@ -72,7 +77,7 @@ theorem pointField_eq (hL : ∀ v : U, L (J v) = v) (t : K)
 section Time
 
 variable (T : ℝ) (hT : 0 ≤ T)
-  (p q : C(Icc (0 : ℝ) T,CylinderL2 P U))
+  (p q : C(Icc (0 : ℝ) T, CylinderL2 P U))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
   (hd : ∀ t : Icc (0 : ℝ) T,

@@ -6,9 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.InverseRegularity
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Parameter regularity of the genuinely constructed coercive inverse
@@ -17,6 +20,9 @@ The positive lower-bound certificate may vary with the parameter and need not
 be differentiable. The inverse itself is the actual operator inverse, so its
 regularity depends only on the operator coefficients.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,7 +39,7 @@ of the actual inverse operator. -/
 theorem contDiff_coerciveInverse_variable
     {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
     (A : P → E →L[ℝ] E) (c : P → ℝ) (hc : ∀ x, 0 < c x)
-    (hA : ∀ x v, c x * ‖v‖^2 ≤ ⟪A x v, v⟫_ℝ)
+    (hA : ∀ x v, c x * ‖v‖ ^ 2 ≤ ⟪A x v, v⟫_ℝ)
     {n : ℕ∞ω} (hreg : ContDiff ℝ n A) :
     ContDiff ℝ n (fun x => coerciveInverse (A x) (c x) (hc x) (hA x)) := by
   have hfun : (fun x => coerciveInverse (A x) (c x) (hc x) (hA x)) =
@@ -53,7 +59,7 @@ theorem contDiff_coerciveInverse_variable
 /-- The actual derivative of an inverse, even with a varying coercivity certificate. -/
 theorem hasDerivAt_coerciveInverse_variable
     (A : ℝ → E →L[ℝ] E) (c : ℝ → ℝ) (hc : ∀ x, 0 < c x)
-    (hA : ∀ x v, c x * ‖v‖^2 ≤ ⟪A x v, v⟫_ℝ)
+    (hA : ∀ x v, c x * ‖v‖ ^ 2 ≤ ⟪A x v, v⟫_ℝ)
     (x : ℝ) (A₁ : E →L[ℝ] E) (hder : HasDerivAt A A₁ x) :
     HasDerivAt (fun r => coerciveInverse (A r) (c r) (hc r) (hA r))
       (-(coerciveInverse (A x) (c x) (hc x) (hA x)).comp
@@ -77,7 +83,7 @@ theorem hasDerivAt_coerciveInverse_variable
 theorem contDiff_coerciveSolution_variable
     {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
     (A : P → E →L[ℝ] E) (c : P → ℝ) (hc : ∀ x, 0 < c x)
-    (hA : ∀ x v, c x * ‖v‖^2 ≤ ⟪A x v, v⟫_ℝ)
+    (hA : ∀ x v, c x * ‖v‖ ^ 2 ≤ ⟪A x v, v⟫_ℝ)
     (f : P → E) {n : ℕ∞ω} (hreg : ContDiff ℝ n A) (hf : ContDiff ℝ n f) :
     ContDiff ℝ n (fun x => coerciveInverse (A x) (c x) (hc x) (hA x) (f x)) :=
   (contDiff_coerciveInverse_variable A c hc hA hreg).clm_apply hf

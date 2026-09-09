@@ -6,39 +6,50 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+
+/-! Squared metric stability with a viscosity-sized source, including zero energy. -/
 
 @[expose] public section
 
-/-! Squared metric stability with a viscosity-sized source, including zero energy. -/
 
 noncomputable section
 
 namespace EulerSquaredMetricStability
 
-open MeasureTheory Set InnerProductSpace Real EulerMetricEnergyEvolution
+open Set InnerProductSpace Real EulerMetricEnergyEvolution
 open scoped Topology
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
-/-- A literal transport-pressure-heat equation gives a squared metric differential bound without differentiating a zero norm. -/
+/-- A literal transport-pressure-heat equation gives a squared metric differential bound without
+differentiating a zero norm. -/
 theorem metric_derivative_bound (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
     (t ν c β h L ε M : ℝ) (K' : H →L[ℝ] H) (e' transport pressure forcing lap : H)
     (hc : 0 < c) (hν : 0 ≤ ν) (hβ : 0 ≤ β) (hh : 0 ≤ h) (hL : 0 ≤ L)
     (hK : HasDerivAt K K' t) (he : HasDerivAt e e' t)
-    (hsym : ∀ v w, ⟪K t v,w⟫_ℝ = ⟪v,K t w⟫_ℝ)
-    (hcoer : c^2*‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ)
-    (heq : e'+transport+pressure=forcing+ν • lap)
-    (hp : ⟪K t (e t),pressure⟫_ℝ=0)
-    (ht : |⟪K t (e t),transport⟫_ℝ| ≤ β*‖e t‖^2)
-    (hlap : ⟪K t (e t),lap⟫_ℝ ≤ h*‖e t‖^2)
-    (hf : ‖forcing‖ ≤ L*‖e t‖+ε*M) :
+    (hsym : ∀ v w, ⟪K t v, w⟫_ℝ = ⟪v, K t w⟫_ℝ)
+    (hcoer : c ^ 2 * ‖e t‖ ^ 2 ≤ ⟪K t (e t), e t⟫_ℝ)
+    (heq : e' + transport + pressure = forcing + ν • lap)
+    (hp : ⟪K t (e t), pressure⟫_ℝ = 0)
+    (ht : |⟪K t (e t), transport⟫_ℝ| ≤ β * ‖e t‖ ^ 2)
+    (hlap : ⟪K t (e t), lap⟫_ℝ ≤ h * ‖e t‖ ^ 2)
+    (hf : ‖forcing‖ ≤ L * ‖e t‖ + ε * M) :
     deriv (fun s => ⟪K s (e s),e s⟫_ℝ) t ≤
-      ((‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)/c^2)*⟪K t (e t),e t⟫_ℝ+
+      ((‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)/c^2)*⟪K t (e t),e t⟫_ℝ +
         (‖K t‖*M)^2*ε^2 := by
   have hd := metric_energy_evolution K e t K' e' transport pressure (forcing+ν • lap) hK he hsym
-    heq hp
+      heq hp
   rw [hd.deriv]
   have hb := energy_derivative_bound (K t) K' (e t) transport forcing β hβ ht
   have hheat := mul_le_mul_of_nonneg_left hlap (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hν)
@@ -48,8 +59,8 @@ theorem metric_derivative_bound (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
       (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*‖e t‖^2+(‖K t‖*M)^2*ε^2 := by
     rw [inner_add_right,real_inner_smul_right]
     nlinarith
-  have hn : ‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ/c^2 := (le_div_iff₀ (sq_pos_of_pos hc)).mpr (by nlinarith
-    [hcoer])
+  have hn : ‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ/c^2 := (le_div_iff₀ (sq_pos_of_pos hc)).mpr (by
+      nlinarith [hcoer])
   have ha : 0 ≤ ‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1 := by positivity
   calc
     _ ≤ (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*‖e t‖^2+(‖K t‖*M)^2*ε^2 := hraw
@@ -57,16 +68,17 @@ theorem metric_derivative_bound (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
       add_le_add (mul_le_mul_of_nonneg_left hn ha) le_rfl
     _ = _ := by ring
 
-/-- A genuine interior differential inequality yields a finite-interval linear-growth bound, including both endpoints. -/
+/-- A genuine interior differential inequality yields a finite-interval linear-growth bound,
+including both endpoints. -/
 theorem linear_growth_bound (E E' : ℝ → ℝ) (A B T : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hT : 0 ≤ T)
     (hcont : ContinuousOn E (Icc 0 T)) (hzero : E 0 ≤ 0)
     (hder : ∀ t ∈ Ioo 0 T, HasDerivAt E (E' t) t)
-    (hineq : ∀ t ∈ Ioo 0 T, E' t ≤ A*E t+B) :
+    (hineq : ∀ t ∈ Ioo 0 T, E' t ≤ A * E t + B) :
     ∀ t ∈ Icc 0 T, E t ≤ B*T*exp (A*T) := by
   let F := fun t : ℝ => exp (-A*t)*E t-B*t
   have hFc : ContinuousOn F (Icc 0 T) :=
     (((Real.continuous_exp.comp (show Continuous (fun t : ℝ => -A*t) from continuous_const.mul
-      continuous_id)).continuousOn).mul hcont).sub
+        continuous_id)).continuousOn).mul hcont).sub
       (continuous_const.mul continuous_id).continuousOn
   have hFd (t : ℝ) (ht : t ∈ Ioo 0 T) :
       HasDerivAt F (exp (-A*t)*(E' t-A*E t)-B) t := by

@@ -10,11 +10,13 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientBud
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCoefficientBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceOperators
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketNormalBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 
 /-! Both nonlinear-profile and exact-correction coefficient budgets are
 derived from the original joined-source coefficient bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,13 +26,15 @@ open EulerTransversePacketProvider
 
 variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
 
+/-- Joined coefficient budget as an element of `CoefficientBudget (joinedSourceCoefficientData P
+M D τ hτ hτT B hTime)`. -/
 def joinedCoefficientBudget {R : ℝ} (NB : EulerTransversePacketJoin.NormalBudget D 6 R) :
     CoefficientBudget (joinedSourceCoefficientData P M D τ hτ hτT B hTime) :=
   (sourceCoefficientBudget P M D (InitialData.zero P D) hTime NB.Rc NB.C
-    NB.Rc_nonneg NB.C_nonneg NB.inverse_bound NB.strain_bound).of_raw_eq
+    NB.Rc_nonneg NB.C_nonneg NB.inverse_bound NB.strain_bound).ofRawEq
     (joinedSourceCoefficientData P M D τ hτ hτT B hTime)
     (fun _ _ _ => rfl) (fun _ _ _ => rfl) (fun _ _ _ => rfl)
 
@@ -60,6 +64,6 @@ def correctionCoefficients (P : ℝ) [Fact (0 < P)] : CorrectionCoefficientBudge
     (fun n t x => (NB.inverse_bound n t x).trans
       (mul_le_mul_of_nonneg_left
         (majorant_radius_mono NB.Rc (max L.Rc NB.Rc) NB.Rc_nonneg (le_max_right _ _) 0 n)
-          NB.C_nonneg))
+            NB.C_nonneg))
 
 end EulerTransversePacketJoin.Budget

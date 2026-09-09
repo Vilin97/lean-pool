@@ -7,11 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanMollifierLimit
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicScaling
+
+/-! Differentiating an actual compact mollifier transfers the distributional Laplacian to the
+kernel. -/
 
 @[expose] public section
 
-/-! Differentiating an actual compact mollifier transfers the distributional Laplacian to the
-  kernel. -/
 
 noncomputable section
 
@@ -73,7 +77,7 @@ theorem laplacian_comp_const_sub (g : Space → ℝ) (hg : ContDiff ℝ ∞ g) (
 theorem convolution_harmonic_at (U : Set Space) (f g : Space → ℝ)
     (hf : LocallyIntegrable f volume) (hh : ScalarWeakHarmonicOn U f)
     (hg : ContDiff ℝ ∞ g) (hgc : HasCompactSupport g) (x : Space)
-    (hsupport : tsupport (fun y => g (x-y)) ⊆ U) :
+    (hsupport : tsupport (fun y => g (x - y)) ⊆ U) :
     Δ (f ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] g) x = 0 := by
   rw [laplacian_convolution_right f g hf hg hgc, convolution_def]
   change (∫ y, f y * Δ g (x-y)) = 0
@@ -95,11 +99,12 @@ theorem normed_reflected_support (φ : ContDiffBump (0 : Space)) (x : Space) :
   rw [norm_sub_rev]
   exact hnorm.le
 
-/-- Actual compact mollification turns weak harmonicity into classical harmonicity in the interior. -/
+/-- Actual compact mollification turns weak harmonicity into classical harmonicity in the interior.
+-/
 theorem scalarMollification_harmonic (φ : ContDiffBump (0 : Space))
     (f : Space → ℝ) (hf : MemLp f 2 volume)
     (hh : ScalarWeakHarmonicOn (Metric.ball (0 : Space) 1) f)
-    (hr : φ.rOut ≤ 1/4) :
+    (hr : φ.rOut ≤ 1 / 4) :
     ∀ x ∈ Metric.ball (0 : Space) (1/2 : ℝ), Δ (scalarMollification φ f) x = 0 := by
   have hflip : (ContinuousLinearMap.lsmul ℝ ℝ).flip = ContinuousLinearMap.lsmul ℝ ℝ := by
     apply ContinuousLinearMap.ext

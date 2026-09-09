@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CylindricalResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Exact angularly averaged Navier--Stokes balances
@@ -18,6 +18,9 @@ The average is a normalized actual interval integral. All coordinate derivatives
 are Fréchet derivatives on spacetime, and the Reynolds products include the
 entire oscillatory velocity.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.MeanResidual
 
@@ -28,12 +31,18 @@ open AxisymmetricFields (projection)
 open AxisymmetricResidual (pack pack_zero pack_one pack_two)
 open scoped ContDiff Topology Interval
 
+/-- Scalar: an abbreviation for `SpaceTime → ℝ`. -/
 abbrev Scalar := SpaceTime → ℝ
+/-- Components: an abbreviation for `Fin 3 → Scalar`. -/
 abbrev Components := Fin 3 → Scalar
 
+/-- Period, given by `2 * Real.pi`. -/
 noncomputable def period : ℝ := 2 * Real.pi
+/-- Angular vector, given by `(0, coordinateVector 1)`. -/
 noncomputable def angularVector : SpaceTime := (0, coordinateVector 1)
+/-- Angular shift, given by `q + a • angularVector`. -/
 noncomputable def angularShift (q : SpaceTime) (a : ℝ) : SpaceTime := q + a • angularVector
+/-- Radius, given by `q.2 0`. -/
 noncomputable def radius (q : SpaceTime) : ℝ := q.2 0
 
 theorem period_pos : 0 < period := mul_pos (by norm_num) Real.pi_pos
@@ -49,23 +58,32 @@ theorem period_ne_zero : period ≠ 0 := ne_of_gt period_pos
 variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Direction, given by `fderiv ℝ f q v`. -/
 noncomputable def direction (v : SpaceTime) (f : SpaceTime → E) (q : SpaceTime) : E :=
   fderiv ℝ f q v
 
+/-- Dt, given by `direction (1, 0) f`. -/
 noncomputable def dt (f : SpaceTime → E) := direction (1, 0) f
+/-- Dr, given by `direction (0, coordinateVector 0) f`. -/
 noncomputable def dr (f : SpaceTime → E) := direction (0, coordinateVector 0) f
+/-- Dtheta, given by `direction angularVector f`. -/
 noncomputable def dtheta (f : SpaceTime → E) := direction angularVector f
+/-- Dz, given by `direction (0, coordinateVector 2) f`. -/
 noncomputable def dz (f : SpaceTime → E) := direction (0, coordinateVector 2) f
 
+/-- Average, given by `period⁻¹ • ∫ a in (0 : ℝ)..period, f (angularShift q a)`. -/
 noncomputable def average (f : SpaceTime → E) (q : SpaceTime) : E :=
   period⁻¹ • ∫ a in (0 : ℝ)..period, f (angularShift q a)
 
+/-- Angular continuous, given by `∀ q, Continuous (fun a => f (angularShift q a))`. -/
 def AngularContinuous (f : SpaceTime → E) : Prop :=
   ∀ q, Continuous (fun a => f (angularShift q a))
 
+/-- Angular periodic, given by `∀ q, f (angularShift q period) = f q`. -/
 def AngularPeriodic (f : SpaceTime → E) : Prop :=
   ∀ q, f (angularShift q period) = f q
 
+/-- Angular invariant, given by `∀ q a, f (angularShift q a) = f q`. -/
 def AngularInvariant (f : SpaceTime → E) : Prop :=
   ∀ q a, f (angularShift q a) = f q
 
@@ -174,7 +192,7 @@ theorem average_smooth [CompleteSpace E] {f : SpaceTime → E} (hf : ContDiff �
     0 period).const_smul _
 
 /-- Differentiation under the actual compact angular integral. -/
-theorem direction_average [CompleteSpace E] {f : SpaceTime → E}
+theorem direction_average {f : SpaceTime → E}
     (hf : ContDiff ℝ ∞ f) (v q : SpaceTime) :
     direction v (average f) q = average (direction v f) q := by
   let g : SpaceTime × ℝ → E := fun qa => f (angularShift qa.1 qa.2)
@@ -302,6 +320,7 @@ theorem temporal_direction {f : SpaceTime → E} (hf : ContDiff ℝ ∞ f)
   rw [h.fderiv]
   rfl
 
+/-- Velocity, defined pointwise by `pack (w 0 q) (w 1 q) (w 2 q)`. -/
 noncomputable def velocity (w : Components) : VelocityField :=
   fun q => pack (w 0 q) (w 1 q) (w 2 q)
 
@@ -326,29 +345,39 @@ theorem direction_velocity_component {w : Components} (hw : ∀ i, ContDiff ℝ 
   rw [direction_velocity hw]
   fin_cases i <;> simp
 
+/-- Laplacian, given by `dr (dr f) q + dr f q / radius q + dtheta (dtheta f) q / radius q ^ 2 +
+dz (dz f) q`. -/
 noncomputable def laplacian (f : Scalar) (q : SpaceTime) : ℝ :=
   dr (dr f) q + dr f q / radius q + dtheta (dtheta f) q / radius q ^ 2 + dz (dz f) q
 
+/-- Mean laplacian, given by `dr (dr f) q + dr f q / radius q + dz (dz f) q`. -/
 noncomputable def meanLaplacian (f : Scalar) (q : SpaceTime) : ℝ :=
   dr (dr f) q + dr f q / radius q + dz (dz f) q
 
+/-- Radial divergence, given by `dr f q + c / radius q * f q`. -/
 noncomputable def radialDivergence (c : ℝ) (f : Scalar) (q : SpaceTime) : ℝ :=
   dr f q + c / radius q * f q
 
+/-- Divergence, given by `dr (w 0) q + w 0 q / radius q + dtheta (w 1) q / radius q + dz (w 2)
+q`. -/
 noncomputable def divergence (w : Components) (q : SpaceTime) : ℝ :=
   dr (w 0) q + w 0 q / radius q + dtheta (w 1) q / radius q + dz (w 2) q
 
+/-- Transport, given by `w 0 q * dr f q + w 1 q / radius q * dtheta f q + w 2 q * dz f q`. -/
 noncomputable def transport (w : Components) (f : Scalar) (q : SpaceTime) : ℝ :=
   w 0 q * dr f q + w 1 q / radius q * dtheta f q + w 2 q * dz f q
 
+/-- Residual radial, constructed using `dt`. -/
 noncomputable def residualRadial (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (w 0) q + transport w (w 0) q - (w 1 q) ^ 2 / radius q - laplacian (w 0) q +
     w 0 q / radius q ^ 2 + 2 * dtheta (w 1) q / radius q ^ 2 + dr p q
 
+/-- Residual angular, constructed using `dt`. -/
 noncomputable def residualAngular (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (w 1) q + transport w (w 1) q + w 0 q * w 1 q / radius q - laplacian (w 1) q +
     w 1 q / radius q ^ 2 - 2 * dtheta (w 0) q / radius q ^ 2 + dtheta p q / radius q
 
+/-- Residual axial, given by `dt (w 2) q + transport w (w 2) q - laplacian (w 2) q + dz p q`. -/
 noncomputable def residualAxial (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (w 2) q + transport w (w 2) q - laplacian (w 2) q + dz p q
 
@@ -416,18 +445,21 @@ theorem cylindricalResidual_axial {w : Components} {p : Scalar}
     velocity_apply, CylindricalResidual.scalarGradient, pack_two, spatial_direction hp,
     residualAxial, transport, dr, dtheta, dz, angularVector, radius]
 
+/-- Conservative radial, constructed using `dt`. -/
 noncomputable def conservativeRadial (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (w 0) q + radialDivergence 1 (fun y => w 0 y * w 0 y) q +
     dtheta (fun y => w 1 y * w 0 y) q / radius q +
     dz (fun y => w 2 y * w 0 y) q - (w 1 q * w 1 q) / radius q - laplacian (w 0) q +
     w 0 q / radius q ^ 2 + 2 * dtheta (w 1) q / radius q ^ 2 + dr p q
 
+/-- Conservative angular, constructed using `dt`. -/
 noncomputable def conservativeAngular (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (w 1) q + radialDivergence 2 (fun y => w 0 y * w 1 y) q +
     dtheta (fun y => w 1 y * w 1 y) q / radius q +
     dz (fun y => w 2 y * w 1 y) q - laplacian (w 1) q +
     w 1 q / radius q ^ 2 - 2 * dtheta (w 0) q / radius q ^ 2 + dtheta p q / radius q
 
+/-- Conservative axial, constructed using `dt`. -/
 noncomputable def conservativeAxial (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (w 2) q + radialDivergence 1 (fun y => w 0 y * w 2 y) q +
     dtheta (fun y => w 1 y * w 2 y) q / radius q +
@@ -462,11 +494,11 @@ theorem angularInvariant_radius (f : ℝ → E) : AngularInvariant (fun q => f (
   intro q a
   exact congrArg f (radius_angularShift q a)
 
-theorem average_direction [CompleteSpace E] {f : SpaceTime → E}
+theorem average_direction {f : SpaceTime → E}
     (hf : ContDiff ℝ ∞ f) (v q : SpaceTime) :
     average (direction v f) q = direction v (average f) q := (direction_average hf v q).symm
 
-theorem average_direction_twice [CompleteSpace E] {f : SpaceTime → E}
+theorem average_direction_twice {f : SpaceTime → E}
     (hf : ContDiff ℝ ∞ f) (v w q : SpaceTime) :
     average (direction v (direction w f)) q = direction v (direction w (average f)) q := by
   rw [average_direction (direction_smooth w hf)]
@@ -490,7 +522,7 @@ theorem average_dzdz {f : Scalar} (hf : ContDiff ℝ ∞ f) (q : SpaceTime) :
 
 theorem angularContinuous_direction {f : Scalar} (hf : ContDiff ℝ ∞ f) (v : SpaceTime) :
     AngularContinuous (direction v f) := angularContinuous_of_continuous (direction_smooth v
-      hf).continuous
+        hf).continuous
 
 theorem AngularContinuous.div_r {f : Scalar} (hf : AngularContinuous f) :
     AngularContinuous (fun q => f q / radius q) := by
@@ -540,16 +572,19 @@ theorem average_laplacian {f : Scalar} (hf : ContDiff ℝ ∞ f) (hp : AngularPe
     average_dtheta_zero (f := dtheta f) (direction_smooth _ hf) (hp.direction angularVector)]
   simp
 
+/-- Reynolds radial, constructed using `dt`. -/
 noncomputable def reynoldsRadial (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (average (w 0)) q + radialDivergence 1 (average (fun y => w 0 y * w 0 y)) q +
     dz (average (fun y => w 2 y * w 0 y)) q - average (fun y => w 1 y * w 1 y) q / radius q -
     meanLaplacian (average (w 0)) q + average (w 0) q / radius q ^ 2 + dr (average p) q
 
+/-- Reynolds angular, constructed using `dt`. -/
 noncomputable def reynoldsAngular (w : Components) (q : SpaceTime) : ℝ :=
   dt (average (w 1)) q + radialDivergence 2 (average (fun y => w 0 y * w 1 y)) q +
     dz (average (fun y => w 2 y * w 1 y)) q - meanLaplacian (average (w 1)) q +
     average (w 1) q / radius q ^ 2
 
+/-- Reynolds axial, constructed using `dt`. -/
 noncomputable def reynoldsAxial (w : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (average (w 2)) q + radialDivergence 1 (average (fun y => w 0 y * w 2 y)) q +
     dz (average (fun y => w 2 y * w 2 y)) q - meanLaplacian (average (w 2)) q +
@@ -699,6 +734,8 @@ noncomputable def total (base mean osc : Components) : Components :=
 noncomputable def covariance (osc : Components) (i j : Fin 3) : Scalar :=
   average (fun q => osc i q * osc j q)
 
+/-- Flux difference, defined pointwise by `base i q * mean j q + mean i q * base j q + mean i q
+* mean j q + covariance osc i j q`. -/
 noncomputable def fluxDifference (base mean osc : Components) (i j : Fin 3) : Scalar :=
   fun q => base i q * mean j q + mean i q * base j q +
     mean i q * mean j q + covariance osc i j q
@@ -707,7 +744,7 @@ theorem covariance_smooth {osc : Components} (ho : ∀ i, ContDiff ℝ ∞ (osc 
     ContDiff ℝ ∞ (covariance osc i j) := average_smooth ((ho i).mul (ho j))
 
 theorem covariance_symm (osc : Components) (i j : Fin 3) : covariance osc i j = covariance osc j i
-  := by
+    := by
   simp only [covariance, mul_comm]
 
 theorem total_smooth {base mean osc : Components}
@@ -799,15 +836,19 @@ theorem radialDivergence_add {f g : Scalar} (hf : ContDiff ℝ ∞ f) (hg : Cont
   simp only [radialDivergence, dr, direction_add hf hg]
   ring
 
+/-- Base radial, constructed using `dt`. -/
 noncomputable def baseRadial (b : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (b 0) q + radialDivergence 1 (fun y => b 0 y * b 0 y) q +
     dz (fun y => b 2 y * b 0 y) q - b 1 q * b 1 q / radius q -
     meanLaplacian (b 0) q + b 0 q / radius q ^ 2 + dr p q
 
+/-- Base angular, constructed using `dt`. -/
 noncomputable def baseAngular (b : Components) (q : SpaceTime) : ℝ :=
   dt (b 1) q + radialDivergence 2 (fun y => b 0 y * b 1 y) q +
     dz (fun y => b 2 y * b 1 y) q - meanLaplacian (b 1) q + b 1 q / radius q ^ 2
 
+/-- Base axial, given by `dt (b 2) q + radialDivergence 1 (fun y => b 0 y * b 2 y) q + dz (fun y
+=> b 2 y * b 2 y) q - meanLaplacian (b 2) q + dz p q`. -/
 noncomputable def baseAxial (b : Components) (p : Scalar) (q : SpaceTime) : ℝ :=
   dt (b 2) q + radialDivergence 1 (fun y => b 0 y * b 2 y) q +
     dz (fun y => b 2 y * b 2 y) q - meanLaplacian (b 2) q + dz p q
@@ -965,7 +1006,7 @@ theorem exact_mean_balances {b m o : Components} {p pb pm : Scalar}
     (average (fun y => CylindricalResidual.cylindricalResidual
       (velocity (total b m o)) p y.1 y.2 0) q -
       CylindricalResidual.cylindricalResidual (velocity b) pb q.1 q.2 0 = dr pm q - gr b m o q) :=
-        by
+          by
   have ht := total_smooth hb hm ho
   have htp := total_periodic hbi hmi hop
   have hbase := base_residuals hb hpb hbi hpbi hbdiv q hr
@@ -1047,8 +1088,10 @@ theorem cylindricalDivergence_eq {w : Components} (hw : ∀ i, ContDiff ℝ ∞ 
     CylindricalResidual.vectorDivergence (fun y => velocity w (q.1, y)) q.2 = divergence w q := by
   simp only [CylindricalResidual.vectorDivergence, spatial_direction (velocity_smooth hw),
     direction_velocity_component hw, velocity_apply, divergence, dr, dtheta, dz, angularVector,
-      radius]
+        radius]
 
+/-- Represents, given by `∀ q : SpaceTime, u (q.1, CylindricalResidual.chart q.2) =
+CylindricalResidual.frame (q.2 1) (velocity w q)`. -/
 def Represents (u : VelocityField) (w : Components) : Prop :=
   ∀ q : SpaceTime, u (q.1, CylindricalResidual.chart q.2) =
     CylindricalResidual.frame (q.2 1) (velocity w q)
@@ -1057,7 +1100,7 @@ theorem Represents.components {u : VelocityField} {w : Components} (h : Represen
     CylindricalResidual.velocityComponents u = velocity w := by
   funext q
   change CylindricalResidual.frame (-(q.2 1)) (u (q.1, CylindricalResidual.chart q.2)) = velocity w
-    q
+      q
   rw [h q, CylindricalResidual.frame_inverse]
 
 /-- Exact physical Cartesian residual resolved in the cylindrical frame. -/
@@ -1087,7 +1130,7 @@ theorem cartesianDivergence_eq {u : VelocityField} {w : Components}
     (hu.differentiableAt (by norm_num)).comp _
       ((differentiableAt_const _).prodMk differentiableAt_id)
   rw [CylindricalResidual.divergence_cylindrical hs hr, hrep.components, cylindricalDivergence_eq
-    hw]
+      hw]
 
 theorem average_cartesianResidual_eq {u : VelocityField} {p : PressureField}
     {w : Components} {P : Scalar} (hrep : Represents u w)
@@ -1154,8 +1197,8 @@ theorem average_invariant_of_periodic [CompleteSpace E] {f : SpaceTime → E}
       simpa [angularShift] using ((hasDerivAt_id b).smul_const angularVector).const_add q
     have hder : HasDerivAt (fun c => average f (angularShift q c))
         (dtheta (average f) (angularShift q b)) b :=
-      (((average_smooth hf).differentiable (by simp)) (angularShift q
-        b)).hasFDerivAt.comp_hasDerivAt b hs
+      (((average_smooth hf).differentiable (by
+          simp)) (angularShift q b)).hasFDerivAt.comp_hasDerivAt b hs
     have hz : dtheta (average f) (angularShift q b) = 0 := by
       rw [show dtheta (average f) (angularShift q b) = average (dtheta f) (angularShift q b) from
         direction_average hf angularVector (angularShift q b), average_dtheta_zero hf hp]

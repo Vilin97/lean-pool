@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEnvelopeTransport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSumBounds
-
-@[expose] public section
 
 /-!
 # Whole-lift bounds from the actual native copies
@@ -24,6 +21,9 @@ The Gaussian error is assembled as the sum of cutoff-derivative terms plus
 one uncovered-source term.  In particular, the source is never summed once
 for every inactive copy.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,6 +40,7 @@ variable {D E : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
 /-- Closed support cells, with a unique cell at a point.  Neither a finite
 index set nor one cell covering the whole strip is required. -/
 structure Cells (D : Type*) [TopologicalSpace D] (I : Type*) where
+  /-- Carrier of `Cells`, of type `ℕ → I → Set D`. -/
   carrier : ℕ → I → Set D
   closed : ∀ n i, IsClosed (carrier n i)
   locallyFinite : ∀ n, LocallyFinite (carrier n)
@@ -310,6 +311,7 @@ open CommonCoverSolve TorusInverse TorusAverages
 variable {P E : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Native cell, given by `{z | g.coordinates k z.2 ∈ K}`. -/
 noncomputable def nativeCell (g : Geometry) (K : Set Plane) (k : Frequency) : Set (P × Plane) :=
   {z | g.coordinates k z.2 ∈ K}
 
@@ -339,6 +341,7 @@ theorem nativeCell_locallyFinite (g : Geometry) {K : Set Plane} (hK : IsCompact 
   change g.coordinates k y.2 ∈ K at hy
   simp [κ, hy] at hh
 
+/-- Native cells, bundling `carrier`, `closed`, `locallyFinite`, `unique`. -/
 noncomputable def nativeCells (g : ℕ → Geometry) (K : ℕ → Set Plane)
     (hK : ∀ n, IsCompact (K n))
     (hinj : ∀ n, InjOn quotientPoint ((fun z => (g n).center + (g n).basis z) '' K n)) :
@@ -447,7 +450,7 @@ theorem map (hf : LocalJets s w α K f) (L : E →L[ℝ] F) :
   calc
     _ ≤ ‖L‖ * ‖iteratedFDeriv ℝ j (f n i) x‖ := L.norm_compContinuousMultilinearMap_le _
     _ ≤ ‖L‖ * majorant s w α C p n x := mul_le_mul_of_nonneg_left (hb n i x hx hi j hj)
-      (norm_nonneg _)
+        (norm_nonneg _)
     _ = _ := by unfold majorant; ring
 
 theorem add (hf : LocalJets s w α K f) (hg : LocalJets s w α K g)
@@ -618,9 +621,9 @@ theorem local_gaussian_all_gains {s : StripData D} {K : ℕ → I → Set D}
   refine ⟨hf.smooth, ?_⟩
   intro m
   obtain ⟨A, hA, p, hb⟩ := local_gaussian_tail_bound hf edges scales θ L hL ell hell hLell hc hW
-    hzero m
-  obtain ⟨B, hB, hflat⟩ := gaussian_beats_Q_power (by positivity : 0 < c * ell / 50) p
-    (scales.power * β)
+      hzero m
+  obtain ⟨B, hB, hflat⟩ := gaussian_beats_Q_power (by
+      positivity : 0 < c * ell / 50) p (scales.power * β)
   refine ⟨A * B, mul_nonneg hA hB.le, 0, ?_⟩
   intro n i x hx hi j hj
   have ht := (hb n i x hx hi j hj).trans
@@ -628,9 +631,9 @@ theorem local_gaussian_all_gains {s : StripData D} {K : ℕ → I → Set D}
       (A * B) * ChartScales.Q n ^ (scales.power * β) by
         calc
           _ = A * ((1 + ChartScales.S n) ^ p * Real.exp (-(c * ell / 50) * ChartScales.S n)) := by
-            ring
+              ring
           _ ≤ A * (B * ChartScales.Q n ^ (scales.power * β)) := mul_le_mul_of_nonneg_left (hflat n)
-            hA
+              hA
           _ = _ := by ring)
   simpa only [majorant, pow_zero, mul_one, scales.epsilon_eq,
     ← Real.rpow_mul (ChartScales.Q_pos n).le] using ht
@@ -771,32 +774,45 @@ variable {D I : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 /-- Local raw copies share one physical carrier and background.  Their
 amplitudes and pressures may differ in every copy and need not be periodic. -/
 structure CopyData (D I : Type) where
+  /-- Background of `CopyData`, of type `WaveCoefficients D`. -/
   background : WaveCoefficients D
+  /-- Amplitude of `CopyData`, of type `ℕ → I → D → ComplexVector`. -/
   amplitude : ℕ → I → D → ComplexVector
+  /-- Pressure field of `CopyData`, of type `ℕ → I → D → ℂ`. -/
   pressure : ℕ → I → D → ℂ
+  /-- Cutoff of `CopyData`, of type `ℕ → I → D → ℝ`. -/
   cutoff : ℕ → I → D → ℝ
+  /-- Source of `CopyData`, of type `ℕ → D → ComplexVector`. -/
   source : ℕ → D → ComplexVector
 
 namespace CopyData
 
 variable (a : CopyData D I)
 
+/-- Raw, given by `{ a.background with amplitude := fun n => a.amplitude n i pressure := fun n
+=> a.pressure n i }`. -/
 noncomputable def raw (i : I) : WaveCoefficients D :=
   { a.background with amplitude := fun n => a.amplitude n i
                       pressure := fun n => a.pressure n i }
 
+/-- Localized, given by `(a.raw i).withCutoff (fun n => a.cutoff n i)`. -/
 noncomputable def localized (i : I) : WaveCoefficients D :=
   (a.raw i).withCutoff (fun n => a.cutoff n i)
 
+/-- Corrected, given by `(a.raw i).corrected s d (fun n => a.cutoff n i)`. -/
 noncomputable def corrected (s : StripData D) (d : GraphDirections D) (i : I) :
     WaveCoefficients D := (a.raw i).corrected s d (fun n => a.cutoff n i)
 
+/-- Local good, given by `(a.raw i).constructedGood s d (fun n => a.cutoff n i) n`. -/
 noncomputable def localGood (s : StripData D) (d : GraphDirections D) (n : ℕ) (i : I) :
     D → ComplexVector := (a.raw i).constructedGood s d (fun n => a.cutoff n i) n
 
+/-- Local tail, given by `d.Dfast (fun n => a.cutoff n i) n x • a.amplitude n i x`. -/
 noncomputable def localTail (d : GraphDirections D) (n : ℕ) (i : I) (x : D) : ComplexVector :=
   d.Dfast (fun n => a.cutoff n i) n x • a.amplitude n i x
 
+/-- Local gaussian, given by `excludedSlotError d (fun n => a.cutoff n i) (fun n => a.amplitude
+n i) a.source n`. -/
 noncomputable def localGaussian (d : GraphDirections D) (n : ℕ) (i : I) : D → ComplexVector :=
   excludedSlotError d (fun n => a.cutoff n i) (fun n => a.amplitude n i) a.source n
 
@@ -806,6 +822,7 @@ noncomputable def common : WaveCoefficients D :=
     amplitude := fun n => copySum (fun i => (a.localized i).amplitude n)
     pressure := fun n => copySum (fun i => (a.localized i).pressure n) }
 
+/-- Common corrected, given by `a.common.addAmplitude (a.common.curlCorrection s d)`. -/
 noncomputable def commonCorrected (s : StripData D) (d : GraphDirections D) :
     WaveCoefficients D := a.common.addAmplitude (a.common.curlCorrection s d)
 
@@ -814,8 +831,10 @@ formula on each native copy. -/
 noncomputable def globalGood (s : StripData D) (d : GraphDirections D) (n : ℕ) :
     D → ComplexVector := copySum (a.localGood s d n)
 
+/-- Cutoff sum, given by `copySum (a.cutoff n)`. -/
 noncomputable def cutoffSum (n : ℕ) : D → ℝ := copySum (a.cutoff n)
 
+/-- Global tail, given by `copySum (a.localTail d n)`. -/
 noncomputable def globalTail (d : GraphDirections D) (n : ℕ) : D → ComplexVector :=
   copySum (a.localTail d n)
 
@@ -957,7 +976,7 @@ theorem localGood_support (K : Cells D I)
   intro x hx
   by_contra hn
   exact hx (a.localGood_zero_germ s d (zero_germ_of_support (K.closed n i) (hs n i)
-    hn)).self_of_nhds
+      hn)).self_of_nhds
 
 theorem localTail_support (K : Cells D I)
     (hs : ∀ n i, support (a.cutoff n i) ⊆ K.carrier n i)
@@ -974,7 +993,7 @@ theorem corrected_support (K : Cells D I)
   intro x hx
   by_contra hn
   exact hx (a.corrected_zero_germ s d (zero_germ_of_support (K.closed n i) (hs n i)
-    hn)).self_of_nhds
+      hn)).self_of_nhds
 
 omit [NormedSpace ℝ D] in
 theorem common_zero_germs (K : Cells D I)
@@ -1214,7 +1233,7 @@ theorem differentialGood_zero_germ (K : Cells D I)
     (a.background.frequencyBase n) (a.background.axialBase n) (a.background.phase n)
     (d.radialField n) (fun _ => d.angular) (d.axialField s n) (d.fastField n)
   have hr := remainder_germ (a.commonCorrected_zero_germ K hs s d hx) (a.common_zero_germs K hs
-    hx).2
+      hx).2
     (s.epsilon n) (a.background.frequency n) (a.background.radius n)
     (a.background.radialBase n) (a.background.frequencyBase n) (a.background.axialBase n)
     (a.background.phase n) (d.radialField n) (fun _ => d.angular) (d.axialField s n)
@@ -1542,7 +1561,7 @@ theorem globalGaussian_translate (d : GraphDirections D) (n : ℕ) (z : D) (e : 
     intro i y
     have hD : fderiv ℝ (a.cutoff n (e i)) (y + z) = fderiv ℝ (a.cutoff n i) y := by
       rw [← fderiv_comp_add_right z, show (fun x => a.cutoff n (e i) (x + z)) = a.cutoff n i from
-        funext (hψ i)]
+          funext (hψ i)]
     simp only [localTail, GraphDirections.Dfast, HarmonicCalculus.along,
       GraphDirections.fastField, hD, hu]
   have hS : a.cutoffSum n (x + z) = a.cutoffSum n x := copySum_translate _ (fun x => x + z) e hψ x
@@ -1583,8 +1602,10 @@ theorem complexCopyData_common (base : WaveCoefficients (P × Plane))
       { base with
         amplitude := fun n => commonVelocity (t n) (source n) (g n) (hab n) (κ n)
         pressure := fun n => commonPressure (t n) (source n) (g n) (hab n) (κ n) (base.frequency n)
-          } := rfl
+            } := rfl
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem complexCopyData_common_periodic (base : WaveCoefficients (P × Plane))
     (t : ℕ → TangentData P ProblemStatement.Space) (source : ℕ → P × Plane → ComplexVector)
     (g : ℕ → Geometry) (entry exit : ℕ → ℝ) (hab : ∀ n, entry n ≤ exit n)
@@ -1644,7 +1665,7 @@ theorem particularData_frequency (r : Reference P) (charts : BandCharts P)
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
     (base : WaveCoefficients ((P × ℝ) × Plane)) (n : ℕ) :
     (particularData r charts c u b G A j base).background.frequency n = (j : ℝ) * b.frequency n :=
-      rfl
+        rfl
 
 theorem particularData_phase (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
@@ -1673,7 +1694,7 @@ theorem particularData_common (r : Reference P) (charts : BandCharts P)
       actualCommonCoefficients r charts c u b G A j base := by
   let a := particularData r charts c u b G A j base
   have ha : a.common.amplitude = (actualCommonCoefficients r charts c u b G A j base).amplitude :=
-    by
+      by
     funext n
     rw [actualCommon_amplitude_periodization]
     rfl
@@ -1683,7 +1704,7 @@ theorem particularData_common (r : Reference P) (charts : BandCharts P)
     rfl
   calc
     a.common = { actualCarrier base b j with amplitude := a.common.amplitude, pressure :=
-      a.common.pressure } := rfl
+        a.common.pressure } := rfl
     _ = { actualCarrier base b j with
       amplitude := (actualCommonCoefficients r charts c u b G A j base).amplitude,
       pressure := (actualCommonCoefficients r charts c u b G A j base).pressure } := by rw [ha, hp]

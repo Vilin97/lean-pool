@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensor
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
 
 /-! The actual tensor-path map commutes with the initial value and the
 Bochner time integral. These identities permit differentiation of a
 path-space integral equation at every spatial order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,7 +39,7 @@ theorem tensorPath_const {K : Type*} [TopologicalSpace K] [CompactSpace K]
   rfl
 
 theorem tensorPath_integral (T : ℝ) (hT : 0 ≤ T) (n : ℕ)
-    (A : E [×n]→L[ℝ] C(Icc (0 : ℝ) T,V)) :
+    (A : E [×n]→L[ℝ] C(Icc (0 : ℝ) T, V)) :
     tensorPathMap n ((integral T hT).compContinuousMultilinearMap A) =
       integral T hT (tensorPathMap n A) := by
   apply ContinuousMap.ext

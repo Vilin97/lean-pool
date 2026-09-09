@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTailNormalization
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFrequencyBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFrequencyBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketTailNormalization
+
+/-! Inverse-frame normalized approximation bounds are independent of truncation length. -/
 
 @[expose] public section
 
-/-! Inverse-frame normalized approximation bounds are independent of truncation length. -/
 
 noncomputable section
 
@@ -23,9 +25,9 @@ variable {P T : ℝ} [Fact (0 < P)] {O : Operators} {C : CoefficientData P T O}
   (BC : CoefficientBudget C) {raw : VectorField} (G : Field P T raw)
 
 theorem normalized_approximation_bound {R k B C₁ C₂ : ℝ}
-    (hG : G.WordBound 6 R (k⁻¹*C₁+(k⁻¹)^2*C₂+2*B*(k⁻¹*B)^3) 0)
+    (hG : G.WordBound 6 R (k⁻¹ * C₁ + (k⁻¹) ^ 2 * C₂ + 2 * B * (k⁻¹ * B) ^ 3) 0)
     (hR : 0 ≤ R) (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
-    (hk : 4 ≤ k) (hB0 : 0 ≤ B) (hB : B ≤ k^(1/100 : ℝ))
+    (hk : 4 ≤ k) (hB0 : 0 ≤ B) (hB : B ≤ k ^ (1 / 100 : ℝ))
     (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) :
     ((C.inverse.multiply G).smul k).WordBound 6 R (BC.multiplierCost*(C₁+C₂+1)) 0 := by
   have hk0 : 0 ≤ k := by linarith

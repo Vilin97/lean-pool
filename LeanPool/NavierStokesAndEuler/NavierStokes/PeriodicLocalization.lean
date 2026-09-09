@@ -7,17 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
-public import Mathlib.Topology.LocallyFinite
-public import Mathlib.Data.Int.Interval
-public import Mathlib.Data.Fintype.Pi
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Spatial periodization in physical Euclidean three-space
@@ -28,6 +18,9 @@ Consequently every smoothness order is preserved. The construction agrees with
 the original field on an explicit cube whenever the other translates vanish.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PeriodicLocalization
@@ -35,6 +28,7 @@ namespace NavierStokes.PeriodicLocalization
 open ProblemStatement Set Filter
 open scoped BigOperators ContDiff Topology
 
+/-- Lattice: an abbreviation for `Fin 3 → ℤ`. -/
 abbrev Lattice := Fin 3 → ℤ
 
 /-- The integer lattice embedded in the Euclidean space of the PDE statement. -/
@@ -79,6 +73,7 @@ def latticeBox (N : ℕ) : Set Lattice :=
 theorem finite_latticeBox (N : ℕ) : (latticeBox N).Finite :=
   Set.Finite.pi' (fun _ : Fin 3 => Set.finite_Icc _ _)
 
+/-- Lattice box finset, given by `(finite_latticeBox N).toFinset`. -/
 def latticeBoxFinset (N : ℕ) : Finset Lattice := (finite_latticeBox N).toFinset
 
 @[simp] theorem mem_latticeBoxFinset (N : ℕ) (n : Lattice) :

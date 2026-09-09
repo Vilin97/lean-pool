@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerCanonicalGraph
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorLp
 
-@[expose] public section
-
 /-! Canonical spatial fields and all their actual derivative tensors are
 in physical L². Their bounds have only explicit polynomial frequency loss. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,6 +22,7 @@ namespace EulerCylinderPhysicalTensor
 open InnerProductSpace EulerLiftedGradientSpace EulerMetricTransport
   EulerCylinderCoordinates
 
+/-- Physical phase, given by `(k*inner ℝ m x : ℝ)`. -/
 def physicalPhase (P k : ℝ) (m : Vector3) (x : Vector3) : AddCircle P :=
   (k*inner ℝ m x : ℝ)
 
@@ -48,6 +50,7 @@ open scoped ContDiff
 variable {P T : ℝ} [Fact (0 < P)] (A : EulerAllOrderCorrectionData.FieldTower P T)
   (k : ℝ) (m : Vector3)
 
+/-- Physical point field, given by `physicalField P k m (A.pointField t)`. -/
 def physicalPointField (t : Icc (0 : ℝ) T) : Vector3 → Vector3 :=
   physicalField P k m (A.pointField t)
 
@@ -60,14 +63,15 @@ theorem physicalTensor_memLp (n : ℕ) (t : Icc (0 : ℝ) T) :
   EulerCylinderPhysicalTensor.physicalTensor_memLp P k m (A.pointField t) (A.pointField_smooth t) n
     (fun w => A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w t)
     (fun w => A.canonicalGraphWordPath_ae (physicalPhase P k m) (physicalPhase_continuous P k m) n
-      w t)
+        w t)
 
+/-- Physical tensor value, constructed using `physicalTensorLp`. -/
 def physicalTensorValue (n : ℕ) (t : Icc (0 : ℝ) T) :
     Lp (Vector3 [×n]→L[ℝ] Vector3) 2 (volume : Measure Vector3) :=
   physicalTensorLp P k m (A.pointField t) (A.pointField_smooth t) n
     (fun w => A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w t)
     (fun w => A.canonicalGraphWordPath_ae (physicalPhase P k m) (physicalPhase_continuous P k m) n
-      w t)
+        w t)
 
 theorem physicalTensorValue_ae (n : ℕ) (t : Icc (0 : ℝ) T) :
     (A.physicalTensorValue k m n t : Vector3 → (Vector3 [×n]→L[ℝ] Vector3)) =ᵐ[volume]

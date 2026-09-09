@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryRadius
 
-@[expose] public section
-
 /-! The primary grade imposes only finitely many fixed lower bounds on the
 external radius.  Enlarging it leaves the time profile and every source cost
 unchanged, including the terminal amplitude before its scalar multiplier. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +30,7 @@ variable {P : ℝ}
   (H : Budget L) (N : EulerTransversePacketJoin.NormalBudget D 6 L.R)
   (C : ℝ)
 
+/-- Grade radius, constructed using `max`. -/
 def gradeRadius : ℝ :=
   max L.R (max (H.commonCost*C) (max (H.correctorAmplitude (P := P) N*C)
     (max (H.correctorTimeAmplitude (P := P) N*C) (3*H.pressureAmplitude (P := P) N*C))))

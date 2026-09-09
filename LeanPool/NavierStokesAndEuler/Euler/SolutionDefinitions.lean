@@ -15,7 +15,6 @@ project.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
@@ -33,8 +32,6 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 public import Mathlib.Order.CompletePartialOrder
 
-@[expose] public section
-
 /-!
 # Solution-side definitions for the Euler Comparator challenge
 
@@ -50,6 +47,9 @@ within `[0,∞)`.
 These definitions reproduce the independent reference exactly. This module
 contains no challenge theorem or proof placeholder and does not import `Euler`.
 -/
+
+@[expose] public section
+
 
 
 -- Inline the only needed notation from FormalConjecturesForMathlib.Geometry.3d.

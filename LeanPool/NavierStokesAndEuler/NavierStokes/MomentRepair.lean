@@ -7,13 +7,9 @@ Authors: OpenAI
 module
 
 public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-public import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 public import Mathlib.Analysis.Normed.Module.Basic
-public import Mathlib.Topology.MetricSpace.Contracting
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Topology.Algebra.Module.Equiv
+import Mathlib.Topology.MetricSpace.Contracting
 
 /-!
 # Finite moment repair
@@ -24,6 +20,9 @@ moment functionals and correction profiles. It is proved separately for a
 two-row weighted point-evaluation matrix. No assertion about the existence of
 smooth bumps or the conditioning of their moment matrices is implicit here.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

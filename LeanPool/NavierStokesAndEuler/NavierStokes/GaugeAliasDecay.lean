@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeMomentBalances
 
-@[expose] public section
-
 /-!
 # Arbitrary decay of the actual moving-gauge compactification alias
 
 The finite-jet estimates are local in the slow variables. The radial
 frequency is finally specialized to the actual manuscript exponent.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,13 +26,16 @@ open Set Filter Function MeasureTheory
 open scoped ContDiff Topology Interval BigOperators
 open TorusInverse JetBounds UniformFourierAlias
 
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Point: an abbreviation for `PressureStream.Lift S`. -/
 abbrev Point (S : Type) := PressureStream.Lift S
 
 section FiberInverse
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S]
 
+/-- Fiber shell, given by `{z | z.1 ∈ Icc a b ∧ z.2.1 = s}`. -/
 noncomputable def fiberShell (a b : ℝ) (s : S) : Set (Point S) :=
   {z | z.1 ∈ Icc a b ∧ z.2.1 = s}
 
@@ -59,7 +63,7 @@ theorem sourceJet_finiteJets_fiber (d : Direction) (a b : ℝ) (p m : ℕ) :
       ∀ C : ℝ, 0 ≤ C → ∀ s : S,
       FiniteJetBound (m + 6 * p) f (fiberShell a b s) C →
       FiniteJetBound m (RadialAlias.sourceJet (familyInverse d) f p) (fiberShell a b s) (K * C) :=
-        by
+          by
   induction p generalizing m with
   | zero =>
     refine ⟨1, zero_le_one, ?_⟩
@@ -317,9 +321,9 @@ theorem compactAlias_finiteJets_local {coord a b d : ℝ} (U : SlowRegion coord)
   have hAfixed : PhysicalMeanDomain.SupportedOn c e U.carrier
       (compactAlias d a b M (qLength coord) (vector direction) f) := fun x hx hn =>
     ⟨(hleft _ hx).trans (compactAlias_q_supportedGauge U ha hab hd M (vector direction) f x hx
-      hn).1,
+        hn).1,
       (compactAlias_q_supportedGauge U ha hab hd M (vector direction) f x hx hn).2.trans (hright _
-        hx)⟩
+          hx)⟩
   by_cases hr : z.1 ∈ Ioo c e
   · have hJ := physicalTotal_contDiffOn (M := M) hc hce hd (vector direction) U.isOpen hf hfixed
     have he : compactAlias d a b M (qLength coord) (vector direction) f =ᶠ[𝓝 z]
@@ -433,7 +437,7 @@ theorem radialFrequency_inv_compare {h Mbase : ℝ} {n i D : ℕ} (hM : Mbase �
         rw [radialFrequency_abs, pow_add]
         field_simp
   have hh : 1 / |MeanChartCompatibility.radialFrequency h n i (ChartScales.radialExponent h) Mbase|
-    ≤
+      ≤
       (ChartScales.Lambda ^ D / |Mbase|) / ChartScales.radialCoefficient h n :=
     (div_le_div_iff₀ hMp hcoef).mpr (by simpa only [one_mul] using hle)
   simpa only [one_div, div_eq_mul_inv, one_mul] using hh
@@ -445,7 +449,7 @@ theorem actual_inverse_frequency_bound {h Mbase : ℝ} (hh : 0 < h) (hM : Mbase 
     (L : ℕ → ℝ) (hL : ∀ n, 1 ≤ L n) (hS : ∀ n, ChartScales.S n ≤ L n) :
     ∃ B : ℝ, 0 ≤ B ∧ ∃ q : ℕ, ∀ n,
       |MeanChartCompatibility.radialFrequency h n (index n) (ChartScales.radialExponent h) Mbase|⁻¹
-        ≤
+          ≤
         B * ChartScales.epsilon h n ^ ChartScales.kappa * L n ^ q := by
   obtain ⟨q, hq⟩ := exists_nat_ge ChartScales.rho
   let A := (ChartScales.Lambda ^ D / |Mbase|) * ChartScales.Lambda
@@ -457,7 +461,7 @@ theorem actual_inverse_frequency_bound {h Mbase : ℝ} (hh : 0 < h) (hM : Mbase 
     mul_pos (Real.rpow_pos_of_pos (ChartScales.epsilon_pos h n) _) (pow_pos (hLpos n) _)
   have htail (n : ℕ) (hn : 4 ≤ n) :
       |(MeanChartCompatibility.radialFrequency h n (index n) (ChartScales.radialExponent h)
-        Mbase)⁻¹| ≤
+          Mbase)⁻¹| ≤
         A * (ChartScales.epsilon h n ^ ChartScales.kappa * L n ^ q) := by
     have hSL : ChartScales.S n ^ ChartScales.rho ≤ L n ^ q := by
       calc
@@ -471,7 +475,7 @@ theorem actual_inverse_frequency_bound {h Mbase : ℝ} (hh : 0 < h) (hM : Mbase 
         radialFrequency_inv_compare hM (hgap n)
       _ ≤ (ChartScales.Lambda ^ D / |Mbase|) *
           (ChartScales.Lambda * ChartScales.epsilon h n ^ ChartScales.kappa * ChartScales.S n ^
-            ChartScales.rho) :=
+              ChartScales.rho) :=
         mul_le_mul_of_nonneg_left (ChartScales.radialCoefficient_inv_upper h hh.le hn) hfactor
       _ ≤ (ChartScales.Lambda ^ D / |Mbase|) *
           (ChartScales.Lambda * ChartScales.epsilon h n ^ ChartScales.kappa * L n ^ q) :=
@@ -481,7 +485,7 @@ theorem actual_inverse_frequency_bound {h Mbase : ℝ} (hh : 0 < h) (hM : Mbase 
       _ = _ := by dsimp [A]; ring
   obtain ⟨B, hB, hb⟩ := scalar_bound_of_tail
     (fun n => (MeanChartCompatibility.radialFrequency h n (index n) (ChartScales.radialExponent h)
-      Mbase)⁻¹)
+        Mbase)⁻¹)
     (fun n => ChartScales.epsilon h n ^ ChartScales.kappa * L n ^ q) hw A hA 4 htail
   refine ⟨B, hB, q, ?_⟩
   intro n
@@ -496,7 +500,7 @@ theorem actual_fast_coefficient_bound {h : ℝ} (hh : 0 < h)
   have htail (n : ℕ) (hn : 4 ≤ n) :
       |ChartScales.Tg ^ index n * ChartScales.Q n ^ (1 + h)| ≤ ChartScales.Tg ^ D * (1 : ℝ) := by
     rw [abs_of_pos (mul_pos (pow_pos ChartScales.Tg_pos _) (Real.rpow_pos_of_pos (ChartScales.Q_pos
-      n) _))]
+        n) _))]
     calc
       _ ≤ ChartScales.Tg ^ (ChartScales.nativeIndex h n + D) * ChartScales.Q n ^ (1 + h) :=
         mul_le_mul_of_nonneg_right (pow_le_pow_right₀ ChartScales.Tg_one_lt.le (hgap n))
@@ -544,7 +548,7 @@ theorem meanClass_compactAlias_superflat {coord a b h Mbase α : ℝ} (U : SlowR
   have hβ := localBandJets_compactAlias_gain U ha hab hd .radial
     (ChartScales.epsilon h) L
     (fun n => MeanChartCompatibility.radialFrequency h n (index n) (ChartScales.radialExponent h)
-      Mbase)
+        Mbase)
     (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL
     (by norm_num [ChartScales.kappa]) hB q
     (fun n => radialFrequency_ne_zero h n (index n) (ChartScales.radialExponent h) hM)
@@ -576,7 +580,7 @@ theorem meanClass_dividedAlias_superflat {coord a b h Mbase α : ℝ} (U : SlowR
   meanClass_divideRadius_moving U ha hcL hcR (ChartScales.epsilon h) L
     (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL
     (meanClass_compactAlias_superflat U ha hab hcL hcR hh hM index D hgap L hL hS hf hs hp hm
-      hclass β)
+        hclass β)
 
 theorem actual_fast_coefficient_bandBound (s : StripData (Point Plane)) {h : ℝ} (hh : 0 < h)
     (index : ℕ → ℕ) (D : ℕ) (hgap : ∀ n, index n ≤ ChartScales.nativeIndex h n + D) :
@@ -615,11 +619,11 @@ theorem meanClass_fastDividedAlias_superflat {coord a b h Mbase α : ℝ} (U : S
       (fun n => MeanChartCompatibility.fastAtIndex h n (index n)
         (PressureStream.divideRadius (compactAlias (ChartScales.radialExponent h) a b
           (MeanChartCompatibility.radialFrequency h n (index n) (ChartScales.radialExponent h)
-            Mbase)
+              Mbase)
           (qLength coord) (vector .radial) (f n)))) :=
   meanClass_fastAtIndex _ hh index D hgapUpper
     (meanClass_dividedAlias_superflat U ha hab hcL hcR hh hM index D hgapLower L hL hS hf hs hp hm
-      hclass β)
+        hclass β)
 
 end ClassConclusions
 
@@ -627,10 +631,12 @@ section ActualTemporalAlias
 
 open VariableGaugeMean LocalSignedRequest WeightedClasses
 
+/-- Temporal source, defined pointwise by `PressureStream.weightedSource
+(MeanChartCompatibility.temporalAtIndex h n (index n) (f n))`. -/
 noncomputable def temporalSource (h : ℝ) (index : ℕ → ℕ)
     (f : ℕ → Point Plane → ℝ) : ℕ → Point Plane → ℝ :=
   fun n => PressureStream.weightedSource (MeanChartCompatibility.temporalAtIndex h n (index n) (f
-    n))
+      n))
 
 theorem temporalAtIndex_zeroMean_on {coord : ℝ} (U : SlowRegion coord) (h : ℝ) (n i : ℕ)
     {f : Point Plane → ℝ} (hf : ContDiffOn ℝ ∞ f (PhysicalMeanDomain.slowDomain U.carrier))
@@ -647,19 +653,19 @@ theorem temporalSource_movingField {coord a b : ℝ} (U : SlowRegion coord) (h :
     (hp : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (f n)) :
     GaugeMomentBalances.MovingField U a b (temporalSource h index f) := by
   refine ⟨fun n => contDiffOn_fst.mul (temporalAtIndex_contDiffOn h n (index n) U.isOpen (hf n) (hp
-    n)), ?_, ?_⟩
+      n)), ?_, ?_⟩
   · intro n z hz hn
     exact temporalAtIndex_supportedGauge h n (index n) (hs n) z hz (right_ne_zero_of_mul hn)
   · intro n R s hsm Y k
     exact congrArg (R * ·) (MeanChartCompatibility.temporalAtIndex_periodic h n (index n) (f n) R s
-      Y k)
+        Y k)
 
 theorem temporalSource_zero_mass {coord : ℝ} (U : SlowRegion coord) (h : ℝ) (index : ℕ → ℕ)
     {f : ℕ → Point Plane → ℝ}
     (hf : ∀ n, ContDiffOn ℝ ∞ (f n) (PhysicalMeanDomain.slowDomain U.carrier))
     (hp : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (f n)) (n : ℕ)
     {s : Plane} (hs : s ∈ U.carrier) : PressureStream.pressureMass (temporalSource h index f n) s =
-      0 := by
+        0 := by
   have hz (R : ℝ) : PressureStream.torusAverage (temporalSource h index f n) (R, s) = 0 := by
     rw [temporalSource, PressureStream.torusAverage_weightedSource,
       temporalAtIndex_zeroMean_on U h n (index n) (hf n) (hp n) R hs, mul_zero]
@@ -676,7 +682,7 @@ theorem temporalSource_mem {coord a b h α : ℝ} (U : SlowRegion coord)
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) α f) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) α (temporalSource h
-        index f) :=
+          index f) :=
   meanClass_radialMultiply_moving U ha hcL hcR (ChartScales.epsilon h) L
     (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL contDiff_id
     (meanClass_temporalAtIndex_moving U ha hcL hcR (ChartScales.epsilon h) L
@@ -696,11 +702,11 @@ theorem temporalAxialDifference_mem {a b h Mbase α : ℝ} (U : SlowRegion (2 * 
     (hp : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hclass : MeanClass (movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) α (u.axialResidual c))
-        (β : ℝ) :
+          (β : ℝ) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) β
       (temporalAxialDifference (similarityGauge h (ChartScales.radialExponent h) a b Mbase hab
-        index)
+          index)
         h index c u) := by
   have hfield := temporalSource_movingField U h index hf hs hp
   have hsrc := temporalSource_mem U ha hcL hcR hh index D hgap L hL hS hf hp hclass
@@ -730,19 +736,19 @@ theorem temporalAliasState_axial_mem {a b h Mbase α : ℝ} (U : SlowRegion (2 *
     (L : ℕ → ℝ) (hL : ∀ n, 1 ≤ L n) (hS : ∀ n, ChartScales.S n ≤ L n)
     (c : CorrectionState.Context (Point Plane)) (u : CorrectionState.State (Point Plane))
     (hfast : c.operators.fastCoefficient = fun n => ChartScales.Tg ^ index n * ChartScales.Q n ^ (1
-      + h))
+        + h))
     (hv : c.operators.vT = (0, (0, vector .temporal)))
     (hf : ∀ n, ContDiffOn ℝ ∞ (u.axialResidual c n) (PhysicalMeanDomain.slowDomain U.carrier))
     (hs : ∀ n, SupportedGauge a b (qLength (2 * h)) U.carrier (u.axialResidual c n))
     (hp : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hclass : MeanClass (movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) α (u.axialResidual c))
-        (β : ℝ) :
+          (β : ℝ) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) β
       (fun n z => temporalAliasState
         (similarityGauge h (ChartScales.radialExponent h) a b Mbase hab index) h index c u n (z, 0)
-          2) := by
+            2) := by
   have hdiff := temporalAxialDifference_mem U ha hab hcL hcR hh hM index D hgapLower L hL hS
     c u hf hs hp hclass β
   have hder := meanClass_fastAtIndex _ hh index D hgapUpper hdiff

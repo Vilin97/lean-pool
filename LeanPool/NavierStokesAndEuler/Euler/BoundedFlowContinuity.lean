@@ -7,12 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedLipschitzFlow
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The actual bounded Lipschitz flow is jointly continuous in both times
 and the initial point. Reversing its two time arguments gives its genuine
 continuous inverse, so each fixed-time map is a homeomorphism. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -65,6 +70,8 @@ theorem flow_joint_continuous :
   simpa only [dist_self, sub_self, abs_zero, mul_zero, add_zero, zero_mul] using
     hc.tendsto p₀
 
+/-- Flow homeomorph, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
+compatibility proofs. -/
 def flowHomeomorph (s t : ℝ) : E ≃ₜ E where
   toFun := V.flow s t
   invFun := V.flow t s
@@ -75,8 +82,10 @@ def flowHomeomorph (s t : ℝ) : E ≃ₜ E where
   continuous_invFun := V.flow_joint_continuous.comp
     (continuous_const.prodMk (continuous_const.prodMk continuous_id))
 
+/-- Forward, given by `V.flow 0 t x`. -/
 def forward (t : ℝ) (x : E) : E := V.flow 0 t x
 
+/-- Backward, given by `V.flow t 0 x`. -/
 def backward (t : ℝ) (x : E) : E := V.flow t 0 x
 
 @[simp] theorem backward_forward (t : ℝ) (x : E) :

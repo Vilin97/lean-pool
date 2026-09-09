@@ -6,19 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatPrimitiveFactor
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-public import Mathlib.Algebra.Order.Algebra
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Data.EReal.Inv
-public import Mathlib.Tactic.GCongr
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
+import LeanPool.NavierStokesAndEuler.NavierStokes.FlatPrimitiveFactor
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.Normed.Operator.Prod
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Uniform flat-weight estimates for radial primitives
@@ -27,6 +22,9 @@ The initial coordinate is additive distance from the left endpoint of a fixed
 interval `(0,L)`. The constants in the estimates are independent of the point
 approaching either endpoint and of any auxiliary shifts in the source.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,9 +37,13 @@ open FlatCutoff
 private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   le_of_lt (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top n))
 
+/-- Delta, given by `min 1 (min x (L - x))`. -/
 def delta (L x : ℝ) : ℝ := min 1 (min x (L - x))
+/-- Zeta, given by `edge cL x * edge cR (L - x)`. -/
 def zeta (cL cR L x : ℝ) : ℝ := edge cL x * edge cR (L - x)
+/-- Weight, given by `zeta cL cR L x / delta L x ^ m`. -/
 def weight (cL cR L : ℝ) (m : ℕ) (x : ℝ) : ℝ := zeta cL cR L x / delta L x ^ m
+/-- Single weight, given by `edge c x / x ^ m`. -/
 def singleWeight (c : ℝ) (m : ℕ) (x : ℝ) : ℝ := edge c x / x ^ m
 
 theorem delta_pos {L x : ℝ} (hx : x ∈ Ioo 0 L) : 0 < delta L x := by
@@ -189,6 +191,8 @@ theorem left_base_le_weight {cL cR L x : ℝ} (hcR : 0 ≤ cR)
     simpa only [weight, pow_zero, div_one] using zeta_le_weight cL cR m hxi
   exact h0.trans (mul_le_mul_of_nonneg_left hw (inv_nonneg.mpr (edge_nonneg _ _)))
 
+/-- Whole majorant, given by `singleWeight cL 0 x + singleWeight cL m x + (singleWeight cR 0 (L
+- x) + singleWeight cR m (L - x))`. -/
 def wholeMajorant (cL cR L : ℝ) (m : ℕ) (x : ℝ) : ℝ :=
   singleWeight cL 0 x + singleWeight cL m x +
     (singleWeight cR 0 (L - x) + singleWeight cR m (L - x))
@@ -326,6 +330,8 @@ theorem interval_primitive_uniform
     _ ≤ (A * D) * L := mul_le_mul_of_nonneg_left (by linarith) (mul_nonneg hA hD)
     _ = (D * L) * A := by ring
 
+/-- Compact primitive, given by `intervalIntegral f 0 x volume - χ x • intervalIntegral f 0 L
+volume`. -/
 def compactPrimitive (χ : ℝ → ℝ) (f : ℝ → V) (L x : ℝ) : V :=
   intervalIntegral f 0 x volume - χ x • intervalIntegral f 0 L volume
 
@@ -373,7 +379,7 @@ theorem compact_primitive_uniform
       have hn : ‖compactPrimitive χ f L x‖ ≤ 2 * D * A := by
         calc
           _ ≤ ‖intervalIntegral f 0 x volume‖ + ‖χ x • intervalIntegral f 0 L volume‖ :=
-            norm_sub_le _ _
+              norm_sub_le _ _
           _ ≤ D * A + 1 * (D * A) := by
             rw [norm_smul, Real.norm_eq_abs]
             exact add_le_add hp (mul_le_mul (hχ x) ht (norm_nonneg _) zero_le_one)
@@ -389,8 +395,11 @@ end Integrals
 
 /-! ### Pullback to logarithmic edge distances on a fixed positive annulus -/
 
+/-- Log length, given by `Real.log (b / a)`. -/
 def logLength (a b : ℝ) : ℝ := Real.log (b / a)
+/-- Log position, given by `Real.log (X / a)`. -/
 def logPosition (a X : ℝ) : ℝ := Real.log (X / a)
+/-- Log weight, given by `weight cL cR (logLength a b) m (logPosition a X)`. -/
 def logWeight (cL cR a b : ℝ) (m : ℕ) (X : ℝ) : ℝ :=
   weight cL cR (logLength a b) m (logPosition a X)
 
@@ -423,6 +432,7 @@ theorem logWeight_formula {a b X : ℝ} (ha : 0 < a) (hX : X ∈ Ioo a b)
   rw [← Real.exp_add]
   simp only [logPosition, neg_div, sub_eq_add_neg]
 
+/-- Exp coordinate, given by `a * Real.exp s`. -/
 def expCoordinate (a s : ℝ) : ℝ := a * Real.exp s
 
 theorem expCoordinate_logPosition {a X : ℝ} (ha : 0 < a) (hX : 0 < X) :
@@ -455,6 +465,7 @@ section LogIntegrals
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Exp pullback, given by `expCoordinate a s • f (expCoordinate a s)`. -/
 def expPullback (a : ℝ) (f : ℝ → V) (s : ℝ) : V :=
   expCoordinate a s • f (expCoordinate a s)
 
@@ -542,6 +553,8 @@ theorem log_interval_primitive_uniform
       mul_le_mul_of_nonneg_left (by linarith) (mul_nonneg hA hD)
     _ = (D * (b - a)) * A := by ring
 
+/-- Log compact primitive, given by `intervalIntegral f a X volume - χ (logPosition a X) •
+intervalIntegral f a b volume`. -/
 def logCompactPrimitive (χ : ℝ → ℝ) (f : ℝ → V) (a b X : ℝ) : V :=
   intervalIntegral f a X volume - χ (logPosition a X) • intervalIntegral f a b volume
 
@@ -581,6 +594,8 @@ section PhysicalIntegrals
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Radial compact primitive, given by `intervalIntegral f a X volume - χ X • intervalIntegral f
+a b volume`. -/
 def radialCompactPrimitive (χ : ℝ → ℝ) (f : ℝ → V) (a b X : ℝ) : V :=
   intervalIntegral f a X volume - χ X • intervalIntegral f a b volume
 
@@ -613,7 +628,7 @@ theorem exists_log_plateau_width
     apply hright
     calc
       d = expCoordinate a (logPosition a d) := (expCoordinate_logPosition ha (ha.trans (hac.trans
-        hcd))).symm
+          hcd))).symm
       _ ≤ expCoordinate a s :=
         mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (by linarith)) ha.le
 
@@ -648,7 +663,7 @@ theorem radialSlice_continuous {f : ℝ × E → V} (hf : Continuous f)
     (M : ℝ) (v : E) (z : ℝ × E) : Continuous (radialSlice M v f z) := by
   exact hf.comp (continuous_id.prodMk
     (continuous_const.add ((continuous_const.mul (continuous_id.sub continuous_const)).smul
-      continuous_const)))
+        continuous_const)))
 
 /-- Auxiliary translation does not change a radial bound that is uniform in
 the auxiliary variable. Constants are independent of M, v, and the base point. -/
@@ -812,7 +827,7 @@ theorem cutoff_finiteJet_bound (a b : ℝ) (χ : ℝ → ℝ) (hχ : ContDiff �
     _ ≤ ‖iteratedFDeriv ℝ j χ z.1‖ * 1 := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       exact Finset.prod_le_one (fun _ _ => norm_nonneg _) (fun _ _ =>
-        ContinuousLinearMap.norm_fst_le _ _ _)
+          ContinuousLinearMap.norm_fst_le _ _ _)
     _ = ‖iteratedFDeriv ℝ j χ z.1‖ := mul_one _
     _ ≤ C j' := hb j' z.1 hz
     _ ≤ ∑ k, C k := hCj
@@ -912,11 +927,11 @@ theorem transport_compact_finiteJets_uniform
   have hR : 0 ≤ R := Finset.sum_nonneg (fun j _ => hKR j)
   have hD : 0 ≤ D := Finset.sum_nonneg (fun j _ => hDS j)
   have hLL (j : Fin (m + 1)) : KL j ≤ L := Finset.single_le_sum (fun k _ => hKL k) (Finset.mem_univ
-    j)
+      j)
   have hRR (j : Fin (m + 1)) : KR j ≤ R := Finset.single_le_sum (fun k _ => hKR k) (Finset.mem_univ
-    j)
+      j)
   have hDD (j : Fin (m + 1)) : DS j ≤ D := Finset.single_le_sum (fun k _ => hDS k) (Finset.mem_univ
-    j)
+      j)
   let KM := D * (1 + (2 : ℝ) ^ m * B) / d₀
   have hKM : 0 ≤ KM := div_nonneg (mul_nonneg hD (by positivity)) hd₀.le
   let K := L + R + KM
@@ -946,8 +961,8 @@ theorem transport_compact_finiteJets_uniform
     exact h.trans (mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_right ((hLL j').trans hLK) hA) hw)
   · by_cases hzr : logLength a b - ρ / 2 ≤ logPosition a z.1
-    · rw [compact_jet_eq_neg_future_on_right ha hf.continuous hs hr z (ha.trans hz.1) (by linarith)
-      j,
+    · rw [compact_jet_eq_neg_future_on_right ha hf.continuous hs hr z (ha.trans hz.1) (by
+        linarith) j,
         norm_neg, TransportPrimitive.iteratedFDeriv_futureIntegral hf hs]
       have h := hbR j' M v (iteratedFDeriv ℝ j f)
         (TransportPrimitive.iteratedFDeriv_contDiff hf j).continuous

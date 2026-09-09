@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePropagator
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
 
 /-! The physical geometry theorem supplies the actual weighted-growth
 input used by the source packet budgets.  The only bridge hypotheses are
 literal interval, strain, and normal identities. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +29,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : Data U) {Ω : Set Space} (G : PhysicalGeometryData {x : Space // x ∈ Ω})
   {F F₁ Z Z₁ : ℝ → ℝ} (H : PhysicalGeometryConclusion G F F₁ Z Z₁)
 
+/-- Growth profile, bundling `toFun`, `continuous_toFun`. -/
 def growthProfile : C(Icc (0 : ℝ) D.T,ℝ) where
   toFun t := Z ((G.a/G.ε)*t)
   continuous_toFun := (continuous_iff_continuousAt.mpr
@@ -41,13 +44,14 @@ theorem growthProfile_initial :
     growthProfile D G H ⟨0,le_rfl,D.T_pos.le⟩=1 := by
   simpa only [growthProfile,ContinuousMap.coe_mk,mul_zero] using H.initial_values.2.2.1
 
-theorem growthProfile_pos (hhorizon : G.time G.H=G.t₀+D.T)
+theorem growthProfile_pos (hhorizon : G.time G.H = G.t₀ + D.T)
     (t : Icc (0 : ℝ) D.T) : 0 < growthProfile D G H t := by
   rw [growthProfile_eq_physical]
   apply H.physical_profile_positive
   rw [hhorizon]
   exact ⟨by linarith [t.property.1],by linarith [t.property.2]⟩
 
+/-- Growth constant, given by `560*G.Θ^10/G.ε`. -/
 def growthConstant : ℝ := 560*G.Θ^10/G.ε
 
 theorem growthConstant_pos : 0 < growthConstant G := by
@@ -55,12 +59,12 @@ theorem growthConstant_pos : 0 < growthConstant G := by
   positivity [G.Theta_pos,G.epsilon_pos]
 
 theorem physicalGrowth_of_geometry
-    (hinterval : G.S=Icc G.t₀ (G.t₀+D.T))
-    (hhorizon : G.time G.H=G.t₀+D.T)
+    (hinterval : G.S = Icc G.t₀ (G.t₀ + D.T))
+    (hhorizon : G.time G.H = G.t₀ + D.T)
     (hstrain : ∀ (x : {x : Space // x ∈ Ω}) (t : Icc (0 : ℝ) D.T),
-      G.M x (G.t₀+t)=D.M.field t x.1)
+      G.M x (G.t₀ + t) = D.M.field t x.1)
     (hnormal : ∀ (x : {x : Space // x ∈ Ω}) (t : Icc (0 : ℝ) D.T),
-      G.r x (G.t₀+t)=D.normal.field t x.1) :
+      G.r x (G.t₀ + t) = D.normal.field t x.1) :
     PhysicalGrowth D Ω (growthProfile D G H) (growthConstant G) := by
   intro x hx w hw hw0 t s hst
   let ξ : {x : Space // x ∈ Ω} := ⟨x,hx⟩
@@ -98,12 +102,12 @@ theorem physicalGrowth_of_geometry
 /-- The profile and its physical growth property are derived together
 from the actual geometry stage. They are ready for the source-budget constructors. -/
 theorem exists_growth_of_geometry
-    (hinterval : G.S=Icc G.t₀ (G.t₀+D.T))
-    (hhorizon : G.time G.H=G.t₀+D.T)
+    (hinterval : G.S = Icc G.t₀ (G.t₀ + D.T))
+    (hhorizon : G.time G.H = G.t₀ + D.T)
     (hstrain : ∀ (x : {x : Space // x ∈ Ω}) (t : Icc (0 : ℝ) D.T),
-      G.M x (G.t₀+t)=D.M.field t x.1)
+      G.M x (G.t₀ + t) = D.M.field t x.1)
     (hnormal : ∀ (x : {x : Space // x ∈ Ω}) (t : Icc (0 : ℝ) D.T),
-      G.r x (G.t₀+t)=D.normal.field t x.1) :
+      G.r x (G.t₀ + t) = D.normal.field t x.1) :
     ∃ (g : C(Icc (0 : ℝ) D.T,ℝ)) (C : ℝ),
       (∀ t, 0 < g t) ∧ g ⟨0,le_rfl,D.T_pos.le⟩=1 ∧ 0 < C ∧ PhysicalGrowth D Ω g C := by
   obtain ⟨F,F₁,Z,Z₁,H⟩ := G.exists_geometry

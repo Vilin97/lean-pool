@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicPhaseAssembly
 
-@[expose] public section
-
 /-!
 # Primitive correction formulas at a nonzero axial endpoint
 
@@ -21,6 +19,9 @@ mean operations.  Agreement of primitive data is on whole slow fibers,
 because radial and torus integrals are nonlocal on each such fiber.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.OffplaneCorrectionExtensions
@@ -28,13 +29,18 @@ namespace NavierStokes.OffplaneCorrectionExtensions
 open Set Filter Function
 open scoped Topology ContDiff BigOperators
 
+/-- Slow: an abbreviation for `PressureStream.Plane`. -/
 abbrev Slow := PressureStream.Plane
+/-- Lift: an abbreviation for `PressureStream.Lift Slow`. -/
 abbrev Lift := PressureStream.Lift Slow
+/-- Model: an abbreviation for `MeanRankUpdate.ModelPoint × PressureStream.Plane`. -/
 abbrev Model := MeanRankUpdate.ModelPoint × PressureStream.Plane
 
+/-- Stable Q, given by `(PositiveRepresentatives.stableInverse coord s).1`. -/
 noncomputable def stableQ (coord : ℝ) (s : Slow) : ℝ :=
   (PositiveRepresentatives.stableInverse coord s).1
 
+/-- Stable length, given by `Real.sqrt (stableQ coord s)`. -/
 noncomputable def stableLength (coord : ℝ) (s : Slow) : ℝ := Real.sqrt (stableQ coord s)
 
 theorem stableQ_pos {coord : ℝ} {s : Slow}
@@ -70,10 +76,13 @@ theorem stableLength_eq_qLength {coord : ℝ} (hc : 0 < coord) (hc1 : coord < 1)
 inner and finite outer bounds.  These bounds are constructed from the
 actual stable branch below. -/
 structure Window (coord a b : ℝ) where
+  /-- Carrier of `Window`, of type `Set Slow`. -/
   carrier : Set Slow
   isOpen : IsOpen carrier
   stable : carrier ⊆ PositiveRepresentatives.stableTarget coord
+  /-- Lower of `Window`, of type `ℝ`. -/
   lower : ℝ
+  /-- Upper of `Window`, of type `ℝ`. -/
   upper : ℝ
   lower_pos : 0 < lower
   lower_lt_upper : lower < upper
@@ -135,6 +144,7 @@ noncomputable def positiveSlow : Set Slow := {s | 0 < s.1}
 
 theorem positiveSlow_open : IsOpen positiveSlow := isOpen_lt continuous_const continuous_fst
 
+/-- Fiber agreement, given by `EqOn F f (PhysicalMeanDomain.slowDomain (U ∩ positiveSlow))`. -/
 def FiberAgreement {V : Type*} (U : Set Slow) (F f : Lift → V) : Prop :=
   EqOn F f (PhysicalMeanDomain.slowDomain (U ∩ positiveSlow))
 
@@ -155,9 +165,12 @@ radial variable; only the time coordinate is replaced by `q`. -/
 noncomputable def stableModel (coord : ℝ) (p : Lift) : Model :=
   ((stableQ coord p.2.1, (p.1, p.2.1.2)), p.2.2)
 
+/-- Physical model, given by `((SimilarityCoordinates.coordinateQ coord p.2.1, (p.1, p.2.1.2)),
+p.2.2)`. -/
 noncomputable def physicalModel (coord : ℝ) (p : Lift) : Model :=
   ((SimilarityCoordinates.coordinateQ coord p.2.1, (p.1, p.2.1.2)), p.2.2)
 
+/-- Model domain, given by `{y | 0 < y.1.1}`. -/
 noncomputable def modelDomain : Set Model := {y | 0 < y.1.1}
 
 theorem modelDomain_open : IsOpen modelDomain :=
@@ -175,9 +188,11 @@ theorem stableModel_mem {coord : ℝ} {p : Lift}
     (hp : p.2.1 ∈ PositiveRepresentatives.stableTarget coord) :
     stableModel coord p ∈ modelDomain := stableQ_pos hp
 
+/-- Continued source, given by `F ∘ stableModel coord`. -/
 noncomputable def continuedSource (coord : ℝ) (F : Model → ℝ) : Lift → ℝ :=
   F ∘ stableModel coord
 
+/-- Physical source, given by `F ∘ physicalModel coord`. -/
 noncomputable def physicalSource (coord : ℝ) (F : Model → ℝ) : Lift → ℝ :=
   F ∘ physicalModel coord
 
@@ -200,6 +215,8 @@ def ModelSupported {V : Type*} [Zero V] (a b : ℝ) (F : Model → V) : Prop :=
   ∀ y ∈ modelDomain, F y ≠ 0 →
     y.1.2.1 ∈ Icc (Real.sqrt y.1.1 * a) (Real.sqrt y.1.1 * b)
 
+/-- Model periodic, given by `∀ y : MeanRankUpdate.ModelPoint, 0 < y.1 →
+FourierAlias.TorusPeriodic (fun Y => F (y, Y))`. -/
 def ModelPeriodic (F : Model → ℝ) : Prop :=
   ∀ y : MeanRankUpdate.ModelPoint, 0 < y.1 →
     FourierAlias.TorusPeriodic (fun Y => F (y, Y))
@@ -319,7 +336,7 @@ theorem streamPotential_agreement (d a b M : ℝ) (v : Slow) :
     FiberAgreement U (VariableGaugeMean.streamPotential d a b M (stableLength coord) v F)
       (VariableGaugeMean.streamPotential d a b M (VariableGaugeMean.qLength coord) v f) := by
   have hw : FiberAgreement U (PressureStream.weightedSource F) (PressureStream.weightedSource f) :=
-    by
+      by
     intro p hp
     exact congrArg (fun t => p.1 * t) (he hp)
   intro p hp
@@ -348,6 +365,7 @@ end ExactAgreement
 data from explicit positive-q models, then preserve it through the actual
 nonlocal mean operations. -/
 structure SupportedContinuation {coord a b : ℝ} (W : Window coord a b) (f : Lift → ℝ) where
+  /-- Value of `SupportedContinuation`, of type `Lift → ℝ`. -/
   value : Lift → ℝ
   smooth : ContDiffOn ℝ ∞ value (PhysicalMeanDomain.slowDomain W.carrier)
   supported : VariableGaugeMean.SupportedGauge a b (stableLength coord) W.carrier value
@@ -357,6 +375,7 @@ namespace SupportedContinuation
 
 variable {coord a b : ℝ} {W : Window coord a b} (hc : 0 < coord) (hc1 : coord < 1)
 
+/-- Of model, bundling `value`, `smooth`, `supported`, `agrees`. -/
 noncomputable def ofModel (F : Model → ℝ) (hF : ContDiffOn ℝ ∞ F modelDomain)
     (hs : ModelSupported a b F) : SupportedContinuation W (physicalSource coord F) where
   value := continuedSource coord F
@@ -364,6 +383,8 @@ noncomputable def ofModel (F : Model → ℝ) (hF : ContDiffOn ℝ ∞ F modelDo
   supported := continuedSource_supported hs W.stable
   agrees := continuedSource_agreement hc hc1 F W.carrier
 
+/-- Primitive, bundling `value`, `smooth`, `supported`, `W` and the required compatibility
+proofs. -/
 noncomputable def primitive {f : Lift → ℝ} (e : SupportedContinuation W f)
     (ha : 0 < a) (hab : a < b) {d : ℝ} (hd : 0 < d) (M : ℝ) (v : Slow) :
     SupportedContinuation W
@@ -374,6 +395,8 @@ noncomputable def primitive {f : Lift → ℝ} (e : SupportedContinuation W f)
     W.isOpen (fun _ hs => W.length_pos hs) e.smooth e.supported
   agrees := compactPrimitive_agreement hc hc1 e.agrees d a b M v
 
+/-- Pressure, bundling `value`, `smooth`, `supported`, `W` and the required compatibility
+proofs. -/
 noncomputable def pressure {f : Lift → ℝ} (e : SupportedContinuation W f)
     (ha : 0 < a) (hab : a < b) {d : ℝ} (hd : 0 < d) (M : ℝ) (v : Slow) :
     SupportedContinuation W
@@ -385,6 +408,7 @@ noncomputable def pressure {f : Lift → ℝ} (e : SupportedContinuation W f)
     (VariableGaugeMean.pressureSource_supported hab (fun _ hs => W.length_pos hs) e.supported)
   agrees := meanPressure_agreement hc hc1 e.agrees d a b M hab v
 
+/-- Stream, bundling `value`, `smooth`, `supported`, `W` and the required compatibility proofs. -/
 noncomputable def stream {f : Lift → ℝ} (e : SupportedContinuation W f)
     (ha : 0 < a) (hab : a < b) {d : ℝ} (hd : 0 < d) (M : ℝ) (v : Slow) :
     SupportedContinuation W
@@ -395,6 +419,7 @@ noncomputable def stream {f : Lift → ℝ} (e : SupportedContinuation W f)
     W.isOpen (fun _ hs => W.length_pos hs) e.smooth e.supported
   agrees := streamPotential_agreement hc hc1 e.agrees d a b M v
 
+/-- Alias field, bundling `value`, `smooth`, `supported`, `agrees`. -/
 noncomputable def aliasField {f : Lift → ℝ} (e : SupportedContinuation W f)
     (ha : 0 < a) (hab : a < b) {d : ℝ} (hd : 0 < d) (M : ℝ) (v : Slow) :
     SupportedContinuation W
@@ -408,6 +433,7 @@ noncomputable def aliasField {f : Lift → ℝ} (e : SupportedContinuation W f)
   agrees := compactAlias_agreement hc hc1 e.agrees d a b M v
 
 omit hc hc1 in
+/-- Temporal, bundling `value`, `smooth`, `supported`, `agrees`. -/
 noncomputable def temporal {f : Lift → ℝ} (e : SupportedContinuation W f)
     (h : ℝ) (n i : ℕ) (hp : PhysicalMeanDomain.PeriodicOn W.carrier e.value) :
     SupportedContinuation W (MeanChartCompatibility.temporalAtIndex h n i f) where
@@ -422,6 +448,7 @@ namespace SupportedContinuation
 
 variable {coord a b : ℝ} {W : Window coord a b}
 
+/-- Scale slow, bundling `value`, `smooth`, `supported`, `agrees`. -/
 noncomputable def scaleSlow {f : Lift → ℝ} (e : SupportedContinuation W f)
     {c : Slow → ℝ} (C : Slow → ℝ) (hC : ContDiffOn ℝ ∞ C W.carrier)
     (he : EqOn C c (W.carrier ∩ positiveSlow)) :
@@ -431,6 +458,8 @@ noncomputable def scaleSlow {f : Lift → ℝ} (e : SupportedContinuation W f)
   supported := fun p hp hn => e.supported p hp (right_ne_zero_of_mul hn)
   agrees := fun _ hp => congrArg₂ (fun x y : ℝ => x * y) (he hp) (e.agrees hp)
 
+/-- Finite sum, bundling `value`, `smooth`, `supported`, `agrees` and the required compatibility
+proofs. -/
 noncomputable def finiteSum {ι : Type*} (s : Finset ι) (f : ι → Lift → ℝ)
     (e : ∀ i, SupportedContinuation W (f i)) :
     SupportedContinuation W (fun p => ∑ i ∈ s, f i p) where
@@ -453,7 +482,7 @@ on the continued neighborhood. -/
 theorem pressureMass_smooth {f : Lift → ℝ} (e : SupportedContinuation W f) :
     ContDiffOn ℝ ∞ (PressureStream.pressureMass e.value) W.carrier := by
   have hm := PhysicalMeanDomain.liftedPressureMass_contDiffOn W.isOpen e.smooth (W.fixed_support
-    e.supported)
+      e.supported)
   have hmap : ContDiffOn ℝ ∞ (fun s : Slow => ((0 : ℝ), (s, (0 : Slow)))) W.carrier :=
     contDiffOn_const.prodMk (contDiffOn_id.prodMk contDiffOn_const)
   exact hm.comp hmap (fun _ hp => hp)
@@ -525,17 +554,23 @@ section ContinuedReferenceODE
 variable {V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Stable parameter, given by `(stableQ coord p.2, (p.1, p.2.2))`. -/
 noncomputable def stableParameter (coord : ℝ) (p : ℝ × Slow) : MeanRankUpdate.ModelPoint :=
   (stableQ coord p.2, (p.1, p.2.2))
 
+/-- Physical parameter, given by `(SimilarityCoordinates.coordinateQ coord p.2, (p.1, p.2.2))`. -/
 noncomputable def physicalParameter (coord : ℝ) (p : ℝ × Slow) : MeanRankUpdate.ModelPoint :=
   (SimilarityCoordinates.coordinateQ coord p.2, (p.1, p.2.2))
 
+/-- Continued reference solve, defined pointwise by `(pullLinearData (stableParameter coord)
+d).commonSolve g hab κ ((p.1, p.2.1), p.2.2)`. -/
 noncomputable def continuedReferenceSolve (coord : ℝ)
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
     (g : CommonCoverSolve.Geometry) {a b : ℝ} (hab : a ≤ b) (κ : Slow → ℝ) : Lift → E :=
   fun p => (pullLinearData (stableParameter coord) d).commonSolve g hab κ ((p.1, p.2.1), p.2.2)
 
+/-- Physical reference solve, defined pointwise by `(pullLinearData (physicalParameter coord)
+d).commonSolve g hab κ ((p.1, p.2.1), p.2.2)`. -/
 noncomputable def physicalReferenceSolve (coord : ℝ)
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
     (g : CommonCoverSolve.Geometry) {a b : ℝ} (hab : a ≤ b) (κ : Slow → ℝ) : Lift → E :=
@@ -644,6 +679,8 @@ section FullReferenceCarrier
 variable {V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Reference carrier model, given by `(HarmonicCalculus.mode frequency
+(PeriodicPhaseAssembly.phase g w.cutoff A B) (fun z => L (d.commonSolve g hst κ z)) y).re`. -/
 noncomputable def referenceCarrierModel
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
     (g : CommonCoverSolve.Geometry) {s t : ℝ} (hst : s ≤ t) (κ : Slow → ℝ)
@@ -665,6 +702,8 @@ theorem referenceCarrier_physical_formula (coord : ℝ)
         HarmonicCalculus.carrier frequency
           (physicalSource coord (PeriodicPhaseAssembly.phase g w.cutoff A B)) p).re := rfl
 
+/-- Reference carrier continuation as an element of `SupportedContinuation W (physicalSource
+coord (referenceCarrierModel d g hst κ w A B frequency L))`. -/
 noncomputable def referenceCarrierContinuation {coord a b : ℝ} {W : Window coord a b}
     (hc : 0 < coord) (hc1 : coord < 1)
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
@@ -704,7 +743,7 @@ theorem rankAngular_model_supported (coord A B lam a b : ℝ) (hab : a < b)
     ModelSupported a b (fun y => MeanRankUpdate.angularModel coord A B lam a b d y.1) := by
   intro y hy hn
   have hr := MeanRankUpdate.angularIncrement_tsupport lam (MeanRankUpdate.modelAmplitude coord B
-    y.1)
+      y.1)
     a b (MeanRankUpdate.modelVelocity A y.1) (Real.sqrt_pos.mpr hy) hab d (subset_tsupport _ hn)
   exact ⟨hr.1.le, hr.2.le⟩
 
@@ -713,7 +752,7 @@ theorem rankAxial_model_supported (coord A B lam a b : ℝ) (hab : a < b)
     ModelSupported a b (fun y => MeanRankUpdate.axialModel coord A B lam a b d y.1) := by
   intro y hy hn
   have hr := MeanRankUpdate.desiredAxialIncrement_tsupport lam (MeanRankUpdate.modelAmplitude coord
-    B y.1)
+      B y.1)
     a b (MeanRankUpdate.modelVelocity A y.1) (Real.sqrt_pos.mpr hy) hab d (subset_tsupport _ hn)
   exact ⟨hr.1.le, hr.2.le⟩
 
@@ -723,20 +762,22 @@ noncomputable def rankAngularContinuation {coord a b : ℝ} {W : Window coord a 
     (hc : 0 < coord) (hc1 : coord < 1) (A B lam : ℝ) (hB : B ≠ 0) (hab : a < b)
     (d : MeanRankUpdate.Debt) :
     SupportedContinuation W (MeanRankUpdate.chartKernel coord (MeanRankUpdate.angularModel coord A
-      B lam a b d)) := by
+        B lam a b d)) := by
   apply SupportedContinuation.ofModel hc hc1 (fun y => MeanRankUpdate.angularModel coord A B lam a
-    b d y.1)
+      b d y.1)
   · exact (MeanRankUpdate.angularModel_contDiffOn coord A B lam a b hB d).comp
       contDiffOn_fst (fun _ hy => hy)
   · exact rankAngular_model_supported coord A B lam a b hab d
 
+/-- Rank axial continuation as an element of `SupportedContinuation W
+(MeanRankUpdate.chartKernel coord (MeanRankUpdate.axialModel coord A B lam a b d))`. -/
 noncomputable def rankAxialContinuation {coord a b : ℝ} {W : Window coord a b}
     (hc : 0 < coord) (hc1 : coord < 1) (A B lam : ℝ) (hB : B ≠ 0) (hab : a < b)
     (d : MeanRankUpdate.Debt) :
     SupportedContinuation W (MeanRankUpdate.chartKernel coord (MeanRankUpdate.axialModel coord A B
-      lam a b d)) := by
+        lam a b d)) := by
   apply SupportedContinuation.ofModel hc hc1 (fun y => MeanRankUpdate.axialModel coord A B lam a b
-    d y.1)
+      d y.1)
   · exact (MeanRankUpdate.axialModel_contDiffOn coord A B lam a b hB d).comp
       contDiffOn_fst (fun _ hy => hy)
   · exact rankAxial_model_supported coord A B lam a b hab d
@@ -745,9 +786,12 @@ end RankModels
 
 section PhysicalFields
 
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
+/-- Physical slow, given by `(1 - w.1, w.2 2)`. -/
 noncomputable def physicalSlow (w : SpaceTime) : Slow := (1 - w.1, w.2 2)
 
 theorem physicalSlow_contDiff : ContDiff ℝ ∞ physicalSlow :=
@@ -759,6 +803,7 @@ field.  The common covering level remains the supplied `n`. -/
 noncomputable def physicalLift (h : ℝ) (n : ℕ) (w : SpaceTime) : Lift :=
   (AnnularEndpoint.radius w, (physicalSlow w, PhysicalGraphBounds.nativeGraph h n w))
 
+/-- Physical domain, given by `physicalSlow ⁻¹' U`. -/
 noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := physicalSlow ⁻¹' U
 
 theorem physicalDomain_open {U : Set Slow} (hU : IsOpen U) : IsOpen (physicalDomain U) :=
@@ -787,6 +832,7 @@ theorem physicalLift_contDiffAt (h : ℝ) (n : ℕ) {w : SpaceTime}
   (radius_contDiffAt hw).prodMk (physicalSlow_contDiff.contDiffAt.prodMk
     (PhysicalGraphBounds.contDiffAt_nativeGraph h n hw))
 
+/-- Physical scalar, given by `f ∘ physicalLift h n`. -/
 noncomputable def physicalScalar (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → ℝ :=
   f ∘ physicalLift h n
 
@@ -820,9 +866,9 @@ theorem physicalScalar_smooth (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
 potential, including its division by the radial variable. -/
 noncomputable def azimuthalPotential (h : ℝ) (n : ℕ) (f : Lift → ℝ) (w : SpaceTime) : Space :=
   (-w.2 1 / AnnularEndpoint.radius w * physicalScalar h n f w) • ProblemStatement.coordinateVector
-    0 +
+      0 +
     (w.2 0 / AnnularEndpoint.radius w * physicalScalar h n f w) • ProblemStatement.coordinateVector
-      1
+        1
 
 /-- A direct angular velocity uses the same Cartesian multiplication by
 `e_theta`.  This definition does not apply a curl or a radial primitive. -/
@@ -857,6 +903,8 @@ namespace SupportedContinuation
 
 variable {coord a b : ℝ} {W : Window coord a b} {f : Lift → ℝ}
 
+/-- Physical extension, bundling `value`, `domain`, `isOpen`, `mem` and the required
+compatibility proofs. -/
 noncomputable def physicalExtension (e : SupportedContinuation W f) (h : ℝ) (n : ℕ)
     {x : Space} (hx : (0, x 2) ∈ W.carrier) :
     JointResidualLimits.OneSidedExtension (physicalScalar h n f) x where
@@ -869,6 +917,8 @@ noncomputable def physicalExtension (e : SupportedContinuation W f) (h : ℝ) (n
     intro w hw
     exact e.agrees ⟨hw.1, show 0 < 1 - w.1 from sub_pos.mpr hw.2.1⟩
 
+/-- Azimuthal extension, bundling `value`, `domain`, `isOpen`, `mem` and the required
+compatibility proofs. -/
 noncomputable def azimuthalExtension (e : SupportedContinuation W f) (h : ℝ) (n : ℕ)
     {x : Space} (hx : (0, x 2) ∈ W.carrier) :
     JointResidualLimits.OneSidedExtension (azimuthalPotential h n f) x where
@@ -877,7 +927,7 @@ noncomputable def azimuthalExtension (e : SupportedContinuation W f) (h : ℝ) (
   isOpen := physicalDomain_open W.isOpen
   mem := by simpa only [physicalDomain, mem_preimage, physicalSlow, sub_self] using hx
   smooth := azimuthalPotential_smooth h n W.isOpen W.lower_pos e.smooth (W.fixed_support
-    e.supported)
+      e.supported)
   agrees := by
     intro w hw
     have he := (e.physicalExtension h n hx).agrees hw
@@ -885,6 +935,7 @@ noncomputable def azimuthalExtension (e : SupportedContinuation W f) (h : ℝ) (
     dsimp only [azimuthalPotential]
     rw [he]
 
+/-- Angular extension, given by `e.azimuthalExtension h n hx`. -/
 noncomputable def angularExtension (e : SupportedContinuation W f) (h : ℝ) (n : ℕ)
     {x : Space} (hx : (0, x 2) ∈ W.carrier) :
     JointResidualLimits.OneSidedExtension (angularField h n f) x :=
@@ -934,7 +985,7 @@ theorem temporal_mean_model_extension {h a b d : ℝ} (hh : 0 < h) (hh1 : h < 1 
   let e : SupportedContinuation W (physicalSource (2 * h) F) :=
     SupportedContinuation.ofModel hc hc1 F hF hs
   have heper : PhysicalMeanDomain.PeriodicOn W.carrier e.value := continuedSource_periodic hp
-    W.stable
+      W.stable
   exact ⟨((e.temporal h n i heper).stream hc hc1 ha hab hd M v).azimuthalExtension h n hw⟩
 
 theorem mean_models_supported {coord a b d : ℝ} (hc : 0 < coord) (hc1 : coord < 1)
@@ -942,22 +993,22 @@ theorem mean_models_supported {coord a b d : ℝ} (hc : 0 < coord) (hc1 : coord 
     (F : Model → ℝ) (hF : ContDiffOn ℝ ∞ F modelDomain) (hs : ModelSupported a b F) :
     VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength coord) positiveSlow
       (VariableGaugeMean.meanPressure d a b M hab (VariableGaugeMean.qLength coord) v
-        (physicalSource coord F)) ∧
+          (physicalSource coord F)) ∧
     VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength coord) positiveSlow
       (VariableGaugeMean.streamPotential d a b M (VariableGaugeMean.qLength coord) v
-        (physicalSource coord F)) := by
+          (physicalSource coord F)) := by
   constructor
   · intro p hp hn
     obtain ⟨W, hw⟩ := exists_window_at hc hc1 ha hab
       (PositiveRepresentatives.positiveTime_mem_stableTarget hc hc1 hp)
     let e : SupportedContinuation W (physicalSource coord F) := SupportedContinuation.ofModel hc
-      hc1 F hF hs
+        hc1 F hF hs
     exact (e.pressure hc hc1 ha hab hd M v).support_on_past hc hc1 hw hp hn
   · intro p hp hn
     obtain ⟨W, hw⟩ := exists_window_at hc hc1 ha hab
       (PositiveRepresentatives.positiveTime_mem_stableTarget hc hc1 hp)
     let e : SupportedContinuation W (physicalSource coord F) := SupportedContinuation.ofModel hc
-      hc1 F hF hs
+        hc1 F hF hs
     exact (e.stream hc hc1 ha hab hd M v).support_on_past hc hc1 hw hp hn
 
 theorem physicalScalar_shrinkingSupport (h : ℝ) (n : ℕ) {a b : ℝ} {f : Lift → ℝ}
@@ -985,6 +1036,7 @@ section DiagonalCutoffs
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Physical Q extension, given by `(EndpointCoordinates.cartesianExtension h w).1`. -/
 noncomputable def physicalQExtension (h : ℝ) (w : SpaceTime) : ℝ :=
   (EndpointCoordinates.cartesianExtension h w).1
 
@@ -1003,7 +1055,7 @@ theorem diagonal_extension {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (SolenoidalDiagonal.potentialSum a (PhysicalWaveSum.physicalQ h) F) x) := by
   classical
   obtain ⟨U, hU, hxU, hUD, _, _, hqU⟩ := EndpointCoordinates.cartesian_endpoint_neighborhood hh hh1
-    hx
+      hx
   obtain ⟨N, hN⟩ := SmoothCutoffs.scaledCutoffs_zero_on_common_neighborhood a ha
     (EndpointCoordinates.endpointRoot_pos (2 * h) hx)
   let e : ∀ j, JointResidualLimits.OneSidedExtension (F j) x := fun j => Classical.choice (he j)
@@ -1029,12 +1081,12 @@ theorem diagonal_extension {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   · intro w hw
     have hqt := physicalQExtension_eq hh hh1 hw.2.1
     have hlow : EndpointCoordinates.endpointRoot (2 * h) (x 2) / 2 < PhysicalWaveSum.physicalQ h w
-      := by
+        := by
       rw [← hqt]
       exact (hqU w hw.1.1).1
     have hsum : SolenoidalDiagonal.potentialSum a (PhysicalWaveSum.physicalQ h) F w =
         ∑ j ∈ Finset.range N, SolenoidalDiagonal.cutStage a (PhysicalWaveSum.physicalQ h) F j w :=
-          by
+            by
       apply tsum_eq_sum
       intro j hj
       simp only [SolenoidalDiagonal.cutStage, hN j
@@ -1068,7 +1120,7 @@ theorem mean_diagonal_extensions {h a b d : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     Nonempty (JointResidualLimits.OneSidedExtension
       (SolenoidalDiagonal.velocitySum scale (PhysicalWaveSum.physicalQ h) A) x) := by
   have he := fun j => mean_model_extensions hh hh1 ha hab hd (M j) (v j) (n j) (F j) (hF j) (hs j)
-    hx
+      hx
   obtain ⟨eA⟩ := diagonal_extension hh hh1 hscale hx (fun j => (he j).2.1)
   exact ⟨diagonal_extension hh hh1 hscale hx (fun j => (he j).1), ⟨eA⟩,
     ⟨AnnularEndpoint.curlExtension eA⟩⟩
@@ -1087,19 +1139,19 @@ theorem mean_diagonal_awayExtensions {h a b d : ℝ} (hh : 0 < h) (hh1 : h < 1 /
     let A := fun j => azimuthalPotential h (n j) (VariableGaugeMean.streamPotential d a b (M j)
       (VariableGaugeMean.qLength (2 * h)) (v j) (physicalSource (2 * h) (F j)))
     JointResidualLimits.AwayExtensions (SolenoidalDiagonal.potentialSum scale
-      (PhysicalWaveSum.physicalQ h) p) ∧
+        (PhysicalWaveSum.physicalQ h) p) ∧
     JointResidualLimits.AwayExtensions (SolenoidalDiagonal.potentialSum scale
-      (PhysicalWaveSum.physicalQ h) A) ∧
+        (PhysicalWaveSum.physicalQ h) A) ∧
     JointResidualLimits.AwayExtensions (SolenoidalDiagonal.velocitySum scale
-      (PhysicalWaveSum.physicalQ h) A) := by
+        (PhysicalWaveSum.physicalQ h) A) := by
   have hsup j := mean_models_supported (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1)
     ha hab hd (M j) (v j) (F j) (hF j) (hs j)
   have hps := AnnularEndpoint.ShrinkingSupport.potentialSum
     (fun j => physicalScalar_shrinkingSupport h (n j) (hsup j).1) scale (PhysicalWaveSum.physicalQ
-      h)
+        h)
   have hAs := AnnularEndpoint.ShrinkingSupport.potentialSum
     (fun j => azimuthalPotential_shrinkingSupport h (n j) (hsup j).2) scale
-      (PhysicalWaveSum.physicalQ h)
+        (PhysicalWaveSum.physicalQ h)
   have hvs := hAs.spatialCurl hh hh1
   refine ⟨?_, ?_, ?_⟩
   · intro x hx

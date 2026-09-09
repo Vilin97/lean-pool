@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialFields
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalL2Scaling
 
-@[expose] public section
-
 /-! Common compact support for the two actual initial increments after
 the physical spatial dilation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +25,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 omit [NormedSpace ℝ V] in
 theorem support_in_ball_of_zero (f : Space → V) (R : ℝ)
-    (hz : ∀ x, R < ‖x‖ → f x=0) : tsupport f ⊆ Metric.closedBall 0 R := by
+    (hz : ∀ x, R < ‖x‖ → f x = 0) : tsupport f ⊆ Metric.closedBall 0 R := by
   apply closure_minimal _ Metric.isClosed_closedBall
   intro x hx
   rw [Metric.mem_closedBall,dist_zero_right]
@@ -51,7 +52,7 @@ end EulerPhysicalL2Scaling
 namespace EulerPacketInitial
 
 open Set EulerSmoothLimit EulerPacketProfileRecursion EulerPacketCylinderField
-  EulerPhysicalL2Scaling
+    EulerPhysicalL2Scaling
 
 variable {P T : ℝ} [Fact (0 < P)] {hT : 0 ≤ T} {N : ℕ}
   {a : ℕ → Profile} {support : Set Space}
@@ -73,7 +74,7 @@ theorem high_scaled_support
 
 theorem mean_scaled_support (κ k : ℝ) (m : Space) (ell : ℝ) (hell : 0 < ell)
     (a : ℕ → Profile)
-    (hs : ∀ i, i ≤ N → ∀ θ, tsupport (fun x => (a i).mean (0,(x,θ))) ⊆
+    (hs : ∀ i, i ≤ N → ∀ θ, tsupport (fun x => (a i).mean (0, (x, θ))) ⊆
       {x : Space | ‖ell • x‖ ≤ 2}) :
     tsupport (scale ell (fun x => mean N κ 0 a (0,(x,k*inner ℝ m x)))) ⊆
       Metric.closedBall 0 2 := by

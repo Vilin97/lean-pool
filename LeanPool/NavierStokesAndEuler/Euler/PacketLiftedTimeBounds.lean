@@ -7,11 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedCoefficientBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderMeasureDescent
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerJetLp
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldJetLp
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The actual lifted time coefficient has simultaneous sup and cylinder
 L² bounds from the genuine approximation and correction time derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,22 +36,50 @@ open scoped ContDiff BoundedContinuousFunction
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {hT : 0 < T} {A : Data P T}
   (B : Budget P hT A) {raw_t : VectorField}
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] LiftTangent) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] LiftTangent) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))
-  := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ]
-  LiftTangent)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))
-  := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds1 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds2 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] LiftTangent)` instance to
+shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds3 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    LiftTangent) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] LiftTangent)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds4 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds5 (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ
+    (LiftTangent [×n]→L[ℝ] Space))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))` instance
+to shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds6 (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ] Space)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds7 (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ
+    (LiftTangent [×n]→L[ℝ]
+    LiftTangent)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds8 (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ] LiftTangent))
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, LiftTangent →ᵇ (LiftTangent
+[×n]→L[ℝ] Space))` instance to shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds9 (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
     LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, LiftTangent →ᵇ (LiftTangent
+[×n]→L[ℝ] LiftTangent))` instance to shorten typeclass synthesis. -/
+local instance instPacketLiftedTimeBounds10 (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
     LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent)) := inferInstance
 
 private theorem time_envelope_mono {C D R S : ℝ} (hD : 0 ≤ D) (hR : 0 ≤ R)
@@ -67,7 +103,7 @@ theorem Budget.liftedPacketDerivativeCoefficient_periodic (H : Field P T raw_t)
 theorem Budget.liftedPacketDerivativeCoefficient_jetSeries (H : Field P T raw_t)
     (n : ℕ) (t : Icc (0 : ℝ) T) :
     (fun q => jetSeries P ((B.liftedPacketDerivativeCoefficient P H).field t : LiftTangent →
-      LiftTangent) q n) =
+        LiftTangent) q n) =
       tensor P (fun q => transportDirection A.κ A.direction
         (H.toFieldTower.pointField t q + (B.timeDerivativeTower P).pointField t q)) n := by
   have he : ((B.liftedPacketDerivativeCoefficient P H).field t : LiftTangent → LiftTangent) =
@@ -96,7 +132,7 @@ theorem Budget.liftedPacketDerivativeCoefficient_memLp (H : Field P T raw_t)
   exact tensor_map_memLp P (transportLinear A.κ A.direction)
     (fun q => H.toFieldTower.pointField t q + (B.timeDerivativeTower P).pointField t q)
     (fun q => (H.toFieldTower.pointField_smooth t q).add ((B.timeDerivativeTower
-      P).pointField_smooth t q)) n
+        P).pointField_smooth t q)) n
     (tensor_add_memLp P _ _ (H.toFieldTower.pointField_smooth t)
       ((B.timeDerivativeTower P).pointField_smooth t) n
       (H.toFieldTower.coverTensor_memLp n t) ((B.timeDerivativeTower P).coverTensor_memLp n t))
@@ -106,7 +142,7 @@ theorem Budget.liftedPacketDerivativeCoefficient_jet_bound (H : Field P T raw_t)
     (hR : 0 ≤ R) (hρ : 0 < ρ) (hCh : 0 ≤ Ch) (hCe : 0 ≤ Ce)
     (hH : H.WordBound 6 R Ch 0)
     (hE : ∀ n (t : Icc (0 : ℝ) T),
-      weightedNorm P 6 n ρ ((B.timeDerivativeTower P).realization (n+6) t) ≤ Ce) (n : ℕ) :
+      weightedNorm P 6 n ρ ((B.timeDerivativeTower P).realization (n + 6) t) ≤ Ce) (n : ℕ) :
     ‖(B.liftedPacketDerivativeCoefficient P H).jet n‖ ≤
       (2*liftedInputConstant P*(Ch+Ce)) * (liftedInputRadius R ρ)^n * (n.factorial : ℝ)^2 := by
   have hK : 0 ≤ liftedInputConstant P := zero_le_one.trans (liftedInputConstant_one_le P)
@@ -125,7 +161,7 @@ theorem Budget.liftedPacketDerivativeCoefficient_jet_bound (H : Field P T raw_t)
   have hfull := lift_jet_norm_le_full
     (H.toSmoothTimeField.add (B.correctionDerivativeCoefficient P)) A.κ A.direction n
   change ‖(lift (H.toSmoothTimeField.add (B.correctionDerivativeCoefficient P)) A.κ
-    A.direction).jet n‖ ≤ _
+      A.direction).jet n‖ ≤ _
   apply hfull.trans
   calc
     _ ≤ 2*‖(H.toSmoothTimeField.add (B.correctionDerivativeCoefficient P)).jet n‖ :=
@@ -140,7 +176,7 @@ theorem Budget.liftedPacketDerivativeCoefficient_L2_bound (H : Field P T raw_t)
     (hR : 0 ≤ R) (hρ : 0 < ρ) (hCh : 0 ≤ Ch) (hCe : 0 ≤ Ce)
     (hH : H.WordBound 6 R Ch 0)
     (hE : ∀ n (t : Icc (0 : ℝ) T),
-      weightedNorm P 6 n ρ ((B.timeDerivativeTower P).realization (n+6) t) ≤ Ce)
+      weightedNorm P 6 n ρ ((B.timeDerivativeTower P).realization (n + 6) t) ≤ Ce)
     (n : ℕ) (t : Icc (0 : ℝ) T) :
     (eLpNorm (fun q => jetSeries P
       ((B.liftedPacketDerivativeCoefficient P H).field t : LiftTangent → LiftTangent) q n)
@@ -148,7 +184,7 @@ theorem Budget.liftedPacketDerivativeCoefficient_L2_bound (H : Field P T raw_t)
       (2*liftedInputConstant P*(Ch+Ce)) * (liftedInputRadius R ρ)^n * (n.factorial : ℝ)^2 := by
   have hh := (hH.coverTensor_bound n t).trans
     (time_envelope_mono hCh (mul_nonneg (norm_nonneg _) hR) le_rfl (liftedInputRadius_packet R ρ hR
-      hρ) n)
+        hρ) n)
   have he := ((B.timeDerivativeTower P).coverTensor_weighted n ρ Ce hρ t (hE n t)).trans
     (time_envelope_mono hCe (mul_nonneg (norm_nonneg _) (inv_nonneg.mpr hρ.le)) le_rfl
       (liftedInputRadius_error R ρ hR) n)

@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerCanonicalGraph
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblySourceTower
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressure
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Actual spatial L² paths of the constructed correction and its pressure
 on every fixed continuous phase graph, including every cylinder word and
 the genuine time derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,14 +30,17 @@ variable (P : ℝ) [Fact (0 < P)]
   (B : Budget P hT A)
   (θ : Vector3 → AddCircle P) (hθ : Continuous θ)
 
+/-- Spatial L² path of the word derivative of the correction, restricted to the graph of `θ`. -/
 def Budget.graphCorrectionWordPath (n : ℕ) (w : Fin n → Fin 4) :
     C(Icc (0 : ℝ) T,Lp Vector3 2 (volume : Measure Vector3)) :=
   (B.fieldTower P).canonicalGraphWordPath θ hθ n w
 
+/-- Spatial L² path of the word derivative of the time derivative, on the graph of `θ`. -/
 def Budget.graphTimeDerivativeWordPath (n : ℕ) (w : Fin n → Fin 4) :
     C(Icc (0 : ℝ) T,Lp Vector3 2 (volume : Measure Vector3)) :=
   (B.timeDerivativeTower P).canonicalGraphWordPath θ hθ n w
 
+/-- Spatial L² path of the word derivative of the pressure, restricted to the graph of `θ`. -/
 def Budget.graphPressureWordPath (n : ℕ) (w : Fin n → Fin 4) :
     C(Icc (0 : ℝ) T,Lp Vector3 2 (volume : Measure Vector3)) :=
   (B.pressureTower P).canonicalGraphWordPath θ hθ n w

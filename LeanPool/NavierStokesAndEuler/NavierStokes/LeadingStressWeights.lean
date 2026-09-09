@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActiveAnnulusWeight
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedProfileAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalHistoryBridge
 
 /-!
 # Weighted bounds for the actual leading stress
@@ -19,6 +17,9 @@ The stress consists of the two genuine coefficients in `LeadingStress`.
 Its edge factors are transported through the literal finite modulation and
 the five restored profile histories.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +31,7 @@ namespace NavierStokes.LeadingStressWeights
 open ProfileHistories
 
 
+/-- Stress, given by `(LeadingStress.theta P h p, LeadingStress.axial P h p)`. -/
 noncomputable def stress {D : RadialDomain} (P : Profiles D) (h : ℝ) (p : Point) : ℝ × ℝ :=
   (LeadingStress.theta P h p, LeadingStress.axial P h p)
 
@@ -55,6 +57,8 @@ theorem stress_contDiffAt {D : RadialDomain} (P : Profiles D) (h : ℝ) {p : Poi
   (LeadingStress.theta_smoothAt P h hp hX.ne' hf hL).prodMk
     (LeadingStress.axial_smoothAt P h hp hX.ne' hL)
 
+/-- Stress domain, given by `{p | p ∈ D.carrier ∧ 0 < p.1 ∧ P.f p ≠ 0 ∧ NaturalAxisData.L h p.2
+≠ 0}`. -/
 noncomputable def stressDomain {D : RadialDomain} (P : Profiles D) (h : ℝ) : Set Point :=
   {p | p ∈ D.carrier ∧ 0 < p.1 ∧ P.f p ≠ 0 ∧ NaturalAxisData.L h p.2 ≠ 0}
 
@@ -74,13 +78,16 @@ theorem stress_smooth {D : RadialDomain} (P : Profiles D) (h : ℝ) :
     ContDiffOn ℝ ∞ (stress P h) (stressDomain P h) :=
   fun _ hp => (stress_contDiffAt P h hp.1 hp.2.1 hp.2.2.1 hp.2.2.2).contDiffWithinAt
 
+/-- Log point, given by `(Real.exp p.2, p.1)`. -/
 noncomputable def logPoint (p : ℝ × ℝ) : Point := (Real.exp p.2, p.1)
 
 theorem logPoint_smooth : ContDiff ℝ ∞ logPoint := contDiff_snd.exp.prodMk contDiff_fst
 
+/-- Log stress, given by `stress P h ∘ logPoint`. -/
 noncomputable def logStress {D : RadialDomain} (P : Profiles D) (h : ℝ) : (ℝ × ℝ) → ℝ × ℝ :=
   stress P h ∘ logPoint
 
+/-- Log stress domain, given by `logPoint ⁻¹' stressDomain P h`. -/
 noncomputable def logStressDomain {D : RadialDomain} (P : Profiles D) (h : ℝ) : Set (ℝ × ℝ) :=
   logPoint ⁻¹' stressDomain P h
 
@@ -204,9 +211,9 @@ theorem activation_stress (y : ℝ) {eta : ℝ} (hη : eta ∈ ReferencePath.par
     (FromReference.f_pos N T kappa delta hp hx.le).ne'
   have hs := activation_shears N hT hd hdlim kappa P0 hP0 y hη
   have hq := ActivationStocks.FromReference.actual_stockOne_logView N hT hd hdlim kappa h P0 hP0 y
-    hη
+      hη
   have hn := ActivationStocks.FromReference.actual_stockTwo_logView N hT hd hdlim kappa h P0 hP0 y
-    hη
+      hη
   change stress P h _ = _
   rw [stress_eq P h hx hfp, hs.1, hs.2, NominalConeAssembly.p1_eq_stock,
     NominalConeAssembly.p2_eq_stock, hq, hn]
@@ -224,11 +231,13 @@ open StressActivation
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Activation profiles, constructed using `FromReference.histories`. -/
 noncomputable def activationProfiles : Profiles W.axis.referenceInput.radialDomain :=
   FromReference.histories W.axis.referenceInput W.controls.activationTime_pos
     W.controls.referenceWidth_pos W.controls.referenceWidth_small W.controls.kappa
     F.axisDatum F.axisDatum_contDiff
 
+/-- Activation stress, constructed using `ActivationCone.activatedStress`. -/
 noncomputable def activationStress : Point → ℝ × ℝ :=
   ActivationCone.activatedStress F.data.h W.axis.referenceInput.endpoint
     (ActivationStocks.FromReference.initial W.axis.referenceInput W.controls.referenceWidth_pos
@@ -240,7 +249,7 @@ noncomputable def activationStress : Point → ℝ × ℝ :=
 theorem nominal_activation_stress {y eta : ℝ} (hy : y ≤ W.controls.referenceWidth)
     (hη : eta ∈ Icc (-1 : ℝ) 1) :
     stress W.profiles F.data.h (NominalConeAssembly.chart (NominalConeAssembly.activeLeft W) (y,
-      eta)) =
+        eta)) =
       activationStress W (y, eta) := by
   let p := NominalConeAssembly.chart (NominalConeAssembly.activeLeft W) (y, eta)
   have hηJ := NaturalAxisCoefficients.original_interval_interior hη
@@ -250,7 +259,7 @@ theorem nominal_activation_stress {y eta : ℝ} (hy : y ≤ W.controls.reference
   have hXi : p.1 ≤ NominalProfile.Xi := hR.trans W.controls.activation_collar_le_Xi
   have hseed := NominalConeAssembly.Witness.seed_coordinates W hx hXi hη
   have hseedf : W.controls.seedProfiles.f p ≠ 0 := (W.controls.seedF_positive (p := p) hηJ
-    hx.le).ne'
+      hx.le).ne'
   have hfirst : stress W.profiles F.data.h p = stress W.controls.seedProfiles F.data.h p :=
     stress_eq_of_coordinates W.profiles W.controls.seedProfiles F.data.h hx hseedf
       (W.seed_agreement hx.le hXi).1 hseed.1 hseed.2.1 hseed.2.2.1 hseed.2.2.2
@@ -260,13 +269,13 @@ theorem nominal_activation_stress {y eta : ℝ} (hy : y ≤ W.controls.reference
     (FromReference.f_pos W.axis.referenceInput W.controls.activationTime W.controls.kappa
       W.controls.referenceWidth hp hx.le).ne'
   have he := NominalConeAssembly.coordinates_of_prefix W.controls.seedProfiles (activationProfiles
-    W)
+      W)
     F.data.h ReferencePath.parameterInterval_open (R := (4 / W.axis.scale) * Real.exp
-      W.controls.referenceWidth)
+        W.controls.referenceWidth)
     rfl (fun q hq hqr => (W.controls.seed_activation hq hqr).1)
       (fun q hq hqr => (W.controls.seed_activation hq hqr).2) hp hp hx hR hηJ hAf
   have hsecond : stress W.controls.seedProfiles F.data.h p = stress (activationProfiles W) F.data.h
-    p :=
+      p :=
     stress_eq_of_coordinates W.controls.seedProfiles (activationProfiles W) F.data.h hx hAf
       (W.controls.seed_activation (p := p) hηJ hR).1 he.1 he.2.1 he.2.2.1 he.2.2.2
   exact hfirst.trans (hsecond.trans (activation_stress W.axis.referenceInput
@@ -275,6 +284,8 @@ theorem nominal_activation_stress {y eta : ℝ} (hy : y ≤ W.controls.reference
 
 variable {W} {d : ModulatedProfileAssembly.LoopData W} (v : ModulatedProfileAssembly.Witness d)
 
+/-- Inner width, given by `min W.controls.referenceWidth (Real.log (d.modulation.left /
+NominalConeAssembly.activeLeft W))`. -/
 noncomputable def innerWidth (_v : ModulatedProfileAssembly.Witness d) : ℝ :=
   min W.controls.referenceWidth (Real.log (d.modulation.left / NominalConeAssembly.activeLeft W))
 
@@ -309,7 +320,9 @@ section OuterCollar
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Left edge, given by `Real.log (NominalConeAssembly.activeLeft W)`. -/
 noncomputable def leftEdge : ℝ := Real.log (NominalConeAssembly.activeLeft W)
+/-- Right edge, given by `Real.log (NominalConeAssembly.activeRight W)`. -/
 noncomputable def rightEdge : ℝ := Real.log (NominalConeAssembly.activeRight W)
 
 theorem rightEdge_eq : rightEdge W = Real.log W.controls.radius + OutgoingTail.tailEnd F.data := by
@@ -329,7 +342,7 @@ theorem edges_ordered : leftEdge W < rightEdge W := by
     change W.controls.radius < W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)
     have hh := mul_lt_mul_of_pos_left (Real.one_lt_exp_iff.mpr
       ((SchedulePressure.endpoint_pos F.data).trans_le F.tailEnd_after_endpoint))
-        W.controls.radius_pos
+          W.controls.radius_pos
     simpa only [mul_one] using hh
   apply Real.log_lt_log (NominalConeAssembly.activeLeft_pos W)
   exact (NominalConeAssembly.activeLeft_lt_Xi W).trans
@@ -341,10 +354,10 @@ theorem nominal_terminal_stress {y eta : ℝ} (hy : TerminalCone.terminalStart F
     stress W.profiles F.data.h (NominalConeAssembly.chart W.controls.radius (y, eta)) =
       TerminalEdgeFactor.profileStress (TerminalHistoryBridge.normalization F W.controls.radius)
         F.data (TerminalHistoryBridge.shift F W.controls.radius) (eta, OutgoingTail.tailEnd F.data
-          - y) := by
+            - y) := by
   let p := NominalConeAssembly.chart W.controls.radius (y, eta)
   have hend : F.data.core.endpoint < y := (TerminalHistoryBridge.terminalStart_after_endpoint
-    F).trans_le hy
+      F).trans_le hy
   have hy0 : 0 ≤ y := (SchedulePressure.endpoint_pos F.data).le.trans hend.le
   have hx : 0 < p.1 := NominalConeAssembly.chart_positive W.controls.radius_pos _
   have hp := NominalConeAssembly.Witness.chart_after_match W (p := (y, eta)) hy0
@@ -362,8 +375,8 @@ theorem nominal_terminal_stress {y eta : ℝ} (hy : TerminalCone.terminalStart F
     rw [← he.2.1]
     change W.profiles.f p = (Real.sqrt (2 * p.1) * W.profiles.f p) /
       Real.sqrt (2 * W.controls.radius * Real.exp y)
-    have hr : 2 * p.1 = 2 * W.controls.radius * Real.exp y := by dsimp [p,
-      NominalConeAssembly.chart]; ring
+    have hr : 2 * p.1 = 2 * W.controls.radius * Real.exp y := by
+        dsimp [p, NominalConeAssembly.chart]; ring
     rw [hr, mul_div_cancel_left₀ _ hroot]
   have hE : HeatSwitchCone.logE F W.controls.radius W.heat.coefficients (y, eta) ≠ 0 := by
     rw [← he.2.1]
@@ -402,6 +415,8 @@ theorem right_chart_eq (x : ℝ) :
 
 variable {W} {d : ModulatedProfileAssembly.LoopData W} (v : ModulatedProfileAssembly.Witness d)
 
+/-- Outer width, given by `min 1 (Real.log (NominalConeAssembly.activeRight W /
+(ModulatedProfileAssembly.repairPatch W).right))`. -/
 noncomputable def outerWidth (_v : ModulatedProfileAssembly.Witness d) : ℝ :=
   min 1 (Real.log (NominalConeAssembly.activeRight W /
     (ModulatedProfileAssembly.repairPatch W).right))
@@ -565,15 +580,19 @@ end WholeAnnulus
 
 section ShearIdentities
 
+/-- Log shear A, given by `ActivationContinuation.shearA P (logPoint p)`. -/
 noncomputable def logShearA {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   ActivationContinuation.shearA P (logPoint p)
 
+/-- Log shear B, given by `ActivationContinuation.shearB P (logPoint p)`. -/
 noncomputable def logShearB {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   ActivationContinuation.shearB P (logPoint p)
 
+/-- Log speed, given by `ActivationContinuation.shearSize (logShearA P p) (logShearB P p)`. -/
 noncomputable def logSpeed {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   ActivationContinuation.shearSize (logShearA P p) (logShearB P p)
 
+/-- Log slope, given by `logShearB P p / logShearA P p`. -/
 noncomputable def logSlope {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   logShearB P p / logShearA P p
 
@@ -607,7 +626,7 @@ theorem nominal_activation_shears {y eta : ℝ} (hy : y ≤ W.controls.reference
       StressActivation.actualP1 W.controls.activationTime W.controls.kappa L (y, eta) ∧
     ActivationContinuation.shearB W.profiles p =
       StressActivation.actualP2 W.controls.activationTime W.controls.kappa N.endpoint L U (y, eta)
-        := by
+          := by
   let p := NominalConeAssembly.chart (NominalConeAssembly.activeLeft W) (y, eta)
   have hηJ := NaturalAxisCoefficients.original_interval_interior hη
   have hx : 0 < p.1 := NominalConeAssembly.chart_positive (NominalConeAssembly.activeLeft_pos W) _
@@ -619,12 +638,12 @@ theorem nominal_activation_shears {y eta : ℝ} (hy : y ≤ W.controls.reference
     ⟨lt_of_lt_of_le (by norm_num) (mul_nonneg W.axis.scale_pos.le hx.le), hηJ⟩
   have hAf : (activationProfiles W).f p ≠ 0 :=
     (StressActivation.FromReference.f_pos W.axis.referenceInput W.controls.activationTime
-      W.controls.kappa
+        W.controls.kappa
       W.controls.referenceWidth hp hx.le).ne'
   have he := NominalConeAssembly.coordinates_of_prefix W.controls.seedProfiles (activationProfiles
-    W)
+      W)
     F.data.h ReferencePath.parameterInterval_open (R := (4 / W.axis.scale) * Real.exp
-      W.controls.referenceWidth)
+        W.controls.referenceWidth)
     rfl (fun q hq hqr => (W.controls.seed_activation hq hqr).1)
       (fun q hq hqr => (W.controls.seed_activation hq hqr).2) hp hp hx hR hηJ hAf
   have ha := activation_shears W.axis.referenceInput W.controls.activationTime_pos
@@ -641,7 +660,7 @@ theorem modulated_activation_shears {x eta : ℝ} (hx : x < innerWidth v)
       StressActivation.actualP1 W.controls.activationTime W.controls.kappa L (x, eta) ∧
     logShearB v.profiles (eta, leftEdge W + x) =
       StressActivation.actualP2 W.controls.activationTime W.controls.kappa N.endpoint L U (x, eta)
-        := by
+          := by
   have hxR : x ≤ W.controls.referenceWidth := hx.le.trans (min_le_left _ _)
   have hq := shears_outside v
     (p := (NominalConeAssembly.activeLeft W * Real.exp x, eta))
@@ -659,10 +678,10 @@ theorem modulated_activation_speed_slope {x eta : ℝ} (hx : x < innerWidth v)
     let U := StressActivation.FromReference.refAxial N W.controls.referenceWidth
     ActiveAnnulusWeight.leftChart (leftEdge W) (logSpeed v.profiles) (eta, x) =
       StressActivation.shearSize W.controls.activationTime W.controls.kappa N.endpoint L U (x, eta)
-        ∧
+          ∧
     ActiveAnnulusWeight.leftChart (leftEdge W) (logSlope v.profiles) (eta, x) =
       StressActivation.shearSlope W.controls.activationTime W.controls.kappa N.endpoint L U (x,
-        eta) := by
+          eta) := by
   have hs := modulated_activation_shears v hx hη
   dsimp only [ActiveAnnulusWeight.leftChart, logSpeed, logSlope]
   rw [hs.1, hs.2, shearSize_eq]
@@ -674,7 +693,7 @@ theorem nominal_terminal_shears {y eta : ℝ} (hy : TerminalCone.terminalStart F
     ActivationContinuation.shearA W.profiles p =
       TerminalEdgeFactor.profileSpeed (TerminalHistoryBridge.normalization F W.controls.radius)
         F.data (TerminalHistoryBridge.shift F W.controls.radius) (eta, OutgoingTail.tailEnd F.data
-          - y) ∧
+            - y) ∧
     ActivationContinuation.shearB W.profiles p = 0 := by
   have hend := (TerminalHistoryBridge.terminalStart_after_endpoint F).trans_le hy
   have hp := NominalConeAssembly.Witness.chart_after_match W (p := (y, eta))
@@ -909,11 +928,13 @@ open ActiveAnnulusWeight StressActivation
 
 variable {F : OutgoingProfile.Profile}
 
+/-- Activation speed, constructed using `shearSize`. -/
 noncomputable def activationSpeed (W : NominalProfile.Witness F) (q : ℝ × ℝ) : ℝ :=
   shearSize W.controls.activationTime W.controls.kappa W.axis.referenceInput.endpoint
     (FromReference.refLog W.axis.referenceInput W.controls.referenceWidth)
     (FromReference.refAxial W.axis.referenceInput W.controls.referenceWidth) (q.2, q.1)
 
+/-- Activation slope, constructed using `shearSlope`. -/
 noncomputable def activationSlope (W : NominalProfile.Witness F) (q : ℝ × ℝ) : ℝ :=
   shearSlope W.controls.activationTime W.controls.kappa W.axis.referenceInput.endpoint
     (FromReference.refLog W.axis.referenceInput W.controls.referenceWidth)
@@ -928,11 +949,11 @@ theorem activation_direction_positive (W : NominalProfile.Witness F) (hκ : W.co
         (activationSpeed W) (activationSlope W) G.width := by
   let N := W.axis.referenceInput
   have hL := FromReference.refLog_smooth N W.controls.referenceWidth_pos
-    W.controls.referenceWidth_small
+      W.controls.referenceWidth_small
   have hU := FromReference.refAxial_smooth N W.controls.referenceWidth_pos
-    W.controls.referenceWidth_small
+      W.controls.referenceWidth_small
   obtain ⟨G, hpos, halign⟩ := exists_natural_activation_factor_aligned W.axis.scale_pos
-    W.axis.natural
+      W.axis.natural
     F.axisDatum_contDiff W.axis.small W.controls.referenceWidth_pos W.controls.referenceWidth_small
       W.controls.activationTime_pos hκ
   obtain ⟨t, a, M, ht, _, hapos, _, hb⟩ := ActivationCone.natural_reference_bounds
@@ -955,7 +976,7 @@ theorem activation_direction_positive (W : NominalProfile.Witness F) (hκ : W.co
     change tilt (G.coefficient (eta, 0)) =
       actualP2 W.controls.activationTime W.controls.kappa N.endpoint
         (FromReference.refLog N W.controls.referenceWidth) (FromReference.refAxial N
-          W.controls.referenceWidth)
+            W.controls.referenceWidth)
         (0, eta) / actualP1 W.controls.activationTime W.controls.kappa
           (FromReference.refLog N W.controls.referenceWidth) (0, eta)
     rw [hz.1, hz.2]
@@ -967,7 +988,7 @@ theorem activation_direction_positive (W : NominalProfile.Witness F) (hκ : W.co
       (NaturalAxisCoefficients.original_interval_interior heta)
   change 2 < shearSize W.controls.activationTime W.controls.kappa N.endpoint
     (FromReference.refLog N W.controls.referenceWidth) (FromReference.refAxial N
-      W.controls.referenceWidth) (0, eta)
+        W.controls.referenceWidth) (0, eta)
   unfold shearSize
   rw [hz.1, hz.2]
   exact (show (2 : ℝ) < 2 + 1 / 8 by norm_num).trans (hb 0 ⟨le_rfl, ht.le⟩ eta heta).2.1
@@ -1016,7 +1037,7 @@ theorem outer_direction_positive :
     (TerminalHistoryBridge.shift F W.controls.radius) heta, ?_⟩
   apply trueDirection_transfer
     (terminal_true_direction hC F.data (TerminalHistoryBridge.shift F W.controls.radius))
-      (outerWidth_pos v)
+        (outerWidth_pos v)
   · exact fun eta heta x _ hx => modulated_terminal_stress v hx heta
   · exact fun eta heta x _ hx => (modulated_terminal_speed_slope v hx heta).1
   · exact fun eta heta x _ hx => (modulated_terminal_speed_slope v hx heta).2
@@ -1037,9 +1058,9 @@ theorem activationStress_zero_of_nonpos {x eta : ℝ} (hx : x ≤ 0)
   let I := ActivationStocks.FromReference.initial N W.controls.referenceWidth_pos
     W.controls.referenceWidth_small F.axisDatum F.axisDatum_contDiff
   have hL := FromReference.refLog_smooth N W.controls.referenceWidth_pos
-    W.controls.referenceWidth_small
+      W.controls.referenceWidth_small
   have hU := FromReference.refAxial_smooth N W.controls.referenceWidth_pos
-    W.controls.referenceWidth_small
+      W.controls.referenceWidth_small
   have hi := ActivationStocks.FromReference.initial_smooth N W.controls.referenceWidth_pos
     W.controls.referenceWidth_small F.axisDatum F.axisDatum_contDiff
   have hcoef : ∀ eta ∈ ReferencePath.parameterInterval, NaturalAxisData.L F.data.h eta ≠ 0 := by
@@ -1054,13 +1075,13 @@ theorem activationStress_zero_of_nonpos {x eta : ℝ} (hx : x ≤ 0)
     field_simp [W.controls.activationTime_pos.ne']
   have hzero : ActivationBounds.scaledDistance
       ((W.controls.kappa, W.controls.activationTime), (x / W.controls.activationTime, eta)) = 0 :=
-        by
+          by
     unfold ActivationBounds.scaledDistance
     rw [activation_zero (by norm_num : (0 : ℝ) < 1) W.controls.kappa
       (div_nonpos_of_nonpos_of_nonneg hx W.controls.activationTime_pos.le), mul_zero]
   rw [hTx, hzero, zero_mul, zero_mul] at hf
   have hm := ActivationCone.natural_reference_log_match W.axis.scale_pos
-    W.axis.natural.profile.family
+      W.axis.natural.profile.family
     F.axisDatum_contDiff W.axis.small W.controls.referenceWidth_pos W.controls.referenceWidth_small
       (hx.trans W.controls.referenceWidth_pos.le) hη
   have hs1 : ActivationCone.activatedStockOne F.data.h N.endpoint I L U
@@ -1128,6 +1149,7 @@ points and the same activation time used to construct the profile. -/
 noncomputable def zeta (_v : ModulatedProfileAssembly.Witness d) (X : ℝ) : ℝ :=
   radialWeight (W.controls.activationTime ^ 2) (leftEdge W) (rightEdge W) X
 
+/-- Distance, given by `edgeDistance (leftEdge W) (rightEdge W) (Real.log X)`. -/
 noncomputable def distance (_v : ModulatedProfileAssembly.Witness d) (X : ℝ) : ℝ :=
   edgeDistance (leftEdge W) (rightEdge W) (Real.log X)
 
@@ -1212,7 +1234,7 @@ theorem exists_weighted_profile :
           (rightChart (rightEdge W) (logSlope v.profiles)) G.width) := by
   obtain ⟨F, W, d, v, hv⟩ := ModulatedProfileAssembly.exists_modulated_profile
   exact ⟨F, W, d, v, hv, weighted_bounds v hv, inner_direction_positive v hv,
-    outer_direction_positive v⟩
+      outer_direction_positive v⟩
 
 end FinalPackage
 

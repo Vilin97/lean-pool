@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatedOutgoing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FiveProfileMoments
 
-@[expose] public section
-
 /-!
 # Four disjoint reservations on the actual outgoing shaped wait
 
@@ -21,6 +19,9 @@ existing heat-compensation patch. The last two remain pure powers after that
 heat correction. All fields below use the same outgoing profile.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -29,6 +30,7 @@ open NavierStokes.OutgoingProfile (Profile)
 
 namespace NavierStokes.ReservedPatches
 
+/-- Slot data for reserved patches. -/
 inductive Slot where
   | modulation
   | heat
@@ -36,12 +38,16 @@ inductive Slot where
   | mean
   deriving DecidableEq
 
+/-- Left offset as an element of `Slot → ℝ | .modulation => -25 | .heat => -20 | .positive =>
+-14 | .mean => -8`. -/
 noncomputable def leftOffset : Slot → ℝ
   | .modulation => -25
   | .heat => -20
   | .positive => -14
   | .mean => -8
 
+/-- Right offset as an element of `Slot → ℝ | .modulation => -20 | .heat => -15 | .positive =>
+-9 | .mean => -3`. -/
 noncomputable def rightOffset : Slot → ℝ
   | .modulation => -20
   | .heat => -15
@@ -59,18 +65,23 @@ theorem offsets_separated {s t : Slot} (hst : s ≠ t) :
     rightOffset s ≤ leftOffset t ∨ rightOffset t ≤ leftOffset s := by
   cases s <;> cases t <;> simp_all [leftOffset, rightOffset] <;> norm_num
 
+/-- Left clock, given by `F.data.core.pulseStart + leftOffset s`. -/
 noncomputable def leftClock (F : Profile) (s : Slot) : ℝ :=
   F.data.core.pulseStart + leftOffset s
 
+/-- Right clock, given by `F.data.core.pulseStart + rightOffset s`. -/
 noncomputable def rightClock (F : Profile) (s : Slot) : ℝ :=
   F.data.core.pulseStart + rightOffset s
 
+/-- Left, given by `OutgoingDilation.radius XR (leftClock F s)`. -/
 noncomputable def left (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   OutgoingDilation.radius XR (leftClock F s)
 
+/-- Right, given by `OutgoingDilation.radius XR (rightClock F s)`. -/
 noncomputable def right (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   OutgoingDilation.radius XR (rightClock F s)
 
+/-- Window, given by `Ioo (left F XR s) (right F XR s)`. -/
 noncomputable def window (F : Profile) (XR : ℝ) (s : Slot) : Set ℝ :=
   Ioo (left F XR s) (right F XR s)
 
@@ -188,10 +199,14 @@ theorem heat_right (F : Profile) (XR : ℝ) :
 
 /-! ## Closed support regions with strict margins in the four windows -/
 
+/-- Inner lower as an element of `Slot → ℝ | .heat => TerminalCompensation.lower
+OutgoingDilation.compensationPatch 0 | _ => Real.exp 1`. -/
 noncomputable def innerLower : Slot → ℝ
   | .heat => TerminalCompensation.lower OutgoingDilation.compensationPatch 0
   | _ => Real.exp 1
 
+/-- Inner upper as an element of `Slot → ℝ | .heat => TerminalCompensation.upper
+OutgoingDilation.compensationPatch 2 | _ => Real.exp 4`. -/
 noncomputable def innerUpper : Slot → ℝ
   | .heat => TerminalCompensation.upper OutgoingDilation.compensationPatch 2
   | _ => Real.exp 4
@@ -210,12 +225,15 @@ theorem inner_bounds (s : Slot) :
     exact ⟨by simpa only [Real.exp_zero] using Real.exp_lt_exp.mpr (show (0 : ℝ) < 1 by norm_num),
       Real.exp_lt_exp.mpr (by norm_num), Real.exp_lt_exp.mpr (by norm_num)⟩
 
+/-- Support left, given by `left F XR s * innerLower s`. -/
 noncomputable def supportLeft (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   left F XR s * innerLower s
 
+/-- Support right, given by `left F XR s * innerUpper s`. -/
 noncomputable def supportRight (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   left F XR s * innerUpper s
 
+/-- Closed patch, given by `Icc (supportLeft F XR s) (supportRight F XR s)`. -/
 noncomputable def closedPatch (F : Profile) (XR : ℝ) (s : Slot) : Set ℝ :=
   Icc (supportLeft F XR s) (supportRight F XR s)
 
@@ -267,6 +285,7 @@ theorem closedPatches_disjoint (F : Profile) (XR : ℝ) (hXR : 0 < XR)
   (windows_disjoint F XR hXR hst).mono
     (closedPatch_subset F XR hXR s) (closedPatch_subset F XR hXR t)
 
+/-- Moment patch, bundling `left`, `right`, `left_pos`, `ordered`. -/
 noncomputable def momentPatch (F : Profile) (XR : ℝ) (hXR : 0 < XR)
     (s : Slot) : FiveProfileMoments.Patch where
   left := supportLeft F XR s
@@ -276,6 +295,7 @@ noncomputable def momentPatch (F : Profile) (XR : ℝ) (hXR : 0 < XR)
 
 /-! ## Exact fields on the actual, common outgoing profile -/
 
+/-- X amplitude, constructed using `OutgoingSchedule.radialAmplitude`. -/
 noncomputable def xAmplitude (F : Profile) (XR eta : ℝ) : ℝ :=
   OutgoingSchedule.radialAmplitude F.data.core.P F.data.core.dropLength F.data.core.lam
     F.data.core.holdStart * OutgoingSchedule.shape eta *
@@ -427,21 +447,27 @@ theorem heat_increment_tsupport (F : Profile) (XR : ℝ) (hXR : 0 < XR)
 
 /-! ## Conversion to the similarity radius R, where X = R squared / 2 -/
 
+/-- Radial left, given by `Real.sqrt (2 * left F XR s)`. -/
 noncomputable def radialLeft (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   Real.sqrt (2 * left F XR s)
 
+/-- Radial right, given by `Real.sqrt (2 * right F XR s)`. -/
 noncomputable def radialRight (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   Real.sqrt (2 * right F XR s)
 
+/-- Radial support left, given by `Real.sqrt (2 * supportLeft F XR s)`. -/
 noncomputable def radialSupportLeft (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   Real.sqrt (2 * supportLeft F XR s)
 
+/-- Radial support right, given by `Real.sqrt (2 * supportRight F XR s)`. -/
 noncomputable def radialSupportRight (F : Profile) (XR : ℝ) (s : Slot) : ℝ :=
   Real.sqrt (2 * supportRight F XR s)
 
+/-- Radial window, given by `Ioo (radialLeft F XR s) (radialRight F XR s)`. -/
 noncomputable def radialWindow (F : Profile) (XR : ℝ) (s : Slot) : Set ℝ :=
   Ioo (radialLeft F XR s) (radialRight F XR s)
 
+/-- Radial closed patch, given by `Icc (radialSupportLeft F XR s) (radialSupportRight F XR s)`. -/
 noncomputable def radialClosedPatch (F : Profile) (XR : ℝ) (s : Slot) : Set ℝ :=
   Icc (radialSupportLeft F XR s) (radialSupportRight F XR s)
 
@@ -525,6 +551,7 @@ theorem radial_closedPatches_disjoint (F : Profile) (XR : ℝ) (hXR : 0 < XR)
   (radial_windows_disjoint F XR hXR hst).mono
     (radial_closedPatch_subset F XR hXR s) (radial_closedPatch_subset F XR hXR t)
 
+/-- Radial amplitude, given by `xAmplitude F XR eta * (2 : ℝ) ^ (1 / 2 + F.data.core.lam)`. -/
 noncomputable def radialAmplitude (F : Profile) (XR eta : ℝ) : ℝ :=
   xAmplitude F XR eta * (2 : ℝ) ^ (1 / 2 + F.data.core.lam)
 
@@ -583,6 +610,7 @@ theorem radial_heated_fields_on_closedPatch (F : Profile) (XR : ℝ) (hXR : 0 < 
 
 /-! ## Supported perturbations preserve the other complete open windows -/
 
+/-- Supported, given by `∀ eta, support (fun X => v (X, eta)) ⊆ closedPatch F XR s`. -/
 def Supported (F : Profile) (XR : ℝ) (s : Slot) (v : ℝ × ℝ → ℝ) : Prop :=
   ∀ eta, support (fun X => v (X, eta)) ⊆ closedPatch F XR s
 
@@ -597,7 +625,7 @@ theorem five_row_updates_supported (F : Profile) (XR : ℝ) (hXR : 0 < XR) (s : 
     (A : ℝ → ℝ) (c : ℝ → FiveProfileMoments.Coeff) :
     Supported F XR s (fun p => A p.2 * FiveProfileMoments.u (momentPatch F XR hXR s) (c p.2) p.1) ∧
       Supported F XR s (fun p => A p.2 * FiveProfileMoments.e (momentPatch F XR hXR s) (c p.2) p.1)
-        := by
+          := by
   constructor
   · intro eta X hX
     have ht := (FiveProfileMoments.physical_edits_tsupport
@@ -665,6 +693,7 @@ theorem finite_updates_eqOn {ι : Type*} [Fintype ι]
   change g p + ∑ i, v i p = g p
   rw [hz, add_zero]
 
+/-- Radial supported, given by `∀ eta, support (fun R => v (R, eta)) ⊆ radialWindow F XR s`. -/
 def RadialSupported (F : Profile) (XR : ℝ) (s : Slot) (v : ℝ × ℝ → ℝ) : Prop :=
   ∀ eta, support (fun R => v (R, eta)) ⊆ radialWindow F XR s
 

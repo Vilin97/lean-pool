@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentNormalPacketParameters
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialScaleSummability
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniversalFrequency
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialScaleSummability
+import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 
 /-! The same normal-stage frequency comparison also supplies the
 parent-label and physical support-scale inequalities for the child flow. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,8 +77,8 @@ theorem support_inverse_le_envelope (J : ℕ) (hJ : 2 ≤ J) (C X : ℝ) (hX : 1
 
 theorem secondary_frequency_guards (J D : ℕ) (hJ : 2 ≤ J) (C X K : ℝ)
     (hX : 1 ≤ X) (n : ℕ)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
-    (hK : K ≤ previousFrequency J D X n^80)
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
+    (hK : K ≤ previousFrequency J D X n ^ 80)
     (hcost : (frequencySpec C).cost J (scaleSequence J X) n ≤ 1)
     (hk : 1 ≤ frequency J X n) :
     K ≤ frequency J X n ∧ (supportScale J X n)⁻¹ ≤ (frequency J X n)^(3/4 : ℝ) := by

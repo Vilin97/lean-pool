@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
 
+/-! Continuity of the actual rescaled moving-frame matrices. -/
+
 @[expose] public section
 
-/-! Continuity of the actual rescaled moving-frame matrices. -/
 
 noncomputable section
 
@@ -24,10 +25,10 @@ theorem rescaledFrame_continuousOn (B D : ℝ → Space →L[ℝ] Space)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
     (hDc : ContinuousOn D S)
     (hm : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
-    (hv : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t)+
-      (2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) S t)
+    (hv : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t) +
+      (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : ∀ t ∈ S, m t ≠ 0) (hv0 : ∀ t ∈ S, v t ≠ 0)
-    (hmv : ∀ t ∈ S, ⟪m t,v t⟫_ℝ = 0) :
+    (hmv : ∀ t ∈ S, ⟪m t, v t⟫_ℝ = 0) :
     ∀ i j, ContinuousOn (fun τ => rescaledFrame D m v t₀ a ε τ i j) U := by
   have ht : ContinuousOn (physicalTime t₀ a ε) U := by unfold physicalTime; fun_prop
   have hf : ∀ i, ContinuousOn (fun t => normalizedFrame m v t i) S := by

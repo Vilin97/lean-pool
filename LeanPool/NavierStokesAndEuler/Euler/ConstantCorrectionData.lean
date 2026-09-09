@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftBudget
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyUniformConstants
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
+import LeanPool.NavierStokesAndEuler.Euler.GevreyUniformConstants
 
 /-! Actual constant coefficient towers for the ordinary Euler correction
 equation: identity pressure metric, zero lower-order coefficients, spatial
 scale one and angular direction zero. No solution is included in the data. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,21 +24,39 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerCylinderSobolev
   EulerAllOrderCorrectionData EulerCorrectionEnergyData EulerJetProductBounds
   EulerH6Pressure EulerSobolevGevreyOperators EulerMetricTransport
-  EulerTransportDerivatives EulerGevreyUniformConstants EulerEnergyMetricPaths
+  EulerTransportDerivatives EulerGevreyUniformConstants
   EulerVolterraConvolution
 open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (LiftTangent →L[ℝ] Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (LiftTangent →L[ℝ] Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (LiftTangent →L[ℝ] LiftTangent →L[ℝ] Space →L[ℝ] Space)
-  := inferInstance
-private local instance : NormedSpace ℝ (LiftTangent →L[ℝ] LiftTangent →L[ℝ] Space →L[ℝ] Space) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instConstantCorrectionData1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instConstantCorrectionData2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →L[ℝ] Space →L[ℝ] Space)` instance to
+shorten typeclass synthesis. -/
+local instance instConstantCorrectionData3 : NormedAddCommGroup (LiftTangent →L[ℝ] Space →L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →L[ℝ] Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instConstantCorrectionData4 : NormedSpace ℝ (LiftTangent →L[ℝ] Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →L[ℝ] LiftTangent →L[ℝ] Space →L[ℝ]
+Space)` instance to shorten typeclass synthesis. -/
+local instance instConstantCorrectionData5 : NormedAddCommGroup (LiftTangent →L[ℝ] LiftTangent
+    →L[ℝ] Space →L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →L[ℝ] LiftTangent →L[ℝ] Space →L[ℝ] Space)`
+instance to shorten typeclass synthesis. -/
+local instance instConstantCorrectionData6 : NormedSpace ℝ (LiftTangent →L[ℝ] LiftTangent →L[ℝ]
+    Space →L[ℝ] Space) :=
+    inferInstance
 
+/-- Coefficient, bundling `coefficient`, `smooth`, `bound`, `norm_bound` and the required
+compatibility proofs. -/
 def coefficient (A : Space →L[ℝ] Space) : SmoothCoefficient P where
   coefficient _ := A
   smooth _ := contDiff_const
@@ -52,6 +71,7 @@ def coefficient (A : Space →L[ℝ] Space) : SmoothCoefficient P where
     change ‖fderiv ℝ (fderiv ℝ (fun _ : LiftTangent => A)) y‖ ≤ 0
     simp only [fderiv_fun_const,fderiv_zero,Pi.zero_apply,norm_zero,le_refl]
 
+/-- Jet used in constant correction data. -/
 def jet (A : Space →L[ℝ] Space) :
     (q : ℕ) → EulerSpatialSobolevInverse.CoefficientJet P standardDirection q (coefficient P A)
   | 0 => .zero _
@@ -93,7 +113,7 @@ theorem jet_zero_weightedCoefficient (q b N : ℕ) (ρ : ℝ) :
 
 theorem coefficient_operator_id :
     (coefficient P (ContinuousLinearMap.id ℝ Space)).operator=ContinuousLinearMap.id ℝ (LiftL2 P)
-      := by
+        := by
   apply ContinuousLinearMap.ext
   intro u
   apply Lp.ext
@@ -109,11 +129,14 @@ theorem coefficient_operator_zero :
     Lp.coeFn_zero Space 2 (liftMeasure P)] with x hx hz
   exact hx.trans hz.symm
 
+/-- Tower, bundling `coefficient`, `jet`, `continuous`. -/
 def tower (T : ℝ) (A : Space →L[ℝ] Space) : CoefficientTower P T where
   coefficient _ := coefficient P A
   jet q _ := jet P A q
   continuous _ := continuous_const
 
+/-- Data, bundling `κ`, `direction`, `scale_bound`, `direction_bound` and the required
+compatibility proofs. -/
 def data {T : ℝ} (F R : FieldTower P T) : EulerAllOrderCorrectionData.Data P T where
   κ := 1
   direction := 0
@@ -122,7 +145,7 @@ def data {T : ℝ} (F R : FieldTower P T) : EulerAllOrderCorrectionData.Data P T
   metric := tower P T (ContinuousLinearMap.id ℝ Space)
   metric_continuous := by
     change Continuous (fun _ : Icc (0 : ℝ) T => (coefficient P (ContinuousLinearMap.id ℝ
-      Space)).operator)
+        Space)).operator)
     exact continuous_const
   coercivity := 1
   coercivity_pos := zero_lt_one
@@ -134,6 +157,8 @@ def data {T : ℝ} (F R : FieldTower P T) : EulerAllOrderCorrectionData.Data P T
   approximation := F
   residual := R
 
+/-- Metric budget, bundling `metric`, `continuous`, `derivative`, `hasDeriv` and the required
+compatibility proofs. -/
 def metricBudget {T : ℝ} (hT : 0 ≤ T) (F R : FieldTower P T) :
     MetricBudget P T hT ((data P F R).atOrder P 1) where
   metric _ := coefficient P (ContinuousLinearMap.id ℝ Space)
@@ -145,8 +170,8 @@ def metricBudget {T : ℝ} (hT : 0 ≤ T) (F R : FieldTower P T) :
   c := 1
   c_pos := zero_lt_one
   symmetric _ _ _ _ := rfl
-  coercive _ _ v := by simp only
-    [coefficient,id_apply,one_pow,one_mul,real_inner_self_eq_norm_sq,le_refl]
+  coercive _ _ v := by
+      simp only [coefficient,id_apply,one_pow,one_mul,real_inner_self_eq_norm_sq,le_refl]
   inverse _ _ v := by change v=v; rfl
   bound := 1
   first := 0
@@ -158,6 +183,7 @@ def metricBudget {T : ℝ} (hT : 0 ≤ T) (F R : FieldTower P T) :
   first_le _ := le_rfl
   time_le _ := by simp only [ContinuousMap.zero_apply,norm_zero,le_refl]
 
+/-- Pressure bound, given by `9^729`. -/
 def pressureBound : ℝ := 9^729
 
 theorem pressureBound_one_le : 1 ≤ pressureBound :=

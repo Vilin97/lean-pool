@@ -8,10 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceEquations
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedEquation
+
+/-! Actual equations, tangency and pressure regularity at every solved joined grade. -/
 
 @[expose] public section
 
-/-! Actual equations, tangency and pressure regularity at every solved joined grade. -/
 
 noncomputable section
 
@@ -46,7 +49,7 @@ theorem joinedSource_mean_equation (A : SourceCoefficientAgreement M D) (p : ℕ
     (t : Icc (0 : ℝ) M.T) (x : Space) (θ : ℝ) :
     linearPart ((joinedSourceOperators P M D τ hτ hτT B).strain (t,(x,θ)))
         (slicedJet (Icc (0 : ℝ) M.T) (joinedSourceProfiles P M D τ hτ hτT B primary p).mean
-          (t,(x,θ))) +
+            (t,(x,θ))) +
       slowPressure ((joinedSourceOperators P M D τ hτ hτT B).inverseFrame (t,(x,θ)))
         (pressureJet (joinedSourceProfiles P M D τ hτ hτT B primary p).meanPressure (t,(x,θ))) =
       meanForce (joinedSourceOperators P M D τ hτ hτT B) p
@@ -58,14 +61,14 @@ theorem joinedSource_mean_equation (A : SourceCoefficientAgreement M D) (p : ℕ
         (joinedSourceProfiles P M D τ hτ hτT B primary) := profiles_step _ _ p hp
   rw [he]
   exact EulerMeanPacketProvider.meanSolve_jet_equation M _
-    ⟨joinedSource_meanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩ t x θ
+    ⟨joinedSourceMeanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩ t x θ
 
 include hT hprimary in
 theorem joinedSource_high_equation (p : ℕ) (hp : 2 ≤ p)
     (t : Icc (0 : ℝ) M.T) (x : Space) (θ : ℝ) :
     linearPart ((joinedSourceOperators P M D τ hτ hτT B).strain (t,(x,θ)))
         (slicedJet (Icc (0 : ℝ) M.T) (joinedSourceProfiles P M D τ hτ hτT B primary p).high
-          (t,(x,θ))) +
+            (t,(x,θ))) +
       fastPressure ((joinedSourceOperators P M D τ hτ hτT B).normal (t,(x,θ)))
         (pressureJet (joinedSourceProfiles P M D τ hτ hτT B primary p).highPressure (t,(x,θ))) =
       highForce (joinedSourceOperators P M D τ hτ hτT B) p
@@ -78,13 +81,13 @@ theorem joinedSource_high_equation (p : ℕ) (hp : 2 ≤ p)
   rw [he]
   let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
   have h := EulerTransversePacketJoin.highSolve_equation τ hτ hτT B
-    ⟨joinedSource_highForcing P M D hT τ hτ hτT B primary hprimary p hp⟩ td x θ
+    ⟨joinedSourceHighForcing P M D hT τ hτ hτT B primary hprimary p hp⟩ td x θ
   change linearPart (D.strain (t,(x,θ)))
       (slicedJet (Icc (0 : ℝ) M.T)
         (EulerTransversePacketJoin.highSolve (P := P) τ hτ hτT B (highForce ops p a)).1 (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ)))
         (pressureJet (EulerTransversePacketJoin.highSolve (P := P) τ hτ hτT B (highForce ops p
-          a)).2 (t,(x,θ))) = _
+            a)).2 (t,(x,θ))) = _
   have hs : Icc (0 : ℝ) M.T = Icc (0 : ℝ) D.T := congrArg (Icc (0 : ℝ)) hT
   have hj := congrArg (fun s : Set ℝ => slicedJet s
     (EulerTransversePacketJoin.highSolve (P := P) τ hτ hτT B (highForce ops p a)).1 (t,(x,θ))) hs
@@ -99,7 +102,7 @@ theorem joinedSource_high_tangent (p : ℕ) (hp : 2 ≤ p)
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_highForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceHighForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   have he : joinedSourceProfiles P M D τ hτ hτT B primary p =
       EulerPacketProfileRecursion.step (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary) := profiles_step _ _ p hp
@@ -117,7 +120,7 @@ theorem joinedSource_highPressure_smooth (p : ℕ) (hp : 2 ≤ p) (t : ℝ) :
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_highForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceHighForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   unfold joinedSourceProfiles
   rw [profiles_step _ _ p hp]
   change ContDiff ℝ ∞ (fun y : Space × ℝ =>
@@ -134,7 +137,7 @@ theorem joinedSource_meanPressure_smooth (p : ℕ) (hp : 2 ≤ p) (t : ℝ) :
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_meanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceMeanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   unfold joinedSourceProfiles
   rw [profiles_step _ _ p hp]
   change ContDiff ℝ ∞ (fun y : Space × ℝ => (EulerMeanPacketProvider.meanSolve M
@@ -150,7 +153,7 @@ theorem joinedSource_meanPressure_angle (p : ℕ) (hp : 2 ≤ p) (t : ℝ) (x : 
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_meanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceMeanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   unfold joinedSourceProfiles
   rw [profiles_step _ _ p hp]
   change (pressureJet (EulerMeanPacketProvider.meanSolve M

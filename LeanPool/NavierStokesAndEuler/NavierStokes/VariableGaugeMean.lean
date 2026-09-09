@@ -6,11 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanChartCompatibility
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanDomain
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalSignedRequest
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # The actual similarity-dependent mean gauge
@@ -28,6 +25,9 @@ increment classes from the actual input fields on the valid slow domain.
 The common torus index and its bounded gap from the native index remain
 explicit.  This module does not assert arbitrary-power alias decay.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.VariableGaugeMean
 
@@ -65,15 +65,20 @@ section Gauge
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Radial ratio, given by `z.1 / ell z.2.1`. -/
 noncomputable def radialRatio (ell : S → ℝ) (z : PressureStream.Lift S) : ℝ := z.1 / ell z.2.1
 
+/-- Cutoff, given by `RadialPullback.physicalCutoff d a b (radialRatio ell z)`. -/
 noncomputable def cutoff (d a b : ℝ) (ell : S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   RadialPullback.physicalCutoff d a b (radialRatio ell z)
 
+/-- Density, given by `(ell z.2.1)⁻¹ * PressureStream.rho a b hab (radialRatio ell z)`. -/
 noncomputable def density (a b : ℝ) (hab : a < b) (ell : S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   (ell z.2.1)⁻¹ * PressureStream.rho a b hab (radialRatio ell z)
 
+/-- Supported gauge, given by `∀ z, z.2.1 ∈ U → f z ≠ 0 → z.1 ∈ Icc (ell z.2.1 * a) (ell z.2.1 *
+b)`. -/
 noncomputable def SupportedGauge (a b : ℝ) (ell : S → ℝ) (U : Set S)
     (f : PressureStream.Lift S → ℝ) : Prop :=
   ∀ z, z.2.1 ∈ U → f z ≠ 0 → z.1 ∈ Icc (ell z.2.1 * a) (ell z.2.1 * b)
@@ -83,18 +88,25 @@ noncomputable def compactPrimitive (d a b M : ℝ) (ell : S → ℝ) (v : Pressu
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   RadialPullback.physicalCompact d (ell z.2.1 * a) (ell z.2.1 * b) M ((0 : S), v) f z
 
+/-- Pressure source, given by `f z - density a b hab ell z * PressureStream.pressureMass f
+z.2.1`. -/
 noncomputable def pressureSource (a b : ℝ) (hab : a < b) (ell : S → ℝ)
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   f z - density a b hab ell z * PressureStream.pressureMass f z.2.1
 
+/-- Mean pressure, given by `compactPrimitive d a b M ell v (pressureSource a b hab ell f)`. -/
 noncomputable def meanPressure (d a b M : ℝ) (hab : a < b) (ell : S → ℝ)
     (v : PressureStream.Plane) (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   compactPrimitive d a b M ell v (pressureSource a b hab ell f)
 
+/-- Stream potential, given by `PressureStream.divideRadius (compactPrimitive d a b M ell v
+(PressureStream.weightedSource f))`. -/
 noncomputable def streamPotential (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.divideRadius (compactPrimitive d a b M ell v (PressureStream.weightedSource f))
 
+/-- Compact alias, given by `RadialPullback.physicalAlias d (ell z.2.1 * a) (ell z.2.1 * b) M
+((0 : S), v) f z`. -/
 noncomputable def compactAlias (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   RadialPullback.physicalAlias d (ell z.2.1 * a) (ell z.2.1 * b) M ((0 : S), v) f z
@@ -154,7 +166,7 @@ omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem pressureSource_supported {a b : ℝ} (hab : a < b) {ell : S → ℝ} {U : Set S}
     (hl : ∀ s ∈ U, 0 < ell s) {f : PressureStream.Lift S → ℝ}
     (hf : SupportedGauge a b ell U f) : SupportedGauge a b ell U (pressureSource a b hab ell f) :=
-      by
+        by
   intro z hz hn
   by_contra hnot
   have hf0 : f z = 0 := by by_contra he; exact hnot (hf z hz he)
@@ -193,9 +205,12 @@ theorem qLength_contDiffOn {coord : ℝ} (hc : 0 < coord) (hc1 : coord < 1) :
   exact ((SimilarityCoordinates.coordinateQ_smooth hc hc1 hs).sqrt
     (SimilarityCoordinates.coordinateQ_spec hc hc1 hs).1.ne').contDiffWithinAt
 
+/-- Cutoff model, given by `RadialPullback.physicalCutoff d a b (y.2.1 / Real.sqrt y.1)`. -/
 noncomputable def cutoffModel (d a b : ℝ) (y : MeanRankUpdate.ModelPoint) : ℝ :=
   RadialPullback.physicalCutoff d a b (y.2.1 / Real.sqrt y.1)
 
+/-- Density model, given by `(Real.sqrt y.1)⁻¹ * PressureStream.rho a b hab (y.2.1 / Real.sqrt
+y.1)`. -/
 noncomputable def densityModel (a b : ℝ) (hab : a < b) (y : MeanRankUpdate.ModelPoint) : ℝ :=
   (Real.sqrt y.1)⁻¹ * PressureStream.rho a b hab (y.2.1 / Real.sqrt y.1)
 
@@ -251,6 +266,7 @@ section AnchorReference
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Physical past, constructed using `TransportPrimitive.pastIntegral`. -/
 noncomputable def physicalPast (d c M : ℝ) (v : E) (f : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   TransportPrimitive.pastIntegral M v (RadialPullback.normalizeSource d c f)
     (RadialPullback.liftChart (RadialPullback.powerChart d c) z)
@@ -269,7 +285,7 @@ theorem normalizeSource_anchor_eq {c a b d : ℝ} (hc : 0 < c) (hca : c ≤ a)
   · rw [RadialPullback.normalizeSource_eq_formula hc hcb hd hz hcs,
       RadialPullback.normalizeSource_eq_formula ha hab hd hz hs]
   · rw [TransportPrimitive.radial_zero_of_lt (RadialPullback.normalizeSource_supported hc hcb hd
-    hcs)
+      hcs)
       ((le_of_not_gt hz).trans_lt (Real.rpow_pos_of_pos hc d)),
       TransportPrimitive.radial_zero_of_lt (RadialPullback.normalizeSource_supported ha hab hd hs)
         ((le_of_not_gt hz).trans_lt (Real.rpow_pos_of_pos ha d))]
@@ -291,7 +307,7 @@ theorem physicalCompact_reference {c a b d M : ℝ} (hc : 0 < c) (hca : c ≤ a)
   by_cases hz : a ≤ z.1
   · unfold RadialPullback.physicalCompact RadialPullback.pullback TransportPrimitive.compactIntegral
       physicalPast PressureStream.physicalTotal RadialPullback.physicalCutoff
-        RadialPullback.liftChart
+          RadialPullback.liftChart
     simp only [Function.comp_apply, smul_eq_mul]
     rw [RadialPullback.powerChart_eq ha (by linarith) d,
       RadialPullback.powerChart_eq hc (by linarith) d, he]
@@ -368,7 +384,7 @@ theorem compactPrimitive_reference {c a b d M : ℝ} (hc : 0 < c) (ha : 0 < a)
     exact hs (p.1, (z.2.1, p.2.2)) hz hp
   have he (r : ℝ) (Y : PressureStream.Plane) : g (r, (z.2.1, Y)) = f (r, (z.2.1, Y)) := rfl
   have hp := physicalCompact_reference (M := M) hc (hleft _ hz) (mul_lt_mul_of_pos_left hab (hl _
-    hz))
+      hz))
     hd ((0 : S), v) hg hgs z
   rw [PhysicalMeanDomain.physicalCompact_fiberLocal d _ _ M v g f z.2.1 he z.1 z.2.2,
     physicalPast_fiberLocal d c M v g f z.2.1 he z.1 z.2.2,
@@ -407,7 +423,7 @@ theorem compactPrimitive_contDiffOn {c e a b d M : ℝ} (hc : 0 < c) (hce : c < 
     exact ⟨(hleft _ hz).trans (hs z hz hn).1, (hs z hz hn).2.trans (hright _ hz)⟩
   have hg := (physicalPast_contDiffOn (M := M) hc hce hd v hU hf hsup).sub
     ((cutoff_contDiffOn ha d b hell hl).mul (physicalTotal_contDiffOn (M := M) hc hce hd v hU hf
-      hsup))
+        hsup))
   apply hg.congr
   intro z hz
   exact compactPrimitive_reference hc ha hab hd ell v hU hl hleft hf hs z hz
@@ -444,9 +460,9 @@ theorem normalizeSource_unweighted_fiber {c e d : ℝ} (hc : 0 < c) (hce : c < e
     simpa only [mul_zero, logWeight_zero_zero (Real.rpow_pos_of_pos hc d) hR, mul_one] using h
   · rw [MeanMomentBounds.supported_zero_outside_open
       (TransportPrimitive.iteratedFDeriv_contDiff (RadialPullback.normalizeSource_contDiff hc hd
-        hf) j).continuous
+          hf) j).continuous
       (TransportPrimitive.iteratedFDeriv_supported (RadialPullback.normalizeSource_supported hc hce
-        hd hs) j) hR,
+          hd hs) j) hR,
       norm_zero]
     exact mul_nonneg hK hA
 
@@ -501,11 +517,11 @@ theorem physicalIntegrals_finiteJets_fiber {c e d : ℝ} (hc : 0 < c) (hce : c <
     transportIntegrals_jet_bound_fiber (M := M) (Real.rpow_le_rpow hc.le hce.le hd.le)
       v hN hsN s j (fun R _ Y => hbN f hf hs A hA s hin (R, (s, Y)) rfl j hj) w hw
   have hp := hbP (TransportPrimitive.pastIntegral M ((0 : S), v) (RadialPullback.normalizeSource d
-    c f))
+      c f))
     (TransportPrimitive.pastIntegral_contDiff hN hsN) z hR _ hB
     (fun j hj => (hI (RadialPullback.liftChart (RadialPullback.powerChart d c) z) hz j hj).1) j hj
   have ht := hbP (TransportPrimitive.totalIntegral M ((0 : S), v) (RadialPullback.normalizeSource d
-    c f))
+      c f))
     (TransportPrimitive.totalIntegral_contDiff hN hsN) z hR _ hB
     (fun j hj => (hI (RadialPullback.liftChart (RadialPullback.powerChart d c) z) hz j hj).2) j hj
   constructor
@@ -518,8 +534,11 @@ end IntegralJets
 
 section StateConstructors
 
+/-- Gauge data, collecting `radial`, `length`. -/
 structure GaugeData (S : Type) where
+  /-- Radial of `GaugeData`, of type `CorrectionState.ReconstructionData`. -/
   radial : CorrectionState.ReconstructionData
+  /-- Length of `GaugeData`, of type `ℕ → S → ℝ`. -/
   length : ℕ → S → ℝ
 
 /-- The actual similarity gauge in every normalized chart. -/
@@ -533,89 +552,102 @@ noncomputable def similarityGauge (h d a b M : ℝ) (hab : a < b) (index : ℕ �
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Reconstruct state as an element of `CorrectionState.State (PressureStream.Lift S)`. -/
 noncomputable def reconstructState (g : GaugeData S)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.State
-      (PressureStream.Lift S) :=
+        (PressureStream.Lift S) :=
   { u with
     pressure := fun n =>
       meanPressure g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
         g.radial.inner_lt_outer (g.length n) g.radial.radialDirection (u.gr c n) }
 
+/-- Pressure alias state as an element of `CorrectionState.Oscillation (PressureStream.Lift S)`. -/
 noncomputable def pressureAliasState (g : GaugeData S)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.Oscillation
-      (PressureStream.Lift S) :=
+        (PressureStream.Lift S) :=
   fun n p => ![-compactAlias g.radial.exponent g.radial.inner g.radial.outer
     (g.radial.frequency n) (g.length n) g.radial.radialDirection
     (pressureSource g.radial.inner g.radial.outer g.radial.inner_lt_outer (g.length n) (u.gr c n))
-      p.1, 0, 0]
+        p.1, 0, 0]
 
+/-- Temporal potential, constructed using `streamPotential`. -/
 noncomputable def temporalPotential (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) (n : ℕ) : PressureStream.Lift S → ℝ :=
   streamPotential g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
     (g.length n) g.radial.radialDirection (MeanChartCompatibility.temporalAtIndex h n (index n)
-      (u.axialResidual c n))
+        (u.axialResidual c n))
 
+/-- Temporal increment state, bundling `radial`, `angular`, `axial`. -/
 noncomputable def temporalIncrementState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : MeanIncrementBounds.Triple
-      (PressureStream.Lift S) where
+        (PressureStream.Lift S) where
   radial := fun n => PressureStream.streamBeta (c.operators.epsilon n • axial) (temporalPotential g
-    h index c u n)
+      h index c u n)
   angular := fun n => MeanChartCompatibility.temporalAtIndex h n (index n) (u.thetaResidual c n)
   axial := fun n => PressureStream.streamGamma
     (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency n)) ((0 : S),
-      g.radial.radialDirection)
+        g.radial.radialDirection)
     (temporalPotential g h index c u n)
 
+/-- Temporal axial difference, constructed using `MeanChartCompatibility.temporalAtIndex`. -/
 noncomputable def temporalAxialDifference (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) (n : ℕ) (z : PressureStream.Lift S) : ℝ :=
   MeanChartCompatibility.temporalAtIndex h n (index n) (u.axialResidual c n) z -
     PressureStream.streamGamma (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency
-      n))
+        n))
       ((0 : S), g.radial.radialDirection) (temporalPotential g h index c u n) z
 
+/-- Temporal alias state, defined pointwise by `![0, 0, -c.operators.fastTime
+(temporalAxialDifference g h index c u) n p.1]`. -/
 noncomputable def temporalAliasState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.Oscillation
-      (PressureStream.Lift S) :=
+        (PressureStream.Lift S) :=
   fun n p => ![0, 0, -c.operators.fastTime (temporalAxialDifference g h index c u) n p.1]
 
+/-- Temporal stage state, given by `reconstructState g c (u.addIncrement (temporalIncrementState
+g h index axial c u) 0 0 0 ⟨0, 0, temporalAliasState g h index c u⟩)`. -/
 noncomputable def temporalStageState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.State
-      (PressureStream.Lift S) :=
+        (PressureStream.Lift S) :=
   reconstructState g c (u.addIncrement (temporalIncrementState g h index axial c u) 0 0 0
     ⟨0, 0, temporalAliasState g h index c u⟩)
 
+/-- Rank potential, constructed using `streamPotential`. -/
 noncomputable def rankPotential (g : GaugeData S) (r : CorrectionState.RankData S)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) (n : ℕ) : PressureStream.Lift S → ℝ :=
   streamPotential g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
     (g.length n) g.radial.radialDirection (MeanRankUpdate.slowLift
-      (CorrectionState.rankDesiredAxial r c u n))
+        (CorrectionState.rankDesiredAxial r c u n))
 
+/-- Rank increment state, bundling `radial`, `angular`, `axial`. -/
 noncomputable def rankIncrementState (g : GaugeData S) (r : CorrectionState.RankData S)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : MeanIncrementBounds.Triple
-      (PressureStream.Lift S) where
+        (PressureStream.Lift S) where
   radial := fun n => PressureStream.streamBeta (c.operators.epsilon n • axial) (rankPotential g r c
-    u n)
+      u n)
   angular := fun n => MeanRankUpdate.slowLift (CorrectionState.rankAngular r c u n)
   axial := fun n => PressureStream.streamGamma
     (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency n)) ((0 : S),
-      g.radial.radialDirection)
+        g.radial.radialDirection)
     (rankPotential g r c u n)
 
+/-- Rank stage state, given by `reconstructState g c (u.addIncrement (rankIncrementState g r
+axial c u) 0 0 0 CorrectionState.ExcludedErrors.zero)`. -/
 noncomputable def rankStageState (g : GaugeData S) (r : CorrectionState.RankData S)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.State
-      (PressureStream.Lift S) :=
+        (PressureStream.Lift S) :=
   reconstructState g c (u.addIncrement (rankIncrementState g r axial c u) 0 0 0
-    CorrectionState.ExcludedErrors.zero)
+      CorrectionState.ExcludedErrors.zero)
 
 end StateConstructors
 
@@ -648,7 +680,7 @@ theorem streamPotential_eq_fixed (d a b M : ℝ) (ell : S → ℝ)
     streamPotential d a b M ell v f z = PressureStream.streamPotential d
       (ell z.2.1 * a) (ell z.2.1 * b) M ((0 : S), v) f z := by
   simp only [streamPotential, PressureStream.streamPotential, PressureStream.divideRadius,
-    compactPrimitive]
+      compactPrimitive]
 
 theorem meanPressure_congr_endpoints {a b a' b' : ℝ} {hab : a < b} {hab' : a' < b'}
     (ha : a = a') (hb : b = b') (d M : ℝ) (v : PressureStream.Plane)
@@ -698,8 +730,8 @@ theorem meanPressure_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
   rw [meanPressure_eq_fixed hab d M ell v _ z hzl,
     meanPressure_eq_fixed hab d N ell' w f _ hzl']
   change _ = (u / l) * PressureStream.meanPressure d (l * (ell z.2.1 * a))
-    (l * (ell z.2.1 * b)) N _ w g (chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z) at
-      ht
+    (l * (ell z.2.1 * b)) N _ w g (chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z)
+        at ht
   rw [hleft] at ht
   rw [meanPressure_congr_endpoints (hab' := mul_lt_mul_of_pos_left hab hzl') hscaleA hscaleB] at ht
   exact ht.trans (congrArg (fun t : ℝ => (u / l) * t)
@@ -862,7 +894,7 @@ theorem compactPrimitive_finiteJets_local {c e d a b : ℝ} (hc : 0 < c) (hce : 
         ‖iteratedFDeriv ℝ j f (R, (z.2.1, Y))‖ ≤ A) →
       (∀ j ≤ m, ‖iteratedFDeriv ℝ j (cutoff d a b ell) z‖ ≤ B) → ∀ j ≤ m,
         ‖iteratedFDeriv ℝ j (compactPrimitive d a b M ell v f) z‖ ≤ K * (1 + (2 : ℝ) ^ m * B) * A
-          := by
+            := by
   obtain ⟨K, hK, hb⟩ := physicalIntegrals_finiteJets_local (S := S) hc hce hd rlo rhi m
   refine ⟨K, hK, ?_⟩
   intro U hU ell hell hl hleft hright M v f hf hs A B hA hB z hz hR hin hcut j hj
@@ -882,7 +914,7 @@ theorem compactPrimitive_finiteJets_local {c e d a b : ℝ} (hc : 0 < c) (hce : 
   calc
     _ ≤ ‖iteratedFDeriv ℝ j (physicalPast d c M ((0 : S), v) f) z‖ +
         ‖iteratedFDeriv ℝ j (fun p => cutoff d a b ell p * PressureStream.physicalTotal d c M ((0 :
-          S), v) f p) z‖ :=
+            S), v) f p) z‖ :=
       sub_jet_norm_le (PhysicalMeanDomain.slowDomain_open hU) hI (hC.mul hJ) hz j
     _ ≤ K * A + (2 : ℝ) ^ m * B * (K * A) :=
       add_le_add (hb U hU M v f hf hsup A hA z hz hR hin j hj).1 hprod
@@ -899,11 +931,14 @@ noncomputable def slowToChartTZ (h : ℝ) (n : ℕ) : Plane →L[ℝ] Plane :=
   (ChartScales.Q n ^ (-1 : ℝ) • ContinuousLinearMap.fst ℝ ℝ ℝ).prod
     (ChartScales.Q n ^ (-CoordinateAlgebra.D h) • ContinuousLinearMap.snd ℝ ℝ ℝ)
 
+/-- Swap slow as an element of `PressureStream.Lift Plane →L[ℝ] PressureStream.Lift Plane`. -/
 noncomputable def swapSlow : PressureStream.Lift Plane →L[ℝ] PressureStream.Lift Plane :=
   (ContinuousLinearMap.id ℝ ℝ).prodMap
     ((ContinuousLinearEquiv.prodComm ℝ ℝ ℝ).toContinuousLinearMap.prodMap
       (ContinuousLinearMap.id ℝ Plane))
 
+/-- Physical to chart TZ, given by `chartLinear (chartScale n) ((slowToChartTZ h n).prodMap
+(TemporalMeanUpdate.coverMap i))`. -/
 noncomputable def physicalToChartTZ (h : ℝ) (n i : ℕ) :
     PressureStream.Lift Plane →L[ℝ] PressureStream.Lift Plane :=
   chartLinear (chartScale n) ((slowToChartTZ h n).prodMap (TemporalMeanUpdate.coverMap i))
@@ -911,6 +946,8 @@ noncomputable def physicalToChartTZ (h : ℝ) (n i : ℕ) :
 theorem physicalToChartTZ_swap (h : ℝ) (n i : ℕ) (z : PressureStream.Lift Plane) :
     physicalToChartTZ h n i (swapSlow z) = swapSlow (physicalToChart h n i z) := rfl
 
+/-- Field on physical TZ, given by `coverPull (chartScale n) (slowToChartTZ h n) i
+(ChartScales.Q n ^ (-a)) f`. -/
 noncomputable def fieldOnPhysicalTZ (h : ℝ) (n i : ℕ) (a : ℝ)
     (f : PressureStream.Lift Plane → ℝ) : PressureStream.Lift Plane → ℝ :=
   coverPull (chartScale n) (slowToChartTZ h n) i (ChartScales.Q n ^ (-a)) f
@@ -963,7 +1000,7 @@ theorem physicalMeanPressure_naturality {h d a b : ℝ} (hh : 0 < h) (hh1 : h < 
       (fieldOnPhysicalTZ h n i (2 * CoordinateAlgebra.A h + 1 / 2) f) z =
     fieldOnPhysicalTZ h n i (2 * CoordinateAlgebra.A h)
       (meanPressure d a b (radialFrequency h n i d M) hab (qLength (2 * h)) (vector .radial) f) z
-        := by
+          := by
   have hc : 0 < 2 * h := by linarith
   have hc1 : 2 * h < 1 := by linarith
   have he := meanPressure_coverPull (chartScale_pos n) ha hab hd (slowToChartTZ h n) i M
@@ -991,7 +1028,7 @@ theorem physicalStreamPotential_naturality {h d a b : ℝ} (hh : 0 < h) (hh1 : h
       (fieldOnPhysicalTZ h n i (CoordinateAlgebra.A h) f) z =
     fieldOnPhysicalTZ h n i (CoordinateAlgebra.A h - 1 / 2)
       (streamPotential d a b (radialFrequency h n i d M) (qLength (2 * h)) (vector .radial) f) z :=
-        by
+          by
   have hc : 0 < 2 * h := by linarith
   have hc1 : 2 * h < 1 := by linarith
   have he := streamPotential_coverPull (chartScale_pos n) ha hab hd (slowToChartTZ h n) i M
@@ -1052,7 +1089,7 @@ theorem iteratedFDeriv_zero_outsideGauge {a b : ℝ} {ell : S → ℝ} {U : Set 
     iteratedFDeriv ℝ j f z = 0 := by
   exact MeanMomentBounds.supported_zero_outside_open
     (PhysicalMeanDomain.freezeSlow_continuous (TransportPrimitive.iteratedFDeriv_contDiff hf
-      j).continuous z.2.1)
+        j).continuous z.2.1)
     (iteratedFDeriv_supportedGauge_fiber hU hell hs hz j) hR
 
 end MovingSupport
@@ -1087,7 +1124,7 @@ theorem pastIntegral_scaled {l a b : ℝ} (hl : 0 < l) (M : ℝ) (v : E)
     (z : ℝ × E) :
     TransportPrimitive.pastIntegral M v f z =
       l • TransportPrimitive.pastIntegral (M * l) v (fun q : ℝ × E => f (l * q.1, q.2)) (z.1 / l,
-        z.2) := by
+          z.2) := by
   have hc : Continuous (fun q : ℝ × E => f (l * q.1, q.2)) :=
     hf.comp ((continuous_const.mul continuous_fst).prodMk continuous_snd)
   rw [TransportPrimitive.pastIntegral_eq_radialInterval hf hs,
@@ -1095,7 +1132,7 @@ theorem pastIntegral_scaled {l a b : ℝ} (hl : 0 < l) (M : ℝ) (v : E)
       hc (radialScale_supported hl hs)]
   change (∫ s in (l * a)..z.1, radialSlice M v f z s) =
     l • ∫ s in a..(z.1 / l), radialSlice (M * l) v (fun q : ℝ × E => f (l * q.1, q.2)) (z.1 / l,
-      z.2) s
+        z.2) s
   simp_rw [radialSlice_scaled hl.ne']
   rw [← integral_scaled hl.ne', mul_div_cancel₀ _ hl.ne']
 
@@ -1104,7 +1141,7 @@ theorem futureIntegral_scaled {l a b : ℝ} (hl : 0 < l) (M : ℝ) (v : E)
     (z : ℝ × E) :
     TransportPrimitive.futureIntegral M v f z =
       l • TransportPrimitive.futureIntegral (M * l) v (fun q : ℝ × E => f (l * q.1, q.2)) (z.1 / l,
-        z.2) := by
+          z.2) := by
   have hc : Continuous (fun q : ℝ × E => f (l * q.1, q.2)) :=
     hf.comp ((continuous_const.mul continuous_fst).prodMk continuous_snd)
   rw [TransportPrimitive.futureIntegral_eq_radialInterval hf hs,
@@ -1112,7 +1149,7 @@ theorem futureIntegral_scaled {l a b : ℝ} (hl : 0 < l) (M : ℝ) (v : E)
       hc (radialScale_supported hl hs)]
   change (∫ s in z.1..(l * b), radialSlice M v f z s) =
     l • ∫ s in (z.1 / l)..b, radialSlice (M * l) v (fun q : ℝ × E => f (l * q.1, q.2)) (z.1 / l,
-      z.2) s
+        z.2) s
   simp_rw [radialSlice_scaled hl.ne']
   rw [← integral_scaled hl.ne', mul_div_cancel₀ _ hl.ne']
 
@@ -1136,13 +1173,13 @@ theorem scaled_transport_past_left_uniform {a b cL cR L : ℝ}
     simpa only [mul_div_cancel_left₀ _ hl.ne'] using
       hin (l * R) (by simpa only [mul_div_cancel_left₀ _ hl.ne'] using hR) Y
   have h := hb (M * l) v (fun q : ℝ × E => f (l * q.1, q.2)) hpullc hpull A hA hsource (z.1 / l,
-    z.2) hz hh
+      z.2) hz hh
   rw [pastIntegral_scaled hl M v hf hs, norm_smul, Real.norm_eq_abs, abs_of_pos hl]
   calc
     _ ≤ l * (K * A * logWeight cL cR a b p (z.1 / l)) := mul_le_mul_of_nonneg_left h hl.le
     _ ≤ L * (K * A * logWeight cL cR a b p (z.1 / l)) :=
       mul_le_mul_of_nonneg_right hlL (mul_nonneg (mul_nonneg hK hA) (weight_pos cL cR p
-        (logPosition_mem ha hz)).le)
+          (logPosition_mem ha hz)).le)
     _ = _ := by ring
 
 theorem scaled_transport_future_right_uniform {a b cL cR L : ℝ}
@@ -1165,13 +1202,13 @@ theorem scaled_transport_future_right_uniform {a b cL cR L : ℝ}
     simpa only [mul_div_cancel_left₀ _ hl.ne'] using
       hin (l * R) (by simpa only [mul_div_cancel_left₀ _ hl.ne'] using hR) Y
   have h := hb (M * l) v (fun q : ℝ × E => f (l * q.1, q.2)) hpullc hpull A hA hsource (z.1 / l,
-    z.2) hz hh
+      z.2) hz hh
   rw [futureIntegral_scaled hl M v hf hs, norm_smul, Real.norm_eq_abs, abs_of_pos hl]
   calc
     _ ≤ l * (K * A * logWeight cL cR a b p (z.1 / l)) := mul_le_mul_of_nonneg_left h hl.le
     _ ≤ L * (K * A * logWeight cL cR a b p (z.1 / l)) :=
       mul_le_mul_of_nonneg_right hlL (mul_nonneg (mul_nonneg hK hA) (weight_pos cL cR p
-        (logPosition_mem ha hz)).le)
+          (logPosition_mem ha hz)).le)
     _ = _ := by ring
 
 end ScaledIntegrals
@@ -1194,7 +1231,7 @@ theorem normalizeSource_gauge_finiteJets {c e a b d : ℝ}
   obtain ⟨KC, hKC, hbC⟩ := radial_comp_finiteJets_uniform (E := S × PressureStream.Plane) (V := ℝ)
     (c ^ d) (e ^ d) (inverseChart_contDiff hc d) m
   obtain ⟨KM, hKM, hbM⟩ := radial_multiplier_finiteJets_uniform (E := S × PressureStream.Plane) (V
-    := ℝ)
+      := ℝ)
     (c ^ d) (e ^ d) (sourceMultiplier_contDiff hc hd) m
   let Q := ((min 1 d⁻¹) ^ p)⁻¹
   have hQ : 0 ≤ Q := (inv_pos.mpr (pow_pos (lt_min zero_lt_one (inv_pos.mpr hd)) p)).le
@@ -1217,8 +1254,8 @@ theorem normalizeSource_gauge_finiteJets {c e a b d : ℝ}
   have har : l * a < inverseChart d c z.1 :=
     (Real.rpow_lt_rpow_iff (mul_pos hl ha).le hrp.le hd).mp (by simpa only [hrpow] using hlaz)
   have hrb : inverseChart d c z.1 < l * b :=
-    (Real.rpow_lt_rpow_iff hrp.le (mul_pos hl (ha.trans hab)).le hd).mp (by simpa only [hrpow]
-      using hlbz)
+    (Real.rpow_lt_rpow_iff hrp.le (mul_pos hl (ha.trans hab)).le hd).mp (by
+        simpa only [hrpow] using hlbz)
   have hr : inverseChart d c z.1 / l ∈ Ioo a b :=
     ⟨(lt_div_iff₀ hl).mpr (by nlinarith), (div_lt_iff₀ hl).mpr (by nlinarith)⟩
   have hratio : (inverseChart d c z.1 / l) ^ d = z.1 / l ^ d := by
@@ -1241,7 +1278,7 @@ theorem normalizeSource_gauge_finiteJets {c e a b d : ℝ}
   calc
     _ ≤ KM * (KC * (A * logWeight cL cR a b p (inverseChart d c z.1 / l))) := hmul
     _ ≤ KM * (KC * (A * (Q * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (z.1 / l ^ d))))
-      :=
+        :=
       mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left
         (mul_le_mul_of_nonneg_left hweight hA) hKC) hKM
     _ = _ := by ring
@@ -1279,9 +1316,11 @@ end ScaledNormalization
 section VariableTransport
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Normalized cutoff, given by `TransportPrimitive.interiorCutoff a b (radialRatio ell z)`. -/
 noncomputable def normalizedCutoff (a b : ℝ) (ell : S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   TransportPrimitive.interiorCutoff a b (radialRatio ell z)
 
+/-- Transport gauge, constructed using `TransportPrimitive.pastIntegral`. -/
 noncomputable def transportGauge (a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   TransportPrimitive.pastIntegral M ((0 : S), v) f z -
@@ -1295,7 +1334,7 @@ theorem normalizedCutoff_contDiffOn (a b : ℝ) {ell : S → ℝ} {U : Set S}
 theorem transportGauge_contDiffOn {c e a b M : ℝ} {ell : S → ℝ} {U : Set S}
     (hell : ContDiffOn ℝ ∞ ell U) (hl : ∀ s ∈ U, 0 < ell s) (v : PressureStream.Plane)
     {f : PressureStream.Lift S → ℝ} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported c e
-      f) :
+        f) :
     ContDiffOn ℝ ∞ (transportGauge a b M ell v f) (PhysicalMeanDomain.slowDomain U) :=
   (TransportPrimitive.pastIntegral_contDiff hf hs).contDiffOn.sub
     ((normalizedCutoff_contDiffOn a b hell hl).mul
@@ -1395,7 +1434,7 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
     have h := hbL j' (ell z.2.1) (hl _ hz) (hu _ hz) M ((0 : S), v)
       (PhysicalMeanDomain.freezeSlow z.2.1 (iteratedFDeriv ℝ j f))
       (PhysicalMeanDomain.freezeSlow_continuous (TransportPrimitive.iteratedFDeriv_contDiff hf
-        j).continuous _)
+          j).continuous _)
       (iteratedFDeriv_supportedGauge_fiber hU hell.continuousOn hsg hz j) A hA
       (fun R hR Y => hin j hj R hR Y.2) z hR (by linarith)
     have hsingle : KL j' ≤ leftK := Finset.single_le_sum (fun i _ => hKL i) (Finset.mem_univ j')
@@ -1405,8 +1444,8 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
     · have heq : transportGauge a b M ell v f =ᶠ[𝓝 z]
           -TransportPrimitive.futureIntegral M ((0 : S), v) f := by
         have hlogright : ∀ᶠ x in 𝓝 z, logLength a b - ρ < logPosition a (radialRatio ell x) :=
-          hlog.eventually (lt_mem_nhds (by change logLength a b - ρ < logPosition a (z.1 / ell
-            z.2.1); linarith))
+          hlog.eventually (lt_mem_nhds (by
+              change logLength a b - ρ < logPosition a (z.1 / ell z.2.1); linarith))
         filter_upwards [hpos, hlogright] with x hxp hxr
         have hone : normalizedCutoff a b ell x = 1 := by
           have he := hright (logPosition a (radialRatio ell x)) hxr.le
@@ -1421,7 +1460,7 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
       have h := hbR j' (ell z.2.1) (hl _ hz) (hu _ hz) M ((0 : S), v)
         (PhysicalMeanDomain.freezeSlow z.2.1 (iteratedFDeriv ℝ j f))
         (PhysicalMeanDomain.freezeSlow_continuous (TransportPrimitive.iteratedFDeriv_contDiff hf
-          j).continuous _)
+            j).continuous _)
         (iteratedFDeriv_supportedGauge_fiber hU hell.continuousOn hsg hz j) A hA
         (fun R hR Y => hin j hj R hR Y.2) z hR (by linarith)
       have hsingle : KR j' ≤ rightK := Finset.single_le_sum (fun i _ => hKR i) (Finset.mem_univ j')
@@ -1431,9 +1470,9 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
         hmiddle p (logPosition a (z.1 / ell z.2.1)) ⟨le_of_not_ge hzleft, le_of_not_ge hzright⟩
       have hC := normalizedCutoff_contDiffOn a b hell hl
       have hJ := (TransportPrimitive.totalIntegral_contDiff hf hs (M := M) (v := ((0 : S),
-        v))).contDiffOn (s := PhysicalMeanDomain.slowDomain U)
+          v))).contDiffOn (s := PhysicalMeanDomain.slowDomain U)
       have hI := (TransportPrimitive.pastIntegral_contDiff hf hs (M := M) (v := ((0 : S),
-        v))).contDiffOn (s := PhysicalMeanDomain.slowDomain U)
+          v))).contDiffOn (s := PhysicalMeanDomain.slowDomain U)
       have hprod := product_jet_bound (PhysicalMeanDomain.slowDomain_open hU) hC hJ hz hj hB
         (mul_nonneg hmassK hA) hcut (fun i hi => (hmass i hi).2)
       have hb : ‖iteratedFDeriv ℝ j (transportGauge a b M ell v f) z‖ ≤
@@ -1449,8 +1488,8 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
       exact (hb.trans hmid).trans ((mul_le_mul_of_nonneg_left hw
         (mul_nonneg (mul_nonneg hmidK (by positivity)) hA)).trans
           (mul_le_mul_of_nonneg_right
-            (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hmiddleK (by positivity)) hA)
-              hnorm))
+            (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hmiddleK (by
+                positivity)) hA) hnorm))
 
 end VariableTransport
 
@@ -1465,7 +1504,7 @@ theorem radial_comp_finiteJets_local (a b : ℝ) {φ : ℝ → ℝ}
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i F (liftChart φ z)‖ ≤ C) → ∀ j ≤ m,
       ‖iteratedFDeriv ℝ j (F ∘ liftChart φ) z‖ ≤ K * C := by
   obtain ⟨K, hK, hb⟩ := radial_comp_finiteJets_uniform (E := S × PressureStream.Plane) (V := ℝ) a b
-    hφ m
+      hφ m
   refine ⟨K, hK, ?_⟩
   intro U hU F hF z hz hR C hC hin j hj
   obtain ⟨χ, _, _, hχF, he⟩ := PhysicalMeanDomain.exists_fiber_localization hU hz hF
@@ -1563,6 +1602,8 @@ theorem qLength_reference_bounds {coord a b : ℝ} (U : SlowRegion coord)
     have hh := mul_le_mul_of_nonneg_right (hupp s hs) (ha.trans hab).le
     linarith
 
+/-- Normalized cutoff model, given by `TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (y.2.1
+/ (Real.sqrt y.1) ^ d)`. -/
 noncomputable def normalizedCutoffModel (d a b : ℝ) (y : MeanRankUpdate.ModelPoint) : ℝ :=
   TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (y.2.1 / (Real.sqrt y.1) ^ d)
 
@@ -1601,14 +1642,14 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
     (hright : ∀ s ∈ U.carrier, qLength coord s * b ≤ e)
     (hupp : ∀ s ∈ U.carrier, qLength coord s ≤ L) (p m : ℕ) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ (M : ℝ) (v : PressureStream.Plane) (f : PressureStream.Lift
-      PressureStream.Plane → ℝ),
+        PressureStream.Plane → ℝ),
       ContDiff ℝ ∞ f → RadialAlias.RadiallySupported c e f → SupportedGauge a b (qLength coord)
-        U.carrier f →
+          U.carrier f →
       ∀ A : ℝ, 0 ≤ A → ∀ z : PressureStream.Lift PressureStream.Plane,
       z.2.1 ∈ U.carrier → z.1 / qLength coord z.2.1 ∈ Ioo a b →
       (∀ j ≤ m, ∀ R, R / qLength coord z.2.1 ∈ Ioo a b → ∀ Y : PressureStream.Plane,
         ‖iteratedFDeriv ℝ j f (R, (z.2.1, Y))‖ ≤ A * logWeight cL cR a b p (R / qLength coord
-          z.2.1)) →
+            z.2.1)) →
       ∀ j ≤ m, ‖iteratedFDeriv ℝ j (compactPrimitive d a b M (qLength coord) v f) z‖ ≤
         K * A * logWeight cL cR a b p (z.1 / qLength coord z.2.1) := by
   have hcU : 0 < c ^ d := Real.rpow_pos_of_pos hc d
@@ -1625,13 +1666,13 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
   let V : Set MeanRankUpdate.ChartPoint := {z | z.2.1 ∈ U.carrier ∧ z.1 ∈ Icc (c ^ d) (e ^ d)}
   obtain ⟨B, hB, hbB⟩ := normalizedCutoff_q_finiteJets U.coord_pos U.coord_lt_one U.qlo_pos d a b
     (V := V) (fun z hz => U.time_pos z.2.1 hz.1) (fun z hz => U.q_mem z.2.1 hz.1) (fun _ hz =>
-      hz.2) m
+        hz.2) m
   obtain ⟨KN, hKN, hbN⟩ := normalizeSource_gauge_finiteJets (S := PressureStream.Plane) hc hce ha
-    hab hd cL cR p m
+      hab hd cL cR p m
   obtain ⟨KT, hKT, hbT⟩ := transportGauge_finiteJets (S := PressureStream.Plane) hceU haU habU hcLU
-    hcRU hLU p m
+      hcRU hLU p m
   obtain ⟨KP, hKP, hbP⟩ := radial_comp_finiteJets_local (S := PressureStream.Plane) c e
-    (powerChart_contDiff hc d) m
+      (powerChart_contDiff hc d) m
   let Q := ((min 1 d) ^ p)⁻¹
   have hQ : 0 ≤ Q := (inv_pos.mpr (pow_pos (lt_min zero_lt_one hd) p)).le
   refine ⟨KP * KT * (1 + B) * KN * Q, by positivity, ?_⟩
@@ -1656,13 +1697,13 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
   let g := normalizeSource d c f
   have hg : ContDiff ℝ ∞ g := normalizeSource_contDiff hc hd hf
   have hgs : RadialAlias.RadiallySupported (c ^ d) (e ^ d) g := normalizeSource_supported hc hce hd
-    hs
+      hs
   have hgg := normalizeSource_supportedGauge hc hce ha hab hd hl hs hsg
   have hgp := transportGauge_contDiffOn (a := a ^ d) (b := b ^ d) (M := M) hellpow (fun s hs =>
-    Real.rpow_pos_of_pos (hl s hs) d) v hg hgs
+      Real.rpow_pos_of_pos (hl s hs) d) v hg hgs
   have hbound (i : ℕ) (hi : i ≤ m) :
       ‖iteratedFDeriv ℝ i (transportGauge (a ^ d) (b ^ d) M (fun s => qLength coord s ^ d) v g) zU‖
-        ≤
+          ≤
         KT * (1 + B) * (KN * A) * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p
           (zU.1 / qLength coord z.2.1 ^ d) := by
     exact hbT U.carrier U.isOpen _ hellpow (fun s hs => Real.rpow_pos_of_pos (hl s hs) d)
@@ -1683,10 +1724,10 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
   calc
     _ ≤ KP * (KT * (1 + B) * (KN * A) *
         logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (zU.1 / qLength coord z.2.1 ^ d)) :=
-          hp
+            hp
     _ = (KP * (KT * (1 + B) * (KN * A))) *
-        logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (zU.1 / qLength coord z.2.1 ^ d) :=
-          by ring
+        logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (zU.1 / qLength coord z.2.1 ^ d) := by
+            ring
     _ ≤ (KP * (KT * (1 + B) * (KN * A))) *
         (Q * logWeight cL cR a b p (z.1 / qLength coord z.2.1)) :=
       mul_le_mul_of_nonneg_left hw (by positivity)
@@ -1744,7 +1785,7 @@ theorem compactPrimitive_q_finiteJets (ha : 0 < a) (hab : a < b) (hd : 0 < d)
       ∀ z : Point, z.2.1 ∈ U.carrier → z.1 / qLength coord z.2.1 ∈ Ioo a b →
       (∀ j ≤ m, ∀ R, R / qLength coord z.2.1 ∈ Ioo a b → ∀ Y : PressureStream.Plane,
         ‖iteratedFDeriv ℝ j f (R, (z.2.1, Y))‖ ≤ A * logWeight cL cR a b p (R / qLength coord
-          z.2.1)) →
+            z.2.1)) →
       ∀ j ≤ m, ‖iteratedFDeriv ℝ j (compactPrimitive d a b M (qLength coord) v f) z‖ ≤
         K * A * logWeight cL cR a b p (z.1 / qLength coord z.2.1) := by
   obtain ⟨c, e, L, hc, hce, hL, hl, hleft, hright, hupp⟩ := qLength_reference_bounds U ha hab
@@ -1793,7 +1834,7 @@ theorem meanClass_compactPrimitive (hab : a < b) (hd : 0 < d)
       (movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL _).mpr ⟨hzm.1, hR⟩
     have h := hb n (R, (z.2.1, Y)) hpoint i hi
     rw [movingStrip_majorant_eq U a b cL cR ha hcL hcR ε L hε hεone hL α C p n (R, (z.2.1, Y)) hR]
-      at h
+        at h
     exact h
   have h := hKbound (M n) (v n) (f n) (hf n) (hs n) _ hA z hzm.1 hzm.2 hsource j hj
   rw [movingStrip_majorant_eq U a b cL cR ha hcL hcR ε L hε hεone hL α (K * C) p n z hzm.2]
@@ -1821,14 +1862,14 @@ theorem meanClass_moving_localBandJets {α : ℝ} {f : ℕ → Point → ℝ}
     have h := hb n z hpoint j hj
     rw [movingStrip_majorant_eq U a b cL cR ha hcL hcR ε L hε hεone hL α C p n z hR] at h
     exact (h.trans (mul_le_mul_of_nonneg_left (hweight _ (logPosition_mem ha hR)) hA)).trans_eq (by
-      ring)
+        ring)
   · have hR' : z.1 ∉ Ioo (qLength coord z.2.1 * a) (qLength coord z.2.1 * b) := by
       intro h
-      exact hR ⟨(lt_div_iff₀ hp).mpr (by nlinarith [h.1]), (div_lt_iff₀ hp).mpr (by nlinarith
-        [h.2])⟩
+      exact hR ⟨(lt_div_iff₀ hp).mpr (by
+          nlinarith [h.1]), (div_lt_iff₀ hp).mpr (by nlinarith [h.2])⟩
     have hell : ContinuousOn (qLength coord) U.carrier :=
       ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun s hs => U.time_pos s
-        hs)).continuousOn
+          hs)).continuousOn
     rw [iteratedFDeriv_zero_outsideGauge_on U.isOpen hell (hf n) (hs n) hz hR' j, norm_zero]
     exact mul_nonneg (mul_nonneg (mul_nonneg hC hW) (Real.rpow_pos_of_pos (hε n) α).le)
       (pow_nonneg (zero_le_one.trans (hL n)) p)
@@ -1876,10 +1917,10 @@ theorem chartKernel_unweighted_moving (g : MeanRankUpdate.ModelPoint → ℝ)
   have ht : ∀ z ∈ st.domain, MeanRankUpdate.chartInput z ∈ PhysicalCoordinateBounds.positiveTime :=
     fun z hz => U.time_pos z.2.1 (hdom hz)
   apply unweighted_of_finiteJetBounds st _ (MeanRankUpdate.chartKernel_contDiffOn U.coord_pos
-    U.coord_lt_one ht hg)
+      U.coord_lt_one ht hg)
   intro m
   obtain ⟨C, _, hb⟩ := MeanRankUpdate.chartKernel_finiteJetBounds U.coord_pos U.coord_lt_one
-    U.qlo_pos
+      U.qlo_pos
     ht (fun z hz => U.q_mem z.2.1 (hdom hz))
     (fun z hz => moving_radial_bounds U ha (hdom hz)
       ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).2) hg m
@@ -1988,7 +2029,7 @@ theorem compactPrimitive_periodicOn (d a b M : ℝ) (ell : S → ℝ) (v : Press
           (Y + (M * q) • v) k)
   simp only [compactPrimitive, physicalCompact, pullback, liftChart, Function.comp_def,
     TransportPrimitive.compactIntegral, TransportPrimitive.pastIntegral,
-      TransportPrimitive.totalIntegral, he]
+        TransportPrimitive.totalIntegral, he]
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem pressureSource_periodicOn {a b : ℝ} (hab : a < b) (ell : S → ℝ)
@@ -2033,7 +2074,7 @@ theorem localBandJets_meanClass_of_gaugeInteriorSupport {c e α : ℝ}
   let sb := logStripData (E := PressureStream.Plane × PressureStream.Plane)
     a b cL cR ha hcL hcR ε L hε hεone hL
   have hmem (r : ℝ) (hr : r ∈ Icc c e) : (r, (0 : PressureStream.Plane × PressureStream.Plane)) ∈
-    sb.domain :=
+      sb.domain :=
     ⟨hac.trans_le hr.1, hr.2.trans_lt heb⟩
   have hcont : ContinuousOn (fun r : ℝ => sb.zeta (r, 0)) (Icc c e) :=
     sb.zeta_smooth.continuousOn.comp (continuous_id.prodMk continuous_const).continuousOn hmem
@@ -2069,7 +2110,7 @@ theorem localBandJets_meanClass_of_gaugeInteriorSupport {c e α : ℝ}
         ((div_lt_iff₀ hEll).mpr (by nlinarith [h.2])).le⟩
     rw [iteratedFDeriv_zero_outsideGauge_on U.isOpen
       ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun s hs => U.time_pos s
-        hs)).continuousOn
+          hs)).continuousOn
       (hf n) (hs n) hzs hr j, norm_zero]
     exact majorant_nonneg st _ α (div_nonneg hC hδ.le) k n z (st.zeta_nonneg z hz)
 
@@ -2080,7 +2121,7 @@ theorem meanClass_radialMultiply_moving {φ : ℝ → ℝ} (hφ : ContDiff ℝ �
       (fun n z => φ z.1 * f n z) := by
   let st := movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL
   have hrad (z : Point) (hz : z ∈ st.domain) : z.1 ∈ Icc (Real.sqrt U.qlo * a) (Real.sqrt U.qhi *
-    b) :=
+      b) :=
     moving_radial_bounds U ha
       ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).1
       ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).2
@@ -2088,7 +2129,7 @@ theorem meanClass_radialMultiply_moving {φ : ℝ → ℝ} (hφ : ContDiff ℝ �
     apply unweighted_of_finiteJetBounds st _ (hφ.comp contDiff_fst).contDiffOn
     intro m
     obtain ⟨C, _, hbound⟩ := cutoff_finiteJet_bound (E := PressureStream.Plane ×
-      PressureStream.Plane)
+        PressureStream.Plane)
       (Real.sqrt U.qlo * a) (Real.sqrt U.qhi * b) φ hφ m
     exact ⟨C, fun j hj z hz => hbound j hj z (hrad z hz)⟩
   have he := MeanIncrementBounds.Class.coefficient_mul hc hf
@@ -2100,19 +2141,19 @@ theorem meanClass_divideRadius_moving {α : ℝ} {f : ℕ → Point → ℝ}
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (fun n => PressureStream.divideRadius (f n)) := by
   let c := Real.sqrt U.qlo * a / 4
-  have hc : 0 < c := by dsimp [c]; exact div_pos (mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha) (by
-    norm_num)
+  have hc : 0 < c := by
+      dsimp [c]; exact div_pos (mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha) (by norm_num)
   let φ := fun r => (positiveRadius c r)⁻¹
   have hφ : ContDiff ℝ ∞ φ := (positiveRadius_contDiff c).inv (fun r => (positiveRadius_pos hc
-    r).ne')
+      r).ne')
   have hm := meanClass_radialMultiply_moving U ha hcL hcR ε L hε hεone hL hφ hf
   apply MeanRankUpdate.meanClass_congr_on hm
   intro n z hz
   have hrad := moving_radial_bounds U ha
     ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).1
     ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).2
-  have hcz : 2 * c ≤ z.1 := by dsimp [c]; have := mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha;
-    linarith [hrad.1]
+  have hcz : 2 * c ≤ z.1 := by
+      dsimp [c]; have := mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha; linarith [hrad.1]
   change f n z / z.1 = (positiveRadius c z.1)⁻¹ * f n z
   rw [positiveRadius_eq_self hc hcz]
   ring
@@ -2139,7 +2180,7 @@ theorem meanClass_streamBeta {d : ℝ} (hab : a < b) (hd : 0 < d)
     (M : ℕ → ℝ) (v : ℕ → PressureStream.Plane) (w : PressureStream.Plane × PressureStream.Plane) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (fun n => PressureStream.streamBeta w (streamPotential d a b (M n) (qLength coord) (v n) (f
-        n))) := by
+          n))) := by
   have hp := meanClass_streamPotential U ha hcL hcR ε L hε hεone hL hab hd hf hs hclass M v
   have hD := (hp.directional (0, w)).map (-ContinuousLinearMap.id ℝ ℝ)
   simp only [
@@ -2158,7 +2199,7 @@ theorem fderiv_eq_on_radialFiber {f g : PressureStream.Lift S → ℝ} {z : Pres
   let L : (ℝ × PressureStream.Plane) →L[ℝ] PressureStream.Lift S :=
     (ContinuousLinearMap.fst ℝ ℝ PressureStream.Plane).prod
       ((0 : (ℝ × PressureStream.Plane) →L[ℝ] S).prod (ContinuousLinearMap.snd ℝ ℝ
-        PressureStream.Plane))
+          PressureStream.Plane))
   have hi : HasFDerivAt (fun q : ℝ × PressureStream.Plane => (q.1, (z.2.1, q.2))) L (z.1, z.2.2) :=
     hasFDerivAt_fst.prodMk ((hasFDerivAt_const z.2.1 _).prodMk hasFDerivAt_snd)
   have hff := hf.hasFDerivAt.comp (z.1, z.2.2) hi
@@ -2181,7 +2222,7 @@ theorem graphDr_eq_on_radialFiber {f g : PressureStream.Lift S → ℝ} {z : Pre
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem divideRadius_fiberLocal : PhysicalMeanDomain.FiberLocal (S := S)
-  PressureStream.divideRadius := by
+    PressureStream.divideRadius := by
   intro f g s he r Y
   exact congrArg (fun x : ℝ => x / r) (he r Y)
 
@@ -2219,19 +2260,19 @@ theorem compactPrimitive_radial_identity (M : ℝ) (v : PressureStream.Plane) {f
     ((compactPrimitive_q_contDiffOn U ha hab hd M v hf hs).contDiffAt
       ((PhysicalMeanDomain.slowDomain_open U.isOpen).mem_nhds hz)).differentiableAt (by simp)
   have hright : DifferentiableAt ℝ (physicalCompact d (ell * a) (ell * b) M ((0 :
-    PressureStream.Plane), v) g) z :=
+      PressureStream.Plane), v) g) z :=
     (physicalCompact_contDiff (mul_pos hell ha) (mul_lt_mul_of_pos_left hab hell) hd hg hgs M
       ((0 : PressureStream.Plane), v)).differentiable (by simp) z
   have he : ∀ r Y, compactPrimitive d a b M (qLength coord) v f (r, (z.2.1, Y)) =
       physicalCompact d (ell * a) (ell * b) M ((0 : PressureStream.Plane), v) g (r, (z.2.1, Y)) :=
-        by
+          by
     intro r Y
     exact PhysicalMeanDomain.physicalCompact_fiberLocal d (ell * a) (ell * b) M v f g z.2.1 (fun _
-      _ => rfl) r Y
+        _ => rfl) r Y
   rw [graphDr_eq_on_radialFiber hleft hright he]
   rw [PressureStream.graphDr_eq_physical,
     physicalGraphDeriv_physicalCompact_global (mul_pos hell ha) (mul_lt_mul_of_pos_left hab hell)
-      hd hg hgs]
+        hd hg hgs]
   have halias := PhysicalMeanDomain.physicalAlias_fiberLocal d (ell * a) (ell * b) M v g f z.2.1
     (fun _ _ => rfl) z.1 z.2.2
   exact congrArg (fun x : ℝ => f z - x) halias
@@ -2257,7 +2298,7 @@ theorem streamPotential_q_contDiffOn (M : ℝ) (v : PressureStream.Plane) {f : P
   have hIc := compactPrimitive_q_contDiffOn U ha hab hd M v (contDiffOn_fst.mul hf) hw
   have hIcs := compactPrimitive_supportedGauge (M := M) ha hab hd (qLength coord) v U.isOpen
     (fun s hs => qLength_pos U.coord_pos U.coord_lt_one (U.time_pos s hs)) (contDiffOn_fst.mul hf)
-      hw
+        hw
   obtain ⟨c, e, L, hc, hce, _, hl, hleft, hright, _⟩ := qLength_reference_bounds U ha hab
   exact divideRadius_contDiffOn hc U.isOpen hIc (fun z hz hn =>
     ⟨(hleft _ hz).trans (hIcs z hz hn).1, (hIcs z hz hn).2.trans (hright _ hz)⟩)
@@ -2275,15 +2316,16 @@ theorem streamGamma_eq_desired_sub_alias (M : ℝ) (v : PressureStream.Plane) {f
   have hId : DifferentiableAt ℝ
       (compactPrimitive d a b M (qLength coord) v (PressureStream.weightedSource f)) z :=
     (hIc.contDiffAt ((PhysicalMeanDomain.slowDomain_open U.isOpen).mem_nhds hz)).differentiableAt
-      (by simp)
+        (by
+        simp)
   change PressureStream.graphDr _ _ (PressureStream.divideRadius _) z +
     PressureStream.divideRadius (PressureStream.divideRadius _) z = _
   change PressureStream.graphDr _ _ (PressureStream.divideRadius _) z +
     PressureStream.divideRadius _ z / z.1 = _
   rw [PressureStream.graphDr_divideRadius (PressureStream.physicalSpeed d M) ((0 :
-    PressureStream.Plane), v) hId hr,
+      PressureStream.Plane), v) hId hr,
     compactPrimitive_radial_identity U ha hab hd M v (f := PressureStream.weightedSource f)
-      (contDiffOn_fst.mul hf) hw hz]
+        (contDiffOn_fst.mul hf) hw hz]
   dsimp only [PressureStream.weightedSource]
   field_simp
 
@@ -2293,7 +2335,7 @@ theorem stream_divergence_zero (M : ℝ) (v : PressureStream.Plane)
     (hs : SupportedGauge a b (qLength coord) U.carrier f) {z : Point} (hz : z.2.1 ∈ U.carrier)
     (hr : z.1 ≠ 0) :
     PressureStream.graphDivergence (PressureStream.physicalSpeed d M) ((0 : PressureStream.Plane),
-      v) w
+        v) w
       (PressureStream.streamBeta w (streamPotential d a b M (qLength coord) v f))
       (PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 : PressureStream.Plane), v)
         (streamPotential d a b M (qLength coord) v f)) z = 0 := by
@@ -2308,6 +2350,8 @@ end ActualIdentities
 section AliasRepresentation
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Cutoff radial derivative, given by `(ell z.2.1)⁻¹ * deriv (physicalCutoff d a b)
+(radialRatio ell z)`. -/
 noncomputable def cutoffRadialDerivative (d a b : ℝ) (ell : S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   (ell z.2.1)⁻¹ * deriv (physicalCutoff d a b) (radialRatio ell z)
@@ -2369,7 +2413,7 @@ theorem compactAlias_reference {c a b d M : ℝ} (hc : 0 < c) (ha : 0 < a)
       (div_lt_iff₀ (hl _ hz)).mpr (by nlinarith [lt_of_not_ge hR])
     have he : cutoffRadialDerivative d a b ell z = 0 := by
       simp only [cutoffRadialDerivative, radialRatio, deriv_physicalCutoff_zero_left ha hab hd
-        hsmall, mul_zero]
+          hsmall, mul_zero]
     simp only [he, zero_mul]
 
 theorem cutoffRadialDerivative_contDiffOn {a : ℝ} (ha : 0 < a) (d b : ℝ)
@@ -2383,7 +2427,7 @@ omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 /-- The derivative of the actual cutoff is supported in one reserved
 profile interval, independently of the source and transport frequency. -/
 theorem cutoffRadialDerivative_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
-  :
+    :
     ∃ c e : ℝ, a < c ∧ c < e ∧ e < b ∧ ∀ (ell : S → ℝ) (U : Set S),
       (∀ s ∈ U, 0 < ell s) → SupportedGauge c e ell U (cutoffRadialDerivative d a b ell) := by
   have hb : 0 < b := ha.trans hab
@@ -2400,18 +2444,18 @@ theorem cutoffRadialDerivative_interior_support {a b d : ℝ} (ha : 0 < a) (hab 
   let e := eU ^ d⁻¹
   have hac : a < c := by
     simpa only [Real.rpow_rpow_inv ha.le hd.ne'] using Real.rpow_lt_rpow haU.le hacU (inv_pos.mpr
-      hd)
+        hd)
   have hce : c < e := Real.rpow_lt_rpow hcU.le hceU (inv_pos.mpr hd)
   have heb : e < b := by
     simpa only [Real.rpow_rpow_inv hb.le hd.ne'] using Real.rpow_lt_rpow heU.le hebU (inv_pos.mpr
-      hd)
+        hd)
   have hcPow : c ^ d = cU := Real.rpow_inv_rpow hcU.le hd.ne'
   have hePow : e ^ d = eU := Real.rpow_inv_rpow heU.le hd.ne'
   have hzeroLeft (r : ℝ) (hr : r < c) : deriv (physicalCutoff d a b) r = 0 := by
     by_cases hra : a ≤ r
     · rw [deriv_physicalCutoff ha (by linarith) d b]
       have hχ : deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) (powerChart d a r) = 0 :=
-        by
+          by
         apply TemporalMeanUpdate.interiorCutoff_deriv_zero_left habU
         rw [powerChart_eq ha (by linarith) d]
         exact (Real.rpow_lt_rpow (ha.trans_le hra).le hr hd).trans_eq hcPow
@@ -2540,7 +2584,7 @@ theorem meanClass_liftedTorusAverage_moving {α : ℝ} {f : ℕ → Point → �
   let st := movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL
   refine ⟨hclass.weight_nonneg, fun n => (PhysicalMeanDomain.liftedTorusAverage_contDiffOn
     U.isOpen (hf n)).mono (fun p hp => ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL
-      p).mp hp).1), ?_⟩
+        p).mp hp).1), ?_⟩
   intro m
   obtain ⟨C, hC, k, hb⟩ := hclass.bounds m
   refine ⟨C, hC, k, ?_⟩
@@ -2583,7 +2627,7 @@ theorem meanClass_temporalInverse_moving {α : ℝ} {f : ℕ → Point → ℝ}
   have hB : 0 ≤ B := majorant_nonneg st _ α hC k n p (st.zeta_nonneg p hpu)
   have hin : ∀ i ≤ m + 5, ∀ q ∈ ({(p.1, p.2.1)} : Set (ℝ × PressureStream.Plane)), ∀ Y,
       ‖iteratedFDeriv ℝ i (UniformFourierAlias.toProduct (PhysicalMeanDomain.localize c (f n))) (q,
-        Y)‖ ≤ B := by
+          Y)‖ ≤ B := by
     intro i hi q hq Y
     rcases mem_singleton_iff.mp hq with rfl
     rw [UniformFourierAlias.norm_iteratedFDeriv_toProduct, he.jet_eq i p.1 Y]
@@ -2595,7 +2639,7 @@ theorem meanClass_temporalInverse_moving {α : ℝ} {f : ℕ → Point → ℝ}
     hper hB hin j hj (p.1, p.2.1) (mem_singleton _) p.2.2
   rw [← UniformFourierAlias.norm_iteratedFDeriv_fromProduct] at ho
   change ‖iteratedFDeriv ℝ j (TemporalMeanUpdate.temporalInverse (PhysicalMeanDomain.localize c (f
-    n))) p‖ ≤ K * B at ho
+      n))) p‖ ≤ K * B at ho
   rw [(PhysicalMeanDomain.temporalInverse_fiberLocal.germ he).jet_eq j p.1 p.2.2] at ho
   exact ho.trans_eq (by dsimp [B, majorant]; ring)
 
@@ -2638,7 +2682,7 @@ theorem temporalAtIndex_fiberLocal (h : ℝ) (n i : ℕ) :
     PhysicalMeanDomain.FiberLocal (S := S) (MeanChartCompatibility.temporalAtIndex h n i) := by
   intro f g s he r Y
   rw [MeanChartCompatibility.temporalAtIndex_eq_native,
-    MeanChartCompatibility.temporalAtIndex_eq_native]
+      MeanChartCompatibility.temporalAtIndex_eq_native]
   exact congrArg (fun z : ℝ => MeanChartCompatibility.commonRatio h n i * z)
     (PhysicalMeanDomain.desiredIncrement_fiberLocal h n f g s he r Y)
 
@@ -2653,7 +2697,7 @@ theorem temporalAtIndex_supportedGauge (h : ℝ) (n i : ℕ) {a b : ℝ}
     fun p hp => hs (p.1, (z.2.1, p.2.2)) hz hp
   have he := temporalAtIndex_fiberLocal h n i g f z.2.1 (fun _ _ => rfl) z.1 z.2.2
   exact MeanChartCompatibility.temporalAtIndex_supported h n i hgs (fun hzero => hn (he.symm.trans
-    hzero))
+      hzero))
 
 
 theorem temporalAtIndex_contDiffOn (h : ℝ) (n i : ℕ) {U : Set S} (hU : IsOpen U)
@@ -2661,7 +2705,7 @@ theorem temporalAtIndex_contDiffOn (h : ℝ) (n i : ℕ) {U : Set S} (hU : IsOpe
     (hf : ContDiffOn ℝ ∞ f (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U f) :
     ContDiffOn ℝ ∞ (MeanChartCompatibility.temporalAtIndex h n i f) (PhysicalMeanDomain.slowDomain
-      U) :=
+        U) :=
   (temporalAtIndex_fiberLocal h n i).contDiffOn_of_periodic
     (fun _ hf hp => MeanChartCompatibility.temporalAtIndex_smooth h n i hf hp) hU hf hp
 
@@ -2673,7 +2717,7 @@ theorem temporalAtIndex_fast_cancellation_on (h : ℝ) (n i : ℕ) {U : Set S} (
       -TemporalMeanUpdate.centered f z := by
   obtain ⟨c, _, hcs, hcf, he⟩ := PhysicalMeanDomain.exists_fiber_localization hU hz hf
   have hD : fderiv ℝ (MeanChartCompatibility.temporalAtIndex h n i (PhysicalMeanDomain.localize c
-    f)) z =
+      f)) z =
       fderiv ℝ (MeanChartCompatibility.temporalAtIndex h n i f) z :=
     (((temporalAtIndex_fiberLocal h n i).germ he).eventuallyEq z.1 z.2.2).fderiv_eq
   have hC := ((PhysicalMeanDomain.centered_fiberLocal.germ he).eventuallyEq z.1 z.2.2).self_of_nhds
@@ -2686,6 +2730,8 @@ end TemporalLocal
 section AliasClass
 open LocalSignedRequest WeightedClasses
 
+/-- Cutoff radial derivative model, given by `(Real.sqrt y.1)⁻¹ * deriv (physicalCutoff d a b)
+(y.2.1 / Real.sqrt y.1)`. -/
 noncomputable def cutoffRadialDerivativeModel (d a b : ℝ) (y : MeanRankUpdate.ModelPoint) : ℝ :=
   (Real.sqrt y.1)⁻¹ * deriv (physicalCutoff d a b) (y.2.1 / Real.sqrt y.1)
 
@@ -2710,7 +2756,7 @@ theorem cutoffRadialDerivative_q_finiteJets {coord qlo qhi rlo rhi a : ℝ}
     (hq : ∀ z ∈ V, MeanRankUpdate.chartQ coord z ∈ Icc qlo qhi)
     (hR : ∀ z ∈ V, z.1 ∈ Icc rlo rhi) (m : ℕ) :
     ∃ B : ℝ, 0 ≤ B ∧ JetBounds.FiniteJetBound m (cutoffRadialDerivative d a b (qLength coord)) V B
-      := by
+        := by
   rw [cutoffRadialDerivative_q_eq_kernel]
   exact MeanRankUpdate.chartKernel_finiteJetBounds hc hc1 hqlo hT hq hR
     (cutoffRadialDerivativeModel_contDiffOn ha d b) m
@@ -2738,7 +2784,7 @@ theorem compactAlias_q_supportedGauge (M : ℝ) (v : PressureStream.Plane) (f : 
   intro z hz hn
   have hpos := qLength_pos U.coord_pos U.coord_lt_one (U.time_pos _ hz)
   exact physicalAlias_supported (mul_pos hpos ha) (mul_lt_mul_of_pos_left hab hpos) hd M ((0 :
-    PressureStream.Plane), v) f hn
+      PressureStream.Plane), v) f hn
 
 theorem localBandJets_compactAlias {ε L : ℕ → ℝ} {α : ℝ} {f : ℕ → Point → ℝ}
     (hε : ∀ n, 0 < ε n) (hL : ∀ n, 1 ≤ L n)
@@ -2760,12 +2806,12 @@ theorem localBandJets_compactAlias {ε L : ℕ → ℝ} {α : ℝ} {f : ℕ → 
   intro m
   obtain ⟨C, hC0, k, hbound⟩ := hb m
   obtain ⟨K, hK, hJbound⟩ := physicalIntegrals_finiteJets_local (S := PressureStream.Plane) hc hce
-    hd c e m
+      hd c e m
   let V : Set Point := {z | z.2.1 ∈ U.carrier ∧ z.1 ∈ Icc c e}
   obtain ⟨B, hB, hBbound⟩ := cutoffRadialDerivative_q_finiteJets U.coord_pos U.coord_lt_one
-    U.qlo_pos ha d b
+      U.qlo_pos ha d b
     (V := V) (fun z hz => U.time_pos z.2.1 hz.1) (fun z hz => U.q_mem z.2.1 hz.1) (fun _ hz =>
-      hz.2) m
+        hz.2) m
   refine ⟨(2 : ℝ) ^ m * B * K * C, by positivity, k, ?_⟩
   intro n z hz j hj
   have hA : 0 ≤ C * ε n ^ α * L n ^ k :=
@@ -2785,7 +2831,7 @@ theorem localBandJets_compactAlias {ε L : ℕ → ℝ} {α : ℝ} {f : ℕ → 
         ⟨hr.1.le, hr.2.le⟩ (fun q hq R hR Y => hbound n (R, (z.2.1, Y)) hz q hq) i hi).2)
     exact hp.trans_eq (by ring)
   · rw [PhysicalMeanDomain.jet_zero_outside U.isOpen (compactAlias_q_contDiffOn U ha hab hd (M n)
-    (v n) (hf n) (hs n))
+      (v n) (hf n) (hs n))
       (hAfixed n) hz hr j, norm_zero]
     exact mul_nonneg (mul_nonneg (by positivity) (Real.rpow_pos_of_pos (hε n) α).le)
       (pow_nonneg (zero_le_one.trans (hL n)) k)
@@ -2801,7 +2847,7 @@ theorem meanClass_compactAlias {α : ℝ} {f : ℕ → Point → ℝ}
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (fun n => compactAlias d a b (M n) (qLength coord) (v n) (f n)) := by
   obtain ⟨c, e, hac, _, heb, hsup⟩ := compactAlias_interior_support (S := PressureStream.Plane) ha
-    hab hd
+      hab hd
   exact localBandJets_meanClass_of_gaugeInteriorSupport U ha hcL hcR ε L hε hεone hL hac heb
     (fun n => compactAlias_q_contDiffOn U ha hab hd (M n) (v n) (hf n) (hs n))
     (fun n => hsup (qLength coord) U.carrier
@@ -2816,7 +2862,7 @@ theorem meanClass_dividedCompactAlias {α : ℝ} {f : ℕ → Point → ℝ}
     (M : ℕ → ℝ) (v : ℕ → PressureStream.Plane) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (fun n => PressureStream.divideRadius (compactAlias d a b (M n) (qLength coord) (v n) (f n)))
-        :=
+          :=
   meanClass_divideRadius_moving U ha hcL hcR ε L hε hεone hL
     (meanClass_compactAlias U ha hab hd hcL hcR ε L hε hεone hL hf hs hclass M v)
 
@@ -2827,13 +2873,13 @@ theorem meanClass_streamGamma {α : ℝ} {f : ℕ → Point → ℝ}
     (M : ℕ → ℝ) (v : ℕ → PressureStream.Plane) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (fun n => PressureStream.streamGamma (PressureStream.physicalSpeed d (M n)) ((0 :
-        PressureStream.Plane), v n)
+          PressureStream.Plane), v n)
         (streamPotential d a b (M n) (qLength coord) (v n) (f n))) := by
   have hw := meanClass_radialMultiply_moving U ha hcL hcR ε L hε hεone hL contDiff_id hclass
   have hA := meanClass_dividedCompactAlias U ha hab hd hcL hcR ε L hε hεone hL
     (f := fun n => PressureStream.weightedSource (f n))
     (fun n => contDiffOn_fst.mul (hf n)) (fun n z hz hn => hs n z hz (right_ne_zero_of_mul hn)) hw
-      M v
+        M v
   apply MeanRankUpdate.meanClass_congr_on (MeanIncrementBounds.Class.sub hclass hA)
   intro n z hz
   have hzm := (movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz
@@ -2868,7 +2914,7 @@ theorem meanClass_temporalStreamPotential {h α : ℝ} (hh : 0 ≤ h)
     (fun n => temporalAtIndex_contDiffOn h n (index n) U.isOpen (hf n) (hp n))
     (fun n => temporalAtIndex_supportedGauge h n (index n) (hs n))
     (meanClass_temporalAtIndex_moving U ha hcL hcR ε L hε hεone hL hh hscale index D hgap hf hp
-      hclass) M v
+        hclass) M v
 
 theorem meanClass_temporalStreamGamma {h α : ℝ} (hh : 0 ≤ h)
     (hscale : ∀ n, ChartScales.S n ≤ L n) (index : ℕ → ℕ) (D : ℕ)
@@ -2880,14 +2926,14 @@ theorem meanClass_temporalStreamGamma {h α : ℝ} (hh : 0 ≤ h)
     (M : ℕ → ℝ) (v : ℕ → PressureStream.Plane) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (fun n => PressureStream.streamGamma (PressureStream.physicalSpeed d (M n)) ((0 :
-        PressureStream.Plane), v n)
+          PressureStream.Plane), v n)
         (streamPotential d a b (M n) (qLength coord) (v n)
           (MeanChartCompatibility.temporalAtIndex h n (index n) (f n)))) :=
   meanClass_streamGamma U ha hab hd hcL hcR ε L hε hεone hL
     (fun n => temporalAtIndex_contDiffOn h n (index n) U.isOpen (hf n) (hp n))
     (fun n => temporalAtIndex_supportedGauge h n (index n) (hs n))
     (meanClass_temporalAtIndex_moving U ha hcL hcR ε L hε hεone hL hh hscale index D hgap hf hp
-      hclass) M v
+        hclass) M v
 
 omit hab hd in
 theorem streamBeta_smul_direction {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -2912,7 +2958,7 @@ theorem meanClass_scaledTemporalStreamBeta {h α : ℝ} (hh : 0 ≤ h)
           (MeanChartCompatibility.temporalAtIndex h n (index n) (f n)))) := by
   let st := movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL
   have hc := meanClass_temporalAtIndex_moving U ha hcL hcR ε L hε hεone hL hh hscale index D hgap
-    hf hp hclass
+      hf hp hclass
   have hi := meanClass_streamBeta U ha hcL hcR ε L hε hεone hL hab hd
     (fun n => temporalAtIndex_contDiffOn h n (index n) U.isOpen (hf n) (hp n))
     (fun n => temporalAtIndex_supportedGauge h n (index n) (hs n)) hc M v w
@@ -2938,7 +2984,7 @@ theorem reconstructState_pressure_class
     (hf : ∀ n, ContDiffOn ℝ ∞ (u.gr c n) (PhysicalMeanDomain.slowDomain U.carrier))
     (hs : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (u.gr c n))
     (hclass : MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-      hεone hL)
+        hεone hL)
       α (u.gr c)) :
     MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone hL)
       α (reconstructState g c u).pressure := by
@@ -2953,12 +2999,12 @@ theorem reconstructState_pressure_change_class
     (hsf : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (u.gr c n))
     (hsg : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (v.gr c n))
     (hclass : MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-      hεone hL)
+        hεone hL)
       α (u.gr c - v.gr c)) :
     MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone hL)
       α ((reconstructState g c u).pressure - (reconstructState g c v).pressure) := by
   have he := meanClass_meanPressure_change U ha g.radial.inner_lt_outer hd hcL hcR ε L hε hεone hL
-    hf hg hsf hsg hclass
+      hf hg hsf hsg hclass
       g.radial.frequency (fun _ => g.radial.radialDirection)
   simp only [reconstructState, hell] at he ⊢
   exact he
@@ -2974,12 +3020,12 @@ theorem temporalIncrementState_classes
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (hcθ : MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone
-      hL)
+        hL)
       α (u.thetaResidual c))
     (hcz : MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone
-      hL)
+        hL)
       α (u.axialResidual c)) :
     MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone hL)
       (α + 1) (temporalIncrementState g h index axial c u).radial ∧
@@ -2988,15 +3034,15 @@ theorem temporalIncrementState_classes
     MeanClass (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone hL)
       α (temporalIncrementState g h index axial c u).axial := by
   have hB := meanClass_scaledTemporalStreamBeta U ha g.radial.inner_lt_outer hd hcL hcR ε L hε
-    hεone hL
+      hεone hL
     hh hscale index D hgap hz hpz hsz hcz g.radial.frequency (fun _ => g.radial.radialDirection)
-      axial
+        axial
   have hT := meanClass_temporalAtIndex_moving U ha hcL hcR ε L hε hεone hL hh hscale index D hgap
-    hθ hpθ hcθ
+      hθ hpθ hcθ
   have hG := meanClass_temporalStreamGamma U ha g.radial.inner_lt_outer hd hcL hcR ε L hε hεone hL
     hh hscale index D hgap hz hpz hsz hcz g.radial.frequency (fun _ => g.radial.radialDirection)
   simpa only [temporalIncrementState, temporalPotential, hell, heps] using And.intro hB (And.intro
-    hT hG)
+      hT hG)
 
 end ActualStateClasses
 
@@ -3028,8 +3074,8 @@ theorem streamBeta_supportedGauge {a b : ℝ} {ell : S → ℝ} {U : Set S}
     SupportedGauge a b ell U (PressureStream.streamBeta w f) := by
   intro z hz hn
   apply fderiv_apply_supportedGauge hU hell hs (fun _ => (0, w)) z hz
-  exact fun hzero => hn (by simp only [PressureStream.streamBeta, PressureStream.graphDz, hzero,
-    neg_zero])
+  exact fun hzero => hn (by
+      simp only [PressureStream.streamBeta, PressureStream.graphDz, hzero, neg_zero])
 
 theorem streamGamma_supportedGauge {a b : ℝ} {ell : S → ℝ} {U : Set S}
     (hU : IsOpen U) (hell : ContinuousOn ell U) {f : PressureStream.Lift S → ℝ}
@@ -3043,8 +3089,9 @@ theorem streamGamma_supportedGauge {a b : ℝ} {ell : S → ℝ} {U : Set S}
   have hF : f z = 0 := by
     by_contra hf
     exact hnot (hs z hz hf)
-  exact hn (by simp only [PressureStream.streamGamma, PressureStream.divideRadius, hD, hF,
-    zero_div, add_zero])
+  exact hn (by
+      simp only [PressureStream.streamGamma, PressureStream.divideRadius, hD, hF, zero_div,
+          add_zero])
 
 theorem streamPotential_supportedGauge {a b d M : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
     (ell : S → ℝ) (v : PressureStream.Plane) {U : Set S} (hU : IsOpen U)
@@ -3070,13 +3117,13 @@ theorem reconstructState_radial_identity (n : ℕ)
     {z : Point} (hz : z.2.1 ∈ U.carrier) :
     PressureStream.graphDr (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency n))
       ((0 : PressureStream.Plane), g.radial.radialDirection) ((reconstructState g c u).pressure n)
-        z =
+          z =
         u.gr c n z - density g.radial.inner g.radial.outer g.radial.inner_lt_outer (g.length n) z *
           PressureStream.pressureMass (u.gr c n) z.2.1 -
         compactAlias g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
           (g.length n) g.radial.radialDirection
           (pressureSource g.radial.inner g.radial.outer g.radial.inner_lt_outer (g.length n) (u.gr
-            c n)) z := by
+              c n)) z := by
   simpa only [reconstructState, hell] using
     meanPressure_radial_identity U ha g.radial.inner_lt_outer hd (g.radial.frequency n)
       g.radial.radialDirection hf hs hz
@@ -3085,13 +3132,13 @@ theorem temporalAxialDifference_eq_dividedAlias (h : ℝ) (index : ℕ → ℕ) 
     (hf : ContDiffOn ℝ ∞ (u.axialResidual c n) (PhysicalMeanDomain.slowDomain U.carrier))
     (hp : PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hs : SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (u.axialResidual c
-      n))
+        n))
     {z : Point} (hz : z.2.1 ∈ U.carrier) (hr : z.1 ≠ 0) :
     temporalAxialDifference g h index c u n z =
       compactAlias g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
         (g.length n) g.radial.radialDirection
         (PressureStream.weightedSource (MeanChartCompatibility.temporalAtIndex h n (index n)
-          (u.axialResidual c n))) z / z.1 := by
+            (u.axialResidual c n))) z / z.1 := by
   simp only [temporalAxialDifference, temporalPotential, hell]
   rw [streamGamma_eq_desired_sub_alias U ha g.radial.inner_lt_outer hd (g.radial.frequency n)
     g.radial.radialDirection (temporalAtIndex_contDiffOn h n (index n) U.isOpen hf hp)
@@ -3103,10 +3150,10 @@ theorem temporalIncrementState_divergence_zero (h : ℝ) (index : ℕ → ℕ)
     (hf : ContDiffOn ℝ ∞ (u.axialResidual c n) (PhysicalMeanDomain.slowDomain U.carrier))
     (hp : PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hs : SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (u.axialResidual c
-      n))
+        n))
     {z : Point} (hz : z.2.1 ∈ U.carrier) (hr : z.1 ≠ 0) :
     PressureStream.graphDivergence (PressureStream.physicalSpeed g.radial.exponent
-      (g.radial.frequency n))
+        (g.radial.frequency n))
       ((0 : PressureStream.Plane), g.radial.radialDirection) (c.operators.epsilon n • axial)
       ((temporalIncrementState g h index axial c u).radial n)
       ((temporalIncrementState g h index axial c u).axial n) z = 0 := by
@@ -3121,9 +3168,9 @@ theorem temporalIncrementState_supportedGauge (h : ℝ) (index : ℕ → ℕ)
     (hf : ContDiffOn ℝ ∞ (u.axialResidual c n) (PhysicalMeanDomain.slowDomain U.carrier))
     (hp : PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (u.axialResidual
-      c n))
+        c n))
     (hsθ : SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (u.thetaResidual
-      c n)) :
+        c n)) :
     SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
       ((temporalIncrementState g h index axial c u).radial n) ∧
     SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
@@ -3132,9 +3179,9 @@ theorem temporalIncrementState_supportedGauge (h : ℝ) (index : ℕ → ℕ)
       ((temporalIncrementState g h index axial c u).axial n) := by
   have hL : ContinuousOn (qLength coord) U.carrier :=
     ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun s hs => U.time_pos s
-      hs)).continuousOn
+        hs)).continuousOn
   have hpot := streamPotential_supportedGauge (M := g.radial.frequency n) ha
-    g.radial.inner_lt_outer hd
+      g.radial.inner_lt_outer hd
     (qLength coord) g.radial.radialDirection U.isOpen
     (fun s hs => qLength_pos U.coord_pos U.coord_lt_one (U.time_pos s hs))
     (temporalAtIndex_contDiffOn h n (index n) U.isOpen hf hp)
@@ -3142,7 +3189,7 @@ theorem temporalIncrementState_supportedGauge (h : ℝ) (index : ℕ → ℕ)
   have hB := streamBeta_supportedGauge U.isOpen hL hpot (c.operators.epsilon n • axial)
   have hG := streamGamma_supportedGauge U.isOpen hL hpot
     (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency n)) ((0 :
-      PressureStream.Plane), g.radial.radialDirection)
+        PressureStream.Plane), g.radial.radialDirection)
   simpa only [temporalIncrementState, temporalPotential, hell] using
     And.intro hB (And.intro (temporalAtIndex_supportedGauge h n (index n) hsθ) hG)
 

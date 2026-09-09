@@ -8,13 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TorusInverse
 public import Mathlib.Analysis.Fourier.AddCircleMulti
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Analysis.PSeries
-public import Mathlib.Analysis.Normed.Ring.InfiniteSum
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.PSeries
 
 /-!
 # Fourier coefficients of actual smooth periodic functions
@@ -23,6 +18,9 @@ Coefficients are defined by actual unit-interval integrals. Their decay is
 derived from integration by parts and bounds for actual coordinate derivatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SmoothFourierData
@@ -30,7 +28,7 @@ namespace NavierStokes.SmoothFourierData
 open Set Function MeasureTheory TorusInverse
 open scoped BigOperators ContDiff Interval Topology
 
-local instance : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
+local instance instSmoothFourierData1 : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
 
 /-- The actual unit-period Fourier coefficient of a function on the line. -/
 def unitCoeff (f : ℝ → ℂ) (n : ℤ) : ℂ :=
@@ -75,6 +73,7 @@ def UnitPeriodic (f : Plane → ℂ) : Prop :=
 /-- The genuine first coordinate derivative. -/
 noncomputable def partialX (f : Plane → ℂ) (z : Plane) : ℂ := fderiv ℝ f z (1, 0)
 
+/-- X jet, given by `partialX^[p] f`. -/
 noncomputable def xJet (p : ℕ) (f : Plane → ℂ) : Plane → ℂ := partialX^[p] f
 
 @[simp] theorem xJet_zero (f : Plane → ℂ) : xJet 0 f = f := rfl
@@ -189,6 +188,7 @@ theorem integral_square_swap {f : Plane → ℂ} (hf : Continuous f) :
     (isCompact_Icc.prod isCompact_Icc)).mono_set
       (Set.prod_mono Ioc_subset_Icc_self Ioc_subset_Icc_self)
 
+/-- Swap function, defined pointwise by `f (z.2, z.1)`. -/
 noncomputable def swapFunction (f : Plane → ℂ) : Plane → ℂ := fun z => f (z.2, z.1)
 
 theorem swapFunction_smooth {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) :
@@ -398,6 +398,7 @@ theorem coefficient_seminorm_bound {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
 
 /-! ## Identification with the actual torus Fourier coefficients -/
 
+/-- Torus lift, given by `f ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle))`. -/
 noncomputable def torusLift (f : Torus → ℂ) (x : Plane) : ℂ :=
   f ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle))
 
@@ -405,6 +406,7 @@ theorem torusLift_periodic (f : Torus → ℂ) : UnitPeriodic (torusLift f) := b
   intro z k
   simp [torusLift]
 
+/-- Torus coefficient, given by `∫ z, torusMode (-k) z * f z ∂torusMeasure`. -/
 def torusCoefficient (f : Torus → ℂ) (k : Frequency) : ℂ :=
   ∫ z, torusMode (-k) z * f z ∂torusMeasure
 
@@ -522,6 +524,7 @@ theorem unitPeriodic_second {f : Plane → ℂ} (hp : UnitPeriodic f) (x : ℝ) 
   intro y
   simpa using hp (x, y) (0, 1)
 
+/-- First lift, given by `(unitPeriodic_first hp y).lift z`. -/
 noncomputable def firstLift (f : Plane → ℂ) (hp : UnitPeriodic f)
     (z : UnitAddCircle) (y : ℝ) : ℂ :=
   (unitPeriodic_first hp y).lift z
@@ -533,6 +536,7 @@ theorem firstLift_periodic (f : Plane → ℂ) (hp : UnitPeriodic f) (z : UnitAd
   change f (x, y + 1) = f (x, y)
   exact unitPeriodic_second hp x y
 
+/-- Descend, given by `(firstLift_periodic f hp z.1).lift z.2`. -/
 noncomputable def descend (f : Plane → ℂ) (hp : UnitPeriodic f) (z : Torus) : ℂ :=
   (firstLift_periodic f hp z.1).lift z.2
 
@@ -546,6 +550,7 @@ theorem descend_continuous {f : Plane → ℂ} (hf : Continuous f) (hp : UnitPer
   apply (hq.prodMap hq).isQuotientMap.continuous_iff.mpr
   exact hf
 
+/-- Descend continuous, bundling `toFun`, `continuous_toFun`. -/
 noncomputable def descendContinuous (f : Plane → ℂ) (hf : Continuous f)
     (hp : UnitPeriodic f) : C(Torus, ℂ) where
   toFun := descend f hp

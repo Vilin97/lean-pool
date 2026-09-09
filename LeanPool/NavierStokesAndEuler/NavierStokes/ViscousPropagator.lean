@@ -7,14 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianEnvelope
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TangentODE
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Tactic.Module
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.TangentODE
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Energy estimates for the viscous two-mode equation
@@ -23,6 +20,9 @@ The norm is the genuine Euclidean norm on `EuclideanSpace ℝ (Fin 2)`.
 The auxiliary Hilbert-space lemmas derive an estimate from a differential
 equation and an energy inequality; no propagator bound is assumed.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ViscousPropagator
 

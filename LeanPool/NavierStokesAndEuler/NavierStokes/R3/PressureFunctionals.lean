@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureTestBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszPairing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureTestBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszPairing
 
 /-!
 # The pressure-difference functional on Schwartz tests
@@ -20,6 +20,9 @@ tensor coefficients belong to `L¹`. All pairings below are actual Lebesgue
 integrals. The final functional uses the spatial Laplacian and coordinate
 derivatives from the equation, and the double Riesz test operator.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

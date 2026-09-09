@@ -9,12 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.FlowL2Transport
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCorrectionCoefficients
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalContinuity
 
 /-! Reconstruction W=κFz is a genuine all-order field tower. Its graph
 restriction and its actual inverse-flow pullback are continuous spatial L²
 paths, with no independent integrability assumption on the perturbation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +30,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   (κ : ℝ) (Z : FieldTower P D.T)
 
+/-- Reconstructed tower, given by `(Z.multiply ((frameCoefficient D).toCoefficientTower P)).smul
+κ`. -/
 def reconstructedTower : FieldTower P D.T :=
   (Z.multiply ((frameCoefficient D).toCoefficientTower P)).smul κ
 
@@ -37,6 +41,8 @@ theorem reconstructedTower_pointField (t : Icc (0 : ℝ) D.T) (x : LiftDomain P)
   rw [reconstructedTower,FieldTower.smul_pointField,FieldTower.multiply_pointField]
   rfl
 
+/-- Graph path, given by `(reconstructedTower D P κ Z).canonicalGraphWordPath (physicalPhase P k
+D.m₀) (physicalPhase_continuous P k D.m₀) 0 Fin.elim0`. -/
 def graphPath (k : ℝ) : C(Icc (0 : ℝ) D.T,Lp Space 2 (volume : Measure Space)) :=
   (reconstructedTower D P κ Z).canonicalGraphWordPath
     (physicalPhase P k D.m₀) (physicalPhase_continuous P k D.m₀) 0 Fin.elim0
@@ -49,6 +55,7 @@ theorem graphPath_ae (k : ℝ) (t : Icc (0 : ℝ) D.T) :
   simpa only [graphPath,EulerCylinderSobolev.iteratedFieldDerivative_zero,
     reconstructedTower_pointField,physicalPhase,cylinderGraph] using h
 
+/-- Graph tensor path, given by `(reconstructedTower D P κ Z).physicalTensorPath k D.m₀ n`. -/
 def graphTensorPath (k : ℝ) (n : ℕ) :
     C(Icc (0 : ℝ) D.T,Lp (Space [×n]→L[ℝ] Space) 2 (volume : Measure Space)) :=
   (reconstructedTower D P κ Z).physicalTensorPath k D.m₀ n
@@ -69,8 +76,10 @@ variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hYX : ∀ t, Function.LeftInverse (Y t) (X t))
   (hXY : ∀ t, Function.RightInverse (Y t) (X t))
   (hY : Continuous (Function.uncurry Y))
-  (hdet : ∀ t x, (D.F.field t x).det=1)
+  (hdet : ∀ t x, (D.F.field t x).det = 1)
 
+/-- Eulerian path, given by `transportPath X Y (fun t x => D.F.field t x) hX hYX hXY hY hdet
+(graphPath D P κ Z k)`. -/
 def eulerianPath (k : ℝ) : C(Icc (0 : ℝ) D.T,Lp Space 2 (volume : Measure Space)) :=
   transportPath X Y (fun t x => D.F.field t x) hX hYX hXY hY hdet (graphPath D P κ Z k)
 

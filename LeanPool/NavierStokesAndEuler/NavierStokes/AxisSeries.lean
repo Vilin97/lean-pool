@@ -7,12 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisProfile
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Topology.Algebra.InfiniteSum.NatInt
-public import Mathlib.Tactic.GCongr
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.SmoothSeries
 
 /-!
 # Convergent series for the leading natural axis profile
@@ -20,6 +16,9 @@ public import Mathlib.Tactic.GCongr
 This module concerns the leading scaled linear equation of Proposition 5.1,
 not the nonlinear perturbation or the claimed uniform remainder estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

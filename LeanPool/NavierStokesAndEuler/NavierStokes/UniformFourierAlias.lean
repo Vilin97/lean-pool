@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FourierAlias
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialPullback
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothFamilyTorusInverse
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Uniform seminorm bounds for families of exact Fourier aliases
@@ -19,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothFamilyTorusInvers
 All constants are chosen before the source and the band. The estimates use
 actual derivatives and actual translated integrals.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -300,6 +301,7 @@ section RealTransfer
 variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Complexify, given by `f z`. -/
 noncomputable def complexify (f : D → ℝ) (z : D) : ℂ := f z
 
 theorem complexify_smooth {f : D → ℝ} (hf : ContDiff ℝ ∞ f) :
@@ -359,6 +361,7 @@ variable {S F : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 noncomputable def toProduct (f : ℝ × (S × Plane) → F) (z : (ℝ × S) × Plane) : F :=
   f (z.1.1, (z.1.2, z.2))
 
+/-- From product, given by `f ((z.1, z.2.1), z.2.2)`. -/
 noncomputable def fromProduct (f : (ℝ × S) × Plane → F) (z : ℝ × (S × Plane)) : F :=
   f ((z.1, z.2.1), z.2.2)
 
@@ -390,12 +393,15 @@ theorem norm_iteratedFDeriv_fromProduct (f : (ℝ × S) × Plane → F)
       ‖iteratedFDeriv ℝ m f ((z.1, z.2.1), z.2.2)‖ :=
   (LinearIsometryEquiv.prodAssoc ℝ ℝ S Plane).symm.norm_iteratedFDeriv_comp_right f z m
 
+/-- Source mean, given by `FourierAlias.torusMean (fun Y => f (p.1, (p.2, Y)))`. -/
 noncomputable def sourceMean (f : ℝ × (S × Plane) → F) (p : ℝ × S) : F :=
   FourierAlias.torusMean (fun Y => f (p.1, (p.2, Y)))
 
+/-- Source periodic, given by `∀ U s, FourierAlias.TorusPeriodic (fun Y => f (U, (s, Y)))`. -/
 noncomputable def SourcePeriodic (f : ℝ × (S × Plane) → F) : Prop :=
   ∀ U s, FourierAlias.TorusPeriodic (fun Y => f (U, (s, Y)))
 
+/-- Radial slice, given by `f (z.1, (s, z.2))`. -/
 noncomputable def radialSlice (f : ℝ × (S × Plane) → F) (s : S) (z : ℝ × Plane) : F :=
   f (z.1, (s, z.2))
 
@@ -429,7 +435,7 @@ theorem sourceMean_totalIntegral {a b M : ℝ} {v : Plane} {f : ℝ × (S × Pla
   exact FourierAlias.torusMean_totalIntegral hab (radialSlice_smooth hf s).continuous
     (fun u => hp u s) (radialSlice_supported hs s) U
 
-theorem exactAlias_sourceMean_zero [CompleteSpace F] {a b M : ℝ} {v : Plane}
+theorem exactAlias_sourceMean_zero {a b M : ℝ} {v : Plane}
     {f : ℝ × (S × Plane) → F} (χ : ℝ → ℝ) (hab : a ≤ b)
     (hf : ContDiff ℝ ∞ f) (hp : SourcePeriodic f)
     (hs : RadialAlias.RadiallySupported a b f)
@@ -452,9 +458,11 @@ section RealInverse
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Parameter periodic, given by `∀ p, FourierAlias.TorusPeriodic (fun Y => f (p, Y))`. -/
 noncomputable def ParameterPeriodic {F : Type} (f : P × Plane → F) : Prop :=
   ∀ p, FourierAlias.TorusPeriodic (fun Y => f (p, Y))
 
+/-- Parameter mean, given by `FourierAlias.torusMean (fun Y => f (p, Y))`. -/
 noncomputable def parameterMean {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (f : P × Plane → F) (p : P) : F := FourierAlias.torusMean (fun Y => f (p, Y))
 
@@ -494,6 +502,7 @@ Fourier inverse by real part. -/
 noncomputable def realInverse (d : Direction) (f : P × Plane → ℝ) (z : P × Plane) : ℝ :=
   Complex.re (SmoothFamilyTorusInverse.inverse d (complexify f) z)
 
+/-- Real centered, given by `f z - parameterMean f z.1`. -/
 noncomputable def realCentered (f : P × Plane → ℝ) (z : P × Plane) : ℝ :=
   f z - parameterMean f z.1
 
@@ -508,7 +517,7 @@ theorem complexify_realCentered (f : P × Plane → ℝ) :
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 theorem realCentered_eq_re_nonbar (f : P × Plane → ℝ) :
     realCentered f = fun z => Complex.re (SmoothFamilyTorusInverse.nonbarPart (complexify f) z) :=
-      by
+        by
   funext z
   have h := congrArg Complex.re (congrFun (complexify_realCentered f) z)
   exact h
@@ -553,7 +562,7 @@ theorem realCentered_smooth {f : P × Plane → ℝ} (hf : ContDiff ℝ ∞ f)
   rw [realCentered_eq_re_nonbar]
   exact Complex.reCLM.contDiff.comp
     (SmoothFamilyTorusInverse.nonbarPart_smooth (complexify_smooth hf)
-      (complexify_parameterPeriodic hp))
+        (complexify_parameterPeriodic hp))
 
 omit [FiniteDimensional ℝ P] in
 theorem realCentered_zeroMean {f : P × Plane → ℝ} (hf : ContDiff ℝ ∞ f)
@@ -568,7 +577,7 @@ theorem realInverse_smooth (d : Direction) {f : P × Plane → ℝ}
     (hf : ContDiff ℝ ∞ f) (hp : ParameterPeriodic f) : ContDiff ℝ ∞ (realInverse d f) :=
   Complex.reCLM.contDiff.comp
     (SmoothFamilyTorusInverse.inverse_smooth d (complexify_smooth hf) (complexify_parameterPeriodic
-      hp))
+        hp))
 
 theorem realInverse_zeroMean (d : Direction) {f : P × Plane → ℝ}
     (hf : ContDiff ℝ ∞ f) (hp : ParameterPeriodic f) :
@@ -657,6 +666,7 @@ section TransportInverse
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S]
 
+/-- Family inverse, given by `fromProduct (SmoothFamilyTorusInverse.inverse d (toProduct f))`. -/
 noncomputable def familyInverse (d : Direction) (f : ℝ × (S × Plane) → ℂ) :
     ℝ × (S × Plane) → ℂ := fromProduct (SmoothFamilyTorusInverse.inverse d (toProduct f))
 
@@ -665,6 +675,7 @@ theorem mean_toProduct (f : ℝ × (S × Plane) → ℂ) (p : ℝ × S) :
     SmoothFamilyTorusInverse.mean (toProduct f) p = sourceMean f p :=
   SmoothFamilyTorusInverse.mean_eq_integral _ _
 
+/-- Real center source, given by `fromProduct (realCentered (toProduct f))`. -/
 noncomputable def realCenterSource (f : ℝ × (S × Plane) → ℝ) : ℝ × (S × Plane) → ℝ :=
   fromProduct (realCentered (toProduct f))
 
@@ -722,14 +733,14 @@ theorem totalIntegral_realCenterSource {a b M : ℝ} {v : Plane}
       (SmoothFamilyTorusInverse.mean (toProduct (complexify f)) (U, z.2.1))) :=
     Complex.continuous_re.comp
       ((SmoothFamilyTorusInverse.coefficient_smooth (toProduct_smooth (complexify_smooth hf))
-        0).continuous.comp
+          0).continuous.comp
         (continuous_id.prodMk continuous_const))
   have hmc : Continuous (fun U => sourceMean f (U, z.2.1)) := by
     simpa only [mean_toProduct, sourceMean_complexify, Complex.ofReal_re] using ht
   rw [intervalIntegral.integral_sub
     (f := fun U => f (U, (z.2.1, z.2.2 + (M * (U - z.1)) • v)))
     (g := fun U => sourceMean f (U, z.2.1)) (hc.intervalIntegrable _ _) (hmc.intervalIntegrable _
-      _),
+        _),
     hm z.2.1, sub_zero]
 
 theorem exactAlias_eq_realCenterSource {a b M : ℝ} {v : Plane}
@@ -801,6 +812,7 @@ theorem familyInverse_solves (d : Direction) {f : ℝ × (S × Plane) → ℂ}
   have hi := congrFun (SmoothFamilyTorusInverse.inverse_solves d (toProduct_smooth hf) hp hm) (e z)
   exact hi
 
+/-- Admissible, constructed using `ContDiff`. -/
 noncomputable def Admissible (a b : ℝ) (f : ℝ × (S × Plane) → ℂ) : Prop :=
   ContDiff ℝ ∞ f ∧ SmoothFamilyTorusInverse.Periodic (toProduct f) ∧
     SmoothFamilyTorusInverse.ZeroMean (toProduct f) ∧ RadialAlias.RadiallySupported a b f

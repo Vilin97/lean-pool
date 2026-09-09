@@ -7,21 +7,23 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseTransportCommutator
-public import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
+public import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearProduct
+import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
+
+/-! Actual fixed-H⁶ external scalar multiplication commutators with positive-order binomial bounds.
+-/
 
 @[expose] public section
 
-/-! Actual fixed-H⁶ external scalar multiplication commutators with positive-order binomial bounds.
-  -/
 
 noncomputable section
 
 namespace EulerExternalScalarCommutator
 
 open MeasureTheory EulerSobolev EulerLiftedGradientSpace EulerMetricTransport
-  EulerTransportDerivatives
-  EulerCylinderSobolev EulerRealCylinder EulerVectorCylinder EulerH6Nonlinear
-    EulerBaseTransportCommutator
+    EulerTransportDerivatives
+  EulerCylinderSobolev   EulerH6Nonlinear
+      EulerBaseTransportCommutator
   EulerJetProductBounds EulerSpatialSobolevInverse
 open scoped ContDiff ENNReal Topology
 
@@ -36,8 +38,8 @@ theorem fieldDerivative_sub (a : LiftTangent) (f g : LiftDomain period → F)
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
     fieldDerivative period a (f-g) = fieldDerivative period a f-fieldDerivative period a g := by
   funext x
-  have h := (((hf x).differentiable (by simp)) 0).hasFDerivAt.sub (((hg x).differentiable (by
-    simp)) 0).hasFDerivAt
+  have h := (((hf x).differentiable (by
+      simp)) 0).hasFDerivAt.sub (((hg x).differentiable (by simp)) 0).hasFDerivAt
   exact congrArg (fun A : LiftTangent →L[ℝ] F => A a) h.fderiv
 
 omit [Fact (0 < period)] in
@@ -45,7 +47,7 @@ theorem word_sub {n : ℕ} (w : Fin n → Fin 4) (f g : LiftDomain period → F)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
     iteratedFieldDerivative period w (f-g) = iteratedFieldDerivative period w
-      f-iteratedFieldDerivative period w g := by
+        f-iteratedFieldDerivative period w g := by
   induction n with
   | zero => rfl
   | succ n ih =>
@@ -62,7 +64,7 @@ theorem scalarCommutator_smooth {n : ℕ} (w : Fin n → Fin 4)
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
     ∀ x, ContDiff ℝ ∞ (localFieldLift period (scalarCommutator period w f g) x) :=
   fun x => (iteratedFieldDerivative_smooth period w (fun x => f x • g x) (fun y => (hf y).smul (hg
-    y)) x).sub
+      y)) x).sub
     ((hf x).smul (iteratedFieldDerivative_smooth period w g hg x))
 
 theorem scalarCommutator_all_memLp {n : ℕ} (w : Fin n → Fin 4)
@@ -70,11 +72,11 @@ theorem scalarCommutator_all_memLp {n : ℕ} (w : Fin n → Fin 4)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure
-      period))
+        period))
     (hgL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u g) 2 (liftMeasure
-      period)) :
+        period)) :
     ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u (scalarCommutator period w f
-      g)) 2 (liftMeasure period) := by
+        g)) 2 (liftMeasure period) := by
   intro j u
   rw [scalarCommutator, word_sub period u (iteratedFieldDerivative period w (fun x => f x • g x))
     (fun x => f x • iteratedFieldDerivative period w g x)
@@ -89,28 +91,28 @@ def commutatorH6Norm (n : ℕ) (f : LiftDomain period → ℝ) (g : LiftDomain p
   ∑ w : Fin n → Fin 4, liftSobolevNorm period 6 (scalarCommutator period w f g)
 
 theorem commutatorH6Norm_nonneg (n : ℕ) (f : LiftDomain period → ℝ) (g : LiftDomain period →
-  Vector3) :
+    Vector3) :
     0 ≤ commutatorH6Norm period n f g := Finset.sum_nonneg fun _ _ => liftSobolevNorm_nonneg period
-      6 _
+        6 _
 
 @[simp] theorem commutatorH6Norm_zero (f : LiftDomain period → ℝ) (g : LiftDomain period → Vector3)
-  :
+    :
     commutatorH6Norm period 0 f g = 0 := by
   simp [commutatorH6Norm, scalarCommutator, iteratedFieldDerivative_zero, liftSobolevNorm,
-    EulerH6Nonlinear.word_zero]
+      EulerH6Nonlinear.word_zero]
 
 /-- The exact differential recurrence gives a recurrence of the actual fixed-base Sobolev norms. -/
 theorem commutatorH6Norm_succ_le (n : ℕ) (f : LiftDomain period → ℝ) (g : LiftDomain period →
-  Vector3)
+    Vector3)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure
-      period))
+        period))
     (hgL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u g) 2 (liftMeasure
-      period)) :
+        period)) :
     commutatorH6Norm period (n+1) f g ≤ ∑ i : Fin 4,
       (wordSobolevNorm period 6 n (fun x => fieldDerivative period (standardDirection i) f x • g x)
-        +
+          +
         commutatorH6Norm period n f (fieldDerivative period (standardDirection i) g)) := by
   rw [commutatorH6Norm, sum_word_snoc]
   apply Finset.sum_le_sum
@@ -131,17 +133,18 @@ theorem commutatorH6Norm_succ_le (n : ℕ) (f : LiftDomain period → ℝ) (g : 
     (fun j _ u => word_all_memLp period w _ (product_all_memLp period 3 _ g hdf hg hdfL hgL) j u)
     (fun j _ u => scalarCommutator_all_memLp period w f _ hf hdg hfL hdgL j u)
 
-/-- The actual external commutator has exactly the positive-coefficient-order binomial convolution. -/
+/-- The actual external commutator has exactly the positive-coefficient-order binomial convolution.
+-/
 theorem commutatorH6Norm_bound (n : ℕ) (f : LiftDomain period → ℝ) (g : LiftDomain period → Vector3)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure
-      period))
+        period))
     (hgL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u g) 2 (liftMeasure
-      period)) :
+        period)) :
     commutatorH6Norm period n f g ≤ productConstant period 3 *
       commutatorConvolution (fun l => wordSobolevNorm period 6 l f) (fun l => wordSobolevNorm
-        period 6 l g) n := by
+          period 6 l g) n := by
   induction n generalizing f g with
   | zero => simp [commutatorConvolution_eq_sum]
   | succ n ih =>
@@ -150,16 +153,16 @@ theorem commutatorH6Norm_bound (n : ℕ) (f : LiftDomain period → ℝ) (g : Li
       _ ≤ ∑ i : Fin 4, (productConstant period 3 * leibnizConvolution
           (fun l => wordSobolevNorm period 6 l (fieldDerivative period (standardDirection i) f))
           (fun l => wordSobolevNorm period 6 l g) n + productConstant period 3 *
-            commutatorConvolution
+              commutatorConvolution
           (fun l => wordSobolevNorm period 6 l f)
           (fun l => wordSobolevNorm period 6 l (fieldDerivative period (standardDirection i) g)) n)
-            := by
+              := by
         apply Finset.sum_le_sum
         intro i _
         exact add_le_add (product_wordSobolevNorm_bound period 3 n _ g
           (fieldDerivative_smooth period _ f hf) hg (derivative_all_memLp period f hfL i) hgL)
           (ih f _ hf (fieldDerivative_smooth period _ g hg) hfL (derivative_all_memLp period g hgL
-            i))
+              i))
       _ = _ := by
         rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum,
           sum_leibnizConvolution_left, sum_commutatorConvolution_right, commutatorConvolution_succ]

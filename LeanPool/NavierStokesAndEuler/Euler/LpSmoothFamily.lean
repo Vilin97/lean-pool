@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedDerivative
-public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedDerivative
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Tactic.NormNum.GCD
+
+/-! Smooth parameter dependence in actual L² from square-integrable fiberwise jets. -/
 
 @[expose] public section
 
-/-! Smooth parameter dependence in actual L² from square-integrable fiberwise jets. -/
 
 noncomputable section
 
@@ -30,10 +34,13 @@ variable {X : Type u} [MeasurableSpace X] {P : Type v}
 /-- Actual parameter jets on almost every fiber, with one L² majorant per derivative order. -/
 structure SmoothFamily (μ : Measure X) (P : Type v) (V : Type w)
     [NormedAddCommGroup P] [NormedSpace ℝ P] [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Underlying field of `SmoothFamily`, of type `P → X → V`. -/
   field : P → X → V
   smooth : ∀ᵐ x ∂μ, ContDiff ℝ ∞ (fun a => field a x)
+  /-- Jet of `SmoothFamily`, of type `(n : ℕ) → P → Lp (P [×n]→L[ℝ] V) 2 μ`. -/
   jet : (n : ℕ) → P → Lp (P [×n]→L[ℝ] V) 2 μ
   jet_ae : ∀ n a, jet n a =ᵐ[μ] fun x => iteratedFDeriv ℝ n (fun b => field b x) a
+  /-- Bound of `SmoothFamily`, of type `ℕ → Lp ℝ 2 μ`. -/
   bound : ℕ → Lp ℝ 2 μ
   bounded : ∀ n, ∀ᵐ x ∂μ, ∀ a, ‖iteratedFDeriv ℝ n (fun b => field b x) a‖ ≤ bound n x
 
@@ -41,23 +48,27 @@ namespace SmoothFamily
 
 variable {μ : Measure X}
 
+/-- Value, given by `(continuousMultilinearCurryFin0 ℝ P
+V).toContinuousLinearEquiv.toContinuousLinearMap.compLpL 2 μ (A.jet 0 a)`. -/
 def value (A : SmoothFamily μ P V) (a : P) : Lp V 2 μ :=
   (continuousMultilinearCurryFin0 ℝ P V).toContinuousLinearEquiv.toContinuousLinearMap.compLpL
     2 μ (A.jet 0 a)
 
 theorem value_ae (A : SmoothFamily μ P V) (a : P) : A.value a =ᵐ[μ] A.field a := by
   filter_upwards [(continuousMultilinearCurryFin0 ℝ P
-    V).toContinuousLinearEquiv.toContinuousLinearMap.coeFn_compLpL
+      V).toContinuousLinearEquiv.toContinuousLinearMap.coeFn_compLpL
     (A.jet 0 a), A.jet_ae 0 a] with x hx hj
   rw [show A.value a x = continuousMultilinearCurryFin0 ℝ P V (A.jet 0 a x) from hx, hj]
   rw [iteratedFDeriv_zero_eq_comp]
   exact (continuousMultilinearCurryFin0 ℝ P V).apply_symm_apply _
 
+/-- Derivative, bundling `field`, `smooth`, `jet`, `jet_ae` and the required compatibility
+proofs. -/
 def derivative (A : SmoothFamily μ P V) : SmoothFamily μ P (P →L[ℝ] V) where
   field a x := fderiv ℝ (fun b => A.field b x) a
   smooth := A.smooth.mono (fun _ hx => hx.fderiv_right (m := ∞) (by simp))
   jet n a := (continuousMultilinearCurryRightEquiv' ℝ n P
-    V).toContinuousLinearEquiv.toContinuousLinearMap.compLpL
+      V).toContinuousLinearEquiv.toContinuousLinearMap.compLpL
     2 μ (A.jet (n+1) a)
   jet_ae n a := by
     let L : (P [×(n+1)]→L[ℝ] V) →L[ℝ] (P [×n]→L[ℝ] (P →L[ℝ] V)) :=

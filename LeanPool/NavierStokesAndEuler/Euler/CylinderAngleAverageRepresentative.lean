@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAnglePrimitive
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
+
+/-! The actual L² angular average equals the literal mean of every continuous H³ representative. -/
 
 @[expose] public section
 
-/-! The actual L² angular average equals the literal mean of every continuous H³ representative. -/
 
 noncomputable section
 
@@ -29,6 +32,7 @@ theorem average_full_translation (a : LiftDomain P) (u : LiftL2 P) :
   intro s v
   exact translations_commute P a (coveringMap P (0,s)) v
 
+/-- Sobolev average, given by `liftOperator P q (average P) (average_full_translation P)`. -/
 def sobolevAverage (q : ℕ) : SobolevSpace P q →L[ℝ] SobolevSpace P q :=
   liftOperator P q (average P) (average_full_translation P)
 
@@ -37,7 +41,7 @@ theorem sobolevAverage_norm (q : ℕ) : ‖sobolevAverage P q‖ ≤ 1 :=
 
 theorem sobolevAngleCurve_continuous {q : ℕ} (u : SobolevSpace P q) :
     Continuous (fun s : ℝ => sobolevTranslation P q (EulerCylinderAnglePrimitive.angleShift P s) u)
-      :=
+        :=
   (sobolevTranslation_continuous P u).comp (EulerCylinderAnglePrimitive.angleShift_continuous P)
 
 theorem sobolevAverage_eq_integral {q : ℕ} (u : SobolevSpace P q) :
@@ -65,7 +69,7 @@ theorem pointEvaluation_average_kernel (u : SobolevSpace P 3) (x : LiftDomain P)
 /-- Pointwise identification with the actual normalized angular integral, at every angle. -/
 theorem pointEvaluation_average_mean (u : SobolevSpace P 3)
     (f : LiftDomain P → Vector3) (hf : Continuous f)
-    (hrep : (value P u : LiftDomain P → Vector3)=ᵐ[liftMeasure P] f)
+    (hrep : (value P u : LiftDomain P → Vector3) =ᵐ[liftMeasure P] f)
     (y : Vector3) (θ : ℝ) :
     pointEvaluation P (y,(θ : AddCircle P)) (sobolevAverage P 3 u) =
       P⁻¹ • (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P))) := by
@@ -82,7 +86,7 @@ theorem pointEvaluation_average_mean (u : SobolevSpace P 3)
 /-- The operator's zero kernel is precisely the classical zero-mean condition. -/
 theorem average_eq_zero_iff (u : SobolevSpace P 3)
     (f : LiftDomain P → Vector3) (hf : Continuous f)
-    (hrep : (value P u : LiftDomain P → Vector3)=ᵐ[liftMeasure P] f) :
+    (hrep : (value P u : LiftDomain P → Vector3) =ᵐ[liftMeasure P] f) :
     average P (value P u) = 0 ↔ ∀ y, (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P))) = 0 := by
   constructor
   · intro h y

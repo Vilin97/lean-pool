@@ -6,18 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeProfiles
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhaseJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeCopyFamily
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeSignedData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedReferenceGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedFamilySupport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GluedStageEstimates
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeBounds
 
 /-!
 # Physical wave data for the actual signed cycle fields
@@ -26,6 +21,9 @@ The native family is the family in `ActualSignedExterior`. Geometry,
 profiles and native source bounds are assembled before any physical
 estimate is applied.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,19 +34,24 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open PhysicalWaveSum PhysicalCopyBounds
 open scoped Topology ContDiff BigOperators
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Native: an abbreviation for `ActualSignedPhysicalData.Native`. -/
 abbrev Native := ActualSignedPhysicalData.Native
+/-- Source index: an abbreviation for `Σ (_ : BandLabel), ActualSignedPhysicalData.SourceIndex`. -/
 abbrev SourceIndex := Σ (_ : BandLabel), ActualSignedPhysicalData.SourceIndex
 
 variable {B N0 : ℕ}
 
+/-- Native states, given by `ActualSignedPhysicalBinding.nativeStateData l P u H hp`. -/
 noncomputable def nativeStates (P : SignedStressPrimitive.Patch) (u : State
-  LocalSignedRequest.Point)
+    LocalSignedRequest.Point)
     (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
     (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure)
     (l : Label B N0) : (ActualSignedPhysicalBinding.nativeViews l).StateData :=
   ActualSignedPhysicalBinding.nativeStateData l P u H hp
 
+/-- Family, given by `ActualSignedExterior.family (nativeStates (N0 := N0) P u H hp)`. -/
 noncomputable def family (P : SignedStressPrimitive.Patch) (u : State LocalSignedRequest.Point)
     (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
     (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure) :
@@ -117,6 +120,7 @@ section CopyFamilies
 
 variable (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
 
+/-- Original potential cells, constructed using `DependentSignedPhysicalFamily.diagonalCells`. -/
 noncomputable def originalPotentialCells (i : Fin 3) :
     SupportCells ((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le i) :=
   DependentSignedPhysicalFamily.diagonalCells _
@@ -126,6 +130,7 @@ noncomputable def originalPotentialCells (i : Fin 3) :
       (fun L => ActualSignedPhysicalData.localizedPotentialCells slots outgoing.data.h_pos.le
         ((ActualSignedExterior.family s).singleton L) i))
 
+/-- Original pressure cells, constructed using `DependentSignedPhysicalFamily.diagonalCells`. -/
 noncomputable def originalPressureCells :
     SupportCells ((ActualSignedExterior.family s).pressureCopies slots outgoing.data.h_pos.le) :=
   DependentSignedPhysicalFamily.diagonalCells _
@@ -161,10 +166,12 @@ theorem pressureCells_inactive {L : BandLabel}
       (DependentSignedPhysicalFamily.zeroCells (H := 1)).cells L := by
   exact branchCells_inactive (ActualSignedExterior.family s) _ _ L L hL
 
+/-- Original potential carrier, bundling `region`, `open_region`, `jets`, `contains` and the
+required compatibility proofs. -/
 noncomputable def originalPotentialCarrier (i : Fin 3) :
     CarrierBounds ((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le i)
       (originalPotentialCells s i) ActualPolarCoverage.inner ActualPolarCoverage.outer h
-        slots.radius where
+          slots.radius where
   region _ L := ActualSignedNativeProfiles.region B N0 L
   open_region _ := ActualSignedNativeProfiles.region_open B N0
   jets := ActualSignedNativeProfiles.potential_profiles_jets s i
@@ -172,9 +179,10 @@ noncomputable def originalPotentialCarrier (i : Fin 3) :
     classical
     change LocalPhysicalCopyBounds.slotSlow
       (((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le i).carrier k
-        I.1
+          I.1
         |>.withChart j) ActualPolarCoverage.inner h I.1.val.1 slots.radius w ∈ _
-    rw [ActualSignedPhysicalData.slotSlow_eq_nativeSlow ActualPolarCoverage.inner_pos]
+    rw [ActualSignedPhysicalData.slotSlow_eq_nativeSlow
+      ActualPolarCoverage.inner_pos _ h I.1.val.1 slots.radius j w hj]
     by_cases hL : I.1 ∈ ActualSignedExterior.labels B N0
     · let L : ActualSignedPhysicalData.NativeLabel (ActualSignedExterior.labels B N0) :=
         ⟨I.1.val,I.1.property,hL⟩
@@ -184,12 +192,13 @@ noncomputable def originalPotentialCarrier (i : Fin 3) :
       exact ActualSignedNativeProfiles.closure_covers s L I.1 w hw hc.2
     · rw [potentialCells_inactive s i hL] at hc
       exact hc.elim
-    exact hj
 
+/-- Original pressure carrier, bundling `region`, `open_region`, `jets`, `contains` and the
+required compatibility proofs. -/
 noncomputable def originalPressureCarrier :
     CarrierBounds ((ActualSignedExterior.family s).pressureCopies slots outgoing.data.h_pos.le)
       (originalPressureCells s) ActualPolarCoverage.inner ActualPolarCoverage.outer h slots.radius
-        where
+          where
   region _ L := ActualSignedNativeProfiles.region B N0 L
   open_region _ := ActualSignedNativeProfiles.region_open B N0
   jets := ActualSignedNativeProfiles.pressure_profiles_jets s
@@ -198,7 +207,8 @@ noncomputable def originalPressureCarrier :
     change LocalPhysicalCopyBounds.slotSlow
       (((ActualSignedExterior.family s).pressureCopies slots outgoing.data.h_pos.le).carrier k I.1
         |>.withChart j) ActualPolarCoverage.inner h I.1.val.1 slots.radius w ∈ _
-    rw [ActualSignedPhysicalData.slotSlow_eq_nativeSlow ActualPolarCoverage.inner_pos]
+    rw [ActualSignedPhysicalData.slotSlow_eq_nativeSlow
+      ActualPolarCoverage.inner_pos _ h I.1.val.1 slots.radius j w hj]
     by_cases hL : I.1 ∈ ActualSignedExterior.labels B N0
     · let L : ActualSignedPhysicalData.NativeLabel (ActualSignedExterior.labels B N0) :=
         ⟨I.1.val,I.1.property,hL⟩
@@ -208,7 +218,6 @@ noncomputable def originalPressureCarrier :
       exact ActualSignedNativeProfiles.closure_covers s L I.1 w hw hc.2
     · rw [pressureCells_inactive s hL] at hc
       exact hc.elim
-    exact hj
 
 /-- The actual assembled copies, extended by zero outside positive lift
 time. Their fields agree with the original signed fields before t=1. -/
@@ -216,21 +225,29 @@ noncomputable def potentialCopies (i : Fin 3) : CopyFamily 1 TorusInverse.Freque
   PositiveTimeCopyFamily.gate
     ((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le i)
 
+/-- Pressure copies, given by `PositiveTimeCopyFamily.gate ((ActualSignedExterior.family
+s).pressureCopies slots outgoing.data.h_pos.le)`. -/
 noncomputable def pressureCopies : CopyFamily 1 TorusInverse.Frequency :=
   PositiveTimeCopyFamily.gate
     ((ActualSignedExterior.family s).pressureCopies slots outgoing.data.h_pos.le)
 
+/-- Potential cells, given by `PositiveTimeCopyFamily.gateCells (originalPotentialCells s i)`. -/
 noncomputable def potentialCells (i : Fin 3) : SupportCells (potentialCopies s i) :=
   PositiveTimeCopyFamily.gateCells (originalPotentialCells s i)
 
+/-- Pressure cells, given by `PositiveTimeCopyFamily.gateCells (originalPressureCells s)`. -/
 noncomputable def pressureCells : SupportCells (pressureCopies s) :=
   PositiveTimeCopyFamily.gateCells (originalPressureCells s)
 
+/-- Potential carrier, given by `PositiveTimeCopyFamily.gateCarrier (originalPotentialCells s i)
+(originalPotentialCarrier s i)`. -/
 noncomputable def potentialCarrier (i : Fin 3) :
     CarrierBounds (potentialCopies s i) (potentialCells s i)
       ActualPolarCoverage.inner ActualPolarCoverage.outer h slots.radius :=
   PositiveTimeCopyFamily.gateCarrier (originalPotentialCells s i) (originalPotentialCarrier s i)
 
+/-- Pressure carrier, given by `PositiveTimeCopyFamily.gateCarrier (originalPressureCells s)
+(originalPressureCarrier s)`. -/
 noncomputable def pressureCarrier :
     CarrierBounds (pressureCopies s) (pressureCells s)
       ActualPolarCoverage.inner ActualPolarCoverage.outer h slots.radius :=
@@ -327,32 +344,39 @@ theorem pressure_frequencies (k : TorusInverse.Frequency) (L : BandLabel) :
 
 /-! ## The jointly indexed Cartesian sources -/
 
+/-- Source strip, constructed using `CartesianCopySource.pullStrip`. -/
 noncomputable def sourceStrip : WeightedClasses.StripData PhysicalGraphBounds.LiftPoint :=
   CartesianCopySource.pullStrip ActualPrimaryBounds.strip
     ActualPolarCoverage.inner ActualPolarCoverage.outer ActualPolarCoverage.inner_pos
 
+/-- Potential source as an element of `(Fin 3 × SourceIndex) → ℕ → PhysicalGraphBounds.LiftPoint
+→ ℂ`. -/
 noncomputable def potentialSource :
     (Fin 3 × SourceIndex) → ℕ → PhysicalGraphBounds.LiftPoint → ℂ :=
   fun I n x => CartesianCopySource.rotatedSource
     (DependentSignedPhysicalFamily.jointSource
       ((ActualSignedExterior.family s).potentialSource slots outgoing.data.h_pos.le)) I.2 n x I.1
 
+/-- Pressure source as an element of `SourceIndex → ℕ → PhysicalGraphBounds.LiftPoint → ℂ`. -/
 noncomputable def pressureSource : SourceIndex → ℕ → PhysicalGraphBounds.LiftPoint → ℂ :=
   fun I n x => DependentSignedPhysicalFamily.jointSource
     ((ActualSignedExterior.family s).pressureSource slots outgoing.data.h_pos.le) I n
       (PhysicalClassBounds.cylindricalMap x)
 
+/-- Source weight, given by `Real.sqrt (ActualPrimaryBounds.strip.zeta
+(PhysicalClassBounds.cylindricalMap x))`. -/
 noncomputable def sourceWeight (_ : SourceIndex) (_ : ℕ)
     (x : PhysicalGraphBounds.LiftPoint) : ℝ :=
   Real.sqrt (ActualPrimaryBounds.strip.zeta (PhysicalClassBounds.cylindricalMap x))
 
+/-- Potential weight, given by `sourceWeight I.2 n x`. -/
 noncomputable def potentialWeight (I : Fin 3 × SourceIndex) (n : ℕ)
     (x : PhysicalGraphBounds.LiftPoint) : ℝ := sourceWeight I.2 n x
 
 theorem potential_amplitude_eq_source (i : Fin 3) (k : TorusInverse.Frequency)
     (I : WaveIndex 1) (x : PhysicalGraphBounds.LiftPoint) :
     ((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le i).amplitude k I
-      x =
+        x =
       ChartScales.Q I.1.val.1 ^ (-h) • potentialSource s (i, ⟨I.1, (I, k)⟩) I.1.val.1 x :=
   DependentSignedPhysicalFamily.Family.potential_amplitude_eq_source _ _ _ _ _ _ _
 
@@ -434,6 +458,8 @@ noncomputable def potentialOfNative
   smooth := ActualSignedFamilySupport.potential_smooth s hgeo hn
   frequencies := potential_frequencies s
 
+/-- Pressure of native, bundling `lowerRadius`, `upperRadius`, `nativeWidth`, `slowBound` and
+the required compatibility proofs. -/
 noncomputable def pressureOfNative
     (hs : LocalPhysicalCopyBounds.LocalSourceBounds ActualPrimaryBounds.strip h α
       (fun (_ : SourceIndex) _ y => Real.sqrt (ActualPrimaryBounds.strip.zeta y))
@@ -543,6 +569,7 @@ noncomputable def potentialFromResiduals :
       simp only [sub_add_cancel] at he
       exact he)
 
+/-- Pressure from residuals, constructed using `pressureOfNative`. -/
 noncomputable def pressureFromResiduals :
     PhysicalStageBounds.WaveData h PhysicalGraphBounds.LiftPoint
       SourceIndex TorusInverse.Frequency Unit :=
@@ -586,6 +613,7 @@ noncomputable def cyclePotentialData :
     (ActualSignedPhysicalBinding.afterParticular_pressure x R.primitive)
     (1 + σ - ChartScales.kappa) R.reconstructed R.theta R.axial
 
+/-- Cycle pressure data, constructed using `pressureFromResiduals`. -/
 noncomputable def cyclePressureData :
     PhysicalStageBounds.WaveData h PhysicalGraphBounds.LiftPoint
       SourceIndex TorusInverse.Frequency Unit :=
@@ -672,7 +700,7 @@ physical bound or native output-regularity hypothesis. -/
 noncomputable def signedInputs (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     GluedStageEstimates.SignedInputs PhysicalGraphBounds.LiftPoint SourceIndex
-      TorusInverse.Frequency where
+        TorusInverse.Frequency where
   potential j := cyclePotentialData (ActualCyclePreservation.state B N0 j) (stageResult B N0 hN j)
   pressure j := cyclePressureData (ActualCyclePreservation.state B N0 j) (stageResult B N0 hN j)
   potential_exponent j := by

@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalEntrance
 
-@[expose] public section
-
 /-!
 # Actual lag stocks during the activation ramp
 
@@ -18,6 +16,9 @@ The stock formulas are obtained from the genuine five profile histories.
 Smooth difference factors are constructed from the field and history factors;
 no estimate for a stock difference is supplied as an assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,26 +28,34 @@ open Set Filter ProfileHistories StressActivation
 open scoped Topology ContDiff
 
 
+/-- Mass flux, given by `X - 2 * NaturalAxisData.D h * η * M - NaturalAxisData.d η * Mη`. -/
 noncomputable def massFlux (h X η M Mη : ℝ) : ℝ :=
   X - 2 * NaturalAxisData.D h * η * M - NaturalAxisData.d η * Mη
 
+/-- Angular remainder, given by `(1 - h) * I - NaturalAxisData.D h * η * Iη - NaturalAxisData.d
+η * Jη + 2 * (h - NaturalAxisData.D h) * η * J`. -/
 noncomputable def angularRemainder (h η I Iη J Jη : ℝ) : ℝ :=
   (1 - h) * I - NaturalAxisData.D h * η * Iη - NaturalAxisData.d η * Jη +
     2 * (h - NaturalAxisData.D h) * η * J
 
+/-- Stock one, given by `(-massFlux h X η M Mη + angularRemainder h η I Iη J Jη / (2 * X * f)) /
+NaturalAxisData.L h η`. -/
 noncomputable def stockOne (h X η f M Mη I Iη J Jη : ℝ) : ℝ :=
   (-massFlux h X η M Mη + angularRemainder h η I Iη J Jη / (2 * X * f)) /
     NaturalAxisData.L h η
 
+/-- Stock two as an element of `ℝ`. -/
 noncomputable def stockTwo (h X η f U M Mη S Sη P Pη : ℝ) : ℝ :=
   (-massFlux h X η M Mη * U + NaturalAxisData.D h * (M - η * Mη) +
     4 * h * η * S - NaturalAxisData.d η * Sη +
     X * (4 * NaturalAxisData.A h * η * P - NaturalAxisData.d η * Pη)) /
       (NaturalAxisData.L h η * Real.sqrt (2 * X) * f)
 
+/-- Profile stock one, given by `p.1 * P.angularLag h p / NaturalAxisData.L h p.2`. -/
 noncomputable def profileStockOne {D : RadialDomain} (P : Profiles D) (h : ℝ)
     (p : Point) : ℝ := p.1 * P.angularLag h p / NaturalAxisData.L h p.2
 
+/-- Profile stock two, given by `p.1 * P.axialLag h p / (NaturalAxisData.L h p.2 * P.E p)`. -/
 noncomputable def profileStockTwo {D : RadialDomain} (P : Profiles D) (h : ℝ)
     (p : Point) : ℝ := p.1 * P.axialLag h p / (NaturalAxisData.L h p.2 * P.E p)
 
@@ -92,7 +101,7 @@ theorem profileStockTwo_eq {D : RadialDomain} (P : Profiles D) (h : ℝ)
   rw [← profile_massFlux P h hp]
   dsimp only [StressAlgebra.axialExponent, StressAlgebra.velocityExponent,
     StressAlgebra.coordinateFactor, NaturalAxisData.D, NaturalAxisData.A, NaturalAxisData.d]
-  field_simp ; ring
+  field_simp; ring
 
 section SmoothPairs
 
@@ -101,8 +110,11 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- Two actual smooth values with an explicitly constructed smooth factor
 for their difference. The following algebra constructs new factors. -/
 structure SmoothPair (Ω : Set E) (w : E → ℝ) where
+  /-- Actual of `SmoothPair`, of type `E → ℝ`. -/
   actual : E → ℝ
+  /-- Reference of `SmoothPair`, of type `E → ℝ`. -/
   reference : E → ℝ
+  /-- Factor of `SmoothPair`, of type `E → ℝ`. -/
   factor : E → ℝ
   actual_smooth : ContDiffOn ℝ ∞ actual Ω
   reference_smooth : ContDiffOn ℝ ∞ reference Ω
@@ -113,6 +125,8 @@ namespace SmoothPair
 
 variable {Ω : Set E} {w : E → ℝ}
 
+/-- Common, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def common (F : E → ℝ) (hF : ContDiffOn ℝ ∞ F Ω) : SmoothPair Ω w where
   actual := F
   reference := F
@@ -122,6 +136,8 @@ noncomputable def common (F : E → ℝ) (hF : ContDiffOn ℝ ∞ F Ω) : Smooth
   factor_smooth := contDiffOn_const
   difference := by intro p hp; simp
 
+/-- Add, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def add (A B : SmoothPair Ω w) : SmoothPair Ω w where
   actual := fun p => A.actual p + B.actual p
   reference := fun p => A.reference p + B.reference p
@@ -131,6 +147,8 @@ noncomputable def add (A B : SmoothPair Ω w) : SmoothPair Ω w where
   factor_smooth := A.factor_smooth.add B.factor_smooth
   difference := by intro p hp; nlinarith [A.difference p hp, B.difference p hp]
 
+/-- Neg, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def neg (A : SmoothPair Ω w) : SmoothPair Ω w where
   actual := fun p => -A.actual p
   reference := fun p => -A.reference p
@@ -140,8 +158,11 @@ noncomputable def neg (A : SmoothPair Ω w) : SmoothPair Ω w where
   factor_smooth := A.factor_smooth.neg
   difference := by intro p hp; nlinarith [A.difference p hp]
 
+/-- Sub, given by `A.add B.neg`. -/
 noncomputable def sub (A B : SmoothPair Ω w) : SmoothPair Ω w := A.add B.neg
 
+/-- Mul, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def mul (A B : SmoothPair Ω w) : SmoothPair Ω w where
   actual := fun p => A.actual p * B.actual p
   reference := fun p => A.reference p * B.reference p
@@ -149,7 +170,7 @@ noncomputable def mul (A B : SmoothPair Ω w) : SmoothPair Ω w where
   actual_smooth := A.actual_smooth.mul B.actual_smooth
   reference_smooth := A.reference_smooth.mul B.reference_smooth
   factor_smooth := (A.factor_smooth.mul B.actual_smooth).add (A.reference_smooth.mul
-    B.factor_smooth)
+      B.factor_smooth)
   difference := by
     intro p hp
     calc
@@ -157,6 +178,8 @@ noncomputable def mul (A B : SmoothPair Ω w) : SmoothPair Ω w where
           A.reference p * (B.actual p - B.reference p) := by ring
       _ = _ := by rw [A.difference p hp, B.difference p hp]; ring
 
+/-- Inv, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def inv (A : SmoothPair Ω w)
     (ha : ∀ p ∈ Ω, A.actual p ≠ 0) (hr : ∀ p ∈ Ω, A.reference p ≠ 0) : SmoothPair Ω w where
   actual := fun p => (A.actual p)⁻¹
@@ -171,9 +194,10 @@ noncomputable def inv (A : SmoothPair Ω w)
     have hpa := ha p hp
     have hpr := hr p hp
     calc
-      _ = -(A.actual p - A.reference p) / (A.actual p * A.reference p) := by field_simp ; ring
+      _ = -(A.actual p - A.reference p) / (A.actual p * A.reference p) := by field_simp; ring
       _ = _ := by rw [A.difference p hp]; ring
 
+/-- Div, given by `A.mul (B.inv ha hr)`. -/
 noncomputable def div (A B : SmoothPair Ω w)
     (ha : ∀ p ∈ Ω, B.actual p ≠ 0) (hr : ∀ p ∈ Ω, B.reference p ≠ 0) : SmoothPair Ω w :=
   A.mul (B.inv ha hr)
@@ -182,6 +206,7 @@ end SmoothPair
 
 end SmoothPairs
 
+/-- Eta D, given by `deriv (fun η => F (p.1, η)) p.2`. -/
 noncomputable def etaD (F : Field) (p : Point) : ℝ :=
   deriv (fun η => F (p.1, η)) p.2
 
@@ -190,10 +215,12 @@ theorem etaD_eq_parameterPartial {D : RadialDomain} {F : Field}
     etaD F p = parameterPartial F p :=
   (parameterPartial_hasDerivAt D hF hp).deriv
 
+/-- Log view one, constructed using `stockOne`. -/
 noncomputable def logViewOne (h X0 : ℝ) (f : Field) (H : HistoryRow → Field) (p : Point) : ℝ :=
   stockOne h (radius X0 p.1) p.2 (f p) (H .mass p) (etaD (H .mass) p)
     (H .angular p) (etaD (H .angular) p) (H .transport p) (etaD (H .transport) p)
 
+/-- Log view two, constructed using `stockTwo`. -/
 noncomputable def logViewTwo (h X0 : ℝ) (f U : Field) (H : HistoryRow → Field) (p : Point) : ℝ :=
   stockTwo h (radius X0 p.1) p.2 (f p) (U p) (H .mass p) (etaD (H .mass) p)
     (H .energy p) (etaD (H .energy) p) (H .pressure p) (etaD (H .pressure) p)
@@ -224,7 +251,7 @@ theorem profileStockOne_logView {D : RadialDomain} (P : Profiles D) (h X0 : ℝ)
   rw [hfield, show H .mass p = profileHistory P .mass (radius X0 p.1, p.2) from hH .mass p.2 hη,
     show H .angular p = profileHistory P .angular (radius X0 p.1, p.2) from hH .angular p.2 hη,
     show H .transport p = profileHistory P .transport (radius X0 p.1, p.2) from hH .transport p.2
-      hη,
+        hη,
     hd .mass, hd .angular, hd .transport]
   rfl
 
@@ -254,6 +281,8 @@ open ReferencePath
 
 variable (N : ReferencePath.Input)
 
+/-- Initial, defined pointwise by `profileHistory (N.histories hδ hδT P0 hP0) r (N.endpoint,
+η)`. -/
 noncomputable def initial {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
     (P0 : ℝ → ℝ) (hP0 : ContDiff ℝ ∞ P0) : HistoryRow → ℝ → ℝ :=
   fun r η => profileHistory (N.histories hδ hδT P0 hP0) r (N.endpoint, η)
@@ -320,7 +349,7 @@ theorem reference_stockOne_logView {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ra
   · exact (Real.exp_pos _).ne'
   · intro r ξ hξ
     exact (StressActivation.FromReference.reference_histories_log_formula N hδ hδT P0 hP0 r y
-      hξ).symm
+        hξ).symm
 
 theorem reference_stockTwo_logView {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
     (h : ℝ) (P0 : ℝ → ℝ) (hP0 : ContDiff ℝ ∞ P0)
@@ -339,12 +368,13 @@ theorem reference_stockTwo_logView {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ra
   · exact (StressActivation.FromReference.refU_logPullback N hδ hδT y hη).symm
   · intro r ξ hξ
     exact (StressActivation.FromReference.reference_histories_log_formula N hδ hδT P0 hP0 r y
-      hξ).symm
+        hξ).symm
 
 end FromReference
 
 open ActivationBounds (ScaledPoint scaledDomain scaledDistance)
 
+/-- Stock pair: an abbreviation for `SmoothPair (scaledDomain J) scaledDistance`. -/
 abbrev StockPair (J : Set ℝ) := SmoothPair (scaledDomain J) scaledDistance
 
 /-- Parameter differentiation preserves the same flat-distance factor. -/
@@ -381,6 +411,8 @@ theorem etaPair_reference_eq {J : Set ℝ} (hJ : IsOpen J) (A : StockPair J)
   filter_upwards [hJ.mem_nhds hη] with ξ hξ
   exact heq ξ hξ
 
+/-- Controlled pair, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def controlledPair {J : Set ℝ} (hJ : IsOpen J) {U : Field}
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) : StockPair J where
   actual := ActivationBounds.controlledValue U
@@ -391,6 +423,8 @@ noncomputable def controlledPair {J : Set ℝ} (hJ : IsOpen J) {U : Field}
   factor_smooth := ActivationBounds.controlledErrorFactor_smooth hJ hU
   difference := by intro q hq; dsimp only [ActivationBounds.controlledValue]; ring
 
+/-- Angular pair, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def angularPair {J : Set ℝ} (hJ : IsOpen J) {L : Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) : StockPair J where
   actual := ActivationBounds.angularValue L
@@ -412,6 +446,8 @@ noncomputable def angularPair {J : Set ℝ} (hJ : IsOpen J) {L : Field}
     rw [StressActivation.exp_sub_one]
     ring
 
+/-- History pair, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
+compatibility proofs. -/
 noncomputable def historyPair (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
@@ -449,6 +485,7 @@ theorem angularPair_actual_eq {J : Set ℝ} (hJ : IsOpen J) {L : Field}
   dsimp only [angularPair, ActivationBounds.angularValue, activatedAngular]
   rw [ActivationBounds.controlledValue_eq hT κ hJ hL u hη]
 
+/-- Scaled radius, given by `radius X0 (q.1.2 * q.2.1)`. -/
 noncomputable def scaledRadius (X0 : ℝ) (q : ScaledPoint) : ℝ := radius X0 (q.1.2 * q.2.1)
 
 theorem scaledRadius_smooth (X0 : ℝ) : ContDiff ℝ ∞ (scaledRadius X0) :=
@@ -457,35 +494,48 @@ theorem scaledRadius_smooth (X0 : ℝ) : ContDiff ℝ ∞ (scaledRadius X0) :=
 theorem scaledRadius_pos {X0 : ℝ} (hX0 : 0 < X0) (q : ScaledPoint) : 0 < scaledRadius X0 q :=
   mul_pos hX0 (Real.exp_pos _)
 
+/-- Constant pair, given by `SmoothPair.common (fun _ => c) contDiffOn_const`. -/
 noncomputable def constantPair (J : Set ℝ) (c : ℝ) : StockPair J :=
   SmoothPair.common (fun _ => c) contDiffOn_const
 
+/-- Parameter pair, given by `SmoothPair.common (fun q => g q.2.2) (hg.comp
+contDiff_snd.snd).contDiffOn`. -/
 noncomputable def parameterPair (J : Set ℝ) (g : ℝ → ℝ) (hg : ContDiff ℝ ∞ g) : StockPair J :=
   SmoothPair.common (fun q => g q.2.2) (hg.comp contDiff_snd.snd).contDiffOn
 
+/-- Radius pair, given by `SmoothPair.common (scaledRadius X0) (scaledRadius_smooth
+X0).contDiffOn`. -/
 noncomputable def radiusPair (J : Set ℝ) (X0 : ℝ) : StockPair J :=
   SmoothPair.common (scaledRadius X0) (scaledRadius_smooth X0).contDiffOn
 
+/-- Sqrt radius pair, constructed using `SmoothPair.common`. -/
 noncomputable def sqrtRadiusPair (J : Set ℝ) {X0 : ℝ} (hX0 : 0 < X0) : StockPair J :=
   SmoothPair.common (fun q => Real.sqrt (2 * scaledRadius X0 q))
     ((contDiff_const.mul (scaledRadius_smooth X0)).sqrt
       (fun q => (mul_pos (by norm_num) (scaledRadius_pos hX0 q)).ne')).contDiffOn
 
+/-- D pair, given by `parameterPair J NaturalAxisData.d (contDiff_const.sub (contDiff_id.pow
+2))`. -/
 noncomputable def dPair (J : Set ℝ) : StockPair J :=
   parameterPair J NaturalAxisData.d (contDiff_const.sub (contDiff_id.pow 2))
 
+/-- L pair, given by `parameterPair J (NaturalAxisData.L h) (contDiff_const.sub
+(contDiff_const.mul (contDiff_id.pow 2)))`. -/
 noncomputable def lPair (J : Set ℝ) (h : ℝ) : StockPair J :=
   parameterPair J (NaturalAxisData.L h)
     (contDiff_const.sub (contDiff_const.mul (contDiff_id.pow 2)))
 
+/-- Eta pair common, given by `parameterPair J id contDiff_id`. -/
 noncomputable def etaPairCommon (J : Set ℝ) : StockPair J := parameterPair J id contDiff_id
 
+/-- Mass flux pair as an element of `StockPair J`. -/
 noncomputable def massFluxPair {J : Set ℝ} (h X0 : ℝ)
     (H Hη : HistoryRow → StockPair J) : StockPair J :=
   ((radiusPair J X0).sub
     ((parameterPair J (fun η => 2 * NaturalAxisData.D h * η) (contDiff_const.mul contDiff_id)).mul
       (H .mass))).sub ((dPair J).mul (Hη .mass))
 
+/-- Angular remainder pair as an element of `StockPair J`. -/
 noncomputable def angularRemainderPair {J : Set ℝ} (h : ℝ)
     (H Hη : HistoryRow → StockPair J) : StockPair J :=
   ((((constantPair J (1 - h)).mul (H .angular)).sub
@@ -494,6 +544,7 @@ noncomputable def angularRemainderPair {J : Set ℝ} (h : ℝ)
         ((parameterPair J (fun η => 2 * (h - NaturalAxisData.D h) * η)
           (contDiff_const.mul contDiff_id)).mul (H .transport))
 
+/-- Stock one pair as an element of `StockPair J`. -/
 noncomputable def stockOnePair {J : Set ℝ} (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
     (hcoef : ∀ η ∈ J, NaturalAxisData.L h η ≠ 0)
     (F : StockPair J) (H Hη : HistoryRow → StockPair J)
@@ -511,6 +562,7 @@ noncomputable def stockOnePair {J : Set ℝ} (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
   let num := (massFluxPair h X0 H Hη).neg.add ((angularRemainderPair h H Hη).div den hda hdr)
   exact num.div (lPair J h) (fun q hq => hcoef q.2.2 hq.2.2) (fun q hq => hcoef q.2.2 hq.2.2)
 
+/-- Stock two pair as an element of `StockPair J`. -/
 noncomputable def stockTwoPair {J : Set ℝ} (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
     (hcoef : ∀ η ∈ J, NaturalAxisData.L h η ≠ 0)
     (F U : StockPair J) (H Hη : HistoryRow → StockPair J)
@@ -518,7 +570,7 @@ noncomputable def stockTwoPair {J : Set ℝ} (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
     (hfr : ∀ q ∈ scaledDomain J, F.reference q ≠ 0) : StockPair J := by
   let num := (((((massFluxPair h X0 H Hη).neg.mul U).add
     ((constantPair J (NaturalAxisData.D h)).mul ((H .mass).sub ((etaPairCommon J).mul (Hη
-      .mass))))).add
+        .mass))))).add
     ((parameterPair J (fun η => 4 * h * η) (contDiff_const.mul contDiff_id)).mul (H .energy))).sub
     ((dPair J).mul (Hη .energy))).add
       ((radiusPair J X0).mul (((parameterPair J (fun η => 4 * NaturalAxisData.A h * η)
@@ -607,12 +659,14 @@ variable (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0) (initial : HistoryRow → ℝ → �
     (hi : ∀ r, ContDiffOn ℝ ∞ (initial r) J)
     (hcoef : ∀ η ∈ J, NaturalAxisData.L h η ≠ 0)
 
+/-- Activation one pair, constructed using `stockOnePair`. -/
 noncomputable def activationOnePair : StockPair J :=
   stockOnePair h hX0 hcoef (angularPair hJ hL)
     (historyPair X0 initial hJ hL hU hi)
     (fun r => etaPair hJ (historyPair X0 initial hJ hL hU hi r))
     (fun _q _ => (Real.exp_pos _).ne') (fun _q _ => (Real.exp_pos _).ne')
 
+/-- Activation two pair, constructed using `stockTwoPair`. -/
 noncomputable def activationTwoPair : StockPair J :=
   stockTwoPair h hX0 hcoef (angularPair hJ hL) (controlledPair hJ hU)
     (historyPair X0 initial hJ hL hU hi)
@@ -737,7 +791,7 @@ theorem log_stocks_uniform_jets {K : Set ℝ} (hK : IsCompact K) (hKJ : K ⊆ J)
               (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U)) (y, ξ) -
             logViewTwo h X0 (referenceAngular L) U
               (logHistory X0 initial (referenceAngular L) U) (y, ξ)) η| ≤ M * y * activation T κ y
-                := by
+                  := by
   obtain ⟨P, Q, hP, hQ, hfactor⟩ := exists_log_stock_factors h hX0 initial hJ hL hU hi hcoef
   obtain ⟨M₁, hM₁, hb₁⟩ := ActivationBounds.width_uniform_jet_bound hJ hK hKJ hP
     (E := fun κ T y η => logViewOne h X0 (activatedAngular T κ L)
@@ -748,7 +802,7 @@ theorem log_stocks_uniform_jets {K : Set ℝ} (hK : IsCompact K) (hKJ : K ⊆ J)
     (E := fun κ T y η => logViewTwo h X0 (activatedAngular T κ L) (controlled T κ U)
       (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U)) (y, η) -
         logViewTwo h X0 (referenceAngular L) U (logHistory X0 initial (referenceAngular L) U) (y,
-          η))
+            η))
     (fun κ T hT u η hη => (hfactor T hT.ne' κ u η hη).2) T0 n
   refine ⟨max M₁ M₂, hM₁.trans (le_max_left _ _), ?_⟩
   intro T hT κ hκ y hy η hη
@@ -870,7 +924,7 @@ theorem profiles_stocks_congr {D E : RadialDomain} (P : Profiles D) (Q : Profile
       (profileHistory P .mass (X, η)) (parameterPartial (profileHistory P .mass) (X, η))
       (profileHistory P .angular (X, η)) (parameterPartial (profileHistory P .angular) (X, η))
       (profileHistory P .transport (X, η)) (parameterPartial (profileHistory P .transport) (X, η))
-        = _
+          = _
     rw [hf, hH .mass η hη, hH .angular η hη, hH .transport η hη,
       hD .mass, hD .angular, hD .transport]
     rfl
@@ -883,6 +937,7 @@ theorem profiles_stocks_congr {D E : RadialDomain} (P : Profiles D) (Q : Profile
       hD .mass, hD .energy, hD .pressure]
     rfl
 
+/-- Natural domain, bundling `carrier`, `isOpen`, `scale_mem`. -/
 noncomputable def naturalDomain {Λ : ℝ} (hΛ : 0 < Λ) : RadialDomain where
   carrier := NaturalProfile.domain Λ
   isOpen := NaturalProfile.domain_isOpen Λ
@@ -904,6 +959,8 @@ open NaturalProfile NaturalAxisBridge
 variable {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) (hΛ : 0 < Λ) (hP0 : ContDiff ℝ ∞ P0)
 
+/-- Natural histories, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility
+proofs. -/
 noncomputable def naturalHistories : Profiles (naturalDomain hΛ) where
   f := F.f
   U := F.U
@@ -1013,7 +1070,7 @@ theorem naturalHistories_stocks {p : Point} (hp : p ∈ domain Λ) (hX : 0 < p.1
   let P := naturalHistories F hΛ hP0
   have hi : primitive (P.angularSource h) p =
       ∫ x in (0 : ℝ)..p.1, (2 * x * F.f (x, p.2)) * NaturalEntrance.Sq h F.f F.U F.Ubar (x, p.2) :=
-        by
+          by
     apply intervalIntegral.integral_congr
     intro x hx
     exact naturalHistories_angularSource F hΛ hP0 (domain_segment hΛ hp hx) (hf x hx)
@@ -1058,7 +1115,7 @@ theorem reference_stocks_natural {δ : ℝ} (hδ : 0 < δ)
   change profileStockOne P h p = NaturalEntrance.p1 F.f p ∧
     profileStockTwo P h p = NaturalEntrance.p2 F.f F.U p
   have hηJ : η ∈ ReferencePath.parameterInterval :=
-    NaturalAxisCoefficients.original_interval_interior hη
+      NaturalAxisCoefficients.original_interval_interior hη
   have hyT : y < ReferencePath.rampLimit := by linarith
   have hp : p ∈ domain Λ := N.fromLog_mem ⟨hyT, hηJ⟩
   have hpN : p ∈ N.radialDomain.carrier :=

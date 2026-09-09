@@ -6,98 +6,17 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+
+/-!
+# Packet Source Scales
+-/
 
 @[expose] public section
 
@@ -186,7 +105,7 @@ theorem source_neighbor_error_summable
   apply hsum.of_nonneg_of_le
   · intro n
     exact mul_nonneg (exp_pos _).le (pow_nonneg (le_trans zero_le_one (sourceTheta_bounds hJ1 hC
-      hx1 n).1) A)
+        hx1 n).1) A)
   · intro n
     have hj : (1 : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show 1 ≤ J + n by omega)
     have hp : (1 : ℝ) ≤ (J - 1 + n : ℕ) := by exact_mod_cast (show 1 ≤ J - 1 + n by omega)
@@ -225,7 +144,7 @@ theorem theta_weighted_source_exponential_summable
   apply hsum.of_nonneg_of_le
   · intro n
     exact mul_nonneg (pow_nonneg (le_trans zero_le_one (sourceTheta_bounds hJ1 hC hx1 n).1) A)
-      (exp_pos _).le
+        (exp_pos _).le
   · intro n
     have hθ := pow_le_pow_left₀ (le_trans zero_le_one (sourceTheta_bounds hJ1 hC hx1 n).1)
       (sourceTheta_bounds hJ1 hC hx1 n).2 A
@@ -248,11 +167,11 @@ theorem source_prior_error_summable
   apply hsum.of_nonneg_of_le
   · intro n
     exact mul_nonneg (exp_pos _).le (pow_nonneg (le_trans zero_le_one (sourceTheta_bounds hJ1 hC
-      hx1 n).1) A)
+        hx1 n).1) A)
   · intro n
     have hp : (0 : ℝ) < (J - 1 + n : ℕ) := by exact_mod_cast (show 0 < J - 1 + n by omega)
-    have hpj : ((J - 1 + n : ℕ) : ℝ) ≤ ((J + n : ℕ) : ℝ) := by exact_mod_cast (show J - 1 + n ≤ J +
-      n by omega)
+    have hpj : ((J - 1 + n : ℕ) : ℝ) ≤ ((J + n : ℕ) : ℝ) := by
+        exact_mod_cast (show J - 1 + n ≤ J + n by omega)
     have hpow := pow_le_pow_left₀ hp.le hpj 4
     have hd := div_le_div_of_nonneg_left (le_trans zero_le_one (hx1 n))
       (by positivity : 0 < 4 * ((J - 1 + n : ℕ) : ℝ) ^ 4)
@@ -275,8 +194,8 @@ theorem source_shear_gradient_bound
   have ho : (1 : ℝ) ≤ (J - 2 + n : ℕ) := by exact_mod_cast (show 1 ≤ J - 2 + n by omega)
   have hop : ((J - 2 + n : ℕ) : ℝ) ≤ ((J - 1 + n : ℕ) : ℝ) := by
     exact_mod_cast (show J - 2 + n ≤ J - 1 + n by omega)
-  have hp : (0 : ℝ) < (J - 1 + n : ℕ) := lt_of_lt_of_le (by linarith : (0 : ℝ) < (J - 2 + n : ℕ))
-    hop
+  have hp : (0 : ℝ) < (J - 1 + n : ℕ) := lt_of_lt_of_le (by
+      linarith : (0 : ℝ) < (J - 2 + n : ℕ)) hop
   have hpj : ((J - 1 + n : ℕ) : ℝ) ≤ ((J + n : ℕ) : ℝ) := by
     exact_mod_cast (show J - 1 + n ≤ J + n by omega)
   have hpow := pow_le_pow_left₀ hp.le hpj 7
@@ -353,9 +272,9 @@ theorem source_coefficient_error_eventually_small
     (hx : ∀ n, x (n + 1) = ((J + n : ℕ) : ℝ) ^ 2 * x n)
     (C c K : ℝ) (hC : 1 ≤ C) (hc : 0 ≤ c) :
     ∀ᶠ n in atTop, 1000000 * K * sourceCoefficientError J C c x n * sourceTheta J C x n ^ 40 ≤ 1 :=
-      by
+        by
   have hh := (source_coefficient_error_summable J hJ x hx0 hx C c hC hc
-    40).tendsto_atTop_zero.const_mul
+      40).tendsto_atTop_zero.const_mul
     (1000000 * K)
   simp only [mul_zero] at hh
   have hh' := hh.eventually_le_const (by norm_num : (0 : ℝ) < 1)

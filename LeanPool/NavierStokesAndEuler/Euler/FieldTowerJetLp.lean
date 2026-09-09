@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerSmoothTimeField
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 
 /-! Descended derivative tensors of a coherent Sobolev field tower have
 their actual cylinder L² bounds. The estimate selects a summand of the
 weighted H6 norm and has no loss depending on the derivative order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -57,14 +59,14 @@ theorem coverTensor_memLp (n : ℕ) (t : Icc (0 : ℝ) T) :
 theorem coverTensor_norm_le_level (s n : ℕ) (hn : n ≤ s) (t : Icc (0 : ℝ) T) :
     (eLpNorm (tensor P (A.pointField t) n) 2 (liftMeasure P)).toReal ≤
       ‖coordinateEquiv.symm.toContinuousLinearMap‖^n * levelNorm P (toJet P (A.realization s t)) n
-        := by
+          := by
   have h := tensor_eLpNorm_le P (A.pointField t) (A.pointField_smooth t) n
     (fun w => A.pointField_word_memLp n w t)
   simpa only [A.pointField_word_norm s n hn, levelNorm_eq_words] using h
 
 theorem coverTensor_weighted (n : ℕ) (ρ C : ℝ) (hρ : 0 < ρ)
     (t : Icc (0 : ℝ) T)
-    (hb : weightedNorm P 6 n ρ (A.realization (n+6) t) ≤ C) :
+    (hb : weightedNorm P 6 n ρ (A.realization (n + 6) t) ≤ C) :
     (eLpNorm (tensor P (A.pointField t) n) 2 (liftMeasure P)).toReal ≤
       C * (‖coordinateEquiv.symm.toContinuousLinearMap‖*ρ⁻¹)^n * (n.factorial : ℝ)^2 := by
   let J := toJet P (A.realization (n+6) t)

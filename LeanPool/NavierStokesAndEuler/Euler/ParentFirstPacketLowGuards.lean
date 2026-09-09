@@ -6,17 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
 public import LeanPool.NavierStokesAndEuler.Euler.ParentHomogeneousPacketLowBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerLowBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerChild
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketChildLowBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
 
 /-! The first packet preserves the exterior initial bound exactly and
 creates the small core used by later stages. Its pressure guard comes
 from the actual scalar pressure, and the exact correction adds no initial
 support outside the packet ball. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,31 +31,34 @@ open Set InnerProductSpace EulerSmoothLimit EulerMeanHarmonic
 
 variable {A : Parent} (E : Evolution A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (hchild : ℝ) (hhchild : 0 ≤ hchild)
   (ξ : U) (hs : tsupport EulerSpatialCutoffs.innerCutoff ⊆ support)
   (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
   (Q : Budget period A.T_pos
     (forwardInitializedCorrectionData (A.meanData H) (A.transverseData m hm J support hSupport) rfl
-      δ hδ ξ hs (δ*hchild) (A.sourceAgreement m hm J support hSupport H) N hN k hk))
+      δ hδ ξ hs (δ * hchild) (A.sourceAgreement m hm J support hSupport H) N hN k hk))
   (G : EulerPhysicalGraphFlowBounds.Data period A.T)
-  (hG : G.A=Q.liftedPacketCoefficient period
+  (hG : G.A =
+ Q.liftedPacketCoefficient period
     (forwardInitializedNormalizedField (A.meanData H) (A.transverseData m hm J support hSupport) rfl
-      δ hδ ξ hs (δ*hchild) N k))
-  (hgraph : ∀ t q, graphConstraint k m (G.A.field t q)=0)
+      δ hδ ξ hs (δ * hchild) N k))
+  (hgraph : ∀ t q, graphConstraint k m (G.A.field t q) = 0)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
 
-def firstChildLowBounds (hL : H.L=0) (hquarter : A.ell ≤ 1/4)
-    (hSupportBall : support ⊆ Metric.closedBall 0 (1/2 : ℝ))
+/-- First child low bounds as an element of `LowBounds (A.child G k m hgraph nextEll hnext
+hnext1)`. -/
+def firstChildLowBounds (hL : H.L = 0) (hquarter : A.ell ≤ 1 / 4)
+    (hSupportBall : support ⊆ Metric.closedBall 0 (1 / 2 : ℝ))
     (ev ep CM CH : ℝ)
     (herr : E.HomogeneousSourceErrors m hm J support hSupport Q
       (forwardInitializedApproximationResidual (A.meanData H) (A.transverseData m hm J support
-        hSupport) rfl
-        δ hδ ξ hs (δ*hchild) (A.sourceAgreement m hm J support hSupport H) N hN k hk)
+          hSupport) rfl
+        δ hδ ξ hs (δ * hchild) (A.sourceAgreement m hm J support hSupport H) N hN k hk)
       k δ hchild ξ ev ep)
     (hsize : ∀ (t : Icc (0 : ℝ) A.T) x,
-      ‖(A.transverseData m hm J support hSupport).normal.field t x‖*
+      ‖(A.transverseData m hm J support hSupport).normal.field t x‖ *
         ‖EulerPacketForwardFactorization.canonicalVelocity
           (A.transverseData m hm J support hSupport) ξ t x‖ ≤ firstRatio)
     (hflux : ∀ (t : Icc (0 : ℝ) A.T) x,
@@ -61,10 +66,10 @@ def firstChildLowBounds (hL : H.L=0) (hquarter : A.ell ≤ 1/4)
         (A.transverseData m hm J support hSupport).M.field t x
           (EulerPacketForwardFactorization.canonicalVelocity
             (A.transverseData m hm J support hSupport) ξ t x)⟫_ℝ)
-    (hCM : ∀ (t : Icc (0 : ℝ) A.T) x, ‖fderiv ℝ (fun y => E.velocity (t,y)) x‖ ≤ CM)
+    (hCM : ∀ (t : Icc (0 : ℝ) A.T) x, ‖fderiv ℝ (fun y => E.velocity (t, y)) x‖ ≤ CM)
     (hCH : ∀ (t : Icc (0 : ℝ) A.T) x, ‖fderiv ℝ (E.force t) x‖ ≤ CH)
-    (hsmall : (H.K+2*CM*δ*(hchild*firstRatio)+ep)*(A.T^2/2)+CM*A.T+
-      boundaryLocalizationC2*(CM+hchild*firstRatio+ev)*A.ell^3*A.T ≤ 1/2) :
+    (hsmall : (H.K + 2 * CM * δ * (hchild * firstRatio) + ep) * (A.T ^ 2 / 2) + CM * A.T +
+      boundaryLocalizationC2 * (CM + hchild * firstRatio + ev) * A.ell ^ 3 * A.T ≤ 1 / 2) :
     LowBounds (A.child G k m hgraph nextEll hnext hnext1) := by
   let residual := forwardInitializedApproximationResidual (A.meanData H)
     (A.transverseData m hm J support hSupport) rfl δ hδ ξ hs (δ*hchild)
@@ -73,7 +78,7 @@ def firstChildLowBounds (hL : H.L=0) (hquarter : A.ell ≤ 1/4)
     (A.transverseData m hm J support hSupport) rfl δ hδ ξ hs (δ*hchild) N k
   have hkinv : k*k⁻¹=1 := mul_inv_cancel₀ (by linarith : k ≠ 0)
   let EC := E.child m hm J support hSupport Q residual V rfl G hG k hkinv hgraph nextEll hnext
-    hnext1
+      hnext1
   let Cnew := CM+hchild*firstRatio+ev
   let Knew := H.K+2*CM*δ*(hchild*firstRatio)+ep
   have hev : 0 ≤ ev := (norm_nonneg _).trans (herr A.zeroTime 0).1

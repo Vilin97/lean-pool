@@ -8,10 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalStress
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricHeatTail
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TailCone
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
+import LeanPool.NavierStokesAndEuler.NavierStokes.TailCone
 
 /-!
 # Canonical pressure of the physical terminal heat tail
@@ -20,6 +18,9 @@ The heat parameter is the physical time `1-t`.  The pressure is the actual
 improper radial integral.  Its regularity is obtained by separating the pure
 heat tail from a compact taper correction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,12 +37,16 @@ noncomputable def amplitudeExponent (h : ℝ) : ℝ := 1 / 2 + h
 noncomputable def heatJet (h : ℝ) (n : ℕ) (ν v : ℝ) : ℝ :=
   (2 / v) ^ n * RadialHeatProfile.profileJet (1 + h) n (2 * ν / v)
 
+/-- Heat jet bound, given by `2 ^ n * ParametricHeatTail.heatJetBound h n`. -/
 noncomputable def heatJetBound (h : ℝ) (n : ℕ) : ℝ :=
   2 ^ n * ParametricHeatTail.heatJetBound h n
 
+/-- Pressure weight, given by `v ^ (-2 * amplitudeExponent h - 1)`. -/
 noncomputable def pressureWeight (h v : ℝ) : ℝ :=
   v ^ (-2 * amplitudeExponent h - 1)
 
+/-- Heat pressure jet, given by `pressureWeight h v * ParametricHeatTail.jetProduct (fun i =>
+heatJet h i ν v) (fun i => heatJet h i ν v) n`. -/
 noncomputable def heatPressureJet (h : ℝ) (n : ℕ) (ν v : ℝ) : ℝ :=
   pressureWeight h v * ParametricHeatTail.jetProduct (fun i => heatJet h i ν v)
     (fun i => heatJet h i ν v) n
@@ -51,9 +56,9 @@ noncomputable def heatPressureFactor (h ν : ℝ) : ℝ :=
   ∫ v in Ioi (1 : ℝ), pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^ 2
 
 theorem heatJet_zero (h ν v : ℝ) : heatJet h 0 ν v = RadialHeatProfile.profile (1 + h) (2 * ν / v)
-  := by
+    := by
   simp [heatJet, RadialHeatProfile.profileJet, RadialHeatProfile.derivativeCoeff,
-    RadialHeatProfile.profile]
+      RadialHeatProfile.profile]
 
 theorem heatJet_hasDerivWithinAt {h ν v : ℝ} (hh : 0 < h)
     (hv : 0 < v) (hν : 0 ≤ ν) (n : ℕ) :
@@ -88,7 +93,7 @@ theorem heatJet_bound {h ν v : ℝ} (hh : 0 < h) (hν : 0 ≤ ν) (hv : 1 ≤ v
     |heatJet h n ν v| ≤ heatJetBound h n := by
   have hvp : 0 < v := zero_lt_one.trans_le hv
   have hj : |RadialHeatProfile.profileJet (1 + h) n (2 * ν / v)| ≤ ParametricHeatTail.heatJetBound
-    h n := by
+      h n := by
     rw [← RadialHeatProfile.iteratedDerivWithin_profile (by linarith) n (by positivity)]
     exact RadialHeatProfile.profile_derivative_bound (by linarith) n (by positivity)
   have hp : (2 / v) ^ n ≤ (2 : ℝ) ^ n := by
@@ -100,7 +105,7 @@ theorem heatJet_bound {h ν v : ℝ} (hh : 0 < h) (hν : 0 ≤ ν) (hv : 1 ≤ v
 theorem pressureWeight_continuousOn (h : ℝ) : ContinuousOn (pressureWeight h) (Ioi 0) := by
   intro v hv
   exact (((contDiffAt_id (n := ∞)).rpow_const_of_ne (show v ≠ 0 from ne_of_gt
-    hv)).continuousAt).continuousWithinAt
+      hv)).continuousAt).continuousWithinAt
 
 theorem heatPressureJet_continuousOn {h ν : ℝ} (hh : 0 < h) (hν : 0 ≤ ν) (n : ℕ) :
     ContinuousOn (heatPressureJet h n ν) (Ioi 0) :=
@@ -126,9 +131,9 @@ theorem heatPressureJet_dominated {h : ℝ} (hh : 0 < h) :
   · filter_upwards [ae_restrict_mem measurableSet_Ioi] with v hv
     intro ν hν
     have hBp : 0 ≤ B := ParametricHeatTail.jetProduct_nonneg (heatJetBound_nonneg hh)
-      (heatJetBound_nonneg hh) n
+        (heatJetBound_nonneg hh) n
     have hb : |ParametricHeatTail.jetProduct (fun i => heatJet h i ν v) (fun i => heatJet h i ν v)
-      n| ≤ B := by
+        n| ≤ B := by
       simpa only [div_one] using ParametricHeatTail.jetProduct_bound (X := 1) le_rfl
         (heatJetBound_nonneg hh) (heatJetBound_nonneg hh)
         (fun i => by simpa only [div_one] using heatJet_bound hh hν.1 hv.le i)
@@ -144,7 +149,7 @@ theorem heatPressureJet_measurable {h : ℝ} (hh : 0 < h) (n : ℕ) {ν : ℝ} (
 
 theorem heatPressureJet_zero (h ν v : ℝ) :
     heatPressureJet h 0 ν v = pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^
-      2 := by
+        2 := by
   simp only [heatPressureJet, ParametricHeatTail.jetProduct, heatJet_zero, pow_two]
 
 /-- Every derivative of the heat-only improper integral is dominated by an
@@ -163,18 +168,25 @@ theorem heatPressureFactor_contDiffOn {h : ℝ} (hh : 0 < h) :
 
 /-! ## The compact taper correction -/
 
+/-- Heat density, given by `pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^
+2`. -/
 noncomputable def heatDensity (h ν v : ℝ) : ℝ :=
   pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^ 2
 
+/-- Tapered density, given by `heatDensity h p.1 v * f (p.2 + Real.log v) ^ 2`. -/
 noncomputable def taperedDensity (h : ℝ) (f : ℝ → ℝ) (p : ℝ × ℝ) (v : ℝ) : ℝ :=
   heatDensity h p.1 v * f (p.2 + Real.log v) ^ 2
 
+/-- Deficit density, given by `heatDensity h p.1 v * (1 - f (p.2 + Real.log v) ^ 2)`. -/
 noncomputable def deficitDensity (h : ℝ) (f : ℝ → ℝ) (p : ℝ × ℝ) (v : ℝ) : ℝ :=
   heatDensity h p.1 v * (1 - f (p.2 + Real.log v) ^ 2)
 
+/-- Tapered pressure factor, given by `∫ v in Ioi (1 : ℝ), taperedDensity h f p v`. -/
 noncomputable def taperedPressureFactor (h : ℝ) (f : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   ∫ v in Ioi (1 : ℝ), taperedDensity h f p v
 
+/-- Compact deficit, given by `(B - 1) * ∫ u in (0 : ℝ)..1, deficitDensity h f p (1 + (B - 1) *
+u)`. -/
 noncomputable def compactDeficit (h : ℝ) (f : ℝ → ℝ) (B : ℝ) (p : ℝ × ℝ) : ℝ :=
   (B - 1) * ∫ u in (0 : ℝ)..1, deficitDensity h f p (1 + (B - 1) * u)
 
@@ -300,7 +312,7 @@ theorem compactDeficit_contDiffOn {h B : ℝ} {f : ℝ → ℝ}
     ContDiffOn ℝ ∞ (compactDeficit h f B) {p : ℝ × ℝ | 0 < p.1} := by
   apply contDiffOn_const.mul
   apply ProfileHistories.compact_parameter_integral_smooth (isOpen_lt continuous_const
-    continuous_fst)
+      continuous_fst)
   exact fun p hp u hu => compactDeficit_integrand_smooth hh hf hB p hp u hu
 
 /-- Genuine joint smoothness of the tapered improper integral. Only the compact
@@ -329,9 +341,12 @@ theorem taperedPressureFactor_contDiffAt {h Y : ℝ} {f : ℝ → ℝ} {p : ℝ 
 
 /-! ## Actual differentiation in the logarithmic radial parameter -/
 
+/-- Taper derivative density, given by `heatDensity h p.1 v * f (p.2 + Real.log v) * deriv f
+(p.2 + Real.log v)`. -/
 noncomputable def taperDerivativeDensity (h : ℝ) (f : ℝ → ℝ) (p : ℝ × ℝ) (v : ℝ) : ℝ :=
   heatDensity h p.1 v * f (p.2 + Real.log v) * deriv f (p.2 + Real.log v)
 
+/-- Taper derivative integral, given by `∫ v in Ioi (1 : ℝ), taperDerivativeDensity h f p v`. -/
 noncomputable def taperDerivativeIntegral (h : ℝ) (f : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   ∫ v in Ioi (1 : ℝ), taperDerivativeDensity h f p v
 
@@ -347,7 +362,7 @@ theorem deficitDensity_hasDerivAt_y (h ν v y : ℝ) {f : ℝ → ℝ}
     HasDerivAt (fun u => deficitDensity h f (ν, u) v)
       (-2 * taperDerivativeDensity h f (ν, y) v) y := by
   have hd := (((hf.hasDerivAt.comp y ((hasDerivAt_id y).add_const (Real.log v))).pow 2).const_sub
-    1).const_mul
+      1).const_mul
     (heatDensity h ν v)
   convert! hd using 1
   simp only [taperDerivativeDensity, Function.comp_apply, id_eq, mul_one, pow_one,
@@ -411,9 +426,9 @@ theorem taperedPressureFactor_hasDerivAt_y {h Y : ℝ} {f : ℝ → ℝ} {p : �
   have he : (fun y => taperedPressureFactor h f (p.1, y)) =ᶠ[𝓝 p.2]
       (fun y => heatPressureFactor h p.1 - compactDeficit h f B (p.1, y)) := by
     filter_upwards [(continuousAt_id.add_const (Real.log B)).eventually (Ioi_mem_nhds hy)] with y
-      hy'
+        hy'
     exact taperedPressureFactor_eq hh hν.le hf.continuous hb hB (show Y < y + Real.log B from
-      hy').le hplateau
+        hy').le hplateau
   have hi : taperDerivativeIntegral h f p =
       (B - 1) * ∫ u in (0 : ℝ)..1, taperDerivativeDensity h f p (1 + (B - 1) * u) := by
     rw [taperDerivativeIntegral, integral_tail_eq_interval hB
@@ -426,6 +441,7 @@ theorem taperedPressureFactor_hasDerivAt_y {h Y : ℝ} {f : ℝ → ℝ} {p : �
 
 /-! ## Identification with the physical canonical pressure -/
 
+/-- Pressure coordinates, given by `((1 - p.1) / p.2.1, Real.log (SimilarityProfile.X h p))`. -/
 noncomputable def pressureCoordinates (h : ℝ) (p : SimilarityProfile.PhysicalPoint) : ℝ × ℝ :=
   ((1 - p.1) / p.2.1, Real.log (SimilarityProfile.X h p))
 
@@ -446,7 +462,7 @@ theorem swirlCoefficient_sq (C h : ℝ) (f : ℝ → ℝ) {p : SimilarityProfile
       p.2.1 ^ (-2 * amplitudeExponent h) / p.2.1 := by
     rw [Real.rpow_sub hs, Real.rpow_one]
   unfold TerminalStress.swirlCoefficient TerminalStress.physicalHeat
-    RadialHeatProfile.spatialProfile
+      RadialHeatProfile.spatialProfile
     TerminalStress.flattening
   rw [hexp, div_pow, mul_pow, mul_pow, mul_pow, hp,
     Real.sq_sqrt (by positivity : 0 ≤ 2 * p.2.1), hpow]
@@ -530,7 +546,7 @@ theorem canonicalPressure_contDiffAt (C : ℝ) {h Y : ℝ} {f : ℝ → ℝ}
     (ht : p.1 < 1) (hs : 0 < p.2.1) (hf : ContDiff ℝ ∞ f)
     (hb : ∀ y, 0 ≤ f y ∧ f y ≤ 1) (hplateau : ∀ y, Y ≤ y → f y = 1) :
     ContDiffAt ℝ ∞ (TerminalStress.canonicalPressure (TerminalStress.swirlCoefficient C h f)) p :=
-      by
+        by
   have harg : 0 < (pressureCoordinates h p).1 := div_pos (sub_pos.mpr ht) hs
   have hfac := (taperedPressureFactor_contDiffAt hh hf hb hplateau harg).comp p
     (pressureCoordinates_contDiffAt hh hh1 ht hs)
@@ -547,6 +563,8 @@ theorem canonicalPressure_contDiffAt (C : ℝ) {h Y : ℝ} {f : ℝ → ℝ}
 
 /-! ## The axial derivative of the physical pressure -/
 
+/-- Log scale derivative, given by `CoordinateAlgebra.qAxial (SimilarityProfile.q h p) h
+(SimilarityProfile.eta h p) / SimilarityProfile.q h p`. -/
 noncomputable def logScaleDerivative (h : ℝ) (p : SimilarityProfile.PhysicalPoint) : ℝ :=
   CoordinateAlgebra.qAxial (SimilarityProfile.q h p) h (SimilarityProfile.eta h p) /
     SimilarityProfile.q h p
@@ -563,7 +581,7 @@ theorem logX_hasDerivAt_z {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
     (-logScaleDerivative h p) p.2.2
   apply hd.congr_deriv
   unfold logScaleDerivative
-  field_simp [hq.ne', hs.ne'] ; ring
+  field_simp [hq.ne', hs.ne']; ring
 
 theorem physicalHeat_sq_div (C h : ℝ) {p : SimilarityProfile.PhysicalPoint} (hs : 0 < p.2.1) :
     TerminalStress.physicalHeat C (1 + h) p ^ 2 / p.2.1 =
@@ -575,6 +593,7 @@ theorem physicalHeat_sq_div (C h : ℝ) {p : SimilarityProfile.PhysicalPoint} (h
   have he' := congrArg (fun a : ℝ => 2 * a) he
   convert! he' using 1 <;> ring
 
+/-- Axial pressure integral as an element of `ℝ`. -/
 noncomputable def axialPressureIntegral (C h : ℝ) (f : ℝ → ℝ)
     (p : SimilarityProfile.PhysicalPoint) : ℝ :=
   ∫ s in Ioi p.2.1, TerminalStress.physicalHeat C (1 + h) (p.1, (s, p.2.2)) ^ 2 *
@@ -587,7 +606,7 @@ theorem axialPressureIntegral_eq (C : ℝ) {h : ℝ} (f : ℝ → ℝ)
       taperDerivativeIntegral h f (pressureCoordinates h p) := by
   let G : ℝ → ℝ := fun s => TerminalStress.physicalHeat C (1 + h) (p.1, (s, p.2.2)) ^ 2 *
     f (Real.log (s / SimilarityProfile.q h p)) * deriv f (Real.log (s / SimilarityProfile.q h p)) /
-      s
+        s
   have he : (∫ s in Ioi p.2.1, G s) = p.2.1 * ∫ v in Ioi (1 : ℝ), G (p.2.1 * v) := by
     rw [integral_comp_mul_left_Ioi G 1 hs]
     simp only [mul_one, smul_eq_mul]
@@ -672,12 +691,12 @@ theorem spatialHeat_antitoneOn {h ν : ℝ} (hh : 0 < h) (hν : 0 < ν) :
     AntitoneOn (RadialHeatProfile.spatialProfile (1 + h) ν) (Ioi 0) := by
   apply antitoneOn_of_deriv_nonpos (convex_Ioi 0)
   · intro v hv
-    exact (RadialHeatProfile.spatialProfile_hasDerivAt_s (by linarith) hν
-      hv).continuousAt.continuousWithinAt
+    exact (RadialHeatProfile.spatialProfile_hasDerivAt_s (by
+        linarith) hν hv).continuousAt.continuousWithinAt
   · intro v hv
     have hv' : 0 < v := by simpa only [interior_Ioi, Set.mem_Ioi] using hv
-    exact (RadialHeatProfile.spatialProfile_hasDerivAt_s (by linarith) hν
-      hv').differentiableAt.differentiableWithinAt
+    exact (RadialHeatProfile.spatialProfile_hasDerivAt_s (by
+        linarith) hν hv').differentiableAt.differentiableWithinAt
   · intro v hv
     have hv' : 0 < v := by simpa only [interior_Ioi, Set.mem_Ioi] using hv
     rw [(RadialHeatProfile.spatialProfile_hasDerivAt_s (by linarith) hν hv').deriv]
@@ -776,7 +795,7 @@ theorem axialPressureIntegral_bound (C : ℝ) {h Y : ℝ} {f : ℝ → ℝ}
     (hplateau : ∀ y, Y ≤ y → f y = 1) :
     0 ≤ axialPressureIntegral C h f p ∧ axialPressureIntegral C h f p ≤
       TerminalStress.physicalHeat C (1 + h) p ^ 2 * (1 - f (Real.log (SimilarityProfile.X h p))) :=
-        by
+          by
   rw [axialPressureIntegral_eq C f (SimilarityProfile.q_pos hh hh1 ht) hs]
   have hbnd := taperDerivativeIntegral_bound (p := pressureCoordinates h p) hh hf hb hmono hplateau
     (div_pos (sub_pos.mpr ht) hs)
@@ -811,14 +830,14 @@ theorem logScaleDerivative_eq {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
     (hq : 0 < SimilarityProfile.q h p) :
     logScaleDerivative h p = 2 * SimilarityProfile.eta h p /
       (SimilarityProfile.q h p ^ CoordinateAlgebra.D h * CoordinateAlgebra.L h
-        (SimilarityProfile.eta h p)) := by
+          (SimilarityProfile.eta h p)) := by
   unfold logScaleDerivative CoordinateAlgebra.qAxial
   rw [div_right_comm, mul_div_cancel_right₀ _ hq.ne']
 
 theorem logScaleDerivative_bound {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
     (hh : 0 < h) (hh1 : h < 1 / 2) (ht : p.1 < 1) :
     |logScaleDerivative h p| ≤ 2 / (1 - 2 * h) * SimilarityProfile.q h p ^ (-CoordinateAlgebra.D h)
-      := by
+        := by
   have hq := SimilarityProfile.q_pos hh hh1 ht
   have heta := SimilarityProfile.eta_sq_lt_one hh hh1 ht
   have heta1 : |SimilarityProfile.eta h p| ≤ 1 := by
@@ -833,7 +852,7 @@ theorem logScaleDerivative_bound {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
     abs_of_pos (mul_pos hpow hL)]
   calc
     _ ≤ 2 / (SimilarityProfile.q h p ^ CoordinateAlgebra.D h * CoordinateAlgebra.L h
-      (SimilarityProfile.eta h p)) := by
+        (SimilarityProfile.eta h p)) := by
       exact div_le_div_of_nonneg_right (by nlinarith) (mul_pos hpow hL).le
     _ ≤ 2 / (SimilarityProfile.q h p ^ CoordinateAlgebra.D h * (1 - 2 * h)) :=
       div_le_div_of_nonneg_left (by norm_num) (mul_pos hpow hh0)
@@ -844,6 +863,7 @@ theorem logScaleDerivative_bound {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
 
 /-! ## The actual outgoing taper and its terminal edge estimate -/
 
+/-- Outgoing taper, given by `OutgoingTail.tailShape d (y - y0)`. -/
 noncomputable def outgoingTaper (d : OutgoingTail.TailData) (y0 y : ℝ) : ℝ :=
   OutgoingTail.tailShape d (y - y0)
 
@@ -870,6 +890,8 @@ theorem outgoingTaper_deriv_nonneg (d : OutgoingTail.TailData) (y0 y : ℝ) :
 theorem outgoingTaper_plateau (d : OutgoingTail.TailData) (y0 y : ℝ) (hy : y0 + 3 ≤ y) :
     outgoingTaper d y0 y = 1 := OutgoingTail.tailShape_late d (by linarith)
 
+/-- Outgoing pressure, given by `TerminalStress.canonicalPressure
+(TerminalStress.swirlCoefficient C d.h (outgoingTaper d y0))`. -/
 noncomputable def outgoingPressure (C : ℝ) (d : OutgoingTail.TailData) (y0 : ℝ) :
     SimilarityProfile.PhysicalProfile :=
   TerminalStress.canonicalPressure (TerminalStress.swirlCoefficient C d.h (outgoingTaper d y0))
@@ -935,12 +957,12 @@ theorem integrableOn_Ioi_of_eventually_zero {g : ℝ → ℝ} {r : ℝ} (hr : 0 
 theorem logX_radial_contDiffAt {h t z r : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (ht : t < 1) (hr : 0 < r) :
     ContDiffAt ℝ ∞ (fun u => Real.log (SimilarityProfile.X h (TerminalStress.radiusPoint t u z))) r
-      := by
+        := by
   have hs : 0 < (TerminalStress.radiusPoint t r z).2.1 := by
     dsimp [TerminalStress.radiusPoint]
     positivity
   have hX := (SimilarityProfile.inner_smoothAt hh hh1 (p := TerminalStress.radiusPoint t r z)
-    ht).fst
+      ht).fst
   exact (hX.log (div_pos hs (SimilarityProfile.q_pos hh hh1 ht)).ne').comp r
     (TerminalStress.radiusPoint_contDiff t z).contDiffAt
 
@@ -980,14 +1002,14 @@ theorem terminal_forcing_integrable (C : ℝ) {h t z r Y : ℝ} {f : ℝ → ℝ
       (((hK u hu).continuousAt.neg.mul ((hgdd u hu).continuousAt.add
         ((hgd u hu).continuousAt.div continuousAt_id hu.ne'))).sub
           ((continuousAt_const.mul (hKd u hu).continuousAt).mul (hgd u
-            hu).continuousAt))).continuousWithinAt
+              hu).continuousAt))).continuousWithinAt
   · filter_upwards [hgp', hgp''] with u hu hu'
     change u ^ 2 * TerminalStress.viscousResidual K g u = 0
     simp only [TerminalStress.viscousResidual, hu, hu', zero_div, add_zero, mul_zero, sub_zero]
   · intro u hu
     exact (((continuousAt_id.mul (hK u hu).continuousAt).sub
       ((continuousAt_id.pow 2).mul (hKd u hu).continuousAt)).mul (hgd u
-        hu).continuousAt).continuousWithinAt
+          hu).continuousAt).continuousWithinAt
   · filter_upwards [hgp'] with u hu
     change TerminalStress.correction K g u = 0
     simp only [TerminalStress.correction, hu, mul_zero]
@@ -1022,8 +1044,8 @@ theorem terminalStress_ge_mass {C h t z r R Y : ℝ} {f : ℝ → ℝ}
   let K := TerminalStress.heatAmplitude C (1 + h) t
   let g := TerminalStress.radialSlice (TerminalStress.flattening h f) t z
   have hK : ∀ u ∈ Ici r, DifferentiableAt ℝ K u := fun u hu =>
-    (TerminalStress.heatAmplitude_contDiffAt C (by linarith) ht (hr.trans_le hu)).differentiableAt
-      (by simp)
+    (TerminalStress.heatAmplitude_contDiffAt C (by
+        linarith) ht (hr.trans_le hu)).differentiableAt (by simp)
   have hF : ∀ u ∈ Ici r, ContDiffAt ℝ 2 g u := fun u hu =>
     TerminalStress.flattening_radial_contDiffAt hh hh1 ht (hr.trans_le hu)
       (hf.of_le (WithTop.coe_le_coe.mpr le_top))
@@ -1124,7 +1146,7 @@ theorem axialBackwardStress_bound {C h t z r R Y : ℝ} {f : ℝ → ℝ}
   have hpoint (s : ℝ) (hs : r ^ 2 / 2 ≤ s) : |g s| ≤ B := by
     have hsp : 0 < s := ha.trans_le hs
     have hbound := canonicalPressure_partialZ_bound C (p := (t, (s, z))) hh hh1 ht hsp hf hb hmono
-      hplateau
+        hplateau
     have hK := physicalHeat_radial_le (z := z) hC hh ht ha hs
     change TerminalStress.physicalHeat C (1 + h) (t, (s, z)) ≤
       TerminalStress.physicalHeat C (1 + h) p at hK
@@ -1132,7 +1154,7 @@ theorem axialBackwardStress_bound {C h t z r R Y : ℝ} {f : ℝ → ℝ}
     have hKsq : TerminalStress.physicalHeat C (1 + h) (t, (s, z)) ^ 2 ≤
         TerminalStress.physicalHeat C (1 + h) p ^ 2 := by nlinarith
     have hlog : Real.log (SimilarityProfile.X h p) ≤ Real.log (SimilarityProfile.X h (t, (s, z)))
-      := by
+        := by
       apply Real.log_le_log (div_pos ha hq)
       exact (div_le_div_iff_of_pos_right hq).mpr hs
     have hfdec := sub_le_sub_left (hmonof hlog) 1
@@ -1146,15 +1168,15 @@ theorem axialBackwardStress_bound {C h t z r R Y : ℝ} {f : ℝ → ℝ}
       apply Real.log_le_log (div_pos (show 0 < R ^ 2 / 2 by positivity) hq)
       exact (div_le_div_iff_of_pos_right hq).mpr hs.le
     have hbound := canonicalPressure_partialZ_bound C (p := (t, (s, z))) hh hh1 ht hsp hf hb hmono
-      hplateau
+        hplateau
     rw [hplateau _ hy, sub_self, mul_zero] at hbound
     exact abs_nonpos_iff.mp hbound
   have hcont : ContinuousOn g (Ioi 0) := by
     intro s hs
     exact (((canonicalPressure_partialZ_contDiffAt C (p := (t, (s, z))) hh hh1 ht hs hf hb
-      hplateau).comp s
+        hplateau).comp s
       (contDiffAt_const.prodMk (contDiffAt_id.prodMk
-        contDiffAt_const))).continuousAt).continuousWithinAt
+          contDiffAt_const))).continuousAt).continuousWithinAt
   have hi : IntegrableOn g (Ioi (r ^ 2 / 2)) := integrableOn_Ioi_of_eventually_zero ha hcont (by
     filter_upwards [eventually_gt_atTop (R ^ 2 / 2)] with s hs
     exact hzero s hs)
@@ -1205,8 +1227,8 @@ theorem heatAmplitude_annulus_lower {C h t r R Λ : ℝ}
     exact Real.rpow_le_rpow_of_nonpos hb (by nlinarith) (by dsimp [amplitudeExponent]; linarith)
   have harg : 2 * (1 - t) / (R ^ 2 / 2) ≤ 2 * (1 - t) / (r ^ 2 / 2) :=
     div_le_div_of_nonneg_left (by positivity) ha hab
-  have hH := heatProfile_antitoneOn hh (div_pos (by positivity) hb) (div_pos (by positivity) ha)
-    harg
+  have hH := heatProfile_antitoneOn hh (div_pos (by
+      positivity) hb) (div_pos (by positivity) ha) harg
   have hHa := (RadialHeatProfile.profile_pos (a := 1 + h) (by linarith)
     (show 0 ≤ 2 * (1 - t) / (r ^ 2 / 2) by positivity)).le
   have he := mul_le_mul hpow hH hHa (Real.rpow_nonneg hb.le _)
@@ -1222,6 +1244,7 @@ theorem timeDenominator_le_q {h t z : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (ht : 
     nlinarith [sq_nonneg (SimilarityProfile.eta h (t, (0, z)))]
   exact (mul_le_mul_of_nonneg_left hL hq).trans_eq (mul_one _)
 
+/-- Tilt constant, given by `(2 / (1 - 2 * h)) * (Λ - 1) / Λ ^ (-amplitudeExponent h)`. -/
 noncomputable def tiltConstant (h Λ : ℝ) : ℝ :=
   (2 / (1 - 2 * h)) * (Λ - 1) / Λ ^ (-amplitudeExponent h)
 
@@ -1238,7 +1261,7 @@ theorem terminal_tilt_bound {C h t z r R Y Λ : ℝ} {f : ℝ → ℝ}
     0 < TerminalStress.terminalStress C h f t z r ∧
     |axialBackwardStress C h f t z r| / TerminalStress.terminalStress C h f t z r ≤
       tiltConstant h Λ * SimilarityProfile.q h (TerminalStress.radiusPoint t r z) ^ (1 -
-        CoordinateAlgebra.D h) *
+          CoordinateAlgebra.D h) *
         TerminalStress.heatAmplitude C (1 + h) t r := by
   let p := TerminalStress.radiusPoint t r z
   let q := SimilarityProfile.q h p
@@ -1263,11 +1286,11 @@ theorem terminal_tilt_bound {C h t z r R Y Λ : ℝ} {f : ℝ → ℝ}
         div_le_div_of_nonneg_right (by
           simpa only [mul_assoc] using mul_le_mul_of_nonneg_left hcarrier hr.le) (by positivity)
       _ ≤ _ := div_le_div_of_nonneg_left
-        (mul_nonneg hr.le (TerminalStress.heatAmplitude_pos hC (by linarith) ht (hr.trans_le
-          hrR)).le)
+        (mul_nonneg hr.le (TerminalStress.heatAmplitude_pos hC (by
+            linarith) ht (hr.trans_le hrR)).le)
         (by positivity) (mul_le_mul_of_nonneg_left (timeDenominator_le_q hh hh1 ht) (by norm_num))
-  have hS : 0 < S := (mul_pos (div_pos (mul_pos (mul_pos hr hbpos) hK) (by positivity))
-    hE).trans_le hlow
+  have hS : 0 < S := (mul_pos (div_pos (mul_pos (mul_pos hr hbpos) hK) (by
+      positivity)) hE).trans_le hlow
   refine ⟨hS, ?_⟩
   have hax := (axialBackwardStress_bound hC hh hh1 ht hr hrR hf hb hmono hplateau hR).2
   have hlength : (R ^ 2 - r ^ 2) / (2 * r) ≤ (Λ - 1) * r / 2 := by
@@ -1334,7 +1357,7 @@ theorem physicalEdit_eq_released_carrier (d : OutgoingTail.TailData) {K : ℝ} (
     (hfull : 1 / 2 ≤ Real.log (SimilarityProfile.X d.h p / K) + 1 / 5) :
     SimilarityProfile.q d.h p ^ (-amplitudeExponent d.h) *
       ParametricHeatTail.physicalEdit d K (SimilarityProfile.eta d.h p) (SimilarityProfile.X d.h p)
-        =
+          =
         TerminalStress.physicalHeat (releasedNormalization d K) (1 + d.h) p *
           outgoingTaper d (Real.log K - 1 / 5) (Real.log (SimilarityProfile.X d.h p)) := by
   have hq := SimilarityProfile.q_pos d.h_pos d.h_lt_half ht
@@ -1446,11 +1469,11 @@ theorem released_terminal_tilt (d : OutgoingTail.TailData) {K y0 t z r R Λ : �
   have hheat := released_heat_bound d hK (p := TerminalStress.radiusPoint t r z) ht
     (by dsimp [TerminalStress.radiusPoint]; positivity) hX
   have hp : 0 ≤ SimilarityProfile.q d.h (TerminalStress.radiusPoint t r z) ^ (1 -
-    CoordinateAlgebra.D d.h) *
+      CoordinateAlgebra.D d.h) *
       TerminalStress.heatAmplitude (releasedNormalization d K) (1 + d.h) t r := by
     exact mul_nonneg (Real.rpow_nonneg (SimilarityProfile.q_pos d.h_pos d.h_lt_half ht).le _)
-      (TerminalStress.heatAmplitude_pos (releasedNormalization_pos d hK) (by linarith [d.h_pos]) ht
-        hr).le
+      (TerminalStress.heatAmplitude_pos (releasedNormalization_pos d hK) (by
+          linarith [d.h_pos]) ht hr).le
   calc
     _ ≤ (4 * Λ * (Λ - 1)) * HeatTailEdit.outgoingAmplitude d := by
       rw [mul_assoc]
@@ -1469,7 +1492,7 @@ theorem released_terminal_tilt_small (d : OutgoingTail.TailData) {K y0 t z r R �
     (hsmall : d.h ≤ ε / (1 + 16 * Λ * (Λ - 1) * OutgoingTail.finalAngular d (d.releaseStart, 0))) :
     |axialBackwardStress (releasedNormalization d K) d.h (outgoingTaper d y0) t z r| /
       TerminalStress.terminalStress (releasedNormalization d K) d.h (outgoingTaper d y0) t z r ≤ ε
-        := by
+          := by
   have hb := (released_terminal_tilt d hK hh4 ht hr hrR hΛ hRΛ hX hR hinside).2
   let B := 16 * Λ * (Λ - 1) * OutgoingTail.finalAngular d (d.releaseStart, 0)
   have hB : 0 ≤ B := mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) (zero_le_one.trans hΛ))
@@ -1498,14 +1521,14 @@ theorem outgoing_navierStokesResidual (C : ℝ) (d : OutgoingTail.TailData) (y0 
           (TerminalStress.leadingResidual C d.h (outgoingTaper d y0) t
             (Real.sqrt (2 * AxisymmetricFields.radialEnergy x)) (x 2) -
           TerminalStress.axialViscosity C d.h (outgoingTaper d y0) (AxisymmetricFields.profilePoint
-            t x)))
+              t x)))
         (x 0 / Real.sqrt (2 * AxisymmetricFields.radialEnergy x) *
           (TerminalStress.leadingResidual C d.h (outgoingTaper d y0) t
             (Real.sqrt (2 * AxisymmetricFields.radialEnergy x)) (x 2) -
           TerminalStress.axialViscosity C d.h (outgoingTaper d y0) (AxisymmetricFields.profilePoint
-            t x)))
+              t x)))
         (SimilarityProfile.partialZ (outgoingPressure C d y0) (AxisymmetricFields.profilePoint t
-          x)) := by
+            x)) := by
   let a := AxisymmetricFields.radialEnergy x / 2
   have ha : 0 < a := by dsimp [a]; positivity
   have hi := swirlCoefficient_sq_integrable C (p := (t, (a, x 2))) d.h_pos d.h_lt_half ht ha
@@ -1546,7 +1569,7 @@ theorem axialBackwardStress_divergence {C h t z r R Y : ℝ} {f : ℝ → ℝ}
     exact (((canonicalPressure_partialZ_contDiffAt C (p := (t, (s, z))) hh hh1 ht
       (ha.trans hs) hf hb hplateau).comp s
         (contDiffAt_const.prodMk (contDiffAt_id.prodMk
-          contDiffAt_const))).continuousAt).continuousWithinAt
+            contDiffAt_const))).continuousAt).continuousWithinAt
   have hd := (TerminalStress.neg_tailIntegral_hasDerivAt hab hi hc).fun_neg
   simp only [neg_neg] at hd
   have hdr := hd.comp r (RadialHeatProfile.radiusSquared_hasDerivAt r)
@@ -1555,6 +1578,6 @@ theorem axialBackwardStress_divergence {C h t z r R Y : ℝ} {f : ℝ → ℝ}
   rw [hquot.deriv]
   change _ = -g (r ^ 2 / 2)
   dsimp only [axialBackwardStress, Function.comp_apply, id_eq]
-  field_simp [hr.ne'] ; ring
+  field_simp [hr.ne']; ring
 
 end NavierStokes.TerminalPressure

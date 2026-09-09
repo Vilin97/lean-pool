@@ -6,19 +6,29 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Algebra.Polynomial.Eval.Degree
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Tactic
-
-@[expose] public section
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Algebra.Polynomial.Degree.Operations
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A fixed polynomial has one uniform power bound on the whole range
 x ≥ 1. This extracts an actual degree and constant for scalar cost formulas. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPolynomialCost
 
+/-- Coefficient cost, given by `1+∑ n ∈ p.support, |p.coeff n|`. -/
 def coefficientCost (p : Polynomial ℝ) : ℝ := 1+∑ n ∈ p.support, |p.coeff n|
 
 theorem coefficientCost_pos (p : Polynomial ℝ) : 0 < coefficientCost p := by
@@ -37,7 +47,7 @@ theorem eval_bound (p : Polynomial ℝ) (x : ℝ) (hx : 1 ≤ x) :
       rw [abs_mul,abs_of_nonneg (pow_nonneg (zero_le_one.trans hx) n)]
       exact mul_le_mul_of_nonneg_left
         (pow_le_pow_right₀ hx (Polynomial.le_natDegree_of_ne_zero (Polynomial.mem_support_iff.mp
-          hn)))
+            hn)))
         (abs_nonneg _)
     _ = (∑ n ∈ p.support, |p.coeff n|)*x^p.natDegree := (Finset.sum_mul ..).symm
     _ ≤ coefficientCost p*x^p.natDegree :=

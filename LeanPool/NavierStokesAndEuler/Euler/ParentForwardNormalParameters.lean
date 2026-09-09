@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentNormalPacketParameters
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardUniformCosts
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketNeighborPolynomial
 
 /-! The zero-history normal stage has the same fixed parameter envelope
 as every positive-history stage. Its actual initial coordinate has norm one. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,22 +27,22 @@ open Set Real EulerSmoothLimit EulerTransverseFrameCoordinates EulerTransversePa
 
 variable {A : Parent} (L : LabelData A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hsupport : IsCompact support)
   (P : ParentFrame (A.transverseData m hm R support hsupport) 0) (G : ForwardGuards P)
 
 omit [CompleteSpace U] in
 theorem forwardNormalParameterSize_bound (J D : ℕ) (hJ : 2 ≤ J) (C X : ℝ) (hC : 1 ≤ C) (hX : 1 ≤ X)
     (n : ℕ) (Ti : ℝ)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
-    (hK : L.K ≤ previousFrequency J D X n^80)
-    (hTi : Ti ≤ 12/baseHorizon J X)
-    (hBc : H.Bc ≤ gradientConstant*X^1000+2)
-    (hL : H.L=EulerMeanHarmonic.boundaryLocalizationC1*H.Bc+1)
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
+    (hK : L.K ≤ previousFrequency J D X n ^ 80)
+    (hTi : Ti ≤ 12 / baseHorizon J X)
+    (hBc : H.Bc ≤ gradientConstant * X ^ 1000 + 2)
+    (hL : H.L = EulerMeanHarmonic.boundaryLocalizationC1 * H.Bc + 1)
     (hΘ : P.horizon ≤ sourceTheta J C (scaleSequence J X) n)
-    (hδ : G.δ=spike J X n) (hh : G.hchild=shear J X n)
-    (hshear : P.shear=previousShear J X n) :
+    (hδ : G.δ = spike J X n) (hh : G.hchild = shear J X n)
+    (hshear : P.shear = previousShear J X n) :
     L.geometryForwardParameterSize H m hm R support hsupport P G Ti G.initialCoordinate ≤
       envelope J C X n := by
   have hprev : 1 ≤ P.shear := hshear.symm ▸ previousShear_one J (by omega) X hX n

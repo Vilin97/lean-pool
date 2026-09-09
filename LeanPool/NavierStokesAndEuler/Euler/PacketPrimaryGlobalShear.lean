@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastHessian
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
 
 /-! The primary's literal velocity gradient at every spatial point.  Its
 fast derivative is the source shear, and the slow derivative has an
 explicit inverse-frequency factor. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +31,8 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
   EulerCylinderCoordinates EulerCylinderSobolevSpace EulerGevrey
 open scoped ContDiff
 
+/-- Slow graph derivative, given by `k⁻¹ • ((fderiv ℝ q (graphMap k m (Y x))).comp (inl ℝ Space
+ℝ)).comp J`. -/
 def slowGraphDerivative (q : LiftTangent → Space) (k : ℝ) (m : Space)
     (Y : Space → Space) (J : Space →L[ℝ] Space) (x : Space) : Space →L[ℝ] Space :=
   k⁻¹ • ((fderiv ℝ q (graphMap k m (Y x))).comp (inl ℝ Space ℝ)).comp J
@@ -34,7 +41,7 @@ theorem graph_vector_hasFDerivAt (q : LiftTangent → Space) (k : ℝ) (hk : k �
     (m : Space) (Y : Space → Space) (J : Space →L[ℝ] Space) (x : Space)
     (hY : HasFDerivAt Y J x) (hq : DifferentiableAt ℝ q (graphMap k m (Y x))) :
     HasFDerivAt (fun y => k⁻¹ • q (graphMap k m (Y y)))
-      (rankOne ℝ (fderiv ℝ q (graphMap k m (Y x)) (0,1)) (J.adjoint m)+
+      (rankOne ℝ (fderiv ℝ q (graphMap k m (Y x)) (0,1)) (J.adjoint m) +
         slowGraphDerivative q k m Y J x) x := by
   have hg : HasFDerivAt (fun y => graphMap k m (Y y)) ((graphMap k m).comp J) x :=
     (graphMap k m).hasFDerivAt.comp x hY
@@ -77,7 +84,7 @@ theorem scaled_terminal_angular_fderiv (a : ℝ) (t : Icc (0 : ℝ) D.T) (z : Li
     (canonicalVelocity τ hτ hτT B ξ hs t z.1)).const_smul a
   have hq : DifferentiableAt ℝ q z :=
     ((vectorField τ hτ hτT B (initialData D δ hδ (a • ξ) hs)).raw_smooth t).differentiable (by
-      simp) z
+        simp) z
   have hv := (hq.hasFDerivAt.comp_hasDerivAt z.2
     ((hasDerivAt_const z.2 z.1).prodMk (hasDerivAt_id z.2))).deriv
   change deriv (fun θ => q (z.1,θ)) z.2 = _ at hv
@@ -96,7 +103,8 @@ theorem scaled_terminal_global_gradient (a k : ℝ) (hk : k ≠ 0)
       slowGraphDerivative (fun z => vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs) (t,z))
         k D.m₀ Y (D.FInv.field t (Y x)) x := by
   have hq := ((vectorField τ hτ hτT B (initialData D δ hδ (a • ξ) hs)).raw_smooth t).differentiable
-    (by simp)
+      (by
+      simp)
   have he := (graph_vector_hasFDerivAt
     (fun z => vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs) (t,z))
     k hk D.m₀ Y _ x hY (hq _)).fderiv
@@ -119,7 +127,7 @@ theorem scaled_terminal_global_gradient_bound (a k : ℝ) (hk : 0 < k)
       (a*deriv (profile δ) (k*⟪D.m₀,Y x⟫_ℝ)) •
         rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t (Y x)) (D.normal.field t (Y x))‖ ≤
       (‖coordinateEquiv.symm.toContinuousLinearMap‖*(sobolevEmbeddingConstant period 3*A*R)*C)/k :=
-        by
+          by
   rw [scaled_terminal_global_gradient τ hτ hτT B δ hδ ξ hs a k hk.ne' t Y x hY,
     add_sub_cancel_left]
   have hd := hG.raw_fderiv_le (by norm_num) t (graphMap k D.m₀ (Y x))

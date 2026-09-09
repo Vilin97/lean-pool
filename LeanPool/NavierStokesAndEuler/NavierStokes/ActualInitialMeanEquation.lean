@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LiftedMeanResidual
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
 
 /-!
 # The actual initialized mean equation and incompressibility
@@ -18,6 +17,9 @@ This module works with the literal initialized state before the final
 initialization consumer. No `MeanHypotheses` or divergence statement is
 an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,9 +30,12 @@ open CorrectionState CorrectionStep MeanIncrementBounds
 open CorrectionInitialization.ActualPrimary
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `PressureStream.Lift PressureStream.Plane`. -/
 abbrev Point := PressureStream.Lift PressureStream.Plane
+/-- Full: an abbreviation for `Point × ℝ`. -/
 abbrev Full := Point × ℝ
 
+/-- Strip, given by `BaseContextAssembly.nativeStrip nominal standardRegion`. -/
 noncomputable def strip : WeightedClasses.StripData Point :=
   BaseContextAssembly.nativeStrip nominal standardRegion
 
@@ -122,7 +127,7 @@ theorem temporalIncrement_meanDivergence_zero_local
       axial slowTime temporal)
     (n : ℕ) {x : Point} (hx : x.2.1 ∈ U.carrier) (hr : x.1 ≠ 0) :
     meanDivergence c (VariableGaugeMean.temporalIncrementState g htime index axial c u) n x = 0 :=
-      by
+        by
   rw [meanDivergence_eq_graph g.radial c.operators.epsilon c.operators.fastCoefficient
     axial slowTime temporal c hcompat]
   have hz := HP.axial_reconstructed ha hd hell hfixed
@@ -143,7 +148,7 @@ theorem rankIncrement_meanDivergence_zero_local {r : RankData PressureStream.Pla
   simpa only [VariableGaugeMean.rankIncrementState, VariableGaugeMean.rankPotential, hell] using
     VariableGaugeMean.stream_divergence_zero U hg.primitive_inner_pos g.radial.inner_lt_outer
       hg.exponent_pos (g.radial.frequency n) g.radial.radialDirection (c.operators.epsilon n •
-        axial)
+          axial)
       (hf.smooth n) (hf.supported n) hx hr
 
 theorem temporalStage_fullDivergence_local
@@ -164,7 +169,7 @@ theorem temporalStage_fullDivergence_local
       ⟨0, 0, VariableGaugeMean.temporalAliasState g htime index c u⟩) n (x, θ) = _
   rw [meanAddition_fullDivergence (PhysicalMeanDomain.slowDomain_open U.isOpen) c u _ _ _ _
     (MeanStageRegularity.temporalIncrement_moving HP ha hd hell hfixed htime index
-      axial).regular.smooth
+        axial).regular.smooth
     n hx θ hu, temporalIncrement_meanDivergence_zero_local HP ha hd hell hfixed
       htime index axial slowTime temporal hcompat n hx hr, add_zero]
 
@@ -183,12 +188,14 @@ theorem rankStage_fullDivergence_local {r : RankData PressureStream.Plane}
   rw [meanAddition_fullDivergence (PhysicalMeanDomain.slowDomain_open U.isOpen) c u _ _ _ _
     (MeanStageRegularity.rankIncrement_moving hg hell axial).regular.smooth n hx θ hu,
     rankIncrement_meanDivergence_zero_local hg hell axial slowTime temporal hcompat n hx hr,
-      add_zero]
+        add_zero]
 
 end LocalMeanStages
 
 /-! ## First derivatives of the actual physical base -/
 
+/-- Component divergence, given by `along Vr (fun y => a y 0) x + a x 0 / R x + along Vθ (fun y
+=> a y 1) x / R x + along Vz (fun y => a y 2) x`. -/
 noncomputable def componentDivergence {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (R : E → ℝ) (Vr Vθ Vz : E → E) (a : E → Fin 3 → ℝ) (x : E) : ℝ :=
   along Vr (fun y => a y 0) x + a x 0 / R x +
@@ -243,7 +250,7 @@ theorem componentDivergence_pullback {E F : Type*}
   field_simp [hl, hr]
 
 theorem coordinate_divergence_eq {a : ProblemStatement.SpaceTime → ProblemStatement.Space}
-    {t : ℝ} {q : ProblemStatement.Space} (ha : DifferentiableAt ℝ a (t,q)) :
+    {t : ℝ} {q : ProblemStatement.Space} (ha : DifferentiableAt ℝ a (t, q)) :
     componentDivergence LinearWaveResidual.coordinateRadius
       (LinearWaveResidual.spaceDirection 0) (LinearWaveResidual.spaceDirection 1)
       (LinearWaveResidual.spaceDirection 2) (fun z i => a z i) (t,q) =
@@ -283,12 +290,12 @@ theorem scaled_base_divergence (B n : ℕ) {x : Full} (hx : x ∈ ActualBaseResi
       (PhysicalResidualTZ.graphAxialTZ (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
         (CorrectionInitialization.CommonWindow.index h n)))
       (ActualBaseResidual.velocityAtScale certificate modulation upper B (ChartScales.Q n)) x = 0
-        := by
+          := by
   let a : ProblemStatement.SpaceTime → ProblemStatement.Space :=
     CylindricalResidual.velocityComponents (FinalSlowBase.velocity certificate modulation upper B)
   have ha : ContDiffOn ℝ ∞ a BaseResidual.past :=
     ActualBaseResidual.velocityComponents_smooth (FinalSlowBase.velocity_smooth certificate
-      modulation upper B)
+        modulation upper B)
   have hac (i : Fin 3) : ContDiffOn ℝ ∞ (fun z => a z i) BaseResidual.past := by
     simpa only [Function.comp_def, AxisymmetricFields.projection_apply] using
       (AxisymmetricFields.projection i).contDiff.comp_contDiffOn ha
@@ -302,7 +309,8 @@ theorem scaled_base_divergence (B n : ℕ) {x : Full} (hx : x ∈ ActualBaseResi
     simpa only [ActualBaseResidual.cylinderPoint, AxisymmetricResidual.pack_zero] using
       mul_pos (Real.sqrt_pos.2 (ChartScales.Q_pos n)) hx.1
   have hda := (ha.contDiffAt (BaseResidual.past_isOpen.mem_nhds ⟨ht, mem_univ _⟩)).differentiableAt
-    (by simp)
+      (by
+      simp)
   have hmem :
       ((ActualBaseResidual.cylinderPoint h (ChartScales.Q n) x).1,
         CylindricalResidual.chart (ActualBaseResidual.cylinderPoint h (ChartScales.Q n) x).2) ∈
@@ -327,7 +335,7 @@ theorem scaled_base_divergence (B n : ℕ) {x : Full} (hx : x ∈ ActualBaseResi
 
 theorem base_divergence (B n : ℕ) {x : Full} (hx : x ∈ LiftedMeanResidual.cylinder strip.domain) :
     LiftedMeanResidual.realDivergence (LiftedMeanResidual.liftScalar (commonContext
-      B).operators.radius)
+        B).operators.radius)
       (LiftedMeanResidual.radialDirection (commonContext B) n) LiftedMeanResidual.angularDirection
       (LiftedMeanResidual.axialDirection (commonContext B) n)
       (LiftedMeanResidual.baseLift (commonContext B) n) x = 0 := by
@@ -344,7 +352,7 @@ theorem base_divergence (B n : ℕ) {x : Full} (hx : x ∈ LiftedMeanResidual.cy
   rw [he] at hz
   have HM : PhysicalResidualTZ.MatchesAtTZ (commonContext B).operators
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
-        (CorrectionInitialization.CommonWindow.index h n)) n :=
+          (CorrectionInitialization.CommonWindow.index h n)) n :=
     CommonBaseContext.operators_match_physical h (CorrectionInitialization.CommonWindow.index h)
       (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)
       (PrimaryTargetBounds.radii_ordered nominal) n
@@ -366,7 +374,7 @@ theorem piece_divergence {B N0 : ℕ} (l : Label B N0 × Fin 2) (n : ℕ) {x : F
   have hv (i : Fin 3) : DifferentiableAt ℝ
       (fun y => (ActualInitialCoherence.pieces B N0 l).velocity n y i) x :=
     ((contDiffOn_pi.mp (ActualPrimaryCoherence.piece_velocity_smooth standardRegion l.2 l.1 n)
-      i).contDiffAt
+        i).contDiffAt
       (ActualPrimaryCoherence.positiveChart_open.mem_nhds hx.2)).differentiableAt (by simp)
   have hz := ActualPrimaryCoherence.piece_full_divergence standardRegion l.2 l.1 n hx
   have hr : (PrimaryResidualClass.directions (commonContext B)).radialField n =
@@ -389,7 +397,7 @@ theorem piece_divergence {B N0 : ℕ} (l : Label B N0 × Fin 2) (n : ℕ) {x : F
 theorem seed_oscillation_divergence (B N0 n : ℕ) {x : Full}
     (hx : x ∈ LiftedMeanResidual.cylinder strip.domain) :
     LiftedMeanResidual.realDivergence (LiftedMeanResidual.liftScalar (commonContext
-      B).operators.radius)
+        B).operators.radius)
       (LiftedMeanResidual.radialDirection (commonContext B) n) LiftedMeanResidual.angularDirection
       (LiftedMeanResidual.axialDirection (commonContext B) n)
       ((ActualInitialCoherence.seed B N0).oscillation n) x = 0 := by
@@ -398,9 +406,9 @@ theorem seed_oscillation_divergence (B N0 n : ℕ) {x : Full}
       (ActualInitialCoherence.pieces B N0 l).velocity n y i) x = 0
   rw [componentDivergence_sum _ _ _ _ _ (fun l _ i =>
     ((contDiffOn_pi.mp (ActualPrimaryCoherence.piece_velocity_smooth standardRegion l.2 l.1 n)
-      i).contDiffAt
+        i).contDiffAt
       (ActualPrimaryCoherence.positiveChart_open.mem_nhds (strip_time hx.1))).differentiableAt (by
-        simp))]
+          simp))]
   exact Finset.sum_eq_zero (fun l _ => piece_divergence l n ⟨strip_radius hx.1, strip_time hx.1⟩)
 
 theorem primary_oscillation (B N0 : ℕ) :
@@ -442,9 +450,11 @@ theorem primary_fullDivergence (B N0 n : ℕ) {x : Full}
     (a := LiftedMeanResidual.baseLift (commonContext B) n)
     (b := (ActualInitialCoherence.seed B N0).oscillation n)
     (fun i => ((hb i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-      hx)).differentiableAt (by simp))
+        hx)).differentiableAt (by
+        simp))
     (fun i => ((hw i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-      hx)).differentiableAt (by simp))]
+        hx)).differentiableAt (by
+        simp))]
   exact (congrArg₂ (fun a b : ℝ => a + b) (base_divergence B n hx)
     (seed_oscillation_divergence B N0 n hx)).trans (zero_add 0)
 
@@ -467,18 +477,20 @@ theorem initialized_fullDivergence (B N0 n : ℕ) {x : Full}
     (fun _ hy => strip_to_positive hy) (by simpa only [temporal_oscillation] using hw)
   have hm := temporalStage_fullDivergence_local (ActualInitialCoherence.primary_primitive B N0)
     (PrimaryTargetBounds.leftRadius_pos nominal) (ChartScales.radialExponent_pos h
-      outgoing.data.h_pos.le)
+        outgoing.data.h_pos.le)
     commonGauge_length rfl h (CorrectionInitialization.CommonWindow.index h) ((0,1),0) ((1,0),0)
     (TorusInverse.vector .temporal) (common_graphOperators B) n (strip_to_slow hx.1)
     (strip_radius hx.1).ne' x.2
     (fun i => ((hp n i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-      hx)).differentiableAt (by simp))
+        hx)).differentiableAt (by
+        simp))
   have hr := rankStage_fullDivergence_local (ActualInitialCoherence.rank_geometry_of_primitive B _
     (ActualInitialCoherence.temporal_primitive B N0)) commonGauge_length ((0,1),0) ((1,0),0)
     (TorusInverse.vector .temporal) (common_graphOperators B) n (strip_to_slow hx.1)
     (strip_radius hx.1).ne' x.2
     (fun i => ((ht n i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-      hx)).differentiableAt (by simp))
+        hx)).differentiableAt (by
+        simp))
   exact hr.trans (hm.trans (primary_fullDivergence B N0 n hx))
 
 /-! ## Literal angular harmonics and the retained errors -/
@@ -583,30 +595,30 @@ theorem initialized_errors_angularContinuous (B N0 n : ℕ) {x : Point}
     (hT : 0 < x.2.1.1) (i : Fin 3) :
     Continuous (fun θ : ℝ => (ActualInitialCoherence.initialized B N0).errors.base n (x, θ) i) ∧
       Continuous (fun θ : ℝ => (ActualInitialCoherence.initialized B N0).errors.total n (x, θ) i)
-        := by
+          := by
   obtain ⟨hb, hg, ha⟩ :=
-    CorrectionInitialization.GaugeInitialization.initializedBands_error_components
+      CorrectionInitialization.GaugeInitialization.initializedBands_error_components
     commonGauge rankData h (CorrectionInitialization.CommonWindow.index h) ((0,1),0) (commonContext
-      B)
+        B)
     (activeLabels standardRegion B N0) (ActualInitialCoherence.pieces B N0)
-      (ActualInitialCoherence.baseError B)
+        (ActualInitialCoherence.baseError B)
   change (ActualInitialCoherence.initialized B N0).errors.base = _ at hb
   change (ActualInitialCoherence.initialized B N0).errors.gaussian = _ at hg
   change (ActualInitialCoherence.initialized B N0).errors.aliasError = _ at ha
   have hbc : Continuous (fun θ : ℝ => (ActualInitialCoherence.initialized B N0).errors.base n (x,
-    θ) i) := by
+      θ) i) := by
     rw [hb]
     exact ActualBaseResidual.baseError_angular_continuous certificate modulation upper B n hT i
   have hgc : Continuous (fun θ : ℝ => (ActualInitialCoherence.initialized B N0).errors.gaussian n
-    (x, θ) i) := by
+      (x, θ) i) := by
     rw [hg]
     exact continuous_finsetSum _ (fun l _ => piece_excluded_angularContinuous l n x i)
   have hac : Continuous (fun θ : ℝ => (ActualInitialCoherence.initialized B N0).errors.aliasError n
-    (x, θ) i) := by
+      (x, θ) i) := by
     rw [ha]
     change Continuous (fun _ : ℝ =>
       VariableGaugeMean.temporalAliasState commonGauge h
-        (CorrectionInitialization.CommonWindow.index h)
+          (CorrectionInitialization.CommonWindow.index h)
         (commonContext B) (ActualInitialCoherence.primary B N0) n (x, 0) i +
       VariableGaugeMean.pressureAliasState commonGauge (commonContext B)
         (ActualInitialCoherence.ranked B N0) n (x, 0) i)
@@ -623,7 +635,7 @@ theorem initialized_angularData (B N0 : ℕ) :
     rw [initialized_oscillatoryPressure]
     change ContDiffOn ℝ ∞ (fun p => ∑ l ∈ activeLabels standardRegion B N0 n,
       (ActualInitialCoherence.pieces B N0 l).pressure n p) (LiftedMeanResidual.cylinder
-        strip.domain)
+          strip.domain)
     apply ContDiffOn.sum
     intro l _
     exact (ActualPrimaryCoherence.piece_pressure_smooth standardRegion l.2 l.1 n).mono
@@ -651,7 +663,7 @@ theorem initialized_angularData (B N0 : ℕ) :
     rw [initialized_oscillatoryPressure]
     exact seed_pressure_mean_zero B N0 n x
   base_error_continuous n x hx i := (initialized_errors_angularContinuous B N0 n (strip_time hx)
-    i).1
+      i).1
   excluded_continuous n x hx i := (initialized_errors_angularContinuous B N0 n (strip_time hx) i).2
 
 /-- The literal initializer satisfies the local hypotheses of the
@@ -661,7 +673,7 @@ theorem initialized_meanHypotheses (B N0 : ℕ) :
       (ActualInitialCoherence.initialized B N0) :=
   meanHypotheses_of_primitive (g := commonGauge) (ActualInitialCoherence.initialized_primitive B N0)
     (PrimaryTargetBounds.leftRadius_pos nominal) (ChartScales.radialExponent_pos h
-      outgoing.data.h_pos.le)
+        outgoing.data.h_pos.le)
     commonGauge_length rfl strip.isOpen_domain (fun _ hx => strip_to_positive hx)
     (initialized_angularData B N0) (fun n _ hx => base_divergence B n hx)
     (fun n _ hx => initialized_fullDivergence B N0 n hx)
@@ -671,7 +683,7 @@ by `initializedBands`. -/
 theorem initialized_angularMean_fullGoodResidual (B N0 n : ℕ) {x : Point}
     (hx : x ∈ strip.domain) (i : Fin 3) :
     angularMeanVector (fullGoodResidual (commonContext B) (ActualInitialCoherence.initialized B
-      N0)) n x i =
+        N0)) n x i =
       (ActualInitialCoherence.initialized B N0).meanGoodResidual (commonContext B) n x i :=
   LiftedMeanResidual.angularMean_fullGoodResidual (initialized_meanHypotheses B N0) n hx i
 

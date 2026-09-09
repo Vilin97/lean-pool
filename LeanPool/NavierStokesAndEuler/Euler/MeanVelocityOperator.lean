@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityPressure
 
-@[expose] public section
-
 /-!
 # The actual bounded linear mean velocity inverse
 
@@ -18,6 +16,9 @@ linear map on the original derivative variable, and the genuine H² evolution
 identifies it with `F z_t`. Composing with the variational solver gives the
 actual linear velocity inverse with an explicit finite-time bound.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -124,10 +125,10 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (FInv F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2)
   (L K B : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B)
   (hFInv₀ : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
-  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K*‖z‖^2)
+  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
   (hboundary : ∀ z : L2, z ∈ solenoidalSpace →
-    -B*‖z‖^2 ≤ ⟪M0 z, z⟫_ℝ+L*⟪A z, z⟫_ℝ)
-  (hsmall : K*(T^2/2)+B*T ≤ 1/2)
+    -B * ‖z‖ ^ 2 ≤ ⟪M0 z, z⟫_ℝ + L * ⟪A z, z⟫_ℝ)
+  (hsmall : K * (T ^ 2 / 2) + B * T ≤ 1 / 2)
 
 /-- The genuine bounded linear mean velocity inverse on actual forcing classes. -/
 def meanVelocitySolver : TimeLp T L2 →L[ℝ] TimeLp T L2 :=

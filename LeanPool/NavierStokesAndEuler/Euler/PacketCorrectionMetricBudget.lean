@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionSourceData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetricTime
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! A genuine inverse-metric budget for the source correction data.
 Its time derivative, symmetry, coercivity and inverse identity are proved
 from the prescribed deformation; the bounds are finite norms of actual
 coefficient paths and their actual first translation derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,10 +28,22 @@ open Set EulerSmoothLimit EulerPacketCylinderField EulerAllOrderCorrectionData
   EulerPacketProfileRecursion
 open scoped BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCorrectionMetricBudget1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCorrectionMetricBudget2 : NormedSpace ℝ (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCorrectionMetricBudget3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCorrectionMetricBudget4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
@@ -51,11 +65,15 @@ theorem inverseMetric_operator_hasDerivAt (t : ℝ) (ht : t ∈ Ioo 0 D.T) :
     ⟨t,⟨ht.1.le,ht.2.le⟩⟩).hasDerivAt (Icc_mem_nhds ht.1 ht.2)
   simpa only [extendPath,projIcc_of_mem D.T_pos.le ⟨ht.1.le,ht.2.le⟩] using h
 
+/-- Inverse metric bound, given by `‖(inverseMetricCoefficient D).path‖`. -/
 def inverseMetricBound : ℝ := ‖(inverseMetricCoefficient D).path‖
 
+/-- Inverse metric first bound, given by `‖iteratedFDeriv ℝ 1 (translateCoefficientPath
+(inverseMetricCoefficient D).path) 0‖`. -/
 def inverseMetricFirstBound : ℝ :=
   ‖iteratedFDeriv ℝ 1 (translateCoefficientPath (inverseMetricCoefficient D).path) 0‖
 
+/-- Inverse metric time bound, given by `‖(inverseMetricTimeCoefficient D).path‖`. -/
 def inverseMetricTimeBound : ℝ := ‖(inverseMetricTimeCoefficient D).path‖
 
 theorem inverseMetricBound_le : inverseMetricBound D ≤ ‖D.F.field‖^2 := by
@@ -122,6 +140,8 @@ def sourceMetricBudget (κ : ℝ) (hκ : |κ| ≤ 1)
   first_le _ := le_rfl
   time_le t := inverseMetricDerivativePath_norm D P t
 
+/-- Source metric budget of fields, given by `sourceMetricBudget D P κ hκ Z.toFieldTower
+G.toFieldTower q`. -/
 def sourceMetricBudgetOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
     {z r : VectorField} (Z : Field P D.T z) (G : Field P D.T r) (q : ℕ) :
     MetricBudget P D.T D.T_pos.le

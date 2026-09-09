@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedProfilesRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedProfilesRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepParity
+
+/-! Every grade constructed with the joined inverse has the prescribed joint parity. -/
 
 @[expose] public section
 
-/-! Every grade constructed with the joined inverse has the prescribed joint parity. -/
 
 noncomputable section
 

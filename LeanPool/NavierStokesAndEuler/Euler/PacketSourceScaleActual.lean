@@ -7,14 +7,22 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleSequence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBaseScales
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 The geometry error for the literal scale sequences, including the initial
 polynomial shear and frequency.  Comparison with the normal-form costs is
 proved here, rather than imposed at the two exceptional starting stages.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,21 +35,30 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceTime
 
 open scoped Topology
 
+/-- Epsilon, given by `sqrt (a/previousShear J X n)`. -/
 def epsilon (J : ℕ) (X a : ℝ) (n : ℕ) : ℝ := sqrt (a/previousShear J X n)
 
+/-- Prior error, given by `previousFrequency J D X n ^ (-(1/4 : ℝ))`. -/
 def priorError (J D : ℕ) (X : ℝ) (n : ℕ) : ℝ := previousFrequency J D X n ^ (-(1/4 : ℝ))
 
+/-- Neighbor error, given by `supportScale J X n * previousFrequency J D X n^c * previousShear J
+X n^c`. -/
 def neighborError (J D : ℕ) (X c : ℝ) (n : ℕ) : ℝ :=
   supportScale J X n * previousFrequency J D X n^c * previousShear J X n^c
 
+/-- Geometry error as an element of `ℝ`. -/
 def geometryError (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
-  16*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n*(4*(1+olderShear J X n))^2+
+  16*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n*(4*(1+olderShear J X n))^2 +
     priorError J D X n+neighborError J D X c n)
 
+/-- Base error cost, given by `16*(128*X^(-500 : ℝ)*sourceTheta J C (scaleSequence J X)
+0+X^(-(D:ℝ)/4)) * sourceTheta J C (scaleSequence J X) 0^60`. -/
 def baseErrorCost (J D : ℕ) (C X : ℝ) : ℝ :=
-  16*(128*X^(-500 : ℝ)*sourceTheta J C (scaleSequence J X) 0+X^(-(D:ℝ)/4))*
+  16*(128*X^(-500 : ℝ)*sourceTheta J C (scaleSequence J X) 0+X^(-(D:ℝ)/4)) *
     sourceTheta J C (scaleSequence J X) 0^60
 
+/-- Geometry error cost, given by `geometryError J D C c X a n * sourceTheta J C (scaleSequence
+J X) n^60`. -/
 def geometryErrorCost (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
   geometryError J D C c X a n * sourceTheta J C (scaleSequence J X) n^60
 
@@ -83,8 +100,8 @@ theorem priorError_zero_eq (J D : ℕ) {X : ℝ} (hX : 0 < X) :
   ring
 
 theorem neighborError_le (J D : ℕ) (hJ : 1 ≤ J) (X c : ℝ) (hX : 0 < X) (hc : 0 ≤ c)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     neighborError J D X c n ≤ sourceNeighborError J c (scaleSequence J X) n := by
   have hK := rpow_le_rpow (previousFrequency_pos J D hX n).le
     (previousFrequency_le_normal J D hJ X hbaseK n) hc
@@ -112,10 +129,10 @@ theorem geometryError_nonneg (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : �
 
 theorem geometryError_succ_le (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 ≤ C)
     (hX : 1 ≤ X) (hc : 0 ≤ c) (a : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     geometryError J D C c X a (n+1) ≤ 16*sourceCoefficientError J C c (scaleSequence J X) (n+1) :=
-      by
+        by
   have hJ1 : 1 ≤ J := by omega
   have hXp : 0 < X := lt_of_lt_of_le zero_lt_one hX
   have hx1 := quadratic_growth_one_le J hJ1 (scaleSequence J X) hX (scaleSequence_succ J X)
@@ -128,8 +145,8 @@ theorem geometryError_succ_le (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 �
     linarith only [previousShear_pos J hXp n]
   have hprod := mul_le_mul (mul_le_mul_of_nonneg_right he hθ)
     (pow_le_pow_left₀ hg₀ hg 2) (sq_nonneg _)
-    (mul_nonneg (show 0 ≤ sourceEpsilon J (scaleSequence J X) (n+1) by unfold sourceEpsilon;
-      positivity) hθ)
+    (mul_nonneg (show 0 ≤ sourceEpsilon J (scaleSequence J X) (n+1) by
+        unfold sourceEpsilon; positivity) hθ)
   have hn := neighborError_le J D hJ1 X c hXp hc hbaseH hbaseK (n+1)
   have hp₀ : 0 ≤ sourcePriorError J (scaleSequence J X) (n+1) := (exp_pos _).le
   have hn₀ : 0 ≤ sourceNeighborError J c (scaleSequence J X) (n+1) := (exp_pos _).le
@@ -139,10 +156,10 @@ theorem geometryError_succ_le (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 �
 
 theorem geometryError_zero_le (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 ≤ C)
     (hX : 1 ≤ X) (hc : 0 ≤ c) (a : ℕ → ℝ) (ha : 0 ≤ a 0) (ha₂ : a 0 ≤ 2)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) :
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) :
     geometryError J D C c X a 0 ≤
-      16*(128*X^(-500 : ℝ)*sourceTheta J C (scaleSequence J X) 0+X^(-(D:ℝ)/4))+
+      16*(128*X^(-500 : ℝ)*sourceTheta J C (scaleSequence J X) 0+X^(-(D:ℝ)/4)) +
         sourceCoefficientError J C c (scaleSequence J X) 0 := by
   have hJ1 : 1 ≤ J := by omega
   have hXp : 0 < X := lt_of_lt_of_le zero_lt_one hX
@@ -152,7 +169,7 @@ theorem geometryError_zero_le (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 �
   have he := mul_le_mul_of_nonneg_right (epsilon_zero_le J hXp ha ha₂) hθ
   have hn := neighborError_le J D hJ1 X c hXp hc hbaseH hbaseK 0
   have hp₀ : 0 ≤ sourcePriorError J (scaleSequence J X) 0 := (exp_pos _).le
-  have hs₀ : 0 ≤ sourceEpsilon J (scaleSequence J X) 0*sourceTheta J C (scaleSequence J X) 0*
+  have hs₀ : 0 ≤ sourceEpsilon J (scaleSequence J X) 0*sourceTheta J C (scaleSequence J X) 0 *
       sourceOlderGradient J (scaleSequence J X) 0^2 := by
     unfold sourceEpsilon
     positivity
@@ -163,11 +180,11 @@ theorem geometryError_zero_le (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 �
 
 theorem geometryErrorCost_bound (J D : ℕ) (hJ : 3 ≤ J) (C c X : ℝ) (hC : 1 ≤ C)
     (hX : 1 ≤ X) (hc : 0 ≤ c) (a : ℕ → ℝ) (ha : ∀ n, 0 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     geometryErrorCost J D C c X a n ≤
       16*coefficientCost J C c 60 (scaleSequence J X) n + if n=0 then baseErrorCost J D C X else 0
-        := by
+          := by
   have hx1 := quadratic_growth_one_le J (by omega) (scaleSequence J X) hX (scaleSequence_succ J X)
   have hθ : 0 ≤ sourceTheta J C (scaleSequence J X) n :=
     le_trans zero_le_one (sourceTheta_bounds (by omega : 1 ≤ J) hC hx1 n).1
@@ -227,6 +244,8 @@ theorem baseErrorCost_tendsto_zero (J D : ℕ) (hJ : 1 ≤ J) (hD : 1000 ≤ D)
       gcongr
     exact mul_le_mul hinner (pow_le_pow_left₀ hθ₀ hθ 60) (pow_nonneg hθ₀ 60) (by positivity)
 
+/-- Actual bounds data, collecting `normal`, `initial_shear`, `initial_frequency`,
+`coefficient`. -/
 structure ActualBounds (J D : ℕ) (C c X δ : ℝ) : Prop where
   normal : UniformBounds J C c 60 (scaleSequence J X) δ
   initial_shear : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7)

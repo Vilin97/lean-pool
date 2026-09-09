@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
 public import LeanPool.NavierStokesAndEuler.Euler.ParentInitializedRadiusPolynomial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
+public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
 
 /-! The source size used by the canonical packet solve is bounded by
 one explicit polynomial-exponential envelope, including the base-sized
 boundary coefficient and both reciprocal time intervals. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +26,7 @@ open Real EulerPacketSourceParameterScales EulerPacketUniformFrequencyScales
   EulerPacketSourceScaleSequence EulerPacketSourceScaleChoice EulerParentInitializedRadius
   EulerPacketSourceScales
 
+/-- Bound constant, given by `8+1120*(2*Cθ)^10+CB+Cξ`. -/
 def boundConstant (Cθ CB Cξ : ℝ) : ℝ := 8+1120*(2*Cθ)^10+CB+Cξ
 
 theorem constant_pos (Cθ CB Cξ : ℝ) (hB : 0 ≤ CB) (hξ : 0 ≤ Cξ) :
@@ -33,17 +37,17 @@ theorem constant_pos (Cθ CB Cξ : ℝ) (hB : 0 ≤ CB) (hξ : 0 ≤ Cξ) :
 theorem source_size_le (J D : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 1 ≤ X)
     (Cθ CB Cξ d c : ℝ) (hθ : 1 ≤ Cθ) (hB : 0 ≤ CB) (hξC : 0 ≤ Cξ)
     (hd : 0 ≤ d) (hc : 1 ≤ c) (hdc : d ≤ c)
-    (R : ℕ) (hRc : (R : ℝ)*d ≤ c)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
+    (R : ℕ) (hRc : (R : ℝ) * d ≤ c)
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
     (n : ℕ) (K Ti TiTotal Cp B ξ Θ Ei : ℝ) (hK0 : 0 ≤ K)
-    (hK : K ≤ previousFrequency J D X n^d)
-    (hTi : Ti ≤ 12/EulerPacketBaseGuardScales.baseHorizon J X)
-    (hTiTotal : TiTotal ≤ 12/EulerPacketBaseGuardScales.baseHorizon J X)
-    (hBc : B ≤ CB*X^1000) (hξ : ξ ≤ Cξ*K^R)
+    (hK : K ≤ previousFrequency J D X n ^ d)
+    (hTi : Ti ≤ 12 / EulerPacketBaseGuardScales.baseHorizon J X)
+    (hTiTotal : TiTotal ≤ 12 / EulerPacketBaseGuardScales.baseHorizon J X)
+    (hBc : B ≤ CB * X ^ 1000) (hξ : ξ ≤ Cξ * K ^ R)
     (hΘ0 : 0 ≤ Θ) (hΘ : Θ ≤ sourceTheta J Cθ (scaleSequence J X) n)
-    (hEi0 : 0 ≤ Ei) (hEi : Ei ≤ 2*previousShear J X n)
-    (hCp : Cp ≤ 560*Θ^10*Ei) :
+    (hEi0 : 0 ≤ Ei) (hEi : Ei ≤ 2 * previousShear J X n)
+    (hCp : Cp ≤ 560 * Θ ^ 10 * Ei) :
     parameterSize K Ti TiTotal Cp B (spike J X n) ξ+shear J X n ≤
       parameterEnvelope J (boundConstant Cθ CB Cξ) c 20 1000 X n := by
   let z := predecessorExponent J X n

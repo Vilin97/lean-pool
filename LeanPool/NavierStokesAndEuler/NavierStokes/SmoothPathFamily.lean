@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricODE
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Topology.CompactOpen
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Jointly smooth functions as smooth families of continuous paths
@@ -20,6 +17,9 @@ The first derivative is proved with a uniform mean-value remainder estimate.
 Continuity into the supremum-norm path space follows from compact-open currying.
 All path derivatives are constructed from genuine parameter derivatives.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.SmoothPathFamily
 
@@ -70,6 +70,8 @@ theorem continuousOn_pathFamily {U : Set P} {F : P × ℝ → E}
   funext z
   exact pathFamily_apply F z.1 (slice_continuous hF z.1.2) z.2
 
+/-- Flip linear, bundling `toFun`, `toFun`, `map_add`, `map_smul` and the required compatibility
+proofs. -/
 noncomputable def flipLinear : C(Icc a b, P →L[ℝ] E) →ₗ[ℝ] P →ₗ[ℝ] C(Icc a b, E) where
   toFun g := {
     toFun := fun v => ⟨fun t => g t v, g.continuous.clm_apply continuous_const⟩
@@ -183,7 +185,7 @@ theorem contDiffOn_pathFamily_nat (U : Set P) (V : Set ℝ)
       hD.continuousOn.mono (Set.prod_mono Subset.rfl hI)
     have hd : ∀ p ∈ U, HasFDerivAt (pathFamily (a := a) (b := b) F)
         (flipPath (P := P) (E := W) (pathFamily (a := a) (b := b) (parameterDerivative F) p)) p :=
-          by
+            by
       intro p hp
       apply hasFDerivAt_pathFamily hU F (parameterDerivative F) hFc hDc _ hp
       intro q hq t

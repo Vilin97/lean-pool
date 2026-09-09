@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderClassicalSolenoidal
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialEmbedding
-public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderClassicalSolenoidal
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+
+/-! A genuine smooth ordinary solenoidal L² field remains solenoidal on the periodic cylinder. -/
 
 @[expose] public section
 
-/-! A genuine smooth ordinary solenoidal L² field remains solenoidal on the periodic cylinder. -/
 
 noncomputable section
 
@@ -73,6 +75,6 @@ theorem embedding_mem_of_smooth_orbit (κ : ℝ) (m : Space) (u : L2)
     (hu : u ∈ solenoidalSpace) (hs : SmoothOrbit u) :
     embedding P u ∈ divergenceFreeSpace P κ m :=
   embedding_mem P κ m u hu (representative u hs) (representative_smooth u hs) (representative_ae u
-    hs)
+      hs)
 
 end EulerMeanCylinderSolenoidal

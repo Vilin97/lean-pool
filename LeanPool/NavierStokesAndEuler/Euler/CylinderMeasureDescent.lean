@@ -6,16 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-public import Mathlib.MeasureTheory.Group.FundamentalDomain
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
 
 /-! A volume-preserving map of the real cylinder cover which commutes
 with deck translations induces a measure-preserving cylinder map. The
 proof compares genuine fundamental domains; it does not integrate a
 nonzero periodic function over the whole real cover. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,9 +25,13 @@ open scoped Pointwise
 
 variable (P : ℝ) [Fact (0 < P)]
 
-local instance (priority := 2000) deckVAdd : VAdd (AddSubgroup.zmultiples P) LiftTangent where
+/-- Deck translation adds an integral multiple of the period to the lifted angle. -/
+local instance (priority := 2000) deckVAdd : VAdd
+    (AddSubgroup.zmultiples P) LiftTangent where
   vadd c z := (z.1,(c : ℝ)+z.2)
 
+/-- The `AddAction (AddSubgroup.zmultiples P) LiftTangent` structure used in cylinder measure
+descent. -/
 local instance deckAction : AddAction (AddSubgroup.zmultiples P) LiftTangent where
   vadd := (· +ᵥ ·)
   zero_vadd z := by
@@ -46,7 +49,7 @@ local instance deckMeasurable : MeasurableConstVAdd (AddSubgroup.zmultiples P) L
   measurable_const_vadd _c := measurable_fst.prodMk (measurable_const.add measurable_snd)
 
 local instance deckInvariant : VAddInvariantMeasure (AddSubgroup.zmultiples P) LiftTangent volume
-  where
+    where
   measure_preimage_vadd c s hs := by
     have hp := (MeasurePreserving.id (volume : Measure Vector3)).prod
       (measurePreserving_add_left (volume : Measure ℝ) (c : ℝ))
@@ -58,6 +61,7 @@ theorem coveringMap_deck (c : AddSubgroup.zmultiples P) (z : LiftTangent) :
   have hc : ((c : ℝ) : AddCircle P)=0 := (QuotientAddGroup.eq_zero_iff _).2 c.property
   simp only [deck_apply,coveringMap,AddCircle.coe_add,hc,zero_add]
 
+/-- Strip, given by `Prod.snd ⁻¹' Ioc (0 : ℝ) P`. -/
 def strip : Set LiftTangent := Prod.snd ⁻¹' Ioc (0 : ℝ) P
 
 omit [Fact (0 < P)] in
@@ -80,7 +84,7 @@ theorem coveringMap_measurePreserving :
     rw [← univ_prod,← Measure.prod_restrict,Measure.restrict_univ]
   rw [hm]
   have hp := (MeasurePreserving.id (volume : Measure Vector3)).prod (AddCircle.measurePreserving_mk
-    P 0)
+      P 0)
   simp only [zero_add] at hp
   convert! hp using 1
 
@@ -94,8 +98,8 @@ theorem measurePreserving_of_cover
     (f : LiftTangent → LiftTangent) (g : LiftDomain P → LiftDomain P)
     (hf : MeasurePreserving f volume volume) (hg : Measurable g)
     (hdeck : ∀ (c : AddSubgroup.zmultiples P) z,
-      f (z.1,(c : ℝ)+z.2) = ((f z).1,(c : ℝ)+(f z).2))
-    (hcover : ∀ z, coveringMap P (f z)=g (coveringMap P z)) :
+      f (z.1, (c : ℝ) + z.2) = ((f z).1, (c : ℝ) + (f z).2))
+    (hcover : ∀ z, coveringMap P (f z) = g (coveringMap P z)) :
     MeasurePreserving g (liftMeasure P) (liftMeasure P) := by
   have hequiv (c : AddSubgroup.zmultiples P) : Semiconj f (c +ᵥ ·) (c +ᵥ ·) := hdeck c
   have hfd := strip_fundamental P

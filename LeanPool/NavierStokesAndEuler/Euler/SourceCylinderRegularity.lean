@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderEquation
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderUnweightedForward
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderUnweightedForward
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Genuine mixed regularity of the solved physical forward fields
@@ -19,6 +19,9 @@ translation orbits. Applying the physical frame then gives this same
 regularity for the velocity and its true time derivative. These statements
 are proved from the data, not included in the solution interface.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,8 +37,8 @@ variable (period : ℝ) [Fact (0 < period)]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (S : Set Space) (hS : MeasurableSet S) (hSc : IsCompact S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported period E S hS)) (a₀ : Supported period U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported period E S hS)) (a₀ : Supported period U S hS)
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS f)))
   (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U)))
 

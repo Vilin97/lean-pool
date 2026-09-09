@@ -6,15 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialBorelExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowExpansionResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCoordinateBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
+import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalJetBounds
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Constructing the slow asymptotic base from smooth coefficient data
@@ -23,6 +22,9 @@ The cutoff-stage bounds are derived from compactness of actual derivatives on
 a normalized coordinate set. They are not assumptions on the output series.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SlowBorelBase
@@ -30,14 +32,18 @@ namespace NavierStokes.SlowBorelBase
 open Set Filter Function
 open scoped Topology ContDiff BigOperators
 
+/-- Inner: an abbreviation for `ℝ × ℝ`. -/
 abbrev Inner := ℝ × ℝ
+/-- Chart: an abbreviation for `ℝ × Inner`. -/
 abbrev Chart := ℝ × Inner
 
+/-- Scale map, given by `SpatialBorelExtension.timeScale q`. -/
 noncomputable def scaleMap (q : ℝ) : Chart →L[ℝ] Chart :=
   SpatialBorelExtension.timeScale q
 
 @[simp] theorem scaleMap_apply (q : ℝ) (y : Chart) : scaleMap q y = (q * y.1, y.2) := rfl
 
+/-- Local power, given by `SmoothCutoffs.cutoff (4 * (q - 1)) * q ^ b`. -/
 noncomputable def localPower (b q : ℝ) : ℝ := SmoothCutoffs.cutoff (4 * (q - 1)) * q ^ b
 
 theorem localPower_smooth (b : ℝ) : ContDiff ℝ ∞ (localPower b) := by
@@ -68,14 +74,18 @@ theorem localPower_eventually_eq (b : ℝ) : localPower b =ᶠ[𝓝 1] (fun q : 
 
 variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Power coefficient, given by `y.1 ^ b • f y.2`. -/
 noncomputable def powerCoefficient (b : ℝ) (f : Inner → V) (y : Chart) : V := y.1 ^ b • f y.2
 
+/-- Power stage, given by `SmoothCutoffs.scaledCutoff c y.1 • powerCoefficient b f y`. -/
 noncomputable def powerStage (c b : ℝ) (f : Inner → V) (y : Chart) : V :=
   SmoothCutoffs.scaledCutoff c y.1 • powerCoefficient b f y
 
+/-- Template, given by `SmoothCutoffs.cutoff (c * y.1) • (localPower b y.1 • f y.2)`. -/
 noncomputable def template (c b : ℝ) (f : Inner → V) (y : Chart) : V :=
   SmoothCutoffs.cutoff (c * y.1) • (localPower b y.1 • f y.2)
 
+/-- Joint template, given by `template z.1 b f z.2`. -/
 noncomputable def jointTemplate (b : ℝ) (f : Inner → V) (z : ℝ × Chart) : V :=
   template z.1 b f z.2
 
@@ -141,8 +151,8 @@ theorem exists_template_jet_bound {f : Inner → V} (hf : ContDiff ℝ ∞ f)
   refine (template_jet_bound_by_joint hf c b m (1, w)).trans ?_
   have hb := mul_le_mul_of_nonneg_right (hD (c, (1, w)) ⟨hc, rfl, hw⟩)
     (pow_nonneg (norm_nonneg (ContinuousLinearMap.inr ℝ ℝ Chart)) m)
-  exact hb.trans (by dsimp [C]; linarith [le_max_left (D * ‖ContinuousLinearMap.inr ℝ ℝ Chart‖ ^ m)
-    0])
+  exact hb.trans (by
+      dsimp [C]; linarith [le_max_left (D * ‖ContinuousLinearMap.inr ℝ ℝ Chart‖ ^ m) 0])
 
 /-- Jets in the chart obtained by freezing the scale at the evaluation point
 and replacing q by q·s. The inner variables are left unscaled. -/
@@ -256,19 +266,26 @@ positive corrections, with a zero placeholder at index zero. -/
 noncomputable def positiveCoefficient (h : ℝ) (f : ℕ → Inner → V) (j : ℕ) : Chart → V :=
   if j = 0 then (fun _ => 0) else powerCoefficient (2 * h * j) (f j)
 
+/-- Slow stage, given by `SolenoidalDiagonal.cutStage (fun j => (a j : ℝ)) Prod.fst
+(positiveCoefficient h f)`. -/
 noncomputable def slowStage (a : ℕ → ℕ) (h : ℝ) (f : ℕ → Inner → V) : ℕ → Chart → V :=
   SolenoidalDiagonal.cutStage (fun j => (a j : ℝ)) Prod.fst (positiveCoefficient h f)
 
+/-- Positive sum, given by `SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) Prod.fst
+(positiveCoefficient h f)`. -/
 noncomputable def positiveSum (a : ℕ → ℕ) (h : ℝ) (f : ℕ → Inner → V) : Chart → V :=
   SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) Prod.fst (positiveCoefficient h f)
 
+/-- Slow sum, given by `f 0 y.2 + positiveSum a h f y`. -/
 noncomputable def slowSum (a : ℕ → ℕ) (h : ℝ) (f : ℕ → Inner → V) (y : Chart) : V :=
   f 0 y.2 + positiveSum a h f y
 
+/-- Cut prefix, given by `f 0 y.2 + ∑ j ∈ Finset.range (J + 1), slowStage a h f j y`. -/
 noncomputable def cutPrefix (a : ℕ → ℕ) (h : ℝ) (f : ℕ → Inner → V)
     (J : ℕ) (y : Chart) : V :=
   f 0 y.2 + ∑ j ∈ Finset.range (J + 1), slowStage a h f j y
 
+/-- Uncut prefix, given by `f 0 y.2 + ∑ j ∈ Finset.range (J + 1), positiveCoefficient h f j y`. -/
 noncomputable def uncutPrefix (h : ℝ) (f : ℕ → Inner → V) (J : ℕ) (y : Chart) : V :=
   f 0 y.2 + ∑ j ∈ Finset.range (J + 1), positiveCoefficient h f j y
 
@@ -447,7 +464,7 @@ theorem cutPrefix_eventually_uncut (a : ℕ → ℕ) (h : ℝ)
   filter_upwards [hb y continuous_fst.continuousAt hy] with z hz
   exact congrArg (fun v => f 0 z.2 + v) hz
 
-/-- Every requested finite ordinary jet has a sufficiently late *uncut*
+/-- Every requested finite ordinary jet has a sufficiently late *uncut *
 prefix with any prescribed remainder power. The prefix depends on both
 requests; this does not assert that one fixed tail is flat to all orders. -/
 theorem exists_ordinary_uncut_tail {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h)
@@ -624,11 +641,13 @@ theorem normalized_correction_bound {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h)
 
 section PhysicalCoordinates
 
+/-- Inner box, given by `Icc lo hi ×ˢ Icc (-1) 1`. -/
 noncomputable def innerBox (lo hi : ℝ) : Set Inner := Icc lo hi ×ˢ Icc (-1) 1
 
 theorem innerBox_isCompact (lo hi : ℝ) : IsCompact (innerBox lo hi) :=
   isCompact_Icc.prod isCompact_Icc
 
+/-- Physical chart as an element of `Chart`. -/
 noncomputable def physicalChart (h : ℝ) (p : Chart) : Chart :=
   (PhysicalCoordinateBounds.physicalQ (2 * h) p,
     (PhysicalCoordinateBounds.physicalX (2 * h) p,
@@ -784,7 +803,7 @@ theorem exists_physical_uncut_tail {a : ℕ → ℕ} {h : ℝ}
   dsimp [C]
   rw [Real.rpow_add hq, Real.rpow_natCast, div_pow]
   have hqn : (physicalChart h p).1 ^ m ≠ 0 := pow_ne_zero m hq.ne'
-  field_simp [hq.ne', hqn] ; simp [← mul_pow]
+  field_simp [hq.ne', hqn]; simp [← mul_pow]
   congr 1
   field_simp
 
@@ -813,6 +832,7 @@ theorem physicalProfile_smoothOn {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
     ContDiffOn ℝ ∞ (physicalProfile a h b f) (Iio 1 ×ˢ (univ : Set Inner)) :=
   fun _ hp => (physicalProfile_smoothAt ha hh hh1 hf b hp.1).contDiffWithinAt
 
+/-- Coefficient weight, with branches according to `j = 0`. -/
 noncomputable def coefficientWeight (a : ℕ → ℕ) (h q : ℝ) (j : ℕ) : ℝ :=
   if j = 0 then 0 else SmoothCutoffs.scaledCutoff (a j) q * q ^ (2 * h * j)
 
@@ -893,6 +913,8 @@ end PhysicalProfiles
 
 section PoweredTails
 
+/-- Physical uncut prefix, given by `(physicalChart h p).1 ^ b • uncutPrefix h f J
+(physicalChart h p)`. -/
 noncomputable def physicalUncutPrefix (h b : ℝ) (f : ℕ → Inner → V) (J : ℕ)
     (p : Chart) : V := (physicalChart h p).1 ^ b • uncutPrefix h f J (physicalChart h p)
 
@@ -1108,12 +1130,19 @@ section BaseFields
 /-- Smooth coefficient data before asymptotic summation. The radial and swirl
 potentials below are constructed by actual integration from these data. -/
 structure Coefficients where
+  /-- Axial of `Coefficients`, of type `ℕ → Inner → ℝ`. -/
   axial : ℕ → Inner → ℝ
+  /-- Phi of `Coefficients`, of type `ℕ → Inner → ℝ`. -/
   phi : ℕ → Inner → ℝ
+  /-- Pressure field of `Coefficients`, of type `ℕ → Inner → ℝ`. -/
   pressure : ℕ → Inner → ℝ
+  /-- Stress theta of `Coefficients`, of type `ℕ → Inner → ℝ`. -/
   stressTheta : ℕ → Inner → ℝ
+  /-- Stress axial of `Coefficients`, of type `ℕ → Inner → ℝ`. -/
   stressAxial : ℕ → Inner → ℝ
 
+/-- Smooth coefficients data, collecting `axial`, `phi`, `pressure`, `stressTheta`,
+`stressAxial`. -/
 structure SmoothCoefficients (d : Coefficients) : Prop where
   axial : ∀ j, ContDiff ℝ ∞ (d.axial j)
   phi : ∀ j, ContDiff ℝ ∞ (d.phi j)
@@ -1121,6 +1150,7 @@ structure SmoothCoefficients (d : Coefficients) : Prop where
   stressTheta : ∀ j, ContDiff ℝ ∞ (d.stressTheta j)
   stressAxial : ∀ j, ContDiff ℝ ∞ (d.stressAxial j)
 
+/-- Global radial domain, bundling `carrier`, `isOpen`, `scale_mem`. -/
 noncomputable def globalRadialDomain : ProfileHistories.RadialDomain where
   carrier := univ
   isOpen := isOpen_univ
@@ -1139,6 +1169,7 @@ theorem partialX_primitive {f : Inner → ℝ} (hf : ContDiff ℝ ∞ f) :
   funext w
   exact ProfileHistories.radialPartial_primitive globalRadialDomain hf.contDiffOn (mem_univ w)
 
+/-- Bundle: an abbreviation for `Fin 7 → ℝ`. -/
 abbrev Bundle := Fin 7 → ℝ
 
 /-- One bundle forces one common cutoff schedule for the streams, angular
@@ -1161,6 +1192,7 @@ theorem coefficientBundle_smooth {d : Coefficients} (hd : SmoothCoefficients d)
   · exact hd.axial j
   · exact hd.phi j
 
+/-- Bundle component, defined pointwise by `coefficientBundle C d j w i`. -/
 noncomputable def bundleComponent (C : ℝ) (d : Coefficients) (i : Fin 7) : ℕ → Inner → ℝ :=
   fun j w => coefficientBundle C d j w i
 
@@ -1181,24 +1213,35 @@ theorem admissible_component {a : ℕ → ℕ} {h C : ℝ} {d : Coefficients}
 noncomputable def streamFactor (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalProfile a h (-CoordinateAlgebra.A h) (bundleComponent C d 0)
 
+/-- Swirl potential, given by `physicalProfile a h (1 / 2 - CoordinateAlgebra.A h)
+(bundleComponent C d 1)`. -/
 noncomputable def swirlPotential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalProfile a h (1 / 2 - CoordinateAlgebra.A h) (bundleComponent C d 1)
 
+/-- Integrated stream, given by `p.2.1 * streamFactor a h C d p`. -/
 noncomputable def integratedStream (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients)
     (p : Chart) : ℝ := p.2.1 * streamFactor a h C d p
 
+/-- Base velocity, given by `AxisymmetricFields.velocity (streamFactor a h C d) (swirlPotential
+a h C d)`. -/
 noncomputable def baseVelocity (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) :
     ProblemStatement.VelocityField :=
   AxisymmetricFields.velocity (streamFactor a h C d) (swirlPotential a h C d)
 
+/-- Base pressure, defined pointwise by `physicalProfile a h (-2 * CoordinateAlgebra.A h)
+(bundleComponent C d 2) (AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def basePressure (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) :
     ProblemStatement.PressureField := fun z =>
   physicalProfile a h (-2 * CoordinateAlgebra.A h) (bundleComponent C d 2)
     (AxisymmetricFields.profilePoint z.1 z.2)
 
+/-- Base stress theta, given by `physicalProfile a h (-CoordinateAlgebra.A h - 1 / 2)
+(bundleComponent C d 3)`. -/
 noncomputable def baseStressTheta (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalProfile a h (-CoordinateAlgebra.A h - 1 / 2) (bundleComponent C d 3)
 
+/-- Base stress axial, given by `physicalProfile a h (-CoordinateAlgebra.A h - 1 / 2)
+(bundleComponent C d 4)`. -/
 noncomputable def baseStressAxial (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalProfile a h (-CoordinateAlgebra.A h - 1 / 2) (bundleComponent C d 4)
 
@@ -1339,13 +1382,14 @@ theorem baseVelocity_axial {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
     (C : ℝ) {t : ℝ} (ht : t < 1) (x : ProblemStatement.Space) :
     baseVelocity a h C d (t, x) 2 =
       physicalProfile a h (-CoordinateAlgebra.A h) d.axial (AxisymmetricFields.profilePoint t x) :=
-        by
+          by
   have hH := (physicalProfile_smoothAt ha hh hh1 (bundleComponent_smooth hd C 0)
     (-CoordinateAlgebra.A h) (p := AxisymmetricFields.profilePoint t x) ht).differentiableAt (by
-      simp)
+        simp)
   have hK := (physicalProfile_smoothAt ha hh hh1 (bundleComponent_smooth hd C 1)
     (1 / 2 - CoordinateAlgebra.A h) (p := AxisymmetricFields.profilePoint t x) ht).differentiableAt
-      (by simp)
+        (by
+        simp)
   change DifferentiableAt ℝ (streamFactor a h C d) (AxisymmetricFields.profilePoint t x) at hH
   change DifferentiableAt ℝ (swirlPotential a h C d) (AxisymmetricFields.profilePoint t x) at hK
   rw [baseVelocity, AxisymmetricFields.velocity_two _ _ _ _ hH hK]
@@ -1368,7 +1412,7 @@ theorem partialS_swirlPotential {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
   rw [swirlPotential, partialS_physicalProfile ha hh hh1 (bundleComponent_smooth hd C 1) _ hp]
   change physicalProfile a h (1 / 2 - CoordinateAlgebra.A h - 1)
     (fun j => SimilarityProfile.partialX (fun w => -C⁻¹ * ProfileHistories.primitive (d.phi j) w))
-      p = _
+        p = _
   simp_rw [partialX_swirl_primitive (hd.phi _) C]
   rw [show 1 / 2 - CoordinateAlgebra.A h - 1 = -CoordinateAlgebra.A h - 1 / 2 by ring]
   unfold physicalProfile
@@ -1421,13 +1465,18 @@ theorem compact_map_finite_bound {E : Type} [NormedAddCommGroup E] [NormedSpace 
   refine (hCb i x hx).trans (hCi.trans ?_)
   simpa only [pow_one] using pow_le_pow_right₀ hD hi
 
+/-- Cartesian chart, given by `physicalChart h (AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def cartesianChart (h : ℝ) (z : ProblemStatement.SpaceTime) : Chart :=
   physicalChart h (AxisymmetricFields.profilePoint z.1 z.2)
 
+/-- Cartesian profile, given by `physicalProfile a h b f (AxisymmetricFields.profilePoint z.1
+z.2)`. -/
 noncomputable def cartesianProfile (a : ℕ → ℕ) (h b : ℝ) (f : ℕ → Inner → V)
     (z : ProblemStatement.SpaceTime) : V :=
   physicalProfile a h b f (AxisymmetricFields.profilePoint z.1 z.2)
 
+/-- Cartesian uncut prefix, given by `physicalUncutPrefix h b f J
+(AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def cartesianUncutPrefix (h b : ℝ) (f : ℕ → Inner → V) (J : ℕ)
     (z : ProblemStatement.SpaceTime) : V :=
   physicalUncutPrefix h b f J (AxisymmetricFields.profilePoint z.1 z.2)
@@ -1534,9 +1583,11 @@ theorem normalized_correction_smul_inner {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h
     _ ≤ C * q ^ (2 * h) := mul_le_mul_of_nonneg_right (by dsimp [C]; linarith)
       (Real.rpow_nonneg hq.le _)
 
+/-- Normalized swirl, given by `Real.sqrt (2 * y.2.1) / C * slowSum a h d.phi y`. -/
 noncomputable def normalizedSwirl (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients)
     (y : Chart) : ℝ := Real.sqrt (2 * y.2.1) / C * slowSum a h d.phi y
 
+/-- Leading swirl, given by `Real.sqrt (2 * w.1) / C * d.phi 0 w`. -/
 noncomputable def leadingSwirl (C : ℝ) (d : Coefficients) (w : Inner) : ℝ :=
   Real.sqrt (2 * w.1) / C * d.phi 0 w
 

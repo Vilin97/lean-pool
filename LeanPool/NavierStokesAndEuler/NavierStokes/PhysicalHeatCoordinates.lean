@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricHeatTail
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalStress
 
-@[expose] public section
-
 /-!
 # The heat edit in the actual implicit physical coordinates
 
@@ -19,6 +17,9 @@ satisfies `1-t = q - z^2*q^(2*h)`.  The quadratic-coordinate helper with
 `q = tau + z^2` is not used here.  These identities connect the actual heat
 edit to the terminal angular velocity, including its normalization.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -46,6 +47,7 @@ theorem heat_argument {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   rw [diffusion_eq_ratio hh hh1 ht]
   exact ParametricHeatTail.heat_ratio_physical (q_pos hh hh1 ht) hs
 
+/-- Normalization, given by `HeatTailEdit.outgoingAmplitude d * K ^ HeatTailEdit.exponent d.h`. -/
 noncomputable def normalization (d : OutgoingTail.TailData) (K : ℝ) : ℝ :=
   HeatTailEdit.outgoingAmplitude d * K ^ HeatTailEdit.exponent d.h
 
@@ -53,11 +55,14 @@ theorem normalization_pos (d : OutgoingTail.TailData) {K : ℝ} (hK : 0 < K) :
     0 < normalization d K :=
   mul_pos (HeatTailEdit.outgoingAmplitude_pos d) (Real.rpow_pos_of_pos hK _)
 
+/-- Edited angular, given by `q d.h p ^ (-HeatTailEdit.exponent d.h) *
+ParametricHeatTail.physicalEdit d K (eta d.h p) (X d.h p)`. -/
 noncomputable def editedAngular (d : OutgoingTail.TailData) (K : ℝ)
     (p : PhysicalPoint) : ℝ :=
   q d.h p ^ (-HeatTailEdit.exponent d.h) *
     ParametricHeatTail.physicalEdit d K (eta d.h p) (X d.h p)
 
+/-- Shape, given by `OutgoingTail.tailShape d (y - Real.log K + 1 / 5)`. -/
 noncomputable def shape (d : OutgoingTail.TailData) (K y : ℝ) : ℝ :=
   OutgoingTail.tailShape d (y - Real.log K + 1 / 5)
 

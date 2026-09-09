@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardExactFields
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialFields
+public import LeanPool.NavierStokesAndEuler.Euler.PhysicalL2Scaling
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
 
 /-! With the base boundary parameter zero, the entire actual forward
 initial increment is supported in the small physical packet ball. The
 exact correction starts from zero, so it adds no initial tail. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,20 +29,24 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized initial high, given by `scale M.ℓ (fun x => EulerPacketInitial.high N
+k⁻¹ 0 (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))`. -/
 def forwardInitializedInitialHigh (N : ℕ) (k : ℝ) : Space → Space :=
   scale M.ℓ (fun x => EulerPacketInitial.high N k⁻¹ 0
     (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))
 
+/-- Forward initialized initial mean, given by `scale M.ℓ (fun x => EulerPacketInitial.mean N
+k⁻¹ 0 (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))`. -/
 def forwardInitializedInitialMean (N : ℕ) (k : ℝ) : Space → Space :=
   scale M.ℓ (fun x => EulerPacketInitial.mean N k⁻¹ 0
     (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))
 
 include hTime in
 theorem forwardInitializedInitialHigh_support
-    (hS : D.support ⊆ Metric.closedBall 0 (1/2 : ℝ)) (N : ℕ) (k : ℝ) :
+    (hS : D.support ⊆ Metric.closedBall 0 (1 / 2 : ℝ)) (N : ℕ) (k : ℝ) :
     tsupport (forwardInitializedInitialHigh M D δ hδ ξ hs α N k) ⊆
       Metric.closedBall 0 (M.ℓ/2) := by
   have h := EulerPacketInitial.high_scaled_support
@@ -48,7 +55,7 @@ theorem forwardInitializedInitialHigh_support
   simpa only [forwardInitializedInitialHigh,div_eq_mul_inv,one_mul] using h
 
 include hTime in
-theorem forwardInitializedInitialMean_zero (hL : M.L=0) (N : ℕ) (k : ℝ) :
+theorem forwardInitializedInitialMean_zero (hL : M.L = 0) (N : ℕ) (k : ℝ) :
     forwardInitializedInitialMean M D δ hδ ξ hs α N k = 0 := by
   funext x
   change M.ℓ • EulerPacketInitial.mean N k⁻¹ 0
@@ -95,8 +102,8 @@ theorem forwardInitializedExactPhysicalVelocity_initial_split :
     Cagree N hN k hk Q)]
   exact forwardInitializedInitial_split M D δ hδ ξ hs α N k
 
-theorem forwardInitializedExactPhysicalVelocity_initial_support (hL : M.L=0)
-    (hS : D.support ⊆ Metric.closedBall 0 (1/2 : ℝ)) :
+theorem forwardInitializedExactPhysicalVelocity_initial_support (hL : M.L = 0)
+    (hS : D.support ⊆ Metric.closedBall 0 (1 / 2 : ℝ)) :
     tsupport (scale M.ℓ (forwardInitializedExactPhysicalVelocity M D hTime δ hδ ξ hs α
       Cagree N hN k hk Q ⟨0,le_rfl,D.T_pos.le⟩ id)) ⊆ Metric.closedBall 0 (M.ℓ/2) := by
   rw [forwardInitializedExactPhysicalVelocity_initial_split,

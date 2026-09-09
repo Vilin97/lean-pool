@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeDebtIncrement
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
 
 /-!
 # Regularity of covariances of the actual harmonic state
@@ -19,6 +17,9 @@ integral. Smoothness of that integral follows from local compact
 domination of its genuine parameter derivatives. No covariance
 regularity or covariance formula is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +31,8 @@ open scoped Topology ContDiff BigOperators Interval
 
 variable {D : Type} {ι : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Angular smooth, given by `∀ n i, ContDiffOn ℝ ∞ (fun p => u n p i)
+(HarmonicResidual.liftDomain Ω)`. -/
 noncomputable def AngularSmooth (Ω : Set D) (u : Oscillation D) : Prop :=
   ∀ n i, ContDiffOn ℝ ∞ (fun p => u n p i) (HarmonicResidual.liftDomain Ω)
 
@@ -120,7 +123,7 @@ variable {Ω : Set D} {labels : ℕ → Finset ι} {blocks : ι → HarmonicBloc
 
 theorem of_global
     (hc : ∀ n l, l ∈ labels n → ∀ i, HarmonicResidual.SmoothCoefficients Ω ((blocks l).velocity n
-      i))
+        i))
     (hΦ : ∀ n l, l ∈ labels n → ContDiffOn ℝ ∞ ((blocks l).phase n) Ω) :
     LocalData Ω labels blocks (fun _ _ => Set.univ) :=
   ⟨fun _ _ _ => isOpen_univ, fun n l hl i j => (hc n l hl i j).mono inter_subset_left,
@@ -144,9 +147,13 @@ end LocalData
 
 /-! ## Actual support in the moving radial annulus -/
 
+/-- Plane: an abbreviation for `GaugeDebtIncrement.Plane`. -/
 abbrev Plane := GaugeDebtIncrement.Plane
+/-- Point: an abbreviation for `GaugeDebtIncrement.Point`. -/
 abbrev Point := GaugeDebtIncrement.Point
 
+/-- Wave support, given by `∀ n θ i, VariableGaugeMean.SupportedGauge a b
+(VariableGaugeMean.qLength coord) U.carrier (fun x => u n (x, θ) i)`. -/
 noncomputable def WaveSupport {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord)
     (a b : ℝ) (u : Oscillation Point) : Prop :=
   ∀ n θ i, VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength coord)
@@ -306,7 +313,7 @@ theorem waveStage_covariance_regular (g : VariableGaugeMean.GaugeData Plane)
     (q : OscillatoryScalar Point) (gaussian : Oscillation Point) (i j : Fin 3) :
     GaugeDebtIncrement.Regular U a b ((SignedMeanGain.waveStage g c u
       (LabelSumBounds.fieldSum labels₁ (fun l => (blocks₁ l).oscillation)) q gaussian).covariance i
-        j) := by
+          j) := by
   rw [SignedMeanGain.waveStage_covariance]
   exact (state_covariance_regular U u hu h₀ hs₀ i j).add
     (state_covarianceIncrement_regular U u hu h₀ h₁ hs₁ i j)

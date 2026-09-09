@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeGradient
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaPair
+import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeGradient
+import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
+
+/-! Actual one-sided time differentiation of the packet's spatial curl corrector. -/
 
 @[expose] public section
 
-/-! Actual one-sided time differentiation of the packet's spatial curl corrector. -/
 
 noncomputable section
 
@@ -23,14 +26,15 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
 open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
-  (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T,LiftL2 P))
+  (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
 
 include hd
 
-/-- The two product-rule terms are derived from the genuine L² evolution and actual inverse frame derivative. -/
+/-- The two product-rule terms are derived from the genuine L² evolution and actual inverse frame
+derivative. -/
 theorem matrixSlowCurl_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain P)
     (G : ℝ → Space →L[ℝ] Space) (G₁ : Space →L[ℝ] Space)
     (hG : HasDerivWithinAt G G₁ (Icc (0 : ℝ) T) t) :
@@ -45,13 +49,14 @@ theorem matrixSlowCurl_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain P)
   have hL : HasDerivWithinAt (fun r => (ContinuousLinearMap.inl ℝ Space ℝ).comp (G r))
       ((ContinuousLinearMap.inl ℝ Space ℝ).comp G₁) (Icc (0 : ℝ) T) t := by
     have h := ((hasDerivAt_const (t : ℝ) (ContinuousLinearMap.inl ℝ Space
-      ℝ)).hasDerivWithinAt).clm_comp hG
+        ℝ)).hasDerivWithinAt).clm_comp hG
     simpa only [ContinuousLinearMap.zero_comp, zero_add] using h
   have hD := pointField_fderiv_hasDerivWithinAt P T hT p f hp hf hd t x
   have h := curlOperator.hasFDerivAt.comp_hasDerivWithinAt (t : ℝ) (hD.clm_comp hL)
   simpa only [Function.comp_def, map_add, curlOperator_apply, projIcc_of_mem hT t.property] using h
 
-/-- This is the literal lifted curl in the Piola packet construction, including both time endpoints. -/
+/-- This is the literal lifted curl in the Piola packet construction, including both time endpoints.
+-/
 theorem liftedSlowCurl_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain P)
     (F : ℝ → Space → Space ≃L[ℝ] Space) (G₁ : Space →L[ℝ] Space)
     (hG : HasDerivWithinAt (fun r => (F r x.1).symm.toContinuousLinearMap) G₁

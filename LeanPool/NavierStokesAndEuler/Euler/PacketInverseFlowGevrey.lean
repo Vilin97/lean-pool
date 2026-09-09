@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorOperator
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyInverseMap
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 
 /-!
 # The actual inverse parent flow preserves source Gevrey regularity
@@ -18,6 +18,9 @@ The inverse derivative bounds are derived from the prescribed deformation
 and its determinant-one cofactor identity.  Neither inverse-flow jets nor
 inverse-deformation jets are independent assumptions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,6 +52,7 @@ theorem inverseFlow_contDiff (t : Icc (0 : ℝ) D.T) : ContDiff ℝ ∞ (Y t) :=
   contDiff_of_fderiv_eq_comp (Y t) (D.FInv.field t) (hY t) (D.FInv.smooth t)
     (inverseFlow_fderiv D X Y hX hY hXY t)
 
+/-- Source inverse radius, given by `1 + 18*C^2*R`. -/
 def sourceInverseRadius (C R : ℝ) : ℝ := 1 + 18*C^2*R
 
 lemma sourceInverseRadius_eq (C R : ℝ) :
@@ -64,7 +68,7 @@ lemma sourceInverseRadius_pos (C R : ℝ) (hR : 0 ≤ R) :
 variable (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
   (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
 
 include hX hY hXY hR hC hdet hF in
 theorem inverseFlow_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
@@ -84,7 +88,7 @@ Gevrey radius; the small correction amplitude is retained exactly. -/
 theorem pullback_gevrey {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (g : Icc (0 : ℝ) D.T → Space → V) (hg : ∀ t, ContDiff ℝ ∞ (g t))
     (A S : ℝ) (hA : 0 ≤ A) (hS : 0 ≤ S)
-    (hgjet : ∀ n t x, ‖iteratedFDeriv ℝ n (g t) x‖ ≤ A*S^n*(n.factorial : ℝ)^2)
+    (hgjet : ∀ n t x, ‖iteratedFDeriv ℝ n (g t) x‖ ≤ A * S ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖iteratedFDeriv ℝ n (fun y => g t (Y t y)) x‖ ≤
       A * (sourceInverseRadius C R * (9*C^2*S+2))^n * (n.factorial : ℝ)^2 := by

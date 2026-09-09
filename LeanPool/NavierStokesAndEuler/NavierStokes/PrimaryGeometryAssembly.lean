@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseChartJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.BasePhaseGeometry
+import LeanPool.NavierStokesAndEuler.NavierStokes.AlignedProfileSpectralCone
 
 /-!
 # Primary phase geometry for the constructed slow base
@@ -20,6 +19,9 @@ used for the local base estimates.  Compact constants use the genuine
 stable inverse branch, including its regular zero-time boundary.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PrimaryGeometryAssembly
@@ -27,7 +29,10 @@ namespace NavierStokes.PrimaryGeometryAssembly
 open Set Filter Function
 open scoped Topology ContDiff InnerProductSpace EuclideanSpace
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Plane: an abbreviation for `MovingFrameODE.Plane /-! ## The actual positive support cells
+-/`. -/
 abbrev Plane := MovingFrameODE.Plane
 
 
@@ -70,7 +75,7 @@ theorem openCell_subset_larger {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid) 
 
 theorem support_subset_openCell {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid) :
     tsupport (PrimaryRepresentatives.nativeMask n k) ∩ PositiveRepresentatives.positiveTime ⊆
-      openCell n k := by
+        openCell n k := by
   intro p hp
   have hs := SquaredPartition.nativeSpacing_pos hn
   have hb := PrimaryRepresentatives.nativeMask_tsupport_subset hn k hp.1
@@ -86,13 +91,14 @@ theorem representative_mem_openCell (K : Set Slow) (L : PositiveRepresentatives.
     PositiveRepresentatives.representative K L ∈ openCell L.val.1 L.val.2 :=
   support_subset_openCell L.property.1 L.val.2
     ⟨PositiveRepresentatives.representative_mem_tsupport K L,
-      PositiveRepresentatives.representative_time_pos K L⟩
+        PositiveRepresentatives.representative_time_pos K L⟩
 
 theorem openCell_representative_distance (K : Set Slow) (L : PositiveRepresentatives.ActiveLabel K)
     {p : Slow} (hp : p ∈ openCell L.val.1 L.val.2) :
     ‖p - PositiveRepresentatives.representative K L‖ ≤ 3 / ChartScales.S L.val.1 ^ 3 :=
   PositiveRepresentatives.representative_enlarged_distance K L (openCell_subset_box _ _ hp)
 
+/-- Cell domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def cellDomain (h lo hi : ℝ) (N : ℕ) :
     PhaseJetBounds.Domain (BaseChartJets.CellIndex h lo hi N) Slow where
   scale L := ChartScales.S (BaseChartJets.cellBand L)
@@ -106,7 +112,7 @@ theorem cellDomain_subset_larger {h lo hi : ℝ} {N : ℕ} (L : BaseChartJets.Ce
 
 theorem cellDomain_support {h lo hi : ℝ} {N : ℕ} (L : BaseChartJets.CellIndex h lo hi N) :
     tsupport (PrimaryRepresentatives.nativeMask L.val.val.1 L.val.val.2) ∩
-      PositiveRepresentatives.positiveTime ⊆
+        PositiveRepresentatives.positiveTime ⊆
       (cellDomain h lo hi N).carrier L :=
   support_subset_openCell L.val.property.1 L.val.val.2
 
@@ -123,7 +129,7 @@ noncomputable def earlierIndex {h lo hi : ℝ} {N M : ℕ} (hNM : N ≤ M)
 
 @[simp] theorem earlierIndex_band {h lo hi : ℝ} {N M : ℕ} (hNM : N ≤ M)
     (L : BaseChartJets.CellIndex h lo hi M) : BaseChartJets.cellBand (earlierIndex hNM L) =
-      BaseChartJets.cellBand L := rfl
+        BaseChartJets.cellBand L := rfl
 
 theorem polynomial_restrict_reindex {ι κ E V : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -144,10 +150,14 @@ section ActualFields
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Reference set, given by `PrimaryRepresentatives.referenceCompact F.data.h
+(NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W)`. -/
 noncomputable def referenceSet : Set Slow :=
   PrimaryRepresentatives.referenceCompact F.data.h (NominalConeAssembly.activeLeft W)
     (NominalConeAssembly.activeRight W)
 
+/-- Index: an abbreviation for `BaseChartJets.CellIndex F.data.h (NominalConeAssembly.activeLeft
+W) (NominalConeAssembly.activeRight W) N`. -/
 abbrev Index (N : ℕ) :=
   BaseChartJets.CellIndex F.data.h (NominalConeAssembly.activeLeft W)
     (NominalConeAssembly.activeRight W) N
@@ -157,17 +167,22 @@ instance indexCountable (N : ℕ) : Countable (Index W N) := by
     PrimaryRepresentatives.ActiveLabel]
   infer_instance
 
+/-- Label, given by `L.val.val`. -/
 noncomputable def label {N : ℕ} (L : Index W N) : PartitionedCovariance.UnsignedLabel := L.val.val
 
 theorem label_injective {N : ℕ} : Injective (label W (N := N)) :=
   fun _ _ he => Subtype.ext (Subtype.ext he)
 
+/-- Domain, given by `cellDomain F.data.h (NominalConeAssembly.activeLeft W)
+(NominalConeAssembly.activeRight W) N`. -/
 noncomputable def domain (N : ℕ) : PhaseJetBounds.Domain (Index W N) Slow :=
   cellDomain F.data.h (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W) N
 
+/-- Representative, given by `PositiveRepresentatives.representative (referenceSet W) L.val`. -/
 noncomputable def representative {N : ℕ} (L : Index W N) : Slow :=
   PositiveRepresentatives.representative (referenceSet W) L.val
 
+/-- Base domain, given by `PositiveRepresentatives.positiveCell L.val.val.1 L.val.val.2`. -/
 noncomputable def baseDomain {N : ℕ} (L : Index W N) : Set Slow :=
   PositiveRepresentatives.positiveCell L.val.val.1 L.val.val.2
 
@@ -240,27 +255,39 @@ noncomputable def frequency (upper : ℝ) (B n : ℕ) : Slow → ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
+/-- Axial, given by `BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
+(FinalSlowBase.coefficients H v) (ChartScales.Q n)`. -/
 noncomputable def axial (upper : ℝ) (B n : ℕ) : Slow → ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
+/-- Leading frequency, given by `BaseChartJets.leadingFrequency F.data.h W.axis.normalization
+(FinalSlowBase.coefficients H v)`. -/
 noncomputable def leadingFrequency : Slow → ℝ :=
   BaseChartJets.leadingFrequency F.data.h W.axis.normalization (FinalSlowBase.coefficients H v)
 
+/-- Leading axial, given by `BaseChartJets.leadingAxial F.data.h (FinalSlowBase.coefficients H
+v)`. -/
 noncomputable def leadingAxial : Slow → ℝ :=
   BaseChartJets.leadingAxial F.data.h (FinalSlowBase.coefficients H v)
 
+/-- Shear, given by `PhaseEstimates.shearVector (leadingFrequency H v) (leadingAxial H v)`. -/
 noncomputable def shear : Slow → Plane :=
   PhaseEstimates.shearVector (leadingFrequency H v) (leadingAxial H v)
 
 /-- This record is an output of the concrete construction below.  None of
 its analytic bounds are assumptions of the exported constructor. -/
 structure Prepared (upper : ℝ) (B : ℕ) (r0 : ℝ) (N0 : ℕ) where
+  /-- Truncation order of `Prepared`, of type `ℕ`. -/
   N : ℕ
   threshold : N0 ≤ N
+  /-- M of `Prepared`, of type `ℝ`. -/
   M : ℝ
+  /-- U of `Prepared`, of type `ℝ`. -/
   u : ℝ
+  /-- Eta of `Prepared`, of type `ℝ`. -/
   eta : ℝ
+  /-- Target of `Prepared`, of type `Slow → Plane`. -/
   target : Slow → Plane
   one_le_M : 1 ≤ M
   u_pos : 0 < u
@@ -303,10 +330,11 @@ structure Prepared (upper : ℝ) (B : ℕ) (r0 : ℝ) (N0 : ℕ) where
           (shear H v (representative W L)) *
         ⟪target p, PrimaryRepresentatives.transverseDirection (shear H v (representative W L))⟫_ℝ /
         ⟪target p, PrimaryRepresentatives.normalDirection (shear H v (representative W L))⟫_ℝ| +
-          eta ≤
+            eta ≤
         PrimaryRepresentatives.slopeRatio u
   large : ∀ n, N ≤ n → BasePhaseGeometry.LargeBand F.data.h M u n
 
+/-- Phase sign, with branches according to `c = 0`. -/
 noncomputable def phaseSign (c : Fin 2) : ℝ := if c = 0 then 1 else -1
 
 theorem phaseSign_abs (c : Fin 2) : |phaseSign c| = 1 := by
@@ -359,7 +387,7 @@ noncomputable def family {upper : ℝ} {B : ℕ} {r0 : ℝ} {N0 : ℕ}
     sign := fun _ => phaseSign_abs c }
   · intro L
     simpa only [PrimaryRepresentatives.quarterTurn_transverseDirection] using (a.cone
-      L).lambda0_div_c0
+        L).lambda0_div_c0
   · intro L
     have he := (a.cone L).lambda0_mul_c0
     rw [← BasePhaseGeometry.Representatives.normal_inner_shear (a.cone L).shear_ne_zero] at he
@@ -478,6 +506,7 @@ noncomputable def prepared (hcone : LeadingStressWeights.FullTrueCone v)
     (N0 : ℕ) : Prepared H v upper B r0 N0 :=
   Classical.choice (exists_prepared H v hcone upper B r0 hbox N0)
 
+/-- Phases, given by `construction H v (prepared H v hcone upper B r0 hbox N0) hr0`. -/
 noncomputable def phases (hcone : LeadingStressWeights.FullTrueCone v)
     (upper : ℝ) (B : ℕ) (r0 : ℝ) (hr0 : 0 < r0)
     (hbox : 2 * NominalConeAssembly.activeRight W ≤ FinalSlowBase.boxRadius W upper)
@@ -492,6 +521,7 @@ noncomputable def canonicalPrepared (hcone : LeadingStressWeights.FullTrueCone v
     Prepared H v (2 * NominalConeAssembly.activeRight W) B r0 N0 :=
   prepared H v hcone (2 * NominalConeAssembly.activeRight W) B r0 (le_max_left _ _) N0
 
+/-- Canonical phases, given by `construction H v (canonicalPrepared H v hcone B r0 N0) hr0`. -/
 noncomputable def canonicalPhases (hcone : LeadingStressWeights.FullTrueCone v)
     (B : ℕ) (r0 : ℝ) (hr0 : 0 < r0) (N0 : ℕ) :
     Fin 2 → PrimaryPulseBounds.PhaseConstruction
@@ -599,7 +629,7 @@ theorem target_eq_normalized_stress {p : Slow} (hp : p ∈ referenceSet W)
 theorem frequency_eq_physical {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1) (n : ℕ) :
     frequency H v upper B n p = ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
       FinalSlowBase.velocity H v upper B (BaseChartJets.bandPoint F.data.h (ChartScales.Q n) p) 1 /
-        p.1 := by
+          p.1 := by
   exact BaseChartJets.frequency_eq_normalized_velocity
     (FinalSlowBase.scales_strictMono H v upper B) F.data.h_pos F.data.h_lt_half
     (ChartScales.Q_pos n) (FinalSlowBase.coefficients_smooth H v) hT hR
@@ -607,7 +637,7 @@ theorem frequency_eq_physical {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1) (n : �
 theorem axial_eq_physical {p : Slow} (hT : 0 < p.2.2) (n : ℕ) :
     axial H v upper B n p = ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
       FinalSlowBase.velocity H v upper B (BaseChartJets.bandPoint F.data.h (ChartScales.Q n) p) 2
-        := by
+          := by
   exact BaseChartJets.axial_eq_normalized_velocity
     (FinalSlowBase.scales_strictMono H v upper B) F.data.h_pos F.data.h_lt_half
     (ChartScales.Q_pos n) (FinalSlowBase.coefficients_smooth H v) hT

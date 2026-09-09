@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CompactSmoothBounds
-public import LeanPool.NavierStokesAndEuler.Euler.CurlTimeDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+import LeanPool.NavierStokesAndEuler.Euler.CompactSmoothBounds
+import LeanPool.NavierStokesAndEuler.Euler.CurlTimeDerivative
 
 /-! Joint smoothness bounds the actual spatial vorticity on every fixed
 compact spatial set and every closed finite time interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 

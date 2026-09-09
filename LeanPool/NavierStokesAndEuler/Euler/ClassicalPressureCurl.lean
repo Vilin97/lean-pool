@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Classical lifted closedness of actual smooth representatives of the closed L² gradient space. -/
 
 @[expose] public section
 
-/-! Classical lifted closedness of actual smooth representatives of the closed L² gradient space. -/
 
 noncomputable section
 
@@ -46,7 +50,7 @@ theorem scalar_product_integrable (f g : LiftDomain period → ℝ)
     (hgc : HasCompactSupport g) :
     Integrable (fun x => f x * g x) (liftMeasure period) :=
   ((smoothField_continuous period f hf).mul (smoothField_continuous period g
-    hg)).integrable_of_hasCompactSupport hgc.mul_left
+      hg)).integrable_of_hasCompactSupport hgc.mul_left
 
 /-- Scalar integration by parts with only the test factor compactly supported. -/
 theorem scalar_integration_by_parts_test (a : LiftTangent) (f ψ : LiftDomain period → ℝ)
@@ -104,7 +108,7 @@ theorem scalar_integration_by_parts_test (a : LiftTangent) (f ψ : LiftDomain pe
       _ ≤ (M * ‖a‖) * ‖f x * ψ x‖ + 1 * ‖Df x * ψ x‖ := by gcongr; exact hDc n x
       _ = _ := by ring
   have hFl : ∀ᵐ x ∂liftMeasure period, Filter.Tendsto (fun n => F n x) Filter.atTop (𝓝 (Df x * ψ
-    x)) := by
+      x)) := by
     apply Filter.Eventually.of_forall
     intro x
     have hdc : Filter.Tendsto (fun n => fieldDerivative period a (spatialCutoff period n) x)
@@ -118,7 +122,7 @@ theorem scalar_integration_by_parts_test (a : LiftTangent) (f ψ : LiftDomain pe
   have hGm (n : ℕ) : AEStronglyMeasurable (G n) (liftMeasure period) :=
     ((smoothField_continuous period _ (spatialCutoff_smooth period n)).mul
       ((smoothField_continuous period f hf).mul (smoothField_continuous period Dψ
-        hDψ))).aestronglyMeasurable
+          hDψ))).aestronglyMeasurable
   have hGb (n : ℕ) : ∀ᵐ x ∂liftMeasure period, ‖G n x‖ ≤ ‖f x * Dψ x‖ := by
     apply Filter.Eventually.of_forall
     intro x
@@ -129,13 +133,13 @@ theorem scalar_integration_by_parts_test (a : LiftTangent) (f ψ : LiftDomain pe
     rw [norm_mul]
     simpa only [one_mul] using mul_le_mul_of_nonneg_right hcn (norm_nonneg (f x * Dψ x))
   have hGl : ∀ᵐ x ∂liftMeasure period, Filter.Tendsto (fun n => G n x) Filter.atTop (𝓝 (f x * Dψ
-    x)) :=
+      x)) :=
     Filter.Eventually.of_forall (fun x => by
       simpa only [G, one_mul] using (spatialCutoff_tendsto period x).mul_const (f x * Dψ x))
   have hGt := tendsto_integral_of_dominated_convergence (fun x => ‖f x * Dψ x‖)
     hGm hR.norm hGb hGl
   have hseq : (fun n => ∫ x, F n x ∂liftMeasure period) = fun n => -(∫ x, G n x ∂liftMeasure
-    period) := funext hFG
+      period) := funext hFG
   rw [hseq] at hFt
   exact tendsto_nhds_unique hFt hGt.neg
 
@@ -173,7 +177,8 @@ theorem smooth_eq_zero_of_compact_test_integrals (q : LiftDomain period → ℝ)
     simpa only [one_mul] using tendsto_nhds_unique ht tendsto_const_nhds
   exact sq_eq_zero_iff.mp hh
 
-/-- Every smooth representative of an element of the closed lifted gradient space is classically closed. -/
+/-- Every smooth representative of an element of the closed lifted gradient space is classically
+closed. -/
 theorem gradientSpace_classical_curl_zero (κ : ℝ) (m : Vector3)
     (p : LiftL2 period) (hp : p ∈ gradientSpace period κ m)
     (g : LiftDomain period → Vector3)

@@ -6,15 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FlowEscapeBound
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-
-@[expose] public section
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.FlowEscapeBound
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # Finite-energy estimate for the radial homotopy operator
@@ -24,6 +23,9 @@ norm at most two. The substitution `t = r²` reduces the estimate to ordinary
 Cauchy--Schwarz and exactly cancels the Jacobian of dilation. Only continuity
 and finite energy are needed; no derivative integrability is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -135,8 +137,8 @@ theorem radial_average_memLp_and_energy (u : Space → Space) (hu : Continuous u
   have hb := radial_average_sq_le_action u hu
   have hint : Integrable (fun x : Space => ‖∫ t in (0 : ℝ)..1, t • u (t • x)‖ ^ 2) := by
     apply hact.mono' (hm.norm.pow 2)
-    exact Eventually.of_forall (fun x => by simpa only [Pi.pow_apply, norm_pow, norm_norm] using hb
-      x)
+    exact Eventually.of_forall (fun x => by
+        simpa only [Pi.pow_apply, norm_pow, norm_norm] using hb x)
   refine ⟨(memLp_two_iff_integrable_sq_norm hm).mpr hint, ?_⟩
   exact (integral_mono hint hact hb).trans_eq henergy
 

@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramPath
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseMomentumRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalInverse
 
 /-!
 # Genuine time-H¹ transverse coordinates
@@ -19,6 +18,9 @@ the physical displacement. Their time derivative is an actual Bochner L² field,
 and differentiating the reconstructed displacement gives the exact kinetic
 coordinate identity used in the strong transverse equation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

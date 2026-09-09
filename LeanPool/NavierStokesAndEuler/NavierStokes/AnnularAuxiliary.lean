@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRadialExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
 
-@[expose] public section
-
 /-!+# Smooth auxiliary fields for an annulus
 
 The maps constructed here agree with the physical fields on an open positive
@@ -20,6 +18,9 @@ supported edit differences, including their nonlinear density integrals, are
 unchanged when transplanted back to the original field.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter MeasureTheory
@@ -27,6 +28,7 @@ open scoped ContDiff Topology
 
 namespace NavierStokes.AnnularAuxiliary
 
+/-- Positive map, given by `a + TransportPrimitive.cutoff (a / 2) a X * (X - a)`. -/
 noncomputable def positiveMap (a X : ℝ) : ℝ :=
   a + TransportPrimitive.cutoff (a / 2) a X * (X - a)
 
@@ -50,6 +52,7 @@ theorem positiveMap_pos {a : ℝ} (ha : 0 < a) (X : ℝ) : 0 < positiveMap a X :
       dsimp [positiveMap]
       nlinarith
 
+/-- Auxiliary, given by `F (positiveMap a p.1, w.parameterMap p.2)`. -/
 noncomputable def auxiliary {S : Set ℝ}
     (w : ParametricRadialExtension.ParameterWindow S) (a : ℝ)
     (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
@@ -126,7 +129,7 @@ theorem transplanted_density_integral
     (H : (ℝ × ℝ) → E → V) {base aux replacement : ℝ × ℝ → E} {K : Set (ℝ × ℝ)}
     (hbase : EqOn base aux K) (hedit : ∀ x ∉ K, replacement x = aux x) (X eta : ℝ) :
     (∫ r in (0 : ℝ)..X, H (r, eta) (transplant base aux replacement (r, eta)) - H (r, eta) (base
-      (r, eta))) =
+        (r, eta))) =
       ∫ r in (0 : ℝ)..X, H (r, eta) (replacement (r, eta)) - H (r, eta) (aux (r, eta)) := by
   apply intervalIntegral.integral_congr
   intro r _

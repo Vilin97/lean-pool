@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Topology.Algebra.Support
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Vorticity support along ordinary particle trajectories
@@ -23,6 +21,9 @@ trajectory. It does not assume a spatially uniform bound on the velocity or
 its derivatives. The transport theorem below uses an ordinary differential
 equation for vorticity, not a prescribed support condition.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

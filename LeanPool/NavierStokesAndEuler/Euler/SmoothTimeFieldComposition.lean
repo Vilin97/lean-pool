@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldPullback
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldMultilinear
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-! Composition with identity plus a bounded smooth displacement preserves
 the actual continuous-time bounded spatial jets. The finite Faà di Bruno
 formula is evaluated in the sup norm, with no extra time derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,10 +35,21 @@ variable {K E V : Type u} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldComposition1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldComposition2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldComposition3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldComposition4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
 theorem field_lipschitz (A : SmoothTimeField K E V) (t : K) :
     LipschitzWith ‖A.jet 1‖₊ (A.field t) := by
@@ -57,6 +72,8 @@ theorem positive_identity_jet (n : ℕ) (hn : 0 < n) (x : E) :
     | zero => rfl
     | succ n => simp only [iteratedFDeriv_succ_const, Pi.zero_apply]
 
+/-- Displaced jet, given by `ContinuousMap.const K (BoundedContinuousFunction.const E
+(iteratedFDeriv ℝ n (id : E → E) 0)) + D.jet n`. -/
 def displacedJet (D : SmoothTimeField K E E) (n : ℕ) :
     C(K,E →ᵇ (E [×n]→L[ℝ] E)) :=
   ContinuousMap.const K (BoundedContinuousFunction.const E
@@ -69,6 +86,7 @@ theorem displacedJet_apply (D : SmoothTimeField K E E) (n : ℕ) (hn : 0 < n)
   rw [positive_identity_jet n hn x, D.jet_eq]
   exact (iteratedFDeriv_add_apply contDiffAt_id ((D.smooth t).contDiffAt.of_le (by simp))).symm
 
+/-- Pulled jet, given by `pathPullback (A.jet n) D.field ‖A.jet (n+1)‖₊ (A.jet_lipschitz n)`. -/
 def pulledJet (A : SmoothTimeField K E V) (D : SmoothTimeField K E E) (n : ℕ) :
     C(K,E →ᵇ (E [×n]→L[ℝ] V)) :=
   pathPullback (A.jet n) D.field ‖A.jet (n+1)‖₊ (A.jet_lipschitz n)
@@ -79,6 +97,7 @@ def pulledJet (A : SmoothTimeField K E V) (D : SmoothTimeField K E E) (n : ℕ) 
   change A.jet n t (x+D.field t x) = _
   exact A.jet_eq n t _
 
+/-- Partition jet as an element of `C(K,E →ᵇ (E [×n]→L[ℝ] V))`. -/
 def partitionJet (A : SmoothTimeField K E V) (D : SmoothTimeField K E E)
     {n : ℕ} (c : OrderedFinpartition n) : C(K,E →ᵇ (E [×n]→L[ℝ] V)) := by
   let L := (c.compAlongOrderedFinpartitionL ℝ E E V).flipMultilinear
@@ -103,6 +122,8 @@ theorem partitionJet_apply (A : SmoothTimeField K E V) (D : SmoothTimeField K E 
   funext i
   exact displacedJet_apply D (c.partSize i) (c.partSize_pos i) t x
 
+/-- Comp displacement, bundling `field`, `smooth`, `jet`, `jet_eq` and the required
+compatibility proofs. -/
 def compDisplacement (A : SmoothTimeField K E V) (D : SmoothTimeField K E E) :
     SmoothTimeField K E V where
   field := pathPullback A.field D.field ‖A.jet 1‖₊ A.field_lipschitz

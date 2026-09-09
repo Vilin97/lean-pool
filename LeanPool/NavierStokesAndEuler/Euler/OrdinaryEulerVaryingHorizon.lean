@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.BreakdownCriterion
 
 /-! H³ stability on varying initial horizons. The comparison constant
 uses only the original reference Euler solution and its full horizon. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,7 +39,7 @@ theorem restricted_exponential_le (n : ℕ) :
 
 theorem eventually_h3_bound_varying
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))
-    (hinit : ∀ n, tensorNorm 3 ((R n).difference (V n) ⟨0,le_rfl,hD n⟩) ≤ ε n) :
+    (hinit : ∀ n, tensorNorm 3 ((R n).difference (V n) ⟨0, le_rfl, hD n⟩) ≤ ε n) :
     ∀ᶠ n in atTop, ∀ t : Icc (0 : ℝ) (durations n),
       tensorNorm 3 ((R n).difference (V n) t) ≤
         640*ε n*Real.exp (3*stabilityConstant U.referenceSize*T) := by
@@ -59,7 +61,7 @@ theorem eventually_h3_bound_varying
 
 theorem sampled_h3_tendsto_zero_varying
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))
-    (hinit : ∀ n, tensorNorm 3 ((R n).difference (V n) ⟨0,le_rfl,hD n⟩) ≤ ε n)
+    (hinit : ∀ n, tensorNorm 3 ((R n).difference (V n) ⟨0, le_rfl, hD n⟩) ≤ ε n)
     (times : ∀ n, Icc (0 : ℝ) (durations n)) :
     Tendsto (fun n => tensorNorm 3 ((R n).difference (V n) (times n))) atTop (𝓝 0) := by
   apply squeeze_zero' (Eventually.of_forall (fun n => tensorNorm_nonneg 3 _))
@@ -70,10 +72,10 @@ theorem sampled_h3_tendsto_zero_varying
 
 theorem no_gradient_escape_varying
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))
-    (hinit : ∀ n, tensorNorm 3 ((R n).difference (V n) ⟨0,le_rfl,hD n⟩) ≤ ε n)
+    (hinit : ∀ n, tensorNorm 3 ((R n).difference (V n) ⟨0, le_rfl, hD n⟩) ≤ ε n)
     (times : ∀ n, Icc (0 : ℝ) (durations n)) :
     ¬ Tendsto (fun n => ‖fderiv ℝ ((V n).velocity (times n)).field 0‖) atTop atTop := by
-  let err : ℕ → ℝ := fun n => (9*smoothEmbeddingConstant)*
+  let err : ℕ → ℝ := fun n => (9*smoothEmbeddingConstant) *
     tensorNorm 3 ((R n).difference (V n) (times n))
   have he : Tendsto err atTop (𝓝 0) := by
     simpa only [mul_zero] using
@@ -97,14 +99,14 @@ theorem no_gradient_escape_varying
   rw [hf,fderiv_sub (((V n).velocity (times n)).smooth.differentiable (by simp) 0)
     (((R n).velocity (times n)).smooth.differentiable (by simp) 0)] at hb
   rw [projIcc_of_mem hT ⟨(times n).property.1,(times n).property.2.trans (hDT n)⟩]
-  change ‖fderiv ℝ ((V n).velocity (times n)).field 0-
+  change ‖fderiv ℝ ((V n).velocity (times n)).field 0 -
       fderiv ℝ ((R n).velocity (times n)).field 0‖ ≤
     (9*smoothEmbeddingConstant)*tensorNorm 3 ((R n).difference (V n) (times n))
   rw [tensorNorm_eq,hf]
   exact hb
 
 theorem no_gradient_escape_of_initial_tendsto_varying
-    (hinit : Tendsto (fun n => tensorNorm 3 ((R n).difference (V n) ⟨0,le_rfl,hD n⟩))
+    (hinit : Tendsto (fun n => tensorNorm 3 ((R n).difference (V n) ⟨0, le_rfl, hD n⟩))
       atTop (𝓝 0)) (times : ∀ n, Icc (0 : ℝ) (durations n)) :
     ¬ Tendsto (fun n => ‖fderiv ℝ ((V n).velocity (times n)).field 0‖) atTop atTop := by
   let ε : ℕ → ℝ := fun n => tensorNorm 3 ((R n).difference (V n) ⟨0,le_rfl,hD n⟩)+1/((n : ℝ)+1)

@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianFields
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.DistLEIntegral
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
+public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussian
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianFields
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.DistLEIntegral
+
+/-! The small-time heat remainder from genuine third spatial L² derivatives. -/
 
 @[expose] public section
 
-/-! The small-time heat remainder from genuine third spatial L² derivatives. -/
 
 noncomputable section
 

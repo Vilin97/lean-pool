@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
 
+/-! Translation is strongly differentiable in the actual Sobolev topology with one more derivative.
+-/
+
 @[expose] public section
 
-/-! Translation is strongly differentiable in the actual Sobolev topology with one more derivative.
-  -/
 
 noncomputable section
 
@@ -23,13 +24,13 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Differentiating cylinder translation in Hq costs precisely one Sobolev derivative. -/
-theorem sobolevTranslation_hasDerivAt {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q+1)) :
+theorem sobolevTranslation_hasDerivAt {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q + 1)) :
     HasDerivAt (fun t => sobolevTranslation period q (translationPath period (standardDirection i)
-      t)
+        t)
       (truncateOperator period q u)) (derivativeOperator period q i u) 0 := by
   let f : ℝ → SobolevSpace period q := fun t =>
     sobolevTranslation period q (translationPath period (standardDirection i) t) (truncateOperator
-      period q u)
+        period q u)
   let d : SobolevWord q → LiftL2 period := fun w =>
     u.val ⟨⟨w.1.val+1, Nat.succ_lt_succ w.1.isLt⟩, Fin.cons i w.2⟩
   have hd : HasDerivAt (fun t => (f t).val) d 0 := by
@@ -42,7 +43,7 @@ theorem sobolevTranslation_hasDerivAt {q : ℕ} (i : Fin 4) (u : SobolevSpace pe
     intro t
     change (t-0)⁻¹ • ((f t).val - (f 0).val) ∈ sobolevSubspace period q
     exact (sobolevSubspace period q).smul_mem _ ((sobolevSubspace period q).sub_mem (f t).property
-      (f 0).property)
+        (f 0).property)
   let v : SobolevSpace period q := ⟨d, hdmem⟩
   have hv : HasDerivAt f v 0 := by
     apply hasDerivAt_iff_tendsto_slope.mpr

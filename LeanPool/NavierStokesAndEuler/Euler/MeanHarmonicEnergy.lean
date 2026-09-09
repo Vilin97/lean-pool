@@ -6,10 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-!
 # Local energy identities for the harmonic part of the mean inverse
@@ -19,6 +21,9 @@ field. This file starts that argument with the classical localized energy
 identity, proved by ordinary-space integration by parts. No interior estimate
 or mean-value formula is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -71,10 +76,10 @@ theorem caccioppoli_identity (η h : Space → ℝ)
     hcSquaredη.mul_left (f := fun x => h x ^ 2)
   have hA : Integrable (fun x => ‖gradient (η * h) x‖ ^ 2) :=
     ((contDiff_gradient (hη.mul hh)).continuous.norm.pow 2).integrable_of_hasCompactSupport
-      hcompactA
+        hcompactA
   have hC : Integrable (fun x => h x ^ 2 * ‖gradient η x‖ ^ 2) :=
     ((hh.continuous.pow 2).mul ((contDiff_gradient hη).continuous.norm.pow
-      2)).integrable_of_hasCompactSupport
+        2)).integrable_of_hasCompactSupport
       hcompactC
   have hcTest : HasCompactSupport (η * (η * h)) := hcη.mul_right (f' := η * h)
   have hip := gradient_test_integration_by_parts (gradient h) (contDiff_gradient hh)

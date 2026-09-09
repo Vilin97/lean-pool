@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # A bounded reconstruction of genuine time-H¹ fields
@@ -20,6 +21,9 @@ The pair of L² fields `(p,q)` determines a continuous path by
 of `p` with derivative `q`, this is that representative. Thus parameter
 derivatives and all-order bounds pass through one fixed bounded linear map.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -159,8 +163,8 @@ the trace costs a fixed polynomial multiplier, independent of the order. -/
 theorem reconstruction_gevrey (T : ℝ) (hT : 0 < T)
     (p q : P → TimeLp T E) (hp : ContDiff ℝ ∞ p) (hq : ContDiff ℝ ∞ q)
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D) (d : ℕ)
-    (hbp : ∀ n x, ‖iteratedFDeriv ℝ n p x‖ ≤ C*majorant R d n)
-    (hbq : ∀ n x, ‖iteratedFDeriv ℝ n q x‖ ≤ D*majorant R d n)
+    (hbp : ∀ n x, ‖iteratedFDeriv ℝ n p x‖ ≤ C * majorant R d n)
+    (hbq : ∀ n x, ‖iteratedFDeriv ℝ n q x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => reconstruction T hT.le (p y,q y)) x‖ ≤
       ((T⁻¹*Real.sqrt T)*C + (2*Real.sqrt T)*D) * majorant R d n := by

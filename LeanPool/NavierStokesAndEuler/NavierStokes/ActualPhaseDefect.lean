@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AllBandBaseJets
 
 /-!
 # The material defect of the actual primary chart phase
@@ -18,6 +17,9 @@ The base coefficients are identified through their common physical field
 before the native material cancellation is used.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualPhaseDefect
@@ -25,8 +27,11 @@ namespace NavierStokes.ActualPhaseDefect
 open Set Function Filter HarmonicCalculus
 open scoped ContDiff Topology BigOperators
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
 
 
@@ -71,12 +76,12 @@ theorem material_chartChange {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     LinearWaveResidual.materialPhaseDefect PhysicalResidualBridge.ScaledGraph.radius b F G
       (PhysicalResidualBridge.commonGraph Q h i).radial PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph Q h i).axial (PhysicalResidualBridge.commonGraph Q h
-        i).temporal
+          i).temporal
       (fun y => scale*Phi (PhysicalParticularWave.cylinderChange h Q Qr gap y)) x =
     scale*PhysicalParticularWave.clockWeight h Q Qr *
       LinearWaveResidual.materialPhaseDefect PhysicalResidualBridge.ScaledGraph.radius br Fr Gr
         (PhysicalResidualBridge.commonGraph Qr h (i+gap)).radial
-          PhysicalResidualBridge.ScaledGraph.angular
+            PhysicalResidualBridge.ScaledGraph.angular
         (PhysicalResidualBridge.commonGraph Qr h (i+gap)).axial
         (PhysicalResidualBridge.commonGraph Qr h (i+gap)).temporal Phi
         (PhysicalParticularWave.cylinderChange h Q Qr gap x) := by
@@ -104,7 +109,7 @@ theorem slot_coordinate_temporal (l : SlotColoring.Label) :
       ActualSignedGeometry.temporalVector = (0,(ChartScales.timeCoefficient h l.1)⁻¹) := by
   let g := ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0
   have hb : g.basis (0,(ChartScales.timeCoefficient h l.1)⁻¹) = ActualSignedGeometry.temporalVector
-    := by
+      := by
     rw [ActualSignedGeometry.slotGeometry_basis]
     simp [ (ChartScales.timeCoefficient_pos h l.1).ne']
   have he := (g.basis.symm_apply_eq).mpr hb.symm
@@ -116,7 +121,7 @@ theorem slot_coordinates_temporal (l : SlotColoring.Label) (x : Cylinder) :
     ActualSignedGeometry.slotLinear
       (ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0)
       ((PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).temporal x) =
+          l.1)).temporal x) =
       PhaseCalculus.eV-ChartScales.epsilon h l.1 • PhaseCalculus.eT := by
   change ((0,(0,-ChartScales.epsilon h l.1)),(0,
     ((ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0).coordinateLinear
@@ -126,23 +131,23 @@ theorem slot_coordinates_temporal (l : SlotColoring.Label) (x : Cylinder) :
 
 theorem slot_material (l : SlotColoring.Label) (p pz x0 : ℝ) (b F G : Slow → ℝ)
     (k : TorusInverse.Frequency) {x : Cylinder} (hx : 0 < x.1.1)
-    (hF : DifferentiableAt ℝ F (x.1.1,x.1.2.1))
-    (hG : DifferentiableAt ℝ G (x.1.1,x.1.2.1)) :
+    (hF : DifferentiableAt ℝ F (x.1.1, x.1.2.1))
+    (hG : DifferentiableAt ℝ G (x.1.1, x.1.2.1)) :
     LinearWaveResidual.materialPhaseDefect PhysicalResidualBridge.ScaledGraph.radius
       (fun y => b (y.1.1,y.1.2.1)) (fun y => F (y.1.1,y.1.2.1)) (fun y => G (y.1.1,y.1.2.1))
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).radial
+          l.1)).radial
       PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).axial
+          l.1)).axial
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).temporal
+          l.1)).temporal
       (PhaseCalculus.phase (ChartScales.epsilon h l.1) p pz x0 F G ∘
         ActualSignedGeometry.slotCoordinates
           (ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0) k) x =
     PrimaryMaterialDefect.expression (ChartScales.epsilon h l.1) p pz x0
       (((ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0).coordinates k
-        x.1.2.2).2)
+          x.1.2.2).2)
       (b (x.1.1,x.1.2.1)) (G (x.1.1,x.1.2.1))
       (PhaseCalculus.slowR F (x.1.1,x.1.2.1)) (PhaseCalculus.slowR G (x.1.1,x.1.2.1))
       (PhaseCalculus.slowT F (x.1.1,x.1.2.1)) (PhaseCalculus.slowT G (x.1.1,x.1.2.1))
@@ -157,12 +162,12 @@ theorem slot_material (l : SlotColoring.Label) (p pz x0 : ℝ) (b F G : Slow →
   have he : LinearWaveResidual.materialPhaseDefect PhysicalResidualBridge.ScaledGraph.radius
       (fun y => b (y.1.1,y.1.2.1)) (fun y => F (y.1.1,y.1.2.1)) (fun y => G (y.1.1,y.1.2.1))
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).radial
+          l.1)).radial
       PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).axial
+          l.1)).axial
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).temporal
+          l.1)).temporal
       (PhaseCalculus.phase (ChartScales.epsilon h l.1) p pz x0 F G ∘ chi) x =
       LinearWaveResidual.materialPhaseDefect (fun y : PhaseCalculus.Slot => y.1.1)
         (fun y => b y.1) (fun y => F y.1) (fun y => G y.1)
@@ -195,7 +200,7 @@ theorem radialSlow_change (n m : ℕ) (p : Slow) :
   change ChartScales.Q n ^ CoordinateAlgebra.A out.data.h *
       SlowBorelBase.baseVelocity _ _ _ _ (BaseChartJets.bandPoint _ _ _) 0 =
     PhysicalParticularWave.velocityWeight _ _ _ * (ChartScales.Q m ^ CoordinateAlgebra.A out.data.h
-      *
+        *
       SlowBorelBase.baseVelocity _ _ _ _ (BaseChartJets.bandPoint _ _ _) 0)
   rw [bandPoint_change (ChartScales.Q_pos n) (ChartScales.Q_pos m),
     PhysicalParticularWave.velocityWeight, ← mul_assoc,
@@ -211,11 +216,11 @@ theorem axialSlow_change (n m : ℕ) {p : Slow} (hT : 0 < p.2.2) :
   unfold BaseContextAssembly.axialSlow
   rw [BaseChartJets.axial_eq_normalized_velocity (FinalSlowBase.scales_strictMono H v upper B)
       out.data.h_pos out.data.h_lt_half (ChartScales.Q_pos n) (FinalSlowBase.coefficients_smooth H
-        v) hT
+          v) hT
       (C := W.axis.normalization),
     BaseChartJets.axial_eq_normalized_velocity (FinalSlowBase.scales_strictMono H v upper B)
       out.data.h_pos out.data.h_lt_half (ChartScales.Q_pos m) (FinalSlowBase.coefficients_smooth H
-        v) hTr
+          v) hTr
       (C := W.axis.normalization),
     bandPoint_change (ChartScales.Q_pos n) (ChartScales.Q_pos m),
     PhysicalParticularWave.velocityWeight, ← mul_assoc,
@@ -233,10 +238,10 @@ theorem frequencySlow_change (n m : ℕ) {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p
   unfold BaseContextAssembly.frequencySlow
   rw [BaseChartJets.frequency_eq_normalized_velocity (FinalSlowBase.scales_strictMono H v upper B)
       out.data.h_pos out.data.h_lt_half (ChartScales.Q_pos n) (FinalSlowBase.coefficients_smooth H
-        v) hT hR,
+          v) hT hR,
     BaseChartJets.frequency_eq_normalized_velocity (FinalSlowBase.scales_strictMono H v upper B)
       out.data.h_pos out.data.h_lt_half (ChartScales.Q_pos m) (FinalSlowBase.coefficients_smooth H
-        v) hTr hRr,
+          v) hTr hRr,
     bandPoint_change (ChartScales.Q_pos n) (ChartScales.Q_pos m),
     ActualSignedGeometry.slowChange_apply,
     clock_eq_velocity_radial (ChartScales.Q_pos n) (ChartScales.Q_pos m)]
@@ -245,11 +250,11 @@ theorem frequencySlow_change (n m : ℕ) {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p
     _ = (PhysicalParticularWave.velocityWeight out.data.h (ChartScales.Q n) (ChartScales.Q m) *
         ChartScales.Q m ^ CoordinateAlgebra.A out.data.h) *
         (SlowBorelBase.baseVelocity (FinalSlowBase.scales H v upper B) out.data.h
-          W.axis.normalization
+            W.axis.normalization
           (FinalSlowBase.coefficients H v) (BaseChartJets.bandPoint out.data.h (ChartScales.Q n) p)
-            1 / p.1) := by
+              1 / p.1) := by
       have hs := (PhysicalParticularWave.ratioPower_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m)
-        (1/2)).ne'
+          (1/2)).ne'
       field_simp [hs, hR.ne']
     _ = _ := by
       rw [PhysicalParticularWave.velocityWeight,
@@ -264,9 +269,9 @@ theorem material_congr_germ {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E
     LinearWaveResidual.materialPhaseDefect R b F G Vr Vtheta Vz Vt Phi =ᶠ[𝓝 x]
       LinearWaveResidual.materialPhaseDefect R b F G Vr Vtheta Vz Vt Psi := by
   filter_upwards [ParticularWaveAssembly.along_germ he Vr, ParticularWaveAssembly.along_germ he
-    Vtheta,
+      Vtheta,
     ParticularWaveAssembly.along_germ he Vz, ParticularWaveAssembly.along_germ he Vt] with y hr
-      htheta hz ht
+        htheta hz ht
   simp only [LinearWaveResidual.materialPhaseDefect, hr, htheta, hz, ht]
 
 theorem periodic_material_germ {dimension h : ℝ}
@@ -276,24 +281,24 @@ theorem periodic_material_germ {dimension h : ℝ}
     (p pz x0 : ℝ) (b F G : Slow → ℝ)
     {S : Set Slow} (hS : IsOpen S) (hF : ContDiffOn ℝ ∞ F S) (hG : ContDiffOn ℝ ∞ G S)
     (k : TorusInverse.Frequency) {x : Cylinder} (hR : 0 < x.1.1)
-    (hx : (x.1.1,x.1.2.1) ∈ S)
+    (hx : (x.1.1, x.1.2.1) ∈ S)
     (hc : (ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0).coordinates
-      k x.1.2.2 ∈
+        k x.1.2.2 ∈
       (ActualSignedGeometry.clockWindow sys l.1).core) :
     (fun y => LinearWaveResidual.materialPhaseDefect PhysicalResidualBridge.ScaledGraph.radius
       (fun z => b (z.1.1,z.1.2.1)) (fun z => F (z.1.1,z.1.2.1)) (fun z => G (z.1.1,z.1.2.1))
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).radial
+          l.1)).radial
       PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).axial
+          l.1)).axial
       (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-        l.1)).temporal
+          l.1)).temporal
       (ActualSignedGeometry.periodicPhase sys l 0 (ChartScales.epsilon h l.1) p pz x0 F G) y) =ᶠ[𝓝
-        x]
+          x]
     fun y => PrimaryMaterialDefect.expression (ChartScales.epsilon h l.1) p pz x0
       ((ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det l 0).coordinates k
-        y.1.2.2).2
+          y.1.2.2).2
       (b (y.1.1,y.1.2.1)) (G (y.1.1,y.1.2.1))
       (PhaseCalculus.slowR F (y.1.1,y.1.2.1)) (PhaseCalculus.slowR G (y.1.1,y.1.2.1))
       (PhaseCalculus.slowT F (y.1.1,y.1.2.1)) (PhaseCalculus.slowT G (y.1.1,y.1.2.1))
@@ -303,11 +308,11 @@ theorem periodic_material_germ {dimension h : ℝ}
   have he := material_congr_germ PhysicalResidualBridge.ScaledGraph.radius
     (fun z => b (z.1.1,z.1.2.1)) (fun z => F (z.1.1,z.1.2.1)) (fun z => G (z.1.1,z.1.2.1))
     (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-      l.1)).radial
+        l.1)).radial
     PhysicalResidualBridge.ScaledGraph.angular
     (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h l.1)).axial
     (PhysicalResidualBridge.commonGraph (ChartScales.Q l.1) h (ChartScales.nativeIndex h
-      l.1)).temporal hp
+        l.1)).temporal hp
   have hmem : ∀ᶠ y : Cylinder in 𝓝 x, (y.1.1,y.1.2.1) ∈ S :=
     (hS.preimage (continuous_fst.fst.prodMk continuous_fst.snd.fst)).mem_nhds hx
   have hpos : ∀ᶠ y : Cylinder in 𝓝 x, 0 < y.1.1 :=
@@ -340,7 +345,7 @@ theorem context_material_swap
       hG.eR, hG.vR, hG.frequency, hG.profile, PhysicalResidualBridge.ScaledGraph.radial, smul_smul]
   have hz : PhysicalResidualTZ.swapCylinder ((PrimaryResidualClass.directions c).axialField
       (HarmonicWaveInteraction.productStrip s) n x) = G.axial (PhysicalResidualTZ.swapCylinder x)
-        := by
+          := by
     simp [PrimaryResidualClass.directions, LinearWaveBounds.GraphDirections.axialField,
       PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply,
       hG.eZ, hepsilon, hG.epsilon, PhysicalResidualBridge.ScaledGraph.axial,
@@ -361,7 +366,7 @@ theorem context_material_swap
       fderiv ℝ (fun y => Phi (PhysicalResidualTZ.swapCylinder y)) x z =
         fderiv ℝ Phi (PhysicalResidualTZ.swapCylinder x) (PhysicalResidualTZ.swapCylinder z) :=
     PhysicalResidualTZ.fderiv_reindex PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv Phi x
-      z
+        z
   unfold LinearWaveBounds.WaveCoefficients.defect LinearWaveResidual.materialPhaseDefect along
   rw [hphase]
   simp only [hd, hr, hz, ht, ha, PhysicalResidualTZ.swapCylinder_swapCylinder]
@@ -372,15 +377,17 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 
 variable {B N0 : ℕ}
 
+/-- Native copy, constructed using `ActualSignedGeometry.copyPoint`. -/
 noncomputable def nativeCopy (j : Fin 2) (L : Label B N0) (n : ℕ) (k : TorusInverse.Frequency)
     (x : FullPoint) : Slow × Plane :=
   ActualSignedGeometry.copyPoint slots vectors_det
     (PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal L) j)
     n (CommonWindow.index h n) k (ActualSignedGeometry.meanEquiv.symm x.1)
 
+/-- View map as an element of `FullPoint →L[ℝ] Cylinder`. -/
 noncomputable def viewMap (L : Label B N0) (n : ℕ) : FullPoint →L[ℝ] Cylinder :=
   (PhysicalParticularWave.cylinderChange h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-    L))
+      L))
     (ChartScales.nativeIndex h (BaseChartJets.cellBand L)-CommonWindow.index h n)).comp
       PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv.toContinuousLinearMap
 
@@ -407,7 +414,7 @@ theorem chart_phase_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) {x : FullPoint}
     (hc : (nativeCopy j L n k x).2 ∈ (ActualSignedGeometry.clockWindow slots
-      (BaseChartJets.cellBand L)).core) :
+        (BaseChartJets.cellBand L)).core) :
     (chartCoefficients j L).phase n =ᶠ[𝓝 x]
     fun y => ((ChartScales.carrier h (BaseChartJets.cellBand L):ℝ)/(ChartScales.carrier h n:ℝ)) *
       PhaseCalculus.phase (ChartScales.epsilon h (BaseChartJets.cellBand L))
@@ -434,19 +441,21 @@ theorem chart_phase_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   rw [hy]
   change _ * PhaseCalculus.phase _ _ _ _ _ _
     (ActualSignedGeometry.slotCoordinates (ActualSignedGeometry.slotGeometry slots vectors_det l 0)
-      k
+        k
       (viewMap L n y)) = _
   rw [view_slot]
 
+/-- Defect as an element of `FullPoint → ℝ`. -/
 noncomputable def defect (j : Fin 2) (L : Label B N0) (n : ℕ) : FullPoint → ℝ :=
   (chartCoefficients j L).defect
     (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal standardRegion))
     (PrimaryResidualClass.directions (commonContext B)) n
 
+/-- Reference material, constructed using `LinearWaveResidual.materialPhaseDefect`. -/
 noncomputable def referenceMaterial (j : Fin 2) (L : Label B N0) : Cylinder → ℝ :=
   LinearWaveResidual.materialPhaseDefect PhysicalResidualBridge.ScaledGraph.radius
     (fun y => BaseContextAssembly.radialSlow certificate modulation upper B (BaseChartJets.cellBand
-      L)
+        L)
       (y.1.1,y.1.2.1))
     (fun y => (phases B N0 j).phase.F L (y.1.1,y.1.2.1))
     (fun y => (phases B N0 j).phase.G L (y.1.1,y.1.2.1))
@@ -463,6 +472,7 @@ noncomputable def referenceMaterial (j : Fin 2) (L : Label B N0) : Cylinder → 
       ((phases B N0 j).phase.p L) ((phases B N0 j).phase.pz L) ((phases B N0 j).phase.x0 L)
       ((phases B N0 j).phase.F L) ((phases B N0 j).phase.G L))
 
+/-- Native expression as an element of `ℝ`. -/
 noncomputable def nativeExpression (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : ℝ :=
   let z := nativeCopy j L n k x
@@ -480,12 +490,12 @@ noncomputable def nativeExpression (j : Fin 2) (L : Label B N0) (n : ℕ)
 theorem chart_material_view (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     {x : FullPoint} (hT : 0 < x.1.2.1.1) (hR : 0 < x.1.1)
-    (hp : ((viewMap L n x).1.1,(viewMap L n x).1.2.1) ∈
+    (hp : ((viewMap L n x).1.1, (viewMap L n x).1.2.1) ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L) :
     defect j L n x =
       (((ChartScales.carrier h (BaseChartJets.cellBand L):ℝ)/(ChartScales.carrier h n:ℝ)) *
         PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q
-          (BaseChartJets.cellBand L))) *
+            (BaseChartJets.cellBand L))) *
       referenceMaterial j L (viewMap L n x) := by
   have hphys := CommonBaseContext.context_matches_physical certificate modulation upper B
     (CommonWindow.index h) n
@@ -508,15 +518,15 @@ theorem chart_material_view (j : Fin 2) (L : Label B N0) (n : ℕ)
     ((phases B N0 j).phase.F L) ((phases B N0 j).phase.G L)
     (hF.differentiableAt (by simp)) (hG.differentiableAt (by simp))
   have he := material_chartChange (ChartScales.Q_pos n) (ChartScales.Q_pos (BaseChartJets.cellBand
-    L))
+      L))
     h (CommonWindow.index h n) (ChartScales.nativeIndex h (BaseChartJets.cellBand
-      L)-CommonWindow.index h n)
+        L)-CommonWindow.index h n)
     ((ChartScales.carrier h (BaseChartJets.cellBand L):ℝ)/(ChartScales.carrier h n:ℝ))
     (fun y => (chartCoefficients j L).radialBase n (PhysicalResidualTZ.swapCylinder y))
     (fun y => (chartCoefficients j L).frequencyBase n (PhysicalResidualTZ.swapCylinder y))
     (fun y => (chartCoefficients j L).axialBase n (PhysicalResidualTZ.swapCylinder y))
     (fun y => BaseContextAssembly.radialSlow certificate modulation upper B (BaseChartJets.cellBand
-      L)
+        L)
       (y.1.1,y.1.2.1))
     (fun y => (phases B N0 j).phase.F L (y.1.1,y.1.2.1))
     (fun y => (phases B N0 j).phase.G L (y.1.1,y.1.2.1)) _
@@ -537,11 +547,11 @@ theorem chart_defect_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hp : (nativeCopy j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
     (hc : (nativeCopy j L n k x).2 ∈ (ActualSignedGeometry.clockWindow slots
-      (BaseChartJets.cellBand L)).core) :
+        (BaseChartJets.cellBand L)).core) :
     defect j L n =ᶠ[𝓝 x] fun y =>
       (((ChartScales.carrier h (BaseChartJets.cellBand L):ℝ)/(ChartScales.carrier h n:ℝ)) *
         PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q
-          (BaseChartJets.cellBand L))) *
+            (BaseChartJets.cellBand L))) *
       nativeExpression j L n k y := by
   let S := (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L
   let l := PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal L) j
@@ -556,7 +566,7 @@ theorem chart_defect_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   have hRv : 0 < (viewMap L n x).1.1 :=
     ActualSignedGeometry.slowChange_radius (h := h) (ChartScales.Q_pos n)
       (ChartScales.Q_pos (BaseChartJets.cellBand L)) (p := BaseContextAssembly.slowCoordinates x.1)
-        hR
+          hR
   have href := periodic_material_germ slots outgoing.data.h_pos.le
     ((choice B N0).prepared.large _ L.property).four_le
     ((phases B N0 j).phase.p L) ((phases B N0 j).phase.pz L) ((phases B N0 j).phase.x0 L)
@@ -578,6 +588,7 @@ theorem chart_defect_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   rw [nativeCopy_view]
   exact congrArg (fun z : ℝ => _ * z) hy
 
+/-- Reduced expression as an element of `ℝ`. -/
 noncomputable def reducedExpression (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : ℝ :=
   let z := nativeCopy j L n k x
@@ -585,7 +596,7 @@ noncomputable def reducedExpression (j : Fin 2) (L : Label B N0) (n : ℕ)
     ((phases B N0 j).phase.p L) ((phases B N0 j).phase.pz L) ((phases B N0 j).phase.x0 L) z.2.2
     (BaseRadialJets.reducedRadial (FinalSlowBase.scales certificate modulation upper B) h
       (FinalSlowBase.coefficients certificate modulation) (ChartScales.Q (BaseChartJets.cellBand
-        L)) z.1)
+          L)) z.1)
     ((phases B N0 j).phase.G L z.1)
     (PhaseCalculus.slowR ((phases B N0 j).phase.F L) z.1)
     (PhaseCalculus.slowR ((phases B N0 j).phase.G L) z.1)
@@ -601,9 +612,9 @@ theorem nativeExpression_reduced (j : Fin 2) (L : Label B N0) (n : ℕ)
   have hTr : 0 < (nativeCopy j L n k x).1.2.2 :=
     ActualSignedGeometry.slowChange_time (h := h) (ChartScales.Q_pos n)
       (ChartScales.Q_pos (BaseChartJets.cellBand L)) (p := BaseContextAssembly.slowCoordinates x.1)
-        hT
+          hT
   have hb := BaseRadialJets.radial_eq (FinalSlowBase.scales_strictMono certificate modulation upper
-    B)
+      B)
     outgoing.data.h_pos outgoing.data.h_lt_half (ChartScales.Q_pos (BaseChartJets.cellBand L))
     (FinalSlowBase.coefficients_smooth certificate modulation) (C := nominal.axis.normalization) hTr
   dsimp only [nativeExpression, reducedExpression, BaseContextAssembly.radialSlow]
@@ -612,10 +623,11 @@ theorem nativeExpression_reduced (j : Fin 2) (L : Label B N0) (n : ℕ)
   dsimp only [ChartScales.epsilon, h]
   ring
 
+/-- Material weight as an element of `ℝ`. -/
 noncomputable def materialWeight (L : Label B N0) (n : ℕ) : ℝ :=
   ((ChartScales.carrier h (BaseChartJets.cellBand L):ℝ)/(ChartScales.carrier h n:ℝ)) *
     PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-      L)) *
+        L)) *
     (ChartScales.epsilon h (BaseChartJets.cellBand L)/ChartScales.epsilon h n)
 
 /-- The exact small factor is the target-band viscosity. -/
@@ -625,7 +637,7 @@ theorem chart_defect_reduced_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hp : (nativeCopy j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
     (hc : (nativeCopy j L n k x).2 ∈ (ActualSignedGeometry.clockWindow slots
-      (BaseChartJets.cellBand L)).core) :
+        (BaseChartJets.cellBand L)).core) :
     defect j L n =ᶠ[𝓝 x]
       fun y => ChartScales.epsilon h n * materialWeight L n * reducedExpression j L n k y := by
   have he := chart_defect_germ j L n hi k hT hR hp hc
@@ -636,7 +648,7 @@ theorem chart_defect_reduced_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   unfold materialWeight
   let a := ((ChartScales.carrier h (BaseChartJets.cellBand L):ℝ)/(ChartScales.carrier h n:ℝ)) *
     PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-      L))
+        L))
   let e := ChartScales.epsilon h n
   let er := ChartScales.epsilon h (BaseChartJets.cellBand L)
   let r := reducedExpression j L n k y
@@ -649,13 +661,13 @@ theorem chart_defect_reduced_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
 theorem materialWeight_normal (L : Label B N0) (n : ℕ) :
     materialWeight L n =
       PhysicalParticularWave.normalWeight (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-        L))
+          L))
         (ChartScales.carrier h n) (ChartScales.carrier h (BaseChartJets.cellBand L)) *
       PhysicalParticularWave.ratioPower (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand L))
         (CoordinateAlgebra.A h-h) := by
   have he : ChartScales.epsilon h (BaseChartJets.cellBand L)/ChartScales.epsilon h n =
       PhysicalParticularWave.ratioPower (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-        L)) (-h) := by
+          L)) (-h) := by
     simpa only [neg_neg, ChartScales.epsilon] using PhysicalParticularWave.ratioPower_neg_div
       (ChartScales.Q_pos n) (ChartScales.Q_pos (BaseChartJets.cellBand L)) (-h)
   unfold materialWeight PhysicalParticularWave.normalWeight PhysicalParticularWave.clockWeight
@@ -665,6 +677,8 @@ theorem materialWeight_normal (L : Label B N0) (n : ℕ) :
   congr 2
   ring
 
+/-- Material weight bound, given by `2*ActualSignedGeometry.powerBound (h/2+1/2) *
+ActualSignedGeometry.powerBound (CoordinateAlgebra.A h-h)`. -/
 noncomputable def materialWeightBound : ℝ :=
   2*ActualSignedGeometry.powerBound (h/2+1/2) *
     ActualSignedGeometry.powerBound (CoordinateAlgebra.A h-h)
@@ -678,19 +692,19 @@ theorem materialWeight_pos (L : Label B N0) (n : ℕ) : 0 < materialWeight L n :
     (div_pos (ChartScales.epsilon_pos h _) (ChartScales.epsilon_pos h _))
 
 theorem materialWeight_bound (L : Label B N0) (n : ℕ)
-    (hnm : n ≤ BaseChartJets.cellBand L+4) (hmn : BaseChartJets.cellBand L ≤ n+4) :
+    (hnm : n ≤ BaseChartJets.cellBand L + 4) (hmn : BaseChartJets.cellBand L ≤ n + 4) :
     materialWeight L n ≤ materialWeightBound := by
   let near : ∀ (_ : Unit) (_ : ℕ), n ≤ BaseChartJets.cellBand L+4 ∧
       BaseChartJets.cellBand L ≤ n+4 := fun _ _ => ⟨hnm,hmn⟩
   have hnormal : PhysicalParticularWave.normalWeight (ChartScales.Q n) (ChartScales.Q
-    (BaseChartJets.cellBand L))
+      (BaseChartJets.cellBand L))
       (ChartScales.carrier h n) (ChartScales.carrier h (BaseChartJets.cellBand L)) ≤
       2*ActualSignedGeometry.powerBound (h/2+1/2) := by
     rw [← ActualSignedGeometry.normalScale_value (fun _ => n) (fun (_ : Unit) _ =>
-      BaseChartJets.cellBand L)
+        BaseChartJets.cellBand L)
       near outgoing.data.h_pos.le () 0]
     exact ((ActualSignedGeometry.normalScale (fun _ => n) (fun (_ : Unit) _ =>
-      BaseChartJets.cellBand L)
+        BaseChartJets.cellBand L)
       near outgoing.data.h_pos.le).bounds () 0).2
   rw [materialWeight_normal]
   exact mul_le_mul hnormal (ActualSignedGeometry.dyadic_ratioPower_le hnm hmn _)
@@ -702,7 +716,7 @@ theorem native_core_of_interval (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hu : |(nativeCopy j L n k x).2.1| ≤ slots.radius)
     (hv : (nativeCopy j L n k x).2.2 ∈ Ioo 0 ((phases B N0 j).L L)) :
     (nativeCopy j L n k x).2 ∈ (ActualSignedGeometry.clockWindow slots (BaseChartJets.cellBand
-      L)).core :=
+        L)).core :=
   ⟨abs_le.mp hu, hv.1.le, hv.2.le⟩
 
 theorem active_copy_defect_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
@@ -713,7 +727,7 @@ theorem active_copy_defect_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hp : (nativeCopy j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
     (hc : (nativeCopy j L n k x).2 ∈ (ActualSignedGeometry.clockWindow slots
-      (BaseChartJets.cellBand L)).core) :
+        (BaseChartJets.cellBand L)).core) :
     defect j L n =ᶠ[𝓝 x]
       fun y => ChartScales.epsilon h n * materialWeight L n * reducedExpression j L n k y :=
   chart_defect_reduced_germ j L n (CommonWindow.index_le hactive) k
@@ -728,12 +742,12 @@ theorem active_copy_defect_jets (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hp : (nativeCopy j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
     (hc : (nativeCopy j L n k x).2 ∈ (ActualSignedGeometry.clockWindow slots
-      (BaseChartJets.cellBand L)).core)
+        (BaseChartJets.cellBand L)).core)
     (m : ℕ) :
     iteratedFDeriv ℝ m (defect j L n) x = iteratedFDeriv ℝ m
       (fun y => ChartScales.epsilon h n * materialWeight L n * reducedExpression j L n k y) x :=
   PhysicalWaveSum.iteratedFDeriv_eq_of_eventuallyEq (active_copy_defect_germ j L n hactive k hx hp
-    hc) m
+      hc) m
 
 theorem active_materialWeight_bound (L : Label B N0) (n : ℕ)
     (hactive : BaseChartJets.cellBand L ∈ CommonWindow.levels n) :
@@ -743,6 +757,8 @@ theorem active_materialWeight_bound (L : Label B N0) (n : ℕ)
 
 /-! ## Actual native jets before the copy-coordinate pullback -/
 
+/-- Padded region, bundling `carrier`, `isOpen`, `have`, `coord_pos` and the required
+compatibility proofs. -/
 noncomputable def paddedRegion : LocalSignedRequest.SlowRegion (2*h) where
   carrier := {z | 0 < z.1 ∧ SimilarityCoordinates.coordinateQ (2*h) z ∈ Ioo (1/4 : ℝ) 4}
   isOpen := by
@@ -762,17 +778,18 @@ noncomputable def paddedRegion : LocalSignedRequest.SlowRegion (2*h) where
   q_mem := fun _ hz => ⟨hz.2.1.le,hz.2.2.le⟩
 
 theorem padded_slow_mem {p : Slow} (hT : 0 < p.2.2)
-    (hq : SimilarityHomogeneity.chartQ h p ∈ Icc (1/2 : ℝ) 2)
+    (hq : SimilarityHomogeneity.chartQ h p ∈ Icc (1 / 2 : ℝ) 2)
     (hr : PrimaryTargetBounds.profileRadius h p ∈
       Ioo (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)) :
     p ∈ BaseContextAssembly.slowCarrier nominal paddedRegion := by
   apply (BaseContextAssembly.nativeStrip_mem nominal paddedRegion (BaseContextAssembly.insertSlow
-    p)).mpr
+      p)).mpr
   refine ⟨⟨hT,?_,?_⟩,hr⟩
   · exact (by norm_num : (1/4 : ℝ) < 1/2).trans_le hq.1
   · exact hq.2.trans_lt (by norm_num)
 
-noncomputable def reducedSlowDomain (U : LocalSignedRequest.SlowRegion (2*h)) :
+/-- Reduced slow domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
+noncomputable def reducedSlowDomain (U : LocalSignedRequest.SlowRegion (2 * h)) :
     PhaseJetBounds.Domain (Fin 2 × Label B N0) Slow where
   scale i := ChartScales.S (BaseChartJets.cellBand i.2)
   carrier i := (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier i.2 ∩
@@ -780,20 +797,23 @@ noncomputable def reducedSlowDomain (U : LocalSignedRequest.SlowRegion (2*h)) :
   isOpen i := ((PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).isOpen i.2).inter
     (BaseContextAssembly.slowCarrier_open nominal U)
   one_le_scale i := (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).one_le_scale
-    i.2
+      i.2
 
-noncomputable def reducedJetDomain (U : LocalSignedRequest.SlowRegion (2*h)) :
+/-- Reduced jet domain, given by `(reducedSlowDomain U).slot (fun i => (phases B N0 i.1).V i.2)
+(fun i => (phases B N0 i.1).openV i.2)`. -/
+noncomputable def reducedJetDomain (U : LocalSignedRequest.SlowRegion (2 * h)) :
     PhaseJetBounds.Domain (Fin 2 × Label B N0) (Slow × ℝ) :=
   (reducedSlowDomain U).slot (fun i => (phases B N0 i.1).V i.2)
     (fun i => (phases B N0 i.1).openV i.2)
 
+/-- Native reduced, constructed using `PrimaryMaterialDefect.expression`. -/
 noncomputable def nativeReduced (i : Fin 2 × Label B N0) (z : Slow × ℝ) : ℝ :=
   PrimaryMaterialDefect.expression 1
     ((phases B N0 i.1).phase.p i.2) ((phases B N0 i.1).phase.pz i.2)
     ((phases B N0 i.1).phase.x0 i.2) z.2
     (BaseRadialJets.reducedRadial (FinalSlowBase.scales certificate modulation upper B) h
       (FinalSlowBase.coefficients certificate modulation) (ChartScales.Q (BaseChartJets.cellBand
-        i.2)) z.1)
+          i.2)) z.1)
     ((phases B N0 i.1).phase.G i.2 z.1)
     (PhaseCalculus.slowR ((phases B N0 i.1).phase.F i.2) z.1)
     (PhaseCalculus.slowR ((phases B N0 i.1).phase.G i.2) z.1)
@@ -807,7 +827,7 @@ theorem reducedExpression_eq_native (j : Fin 2) (L : Label B N0) (n : ℕ)
     reducedExpression j L n k x =
       nativeReduced (j,L) ((nativeCopy j L n k x).1,(nativeCopy j L n k x).2.2) := rfl
 
-theorem native_reduced_polynomial (U : LocalSignedRequest.SlowRegion (2*h)) :
+theorem native_reduced_polynomial (U : LocalSignedRequest.SlowRegion (2 * h)) :
     PhaseJetBounds.PolynomialJets (reducedJetDomain (B := B) (N0 := N0) U) nativeReduced := by
   let D := reducedSlowDomain (B := B) (N0 := N0) U
   let V : (Fin 2 × Label B N0) → Set ℝ := fun i => (phases B N0 i.1).V i.2
@@ -831,7 +851,7 @@ theorem native_reduced_polynomial (U : LocalSignedRequest.SlowRegion (2*h)) :
   have hb : PhaseJetBounds.PolynomialJets D (fun i =>
       BaseRadialJets.reducedRadial (FinalSlowBase.scales certificate modulation upper B) h
         (FinalSlowBase.coefficients certificate modulation) (ChartScales.Q (BaseChartJets.cellBand
-          i.2))) :=
+            i.2))) :=
     BaseChartJets.polynomial_of_unit (AllBandBaseJets.reducedRadial_polynomial
       outgoing.data.h_pos outgoing.data.h_lt_half (BaseContextAssembly.geometryRadius_pos nominal U)
       (BaseContextAssembly.one_le_geometryBound nominal U) (div_pos U.qlo_pos (by norm_num))
@@ -848,17 +868,17 @@ theorem native_reduced_polynomial (U : LocalSignedRequest.SlowRegion (2*h)) :
   have hMj (j : Fin 2) : (phases B N0 j).M ≤ M := by
     fin_cases j <;> dsimp [M] <;> linarith
   have hp : PhaseJetBounds.PolynomialJets (D.slot V hV) (fun i _ => (phases B N0 i.1).phase.p i.2)
-    :=
+      :=
     PhaseJetBounds.PolynomialJets.const_uniform _ hM (fun i => by
       rw [Real.norm_eq_abs]
       exact ((phases B N0 i.1).constants i.2).2.1.trans (hMj i.1))
   have hpz : PhaseJetBounds.PolynomialJets (D.slot V hV) (fun i _ => (phases B N0 i.1).phase.pz
-    i.2) :=
+      i.2) :=
     PhaseJetBounds.PolynomialJets.const_uniform _ hM (fun i => by
       rw [Real.norm_eq_abs]
       exact ((phases B N0 i.1).constants i.2).2.2.1.trans (hMj i.1))
   have hx0 : PhaseJetBounds.PolynomialJets (D.slot V hV) (fun i _ => (phases B N0 i.1).phase.x0
-    i.2) :=
+      i.2) :=
     PhaseJetBounds.PolynomialJets.const_uniform _ hM (fun i => by
       rw [Real.norm_eq_abs]
       exact ((phases B N0 i.1).constants i.2).2.2.2.trans (hMj i.1))
@@ -883,14 +903,14 @@ theorem native_reduced_polynomial (U : LocalSignedRequest.SlowRegion (2*h)) :
     (hbb.mul hx0).sub (ht.mul (((hbb.mul ((hp.mul hFR).add (hpz.mul hGR))).sub
       ((hp.mul hFT).add (hpz.mul hGT))).add (hGG.mul ((hp.mul hFZ).add (hpz.mul hGZ)))))
 
-theorem native_reduced_finite_jets (U : LocalSignedRequest.SlowRegion (2*h)) (N : ℕ) :
+theorem native_reduced_finite_jets (U : LocalSignedRequest.SlowRegion (2 * h)) (N : ℕ) :
     ∃ C : ℝ, 1 ≤ C ∧ ∃ m : ℕ, ∀ (j : Fin 2) (L : Label B N0),
       JetBounds.FiniteJetBound N (nativeReduced (j,L))
         ((reducedJetDomain U).carrier (j,L)) (C*ChartScales.S (BaseChartJets.cellBand L)^m) := by
   obtain ⟨C,hC,m,hm⟩ := (native_reduced_polynomial (B := B) (N0 := N0) U).bound N
   exact ⟨C,hC,m,fun j L => hm (j,L)⟩
 
-theorem native_reduced_domain_mem (U : LocalSignedRequest.SlowRegion (2*h))
+theorem native_reduced_domain_mem (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) {p : Slow} {t : ℝ}
     (hp : p ∈ (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
     (hs : p ∈ BaseContextAssembly.slowCarrier nominal U)

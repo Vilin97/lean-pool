@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanMollifierLimit
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Scalar test functions and component energies for actual R³ vector fields. -/
 
 @[expose] public section
 
-/-! Scalar test functions and component energies for actual R³ vector fields. -/
 
 noncomputable section
 

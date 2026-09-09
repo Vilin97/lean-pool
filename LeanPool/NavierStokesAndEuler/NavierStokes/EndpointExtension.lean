@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-
-@[expose] public section
 
 /-!
 # Smooth gluing from matching one-sided derivative jets
@@ -23,6 +20,9 @@ This is the gluing step needed after the left endpoint regularity and the
 right Taylor--Borel construction in Lemmas 11.5--11.6. It does not construct a
 right branch with arbitrary prescribed jets.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

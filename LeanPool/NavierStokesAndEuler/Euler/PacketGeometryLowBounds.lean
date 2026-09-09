@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryGrowth
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPropagationTime
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryAssembly
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryAssembly
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketTargetAmplification
 
 /-! Actual primary size and sign estimates on the good, early, and
 stationary-history portions of the packet horizon. The amplitude is the
 one selected by its genuine center target size. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,6 +26,7 @@ namespace EulerPacketGeometryLowBounds
 open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCutoffs
   EulerGevreyCutoff EulerGevrey EulerPacketMovingFrame
 
+/-- Cutoff bound, given by `1+(9/rawBump 0)^3`. -/
 def cutoffBound : ℝ := 1+(9/rawBump 0)^3
 
 theorem cutoffBound_pos : 0 < cutoffBound := by
@@ -34,13 +40,14 @@ theorem cutoff_le (x : Space) : innerCutoff x ≤ cutoffBound := by
   have he := (le_abs_self (innerCutoff x)).trans (by simpa only [Real.norm_eq_abs] using h)
   exact he.trans (by unfold cutoffBound; linarith)
 
+/-- Good ratio, given by `cutoffBound*(64*Real.exp 6)`. -/
 def goodRatio : ℝ := cutoffBound*(64*Real.exp 6)
 
 theorem goodRatio_pos : 0 < goodRatio := by unfold goodRatio; positivity [cutoffBound_pos]
 
 variable {ι : Type*} (G : PhysicalGeometryData ι)
 
-theorem amplitude_size_of_ratio (value R : ℝ) (h : value/G.targetSize ≤ R) :
+theorem amplitude_size_of_ratio (value R : ℝ) (h : value / G.targetSize ≤ R) :
     G.amplitude*value ≤ G.δ*G.hchild*R := by
   have hh := mul_le_mul_of_nonneg_left h (mul_nonneg G.delta_nonneg G.child_nonneg)
   calc
@@ -60,7 +67,7 @@ theorem good_amplitude_size (x : ι) (s : ℝ) (hs : s ∈ Icc 1 G.H) :
     _ = _ := by rw [J.amplitude_normalization]; ring
 
 theorem early_amplitude_size (x : ι) (s : ℝ) (hs : s ∈ Icc 0 1) :
-    G.amplitude*G.size x s ≤ G.δ*G.hchild*
+    G.amplitude*G.size x s ≤ G.δ*G.hchild *
       (8232*Real.exp 9*G.Θ^5*Real.exp (-(1/(4*G.σ)))) := by
   obtain ⟨F,F1,Z,Z1,J⟩ := G.exists_geometry
   exact amplitude_size_of_ratio G _ _ (J.early_size x s hs)
@@ -85,16 +92,21 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)} (A : Guards hτ hτT P H)
-  (hball : (1/2 : ℝ) ≤ A.radius)
+  (hball : (1 / 2 : ℝ) ≤ A.radius)
 
+/-- Low geometry, given by `A.geometryData {x | ‖x‖ ≤ (1/2 : ℝ)} (by norm_num) (fun _ hx =>
+hx.trans hball)`. -/
 def lowGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   A.geometryData {x | ‖x‖ ≤ (1/2 : ℝ)} (by norm_num) (fun _ hx => hx.trans hball)
 
+/-- Primary amplitude, given by `(A.lowGeometry hball).amplitude`. -/
 def primaryAmplitude : ℝ := (A.lowGeometry hball).amplitude
 
 theorem primaryAmplitude_nonneg : 0 ≤ A.primaryAmplitude hball :=
   EulerPacketGeometryLowBounds.amplitude_nonneg (A.lowGeometry hball)
 
+/-- Early ratio, given by `cutoffBound*(8232*Real.exp 9*P.horizon^5*Real.exp
+(-(1/(4*P.sigma))))`. -/
 def earlyRatio (_A : Guards hτ hτT P H) : ℝ :=
   cutoffBound*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))
 
@@ -114,20 +126,20 @@ theorem scaledTime_upper (t : Icc (0 : ℝ) D.T) :
     _ ≤ (P.a/P.epsilon)*(D.T-τ) := hh
     _ = _ := by unfold ParentFrame.horizon; ring
 
-theorem lowGeometry_size (t : Icc (0 : ℝ) D.T) (x : Space) (hx : ‖x‖ ≤ (1/2 : ℝ)) :
+theorem lowGeometry_size (t : Icc (0 : ℝ) D.T) (x : Space) (hx : ‖x‖ ≤ (1 / 2 : ℝ)) :
     (A.lowGeometry hball).size ⟨x,hx⟩ (scaledTime τ P.a P.epsilon t) =
       ‖D.normal.field t x‖*‖uncutVelocity τ hτ hτT H A.terminal t x‖ := by
   change ‖D.normal.field (D.clamp (physicalTime τ P.a P.epsilon (scaledTime τ P.a P.epsilon t))) x‖*
     ‖uncutVelocity τ hτ hτT H A.terminal (physicalTime τ P.a P.epsilon (scaledTime τ P.a P.epsilon
-      t)) x‖ = _
+        t)) x‖ = _
   rw [physicalTime_scaledTime A.a_pos.ne' A.epsilon_pos.ne',Data.clamp_coe]
 
 theorem cutoff_amplitude_size (t : Icc (0 : ℝ) D.T) (x : Space)
     (hs : tsupport innerCutoff ⊆ D.support) :
     A.primaryAmplitude hball*(‖D.normal.field t x‖*‖canonicalVelocity τ hτ hτT H A.terminal hs t
-      x‖) =
+        x‖) =
       innerCutoff x*(A.primaryAmplitude hball*(‖D.normal.field t x‖*‖uncutVelocity τ hτ hτT H
-        A.terminal t x‖)) := by
+          A.terminal t x‖)) := by
   rw [canonicalVelocity_eq_cutoff_uncut,norm_smul,Real.norm_of_nonneg (innerCutoff_nonneg x)]
   ring
 
@@ -135,7 +147,7 @@ theorem good_primary_size (t : Icc (0 : ℝ) D.T)
     (ht : 1 ≤ scaledTime τ P.a P.epsilon t) (x : Space)
     (hs : tsupport innerCutoff ⊆ D.support) :
     A.primaryAmplitude hball*(‖D.normal.field t x‖*‖canonicalVelocity τ hτ hτT H A.terminal hs t
-      x‖) ≤
+        x‖) ≤
       A.δ*A.hchild*goodRatio := by
   rw [A.cutoff_amplitude_size hball t x hs]
   by_cases hcut : innerCutoff x=0
@@ -170,10 +182,10 @@ theorem good_primary_flux (t : Icc (0 : ℝ) D.T)
   have hg := good_flux (A.lowGeometry hball) ⟨x,hx⟩ (scaledTime τ P.a P.epsilon t)
     ⟨ht,A.scaledTime_upper t⟩
   change 0 < ⟪D.normal.field (D.clamp (physicalTime τ P.a P.epsilon (scaledTime τ P.a P.epsilon
-    t))) x,
+      t))) x,
     D.M.field (D.clamp (physicalTime τ P.a P.epsilon (scaledTime τ P.a P.epsilon t))) x
       (uncutVelocity τ hτ hτT H A.terminal (physicalTime τ P.a P.epsilon (scaledTime τ P.a
-        P.epsilon t)) x)⟫_ℝ at hg
+          P.epsilon t)) x)⟫_ℝ at hg
   rw [physicalTime_scaledTime A.a_pos.ne' A.epsilon_pos.ne',Data.clamp_coe] at hg
   exact mul_nonneg (innerCutoff_nonneg x) hg.le
 
@@ -181,7 +193,7 @@ theorem early_primary_size (t : Icc (0 : ℝ) D.T)
     (ht : scaledTime τ P.a P.epsilon t ∈ Icc 0 1) (x : Space)
     (hs : tsupport innerCutoff ⊆ D.support) :
     A.primaryAmplitude hball*(‖D.normal.field t x‖*‖canonicalVelocity τ hτ hτT H A.terminal hs t
-      x‖) ≤
+        x‖) ≤
       A.δ*A.hchild*A.earlyRatio := by
   rw [A.cutoff_amplitude_size hball t x hs]
   by_cases hcut : innerCutoff x=0
@@ -198,8 +210,8 @@ theorem early_primary_size (t : Icc (0 : ℝ) D.T)
     _ ≤ innerCutoff x*(A.δ*A.hchild*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))) :=
       mul_le_mul_of_nonneg_left hg (innerCutoff_nonneg x)
     _ ≤ cutoffBound*(A.δ*A.hchild*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))) :=
-      mul_le_mul_of_nonneg_right (cutoff_le x) (by positivity
-        [A.delta_nonneg,A.child_nonneg,A.horizon_lower])
+      mul_le_mul_of_nonneg_right (cutoff_le x) (by
+          positivity [A.delta_nonneg,A.child_nonneg,A.horizon_lower])
     _ = _ := by unfold earlyRatio; ring
 
 /-- This cost is computed from the actual stationary endpoint operator.
@@ -214,21 +226,24 @@ theorem historySizeCost_nonneg : 0 ≤ A.historySizeCost := by
   unfold historySizeCost
   positivity [D.inverseBound_pos,A.terminalBound_nonneg]
 
+/-- History ratio, given by `cutoffBound*(4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT)) *
+Real.exp (-(1/(4*P.sigma)))`. -/
 def historyRatio : ℝ :=
-  cutoffBound*(4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT))*
+  cutoffBound*(4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT)) *
     Real.exp (-(1/(4*P.sigma)))
 
 theorem historyRatio_nonneg : 0 ≤ A.historyRatio := by
   unfold historyRatio
   positivity [cutoffBound_pos,A.horizon_lower,A.historySizeCost_nonneg,rayScale_pos hτ hτT P]
 
+/-- Bad ratio, given by `A.earlyRatio+A.historyRatio`. -/
 def badRatio : ℝ := A.earlyRatio+A.historyRatio
 
 theorem badRatio_nonneg : 0 ≤ A.badRatio := add_nonneg A.earlyRatio_nonneg A.historyRatio_nonneg
 
 omit [CompleteSpace U] in
-theorem badRatio_formula : A.badRatio = cutoffBound*
-    (8232*Real.exp 9*P.horizon^5+4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT))*
+theorem badRatio_formula : A.badRatio = cutoffBound *
+    (8232*Real.exp 9*P.horizon^5+4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT)) *
       Real.exp (-(1/(4*P.sigma))) := by
   unfold badRatio earlyRatio historyRatio
   ring
@@ -252,7 +267,7 @@ theorem history_uncut_size (t : Icc (0 : ℝ) D.T) (ht : (t : ℝ) ≤ τ) (x : 
       _ ≤ historyLabelSizeCost H*P.terminalBound A.CM A.CH :=
         mul_le_mul (labelVelocity_norm H x) A.terminal_properties.2.2.2.1
           (norm_nonneg _) ((norm_nonneg (H.coefficients.labelVelocity x)).trans (labelVelocity_norm
-            H x))
+              H x))
   calc
     _ ≤ D.inverseBound*(historyLabelSizeCost H*P.terminalBound A.CM A.CH) :=
       mul_le_mul hn hv (norm_nonneg _) D.inverseBound_pos.le
@@ -261,7 +276,7 @@ theorem history_uncut_size (t : Icc (0 : ℝ) D.T) (ht : (t : ℝ) ≤ τ) (x : 
 theorem history_primary_size (t : Icc (0 : ℝ) D.T) (ht : (t : ℝ) ≤ τ) (x : Space)
     (hs : tsupport innerCutoff ⊆ D.support) :
     A.primaryAmplitude hball*(‖D.normal.field t x‖*‖canonicalVelocity τ hτ hτT H A.terminal hs t
-      x‖) ≤
+        x‖) ≤
       A.δ*A.hchild*A.historyRatio := by
   let G := A.lowGeometry hball
   obtain ⟨F,F1,Z,Z1,J⟩ := G.exists_geometry
@@ -270,18 +285,18 @@ theorem history_primary_size (t : Icc (0 : ℝ) D.T) (ht : (t : ℝ) ≤ τ) (x 
   have ha := amplitude_size_of_ratio G _ _ hr
   change A.primaryAmplitude hball*(‖D.normal.field t x‖*‖uncutVelocity τ hτ hτT H A.terminal t x‖) ≤
     A.δ*A.hchild*((4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT))*Real.exp (-(1/(4*P.sigma))))
-      at ha
+        at ha
   rw [A.cutoff_amplitude_size hball t x hs]
   calc
     _ ≤ innerCutoff x*(A.δ*A.hchild*((4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT))*Real.exp
-      (-(1/(4*P.sigma))))) :=
+        (-(1/(4*P.sigma))))) :=
       mul_le_mul_of_nonneg_left ha (innerCutoff_nonneg x)
     _ ≤ cutoffBound*(A.δ*A.hchild*((4*P.horizon*A.historySizeCost/(P.rayScale hτ hτT))*Real.exp
-      (-(1/(4*P.sigma))))) :=
+        (-(1/(4*P.sigma))))) :=
       mul_le_mul_of_nonneg_right (cutoff_le x)
-        (by positivity
-          [A.delta_nonneg,A.child_nonneg,A.horizon_lower,A.historySizeCost_nonneg,rayScale_pos hτ
-          hτT P])
+        (by
+            positivity [A.delta_nonneg, A.child_nonneg, A.horizon_lower, A.historySizeCost_nonneg,
+                rayScale_pos hτ hτT P])
     _ = _ := by unfold historyRatio; ring
 
 /-- One exponential target-ratio bound covers every time before scaled
@@ -290,7 +305,7 @@ theorem bad_primary_size (t : Icc (0 : ℝ) D.T)
     (ht : scaledTime τ P.a P.epsilon t ≤ 1) (x : Space)
     (hs : tsupport innerCutoff ⊆ D.support) :
     A.primaryAmplitude hball*(‖D.normal.field t x‖*‖canonicalVelocity τ hτ hτT H A.terminal hs t
-      x‖) ≤
+        x‖) ≤
       A.δ*A.hchild*A.badRatio := by
   by_cases hh : (t : ℝ) ≤ τ
   · exact (A.history_primary_size hball t hh x hs).trans

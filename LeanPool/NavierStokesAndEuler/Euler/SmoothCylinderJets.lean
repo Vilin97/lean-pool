@@ -9,12 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderFlow
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderDescentJets
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Actual periodic displacement jets and their differentiated integral
 equation. The real covering displacement is periodic, so its descent is
 a vector-valued field, including its angular displacement component. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,16 +26,22 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderCoverDescent
   EulerSmoothBanachFlow EulerFinitePathTensor EulerVolterraConvolution
 open scoped ContDiff Interval
 
-private local instance (n : ℕ) : MeasurableSpace (LiftTangent [×n]→L[ℝ] LiftTangent) := borel _
-private local instance (n : ℕ) : BorelSpace (LiftTangent [×n]→L[ℝ] LiftTangent) := ⟨rfl⟩
+/-- The `MeasurableSpace (LiftTangent [×n]→L[ℝ] LiftTangent)` structure used in smooth cylinder
+jets. -/
+local instance instSmoothCylinderJets1 (n : ℕ) : MeasurableSpace (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := borel _
+local instance instSmoothCylinderJets2 (n : ℕ) : BorelSpace (LiftTangent [×n]→L[ℝ] LiftTangent) :=
+    ⟨rfl⟩
 
 variable (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T)
   (A : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
   (hA : ∀ (c : AddSubgroup.zmultiples P) (t : Icc (0 : ℝ) T) z,
-    A.field t (z.1,(c : ℝ)+z.2)=A.field t z)
+    A.field t (z.1, (c : ℝ) + z.2) = A.field t z)
 
+/-- Velocity cover, given by `A.field (projIcc 0 T hT t)`. -/
 def velocityCover (t : ℝ) : LiftTangent → LiftTangent := A.field (projIcc 0 T hT t)
 
+/-- Forward cover, given by `(flowData T hT A).forward (projIcc 0 T hT t)`. -/
 def forwardCover (t : ℝ) : LiftTangent → LiftTangent :=
   (flowData T hT A).forward (projIcc 0 T hT t)
 
@@ -55,12 +63,15 @@ theorem coverDisplacement_deck (t : ℝ) (c : AddSubgroup.zmultiples P) (z : Lif
   rw [forwardCover_deck P T hT A hA]
   apply Prod.ext <;> simp
 
+/-- Displacement, given by `descend P (EulerSmoothBanachFlow.displacement T hT A t)`. -/
 def displacement (t : ℝ) : LiftDomain P → LiftTangent :=
   descend P (EulerSmoothBanachFlow.displacement T hT A t)
 
+/-- Displacement jet, given by `jetSeries P (EulerSmoothBanachFlow.displacement T hT A t) q n`. -/
 def displacementJet (t : ℝ) (q : LiftDomain P) (n : ℕ) : LiftTangent [×n]→L[ℝ] LiftTangent :=
   jetSeries P (EulerSmoothBanachFlow.displacement T hT A t) q n
 
+/-- Composition jet as an element of `LiftTangent [×n]→L[ℝ] LiftTangent`. -/
 def compositionJet (t : ℝ) (q : LiftDomain P) (n : ℕ) : LiftTangent [×n]→L[ℝ] LiftTangent :=
   (jetSeries P (velocityCover T hT A t) (forward P T hT A (projIcc 0 T hT t) q)).taylorComp
     (jetSeries P (forwardCover T hT A t) q) n

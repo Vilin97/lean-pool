@@ -9,13 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketResidualTailFields
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 
-@[expose] public section
-
 /-!
 The actual sliced momentum coefficient equals the tail decomposition using
 only finite velocity regularity. No regularity of the lower scalar pressures
 is needed, because their coefficients are already outside the tail support.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,7 +38,7 @@ theorem slicedJet_assembledVelocity_finite (O : Operators) (N : ℕ) (a : ℕ �
   · rw [truncate_of_le _ _ _ hi,truncate_of_le _ _ _ hi,slicedJet_add (hA i hi) (hB i hi)]
   · rw [truncate_of_gt _ _ _ (by omega),truncate_of_gt _ _ _ (by omega)]
 
-theorem slicedMomentumGrade_tail_eq_recursive (O : Operators) (N n : ℕ) (hn : N+1 ≤ n)
+theorem slicedMomentumGrade_tail_eq_recursive (O : Operators) (N n : ℕ) (hn : N + 1 ≤ n)
     (a : ℕ → Profile) (z : Domain)
     (hA : ∀ i ≤ N, SliceDifferentiable O.interval (a i).high z)
     (hB : ∀ i ≤ N, SliceDifferentiable O.interval (a i).mean z)
@@ -60,15 +61,15 @@ theorem slicedMomentumGrade_tail_eq_recursive (O : Operators) (N n : ℕ) (hn : 
   unfold recursiveGrade coefficient
   rw [hg,shiftDown_above (N+1) n _ hn,shiftDown_above (N+1) n _ hn]
 
-theorem slicedMomentumGrade_tail (O : Operators) (N n : ℕ) (hn : N+1 ≤ n)
-    (a : ℕ → Profile) (ha : a 0=0) (z : Domain)
+theorem slicedMomentumGrade_tail (O : Operators) (N n : ℕ) (hn : N + 1 ≤ n)
+    (a : ℕ → Profile) (ha : a 0 = 0) (z : Domain)
     (hA : ∀ i ≤ N, SliceDifferentiable O.interval (a i).high z)
     (hB : ∀ i ≤ N, SliceDifferentiable O.interval (a i).mean z)
     (hC : ∀ i ≤ N, SliceDifferentiable O.interval (a i).corrector z) :
     slicedMomentumGrade O.interval (N+1) (O.inverseFrame z) (O.strain z) (O.normal z)
       (assembledVelocity N a) (assembledPressure N a) z n =
       (if n=N+1 then
-        linearPart (O.strain z) (slicedJet O.interval (a N).corrector z)+
+        linearPart (O.strain z) (slicedJet O.interval (a N).corrector z) +
         slowPressure (O.inverseFrame z) (pressureJet (a N).highPressure z) else 0) +
       nonlinearGrade (N+1) n (O.inverseFrame z) (O.normal z) (knownJets O (N+1) a z) :=
   (slicedMomentumGrade_tail_eq_recursive O N n hn a z hA hB hC).trans
@@ -82,11 +83,12 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
 
 variable {P T : ℝ} [Fact (0 < P)] {O : Operators} {N : ℕ} {a : ℕ → Profile} {S : Set Space}
 
+/-- Literal tail grade field used in packet residual tail actual. -/
 def literalTailGradeField (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i))
-    (C : CoefficientData P T O) (ha : a 0=0) (n : ℕ) (hn : N+1 ≤ n) :
+    (C : CoefficientData P T O) (ha : a 0 = 0) (n : ℕ) (hn : N + 1 ≤ n) :
     Field P T (fun z => slicedMomentumGrade O.interval (N+1) (O.inverseFrame z) (O.strain z)
-      (O.normal z)
+        (O.normal z)
       (assembledVelocity N a) (assembledPressure N a) z n) := by
   refine (tailGradeField hT G C ha n hn).congr ?_
   intro t x θ
@@ -100,11 +102,11 @@ def literalTailGradeField (hT : 0 < T)
   · intro i hi
     rw [C.interval_eq]
     exact (G i hi).corrector.sliceDifferentiable (G i hi).correctorDerivative hT.le (G i
-      hi).corrector_time t x θ
+        hi).corrector_time t x θ
 
 theorem literalTailGradeField_path (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i))
-    (C : CoefficientData P T O) (ha : a 0=0) (n : ℕ) (hn : N+1 ≤ n) :
+    (C : CoefficientData P T O) (ha : a 0 = 0) (n : ℕ) (hn : N + 1 ≤ n) :
     (literalTailGradeField hT G C ha n hn).path = (tailGradeField hT G C ha n hn).path := rfl
 
 end EulerPacketCylinderField.ProfileRegularity

@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedMomentRepair
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 /-!
 # The five-row rank repair on an unaltered power-law patch
@@ -20,6 +18,9 @@ The three angular and two axial powers are proved distinct when `lam > 0`.
 No nonsingularity or preimage is assumed: the profiles use the constructed
 localized moment inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,9 +35,11 @@ abbrev Debt := Fin 3 → ℝ
 /-- A positive mesh with unused gaps between the correction intervals. -/
 def cellStep (a b : ℝ) (n : ℕ) : ℝ := (b - a) / (2 * (n : ℝ) + 1)
 
+/-- Cell lower, given by `a + (2 * (j.val : ℝ) + 1) * cellStep a b n`. -/
 def cellLower {n : ℕ} (a b : ℝ) (j : Fin n) : ℝ :=
   a + (2 * (j.val : ℝ) + 1) * cellStep a b n
 
+/-- Cell upper, given by `a + (2 * (j.val : ℝ) + 2) * cellStep a b n`. -/
 def cellUpper {n : ℕ} (a b : ℝ) (j : Fin n) : ℝ :=
   a + (2 * (j.val : ℝ) + 2) * cellStep a b n
 
@@ -88,7 +91,9 @@ theorem cell_union_subset {n : ℕ} (a b : ℝ) (hab : a < b) :
   obtain ⟨j, hj⟩ := mem_iUnion.mp hR
   exact ⟨(cellLower_gt a b hab j).trans hj.1, hj.2.trans (cellUpper_lt a b hab j)⟩
 
+/-- Angular powers, given by `![2, -2 - 2 * lam, -2 * lam]`. -/
 def angularPowers (lam : ℝ) : Fin 3 → ℝ := ![2, -2 - 2 * lam, -2 * lam]
+/-- Axial powers, given by `![1, 1 - 2 * lam]`. -/
 def axialPowers (lam : ℝ) : Fin 2 → ℝ := ![1, 1 - 2 * lam]
 
 theorem angularPowers_injective (lam : ℝ) (hlam : 0 < lam) : Injective (angularPowers lam) := by
@@ -209,7 +214,8 @@ theorem pressure_row (lam C a b : ℝ) (d : Debt) (hlam : 0 < lam) (hC : C ≠ 0
       simp only [hz, mul_zero]
   rw [hi, integral_const_mul]
   have hm := angular_moments lam C a b d hlam ha hab 1
-  simp [angularPowers, angularDebt] at hm
+  simp only [angularPowers, neg_mul, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero,
+      angularDebt] at hm
   rw [hm]
   field_simp
 
@@ -226,7 +232,8 @@ theorem angular_row (lam C a b : ℝ) (d : Debt) (hlam : 0 < lam) (hC : C ≠ 0)
       simp only [hz, mul_zero]
   rw [hi, integral_const_mul]
   have hm := axial_moments lam C a b d hlam ha hab 1
-  simp [axialPowers, axialDebt] at hm
+  simp only [axialPowers, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_fin_one, axialDebt]
+      at hm
   rw [hm]
   field_simp
 
@@ -334,6 +341,7 @@ theorem exists_five_row_repair (lam C a b : ℝ) (d : Debt) (hlam : 0 < lam) (hC
 
 section Linearity
 
+/-- Angular debt linear map, bundling `toFun`, `map_add`, `map_smul`. -/
 def angularDebtLinearMap (C : ℝ) : Debt →ₗ[ℝ] (Fin 3 → ℝ) where
   toFun := angularDebt C
   map_add' d e := by
@@ -343,6 +351,7 @@ def angularDebtLinearMap (C : ℝ) : Debt →ₗ[ℝ] (Fin 3 → ℝ) where
     ext i
     fin_cases i <;> simp [angularDebt, Pi.smul_apply, smul_eq_mul] <;> ring
 
+/-- Axial debt linear map, bundling `toFun`, `map_add`, `map_smul`. -/
 def axialDebtLinearMap (C : ℝ) : Debt →ₗ[ℝ] (Fin 2 → ℝ) where
   toFun := axialDebt C
   map_add' d e := by

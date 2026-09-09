@@ -8,13 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletEquation
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletSupport
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletParity
 public import LeanPool.NavierStokesAndEuler.Euler.SourceNormalResidualBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletEquation
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletMean
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletSupport
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
 
 /-!
 # The actual forced transverse history on packet fields
@@ -25,6 +25,9 @@ time derivative, and scalar pressure path. No output regularity or equation
 is included in the input.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketProvider.HistoryData
@@ -32,27 +35,35 @@ namespace EulerTransversePacketProvider.HistoryData
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoefficients
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths EulerTimeLp
   EulerCylinderSmoothOrbit EulerCylinderAngleAverage EulerVolterraConvolution EulerMetricTransport
-  EulerSourceNormalResidualBounds EulerPacketProfileRecursion EulerCylinderFieldReflection
+  EulerSourceNormalResidualBounds EulerPacketProfileRecursion
 open scoped ContDiff BoundedContinuousFunction
 
 variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} (B : HistoryData D) {raw : VectorField} (G : Forcing P D raw)
 
+/-- Forcing path: an abbreviation for `includePath P D.support D.support_measurable G.path`. -/
 abbrev forcingPath := includePath P D.support D.support_measurable G.path
 
+/-- Coordinate path, given by `B.coefficients.velocityPath P (pathLp D.T D.T_pos.le (forcingPath
+G))`. -/
 def coordinatePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.velocityPath P (pathLp D.T D.T_pos.le (forcingPath G))
 
+/-- Coordinate derivative path, given by `B.coefficients.accelerationPath P (forcingPath G)`. -/
 def coordinateDerivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.accelerationPath P (forcingPath G)
 
+/-- Velocity path, given by `B.coefficients.physicalVelocity P (forcingPath G)`. -/
 def velocityPath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.physicalVelocity P (forcingPath G)
 
+/-- Derivative path, given by `B.coefficients.physicalDerivative P (forcingPath G)`. -/
 def derivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.physicalDerivative P (forcingPath G)
 
+/-- Pressure path, given by `sourcePressure P D.M D.normal D.normalLower D.normalLower_pos
+D.normal_lower (forcingPath G) (B.velocityPath G)`. -/
 def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (forcingPath G) (B.velocityPath G)
@@ -112,9 +123,11 @@ theorem velocityPath_mean_zero (t : Icc (0 : ℝ) D.T) : average P (B.velocityPa
 theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) : average P (B.derivativePath G t) = 0 :=
   B.coefficients.physicalDerivative_mean_zero P (forcingPath G) G.mean_zero t
 
+/-- Field, given by `pointField P (B.velocityPath G) (B.velocityPath_orbit G) t`. -/
 def field (t : Icc (0 : ℝ) D.T) : LiftDomain P → Space :=
   pointField P (B.velocityPath G) (B.velocityPath_orbit G) t
 
+/-- Derivative field, given by `pointField P (B.derivativePath G) (B.derivativePath_orbit G) t`. -/
 def derivativeField (t : Icc (0 : ℝ) D.T) : LiftDomain P → Space :=
   pointField P (B.derivativePath G) (B.derivativePath_orbit G) t
 
@@ -148,7 +161,7 @@ theorem field_zero_outside (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) (hx : x.1 
     _ _ (B.velocityPath_supported G t) x hx
 
 theorem derivativeField_zero_outside (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) (hx : x.1 ∉
-  D.support) :
+    D.support) :
     B.derivativeField G t x = 0 := by
   change pointField P (B.derivativePath G) (B.derivativePath_orbit G) t x = 0
   rw [pointField_eq_representative]
@@ -164,8 +177,8 @@ theorem normal_ne_zero (t : Icc (0 : ℝ) D.T) (x : Space) : D.normal.field t x 
 
 theorem balance_ae (t : Icc (0 : ℝ) D.T) :
     ∀ᵐ x ∂liftMeasure P,
-      B.derivativePath G t x+D.M.field t x.1 (B.velocityPath G t x)+
-        ((⟪D.normal.field t x.1,forcingPath G t x⟫_ℝ-
+      B.derivativePath G t x+D.M.field t x.1 (B.velocityPath G t x) +
+        ((⟪D.normal.field t x.1,forcingPath G t x⟫_ℝ -
           2*⟪D.normal.field t x.1,D.M.field t x.1 (B.velocityPath G t x)⟫_ℝ)/
           ‖D.normal.field t x.1‖^2) • D.normal.field t x.1 = forcingPath G t x :=
   B.coefficients.physical_balance_ae P (forcingPath G)
@@ -177,7 +190,7 @@ theorem field_tangent (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
   have hae : (fun y : LiftDomain P => ⟪D.normal.field t y.1,B.field G t y⟫_ℝ) =ᵐ[liftMeasure P]
       (fun _ => 0) := by
     filter_upwards [B.coefficients.physicalVelocity_ae P (forcingPath G) t,B.field_ae G t] with y
-      hq ha
+        hq ha
     change B.velocityPath G t y = D.frame.field t y.1 (B.coordinatePath G t y) at hq
     rw [← ha,hq]
     exact D.frame_tangent t y.1 _

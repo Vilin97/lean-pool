@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedAllOrderBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
 
-@[expose] public section
-
 /-! A single explicit polynomial controls the five scalar costs used by
 the actual all-order packet correction. This is a uniform estimate on
 primitive source bounds, not a per-parent eventual-frequency assertion. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,10 +28,21 @@ open EulerPacketCorrectionConstants EulerPacketCorrectionCoefficients
   EulerPacketProfileRecursion EulerPacketShiftArithmetic EulerSmoothLimit
 open scoped BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] Space)) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketFiveCostPolynomial1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketFiveCostPolynomial2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instPacketFiveCostPolynomial3 : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] Space)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instPacketFiveCostPolynomial4 : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] Space)) :=
+    inferInstance
 
 variable (P : ℝ) [Fact (0 < P)]
 
@@ -43,34 +55,43 @@ def rawGrowth (i m f t B M A0 A2 B0 B1 : ℝ) : ℝ :=
   let k := m*i
   let g0 := (t+4*f^2*i^2)*i^2/2+f*i^2*sobolevEmbeddingConstant P 6*B0
   let g1 := f*i^2*sobolevEmbeddingConstant P 6*μ
-  1+g0+g1+k*s+k*((s*(productConstant P 3*B1+A0+2*A2*productConstant P 3*B0)+tr*B0)*μ)+
+  1+g0+g1+k*s+k*((s*(productConstant P 3*B1+A0+2*A2*productConstant P 3*B0)+tr*B0)*μ) +
     k*((s*A2*productConstant P 3+tr)*μ^2)+k*(loss*μ^2)
 
+/-- Growth envelope, given by `rawGrowth P X X X X X X X X (2*velocity X X X) (48*velocity X X
+X*X)`. -/
 def growthEnvelope (X : ℝ) : ℝ :=
   rawGrowth P X X X X X X X X (2*velocity X X X) (48*velocity X X X*X)
 
+/-- Inverse radius envelope, given by `1+8*X+4*X^2+X`. -/
 def inverseRadiusEnvelope (X : ℝ) : ℝ := 1+8*X+4*X^2+X
 
+/-- Five envelope as an element of `ℝ`. -/
 def fiveEnvelope (X : ℝ) : ℝ :=
-  1+tailPolynomialConstant X X X+X+12*growthEnvelope P X*X+
-    8*growthEnvelope P X*X*drift X X X*inverseRadiusEnvelope X+
+  1+tailPolynomialConstant X X X+X+12*growthEnvelope P X*X +
+    8*growthEnvelope P X*X*drift X X X*inverseRadiusEnvelope X +
     8*growthEnvelope P X*X*inverseRadiusEnvelope X
 
+/-- Grade polynomial, given by `3*Polynomial.X^(2*n)*((4*Polynomial.X)^(highShift n) *
+Polynomial.C ((highShift n).factorial : ℝ)^2)`. -/
 def gradePolynomial (n : ℕ) : Polynomial ℝ :=
-  3*Polynomial.X^(2*n)*((4*Polynomial.X)^(highShift n)*
+  3*Polynomial.X^(2*n)*((4*Polynomial.X)^(highShift n) *
     Polynomial.C ((highShift n).factorial : ℝ)^2)
 
+/-- Velocity polynomial, given by `Polynomial.X*(gradePolynomial 1+gradePolynomial 2+1)`. -/
 def velocityPolynomial : Polynomial ℝ :=
   Polynomial.X*(gradePolynomial 1+gradePolynomial 2+1)
 
+/-- Drift polynomial, given by `2*(3*velocityPolynomial+Polynomial.X*(gradePolynomial 2+2))`. -/
 def driftPolynomial : Polynomial ℝ :=
   2*(3*velocityPolynomial+Polynomial.X*(gradePolynomial 2+2))
 
+/-- Growth polynomial as an element of `Polynomial ℝ`. -/
 def growthPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let μ := 1+Polynomial.C (Real.sqrt 5461)*X
   let s := 1+2*X*(3136*X+1)
-  let tr := Polynomial.C (5461*baseTransportConstant P)+
+  let tr := Polynomial.C (5461*baseTransportConstant P) +
     2688*X*(8*X*Polynomial.C (5460*lowerProductConstant P 3))
   let loss := (4+32*X)*Polynomial.C (productConstant P 3)
   let p := Polynomial.C (productConstant P 3)
@@ -79,9 +100,10 @@ def growthPolynomial : Polynomial ℝ :=
   let k := X*X
   let g0 := (X+4*X^2*X^2)*X^2*Polynomial.C (1/2)+X*X^2*e*(2*V)
   let g1 := X*X^2*e*μ
-  1+g0+g1+k*s+k*((s*(p*(48*V*X)+X+2*X*p*(2*V))+tr*(2*V))*μ)+
+  1+g0+g1+k*s+k*((s*(p*(48*V*X)+X+2*X*p*(2*V))+tr*(2*V))*μ) +
     k*((s*X*p+tr)*μ^2)+k*(loss*μ^2)
 
+/-- Five polynomial as an element of `Polynomial ℝ`. -/
 def fivePolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let G := growthPolynomial P
@@ -114,16 +136,20 @@ theorem growthPolynomial_eval (X : ℝ) : (growthPolynomial P).eval X=growthEnve
   unfold growthPolynomial growthEnvelope rawGrowth sourceConstant transportConstant lossConstant
   dsimp only
   simp only [Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_C,
-    Polynomial.eval_X,Polynomial.eval_ofNat,Polynomial.eval_one,velocityPolynomial_eval,div_eq_mul_inv]
+    Polynomial.eval_X, Polynomial.eval_ofNat, Polynomial.eval_one, velocityPolynomial_eval,
+        div_eq_mul_inv]
   ring
 
 theorem fivePolynomial_eval (X : ℝ) : (fivePolynomial P).eval X=fiveEnvelope P X := by
   unfold fivePolynomial fiveEnvelope inverseRadiusEnvelope tailPolynomialConstant
   dsimp only
   simp only [Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_C,
-    Polynomial.eval_X,Polynomial.eval_ofNat,Polynomial.eval_one,growthPolynomial_eval,driftPolynomial_eval]
+    Polynomial.eval_X, Polynomial.eval_ofNat, Polynomial.eval_one, growthPolynomial_eval,
+        driftPolynomial_eval]
 
+/-- Cost constant, given by `coefficientCost (fivePolynomial P)`. -/
 def costConstant : ℝ := coefficientCost (fivePolynomial P)
+/-- Cost power, given by `(fivePolynomial P).natDegree`. -/
 def costPower : ℕ := (fivePolynomial P).natDegree
 
 theorem costConstant_pos : 0 < costConstant P := coefficientCost_pos _
@@ -167,18 +193,21 @@ private theorem rawGrowth_mono {i m f t B M A0 A2 B0 B1 X Y0 Y1 : ℝ}
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (Kc : CorrectionCoefficientBudget D P)
 
-private local instance : NormedAddCommGroup C(Set.Icc (0 : ℝ) D.T, Space →ᵇ (Space →L[ℝ] Space)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Set.Icc (0 : ℝ) D.T, Space →ᵇ (Space →L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instPacketFiveCostPolynomial5 : NormedAddCommGroup C(Set.Icc (0 : ℝ) D.T, Space →ᵇ
+    (Space →L[ℝ] Space)) :=
+    inferInstance
 
 theorem growth_eq_raw (R H C : ℝ) :
     growth D P Kc R H C = rawGrowth P D.inverseBound (inverseMetricBound D)
       (inverseMetricFirstBound D) (inverseMetricTimeBound D) Kc.B Kc.M Kc.A0 Kc.A2
       (2*velocity R H C) (48*velocity R H C*R) := by
   unfold growth growthCoefficient rawGrowth energyConstant
-    EulerNonlinearEnergyConstants.linearCoefficient
-    EulerNonlinearEnergyConstants.quadraticCoefficient
+      EulerNonlinearEnergyConstants.linearCoefficient
+          EulerNonlinearEnergyConstants.quadraticCoefficient
     EulerNonlinearEnergyConstants.lossCoefficient growthBudgetBase growthBudgetSlope
-      metricAmplification
+        metricAmplification
   simp only [div_eq_mul_inv,mul_inv_rev,inv_pow,inv_inv]
   ring
 
@@ -194,7 +223,7 @@ theorem growth_le_envelope (R H C X : ℝ) (hR : 0 ≤ R) (hH : 0 ≤ H) (hC : 0
   have hm0 : 0 ≤ inverseMetricBound D := norm_nonneg (inverseMetricCoefficient D).path
   have hf0 : 0 ≤ inverseMetricFirstBound D :=
     norm_nonneg (iteratedFDeriv ℝ 1 (EulerMeanCoefficients.translateCoefficientPath
-      (inverseMetricCoefficient D).path) 0)
+        (inverseMetricCoefficient D).path) 0)
   have ht0 : 0 ≤ inverseMetricTimeBound D := norm_nonneg (inverseMetricTimeCoefficient D).path
   rw [growth_eq_raw]
   exact rawGrowth_mono P D.inverseBound_pos.le hm0 hf0 ht0

@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryLocalization
-public import LeanPool.NavierStokesAndEuler.Euler.MeanLocalizedQuadraticBound
 public import LeanPool.NavierStokesAndEuler.Euler.MeanScaledCutoff
+import LeanPool.NavierStokesAndEuler.Euler.MeanLocalizedQuadraticBound
+
+/-! The concrete boundary lower bound used in the mean time-variational solve. -/
 
 @[expose] public section
 
-/-! The concrete boundary lower bound used in the mean time-variational solve. -/
 
 noncomputable section
 
@@ -28,8 +29,8 @@ theorem mean_boundary_lower_bound (χ : Cutoff) (R : ℝ) (hR : 0 < R)
     (M : Space → Space →L[ℝ] Space) (hM : AEStronglyMeasurable M volume)
     (C : ℝ≥0) (hC : ∀ x, ‖M x‖ ≤ C)
     (Be Bc L r : ℝ) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc)
-    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4)
-    (hext : ∀ x, x ∉ Metric.ball (0 : Space) (R*r) →
+    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4)
+    (hext : ∀ x, x ∉ Metric.ball (0 : Space) (R * r) →
       ∀ v : Space, -Be * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
     (hcore : ∀ x, x ∈ Metric.ball (0 : Space) (R*r) →
       ∀ v : Space, -Bc * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
@@ -48,7 +49,7 @@ theorem scaled_mean_boundary_lower_bound (ℓ : ℝ) (hℓ : 0 < ℓ)
     (M : Space → Space →L[ℝ] Space) (hM : AEStronglyMeasurable M volume)
     (C : ℝ≥0) (hC : ∀ x, ‖M x‖ ≤ C)
     (Be Bc L r : ℝ) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc)
-    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4)
+    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4)
     (hext : ∀ x, r ≤ ‖ℓ • x‖ → ∀ v : Space, -Be * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
     (hcore : ∀ x, ‖ℓ • x‖ < r → ∀ v : Space, -Bc * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
     (z : L2) (hz : z ∈ solenoidalSpace) :

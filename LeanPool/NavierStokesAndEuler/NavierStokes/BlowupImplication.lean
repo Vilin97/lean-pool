@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.Normed.Module.Basic
-public import Mathlib.Topology.Order.LeftRightNhds
-public import Mathlib.Tactic.Linarith
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-!
 # Conditional blow-up and obstruction to continuous extension
@@ -22,6 +18,9 @@ limiting profile force divergent velocity norm under a negative real power.
 The resulting field cannot be bounded near, or continuously extended to, the
 endpoint. No existence theorem for the manuscript's profiles is assumed here.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

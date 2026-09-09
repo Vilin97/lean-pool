@@ -6,15 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinearBounds
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMapBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAdvection
+import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMapBounds
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinearBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+
+/-! Same-radius word bounds on the actual raw-field witnesses used by the packet recursion. -/
 
 @[expose] public section
 
-/-! Same-radius word bounds on the actual raw-field witnesses used by the packet recursion. -/
 
 noncomputable section
 
@@ -28,6 +34,8 @@ open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
+/-- Word bound, given by `∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P
+a G.path) n 0 ≤ A*majorant R d n`. -/
 def WordBound (G : Field P T raw) (q : ℕ) (R A : ℝ) (d : ℕ) : Prop :=
   ∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) n 0 ≤
     A*majorant R d n
@@ -40,7 +48,7 @@ theorem WordBound.transfer (h : G.WordBound q R A d) (H : Field P T raw) : H.Wor
   exact h
 
 theorem WordBound.congr (h : G.WordBound q R A d)
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw' (t,(x,θ)) = raw (t,(x,θ))) :
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw' (t, (x, θ)) = raw (t, (x, θ))) :
     (G.congr he).WordBound q R A d := h
 
 theorem WordBound.mono_amplitude (h : G.WordBound q R A d) (hR : 0 ≤ R) (hAB : A ≤ B) :
@@ -55,14 +63,14 @@ theorem wordBound_zero (P T : ℝ) [Fact (0 < P)] (q : ℕ) (R : ℝ) (d : ℕ) 
     (Field.zero P T).WordBound q R 0 d := by
   intro n
   change block standardDirection q (fun a : LiftTangent => pathTranslate P a (0 : C(Icc (0 : ℝ)
-    T,LiftL2 P))) n 0 ≤ _
+      T,LiftL2 P))) n 0 ≤ _
   simp only [map_zero,block_zero_function,zero_mul,le_refl]
 
 theorem WordBound.add (hG : G.WordBound q R A d) (hH : H.WordBound q R B d) :
     (G.add H).WordBound q R (A+B) d := by
   intro n
   change block standardDirection q (fun a : LiftTangent => pathTranslate P a (G.path+H.path)) n 0 ≤
-    _
+      _
   simp only [map_add]
   exact (block_add_le standardDirection q _ _ G.orbit H.orbit n 0).trans
     ((add_le_add (hG n) (hH n)).trans_eq (by ring))
@@ -71,7 +79,7 @@ theorem WordBound.sub (hG : G.WordBound q R A d) (hH : H.WordBound q R B d) :
     (G.sub H).WordBound q R (A+B) d := by
   intro n
   change block standardDirection q (fun a : LiftTangent => pathTranslate P a (G.path+ -H.path)) n 0
-    ≤ _
+      ≤ _
   simp only [map_add,map_neg]
   have h := block_sub_le standardDirection q
     (fun a : LiftTangent => pathTranslate P a G.path)
@@ -145,7 +153,7 @@ theorem WordBound.multiply (hG : G.WordBound q R A d)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hA : 0 ≤ A)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
     (hK : ∀ n a, ‖iteratedFDeriv ℝ n (EulerMeanCoefficients.translateCoefficientPath K.path) a‖ ≤
-      C*majorant Rc 0 n) :
+      C * majorant Rc 0 n) :
     (K.multiply G).WordBound q R (3*sobolevCoefficientAmplitude (Fin 4) q Rc C*A) d :=
   product_orbit_block_bound P K.path K.orbit standardDirection
     (fun i => by cases i using Fin.cases <;> simp [Prod.norm_def]) q

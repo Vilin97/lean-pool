@@ -6,17 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 Scalar amplitudes for actual terminal L² data. A unit-input estimate for a
 genuine linear endpoint map gives the identical coefficient/radius guard
 for every nonnegative amplitude, including zero.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,20 +51,20 @@ theorem constantPath_block_le (directions : ι → LiftTangent) (q : ℕ)
     (one_mul _))
 
 theorem terminal_amplitude_bound (directions : ι → LiftTangent) (q : ℕ)
-    (S : CylinderL2 P U →L[ℝ] C(K,CylinderL2 P V))
+    (S : CylinderL2 P U →L[ℝ] C(K, CylinderL2 P V))
     (hs : ∀ Y : CylinderL2 P U, ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y) →
       ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (S Y)))
     (R C : ℝ) (d e : ℕ)
     (hunit : ∀ Y : CylinderL2 P U, ∀ _hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y),
       (∀ n, block directions q (fun a : LiftTangent => translate P a Y) n 0 ≤ majorant R d n) →
       ∀ n, block directions q (fun a : LiftTangent => pathTranslate P a (S Y)) n 0 ≤ C*majorant R e
-        n)
+          n)
     (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y))
     (A : ℝ) (hA : 0 ≤ A)
     (hb : ∀ n, block directions q (fun a : LiftTangent => translate P a Y) n 0 ≤ A*majorant R d n)
     (n : ℕ) :
     block directions q (fun a : LiftTangent => pathTranslate P a (S Y)) n 0 ≤ (C*A)*majorant R e n
-      := by
+        := by
   by_cases hAz : A = 0
   · have hy : Y = 0 := by
       have hh := value_zero_of_block_zero_bound directions q

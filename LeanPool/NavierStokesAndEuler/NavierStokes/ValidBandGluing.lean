@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
 
-@[expose] public section
-
 /-!
 # A representative on the union of valid open charts
 
@@ -17,6 +15,9 @@ Local formulas are identified only where both charts are valid.  The
 chosen representative agrees with every valid chart on an ambient
 neighborhood.  No regularity at the boundary of the union is asserted.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,8 +28,10 @@ open scoped Topology ContDiff
 
 variable {ι D E : Type*}
 
+/-- Domain, given by `⋃ i, U i`. -/
 def domain (U : ι → Set D) : Set D := ⋃ i, U i
 
+/-- Compatible, given by `∀ i j, EqOn (f i) (f j) (U i ∩ U j)`. -/
 def Compatible (U : ι → Set D) (f : ι → D → E) : Prop :=
   ∀ i j, EqOn (f i) (f j) (U i ∩ U j)
 

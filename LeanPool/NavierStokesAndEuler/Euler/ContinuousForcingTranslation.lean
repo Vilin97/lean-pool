@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousSpatialFamily
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LpMultilinearBundling
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 
 /-!
 # Actual forcing derivatives in the uniform time norm
@@ -19,6 +18,9 @@ Continuous paths of the literal ordinary spatial L² jets give genuine
 smoothness of the forcing translation orbit in C(time,L²). The derivative
 norm is bounded by the original uniform-time spatial jet norm, with no loss.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,16 +34,16 @@ variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Ordinary translation applied to every value of an actual continuous L² path. -/
-def translate (a : Space) (f : C(K,L2Space V)) : C(K,L2Space V) :=
+def translate (a : Space) (f : C(K, L2Space V)) : C(K,L2Space V) :=
   (EulerLpTranslation.translation a).toContinuousLinearMap.compLeftContinuous ℝ K f
 
 omit [CompactSpace K] in
-@[simp] theorem translate_apply (a : Space) (f : C(K,L2Space V)) (t : K) :
+@[simp] theorem translate_apply (a : Space) (f : C(K, L2Space V)) (t : K) :
     translate a f t = EulerLpTranslation.translation a (f t) := rfl
 
 variable (A : K → SmoothL2Field V)
   (hA : ∀ n, Continuous (fun t => (A t).jetLp n))
-  (f : C(K,L2Space V)) (hf : ∀ t, f t = (A t).toLp)
+  (f : C(K, L2Space V)) (hf : ∀ t, f t = (A t).toLp)
 
 /-- The original ordinary spatial jet, as a genuine continuous L² path. -/
 def spatialJetPath (n : ℕ) : C(K,L2Space (Space [×n]→L[ℝ] V)) :=

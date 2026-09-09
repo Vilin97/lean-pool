@@ -7,12 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerFlowL2
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
-
-@[expose] public section
 
 /-! The three actual base-flow fields satisfy the source's fixed-H6
 label bound with one explicit constant, independent of derivative order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +23,7 @@ open EulerParentPacketFrames EulerLpTranslation EulerParameterWordGevrey
 
 variable {I : Input} (L : L2Data I)
 
+/-- Label cost, constructed using `1`. -/
 def labelCost : ℝ :=
   1 + sobolevCoefficientAmplitude (Fin 3) 6 L.velocityRadius (I.T*L.C) +
     sobolevCoefficientAmplitude (Fin 3) 6 L.velocityRadius L.C +
@@ -75,6 +76,8 @@ theorem acceleration_labelBound (t : Icc (0 : ℝ) I.T) :
   · dsimp [labelCost]; linarith
   · dsimp [labelCost]; linarith
 
+/-- Label data, bundling `K`, `K_one`, `displacement`, `velocity` and the required compatibility
+proofs. -/
 def labelData (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1) :
     LabelData (I.parent ell hell hell1) where
   K := L.labelCost

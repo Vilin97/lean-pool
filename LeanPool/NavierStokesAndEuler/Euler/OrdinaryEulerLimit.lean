@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanPressurePotential
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
 
 /-! A common-interval Euler limit constructed from genuine smooth Euler
 evolutions. The only compactness inputs are actual uniform Sobolev
 bounds and L² Cauchy convergence. The nonlinear term, pressure, and
 time equation are all recovered in the proof. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,14 +38,14 @@ theorem field_mem_solenoidal (t : Icc (0 : ℝ) T) : (L.field t).toLp ∈ soleno
 
 theorem field_integral_equation (hpos : 0 < T) (M : ℝ)
     (hb : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M) (t : Icc (0 : ℝ) T) :
-    (L.field t).toLp=(L.field ⟨0,le_rfl,hT⟩).toLp+
+    (L.field t).toLp=(L.field ⟨0,le_rfl,hT⟩).toLp +
       integral T hT (projectedRhsPath L.field L.field_continuous) t := by
   have hg := L.projectedRhsPath_convergence hT M hb
   have hi := (ContinuousMap.evalCLM ℝ t).continuous.tendsto
     (integral T hT (projectedRhsPath L.field L.field_continuous)) |>.comp
       (((integral (E := L2) T hT).continuous.tendsto _).comp hg)
   have hsum := (L.toLp_convergence ⟨0,le_rfl,hT⟩).add hi
-  have he (k : ℕ) : ((V k).velocity t).toLp=((V k).velocity ⟨0,le_rfl,hT⟩).toLp+
+  have he (k : ℕ) : ((V k).velocity t).toLp=((V k).velocity ⟨0,le_rfl,hT⟩).toLp +
       integral T hT (projectedRhsPath (V k).velocity (V k).velocity_continuous) t := by
     have h := congrArg (fun p : C(Icc (0 : ℝ) T,L2) => p t) ((V k).velocity_integral_equation hpos)
     simpa only [Evolution.velocityPath_apply,ContinuousMap.add_apply,ContinuousMap.const_apply,
@@ -54,14 +56,16 @@ theorem field_hasDerivWithinAt (hpos : 0 < T) (M : ℝ)
     (hb : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (fun r => (L.field (projIcc 0 T hT r)).toLp)
       (projectedRhs (L.field t)).toLp (Icc (0 : ℝ) T) t := by
-  have he : (fun r => (L.field (projIcc 0 T hT r)).toLp)=
-      fun r => (L.field ⟨0,le_rfl,hT⟩).toLp+
+  have he : (fun r => (L.field (projIcc 0 T hT r)).toLp) =
+      fun r => (L.field ⟨0,le_rfl,hT⟩).toLp +
         extendPath T hT (integral T hT (projectedRhsPath L.field L.field_continuous)) r := by
     funext r
     exact L.field_integral_equation hpos M hb (projIcc 0 T hT r)
   rw [he]
   exact (integral_hasDerivWithinAt T hT (projectedRhsPath L.field L.field_continuous) t).const_add _
 
+/-- To evolution, bundling `velocity`, `pressureForce`, `velocity_continuous`,
+`pressure_continuous` and the required compatibility proofs. -/
 def toEvolution (hpos : 0 < T) (M : ℝ)
     (hb : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M) : Evolution T hT where
   velocity := L.field
@@ -86,16 +90,20 @@ end SmoothLimitData
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Euler limit data, given by `smoothLimitData hT (fun k => (V k).velocity) (fun k => (V
+k).velocity_continuous) hb h0`. -/
 def eulerLimitData (V : ℕ → Evolution T hT)
     (hb : ∀ q, ∃ M : ℝ, ∀ k t, tensorNorm q ((V k).velocity t) ≤ M)
     (h0 : CauchySeq (fun k => fieldPath (V k).velocity (V k).velocity_continuous)) :
     SmoothLimitData (fun k => (V k).velocity) (fun k => (V k).velocity_continuous) :=
   smoothLimitData hT (fun k => (V k).velocity) (fun k => (V k).velocity_continuous) hb h0
 
+/-- Limit evolution, given by `(eulerLimitData V hb h0).toEvolution hpos (Classical.choose (hb
+3)) (Classical.choose_spec (hb 3))`. -/
 def limitEvolution (V : ℕ → Evolution T hT) (hpos : 0 < T)
     (hb : ∀ q, ∃ M : ℝ, ∀ k t, tensorNorm q ((V k).velocity t) ≤ M)
     (h0 : CauchySeq (fun k => fieldPath (V k).velocity (V k).velocity_continuous)) : Evolution T hT
-      :=
+        :=
   (eulerLimitData V hb h0).toEvolution hpos (Classical.choose (hb 3)) (Classical.choose_spec (hb 3))
 
 theorem limitEvolution_jet_convergence (V : ℕ → Evolution T hT) (hpos : 0 < T)
@@ -109,7 +117,7 @@ theorem limitEvolution_jet_convergence (V : ℕ → Evolution T hT) (hpos : 0 < 
 theorem limitEvolution_initial (V : ℕ → Evolution T hT) (hpos : 0 < T)
     (hb : ∀ q, ∃ M : ℝ, ∀ k t, tensorNorm q ((V k).velocity t) ≤ M)
     (h0 : CauchySeq (fun k => fieldPath (V k).velocity (V k).velocity_continuous))
-    (u0 : L2) (hu0 : Tendsto (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp) atTop (𝓝 u0)) :
+    (u0 : L2) (hu0 : Tendsto (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp) atTop (𝓝 u0)) :
     ((limitEvolution V hpos hb h0).velocity ⟨0,le_rfl,hT⟩).toLp=u0 :=
   tendsto_nhds_unique ((eulerLimitData V hb h0).toLp_convergence ⟨0,le_rfl,hT⟩) hu0
 
@@ -122,6 +130,8 @@ theorem limitEvolution_bound (V : ℕ → Evolution T hT) (hpos : 0 < T)
 
 namespace Evolution
 
+/-- Scalar pressure, given by `EulerCanonicalGraphPotential.radialPotential (U.pressureForce
+t).field`. -/
 def scalarPressure (U : Evolution T hT) (t : Icc (0 : ℝ) T) : Space → ℝ :=
   EulerCanonicalGraphPotential.radialPotential (U.pressureForce t).field
 

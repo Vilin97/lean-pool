@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketConstraints
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
+
+/-! The concrete mean inverse in the literal jets used by the packet recursion. -/
 
 @[expose] public section
 
-/-! The concrete mean inverse in the literal jets used by the packet recursion. -/
 
 noncomputable section
 
@@ -41,7 +42,7 @@ theorem slowPressure_pressureJet (FInv : Space →L[ℝ] Space)
     slowPressure FInv (pressureJet p (t,(x,θ))) =
       FInv.adjoint (gradient (fun y => p (t,(y,θ))) x) := by
   change FInv.adjoint ((toDual ℝ Space).symm ((pressureJet p (t,(x,θ))).2.comp spatialInjection)) =
-    _
+      _
   rw [pressureJet_spatial_derivative p t x θ hp]
   rfl
 
@@ -57,10 +58,10 @@ theorem slicedJet_time (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 /-- This is exactly the pointwise mean equation required by the grade recursion. -/
 theorem jet_equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) G.vector (t,(x,θ)))+
+    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) G.vector (t,(x,θ))) +
       slowPressure (D.inverseFrame (t,(x,θ))) (pressureJet G.scalar (t,(x,θ))) =
         raw (t,(x,θ)) := by
-  change (slicedJet (Icc (0 : ℝ) D.T) G.vector (t,(x,θ))).2 timeDirection+
+  change (slicedJet (Icc (0 : ℝ) D.T) G.vector (t,(x,θ))).2 timeDirection +
     D.strain (t,(x,θ)) (G.vector (t,(x,θ)))+_ = _
   rw [G.slicedJet_time, slowPressure_pressureJet _ G.scalar t x θ
     ((G.scalar_spatial_smooth t).differentiable (by simp) (x,θ))]
@@ -72,7 +73,7 @@ theorem vector_angle_jet (t : ℝ) (x : Space) (θ : ℝ) :
   have hfst : HasFDerivAt (Prod.fst : Space × ℝ → Space)
       (ContinuousLinearMap.fst ℝ Space ℝ) (x,θ) := hasFDerivAt_fst
   have hd := ((pathRepresentative_smooth D.T G.velocityPath G.velocityPath_orbit (D.clamp
-    t)).differentiable
+      t)).differentiable
     (by simp) x).hasFDerivAt.comp (x,θ) hfst
   change (fderiv ℝ (fun y : Space × ℝ =>
     pathRepresentative D.T G.velocityPath G.velocityPath_orbit (D.clamp t) y.1) (x,θ)) (0,1) = 0
@@ -98,7 +99,7 @@ end Forcing
 /-- The total operator discharges the literal packet mean-jet interface on admissible inputs. -/
 theorem meanSolve_jet_equation (D : Data) (raw : VectorField) (h : Nonempty (Forcing D raw))
     (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) (meanSolve D raw).1 (t,(x,θ)))+
+    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) (meanSolve D raw).1 (t,(x,θ))) +
       slowPressure (D.inverseFrame (t,(x,θ))) (pressureJet (meanSolve D raw).2 (t,(x,θ))) =
         raw (t,(x,θ)) := by
   rw [meanSolve_of_admissible D raw h]

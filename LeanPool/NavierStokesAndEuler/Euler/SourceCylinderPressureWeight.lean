@@ -7,10 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureField
-public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderWeight
 public import LeanPool.NavierStokesAndEuler.Euler.SourceNormalResidualBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderForwardSobolev
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderWeight
 
 /-!
 # The pressure estimate is for the actual normalized PDE pressure
@@ -18,6 +18,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.SourceNormalResidualBounds
 All identities are algebraic identities of genuine continuous L² paths.
 They use no derivative, extremum, or reciprocal bound for the time profile.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,8 +34,8 @@ open scoped BoundedContinuousFunction
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (M : SmoothCoefficientPath K (Space →L[ℝ] Space)) (m : SmoothCoefficientPath K Space)
-  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖^2)
-  (g : C(K,ℝ)) (f v : C(K,CylinderL2 P Space))
+  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
+  (g : C(K, ℝ)) (f v : C(K, CylinderL2 P Space))
 
 theorem sourceResidual_weight :
     sourceResidual P M m cm hcm hm (weight g f) (weight g v) =
@@ -69,11 +72,11 @@ variable (P : ℝ) [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported P Space S hS)) (a₀ : Supported P U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported P Space S hS)) (a₀ : Supported P U S hS)
   (M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
-  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖^2)
+  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
 
 /-- The bounded pressure used in the coefficient estimate is exactly the PDE pressure. -/
 theorem pressurePath_eq_sourcePressure :
@@ -81,7 +84,7 @@ theorem pressurePath_eq_sourcePressure :
       sourcePressure P M m cm hcm hm (includePath P S hS f)
         (includePath P S hS (velocity P S hS T hT Q Q₁ c hc hQ f a₀)) := rfl
 
-variable (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+variable (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
 /-- The actual pressure path divided by g, written in terms of the normalized
 physical forcing and the already constructed normalized physical velocity. -/

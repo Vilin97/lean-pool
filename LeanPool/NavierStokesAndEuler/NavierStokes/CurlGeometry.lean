@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import Mathlib.Data.Complex.Basic
-public import Mathlib.LinearAlgebra.Matrix.Notation
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Algebra.GroupWithZero.Action.Pi
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Algebra of the curl realization in Lemma 8.8
@@ -24,13 +27,19 @@ symbol and the algebraic divergence cancellation. They do not establish
 regularity, bounds for the differentiated amplitude, or descent from the lift.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.CurlGeometry
 
+/-- Vec3: an abbreviation for `Fin 3 → R`. -/
 abbrev Vec3 (R : Type*) := Fin 3 → R
 
+/-- Dot, given by `u 0 * v 0 + u 1 * v 1 + u 2 * v 2`. -/
 def dot {R : Type*} [CommRing R] (u v : Vec3 R) : R :=
   u 0 * v 0 + u 1 * v 1 + u 2 * v 2
 
+/-- Cross, given by `![u 1 * v 2 - u 2 * v 1, u 2 * v 0 - u 0 * v 2, u 0 * v 1 - u 1 * v 0]`. -/
 def cross {R : Type*} [CommRing R] (u v : Vec3 R) : Vec3 R :=
   ![u 1 * v 2 - u 2 * v 1,
     u 2 * v 0 - u 0 * v 2,
@@ -90,6 +99,7 @@ theorem normalized_double_cross {R : Type*} [Field R] (n a : Vec3 R)
   simp only [Pi.smul_apply, Pi.neg_apply, smul_eq_mul]
   field_simp
 
+/-- Curl symbol, given by `cross (Complex.I • ξ) A`. -/
 noncomputable def curlSymbol (ξ A : Vec3 ℂ) : Vec3 ℂ :=
   cross (Complex.I • ξ) A
 
@@ -113,6 +123,7 @@ theorem principal_symbol_realizes (k : ℂ) (n a : Vec3 ℂ)
   rw [hs]
   exact normalized_double_cross n a hn ha
 
+/-- Complexify, defined pointwise by `(n j : ℂ)`. -/
 def complexify (n : Vec3 ℝ) : Vec3 ℂ := fun j => (n j : ℂ)
 
 theorem complexify_dot_self (n : Vec3 ℝ) :
@@ -152,12 +163,15 @@ product rules for multiplication by `q` used by the calculation. They must
 still be established for the manuscript's graph derivatives.
 -/
 
+/-- Cylindrical curl, given by `![q * Dθ (A 2) - Dz (A 1), Dz (A 0) - Dr (A 2), Dr (A 1) + q * A
+1 - q * Dθ (A 0)]`. -/
 def cylindricalCurl {F : Type*} [CommRing F]
     (Dr Dθ Dz : F →+ F) (q : F) (A : Vec3 F) : Vec3 F :=
   ![q * Dθ (A 2) - Dz (A 1),
     Dz (A 0) - Dr (A 2),
     Dr (A 1) + q * A 1 - q * Dθ (A 0)]
 
+/-- Cylindrical div, given by `Dr (v 0) + q * v 0 + q * Dθ (v 1) + Dz (v 2)`. -/
 def cylindricalDiv {F : Type*} [CommRing F]
     (Dr Dθ Dz : F →+ F) (q : F) (v : Vec3 F) : F :=
   Dr (v 0) + q * v 0 + q * Dθ (v 1) + Dz (v 2)

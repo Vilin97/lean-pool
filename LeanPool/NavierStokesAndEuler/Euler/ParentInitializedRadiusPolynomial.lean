@@ -10,11 +10,13 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRadiusPolynomial
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketJoinedInput
 public import LeanPool.NavierStokesAndEuler.Euler.ParentCorrectionCostEnvelope
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedCoefficientBudgets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
 
 /-! Polynomial control of the literal canonical initialized radius built from
 the parent fields. The boundary coefficient remains an explicit scalar input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,12 +24,16 @@ namespace EulerParentInitializedRadius
 
 open EulerPacketRadiusPolynomial EulerPacketSourceRadius EulerParentCorrectionCost
   EulerParentCoefficientPolynomial EulerPolynomialCost EulerPacketParentPhysicalBudgets
-    EulerPacketTerminalDatum
+      EulerPacketTerminalDatum
 
+/-- Input envelope, given by `let a := parentConstant period*X^parentPower period
+1+X+a+3*a^3*X`. -/
 def inputEnvelope (X : ℝ) : ℝ :=
   let a := parentConstant period*X^parentPower period
   1+X+a+3*a^3*X
 
+/-- Input polynomial, given by `let X : Polynomial ℝ := Polynomial.X let a := Polynomial.C
+(parentConstant period)*X^parentPower period 1+X+a+3*a^3*X`. -/
 def inputPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let a := Polynomial.C (parentConstant period)*X^parentPower period
@@ -35,7 +41,8 @@ def inputPolynomial : Polynomial ℝ :=
 
 theorem inputPolynomial_eval (X : ℝ) : inputPolynomial.eval X=inputEnvelope X := by
   simp only [inputPolynomial,inputEnvelope,Polynomial.eval_add,Polynomial.eval_mul,
-    Polynomial.eval_pow,Polynomial.eval_C,Polynomial.eval_X,Polynomial.eval_one,Polynomial.eval_ofNat]
+    Polynomial.eval_pow, Polynomial.eval_C, Polynomial.eval_X, Polynomial.eval_one,
+        Polynomial.eval_ofNat]
 
 theorem inputEnvelope_bounds (K X : ℝ) (hK : 1 ≤ K) (hKX : K ≤ X) :
     1 ≤ inputEnvelope X ∧ X ≤ inputEnvelope X ∧
@@ -50,7 +57,7 @@ theorem inputEnvelope_bounds (K X : ℝ) (hK : 1 ≤ K) (hKX : K ≤ X) :
       (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hK0 hKX _) (parentConstant_pos period).le)
   have hl : leafEnvelope K ≤ a := (parentEnvelope_bounds period K hK0).2.1.trans hp
   have hf : EulerPacketParentLabelBounds.frameAmplitude K ≤ a := (leaf_bounds K hK0).2.2.2.1.trans
-    hl
+      hl
   have ha : a ≤ inputEnvelope X := by
     change a ≤ 1+X+a+3*a^3*X
     nlinarith only [hX0,mul_nonneg (pow_nonneg ha0 3) hX0]
@@ -68,15 +75,19 @@ theorem inputEnvelope_bounds (K X : ℝ) (hK : 1 ≤ K) (hKX : K ≤ X) :
     change 3*a^3*X ≤ 1+X+a+3*a^3*X
     linarith only [hX0,ha0]
 
+/-- Source envelope, given by `sourceRadiusEnvelope (inputEnvelope X)`. -/
 def sourceEnvelope (X : ℝ) : ℝ := sourceRadiusEnvelope (inputEnvelope X)
 
+/-- Source polynomial, given by `sourceRadiusPolynomial.comp inputPolynomial`. -/
 def sourcePolynomial : Polynomial ℝ := sourceRadiusPolynomial.comp inputPolynomial
 
 theorem sourcePolynomial_eval (X : ℝ) : sourcePolynomial.eval X=sourceEnvelope X := by
   simp only [sourcePolynomial,sourceEnvelope,Polynomial.eval_comp,
     sourceRadiusPolynomial_eval,inputPolynomial_eval]
 
+/-- Source constant, given by `coefficientCost sourcePolynomial`. -/
 def sourceConstant : ℝ := coefficientCost sourcePolynomial
+/-- Source power, given by `sourcePolynomial.natDegree`. -/
 def sourcePower : ℕ := sourcePolynomial.natDegree
 
 theorem sourceConstant_pos : 0 < sourceConstant := coefficientCost_pos _
@@ -86,6 +97,7 @@ theorem sourceEnvelope_power (X : ℝ) (hX : 1 ≤ X) :
   rw [← sourcePolynomial_eval]
   exact (le_abs_self _).trans (eval_bound sourcePolynomial X hX)
 
+/-- Parameter size, given by `1+K+Ti+TiTotal+Cp+B+δ⁻¹+N`. -/
 def parameterSize (K Ti TiTotal Cp B δ N : ℝ) : ℝ := 1+K+Ti+TiTotal+Cp+B+δ⁻¹+N
 
 theorem parameterSize_bounds (K Ti TiTotal Cp B δ N : ℝ)
@@ -97,11 +109,14 @@ theorem parameterSize_bounds (K Ti TiTotal Cp B δ N : ℝ)
     δ⁻¹ ≤ parameterSize K Ti TiTotal Cp B δ N ∧ N ≤ parameterSize K Ti TiTotal Cp B δ N := by
   have hi := (inv_pos.mpr hδ).le
   unfold parameterSize
-  exact ⟨by linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by
-    linarith⟩
+  exact ⟨by
+      linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith⟩
 
+/-- Full envelope, given by `radiusEnvelope (sourceEnvelope X)`. -/
 def fullEnvelope (X : ℝ) : ℝ := radiusEnvelope (sourceEnvelope X)
 
+/-- Full polynomial, given by `radiusPolynomial.comp (sourceRadiusPolynomial.comp
+inputPolynomial)`. -/
 def fullPolynomial : Polynomial ℝ :=
   radiusPolynomial.comp (sourceRadiusPolynomial.comp inputPolynomial)
 
@@ -109,7 +124,9 @@ theorem fullPolynomial_eval (X : ℝ) : fullPolynomial.eval X=fullEnvelope X := 
   simp only [fullPolynomial,fullEnvelope,sourceEnvelope,Polynomial.eval_comp,radiusPolynomial_eval,
     sourceRadiusPolynomial_eval,inputPolynomial_eval]
 
+/-- Full constant, given by `coefficientCost fullPolynomial`. -/
 def fullConstant : ℝ := coefficientCost fullPolynomial
+/-- Full power, given by `fullPolynomial.natDegree`. -/
 def fullPower : ℕ := fullPolynomial.natDegree
 
 theorem fullConstant_pos : 0 < fullConstant := coefficientCost_pos _
@@ -131,13 +148,13 @@ open Set EulerSmoothLimit EulerGevrey EulerMeanCoefficients EulerMeanBoundary
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {G : Parent} (L : LabelData G) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (Ti Cp : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti) (hCp : 0 ≤ Cp)
-  (g : C(Icc (0 : ℝ) (G.T-τ),ℝ)) (hg : ∀ t, 0 < g t)
-  (hg0 : g ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩=1)
+  (g : C(Icc (0 : ℝ) (G.T - τ), ℝ)) (hg : ∀ t, 0 < g t)
+  (hg0 : g ⟨0, le_rfl, (sub_pos.mpr hτT).le⟩ = 1)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
   (hphysical : PhysicalGrowth ((G.transverseData m hm R S hS).tail τ hτ.le hτT)
     EulerPacketParentPhysicalBudgets.halfBall g Cp)
   (TiTotal : ℝ) (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal)
@@ -147,6 +164,8 @@ local notation "J" => L.joinedInputs H m hm R S hS τ hτ hτT Ti Cp hτ1 hTi hC
 local notation "BC" => joinedCoefficientBudget period (G.meanData H) (G.transverseData m hm R S hS)
   rfl τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) (JoinedInputs.normal J)
 
+/-- Canonical initialized radius, given by `initializedRadius (J).mean (J).linear (J).normal BC
+δ ξ`. -/
 def canonicalInitializedRadius (δ : ℝ) (ξ : U) : ℝ :=
   initializedRadius (J).mean (J).linear (J).normal BC δ ξ
 
@@ -154,7 +173,7 @@ theorem joined_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
     (hKX : L.K ≤ X) (hTiX : Ti ≤ X) (hTiTotalX : TiTotal ≤ X)
     (hCpX : Cp ≤ X) (hLX : H.L ≤ X) (hδX : δ⁻¹ ≤ X) (hξX : ‖ξ‖ ≤ X) :
     RadiusPrimitives (J).mean (J).linear (J).normal BC δ ξ (sourceRadiusEnvelope (inputEnvelope X))
-      := by
+        := by
   let W := inputEnvelope X
   let V := sourceRadiusEnvelope W
   have hK0 := zero_le_one.trans L.K_one
@@ -189,7 +208,7 @@ theorem joined_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
       (hTiTotalX.trans hb.2.1) (coefficientRadius_nonneg L.K) (hr.trans hLW)
       (frameAmplitude_nonneg L.K) (hf.trans hLW) (gradientAmplitude_nonneg L.K) (hgK.trans hLW)
       (gradientAmplitude_nonneg L.K) hL0 (hLX.trans hb.2.1) (hh.trans hLW) (hi.trans hLW)
-        (hgram.trans hLW)
+          (hgram.trans hLW)
   have hJR : (J).linear.R ≤ V := by
     change max _ (max _ _) ≤ V
     exact max_le hjoin (max_le (hnr.trans hLV) hmean)
@@ -201,7 +220,7 @@ theorem joined_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
       have hf0 := (J).linear.frame_bound 0 (initialInclusion G.T τ hτT.le t) x
       have he : (J).linear.C₀=frameAmplitude L.K := rfl
       change ‖(G.transverseData m hm R S hS).F.field (initialInclusion G.T τ hτT.le t) x‖ ≤
-        frameAmplitude L.K
+          frameAmplitude L.K
       simpa only [norm_iteratedFDeriv_zero,majorant,Nat.zero_add,Nat.factorial_zero,
         Nat.cast_one,pow_zero,mul_one,one_pow,he] using hf0
   have hBC := (BC).parent_primitive_bound L.K hK0 hr hn
@@ -238,7 +257,7 @@ theorem canonicalInitializedRadius_power (δ : ℝ) (hδ : 0 < δ) (ξ : U) (X :
     (hCpX : Cp ≤ X) (hLX : H.L ≤ X) (hδX : δ⁻¹ ≤ X) (hξX : ‖ξ‖ ≤ X) :
     L.canonicalInitializedRadius H m hm R S hS τ hτ hτT Ti Cp hτ1 hTi hCp
       g hg hg0 Ω hΩ hΩo hsub hΩball hphysical TiTotal hT1 hTiTotal δ ξ ≤ fullConstant*X^fullPower
-        := by
+          := by
   have hp := L.joined_radius_primitives H m hm R S hS τ hτ hτT Ti Cp hτ1 hTi hCp
     g hg hg0 Ω hΩ hΩo hsub hΩball hphysical TiTotal hT1 hTiTotal δ ξ X
     hKX hTiX hTiTotalX hCpX hLX hδX hξX

@@ -7,11 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualTZ
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCurlCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalResidual
-
-@[expose] public section
 
 /-!
 # Physical finite prefixes of the actual correction cycle
@@ -26,6 +22,9 @@ only on their valid domains.  A final adapter accepts individual potential-curl
 realizations, not an assumed equality of finite prefixes.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.CyclePhysicalPrefixes
@@ -34,8 +33,11 @@ open Set Filter Function ProblemStatement CorrectionState CorrectionStep
 open MeanIncrementBounds
 open scoped ContDiff Topology BigOperators
 
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
+/-- Components: an abbreviation for `Cylinder → Fin 3 → ℝ`. -/
 abbrev Components := Cylinder → Fin 3 → ℝ
+/-- Scaled graph: an abbreviation for `PhysicalResidualBridge.ScaledGraph`. -/
 abbrev ScaledGraph := PhysicalResidualBridge.ScaledGraph
 
 /-- The actual cylindrical realization is linear in the three components. -/
@@ -63,6 +65,7 @@ noncomputable def pressureMap (G : ScaledGraph) : (Cylinder → ℝ) →ₗ[ℝ]
     simp [PhysicalResidualTZ.pressureTZ, PhysicalResidualBridge.ScaledGraph.pressure,
       mul_left_comm]
 
+/-- Mean components, defined pointwise by `![m.radial n x.1, m.angular n x.1, m.axial n x.1]`. -/
 noncomputable def meanComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
   fun x => ![m.radial n x.1, m.angular n x.1, m.axial n x.1]
 
@@ -124,9 +127,11 @@ theorem next_pressureComponents (n : ℕ) :
     next_pressure, stepPressureComponents, Pi.add_apply]
   ring
 
+/-- Cylindrical step velocity, given by `velocityMap G (stepComponents p v c u n)`. -/
 noncomputable def cylindricalStepVelocity (G : ScaledGraph) (n : ℕ) : VelocityField :=
   velocityMap G (stepComponents p v c u n)
 
+/-- Cylindrical step pressure, given by `pressureMap G (stepPressureComponents p v c u n)`. -/
 noncomputable def cylindricalStepPressure (G : ScaledGraph) (n : ℕ) : PressureField :=
   pressureMap G (stepPressureComponents p v c u n)
 
@@ -169,6 +174,7 @@ noncomputable def polarVelocityMap (a : ℝ) (j : PolarCharts.Index) :
     exact (CylindricalResidual.frame (PhysicalCurlCovariance.polarInput a j z).2).map_smul
       r (v (PhysicalCurlCovariance.polarCoordinates a j z))
 
+/-- Polar pressure map, bundling `toFun`, `map_add`, `map_smul`. -/
 noncomputable def polarPressureMap (a : ℝ) (j : PolarCharts.Index) :
     PressureField →ₗ[ℝ] PressureField where
   toFun p z := p (PhysicalCurlCovariance.polarCoordinates a j z)
@@ -180,6 +186,7 @@ noncomputable def velocity (a : ℝ) (j : PolarCharts.Index) (G : ScaledGraph) (
     (c : Context CyclePoint) (u : State CyclePoint) : VelocityField :=
   polarVelocityMap a j (cylindricalVelocity G n c u)
 
+/-- Pressure, given by `polarPressureMap a j (cylindricalPressure G n p₀ u)`. -/
 noncomputable def pressure (a : ℝ) (j : PolarCharts.Index) (G : ScaledGraph) (n : ℕ)
     (p₀ : Cylinder → ℝ) (u : State CyclePoint) : PressureField :=
   polarPressureMap a j (cylindricalPressure G n p₀ u)
@@ -229,9 +236,11 @@ variable {ι : Type} (p : CycleParameters ι) (v : CycleCoefficients ι)
     (c : Context CyclePoint) (u : State CyclePoint)
     (a : ℝ) (j : PolarCharts.Index) (G : ScaledGraph) (n : ℕ)
 
+/-- Step velocity, given by `polarVelocityMap a j (cylindricalStepVelocity p v c u G n)`. -/
 noncomputable def stepVelocity : VelocityField :=
   polarVelocityMap a j (cylindricalStepVelocity p v c u G n)
 
+/-- Step pressure, given by `polarPressureMap a j (cylindricalStepPressure p v c u G n)`. -/
 noncomputable def stepPressure : PressureField :=
   polarPressureMap a j (cylindricalStepPressure p v c u G n)
 
@@ -262,11 +271,13 @@ section Prefixes
 variable {ι : Type} (p : ℕ → CycleParameters ι) (c : Context CyclePoint)
     (seed : CycleState ι) (a : ℝ) (j : PolarCharts.Index) (G : ScaledGraph) (n : ℕ)
 
+/-- Velocity stages, constructed using `Nat.casesOn`. -/
 noncomputable def velocityStages (k : ℕ) : VelocityField :=
   Nat.casesOn k (velocity a j G n c seed.state)
     (fun k => stepVelocity (p k) (CycleState.iterate p c seed k).coefficients c
       (CycleState.iterate p c seed k).state a j G n)
 
+/-- Pressure stages, constructed using `Nat.casesOn`. -/
 noncomputable def pressureStages (p₀ : Cylinder → ℝ) (k : ℕ) : PressureField :=
   Nat.casesOn k (pressure a j G n p₀ seed.state)
     (fun k => stepPressure (p k) (CycleState.iterate p c seed k).coefficients c
@@ -322,9 +333,11 @@ end Prefixes
 
 /-! ## The actual split into potential and direct angular contributions -/
 
+/-- Meridional components, defined pointwise by `![m.radial n x.1, 0, m.axial n x.1]`. -/
 noncomputable def meridionalComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
   fun x => ![m.radial n x.1, 0, m.axial n x.1]
 
+/-- Angular components, defined pointwise by `![0, m.angular n x.1, 0]`. -/
 noncomputable def angularComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
   fun x => ![0, m.angular n x.1, 0]
 
@@ -340,6 +353,8 @@ noncomputable def initialPotentialPart (a : ℝ) (j : PolarCharts.Index) (G : Sc
   polarVelocityMap a j (velocityMap G (PhysicalResidualBridge.baseComponents c n +
     meridionalComponents u.mean n + u.oscillation n))
 
+/-- Initial direct part, given by `polarVelocityMap a j (velocityMap G (angularComponents u.mean
+n))`. -/
 noncomputable def initialDirectPart (a : ℝ) (j : PolarCharts.Index) (G : ScaledGraph)
     (n : ℕ) (u : State CyclePoint) : VelocityField :=
   polarVelocityMap a j (velocityMap G (angularComponents u.mean n))

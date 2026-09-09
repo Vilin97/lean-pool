@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.Analysis.Normed.Group.Bounded
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.ParametricIntegral
+
+/-! Smooth parameter dependence of an actual integral over a compact interval. -/
 
 @[expose] public section
 
-/-! Smooth parameter dependence of an actual integral over a compact interval. -/
 
 noncomputable section
 
@@ -27,6 +28,7 @@ open scoped ContDiff Topology Interval
 variable {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] [ProperSpace X]
   {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Parameter derivative, given by `(fderiv ℝ F p).comp (ContinuousLinearMap.inl ℝ X ℝ)`. -/
 def parameterDerivative (F : X × ℝ → E) (p : X × ℝ) : X →L[ℝ] E :=
   (fderiv ℝ F p).comp (ContinuousLinearMap.inl ℝ X ℝ)
 

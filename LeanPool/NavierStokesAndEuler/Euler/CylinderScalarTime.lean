@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarPrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! Jointly continuous scalar representatives of actual smooth cylinder L² paths. -/
 
 @[expose] public section
 
-/-! Jointly continuous scalar representatives of actual smooth cylinder L² paths. -/
 
 noncomputable section
 
@@ -23,7 +25,7 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (p : C(K,CylinderL2 P ℝ))
+  (p : C(K, CylinderL2 P ℝ))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 /-- A fixed norm-one embedding lets the existing bounded H3 evaluation recover

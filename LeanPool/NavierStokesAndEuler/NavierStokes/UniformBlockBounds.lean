@@ -6,13 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StateReindex
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
-
-@[expose] public section
 
 /-!
 # Uniform coefficient bounds for the literal harmonic blocks
@@ -21,6 +17,9 @@ Restriction to angle zero, isometric coordinate changes, conjugate pairs,
 and finite signed harmonic sums preserve constants chosen before labels.
 The endpoints use the actual signed and particular block constructors.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -107,11 +106,11 @@ theorem pair_uniform {a : ι → ℕ → D → ℂ} (ha : UniformClass s w α a)
   by_cases hm : m = j <;> by_cases hm' : -m = j
   · simpa only [ParticularWaveAssembly.pair_apply, ite_eq_left hm, ite_eq_left hm'] using hp.add hn
   · simpa only [ParticularWaveAssembly.pair_apply, ite_eq_left hm, ite_eq_right hm', map_zero,
-    add_zero] using hp
+      add_zero] using hp
   · simpa only [ParticularWaveAssembly.pair_apply, ite_eq_right hm, ite_eq_left hm', zero_add]
-    using hn
+      using hn
   · simpa only [ParticularWaveAssembly.pair_apply, ite_eq_right hm, ite_eq_right hm', map_zero,
-    add_zero] using hz
+      add_zero] using hz
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem pair_sub_apply (j m : ℤ) (a b : D → ℂ) (x : D) :
@@ -176,7 +175,7 @@ theorem commonCorrected_difference_uniform {I : Type}
     (i : Fin 3) (m : ℤ) :
     UniformClass (SignedWaveUpdate.sectionStrip s) (fun l n x => w l n (x,0)) α
       (fun l n x => (SignedWaveUpdate.blockOfCoefficients ((a l).commonCorrected s (d l)) (kp
-        l)).velocity n i m x -
+          l)).velocity n i m x -
         (SignedWaveUpdate.blockOfCoefficients (a l).common (kp l)).velocity n i m x) := by
   apply blockOfCoefficients_difference_uniform _ _ kp _ i m
   apply hc.congr
@@ -214,7 +213,7 @@ theorem commonCorrected_product_difference_uniform {I : Type}
     UniformWaveClass s P α
       (fun l n x => (SignedWaveUpdate.blockOfCoefficients
         ((a l).commonCorrected (HarmonicWaveInteraction.productStrip s) (d l)) (kp l)).velocity n i
-          m x -
+            m x -
         (SignedWaveUpdate.blockOfCoefficients (a l).common (kp l)).velocity n i m x) := by
   have h := commonCorrected_difference_uniform a d kp hc i m
   rw [sectionStrip_productStrip] at h
@@ -239,12 +238,12 @@ theorem assembledBlock_uniform
       (ParticularWaveAssembly.assembledBlock N (k l) (Φ l) (kp l) (v l) (p l)).velocity n i m x)) ∧
     (∀ m, UniformClass s w γ (fun l n x =>
       (ParticularWaveAssembly.assembledBlock N (k l) (Φ l) (kp l) (v l) (p l)).pressure n m x)) :=
-        by
+          by
   constructor
   · intro i m
     have hs := UniformClass.sum (ParticularWaveAssembly.modes N)
       (fun j l n x => (ParticularWaveAssembly.modeBlock j (k l) (Φ l) (kp l) (v l j) (p l
-        j)).velocity n i m x)
+          j)).velocity n i m x)
       hw (fun j hj => pair_uniform ((hv j hj).map (ContinuousLinearMap.proj i)) j m)
     apply hs.congr
     intro l n x hx
@@ -254,7 +253,7 @@ theorem assembledBlock_uniform
   · intro m
     have hs := UniformClass.sum (ParticularWaveAssembly.modes N)
       (fun j l n x => (ParticularWaveAssembly.modeBlock j (k l) (Φ l) (kp l) (v l j) (p l
-        j)).pressure n m x)
+          j)).pressure n m x)
       hw (fun j hj => pair_uniform (hp j hj) j m)
     apply hs.congr
     intro l n x hx
@@ -320,7 +319,7 @@ theorem native_assembledBlock_uniform
         (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (x,0)))
         (fun j n x => p l j n (ParticularWaveAssembly.angleShuffle (x,0)))).pressure n m x)) :=
   assembledBlock_uniform N k Φ kp (fun l n x hx => hw l n (ParticularWaveAssembly.angleShuffle
-    (x,0)) hx)
+      (x,0)) hx)
     (fun j hj => nativeSlice_uniform (hv j hj)) (fun j hj => nativeSlice_uniform (hp j hj))
 
 theorem native_assembledBlock_original_uniform

@@ -8,18 +8,19 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevTransport
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevCoefficientPressure
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+
+/-! The literal transport and order-zero quadratic operators in the Euler correction equation. -/
 
 @[expose] public section
 
-/-! The literal transport and order-zero quadratic operators in the Euler correction equation. -/
 
 noncomputable section
 
 namespace EulerCorrectionOperators
 
 open MeasureTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
-  EulerSpatialSobolevInverse
+    EulerSpatialSobolevInverse
   EulerCylinderSobolev EulerCylinderSobolevSpace EulerSobolevL2Product EulerSobolevTransport
   EulerSobolevCoefficientPressure EulerVectorCylinder EulerMetricTransport
 open scoped Topology ContDiff ENNReal
@@ -53,16 +54,22 @@ theorem linearize_continuous {T : Type*} [TopologicalSpace T]
     (hB : Continuous B) (hC : Continuous C) (hz : Continuous z) :
     Continuous (fun t => linearize (B t) (C t) (z t)) := by
   have hflip : Continuous (fun t => (B t).flip) := (ContinuousLinearMap.flipₗᵢ ℝ X X
-    Y).continuous.comp hB
+      Y).continuous.comp hB
   exact ((hB.clm_apply hz).add (hflip.clm_apply hz)).add hC
 
 variable (period : ℝ) [Fact (0 < period)]
 
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace period q)` instance to shorten
+typeclass synthesis. -/
 local instance sobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace period q)` instance to shorten typeclass
+synthesis. -/
 local instance sobolevRealSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
+/-- Cache the standard `SeminormedAddCommGroup (SobolevSpace period (q+1) →L[ℝ] SobolevSpace
+period (q+1) →L[ℝ] SobolevSpace period q)` instance to shorten typeclass synthesis. -/
 local instance sobolevBilinearGroup (q : ℕ) : SeminormedAddCommGroup
     (SobolevSpace period (q+1) →L[ℝ] SobolevSpace period (q+1) →L[ℝ] SobolevSpace period q) :=
-      inferInstance
+        inferInstance
 
 /-- The actual derivative-free coordinate product on the input Sobolev level. -/
 def coordinateProduct {q : ℕ} (hq : 6 ≤ q) (i : Fin 3) :
@@ -71,9 +78,9 @@ def coordinateProduct {q : ℕ} (hq : 6 ≤ q) (i : Fin 3) :
     (truncateOperator period q) (truncateOperator period q)
 
 @[simp] theorem coordinateProduct_apply {q : ℕ} (hq : 6 ≤ q) (i : Fin 3)
-    (u v : SobolevSpace period (q+1)) :
+    (u v : SobolevSpace period (q + 1)) :
     coordinateProduct period hq i u v = productHq period hq (coordinate 3 i) (coordinate_norm_le 3
-      i)
+        i)
       (truncateOperator period q u) (truncateOperator period q v) := rfl
 
 /-- The actual order-zero quadratic coefficient terms, Σ Cᵢ(uᵢ v). -/
@@ -84,7 +91,7 @@ def algebraicBilinear {q : ℕ} (hq : 6 ≤ q)
 
 theorem algebraicBilinear_apply {q : ℕ} (hq : 6 ≤ q)
     (C : Fin 3 → SobolevSpace period q →L[ℝ] SobolevSpace period q)
-    (u v : SobolevSpace period (q+1)) :
+    (u v : SobolevSpace period (q + 1)) :
     algebraicBilinear period hq C u v = ∑ i : Fin 3, C i (coordinateProduct period hq i u v) := by
   simp only [algebraicBilinear, sum_apply, postcompose_apply]
 
@@ -98,17 +105,17 @@ def eulerBilinear {q : ℕ} (hq : 6 ≤ q)
 /-- Actual coefficient multiplication gives precisely the classical order-zero quadratic field. -/
 theorem algebraicBilinear_ae {q : ℕ} (hq : 6 ≤ q)
     (C : Fin 3 → SmoothCoefficient period) (K : ∀ i, CoefficientJet period standardDirection q (C
-      i))
-    (u v : SobolevSpace period (q+1)) (f g : LiftDomain period → Vector3)
+        i))
+    (u v : SobolevSpace period (q + 1)) (f g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f)
     (hv : (value period v : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g) :
     (value period (algebraicBilinear period hq (fun i => coefficientSobolevOperator period (K i)) u
-      v) :
+        v) :
       LiftDomain period → Vector3) =ᵐ[liftMeasure period]
         (fun x => ∑ i : Fin 3, f x i • (C i).coefficient x (g x)) := by
   rw [algebraicBilinear_apply]
   change ((valueOperator period q) (∑ i : Fin 3, _) : LiftDomain period → Vector3) =ᵐ[liftMeasure
-    period] _
+      period] _
   rw [map_sum]
   have hi (i : Fin 3) :
       (value period (coefficientSobolevOperator period (K i) (coordinateProduct period hq i u v)) :
@@ -118,17 +125,17 @@ theorem algebraicBilinear_ae {q : ℕ} (hq : 6 ≤ q)
     have hpr := productHq_ae period hq (coordinate 3 i) (coordinate_norm_le 3 i)
       (truncateOperator period q u) (truncateOperator period q v)
     filter_upwards [(C i).operator_ae (value period (coordinateProduct period hq i u v)), hpr, hu,
-      hv]
+        hv]
       with x h1 h2 h3 h4
     rw [h1]
     change (C i).coefficient x (value period (productHq period hq (coordinate 3 i)
-      (coordinate_norm_le 3 i)
+        (coordinate_norm_le 3 i)
       (truncateOperator period q u) (truncateOperator period q v)) x) = _
     rw [h2, value_truncateOperator, value_truncateOperator, h3, h4, map_smul]
     rfl
   filter_upwards [Lp.coeFn_finsetSum Finset.univ (fun i : Fin 3 => value period
     (coefficientSobolevOperator period (K i) (coordinateProduct period hq i u v))), ae_all_iff.mpr
-      hi] with x hx hall
+        hi] with x hx hall
   simp only [Finset.sum_apply] at hx
   exact hx.trans (Finset.sum_congr rfl (fun i _ => hall i))
 

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelNaturality
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeighted
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelNaturality
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Genuine scalar-profile normalization commutes with bounded linear intertwiners. -/
 
 @[expose] public section
 
-/-! Genuine scalar-profile normalization commutes with bounded linear intertwiners. -/
 
 noncomputable section
 
@@ -23,16 +25,16 @@ variable {E F : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
   {T : ℝ} {hT : 0 ≤ T}
-  {B : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
-  {D : C(Icc (0 : ℝ) T,F →L[ℝ] F)}
+  {B : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
+  {D : C(Icc (0 : ℝ) T, F →L[ℝ] F)}
   (U : Evolution T hT B) (V : Evolution T hT D)
   (L : E →L[ℝ] F) (hL : ∀ t u, D t (L u) = L (B t u))
 
 include hL
 
 /-- Exact naturality of the actual normalized Duhamel solution. -/
-theorem weightedSolution_map (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-    (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem weightedSolution_map (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+    (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     V.weightedSolution g hg (L.compLeftContinuous ℝ (Icc (0 : ℝ) T) f) (L a₀) =
       L.compLeftContinuous ℝ (Icc (0 : ℝ) T) (U.weightedSolution g hg f a₀) := by
   have hw : weight g (L.compLeftContinuous ℝ (Icc (0 : ℝ) T) f) =

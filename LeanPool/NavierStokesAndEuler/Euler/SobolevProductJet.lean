@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevL2Product
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+import LeanPool.NavierStokesAndEuler.Euler.SobolevTranslationDifferentiation
+
+/-! Actual strong product jets from the genuine Sobolev-to-L² bilinear multiplication. -/
 
 @[expose] public section
 
-/-! Actual strong product jets from the genuine Sobolev-to-L² bilinear multiplication. -/
 
 noncomputable section
 
@@ -23,11 +25,12 @@ open scoped Topology ENNReal
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Genuine L² differentiation of a pointwise product, with one Sobolev derivative on its coefficient. -/
+/-- Genuine L² differentiation of a pointwise product, with one Sobolev derivative on its
+coefficient. -/
 theorem scalarProduct_hasDerivAt (L : Vector3 →L[ℝ] ℝ) (i : Fin 4)
     (u : SobolevSpace period 4) (v v' : LiftL2 period)
     (hv : HasDerivAt (fun t => translation period (translationPath period (standardDirection i) t)
-      v) v' 0) :
+        v) v' 0) :
     HasDerivAt (fun t => translation period (translationPath period (standardDirection i) t)
       (scalarProduct period (le_refl 3) L (truncateOperator period 3 u) v))
       (scalarProduct period (le_refl 3) L (truncateOperator period 3 u) v' +
@@ -39,29 +42,29 @@ theorem scalarProduct_hasDerivAt (L : Vector3 →L[ℝ] ℝ) (i : Fin 4)
       (truncateOperator period 3 u) = truncateOperator period 3 u := by
     apply value_injective period
     change translation period (translationPath period (standardDirection i) 0) (value period u) =
-      value period u
+        value period u
     rw [translationPath_zero, translation_zero]
   have he : (fun t => B (sobolevTranslation period 3 (translationPath period (standardDirection i)
-    t)
+      t)
       (truncateOperator period 3 u)) (translation period (translationPath period (standardDirection
-        i) t) v)) =
+          i) t) v)) =
       fun t => translation period (translationPath period (standardDirection i) t)
         (scalarProduct period (le_refl 3) L (truncateOperator period 3 u) v) := by
     funext t
     exact scalarProduct_translation period (le_refl 3) L _ _ _
   change HasDerivAt (fun t => B (sobolevTranslation period 3 (translationPath period
-    (standardDirection i) t)
+      (standardDirection i) t)
       (truncateOperator period 3 u)) (translation period (translationPath period (standardDirection
-        i) t) v))
+          i) t) v))
       (B (sobolevTranslation period 3 (translationPath period (standardDirection i) 0)
-        (truncateOperator period 3 u)) v' +
+          (truncateOperator period 3 u)) v' +
         B (derivativeOperator period 3 i u) (translation period (translationPath period
-          (standardDirection i) 0) v)) 0 at h
+            (standardDirection i) 0) v)) 0 at h
   rw [he, hzero, translationPath_zero, translation_zero] at h
   exact h
 
 /-- Pointwise multiplication with q+3 coefficient derivatives produces a genuine q-jet. -/
-def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q+3))
+def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q + 3))
     {v : LiftL2 period} (J : SpatialJet period standardDirection q v) :
     SpatialJet period standardDirection q
       (scalarProduct period (le_refl 3) L (restrictOperator period (by omega : 3 ≤ q+3) u) v) := by
@@ -74,8 +77,8 @@ def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q
       let du : Fin 4 → SobolevSpace period (q+3) := fun i => derivativeOperator period (q+3) i u
       let u3 : SobolevSpace period 3 := restrictOperator period (by omega : 3 ≤ q+1+3) u
       let d : Fin 4 → LiftL2 period := fun i =>
-        scalarProduct period (le_refl 3) L (restrictOperator period (by omega : 3 ≤ q+3) u0) (dv i)
-          +
+        scalarProduct period (le_refl 3) L (restrictOperator period (by
+            omega : 3 ≤ q+3) u0) (dv i) +
         scalarProduct period (le_refl 3) L (restrictOperator period (by omega : 3 ≤ q+3) (du i)) v
       have hbase : restrictOperator period (by omega : 3 ≤ q+3) u0 = u3 := by
         apply value_injective period
@@ -98,14 +101,14 @@ def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q
 
 /-- The output Sobolev array of an actual pointwise scalar-vector product. -/
 def productHighLow (L : Vector3 →L[ℝ] ℝ) {q : ℕ}
-    (u : SobolevSpace period (q+3)) (v : SobolevSpace period q) : SobolevSpace period q :=
+    (u : SobolevSpace period (q + 3)) (v : SobolevSpace period q) : SobolevSpace period q :=
   ofJet period (productJet period L u (toJet period v))
 
 @[simp] theorem productHighLow_value (L : Vector3 →L[ℝ] ℝ) {q : ℕ}
-    (u : SobolevSpace period (q+3)) (v : SobolevSpace period q) :
+    (u : SobolevSpace period (q + 3)) (v : SobolevSpace period q) :
     value period (productHighLow period L u v) =
-      scalarProduct period (le_refl 3) L (restrictOperator period (by omega : 3 ≤ q+3) u) (value
-        period v) :=
+      scalarProduct period (le_refl 3) L (restrictOperator period (by
+          omega : 3 ≤ q+3) u) (value period v) :=
   value_ofJet period _
 
 end EulerSobolevL2Product

@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLifespan
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLimit
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 
 /-! One actual Euler field on the half-open maximal interval. Values are
 chosen on intermediate horizons, and genuine Euler uniqueness removes
 the dependence on that choice. No continuation criterion is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,10 +27,13 @@ open scoped Topology ContDiff
 
 variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 
+/-- Time: an abbreviation for `Ico (0 : ℝ) L.duration`. -/
 abbrev Time : Type := Ico (0 : ℝ) L.duration
 
+/-- Initial time, given by `⟨0,le_rfl,L.duration_pos⟩`. -/
 def initialTime : L.Time := ⟨0,le_rfl,L.duration_pos⟩
 
+/-- Intermediate horizon, given by `((t : ℝ)+L.duration)/2`. -/
 def intermediateHorizon (t : L.Time) : ℝ := ((t : ℝ)+L.duration)/2
 
 theorem intermediateHorizon_pos (t : L.Time) : 0 < L.intermediateHorizon t := by
@@ -47,16 +53,21 @@ theorem intermediateHorizon_lt (t : L.Time) : L.intermediateHorizon t < L.durati
   dsimp [intermediateHorizon]
   linarith
 
+/-- Intermediate time, given by `⟨t,t.property.1,(L.time_lt_intermediateHorizon t).le⟩`. -/
 def intermediateTime (t : L.Time) : Icc (0 : ℝ) (L.intermediateHorizon t) :=
   ⟨t,t.property.1,(L.time_lt_intermediateHorizon t).le⟩
 
+/-- Shorter time, given by `⟨t,t.property.1,t.property.2.trans_lt hSL⟩`. -/
 def shorterTime (S : ℝ) (hSL : S < L.duration) (t : Icc (0 : ℝ) S) : L.Time :=
   ⟨t,t.property.1,t.property.2.trans_lt hSL⟩
 
+/-- Maximal field, given by `(L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos
+t) (L.intermediateHorizon_lt t)).velocity (L.intermediateTime t)`. -/
 def maximalField (t : L.Time) : SmoothL2Field Space :=
   (L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos t)
     (L.intermediateHorizon_lt t)).velocity (L.intermediateTime t)
 
+/-- Maximal pressure field as an element of `SmoothL2Field Space`. -/
 def maximalPressureField (t : L.Time) : SmoothL2Field Space :=
   (L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos t)
     (L.intermediateHorizon_lt t)).pressureForce (L.intermediateTime t)
@@ -64,7 +75,7 @@ def maximalPressureField (t : L.Time) : SmoothL2Field Space :=
 theorem maximalFields_eq_evolution (S : ℝ) (hS : 0 < S) (hSL : S < L.duration)
     (t : Icc (0 : ℝ) S) :
     L.maximalField (L.shorterTime S hSL t)=(L.evolution S hS hSL).velocity t ∧
-      L.maximalPressureField (L.shorterTime S hSL t)=
+      L.maximalPressureField (L.shorterTime S hSL t) =
         (L.evolution S hS hSL).pressureForce t := by
   let u := L.shorterTime S hSL t
   let M := L.intermediateHorizon u
@@ -113,7 +124,7 @@ theorem maximalField_jet_continuous (n : ℕ) :
   apply L.continuous_of_shorter_restrictions
   intro S hS hSL
   have he : (fun t : Icc (0 : ℝ) S =>
-      (L.maximalField (L.shorterTime S hSL t)).jetLp n)=
+      (L.maximalField (L.shorterTime S hSL t)).jetLp n) =
       (fun t => ((L.evolution S hS hSL).velocity t).jetLp n) := by
     funext t
     rw [L.maximalField_eq_evolution S hS hSL t]
@@ -125,7 +136,7 @@ theorem maximalPressureField_jet_continuous (n : ℕ) :
   apply L.continuous_of_shorter_restrictions
   intro S hS hSL
   have he : (fun t : Icc (0 : ℝ) S =>
-      (L.maximalPressureField (L.shorterTime S hSL t)).jetLp n)=
+      (L.maximalPressureField (L.shorterTime S hSL t)).jetLp n) =
       (fun t => ((L.evolution S hS hSL).pressureForce t).jetLp n) := by
     funext t
     rw [L.maximalPressureField_eq_evolution S hS hSL t]
@@ -145,8 +156,11 @@ theorem maximalPressureField_gradient (t : L.Time) :
   (L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos t)
     (L.intermediateHorizon_lt t)).gradient (L.intermediateTime t)
 
+/-- Maximal velocity, given by `(L.maximalField t).field`. -/
 def maximalVelocity (t : L.Time) : Space → Space := (L.maximalField t).field
 
+/-- Maximal pressure, given by `EulerCanonicalGraphPotential.radialPotential
+(L.maximalPressureField t).field`. -/
 def maximalPressure (t : L.Time) : Space → ℝ :=
   EulerCanonicalGraphPotential.radialPotential (L.maximalPressureField t).field
 
@@ -212,7 +226,7 @@ theorem maximalVelocity_time_law (S : ℝ) (hS : 0 < S) (hSL : S < L.duration)
     HasDerivAt (fun r => L.maximalVelocity
       (L.shorterTime S hSL (projIcc 0 S hS.le r)) x)
       (-fderiv ℝ (L.maximalVelocity (L.shorterTime S hSL ⟨t,ht.1.le,ht.2.le⟩)) x
-        (L.maximalVelocity (L.shorterTime S hSL ⟨t,ht.1.le,ht.2.le⟩) x)-
+        (L.maximalVelocity (L.shorterTime S hSL ⟨t,ht.1.le,ht.2.le⟩) x) -
         _root_.gradient (L.maximalPressure (L.shorterTime S hSL ⟨t,ht.1.le,ht.2.le⟩)) x) t := by
   rw [(L.maximalPressure_spec (L.shorterTime S hSL ⟨t,ht.1.le,ht.2.le⟩)).2.2 x,
     L.maximalPressureField_eq_evolution S hS hSL]

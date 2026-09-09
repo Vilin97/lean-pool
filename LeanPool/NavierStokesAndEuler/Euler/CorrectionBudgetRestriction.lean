@@ -9,31 +9,34 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyData
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionTimeRestriction
 
+/-! Genuine coefficient and metric budgets persist under restriction to a partial time interval. -/
+
 @[expose] public section
 
-/-! Genuine coefficient and metric budgets persist under restriction to a partial time interval. -/
 
 noncomputable section
 
 namespace EulerCorrectionBudgetRestriction
 
 open Set EulerCorrectionOperators EulerCorrectionEnergyData EulerQuadraticSource
-  EulerVolterraConvolution
+    EulerVolterraConvolution
 open scoped Topology
 
-/-- Clamped restriction agrees with the original continuous path at every time in the shorter interval. -/
+/-- Clamped restriction agrees with the original continuous path at every time in the shorter
+interval. -/
 theorem extend_restriction_eq {E : Type*} [NormedAddCommGroup E] {T S : ℝ}
-    (hT : 0 ≤ T) (hS : 0 ≤ S) (hTS : T ≤ S) (f : C(Icc (0 : ℝ) S,E))
+    (hT : 0 ≤ T) (hS : 0 ≤ S) (hTS : T ≤ S) (f : C(Icc (0 : ℝ) S, E))
     (t : ℝ) (ht : t ∈ Icc 0 T) :
     extendPath T hT (f.comp (timeInclusion hTS)) t = extendPath S hS f t := by
   unfold extendPath
   simp only [projIcc_of_mem _ ht, projIcc_of_mem _ (show t ∈ Icc 0 S from ⟨ht.1,ht.2.trans hTS⟩)]
   rfl
 
-/-- Restriction of a genuine time derivative gives the same genuine derivative in the shorter interval. -/
+/-- Restriction of a genuine time derivative gives the same genuine derivative in the shorter
+interval. -/
 theorem hasDerivAt_restriction {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {T S : ℝ} (hT : 0 ≤ T) (hS : 0 ≤ S) (hTS : T ≤ S)
-    (f f' : C(Icc (0 : ℝ) S,E))
+    (f f' : C(Icc (0 : ℝ) S, E))
     (hf : ∀ t ∈ Ioo 0 S, HasDerivAt (extendPath S hS f) (extendPath S hS f' t) t)
     (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (extendPath T hT (f.comp (timeInclusion hTS)))
@@ -46,8 +49,8 @@ theorem hasDerivAt_restriction {E : Type*} [NormedAddCommGroup E] [NormedSpace �
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Every concrete spatial budget restricts with exactly the same numerical constants. -/
-def SpatialBudget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) S)} {N : ℕ} {R : C(Icc (0 : ℝ) S,ℝ)}
+def SpatialBudget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) S)} {N : ℕ} {R : C(Icc (0 : ℝ) S, ℝ)}
     (B : SpatialBudget period hq D N R) (hTS : T ≤ S) :
     SpatialBudget period hq (D.comp period (timeInclusion hTS)) N (R.comp (timeInclusion hTS)) where
   Rc := B.Rc
@@ -78,16 +81,17 @@ def SpatialBudget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q+1}
   quadratic t := B.quadratic (timeInclusion hTS t)
   residual_bound t := B.residual_bound (timeInclusion hTS t)
 
-/-- The actual inverse metric and its genuine derivative restrict with unchanged numerical budgets. -/
+/-- The actual inverse metric and its genuine derivative restrict with unchanged numerical budgets.
+-/
 def MetricBudget.restrict {q : ℕ} {T S : ℝ} {hS : 0 ≤ S}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) S)}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) S)}
     (K : MetricBudget period S hS D) (hT : 0 ≤ T) (hTS : T ≤ S) :
     MetricBudget period T hT (D.comp period (timeInclusion hTS)) where
   metric t := K.metric (timeInclusion hTS t)
   continuous := K.continuous.comp (timeInclusion hTS).continuous
   derivative := K.derivative.comp (timeInclusion hTS)
   hasDeriv t ht := hasDerivAt_restriction hT hS hTS (K.operatorPath period) K.derivative K.hasDeriv
-    t ht
+      t ht
   c := K.c
   c_pos := K.c_pos
   symmetric t := K.symmetric (timeInclusion hTS t)

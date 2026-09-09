@@ -7,11 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Numerical absorption in the sharp gradient and Hessian bounds,
 and the common localized coercivity guard for all nested horizons. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,8 +26,8 @@ open Real EulerPacketBaseGuardScales
 
 theorem gradient_bound (CM hprev hchild g b e : ℝ)
     (hCM : 4 ≤ CM) (hp : 1 ≤ hprev) (hc : 1 ≤ hchild)
-    (hscale : hprev^2 ≤ hchild/4) (hg : 4*g ≤ CM)
-    (hbad : hchild*b+e ≤ 1) :
+    (hscale : hprev ^ 2 ≤ hchild / 4) (hg : 4 * g ≤ CM)
+    (hbad : hchild * b + e ≤ 1) :
     CM*hprev+hchild*(g+b)+e ≤ CM*hchild := by
   have hCM0 : 0 ≤ CM := by linarith only [hCM]
   have hh : hprev ≤ hchild/4 := by nlinarith only [hp,hscale,sq_nonneg (hprev-1)]
@@ -33,8 +38,8 @@ theorem gradient_bound (CM hprev hchild g b e : ℝ)
 
 theorem hessian_bound (CM CH hprev hold hchild g b e : ℝ)
     (hCH : 4 ≤ CH) (hp : 1 ≤ hprev) (hc : 1 ≤ hchild)
-    (hhold : hold ≤ hprev) (hscale : hprev^2 ≤ hchild/4)
-    (hg : 8*CM*g ≤ CH) (hbad : 2*CM*hprev*hchild*b+e ≤ 1) :
+    (hhold : hold ≤ hprev) (hscale : hprev ^ 2 ≤ hchild / 4)
+    (hg : 8 * CM * g ≤ CH) (hbad : 2 * CM * hprev * hchild * b + e ≤ 1) :
     CH*hprev*hold+2*CM*hprev*hchild*(g+b)+e ≤ CH*hchild*hprev := by
   have hCH0 : 0 ≤ CH := by linarith only [hCH]
   have hp0 := zero_le_one.trans hp
@@ -51,7 +56,7 @@ theorem hessian_bound (CM CH hprev hold hchild g b e : ℝ)
 theorem localized_cost_le (J : ℕ) (X K Be Bc Kcap Becap CM Cboundary T : ℝ)
     (hK : 0 ≤ K) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hT : 0 ≤ T)
     (hC : 0 ≤ Cboundary) (hr : 0 ≤ baseRadius X)
-    (hKT : K ≤ Kcap) (hBeT : Be ≤ Becap) (hBcT : Bc ≤ CM*X^1000+2)
+    (hKT : K ≤ Kcap) (hBeT : Be ≤ Becap) (hBcT : Bc ≤ CM * X ^ 1000 + 2)
     (hTS : T ≤ baseHorizon J X) :
     K*(T^2/2)+Be*T+Cboundary*Bc*(baseRadius X)^3*T ≤
       baseGuardCost J Kcap Becap CM Cboundary X := by
@@ -64,9 +69,9 @@ theorem localized_cost_le (J : ℕ) (X K Be Bc Kcap Becap CM Cboundary T : ℝ)
 theorem localized_guard (J : ℕ) (X K Be Bc Kcap Becap CM Cboundary T : ℝ)
     (hK : 0 ≤ K) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hT : 0 ≤ T)
     (hC : 0 ≤ Cboundary) (hr : 0 ≤ baseRadius X)
-    (hKT : K ≤ Kcap) (hBeT : Be ≤ Becap) (hBcT : Bc ≤ CM*X^1000+2)
+    (hKT : K ≤ Kcap) (hBeT : Be ≤ Becap) (hBcT : Bc ≤ CM * X ^ 1000 + 2)
     (hTS : T ≤ baseHorizon J X)
-    (hbase : baseGuardCost J Kcap Becap CM Cboundary X ≤ 1/2) :
+    (hbase : baseGuardCost J Kcap Becap CM Cboundary X ≤ 1 / 2) :
     K*(T^2/2)+Be*T+Cboundary*Bc*(baseRadius X)^3*T ≤ 1/2 :=
   (localized_cost_le J X K Be Bc Kcap Becap CM Cboundary T
     hK hBe hBc hT hC hr hKT hBeT hBcT hTS).trans hbase

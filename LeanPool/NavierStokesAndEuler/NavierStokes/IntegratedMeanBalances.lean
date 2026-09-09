@@ -6,13 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PressureStream
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-public import Mathlib.Analysis.Calculus.Deriv.Support
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 
 /-!
 # Integrated tangential balances from actual radial differential expressions
@@ -22,6 +17,9 @@ the boundary cancellations, and parameter derivatives pass under integrals by
 the dominated differentiation theorem in `TransportPrimitive`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.IntegratedMeanBalances
@@ -29,6 +27,7 @@ namespace NavierStokes.IntegratedMeanBalances
 open Set Function MeasureTheory Filter
 open scoped ContDiff Topology Interval
 
+/-- Moment, given by `∫ r, r ^ n * f r`. -/
 noncomputable def moment (n : ℕ) (f : ℝ → ℝ) : ℝ := ∫ r, r ^ n * f r
 
 theorem weighted_integrable {f : ℝ → ℝ} (hf : Continuous f)
@@ -90,12 +89,15 @@ theorem moment_deriv_succ {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
     (weighted_integrable hf.continuous hs (n + 1))
   simpa only [moment, Pi.mul_apply, mul_assoc, integral_const_mul, neg_mul] using hi
 
+/-- Radial divergence, given by `deriv f r + c / r * f r`. -/
 noncomputable def radialDivergence (c : ℝ) (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv f r + c / r * f r
 
+/-- Angular radial viscosity, given by `deriv (deriv f) r + deriv f r / r - f r / r ^ 2`. -/
 noncomputable def angularRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv (deriv f) r + deriv f r / r - f r / r ^ 2
 
+/-- Axial radial viscosity, given by `deriv (deriv f) r + deriv f r / r`. -/
 noncomputable def axialRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv (deriv f) r + deriv f r / r
 
@@ -244,9 +246,11 @@ section Families
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Radial moment, given by `moment n (fun r => F (r, p))`. -/
 noncomputable def radialMoment (n : ℕ) (F : ℝ × P → ℝ) (p : P) : ℝ :=
   moment n (fun r => F (r, p))
 
+/-- Parameter partial, given by `fderiv ℝ F x (0, v)`. -/
 noncomputable def parameterPartial (v : P) (F : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
   fderiv ℝ F x (0, v)
 
@@ -352,21 +356,27 @@ section Torus
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Torus inner, given by `∫ x in (0 : ℝ)..1, F (q, x)`. -/
 noncomputable def torusInner (F : (P × ℝ) × ℝ → ℝ) (q : P × ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..1, F (q, x)
 
+/-- Torus average, given by `∫ y in (0 : ℝ)..1, torusInner F (p, y)`. -/
 noncomputable def torusAverage (F : (P × ℝ) × ℝ → ℝ) (p : P) : ℝ :=
   ∫ y in (0 : ℝ)..1, torusInner F (p, y)
 
+/-- Fixed partial, given by `fderiv ℝ F q v`. -/
 noncomputable def fixedPartial (v : (P × ℝ) × ℝ) (F : (P × ℝ) × ℝ → ℝ)
     (q : (P × ℝ) × ℝ) : ℝ := fderiv ℝ F q v
 
+/-- Slow partial, given by `fixedPartial ((v, 0), 0) F`. -/
 noncomputable def slowPartial (v : P) (F : (P × ℝ) × ℝ → ℝ) : (P × ℝ) × ℝ → ℝ :=
   fixedPartial ((v, 0), 0) F
 
+/-- Torus partial, given by `fixedPartial ((0, v.2), v.1) F`. -/
 noncomputable def torusPartial (v : ℝ × ℝ) (F : (P × ℝ) × ℝ → ℝ) : (P × ℝ) × ℝ → ℝ :=
   fixedPartial ((0, v.2), v.1) F
 
+/-- Torus periodic data, collecting `first`, `second`. -/
 structure TorusPeriodic (F : (P × ℝ) × ℝ → ℝ) : Prop where
   first : ∀ q, F (q + ((0, 0), 1)) = F q
   second : ∀ q, F (q + ((0, 1), 0)) = F q
@@ -453,8 +463,8 @@ theorem torusAverage_second_zero {F : (P × ℝ) × ℝ → ℝ}
   have hd : ∀ y, HasDerivAt (fun s => torusInner F (p, s))
       (torusInner (fixedPartial ((0, 1), 0) F) (p, y)) y := by
     intro y
-    have hh := (((torusInner_smooth hF).differentiable (by simp)) (p,
-      y)).hasFDerivAt.comp_hasDerivAt y
+    have hh := (((torusInner_smooth hF).differentiable (by
+        simp)) (p, y)).hasFDerivAt.comp_hasDerivAt y
       ((hasDerivAt_const y p).prodMk (hasDerivAt_id y))
     have he := parameterIntegral_fderiv_apply hF 0 1 (p, y) (0, 1)
     change fderiv ℝ (torusInner F) (p, y) (0, 1) =
@@ -491,6 +501,7 @@ theorem torusAverage_torusPartial_zero (v : ℝ × ℝ) {F : (P × ℝ) × ℝ �
     torusAverage_first_zero hF hp, torusAverage_second_zero hF hp]
   simp
 
+/-- Graph partial, given by `slowPartial v F q + a q.1.1 * torusPartial w F q`. -/
 noncomputable def graphPartial (a : P → ℝ) (v : P) (w : ℝ × ℝ)
     (F : (P × ℝ) × ℝ → ℝ) (q : (P × ℝ) × ℝ) : ℝ :=
   slowPartial v F q + a q.1.1 * torusPartial w F q
@@ -584,8 +595,11 @@ theorem moment_balance_algebra (n : ℕ) (α β δ : ℝ) (f g h j k l : ℝ →
     moment_add n hα hg, moment_const_mul, moment_const_mul, moment_const_mul,
     moment_add n hj hδ, moment_const_mul]
 
+/-- Mean parameter: an abbreviation for `ℝ × ℝ`. -/
 abbrev MeanParameter := ℝ × ℝ
+/-- Mean point: an abbreviation for `ℝ × MeanParameter`. -/
 abbrev MeanPoint := ℝ × MeanParameter
+/-- Mean field: an abbreviation for `MeanPoint → ℝ`. -/
 abbrev MeanField := MeanPoint → ℝ
 
 /-- Joint smoothness and a common compact radial shell are genuine input
@@ -698,14 +712,17 @@ theorem integrated_axial_balance {a b : ℝ} (ε : ℝ)
     (fun r => parameterPartial (0, 1) (parameterPartial (0, 1) γ) (r, p))
     (radialDivergence 1 (fun r => virtualFlux (r, p)))
     ((hγ.parameterDerivative (1, 0)).weighted_integrable 1 p)
-    (by simpa only [pow_one] using axial_divergence_integrable (hr.slice_smooth p)
-      (hr.slice_compact p))
+    (by
+        simpa only [pow_one] using axial_divergence_integrable (hr.slice_smooth p)
+            (hr.slice_compact p))
     (((hz.add hp).parameterDerivative (0, 1)).weighted_integrable 1 p)
-    (by simpa only [pow_one] using axial_viscosity_integrable (hγ.slice_smooth p) (hγ.slice_compact
-      p))
+    (by
+        simpa only [pow_one] using axial_viscosity_integrable (hγ.slice_smooth p) (hγ.slice_compact
+            p))
     (((hγ.parameterDerivative (0, 1)).parameterDerivative (0, 1)).weighted_integrable 1 p)
-    (by simpa only [pow_one] using axial_divergence_integrable (hT.slice_smooth p)
-      (hT.slice_compact p))
+    (by
+        simpa only [pow_one] using axial_divergence_integrable (hT.slice_smooth p)
+            (hT.slice_compact p))
   have ht := zero_mass_parameterPartial hγ.smooth hγ.supported 1 hmass p (1, 0)
   have hzz := zero_mass_parameterPartial_twice hγ.smooth hγ.supported 1 hmass p (0, 1) (0, 1)
   have hd := radialMoment_parameterPartial (hz.add hp).smooth (hz.add hp).supported 1 p (0, 1)
@@ -720,11 +737,14 @@ theorem integrated_axial_balance {a b : ℝ} (ε : ℝ)
   rw [ht, hzz, ← hd]
   ring
 
+/-- Pressure total, given by `radialMoment 0 gr`. -/
 noncomputable def pressureTotal (gr : MeanField) : MeanParameter → ℝ := radialMoment 0 gr
 
+/-- Pressure coefficient, given by `radialMoment 2 ρ p / 2`. -/
 noncomputable def pressureCoefficient (ρ : MeanField) (p : MeanParameter) : ℝ :=
   radialMoment 2 ρ p / 2
 
+/-- Axial defect, given by `radialMoment 1 axialFlux p - (1 / 2 : ℝ) * radialMoment 2 gr p`. -/
 noncomputable def axialDefect (axialFlux gr : MeanField) (p : MeanParameter) : ℝ :=
   radialMoment 1 axialFlux p - (1 / 2 : ℝ) * radialMoment 2 gr p
 
@@ -816,7 +836,7 @@ theorem angularBalance_supported {a b : ℝ} (ε : ℝ)
   apply hx
   simp [angularBalance,
     (hv.parameterDerivative (1, 0)).zero_of_not_mem hn, (hz.parameterDerivative (0,
-      1)).zero_of_not_mem hn,
+        1)).zero_of_not_mem hn,
     ((hv.parameterDerivative (0, 1)).parameterDerivative (0, 1)).zero_of_not_mem hn,
     zero_of_not_mem_interval (radialDivergence_supported (hr.slice_support x.2) 2) hn,
     zero_of_not_mem_interval (radialDivergence_supported (hT.slice_support x.2) 2) hn,
@@ -828,13 +848,13 @@ theorem axialBalance_supported {a b : ℝ} (ε : ℝ)
     (hz : SmoothShell a b axialFlux) (hp : SmoothShell a b pressure)
     (hT : SmoothShell a b virtualFlux) :
     RadialAlias.RadiallySupported a b (axialBalance ε γ radialFlux axialFlux pressure virtualFlux)
-      := by
+        := by
   intro x hx
   by_contra hn
   apply hx
   simp [axialBalance,
     (hγ.parameterDerivative (1, 0)).zero_of_not_mem hn, ((hz.add hp).parameterDerivative (0,
-      1)).zero_of_not_mem hn,
+        1)).zero_of_not_mem hn,
     ((hγ.parameterDerivative (0, 1)).parameterDerivative (0, 1)).zero_of_not_mem hn,
     zero_of_not_mem_interval (radialDivergence_supported (hr.slice_support x.2) 1) hn,
     zero_of_not_mem_interval (radialDivergence_supported (hT.slice_support x.2) 1) hn,
@@ -844,8 +864,8 @@ theorem positive_radialMoment {a b : ℝ} (ha : 0 < a) {F : MeanField}
     (hs : RadialAlias.RadiallySupported a b F) (n : ℕ) (p : MeanParameter) :
     (∫ r in Ioi (0 : ℝ), r ^ n * F (r, p)) = radialMoment n F p := by
   apply positive_integral_eq_integral ha
-  intro r hr
-  exact hs (right_ne_zero_of_mul hr)
+  · intro r hr
+    exact hs (right_ne_zero_of_mul hr)
 
 theorem integrated_angular_positive {a b : ℝ} (ha : 0 < a) (ε : ℝ)
     {v radialFlux axialFlux virtualFlux : MeanField}
@@ -903,13 +923,17 @@ theorem constructed_pressure_moment {d a b M : ℝ}
 
 end PressurePrimitive
 
+/-- Reconstructed mean pressure, given by `PressureStream.torusAverage
+(PressureStream.meanPressure d a b M hab v f)`. -/
 noncomputable def reconstructedMeanPressure (d a b M : ℝ) (hab : a < b) (v : ℝ × ℝ)
     (f : PressureStream.Lift MeanParameter → ℝ) : MeanField :=
   PressureStream.torusAverage (PressureStream.meanPressure d a b M hab v f)
 
+/-- Averaged radial source, given by `PressureStream.torusAverage f`. -/
 noncomputable def averagedRadialSource (f : PressureStream.Lift MeanParameter → ℝ) : MeanField :=
   PressureStream.torusAverage f
 
+/-- Normalized mean density, given by `PressureStream.rho a b hab x.1`. -/
 noncomputable def normalizedMeanDensity (a b : ℝ) (hab : a < b) (x : MeanPoint) : ℝ :=
   PressureStream.rho a b hab x.1
 

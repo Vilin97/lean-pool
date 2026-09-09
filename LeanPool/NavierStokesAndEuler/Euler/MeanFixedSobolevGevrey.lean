@@ -7,11 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedInverse
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevrey
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Genuine fixed-Hq bounds for the constructed mean inverse
@@ -21,6 +27,9 @@ Sobolev order, and the same radius. Only the known coefficient estimates are
 converted from tensor bounds. Their finite Sobolev cost is paid once, before
 applying the actual inverse recurrence.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,12 +44,28 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoi
 open scoped ContDiff
 
 -- Reuse the nested Hilbert-space instances in the adjoint and inverse estimates.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSobolevGevrey1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSobolevGevrey2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSobolevGevrey3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSobolevGevrey4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedSobolevGevrey5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace)
+    := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedSobolevGevrey6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
 /-- Coefficient-only amplitude of the full mean form in a fixed base order. -/
 def operatorBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
@@ -59,8 +84,8 @@ theorem forcingOperator_bound {P : Type*} [NormedAddCommGroup P] [NormedSpace �
     (F F₁ : P → C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (hF : ContDiff ℝ ∞ F) (hF₁ : ContDiff ℝ ∞ F₁)
     (Rc CF CF₁ : ℝ) (hRc : 0 ≤ Rc) (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF*majorant Rc 0 n)
-    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁*majorant Rc 0 n)
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF * majorant Rc 0 n)
+    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁ * majorant Rc 0 n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => -(fixedMeanPrimitive T hT (F y) (F₁ y)).adjoint) x‖ ≤
       (T*(T*CF₁+CF))*majorant Rc 0 n := by
@@ -86,7 +111,7 @@ variable {ι : Type*} [Fintype ι]
   (T : ℝ) (hT : 0 ≤ T)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L c : ℝ)
   (hc : 0 < c)
-  (hcoercive : ∀ v, c*‖v‖^2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v,v⟫_ℝ)
+  (hcoercive : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v, v⟫_ℝ)
 
 include hd in
 /-- A genuine one-shift fixed-Hq estimate for the spatial orbit of the actual
@@ -103,23 +128,23 @@ theorem solution_translation_block_gevrey
     (hRc : 0 ≤ Rc) (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCH : 0 ≤ CH)
     (hCM : 0 ≤ CM) (hCA : 0 ≤ CA) (hCf : 0 ≤ Cf)
     (hM : 1 ≤ M)
-    (hMC : sobolevInverseCost c⁻¹ (operatorBlockAmplitude ι q T Rc CF CF₁ CH CM CA L) q*
+    (hMC : sobolevInverseCost c⁻¹ (operatorBlockAmplitude ι q T Rc CF CF₁ CH CM CA L) q *
       operatorBlockAmplitude ι q T Rc CF CF₁ CH CM CA L ≤ M)
-    (hMD : sobolevInverseCost c⁻¹ (operatorBlockAmplitude ι q T Rc CF CF₁ CH CM CA L) q*
+    (hMD : sobolevInverseCost c⁻¹ (operatorBlockAmplitude ι q T Rc CF CF₁ CH CM CA L) q *
       forcingBlockAmplitude ι q T Rc CF CF₁ Cf ≤ M)
     (hR : 2*M*(sobolevCoefficientRadius ι Rc+1) ≤ R)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant Rc 0
-      n)
+        n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant Rc
-      0 n)
+        0 n)
     (hHb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b H) a‖ ≤ CH*majorant Rc 0
-      n)
+        n)
     (hMb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translateOperator b M0) a‖ ≤ CM*majorant Rc
-      0 n)
+        0 n)
     (hAb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translateOperator b A) a‖ ≤ CA*majorant Rc
-      0 n)
+        0 n)
     (d : ℕ) (hfb : ∀ n a, block directions q (fun b : Space => timeTranslation T b f) n a ≤
-      Cf*majorant R d n)
+        Cf*majorant R d n)
     (n : ℕ) (x : Space) :
     block directions q (fun a : Space => timeSolenoidalTranslation T a
       (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
@@ -133,15 +158,15 @@ theorem solution_translation_block_gevrey
   have hO : ContDiff ℝ ∞ O :=
     contDiff_fixedMeanOperator T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
       (fun a => translatePath T a H) (fun a => translateOperator a M0) (fun a => translateOperator
-        a A)
+          a A)
       L hF hF₁ hH hM0 hA
   have hJ0 : ContDiff ℝ ∞ (fun a : Space => translatedMeanPrimitive T hT a F F₁) :=
     contDiff_fixedMeanPrimitive T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
-      hF hF₁
+        hF hF₁
   have hJ : ContDiff ℝ ∞ J :=
     ((realAdjoint (U := TimeLp T solenoidalSpace) (E := TimeLp T L2)).contDiff.comp hJ0).neg
   have hu : ContDiff ℝ ∞ u := solution_translation_contDiff T hT F F₁ H M0 A L c hc hcoercive f hO
-    hJ0 hf
+      hJ0 hf
   have hg : ContDiff ℝ ∞ g := hJ.clm_apply hf
   have heq (a : Space) : O a (u a) = g a := by
     dsimp only [u]
@@ -150,7 +175,7 @@ theorem solution_translation_block_gevrey
         (operator_inverse_apply (O a) c hc
           (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive) _)
   have hOb (k a) : ‖iteratedFDeriv ℝ k O a‖ ≤ operatorAmplitude T CF CF₁ CH CM CA L*majorant Rc 0 k
-    :=
+      :=
     fixedMeanOperator_bound T hT (fun a => translatePath T a F)
       (fun a => translatePath T a F₁) (fun a => translatePath T a H)
       (fun a => translateOperator a M0) (fun a => translateOperator a A) L hF hF₁ hH hM0 hA
@@ -172,7 +197,7 @@ theorem solution_translation_block_gevrey
   have hbJ (k a) := coefficientBlock_of_tensor_bound directions hd q J hJ Rc _ hRc
     (show 0 ≤ T*(T*CF₁+CF) by positivity) hJb k a
   have hgb (k a) : block directions q g k a ≤ forcingBlockAmplitude ι q T Rc CF CF₁ Cf*majorant R d
-    k :=
+      k :=
     block_clm_apply_gevrey directions q J (fun a => timeTranslation T a f) hJ hf
       (sobolevCoefficientRadius ι Rc) R _ Cf hr₀ hrR hJA0 hCf hbJ d hfb k a
   apply block_inverse_gevrey directions q O u g hO hu hg heq

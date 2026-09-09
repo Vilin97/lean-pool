@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEquation
 
 /-!
 The actual affine-terminal fixed-coordinate variational solution satisfies
@@ -16,6 +15,9 @@ the source homogeneous coordinate equation.  The range condition follows
 from its explicit coordinate primitive.  No ambient normal, nor a supplied
 weak equation or smooth representative, is an input to these results.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +28,7 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace
   EulerTimeLp EulerTerminalTimePrimitive EulerInitialTimePrimitive
   EulerVolterraConvolution EulerTimeH1OperatorProduct EulerTimeH1FrameTransport
   EulerTransverseGramInverse EulerTransverseGramPath EulerTransverseInitialCoordinates
-  EulerTransverseInitialInverse EulerTransverseEndpointEnergy EulerTransverseFixedEndpoint
+   EulerTransverseEndpointEnergy EulerTransverseFixedEndpoint
   EulerTransverseFixedSpaceInverse EulerTransverseEndpointParameter
   EulerTransverseEndpointMomentum EulerTransverseMomentumRegularity
   EulerTransverseEndpointVelocity EulerTransverseEndpointDifferentiation
@@ -192,12 +194,12 @@ theorem continuousCoordinateVelocity_hasDerivWithinAt_generator (ξ : U) (t : Ic
       (Icc (0 : ℝ) T) t := by
   have hv := (coordinate_equation T hT Q Q₁ H c hc hQ hd K hK hH hsmall Q₂ hTpos hd₁ hframe ξ t).2
   rw [← continuousCoordinateVelocity_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall Q₂ hTpos hd₁ hframe ξ
-    t] at hv
+      t] at hv
   apply hv.congr_of_mem _ t.property
   intro s hs
   simpa only [extendPath, projIcc_of_mem hT hs] using
     continuousCoordinateVelocity_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall Q₂ hTpos hd₁ hframe ξ ⟨s,
-      hs⟩
+        hs⟩
 
 include hd₁ hframe hTpos in
 /-- The affine-terminal coordinate history coincides with the actual
@@ -208,10 +210,10 @@ theorem continuousCoordinateVelocity_eq_forward
     continuousCoordinateVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall ξ t =
       coordinates T hT Q Q₁ c hc hQ evolution 0
         (continuousCoordinateVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall ξ ⟨0, le_rfl, hT⟩) t :=
-          by
+            by
   rw [continuousCoordinateVelocity_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall Q₂ hTpos hd₁ hframe ξ t,
     continuousCoordinateVelocity_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall Q₂ hTpos hd₁ hframe ξ ⟨0,
-      le_rfl, hT⟩]
+        le_rfl, hT⟩]
   exact coordinateVelocity_eq_forward T hT Q Q₁ Q₂ c hc hQ H hTpos hd hd₁ hframe _
     (fixedEndpointDerivative_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall _ ξ)
     (coordinateSlope_range T hT Q Q₁ H c hc hQ hd K hK hH hsmall ξ) evolution t

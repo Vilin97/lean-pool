@@ -6,12 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalMeanPhysicalBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.InitializedPhysicalBackground
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualIterationLedger
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanPhysicalData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalMeanPhysicalBounds
 
 /-!
 # Physical stage estimates from the actual native mean region
@@ -21,6 +20,9 @@ Only native smoothness, support, and class estimates are input. The
 physical stage bounds and the initialized velocity estimate are derived.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualPhysicalStageBounds
@@ -28,6 +30,7 @@ namespace NavierStokes.ActualPhysicalStageBounds
 open Set Function Filter ProblemStatement DiagonalResidual
 open scoped Topology ContDiff BigOperators
 
+/-- Region, given by `PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 2) 2`. -/
 noncomputable def region (h : ℝ) : Set PhysicalGraphBounds.Plane :=
   PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 2) 2
 
@@ -38,11 +41,18 @@ theorem region_open {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) : IsOpen (region h)
 This record neither constructs a new physical field nor assumes physical
 derivative bounds. -/
 structure MeanInput (h degree : ℝ) where
+  /-- First band of `MeanInput`, of type `ℕ`. -/
   firstBand : ℕ
+  /-- Gap bound of `MeanInput`, of type `ℕ`. -/
   gapBound : ℕ
+  /-- Lower radius of `MeanInput`, of type `ℝ`. -/
   lowerRadius : ℝ
+  /-- Upper radius of `MeanInput`, of type `ℝ`. -/
   upperRadius : ℝ
+  /-- Alpha of `MeanInput`, of type `ℝ`. -/
   alpha : ℝ
+  /-- Family of `MeanInput`, of type `PhysicalMeanJetBounds.CoherentFamily h degree firstBand
+  gapBound (region h) ℝ`. -/
   family : PhysicalMeanJetBounds.CoherentFamily h degree firstBand gapBound (region h) ℝ
   band_four : 4 ≤ firstBand
   lower_pos : 0 < lowerRadius
@@ -50,7 +60,7 @@ structure MeanInput (h degree : ℝ) where
   smooth : ∀ n ≥ firstBand, ContDiffOn ℝ ∞ (family.native n)
     (PhysicalMeanDomain.slowDomain (region h))
   support : PhysicalMeanJetBounds.NativeSupport h lowerRadius upperRadius firstBand (region h)
-    family.native
+      family.native
   jets : PhysicalMeanJetBounds.NativeJets firstBand (region h) (h * alpha) family.native
 
 /-- Package the existing moving-field and native-class theorems without
@@ -105,7 +115,7 @@ theorem MeanInput.angular_bound {h degree qbig : ℝ} (M : MeanInput h degree)
       ‖iteratedFDeriv ℝ m M.family.angularField w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (h * M.alpha - PhysicalMeanJetBounds.loss degree m) :=
   LocalMeanPhysicalBounds.angularField_sublevel_bound M.family hh hh1 M.lower_pos M.radii_lt
-    M.band_four
+      M.band_four
     (region_open hh hh1) (fun _ hx => hx) M.smooth M.support M.jets hq m
 
 theorem MeanInput.field_bound_with_gain {h degree qbig g delta : ℝ} (M : MeanInput h degree)
@@ -115,7 +125,7 @@ theorem MeanInput.field_bound_with_gain {h degree qbig g delta : ℝ} (M : MeanI
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m M.family.field w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (g - (PhysicalMeanJetBounds.loss degree m + delta)) :=
-          by
+            by
   obtain ⟨C, hC, hb⟩ := M.field_bound hh hh1 hq m
   refine ⟨C, hC, fun w hw hqw => (hb w hw hqw).trans ?_⟩
   exact mul_le_mul_of_nonneg_left
@@ -129,7 +139,7 @@ theorem MeanInput.angular_bound_with_gain {h degree qbig g delta : ℝ} (M : Mea
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m M.family.angularField w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (g - (PhysicalMeanJetBounds.loss degree m + delta)) :=
-          by
+            by
   obtain ⟨C, hC, hb⟩ := M.angular_bound hh hh1 hq m
   refine ⟨C, hC, fun w hw hqw => (hb w hw hqw).trans ?_⟩
   exact mul_le_mul_of_nonneg_left
@@ -187,6 +197,8 @@ noncomputable def potentialIncrement
     (MT MR : MeanInput h (CoordinateAlgebra.A h - 1 / 2)) : VelocityField :=
   fun w => WP.vector w + WS.vector w + MT.family.angularField w + MR.family.angularField w
 
+/-- Pressure increment, defined pointwise by `WP.pressure w + WS.pressure w + MP.family.field
+w`. -/
 noncomputable def pressureIncrement
     (WP : PhysicalStageBounds.WaveData h DP IP KP Unit)
     (WS : PhysicalStageBounds.WaveData h DS IS KS Unit)
@@ -228,12 +240,12 @@ theorem potentialIncrement_bound
   have hp0 := WP.vector_bound_with_gain hh hh1 hWP m
   have hs0 := WS.vector_bound_with_gain hh hh1 hWS m
   have hp := weaken_bound (qbig := qbig) (s := g - PhysicalStageBounds.potentialLoss h dw dm m) hh
-    hh1
+      hh1
     (sub_le_sub_left (le_max_left _ _) g) (by
       obtain ⟨C, hC, hb⟩ := hp0
       exact ⟨C, hC, fun w hw hqw => hb w hw.1 hqw⟩)
   have hs := weaken_bound (qbig := qbig) (s := g - PhysicalStageBounds.potentialLoss h dw dm m) hh
-    hh1
+      hh1
     (sub_le_sub_left (le_max_left _ _) g) (by
       obtain ⟨C, hC, hb⟩ := hs0
       exact ⟨C, hC, fun w hw hqw => hb w hw.1 hqw⟩)
@@ -266,12 +278,12 @@ theorem pressureIncrement_bound
   have hp0 := WP.pressure_bound_with_gain hh hh1 hWP m
   have hs0 := WS.pressure_bound_with_gain hh hh1 hWS m
   have hp := weaken_bound (qbig := qbig) (s := g - PhysicalStageBounds.pressureLoss h dw dm m) hh
-    hh1
+      hh1
     (sub_le_sub_left (le_max_left _ _) g) (by
       obtain ⟨C, hC, hb⟩ := hp0
       exact ⟨C, hC, fun w hw hqw => hb w hw.1 hqw⟩)
   have hs := weaken_bound (qbig := qbig) (s := g - PhysicalStageBounds.pressureLoss h dw dm m) hh
-    hh1
+      hh1
     (sub_le_sub_left (le_max_left _ _) g) (by
       obtain ⟨C, hC, hb⟩ := hs0
       exact ⟨C, hC, fun w hw hqw => hb w hw.1 hqw⟩)
@@ -289,15 +301,30 @@ end Increments
 
 /-! ## Positive correction stages and the exact ledger gain -/
 
+/-- Cycle inputs data, collecting `particularPotential`, `signedPotential`,
+`particularPressure`, `signedPressure`, `temporal`, `rank` and their compatibility
+conditions. -/
 structure CycleInputs (h : ℝ) (DP : Type) [NormedAddCommGroup DP] [NormedSpace ℝ DP]
     (IP KP : Type*) (DS : Type) [NormedAddCommGroup DS] [NormedSpace ℝ DS] (IS KS : Type*) where
+  /-- Particular potential of `CycleInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DP IP
+  KP (Fin 3)`. -/
   particularPotential : ℕ → PhysicalStageBounds.WaveData h DP IP KP (Fin 3)
+  /-- Signed potential of `CycleInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DS IS KS
+  (Fin 3)`. -/
   signedPotential : ℕ → PhysicalStageBounds.WaveData h DS IS KS (Fin 3)
+  /-- Particular pressure of `CycleInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DP IP KP
+  Unit`. -/
   particularPressure : ℕ → PhysicalStageBounds.WaveData h DP IP KP Unit
+  /-- Signed pressure of `CycleInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DS IS KS
+  Unit`. -/
   signedPressure : ℕ → PhysicalStageBounds.WaveData h DS IS KS Unit
+  /-- Temporal of `CycleInputs`, of type `ℕ → MeanInput h (CoordinateAlgebra.A h - 1 / 2)`. -/
   temporal : ℕ → MeanInput h (CoordinateAlgebra.A h - 1 / 2)
+  /-- Rank of `CycleInputs`, of type `ℕ → MeanInput h (CoordinateAlgebra.A h - 1 / 2)`. -/
   rank : ℕ → MeanInput h (CoordinateAlgebra.A h - 1 / 2)
+  /-- Angular of `CycleInputs`, of type `ℕ → MeanInput h (CoordinateAlgebra.A h)`. -/
   angular : ℕ → MeanInput h (CoordinateAlgebra.A h)
+  /-- Pressure field of `CycleInputs`, of type `ℕ → MeanInput h (2 * CoordinateAlgebra.A h)`. -/
   pressure : ℕ → MeanInput h (2 * CoordinateAlgebra.A h)
 
 namespace CycleInputs
@@ -307,11 +334,16 @@ variable {h : ℝ}
   [NormedAddCommGroup DS] [NormedSpace ℝ DS] {IP KP IS KS : Type*}
   (D : CycleInputs h DP IP KP DS IS KS)
 
+/-- Potential, given by `potentialIncrement (D.particularPotential k) (D.signedPotential k)
+(D.temporal k) (D.rank k)`. -/
 noncomputable def potential (k : ℕ) : VelocityField :=
   potentialIncrement (D.particularPotential k) (D.signedPotential k) (D.temporal k) (D.rank k)
 
+/-- Direct, given by `(D.angular k).family.angularField`. -/
 noncomputable def direct (k : ℕ) : VelocityField := (D.angular k).family.angularField
 
+/-- Pressure field, given by `pressureIncrement (D.particularPressure k) (D.signedPressure k)
+(D.pressure k)`. -/
 noncomputable def pressureField (k : ℕ) : PressureField :=
   pressureIncrement (D.particularPressure k) (D.signedPressure k) (D.pressure k)
 
@@ -319,7 +351,7 @@ noncomputable def pressureField (k : ℕ) : PressureField :=
 and chart-degree comparisons, not physical estimates. -/
 structure Metadata (κ : ℝ) : Prop where
   particularPotential : ∀ k, ActualIterationLedger.waveNative κ (k + 1) ≤ (D.particularPotential
-    k).alpha
+      k).alpha
   particularPotentialShift : ∀ k, -h ≤ (D.particularPotential k).shift
   signedPotential : ∀ k, ActualIterationLedger.waveNative κ (k + 1) ≤ (D.signedPotential k).alpha
   signedPotentialShift : ∀ k, -h ≤ (D.signedPotential k).shift
@@ -327,13 +359,14 @@ structure Metadata (κ : ℝ) : Prop where
   rank : ∀ k, ActualIterationLedger.meanNative κ (k + 1) ≤ (D.rank k).alpha
   angular : ∀ k, ActualIterationLedger.meanNative κ (k + 1) ≤ (D.angular k).alpha
   particularPressure : ∀ k, ActualIterationLedger.wavePressureNative κ (k + 1) ≤
-    (D.particularPressure k).alpha
+      (D.particularPressure k).alpha
   particularPressureShift : ∀ k, -(2 * CoordinateAlgebra.A h) ≤ (D.particularPressure k).shift
   signedPressure : ∀ k, ActualIterationLedger.wavePressureNative κ (k + 1) ≤ (D.signedPressure
-    k).alpha
+      k).alpha
   signedPressureShift : ∀ k, -(2 * CoordinateAlgebra.A h) ≤ (D.signedPressure k).shift
   pressure : ∀ k, ActualIterationLedger.meanNative κ (k + 1) ≤ (D.pressure k).alpha
 
+/-- Valid scale data, collecting `temporal`, `rank`, `angular`, `pressure`. -/
 structure ValidScale (qbig : ℝ) : Prop where
   temporal : ∀ k, qbig ≤ ChartScales.Q (D.temporal k).firstBand
   rank : ∀ k, qbig ≤ ChartScales.Q (D.rank k).firstBand
@@ -396,7 +429,7 @@ theorem pressure_bound (H : D.Metadata κ) (Q : D.ValidScale qbig)
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m (D.pressureField k) w‖ ≤ C * PhysicalWaveSum.physicalQ h w ^
         (ActualIterationLedger.gain h (k + 1) - PhysicalStageBounds.pressureLoss h (2 *
-          CoordinateAlgebra.A h) 0 m) :=
+            CoordinateAlgebra.A h) 0 m) :=
   pressureIncrement_bound (D.particularPressure k) (D.signedPressure k) (D.pressure k)
     hh hh1 (Q.pressure k)
     (pressure_gain hh.le hκ k (H.particularPressure k) (H.particularPressureShift k))
@@ -440,7 +473,7 @@ theorem raw_of_positive_bounds {F : ℕ → SpaceTime → V} {gain L : ℕ → �
     (hb : ∀ k m, ∃ C : ℝ, 0 ≤ C ∧ ∀ w ∈ CutStageEstimates.physicalSublevel h qbig,
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m (F (k + 1)) w‖ ≤ C * PhysicalWaveSum.physicalQ h w ^ (gain (k + 1) - L
-        m)) :
+          m)) :
     ∃ C : ℕ → ℕ → ℝ, (∀ j m, 0 ≤ C j m) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) F gain L C (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) := by
@@ -478,15 +511,15 @@ theorem represented_raw_bounds (H : D.Metadata κ) (Q : D.ValidScale qbig)
     ∃ CA CB CP : ℕ → ℕ → ℝ,
       (∀ j m, 0 ≤ CA j m ∧ 0 ≤ CB j m ∧ 0 ≤ CP j m) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) A (ActualIterationLedger.gain
-        h)
+          h)
         (PhysicalStageBounds.potentialLoss h h 0) CA (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) B (ActualIterationLedger.gain
-        h)
+          h)
         (PhysicalStageBounds.directLoss h 0) CB (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) P (ActualIterationLedger.gain
-        h)
+          h)
         (PhysicalStageBounds.pressureLoss h (2 * CoordinateAlgebra.A h) 0) CP (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) := by
   obtain ⟨CA, hCA, ha⟩ := raw_of_positive_bounds
@@ -507,6 +540,8 @@ section InitialIncrement
 
 variable {h : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
+/-- Initial increment, defined pointwise by `W.vector w + MT.family.angularField w +
+MR.family.angularField w`. -/
 noncomputable def initialIncrement (W : PhysicalStageBounds.WaveData h D I K (Fin 3))
     (MT MR : MeanInput h (CoordinateAlgebra.A h - 1 / 2)) : VelocityField :=
   fun w => W.vector w + MT.family.angularField w + MR.family.angularField w
@@ -573,6 +608,8 @@ noncomputable def initialPressureIncrement (W : PhysicalStageBounds.WaveData h D
     (M : MeanInput h (2 * CoordinateAlgebra.A h)) : PressureField :=
   fun w => W.pressure w + M.family.field w
 
+/-- Initial pressure loss, given by `PhysicalStageBounds.pressureLoss h (-(h * waveAlpha +
+waveShift)) (-(h * meanAlpha)) m`. -/
 noncomputable def initialPressureLoss (h waveAlpha waveShift meanAlpha : ℝ) (m : ℕ) : ℝ :=
   PhysicalStageBounds.pressureLoss h (-(h * waveAlpha + waveShift)) (-(h * meanAlpha)) m
 
@@ -639,17 +676,21 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (v : ModulatedProfileAssembly.Witness ld)
   {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
+/-- Initial potential, defined pointwise by `TailGaugePotential.finalPotential H v upper B w +
+initialIncrement WA MT MR w`. -/
 noncomputable def initialPotential (upper : ℝ) (B : ℕ)
     (WA : PhysicalStageBounds.WaveData F.data.h D I K (Fin 3))
     (MT MR : MeanInput F.data.h (CoordinateAlgebra.A F.data.h - 1 / 2)) : VelocityField :=
   fun w => TailGaugePotential.finalPotential H v upper B w + initialIncrement WA MT MR w
 
+/-- Initial velocity, defined pointwise by `SpatialCurl.spatialCurl (initialPotential H v upper
+B WA MT MR) w + MB.family.angularField w`. -/
 noncomputable def initialVelocity (upper : ℝ) (B : ℕ)
     (WA : PhysicalStageBounds.WaveData F.data.h D I K (Fin 3))
     (MT MR : MeanInput F.data.h (CoordinateAlgebra.A F.data.h - 1 / 2))
     (MB : MeanInput F.data.h (CoordinateAlgebra.A F.data.h)) : VelocityField :=
   fun w => SpatialCurl.spatialCurl (initialPotential H v upper B WA MT MR) w +
-    MB.family.angularField w
+      MB.family.angularField w
 
 theorem initialPotential_smooth (upper : ℝ) (B : ℕ)
     (WA : PhysicalStageBounds.WaveData F.data.h D I K (Fin 3))
@@ -692,9 +733,9 @@ theorem initialVelocity_rate (upper : ℝ) (B : ℕ)
       (initialVelocity H v upper B WA MT MR MB) m
       (-initialLoss F.data.h WA.alpha WA.shift (min MT.alpha MR.alpha) MB.alpha m) := by
   let qbig := min (ChartScales.Q MT.firstBand) (min (ChartScales.Q MR.firstBand) (ChartScales.Q
-    MB.firstBand))
+      MB.firstBand))
   have hqbig : 0 < qbig := lt_min (ChartScales.Q_pos _) (lt_min (ChartScales.Q_pos _)
-    (ChartScales.Q_pos _))
+      (ChartScales.Q_pos _))
   have hqT : qbig ≤ ChartScales.Q MT.firstBand := min_le_left _ _
   have hqR : qbig ≤ ChartScales.Q MR.firstBand := (min_le_right _ _).trans (min_le_left _ _)
   have hqB : qbig ≤ ChartScales.Q MB.firstBand := (min_le_right _ _).trans (min_le_right _ _)
@@ -768,7 +809,7 @@ theorem background_from_representations
       (CutStageEstimates.physicalSublevel F.data.h qbig))
     (hB0 : EqOn (B 0) MB.family.angularField (CutStageEstimates.physicalSublevel F.data.h qbig))
     (hA : ∀ k, EqOn (Cyc.potential k) (A (k + 1)) (CutStageEstimates.physicalSublevel F.data.h
-      qbig))
+        qbig))
     (hB : ∀ k, EqOn (Cyc.direct k) (B (k + 1)) (CutStageEstimates.physicalSublevel F.data.h qbig))
     (J m : ℕ) :
     JetRate ActualBaseVelocityBounds.endpoint (PhysicalWaveSum.physicalQ F.data.h)
@@ -833,22 +874,22 @@ theorem candidate_raw_bounds
     (stages : ℕ → MixedAxisPreservation.PotentialStage.{u} F.data.h
       (MixedAxisPreservation.localDomain F.data.h qbig))
     (angular : ℕ → DirectAngularDiagonal.AngularData (LocalAngularDiagonal.localSlowDomain F.data.h
-      qbig))
+        qbig))
     (pInitial : PressureField) (pStages : ℕ → PressureField)
     (hA : ∀ k, EqOn (Cyc.potential k) (stages k).field (CutStageEstimates.physicalSublevel F.data.h
-      qbig))
+        qbig))
     (hB : ∀ k, EqOn (Cyc.direct k) (LocalAngularDiagonal.rawSeries angular (k + 1))
       (CutStageEstimates.physicalSublevel F.data.h qbig))
     (hP : ∀ k, EqOn (Cyc.pressureField k) (pStages k) (CutStageEstimates.physicalSublevel F.data.h
-      qbig)) :
+        qbig)) :
     ∃ CA CB CP : ℕ → ℕ → ℝ,
       (∀ j m, 0 ≤ CA j m ∧ 0 ≤ CB j m ∧ 0 ≤ CP j m) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ F.data.h)
         (MixedCandidateAssembly.potentialStages H v upper bandFloor initial stages)
         (ActualIterationLedger.gain F.data.h) (PhysicalStageBounds.potentialLoss F.data.h F.data.h
-          0)
+            0)
         CA (fun _ _ => 0) (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel
-          F.data.h qbig) ∧
+            F.data.h qbig) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ F.data.h)
         (LocalAngularDiagonal.rawSeries angular) (ActualIterationLedger.gain F.data.h)
         (PhysicalStageBounds.directLoss F.data.h 0) CB (fun _ _ => 0)
@@ -858,11 +899,11 @@ theorem candidate_raw_bounds
         (ActualIterationLedger.gain F.data.h)
         (PhysicalStageBounds.pressureLoss F.data.h (2 * CoordinateAlgebra.A F.data.h) 0)
         CP (fun _ _ => 0) (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel
-          F.data.h qbig) := by
+            F.data.h qbig) := by
   apply Cyc.represented_raw_bounds HM HQ F.data.h_pos F.data.h_lt_half hκ
   · intro k
     simpa only [MixedCandidateAssembly.potentialStages,
-      MixedAxisPreservation.initializedSeries_succ] using hA k
+        MixedAxisPreservation.initializedSeries_succ] using hA k
   · exact hB
   · intro k
     simpa only [MixedCandidateAssembly.pressureStages_succ] using hP k
@@ -884,18 +925,21 @@ noncomputable def actualInitialTemporalInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
     (initialTemporal_moving B N0) (initialTemporal_nativeJets B N0 N (by omega))
 
+/-- Actual initial rank input, constructed using `MeanInput.ofMoving`. -/
 noncomputable def actualInitialRankInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   MeanInput.ofMoving standardRegion rfl (initialRankFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
     (initialRank_moving B N0) (initialRank_nativeJets B N0 N (by omega))
 
+/-- Actual initial angular input, constructed using `MeanInput.ofMoving`. -/
 noncomputable def actualInitialAngularInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     MeanInput h (CoordinateAlgebra.A h) :=
   MeanInput.ofMoving standardRegion rfl (initialAngularFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
     (initial_mean_moving B N0).angular (initialAngular_nativeJets B N0 N (by omega))
 
+/-- Actual initial pressure input, constructed using `MeanInput.ofMoving`. -/
 noncomputable def actualInitialPressureInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     MeanInput h (2 * CoordinateAlgebra.A h) :=
   MeanInput.ofMoving standardRegion rfl (initialPressureFamily B N0 N) hN
@@ -941,55 +985,58 @@ noncomputable def actualCycleTemporalInput (H : InitialCycleInput B N0 N p)
     (HC : WeightedClasses.MeanClass ActualInitialMean.strip α
       (((p j).afterSigned
         (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-          j).coefficients
+            j).coefficients
         (commonContext B) (CycleState.iterate p (commonContext B)
-          (ActualInitialization.initialCycleState B N0) j).state).axialResidual
+            (ActualInitialization.initialCycleState B N0) j).state).axialResidual
         (commonContext B))) : MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   MeanInput.ofMoving standardRegion rfl ((initialCycleData H).temporalFamily j) hN
     initialGeometry.inner_pos initialGeometry.inner_lt_outer
     ((initialCycleData H).temporal_moving j) (cycleTemporal_nativeJets H j (by omega) HC)
 
+/-- Actual cycle rank input, constructed using `MeanInput.ofMoving`. -/
 noncomputable def actualCycleRankInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HC : WeightedClasses.UnweightedClass ActualInitialMean.slowStrip α
       (CorrectionState.debt (commonContext B)
         ((p j).afterTemporal
           (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-            j).coefficients
+              j).coefficients
           (commonContext B) (CycleState.iterate p (commonContext B)
-            (ActualInitialization.initialCycleState B N0) j).state))) :
+              (ActualInitialization.initialCycleState B N0) j).state))) :
     MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   MeanInput.ofMoving standardRegion rfl ((initialCycleData H).rankFamily j) hN
     initialGeometry.inner_pos initialGeometry.inner_lt_outer
     ((initialCycleData H).rank_moving j) (cycleRank_nativeJets H j (by omega) HC)
 
+/-- Actual cycle angular input, constructed using `MeanInput.ofMoving`. -/
 noncomputable def actualCycleAngularInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HT : MeanIncrementBounds.IncrementBounds ActualInitialMean.strip α
       ((p j).temporalIncrement
         (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-          j).coefficients
+            j).coefficients
         (commonContext B) (CycleState.iterate p (commonContext B)
-          (ActualInitialization.initialCycleState B N0) j).state))
+            (ActualInitialization.initialCycleState B N0) j).state))
     (HR : MeanIncrementBounds.IncrementBounds ActualInitialMean.strip α
       ((p j).rankIncrement
         (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-          j).coefficients
+            j).coefficients
         (commonContext B) (CycleState.iterate p (commonContext B)
-          (ActualInitialization.initialCycleState B N0) j).state)) :
+            (ActualInitialization.initialCycleState B N0) j).state)) :
     MeanInput h (CoordinateAlgebra.A h) :=
   MeanInput.ofMoving standardRegion rfl ((initialCycleData H).angularIncrementFamily j) hN
     initialGeometry.inner_pos initialGeometry.inner_lt_outer
-    ((initialCycleData H).angularIncrement_moving j) (angularIncrement_nativeJets H j (by omega) HT
-      HR)
+    ((initialCycleData H).angularIncrement_moving j) (angularIncrement_nativeJets H j (by
+        omega) HT HR)
 
+/-- Actual cycle pressure input as an element of `MeanInput h (2 * CoordinateAlgebra.A h)`. -/
 noncomputable def actualCyclePressureInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HC : WeightedClasses.MeanClass ActualInitialMean.strip α
       ((CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        (j+1)).state.pressure -
+          (j + 1)).state.pressure -
         (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-          j).state.pressure)) :
+            j).state.pressure)) :
     MeanInput h (2 * CoordinateAlgebra.A h) := by
   have hs : (VariableGaugeMean.reconstructState initialGeometry.gauge (commonContext B)
       (ActualInitialization.initialCycleState B N0).state).pressure =
@@ -999,7 +1046,7 @@ noncomputable def actualCyclePressureInput (H : InitialCycleInput B N0 N p)
   exact MeanInput.ofMoving standardRegion rfl ((initialCycleData H).pressureIncrementFamily j) hN
     initialGeometry.inner_pos initialGeometry.inner_lt_outer
     ((initialCycleData H).pressureIncrement_moving hs j) (pressureIncrement_nativeJets H j (by
-      omega) HC)
+        omega) HC)
 
 end ConstructedMeans
 

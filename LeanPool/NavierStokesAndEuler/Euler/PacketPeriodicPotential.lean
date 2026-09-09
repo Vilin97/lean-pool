@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaPair
+import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
+
+/-! The literal angular vector potential on the periodic cylinder. -/
 
 @[expose] public section
 
-/-! The literal angular vector potential on the periodic cylinder. -/
 
 noncomputable section
 
@@ -30,6 +32,8 @@ theorem liftIco_eq_periodicLift {E : Type*} (f : ℝ → E) (hf : Function.Perio
   exact (hf.lift_coe (AddCircle.equivIco P 0 θ)).symm.trans
     (congrArg hf.lift (AddCircle.coe_equivIco (p := P) (a := 0) (y := θ)))
 
+/-- Field, given by `AddCircle.liftIco P 0 (potential P (m x.1) (fun θ => A (x.1,(θ : AddCircle
+P)))) x.2`. -/
 def field (m : Space → Space) (A : LiftDomain P → Space) (x : LiftDomain P) : Space :=
   AddCircle.liftIco P 0 (potential P (m x.1) (fun θ => A (x.1,(θ : AddCircle P)))) x.2
 
@@ -42,7 +46,7 @@ theorem angle_periodic (A : LiftDomain P → Space) (y : Space) :
 
 theorem field_cover (m : Space → Space) (A : LiftDomain P → Space)
     (hA : Continuous A)
-    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y,(θ : AddCircle P))) = 0)
+    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y, (θ : AddCircle P))) = 0)
     (z : LiftTangent) :
     field P m A (coveringMap P z) =
       coveringPotential P m (localFieldLift P A 0) z := by
@@ -57,7 +61,7 @@ theorem field_cover (m : Space → Space) (A : LiftDomain P → Space)
 theorem field_smooth (m : Space → Space) (A : LiftDomain P → Space)
     (hm : ContDiff ℝ ∞ m) (hnz : ∀ y, m y ≠ 0)
     (hA : ∀ x, ContDiff ℝ ∞ (localFieldLift P A x))
-    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y,(θ : AddCircle P))) = 0)
+    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y, (θ : AddCircle P))) = 0)
     (x : LiftDomain P) : ContDiff ℝ ∞ (localFieldLift P (field P m A) x) := by
   have hAc := smoothField_continuous P A hA
   have hQ := coveringPotential_contDiff P (le_of_lt (Fact.out : 0 < P)) m _ hm hnz (hA 0)
@@ -77,7 +81,7 @@ theorem field_smooth (m : Space → Space) (A : LiftDomain P → Space)
 theorem field_continuous (m : Space → Space) (A : LiftDomain P → Space)
     (hm : ContDiff ℝ ∞ m) (hnz : ∀ y, m y ≠ 0)
     (hA : ∀ x, ContDiff ℝ ∞ (localFieldLift P A x))
-    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y,(θ : AddCircle P))) = 0) :
+    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y, (θ : AddCircle P))) = 0) :
     Continuous (field P m A) :=
   smoothField_continuous P _ (field_smooth P m A hm hnz hA hmean)
 
@@ -107,7 +111,7 @@ theorem field_compact (m : Space → Space) (A : LiftDomain P → Space)
 theorem field_angle_derivative (m : Space → Space) (A : LiftDomain P → Space)
     (hm : ContDiff ℝ ∞ m) (hnz : ∀ y, m y ≠ 0)
     (hA : ∀ x, ContDiff ℝ ∞ (localFieldLift P A x))
-    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y,(θ : AddCircle P))) = 0)
+    (hmean : ∀ y, (∫ θ in (0 : ℝ)..P, A (y, (θ : AddCircle P))) = 0)
     (x : LiftDomain P) :
     fieldDerivative P (0,1) (field P m A) x = potentialMultiplier (m x.1) (A x) := by
   have hAc := smoothField_continuous P A hA

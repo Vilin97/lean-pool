@@ -6,20 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeExcludedBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualBaseResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GlobalBaseError
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBaseEndpoint
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryDynamics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualGaussianCoverage
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialMean
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhaseJetBounds
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhaseJetBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeExcludedBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 
 /-!
 # Excluded errors of the actual initialized state
@@ -27,6 +22,9 @@ public import Mathlib.Analysis.Calculus.LocalExtr.Basic
 The base term is the normalized residual of the same fixed slow base.
 The primary Gaussian and current gauge aliases are retained literally.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -76,6 +74,8 @@ theorem stressForce_congr {f g f' g' : SimilarityProfile.PhysicalProfile}
     LeadingStress.radialDivergence, SimilarityProfile.partialS,
     hf.self_of_nhds, hg.self_of_nhds, hf.fderiv_eq, hg.fderiv_eq]
 
+/-- Continuation domain, given by `EndpointCoordinates.cartesianDomain h ∩ {z | 0 <
+AxisymmetricFields.radialEnergy z.2}`. -/
 noncomputable def continuationDomain (h : ℝ) : Set SpaceTime :=
   EndpointCoordinates.cartesianDomain h ∩ {z | 0 < AxisymmetricFields.radialEnergy z.2}
 
@@ -151,6 +151,7 @@ end BaseContinuation
 
 section CompactNativeGeometry
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
@@ -197,6 +198,7 @@ theorem closedSlowSet_axial_ne {p : Slow} (hp : p ∈ closedSlowSet W U)
   rw [hT, hz, zero_pow (by decide : 2 ≠ 0), zero_mul, zero_add] at hsep
   exact (not_le_of_gt U.qlo_pos) hsep
 
+/-- Band linear as an element of `Slow →L[ℝ] SpaceTime`. -/
 noncomputable def bandLinear (h Q : ℝ) : Slow →L[ℝ] SpaceTime :=
   ((-Q) • (ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ))).prod
     (AxisymmetricResidual.packDerivative
@@ -212,7 +214,7 @@ theorem bandPoint_affine (h Q : ℝ) (p : Slow) :
   · ext i
     fin_cases i <;>
       simp [BaseChartJets.bandPoint, bandLinear, AxisymmetricResidual.packDerivative,
-        coordinateVector]
+          coordinateVector]
 
 theorem bandPoint_smooth (h Q : ℝ) : ContDiff ℝ ∞ (BaseChartJets.bandPoint h Q) := by
   have he : BaseChartJets.bandPoint h Q = fun p => bandLinear h Q p + (1, 0) :=
@@ -282,6 +284,7 @@ theorem Q_tendsto_zero : Tendsto ChartScales.Q atTop (𝓝 0) := by
   simpa only [ChartScales.epsilon, Real.rpow_zero, Real.rpow_one, one_mul] using
     ChartScales.slow_power_epsilon_tendsto_zero (h := 1) (by norm_num) 0 1 (by norm_num)
 
+/-- Native approach filter, constructed using `Filter.map`. -/
 noncomputable def nativeApproachFilter : Filter SpaceTime :=
   Filter.map (fun p : ℕ × Slow => BaseChartJets.bandPoint F.data.h (ChartScales.Q p.1) p.2)
     (atTop ×ˢ 𝓟 (BaseContextAssembly.slowCarrier W U))
@@ -307,6 +310,8 @@ theorem nativeApproach_q_bound {n : ℕ} {p : Slow}
   · exact mul_pos (ChartScales.Q_pos n) (U.qlo_pos.trans_le hq.1)
   · exact mul_le_mul_of_nonneg_left hq.2 (ChartScales.Q_pos n).le
 
+/-- Native approach, bundling `carrier`, `compact`, `in_carrier`, `exact` and the required
+compatibility proofs. -/
 noncomputable def nativeApproach : BaseResidual.PhysicalApproach
     (nativeApproachFilter W U) F.data.h 0
       (NominalConeAssembly.activeRight W) where
@@ -345,7 +350,7 @@ noncomputable def nativeApproach : BaseResidual.PhysicalApproach
     have hupper : Tendsto (fun p : ℕ × Slow => ChartScales.Q p.1 * U.qhi)
         (atTop ×ˢ 𝓟 (BaseContextAssembly.slowCarrier W U)) (𝓝 0) := by
       simpa only [zero_mul, Function.comp_def] using (Q_tendsto_zero.mul_const U.qhi).comp
-        tendsto_fst
+          tendsto_fst
     apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hupper
     · rw [Filter.eventually_prod_principal_iff]
       exact Filter.Eventually.of_forall (fun n p hp => (nativeApproach_q_bound W U hp).1.le)
@@ -363,7 +368,7 @@ theorem physical_error_eventual (m : ℕ) (r : ℝ) (hr : 0 ≤ r) :
     (le_max_right _ _) m r hr
   rw [nativeApproachFilter, Filter.eventually_map, Filter.eventually_prod_principal_iff] at hb
   refine ⟨C * (max 1 U.qhi) ^ r, mul_nonneg hC (Real.rpow_nonneg (le_max_left _ _ |>.trans'
-    zero_le_one) _), ?_⟩
+      zero_le_one) _), ?_⟩
   filter_upwards [hb] with n hn
   intro p hp
   have hq := nativeApproach_q_bound W U (n := n) hp
@@ -442,6 +447,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (v : ModulatedProfileAssembly.Witness ld) (upper : ℝ) (B : ℕ)
   (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
 
+/-- Normalized base, constructed using `ChartScales.Q`. -/
 noncomputable def normalizedBase (n : ℕ) (p : Slow) : Space :=
   ChartScales.Q n ^ (2 * CoordinateAlgebra.A F.data.h + 1 / 2) •
     FinalSlowBase.error H v upper B (BaseChartJets.bandPoint F.data.h (ChartScales.Q n) p)
@@ -469,11 +475,11 @@ theorem normalizedBase_prefix (alpha : ℝ) (m : ℕ) :
   have ht := (BaseContextAssembly.native_geometry W U ℕ).time 0 p hp
   have he : ContDiffAt ℝ ∞
       (fun p => FinalSlowBase.error H v upper B (BaseChartJets.bandPoint F.data.h (ChartScales.Q n)
-        p)) p :=
+          p)) p :=
     ((FinalSlowBase.error_smooth H v upper B).contDiffAt
       (BaseResidual.past_isOpen.mem_nhds
         ⟨BaseChartJets.bandPoint_time (h := F.data.h) (ChartScales.Q_pos n) ht, Set.mem_univ
-          _⟩)).comp p
+            _⟩)).comp p
       (bandPoint_smooth _ _).contDiffAt
   have hcomp := PhaseJetBounds.norm_jet_comp_affine BaseResidual.past_isOpen
     (FinalSlowBase.error_smooth H v upper B) (bandLinear F.data.h (ChartScales.Q n)) (1, 0)
@@ -515,7 +521,7 @@ theorem normalizedBase_prefix (alpha : ℝ) (m : ℕ) :
 
 theorem normalizedBase_envelope (alpha : ℝ) :
     PrimaryPulseBounds.EnvelopeJets (BaseChartJets.unitScale (BaseContextAssembly.phaseDomain W U
-      ℕ))
+        ℕ))
       (fun n _ => ChartScales.epsilon F.data.h n ^ alpha) (normalizedBase H v upper B) := by
   refine ⟨fun n _ _ => (Real.rpow_pos_of_pos (ChartScales.epsilon_pos F.data.h n) _).le,
     normalizedBase_smooth H v upper B U, ?_⟩
@@ -551,7 +557,7 @@ theorem baseError_component_class (alpha : ℝ) (i : Fin 3) :
 
 theorem baseError_angle_component_class (alpha : ℝ) (i : Fin 3) :
     UnweightedClass (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip W U))
-      alpha
+        alpha
       (fun n x => ActualBaseResidual.baseError H v upper B n x i) := by
   have hh := HarmonicWaveInteraction.class_lift (baseError_component_class H v upper B U alpha i)
   apply WaveInteractionBounds.class_congr hh
@@ -600,6 +606,8 @@ theorem nativeGaussian_zero_plateau (l : SignedLabel B N0) {x : Native}
   filter_upwards [hd] with z hz
   simp only [nativeGaussian, hz, fderiv_fun_const, Pi.zero_apply, _root_.zero_apply, zero_smul]
 
+/-- Native band scales, bundling `power`, `epsilon_eq`, `boundConstant`, `constant_one_le` and
+the required compatibility proofs. -/
 noncomputable def nativeBandScales : GaussianTailFlat.BandScaleControl nativeStrip where
   power := ActualPrimary.h
   epsilon_eq := fun _ => rfl
@@ -612,6 +620,7 @@ noncomputable def nativeBandScales : GaussianTailFlat.BandScaleControl nativeStr
     have hS : 0 ≤ ChartScales.S n := by unfold ChartScales.S; positivity
     exact max_le (by linarith) (by linarith)
 
+/-- Gaussian length lower, given by `2 * ActualPrimary.slots.radius / 25`. -/
 noncomputable def gaussianLengthLower : ℝ := 2 * ActualPrimary.slots.radius / 25
 
 theorem gaussianLengthLower_pos : 0 < gaussianLengthLower := by
@@ -621,16 +630,16 @@ theorem gaussianLengthLower_pos : 0 < gaussianLengthLower := by
 theorem gaussianLength_near (l : SignedLabel B N0) (n : ℕ) (hn : near l n) :
     gaussianLengthLower * ChartScales.S n ≤ (ActualPrimary.phases B N0 0).L l.2 := by
   have hs := ActualSignedGeometry.S_window_le
-    (show 1 ≤ BaseChartJets.cellBand l.2 by have := label_large l; exact Nat.le_trans (by norm_num)
-      this)
+    (show 1 ≤ BaseChartJets.cellBand l.2 by
+        have := label_large l; exact Nat.le_trans (by norm_num) this)
     (near_distance hn).1
   have hl := (ChartScales.slotLength_bounds ActualPrimary.slots.radius ActualPrimary.h
     ActualPrimary.slots.radius_pos.le ActualPrimary.outgoing.data.h_pos.le (label_large l)).1
   change 2 * ActualPrimary.slots.radius * ChartScales.S (BaseChartJets.cellBand l.2) ≤
     ChartScales.slotLength ActualPrimary.slots.radius ActualPrimary.h (BaseChartJets.cellBand l.2)
-      at hl
+        at hl
   change _ ≤ ChartScales.slotLength ActualPrimary.slots.radius ActualPrimary.h
-    (BaseChartJets.cellBand l.2)
+      (BaseChartJets.cellBand l.2)
   unfold gaussianLengthLower
   nlinarith [mul_le_mul_of_nonneg_left hs ActualPrimary.slots.radius_pos.le]
 
@@ -646,6 +655,8 @@ theorem gaussianLength_eq (l : SignedLabel B N0) (n : ℕ) (hn : near l n) :
     gaussianLength l n = (ActualPrimary.phases B N0 0).L l.2 :=
   max_eq_left (gaussianLength_near l n hn)
 
+/-- Gaussian rate, given by `ActualGaussianCoverage.gaussianRate (ActualPrimary.choice B
+N0).prepared.M⁻¹ (ActualPrimary.choice B N0).prepared.u`. -/
 noncomputable def gaussianRate (B N0 : ℕ) : ℝ :=
   ActualGaussianCoverage.gaussianRate (ActualPrimary.choice B N0).prepared.M⁻¹
     (ActualPrimary.choice B N0).prepared.u
@@ -759,14 +770,14 @@ theorem labelCarrier_closed (l : SignedLabel B N0) (n : ℕ) : IsClosed (labelCa
     (ActualPrimary.nativeSlow l.2 (ActualPrimary.toAbsolute n x), (ActualPrimary.toAbsolute n x).2)
   have hq : Continuous q :=
     (((ActualPrimary.nativeSlow_smooth l.2).comp (ActualPrimary.toAbsolute_smooth
-      n)).continuous).prodMk
+        n)).continuous).prodMk
       (ActualPrimary.toAbsolute_smooth n).continuous.snd
   have he : labelCarrier l n = q ⁻¹' ActualGaussianCoverage.sourceRegion
       (ActualGaussianCoverage.actualSlowCore ActualPrimary.certificate ActualPrimary.modulation
         (ActualPrimary.choice B N0).prepared l.2)
       (ActualPrimary.geometry l.1 l.2) ActualPrimary.slots.radius
       (ChartScales.slotLength ActualPrimary.slots.radius ActualPrimary.h (BaseChartJets.cellBand
-        l.2)) 1 := by
+          l.2)) 1 := by
     ext x
     simp only [labelCarrier, Set.mem_ofPred_eq, mem_preimage, ActualGaussianCoverage.sourceRegion,
       mem_inter_iff, ActualGaussianCoverage.actualSourceCore, mem_prod,
@@ -823,7 +834,7 @@ theorem nativeGaussian_source_tsupport (l : SignedLabel B N0) :
         (ActualPrimary.choice B N0).prepared l.2 :=
   closure_minimal (nativeGaussian_source_support l)
     (ActualGaussianCoverage.actualSourceCore_closed ActualPrimary.certificate
-      ActualPrimary.modulation
+        ActualPrimary.modulation
       (ActualPrimary.choice B N0).prepared l.2)
 
 end InitialLabelSupport
@@ -834,10 +845,11 @@ open CorrectionInitialization ActualPrimaryBounds
 
 variable {B N0 : ℕ}
 
+/-- Chart gaussian, constructed using `LinearWaveBounds.excludedSlotError`. -/
 noncomputable def chartGaussian (l : SignedLabel B N0) :
     ℕ → ActualPrimary.FullPoint → HarmonicCalculus.ComplexVector :=
   LinearWaveBounds.excludedSlotError (PrimaryResidualClass.directions (ActualPrimary.commonContext
-    B))
+      B))
     (ActualPrimary.chartCutoff l.1 l.2) (ActualPrimary.chartCoefficients l.1 l.2).amplitude 0
 
 theorem nativeGaussian_smooth (L : ActualPrimary.Label B N0) :
@@ -847,14 +859,14 @@ theorem nativeGaussian_smooth (L : ActualPrimary.Label B N0) :
 theorem chartCutoff_germ (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency)
     {x : ActualPrimary.FullPoint}
     (hc : (ActualPrimaryDynamics.copyPoint l.1 l.2 n k x).2 ∈ (ActualPrimary.clockWindow l.2).core)
-      :
+        :
     ActualPrimary.chartCutoff l.1 l.2 n =ᶠ[𝓝 x]
       fun y => ActualPrimary.gaussian l.2 (ActualPrimaryDynamics.copyPoint l.1 l.2 n k y) := by
   have he := PeriodicPhaseAssembly.periodicClock_germ (ActualPrimary.geometry l.1 l.2)
     (ActualPrimary.clockWindow l.2) (ActualPrimary.clockWindow_injective l.1 l.2) k
     (z := ActualPrimaryDynamics.coefficientPoint l.2 n x) hc
   filter_upwards [(ActualPrimaryDynamics.coefficientPoint_smooth l.2
-    n).continuous.continuousAt.eventually he]
+      n).continuous.continuousAt.eventually he]
     with y hy
   dsimp only [ActualPrimaryDynamics.coefficientPoint] at hy
   change GaussianTailFlat.profile (_ / _) = GaussianTailFlat.profile (_ / _)
@@ -867,12 +879,12 @@ theorem fast_nativeGaussian (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.F
       ((PrimaryResidualClass.directions (ActualPrimary.commonContext B)).fastField n x) =
         ActualPrimaryDynamics.clockScale l.2 n *
           fderiv ℝ (ActualPrimary.gaussian l.2) (ActualPrimaryDynamics.copyPoint l.1 l.2 n k x) (0,
-            (0, 1)) := by
+              (0, 1)) := by
   change fderiv ℝ (ActualPrimary.gaussian l.2 ∘ ActualPrimaryDynamics.copyPoint l.1 l.2 n k) x _ = _
   rw [fderiv_comp x ((nativeGaussian_smooth l.2).differentiable (by simp)).differentiableAt
     (ActualPrimaryDynamics.copyPoint_hasFDerivAt l.1 l.2 n k x).differentiableAt,
     ContinuousLinearMap.comp_apply, (ActualPrimaryDynamics.copyPoint_hasFDerivAt l.1 l.2 n k
-      x).fderiv,
+        x).fderiv,
     ActualPrimaryDynamics.copyLinear_fast]
   have he : (0, (0, ActualPrimaryDynamics.clockScale l.2 n)) =
       ActualPrimaryDynamics.clockScale l.2 n • ((0, (0, 1)) : Native) := by ext <;> simp
@@ -892,21 +904,21 @@ theorem gaussianScale_eq (l : SignedLabel B N0) (n : ℕ) :
 theorem chartGaussian_germ (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency)
     {x : ActualPrimary.FullPoint}
     (hc : (ActualPrimaryDynamics.copyPoint l.1 l.2 n k x).2 ∈ (ActualPrimary.clockWindow l.2).core)
-      :
+        :
     chartGaussian l n =ᶠ[𝓝 x] fun y =>
       coefficientScale (2 * CoordinateAlgebra.A ActualPrimary.h + 1 / 2) l n •
         nativeGaussian l (ActualPrimaryDynamics.copyPoint l.1 l.2 n k y) := by
   have hd : fderiv ℝ (ActualPrimary.chartCutoff l.1 l.2 n) =ᶠ[𝓝 x]
       fderiv ℝ (fun y => ActualPrimary.gaussian l.2 (ActualPrimaryDynamics.copyPoint l.1 l.2 n k
-        y)) :=
+          y)) :=
     (chartCutoff_germ l n k hc).fderiv
   filter_upwards [hd, ActualPrimaryDynamics.amplitude_germ l.1 l.2 n k hc] with y hy ha
   simp only [chartGaussian, LinearWaveBounds.excludedSlotError,
-    LinearWaveBounds.GraphDirections.Dfast,
+      LinearWaveBounds.GraphDirections.Dfast,
     LinearWaveBounds.GraphDirections.fastField, HarmonicCalculus.along, Pi.zero_apply, smul_zero,
     add_zero, hy, ha]
   change fderiv ℝ (fun y => ActualPrimary.gaussian l.2 (ActualPrimaryDynamics.copyPoint l.1 l.2 n k
-    y)) y
+      y)) y
     ((PrimaryResidualClass.directions (ActualPrimary.commonContext B)).fastField n y) •
       (ActualPrimaryDynamics.velocityScale l.2 n • _) = _
   rw [fast_nativeGaussian]
@@ -919,7 +931,7 @@ theorem chartGaussian_zero_no_copy (l : SignedLabel B N0) (n : ℕ) {x : ActualP
     chartGaussian l n =ᶠ[𝓝 x] fun _ => 0 := by
   filter_upwards [(ActualPrimaryDynamics.coefficient_zero_germs l.1 l.2 n hc).1] with y hy
   simp only [chartGaussian, LinearWaveBounds.excludedSlotError, hy, Pi.zero_apply, smul_zero,
-    add_zero]
+      add_zero]
 
 theorem chartGaussian_support (l : SignedLabel B N0) (n : ℕ) :
     support (chartGaussian l n) ⊆ Prod.fst ⁻¹' labelCarrier l n := by
@@ -939,7 +951,7 @@ theorem chartGaussian_zero_germ (l : SignedLabel B N0) (n : ℕ) {x : ActualPrim
     (hx : x.1 ∉ labelCarrier l n) : chartGaussian l n =ᶠ[𝓝 x] fun _ => 0 :=
   notMem_tsupport_iff_eventuallyEq.mp (fun hz => hx
     (closure_minimal (chartGaussian_support l n) ((labelCarrier_closed l n).preimage
-      continuous_fst) hz))
+        continuous_fst) hz))
 
 theorem dynamics_copyPoint_eq (l : SignedLabel B N0) (n : ℕ) (hn : near l n)
     (k : TorusInverse.Frequency) (x : Native) (θ : ℝ) :
@@ -1089,9 +1101,11 @@ open CorrectionInitialization ActualPrimaryBounds
 
 variable {B N0 : ℕ}
 
+/-- Gaussian strip: an abbreviation for `HarmonicWaveInteraction.productStrip strip`. -/
 noncomputable abbrev gaussianStrip : StripData ActualPrimary.FullPoint :=
   HarmonicWaveInteraction.productStrip strip
 
+/-- Chart carrier, constructed using `HarmonicCalculus.carrier`. -/
 noncomputable def chartCarrier (l : SignedLabel B N0) (n : ℕ) : ActualPrimary.FullPoint → ℂ :=
   HarmonicCalculus.carrier ((ActualPrimary.chartCoefficients l.1 l.2).frequency n)
     ((ActualPrimary.chartCoefficients l.1 l.2).phase n)
@@ -1101,6 +1115,8 @@ theorem chartCarrier_smooth (l : SignedLabel B N0) (n : ℕ) :
   HarmonicCalculus.contDiffOn_carrier ((ActualPrimary.chartCoefficients l.1 l.2).frequency n)
     (ActualPrimaryCoherence.piece_phase_smooth ActualPrimary.standardRegion l.1 l.2 n)
 
+/-- Gaussian field, given by `(ActualPrimary.piece ActualPrimary.standardRegion l.1
+l.2).excluded`. -/
 noncomputable def gaussianField (l : SignedLabel B N0) :
     ℕ → ActualPrimary.FullPoint → Fin 3 → ℝ :=
   (ActualPrimary.piece ActualPrimary.standardRegion l.1 l.2).excluded
@@ -1175,7 +1191,7 @@ theorem gaussianField_all_gains_of_carrier
     (fun α => (chartGaussian_all_gains (B := B) (N0 := N0) α).map (ContinuousLinearMap.proj i))
     (chartCarrier_smooth (B := B) (N0 := N0))
     (K := fun (l : SignedLabel B N0) n => tsupport (((ActualPrimary.chartCoefficients l.1
-      l.2).withCutoff
+        l.2).withCutoff
       (ActualPrimary.chartCutoff l.1 l.2)).amplitude n))
     (fun l n x _ hx => by
       filter_upwards [chartGaussian_zero_off_cut l n hx] with y hy
@@ -1185,6 +1201,7 @@ theorem gaussianField_all_gains_of_carrier
   intro l n x _
   exact (gaussianField_eq l n x i).symm
 
+/-- Initial gaussian, constructed using `LabelSumBounds.fieldSum`. -/
 noncomputable def initialGaussian (B N0 : ℕ) : ℕ → ActualPrimary.FullPoint → Fin 3 → ℝ :=
   LabelSumBounds.fieldSum (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0)
     (fun l => (ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1).excluded)
@@ -1246,10 +1263,10 @@ theorem primary_axial_class (d : ActualInitialMean.PrimaryData B N0) :
   unfold ActualInitialMean.PrimaryData at d
   have hh := MovingInitialization.zeroMean_reconstructed_bounds
     (cL := FinalSlowBase.edgeExponent ActualPrimary.nominal / 4) (cR := 1)
-      ActualPrimary.standardRegion
+        ActualPrimary.standardRegion
     ActualPrimary.commonGauge (PrimaryTargetBounds.leftRadius_pos ActualPrimary.nominal)
-    d.exponent_pos (div_pos (FinalSlowBase.edgeExponent_pos ActualPrimary.nominal) (by norm_num))
-      zero_lt_one
+    d.exponent_pos (div_pos (FinalSlowBase.edgeExponent_pos ActualPrimary.nominal) (by
+        norm_num)) zero_lt_one
     (ChartScales.epsilon ActualPrimary.h) BaseContextAssembly.slowScale
     (ChartScales.epsilon_pos ActualPrimary.h)
     (ChartScales.epsilon_le_one ActualPrimary.h ActualPrimary.outgoing.data.h_pos.le)
@@ -1332,7 +1349,7 @@ theorem initializedAlias_all_gains (B N0 : ℕ) (β : ℝ) :
   have he : (ActualInitialMean.initialized B N0).errors.aliasError =
       VariableGaugeMean.temporalAliasState ActualPrimary.commonGauge ActualPrimary.h
         (CommonWindow.index ActualPrimary.h) (ActualPrimary.commonContext B)
-          (ActualInitialMean.primary B N0) +
+            (ActualInitialMean.primary B N0) +
       VariableGaugeMean.pressureAliasState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
         (ActualInitialMean.ranked B N0) := ActualInitialCoherence.initialized_aliases B N0
   rw [he]
@@ -1352,11 +1369,11 @@ open CorrectionInitialization ActualPrimaryBounds
 theorem initialized_errors_formula (B N0 : ℕ) :
     (ActualInitialMean.initialized B N0).errors.total =
       ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B +
+          ActualPrimary.upper B +
       initialGaussian B N0 + (ActualInitialMean.initialized B N0).errors.aliasError := by
   obtain ⟨hb, hg, _⟩ := GaugeInitialization.initializedBands_error_components
     ActualPrimary.commonGauge ActualPrimary.rankData ActualPrimary.h (CommonWindow.index
-      ActualPrimary.h)
+        ActualPrimary.h)
     ActualInitialMean.axial (ActualPrimary.commonContext B)
     (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0) ActualInitialMean.primaryPiece
     (ActualInitialMean.baseError B)
@@ -1370,7 +1387,7 @@ field; the base and both aliases in this formula are already constructed. -/
 theorem initializedErrors_all_gains_of_gaussian (B N0 : ℕ) (β : ℝ) (i : Fin 3)
     (hg : UnweightedClass gaussianStrip β (fun n x => initialGaussian B N0 n x i)) :
     UnweightedClass gaussianStrip β (fun n x => (ActualInitialMean.initialized B N0).errors.total n
-      x i) := by
+        x i) := by
   have hb := baseError_angle_component_class ActualPrimary.certificate ActualPrimary.modulation
     ActualPrimary.upper B ActualPrimary.standardRegion β i
   have ha := (initializedAlias_unweighted B N0 β).map (ContinuousLinearMap.proj i)

@@ -6,11 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatTailEdit
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
 
 /-!
 # Three exact terminal compensation moments
@@ -21,6 +18,9 @@ amplitude leaves one fixed quadratic map, so its smooth inverse and estimates
 are uniform in the transverse parameter.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter MeasureTheory
@@ -28,18 +28,23 @@ open scoped BigOperators ContDiff Topology
 
 namespace NavierStokes.TerminalCompensation
 
+/-- Coefficient: an abbreviation for `Fin 3 → ℝ`. -/
 abbrev Coeff := Fin 3 → ℝ
 
 /-- An arbitrary reserved interval in the normalized positive radial coordinate. -/
 structure Patch where
+  /-- Left of `Patch`, of type `ℝ`. -/
   left : ℝ
+  /-- Right of `Patch`, of type `ℝ`. -/
   right : ℝ
   left_pos : 0 < left
   ordered : left < right
 
+/-- Lower, given by `P.left + (2 * (j.val : ℝ) + 1) * (P.right - P.left) / 7`. -/
 noncomputable def lower (P : Patch) (j : Fin 3) : ℝ :=
   P.left + (2 * (j.val : ℝ) + 1) * (P.right - P.left) / 7
 
+/-- Upper, given by `P.left + (2 * (j.val : ℝ) + 2) * (P.right - P.left) / 7`. -/
 noncomputable def upper (P : Patch) (j : Fin 3) : ℝ :=
   P.left + (2 * (j.val : ℝ) + 2) * (P.right - P.left) / 7
 
@@ -60,6 +65,7 @@ theorem intervals_separated (P : Patch) (i j : Fin 3) (hij : i < j) :
   fin_cases i <;> fin_cases j <;> norm_num at hij <;> norm_num <;>
     dsimp [upper, lower] <;> norm_num <;> linarith [P.ordered]
 
+/-- Bump, given by `LocalizedMomentRepair.bump (lower P j) (upper P j)`. -/
 noncomputable def bump (P : Patch) (j : Fin 3) : ℝ → ℝ :=
   LocalizedMomentRepair.bump (lower P j) (upper P j)
 
@@ -97,6 +103,7 @@ theorem bumps_disjoint (P : Patch) (i j : Fin 3) (hij : i ≠ j) (x : ℝ) :
   · have hs := intervals_separated P j i h
     linarith [hjx.2, hix.1]
 
+/-- Correction, given by `∑ j, c j * bump P j x`. -/
 noncomputable def correction (P : Patch) (c : Coeff) (x : ℝ) : ℝ :=
   ∑ j, c j * bump P j x
 
@@ -182,9 +189,11 @@ theorem correction_square (P : Patch) (c : Coeff) (x : ℝ) :
         2 * c 1 * c 2 * (bump P 1 x * bump P 2 x) := by ring
     _ = _ := by rw [h01, h02, h12]; ring
 
+/-- Bump moment, given by `∫ x, x ^ s * bump P j x`. -/
 noncomputable def bumpMoment (P : Patch) (s : ℝ) (j : Fin 3) : ℝ :=
   ∫ x, x ^ s * bump P j x
 
+/-- Square moment, given by `∫ x, x ^ s * (bump P j x) ^ 2`. -/
 noncomputable def squareMoment (P : Patch) (s : ℝ) (j : Fin 3) : ℝ :=
   ∫ x, x ^ s * (bump P j x) ^ 2
 
@@ -216,14 +225,17 @@ theorem correction_square_moment (P : Patch) (s : ℝ) (c : Coeff) :
   · intro j _
     exact (weighted_bump_sq_integrable P s j).const_mul _
 
+/-- Slope, given by `-1 / 2 - lam`. -/
 noncomputable def slope (lam : ℝ) : ℝ := -1 / 2 - lam
 
+/-- Powers, given by `![-1 + slope lam, slope lam, 1 / 2]`. -/
 noncomputable def powers (lam : ℝ) : Coeff := ![-1 + slope lam, slope lam, 1 / 2]
 
 theorem powers_injective (lam : ℝ) (hlam : 0 ≤ lam) : Injective (powers lam) := by
   intro i j hij
   fin_cases i <;> fin_cases j <;> norm_num [powers, slope] at hij <;> norm_num <;> linarith
 
+/-- Linear matrix, given by `LocalizedMomentRepair.matrix (powers lam) (lower P) (upper P)`. -/
 noncomputable def linearMatrix (P : Patch) (lam : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   LocalizedMomentRepair.matrix (powers lam) (lower P) (upper P)
 
@@ -237,6 +249,7 @@ theorem linearMatrix_det_ne_zero (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) :
     (powers_injective lam hlam) (fun j => P.left_pos.trans (lower_gt_left P j))
     (lower_lt_upper P) (intervals_separated P)
 
+/-- Linear equiv, constructed using `LinearEquiv.toContinuousLinearEquiv`. -/
 noncomputable def linearEquiv (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) :
     Coeff ≃L[ℝ] Coeff :=
   LinearEquiv.toContinuousLinearEquiv
@@ -254,6 +267,8 @@ noncomputable def linearEquiv (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) :
 theorem linearEquiv_apply (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) (c : Coeff) :
     linearEquiv P lam hlam c = (linearMatrix P lam).mulVec c := rfl
 
+/-- Quadratic bilin, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
+compatibility proofs. -/
 noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[ℝ] Coeff where
   toFun c :=
     { toFun := fun d =>
@@ -272,6 +287,7 @@ noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[�
     ext e i
     fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three] <;> ring
 
+/-- Quadratic continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def quadraticCLM (P : Patch) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
   LinearMap.toContinuousLinearMap
     ((LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Coeff) (F' := Coeff)).toLinearMap.comp
@@ -282,6 +298,7 @@ theorem quadraticCLM_apply (P : Patch) (c d : Coeff) :
       ![(1 / 2) * ∑ j, squareMoment P (-1) j * c j * d j,
         (1 / 2) * ∑ j, squareMoment P 0 j * c j * d j, 0] := rfl
 
+/-- Base profile, given by `x ^ slope lam`. -/
 noncomputable def baseProfile (lam x : ℝ) : ℝ := x ^ slope lam
 
 /-- One half of a squared-profile change, against a power weight. -/
@@ -508,8 +525,10 @@ theorem composed_solver_deriv_bound {g : Coeff → Coeff} {ε C : ℝ}
 noncomputable def physicalProfile (P : Patch) (lam R a : ℝ) (c : Coeff) (X : ℝ) : ℝ :=
   a * (baseProfile lam (X / R) + correction P c (X / R))
 
+/-- Clean profile, given by `a * baseProfile lam (X / R)`. -/
 noncomputable def cleanProfile (lam R a X : ℝ) : ℝ := a * baseProfile lam (X / R)
 
+/-- Physical moments as an element of `Coeff`. -/
 noncomputable def physicalMoments (P : Patch) (lam R a : ℝ) (c : Coeff) : Coeff :=
   ![∫ X, ((physicalProfile P lam R a c X) ^ 2 - (cleanProfile lam R a X) ^ 2) / X,
     ∫ X, (physicalProfile P lam R a c X) ^ 2 - (cleanProfile lam R a X) ^ 2,
@@ -571,6 +590,8 @@ theorem physicalMoments_eq (P : Patch) (lam R a : ℝ) (hR : 0 < R) (c : Coeff) 
     simp only [angular_density_rescale P lam R a hR c, integral_const_mul]
     ring
 
+/-- Normalization factors, given by `![(2 * a ^ 2)⁻¹, (2 * R * a ^ 2)⁻¹, (R * Real.sqrt (2 * R)
+* a)⁻¹]`. -/
 noncomputable def normalizationFactors (R a : ℝ) : Coeff :=
   ![(2 * a ^ 2)⁻¹, (2 * R * a ^ 2)⁻¹, (R * Real.sqrt (2 * R) * a)⁻¹]
 
@@ -595,9 +616,11 @@ theorem physicalMoments_cancel (P : Patch) (lam R a : ℝ) (hR : 0 < R) (ha : 0 
 noncomputable def scaledDebt (R : ℝ) (d : Coeff) : Coeff :=
   ![d 0, d 1 / R, d 2 / (R * Real.sqrt (2 * R))]
 
+/-- Amplitude factors, given by `![(2 * a ^ 2)⁻¹, (2 * a ^ 2)⁻¹, a⁻¹]`. -/
 noncomputable def amplitudeFactors (a : ℝ) : Coeff :=
   ![(2 * a ^ 2)⁻¹, (2 * a ^ 2)⁻¹, a⁻¹]
 
+/-- Amplitude debt, given by `-(amplitudeFactors a * v)`. -/
 noncomputable def amplitudeDebt (a : ℝ) (v : Coeff) : Coeff := -(amplitudeFactors a * v)
 
 theorem normalizedDebt_eq (R a : ℝ) (d : Coeff) :
@@ -637,14 +660,14 @@ theorem compact_amplitude_bounds {U S : Set ℝ} (hU : IsOpen U) (hS : IsCompact
   obtain ⟨B₂, hb₂⟩ := hS.exists_bound_of_continuousOn (ha.continuousOn.mono hSU)
   obtain ⟨B₃, hb₃⟩ := hS.exists_bound_of_continuousOn (had.continuousOn.mono hSU)
   let D : ℝ := 1 + |B₀| + |B₁| + |B₂| + |B₃|
-  have hD₀ : B₀ ≤ D := by dsimp [D]; linarith [le_abs_self B₀, abs_nonneg B₁, abs_nonneg B₂,
-    abs_nonneg B₃]
-  have hD₁ : B₁ ≤ D := by dsimp [D]; linarith [le_abs_self B₁, abs_nonneg B₀, abs_nonneg B₂,
-    abs_nonneg B₃]
-  have hD₂ : B₂ ≤ D := by dsimp [D]; linarith [le_abs_self B₂, abs_nonneg B₀, abs_nonneg B₁,
-    abs_nonneg B₃]
-  have hD₃ : B₃ ≤ D := by dsimp [D]; linarith [le_abs_self B₃, abs_nonneg B₀, abs_nonneg B₁,
-    abs_nonneg B₂]
+  have hD₀ : B₀ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₀, abs_nonneg B₁, abs_nonneg B₂, abs_nonneg B₃]
+  have hD₁ : B₁ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₁, abs_nonneg B₀, abs_nonneg B₂, abs_nonneg B₃]
+  have hD₂ : B₂ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₂, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₃]
+  have hD₃ : B₃ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₃, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₂]
   refine ⟨D, by dsimp [D]; positivity, fun η hη => ⟨(hb₀ η hη).trans hD₀,
     (hb₁ η hη).trans hD₁, ?_, ?_⟩⟩
   · exact (hb₂ η hη).trans hD₂
@@ -820,6 +843,7 @@ theorem angular_scale_eq (R : ℝ) (hR : 0 < R) :
     show (3 / 2 : ℝ) = 1 + 1 / 2 by norm_num, Real.rpow_add hR, Real.rpow_one]
   ring
 
+/-- Heat debt as an element of `Coeff`. -/
 noncomputable def heatDebt (T : OutgoingTail.TailData) (ν K η : ℝ) : Coeff :=
   ![HeatTailEdit.pressureDebt (HeatTailEdit.outgoingProfile T K η) T.h ν K,
     HeatTailEdit.energyDebt (HeatTailEdit.outgoingProfile T K η) T.h ν K,

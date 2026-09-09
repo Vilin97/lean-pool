@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-public import Mathlib.MeasureTheory.Integral.Layercake
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.MeasureTheory.Integral.Layercake
 
 /-!
 # The radial majorant of the cutoff commutator
@@ -20,6 +17,9 @@ The cancellation factor `min (‖z‖ / R) 1` makes the singular kernel belong t
 `L^(4/3)` in three dimensions. The proof uses the layer-cake formula and the
 volume of balls, so no principal-value integral occurs in this module.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -249,7 +249,7 @@ theorem radialCommutatorKernel_lpNorm_scale {R : ℝ} (hR : 0 < R) :
   rw [kernel_lpNorm_formula hR, kernel_lpNorm_formula zero_lt_one,
     kernel_power_integral_scale hR,
     Real.mul_rpow (Real.rpow_nonneg hR.le _) hi, ← Real.rpow_mul hR.le]
-  norm_num ; ring
+  norm_num; ring
 
 /-- A single finite constant bounds the kernel norm at every positive radius. -/
 theorem radialCommutatorKernel_lpNorm_le :

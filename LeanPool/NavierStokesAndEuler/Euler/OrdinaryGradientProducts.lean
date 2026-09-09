@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientInterpolation
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Products
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientInterpolation
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Products
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! Sharp H³ products controlled by the actual velocity gradient.
 The only middle product is D²u D²u, handled by cubic testing. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,7 +48,7 @@ theorem secondWord_square_gradient (A : SmoothL2Field Space) (K N : ℝ)
   change ‖(scalarProduct (wordField (mapField (EuclideanSpace.proj i) A) w)
       (wordField (mapField (EuclideanSpace.proj i) A) w)).toLp‖ ≤
     3*K*‖((wordField (mapField (EuclideanSpace.proj i) A) w).directionalField (axis (w 0))).toLp‖
-      at hs
+        at hs
   apply hs.trans
   have hn := (wordBound_coordinate hN i) 3 le_rfl (Fin.cons (w 0) w)
   rw [wordField_cons] at hn
@@ -101,7 +105,7 @@ theorem secondWord_product_gradient (A : SmoothL2Field Space) (K N : ℝ)
 
 theorem coordinateProduct_gradient (A : SmoothL2Field Space) (K N : ℝ)
     (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hN : WordBound 3 N A)
-    {k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (hkl : k+l ≤ 4)
+    {k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (hkl : k + l ≤ 4)
     (w : Fin k → Fin 3) (v : Fin l → Fin 3) (i : Fin 3) :
     ‖(coordinateProduct i (wordField A w) (wordField A v)).toLp‖ ≤ 9*K*N := by
   have hK0 : 0 ≤ K := (norm_nonneg (fderiv ℝ A.field 0)).trans (hK 0)
@@ -130,7 +134,7 @@ theorem coordinateProduct_gradient (A : SmoothL2Field Space) (K N : ℝ)
 
 theorem gradient_tame_outer_product (A : SmoothL2Field Space) (K N : ℝ)
     (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hN : WordBound 3 N A)
-    {n k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (horder : n+k+l ≤ 4)
+    {n k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (horder : n + k + l ≤ 4)
     (a : Fin n → Fin 3) (w : Fin k → Fin 3) (v : Fin l → Fin 3) (i : Fin 3) :
     ‖(wordField (coordinateProduct i (wordField A w) (wordField A v)) a).toLp‖ ≤
       (2 : ℝ)^n*9*K*N := by

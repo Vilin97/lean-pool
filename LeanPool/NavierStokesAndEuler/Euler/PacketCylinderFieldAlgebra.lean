@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
+public import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! Finite algebra on actual cylinder-path witnesses of raw packet fields. -/
 
 @[expose] public section
 
-/-! Finite algebra on actual cylinder-path witnesses of raw packet fields. -/
 
 noncomputable section
 
@@ -18,13 +20,13 @@ namespace EulerPacketCylinderField.Field
 
 open Set MeasureTheory ContinuousLinearMap Finset EulerSmoothLimit EulerLiftedGradientSpace
   EulerCylinderSmoothOrbit EulerLpCylinderTranslation EulerMetricTransport
-    EulerPacketProfileRecursion
+      EulerPacketProfileRecursion
 open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
 /-- Recover a raw witness from an actual continuous representative of its L² path. -/
-def ofLifted (p : C(Icc (0 : ℝ) T,LiftL2 P))
+def ofLifted (p : C(Icc (0 : ℝ) T, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
     (f : Icc (0 : ℝ) T → LiftDomain P → Space) (hc : ∀ t, Continuous (f t))
     (hrep : ∀ t, (p t : LiftDomain P → Space) =ᵐ[liftMeasure P] f t)
@@ -38,18 +40,20 @@ def ofLifted (p : C(Icc (0 : ℝ) T,LiftL2 P))
 
 /-- Equality is needed only on the actual closed time interval. -/
 def congr (G : Field P T raw)
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw' (t,(x,θ)) = raw (t,(x,θ))) :
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw' (t, (x, θ)) = raw (t, (x, θ))) :
     Field P T raw' where
   path := G.path
   orbit := G.orbit
   raw_eq t x θ := (he t x θ).trans (G.raw_eq t x θ)
 
+/-- Zero, constructed using `ofLifted`. -/
 def zero (P T : ℝ) [Fact (0 < P)] : Field P T (0 : VectorField) :=
   ofLifted 0 (by simpa only [map_zero] using (contDiff_const :
       ContDiff ℝ ∞ (fun _ : LiftTangent => (0 : C(Icc (0 : ℝ) T,LiftL2 P)))))
     (fun _ _ => 0) (fun _ => continuous_const)
     (fun _ => Lp.coeFn_zero Space 2 (liftMeasure P)) (fun _ _ _ => rfl)
 
+/-- Add, constructed using `ofLifted`. -/
 def add (G : Field P T raw) (H : Field P T raw') : Field P T (raw+raw') :=
   ofLifted (G.path+H.path) (by simpa only [map_add] using G.orbit.add H.orbit)
     (fun t x => pointField P G.path G.orbit t x+pointField P H.path H.orbit t x)
@@ -61,6 +65,7 @@ def add (G : Field P T raw) (H : Field P T raw') : Field P T (raw+raw') :=
       exact ha.trans (congrArg₂ (·+·) hg hh))
     (fun t x θ => by simp only [Pi.add_apply,G.raw_eq,H.raw_eq])
 
+/-- Neg, constructed using `ofLifted`. -/
 def neg (G : Field P T raw) : Field P T (-raw) :=
   ofLifted (-G.path) (by simpa only [map_neg] using G.orbit.neg)
     (fun t x => -pointField P G.path G.orbit t x)
@@ -70,9 +75,11 @@ def neg (G : Field P T raw) : Field P T (-raw) :=
       exact hn.trans (congrArg Neg.neg hg))
     (fun t x θ => by simp only [Pi.neg_apply,G.raw_eq])
 
+/-- Sub, given by `(G.add H.neg).congr (fun t x θ => by simp only [sub_eq_add_neg])`. -/
 def sub (G : Field P T raw) (H : Field P T raw') : Field P T (raw-raw') :=
   (G.add H.neg).congr (fun t x θ => by simp only [sub_eq_add_neg])
 
+/-- Smul, constructed using `ofLifted`. -/
 def smul (G : Field P T raw) (c : ℝ) : Field P T (c • raw) :=
   ofLifted (c • G.path) (by simpa only [map_smul] using G.orbit.const_smul c)
     (fun t x => c • pointField P G.path G.orbit t x)

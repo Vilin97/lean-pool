@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FrameTransport
 
-@[expose] public section
-
 /-!
 # The actual transverse inverse on a fixed Hilbert space
 
@@ -18,6 +16,9 @@ of the spatial label, angle, or frame. The transported form and its actual
 coercive inverse are constructed here and identified with the original physical
 transverse solve. This is the fixed-space starting point for parameter estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,11 +64,11 @@ theorem fixedFrameOperator_inner (u v : zeroTraceDerivatives (U := U) T hT) :
   rw [adjoint_inner_left, dirichletOperator_inner]
   rfl
 
-variable (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖^2 ≤ ‖Q t x‖^2)
+variable (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^ 2)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
-  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖^2)
-  (hsmall : K * (T^2/2) ≤ 1/2)
+  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- A polynomial quantitative coercivity constant on the fixed coordinate space. -/
 def fixedCoercivity : ℝ := (transportCost T Q Q₁ c)⁻¹ ^ 2 / 2

@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PartialCorrectionBootstrap
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyPathNorm
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionMildEquation
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionContinuation
+import LeanPool.NavierStokesAndEuler.Euler.GevreyPathNorm
+import LeanPool.NavierStokesAndEuler.Euler.PartialCorrectionBootstrap
+
+/-! Actual global-in-time viscous correction from concrete Gevrey coefficient and residual budgets.
+-/
 
 @[expose] public section
 
-/-! Actual global-in-time viscous correction from concrete Gevrey coefficient and residual budgets.
-  -/
 
 noncomputable section
 
@@ -21,7 +24,7 @@ namespace EulerGlobalGevreyCorrection
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerSobolevCoefficientPressure
-    EulerCorrectionLowerData
+      EulerCorrectionLowerData
   EulerCorrectionEnergyData EulerCorrectionEnergyMajorants EulerPartialCorrectionBootstrap
   EulerCorrectionContinuation EulerGevreyMetricEstimate EulerGevreyPathNorm EulerEnergyMetricPaths
   EulerQuadraticSource EulerPacketWeights
@@ -29,11 +32,12 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Concrete coefficient and residual bounds yield an actual viscous correction throughout the prescribed interval.
-The a-priori energy estimate and the continuation bound are proved inside this theorem, not
-  supplied as hypotheses. -/
+/-- Concrete coefficient and residual bounds yield an actual viscous correction throughout the
+prescribed interval.
+The a-priori energy estimate and the continuation bound are proved inside this theorem, not supplied
+as hypotheses. -/
 theorem exists_global_gevrey_correction {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS : 0 < S)
-    (D : CorrectionData period (q+1) (Icc (0 : ℝ) S))
+    (D : CorrectionData period (q + 1) (Icc (0 : ℝ) S))
     (KG : ∀ t, CoefficientJet period standardDirection q (D.metric.coefficient t))
     (KL : ∀ t, CoefficientJet period standardDirection q (D.linear.coefficient t))
     (KQ : ∀ i t, CoefficientJet period standardDirection q ((D.quadratic i).coefficient t))
@@ -41,12 +45,12 @@ theorem exists_global_gevrey_correction {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS :
     (hLq : Continuous (fun t => coefficientSobolevOperator period (KL t)))
     (hQq : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ i t)))
     (hG : Continuous (fun t => (D.metric.coefficient t).operator))
-    (N : ℕ) (hN : N+6 ≤ q+1) (hNfull : q+1 ≤ N+6) (R : C(Icc (0 : ℝ) S,ℝ))
-    (B : SpatialBudget period (by omega : 6 ≤ q+1) D N R) (K : MetricBudget period S hS.le D)
+    (N : ℕ) (hN : N + 6 ≤ q + 1) (hNfull : q + 1 ≤ N + 6) (R : C(Icc (0 : ℝ) S, ℝ))
+    (B : SpatialBudget period (by omega : 6 ≤ q + 1) D N R) (K : MetricBudget period S hS.le D)
     (C Δ ρ0 : ℝ) (hC : combinedConstant period B K ≤ C) (hΔ : 0 < Δ) (hΔ1 : Δ ≤ 1) (hρ0 : 0 < ρ0)
-    (hdecay : 2*C*(B.B0+Δ)*S ≤ ρ0/2) (hscale : ρ0*B.Rc ≤ 1)
-    (hsmall : 2*B.residual*Real.exp (3*C*S) ≤ Δ/2)
-    (hR : ∀ t, R t = ρ0-2*C*(B.B0+Δ)*t.val)
+    (hdecay : 2 * C * (B.B0 + Δ) * S ≤ ρ0 / 2) (hscale : ρ0 * B.Rc ≤ 1)
+    (hsmall : 2 * B.residual * Real.exp (3 * C * S) ≤ Δ / 2)
+    (hR : ∀ t, R t = ρ0 - 2 * C * (B.B0 + Δ) * t.val)
     (ν : ℝ) (hν : 0 < ν) (hν1 : ν ≤ 1)
     (hz : ∀ t, value period (D.approximation t) ∈ divergenceFreeSpace period D.κ D.direction) :
     ∃ e : C(Icc (0 : ℝ) S,SobolevSpace period (q+1)),
@@ -81,9 +85,9 @@ theorem exists_global_gevrey_correction {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS :
       N hN R B K C Δ ρ0 hC hΔ hΔ1 hρ0 hdecay hscale hsmall hR ν hν hν1 hz T hT hTS e hsol
     apply norm_le_of_energy_bound period N hN hNfull T (R.comp (timeInclusion hTS))
       ((K.operatorPath period).comp (timeInclusion hTS)) e K.c δ (Δ/2) K.c_pos hδ hδ1 (by
-        positivity)
+          positivity)
       (fun t => hrad (timeInclusion hTS t)) (fun t => K.operator_coercive period (timeInclusion hTS
-        t))
+          t))
     intro t
     rw [energyPath_apply]
     exact (hb t).2

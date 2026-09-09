@@ -6,108 +6,22 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketTargetCompression
-
-@[expose] public section
-
-noncomputable section
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 Convergence estimates for the actual quadratic scale recurrence in (37).
 The sequence is reindexed so that `x 0 = x_{J-1}` and
 `x (n+1) = (J+n)^2 x n`; hence `J+n` is the stage index in the source.
 -/
+
+@[expose] public section
+
+noncomputable section
 
 namespace EulerScale
 
@@ -217,8 +131,8 @@ theorem abs_log_growth_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
       have hJ2 : (1 : ℝ) ≤ (J : ℝ) ^ 2 := one_le_pow₀ hJr
       calc
         _ ≤ |Real.log (x 0)| + 2 := by linarith
-        _ ≤ _ := by simpa using mul_le_mul_of_nonneg_left hJ2 (by positivity : 0 ≤ |Real.log (x 0)|
-          + 2)
+        _ ≤ _ := by
+            simpa using mul_le_mul_of_nonneg_left hJ2 (by positivity : 0 ≤ |Real.log (x 0)| + 2)
   | succ n ih =>
       have hj1 : (1 : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show 1 ≤ J + n by omega)
       have hjp : (0 : ℝ) < (J + n : ℕ) := lt_of_lt_of_le zero_lt_one hj1
@@ -229,8 +143,8 @@ theorem abs_log_growth_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
       rw [hx, Real.log_mul (pow_ne_zero _ hjp.ne') (hxp n).ne', Real.log_pow]
       calc
         _ ≤ |(2 : ℝ) * Real.log ((J + n : ℕ) : ℝ)| + |Real.log (x n)| := abs_add_le _ _
-        _ = 2 * Real.log ((J + n : ℕ) : ℝ) + |Real.log (x n)| := by rw [abs_of_nonneg (by
-          positivity)]
+        _ = 2 * Real.log ((J + n : ℕ) : ℝ) + |Real.log (x n)| := by
+            rw [abs_of_nonneg (by positivity)]
         _ ≤ 2 * ((J + n : ℕ) : ℝ) +
             (|Real.log (x 0)| + 2) * ((J + n : ℕ) : ℝ) ^ 2 := by linarith
         _ ≤ _ := by
@@ -253,7 +167,8 @@ theorem polynomial_log_over_growth_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ �
   have hd := div_le_div_of_nonneg_right h (hxp n).le
   simpa only [pow_add, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hd
 
-/-- The logarithmic term on the right side of (39) tends to zero with every fixed polynomial weight. -/
+/-- The logarithmic term on the right side of (39) tends to zero with every fixed polynomial weight.
+-/
 theorem polynomial_log_over_growth_tendsto_zero (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
     (hx0 : 0 < x 0) (hx : ∀ n, x (n + 1) = ((J + n : ℕ) : ℝ) ^ 2 * x n)
     (A : ℕ) :
@@ -380,7 +295,7 @@ theorem log_sum_exp_mul_tendsto_zero {ι : Type*} [Fintype ι] [Nonempty ι]
     exact mul_nonneg (log_sum_exp_bounds (fun i => a i n) (fun i => ha i n)).1 (hr n)
   · intro n
     exact mul_le_mul_of_nonneg_right (log_sum_exp_bounds (fun i => a i n) (fun i => ha i n)).2 (hr
-      n)
+        n)
 
 /-- A starting scale at least one stays at least one. -/
 theorem quadratic_growth_one_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
@@ -400,7 +315,7 @@ base constant; the previous frequency power; inverse support and spike scales;
 the present and previous shears; and the present and previous geometric sizes.
 -/
 noncomputable def sourceParameterExponent (J : ℕ) (Cbase Cstar : ℝ) (x : ℕ → ℝ) (i : Fin 8) (n : ℕ)
-  : ℝ :=
+    : ℝ :=
   ![Real.log Cbase,
     Cstar * x n / ((J - 1 + n : ℕ) : ℝ) ^ 4,
     x n / ((J + n : ℕ) : ℝ) ^ (7 / 2 : ℝ),
@@ -426,15 +341,25 @@ theorem sourceParameterExponent_nonneg (J : ℕ) (hJ : 2 ≤ J)
     one_le_mul_of_one_le_of_one_le (one_le_pow₀ hj) hxn
   fin_cases i
   · simpa [sourceParameterExponent] using Real.log_nonneg hCbase
-  · simp [sourceParameterExponent]
+  · simp only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.mk_one, Fin.isValue,
+      Matrix.cons_val_one, Matrix.cons_val_zero, ge_iff_le]
     positivity
-  · simp [sourceParameterExponent]
+  · simp only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.reduceFinMk,
+      Matrix.cons_val, ge_iff_le]
     positivity
-  · simp [sourceParameterExponent]
+  · simp only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.reduceFinMk,
+      Matrix.cons_val, ge_iff_le]
     positivity
-  · simp [sourceParameterExponent]
+  · simp only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.reduceFinMk,
+      Matrix.cons_val, ge_iff_le]
     positivity
-  · simp [sourceParameterExponent]
+  · simp only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.reduceFinMk,
+      Matrix.cons_val, ge_iff_le]
     positivity
   · simpa [sourceParameterExponent] using Real.log_nonneg hprod
   · simpa [sourceParameterExponent] using Real.log_nonneg hxn
@@ -455,21 +380,25 @@ theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
   fin_cases i
   · simpa [sourceParameterExponent] using
       ((polynomial_over_growth_summable J hJ1 x hx0 hx 2).tendsto_atTop_zero.const_mul (Real.log
-        Cbase))
+          Cbase))
   · have h := (stage_sq_div_predecessor_power_tendsto_zero J hJ 4 (by omega)).const_mul Cstar
     simp only [mul_zero] at h
     apply h.congr'
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.mk_one, Fin.isValue,
+      Matrix.cons_val_one, Matrix.cons_val_zero]
     field_simp [(hxp n).ne']
   · have h := stage_sq_div_real_power_tendsto_zero J hJ1 (7 / 2) (by norm_num)
     apply h.congr'
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.reduceFinMk,
+      Matrix.cons_val]
     field_simp [(hxp n).ne']
   · have h := stage_sq_div_real_power_tendsto_zero J hJ1 3 (by norm_num)
     simp only [Real.rpow_ofNat] at h
@@ -477,7 +406,9 @@ theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.reduceFinMk,
+      Matrix.cons_val]
     field_simp [(hxp n).ne']
   · have h := stage_sq_div_real_power_tendsto_zero J hJ1 5 (by norm_num)
     simp only [Real.rpow_ofNat] at h
@@ -485,23 +416,29 @@ theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.reduceFinMk,
+      Matrix.cons_val]
     field_simp [(hxp n).ne']
   · have h := stage_sq_div_predecessor_power_tendsto_zero J hJ 7 (by omega)
     apply h.congr'
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.reduceFinMk,
+      Matrix.cons_val]
     field_simp [(hxp n).ne']
   · have h := ((polynomial_stage_log_over_growth_summable J hJ1 x hx0 hx
-    2).tendsto_atTop_zero.const_mul 2).add hlx
+      2).tendsto_atTop_zero.const_mul 2).add hlx
     simp only [mul_zero, add_zero] at h
     apply h.congr'
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.reduceFinMk,
+      Matrix.cons_val]
     have hjp' : (0 : ℝ) < (J : ℝ) + n := by simpa using hjp n
     rw [Real.log_mul (pow_ne_zero _ hjp'.ne') (hxp n).ne', Real.log_pow]
     push_cast
@@ -510,7 +447,9 @@ theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
     apply Eventually.of_forall
     intro n
     dsimp only
-    simp [sourceParameterExponent]
+    simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.reduceFinMk,
+      Matrix.cons_val]
     ring
 
 /-- Expansion of the aggregate into the scales listed immediately before (39). -/
@@ -566,7 +505,7 @@ theorem perturbed_exponential_decay_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ �
   have hxp := quadratic_growth_pos J hJ x hx0 hx
   have hb2 : 0 < b / 2 := by linarith
   apply (exponential_decay_real_power_summable J hJ x hx0 hx A (b / 2)
-    hb2).of_norm_bounded_eventually_nat
+      hb2).of_norm_bounded_eventually_nat
   filter_upwards [he.eventually_le_const hb2] with n hn
   have hj : (0 : ℝ) < (J + n : ℕ) := by exact_mod_cast (show 0 < J + n by omega)
   have hy : 0 < x n / ((J + n : ℕ) : ℝ) ^ A := div_pos (hxp n) (Real.rpow_pos_of_pos hj A)

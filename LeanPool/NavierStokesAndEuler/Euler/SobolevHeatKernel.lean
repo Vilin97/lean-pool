@@ -7,26 +7,28 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeat
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Jointly continuous positive-time heat kernels with an explicit integrable parabolic bound. -/
 
 @[expose] public section
 
-/-! Jointly continuous positive-time heat kernels with an explicit integrable parabolic bound. -/
 
 noncomputable section
 
 namespace EulerSobolevHeat
 
 open EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerGaussianCylinderHeat MeasureTheory Set
-  Metric
+    Metric
 open intervalIntegral
 open scoped Topology NNReal
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- A local name for the inherited Sobolev normed group avoids repeated subtype-instance expansion. -/
+/-- A local name for the inherited Sobolev normed group avoids repeated subtype-instance expansion.
+-/
 local instance sobolevNormedGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
 /-- A local name for the inherited Sobolev scalar structure. -/
 local instance sobolevNormedSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
@@ -45,14 +47,14 @@ theorem heatOperator_joint_continuous (q : ℕ) :
   apply Metric.continuousAt_iff.mpr
   intro ε hε
   obtain ⟨δ, hδ, hd⟩ := (Metric.continuousAt_iff.mp (heatOperator_continuous period
-    p.2).continuousAt)
+      p.2).continuousAt)
     (ε / 2) (by linarith)
   refine ⟨min δ (ε / 2), lt_min hδ (by linarith), ?_⟩
   intro z hz
   have ht : dist z.1 p.1 < δ := (show dist z.1 p.1 ≤ dist z p from le_max_left _ _).trans_lt
-    (lt_min_iff.mp hz).1
+      (lt_min_iff.mp hz).1
   have hf : dist z.2 p.2 < ε / 2 := (show dist z.2 p.2 ≤ dist z p from le_max_right _ _).trans_lt
-    (lt_min_iff.mp hz).2
+      (lt_min_iff.mp hz).2
   have h := dist_triangle (heatOperator period q z.1 z.2) (heatOperator period q z.1 p.2)
     (heatOperator period q p.1 p.2)
   have h1 := heatOperator_dist_le period z.1 z.2 p.2
@@ -85,7 +87,8 @@ theorem heatGain_tsub {q : ℕ} (ε v : ℝ≥0) (hε : 0 < ε) (hev : ε ≤ v)
   simp only [heatGain_value, heatOperator_value, cylinderHeat_semigroup]
   rw [add_tsub_cancel_of_le hev]
 
-/-- Splitting off a fixed positive smoothing time gives joint continuity with one gained derivative. -/
+/-- Splitting off a fixed positive smoothing time gives joint continuity with one gained derivative.
+-/
 theorem heatGain_joint_continuous (q : ℕ) :
     Continuous (fun p : {v : ℝ≥0 // 0 < v} × SobolevSpace period q =>
       heatGain period q p.1.val p.1.property p.2) := by

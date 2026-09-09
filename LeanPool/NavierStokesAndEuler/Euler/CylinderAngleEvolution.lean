@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleWordBounds
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
+
+/-! Time differentiation of the actual normalized angular integral on the cylinder. -/
 
 @[expose] public section
 
-/-! Time differentiation of the actual normalized angular integral on the cylinder. -/
 
 noncomputable section
 
@@ -27,19 +29,19 @@ variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 omit [CompactSpace K] in
-theorem pathPrimitive_translation (p : C(K,LiftL2 P)) (a : LiftTangent) :
+theorem pathPrimitive_translation (p : C(K, LiftL2 P)) (a : LiftTangent) :
     pathPrimitive P (pathTranslate P a p) = pathTranslate P a (pathPrimitive P p) := by
   apply ContinuousMap.ext
   intro t
   exact primitive_mixed_translation P a (p t)
 
-theorem pathPrimitive_orbit_contDiff (p : C(K,LiftL2 P))
+theorem pathPrimitive_orbit_contDiff (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (pathPrimitive P p)) := by
   simpa only [Function.comp_def, pathPrimitive_translation] using
     (pathPrimitive (K := K) P).contDiff.comp hp
 
-theorem primitive_sobolevPath (p : C(K,LiftL2 P))
+theorem primitive_sobolevPath (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (q : ℕ) (t : K) :
     sobolevPath P q (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t =
       sobolevPrimitive P q (sobolevPath P q p hp t) := by
@@ -50,7 +52,7 @@ theorem primitive_sobolevPath (p : C(K,LiftL2 P))
   rfl
 
 /-- The representative of the time-dependent L² primitive is the same explicit angular integral. -/
-theorem pointField_primitive_formula (p : C(K,LiftL2 P))
+theorem pointField_primitive_formula (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
     (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P)))=0)
     (t : K) (y : Vector3) (θ : ℝ) :
@@ -67,7 +69,7 @@ theorem pointField_primitive_formula (p : C(K,LiftL2 P))
 
 section Time
 
-variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T,LiftL2 P))
+variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
@@ -81,8 +83,8 @@ theorem pathPrimitive_time_derivative (t : Icc (0 : ℝ) T) :
 include hd in
 /-- The literal primitive differentiates within the closed time interval at every angle. -/
 theorem classicalPrimitive_time_derivative
-    (hpm : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P)))=0)
-    (hfm : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P f hf t (y,(s : AddCircle P)))=0)
+    (hpm : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y, (s : AddCircle P))) = 0)
+    (hfm : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P f hf t (y, (s : AddCircle P))) = 0)
     (t : Icc (0 : ℝ) T) (y : Vector3) (θ : ℝ) :
     HasDerivWithinAt (fun r => EulerAngleMeanZeroPrimitive.primitive P
         (fun s => pointField P p hp (projIcc 0 T hT r) (y,(s : AddCircle P))) θ)

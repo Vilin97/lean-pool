@@ -7,9 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelFrozenGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevreyAt
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelGevrey
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevreyAt
 
 /-!
 # The forward estimate in actual fixed-Sobolev external-word blocks
@@ -20,6 +21,9 @@ inverse estimate and then the external-word recurrence gives one factorial
 shift at the same input/output radius. Every constant is a fixed polynomial
 in the coefficient, data, propagator and time-length constants when q is fixed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,32 +45,51 @@ def forwardSobolevCost (ι : Type*) [Fintype ι] (q : ℕ) (T C A D CB Rc : ℝ)
 variable {P E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] [Fintype ι]
   (directions : ι → P) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
-  (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T,E →L[ℝ] E))
+  (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T, E →L[ℝ] E))
   (U : ∀ x, Evolution T hT (B x))
-  (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-  (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E)
+  (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+  (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → E)
 
-private local instance : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E)) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelSobolevGevrey1 : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelSobolevGevrey2 : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelSobolevGevrey3 : NormedAddCommGroup C(Icc (0 : ℝ) T,E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelSobolevGevrey4 : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E)` instance to shorten
+typeclass synthesis. -/
+local instance instLinearDuhamelSobolevGevrey5 : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelSobolevGevrey6 : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))`
+instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelSobolevGevrey7 : NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc
+    (0 : ℝ) T,E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))` instance to
+shorten typeclass synthesis. -/
+local instance instLinearDuhamelSobolevGevrey8 : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 :
+    ℝ) T,E)) :=
+    inferInstance
 
 include hd in
 /-- The actual fixed-Hq block of the forward solution gains just one shift,
 with an unchanged radius and with H3 used only at the base parameter. -/
 theorem weightedSolution_block_gevrey_at
     (hB : ContDiff ℝ ∞ B) (hf : ContDiff ℝ ∞ f) (ha₀ : ContDiff ℝ ∞ a₀)
-    (hg₀ : g ⟨0,le_rfl,hT⟩ = 1)
+    (hg₀ : g ⟨0, le_rfl, hT⟩ = 1)
     (C A D CB Rc R : ℝ) (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hCB : 0 ≤ CB)
     (hRc : 0 ≤ Rc)
-    (hR : 2*forwardSobolevCost ι q T C A D CB Rc*(sobolevCoefficientRadius ι Rc+1) ≤ R)
-    (hBb : ∀ n y, ‖iteratedFDeriv ℝ n B y‖ ≤ CB*majorant Rc 0 n)
+    (hR : 2 * forwardSobolevCost ι q T C A D CB Rc * (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+    (hBb : ∀ n y, ‖iteratedFDeriv ℝ n B y‖ ≤ CB * majorant Rc 0 n)
     (x : P) (hU : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ‖(U x).propagator t s‖ ≤ C*g t/g s)
     (d : ℕ) (hforce : ∀ n, block directions q f n x ≤ D*majorant R d n)
     (hinitial : ∀ n, block directions q a₀ n x ≤ A*majorant R d n)
@@ -105,11 +128,11 @@ theorem weightedSolution_block_gevrey_at
   have hcoeff (j : ℕ) : coefficientBlock directions q Aₓ (j+1) x ≤
       CF*(sobolevCoefficientRadius ι Rc^(j+1)*((j+1).factorial : ℝ)^2) := by
     simpa only [majorant, Nat.add_zero, CF, forwardSobolevAmplitude] using
-      coefficientBlock_of_tensor_bound directions hd q Aₓ hAₓ
+        coefficientBlock_of_tensor_bound directions hd q Aₓ hAₓ
       Rc (frozenAmplitude T C CB) hRc hfrozen hAb (j+1) x
   have hFb : ∀ j, block directions q Fₓ j x ≤ DF*majorant R d j :=
     frozenForcing_block_bound T hT B U g hg directions q f a₀ hf ha₀ hg₀ C A D R hC x hU d hforce
-      hinitial
+        hinitial
   exact block_inverse_gevrey_at directions q Aₓ u Fₓ hAₓ hu hFₓ
     (frozenOperator_equation T hT B U g hg f a₀ x) x
     (ContinuousLinearMap.id ℝ C(Icc (0 : ℝ) T,E))

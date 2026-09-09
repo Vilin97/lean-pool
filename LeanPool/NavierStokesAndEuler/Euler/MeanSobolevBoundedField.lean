@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
 
 /-!
 # Actual bounded continuous representatives from smooth L² jets
@@ -21,6 +21,9 @@ any finite-dimensional real target. It is used only for qualitative closure;
 the sharp word estimates use their previously proved direct bounds.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanSobolevBoundedField
@@ -30,7 +33,7 @@ open MeasureTheory Set ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
   EulerLpTranslation.SmoothL2Field EulerLpDerivative
 open scoped BoundedContinuousFunction ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanSobolevBoundedField1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 /-- The genuine cylinder Sobolev representative, restricted to ordinary space. -/
 def sobolevField (u : SobolevSpace 1 3) : Space →ᵇ Space :=
@@ -38,13 +41,14 @@ def sobolevField (u : SobolevSpace 1 3) : Space →ᵇ Space :=
     ((EulerSobolevPointEvaluation.representative_continuous 1 u).comp
       (continuous_id.prodMk continuous_const))
     (sobolevEmbeddingConstant 1 3*‖u‖) (fun x => EulerSobolevPointEvaluation.representative_bound 1
-      u (x,0))
+        u (x,0))
 
 theorem sobolevField_norm (u : SobolevSpace 1 3) :
     ‖sobolevField u‖ ≤ sobolevEmbeddingConstant 1 3*‖u‖ :=
   BoundedContinuousFunction.norm_ofNormedAddCommGroup_le _
     (mul_nonneg (sobolevEmbeddingConstant_nonneg 1 3) (norm_nonneg u)) _
 
+/-- Sobolev linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def sobolevLinear : SobolevSpace 1 3 →ₗ[ℝ] (Space →ᵇ Space) where
   toFun := sobolevField
   map_add' u v := by
@@ -60,13 +64,14 @@ def sobolevLinear : SobolevSpace 1 3 →ₗ[ℝ] (Space →ᵇ Space) where
 def sobolevMap : SobolevSpace 1 3 →L[ℝ] (Space →ᵇ Space) :=
   sobolevLinear.mkContinuous (sobolevEmbeddingConstant 1 3) sobolevField_norm
 
+/-- Space field, given by `sobolevMap (ordinarySobolev 3 A.toLp A.translation_contDiff)`. -/
 def spaceField (A : EulerLpTranslation.SmoothL2Field Space) : Space →ᵇ Space :=
   sobolevMap (ordinarySobolev 3 A.toLp A.translation_contDiff)
 
 @[simp] theorem spaceField_apply (A : EulerLpTranslation.SmoothL2Field Space) (x : Space) :
     spaceField A x = A.field x := by
   have he := representative_unique A.toLp A.translation_contDiff A.field A.smooth.continuous
-    A.toLp_ae
+      A.toLp_ae
   exact (pointEvaluation_ordinary A.toLp A.translation_contDiff x).trans (congrFun he x)
 
 theorem continuous_spaceField {K : Type*} [TopologicalSpace K]
@@ -84,9 +89,13 @@ theorem continuous_spaceField {K : Type*} [TopologicalSpace K]
   rw [he]
   exact (multilinearBundling (P := Space) (V := Space) volume n).continuous.comp (hA n)
 
+/-- Scalar embedding, given by `(ContinuousLinearMap.id ℝ ℝ).smulRight (EuclideanSpace.single (0
+: Fin 3) 1)`. -/
 def scalarEmbedding : ℝ →L[ℝ] Space :=
   (ContinuousLinearMap.id ℝ ℝ).smulRight (EuclideanSpace.single (0 : Fin 3) 1)
 
+/-- Scalar field, given by `(EuclideanSpace.proj (0 : Fin 3) : Space →L[ℝ]
+ℝ).compLeftContinuousBounded Space (spaceField (mapField scalarEmbedding A))`. -/
 def scalarField (A : EulerLpTranslation.SmoothL2Field ℝ) : Space →ᵇ ℝ :=
   (EuclideanSpace.proj (0 : Fin 3) : Space →L[ℝ] ℝ).compLeftContinuousBounded Space
     (spaceField (mapField scalarEmbedding A))
@@ -101,15 +110,18 @@ theorem continuous_scalarField {K : Type*} [TopologicalSpace K]
     (A : K → EulerLpTranslation.SmoothL2Field ℝ)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : Continuous (fun t => scalarField (A t)) :=
   ((EuclideanSpace.proj (0 : Fin 3) : Space →L[ℝ] ℝ).compLeftContinuousBounded
-    Space).continuous.comp
+      Space).continuous.comp
     (continuous_spaceField (fun t => mapField scalarEmbedding (A t))
       (continuous_jetLp_mapField scalarEmbedding A hA))
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
+/-- Coordinate, given by `((Module.finBasis ℝ V).coord i).toContinuousLinearMap`. -/
 def coordinate (i : Fin (Module.finrank ℝ V)) : V →L[ℝ] ℝ :=
   ((Module.finBasis ℝ V).coord i).toContinuousLinearMap
 
+/-- Coordinate vector, given by `(ContinuousLinearMap.id ℝ ℝ).smulRight (Module.finBasis ℝ V
+i)`. -/
 def coordinateVector (i : Fin (Module.finrank ℝ V)) : ℝ →L[ℝ] V :=
   (ContinuousLinearMap.id ℝ ℝ).smulRight (Module.finBasis ℝ V i)
 
@@ -122,7 +134,7 @@ def finiteField (A : EulerLpTranslation.SmoothL2Field V) : Space →ᵇ V :=
     finiteField A x = A.field x := by
   simp only [finiteField, BoundedContinuousFunction.sum_apply]
   change (∑ i : Fin (Module.finrank ℝ V), coordinateVector i (scalarField (mapField (coordinate i)
-    A) x)) = _
+      A) x)) = _
   simp only [scalarField_apply, mapField_field]
   exact (Module.finBasis ℝ V).sum_repr (A.field x)
 

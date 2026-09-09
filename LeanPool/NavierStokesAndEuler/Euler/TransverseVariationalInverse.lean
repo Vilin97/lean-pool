@@ -9,8 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFrameCoordinates
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # The actual zero-endpoint transverse displacement inverse
@@ -25,6 +24,9 @@ This constructs the weak transverse inverse in source lines 172--184.  The
 coordinate identity `η = F R ξ` and strong coordinate evolution require the
 separate frame and regularity arguments; they are not assumed in this file.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -223,7 +225,7 @@ theorem transverseDisplacement_neg (f : TimeLp T E) :
 
 /-- A zero angle mean of the forcing gives a zero angle mean of the displacement.
 The measure can be the normalized periodic angle measure; coefficients are fixed in this parameter.
-  -/
+-/
 theorem transverseDisplacement_integral_zero {α : Type*} [MeasurableSpace α]
     (μ : Measure α) (f : α → TimeLp T E) (hf : Integrable f μ)
     (hmean : ∫ a, f a ∂μ = 0) :

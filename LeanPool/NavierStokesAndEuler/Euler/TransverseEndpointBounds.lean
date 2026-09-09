@@ -6,17 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CoerciveEndpointBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointParameter
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
 
 /-!
 Coefficient-only estimates for the nonzero-terminal transverse construction.
 Both primitives, the actual affine trial, and the fixed-coordinate form are
 estimated in their genuine Bochner and operator norms.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,7 +29,7 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace
   EulerTimeLpCoefficientMap EulerTimeLpCoefficientGevrey
   EulerTransverseVariationalInverse EulerTransverseFixedSpaceInverse
   EulerTransverseEndpointEnergy EulerTransverseFixedEndpoint
-  EulerTransverseEndpointParameter EulerCoerciveProjection EulerCoerciveEndpointBounds
+  EulerTransverseEndpointParameter EulerCoerciveProjection
 
 variable {U E V : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -167,7 +167,7 @@ theorem affineTrial_norm_le (A A₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
     have hscale : ‖T⁻¹ • ContinuousLinearMap.id ℝ U‖ ≤ |T⁻¹| := by
       rw [norm_smul, Real.norm_eq_abs]
       simpa only [mul_one] using mul_le_mul_of_nonneg_left (norm_id_le (𝕜 := ℝ) (E := U))
-        (abs_nonneg T⁻¹)
+          (abs_nonneg T⁻¹)
     exact (opNorm_comp_le _ _).trans
       (mul_le_mul (constantFieldOperator_norm_le T hT) hscale (norm_nonneg _) (by linarith))
   apply ((opNorm_comp_le _ _).trans (mul_le_mul
@@ -184,7 +184,7 @@ theorem affineTrial_sub_norm_le (A A₁ B B₁ : C(Icc (0 : ℝ) T, U →L[ℝ] 
     have hscale : ‖T⁻¹ • ContinuousLinearMap.id ℝ U‖ ≤ |T⁻¹| := by
       rw [norm_smul, Real.norm_eq_abs]
       simpa only [mul_one] using mul_le_mul_of_nonneg_left (norm_id_le (𝕜 := ℝ) (E := U))
-        (abs_nonneg T⁻¹)
+          (abs_nonneg T⁻¹)
     exact (opNorm_comp_le _ _).trans
       (mul_le_mul (constantFieldOperator_norm_le T hT) hscale (norm_nonneg _) (by linarith))
   unfold affineTrial

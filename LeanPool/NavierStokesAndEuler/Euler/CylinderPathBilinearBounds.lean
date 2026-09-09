@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinear
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductBounds
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+
+/-! Fixed bounded vector operations preserve the genuine nonlinear H6 word estimates. -/
 
 @[expose] public section
 
-/-! Fixed bounded vector operations preserve the genuine nonlinear H6 word estimates. -/
 
 noncomputable section
 
@@ -25,12 +27,17 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathBilinearBounds1 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathBilinearBounds2 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderPathBilinearBounds3 : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPathBilinearBounds4 : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
 
-theorem pathMap_block_le (A : Space →L[ℝ] Space) (p : C(K,LiftL2 P))
+theorem pathMap_block_le (A : Space →L[ℝ] Space) (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
     (q n : ℕ) (a : LiftTangent) :
     block standardDirection q (fun b : LiftTangent => pathTranslate P b (pathMap P A p)) n a ≤
@@ -46,7 +53,7 @@ theorem pathMap_block_le (A : Space →L[ℝ] Space) (p : C(K,LiftL2 P))
   exact h.trans (mul_le_mul_of_nonneg_right hnorm
     (block_nonneg standardDirection q (fun b : LiftTangent => pathTranslate P b p) n a))
 
-variable (B : Space →L[ℝ] Space →L[ℝ] Space) (p q : C(K,LiftL2 P))
+variable (B : Space →L[ℝ] Space →L[ℝ] Space) (p q : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
 

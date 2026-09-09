@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousInverseDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowContinuity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousInverseDerivative
+import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowContinuity
+import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
 
 /-! The actual inverse parent flow needs only continuity as an input.
 Its differentiability, smooth spatial slices, and jointly continuous
 spatial jets follow from the prescribed Jacobian and inverse identities. -/
+
+@[expose] public section
+
 
 noncomputable section
 

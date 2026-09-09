@@ -6,9 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanGramTranslation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
 
 /-!
 # Ordinary spatial covariance of the mean Gram inverse
@@ -18,6 +17,9 @@ They identify the continuous acceleration family with translation of the
 original acceleration, including endpoint time values.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanPointwiseGramTranslation
@@ -26,7 +28,7 @@ open InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
   EulerMeanTimeTranslation EulerMeanOperatorTranslation EulerTransverseGramInverse
 
 private theorem eq_of_translated_inner (a : Space) (x y : solenoidalSpace)
-    (h : ∀ v, ⟪x,solenoidalTranslation a v⟫_ℝ = ⟪y,solenoidalTranslation a v⟫_ℝ) : x = y := by
+    (h : ∀ v, ⟪x, solenoidalTranslation a v⟫_ℝ = ⟪y, solenoidalTranslation a v⟫_ℝ) : x = y := by
   apply ext_inner_right ℝ
   intro v
   simpa only [solenoidalTranslation_add, add_neg_cancel, solenoidalTranslation_zero] using
@@ -48,7 +50,7 @@ theorem frameAdjoint_translation (a : Space) (F : L2 →L[ℝ] L2) (f : L2) :
       (((translation a).inner_map_map f ((F.comp solenoidalSpace.subtypeL) v)).trans
         ((adjoint_inner_left (F.comp solenoidalSpace.subtypeL) v f).symm.trans
           ((solenoidalTranslation a).inner_map_map ((F.comp solenoidalSpace.subtypeL).adjoint f)
-            v).symm)))
+              v).symm)))
 
 theorem gram_translation (a : Space) (F : L2 →L[ℝ] L2) (v : solenoidalSpace) :
     gram ((translateOperator a F).comp solenoidalSpace.subtypeL) (solenoidalTranslation a v) =
@@ -74,7 +76,7 @@ theorem gramInverse_translation (a : Space) (F : L2 →L[ℝ] L2) (c : ℝ) (hc 
       solenoidalTranslation a (gramInverse (F.comp solenoidalSpace.subtypeL) c hc hF g) := by
   have he := (gram_translation a F (gramInverse (F.comp solenoidalSpace.subtypeL) c hc hF g)).trans
     (congrArg (solenoidalTranslation a) (gram_inverse_apply (F.comp solenoidalSpace.subtypeL) c hc
-      hF g))
+        hF g))
   have hi := congrArg (gramInverse ((translateOperator a F).comp solenoidalSpace.subtypeL)
     c hc (translated_lower a F c hF)) he
   exact hi.symm.trans (inverse_gram_apply ((translateOperator a F).comp solenoidalSpace.subtypeL)
@@ -106,6 +108,6 @@ theorem acceleration_translation (a : Space) (F F₁ : L2 →L[ℝ] L2) (c : ℝ
   exact (congrArg (gramInverse ((translateOperator a F).comp solenoidalSpace.subtypeL)
       c hc (translated_lower a F c hF)) hg).trans
     (gramInverse_translation a F c hc hF ((F.comp solenoidalSpace.subtypeL).adjoint (f-(2 : ℝ) • F₁
-      (v : L2))))
+        (v : L2))))
 
 end EulerMeanPointwiseGramTranslation

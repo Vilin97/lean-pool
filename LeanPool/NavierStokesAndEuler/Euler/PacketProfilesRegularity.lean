@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileStepRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderRecursiveAdmissibility
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileStepRegularity
 
 /-!
 # Genuine regularity through the full literal profile recursion
@@ -16,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileStepRegularity
 Strong induction applies the constructed mean and high solvers at each grade.
 Only the primary profile is supplied; later forcing admissibility is proved.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,11 +56,13 @@ theorem profiles_regular (p : ℕ) :
     rw [profiles_step O primary p hp]
     exact ⟨ProfileRegularity.step M D hT I C hmean hhigh hcorrector hp G⟩
 
+/-- Profile witness, given by `Classical.choice (profiles_regular M D hT I C hmean hhigh
+hcorrector primary hprimary p)`. -/
 def profileWitness (p : ℕ) : ProfileRegularity P M.T M.T_pos.le D.support (profiles O primary p) :=
   Classical.choice (profiles_regular M D hT I C hmean hhigh hcorrector primary hprimary p)
 
 /-- The literal mean forcing at every nonprimary grade has actual smooth spatial L² slices. -/
-def profiles_meanForcing (p : ℕ) (hp : 2 ≤ p) :
+def profilesMeanForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerMeanPacketProvider.Forcing M (meanForce O p (profiles O primary)) := by
   let G : ∀ i, i < p → ProfileRegularity P M.T M.T_pos.le D.support (profiles O primary i) :=
     fun i _ => profileWitness M D hT I C hmean hhigh hcorrector primary hprimary i
@@ -65,7 +71,7 @@ def profiles_meanForcing (p : ℕ) (hp : 2 ≤ p) :
   exact F.meanForcing M C (by omega) W.correctorDerivative W.corrector_time W.pressure
 
 /-- The actual supported zero-mean transverse input is built from the already generated profiles. -/
-def profiles_highForcing (p : ℕ) (hp : 2 ≤ p) :
+def profilesHighForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerTransversePacketProvider.Forcing P D (highForce O p (profiles O primary)) := by
   let G : ∀ i, i < p → ProfileRegularity P M.T M.T_pos.le D.support (profiles O primary i) :=
     fun i _ => profileWitness M D hT I C hmean hhigh hcorrector primary hprimary i

@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernel
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 /-!
 # Integration in time for the heat-kernel Hessian
@@ -18,6 +17,9 @@ The reciprocal substitution reduces the inverse-time Gaussian integrals to
 the ordinary Gamma integral. These estimates are uniform in the spatial
 indices and give the inverse-cube kernel bound in three dimensions.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

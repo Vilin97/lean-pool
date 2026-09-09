@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleResidualBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanPotentialRealization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TailGaugePotential
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualExteriorPrefix
-
-@[expose] public section
 
 /-!
 # Physical residual fields from the literal mixed prefixes
@@ -22,6 +19,9 @@ stored correction state.  Exterior statements use pointwise identities
 on an open past sublevel, not global topological support.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualPhysicalPrefixFields
@@ -29,16 +29,21 @@ namespace NavierStokes.ActualPhysicalPrefixFields
 open Set Function Filter ProblemStatement CorrectionState CorrectionStep
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `PhysicalMeanJetBounds.Point`. -/
 abbrev Point := PhysicalMeanJetBounds.Point
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
+/-- Scaled graph: an abbreviation for `PhysicalResidualBridge.ScaledGraph`. -/
 abbrev ScaledGraph := PhysicalResidualBridge.ScaledGraph
 
+/-- Forward, given by `(z.1, CylindricalResidual.chart z.2)`. -/
 noncomputable def forward (z : SpaceTime) : SpaceTime :=
   (z.1, CylindricalResidual.chart z.2)
 
 theorem forward_smooth : ContDiff ℝ ∞ forward :=
   contDiff_fst.prodMk (CylindricalResidual.contDiff_chart.comp contDiff_snd)
 
+/-- Replace angle, given by `(z.1, AxisymmetricResidual.pack (z.2 0) theta (z.2 2))`. -/
 noncomputable def replaceAngle (z : SpaceTime) (theta : ℝ) : SpaceTime :=
   (z.1, AxisymmetricResidual.pack (z.2 0) theta (z.2 2))
 
@@ -49,6 +54,8 @@ noncomputable def replaceAngle (z : SpaceTime) (theta : ℝ) : SpaceTime :=
   · ext i
     fin_cases i <;> simp
 
+/-- Angular periodic, given by `∀ z, Function.Periodic (fun theta => f (replaceAngle z theta))
+(2 * Real.pi)`. -/
 def AngularPeriodic {E : Type*} (f : SpaceTime → E) : Prop :=
   ∀ z, Function.Periodic (fun theta => f (replaceAngle z theta)) (2 * Real.pi)
 
@@ -126,7 +133,7 @@ theorem velocity_pullback_germ {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index)
     forward_smooth.continuous.continuousAt
       ((ActualMeanPotentialRealization.cartesianDomain_open a i).mem_nhds hc),
     (isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous).mem_nhds
-      hr]
+        hr]
     with y hy hyc hyr
   exact (hu hy).trans (polarVelocity_forward ha i hf hyr hyc)
 
@@ -140,7 +147,7 @@ theorem pressure_pullback_germ {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index)
     forward_smooth.continuous.continuousAt
       ((ActualMeanPotentialRealization.cartesianDomain_open a i).mem_nhds hc),
     (isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous).mem_nhds
-      hr]
+        hr]
     with y hy hyc hyr
   exact (hP hy).trans (polarPressure_forward ha i hf hyr hyc)
 
@@ -198,7 +205,7 @@ theorem velocityTZ_periodic (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ)
   ext j
   simp only [PhysicalResidualTZ.velocityTZ, PhysicalResidualBridge.ScaledGraph.velocity_apply]
   change G.velocityScale * a (PhysicalResidualTZ.graphMapTZ G (replaceAngle z (theta + 2 *
-    Real.pi))) j =
+      Real.pi))) j =
     G.velocityScale * a (PhysicalResidualTZ.graphMapTZ G (replaceAngle z theta)) j
   rw [graphMapTZ_replaceAngle, graphMapTZ_replaceAngle]
   exact congrArg (fun v : Fin 3 → ℝ => G.velocityScale * v j) (ha _ theta)
@@ -208,14 +215,14 @@ theorem pressureTZ_periodic (G : ScaledGraph) (a : Cylinder → ℝ)
     AngularPeriodic (PhysicalResidualTZ.pressureTZ G a) := by
   intro z theta
   change G.velocityScale ^ 2 * a (PhysicalResidualTZ.graphMapTZ G (replaceAngle z (theta + 2 *
-    Real.pi))) =
+      Real.pi))) =
     G.velocityScale ^ 2 * a (PhysicalResidualTZ.graphMapTZ G (replaceAngle z theta))
   rw [graphMapTZ_replaceAngle, graphMapTZ_replaceAngle]
   exact congrArg (G.velocityScale ^ 2 * ·) (ha _ theta)
 
 /-! ## Actual finite prefixes retain local stage agreement -/
 
-theorem uncutPrefix_eqOn {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem uncutPrefix_eqOn {E : Type*} [NormedAddCommGroup E]
     {V : Set SpaceTime} {f g : ℕ → SpaceTime → E}
     (hf : ∀ k, EqOn (f k) (g k) V) (J : ℕ) :
     EqOn (DiagonalJetBounds.uncutPrefix f J) (DiagonalJetBounds.uncutPrefix g J) V := by
@@ -260,7 +267,7 @@ theorem graphSource_open (G : ScaledGraph) (hl : 0 < G.radialScale)
       (G.map_smoothAt (mul_pos hl hz.1).ne').continuousAt
   exact Filter.inter_mem
     ((isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous).mem_nhds
-      hz.1)
+        hz.1)
     (hg (hU.mem_nhds hz.2))
 
 theorem exists_cartesianChart {z : SpaceTime} (hr : 0 < z.2 0) :
@@ -279,19 +286,22 @@ theorem exists_cartesianChart {z : SpaceTime} (hr : 0 < z.2 0) :
 
 open CorrectionInitialization.ActualPrimary
 
+/-- Source, given by `PhysicalResidualTZ.graphSourceTZ
+(ActualCycleResidualBounds.actualBandGraph n) ActualPolarCoverage.nativeDomain`. -/
 noncomputable def source (n : ℕ) : Set SpaceTime :=
   PhysicalResidualTZ.graphSourceTZ (ActualCycleResidualBounds.actualBandGraph n)
     ActualPolarCoverage.nativeDomain
 
+/-- Cartesian chart domain, constructed using `CutStageEstimates.physicalSublevel`. -/
 noncomputable def cartesianChartDomain (qbig : ℝ) (n : ℕ) (a : ℝ) (i : PolarCharts.Index) : Set
-  SpaceTime :=
+    SpaceTime :=
   CutStageEstimates.physicalSublevel h qbig ∩
     (ActualMeanPotentialRealization.cartesianDomain a i ∩
       (PhysicalCurlCovariance.polarCoordinates a i) ⁻¹' source n)
 
 theorem source_open (n : ℕ) : IsOpen (source n) :=
   graphSource_open _ (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _)
-    ActualPolarCoverage.nativeDomain_open
+      ActualPolarCoverage.nativeDomain_open
 
 theorem cartesianChartDomain_open (qbig : ℝ) (n : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) :
     IsOpen (cartesianChartDomain qbig n a i) :=
@@ -308,22 +318,22 @@ theorem source_q_lt (n : ℕ) {z : SpaceTime} (ht : z ∈ PhysicalWaveSum.preter
   change (PhysicalResidualTZ.graphMapTZ (ActualCycleResidualBounds.actualBandGraph n) z).1 =
     PhysicalMeanJetBounds.graph h n (ActualCycleResidualBounds.actualGap n) (forward z) at he
   have hs : (PhysicalMeanJetBounds.graph h n (ActualCycleResidualBounds.actualGap n) (forward
-    z)).2.1 ∈
+      z)).2.1 ∈
       standardRegion.carrier := by
     rw [← he]
     exact hz.2.1.1
   have hu := hs.2.2
   rw [PhysicalMeanJetBounds.graph_q_eq outgoing.data.h_pos outgoing.data.h_lt_half n
     (ActualCycleResidualBounds.actualGap n) (show forward z ∈ PhysicalWaveSum.preterminal from ht)]
-      at hu
+        at hu
   exact (div_lt_iff₀ (ChartScales.Q_pos n)).mp hu
 
 theorem source_sublevel {Nr : ℕ} {qbig : ℝ} (hfloor : 2 * ChartScales.Q Nr ≤ qbig)
     {n : ℕ} (hn : Nr ≤ n) {z : SpaceTime} (ht : z ∈ PhysicalWaveSum.preterminal)
     (hz : z ∈ source n) : forward z ∈ CutStageEstimates.physicalSublevel h qbig :=
   ⟨ht, (source_q_lt n ht hz).trans_le
-    ((mul_le_mul_of_nonneg_left (ActualPrimaryCovariance.Q_antitone hn) (by norm_num)).trans
-      hfloor)⟩
+    ((mul_le_mul_of_nonneg_left (ActualPrimaryCovariance.Q_antitone hn) (by
+        norm_num)).trans hfloor)⟩
 
 theorem source_polarCoordinates {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) (n : ℕ)
     {z : SpaceTime} (hz : z ∈ source n)
@@ -354,29 +364,29 @@ theorem actual_pressure_periodic {ι : Type} {v : CycleCoefficients ι} {s : Sta
     ActualBaseResidual.basePressure certificate modulation upper B n (x, theta) +
       s.totalPressureIncrement n (x, theta)
   rw [ActualBaseResidual.basePressure_angle_eq certificate modulation upper B n x (theta + 2 *
-    Real.pi),
+      Real.pi),
     ActualBaseResidual.basePressure_angle_eq certificate modulation upper B n x theta]
   exact congrArg (_ + ·) (represented_totalPressure_periodic H n x theta)
 
 /-- Every input is an individual stage agreement on its concrete valid
 polar chart. No finite-prefix or germ equality is a field of this record. -/
 structure StageRealizations (B N0 Nr : ℕ) (p : ℕ → CycleParameters (ActualInitialization.Index B
-  N0))
+    N0))
     (qbig : ℝ) (A D : ℕ → VelocityField) (P : ℕ → PressureField) : Prop where
   potential : ∀ n, Nr ≤ n → ∀ a, 0 < a → ∀ i k,
     EqOn (SpatialCurl.spatialCurl (A k))
       (CyclePhysicalPrefixes.potentialParts p (commonContext B)
-        (ActualInitialization.initialCycleState B N0)
+          (ActualInitialization.initialCycleState B N0)
         a i (ActualCycleResidualBounds.actualBandGraph n) n k) (cartesianChartDomain qbig n a i)
   direct : ∀ n, Nr ≤ n → ∀ a, 0 < a → ∀ i k,
     EqOn (D k)
       (CyclePhysicalPrefixes.directStages p (commonContext B)
-        (ActualInitialization.initialCycleState B N0)
+          (ActualInitialization.initialCycleState B N0)
         a i (ActualCycleResidualBounds.actualBandGraph n) n k) (cartesianChartDomain qbig n a i)
   pressure : ∀ n, Nr ≤ n → ∀ a, 0 < a → ∀ i k,
     EqOn (P k)
       (CyclePhysicalPrefixes.pressureStages p (commonContext B)
-        (ActualInitialization.initialCycleState B N0)
+          (ActualInitialization.initialCycleState B N0)
         a i (ActualCycleResidualBounds.actualBandGraph n) n
         (ActualCycleResidualBounds.actualBasePressure B n) k) (cartesianChartDomain qbig n a i)
 
@@ -388,9 +398,9 @@ theorem StageRealizations.velocity_prefix {B N0 Nr : ℕ}
     (n : ℕ) (hn : Nr ≤ n) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) (J : ℕ) :
     EqOn (MixedDiagonalResidual.uncutVelocity A D J)
       (CyclePhysicalPrefixes.velocity a i (ActualCycleResidualBounds.actualBandGraph n) n
-        (commonContext B)
+          (commonContext B)
         (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-          J).state)
+            J).state)
       (cartesianChartDomain qbig n a i) :=
   mixedVelocity_eqOn p (commonContext B) (ActualInitialization.initialCycleState B N0)
     a i _ n (cartesianChartDomain_open qbig n ha i) A D
@@ -406,7 +416,7 @@ theorem StageRealizations.pressure_prefix {B N0 Nr : ℕ}
       (CyclePhysicalPrefixes.pressure a i (ActualCycleResidualBounds.actualBandGraph n) n
         (ActualCycleResidualBounds.actualBasePressure B n)
         (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-          J).state)
+            J).state)
       (cartesianChartDomain qbig n a i) :=
   pressurePrefix_eqOn p (commonContext B) (ActualInitialization.initialCycleState B N0) a i _ n _ P
     (H.pressure n hn a ha i) J
@@ -420,25 +430,25 @@ theorem StageRealizations.velocity_germ {B N0 Nr : ℕ}
     (J : ℕ)
     (Hrep : CycleRepresentation
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).coefficients
+          J).coefficients
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0) J).state
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).axisymmetricAlias)
+          J).axisymmetricAlias)
     (n : ℕ) (hn : Nr ≤ n) {z : SpaceTime} (ht : z ∈ PhysicalWaveSum.preterminal)
     (hz : z ∈ source n) :
     (fun y : SpaceTime => MixedDiagonalResidual.uncutVelocity A D J (y.1, CylindricalResidual.chart
-      y.2)) =ᶠ[𝓝 z]
+        y.2)) =ᶠ[𝓝 z]
       (fun y => CylindricalResidual.frame (y.2 1)
         (PhysicalResidualTZ.velocityTZ (ActualCycleResidualBounds.actualBandGraph n)
           (fun v i => PhysicalResidualBridge.baseComponents (commonContext B) n v i +
             PhysicalResidualBridge.incrementComponents
               (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-                J).state n v i) y)) := by
+                  J).state n v i) y)) := by
   obtain ⟨a, ha, i, hi⟩ := exists_validChart hfloor hn ht hz
   have hp : AngularPeriodic (CyclePhysicalPrefixes.cylindricalVelocity
       (ActualCycleResidualBounds.actualBandGraph n) n (commonContext B)
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).state) :=
+          J).state) :=
     velocityTZ_periodic _ _ (represented_components_periodic Hrep (commonContext B) n)
   exact velocity_pullback_germ ha i hp (cartesianChartDomain_open qbig n ha i)
     (H.velocity_prefix hA n hn ha i J) hz.1 hi hi.2.1
@@ -450,23 +460,23 @@ theorem StageRealizations.pressure_germ {B N0 Nr : ℕ}
     (hfloor : 2 * ChartScales.Q Nr ≤ qbig) (J : ℕ)
     (Hrep : CycleRepresentation
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).coefficients
+          J).coefficients
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0) J).state
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).axisymmetricAlias)
+          J).axisymmetricAlias)
     (n : ℕ) (hn : Nr ≤ n) {z : SpaceTime} (ht : z ∈ PhysicalWaveSum.preterminal)
     (hz : z ∈ source n) :
     CylindricalResidual.pressurePullback (DiagonalJetBounds.uncutPrefix P (J+1)) =ᶠ[𝓝 z]
       PhysicalResidualTZ.pressureTZ (ActualCycleResidualBounds.actualBandGraph n)
         (fun v => ActualCycleResidualBounds.actualBasePressure B n v +
           (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-            J).state.totalPressureIncrement n v) := by
+              J).state.totalPressureIncrement n v) := by
   obtain ⟨a, ha, i, hi⟩ := exists_validChart hfloor hn ht hz
   have hp : AngularPeriodic (CyclePhysicalPrefixes.cylindricalPressure
       (ActualCycleResidualBounds.actualBandGraph n) n (ActualCycleResidualBounds.actualBasePressure
-        B n)
+          B n)
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).state) :=
+          J).state) :=
     pressureTZ_periodic _ _ (actual_pressure_periodic Hrep B n)
   exact pressure_pullback_germ ha i hp (cartesianChartDomain_open qbig n ha i)
     (H.pressure_prefix n hn ha i J) hz.1 hi hi.2.1
@@ -485,15 +495,15 @@ theorem physicalFields_of_stages {B N0 Nr : ℕ}
     (J : ℕ)
     (Hrep : CycleRepresentation
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).coefficients
+          J).coefficients
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0) J).state
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).axisymmetricAlias) :
+          J).axisymmetricAlias) :
     ActualCycleResidualBounds.PhysicalData B Nr
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0) J).state
       (MixedDiagonalResidual.uncutVelocity A D J) (DiagonalJetBounds.uncutPrefix P (J+1)) := by
   have hU := CutStageEstimates.physicalSublevel_open outgoing.data.h_pos outgoing.data.h_lt_half
-    qbig
+      qbig
   constructor
   · intro n hn z ht hz
     have hu := source_sublevel hfloor hn ht hz
@@ -524,10 +534,10 @@ theorem physicalFields_all {B N0 Nr : ℕ}
     (hP : ∀ k, ContDiffOn ℝ ∞ (P k) (CutStageEstimates.physicalSublevel h qbig))
     (Hrep : ∀ J, CycleRepresentation
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).coefficients
+          J).coefficients
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0) J).state
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)
-        J).axisymmetricAlias) :
+          J).axisymmetricAlias) :
     ∀ J, ActualCycleResidualBounds.PhysicalData B Nr
       (CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0) J).state
       (MixedDiagonalResidual.uncutVelocity A D J) (DiagonalJetBounds.uncutPrefix P (J+1)) :=

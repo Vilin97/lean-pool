@@ -9,13 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketScaledBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
 public import LeanPool.NavierStokesAndEuler.Euler.PacketEulerianRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2ScalingContinuity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2ScalingContinuity
 
 /-! Actual physical L² fields of a packet over a parent. The genuine
 inverse and the proved parent label bound supply all reconstruction
 regularity, and the physical spatial scale is retained exactly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,10 +41,11 @@ namespace LabelData
 
 variable {A : Parent} (L : LabelData A) (I : ParticleInverse A)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   (P : ℝ) [Fact (0 < P)] (κ : ℝ) (Z : FieldTower P A.T) (k : ℝ)
 
+/-- Packet velocity field, constructed using `scaleField`. -/
 def packetVelocityField (t : Icc (0 : ℝ) A.T) : SmoothL2Field Space :=
   scaleField A.ell A.ell_pos
     (eulerianSmoothField (A.transverseData m hm J support hSupport) P κ Z k
@@ -52,6 +54,7 @@ def packetVelocityField (t : Icc (0 : ℝ) A.T) : SmoothL2Field Space :=
       L.scaledRadius (frameAmplitude L.K) L.scaledRadius_nonneg (frameAmplitude_nonneg L.K)
       A.frame_det L.frame_scaled_bound t)
 
+/-- Packet force field, constructed using `scaleField`. -/
 def packetForceField (t : Icc (0 : ℝ) A.T) : SmoothL2Field Space :=
   scaleField A.ell A.ell_pos
     (pressureForceSmoothField (A.transverseData m hm J support hSupport) P κ Z k

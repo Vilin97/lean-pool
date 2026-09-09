@@ -6,14 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Analytic existence of the similarity coordinates
@@ -22,6 +18,9 @@ Here `a = 2h`. We construct the unique positive solution of
 `τ = q - z² q^a` for `0 < a < 1` and `τ > 0`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter
@@ -29,6 +28,7 @@ open scoped Topology ContDiff
 
 namespace NavierStokes.SimilarityCoordinates
 
+/-- Forward scalar, given by `q - z ^ 2 * q ^ a`. -/
 def forwardScalar (a z q : ℝ) : ℝ := q - z ^ 2 * q ^ a
 
 theorem forwardScalar_factor {q : ℝ} (hq : 0 < q) (a z : ℝ) :
@@ -148,6 +148,7 @@ theorem eq_coordinateQ {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
   have hs := coordinateQ_spec ha ha1 hp
   exact positive_solution_unique ha ha1 hp hq hs.1 he hs.2
 
+/-- Scalar slope, given by `1 - z ^ 2 * a * q ^ (a - 1)`. -/
 def scalarSlope (a z q : ℝ) : ℝ := 1 - z ^ 2 * a * q ^ (a - 1)
 
 theorem scalarSlope_pos {a z q : ℝ} (ha : 0 < a) (ha1 : a < 1)
@@ -239,6 +240,7 @@ theorem forwardMap_hasFDerivAt {a : ℝ} {p : ℝ × ℝ} (hp : p.1 ≠ 0)
   change HasFDerivAt (fun v : ℝ × ℝ => (v.1 - v.2 ^ 2 * v.1 ^ a, v.2)) _ p
   simpa only [Pi.mul_apply, Pi.sub_apply, pow_two] using hder
 
+/-- Inverse map, given by `(coordinateQ a p, p.2)`. -/
 def inverseMap (a : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (coordinateQ a p, p.2)
 
 theorem inverseMap_forwardMap {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
@@ -347,6 +349,7 @@ theorem coordinateQ_hasDerivAt_time {a t z : ℝ}
   convert! hc using 1
   ring
 
+/-- Coordinate eta, given by `p.2 / coordinateQ a p ^ ((1 - a) / 2)`. -/
 def coordinateEta (a : ℝ) (p : ℝ × ℝ) : ℝ :=
   p.2 / coordinateQ a p ^ ((1 - a) / 2)
 
@@ -507,6 +510,7 @@ theorem coordinateQ_hasDerivAt_z_L {a τ z : ℝ}
   rw [hnum]
   exact hc
 
+/-- Coordinate X, given by `s / coordinateQ a p`. -/
 def coordinateX (a s : ℝ) (p : ℝ × ℝ) : ℝ := s / coordinateQ a p
 
 theorem coordinateX_smooth {a s : ℝ} (ha : 0 < a) (ha1 : a < 1)

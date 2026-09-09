@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteLifespan
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFirstStageSupport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialDatumSupport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketFirstStageSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialDatumSupport
 
 /-! A compactly supported, smooth, divergence-free initial velocity
 whose ordinary smooth Euler solutions have a finite maximal horizon.
 The separate continuation and vorticity criteria are not asserted here. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,6 +35,8 @@ theorem initialDatum_compact : HasCompactSupport initialDatum.field :=
 theorem lifespan_le_one : lifespan.duration ≤ 1 :=
   lifespan_le_base.trans constructionScales.time_small
 
+/-- Has smooth euler solution, given by `∃ hT : 0 < T, ∃ U : Evolution T hT.le, (U.velocity
+⟨0,le_rfl,hT.le⟩).field=u₀`. -/
 def HasSmoothEulerSolution (u₀ : Space → Space) (T : ℝ) : Prop :=
   ∃ hT : 0 < T, ∃ U : Evolution T hT.le,
     (U.velocity ⟨0,le_rfl,hT.le⟩).field=u₀

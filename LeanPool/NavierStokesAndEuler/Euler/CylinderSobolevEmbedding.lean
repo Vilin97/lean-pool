@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDensity
-public import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearProduct
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDensity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+
+/-! Genuine L∞ control of finite-order cylinder Sobolev fields, obtained by smooth density. -/
 
 @[expose] public section
 
-/-! Genuine L∞ control of finite-order cylinder Sobolev fields, obtained by smooth density. -/
 
 noncomputable section
 
@@ -29,8 +33,8 @@ def sobolevEmbeddingConstant (q : ℕ) : ℝ :=
   (3 * cylinderEmbeddingConstant period) * (Fintype.card (SobolevWord q) : ℝ)
 
 theorem sobolevEmbeddingConstant_nonneg (q : ℕ) : 0 ≤ sobolevEmbeddingConstant period q :=
-  mul_nonneg (mul_nonneg (by norm_num) (cylinderEmbeddingConstant_nonneg period)) (Nat.cast_nonneg
-    _)
+  mul_nonneg (mul_nonneg (by
+      norm_num) (cylinderEmbeddingConstant_nonneg period)) (Nat.cast_nonneg _)
 
 /-- Every actual smooth mollification has the same uniform pointwise Sobolev bound. -/
 theorem mollifier_pointwise_bound {q : ℕ} (hq : 3 ≤ q) (n : ℕ) (u : SobolevSpace period q)
@@ -43,8 +47,8 @@ theorem mollifier_pointwise_bound {q : ℕ} (hq : 3 ≤ q) (n : ℕ) (u : Sobole
     sobolevMollifier_representative period n u
   have hL2 : ∀ j ≤ 3, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure period) :=
-    fun j hj w => jet_classical_memLp period (by omega) (value period un) (toJet period un) w f
-      hrep hf
+    fun j hj w => jet_classical_memLp period (by
+        omega) (value period un) (toJet period un) w f hrep hf
   have hnorm : liftSobolevNorm period q f = sumNorm period un := by
     rw [sumNorm_eq_jet]
     exact (jet_sobolevNorm_eq period (value period un) (toJet period un) f hrep hf).symm
@@ -60,7 +64,7 @@ theorem mollifier_pointwise_bound {q : ℕ} (hq : 3 ≤ q) (n : ℕ) (u : Sobole
         (mul_nonneg (by norm_num) (cylinderEmbeddingConstant_nonneg period))
     _ ≤ (3 * cylinderEmbeddingConstant period) * ((Fintype.card (SobolevWord q) : ℝ) * ‖u‖) :=
       mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left (sobolevMollifier_bound period n u)
-        (Nat.cast_nonneg _))
+          (Nat.cast_nonneg _))
         (mul_nonneg (by norm_num) (cylinderEmbeddingConstant_nonneg period))
     _ = _ := (mul_assoc ..).symm
 
@@ -69,7 +73,7 @@ theorem value_ae_bound {q : ℕ} (hq : 3 ≤ q) (u : SobolevSpace period q) :
     ∀ᵐ x ∂liftMeasure period, ‖value period u x‖ ≤ sobolevEmbeddingConstant period q * ‖u‖ := by
   obtain ⟨ns, _hns, hlim⟩ :=
     (tendstoInMeasure_of_tendsto_Lp (mollify_tendsto period (value period
-      u))).exists_seq_tendsto_ae'
+        u))).exists_seq_tendsto_ae'
   have hreps : ∀ᵐ x ∂liftMeasure period, ∀ n : ℕ,
       mollify period (ns n) (value period u) x = smoothMollifier period (ns n) (value period u) x :=
     ae_all_iff.mpr (fun n => mollify_ae_smoothMollifier period (ns n) (value period u))

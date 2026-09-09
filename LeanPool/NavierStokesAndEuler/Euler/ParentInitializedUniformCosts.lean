@@ -8,12 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceUniformEnvelope
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryInput
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardRadiusPolynomial
-
-@[expose] public section
 
 /-! The actual parent and chosen geometric profile supply every primitive
 of the uniform correction and physical-output comparison. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,15 +25,15 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketSourceGeometr
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {G : Parent} (L : LabelData G) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (P : ParentFrame (G.transverseData m hm R S hS) τ)
   (J : Guards hτ hτT P (G.historyOn H m hm R S hS τ hτ hτT))
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (Ti TiTotal : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
   (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
 local notation "A" => L.geometryInputs H m hm R S hS τ hτ hτT P J hball Ti TiTotal
   hτ1 hTi hT1 hTiTotal Ω hΩ hΩo hsub hΩball
@@ -41,6 +41,8 @@ local notation "BC" => joinedCoefficientBudget period (G.meanData H)
   (G.transverseData m hm R S hS) rfl τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT)
   (JoinedInputs.normal A)
 
+/-- Geometry parameter size, given by `parameterSize L.K Ti TiTotal (560*P.horizon^10/P.epsilon)
+H.L J.δ ‖ξ‖+J.hchild`. -/
 def geometryParameterSize (ξ : U) : ℝ :=
   parameterSize L.K Ti TiTotal (560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild
 
@@ -49,7 +51,7 @@ theorem geometry_uniform_primitives (ξ : U) (hδ : 0 < J.δ) (hδ1 : J.δ ≤ 1
     EulerPacketRadiusPolynomial.RadiusPrimitives (A).mean (A).linear (A).normal BC J.δ ξ
       (profileEnvelope X) ∧
     (∀ t, J.primaryAmplitude hball*(A).linear.fullProfile t ≤ profileEnvelope X) ∧
-    EulerPacketInitializedOutputCost.uniformConstant*
+    EulerPacketInitializedOutputCost.uniformConstant *
       (profileEnvelope X)^EulerPacketInitializedOutputCost.uniformPower ≤
       frequencyConstant*X^frequencyPower := by
   let X := L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ

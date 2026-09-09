@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRecursion
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAssembly
+import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeDiagonal
+
+/-! The constructed recursive forcing equals the full nonlinear coefficient forcing. -/
 
 @[expose] public section
 
-/-! The constructed recursive forcing equals the full nonlinear coefficient forcing. -/
 
 noncomputable section
 
@@ -29,12 +31,13 @@ theorem slicedJet_zero {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (s : Set ℝ) (z : Domain) : slicedJet s (0 : Domain → E) z=0 := by
   simp [slicedJet, joinDerivative]
 
+/-- Assembled jets, constructed using `assemble`. -/
 def assembledJets (O : Operators) (N : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → VectorJet :=
   assemble N (fun i => slicedJet O.interval (a i).high z+slicedJet O.interval (a i).mean z)
     (fun i => slicedJet O.interval (a i).corrector z)
 
 theorem assembledJets_eq_velocityJet (O : Operators) (N : ℕ) (a : ℕ → Profile)
-    (ha : a 0=0) (z : Domain) (i : ℕ) (hi : i ≤ N) :
+    (ha : a 0 = 0) (z : Domain) (i : ℕ) (hi : i ≤ N) :
     assembledJets O N a z i=velocityJet O.interval a z i := by
   by_cases hz : i=0
   · subst i
@@ -45,13 +48,13 @@ theorem assembledJets_eq_velocityJet (O : Operators) (N : ℕ) (a : ℕ → Prof
     rw [assemble_interior N i (by omega) hi]
     simp only [velocityJet, hz, ite_false]
 
-theorem velocityJet_primary (O : Operators) (a : ℕ → Profile) (ha : a 0=0)
-    (hmean : (a 1).mean=0) (z : Domain) :
+theorem velocityJet_primary (O : Operators) (a : ℕ → Profile) (ha : a 0 = 0)
+    (hmean : (a 1).mean = 0) (z : Domain) :
     velocityJet O.interval a z 1=slicedJet O.interval (a 1).high z := by
   simp only [velocityJet, one_ne_zero, ite_false, hmean, Nat.sub_self, ha]
   simp [slicedJet_zero]
 
-theorem nonlinearGrade_cutoff (M K p : ℕ) (hM : p+1 ≤ M) (hK : p+1 ≤ K)
+theorem nonlinearGrade_cutoff (M K p : ℕ) (hM : p + 1 ≤ M) (hK : p + 1 ≤ K)
     (FInv : Space →L[ℝ] Space) (m : Space) (u : ℕ → VectorJet) :
     nonlinearGrade M p FInv m u=nonlinearGrade K p FInv m u := by
   unfold nonlinearGrade
@@ -60,10 +63,10 @@ theorem nonlinearGrade_cutoff (M K p : ℕ) (hM : p+1 ≤ M) (hK : p+1 ≤ K)
 
 /-- Substituting the newly solved mean is the only change from the known forcing. -/
 theorem assembled_nonlinear_eq_known (O : Operators) (N p : ℕ) (hp : 2 ≤ p) (hpN : p ≤ N)
-    (a : ℕ → Profile) (ha : a 0=0) (hmean : (a 1).mean=0) (z : Domain)
-    (hprimary : ⟪O.normal z,(a 1).high z⟫_ℝ=0) (hhigh : ⟪O.normal z,(a p).high z⟫_ℝ=0) :
-    nonlinearGrade (N+1) p (O.inverseFrame z) (O.normal z) (assembledJets O N a z)=
-      nonlinearGrade (p+1) p (O.inverseFrame z) (O.normal z) (knownJets O p a z)+
+    (a : ℕ → Profile) (ha : a 0 = 0) (hmean : (a 1).mean = 0) (z : Domain)
+    (hprimary : ⟪O.normal z, (a 1).high z⟫_ℝ = 0) (hhigh : ⟪O.normal z, (a p).high z⟫_ℝ = 0) :
+    nonlinearGrade (N+1) p (O.inverseFrame z) (O.normal z) (assembledJets O N a z) =
+      nonlinearGrade (p+1) p (O.inverseFrame z) (O.normal z) (knownJets O p a z) +
       fastAdvection (O.normal z) (slicedJet O.interval (a p).mean z)
         (slicedJet O.interval (a 1).high z) := by
   have h₀ : knownJets O p a z 0=0 := by
@@ -75,7 +78,7 @@ theorem assembled_nonlinear_eq_known (O : Operators) (N p : ℕ) (hp : 2 ≤ p) 
     intro i hi
     rw [assembledJets_eq_velocityJet O N a ha z i (by omega)]
     simp only [knownJets, history, hi, ite_true]
-  have hnew : assembledJets O N a z p=knownJets O p a z p+
+  have hnew : assembledJets O N a z p=knownJets O p a z p +
       (slicedJet O.interval (a p).high z+slicedJet O.interval (a p).mean z) := by
     unfold assembledJets
     rw [assemble_interior N p (by omega) hpN]
@@ -87,14 +90,15 @@ theorem assembled_nonlinear_eq_known (O : Operators) (N p : ℕ) (hp : 2 ≤ p) 
     (by rw [h₁]; exact hprimary) hhigh
   rw [h, h₁, nonlinearGrade_cutoff (N+1) (p+1) p (by omega) le_rfl]
 
+/-- Full force as an element of `VectorField`. -/
 def fullForce (O : Operators) (N p : ℕ) (a : ℕ → Profile) : VectorField :=
-  fun z => -(linearPart (O.strain z) (slicedJet O.interval (a (p-1)).corrector z)+
-    slowPressure (O.inverseFrame z) (pressureJet (a (p-1)).highPressure z)+
+  fun z => -(linearPart (O.strain z) (slicedJet O.interval (a (p-1)).corrector z) +
+    slowPressure (O.inverseFrame z) (pressureJet (a (p-1)).highPressure z) +
     nonlinearGrade (N+1) p (O.inverseFrame z) (O.normal z) (assembledJets O N a z))
 
 theorem knownForce_sub_interaction (O : Operators) (N p : ℕ) (hp : 2 ≤ p) (hpN : p ≤ N)
-    (a : ℕ → Profile) (ha : a 0=0) (hmean : (a 1).mean=0) (z : Domain)
-    (hprimary : ⟪O.normal z,(a 1).high z⟫_ℝ=0) (hhigh : ⟪O.normal z,(a p).high z⟫_ℝ=0) :
+    (a : ℕ → Profile) (ha : a 0 = 0) (hmean : (a 1).mean = 0) (z : Domain)
+    (hprimary : ⟪O.normal z, (a 1).high z⟫_ℝ = 0) (hhigh : ⟪O.normal z, (a p).high z⟫_ℝ = 0) :
     knownForce O p a z-fastAdvection (O.normal z) (slicedJet O.interval (a p).mean z)
       (slicedJet O.interval (a 1).high z)=fullForce O N p a z := by
   unfold knownForce fullForce
@@ -102,11 +106,11 @@ theorem knownForce_sub_interaction (O : Operators) (N p : ℕ) (hp : 2 ≤ p) (h
   abel
 
 /-- The two right-hand sides actually generated by recursion sum to source (14). -/
-theorem recursive_forces_sum (O : Operators) (primary : Profile) (hmean : primary.mean=0)
+theorem recursive_forces_sum (O : Operators) (primary : Profile) (hmean : primary.mean = 0)
     (N p : ℕ) (hp : 2 ≤ p) (hpN : p ≤ N) (z : Domain)
-    (hprimary : ⟪O.normal z,primary.high z⟫_ℝ=0)
-    (hhigh : ⟪O.normal z,(profiles O primary p).high z⟫_ℝ=0) :
-    meanForce O p (profiles O primary) z+highForce O p (profiles O primary) z=
+    (hprimary : ⟪O.normal z, primary.high z⟫_ℝ = 0)
+    (hhigh : ⟪O.normal z, (profiles O primary p).high z⟫_ℝ = 0) :
+    meanForce O p (profiles O primary) z+highForce O p (profiles O primary) z =
       fullForce O N p (profiles O primary) z := by
   have hm : (profiles O primary 1).mean=0 := by rw [profiles_one, hmean]
   have ht : ⟪O.normal z,(profiles O primary 1).high z⟫_ℝ=0 := by
@@ -116,11 +120,11 @@ theorem recursive_forces_sum (O : Operators) (primary : Profile) (hmean : primar
     (profiles_zero O primary) hm z ht hhigh
   unfold highForce
   rw [← profiles_mean O primary p hp]
-  exact (by abel : meanForce O p (profiles O primary) z+
-    (knownForce O p (profiles O primary) z-meanForce O p (profiles O primary) z-
+  exact (by abel : meanForce O p (profiles O primary) z +
+    (knownForce O p (profiles O primary) z-meanForce O p (profiles O primary) z -
       fastAdvection (O.normal z) (slicedJet O.interval (profiles O primary p).mean z)
-        (slicedJet O.interval (profiles O primary 1).high z))=
-      knownForce O p (profiles O primary) z-
+        (slicedJet O.interval (profiles O primary 1).high z)) =
+      knownForce O p (profiles O primary) z -
       fastAdvection (O.normal z) (slicedJet O.interval (profiles O primary p).mean z)
         (slicedJet O.interval (profiles O primary 1).high z)).trans h
 

@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WholeSpaceEnergyLimit
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedFluxEstimates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonRateBound
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonRateBound
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedDifferenceEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedFluxEstimates
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WholeSpaceEnergyLimit
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Closing the whole-space comparison estimate
@@ -19,6 +23,9 @@ This module isolates the final PDE energy calculation. Its explicit pressure
 flux hypothesis is discharged by the pressure reconstruction modules in the
 whole-space uniqueness theorem; it is not a competitor hypothesis.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -32,6 +39,8 @@ open ProblemStatement Comparison ComparisonCutoffs
 open NavierStokes.ProblemStatement (spatialDerivative spatialDivergence)
 open NavierStokes.PeriodicUniqueness (spatial_smooth time_differentiable_at_interior)
 
+/-- Pressure envelope, given by `(B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) + R ^ (-7 / 4 : ℝ)
+* B ^ (3 / 4 : ℝ)`. -/
 def pressureEnvelope (R A B : ℝ) : ℝ :=
   (B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) +
     R ^ (-7 / 4 : ℝ) * B ^ (3 / 4 : ℝ)

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicMeanInteraction
 
-@[expose] public section
-
 /-!
 # Actual harmonic wave-update interactions
 
@@ -17,6 +15,9 @@ The nonlinear terms are finite convolutions of actual differentiated fields.
 All-jet classes are lifted and restricted by proved norm-one linear pullbacks
 before applying the full cylindrical divergence cancellation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +32,8 @@ variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Pullback strip, bundling `domain`, `isOpen_domain`, `epsilon`, `epsilon_pos` and the
+required compatibility proofs. -/
 noncomputable def pullbackStrip (s : StripData D) (L : E →L[ℝ] D) : StripData E where
   domain := L ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage L.continuous
@@ -68,7 +71,9 @@ theorem class_pullback {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ} {f :
   have hpow : ‖L‖ ^ j ≤ 1 := pow_le_one₀ (norm_nonneg L) hL
   exact (hc.trans (mul_le_of_le_one_right (norm_nonneg _) hpow)).trans (hb n (L x) hx j hj)
 
+/-- Projection, given by `ContinuousLinearMap.fst ℝ D ℝ`. -/
 noncomputable def projection : D × ℝ →L[ℝ] D := ContinuousLinearMap.fst ℝ D ℝ
+/-- Inclusion, given by `(ContinuousLinearMap.id ℝ D).prod (0 : D →L[ℝ] ℝ)`. -/
 noncomputable def inclusion : D →L[ℝ] D × ℝ :=
   (ContinuousLinearMap.id ℝ D).prod (0 : D →L[ℝ] ℝ)
 
@@ -83,6 +88,7 @@ theorem inclusion_norm : ‖inclusion (D := D)‖ ≤ 1 := by
   intro x
   simp [inclusion, Prod.norm_def]
 
+/-- Product strip, given by `pullbackStrip s projection`. -/
 noncomputable def productStrip (s : StripData D) : StripData (D × ℝ) := pullbackStrip s projection
 
 theorem class_lift {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ} {f : ℕ → D → F}
@@ -100,6 +106,8 @@ theorem class_slice {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ} {f : �
   rw [he] at hh
   exact hh
 
+/-- Lifted geometry, bundling `radius`, `radial`, `angular`, `axial` and the required
+compatibility proofs. -/
 noncomputable def liftedGeometry {s : StripData D} {κ : ℝ} (G : Geometry s κ) :
     Geometry (productStrip s) κ where
   radius := fun n p => G.radius n p.1
@@ -111,6 +119,7 @@ noncomputable def liftedGeometry {s : StripData D} {κ : ℝ} (G : Geometry s κ
   axial_class := (class_lift G.axial_class).map inclusion
   inverse_radius_class := class_lift G.inverse_radius_class
 
+/-- Full phase, given by `b.phase n p.1 + ((b.angularFrequency n : ℝ) / b.frequency n) * p.2`. -/
 noncomputable def fullPhase (b : CorrectionState.HarmonicBlock D) (n : ℕ) (p : D × ℝ) : ℝ :=
   b.phase n p.1 + ((b.angularFrequency n : ℝ) / b.frequency n) * p.2
 
@@ -119,9 +128,11 @@ theorem fullPhase_smooth {s : StripData D} (b : CorrectionState.HarmonicBlock D)
     ContDiffOn ℝ ∞ (fullPhase b n) (productStrip s).domain :=
   ((hΦ n).comp contDiffOn_fst (fun _ hx => hx)).add (contDiffOn_const.mul contDiffOn_snd)
 
+/-- Amplitude, defined pointwise by `blockAmplitude b n i j x`. -/
 noncomputable def amplitude (b : CorrectionState.HarmonicBlock D) (j : ℤ)
     (n : ℕ) (x : D) : ComplexVector := fun i => blockAmplitude b n i j x
 
+/-- Single mode, constructed using `HarmonicResidual.vectorField`. -/
 noncomputable def singleMode (b : CorrectionState.HarmonicBlock D) (j : ℤ)
     (n : ℕ) (p : D × ℝ) : ComplexVector :=
   HarmonicResidual.vectorField (fun i => AddMonoidAlgebra.single j (fun x => amplitude b j n x i))
@@ -159,7 +170,8 @@ theorem lifted_amplitude_angularIndependent {s : StripData D} {κ α : ℝ} {P :
   rcases p with ⟨x, θ⟩
   have hs := class_lift (blockAmplitude_class hb hj i)
   have hd := ((hs.smooth n).contDiffAt ((productStrip s).isOpen_domain.mem_nhds
-    hp)).differentiableAt (by simp)
+      hp)).differentiableAt (by
+      simp)
   change DifferentiableAt ℝ (fun q : D × ℝ => amplitude b j n q.1 i) (x, θ) at hd
   change along HarmonicResidual.angularDirection (fun q => amplitude b j n q.1 i) (x, θ) = 0
   rw [HarmonicResidual.along_angularDirection hd]
@@ -223,7 +235,7 @@ theorem orderedKernel_eq_fullCoefficient {s : StripData D} {κ : ℝ}
   have hθ := along_fullPhase_angular carrierData n (p := (x, 0)) hΦ
   have hd (V : D → D) (j : Fin 3) := along_fst V (p := (x, 0)) (hb j)
   simp only [sameCoefficient, strippedTransport, liftedGeometry, slowGeometry, normalDot,
-    phaseNormal]
+      phaseNormal]
   change orderedKernel _ _ _ _ _ _ _ _ _ =
     a n x 0 * along (HarmonicResidual.liftDirection _) (fun p => b n p.1 i) (x, 0) +
     (a n x 1 / (c.operators.radius x : ℂ)) * angularGenerator (b n x) i +
@@ -236,12 +248,12 @@ theorem orderedKernel_eq_fullCoefficient {s : StripData D} {κ : ℝ}
         (fullPhase carrierData n) (x, 0)) (a n x)) * b n x i
   simp only [normalDot, phaseNormal, hp, hθ, hd, WithLp.ofLp_toLp,
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-      Matrix.tail_cons,
+        Matrix.tail_cons,
     orderedKernel, derivativeCoefficient, HarmonicResidual.contextFrame,
     phaseFactor, Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_intCast, Int.cast_mul]
   have hkc : (carrierData.frequency n : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hk
   have hrc : (c.operators.radius x : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (hR x hx).ne'
-  field_simp ; ring
+  field_simp; ring
 
 /-- The first harmonic is used only through its genuine divergence equation.
 Its carrier cancels against the second harmonic with a bounded integer ratio. -/
@@ -470,6 +482,7 @@ theorem blockAmplitude_addBlock (a b : CorrectionState.HarmonicBlock D) (n : ℕ
   funext i
   exact realCoefficients_add _ _
 
+/-- Block transport as an element of `HarmonicResidual.BlockCoefficients D`. -/
 noncomputable def blockTransport (c : CorrectionState.Context D)
     (carrierData a b : CorrectionState.HarmonicBlock D) : HarmonicResidual.BlockCoefficients D :=
   fun n => HarmonicResidual.transport (HarmonicResidual.contextFrame c n)
@@ -529,9 +542,11 @@ theorem nonlinearCoefficients_wave_class {s : StripData D} {κ α β : ℝ} {P :
       (fun n x => nonlinearCoefficients c a b n i j x) := by
   exact ((mixed_wave_class c ho hR ha hb ha0 hb0 hM hN hΦ hk hda hdb hP0 hP1 j i).mono_exponent
     (min_le_left _ _)).add ((square_wave_class c ho hR a hb hb0 hN hΦ hk hdb hP0 hP1 j
-      i).mono_exponent
+        i).mono_exponent
       (min_le_right _ _))
 
+/-- Nonlinear error block, bundling `velocity`, `pressure`, `frequency`, `phase` and the
+required compatibility proofs. -/
 noncomputable def nonlinearErrorBlock (c : CorrectionState.Context D)
     (a b : CorrectionState.HarmonicBlock D) : CorrectionState.HarmonicBlock D where
   velocity := fun n i => HarmonicResidual.nonconstant
@@ -554,7 +569,7 @@ theorem nonlinearErrorBlock_class {s : StripData D} {κ α β : ℝ} {P : ℕ �
     (nonlinearErrorBlock c a b).WaveBounds s P (min (α + β - κ) (β + β - κ)) := by
   intro i j hj
   have hh m := nonlinearCoefficients_wave_class c ho hR ha hb ha0 hb0 hM hN hΦ hk hda hdb hP0 hP1 m
-    i
+      i
   have hr := realCoefficient_class (fun n => nonlinearCoefficients c a b n i) j (hh j) (hh (-j))
   apply class_congr hr
   intro n x _
@@ -658,7 +673,7 @@ theorem nonlinear_update_coefficients {U : Set D} (hU : IsOpen U)
     (HarmonicResidual.vectorField _ k Φ kp (x, θ)) i
   rw [hnew, hold, hlin, hab, hba, hbb, vectorField_add, scalarField_add]
   have he := HarmonicResidual.Actual.nonlinearResidual_add_sub (Vθ :=
-    HarmonicResidual.angularDirection)
+      HarmonicResidual.angularDirection)
     (HarmonicResidual.liftDomain_open hU) g.viscosity (fun y => g.radius y.1)
     (HarmonicResidual.liftDirection g.time) (HarmonicResidual.liftDirection_smooth hr)
     contDiffOn_const (HarmonicResidual.liftDirection_smooth hz)
@@ -671,7 +686,7 @@ theorem nonlinear_update_coefficients {U : Set D} (hU : IsOpen U)
 
 theorem linear_mean_difference (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (B m : D → ComplexVector) (a : HarmonicResidual.VectorCoefficients D) (p : Coefficients D) {x :
-      D}
+        D}
     (hB : ∀ i, DifferentiableAt ℝ (fun y => B y i) x)
     (hm : ∀ i, DifferentiableAt ℝ (fun y => m y i) x) (j : ℤ) (i : Fin 3) :
     HarmonicResidual.linearResidual g k Φ kp (HarmonicResidual.constantVector (B + m)) a p i j x -
@@ -696,7 +711,7 @@ theorem nonlinear_update_with_mean {U : Set D} (hU : IsOpen U)
     HarmonicResidual.nonlinearResidual g k Φ kp (HarmonicResidual.constantVector (B + M))
         (a + b) (p + q) i j x -
       HarmonicResidual.nonlinearResidual g k Φ kp (HarmonicResidual.constantVector (B + M)) a p i j
-        x =
+          x =
       HarmonicResidual.linearResidual g k Φ kp (HarmonicResidual.constantVector B) b q i j x +
         crossCoefficients g k Φ kp M b i j x +
         HarmonicResidual.transport g k Φ kp a b i j x +
@@ -710,6 +725,7 @@ theorem nonlinear_update_with_mean {U : Set D} (hU : IsOpen U)
     (fun r => ((hM r).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)) j i
   linear_combination hn + hm
 
+/-- Linear coefficients as an element of `HarmonicResidual.BlockCoefficients D`. -/
 noncomputable def linearCoefficients (c : CorrectionState.Context D)
     (carrierData b : CorrectionState.HarmonicBlock D) : HarmonicResidual.BlockCoefficients D :=
   fun n => HarmonicResidual.linearResidual (HarmonicResidual.contextFrame c n)
@@ -720,7 +736,7 @@ noncomputable def linearCoefficients (c : CorrectionState.Context D)
 /-- The complete wave change before removing its zero mode. The Gaussian
 increment and the alias difference remain literal coefficient fields. -/
 noncomputable def waveChangeCoefficients (c : CorrectionState.Context D) (u : CorrectionState.State
-  D)
+    D)
     (a b : CorrectionState.HarmonicBlock D) (g A₀ A₁ : HarmonicResidual.BlockCoefficients D) :
     HarmonicResidual.BlockCoefficients D :=
   linearCoefficients c a b + meanCross c u.mean (withCarrier a b) + nonlinearCoefficients c a b -
@@ -752,15 +768,15 @@ theorem residualCoefficients_wave_update {U : Set D} (hU : IsOpen U)
   let N₀ := HarmonicResidual.nonlinearResidual (HarmonicResidual.contextFrame c n)
     (a.frequency n) (a.phase n) (a.angularFrequency n)
     (HarmonicResidual.constantVector (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean
-      u₀ n))
+        u₀ n))
     (blockAmplitude a n) (HarmonicResidual.realCoefficients (a.pressure n))
   let N₁ := HarmonicResidual.nonlinearResidual (HarmonicResidual.contextFrame c n)
     (a.frequency n) (a.phase n) (a.angularFrequency n)
     (HarmonicResidual.constantVector (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean
-      u₀ n))
+        u₀ n))
     (blockAmplitude a n + blockAmplitude b n)
     (HarmonicResidual.realCoefficients (a.pressure n) + HarmonicResidual.realCoefficients
-      (b.pressure n))
+        (b.pressure n))
   have hd (m : ℤ) : N₁ i m x - N₀ i m x =
       linearCoefficients c a b n i m x + meanCross c u₀.mean (withCarrier a b) n i m x +
         nonlinearCoefficients c a b n i m x := by
@@ -811,11 +827,15 @@ theorem residualBlock_wave_update {U : Set D} (hU : IsOpen U)
   exact residualCoefficients_wave_update hU c u₀ u₁ he a b G g A₀ A₁ n hr hz hΦ hkp
     hB hM ha hb hp hq hx j i
 
+/-- Interaction coefficients, given by `meanCross c u.mean (withCarrier a b) +
+nonlinearCoefficients c a b`. -/
 noncomputable def interactionCoefficients (c : CorrectionState.Context D) (u :
-  CorrectionState.State D)
+    CorrectionState.State D)
     (a b : CorrectionState.HarmonicBlock D) : HarmonicResidual.BlockCoefficients D :=
   meanCross c u.mean (withCarrier a b) + nonlinearCoefficients c a b
 
+/-- Interaction block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def interactionBlock (c : CorrectionState.Context D) (u : CorrectionState.State D)
     (a b : CorrectionState.HarmonicBlock D) : CorrectionState.HarmonicBlock D where
   velocity := fun n i => HarmonicResidual.nonconstant
@@ -825,6 +845,8 @@ noncomputable def interactionBlock (c : CorrectionState.Context D) (u : Correcti
   phase := a.phase
   angularFrequency := a.angularFrequency
 
+/-- Linear good block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def linearGoodBlock (c : CorrectionState.Context D)
     (a b : CorrectionState.HarmonicBlock D) (g : HarmonicResidual.BlockCoefficients D) :
     CorrectionState.HarmonicBlock D where
@@ -894,7 +916,7 @@ theorem residualBlock_wave_update_split {U : Set D} (hU : IsOpen U)
     (HarmonicResidual.residualBlock c u₁ (addBlock a b) (G + g) A₁).velocity n i j x -
       (HarmonicResidual.residualBlock c u₀ a G A₀).velocity n i j x =
       (linearGoodBlock c a b g).velocity n i j x + (interactionBlock c u₀ a b).velocity n i j x :=
-        by
+          by
   rw [residualBlock_wave_update hU c u₀ u₁ he a b G g A₀ A₁ n hr hz hΦ hkp hB hM ha hb hp hq hx j i,
     waveChange_projection_split c u₀ a b g A₀ A₁ hA n i]
   rfl
@@ -919,9 +941,9 @@ theorem interactionBlock_class {s : StripData D} {κ α β H : ℝ} {P : ℕ →
       (min (β + H - 1 / 2) (min (α + β - κ) (β + β - κ))) := by
   intro i j hj
   have hmean := realMeanCross_class c ho hκ hR hm (b := withCarrier a b) hb hNormal hFreq hAng hP0
-    hj i
+      hj i
   have hnon m := nonlinearCoefficients_wave_class c ho hR ha hb ha0 hb0 hM hN hΦ hk hda hdb hP0 hP1
-    m i
+      m i
   have hn := realCoefficient_class (fun n => nonlinearCoefficients c a b n i) j (hnon j) (hnon (-j))
   apply class_congr ((hmean.mono_exponent (min_le_left _ _)).add
     (hn.mono_exponent (min_le_right _ _)))
@@ -933,6 +955,7 @@ theorem interactionBlock_class {s : StripData D} {κ α β H : ℝ} {P : ℕ →
 
 /-! ## Extracting the actual divergence condition -/
 
+/-- Divergence coefficients, constructed using `differentiate`. -/
 noncomputable def divergenceCoefficients (g : HarmonicResidual.Frame D)
     (k : ℝ) (Φ : D → ℝ) (kp : ℤ) (a : HarmonicResidual.VectorCoefficients D) : Coefficients D :=
   differentiate g.radial k Φ (a 0) +
@@ -963,9 +986,9 @@ theorem divergenceCoefficients_single (g : HarmonicResidual.Frame D)
   ext m x
   by_cases hm : m = j
   · subst m
-    simp [divergenceCoefficients, constantCoefficient, -LaurentPolynomial.single_eq_C_mul_T]
+    simp [divergenceCoefficients, constantCoefficient]
   · simp [divergenceCoefficients, constantCoefficient, hm,
-      derivativeCoefficient, along, -LaurentPolynomial.single_eq_C_mul_T]
+      derivativeCoefficient, along]
 
 theorem smoothCoefficients_single {U : Set D} {f : D → ℂ}
     (hf : ContDiffOn ℝ ∞ f U) (j : ℤ) :
@@ -994,7 +1017,7 @@ theorem modeSolenoidal_of_full {s : StripData D} (c : CorrectionState.Context D)
   have hb' i := (hb n i).realCoefficients
   have hfield : HarmonicResidual.vectorField (blockAmplitude b n)
       (b.frequency n) (b.phase n) (b.angularFrequency n) = fun q i => (b.oscillation n q i : ℂ) :=
-        by
+          by
     ext q i
     exact HarmonicResidual.field_realCoefficients _ _ _ _ _
   have hz : divergenceCoefficients (HarmonicResidual.contextFrame c n)
@@ -1108,7 +1131,7 @@ theorem linearGoodBlock_band (c : CorrectionState.Context D) (a : CorrectionStat
 
 theorem linearGoodBlock_conjugate (c : CorrectionState.Context D)
     (a b : CorrectionState.HarmonicBlock D) (g : HarmonicResidual.BlockCoefficients D) (n : ℕ) (i :
-      Fin 3) :
+        Fin 3) :
     ConjugateSymmetric ((linearGoodBlock c a b g).velocity n i) :=
   HarmonicResidual.nonconstant_conjugate (HarmonicResidual.realCoefficients_conjugate _)
 
@@ -1118,11 +1141,13 @@ theorem linearGoodBlock_zero (c : CorrectionState.Context D)
   intro n i
   simp [linearGoodBlock, HarmonicResidual.nonconstant]
 
+/-- Wave residual difference block, bundling `velocity`, `pressure`, `frequency`, `phase` and
+the required compatibility proofs. -/
 noncomputable def waveResidualDifferenceBlock (c : CorrectionState.Context D)
     (u₀ u₁ : CorrectionState.State D) (a b : CorrectionState.HarmonicBlock D)
     (G g A₀ A₁ : HarmonicResidual.BlockCoefficients D) : CorrectionState.HarmonicBlock D where
   velocity := fun n i => (HarmonicResidual.residualBlock c u₁ (addBlock a b) (G + g) A₁).velocity n
-    i -
+      i -
     (HarmonicResidual.residualBlock c u₀ a G A₀).velocity n i
   pressure := fun _ => 0
   frequency := a.frequency

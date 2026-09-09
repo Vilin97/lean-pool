@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
+
+/-! Genuine ordinary-space L² translations and closedness of their full derivative. -/
 
 @[expose] public section
 
-/-! Genuine ordinary-space L² translations and closedness of their full derivative. -/
 
 noncomputable section
 
@@ -25,8 +25,11 @@ open scoped Topology
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- L² space: an abbreviation for `Lp V 2 (volume : Measure Space)`. -/
 abbrev L2Space (V : Type*) [NormedAddCommGroup V] := Lp V 2 (volume : Measure Space)
 
+/-- Translation, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x+a)
+(measurePreserving_add_right volume a)`. -/
 def translation (a : Space) : L2Space V →ₗᵢ[ℝ] L2Space V :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x+a) (measurePreserving_add_right volume a)
 
@@ -44,7 +47,7 @@ theorem translation_add (a b : Space) (u : L2Space V) :
   apply Lp.ext
   filter_upwards [translation_ae a (translation b u),
     (measurePreserving_add_right (volume : Measure Space) a).quasiMeasurePreserving.ae
-      (translation_ae b u),
+        (translation_ae b u),
     translation_ae (a+b) u] with x ha hb hab
   rw [ha, hb, hab, add_assoc]
 
@@ -79,13 +82,14 @@ theorem translation_derivatives_tendstoUniformly {ι : Type*} {l : Filter ι}
       (fun a => (translation a).toContinuousLinearMap.comp D₀) l :=
   EulerIsometricAction.derivatives_tendstoUniformly translation D D₀ hD
 
-/-- Convergent ordinary L² fields and their actual translation derivatives have the expected derivative in the limit. -/
+/-- Convergent ordinary L² fields and their actual translation derivatives have the expected
+derivative in the limit. -/
 theorem translation_hasFDerivAt_limit (u : ℕ → L2Space V)
     (D : ℕ → Space →L[ℝ] L2Space V) (u₀ : L2Space V) (D₀ : Space →L[ℝ] L2Space V)
     (h : ∀ n, HasFDerivAt (fun a : Space => translation a (u n)) (D n) 0)
     (hu : Tendsto u atTop (𝓝 u₀)) (hD : Tendsto D atTop (𝓝 D₀)) :
     HasFDerivAt (fun a : Space => translation a u₀) D₀ 0 :=
   EulerIsometricAction.hasFDerivAt_limit translation translation_add translation_zero u D u₀ D₀ h
-    hu hD
+      hu hD
 
 end EulerLpTranslation

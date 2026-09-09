@@ -6,23 +6,30 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicCutoffEnergy
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+
+/-! Actual nested smooth cutoffs, with finite derivative bounds independent of the field. -/
 
 @[expose] public section
 
-/-! Actual nested smooth cutoffs, with finite derivative bounds independent of the field. -/
 
 noncomputable section
 
 namespace EulerMeanHarmonic
 
-open MeasureTheory InnerProductSpace EulerSmoothLimit EulerVectorCalculus EulerMeanSolenoidal
+open MeasureTheory InnerProductSpace EulerSmoothLimit EulerVectorCalculus
 open scoped ContDiff
 
-private theorem derivative_bound_exists (f : Space → ℝ) (hc : HasCompactSupport f)
+theorem derivative_bound_exists (f : Space → ℝ) (hc : HasCompactSupport f)
     (hs : ContDiff ℝ ∞ f) (n : ℕ) : ∃ C : ℝ, ∀ x, ‖iteratedFDeriv ℝ n f x‖ ≤ C :=
   (hc.iteratedFDeriv n).exists_bound_of_continuous (hs.continuous_iteratedFDeriv (by simp))
 
+/-- Derivative bound, given by `max 1 (Classical.choose (derivative_bound_exists f hc hs n))`. -/
 def derivativeBound (f : Space → ℝ) (hc : HasCompactSupport f)
     (hs : ContDiff ℝ ∞ f) (n : ℕ) : ℝ :=
   max 1 (Classical.choose (derivative_bound_exists f hc hs n))
@@ -51,12 +58,18 @@ theorem abs_secondPartial_le_derivativeBound (f : Space → ℝ) (hc : HasCompac
     simpa only [PiLp.norm_single, norm_one, Finset.prod_const_one, mul_one] using h
   exact hb.trans (norm_iteratedFDeriv_le_derivativeBound f hc hs 2 x)
 
+/-- Inner bump, given by `⟨1/2, 5/8, by norm_num, by norm_num⟩`. -/
 def innerBump : ContDiffBump (0 : Space) := ⟨1/2, 5/8, by norm_num, by norm_num⟩
+/-- Middle bump, given by `⟨3/4, 13/16, by norm_num, by norm_num⟩`. -/
 def middleBump : ContDiffBump (0 : Space) := ⟨3/4, 13/16, by norm_num, by norm_num⟩
+/-- Outer bump, given by `⟨7/8, 15/16, by norm_num, by norm_num⟩`. -/
 def outerBump : ContDiffBump (0 : Space) := ⟨7/8, 15/16, by norm_num, by norm_num⟩
 
+/-- Inner cutoff, given by `innerBump`. -/
 def innerCutoff : Space → ℝ := innerBump
+/-- Middle cutoff, given by `middleBump`. -/
 def middleCutoff : Space → ℝ := middleBump
+/-- Outer cutoff, given by `outerBump`. -/
 def outerCutoff : Space → ℝ := outerBump
 
 theorem inner_smooth : ContDiff ℝ ∞ innerCutoff := innerBump.contDiff
@@ -86,7 +99,7 @@ theorem abs_outer_le_one (x : Space) : |outerCutoff x| ≤ 1 := by
   rw [abs_of_nonneg outerBump.nonneg]
   exact outerBump.le_one
 
-theorem inner_one_on_halfBall {x : Space} (hx : x ∈ Metric.closedBall 0 (1/2 : ℝ)) :
+theorem inner_one_on_halfBall {x : Space} (hx : x ∈ Metric.closedBall 0 (1 / 2 : ℝ)) :
     innerCutoff x = 1 := innerBump.one_of_mem_closedBall hx
 
 theorem middle_one_on_inner_support {x : Space} (hx : x ∈ tsupport innerCutoff) :

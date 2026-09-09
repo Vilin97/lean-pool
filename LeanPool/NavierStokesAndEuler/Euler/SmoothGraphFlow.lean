@@ -6,17 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GraphVelocityTrace
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldPrecomp
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldLinear
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.GraphInvariantFlow
+import LeanPool.NavierStokesAndEuler.Euler.GraphVelocityTrace
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
 
 /-! The graph restriction of the actual lifted flow is the actual flow
 of a smooth three-dimensional velocity. It preserves ordinary spatial
 volume when the original lifted velocity has zero trace. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +30,7 @@ open scoped ContDiff
 variable (k : ℝ) (m : Vector3) (T : ℝ) (hT : 0 ≤ T)
   (A : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
 
+/-- Graph coefficient, given by `(A.precompLinear (graphLinear k m)).map (fst ℝ Vector3 ℝ)`. -/
 def graphCoefficient : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   (A.precompLinear (graphLinear k m)).map (fst ℝ Vector3 ℝ)
 
@@ -40,7 +43,7 @@ theorem graphCoefficient_timeDerivative
     SmoothTimeField.TimeDerivative T hT (graphCoefficient k m T A) (graphCoefficient k m T A₁) :=
   (htime.precompLinear (graphLinear k m)).map (fst ℝ Vector3 ℝ)
 
-variable (hgraph : ∀ t z, graphConstraint k m (A.field t z)=0)
+variable (hgraph : ∀ t z, graphConstraint k m (A.field t z) = 0)
 
 include hgraph in
 theorem flowData_tangent (r : ℝ) (z : LiftTangent) :
@@ -84,7 +87,8 @@ theorem graph_forward_contDiff (t : Icc (0 : ℝ) T) :
   exact forward_contDiff T hT (graphCoefficient k m T A) t
 
 variable (hdiv : ∀ t z,
-  LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) z).toLinearMap=0)
+  LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) z).toLinearMap =
+      0)
 
 include hgraph hdiv in
 theorem graphCoefficient_trace_zero (t : Icc (0 : ℝ) T) (x : Vector3) :

@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeEndpointEnergyUniqueness
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TimeEndpointEnergyUniqueness
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 Boundary uniqueness for the literal moving-frame coordinate equation.
 The proof passes through the physical displacement and the already proved
 short-time energy coercivity, including the source identity Q'' = -H Q.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,14 +31,15 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-def applyPath {T : ℝ} (Q : C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (z : C(Icc (0 : ℝ) T,U)) : C(Icc (0 : ℝ) T,E) :=
+/-- Apply path, given by `⟨fun t => Q t (z t),Q.continuous.clm_apply z.continuous⟩`. -/
+def applyPath {T : ℝ} (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (z : C(Icc (0 : ℝ) T, U)) : C(Icc (0 : ℝ) T,E) :=
   ⟨fun t => Q t (z t),Q.continuous.clm_apply z.continuous⟩
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem applyPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
-    (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (z v : C(Icc (0 : ℝ) T,U))
+    (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (z v : C(Icc (0 : ℝ) T, U))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
     (hz : ∀ t : Icc (0 : ℝ) T,
@@ -48,9 +52,9 @@ theorem applyPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
   simpa only [extendPath,projIcc_of_mem hT t.property] using (hd t).clm_apply (hz t)
 
 theorem zero_of_projected_equation (T : ℝ) (hT : 0 ≤ T) (hTpos : 0 < T)
-    (Q Q₁ Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+    (Q Q₁ Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+    (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
     (hd₁ : ∀ t : Icc (0 : ℝ) T,
@@ -108,9 +112,9 @@ theorem zero_of_projected_equation (T : ℝ) (hT : 0 ≤ T) (hTpos : 0 < T)
   rw [← frameLeftInverse_apply (Q t) c hc (hQ t) (v t),hu0,map_zero,ContinuousMap.zero_apply]
 
 theorem unique_of_projected_equation (T : ℝ) (hT : 0 ≤ T) (hTpos : 0 < T)
-    (Q Q₁ Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+    (Q Q₁ Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+    (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
     (hd₁ : ∀ t : Icc (0 : ℝ) T,

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledActualParticularControl
 
-@[expose] public section
-
 /-!
 # Geometric jets for the actual scaled particular inverse
 
@@ -18,6 +16,9 @@ computed from the selected transported frame. Their native-copy jets
 follow from the selected phase construction and the polynomial coordinate
 cost, without estimates on a solved velocity or pressure as hypotheses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,8 +29,11 @@ open CommonCoverSolve TorusInverse ParticularWaveBounds PeriodizedWaveBounds
 open ActualParticularControl
 open scoped Topology ContDiff BigOperators
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
 
 
@@ -66,10 +70,10 @@ theorem polynomial_native_jets (s : StripData X)
     {U : Domain (Label × ℕ) Q} {f : (Label × ℕ) → Q → E}
     (hf : PolynomialJets U f) (C : Label → ℕ → I → Set X)
     (L : Label → ℕ → X →L[ℝ] Q) (b : Label → ℕ → I → Q)
-    (hscale : ∀ l n, U.scale (l,n) = s.slow n)
+    (hscale : ∀ l n, U.scale (l, n) = s.slow n)
     {A : ℝ} {a : ℕ} (hA : 1 ≤ A)
     (hL : ∀ l n, ‖L l n‖ ≤ A * s.slow n ^ a)
-    (hmap : ∀ l n k x, x ∈ s.domain → x ∈ C l n k → L l n x + b l n k ∈ U.carrier (l,n)) :
+    (hmap : ∀ l n k x, x ∈ s.domain → x ∈ C l n k → L l n x + b l n k ∈ U.carrier (l, n)) :
     UniformLocalJets s (fun _ _ _ => 1) 0 C
       (fun l n k x => f (l,n) (L l n x + b l n k)) := by
   let V : PrimaryCopyBounds.JetDomain (Label × ℕ) Q :=
@@ -95,26 +99,28 @@ section NativeCoordinates
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Argument, given by `(χ x.1, (g.coordinates k x.2).2)`. -/
 noncomputable def argument (χ : P →L[ℝ] Slow) (g : Geometry) (k : Frequency)
     (x : P × Plane) : Slow × ℝ := (χ x.1, (g.coordinates k x.2).2)
 
+/-- Argument linear as an element of `(P × Plane) →L[ℝ] (Slow × ℝ)`. -/
 noncomputable def argumentLinear (χ : P →L[ℝ] Slow) (g : Geometry) :
     (P × Plane) →L[ℝ] (Slow × ℝ) :=
   (χ.comp (ContinuousLinearMap.fst ℝ P Plane)).prod
     ((ContinuousLinearMap.snd ℝ ℝ ℝ).comp (g.coordinateLinear.comp (ContinuousLinearMap.snd ℝ P
-      Plane)))
+        Plane)))
 
 theorem argument_affine (χ : P →L[ℝ] Slow) (g : Geometry) (k : Frequency) (x : P × Plane) :
     argument χ g k x = argumentLinear χ g x + (0,(g.coordinates k 0).2) := by
   change (χ x.1, (g.coordinates k x.2).2) = (χ x.1+0, (g.coordinateLinear x.2).2+(g.coordinates k
-    0).2)
+      0).2)
   rw [g.coordinates_eq_affine]
   simp only [Prod.snd_add, zero_add, add_comm]
 
 theorem argumentLinear_norm (χ : P →L[ℝ] Slow) (g : Geometry) :
     ‖argumentLinear χ g‖ ≤ ‖χ‖ + CommonCoverClass.argumentCost g := by
   have hg : 0 ≤ CommonCoverClass.argumentCost g := zero_le_one.trans
-    (CommonCoverClass.one_le_argumentCost g)
+      (CommonCoverClass.one_le_argumentCost g)
   have hc : ‖g.coordinateLinear‖ ≤ CommonCoverClass.argumentCost g := by
     unfold CommonCoverClass.argumentCost
     have hh : 0 ≤ ‖g.pointLinear‖ * (1+‖g.coordinateLinear‖) := by positivity
@@ -148,6 +154,8 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   (clock normal : ActualSignedControl.PositiveScale Label)
   (g : Label → ℕ → Geometry) (r : Label → ℕ → ℝ)
 
+/-- Tangent, given by `PrimaryCopyBridge.frameTangentData (nativeFrame
+(ScaledActualParticularControl.frame F φ clock normal (l,n)) χ) j (source l n)`. -/
 noncomputable def tangent (source : Label → ℕ → P × Plane → Space) (j : ℤ)
     (l : Label) (n : ℕ) : TangentData P Space :=
   PrimaryCopyBridge.frameTangentData
@@ -169,7 +177,7 @@ theorem frame_field_native_jets {E : Type} [NormedAddCommGroup E] [NormedSpace �
         (ScaledActualParticularControl.interval F clock)
         (ScaledActualParticularControl.interval_open F clock)) f)
     {C : ℝ} {a : ℕ} (hC : 1 ≤ C)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ C*s.slow n^a) :
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ C * s.slow n ^ a) :
     UniformLocalJets (CommonCoverClass.sourceStrip s) (fun _ _ _ => 1) 0
       (ScaledActualParticularControl.patch s F χ φ clock g r)
       (fun l n k x => f (l,n) (argument χ (g l n) k x)) := by
@@ -190,33 +198,33 @@ theorem frame_field_native_jets {E : Type} [NormedAddCommGroup E] [NormedSpace �
 theorem native_normal_eq (source : Label → ℕ → P × Plane → Space) (j : ℤ)
     (l : Label) (n : ℕ) (k : Frequency) (x : P × Plane) :
     (tangent F χ φ clock normal source j l n).normal (ParticularWaveBounds.nativePoint (g l n) k x)
-      =
+        =
       (ScaledActualParticularControl.frame F φ clock normal (l,n)).normal (argument χ (g l n) k x)
-        := rfl
+          := rfl
 
 theorem native_motion_eq (source : Label → ℕ → P × Plane → Space) (j : ℤ)
     (l : Label) (n : ℕ) (k : Frequency) (x : P × Plane) :
     (tangent F χ φ clock normal source j l n).normalDot (ParticularWaveBounds.nativePoint (g l n) k
-      x) =
+        x) =
       (ScaledActualParticularControl.frame F φ clock normal (l,n)).normalMotion (argument χ (g l n)
-        k x) := rfl
+          k x) := rfl
 
 theorem native_action_eq (source : Label → ℕ → P × Plane → Space) (j : ℤ)
     (l : Label) (n : ℕ) (k : Frequency) (x : P × Plane) :
     (tangent F χ φ clock normal source j l n).action (ParticularWaveBounds.nativePoint (g l n) k x)
-      =
+        =
       PrimaryCopyBridge.baseOperator
         ((ScaledActualParticularControl.frame F φ clock normal (l,n)).F (argument χ (g l n) k x))
         ((ScaledActualParticularControl.frame F φ clock normal (l,n)).shear (argument χ (g l n) k
-          x)) := rfl
+            x)) := rfl
 
 /-- These are the three actual geometric inputs needed by the pressure
 estimate in `ParticularCopyBounds.uniform_coefficients_jets`. -/
 theorem native_geometry_jets
     (source : Label → ℕ → P × Plane → Space) (j : ℤ)
     {A B C : ℝ} {a : ℕ} (hA : 1 ≤ A) (hB : 1 ≤ B) (hC : 1 ≤ C)
-    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B*s.slow i.2)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ C*s.slow n^a) :
+    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B * s.slow i.2)
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ C * s.slow n ^ a) :
     UniformLocalJets (CommonCoverClass.sourceStrip s) (fun _ _ _ => 1) 0
       (ScaledActualParticularControl.patch s F χ φ clock g r)
       (fun l n k x => (tangent F χ φ clock normal source j l n).normal
@@ -261,7 +269,7 @@ theorem native_normal_eq_scaled (source : Label → ℕ → P × Plane → Space
     {l : Label} {n : ℕ} {k : Frequency} {x : P × Plane}
     (hx : x ∈ ScaledActualParticularControl.patch s F χ φ clock g r l n k) :
     (tangent F χ φ clock normal source j l n).normal (ParticularWaveBounds.nativePoint (g l n) k x)
-      =
+        =
       normal.value l n • F.phase.normal (l,n)
         (φ (l,n) (χ x.1), clock.value l n * ((g l n).coordinates k x.2).2) := by
   rw [native_normal_eq]
@@ -272,7 +280,7 @@ theorem native_normal_eq_scaled (source : Label → ℕ → P × Plane → Space
   congr 1
   exact selected_frame_normal_eq F ⟨hx.1.2.1,
     F.interval (l,n) (ScaledActualParticularControl.clock_mem F clock
-      ⟨hx.1.2.2.1.le,hx.1.2.2.2.le⟩)⟩
+        ⟨hx.1.2.2.1.le,hx.1.2.2.2.le⟩)⟩
 
 theorem normal_lower_pos : 0 < normal.lower * F.b := mul_pos normal.lower_pos F.b_pos
 
@@ -283,9 +291,9 @@ theorem native_normal_bounds (source : Label → ℕ → P × Plane → Space) (
     (hx : x ∈ ScaledActualParticularControl.patch s F χ φ clock g r l n k) :
     normal.lower * F.b ≤
       ‖(tangent F χ φ clock normal source j l n).normal (ParticularWaveBounds.nativePoint (g l n) k
-        x)‖ ∧
+          x)‖ ∧
     ‖(tangent F χ φ clock normal source j l n).normal (ParticularWaveBounds.nativePoint (g l n) k
-      x)‖ ≤
+        x)‖ ≤
       normal.upper * (F.M^2 + 3*F.M) := by
   rw [native_normal_eq_scaled s F χ φ clock normal g r source j hx,
     norm_smul, Real.norm_eq_abs, abs_of_pos (normal.value_pos l n)]

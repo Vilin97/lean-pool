@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceCenter
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitialSupport
+import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
 
 /-! The initial traces of the actual chosen Euler states are the same
 compact high and mean increments used in the initial-data convergence
 proof. Restriction to a shorter horizon preserves these equalities. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,13 +46,13 @@ local notation "res" => residual I S k hk nextEll hnext hnext1 F
 
 theorem normalized_initial :
     I.parent.normalizedPacketVelocity I.normal I.normal_unit I.coordinates I.support
-      I.support_compact
+        I.support_compact
       F.Q res k S.evolution.inverse I.parent.zeroTime =
     initializedExactPhysicalVelocity I.meanData I.data rfl I.historyTime I.history_pos I.history_lt
       I.history I.geometry.δ I.delta_pos I.terminal I.cutoff_support I.alpha I.agreement
       (truncation k) F.hn k hk.four F.Q I.parent.zeroTime id := by
   change initializedExactPhysicalVelocity I.meanData I.data rfl I.historyTime I.history_pos
-    I.history_lt
+      I.history_lt
       I.history I.geometry.δ I.delta_pos I.terminal I.cutoff_support I.alpha I.agreement
       (truncation k) F.hn k hk.four F.Q I.parent.zeroTime
       (S.evolution.inverse.normalized I.parent.zeroTime) = _
@@ -68,7 +70,7 @@ theorem initial_increment : S.velocityIncrement T 0 = I.exactInitial k hk.four F
           I.support I.support_compact F.Q res k S.evolution.inverse I.parent.zeroTime) x :=
     I.parent.exactPacketVelocity_eq_addVelocity I.normal I.normal_unit I.coordinates
       I.support I.support_compact F.Q res k S.evolution.inverse S.evolution.velocity
-        I.parent.zeroTime x
+          I.parent.zeroTime x
   change (T).evolution.velocity (0,x)-S.evolution.velocity (0,x)=_
   rw [he]
   simp only [addVelocity,add_sub_cancel_left,
@@ -97,12 +99,15 @@ namespace GeometryForwardInput
 
 variable (I : GeometryForwardInput U)
 
+/-- High, constructed using `forwardInitializedInitialHigh`. -/
 def high (k : ℝ) : Space → Space := forwardInitializedInitialHigh I.meanData I.data
   I.geometry.δ I.delta_pos I.geometry.initialCoordinate I.cutoff_support I.alpha (truncation k) k
 
+/-- Mean, constructed using `forwardInitializedInitialMean`. -/
 def mean (k : ℝ) : Space → Space := forwardInitializedInitialMean I.meanData I.data
   I.geometry.δ I.delta_pos I.geometry.initialCoordinate I.cutoff_support I.alpha (truncation k) k
 
+/-- Exact initial, constructed using `scale`. -/
 def exactInitial (k : ℝ) (hk : 4 ≤ k) (hn : 1 ≤ truncation k) (Q : I.correctionBudget k hk hn) :
     Space → Space := scale I.parent.ell
   (forwardInitializedExactPhysicalVelocity I.meanData I.data rfl I.geometry.δ I.delta_pos
@@ -110,10 +115,10 @@ def exactInitial (k : ℝ) (hk : 4 ≤ k) (hn : 1 ≤ truncation k) (Q : I.corre
     (truncation k) hn k hk Q I.parent.zeroTime id)
 
 theorem exactInitial_eq (k : ℝ) (hk : 4 ≤ k) (hn : 1 ≤ truncation k) (Q : I.correctionBudget k hk
-  hn) :
+    hn) :
     I.exactInitial k hk hn Q=I.high k+I.mean k :=
   forwardInitializedExactPhysicalVelocity_initial_split I.meanData I.data rfl I.geometry.δ
-    I.delta_pos
+      I.delta_pos
     I.geometry.initialCoordinate I.cutoff_support I.alpha I.agreement (truncation k) hn k hk Q
 
 end GeometryForwardInput
@@ -129,7 +134,7 @@ local notation "res" => residual I S k hk nextEll hnext hnext1 F
 
 theorem normalized_initial :
     I.parent.normalizedPacketVelocity I.normal I.normal_unit I.coordinates I.support
-      I.support_compact
+        I.support_compact
       F.Q res k S.evolution.inverse I.parent.zeroTime =
     forwardInitializedExactPhysicalVelocity I.meanData I.data rfl I.geometry.δ I.delta_pos
       I.geometry.initialCoordinate I.cutoff_support I.alpha I.agreement
@@ -152,7 +157,7 @@ theorem initial_increment : S.velocityIncrement T 0 = I.exactInitial k hk.four F
           I.support I.support_compact F.Q res k S.evolution.inverse I.parent.zeroTime) x :=
     I.parent.exactPacketVelocity_eq_addVelocity I.normal I.normal_unit I.coordinates
       I.support I.support_compact F.Q res k S.evolution.inverse S.evolution.velocity
-        I.parent.zeroTime x
+          I.parent.zeroTime x
   change (T).evolution.velocity (0,x)-S.evolution.velocity (0,x)=_
   rw [he]
   simp only [addVelocity,add_sub_cancel_left,

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
 
-@[expose] public section
-
 /-!
 # Support of the actual harmonic residual supplied to a copy solve
 
@@ -18,6 +16,9 @@ derivatives, convolutions, real projection, and removal of the zero mode.
 Only nonzero input harmonics need be localized: a spatially global zero
 mode, such as an axisymmetric pressure alias, does not create a new slot.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -93,7 +94,7 @@ theorem coefficient_germ (hc : NonzeroSupported K c) (hK : IsClosed K)
 of the coefficient is assumed on the other side of the support. -/
 theorem differentiate (hc : NonzeroSupported K c) (hK : IsClosed K)
     (V : D → D) (k : ℝ) (Φ : D → ℝ) : NonzeroSupported K (HarmonicFields.differentiate V k Φ c) :=
-      by
+        by
   intro j hj x hx
   have he := hc.coefficient_germ hK hj hx
   simp only [differentiate_apply, derivativeCoefficient, along, he.fderiv_eq,
@@ -113,10 +114,10 @@ theorem realProjection (hc : NonzeroSupported K c) : NonzeroSupported K (realCoe
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem nonconstant (hc : NonzeroSupported K c) : NonzeroSupported K (HarmonicResidual.nonconstant
-  c) := by
+    c) := by
   intro j hj x hx
   simpa only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_ne hj]
-    using hc j hj x hx
+      using hc j hj x hx
 
 omit [NormedSpace ℝ D] in
 theorem tsupport (hc : NonzeroSupported K c) (hK : IsClosed K) {j : ℤ} (hj : j ≠ 0) :
@@ -160,7 +161,7 @@ theorem vectorLaplacian_supported {K : Set D} (hK : IsClosed K)
   (scalarLaplacian_supported hK g k Φ kp (ha i)).add
     ((NonzeroSupported.boundConstant _).mul (((NonzeroSupported.boundConstant _).mul
       (rotate_supported (fun j => (ha j).angular kp) i)).add (rotate_supported (rotate_supported
-        ha) i)))
+          ha) i)))
 
 theorem transport_supported {K : Set D} (hK : IsClosed K)
     (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
@@ -235,7 +236,7 @@ theorem residualSource_apply_ne_zero (c : CorrectionState.Context D) (u : Correc
       realCoefficients (G n i) j x - realCoefficients (A n i) j x := by
   change nonconstant (realCoefficients (_ - _ - _)) j x = _
   simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_ne hj,
-    realCoefficients_sub,
+      realCoefficients_sub,
     AddMonoidAlgebra.coeff_sub, Finsupp.sub_apply, Pi.sub_apply]
   rfl
 
@@ -256,7 +257,7 @@ theorem residualSource_outside (c : CorrectionState.Context D) (u : CorrectionSt
     rw [residualSource_apply_ne_zero c u b G A hj]
     have hn := ((nonlinear_ofBlock_supported hK c u b G A n hv hp i).realProjection) j hj x hx
     simp only [hn, excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-      Finsupp.erase_ne hj, zero_sub]
+        Finsupp.erase_ne hj, zero_sub]
 
 theorem residualSource_complement_germ (c : CorrectionState.Context D) (u : CorrectionState.State D)
     (b : CorrectionState.HarmonicBlock D) (G A : HarmonicResidual.BlockCoefficients D)
@@ -281,7 +282,7 @@ theorem residualSource_support (c : CorrectionState.Context D) (u : CorrectionSt
   by_cases hj : j = 0
   · simp [excludedSource, HarmonicResidual.nonconstant, hj]
   · simp only [excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-    Finsupp.erase_ne hj,
+      Finsupp.erase_ne hj,
       (hG i).realProjection j hj x hnot, (hA i).realProjection j hj x hnot, neg_zero, sub_zero,
       Pi.zero_apply]
 
@@ -324,7 +325,7 @@ theorem residualSource_outside_of_real
     have hn := ((nonlinear_ofBlock_supported_of_real hK c u b G A n hv hp i).realProjection)
       j hj x hx
     simp only [hn, excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-      Finsupp.erase_ne hj, zero_sub]
+        Finsupp.erase_ne hj, zero_sub]
 
 theorem residualSource_complement_germ_of_real
     (c : CorrectionState.Context D) (u : CorrectionState.State D)
@@ -354,7 +355,7 @@ theorem residualSource_support_of_real
   by_cases hj : j = 0
   · simp [excludedSource, HarmonicResidual.nonconstant, hj]
   · simp only [excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-    Finsupp.erase_ne hj,
+      Finsupp.erase_ne hj,
       hG i j hj x hnot, hA i j hj x hnot, neg_zero, sub_zero, Pi.zero_apply]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -445,6 +446,7 @@ open CommonCoverSolve TorusInverse TorusAverages
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Native union, given by `⋃ k : Frequency, PeriodizedWaveBounds.nativeCell g K k`. -/
 noncomputable def nativeUnion (g : Geometry) (K : Set Plane) : Set (P × Plane) :=
   ⋃ k : Frequency, PeriodizedWaveBounds.nativeCell g K k
 
@@ -863,8 +865,8 @@ theorem block_velocity_nativeSupport
       (fun v => g.center + g.basis v) '' K) (i : Fin 3) :
     NonzeroSupportedOn U (nativeUnion g K) (realCoefficients ((b l).velocity n i)) := by
   apply coefficient_nativeSupport_of_field _ _ _ hkp g K _ _ (Y n) hcoord hslot
-  intro x hx θ hn
-  exact (hb l n x hx θ i hn).2
+  · intro x hx θ hn
+    exact (hb l n x hx θ i hn).2
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 theorem InputSupportOn.of_native_fields
@@ -987,7 +989,7 @@ theorem zero_wave_unlocalized_error
     (by rw [hp]; exact NonzeroSupported.zero) 1 (Set.notMem_empty x)]
   ext i
   norm_num [excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-    realCoefficients_apply,
-    AddMonoidAlgebra.coeff_single, Finsupp.single_apply, -LaurentPolynomial.single_eq_C_mul_T]
+      realCoefficients_apply,
+    AddMonoidAlgebra.coeff_single, Finsupp.single_apply]
 
 end NavierStokes.HarmonicSourceSupport

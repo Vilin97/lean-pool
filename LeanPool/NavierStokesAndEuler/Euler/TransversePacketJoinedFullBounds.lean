@@ -6,12 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPressure
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrectorBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketNormalBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrector
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrectorBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPressure
 
 /-!
 # The complete quantitative forced transverse provider
@@ -21,6 +21,9 @@ Q, Q_t, C and C_t bounds linear in its amplitude. All eight outputs use the
 same external radius and fixed mixed Sobolev order. They spend at most four
 derivative shifts, within the manuscript's ten-shift allowance.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,16 +44,22 @@ variable {P : ℝ} [Fact (0 < P)]
   {B : HistoryData (D.initial τ hτ hτT.le)} {q : ℕ}
   (L : Budget D τ hτ hτT B (Fin 4) q) (N : NormalBudget D q L.R)
 
+/-- Pressure amplitude, given by `P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost`. -/
 def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost
+/-- Potential amplitude, given by `3*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialAmplitude : ℝ := 3*N.blockAmplitude*(P*L.commonCost)
+/-- Potential time amplitude, given by `6*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialTimeAmplitude : ℝ := 6*N.blockAmplitude*(P*L.commonCost)
+/-- Corrector amplitude, given by `27*N.blockAmplitude^2*(P*L.commonCost)`. -/
 def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*L.commonCost)
+/-- Corrector time amplitude, given by `108*N.blockAmplitude^2*(P*L.commonCost)`. -/
 def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*L.commonCost)
 
 variable {raw : VectorField} (G : Forcing P D raw) (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
   (hforce : ∀ n, block standardDirection q (fun a => pathTranslate P a
-    (normalize L.fullProfile L.fullProfile_pos (HistoryData.forcingPath G))) n 0 ≤ A*majorant L.R d
-      n)
+    (normalize L.fullProfile L.fullProfile_pos (HistoryData.forcingPath G))) n 0 ≤ A * majorant L.R
+        d
+        n)
 
 include hA hforce
 
@@ -76,7 +85,7 @@ theorem pressure_bound (n : ℕ) :
         (L.pressureAmplitude (P := P) N*A)*majorant L.R (d+3) n := by
   have hf (j : ℕ) : block standardDirection q (fun a => pathTranslate P a
       (normalize L.fullProfile L.fullProfile_pos (HistoryData.forcingPath G))) j 0 ≤ A*majorant L.R
-        (d+3) j :=
+          (d+3) j :=
     (hforce j).trans (mul_le_mul_of_nonneg_left
       (majorant_mono_shift L.R L.radius_bounds.1 d (d+3) j (by omega)) hA)
   have h := source_pressure_bound τ hτ hτT B G L.fullProfile L.fullProfile_pos

@@ -7,15 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ReleaseMoments
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectedPulseAmplitude
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FuturePressureBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CoordinateAlgebra
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingHistories
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectedPressureBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseCone
-
-@[expose] public section
 
 /-!
 # The actual outgoing tail and its cone estimates
@@ -24,6 +18,9 @@ The controller below is identified with an actual corrected angular history
 by `ReleaseMoments`. Bounds never assume an amplitude small relative to `h`:
 the prescribed long release plateau supplies that suppression.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -109,6 +106,7 @@ theorem tailLag_first_half_lower (d : TailData) {t : ℝ} (ht : 0 ≤ t) (ht' : 
   have h := mul_le_mul (tailDebt_ge_coefficient d) he (Real.exp_pos (-1)).le (tailDebt_pos d).le
   nlinarith
 
+/-- Release lower constant, given by `min (Real.exp (-2)) (Real.exp (-1) * tailCoefficient)`. -/
 noncomputable def releaseLowerConstant : ℝ := min (Real.exp (-2)) (Real.exp (-1) * tailCoefficient)
 
 theorem releaseLowerConstant_pos : 0 < releaseLowerConstant :=
@@ -218,6 +216,7 @@ theorem profileSlope_bounds (d : TailData) (y : ℝ) :
   dsimp [profileSlope]
   constructor <;> linarith
 
+/-- Release A, given by `2 - 2 * profileSlope d y`. -/
 noncomputable def releaseA (d : TailData) (y : ℝ) : ℝ := 2 - 2 * profileSlope d y
 
 theorem releaseA_bounds (d : TailData) (y : ℝ) : 2 < releaseA d y ∧ releaseA d y ≤ 4 := by
@@ -299,9 +298,12 @@ theorem weighted_square_release_integral_le (d : TailData) (eta : ℝ) {y : ℝ}
   rw [heq] at h
   nlinarith [sq_nonneg (finalAngular d (y, eta))]
 
+/-- Release future energy, given by `∫ t in Ioi y, Real.exp (t - y) * finalAngular d (t, 0) ^
+2`. -/
 noncomputable def releaseFutureEnergy (d : TailData) (y : ℝ) : ℝ :=
   ∫ t in Ioi y, Real.exp (t - y) * finalAngular d (t, 0) ^ 2
 
+/-- Release future mass, given by `∫ t in Ioi y, finalAngular d (t, 0) ^ 2`. -/
 noncomputable def releaseFutureMass (d : TailData) (y : ℝ) : ℝ :=
   ∫ t in Ioi y, finalAngular d (t, 0) ^ 2
 
@@ -310,6 +312,7 @@ with the source primitive uses the actual zero total energy. -/
 noncomputable def releaseNumerator (d : TailData) (eta y : ℝ) : ℝ :=
   2 * eta * (d.h * releaseFutureEnergy d y - (1 / 2 + d.h) * releaseFutureMass d y)
 
+/-- Numerator constant, given by `2 * (1 + FuturePressureBounds.envelopeConstant)`. -/
 noncomputable def numeratorConstant : ℝ := 2 * (1 + FuturePressureBounds.envelopeConstant)
 
 theorem numeratorConstant_pos : 0 < numeratorConstant := by
@@ -373,6 +376,8 @@ theorem finalAngular_le_releaseAmplitude (d : TailData) (eta : ℝ) {y : ℝ}
     Real.exp_le_one_iff.mpr (by nlinarith [d.h_pos])
   nlinarith [finalAngular_pos d (d.releaseStart, eta)]
 
+/-- Release velocity ratio, given by `releaseNumerator d eta y / (finalAngular d (y, 0) *
+ReleaseMoments.normalizedLag d c eta y)`. -/
 noncomputable def releaseVelocityRatio (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   releaseNumerator d eta y / (finalAngular d (y, 0) * ReleaseMoments.normalizedLag d c eta y)
 
@@ -380,7 +385,7 @@ theorem releaseVelocityRatio_abs_le {d : TailData} {K : ℝ} (w : ResetWitness d
     {eta y : ℝ} (heta : |eta| ≤ 1) (hy : d.releaseStart ≤ y) (hy' : y ≤ tailStart d + 1 / 2) :
     |releaseVelocityRatio d w.coefficients eta y| ≤
       numeratorConstant * finalAngular d (y, 0) / ReleaseMoments.normalizedLag d w.coefficients eta
-        y := by
+          y := by
   have hQ := normalizedLag_pos w eta hy hy'
   have hden := mul_pos (finalAngular_pos d (y, 0)) hQ
   rw [releaseVelocityRatio, abs_div, abs_of_pos hden]
@@ -389,7 +394,9 @@ theorem releaseVelocityRatio_abs_le {d : TailData} {K : ℝ} (w : ResetWitness d
     _ ≤ numeratorConstant * finalAngular d (y, 0) ^ 2 := releaseNumerator_abs_le d heta hy
     _ = _ := by field_simp [hQ.ne']
 
+/-- Early ratio constant, given by `2 * numeratorConstant / Real.exp (-2)`. -/
 noncomputable def earlyRatioConstant : ℝ := 2 * numeratorConstant / Real.exp (-2)
+/-- Late ratio constant, given by `2 * numeratorConstant / releaseLowerConstant`. -/
 noncomputable def lateRatioConstant : ℝ := 2 * numeratorConstant / releaseLowerConstant
 
 theorem earlyRatioConstant_pos : 0 < earlyRatioConstant :=
@@ -404,7 +411,7 @@ theorem releaseVelocityRatio_early {d : TailData} {K : ℝ} (w : ResetWitness d 
     (hy' : y ≤ d.releaseStart + d.rampEnd) :
     |releaseVelocityRatio d w.coefficients eta y| ≤
       earlyRatioConstant * (d.core.P * Real.exp (Real.exp d.core.m + 12)) * d.core.lam ^ (29 : ℕ)
-        := by
+          := by
   have hyend : y ≤ tailStart d + 1 / 2 := by
     dsimp [tailStart]
     linarith [decayHold_pos d]
@@ -414,23 +421,23 @@ theorem releaseVelocityRatio_early {d : TailData} {K : ℝ} (w : ResetWitness d 
     exact mul_pos (Real.exp_pos _) (div_pos d.core.lam_pos (by norm_num))
   calc
     _ ≤ numeratorConstant * finalAngular d (y, 0) / ReleaseMoments.normalizedLag d w.coefficients
-      eta y :=
+        eta y :=
       releaseVelocityRatio_abs_le w heta hy hyend
     _ ≤ numeratorConstant * finalAngular d (d.releaseStart, 0) /
         ReleaseMoments.normalizedLag d w.coefficients eta y :=
       div_le_div_of_nonneg_right
         (mul_le_mul_of_nonneg_left (finalAngular_le_releaseAmplitude d 0 hy)
-          numeratorConstant_pos.le) hQ.le
+            numeratorConstant_pos.le) hQ.le
     _ ≤ numeratorConstant * finalAngular d (d.releaseStart, 0) / (Real.exp (-2) * (d.core.lam / 2))
-      :=
+        :=
       div_le_div_of_nonneg_left (mul_nonneg numeratorConstant_pos.le (finalAngular_pos d _).le) hcl
-        hQl
+          hQl
     _ ≤ numeratorConstant * ((d.core.P * Real.exp (Real.exp d.core.m + 12)) * d.core.lam ^ (30 :
-      ℕ)) /
+        ℕ)) /
         (Real.exp (-2) * (d.core.lam / 2)) :=
       div_le_div_of_nonneg_right
         (mul_le_mul_of_nonneg_left (releaseAmplitude_small d hwait 0) numeratorConstant_pos.le)
-          hcl.le
+            hcl.le
     _ = _ := by
       dsimp [earlyRatioConstant]
       field_simp [d.core.lam_pos.ne']
@@ -441,7 +448,7 @@ theorem releaseVelocityRatio_late {d : TailData} {K : ℝ} (w : ResetWitness d K
     (hy' : y ≤ tailStart d + 1 / 2) :
     |releaseVelocityRatio d w.coefficients eta y| ≤
       lateRatioConstant * (d.core.P * Real.exp (Real.exp d.core.m + 12)) * d.core.lam ^ (29 : ℕ) :=
-        by
+          by
   have hyR : d.releaseStart ≤ y := by
     dsimp [TailData.secondRampStart] at hy
     linarith [d.longHold_pos]
@@ -455,7 +462,7 @@ theorem releaseVelocityRatio_late {d : TailData} {K : ℝ} (w : ResetWitness d K
     simpa only [← pow_succ, mul_one] using h
   calc
     _ ≤ numeratorConstant * finalAngular d (y, 0) / ReleaseMoments.normalizedLag d w.coefficients
-      eta y :=
+        eta y :=
       releaseVelocityRatio_abs_le w heta hyR hy'
     _ ≤ numeratorConstant * (2 * finalAngular d (d.releaseStart, 0) * d.h ^ 4) /
         ReleaseMoments.normalizedLag d w.coefficients eta y :=
@@ -464,14 +471,14 @@ theorem releaseVelocityRatio_late {d : TailData} {K : ℝ} (w : ResetWitness d K
     _ ≤ numeratorConstant * (2 * finalAngular d (d.releaseStart, 0) * d.h ^ 4) /
         (releaseLowerConstant * d.h) :=
       div_le_div_of_nonneg_left (mul_nonneg numeratorConstant_pos.le
-        (mul_nonneg (mul_nonneg (by norm_num) (finalAngular_pos d _).le) (pow_nonneg d.h_pos.le
-          4))) hcl hQl
+        (mul_nonneg (mul_nonneg (by
+            norm_num) (finalAngular_pos d _).le) (pow_nonneg d.h_pos.le 4))) hcl hQl
     _ = lateRatioConstant * finalAngular d (d.releaseStart, 0) * d.h ^ 3 := by
       dsimp [lateRatioConstant]
       field_simp [d.h_pos.ne', releaseLowerConstant_pos.ne']
     _ ≤ lateRatioConstant * finalAngular d (d.releaseStart, 0) := by
       exact mul_le_of_le_one_right (mul_nonneg lateRatioConstant_pos.le (finalAngular_pos d _).le)
-        hh
+          hh
     _ ≤ lateRatioConstant *
         ((d.core.P * Real.exp (Real.exp d.core.m + 12)) * d.core.lam ^ (30 : ℕ)) :=
       mul_le_mul_of_nonneg_left (releaseAmplitude_small d hwait 0) lateRatioConstant_pos.le
@@ -481,6 +488,8 @@ theorem releaseVelocityRatio_late {d : TailData} {K : ℝ} (w : ResetWitness d K
           (mul_nonneg d.core.P_pos.le (Real.exp_pos (Real.exp d.core.m + 12)).le))
       simpa only [mul_assoc] using h
 
+/-- Release cone constant, given by `(earlyRatioConstant + lateRatioConstant) * (P * Real.exp
+(Real.exp m + 12))`. -/
 noncomputable def releaseConeConstant (P m : ℝ) : ℝ :=
   (earlyRatioConstant + lateRatioConstant) * (P * Real.exp (Real.exp m + 12))
 
@@ -494,7 +503,7 @@ theorem releaseVelocityRatio_uniform {d : TailData} {K : ℝ} (w : ResetWitness 
       releaseConeConstant d.core.P d.core.m * d.core.lam ^ (29 : ℕ) := by
   have hP : 0 ≤ (d.core.P * Real.exp (Real.exp d.core.m + 12)) * d.core.lam ^ (29 : ℕ) := by
     exact mul_nonneg (mul_nonneg d.core.P_pos.le (Real.exp_pos _).le) (pow_nonneg d.core.lam_pos.le
-      _)
+        _)
   dsimp [releaseConeConstant]
   by_cases h1 : y ≤ d.releaseStart + d.rampEnd
   · have h := releaseVelocityRatio_early w hwait heta hy h1
@@ -552,9 +561,13 @@ theorem cone_of_zero_bs {a r p : ℝ} (ha : 2 < a) (ha' : a ≤ 4)
   · have hmul := mul_le_mul_of_nonneg_left hmargin (show 0 ≤ p by linarith)
     nlinarith
 
+/-- Release P1, given by `XR * Real.exp y * ReleaseMoments.normalizedLag d c eta y /
+CoordinateAlgebra.L d.h eta`. -/
 noncomputable def releaseP1 (d : TailData) (c : ℝ → Coeff) (XR eta y : ℝ) : ℝ :=
   XR * Real.exp y * ReleaseMoments.normalizedLag d c eta y / CoordinateAlgebra.L d.h eta
 
+/-- Release radius threshold, given by `16 / (Real.exp d.releaseStart * (releaseLowerConstant *
+d.h))`. -/
 noncomputable def releaseRadiusThreshold (d : TailData) : ℝ :=
   16 / (Real.exp d.releaseStart * (releaseLowerConstant * d.h))
 
@@ -596,7 +609,7 @@ theorem release_true_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
 theorem exists_release_cone_threshold (P m : ℝ) (hP : 0 < P) :
     ∃ lam0 : ℝ, 0 < lam0 ∧ ∀ d : TailData, d.core.P = P → d.core.m = m →
       d.core.lam < lam0 → releaseConeConstant d.core.P d.core.m * d.core.lam ^ (29 : ℕ) < 1 / 2 :=
-        by
+          by
   have hC := releaseConeConstant_pos (m := m) hP
   refine ⟨(1 / 2) / releaseConeConstant P m, div_pos (by norm_num) hC, ?_⟩
   intro d hdP hdm hd
@@ -667,7 +680,7 @@ theorem actualS_backward {d : TailData} {K : ℝ} (w : ResetWitness d K)
     intro t _
     exact actual_energyWeight_eq w Amp eta t
   have hf : (∫ t in Ioi y, CorrectedPulseAmplitude.energyIntegrand d w.coefficients (Amp eta) eta
-    t) =
+      t) =
       -(1 / 2 : ℝ) * ∫ t in Ioi y, Real.exp t * correctedAngular d w.coefficients (t, eta) ^ 2 := by
     rw [← integral_const_mul]
     apply setIntegral_congr_fun measurableSet_Ioi
@@ -721,7 +734,7 @@ theorem actualS_eta_zero {d : TailData} {K : ℝ} (w : ResetWitness d K)
 theorem actualPi_eq_correctedPi {d : TailData} {K : ℝ} (w : ResetWitness d K) (y eta : ℝ) :
     OutgoingHistories.Pi w (y, eta) = CorrectedPressureBounds.correctedPi w y eta := by
   rw [OutgoingHistories.Pi_eq_past_integral,
-    CorrectedPressureBounds.correctedPi_eq_axisPressure_add]
+      CorrectedPressureBounds.correctedPi_eq_axisPressure_add]
   rw [integral_div]
   dsimp [OutgoingHistories.E]
   ring
@@ -754,7 +767,7 @@ theorem actualNs_eq_releaseNumerator {d : TailData} {K : ℝ} (w : ResetWitness 
     actualS_uniform w ha eta hy hz0, actualS_eta_zero w ha eta hy hz,
     actualPi_uniform w eta hy, actualPi_eta_zero w eta hy]
   dsimp [releaseNumerator, StressAlgebra.velocityExponent]
-  field_simp ; ring
+  field_simp; ring
 
 theorem amplitude_energy_zero_germ {d : TailData} {K : ℝ} (w : ResetWitness d K) (eta : ℝ)
     (hneg : CorrectedPulseAmplitude.constantTerm d w.coefficients eta < -(1 / 5)) :
@@ -775,7 +788,7 @@ theorem actualRatio_eq_releaseVelocityRatio {d : TailData} {K : ℝ} (w : ResetW
   rw [actualNs_eq_releaseNumerator w ha eta hy hz, actualQs_eq_normalizedLag w ha eta hy]
   change releaseNumerator d eta y /
       (correctedAngular d w.coefficients (y, eta) * ReleaseMoments.normalizedLag d w.coefficients
-        eta y) = _
+          eta y) = _
   rw [ReleaseMoments.corrected_eq_release d w.coefficients eta hy]
   rfl
 
@@ -800,19 +813,28 @@ theorem actual_release_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
 
 /-! ## Actual logarithmic derivatives through flattening and reset -/
 
+/-- Reset relative, given by `relative (w.coefficients eta) (y - correctionCenter d)`. -/
 noncomputable def resetRelative {d : TailData} {K : ℝ} (w : ResetWitness d K) (eta y : ℝ) : ℝ :=
   relative (w.coefficients eta) (y - correctionCenter d)
 
+/-- Reset radial derivative, given by `deriv (relative (w.coefficients eta)) (y -
+correctionCenter d)`. -/
 noncomputable def resetRadialDerivative {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (eta y : ℝ) : ℝ := deriv (relative (w.coefficients eta)) (y - correctionCenter d)
 
+/-- Reset eta derivative, given by `relative (deriv w.coefficients eta) (y - correctionCenter
+d)`. -/
 noncomputable def resetEtaDerivative {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (eta y : ℝ) : ℝ := relative (deriv w.coefficients eta) (y - correctionCenter d)
 
+/-- Corrected flat slope, given by `flatteningSlope d y eta + resetRadialDerivative w eta y / (1
++ resetRelative w eta y)`. -/
 noncomputable def correctedFlatSlope {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (eta y : ℝ) : ℝ := flatteningSlope d y eta + resetRadialDerivative w eta y / (1 + resetRelative
-      w eta y)
+        w eta y)
 
+/-- Corrected eta slope, given by `etaRate d eta y + resetEtaDerivative w eta y / (1 +
+resetRelative w eta y)`. -/
 noncomputable def correctedEtaSlope {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (eta y : ℝ) : ℝ := etaRate d eta y + resetEtaDerivative w eta y / (1 + resetRelative w eta y)
 
@@ -839,8 +861,8 @@ theorem correctedFlat_hasDerivAt {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hn : 1 + resetRelative w eta y ≠ 0 := by linarith [resetFactor_ge_half w eta y]
   convert! hd using 1
   dsimp [OutgoingHistories.E, correctedAngular, correctedFlatSlope, resetRelative,
-    resetRadialDerivative] at *
-  field_simp [hn] ; ring
+      resetRadialDerivative] at *
+  field_simp [hn]; ring
 
 theorem correctedEta_hasDerivAt {d : TailData} {K : ℝ} (w : ResetWitness d K) (eta y : ℝ) :
     HasDerivAt (fun q => OutgoingHistories.E w (y, q))
@@ -856,7 +878,7 @@ theorem correctedEta_hasDerivAt {d : TailData} {K : ℝ} (w : ResetWitness d K) 
   have hn : 1 + resetRelative w eta y ≠ 0 := by linarith [resetFactor_ge_half w eta y]
   convert! hd using 1
   dsimp [OutgoingHistories.E, correctedAngular, correctedEtaSlope, resetRelative,
-    resetEtaDerivative] at *
+      resetEtaDerivative] at *
   field_simp [hn]
 
 theorem correctedFlat_dY_H {d : TailData} {K : ℝ} (w : ResetWitness d K)
@@ -889,20 +911,22 @@ theorem correctedFlat_Sq {d : TailData} {K : ℝ} (w : ResetWitness d K)
       StressAlgebra.axialExponent d.h * eta * correctedEtaSlope w eta y := by
   unfold OutgoingHistories.Sq OutgoingHistories.angularSource
   rw [OutgoingHistories.W_after_endpoint d ha eta hy, OutgoingHistories.U_after_endpoint d Amp eta
-    hy,
+      hy,
     correctedFlat_dY_H w eta hy hy', corrected_dEta_H]
   dsimp only
-  field_simp [(OutgoingHistories.H_pos w (y, eta)).ne'] ; ring
+  field_simp [(OutgoingHistories.H_pos w (y, eta)).ne']; ring
 
+/-- Reset jet constant, given by `Classical.choose relative_first_jet_bound`. -/
 noncomputable def resetJetConstant : ℝ := Classical.choose relative_first_jet_bound
 
 theorem resetJetConstant_pos : 0 < resetJetConstant := (Classical.choose_spec
-  relative_first_jet_bound).1
+    relative_first_jet_bound).1
 
 theorem relative_radial_bound (c : Coeff) (y : ℝ) :
     |deriv (relative c) y| ≤ resetJetConstant * ‖c‖ :=
   ((Classical.choose_spec relative_first_jet_bound).2 c y).2
 
+/-- Reset source error, given by `(2 * resetJetConstant + 2) * (K * d.core.lam ^ (28 : ℕ))`. -/
 noncomputable def resetSourceError (d : TailData) (K : ℝ) : ℝ :=
   (2 * resetJetConstant + 2) * (K * d.core.lam ^ (28 : ℕ))
 
@@ -922,7 +946,7 @@ theorem reset_radial_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
 
 theorem reset_eta_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K) (eta y : ℝ) :
     |resetEtaDerivative w eta y / (1 + resetRelative w eta y)| ≤ 4 * (K * d.core.lam ^ (28 : ℕ)) :=
-      by
+        by
   have hden : 0 < 1 + resetRelative w eta y := by linarith [resetFactor_ge_half w eta y]
   have hr := ResetEnergyBounds.relative_eta_bound w eta (y - correctionCenter d)
   change |resetEtaDerivative w eta y| ≤ _ at hr
@@ -967,8 +991,8 @@ theorem correctedFlat_source_lower {d : TailData} {K : ℝ} (w : ResetWitness d 
   have hDEta : |StressAlgebra.axialExponent d.h * eta| ≤ 1 / 2 := by
     rw [abs_mul, abs_of_nonneg hD]
     nlinarith [mul_le_mul_of_nonneg_left heta hD]
-  have he := mul_le_mul hDEta (reset_eta_ratio_bound w eta y) (abs_nonneg _) (by norm_num : (0 : ℝ)
-    ≤ 1 / 2)
+  have he := mul_le_mul hDEta (reset_eta_ratio_bound w eta y) (abs_nonneg _) (by
+      norm_num : (0 : ℝ) ≤ 1 / 2)
   rw [← abs_mul] at he
   have he' := (le_abs_self _).trans he
   rw [correctedFlat_Sq w ha eta hy hy']
@@ -1031,7 +1055,7 @@ theorem flatten_Qs_lower_of_endpoint {d : TailData} {K : ℝ} (w : ResetWitness 
       (fun t => (OutgoingHistories.H_pos w (t, eta)).ne')
   apply ode_constant_barrier (b := fun t => OutgoingHistories.Sq w Amp (t, eta))
     ((OutgoingHistories.Qs_smooth w ha).continuous.comp (continuous_id.prodMk continuous_const)) hr
-      hy hinit
+        hy hinit
   · intro t _
     exact OutgoingHistories.Qs_hasDerivAt w ha (t, eta)
   · intro t ht
@@ -1043,8 +1067,8 @@ theorem flatten_Qs_lower_of_endpoint {d : TailData} {K : ℝ} (w : ResetWitness 
     rw [hr_eq]
     have hrate := (correctedFlat_geometry w hsmall eta t heta2).2.2
     have hsource := correctedFlat_source_lower w ha eta heta ht.1.le htR
-    have hm := mul_le_mul_of_nonneg_right hrate (div_nonneg d.core.lam_pos.le (by norm_num : (0 :
-      ℝ) ≤ 4))
+    have hm := mul_le_mul_of_nonneg_right hrate (div_nonneg d.core.lam_pos.le (by
+        norm_num : (0 : ℝ) ≤ 4))
     nlinarith
 
 theorem corrected_flatten_Qs_lower {d : TailData} {K : ℝ} (w : ResetWitness d K)
@@ -1081,7 +1105,7 @@ theorem corrected_square_prefix_le {d : TailData} {K : ℝ} (w : ResetWitness d 
     (eta : ℝ) (heta : eta ^ 2 ≤ 1) {y : ℝ} (hy : d.core.endpoint ≤ y)
     (hy' : y ≤ d.releaseStart) :
     OutgoingHistories.E w (y, eta) ^ 2 ≤ (9 / 4 : ℝ) * finalAngular d (d.core.endpoint, eta) ^ 2 :=
-      by
+        by
   have hd := corrected_density_prefix_le w eta heta hy hy'
   have hm := mul_le_mul_of_nonneg_right (Real.exp_le_exp.mpr hy)
     (sq_nonneg (OutgoingHistories.E w (y, eta)))
@@ -1101,7 +1125,7 @@ theorem actualS_endpoint {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (hz : CorrectedPulseAmplitude.totalEnergy d w.coefficients (Amp eta) eta = 0) :
     OutgoingHistories.S w Amp (d.core.endpoint, eta) =
       (1 / 2 : ℝ) * (postPulseEnergy d eta + ResetEnergyBounds.resetEnergy d w.coefficients eta) :=
-        by
+          by
   rw [actualS_backward w ha eta le_rfl hz, ResetEnergyBounds.integral_corrected_energy]
 
 theorem actualS_eta_endpoint {d : TailData} {K : ℝ} (w : ResetWitness d K)
@@ -1112,12 +1136,12 @@ theorem actualS_eta_endpoint {d : TailData} {K : ℝ} (w : ResetWitness d K)
         deriv (ResetEnergyBounds.resetEnergy d w.coefficients) eta) := by
   have he : (fun q => OutgoingHistories.S w Amp (d.core.endpoint, q)) =ᶠ[𝓝 eta]
       (fun q => (1 / 2 : ℝ) * (postPulseEnergy d q + ResetEnergyBounds.resetEnergy d w.coefficients
-        q)) := by
+          q)) := by
     filter_upwards [hz] with q hq
     exact actualS_endpoint w ha q hq
   have hd := (((postPulseEnergy_contDiff d).differentiable (by simp) eta).hasDerivAt.fun_add
-    (((ResetEnergyBounds.resetEnergy_contDiff d w.smooth).differentiable (by simp)
-      eta).hasDerivAt)).const_mul
+    (((ResetEnergyBounds.resetEnergy_contDiff d w.smooth).differentiable (by
+        simp) eta).hasDerivAt)).const_mul
       (1 / 2 : ℝ)
   rw [OutgoingHistories.dEta_eq_deriv (OutgoingHistories.S_smooth w ha), he.deriv_eq, hd.deriv]
 
@@ -1153,6 +1177,8 @@ theorem abs_increment_le {f f' : ℝ → ℝ} {a b C : ℝ} (hab : a ≤ b)
     (fun t ht => by simpa only [Real.norm_eq_abs] using hb t ⟨ht.1, ht.2.le⟩) b ⟨hab, le_rfl⟩
   simpa only [Real.norm_eq_abs] using h
 
+/-- Finite energy budget, given by `flattenLength + releaseConstant + 40 + 20 * (d.releaseStart
+- d.core.endpoint)`. -/
 noncomputable def finiteEnergyBudget (d : TailData) : ℝ :=
   flattenLength + releaseConstant + 40 + 20 * (d.releaseStart - d.core.endpoint)
 
@@ -1166,7 +1192,7 @@ theorem actualS_finite_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (hz : ∀ᶠ q in 𝓝 eta, CorrectedPulseAmplitude.totalEnergy d w.coefficients (Amp q) q = 0)
     {y : ℝ} (hy : d.core.endpoint ≤ y) (hy' : y ≤ d.releaseStart) :
     |OutgoingHistories.S w Amp (y, eta)| ≤ finiteEnergyBudget d * energyDensity d eta
-      d.core.endpoint ∧
+        d.core.endpoint ∧
     |OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y, eta)| ≤
       finiteEnergyBudget d * energyDensity d eta d.core.endpoint := by
   have hz0 : CorrectedPulseAmplitude.totalEnergy d w.coefficients (Amp eta) eta = 0 :=
@@ -1176,10 +1202,10 @@ theorem actualS_finite_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hL : 0 ≤ d.releaseStart - d.core.endpoint := sub_nonneg.mpr (endpoint_le_releaseStart d)
   have hSI : |OutgoingHistories.S w Amp (d.core.endpoint, eta)| ≤
       ((d.releaseStart - d.core.endpoint + releaseConstant) / 2 + 12) * energyDensity d eta
-        d.core.endpoint := by
+          d.core.endpoint := by
     rw [actualS_endpoint w ha eta hz0, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2)]
     have hsum := abs_add_le (postPulseEnergy d eta) (ResetEnergyBounds.resetEnergy d w.coefficients
-      eta)
+        eta)
     rw [abs_of_nonneg (postPulseEnergy_nonneg d eta)] at hsum
     have hR := ResetEnergyBounds.resetEnergy_abs_le w eta heta
     have hs := mul_le_mul_of_nonneg_right hsmall hD
@@ -1191,7 +1217,7 @@ theorem actualS_finite_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K)
       (deriv (ResetEnergyBounds.resetEnergy d w.coefficients) eta)
     have hs := mul_le_mul_of_nonneg_right hsmall hD
     nlinarith [abs_deriv_postPulseEnergy_le d eta heta, ResetEnergyBounds.resetEnergy_deriv_abs_le
-      w eta heta]
+        w eta heta]
   have hSD := abs_increment_le hy (fun t ht => actualS_after_hasDerivAt w ha eta ht.1)
     (C := 2 * energyDensity d eta d.core.endpoint) (fun t ht => by
       rw [abs_div, abs_neg, abs_of_nonneg (mul_nonneg (Real.exp_pos _).le (sq_nonneg _))]
@@ -1206,7 +1232,8 @@ theorem actualS_finite_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K)
         (mul_nonneg (Real.exp_pos t).le (sq_nonneg (OutgoingHistories.E w (t, eta))))
       nlinarith)
   have hlen := mul_le_mul_of_nonneg_right (show y - d.core.endpoint ≤ d.releaseStart -
-    d.core.endpoint by linarith) hD
+      d.core.endpoint by
+      linarith) hD
   have hS := abs_sub_le (OutgoingHistories.S w Amp (y, eta))
     (OutgoingHistories.S w Amp (d.core.endpoint, eta)) 0
   have hSE := abs_sub_le (OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y, eta))
@@ -1214,9 +1241,11 @@ theorem actualS_finite_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K)
   simp only [sub_zero] at hS hSE
   dsimp [finiteEnergyBudget]
   constructor <;> nlinarith [mul_nonneg flattenLength_pos.le hD, mul_nonneg releaseConstant_pos.le
-    hD,
+      hD,
     mul_nonneg hL hD]
 
+/-- Finite numerator budget, given by `5 * finiteEnergyBudget d + 12 *
+CorrectedPressureBounds.correctedConstant`. -/
 noncomputable def finiteNumeratorBudget (d : TailData) : ℝ :=
   5 * finiteEnergyBudget d + 12 * CorrectedPressureBounds.correctedConstant
 
@@ -1277,7 +1306,7 @@ theorem actualNs_finite_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hav : |4 * StressAlgebra.velocityExponent d.h * eta| ≤ 4 := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4), abs_of_nonneg ha0]
     have hm := mul_le_mul_of_nonneg_left heta (show 0 ≤ 4 * StressAlgebra.velocityExponent d.h by
-      positivity)
+        positivity)
     nlinarith
   have h1 := mul_le_mul hh hs0 (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 2)
   have h2 := mul_le_mul hd hs1 (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)
@@ -1287,24 +1316,24 @@ theorem actualNs_finite_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
   rw [OutgoingHistories.Ns_after_endpoint w ha eta hy]
   rw [show (4 * d.h * eta * OutgoingHistories.S w Amp (y, eta) -
       StressAlgebra.coordinateFactor eta * OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y,
-        eta)) /
+          eta)) /
       Real.exp y = 4 * d.h * eta * (OutgoingHistories.S w Amp (y, eta) / Real.exp y) -
       StressAlgebra.coordinateFactor eta * (OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y,
-        eta) /
+          eta) /
         Real.exp y) by ring]
   have ht1 := abs_sub_le
     (4 * d.h * eta * (OutgoingHistories.S w Amp (y, eta) / Real.exp y)) 0
     (StressAlgebra.coordinateFactor eta * (OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y,
-      eta) / Real.exp y))
+        eta) / Real.exp y))
   have ht2 := abs_add_le
     (4 * d.h * eta * (OutgoingHistories.S w Amp (y, eta) / Real.exp y) -
       StressAlgebra.coordinateFactor eta * (OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y,
-        eta) / Real.exp y))
+          eta) / Real.exp y))
     (4 * StressAlgebra.velocityExponent d.h * eta * OutgoingHistories.Pi w (y, eta))
   have ht3 := abs_sub_le
     (4 * d.h * eta * (OutgoingHistories.S w Amp (y, eta) / Real.exp y) -
       StressAlgebra.coordinateFactor eta * (OutgoingHistories.dEta (OutgoingHistories.S w Amp) (y,
-        eta) / Real.exp y) +
+          eta) / Real.exp y) +
       4 * StressAlgebra.velocityExponent d.h * eta * OutgoingHistories.Pi w (y, eta)) 0
     (StressAlgebra.coordinateFactor eta * OutgoingHistories.dEta (OutgoingHistories.Pi w) (y, eta))
   simp only [sub_zero, zero_sub, abs_neg] at ht1 ht3
@@ -1321,12 +1350,14 @@ theorem lambda_log_bound (d : TailData) : d.core.lam * Real.log (1 / d.core.lam)
 
 theorem lambda_finite_length_bound (d : TailData) :
     d.core.lam * (d.releaseStart - d.core.endpoint) ≤ flattenLength + 30 := by
-  have hf := mul_le_mul_of_nonneg_right (show d.core.lam ≤ 1 by linarith [d.core.lam_lt])
-    flattenLength_pos.le
+  have hf := mul_le_mul_of_nonneg_right (show d.core.lam ≤ 1 by
+      linarith [d.core.lam_lt]) flattenLength_pos.le
   have hl := lambda_log_bound d
   dsimp [TailData.releaseStart, TailData.flattenEnd, TailData.uniformWait]
   nlinarith
 
+/-- Finite numerator constant, given by `5 * (flattenLength + releaseConstant + 40 + 20 *
+(flattenLength + 30)) + 12 * CorrectedPressureBounds.correctedConstant`. -/
 noncomputable def finiteNumeratorConstant : ℝ :=
   5 * (flattenLength + releaseConstant + 40 + 20 * (flattenLength + 30)) +
     12 * CorrectedPressureBounds.correctedConstant
@@ -1342,8 +1373,8 @@ theorem finiteNumeratorBudget_bound (d : TailData) :
     d.core.lam * finiteNumeratorBudget d ≤ finiteNumeratorConstant := by
   have hl : d.core.lam ≤ 1 := by linarith [d.core.lam_lt]
   have hbase := mul_le_mul_of_nonneg_right hl
-    (show 0 ≤ flattenLength + releaseConstant + 40 by linarith [flattenLength_pos,
-      releaseConstant_pos])
+    (show 0 ≤ flattenLength + releaseConstant + 40 by
+        linarith [flattenLength_pos, releaseConstant_pos])
   have hP := mul_le_mul_of_nonneg_right hl CorrectedPressureBounds.correctedConstant_pos.le
   have hlen := lambda_finite_length_bound d
   dsimp [finiteNumeratorBudget, finiteEnergyBudget, finiteNumeratorConstant]
@@ -1361,16 +1392,17 @@ theorem flattenFactor_ge_half (d : TailData) (eta y : ℝ) : 1 / 2 ≤ flattenFa
   have hm := mul_le_mul_of_nonneg_right (sigma_le_one ((y - d.core.endpoint) / flattenLength)) hlog
   have hp := mul_nonneg (sigma_nonneg ((y - d.core.endpoint) / flattenLength)) hJ
   have hh : -Real.log 2 ≤ sigma ((y - d.core.endpoint) / flattenLength) * (logShape eta - Real.log
-    2) := by
+      2) := by
     nlinarith
   have he := Real.exp_le_exp.mpr hh
   simp only [Real.exp_neg, Real.exp_log (by norm_num : (0 : ℝ) < 2), inv_eq_one_div] at he
   exact he
 
+/-- Finite amplitude constant, given by `Real.exp (-(3 / 5 : ℝ) * flattenLength) / 4`. -/
 noncomputable def finiteAmplitudeConstant : ℝ := Real.exp (-(3 / 5 : ℝ) * flattenLength) / 4
 
 theorem finiteAmplitudeConstant_pos : 0 < finiteAmplitudeConstant := div_pos (Real.exp_pos _) (by
-  norm_num)
+    norm_num)
 
 theorem corrected_amplitude_finite_lower {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (eta : ℝ) {y : ℝ} (hy : d.core.endpoint ≤ y) (hy' : y ≤ d.releaseStart) :
@@ -1381,7 +1413,7 @@ theorem corrected_amplitude_finite_lower {d : TailData} {K : ℝ} (w : ResetWitn
     (P := d.core.P) (lam := d.core.lam)
   have hang : angular d.core.P d.core.dropLength d.core.lam (y, eta) =
       finalAngular d (d.core.endpoint, eta) * Real.exp (-(1 / 2 + d.core.lam) * (y -
-        d.core.endpoint)) := by
+          d.core.endpoint)) := by
     rw [finalAngular_before d eta le_rfl]
     dsimp [angular]
     rw [hr]
@@ -1396,8 +1428,8 @@ theorem corrected_amplitude_finite_lower {d : TailData} {K : ℝ} (w : ResetWitn
       Real.exp_add, h18]
   have hrate : -(3 / 5 : ℝ) * (d.releaseStart - d.core.endpoint) ≤
       -(1 / 2 + d.core.lam) * (y - d.core.endpoint) := by
-    have hm := mul_le_mul_of_nonneg_right (show 1 / 2 + d.core.lam ≤ (3 / 5 : ℝ) by linarith
-      [d.core.lam_lt])
+    have hm := mul_le_mul_of_nonneg_right (show 1 / 2 + d.core.lam ≤ (3 / 5 : ℝ) by
+        linarith [d.core.lam_lt])
       (sub_nonneg.mpr hy)
     linarith
   have he := Real.exp_le_exp.mpr hrate
@@ -1427,7 +1459,7 @@ theorem endpointAmplitude_le_pulse (d : TailData) (eta : ℝ) :
   dsimp [angular]
   rw [hr]
   change pulseAmplitude d.core * Real.exp (-(1 / 2 + d.core.lam) * (d.core.endpoint -
-    d.core.pulseStart)) *
+      d.core.pulseStart)) *
     shape eta ≤ pulseAmplitude d.core
   have he : Real.exp (-(1 / 2 + d.core.lam) * (d.core.endpoint - d.core.pulseStart)) ≤ 1 :=
     Real.exp_le_one_iff.mpr (by nlinarith [d.core.lam_pos])
@@ -1440,13 +1472,15 @@ theorem endpointAmplitude_le_pulse (d : TailData) (eta : ℝ) :
   have hp := mul_le_mul_of_nonneg_left hm (pulseAmplitude_pos d.core).le
   nlinarith
 
+/-- Finite cone constant, given by `(4 * finiteNumeratorConstant / finiteAmplitudeConstant) * (P
+* Real.exp (Real.exp m + 12))`. -/
 noncomputable def finiteConeConstant (P m : ℝ) : ℝ :=
   (4 * finiteNumeratorConstant / finiteAmplitudeConstant) * (P * Real.exp (Real.exp m + 12))
 
 theorem finiteConeConstant_pos {P : ℝ} (hP : 0 < P) (m : ℝ) : 0 < finiteConeConstant P m := by
   dsimp [finiteConeConstant]
-  exact mul_pos (div_pos (mul_pos (by norm_num) finiteNumeratorConstant_pos)
-    finiteAmplitudeConstant_pos)
+  exact mul_pos (div_pos (mul_pos (by
+      norm_num) finiteNumeratorConstant_pos) finiteAmplitudeConstant_pos)
     (mul_pos hP (Real.exp_pos _))
 
 theorem actual_finite_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
@@ -1460,17 +1494,17 @@ theorem actual_finite_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K
       (OutgoingHistories.E w (y, eta) * OutgoingHistories.Qs w Amp (y, eta))| ≤
       finiteConeConstant d.core.P d.core.m * d.core.lam ^ (10 : ℕ) := by
   have he := corrected_amplitude_finite_lower w eta hy hy'
-  have hq : 0 < OutgoingHistories.Qs w Amp (y, eta) := lt_of_lt_of_le (by linarith
-    [d.core.lam_pos]) hQ
+  have hq : 0 < OutgoingHistories.Qs w Amp (y, eta) := lt_of_lt_of_le (by
+      linarith [d.core.lam_pos]) hQ
   have hden := mul_pos (OutgoingHistories.E_pos w (y, eta)) hq
   have hnum := actualNs_finite_bound w ha hsmall eta heta hz hy hy'
   have hbud : finiteNumeratorBudget d ≤ finiteNumeratorConstant / d.core.lam :=
     (le_div_iff₀ d.core.lam_pos).mpr (by nlinarith [finiteNumeratorBudget_bound d])
   have hend := (endpointAmplitude_le_pulse d eta).trans (OutgoingPulseBounds.pulseAmplitude_small
-    d.core hwait)
+      d.core hwait)
   have hE := finalAngular_pos d (d.core.endpoint, eta)
   have he0 : 0 < finiteAmplitudeConstant * finalAngular d (d.core.endpoint, eta) * d.core.lam ^ (18
-    : ℕ) :=
+      : ℕ) :=
     mul_pos (mul_pos finiteAmplitudeConstant_pos hE) (pow_pos d.core.lam_pos _)
   have hdl := mul_le_mul he hQ (by linarith [d.core.lam_pos] : (0 : ℝ) ≤ d.core.lam / 4)
     (OutgoingHistories.E_pos w (y, eta)).le
@@ -1480,19 +1514,19 @@ theorem actual_finite_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K
   calc
     _ ≤ (finiteNumeratorConstant / d.core.lam * finalAngular d (d.core.endpoint, eta) ^ 2) /
         (finiteAmplitudeConstant * finalAngular d (d.core.endpoint, eta) * d.core.lam ^ (18 : ℕ) *
-          (d.core.lam / 4)) :=
+            (d.core.lam / 4)) :=
       div_le_div₀ (mul_nonneg (div_nonneg finiteNumeratorConstant_pos.le d.core.lam_pos.le)
-        (sq_nonneg _))
+          (sq_nonneg _))
         (hnum.trans (mul_le_mul_of_nonneg_right hbud (sq_nonneg _))) hdl0 hdl
     _ = (4 * finiteNumeratorConstant / finiteAmplitudeConstant) *
         (finalAngular d (d.core.endpoint, eta) / d.core.lam ^ (20 : ℕ)) := by
       field_simp [d.core.lam_pos.ne', hE.ne', finiteAmplitudeConstant_pos.ne']
     _ ≤ (4 * finiteNumeratorConstant / finiteAmplitudeConstant) *
         ((d.core.P * Real.exp (Real.exp d.core.m + 12)) * d.core.lam ^ (30 : ℕ) / d.core.lam ^ (20
-          : ℕ)) :=
+            : ℕ)) :=
       mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_right hend (pow_pos d.core.lam_pos _).le)
-        (div_nonneg (mul_nonneg (by norm_num) finiteNumeratorConstant_pos.le)
-          finiteAmplitudeConstant_pos.le)
+        (div_nonneg (mul_nonneg (by
+            norm_num) finiteNumeratorConstant_pos.le) finiteAmplitudeConstant_pos.le)
     _ = _ := by
       have hp : d.core.lam ^ (30 : ℕ) / d.core.lam ^ (20 : ℕ) = d.core.lam ^ (10 : ℕ) := by
         field_simp [d.core.lam_pos.ne']
@@ -1504,9 +1538,12 @@ theorem actual_finite_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K
 
 /-! ## Cone quantities of the actual corrected profile -/
 
+/-- Actual A, given by `1 - 2 * deriv (fun t => Real.log (OutgoingHistories.E w (t, eta))) y`. -/
 noncomputable def actualA {d : TailData} {K : ℝ} (w : ResetWitness d K) (y eta : ℝ) : ℝ :=
   1 - 2 * deriv (fun t => Real.log (OutgoingHistories.E w (t, eta))) y
 
+/-- Actual bs, given by `2 * deriv (fun t => OutgoingHistories.U d Amp (t, eta)) y /
+OutgoingHistories.E w (y, eta)`. -/
 noncomputable def actualBs {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (y eta : ℝ) : ℝ :=
   2 * deriv (fun t => OutgoingHistories.U d Amp (t, eta)) y / OutgoingHistories.E w (y, eta)
@@ -1519,7 +1556,7 @@ theorem actualA_finite {d : TailData} {K : ℝ} (w : ResetWitness d K) (eta : �
   rw [hd.deriv]
   change 1 - 2 * (OutgoingHistories.E w (y, eta) * (correctedFlatSlope w eta y - 1 / 2) /
     OutgoingHistories.E w (y, eta)) = _
-  field_simp [(OutgoingHistories.E_pos w (y, eta)).ne'] ; ring
+  field_simp [(OutgoingHistories.E_pos w (y, eta)).ne']; ring
 
 theorem actualA_release {d : TailData} {K : ℝ} (w : ResetWitness d K) (eta : ℝ) {y : ℝ}
     (hy : d.releaseStart ≤ y) : actualA w y eta = releaseA d y :=
@@ -1530,7 +1567,7 @@ theorem actualBs_zero {d : TailData} {K : ℝ} (w : ResetWitness d K)
     actualBs w Amp y eta = 0 := by
   have hf : Differentiable ℝ (fun t => OutgoingHistories.U d Amp (t, eta)) :=
     ((OutgoingHistories.U_smooth d ha).comp (contDiff_id.prodMk contDiff_const)).differentiable (by
-      simp)
+        simp)
   have hz : HasDerivWithinAt (fun t => OutgoingHistories.U d Amp (t, eta)) 0 (Ici y) y := by
     apply (hasDerivWithinAt_const y (Ici y) (0 : ℝ)).congr
     · intro t ht
@@ -1538,7 +1575,7 @@ theorem actualBs_zero {d : TailData} {K : ℝ} (w : ResetWitness d K)
     · exact OutgoingHistories.U_after_endpoint d Amp eta hy
   have hd : deriv (fun t => OutgoingHistories.U d Amp (t, eta)) y = 0 :=
     (uniqueDiffOn_Ici y y (show y ∈ Ici y from le_refl y)).eq_deriv _ (hf
-      y).hasDerivAt.hasDerivWithinAt hz
+        y).hasDerivAt.hasDerivWithinAt hz
   simp [actualBs, hd]
 
 theorem actualP2_eq {d : TailData} {K : ℝ} (w : ResetWitness d K)
@@ -1552,6 +1589,7 @@ theorem actualP2_eq {d : TailData} {K : ℝ} (w : ResetWitness d K)
   dsimp [OutgoingHistories.p1, OutgoingHistories.p2]
   field_simp [hL.ne', hQ.ne', (OutgoingHistories.E_pos w (y, eta)).ne']
 
+/-- Finite radius threshold, given by `16 / (Real.exp d.core.endpoint * (d.core.lam / 4))`. -/
 noncomputable def finiteRadiusThreshold (d : TailData) : ℝ :=
   16 / (Real.exp d.core.endpoint * (d.core.lam / 4))
 
@@ -1596,6 +1634,7 @@ theorem reset_scale_le_one {d : TailData} {K : ℝ} (w : ResetWitness d K)
   dsimp [resetSourceError] at hreset
   nlinarith [d.core.lam_lt]
 
+/-- Tail radius threshold, given by `max (finiteRadiusThreshold d) (releaseRadiusThreshold d)`. -/
 noncomputable def tailRadiusThreshold (d : TailData) : ℝ :=
   max (finiteRadiusThreshold d) (releaseRadiusThreshold d)
 
@@ -1621,7 +1660,7 @@ theorem corrected_tail_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
     actualA w y eta < ConeAlgebra.coneBound
       (OutgoingHistories.p1 XR w (CorrectedPulseAmplitude.amplitude d w.coefficients) (y, eta))
       (OutgoingHistories.p2 XR w (CorrectedPulseAmplitude.amplitude d w.coefficients) (y, eta)) :=
-        by
+          by
   let Amp := CorrectedPulseAmplitude.amplitude d w.coefficients
   have ha : ContDiff ℝ ∞ Amp := CorrectedPulseAmplitude.amplitude_contDiff d w.smooth
   have heta2 : eta ^ 2 ≤ 1 := by have h := abs_le.mp heta; nlinarith
@@ -1629,15 +1668,15 @@ theorem corrected_tail_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hb := actualBs_zero w ha eta hy
   by_cases hyr : y < d.releaseStart
   · have hQ := corrected_flatten_Qs_lower w hK hwait hsmall hscale hpulse hh1 hhT hreset eta heta
-    hy hyr.le
+      hy hyr.le
     have hQ0 : 0 < OutgoingHistories.Qs w Amp (y, eta) := by
       change 0 < OutgoingHistories.Qs w (CorrectedPulseAmplitude.amplitude d w.coefficients) (y,
-        eta)
+          eta)
       linarith [d.core.lam_pos]
     have har := correctedFlat_geometry w hreset eta y heta2
     have hAw := actualA_finite w eta hy hyr
     have hratio := (actual_finite_ratio_bound w ha hwait (reset_scale_le_one w hreset) eta heta hz
-      hy hyr.le hQ).trans hfinite
+        hy hyr.le hQ).trans hfinite
     have hp := actualP1_finite_large w Amp ((le_max_left _ _).trans_lt hXR) heta2 hy hQ
     have hc := cone_of_zero_bs (a := actualA w y eta) (by rw [hAw]; exact har.1)
       (by rw [hAw]; exact har.2.1) hratio hp
@@ -1655,7 +1694,7 @@ theorem corrected_tail_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
       exact (releaseVelocityRatio_uniform w hwait heta hR hy').trans hrelease
     have hp : 16 < OutgoingHistories.p1 XR w Amp (y, eta) := by
       change 16 < XR * Real.exp y * OutgoingHistories.Qs w Amp (y, eta) / CoordinateAlgebra.L d.h
-        eta
+          eta
       rw [actualQs_eq_normalizedLag w ha eta hR]
       exact releaseP1_large w ((le_max_right _ _).trans_lt hXR) heta2 hR hy'
     have har := releaseA_bounds d y
@@ -1670,8 +1709,8 @@ theorem corrected_tail_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
 /-! ## Simultaneous parameter choice, uniform in the terminal parameter -/
 
 theorem lambda_power_le_self (d : TailData) (n : ℕ) : d.core.lam ^ (n + 1) ≤ d.core.lam := by
-  have hp := pow_le_one₀ d.core.lam_pos.le (show d.core.lam ≤ 1 by linarith [d.core.lam_lt]) (n :=
-    n)
+  have hp := pow_le_one₀ d.core.lam_pos.le (show d.core.lam ≤ 1 by
+      linarith [d.core.lam_lt]) (n := n)
   rw [pow_succ]
   nlinarith [d.core.lam_pos]
 
@@ -1713,7 +1752,7 @@ theorem exists_tail_smallness_threshold (P m K : ℝ) (hP : 0 < P) (hK : 0 < K) 
       finiteConeConstant d.core.P d.core.m * d.core.lam ^ (10 : ℕ) ≤ 1 / 2 ∧
       releaseConeConstant d.core.P d.core.m * d.core.lam ^ (29 : ℕ) ≤ 1 / 2 := by
   obtain ⟨rate, hrate, Hrate⟩ := PulseAmplitude.exists_rate_threshold
-    (CorrectedPulseAmplitude.combinedConstant P m K)
+      (CorrectedPulseAmplitude.combinedConstant P m K)
   obtain ⟨finite, hfinite, Hfinite⟩ := exists_finite_cone_threshold P m hP
   obtain ⟨release, hrelease, Hrelease⟩ := exists_release_cone_threshold P m hP
   obtain ⟨reset, hreset, Hreset⟩ := exists_reset_source_threshold K hK
@@ -1723,7 +1762,7 @@ theorem exists_tail_smallness_threshold (P m K : ℝ) (hP : 0 < P) (hK : 0 < K) 
   have hincoming : 0 < incoming := div_pos (Real.exp_pos _) (by norm_num)
   refine ⟨min rate (min finite (min release (min reset (min source (min (1 / 120) incoming))))),
     lt_min hrate (lt_min hfinite (lt_min hrelease (lt_min hreset (lt_min hsource (lt_min (by
-      norm_num) hincoming))))), ?_⟩
+        norm_num) hincoming))))), ?_⟩
   intro d hdP hdm hlam
   rcases lt_min_iff.mp hlam with ⟨hlrate, hlam⟩
   rcases lt_min_iff.mp hlam with ⟨hlfinite, hlam⟩
@@ -1787,6 +1826,6 @@ theorem exists_scheduled_tail_cone (P m : ℝ) (hP : 0 < P) :
     exact (ha.2 eta heta).2.2.1
   · intro XR hXR eta heta y hy hy'
     exact corrected_tail_cone w hK hwait hsmall hscale hpulse hh1 hhT hreset hfinite hrelease hXR
-      heta hy hy'
+        heta hy hy'
 
 end NavierStokes.TailCone

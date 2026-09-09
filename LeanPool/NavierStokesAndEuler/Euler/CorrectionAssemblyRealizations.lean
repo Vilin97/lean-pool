@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressure
 
+/-! Genuine continuous Sobolev realizations of the assembled correction and its actual pressure at
+every order. -/
+
 @[expose] public section
 
-/-! Genuine continuous Sobolev realizations of the assembled correction and its actual pressure at
-  every order. -/
 
 noncomputable section
 
@@ -22,7 +23,8 @@ open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerAllOrderCorrect
 variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
-/-- The assembled correction as one actual L² field with continuous Sobolev realizations at every order. -/
+/-- The assembled correction as one actual L² field with continuous Sobolev realizations at every
+order. -/
 def FiniteFamily.fieldTower (F : FiniteFamily period hT A) (C : ComparisonData period hT A) :
     FieldTower period T where
   field := F.commonPath period
@@ -30,7 +32,8 @@ def FiniteFamily.fieldTower (F : FiniteFamily period hT A) (C : ComparisonData p
     (Icc (0 : ℝ) T) (F.solution (q+6) (by omega))
   value_eq q t := F.value_common period C (q+6) (by omega) t
 
-/-- The actual signed pressure as one L² field with continuous Sobolev realizations at every order. -/
+/-- The actual signed pressure as one L² field with continuous Sobolev realizations at every order.
+-/
 def FiniteFamily.pressureTower (F : FiniteFamily period hT A) (C : ComparisonData period hT A) :
     FieldTower period T where
   field := F.commonPressure period
@@ -40,7 +43,7 @@ def FiniteFamily.pressureTower (F : FiniteFamily period hT A) (C : ComparisonDat
 
 /-- Each finite solution is exactly the common tower's realization at that same Sobolev order. -/
 theorem FiniteFamily.solution_eq_realization (F : FiniteFamily period hT A) (C : ComparisonData
-  period hT A)
+    period hT A)
     (q : ℕ) (hq : 6 ≤ q) :
     F.solution q hq = (F.fieldTower period C).realization (q+1) := by
   apply ContinuousMap.ext
@@ -49,7 +52,8 @@ theorem FiniteFamily.solution_eq_realization (F : FiniteFamily period hT A) (C :
   exact (F.value_common period C q hq t).trans
     ((F.fieldTower period C).value_eq (q+1) t).symm
 
-/-- Every finite signed pressure is exactly the common pressure tower's realization at that order. -/
+/-- Every finite signed pressure is exactly the common pressure tower's realization at that order.
+-/
 theorem FiniteFamily.signedPressurePath_eq_realization (F : FiniteFamily period hT A)
     (C : ComparisonData period hT A) (q : ℕ) (hq : 6 ≤ q) :
     F.signedPressurePath period q hq = (F.pressureTower period C).realization q := by

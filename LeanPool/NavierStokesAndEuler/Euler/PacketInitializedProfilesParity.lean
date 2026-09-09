@@ -7,13 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimarySourceParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimarySourceParity
 
 /-! Every initialized profile inherits reflection parity from the actual
 terminal wave and the prescribed source coefficient symmetries. -/
+
+@[expose] public section
+
 
 noncomputable section
 

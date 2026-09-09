@@ -6,13 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialJet
+
+/-! The actual spatial derivatives and nonlinear jet terms preserve joint odd velocity parity. -/
 
 @[expose] public section
 
-/-! The actual spatial derivatives and nonlinear jet terms preserve joint odd velocity parity. -/
 
 noncomputable section
 
@@ -22,6 +21,8 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerLiftedGradi
   EulerPacketPointJets EulerPacketProfileRecursion
 open scoped ContDiff
 
+/-- Joint odd: an abbreviation for `∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(-x,-θ)) = -raw
+(t,(x,θ))`. -/
 abbrev JointOdd (T : ℝ) (raw : VectorField) : Prop :=
   ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ))
 
@@ -45,7 +46,7 @@ theorem sub (hf : JointOdd T f) (hg : JointOdd T g) : JointOdd T (f-g) := by
   simpa only [sub_eq_add_neg] using hf.add hg.neg
 
 theorem congr (hf : JointOdd T f)
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, g (t,(x,θ)) = f (t,(x,θ))) : JointOdd T g := by
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, g (t, (x, θ)) = f (t, (x, θ))) : JointOdd T g := by
   intro t x θ
   rw [he,he,hf]
 
@@ -86,7 +87,7 @@ theorem spatial_even_of_value_odd (hK : JointOdd T (fun z => (K z).1))
   rw [H.spatial_eq,H.spatial_eq,H.field.raw_fderiv_even_of_odd hr t x θ]
 
 theorem slowAdvection_odd (inverse : Domain → Space →L[ℝ] Space)
-    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, inverse (t,(-x,-θ)) = inverse (t,(x,θ)))
+    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, inverse (t, (-x, -θ)) = inverse (t, (x, θ)))
     (hJ : JointOdd T (fun z => (J z).1)) (hK : JointOdd T (fun z => (K z).1)) :
     JointOdd T (fun z => EulerPacketPointJets.slowAdvection (inverse z) (J z) (K z)) := by
   intro t x θ
@@ -101,7 +102,7 @@ theorem slowAdvection_odd (inverse : Domain → Space →L[ℝ] Space)
   rw [hD,hI t x θ,hj,map_neg,map_neg]
 
 theorem fastAdvection_odd (normal : VectorField)
-    (hN : ∀ (t : Icc (0 : ℝ) T) x θ, normal (t,(-x,-θ)) = normal (t,(x,θ)))
+    (hN : ∀ (t : Icc (0 : ℝ) T) x θ, normal (t, (-x, -θ)) = normal (t, (x, θ)))
     (hJ : JointOdd T (fun z => (J z).1)) (hK : JointOdd T (fun z => (K z).1)) :
     JointOdd T (fun z => EulerPacketPointJets.fastAdvection (normal z) (J z) (K z)) := by
   intro t x θ

@@ -6,13 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalBinding
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatDyadicExtension
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedUnmaskedBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedUnmaskedBinding
-
-@[expose] public section
 
 /-!
 # Native regularity of the actual signed cut sources
@@ -23,6 +18,9 @@ radial edges; no smooth continuation of the unmasked request at a dyadic
 face is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedNativeRegularity
@@ -32,6 +30,7 @@ open CorrectionInitialization
 open scoped Topology ContDiff
 
 
+/-- Full point: an abbreviation for `ActualWaveRegularityData.FullPoint`. -/
 abbrev FullPoint := ActualWaveRegularityData.FullPoint
 
 theorem half_weight_bounded {cL cR L : ℝ} (hcL : 0 < cL) (hcR : 0 < cR) (m : ℕ) :
@@ -40,7 +39,7 @@ theorem half_weight_bounded {cL cR L : ℝ} (hcL : 0 < cL) (hcR : 0 < cR) (m : �
         Real.sqrt (WeightedRadialPrimitive.zeta cL cR L t) ≤ C := by
   obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn
     ((WeightedRadialPrimitive.wholeMajorant_continuous (half_pos hcL) (half_pos hcR) L
-      m).continuousOn :
+        m).continuousOn :
       ContinuousOn _ (Icc (0 : ℝ) L))
   refine ⟨max C 0, le_max_right _ _, ?_⟩
   intro t ht
@@ -90,9 +89,9 @@ theorem radial_jets_zero_outside {f : ℕ → FullPoint → E} {α : ℝ}
       Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)
   · have he : ActualWaveRegularityData.radius x = PrimaryTargetBounds.leftRadius
-    ActualPrimary.nominal ∨
+      ActualPrimary.nominal ∨
         ActualWaveRegularityData.radius x = PrimaryTargetBounds.rightRadius ActualPrimary.nominal
-          := by
+            := by
       rcases not_and_or.mp ho with ha | hb
       · exact Or.inl (le_antisymm (le_of_not_gt ha) hc.1)
       · exact Or.inr (le_antisymm hc.2 (le_of_not_gt hb))
@@ -169,7 +168,7 @@ theorem radial_class_pull_local_bounds {D : Type} [NormedAddCommGroup D] [Normed
         Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
           (PrimaryTargetBounds.rightRadius ActualPrimary.nominal) → f n x = 0)
     (e : D →L[ℝ] FullPoint) (Ω : Set D) (q : D → ℝ)
-    (hmap : MapsTo e (WaveEdgeExtension.windowDomain Ω q (1/2) 2)
+    (hmap : MapsTo e (WaveEdgeExtension.windowDomain Ω q (1 / 2) 2)
       (ActualWaveRegularity.fullDomain ActualPrimary.standardRegion)) (n : ℕ) :
     FlatDyadicExtension.LocalJetBounds Ω q (f n ∘ e) := by
   intro x _hx _he m
@@ -177,7 +176,7 @@ theorem radial_class_pull_local_bounds {D : Type} [NormedAddCommGroup D] [Normed
   let Q : ℝ := max 1 ‖e‖
   have hQ : 1 ≤ Q := le_max_left _ _
   refine ⟨C * Q ^ m, mul_nonneg hC (pow_nonneg (zero_le_one.trans hQ) m),
-    Filter.Eventually.of_forall ?_⟩
+      Filter.Eventually.of_forall ?_⟩
   intro y hy j hj
   have hbound := norm_iteratedFDeriv_linear_pull e
     (ActualWaveRegularity.fullDomain_open ActualPrimary.standardRegion)
@@ -196,7 +195,7 @@ theorem radial_class_dyadic_pull_smooth {D : Type} [NormedAddCommGroup D] [Norme
           (PrimaryTargetBounds.rightRadius ActualPrimary.nominal) → f n x = 0)
     (e : D →L[ℝ] FullPoint) {Ω : Set D} (hΩ : IsOpen Ω) {q : D → ℝ}
     (hq : ContDiffOn ℝ ∞ q Ω)
-    (hmap : MapsTo e (WaveEdgeExtension.windowDomain Ω q (1/2) 2)
+    (hmap : MapsTo e (WaveEdgeExtension.windowDomain Ω q (1 / 2) 2)
       (ActualWaveRegularity.fullDomain ActualPrimary.standardRegion)) (n : ℕ) :
     ContDiffOn ℝ ∞ (fun y => SquaredPartition.dyadicProfile (q y) • f n (e y)) Ω ∧
     ∀ x ∈ Ω, q x = 1/2 ∨ q x = 2 → ∀ m,
@@ -205,9 +204,12 @@ theorem radial_class_dyadic_pull_smooth {D : Type} [NormedAddCommGroup D] [Norme
     ((ActualWaveRegularityData.full_regular_of_class hf hz n).1.comp e.contDiff.contDiffOn hmap)
     (radial_class_pull_local_bounds hf hz e Ω q hmap n)
 
+/-- Native: an abbreviation for `ActualSignedPhysicalData.Native`. -/
 abbrev Native := ActualSignedPhysicalData.Native
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualSignedPhysicalBinding.Label B N0
 
+/-- Native cylinder map as an element of `Native →L[ℝ] PhysicalSignedWave.Cylinder`. -/
 noncomputable def nativeCylinderMap : Native →L[ℝ] PhysicalSignedWave.Cylinder :=
   let r := ContinuousLinearMap.fst ℝ ℝ (TorusInverse.Plane × TorusInverse.Plane)
   let s := ContinuousLinearMap.snd ℝ ℝ (TorusInverse.Plane × TorusInverse.Plane)
@@ -219,6 +221,8 @@ noncomputable def nativeCylinderMap : Native →L[ℝ] PhysicalSignedWave.Cylind
 theorem nativeCylinderMap_apply (y : Native) :
     nativeCylinderMap y = ActualSignedPhysicalData.nativeCylinder y := rfl
 
+/-- Native to common, given by `(ActualSignedPhysicalBinding.toCommonCylinder
+l).toContinuousLinearMap.comp nativeCylinderMap`. -/
 noncomputable def nativeToCommon {B N0 : ℕ} (l : Label B N0) : Native →L[ℝ] FullPoint :=
   (ActualSignedPhysicalBinding.toCommonCylinder l).toContinuousLinearMap.comp nativeCylinderMap
 
@@ -226,6 +230,7 @@ theorem nativeToCommon_apply {B N0 : ℕ} (l : Label B N0) (y : Native) :
     nativeToCommon l y = ActualSignedPhysicalBinding.toCommonCylinder l
       (ActualSignedPhysicalData.nativeCylinder y) := rfl
 
+/-- Native Q, given by `SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) y.2.1`. -/
 noncomputable def nativeQ (y : Native) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) y.2.1
 
@@ -255,14 +260,15 @@ theorem radial_class_native_smooth {B N0 : ℕ} (l : Label B N0)
       ActualSignedPhysicalData.nativePast ∧
       ∀ y ∈ ActualSignedPhysicalData.nativePast, nativeQ y = 1/2 ∨ nativeQ y = 2 → ∀ m,
         iteratedFDeriv ℝ m (fun z => SquaredPartition.dyadicProfile (nativeQ z) • f n
-          (nativeToCommon l z)) y = 0 :=
+            (nativeToCommon l z)) y = 0 :=
   radial_class_dyadic_pull_smooth hf hz (nativeToCommon l)
     ActualSignedPhysicalData.nativePast_open nativeQ_smooth (nativeToCommon_maps l) n
 
 theorem primary_mask_zero_outside {B N0 : ℕ} (l : Label B N0) (n : ℕ)
     (x : PhysicalSignedWave.Cylinder)
-    (ho : SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) (x.1.2.1.2,x.1.2.1.1) ∉ Ioo (1/2
-      : ℝ) 2) :
+    (ho : SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) (x.1.2.1.2, x.1.2.1.1) ∉ Ioo (1 /
+        2
+        : ℝ) 2) :
     (ActualSignedPhysicalBinding.primary l).mask n x = 0 := by
   change ActualPrimary.spatialMask l.1 (x.1.1,x.1.2.1) = 0
   by_contra hn
@@ -271,10 +277,11 @@ theorem primary_mask_zero_outside {B N0 : ℕ} (l : Label B N0) (n : ℕ)
 theorem referenceScalar_zero_outside {B N0 : ℕ} (l : Label B N0)
     (request : ℕ → PhysicalSignedWave.Cylinder → SignedWaveUpdate.Vec2)
     (j : Fin 2) (n : ℕ) (x : PhysicalSignedWave.Cylinder)
-    (ho : SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) (x.1.2.1.2,x.1.2.1.1) ∉ Ioo (1/2
-      : ℝ) 2) :
+    (ho : SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) (x.1.2.1.2, x.1.2.1.1) ∉ Ioo (1 /
+        2
+        : ℝ) 2) :
     ActualPeriodizedSignedRealization.referenceScalar (ActualSignedPhysicalBinding.primary l)
-      request j n x = 0 := by
+        request j n x = 0 := by
   simp only [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar,
     primary_mask_zero_outside l n x ho, mul_zero]
 
@@ -288,7 +295,7 @@ theorem own_native_smooth {f : Label B N0 → TorusInverse.Frequency → ℕ →
     (hf : LabelSumBounds.UniformClass ActualSignedStageControls.fullStrip
       (fun (i : Label B N0 × TorusInverse.Frequency) n x =>
         Real.sqrt (ActualSignedStageControls.fullStrip.zeta x) * ActualSignedStageControls.envelope
-          i.1 n x)
+            i.1 n x)
       α (ownField f))
     (hz : ∀ l k x, x ∈ ActualWaveRegularity.fullDomain ActualPrimary.standardRegion →
       ActualWaveRegularityData.radius x ∉
@@ -328,7 +335,7 @@ include hR in
 theorem potential_smooth_and_flat (l : Label B N0) (k : TorusInverse.Frequency) :
     ContDiffOn ℝ ∞ (fun y => SquaredPartition.dyadicProfile (nativeQ y) •
       potential request l k (reference l) (nativeToCommon l y)) ActualSignedPhysicalData.nativePast
-        ∧
+          ∧
       ∀ y ∈ ActualSignedPhysicalData.nativePast, nativeQ y = 1/2 ∨ nativeQ y = 2 → ∀ m,
         iteratedFDeriv ℝ m (fun z => SquaredPartition.dyadicProfile (nativeQ z) •
           potential request l k (reference l) (nativeToCommon l z)) y = 0 := by
@@ -365,7 +372,7 @@ theorem native_potential_source_factor (L : NativeLabel B N0)
     if I.1.1 = (L : PhysicalWaveSum.BandLabel) ∧ I.1.2.val = 1 ∧ n = L.val.1 then
       fun y => SquaredPartition.dyadicProfile (nativeQ y) •
         ActualSignedUnmaskedBounds.potential (request (B := B) P u)
-          (ActualSignedExterior.actualLabel L) I.2
+            (ActualSignedExterior.actualLabel L) I.2
           (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
           (nativeToCommon (ActualSignedExterior.actualLabel L) y)
     else fun _ => 0 := by
@@ -386,7 +393,7 @@ theorem native_potential_source_factor (L : NativeLabel B N0)
       change I.1.1 ∉ {(L : PhysicalWaveSum.BandLabel)}
       exact fun h => hL (mem_singleton_iff.mp h)
     simp only [ActualSignedPhysicalData.nativePotentialSource, dite_eq_right hm, hL, false_and,
-      ite_false]
+        ite_false]
 
 theorem native_pressure_source_factor (L : NativeLabel B N0)
     (I : ActualSignedPhysicalData.SourceIndex) (n : ℕ) :
@@ -395,7 +402,7 @@ theorem native_pressure_source_factor (L : NativeLabel B N0)
     if I.1.1 = (L : PhysicalWaveSum.BandLabel) ∧ I.1.2.val = 1 ∧ n = L.val.1 then
       fun y => SquaredPartition.dyadicProfile (nativeQ y) •
         ActualSignedUnmaskedBounds.pressure (request (B := B) P u)
-          (ActualSignedExterior.actualLabel L) I.2
+            (ActualSignedExterior.actualLabel L) I.2
           (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
           (nativeToCommon (ActualSignedExterior.actualLabel L) y)
     else fun _ => 0 := by
@@ -416,7 +423,7 @@ theorem native_pressure_source_factor (L : NativeLabel B N0)
       change I.1.1 ∉ {(L : PhysicalWaveSum.BandLabel)}
       exact fun h => hL (mem_singleton_iff.mp h)
     simp only [ActualSignedPhysicalData.nativePressureSource, dite_eq_right hm, hL, false_and,
-      ite_false]
+        ite_false]
 
 omit P u H hp in
 theorem zero_native_smooth_and_flat :
@@ -539,11 +546,11 @@ theorem cycleNativeRegular
     (hθ : MeanClass ActualInitialization.geometry.strip α
       (((ActualCycleParameters.fixedParameters B N0).afterParticular
         x.coefficients (ActualPrimary.commonContext B) x.state).thetaResidual
-          (ActualPrimary.commonContext B)))
+            (ActualPrimary.commonContext B)))
     (hz : MeanClass ActualInitialization.geometry.strip α
       (((ActualCycleParameters.fixedParameters B N0).afterParticular
         x.coefficients (ActualPrimary.commonContext B) x.state).axialResidual
-          (ActualPrimary.commonContext B)))
+            (ActualPrimary.commonContext B)))
     (L : NativeLabel B N0) :
     ActualSignedPhysicalData.NativeRegular ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
       ((ActualSignedExterior.cycleFamily x H hp).singleton L) :=

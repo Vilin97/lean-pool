@@ -7,13 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiophantineGraph
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 public import Mathlib.Analysis.Fourier.AddCircle
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Smooth Fourier series and directional inversion on the two-dimensional torus
@@ -22,15 +18,21 @@ We work on the universal cover `ℝ × ℝ`, with frequencies in `ℤ × ℤ`.
 Rapid coefficients have summable polynomially weighted norms of every order.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.TorusInverse
 
 open scoped BigOperators Topology ContDiff
 
+/-- Frequency: an abbreviation for `ℤ × ℤ`. -/
 abbrev Frequency := ℤ × ℤ
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
 
+/-- Weight, given by `1 + |(k.1 : ℝ)| + |(k.2 : ℝ)|`. -/
 def weight (k : Frequency) : ℝ := 1 + |(k.1 : ℝ)| + |(k.2 : ℝ)|
 
 theorem weight_pos (k : Frequency) : 0 < weight k := by
@@ -59,22 +61,31 @@ theorem Rapid.mul_linear {a b : Frequency → ℂ} (ha : Rapid a) (C : ℝ)
       exact mul_le_mul_of_nonneg_right (hb k) (norm_nonneg _)
     _ = C * (weight k ^ (p + 1) * ‖a k‖) := by rw [pow_succ]; ring
 
+/-- Omega, given by `2 * Real.pi * Complex.I`. -/
 def omega : ℂ := 2 * Real.pi * Complex.I
 
+/-- Freq X, given by `omega * (k.1 : ℂ)`. -/
 def freqX (k : Frequency) : ℂ := omega * (k.1 : ℂ)
+/-- Freq Y, given by `omega * (k.2 : ℂ)`. -/
 def freqY (k : Frequency) : ℂ := omega * (k.2 : ℂ)
 
+/-- Dx, given by `ContinuousLinearMap.fst ℝ ℝ ℝ`. -/
 def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+/-- Dy, given by `ContinuousLinearMap.snd ℝ ℝ ℝ`. -/
 def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
 
+/-- Lift X, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dx`. -/
 def liftX : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dx
+/-- Lift Y, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dy`. -/
 def liftY : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dy
 
 @[simp] theorem liftX_apply (c : ℂ) (x : Plane) : liftX c x = x.1 • c := rfl
 @[simp] theorem liftY_apply (c : ℂ) (x : Plane) : liftY c x = x.2 • c := rfl
 
+/-- Phase, given by `liftX (freqX k) + liftY (freqY k)`. -/
 def phase (k : Frequency) : Plane →L[ℝ] ℂ := liftX (freqX k) + liftY (freqY k)
 
+/-- Mode, given by `Complex.exp (phase k x)`. -/
 def mode (k : Frequency) (x : Plane) : ℂ := Complex.exp (phase k x)
 
 theorem phase_formula (k : Frequency) (x : Plane) :
@@ -90,7 +101,9 @@ theorem norm_mode (k : Frequency) (x : Plane) : ‖mode k x‖ = 1 := by
 theorem continuous_mode (k : Frequency) : Continuous (mode k) :=
   Complex.continuous_exp.comp (phase k).continuous
 
+/-- Deriv X, given by `freqX k * a k`. -/
 def derivX (a : Frequency → ℂ) (k : Frequency) : ℂ := freqX k * a k
+/-- Deriv Y, given by `freqY k * a k`. -/
 def derivY (a : Frequency → ℂ) (k : Frequency) : ℂ := freqY k * a k
 
 theorem norm_freqX_le (k : Frequency) : ‖freqX k‖ ≤ ‖omega‖ * weight k := by
@@ -113,6 +126,7 @@ theorem Rapid.derivX {a : Frequency → ℂ} (ha : Rapid a) : Rapid (derivX a) :
 theorem Rapid.derivY {a : Frequency → ℂ} (ha : Rapid a) : Rapid (derivY a) :=
   ha.mul_linear ‖omega‖ norm_freqY_le
 
+/-- Series, given by `∑' k, a k * mode k x`. -/
 def series (a : Frequency → ℂ) (x : Plane) : ℂ := ∑' k, a k * mode k x
 
 theorem summable_terms {a : Frequency → ℂ} (ha : Rapid a) (x : Plane) :
@@ -125,6 +139,7 @@ theorem continuous_series {a : Frequency → ℂ} (ha : Rapid a) : Continuous (s
   intro k x
   simp only [norm_mul, norm_mode, mul_one, le_refl]
 
+/-- Term derivative, given by `liftX (derivX a k * mode k x) + liftY (derivY a k * mode k x)`. -/
 def termDeriv (a : Frequency → ℂ) (k : Frequency) (x : Plane) : Plane →L[ℝ] ℂ :=
   liftX (derivX a k * mode k x) + liftY (derivY a k * mode k x)
 
@@ -140,6 +155,7 @@ theorem hasFDerivAt_term (a : Frequency → ℂ) (k : Frequency) (x : Plane) :
     ring
   simpa only [mode, hd] using h
 
+/-- Derivative majorant, given by `‖liftX‖ * ‖derivX a k‖ + ‖liftY‖ * ‖derivY a k‖`. -/
 def derivativeMajorant (a : Frequency → ℂ) (k : Frequency) : ℝ :=
   ‖liftX‖ * ‖derivX a k‖ + ‖liftY‖ * ‖derivY a k‖
 
@@ -197,15 +213,21 @@ theorem contDiff_series {a : Frequency → ℂ} (ha : Rapid a) :
     ContDiff ℝ ∞ (series a) :=
   contDiff_infty.mpr (fun p => contDiff_series_nat p ha)
 
+/-- Direction data for torus inverse. -/
 inductive Direction
   | radial
   | temporal
   deriving DecidableEq
 
+/-- Vector as an element of `Direction → Plane | .radial => (1, 1 - Real.sqrt 2) | .temporal =>
+(Real.sqrt 2 - 1, 1)`. -/
 def vector : Direction → Plane
   | .radial => (1, 1 - Real.sqrt 2)
   | .temporal => (Real.sqrt 2 - 1, 1)
 
+/-- Symbol as an element of `Direction → Frequency → ℝ | .radial, k =>
+DiophantineGraph.radialSymbol k.1 k.2 | .temporal, k => DiophantineGraph.timeSymbol k.1
+k.2`. -/
 def symbol : Direction → Frequency → ℝ
   | .radial, k => DiophantineGraph.radialSymbol k.1 k.2
   | .temporal, k => DiophantineGraph.timeSymbol k.1 k.2
@@ -255,7 +277,9 @@ theorem omega_ne_zero : omega ≠ 0 := by
   exact mul_ne_zero (mul_ne_zero (by norm_num)
     (Complex.ofReal_ne_zero.mpr Real.pi_ne_zero)) Complex.I_ne_zero
 
+/-- Multiplier, given by `(omega * (symbol d k : ℂ))⁻¹`. -/
 def multiplier (d : Direction) (k : Frequency) : ℂ := (omega * (symbol d k : ℂ))⁻¹
+/-- Inverse coefficient, given by `multiplier d k * a k`. -/
 def inverseCoeff (d : Direction) (a : Frequency → ℂ) (k : Frequency) : ℂ :=
   multiplier d k * a k
 
@@ -308,6 +332,7 @@ theorem coefficient_cancel (d : Direction) {a : Frequency → ℂ} (hzero : a 0 
     change (omega * (symbol d k : ℂ)) * ((omega * (symbol d k : ℂ))⁻¹ * a k) = a k
     rw [← mul_assoc, mul_inv_cancel₀ hd, one_mul]
 
+/-- Directional inverse, given by `series (inverseCoeff d a)`. -/
 def directionalInverse (d : Direction) (a : Frequency → ℂ) : Plane → ℂ :=
   series (inverseCoeff d a)
 
@@ -345,10 +370,12 @@ theorem directionalInverse_solves (d : Direction) {a : Frequency → ℂ}
 /-! ## Descent to the torus and actual Haar means -/
 
 open MeasureTheory
-local instance : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
+local instance instTorusInverse1 : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
 
+/-- Torus: an abbreviation for `UnitAddCircle × UnitAddCircle`. -/
 abbrev Torus := UnitAddCircle × UnitAddCircle
 
+/-- Torus measure as an element of `Measure Torus`. -/
 def torusMeasure : Measure Torus :=
   (AddCircle.haarAddCircle : Measure UnitAddCircle).prod AddCircle.haarAddCircle
 
@@ -356,6 +383,7 @@ instance : IsProbabilityMeasure torusMeasure := by
   unfold torusMeasure
   infer_instance
 
+/-- Torus mode, bundling `toFun`, `continuous_toFun`. -/
 def torusMode (k : Frequency) : C(Torus, ℂ) where
   toFun z := fourier k.1 z.1 * fourier k.2 z.2
   continuous_toFun := ((fourier k.1).continuous.comp continuous_fst).mul
@@ -364,6 +392,7 @@ def torusMode (k : Frequency) : C(Torus, ℂ) where
 theorem norm_torusMode (k : Frequency) (z : Torus) : ‖torusMode k z‖ = 1 := by
   simp [torusMode, fourier_apply, Circle.norm_coe]
 
+/-- Torus series, given by `∑' k, a k * torusMode k z`. -/
 def torusSeries (a : Frequency → ℂ) (z : Torus) : ℂ := ∑' k, a k * torusMode k z
 
 theorem mode_eq_torusMode (k : Frequency) (x : Plane) :
@@ -392,7 +421,7 @@ theorem series_periodic (a : Frequency → ℂ) (x : Plane) (m n : ℤ) :
 theorem continuous_torusSeries {a : Frequency → ℂ} (ha : Rapid a) :
     Continuous (torusSeries a) := by
   apply continuous_tsum (fun k => continuous_const.fun_mul (torusMode k).continuous)
-    ha.summable_norm
+      ha.summable_norm
   intro k z
   simp only [norm_mul, norm_torusMode, mul_one, le_refl]
 
@@ -452,16 +481,20 @@ theorem norm_directionalInverse_le (d : Direction) {a : Frequency → ℂ}
     ‖directionalInverse d a x‖ ≤ (6 * ‖omega⁻¹‖) * coeffSeminorm 1 a := by
   exact (norm_series_le (ha.inverseCoeff d) x).trans (inverseCoeff_seminorm_le d ha 0)
 
+/-- Coordinate coefficient, with branches according to `j`. -/
 def coordinateCoeff (j : Bool) (a : Frequency → ℂ) : Frequency → ℂ :=
   if j then derivY a else derivX a
 
+/-- Coordinate partial, given by `fderiv ℝ f x (if j then (0, 1) else (1, 0))`. -/
 def coordinatePartial (j : Bool) (f : Plane → ℂ) (x : Plane) : ℂ :=
   fderiv ℝ f x (if j then (0, 1) else (1, 0))
 
+/-- Coefficient word as an element of `js, a => coordinateCoeff j (coefficientWord js a)`. -/
 def coefficientWord : List Bool → (Frequency → ℂ) → Frequency → ℂ
   | [], a => a
   | j :: js, a => coordinateCoeff j (coefficientWord js a)
 
+/-- Derivative word as an element of `js, f => coordinatePartial j (derivativeWord js f)`. -/
 def derivativeWord : List Bool → (Plane → ℂ) → Plane → ℂ
   | [], f => f
   | j :: js, f => coordinatePartial j (derivativeWord js f)

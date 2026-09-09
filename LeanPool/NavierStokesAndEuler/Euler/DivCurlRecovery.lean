@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicCutoffEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
 public import LeanPool.NavierStokesAndEuler.Euler.LpSpatialCutoff
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicCutoffEnergy
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicEnergy
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Elliptic recovery for classical fields without assuming Sobolev regularity.
 
@@ -18,6 +21,9 @@ The localized identities below require only ordinary smoothness and a compactly
 supported scalar cutoff. In particular, they do not assume that derivatives of
 the velocity are globally square integrable.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -103,7 +109,7 @@ theorem gradient_energy_recovery (M : ℝ)
         M ^ 2 * (∫ x, h x ^ 2) + ∫ x, |h x * Δ h x| := by
   have hs : Integrable (fun x => |h x * Δ h x|) :=
     (hh.continuous.mul (scalar_laplacian_smooth h
-      hh).continuous).abs.integrable_of_hasCompactSupport
+        hh).continuous).abs.integrable_of_hasCompactSupport
       ((hcΔ.mul_left (f := h)).comp_left (g := abs) (abs_zero))
   have hs2 : Integrable (fun x => h x ^ 2) := hL2.integrable_sq
   let F (n : ℕ) (x : Space) : ℝ := ‖gradient (cutoff n * h) x‖ ^ 2
@@ -112,7 +118,7 @@ theorem gradient_energy_recovery (M : ℝ)
       (compactSupport_gradient ((cutoff_compact n).mul_right (f' := h))).comp_left
         (g := fun v : Space => ‖v‖ ^ 2) (by simp)
     exact ((contDiff_gradient ((cutoff_smooth n).mul hh)).continuous.norm.pow
-      2).integrable_of_hasCompactSupport hc
+        2).integrable_of_hasCompactSupport hc
   have hFbound (n : ℕ) : (∫ x, F n x) ≤ M ^ 2 * (∫ x, h x ^ 2) +
       ∫ x, |h x * Δ h x| := by
     have hcut := integrable_square_gradient_cutoff (cutoff n) h
@@ -123,7 +129,7 @@ theorem gradient_energy_recovery (M : ℝ)
           (f' := fun x => h x * Δ h x)
       exact (((cutoff_smooth n).continuous.pow 2).mul
         (hh.continuous.mul (scalar_laplacian_smooth h
-          hh).continuous)).integrable_of_hasCompactSupport hc
+            hh).continuous)).integrable_of_hasCompactSupport hc
     have hc : (∫ x, h x ^ 2 * ‖gradient (cutoff n) x‖ ^ 2) ≤
         M ^ 2 * ∫ x, h x ^ 2 := by
       rw [← integral_const_mul]
@@ -156,7 +162,7 @@ theorem gradient_energy_recovery (M : ℝ)
     have hg := (toDual ℝ Space).symm.continuous.continuousAt.tendsto.comp hd
     simpa only [F, gradient, Function.comp_def] using hg.norm.pow 2
   have hfatou := integrable_and_integral_le_of_nonnegative_limit volume F (fun x => ‖gradient h x‖
-    ^ 2)
+      ^ 2)
     (M ^ 2 * (∫ x, h x ^ 2) + ∫ x, |h x * Δ h x|) hF
     ((contDiff_gradient hh).continuous.norm.pow 2).aestronglyMeasurable
     (fun n x => sq_nonneg _) (fun x => sq_nonneg _) hlim hFbound
@@ -195,7 +201,7 @@ theorem exists_gradient_energy_square_bound : ∃ C : ℝ, 0 ≤ C ∧
   intro h hh hL2 hcΔ
   have hs : Integrable (fun x => |h x * Δ h x|) :=
     (hh.continuous.mul (scalar_laplacian_smooth h
-      hh).continuous).abs.integrable_of_hasCompactSupport
+        hh).continuous).abs.integrable_of_hasCompactSupport
       ((hcΔ.mul_left (f := h)).comp_left (g := abs) abs_zero)
   have hΔL2 : MemLp (Δ h) 2 volume :=
     (scalar_laplacian_smooth h hh).continuous.memLp_of_hasCompactSupport hcΔ
@@ -337,7 +343,7 @@ theorem component_wordDerivative_memLp (u : Space → Space)
   have hs : ContDiff ℝ ∞ (fun x => u x j) := (contDiff_piLp 2).mp hu j
   have hcomp : MemLp (fun x => u x j) 2 volume :=
     hL2.of_le hs.continuous.aestronglyMeasurable (Eventually.of_forall (fun x => PiLp.norm_apply_le
-      _ j))
+        _ j))
   have hΔ : HasCompactSupport (Δ (fun x => u x j)) := by
     have he : Δ (fun x => u x j) = fun x => (Δ u x) j :=
       funext (fun x => (vector_laplacian_coordinate u hu x j).symm)

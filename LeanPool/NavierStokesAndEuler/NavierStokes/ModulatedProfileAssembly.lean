@@ -7,13 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularAuxiliary
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalProfile
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ReservedPatches
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalConeAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AssembledSlowBase
-
-@[expose] public section
 
 /-!
 # Modulation of one actual nominal profile
@@ -25,6 +20,9 @@ field used by the periodic-loop construction is clamped only away from the
 modulation annulus.  Finally only the supported edits are transplanted back
 to the original nominal profile.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,7 +46,7 @@ theorem rows_eq_of_nonnegative {D D' : RadialDomain} (P : Profiles D) (Q : Profi
     (hu : ∀ x ∈ Icc (0 : ℝ) X, P.U (x, eta) = Q.U (x, eta)) :
     ModulatedHistories.profileRows P (X, eta) = ModulatedHistories.profileRows Q (X, eta) := by
   rw [ModulatedHistories.profileRows_eq_axisHistory, ModulatedHistories.profileRows_eq_axisHistory,
-    h0]
+      h0]
   congr 1
   unfold ModulatedHistories.axisHistory
   funext i
@@ -70,6 +68,7 @@ theorem histories_eq_of_nonnegative {D D' : RadialDomain}
 
 /-- This is genuine available domain data of a fixed nominal witness. -/
 structure ParameterData {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) where
+  /-- Parameters of `ParameterData`, of type `Set ℝ`. -/
   parameters : Set ℝ
   isOpen : IsOpen parameters
   contains : Icc (-1 : ℝ) 1 ⊆ parameters
@@ -86,9 +85,11 @@ namespace ParameterData
 
 variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F} (d : ParameterData W)
 
+/-- Window, given by `ParametricRadialExtension.parameterWindow d.isOpen d.contains`. -/
 noncomputable def window : ParametricRadialExtension.ParameterWindow d.parameters :=
   ParametricRadialExtension.parameterWindow d.isOpen d.contains
 
+/-- Target, given by `Ioo (-d.window.inner) d.window.inner`. -/
 noncomputable def target : Set ℝ := Ioo (-d.window.inner) d.window.inner
 
 theorem target_open : IsOpen d.target := isOpen_Ioo
@@ -97,6 +98,7 @@ theorem target_contains : Icc (-1 : ℝ) 1 ⊆ d.target := d.window.unit_subset
 
 theorem target_subset : d.target ⊆ d.parameters := d.window.target_subset
 
+/-- Parameterized, given by `f (p.1, d.window.parameterMap p.2)`. -/
 noncomputable def parameterized (f : Field) (p : Point) : ℝ :=
   f (p.1, d.window.parameterMap p.2)
 
@@ -107,6 +109,8 @@ theorem parameterized_smooth {f : Field} (hf : ContDiffOn ℝ ∞ f W.domain.car
   intro p hp
   exact d.nonnegative p.1 hp.1 _ (d.window.parameterMap_mem p.2)
 
+/-- Extended, given by `ParametricRadialExtension.halfPlaneExtension (d.parameterized f)
+(d.parameterized_smooth hf)`. -/
 noncomputable def extended (f : Field) (hf : ContDiffOn ℝ ∞ f W.domain.carrier) : Field :=
   ParametricRadialExtension.halfPlaneExtension (d.parameterized f) (d.parameterized_smooth hf)
 
@@ -125,7 +129,9 @@ theorem extended_germ (f : Field) (hf : ContDiffOn ℝ ∞ f W.domain.carrier)
   filter_upwards [(isOpen_Ioi.prod d.target_open).mem_nhds ⟨hX, heta⟩] with q hq
   exact d.extended_eq f hf hq.1.le (abs_lt.mpr hq.2).le
 
+/-- F, given by `d.extended W.profiles.f W.profiles.f_smooth`. -/
 noncomputable def f : Field := d.extended W.profiles.f W.profiles.f_smooth
+/-- U, given by `d.extended W.profiles.U W.profiles.U_smooth`. -/
 noncomputable def U : Field := d.extended W.profiles.U W.profiles.U_smooth
 
 theorem f_smooth : ContDiff ℝ ∞ d.f := d.extended_smooth _ _
@@ -136,9 +142,10 @@ theorem fields_eq {p : Point} (hX : 0 ≤ p.1) (heta : p.2 ∈ d.target) :
   ⟨d.extended_eq _ _ hX (abs_lt.mpr heta).le,
     d.extended_eq _ _ hX (abs_lt.mpr heta).le⟩
 
+/-- Profiles, constructed using `ModulatedHistories.profiles`. -/
 noncomputable def profiles : Profiles (ModulatedHistories.stripDomain univ isOpen_univ) :=
   ModulatedHistories.profiles univ isOpen_univ d.f d.U F.axisDatum d.f_smooth.contDiffOn
-    d.U_smooth.contDiffOn
+      d.U_smooth.contDiffOn
     F.axisDatum_contDiff.contDiffOn
 
 theorem pressure0_eq : d.profiles.pressure0 = W.profiles.pressure0 := rfl
@@ -146,7 +153,7 @@ theorem pressure0_eq : d.profiles.pressure0 = W.profiles.pressure0 := rfl
 /-- These are absolute histories, not the histories of a radially clamped field. -/
 theorem rows_eq {X eta : ℝ} (hX : 0 ≤ X) (heta : eta ∈ d.target) :
     ModulatedHistories.profileRows d.profiles (X, eta) = ModulatedHistories.profileRows W.profiles
-      (X, eta) := by
+        (X, eta) := by
   exact rows_eq_of_nonnegative d.profiles W.profiles rfl hX
     (fun _ hx => (d.fields_eq hx.1 heta).1) (fun _ hx => (d.fields_eq hx.1 heta).2)
 
@@ -209,7 +216,7 @@ noncomputable def repairPatch {F : OutgoingProfile.Profile} (W : NominalProfile.
 theorem repairPatch_before_positive {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) :
     (repairPatch W).right < ReservedPatches.left F W.controls.radius .positive := by
   have hm := (ReservedPatches.support_margins F W.controls.radius W.controls.radius_pos
-    .modulation).2.2
+      .modulation).2.2
   have hh : ReservedPatches.right F W.controls.radius .modulation <
       ReservedPatches.left F W.controls.radius .positive := by
     apply ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos
@@ -274,19 +281,24 @@ theorem transplantProfiles_fields {D D' : RadialDomain} (Q : Profiles D)
   ⟨AnnularAuxiliary.transplant_inside hfp.symm,
     AnnularAuxiliary.transplant_inside hUp.symm⟩
 
+/-- Band, given by `Icc (-a) a`. -/
 noncomputable def band (a : ℝ) : Set ℝ := Icc (-a) a
 
+/-- Modulation region, given by `Icc v.left v.right ×ˢ band a`. -/
 noncomputable def modulationRegion (v : ModulatedHistories.Window) (a : ℝ) : Set Point :=
   Icc v.left v.right ×ˢ band a
 
+/-- Following region, given by `Icc v.right (repairPatch W).right ×ˢ band a`. -/
 noncomputable def followingRegion {F : OutgoingProfile.Profile}
     (W : NominalProfile.Witness F) (v : ModulatedHistories.Window) (a : ℝ) : Set Point :=
   Icc v.right (repairPatch W).right ×ˢ band a
 
+/-- Full region, given by `Icc v.left (repairPatch W).right ×ˢ band a`. -/
 noncomputable def fullRegion {F : OutgoingProfile.Profile}
     (W : NominalProfile.Witness F) (v : ModulatedHistories.Window) (a : ℝ) : Set Point :=
   Icc v.left (repairPatch W).right ×ˢ band a
 
+/-- Boundary region, given by `({v.left, v.right} : Set ℝ) ×ˢ band a`. -/
 noncomputable def boundaryRegion (v : ModulatedHistories.Window) (a : ℝ) : Set Point :=
   ({v.left, v.right} : Set ℝ) ×ˢ band a
 
@@ -294,16 +306,23 @@ noncomputable def boundaryRegion (v : ModulatedHistories.Window) (a : ℝ) : Set
 nonlinear repair are constructed later. Each supplied smooth coordinate is
 identified with an actual stock or shear of this particular `W`. -/
 structure LoopData {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) where
+  /-- Parameter of `LoopData`, of type `ParameterData W`. -/
   parameter : ParameterData W
+  /-- Eta radius of `LoopData`, of type `ℝ`. -/
   etaRadius : ℝ
   one_lt_etaRadius : 1 < etaRadius
   etaRadius_lt_target : etaRadius < parameter.window.inner
+  /-- Modulation of `LoopData`, of type `ModulatedHistories.Window`. -/
   modulation : ModulatedHistories.Window
   after_initial : 4 / W.axis.scale < modulation.left
   before_repair : modulation.right < (repairPatch W).left
+  /-- A of `LoopData`, of type `Field`. -/
   a : Field
+  /-- M of `LoopData`, of type `Field`. -/
   m : Field
+  /-- P₁ of `LoopData`, of type `Field`. -/
   p₁ : Field
+  /-- P₂ of `LoopData`, of type `Field`. -/
   p₂ : Field
   a_smooth : ContDiff ℝ ∞ a
   m_smooth : ContDiff ℝ ∞ m
@@ -333,6 +352,7 @@ namespace LoopData
 
 variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F} (d : LoopData W)
 
+/-- Parameters, given by `Ioo (-d.etaRadius) d.etaRadius`. -/
 noncomputable def parameters : Set ℝ := Ioo (-d.etaRadius) d.etaRadius
 
 theorem parameters_open : IsOpen d.parameters := isOpen_Ioo
@@ -374,9 +394,12 @@ theorem exists_realization : Nonempty (ParametricModulation.TrueConeRealization 
     d.a_smooth d.m_smooth d.p₁_smooth d.p₂_smooth
     (fun p hp => d.positive_a p (d.union_full (Or.inl hp))) d.projection d.true_boundary
 
+/-- Realization: an abbreviation for `ParametricModulation.TrueConeRealization d.a d.m d.p₁ d.p₂
+(modulationRegion d.modulation d.etaRadius) (boundaryRegion d.modulation d.etaRadius)`. -/
 abbrev Realization := ParametricModulation.TrueConeRealization d.a d.m d.p₁ d.p₂
   (modulationRegion d.modulation d.etaRadius) (boundaryRegion d.modulation d.etaRadius)
 
+/-- Angular auxiliary, given by `d.parameter.E (d.modulation.left / 2)`. -/
 noncomputable def angularAux : Field := d.parameter.E (d.modulation.left / 2)
 
 theorem angularAux_smooth : ContDiff ℝ ∞ d.angularAux :=
@@ -395,6 +418,7 @@ theorem auxiliary_shears {p : Point} (hp : p ∈ fullRegion W d.modulation d.eta
     ((d.parameter.extended_germ W.profiles.U W.profiles.U_smooth
       (d.full_positive hp) (d.band_target hp.2)).comp_tendsto ht)
 
+/-- Domain, given by `restrictDomain W.domain d.parameters d.parameters_open`. -/
 noncomputable def domain : RadialDomain := restrictDomain W.domain d.parameters d.parameters_open
 
 theorem domain_nonnegative {p : Point} (hX : 0 ≤ p.1) (heta : p.2 ∈ d.parameters) :
@@ -402,6 +426,7 @@ theorem domain_nonnegative {p : Point} (hX : 0 ≤ p.1) (heta : p.2 ∈ d.parame
   ⟨d.parameter.nonnegative p.1 hX _ (d.parameter.target_subset (d.parameters_target heta)),
     mem_univ _, heta⟩
 
+/-- Output F, constructed using `AnnularAuxiliary.transplant`. -/
 noncomputable def outputF (r : d.Realization) (N : ℕ)
     (c : ℝ → ModulatedHistories.Coeff) : Field :=
   AnnularAuxiliary.transplant W.profiles.f d.parameter.f
@@ -409,6 +434,7 @@ noncomputable def outputF (r : d.Realization) (N : ℕ)
       (ReservedPatches.xAmplitude F W.controls.radius) c
       (ModulatedHistories.localizedF d.modulation r d.parameter.f N))
 
+/-- Output U, constructed using `AnnularAuxiliary.transplant`. -/
 noncomputable def outputU (r : d.Realization) (N : ℕ)
     (c : ℝ → ModulatedHistories.Coeff) : Field :=
   AnnularAuxiliary.transplant W.profiles.U d.parameter.U
@@ -428,7 +454,7 @@ theorem output_outside (r : d.Realization) (N : ℕ) (c : ℝ → ModulatedHisto
     (ModulatedHistories.localizedU d.modulation r d.angularAux d.parameter.U N) hpatch
   have hbase : ModulatedHistories.localizedF d.modulation r d.parameter.f N p = d.parameter.f p ∧
       ModulatedHistories.localizedU d.modulation r d.angularAux d.parameter.U N p = d.parameter.U p
-        := by
+          := by
     by_cases hlo : p.1 ≤ d.modulation.left
     · exact ⟨ModulatedHistories.splice_eq_before _ _ _ hlo,
         ModulatedHistories.splice_eq_before _ _ _ hlo⟩
@@ -446,24 +472,28 @@ end LoopData
 neighborhood of the complete physical band. -/
 structure Witness {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     (d : LoopData W) where
+  /-- Realization of `Witness`, of type `d.Realization`. -/
   realization : d.Realization
+  /-- Frequency of `Witness`, of type `ℕ`. -/
   frequency : ℕ
   frequency_pos : 0 < frequency
+  /-- Coefficients of `Witness`, of type `ℝ → ModulatedHistories.Coeff`. -/
   coefficients : ℝ → ModulatedHistories.Coeff
   coefficients_smooth : ContDiff ℝ ∞ coefficients
+  /-- Profiles of `Witness`, of type `Profiles d.domain`. -/
   profiles : Profiles d.domain
   f_formula : profiles.f = d.outputF realization frequency coefficients
   U_formula : profiles.U = d.outputU realization frequency coefficients
   pressure0 : profiles.pressure0 = W.profiles.pressure0
   restored : ∀ eta ∈ d.parameters, ∀ X : ℝ, (repairPatch W).right ≤ X →
     ModulatedHistories.profileRows profiles (X, eta) = ModulatedHistories.profileRows W.profiles
-      (X, eta)
+        (X, eta)
   true_cone : ∀ p ∈ Icc d.modulation.left (repairPatch W).right ×ˢ d.parameters,
     0 < profiles.f p ∧ TrueConeLoop.InTrueCone
       (ActivationStocks.profileStockOne profiles F.data.h p)
       (ActivationStocks.profileStockTwo profiles F.data.h p)
       (ModulatedCone.angularShear profiles.E p) (ModulatedCone.signedAxialShear profiles.E
-        profiles.U p)
+          profiles.U p)
 
 theorem exists_witness {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     (d : LoopData W) : Nonempty (Witness d) := by
@@ -511,9 +541,9 @@ theorem exists_witness {F : OutgoingProfile.Profile} {W : NominalProfile.Witness
     (followingRegion W d.modulation d.etaRadius) (isCompact_Icc.prod isCompact_Icc)
     (fun _ hp => hp.1.1)
     (fun p hp => (d.angular_eq p (d.union_full hp)).trans (d.auxiliary_shears (d.union_full
-      hp)).1.symm)
+        hp)).1.symm)
     (fun p hp => (d.axial_eq p (d.union_full hp)).trans (d.auxiliary_shears (d.union_full
-      hp)).2.symm)
+        hp)).2.symm)
     d.relaxed d.true_following P d.parameter.profiles
     (fun n => (hP n).1) (fun n => (hP n).2.1) rfl rfl (fun n => (hP n).2.2)
     (band d.etaRadius) isCompact_Icc (fun _ hp => (d.union_full hp).2)
@@ -560,7 +590,7 @@ theorem exists_witness {F : OutgoingProfile.Profile} {W : NominalProfile.Witness
   have h0 : Q.pressure0 = R.pressure0 := (hP N).2.2.symm
   have hhist : ∀ X : ℝ, 0 ≤ X → ∀ eta ∈ d.parameters, ∀ row : StressActivation.HistoryRow,
       StressActivation.profileHistory Q row (X, eta) = StressActivation.profileHistory R row (X,
-        eta) := by
+          eta) := by
     intro X hx eta he row
     exact histories_eq_of_nonnegative Q R h0 hx (fun _ hx => (hQR _ hx.1 he).1)
       (fun _ hx => (hQR _ hx.1 he).2) row
@@ -572,7 +602,7 @@ theorem exists_witness {F : OutgoingProfile.Profile} {W : NominalProfile.Witness
         rows_eq_of_nonnegative Q R h0 hXp (fun _ hx => (hQR _ hx.1 he).1)
           (fun _ hx => (hQR _ hx.1 he).2)
       _ = ModulatedHistories.profileRows d.parameter.profiles (X, eta) := hrows eta ⟨he.1.le,
-        he.2.le⟩ X hx
+          he.2.le⟩ X hx
       _ = ModulatedHistories.profileRows W.profiles (X, eta) :=
         d.parameter.rows_eq hXp (d.parameters_target he)
   · intro p hp
@@ -722,6 +752,8 @@ theorem exists_smooth_extension {K O : Set Point} (hK : IsCompact K) (hO : IsOpe
     dsimp only
     rw [chi.one_on p (chi.contains hp), one_mul]
 
+/-- Regular domain, given by `{p | p ∈ D.carrier ∧ 0 < p.1 ∧ 0 < P.f p ∧ 0 <
+ActivationContinuation.shearA P p ∧ NaturalAxisData.L h p.2 ≠ 0}`. -/
 noncomputable def regularDomain {D : RadialDomain} (P : Profiles D) (h : ℝ) : Set Point :=
   {p | p ∈ D.carrier ∧ 0 < p.1 ∧ 0 < P.f p ∧
     0 < ActivationContinuation.shearA P p ∧ NaturalAxisData.L h p.2 ≠ 0}
@@ -758,6 +790,8 @@ theorem coordinates_smooth {D : RadialDomain} (P : Profiles D) (h : ℝ) :
     fun p hp => (hs p hp).2.2.1.contDiffWithinAt,
     fun p hp => (hs p hp).2.2.2.contDiffWithinAt⟩
 
+/-- Relaxed domain, given by `{p | p ∈ regularDomain P h ∧ ActivationContinuation.IsRelaxed P h
+p}`. -/
 noncomputable def relaxedDomain {D : RadialDomain} (P : Profiles D) (h : ℝ) : Set Point :=
   {p | p ∈ regularDomain P h ∧ ActivationContinuation.IsRelaxed P h p}
 
@@ -778,18 +812,19 @@ theorem relaxedDomain_open {D : RadialDomain} (P : Profiles D) (h : ℝ) :
     (htrans.abs.mul ((((hproj.sub (continuousAt_const (y := (2 : ℝ)))).div_const 2).add
       ((htrans.pow 2).div_const 16)).sqrt))
   have hpr : 2 < ReferenceBounds.p1 P h p + ReferenceBounds.p2 P h p * NominalConeAssembly.tilt P p
-    :=
+      :=
     hp.2.projection_positive
   have hsp : ActivationContinuation.shearA P p * (1 + NominalConeAssembly.tilt P p ^ 2) <
       ConeAlgebra.coneBound (ReferenceBounds.p1 P h p + ReferenceBounds.p2 P h p *
-        NominalConeAssembly.tilt P p)
+          NominalConeAssembly.tilt P p)
         (ReferenceBounds.p2 P h p - ReferenceBounds.p1 P h p * NominalConeAssembly.tilt P p) :=
-          hp.2.cone
+            hp.2.cone
   filter_upwards [(regularDomain_open P h).mem_nhds hp.1,
     continuousAt_const.eventually_lt hproj hpr,
     hspeed.eventually_lt hbound hsp] with q hq hqpr hqsp
   exact ⟨hq, ⟨hq.2.2.2.1, hqpr, hqsp⟩⟩
 
+/-- True domain, given by `{p | p ∈ relaxedDomain P h ∧ NominalConeAssembly.IsTrue P h p}`. -/
 noncomputable def trueDomain {D : RadialDomain} (P : Profiles D) (h : ℝ) : Set Point :=
   {p | p ∈ relaxedDomain P h ∧ NominalConeAssembly.IsTrue P h p}
 
@@ -802,7 +837,7 @@ theorem trueDomain_open {D : RadialDomain} (P : Profiles D) (h : ℝ) :
   have hspeed := hs.1.continuousAt.mul
     ((continuousAt_const (y := (1 : ℝ))).add (hs.2.1.continuousAt.pow 2))
   have hsp : 2 < ActivationContinuation.shearA P p * (1 + NominalConeAssembly.tilt P p ^ 2) :=
-    hp.2.2
+      hp.2.2
   filter_upwards [(relaxedDomain_open P h).mem_nhds hp.1,
     continuousAt_const.eventually_lt hspeed hsp] with q hq hqs
   exact ⟨hq, hq.2, hqs⟩
@@ -811,14 +846,15 @@ theorem trueDomain_open {D : RadialDomain} (P : Profiles D) (h : ℝ) :
 profile and the physical band. No loop, repair, extension or modified
 profile is assumed. -/
 structure NominalBounds {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) where
+  /-- Modulation of `NominalBounds`, of type `ModulatedHistories.Window`. -/
   modulation : ModulatedHistories.Window
   after_initial : 4 / W.axis.scale < modulation.left
   before_repair : modulation.right < (repairPatch W).left
   relaxed : ∀ p ∈ fullRegion W modulation 1, ActivationContinuation.IsRelaxed W.profiles F.data.h p
   true_boundary : ∀ p ∈ boundaryRegion modulation 1, NominalConeAssembly.IsTrue W.profiles F.data.h
-    p
+      p
   true_following : ∀ p ∈ followingRegion W modulation 1, NominalConeAssembly.IsTrue W.profiles
-    F.data.h p
+      F.data.h p
 
 namespace NominalBounds
 
@@ -837,7 +873,7 @@ theorem exists_loopData : ∃ d : LoopData W, d.modulation = b.modulation := by
       relaxedDomain W.profiles F.data.h := by
     intro p hp
     exact ⟨regular_of_relaxed (b.modulation.left_pos.trans_le hp.1.1) hp.2 (b.relaxed p hp),
-      b.relaxed p hp⟩
+        b.relaxed p hp⟩
   obtain ⟨_, V₁, _, hV₁, hI₁, hJ₁, hprod₁⟩ := generalized_tube_lemma isCompact_Icc isCompact_Icc
     (relaxedDomain_open W.profiles F.data.h) hfull
   have hbdy : ({b.modulation.left, b.modulation.right} : Set ℝ) ×ˢ band 1 ⊆
@@ -879,7 +915,7 @@ theorem exists_loopData : ∃ d : LoopData W, d.modulation = b.modulation := by
     exact hprod₃ ⟨hI₃ hp.1, (hband hp.2).1.2⟩
   have hcompact : IsCompact (fullRegion W b.modulation w.inner) := isCompact_Icc.prod isCompact_Icc
   have hTO : fullRegion W b.modulation w.inner ⊆ regularDomain W.profiles F.data.h := fun _ hp =>
-    (hT hp).1
+      (hT hp).1
   have hcoords := coordinates_smooth W.profiles F.data.h
   obtain ⟨a, ha, hea⟩ := exists_smooth_extension hcompact (regularDomain_open W.profiles F.data.h)
     hTO _ hcoords.1
@@ -911,8 +947,8 @@ theorem exists_loopData : ∃ d : LoopData W, d.modulation = b.modulation := by
     parameter := pd
     etaRadius := w.inner
     one_lt_etaRadius := w.one_lt_inner
-    etaRadius_lt_target := (hband (show w.inner ∈ band w.inner from ⟨by linarith [w.inner_pos],
-      le_rfl⟩)).2.2
+    etaRadius_lt_target := (hband (show w.inner ∈ band w.inner from ⟨by
+        linarith [w.inner_pos], le_rfl⟩)).2.2
     modulation := b.modulation
     after_initial := b.after_initial
     before_repair := b.before_repair
@@ -962,7 +998,7 @@ theorem exists_loopData : ∃ d : LoopData W, d.modulation = b.modulation := by
     exact (NominalConeAssembly.isTrue_iff_loop _ _ _).mp (hS hp).2
 
 theorem exists_modulated : ∃ d : LoopData W, d.modulation = b.modulation ∧ Nonempty (Witness d) :=
-  by
+    by
   obtain ⟨d, hd⟩ := b.exists_loopData
   exact ⟨d, hd, exists_witness d⟩
 
@@ -973,6 +1009,7 @@ namespace Witness
 variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     {d : LoopData W} (v : Witness d)
 
+/-- Slow parameters, given by `d.parameters ∩ AssembledSlowBase.nominalParameters W`. -/
 noncomputable def slowParameters (_v : Witness d) : Set ℝ :=
   d.parameters ∩ AssembledSlowBase.nominalParameters W
 
@@ -1032,6 +1069,7 @@ end Witness
 
 /-! ## Bind the constructed profile to the completed nominal cone theorem -/
 
+/-- Hold radius, given by `W.controls.radius * Real.exp F.data.core.holdStart`. -/
 noncomputable def holdRadius {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : ℝ :=
   W.controls.radius * Real.exp F.data.core.holdStart
 
@@ -1049,7 +1087,7 @@ theorem holdRadius_before_repair {F : OutgoingProfile.Profile} (W : NominalProfi
       (ReservedPatches.support_margins F W.controls.radius W.controls.radius_pos .modulation).1
 
 theorem repairPatch_before_activeRight {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
-  :
+    :
     (repairPatch W).right < NominalConeAssembly.activeRight W := by
   have hclock : ReservedPatches.rightClock F .modulation < OutgoingTail.tailEnd F.data := by
     have h₀ := (ReservedPatches.clock_inside_wait F .modulation).2
@@ -1060,7 +1098,7 @@ theorem repairPatch_before_activeRight {F : OutgoingProfile.Profile} (W : Nomina
     dsimp only [OutgoingTail.tailEnd]
     linarith [F.data.core.pulseLength_pos]
   exact (ReservedPatches.support_margins F W.controls.radius W.controls.radius_pos
-    .modulation).2.2.trans
+      .modulation).2.2.trans
     (ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos hclock)
 
 theorem nominalBounds_of_certificate {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
@@ -1113,7 +1151,7 @@ theorem nominalBounds_of_certificate {F : OutgoingProfile.Profile} (W : NominalP
       · rw [Set.mem_singleton_iff] at h
         exact htrue_after p h.ge
           (h.le.trans_lt (hgap.trans ((repairPatch W).ordered.trans (repairPatch_before_activeRight
-            W)))) hp.2
+              W)))) hp.2
     true_following := fun p hp => htrue_after p hp.1.1
       (hp.1.2.trans_lt (repairPatch_before_activeRight W)) hp.2 }
   refine ⟨b, ?_⟩
@@ -1153,7 +1191,7 @@ theorem exists_of_certificate {F : OutgoingProfile.Profile} (W : NominalProfile.
   have hc := (NominalConeAssembly.isTrue_iff_loop W.profiles F.data.h p).mp
     (hb p hl hr heta (by simpa only [hd] using hout))
   have hs := NominalConeAssembly.modulated_shears_eq W.profiles (W.domain_contains hx.le heta) hx
-    hf.ne'
+      hf.ne'
   simpa only [NominalConeAssembly.p1_eq_stock, NominalConeAssembly.p2_eq_stock, hs.1, hs.2] using hc
 
 /-- The already constructed nominal cone theorem supplies a concrete

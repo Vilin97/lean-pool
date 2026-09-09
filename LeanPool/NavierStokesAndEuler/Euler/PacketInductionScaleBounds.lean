@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScales
-public import LeanPool.NavierStokesAndEuler.Euler.PacketLowBoundPropagation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.NormalPacketFrequencyGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketLowBoundPropagation
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
 
 /-! Pointwise and partial-sum consequences of the one global scale
 choice, ready for a finite-prefix packet induction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -71,8 +74,8 @@ theorem priorError_one (n : ℕ) : priorError S.J S.D S.X n ≤ 1 := by
 theorem shear_separation (n : ℕ) :
     previousShear S.J S.X n^2 ≤ shear S.J S.X n/4 := by
   have hp := (actualParentRatio_le S.J S.j_one S.X S.x_pos S.actual.initial_shear n).trans
-    ((S.actual.normal.parent.term_le n).trans (S.delta_small.trans (by norm_num : (1 : ℝ)/16 ≤
-      1/4)))
+    ((S.actual.normal.parent.term_le n).trans (S.delta_small.trans (by
+        norm_num : (1 : ℝ)/16 ≤ 1/4)))
   have hh : 0 < shear S.J S.X n := exp_pos _
   have h := (div_le_iff₀ hh).mp hp
   linarith only [h]
@@ -96,7 +99,7 @@ theorem source_frequency (n : ℕ) (P : ℝ) (hP : 1 ≤ P)
   EulerNormalPacketParameters.frequency_guard S.J 4 S.X P n hP hPE (S.frequency_cost n)
 
 theorem secondary_frequency (n : ℕ) (K : ℝ)
-    (hK : K ≤ previousFrequency S.J S.D S.X n^80) :
+    (hK : K ≤ previousFrequency S.J S.D S.X n ^ 80) :
     K ≤ frequency S.J S.X n ∧
       (supportScale S.J S.X n)⁻¹ ≤ (frequency S.J S.X n)^(3/4 : ℝ) :=
   EulerNormalPacketParameters.secondary_frequency_guards S.J S.D (by have h := S.stage_large; omega)
@@ -121,11 +124,11 @@ theorem activation_small {n : ℕ} (hn : n ≠ 0) :
 
 theorem localized_guard (T K Be Bc : ℝ) (hT : 0 ≤ T) (hK : 0 ≤ K)
     (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc)
-    (hKcap : K ≤ initialCoefficientCost+1) (hBecap : Be ≤ initialCoefficientCost+1)
-    (hBccap : Bc ≤ gradientConstant*S.X^1000+2) (hTcap : T ≤ baseHorizon S.J S.X) :
+    (hKcap : K ≤ initialCoefficientCost + 1) (hBecap : Be ≤ initialCoefficientCost + 1)
+    (hBccap : Bc ≤ gradientConstant * S.X ^ 1000 + 2) (hTcap : T ≤ baseHorizon S.J S.X) :
     K*(T^2/2)+Be*T+EulerMeanHarmonic.boundaryLocalizationC2*Bc*(baseRadius S.X)^3*T ≤ 1/2 :=
   EulerPacketLowBoundPropagation.localized_guard S.J S.X K Be Bc
-    (initialCoefficientCost+1) (initialCoefficientCost+1) gradientConstant
+    (initialCoefficientCost + 1) (initialCoefficientCost + 1) gradientConstant
     EulerMeanHarmonic.boundaryLocalizationC2 T hK hBe hBc hT
     EulerMeanHarmonic.boundaryLocalizationC2_nonneg (baseRadius_pos S.x_pos).le
     hKcap hBecap hBccap hTcap S.localized

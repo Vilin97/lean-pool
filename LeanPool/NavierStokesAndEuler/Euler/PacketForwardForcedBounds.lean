@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitial
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 
 /-! Every forced direct-forward grade starts from zero and obeys the genuine
 five-field grade budget at the common radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HeatRestart
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevSmoothApproximation
+public import LeanPool.NavierStokesAndEuler.Euler.MildWordEquation
+
+/-! Genuine heat regularization of continuous Sobolev paths, uniformly in time. -/
 
 @[expose] public section
 
-/-! Genuine heat regularization of continuous Sobolev paths, uniformly in time. -/
 
 noncomputable section
 
@@ -29,19 +30,19 @@ def heatRegularizer (q n : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace p
 
 /-- The total actual Gaussian variance of the regularizer. -/
 def regularizerVariance (n : ℕ) : ℝ≥0 := smoothingVariance n + (smoothingVariance n +
-  smoothingVariance n)
+    smoothingVariance n)
 
 /-- The total regularizing variance tends to zero. -/
 theorem regularizerVariance_tendsto : Filter.Tendsto regularizerVariance Filter.atTop (𝓝 0) := by
   change Filter.Tendsto (fun n => smoothingVariance n + (smoothingVariance n + smoothingVariance
-    n)) Filter.atTop (𝓝 0)
+      n)) Filter.atTop (𝓝 0)
   simpa only [add_zero] using
     smoothingVariance_tendsto.add (smoothingVariance_tendsto.add smoothingVariance_tendsto)
 
 /-- The regularizer has exactly its stated genuine L² heat value. -/
 theorem heatRegularizer_value {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
     value period (heatRegularizer period q n u) = cylinderHeat period (regularizerVariance n)
-      (value period u) :=
+        (value period u) :=
   heatGainThree_value period _ _ u
 
 /-- Forgetting the three extra derivatives gives the actual contractive heat evolution. -/
@@ -70,7 +71,7 @@ theorem pathHeat_continuous {q : ℕ} (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevS
     (g := fun p : ℝ≥0 × SobolevSpace period q => heatOperator period q p.1 p.2)
     (f := fun p : ℝ≥0 × Icc (0 : ℝ) T => (p.1, u p.2))
     (heatOperator_joint_continuous period q) (continuous_fst.prodMk (u.continuous.comp
-      continuous_snd))
+        continuous_snd))
 
 /-- A continuous path regularized by three genuine spatial heat derivatives. -/
 def regularizedPath {q : ℕ} (T : ℝ) (n : ℕ) (u : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
@@ -93,7 +94,7 @@ theorem regularizedPath_tendsto {q : ℕ} (T : ℝ) (u : C(Icc (0 : ℝ) T, Sobo
   exact restrict_heatRegularizer period n (u t)
 
 /-- Regularization at adjacent Sobolev levels has exactly the same underlying field. -/
-theorem heatRegularizer_truncate {q : ℕ} (n : ℕ) (u : SobolevSpace period (q+1)) :
+theorem heatRegularizer_truncate {q : ℕ} (n : ℕ) (u : SobolevSpace period (q + 1)) :
     heatRegularizer period q n (truncateOperator period q u) =
       restrictOperator period (by omega : q+3 ≤ q+1+3) (heatRegularizer period (q+1) n u) := by
   apply value_injective period

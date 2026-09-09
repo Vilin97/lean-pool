@@ -6,15 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Bounds for actual Fréchet jets
@@ -23,6 +17,9 @@ Finite jet bounds on open domains, using `iteratedFDeriv` itself.  The product
 estimates follow from Mathlib's higher-order Leibniz inequality.  No PDE,
 construction, or prescribed derivative values are assumed here.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.JetBounds
 

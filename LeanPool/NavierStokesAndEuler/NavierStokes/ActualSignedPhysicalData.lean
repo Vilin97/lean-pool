@@ -12,8 +12,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedAxisPreservation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CartesianCopySource
 
-@[expose] public section
-
 /-!
 # Physical data of the actual native signed copies
 
@@ -21,6 +19,9 @@ The primitive signed quotient is unchanged.  Its compact auxiliary cutoff
 is repartitioned exactly, and the physical carrier uses the midpoint of
 each actual lattice-translated slot.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,11 +32,17 @@ open scoped Topology ContDiff BigOperators InnerProductSpace
 
 attribute [local instance] Classical.propDecidable
 
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
+/-- Lift point: an abbreviation for `PhysicalGraphBounds.LiftPoint`. -/
 abbrev LiftPoint := PhysicalGraphBounds.LiftPoint
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
 
 section Repartition
@@ -96,7 +103,7 @@ theorem coefficients_outer (clock : ℕ → D → ℝ) :
       (fun n x => GaussianTailFlat.profile (clock n x)) := by
   rw [coefficients_repartition]
   have he : (fun n x => GaussianTailFlat.profile (clock n x) * PrimaryCopyBounds.outerCutoff (clock
-    n x)) =
+      n x)) =
       (fun n x => GaussianTailFlat.profile (clock n x)) :=
     funext fun n => funext fun x => PrimaryCopyBounds.profile_mul_outerCutoff (clock n x)
   rw [he]
@@ -131,9 +138,9 @@ theorem common_eq_of_localized (f g : PeriodizedWaveBounds.CopyData D K)
     exact tsum_congr fun k => congrArg (fun a : WaveCoefficients D => a.pressure n x) (he k)
   calc
     f.common = {f.background with amplitude := f.common.amplitude, pressure := f.common.pressure}
-      := rfl
-    _ = {g.background with amplitude := g.common.amplitude, pressure := g.common.pressure} := by rw
-      [hb, ha, hp]
+        := rfl
+    _ = {g.background with amplitude := g.common.amplitude, pressure := g.common.pressure} := by
+        rw [hb, ha, hp]
     _ = g.common := rfl
 
 theorem commonCorrected_eq_of_localized (f g : PeriodizedWaveBounds.CopyData D K)
@@ -149,8 +156,10 @@ section Geometry
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
 
+/-- Geometry, given by `ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det
+label gap`. -/
 noncomputable def geometry (label : SlotColoring.Label) (gap : ℕ) : CommonCoverSolve.Geometry :=
   ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det label gap
 
@@ -163,7 +172,7 @@ theorem center_eq_anchor (label : SlotColoring.Label) (gap : ℕ) (k : Frequency
     center (h := h) label k = PhysicalCopyBounds.nativeCenter (geometry sys label gap) k +
       sys.radius • ActualSignedGeometry.temporalVector := by
   change _ = (PartitionedCovariance.slotCenter h label - sys.radius •
-    ActualSignedGeometry.temporalVector +
+      ActualSignedGeometry.temporalVector +
     TorusAverages.latticePoint k) + sys.radius • ActualSignedGeometry.temporalVector
   unfold center
   abel
@@ -180,9 +189,9 @@ theorem eta_basis (label : SlotColoring.Label) (gap : ℕ) (z : Plane) :
 
 theorem eta_offset (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (Y : Plane) :
     PhysicalGraphBounds.etaCoordinate (CommonCoverSolve.coverPower gap Y - center (h := h) label k)
-      =
+        =
       ChartScales.timeCoefficient h label.1 * ((geometry sys label gap).coordinates k Y).2 -
-        sys.radius := by
+          sys.radius := by
   rw [center_eq_anchor sys label gap k, ← sub_sub, map_sub, map_smul]
   have he := PhysicalCopyBounds.native_offset (geometry sys label gap) k Y
   change CommonCoverSolve.coverPower gap Y - _ = _ at he
@@ -194,21 +203,21 @@ theorem eta_offset (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (Y :
 using the lower endpoint as carrier center would count this shift twice. -/
 theorem clock_eq_native (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (Y : Plane) :
     (PhysicalGraphBounds.etaCoordinate (CommonCoverSolve.coverPower gap Y - center (h := h) label
-      k) + sys.radius) /
+        k) + sys.radius) /
       ChartScales.timeCoefficient h label.1 = ((geometry sys label gap).coordinates k Y).2 := by
-  rw [eta_offset]
-  field_simp [(ChartScales.timeCoefficient_pos h label.1).ne'] ; ring
+  rw [eta_offset (sys := sys)]
+  field_simp [(ChartScales.timeCoefficient_pos h label.1).ne']; ring
 
 theorem width_on_core (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (Y : Plane)
     (hy : (geometry sys label gap).coordinates k Y ∈ (ActualSignedGeometry.clockWindow sys
-      label.1).core) :
+        label.1).core) :
     |PhysicalGraphBounds.etaCoordinate (CommonCoverSolve.coverPower gap Y - center (h := h) label
-      k)| ≤ sys.radius := by
-  rw [eta_offset]
+        k)| ≤ sys.radius := by
+  rw [eta_offset (sys := sys)]
   have hci := ChartScales.timeCoefficient_pos h label.1
   have hv : 0 ≤ ((geometry sys label gap).coordinates k Y).2 ∧
       ((geometry sys label gap).coordinates k Y).2 ≤ ChartScales.slotLength sys.radius h label.1 :=
-        hy.2
+          hy.2
   have hb := mul_le_mul_of_nonneg_left hv.2 hci.le
   have he : ChartScales.timeCoefficient h label.1 * ChartScales.slotLength sys.radius h label.1 =
       2 * sys.radius := by
@@ -216,6 +225,8 @@ theorem width_on_core (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (
     field_simp
   exact abs_le.mpr ⟨by nlinarith [mul_nonneg hci.le hv.1], by nlinarith⟩
 
+/-- Native mask, given by `PartitionedCovariance.cutoff sys.radius z.1 *
+PrimaryCopyBounds.outerCutoff (z.2 / ChartScales.slotLength sys.radius h label.1)`. -/
 noncomputable def nativeMask (label : SlotColoring.Label) (z : Plane) : ℝ :=
   PartitionedCovariance.cutoff sys.radius z.1 *
     PrimaryCopyBounds.outerCutoff (z.2 / ChartScales.slotLength sys.radius h label.1)
@@ -249,13 +260,13 @@ noncomputable def layout (hh : 0 ≤ h) (label : SlotColoring.Label) (hl : 4 ≤
   geometry _ := geometry sys label gap
   window _ := ActualSignedGeometry.clockWindow sys label.1
   length _ := ChartScales.slotLength sys.radius h label.1
-  length_pos _ := div_pos (mul_pos (by norm_num) sys.radius_pos) (ChartScales.timeCoefficient_pos _
-    _)
+  length_pos _ := div_pos (mul_pos (by
+      norm_num) sys.radius_pos) (ChartScales.timeCoefficient_pos _ _)
   cutoff _ := nativeMask sys label
   cutoff_smooth _ := nativeMask_smooth sys label
   cutoff_support _ := nativeMask_support sys label
   injective _ := ActualSignedGeometry.clockWindow_injective sys ActualSignedGeometry.vectors_det hh
-    hl gap
+      hl gap
 
 /-- The actual native carrier, retaining the individual lattice midpoint. -/
 noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
@@ -283,10 +294,10 @@ theorem slotMap_eq_native (label : SlotColoring.Label) (gap : ℕ) (k : Frequenc
         ActualSignedGeometry.slotCoordinates (geometry sys label gap) k (cylinderAt a chart x) := by
   rw [PhysicalGraphBounds.slotMap_formula]
   change (((PolarCharts.chart a chart (PhysicalGraphBounds.liftXY x)).1, PhysicalGraphBounds.liftZT
-    x),
+      x),
     ((PolarCharts.chart a chart (PhysicalGraphBounds.liftXY x)).2,
       (PhysicalGraphBounds.etaCoordinate (CommonCoverSolve.coverPower gap x.2 - center label k) +
-        sys.radius) /
+          sys.radius) /
         ChartScales.timeCoefficient h label.1)) = _
   rw [clock_eq_native]
   rfl
@@ -298,7 +309,7 @@ theorem carrier_phase_eq_native (label : SlotColoring.Label) (gap : ℕ) (k : Fr
         (PhysicalWaveSum.upLift gap x) =
       PhaseCalculus.phase (ChartScales.epsilon h label.1) p pz x0 F G
         (ActualSignedGeometry.slotCoordinates (geometry sys label gap) k (cylinderAt a chart x)) :=
-          by
+            by
   change PhaseCalculus.phase (ChartScales.epsilon h label.1) p pz x0 F G
     (PhysicalGraphBounds.slotMap (PolarCharts.chart a chart)
       (ChartScales.timeCoefficient h label.1) (center label k) sys.radius
@@ -311,11 +322,13 @@ section ActualCopies
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
   (hh : 0 ≤ h) (label : SlotColoring.Label) (hl : 4 ≤ label.1) (gap : ℕ)
   {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (B : PhysicalSignedWave.PrimaryData U)
   {reference : ℕ} (V : B.Views reference)
 
+/-- Dynamic coefficients, constructed using
+`ActualPeriodizedSignedRealization.coefficientsWith`. -/
 noncomputable def dynamicCoefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) (k : Frequency) :
     WaveCoefficients Cylinder :=
   ActualPeriodizedSignedRealization.coefficientsWith B (layout sys hh label hl gap) V request j
@@ -327,7 +340,7 @@ Gaussian together form the final compact native cutoff. -/
 noncomputable def dynamicCopyData (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     PeriodizedWaveBounds.CopyData Cylinder Frequency where
   background := (ActualPeriodizedSignedRealization.periodizedPrimary B (layout sys hh label hl
-    gap)).viewBase
+      gap)).viewBase
     V.background V.frequency (fun n => V.map n) reference
   amplitude n k := (dynamicCoefficients sys hh label hl gap B V request j k).amplitude n
   pressure n k := (dynamicCoefficients sys hh label hl gap B V request j k).pressure n
@@ -339,13 +352,13 @@ noncomputable def dynamicCopyData (request : ℕ → Cylinder → Vec2) (j : Fin
 theorem dynamic_localized_eq (request : ℕ → Cylinder → Vec2) (j : Fin 2) (k : Frequency) :
     (dynamicCopyData sys hh label hl gap B V request j).localized k =
       (ActualPeriodizedSignedRealization.copyData B (layout sys hh label hl gap) V request
-        j).localized k := by
+          j).localized k := by
   have hm : ActualPeriodizedSignedRealization.copyMask B (layout sys hh label hl gap) V k =
       fun n x => ActualPeriodizedSignedRealization.sharedMask B V n x *
         nativeMask sys label ((geometry sys label gap).coordinates k (V.map n x).1.2.2) := rfl
   change ((dynamicCoefficients sys hh label hl gap B V request j k).withCutoff _) =
     ((ActualPeriodizedSignedRealization.nativeCoefficients B (layout sys hh label hl gap) V request
-      j k).withCutoff _)
+        j k).withCutoff _)
   unfold dynamicCoefficients ActualPeriodizedSignedRealization.nativeCoefficients
   rw [hm]
   unfold ActualPeriodizedSignedRealization.coefficientsWith
@@ -361,20 +374,20 @@ theorem dynamic_localized_eq (request : ℕ → Cylinder → Vec2) (j : Fin 2) (
       (PartitionedCovariance.cutoff sys.radius
         ((geometry sys label gap).coordinates k (V.map n x).1.2.2).1 *
         PrimaryCopyBounds.outerCutoff (((geometry sys label gap).coordinates k (V.map n x).1.2.2).2
-          /
+            /
           ChartScales.slotLength sys.radius h label.1))
   rw [mul_left_comm, PrimaryCopyBounds.profile_mul_outerCutoff]
 
 theorem dynamic_common_eq (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     (dynamicCopyData sys hh label hl gap B V request j).common =
       (ActualPeriodizedSignedRealization.copyData B (layout sys hh label hl gap) V request
-        j).common :=
+          j).common :=
   common_eq_of_localized _ _ rfl (dynamic_localized_eq sys hh label hl gap B V request j)
 
 theorem dynamic_commonCorrected_eq (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     (dynamicCopyData sys hh label hl gap B V request j).commonCorrected V.strip V.directions =
       (ActualPeriodizedSignedRealization.views B (layout sys hh label hl gap) V).exactCoefficients
-        request j := by
+          request j := by
   rw [commonCorrected_eq_of_localized
     (dynamicCopyData sys hh label hl gap B V request j)
     (ActualPeriodizedSignedRealization.copyData B (layout sys hh label hl gap) V request j) rfl
@@ -388,6 +401,7 @@ end ActualCopies
 /-- An actual active label, retaining the native slot label and its band
 bound without selecting data for omitted labels. -/
 structure NativeLabel (active : Set PhysicalWaveSum.BandLabel) where
+  /-- Val of `NativeLabel`, of type `SlotColoring.Label`. -/
   val : SlotColoring.Label
   property : 4 ≤ val.1
   mem : (⟨val, property⟩ : PhysicalWaveSum.BandLabel) ∈ active
@@ -398,15 +412,24 @@ instance {active : Set PhysicalWaveSum.BandLabel} :
 /-- The same primary/view/state triple is stored only for actual active
 labels. Omitted physical labels will be exactly zero. -/
 structure SignedFamily (U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow) where
+  /-- Active of `SignedFamily`, of type `Set PhysicalWaveSum.BandLabel`. -/
   active : Set PhysicalWaveSum.BandLabel
+  /-- Primary of `SignedFamily`, of type `NativeLabel active → PhysicalSignedWave.PrimaryData
+  U`. -/
   primary : NativeLabel active → PhysicalSignedWave.PrimaryData U
+  /-- View of `SignedFamily`, of type `(L : NativeLabel active) → (primary L).Views L.val.1`. -/
   view : (L : NativeLabel active) → (primary L).Views L.val.1
+  /-- State of `SignedFamily`, of type `(L : NativeLabel active) → (view L).StateData`. -/
   state : (L : NativeLabel active) → (view L).StateData
+  /-- Column of `SignedFamily`, of type `NativeLabel active → Fin 2`. -/
   column : NativeLabel active → Fin 2
 
+/-- Positive index, given by `(L, ⟨1, by decide⟩)`. -/
 noncomputable def positiveIndex (L : PhysicalWaveSum.BandLabel) : PhysicalWaveSum.WaveIndex 1 :=
   (L, ⟨1, by decide⟩)
 
+/-- Cylinder zero, given by `((PolarCharts.radius (PhysicalGraphBounds.liftXY x),
+(PhysicalGraphBounds.liftZT x, x.2)), 0)`. -/
 noncomputable def cylinderZero (x : LiftPoint) : Cylinder :=
   ((PolarCharts.radius (PhysicalGraphBounds.liftXY x), (PhysicalGraphBounds.liftZT x, x.2)), 0)
 
@@ -422,6 +445,7 @@ theorem rotateCoefficient_zero (Y : Plane) : rotateCoefficient Y 0 = 0 := by
   fin_cases i <;> simp [rotateCoefficient]
 
 
+/-- Rotation map, constructed using `ContinuousLinearMap.pi`. -/
 noncomputable def rotationMap (Y : Plane) : ComplexVector →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi ![
     (Y.1 / PolarCharts.radius Y) • ContinuousLinearMap.proj 0 -
@@ -431,7 +455,7 @@ noncomputable def rotationMap (Y : Plane) : ComplexVector →L[ℝ] ComplexVecto
     ContinuousLinearMap.proj 2]
 
 theorem rotationMap_apply (Y : Plane) (v : ComplexVector) : rotationMap Y v = rotateCoefficient Y v
-  := by
+    := by
   ext i
   fin_cases i <;> simp [rotationMap, rotateCoefficient]
 
@@ -465,7 +489,7 @@ theorem rotateCoefficient_chart_re {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index
     (hY : Y ∈ PolarCharts.chartDomain a j) (v : ComplexVector) (i : Fin 3) :
     (rotateCoefficient Y v i).re =
       CylindricalResidual.frame (PolarCharts.chart a j Y).2 (PhysicalCurlCovariance.realVector v) i
-        := by
+          := by
   have hc := congrArg Prod.fst (PolarCharts.polar_chart ha j hY)
   have hs := congrArg Prod.snd (PolarCharts.polar_chart ha j hY)
   simp only [PolarCharts.polar, chart_radius ha j hY] at hc hs
@@ -498,7 +522,7 @@ theorem scaledRadial_forward (n : ℕ) (z : SpaceTime) :
       PolarCharts.polar (ChartScales.Q n ^ (-(1 / 2 : ℝ)) * z.2 0, z.2 1) := by
   ext <;> simp [PhysicalGraphBounds.scaledRadial, PhysicalGraphBounds.radialProjection_apply,
     CylindricalResidual.chart, PolarCharts.polar, AxisymmetricResidual.pack, coordinateVector] <;>
-      ring
+        ring
 
 /-- The exact physical Cartesian lift and the common cylindrical graph
 have identical coordinates; in particular no fast variable is discarded. -/
@@ -509,7 +533,7 @@ theorem cylinderAt_physical_forward (h : ℝ) (n : ℕ) {a : ℝ} (ha : 0 < a)
       PolarCharts.chartDomain a j) :
     cylinderAt a j (PhysicalGraphBounds.physicalLift h n (z.1, CylindricalResidual.chart z.2)) =
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n)).map z
-        := by
+          := by
   have hQ := ChartScales.Q_pos n
   have hR : 0 < ChartScales.Q n ^ (-(1 / 2 : ℝ)) * z.2 0 :=
     mul_pos (Real.rpow_pos_of_pos hQ _) hr
@@ -540,14 +564,14 @@ theorem cylinderAt_physical_forward (h : ℝ) (n : ℕ) {a : ℝ} (ha : 0 < a)
           ChartScales.Q n ^ (1 + h)) := by ring
       _ = _ := by
         rw [← Real.rpow_add hQ, ← Real.rpow_add hQ,
-          show -CoordinateAlgebra.A h + -(1 / 2 : ℝ) + (1 + h) = 0 by unfold CoordinateAlgebra.A;
-            ring,
+          show -CoordinateAlgebra.A h + -(1 / 2 : ℝ) + (1 + h) = 0 by
+              unfold CoordinateAlgebra.A; ring,
           Real.rpow_zero, mul_one]
   have hn := PhysicalGraphBounds.nativeGraph_normalized h n (z.1, CylindricalResidual.chart z.2)
   rw [PhysicalGraphBounds.radialProfile, radiusPower_eq_radius, scaledRadial_forward,
     PolarCharts.radius_polar, abs_of_pos hR] at hn
   have hc : cylinderAt a j (PhysicalGraphBounds.physicalLift h n (z.1, CylindricalResidual.chart
-    z.2)) =
+      z.2)) =
       ((ChartScales.Q n ^ (-(1 / 2 : ℝ)) * z.2 0,
         ((ChartScales.Q n ^ (-CoordinateAlgebra.D h) * z.2 2,
           ChartScales.Q n ^ (-1 : ℝ) * (1 - z.1)),
@@ -566,9 +590,11 @@ section PhysicalFamilies
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
 
+/-- Wave mask, given by `PartitionedCovariance.cutoff sys.radius z.1 * GaussianTailFlat.profile
+(z.2 / ChartScales.slotLength sys.radius h label.1)`. -/
 noncomputable def waveMask (label : SlotColoring.Label) (z : Plane) : ℝ :=
   PartitionedCovariance.cutoff sys.radius z.1 *
     GaussianTailFlat.profile (z.2 / ChartScales.slotLength sys.radius h label.1)
@@ -591,6 +617,7 @@ theorem waveMask_support (label : SlotColoring.Label) :
   intro hn
   exact hz (by rw [waveMask_eq_compact, hn, zero_mul])
 
+/-- Selected carrier, constructed using `carrier`. -/
 noncomputable def selectedCarrier (L : NativeLabel f.active) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   carrier (h := h) L.val k
@@ -600,6 +627,7 @@ noncomputable def selectedCarrier (L : NativeLabel f.active) (k : Frequency) :
     (((f.primary L).pulse (f.column L)).phase.F L.val.1)
     (((f.primary L).pulse (f.column L)).phase.G L.val.1)
 
+/-- Extended carrier, with branches according to `hL : L ∈ f.active`. -/
 noncomputable def extendedCarrier (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   if hL : L ∈ f.active then
@@ -615,6 +643,7 @@ theorem extendedCarrier_center (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
   unfold extendedCarrier
   split_ifs <;> rfl
 
+/-- Raw signed amplitude, constructed using `ActualPeriodizedSignedRealization.referenceScalar`. -/
 noncomputable def rawSignedAmplitude (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
     ComplexVector :=
   ActualPeriodizedSignedRealization.referenceScalar (f.primary L) (f.state L).referenceRequest
@@ -622,6 +651,7 @@ noncomputable def rawSignedAmplitude (L : NativeLabel f.active) (k : Frequency) 
       (ActualPeriodizedSignedRealization.referenceNativeUnit (f.primary L)
         (layout sys hh L.val L.property 0) (f.column L) L.val.1 k x)
 
+/-- Raw potential, constructed using `CurlClassBounds.inverseCarrier`. -/
 noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
     ComplexVector :=
   CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
@@ -629,6 +659,7 @@ noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : C
       ((f.primary L).base.normal (f.primary L).strip (f.primary L).directions L.val.1 x)
       (rawSignedAmplitude sys hh f L k x)
 
+/-- Raw pressure, constructed using `ActualPeriodizedSignedRealization.referenceScalar`. -/
 noncomputable def rawPressure (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) : ℂ :=
   ActualPeriodizedSignedRealization.referenceScalar (f.primary L) (f.state L).referenceRequest
     (f.column L) L.val.1 x •
@@ -652,6 +683,7 @@ noncomputable def potentialFamily (i : Fin 3) : PhysicalCopyBounds.CopyFamily 1 
     else 0
   else 0
 
+/-- Pressure family, bundling `gap`, `carrier`, `amplitude`. -/
 noncomputable def pressureFamily : PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap _ := 0
   carrier k L := extendedCarrier (h := h) f L k
@@ -685,43 +717,45 @@ theorem potential_amplitude_mem (i : Fin 3) (k : Frequency)
     (I : PhysicalWaveSum.WaveIndex 1) (x : LiftPoint)
     (hx : (potentialFamily sys hh f i).amplitude k I x ≠ 0) :
     (geometry sys I.1.val 0).coordinates k x.2 ∈ (ActualSignedGeometry.clockWindow sys
-      I.1.val.1).core := by
+        I.1.val.1).core := by
   by_cases hL : I.1 ∈ f.active
   · apply waveMask_support sys I.1.val
     intro hz
     apply hx
     simp only [potentialFamily, dite_eq_left hL, hz, Complex.ofReal_zero, mul_zero, zero_mul,
-      ite_self]
+        ite_self]
   · exact False.elim (hx (by simp [potentialFamily, hL]))
 
 theorem pressure_amplitude_mem (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1) (x : LiftPoint)
     (hx : (pressureFamily sys hh f).amplitude k I x ≠ 0) :
     (geometry sys I.1.val 0).coordinates k x.2 ∈ (ActualSignedGeometry.clockWindow sys
-      I.1.val.1).core := by
+        I.1.val.1).core := by
   by_cases hL : I.1 ∈ f.active
   · apply waveMask_support sys I.1.val
     intro hz
     apply hx
     simp only [pressureFamily, dite_eq_left hL, hz, Complex.ofReal_zero, mul_zero, zero_mul,
-      ite_self]
+        ite_self]
   · exact False.elim (hx (by simp [pressureFamily, hL]))
 
+/-- Potential cells, constructed using `PhysicalCopyBounds.nativeSupportCells`. -/
 noncomputable def potentialCells (i : Fin 3) : PhysicalCopyBounds.SupportCells (potentialFamily sys
-  hh f i) :=
+    hh f i) :=
   PhysicalCopyBounds.nativeSupportCells
     (fun L => geometry sys L.val 0) (fun L => (ActualSignedGeometry.clockWindow sys L.val.1).core)
     (fun L => (ActualSignedGeometry.clockWindow sys L.val.1).core_compact)
     (fun L => (ActualSignedGeometry.clockWindow_injective sys ActualSignedGeometry.vectors_det hh
-      L.property 0).mono
+        L.property 0).mono
       (Set.image_mono (ActualSignedGeometry.clockWindow sys L.val.1).core_subset_outer))
     (potential_amplitude_mem sys hh f i)
 
+/-- Pressure cells, constructed using `PhysicalCopyBounds.nativeSupportCells`. -/
 noncomputable def pressureCells : PhysicalCopyBounds.SupportCells (pressureFamily sys hh f) :=
   PhysicalCopyBounds.nativeSupportCells
     (fun L => geometry sys L.val 0) (fun L => (ActualSignedGeometry.clockWindow sys L.val.1).core)
     (fun L => (ActualSignedGeometry.clockWindow sys L.val.1).core_compact)
     (fun L => (ActualSignedGeometry.clockWindow_injective sys ActualSignedGeometry.vectors_det hh
-      L.property 0).mono
+        L.property 0).mono
       (Set.image_mono (ActualSignedGeometry.clockWindow sys L.val.1).core_subset_outer))
     (pressure_amplitude_mem sys hh f)
 
@@ -734,7 +768,7 @@ theorem waveMask_summable_smul {E : Type*} [NormedAddCommGroup E] [NormedSpace �
   obtain ⟨J, hJ⟩ := (geometry sys L.val 0).finite_copy_cutoffs
     (HasCompactSupport.of_support_subset_isCompact
       (ActualSignedGeometry.clockWindow sys L.val.1).core_compact (nativeMask_support sys L.val))
-        ‖Y‖
+          ‖Y‖
   apply summable_of_ne_finset_zero (s := J)
   intro k hk
   have hz : nativeMask sys L.val ((geometry sys L.val 0).coordinates k Y) = 0 := hJ Y le_rfl k hk
@@ -751,13 +785,15 @@ theorem signed_raw_eq_sum (L : NativeLabel f.active) (x : Cylinder) :
   rw [waveMask_eq_compact, mul_smul]
   rfl
 
+/-- Potential map, given by `CurlClassBounds.inverseCarrier K • ((‖N‖ ^ 2)⁻¹ •
+CurlClassBounds.complexCrossLinear (CurlClassBounds.complexify N))`. -/
 noncomputable def potentialMap (K : ℝ) (N : Space) : ComplexVector →L[ℝ] ComplexVector :=
   CurlClassBounds.inverseCarrier K •
     ((‖N‖ ^ 2)⁻¹ • CurlClassBounds.complexCrossLinear (CurlClassBounds.complexify N))
 
 theorem potentialMap_apply (K : ℝ) (N : Space) (v : ComplexVector) :
     potentialMap K N v = CurlClassBounds.inverseCarrier K • CurlClassBounds.normalCoefficient N v
-      := rfl
+        := rfl
 
 theorem signed_potential_eq_sum (L : NativeLabel f.active) (x : Cylinder) :
     CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
@@ -765,7 +801,7 @@ theorem signed_potential_eq_sum (L : NativeLabel f.active) (x : Cylinder) :
         ((f.primary L).base.normal (f.primary L).strip (f.primary L).directions L.val.1 x)
         ((ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L)
           (layout sys hh L.val L.property 0)).raw (f.state L).referenceRequest (f.column L) L.val.1
-            x) =
+              x) =
       ∑' k, waveMask sys L.val ((geometry sys L.val 0).coordinates k x.1.2.2) •
         rawPotential sys hh f L k x := by
   change potentialMap _ _ _ = _
@@ -779,15 +815,15 @@ theorem signed_potential_eq_sum (L : NativeLabel f.active) (x : Cylinder) :
 theorem signed_pressure_eq_sum (L : NativeLabel f.active) (x : Cylinder) :
     (ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L)
       (layout sys hh L.val L.property 0)).rawPressure (f.state L).referenceRequest (f.column L)
-        L.val.1 x =
+          L.val.1 x =
       ∑' k, waveMask sys L.val ((geometry sys L.val 0).coordinates k x.1.2.2) •
         rawPressure sys hh f L k x := by
   let l := layout sys hh L.val L.property 0
   let B := f.primary L
   let v := (ActualPeriodizedSignedRealization.periodizedPrimary B l).fundamental (f.column L)
-    L.val.1 x
+      L.val.1 x
   have hs : SignedWaveUpdate.signedScalar (ActualPeriodizedSignedRealization.periodizedPrimary B
-    l).strip
+      l).strip
       (ActualPeriodizedSignedRealization.periodizedPrimary B l).matrix
       (ActualPeriodizedSignedRealization.periodizedPrimary B l).target (f.state L).referenceRequest
       (ActualPeriodizedSignedRealization.periodizedPrimary B l).mask (f.column L) L.val.1 x =
@@ -822,6 +858,8 @@ structure ReferenceGeometry where
       (((f.primary L).pulse (f.column L)).phase.x0 L.val.1)
       (((f.primary L).pulse (f.column L)).phase.F L.val.1)
       (((f.primary L).pulse (f.column L)).phase.G L.val.1)
+  /-- Angular of `ReferenceGeometry`, of type `∀ L, (f.primary L).Angular (f.state
+  L).referenceRequest L.val.1`. -/
   angular : ∀ L, (f.primary L).Angular (f.state L).referenceRequest L.val.1
   chart : ∀ L, PhysicalSignedWave.ChartGeometry (f.primary L).base (f.primary L).strip
     (f.primary L).directions L.val.1 h (ChartScales.Q L.val.1) (ChartScales.nativeIndex h L.val.1)
@@ -874,7 +912,7 @@ theorem invariant_angle_zero {E : Type} (F : Cylinder → E)
 theorem phase_eq_native (L : NativeLabel f.active) (k : Frequency)
     (a : ℝ) (chart : PolarCharts.Index) (x : LiftPoint)
     (hx : (geometry sys L.val 0).coordinates k x.2 ∈ (ActualSignedGeometry.clockWindow sys
-      L.val.1).core) :
+        L.val.1).core) :
     (f.primary L).base.phase L.val.1 (cylinderAt a chart x) =
       ((selectedCarrier (h := h) f L k).withChart chart).phase a h L.val.1 sys.radius x := by
   rw [G.phase L]
@@ -885,7 +923,7 @@ theorem phase_eq_native (L : NativeLabel f.active) (k : Frequency)
     (((f.primary L).pulse (f.column L)).phase.x0 L.val.1)
     (((f.primary L).pulse (f.column L)).phase.F L.val.1)
     (((f.primary L).pulse (f.column L)).phase.G L.val.1) k (x := cylinderAt a chart x)
-      hx).eq_of_nhds
+        hx).eq_of_nhds
   exact he.trans (carrier_phase_eq_native sys L.val 0 k
     (((f.primary L).pulse (f.column L)).phase.p L.val.1)
     (((f.primary L).pulse (f.column L)).phase.pz L.val.1)
@@ -903,7 +941,7 @@ theorem rawPotential_cylinderAt (L : NativeLabel f.active) (k : Frequency)
     {a : ℝ} (ha : 0 < a) (chart : PolarCharts.Index) {x : LiftPoint}
     (hx : PhysicalGraphBounds.liftXY x ∈ PolarCharts.chartDomain a chart) :
     rawPotential sys hh f L k (cylinderAt a chart x) = rawPotential sys hh f L k (cylinderZero x)
-      := by
+        := by
   rw [invariant_angle_zero _ (rawPotential_invariant sys hh f G L k), cylinderAt_fst ha chart hx]
   rfl
 
@@ -911,7 +949,7 @@ theorem rawPressure_cylinderAt (L : NativeLabel f.active) (k : Frequency)
     {a : ℝ} (ha : 0 < a) (chart : PolarCharts.Index) {x : LiftPoint}
     (hx : PhysicalGraphBounds.liftXY x ∈ PolarCharts.chartDomain a chart) :
     rawPressure sys hh f L k (cylinderAt a chart x) = rawPressure sys hh f L k (cylinderZero x) :=
-      by
+        by
   rw [invariant_angle_zero _ (rawPressure_invariant sys hh f G L k), cylinderAt_fst ha chart hx]
   rfl
 
@@ -928,7 +966,7 @@ theorem pressure_commonWave (L : NativeLabel f.active) (k : Frequency)
         (waveMask sys L.val ((geometry sys L.val 0).coordinates k
           (PhysicalGraphBounds.physicalLift h L.val.1 w).2) •
           rawPressure sys hh f L k (cylinderAt a chart (PhysicalGraphBounds.physicalLift h L.val.1
-            w))) *
+              w))) *
         HarmonicCalculus.carrier ((f.primary L).base.frequency L.val.1)
           ((f.primary L).base.phase L.val.1)
           (cylinderAt a chart (PhysicalGraphBounds.physicalLift h L.val.1 w)) := by
@@ -950,14 +988,14 @@ theorem pressure_commonWave (L : NativeLabel f.active) (k : Frequency)
 /-- The complete copy sum is exactly the same reference pressure mode. -/
 theorem pressure_periodized (L : NativeLabel f.active) {a b : ℝ} (ha : 0 < a)
     (w : SpaceTime) (hw : PhysicalGraphBounds.scaledRadial L.val.1 w ∈ PhysicalGraphBounds.annulus
-      a b) :
+        a b) :
     (pressureFamily sys hh f).periodized a h sys.radius (positiveIndex L) w =
       (ChartScales.Q L.val.1 ^ (-(2 * CoordinateAlgebra.A h)) : ℝ) •
         HarmonicCalculus.mode ((f.primary L).base.frequency L.val.1)
           ((f.primary L).base.phase L.val.1)
           ((ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L)
             (layout sys hh L.val L.property 0)).rawPressure (f.state L).referenceRequest (f.column
-              L) L.val.1)
+                L) L.val.1)
           (cylinderAt a (PhysicalWaveSum.chooseChart a (PhysicalGraphBounds.scaledRadial L.val.1 w))
             (PhysicalGraphBounds.physicalLift h L.val.1 w)) := by
   have hc := PhysicalWaveSum.chooseChart_valid ha hw
@@ -983,9 +1021,9 @@ theorem potential_commonWave (L : NativeLabel f.active) (k : Frequency) (i : Fin
         (waveMask sys L.val ((geometry sys L.val 0).coordinates k
           (PhysicalGraphBounds.physicalLift h L.val.1 w).2) •
           rotateCoefficient (PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h L.val.1
-            w))
+              w))
             (rawPotential sys hh f L k (cylinderAt a chart (PhysicalGraphBounds.physicalLift h
-              L.val.1 w))) i) *
+                L.val.1 w))) i) *
         HarmonicCalculus.carrier ((f.primary L).base.frequency L.val.1)
           ((f.primary L).base.phase L.val.1)
           (cylinderAt a chart (PhysicalGraphBounds.physicalLift h L.val.1 w)) := by
@@ -1005,8 +1043,9 @@ theorem potential_commonWave (L : NativeLabel f.active) (k : Frequency) (i : Fin
     ring
 
 omit G in
+/-- Reference potential coefficient, constructed using `CurlClassBounds.inverseCarrier`. -/
 noncomputable def referencePotentialCoefficient (L : NativeLabel f.active) (x : Cylinder) :
-  ComplexVector :=
+    ComplexVector :=
   CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
     CurlClassBounds.normalCoefficient
       ((f.primary L).base.normal (f.primary L).strip (f.primary L).directions L.val.1 x)
@@ -1020,7 +1059,7 @@ theorem rotatedPotential_sum (L : NativeLabel f.active) (x : Cylinder) (Y : Plan
         rotateCoefficient Y (referencePotentialCoefficient sys hh f L x) i := by
   let A : ComplexVector →L[ℝ] ℂ := (ContinuousLinearMap.proj i).comp (rotationMap Y)
   have he := A.map_tsum (waveMask_summable_smul sys L x.1.2.2 (fun k => rawPotential sys hh f L k
-    x))
+      x))
   simp only [map_smul, A, ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply,
     rotationMap_apply] at he
   rw [← signed_potential_eq_sum sys hh f L x] at he
@@ -1034,10 +1073,10 @@ theorem potential_periodized (L : NativeLabel f.active) (i : Fin 3)
     (potentialFamily sys hh f i).periodized a h sys.radius (positiveIndex L) w =
       (ChartScales.Q L.val.1 ^ (-h) : ℝ) •
         (rotateCoefficient (PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h L.val.1
-          w))
+            w))
           (referencePotentialCoefficient sys hh f L
             (cylinderAt a (PhysicalWaveSum.chooseChart a (PhysicalGraphBounds.scaledRadial L.val.1
-              w))
+                w))
               (PhysicalGraphBounds.physicalLift h L.val.1 w))) i *
         HarmonicCalculus.carrier ((f.primary L).base.frequency L.val.1)
           ((f.primary L).base.phase L.val.1)
@@ -1066,7 +1105,7 @@ theorem angular_integer (L : NativeLabel f.active) (k : Frequency) :
   have he := (G.angular L).phase (0 : Cylinder) 1
   rw [G.phase L] at he
   simp only [ActualSignedGeometry.periodicPhase, PhaseCalculus.phase, Prod.fst_zero, Prod.snd_zero,
-    one_smul, zero_add, mul_zero,
+      one_smul, zero_add, mul_zero,
     mul_one, add_zero] at he
   have hp : ((f.primary L).pulse (f.column L)).phase.p L.val.1 =
       (G.angular L).mode / (f.primary L).base.frequency L.val.1 := by linarith
@@ -1078,16 +1117,16 @@ theorem angular_integer (L : NativeLabel f.active) (k : Frequency) :
 
 theorem pressure_periodized_of_chart (L : NativeLabel f.active) {a b : ℝ} (ha : 0 < a)
     (w : SpaceTime) (hw : PhysicalGraphBounds.scaledRadial L.val.1 w ∈ PhysicalGraphBounds.annulus
-      a b)
+        a b)
     (j : PolarCharts.Index) (hj : PhysicalGraphBounds.scaledRadial L.val.1 w ∈
-      PolarCharts.chartDomain a j) :
+        PolarCharts.chartDomain a j) :
     (pressureFamily sys hh f).periodized a h sys.radius (positiveIndex L) w =
       (ChartScales.Q L.val.1 ^ (-(2 * CoordinateAlgebra.A h)) : ℝ) •
         HarmonicCalculus.mode ((f.primary L).base.frequency L.val.1)
           ((f.primary L).base.phase L.val.1)
           ((ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L)
             (layout sys hh L.val L.property 0)).rawPressure (f.state L).referenceRequest (f.column
-              L) L.val.1)
+                L) L.val.1)
           (cylinderAt a j (PhysicalGraphBounds.physicalLift h L.val.1 w)) := by
   have hc := PhysicalWaveSum.chooseChart_valid ha hw
   unfold PhysicalCopyBounds.CopyFamily.periodized
@@ -1107,11 +1146,11 @@ theorem potential_periodized_of_chart (L : NativeLabel f.active) (i : Fin 3)
     {a b : ℝ} (ha : 0 < a) (w : SpaceTime)
     (hw : PhysicalGraphBounds.scaledRadial L.val.1 w ∈ PhysicalGraphBounds.annulus a b)
     (j : PolarCharts.Index) (hj : PhysicalGraphBounds.scaledRadial L.val.1 w ∈
-      PolarCharts.chartDomain a j) :
+        PolarCharts.chartDomain a j) :
     (potentialFamily sys hh f i).periodized a h sys.radius (positiveIndex L) w =
       (ChartScales.Q L.val.1 ^ (-h) : ℝ) •
         (rotateCoefficient (PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h L.val.1
-          w))
+            w))
           (referencePotentialCoefficient sys hh f L
             (cylinderAt a j (PhysicalGraphBounds.physicalLift h L.val.1 w))) i *
         HarmonicCalculus.carrier ((f.primary L).base.frequency L.val.1)
@@ -1126,12 +1165,12 @@ theorem potential_periodized_of_chart (L : NativeLabel f.active) (i : Fin 3)
     ((potentialFamily sys hh f i).amplitude k (positiveIndex L)) 1 w) = _
   have he (k : Frequency) := PhysicalWaveSum.commonWave_charts_agree ha h L.val.1 0 sys.radius
     (selectedCarrier (h := h) f L k) ((potentialFamily sys hh f i).amplitude k (positiveIndex L)) 1
-      w
+        w
     (G.angular L).mode (angular_integer sys f G L k) _ j hc hj
   simp_rw [he, potential_commonWave sys hh f G L _ i ha j w hj]
   rw [tsum_mul_right, tsum_const_smul'']
   rw [← rotatedPotential_sum sys hh f L (cylinderAt a j (PhysicalGraphBounds.physicalLift h L.val.1
-    w))
+      w))
     (PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h L.val.1 w)) i]
   exact smul_mul_assoc _ _ _
 
@@ -1156,11 +1195,11 @@ theorem pressure_periodized_physical (L : NativeLabel f.active) {a b delta : ℝ
     exact PartitionedCovariance.actual_carrier_ne_zero _ _
   have hG : PhysicalSignedWave.ChartGeometry
       (ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L) (layout sys hh L.val
-        L.property 0)).base
+          L.property 0)).base
       (ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L) (layout sys hh L.val
-        L.property 0)).strip
+          L.property 0)).strip
       (ActualPeriodizedSignedRealization.periodizedPrimary (f.primary L) (layout sys hh L.val
-        L.property 0)).directions
+          L.property 0)).directions
       L.val.1 (f.view L).exponent (f.view L).referenceScale (f.view L).referenceCover := by
     simp only [G.exponent L, G.scale L, G.cover L]
     exact G.chart L
@@ -1240,11 +1279,11 @@ theorem potential_periodized_physical (L : NativeLabel f.active) (i : Fin 3)
   have hmap := cylinderAt_physical_forward h L.val.1 ha j z hz.1 hz.2.1 hj
   have hc : PhysicalGraphBounds.liftXY
       (PhysicalGraphBounds.physicalLift h L.val.1 (z.1, CylindricalResidual.chart z.2)) ∈
-      PolarCharts.chartDomain a j := by simpa only [PhysicalGraphBounds.liftXY_physicalLift] using
-        hj
+      PolarCharts.chartDomain a j := by
+          simpa only [PhysicalGraphBounds.liftXY_physicalLift] using hj
   have hangle : (PolarCharts.chart a j (PhysicalGraphBounds.liftXY
       (PhysicalGraphBounds.physicalLift h L.val.1 (z.1, CylindricalResidual.chart z.2)))).2 = z.2 1
-        :=
+          :=
     congrArg Prod.snd hmap
   rw [potential_periodized_of_chart sys hh f G L i ha _ hw j hj,
     ← rotateCoefficient_vectorMode]
@@ -1253,14 +1292,14 @@ theorem potential_periodized_physical (L : NativeLabel f.active) (i : Fin 3)
       ((f.primary L).base.frequency L.val.1) ((f.primary L).base.phase L.val.1)
       (referencePotentialCoefficient sys hh f L)
       (cylinderAt a j (PhysicalGraphBounds.physicalLift h L.val.1 (z.1, CylindricalResidual.chart
-        z.2)))) i
+          z.2)))) i
   rw [rotateCoefficient_real_smul, Pi.smul_apply] at he
   rw [he, hangle, hmap, ← referencePotential_eq_mode sys hh f G L hPhi z hz.1 hsource]
   have hf := (PhysicalCurlCovariance.globalCartesianPotential_forward_germ hdelta j
     (V.referencePotential (f.state L).referenceRequest (f.column L))
     (V.referencePotential_periodic (ActualPeriodizedSignedRealization.periodizedAngular
       (f.primary L) (layout sys hh L.val L.property 0) (G.angular L)) hK (f.column L))
-        hz).eq_of_nhds
+          hz).eq_of_nhds
   exact (congrArg (fun v : Space => v i) hf).symm
 
 end PhysicalFamilies
@@ -1268,9 +1307,12 @@ end PhysicalFamilies
 
 /-! ## Explicit native sources and their physical class adapter -/
 
+/-- Native: an abbreviation for `CartesianCopySource.Native`. -/
 abbrev Native := CartesianCopySource.Native
+/-- Source index: an abbreviation for `PhysicalWaveSum.WaveIndex 1 × Frequency`. -/
 abbrev SourceIndex := PhysicalWaveSum.WaveIndex 1 × Frequency
 
+/-- Native cylinder, given by `((y.1, ((y.2.1.2, y.2.1.1), y.2.2)), 0)`. -/
 noncomputable def nativeCylinder (y : Native) : Cylinder :=
   ((y.1, ((y.2.1.2, y.2.1.1), y.2.2)), 0)
 
@@ -1286,9 +1328,10 @@ section NativeSources
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
 
+/-- Native potential source, with branches according to `hL : I.1.1 ∈ f.active`. -/
 noncomputable def nativePotentialSource (I : SourceIndex) (n : ℕ) (y : Native) : ComplexVector :=
   if hL : I.1.1 ∈ f.active then
     if I.1.2.val = 1 ∧ n = I.1.1.val.1 then
@@ -1297,6 +1340,7 @@ noncomputable def nativePotentialSource (I : SourceIndex) (n : ℕ) (y : Native)
     else 0
   else 0
 
+/-- Native pressure source, with branches according to `hL : I.1.1 ∈ f.active`. -/
 noncomputable def nativePressureSource (I : SourceIndex) (n : ℕ) (y : Native) : ℂ :=
   if hL : I.1.1 ∈ f.active then
     if I.1.2.val = 1 ∧ n = I.1.1.val.1 then
@@ -1310,7 +1354,7 @@ theorem potential_amplitude_eq_source (i : Fin 3) (k : Frequency)
     (potentialFamily sys hh f i).amplitude k I x =
       (ChartScales.Q I.1.val.1 ^ (-h) : ℝ) •
         CartesianCopySource.rotatedSource (nativePotentialSource sys hh f) (I, k) I.1.val.1 x i :=
-          by
+            by
   unfold CartesianCopySource.rotatedSource
   rw [cartesian_rotation]
   by_cases hL : I.1 ∈ f.active
@@ -1323,7 +1367,7 @@ theorem potential_amplitude_eq_source (i : Fin 3) (k : Frequency)
   · simp [potentialFamily, nativePotentialSource, hL, rotateCoefficient_zero]
 
 theorem pressure_amplitude_eq_source (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1) (x :
-  LiftPoint) :
+    LiftPoint) :
     (pressureFamily sys hh f).amplitude k I x =
       (ChartScales.Q I.1.val.1 ^ (-(2 * CoordinateAlgebra.A h)) : ℝ) •
         nativePressureSource sys hh f (I, k) I.1.val.1 (PhysicalClassBounds.cylindricalMap x) := by
@@ -1340,7 +1384,7 @@ omit sys hh f in
 theorem increment_zero_target (H : Mat2) (R : Vec2) (j : Fin 2) :
     SignedCovariance.increment H 0 R j = 0 := by
   fin_cases j <;> simp [SignedCovariance.increment, SmoothCovariance.amplitudes,
-    SmoothCovariance.weights,
+      SmoothCovariance.weights,
     SmoothCovariance.cramerNumerator]
 
 theorem rawPotential_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylinder)
@@ -1353,7 +1397,7 @@ theorem rawPotential_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylind
     · simp [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar, ht,
         increment_zero_target]
   simp [rawPotential, rawSignedAmplitude, hr, CurlClassBounds.normalCoefficient,
-    CurlClassBounds.normalCross]
+      CurlClassBounds.normalCross]
 
 theorem rawPressure_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylinder)
     (hx : (f.primary L).mask L.val.1 x = 0 ∨ (f.primary L).target L.val.1 x = 0) :
@@ -1377,11 +1421,11 @@ theorem potential_amplitude_inputs (i : Fin 3) (k : Frequency)
     · refine ⟨hL, hI, ?_, ?_⟩
       · intro hm
         have hr := rawPotential_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x)
-          (Or.inl hm)
+            (Or.inl hm)
         exact hx (by simp [potentialFamily, hL, hI, hr, rotateCoefficient_zero])
       · intro ht
         have hr := rawPotential_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x)
-          (Or.inr ht)
+            (Or.inr ht)
         exact hx (by simp [potentialFamily, hL, hI, hr, rotateCoefficient_zero])
     · exact False.elim (hx (by simp [potentialFamily, hL, hI]))
   · exact False.elim (hx (by simp [potentialFamily, hL]))
@@ -1396,11 +1440,11 @@ theorem pressure_amplitude_inputs (k : Frequency) (I : PhysicalWaveSum.WaveIndex
     · refine ⟨hL, hI, ?_, ?_⟩
       · intro hm
         have hr := rawPressure_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x) (Or.inl
-          hm)
+            hm)
         exact hx (by simp [pressureFamily, hL, hI, hr])
       · intro ht
         have hr := rawPressure_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x) (Or.inr
-          ht)
+            ht)
         exact hx (by simp [pressureFamily, hL, hI, hr])
     · exact False.elim (hx (by simp [pressureFamily, hL, hI]))
   · exact False.elim (hx (by simp [pressureFamily, hL]))
@@ -1424,7 +1468,7 @@ structure PrimitiveLocalization (a b : ℝ) (s : StripData Native) : Prop where
   mask_pullback : ∀ (L : NativeLabel f.active) (w : SpaceTime), w ∈ PhysicalWaveSum.preterminal →
     (f.primary L).mask L.val.1 (cylinderZero (PhysicalGraphBounds.physicalLift h L.val.1 w)) =
       PhysicalWaveSum.physicalMask (CoordinateAlgebra.D h) L.val (PhysicalWaveSum.physicalParams h
-        w)
+          w)
 
 omit sys hh f in
 theorem normalized_slow_norm {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) {p : Plane}
@@ -1497,7 +1541,7 @@ theorem primitive_domain (L : NativeLabel f.active) (x : LiftPoint)
 theorem potential_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hb : 0 < b) (i : Fin 3) :
     LocalPhysicalCopyBounds.SupportData (potentialFamily sys hh f i) (a / 4) (2 * b) h sys.radius 2
-      0 where
+        0 where
   gap_le _ := le_rfl
   gap_native _ := Nat.zero_le _
   angular_integer k L := by
@@ -1508,7 +1552,7 @@ theorem potential_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h <
     · exact ⟨0, by simp [potentialFamily, extendedCarrier, hL, carrier]⟩
   geometry_support k I w hw := by
     change (potentialFamily sys hh f i).amplitude k I (PhysicalWaveSum.commonLift h I.1.val.1 0 w)
-      ≠ 0 at hw
+        ≠ 0 at hw
     rw [commonLift_zero] at hw
     obtain ⟨hL, _, hm, hT⟩ := potential_amplitude_inputs sys hh f i k I _ hw
     have hn := primitive_annulus (f := f) hloc hh0 hh1 ha hb ⟨I.1.val, I.1.property, hL⟩ _ hm hT
@@ -1516,15 +1560,15 @@ theorem potential_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h <
     · simpa only [PhysicalGraphBounds.liftXY_physicalLift] using hn.1
     · have hs := potential_amplitude_mem sys hh f i k I _ hw
       have hwidth := width_on_core sys I.1.val 0 k (PhysicalGraphBounds.physicalLift h I.1.val.1
-        w).2 hs
+          w).2 hs
       change |PhysicalGraphBounds.etaCoordinate
         (PhysicalGraphBounds.nativeGraph h I.1.val.1 w - (extendedCarrier (h := h) f I.1
-          k).center)| ≤ sys.radius
+            k).center)| ≤ sys.radius
       rw [extendedCarrier_center]
       exact hwidth
   mask_support k I w hw hne := by
     change (potentialFamily sys hh f i).amplitude k I (PhysicalWaveSum.commonLift h I.1.val.1 0 w)
-      ≠ 0 at hne
+        ≠ 0 at hne
     rw [commonLift_zero] at hne
     obtain ⟨hL, _, hm, _⟩ := potential_amplitude_inputs sys hh f i k I _ hne
     rw [← hloc.mask_pullback ⟨I.1.val, I.1.property, hL⟩ w hw]
@@ -1533,7 +1577,7 @@ theorem potential_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h <
 theorem pressure_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hb : 0 < b) :
     LocalPhysicalCopyBounds.SupportData (pressureFamily sys hh f) (a / 4) (2 * b) h sys.radius 2 0
-      where
+        where
   gap_le _ := le_rfl
   gap_native _ := Nat.zero_le _
   angular_integer k L := by
@@ -1544,7 +1588,7 @@ theorem pressure_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 
     · exact ⟨0, by simp [pressureFamily, extendedCarrier, hL, carrier]⟩
   geometry_support k I w hw := by
     change (pressureFamily sys hh f).amplitude k I (PhysicalWaveSum.commonLift h I.1.val.1 0 w) ≠ 0
-      at hw
+        at hw
     rw [commonLift_zero] at hw
     obtain ⟨hL, _, hm, hT⟩ := pressure_amplitude_inputs sys hh f k I _ hw
     have hn := primitive_annulus (f := f) hloc hh0 hh1 ha hb ⟨I.1.val, I.1.property, hL⟩ _ hm hT
@@ -1552,15 +1596,15 @@ theorem pressure_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 
     · simpa only [PhysicalGraphBounds.liftXY_physicalLift] using hn.1
     · have hs := pressure_amplitude_mem sys hh f k I _ hw
       have hwidth := width_on_core sys I.1.val 0 k (PhysicalGraphBounds.physicalLift h I.1.val.1
-        w).2 hs
+          w).2 hs
       change |PhysicalGraphBounds.etaCoordinate
         (PhysicalGraphBounds.nativeGraph h I.1.val.1 w - (extendedCarrier (h := h) f I.1
-          k).center)| ≤ sys.radius
+            k).center)| ≤ sys.radius
       rw [extendedCarrier_center]
       exact hwidth
   mask_support k I w hw hne := by
     change (pressureFamily sys hh f).amplitude k I (PhysicalWaveSum.commonLift h I.1.val.1 0 w) ≠ 0
-      at hne
+        at hne
     rw [commonLift_zero] at hne
     obtain ⟨hL, _, hm, _⟩ := pressure_amplitude_inputs sys hh f k I _ hne
     rw [← hloc.mask_pullback ⟨I.1.val, I.1.property, hL⟩ w hw]
@@ -1593,6 +1637,8 @@ end NativeSources
 
 /-! ## A fixed native region for the selected carrier profiles -/
 
+/-- Carrier region, given by `{p | p.1 ∈ Ioo (a / 8) (4 * b + 1) ∧ (p.2.2, p.2.1) ∈
+PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 4) 4}`. -/
 noncomputable def carrierRegion (h a b : ℝ) : Set PhysicalGraphBounds.Slow :=
   {p | p.1 ∈ Ioo (a / 8) (4 * b + 1) ∧
     (p.2.2, p.2.1) ∈ PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 4) 4}
@@ -1612,11 +1658,11 @@ theorem carrierRegion_contains {h a b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (ha 
     (hregion : PhysicalWaveSum.physicalParams h w ∈
       PhysicalWaveSum.labelRegion (CoordinateAlgebra.D h) L.val)
     (hann : PhysicalGraphBounds.scaledRadial L.val.1 w ∈ PhysicalGraphBounds.annulus (a / 4) (2 *
-      b))
+        b))
     (j : PolarCharts.Index)
     (hj : PhysicalGraphBounds.scaledRadial L.val.1 w ∈ PolarCharts.chartDomain (a / 4) j) :
     LocalPhysicalCopyBounds.slotSlow (c.withChart j) (a / 4) h L.val.1 r0 w ∈ carrierRegion h a b
-      := by
+        := by
   have ha4 : 0 < a / 4 := by positivity
   have hrel := PhysicalWaveSum.labelRegion_active_relation hregion
   have hs := PhysicalMeanJetBounds.graph_slow_normalized hh hh1 L.val.1 0 hw hrel.1 hrel.2
@@ -1645,7 +1691,7 @@ theorem term_tsupport_labelRegion {H : ℕ} {K : Type*}
     {w : SpaceTime} (hw : w ∈ PhysicalWaveSum.preterminal)
     (ht : w ∈ tsupport (f.term a h r0 I k)) :
     PhysicalWaveSum.physicalParams h w ∈ PhysicalWaveSum.labelRegion (CoordinateAlgebra.D h)
-      I.1.val := by
+        I.1.val := by
   apply PhysicalWaveSum.closed_property_on_tsupport PhysicalWaveSum.preterminal_open hw
     (PhysicalWaveSum.physicalParams_continuousAt hh hh1 hw)
     (PhysicalWaveSum.labelRegion_closed _ _) ?_ ht
@@ -1654,6 +1700,7 @@ theorem term_tsupport_labelRegion {H : ℕ} {K : Type*}
     (hr.mask_support k I y hy (PhysicalWaveSum.globalWave_ne_zero_amp hny))
 
 
+/-- Native slow, given by `(y.1, (y.2.1.2, y.2.1.1))`. -/
 noncomputable def nativeSlow (y : Native) : PhysicalGraphBounds.Slow := (y.1, (y.2.1.2, y.2.1.1))
 
 theorem slotSlow_eq_nativeSlow {a : ℝ} (ha : 0 < a) (c : PhysicalWaveSum.CarrierData)
@@ -1662,17 +1709,18 @@ theorem slotSlow_eq_nativeSlow {a : ℝ} (ha : 0 < a) (c : PhysicalWaveSum.Carri
     LocalPhysicalCopyBounds.slotSlow (c.withChart j) a h n r0 w =
       nativeSlow (PhysicalMeanJetBounds.graph h n 0 w) := by
   have hxy : PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h n w) ∈
-      PolarCharts.chartDomain a j := by simpa only [PhysicalGraphBounds.liftXY_physicalLift] using
-        hj
+      PolarCharts.chartDomain a j := by
+          simpa only [PhysicalGraphBounds.liftXY_physicalLift] using hj
   unfold LocalPhysicalCopyBounds.slotSlow
   rw [PhysicalGraphBounds.slotMap_formula]
   rw [PhysicalMeanJetBounds.graph, Function.comp_apply, commonLift_zero]
   change ((PolarCharts.chart a j (PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h n
-    w))).1,
+      w))).1,
     PhysicalGraphBounds.liftZT (PhysicalGraphBounds.physicalLift h n w)) = _
   rw [chart_radius ha j hxy]
   rfl
 
+/-- Native past, given by `{y | 0 < y.2.1.1}`. -/
 noncomputable def nativePast : Set Native := {y | 0 < y.2.1.1}
 
 theorem nativePast_open : IsOpen nativePast := isOpen_lt continuous_const continuous_snd.fst.fst
@@ -1687,6 +1735,7 @@ noncomputable def restrictCells {E K : Type*} [TopologicalSpace E]
   locallyFinite n := (c.locallyFinite n).subset (fun _ => inter_subset_left)
   unique n i j x hi hj := c.unique n i j x hi.1 hj.1
 
+/-- Primitive core as an element of `Set LiftPoint`. -/
 noncomputable def primitiveCore {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (f : SignedFamily U) (L : PhysicalWaveSum.BandLabel) : Set LiftPoint :=
   {x | ∃ hL : L ∈ f.active,
@@ -1697,7 +1746,7 @@ section NativeBounds
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
 
 /-- The native cell is narrowed only by the support of the original mask
@@ -1712,6 +1761,7 @@ noncomputable def localizedPotentialCells (i : Fin 3) :
     exact ⟨(potentialCells sys hh f i).support I k hx,
       subset_closure ⟨hL, hm, ht⟩⟩
 
+/-- Localized pressure cells, bundling `cells`, `support`, `obtain`. -/
 noncomputable def localizedPressureCells :
     PhysicalCopyBounds.SupportCells (pressureFamily sys hh f) where
   cells L := restrictCells ((pressureCells sys hh f).cells L)
@@ -1725,13 +1775,15 @@ noncomputable def localizedPressureCells :
 regions. Only the slow coordinate cover and native polynomial jets are
 stored; no physical bound or carrier representation is an input. -/
 structure NativeProfiles where
+  /-- Region of `NativeProfiles`, of type `PhysicalWaveSum.BandLabel → Set
+  PhysicalGraphBounds.Slow`. -/
   region : PhysicalWaveSum.BandLabel → Set PhysicalGraphBounds.Slow
   region_open : ∀ L, IsOpen (region L)
   jets : PhaseJetBounds.PolynomialJets
     (PhysicalCopyBounds.copyBandDomain (fun (_ : Frequency) L => region L) (fun _ L => region_open
-      L))
+        L))
     (fun I p => ((extendedCarrier (h := h) f I.2 I.1).F p, (extendedCarrier (h := h) f I.2 I.1).G
-      p))
+        p))
   covers : ∀ L w, w ∈ PhysicalWaveSum.preterminal →
     PhysicalWaveSum.physicalParams h w ∈ PhysicalWaveSum.labelRegion (CoordinateAlgebra.D h) L.val →
     PhysicalGraphBounds.physicalLift h L.val.1 w ∈ closure (primitiveCore f L) →
@@ -1745,9 +1797,11 @@ structure NativeRegular : Prop where
 
 variable {a b : ℝ} (ha : 0 < a) (hp : NativeProfiles (h := h) f)
 
+/-- Potential carrier, bundling `region`, `open_region`, `jets`, `contains` and the required
+compatibility proofs. -/
 noncomputable def potentialCarrier (i : Fin 3) :
     PhysicalCopyBounds.CarrierBounds (potentialFamily sys hh f i) (localizedPotentialCells sys hh f
-      i)
+        i)
       (a / 4) (2 * b) h sys.radius where
   region _ L := hp.region L
   open_region _ L := hp.region_open L
@@ -1759,6 +1813,8 @@ noncomputable def potentialCarrier (i : Fin 3) :
     apply hp.covers I.1 w hw hr
     simpa only [potentialFamily, commonLift_zero] using hc.2
 
+/-- Pressure carrier, bundling `region`, `open_region`, `jets`, `contains` and the required
+compatibility proofs. -/
 noncomputable def pressureCarrier :
     PhysicalCopyBounds.CarrierBounds (pressureFamily sys hh f) (localizedPressureCells sys hh f)
       (a / 4) (2 * b) h sys.radius where
@@ -1772,6 +1828,8 @@ noncomputable def pressureCarrier :
     apply hp.covers I.1 w hw hr
     simpa only [pressureFamily, commonLift_zero] using hc.2
 
+/-- Lifted native past, given by `PhysicalClassBounds.cylindricalDomain (a / 4) (2 * b) ∩
+PhysicalClassBounds.cylindricalMap ⁻¹' nativePast`. -/
 noncomputable def liftedNativePast (a b : ℝ) : Set LiftPoint :=
   PhysicalClassBounds.cylindricalDomain (a / 4) (2 * b) ∩
     PhysicalClassBounds.cylindricalMap ⁻¹' nativePast
@@ -1790,7 +1848,7 @@ theorem potential_amplitude_smooth (i : Fin 3) (k : Frequency) (I : PhysicalWave
     (PhysicalClassBounds.cylindricalMap_smooth (div_pos ha (by norm_num))).mono inter_subset_left
   have hsrc := (hn.potential (I, k) I.1.val.1).comp hm (fun _ hx => hx.2)
   have hrot : ContDiffOn ℝ ∞ (fun x : LiftPoint => CartesianCopySource.rotationMap
-    (PhysicalGraphBounds.liftXY x))
+      (PhysicalGraphBounds.liftXY x))
       (liftedNativePast a b) :=
     CartesianCopySource.rotationMap_smooth.comp PhysicalGraphBounds.liftXY.contDiff.contDiffOn
       (fun _ hx => PhysicalClassBounds.cylindricalDomain_axisFree (div_pos ha (by norm_num)) hx.1)
@@ -1845,10 +1903,10 @@ theorem potentialSmooth (i : Fin 3) :
       (by simpa only [potentialFamily, commonLift_zero] using hc.2)
     change LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).F
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _) ∧
+            _) ∧
       LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).G
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _)
+            _)
     rw [slotSlow_eq_nativeSlow (div_pos ha (by norm_num)) _ _ _ _ _ _ hj]
     exact ⟨LocalPhysicalCopyBounds.SmoothNear.of_open (hp.region_open I.1)
       (hp.jets.smooth (k, I.1)).fst hp',
@@ -1871,10 +1929,10 @@ theorem pressureSmooth :
       (by simpa only [pressureFamily, commonLift_zero] using hc.2)
     change LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).F
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _) ∧
+            _) ∧
       LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).G
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _)
+            _)
     rw [slotSlow_eq_nativeSlow (div_pos ha (by norm_num)) _ _ _ _ _ _ hj]
     exact ⟨LocalPhysicalCopyBounds.SmoothNear.of_open (hp.region_open I.1)
       (hp.jets.smooth (k, I.1)).fst hp',
@@ -1941,7 +1999,7 @@ noncomputable def identitySourceChart {N : ℕ} {K I : Type}
     have hrad := (hs.tsupport_geometry J k hz).1
     have hm := (PhysicalWaveSum.commonLift_smoothAt h J.1.val.1 (f.gap J.1)
       (PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-        hrad))).continuousAt
+          hrad))).continuousAt
     exact hm.continuousWithinAt.mem_closure hz
       (fun y hy => hd k J _ (PhysicalWaveSum.globalWave_ne_zero_amp hy))
 
@@ -1949,7 +2007,7 @@ section WaveData
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
   {a b : ℝ} {s : StripData Native} (hloc : PrimitiveLocalization (h := h) f a b s)
   (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 1 / 2)
@@ -2143,7 +2201,7 @@ theorem polarCoordinates_backward {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
 theorem polarCoordinates_valid {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     {x : SpaceTime} (hx : PhysicalGraphBounds.radialProjection x ∈ PolarCharts.chartDomain a j) :
     PhysicalCurlCovariance.polarCoordinates a j x ∈ PhysicalCurlCovariance.validCylindrical a j :=
-      by
+        by
   have hr : 0 < PolarCharts.radius (PhysicalGraphBounds.radialProjection x) := by
     rw [← PolarCharts.radius_rotate j]
     apply PolarCharts.radius_pos_of_fst_pos
@@ -2164,13 +2222,17 @@ section ReferenceGerms
 
 variable {D h : ℝ}
   (sys : PartitionedCovariance.SlotSystem D h ActualSignedGeometry.radialVector
-    ActualSignedGeometry.temporalVector)
+      ActualSignedGeometry.temporalVector)
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
 
+/-- Label potential, defined pointwise by `PhysicalCurlCovariance.realVector (fun i =>
+(potentialFamily sys hh f i).periodized a h sys.radius (positiveIndex L) x)`. -/
 noncomputable def labelPotential (L : NativeLabel f.active) (a : ℝ) : VelocityField :=
   fun x => PhysicalCurlCovariance.realVector (fun i =>
     (potentialFamily sys hh f i).periodized a h sys.radius (positiveIndex L) x)
 
+/-- Label pressure, defined pointwise by `((pressureFamily sys hh f).periodized a h sys.radius
+(positiveIndex L) x).re`. -/
 noncomputable def labelPressure (L : NativeLabel f.active) (a : ℝ) : PressureField :=
   fun x => ((pressureFamily sys hh f).periodized a h sys.radius (positiveIndex L) x).re
 

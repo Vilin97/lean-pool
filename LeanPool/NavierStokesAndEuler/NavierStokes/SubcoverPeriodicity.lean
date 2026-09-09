@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveBounds
 
-@[expose] public section
-
 /-!
 # A single deck shift of the actual particular solve
 
@@ -18,6 +16,9 @@ the actual anchored coefficient and forcing paths gives equality of the
 Volterra solves, and a bijective copy reindexing gives the same symmetry of
 the periodized velocity and pressure.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,6 +43,8 @@ theorem forcingAlong_shift (d : LinearData P V E) (g : Geometry)
       d.forcingAlong g j ((p,Y),s) := by
   simp only [LinearData.forcingAlong, g.coordinates_deck, g.path_deck, hf]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem forcingPath_shift (d : LinearData P V E) (g : Geometry)
     {a b : ℝ} (j K : Frequency) (p : P)
     (hf : ∀ Y : Plane, d.source (p, Y + TorusAverages.latticePoint K) = d.source (p,Y))
@@ -54,6 +57,8 @@ theorem forcingPath_shift (d : LinearData P V E) (g : Geometry)
 
 variable [CompleteSpace E]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem anchoredSolve_shift (d : LinearData P V E) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (j K : Frequency) (p : P)
     (hf : ∀ Y : Plane, d.source (p, Y + TorusAverages.latticePoint K) = d.source (p,Y))
@@ -63,6 +68,8 @@ theorem anchoredSolve_shift (d : LinearData P V E) (g : Geometry)
   unfold LinearData.anchoredSolve
   rw [d.coefficientPath_deck, forcingPath_shift d g j K p hf]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copySolve_shift (d : LinearData P V E) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (j K : Frequency) (p : P)
     (hf : ∀ Y : Plane, d.source (p, Y + TorusAverages.latticePoint K) = d.source (p,Y))
@@ -78,6 +85,8 @@ section ParticularCopies
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copyVelocity_shift (t : TangentData P ProblemStatement.Space) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (j K : Frequency) (p : P)
     (hf : ∀ Y : Plane, t.source (p, Y + TorusAverages.latticePoint K) = t.source (p,Y))
@@ -87,6 +96,8 @@ theorem copyVelocity_shift (t : TangentData P ProblemStatement.Space) (g : Geome
   unfold copyVelocity
   rw [copySolve_shift t.linearData g hab j K p hf]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copyPressure_shift (t : TangentData P ProblemStatement.Space) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (j K : Frequency) (frequency : ℝ) (p : P)
     (hf : ∀ Y : Plane, t.source (p, Y + TorusAverages.latticePoint K) = t.source (p,Y))
@@ -96,6 +107,8 @@ theorem copyPressure_shift (t : TangentData P ProblemStatement.Space) (g : Geome
   simp only [copyPressure, copyPressureReal, nativePoint, g.coordinates_deck,
     copySolve_shift t.linearData g hab j K p hf Y, hf Y]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem complexCopyVelocity_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (j K : Frequency) (p : P)
@@ -109,6 +122,8 @@ theorem complexCopyVelocity_shift (t : TangentData P ProblemStatement.Space)
   simp only [complexCopyVelocity, copyVelocity_shift _ g hab j K p hr Y,
     copyVelocity_shift _ g hab j K p hi Y]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem complexCopyPressure_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (j K : Frequency) (frequency : ℝ) (p : P)
@@ -123,6 +138,8 @@ theorem complexCopyPressure_shift (t : TangentData P ProblemStatement.Space)
   simp only [complexCopyPressure, copyPressure_shift _ g hab j K frequency p hr Y,
     copyPressure_shift _ g hab j K frequency p hi Y]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem complexCopyVelocity_shift_of_gap_zero (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) (hg : g.gap = 0)
     {a b : ℝ} (hab : a ≤ b) (j K : Frequency) (p : P)
@@ -132,6 +149,8 @@ theorem complexCopyVelocity_shift_of_gap_zero (t : TangentData P ProblemStatemen
   simpa only [hg, coverIndex, Function.iterate_zero, id_eq] using
     complexCopyVelocity_shift t f g hab j K p hf Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem complexCopyPressure_shift_of_gap_zero (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) (hg : g.gap = 0)
     {a b : ℝ} (hab : a ≤ b) (j K : Frequency) (frequency : ℝ) (p : P)
@@ -151,7 +170,7 @@ variable {P H : Type} [NormedAddCommGroup H] [NormedSpace ℝ H]
 factor when passing from the individual solves to the common field. -/
 theorem periodizedCopies_shift (g : Geometry) (κ : Plane → ℝ)
     (F : Frequency → P × Plane → H) (K : Frequency) (p : P)
-    (hF : ∀ j Y, F (j + coverIndex g.gap K) (p, Y + TorusAverages.latticePoint K) = F j (p,Y))
+    (hF : ∀ j Y, F (j + coverIndex g.gap K) (p, Y + TorusAverages.latticePoint K) = F j (p, Y))
     (Y : Plane) :
     periodizedCopies g κ F (p, Y + TorusAverages.latticePoint K) =
       periodizedCopies g κ F (p,Y) := by
@@ -172,6 +191,8 @@ section CommonFields
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonVelocity_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (K : Frequency) (p : P)
@@ -180,6 +201,8 @@ theorem commonVelocity_shift (t : TangentData P ProblemStatement.Space)
       commonVelocity t f g hab κ (p,Y) :=
   periodizedCopies_shift g κ _ K p (fun j Y => complexCopyVelocity_shift t f g hab j K p hf Y) Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonPressure_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (frequency : ℝ) (K : Frequency) (p : P)
@@ -248,6 +271,8 @@ section SubcoverFields
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonVelocity_subcover_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (d : ℕ) (k : Frequency) (p : P)
@@ -257,6 +282,8 @@ theorem commonVelocity_subcover_shift (t : TangentData P ProblemStatement.Space)
       commonVelocity t f g hab κ (p,Y) :=
   commonVelocity_shift t f g hab κ (coverIndex d k) p hf Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonPressure_subcover_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (frequency : ℝ) (d : ℕ) (k : Frequency) (p : P)
@@ -266,18 +293,24 @@ theorem commonPressure_subcover_shift (t : TangentData P ProblemStatement.Space)
       commonPressure t f g hab κ frequency (p,Y) :=
   commonPressure_shift t f g hab κ frequency (coverIndex d k) p hf Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonVelocity_subcoverPeriodic (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (d : ℕ) (p : P) (hf : SubcoverPeriodicAt d f p) :
     SubcoverPeriodicAt d (commonVelocity t f g hab κ) p :=
   fun Y k => commonVelocity_subcover_shift t f g hab κ d k p (fun Z => hf Z k) Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonPressure_subcoverPeriodic (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (frequency : ℝ) (d : ℕ) (p : P) (hf : SubcoverPeriodicAt d f p) :
     SubcoverPeriodicAt d (commonPressure t f g hab κ frequency) p :=
   fun Y k => commonPressure_subcover_shift t f g hab κ frequency d k p (fun Z => hf Z k) Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 /-- A single symmetry of the original source yields precisely the
 transported symmetry of the solved inverse-cover source. -/
 theorem commonVelocity_inverseCoverSource_shift (t : TangentData P ProblemStatement.Space)
@@ -290,6 +323,8 @@ theorem commonVelocity_inverseCoverSource_shift (t : TangentData P ProblemStatem
   commonVelocity_subcover_shift t _ g hab κ d k p
     (inverseCoverSource_shift d f p k hf) Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonPressure_inverseCoverSource_shift (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (frequency : ℝ) (d : ℕ) (k : Frequency) (p : P)

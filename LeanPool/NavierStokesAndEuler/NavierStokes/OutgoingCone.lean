@@ -6,13 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingEntranceCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ShapedWaitBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TailCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingProfile
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # One clean outgoing cone on one reset witness
@@ -22,6 +18,9 @@ axial history. The later assembly keeps the same reset and corrected amplitude
 through every interval. The true additional inequality starts at the shaped
 hold; the early outgoing region only requires the relaxed cone.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -58,10 +57,12 @@ theorem hold_Qs_pos {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hl := ShapedWaitBounds.canonical_Qs_hold_lower w ha hh1 hhlam hhT heta ht htw
   have hp : 0 < ShapedWaitBounds.holdFloor d.core.m *
       (eta ^ 2 + d.core.lam + Real.exp (-(1 - d.core.lam) * t)) := by
-    exact mul_pos hf (by nlinarith [sq_nonneg eta, d.core.lam_pos, Real.exp_pos (-(1 - d.core.lam)
-      * t)])
+    exact mul_pos hf (by
+        nlinarith [sq_nonneg eta, d.core.lam_pos, Real.exp_pos (-(1 - d.core.lam) * t)])
   exact hp.trans_le hl
 
+/-- Hold ratio constant, given by `ShapedWaitBounds.axialWaitConstant P m / (2 *
+ShapedWaitBounds.holdFloor m)`. -/
 noncomputable def holdRatioConstant (P m : ℝ) : ℝ :=
   ShapedWaitBounds.axialWaitConstant P m / (2 * ShapedWaitBounds.holdFloor m)
 
@@ -97,8 +98,8 @@ theorem hold_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
       OutgoingHistories.Qs w Amp (d.core.holdStart + t, eta) := by
     nlinarith [mul_pos hc d.core.lam_pos]
   have hfac : 0 ≤ holdRatioConstant d.core.P d.core.m * (1 + t) * Real.exp (d.core.lam * t / 2) :=
-    mul_nonneg (mul_nonneg (holdRatioConstant_pos d.core.P_pos d.core.m).le (by linarith))
-      (Real.exp_pos _).le
+    mul_nonneg (mul_nonneg (holdRatioConstant_pos d.core.P_pos d.core.m).le (by
+        linarith)) (Real.exp_pos _).le
   have hb := mul_le_mul_of_nonneg_left hqeta hfac
   have hex : Real.exp (d.core.lam * t / 2) * s = Real.exp (-(1 / 2 - d.core.lam) * t) := by
     dsimp [s]
@@ -117,6 +118,7 @@ theorem hold_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
   rw [← div_div, abs_div, abs_of_pos hQ]
   exact (div_le_iff₀ hQ).mpr (hN.trans hb)
 
+/-- Hold small constant, given by `60 * Real.exp 30 * holdRatioConstant P m`. -/
 noncomputable def holdSmallConstant (P m : ℝ) : ℝ :=
   60 * Real.exp 30 * holdRatioConstant P m
 
@@ -140,8 +142,8 @@ theorem hold_sqrt_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hex := Real.exp_le_exp.mpr harg
   have hb := hold_ratio_bound w ha hh1 hhlam hhT heta ht htw
   have hC := (holdRatioConstant_pos d.core.P_pos d.core.m).le
-  have hbound := mul_le_mul hlin hex (Real.exp_pos _).le (by positivity : 0 ≤ 60 * (1 + Real.log (1
-    / d.core.lam)))
+  have hbound := mul_le_mul hlin hex (Real.exp_pos _).le (by
+      positivity : 0 ≤ 60 * (1 + Real.log (1 / d.core.lam)))
   have hm := mul_le_mul_of_nonneg_left hbound hC
   have hraw : |coneRatio w Amp (d.core.holdStart + t, eta)| ≤
       holdSmallConstant d.core.P d.core.m * (1 + Real.log (1 / d.core.lam)) := by
@@ -225,18 +227,25 @@ theorem hold_source_criterion {d : TailData} {K : ℝ} (w : ResetWitness d K)
 
 /-! ## Common actual cone coordinates and source tests -/
 
+/-- Normal V, given by `coneA w p * (1 + (coneB w Amp p / coneA w p) ^ 2)`. -/
 noncomputable def normalV {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   coneA w p * (1 + (coneB w Amp p / coneA w p) ^ 2)
 
+/-- Normal P, given by `OutgoingHistories.p1 XR w Amp p * (1 - coneB w Amp p * coneRatio w Amp p
+/ coneA w p)`. -/
 noncomputable def normalP {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingHistories.p1 XR w Amp p * (1 - coneB w Amp p * coneRatio w Amp p / coneA w p)
 
+/-- Normal J, given by `OutgoingHistories.p1 XR w Amp p * (coneRatio w Amp p + coneB w Amp p /
+coneA w p)`. -/
 noncomputable def normalJ {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingHistories.p1 XR w Amp p * (coneRatio w Amp p + coneB w Amp p / coneA w p)
 
+/-- Source criterion data, collecting `angular_positive`, `radial_positive`, `first_positive`,
+`second_strict`. -/
 structure SourceCriterion {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : Prop where
   angular_positive : 0 < OutgoingHistories.Qs w Amp p
@@ -245,6 +254,8 @@ structure SourceCriterion {d : TailData} {K : ℝ} (w : ResetWitness d K)
   second_strict : 2 * coneB w Amp p * coneRatio w Amp p +
     coneB w Amp p ^ 2 / coneA w p + (coneA w p - 2) * coneRatio w Amp p ^ 2 < 2
 
+/-- Relaxed at data, collecting `angular_positive`, `radial_positive`, `stress_gt_two`,
+`root_strict`. -/
 structure RelaxedAt {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (XR : ℝ) (p : ℝ × ℝ) : Prop where
   angular_positive : 0 < OutgoingHistories.Qs w Amp p
@@ -252,6 +263,7 @@ structure RelaxedAt {d : TailData} {K : ℝ} (w : ResetWitness d K)
   stress_gt_two : 2 < normalP w Amp XR p
   root_strict : normalV w Amp p < ConeAlgebra.coneBound (normalP w Amp XR p) (normalJ w Amp XR p)
 
+/-- True at, given by `RelaxedAt w Amp XR p ∧ 2 < normalV w Amp p`. -/
 noncomputable def TrueAt {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (XR : ℝ) (p : ℝ × ℝ) : Prop :=
   RelaxedAt w Amp XR p ∧ 2 < normalV w Amp p
@@ -301,8 +313,8 @@ theorem sourceCriterion_before_endpoint {d : TailData} {K : ℝ} (w : ResetWitne
     linarith
   have hp := hpulse eta (y - d.core.pulseStart) heta ht ht'
   rw [add_sub_cancel] at hp
-  exact ⟨hp.angular_positive, by change 0 < PulseCone.radialA w (y, eta); linarith
-    [hp.radial_gt_two],
+  exact ⟨hp.angular_positive, by
+      change 0 < PulseCone.radialA w (y, eta); linarith [hp.radial_gt_two],
     hp.true_criterion.1, hp.true_criterion.2.1⟩
 
 theorem true_radial_before_endpoint {d : TailData} {K : ℝ} (w : ResetWitness d K)
@@ -320,6 +332,7 @@ theorem true_radial_before_endpoint {d : TailData} {K : ℝ} (w : ResetWitness d
     rw [add_sub_cancel] at hp
     exact hp.radial_gt_two
 
+/-- Pre window, given by `Icc left d.core.endpoint ×ˢ Icc (-1) 1`. -/
 noncomputable def preWindow (d : TailData) (left : ℝ) : Set (ℝ × ℝ) :=
   Icc left d.core.endpoint ×ˢ Icc (-1) 1
 
@@ -341,7 +354,7 @@ theorem compact_actual_pre_cone {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hratio : ContinuousOn (coneRatio w Amp) (preWindow d left) := by
     apply (OutgoingHistories.Ns_smooth w ha).continuous.continuousOn.div
       ((OutgoingHistories.E_smooth w).continuous.mul (OutgoingHistories.Qs_smooth w
-        ha).continuous).continuousOn
+          ha).continuous).continuousOn
     intro p hp
     exact (mul_pos (OutgoingHistories.E_pos w p) (hsource p hp).angular_positive).ne'
   obtain ⟨gap, p0, hgap, hp0, Hcone⟩ := UniformCone.compact_equation_eleven_gap hcompact
@@ -393,18 +406,22 @@ theorem relaxed_of_zero_shear {d : TailData} {K : ℝ} (w : ResetWitness d K)
   rw [hj] at hroot
   refine ⟨hQ, hA, ?_, ?_⟩
   · simpa only [normalP, hB, zero_mul, zero_div, sub_zero, mul_one] using hP
-  · simpa only [normalV, normalP, normalJ, hB, zero_mul, zero_div, zero_pow (by decide : (2 : ℕ) ≠
-    0),
+  · simpa only [normalV, normalP, normalJ, hB, zero_mul, zero_div, zero_pow (by
+      decide : (2 : ℕ) ≠ 0),
       sub_zero, add_zero, mul_one] using hroot
 
+/-- Clean end, given by `tailStart d + 1 / 2`. -/
 noncomputable def cleanEnd (d : TailData) : ℝ := tailStart d + 1 / 2
 
+/-- Clean window, given by `Icc left (cleanEnd d) ×ˢ Icc (-1) 1`. -/
 noncomputable def cleanWindow (d : TailData) (left : ℝ) : Set (ℝ × ℝ) :=
   Icc left (cleanEnd d) ×ˢ Icc (-1) 1
 
+/-- True window, given by `Icc d.core.holdStart (cleanEnd d) ×ˢ Icc (-1) 1`. -/
 noncomputable def trueWindow (d : TailData) : Set (ℝ × ℝ) :=
   Icc d.core.holdStart (cleanEnd d) ×ˢ Icc (-1) 1
 
+/-- Clean outgoing cone data, collecting `relaxed`, `true_from_hold`. -/
 structure CleanOutgoingCone {d : TailData} {K : ℝ} (w : ResetWitness d K) (XR left : ℝ) : Prop where
   relaxed : ∀ p ∈ cleanWindow d left,
     RelaxedAt w (CorrectedPulseAmplitude.amplitude d w.coefficients) XR p
@@ -427,7 +444,7 @@ theorem clean_cone_of_components {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (hhold : holdSmallConstant d.core.P d.core.m * PulseCone.coneRate d.core.lam ≤ 1 / 2)
     (hpulse : ∀ eta t : ℝ, |eta| ≤ 1 → 0 ≤ t → t ≤ d.core.pulseLength →
       PulseCone.PulseConeAt w (CorrectedPulseAmplitude.amplitude d w.coefficients)
-        (d.core.pulseStart + t, eta))
+          (d.core.pulseStart + t, eta))
     (left : ℝ) (hleft : left ≤ 0) :
     ∃ XR0 : ℝ, 0 < XR0 ∧ ∀ XR : ℝ, XR0 < XR → CleanOutgoingCone w XR left := by
   let Amp := CorrectedPulseAmplitude.amplitude d w.coefficients
@@ -445,7 +462,7 @@ theorem clean_cone_of_components {d : TailData} {K : ℝ} (w : ResetWitness d K)
       TrueAt w Amp XR (y, eta) := by
     intro y eta hy hy' heta
     have ht := TailCone.corrected_tail_cone w hK hwait hsmall hscale hsource hh1 hhT hreset hfinite
-      hrelease
+        hrelease
       hXRtail heta hy hy'
     have hA : 2 < coneA w (y, eta) := by rw [coneA_eq_actualA]; exact ht.2.2.1
     have hB : coneB w Amp (y, eta) = 0 := by rw [coneB_eq_actualBs w ha]; exact ht.2.1
@@ -466,6 +483,8 @@ theorem clean_cone_of_components {d : TailData} {K : ℝ} (w : ResetWitness d K)
   · exact true_radial_before_endpoint w Amp hpulse hp.1.1 hy (abs_le.mpr hp.2)
   · exact (Htail y eta (le_of_not_ge hy) hp.1.2 (abs_le.mpr hp.2)).2
 
+/-- Height threshold, given by `min (OutgoingEntranceCone.heightThreshold m lam) (lam /
+100000)`. -/
 noncomputable def heightThreshold (m lam : ℝ) : ℝ :=
   min (OutgoingEntranceCone.heightThreshold m lam) (lam / 100000)
 
@@ -484,7 +503,7 @@ theorem exists_ordered_clean_cone :
         ∀ w : ResetWitness d K, ∀ left : ℝ, left ≤ 0 →
           ∃ XR0 : ℝ, 0 < XR0 ∧ ∀ XR : ℝ, XR0 < XR → CleanOutgoingCone w XR left := by
   obtain ⟨M, hM, Hdrop⟩ := OutgoingEntranceCone.exists_small_dropSpeed
-    OutgoingEntranceCone.dropThreshold_pos
+      OutgoingEntranceCone.dropThreshold_pos
   refine ⟨M, hM, ?_⟩
   intro m hm P hP K hK
   have hPpos := (OutgoingEntranceCone.amplitudeThreshold_pos m).trans_le hP
@@ -493,7 +512,7 @@ theorem exists_ordered_clean_cone :
   obtain ⟨tailLam, htailLam, Htail⟩ := TailCone.exists_tail_smallness_threshold P m K hPpos hK
   refine ⟨min (OutgoingEntranceCone.lambdaThreshold P m) (min holdLam (min pulseLam tailLam)),
     lt_min (OutgoingEntranceCone.lambdaThreshold_pos P m) (lt_min hholdLam (lt_min hpulseLam
-      htailLam)), ?_⟩
+        htailLam)), ?_⟩
   intro d hdP hdm hwait hlam hh w left hleft
   rcases lt_min_iff.mp hlam with ⟨hentranceLam, hlam⟩
   rcases lt_min_iff.mp hlam with ⟨hhold, hlam⟩
@@ -509,13 +528,14 @@ theorem exists_ordered_clean_cone :
     rw [hdm]; exact Hdrop m hm
   have hhold' : holdSmallConstant d.core.P d.core.m * PulseCone.coneRate d.core.lam ≤ 1 / 2 := by
     rw [hdP, hdm]; exact Hhold _ d.core.lam_pos hhold
-  apply clean_cone_of_components w hK hwait hsmall hscale hsource hh1 (by linarith
-    [d.core.lam_pos]) hhT
+  apply clean_cone_of_components w hK hwait hsmall hscale hsource hh1 (by
+      linarith [d.core.lam_pos]) hhT
     hreset hfinite hrelease hchosen.1 hdrop hchosen.2.1 hhold' ?_ left hleft
   exact Hpulse d hdP hdm hwait hpulse hhTiny w
 
 /-! ## The existing profile object and compact margins -/
 
+/-- Profile clean cone, given by `CleanOutgoingCone F.reset XR left`. -/
 noncomputable def ProfileCleanCone (F : OutgoingProfile.Profile) (XR left : ℝ) : Prop :=
   CleanOutgoingCone F.reset XR left
 
@@ -551,13 +571,13 @@ theorem normal_data_continuousOn {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hcr : ContinuousOn (coneRatio w Amp) s := by
     apply (OutgoingHistories.Ns_smooth w ha).continuous.continuousOn.div
       ((OutgoingHistories.E_smooth w).continuous.mul (OutgoingHistories.Qs_smooth w
-        ha).continuous).continuousOn
+          ha).continuous).continuousOn
     intro p hp
     exact (mul_pos (OutgoingHistories.E_pos w p) (hQ p hp)).ne'
   have hp1 : ContinuousOn (OutgoingHistories.p1 XR w Amp) s := by
     have hx : Continuous (fun p : ℝ × ℝ => XR * Real.exp p.1 * OutgoingHistories.Qs w Amp p) :=
       (continuous_const.mul (Real.continuous_exp.comp continuous_fst)).mul
-        (OutgoingHistories.Qs_smooth w ha).continuous
+          (OutgoingHistories.Qs_smooth w ha).continuous
     have hL : Continuous (fun p : ℝ × ℝ => 1 - 2 * d.h * p.2 ^ 2) :=
       continuous_const.sub (continuous_const.mul (continuous_snd.pow 2))
     apply hx.continuousOn.div hL.continuousOn
@@ -575,7 +595,7 @@ theorem clean_relaxed_margins {d : TailData} {K : ℝ} (w : ResetWitness d K)
     ∃ eps : ℝ, 0 < eps ∧ ∀ p ∈ cleanWindow d left,
       eps ≤ OutgoingHistories.Qs w (CorrectedPulseAmplitude.amplitude d w.coefficients) p ∧
       eps ≤ coneA w p ∧ eps ≤ normalP w (CorrectedPulseAmplitude.amplitude d w.coefficients) XR p -
-        2 ∧
+          2 ∧
       eps ≤ ConeAlgebra.coneBound
         (normalP w (CorrectedPulseAmplitude.amplitude d w.coefficients) XR p)
         (normalJ w (CorrectedPulseAmplitude.amplitude d w.coefficients) XR p) -
@@ -588,17 +608,17 @@ theorem clean_relaxed_margins {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (fun p hp => (h.relaxed p hp).radial_positive)
   obtain ⟨eQ, heQ, HQ⟩ := UniformCone.positive_uniform_margin hk
     (OutgoingHistories.Qs_smooth w ha).continuous.continuousOn (fun p hp => (h.relaxed p
-      hp).angular_positive)
+        hp).angular_positive)
   obtain ⟨eA, heA, HA⟩ := UniformCone.positive_uniform_margin hk
     (OutgoingEntranceCone.coneA_continuous w).continuousOn (fun p hp => (h.relaxed p
-      hp).radial_positive)
+        hp).radial_positive)
   obtain ⟨eP, heP, HP⟩ := UniformCone.positive_uniform_margin hk (hd.1.sub continuousOn_const)
     (fun p hp => sub_pos.mpr (h.relaxed p hp).stress_gt_two)
   have hroot : ContinuousOn (fun p => ConeAlgebra.coneBound (normalP w Amp XR p) (normalJ w Amp XR
-    p) -
+      p) -
       normalV w Amp p) (cleanWindow d left) :=
     (UniformCone.continuous_coneBound.comp_continuousOn (hd.1.prodMk (hd.2.1.prodMk hd.2.2))).sub
-      hd.2.2
+        hd.2.2
   obtain ⟨eR, heR, HR⟩ := UniformCone.positive_uniform_margin hk hroot
     (fun p hp => sub_pos.mpr (h.relaxed p hp).root_strict)
   refine ⟨min eQ (min eA (min eP eR)), lt_min heQ (lt_min heA (lt_min heP heR)), ?_⟩
@@ -640,20 +660,24 @@ theorem clean_true_stable {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (fun p hp => abs_le.mpr hp.2) (fun p hp => (h.true_from_hold p hp).1.angular_positive)
     (fun p hp => (h.true_from_hold p hp).1.radial_positive)
   exact UniformCone.compact_family_quadratic_stable (isCompact_Icc.prod isCompact_Icc) hd.1 hd.2.1
-    hd.2.2
+      hd.2.2
     (fun p hp => ⟨(h.true_from_hold p hp).2, (h.true_from_hold p hp).1.stress_gt_two,
       (h.true_from_hold p hp).1.root_strict⟩)
 
 /-! ## Margins independent of the later entrance radius -/
 
+/-- Source C, given by `1 - coneB w Amp p * coneRatio w Amp p / coneA w p`. -/
 noncomputable def sourceC {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   1 - coneB w Amp p * coneRatio w Amp p / coneA w p
 
+/-- Source J, given by `coneRatio w Amp p + coneB w Amp p / coneA w p`. -/
 noncomputable def sourceJ {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   coneRatio w Amp p + coneB w Amp p / coneA w p
 
+/-- Leading gap, given by `2 * sourceC w Amp p ^ 2 - (normalV w Amp p - 2) * sourceJ w Amp p ^
+2`. -/
 noncomputable def leadingGap {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   2 * sourceC w Amp p ^ 2 - (normalV w Amp p - 2) * sourceJ w Amp p ^ 2
@@ -707,7 +731,7 @@ theorem clean_true_source_margins {d : TailData} {K : ℝ} (w : ResetWitness d K
   have hcr : ContinuousOn (coneRatio w Amp) (trueWindow d) := by
     apply (OutgoingHistories.Ns_smooth w ha).continuous.continuousOn.div
       ((OutgoingHistories.E_smooth w).continuous.mul (OutgoingHistories.Qs_smooth w
-        ha).continuous).continuousOn
+          ha).continuous).continuousOn
     intro p hp
     exact (mul_pos (OutgoingHistories.E_pos w p) (hpositive hp).1).ne'
   have hane : ∀ p ∈ trueWindow d, coneA w p ≠ 0 := fun p hp => (hpositive hp).2.1.ne'
@@ -721,22 +745,22 @@ theorem clean_true_source_margins {d : TailData} {K : ℝ} (w : ResetWitness d K
   obtain ⟨eQ, heQ, HQ⟩ := UniformCone.positive_uniform_margin hk
     (OutgoingHistories.Qs_smooth w ha).continuous.continuousOn (fun p hp => (hpositive hp).1)
   obtain ⟨eA, heA, HA⟩ := UniformCone.positive_uniform_margin hk hca (fun p hp => (hpositive
-    hp).2.1)
+      hp).2.1)
   obtain ⟨eV, heV, HV⟩ := UniformCone.positive_uniform_margin hk (hV.sub continuousOn_const)
     (fun p hp => sub_pos.mpr (hpositive hp).2.2.1)
   obtain ⟨eC, heC, HC⟩ := UniformCone.positive_uniform_margin hk hC (fun p hp => (hpositive
-    hp).2.2.2.1)
+      hp).2.2.2.1)
   obtain ⟨eG, heG, HG⟩ := UniformCone.positive_uniform_margin hk hG (fun p hp => (hpositive
-    hp).2.2.2.2)
+      hp).2.2.2.2)
   refine ⟨min eQ (min eA (min eV (min eC eG))), lt_min heQ (lt_min heA (lt_min heV (lt_min heC
-    heG))), ?_⟩
+      heG))), ?_⟩
   intro p hp
   exact ⟨(min_le_left _ _).trans (HQ p hp),
     ((min_le_right _ _).trans (min_le_left _ _)).trans (HA p hp),
     ((min_le_right _ _).trans ((min_le_right _ _).trans (min_le_left _ _))).trans (HV p hp),
     ((min_le_right _ _).trans ((min_le_right _ _).trans ((min_le_right _ _).trans (min_le_left _
-      _)))).trans (HC p hp),
+        _)))).trans (HC p hp),
     ((min_le_right _ _).trans ((min_le_right _ _).trans ((min_le_right _ _).trans (min_le_right _
-      _)))).trans (HG p hp)⟩
+        _)))).trans (HG p hp)⟩
 
 end NavierStokes.OutgoingCone

@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedSpaceInverse
 
-@[expose] public section
-
 /-!
 # Spatial translation covariance of the actual fixed mean form
 
@@ -18,6 +16,9 @@ The full form, including its nonlocal initial boundary operator, transforms by
 ordinary spatial translation. Consequently its coercivity persists with the
 same constant throughout the translated coefficient family.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,12 +30,27 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerMeanFixedSpaceInverse
 
 -- Reuse the nested Hilbert-space instances in the translation and adjoint identities.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedTranslation1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedTranslation2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedTranslation3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedTranslation4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedTranslation5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedTranslation6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
 variable (T : ℝ) (hT : 0 ≤ T) (a : Space)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
@@ -83,7 +99,7 @@ theorem fixedMeanForm_translate (u v : TimeLp T solenoidalSpace) :
   have hR (z) := fixedMeanTrace_translate T hT a F F₁ z
   have hkin := (congrArg₂ (fun x y : TimeLp T L2 => ⟪x,y⟫_ℝ) (hD u) (hD v)).trans
     ((timeTranslation T a).inner_map_map (fixedMeanDerivative T hT F F₁ u) (fixedMeanDerivative T
-      hT F F₁ v))
+        hT F F₁ v))
   have hHJ := (congrArg (timeMultiplier T hT (translatePath T a H)) (hJ u)).trans
     (timeMultiplier_translate T hT a H (fixedMeanPrimitive T hT F F₁ u))
   have hpot := (congrArg₂ (fun x y : TimeLp T L2 => ⟪x,y⟫_ℝ) hHJ (hJ v)).trans
@@ -93,7 +109,7 @@ theorem fixedMeanForm_translate (u v : TimeLp T solenoidalSpace) :
     (boundaryCoefficient_translate a M0 A L (fixedMeanTrace T hT F F₁ u))
   have hboundary := (congrArg₂ (fun x y : L2 => ⟪x,y⟫_ℝ) hCR (hR v)).trans
     ((translation a).inner_map_map ((M0+L • A) (fixedMeanTrace T hT F F₁ u)) (fixedMeanTrace T hT F
-      F₁ v))
+        F₁ v))
   exact (fixedMeanOperator_inner T hT (translatePath T a F) (translatePath T a F₁)
       (translatePath T a H) (translateOperator a M0) (translateOperator a A) L
       (timeSolenoidalTranslation T a u) (timeSolenoidalTranslation T a v)).trans
@@ -128,7 +144,7 @@ theorem fixedMeanOperator_translate (u : TimeLp T solenoidalSpace) :
 
 /-- The same positive coercivity constant holds for all genuinely translated coefficients. -/
 theorem translatedMeanOperator_coercive (c : ℝ)
-    (hcoercive : ∀ v, c*‖v‖^2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v,v⟫_ℝ)
+    (hcoercive : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v, v⟫_ℝ)
     (v : TimeLp T solenoidalSpace) :
     c*‖v‖^2 ≤ ⟪translatedMeanOperator T hT a F F₁ H M0 A L v,v⟫_ℝ := by
   have h := hcoercive (timeSolenoidalTranslation T (-a) v)
@@ -153,6 +169,6 @@ theorem fixedMeanPrimitive_adjoint_translate (f : TimeLp T L2) :
       (((timeTranslation T a).inner_map_map f (fixedMeanPrimitive T hT F F₁ v)).trans
         ((adjoint_inner_left (fixedMeanPrimitive T hT F F₁) v f).symm.trans
           ((timeSolenoidalTranslation T a).inner_map_map ((fixedMeanPrimitive T hT F F₁).adjoint f)
-            v).symm)))
+              v).symm)))
 
 end EulerMeanFixedTranslation

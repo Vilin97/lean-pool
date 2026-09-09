@@ -6,16 +6,13 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Topology.Instances.ENNReal.Lemmas
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.MeanValue
+
+/-! Short-time confinement uses a velocity bound only inside the trapping ball. -/
 
 @[expose] public section
 
-/-! Short-time confinement uses a velocity bound only inside the trapping ball. -/
 
 noncomputable section
 

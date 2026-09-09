@@ -7,12 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
-public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ScalarEnergyBound
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactForceBound
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactForceBound
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ScalarEnergyBound
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Energy of compactly supported fields on Euclidean three-space
@@ -21,6 +21,9 @@ All integrals in this module are the standard Lebesgue volume integrals on
 `ProblemStatement.Space`. Compact support supplies integrability; no finite
 replacement measure or convention about nonintegrable functions is used.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -115,11 +118,11 @@ theorem integral_fderiv_apply {f : Space → ℝ} {v : Space → Space}
     exact Finset.mul_sum _ _ _
   have hIl (i : Fin 3) : Integrable (fun x => v x i * spatialPartial i f x) :=
     ((component_contDiff hv i).continuous.mul (spatial_partial_contDiff hf
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
       (compact_component hcv i).mul_right
   have hIr (i : Fin 3) : Integrable (fun x => f x * spatialPartial i v x i) :=
     (hf.continuous.mul (component_contDiff (spatial_partial_contDiff hv i)
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
       (compact_component (compact_partial hcv i) i).mul_left
   rw [hleft, hright, integral_finsetSum _ (fun i _ => hIl i),
     integral_finsetSum _ (fun i _ => hIr i), ← Finset.sum_neg_distrib]
@@ -201,9 +204,12 @@ theorem integral_pressure_energy_zero {u : VelocityField} {p : PressureField} {t
 /-- The full squared spatial L2 norm with ordinary Euclidean volume. -/
 def l2Sq (u : VelocityField) (t : ℝ) : ℝ := ∫ x : Space, ‖u (t, x)‖ ^ 2
 
+/-- Energy rate, given by `∫ x : Space, 2 * ⟪u (t, x), temporalDerivative u t x⟫_ℝ`. -/
 def energyRate (u : VelocityField) (t : ℝ) : ℝ :=
   ∫ x : Space, 2 * ⟪u (t, x), temporalDerivative u t x⟫_ℝ
 
+/-- Dissipation, given by `∑ i : Fin 3, ∫ x : Space, ‖spatialPartial i (fun y => u (t, y)) x‖ ^
+2`. -/
 def dissipation (u : VelocityField) (t : ℝ) : ℝ :=
   ∑ i : Fin 3, ∫ x : Space, ‖spatialPartial i (fun y => u (t, y)) x‖ ^ 2
 

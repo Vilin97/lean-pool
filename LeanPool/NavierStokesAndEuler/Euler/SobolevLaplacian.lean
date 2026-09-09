@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevMetricTransport
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatGenerator
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDensity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+
+/-! The genuine commuting coordinate derivatives and bounded Laplacian on the complete Sobolev
+scale. -/
 
 @[expose] public section
 
-/-! The genuine commuting coordinate derivatives and bounded Laplacian on the complete Sobolev
-  scale. -/
 
 noncomputable section
 
@@ -22,25 +24,26 @@ namespace EulerSobolevLaplacian
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerMetricTransport
   EulerCylinderSobolev EulerCylinderSobolevSpace EulerSobolevHeat EulerSobolevHeatGenerator
   EulerMollifierRepresentative EulerPressureSpatialRegularity EulerSpatialSobolevInverse
-    EulerTransportDerivatives
+      EulerTransportDerivatives
 open scoped Topology ContDiff ENNReal NNReal
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- A genuine Sobolev coordinate derivative agrees with every smooth representative's classical derivative. -/
-theorem derivative_value_ae {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q+1))
+/-- A genuine Sobolev coordinate derivative agrees with every smooth representative's classical
+derivative. -/
+theorem derivative_value_ae {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q + 1))
     (g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g)
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
     (value period (derivativeOperator period q i u) : LiftDomain period → Vector3) =ᵐ[liftMeasure
-      period]
+        period]
       fieldDerivative period (standardDirection i) g :=
   EulerStrongSmoothJet.translation_derivative_ae period (standardDirection i)
     (value period u) (value period (derivativeOperator period q i u)) g hu hg
     (derivativeOperator_hasDerivAt period i u)
 
 /-- Coordinate derivatives commute on every genuinely smooth represented Sobolev field. -/
-theorem derivative_commute_smooth {q : ℕ} (i j : Fin 4) (u : SobolevSpace period (q+2))
+theorem derivative_commute_smooth {q : ℕ} (i j : Fin 4) (u : SobolevSpace period (q + 2))
     (g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g)
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
@@ -57,10 +60,11 @@ theorem derivative_commute_smooth {q : ℕ} (i j : Fin 4) (u : SobolevSpace peri
   filter_upwards [hi, hj] with x hix hjx
   rw [hix, hjx]
   exact EulerLiftedCurl.fieldDerivatives_commute period (standardDirection i) (standardDirection j)
-    g hg x
+      g hg x
 
-/-- Strong coordinate derivatives commute for every actual finite Sobolev field, by genuine smooth density. -/
-theorem derivative_commute {q : ℕ} (i j : Fin 4) (u : SobolevSpace period (q+2)) :
+/-- Strong coordinate derivatives commute for every actual finite Sobolev field, by genuine smooth
+density. -/
+theorem derivative_commute {q : ℕ} (i j : Fin 4) (u : SobolevSpace period (q + 2)) :
     derivativeOperator period q i (derivativeOperator period (q+1) j u) =
       derivativeOperator period q j (derivativeOperator period (q+1) i u) := by
   let A := (derivativeOperator period q i).comp (derivativeOperator period (q+1) j)
@@ -73,8 +77,8 @@ theorem derivative_commute {q : ℕ} (i j : Fin 4) (u : SobolevSpace period (q+2
     exact derivative_commute_smooth period i j (sobolevMollifier period (q+2) n u)
       (smoothMollifier period n (value period u)) (sobolevMollifier_representative period n u)
       (smoothMollifier_smooth period n (value period u))
-  change Filter.Tendsto (fun n => A (sobolevMollifier period (q+2) n u)) Filter.atTop (𝓝 (A u)) at
-    hA
+  change Filter.Tendsto (fun n => A (sobolevMollifier period (q+2) n u)) Filter.atTop (𝓝 (A u))
+      at hA
   rw [he] at hA
   exact tendsto_nhds_unique hA hB
 
@@ -83,15 +87,15 @@ def laplacianOperator (q : ℕ) : SobolevSpace period (q+2) →L[ℝ] SobolevSpa
   ∑ i : Fin 4, (derivativeOperator period q i).comp (derivativeOperator period (q+1) i)
 
 /-- The bounded Laplacian is the sum of the genuine pure second derivatives. -/
-theorem laplacianOperator_apply {q : ℕ} (u : SobolevSpace period (q+2)) :
+theorem laplacianOperator_apply {q : ℕ} (u : SobolevSpace period (q + 2)) :
     laplacianOperator period q u = ∑ i : Fin 4,
       derivativeOperator period q i (derivativeOperator period (q+1) i u) := by
   simp only [laplacianOperator, sum_apply, ContinuousLinearMap.comp_apply]
 
 /-- Its L² field is exactly the previously proved actual Laplacian evaluation. -/
-theorem laplacianOperator_value {q : ℕ} (u : SobolevSpace period (q+2)) :
-    value period (laplacianOperator period q u) = laplacianEvaluation period (q+2) (by omega) u :=
-      by
+theorem laplacianOperator_value {q : ℕ} (u : SobolevSpace period (q + 2)) :
+    value period (laplacianOperator period q u) = laplacianEvaluation period (q+2) (by
+        omega) u := by
   rw [laplacianOperator_apply, laplacianEvaluation_apply]
   change (valueOperator period q) (∑ i : Fin 4, _) = _
   rw [map_sum]
@@ -104,7 +108,7 @@ theorem laplacianOperator_value {q : ℕ} (u : SobolevSpace period (q+2)) :
   rw [hw]
 
 /-- The actual complete-Sobolev Laplacian has norm at most four. -/
-theorem laplacianOperator_bound {q : ℕ} (u : SobolevSpace period (q+2)) :
+theorem laplacianOperator_bound {q : ℕ} (u : SobolevSpace period (q + 2)) :
     ‖laplacianOperator period q u‖ ≤ 4 * ‖u‖ := by
   rw [laplacianOperator_apply]
   apply (norm_sum_le _ _).trans
@@ -114,7 +118,7 @@ theorem laplacianOperator_bound {q : ℕ} (u : SobolevSpace period (q+2)) :
     _ = _ := by simp
 
 /-- The actual Laplacian commutes with every coordinate derivative. -/
-theorem laplacian_derivative {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q+3)) :
+theorem laplacian_derivative {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q + 3)) :
     laplacianOperator period q (derivativeOperator period (q+2) i u) =
       derivativeOperator period q i (laplacianOperator period (q+1) u) := by
   rw [laplacianOperator_apply, laplacianOperator_apply, map_sum]

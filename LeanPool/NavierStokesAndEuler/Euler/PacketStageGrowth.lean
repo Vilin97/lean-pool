@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentEulerParity
 
 /-! The actual physical gradient at a stage's activation diverges with
 the stage index. This uses the invariant's true frame decomposition. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +29,7 @@ theorem activationMargin_le_half : activationMargin ≤ 1/2 := by
     positivity
   unfold activationMargin
   apply (div_le_iff₀ (show 0 < 32*(activationConstant gradientConstant hessianConstant+1) by
-    positivity)).mpr
+      positivity)).mpr
   linarith only [hA]
 
 namespace Scales
@@ -57,6 +60,8 @@ open scoped Topology
 
 variable {c B : ℝ} {S : Scales c B} {n : ℕ} (P : Stage S n)
 
+/-- Activation gradient, given by `‖fderiv ℝ (fun x => P.state.evolution.velocity (P.time,x))
+0‖`. -/
 def activationGradient : ℝ :=
   ‖fderiv ℝ (fun x => P.state.evolution.velocity (P.time,x)) 0‖
 

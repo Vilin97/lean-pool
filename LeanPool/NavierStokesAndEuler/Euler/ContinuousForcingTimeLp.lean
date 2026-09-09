@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousForcingTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.MeanForcingTranslation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousForcingTranslation
 
 /-!
 # Continuous ordinary forcing jets supply the Bochner hypotheses
@@ -18,6 +17,9 @@ On the compact time interval, continuous actual spatial L² jets are
 automatically square integrable. The continuous and Bochner orbit theorems
 therefore use the same concrete forcing data.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,7 +40,7 @@ theorem spatialJets_memLp (T : ℝ) (hT : 0 ≤ T) (A : ℝ → SmoothL2Field V)
   rw [projIcc_of_mem hT ht]
 
 theorem forcing_representation (T : ℝ) (hT : 0 ≤ T) (A : ℝ → SmoothL2Field V)
-    (fC : C(Icc (0 : ℝ) T,L2Space V)) (hC : ∀ t, fC t = (A t).toLp)
+    (fC : C(Icc (0 : ℝ) T, L2Space V)) (hC : ∀ t, fC t = (A t).toLp)
     (f : TimeLp T (L2Space V))
     (hf : (f : ℝ → L2Space V) =ᵐ[timeMeasure T] extendPath T hT fC) :
     (f : ℝ → L2Space V) =ᵐ[timeMeasure T] fun t => (A t).toLp := by

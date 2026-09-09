@@ -7,12 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisCoefficientSpace
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.RealDeriv
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Uniform analytic input for the natural-axis coefficient space
@@ -21,6 +17,9 @@ The hypotheses concern one common complex neighborhood of the entire real
 parameter interval. Cauchy's integral formula supplies bounds on actual
 derivatives; the derivative bounds are not hypotheses of the construction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

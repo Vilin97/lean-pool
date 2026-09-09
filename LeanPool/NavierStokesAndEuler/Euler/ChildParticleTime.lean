@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldChain
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
 
 /-! The literal child map X(t,Y(t,a)), its actual velocity, and its
 actual acceleration, as continuous smooth coefficient paths. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,18 +26,24 @@ open Set SmoothTimeField
 variable {K E : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- First term, given by `applyField (P.derivative.compDisplacement D) V`. -/
 def firstTerm (P D V : SmoothTimeField K E E) : SmoothTimeField K E E :=
   applyField (P.derivative.compDisplacement D) V
 
+/-- Second term, given by `applyField (applyField (P.derivative.derivative.compDisplacement D)
+V) V`. -/
 def secondTerm (P D V : SmoothTimeField K E E) : SmoothTimeField K E E :=
   applyField (applyField (P.derivative.derivative.compDisplacement D) V) V
 
+/-- Displacement, given by `(P.compDisplacement D).add D`. -/
 def displacement (P D : SmoothTimeField K E E) : SmoothTimeField K E E :=
   (P.compDisplacement D).add D
 
+/-- Velocity, given by `((P₁.compDisplacement D).add D₁).add (firstTerm P D D₁)`. -/
 def velocity (P P₁ D D₁ : SmoothTimeField K E E) : SmoothTimeField K E E :=
   ((P₁.compDisplacement D).add D₁).add (firstTerm P D D₁)
 
+/-- Acceleration as an element of `SmoothTimeField K E E`. -/
 def acceleration (P P₁ P₂ D D₁ D₂ : SmoothTimeField K E E) : SmoothTimeField K E E :=
   (((((P₂.compDisplacement D).add (firstTerm P₁ D D₁)).add
     (firstTerm P₁ D D₁)).add (secondTerm P D D₁)).add D₂).add (firstTerm P D D₂)
@@ -58,17 +66,18 @@ def acceleration (P P₁ P₂ D D₁ D₂ : SmoothTimeField K E E) : SmoothTimeF
     (displacement P D).field t x = P.field t (x+D.field t x)+D.field t x := rfl
 
 @[simp] theorem velocity_apply (P P₁ D D₁ : SmoothTimeField K E E) (t : K) (x : E) :
-    (velocity P P₁ D D₁).field t x = P₁.field t (x+D.field t x)+D₁.field t x+
+    (velocity P P₁ D D₁).field t x = P₁.field t (x+D.field t x)+D₁.field t x +
       fderiv ℝ (P.field t : E → E) (x+D.field t x) (D₁.field t x) := by
   simp only [velocity,SmoothTimeField.add_apply,compDisplacement_apply,firstTerm_apply]
 
 @[simp] theorem acceleration_apply (P P₁ P₂ D D₁ D₂ : SmoothTimeField K E E) (t : K) (x : E) :
-    (acceleration P P₁ P₂ D D₁ D₂).field t x = P₂.field t (x+D.field t x)+
-      fderiv ℝ (P₁.field t : E → E) (x+D.field t x) (D₁.field t x)+
-      fderiv ℝ (P₁.field t : E → E) (x+D.field t x) (D₁.field t x)+
-      fderiv ℝ (fderiv ℝ (P.field t : E → E)) (x+D.field t x) (D₁.field t x) (D₁.field t x)+
+    (acceleration P P₁ P₂ D D₁ D₂).field t x = P₂.field t (x+D.field t x) +
+      fderiv ℝ (P₁.field t : E → E) (x+D.field t x) (D₁.field t x) +
+      fderiv ℝ (P₁.field t : E → E) (x+D.field t x) (D₁.field t x) +
+      fderiv ℝ (fderiv ℝ (P.field t : E → E)) (x+D.field t x) (D₁.field t x) (D₁.field t x) +
       D₂.field t x+fderiv ℝ (P.field t : E → E) (x+D.field t x) (D₂.field t x) := by
-  simp only [acceleration,SmoothTimeField.add_apply,compDisplacement_apply,firstTerm_apply,secondTerm_apply]
+  simp only [acceleration, SmoothTimeField.add_apply, compDisplacement_apply, firstTerm_apply,
+      secondTerm_apply]
 
 theorem map_composition (P D : SmoothTimeField K E E) (t : K) (x : E) :
     x+(displacement P D).field t x =
@@ -99,7 +108,8 @@ theorem velocity_time (hP : TimeDerivative T hT P P₁) (hP₁ : TimeDerivative 
   have h := ((hP₁.compDisplacement hD).add hD₁).add hp
   apply h.congr_fields (fun _ _ => rfl)
   intro t x
-  simp only [acceleration,firstTerm,secondTerm,SmoothTimeField.add_apply,applyField_apply,compDisplacement_apply,
+  simp only [acceleration, firstTerm, secondTerm, SmoothTimeField.add_apply, applyField_apply,
+      compDisplacement_apply,
     _root_.add_apply]
   abel
 

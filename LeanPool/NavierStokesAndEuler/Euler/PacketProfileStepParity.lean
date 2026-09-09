@@ -7,11 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientProperties
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighParity
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderRecursiveAdmissibility
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientProperties
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
+
+/-! One actual mean/transverse solve preserves every joint profile symmetry. -/
 
 @[expose] public section
 
-/-! One actual mean/transverse solve preserves every joint profile symmetry. -/
 
 noncomputable section
 
@@ -44,10 +52,10 @@ theorem step (hp : 2 ≤ p)
   let W := G (p-1) (by omega)
   have Hpre := prefixOdd H
   let hm : Nonempty (EulerMeanPacketProvider.Forcing M (EulerPacketProfileRecursion.meanForce O p
-    a)) :=
+      a)) :=
     ⟨F.meanForcing M C (by omega) W.correctorDerivative W.corrector_time W.pressure⟩
   let hh : Nonempty (EulerTransversePacketProvider.Forcing P D
-    (EulerPacketProfileRecursion.highForce O p a)) :=
+      (EulerPacketProfileRecursion.highForce O p a)) :=
     ⟨F.highForcing M D hT C hp W.correctorDerivative W.corrector_time W.pressure hmean
       (ProfileRegularity.prefixLocality G) W.pressure_zero⟩
   let GH := Classical.choice hh
@@ -60,7 +68,12 @@ theorem step (hp : 2 ≤ p)
   have hhOdd : JointOdd D.T (EulerPacketProfileRecursion.highForce O p a) :=
     (F.actualHighForce_odd M Hpre C E eM hp W.correctorDerivative W.corrector_time
       W.pressure (H (p-1) (by omega)).pressure hmean).changeTime hT
-  refine { high := ?_, mean := ?_, corrector := ?_, pressure := ?_, highPressure := ?_,
+  refine {
+    high := ?_
+    mean := ?_
+    corrector := ?_
+    pressure := ?_
+    highPressure := ?_
     meanPressure := ?_ }
   · intro t x θ
     let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
@@ -76,7 +89,7 @@ theorem step (hp : 2 ≤ p)
   · intro t x θ
     let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
     change O.curlCorrector (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1
-      (t,(-x,-θ)) =
+        (t,(-x,-θ)) =
       -O.curlCorrector (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1 (t,(x,θ))
     rw [hcorrector,hhigh,EulerTransversePacketProvider.highSolve_of_admissible D I _ hh,
       GH.curlCorrector_eq I td (-x) (-θ),GH.curlCorrector_eq I td x θ]
@@ -84,7 +97,7 @@ theorem step (hp : 2 ≤ p)
   · intro t x θ
     let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
     change pressureGradient (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).2
-      (t,(-x,-θ)) =
+        (t,(-x,-θ)) =
       -pressureGradient (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).2 (t,(x,θ))
     rw [hhigh,EulerTransversePacketProvider.highSolve_of_admissible D I _ hh]
     exact GH.scalarGradient_odd I hSym hF hDM hhOdd hI td x θ

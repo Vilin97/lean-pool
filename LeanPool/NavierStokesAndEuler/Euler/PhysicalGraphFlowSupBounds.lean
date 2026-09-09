@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowBounds
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowCoefficientPaths
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowCoefficientPaths
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-! Uniform bounds needed for composition with the physical graph flow.
 The small lifted displacement controls positive derivatives of the
 physical coordinate change without a physical-frequency Grönwall bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,7 +42,7 @@ theorem displacement_sup_bound (k : ℝ) (m : Vector3) (ell : ℝ)
       displacement T G.time_nonneg G.A t := by
     funext y
     simp only [displacement,EulerVolterraConvolution.extendPath,projIcc_of_mem G.time_nonneg
-      t.property]
+        t.property]
   rw [← he]
   exact displacementFamily_jet_bound T G.time_nonneg G.A G.B G.R G.B_nonneg G.R_pos G.small
     G.sup_bound j t z
@@ -56,13 +58,13 @@ theorem velocity_sup_bound (k : ℝ) (m : Vector3) (ell : ℝ)
   exact fun j z => materialVelocity_bound T G.time_nonneg G.A G.B G.R
     G.B_nonneg G.R_pos G.small G.sup_bound j t z
 
-variable (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+variable (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
 
 include hgraph in
 theorem physical_positive_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (t : Icc (0 : ℝ) T) (n : ℕ) (hn : 0 < n) (x : Vector3) :
     ‖iteratedFDeriv ℝ n ((flowData T G.time_nonneg (physicalCoefficient k m T G.A ell)).forward t)
-      x‖ ≤
+        x‖ ≤
       (1+G.B*T)*(1+ell⁻¹*(4*G.R*graphFactor k m))^n*(n.factorial : ℝ)^2 := by
   have he : (flowData T G.time_nonneg (physicalCoefficient k m T G.A ell)).forward t =
       fun y => y+(G.displacementField k m ell hell t).field y := by

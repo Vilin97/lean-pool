@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
-public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.Normed.Operator.Basic
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+import Mathlib.Analysis.Calculus.MeanValue
+
+/-! A true orbit derivative gives a global increment bound for a linear isometric action. -/
 
 @[expose] public section
 
-/-! A true orbit derivative gives a global increment bound for a linear isometric action. -/
 
 noncomputable section
 
@@ -31,7 +34,7 @@ theorem norm_sub_le_of_hasFDerivAt (τ : P → E →ₗᵢ[ℝ] E)
     simpa only [ContinuousLinearMap.comp_apply, LinearIsometry.coe_toContinuousLinearMap,
       LinearIsometry.norm_map] using D.le_opNorm v
   have hh := (convex_univ : Convex ℝ (Set.univ : Set
-    P)).norm_image_sub_le_of_norm_hasFDerivWithin_le
+      P)).norm_image_sub_le_of_norm_hasFDerivWithin_le
     (fun b _ => (hasFDerivAt_all τ hadd u D h b).hasFDerivWithinAt)
     (fun b _ => hb b) (Set.mem_univ (0 : P)) (Set.mem_univ a)
   simpa only [hzero, sub_zero] using hh

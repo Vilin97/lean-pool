@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductSupport
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldSupport
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighMean
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
+
+/-! Supported, zero-mean raw cylinder witnesses feed the actual high-mode solver. -/
 
 @[expose] public section
 
-/-! Supported, zero-mean raw cylinder witnesses feed the actual high-mode solver. -/
 
 noncomputable section
 
@@ -30,7 +32,7 @@ def transverseForcing (D : EulerTransversePacketProvider.Data U) {raw : VectorFi
     (G : Field P D.T raw)
     (hs : ∀ t, G.path t ∈ Supported P Space D.support D.support_measurable)
     (hm : ∀ (t : Icc (0 : ℝ) D.T) x,
-      (∫ θ in (0 : ℝ)..P, raw (t,(x,θ))) = 0) :
+      (∫ θ in (0 : ℝ)..P, raw (t, (x, θ))) = 0) :
     EulerTransversePacketProvider.Forcing P D raw where
   path := supportedPath P D.support D.support_measurable G.path hs
   path_orbit := by simpa only [include_supportedPath] using G.orbit

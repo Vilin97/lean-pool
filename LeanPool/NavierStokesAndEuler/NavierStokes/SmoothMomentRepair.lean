@@ -6,15 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
 public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
 
 /-!
 # Smooth dependence of quadratic moment repair
@@ -25,6 +18,9 @@ product equivalence. The smooth inverse-function theorem constructs a local
 solver; no solution branch or its regularity is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter
@@ -34,7 +30,9 @@ namespace NavierStokes.SmoothMomentRepair
 
 variable (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Quadratic coefficients: an abbreviation for `(E →L[ℝ] E) × (E →L[ℝ] E →L[ℝ] E)`. -/
 abbrev QuadraticCoefficients := (E →L[ℝ] E) × (E →L[ℝ] E →L[ℝ] E)
+/-- Repair data: an abbreviation for `QuadraticCoefficients E × E`. -/
 abbrev RepairData := QuadraticCoefficients E × E
 
 variable {E}
@@ -43,6 +41,7 @@ variable {E}
 def forward (z : RepairData E) : RepairData E :=
   (z.1, z.1.1 z.2 + z.1.2 z.2 z.2)
 
+/-- Base, given by `((B.toContinuousLinearMap, A), 0)`. -/
 def base (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) : RepairData E :=
   ((B.toContinuousLinearMap, A), 0)
 

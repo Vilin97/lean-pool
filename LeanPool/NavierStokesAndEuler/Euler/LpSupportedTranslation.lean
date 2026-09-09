@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedMultiplier
 public import LeanPool.NavierStokesAndEuler.Euler.LpTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
-public import Mathlib.Topology.MetricSpace.Thickening
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientSpatial
 
 /-!
 # Actual spatial translations between supported L² spaces
@@ -21,6 +18,9 @@ A compact support inside an open set has a translation neighborhood in
 which the translated data lie in one fixed larger supported space. This
 margin is qualitative and does not occur in any operator-norm constant.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -59,12 +59,12 @@ def intoLarger (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : Meas
     (hsub : shiftedSet a S ⊆ Ω) :
     supportedSpace (V := V) volume S hS →ₗᵢ[ℝ] supportedSpace (V := V) volume Ω hΩ where
   toLinearMap := ((translation (V := V) a).toLinearMap.comp (supportedSpace volume S
-    hS).subtype).codRestrict
+      hS).subtype).codRestrict
     (supportedSpace volume Ω hΩ) (translation_mem a S Ω hS hΩ hsub)
   norm_map' := fun u => (translation a).norm_map (u : L2Space V)
 
 @[simp] theorem intoLarger_coe (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ :
-  MeasurableSet Ω)
+    MeasurableSet Ω)
     (hsub : shiftedSet a S ⊆ Ω) (u : supportedSpace (V := V) volume S hS) :
     (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation a (u : L2Space V) := rfl
 
@@ -74,7 +74,7 @@ def translatedField (A : Field (α := Space) (V := V)) (a : Space) : Field (α :
 
 /-- Actual coefficient multiplication intertwines the support-changing translation. -/
 theorem operator_intertwines (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ :
-  MeasurableSet Ω)
+    MeasurableSet Ω)
     (hsub : shiftedSet a S ⊆ Ω) (A : Field (α := Space) (V := V))
     (u : supportedSpace (V := V) volume S hS) :
     operator volume Ω hΩ (translatedField A a) (intoLarger a S Ω hS hΩ hsub u) =

@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderReflection
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! Joint reflection for arbitrary Hilbert-valued cylinder fields and their actual supported spaces.
+-/
 
 @[expose] public section
 
-/-! Joint reflection for arbitrary Hilbert-valued cylinder fields and their actual supported
-  spaces. -/
 
 noncomputable section
 
@@ -21,7 +22,7 @@ namespace EulerCylinderFieldReflection
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerLpCylinderTranslation EulerLpCylinderPaths EulerLpCylinderRectangular
-    EulerLpSupportedSubspace
+      EulerLpSupportedSubspace
 open scoped BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)]
@@ -30,6 +31,8 @@ section Basic
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Reflection, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain P => -x)
+(EulerCylinderReflection.measurePreserving_reflection P)`. -/
 def reflection : CylinderL2 P V →ₗᵢ[ℝ] CylinderL2 P V :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain P => -x)
     (EulerCylinderReflection.measurePreserving_reflection P)
@@ -65,15 +68,16 @@ theorem representative_of_reflection (u : CylinderL2 P V) (f : LiftDomain P → 
     rw [hs,Pi.smul_apply,hy,hn] at hr
     exact hr.symm
   exact congrFun (Measure.eq_of_ae_eq he (hcont.comp continuous_neg) (continuous_const.smul hcont))
-    x
+      x
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
+/-- Path reflection, given by `(reflection P).toContinuousLinearMap.compLeftContinuous ℝ K`. -/
 def pathReflection : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
   (reflection P).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem pathReflection_apply (u : C(K,CylinderL2 P V)) (t : K) :
+@[simp] theorem pathReflection_apply (u : C(K, CylinderL2 P V)) (t : K) :
     pathReflection P u t = reflection P (u t) := rfl
 
 end Basic
@@ -107,7 +111,7 @@ include hSym in
 theorem reflection_mem (u : Supported P V S hS) :
     reflection P (u : CylinderL2 P V) ∈ Supported P V S hS := by
   apply (mem_supportedSpace_ae (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS)
-    _).mpr
+      _).mpr
   filter_upwards [reflection_ae P (u : CylinderL2 P V),
     (EulerCylinderReflection.measurePreserving_reflection P).quasiMeasurePreserving.ae
       ((mem_supportedSpace_ae (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS)
@@ -117,6 +121,7 @@ theorem reflection_mem (u : Supported P V S hS) :
   intro hn
   exact hx ((hSym x.1).mp hn)
 
+/-- Supported reflection as an element of `Supported P V S hS →L[ℝ] Supported P V S hS`. -/
 def supportedReflection : Supported P V S hS →L[ℝ] Supported P V S hS :=
   ((reflection P).toContinuousLinearMap.comp (Supported P V S hS).subtypeL).codRestrict
     (Supported P V S hS) (reflection_mem P S hS hSym)
@@ -126,11 +131,13 @@ def supportedReflection : Supported P V S hS →L[ℝ] Supported P V S hS :=
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
+/-- Supported path reflection, given by `(supportedReflection P S hS hSym).compLeftContinuous ℝ
+K`. -/
 def supportedPathReflection : C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS) :=
   (supportedReflection P S hS hSym).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem supportedPathReflection_apply (u : C(K,Supported P V S hS)) (t : K) :
+@[simp] theorem supportedPathReflection_apply (u : C(K, Supported P V S hS)) (t : K) :
     supportedPathReflection P S hS hSym u t = supportedReflection P S hS hSym (u t) := rfl
 
 end Supported

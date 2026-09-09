@@ -9,14 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldPrecomp
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldLinear
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowTimeGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowAcceleration
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJets
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! A physical label dilation of a smooth velocity has the conjugate
 actual flow. Displacement, material velocity and material acceleration
 are the literal dilations of the corresponding original fields. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +29,8 @@ open scoped ContDiff
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E) (ell : ℝ)
 
+/-- Scaled coefficient, given by `(A.precompLinear (ell⁻¹ • ContinuousLinearMap.id ℝ E)).map
+(ell • ContinuousLinearMap.id ℝ E)`. -/
 def scaledCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
   (A.precompLinear (ell⁻¹ • ContinuousLinearMap.id ℝ E)).map (ell • ContinuousLinearMap.id ℝ E)
 
@@ -87,7 +90,7 @@ theorem scaledCoefficient_fderiv (hell : ell ≠ 0) (t : Icc (0 : ℝ) T) (x : E
   rw [h.fderiv]
   ext v
   simp only [FunLike.coe_smul,Pi.smul_apply,comp_apply,id_apply,map_smul,smul_smul,mul_inv_cancel₀
-    hell,one_smul]
+      hell,one_smul]
 
 omit [FiniteDimensional ℝ E] in
 theorem scaled_accelerationField_eq
@@ -112,10 +115,10 @@ theorem scaled_materialAcceleration_eq
 
 omit [FiniteDimensional ℝ E] in
 theorem scaledCoefficient_trace_zero (hell : ell ≠ 0)
-    (hdiv : ∀ t x, LinearMap.trace ℝ E (fderiv ℝ (A.field t : E → E) x).toLinearMap=0)
+    (hdiv : ∀ t x, LinearMap.trace ℝ E (fderiv ℝ (A.field t : E → E) x).toLinearMap = 0)
     (t : Icc (0 : ℝ) T) (x : E) :
     LinearMap.trace ℝ E (fderiv ℝ ((scaledCoefficient T A ell).field t : E → E) x).toLinearMap=0 :=
-      by
+        by
   rw [scaledCoefficient_fderiv T A ell hell]
   exact hdiv t _
 

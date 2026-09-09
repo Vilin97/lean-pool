@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownDecomposition
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPrefixLocality
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAverage
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPrefixLocality
+
+/-! Genuine cylinder-path witnesses for each of the fifteen known-force families. -/
 
 @[expose] public section
 
-/-! Genuine cylinder-path witnesses for each of the fifteen known-force families. -/
 
 noncomputable section
 
@@ -22,11 +25,12 @@ open Set MeasureTheory Finset EulerSmoothLimit EulerPacketPointJets EulerPacketP
 
 variable {P T : ℝ} [Fact (0 < P)] {O : Operators} {p : ℕ} {a : ℕ → Profile}
 
+/-- Term field as an element of `Field P T (k.raw O p a i j)`. -/
 def PrefixFields.termField (F : PrefixFields P T p a) (C : CoefficientData P T O)
-    (hp : 1 ≤ p) (hT : 0 < T) {corrector_t : VectorField}
-    (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-    (pressure : Field P T (pressureGradient (a (p-1)).highPressure))
+    (hp : 1 ≤ p) (hT : 0 < T) {correctorT : VectorField}
+    (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+    (pressure : Field P T (pressureGradient (a (p - 1)).highPressure))
     (k : KnownTerm) (i j : ℕ) : Field P T (k.raw O p a i j) := by
   cases k with
   | previousLinear =>
@@ -47,32 +51,32 @@ def PrefixFields.termField (F : PrefixFields P T p a) (C : CoefficientData P T O
   | fastMeanHigh =>
     by_cases h : i+j=p+1
     · exact (SpatialJetField.fastAdvection C.normal (F.pieceJet O .mean i) (F.pieceJet O .high
-      j)).congr
+        j)).congr
         (fun _ _ _ => by simp [KnownTerm.raw, h])
     · exact (Field.zero P T).congr (fun _ _ _ => by simp [KnownTerm.raw, h])
   | fastMeanCorrector =>
     by_cases h : i+j=p+1
     · exact (SpatialJetField.fastAdvection C.normal (F.pieceJet O .mean i) (F.pieceJet O .corrector
-      j)).congr
+        j)).congr
         (fun _ _ _ => by simp [KnownTerm.raw, h])
     · exact (Field.zero P T).congr (fun _ _ _ => by simp [KnownTerm.raw, h])
   | fastCorrectorHigh =>
     by_cases h : i+j=p+1
     · exact (SpatialJetField.fastAdvection C.normal (F.pieceJet O .corrector i) (F.pieceJet O .high
-      j)).congr
+        j)).congr
         (fun _ _ _ => by simp [KnownTerm.raw, h])
     · exact (Field.zero P T).congr (fun _ _ _ => by simp [KnownTerm.raw, h])
   | fastCorrectorCorrector =>
     by_cases h : i+j=p+1
     · exact (SpatialJetField.fastAdvection C.normal (F.pieceJet O .corrector i) (F.pieceJet O
-      .corrector j)).congr
+        .corrector j)).congr
         (fun _ _ _ => by simp [KnownTerm.raw, h])
     · exact (Field.zero P T).congr (fun _ _ _ => by simp [KnownTerm.raw, h])
 
 theorem KnownTerm.integral_zero_of_zeroMean (F : PrefixFields P T p a)
     (C : CoefficientData P T O)
     (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (k : KnownTerm) (hk : k.zeroMean = true) (i j : ℕ)
     (t : Icc (0 : ℝ) T) (x : Space) :
     (∫ θ in (0 : ℝ)..P, k.raw O p a i j (t,(x,θ))) = 0 := by
@@ -91,7 +95,7 @@ theorem KnownTerm.integral_zero_of_zeroMean (F : PrefixFields P T p a)
 theorem KnownTerm.angleIndependent_of_meanOnly (F : PrefixFields P T p a)
     (C : CoefficientData P T O)
     (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (k : KnownTerm) (hk : k.meanOnly = true) (i j : ℕ)
     (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     k.raw O p a i j (t,(x,θ)) = k.raw O p a i j (t,(x,0)) := by
@@ -119,16 +123,18 @@ theorem angleMean_eq_of_angleIndependent {raw : VectorField}
 
 namespace KnownTerm
 
+/-- Mean raw, with branches according to `k.zeroMean`. -/
 def meanRaw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile) (i j : ℕ) : VectorField :=
   if k.zeroMean then 0 else angleMean O.period (k.raw O p a i j)
 
+/-- High raw, with branches according to `k.meanOnly`. -/
 def highRaw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile) (i j : ℕ) : VectorField :=
   if k.meanOnly then 0 else if k.zeroMean then k.raw O p a i j else
     k.raw O p a i j-angleMean O.period (k.raw O p a i j)
 
 theorem meanRaw_eq (F : PrefixFields P T p a) (C : CoefficientData P T O)
     (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (k : KnownTerm) (i j : ℕ) (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     k.meanRaw O p a i j (t,(x,θ)) = angleMean O.period (k.raw O p a i j) (t,(x,θ)) := by
   by_cases hk : k.zeroMean = true
@@ -138,14 +144,14 @@ theorem meanRaw_eq (F : PrefixFields P T p a) (C : CoefficientData P T O)
 
 theorem highRaw_eq (F : PrefixFields P T p a) (C : CoefficientData P T O)
     (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (k : KnownTerm) (i j : ℕ) (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     k.highRaw O p a i j (t,(x,θ)) =
       k.raw O p a i j (t,(x,θ))-angleMean O.period (k.raw O p a i j) (t,(x,θ)) := by
   by_cases hm : k.meanOnly = true
   · simp only [highRaw, ite_eq_left hm, Pi.zero_apply, C.period_eq]
     rw [angleMean_eq_of_angleIndependent (t : ℝ) x (angleIndependent_of_meanOnly F C hB k hm i j t
-      x), sub_self]
+        x), sub_self]
   · by_cases hz : k.zeroMean = true
     · simp only [highRaw, ite_eq_right hm, ite_eq_left hz, angleMean, C.period_eq,
         integral_zero_of_zeroMean F C hB k hz i j t x, smul_zero, sub_zero]
@@ -153,22 +159,24 @@ theorem highRaw_eq (F : PrefixFields P T p a) (C : CoefficientData P T O)
 
 end KnownTerm
 
+/-- Mean term field as an element of `Field P T (k.meanRaw O p a i j)`. -/
 def PrefixFields.meanTermField (F : PrefixFields P T p a) (C : CoefficientData P T O)
-    (hp : 1 ≤ p) (hT : 0 < T) {corrector_t : VectorField}
-    (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-    (pressure : Field P T (pressureGradient (a (p-1)).highPressure))
+    (hp : 1 ≤ p) (hT : 0 < T) {correctorT : VectorField}
+    (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+    (pressure : Field P T (pressureGradient (a (p - 1)).highPressure))
     (k : KnownTerm) (i j : ℕ) : Field P T (k.meanRaw O p a i j) := by
   by_cases h : k.zeroMean = true
   · exact (Field.zero P T).congr (fun _ _ _ => by simp [KnownTerm.meanRaw, h])
   · exact (F.termField C hp hT Ct hCt pressure k i j).angleMean.congr
       (fun _ _ _ => by simp [KnownTerm.meanRaw, h, C.period_eq])
 
+/-- High term field as an element of `Field P T (k.highRaw O p a i j)`. -/
 def PrefixFields.highTermField (F : PrefixFields P T p a) (C : CoefficientData P T O)
-    (hp : 1 ≤ p) (hT : 0 < T) {corrector_t : VectorField}
-    (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-    (pressure : Field P T (pressureGradient (a (p-1)).highPressure))
+    (hp : 1 ≤ p) (hT : 0 < T) {correctorT : VectorField}
+    (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+    (pressure : Field P T (pressureGradient (a (p - 1)).highPressure))
     (k : KnownTerm) (i j : ℕ) : Field P T (k.highRaw O p a i j) := by
   by_cases hm : k.meanOnly = true
   · exact (Field.zero P T).congr (fun _ _ _ => by simp [KnownTerm.highRaw, hm])

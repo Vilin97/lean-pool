@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedCurlRealization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CopyAngularInvariance
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedWaveBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedCurlRealization
 
 /-!
 # Actual wave identities at closed native-cell points
@@ -18,6 +16,9 @@ All derivatives below are ambient derivatives at the selected point.  No
 openness of a quantitative control cell, nor a zero germ at its flat boundary,
 is required.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ClosedNativeWaveIdentities
 
@@ -219,7 +220,7 @@ theorem linearResidual_mode_split_at (ε κ : ℝ) (R b F G : D → ℝ)
   rw [show along (LinearWaveResidual.timeDirection ε Vf Vs) (fun y => vectorMode κ Φ a y i) x =
       (along (LinearWaveResidual.timeDirection ε Vf Vs) (fun y => a y i) x +
         phaseFactor κ * Complex.ofReal (along (LinearWaveResidual.timeDirection ε Vf Vs) Φ x) * a x
-          i) *
+            i) *
           carrier κ Φ x from along_mode _ κ dΦ (da i)]
   rw [add_assoc _ (LinearWaveResidual.transport R Vr Vθ Vz (LinearWaveResidual.complexBase R b F G)
     (vectorMode κ Φ a) x i) (LinearWaveResidual.transport R Vr Vθ Vz (vectorMode κ Φ a)
@@ -228,7 +229,7 @@ theorem linearResidual_mode_split_at (ε κ : ℝ) (R b F G : D → ℝ)
   simp only [LinearWaveResidual.principal, LinearWaveResidual.remainder,
     LinearWaveResidual.slowTransport, LinearWaveResidual.materialPhaseDefect,
     LinearWaveResidual.along_timeDirection, Complex.ofReal_add, Complex.ofReal_mul,
-      Complex.ofReal_pow]
+        Complex.ofReal_pow]
   ring
 
 section Curl
@@ -326,7 +327,7 @@ theorem cylindricalCurl_vectorPotential_of_differentiable
     (fun i => (hB i).const_smul (inverseCarrier K)),
     cylindricalCurl_const_smul R Vr Vθ Vz (inverseCarrier K) hB, normalCross_smul]
   change (fun i => ((inverseCarrier K • cylindricalCurl R Vr Vθ Vz (coefficient R Vr Vθ Vz Φ a) x)
-    i +
+      i +
       phaseFactor K * (inverseCarrier K • normalCross (phaseNormal R Vr Vθ Vz Φ x)
         (normalCoefficient (phaseNormal R Vr Vθ Vz Φ x) (a x))) i) * carrier K Φ x) = _
   rw [hcross]
@@ -351,8 +352,8 @@ theorem cylindricalCurl_vectorPotential_at {K : ℝ} (hK : K ≠ 0)
       vectorMode K Φ (realizedCoefficient K R Vr Vθ Vz Φ a) x := by
   have hB := normalCoefficient_contDiffAt (phaseNormal_contDiffAt hR hRn hr hθ hz hΦ) ha hn
   exact cylindricalCurl_vectorPotential_of_differentiable R Vr Vθ Vz hK
-    (hΦ.differentiableAt (by simp)) (fun i => (contDiffAt_pi.mp hB i).differentiableAt (by simp))
-      hn ht
+    (hΦ.differentiableAt (by
+        simp)) (fun i => (contDiffAt_pi.mp hB i).differentiableAt (by simp)) hn ht
 
 theorem cylindricalCurl_vectorPotential_germ {K : ℝ} (hK : K ≠ 0)
     {R : D → ℝ} {Vr Vθ Vz : D → D} {Φ : D → ℝ} {a : D → ComplexVector} {x : D}
@@ -408,7 +409,7 @@ theorem divergence_curl_zero_at {R : D → ℝ} {Vr Vθ Vz : D → D} {x : D}
     rw [along_inv Vz dR G.radius_ne, G.axial_radius, mul_zero]
   simp only [cylindricalDivergence, cylindricalCurl,
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-      Matrix.tail_cons]
+        Matrix.tail_cons]
   rw [along_sub Vr (dinv.fun_smul (dθ 2)) (dz 1),
     along_sub Vθ (dz 0) (dr 2),
     along_sub Vz ((dr 1).fun_add (dinv.fun_smul (db 1))) (dinv.fun_smul (dθ 0)),
@@ -432,7 +433,7 @@ theorem realizedCoefficient_divergence_at {K : ℝ} (hK : K ≠ 0)
     cylindricalDivergence R Vr Vθ Vz
       (vectorMode K Φ (realizedCoefficient K R Vr Vθ Vz Φ a)) x = 0 := by
   rw [← cylindricalDivergence_germ (cylindricalCurl_vectorPotential_germ hK G.radius_smooth
-    G.radius_ne
+      G.radius_ne
     G.radial_smooth G.angular_smooth G.axial_smooth hΦ ha hn ht)]
   exact divergence_curl_zero_at G (vectorPotential_contDiffAt K G.radius_smooth G.radius_ne
     G.radial_smooth G.angular_smooth G.axial_smooth hΦ ha hn)
@@ -485,6 +486,8 @@ end Curl
 
 /-! ## Literal cutoff/curl residual from primitive pointwise data -/
 
+/-- Exact at data, collecting `radial_profile`, `phase`, `amplitude`, `radius`, `radial_base`,
+`frequency_base` and their compatibility conditions. -/
 structure ExactAt (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) (x : D) : Prop where
   radial_profile : ContDiffAt ℝ ∞ d.radialProfile x
@@ -499,7 +502,7 @@ structure ExactAt (a : WaveCoefficients D) (s : StripData D) (d : GraphDirection
   radial_radius : along (d.radialField n) (a.radius n) x = 1
   base_angular : ∀ j, along (fun _ => d.angular) (fun y =>
     LinearWaveResidual.base (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase n) y j)
-      x = 0
+        x = 0
   amplitude_angular : ∀ j,
     along (fun _ => d.angular) (fun y => a.amplitude n y j) =ᶠ[𝓝 x] fun _ => 0
   phase_angular : ∃ p : ℝ, along (fun _ => d.angular) (a.phase n) =ᶠ[𝓝 x] fun _ => p
@@ -517,7 +520,7 @@ theorem harmonicResidual_eq_at {a : WaveCoefficients D} {s : StripData D}
     (d.fastField n) (fun _ => d.slow) hr contDiffAt_const contDiffAt_const
     h.phase h.amplitude h.radius h.radial_base h.frequency_base h.axial_base
     h.radius_nonzero h.radial_radius h.base_angular h.amplitude_angular hpθ h.pressure
-      h.pressure_angular
+        h.pressure_angular
 
 theorem harmonicResidual_eq_good_add_excluded_at
     (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
@@ -531,7 +534,7 @@ theorem harmonicResidual_eq_good_add_excluded_at
         (fun j => source n x j * carrier (a.frequency n) (a.phase n) x) =
       (fun j => (a.goodCoefficient s d ψ f n x j +
         excludedSlotError d ψ a.amplitude source n x j) * carrier (a.frequency n) (a.phase n) x) :=
-          by
+            by
   rw [harmonicResidual_eq_at h]
   have he := LocalizedWaveBounds.corrected_coefficient_eq_good_add_excluded_at
     a s d ψ f source n x ha hψ hf hsolve
@@ -584,7 +587,7 @@ theorem curlCorrection : ContDiffAt ℝ ∞ ((a.withCutoff ψ).curlCorrection s 
   curlRemainder_contDiffAt (a.frequency n) h.radius h.radius_ne h.radial_field
     contDiffAt_const contDiffAt_const (normalCoefficient_contDiffAt
       (phaseNormal_contDiffAt h.radius h.radius_ne h.radial_field contDiffAt_const contDiffAt_const
-        h.phase)
+          h.phase)
       (h.cutoff.smul h.amplitude) h.normal_ne)
 
 theorem corrected_amplitude : ContDiffAt ℝ ∞ ((a.corrected s d ψ).amplitude n) x :=
@@ -669,7 +672,7 @@ theorem native_realizes_curl_at (n : ℕ) (i : I) (x : D)
     CurlClassBounds.cylindricalCurl (a.background.radius n) (d.radialField n) (fun _ => d.angular)
       (d.axialField s n) ((a.localized i).curlPotential s d n) x =
       vectorMode (a.background.frequency n) (a.background.phase n) ((a.corrected s d i).amplitude
-        n) x := by
+          n) x := by
   apply cylindricalCurl_vectorPotential_at hK h.radius h.radius_ne h.radial_field
     contDiffAt_const contDiffAt_const h.phase (h.cutoff.smul h.amplitude) h.normal_ne
   change normalDot (a.background.normal s d n x) (a.cutoff n i x • a.amplitude n i x) = 0
@@ -678,10 +681,10 @@ theorem native_realizes_curl_at (n : ℕ) (i : I) (x : D)
 theorem native_divergence_zero_at (n : ℕ) (i : I) (x : D)
     (h : RawJetsAt (a.raw i) s d (fun n => a.cutoff n i) n x)
     (G : GeometryAt (a.background.radius n) (d.radialField n) (fun _ => d.angular) (d.axialField s
-      n) x)
+        n) x)
     (hK : a.background.frequency n ≠ 0)
     (ht : (fun y => normalDot (a.background.normal s d n y) (a.amplitude n i y)) =ᶠ[𝓝 x] fun _ =>
-      0) :
+        0) :
     cylindricalDivergence (a.background.radius n) (d.radialField n) (fun _ => d.angular)
       (d.axialField s n) (vectorMode (a.background.frequency n) (a.background.phase n)
         ((a.corrected s d i).amplitude n)) x = 0 := by

@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTransportCancellation
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Exact conservation of kinetic energy for the ordinary smooth Euler
 class, using the genuine noncompact transport and pressure cancellations. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,7 +51,7 @@ theorem kineticEnergy_conserved (t : Icc (0 : ℝ) T) :
     (fun s => U.kineticEnergy_hasDerivWithinAt s) t
   simpa only [map_zero,ContinuousMap.zero_apply,add_zero,
     projIcc_of_mem hT t.property,projIcc_of_mem hT (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl,hT⟩)] using
-      h
+        h
 
 theorem velocity_norm_conserved (t : Icc (0 : ℝ) T) :
     ‖(U.velocity t).toLp‖=‖(U.velocity ⟨0,le_rfl,hT⟩).toLp‖ := by

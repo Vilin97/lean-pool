@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
 public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
 
 /-!
 # Weighted Sobolev estimates for compact cutoffs
@@ -20,6 +17,9 @@ public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
 The derivative estimate is local: the unweighted velocity only needs to be in
 `L²`. No integrability assumption is made on its unweighted derivative.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -47,7 +47,7 @@ theorem memLp_of_compact {E : Type*} [NormedAddCommGroup E]
 /-- Mathlib's homogeneous Sobolev inequality specialized to Euclidean `R³`.
 The finite derivative norm is supplied by compact support and `C¹` regularity. -/
 theorem lpNorm_six_le {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] [CompleteSpace E]
+    [InnerProductSpace ℝ E]
     {f : Space → E} (hf : ContDiff ℝ 1 f) (hs : HasCompactSupport f) :
     comparisonLpNorm 6 f ≤ sobolevConstant * comparisonLpNorm 2 (fderiv ℝ f) := by
   have hn : Module.finrank ℝ Space = 3 := by simp [Space, NavierStokes.ProblemStatement.Space]

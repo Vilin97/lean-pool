@@ -7,10 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EvenSmoothDescent
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-!
 # Joint smoothness of even descent
@@ -21,6 +21,9 @@ regularity is inferred. Separate smoothness is not used as a substitute for
 joint smoothness.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -30,25 +33,33 @@ namespace NavierStokes.ParametricEvenDescent
 
 universe u
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
 
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Even radial, given by `∀ p, Function.Even (fun r => F (p, r))`. -/
 noncomputable def EvenRadial (F : Plane → E) : Prop :=
   ∀ p, Function.Even (fun r => F (p, r))
 
+/-- Parameter partial, given by `deriv (fun p => F (p, q.2)) q.1`. -/
 noncomputable def parameterPartial (F : Plane → E) (q : Plane) : E :=
   deriv (fun p => F (p, q.2)) q.1
 
+/-- Radial partial, given by `deriv (fun r => F (q.1, r)) q.2`. -/
 noncomputable def radialPartial (F : Plane → E) (q : Plane) : E :=
   deriv (fun r => F (q.1, r)) q.2
 
+/-- Radial reduce, given by `EvenSmoothDescent.radialDerivative (fun r => F (q.1, r)) q.2`. -/
 noncomputable def radialReduce (F : Plane → E) (q : Plane) : E :=
   EvenSmoothDescent.radialDerivative (fun r => F (q.1, r)) q.2
 
+/-- Descend, given by `F (q.1, Real.sqrt q.2)`. -/
 noncomputable def descend (F : Plane → E) (q : Plane) : E :=
   F (q.1, Real.sqrt q.2)
 
+/-- Plane derivative, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).smulRight (parameterPartial F q)
++ (ContinuousLinearMap.snd ℝ ℝ ℝ).smulRight (radialReduce F q)`. -/
 noncomputable def planeDerivative (F : Plane → E) (q : Plane) : Plane →L[ℝ] E :=
   (ContinuousLinearMap.fst ℝ ℝ ℝ).smulRight (parameterPartial F q) +
     (ContinuousLinearMap.snd ℝ ℝ ℝ).smulRight (radialReduce F q)
@@ -99,6 +110,7 @@ theorem radialReduce_integral (F : Plane → E) (q : Plane) :
     radialPartial, show (2 : ℕ) = 1 + 1 from rfl, iteratedDeriv_succ]
   simp only [iteratedDeriv_zero]
 
+omit [CompleteSpace E] in
 theorem contDiff_radialReduce {F : Plane → E} (hF : ContDiff ℝ ∞ F) :
     ContDiff ℝ ∞ (radialReduce F) := by
   let K : Plane × ℝ → E := fun z => radialPartial (radialPartial F) (z.1.1, z.2 * z.1.2)
@@ -128,6 +140,7 @@ theorem even_radialReduce {F : Plane → E} (hEven : EvenRadial F) :
   intro p r
   exact EvenSmoothDescent.even_radialDerivative (hEven p) r
 
+omit [CompleteSpace E] in
 theorem contDiff_planeDerivative {F : Plane → E} (hF : ContDiff ℝ ∞ F) :
     ContDiff ℝ ∞ (planeDerivative F) :=
   (contDiff_const.smulRight (contDiff_parameterPartial hF)).add
@@ -225,6 +238,8 @@ theorem contDiffOn_descend {F : Plane → E} (hF : ContDiff ℝ ∞ F)
     ContDiffOn ℝ ∞ (descend F) (univ ×ˢ Ici (0 : ℝ)) :=
   contDiffOn_infty.mpr fun n => contDiffOn_descend_nat n E F hF hEven
 
+/-- Localized, given by `(EvenSmoothDescent.evenCutoff A (q.1 - a) *
+EvenSmoothDescent.evenCutoff R q.2) • F q`. -/
 noncomputable def localized (a A R : ℝ) (F : Plane → E) (q : Plane) : E :=
   (EvenSmoothDescent.evenCutoff A (q.1 - a) *
     EvenSmoothDescent.evenCutoff R q.2) • F q

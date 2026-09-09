@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Strong continuity of isometric spatial actions on time L²
@@ -17,6 +16,9 @@ public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 This uses dominated convergence with the actual square-integrable time field.
 It does not assume operator-norm continuity of spatial translations.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

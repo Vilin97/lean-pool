@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalBinding
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DependentSignedPhysicalFamily
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
-
-@[expose] public section
 
 /-!
 # Exact exterior support of the actual signed physical fields
@@ -21,6 +18,9 @@ vanish outside the fixed nominal active annulus. The argument retains the
 normalized radial coordinate exactly and is independent of the request.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedExterior
@@ -29,10 +29,13 @@ open Set Function Filter ProblemStatement CorrectionInitialization
 open CorrectionInitialization.ActualPrimary PhysicalWaveSum PhysicalCopyBounds
 open scoped Topology ContDiff BigOperators
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
 
 variable {B N0 : ℕ}
 
+/-- Active, given by `ActualPolarCoverage.active /-! ## The normalized radial coordinate does
+not depend on the band -/`. -/
 noncomputable def active : Set SpaceTime := ActualPolarCoverage.active
 
 /-! ## The normalized radial coordinate does not depend on the band -/
@@ -98,6 +101,8 @@ theorem primary_mask_or_target_zero (l : Label B N0) (n m : ℕ)
 
 /-! ## All actual labels, with their original dependent data -/
 
+/-- Band label, given by `⟨ActualSignedPhysicalBinding.spatialLabel l,
+ActualPrimaryBounds.label_large (l.2, l.1)⟩`. -/
 noncomputable def bandLabel (l : Label B N0) : BandLabel :=
   ⟨ActualSignedPhysicalBinding.spatialLabel l, ActualPrimaryBounds.label_large (l.2, l.1)⟩
 
@@ -115,13 +120,17 @@ theorem bandLabel_injective : Injective (bandLabel (B := B) (N0 := N0)) := by
   apply PartitionedCovariance.signedLabel_injective (PrimaryGeometryAssembly.label nominal k.1)
   simpa only [bandLabel, ActualSignedPhysicalBinding.spatialLabel, hfirst] using he
 
+/-- Labels, given by `range (bandLabel (B := B) (N0 := N0))`. -/
 noncomputable def labels (B N0 : ℕ) : Set BandLabel := range (bandLabel (B := B) (N0 := N0))
 
+/-- Native label, given by `⟨ActualSignedPhysicalBinding.spatialLabel l,
+ActualPrimaryBounds.label_large (l.2, l.1), Set.mem_range_self l⟩`. -/
 noncomputable def nativeLabel (l : Label B N0) :
     ActualSignedPhysicalData.NativeLabel (labels B N0) :=
   ⟨ActualSignedPhysicalBinding.spatialLabel l, ActualPrimaryBounds.label_large (l.2, l.1),
     Set.mem_range_self l⟩
 
+/-- Actual label, given by `Classical.choose L.mem`. -/
 noncomputable def actualLabel (L : ActualSignedPhysicalData.NativeLabel (labels B N0)) :
     Label B N0 := Classical.choose L.mem
 
@@ -144,6 +153,7 @@ theorem nativeLabel_ext {S : Set BandLabel}
     nativeLabel (actualLabel L) = L :=
   nativeLabel_ext (congrArg Subtype.val (bandLabel_actualLabel L))
 
+/-- Label equiv, bundling `toFun`, `invFun`, `left_inv`, `right_inv`. -/
 noncomputable def labelEquiv : Label B N0 ≃ ActualSignedPhysicalData.NativeLabel (labels B N0) where
   toFun := nativeLabel
   invFun := actualLabel
@@ -154,6 +164,7 @@ theorem actualLabel_reference (L : ActualSignedPhysicalData.NativeLabel (labels 
     ActualSignedPhysicalBinding.reference (actualLabel L) = L.val.1 :=
   congrArg (fun L : BandLabel => L.val.1) (bandLabel_actualLabel L)
 
+/-- Reband payload, given by `he ▸ ⟨V, s⟩`. -/
 noncomputable def rebandPayload {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     {P : PhysicalSignedWave.PrimaryData U} {n m : ℕ} (he : n = m)
     (V : P.Views n) (s : V.StateData) : Σ W : P.Views m, W.StateData :=
@@ -166,8 +177,10 @@ theorem rebandPayload_referenceRequest {U : PhaseJetBounds.Domain ℕ PhaseCalcu
   cases he
   rfl
 
+/-- Payload, given by `rebandPayload (actualLabel_reference L)
+(ActualSignedPhysicalBinding.nativeViews (actualLabel L)) (s (actualLabel L))`. -/
 noncomputable def payload (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews
-  l).StateData)
+    l).StateData)
     (L : ActualSignedPhysicalData.NativeLabel (labels B N0)) :
     Σ V : (ActualSignedPhysicalBinding.primary (actualLabel L)).Views L.val.1, V.StateData :=
   rebandPayload (actualLabel_reference L) (ActualSignedPhysicalBinding.nativeViews (actualLabel L))
@@ -176,7 +189,7 @@ noncomputable def payload (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.
 /-- Both signs and every actual primary label are retained. Only proof
 transport of the reference index is used in the view/state fields. -/
 noncomputable def family (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews
-  l).StateData) :
+    l).StateData) :
     DependentSignedPhysicalFamily.Family where
   active := labels B N0
   domain L := ActualSignedPhysicalBinding.domain (actualLabel L)
@@ -191,7 +204,7 @@ noncomputable def family (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.n
     ((family s).state L).referenceRequest = (s (actualLabel L)).referenceRequest :=
   rebandPayload_referenceRequest _ _ _
 
-@[simp] theorem family_referenceRequest_nativeLabel
+theorem family_referenceRequest_nativeLabel
     (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
     (l : Label B N0) :
     ((family s).state (nativeLabel l)).referenceRequest = (s l).referenceRequest := by
@@ -304,6 +317,8 @@ noncomputable def potential : VelocityField :=
   PhysicalCopyBounds.vectorSum ((family s).potentialCopies slots outgoing.data.h_pos.le)
     ActualPolarCoverage.inner h slots.radius
 
+/-- Pressure, defined pointwise by `(((family s).pressureCopies slots
+outgoing.data.h_pos.le).sum ActualPolarCoverage.inner h slots.radius w).re`. -/
 noncomputable def pressure : PressureField :=
   fun w => (((family s).pressureCopies slots outgoing.data.h_pos.le).sum
     ActualPolarCoverage.inner h slots.radius w).re
@@ -361,17 +376,21 @@ variable (x : CorrectionStep.CycleState (Label B N0))
       ((ActualCycleParameters.fixedParameters B N0).afterParticular
         x.coefficients (commonContext B) x.state).pressure)
 
+/-- Cycle native states, constructed using `ActualSignedPhysicalBinding.nativeStateData`. -/
 noncomputable def cycleNativeStates (l : Label B N0) :
     (ActualSignedPhysicalBinding.nativeViews l).StateData :=
   ActualSignedPhysicalBinding.nativeStateData l ActualInitialization.patch
     ((ActualCycleParameters.fixedParameters B N0).afterParticular
       x.coefficients (commonContext B) x.state) H hp
 
+/-- Cycle family, given by `family (cycleNativeStates x H hp)`. -/
 noncomputable def cycleFamily : DependentSignedPhysicalFamily.Family :=
   family (cycleNativeStates x H hp)
 
+/-- Cycle potential, given by `potential (cycleNativeStates x H hp)`. -/
 noncomputable def cyclePotential : VelocityField := potential (cycleNativeStates x H hp)
 
+/-- Cycle pressure, given by `pressure (cycleNativeStates x H hp)`. -/
 noncomputable def cyclePressure : PressureField := pressure (cycleNativeStates x H hp)
 
 /-- The exterior statement concerns the signed request of the literal

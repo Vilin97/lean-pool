@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseContextAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseStressClasses
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualNaturality
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.BaseStressClasses
 
 /-!
 # The actual slow base on a coarsest common integer cover
@@ -20,6 +18,9 @@ Only the integer cover used in the graph operators changes. The forward
 real-lift map is the genuine integer covering matrix, with its actual norm.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.CommonBaseContext
@@ -27,8 +28,11 @@ namespace NavierStokes.CommonBaseContext
 open Set Function Filter WeightedClasses
 open scoped ContDiff Topology BigOperators
 
+/-- Plane: an abbreviation for `BaseContextAssembly.Plane`. -/
 abbrev Plane := BaseContextAssembly.Plane
+/-- Point: an abbreviation for `BaseContextAssembly.Point`. -/
 abbrev Point := BaseContextAssembly.Point
+/-- Slow: an abbreviation for `BaseContextAssembly.Slow`. -/
 abbrev Slow := BaseContextAssembly.Slow
 
 /-- Scalar hypotheses on the chosen common index, including every low band. -/
@@ -54,9 +58,12 @@ theorem IndexBounds.commonRatio {h : ℝ} {index : ℕ → ℕ} {K : ℕ}
   ⟨MeanChartCompatibility.commonRatio_pos h n (index n),
     MeanChartCompatibility.commonRatio_le (H.native_le_add n)⟩
 
+/-- Radial frequency, given by `ChartScales.Lambda ^ index n * ChartScales.Q n ^
+(ChartScales.radialExponent h / 2)`. -/
 noncomputable def radialFrequency (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : ℝ :=
   ChartScales.Lambda ^ index n * ChartScales.Q n ^ (ChartScales.radialExponent h / 2)
 
+/-- Fast coefficient, given by `ChartScales.Tg ^ index n * ChartScales.Q n ^ (1 + h)`. -/
 noncomputable def fastCoefficient (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : ℝ :=
   ChartScales.Tg ^ index n * ChartScales.Q n ^ (1 + h)
 
@@ -78,7 +85,7 @@ theorem fastCoefficient_mono (h : ℝ) {i j : ℕ → ℕ} {n : ℕ} (hij : i n 
 
 theorem radialFrequency_add (h : ℝ) (i k : ℕ → ℕ) (n : ℕ) :
     radialFrequency h (fun m => i m + k m) n = ChartScales.Lambda ^ k n * radialFrequency h i n :=
-      by
+        by
   simp only [radialFrequency, pow_add]
   ring
 
@@ -126,6 +133,8 @@ theorem fastCoefficient_inverse_bound {h : ℝ} {index : ℕ → ℕ} {K : ℕ}
         (pow_nonneg ChartScales.Tg_pos.le _)
     _ = _ := by rw [pow_succ]; ring
 
+/-- Reconstruction, bundling `exponent`, `inner`, `outer`, `inner_lt_outer` and the required
+compatibility proofs. -/
 noncomputable def reconstruction (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b) :
     CorrectionState.ReconstructionData where
   exponent := ChartScales.radialExponent h
@@ -135,6 +144,7 @@ noncomputable def reconstruction (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (ha
   frequency := radialFrequency h index
   radialDirection := TorusInverse.vector .radial
 
+/-- Operators, constructed using `CorrectionState.graphOperators`. -/
 noncomputable def operators (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b) :
     MeanIncrementBounds.Operators Point :=
   CorrectionState.graphOperators (reconstruction h index a b hab) (ChartScales.epsilon h)
@@ -148,7 +158,7 @@ theorem operators_match_physical (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (ha
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (index n)) n := by
   constructor <;> rfl
 
-theorem operator_bounds {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowRegion (2*h))
+theorem operator_bounds {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowRegion (2 * h))
     {index : ℕ → ℕ} (hi : ∀ n, index n ≤ ChartScales.nativeIndex h n)
     {a b cL cR : ℝ} (ha : 0 < a) (hab : a < b) (hcL : 0 < cL) (hcR : 0 < cR) :
     MeanIncrementBounds.OperatorBounds (BaseContextAssembly.movingStrip hh U a b cL cR ha hcL hcR)
@@ -182,15 +192,15 @@ noncomputable def coverLift (k : ℕ) : Point ≃L[ℝ] Point :=
 
 @[simp] theorem coverLift_slow (k : ℕ) (x : Point) :
     BaseContextAssembly.slowCoordinates (coverLift k x) = BaseContextAssembly.slowCoordinates x :=
-      rfl
+        rfl
 
-@[simp] theorem coverLift_eR (k : ℕ) : coverLift k (1,(0,0)) = (1,(0,0)) := by
+theorem coverLift_eR (k : ℕ) : coverLift k (1,(0,0)) = (1,(0,0)) := by
   simp only [coverLift_apply, map_zero]
 
-@[simp] theorem coverLift_eZ (k : ℕ) : coverLift k (0,((0,1),0)) = (0,((0,1),0)) := by
+theorem coverLift_eZ (k : ℕ) : coverLift k (0,((0,1),0)) = (0,((0,1),0)) := by
   simp only [coverLift_apply, map_zero]
 
-@[simp] theorem coverLift_eT (k : ℕ) : coverLift k (0,((1,0),0)) = (0,((1,0),0)) := by
+theorem coverLift_eT (k : ℕ) : coverLift k (0,((1,0),0)) = (0,((1,0),0)) := by
   simp only [coverLift_apply, map_zero]
 
 theorem coverPower_radial (k : ℕ) :
@@ -231,7 +241,7 @@ theorem coverLift_physicalToChart (h : ℝ) (n i k : ℕ) (x : Point) :
     · change CommonCoverSolve.coverPower k (TemporalMeanUpdate.coverMap i x.2.2) =
         TemporalMeanUpdate.coverMap (i+k) x.2.2
       rw [MeanChartCompatibility.coverMap_eq_coverPower,
-        MeanChartCompatibility.coverMap_eq_coverPower,
+          MeanChartCompatibility.coverMap_eq_coverPower,
         coverPower_comp]
 
 theorem IndexBounds.physicalToChart {h : ℝ} {index : ℕ → ℕ} {K : ℕ}
@@ -241,6 +251,7 @@ theorem IndexBounds.physicalToChart {h : ℝ} {index : ℕ → ℕ} {K : ℕ}
     PhysicalResidualTZ.physicalToChartTZ h n (ChartScales.nativeIndex h n) x := by
   rw [coverLift_physicalToChart, H.add_gap n]
 
+/-- Pull, given by `f n (coverLift (gap n) x)`. -/
 noncomputable def pull {E : Type*} (gap : ℕ → ℕ) (f : ℕ → Point → E) (n : ℕ) (x : Point) : E :=
   f n (coverLift (gap n) x)
 
@@ -255,7 +266,7 @@ theorem pull_dr (h a b : ℝ) (hab : a < b) (index gap : ℕ → ℕ) (f : ℕ �
   funext n x
   change fderiv ℝ (pull gap f n) x (1,(0,0)) +
       radialFrequency h index n * (RadialPullback.radialJacobian (ChartScales.radialExponent h) x.1
-        *
+          *
         fderiv ℝ (pull gap f n) x (0,(0,TorusInverse.vector .radial))) =
     fderiv ℝ (f n) (coverLift (gap n) x) (1,(0,0)) +
       radialFrequency h (fun n => index n + gap n) n *
@@ -286,7 +297,7 @@ theorem pull_fastTime (h a b : ℝ) (hab : a < b) (index gap : ℕ → ℕ) (f :
       pull gap ((operators h (fun n => index n + gap n) a b hab).fastTime f) := by
   funext n x
   change fastCoefficient h index n * fderiv ℝ (pull gap f n) x (0,(0,TorusInverse.vector
-    .temporal)) =
+      .temporal)) =
     fastCoefficient h (fun n => index n + gap n) n *
       fderiv ℝ (f n) (coverLift (gap n) x) (0,(0,TorusInverse.vector .temporal))
   rw [pull_fderiv, coverLift_vT, map_smul, fastCoefficient_add]
@@ -314,24 +325,24 @@ theorem pull_native_derivatives (h a b : ℝ) (hab : a < b)
         pull gap ((BaseContextAssembly.operators h a b hab).time f) := by
   dsimp only
   have he : (fun n => index n + (ChartScales.nativeIndex h n - index n)) = ChartScales.nativeIndex
-    h :=
+      h :=
     funext (fun n => Nat.add_sub_of_le (hi n))
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · simpa only [he, operators_native] using pull_dr h a b hab index (fun n =>
-    ChartScales.nativeIndex h n - index n) f
+      ChartScales.nativeIndex h n - index n) f
   · simpa only [he, operators_native] using pull_dz h a b hab index (fun n =>
-    ChartScales.nativeIndex h n - index n) f
+      ChartScales.nativeIndex h n - index n) f
   · simpa only [he, operators_native] using pull_slowTime h a b hab index (fun n =>
-    ChartScales.nativeIndex h n - index n) f
+      ChartScales.nativeIndex h n - index n) f
   · simpa only [he, operators_native] using pull_fastTime h a b hab index (fun n =>
-    ChartScales.nativeIndex h n - index n) f
+      ChartScales.nativeIndex h n - index n) f
   · simpa only [he, operators_native] using pull_time h a b hab index (fun n =>
-    ChartScales.nativeIndex h n - index n) f
+      ChartScales.nativeIndex h n - index n) f
 
 theorem coverLift_radialField (h a b : ℝ) (hab : a < b) (index gap : ℕ → ℕ) (n : ℕ) (x : Point) :
     coverLift (gap n) ((operators h index a b hab).eR +
       ((operators h index a b hab).radialFrequency n * (operators h index a b hab).radialProfile x)
-        •
+          •
         (operators h index a b hab).vR) =
     (operators h (fun m => index m + gap m) a b hab).eR +
       ((operators h (fun m => index m + gap m) a b hab).radialFrequency n *
@@ -357,7 +368,7 @@ theorem coverLift_axialField (h a b : ℝ) (hab : a < b) (index gap : ℕ → �
 
 theorem coverLift_timeField (h a b : ℝ) (hab : a < b) (index gap : ℕ → ℕ) (n : ℕ) :
     coverLift (gap n) ((operators h index a b hab).fastCoefficient n • (operators h index a b
-      hab).vT -
+        hab).vT -
       (operators h index a b hab).epsilon n • (operators h index a b hab).eT) =
     (operators h (fun m => index m + gap m) a b hab).fastCoefficient n •
       (operators h (fun m => index m + gap m) a b hab).vT -
@@ -409,7 +420,7 @@ theorem coverLift_norm_le {k K : ℕ} (hk : k ≤ K) :
       (CommonCoverSolve.coverPower k : Plane →L[ℝ] Plane).le_opNorm _
     _ ≤ CommonCoverSolve.coveringBound K * ‖x‖ :=
       mul_le_mul (CommonCoverSolve.coveringNorm_le_bound hk) ((norm_snd_le x.2).trans (norm_snd_le
-        x))
+          x))
         (norm_nonneg _) (CommonCoverSolve.coveringBound_pos K).le
     _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
 
@@ -418,21 +429,21 @@ end Cover
 section CoverClass
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
-  (U : LocalSignedRequest.SlowRegion (2*F.data.h))
+  (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
 
-@[simp] theorem coverLift_mem (k : ℕ) (x : Point) :
+theorem coverLift_mem (k : ℕ) (x : Point) :
     coverLift k x ∈ (BaseContextAssembly.nativeStrip W U).domain ↔
       x ∈ (BaseContextAssembly.nativeStrip W U).domain := Iff.rfl
 
-@[simp] theorem coverLift_delta (k : ℕ) (x : Point) :
+theorem coverLift_delta (k : ℕ) (x : Point) :
     (BaseContextAssembly.nativeStrip W U).delta (coverLift k x) =
       (BaseContextAssembly.nativeStrip W U).delta x := rfl
 
-@[simp] theorem coverLift_zeta (k : ℕ) (x : Point) :
+theorem coverLift_zeta (k : ℕ) (x : Point) :
     (BaseContextAssembly.nativeStrip W U).zeta (coverLift k x) =
       (BaseContextAssembly.nativeStrip W U).zeta x := rfl
 
-@[simp] theorem coverLift_growth (k n : ℕ) (x : Point) :
+theorem coverLift_growth (k n : ℕ) (x : Point) :
     (BaseContextAssembly.nativeStrip W U).growth n (coverLift k x) =
       (BaseContextAssembly.nativeStrip W U).growth n x := rfl
 
@@ -449,7 +460,7 @@ theorem class_pull {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   have hc : 1 ≤ 1 + CommonCoverSolve.coveringBound K := by
     linarith [CommonCoverSolve.coveringBound_pos K]
   have ht := CommonCoverClass.memClass_affine_transport s s (w := w) (v := w) (α := alpha) (f := f)
-    hf id
+      hf id
     (fun n => (coverLift (gap n) : Point →L[ℝ] Point)) (fun _ => 0)
     (fun n x hx => by simp only [zero_add]; exact (coverLift_mem W U (gap n) x).mpr hx)
     (fun n x hx => by simp only [id_eq, zero_add]; exact hw n x hx)
@@ -493,7 +504,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 noncomputable def context (index : ℕ → ℕ) : CorrectionState.Context Point :=
   { BaseContextAssembly.nativeContext H v upper B with
     operators := operators F.data.h index (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (PrimaryTargetBounds.radii_ordered W) }
 
 @[simp] theorem context_base (index : ℕ → ℕ) :
@@ -501,11 +512,11 @@ noncomputable def context (index : ℕ → ℕ) : CorrectionState.Context Point 
 
 @[simp] theorem context_virtualTheta (index : ℕ → ℕ) :
     (context H v upper B index).virtualTheta = (BaseContextAssembly.nativeContext H v upper
-      B).virtualTheta := rfl
+        B).virtualTheta := rfl
 
 @[simp] theorem context_virtualAxial (index : ℕ → ℕ) :
     (context H v upper B index).virtualAxial = (BaseContextAssembly.nativeContext H v upper
-      B).virtualAxial := rfl
+        B).virtualAxial := rfl
 
 theorem context_native : context H v upper B (ChartScales.nativeIndex F.data.h) =
     BaseContextAssembly.nativeContext H v upper B := rfl
@@ -516,16 +527,16 @@ theorem context_operator_bounds (U : LocalSignedRequest.SlowRegion (2 * F.data.h
       (context H v upper B index).operators ChartScales.kappa :=
   operator_bounds F.data.h_pos.le U hi (PrimaryTargetBounds.leftRadius_pos W)
     (PrimaryTargetBounds.radii_ordered W) (div_pos (FinalSlowBase.edgeExponent_pos W) (by
-      norm_num)) zero_lt_one
+        norm_num)) zero_lt_one
 
 theorem context_base_bounds (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (index : ℕ → ℕ) :
     MeanIncrementBounds.BaseBounds (BaseContextAssembly.nativeStrip W U) (context H v upper B
-      index).base :=
+        index).base :=
   BaseContextAssembly.native_base_bounds H v upper B U
 
 theorem context_base_smooth (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (index : ℕ → ℕ) :
     MeanIncrementBounds.SmoothTriple (LocalRankDefect.positiveDomain U.carrier) (context H v upper
-      B index).base :=
+        B index).base :=
   BaseContextAssembly.native_base_smooth H v upper B U
 
 theorem context_operators_local (U : Set Plane) (index : ℕ → ℕ) :
@@ -568,10 +579,10 @@ theorem context_stress_properties (U : LocalSignedRequest.SlowRegion (2 * F.data
     PhysicalMeanDomain.PeriodicOn U.carrier ((context H v upper B index).virtualTheta n) ∧
     PhysicalMeanDomain.PeriodicOn U.carrier ((context H v upper B index).virtualAxial n) ∧
     LocalSignedRequest.MovingSupport (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (2 * F.data.h) U.carrier ((context H v upper B index).virtualTheta n) ∧
     LocalSignedRequest.MovingSupport (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (2 * F.data.h) U.carrier ((context H v upper B index).virtualAxial n) :=
   BaseContextAssembly.native_stress_properties H v upper B U n
 
@@ -625,7 +636,7 @@ theorem contextOn_native {index : ℕ → ℕ} (hi : ∀ n, index n ≤ ChartSca
   have he : (fun m => index m + (ChartScales.nativeIndex F.data.h m - index m)) =
       ChartScales.nativeIndex F.data.h := funext (fun m => Nat.add_sub_of_le (hi m))
   have hc := contextOn_add H v upper B index (fun m => ChartScales.nativeIndex F.data.h m - index
-    m) U n
+      m) U n
   rwa [he, context_native] at hc
 
 theorem context_stress_classes (hcone : LeadingStressWeights.FullTrueCone v)
@@ -635,7 +646,7 @@ theorem context_stress_classes (hcone : LeadingStressWeights.FullTrueCone v)
   BaseStressClasses.virtualStress_components H v hcone upper B U
 
 theorem context_higher_stress_classes (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (index : ℕ
-  → ℕ) :
+    → ℕ) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 2
       (fun n x => (context H v upper B index).virtualTheta n x -
         (BaseContextAssembly.leadingVirtualStress H v n x).1) ∧

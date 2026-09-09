@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverClass
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverSolve
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityHomogeneity
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalGraphBounds
 
 /-!
 # Naturality of the actual mean operators
@@ -19,6 +19,9 @@ frequencies, and amplitudes are transported together.  The identities below
 are identities of the defined integral/Fourier/rank operators, not an
 assumption that separately chosen chart outputs coincide.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.MeanChartCompatibility
 
@@ -91,12 +94,14 @@ section Pullback
 variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Chart linear, given by `(l • ContinuousLinearMap.id ℝ ℝ).prodMap C`. -/
 noncomputable def chartLinear (l : ℝ) (C : E →L[ℝ] F) : ℝ × E →L[ℝ] ℝ × F :=
   (l • ContinuousLinearMap.id ℝ ℝ).prodMap C
 
 @[simp] theorem chartLinear_apply (l : ℝ) (C : E →L[ℝ] F) (z : ℝ × E) :
     chartLinear l C z = (l * z.1, C z.2) := rfl
 
+/-- Pull, given by `u * f (chartLinear l C z)`. -/
 noncomputable def pull (l : ℝ) (C : E →L[ℝ] F) (u : ℝ) (f : ℝ × F → ℝ) (z : ℝ × E) : ℝ :=
   u * f (chartLinear l C z)
 
@@ -181,7 +186,7 @@ theorem physicalCompact_pull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
       by_contra hn
       exact hz (RadialPullback.physicalCompact_supported ha hab hd hp hsp M v hn).1
     have hright : RadialPullback.physicalCompact d (l * a) (l * b) N w f (chartLinear l C z) = 0 :=
-      by
+        by
       by_contra hn
       have ht := (RadialPullback.physicalCompact_supported hla hlab hd hf hs N w hn).1
       exact (not_le_of_gt (mul_lt_mul_of_pos_left hz' hl)) ht
@@ -314,10 +319,12 @@ open TorusInverse
 variable {S T : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
   [NormedAddCommGroup T] [NormedSpace ℝ T]
 
+/-- Parameter pull, given by `pull l (P.prodMap (ContinuousLinearMap.id ℝ Plane)) u f`. -/
 noncomputable def parameterPull (l : ℝ) (P : S →L[ℝ] T) (u : ℝ)
     (f : PressureStream.Lift T → ℝ) : PressureStream.Lift S → ℝ :=
   pull l (P.prodMap (ContinuousLinearMap.id ℝ Plane)) u f
 
+/-- Cover pull, given by `pull l (P.prodMap (TemporalMeanUpdate.coverMap k)) u f`. -/
 noncomputable def coverPull (l : ℝ) (P : S →L[ℝ] T) (k : ℕ) (u : ℝ)
     (f : PressureStream.Lift T → ℝ) : PressureStream.Lift S → ℝ :=
   pull l (P.prodMap (TemporalMeanUpdate.coverMap k)) u f
@@ -414,7 +421,7 @@ theorem meanPressure_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
     PressureStream.meanPressure d a b M hab v (coverPull l P k u f) z =
       coverPull l P k (u / l)
         (PressureStream.meanPressure d (l * a) (l * b) N (mul_lt_mul_of_pos_left hab hl) w f) z :=
-          by
+            by
   have hvector : M • (P.prodMap (TemporalMeanUpdate.coverMap k)) ((0 : S), v) =
       (N * l ^ d) • ((0 : T), w) := by
     apply Prod.ext
@@ -503,7 +510,8 @@ theorem temporal_physical_pull (h : ℝ) (n : ℕ) (l : ℝ) (P : S →L[ℝ] T)
       (ChartScales.Tg ^ ChartScales.nativeIndex h n)⁻¹ *
         TemporalMeanUpdate.temporalInverse (TemporalMeanUpdate.centered f)
           (l * z.1, (P z.2.1, TemporalMeanUpdate.coverMap (ChartScales.nativeIndex h n) z.2.2)) :=
-            by ring
+              by
+              ring
     _ = _ := by rw [hpow]; ring
 
 /-- The common-index form of the actual temporal update. A common index
@@ -516,8 +524,10 @@ noncomputable def temporalAtIndex (h : ℝ) (n i : ℕ)
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem temporalAtIndex_native (h : ℝ) (n : ℕ) (f : PressureStream.Lift S → ℝ) :
     temporalAtIndex h n (ChartScales.nativeIndex h n) f = TemporalMeanUpdate.desiredIncrement h n f
-      := rfl
+        := rfl
 
+/-- Physical temporal, given by `-TemporalMeanUpdate.temporalInverse
+(TemporalMeanUpdate.centered f) z`. -/
 noncomputable def physicalTemporal (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   -TemporalMeanUpdate.temporalInverse (TemporalMeanUpdate.centered f) z
@@ -529,7 +539,7 @@ theorem temporalAtIndex_physical_pull (h : ℝ) (n i : ℕ) (l : ℝ) (P : S →
     (hp : PressureStream.TorusPeriodicLift f) (z : PressureStream.Lift S) :
     coverPull l P i (ChartScales.Q n ^ (-CoordinateAlgebra.A h)) (temporalAtIndex h n i f) z =
       physicalTemporal (coverPull l P i (ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h + 1 / 2)))
-        f) z := by
+          f) z := by
   unfold physicalTemporal
   rw [temporalInverse_centered_coverPull l P i _ hf hp]
   change ChartScales.Q n ^ (-CoordinateAlgebra.A h) *
@@ -598,6 +608,7 @@ section CommonTemporalBounds
 
 open TorusInverse
 
+/-- Common ratio, given by `ChartScales.Tg ^ ChartScales.nativeIndex h n / ChartScales.Tg ^ i`. -/
 noncomputable def commonRatio (h : ℝ) (n i : ℕ) : ℝ :=
   ChartScales.Tg ^ ChartScales.nativeIndex h n / ChartScales.Tg ^ i
 
@@ -614,7 +625,7 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem temporalAtIndex_eq_native (h : ℝ) (n i : ℕ) (f : PressureStream.Lift S → ℝ) :
     temporalAtIndex h n i f = fun z => commonRatio h n i * TemporalMeanUpdate.desiredIncrement h n
-      f z := by
+        f z := by
   funext z
   unfold temporalAtIndex commonRatio TemporalMeanUpdate.desiredIncrement
     TemporalMeanUpdate.chartPrefactor ChartScales.timeCoefficient
@@ -651,6 +662,8 @@ theorem meanClass_temporalAtIndex_of_native (s : WeightedClasses.StripData (Pres
   have hout := hf.band_smul hb
   simpa only [add_zero, temporalAtIndex_eq_native, smul_eq_mul] using hout
 
+/-- Fast at index, given by `(ChartScales.Tg ^ i * ChartScales.Q n ^ (1 + h)) *
+PressureStream.graphDz ((0 : S), vector .temporal) f z`. -/
 noncomputable def fastAtIndex (h : ℝ) (n i : ℕ) (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   (ChartScales.Tg ^ i * ChartScales.Q n ^ (1 + h)) *
@@ -703,11 +716,13 @@ theorem coverMap_radial (i : ℕ) :
   rw [coverMap_eq_coverPower, CommonCoverSolve.coverPower_apply]
   exact PhysicalGraphBounds.cover_pow_radialDirection i
 
+/-- Chart scale, given by `ChartScales.Q n ^ (-(1 / 2 : ℝ))`. -/
 noncomputable def chartScale (n : ℕ) : ℝ := ChartScales.Q n ^ (-(1 / 2 : ℝ))
 
 theorem chartScale_pos (n : ℕ) : 0 < chartScale n :=
   Real.rpow_pos_of_pos (ChartScales.Q_pos n) _
 
+/-- Radial frequency, given by `M * ChartScales.Lambda ^ i * ChartScales.Q n ^ (d / 2)`. -/
 noncomputable def radialFrequency (_h : ℝ) (n i : ℕ) (d M : ℝ) : ℝ :=
   M * ChartScales.Lambda ^ i * ChartScales.Q n ^ (d / 2)
 
@@ -736,6 +751,8 @@ noncomputable def slowToChart (h : ℝ) (n : ℕ) : Plane →L[ℝ] Plane :=
   (ChartScales.Q n ^ (-CoordinateAlgebra.D h) • ContinuousLinearMap.fst ℝ ℝ ℝ).prod
     (ChartScales.Q n ^ (-1 : ℝ) • ContinuousLinearMap.snd ℝ ℝ ℝ)
 
+/-- Physical to chart, given by `chartLinear (chartScale n) ((slowToChart h n).prodMap
+(TemporalMeanUpdate.coverMap i))`. -/
 noncomputable def physicalToChart (h : ℝ) (n i : ℕ) :
     PressureStream.Lift Plane →L[ℝ] PressureStream.Lift Plane :=
   chartLinear (chartScale n) ((slowToChart h n).prodMap (TemporalMeanUpdate.coverMap i))
@@ -793,6 +810,8 @@ theorem physicalPressure_naturality {d a b : ℝ} (ha : 0 < a) (hab : a < b) (hd
   rw [pressure_unit_factor] at ht
   exact ht
 
+/-- Reconstruct pressure family, given by `{ u with pressure := fun n =>
+(CorrectionState.reconstructPressure (r n) c u).pressure n }`. -/
 noncomputable def reconstructPressureFamily (r : ℕ → CorrectionState.ReconstructionData)
     (c : CorrectionState.Context (PressureStream.Lift Plane))
     (u : CorrectionState.State (PressureStream.Lift Plane)) :
@@ -811,10 +830,10 @@ theorem reconstructPressureFamily_represents {d a b : ℝ}
     (hp : ∀ n, PressureStream.TorusPeriodicLift (u.gr c n))
     (hs : ∀ n, RadialAlias.RadiallySupported (chartScale n * a) (chartScale n * b) (u.gr c n))
     (hsource : ∀ n, fieldOnPhysical h n (index n) (2 * CoordinateAlgebra.A h + 1 / 2) (u.gr c n) =
-      F) :
+        F) :
     ∀ n, fieldOnPhysical h n (index n) (2 * CoordinateAlgebra.A h)
       ((reconstructPressureFamily (fun k => bandReconstruction h k (index k) d a b M hab) c
-        u).pressure n) =
+          u).pressure n) =
         PressureStream.meanPressure d a b M hab (vector .radial) F := by
   intro n
   have ht := physicalPressure_naturality ha hab hd h n (index n) M (hf n) (hp n) (hs n)
@@ -833,7 +852,7 @@ theorem temporalFamily_represents (h : ℝ) (index : ℕ → ℕ)
         (fieldOnPhysical h n (index n) (2 * CoordinateAlgebra.A h + 1 / 2) (f n)) := by
     funext z
     exact temporalAtIndex_physical_pull h n (index n) (chartScale n) (slowToChart h n) (hf n) (hp
-      n) z
+        n) z
   rw [hsource n] at ht
   exact ht
 
@@ -926,7 +945,7 @@ theorem pressureAlias_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
     PressureStream.pressureAlias d a b M hab v (coverPull l P k u f) z =
       coverPull l P k u
         (PressureStream.pressureAlias d (l * a) (l * b) N (mul_lt_mul_of_pos_left hab hl) w f) z :=
-          by
+            by
   let C := P.prodMap (TemporalMeanUpdate.coverMap k)
   have hvector : M • C ((0 : S), v) = (N * l ^ d) • ((0 : T), w) := by
     apply Prod.ext
@@ -949,7 +968,7 @@ theorem pressureAlias_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
       u * PressureStream.graphDr _ _ _ (chartLinear l C z) =
     u * PressureStream.pressureAlias d (l * a) (l * b) N _ w f (chartLinear l C z)
   rw [pressureAlias_eq_source_sub_derivative (mul_pos hl ha) (mul_lt_mul_of_pos_left hab hl) hd w
-    hf hs]
+      hf hs]
   ring
 
 end PressureAlias
@@ -967,10 +986,11 @@ noncomputable def commonTemporalPotential (r : ℕ → CorrectionState.Reconstru
   PressureStream.streamPotential (r n).exponent (r n).inner (r n).outer ((r n).frequency n)
     ((0 : S), (r n).radialDirection) (temporalAtIndex h n (index n) (f n))
 
+/-- Common temporal fields, bundling `radial`, `angular`, `axial`. -/
 noncomputable def commonTemporalFields (r : ℕ → CorrectionState.ReconstructionData)
     (h : ℝ) (index : ℕ → ℕ) (epsilon : ℕ → ℝ) (axial : S × Plane)
     (fθ fz : ℕ → PressureStream.Lift S → ℝ) : MeanIncrementBounds.Triple (PressureStream.Lift S)
-      where
+        where
   radial := fun n => PressureStream.streamBeta (epsilon n • axial)
     (commonTemporalPotential r h index fz n)
   angular := fun n => temporalAtIndex h n (index n) (fθ n)
@@ -978,6 +998,7 @@ noncomputable def commonTemporalFields (r : ℕ → CorrectionState.Reconstructi
     (PressureStream.physicalSpeed (r n).exponent ((r n).frequency n))
     ((0 : S), (r n).radialDirection) (commonTemporalPotential r h index fz n)
 
+/-- Common temporal alias, constructed using `PressureStream.divideRadius`. -/
 noncomputable def commonTemporalAlias (r : ℕ → CorrectionState.ReconstructionData)
     (h : ℝ) (index : ℕ → ℕ) (f : ℕ → PressureStream.Lift S → ℝ) (n : ℕ) :
     PressureStream.Lift S → ℝ :=
@@ -985,6 +1006,8 @@ noncomputable def commonTemporalAlias (r : ℕ → CorrectionState.Reconstructio
     (r n).outer ((r n).frequency n) ((0 : S), (r n).radialDirection)
     (PressureStream.weightedSource (temporalAtIndex h n (index n) (f n))))
 
+/-- Common temporal increment, given by `commonTemporalFields r h index c.operators.epsilon
+axial (u.thetaResidual c) (u.axialResidual c)`. -/
 noncomputable def commonTemporalIncrement (r : ℕ → CorrectionState.ReconstructionData)
     (h : ℝ) (index : ℕ → ℕ) (axial : S × Plane)
     (c : CorrectionState.Context (PressureStream.Lift S))
@@ -1077,9 +1100,11 @@ section PhysicalTemporalFields
 
 open TorusInverse
 
+/-- Physical auxiliary, given by `(slowToChart h n).prodMap (TemporalMeanUpdate.coverMap i)`. -/
 noncomputable def physicalAuxiliary (h : ℝ) (n i : ℕ) : Plane × Plane →L[ℝ] Plane × Plane :=
   (slowToChart h n).prodMap (TemporalMeanUpdate.coverMap i)
 
+/-- Axial unit, given by `((1, 0), (0, 0))`. -/
 noncomputable def axialUnit : Plane × Plane := ((1, 0), (0, 0))
 
 theorem physicalAuxiliary_radial (h : ℝ) (n i : ℕ) (d M : ℝ) :
@@ -1105,7 +1130,10 @@ theorem physicalAuxiliary_axial (h : ℝ) (n i : ℕ) :
     congr 1
     unfold CoordinateAlgebra.D
     ring
-  simp [physicalAuxiliary, axialUnit, slowToChart, he]
+  simp only [physicalAuxiliary, slowToChart, he, axialUnit, ContinuousLinearMap.coe_prodMap',
+      Prod.map_apply,
+    ContinuousLinearMap.prod_apply, smul_apply, ContinuousLinearMap.coe_fst', smul_eq_mul, mul_one,
+    ContinuousLinearMap.coe_snd', mul_zero, Prod.smul_mk, Prod.mk.injEq, true_and]
   exact (TemporalMeanUpdate.coverMap i).map_zero
 
 theorem physicalFast_naturality (h : ℝ) (n i : ℕ) {f : PressureStream.Lift Plane → ℝ}
@@ -1176,11 +1204,11 @@ noncomputable def physicalTemporalFields (d a b M : ℝ)
     (Fθ Fz : PressureStream.Lift Plane → ℝ) (z : PressureStream.Lift Plane) : Fin 3 → ℝ :=
   ![PressureStream.streamBeta axialUnit
       (PressureStream.streamPotential d a b M ((0 : Plane), vector .radial) (physicalTemporal Fz))
-        z,
+          z,
     physicalTemporal Fθ z,
     PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 : Plane), vector .radial)
       (PressureStream.streamPotential d a b M ((0 : Plane), vector .radial) (physicalTemporal Fz))
-        z]
+          z]
 
 /-- The three defined chart components are restrictions of one physical
 vector field. The source identities are the only compatibility premises. -/
@@ -1224,9 +1252,12 @@ open TorusInverse
 variable {S T : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
   [NormedAddCommGroup T] [NormedSpace ℝ T]
 
+/-- Source moment, given by `PressureStream.pressureMass (fun z => z.1 ^ m * f z) s`. -/
 noncomputable def sourceMoment (m : ℕ) (f : PressureStream.Lift S → ℝ) (s : S) : ℝ :=
   PressureStream.pressureMass (fun z => z.1 ^ m * f z) s
 
+/-- Source debt, given by `![sourceMoment 0 g s, sourceMoment 2 qθ s, sourceMoment 1 qz s - (1 /
+2 : ℝ) * sourceMoment 2 g s]`. -/
 noncomputable def sourceDebt (g qθ qz : PressureStream.Lift S → ℝ) (s : S) : MeanRankUpdate.Debt :=
   ![sourceMoment 0 g s, sourceMoment 2 qθ s, sourceMoment 1 qz s - (1 / 2 : ℝ) * sourceMoment 2 g s]
 
@@ -1240,7 +1271,7 @@ theorem sourceMoment_coverPull {l : ℝ} (hl : 0 < l) (P : S →L[ℝ] T)
     funext z
     change z.1 ^ m * (u * f (chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z)) =
       (u / l ^ m) * ((l * z.1) ^ m * f (chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k))
-        z))
+          z))
     rw [mul_pow]
     field_simp
   have hfp : PressureStream.TorusPeriodicLift (fun z : PressureStream.Lift T => z.1 ^ m * f z) := by
@@ -1277,7 +1308,7 @@ theorem sourceDebt_coverPull {l : ℝ} (hl : 0 < l) (P : S →L[ℝ] T) (k : ℕ
       l⁻¹ ^ 2 * u ^ 2 * (sourceMoment 1 qz (P s) - (1 / 2 : ℝ) * sourceMoment 2 g (P s))
     rw [sourceMoment_coverPull hl P k 1 (u ^ 2) hz hpz,
       sourceMoment_coverPull hl P k 2 (l * u ^ 2) hg hpg]
-    field_simp ; ring
+    field_simp; ring
 
 omit [NormedAddCommGroup T] [NormedSpace ℝ T] in
 theorem stateDebt_eq_sourceDebt (c : CorrectionState.Context (PressureStream.Lift S))
@@ -1333,8 +1364,9 @@ section PhysicalProfile
 
 open TorusInverse
 
+/-- Slow projection, given by `(z.1, z.2.1)`. -/
 noncomputable def slowProjection (z : PressureStream.Lift Plane) : SimilarityHomogeneity.ChartPoint
-  :=
+    :=
   (z.1, z.2.1)
 
 theorem slowProjection_physicalToChart (h : ℝ) (n i : ℕ) (z : PressureStream.Lift Plane) :

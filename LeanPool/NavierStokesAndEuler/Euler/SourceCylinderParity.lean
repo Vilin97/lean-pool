@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderForwardParity
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderEquation
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+import LeanPool.NavierStokesAndEuler.Euler.CylinderForwardParity
+
+/-! Reflection parity of the actual Gram-projected source evolution and its physical velocity. -/
 
 @[expose] public section
 
-/-! Reflection parity of the actual Gram-projected source evolution and its physical velocity. -/
 
 noncomputable section
 
@@ -30,7 +32,7 @@ variable {K U E : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (Q Q₁ : SmoothCoefficientPath K (U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
 
 theorem sourceForcing_even (hE : ∀ t x, Q.field t (-x) = Q.field t x) (t : K) (x : Space) :
     sourceForcing Q c hc hQ t (-x) = sourceForcing Q c hc hQ t x := by
@@ -51,10 +53,10 @@ variable (P : ℝ) [Fact (0 < P)]
   (S : Set Space) (hS : MeasurableSet S) (hSym : ∀ x, -x ∈ S ↔ x ∈ S)
   (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
   (hE : ∀ t x, Q.field t (-x) = Q.field t x)
   (hE₁ : ∀ t x, Q₁.field t (-x) = Q₁.field t x)
-  (f : C(Icc (0 : ℝ) T,Supported P E S hS)) (a₀ : Supported P U S hS)
+  (f : C(Icc (0 : ℝ) T, Supported P E S hS)) (a₀ : Supported P U S hS)
   (hf : ∀ t, reflection P (f t : CylinderL2 P E) = -(f t : CylinderL2 P E))
   (ha₀ : reflection P (a₀ : CylinderL2 P U) = -(a₀ : CylinderL2 P U))
 

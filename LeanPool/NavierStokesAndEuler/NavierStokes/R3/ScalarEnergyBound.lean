@@ -6,12 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # A scalar bound for the forced energy inequality
@@ -20,6 +18,9 @@ The integrating factor controls an energy whose time derivative is bounded by
 the energy plus a constant. Only derivatives in the interior of the time
 interval are required.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

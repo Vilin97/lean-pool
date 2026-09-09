@@ -7,11 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFinite
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyRealizations
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyTime
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyParity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyCompatibility
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
 
 /-!
 # One all-order correction from the actual small-drift construction
@@ -26,6 +25,9 @@ every external cutoff and satisfies the actual equation in every finite Sobolev
 order.  Smoothness asserted here is spatial smoothness, with a jointly continuous
 representative and its genuine first time derivative.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -113,7 +115,7 @@ theorem Budget.fieldTower_energy (B : Budget period hT A) (P : ℕ) (t : Icc (0 
     energyNorm period P (by omega : P+6 ≤ (P+6)+1)
         (B.radius t) (B.metric.operatorPath period t)
         ((B.fieldTower period).realization ((P+6)+1) t) ≤
-      2*(B.spatial (P+6) (by omega)).full.residual*
+      2*(B.spatial (P+6) (by omega)).full.residual *
         Real.exp (3*B.growthCoefficient*t.val) ∧
     energyNorm period P (by omega : P+6 ≤ (P+6)+1)
         (B.radius t) (B.metric.operatorPath period t)
@@ -272,7 +274,7 @@ theorem exists_smooth_lifted_correction (B : Budget period hT A) :
       (∀ (P : ℕ) t,
         energyNorm period P (by omega : P+6 ≤ (P+6)+1)
             (B.radius t) (B.metric.operatorPath period t) (E.realization ((P+6)+1) t) ≤
-          2*(B.spatial (P+6) (by omega)).full.residual*
+          2*(B.spatial (P+6) (by omega)).full.residual *
             Real.exp (3*B.growthCoefficient*t.val) ∧
         energyNorm period P (by omega : P+6 ≤ (P+6)+1)
             (B.radius t) (B.metric.operatorPath period t) (E.realization ((P+6)+1) t) ≤

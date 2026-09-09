@@ -6,15 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalEntrance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ReferencePath
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ReferenceJetBounds
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ReferenceJetBounds
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Bounds for the actual reference continuation
@@ -23,6 +18,9 @@ The history estimates below use the primitive-defined lags and pressure of
 `ProfileHistories`. The reference source estimates and the ordered parameter
 choices are derived from the constructed natural and reference profiles.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,22 +36,28 @@ section Histories
 
 variable {D : RadialDomain} (P : Profiles D)
 
+/-- Log slope, given by `1 + p.1 * radialPartial P.f p / P.f p`. -/
 noncomputable def logSlope (p : Point) : ℝ :=
   1 + p.1 * radialPartial P.f p / P.f p
 
+/-- Source Q as an element of `ℝ`. -/
 noncomputable def sourceQ (h : ℝ) (p : Point) : ℝ :=
   -P.W h p * logSlope P p - h * (1 - 2 * p.2 * P.U p) -
     (StressAlgebra.axialExponent h * p.2 + StressAlgebra.coordinateFactor p.2 * P.U p) *
       (parameterPartial P.f p / P.f p)
 
+/-- P1, given by `p.1 * P.angularLag h p / NaturalAxisData.L h p.2`. -/
 noncomputable def p1 (h : ℝ) (p : Point) : ℝ :=
   p.1 * P.angularLag h p / NaturalAxisData.L h p.2
 
+/-- Ns, given by `P.axialLag h p / NaturalAxisData.L h p.2`. -/
 noncomputable def ns (h : ℝ) (p : Point) : ℝ :=
   P.axialLag h p / NaturalAxisData.L h p.2
 
+/-- P2, given by `p.1 * ns P h p / P.E p`. -/
 noncomputable def p2 (h : ℝ) (p : Point) : ℝ := p.1 * ns P h p / P.E p
 
+/-- Cone size, given by `p1 P h p + p2 P h p ^ 2 / p1 P h p`. -/
 noncomputable def coneSize (h : ℝ) (p : Point) : ℝ :=
   p1 P h p + p2 P h p ^ 2 / p1 P h p
 
@@ -112,7 +116,7 @@ theorem pressure_increment_bound {p : Point} (_ : p ∈ D.carrier) (hX : 0 ≤ p
     (f := fun s => P.f (s, p.2) ^ 2) ?_
   · simp only [Profiles.pressure, add_sub_cancel_left, primitive]
     rw [Real.norm_eq_abs, sub_zero, abs_of_nonneg hX] at hbound
-    convert! hbound using 1 ; ring
+    convert! hbound using 1; ring
   · intro s hs
     have hsi : s ∈ Icc (0 : ℝ) p.1 :=
       ⟨(uIoc_of_le hX ▸ hs).1.le, (uIoc_of_le hX ▸ hs).2⟩
@@ -129,7 +133,7 @@ theorem pressure_parameter_increment_bound {p : Point} (hp : p ∈ D.carrier) (h
     (a := (0 : ℝ)) (b := p.1) (C := 2 * (K / C) ^ 2)
     (f := fun s => 2 * P.f (s, p.2) * parameterPartial P.f (s, p.2)) ?_
   · rw [Real.norm_eq_abs, sub_zero, abs_of_nonneg hX] at hbound
-    convert! hbound using 1 ; ring
+    convert! hbound using 1; ring
   · intro s hs
     have hsi : s ∈ Icc (0 : ℝ) p.1 :=
       ⟨(uIoc_of_le hX ▸ hs).1.le, (uIoc_of_le hX ▸ hs).2⟩
@@ -146,7 +150,7 @@ theorem pressure_dot_bound {p : Point} (hp : p ∈ D.carrier) (hX : 0 ≤ p.1)
   rw [P.radialPartial_pressure hp, abs_mul, abs_of_nonneg hX, abs_pow]
   have h := pow_le_pow_left₀ (abs_nonneg _) hf 2
   have hm := mul_le_mul_of_nonneg_left h hX
-  convert! hm using 1 ; ring
+  convert! hm using 1; ring
 
 theorem p1_lower_from_source {p : Point} (hp : p ∈ D.carrier) (hX : 0 < p.1)
     (h : ℝ) (hL : 0 < NaturalAxisData.L h p.2) {q : ℝ} (hq : 0 ≤ q)
@@ -192,7 +196,7 @@ theorem ns_deviation_bound {p : Point} (hp : p ∈ D.carrier) (hX : 0 < p.1)
       (∫ s in (0 : ℝ)..p.1, P.axialSource h (s, p.2) - Z) /
         (NaturalAxisData.L h p.2 * p.1) := by
     rw [intervalIntegral.integral_sub (radial_slice_intervalIntegrable D (P.axialSource_smooth h)
-      hp)
+        hp)
       intervalIntegrable_const, intervalIntegral.integral_const]
     rw [ns_primitive]
     unfold primitive
@@ -237,7 +241,8 @@ theorem p1_lower_from_initial {p : Point} (hp : p ∈ D.carrier) (hX : 0 < p.1)
     have hcmp := intervalIntegral.integral_mono_on (μ := volume) haX
       ((continuous_const.fun_mul continuous_id).intervalIntegrable a p.1) haXint
       (f := fun s => (2 * P.f p * q) * s) (g := fun s => P.angularSource h (s, p.2)) ?_
-    · rw [intervalIntegral.integral_const_mul, integral_id] at hcmp
+    · rw [intervalIntegral.integral_const_mul, integral_id]
+        at hcmp
       exact hcmp
     · intro s hs
       have hs0 : s ∈ Icc (0 : ℝ) p.1 := ⟨ha.le.trans hs.1, hs.2⟩
@@ -402,11 +407,15 @@ logarithmic derivative. They are not source or cone assumptions.
 
 open NaturalAxisCoefficients
 
+/-- Bounded jets: an abbreviation for `Metric.closedBall (0 : Fin 5 → ℝ) B instance (B : ℝ) :
+CompactSpace (BoundedJets B) := isCompact_iff_compactSpace.mp (isCompact_closedBall _ _)`. -/
 abbrev BoundedJets (B : ℝ) := Metric.closedBall (0 : Fin 5 → ℝ) B
 
 instance (B : ℝ) : CompactSpace (BoundedJets B) :=
   isCompact_iff_compactSpace.mp (isCompact_closedBall _ _)
 
+/-- Source parameter: an abbreviation for `NaturalEntrance.entranceSet × (Icc (0 : ℝ) 1 ×
+BoundedJets B)`. -/
 abbrev SourceParameter (B : ℝ) :=
   NaturalEntrance.entranceSet × (Icc (0 : ℝ) 1 × BoundedJets B)
 
@@ -434,6 +443,7 @@ theorem qRemainder_continuous (h j : ℝ) {σ : ℝ} (hσ : 0 < σ) :
     NaturalAxisData.U, NaturalAxisData.d, NaturalAxisData.D]
   fun_prop (disch := first | exact fun x => hn x.1.2 | exact hn _)
 
+/-- Q model, constructed using `qRemainder`. -/
 noncomputable def qModel {h j σ : ℝ} {P0 : ℝ → ℝ}
     (v : CoefficientFamily h j σ P0) (B : ℝ) (p : SourceParameter B) (z : ℝ × ℝ) : ℝ :=
   qRemainder h j σ p.1.val p.2.1.val p.2.2.val z.1
@@ -450,7 +460,7 @@ theorem qModel_continuous {h j σ : ℝ} {P0 : ℝ → ℝ}
   let m : SourceParameter B × (ℝ × ℝ) → ((Point × ℝ) × (Fin 5 → ℝ)) × (ℝ × ℝ) :=
     fun p => (((p.1.1.val, p.1.2.1.val), p.1.2.2.val),
       (p.2.1, NaturalEntrance.sourceJets v.epsilon_pos (NaturalEntrance.referencePair v) p.1.1 1 +
-        p.2.2))
+          p.2.2))
   have hm : Continuous m := by
     dsimp [m]
     fun_prop
@@ -465,7 +475,7 @@ theorem qModel_at_chi_zero {h j σ : ℝ} {P0 : ℝ → ℝ}
   have hk := NaturalEntrance.gradient_zero_of_chi_zero h j hσ hchi
   have hr := NaturalEntrance.reference_phiY_zero v p.1 hchi
   simp only [qModel, qRemainder, Prod.fst_zero, Prod.snd_zero, hr, hH, hk, add_zero, zero_mul,
-    mul_zero, zero_div, sub_zero, mul_one]
+      mul_zero, zero_div, sub_zero, mul_one]
 
 /-- Uniformity in all bounded reference jets is proved before the scale
 and normalization are chosen. The growing term supplies no help at `χ=0`;
@@ -521,6 +531,7 @@ theorem qModel_uniform_lower {h j σ : ℝ} {P0 : ℝ → ℝ}
   have hb := hmain Λ ((le_max_left _ _).trans hΛ) p
   nlinarith
 
+/-- Axial source parameter: an abbreviation for `Icc (-1 : ℝ) 1 × BoundedJets B`. -/
 abbrev AxialSourceParameter (B : ℝ) := Icc (-1 : ℝ) 1 × BoundedJets B
 
 /-- The axial source written in normalized axial jets and the actual three
@@ -598,12 +609,14 @@ theorem average_error_bound {F : ProfileHistories.Field} (hF : ContDiffOn ℝ �
     (f := fun t => Λ * (F (t * p.1, p.2) - b)) hbt
   simpa only [Real.norm_eq_abs, sub_zero, abs_one, mul_one] using hb
 
+/-- Q jets as an element of `Fin 5 → ℝ`. -/
 noncomputable def qJets (j σ h Λ φ : ℝ) (p : Point) : Fin 5 → ℝ :=
   ![φ, Λ * (P.U p - NaturalAxisData.U j p.2),
     Λ * (P.Ubar p - NaturalAxisData.U j p.2),
     Λ * (average (parameterPartial P.U) p - 4),
     parameterPartial P.f p / P.f p - Λ * realGradient h j σ p.2]
 
+/-- N jets as an element of `Fin 5 → ℝ`. -/
 noncomputable def nJets (j Λ : ℝ) (p : Point) : Fin 5 → ℝ :=
   ![Λ * (P.U p - NaturalAxisData.U j p.2),
     Λ * (parameterPartial P.U p - 4),
@@ -611,6 +624,8 @@ noncomputable def nJets (j Λ : ℝ) (p : Point) : Fin 5 → ℝ :=
     Λ * (average (parameterPartial P.U) p - 4),
     Λ * (p.1 * radialPartial P.U p)]
 
+/-- Pressure jets, given by `![1 / Λ, P.pressure p - P.pressure0 p.2, parameterPartial
+P.pressure p - deriv P.pressure0 p.2, p.1 * P.f p ^ 2]`. -/
 noncomputable def pressureJets (Λ : ℝ) (p : Point) : Fin 4 → ℝ :=
   ![1 / Λ, P.pressure p - P.pressure0 p.2,
     parameterPartial P.pressure p - deriv P.pressure0 p.2,
@@ -643,7 +658,7 @@ theorem sourceN_model (h j : ℝ) {Λ B : ℝ} (hΛ : Λ ≠ 0)
   unfold Profiles.axialSource StressAlgebra.axialSource Profiles.W
   unfold NaturalAxisData.W NaturalAxisData.d NaturalAxisData.D NaturalAxisData.A
   unfold StressAlgebra.axialExponent StressAlgebra.velocityExponent StressAlgebra.coordinateFactor
-  field_simp [hΛ] ; ring
+  field_simp [hΛ]; ring
 
 theorem qJets_bound (h j σ : ℝ) {Λ B φ : ℝ} (hB : 0 ≤ B) {p : Point}
     (hφ : |φ| ≤ B)
@@ -802,17 +817,17 @@ theorem reference_sourceQ_natural {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ram
     unfold radialPartial
     rw [hfD]
     exact radialPartial_natural (F.family.natural.f_smooth.contDiffAt ((domain_isOpen Λ).mem_nhds
-      hp))
+        hp))
   have hfe : parameterPartial P.f p = partialEta F.family.f p := by
     unfold parameterPartial
     rw [hfD]
     exact parameterPartial_natural (F.family.natural.f_smooth.contDiffAt ((domain_isOpen
-      Λ).mem_nhds hp))
+        Λ).mem_nhds hp))
   have hve : parameterPartial P.Ubar p = partialEta F.family.Ubar p := by
     unfold parameterPartial
     rw [hvD]
     exact parameterPartial_natural (F.family.natural.average_smooth.contDiffAt ((domain_isOpen
-      Λ).mem_nhds hp))
+        Λ).mem_nhds hp))
   change sourceQ P h p = _
   rw [sourceQ, logSlope, P.W_formula h hpN, hfv, huv, hvv, hfx, hfe, hve]
   rfl
@@ -955,7 +970,7 @@ theorem reference_antitone {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
   · exact (radial_slice_continuous N.radialDomain P.f_smooth η).mono (fun X hx => hp X hx)
   · intro X hx
     exact (radialPartial_hasDerivAt N.radialDomain P.f_smooth (hp X (interior_subset
-      hx))).differentiableAt.differentiableWithinAt
+        hx))).differentiableAt.differentiableWithinAt
   · intro X hx
     have hXi : X ∈ Ioo (0 : ℝ) R := by simpa only [interior_Icc] using hx
     rw [(radialPartial_hasDerivAt N.radialDomain P.f_smooth (hp X (interior_subset hx))).deriv]
@@ -1016,8 +1031,11 @@ end SmallPressure
 
 /-! ## Cone comparison for the actual reference histories -/
 
+/-- Hold region, given by `Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1`. -/
 noncomputable def holdRegion : Set Point := Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1
 
+/-- Reference bounds on hold data, collecting `source_lower`, `logarithmic_slope`,
+`first_positive`, `cone_margin`, `at_hundred`. -/
 structure ReferenceBoundsOnHold {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : AnalyticInputs h j σ P0} (F : NaturalEntrance.CoefficientProfile d Λ C)
     (hΛ : 0 < Λ) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
@@ -1055,7 +1073,7 @@ theorem bounds_from_sources (hsmall : NaturalAxisData.SmallParameters h j) (hσ 
         sourceQ (referenceProfiles E.profile hΛ hδ hδT hP0) h p)
     (hn : ∀ p ∈ holdRegion,
       |(referenceProfiles E.profile hΛ hδ hδT hP0).axialSource h p - NaturalAxisData.Z h j P0 p.2|
-        < ν / 2)
+          < ν / 2)
     (hfbound : ∀ p ∈ holdRegion, |(referenceProfiles E.profile hΛ hδ hδT hP0).f p| ≤ K / C) :
     ReferenceBoundsOnHold E.profile hΛ hδ hδT hP0 := by
   let P := referenceProfiles E.profile hΛ hδ hδT hP0
@@ -1119,13 +1137,13 @@ theorem bounds_from_sources (hsmall : NaturalAxisData.SmallParameters h j) (hσ 
       have htri : |NaturalAxisData.Z h j P0 p.2| / NaturalAxisData.L h p.2 ≤
           |ns P h p| + (ν / 2) / NaturalAxisData.L h p.2 := by
         have ht := abs_sub (ns P h p) (ns P h p - NaturalAxisData.Z h j P0 p.2 / NaturalAxisData.L
-          h p.2)
+            h p.2)
         have he : ns P h p - (ns P h p - NaturalAxisData.Z h j P0 p.2 / NaturalAxisData.L h p.2) =
             NaturalAxisData.Z h j P0 p.2 / NaturalAxisData.L h p.2 := by ring
         rw [he, abs_div, abs_of_pos hL] at ht
         linarith
       have hdiv : (|NaturalAxisData.Z h j P0 p.2| - ν / 2) / NaturalAxisData.L h p.2 ≤ |ns P h p|
-        := by
+          := by
         rw [sub_div]
         linarith
       have hns : ν / 2 ≤ |ns P h p| := by
@@ -1160,7 +1178,7 @@ theorem normalized_history_bounds {D : RadialDomain} (P : Profiles D)
       |Λ * (average (parameterPartial P.U) p - 4)| ≤ B := by
   constructor
   · exact average_error_bound P.U_smooth hpD (fun t ht => hU (t * p.1, p.2) (holdRegion_scale hp
-    ht))
+      ht))
   · exact average_error_bound (parameterPartial_smooth D P.U_smooth) hpD
       (fun t ht => hUη (t * p.1, p.2) (holdRegion_scale hp ht))
 
@@ -1179,7 +1197,7 @@ theorem sourceQ_uniform_threshold {h j σ : ℝ} {P0 : ℝ → ℝ}
         |parameterPartial P.f p / P.f p - Λ * realGradient h j σ p.2| ≤ B →
         p.1 * radialPartial P.f p / P.f p = θ * Y *
           (NaturalEntrance.sourceJets v.epsilon_pos (NaturalEntrance.referencePair v) (Y, p.2) 1 +
-            e) / φ →
+              e) / φ →
         (47 / 50 : ℝ) * NaturalAxisData.L h p.2 * Λ * NaturalAxisData.chi h j σ p.2 + 12 / 5 <
           sourceQ P h p := by
   obtain ⟨M, hM, he⟩ := qModel_uniform_lower v hsmall hσ B hK

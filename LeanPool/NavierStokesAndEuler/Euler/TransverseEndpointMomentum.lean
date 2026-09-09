@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseMomentumRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 
 /-!
 The actual transverse momentum for an initial-zero stationary path whose
@@ -17,6 +16,9 @@ terminal displacement may be nonzero.  A canonical bounded terminal momentum
 map is obtained from the weak equation and the true time primitive.  Its
 continuous representative and derivative are conclusions, not extra data.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

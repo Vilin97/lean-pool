@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpLinearity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
+import LeanPool.NavierStokesAndEuler.Euler.CylinderTranslationAdjoint
+import LeanPool.NavierStokesAndEuler.Euler.LpOperatorFieldAlgebra
 
 /-!
 # Actual zero angular mean of the history solution
@@ -20,6 +22,9 @@ including the adjoint test maps. The constructed inverse and its continuous
 velocity therefore preserve zero mean. No pointwise mean condition is assumed
 on the solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -81,7 +86,7 @@ theorem velocityPath_average (f : TimeLp T (CylinderL2 P E)) (t : Icc (0 : ℝ) 
     (fun t u => average_fullOperator_back P (D.Q₁ t) u)
     (fun t u => (average_fullOperator P (D.H t) u).symm) f t
 
-theorem accelerationPath_average (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+theorem accelerationPath_average (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     D.accelerationPath P (pathAverage P f) t = average P (D.accelerationPath P f t) :=
   D.accelerationPath_intertwines P D (average P) (average P)
     (fun t u => (average_fullOperator P (D.Q t) u).symm)
@@ -90,7 +95,7 @@ theorem accelerationPath_average (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Ic
     (fun t u => average_fullOperator_back P (D.Q₁ t) u)
     (fun t u => (average_fullOperator P (D.H t) u).symm) f t
 
-theorem physicalVelocity_average (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+theorem physicalVelocity_average (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     D.physicalVelocity P (pathAverage P f) t = average P (D.physicalVelocity P f t) :=
   D.physicalVelocity_intertwines P D (average P) (average P)
     (fun t u => (average_fullOperator P (D.Q t) u).symm)
@@ -99,7 +104,7 @@ theorem physicalVelocity_average (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Ic
     (fun t u => average_fullOperator_back P (D.Q₁ t) u)
     (fun t u => (average_fullOperator P (D.H t) u).symm) f t
 
-theorem physicalDerivative_average (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
+theorem physicalDerivative_average (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
     D.physicalDerivative P (pathAverage P f) t = average P (D.physicalDerivative P f t) :=
   D.physicalDerivative_intertwines P D (average P) (average P)
     (fun t u => (average_fullOperator P (D.Q t) u).symm)
@@ -127,12 +132,12 @@ theorem physicalVelocity_zero (t : Icc (0 : ℝ) T) : D.physicalVelocity P 0 t =
 theorem physicalDerivative_zero (t : Icc (0 : ℝ) T) : D.physicalDerivative P 0 t = 0 := by
   have hz : pathLp T D.time_pos.le (0 : C(Icc (0 : ℝ) T,CylinderL2 P E)) = 0 :=
     map_zero (pathLpOperator T D.time_pos.le)
-  change D.frameDerivative P t (D.velocityPath P (pathLp T D.time_pos.le 0) t)+
+  change D.frameDerivative P t (D.velocityPath P (pathLp T D.time_pos.le 0) t) +
     D.frame P t (D.accelerationPath P 0 t) = 0
   rw [hz,D.accelerationPath_zero P t]
   simp only [map_zero,ContinuousMap.zero_apply,add_zero]
 
-variable (f : C(Icc (0 : ℝ) T,CylinderL2 P E)) (hf : ∀ t, average P (f t) = 0)
+variable (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (hf : ∀ t, average P (f t) = 0)
 
 omit [CompleteSpace E] in
 include hf in

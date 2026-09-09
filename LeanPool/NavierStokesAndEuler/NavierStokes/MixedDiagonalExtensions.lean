@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneCorrectionExtensions
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalPhysicalCopyBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneCorrectionExtensions
 
 /-!
 # Endpoint extensions for locally constructed diagonal stages
@@ -23,6 +21,9 @@ every positive stage at once and the initial cutoff is identically one.
 These results concern the full actual sum, including stage zero. They do
 not assume that its away-from-origin extensions have already been built.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -146,12 +147,12 @@ theorem localCopy_sum_support {H gap : ℕ} {K : Type*}
     (hf : LocalPhysicalCopyBounds.SupportData f a b h r0 Z gap) :
     AnnularEndpoint.ShrinkingSupport h (2 * b * Real.sqrt 2) (f.sum a h r0) := by
   apply AnnularEndpoint.shrinkingSupport_of_normalized_annulus
-  intro w ht hn
-  obtain ⟨I, k, hk⟩ := f.sum_nonzero_term hn
-  have hamp := PhysicalWaveSum.globalWave_ne_zero_amp hk
-  have hm := PhysicalWaveSum.physicalMask_support_subset _ _ (hf.mask_support k I w ht hamp)
-  exact ⟨I.1.val.1, (hf.geometry_support k I w hamp).1,
-    (PhysicalWaveSum.labelRegion_active_relation hm).2⟩
+  · intro w ht hn
+    obtain ⟨I, k, hk⟩ := f.sum_nonzero_term hn
+    have hamp := PhysicalWaveSum.globalWave_ne_zero_amp hk
+    have hm := PhysicalWaveSum.physicalMask_support_subset _ _ (hf.mask_support k I w ht hamp)
+    exact ⟨I.1.val.1, (hf.geometry_support k I w hamp).1,
+      (PhysicalWaveSum.labelRegion_active_relation hm).2⟩
 
 theorem localCopy_vector_support {H gap : ℕ} {K : Type*}
     {f : Fin 3 → PhysicalCopyBounds.CopyFamily H K} {a b h r0 Z : ℝ}

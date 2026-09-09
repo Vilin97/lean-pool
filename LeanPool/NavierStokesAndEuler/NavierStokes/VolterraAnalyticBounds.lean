@@ -6,20 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Normed.Group.Constructions
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Data.EReal.Operations
-public import Mathlib.Topology.Algebra.InfiniteSum.Order
-public import Mathlib.Topology.MetricSpace.Bounded
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AnalyticCoefficientBounds
-
-@[expose] public section
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Actual analytic Volterra words for the slow axis recursion
@@ -28,6 +19,9 @@ The functions and radial integrals here are genuine functions and Bochner
 integrals. The parameter derivative is the actual complex derivative.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.VolterraAnalyticBounds
@@ -35,8 +29,11 @@ namespace NavierStokes.VolterraAnalyticBounds
 open Set Metric MeasureTheory intervalIntegral Complex
 open scoped BigOperators NNReal Interval
 
+/-- Vector: an abbreviation for `Fin 6 → ℂ`. -/
 abbrev Vec := Fin 6 → ℂ
+/-- Field: an abbreviation for `ℝ → ℂ → Vec`. -/
 abbrev Field := ℝ → ℂ → Vec
+/-- Coefficient: an abbreviation for `ℝ → ℂ → Matrix (Fin 6) (Fin 6) ℂ`. -/
 abbrev Coeff := ℝ → ℂ → Matrix (Fin 6) (Fin 6) ℂ
 
 /-- The singular diagonal in the transformed axis equations is
@@ -44,6 +41,7 @@ abbrev Coeff := ℝ → ℂ → Matrix (Fin 6) (Fin 6) ℂ
 noncomputable def exponent (i : Fin 6) : ℕ :=
   if i.val = 2 then 2 else if i.val = 4 then 3 else if i.val = 5 then 1 else 0
 
+/-- Parameter derivative, defined pointwise by `deriv (fun w : ℂ => F r w i) z`. -/
 noncomputable def parameterDeriv (F : Field) : Field :=
   fun r z i => deriv (fun w : ℂ => F r w i) z
 
@@ -52,6 +50,7 @@ division by the radial coordinate. -/
 noncomputable def radialInverse (F : Field) : Field :=
   fun r z i => r • ∫ t : ℝ in (0)..(1), (t ^ exponent i) • F (t * r) z i
 
+/-- Matrix action, defined pointwise by `(A r z).mulVec (F r z)`. -/
 noncomputable def matrixAction (A : Coeff) (F : Field) : Field :=
   fun r z => (A r z).mulVec (F r z)
 
@@ -59,6 +58,7 @@ noncomputable def matrixAction (A : Coeff) (F : Field) : Field :=
 noncomputable def letter (A₀ A₁ : Coeff) (b : Bool) (F : Field) : Field :=
   radialInverse (if b then matrixAction A₁ (parameterDeriv F) else matrixAction A₀ F)
 
+/-- Word as an element of `w, F => letter A₀ A₁ b (word A₀ A₁ w F)`. -/
 noncomputable def word (A₀ A₁ : Coeff) : List Bool → Field → Field
   | [], F => F
   | b :: w, F => letter A₀ A₁ b (word A₀ A₁ w F)
@@ -302,7 +302,7 @@ theorem norm_deriv_le {f : ℂ → ℂ} {c : ℂ} {δ C : ℝ}
   have heq : deriv f c = cauchyPowerSeries f c δ 1 (fun _ => 1) := by
     have h := (hp.factorial_smul (1 : ℂ) 1).symm
     simp only [← iteratedDeriv_eq_iteratedFDeriv, iteratedDeriv_one, Nat.factorial_one, one_smul]
-      at h
+        at h
     exact h
   rw [heq]
   simpa [div_eq_mul_inv, mul_comm] using hc

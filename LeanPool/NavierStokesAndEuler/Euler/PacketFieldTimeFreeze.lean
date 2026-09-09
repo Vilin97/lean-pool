@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldWeight
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Time evaluation and constant extension preserve every genuine spatial
 word bound. Restoring a time weight uses its value at that time, retaining
 the source's initial alpha factor. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,11 +27,12 @@ namespace EulerContinuousTimeFreeze
 variable {K E : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Freeze path, given by `(ContinuousLinearMap.const ℝ K).comp (ContinuousMap.evalCLM ℝ t)`. -/
 def freezePath (t : K) : C(K,E) →L[ℝ] C(K,E) :=
   (ContinuousLinearMap.const ℝ K).comp (ContinuousMap.evalCLM ℝ t)
 
 omit [CompactSpace K] in
-@[simp] theorem freezePath_apply (t s : K) (p : C(K,E)) : freezePath t p s = p t := rfl
+@[simp] theorem freezePath_apply (t s : K) (p : C(K, E)) : freezePath t p s = p t := rfl
 
 theorem freezePath_norm (t : K) : ‖freezePath (E := E) t‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
@@ -50,13 +52,14 @@ open Set MeasureTheory EulerSmoothLimit EulerLiftedGradientSpace EulerLpCylinder
 
 variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
 
-theorem freezePath_translate (t : Icc (0 : ℝ) T) (p : C(Icc (0 : ℝ) T,LiftL2 P))
+theorem freezePath_translate (t : Icc (0 : ℝ) T) (p : C(Icc (0 : ℝ) T, LiftL2 P))
     (a : LiftTangent) :
     pathTranslate P a (freezePath t p) = freezePath t (pathTranslate P a p) := by
   apply ContinuousMap.ext
   intro s
   rfl
 
+/-- Freeze, constructed using `ofLifted`. -/
 def freeze (G : Field P T raw) (t : Icc (0 : ℝ) T) :
     Field P T (fun z => raw (t,z.2)) :=
   ofLifted (freezePath t G.path)
@@ -68,7 +71,7 @@ def freeze (G : Field P T raw) (t : Icc (0 : ℝ) T) :
       exact (freezePath t).contDiff.comp G.orbit)
     (fun _ => pointField P G.path G.orbit t)
     (fun _ => EulerMetricTransport.smoothField_continuous P _ (pointField_smooth P G.path G.orbit
-      t))
+        t))
     (fun _ => pointField_ae P G.path G.orbit t)
     (fun _ x θ => G.raw_eq t x θ)
 
@@ -95,7 +98,7 @@ theorem WordBound.freeze {G : Field P T raw} {q d : ℕ} {R A : ℝ}
   exact hb.trans (hm.trans (hG n))
 
 theorem freeze_normalized_restore (G : Field P T raw) (hT : 0 ≤ T)
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t) (t : Icc (0 : ℝ) T) :
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) (t : Icc (0 : ℝ) T) :
     (G.freeze t).path = (((G.normalized hT g hg).freeze t).smul (g t)).path := by
   apply ContinuousMap.ext
   intro s
@@ -103,7 +106,7 @@ theorem freeze_normalized_restore (G : Field P T raw) (hT : 0 ≤ T)
   rw [smul_smul, mul_inv_cancel₀ (ne_of_gt (hg t)), one_smul]
 
 theorem WordBound.freeze_normalized {G : Field P T raw} {q d : ℕ} {R A : ℝ}
-    (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+    (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     (hG : (G.normalized hT g hg).WordBound q R A d) (t : Icc (0 : ℝ) T) :
     (G.freeze t).WordBound q R (g t*A) d := by
   have h := (hG.freeze t).smul (g t)

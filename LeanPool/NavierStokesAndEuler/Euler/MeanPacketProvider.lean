@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcing
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathTimeDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathTimeDerivative
 
 /-!
 # A concrete raw-field provider for the mean packet equation
@@ -20,6 +19,9 @@ actual source variational solve and its genuine classical representatives.
 The function is total on raw fields; its PDE contract is proved precisely on
 the admissible domain, without a smooth time extension across endpoints.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,15 +36,18 @@ open scoped ContDiff
 
 namespace Data
 
-/-- A continuous closed-interval retraction, used only to define the raw field outside its domain. -/
+/-- A continuous closed-interval retraction, used only to define the raw field outside its domain.
+-/
 def clamp (D : Data) (t : ℝ) : Icc (0 : ℝ) D.T := projIcc 0 D.T D.T_pos.le t
 
 @[simp] theorem clamp_coe (D : Data) (t : Icc (0 : ℝ) D.T) : D.clamp t = t :=
   projIcc_of_mem D.T_pos.le t.property
 
+/-- Inverse Frame, given by `D.FInv (D.clamp z.1) z.2.1`. -/
 def inverseFrame (D : Data) (z : Domain) : Space →L[ℝ] Space :=
   D.FInv (D.clamp z.1) z.2.1
 
+/-- Strain, given by `D.M.field (D.clamp z.1) z.2.1`. -/
 def strain (D : Data) (z : Domain) : Space →L[ℝ] Space :=
   D.M.field (D.clamp z.1) z.2.1
 
@@ -94,12 +99,12 @@ theorem vector_spatial_smooth (t : ℝ) : ContDiff ℝ ∞ (fun y : Space × ℝ
 theorem vectorDerivative_spatial_smooth (t : ℝ) :
     ContDiff ℝ ∞ (fun y : Space × ℝ => G.vectorDerivative (t,y)) :=
   (pathRepresentative_smooth D.T G.derivativePath G.derivativePath_orbit (D.clamp t)).comp
-    contDiff_fst
+      contDiff_fst
 
 theorem scalar_spatial_smooth (t : ℝ) : ContDiff ℝ ∞ (fun y : Space × ℝ => G.scalar (t,y)) :=
   (pressureScalar_spec D.T D.T_pos.le D.F D.F₁ D.opInv G.solution
     D.frameLower D.frameLower_pos D.frame_lower G.path G.pressureForcePath_orbit (D.clamp
-      t)).1.comp contDiff_fst
+        t)).1.comp contDiff_fst
 
 /-- The returned velocity has the genuine within-time derivative at both endpoints too. -/
 theorem vector_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
@@ -112,16 +117,16 @@ theorem vector_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 /-- The genuine raw mean equation, with the normalized actual scalar pressure. -/
 theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    G.vectorDerivative (t,(x,θ))+D.strain (t,(x,θ)) (G.vector (t,(x,θ)))+
+    G.vectorDerivative (t,(x,θ))+D.strain (t,(x,θ)) (G.vector (t,(x,θ))) +
       (D.inverseFrame (t,(x,θ))).adjoint (gradient (fun y => G.scalar (t,(y,θ))) x) = raw (t,(x,θ))
-        := by
+          := by
   have hp := pressureScalar_equation D.T D.T_pos.le D.F D.F₁ D.opInv G.solution
     D.frameLower D.frameLower_pos D.frame_lower G.path G.pressureForcePath_orbit
     D.T_pos D.opF_time D.M D.strain_equation D.FInv D.inverse_right
     G.velocityPath_orbit G.derivativePath_orbit G.path_orbit t x
   have hp := hp.trans (G.forcingRepresentative_eq t x θ)
   simpa only [vector, vectorDerivative, scalar, Data.strain, Data.inverseFrame, Data.clamp_coe]
-    using hp
+      using hp
 
 end Forcing
 
@@ -142,9 +147,9 @@ theorem meanSolve_contract (D : Data) (raw : VectorField) (h : Nonempty (Forcing
     ∃ bt : VectorField,
       (∀ (t : Icc (0 : ℝ) D.T) x θ,
         HasDerivWithinAt (fun r => (meanSolve D raw).1 (r,(x,θ))) (bt (t,(x,θ))) (Icc (0 : ℝ) D.T)
-          t) ∧
+            t) ∧
       (∀ (t : Icc (0 : ℝ) D.T) x θ,
-        bt (t,(x,θ))+D.strain (t,(x,θ)) ((meanSolve D raw).1 (t,(x,θ)))+
+        bt (t,(x,θ))+D.strain (t,(x,θ)) ((meanSolve D raw).1 (t,(x,θ))) +
           (D.inverseFrame (t,(x,θ))).adjoint
             (gradient (fun y => (meanSolve D raw).2 (t,(y,θ))) x) = raw (t,(x,θ))) ∧
       (∀ t, ContDiff ℝ ∞ (fun y : Space × ℝ => (meanSolve D raw).1 (t,y))) ∧

@@ -6,14 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionLp
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
+import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+import Mathlib.Tactic.NormNum.GCD
 
 /-! A genuine L² Gevrey product estimate, with the coefficient tensors
 bounded uniformly and the field tensors measured in L². It applies on
 any base, including cylinder tensors evaluated through a cover section. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,10 +59,10 @@ theorem clm_apply_memLp_and_bound
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) (n : ℕ)
     (hm : AEStronglyMeasurable (fun x => iteratedFDeriv ℝ n (fun y => f y (g y)) (σ x)) μ)
     (R B C : ℝ) (hR : 0 ≤ R) (hB : 0 ≤ B) (hC : 0 ≤ C) (d e : ℕ)
-    (hb : ∀ j ≤ n, ∀ x, ‖iteratedFDeriv ℝ j f (σ x)‖ ≤ B*majorant R d j)
+    (hb : ∀ j ≤ n, ∀ x, ‖iteratedFDeriv ℝ j f (σ x)‖ ≤ B * majorant R d j)
     (hLp : ∀ j ≤ n, MemLp (fun x => iteratedFDeriv ℝ j g (σ x)) 2 μ)
     (hNorm : ∀ j ≤ n,
-      (eLpNorm (fun x => iteratedFDeriv ℝ j g (σ x)) 2 μ).toReal ≤ C*majorant R e j) :
+      (eLpNorm (fun x => iteratedFDeriv ℝ j g (σ x)) 2 μ).toReal ≤ C * majorant R e j) :
     MemLp (fun x => iteratedFDeriv ℝ n (fun y => f y (g y)) (σ x)) 2 μ ∧
       (eLpNorm (fun x => iteratedFDeriv ℝ n (fun y => f y (g y)) (σ x)) 2 μ).toReal ≤
         (3*B*C)*majorant R (d+e) n := by
@@ -70,8 +78,8 @@ theorem clm_apply_memLp_and_bound
     apply Finset.sum_le_sum
     intro j hj
     exact mul_le_mul_of_nonneg_right
-      (mul_le_mul_of_nonneg_left (hb j (by simpa using (Nat.le_of_lt_succ (Finset.mem_range.mp
-        hj))) x)
+      (mul_le_mul_of_nonneg_left (hb j (by
+          simpa using (Nat.le_of_lt_succ (Finset.mem_range.mp hj))) x)
         (Nat.cast_nonneg _)) (norm_nonneg _)
   obtain ⟨hprod,hn⟩ := finite_domination μ (Finset.range (n+1)) _ hm H hH hdom
   refine ⟨hprod,hn.trans ?_⟩
@@ -79,7 +87,7 @@ theorem clm_apply_memLp_and_bound
       a j*(eLpNorm (fun x => iteratedFDeriv ℝ (n-j) g (σ x)) 2 μ).toReal := by
     have he : H j = a j • (fun x => ‖iteratedFDeriv ℝ (n-j) g (σ x)‖) := rfl
     rw [he,eLpNorm_const_smul,eLpNorm_norm,ENNReal.toReal_mul,toReal_enorm,Real.norm_of_nonneg (ha
-      j)]
+        j)]
   simp_rw [hHnorm]
   calc
     _ ≤ ∑ j ∈ Finset.range (n+1), a j*(C*majorant R e (n-j)) :=

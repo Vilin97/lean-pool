@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleTime
 public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleFieldBounds
 
-@[expose] public section
-
 /-! The L² child fields used in the estimates are exactly the actual
 first and second time derivatives of the composed particle map. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,7 +56,7 @@ theorem childVelocity (t : Icc (0 : ℝ) T) (x : Space) :
 
 theorem childAcceleration (t : Icc (0 : ℝ) T) (x : Space) :
     (G t).childAcceleration.field x=(EulerChildParticleTime.acceleration P P₁ P₂ D D₁ D₂).field t x
-      := by
+        := by
   rw [EulerChildParticleFieldBounds.Data.childAcceleration_apply,acceleration_apply]
   have he : (G t).parentDisplacement.field = (P.field t : Space → Space) :=
     funext (H.parentDisplacement t)

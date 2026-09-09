@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCrossProduct
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+
+/-! Smoothness and actual time differentiation of the normalized cross multiplier. -/
 
 @[expose] public section
 
-/-! Smoothness and actual time differentiation of the normalized cross multiplier. -/
 
 noncomputable section
 
@@ -20,15 +23,26 @@ namespace EulerPacketCrossProduct
 open EulerSmoothLimit InnerProductSpace Matrix WithLp
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : AddCommGroup (Space →L[ℝ] Space) :=
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketPotentialMultiplier1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketPotentialMultiplier2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `AddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketPotentialMultiplier3 : AddCommGroup (Space →L[ℝ] Space) :=
   (inferInstance : NormedAddCommGroup (Space →L[ℝ] Space)).toAddCommGroup
-private local instance : Module ℝ (Space →L[ℝ] Space) :=
+/-- Cache the standard `Module ℝ (Space →L[ℝ] Space)` instance to shorten typeclass synthesis. -/
+local instance instPacketPotentialMultiplier4 : Module ℝ (Space →L[ℝ] Space) :=
   (inferInstance : NormedSpace ℝ (Space →L[ℝ] Space)).toModule
-private local instance : TopologicalSpace (Space →L[ℝ] Space) :=
+/-- Cache the standard `TopologicalSpace (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketPotentialMultiplier5 : TopologicalSpace (Space →L[ℝ] Space) :=
   (inferInstance : PseudoMetricSpace (Space →L[ℝ] Space)).toUniformSpace.toTopologicalSpace
 
+/-- Cross operator linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def crossOperatorLinear : Space →ₗ[ℝ] (Space →L[ℝ] Space) where
   toFun := crossLeft
   map_add' a b := by
@@ -40,6 +54,8 @@ def crossOperatorLinear : Space →ₗ[ℝ] (Space →L[ℝ] Space) where
     intro v
     simp [crossLeft_apply, cross, map_smul]
 
+/-- Cross operator, given by `crossOperatorLinear.mkContinuous 1 (fun a => by change ‖crossLeft
+a‖ ≤ 1*‖a‖ simpa only [one_mul] using crossLeft_norm_le a)`. -/
 def crossOperator : Space →L[ℝ] (Space →L[ℝ] Space) :=
   crossOperatorLinear.mkContinuous 1 (fun a => by
     change ‖crossLeft a‖ ≤ 1*‖a‖
@@ -62,6 +78,8 @@ theorem potentialMultiplier_contDiff (m : X → Space) (hm : ContDiff ℝ ∞ m)
     exact pow_ne_zero 2 (norm_ne_zero_iff.mpr (hnz x)))).neg.smul
     (crossOperator.contDiff.comp hm)
 
+/-- Potential multiplier derivative, given by `(2*⟪m,mt⟫_ℝ/(‖m‖^2)^2) • crossLeft m -
+((‖m‖^2)⁻¹) • crossLeft mt`. -/
 def potentialMultiplierDerivative (m mt : Space) : Space →L[ℝ] Space :=
   (2*⟪m,mt⟫_ℝ/(‖m‖^2)^2) • crossLeft m - ((‖m‖^2)⁻¹) • crossLeft mt
 
@@ -78,6 +96,6 @@ theorem potentialMultiplier_hasDerivWithinAt (s : Set ℝ) (t : ℝ)
   have h := hInv.neg.smul hcross
   simpa only [potentialMultiplier, potentialMultiplierDerivative, Pi.neg_apply,
     Pi.inv_apply, Pi.smul_def', Pi.neg_def, neg_div, neg_neg, sub_eq_add_neg, neg_smul, add_comm]
-      using h
+        using h
 
 end EulerPacketCrossProduct

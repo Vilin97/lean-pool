@@ -9,9 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FiveRowRank
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Five actual profile moments on a reserved positive patch
@@ -21,6 +20,9 @@ the patch. Positive amplitude factoring removes the background parameters
 from the normalized quadratic system.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
@@ -29,17 +31,25 @@ open scoped BigOperators ContDiff Topology
 
 namespace NavierStokes.FiveProfileMoments
 
+/-- Patch data, collecting `left`, `right`, `left_pos`, `ordered`. -/
 structure Patch where
+  /-- Left of `Patch`, of type `ℝ`. -/
   left : ℝ
+  /-- Right of `Patch`, of type `ℝ`. -/
   right : ℝ
   left_pos : 0 < left
   ordered : left < right
 
+/-- Mid, given by `(P.left + P.right) / 2`. -/
 noncomputable def Patch.mid (P : Patch) : ℝ := (P.left + P.right) / 2
 
+/-- Left half, given by `⟨P.left, P.mid, P.left_pos, by dsimp [Patch.mid]; linarith
+[P.ordered]⟩`. -/
 noncomputable def Patch.leftHalf (P : Patch) : Patch :=
   ⟨P.left, P.mid, P.left_pos, by dsimp [Patch.mid]; linarith [P.ordered]⟩
 
+/-- Right half, given by `⟨P.mid, P.right, by dsimp [Patch.mid]; linarith [P.left_pos,
+P.ordered], by dsimp [Patch.mid]; linarith [P.ordered]⟩`. -/
 noncomputable def Patch.rightHalf (P : Patch) : Patch :=
   ⟨P.mid, P.right, by dsimp [Patch.mid]; linarith [P.left_pos, P.ordered],
     by dsimp [Patch.mid]; linarith [P.ordered]⟩
@@ -48,8 +58,11 @@ section Family
 
 variable {n : ℕ}
 
+/-- Lower, given by `FiveRowRank.cellLower P.left P.right j`. -/
 noncomputable def lower (P : Patch) (j : Fin n) : ℝ := FiveRowRank.cellLower P.left P.right j
+/-- Upper, given by `FiveRowRank.cellUpper P.left P.right j`. -/
 noncomputable def upper (P : Patch) (j : Fin n) : ℝ := FiveRowRank.cellUpper P.left P.right j
+/-- Bump, given by `LocalizedMomentRepair.bump (lower P j) (upper P j)`. -/
 noncomputable def bump (P : Patch) (j : Fin n) : ℝ → ℝ :=
   LocalizedMomentRepair.bump (lower P j) (upper P j)
 
@@ -89,6 +102,7 @@ theorem bumps_disjoint (P : Patch) (i j : Fin n) (hij : i ≠ j) (x : ℝ) :
   · linarith [intervals_separated P i j h, hix.2, hjx.1]
   · linarith [intervals_separated P j i h, hjx.2, hix.1]
 
+/-- Correction, given by `∑ j, c j * bump P j x`. -/
 noncomputable def correction (P : Patch) (c : Fin n → ℝ) (x : ℝ) : ℝ := ∑ j, c j * bump P j x
 
 theorem correction_contDiff (P : Patch) (c : Fin n → ℝ) : ContDiff ℝ ∞ (correction P c) :=
@@ -109,7 +123,7 @@ theorem correction_support (P : Patch) (c : Fin n → ℝ) :
 theorem correction_tsupport (P : Patch) (c : Fin n → ℝ) :
     tsupport (correction P c) ⊆ Ioo P.left P.right := by
   have hs : support (correction P c) ⊆ LocalizedMomentRepair.repairRegion (lower (n := n) P) (upper
-    P) := by
+      P) := by
     intro x hx
     by_contra hnot
     apply hx
@@ -121,15 +135,15 @@ theorem correction_tsupport (P : Patch) (c : Fin n → ℝ) :
         LocalizedMomentRepair.bump_support_subset _ _ (lower_lt_upper P j) hn⟩)
     simp [hb]
   have ht := closure_minimal hs (LocalizedMomentRepair.repairRegion_isCompact (lower (n := n) P)
-    (upper P)).isClosed
+      (upper P)).isClosed
   intro x hx
   have hm := LocalizedMomentRepair.repairRegion_subset_open (lower (n := n) P) (upper P)
-    (lower_lt_upper P) (ht hx)
+      (lower_lt_upper P) (ht hx)
   obtain ⟨j, hj⟩ := mem_iUnion.mp hm
   exact ⟨(lower_gt_left P j).trans hj.1, hj.2.trans (upper_lt_right P j)⟩
 
 theorem correction_hasCompactSupport (P : Patch) (c : Fin n → ℝ) : HasCompactSupport (correction P
-  c) :=
+    c) :=
   HasCompactSupport.of_support_subset_isCompact isCompact_Icc (correction_support P c)
 
 theorem weighted_integrable (P : Patch) (s : ℝ) (g : ℝ → ℝ)
@@ -162,7 +176,9 @@ theorem correction_square (P : Patch) (c : Fin n → ℝ) (x : ℝ) :
   · intro hi
     exact (hi (Finset.mem_univ i)).elim
 
+/-- Bump moment, given by `∫ x, x ^ s * bump P j x`. -/
 noncomputable def bumpMoment (P : Patch) (s : ℝ) (j : Fin n) : ℝ := ∫ x, x ^ s * bump P j x
+/-- Square moment, given by `∫ x, x ^ s * (bump P j x) ^ 2`. -/
 noncomputable def squareMoment (P : Patch) (s : ℝ) (j : Fin n) : ℝ := ∫ x, x ^ s * (bump P j x) ^ 2
 
 theorem weighted_correction_integrable (P : Patch) (s : ℝ) (c : Fin n → ℝ) :
@@ -190,7 +206,7 @@ theorem correction_moment (P : Patch) (s : ℝ) (c : Fin n → ℝ) :
   · simp only [integral_const_mul, bumpMoment]
   · intro j _
     exact (weighted_integrable P s _ (bump_contDiff P j).continuous (bump_support_patch P
-      j)).const_mul _
+        j)).const_mul _
 
 theorem correction_square_moment (P : Patch) (s : ℝ) (c : Fin n → ℝ) :
     (∫ x, x ^ s * (correction P c x) ^ 2) = ∑ j, (c j) ^ 2 * squareMoment P s j := by
@@ -211,6 +227,7 @@ theorem correction_square_moment (P : Patch) (s : ℝ) (c : Fin n → ℝ) :
     intro hz
     exact hx (by simp [hz])
 
+/-- Moment matrix, given by `LocalizedMomentRepair.matrix a (lower P) (upper P)`. -/
 noncomputable def momentMatrix (P : Patch) (a : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℝ :=
   LocalizedMomentRepair.matrix a (lower P) (upper P)
 
@@ -219,6 +236,7 @@ theorem momentMatrix_det_ne_zero (P : Patch) (a : Fin n → ℝ) (ha : Injective
   LocalizedMomentRepair.matrix_det_ne_zero a _ _ ha
     (fun j => P.left_pos.trans (lower_gt_left P j)) (lower_lt_upper P) (intervals_separated P)
 
+/-- Matrix equiv, constructed using `LinearEquiv.toContinuousLinearEquiv`. -/
 noncomputable def matrixEquiv (P : Patch) (a : Fin n → ℝ) (ha : Injective a) :
     (Fin n → ℝ) ≃L[ℝ] (Fin n → ℝ) :=
   LinearEquiv.toContinuousLinearEquiv
@@ -234,7 +252,7 @@ noncomputable def matrixEquiv (P : Patch) (a : Fin n → ℝ) (ha : Injective a)
           (isUnit_iff_ne_zero.mpr (momentMatrix_det_ne_zero P a ha)), Matrix.one_mulVec] }
 
 theorem matrixEquiv_apply (P : Patch) (a : Fin n → ℝ) (ha : Injective a) (c : Fin n → ℝ) (i : Fin
-  n) :
+    n) :
     matrixEquiv P a ha c i = ∫ x, x ^ a i * correction P c x := by
   rw [correction_moment]
   change ∑ j, (momentMatrix P a) i j * c j = _
@@ -273,9 +291,12 @@ theorem correction_derivative_bound (P : Patch) (k : ℕ) :
 
 end Family
 
+/-- Coefficient: an abbreviation for `(Fin 2 → ℝ) × (Fin 3 → ℝ)`. -/
 abbrev Coeff := (Fin 2 → ℝ) × (Fin 3 → ℝ)
+/-- Debt: an abbreviation for `Fin 5 → ℝ`. -/
 abbrev Debt := Fin 5 → ℝ
 
+/-- Good exponent, given by `b ≠ -1 / 2 ∧ b ≠ 1 / 2 ∧ b ≠ 3 / 2`. -/
 def GoodExponent (b : ℝ) : Prop := b ≠ -1 / 2 ∧ b ≠ 1 / 2 ∧ b ≠ 3 / 2
 
 theorem good_initial : GoodExponent (1 / 10 : ℝ) := by norm_num [GoodExponent]
@@ -286,7 +307,9 @@ theorem good_outgoing (lam : ℝ) (hlam : 0 < lam) : GoodExponent (-1 / 2 - lam)
   · linarith
   constructor <;> linarith
 
+/-- Axial powers, given by `![0, b + 1 / 2]`. -/
 noncomputable def axialPowers (b : ℝ) : Fin 2 → ℝ := ![0, b + 1 / 2]
+/-- Angular powers, given by `![1 / 2, b, b - 1]`. -/
 noncomputable def angularPowers (b : ℝ) : Fin 3 → ℝ := ![1 / 2, b, b - 1]
 
 theorem axialPowers_injective (b : ℝ) (hb : GoodExponent b) : Injective (axialPowers b) := by
@@ -301,7 +324,9 @@ theorem angularPowers_injective (b : ℝ) (hb : GoodExponent b) : Injective (ang
   fin_cases i <;> fin_cases j <;> norm_num [angularPowers] at hij <;> norm_num at hne
   all_goals first | exact hb.2.1 (by linarith) | exact hb.2.2 (by linarith)
 
+/-- U, given by `correction P.leftHalf c.1`. -/
 noncomputable def u (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.leftHalf c.1
+/-- E, given by `correction P.rightHalf c.2`. -/
 noncomputable def e (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.rightHalf c.2
 
 theorem u_mul_e (P : Patch) (c d : Coeff) (x : ℝ) : u P c x * e P d x = 0 := by
@@ -313,10 +338,13 @@ theorem u_mul_e (P : Patch) (c d : Coeff) (x : ℝ) : u P c x * e P d x = 0 := b
   have he' := correction_tsupport P.rightHalf d.2 (subset_tsupport _ he)
   exact False.elim ((not_lt_of_ge he'.1.le) hu'.2)
 
+/-- Linear equiv as an element of `Coeff ≃L[ℝ] Coeff`. -/
 noncomputable def linearEquiv (P : Patch) (b : ℝ) (hb : GoodExponent b) : Coeff ≃L[ℝ] Coeff :=
   (matrixEquiv P.leftHalf (axialPowers b) (axialPowers_injective b hb)).prodCongr
     (matrixEquiv P.rightHalf (angularPowers b) (angularPowers_injective b hb))
 
+/-- Quadratic bilin, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
+compatibility proofs. -/
 noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[ℝ] Coeff where
   toFun c :=
     { toFun := fun d =>
@@ -332,7 +360,7 @@ noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[�
         apply Prod.ext
         · ext i; simp
         · ext i; fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_two,
-          Fin.sum_univ_three] <;> ring }
+            Fin.sum_univ_three] <;> ring }
   map_add' c d := by
     apply LinearMap.ext
     intro f
@@ -345,13 +373,15 @@ noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[�
     apply Prod.ext
     · ext i; simp
     · ext i; fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_two,
-      Fin.sum_univ_three] <;> ring
+        Fin.sum_univ_three] <;> ring
 
+/-- Quadratic continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def quadraticCLM (P : Patch) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
   LinearMap.toContinuousLinearMap
     ((LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Coeff) (F' := Coeff)).toLinearMap.comp
-      (quadraticBilin P))
+        (quadraticBilin P))
 
+/-- Normalized map as an element of `Coeff`. -/
 noncomputable def normalizedMap (P : Patch) (b : ℝ) (c : Coeff) : Coeff :=
   (![∫ x, u P c x, ∫ x, x ^ (b + 1 / 2) * u P c x],
     ![∫ x, x ^ (1 / 2 : ℝ) * e P c x,
@@ -489,25 +519,32 @@ theorem exists_normalized_repair (P : Patch) (b : ℝ) (hb : GoodExponent b) :
     have hlow := neg_abs_le (e P (g d) x)
     linarith
 
+/-- Physical U, given by `G + A * u P c x`. -/
 noncomputable def physicalU (P : Patch) (A G : ℝ) (c : Coeff) (x : ℝ) : ℝ := G + A * u P c x
+/-- Physical E, given by `A * (x ^ b + e P c x)`. -/
 noncomputable def physicalE (P : Patch) (b A : ℝ) (c : Coeff) (x : ℝ) : ℝ := A * (x ^ b + e P c x)
 
+/-- Physical density as an element of `Debt`. -/
 noncomputable def physicalDensity (P : Patch) (b A G : ℝ) (c : Coeff) (x : ℝ) : Debt :=
   ![physicalU P A G c x - G,
     Real.sqrt (2 * x) * (physicalE P b A c x - A * x ^ b),
     physicalU P A G c x * Real.sqrt (2 * x) * physicalE P b A c x - G * Real.sqrt (2 * x) * (A * x
-      ^ b),
+        ^ b),
     (physicalU P A G c x ^ 2 - physicalE P b A c x ^ 2 / 2) - (G ^ 2 - (A * x ^ b) ^ 2 / 2),
     (physicalE P b A c x ^ 2 - (A * x ^ b) ^ 2) / (2 * x)]
 
+/-- Physical moments, defined pointwise by `∫ x, physicalDensity P b A G c x i`. -/
 noncomputable def physicalMoments (P : Patch) (b A G : ℝ) (c : Coeff) : Debt :=
   fun i => ∫ x, physicalDensity P b A G c x i
 
+/-- Physical debt as an element of `Debt`. -/
 noncomputable def physicalDebt (A G : ℝ) (z : Coeff) : Debt :=
   ![A * z.1 0, Real.sqrt 2 * A * z.2 0,
     Real.sqrt 2 * A ^ 2 * z.1 1 + G * (Real.sqrt 2 * A * z.2 0),
     2 * G * A * z.1 0 - A ^ 2 * z.2 1, A ^ 2 * z.2 2]
 
+/-- Normalized debt, given by `(![d 0 / A, (d 2 - G * d 1) / (Real.sqrt 2 * A ^ 2)], ![d 1 /
+(Real.sqrt 2 * A), (2 * G * d 0 - d 3) / A ^ 2, d 4 / A ^ 2])`. -/
 noncomputable def normalizedDebt (A G : ℝ) (d : Debt) : Coeff :=
   (![d 0 / A, (d 2 - G * d 1) / (Real.sqrt 2 * A ^ 2)],
     ![d 1 / (Real.sqrt 2 * A), (2 * G * d 0 - d 3) / A ^ 2, d 4 / A ^ 2])
@@ -529,6 +566,7 @@ theorem normalized_physical_debt (A G : ℝ) (hA : A ≠ 0) (c : Coeff) :
     fin_cases i <;> simp [physicalDebt, normalizedDebt] <;> field_simp
     all_goals ring
 
+/-- Physical equiv, constructed using `LinearEquiv.toContinuousLinearEquiv`. -/
 noncomputable def physicalEquiv (A G : ℝ) (hA : A ≠ 0) : Coeff ≃L[ℝ] Debt :=
   LinearEquiv.toContinuousLinearEquiv
     { toFun := physicalDebt A G
@@ -538,6 +576,7 @@ noncomputable def physicalEquiv (A G : ℝ) (hA : A ≠ 0) : Coeff ≃L[ℝ] Deb
       map_add' := fun c d => by ext i; fin_cases i <;> simp [physicalDebt] <;> ring
       map_smul' := fun r c => by ext i; fin_cases i <;> simp [physicalDebt, smul_eq_mul] <;> ring }
 
+/-- Normalized density as an element of `Coeff`. -/
 noncomputable def normalizedDensity (P : Patch) (b : ℝ) (c : Coeff) (x : ℝ) : Coeff :=
   (![u P c x, x ^ (b + 1 / 2) * u P c x],
     ![x ^ (1 / 2 : ℝ) * e P c x,
@@ -576,7 +615,7 @@ theorem physicalDensity_eq (P : Patch) (b A G : ℝ) (c : Coeff) (x : ℝ) :
     · simp [physicalDensity, physicalDebt, normalizedDensity, physicalU, physicalE]
       ring
     · simp [physicalDensity, physicalDebt, normalizedDensity, physicalE, hminus, Real.rpow_neg_one]
-      field_simp [hx.ne'] ; ring
+      field_simp [hx.ne']; ring
   · have hu : u P c x = 0 := by
       exact Classical.byContradiction (fun hn =>
         hx (P.leftHalf.left_pos.trans_le (correction_support P.leftHalf c.1 hn).1))
@@ -585,7 +624,7 @@ theorem physicalDensity_eq (P : Patch) (b A G : ℝ) (c : Coeff) (x : ℝ) :
         hx (P.rightHalf.left_pos.trans_le (correction_support P.rightHalf c.2 hn).1))
     ext i
     fin_cases i <;> simp [physicalDensity, physicalDebt, normalizedDensity, physicalU, physicalE,
-      hu, he]
+        hu, he]
 
 theorem integrable_fin_vector {n : ℕ} (f : ℝ → Fin n → ℝ)
     (hf : ∀ i, Integrable (fun x => f x i)) : Integrable f := by
@@ -647,10 +686,10 @@ theorem normalizedDensity_integral (P : Patch) (b : ℝ) (c : Coeff) :
     · change (∫ x, x ^ b * e P c x + (1 / 2) * e P c x ^ 2 - u P c x ^ 2) = _
       unfold u e
       have hs := integral_sub ((weighted_correction_integrable P.rightHalf b c.2).add
-        (hee.const_mul (1 / 2))) huu
+          (hee.const_mul (1 / 2))) huu
       simp only [Pi.add_apply] at hs
       rw [hs, integral_add (weighted_correction_integrable P.rightHalf b c.2) (hee.const_mul (1 /
-        2)), integral_const_mul]
+          2)), integral_const_mul]
       rfl
     · change (∫ x, x ^ (b - 1) * e P c x + (1 / 2) * (x ^ (-1 : ℝ) * e P c x ^ 2)) = _
       unfold e
@@ -704,8 +743,8 @@ theorem physicalDensity_zero_outside (P : Patch) (b A G : ℝ) (c : Coeff) {x : 
     intro hn
     have hs := correction_tsupport P.rightHalf c.2 (subset_tsupport _ hn)
     apply hx
-    have hl : P.left < P.rightHalf.left := by dsimp [Patch.rightHalf, Patch.mid]; linarith
-      [P.ordered]
+    have hl : P.left < P.rightHalf.left := by
+        dsimp [Patch.rightHalf, Patch.mid]; linarith [P.ordered]
     exact ⟨hl.trans hs.1, hs.2⟩
   rw [physicalDensity_eq]
   ext i
@@ -727,6 +766,7 @@ theorem physicalDensity_integrable (P : Patch) (b A G : ℝ) (hA : A ≠ 0) (c :
   simp only [physicalDensity_eq]
   exact he
 
+/-- Normalization linear map, bundling `toFun`, `map_add`, `map_smul`. -/
 noncomputable def normalizationLinearMap (A G : ℝ) : Debt →ₗ[ℝ] Coeff where
   toFun := normalizedDebt A G
   map_add' c d := by
@@ -754,9 +794,9 @@ theorem normalizedDebt_contDiffOn {S : Set ℝ} {A G : ℝ → ℝ} {d : ℝ →
     intro i
     fin_cases i
     · exact (contDiffOn_pi.mp hd 1).div (contDiffOn_const.mul hA) (fun p hp => mul_ne_zero hs (hAn
-      p hp))
+        p hp))
     · exact (((contDiffOn_const.mul hG).mul (contDiffOn_pi.mp hd 0)).sub (contDiffOn_pi.mp hd
-      3)).div
+        3)).div
         (hA.pow 2) (fun p hp => pow_ne_zero 2 (hAn p hp))
     · exact (contDiffOn_pi.mp hd 4).div (hA.pow 2) (fun p hp => pow_ne_zero 2 (hAn p hp))
 
@@ -764,7 +804,7 @@ theorem normalizedDebt_contDiff {A G : ℝ → ℝ} {d : ℝ → Debt}
     (hA : ContDiff ℝ ∞ A) (hG : ContDiff ℝ ∞ G) (hd : ContDiff ℝ ∞ d)
     (hAn : ∀ p, A p ≠ 0) : ContDiff ℝ ∞ (fun p => normalizedDebt (A p) (G p) (d p)) :=
   contDiffOn_univ.mp (normalizedDebt_contDiffOn hA.contDiffOn hG.contDiffOn hd.contDiffOn (fun p _
-    => hAn p))
+      => hAn p))
 
 theorem normalizedDebt_eq_sum (A G : ℝ) (d : Debt) :
     normalizedDebt A G d = ∑ i, d i • normalizedDebt A G (Pi.single i 1) := by
@@ -784,7 +824,7 @@ theorem compact_normalization_bound (S : Set ℝ) (hS : IsCompact S) {A G : ℝ 
     intro i
     obtain ⟨B, hB⟩ := hS.exists_bound_of_continuousOn
       (normalizedDebt_contDiffOn hA hG (d := fun _ => Pi.single i 1) contDiffOn_const
-        hAn).continuousOn
+          hAn).continuousOn
     exact ⟨max B 0, le_max_right _ _, fun p hp => (hB p hp).trans (le_max_left _ _)⟩
   choose B hB hbound using hi
   let K : ℝ := 1 + ∑ i, B i
@@ -818,7 +858,7 @@ theorem physicalU_family_contDiffOn (P : Patch) {S : Set ℝ} {A G : ℝ → ℝ
     ContDiffOn ℝ ∞ (fun z : ℝ × ℝ => physicalU P (A z.1) (G z.1) (c z.1) z.2) (S ×ˢ univ) :=
   (hG.comp contDiffOn_fst (fun _ hz => hz.1)).add
     ((hA.comp contDiffOn_fst (fun _ hz => hz.1)).mul (correction_family_contDiffOn P.leftHalf
-      hc.fst))
+        hc.fst))
 
 theorem physicalE_family_contDiffOn (P : Patch) (b : ℝ) {S : Set ℝ} {A : ℝ → ℝ} {c : ℝ → Coeff}
     (hA : ContDiffOn ℝ ∞ A S) (hc : ContDiffOn ℝ ∞ c S) :
@@ -964,13 +1004,13 @@ theorem smooth_solver_parameter_jets {g : Coeff → Coeff} {r C : ℝ}
     simpa only [Metric.mem_closedBall, dist_zero_right] using hfx.trans htr
   have hxball : f x ∈ Metric.ball (0 : Coeff) r := by
     simpa only [Metric.mem_ball, dist_zero_right] using hfx.trans_lt (lt_of_le_of_lt htr (by
-      linarith))
+        linarith))
   by_cases hk0 : k = 0
   · subst k
     rw [norm_iteratedFDeriv_zero]
     exact ((hvalue _ hxball).trans (mul_le_mul_of_nonneg_left hfx hC.le)).trans
-      (mul_le_mul_of_nonneg_right (by dsimp [K]; exact le_add_of_nonneg_right (by positivity))
-        htau.le)
+      (mul_le_mul_of_nonneg_right (by
+          dsimp [K]; exact le_add_of_nonneg_right (by positivity)) htau.le)
   let V : Set ℝ := f ⁻¹' Metric.ball (0 : Coeff) r
   have hV : IsOpen V := Metric.isOpen_ball.preimage hf.continuous
   have hxV : x ∈ V := hxball
@@ -991,15 +1031,18 @@ theorem smooth_solver_parameter_jets {g : Coeff → Coeff} {r C : ℝ}
     exact (hfj j (hjk.trans hk)).trans
       (pow_le_pow_of_le_one htau.le ht1 (by omega : j ≤ N + 1))
 
+/-- Jet eval, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def jetEval {n : ℕ} (P : Patch) (k : ℕ) (x : ℝ) : (Fin n → ℝ) →L[ℝ] ℝ :=
   LinearMap.toContinuousLinearMap
     { toFun := fun c => ∑ i, c i * iteratedDeriv k (bump P i) x
       map_add' := fun c d => by simp [Pi.add_apply, add_mul, Finset.sum_add_distrib]
       map_smul' := fun r c => by simp [Pi.smul_apply, smul_eq_mul, Finset.mul_sum, mul_assoc] }
 
+/-- U jet eval, given by `(jetEval P.leftHalf k x).comp (ContinuousLinearMap.fst ℝ _ _)`. -/
 noncomputable def uJetEval (P : Patch) (k : ℕ) (x : ℝ) : Coeff →L[ℝ] ℝ :=
   (jetEval P.leftHalf k x).comp (ContinuousLinearMap.fst ℝ _ _)
 
+/-- E jet eval, given by `(jetEval P.rightHalf k x).comp (ContinuousLinearMap.snd ℝ _ _)`. -/
 noncomputable def eJetEval (P : Patch) (k : ℕ) (x : ℝ) : Coeff →L[ℝ] ℝ :=
   (jetEval P.rightHalf k x).comp (ContinuousLinearMap.snd ℝ _ _)
 
@@ -1058,9 +1101,9 @@ theorem physical_mixed_jets_small (P : Patch) {g : Coeff → Coeff} {r C : ℝ}
       JetBounds.FiniteJetBound N f V (tau ^ (N + 1)) →
       ∀ eta ∈ V, ∀ k ≤ N, ∀ m ≤ N, ∀ x : ℝ,
         ‖iteratedFDeriv ℝ m (fun p => iteratedDeriv k (fun y => A p * u P (g (f p)) y) x) eta‖ ≤ K
-          * B * tau ∧
+            * B * tau ∧
         ‖iteratedFDeriv ℝ m (fun p => iteratedDeriv k (fun y => A p * e P (g (f p)) y) x) eta‖ ≤ K
-          * B * tau := by
+            * B * tau := by
   obtain ⟨J, hJ, hjets⟩ := mixed_jet_bound P N
   obtain ⟨D, hD, hparam⟩ := smooth_solver_parameter_jets hr hC hg hvalue N
   let L : ℝ →L[ℝ] Coeff →L[ℝ] Coeff := ContinuousLinearMap.lsmul ℝ ℝ
@@ -1123,11 +1166,11 @@ theorem e_tsupport_patch (P : Patch) (c : Coeff) : tsupport (e P c) ⊆ Ioo P.le
   exact ⟨hm.trans hs.1, hs.2⟩
 
 theorem u_zero_outside (P : Patch) (c : Coeff) {x : ℝ} (hx : x ∉ Ioo P.left P.right) : u P c x = 0
-  :=
+    :=
   Classical.byContradiction (fun hn => hx (u_tsupport_patch P c (subset_tsupport _ hn)))
 
 theorem e_zero_outside (P : Patch) (c : Coeff) {x : ℝ} (hx : x ∉ Ioo P.left P.right) : e P c x = 0
-  :=
+    :=
   Classical.byContradiction (fun hn => hx (e_tsupport_patch P c (subset_tsupport _ hn)))
 
 theorem physical_profiles_unchanged (P : Patch) (b A G : ℝ) (c : Coeff) {x : ℝ}
@@ -1147,6 +1190,7 @@ theorem physical_edits_tsupport (P : Patch) (A : ℝ) (c : Coeff) :
     intro x hx he
     exact hx (by simp [he])
 
+/-- Profile change density as an element of `Debt`. -/
 noncomputable def profileChangeDensity (U E dU dE : ℝ → ℝ) (x : ℝ) : Debt :=
   ![(U x + dU x) - U x,
     Real.sqrt (2 * x) * ((E x + dE x) - E x),
@@ -1173,17 +1217,19 @@ theorem local_profile_moments (P : Patch) (b A G : ℝ) (c : Coeff) (U E : ℝ �
     (hU : ∀ x ∈ Ioo P.left P.right, U x = G)
     (hE : ∀ x ∈ Ioo P.left P.right, E x = A * x ^ b) (i : Fin 5) :
     (∫ x in Ioi (0 : ℝ), profileChangeDensity U E (fun y => A * u P c y) (fun y => A * e P c y) x
-      i) =
+        i) =
       physicalMoments P b A G c i := by
   simp_rw [local_profile_change P b A G c U E hU hE]
   exact physicalMoments_positive_axis P b A G c i
 
+/-- Normalization continuous linear map, given by `∑ i : Fin 5, ContinuousLinearMap.smulRightL ℝ
+Debt Coeff (ContinuousLinearMap.proj i) (normalizedDebt A G (Pi.single i 1))`. -/
 noncomputable def normalizationCLM (A G : ℝ) : Debt →L[ℝ] Coeff :=
   ∑ i : Fin 5, ContinuousLinearMap.smulRightL ℝ Debt Coeff
     (ContinuousLinearMap.proj i) (normalizedDebt A G (Pi.single i 1))
 
 theorem normalizationCLM_apply (A G : ℝ) (d : Debt) : normalizationCLM A G d = normalizedDebt A G d
-  := by
+    := by
   rw [normalizedDebt_eq_sum]
   rfl
 
@@ -1209,7 +1255,7 @@ theorem compact_global_jet_bound {F : Type*} [NormedAddCommGroup F] [NormedSpace
     linarith
   · intro j hj p hp
     have hsum := Finset.single_le_sum (fun j _ => hB j) (Finset.mem_range.mpr (Nat.lt_succ_of_le
-      hj))
+        hj))
     exact (hbound j p hp).trans (by linarith)
 
 /-- The fixed smooth weights in the normalization preserve smallness of every

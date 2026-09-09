@@ -7,11 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
 
 /-!
 # Exact algebra of the stress cone
@@ -20,6 +15,9 @@ This formalizes the square-root criterion and quadratic equivalence in Lemma 3.5
 of the candidate manuscript, together with the normalized
 factorization used in equation (11). It does not construct any stress profile.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ConeAlgebra
 

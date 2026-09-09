@@ -7,11 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketEndpoint
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTraceMatching
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketIntervalData
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCylinderFields
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitial
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCylinderFields
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTraceMatching
 
 /-!
 The primary history has prescribed terminal displacement. Its actual
@@ -19,13 +18,16 @@ coordinate velocity at τ is the initial value of the homogeneous forward
 solve. Both the physical velocity and its true derivative match at τ.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketPrimary
 
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths
-    EulerLpCylinderRectangular
+      EulerLpCylinderRectangular
   EulerCylinderSmoothOrbit EulerPacketProfileRecursion EulerTransversePacketProvider
   EulerVolterraConvolution
 open scoped ContDiff
@@ -33,6 +35,7 @@ open scoped ContDiff
 variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
+/-- Zero forcing, bundling `path`, `path_orbit`, `raw_eq`, `mean_zero`. -/
 def zeroForcing (D : Data U) : Forcing P D (0 : VectorField) where
   path := 0
   path_orbit := by
@@ -44,44 +47,54 @@ def zeroForcing (D : Data U) : Forcing P D (0 : VectorField) where
 variable {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D)
 
+/-- Endpoint data, bundling `value`, `orbit`, `mean_zero`. -/
 def endpointData : InitialData P (D.initial τ hτ hτT.le) where
   value := Y.value
   orbit := Y.orbit
   mean_zero := Y.mean_zero
 
+/-- Forward initial, bundling `value`, `orbit`, `mean_zero`. -/
 def forwardInitial : InitialData P (D.tail τ hτ.le hτT) where
   value := (EulerTransversePacketEndpoint.terminalInitial B (endpointData τ hτ hτT Y)).value
   orbit := (EulerTransversePacketEndpoint.terminalInitial B (endpointData τ hτ hτT Y)).orbit
   mean_zero := (EulerTransversePacketEndpoint.terminalInitial B (endpointData τ hτ hτT Y)).mean_zero
 
+/-- Past velocity, given by `EulerTransversePacketEndpoint.velocityPath B (endpointData τ hτ hτT
+Y)`. -/
 def pastVelocity : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   EulerTransversePacketEndpoint.velocityPath B (endpointData τ hτ hτT Y)
 
+/-- Past derivative, given by `EulerTransversePacketEndpoint.derivativePath B (endpointData τ hτ
+hτT Y)`. -/
 def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   EulerTransversePacketEndpoint.derivativePath B (endpointData τ hτ hτT Y)
 
+/-- Future velocity, given by `includePath P D.support D.support_measurable ((zeroForcing
+(D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y))`. -/
 def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y))
 
+/-- Future derivative, given by `includePath P D.support D.support_measurable ((zeroForcing
+(D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y))`. -/
 def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y))
 
 theorem pastVelocity_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (pastVelocity τ hτ hτT B Y))
-  :=
+    :=
   EulerTransversePacketEndpoint.velocityPath_orbit B (endpointData τ hτ hτT Y)
 
 theorem pastDerivative_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (pastDerivative τ hτ hτT B
-  Y)) :=
+    Y)) :=
   EulerTransversePacketEndpoint.derivativePath_orbit B (endpointData τ hτ hτT Y)
 
 theorem futureVelocity_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (futureVelocity τ hτ hτT B
-  Y)) :=
+    Y)) :=
   (zeroForcing (D.tail τ hτ.le hτT)).velocityPath_orbit (forwardInitial τ hτ hτT B Y)
 
 theorem futureDerivative_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (futureDerivative τ hτ
-  hτT B Y)) :=
+    hτT B Y)) :=
   (zeroForcing (D.tail τ hτ.le hτT)).derivativePath_orbit (forwardInitial τ hτ hτT B Y)
 
 theorem velocity_match : pastVelocity τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
@@ -107,18 +120,18 @@ theorem velocity_match : pastVelocity τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
 
 theorem past_balance_ae (t : Icc (0 : ℝ) τ) :
     ∀ᵐ x ∂liftMeasure P,
-      pastDerivative τ hτ hτT B Y t x+
-        (D.initial τ hτ hτT.le).M.field t x.1 (pastVelocity τ hτ hτT B Y t x)+
+      pastDerivative τ hτ hτT B Y t x +
+        (D.initial τ hτ hτT.le).M.field t x.1 (pastVelocity τ hτ hτT B Y t x) +
         (-(2*⟪(D.initial τ hτ hτT.le).normal.field t x.1,
           (D.initial τ hτ hτT.le).M.field t x.1 (pastVelocity τ hτ hτT B Y t x)⟫_ℝ)/
           ‖(D.initial τ hτ hτT.le).normal.field t x.1‖^2) •
             (D.initial τ hτ hτT.le).normal.field t x.1 = 0 :=
   EulerTransversePacketEndpoint.balance_ae B (endpointData τ hτ hτT Y) t
 
-theorem future_balance_ae (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem future_balance_ae (t : Icc (0 : ℝ) (D.T - τ)) :
     ∀ᵐ x ∂liftMeasure P,
-      futureDerivative τ hτ hτT B Y t x+
-        (D.tail τ hτ.le hτT).M.field t x.1 (futureVelocity τ hτ hτT B Y t x)+
+      futureDerivative τ hτ hτT B Y t x +
+        (D.tail τ hτ.le hτT).M.field t x.1 (futureVelocity τ hτ hτT B Y t x) +
         (-(2*⟪(D.tail τ hτ.le hτT).normal.field t x.1,
           (D.tail τ hτ.le hτT).M.field t x.1 (futureVelocity τ hτ hτT B Y t x)⟫_ℝ)/
           ‖(D.tail τ hτ.le hτT).normal.field t x.1‖^2) •
@@ -130,8 +143,8 @@ theorem future_balance_ae (t : Icc (0 : ℝ) (D.T-τ)) :
     (fun t x => Df.M.field t x) (fun t x => Df.normal.field t x)
     (HistoryData.normal_ne_zero (D := Df)) Df.frame_tangent Df.frame_range Df.frame_strain t
   filter_upwards [hh,Lp.coeFn_zero Space 2 (liftMeasure P)] with x hx hz
-  change futureDerivative τ hτ hτT B Y t x+Df.M.field t x.1 (futureVelocity τ hτ hτT B Y t x)+
-    ((⟪Df.normal.field t x.1,(0 : LiftL2 P) x⟫_ℝ-
+  change futureDerivative τ hτ hτT B Y t x+Df.M.field t x.1 (futureVelocity τ hτ hτT B Y t x) +
+    ((⟪Df.normal.field t x.1,(0 : LiftL2 P) x⟫_ℝ -
       2*⟪Df.normal.field t x.1,Df.M.field t x.1 (futureVelocity τ hτ hτT B Y t x)⟫_ℝ)/
       ‖Df.normal.field t x.1‖^2) • Df.normal.field t x.1 = (0 : LiftL2 P) x at hx
   simpa only [hz,Pi.zero_apply,inner_zero_right,zero_sub] using hx
@@ -155,7 +168,7 @@ theorem pastVelocity_time (t : Icc (0 : ℝ) τ) :
       (pastDerivative τ hτ hτT B Y t) (Icc (0 : ℝ) τ) t :=
   EulerTransversePacketEndpoint.velocityPath_time B (endpointData τ hτ hτT Y) t
 
-theorem futureVelocity_time (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem futureVelocity_time (t : Icc (0 : ℝ) (D.T - τ)) :
     HasDerivWithinAt (extendPath (D.T-τ) (sub_pos.mpr hτT).le (futureVelocity τ hτ hτT B Y))
       (futureDerivative τ hτ hτT B Y t) (Icc (0 : ℝ) (D.T-τ)) t :=
   (zeroForcing (D.tail τ hτ.le hτT)).vectorField_time (forwardInitial τ hτ hτT B Y) t

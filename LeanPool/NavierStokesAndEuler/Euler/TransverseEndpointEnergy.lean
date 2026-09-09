@@ -10,14 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.DirichletEndpointReduction
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalInverse
 
-@[expose] public section
-
 /-!
 The actual endpoint energy in the activation argument.  Paths are genuine
 initial-zero Bochner H¹ paths, and the zero-terminal correction is solved in
 the existing closed transverse derivative space.  Symmetry, positivity and
 minimum energy are conclusions of the construction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

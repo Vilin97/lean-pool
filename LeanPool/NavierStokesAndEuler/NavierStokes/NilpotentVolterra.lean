@@ -6,21 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Topology.ContinuousMap.Compact
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraAnalyticBounds
-
-@[expose] public section
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Regular Volterra inverses and the sparse parameter-derivative system
@@ -30,6 +18,9 @@ is proved directly, without interpreting the singular differential expression
 by division by zero. The analytic word estimates are supplied separately by
 `VolterraAnalyticBounds`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -161,7 +152,7 @@ theorem regularPrimitive_hasDerivAt [CompleteSpace E] (c : ℕ)
         rw [sub_smul, one_smul, mul_smul]
       _ = _ := by
         congr 1
-        field_simp ; ring
+        field_simp; ring
   · exact regularPrimitive_hasDerivAt_ne_zero c hf hξ
 
 theorem regularPrimitive_equation [CompleteSpace E] (c : ℕ)
@@ -185,8 +176,10 @@ abbrev Vec := Fin 6 → ℂ
 /-- Continuous paths on the full fixed radial interval. -/
 abbrev Path (R : ℝ) := C(Icc (0 : ℝ) R, Vec)
 
+/-- Coefficient path: an abbreviation for `C(Icc (0 : ℝ) R, Vec →L[ℂ] Vec)`. -/
 abbrev CoefficientPath (R : ℝ) := C(Icc (0 : ℝ) R, Vec →L[ℂ] Vec)
 
+/-- Extend path, given by `f (projIcc 0 R hR ξ)`. -/
 def extendPath {R : ℝ} (hR : 0 ≤ R) (f : Path R) (ξ : ℝ) : Vec :=
   f (projIcc 0 R hR ξ)
 
@@ -197,6 +190,7 @@ theorem extendPath_continuous {R : ℝ} (hR : 0 ≤ R) (f : Path R) :
 theorem extendPath_apply {R : ℝ} (hR : 0 ≤ R) (f : Path R) (ξ : Icc (0 : ℝ) R) :
     extendPath hR f ξ = f ξ := by simp only [extendPath, projIcc_val]
 
+/-- Path inverse value as an element of `Path R`. -/
 def pathInverseValue {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ) (f : Path R) : Path R :=
   ⟨fun ξ i => regularPrimitive (c i) (fun s => extendPath hR f s i) ξ,
     continuous_pi fun i =>
@@ -249,6 +243,8 @@ theorem pathInverse_apply {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     pathInverse hR c f ξ i =
       (ξ : ℝ) • ∫ t in (0 : ℝ)..1, (t ^ c i) • extendPath hR f (t * ξ) i := rfl
 
+/-- Coefficient action value, given by `⟨fun ξ => A ξ (f ξ), A.continuous.clm_apply
+f.continuous⟩`. -/
 noncomputable def coefficientActionValue {R : ℝ} (A : CoefficientPath R) (f : Path R) : Path R :=
   ⟨fun ξ => A ξ (f ξ), A.continuous.clm_apply f.continuous⟩
 
@@ -260,6 +256,8 @@ theorem norm_coefficientActionValue_le {R : ℝ} (A : CoefficientPath R) (f : Pa
     (mul_le_mul (A.norm_coe_le_norm ξ) (f.norm_coe_le_norm ξ)
       (norm_nonneg _) (norm_nonneg _))
 
+/-- Coefficient action linear, bundling `toFun`, `toFun`, `map_add`, `map_smul` and the required
+compatibility proofs. -/
 def coefficientActionLinear {R : ℝ} : CoefficientPath R →ₗ[ℂ] Path R →ₗ[ℂ] Path R where
   toFun A := {
     toFun := coefficientActionValue A
@@ -280,11 +278,14 @@ def coefficientAction {R : ℝ} : CoefficientPath R →L[ℂ] Path R →L[ℂ] P
 theorem coefficientAction_apply {R : ℝ} (A : CoefficientPath R) (f : Path R)
     (ξ : Icc (0 : ℝ) R) : coefficientAction A f ξ = A ξ (f ξ) := rfl
 
+/-- Path letter, defined pointwise by `pathInverse hR c (if b then coefficientAction (A₁ z)
+(deriv F z) else coefficientAction (A₀ z) (F z))`. -/
 def pathLetter {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (A₀ A₁ : ℂ → CoefficientPath R) (b : Bool) (F : ℂ → Path R) : ℂ → Path R :=
   fun z => pathInverse hR c
     (if b then coefficientAction (A₁ z) (deriv F z) else coefficientAction (A₀ z) (F z))
 
+/-- Path word as an element of `w, F => pathLetter hR c A₀ A₁ b (pathWord hR c A₀ A₁ w F)`. -/
 def pathWord {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (A₀ A₁ : ℂ → CoefficientPath R) : List Bool → (ℂ → Path R) → ℂ → Path R
   | [], F => F
@@ -314,6 +315,7 @@ theorem pathWord_holomorphic {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
   | nil => exact hF
   | cons b w ih => exact pathLetter_holomorphic hR c hU hA₀ hA₁ ih b
 
+/-- Path evaluation, given by `(ContinuousLinearMap.proj i).comp (ContinuousMap.evalCLM ℂ ξ)`. -/
 def pathEvaluation {R : ℝ} (ξ : Icc (0 : ℝ) R) (i : Fin 6) : Path R →L[ℂ] ℂ :=
   (ContinuousLinearMap.proj i).comp (ContinuousMap.evalCLM ℂ ξ)
 
@@ -326,9 +328,12 @@ theorem pathEvaluation_deriv {R : ℝ} {F : ℂ → Path R} {z : ℂ}
     deriv (fun w => F w ξ i) z = deriv F z ξ i := by
   exact ((pathEvaluation ξ i).hasFDerivAt.comp_hasDerivAt z hF.hasDerivAt).deriv
 
+/-- Raw field, defined pointwise by `extendPath hR (F z) r`. -/
 def rawField {R : ℝ} (hR : 0 ≤ R) (F : ℂ → Path R) : VolterraAnalyticBounds.Field :=
   fun r z => extendPath hR (F z) r
 
+/-- Raw coefficient, defined pointwise by `LinearMap.toMatrix' (A z (projIcc 0 R hR
+r)).toLinearMap`. -/
 def rawCoefficient {R : ℝ} (hR : 0 ≤ R) (A : ℂ → CoefficientPath R) :
     VolterraAnalyticBounds.Coeff :=
   fun r z => LinearMap.toMatrix' (A z (projIcc 0 R hR r)).toLinearMap
@@ -436,6 +441,8 @@ theorem raw_word_analytic {R : ℝ} (hR : 0 ≤ R)
     exact congrFun (rawField_pathWord hR hU hA₀ hA₁ hF w hr hz) i
   exact (hraw.analyticOnNhd hU).mono hDisk
 
+/-- Binary words as an element of `ℕ → List (List Bool) | 0 => [[]] | k + 1 => (binaryWords
+k).map (List.cons false) ++ (binaryWords k).map (List.cons true)`. -/
 def binaryWords : ℕ → List (List Bool)
   | 0 => [[]]
   | k + 1 => (binaryWords k).map (List.cons false) ++ (binaryWords k).map (List.cons true)
@@ -458,8 +465,8 @@ theorem list_sum_eval {X E : Type*} [AddCommMonoid E] (l : List (X → E)) (x : 
     l.sum x = (l.map (fun f => f x)).sum := by
   induction l with
   | nil => rfl
-  | cons f l ih => simpa only [List.sum_cons, List.map_cons, Pi.add_apply] using congrArg (f x + ·)
-    ih
+  | cons f l ih =>
+      simpa only [List.sum_cons, List.map_cons, Pi.add_apply] using congrArg (f x + ·) ih
 
 theorem norm_list_sum_le {E : Type*} [SeminormedAddCommGroup E]
     (l : List E) (M : ℝ) (h : ∀ x ∈ l, ‖x‖ ≤ M) :
@@ -472,7 +479,7 @@ theorem norm_list_sum_le {E : Type*} [SeminormedAddCommGroup E]
         ‖x + l.sum‖ ≤ ‖x‖ + ‖l.sum‖ := norm_add_le _ _
         _ ≤ M + (l.length : ℝ) * M :=
           add_le_add (h x (List.mem_cons_self ..)) (ih (fun y hy => h y (List.mem_cons_of_mem _
-            hy)))
+              hy)))
         _ = _ := by ring
 
 theorem holomorphic_list_sum {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
@@ -483,6 +490,7 @@ theorem holomorphic_list_sum {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ
   | cons f l ih =>
       exact (h f (List.mem_cons_self ..)).add (ih (fun g hg => h g (List.mem_cons_of_mem _ hg)))
 
+/-- Layer, given by `((binaryWords k).map (fun w => pathWord hR c A₀ A₁ w F)).sum`. -/
 def layer {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (A₀ A₁ : ℂ → CoefficientPath R) (F : ℂ → Path R) (k : ℕ) : ℂ → Path R :=
   ((binaryWords k).map (fun w => pathWord hR c A₀ A₁ w F)).sum
@@ -621,6 +629,8 @@ theorem layer_bound {R : ℝ} (hR : 0 ≤ R)
   · simp only [List.length_map, binaryWords_length, Nat.cast_pow, Nat.cast_ofNat]
     ring
 
+/-- Solution series, defined pointwise by `∑' k : ℕ, layer hR VolterraAnalyticBounds.exponent A₀
+A₁ F k z`. -/
 def solutionSeries {R : ℝ} (hR : 0 ≤ R)
     (A₀ A₁ : ℂ → CoefficientPath R) (F : ℂ → Path R) : ℂ → Path R :=
   fun z => ∑' k : ℕ, layer hR VolterraAnalyticBounds.exponent A₀ A₁ F k z
@@ -647,8 +657,8 @@ theorem solutionSeries_hasSum {z : ℂ} (hz : z ∈ Metric.closedBall center ρ)
   apply Summable.of_norm_bounded
     (VolterraAnalyticBounds.summable_wordLayers (mul_nonneg hM hR)
       (le_trans zero_le_one (le_max_left _ _)))
-  intro k
-  exact layer_bound hR hU hA₀ hA₁ hF hDisk hgap hB hM hshape hbA₀ hbA₁ hbF k hz
+  · intro k
+    exact layer_bound hR hU hA₀ hA₁ hF hDisk hgap hB hM hshape hbA₀ hbA₁ hbF k hz
 
 /-- The infinite series is a holomorphic map into the space of actual
 continuous radial paths, with no smallness restriction on the coefficients. -/
@@ -756,6 +766,8 @@ theorem integralSolution_spec {R : ℝ} (hR : 0 ≤ R)
   simp only [map_add] at he ⊢
   exact he
 
+/-- Rhs path, given by `f z + (coefficientAction (A₀ z) (W z) + coefficientAction (A₁ z) (deriv
+W z))`. -/
 def rhsPath {R : ℝ} (A₀ A₁ : ℂ → CoefficientPath R) (f W : ℂ → Path R) (z : ℂ) : Path R :=
   f z + (coefficientAction (A₀ z) (W z) + coefficientAction (A₁ z) (deriv W z))
 
@@ -795,11 +807,13 @@ theorem liftedField_eq_trace {R : ℝ} (hR : 0 ≤ R)
   rw [hW, projIcc_of_mem hR hr]
   rfl
 
+/-- Equation RHS as an element of `VolterraAnalyticBounds.Field`. -/
 def equationRHS (A₀ A₁ : VolterraAnalyticBounds.Coeff)
     (f W : VolterraAnalyticBounds.Field) : VolterraAnalyticBounds.Field :=
   fun r z => f r z + (VolterraAnalyticBounds.matrixAction A₀ W r z +
     VolterraAnalyticBounds.matrixAction A₁ (VolterraAnalyticBounds.parameterDeriv W) r z)
 
+/-- Radial derivative, defined pointwise by `deriv (fun s : ℝ => W s z i) r`. -/
 def radialDeriv (W : VolterraAnalyticBounds.Field) : VolterraAnalyticBounds.Field :=
   fun r z i => deriv (fun s : ℝ => W s z i) r
 

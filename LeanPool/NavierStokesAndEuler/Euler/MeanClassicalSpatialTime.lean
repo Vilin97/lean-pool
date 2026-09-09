@@ -6,10 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPhysical
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathTimeDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalTime
+public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousVelocity
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
+import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPhysical
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathTimeDerivative
+import LeanPool.NavierStokesAndEuler.Euler.MeanPhysicalTranslation
 
 /-!
 # Classical spatial representatives of the actual mean time evolution
@@ -19,6 +22,9 @@ spatial translation orbits. The bounded time-integral identity commutes
 with those spatial derivatives, giving genuine jointly continuous spatial
 representatives and their pointwise classical time derivative.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,7 +37,7 @@ open scoped ContDiff
 /-- Actual smooth representatives of a continuous L² path and its genuine
 continuous derivative, with no separate mixed-derivative hypothesis. -/
 theorem exists_classical_pair (T : ℝ) (hT : 0 ≤ T)
-    (p q : C(Icc (0 : ℝ) T,L2))
+    (p q : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (hq : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a q))
     (hder : ∀ t : Icc (0 : ℝ) T,
@@ -65,12 +71,12 @@ open Set MeasureTheory EulerSmoothLimit EulerMeanSolenoidal
 open scoped ContDiff
 
 variable {T : ℝ} {hT : 0 ≤ T}
-  {FInv F F₁ : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)}
+  {FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)}
   {A : L2 →L[ℝ] L2} {L : ℝ} {u f : TimeLp T L2}
   (s : StrongMeanEvolution T hT FInv F F₁ A L u f)
   (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
-  (fC : C(Icc (0 : ℝ) T,L2))
+  (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
+  (fC : C(Icc (0 : ℝ) T, L2))
 
 /-- The reconstructed velocity path has its actual continuous derivative
 at every time, including within-interval endpoint derivatives. -/

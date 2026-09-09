@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramPath
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Coefficient identities in the strong transverse equation
@@ -17,6 +16,9 @@ The only cancellation used here is the source frame equation `Q_tt = -H Q`.
 The time derivatives of the Gram and mixed coefficients are genuine derivatives
 of the prescribed coefficient paths.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

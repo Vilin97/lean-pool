@@ -6,16 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryEquation
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradient
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldSupport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPaths
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryEquation
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryParity
 
 /-! Canonical raw fields for the actual terminal-history/forward primary
 solution, with genuine time derivative, support, mean and tangent constraints. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,23 +38,31 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D)
 
+/-- Vector, defined pointwise by `pointField P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ
+hτ hτT B Y) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def vector : VectorField := fun z =>
   pointField P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Vector derivative, defined pointwise by `pointField P (derivativePath τ hτ hτT B Y)
+(derivativePath_orbit τ hτ hτT B Y) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def vectorDerivative : VectorField := fun z =>
   pointField P (derivativePath τ hτ hτT B Y) (derivativePath_orbit τ hτ hτT B Y)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Scalar, defined pointwise by `scalarPointField P (pressurePath τ hτ hτT B Y)
+(pressurePath_orbit τ hτ hτT B Y) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def scalar : ScalarField := fun z =>
   scalarPointField P (pressurePath τ hτ hτT B Y) (pressurePath_orbit τ hτ hτT B Y)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Vector field, bundling `path`, `orbit`, `raw_eq`. -/
 def vectorField : Field P D.T (vector τ hτ hτT B Y) where
   path := velocityPath τ hτ hτT B Y
   orbit := velocityPath_orbit τ hτ hτT B Y
   raw_eq t x θ := by simp only [vector,Data.clamp_coe]
 
+/-- Vector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
 def vectorDerivativeField : Field P D.T (vectorDerivative τ hτ hτT B Y) where
   path := derivativePath τ hτ hτT B Y
   orbit := derivativePath_orbit τ hτ hτT B Y
@@ -69,6 +82,7 @@ theorem scalar_eq_pointField (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       scalarPointField P (pressurePath τ hτ hτT B Y) (pressurePath_orbit τ hτ hτT B Y)
         t (x,(θ : AddCircle P)) := by simp only [scalar,Data.clamp_coe]
 
+/-- Scalar gradient field, constructed using `EulerPacketCylinderField.scalarGradientField`. -/
 def scalarGradientField : Field P D.T (pressureGradient (scalar τ hτ hτT B Y)) :=
   EulerPacketCylinderField.scalarGradientField (scalar τ hτ hτT B Y)
     (pressurePath τ hτ hτT B Y) (pressurePath_orbit τ hτ hτT B Y)

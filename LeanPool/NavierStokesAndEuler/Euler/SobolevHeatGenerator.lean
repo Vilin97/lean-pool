@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderHeatLaplacian
 public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeat
+import Mathlib.Algebra.Order.Star.Real
+
+/-! A bounded actual Laplacian evaluation and the genuine heat generator on finite Sobolev data. -/
 
 @[expose] public section
 
-/-! A bounded actual Laplacian evaluation and the genuine heat generator on finite Sobolev data. -/
 
 noncomputable section
 
@@ -67,7 +69,8 @@ theorem laplacianEvaluation_heat {q : ℕ} (hq : 2 ≤ q) (v : ℝ≥0) (u : Sob
   intro i _
   rfl
 
-/-- Actual viscous heat on the complete Sobolev space, extended constantly to negative physical time. -/
+/-- Actual viscous heat on the complete Sobolev space, extended constantly to negative physical
+time. -/
 def heatFlow (q : ℕ) (ν t : ℝ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   heatOperator period q (2 * ν * t).toNNReal
 
@@ -82,19 +85,20 @@ theorem heatFlow_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 <
     HasDerivAt (fun s => value period (heatFlow period q ν s u))
       (ν • laplacianEvaluation period q hq (heatFlow period q ν t u)) t := by
   have h := viscousCylinderHeat_equation period (EulerH6Pressure.SpatialJet.restrict (toJet period
-    u) 2 hq) hν ht
+      u) 2 hq) hν ht
   rw [cylinderHeatJet_laplacian, ← laplacianEvaluation_eq_jet period hq u] at h
   change HasDerivAt (fun s => viscousCylinderHeat period ν s (value period u))
     (ν • laplacianEvaluation period q hq (heatOperator period q (2 * ν * t).toNNReal u)) t
   rw [laplacianEvaluation_heat]
   exact h
 
-/-- The actual L² heat orbit has the half-Laplacian derivative on the nonnegative variance half-line. -/
+/-- The actual L² heat orbit has the half-Laplacian derivative on the nonnegative variance
+half-line. -/
 theorem realHeat_value_hasDerivWithinAt {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace period q)
     (t : ℝ) (ht : 0 ≤ t) :
     HasDerivWithinAt (fun s => realCylinderHeat period s (value period u))
       ((1 / 2 : ℝ) • realCylinderHeat period t (laplacianEvaluation period q hq u)) (Set.Ici 0) t
-        := by
+          := by
   let J := EulerH6Pressure.SpatialJet.restrict (toJet period u) 2 hq
   by_cases hzero : t = 0
   · subst t
@@ -109,7 +113,7 @@ theorem realHeat_value_hasDerivWithinAt {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpa
 /-- The heat orbit is Lipschitz in nonnegative variance with a bound from the actual Hq norm. -/
 theorem heat_value_lipschitz {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace period q) :
     LipschitzWith (Real.nnabs (2 * ‖u‖)) (fun v : ℝ≥0 => cylinderHeat period v (value period u)) :=
-      by
+        by
   apply LipschitzWith.of_dist_le_mul
   intro v w
   have hb : ∀ t ∈ Set.Ici (0 : ℝ),
@@ -117,7 +121,7 @@ theorem heat_value_lipschitz {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace period q
     intro t _
     rw [norm_smul, Real.norm_of_nonneg (by norm_num : (0 : ℝ) ≤ 1 / 2)]
     have h := (cylinderHeat_norm_le period t.toNNReal _).trans (laplacianEvaluation_bound period hq
-      u)
+        u)
     change (1 / 2 : ℝ) * ‖cylinderHeat period t.toNNReal (laplacianEvaluation period q hq u)‖ ≤ _
     linarith
   have h := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
@@ -131,7 +135,7 @@ theorem heat_value_lipschitz {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace period q
 /-- The constantly extended real-variance heat orbit is globally Lipschitz in L². -/
 theorem realHeat_value_lipschitz {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace period q) :
     LipschitzWith (Real.nnabs (2 * ‖u‖)) (fun t : ℝ => realCylinderHeat period t (value period u))
-      := by
+        := by
   simpa only [mul_one, Function.comp_def, realCylinderHeat] using
     (heat_value_lipschitz period hq u).comp Real.lipschitzWith_toNNReal
 

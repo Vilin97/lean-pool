@@ -7,8 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedCurl
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaAlgebra
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketPiola
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-!
 The curl Piola identity on the actual periodic cylinder.  The Jacobian acts
@@ -17,6 +20,9 @@ curl by symmetry of the genuine second derivative; the angular component
 passes through unchanged.  This supplies an actual element of the closed
 lifted divergence-free L² space from a compact smooth packet potential.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,16 +34,23 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanBoundary
   EulerLiftedWeakDerivative EulerTransverseGramInverse
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketLiftedPiola1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketLiftedPiola2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 theorem realAdjoint_apply (A : Space →L[ℝ] Space) :
     realAdjoint A = A.adjoint := rfl
 
+/-- Covering curl, given by `curlMatrix ((fderiv ℝ q z).comp (EulerGraphPullback.liftedDirection
+κ m))`. -/
 def coveringCurl (κ : ℝ) (m : Space) (q : LiftTangent → Space)
     (z : LiftTangent) : Space :=
   curlMatrix ((fderiv ℝ q z).comp (EulerGraphPullback.liftedDirection κ m))
 
+/-- Covering pullback covector, given by `(fderiv ℝ Ξ z.1).adjoint (q z)`. -/
 def coveringPullbackCovector (Ξ : Space → Space) (q : LiftTangent → Space)
     (z : LiftTangent) : Space :=
   (fderiv ℝ Ξ z.1).adjoint (q z)
@@ -95,10 +108,13 @@ theorem covering_piola_curl (κ : ℝ) (m : Space) (Ξ : Space → Space)
 
 variable (period : ℝ)
 
+/-- Lifted pullback covector, given by `(fderiv ℝ Ξ x.1).adjoint (Q x)`. -/
 def liftedPullbackCovector (Ξ : Space → Space) (Q : LiftDomain period → Space)
     (x : LiftDomain period) : Space :=
   (fderiv ℝ Ξ x.1).adjoint (Q x)
 
+/-- Transformed lifted curl, given by `curlMatrix ((fieldFDeriv period Q x).comp
+((EulerGraphPullback.liftedDirection κ m).comp (F x.1).symm.toContinuousLinearMap))`. -/
 def transformedLiftedCurl (κ : ℝ) (m : Space)
     (F : Space → Space ≃L[ℝ] Space) (Q : LiftDomain period → Space)
     (x : LiftDomain period) : Space :=

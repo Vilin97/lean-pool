@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneCorrectionExtensions
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CyclePhysicalPrefixes
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
-
-@[expose] public section
 
 /-!
 # Actual Cartesian curls of the mean stream potentials
@@ -20,6 +17,9 @@ The azimuthal potential carries the scale velocity/radialScale. Its genuine
 Cartesian curl is the meridional stream pair in the same physical graph.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualMeanPotentialRealization
@@ -27,20 +27,28 @@ namespace NavierStokes.ActualMeanPotentialRealization
 open Set Filter Function ProblemStatement HarmonicCalculus
 open scoped ContDiff Topology BigOperators
 
+/-- Point: an abbreviation for `PhysicalResidualTZ.Lift`. -/
 abbrev Point := PhysicalResidualTZ.Lift
+/-- Cylinder: an abbreviation for `PhysicalResidualTZ.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualTZ.Cylinder
+/-- Scaled graph: an abbreviation for `PhysicalResidualBridge.ScaledGraph`. -/
 abbrev ScaledGraph := PhysicalResidualBridge.ScaledGraph
 
+/-- Axial, given by `((0, 1), 0)`. -/
 noncomputable def axial : (ℝ × ℝ) × (ℝ × ℝ) := ((0, 1), 0)
 
+/-- Chart point, given by `(PhysicalResidualTZ.graphMapTZ G z).1`. -/
 noncomputable def chartPoint (G : ScaledGraph) (z : SpaceTime) : Point :=
   (PhysicalResidualTZ.graphMapTZ G z).1
 
+/-- Meridional as an element of `Fin 3 → ℝ`. -/
 noncomputable def meridional (G : ScaledGraph) (Ψ : Point → ℝ) (x : Cylinder) : Fin 3 → ℝ :=
   ![PressureStream.streamBeta (G.epsilon • axial) Ψ x.1, 0,
     PressureStream.streamGamma (PressureStream.physicalSpeed G.exponent G.frequency)
       ((0 : ℝ × ℝ), G.radialVector) Ψ x.1]
 
+/-- Component potential, given by `AxisymmetricResidual.pack 0 ((G.velocityScale /
+G.radialScale) * Ψ (chartPoint G z)) 0`. -/
 noncomputable def componentPotential (G : ScaledGraph) (Ψ : Point → ℝ) (z : SpaceTime) : Space :=
   AxisymmetricResidual.pack 0 ((G.velocityScale / G.radialScale) * Ψ (chartPoint G z)) 0
 
@@ -60,7 +68,7 @@ theorem chartPoint_fderiv (G : ScaledGraph) {z : SpaceTime}
   have hd := PhysicalResidualTZ.swapSlow.toContinuousLinearEquiv.hasFDerivAt.comp z
     (((G.map_smoothAt hr).differentiableAt (by simp)).hasFDerivAt.fst)
   change fderiv ℝ (PhysicalResidualTZ.swapSlow.toContinuousLinearEquiv ∘ fun p => (G.map p).1) z w
-    = _
+      = _
   rw [hd.fderiv]
   rfl
 
@@ -95,7 +103,7 @@ theorem scalar_radial (G : ScaledGraph) (hl : 0 < G.radialScale) {z : SpaceTime}
         (PressureStream.physicalSpeed G.exponent G.frequency)
         ((0 : ℝ × ℝ), G.radialVector) Ψ (chartPoint G z) := by
   have he := PhysicalResidualBridge.along_scaled_pull (G.velocityScale / G.radialScale)
-    G.radialScale
+      G.radialScale
     ((chartPoint_smoothAt G (mul_pos hl hr).ne').differentiableAt (by simp)) hΨ
     (chartPoint_radial G (mul_pos hl hr).ne')
   simpa only [div_mul_cancel₀ _ hl.ne', along, PressureStream.graphDr] using he
@@ -130,20 +138,23 @@ theorem componentPotential_realCurl (G : ScaledGraph) (hl : 0 < G.radialScale) {
       (LinearWaveResidual.spaceDirection 2) (fun p i => componentPotential G Ψ p i) z i =
       G.velocityScale * meridional G Ψ (PhysicalResidualTZ.graphMapTZ G z) i := by
   have h0 (k : Fin 3) : along (LinearWaveResidual.spaceDirection k) (fun _ : SpaceTime => (0 : ℝ))
-    z = 0 := by
+      z = 0 := by
     simp [along]
   have hR := scalar_radial G hl hr hΨ
   have hZ := scalar_axial G hl hr hΨ
-  fin_cases i <;> simp [PhysicalCurlCovariance.realCurl, componentPotential,
-    AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, AxisymmetricResidual.pack_two,
-    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, h0, hR, hZ,
-    meridional, PressureStream.streamBeta, PressureStream.streamGamma,
-    PressureStream.divideRadius, LinearWaveResidual.coordinateRadius,
-    mul_zero, zero_sub, sub_zero]
+  fin_cases i <;> simp only [PhysicalCurlCovariance.realCurl, LinearWaveResidual.coordinateRadius,
+      Fin.isValue, componentPotential, AxisymmetricResidual.pack_two, h0, mul_zero,
+          AxisymmetricResidual.pack_one, hZ, zero_sub, AxisymmetricResidual.pack_zero, sub_self,
+              hR, sub_zero, Fin.zero_eta, Matrix.cons_val_zero, meridional,
+                  PressureStream.streamBeta, PressureStream.streamGamma,
+                      PressureStream.divideRadius, mul_neg, neg_inj, mul_eq_mul_left_iff,
+                          Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val_two,
+                              Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.tail_cons,
+                                  Matrix.head_cons]
   · exact Or.inl rfl
   · rw [show (PhysicalResidualTZ.graphMapTZ G z).1.1 = G.radialScale * z.2 0 from rfl]
     change G.velocityScale * _ + (z.2 0)⁻¹ * ((G.velocityScale / G.radialScale) * Ψ (chartPoint G
-      z)) = _
+        z)) = _
     field_simp [hl.ne', hr.ne']
     unfold chartPoint
     ring
@@ -184,7 +195,7 @@ theorem cartesianPotential_curl_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.
     (hΨ : ContDiffAt ℝ ∞ Ψ (chartPoint G z)) :
     SpatialCurl.spatialCurl (cartesianPotential a j G Ψ) (z.1, CylindricalResidual.chart z.2) =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G (meridional G
-        Ψ))
+          Ψ))
         (z.1, CylindricalResidual.chart z.2) := by
   have hrad := (mul_pos hl hz.1).ne'
   have hb := componentPotential_smoothAt G hrad hΨ
@@ -207,6 +218,8 @@ theorem cartesianPotential_curl_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.
 
 /-! ## Ordinary Cartesian chart domains -/
 
+/-- Cartesian domain, given by `PhysicalGraphBounds.radialProjection ⁻¹' PolarCharts.chartDomain
+a j`. -/
 noncomputable def cartesianDomain (a : ℝ) (j : PolarCharts.Index) : Set SpaceTime :=
   PhysicalGraphBounds.radialProjection ⁻¹' PolarCharts.chartDomain a j
 
@@ -216,7 +229,7 @@ theorem cartesianDomain_open (a : ℝ) (j : PolarCharts.Index) : IsOpen (cartesi
 theorem polarCoordinates_valid {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {w : SpaceTime}
     (hw : w ∈ cartesianDomain a j) :
     PhysicalCurlCovariance.polarCoordinates a j w ∈ PhysicalCurlCovariance.validCylindrical a j :=
-      by
+        by
   have hrot : 0 < (PolarCharts.rotate j (PhysicalGraphBounds.radialProjection w)).1 :=
     (by positivity : 0 < a / 4).trans hw
   have hr : 0 < PolarCharts.radius (PhysicalGraphBounds.radialProjection w) := by
@@ -227,12 +240,12 @@ theorem polarCoordinates_valid {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {w
       (PolarCharts.radius (PhysicalGraphBounds.radialProjection w),
         Real.arctan ((PolarCharts.rotate j (PhysicalGraphBounds.radialProjection w)).2 /
           (PolarCharts.rotate j (PhysicalGraphBounds.radialProjection w)).1) + PolarCharts.offset
-            j) := by
+              j) := by
     rw [PhysicalCurlCovariance.polarInput, PolarCharts.chart_eq_localChart ha j hw,
       PolarCharts.localChart_apply]
   refine ⟨?_, ?_, ?_⟩
   · simpa only [PhysicalCurlCovariance.polarCoordinates, hc, AxisymmetricResidual.pack_zero] using
-    hr
+      hr
   · simpa only [PhysicalCurlCovariance.polarCoordinates, hc, AxisymmetricResidual.pack_one,
       add_sub_cancel_right, Set.mem_Ioo] using
       And.intro (Real.neg_pi_div_two_lt_arctan _) (Real.arctan_lt_pi_div_two _)
@@ -252,12 +265,12 @@ theorem polarCoordinates_back {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {w 
     · simpa [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart,
         AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
         PhysicalCurlCovariance.polarInput, PolarCharts.polar,
-          PhysicalGraphBounds.radialProjection_apply]
+            PhysicalGraphBounds.radialProjection_apply]
         using congrArg Prod.fst hp
     · simpa [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart,
         AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
         PhysicalCurlCovariance.polarInput, PolarCharts.polar,
-          PhysicalGraphBounds.radialProjection_apply]
+            PhysicalGraphBounds.radialProjection_apply]
         using congrArg Prod.snd hp
     · simp [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart,
         AxisymmetricResidual.pack_two]
@@ -268,7 +281,7 @@ theorem cartesianPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (hΨ : ContDiffAt ℝ ∞ Ψ (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     SpatialCurl.spatialCurl (cartesianPotential a j G Ψ) w =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G (meridional G
-        Ψ)) w := by
+          Ψ)) w := by
   have ht := cartesianPotential_curl_forward ha j G hl (polarCoordinates_valid ha j hw) hΨ
   simpa only [polarCoordinates_back ha j hw] using ht
 
@@ -286,7 +299,7 @@ structure GaugeMatches (g : VariableGaugeMean.GaugeData (ℝ × ℝ))
 theorem similarityGauge_matches (h a b : ℝ) (hab : a < b) (index : ℕ → ℕ)
     (c : CorrectionState.Context Point) (n : ℕ) (hε : c.operators.epsilon n = ChartScales.Q n ^ h) :
     GaugeMatches (VariableGaugeMean.similarityGauge h (ChartScales.radialExponent h) a b 1 hab
-      index)
+        index)
       c (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (index n)) n := by
   refine ⟨hε, rfl, ?_, rfl⟩
   simp [VariableGaugeMean.similarityGauge, MeanChartCompatibility.radialFrequency,
@@ -303,7 +316,7 @@ theorem meridional_temporal (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (h : 
     VariableGaugeMean.temporalIncrementState, H.epsilon, H.exponent, H.frequency, H.radialVector]
 
 theorem meridional_rank (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (r : CorrectionState.RankData (ℝ
-  × ℝ))
+    × ℝ))
     (c : CorrectionState.Context Point) (u : CorrectionState.State Point)
     (G : ScaledGraph) (n : ℕ) (H : GaugeMatches g c G n) :
     meridional G (VariableGaugeMean.rankPotential g r c u n) =
@@ -321,7 +334,7 @@ theorem temporalPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (hΨ : ContDiffAt ℝ ∞ (VariableGaugeMean.temporalPotential g h index c u n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     SpatialCurl.spatialCurl (cartesianPotential a j G (VariableGaugeMean.temporalPotential g h
-      index c u n)) w =
+        index c u n)) w =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G
         (CyclePhysicalPrefixes.meridionalComponents
           (VariableGaugeMean.temporalIncrementState g h index axial c u) n)) w := by
@@ -335,10 +348,10 @@ theorem rankPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (hΨ : ContDiffAt ℝ ∞ (VariableGaugeMean.rankPotential g r c u n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     SpatialCurl.spatialCurl (cartesianPotential a j G (VariableGaugeMean.rankPotential g r c u n))
-      w =
+        w =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G
         (CyclePhysicalPrefixes.meridionalComponents (VariableGaugeMean.rankIncrementState g r axial
-          c u) n)) w := by
+            c u) n)) w := by
   rw [cartesianPotential_curl ha j G hl hw hΨ, meridional_rank g r c u G n H]
 
 /-! ## Identification with the coherent physical mean potential -/
@@ -352,7 +365,7 @@ theorem radius_forward {z : SpaceTime} (hr : 0 < z.2 0) :
     PhysicalClassBounds.cartesianRadius
       (PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart z.2)) = z.2 0 := by
   change PolarCharts.radius (PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart
-    z.2)) = _
+      z.2)) = _
   rw [projection_forward, PolarCharts.radius_polar, abs_of_pos hr]
 
 theorem physicalPoint_forward (h : ℝ) {z : SpaceTime} (hr : 0 < z.2 0) :
@@ -419,7 +432,7 @@ theorem bandAngularField_forward (h : ℝ) (n d : ℕ) (hd : d ≤ ChartScales.n
       (z.1, CylindricalResidual.chart z.2) =
       CylindricalResidual.frame (z.2 1) (componentPotential
         (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n - d))
-          Ψ z) := by
+            Ψ z) := by
   rw [PhysicalMeanJetBounds.bandAngularField, PhysicalMeanJetBounds.bandField,
     ← chartPoint_eq_graph_forward h n d hd hr, angularVector_forward hr,
     common_potential_units h n (ChartScales.nativeIndex h n - d)]
@@ -432,7 +445,7 @@ theorem bandAngularField_eq_cartesianPotential {a : ℝ} (ha : 0 < a) (j : Polar
     PhysicalMeanJetBounds.bandAngularField h n d (CoordinateAlgebra.A h - 1 / 2) Ψ w =
       cartesianPotential a j
         (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n - d))
-          Ψ w := by
+            Ψ w := by
   have hb := bandAngularField_forward h n d hd Ψ (polarCoordinates_valid ha j hw).1
   have hp := polar_forward ha j (componentPotential
     (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n - d)) Ψ)
@@ -445,7 +458,7 @@ theorem coherent_angularField_germ {a h : ℝ} (ha : 0 < a) (j : PolarCharts.Ind
     (D : PhysicalMeanJetBounds.CoherentFamily h (CoordinateAlgebra.A h - 1 / 2) N Δ U ℝ)
     (hU : IsOpen U) (n : ℕ) (hn : N ≤ n) {w : SpaceTime}
     (ht : w ∈ PhysicalWaveSum.preterminal) (hu : (PhysicalMeanJetBounds.graph h n (D.gap n) w).2.1
-      ∈ U)
+        ∈ U)
     (hw : w ∈ cartesianDomain a j) :
     D.angularField =ᶠ[𝓝 w] cartesianPotential a j
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
@@ -453,7 +466,7 @@ theorem coherent_angularField_germ {a h : ℝ} (ha : 0 < a) (j : PolarCharts.Ind
   apply (D.angularField_germ hU n hn ht hu).trans
   filter_upwards [(cartesianDomain_open a j).mem_nhds hw] with z hz
   exact bandAngularField_eq_cartesianPotential ha j h n (D.gap n) (D.gap_native n hn) (D.native n)
-    hz
+      hz
 
 /-- This is a curl identity for the coherent physical field itself, obtained
 from its proved value coherence and the actual Cartesian derivative. -/
@@ -462,14 +475,14 @@ theorem coherent_angularField_curl {a h : ℝ} (ha : 0 < a) (j : PolarCharts.Ind
     (D : PhysicalMeanJetBounds.CoherentFamily h (CoordinateAlgebra.A h - 1 / 2) N Δ U ℝ)
     (hU : IsOpen U) (n : ℕ) (hn : N ≤ n) {w : SpaceTime}
     (ht : w ∈ PhysicalWaveSum.preterminal) (hu : (PhysicalMeanJetBounds.graph h n (D.gap n) w).2.1
-      ∈ U)
+        ∈ U)
     (hw : w ∈ cartesianDomain a j)
     (hΨ : ContDiffAt ℝ ∞ (D.native n) (PhysicalMeanJetBounds.graph h n (D.gap n) w)) :
     SpatialCurl.spatialCurl D.angularField w =
       let G := PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n
-        - D.gap n)
+          - D.gap n)
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G (meridional G
-        (D.native n))) w := by
+          (D.native n))) w := by
   rw [PhysicalCurlCovariance.spatialCurl_congr (coherent_angularField_germ ha j D hU n hn ht hu hw)]
   apply cartesianPotential_curl ha j _ (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) hw
   rwa [chartPoint_eq_graph ha j h n (D.gap n) (D.gap_native n hn) hw]
@@ -539,7 +552,7 @@ theorem cartesianPotential_add_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Inde
 theorem meridionalComponents_updated (m t : MeanIncrementBounds.Triple Point) (n : ℕ) :
     CyclePhysicalPrefixes.meridionalComponents (MeanIncrementBounds.updated m t) n =
       CyclePhysicalPrefixes.meridionalComponents m n + CyclePhysicalPrefixes.meridionalComponents t
-        n := by
+          n := by
   funext x i
   fin_cases i <;> simp [CyclePhysicalPrefixes.meridionalComponents, MeanIncrementBounds.updated]
 
@@ -574,7 +587,7 @@ noncomputable def cycleMeanPotential {ι : Type} (p : CycleParameters ι)
     (a : ℝ) (j : PolarCharts.Index) (G : ScaledGraph) (n : ℕ) : VelocityField :=
   cartesianPotential a j G
     (VariableGaugeMean.temporalPotential p.gauge p.timeExponent p.commonIndex c (p.afterSigned v c
-      u) n) +
+        u) n) +
   cartesianPotential a j G
     (VariableGaugeMean.rankPotential p.gauge p.rank c (p.afterTemporal v c u) n)
 
@@ -584,30 +597,30 @@ theorem cycleMeanPotential_curl {ι : Type} (p : CycleParameters ι) (v : CycleC
     (hax : p.axial = axial) {w : SpaceTime} (hw : w ∈ cartesianDomain a j)
     (ht : ContDiffAt ℝ ∞
       (VariableGaugeMean.temporalPotential p.gauge p.timeExponent p.commonIndex c (p.afterSigned v
-        c u) n)
+          c u) n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w)))
     (hr : ContDiffAt ℝ ∞ (VariableGaugeMean.rankPotential p.gauge p.rank c (p.afterTemporal v c u)
-      n)
+        n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     SpatialCurl.spatialCurl (cycleMeanPotential p v c u a j G n) w =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G
         (CyclePhysicalPrefixes.meridionalComponents (p.temporalIncrement v c u) n +
           CyclePhysicalPrefixes.meridionalComponents (p.rankIncrement v c u) n)) w := by
   simpa only [cycleMeanPotential, CycleParameters.temporalIncrement, CycleParameters.rankIncrement,
-    hax]
+      hax]
     using temporal_rank_curl ha j p.gauge p.rank p.timeExponent p.commonIndex c
       (p.afterSigned v c u) (p.afterTemporal v c u) G hl n H hw ht hr
 
 theorem cycleMeanPotential_smoothAt {ι : Type} (p : CycleParameters ι) (v : CycleCoefficients ι)
     (c : Context Point) (u : State Point) {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (G : ScaledGraph) (hl : 0 < G.radialScale) (n : ℕ) {w : SpaceTime} (hw : w ∈ cartesianDomain a
-      j)
+        j)
     (ht : ContDiffAt ℝ ∞
       (VariableGaugeMean.temporalPotential p.gauge p.timeExponent p.commonIndex c (p.afterSigned v
-        c u) n)
+          c u) n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w)))
     (hr : ContDiffAt ℝ ∞ (VariableGaugeMean.rankPotential p.gauge p.rank c (p.afterTemporal v c u)
-      n)
+        n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     ContDiffAt ℝ ∞ (cycleMeanPotential p v c u a j G n) w :=
   (cartesianPotential_smoothAt ha j G (mul_pos hl (polarCoordinates_valid ha j hw).1).ne' ht).add
@@ -617,6 +630,7 @@ theorem cycleMeanPotential_smoothAt {ι : Type} (p : CycleParameters ι) (v : Cy
 
 open CorrectionInitialization CorrectionInitialization.GaugeInitialization
 
+/-- Initialized mean potential, constructed using `cartesianPotential`. -/
 noncomputable def initializedMeanPotential {ι : Type}
     (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (r : RankData (ℝ × ℝ))
     (h : ℝ) (index : ℕ → ℕ) (c : Context Point)
@@ -636,13 +650,13 @@ theorem initializedBands_mean {ι : Type}
     (initializedBands g r h index axial c labels pieces baseError).mean =
       MeanIncrementBounds.updated
         (VariableGaugeMean.temporalIncrementState g h index axial c (primaryBands g c labels pieces
-          baseError))
+            baseError))
         (VariableGaugeMean.rankIncrementState g r axial c
           (temporalBands g h index axial c labels pieces baseError)) := by
   change MeanIncrementBounds.updated
     (MeanIncrementBounds.updated ⟨0, 0, 0⟩
       (VariableGaugeMean.temporalIncrementState g h index axial c (primaryBands g c labels pieces
-        baseError)))
+          baseError)))
     (VariableGaugeMean.rankIncrementState g r axial c
       (temporalBands g h index axial c labels pieces baseError)) = _
   simp only [MeanIncrementBounds.updated, zero_add]
@@ -663,7 +677,7 @@ theorem initializedMeanPotential_curl {ι : Type}
       (temporalBands g h index axial c labels pieces baseError) n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     SpatialCurl.spatialCurl (initializedMeanPotential g r h index c labels pieces baseError a j G
-      n) w =
+        n) w =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G
         (CyclePhysicalPrefixes.meridionalComponents
           (initializedBands g r h index axial c labels pieces baseError).mean n)) w := by
@@ -672,6 +686,7 @@ theorem initializedMeanPotential_curl {ι : Type}
 
 /-! ## Finite prefixes of the literal iteration -/
 
+/-- Mean increment components, constructed using `CyclePhysicalPrefixes.meridionalComponents`. -/
 noncomputable def meanIncrementComponents {ι : Type} (p : CycleParameters ι)
     (v : CycleCoefficients ι) (c : Context Point) (u : State Point) (n : ℕ) :
     CyclePhysicalPrefixes.Components :=
@@ -691,13 +706,13 @@ theorem meridionalComponents_iterate {ι : Type} (p : ℕ → CycleParameters ι
       CyclePhysicalPrefixes.meridionalComponents seed.state.mean n +
         ∑ k ∈ Finset.range J, meanIncrementComponents (p k)
           (CycleState.iterate p c seed k).coefficients c (CycleState.iterate p c seed k).state n :=
-            by
+              by
   induction J with
   | zero => simp only [CycleState.iterate_zero, Finset.range_zero, Finset.sum_empty, add_zero]
   | succ J ih =>
       change CyclePhysicalPrefixes.meridionalComponents
         ((p J).next (CycleState.iterate p c seed J).coefficients c (CycleState.iterate p c seed
-          J).state).mean n = _
+            J).state).mean n = _
       rw [meridionalComponents_next, ih, Finset.sum_range_succ, add_assoc]
 
 /-- The finite sum is evaluated on the actual successive cycle states. -/
@@ -715,12 +730,12 @@ theorem cycleMeanPrefix_curl {ι : Type} (p : ℕ → CycleParameters ι)
     (ht : ∀ k < J, ContDiffAt ℝ ∞
       (VariableGaugeMean.temporalPotential (p k).gauge (p k).timeExponent (p k).commonIndex c
         ((p k).afterSigned (CycleState.iterate p c seed k).coefficients c (CycleState.iterate p c
-          seed k).state) n)
+            seed k).state) n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w)))
     (hr : ∀ k < J, ContDiffAt ℝ ∞
       (VariableGaugeMean.rankPotential (p k).gauge (p k).rank c
         ((p k).afterTemporal (CycleState.iterate p c seed k).coefficients c (CycleState.iterate p c
-          seed k).state) n)
+            seed k).state) n)
       (chartPoint G (PhysicalCurlCovariance.polarCoordinates a j w))) :
     SpatialCurl.spatialCurl (cycleMeanPrefix p c seed a j G n J) w =
       CyclePhysicalPrefixes.polarVelocityMap a j (CyclePhysicalPrefixes.velocityMap G

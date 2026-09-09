@@ -6,13 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedStrong
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramInverse
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramAcceleration
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSpaceInverse
+import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedStrong
 
 /-!
 # Continuous coordinate velocity of the actual fixed Dirichlet inverse
@@ -21,6 +18,9 @@ The acceleration is constructed by the true Gram inverse. The weak solve
 proves it is the derivative of the solved coordinate velocity; bounded H¹
 reconstruction then supplies the actual continuous history path.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,24 +37,28 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T)
-  (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+  (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
-  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v,v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
+/-- Velocity Lᵖ, given by `(zeroTraceDerivatives (U := U) T hT).subtypeL.comp (fixedFrameSolver
+T hT Q Q₁ H c hc hQ hd K hK hH hsmall)`. -/
 def velocityLp : TimeLp T E →L[ℝ] TimeLp T U :=
   (zeroTraceDerivatives (U := U) T hT).subtypeL.comp
     (fixedFrameSolver T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
+/-- Acceleration Lᵖ as an element of `TimeLp T E →L[ℝ] TimeLp T U`. -/
 def accelerationLp : TimeLp T E →L[ℝ] TimeLp T U :=
   (gramSolver T hT Q c hc hQ).comp ((timeMultiplier T hT Q).adjoint.comp
     (ContinuousLinearMap.id ℝ (TimeLp T E)-(2 : ℝ) • (timeMultiplier T hT Q₁).comp
       (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)))
 
+/-- Velocity path as an element of `TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U)`. -/
 def velocityPath : TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U) :=
-  (valuePart T hT).comp (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)+
+  (valuePart T hT).comp (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall) +
     (derivativePart T hT).comp (accelerationLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
 theorem velocityLp_zero_trace (f : TimeLp T E) :
@@ -90,7 +94,7 @@ theorem accelerationLp_equation (f : TimeLp T E) :
   rw [ht]
   exact gram_inverse_apply _ c hc (hQ (projIcc 0 T hT t)) _
 
-variable (Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
+variable (Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (hd₁ : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q₁) (Q₂ t) (Icc (0 : ℝ) T) t)
   (hframe : ∀ t, Q₂ t = -((H t).comp (Q t)))
@@ -128,7 +132,7 @@ theorem velocityPath_ae (hTpos : 0 < T) (f : TimeLp T E) :
     (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f : ℝ → U) =ᵐ[timeMeasure T]
       extendPath T hT (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) := by
   obtain ⟨v,hv,hrep,hder⟩ := velocityLp_h1 T hT Q Q₁ H c hc hQ hd K hK hH hsmall Q₂ hd₁ hframe
-    hTpos f
+      hTpos f
   filter_upwards [hrep,ae_restrict_mem measurableSet_Icc] with t ht hmem
   rw [ht]
   change v t = velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall f (projIcc 0 T hT t)

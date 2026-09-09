@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarClassical
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveParity
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveParity
+
+/-! The normalized scalar angular primitive converts joint odd parity to even parity. -/
 
 @[expose] public section
 
-/-! The normalized scalar angular primitive converts joint odd parity to even parity. -/
 
 noncomputable section
 
@@ -20,10 +21,10 @@ namespace EulerCylinderScalarPrimitive
 open Set MeasureTheory EulerSmoothLimit EulerLiftedGradientSpace EulerAngleMeanZeroPrimitive
 
 variable (P : ℝ) [Fact (0 < P)] (f : LiftDomain P → ℝ) (hf : Continuous f)
-  (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P))) = 0)
+  (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y, (s : AddCircle P))) = 0)
 
 theorem classicalPrimitive_joint_even
-    (hodd : ∀ y θ, f (-y,((-θ : ℝ) : AddCircle P)) = -f (y,(θ : AddCircle P)))
+    (hodd : ∀ y θ, f (-y, ((-θ : ℝ) : AddCircle P)) = -f (y, (θ : AddCircle P)))
     (y : Space) (θ : ℝ) :
     classicalPrimitive P f hf hmean (-y,((-θ : ℝ) : AddCircle P)) =
       classicalPrimitive P f hf hmean (y,(θ : AddCircle P)) := by

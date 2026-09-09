@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileStepParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfilesRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileStepParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfilesRegularity
+
+/-! Every profile in the literal recursively generated family has the source parity. -/
 
 @[expose] public section
 
-/-! Every profile in the literal recursively generated family has the source parity. -/
 
 noncomputable section
 

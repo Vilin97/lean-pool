@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularCopyBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEnvelopeTransport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledTangentTransport
-
-@[expose] public section
 
 /-!
 # Modal inputs for the actual residual inverse
@@ -23,6 +20,9 @@ geometric separation identifies its grouped Gaussian at every integration
 time.  All finite-jet constants precede the external label and lattice copy.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualParticularControl
@@ -31,6 +31,7 @@ open Set Function Filter WeightedClasses PhaseJetBounds PrimaryPulseBounds
 open CommonCoverSolve TorusInverse ParticularWaveBounds LabelSumBounds
 open scoped Topology ContDiff InnerProductSpace BigOperators
 
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
 
 
@@ -149,6 +150,7 @@ noncomputable def nativeFrame (d : PrimaryODE.FrameData PhaseCalculus.Slow)
     (χ : P →L[ℝ] PhaseCalculus.Slow) : PrimaryODE.FrameData (P × ℝ) :=
   PrimaryCopyBridge.reindex d (fun q => χ q.1)
 
+/-- Frame argument as an element of `((P × Plane) × ℝ) →L[ℝ] (PhaseCalculus.Slow × ℝ)`. -/
 noncomputable def frameArgument (χ : P →L[ℝ] PhaseCalculus.Slow) :
     ((P × Plane) × ℝ) →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (χ.comp ((ContinuousLinearMap.fst ℝ P Plane).comp
@@ -176,6 +178,7 @@ noncomputable def frameArgument (χ : P →L[ℝ] PhaseCalculus.Slow) :
     frameForcingLinear (PrimaryCopyBridge.copyFrame (nativeFrame d χ) g k) z =
       frameForcingLinear d (frameArgument χ z) := rfl
 
+/-- Frame domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def frameDomain {ι : Type*}
     (U : PhaseJetBounds.Domain ι (PhaseCalculus.Slow × ℝ))
     (χ : P →L[ℝ] PhaseCalculus.Slow) : PhaseJetBounds.Domain ι ((P × Plane) × ℝ) where
@@ -215,7 +218,7 @@ theorem source_path_bounds
     (W : Label → ℕ → ℝ → ℝ) (hW : ∀ l n v, 0 ≤ W l n v)
     (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (L l n))
     {A : ℝ} {a : ℕ} (hA : 1 ≤ A)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A * s.slow n^a)
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A * s.slow n ^ a)
     {α : ℝ} {f : Label → ℕ → P × Plane → V}
     (hf : UniformWaveClass (CommonCoverClass.sourceStrip s) (groupedEnvelope g r L W) α f)
     (N : ℕ) :
@@ -288,14 +291,14 @@ theorem frame_input_jets
     (hd : FrameJets (D.slot V hV) d) (hinterval : ∀ i, Icc 0 (L i) ⊆ V i)
     (hW : ∀ l n v, 0 ≤ W l n v) (χ : P →L[ℝ] PhaseCalculus.Slow)
     (g : Label → ℕ → Geometry) (r : Label → ℕ → ℝ)
-    (hscale : ∀ l n, D.scale (l,n) = s.slow n)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (L (l,n)))
+    (hscale : ∀ l n, D.scale (l, n) = s.slow n)
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (L (l, n)))
     {A : ℝ} {a : ℕ} (hA : 1 ≤ A)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A*s.slow n^a)
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A * s.slow n ^ a)
     (harmonic : Label → ℤ) {J : ℝ} (hJ : 1 ≤ J) (hj : ∀ l, |(harmonic l : ℝ)| ≤ J)
     {α : ℝ} {f : Label → ℕ → P × Plane → ProblemStatement.Space}
     (hf : UniformWaveClass (CommonCoverClass.sourceStrip s)
-      (groupedEnvelope g r (fun l n => L (l,n))
+      (groupedEnvelope g r (fun l n => L (l, n))
         (fun l n => W l n)) α f)
     (N : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∃ m : ℕ, ∀ l n k (x : P × Plane), x.1 ∈ s.domain →
@@ -383,17 +386,17 @@ theorem frame_input_jets
     hW l n v
   have ht := WaveEnvelopeTransport.clm_apply_jet_bound_on hU hpSmooth hsSmooth hxs N
     (show 0 ≤ B*s.growth n x.1^q by positivity)
-    (show 0 ≤ Cs*s.growth n x.1^ms*(s.epsilon n^α*Real.sqrt (s.zeta x.1))*
+    (show 0 ≤ Cs*s.growth n x.1^ms*(s.epsilon n^α*Real.sqrt (s.zeta x.1)) *
       W l n v by positivity)
     hpj (fun i hi => hCsj l n k x hx hξ v hv i hi) j hjN
   change ‖iteratedFDeriv ℝ j
     ((PrimaryCopyBridge.copyFrame (nativeFrame (d (l,n)) χ) (g l n) k).forcing
       (PrimaryCopyBridge.copySource (f l n) (g l n) k)) (x,v)‖ ≤ _ at ht
   calc
-    _ ≤ 2^N*(B*s.growth n x.1^q)*(Cs*s.growth n x.1^ms*
-        (s.epsilon n^α*Real.sqrt (s.zeta x.1))*
+    _ ≤ 2^N*(B*s.growth n x.1^q)*(Cs*s.growth n x.1^ms *
+        (s.epsilon n^α*Real.sqrt (s.zeta x.1)) *
           W l n v) := ht
-    _ = (s.epsilon n^α*Real.sqrt (s.zeta x.1))*(2^N*B*Cs)*s.growth n x.1^(q+ms)*
+    _ = (s.epsilon n^α*Real.sqrt (s.zeta x.1))*(2^N*B*Cs)*s.growth n x.1^(q+ms) *
         W l n v := by rw [pow_add]; ring
     _ ≤ _ := by gcongr
 
@@ -401,15 +404,15 @@ theorem frame_input_jets
 theorem selected_input_jets
     (s : StripData P) (F : PhaseConstruction D) (χ : P →L[ℝ] PhaseCalculus.Slow)
     (g : Label → ℕ → Geometry) (r : Label → ℕ → ℝ)
-    (hscale : ∀ l n, D.scale (l,n) = s.slow n)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l,n)))
+    (hscale : ∀ l n, D.scale (l, n) = s.slow n)
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l, n)))
     {A : ℝ} {a : ℕ} (hA : 1 ≤ A)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A*s.slow n^a)
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A * s.slow n ^ a)
     (harmonic : Label → ℤ) {J : ℝ} (hJ : 1 ≤ J) (hj : ∀ l, |(harmonic l : ℝ)| ≤ J)
     {α : ℝ} {f : Label → ℕ → P × Plane → ProblemStatement.Space}
     (hf : UniformWaveClass (CommonCoverClass.sourceStrip s)
-      (groupedEnvelope g r (fun l n => F.L (l,n))
-        (fun l n => referenceP (F.lam (l,n)) (F.u (l,n)) (F.L (l,n)))) α f)
+      (groupedEnvelope g r (fun l n => F.L (l, n))
+        (fun l n => referenceP (F.lam (l, n)) (F.u (l, n)) (F.L (l, n)))) α f)
     (N : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∃ m : ℕ, ∀ l n k (x : P × Plane), x.1 ∈ s.domain →
       χ x.1 ∈ D.carrier (l,n) →
@@ -479,9 +482,12 @@ theorem residualSource_uniform
   funext i
   fin_cases i <;> simp [ParticularWaveAssembly.residualSource]
 
+/-- Angle strip, given by `CommonCoverClass.parameterStrip s (ContinuousLinearMap.fst ℝ P ℝ)`. -/
 noncomputable def angleStrip (s : StripData P) : StripData (P × ℝ) :=
   CommonCoverClass.parameterStrip s (ContinuousLinearMap.fst ℝ P ℝ)
 
+/-- Forget angle, given by `((ContinuousLinearMap.fst ℝ P ℝ).comp (ContinuousLinearMap.fst ℝ (P
+× ℝ) Plane)).prod (ContinuousLinearMap.snd ℝ (P × ℝ) Plane)`. -/
 noncomputable def forgetAngle : ((P × ℝ) × Plane) →L[ℝ] (P × Plane) :=
   ((ContinuousLinearMap.fst ℝ P ℝ).comp (ContinuousLinearMap.fst ℝ (P × ℝ) Plane)).prod
     (ContinuousLinearMap.snd ℝ (P × ℝ) Plane)
@@ -502,7 +508,7 @@ theorem sourceFamily_uniform
         ParticularWaveAssembly.sourceFamily c u (b l) (G l) (A l) (j l)) := by
   exact uniform_parameter_pull
     (residualSource_uniform (CommonCoverClass.sourceStrip s) (groupedEnvelope g r L W) α c u b G A
-      j h)
+        j h)
     (forgetAngle (P := P))
 
 end CurrentResidual
@@ -564,7 +570,7 @@ section ReferenceControl
 variable {Label : Type} {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   {D : PhaseJetBounds.Domain (Label × ℕ) PhaseCalculus.Slow}
 
-private theorem frame_smooth_mono {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
+theorem frame_smooth_mono {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
     {d : PrimaryODE.FrameData Q} {U V : Set (Q × ℝ)} (h : d.SmoothOn U) (hVU : V ⊆ U) :
     d.SmoothOn V :=
   ⟨h.beta.mono hVU, h.betaDot.mono hVU, h.rho.mono hVU, h.rhoDot.mono hVU,
@@ -572,12 +578,16 @@ private theorem frame_smooth_mono {Q : Type} [NormedAddCommGroup Q] [NormedSpace
     h.eigenvalue.mono hVU, h.eigenvector.mono hVU, h.eigenRate.mono hVU,
     h.viscosity.mono hVU, fun x hx => h.eigenvector_ne_zero x (hVU hx)⟩
 
+/-- Phase neighborhood, given by `{x | x.1 ∈ s.domain ∧ χ x.1 ∈ D.carrier (l,n) ∧ ((g l
+n).coordinates k x.2).2 ∈ Ioo 0 (F.L (l,n))}`. -/
 noncomputable def phaseNeighborhood (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] PhaseCalculus.Slow) (g : Label → ℕ → Geometry)
     (l : Label) (n : ℕ) (k : Frequency) : Set (P × Plane) :=
   {x | x.1 ∈ s.domain ∧ χ x.1 ∈ D.carrier (l,n) ∧
     ((g l n).coordinates k x.2).2 ∈ Ioo 0 (F.L (l,n))}
 
+/-- Phase patch, given by `phaseNeighborhood s F χ g l n k ∩ {x | ((g l n).coordinates k x.2).1
+∈ Icc (-(r l n)) (r l n)}`. -/
 noncomputable def phasePatch (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] PhaseCalculus.Slow) (g : Label → ℕ → Geometry)
     (r : Label → ℕ → ℝ) (l : Label) (n : ℕ) (k : Frequency) : Set (P × Plane) :=
@@ -591,13 +601,13 @@ theorem phaseNeighborhood_open (s : StripData P) (F : PhaseConstruction D)
   (s.isOpen_domain.preimage continuous_fst).inter
     (((D.isOpen (l,n)).preimage (χ.continuous.comp continuous_fst)).inter
       (isOpen_Ioo.preimage (((g l n).coordinates_contDiff k).continuous.comp continuous_snd
-        |>.snd)))
+          |>.snd)))
 
 /-- The output majorant is this same native Gaussian on the phase patch;
 there is no replacement by an unweighted bound. -/
 theorem phasePatch_envelope (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] PhaseCalculus.Slow) (g : Label → ℕ → Geometry) (r : Label → ℕ → ℝ)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l,n)))
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l, n)))
     {l : Label} {n : ℕ} {k : Frequency} {x : P × Plane}
     (hx : x ∈ phasePatch s F χ g r l n k) :
     groupedEnvelope g r (fun l n => F.L (l,n))
@@ -621,14 +631,14 @@ Only the geometric separation and scale comparison remain geometric inputs. -/
 noncomputable def referenceControl
     (s : StripData P) (F : PhaseConstruction D) (χ : P →L[ℝ] PhaseCalculus.Slow)
     (g : Label → ℕ → Geometry) (r : Label → ℕ → ℝ)
-    (hscale : ∀ l n, D.scale (l,n) = s.slow n)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l,n)))
+    (hscale : ∀ l n, D.scale (l, n) = s.slow n)
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l, n)))
     {A : ℝ} {a : ℕ} (hA : 1 ≤ A)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A*s.slow n^a)
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ A * s.slow n ^ a)
     (j : ℤ) (hj : j ≠ 0) {α : ℝ} (f : Label → ℕ → P × Plane → ProblemStatement.Space)
     (hf : UniformWaveClass (CommonCoverClass.sourceStrip s)
-      (groupedEnvelope g r (fun l n => F.L (l,n))
-        (fun l n => referenceP (F.lam (l,n)) (F.u (l,n)) (F.L (l,n)))) α f) :
+      (groupedEnvelope g r (fun l n => F.L (l, n))
+        (fun l n => referenceP (F.lam (l, n)) (F.u (l, n)) (F.L (l, n)))) α f) :
     ParticularCopyBounds.UniformModalControl (CommonCoverClass.sourceStrip s) α
       (fun l n => nativeFrame (F.frame (l,n)) χ)
       (fun l n => PrimaryCopyBridge.frameTangentData (nativeFrame (F.frame (l,n)) χ) j (f l n))
@@ -659,7 +669,7 @@ noncomputable def referenceControl
     bridge := ?_
     coefficient_smooth := fun l n k => (selected_copy_smooth s F χ g l n k).coefficient j
     forcing_smooth := fun l n k => (selected_copy_smooth s F χ g l n k).forcing (hsourceSmooth l n
-      k)
+        k)
     columns_smooth := ?_
     current_slot := fun _ _ _ _ hx => hx.2.2
     rate := fun l n => GaussianEnvelope.referenceRate (F.lam (l,n)) (F.u (l,n)) (F.L (l,n))
@@ -669,7 +679,7 @@ noncomputable def referenceControl
     errorRate_nonneg := fun l n => div_nonneg hnonneg (zero_le_one.trans (D.one_le_scale (l,n)))
     boundConstant := K
     constant_ge_one := hK
-    coordinate_power := a
+    coordinatePower := a
     length_bound := ?_
     exponential_bound := ?_
     coordinate_bound := fun l n => (hgeometry l n).trans
@@ -690,7 +700,7 @@ noncomputable def referenceControl
     change F.L (l,n) ≤ K*s.slow n
     rw [← hscale l n]
     exact (hlength l n).trans (mul_le_mul_of_nonneg_right hKM (zero_le_one.trans (D.one_le_scale
-      (l,n))))
+        (l,n))))
   · intro l n
     have hS : 0 < D.scale (l,n) := zero_lt_one.trans_le (D.one_le_scale (l,n))
     have hμ : 0 ≤ (F.E+4*F.C)/D.scale (l,n) := div_nonneg hnonneg hS.le
@@ -724,10 +734,10 @@ literal Volterra solves in `complexCopyCoefficients`. -/
 noncomputable def actualSourceControl
     (s : StripData P) (F : PhaseConstruction D) (χ : P →L[ℝ] PhaseCalculus.Slow)
     (g : Label → ℕ → Geometry) (r : Label → ℕ → ℝ)
-    (hscale : ∀ l n, D.scale (l,n) = s.slow n)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l,n)))
+    (hscale : ∀ l n, D.scale (l, n) = s.slow n)
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (g l n) (r l n) (F.L (l, n)))
     {K : ℝ} {a : ℕ} (hK : 1 ≤ K)
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ K*s.slow n^a)
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ K * s.slow n ^ a)
     (c : CorrectionState.Context (P × Plane)) (u : CorrectionState.State (P × Plane))
     (b : Label → CorrectionState.HarmonicBlock (P × Plane))
     (G A : Label → HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) (hj : j ≠ 0)
@@ -757,6 +767,8 @@ section ClockTransport
 
 variable {P Q : Type}
 
+/-- Transport argument, given by `(φ.comp (ContinuousLinearMap.fst ℝ Q ℝ)).prod (rate •
+ContinuousLinearMap.snd ℝ Q ℝ)`. -/
 noncomputable def transportArgument [NormedAddCommGroup P] [NormedSpace ℝ P]
     [NormedAddCommGroup Q] [NormedSpace ℝ Q] (φ : Q →L[ℝ] P) (rate : ℝ) :
     (Q × ℝ) →L[ℝ] (P × ℝ) :=
@@ -788,9 +800,9 @@ theorem polynomial_affine_family {ι E V : Type*}
     {f : ι → P → V} (hf : PolynomialJets U f)
     (L : ι → E →L[ℝ] P) (c : ι → P)
     {A B : ℝ} {a b : ℕ} (hA : 1 ≤ A) (hB : 1 ≤ B)
-    (hlin : ∀ i, ‖L i‖ ≤ A*T.scale i^a)
-    (hscale : ∀ i, U.scale i ≤ B*T.scale i^b)
-    (hmap : ∀ i, MapsTo (fun x => L i x+c i) (T.carrier i) (U.carrier i)) :
+    (hlin : ∀ i, ‖L i‖ ≤ A * T.scale i ^ a)
+    (hscale : ∀ i, U.scale i ≤ B * T.scale i ^ b)
+    (hmap : ∀ i, MapsTo (fun x => L i x + c i) (T.carrier i) (U.carrier i)) :
     PolynomialJets T (fun i x => f i (L i x+c i)) := by
   refine ⟨fun i => (hf.smooth i).comp ((L i).contDiff.contDiffOn.add contDiffOn_const) (hmap i), ?_⟩
   intro N
@@ -844,8 +856,8 @@ theorem transported_frame_jets {ι : Type*}
     (φ : ι → Q →L[ℝ] P) (c : ι → P) (shift rate normalScale : ι → ℝ)
     {A B R : ℝ} {a b : ℕ} (hA : 1 ≤ A) (hB : 1 ≤ B) (hR : 1 ≤ R)
     (hrate : ∀ i, |rate i| ≤ R) (hnormal : ∀ i, |normalScale i| ≤ R)
-    (hlin : ∀ i, ‖transportArgument (φ i) (rate i)‖ ≤ A*T.scale i^a)
-    (hscale : ∀ i, U.scale i ≤ B*T.scale i^b)
+    (hlin : ∀ i, ‖transportArgument (φ i) (rate i)‖ ≤ A * T.scale i ^ a)
+    (hscale : ∀ i, U.scale i ≤ B * T.scale i ^ b)
     (hmap : ∀ i, MapsTo (fun z : Q × ℝ => (φ i z.1+c i,shift i+rate i*z.2))
       (T.carrier i) (U.carrier i)) :
     FrameJets T (fun i => transportedFrame (d i) (fun q => φ i q+c i)
@@ -860,8 +872,8 @@ theorem transported_frame_jets {ι : Type*}
   have hr : PolynomialJets T (fun i _ => rate i) :=
     PolynomialJets.const_uniform rate hR (fun i => by simpa only [Real.norm_eq_abs] using hrate i)
   have hn : PolynomialJets T (fun i _ => normalScale i) :=
-    PolynomialJets.const_uniform normalScale hR (fun i => by simpa only [Real.norm_eq_abs] using
-      hnormal i)
+    PolynomialJets.const_uniform normalScale hR (fun i => by
+        simpa only [Real.norm_eq_abs] using hnormal i)
   exact {
     beta := hn.mul (pull hd.beta)
     betaDot := (hn.mul hr).mul (pull hd.betaDot)
@@ -914,7 +926,7 @@ theorem transported_coefficient (d : PrimaryODE.FrameData P) (φ : Q → P)
 theorem transported_energy {ι : Type*} {D : PhaseJetBounds.Domain ι PhaseCalculus.Slow}
     (F : PhaseConstruction D) (i : ι) (φ : Q → PhaseCalculus.Slow)
     (shift rate normalScale : ℝ) (hrate : 0 ≤ rate) {q : Q}
-    (hq : φ q ∈ D.carrier i) {v : ℝ} (hv : shift+rate*v ∈ Icc 0 (F.L i))
+    (hq : φ q ∈ D.carrier i) {v : ℝ} (hv : shift + rate * v ∈ Icc 0 (F.L i))
     {j : ℤ} (hj : j ≠ 0) (z : PrimaryODE.State) :
     ⟪z, (transportedFrame (F.frame i) φ shift rate normalScale).coefficient j (q,v) z⟫_ℝ ≤
       (rate*GaussianEnvelope.referenceRate (F.lam i) (F.u i) (F.L i) (shift+rate*v) +
@@ -924,7 +936,7 @@ theorem transported_energy {ι : Type*} {D : PhaseJetBounds.Domain ι PhaseCalcu
 
 theorem transported_envelope_deriv (lam u L shift rate v : ℝ) :
     HasDerivAt (fun t => referenceP lam u L (shift+rate*t))
-      ((rate*GaussianEnvelope.referenceRate lam u L (shift+rate*v))*
+      ((rate*GaussianEnvelope.referenceRate lam u L (shift+rate*v)) *
         referenceP lam u L (shift+rate*v)) v := by
   have ht : HasDerivAt (fun t : ℝ => shift+rate*t) rate v := by
     simpa using ((hasDerivAt_id v).const_mul rate).const_add shift
@@ -950,7 +962,7 @@ theorem transported_normal (d : PrimaryODE.FrameData P) (φ : Q → P)
   ext i
   fin_cases i <;>
     simp [transportedFrame, PrimaryODE.FrameData.normal, MovingFrameODE.normal,
-      MovingFrameODE.pack] <;> ring
+        MovingFrameODE.pack] <;> ring
 
 theorem transported_normalMotion (d : PrimaryODE.FrameData P) (φ : Q → P)
     (shift rate normalScale : ℝ) (z : Q × ℝ) :
@@ -963,7 +975,7 @@ theorem transported_normalMotion (d : PrimaryODE.FrameData P) (φ : Q → P)
 
 theorem transported_kinematics (d : PrimaryODE.FrameData P) (φ : Q → P)
     (shift rate normalScale : ℝ) (hnormal : normalScale ≠ 0)
-    (q : Q) (I J : Set ℝ) (hmap : MapsTo (fun t => shift+rate*t) I J)
+    (q : Q) (I J : Set ℝ) (hmap : MapsTo (fun t => shift + rate * t) I J)
     (hd : d.Kinematics (φ q) J) :
     (transportedFrame d φ shift rate normalScale).Kinematics q I := by
   have ht (v : ℝ) : HasDerivAt (fun t : ℝ => shift+rate*t) rate v := by
@@ -973,7 +985,7 @@ theorem transported_kinematics (d : PrimaryODE.FrameData P) (φ : Q → P)
   · intro v hv
     have he := ((hd.beta_deriv _ (hmap hv)).scomp v (ht v)).const_mul normalScale
     simpa only [transportedFrame,Function.comp_def,smul_eq_mul,mul_assoc,mul_left_comm,mul_comm]
-      using he
+        using he
   · intro v hv
     have he := (hd.rho_deriv _ (hmap hv)).scomp v (ht v)
     simp only [transportedFrame, Function.comp_def, smul_eq_mul, mul_comm] at he ⊢
@@ -981,7 +993,7 @@ theorem transported_kinematics (d : PrimaryODE.FrameData P) (φ : Q → P)
   · intro v hv
     have he := (hd.eigenvector_deriv _ (hmap hv)).scomp v (ht v)
     simp only [transportedFrame, Function.comp_def, smul_eq_mul, mul_assoc,mul_left_comm,mul_comm]
-      at he ⊢
+        at he ⊢
     exact he
   · intro v hv
     have he := (hd.frameK_deriv _ (hmap hv)).scomp v (ht v)
@@ -1020,7 +1032,7 @@ theorem frameTangentData_transport
   · funext z
     simp [ transportedFrame,
       PrimaryODE.FrameData.damping, PrimaryCopyBridge.nativePoint,
-        CopySolveCompatibility.nativeTimeMap]
+          CopySolveCompatibility.nativeTimeMap]
     ring
 
 end ClockTransport
@@ -1055,9 +1067,9 @@ theorem scaled_selected_copy_energy
     (φ : (Label × ℕ) → PhaseCalculus.Slow →L[ℝ] PhaseCalculus.Slow)
     (rate normalScale : (Label × ℕ) → ℝ) (χ : P →L[ℝ] PhaseCalculus.Slow)
     (g : Label → ℕ → Geometry) (l : Label) (n : ℕ) (k : Frequency)
-    (hrate : 0 < rate (l,n)) (x : P × Plane)
-    (hx : φ (l,n) (χ x.1) ∈ D.carrier (l,n))
-    {v : ℝ} (hv : v ∈ Icc 0 (F.L (l,n)/rate (l,n))) {j : ℤ} (hj : j ≠ 0)
+    (hrate : 0 < rate (l, n)) (x : P × Plane)
+    (hx : φ (l, n) (χ x.1) ∈ D.carrier (l, n))
+    {v : ℝ} (hv : v ∈ Icc 0 (F.L (l, n) / rate (l, n))) {j : ℤ} (hj : j ≠ 0)
     (z : PrimaryODE.State) :
     ⟪z, (PrimaryCopyBridge.copyFrame (nativeFrame
         (scaledSelectedFrame F φ rate normalScale (l,n)) χ) (g l n) k).coefficient j (x,v) z⟫_ℝ ≤
@@ -1085,8 +1097,8 @@ theorem scaled_selected_input_jets
     (χ : P →L[ℝ] PhaseCalculus.Slow)
     {A B R : ℝ} {a b : ℕ} (hA : 1 ≤ A) (hB : 1 ≤ B) (hR : 1 ≤ R)
     (hrateBound : ∀ i, |rate i| ≤ R) (hnormal : ∀ i, |normalScale i| ≤ R)
-    (hlin : ∀ i, ‖transportArgument (φ i) (rate i)‖ ≤ A*T.scale i^a)
-    (hscale : ∀ i, D.scale i ≤ B*T.scale i^b)
+    (hlin : ∀ i, ‖transportArgument (φ i) (rate i)‖ ≤ A * T.scale i ^ a)
+    (hscale : ∀ i, D.scale i ≤ B * T.scale i ^ b)
     (hmap : ∀ i, MapsTo (fun z : PhaseCalculus.Slow × ℝ => (φ i z.1,rate i*z.2))
       ((T.slot V hV).carrier i) ((D.slot F.V F.openV).carrier i))
     (hinterval : ∀ i, Icc 0 (F.L i/rate i) ⊆ V i)
@@ -1107,11 +1119,11 @@ theorem scaled_selected_input_jets
       ∀ j ≤ N, ∀ v ∈ Icc 0 (F.L (l,n)/rate (l,n)),
       ‖iteratedFDeriv ℝ j
         ((PrimaryCopyBridge.copyFrame (nativeFrame (scaledSelectedFrame F φ rate normalScale (l,n))
-          χ)
+            χ)
           (g l n) k).coefficient (harmonic l)) (x,v)‖ ≤ C0*s.growth n x.1^m ∧
       ‖iteratedFDeriv ℝ j
         ((PrimaryCopyBridge.copyFrame (nativeFrame (scaledSelectedFrame F φ rate normalScale (l,n))
-          χ)
+            χ)
           (g l n) k).forcing (PrimaryCopyBridge.copySource (f l n) (g l n) k)) (x,v)‖ ≤
         (s.epsilon n^α*Real.sqrt (s.zeta x.1))*C0*s.growth n x.1^m *
           referenceP (F.lam (l,n)) (F.u (l,n)) (F.L (l,n)) (rate (l,n)*v) ∧

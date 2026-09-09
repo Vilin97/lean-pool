@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Quantitative pointwise bounds for genuine time-H¹ representatives
@@ -16,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
 Absolute continuity and the actual Bochner L² derivative give exact integral
 increments, square-root continuity, and initial/terminal trace bounds.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

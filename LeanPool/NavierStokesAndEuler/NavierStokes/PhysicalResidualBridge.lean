@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalGraphBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LiftedMeanResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanChartCompatibility
-
-@[expose] public section
 
 /-!
 # The physical residual of a scaled graph pullback
@@ -19,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanChartCompatibility
 This file keeps the cylindrical angle separate from the lifted slow and fast
 variables.  Every differential operator is an actual Frechet derivative.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.PhysicalResidualBridge
 
@@ -180,23 +180,35 @@ theorem graphResidual_eq_cylindrical {U : Set SpaceTime}
       CylindricalResidual.vectorAdvection, CylindricalResidual.vectorLaplacian,
       CylindricalResidual.scalarGradient, CylindricalResidual.connection_apply] <;> ring
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
+/-- Lift: an abbreviation for `ℝ × (Plane × Plane)`. -/
 abbrev Lift := ℝ × (Plane × Plane)
+/-- Cylinder: an abbreviation for `Lift × ℝ`. -/
 abbrev Cylinder := Lift × ℝ
 
 /-- Numerical and directional data of one fixed chart. -/
 structure ScaledGraph where
+  /-- Radial scale of `ScaledGraph`, of type `ℝ`. -/
   radialScale : ℝ
+  /-- Velocity scale of `ScaledGraph`, of type `ℝ`. -/
   velocityScale : ℝ
+  /-- Epsilon of `ScaledGraph`, of type `ℝ`. -/
   epsilon : ℝ
+  /-- Exponent of `ScaledGraph`, of type `ℝ`. -/
   exponent : ℝ
+  /-- Frequency of `ScaledGraph`, of type `ℝ`. -/
   frequency : ℝ
+  /-- Fast coefficient of `ScaledGraph`, of type `ℝ`. -/
   fastCoefficient : ℝ
+  /-- Radial vector of `ScaledGraph`, of type `Plane`. -/
   radialVector : Plane
+  /-- Temporal vector of `ScaledGraph`, of type `Plane`. -/
   temporalVector : Plane
 
 namespace ScaledGraph
 
+/-- Map as an element of `Cylinder`. -/
 noncomputable def map (G : ScaledGraph) (p : SpaceTime) : Cylinder :=
   ((G.radialScale * p.2 0,
     ((G.radialScale * G.epsilon * p.2 2,
@@ -205,17 +217,23 @@ noncomputable def map (G : ScaledGraph) (p : SpaceTime) : Cylinder :=
        (G.velocityScale * G.radialScale * G.fastCoefficient * p.1) • G.temporalVector)),
     p.2 1)
 
+/-- Radius, given by `x.1.1`. -/
 noncomputable def radius (x : Cylinder) : ℝ := x.1.1
 
+/-- Radial, given by `((1, ((0, 0), (G.frequency * GraphCalculus.radialSpeed G.exponent x.1.1) •
+G.radialVector)), 0)`. -/
 noncomputable def radial (G : ScaledGraph) (x : Cylinder) : Cylinder :=
   ((1, ((0, 0), (G.frequency * GraphCalculus.radialSpeed G.exponent x.1.1) •
     G.radialVector)), 0)
 
+/-- Angular, given by `(0, 1)`. -/
 noncomputable def angular (_x : Cylinder) : Cylinder := (0, 1)
 
+/-- Axial, given by `((0, ((G.epsilon, 0), 0)), 0)`. -/
 noncomputable def axial (G : ScaledGraph) (_x : Cylinder) : Cylinder :=
   ((0, ((G.epsilon, 0), 0)), 0)
 
+/-- Temporal, given by `((0, ((0, -G.epsilon), G.fastCoefficient • G.temporalVector)), 0)`. -/
 noncomputable def temporal (G : ScaledGraph) (_x : Cylinder) : Cylinder :=
   ((0, ((0, -G.epsilon), G.fastCoefficient • G.temporalVector)), 0)
 
@@ -310,6 +328,7 @@ theorem radial_smooth (G : ScaledGraph) {U : Set Cylinder}
       contDiffAt_const
   exact (contDiffAt_const.prodMk (contDiffAt_const.prodMk hc)).prodMk contDiffAt_const
 
+/-- Source, given by `{p | 0 < p.2 0} ∩ G.map ⁻¹' U`. -/
 noncomputable def source (G : ScaledGraph) (U : Set Cylinder) : Set SpaceTime :=
   {p | 0 < p.2 0} ∩ G.map ⁻¹' U
 
@@ -350,6 +369,7 @@ noncomputable def velocity (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ) : 
     (p : SpaceTime) (i : Fin 3) : G.velocity a p i = G.velocityScale * a (G.map p) i := by
   fin_cases i <;> simp [velocity]
 
+/-- Pressure, defined pointwise by `G.velocityScale ^ 2 * p (G.map z)`. -/
 noncomputable def pressure (G : ScaledGraph) (p : Cylinder → ℝ) : PressureField :=
   fun z => G.velocityScale ^ 2 * p (G.map z)
 
@@ -405,7 +425,7 @@ theorem physical_residual (G : ScaledGraph) (hl : 0 < G.radialScale)
       (navierStokesResidual u P t (CylindricalResidual.chart q)) i =
       G.velocityScale ^ 2 * G.radialScale *
         graphResidual G.epsilon radius G.radial angular G.axial G.temporal a p (G.map (t, q)) i :=
-          by
+            by
   rw [CylindricalResidual.navierStokesResidual_of_representation hu hP hz.1 hrep hpRep,
     CylindricalResidual.frame_inverse]
   exact G.cylindricalResidual_eq hl hε hU hR ha hp hz i
@@ -601,6 +621,7 @@ theorem transport_realLift (R : E → ℝ) (Vr Vθ Vz : E → E)
       LinearWaveResidual.realLift, angularGenerator, LinearWaveResidual.realAngularGenerator,
       hD, ← Complex.ofReal_div]
 
+/-- Complex increment as an element of `ℝ`. -/
 noncomputable def complexIncrement (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
     (B a : E → Fin 3 → ℝ) (p : E → ℝ) (x : E) (i : Fin 3) : ℝ :=
   (LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt (LinearWaveResidual.realLift B)
@@ -631,7 +652,7 @@ theorem complexIncrement_eq {U : Set E} (hU : IsOpen U) (ε : ℝ) (R : E → �
   simp only [complexIncrement, Complex.add_re, ht]
   have h := congrArg
     (fun z : ℝ => z + LinearWaveResidual.realTransport R Vr Vθ Vz a a x i) hl
-  simp [] at h
+  simp only [add_left_inj] at h
   exact congrArg (fun z : ℝ => z + LinearWaveResidual.realTransport R Vr Vθ Vz a a x i) h
 
 /-- The base equation supplies only the fixed base residual.  All linear,
@@ -723,10 +744,14 @@ theorem MatchesAt.timeDirection {c : CorrectionState.Context Lift} {G : ScaledGr
   simp [LiftedMeanResidual.timeDirection, LiftedMeanResidual.liftDirection,
     LiftedMeanResidual.temporalVector, H.epsilon, H.fast, H.vT, H.eT, ScaledGraph.temporal]
 
+/-- Base components, given by `![c.base.radial n x.1, c.base.angular n x.1, c.base.axial n
+x.1]`. -/
 noncomputable def baseComponents (c : CorrectionState.Context Lift) (n : ℕ)
     (x : Cylinder) : Fin 3 → ℝ :=
   ![c.base.radial n x.1, c.base.angular n x.1, c.base.axial n x.1]
 
+/-- Increment components, given by `![s.mean.radial n x.1 + s.oscillation n x 0, s.mean.angular
+n x.1 + s.oscillation n x 1, s.mean.axial n x.1 + s.oscillation n x 2]`. -/
 noncomputable def incrementComponents (s : CorrectionState.State Lift) (n : ℕ)
     (x : Cylinder) : Fin 3 → ℝ :=
   ![s.mean.radial n x.1 + s.oscillation n x 0,

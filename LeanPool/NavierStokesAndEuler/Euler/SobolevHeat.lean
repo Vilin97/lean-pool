@@ -8,17 +8,20 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevSmoothing
 public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatTotal
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+import Mathlib.Algebra.Order.Star.Real
+
+/-! The actual Gaussian cylinder heat semigroup on the complete Sobolev scale. -/
 
 @[expose] public section
 
-/-! The actual Gaussian cylinder heat semigroup on the complete Sobolev scale. -/
 
 noncomputable section
 
 namespace EulerSobolevHeat
 
 open EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerSobolevSmoothing
-  EulerGaussianCylinderHeat
+    EulerGaussianCylinderHeat
 open scoped Topology NNReal
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -92,8 +95,8 @@ theorem heatGain_bound {q : ℕ} (v : ℝ≥0) (hv : 0 < v) (u : SobolevSpace pe
     (fun i f => cylinderHeat_one_derivative period hv f i) (heatDerivativeConstant_nonneg v)
     (cylinderHeat_translation period v) u
   have hA : ‖cylinderHeat period v‖ ≤ 1 :=
-    ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by simpa using cylinderHeat_norm_le
-      period v f)
+    ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by
+        simpa using cylinderHeat_norm_le period v f)
   exact h.trans (mul_le_mul_of_nonneg_right (max_le_max hA le_rfl) (norm_nonneg u))
 
 /-- Truncating the gained derivative gives the ordinary Sobolev heat action. -/

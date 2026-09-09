@@ -6,17 +6,18 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Topology.Order.OrderClosed
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 An explicit extension converts one-sided derivatives on a nondegenerate
 closed time interval into ordinary derivatives there.  It uses affine tails
 whose slopes are the actual endpoint derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +28,7 @@ open Set Filter
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Affine extension, with branches according to `t < 0`. -/
 def affineExtension (f : ℝ → E) (g₀ gT : E) (T t : ℝ) : E :=
   if t < 0 then f 0 + t • g₀ else if T < t then f T + (t-T) • gT else f t
 
@@ -66,7 +68,7 @@ theorem affineExtension_hasDerivAt {f g : ℝ → E} {T t : ℝ}
     · subst t
       have hright : HasDerivAt (fun s : ℝ => f T+(s-T) • g T) (g T) T := by
         simpa only [one_smul, id_eq] using (((hasDerivAt_id T).sub_const T).smul_const (g
-          T)).const_add (f T)
+            T)).const_add (f T)
       have hr := hright.hasDerivWithinAt.congr_of_mem
         (fun s (hs : s ∈ Ici T) => affineExtension_eq_right (g₀ := g 0) hT.le hs) self_mem_Ici
       have hl := hwithin.mono_of_mem_nhdsWithin (Icc_mem_nhdsLE hT)

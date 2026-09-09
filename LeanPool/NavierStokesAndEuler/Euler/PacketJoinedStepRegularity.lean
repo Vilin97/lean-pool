@@ -8,11 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderRecursiveAdmissibility
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrectorSupport
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
+
+/-! A genuine recursion step using the full history/forward transverse inverse. -/
 
 @[expose] public section
 
-/-! A genuine recursion step using the full history/forward transverse inverse. -/
 
 noncomputable section
 
@@ -31,23 +35,25 @@ variable {P : ℝ} [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (hcorrector : O.curlCorrector = D.curlCorrector P)
   {p : ℕ} {a : ℕ → Profile}
 
+/-- Joined step as an element of `ProfileRegularity P M.T M.T_pos.le D.support
+(EulerPacketProfileRecursion.step O p a)`. -/
 def joinedStep (hp : 2 ≤ p)
     (G : ∀ i, i < p → ProfileRegularity P M.T M.T_pos.le D.support (a i)) :
     ProfileRegularity P M.T M.T_pos.le D.support (EulerPacketProfileRecursion.step O p a) := by
   let F := prefixFields G
   let W := G (p-1) (by omega)
   let hm : Nonempty (EulerMeanPacketProvider.Forcing M (EulerPacketProfileRecursion.meanForce O p
-    a)) :=
+      a)) :=
     ⟨F.meanForcing M C (by omega) W.correctorDerivative W.corrector_time W.pressure⟩
   let hh : Nonempty (EulerTransversePacketProvider.Forcing P D
-    (EulerPacketProfileRecursion.highForce O p a)) :=
+      (EulerPacketProfileRecursion.highForce O p a)) :=
     ⟨F.highForcing M D hT C hp W.correctorDerivative W.corrector_time W.pressure hmean
       (prefixLocality G) W.pressure_zero⟩
   let GM := Classical.choice hm
   let GH := Classical.choice hh
   let high : Field P M.T (EulerPacketProfileRecursion.step O p a).high :=
     ((EulerTransversePacketJoin.vectorField τ hτ hτT B GH).changeTime hT.symm).congr (fun _ _ _ =>
-      by
+        by
       change (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1 _ = _
       rw [hhigh,EulerTransversePacketJoin.highSolve_of_admissible τ hτ hτT B hh])
   let mean : Field P M.T (EulerPacketProfileRecursion.step O p a).mean :=
@@ -56,11 +62,11 @@ def joinedStep (hp : 2 ≤ p)
       rw [hmean,EulerMeanPacketProvider.meanSolve_of_admissible M _ hm])
   let corrector : Field P M.T (EulerPacketProfileRecursion.step O p a).corrector :=
     ((EulerTransversePacketJoin.correctorField τ hτ hτT B GH).changeTime hT.symm).congr (fun _ _ _
-      => by
+        => by
       change O.curlCorrector (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1 _ = _
       rw [hcorrector,hhigh,EulerTransversePacketJoin.highSolve_of_admissible τ hτ hτT B hh])
   let pressure : Field P M.T (pressureGradient (EulerPacketProfileRecursion.step O p
-    a).highPressure) :=
+      a).highPressure) :=
     ((EulerTransversePacketJoin.scalarGradientField τ hτ hτT B GH).changeTime hT.symm).congr
       (fun _ _ _ => by
         change pressureGradient (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).2 _ = _
@@ -70,14 +76,14 @@ def joinedStep (hp : 2 ≤ p)
     mean := mean
     corrector := corrector
     pressure := pressure
-    high_t := EulerTransversePacketJoin.vectorDerivative τ hτ hτT B GH
-    mean_t := GM.vectorDerivative
-    corrector_t := EulerTransversePacketJoin.correctorDerivative τ hτ hτT B GH
+    highT := EulerTransversePacketJoin.vectorDerivative τ hτ hτT B GH
+    meanT := GM.vectorDerivative
+    correctorT := EulerTransversePacketJoin.correctorDerivative τ hτ hτT B GH
     highDerivative := (EulerTransversePacketJoin.vectorDerivativeField τ hτ hτT B GH).changeTime
-      hT.symm
+        hT.symm
     meanDerivative := GM.vectorDerivativeCylinderField P
     correctorDerivative := (EulerTransversePacketJoin.correctorDerivativeField τ hτ hτT B
-      GH).changeTime hT.symm
+        GH).changeTime hT.symm
     high_time := ?_
     mean_time := ?_
     corrector_time := ?_
@@ -99,19 +105,19 @@ def joinedStep (hp : 2 ≤ p)
     exact EulerTransversePacketJoin.vector_zero_outside τ hτ hτT B GH t x hx θ
   · intro t x hx θ
     change O.curlCorrector (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1 (t,(x,θ))
-      = 0
+        = 0
     rw [hcorrector,hhigh,EulerTransversePacketJoin.highSolve_of_admissible τ hτ hτT B hh]
     let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
     exact (EulerTransversePacketJoin.curlCorrector_eq τ hτ hτT B GH td x θ).trans
       (EulerTransversePacketJoin.corrector_zero_outside τ hτ hτT B GH t x hx θ)
   · intro t x hx θ
     change pressureGradient (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).2 (t,(x,θ))
-      = 0
+        = 0
     rw [hhigh,EulerTransversePacketJoin.highSolve_of_admissible τ hτ hτT B hh]
     let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
     exact pressureGradient_zero_outside (EulerTransversePacketJoin.scalar τ hτ hτT B GH) t
       D.support D.support_compact.isClosed (EulerTransversePacketJoin.scalar_zero_outside τ hτ hτT
-        B GH td) x hx θ
+          B GH td) x hx θ
   · intro t x θ
     change (O.meanSolve (EulerPacketProfileRecursion.meanForce O p a)).1 (t,(x,θ)) =
       (O.meanSolve (EulerPacketProfileRecursion.meanForce O p a)).1 (t,(x,0))

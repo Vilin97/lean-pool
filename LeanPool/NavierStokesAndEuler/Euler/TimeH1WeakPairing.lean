@@ -6,16 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
+public import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
+import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 Integration by parts for an actual H¹ representative against zero-endpoint
 tests. The identity follows from the proved primitive representation and
 does not posit a weak derivative as an additional assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,7 +49,7 @@ theorem inner_zero_trace (T : ℝ) (hT : 0 ≤ T) (p q : TimeLp T E)
 /-- A continuous derivative on the closed interval gives the exact weak
 pairing of the corresponding genuine time L² elements. -/
 theorem pathLp_inner_zero_trace (T : ℝ) (hT : 0 ≤ T)
-    (p q : C(Icc (0 : ℝ) T,E))
+    (p q : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
     (v : TimeLp T E) (hv : initialTrace T hT v = 0) :

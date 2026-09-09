@@ -10,14 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowCoefficientPaths
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldComposition
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldBilinear
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldDerivativeBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Actual deformation, first time derivative, and second time derivative
 as smooth bounded coefficient paths. Every spatial jet is continuous in
 the sup norm; no third time derivative is used for the acceleration. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,25 +32,50 @@ open Set EulerVolterraConvolution EulerSmoothFlowGevrey
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
-private local instance : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] (E →L[ℝ] E)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] (E →L[ℝ] E)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] E))) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] E))) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowDeformation1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instSmoothFlowDeformation2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowDeformation3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowDeformation4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instSmoothFlowDeformation5 : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instSmoothFlowDeformation6 : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] (E →L[ℝ] E))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothFlowDeformation7 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] (E →L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] (E →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowDeformation8 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] (E →L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] E)))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothFlowDeformation9 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ]
+    E))) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] E)))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothFlowDeformation10 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] E)))
+    := inferInstance
 
-variable (B R : ℝ) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-  (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+variable (B R : ℝ) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+  (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
   (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
+/-- Acceleration coefficient as an element of `SmoothTimeField (Icc (0 : ℝ) T) E E`. -/
 def accelerationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
   (A₁.add (SmoothTimeField.bilinear (ContinuousLinearMap.id ℝ (E →L[ℝ] E)) A.derivative
-    A)).compDisplacement
+      A)).compDisplacement
     (displacementCoefficient T hT A B R hB hR hsmall hb)
 
 @[simp] theorem accelerationCoefficient_apply (t : Icc (0 : ℝ) T) (x : E) :
@@ -67,6 +93,8 @@ def accelerationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
   rw [A.derivativeField_eq]
   exact (accelerationFamily_apply T hT A A₁ x t).symm
 
+/-- Deformation coefficient, given by `(SmoothTimeField.boundConstant (ContinuousLinearMap.id ℝ
+E)).add (displacementCoefficient T hT A B R hB hR hsmall hb).derivative`. -/
 def deformationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E (E →L[ℝ] E) :=
   (SmoothTimeField.boundConstant (ContinuousLinearMap.id ℝ E)).add
     (displacementCoefficient T hT A B R hB hR hsmall hb).derivative
@@ -74,7 +102,7 @@ def deformationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E (E →L[ℝ] E)
 @[simp] theorem deformationCoefficient_apply (t : Icc (0 : ℝ) T) (x : E) :
     (deformationCoefficient T hT A B R hB hR hsmall hb).field t x =
       fderiv ℝ (fun y => (flowData T hT A).forward t y) x := by
-  change ContinuousLinearMap.id ℝ E+
+  change ContinuousLinearMap.id ℝ E +
     (displacementCoefficient T hT A B R hB hR hsmall hb).derivativeField t x = _
   rw [SmoothTimeField.derivativeField_eq]
   have he : ((displacementCoefficient T hT A B R hB hR hsmall hb).field t : E → E) =
@@ -91,11 +119,15 @@ def deformationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E (E →L[ℝ] E)
 
 variable (htime : SmoothTimeField.TimeDerivative T hT A A₁)
   (B₁ R₁ : ℝ) (hB₁ : 0 ≤ B₁) (hR₁ : 0 ≤ R₁)
-  (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁*R₁^n*(n.factorial : ℝ)^2)
+  (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁ * R₁ ^ n * (n.factorial : ℝ) ^ 2)
 
+/-- Deformation time coefficient, given by `(velocityCoefficient T hT A B R hB hR hsmall hb A₁
+htime B₁ R₁ hB₁ hR₁ hb₁).derivative`. -/
 def deformationTimeCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E (E →L[ℝ] E) :=
   (velocityCoefficient T hT A B R hB hR hsmall hb A₁ htime B₁ R₁ hB₁ hR₁ hb₁).derivative
 
+/-- Deformation second coefficient, given by `(accelerationCoefficient T hT A B R hB hR hsmall
+hb A₁).derivative`. -/
 def deformationSecondCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E (E →L[ℝ] E) :=
   (accelerationCoefficient T hT A B R hB hR hsmall hb A₁).derivative
 

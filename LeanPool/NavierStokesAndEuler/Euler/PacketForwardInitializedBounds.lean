@@ -6,14 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardResidualBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardApproximationBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteCoarseBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceResidualFields
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceSolenoidal
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardApproximationBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardResidualBounds
 
 /-! Actual finite velocity, normal drift and residual estimates for the
 zero-history recursion initialized by the literal compact periodic wave. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,10 +38,14 @@ variable (M : EulerMeanPacketProvider.Data)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized packet field, given by `sourcePacketPullbackField period M D hTime
+(InitialData.zero period D) (initialData D δ hδ (α • ξ) hs) N κ`. -/
 def forwardInitializedPacketField (N : ℕ) (κ : ℝ) :=
   sourcePacketPullbackField period M D hTime (InitialData.zero period D)
     (initialData D δ hδ (α • ξ) hs) N κ
 
+/-- Forward initialized residual field, given by `sourceResidualField period M D hTime
+(InitialData.zero period D) (initialData D δ hδ (α • ξ) hs) Cagree N hN κ hκ`. -/
 def forwardInitializedResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) (hκ : κ ≠ 0) :=
   sourceResidualField period M D hTime (InitialData.zero period D)
@@ -48,16 +61,16 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB
-    (wordCost (Fin 4) 6 δ*‖ξ‖))
+    (wordCost (Fin 4) 6 δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
   (hgrowth : timeProfileChange S.growth hTime = α • L.g)
 
 include NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem forwardInitializedPacket_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     ((forwardInitializedPacketField M D hTime δ hδ ξ hs α N k⁻¹).smul k).WordBound
-      6 (4*L.R) (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 1+
+      6 (4*L.R) (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 1 +
         fixedVelocityGradeCost L.R S.H0 2+1)) 0 :=
   forwardPacket_normalized_bound period M D hTime (initialData D δ hδ (α • ξ) hs)
     L NB W LM WM BC hRc hcost S α hα hgrowth
@@ -65,7 +78,7 @@ theorem forwardInitializedPacket_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k : 
     N hN k hk hbase
 
 theorem forwardInitializedPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (((forwardInitializedPacketField M D hTime δ hδ ξ hs α N k⁻¹).smul k).map
       (normalComponentMap D.m₀)).WordBound 6 (4*L.R)
         (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 2+2)/k) 0 :=
@@ -76,8 +89,8 @@ theorem forwardInitializedPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ)
 
 theorem forwardInitializedResidual_normalized_bound (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ)) (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ)) (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (((sourceCoefficientData period M D (InitialData.zero period D) hTime).inverse.multiply
       (forwardInitializedResidualField M D hTime δ hδ ξ hs α Cagree N hN k⁻¹
         (inv_ne_zero (by linarith)))).smul k).WordBound

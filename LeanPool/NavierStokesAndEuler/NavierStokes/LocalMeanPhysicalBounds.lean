@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageSupport
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CutStageEstimates
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageSupport
 
 /-!
 # Physical mean estimates on the actual normalized slow region
@@ -18,6 +18,9 @@ therefore lies strictly in `(1/2, 2)`. The estimates below use that actual
 open region and a genuine local equality with the selected band field.
 The field itself is the existing coherent physical field, not a band sum.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -7,11 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevProductJet
-public import LeanPool.NavierStokesAndEuler.Euler.GeneralRealCylinderAlgebra
+public import LeanPool.NavierStokesAndEuler.Euler.GeneralCylinderAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+import LeanPool.NavierStokesAndEuler.Euler.GeneralRealCylinderAlgebra
+import Mathlib.Algebra.Order.Star.Real
+
+/-! The genuine smooth product bound expressed in the complete cylinder Sobolev norm. -/
 
 @[expose] public section
 
-/-! The genuine smooth product bound expressed in the complete cylinder Sobolev norm. -/
 
 noncomputable section
 
@@ -51,12 +56,12 @@ theorem sobolevProductConstant_nonneg (q : ℕ) : 0 ≤ sobolevProductConstant p
 
 /-- Exact smooth product representative of the actual strong product jet. -/
 theorem productHighLow_representative {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
-    (u : SobolevSpace period (q+3)) (v : SobolevSpace period q)
+    (u : SobolevSpace period (q + 3)) (v : SobolevSpace period q)
     (f g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f)
     (hv : (value period v : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g) :
     (value period (productHighLow period L u v) : LiftDomain period → Vector3) =ᵐ[liftMeasure
-      period]
+        period]
       (fun x => L (f x) • g x) := by
   rw [productHighLow_value]
   filter_upwards [scalarProduct_ae period (le_refl 3) L
@@ -66,7 +71,7 @@ theorem productHighLow_representative {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
 /-- The actual product jet satisfies the low-order algebra bound whenever the inputs are smooth. -/
 theorem productHighLow_bound_smooth {q : ℕ} (hq : 6 ≤ q)
     (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
-    (u : SobolevSpace period (q+3)) (v : SobolevSpace period q)
+    (u : SobolevSpace period (q + 3)) (v : SobolevSpace period q)
     (f g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f)
     (hv : (value period v : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g)
@@ -77,14 +82,14 @@ theorem productHighLow_bound_smooth {q : ℕ} (hq : 6 ≤ q)
   let U : SobolevSpace period q := restrictOperator period (by omega : q ≤ q+3) u
   have hU : (value period U : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f := hu
   have hfL : ∀ j ≤ q, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2
-    (liftMeasure period) :=
+      (liftMeasure period) :=
     fun j hj w => jet_classical_memLp period hj (value period U) (toJet period U) w f hU hf
   have hgL : ∀ j ≤ q, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w g) 2
-    (liftMeasure period) :=
+      (liftMeasure period) :=
     fun j hj w => jet_classical_memLp period hj (value period v) (toJet period v) w g hv hg
   have hP := cylinder_Hq_scalar_vector_product period hq 3 (L ∘ f) g
     (postcomp_smooth period L f hf) hg (fun j hj w => postcomp_word_memLp period hj L f hf hfL w)
-      hgL
+        hgL
   have hPs : ∀ x, ContDiff ℝ ∞ (localFieldLift period (fun x => L (f x) • g x) x) :=
     fun x => (postcomp_smooth period L f hf x).smul (hg x)
   have hpr := productHighLow_representative period L u v f g hu hv
@@ -97,15 +102,15 @@ theorem productHighLow_bound_smooth {q : ℕ} (hq : 6 ≤ q)
   have hGn : liftSobolevNorm period q g ≤ (Fintype.card (SobolevWord q) : ℝ) * ‖v‖ := by
     rw [← sumNorm_eq_classical period v g hv hg]
     exact sumNorm_le_card_norm period v
-  have hpos : 0 ≤ 3 * algebraConstant period q := mul_nonneg (by norm_num) (algebraConstant_nonneg
-    period q)
+  have hpos : 0 ≤ 3 * algebraConstant period q := mul_nonneg (by
+      norm_num) (algebraConstant_nonneg period q)
   calc
     ‖productHighLow period L u v‖ ≤ liftSobolevNorm period q (fun x => L (f x) • g x) := hN
     _ ≤ (3 * algebraConstant period q) * liftSobolevNorm period q (L ∘ f) * liftSobolevNorm period
-      q g := hP
+        q g := hP
     _ ≤ (3 * algebraConstant period q) * liftSobolevNorm period q f * liftSobolevNorm period q g :=
       mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hLF hpos) (liftSobolevNorm_nonneg
-        period q g)
+          period q g)
     _ ≤ (3 * algebraConstant period q) * ((Fintype.card (SobolevWord q) : ℝ) * ‖U‖) *
         ((Fintype.card (SobolevWord q) : ℝ) * ‖v‖) :=
       mul_le_mul (mul_le_mul_of_nonneg_left hFn hpos) hGn (liftSobolevNorm_nonneg period q g)
@@ -114,28 +119,28 @@ theorem productHighLow_bound_smooth {q : ℕ} (hq : 6 ≤ q)
 
 /-- The high-low product is additive in its first argument. -/
 theorem productHighLow_add_left {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
-    (u w : SobolevSpace period (q+3)) (v : SobolevSpace period q) :
+    (u w : SobolevSpace period (q + 3)) (v : SobolevSpace period q) :
     productHighLow period L (u+w) v = productHighLow period L u v + productHighLow period L w v :=
-      by
+        by
   apply value_injective period
   change value period (productHighLow period L (u+w) v) = value period (productHighLow period L u
-    v) + value period (productHighLow period L w v)
+      v) + value period (productHighLow period L w v)
   simp only [productHighLow_value, map_add, scalarProduct_add_left]
 
 /-- The high-low product is additive in its second argument. -/
 theorem productHighLow_add_right {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
-    (u : SobolevSpace period (q+3)) (v w : SobolevSpace period q) :
+    (u : SobolevSpace period (q + 3)) (v w : SobolevSpace period q) :
     productHighLow period L u (v+w) = productHighLow period L u v + productHighLow period L u w :=
-      by
+        by
   apply value_injective period
   change value period (productHighLow period L u (v+w)) = value period (productHighLow period L u
-    v) + value period (productHighLow period L u w)
+      v) + value period (productHighLow period L u w)
   simp only [productHighLow_value]
   exact scalarProduct_add_right period (le_refl 3) L _ _ _
 
 /-- Exact product difference decomposition. -/
 theorem productHighLow_sub {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
-    (u w : SobolevSpace period (q+3)) (v z : SobolevSpace period q) :
+    (u w : SobolevSpace period (q + 3)) (v z : SobolevSpace period q) :
     productHighLow period L u v - productHighLow period L w z =
       productHighLow period L (u-w) v + productHighLow period L w (v-z) := by
   apply value_injective period
@@ -143,9 +148,9 @@ theorem productHighLow_sub {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
     value period (productHighLow period L (u-w) v) + value period (productHighLow period L w (v-z))
   simp only [productHighLow_value, map_sub]
   rw [show value period (v-z) = value period v - value period z from map_sub (valueOperator period
-    q) v z]
+      q) v z]
   change scalarProductBilinear period (le_refl 3) L _ _ - scalarProductBilinear period (le_refl 3)
-    L _ _ =
+      L _ _ =
     scalarProductBilinear period (le_refl 3) L _ _ + scalarProductBilinear period (le_refl 3) L _ _
   simp only [map_sub, sub_apply]
   abel

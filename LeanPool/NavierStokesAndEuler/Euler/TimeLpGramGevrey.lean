@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramInverse
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Uniform factorial estimates for the actual time Gram inverse
@@ -18,6 +18,9 @@ The lower frame bound and actual coefficient derivatives give the estimates
 for the inverse appearing in the strong acceleration equation. No derivative
 bounds on a pre-existing inverse are assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,23 +42,24 @@ variable {P U E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- The Gram solve is the actual smoothly parameterized coercive solution. -/
 theorem gramSolution_contDiff (T : ℝ) (hT : 0 ≤ T)
     (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
     (f : P → TimeLp T U) {n : ℕ∞ω} (hQ : ContDiff ℝ n Q) (hf : ContDiff ℝ n f) :
     ContDiff ℝ n (fun x => gramSolver T hT (Q x) c hc (hLower x) (f x)) :=
   contDiff_coerciveSolution_variable (fun x => gramOperator T hT (Q x)) (fun _ => c)
     (fun _ => hc) (fun x => gramOperator_coercive T hT (Q x) c (hLower x)) f
     (gramOperator_contDiff T hT Q hQ) hf
 
-/-- One factorial shift for the genuine Gram inverse, with an explicit polynomial radius condition. -/
+/-- One factorial shift for the genuine Gram inverse, with an explicit polynomial radius condition.
+-/
 theorem gramSolution_gevrey (T : ℝ) (hT : 0 ≤ T)
     (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
     (hQ : ContDiff ℝ ∞ Q)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C*majorant Rc 0 n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C * majorant Rc 0 n)
     (f : P → TimeLp T U) (hf : ContDiff ℝ ∞ f)
-    (D R : ℝ) (hD : 0 ≤ D) (hR : 2*gramCost c C D*(Rc+1) ≤ R)
-    (d : ℕ) (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D*majorant R d n)
+    (D R : ℝ) (hD : 0 ≤ D) (hR : 2 * gramCost c C D * (Rc + 1) ≤ R)
+    (d : ℕ) (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => gramSolver T hT (Q y) c hc (hLower y) (f y)) x‖ ≤
       majorant R (d+1) n := by
@@ -82,13 +86,13 @@ theorem gramSolution_gevrey (T : ℝ) (hT : 0 ≤ T)
 /-- The same estimate applies to the explicit inverse-Gram multiplier in the strong equation. -/
 theorem inverseGramMultiplier_gevrey (T : ℝ) (hT : 0 ≤ T)
     (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
     (hQ : ContDiff ℝ ∞ Q)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C*majorant Rc 0 n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C * majorant Rc 0 n)
     (f : P → TimeLp T U) (hf : ContDiff ℝ ∞ f)
-    (D R : ℝ) (hD : 0 ≤ D) (hR : 2*gramCost c C D*(Rc+1) ≤ R)
-    (d : ℕ) (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D*majorant R d n)
+    (D R : ℝ) (hD : 0 ≤ D) (hR : 2 * gramCost c C D * (Rc + 1) ≤ R)
+    (d : ℕ) (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n
       (fun y => timeMultiplier T hT (gramInversePath T (Q y) c hc (hLower y)) (f y)) x‖ ≤

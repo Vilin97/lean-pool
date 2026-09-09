@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
+
+/-! Actual defining equations of the generated mean and high profiles. -/
 
 @[expose] public section
 
-/-! Actual defining equations of the generated mean and high profiles. -/
 
 noncomputable section
 
@@ -57,11 +58,11 @@ theorem source_mean_equation (A : SourceCoefficientAgreement M D) (p : ℕ) (hp 
   rw [sourceStrain_eq_mean P M D I A t x θ,sourceInverse_eq_mean P M D I A t x θ]
   have he : sourceProfiles P M D I Iprimary p =
       EulerPacketProfileRecursion.step (sourceOperators P M D I) p (sourceProfiles P M D I
-        Iprimary) :=
+          Iprimary) :=
     profiles_step _ _ p hp
   rw [he]
   exact EulerMeanPacketProvider.meanSolve_jet_equation M _
-    ⟨source_meanForcing P M D hT I Iprimary p hp⟩ t x θ
+    ⟨sourceMeanForcing P M D hT I Iprimary p hp⟩ t x θ
 
 include hT in
 theorem source_high_equation (p : ℕ) (hp : 2 ≤ p)
@@ -73,12 +74,12 @@ theorem source_high_equation (p : ℕ) (hp : 2 ≤ p)
       highForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary) (t,(x,θ)) := by
   have he : sourceProfiles P M D I Iprimary p =
       EulerPacketProfileRecursion.step (sourceOperators P M D I) p (sourceProfiles P M D I
-        Iprimary) :=
+          Iprimary) :=
     profiles_step _ _ p hp
   rw [he]
   let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
   have h := EulerTransversePacketProvider.highSolve_jet_equation D I _
-    ⟨source_highForcing P M D hT I Iprimary p hp⟩ td x θ
+    ⟨sourceHighForcing P M D hT I Iprimary p hp⟩ td x θ
   change linearPart (D.strain (t,(x,θ)))
       (slicedJet (Icc (0 : ℝ) M.T)
         (EulerTransversePacketProvider.highSolve P D I
@@ -86,7 +87,7 @@ theorem source_high_equation (p : ℕ) (hp : 2 ≤ p)
       fastPressure (D.normalField (t,(x,θ)))
         (pressureJet (EulerTransversePacketProvider.highSolve P D I
           (highForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))).2 (t,(x,θ))) =
-            _
+              _
   have hs : Icc (0 : ℝ) M.T = Icc (0 : ℝ) D.T := congrArg (Icc (0 : ℝ)) hT
   have hj := congrArg (fun s : Set ℝ => slicedJet s
     (EulerTransversePacketProvider.highSolve P D I

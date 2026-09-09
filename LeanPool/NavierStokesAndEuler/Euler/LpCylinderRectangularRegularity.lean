@@ -7,10 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductAt
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductAt
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-!
 # Same-radius mixed cylinder bounds for the physical frame and forcing
@@ -20,6 +21,9 @@ its coefficient radius pays the finite alphabet and fixed Sobolev order.
 The input field's external-word radius is preserved by the true product
 estimate, using bounds only at the base translation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,26 +39,71 @@ variable (period : ℝ) [Fact (0 < period)]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F]
   [TopologicalSpace K] [CompactSpace K] [Fintype ι]
 
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 period E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 period E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 period F) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 period F) := inferInstance
-private local instance : NormedAddCommGroup C(K,CylinderL2 period E) := inferInstance
-private local instance : NormedSpace ℝ C(K,CylinderL2 period E) := inferInstance
-private local instance : NormedAddCommGroup C(K,CylinderL2 period F) := inferInstance
-private local instance : NormedSpace ℝ C(K,CylinderL2 period F) := inferInstance
-private local instance : NormedAddCommGroup (C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period
-  F)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period F)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity1 : NormedAddCommGroup (E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity2 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity3 : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity4 : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →ᵇ E →L[ℝ] F)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity5 : NormedAddCommGroup C(K,Space →ᵇ E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity6 : NormedSpace ℝ C(K,Space →ᵇ E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 period E)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity7 : NormedAddCommGroup (CylinderL2 period E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 period E)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity8 : NormedSpace ℝ (CylinderL2 period E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 period F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity9 : NormedAddCommGroup (CylinderL2 period F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 period F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity10 : NormedSpace ℝ (CylinderL2 period F) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,CylinderL2 period E)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity11 : NormedAddCommGroup C(K,CylinderL2 period E)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,CylinderL2 period E)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity12 : NormedSpace ℝ C(K,CylinderL2 period E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,CylinderL2 period F)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity13 : NormedAddCommGroup C(K,CylinderL2 period F)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,CylinderL2 period F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRectangularRegularity14 : NormedSpace ℝ C(K,CylinderL2 period F) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period
+F))` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity15 : NormedAddCommGroup (C(K,CylinderL2 period E)
+    →L[ℝ] C(K,CylinderL2 period
+    F)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period F))`
+instance to shorten typeclass synthesis. -/
+local instance instLpCylinderRectangularRegularity16 : NormedSpace ℝ (C(K,CylinderL2 period E)
+    →L[ℝ] C(K,CylinderL2 period F)) :=
+    inferInstance
 
-variable (A : C(K,Space →ᵇ E →L[ℝ] F)) (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
+variable (A : C(K, Space →ᵇ E →L[ℝ] F)) (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
 
 /-- The actual rectangular multiplier family under all four covering translations. -/
 def mixedMultiplier (a : LiftTangent) : C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period F) :=
@@ -91,11 +140,12 @@ theorem mixedMultiplier_bound (n : ℕ) (C : ℝ)
     (norm_nonneg _)).trans (by simpa only [one_mul] using hright))
 
 include hA in
-/-- Applying the physical frame or projected-forcing coefficient preserves actual mixed smoothness. -/
-theorem product_orbit_contDiff (u : C(K,CylinderL2 period E))
+/-- Applying the physical frame or projected-forcing coefficient preserves actual mixed smoothness.
+-/
+theorem product_orbit_contDiff (u : C(K, CylinderL2 period E))
     (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A u)) :=
-      by
+        by
   have he : (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A u)) =
       (fun a => mixedMultiplier period A a (pathTranslate period a u)) :=
     funext (fun a => (fullMultiplier_translation period a A u).symm)
@@ -106,8 +156,8 @@ include hA in
 /-- True fixed-Hq mixed word bounds for actual coefficient application. The
 field radius R is identical on both sides. -/
 theorem product_orbit_block_bound (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q
-  : ℕ)
-    (u : C(K,CylinderL2 period E))
+    : ℕ)
+    (u : C(K, CylinderL2 period E))
     (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u))
     (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius ι Rc ≤ R)
@@ -115,7 +165,7 @@ theorem product_orbit_block_bound (directions : ι → LiftTangent) (hd : ∀ i,
     (d : ℕ) (hbu : ∀ n, block directions q (fun a : LiftTangent => pathTranslate period a u) n 0 ≤
       D*majorant R d n) (n : ℕ) :
     block directions q (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A
-      u)) n 0 ≤
+        u)) n 0 ≤
       (3*sobolevCoefficientAmplitude ι q Rc C*D)*majorant R d n := by
   have he : (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A u)) =
       (fun a => mixedMultiplier period A a (pathTranslate period a u)) :=
@@ -125,7 +175,7 @@ theorem product_orbit_block_bound (directions : ι → LiftTangent) (hd : ∀ i,
     (fun a : LiftTangent => pathTranslate period a u) (mixedMultiplier_contDiff period A hA) hu 0
     (sobolevCoefficientRadius ι Rc) R (sobolevCoefficientAmplitude ι q Rc C) D
     (sobolevCoefficientRadius_nonneg Rc hRc) hR (sobolevCoefficientAmplitude_nonneg q Rc C hRc hC)
-      hD
+        hD
     (fun j => coefficientBlock_of_tensor_bound directions hd q (mixedMultiplier period A)
       (mixedMultiplier_contDiff period A hA) Rc C hRc hC
       (fun k a => mixedMultiplier_bound period A hA k (C*majorant Rc 0 k) (hbA k) a) j 0)
@@ -133,9 +183,9 @@ theorem product_orbit_block_bound (directions : ι → LiftTangent) (hd : ∀ i,
 
 include hA in
 theorem supported_product_orbit_contDiff (S : Set Space) (hS : MeasurableSet S)
-    (u : C(K,Supported period E S hS))
+    (u : C(K, Supported period E S hS))
     (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS u)))
-      :
+        :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS
       (supportedMultiplierMap period S hS A u))) := by
   rw [include_supportedMultiplier]

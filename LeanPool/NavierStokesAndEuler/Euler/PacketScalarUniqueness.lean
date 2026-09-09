@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Uniqueness of the actual scalar comparison equation, including its state. -/
 
 @[expose] public section
 
-/-! Uniqueness of the actual scalar comparison equation, including its state. -/
 
 noncomputable section
 
@@ -24,13 +29,13 @@ components on the forward half-line.  This lets independently constructed
 neighbor comparisons use one common reference. -/
 theorem equation30_state_eq_of_initial
     {σ : ℝ} {Z Z₁ W W₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
     (hW : ∀ t, 0 ≤ t → HasDerivAt W (W₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
-    (hfluxW : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*W₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*W t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
+    (hfluxW : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * W₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * W t) t)
     (hi : Z 0 = W 0) (hi₁ : Z₁ 0 = W₁ 0) :
     ∀ t, 0 ≤ t → Z t = W t ∧ Z₁ t = W₁ t := by
   have hσ2 : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]

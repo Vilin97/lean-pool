@@ -7,10 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFamily
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Tactic.NormNum.GCD
+
+/-! All-order L² parameter regularity with the original square-integrable derivative bounds. -/
 
 @[expose] public section
 
-/-! All-order L² parameter regularity with the original square-integrable derivative bounds. -/
 
 noncomputable section
 

@@ -6,11 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeAliasDecay
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStateRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeAliasDecay
 
 /-!
 # Full-vector bounds for the actual moving-gauge excluded aliases
@@ -21,6 +18,9 @@ actual source and lifted through fixed linear component maps.  All
 regularity is supplied by the incoming primitive fields and the genuine
 pressure reconstruction, not by a hypothesis on an alias output.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -166,6 +166,7 @@ noncomputable abbrev actualGauge (h a b Mbase : ℝ) (hab : a < b) (index : ℕ 
 
 section ActualAliases
 
+/-- Point: an abbreviation for `MeanStateRegularity.Point`. -/
 abbrev Point := MeanStateRegularity.Point
 
 variable {a b h Mbase cL cR : ℝ}
@@ -186,7 +187,7 @@ theorem pressureAliasState_mean_bounds {κ γ : ℝ}
     (hb : BaseBounds (actualStrip (b := b) U ha hcL hcR hh L hL) c.base)
     (hu : CorrectionState.CumulativeBounds (actualStrip (b := b) U ha hcL hcR hh L hL) u)
     (hW : ∀ i j, MeanClass (actualStrip (b := b) U ha hcL hcR hh L hL) γ (u.covariance i j)) (β :
-      ℝ) :
+        ℝ) :
     MeanClass (actualStrip (b := b) U ha hcL hcR hh L hL) β
       (fun n z => pressureAliasState (actualGauge h a b Mbase hab index) c u n (z, 0)) ∧
       MeanClass (HarmonicWaveInteraction.productStrip (actualStrip (b := b) U ha hcL hcR hh L hL)) β
@@ -207,11 +208,11 @@ theorem pressureAliasState_bounds {κ γ : ℝ}
     (hb : BaseBounds (actualStrip (b := b) U ha hcL hcR hh L hL) c.base)
     (hu : CorrectionState.CumulativeBounds (actualStrip (b := b) U ha hcL hcR hh L hL) u)
     (hW : ∀ i j, MeanClass (actualStrip (b := b) U ha hcL hcR hh L hL) γ (u.covariance i j)) (β :
-      ℝ) :
+        ℝ) :
     UnweightedClass (actualStrip (b := b) U ha hcL hcR hh L hL) β
       (fun n z => pressureAliasState (actualGauge h a b Mbase hab index) c u n (z, 0)) ∧
       UnweightedClass (HarmonicWaveInteraction.productStrip (actualStrip (b := b) U ha hcL hcR hh L
-        hL)) β
+          hL)) β
         (pressureAliasState (actualGauge h a b Mbase hab index) c u) := by
   obtain ⟨hv, hl⟩ := pressureAliasState_mean_bounds U ha hab hcL hcR hh hM index D hgapLower
     L hL hS c u H ho hb hu hW β
@@ -253,7 +254,7 @@ theorem temporalAliasState_bounds {α : ℝ}
     UnweightedClass (actualStrip (b := b) U ha hcL hcR hh L hL) β
       (fun n z => temporalAliasState (actualGauge h a b Mbase hab index) h index c u n (z, 0)) ∧
       UnweightedClass (HarmonicWaveInteraction.productStrip (actualStrip (b := b) U ha hcL hcR hh L
-        hL)) β
+          hL)) β
         (temporalAliasState (actualGauge h a b Mbase hab index) h index c u) := by
   obtain ⟨hm, hl⟩ := temporalAliasState_mean_bounds U ha hab hcL hcR hh hM index D
     hgapLower hgapUpper L hL hS c u H hfixed hfast hv hraw β
@@ -275,7 +276,7 @@ theorem primitiveData_reconstruct {coord a b : ℝ} {U : SlowRegion coord}
 theorem reconstructed_pressure_fixed (g : GaugeData TorusInverse.Plane)
     (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     (reconstructState g c (reconstructState g c u)).pressure = (reconstructState g c u).pressure :=
-      rfl
+        rfl
 
 /-- For a literally reconstructed incoming state the fixed-pressure
 invariant is discharged by the construction itself. -/
@@ -295,13 +296,13 @@ theorem temporalAliasState_reconstructed_bounds
       (movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
         (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL) α
       ((reconstructState (similarityGauge h (ChartScales.radialExponent h) a b Mbase hab index) c
-        u).axialResidual c))
+          u).axialResidual c))
     (β : ℝ) :
     let g := similarityGauge h (ChartScales.radialExponent h) a b Mbase hab index
     let s := movingStripData U a b cL cR ha hcL hcR (ChartScales.epsilon h) L
       (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) hL
     UnweightedClass s β (fun n z => temporalAliasState g h index c (reconstructState g c u) n (z,
-      0)) ∧
+        0)) ∧
       UnweightedClass (HarmonicWaveInteraction.productStrip s) β
         (temporalAliasState g h index c (reconstructState g c u)) := by
   dsimp only

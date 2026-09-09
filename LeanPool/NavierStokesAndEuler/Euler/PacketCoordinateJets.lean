@@ -8,16 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCorrectionCoefficients
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedResidual
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinear
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
 
 /-! Genuine time and spatial derivatives of z = k F⁻¹ W.  The inverse
 derivative is derived from the prescribed deformation, including at the
 endpoints of the actual time interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,23 +27,29 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerVolterraConvolution EulerLpCylinderRectangular
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instPacketCoordinateJets1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instPacketCoordinateJets2 : NormedSpace ℝ Space := inferInstance
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : Data U)
 
+/-- Coordinate, defined pointwise by `k • rawInverse D z (W z)`. -/
 def coordinate (k : ℝ) (W : VectorField) : VectorField :=
   fun z => k • rawInverse D z (W z)
 
+/-- Inverse time, given by `D.inverseDerivative (D.clamp z.1) z.2.1`. -/
 def inverseTime (z : Domain) : Space →L[ℝ] Space :=
   D.inverseDerivative (D.clamp z.1) z.2.1
 
+/-- Inverse time coefficient, bundling `path`, `orbit`, `raw_eq`. -/
 def inverseTimeCoefficient : MatrixCoefficient D.T (inverseTime D) where
   path := D.inverseDerivative
   orbit := D.inverseDerivative_orbit
   raw_eq t x θ := by simp only [inverseTime,Data.clamp_coe]
 
+/-- Coordinate time, defined pointwise by `k • (inverseTime D z (W z) + rawInverse D z (Wt z))`. -/
 def coordinateTime (k : ℝ) (W Wt : VectorField) : VectorField :=
   fun z => k • (inverseTime D z (W z) + rawInverse D z (Wt z))
 
@@ -72,7 +76,7 @@ theorem normal_coordinate (k : ℝ) (W : VectorField) (z : Domain) :
 
 theorem coordinate_hasDerivWithinAt (k : ℝ) (W Wt : VectorField)
     (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ)
-    (hW : HasDerivWithinAt (fun r => W (r,(x,θ))) (Wt (t,(x,θ)))
+    (hW : HasDerivWithinAt (fun r => W (r, (x, θ))) (Wt (t, (x, θ)))
       (Icc (0 : ℝ) D.T) t) :
     HasDerivWithinAt (fun r => coordinate D k W (r,(x,θ)))
       (coordinateTime D k W Wt (t,(x,θ))) (Icc (0 : ℝ) D.T) t := by
@@ -82,7 +86,7 @@ theorem coordinate_hasDerivWithinAt (k : ℝ) (W Wt : VectorField)
 
 theorem coordinate_derivWithin (k : ℝ) (W Wt : VectorField)
     (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ)
-    (hW : HasDerivWithinAt (fun r => W (r,(x,θ))) (Wt (t,(x,θ)))
+    (hW : HasDerivWithinAt (fun r => W (r, (x, θ))) (Wt (t, (x, θ)))
       (Icc (0 : ℝ) D.T) t) :
     derivWithin (fun r => coordinate D k W (r,(x,θ))) (Icc (0 : ℝ) D.T) t =
       coordinateTime D k W Wt (t,(x,θ)) :=
@@ -94,9 +98,12 @@ section Fields
 variable {P : ℝ} [Fact (0 < P)] {W Wt : VectorField}
   (G : Field P D.T W) (Gt : Field P D.T Wt)
 
+/-- Coordinate field, given by `((inverseCoefficient D).multiply G).smul k`. -/
 def coordinateField (k : ℝ) : Field P D.T (coordinate D k W) :=
   ((inverseCoefficient D).multiply G).smul k
 
+/-- Coordinate time field, given by `(((inverseTimeCoefficient D).multiply G).add
+((inverseCoefficient D).multiply Gt)).smul k`. -/
 def coordinateTimeField (k : ℝ) : Field P D.T (coordinateTime D k W Wt) :=
   (((inverseTimeCoefficient D).multiply G).add ((inverseCoefficient D).multiply Gt)).smul k
 

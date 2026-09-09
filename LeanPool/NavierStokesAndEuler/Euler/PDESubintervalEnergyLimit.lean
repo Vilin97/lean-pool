@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PDEEnergyLimit
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpSubinterval
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevMetricTransport
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+public import LeanPool.NavierStokesAndEuler.Euler.WeightedCylinderEnergy
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpSubinterval
+import LeanPool.NavierStokesAndEuler.Euler.WeightedSobolevEnergy
+
+/-! Genuine finite-Sobolev PDE energy passage on every time subinterval. -/
 
 @[expose] public section
 
-/-! Genuine finite-Sobolev PDE energy passage on every time subinterval. -/
 
 noncomputable section
 
@@ -20,10 +25,11 @@ namespace EulerPDESubintervalEnergyLimit
 open MeasureTheory Set Real InnerProductSpace EulerLiftedGradientSpace EulerSpatialSobolevInverse
   EulerCylinderSobolev EulerCylinderSobolevSpace EulerMetricHeatEnergy EulerFiniteMetricEnergy
   EulerWeightedSobolevEnergy EulerWeightedCylinderEnergy EulerSobolevMetricTransport
-  EulerVolterraConvolution EulerTimeLp EulerTimeLpPairing EulerPacketWeights EulerTimeLpSubinterval
+  EulerVolterraConvolution EulerTimeLp  EulerPacketWeights EulerTimeLpSubinterval
 open scoped Topology
 
-/-- Three continuous weighted paths identify the actual scalar integral on an arbitrary time subinterval. -/
+/-- Three continuous weighted paths identify the actual scalar integral on an arbitrary time
+subinterval. -/
 theorem integral_eq_three_subinterval_paths (T : ℝ) (hT : 0 ≤ T) (s t : ℝ) (hst : s ≤ t)
     (a b c X Y Z : C(Icc (0 : ℝ) T, ℝ)) (f : ℝ → ℝ)
     (hf : ∀ r ∈ Icc s t, f r = extendPath T hT a r * extendPath T hT X r +
@@ -33,11 +39,11 @@ theorem integral_eq_three_subinterval_paths (T : ℝ) (hT : 0 ≤ T) (s t : ℝ)
       (∫ r in s..t, extendPath T hT b r * extendPath T hT Y r) +
       ∫ r in s..t, extendPath T hT c r * extendPath T hT Z r := by
   have ha := ((extendPath_continuous T hT a).mul (extendPath_continuous T hT X)).intervalIntegrable
-    (μ := volume) s t
+      (μ := volume) s t
   have hb := ((extendPath_continuous T hT b).mul (extendPath_continuous T hT Y)).intervalIntegrable
-    (μ := volume) s t
+      (μ := volume) s t
   have hc := ((extendPath_continuous T hT c).mul (extendPath_continuous T hT Z)).intervalIntegrable
-    (μ := volume) s t
+      (μ := volume) s t
   change IntervalIntegrable (fun r => extendPath T hT a r * extendPath T hT X r) volume s t at ha
   change IntervalIntegrable (fun r => extendPath T hT b r * extendPath T hT Y r) volume s t at hb
   change IntervalIntegrable (fun r => extendPath T hT c r * extendPath T hT Z r) volume s t at hc
@@ -48,13 +54,14 @@ theorem integral_eq_three_subinterval_paths (T : ℝ) (hT : 0 ≤ T) (s t : ℝ)
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Actual smooth-in-time finite-Sobolev PDE approximations imply the limiting signed integral energy bound.
+/-- Actual smooth-in-time finite-Sobolev PDE approximations imply the limiting signed integral
+energy bound.
 The premises include their literal PDEs and strong convergence, never an assumed energy inequality.
-  -/
+-/
 theorem weighted_pde_energy_subinterval_limit {α β : Type*} [Fintype α] [Fintype β] {q : ℕ} (hq : 3
-  ≤ q)
+    ≤ q)
     (T : ℝ) (hT : 0 ≤ T) (s t : ℝ) (h0s : 0 ≤ s) (hst : s ≤ t) (htT : t ≤ T) (order : α → ℕ) (ρ ρ'
-      : ℝ → ℝ)
+        : ℝ → ℝ)
     (κ : ℝ) (m : Vector3) (K G : ℝ → SmoothCoefficient period)
     (e : ℕ → α → β → ℝ → SobolevSpace period 2)
     (e' p forcing : ℕ → α → β → ℝ → LiftL2 period) (z : ℝ → SobolevSpace period q)
@@ -67,17 +74,17 @@ theorem weighted_pde_energy_subinterval_limit {α β : Type*} [Fintype α] [Fint
     (hKt : ∀ r ∈ Ioo 0 T, HasDerivAt (fun v => (K v).operator) (K' r) r)
     (het : ∀ n i j r, r ∈ Ioo 0 T → HasDerivAt (fun v => value period (e n i j v)) (e' n i j r) r)
     (hsym : ∀ r ∈ Ioo 0 T, ∀ x v w, ⟪(K r).coefficient x v, w⟫_ℝ = ⟪v, (K r).coefficient x w⟫_ℝ)
-    (hpos : ∀ r ∈ Icc 0 T, ∀ x v, c^2*‖v‖^2 ≤ ⟪(K r).coefficient x v, v⟫_ℝ)
+    (hpos : ∀ r ∈ Icc 0 T, ∀ x v, c ^ 2 * ‖v‖ ^ 2 ≤ ⟪(K r).coefficient x v, v⟫_ℝ)
     (hKG : ∀ r ∈ Ioo 0 T, ∀ x v, (K r).coefficient x ((G r).coefficient x v) = v)
     (hediv : ∀ n i j r, r ∈ Ioo 0 T → value period (e n i j r) ∈ divergenceFreeSpace period κ m)
     (hp : ∀ n i j r, r ∈ Ioo 0 T → p n i j r ∈ gradientSpace period κ m)
     (hz : ∀ r ∈ Ioo 0 T, value period (z r) ∈ divergenceFreeSpace period κ m)
     (hzB : ∀ r ∈ Ioo 0 T, ∀ᵐ x ∂liftMeasure period, ‖value period (z r) x‖ ≤ B r)
     (heq : ∀ n i j r, r ∈ Ioo 0 T → e' n i j r +
-      transportOperator period hq κ m (z r) (restrictOperator period (by norm_num : 1 ≤ 2) (e n i j
-        r)) +
+      transportOperator period hq κ m (z r) (restrictOperator period (by
+          norm_num : 1 ≤ 2) (e n i j r)) +
         (G r).operator (p n i j r) = forcing n i j r + ν • jetLaplacian period (toJet period (e n i
-          j r)))
+            j r)))
     (hAint : ∀ i, IntegrableOn (fun r => weight (ρ r) (order i) *
       viscousGrowthCoefficient period (K r) (K' r) κ m c ν (B r) +
       (ρ' r / ρ r) * (order i : ℝ) * weight (ρ r) (order i)) (Icc 0 T))
@@ -85,7 +92,7 @@ theorem weighted_pde_energy_subinterval_limit {α β : Type*} [Fintype α] [Fint
       ((((K r).bound : ℝ) / c) * familyNorm (fun j => forcing n i j r))) (Icc 0 T))
     (a b d : C(Icc (0 : ℝ) T, ℝ))
     (ha : ∀ r ∈ Icc 0 T, viscousGrowthCoefficient period (K r) (K' r) κ m c ν (B r) = extendPath T
-      hT a r)
+        hT a r)
     (hb : ∀ r ∈ Icc 0 T, ρ' r / ρ r = extendPath T hT b r)
     (hd : ∀ r ∈ Icc 0 T, ((K r).bound : ℝ) / c = extendPath T hT d r)
     (X Y Z : ℕ → C(Icc (0 : ℝ) T, ℝ))
@@ -104,7 +111,7 @@ theorem weighted_pde_energy_subinterval_limit {α β : Type*} [Fintype α] [Fint
       ∫ r in Icc s t, pathLp T hT d r * f r ∂timeMeasure T := by
   have hsub : Icc s t ⊆ Icc (0 : ℝ) T := fun _ hr => ⟨h0s.trans hr.1, hr.2.trans htT⟩
   have hsubo : Ioo s t ⊆ Ioo (0 : ℝ) T := fun _ hr => ⟨lt_of_le_of_lt h0s hr.1, lt_of_lt_of_le hr.2
-    htT⟩
+      htT⟩
   apply integral_energy_subinterval_limit T hT s t h0s hst htT a b (pathLp T hT d)
     X Y (fun n => pathLp T hT (Z n)) x y f hX hY hZ
   intro n
@@ -128,7 +135,7 @@ theorem weighted_pde_energy_subinterval_limit {α β : Type*} [Fintype α] [Fint
     (fun r => viscousGrowthCoefficient period (K r) (K' r) κ m c ν (B r) *
       weightedMetricSum (ρ r) order (K r).operator (fun i j => value period (e n i j r)) +
       (ρ' r / ρ r) * weightedMetricLoss (ρ r) order (K r).operator (fun i j => value period (e n i
-        j r)) +
+          j r)) +
       (((K r).bound : ℝ) / c) * weightedForcingSum (ρ r) order (fun i j => forcing n i j r))
     (fun r hr => by rw [ha r (hsub hr), hb r (hsub hr), hd r (hsub hr),
       hXdef n r (hsub hr), hYdef n r (hsub hr), hZdef n r (hsub hr)])

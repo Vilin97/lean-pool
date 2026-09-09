@@ -8,10 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveOrderMoments
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowExpansionResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
-public import Mathlib.Analysis.Calculus.Deriv.Support
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Positive slow-order tangential stress support
@@ -21,6 +20,9 @@ operators use the actual Frechet derivatives. Compact stress support is a
 consequence of the repaired moments and the differential equations.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter MeasureTheory
@@ -28,29 +30,43 @@ open scoped ContDiff Topology BigOperators
 
 namespace NavierStokes.SlowStressSupport
 
+/-- Field: an abbreviation for `ℝ × ℝ → ℝ`. -/
 abbrev Field := ℝ × ℝ → ℝ
+/-- History: an abbreviation for `ℕ → Field`. -/
 abbrev History := ℕ → Field
+/-- Dr, given by `ProfileHistories.radialPartial`. -/
 noncomputable def dr := ProfileHistories.radialPartial
+/-- De, given by `ProfileHistories.parameterPartial`. -/
 noncomputable def de := ProfileHistories.parameterPartial
+/-- Region: an abbreviation for `(univ : Set ℝ) ×ˢ S`. -/
 abbrev region (S : Set ℝ) := (univ : Set ℝ) ×ˢ S
+/-- Smooth: an abbreviation for `ContDiffOn ℝ ∞ f (region S)`. -/
 abbrev Smooth (S : Set ℝ) (f : Field) := ContDiffOn ℝ ∞ f (region S)
 
+/-- Exterior, given by `∀ eta ∈ S, ∀ R, B ≤ R → f (R, eta) = 0`. -/
 noncomputable def exterior (B : ℝ) (S : Set ℝ) (f : Field) : Prop :=
   ∀ eta ∈ S, ∀ R, B ≤ R → f (R, eta) = 0
 
+/-- Weighted, given by `w.1 ^ m * f w`. -/
 noncomputable def weighted (m : ℕ) (f : Field) (w : ℝ × ℝ) : ℝ := w.1 ^ m * f w
 
+/-- Moment, given by `∫ R in (0 : ℝ)..B, R ^ m * f (R, eta)`. -/
 noncomputable def moment (B : ℝ) (m : ℕ) (f : Field) (eta : ℝ) : ℝ :=
   ∫ R in (0 : ℝ)..B, R ^ m * f (R, eta)
 
+/-- Time op, given by `(-b * f w + PositiveAxisSystem.dScale h * w.2 * de f w + w.1 / 2 * dr f
+w) / PositiveAxisSystem.ell h w.2`. -/
 noncomputable def timeOp (h b : ℝ) (f : Field) (w : ℝ × ℝ) : ℝ :=
   (-b * f w + PositiveAxisSystem.dScale h * w.2 * de f w + w.1 / 2 * dr f w) /
     PositiveAxisSystem.ell h w.2
 
+/-- Axial op, given by `(2 * w.2 * b * f w + PositiveAxisSystem.edge w.2 * de f w - w.2 * w.1 *
+dr f w) / PositiveAxisSystem.ell h w.2`. -/
 noncomputable def axialOp (h b : ℝ) (f : Field) (w : ℝ × ℝ) : ℝ :=
   (2 * w.2 * b * f w + PositiveAxisSystem.edge w.2 * de f w - w.2 * w.1 * dr f w) /
     PositiveAxisSystem.ell h w.2
 
+/-- Axial Op2, given by `axialOp h (b - PositiveAxisSystem.dScale h) (axialOp h b f)`. -/
 noncomputable def axialOp2 (h b : ℝ) (f : Field) : Field :=
   axialOp h (b - PositiveAxisSystem.dScale h) (axialOp h b f)
 
@@ -137,8 +153,8 @@ theorem moment_hasDerivAt {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth
     (ProfileHistories.primitive_smooth D (smooth_weighted hf m))
     (w := (B, eta)) heta
   change HasDerivAt (fun z => ProfileHistories.primitive (weighted m f) (B, z))
-    (ProfileHistories.parameterPartial (ProfileHistories.primitive (weighted m f)) (B, eta)) eta at
-      hp
+    (ProfileHistories.parameterPartial (ProfileHistories.primitive (weighted m f)) (B, eta)) eta
+        at hp
   rw [ProfileHistories.parameterPartial_primitive D (smooth_weighted hf m)
     (p := (B, eta)) ⟨mem_univ _, heta⟩] at hp
   have hi : ProfileHistories.primitive (de (weighted m f)) (B, eta) =
@@ -229,11 +245,11 @@ theorem moment_axialOp {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S 
         eta * (B ^ (m + 1) * f (B, eta) - ((m + 1 : ℕ) : ℝ) * moment B m f eta)) /
         PositiveAxisSystem.ell h eta := by
   have h0 := ((slice_smooth (smooth_weighted hf m) heta).continuous.intervalIntegrable (μ :=
-    volume) 0 B)
+      volume) 0 B)
   have h1 := ((slice_smooth (smooth_weighted (smooth_de hS hf) m)
-    heta).continuous.intervalIntegrable (μ := volume) 0 B)
+      heta).continuous.intervalIntegrable (μ := volume) 0 B)
   have h2 := ((slice_smooth (smooth_weighted (smooth_dr hS hf) (m + 1))
-    heta).continuous.intervalIntegrable (μ := volume) 0 B)
+      heta).continuous.intervalIntegrable (μ := volume) 0 B)
   dsimp only [weighted] at h0 h1 h2
   have he : (fun R => R ^ m * axialOp h b f (R, eta)) =
       (fun R => (2 * eta * b * (R ^ m * f (R, eta)) +
@@ -259,11 +275,11 @@ theorem moment_timeOp {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S f
         (B ^ (m + 1) * f (B, eta) - ((m + 1 : ℕ) : ℝ) * moment B m f eta) / 2) /
         PositiveAxisSystem.ell h eta := by
   have h0 := ((slice_smooth (smooth_weighted hf m) heta).continuous.intervalIntegrable (μ :=
-    volume) 0 B)
+      volume) 0 B)
   have h1 := ((slice_smooth (smooth_weighted (smooth_de hS hf) m)
-    heta).continuous.intervalIntegrable (μ := volume) 0 B)
+      heta).continuous.intervalIntegrable (μ := volume) 0 B)
   have h2 := ((slice_smooth (smooth_weighted (smooth_dr hS hf) (m + 1))
-    heta).continuous.intervalIntegrable (μ := volume) 0 B)
+      heta).continuous.intervalIntegrable (μ := volume) 0 B)
   dsimp only [weighted] at h0 h1 h2
   have he : (fun R => R ^ m * timeOp h b f (R, eta)) =
       (fun R => (-b * (R ^ m * f (R, eta)) +
@@ -309,9 +325,12 @@ theorem moment_axialOp2_zero {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smo
     (fun z hz => moment_axialOp_zero hS hf h b B m
       (fun z hz => hs z hz B le_rfl) hm hz) heta
 
+/-- Order exponent, given by `-PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h n`. -/
 noncomputable def orderExponent (h : ℝ) (n : ℕ) : ℝ :=
   -PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h n
 
+/-- Pressure exponent, given by `-2 * PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h
+n`. -/
 noncomputable def pressureExponent (h : ℝ) (n : ℕ) : ℝ :=
   -2 * PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h n
 
@@ -328,6 +347,7 @@ theorem physical_product_power {q : ℝ} (hq : 0 < q) (h b c : ℝ)
       q ^ (b + c + SlowExpansionResidual.slowOrder h n) := by
   rw [SlowExpansionResidual.rpow_product_order hq, hij]
 
+/-- Conv, given by `∑ i ∈ Finset.range (n + 1), u i w * v (n - i) w`. -/
 noncomputable def conv (n : ℕ) (u v : History) (w : ℝ × ℝ) : ℝ :=
   ∑ i ∈ Finset.range (n + 1), u i w * v (n - i) w
 
@@ -412,9 +432,11 @@ theorem axialOp_add {S : Set ℝ} (hS : IsOpen S) {f g : Field}
   simp only [axialOp, hr, he]
   ring
 
+/-- Angular viscous flux, given by `w.1 ^ 2 * dr e w - w.1 * e w`. -/
 noncomputable def angularViscousFlux (e : Field) (w : ℝ × ℝ) : ℝ :=
   w.1 ^ 2 * dr e w - w.1 * e w
 
+/-- Axial viscous flux, given by `w.1 * dr u w`. -/
 noncomputable def axialViscousFlux (u : Field) (w : ℝ × ℝ) : ℝ := w.1 * dr u w
 
 theorem dr_angularViscousFlux {S : Set ℝ} (hS : IsOpen S) {e : Field} (he : Smooth S e)
@@ -440,6 +462,7 @@ theorem dr_axialViscousFlux {S : Set ℝ} (hS : IsOpen S) {u : Field} (hu : Smoo
   norm_num
   ring
 
+/-- Angular weighted, constructed using `w.1`. -/
 noncomputable def angularWeighted (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ × ℝ) : ℝ :=
   w.1 ^ 2 * timeOp h (orderExponent h n) (e n) w +
     (∑ j ∈ Finset.range (n + 1),
@@ -448,6 +471,7 @@ noncomputable def angularWeighted (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ
     (w.1 ^ 2 * dr (dr (e n)) w + w.1 * dr (e n) w - e n w) -
     w.1 ^ 2 * axialOp2 h (orderExponent h (n - 1)) (e (n - 1)) w
 
+/-- Axial weighted, constructed using `w.1`. -/
 noncomputable def axialWeighted (h : ℝ) (n : ℕ) (v u : History) (p : Field) (w : ℝ × ℝ) : ℝ :=
   w.1 * timeOp h (orderExponent h n) (u n) w +
     (∑ j ∈ Finset.range (n + 1),
@@ -457,6 +481,7 @@ noncomputable def axialWeighted (h : ℝ) (n : ℕ) (v u : History) (p : Field) 
     (w.1 * dr (dr (u n)) w + dr (u n) w) -
     w.1 * axialOp2 h (orderExponent h (n - 1)) (u (n - 1)) w
 
+/-- Angular density, constructed using `w.1`. -/
 noncomputable def angularDensity (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ × ℝ) : ℝ :=
   w.1 ^ 2 * timeOp h (orderExponent h n) (e n) w +
     dr (weighted 1 (conv n v e)) w +
@@ -464,6 +489,7 @@ noncomputable def angularDensity (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ 
     dr (angularViscousFlux (e n)) w -
     w.1 ^ 2 * axialOp2 h (orderExponent h (n - 1)) (e (n - 1)) w
 
+/-- Axial density, constructed using `w.1`. -/
 noncomputable def axialDensity (h : ℝ) (n : ℕ) (v u : History) (p : Field) (w : ℝ × ℝ) : ℝ :=
   w.1 * timeOp h (orderExponent h n) (u n) w + dr (conv n v u) w +
     w.1 * axialOp h (pressureExponent h n) (fun p' => conv n u u p' + p p') w -
@@ -503,7 +529,7 @@ theorem axialWeighted_eq_density {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
     axialOp_conv hS hu hu h hw, dr_axialViscousFlux hS (hu n le_rfl) hw]
   have hs : (∑ j ∈ Finset.range (n + 1),
       (v j w * dr (u (n - j)) w + w.1 * u j w * axialOp h (orderExponent h (n - j)) (u (n - j)) w))
-        =
+          =
       (∑ j ∈ Finset.range (n + 1), (dr (v j) w * u (n - j) w + v j w * dr (u (n - j)) w)) +
       w.1 * ∑ j ∈ Finset.range (n + 1),
         (axialOp h (orderExponent h j) (u j) w * u (n - j) w +
@@ -552,7 +578,7 @@ theorem moment_five {S : Set ℝ} {f g k l p : Field}
     (B : ℝ) (m : ℕ) {eta : ℝ} (heta : eta ∈ S) :
     moment B m (fun w => f w + g w + k w - l w - p w) eta =
       moment B m f eta + moment B m g eta + moment B m k eta - moment B m l eta - moment B m p eta
-        := by
+          := by
   rw [moment_sub (((hf.add hg).add hk).sub hl) hp B m heta,
     moment_sub ((hf.add hg).add hk) hl B m heta,
     moment_add (hf.add hg) hk B m heta, moment_add hf hg B m heta]
@@ -616,7 +642,7 @@ theorem axial_integral_balance {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
   have ht := smooth_weighted (smooth_timeOp hS (hu n le_rfl) h (orderExponent h n) hell) 1
   have hr := smooth_conv hv hu
   have hz := smooth_weighted (smooth_axialOp hS ((smooth_conv hu hu).add hp) h (pressureExponent h
-    n) hell) 1
+      n) hell) 1
   have hk := smooth_axialViscousFlux hS (hu n le_rfl)
   have hl := smooth_weighted (smooth_axialOp2 hS (hu (n - 1) (Nat.sub_le _ _)) h
     (orderExponent h (n - 1)) hell) 1
@@ -673,7 +699,7 @@ theorem repaired_moment_data {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
     moment B 1 (u n) eta = 0 ∧ moment B 2 (e n) eta = 0 ∧
       moment B 2 (conv n u e) eta = 0 ∧
       moment B 1 (fun w => conv n u u w + PositiveOrderMoments.pressureHistory n e omega w) eta = 0
-        := by
+          := by
   have hP := PositiveOrderMoments.pressureHistory_contDiffOn hS hq
   have hdP : ∀ w : ℝ × ℝ, w.2 ∈ S →
       dr (PositiveOrderMoments.pressureHistory n e omega) w =
@@ -703,10 +729,10 @@ theorem repaired_moment_data {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
         PositiveOrderMoments.jointPressureGradient n e omega (R, z) = _
       ring
     have hi0 := (slice_smooth (smooth_weighted (smooth_conv hu hu) 1)
-      hz).continuous.intervalIntegrable
+        hz).continuous.intervalIntegrable
       (μ := volume) 0 B
     have hi1 := (slice_smooth (smooth_weighted (smooth_dr hS hP) 2)
-      hz).continuous.intervalIntegrable
+        hz).continuous.intervalIntegrable
       (μ := volume) 0 B
     simp only [weighted, pow_one] at hi0 hi1
     rw [hfun, intervalIntegral.integral_sub hi0 (hi1.const_mul (1 / 2)),
@@ -832,6 +858,7 @@ theorem stress_slice_support (m : ℕ) {F : Field} {S : Set ℝ} {a B : ℝ} (hB
   · by_contra hh
     exact hR (stress_exterior m hB hs hm (le_of_not_ge hh) heta)
 
+/-- Radial support, given by `∀ eta ∈ S, ∀ R, R ∉ Icc a b → f (R, eta) = 0`. -/
 noncomputable def radialSupport (S : Set ℝ) (a b : ℝ) (f : Field) : Prop :=
   ∀ eta ∈ S, ∀ R, R ∉ Icc a b → f (R, eta) = 0
 
@@ -889,7 +916,7 @@ theorem interior_weighted_jets {S K : Set ℝ} (hS : IsOpen S) (hK : IsCompact K
   · apply (div_le_iff₀ (hz0 R hR)).mp
     exact (le_abs_self _).trans ((hC (R, eta) ⟨hi, heta⟩).trans (le_max_left _ _))
   · have hj := jet_eq_zero_of_eventually (support_eventually_zero hS hs (w := (R, eta)) (hKS heta)
-    hi) k
+      hi) k
     rw [hj, norm_zero]
     exact mul_nonneg (le_max_right _ _) (hz0 R hR).le
 
@@ -966,7 +993,7 @@ theorem exterior_angularDensity {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
   have hr := exterior_dr hS (smooth_weighted (smooth_conv hv he) 1)
     (exterior_weighted (exterior_conv_left hV) 1)
   have hz := exterior_axialOp hS (smooth_conv hu he) (exterior_conv_left hU) h (pressureExponent h
-    n)
+      n)
   have hvf : exterior B S (angularViscousFlux (e n)) := by
     intro eta heta R hR
     simp [angularViscousFlux, hE eta heta R hR, exterior_dr hS (he n le_rfl) hE eta heta R hR]
@@ -994,12 +1021,14 @@ theorem exterior_axialDensity {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
   have hk := exterior_dr hS (smooth_axialViscousFlux hS (hu n le_rfl)) hvf
   intro eta heta R hR
   simp [axialDensity, exterior_timeOp hS (hu n le_rfl) (hU n le_rfl) h (orderExponent h n) eta heta
-    R hR,
+      R hR,
     hr eta heta R hR, hz eta heta R hR, hk eta heta R hR, hprev eta heta R hR]
 
+/-- Angular stress, given by `stress 2 (angularDensity h n v u e)`. -/
 noncomputable def angularStress (h : ℝ) (n : ℕ) (v u e : History) : Field :=
   stress 2 (angularDensity h n v u e)
 
+/-- Axial stress, given by `stress 1 (axialDensity h n v u p)`. -/
 noncomputable def axialStress (h : ℝ) (n : ℕ) (v u : History) (p : Field) : Field :=
   stress 1 (axialDensity h n v u p)
 

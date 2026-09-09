@@ -6,17 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 public import LeanPool.NavierStokesAndEuler.Euler.SourceForwardCoefficient
-public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedConstructedEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseNormalResidual
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaAlgebra
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
+import LeanPool.NavierStokesAndEuler.Euler.LpSupportedConstructedEvolution
+import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorOperator
+import LeanPool.NavierStokesAndEuler.Euler.TransverseNormalResidual
 
 /-! The constructed source coordinate propagator is an actual physical
 tangent solution after multiplication by F R.  Consequently a physical
 propagator estimate supplies H3 with only the explicit F and F⁻¹ factors,
 preserving exactly the time-profile ratio. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,32 +35,52 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
-private local instance : NormedSpace ℝ U := inferInstance
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
-private local instance : NormedAddCommGroup (U →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] Space) := inferInstance
-private local instance : NormedRing (U →L[ℝ] U) := inferInstance
-private local instance : NormedAlgebra ℝ (U →L[ℝ] U) := inferInstance
-private local instance : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
-private local instance : NormedAlgebra ℝ (Space →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedSpace ℝ U` instance to shorten typeclass synthesis. -/
+local instance instPacketSourcePropagator1 : NormedSpace ℝ U := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instPacketSourcePropagator2 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instPacketSourcePropagator3 : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketSourcePropagator4 : NormedAddCommGroup (U →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] Space)` instance to shorten typeclass synthesis. -/
+local instance instPacketSourcePropagator5 : NormedSpace ℝ (U →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedRing (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instPacketSourcePropagator6 : NormedRing (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAlgebra ℝ (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instPacketSourcePropagator7 : NormedAlgebra ℝ (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketSourcePropagator8 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAlgebra ℝ (Space →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketSourcePropagator9 : NormedAlgebra ℝ (Space →ᵇ U →L[ℝ] U) := inferInstance
 
 variable (D : Data U)
 
+/-- Fundamental: an abbreviation for `fundamentalPath D.T D.T_pos.le (sourceGenerator D.frame
+D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower)`. -/
 abbrev fundamental := fundamentalPath D.T D.T_pos.le
   (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower)
 
+/-- Propagator, given by `((fundamental D).forward t x).comp ((fundamental D).backward s x)`. -/
 def propagator (t s : Icc (0 : ℝ) D.T) (x : Space) : U →L[ℝ] U :=
   ((fundamental D).forward t x).comp ((fundamental D).backward s x)
 
+/-- Coordinate, given by `extendPath D.T D.T_pos.le (fundamental D).forward t x ((fundamental
+D).backward s x v)`. -/
 def coordinate (s : Icc (0 : ℝ) D.T) (x : Space) (v : U) (t : ℝ) : U :=
   extendPath D.T D.T_pos.le (fundamental D).forward t x ((fundamental D).backward s x v)
 
+/-- Physical, given by `extendPath D.T D.T_pos.le D.frame.field t x (coordinate D s x v t)`. -/
 def physical (s : Icc (0 : ℝ) D.T) (x : Space) (v : U) (t : ℝ) : Space :=
   extendPath D.T D.T_pos.le D.frame.field t x (coordinate D s x v t)
 
+/-- Physical rhs, given by `-(D.M.field t x) w + (2*⟪D.normal.field t x,(D.M.field t x)
+w⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x`. -/
 def physicalRhs (t : Icc (0 : ℝ) D.T) (x w : Space) : Space :=
-  -(D.M.field t x) w+
+  -(D.M.field t x) w +
     (2*⟪D.normal.field t x,(D.M.field t x) w⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x
 
 @[simp] theorem coordinate_at (s t : Icc (0 : ℝ) D.T) (x : Space) (v : U) :
@@ -96,7 +120,7 @@ theorem physical_hasDerivWithinAt (s t : Icc (0 : ℝ) D.T) (x : Space) (v : U) 
       (Icc (0 : ℝ) D.T) t := by
   let a := coordinate D s x v t
   let b := sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower t
-    x a
+      x a
   have hd : HasDerivWithinAt (physical D s x v)
       (D.frameDerivative.field t x a+D.frame.field t x b) (Icc (0 : ℝ) D.T) t := by
     have hp := (D.frame_derivative t t.property x).clm_apply (coordinate_hasDerivWithinAt D s t x v)

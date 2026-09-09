@@ -6,19 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-public import Mathlib.Analysis.Normed.Operator.Extend
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! The actual homogeneous first-order test space on ordinary Euclidean three-space. -/
 
 @[expose] public section
 
-/-! The actual homogeneous first-order test space on ordinary Euclidean three-space. -/
 
 noncomputable section
 
 namespace EulerMeanGradientTest
 
-open MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerMeanCutoffCurl
+open MeasureTheory EulerSmoothLimit EulerMeanSolenoidal
 open scoped ContDiff ENNReal NNReal
 
 /-- Smooth compactly supported vector fields, as a genuine function submodule. -/
@@ -30,6 +31,7 @@ def testSpace : Submodule ℝ (Space → Space) where
   add_mem' hf hg := ⟨hf.1.add hg.1, hf.2.add hg.2⟩
   smul_mem' c f hf := ⟨contDiff_const.smul hf.1, hf.2.smul_left⟩
 
+/-- Test: an abbreviation for `↥testSpace`. -/
 abbrev Test := ↥testSpace
 
 theorem Test.smooth (f : Test) : ContDiff ℝ ∞ (f : Space → Space) := f.property.1
@@ -38,8 +40,8 @@ theorem Test.compact (f : Test) : HasCompactSupport (f : Space → Space) := f.p
 
 theorem Test.column_memLp (f : Test) (i : Fin 3) :
     MemLp (fun x => fderiv ℝ (f : Space → Space) x (EuclideanSpace.single i 1)) 2 volume := by
-  exact ((f.smooth.fderiv_right (m := ∞) (by simp)).continuous.clm_apply
-    continuous_const).memLp_of_hasCompactSupport
+  exact ((f.smooth.fderiv_right (m := ∞) (by
+      simp)).continuous.clm_apply continuous_const).memLp_of_hasCompactSupport
     (f.compact.fderiv_apply ℝ (EuclideanSpace.single i 1))
 
 /-- A genuine distributional/classical derivative column as an L² vector field. -/
@@ -109,7 +111,8 @@ theorem opNorm_le_sum_columns (A : Space →L[ℝ] Space) :
     _ = (∑ i : Fin 3, ‖A (EuclideanSpace.single i 1)‖) * ‖v‖ := by
       rw [← Finset.mul_sum, mul_comm]
 
-/-- The derivative norm used by the cutoff bound is controlled by the actual Hilbert gradient norm. -/
+/-- The derivative norm used by the cutoff bound is controlled by the actual Hilbert gradient norm.
+-/
 theorem lpNorm_fderiv_le_gradient (f : Test) :
     lpNorm (fderiv ℝ (f : Space → Space)) 2 volume ≤ 3 * ‖testGradient f‖ := by
   let a : Fin 3 → Space → ℝ := fun i x =>
@@ -134,7 +137,7 @@ theorem lpNorm_fderiv_le_gradient (f : Test) :
 def homogeneousSpace : Submodule ℝ GradientTensor := testGradient.range.topologicalClosure
 
 instance : CompleteSpace homogeneousSpace :=
-  testGradient.range.isClosed_topologicalClosure.completeSpace_coe
+    testGradient.range.isClosed_topologicalClosure.completeSpace_coe
 
 /-- The dense map from genuine tests into the homogeneous Hilbert space. -/
 def homogeneousGradient : Test →ₗ[ℝ] homogeneousSpace :=

@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionParity
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionUniqueness
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityBudget
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevReflection
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionParity
+import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionUniqueness
+
+/-! Odd parity of actual inviscid correction solutions, proved by genuine PDE uniqueness. -/
 
 @[expose] public section
 
-/-! Odd parity of actual inviscid correction solutions, proved by genuine PDE uniqueness. -/
 
 noncomputable section
 
@@ -26,7 +29,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The inherited finite Sobolev normed-group instance. -/
 local instance inviscidParityGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 /-- The inherited real finite Sobolev module instance. -/
 local instance inviscidParitySpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
@@ -39,15 +42,15 @@ theorem inviscid_correction_odd {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T
     (hG : ∀ t x, (D.metric.coefficient t).coefficient (-x) = (D.metric.coefficient t).coefficient x)
     (hL : ∀ t x, (D.linear.coefficient t).coefficient (-x) = (D.linear.coefficient t).coefficient x)
     (hQ : ∀ t i x, ((D.quadratic i).coefficient t).coefficient (-x) = -((D.quadratic i).coefficient
-      t).coefficient x)
-    (hzOdd : ∀ t, oddReflection period (q+1) (D.approximation t) = D.approximation t)
+        t).coefficient x)
+    (hzOdd : ∀ t, oddReflection period (q + 1) (D.approximation t) = D.approximation t)
     (hrOdd : ∀ t, oddReflection period q (D.residual t) = D.residual t)
-    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
-    (hi : u ⟨0,le_rfl,hT⟩ = 0)
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
+    (hi : u ⟨0, le_rfl, hT⟩ = 0)
     (hu : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (fun r => value period (extendPath T hT u r))
-        (value period ((D.coefficients period hq).apply ⟨t,ht.1.le,ht.2.le⟩ (u
-          ⟨t,ht.1.le,ht.2.le⟩))) t)
+        (value period ((D.coefficients period hq).apply ⟨t, ht.1.le, ht.2.le⟩ (u
+            ⟨t, ht.1.le, ht.2.le⟩))) t)
     (hz : ∀ t, value period (D.approximation t) ∈ divergenceFreeSpace period D.κ D.direction)
     (hud : ∀ t, value period (u t) ∈ divergenceFreeSpace period D.κ D.direction) :
     ∀ t, oddReflection period (q+1) (u t) = u t := by
@@ -58,11 +61,11 @@ theorem inviscid_correction_odd {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T
   have hv : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (fun r => value period (extendPath T hT v r))
         (value period ((D.coefficients period hq).apply ⟨t,ht.1.le,ht.2.le⟩ (v
-          ⟨t,ht.1.le,ht.2.le⟩))) t := by
+            ⟨t,ht.1.le,ht.2.le⟩))) t := by
     intro t ht
     let τ : Icc (0 : ℝ) T := ⟨t,ht.1.le,ht.2.le⟩
     have hd := ((reflection period).toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt t (hu t
-      ht)).neg
+        ht)).neg
     have he := congrArg (value period (q := q))
       (correction_source_oddReflection period hq D τ (hG τ) (hL τ) (hQ τ) (hzOdd τ) (hrOdd τ) (u τ))
     rw [value_oddReflection] at he
@@ -86,10 +89,10 @@ theorem inviscid_correction_pressure_odd {q : ℕ} (hq : 6 ≤ q) {T : Type*} [T
     (hG : ∀ x, (D.metric.coefficient t).coefficient (-x) = (D.metric.coefficient t).coefficient x)
     (hL : ∀ x, (D.linear.coefficient t).coefficient (-x) = (D.linear.coefficient t).coefficient x)
     (hQ : ∀ i x, ((D.quadratic i).coefficient t).coefficient (-x) = -((D.quadratic i).coefficient
-      t).coefficient x)
-    (hz : oddReflection period (q+1) (D.approximation t) = D.approximation t)
+        t).coefficient x)
+    (hz : oddReflection period (q + 1) (D.approximation t) = D.approximation t)
     (hr : oddReflection period q (D.residual t) = D.residual t)
-    (u : SobolevSpace period (q+1)) (hu : oddReflection period (q+1) u = u) :
+    (u : SobolevSpace period (q + 1)) (hu : oddReflection period (q + 1) u = u) :
     oddReflection period q (D.pressure period hq t u) = D.pressure period hq t u := by
   have hh := correction_pressure_oddReflection period hq D t hG hL hQ hz hr u
   rwa [hu] at hh

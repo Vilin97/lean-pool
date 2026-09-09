@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPathMap
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseSourceCoefficientPath
 
-@[expose] public section
-
 /-!
 # The literal source frame as a uniformly smooth bounded coefficient path
 
@@ -19,6 +17,9 @@ source fields F and F_t therefore construct the full bounded frame fields,
 with their genuine jets and time derivative. A pointwise bound on F⁻¹ proves
 the uniform frame coercivity used by the constructed Gram inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -50,7 +51,7 @@ def coefficient (F : SmoothCoefficientPath K (Space →L[ℝ] Space)) :
 
 @[simp] theorem coefficient_apply (F : SmoothCoefficientPath K (Space →L[ℝ] Space))
     (t : K) (x : Space) (v : U) : (coefficient m₀ R F).field t x v = F.field t x (R v : Space) :=
-      rfl
+        rfl
 
 /-- The original pointwise source coefficient derivative bound survives without loss. -/
 theorem coefficient_derivative_bound (F : SmoothCoefficientPath K (Space →L[ℝ] Space))
@@ -59,7 +60,7 @@ theorem coefficient_derivative_bound (F : SmoothCoefficientPath K (Space →L[�
     (t : K) (x : Space) :
     ‖iteratedFDeriv ℝ n ((coefficient m₀ R F).field t : Space → U →L[ℝ] Space) x‖ ≤ C :=
   SmoothCoefficientPath.map_derivative_bound (referenceRestriction m₀ R) (restriction_norm m₀ R) F
-    n C hF t x
+      n C hF t x
 
 /-- The uniform inverse-frame bound gives the precise squared lower frame bound. -/
 theorem coefficient_lower (F : SmoothCoefficientPath K (Space →L[ℝ] Space))

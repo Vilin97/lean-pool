@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointVelocity
 
-@[expose] public section
-
 /-!
 Classical differentiation of the nonzero-terminal stationary coordinates.
 The continuous physical velocity upgrades the weak momentum derivative to
 an every-time derivative; the actual Gram inverse then differentiates the
 coordinate velocity.  These are properties of the constructed weak solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,6 +39,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^ 2)
   (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
+/-- Momentum derivative path as an element of `U`. -/
 def momentumDerivativePath (u : TimeLp T E) (t : ℝ) : U :=
   (extendPath T hT Q₁ t).adjoint (physicalVelocityPath T hT Q Q₁ c hc hQ H u t) -
     (extendPath T hT Q t).adjoint (extendPath T hT H t (initialRealPrimitive T u t))
@@ -63,7 +65,7 @@ theorem initialCoordinates_eq_initialPrimitive
     exact hs.sub_const _
   have he := eq_realPrimitive_of_ac_hasDerivAt_ae T hT v (fun r => ξ r - ξ T)
     (hx.1.sub ((LipschitzWith.const (ξ T)).lipschitzOnWith.absolutelyContinuousOnInterval))
-    hder (sub_self _) 
+    hder (sub_self _)
   have h₀ := he 0 ⟨le_rfl, hT⟩
   have ht := he t t.property
   have hξ₀ : ξ 0 = 0 := initialCoordinates_initial T hT Q c hc hQ u
@@ -129,6 +131,7 @@ theorem initialCoordinates_hasDerivWithinAt (hTpos : 0 < T)
   intro s hs
   exact initialCoordinates_eq_initialPrimitive T hT Q Q₁ c hc hQ hd u ⟨s, hs⟩
 
+/-- Raw coordinate acceleration, constructed using `extendPath`. -/
 def rawCoordinateAcceleration (u : TimeLp T E) (t : ℝ) : U :=
   extendPath T hT (gramInverseDerivativePath T Q Q₁ c hc hQ) t
       (momentumPath T hT Q Q₁ H u t -

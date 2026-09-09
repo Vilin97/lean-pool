@@ -10,13 +10,17 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryFullBou
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimarySourceRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! The actual primary closes the first packet grade.  Its terminal scalar
 amplitude is canceled against the actual time profile, and only fixed source
 costs are absorbed into the radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,7 +49,7 @@ structure GradeGuards : Prop where
 
 variable (W : GradeGuards (P := P) H N C) (Y : InitialData P D) (α : ℝ) (hα : 0 < α)
   (hYb : ∀ n, block standardDirection 6 (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤
-    (α*C)*majorant L.R 0 n)
+    (α * C) * majorant L.R 0 n)
 
 include W hYb hα
 
@@ -65,32 +69,34 @@ theorem grade_fields :
       L.fullProfile_pos).WordBound 6 L.R ((H.commonCost*C)*α) 3 := by
     intro n
     simpa only [Field.normalized_path,vectorField,Nat.zero_add,mul_assoc,mul_left_comm,mul_comm]
-      using H.velocity_common_bound Y _ ha 0 hYb n
+        using H.velocity_common_bound Y _ ha 0 hYb n
   have ht : ((vectorDerivativeField τ hτ hτT B Y).normalized D.T_pos.le L.fullProfile
       L.fullProfile_pos).WordBound 6 L.R ((H.commonCost*C)*α) 3 := by
     intro n
-    simpa only [Field.normalized_path,vectorDerivativeField,Nat.zero_add,mul_assoc,mul_left_comm,mul_comm] using H.derivative_common_bound Y _ ha 0 hYb n
+    simpa only [Field.normalized_path, vectorDerivativeField, Nat.zero_add, mul_assoc,
+        mul_left_comm, mul_comm] using H.derivative_common_bound Y _ ha 0 hYb n
   have hc : ((correctorField τ hτ hτT B Y).normalized D.T_pos.le L.fullProfile
       L.fullProfile_pos).WordBound 6 L.R ((H.correctorAmplitude (P := P) N*C)*α) 4 := by
     intro n
     simpa only [Field.normalized_path,correctorField,Nat.zero_add,mul_assoc,mul_left_comm,mul_comm]
-      using H.corrector_bound N Y _ ha 0 hYb n
+        using H.corrector_bound N Y _ ha 0 hYb n
   have hct : ((correctorDerivativeField τ hτ hτT B Y).normalized D.T_pos.le L.fullProfile
       L.fullProfile_pos).WordBound 6 L.R ((H.correctorTimeAmplitude (P := P) N*C)*α) 4 := by
     intro n
-    simpa only [Field.normalized_path,correctorDerivativeField,Nat.zero_add,mul_assoc,mul_left_comm,mul_comm] using H.corrector_time_bound N Y _ ha 0 hYb n
+    simpa only [Field.normalized_path, correctorDerivativeField, Nat.zero_add, mul_assoc,
+        mul_left_comm, mul_comm] using H.corrector_time_bound N Y _ ha 0 hYb n
   have hp : ((scalarGradientField τ hτ hτT B Y).normalized D.T_pos.le L.fullProfile
       L.fullProfile_pos).WordBound 6 L.R ((3*H.pressureAmplitude (P := P) N*C)*α) 4 := by
     intro n
     simpa only [Field.normalized_path,Nat.zero_add,mul_assoc,mul_left_comm,mul_comm] using
-      H.pressure_gradient_bound N Y _ ha 0 hYb n
+        H.pressure_gradient_bound N Y _ ha 0 hYb n
   refine ⟨?_,?_,?_,?_,?_⟩
   · exact (hv.scale_profile D.T_pos.le L.fullProfile L.fullProfile_pos α hα).absorb_amplitude_to
-      L.radius_bounds.1 (mul_nonneg H.commonCost_nonneg W.terminal_nonneg) W.common (by norm_num
-        [highShift])
+      L.radius_bounds.1 (mul_nonneg H.commonCost_nonneg W.terminal_nonneg) W.common (by
+          norm_num [highShift])
   · exact (ht.scale_profile D.T_pos.le L.fullProfile L.fullProfile_pos α hα).absorb_amplitude_to
-      L.radius_bounds.1 (mul_nonneg H.commonCost_nonneg W.terminal_nonneg) W.common (by norm_num
-        [highShift])
+      L.radius_bounds.1 (mul_nonneg H.commonCost_nonneg W.terminal_nonneg) W.common (by
+          norm_num [highShift])
   · exact (hc.scale_profile D.T_pos.le L.fullProfile L.fullProfile_pos α hα).absorb_amplitude_to
       L.radius_bounds.1 (mul_nonneg (H.correctorAmplitude_nonneg N) W.terminal_nonneg)
       W.corrector (by norm_num [highShift])
@@ -98,8 +104,8 @@ theorem grade_fields :
       L.radius_bounds.1 (mul_nonneg (H.correctorTimeAmplitude_nonneg N) W.terminal_nonneg)
       W.correctorTime (by norm_num [highShift])
   · exact (hp.scale_profile D.T_pos.le L.fullProfile L.fullProfile_pos α hα).absorb_amplitude_to
-      L.radius_bounds.1 (mul_nonneg (mul_nonneg (by norm_num) (H.pressureAmplitude_nonneg N))
-        W.terminal_nonneg)
+      L.radius_bounds.1 (mul_nonneg (mul_nonneg (by
+          norm_num) (H.pressureAmplitude_nonneg N)) W.terminal_nonneg)
       W.pressureGradient (by norm_num [highShift])
 
 theorem profile_budget (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector P)
@@ -149,7 +155,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
   (hR : wordRadius (Fin 4) δ ≤ L.R)
-  (W : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H N (wordCost (Fin 4) 6 δ*‖ξ‖))
+  (W : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H N (wordCost (Fin 4) 6 δ *
+      ‖ξ‖))
 
 include hδ1 hR hα
 
@@ -165,7 +172,7 @@ include W in
 /-- The literal α χ₁ fδ ξT terminal datum supplies the required primary
 profile budget, with every terminal jet estimate discharged. -/
 theorem primary_profile_budget (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector
-  period)
+    period)
     (S : Scales (Icc (0 : ℝ) D.T)) (hgrowth : S.growth = α • L.fullProfile) :
     ProfileBudget (EulerTransversePacketPrimary.profileRegularity τ hτ hτT B
       (initialData D δ hδ (α • ξ) hs) O hcorrector) S L.R 1 :=

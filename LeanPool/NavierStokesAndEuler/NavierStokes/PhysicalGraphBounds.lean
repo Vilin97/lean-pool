@@ -7,19 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GraphCalculus
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlotGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricFields
-public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CoordinateAlgebra
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PolarCharts
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Physical derivatives of the native graph
@@ -27,6 +20,9 @@ public import Mathlib.Analysis.Normed.Group.Bounded
 The graph, the integer covering, and the rounded carrier here are the actual
 ones of Definition 8.1 and equation (26). Bounds use actual Fréchet jets.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,9 +35,12 @@ open scoped ContDiff Topology BigOperators
 private theorem nat_le_infty (k : ℕ) : (k : WithTop ℕ∞) ≤ ∞ :=
   WithTop.coe_le_coe.mpr le_top
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
 
+/-- Radial direction, given by `(1, 1 - Real.sqrt 2)`. -/
 noncomputable def radialDirection : Plane := (1, 1 - Real.sqrt 2)
+/-- Time direction, given by `(Real.sqrt 2 - 1, 1)`. -/
 noncomputable def timeDirection : Plane := (Real.sqrt 2 - 1, 1)
 
 theorem cover_radialDirection :
@@ -52,7 +51,7 @@ theorem cover_radialDirection :
 theorem cover_timeDirection :
     SlotGeometry.cover timeDirection = ChartScales.Tg • timeDirection := by
   ext <;> simp [SlotGeometry.cover_apply, timeDirection, ChartScales.Tg, SlotColoring.coverGrowth]
-    <;>
+      <;>
     nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
 
 theorem cover_pow_radialDirection (i : ℕ) :
@@ -71,6 +70,7 @@ theorem cover_pow_timeDirection (i : ℕ) :
       rw [pow_succ', _root_.mul_apply_eq_comp, hi, map_smul, cover_timeDirection,
         smul_smul, pow_succ]
 
+/-- Radial projection as an element of `SpaceTime →L[ℝ] Plane`. -/
 noncomputable def radialProjection : SpaceTime →L[ℝ] Plane :=
   ((AxisymmetricFields.projection 0).comp (ContinuousLinearMap.snd ℝ ℝ Space)).prod
     ((AxisymmetricFields.projection 1).comp (ContinuousLinearMap.snd ℝ ℝ Space))
@@ -86,9 +86,11 @@ theorem norm_radialProjection_le : ‖radialProjection‖ ≤ 1 := by
   exact max_le ((PiLp.norm_apply_le p.2 0).trans (le_max_right _ _))
     ((PiLp.norm_apply_le p.2 1).trans (le_max_right _ _))
 
+/-- Radius power, given by `(y.1 ^ 2 + y.2 ^ 2) ^ (d / 2)`. -/
 noncomputable def radiusPower (d : ℝ) (y : Plane) : ℝ :=
   (y.1 ^ 2 + y.2 ^ 2) ^ (d / 2)
 
+/-- Radial profile, given by `radiusPower d y • radialDirection`. -/
 noncomputable def radialProfile (d : ℝ) (y : Plane) : Plane :=
   radiusPower d y • radialDirection
 
@@ -135,6 +137,7 @@ theorem nativeGraph_eq (h : ℝ) (n : ℕ) (p : SpaceTime) :
   simp only [smul_smul]
   congr 1 <;> congr 1 <;> ring
 
+/-- Scaled radial, given by `ChartScales.Q n ^ (-(1 / 2 : ℝ)) • radialProjection`. -/
 noncomputable def scaledRadial (n : ℕ) : SpaceTime →L[ℝ] Plane :=
   ChartScales.Q n ^ (-(1 / 2 : ℝ)) • radialProjection
 
@@ -190,7 +193,7 @@ theorem compact_jet_bound {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ 
     (m : ℕ) : ∃ C : ℝ, 1 ≤ C ∧ ∀ k ≤ m, ∀ y ∈ K, ‖iteratedFDeriv ℝ k f y‖ ≤ C := by
   have hsingle (k : ℕ) : ∃ C : ℝ, ∀ y ∈ K, ‖iteratedFDeriv ℝ k f y‖ ≤ C := by
     have hc := (hf.continuousOn_iteratedFDerivWithin (m := k) (nat_le_infty k)
-      hU.uniqueDiffOn).mono hKU
+        hU.uniqueDiffOn).mono hKU
     have he : ContinuousOn (iteratedFDeriv ℝ k f) K := by
       apply hc.congr
       intro y hy
@@ -254,8 +257,8 @@ theorem native_radial_power_le {h : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1)
     {n : ℕ} (hn : 4 ≤ n) :
     ChartScales.radialCoefficient h n ≤ ChartScales.Q n ^ (-1 : ℝ) := by
   have hs : ChartScales.S n ^ (-ChartScales.rho) ≤ 1 :=
-    Real.rpow_le_one_of_one_le_of_nonpos (S_ge_one (by omega)) (neg_nonpos.mpr
-      ChartScales.rho_pos.le)
+    Real.rpow_le_one_of_one_le_of_nonpos (S_ge_one (by
+        omega)) (neg_nonpos.mpr ChartScales.rho_pos.le)
   calc
     ChartScales.radialCoefficient h n ≤
         ChartScales.epsilon h n ^ (-ChartScales.kappa) * ChartScales.S n ^ (-ChartScales.rho) :=
@@ -289,6 +292,7 @@ theorem norm_positive_jet_linear_le {E F : Type*}
   | zero => simp only [norm_iteratedFDeriv_zero, le_refl]
   | succ k => simp only [iteratedFDeriv_succ_const, Pi.zero_apply, norm_zero, norm_nonneg]
 
+/-- Time profile, given by `(ContinuousLinearMap.fst ℝ ℝ Space).smulRight timeDirection`. -/
 noncomputable def timeProfile : SpaceTime →L[ℝ] Plane :=
   (ContinuousLinearMap.fst ℝ ℝ Space).smulRight timeDirection
 
@@ -398,9 +402,13 @@ theorem nativeGraph_jet_bound {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1) (ha :
         ‖timeDirection‖ * ChartScales.Q n ^ (-((m : ℝ) + 2)) := add_le_add hrad htime
     _ = _ := by ring
 
+/-- Chart point: an abbreviation for `ℝ × (ℝ × (ℝ × ℝ))`. -/
 abbrev ChartPoint := ℝ × (ℝ × (ℝ × ℝ))
+/-- Lift point: an abbreviation for `ChartPoint × Plane`. -/
 abbrev LiftPoint := ChartPoint × Plane
 
+/-- Coordinate projection, given by `(AxisymmetricFields.projection j).comp
+(ContinuousLinearMap.snd ℝ ℝ Space)`. -/
 noncomputable def coordinateProjection (j : Fin 3) : SpaceTime →L[ℝ] ℝ :=
   (AxisymmetricFields.projection j).comp (ContinuousLinearMap.snd ℝ ℝ Space)
 
@@ -421,6 +429,7 @@ noncomputable def chartLinear (h : ℝ) (n : ℕ) : SpaceTime →L[ℝ] ChartPoi
           ChartScales.Q n ^ (-CoordinateAlgebra.D h) * p.2 2))) := by
   simp [chartLinear, smul_eq_mul]
 
+/-- Physical chart, given by `chartLinear h n p + (ChartScales.Q n ^ (-1 : ℝ), 0)`. -/
 noncomputable def physicalChart (h : ℝ) (n : ℕ) (p : SpaceTime) : ChartPoint :=
   chartLinear h n p + (ChartScales.Q n ^ (-1 : ℝ), 0)
 
@@ -577,13 +586,13 @@ theorem etaCoordinate_radial : etaCoordinate radialDirection = 0 := by
 theorem etaCoordinate_time : etaCoordinate timeDirection = 1 := by
   have hd : 1 + (Real.sqrt 2 - 1) ^ 2 ≠ 0 := by positivity
   change (1 + (Real.sqrt 2 - 1) ^ 2)⁻¹ * ((Real.sqrt 2 - 1) * (Real.sqrt 2 - 1) + 1) = 1
-  field_simp ; ring
+  field_simp; ring
 
 theorem etaCoordinate_nativeGraph (h : ℝ) (n : ℕ) (p : SpaceTime) :
     etaCoordinate (nativeGraph h n p) = ChartScales.Tg ^ ChartScales.nativeIndex h n * p.1 := by
   rw [nativeGraph_eq, map_add, map_smul, map_smul]
   simp only [radialProfile, map_smul, etaCoordinate_radial, etaCoordinate_time, smul_eq_mul,
-    mul_one, mul_zero, zero_add]
+      mul_one, mul_zero, zero_add]
 
 /-- `center` includes the periodically reindexed lattice-copy translation. -/
 noncomputable def slotTime (h : ℝ) (n : ℕ) (center : Plane) (r0 : ℝ)
@@ -603,7 +612,7 @@ theorem slotTime_affine (h : ℝ) (n : ℕ) (center : Plane) (r0 : ℝ) (p : Spa
   unfold slotTime
   rw [map_sub, etaCoordinate_nativeGraph, hp]
   unfold ChartScales.timeCoefficient
-  field_simp ; ring
+  field_simp; ring
 
 theorem hasFDerivAt_slotTime (h : ℝ) (n : ℕ) (center : Plane) (r0 : ℝ) (p : SpaceTime) :
     HasFDerivAt (slotTime h n center r0)
@@ -645,8 +654,10 @@ theorem carrier_upper {h : ℝ} (hh : 0 ≤ h) (n : ℕ) :
       congr 2
       ring
 
+/-- Phase factor, given by `(c : ℂ) * Complex.I`. -/
 noncomputable def phaseFactor (c : ℝ) : ℂ := (c : ℂ) * Complex.I
 
+/-- Character, given by `Complex.exp (phaseFactor c * (t : ℂ))`. -/
 noncomputable def character (c : ℝ) (t : ℝ) : ℂ :=
   Complex.exp (phaseFactor c * (t : ℂ))
 
@@ -920,16 +931,26 @@ theorem jet_comp_linear_bound {E F G : Type*} [NormedAddCommGroup E] [NormedSpac
   exact hl.trans ((mul_le_mul (hb k hk) (pow_le_one₀ (norm_nonneg _) hL)
     (by positivity) hB).trans_eq (mul_one B))
 
+/-- Slot: an abbreviation for `PhaseCalculus.Slot`. -/
 abbrev Slot := PhaseCalculus.Slot
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
+/-- Slot R, given by `(ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).comp (ContinuousLinearMap.fst ℝ Slow
+(ℝ × ℝ))`. -/
 noncomputable def slotR : Slot →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).comp (ContinuousLinearMap.fst ℝ Slow (ℝ × ℝ))
+/-- Slot Z, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).comp ((ContinuousLinearMap.snd ℝ ℝ (ℝ ×
+ℝ)).comp (ContinuousLinearMap.fst ℝ Slow (ℝ × ℝ)))`. -/
 noncomputable def slotZ : Slot →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ ℝ).comp
     ((ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ)).comp (ContinuousLinearMap.fst ℝ Slow (ℝ × ℝ)))
+/-- Slot theta, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ Slow
+(ℝ × ℝ))`. -/
 noncomputable def slotTheta : Slot →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ Slow (ℝ × ℝ))
+/-- Slot V, given by `(ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ Slow (ℝ ×
+ℝ))`. -/
 noncomputable def slotV : Slot →L[ℝ] ℝ :=
   (ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ Slow (ℝ × ℝ))
 
@@ -939,6 +960,7 @@ theorem norm_slotV_le : ‖slotV‖ ≤ 1 := by
   rw [one_mul]
   exact (le_max_right ‖x.2.1‖ ‖x.2.2‖).trans (le_max_right ‖x.1‖ ‖x.2‖)
 
+/-- Phase linear, given by `p • slotTheta + (pz / ε) • slotZ + x0 • slotR`. -/
 noncomputable def phaseLinear (ε p pz x0 : ℝ) : Slot →L[ℝ] ℝ :=
   p • slotTheta + (pz / ε) • slotZ + x0 • slotR
 
@@ -990,12 +1012,12 @@ theorem phase_slot_jet_bound (ε p pz x0 : ℝ) {F G : Slow → ℝ}
     intro k hk
     simpa only [one_mul] using linear_jet_bound slotV q hM hq zero_le_one norm_slotV_le k
   have he : PhaseCalculus.phase ε p pz x0 F G = fun y => phaseLinear ε p pz x0 y - slotV y * A y :=
-    rfl
+      rfl
   intro k hk
   rw [he]
   simp only [sub_eq_add_neg]
   rw [fun_iteratedFDeriv_add_apply ((phaseLinear ε p pz x0).contDiff.contDiffAt.of_le (nat_le_infty
-    k))
+      k))
     ((slotV.contDiff.mul hA).neg.contDiffAt.of_le (nat_le_infty k))]
   have hneg : iteratedFDeriv ℝ k (fun y : Slot => -(slotV y * A y)) q =
       -iteratedFDeriv ℝ k (fun y : Slot => slotV y * A y) q :=
@@ -1004,8 +1026,8 @@ theorem phase_slot_jet_bound (ε p pz x0 : ℝ) {F G : Slow → ℝ}
   apply (norm_add_le _ _).trans
   rw [norm_neg]
   exact add_le_add
-    (linear_jet_bound (phaseLinear ε p pz x0) q hM hq (by positivity) (norm_phaseLinear_le _ _ _ _)
-      k)
+    (linear_jet_bound (phaseLinear ε p pz x0) q hM hq (by
+        positivity) (norm_phaseLinear_le _ _ _ _) k)
     (pointwise_product_jet_bound slotV.contDiff hA q hk (by linarith) (by positivity) hVb hAb)
 
 theorem pointwise_composition_jet_bound {E F G : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -1031,6 +1053,7 @@ theorem norm_jet_linear_comp {E F G : Type*} [NormedAddCommGroup E] [NormedSpace
   rw [L.iteratedFDeriv_comp_left (hf.contDiffAt.of_le (nat_le_infty k)) le_rfl]
   exact L.norm_compContinuousMultilinearMap_le _
 
+/-- Lift XY as an element of `LiftPoint →L[ℝ] Plane`. -/
 noncomputable def liftXY : LiftPoint →L[ℝ] Plane :=
   (((ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).comp
       (ContinuousLinearMap.snd ℝ ℝ (ℝ × (ℝ × ℝ)))).prod
@@ -1039,6 +1062,7 @@ noncomputable def liftXY : LiftPoint →L[ℝ] Plane :=
         (ContinuousLinearMap.snd ℝ ℝ (ℝ × (ℝ × ℝ)))))).comp
     (ContinuousLinearMap.fst ℝ ChartPoint Plane)
 
+/-- Lift ZT as an element of `LiftPoint →L[ℝ] Plane`. -/
 noncomputable def liftZT : LiftPoint →L[ℝ] Plane :=
   (((ContinuousLinearMap.snd ℝ ℝ ℝ).comp
       ((ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ)).comp
@@ -1055,10 +1079,10 @@ theorem norm_liftXY_le : ‖liftXY‖ ≤ 1 := by
   rw [one_mul]
   exact max_le
     ((le_max_left ‖y.1.2.1‖ ‖y.1.2.2‖).trans ((le_max_right ‖y.1.1‖ ‖y.1.2‖).trans (le_max_left _
-      _)))
+        _)))
     ((le_max_left ‖y.1.2.2.1‖ ‖y.1.2.2.2‖).trans
       ((le_max_right ‖y.1.2.1‖ ‖y.1.2.2‖).trans ((le_max_right ‖y.1.1‖ ‖y.1.2‖).trans (le_max_left
-        _ _))))
+          _ _))))
 
 theorem norm_liftZT_le : ‖liftZT‖ ≤ 1 := by
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one ?_
@@ -1067,9 +1091,11 @@ theorem norm_liftZT_le : ‖liftZT‖ ≤ 1 := by
   exact max_le
     ((le_max_right ‖y.1.2.2.1‖ ‖y.1.2.2.2‖).trans
       ((le_max_right ‖y.1.2.1‖ ‖y.1.2.2‖).trans ((le_max_right ‖y.1.1‖ ‖y.1.2‖).trans (le_max_left
-        _ _))))
+          _ _))))
     ((le_max_left ‖y.1.1‖ ‖y.1.2‖).trans (le_max_left _ _))
 
+/-- Embed polar, given by `((ContinuousLinearMap.fst ℝ ℝ ℝ).prod (0 : Plane →L[ℝ] Plane)).prod
+((ContinuousLinearMap.snd ℝ ℝ ℝ).prod (0 : Plane →L[ℝ] ℝ))`. -/
 noncomputable def embedPolar : Plane →L[ℝ] Slot :=
   ((ContinuousLinearMap.fst ℝ ℝ ℝ).prod (0 : Plane →L[ℝ] Plane)).prod
     ((ContinuousLinearMap.snd ℝ ℝ ℝ).prod (0 : Plane →L[ℝ] ℝ))
@@ -1079,18 +1105,20 @@ theorem norm_embedPolar_le : ‖embedPolar‖ ≤ 1 := by
   intro y
   simp [embedPolar, Prod.norm_def, Real.norm_eq_abs, abs_nonneg]
 
+/-- Slot linear as an element of `LiftPoint →L[ℝ] Slot`. -/
 noncomputable def slotLinear (ci : ℝ) : LiftPoint →L[ℝ] Slot :=
   ((0 : LiftPoint →L[ℝ] ℝ).prod liftZT).prod
     ((0 : LiftPoint →L[ℝ] ℝ).prod
       ((ci⁻¹ • etaCoordinate).comp (ContinuousLinearMap.snd ℝ ChartPoint Plane)))
 
+/-- Slot constant, given by `((0, (0, 0)), (0, (r0 - etaCoordinate center) / ci))`. -/
 noncomputable def slotConstant (ci : ℝ) (center : Plane) (r0 : ℝ) : Slot :=
   ((0, (0, 0)), (0, (r0 - etaCoordinate center) / ci))
 
 /-- The actual native slot coordinates, using a chosen smooth polar chart. -/
 noncomputable def slotMap (κ : Plane → Plane) (ci : ℝ) (center : Plane) (r0 : ℝ)
     (y : LiftPoint) : Slot := embedPolar (κ (liftXY y)) + slotLinear ci y + slotConstant ci center
-      r0
+        r0
 
 theorem slotMap_formula (κ : Plane → Plane) (ci : ℝ) (center : Plane) (r0 : ℝ) (y : LiftPoint) :
     slotMap κ ci center r0 y =
@@ -1103,7 +1131,7 @@ theorem slotMap_formula (κ : Plane → Plane) (ci : ℝ) (center : Plane) (r0 :
 theorem slotMap_smooth {κ : Plane → Plane} (hκ : ContDiff ℝ ∞ κ)
     (ci : ℝ) (center : Plane) (r0 : ℝ) : ContDiff ℝ ∞ (slotMap κ ci center r0) :=
   ((embedPolar.contDiff.comp (hκ.comp liftXY.contDiff)).add (slotLinear ci).contDiff).add
-    contDiff_const
+      contDiff_const
 
 theorem norm_slotLinear_le (ci : ℝ) : ‖slotLinear ci‖ ≤ 1 + |ci⁻¹| * ‖etaCoordinate‖ := by
   have hcoef : 0 ≤ |ci⁻¹| * ‖etaCoordinate‖ := mul_nonneg (abs_nonneg _) (norm_nonneg _)
@@ -1147,7 +1175,7 @@ theorem slotMap_positive_jet_bound {κ : Plane → Plane} (hκ : ContDiff ℝ �
   have hleftsmooth : ContDiff ℝ ∞ (fun z : LiftPoint => embedPolar (κ (liftXY z))) :=
     embedPolar.contDiff.comp hbase
   have hrightsmooth : ContDiff ℝ ∞ (fun z : LiftPoint => slotLinear ci z + slotConstant ci center
-    r0) :=
+      r0) :=
     (slotLinear ci).contDiff.add contDiff_const
   rw [he, fun_iteratedFDeriv_add_apply
     (hleftsmooth.contDiffAt.of_le (nat_le_infty i))
@@ -1158,7 +1186,7 @@ theorem slotMap_positive_jet_bound {κ : Plane → Plane} (hκ : ContDiff ℝ �
     (norm_slotLinear_le ci)
   have hleft' : ‖iteratedFDeriv ℝ i (embedPolar ∘ κ ∘ liftXY) y‖ ≤ K :=
     hleft.trans ((mul_le_mul norm_embedPolar_le (hbaseb i him) (norm_nonneg _)
-      zero_le_one).trans_eq (one_mul K))
+        zero_le_one).trans_eq (one_mul K))
   simpa only [add_assoc, Function.comp_def] using add_le_add hleft' hright
 
 theorem slotMap_physical (κ : Plane → Plane) (h : ℝ) (n : ℕ)
@@ -1200,8 +1228,9 @@ theorem liftedPhase_jet_bound {κ : Plane → Plane} (hκ : ContDiff ℝ ∞ κ)
         (K + 1 + |(ChartScales.timeCoefficient h n)⁻¹| * ‖etaCoordinate‖) ^ m := by
   apply pointwise_composition_jet_bound (slotMap_smooth hκ _ _ _)
     (PhaseCalculus.contDiff_phase _ _ _ _ _ _ hF hG) y m (by positivity)
-    (by have := mul_nonneg (abs_nonneg ((ChartScales.timeCoefficient h n)⁻¹)) (norm_nonneg
-      etaCoordinate); linarith)
+    (by
+        have := mul_nonneg (abs_nonneg ((ChartScales.timeCoefficient h n)⁻¹)) (norm_nonneg
+            etaCoordinate); linarith)
   · exact phase_slot_jet_bound _ _ _ _ hF hG _ m hM hpoint hB hFb hGb
   · exact slotMap_positive_jet_bound hκ _ _ _ y m hK hκb
 
@@ -1228,7 +1257,7 @@ theorem epsilon_inv_le {h : ℝ} (hh : h ≤ 1) (n : ℕ) :
     simp [ChartScales.epsilon, Real.rpow_neg (ChartScales.Q_pos n).le]
   rw [he]
   exact Real.rpow_le_rpow_of_exponent_ge (ChartScales.Q_pos n) (ChartScales.Q_le_one n) (by
-    linarith)
+      linarith)
 
 /-- The exact phase (26) has one fixed inverse-`Q` loss. The integer degree
 of the slow factor may grow with the base profile class; it affects no power
@@ -1279,9 +1308,9 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
           (inv_nonneg.mpr (ChartScales.timeCoefficient_pos h n).le) (by positivity)
       _ = _ := by ring
   have hpoint : ‖slotMap κ (ChartScales.timeCoefficient h n) center r0 y‖ ≤ M0 * ChartScales.S n :=
-    by
-    have hκ0 : ‖κ (liftXY y)‖ ≤ K := by simpa only [norm_iteratedFDeriv_zero] using hκb 0
-      (Nat.zero_le _)
+      by
+    have hκ0 : ‖κ (liftXY y)‖ ≤ K := by
+        simpa only [norm_iteratedFDeriv_zero] using hκb 0 (Nat.zero_le _)
     apply (slotMap_norm_bound κ _ center r0 y (by linarith) hZ (by positivity) hκ0 hz hv).trans
     dsimp [M0]
     nlinarith
@@ -1313,7 +1342,7 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
           (2 : ℝ) ^ m * (M0 * ChartScales.S n) * ((2 * P) * (B * ChartScales.S n ^ d)) := by
         gcongr
       _ ≤ ((3 * P * ChartScales.Q n ^ (-1 : ℝ)) * (M0 * ChartScales.S n)) * (B * ChartScales.S n ^
-        d) +
+          d) +
           ((2 : ℝ) ^ m * (M0 * ChartScales.S n) * ((2 * P) * (B * ChartScales.S n ^ d))) *
             ChartScales.Q n ^ (-1 : ℝ) := by
         apply add_le_add
@@ -1345,10 +1374,12 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
       calc
         _ = ((m.factorial : ℝ) * (3 + (2 : ℝ) ^ (m + 1)) * P * M0 * B * D0 ^ m) *
             (ChartScales.S n * ChartScales.S n ^ d * ChartScales.S n ^ m) * ChartScales.Q n ^ (-1 :
-              ℝ) := by ring
+                ℝ) := by
+                ring
         _ = _ := by rw [hpowers]
     _ ≤ _ := by gcongr; exact le_max_right 1 C0
 
+/-- Wave loss, given by `graphLoss m + (m : ℝ) + h * (m : ℝ) / 2 + 1`. -/
 noncomputable def waveLoss (h : ℝ) (m : ℕ) : ℝ :=
   graphLoss m + (m : ℝ) + h * (m : ℝ) / 2 + 1
 
@@ -1440,7 +1471,7 @@ theorem physical_polar_chart_available {a b : ℝ} (ha : 0 < a) (m : ℕ) :
     (fun k hk => hbound j k hk _ hp.1),
     PolarCharts.polar_chart ha j (PolarCharts.sector_subset_chartDomain ha j hj)⟩
 
-@[simp] theorem liftXY_physicalLift (h : ℝ) (n : ℕ) (p : SpaceTime) :
+theorem liftXY_physicalLift (h : ℝ) (n : ℕ) (p : SpaceTime) :
     liftXY (physicalLift h n p) = scaledRadial n p := by
   simp [liftXY_apply, physicalLift, physicalChart, chartLinear_apply, scaledRadial,
     radialProjection_apply, smul_eq_mul]

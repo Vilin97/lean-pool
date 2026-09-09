@@ -7,12 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The literal activation times and nested horizons in (38). The same
 positive initial time interval is available to every finite packet state. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,14 +25,17 @@ namespace EulerPacketNestedHorizons
 
 open Finset Real EulerScale EulerPacketScaleGeometry EulerPacketSourceScales
   EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence
-  EulerPacketSourceScaleGuards EulerPacketBaseGuardScales
+   EulerPacketBaseGuardScales
 
+/-- Step length, given by `scaleSequence J X (n+1)/sqrt (β n*a n*previousShear J X n)`. -/
 def stepLength (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ) : ℝ :=
   scaleSequence J X (n+1)/sqrt (β n*a n*previousShear J X n)
 
+/-- Activation time, given by `∑ i ∈ range n, stepLength J X a β i`. -/
 def activationTime (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ) : ℝ :=
   ∑ i ∈ range n, stepLength J X a β i
 
+/-- Horizon time, given by `activationTime J X a β n+2*timeWidth J X n`. -/
 def horizonTime (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ) : ℝ :=
   activationTime J X a β n+2*timeWidth J X n
 
@@ -43,9 +51,9 @@ theorem activationTime_succ (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ) :
   rw [horizonTime,activationTime_zero,zero_add,baseHorizon_eq_timeWidth J hX]
 
 variable (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X) (a β : ℕ → ℝ)
-  (ha : ∀ n, 1/2 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
-  (hβ : ∀ n, 1/2 ≤ β n*scaleSequence J X n^2)
-  (hβ₂ : ∀ n, β n*scaleSequence J X n^2 ≤ 2)
+  (ha : ∀ n, 1 / 2 ≤ a n) (ha₂ : ∀ n, a n ≤ 2)
+  (hβ : ∀ n, 1 / 2 ≤ β n * scaleSequence J X n ^ 2)
+  (hβ₂ : ∀ n, β n * scaleSequence J X n ^ 2 ≤ 2)
 
 include hJ hX ha ha₂ hβ hβ₂ in
 theorem stepLength_bounds (n : ℕ) :
@@ -89,7 +97,7 @@ theorem activationTime_lt_horizon (n : ℕ) :
   exact lt_add_of_pos_right _ (mul_pos (by norm_num) (timeWidth_pos J hJ hX n))
 
 include hJ hX ha ha₂ hβ hβ₂ in
-theorem horizonTime_succ_le (n : ℕ) (hw : timeWidth J X (n+1) ≤ timeWidth J X n/2) :
+theorem horizonTime_succ_le (n : ℕ) (hw : timeWidth J X (n + 1) ≤ timeWidth J X n / 2) :
     horizonTime J X a β (n+1) ≤ horizonTime J X a β n := by
   unfold horizonTime
   rw [activationTime_succ]
@@ -97,13 +105,13 @@ theorem horizonTime_succ_le (n : ℕ) (hw : timeWidth J X (n+1) ≤ timeWidth J 
     (stepLength_bounds J hJ X hX a β ha ha₂ hβ hβ₂ n).2 hw
 
 include hJ hX ha ha₂ hβ hβ₂ in
-theorem horizonTime_antitone (hw : ∀ n, timeWidth J X (n+1) ≤ timeWidth J X n/2) :
+theorem horizonTime_antitone (hw : ∀ n, timeWidth J X (n + 1) ≤ timeWidth J X n / 2) :
     Antitone (horizonTime J X a β) := by
   exact antitone_nat_of_succ_le (fun n =>
     horizonTime_succ_le J hJ X hX a β ha ha₂ hβ hβ₂ n (hw n))
 
 include hJ hX ha ha₂ hβ hβ₂ in
-theorem horizonTime_le_base (hw : ∀ n, timeWidth J X (n+1) ≤ timeWidth J X n/2) (n : ℕ) :
+theorem horizonTime_le_base (hw : ∀ n, timeWidth J X (n + 1) ≤ timeWidth J X n / 2) (n : ℕ) :
     horizonTime J X a β n ≤ baseHorizon J X := by
   simpa only [horizonTime_zero J hX a β] using
     horizonTime_antitone J hJ X hX a β ha ha₂ hβ hβ₂ hw (Nat.zero_le n)

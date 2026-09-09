@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
-public import Mathlib.Analysis.Calculus.Deriv.Slope
+
+/-! Genuine directional derivatives of the localized Newtonian operator family in operator norm. -/
 
 @[expose] public section
 
-/-! Genuine directional derivatives of the localized Newtonian operator family in operator norm. -/
 
 noncomputable section
 
@@ -21,10 +21,19 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerM
   Filter
 open scoped ContDiff Topology
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanBoundaryDerivative1 : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] ℝ)` instance to shorten typeclass synthesis. -/
+local instance instMeanBoundaryDerivative2 : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space →L[ℝ] ℝ)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanBoundaryDerivative3 : NormedAddCommGroup (Space →L[ℝ] Space →L[ℝ] ℝ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space →L[ℝ] ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanBoundaryDerivative4 : NormedSpace ℝ (Space →L[ℝ] Space →L[ℝ] ℝ) :=
+    inferInstance
 
 @[simp] theorem Cutoff.translate_zero (χ : Cutoff) : χ.translate 0 = χ := by
   apply Cutoff.ext
@@ -48,7 +57,7 @@ theorem Cutoff.exists_taylor_controls (χ : Cutoff) :
     hs₂.fderiv_right (m := ∞) (by simp)
   obtain ⟨M₂, h₂⟩ := ((χ.compact.fderiv ℝ).fderiv ℝ).exists_bound_of_continuous hs₂.continuous
   obtain ⟨M₃, h₃⟩ := (((χ.compact.fderiv ℝ).fderiv ℝ).fderiv ℝ).exists_bound_of_continuous
-    hs₃.continuous
+      hs₃.continuous
   exact ⟨R, M₂, M₃, (norm_nonneg _).trans (h₂ 0), (norm_nonneg _).trans (h₃ 0), hR, h₂, h₃⟩
 
 /-- Translating the actual cutoff differentiates the bounded cutoff-curl map in operator norm. -/
@@ -73,15 +82,15 @@ theorem cutoffCurl_hasDerivAt_zero (χ : Cutoff) (a : Space) :
     have hne : h ≠ 0 := by simpa only [Set.mem_compl_iff, Set.mem_singleton_iff] using hh
     rw [← cutoffCurl_differenceError]
     exact (cutoffCurl_norm_le _).trans (cutoffBound_differenceError χ R M₂ M₃ hM₂ hM₃ hs h₂ h₃ a h
-      hne hsmall)
+        hne hsmall)
   · have hc : Continuous (fun h : ℝ => cutoffDifferenceConstant R M₂ M₃ * |h| * ‖a‖ ^ 2) := by
-    fun_prop
+      fun_prop
     simpa only [abs_zero, mul_zero, zero_mul] using (hc.tendsto 0).mono_left nhdsWithin_le_nhds
 
 theorem weakPotential_differenceError (χ : Cutoff) (a : Space) (h : ℝ) :
     weakPotential (χ.differenceError a h) =
       h⁻¹ • (weakPotential (χ.translate (h • a)) - weakPotential χ) - weakPotential (χ.directional
-        a) := by
+          a) := by
   calc
     _ = weakPotential (χ.differenceQuotient a h) - weakPotential (χ.directional a) :=
       weakPotential_sub _ _
@@ -89,7 +98,7 @@ theorem weakPotential_differenceError (χ : Cutoff) (a : Space) (h : ℝ) :
       congrArg (fun B : L2 →L[ℝ] homogeneousSpace => B - weakPotential (χ.directional a))
         (weakPotential_scale ((χ.translate (h • a)).sub χ) h⁻¹)
     _ = _ := congrArg (fun B : L2 →L[ℝ] homogeneousSpace => h⁻¹ • B - weakPotential (χ.directional
-      a))
+        a))
       (weakPotential_sub (χ.translate (h • a)) χ)
 
 theorem weakPotential_operatorNorm_le (χ : Cutoff) : ‖weakPotential χ‖ ≤ cutoffBound χ := by
@@ -119,16 +128,16 @@ theorem weakPotential_hasDerivAt_zero (χ : Cutoff) (a : Space) :
     have hne : h ≠ 0 := by simpa only [Set.mem_compl_iff, Set.mem_singleton_iff] using hh
     rw [← weakPotential_differenceError]
     exact (weakPotential_operatorNorm_le _).trans (cutoffBound_differenceError χ R M₂ M₃ hM₂ hM₃ hs
-      h₂ h₃ a h hne hsmall)
+        h₂ h₃ a h hne hsmall)
   · have hc : Continuous (fun h : ℝ => cutoffDifferenceConstant R M₂ M₃ * |h| * ‖a‖ ^ 2) := by
-    fun_prop
+      fun_prop
     simpa only [abs_zero, mul_zero, zero_mul] using (hc.tendsto 0).mono_left nhdsWithin_le_nhds
 
 /-- Both cutoff positions contribute to the actual operator-norm derivative. -/
 theorem mixedBoundaryOperator_hasDerivAt_zero (χ ψ : Cutoff) (a : Space) :
     HasDerivAt (fun t : ℝ => mixedBoundaryOperator (χ.translate (t • a)) (ψ.translate (t • a)))
       (mixedBoundaryOperator (χ.directional a) ψ + mixedBoundaryOperator χ (ψ.directional a)) 0 :=
-        by
+          by
   have h := (cutoffCurl_hasDerivAt_zero χ a).clm_comp (weakPotential_hasDerivAt_zero ψ a)
   simpa only [zero_smul, Cutoff.translate_zero, mixedBoundaryOperator] using h
 
@@ -136,8 +145,8 @@ theorem mixedBoundaryOperator_hasDerivAt_zero (χ ψ : Cutoff) (a : Space) :
 theorem mixedBoundaryOperator_derivative_norm_le (χ ψ : Cutoff) (a : Space) :
     ‖mixedBoundaryOperator (χ.directional a) ψ + mixedBoundaryOperator χ (ψ.directional a)‖ ≤
       cutoffBound (χ.directional a) * cutoffBound ψ + cutoffBound χ * cutoffBound (ψ.directional a)
-        :=
+          :=
   (norm_add_le _ _).trans (add_le_add (mixedBoundaryOperator_norm_le _ _)
-    (mixedBoundaryOperator_norm_le _ _))
+      (mixedBoundaryOperator_norm_le _ _))
 
 end EulerMeanBoundary

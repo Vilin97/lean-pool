@@ -6,15 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanBudget
-public import LeanPool.NavierStokesAndEuler.Euler.ParentCoefficientPolynomial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketParentTransverseCosts
+public import LeanPool.NavierStokesAndEuler.Euler.PacketRadiusCostPolynomial
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
 
 /-! Polynomial control of the original source-solver radii, before the
 canonical primary/common enlargement. The boundary coefficient L is an
 explicit primitive input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,21 +24,29 @@ namespace EulerPacketSourceRadius
 
 open EulerParameterWordGevrey EulerPacketRadiusPolynomial EulerPacketParentMeanCoercivity
   EulerTransverseCoefficientGevrey EulerTransverseFixedSobolev EulerTimeLpGramSobolev
-  EulerTimeLpAccelerationSobolev EulerLinearDuhamel EulerMeanTranslatedGevrey
+   EulerLinearDuhamel EulerMeanTranslatedGevrey
   EulerMeanBoundary EulerPolynomialCost
 
 attribute [local gcongr] sobolevCoefficientAmplitude_mono_all inverseBlockCost_mono_all
-  sobolevInverseCost_mono
+    sobolevInverseCost_mono
 
+/-- Forcing envelope, given by `3*coeff W (2*W)`. -/
 def forcingEnvelope (W : ℝ) : ℝ := 3*coeff W (2*W)
+/-- Acceleration envelope, given by `3*coeff W W*(1+6*coeff W W*(W+2))`. -/
 def accelerationEnvelope (W : ℝ) : ℝ := 3*coeff W W*(1+6*coeff W W*(W+2))
+/-- Operator envelope, given by `36*W^2*(1+2*W+W*scaledBoundaryOperatorAmplitude)`. -/
 def operatorEnvelope (W : ℝ) : ℝ := 36*W^2*(1+2*W+W*scaledBoundaryOperatorAmplitude)
+/-- Projected envelope, given by `3*coeff (4*W) (3*W^2)`. -/
 def projectedEnvelope (W : ℝ) : ℝ := 3*coeff (4*W) (3*W^2)
 
+/-- Primitive lift, given by `1+(W+2)+formEnvelope W+forcingEnvelope
+W+3*W^2+accelerationEnvelope W + operatorEnvelope W+projectedEnvelope W`. -/
 def primitiveLift (W : ℝ) : ℝ :=
-  1+(W+2)+formEnvelope W+forcingEnvelope W+3*W^2+accelerationEnvelope W+
+  1+(W+2)+formEnvelope W+forcingEnvelope W+3*W^2+accelerationEnvelope W +
     operatorEnvelope W+projectedEnvelope W
 
+/-- Source radius envelope, given by `let V := primitiveLift W 1+V+6*weakEnvelope
+V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)`. -/
 def sourceRadiusEnvelope (W : ℝ) : ℝ :=
   let V := primitiveLift W
   1+V+6*weakEnvelope V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)
@@ -56,20 +66,21 @@ theorem primitiveLift_bounds (W : ℝ) (hW : 0 ≤ W) :
   have hop : 0 ≤ operatorEnvelope W := by unfold operatorEnvelope; positivity
   have hp : 0 ≤ projectedEnvelope W := by unfold projectedEnvelope; positivity
   unfold primitiveLift
-  exact ⟨by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith,by
-    nlinarith,by nlinarith⟩
+  exact ⟨by
+      nlinarith,by
+          nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith⟩
 
 theorem coeff_self_lower (W : ℝ) (hW : 0 ≤ W) : W ≤ coeff W W := by
   have hr : 0 ≤ sobolevCoefficientRadius (Fin 4) W := sobolevCoefficientRadius_nonneg W hW
   have hs : (1 : ℝ) ≤ ∑ k ∈ Finset.range 7, sobolevCoefficientRadius (Fin 4) W^k*(k.factorial :
-    ℝ)^2 := by
+      ℝ)^2 := by
     have hh := Finset.single_le_sum (f := fun k : ℕ => sobolevCoefficientRadius (Fin 4)
-      W^k*(k.factorial : ℝ)^2)
+        W^k*(k.factorial : ℝ)^2)
       (fun k (_ : k ∈ Finset.range 7) => mul_nonneg (pow_nonneg hr k) (sq_nonneg _))
       (show 0 ∈ Finset.range 7 by norm_num)
     simpa only [pow_zero,Nat.factorial_zero,Nat.cast_one,one_pow,mul_one] using hh
   change W ≤ (2 : ℝ)^6*W*(∑ k ∈ Finset.range (6+1), sobolevCoefficientRadius (Fin 4)
-    W^k*(k.factorial : ℝ)^2)
+      W^k*(k.factorial : ℝ)^2)
   have hm := mul_le_mul_of_nonneg_left hs (by positivity : 0 ≤ (2 : ℝ)^6*W)
   norm_num only [mul_one,pow_succ,pow_zero] at hm ⊢
   nlinarith
@@ -85,7 +96,7 @@ theorem weakEnvelope_lower_inputs (V : ℝ) (hV : 1 ≤ V) :
   have hi2 : 1+2*V^5+2*V^2 ≤ (1+2*V^5+2*V^2)^2 := by nlinarith
   have ha := coeff_self_lower V hv0
   have hb : coeff V V ≤ coeff V (2*V) := sobolevCoefficientAmplitude_mono_all 6 hv0 hv0 le_rfl (by
-    linarith)
+      linarith)
   have he : V ≤ endpointEnvelope V := by
     unfold endpointEnvelope
     nlinarith only [mul_le_mul_of_nonneg_right ha hv0,hv2]
@@ -95,8 +106,8 @@ theorem weakEnvelope_lower_inputs (V : ℝ) (hV : 1 ≤ V) :
   · have hprod := mul_le_mul_of_nonneg_right (ha.trans hb) (show 0 ≤ endpointEnvelope V by
       unfold endpointEnvelope
       exact mul_nonneg (by nlinarith : 0 ≤ 6*coeff V V) hv0)
-    nlinarith only [hprod,mul_nonneg (sub_nonneg.mpr hV) (by nlinarith only [he,hv0] : 0 ≤
-      endpointEnvelope V),he]
+    nlinarith only [hprod,mul_nonneg (sub_nonneg.mpr hV) (by
+        nlinarith only [he,hv0] : 0 ≤ endpointEnvelope V),he]
 
 theorem block_le_weak (V : ℝ) (hV : 1 ≤ V) (I R C D : ℝ)
     (hI0 : 0 ≤ I) (hR0 : 0 ≤ R) (hC0 : 0 ≤ C) (hD0 : 0 ≤ D)
@@ -123,12 +134,12 @@ theorem forcing_scalar_le (T R C C1 W : ℝ) (hT : 0 ≤ T) (hT1 : T ≤ 1)
     calc
       _ ≤ 1*(1*W+W) := by gcongr
       _ = _ := by ring
-  exact mul_le_mul_of_nonneg_left (sobolevCoefficientAmplitude_mono_all 6 hR (by positivity) hRW
-    hd) (by norm_num)
+  exact mul_le_mul_of_nonneg_left (sobolevCoefficientAmplitude_mono_all 6 hR (by
+      positivity) hRW hd) (by norm_num)
 
 theorem acceleration_scalar_le (R C C1 Cv W : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
     (hC1 : 0 ≤ C1) (hCv : 0 ≤ Cv) (hW : 0 ≤ W)
-    (hRW : R ≤ W) (hCW : C ≤ W) (hC1W : C1 ≤ W) (hCvW : Cv ≤ W+2) :
+    (hRW : R ≤ W) (hCW : C ≤ W) (hC1W : C1 ≤ W) (hCvW : Cv ≤ W + 2) :
     accelerationBlockAmplitude (Fin 4) 6 R C C1 1 Cv ≤ accelerationEnvelope W := by
   have ha := coeff_nonneg R C hR hC
   have hb := coeff_nonneg R C1 hR hC1
@@ -164,7 +175,7 @@ theorem forward_scalar_le (T C A D CB R V : ℝ)
     (hT : 0 ≤ T) (hT1 : T ≤ 1) (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D)
     (hCB : 0 ≤ CB) (hR : 0 ≤ R) (hV : 0 ≤ V)
     (hCV : C ≤ V) (hAV : A ≤ V) (hDV : D ≤ V)
-    (hCBV : CB ≤ 18*V^3) (hRV : R ≤ 4*V) :
+    (hCBV : CB ≤ 18 * V ^ 3) (hRV : R ≤ 4 * V) :
     forwardSobolevCost (Fin 4) 6 T C A D CB R ≤ forwardEnvelope V := by
   have hraw : frozenAmplitude T C CB ≤ 1+36*V^4 := by
     unfold frozenAmplitude
@@ -194,7 +205,7 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
     (hTi0 : 0 ≤ Ti) (hTi : Ti ≤ W) (hR0 : 0 ≤ R) (hR : R ≤ W)
     (hC0 : 0 ≤ C) (hC : C ≤ W) (hC10 : 0 ≤ C1) (hC1 : C1 ≤ W)
     (hC20 : 0 ≤ C2) (hCp0 : 0 ≤ Cp) (hCp : Cp ≤ W)
-    (hH : 27*C^2*C2 ≤ W)
+    (hH : 27 * C ^ 2 * C2 ≤ W)
     (hI : EulerPacketParentMeanCoercivity.inverseEnvelope C C1 ≤ W)
     (hGram : gramInverseEnvelope C ≤ W)
     (hRi : EulerPacketParentTransverseCosts.inverseRadius R C ≤ W) :
@@ -227,7 +238,7 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
       (hGram.trans hWV) (hR.trans hWV)
     · exact (by nlinarith only [pow_le_pow_left₀ hC0 hC 2] : 3*C^2 ≤ 3*W^2).trans hb.2.2.2.2.1
     · exact (acceleration_scalar_le R C C1 v W hR0 hC0 hC10 hv0 hW0 hR hC hC1 hv).trans
-      hb.2.2.2.2.2.1
+        hb.2.2.2.2.2.1
   have ha1 := hacc 1 zero_le_one (by linarith)
   have ha2 := hacc (Ti+2) (by positivity) (by linarith)
   let Ri := EulerPacketParentTransverseCosts.inverseRadius R C
@@ -239,7 +250,7 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
     unfold EulerSourceCylinderForwardSobolev.forcingCost
     positivity
   have hforward : EulerPacketParentTransverseCosts.forwardCost 6 S Ti R C C1 Cp ≤ forwardEnvelope V
-    := by
+      := by
     apply forward_scalar_le S Cp (Ti+2) _ (18*Ri*C*C1) (4*Ri) V
       hS0 hS hCp0 (by positivity) hpf0 (by positivity) (by positivity) hV0
       (hCp.trans hWV) ((by linarith : Ti+2 ≤ W+2).trans hb.2.1) hpf
@@ -248,17 +259,18 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
         _ = _ := by ring
     · gcongr
   have hh0 := EulerPacketParentTransverseCosts.historyCost_nonneg 6 T R C C1 C2 hT0 hR0 hC0 hC10
-    hC20
+      hC20
   have ha10 := EulerPacketParentTransverseCosts.accelerationCost_nonneg 6 R C C1 1 hR0 hC0 hC10
-    zero_le_one
+      zero_le_one
   have ha20 := EulerPacketParentTransverseCosts.accelerationCost_nonneg 6 R C C1 (Ti+2) hR0 hC0
-    hC10 (by positivity)
+      hC10 (by
+      positivity)
   have hww := weakEnvelope_nonneg V hV0
   have hfw := forwardEnvelope_nonneg V hV0
   unfold EulerPacketParentTransverseCosts.radius
   simp only [coefficientRadius_eq]
   calc
-    _ ≤ 1+2*(weakEnvelope V+weakEnvelope V+weakEnvelope V)*(16*V+1)+
+    _ ≤ 1+2*(weakEnvelope V+weakEnvelope V+weakEnvelope V)*(16*V+1) +
         16*(4*V)+2*forwardEnvelope V*(16*(4*V)+1) := by gcongr
     _ ≤ sourceRadiusEnvelope W := by
       change _ ≤ 1+V+6*weakEnvelope V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)
@@ -269,7 +281,7 @@ theorem mean_radius_le (T Ti R C C1 C2 L W : ℝ) (hW : 1 ≤ W)
     (hTi0 : 0 ≤ Ti) (hTi : Ti ≤ W) (hR0 : 0 ≤ R) (hR : R ≤ W)
     (hC0 : 0 ≤ C) (hC : C ≤ W) (hC10 : 0 ≤ C1) (hC1 : C1 ≤ W)
     (hC20 : 0 ≤ C2) (hL0 : 0 ≤ L) (hL : L ≤ W)
-    (hH : 27*C^2*C2 ≤ W)
+    (hH : 27 * C ^ 2 * C2 ≤ W)
     (hI : EulerPacketParentMeanCoercivity.inverseEnvelope C C1 ≤ W)
     (hGram : gramInverseEnvelope C ≤ W) :
     EulerPacketParentMeanBudget.radius 6 T Ti R C C1 C2 L ≤ sourceRadiusEnvelope W := by
@@ -295,7 +307,8 @@ theorem mean_radius_le (T Ti R C C1 C2 L W : ℝ) (hW : 1 ≤ W)
         hT0 hH0 hC10 scaledBoundaryOperatorAmplitude_nonneg) hf0
       (hI.trans hWV) hRV hop hforce
     simpa only [EulerPacketParentMeanBudget.weakCost,EulerPacketParentMeanBudget.operatorCost,
-      EulerMeanFixedSobolevGevrey.operatorBlockAmplitude,EulerPacketParentMeanBudget.curvatureAmplitude,
+      EulerMeanFixedSobolevGevrey.operatorBlockAmplitude,
+          EulerPacketParentMeanBudget.curvatureAmplitude,
       EulerPacketParentMeanBudget.forcingCost,EulerMeanFixedSobolevGevrey.forcingBlockAmplitude,
       mul_one,inverseBlockCost] using hh
   have hgram (v : ℝ) (hv0 : 0 ≤ v) (hv : v ≤ W+2) :
@@ -305,14 +318,14 @@ theorem mean_radius_le (T Ti R C C1 C2 L W : ℝ) (hW : 1 ≤ W)
       (hGram.trans hWV) hRV
     · exact (by nlinarith only [pow_le_pow_left₀ hC0 hC 2] : 3*C^2 ≤ 3*W^2).trans hb.2.2.2.2.1
     · exact (acceleration_scalar_le R C C1 v W hR0 hC0 hC10 hv0 hW0 hR hC hC1 hv).trans
-      hb.2.2.2.2.2.1
+        hb.2.2.2.2.2.1
   have ha1 := hgram 1 zero_le_one (by linarith)
   have ha2 := hgram (Ti+2) (by positivity) (by linarith)
   have hw0 := zero_le_one.trans (EulerPacketParentMeanBudget.weakCost_one_le 6 T R C C1 C2 L hT0
-    hR0 hC0 hC10 hC20)
+      hR0 hC0 hC10 hC20)
   have ha10 := EulerPacketParentMeanBudget.gramCost_nonneg 6 R C C1 1 hR0 hC0 hC10 zero_le_one
   have ha20 := EulerPacketParentMeanBudget.gramCost_nonneg 6 R C C1 (Ti+2) hR0 hC0 hC10 (by
-    positivity)
+      positivity)
   have hww := weakEnvelope_nonneg V hV0
   have hfw := forwardEnvelope_nonneg V hV0
   unfold EulerPacketParentMeanBudget.radius
@@ -334,19 +347,22 @@ theorem le_sourceRadiusEnvelope (W : ℝ) (hW : 0 ≤ W) : W ≤ sourceRadiusEnv
     mul_nonneg hweak (by positivity : 0 ≤ 16*primitiveLift W+1),
     mul_nonneg hforward (by positivity : 0 ≤ 64*primitiveLift W+1)]
 
+/-- Primitive polynomial as an element of `Polynomial ℝ`. -/
 def primitivePolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let a := coeffPoly X X
-  1+(X+2)+36*X^2*(1+X)+3*coeffPoly X (2*X)+3*X^2+
-    3*a*(1+6*a*(X+2))+36*X^2*(1+2*X+X*Polynomial.C scaledBoundaryOperatorAmplitude)+
+  1+(X+2)+36*X^2*(1+X)+3*coeffPoly X (2*X)+3*X^2 +
+    3*a*(1+6*a*(X+2))+36*X^2*(1+2*X+X*Polynomial.C scaledBoundaryOperatorAmplitude) +
     3*coeffPoly (4*X) (3*X^2)
 
 theorem primitivePolynomial_eval (W : ℝ) : primitivePolynomial.eval W=primitiveLift W := by
   simp only [primitivePolynomial,primitiveLift,formEnvelope,forcingEnvelope,accelerationEnvelope,
     operatorEnvelope,projectedEnvelope,coeffPoly,Polynomial.eval_add,Polynomial.eval_mul,
-    Polynomial.eval_pow,Polynomial.eval_ofNat,Polynomial.eval_one,Polynomial.eval_X,Polynomial.eval_C,
+    Polynomial.eval_pow, Polynomial.eval_ofNat, Polynomial.eval_one, Polynomial.eval_X,
+        Polynomial.eval_C,
     coefficientPolynomial_eval,coeff]
 
+/-- Source radius polynomial as an element of `Polynomial ℝ`. -/
 def sourceRadiusPolynomial : Polynomial ℝ :=
   let V := primitivePolynomial
   let endpoint := 6*coeffPoly V V*V
@@ -357,14 +373,16 @@ def sourceRadiusPolynomial : Polynomial ℝ :=
   1+V+6*weak*(16*V+1)+64*V+2*forward*(64*V+1)
 
 theorem sourceRadiusPolynomial_eval (W : ℝ) : sourceRadiusPolynomial.eval W=sourceRadiusEnvelope W
-  := by
+    := by
   simp only [sourceRadiusPolynomial,sourceRadiusEnvelope,weakEnvelope,forwardEnvelope,
     EulerPacketRadiusPolynomial.inverseEnvelope,formEnvelope,endpointEnvelope,
     coeffPoly,Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_ofNat,
     Polynomial.eval_one,inversePolynomial_eval,inverseBlockPolynomial_eval,
     coefficientPolynomial_eval,primitivePolynomial_eval,coeff]
 
+/-- Source radius constant, given by `coefficientCost sourceRadiusPolynomial`. -/
 def sourceRadiusConstant : ℝ := coefficientCost sourceRadiusPolynomial
+/-- Source radius power, given by `sourceRadiusPolynomial.natDegree`. -/
 def sourceRadiusPower : ℕ := sourceRadiusPolynomial.natDegree
 
 theorem sourceRadiusConstant_pos : 0 < sourceRadiusConstant := coefficientCost_pos _

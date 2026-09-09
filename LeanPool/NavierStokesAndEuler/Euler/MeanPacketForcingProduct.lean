@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcingAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientContinuity
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientContinuity
+
+/-! Actual multiplication closure for admissible mean forcing. -/
 
 @[expose] public section
 
-/-! Actual multiplication closure for admissible mean forcing. -/
 
 noncomputable section
 

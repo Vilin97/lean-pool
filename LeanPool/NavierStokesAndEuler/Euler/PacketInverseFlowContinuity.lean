@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.InverseMapJetContinuity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
+import LeanPool.NavierStokesAndEuler.Euler.InverseMapJetContinuity
+import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
 
 /-!
 # Joint spatial-jet continuity for the prescribed inverse parent flow
@@ -18,6 +17,9 @@ The smooth bounded coefficient paths already carry genuine continuous
 spatial jets.  Their evaluation, together with the actual inverse identity,
 supplies all inverse-flow continuity hypotheses used by Sobolev transport.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

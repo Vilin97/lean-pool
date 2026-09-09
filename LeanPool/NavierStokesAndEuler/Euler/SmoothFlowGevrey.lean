@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJets
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFlowFinite
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFlowFinite
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Source-scale Gevrey bounds for the actual globally constructed Picard
 flow.  Only bounds on the given velocity jets and the small product BRT
 are hypotheses; smoothness and all time-jet identities of the flow come
 from its construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,11 +32,20 @@ open EulerSmoothBanachFlow EulerGevreyFlowFinite EulerGevreyGeneratingDerivative
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowGevrey1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instSmoothFlowGevrey2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowGevrey3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowGevrey4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
 
+/-- Velocity extension, given by `A.field (projIcc 0 T hT t) x`. -/
 def velocityExtension (t : ℝ) (x : E) : E := A.field (projIcc 0 T hT t) x
 
 omit [FiniteDimensional ℝ E] in
@@ -47,7 +59,7 @@ theorem velocityExtension_contDiff (t : ℝ) :
 
 omit [FiniteDimensional ℝ E] in
 theorem velocityExtension_jet_bound (B R : ℝ)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : ℝ) (x : E) :
     ‖iteratedFDeriv ℝ n (velocityExtension T hT A t) x‖ ≤ B*R^n*(n.factorial : ℝ)^2 := by
   change ‖iteratedFDeriv ℝ n (A.field (projIcc 0 T hT t) : E → E) x‖ ≤ _
@@ -86,8 +98,8 @@ theorem composition_jet_continuous (n : ℕ) (x : E) :
 /-- A finite generating sum for the actual constructed flow, with a
 cutoff-independent radius and coefficient. -/
 theorem constructed_generating_sum_bound (B R : ℝ)
-    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (N : ℕ) (t : ℝ) (ht : t ∈ Icc 0 T) (x : E) :
     derivativeSum (displacement T hT A t) N ((4*R)⁻¹) x ≤ B*t := by
   apply flow_generating_sum_bound_of_jet_derivative
@@ -100,8 +112,8 @@ theorem constructed_generating_sum_bound (B R : ℝ)
   · exact fun n _ y => composition_jet_continuous T hT A n y
 
 theorem displacement_positive_bound (B R : ℝ)
-    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (hn : 0 < n) (t : ℝ) (ht : t ∈ Icc 0 T) (x : E) :
     ‖iteratedFDeriv ℝ n (displacement T hT A t) x‖ ≤
       B*t*(4*R)^n*(n.factorial : ℝ)^2 := by
@@ -111,7 +123,7 @@ theorem displacement_positive_bound (B R : ℝ)
 
 /-- Order zero uses direct integration of the actual velocity. -/
 theorem displacement_zero_bound (B R : ℝ)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (t : ℝ) (ht : t ∈ Icc 0 T) (x : E) :
     ‖iteratedFDeriv ℝ 0 (displacement T hT A t) x‖ ≤ B*t := by
   let v := fun s => velocityExtension T hT A s ∘ (id+displacement T hT A s)
@@ -138,8 +150,8 @@ theorem displacement_zero_bound (B R : ℝ)
 /-- Source-only all-order spatial estimate for the actual Picard flow
 displacement.  It includes order zero and is linear in B*t. -/
 theorem displacement_bound (B R : ℝ)
-    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : ℝ) (ht : t ∈ Icc 0 T) (x : E) :
     ‖iteratedFDeriv ℝ n (displacement T hT A t) x‖ ≤
       B*t*(4*R)^n*(n.factorial : ℝ)^2 := by

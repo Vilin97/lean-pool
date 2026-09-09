@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
-public import Mathlib.Tactic
-
-@[expose] public section
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # A factorial-square bound for the partitions in Faà di Bruno's formula
@@ -19,6 +17,9 @@ singleton or increases one old part, so the factorial-square weight grows by
 at most `(n + 1)^2 * (x + 2)`.  This avoids replacing every derivative in the
 composition formula by the largest derivative bound.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,12 +52,15 @@ lemma sum_partSize_succ_sq_le (c : OrderedFinpartition n) :
       simp
     _ ≤ _ := by nlinarith
 
+/-- Factorial product, given by `∏ i, ((c.partSize i).factorial : ℝ)`. -/
 def factorialProduct (c : OrderedFinpartition n) : ℝ :=
   ∏ i, ((c.partSize i).factorial : ℝ)
 
+/-- Partition weight, given by `x^c.length * ((c.length.factorial : ℝ) * factorialProduct c)^2`. -/
 def partitionWeight (x : ℝ) (c : OrderedFinpartition n) : ℝ :=
   x^c.length * ((c.length.factorial : ℝ) * factorialProduct c)^2
 
+/-- Partition sum, given by `∑ c : OrderedFinpartition n, partitionWeight x c`. -/
 def partitionSum (n : ℕ) (x : ℝ) : ℝ :=
   ∑ c : OrderedFinpartition n, partitionWeight x c
 

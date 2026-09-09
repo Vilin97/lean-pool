@@ -6,9 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Differentiating a genuine frozen-evolution identity
@@ -17,6 +22,9 @@ This calculus lemma applies to actual bounded initial-data and Green operators.
 The coefficient difference vanishes at the base point, so the resulting
 binomial recurrence contains only lower solution derivatives on the right.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,7 +42,7 @@ theorem derivative_recurrence
     (B : P → X →L[ℝ] X) (u f : P → X) (a : P → E)
     (hB : ContDiff ℝ ∞ B) (hu : ContDiff ℝ ∞ u) (hf : ContDiff ℝ ∞ f) (ha : ContDiff ℝ ∞ a)
     (x : P) (H : E →L[ℝ] X) (K : X →L[ℝ] X)
-    (heq : ∀ y, u y = H (a y) + K (f y + (B y-B x) (u y))) (n : ℕ) :
+    (heq : ∀ y, u y = H (a y) + K (f y + (B y - B x) (u y))) (n : ℕ) :
     ‖iteratedFDeriv ℝ n u x‖ ≤ ‖H‖*‖iteratedFDeriv ℝ n a x‖ + ‖K‖*
       (‖iteratedFDeriv ℝ n f x‖ + ∑ j ∈ range n,
         (n.choose (j+1) : ℝ) * ‖iteratedFDeriv ℝ (j+1) B x‖ *

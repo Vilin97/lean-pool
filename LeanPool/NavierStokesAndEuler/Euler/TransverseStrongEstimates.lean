@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEquation
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Quantitative bounds for the actual transverse coordinate inverse
@@ -16,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEquation
 These bounds use the lower frame constant and coefficient norms. In particular
 no exponential dependence on the undifferentiated coefficient norm is introduced.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -140,8 +142,8 @@ theorem coordinateDerivative_norm (hT : 0 ≤ T) (u : TimeLp T E) :
 /-- The actual coercive forcing-to-coordinate-velocity map has a polynomial bound. -/
 theorem transverseCoordinateDerivative_norm (hT : 0 ≤ T)
     (m : Icc (0 : ℝ) T → E) (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
-    (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖^2)
-    (hsmall : K * (T^2/2) ≤ 1/2) (f : TimeLp T E) :
+    (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖ ^ 2)
+    (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2) (f : TimeLp T E) :
     ‖coordinateDerivative T hT Q Q₁ c hc hQ
       (transverseSolver T hT m H K hK hH hsmall f : TimeLp T E)‖ ≤
       ((2 * (c⁻¹)^2 * ‖Q‖^2 * ‖Q₁‖ + c⁻¹ * ‖Q₁‖) * T + c⁻¹ * ‖Q‖) *

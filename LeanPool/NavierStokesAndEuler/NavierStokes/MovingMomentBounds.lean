@@ -6,10 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalRankDefect
-
-@[expose] public section
 
 /-!
 # Actual moments on the moving profile strip
@@ -18,6 +15,9 @@ The moment map integrates the given fields. It preserves the epsilon
 exponent using the same moving edge weight. The containing annulus is used
 only to justify the actual integrals and local smoothness.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -125,6 +125,7 @@ section Support
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Support, given by `∀ n, SupportedGauge a b ell U (f n)`. -/
 def Support (a b : ℝ) (ell : S → ℝ) (U : Set S) (f : ScalarField (PressureStream.Lift S)) : Prop :=
   ∀ n, SupportedGauge a b ell U (f n)
 
@@ -193,6 +194,7 @@ theorem viscosity (hf : Support a b ell U f) (hU : IsOpen U) (hl : ContinuousOn 
 
 end Support
 
+/-- Supported triple data, collecting `radial`, `angular`, `axial`. -/
 structure SupportedTriple (a b : ℝ) (ell : S → ℝ) (U : Set S)
     (m : Triple (PressureStream.Lift S)) : Prop where
   radial : Support a b ell U m.radial
@@ -243,28 +245,28 @@ theorem remainders_mem {o : Operators Point} {base m h : Triple Point} {κ H : �
     (hms : SupportedTriple a b (qLength coord) U.carrier m)
     (hhs : SupportedTriple a b (qLength coord) U.carrier h)
     (W : Fin 3 → Fin 3 → CorrectionState.ScalarField Point) (hWc : ∀ i j, SmoothOn
-      (PhysicalMeanDomain.slowDomain U.carrier) (W i j))
+        (PhysicalMeanDomain.slowDomain U.carrier) (W i j))
     (hWs : ∀ i j, Support a b (qLength coord) U.carrier (W i j))
     (ho : OperatorBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) o κ)
     (hb : BaseBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) base)
     (hm : MeanIncrementBounds.CumulativeBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone
-      hL) m)
+        hL) m)
     (hh : IncrementBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H h)
     (hH : 9 / 10 ≤ H) (i : Fin 3) :
     UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL)
       (H + 9 / 10 - 2 * κ) (fun n x => DefectIncrementBounds.remainders o base m h W n x i) := by
   obtain ⟨a₀, b₀, R₀, ha₀, _, _, _, hleft, hright, _⟩ := qLength_reference_bounds U ha hab
   have hfixed {f : CorrectionState.ScalarField Point} (hs : Support a b (qLength coord) U.carrier
-    f) :
+      f) :
       ∀ n, PhysicalMeanDomain.SupportedOn a₀ b₀ U.carrier (f n) := by
     intro n x hx hn
     exact ⟨(hleft _ hx).trans (hs n x hx hn).1, (hs n x hx hn).2.trans (hright _ hx)⟩
   have hml : LocalRankDefect.LocalTriple a₀ b₀ U.carrier m :=
     ⟨⟨hmc.radial, hfixed hms.radial⟩, ⟨hmc.angular, hfixed hms.angular⟩, ⟨hmc.axial, hfixed
-      hms.axial⟩⟩
+        hms.axial⟩⟩
   have hhl : LocalRankDefect.LocalTriple a₀ b₀ U.carrier h :=
     ⟨⟨hhc.radial, hfixed hhs.radial⟩, ⟨hhc.angular, hfixed hhs.angular⟩, ⟨hhc.axial, hfixed
-      hhs.axial⟩⟩
+        hhs.axial⟩⟩
   have hwl (i j : Fin 3) : LocalRankDefect.LocalShell a₀ b₀ U.carrier (W i j) :=
     ⟨hWc i j, hfixed (hWs i j)⟩
   have hrc := actualRadialError_mem ho hb hm hh hH W
@@ -273,7 +275,7 @@ theorem remainders_mem {o : Operators Point} {base m h : Triple Point} {κ H : �
   have hrl := LocalRankDefect.actualRadialError_localShell ha₀ U.isOpen hbs hml hhl hop W hwl
   have hl : ContinuousOn (qLength coord) U.carrier :=
     ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun x hx => U.time_pos x
-      hx)).continuousOn
+        hx)).continuousOn
   have hrs : Support a b (qLength coord) U.carrier (actualRadialError o base m h W) :=
     ((gr_support U.isOpen hl o base (updated m h) W (hms.updated hhs) hWs).sub
       (gr_support U.isOpen hl o base m W hms hWs)).sub
@@ -287,10 +289,10 @@ theorem remainders_mem {o : Operators Point} {base m h : Triple Point} {κ H : �
   have hP2 := radialMoment_mem U ha hab hcL hcR ε L hε hεone hL hrl.smooth hrs hrc 2
   have hT := radialMoment_mem U ha hab hcL hcR ε L hε hεone hL
     (LocalRankDefect.thetaQuadratic_localShell hml hhl).smooth hts (thetaQuadratic_mem ho hm hh hH)
-      2
+        2
   have hZ := radialMoment_mem U ha hab hcL hcR ε L hε hεone hL
     (LocalRankDefect.axialQuadratic_localShell hml hhl).smooth hzs (axialQuadratic_mem ho hm hh hH)
-      1
+        1
   fin_cases i
   · exact hP
   · exact hT
@@ -320,30 +322,30 @@ theorem rankStage_defect_class {κ H : ℝ}
     (hms : SupportedTriple g.radial.inner g.radial.outer (qLength coord) U.carrier u.mean)
     (hWc : ∀ i j, SmoothOn (PhysicalMeanDomain.slowDomain U.carrier) (u.covariance i j))
     (hWs : ∀ i j, Support g.radial.inner g.radial.outer (qLength coord) U.carrier (u.covariance i
-      j))
+        j))
     (hV : LocalRankDefect.IsSlowOn U.carrier c.base.angular)
     (hG : LocalRankDefect.IsSlowOn U.carrier c.base.axial)
     (ho : OperatorBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-      hεone hL)
+        hεone hL)
       c.operators κ)
     (hb : BaseBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone
-      hL) c.base)
+        hL) c.base)
     (hm : MeanIncrementBounds.CumulativeBounds
       (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone hL) u.mean)
     (hi : IncrementBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-      hεone hL)
+        hεone hL)
       H (rankIncrementState g r axial c u)) (hH : 9 / 10 ≤ H) (i : Fin 3) :
     UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL)
       (H + 9 / 10 - 2 * κ) (fun n x => debt c (rankStageState g r axial c u) n x i) := by
   obtain ⟨a₀, b₀, R₀, ha₀, hab₀, _, _, hleft, hright, _⟩ :=
     qLength_reference_bounds U ha g.radial.inner_lt_outer
   have hl (n : ℕ) (x : PressureStream.Plane) (hx : x ∈ U.carrier) : a₀ ≤ r.length n x * r.inner :=
-    by
+      by
     have hh := hg.gauge_left n x hx
     rw [hell n] at hh
     exact (hleft x hx).trans hh
   have hr (n : ℕ) (x : PressureStream.Plane) (hx : x ∈ U.carrier) : r.length n x * r.outer ≤ b₀ :=
-    by
+      by
     have hh := hg.gauge_right n x hx
     rw [hell n] at hh
     exact hh.trans (hright x hx)
@@ -387,18 +389,18 @@ theorem rankStage_defectBounds {κ H σ : ℝ}
     (hms : SupportedTriple g.radial.inner g.radial.outer (qLength coord) U.carrier u.mean)
     (hWc : ∀ i j, SmoothOn (PhysicalMeanDomain.slowDomain U.carrier) (u.covariance i j))
     (hWs : ∀ i j, Support g.radial.inner g.radial.outer (qLength coord) U.carrier (u.covariance i
-      j))
+        j))
     (hV : LocalRankDefect.IsSlowOn U.carrier c.base.angular)
     (hG : LocalRankDefect.IsSlowOn U.carrier c.base.axial)
     (ho : OperatorBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-      hεone hL)
+        hεone hL)
       c.operators κ)
     (hb : BaseBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone
-      hL) c.base)
+        hL) c.base)
     (hm : MeanIncrementBounds.CumulativeBounds
       (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε hεone hL) u.mean)
     (hi : IncrementBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-      hεone hL)
+        hεone hL)
       H (rankIncrementState g r axial c u)) (hH : 9 / 10 ≤ H)
     (hσ : 1 + σ ≤ H + 9 / 10 - 2 * κ) :
     DefectBounds (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL)

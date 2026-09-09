@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledTangentTransport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NormalScaling
 
 /-!
 # Copy transport from continuity on the anchored interval
@@ -18,6 +17,9 @@ forcing paths on its finite interval. These lemmas require continuity of
 exactly those paths, including their endpoints. No continuation of the raw
 tangent data or source outside the interval is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -87,12 +89,12 @@ theorem anchoredSolve_timeData (d : LinearData P V E) (g : Geometry)
     exact continuous_const.add (continuous_const.mul continuous_subtype_val)
   have hAc : Continuous (fun t : Icc a b =>
       (timeData d shift rate).coefficientAlong (timeGeometry g shift rate hrate.ne') copy ((p, Y),
-        t)) := by
+          t)) := by
     simp only [coefficientAlong_timeData]
     exact (hA.comp hc).const_smul rate
   have hfc : Continuous (fun t : Icc a b =>
       (timeData d shift rate).forcingAlong (timeGeometry g shift rate hrate.ne') copy ((p, Y), t))
-        := by
+          := by
     simp only [forcingAlong_timeData]
     exact (hf.comp hc).const_smul rate
   let u := fun t => d.anchoredSolve g (time_interval_mono shift hrate hab) copy (p, Y)
@@ -100,9 +102,9 @@ theorem anchoredSolve_timeData (d : LinearData P V E) (g : Geometry)
   have hu0 : u a = 0 := d.anchoredSolve_initial g _ copy (p, Y)
   have hu (t : ℝ) (ht : t ∈ Icc a b) : HasDerivAt u
       ((timeData d shift rate).coefficientAlong (timeGeometry g shift rate hrate.ne') copy ((p, Y),
-        t) (u t) +
+          t) (u t) +
         (timeData d shift rate).forcingAlong (timeGeometry g shift rate hrate.ne') copy ((p, Y),
-          t)) t := by
+            t)) t := by
     have ht' : shift + rate * t ∈ Icc (shift + rate * a) (shift + rate * b) :=
       ⟨time_interval_mono shift hrate ht.1, time_interval_mono shift hrate ht.2⟩
     have hold := anchoredSolve_hasDerivAt d g (time_interval_mono shift hrate hab)
@@ -179,7 +181,7 @@ theorem copySolve_transport (t : TangentData P H) (parameter : Q → P)
         (parameter q, coverPower gap Y) :=
   copySolve_of_compatibleInputs t.linearData _ parameter g hab gap shift rate amplitude hrate
     q copy Y hA hf (transportTangent_sameInputs t parameter gap shift rate amplitude normalScale
-      hnormal q) hslot
+        hnormal q) hslot
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 theorem copyPressureReal_transport (t : TangentData P H) (parameter : Q → P)
@@ -326,7 +328,7 @@ private theorem continuous_zeroEntry_interval {E : Type*} [TopologicalSpace E]
     (hf : Continuous (fun s : Icc 0 L => F s)) :
     Continuous (fun s : Icc (0 + rate * 0) (0 + rate * (L / rate)) => F s) := by
   have h0 : (0 : ℝ) + rate * 0 = 0 := by ring
-  have h1 : (0 : ℝ) + rate * (L / rate) = L := by field_simp ; simp
+  have h1 : (0 : ℝ) + rate * (L / rate) = L := by field_simp; simp
   exact continuous_interval_congr F h0 h1 hf
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
@@ -351,16 +353,16 @@ theorem complexCopyVelocity_zeroEntry (t : TangentData P ProblemStatement.Space)
       amplitude • complexCopyVelocity t f g hL.le copy (parameter q, coverPower gap Y) := by
   have hlen : rate * (L / rate) = L := by field_simp
   have he := complexCopyVelocity_transport (a := 0) (b := L / rate) t f parameter g (div_pos hL
-    hrate).le
+      hrate).le
     gap 0 rate amplitude normalScale hrate hnormal q copy Y
     (continuous_zeroEntry_interval L rate hrate.ne'
       (fun s => t.linearData.coefficientAlong g copy ((parameter q, coverPower gap Y), s)) hA)
     (continuous_zeroEntry_interval L rate hrate.ne'
       (fun s => (realData t f).linearData.forcingAlong g copy ((parameter q, coverPower gap Y), s))
-        hReal)
+          hReal)
     (continuous_zeroEntry_interval L rate hrate.ne'
       (fun s => (imagData t f).linearData.forcingAlong g copy ((parameter q, coverPower gap Y), s))
-        hImag) hslot
+          hImag) hslot
   refine he.trans (congrArg (fun z : HarmonicCalculus.ComplexVector => amplitude • z) ?_)
   exact interval_congr (fun a b hab => complexCopyVelocity t f g (a := a) (b := b) hab copy
     (parameter q, coverPower gap Y)) _ _ (by ring) (by simpa only [zero_add] using hlen)
@@ -386,25 +388,25 @@ theorem complexCopyPressure_zeroEntry (t : TangentData P ProblemStatement.Space)
       (transportGeometry g gap 0 rate hrate.ne') (div_pos hL hrate).le copy frequency (q, Y) =
       ((rate * amplitude / normalScale) * (referenceFrequency / frequency)) •
         complexCopyPressure t f g hL.le copy referenceFrequency (parameter q, coverPower gap Y) :=
-          by
+            by
   have hlen : rate * (L / rate) = L := by field_simp
   have he := complexCopyPressure_transport (a := 0) (b := L / rate) t f parameter g (div_pos hL
-    hrate).le
+      hrate).le
     gap 0 rate amplitude normalScale referenceFrequency frequency hrate hnormal hreference
-      hfrequency
+        hfrequency
     q copy Y (continuous_zeroEntry_interval L rate hrate.ne'
       (fun s => t.linearData.coefficientAlong g copy ((parameter q, coverPower gap Y), s)) hA)
     (continuous_zeroEntry_interval L rate hrate.ne'
       (fun s => (realData t f).linearData.forcingAlong g copy ((parameter q, coverPower gap Y), s))
-        hReal)
+          hReal)
     (continuous_zeroEntry_interval L rate hrate.ne'
       (fun s => (imagData t f).linearData.forcingAlong g copy ((parameter q, coverPower gap Y), s))
-        hImag) hslot
+          hImag) hslot
   refine he.trans (congrArg (fun z : ℂ =>
     ((rate * amplitude / normalScale) * (referenceFrequency / frequency)) • z) ?_)
   exact interval_congr (fun a b hab => complexCopyPressure t f g (a := a) (b := b) hab copy
-    referenceFrequency (parameter q, coverPower gap Y)) _ _ (by ring) (by simpa only [zero_add]
-      using hlen)
+    referenceFrequency (parameter q, coverPower gap Y)) _ _ (by
+        ring) (by simpa only [zero_add] using hlen)
 
 end ComplexPaths
 
@@ -426,7 +428,7 @@ theorem real_forcingAlong_continuous (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → HarmonicCalculus.ComplexVector) (g : Geometry)
     (copy : Frequency) (p : P) (Y : Plane)
     (hB : Continuous (fun s : Icc a b => t.linearData.forcingMap (p, ((g.coordinates copy Y).1,
-      s))))
+        s))))
     (hf : Continuous (fun s : Icc a b => f (p, g.path copy Y s))) :
     Continuous (fun s : Icc a b => (realData t f).linearData.forcingAlong g copy ((p, Y), s)) :=
   forcingAlong_continuous (realData t f).linearData g copy p Y hB
@@ -436,7 +438,7 @@ theorem imag_forcingAlong_continuous (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → HarmonicCalculus.ComplexVector) (g : Geometry)
     (copy : Frequency) (p : P) (Y : Plane)
     (hB : Continuous (fun s : Icc a b => t.linearData.forcingMap (p, ((g.coordinates copy Y).1,
-      s))))
+        s))))
     (hf : Continuous (fun s : Icc a b => f (p, g.path copy Y s))) :
     Continuous (fun s : Icc a b => (imagData t f).linearData.forcingAlong g copy ((p, Y), s)) :=
   forcingAlong_continuous (imagData t f).linearData g copy p Y hB
@@ -466,7 +468,7 @@ private theorem periodizedCopies_transport_of_nonzeroCutoff
   calc
     _ = ∑' copy : Frequency, scale •
         (cutoff (g.coordinates copy (coverPower gap Y)) • G copy (parameter q, coverPower gap Y))
-          := by
+            := by
       apply tsum_congr
       intro copy
       simp only [Function.comp_apply, coordinates_transport]

@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Envelope
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.BreakdownCriterion
 
 /-! Uniform H³ comparison and the actual no-gradient-escape consequence
 for genuine ordinary Euler evolutions. No energy inequality is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,12 +25,15 @@ open scoped ContDiff Topology BoundedContinuousFunction
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Reference norm path, given by `⟨fun t => tensorNorm 4 (U.velocity t),by apply
+continuous_finsetSum intro n _ exact (U.velocity_continuous n).norm⟩`. -/
 def referenceNormPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => tensorNorm 4 (U.velocity t),by
     apply continuous_finsetSum
     intro n _
     exact (U.velocity_continuous n).norm⟩
 
+/-- Reference size, given by `‖U.referenceNormPath‖`. -/
 def referenceSize (U : Evolution T hT) : ℝ := ‖U.referenceNormPath‖
 
 theorem referenceSize_nonneg (U : Evolution T hT) : 0 ≤ U.referenceSize := norm_nonneg _
@@ -48,7 +52,7 @@ theorem gradient_continuous (U : Evolution T hT) (x : Space) :
       (Space →ᵇ (Space →L[ℝ] Space)) →L[ℝ] (Space →L[ℝ] Space)).continuous.comp
     (continuous_finiteField (fun t => (U.velocity t).derivative)
       (continuous_jetLp_derivative U.velocity U.velocity_continuous))
-  have he : (fun t => fderiv ℝ (U.velocity t).field x)=
+  have he : (fun t => fderiv ℝ (U.velocity t).field x) =
       fun t => (BoundedContinuousFunction.evalCLM ℝ x)
         (finiteField ((U.velocity t).derivative)) := by
     funext t
@@ -58,7 +62,7 @@ theorem gradient_continuous (U : Evolution T hT) (x : Space) :
 
 theorem eventually_h3_bound (U : Evolution T hT) (V : ℕ → Evolution T hT)
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))
-    (hinit : ∀ n, tensorNorm 3 (U.difference (V n) ⟨0,le_rfl,hT⟩) ≤ ε n) :
+    (hinit : ∀ n, tensorNorm 3 (U.difference (V n) ⟨0, le_rfl, hT⟩) ≤ ε n) :
     ∀ᶠ n in atTop, ∀ t : Icc (0 : ℝ) T,
       tensorNorm 3 (U.difference (V n) t) ≤
         640*ε n*Real.exp (3*stabilityConstant U.referenceSize*T) := by
@@ -73,7 +77,7 @@ theorem eventually_h3_bound (U : Evolution T hT) (V : ℕ → Evolution T hT)
 
 theorem sampled_h3_tendsto_zero (U : Evolution T hT) (V : ℕ → Evolution T hT)
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))
-    (hinit : ∀ n, tensorNorm 3 (U.difference (V n) ⟨0,le_rfl,hT⟩) ≤ ε n)
+    (hinit : ∀ n, tensorNorm 3 (U.difference (V n) ⟨0, le_rfl, hT⟩) ≤ ε n)
     (times : ℕ → Icc (0 : ℝ) T) :
     Tendsto (fun n => tensorNorm 3 (U.difference (V n) (times n))) atTop (𝓝 0) := by
   apply squeeze_zero' (Eventually.of_forall (fun n => tensorNorm_nonneg 3 _))
@@ -83,10 +87,10 @@ theorem sampled_h3_tendsto_zero (U : Evolution T hT) (V : ℕ → Evolution T hT
 
 theorem no_gradient_escape (U : Evolution T hT) (V : ℕ → Evolution T hT)
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))
-    (hinit : ∀ n, tensorNorm 3 (U.difference (V n) ⟨0,le_rfl,hT⟩) ≤ ε n)
+    (hinit : ∀ n, tensorNorm 3 (U.difference (V n) ⟨0, le_rfl, hT⟩) ≤ ε n)
     (times : ℕ → Icc (0 : ℝ) T) :
     ¬ Tendsto (fun n => ‖fderiv ℝ ((V n).velocity (times n)).field 0‖) atTop atTop := by
-  let err : ℕ → ℝ := fun n => (9*smoothEmbeddingConstant)*
+  let err : ℕ → ℝ := fun n => (9*smoothEmbeddingConstant) *
     tensorNorm 3 (U.difference (V n) (times n))
   have he : Tendsto err atTop (𝓝 0) := by
     simpa only [mul_zero] using
@@ -102,7 +106,7 @@ theorem no_gradient_escape (U : Evolution T hT) (V : ℕ → Evolution T hT)
   have hb := real_smooth_fderiv_le_H3 3 (U.difference (V n) (times n)).field
     (U.difference (V n) (times n)).smooth
     (fun j _ => (U.difference (V n) (times n)).integrable j) 0
-  have hf : (U.difference (V n) (times n)).field=
+  have hf : (U.difference (V n) (times n)).field =
       ((V n).velocity (times n)).field-(U.velocity (times n)).field :=
     funext (fieldSub_field _ _)
   rw [hf,fderiv_sub (((V n).velocity (times n)).smooth.differentiable (by simp) 0)

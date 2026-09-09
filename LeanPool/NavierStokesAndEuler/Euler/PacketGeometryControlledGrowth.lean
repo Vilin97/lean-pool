@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryGrowth
 
 /-! The source growth profile is selected together with its amplitude
 bound. Keeping both properties in the choice specification is necessary
 for a uniform source-frequency estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +26,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : Data U) {Ω : Set Space} (G : PhysicalGeometryData {x : Space // x ∈ Ω})
   {F F₁ Z Z₁ : ℝ → ℝ} (H : PhysicalGeometryConclusion G F F₁ Z Z₁)
 
-theorem growthProfile_amplitude_bound (hhorizon : G.time G.H=G.t₀+D.T)
+theorem growthProfile_amplitude_bound (hhorizon : G.time G.H = G.t₀ + D.T)
     (t : Icc (0 : ℝ) D.T) :
     G.amplitude*growthProfile D G H t ≤ 8*Real.exp 6*G.δ*G.hchild/G.s₀ := by
   have ha : 0 < G.a := by linarith only [G.a_lower]
@@ -64,7 +66,7 @@ open Set EulerSmoothLimit EulerPacketMovingFrame EulerTransversePacketProvider
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)} (A : Guards hτ hτT P H)
-  (hball : (1/2 : ℝ) ≤ A.radius)
+  (hball : (1 / 2 : ℝ) ≤ A.radius)
 
 theorem primaryAmplitude_pos (hδ : 0 < A.δ) (hh : 0 < A.hchild) :
     0 < A.primaryAmplitude hball :=
@@ -99,7 +101,7 @@ open Set EulerSmoothLimit EulerPacketMovingFrame EulerTransversePacketProvider
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {P : ParentFrame D 0} (A : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ A.radius)
+  (hball : (1 / 2 : ℝ) ≤ A.radius)
 
 theorem primaryAmplitude_pos (hδ : 0 < A.δ) (hh : 0 < A.hchild) :
     0 < A.primaryAmplitude hball :=

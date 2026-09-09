@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualNaturality
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
 
-@[expose] public section
-
 /-!
 # Coherence of the actual moving-gauge pressure reconstruction
 
@@ -18,6 +16,9 @@ The hypotheses transport the primitive gauge data and the incoming state on
 whole radial/torus fibers.  The recomputed pressure and retained cutoff alias
 are obtained from their genuine integral definitions.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.GaugeStateCoherence
 
@@ -27,6 +28,7 @@ open Set Function Filter
 open scoped ContDiff Topology
 open PhysicalResidualNaturality
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
 
 variable {S T : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
@@ -172,14 +174,14 @@ theorem reconstructState_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : �
     (hf : ContDiffOn ℝ ∞ (r.gr Cr nr) (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U (r.gr Cr nr))
     (hs : VariableGaugeMean.SupportedGauge gr.radial.inner gr.radial.outer (gr.length nr) U (r.gr
-      Cr nr)) :
+        Cr nr)) :
     StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l
       (VariableGaugeMean.reconstructState g C s) (VariableGaugeMean.reconstructState gr Cr r) n nr
-        := by
+          := by
   refine ⟨H.mean, ?_, H.oscillation, H.oscillatoryPressure, H.baseError, H.gaussian, H.aliasError⟩
   have hgr := H.gr G (PhysicalMeanDomain.slowDomain_open hV) hl.ne'
   have hsup : VariableGaugeMean.SupportedGauge g.radial.inner g.radial.outer (gr.length nr) U (r.gr
-    Cr nr) := by
+      Cr nr) := by
     simpa only [hg.inner, hg.outer] using hs
   have ht := meanPressure_on hl P k ha g.radial.inner_lt_outer hd
     g.radial.radialDirection gr.radial.radialDirection hg.frequency (g.length n) (gr.length nr)
@@ -271,8 +273,8 @@ theorem pressureAlias_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
       (l * (ell z.2.1 * b)) N _ w g
         (MeanChartCompatibility.chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z) at ht
     rw [hleft] at ht
-    rw [pressureAlias_congr_endpoints (hab' := mul_lt_mul_of_pos_left hab hzl') hscaleA hscaleB] at
-      ht
+    rw [pressureAlias_congr_endpoints (hab' := mul_lt_mul_of_pos_left hab hzl') hscaleA hscaleB]
+        at ht
     exact ht.trans (congrArg (fun t : ℝ => u * t)
       (fixedPressureAlias_fiberLocal d (ell' (P z.2.1) * a)
         (ell' (P z.2.1) * b) N (mul_lt_mul_of_pos_left hab hzl') w g f (P z.2.1) he
@@ -321,22 +323,22 @@ theorem pressureAliasState_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : 
     (hf : ContDiffOn ℝ ∞ (r.gr Cr nr) (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U (r.gr Cr nr))
     (hs : VariableGaugeMean.SupportedGauge gr.radial.inner gr.radial.outer (gr.length nr) U (r.gr
-      Cr nr)) :
+        Cr nr)) :
     ∀ z ∈ PhysicalMeanDomain.slowDomain V, ∀ theta i,
       VariableGaugeMean.pressureAliasState g C s n (z, theta) i =
         (c*c*l) * VariableGaugeMean.pressureAliasState gr Cr r nr
           (chartEquiv l hl.ne' P k z, theta) i := by
   have hgr := H.gr G (PhysicalMeanDomain.slowDomain_open hV) hl.ne'
   have hsup : VariableGaugeMean.SupportedGauge g.radial.inner g.radial.outer (gr.length nr) U (r.gr
-    Cr nr) := by
+      Cr nr) := by
     simpa only [hg.inner, hg.outer] using hs
   have ht := pressureAlias_on hl P k ha g.radial.inner_lt_outer hd
     g.radial.radialDirection gr.radial.radialDirection hg.frequency (g.length n) (gr.length nr)
     hU hmap hg.positive hg.length hgr hf hp hsup
   have heq := pressureAlias_congr_profile (hab := gr.radial.inner_lt_outer) (hab' :=
-    g.radial.inner_lt_outer)
+      g.radial.inner_lt_outer)
     hg.exponent hg.inner hg.outer (gr.radial.frequency nr) (gr.length nr) gr.radial.radialDirection
-      (r.gr Cr nr)
+        (r.gr Cr nr)
   intro z hz theta i
   have he := ht z hz
   rw [← heq] at he
@@ -351,12 +353,14 @@ theorem pressureAliasState_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : 
 
 /-! ## The actual similarity gauge in two bands -/
 
+/-- Band scale, given by `(ChartScales.Q n / ChartScales.Q m) ^ (1 / 2 : ℝ)`. -/
 noncomputable def bandScale (n m : ℕ) : ℝ :=
   (ChartScales.Q n / ChartScales.Q m) ^ (1 / 2 : ℝ)
 
 theorem bandScale_pos (n m : ℕ) : 0 < bandScale n m :=
   Real.rpow_pos_of_pos (div_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m)) _
 
+/-- Band velocity scale, given by `(ChartScales.Q n / ChartScales.Q m) ^ CoordinateAlgebra.A h`. -/
 noncomputable def bandVelocityScale (h : ℝ) (n m : ℕ) : ℝ :=
   (ChartScales.Q n / ChartScales.Q m) ^ CoordinateAlgebra.A h
 
@@ -373,8 +377,10 @@ noncomputable def bandSlowEquiv (h : ℝ) (n m : ℕ) : Plane ≃L[ℝ] Plane :=
       ((ChartScales.Q n / ChartScales.Q m) * s.1,
         (ChartScales.Q n / ChartScales.Q m) ^ CoordinateAlgebra.D h * s.2) := rfl
 
+/-- Band chart equiv, given by `chartEquiv (bandScale n m) (bandScale_pos n m).ne'
+(bandSlowEquiv h n m) k`. -/
 noncomputable def bandChartEquiv (h : ℝ) (n m k : ℕ) : PressureStream.Lift Plane ≃L[ℝ]
-  PressureStream.Lift Plane :=
+    PressureStream.Lift Plane :=
   chartEquiv (bandScale n m) (bandScale_pos n m).ne' (bandSlowEquiv h n m) k
 
 @[simp] theorem bandChartEquiv_apply (h : ℝ) (n m k : ℕ) (z : PressureStream.Lift Plane) :
@@ -404,7 +410,7 @@ theorem radialFrequency_band_transport (h d M : ℝ) (n m k i ir : ℕ) (hi : i 
     rw [show (1 / 2 : ℝ) * d = d / 2 by ring]
     exact Real.div_rpow (ChartScales.Q_pos n).le (ChartScales.Q_pos m).le (d / 2)
   rw [MeanChartCompatibility.radialFrequency, MeanChartCompatibility.radialFrequency, hp, ← hi,
-    pow_add]
+      pow_add]
   field_simp [(Real.rpow_pos_of_pos (ChartScales.Q_pos m) (d / 2)).ne']
 
 /-- The similarity gauge satisfies all primitive transport laws with the
@@ -434,13 +440,13 @@ theorem bandScale_eq_ratioPower (n m : ℕ) :
 theorem bandVelocityScale_eq_ratioPower (h : ℝ) (n m : ℕ) :
     bandVelocityScale h n m =
       PhysicalParticularWave.ratioPower (ChartScales.Q n) (ChartScales.Q m) (CoordinateAlgebra.A h)
-        :=
+          :=
   Real.div_rpow (ChartScales.Q_pos n).le (ChartScales.Q_pos m).le _
 
 /-- Concrete band/common-cover reconstruction, with the length and frequency
 transport laws derived from `similarityGauge` itself. -/
 theorem similarity_reconstruction_on {h d a b M : ℝ}
-    (hh : 0 < h) (hh1 : h < 1/2) (ha : 0 < a) (hab : a < b) (hd : 0 < d)
+    (hh : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hab : a < b) (hd : 0 < d)
     (index : ℕ → ℕ) (n m k : ℕ) (hi : index n + k = index m)
     {V U : Set Plane} (hV : IsOpen V) (hU : IsOpen U) (htime : ∀ s ∈ V, 0 < s.1)
     (hmap : MapsTo (bandSlowEquiv h n m) V U)
@@ -452,20 +458,20 @@ theorem similarity_reconstruction_on {h d a b M : ℝ}
       (bandVelocityScale h n m) (bandScale n m) C Cr n m)
     (hf : ContDiffOn ℝ ∞ (r.gr Cr m) (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U (r.gr Cr m))
-    (hs : VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength (2*h)) U (r.gr Cr m)) :
+    (hs : VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength (2 * h)) U (r.gr Cr m)) :
     StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv h n m k)
       (bandVelocityScale h n m) (bandScale n m)
       (VariableGaugeMean.reconstructState (VariableGaugeMean.similarityGauge h d a b M hab index) C
-        s)
+          s)
       (VariableGaugeMean.reconstructState (VariableGaugeMean.similarityGauge h d a b M hab index)
-        Cr r) n m ∧
+          Cr r) n m ∧
     ∀ z ∈ PhysicalMeanDomain.slowDomain V, ∀ theta i,
       VariableGaugeMean.pressureAliasState (VariableGaugeMean.similarityGauge h d a b M hab index)
-        C s n
+          C s n
         (z, theta) i =
       (bandVelocityScale h n m * bandVelocityScale h n m * bandScale n m) *
         VariableGaugeMean.pressureAliasState (VariableGaugeMean.similarityGauge h d a b M hab
-          index) Cr r m
+            index) Cr r m
           (bandChartEquiv h n m k z, theta) i := by
   have hg := similarityGaugeOn hh hh1 d a b M hab index n m k hi htime
   exact ⟨reconstructState_on (bandScale_pos n m) (bandSlowEquiv h n m) k hV hU hmap
@@ -501,7 +507,7 @@ theorem meanPressure_supported {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 
     (hf : ContDiffOn ℝ ∞ f (PhysicalMeanDomain.slowDomain U))
     (hs : VariableGaugeMean.SupportedGauge a b ell U f) :
     VariableGaugeMean.SupportedGauge a b ell U (VariableGaugeMean.meanPressure d a b M hab ell v f)
-      := by
+        := by
   intro z hz hn
   let g := PhysicalMeanDomain.freezeSlow z.2.1 f
   have hg : ContDiff ℝ ∞ g := VariableGaugeMean.freezeSlow_contDiff hU hz hf
@@ -512,19 +518,19 @@ theorem meanPressure_supported {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 
       VariableGaugeMean.meanPressure d a b M hab ell v f z := by
     rw [VariableGaugeMean.meanPressure_eq_fixed hab d M ell v f z (hl _ hz)]
     exact PhysicalMeanDomain.meanPressure_fiberLocal d _ _ M _ v g f z.2.1 (fun _ _ => rfl) z.1
-      z.2.2
+        z.2.2
   apply PressureStream.meanPressure_supported (M := M) (mul_pos (hl _ hz) ha)
     (mul_lt_mul_of_pos_left hab (hl _ hz)) hd v hg hgs
   exact fun hh => hn (hvalue.symm.trans hh)
 
 theorem reconstructState_pressure_supported (g : VariableGaugeMean.GaugeData S)
     (C : CorrectionState.Context (PressureStream.Lift S)) (s : CorrectionState.State
-      (PressureStream.Lift S))
+        (PressureStream.Lift S))
     (n : ℕ) (ha : 0 < g.radial.inner) (hd : 0 < g.radial.exponent) {U : Set S} (hU : IsOpen U)
     (hl : ∀ t ∈ U, 0 < g.length n t)
     (hf : ContDiffOn ℝ ∞ (s.gr C n) (PhysicalMeanDomain.slowDomain U))
     (hs : VariableGaugeMean.SupportedGauge g.radial.inner g.radial.outer (g.length n) U (s.gr C n))
-      :
+        :
     VariableGaugeMean.SupportedGauge g.radial.inner g.radial.outer (g.length n) U
       ((VariableGaugeMean.reconstructState g C s).pressure n) :=
   meanPressure_supported ha g.radial.inner_lt_outer hd (g.radial.frequency n) (g.length n)
@@ -532,7 +538,7 @@ theorem reconstructState_pressure_supported (g : VariableGaugeMean.GaugeData S)
 
 theorem pressureAliasState_supported (g : VariableGaugeMean.GaugeData S)
     (C : CorrectionState.Context (PressureStream.Lift S)) (s : CorrectionState.State
-      (PressureStream.Lift S))
+        (PressureStream.Lift S))
     (n : ℕ) (ha : 0 < g.radial.inner) (hd : 0 < g.radial.exponent) {U : Set S}
     (hl : ∀ t ∈ U, 0 < g.length n t) (theta : ℝ) (i : Fin 3) :
     VariableGaugeMean.SupportedGauge g.radial.inner g.radial.outer (g.length n) U

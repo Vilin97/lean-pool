@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFrameCoefficients
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FrameTransport
 
-@[expose] public section
-
 /-!
 # A fixed Hilbert derivative space for the actual mean inverse
 
@@ -21,6 +19,9 @@ These maps are proved inverse, so no parameter-dependent test space is hidden
 when comparing translated or differentiated coefficients.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
@@ -29,7 +30,7 @@ namespace EulerMeanVariationalInverse
 open Set InnerProductSpace ContinuousLinearMap EulerTimeLp EulerTerminalTimePrimitive
   EulerMeanSolenoidal EulerVolterraConvolution EulerTimeH1OperatorProduct
   EulerTimeH1FrameTransport EulerTransverseGramPath EulerTransverseCoordinateRegularity
-  EulerTransverseStrongEstimates
+
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))

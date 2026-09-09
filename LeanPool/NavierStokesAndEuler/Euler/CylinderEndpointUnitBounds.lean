@@ -7,15 +7,24 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointBudget
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderTerminalAmplitude
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointForcing
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletTimeBounds
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderTerminalAmplitude
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
 
 /-!
 Actual fixed-Hq mixed-word estimates for unit terminal data. The spatial
 radius is unchanged; the coordinate/velocity use two shifts and the true
 time derivative uses three. Every inverse guard is source-only.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,7 +43,7 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
   (hdir : ∀ i, ‖directions i‖ ≤ 1)
   (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y))
   (d : ℕ) (hYb : ∀ n, block directions q (fun a : LiftTangent => translate P a Y) n 0 ≤ majorant
-    L.R d n)
+      L.R d n)
 
 include hY hYb in
 omit [CompleteSpace U] [CompleteSpace E] in
@@ -80,7 +89,7 @@ theorem coordinate_unit_bound (n : ℕ) :
       L.coordinateCost*majorant L.R (d+2) n := by
   have hf := D.endpointForcing_orbit_contDiff P L.frameDerivative_smooth Y hY
   have hv := D.velocityPath_orbit_contDiff P L.frame_smooth L.frameDerivative_smooth
-    L.hessian_smooth
+      L.hessian_smooth
     (D.endpointForcing P Y) hf
   have hb := D.continuousVelocity_block_bound P directions hdir q
     L.frame_smooth L.frameDerivative_smooth L.hessian_smooth L.Rc L.C₀ L.C₁ L.CH
@@ -101,7 +110,7 @@ theorem acceleration_unit_bound (n : ℕ) :
       majorant L.R (d+3) n := by
   have hf := D.endpointForcing_orbit_contDiff P L.frameDerivative_smooth Y hY
   have ha := D.accelerationPath_orbit_contDiff P L.frame_smooth L.frameDerivative_smooth
-    L.hessian_smooth
+      L.hessian_smooth
     (D.endpointForcing P Y) hf
   have hb := D.accelerationPath_block_bound P directions hdir q
     L.frame_smooth L.frameDerivative_smooth L.hessian_smooth L.Rc L.C₀ L.C₁ L.CH
@@ -115,10 +124,10 @@ theorem acceleration_unit_bound (n : ℕ) :
   simp only [map_neg]
   have hn : block directions q
       (fun a : LiftTangent => -pathTranslate P a (D.accelerationPath P (D.endpointForcing P Y))) n
-        0 ≤
+          0 ≤
       block directions q
         (fun a : LiftTangent => pathTranslate P a (D.accelerationPath P (D.endpointForcing P Y))) n
-          0 := by
+            0 := by
     simpa only [neg_one_smul,abs_neg,abs_one,one_mul] using hs
   exact hn.trans hb
 
@@ -129,7 +138,7 @@ theorem velocity_unit_bound (n : ℕ) :
     (fullMultiplierMap P D.Q (D.endpointCoordinate P Y))) n 0 ≤ _
   exact product_orbit_block_bound P D.Q L.frame_smooth directions hdir q (D.endpointCoordinate P Y)
     (D.endpointCoordinate_orbit_contDiff P L.frame_smooth L.frameDerivative_smooth L.hessian_smooth
-      Y hY)
+        Y hY)
     L.Rc L.C₀ L.R L.coordinateCost L.Rc_nonneg L.C₀_nonneg L.coordinateCost_nonneg
     L.radius_bounds.2 L.frame_bound (d+2) (L.coordinate_unit_bound P directions hdir Y hY d hYb) n
 
@@ -137,18 +146,18 @@ theorem derivative_unit_bound (n : ℕ) :
     block directions q (fun a : LiftTangent => pathTranslate P a (D.endpointDerivative P Y)) n 0 ≤
       L.derivativeCost*majorant L.R (d+3) n := by
   have hv := D.endpointCoordinate_orbit_contDiff P L.frame_smooth L.frameDerivative_smooth
-    L.hessian_smooth Y hY
+      L.hessian_smooth Y hY
   have ha := D.endpointAcceleration_orbit_contDiff P L.frame_smooth L.frameDerivative_smooth
-    L.hessian_smooth Y hY
+      L.hessian_smooth Y hY
   have hbv (k) : block directions q (fun a : LiftTangent => pathTranslate P a (D.endpointCoordinate
-    P Y)) k 0 ≤
+      P Y)) k 0 ≤
       L.coordinateCost*majorant L.R (d+3) k :=
     (L.coordinate_unit_bound P directions hdir Y hY d hYb k).trans
       (mul_le_mul_of_nonneg_left (majorant_mono_shift L.R L.radius_bounds.1 (d+2) (d+3) k (by
-        omega))
+          omega))
         L.coordinateCost_nonneg)
   have hba (k) : block directions q (fun a : LiftTangent => pathTranslate P a
-    (D.endpointAcceleration P Y)) k 0 ≤
+      (D.endpointAcceleration P Y)) k 0 ≤
       1*majorant L.R (d+3) k := by
     simpa only [one_mul] using L.acceleration_unit_bound P directions hdir Y hY d hYb k
   have h₁ := product_orbit_block_bound P D.Q₁ L.frameDerivative_smooth directions hdir q
@@ -157,7 +166,7 @@ theorem derivative_unit_bound (n : ℕ) :
   have h₂ := product_orbit_block_bound P D.Q L.frame_smooth directions hdir q
     (D.endpointAcceleration P Y) ha L.Rc L.C₀ L.R 1 L.Rc_nonneg L.C₀_nonneg
     zero_le_one L.radius_bounds.2 L.frame_bound (d+3) hba n
-  have he : D.endpointDerivative P Y = fullMultiplierMap P D.Q₁ (D.endpointCoordinate P Y)+
+  have he : D.endpointDerivative P Y = fullMultiplierMap P D.Q₁ (D.endpointCoordinate P Y) +
       fullMultiplierMap P D.Q (D.endpointAcceleration P Y) := rfl
   rw [he]
   simp only [map_add]

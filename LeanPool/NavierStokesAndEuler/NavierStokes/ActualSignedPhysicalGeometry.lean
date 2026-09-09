@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPotentialCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 
-@[expose] public section
-
 /-!
 # Geometry for current signed waves in physical polar charts
 
@@ -19,6 +17,9 @@ The actual active annulus is covered for every band whose physical scale
 ratio lies in `(1/2,2)`.  An explicit change of the chart radius identifies
 the scaled Cartesian lift with the full native cylindrical graph.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

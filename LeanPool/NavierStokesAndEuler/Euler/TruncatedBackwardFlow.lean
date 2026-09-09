@@ -6,17 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldLinear
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothBanachFlow
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-! Actual backward particle flows of smooth finite-energy truncations.
 The maps are clamped outside the chosen interval, preserving volume at every
 real parameter. Reversing from the other endpoint recovers the original
 coefficient and supplies the forward paths used in local trapping arguments. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -78,7 +81,7 @@ theorem velocity_eq_realField (s : ℝ) (hs : s ∈ Icc 0 T) (x : E) :
     homeomorph A T hT hT1 s x =
       (flowData A T hT hT1).forward (projIcc 0 T hT s) x := rfl
 
-@[simp] theorem homeomorph_zero (x : E) :
+theorem homeomorph_zero (x : E) :
     homeomorph A T hT hT1 0 x = x := by
   rw [homeomorph_apply]
   simp only [projIcc_of_mem hT (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl, hT⟩)]
@@ -88,7 +91,7 @@ theorem homeomorph_joint_continuous :
     Continuous (fun sx : ℝ × E => homeomorph A T hT hT1 sx.1 sx.2) := by
   exact (flowData A T hT hT1).forward_joint_continuous.comp
     (((continuous_subtype_val.comp (continuous_projIcc (a := 0) (b := T) (h := hT))).comp
-      continuous_fst).prodMk
+        continuous_fst).prodMk
       continuous_snd)
 
 omit [FiniteDimensional ℝ E] in
@@ -212,7 +215,7 @@ theorem action_joint_measurable :
       ((volume.restrict (Icc 0 T)).prod μ) := by
   exact (((velocity_joint_continuous A T hT hT1).comp
     (continuous_fst.prodMk (homeomorph_joint_continuous A T hT hT1))).norm.pow
-      2).aestronglyMeasurable
+        2).aestronglyMeasurable
 
 end Measure
 

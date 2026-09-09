@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
-
-@[expose] public section
 
 /-!
 # Zeroth-order bounds for the actual primary covariance
@@ -20,6 +17,9 @@ integrals, and the native chart scales produce the determinant and inverse
 weight bounds. Flat target weights are retained as factors.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -27,13 +27,18 @@ open scoped Topology ContDiff BigOperators
 
 namespace NavierStokes.PrimaryCovarianceBounds
 
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
+/-- Datum type used in primary covariance bounds. -/
 abbrev Datum := Mat2 × Vec2
 
+/-- Use the entrywise matrix norm inherited from the finite function space. -/
 noncomputable local instance : NormedAddCommGroup Mat2 :=
   inferInstanceAs (NormedAddCommGroup (Fin 2 → Fin 2 → ℝ))
 
+/-- Scalar multiplication is the pointwise real vector-space structure on matrices. -/
 noncomputable local instance : NormedSpace ℝ Mat2 :=
   inferInstanceAs (NormedSpace ℝ (Fin 2 → Fin 2 → ℝ))
 
@@ -170,6 +175,7 @@ theorem slotCutoff_bounds {r : ℝ} (hr : 1 ≤ r) :
 
 /-! ## Native chart scale and the positive scalar column sizes -/
 
+/-- Slot radius, given by `Real.sqrt (ChartScales.slotLength r0 h n)`. -/
 noncomputable def slotRadius (r0 h : ℝ) (n : ℕ) : ℝ :=
   Real.sqrt (ChartScales.slotLength r0 h n)
 
@@ -235,9 +241,13 @@ theorem chart_scalar_factor_bounds {r0 h : ℝ} (hr0 : 0 < r0) (hh : 0 ≤ h)
     change R ≤ Real.sqrt (2 * r0)
     nlinarith
 
+/-- Scalar lower, given by `kappa * PulseCovariance.PulseBounds.lowerMassConstant a B *
+Real.sqrt (2 * r0 / ChartScales.Tg)`. -/
 noncomputable def scalarLower (kappa r0 a B : ℝ) : ℝ :=
   kappa * PulseCovariance.PulseBounds.lowerMassConstant a B * Real.sqrt (2 * r0 / ChartScales.Tg)
 
+/-- Scalar upper, given by `kappa * (A ^ 2 * Real.sqrt (Real.pi / (2 * b))) * Real.sqrt (2 *
+r0)`. -/
 noncomputable def scalarUpper (kappa r0 A b : ℝ) : ℝ :=
   kappa * (A ^ 2 * Real.sqrt (Real.pi / (2 * b))) * Real.sqrt (2 * r0)
 
@@ -283,7 +293,7 @@ theorem chart_column_mass_bounds {r0 h kappa a A b B : ℝ}
         mul_le_mul_of_nonneg_left hp.mass_upper (by positivity)
       _ = (kappa * (A ^ 2 * Real.sqrt (Real.pi / (2 * b)))) *
           (Real.sqrt (ChartScales.S n) * ChartScales.timeCoefficient h n * slotRadius r0 h n) := by
-            ring
+              ring
       _ ≤ _ := mul_le_mul_of_nonneg_left hs.2 (mul_nonneg hkappa.le hhi)
 
 theorem eventually_slotRadius_large {r0 h : ℝ} (hr0 : 0 < r0) (hh : 0 ≤ h) (R : ℝ) :
@@ -308,11 +318,14 @@ theorem eventually_slotRadius_large {r0 h : ℝ} (hr0 : 0 < r0) (hh : 0 ≤ h) (
 
 /-! ## The actual pair matrix -/
 
+/-- Normalized pair, defined pointwise by `PulseCovariance.normalizedColumn (P j).ψ (P j).x (P
+j).t i`. -/
 noncomputable def normalizedPair (P : Fin 2 → PartitionedCovariance.Pulse) : Mat2 :=
   fun i j => PulseCovariance.normalizedColumn (P j).ψ (P j).x (P j).t i
 
+/-- Pair scales, defined pointwise by `kappa * ci j * PulseCovariance.mass (P j).ψ (P j).x`. -/
 noncomputable def pairScales (kappa : ℝ) (ci : Vec2) (P : Fin 2 → PartitionedCovariance.Pulse) :
-  Vec2 :=
+    Vec2 :=
   fun j => kappa * ci j * PulseCovariance.mass (P j).ψ (P j).x
 
 theorem pairMatrix_factorization {r a A b B : ℝ}
@@ -347,7 +360,7 @@ theorem normalizedPair_entry_error {r a A b B E D : ℝ}
 /-- Precisely the zeroth-order inputs used by `PrimaryPulseBounds`, with
 the stronger inverse lower bound retaining the factor `R`. -/
 structure ZeroOrderBounds (R detGap entryBound inverseLower zeta : ℝ) (H : Mat2) (T : Vec2) : Prop
-  where
+    where
   determinant : detGap ≤ |(PrimaryPulseBounds.normalizedMatrix R H).det|
   entries : ∀ i j, |R * H i j| ≤ entryBound
   weights : ∀ j, inverseLower * R * zeta ≤ SmoothCovariance.weights H T j
@@ -445,7 +458,7 @@ theorem compact_chart_pair_bounds {X : Type*} [TopologicalSpace X] {K : Set X}
   have hscale (j : Fin 2) : lo ≤ Real.sqrt (ChartScales.S n) *
       pairScales kappa (fun _ => ChartScales.timeCoefficient h n) P j ∧
       Real.sqrt (ChartScales.S n) * pairScales kappa (fun _ => ChartScales.timeCoefficient h n) P j
-        ≤ hi :=
+          ≤ hi :=
     chart_column_mass_bounds hr0 hh hkappa hn4 (hP j)
   have hR : 0 < Real.sqrt (ChartScales.S n) := Real.sqrt_pos.mpr (ChartScales.S_pos (by omega))
   have hbounds := column_scale_bounds (normalizedPair P) (T0 p)
@@ -522,7 +535,9 @@ theorem eventually_slow_large (C : ℝ) :
   change C ≤ (n : ℝ) ^ 2
   nlinarith
 
+/-- Primary lower, given by `Real.exp (-(D + 2 * C) * L) / 2`. -/
 noncomputable def primaryLower (C D L : ℝ) : ℝ := Real.exp (-(D + 2 * C) * L) / 2
+/-- Primary upper, given by `3 * Real.exp ((D + 2 * C) * L) / 2`. -/
 noncomputable def primaryUpper (C D L : ℝ) : ℝ := 3 * Real.exp ((D + 2 * C) * L) / 2
 
 theorem primaryLower_pos (C D L : ℝ) : 0 < primaryLower C D L := by
@@ -543,7 +558,7 @@ theorem canonicalPrimaryPulse_x_radial
     (p : Q) (hp : p ∈ U) (hk : d.Kinematics p (Icc 0 L)) {v : ℝ} (hv : v ∈ Icc 0 L) :
     (PrimaryPulseBounds.canonicalPrimaryPulse d lam u hL U hA p hp hk).x v =
       PrimaryODE.radialPrimary hL.le d (fun z => PrimaryPulseBounds.referenceP lam u L z.2) p v :=
-        by
+          by
   rw [PrimaryPulseBounds.canonicalPrimaryPulse_x d lam u hL U hA p hp hk hv]
   rfl
 

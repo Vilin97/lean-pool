@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TopBlockTimeNorm
-public import LeanPool.NavierStokesAndEuler.Euler.FiniteQuadraticCauchy
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import LeanPool.NavierStokesAndEuler.Euler.FiniteQuadraticCauchy
+import LeanPool.NavierStokesAndEuler.Euler.TopBlockTimeNorm
+
+/-! Actual strong L²-time completion from finitely many closed derivative blocks. -/
 
 @[expose] public section
 
-/-! Actual strong L²-time completion from finitely many closed derivative blocks. -/
 
 noncomputable section
 
@@ -36,7 +38,7 @@ theorem mapped_pathLp_sub (T : ℝ) (hT : 0 ≤ T) (A : X →L[ℝ] Y)
 
 /-- The integrated genuine spatial block bound also controls time-space differences. -/
 theorem pathLp_quadratic_difference (A : X →L[ℝ] Y) (B : I → X →L[ℝ] Z)
-    (hb : ∀ x, ‖x‖^2 ≤ ‖A x‖^2 + ∑ i, ‖B i x‖^2)
+    (hb : ∀ x, ‖x‖ ^ 2 ≤ ‖A x‖ ^ 2 + ∑ i, ‖B i x‖ ^ 2)
     (T : ℝ) (hT : 0 ≤ T) (u v : C(Icc (0 : ℝ) T, X)) :
     ‖pathLp T hT u-pathLp T hT v‖^2 ≤
       ‖pathLp T hT (A.compLeftContinuous ℝ (Icc (0 : ℝ) T) u) -
@@ -47,13 +49,14 @@ theorem pathLp_quadratic_difference (A : X →L[ℝ] Y) (B : I → X →L[ℝ] Z
   simp only [pathLp_sub, mapped_pathLp_sub] at h
   exact h
 
-/-- Genuine finite block convergence and lower-order convergence construct strong convergence in the full Bochner Sobolev space. -/
+/-- Genuine finite block convergence and lower-order convergence construct strong convergence in the
+full Bochner Sobolev space. -/
 theorem cauchy_pathLp_of_blocks (A : X →L[ℝ] Y) (B : I → X →L[ℝ] Z)
-    (hb : ∀ x, ‖x‖^2 ≤ ‖A x‖^2 + ∑ i, ‖B i x‖^2)
+    (hb : ∀ x, ‖x‖ ^ 2 ≤ ‖A x‖ ^ 2 + ∑ i, ‖B i x‖ ^ 2)
     (T : ℝ) (hT : 0 ≤ T) (u : ℕ → C(Icc (0 : ℝ) T, X))
     (hu : CauchySeq (fun n => pathLp T hT (A.compLeftContinuous ℝ (Icc (0 : ℝ) T) (u n))))
     (hf : ∀ i, CauchySeq (fun n => pathLp T hT ((B i).compLeftContinuous ℝ (Icc (0 : ℝ) T) (u n))))
-      :
+        :
     CauchySeq (fun n => pathLp T hT (u n)) := by
   exact EulerQuadraticCauchy.cauchy_of_finite_quadratic_bound _ _ _ hu hf
     (fun n m => pathLp_quadratic_difference A B hb T hT (u n) (u m))

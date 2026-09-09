@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldLinear
 public import LeanPool.NavierStokesAndEuler.Euler.LiftedTransportTrace
-public import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAdvection
+import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
 
 /-! The actual lifted velocity retains the small normal component in its
 coefficient estimates. No division by the packet amplitude is used. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,9 +24,10 @@ namespace EulerLiftedSmoothTimeField
 
 open InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerMetricTransport EulerLiftedTransportTrace EulerPacketCylinderField
-    EulerCylinderScalarPrimitive
+      EulerCylinderScalarPrimitive
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Angular injection, given by `(ContinuousLinearMap.inr ℝ Space ℝ).comp scalarProject`. -/
 def angularInjection : Space →L[ℝ] LiftTangent :=
   (ContinuousLinearMap.inr ℝ Space ℝ).comp scalarProject
 
@@ -79,16 +82,41 @@ theorem transport_tensor_norm {E : Type*} [NormedAddCommGroup E] [NormedSpace �
 variable {K E : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] LiftTangent) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] LiftTangent) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] LiftTangent)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] LiftTangent)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeField1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeField2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] LiftTangent)` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeField3 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] LiftTangent) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] LiftTangent)` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeField4 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] LiftTangent) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeField5 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] Space))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] Space))` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeField6 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] Space)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] LiftTangent))` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeField7 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ]
+    LiftTangent)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] LiftTangent))` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeField8 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] LiftTangent))
+    := inferInstance
 
+/-- Lift, given by `A.map (transportLinear κ m)`. -/
 def lift (A : SmoothTimeField K E Space) (κ : ℝ) (m : Space) : SmoothTimeField K E LiftTangent :=
   A.map (transportLinear κ m)
 

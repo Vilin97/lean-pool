@@ -6,19 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldSupport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
+
+/-! Actual spatial jets outside a closed support and for angle-independent fields. -/
 
 @[expose] public section
 
-/-! Actual spatial jets outside a closed support and for angle-independent fields. -/
 
 noncomputable section
 
 namespace EulerPacketCylinderField
 
 open Set Filter ContinuousLinearMap EulerSmoothLimit EulerPacketPointJets
-  EulerPacketProfileRecursion
+    EulerPacketProfileRecursion
 open scoped Topology ContDiff
 
 /-- Precisely the spatial parts of the jet that occur in the packet nonlinearities. -/
@@ -76,7 +76,7 @@ theorem slicedJet_angleIndependent_of_support (s : Set ℝ) (S : Set Space) (hS 
     rw [slicedJet_angle,raw_fderiv_zero_outside S hS h t x hx θ,zero_apply]
 
 theorem Field.raw_fderiv_of_angleIndependent (G : Field P T raw)
-    (h : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = raw (t,(x,0)))
+    (h : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t, (x, θ)) = raw (t, (x, 0)))
     (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     fderiv ℝ (fun y : Space × ℝ => raw (t,y)) (x,θ) =
       (fderiv ℝ (fun y : Space => raw (t,(y,0))) x).comp (ContinuousLinearMap.fst ℝ Space ℝ) := by
@@ -90,7 +90,7 @@ theorem Field.raw_fderiv_of_angleIndependent (G : Field P T raw)
   exact hd.fderiv
 
 theorem Field.slicedJet_angleIndependent (G : Field P T raw) (s : Set ℝ)
-    (h : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = raw (t,(x,0)))
+    (h : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t, (x, θ)) = raw (t, (x, 0)))
     (t : Icc (0 : ℝ) T) (x : Space) :
     AngleIndependentJet (fun θ => slicedJet s raw (t,(x,θ))) where
   value θ := h t x θ

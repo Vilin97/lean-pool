@@ -9,13 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ConstantCorrectionData
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalContinuity
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 
 /-! With spatial scale one and angular direction zero, the zero-angle
 slice of the actual exact lifted solution solves ordinary three-dimensional
 Euler. The scalar pressure is the canonical normalized graph potential. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,11 +29,17 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerVolterraConvolution EulerLagrangian EulerLpTranslation
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
-private local instance : NormedAddCommGroup LiftTangent := inferInstance
-private local instance : NormedSpace ℝ LiftTangent := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instConstantEulerGraph1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instConstantEulerGraph2 : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup LiftTangent` instance to shorten typeclass synthesis. -/
+local instance instConstantEulerGraph3 : NormedAddCommGroup LiftTangent := inferInstance
+/-- Cache the standard `NormedSpace ℝ LiftTangent` instance to shorten typeclass synthesis. -/
+local instance instConstantEulerGraph4 : NormedSpace ℝ LiftTangent := inferInstance
 
+/-- Inclusion, given by `(ContinuousLinearMap.id ℝ ℝ).prodMap (ContinuousLinearMap.inl ℝ Space
+ℝ)`. -/
 def inclusion : (ℝ × Space) →L[ℝ] (ℝ × LiftTangent) :=
   (ContinuousLinearMap.id ℝ ℝ).prodMap (ContinuousLinearMap.inl ℝ Space ℝ)
 
@@ -40,8 +48,11 @@ def inclusion : (ℝ × Space) →L[ℝ] (ℝ × LiftTangent) :=
 variable {P T : ℝ} [Fact (0 < P)] {hT : 0 < T} {F R : FieldTower P T}
   {B : Budget P hT (data P F R)} (S : ExactLiftedPacket P hT (data P F R) B)
 
+/-- Velocity, given by `S.rawVelocity (q.1,(q.2,0))`. -/
 def velocity (q : ℝ × Space) : Space := S.rawVelocity (q.1,(q.2,0))
+/-- Pressure, given by `S.rawGraphPotential 1 q`. -/
 def pressure (q : ℝ × Space) : ℝ := S.rawGraphPotential 1 q
+/-- Force, given by `S.rawPressure (q.1,(q.2,0))`. -/
 def force (q : ℝ × Space) : Space := S.rawPressure (q.1,(q.2,0))
 
 theorem velocity_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (x : Space) :
@@ -108,6 +119,7 @@ theorem momentum (t : ℝ) (ht : t ∈ Ioo 0 T) (x : Space) :
   rw [hd,map_add]
   exact h
 
+/-- Field, bundling `field`, `smooth`, `integrable`. -/
 def field (t : Icc (0 : ℝ) T) : SmoothL2Field Space where
   field := S.velocity.physicalPointField 1 0 t
   smooth := S.velocity.physicalPointField_smooth 1 0 t
@@ -131,14 +143,14 @@ theorem field_jetLp_continuous (n : ℕ) : Continuous (fun t => (field S t).jetL
 theorem velocity_smooth (t : ℝ) : ContDiff ℝ ∞ (fun x => velocity S (t,x)) := by
   have h := S.velocity.physicalPointField_smooth 1 0 (projIcc 0 T hT.le t)
   change ContDiff ℝ ∞ (fun x => S.velocity.pointField (projIcc 0 T hT.le t) (cylinderGraph P 1 0
-    x)) at h
+      x)) at h
   simpa only [cylinderGraph,inner_zero_left,mul_zero,velocity,ExactLiftedPacket.rawVelocity,
     FieldTower.rawField,coveringMap] using h
 
 theorem force_smooth (t : ℝ) : ContDiff ℝ ∞ (fun x => force S (t,x)) := by
   have h := S.pressure.physicalPointField_smooth 1 0 (projIcc 0 T hT.le t)
   change ContDiff ℝ ∞ (fun x => S.pressure.pointField (projIcc 0 T hT.le t) (cylinderGraph P 1 0
-    x)) at h
+      x)) at h
   simpa only [cylinderGraph,inner_zero_left,mul_zero,force,ExactLiftedPacket.rawPressure,
     FieldTower.rawField,coveringMap] using h
 

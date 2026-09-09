@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Explicit finite-dimensional norm comparisons for the actual H³ energy. -/
 
 @[expose] public section
 
-/-! Explicit finite-dimensional norm comparisons for the actual H³ energy. -/
 
 noncomputable section
 
@@ -19,6 +24,7 @@ namespace EulerOrdinarySobolev
 open MeasureTheory EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
   EulerSmoothSobolev Finset
 
+/-- Tensor norm, given by `∑ n ∈ range (s+1), ‖A.jetLp n‖`. -/
 def tensorNorm (s : ℕ) (A : SmoothL2Field Space) : ℝ := ∑ n ∈ range (s+1), ‖A.jetLp n‖
 
 theorem tensorNorm_eq (s : ℕ) (A : SmoothL2Field Space) :
@@ -29,7 +35,7 @@ theorem tensorNorm_nonneg (s : ℕ) (A : SmoothL2Field Space) : 0 ≤ tensorNorm
   sum_nonneg (fun _ _ => norm_nonneg _)
 
 theorem wordBound_tensorNorm (s : ℕ) (A : SmoothL2Field Space) : WordBound s (tensorNorm s A) A :=
-  by
+    by
   intro n hn w
   exact (wordField_toLp_norm_le A w).trans
     (single_le_sum (fun _ _ => norm_nonneg _) (mem_range.mpr (by omega)))

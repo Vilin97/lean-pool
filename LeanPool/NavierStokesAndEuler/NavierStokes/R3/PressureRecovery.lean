@@ -9,13 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureRecoveryHelpers
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFunctionals
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonTimeAverages
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeakTimeContinuity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.TemporalTestUniqueness
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HarmonicTestFunctionals
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HarmonicTestFunctionals
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureTemporalIdentity
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.TemporalTestUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeakTimeContinuity
 
 /-!
 # Pressure recovery for smooth finite-energy comparisons
@@ -24,6 +24,9 @@ The physical pressure is tested only against compact smooth functions. Its
 canonical representative is recovered from the conservative equation, time
 averaging, and the vanishing theorem for harmonic Sobolev-bounded functionals.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -53,9 +56,11 @@ structure Hypotheses (T : ℝ) (u v : VelocityField) (p q : PressureField) : Pro
   energy_u : NavierStokesR3.ProblemStatement.UniformFiniteEnergy (Icc 0 T) u
   energy_v : NavierStokesR3.ProblemStatement.UniformFiniteEnergy (Icc 0 T) v
 
+/-- Velocity average, given by `timeAverage T a (fun z => (u - v) z k)`. -/
 def velocityAverage (T : ℝ) (a : ℝ → ℝ) (u v : VelocityField) (k : Fin 3) : Space → ℝ :=
   timeAverage T a (fun z => (u - v) z k)
 
+/-- Tensor average, given by `timeAverage T a (fun z => tensorDiff u v z.1 i j z.2)`. -/
 def tensorAverage (T : ℝ) (a : ℝ → ℝ) (u v : VelocityField)
     (i j : Fin 3) : Space → ℝ :=
   timeAverage T a (fun z => tensorDiff u v z.1 i j z.2)
@@ -104,7 +109,7 @@ theorem velocityAverage_pairing {T : ℝ} {u v : VelocityField} {p q : PressureF
     (realTest ψ hψ hcψ).continuous ((realTest ψ hψ hcψ).memLp 2)
   apply Complex.ofReal_injective
   simpa only [velocityAverage, realTest_apply, ← Complex.ofReal_mul, integral_complex_ofReal] using
-    h
+      h
 
 theorem tensorAverage_pairing {T : ℝ} {u v : VelocityField} {p q : PressureField}
     (H : Hypotheses T u v p q) {a : ℝ → ℝ} (ha : ContinuousOn a (Icc 0 T))
@@ -151,7 +156,7 @@ theorem noncanonical_average_identity {T : ℝ} {u v : VelocityField} {p q : Pre
       ∫ t in Icc 0 T, a t * (∑ i : Fin 3, ∫ x, tensorDiff u v t k i x * spatialPartial i ψ x) := by
     have hpair : (∑ i : Fin 3, ∫ x, tensorAverage T a u v k i x * spatialPartial i ψ x) =
         ∑ i : Fin 3, ∫ t in Icc 0 T, a t * (∫ x, tensorDiff u v t k i x * spatialPartial i ψ x) :=
-          by
+            by
       apply Finset.sum_congr rfl
       intro i _
       exact tensorAverage_pairing (ψ := spatialPartial i ψ) H ha.continuous.continuousOn
@@ -386,7 +391,7 @@ theorem time_test_gradient_difference_zero {T : ℝ} {u v : VelocityField} {p q 
   have hQ : ContinuousOn Q (Icc 0 T) := canonical_sum_continuousOn H Ψ
   have hiQ : IntegrableOn (fun t => (a t : ℂ) * Q t) (Icc 0 T) :=
     ((Complex.continuous_ofReal.comp_continuousOn ha.continuous.continuousOn).mul
-      hQ).integrableOn_Icc
+        hQ).integrableOn_Icc
   have hz := averaged_value_zero H ha hsupp k (realTest ψ hψ hcψ)
   rw [averaged_value_realTest H ha hsupp hψ hcψ k] at hz
   change (((∫ t in Icc 0 T, a t * P t : ℝ) : ℂ) +

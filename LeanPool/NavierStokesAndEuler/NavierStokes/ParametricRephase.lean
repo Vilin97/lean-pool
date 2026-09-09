@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothLoop
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 
 /-!
 # Jointly smooth rephasing by positive periodic densities
@@ -21,6 +18,9 @@ the globally defined monotone inverse already constructed there. Its joint
 smoothness is proved with the inverse function theorem applied to the triangular
 map `(p, θ) ↦ (p, Φ(p, θ))`; no smooth inverse is postulated.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,16 +33,21 @@ open SmoothLoop
 
 variable {E : Type*}
 
+/-- Family rate, given by `(d z.1).rate z.2`. -/
 def familyRate (d : E → CircleDensity) (z : E × ℝ) : ℝ := (d z.1).rate z.2
 
+/-- Family phase, given by `phaseMap (d z.1) z.2`. -/
 def familyPhase (d : E → CircleDensity) (z : E × ℝ) : ℝ := phaseMap (d z.1) z.2
 
+/-- Inverse phase, given by `(phaseHomeomorph (d z.1)).symm z.2`. -/
 def inversePhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
   (phaseHomeomorph (d z.1)).symm z.2
 
+/-- Forward map, given by `(z.1, familyPhase d z)`. -/
 def forwardMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
   (z.1, familyPhase d z)
 
+/-- Inverse map, given by `(z.1, inversePhase d z)`. -/
 def inverseMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
   (z.1, inversePhase d z)
 
@@ -159,6 +164,7 @@ end InverseSmoothness
 
 variable {V : Type*}
 
+/-- Rephase family, given by `f (inverseMap d z)`. -/
 def rephaseFamily (d : E → CircleDensity) (f : E × ℝ → V) (z : E × ℝ) : V :=
   f (inverseMap d z)
 
@@ -224,7 +230,7 @@ theorem parameterJet_contDiffOn (F : E × ℝ → V) (U : Set E) (hU : IsOpen U)
 
 /-- Integration over a fixed compact interval preserves joint smoothness.
 All derivative domination is derived from compactness in the imported theorem. -/
-theorem intervalIntegral_contDiffOn_of_joint [ProperSpace E] [CompleteSpace V]
+theorem intervalIntegral_contDiffOn_of_joint [ProperSpace E]
     (F : E × ℝ → V) (U : Set E) (hU : IsOpen U)
     (hF : ContDiffOn ℝ ∞ F (U ×ˢ univ)) (a b : ℝ) (hab : a ≤ b) :
     ContDiffOn ℝ ∞ (fun p => ∫ t in a..b, F (p, t)) U := by

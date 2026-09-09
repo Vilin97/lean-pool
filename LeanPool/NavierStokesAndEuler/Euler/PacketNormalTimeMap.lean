@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialNormalMap
 
+/-! An inverse-free polynomial formula for the actual normal multiplier's time derivative. -/
+
 @[expose] public section
 
-/-! An inverse-free polynomial formula for the actual normal multiplier's time derivative. -/
 
 noncomputable section
 
@@ -23,7 +24,7 @@ def normalTimeMap (N : Space →L[ℝ] ℝ) (Q₁ : ℝ →L[ℝ] Space) : Space
   (N.comp N.adjoint).comp Q₁.adjoint - (2 : ℝ) • (N.comp Q₁).comp N
 
 theorem normalTimeMap_apply (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠ 0)
-    (hN : ∀ v, N v = ⟪m,v⟫_ℝ / ‖m‖^2) (v : Space) :
+    (hN : ∀ v, N v = ⟪m, v⟫_ℝ / ‖m‖ ^ 2) (v : Space) :
     normalTimeMap N (toSpanSingleton ℝ mt) v =
       ⟪mt,v⟫_ℝ / ‖m‖^2 - (2*⟪m,mt⟫_ℝ/(‖m‖^2)^2)*⟪m,v⟫_ℝ := by
   have hd : ‖m‖^2 ≠ 0 := pow_ne_zero 2 (norm_ne_zero_iff.mpr hm)
@@ -40,7 +41,7 @@ theorem normalTimeMap_apply (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠
   field_simp
 
 theorem normalTimeMap_vector (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠ 0)
-    (hN : ∀ v, N v = ⟪m,v⟫_ℝ / ‖m‖^2) :
+    (hN : ∀ v, N v = ⟪m, v⟫_ℝ / ‖m‖ ^ 2) :
     (normalTimeMap N (toSpanSingleton ℝ mt)).adjoint 1 =
       ((‖m‖^2)⁻¹) • mt - (2*⟪m,mt⟫_ℝ/(‖m‖^2)^2) • m := by
   apply ext_inner_right ℝ
@@ -51,7 +52,7 @@ theorem normalTimeMap_vector (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m �
 
 /-- This polynomial coefficient is exactly the derivative of −cross(m)/|m|². -/
 theorem normalTimeMap_potential (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠ 0)
-    (hN : ∀ v, N v = ⟪m,v⟫_ℝ / ‖m‖^2) :
+    (hN : ∀ v, N v = ⟪m, v⟫_ℝ / ‖m‖ ^ 2) :
     normalPotentialMap (normalTimeMap N (toSpanSingleton ℝ mt)) =
       potentialMultiplierDerivative m mt := by
   change -crossOperator ((normalTimeMap N (toSpanSingleton ℝ mt)).adjoint 1) = _

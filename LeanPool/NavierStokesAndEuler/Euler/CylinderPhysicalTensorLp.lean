@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Ordinary derivative tensors of the actual graph field lie in spatial
 L², with explicit frequency loss and the genuine graph-word norms. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,6 +50,8 @@ theorem physicalTensor_memLp :
     (Finset.sum_nonneg (fun _ _ => norm_nonneg _)))]
   exact physicalTensor_norm_le P k m f hf n x
 
+/-- Physical tensor Lᵖ, given by `(physicalTensor_memLp P k m f hf n u hu).toLp (iteratedFDeriv
+ℝ n (physicalField P k m f))`. -/
 def physicalTensorLp : Lp (Vector3 [×n]→L[ℝ] Vector3) 2 (volume : Measure Vector3) :=
   (physicalTensor_memLp P k m f hf n u hu).toLp (iteratedFDeriv ℝ n (physicalField P k m f))
 
@@ -85,7 +89,7 @@ theorem physicalTensorLp_norm_le :
     exact ENNReal.sum_ne_top.2 (fun w _ => (graphWord_memLp P k m f n u hu w).eLpNorm_ne_top)
   have hm : (β : ℝ≥0∞)*eLpNorm
       (∑ w : Fin n → Fin 4, (fun x => ‖iteratedFieldDerivative P w f (cylinderGraph P k m x)‖)) 2
-        volume ≤
+          volume ≤
       (β : ℝ≥0∞)*∑ w : Fin n → Fin 4,
         eLpNorm (fun x => iteratedFieldDerivative P w f (cylinderGraph P k m x)) 2 volume := by
     gcongr
@@ -94,7 +98,7 @@ theorem physicalTensorLp_norm_le :
     ENNReal.toReal_sum (fun w _ => (graphWord_memLp P k m f n u hu w).eLpNorm_ne_top)] at hR
   have hn (w : Fin n → Fin 4) :
       (eLpNorm (fun x => iteratedFieldDerivative P w f (cylinderGraph P k m x)) 2 volume).toReal =
-        ‖u w‖ := by
+          ‖u w‖ := by
     rw [Lp.norm_def,eLpNorm_congr_ae (hu w)]
   have hβ : (β : ℝ) = frequencyFactor k m^n := rfl
   rw [hβ] at hR

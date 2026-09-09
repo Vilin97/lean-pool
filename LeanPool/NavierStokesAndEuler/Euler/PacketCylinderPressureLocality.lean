@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradient
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+
+/-! Spatial support and joint parity of the literal pressure-gradient term. -/
 
 @[expose] public section
 
-/-! Spatial support and joint parity of the literal pressure-gradient term. -/
 
 noncomputable section
 
@@ -32,7 +33,7 @@ theorem pressureGradient_eq_spatialDual (p : ScalarField) (z : Domain) :
 
 theorem pressureGradient_zero_outside (p : ScalarField) (t : ℝ)
     (S : Set Space) (hS : IsClosed S)
-    (hp : ∀ x, x ∉ S → ∀ θ, p (t,(x,θ)) = 0) (x : Space) (hx : x ∉ S) (θ : ℝ) :
+    (hp : ∀ x, x ∉ S → ∀ θ, p (t, (x, θ)) = 0) (x : Space) (hx : x ∉ S) (θ : ℝ) :
     pressureGradient p (t,(x,θ)) = 0 := by
   have hn : {y : LiftTangent | y.1 ∈ Sᶜ} ∈ 𝓝 (x,θ) :=
     (hS.isOpen_compl.preimage continuous_fst).mem_nhds hx

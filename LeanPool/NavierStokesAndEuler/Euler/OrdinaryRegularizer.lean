@@ -9,11 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryMollifier
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothingOperator
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! Actual symmetric, solenoidal smoothing operators. They converge
 to Helmholtz projection, with an explicit H¹ approximation error. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,6 +34,8 @@ theorem projection_idempotent (u : L2) :
     solenoidalProjection (solenoidalProjection u)=solenoidalProjection u :=
   solenoidalSpace.starProjection_eq_self_iff.mpr (solenoidalProjection_mem u)
 
+/-- Regularizer map, given by `solenoidalProjection.comp ((mollifier n).comp
+solenoidalProjection)`. -/
 def regularizerMap (n : ℕ) : L2 →L[ℝ] L2 :=
   solenoidalProjection.comp ((mollifier n).comp solenoidalProjection)
 
@@ -39,7 +43,7 @@ def regularizerMap (n : ℕ) : L2 →L[ℝ] L2 :=
     regularizerMap n u=solenoidalProjection (mollify n (solenoidalProjection u)) := rfl
 
 theorem regularizerMap_translation (n : ℕ) (a : Space) (u : L2) :
-    EulerMeanSolenoidal.translation a (regularizerMap n u)=
+    EulerMeanSolenoidal.translation a (regularizerMap n u) =
       regularizerMap n (EulerMeanSolenoidal.translation a u) := by
   simp only [regularizerMap_apply,solenoidalProjection_translation,mollify_translation]
 
@@ -55,6 +59,8 @@ theorem regularizerMap_contract (n : ℕ) (u : L2) : ‖regularizerMap n u‖ �
   (solenoidalProjection_apply_norm_le _).trans
     ((mollify_norm_le n _).trans (solenoidalProjection_apply_norm_le u))
 
+/-- Regularizer, bundling `op`, `smooth`, `translation`, `symmetric` and the required
+compatibility proofs. -/
 def regularizer (n : ℕ) : SmoothingOperator where
   op := regularizerMap n
   smooth := regularizerMap_smooth n
@@ -69,14 +75,14 @@ theorem regularizer_tendsto (u : L2) :
     atTop (𝓝 (solenoidalProjection u))
   have h := solenoidalProjection.continuous.tendsto (solenoidalProjection u)
   simpa only [Function.comp_def,projection_idempotent] using h.comp (mollify_tendsto
-    (solenoidalProjection u))
+      (solenoidalProjection u))
 
 theorem regularizer_error (n : ℕ) (A : SmoothL2Field Space) :
     ‖(regularizer n).op A.toLp-solenoidalProjection A.toLp‖ ≤
       (2*EulerNoncompactTransport.cutoffScale n)*‖(solenoidalField A).derivative.toLp‖ := by
-  change ‖solenoidalProjection (mollify n (solenoidalProjection A.toLp))-
+  change ‖solenoidalProjection (mollify n (solenoidalProjection A.toLp)) -
     solenoidalProjection A.toLp‖ ≤ _
-  have he : solenoidalProjection (mollify n (solenoidalProjection A.toLp))-
+  have he : solenoidalProjection (mollify n (solenoidalProjection A.toLp)) -
       solenoidalProjection A.toLp=solenoidalProjection
         (mollify n (solenoidalProjection A.toLp)-solenoidalProjection A.toLp) := by
     rw [map_sub,projection_idempotent]
@@ -90,6 +96,7 @@ theorem solenoidalField_wordBound (A : SmoothL2Field Space) (q : ℕ) (M : ℝ)
   rw [solenoidalField_word]
   exact (solenoidalProjection_apply_norm_le _).trans (hM k hk w)
 
+/-- Regularizer error, given by `6*EulerNoncompactTransport.cutoffScale n`. -/
 def regularizerError (n : ℕ) : ℝ := 6*EulerNoncompactTransport.cutoffScale n
 
 theorem regularizerError_nonneg (n : ℕ) : 0 ≤ regularizerError n :=
@@ -98,7 +105,7 @@ theorem regularizerError_nonneg (n : ℕ) : 0 ≤ regularizerError n :=
 theorem regularizerError_tendsto : Tendsto regularizerError atTop (𝓝 (0 : ℝ)) := by
   change Tendsto (fun n => 6*EulerNoncompactTransport.cutoffScale n) atTop (𝓝 (0 : ℝ))
   simpa only [regularizerError,mul_zero] using
-    EulerNoncompactTransport.cutoffScale_tendsto.const_mul 6
+      EulerNoncompactTransport.cutoffScale_tendsto.const_mul 6
 
 theorem regularizer_error_wordBound (n : ℕ) (A : SmoothL2Field Space) (M : ℝ)
     (hM : WordBound 1 M A) :

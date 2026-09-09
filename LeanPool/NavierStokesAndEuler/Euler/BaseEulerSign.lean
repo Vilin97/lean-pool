@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerGuards
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStrainEvolution
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStrainEvolution
 
 /-! The first pressure numerator stays positive for the actual evolving
 normal and the actual homogeneous transverse velocity. Initial plateau
 data are the only geometric inputs; all time equations are constructed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +26,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 
 variable {G : Parent} (L : LabelData G)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S)
 
 omit [CompleteSpace U] in
@@ -43,10 +44,10 @@ theorem source_frame_initial (ξ : U) (x : Space) :
   change G.frame.field G.zeroTime x (R ξ : Space)=_
   rw [G.frame_initial,id_apply]
 
-theorem source_numerator_pos (ξ : U) (hξ : ‖ξ‖=1) (x : Space)
-    (h0 : ⟪m,G.initialStrain.field x (R ξ : Space)⟫_ℝ=1)
-    (hshort : coefficientCost L.K*G.T ≤ 1/2)
-    (hsmall : firstSignRate (coefficientCost L.K) (coefficientCost L.K)*G.T ≤ 1/2)
+theorem source_numerator_pos (ξ : U) (hξ : ‖ξ‖ = 1) (x : Space)
+    (h0 : ⟪m, G.initialStrain.field x (R ξ : Space)⟫_ℝ = 1)
+    (hshort : coefficientCost L.K * G.T ≤ 1 / 2)
+    (hsmall : firstSignRate (coefficientCost L.K) (coefficientCost L.K) * G.T ≤ 1 / 2)
     (t : Icc (0 : ℝ) G.T) :
     1/2 ≤ ⟪(G.transverseData m hm R S hS).normal.field t x,
       G.strain.field t x (EulerPacketForwardFactorization.uncutVelocity
@@ -69,8 +70,8 @@ theorem source_numerator_pos (ξ : U) (hξ : ‖ξ‖=1) (x : Space)
     exact h0
 
 theorem source_numerator_pos_on (T : ℝ) (hT : 0 < T) (hTG : T ≤ G.T)
-    (hguard : T ≤ guardTime G.T L.K) (ξ : U) (hξ : ‖ξ‖=1) (x : Space)
-    (h0 : ⟪m,G.initialStrain.field x (R ξ : Space)⟫_ℝ=1)
+    (hguard : T ≤ guardTime G.T L.K) (ξ : U) (hξ : ‖ξ‖ = 1) (x : Space)
+    (h0 : ⟪m, G.initialStrain.field x (R ξ : Space)⟫_ℝ = 1)
     (t : Icc (0 : ℝ) T) :
     1/2 ≤ ⟪((G.restrictTime T hT hTG).transverseData m hm R S hS).normal.field t x,
       (G.restrictTime T hT hTG).strain.field t x

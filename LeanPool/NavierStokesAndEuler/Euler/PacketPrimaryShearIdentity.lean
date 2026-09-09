@@ -6,16 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHistory
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFrameCoefficients
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
+public import LeanPool.NavierStokesAndEuler.Euler.PacketNormalizedPrimary
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryField
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHistory
 
 /-! The actual compact primary has exactly the source rank-one shear at
 zero phase throughout its history interval, including the activation time.
 No derivative of the finite-dimensional history is postulated. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +32,7 @@ open Set Filter InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 theorem zero_slice_hasFDerivAt (A : Space × ℝ → Space) (x a : Space)
-    (hA : DifferentiableAt ℝ A (x,0)) (hzero : ∀ y, A (y,0)=0)
+    (hA : DifferentiableAt ℝ A (x, 0)) (hzero : ∀ y, A (y, 0) = 0)
     (ha : HasDerivAt (fun θ : ℝ => A (x,θ)) a 0) :
     HasFDerivAt A ((toSpanSingleton ℝ a).comp (snd ℝ Space ℝ)) (x,0) := by
   have hs := hA.hasFDerivAt.comp x
@@ -53,7 +57,7 @@ theorem zero_slice_hasFDerivAt (A : Space × ℝ → Space) (x a : Space)
   exact hd ▸ hA.hasFDerivAt
 
 theorem zero_phase_graph_hasFDerivAt (A : Space × ℝ → Space) (a m : Space)
-    (hA : DifferentiableAt ℝ A (0,0)) (hzero : ∀ y, A (y,0)=0)
+    (hA : DifferentiableAt ℝ A (0, 0)) (hzero : ∀ y, A (y, 0) = 0)
     (ha : HasDerivAt (fun θ : ℝ => A (0,θ)) a 0) (c k : ℝ) :
     HasFDerivAt (fun y => c • A (y,k*⟪m,y⟫_ℝ)) ((c*k) • rankOne ℝ a m) 0 := by
   have hp : HasFDerivAt A ((toSpanSingleton ℝ a).comp (snd ℝ Space ℝ)) (graphMap k m 0) := by
@@ -118,8 +122,8 @@ theorem historyWave_hasFDerivAt (α k : ℝ) (hk : k ≠ 0) (t : Icc (0 : ℝ) �
 normal F⁻ᵀm₀ rather than the initial direction m₀. -/
 theorem historyWave_physical_hasFDerivAt (α k : ℝ) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) τ) (X Y : Space → Space)
-    (hX : HasFDerivAt X (D.F.field ⟨t,t.property.1,t.property.2.trans hτT.le⟩ 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hX : HasFDerivAt X (D.F.field ⟨t, t.property.1, t.property.2.trans hτT.le⟩ 0) 0)
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     HasFDerivAt (fun x => historyWave τ hτ hτT B δ hδ ξ hs α k t (Y x))
       ((α/δ) • rankOne ℝ (B.coefficients.labelVelocity 0 ξ t)
         (D.normal.field ⟨t,t.property.1,t.property.2.trans hτT.le⟩ 0)) (X 0) := by
@@ -142,8 +146,8 @@ theorem historyWave_physical_hasFDerivAt (α k : ℝ) (hk : k ≠ 0)
 
 theorem historyWave_physical_norm (α k : ℝ) (hα : 0 ≤ α) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) τ) (X Y : Space → Space)
-    (hX : HasFDerivAt X (D.F.field ⟨t,t.property.1,t.property.2.trans hτT.le⟩ 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hX : HasFDerivAt X (D.F.field ⟨t, t.property.1, t.property.2.trans hτT.le⟩ 0) 0)
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     ‖fderiv ℝ (fun x => historyWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0)‖ =
       (α/δ) * (‖B.coefficients.labelVelocity 0 ξ t‖ *
         ‖D.normal.field ⟨t,t.property.1,t.property.2.trans hτT.le⟩ 0‖) := by

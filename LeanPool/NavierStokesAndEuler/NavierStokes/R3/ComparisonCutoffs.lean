@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
 
 /-!
 # Smooth spatial cutoffs for whole-space comparison
@@ -19,6 +17,9 @@ The fixed bump is one on the unit ball and supported in the ball of radius two.
 All scaled cutoffs are obtained from this same bump by dilation.  In particular,
 the constants in their derivative estimates do not depend on the radius.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-! Actual angular averaging on the cylinder, including its supported spaces. -/
 
 @[expose] public section
 
-/-! Actual angular averaging on the cylinder, including its supported spaces. -/
 
 noncomputable section
 
@@ -28,6 +28,7 @@ section Average
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V]
 
+/-- Angle curve, given by `translate P (0,s) u`. -/
 def angleCurve (u : CylinderL2 P V) (s : ℝ) : CylinderL2 P V :=
   translate P (0,s) u
 
@@ -35,6 +36,7 @@ omit [CompleteSpace V] in
 theorem angleCurve_continuous (u : CylinderL2 P V) : Continuous (angleCurve P u) :=
   (translate_continuous P u).comp (continuous_const.prodMk continuous_id)
 
+/-- Average integral, given by `P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s)`. -/
 def averageIntegral (u : CylinderL2 P V) : CylinderL2 P V :=
   P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s)
 
@@ -76,6 +78,7 @@ theorem averageIntegral_norm (u : CylinderL2 P V) : ‖averageIntegral P u‖ �
     _ ≤ P⁻¹*(‖u‖*P) := mul_le_mul_of_nonneg_left hb (inv_nonneg.mpr hP.le)
     _ = ‖u‖ := by field_simp
 
+/-- Average linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def averageLinear : CylinderL2 P V →ₗ[ℝ] CylinderL2 P V where
   toFun := averageIntegral P
   map_add' := averageIntegral_add P
@@ -113,11 +116,12 @@ theorem average_translation (a : LiftTangent) (u : CylinderL2 P V) :
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
+/-- Path average, given by `(average P).compLeftContinuous ℝ K`. -/
 def pathAverage : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
   (average P).compLeftContinuous ℝ K
 
 omit [CompactSpace K] [CompleteSpace V] in
-@[simp] theorem pathAverage_apply (u : C(K,CylinderL2 P V)) (t : K) :
+@[simp] theorem pathAverage_apply (u : C(K, CylinderL2 P V)) (t : K) :
     pathAverage P u t = average P (u t) := rfl
 
 omit [CompleteSpace V] in
@@ -130,7 +134,7 @@ theorem pathAverage_norm : ‖pathAverage (K := K) (V := V) P‖ ≤ 1 := by
   exact (averageIntegral_norm P (u t)).trans (u.norm_coe_le_norm t)
 
 omit [CompactSpace K] in
-theorem pathAverage_translation (a : LiftTangent) (u : C(K,CylinderL2 P V)) :
+theorem pathAverage_translation (a : LiftTangent) (u : C(K, CylinderL2 P V)) :
     pathAverage P (pathTranslate P a u) = pathTranslate P a (pathAverage P u) := by
   apply ContinuousMap.ext
   intro t
@@ -145,7 +149,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace
 
 /-- Every actual angular intertwiner commutes with the constructed average. -/
 theorem average_intertwines (L : CylinderL2 P E →L[ℝ] CylinderL2 P F)
-    (hL : ∀ s u, L (translate P (0,s) u) = translate P (0,s) (L u))
+    (hL : ∀ s u, L (translate P (0, s) u) = translate P (0, s) (L u))
     (u : CylinderL2 P E) : average P (L u) = L (average P u) := by
   change P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P (L u) s) =
     L (P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s))
@@ -172,8 +176,8 @@ theorem average_fullOperator (A : Space →ᵇ E →L[ℝ] F) (u : CylinderL2 P 
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-theorem pathAverage_fullMultiplier (A : C(K,Space →ᵇ E →L[ℝ] F))
-    (u : C(K,CylinderL2 P E)) :
+theorem pathAverage_fullMultiplier (A : C(K, Space →ᵇ E →L[ℝ] F))
+    (u : C(K, CylinderL2 P E)) :
     pathAverage P (fullMultiplierMap P A u) = fullMultiplierMap P A (pathAverage P u) := by
   apply ContinuousMap.ext
   intro t
@@ -206,6 +210,8 @@ theorem average_mem (u : Supported P V S hS) :
   rw [← he]
   exact v.property
 
+/-- Supported average, given by `((average P).comp (Supported P V S hS).subtypeL).codRestrict
+(Supported P V S hS) (average_mem P S hS)`. -/
 def supportedAverage : Supported P V S hS →L[ℝ] Supported P V S hS :=
   ((average P).comp (Supported P V S hS).subtypeL).codRestrict
     (Supported P V S hS) (average_mem P S hS)

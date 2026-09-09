@@ -6,9 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
+public import Mathlib.Analysis.Fourier.FourierTransform
 
 /-!
 # An inverse Fourier multiplier as a convolution
@@ -18,6 +17,9 @@ is the convolution of `inverseFourier A` with `ψ`.  Absolute product
 integrability also proves that the spatial convolution exists at every point;
 no global integrability of `inverseFourier A` is required.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

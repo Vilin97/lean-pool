@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanPhysicalData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAngularDiagonal
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageSupport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalMeanPhysicalBounds
 
 /-!
 # Angular stage data for the actual physical means
@@ -20,6 +18,9 @@ half-plane.  Radial symmetry of the actual auxiliary graph proves its
 Cartesian angular representation.  Native annulus support gives a positive
 inner radius and the common shrinking outer support.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,7 +52,7 @@ theorem radialSection_radius {p : DirectAngularDiagonal.CylPoint} (hp : 0 ≤ p.
 unchanged when a Cartesian point is moved to its positive radial half-plane. -/
 theorem physicalPoint_radialSection (h : ℝ) (w : SpaceTime) :
     PhysicalMeanJetBounds.physicalPoint h (radialSection (DirectAngularDiagonal.cylPoint w)) =
-      PhysicalMeanJetBounds.physicalPoint h w := by
+        PhysicalMeanJetBounds.physicalPoint h w := by
   have hs : (DirectAngularDiagonal.radius w) ^ 2 = (w.2 0) ^ 2 + (w.2 1) ^ 2 := by
     exact Real.sq_sqrt (add_nonneg (sq_nonneg _) (sq_nonneg _))
   simp only [PhysicalMeanJetBounds.physicalPoint, radialSection, DirectAngularDiagonal.cylPoint,
@@ -64,15 +65,16 @@ section Generic
 
 variable {h degree : ℝ} {N Δ : ℕ} {U : Set PhysicalGraphBounds.Plane}
 
+/-- Coefficient, given by `D.field ∘ radialSection`. -/
 noncomputable def coefficient (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ U ℝ) :
-  DirectAngularDiagonal.Coefficient :=
+    DirectAngularDiagonal.Coefficient :=
   D.field ∘ radialSection
 
 theorem coefficient_cylPoint (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ U ℝ) (w :
-  SpaceTime) :
+    SpaceTime) :
     coefficient D (DirectAngularDiagonal.cylPoint w) = D.field w := by
   change D.physical (PhysicalMeanJetBounds.physicalPoint h (radialSection
-    (DirectAngularDiagonal.cylPoint w))) =
+      (DirectAngularDiagonal.cylPoint w))) =
     D.physical (PhysicalMeanJetBounds.physicalPoint h w)
   rw [physicalPoint_radialSection]
 
@@ -82,7 +84,7 @@ theorem coefficient_angularField (D : PhysicalMeanJetBounds.CoherentFamily h deg
   funext w
   rw [DirectAngularDiagonal.angularField, coefficient_cylPoint]
   change _ = D.field w • PhysicalMeanJetBounds.angularVector (PhysicalGraphBounds.radialProjection
-    w)
+      w)
   simp only [PhysicalMeanJetBounds.angularVector, PhysicalGraphBounds.radialProjection_apply,
     DirectAngularDiagonal.radius, PolarCharts.radius, PhysicalClassBounds.cartesianRadius,
     smul_add, smul_smul]
@@ -133,7 +135,7 @@ theorem innerRadius_le_of_ne (D : PhysicalMeanJetBounds.CoherentFamily h degree 
     exact hann.2.trans (PolarCharts.norm_le_radius _)
   calc
     innerRadius h a (DirectAngularDiagonal.slowPoint w) = (a / 4) * Real.sqrt
-      (PhysicalWaveSum.physicalQ h w) := rfl
+        (PhysicalWaveSum.physicalQ h w) := rfl
     _ ≤ (a / 4) * Real.sqrt (ChartScales.Q n) :=
       mul_le_mul_of_nonneg_left (Real.sqrt_le_sqrt hqn) (by positivity)
     _ = Real.sqrt (ChartScales.Q n) * (a / 4) := mul_comm _ _
@@ -149,7 +151,7 @@ theorem coefficient_smooth (D : PhysicalMeanJetBounds.CoherentFamily h degree N 
     (hs : PhysicalMeanJetBounds.NativeSupport h a b N U D.native)
     {qbig : ℝ} (hq : qbig ≤ ChartScales.Q N) :
     ContDiffOn ℝ ∞ (coefficient D) (DirectAngularDiagonal.positiveDomain
-      (LocalAngularDiagonal.localSlowDomain h qbig)) := by
+        (LocalAngularDiagonal.localSlowDomain h qbig)) := by
   apply (LocalMeanPhysicalBounds.field_sublevel_smooth D hh hh1 ha hab hU hcover hsm hs hq).comp
     radialSection_smooth.contDiffOn
   intro p hp
@@ -165,7 +167,7 @@ theorem coefficient_vanishes (D : PhysicalMeanJetBounds.CoherentFamily h degree 
     (hs : PhysicalMeanJetBounds.NativeSupport h a b N U D.native)
     {qbig : ℝ} (hq : qbig ≤ ChartScales.Q N)
     (p : DirectAngularDiagonal.CylPoint) (hp : DirectAngularDiagonal.slowOfCyl p ∈
-      LocalAngularDiagonal.localSlowDomain h qbig)
+        LocalAngularDiagonal.localSlowDomain h qbig)
     (hr : 0 ≤ p.2.1) (hinner : p.2.1 < innerRadius h a (DirectAngularDiagonal.slowOfCyl p)) :
     coefficient D p = 0 := by
   by_contra hne
@@ -178,6 +180,8 @@ theorem coefficient_vanishes (D : PhysicalMeanJetBounds.CoherentFamily h degree 
   rw [radialSection_slow, radialSection_radius hr] at hb
   exact (not_lt_of_ge hb) hinner
 
+/-- Coherent angular data, bundling `scalar`, `smooth`, `inner`, `inner_continuous` and the
+required compatibility proofs. -/
 noncomputable def coherentAngularData (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ U ℝ)
     (hh : 0 < h) (hh1 : h < 1 / 2) {a b : ℝ} (ha : 0 < a) (hab : a < b)
     (hU : IsOpen U)
@@ -201,7 +205,7 @@ theorem coherentAngularData_field (D : PhysicalMeanJetBounds.CoherentFamily h de
     (hs : PhysicalMeanJetBounds.NativeSupport h a b N U D.native)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     DirectAngularDiagonal.angularField (coherentAngularData D hh hh1 ha hab hU hcover hsm hs qbig
-      hq).scalar = D.angularField :=
+        hq).scalar = D.angularField :=
   coefficient_angularField D
 
 end Generic
@@ -223,6 +227,7 @@ theorem nativeSupport_of_moving
       ActualInitialization.geometry.patch.b N standardRegion.carrier D.native :=
   fun n _ z hz hne => Hm.supported n z hz hne
 
+/-- Actual angular data, constructed using `coherentAngularData`. -/
 noncomputable def actualAngularData
     (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ standardRegion.carrier ℝ)
     (Hm : GaugeMomentBalances.MovingField standardRegion commonGauge.radial.inner
@@ -248,8 +253,10 @@ noncomputable def actualAngularData
       commonGauge.radial.outer D.native)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     (actualAngularData D Hm qbig hq).inner = innerRadius h ActualInitialization.geometry.patch.a :=
-      rfl
+        rfl
 
+/-- Actual angular support, given by `MixedAxisPreservation.AngularSupport.ofAngularData
+(actualAngularData D Hm qbig hq) (fun _ hw => hw)`. -/
 noncomputable def actualAngularSupport
     (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ standardRegion.carrier ℝ)
     (Hm : GaugeMomentBalances.MovingField standardRegion commonGauge.radial.inner
@@ -257,7 +264,7 @@ noncomputable def actualAngularSupport
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     MixedAxisPreservation.AngularSupport (MixedAxisPreservation.localDomain h qbig) :=
   MixedAxisPreservation.AngularSupport.ofAngularData (actualAngularData D Hm qbig hq) (fun _ hw =>
-    hw)
+      hw)
 
 @[simp] theorem actualAngularSupport_field
     (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ standardRegion.carrier ℝ)
@@ -297,7 +304,7 @@ theorem actualAngular_zero_germ
     D.angularField =ᶠ[𝓝 w] fun _ => 0 := by
   have he := (actualAngularData D Hm qbig hq).field_zero_germ
     (LocalAngularDiagonal.localSlowDomain_open outgoing.data.h_pos outgoing.data.h_lt_half qbig) hw
-      hr
+        hr
   rwa [actualAngularData_field] at he
 
 theorem actualAngular_axis_zero_germ
@@ -317,27 +324,35 @@ end Actual
 
 /-! ## Initialized direct angular mean and actual temporal/rank streams -/
 
+/-- Initial angular data, given by `actualAngularData (initialAngularFamily B N0 N)
+(initial_mean_moving B N0).angular qbig hq`. -/
 noncomputable def initialAngularData (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData (initialAngularFamily B N0 N) (initial_mean_moving B N0).angular qbig hq
 
+/-- Initial temporal data, given by `actualAngularData (initialTemporalFamily B N0 N)
+(initialTemporal_moving B N0) qbig hq`. -/
 noncomputable def initialTemporalData (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData (initialTemporalFamily B N0 N) (initialTemporal_moving B N0) qbig hq
 
+/-- Initial rank data, given by `actualAngularData (initialRankFamily B N0 N)
+(initialRank_moving B N0) qbig hq`. -/
 noncomputable def initialRankData (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData (initialRankFamily B N0 N) (initialRank_moving B N0) qbig hq
 
+/-- Initial stream data, given by `actualAngularData (initialStreamFamily B N0 N)
+(initialStream_moving B N0) qbig hq`. -/
 noncomputable def initialStreamData (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData (initialStreamFamily B N0 N) (initialStream_moving B N0) qbig hq
 
 @[simp] theorem initialAngularData_field (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     DirectAngularDiagonal.angularField (initialAngularData B N0 N qbig hq).scalar =
       (initialAngularFamily B N0 N).angularField := coefficient_angularField (initialAngularFamily
-        B N0 N)
+          B N0 N)
 
 @[simp] theorem initialTemporalData_field (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     DirectAngularDiagonal.angularField (initialTemporalData B N0 N qbig hq).scalar =
       (initialTemporalFamily B N0 N).angularField := coefficient_angularField
-        (initialTemporalFamily B N0 N)
+          (initialTemporalFamily B N0 N)
 
 @[simp] theorem initialRankData_field (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     DirectAngularDiagonal.angularField (initialRankData B N0 N qbig hq).scalar =
@@ -346,17 +361,25 @@ noncomputable def initialStreamData (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ C
 @[simp] theorem initialStreamData_field (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :
     DirectAngularDiagonal.angularField (initialStreamData B N0 N qbig hq).scalar =
       (initialStreamFamily B N0 N).angularField := coefficient_angularField (initialStreamFamily B
-        N0 N)
+          N0 N)
 
+/-- Initial angular support, given by `actualAngularSupport (initialAngularFamily B N0 N)
+(initial_mean_moving B N0).angular qbig hq`. -/
 noncomputable def initialAngularSupport (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport (initialAngularFamily B N0 N) (initial_mean_moving B N0).angular qbig hq
 
+/-- Initial temporal support, given by `actualAngularSupport (initialTemporalFamily B N0 N)
+(initialTemporal_moving B N0) qbig hq`. -/
 noncomputable def initialTemporalSupport (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport (initialTemporalFamily B N0 N) (initialTemporal_moving B N0) qbig hq
 
+/-- Initial rank support, given by `actualAngularSupport (initialRankFamily B N0 N)
+(initialRank_moving B N0) qbig hq`. -/
 noncomputable def initialRankSupport (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport (initialRankFamily B N0 N) (initialRank_moving B N0) qbig hq
 
+/-- Initial stream support, given by `actualAngularSupport (initialStreamFamily B N0 N)
+(initialStream_moving B N0) qbig hq`. -/
 noncomputable def initialStreamSupport (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport (initialStreamFamily B N0 N) (initialStream_moving B N0) qbig hq
 
@@ -380,22 +403,22 @@ theorem initial_shrinkingSupport (B N0 N : ℕ) (qbig : ℝ) (hq : qbig ≤ Char
     MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant qbig
         (initialAngularSupport B N0 N qbig hq).field ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        qbig
+          qbig
         (initialTemporalSupport B N0 N qbig hq).field ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        qbig
+          qbig
         (initialRankSupport B N0 N qbig hq).field ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        qbig
+          qbig
         (initialStreamSupport B N0 N qbig hq).field :=
   ⟨actualAngularSupport_shrinkingSupport (initialAngularFamily B N0 N) (initial_mean_moving B
-    N0).angular qbig hq,
+      N0).angular qbig hq,
     actualAngularSupport_shrinkingSupport (initialTemporalFamily B N0 N) (initialTemporal_moving B
-      N0) qbig hq,
+        N0) qbig hq,
     actualAngularSupport_shrinkingSupport (initialRankFamily B N0 N) (initialRank_moving B N0) qbig
-      hq,
+        hq,
     actualAngularSupport_shrinkingSupport (initialStreamFamily B N0 N) (initialStream_moving B N0)
-      qbig hq⟩
+        qbig hq⟩
 
 /-! ## The literal iterated mean stages -/
 
@@ -403,21 +426,29 @@ section Cycles
 
 variable {B N0 N : ℕ} {p : ℕ → CycleParameters (ActualInitialization.Index B N0)}
 
+/-- Cycle angular data, given by `actualAngularData ((initialCycleData H).angularIncrementFamily
+k) ((initialCycleData H).angularIncrement_moving k) qbig hq`. -/
 noncomputable def cycleAngularData (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData ((initialCycleData H).angularIncrementFamily k)
     ((initialCycleData H).angularIncrement_moving k) qbig hq
 
+/-- Cycle temporal data, given by `actualAngularData ((initialCycleData H).temporalFamily k)
+((initialCycleData H).temporal_moving k) qbig hq`. -/
 noncomputable def cycleTemporalData (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData ((initialCycleData H).temporalFamily k)
     ((initialCycleData H).temporal_moving k) qbig hq
 
+/-- Cycle rank data, given by `actualAngularData ((initialCycleData H).rankFamily k)
+((initialCycleData H).rank_moving k) qbig hq`. -/
 noncomputable def cycleRankData (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData ((initialCycleData H).rankFamily k)
     ((initialCycleData H).rank_moving k) qbig hq
 
+/-- Cycle stream data, given by `actualAngularData ((initialCycleData H).streamFamily k)
+((initialCycleData H).stream_moving k) qbig hq`. -/
 noncomputable def cycleStreamData (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularData ((initialCycleData H).streamFamily k)
@@ -447,21 +478,29 @@ noncomputable def cycleStreamData (H : InitialCycleInput B N0 N p) (k : ℕ)
       ((initialCycleData H).streamFamily k).angularField :=
   coefficient_angularField ((initialCycleData H).streamFamily k)
 
+/-- Cycle angular support, given by `actualAngularSupport ((initialCycleData
+H).angularIncrementFamily k) ((initialCycleData H).angularIncrement_moving k) qbig hq`. -/
 noncomputable def cycleAngularSupport (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport ((initialCycleData H).angularIncrementFamily k)
     ((initialCycleData H).angularIncrement_moving k) qbig hq
 
+/-- Cycle temporal support, given by `actualAngularSupport ((initialCycleData H).temporalFamily
+k) ((initialCycleData H).temporal_moving k) qbig hq`. -/
 noncomputable def cycleTemporalSupport (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport ((initialCycleData H).temporalFamily k)
     ((initialCycleData H).temporal_moving k) qbig hq
 
+/-- Cycle rank support, given by `actualAngularSupport ((initialCycleData H).rankFamily k)
+((initialCycleData H).rank_moving k) qbig hq`. -/
 noncomputable def cycleRankSupport (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport ((initialCycleData H).rankFamily k)
     ((initialCycleData H).rank_moving k) qbig hq
 
+/-- Cycle stream support, given by `actualAngularSupport ((initialCycleData H).streamFamily k)
+((initialCycleData H).stream_moving k) qbig hq`. -/
 noncomputable def cycleStreamSupport (H : InitialCycleInput B N0 N p) (k : ℕ)
     (qbig : ℝ) (hq : qbig ≤ ChartScales.Q N) :=
   actualAngularSupport ((initialCycleData H).streamFamily k)
@@ -496,13 +535,13 @@ theorem cycle_shrinkingSupport (H : InitialCycleInput B N0 N p) (k : ℕ)
     MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant qbig
         (cycleAngularSupport H k qbig hq).field ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        qbig
+          qbig
         (cycleTemporalSupport H k qbig hq).field ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        qbig
+          qbig
         (cycleRankSupport H k qbig hq).field ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        qbig
+          qbig
         (cycleStreamSupport H k qbig hq).field :=
   ⟨actualAngularSupport_shrinkingSupport ((initialCycleData H).angularIncrementFamily k)
       ((initialCycleData H).angularIncrement_moving k) qbig hq,

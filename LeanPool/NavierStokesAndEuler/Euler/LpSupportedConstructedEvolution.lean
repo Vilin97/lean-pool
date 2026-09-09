@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 # Constructed spatial L² evolution from the coefficient field alone
@@ -20,6 +19,9 @@ evolution on supported spatial L². The localized H3 estimate is imposed only
 on this genuine homogeneous propagator and is then inherited with constant
 one by the spatial L² evolution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,12 +35,20 @@ open scoped BoundedContinuousFunction
 variable {α V : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
   [SecondCountableTopology α] [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
-private local instance : NormedRing (V →L[ℝ] V) := inferInstance
-private local instance : NormedAlgebra ℝ (V →L[ℝ] V) := inferInstance
-private local instance : NormedRing (Field (α := α) (V := V)) := inferInstance
-private local instance : NormedAlgebra ℝ (Field (α := α) (V := V)) := inferInstance
+/-- Cache the standard `NormedRing (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedConstructedEvolution1 : NormedRing (V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAlgebra ℝ (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedConstructedEvolution2 : NormedAlgebra ℝ (V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (Field (α := α) (V := V))` instance to shorten typeclass
+synthesis. -/
+local instance instLpSupportedConstructedEvolution3 : NormedRing (Field (α := α) (V := V)) :=
+    inferInstance
+/-- Cache the standard `NormedAlgebra ℝ (Field (α := α) (V := V))` instance to shorten typeclass
+synthesis. -/
+local instance instLpSupportedConstructedEvolution4 : NormedAlgebra ℝ (Field (α := α) (V := V)) :=
+    inferInstance
 
-variable (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,Field (α := α) (V := V)))
+variable (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
 
 omit [MeasurableSpace α] [BorelSpace α] [SecondCountableTopology α] in
 /-- The constructed fields satisfy the literal pointwise homogeneous ODE. -/

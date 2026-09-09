@@ -6,13 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermSums
-public import Mathlib.Algebra.BigOperators.Option
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderLinearTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderProfileChange
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
+import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermSums
+
+/-! Actual mean and high forcing estimates at one fixed radius, uniform in the packet grade. -/
 
 @[expose] public section
 
-/-! Actual mean and high forcing estimates at one fixed radius, uniform in the packet grade. -/
 
 noncomputable section
 
@@ -23,31 +31,32 @@ open Set Finset EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursio
 
 variable {P T : ℝ} [Fact (0 < P)] {p : ℕ} {a : ℕ → Profile}
   {F : PrefixFields P T p a} {O : Operators} {C : CoefficientData P T O}
-  (hp : 2 ≤ p) (hT : 0 < T) {corrector_t : VectorField} (Ct : Field P T corrector_t)
-  (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-  (pressure : Field P T (pressureGradient (a (p-1)).highPressure))
+  (hp : 2 ≤ p) (hT : 0 < T) {correctorT : VectorField} (Ct : Field P T correctorT)
+  (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+  (pressure : Field P T (pressureGradient (a (p - 1)).highPressure))
   {S : Scales (Icc (0 : ℝ) T)} {R : ℝ}
   (BF : PrefixBound F hT.le S R) (BC : CoefficientBudget C)
-  (hCtBound : (Ct.normalized hT.le (S.high (p-1)) (S.high_pos (p-1))).WordBound 6 R 1 (highShift
-    (p-1)))
-  (hPressureBound : (pressure.normalized hT.le (S.high (p-1)) (S.high_pos (p-1))).WordBound 6 R 1
-    (highShift (p-1)))
+  (hCtBound : (Ct.normalized hT.le (S.high (p - 1)) (S.high_pos (p - 1))).WordBound 6 R 1 (highShift
+      (p - 1)))
+  (hPressureBound : (pressure.normalized hT.le (S.high (p - 1)) (S.high_pos (p - 1))).WordBound 6 R
+      1
+    (highShift (p - 1)))
   (hR : 1 ≤ R) (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R) (hcost : BC.termCost ≤ R)
   (hc : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
   (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-    inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+    inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
   (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-    (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+    (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
 
 include BF hCtBound hPressureBound hR hRc hcost hc hB₁ hA hB
 
 theorem meanForce_bound :
-    ((F.meanForce C (by omega) hT Ct hCt pressure).normalized hT.le (S.mean p) (S.mean_pos
-      p)).WordBound
+    ((F.meanForce C (by
+        omega) hT Ct hCt pressure).normalized hT.le (S.mean p) (S.mean_pos p)).WordBound
       6 R 1 (meanForceShift p) := by
   let f : KnownTermIndex → VectorField := fun q => q.1.meanRaw O p a q.2.1 q.2.2
-  let W : ∀ q, Field P T (f q) := fun q => F.meanTermField C (by omega) hT Ct hCt pressure q.1
-    q.2.1 q.2.2
+  let W : ∀ q, Field P T (f q) := fun q => F.meanTermField C (by
+      omega) hT Ct hCt pressure q.1 q.2.1 q.2.2
   let G := Field.finsetSum (knownTermIndices p) f W
   have hd : 0 < meanForceShift p := by have h := force_shift_dominates_grade p hp; omega
   have hcount : (knownTermIndices p).card ≤ (meanForceShift p)^2 := by
@@ -70,7 +79,7 @@ theorem meanForce_bound :
 theorem highForce_bound (newMean : Field P T (meanResult O p a).1)
     (hnew : (newMean.normalized hT.le (S.mean p) (S.mean_pos p)).WordBound 6 R 1 (meanShift p)) :
     ((F.highForce C hp hT Ct hCt pressure newMean).normalized hT.le (S.high p) (S.high_pos
-      p)).WordBound
+        p)).WordBound
       6 R 1 (highForceShift p) := by
   let A := SpatialJetField.fastAdvection C.normal (SpatialJetField.ofField O.interval newMean)
     (SpatialJetField.ofField O.interval (F.high 1 (by omega)))

@@ -8,13 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardFactorization
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGlobalShear
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryPressureShear
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
 
 /-! Literal shear and pressure Hessian of the primary starting at time
 zero.  The leading tensors are derivatives of the actual constructed
 velocity and scalar pressure, with the slow terms retained exactly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,8 +43,8 @@ theorem angular_fderiv (a : ℝ) (t : Icc (0 : ℝ) D.T) (z : LiftTangent) :
       (a*profile δ θ) • canonicalVelocity D ξ t z.1 := by
     funext θ
     exact vector_factorization D δ hδ ξ hs a t z.1 θ
-  have hd := (((profile_contDiff δ hδ).differentiable (by simp) z.2).hasDerivAt.const_mul
-    a).smul_const
+  have hd := (((profile_contDiff δ hδ).differentiable (by
+      simp) z.2).hasDerivAt.const_mul a).smul_const
     (canonicalVelocity D ξ t z.1)
   have hq : DifferentiableAt ℝ q z :=
     (((forcing D).vectorField (initialData D δ hδ (a • ξ) hs)).raw_smooth t).differentiable
@@ -85,7 +88,7 @@ theorem global_gradient_bound (a k : ℝ) (hk : 0 < k)
       (a*deriv (profile δ) (k*⟪D.m₀,Y x⟫_ℝ)) •
         rankOne ℝ (canonicalVelocity D ξ t (Y x)) (D.normal.field t (Y x))‖ ≤
       (‖coordinateEquiv.symm.toContinuousLinearMap‖*(sobolevEmbeddingConstant period 3*A*R)*C)/k :=
-        by
+          by
   rw [global_gradient D δ hδ ξ hs a k hk.ne' t Y x hY,add_sub_cancel_left]
   have hd := hG.raw_fderiv_le (by norm_num) t (graphMap k D.m₀ (Y x))
   simp only [majorant,Nat.add_zero,Nat.factorial_one,Nat.cast_one,pow_one,one_pow,mul_one] at hd
@@ -102,6 +105,8 @@ theorem global_gradient_bound (a k : ℝ) (hk : 0 < k)
       mul_le_mul (mul_le_mul_of_nonneg_left hd (abs_nonneg _)) hJ (norm_nonneg _) (by positivity)
     _ = _ := by rw [abs_of_pos (inv_pos.mpr hk)]; ring
 
+/-- Pressure coefficient, given by `-(2*a*⟪D.normal.field t x,D.M.field t x (canonicalVelocity D
+ξ t x)⟫_ℝ)/ ‖D.normal.field t x‖^2`. -/
 def pressureCoefficient (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) : ℝ :=
   -(2*a*⟪D.normal.field t x,D.M.field t x (canonicalVelocity D ξ t x)⟫_ℝ)/
     ‖D.normal.field t x‖^2
@@ -137,9 +142,13 @@ theorem scalar_second_deriv_zero (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) :
       pressureCoefficient D ξ a t x / δ := by
   rw [scalar_second_deriv,profile_deriv_zero δ hδ,div_eq_mul_inv]
 
+/-- Physical pressure, given by `k⁻¹^2 * scalar D (initialData D δ hδ (a • ξ) hs) (t,(Y
+x,k*⟪D.m₀,Y x⟫_ℝ))`. -/
 def physicalPressure (a k : ℝ) (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space) : ℝ :=
   k⁻¹^2 * scalar D (initialData D δ hδ (a • ξ) hs) (t,(Y x,k*⟪D.m₀,Y x⟫_ℝ))
 
+/-- Hessian remainder, given by `lowerHessian (fun z => scalar D (initialData D δ hδ (a • ξ) hs)
+(t,z)) k D.m₀ Y (fun y => D.FInv.field t (Y y)) x`. -/
 def hessianRemainder (a k : ℝ) (t : Icc (0 : ℝ) D.T) (Y : Space → Space)
     (x : Space) : Space →L[ℝ] Space :=
   lowerHessian (fun z => scalar D (initialData D δ hδ (a • ξ) hs) (t,z))
@@ -166,7 +175,7 @@ theorem physicalPressure_hessian (a k : ℝ) (hk : k ≠ 0) (t : Icc (0 : ℝ) D
 theorem physicalPressure_hessian_of_inverse (a k : ℝ) (hk : k ≠ 0)
     (X Y : Icc (0 : ℝ) D.T → Space → Space)
     (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-    (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
+    (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     fderiv ℝ (gradient (physicalPressure D δ hδ ξ hs a k t (Y t))) x =
       (pressureCoefficient D ξ a t (Y t x) * deriv (profile δ) (k*⟪D.m₀,Y t x⟫_ℝ)) •

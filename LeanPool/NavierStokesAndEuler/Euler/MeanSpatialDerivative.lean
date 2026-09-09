@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
-public import LeanPool.NavierStokesAndEuler.Euler.MeanGradientTestSpace
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+import LeanPool.NavierStokesAndEuler.Euler.MeanGradientTestSpace
+
+/-! Strong ordinary L² spatial derivatives are the classical derivatives of the reconstructed field.
+-/
 
 @[expose] public section
 
-/-! Strong ordinary L² spatial derivatives are the classical derivatives of the reconstructed
-  field. -/
 
 noncomputable section
 
@@ -50,18 +52,18 @@ theorem orbitDerivative_ae_fderiv (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit
 
 /-- The classical directional derivative is exactly the reconstructed strong derivative. -/
 theorem fderiv_representative_apply (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (v x : Space)
-  :
+    :
     fderiv ℝ (representative u hu) x v =
       representative (orbitDerivative u v) (orbitDerivative_smooth u hu v) x := by
   have H := representative_unique (orbitDerivative u v) (orbitDerivative_smooth u hu v)
     (fun y => fderiv ℝ (representative u hu) y v)
-    (((representative_smooth u hu).fderiv_right (m := ∞) (by simp)).continuous.clm_apply
-      continuous_const)
+    (((representative_smooth u hu).fderiv_right (m := ∞) (by
+        simp)).continuous.clm_apply continuous_const)
     (orbitDerivative_ae_fderiv u hu v)
   exact (congrFun H x).symm
 
 theorem representative_directional_memLp (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (v :
-  Space) :
+    Space) :
     MemLp (fun x => fderiv ℝ (representative u hu) x v) 2 (volume : Measure Space) :=
   (Lp.memLp (orbitDerivative u v)).ae_eq (orbitDerivative_ae_fderiv u hu v)
 

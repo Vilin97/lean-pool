@@ -7,13 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionLp
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
+import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The L² composition estimate over an arbitrary measure space.  This
 version allows the base to be a periodic cylinder while the derivatives
 are tensors on its Euclidean cover.  The output is the literal finite
 Taylor composition of the given jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,7 +37,7 @@ variable {X E F : Type*} [MeasurableSpace X]
 theorem taylorComp_partition_bound
     (P : FormalMultilinearSeries ℝ E E) (Q : FormalMultilinearSeries ℝ E F)
     (n : ℕ) (B R : ℝ)
-    (hP : ∀ j, 0 < j → j ≤ n → ‖P j‖ ≤ B*R^j*(j.factorial : ℝ)^2) :
+    (hP : ∀ j, 0 < j → j ≤ n → ‖P j‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2) :
     ‖Q.taylorComp P n‖ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c*‖Q c.length‖ := by
   apply (norm_sum_le _ _).trans
   apply Finset.sum_le_sum
@@ -53,8 +59,8 @@ theorem composition_memLp_and_bound
     (hcomp : AEStronglyMeasurable (fun x => (Q (φ x)).taylorComp (P x) n) μ)
     (A B R S : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S)
     (hQLp : ∀ j ≤ n, MemLp (fun x => Q x j) 2 μ)
-    (hQ : ∀ j ≤ n, (eLpNorm (fun x => Q x j) 2 μ).toReal ≤ A*S^j*(j.factorial : ℝ)^2)
-    (hP : ∀ j, 0 < j → j ≤ n → ∀ x, ‖P x j‖ ≤ B*R^j*(j.factorial : ℝ)^2) :
+    (hQ : ∀ j ≤ n, (eLpNorm (fun x => Q x j) 2 μ).toReal ≤ A * S ^ j * (j.factorial : ℝ) ^ 2)
+    (hP : ∀ j, 0 < j → j ≤ n → ∀ x, ‖P x j‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2) :
     MemLp (fun x => (Q (φ x)).taylorComp (P x) n) 2 μ ∧
       (eLpNorm (fun x => (Q (φ x)).taylorComp (P x) n) 2 μ).toReal ≤
         A*(R*(B*S+2))^n*(n.factorial : ℝ)^2 := by
@@ -79,7 +85,7 @@ theorem composition_memLp_and_bound
     simp only [Finset.sum_apply]
   have hsumNorm := eLpNorm_sum_le
     (fun c (_ : c ∈ (Finset.univ : Finset (OrderedFinpartition n))) => (hHLp
-      c).aestronglyMeasurable)
+        c).aestronglyMeasurable)
     (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   have hLpNorm : eLpNorm (fun x => (Q (φ x)).taylorComp (P x) n) 2 μ ≤
       ∑ c : OrderedFinpartition n, eLpNorm (H c) 2 μ := by
@@ -90,7 +96,7 @@ theorem composition_memLp_and_bound
     (ENNReal.sum_ne_top.mpr (fun c _ => (hHLp c).eLpNorm_ne_top)) hLpNorm
   rw [ENNReal.toReal_sum (fun c _ => (hHLp c).eLpNorm_ne_top)] at hreal
   have hHnorm (c : OrderedFinpartition n) :
-      (eLpNorm (H c) 2 μ).toReal = innerPartitionBound B R c*
+      (eLpNorm (H c) 2 μ).toReal = innerPartitionBound B R c *
         (eLpNorm (fun x => Q x c.length) 2 μ).toReal := by
     have hfun : H c = innerPartitionBound B R c • ((fun y => ‖Q y c.length‖) ∘ φ) := rfl
     rw [hfun, eLpNorm_const_smul,
@@ -99,9 +105,9 @@ theorem composition_memLp_and_bound
       Real.norm_of_nonneg (innerPartitionBound_nonneg B R hB hR c)]
   simp_rw [hHnorm] at hreal
   calc
-    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c*
+    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c *
         (eLpNorm (fun x => Q x c.length) 2 μ).toReal := hreal
-    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c*
+    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c *
         (A*S^c.length*(c.length.factorial : ℝ)^2) := by
       exact Finset.sum_le_sum fun c _ => mul_le_mul_of_nonneg_left
         (hQ c.length c.length_le) (innerPartitionBound_nonneg B R hB hR c)

@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+
+/-! Local mixed-derivative commutation for the ordinary spatial curl. -/
 
 @[expose] public section
 
-/-! Local mixed-derivative commutation for the ordinary spatial curl. -/
 noncomputable section
 
 open Set Filter EulerSmoothLimit EulerMeanBoundary EulerMeanCutoffCurl
@@ -118,7 +120,7 @@ theorem vectorCurl_hasDerivAt {u : ℝ × Space → Space} {t : ℝ} {x : Space}
   filter_upwards [((continuous_id.prodMk continuous_const).tendsto t).eventually hnear]
     with r hr
   exact vectorCurl_eq_matrix _ x (hr.comp x (differentiableAt_const r |>.prodMk
-    differentiableAt_id))
+      differentiableAt_id))
 
 /-- Joint spatial curl retains local joint smoothness. -/
 theorem joint_vectorCurl_contDiffAt {u : ℝ × Space → Space} {t : ℝ} {x : Space}

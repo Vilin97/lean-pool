@@ -7,13 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFiniteScaleChoice
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 A common choice of the starting stage and base scale for the concrete
 coefficient, time-width, and pressure costs in the outer construction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,19 +28,29 @@ noncomputable section
 namespace EulerPacketSourceScaleChoice
 
 open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceTime
-  EulerPacketScaleGeometry EulerPacketFiniteScaleChoice EulerPacketSourceScaleBounds
+   EulerPacketFiniteScaleChoice EulerPacketSourceScaleBounds
 
 open scoped Topology
 
+/-- Cost spec data, collecting `d`, `B`, `N`, `a`, `b`, `c` and their compatibility conditions. -/
 structure CostSpec where
+  /-- D of `CostSpec`, of type `ℕ`. -/
   d : ℕ
+  /-- Bound parameter of `CostSpec`, of type `ℕ`. -/
   B : ℕ
+  /-- Truncation order of `CostSpec`, of type `ℕ`. -/
   N : ℕ
+  /-- A of `CostSpec`, of type `ℝ`. -/
   a : ℝ
+  /-- B of `CostSpec`, of type `ℝ`. -/
   b : ℝ
+  /-- C of `CostSpec`, of type `ℝ`. -/
   c : ℝ
+  /-- Bound coefficient of `CostSpec`, of type `ℝ`. -/
   C : ℝ
+  /-- P of `CostSpec`, of type `ℕ`. -/
   p : ℕ
+  /-- Q of `CostSpec`, of type `ℕ`. -/
   q : ℕ
   d_le_two : d ≤ 2
   a_nonneg : 0 ≤ a
@@ -42,17 +59,20 @@ structure CostSpec where
   b_pos : 0 < b
   C_pos : 0 < C
 
+/-- Cost, given by `monomialCost J s.d s.B s.a s.b s.c s.C s.p s.q x`. -/
 def CostSpec.cost (s : CostSpec) (J : ℕ) (x : ℕ → ℝ) : ℕ → ℝ :=
   monomialCost J s.d s.B s.a s.b s.c s.C s.p s.q x
 
 /-- A finite list of literal exponential costs has summable, uniformly
 small terms and a small total, using one fixed stage and then one base scale. -/
-theorem finite_uniform_choice {ι : Type*} [Fintype ι] (s : ι → CostSpec) :
+theorem finite_uniform_choice {ι : Type*} [Finite ι] (s : ι → CostSpec) :
     ∃ J : ℕ, 3 ≤ J ∧ ∀ δ : ℝ, 0 < δ → ∃ X₀ : ℝ, 8 ≤ X₀ ∧
       ∀ x : ℕ → ℝ, X₀ ≤ x 0 →
         (∀ n, x (n+1) = ((J+n : ℕ) : ℝ)^2*x n) →
         ∀ i, Summable ((s i).cost J x) ∧
           (∑' n, (s i).cost J x n) ≤ δ ∧ ∀ n, (s i).cost J x n ≤ δ := by
+  classical
+  let := Fintype.ofFinite ι
   obtain ⟨J, hJ, hchoice⟩ := finite_source_uniform_small_sum_choice
     (fun i => (s i).d) (fun i => (s i).B) (fun i => (s i).N)
     (fun i => (s i).a) (fun i => (s i).b) (fun i => (s i).c)
@@ -83,6 +103,7 @@ theorem finite_uniform_choice {ι : Type*} [Fintype ι] (s : ι → CostSpec) :
   exact monomialCost_nonneg J (s i).d (s i).B (s i).a (s i).b (s i).c (s i).C
     (s i).p (s i).q x m (s i).C_pos.le (hxp m).le
 
+/-- Source cost data, collecting `elems`. -/
 inductive SourceCost
   | shear | prior | neighbor | extra | width | parent | good
   deriving DecidableEq
@@ -91,6 +112,7 @@ instance : Fintype SourceCost where
   elems := {.shear, .prior, .neighbor, .extra, .width, .parent, .good}
   complete c := by cases c <;> simp
 
+/-- Source cost spec used in packet source scale choice. -/
 def sourceCostSpec (C c : ℝ) (hC : 1 ≤ C) (A : ℕ) : SourceCost → CostSpec
   | .shear => {
       d := 2, B := 9, N := 7, a := 7, b := 1/2, c := 2,
@@ -128,6 +150,7 @@ def sourceCostSpec (C c : ℝ) (hC : 1 ≤ C) (A : ℕ) : SourceCost → CostSpe
       d_le_two := by norm_num, a_nonneg := by norm_num, a_lt_B := by norm_num,
       a_le_N := by norm_num, b_pos := by norm_num, C_pos := by norm_num }
 
+/-- Small series data, collecting `nonneg`, `summable`, `total_le`. -/
 structure SmallSeries (f : ℕ → ℝ) (δ : ℝ) : Prop where
   nonneg : ∀ n, 0 ≤ f n
   summable : Summable f
@@ -144,20 +167,27 @@ theorem SmallSeries.mono {f g : ℕ → ℝ} {δ : ℝ} (h : SmallSeries f δ)
   have hs := h.summable.of_nonneg_of_le hg hle
   exact ⟨hg, hs, (hs.tsum_le_tsum hle h.summable).trans h.total_le⟩
 
+/-- Coefficient cost, given by `sourceCoefficientError J C c x n * sourceTheta J C x n^A`. -/
 def coefficientCost (J : ℕ) (C c : ℝ) (A : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   sourceCoefficientError J C c x n * sourceTheta J C x n^A
 
+/-- Extra time cost, given by `2*sqrt (a n*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J
+x n * sourceTheta J C x n^A`. -/
 def extraTimeCost (J : ℕ) (C : ℝ) (A : ℕ) (x a : ℕ → ℝ) (n : ℕ) : ℝ :=
-  2*sqrt (a n*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J x n*
+  2*sqrt (a n*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J x n *
     sourceTheta J C x n^A
 
+/-- Parent square ratio, given by `exp (2*x n/((J-1+n : ℕ) : ℝ)^7)/exp (x n/((J+n : ℕ) : ℝ)^5)`. -/
 def parentSquareRatio (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   exp (2*x n/((J-1+n : ℕ) : ℝ)^7)/exp (x n/((J+n : ℕ) : ℝ)^5)
 
+/-- Good cost, given by `exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5) * exp (x
+n/((J-1+n : ℕ) : ℝ)^7)`. -/
 def goodCost (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
-  exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5)*
+  exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5) *
     exp (x n/((J-1+n : ℕ) : ℝ)^7)
 
+/-- Uniform bounds data, collecting `coefficient`, `extraTime`, `width`, `parent`, `good`. -/
 structure UniformBounds (J : ℕ) (C c : ℝ) (A : ℕ) (x : ℕ → ℝ) (δ : ℝ) : Prop where
   coefficient : SmallSeries (coefficientCost J C c A x) δ
   extraTime : ∀ a : ℕ → ℝ, (∀ n, 0 ≤ a n) → (∀ n, a n ≤ 2) →
@@ -194,7 +224,7 @@ theorem source_uniform_choice (C c : ℝ) (hC : 1 ≤ C) (hc : 0 ≤ c) (A : ℕ
     (hsmall i).weaken (by linarith only [hδ])
   have hsum : SmallSeries (fun n => f .shear n+f .prior n+f .neighbor n) δ := by
     have hs := ((hsmall .shear).summable.add (hsmall .prior).summable).add (hsmall
-      .neighbor).summable
+        .neighbor).summable
     refine ⟨fun n => add_nonneg (add_nonneg ((hsmall .shear).nonneg n)
       ((hsmall .prior).nonneg n)) ((hsmall .neighbor).nonneg n), hs, ?_⟩
     rw [Summable.tsum_add ((hsmall .shear).summable.add (hsmall .prior).summable)
@@ -206,7 +236,7 @@ theorem source_uniform_choice (C c : ℝ) (hC : 1 ≤ C) (hc : 0 ≤ c) (A : ℕ
   · intro n
     have hθ : 0 ≤ sourceTheta J C x n := le_trans zero_le_one (sourceTheta_bounds hJ1 hC hx1 n).1
     unfold coefficientCost sourceCoefficientError sourceEpsilon sourceOlderGradient
-      sourcePriorError sourceNeighborError
+        sourcePriorError sourceNeighborError
     positivity
   · intro n
     exact sourceCoefficientError_bound J hJ C c hC hc A x hx1 n

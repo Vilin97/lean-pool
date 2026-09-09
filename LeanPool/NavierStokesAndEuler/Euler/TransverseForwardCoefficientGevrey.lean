@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardInverse
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramGevrey
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardRegularity
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Actual coefficient bounds for the transverse forward equation
@@ -20,6 +24,9 @@ factorial shift is absorbed into a coefficient radius enlargement. The source
 generator and projected forcing coefficients then have shift-zero bounds by
 actual composition, with explicit polynomial amplitudes.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,7 +40,7 @@ open Set ContinuousLinearMap EulerGevrey EulerOperatorGevreyCalculus
 open scoped ContDiff
 
 theorem inverseRadius_bounds (c C Rc R : ℝ) (hc : 0 < c) (hRc : 0 ≤ Rc)
-    (hR : 2*gramCost c C 1*(Rc+1) ≤ R) : 0 ≤ R ∧ Rc ≤ 4*R := by
+    (hR : 2 * gramCost c C 1 * (Rc + 1) ≤ R) : 0 ≤ R ∧ Rc ≤ 4*R := by
   have hi : 0 ≤ c⁻¹ := inv_nonneg.mpr hc.le
   have hcost : 1 ≤ gramCost c C 1 := by
     unfold gramCost
@@ -46,22 +53,43 @@ variable {P V E : Type*}
   [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T,V →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+variable (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T, V →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
   (hQr : ContDiff ℝ ∞ Q) (hQ₁r : ContDiff ℝ ∞ Q₁)
   (Rc C₀ C₁ Ri : ℝ) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
-  (hRi : 2*gramCost c C₀ 1*(Rc+1) ≤ Ri)
-  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-  (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+  (hRi : 2 * gramCost c C₀ 1 * (Rc + 1) ≤ Ri)
+  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+  (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
 
-private local instance : NormedAddCommGroup (V →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ (V →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,V →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,V →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,V →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,V →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instTransverseForwardCoefficientGevrey1 : NormedAddCommGroup (V →L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instTransverseForwardCoefficientGevrey2 : NormedSpace ℝ (V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,V →L[ℝ] V)` instance to shorten
+typeclass synthesis. -/
+local instance instTransverseForwardCoefficientGevrey3 : NormedAddCommGroup C(Icc (0 : ℝ) T,V →L[ℝ]
+    V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,V →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instTransverseForwardCoefficientGevrey4 : NormedSpace ℝ C(Icc (0 : ℝ) T,V →L[ℝ] V)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,V →L[ℝ] E)` instance to shorten
+typeclass synthesis. -/
+local instance instTransverseForwardCoefficientGevrey5 : NormedAddCommGroup C(Icc (0 : ℝ) T,V →L[ℝ]
+    E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,V →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instTransverseForwardCoefficientGevrey6 : NormedSpace ℝ C(Icc (0 : ℝ) T,V →L[ℝ] E)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] V)` instance to shorten
+typeclass synthesis. -/
+local instance instTransverseForwardCoefficientGevrey7 : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ]
+    V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instTransverseForwardCoefficientGevrey8 : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] V)
+    := inferInstance
 
 include hQr hRc hC₀ hRi hbQ in
 /-- The genuine inverse becomes a shift-zero coefficient at radius `4 Ri`. -/
@@ -114,9 +142,9 @@ theorem generator_bound (n : ℕ) (x : P) :
 include hQr hRc hC₀ hRi hbQ in
 /-- Multiplication by the actual projected-forcing coefficient preserves the
 input factorial shift, with a polynomial amplitude. -/
-theorem projected_forcing_bound (f : P → C(Icc (0 : ℝ) T,E)) (hf : ContDiff ℝ ∞ f)
-    (R D : ℝ) (hR : 4*Ri ≤ R) (hD : 0 ≤ D) (d : ℕ)
-    (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D*majorant R d n) (n : ℕ) (x : P) :
+theorem projected_forcing_bound (f : P → C(Icc (0 : ℝ) T, E)) (hf : ContDiff ℝ ∞ f)
+    (R D : ℝ) (hR : 4 * Ri ≤ R) (hD : 0 ≤ D) (d : ℕ)
+    (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => forcingOperator T (Q y) c hc (hQ y) (f y)) x‖ ≤
       (9*Ri*C₀*D)*majorant R d n := by
   have hi := (inverseRadius_bounds c C₀ Rc Ri hc hRc hRi).1
@@ -128,8 +156,8 @@ theorem projected_forcing_bound (f : P → C(Icc (0 : ℝ) T,E)) (hf : ContDiff 
     (frameLeftInversePath_bound T Q c hc hQ hQr Rc C₀ Ri hRc hC₀ hRi hbQ j y).trans
       (mul_le_mul_of_nonneg_left (majorant_radius_mono (4*Ri) R hrad hR 0 j) (by positivity))
   have h := apply_bound (fun y => frameLeftInversePath T (Q y) c hc (hQ y)) f
-    (frameLeftInversePath_contDiff T Q c hc hQ hQr) hf R (3*Ri*C₀) D hR0 (by positivity) hD 0 d hbL
-      hbf n x
+    (frameLeftInversePath_contDiff T Q c hc hQ hQr) hf R (3*Ri*C₀) D hR0 (by
+        positivity) hD 0 d hbL hbf n x
   have he : 3*(3*Ri*C₀)*D = 9*Ri*C₀*D := by ring
   simp only [Nat.zero_add, he] at h
   convert h using 1

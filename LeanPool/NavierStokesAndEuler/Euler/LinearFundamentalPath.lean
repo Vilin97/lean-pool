@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalExistence
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamel
+import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalExistence
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Actual continuous fundamental paths from the existence theorem
@@ -19,6 +19,9 @@ within-interval derivatives. The final specialization constructs an Evolution
 for every continuous bounded operator coefficient.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerLinearFundamentalExistence
@@ -26,11 +29,13 @@ namespace EulerLinearFundamentalExistence
 open Set ContinuousLinearMap EulerVolterraConvolution EulerLinearDuhamel
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
-  (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,A))
+  (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, A))
 
 /-- The continuous paths constructed from the actual Banach-space ODE. -/
 structure FundamentalPath where
+  /-- Forward of `FundamentalPath`, of type `C(Icc (0 : ℝ) T,A)`. -/
   forward : C(Icc (0 : ℝ) T,A)
+  /-- Backward of `FundamentalPath`, of type `C(Icc (0 : ℝ) T,A)`. -/
   backward : C(Icc (0 : ℝ) T,A)
   forward_initial : forward ⟨0,le_rfl,hT⟩ = 1
   backward_initial : backward ⟨0,le_rfl,hT⟩ = 1
@@ -76,7 +81,7 @@ namespace EulerLinearDuhamel
 open Set EulerLinearFundamentalExistence
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,E →L[ℝ] E))
+  (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- A homogeneous evolution constructed for an arbitrary continuous operator coefficient. -/
 def constructedEvolution : Evolution T hT B where

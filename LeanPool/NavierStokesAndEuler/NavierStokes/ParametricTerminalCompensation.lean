@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalCompensation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricHeatTail
 
-@[expose] public section
-
 /-!
 # Terminal compensation for genuinely parameter-dependent debts
 
@@ -18,6 +16,9 @@ The physical heat parameter is `1-η²`. This module retains its contribution
 to the debt derivative. Smoothness at the ends of a compact parameter range
 is relative smoothness; all endpoint derivatives are actual `derivWithin`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +28,7 @@ open NavierStokes.TerminalCompensation
 
 namespace NavierStokes.ParametricTerminalCompensation
 
+/-- First jet within bound as an element of `Prop`. -/
 noncomputable def FirstJetWithinBound (P : Patch) (a : ℝ → ℝ) (c : ℝ → Coeff)
     (S : Set ℝ) (η L : ℝ) : Prop :=
   ∀ x : ℝ, |a η * correction P (c η) x| ≤ L ∧
@@ -61,14 +63,14 @@ theorem compact_amplitude_within_bounds {S : Set ℝ} (hS : IsCompact S)
   obtain ⟨B₂, hb₂⟩ := hS.exists_bound_of_continuousOn ha.continuousOn
   obtain ⟨B₃, hb₃⟩ := hS.exists_bound_of_continuousOn had.continuousOn
   let D : ℝ := 1 + |B₀| + |B₁| + |B₂| + |B₃|
-  have hD₀ : B₀ ≤ D := by dsimp [D]; linarith [le_abs_self B₀, abs_nonneg B₁, abs_nonneg B₂,
-    abs_nonneg B₃]
-  have hD₁ : B₁ ≤ D := by dsimp [D]; linarith [le_abs_self B₁, abs_nonneg B₀, abs_nonneg B₂,
-    abs_nonneg B₃]
-  have hD₂ : B₂ ≤ D := by dsimp [D]; linarith [le_abs_self B₂, abs_nonneg B₀, abs_nonneg B₁,
-    abs_nonneg B₃]
-  have hD₃ : B₃ ≤ D := by dsimp [D]; linarith [le_abs_self B₃, abs_nonneg B₀, abs_nonneg B₁,
-    abs_nonneg B₂]
+  have hD₀ : B₀ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₀, abs_nonneg B₁, abs_nonneg B₂, abs_nonneg B₃]
+  have hD₁ : B₁ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₁, abs_nonneg B₀, abs_nonneg B₂, abs_nonneg B₃]
+  have hD₂ : B₂ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₂, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₃]
+  have hD₃ : B₃ ≤ D := by
+      dsimp [D]; linarith [le_abs_self B₃, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₂]
   refine ⟨D, by dsimp [D]; positivity, fun η hη => ⟨(hb₀ η hη).trans hD₀,
     (hb₁ η hη).trans hD₁, ?_, ?_⟩⟩
   · exact (hb₂ η hη).trans hD₂

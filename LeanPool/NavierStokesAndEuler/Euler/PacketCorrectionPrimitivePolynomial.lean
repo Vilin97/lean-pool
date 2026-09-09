@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientCostMonotone
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Fixed polynomials majorize all primitive coefficient constants of the
 packet correction. The pressure inverse is the genuine fixed-order recursion. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,40 +24,63 @@ namespace EulerPacketCorrectionPrimitive
 open EulerParameterWordGevrey EulerCoefficientJetPressureBounds
   EulerPacketCorrectionCoefficients EulerPolynomialCost EulerCylinderPathProduct
 
+/-- Metric envelope, given by `correctionMetricEnvelope X X`. -/
 def metricEnvelope (X : ℝ) : ℝ := correctionMetricEnvelope X X
+/-- Linear envelope, given by `correctionLinearEnvelope X X X`. -/
 def linearEnvelope (X : ℝ) : ℝ := correctionLinearEnvelope X X X
+/-- Quadratic envelope, given by `correctionQuadraticEnvelope X X X`. -/
 def quadraticEnvelope (X : ℝ) : ℝ := correctionQuadraticEnvelope X X X
+/-- Radius envelope, given by `1+(1+metricEnvelope X)*(64*X)+64*X`. -/
 def radiusEnvelope (X : ℝ) : ℝ := 1+(1+metricEnvelope X)*(64*X)+64*X
+/-- Pressure envelope, given by `1+pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 5 + pressureCost
+((1+X)^2)⁻¹ (metricEnvelope X) 6`. -/
 def pressureEnvelope (X : ℝ) : ℝ :=
-  1+pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 5+
+  1+pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 5 +
     pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 6
+/-- Multiplier envelope, given by `3*sobolevCoefficientAmplitude (Fin 4) 6 X X`. -/
 def multiplierEnvelope (X : ℝ) : ℝ := 3*sobolevCoefficientAmplitude (Fin 4) 6 X X
+/-- Term envelope, given by `2*(1+multiplierEnvelope X+9*productBlockConstant
+P*multiplierEnvelope X)`. -/
 def termEnvelope (P : ℝ) [Fact (0 < P)] (X : ℝ) : ℝ :=
   2*(1+multiplierEnvelope X+9*productBlockConstant P*multiplierEnvelope X)
+/-- Primitive envelope as an element of `ℝ`. -/
 def primitiveEnvelope (P : ℝ) [Fact (0 < P)] (X : ℝ) : ℝ :=
-  1+(1+X)+X^2+3*X*X*X+2*X*X+metricEnvelope X+linearEnvelope X+
-    quadraticEnvelope X+radiusEnvelope X+pressureEnvelope X+
+  1+(1+X)+X^2+3*X*X*X+2*X*X+metricEnvelope X+linearEnvelope X +
+    quadraticEnvelope X+radiusEnvelope X+pressureEnvelope X +
     multiplierEnvelope X+termEnvelope P X
 
+/-- Metric polynomial, given by `coefficientPolynomial 6 (4*Polynomial.X)
+(3*Polynomial.X*Polynomial.X)`. -/
 def metricPolynomial : Polynomial ℝ :=
   coefficientPolynomial 6 (4*Polynomial.X) (3*Polynomial.X*Polynomial.X)
+/-- Linear polynomial, given by `2*coefficientPolynomial 6 (4*Polynomial.X)
+(6*Polynomial.X*Polynomial.X)`. -/
 def linearPolynomial : Polynomial ℝ :=
   2*coefficientPolynomial 6 (4*Polynomial.X) (6*Polynomial.X*Polynomial.X)
+/-- Quadratic polynomial, given by `6*coefficientPolynomial 6 (4*Polynomial.X)
+(3*Polynomial.X*(Polynomial.X*Polynomial.X))`. -/
 def quadraticPolynomial : Polynomial ℝ :=
   6*coefficientPolynomial 6 (4*Polynomial.X) (3*Polynomial.X*(Polynomial.X*Polynomial.X))
+/-- Radius polynomial, given by `1+(1+metricPolynomial)*(64*Polynomial.X)+64*Polynomial.X`. -/
 def radiusPolynomial : Polynomial ℝ :=
   1+(1+metricPolynomial)*(64*Polynomial.X)+64*Polynomial.X
+/-- Pressure polynomial envelope, given by `1+pressurePolynomial ((1+Polynomial.X)^2)
+metricPolynomial 5 + pressurePolynomial ((1+Polynomial.X)^2) metricPolynomial 6`. -/
 def pressurePolynomialEnvelope : Polynomial ℝ :=
-  1+pressurePolynomial ((1+Polynomial.X)^2) metricPolynomial 5+
+  1+pressurePolynomial ((1+Polynomial.X)^2) metricPolynomial 5 +
     pressurePolynomial ((1+Polynomial.X)^2) metricPolynomial 6
+/-- Multiplier polynomial, given by `3*coefficientPolynomial 6 Polynomial.X Polynomial.X`. -/
 def multiplierPolynomial : Polynomial ℝ :=
   3*coefficientPolynomial 6 Polynomial.X Polynomial.X
+/-- Term polynomial, given by `2*(1+multiplierPolynomial+9*Polynomial.C (productBlockConstant
+P)*multiplierPolynomial)`. -/
 def termPolynomial (P : ℝ) [Fact (0 < P)] : Polynomial ℝ :=
   2*(1+multiplierPolynomial+9*Polynomial.C (productBlockConstant P)*multiplierPolynomial)
+/-- Primitive polynomial as an element of `Polynomial ℝ`. -/
 def primitivePolynomial (P : ℝ) [Fact (0 < P)] : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
-  1+(1+X)+X^2+3*X*X*X+2*X*X+metricPolynomial+linearPolynomial+
-    quadraticPolynomial+radiusPolynomial+pressurePolynomialEnvelope+
+  1+(1+X)+X^2+3*X*X*X+2*X*X+metricPolynomial+linearPolynomial +
+    quadraticPolynomial+radiusPolynomial+pressurePolynomialEnvelope +
     multiplierPolynomial+termPolynomial P
 
 theorem metricPolynomial_eval (X : ℝ) : metricPolynomial.eval X=metricEnvelope X := by
@@ -67,7 +92,8 @@ theorem linearPolynomial_eval (X : ℝ) : linearPolynomial.eval X=linearEnvelope
     Polynomial.eval_mul,Polynomial.eval_ofNat,Polynomial.eval_X]
 
 theorem quadraticPolynomial_eval (X : ℝ) : quadraticPolynomial.eval X=quadraticEnvelope X := by
-  simp only [quadraticPolynomial,coefficientPolynomial_eval,quadraticEnvelope,correctionQuadraticEnvelope,
+  simp only [quadraticPolynomial, coefficientPolynomial_eval, quadraticEnvelope,
+      correctionQuadraticEnvelope,
     Polynomial.eval_mul,Polynomial.eval_ofNat,Polynomial.eval_X]
 
 theorem radiusPolynomial_eval (X : ℝ) : radiusPolynomial.eval X=radiusEnvelope X := by
@@ -85,7 +111,7 @@ theorem multiplierPolynomial_eval (X : ℝ) : multiplierPolynomial.eval X=multip
     coefficientPolynomial_eval,Polynomial.eval_X]
 
 theorem termPolynomial_eval (P : ℝ) [Fact (0 < P)] (X : ℝ) : (termPolynomial P).eval X=termEnvelope
-  P X := by
+    P X := by
   simp only [termPolynomial,termEnvelope,Polynomial.eval_mul,Polynomial.eval_add,
     Polynomial.eval_ofNat,Polynomial.eval_one,Polynomial.eval_C,multiplierPolynomial_eval]
 
@@ -96,11 +122,13 @@ theorem primitivePolynomial_eval (P : ℝ) [Fact (0 < P)] (X : ℝ) :
     metricPolynomial_eval,linearPolynomial_eval,quadraticPolynomial_eval,radiusPolynomial_eval,
     pressurePolynomialEnvelope_eval,multiplierPolynomial_eval,termPolynomial_eval]
 
+/-- Primitive constant, given by `coefficientCost (primitivePolynomial P)`. -/
 def primitiveConstant (P : ℝ) [Fact (0 < P)] : ℝ := coefficientCost (primitivePolynomial P)
+/-- Primitive power, given by `(primitivePolynomial P).natDegree`. -/
 def primitivePower (P : ℝ) [Fact (0 < P)] : ℕ := (primitivePolynomial P).natDegree
 
 theorem primitiveConstant_pos (P : ℝ) [Fact (0 < P)] : 0 < primitiveConstant P :=
-  coefficientCost_pos _
+    coefficientCost_pos _
 
 theorem primitiveEnvelope_power (P : ℝ) [Fact (0 < P)] (X : ℝ) (hX : 1 ≤ X) :
     primitiveEnvelope P X ≤ primitiveConstant P*X^(primitivePower P) := by

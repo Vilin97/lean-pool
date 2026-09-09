@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Regularity and locality of the concrete Navier--Stokes residual
@@ -19,6 +16,9 @@ All operators below are the ordinary derivatives in `ProblemStatement`.
 The main regularity theorem is on an open spacetime domain; it does not
 differentiate an unspecified extension through a time boundary.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ResidualRegularity
 

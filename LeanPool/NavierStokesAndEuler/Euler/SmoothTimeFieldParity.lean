@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldTimeJets
-public import Mathlib.Algebra.Group.EvenFunction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Spatial derivatives and genuine within-time derivatives preserve
 the expected parity, including the closed interval's endpoints. -/
+
+@[expose] public section
+
 
 noncomputable section
 

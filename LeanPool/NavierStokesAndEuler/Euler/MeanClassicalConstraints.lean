@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPressurePotential
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.CanonicalGraphPotential
+import LeanPool.NavierStokesAndEuler.Euler.MeanPressurePotential
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+
+/-! Classical divergence and pressure identities for the reconstructed mean fields. -/
 
 @[expose] public section
 
-/-! Classical divergence and pressure identities for the reconstructed mean fields. -/
 
 noncomputable section
 

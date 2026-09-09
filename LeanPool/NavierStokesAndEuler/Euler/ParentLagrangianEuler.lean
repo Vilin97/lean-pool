@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketPhysicalCoefficients
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
 
 /-! A true particle velocity law and the actual Euler equation determine
 the particle acceleration. Continuity extends the identity to both
 endpoints; no acceleration or pressure-force match is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +25,7 @@ open scoped Topology
 
 variable (A : EulerParentPacketFrames.Parent)
 
+/-- Real position, given by `x+A.displacement.realField A.T A.T_pos.le t x`. -/
 def realPosition (t : ℝ) (x : Space) : Space :=
   x+A.displacement.realField A.T A.T_pos.le t x
 
@@ -40,9 +42,9 @@ theorem position_time (t : Icc (0 : ℝ) A.T) (x : Space) :
 
 theorem acceleration_eq_neg_gradient
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ)
-    (hvelocity : ∀ (t : Icc (0 : ℝ) A.T) x, A.velocity.field t x=u (t,A.position t x))
-    (hdiff : ∀ t ∈ Ioo 0 A.T, ∀ x, DifferentiableAt ℝ u (t,x))
-    (heuler : ∀ t ∈ Ioo 0 A.T, ∀ x, EulerLagrangian.momentumResidual u p (t,x)=0)
+    (hvelocity : ∀ (t : Icc (0 : ℝ) A.T) x, A.velocity.field t x = u (t, A.position t x))
+    (hdiff : ∀ t ∈ Ioo 0 A.T, ∀ x, DifferentiableAt ℝ u (t, x))
+    (heuler : ∀ t ∈ Ioo 0 A.T, ∀ x, EulerLagrangian.momentumResidual u p (t, x) = 0)
     (t : Icc (0 : ℝ) A.T) (ht : (t : ℝ) ∈ Ioo 0 A.T) (x : Space) :
     A.acceleration.field t x= -gradient (fun y => p (t,y)) (A.position t x) := by
   have hp := (A.position_time t x).hasDerivAt (Icc_mem_nhds ht.1 ht.2)
@@ -71,10 +73,10 @@ theorem acceleration_physical_of_euler
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ)
     (force : Icc (0 : ℝ) A.T → Space → Space)
     (hforce : Continuous (Function.uncurry force))
-    (hgradient : ∀ (t : Icc (0 : ℝ) A.T) x, gradient (fun y => p (t,y)) x=force t x)
-    (hvelocity : ∀ (t : Icc (0 : ℝ) A.T) x, A.velocity.field t x=u (t,A.position t x))
-    (hdiff : ∀ t ∈ Ioo 0 A.T, ∀ x, DifferentiableAt ℝ u (t,x))
-    (heuler : ∀ t ∈ Ioo 0 A.T, ∀ x, EulerLagrangian.momentumResidual u p (t,x)=0)
+    (hgradient : ∀ (t : Icc (0 : ℝ) A.T) x, gradient (fun y => p (t, y)) x = force t x)
+    (hvelocity : ∀ (t : Icc (0 : ℝ) A.T) x, A.velocity.field t x = u (t, A.position t x))
+    (hdiff : ∀ t ∈ Ioo 0 A.T, ∀ x, DifferentiableAt ℝ u (t, x))
+    (heuler : ∀ t ∈ Ioo 0 A.T, ∀ x, EulerLagrangian.momentumResidual u p (t, x) = 0)
     (t : Icc (0 : ℝ) A.T) (x : Space) :
     A.acceleration.field t x= -force t (A.position t x) := by
   let f : ℝ → Space := fun s => A.acceleration.realField A.T A.T_pos.le s x

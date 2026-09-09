@@ -6,12 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureSource
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderClassicalEquation
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
 
 /-!
 # The solved normal pressure source has zero angular mean
@@ -20,6 +19,9 @@ The zero mode is proved for the actual Duhamel solution and then transferred
 to its continuous scalar representative. No zero-mean condition on the
 solution or on its pressure residual is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,11 +36,11 @@ variable (P : ℝ) [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported P Space S hS)) (a₀ : Supported P U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported P Space S hS)) (a₀ : Supported P U S hS)
   (M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
-  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖^2)
+  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
 
 theorem pressureSource_average_zero
     (hf₀ : ∀ t, average P (f t : CylinderL2 P Space) = 0)
@@ -75,13 +77,13 @@ variable (P : ℝ) [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (S : Set Space) (hS : MeasurableSet S) (hSc : IsCompact S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported P Space S hS)) (a₀ : Supported P U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported P Space S hS)) (a₀ : Supported P U S hS)
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)))
   (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a (a₀ : CylinderL2 P U)))
   (M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
-  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖^2)
+  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
 
 omit [Fact (0 < P)] in
 include hcm hm in
@@ -95,7 +97,7 @@ theorem normal_ne_zero_of_lower (t : Icc (0 : ℝ) T) (x : Space) :
 /-- The actual scalar L² class represents the literal normal quotient. -/
 theorem pressureSource_ae_normalResidual (t : Icc (0 : ℝ) T) :
     (pressureSource P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm t : CylinderL2 P ℝ) =ᵐ[liftMeasure
-      P]
+        P]
       normalResidual P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m t := by
   filter_upwards [pressureSource_ae P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm t,
     field_ae P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ t,

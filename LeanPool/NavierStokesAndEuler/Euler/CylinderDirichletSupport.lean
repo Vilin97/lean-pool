@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
+import LeanPool.NavierStokesAndEuler.Euler.LpOperatorFieldAlgebra
+
+/-! Spatial support is preserved by the actual zero-endpoint history inverse. -/
 
 @[expose] public section
 
-/-! Spatial support is preserved by the actual zero-endpoint history inverse. -/
 
 noncomputable section
 
@@ -23,6 +27,8 @@ variable (P : ℝ) [Fact (0 < P)] {V : Type*}
   [NormedAddCommGroup V] [InnerProductSpace ℝ V]
   (S : Set Space) (hS : MeasurableSet S)
 
+/-- Spatial cutoff, given by `cutoffOperator (liftMeasure P) (spatialSet P S)
+(spatialSet_measurable P S hS)`. -/
 def spatialCutoff : CylinderL2 P V →L[ℝ] CylinderL2 P V :=
   cutoffOperator (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS)
 
@@ -31,12 +37,12 @@ theorem spatialCutoff_norm : ‖spatialCutoff (V := V) P S hS‖ ≤ 1 := by
   intro u
   change ‖cutoff (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS) u‖ ≤ 1*‖u‖
   simpa only [one_mul] using cutoff_norm (liftMeasure P) (spatialSet P S) (spatialSet_measurable P
-    S hS) u
+      S hS) u
 
 theorem spatialCutoff_fix (u : CylinderL2 P V) :
     u ∈ Supported P V S hS ↔ spatialCutoff P S hS u = u :=
   (mem_supportedSpace_iff (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS) u).trans
-    eq_comm
+      eq_comm
 
 theorem spatialCutoff_adjoint [CompleteSpace V] :
     (spatialCutoff (V := V) P S hS).adjoint = spatialCutoff P S hS :=
@@ -45,7 +51,7 @@ theorem spatialCutoff_adjoint [CompleteSpace V] :
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 omit [CompactSpace K] in
-theorem spatialCutoff_path_fix (f : C(K,CylinderL2 P V))
+theorem spatialCutoff_path_fix (f : C(K, CylinderL2 P V))
     (hf : ∀ t, f t ∈ Supported P V S hS) :
     (spatialCutoff P S hS).compLeftContinuous ℝ K f = f := by
   apply ContinuousMap.ext
@@ -74,7 +80,7 @@ theorem frame_cutoff (t : Icc (0 : ℝ) T) (u : CylinderL2 P U) :
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem frameDerivative_cutoff (t : Icc (0 : ℝ) T) (u : CylinderL2 P U) :
     D.frameDerivative P t (spatialCutoff P S hS u) = spatialCutoff P S hS (D.frameDerivative P t u)
-      :=
+        :=
   EulerLpOperatorField.full_cutoff (liftMeasure P) (spatialSet P S)
     (spatialSet_measurable P S hS) (fieldLift P (D.Q₁ t)) u
 
@@ -112,7 +118,7 @@ theorem velocityPath_cutoff (f : TimeLp T (CylinderL2 P E)) (t : Icc (0 : ℝ) T
     (D.frame_cutoff_back P S hS) (D.frameDerivative_cutoff_back P S hS)
     (D.hessian_cutoff P S hS) f t
 
-variable (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+variable (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
   (hf : ∀ t, f t ∈ Supported P E S hS)
 
 include hf in

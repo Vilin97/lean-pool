@@ -8,14 +8,20 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSmoothTimeField
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionSmoothTimeField
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftEquation
+public import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
+import LeanPool.NavierStokesAndEuler.Euler.CylinderMeasureDescent
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 
 /-! Actual smooth four-dimensional coefficients of the corrected packet.
 The lifted field equals the constructed exact velocity, has the genuine
 time derivative, is periodic, and has zero divergence. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,18 +36,24 @@ open scoped ContDiff BoundedContinuousFunction
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {hT : 0 < T} {A : Data P T}
   (B : Budget P hT A) {raw raw_t : VectorField}
 
+/-- Packet coefficient, given by `G.toSmoothTimeField.add (B.correctionCoefficient P)`. -/
 def Budget.packetCoefficient (G : Field P T raw) :
     SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Space :=
   G.toSmoothTimeField.add (B.correctionCoefficient P)
 
+/-- Packet derivative coefficient, given by `H.toSmoothTimeField.add
+(B.correctionDerivativeCoefficient P)`. -/
 def Budget.packetDerivativeCoefficient (H : Field P T raw_t) :
     SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Space :=
   H.toSmoothTimeField.add (B.correctionDerivativeCoefficient P)
 
+/-- Lifted packet coefficient, given by `lift (B.packetCoefficient P G) A.κ A.direction`. -/
 def Budget.liftedPacketCoefficient (G : Field P T raw) :
     SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent :=
   lift (B.packetCoefficient P G) A.κ A.direction
 
+/-- Lifted packet derivative coefficient, given by `lift (B.packetDerivativeCoefficient P H) A.κ
+A.direction`. -/
 def Budget.liftedPacketDerivativeCoefficient (H : Field P T raw_t) :
     SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent :=
   lift (B.packetDerivativeCoefficient P H) A.κ A.direction
@@ -49,7 +61,7 @@ def Budget.liftedPacketDerivativeCoefficient (H : Field P T raw_t) :
 theorem Budget.packetCoefficient_eq_corrected (G : Field P T raw)
     (hG : A.approximation = G.toFieldTower) (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     (B.packetCoefficient P G).field t x = (B.correctedFieldTower P).pointField t (coveringMap P x)
-      := by
+        := by
   rw [B.correctedFieldTower_eq P, FieldTower.add_pointField, hG]
   change G.toSmoothTimeField.field t x + (B.fieldTower P).pointField t (coveringMap P x) = _
   rw [G.toSmoothTimeField_apply]
@@ -62,7 +74,7 @@ theorem Budget.liftedPacketCoefficient_eq_corrected (G : Field P T raw)
     (hG : A.approximation = G.toFieldTower) (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     (B.liftedPacketCoefficient P G).field t x =
       transportDirection A.κ A.direction ((B.correctedFieldTower P).pointField t (coveringMap P x))
-        := by
+          := by
   change transportDirection A.κ A.direction ((B.packetCoefficient P G).field t x) = _
   rw [B.packetCoefficient_eq_corrected P G hG]
 
@@ -94,7 +106,7 @@ theorem Budget.liftedPacketCoefficient_trace (G : Field P T raw)
     (hG : A.approximation = G.toFieldTower) (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     LinearMap.trace ℝ LiftTangent
       (fderiv ℝ ((B.liftedPacketCoefficient P G).field t : LiftTangent → LiftTangent)
-        x).toLinearMap = 0 := by
+          x).toLinearMap = 0 := by
   have he : ((B.liftedPacketCoefficient P G).field t : LiftTangent → LiftTangent) =
       coverVelocity P A.κ A.direction ((B.correctedFieldTower P).pointField t) :=
     funext (B.liftedPacketCoefficient_eq_corrected P G hG t)

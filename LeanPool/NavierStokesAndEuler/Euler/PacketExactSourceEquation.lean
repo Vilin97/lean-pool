@@ -7,14 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedJointDifferentiability
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionSourceData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateResidual
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
-
-@[expose] public section
 
 /-! The actual pointwise equation of the exact packet, expressed with the
 prescribed deformation and its genuine time and spatial derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 

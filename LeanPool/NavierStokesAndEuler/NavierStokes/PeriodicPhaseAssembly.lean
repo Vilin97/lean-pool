@@ -6,11 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalParticularWave
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
 
 /-!
 # A periodic phase with the actual native clock germs
@@ -20,6 +17,9 @@ core. Its clock-weighted copies are summed on the common cover. The phase
 is therefore periodic on the full auxiliary lift and retains the original
 clock, with every derivative, on each padded wave core.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,8 +63,11 @@ theorem intervalCutoff_support {a b d : ℝ} (hd : 0 < d) :
 /-- Input geometry for the compact clock cutoff. The full sampled native
 path and all wave cutoff supports are placed inside `core`. -/
 structure ClockWindow where
+  /-- Lower of `ClockWindow`, of type `Plane`. -/
   lower : Plane
+  /-- Upper of `ClockWindow`, of type `Plane`. -/
   upper : Plane
+  /-- Padding of `ClockWindow`, of type `ℝ`. -/
   padding : ℝ
   padding_pos : 0 < padding
 
@@ -72,17 +75,24 @@ namespace ClockWindow
 
 variable (w : ClockWindow)
 
+/-- Core, given by `Icc w.lower.1 w.upper.1 ×ˢ Icc w.lower.2 w.upper.2`. -/
 noncomputable def core : Set Plane :=
   Icc w.lower.1 w.upper.1 ×ˢ Icc w.lower.2 w.upper.2
 
+/-- Plateau, given by `Ioo (w.lower.1 - w.padding) (w.upper.1 + w.padding) ×ˢ Ioo (w.lower.2 -
+w.padding) (w.upper.2 + w.padding)`. -/
 noncomputable def plateau : Set Plane :=
   Ioo (w.lower.1 - w.padding) (w.upper.1 + w.padding) ×ˢ
     Ioo (w.lower.2 - w.padding) (w.upper.2 + w.padding)
 
+/-- Outer, given by `Icc (w.lower.1 - 2 * w.padding) (w.upper.1 + 2 * w.padding) ×ˢ Icc
+(w.lower.2 - 2 * w.padding) (w.upper.2 + 2 * w.padding)`. -/
 noncomputable def outer : Set Plane :=
   Icc (w.lower.1 - 2 * w.padding) (w.upper.1 + 2 * w.padding) ×ˢ
     Icc (w.lower.2 - 2 * w.padding) (w.upper.2 + 2 * w.padding)
 
+/-- Cutoff, given by `intervalCutoff w.lower.1 w.upper.1 w.padding z.1 * intervalCutoff
+w.lower.2 w.upper.2 w.padding z.2`. -/
 noncomputable def cutoff (z : Plane) : ℝ :=
   intervalCutoff w.lower.1 w.upper.1 w.padding z.1 *
     intervalCutoff w.lower.2 w.upper.2 w.padding z.2
@@ -267,9 +277,11 @@ section Phases
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Phase, given by `A z.1 - periodicClock g χ z.2 * B z.1`. -/
 noncomputable def phase (g : Geometry) (χ : Plane → ℝ) (A B : P → ℝ)
     (z : P × Plane) : ℝ := A z.1 - periodicClock g χ z.2 * B z.1
 
+/-- Native phase, given by `A z.1 - (g.coordinates k z.2).2 * B z.1`. -/
 noncomputable def nativePhase (g : Geometry) (A B : P → ℝ) (k : Frequency)
     (z : P × Plane) : ℝ := A z.1 - (g.coordinates k z.2).2 * B z.1
 
@@ -415,16 +427,21 @@ end Phases
 
 /-! ## The manuscript phase in physical slow-coordinate order `(R,(T,Z))` -/
 
+/-- Parameter: an abbreviation for `PhysicalParticularWave.Parameter`. -/
 abbrev Parameter := PhysicalParticularWave.Parameter
 
+/-- Slow swap, given by `(p.1, (p.2.2, p.2.1))`. -/
 noncomputable def slowSwap (p : Parameter) : PhaseCalculus.Slow := (p.1, (p.2.2, p.2.1))
 
+/-- Profile intercept, given by `(pz / ε) * s.2.2 + x0 * s.1`. -/
 noncomputable def profileIntercept (ε pz x0 : ℝ) (s : Parameter) : ℝ :=
   (pz / ε) * s.2.2 + x0 * s.1
 
+/-- Profile rate, given by `p * F s + pz * G s`. -/
 noncomputable def profileRate (p pz : ℝ) (F G : Parameter → ℝ) (s : Parameter) : ℝ :=
   p * F s + pz * G s
 
+/-- Profile phase, given by `phase g χ (profileIntercept ε pz x0) (profileRate p pz F G)`. -/
 noncomputable def profilePhase (g : Geometry) (χ : Plane → ℝ) (ε p pz x0 : ℝ)
     (F G : Parameter → ℝ) : Parameter × Plane → ℝ :=
   phase g χ (profileIntercept ε pz x0) (profileRate p pz F G)
@@ -547,7 +564,7 @@ theorem transportPhase_native_germ (g : Geometry) (w : ClockWindow)
     (copy : Frequency) {z : Q × Plane} (hφ : ContinuousAt φ z.1)
     (hz : CopySolveCompatibility.nativeTimeMap shift rate
       ((CopySolveCompatibility.transportGeometry g gap shift rate hrate).coordinates copy z.2) ∈
-        w.core) :
+          w.core) :
     transportPhase (phase g w.cutoff A B) φ gap K Kr =ᶠ[𝓝 z]
       nativePhase (CopySolveCompatibility.transportGeometry g gap shift rate hrate)
         (fun p => (Kr / K) * (A (φ p) - shift * B (φ p)))
@@ -580,7 +597,7 @@ theorem transportPhase_native_jets (g : Geometry) (w : ClockWindow)
     (copy : Frequency) {z : Q × Plane} (hφ : ContinuousAt φ z.1)
     (hz : CopySolveCompatibility.nativeTimeMap shift rate
       ((CopySolveCompatibility.transportGeometry g gap shift rate hrate).coordinates copy z.2) ∈
-        w.core)
+          w.core)
     (m : ℕ) :
     iteratedFDeriv ℝ m (transportPhase (phase g w.cutoff A B) φ gap K Kr) z =
       iteratedFDeriv ℝ m
@@ -639,7 +656,7 @@ theorem physicalBlock_weighted (b : CorrectionState.HarmonicBlock (Parameter × 
       (physicalBlock b h Q gap reference angular g w A B).frequency reference *
         (physicalBlock b h Q gap reference angular g w A B).phase reference
           (PhysicalParticularWave.parameterChange h (Q n) (Q reference) p, coverPower (gap n) Y) :=
-            by
+              by
   rw [physicalBlock_reference b h Q gap reference angular g w A B hQ hgap (hK reference)]
   exact transportPhase_weighted _ _ _ (hK n) _ _
 
@@ -858,7 +875,7 @@ theorem physicalBlock_native_germ (b : CorrectionState.HarmonicBlock (Parameter 
     (n : ℕ) (shift rate : ℝ) (hrate : rate ≠ 0) (copy : Frequency) {z : Parameter × Plane}
     (hz : CopySolveCompatibility.nativeTimeMap shift rate
       ((CopySolveCompatibility.transportGeometry g (gap n) shift rate hrate).coordinates copy z.2)
-        ∈ w.core) :
+          ∈ w.core) :
     (physicalBlock b h Q gap reference angular g w A B).phase n =ᶠ[𝓝 z]
       nativePhase (CopySolveCompatibility.transportGeometry g (gap n) shift rate hrate)
         (fun p => (b.frequency reference / b.frequency n) *
@@ -872,7 +889,7 @@ theorem physicalBlock_native_germ (b : CorrectionState.HarmonicBlock (Parameter 
 /-- Exact naturality of the complete carrier, including its unchanged
 integer angular character, on the free lift. -/
 theorem physicalBlock_carrier_natural (base : LinearWaveBounds.WaveCoefficients ((Parameter × ℝ) ×
-  Plane))
+    Plane))
     (b : CorrectionState.HarmonicBlock (Parameter × Plane))
     (h : ℝ) (Q : ℕ → ℝ) (gap : ℕ → ℕ) (reference : ℕ) (angular : ℤ)
     (g : Geometry) (w : ClockWindow) (A B : Parameter → ℝ)
@@ -885,7 +902,7 @@ theorem physicalBlock_carrier_natural (base : LinearWaveBounds.WaveCoefficients 
       ((ParticularWaveAssembly.actualCarrier base
         (physicalBlock b h Q gap reference angular g w A B) j).phase reference)
         ((PhysicalParticularWave.parameterChange h (Q n) (Q reference) p, θ), coverPower (gap n) Y)
-          := by
+            := by
   let Bp := physicalBlock b h Q gap reference angular g w A B
   change HarmonicCalculus.carrier ((j : ℝ) * b.frequency n)
       (angularLift (Bp.phase n) ((angular : ℝ) / b.frequency n)) ((p, θ), Y) =

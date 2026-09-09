@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedCoefficientSmooth
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Spatial translation calculus for coefficients uniformly on a compact time interval. -/
 
 @[expose] public section
 
-/-! Spatial translation calculus for coefficients uniformly on a compact time interval. -/
 
 noncomputable section
 
@@ -25,11 +26,20 @@ section Paths
 variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCoefficientPath1 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPath2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instMeanCoefficientPath3 : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCoefficientPath4 : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
 
+/-- Translate coefficient path as an element of `C(K, Space →ᵇ V)`. -/
 def translateCoefficientPath (A : C(K, Space →ᵇ V)) (a : Space) : C(K, Space →ᵇ V) :=
   (BoundedContinuousFunction.compContinuousCLM V ℝ
     ⟨fun x : Space => x+a, continuous_id.add continuous_const⟩).compLeftContinuous ℝ K A
@@ -38,6 +48,8 @@ omit [CompactSpace K] in
 @[simp] theorem translateCoefficientPath_apply (A : C(K, Space →ᵇ V)) (a : Space) (t : K) :
     translateCoefficientPath A a t = translated (A t) a := rfl
 
+/-- Path direction, given by `⟨fun t => fieldDerivativeMap (DA t) a, ((derivativeBundling (V :=
+V)).continuous.comp DA.continuous).clm_apply continuous_const⟩`. -/
 def pathDirection (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) (a : Space) : C(K, Space →ᵇ V) :=
   ⟨fun t => fieldDerivativeMap (DA t) a,
     ((derivativeBundling (V := V)).continuous.comp DA.continuous).clm_apply continuous_const⟩
@@ -53,12 +65,14 @@ theorem pathDirection_norm_le (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) (a :
   exact (fieldDirection_norm_le (DA t) a).trans
     (mul_le_mul_of_nonneg_right (DA.norm_coe_le_norm t) (norm_nonneg a))
 
+/-- Path derivative linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def pathDerivativeLinear (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) :
     Space →ₗ[ℝ] C(K, Space →ᵇ V) where
   toFun := pathDirection DA
   map_add' a b := by ext t x; exact (DA t x).map_add a b
   map_smul' c a := by ext t x; exact (DA t x).map_smul c a
 
+/-- Path derivative map, bundling `toLinearMap`, `cont`. -/
 def pathDerivativeMap (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) :
     Space →L[ℝ] C(K, Space →ᵇ V) where
   toLinearMap := pathDerivativeLinear DA
@@ -72,12 +86,14 @@ theorem pathDerivativeMap_norm_le (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) 
     ‖pathDerivativeMap DA‖ ≤ ‖DA‖ :=
   (pathDerivativeMap DA).opNorm_le_bound (norm_nonneg DA) (pathDirection_norm_le DA)
 
+/-- Path derivative bundling linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def pathDerivativeBundlingLinear : C(K, Space →ᵇ (Space →L[ℝ] V)) →ₗ[ℝ]
     (Space →L[ℝ] C(K, Space →ᵇ V)) where
   toFun := pathDerivativeMap
   map_add' A B := by ext v t x; rfl
   map_smul' c A := by ext v t x; rfl
 
+/-- Path derivative bundling, bundling `toLinearMap`, `cont`. -/
 def pathDerivativeBundling : C(K, Space →ᵇ (Space →L[ℝ] V)) →L[ℝ]
     (Space →L[ℝ] C(K, Space →ᵇ V)) where
   toLinearMap := pathDerivativeBundlingLinear
@@ -124,9 +140,12 @@ theorem translateCoefficientPath_hasFDerivAt (A : C(K, Space →ᵇ V))
 
 end Paths
 
-private local instance : NormedAddCommGroup Field := inferInstance
-private local instance : NormedSpace ℝ Field := inferInstance
+/-- Cache the standard `NormedAddCommGroup Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPath5 : NormedAddCommGroup Field := inferInstance
+/-- Cache the standard `NormedSpace ℝ Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPath6 : NormedSpace ℝ Field := inferInstance
 
+/-- Translated path: an abbreviation for `translateCoefficientPath A a`. -/
 abbrev translatedPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) (a : Space) :
     C(Icc (0 : ℝ) T, Field) := translateCoefficientPath A a
 

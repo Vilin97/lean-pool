@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FieldProduct
-public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1FieldProduct
 
 /-!
 Initial-zero versions of the actual H¹ product and reconstruction lemmas.
@@ -18,13 +16,16 @@ These permit nonzero terminal values and hence explicit affine coordinate
 lifts in the fixed-space endpoint problem.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerInitialTimePrimitive
 
 open MeasureTheory Set ContinuousLinearMap EulerTimeLp EulerTerminalTimePrimitive
   EulerVolterraConvolution EulerTimeH1OperatorProduct EulerTimeH1FieldProduct
-  EulerTimeWeakDerivative
+
 
 variable {E F : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
@@ -59,9 +60,12 @@ theorem initialPrimitiveTimeLp_eq_primitive_of_trace_zero
 
 variable (T : ℝ) (hT : 0 ≤ T) (A A₁ : C(Icc (0 : ℝ) T, E →L[ℝ] F))
 
+/-- Initial product derivative, given by `(timeMultiplier T hT A₁).comp (initialPrimitiveTimeLp
+T hT) + timeMultiplier T hT A`. -/
 def initialProductDerivative : TimeLp T E →L[ℝ] TimeLp T F :=
   (timeMultiplier T hT A₁).comp (initialPrimitiveTimeLp T hT) + timeMultiplier T hT A
 
+/-- Initial product primitive, given by `extendPath T hT A t (initialRealPrimitive T u t)`. -/
 def initialProductPrimitive (u : TimeLp T E) (t : ℝ) : F :=
   extendPath T hT A t (initialRealPrimitive T u t)
 
@@ -125,7 +129,7 @@ theorem constantFieldOperator_ae (x : E) :
 theorem initialPrimitive_constantFieldOperator (x : E) (t : Icc (0 : ℝ) T) :
     initialPrimitive T hT (constantFieldOperator T hT x) t = (t : ℝ) • x := by
   have hlin : AbsolutelyContinuousOnInterval (fun s : ℝ => s • x) 0 T :=
-    (toSpanSingleton ℝ x).lipschitzWith.lipschitzOnWith.absolutelyContinuousOnInterval
+    (toSpanSingleton ℝ x).lipschitz.lipschitzOnWith.absolutelyContinuousOnInterval
   apply Eq.symm
   apply eq_initialRealPrimitive_of_ac_hasDerivAt_ae T hT (constantFieldOperator T hT x)
     (fun s : ℝ => s • x) hlin _ (zero_smul ℝ x) t t.property

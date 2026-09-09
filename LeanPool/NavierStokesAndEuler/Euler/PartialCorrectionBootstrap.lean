@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyBootstrap
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionBudgetRestriction
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionContinuation
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionBudgetRestriction
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionContinuation
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyBootstrap
+
+/-! The actual nonlinear Gevrey bootstrap applies uniformly to every partial correction solution. -/
 
 @[expose] public section
 
-/-! The actual nonlinear Gevrey bootstrap applies uniformly to every partial correction solution. -/
 
 noncomputable section
 
@@ -20,7 +23,7 @@ namespace EulerPartialCorrectionBootstrap
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerSobolevCoefficientPressure
-    EulerCorrectionLowerData
+      EulerCorrectionLowerData
   EulerCorrectionEnergyData EulerCorrectionEnergyMajorants EulerCorrectionEnergyBootstrap
   EulerCorrectionBudgetRestriction EulerCorrectionContinuation EulerGevreyMetricEstimate
   EulerQuadraticSource EulerVolterraConvolution EulerSobolevHeat
@@ -28,9 +31,10 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Every actual partial solution inherits the same quantitative shrinking-radius estimate from the fixed global data. -/
+/-- Every actual partial solution inherits the same quantitative shrinking-radius estimate from the
+fixed global data. -/
 theorem partial_correction_bootstrap {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS : 0 ≤ S)
-    (D : CorrectionData period (q+1) (Icc (0 : ℝ) S))
+    (D : CorrectionData period (q + 1) (Icc (0 : ℝ) S))
     (KG : ∀ t, CoefficientJet period standardDirection q (D.metric.coefficient t))
     (KL : ∀ t, CoefficientJet period standardDirection q (D.linear.coefficient t))
     (KQ : ∀ i t, CoefficientJet period standardDirection q ((D.quadratic i).coefficient t))
@@ -38,24 +42,24 @@ theorem partial_correction_bootstrap {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS : 0 
     (hLq : Continuous (fun t => coefficientSobolevOperator period (KL t)))
     (hQq : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ i t)))
     (hG : Continuous (fun t => (D.metric.coefficient t).operator))
-    (N : ℕ) (hN : N+6 ≤ q+1) (R : C(Icc (0 : ℝ) S,ℝ))
-    (B : SpatialBudget period (by omega : 6 ≤ q+1) D N R) (K : MetricBudget period S hS D)
+    (N : ℕ) (hN : N + 6 ≤ q + 1) (R : C(Icc (0 : ℝ) S, ℝ))
+    (B : SpatialBudget period (by omega : 6 ≤ q + 1) D N R) (K : MetricBudget period S hS D)
     (C Δ ρ0 : ℝ) (hC : combinedConstant period B K ≤ C) (hΔ : 0 < Δ) (hΔ1 : Δ ≤ 1) (hρ0 : 0 < ρ0)
-    (hdecay : 2*C*(B.B0+Δ)*S ≤ ρ0/2) (hscale : ρ0*B.Rc ≤ 1)
-    (hsmall : 2*B.residual*Real.exp (3*C*S) ≤ Δ/2)
-    (hR : ∀ t, R t = ρ0-2*C*(B.B0+Δ)*t.val)
+    (hdecay : 2 * C * (B.B0 + Δ) * S ≤ ρ0 / 2) (hscale : ρ0 * B.Rc ≤ 1)
+    (hsmall : 2 * B.residual * Real.exp (3 * C * S) ≤ Δ / 2)
+    (hR : ∀ t, R t = ρ0 - 2 * C * (B.B0 + Δ) * t.val)
     (ν : ℝ) (hν : 0 < ν) (hν1 : ν ≤ 1)
     (hz : ∀ t, value period (D.approximation t) ∈ divergenceFreeSpace period D.κ D.direction)
     (T : ℝ) (hT : 0 ≤ T) (hTS : T ≤ S)
-    (e : C(Icc (0 : ℝ) T,SobolevSpace period (q+1)))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hsol : ∀ t, e t = quadraticDuhamel period ν hν hT hTS
       ((lowerData period D KG KL KQ hGq hLq hQq).coefficients period hq) 0 e t) :
     ∀ t : Icc (0 : ℝ) T,
       energyNorm period N hN (R (timeInclusion hTS t)) (K.operatorPath period (timeInclusion hTS
-        t)) (e t)
+          t)) (e t)
         ≤ 2*B.residual*Real.exp (3*C*t.val) ∧
       energyNorm period N hN (R (timeInclusion hTS t)) (K.operatorPath period (timeInclusion hTS
-        t)) (e t) ≤ Δ/2 := by
+          t)) (e t) ≤ Δ/2 := by
   let f := timeInclusion hTS
   let Dt := D.comp period f
   let Bt := EulerCorrectionBudgetRestriction.SpatialBudget.restrict period B hTS

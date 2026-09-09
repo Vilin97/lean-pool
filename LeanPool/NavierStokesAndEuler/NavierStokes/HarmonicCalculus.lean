@@ -9,9 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GraphCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Actual differential calculus of a single harmonic
@@ -21,6 +19,9 @@ The direction fields may vary with the point, so their derivatives are included
 in the iterated operators.  The cylindrical formulas use the unscaled angular
 direction, with its factors of `R⁻¹` and `R⁻²` displayed explicitly.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -316,12 +317,14 @@ theorem cylindricalLaplacian_mode_angular_independent {U : Set E} (R : E → ℝ
 
 /-! ## Divergence and the longitudinal gain -/
 
+/-- Complex vector: an abbreviation for `Fin 3 → ℂ`. -/
 abbrev ComplexVector := Fin 3 → ℂ
 
 /-- Complex-bilinear contraction with a real normal. -/
 noncomputable def normalDot (n : EuclideanSpace ℝ (Fin 3)) (a : ComplexVector) : ℂ :=
   (n 0 : ℂ) * a 0 + (n 1 : ℂ) * a 1 + (n 2 : ℂ) * a 2
 
+/-- Vector mode, defined pointwise by `mode κ Φ (fun y => a y i) x`. -/
 noncomputable def vectorMode (κ : ℝ) (Φ : E → ℝ) (a : E → ComplexVector)
     (x : E) : ComplexVector := fun i => mode κ Φ (fun y => a y i) x
 

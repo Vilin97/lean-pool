@@ -6,11 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseChartJets
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSumBounds
 
 /-!
 # The actual normalized radial base component
@@ -21,6 +18,9 @@ factor is `Q^h`.  The exact stream formula includes the factor `1/2` in
 `AxisymmetricFields.velocity_zero`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.BaseRadialJets
@@ -28,8 +28,10 @@ namespace NavierStokes.BaseRadialJets
 open Set Filter Function BaseChartJets PhaseJetBounds PrimaryPulseBounds
 open scoped ContDiff Topology BigOperators
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
+/-- Average sequence, defined pointwise by `ProfileHistories.average (d.axial j)`. -/
 noncomputable def averageSequence (d : SlowBorelBase.Coefficients) : ℕ → Inner → ℝ :=
   fun j => ProfileHistories.average (d.axial j)
 
@@ -49,6 +51,8 @@ theorem averageSequence_admissible {a : ℕ → ℕ} {h C : ℝ}
   rw [averageSequence_eq_component C d]
   exact SlowBorelBase.admissible_component hd ha 0
 
+/-- Band input, given by `(1 - Q * p.2.2, (Q * p.1 ^ 2 / 2, Q ^ CoordinateAlgebra.D h *
+p.2.1))`. -/
 noncomputable def bandInput (h Q : ℝ) (p : Slow) : Chart :=
   (1 - Q * p.2.2, (Q * p.1 ^ 2 / 2, Q ^ CoordinateAlgebra.D h * p.2.1))
 
@@ -73,7 +77,7 @@ theorem bandInput_deriv_Z (h Q : ℝ) (p : Slow) :
     (hasDerivAt_const 0 p.1).prodMk
       (((hasDerivAt_id 0).const_add p.2.1).prodMk (hasDerivAt_const 0 p.2.2))
   have hd := ((bandInput_smooth h Q).differentiable (by
-    simp)).differentiableAt.hasFDerivAt.comp_hasDerivAt 0 hc
+      simp)).differentiableAt.hasFDerivAt.comp_hasDerivAt 0 hc
   have hd' : HasDerivAt (fun t : ℝ => bandInput h Q (p.1, (p.2.1 + t, p.2.2)))
       (0, (0, Q ^ CoordinateAlgebra.D h)) 0 := by
     have hdZ := ((hasDerivAt_id 0).const_add p.2.1).const_mul (Q ^ CoordinateAlgebra.D h)
@@ -130,15 +134,15 @@ theorem normalizedStream_deriv_Z {a : ℕ → ℕ} (ha : StrictMono a) {h C Q : 
     linarith [mul_pos hQ hT]
   have hs := (SlowBorelBase.physicalProfile_smoothAt ha hh hh1
     (SlowBorelBase.bundleComponent_smooth hd C 0) (-CoordinateAlgebra.A h) ht).differentiableAt (by
-      simp)
+        simp)
   change DifferentiableAt ℝ (SlowBorelBase.streamFactor a h C d) (bandInput h Q p) at hs
   have he : normalizedStream a h d Q =ᶠ[𝓝 p]
       (fun q => Q ^ CoordinateAlgebra.A h * SlowBorelBase.streamFactor a h C d (bandInput h Q q))
-        := by
+          := by
     filter_upwards [(isOpen_lt continuous_const continuous_snd.snd).mem_nhds hT] with q hq
     exact normalizedStream_eq hh hh1 hQ d hq
-  have hb := ((bandInput_smooth h Q).differentiable (by simp)).differentiableAt (x := p)
-    |>.hasFDerivAt
+  have hb := ((bandInput_smooth h Q).differentiable (by
+      simp)).differentiableAt (x := p) |>.hasFDerivAt
   have hder := (hs.hasFDerivAt.comp p hb).const_mul (Q ^ CoordinateAlgebra.A h)
   simp only [Function.comp_apply] at hder
   unfold PhaseCalculus.slowZ
@@ -151,6 +155,7 @@ theorem normalizedStream_deriv_Z {a : ℕ → ℕ} (ha : StrictMono a) {h C Q : 
   simp only [smul_eq_mul, AxisymmetricFields.partialZ]
   ring
 
+/-- Reduced radial, given by `-(p.1 / 2) * PhaseCalculus.slowZ (normalizedStream a h d Q) p`. -/
 noncomputable def reducedRadial (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   -(p.1 / 2) * PhaseCalculus.slowZ (normalizedStream a h d Q) p
@@ -169,11 +174,13 @@ theorem radial_eq {a : ℕ → ℕ} (ha : StrictMono a) {h C Q : ℝ}
   have hH := (SlowBorelBase.physicalProfile_smoothAt ha hh hh1
     (SlowBorelBase.bundleComponent_smooth hd C 0) (-CoordinateAlgebra.A h)
     (p := AxisymmetricFields.profilePoint (bandPoint h Q p).1 (bandPoint h Q p).2)
-      ht).differentiableAt (by simp)
+        ht).differentiableAt (by
+        simp)
   have hK := (SlowBorelBase.physicalProfile_smoothAt ha hh hh1
     (SlowBorelBase.bundleComponent_smooth hd C 1) (1 / 2 - CoordinateAlgebra.A h)
     (p := AxisymmetricFields.profilePoint (bandPoint h Q p).1 (bandPoint h Q p).2)
-      ht).differentiableAt (by simp)
+        ht).differentiableAt (by
+        simp)
   have hv := AxisymmetricFields.velocity_zero (SlowBorelBase.streamFactor a h C d)
     (SlowBorelBase.swirlPotential a h C d) (bandPoint h Q p).1 (bandPoint h Q p).2 hH hK
   change SlowBorelBase.baseVelocity a h C d (bandPoint h Q p) 0 =
@@ -219,7 +226,7 @@ theorem scaled_sum_polynomial {ι : Type*} {D : Domain ι Slow}
       ((hf 0).contDiffAt.comp y contDiffAt_snd)).contDiffWithinAt
   have he := normalized_error_envelope hh hqlo hqhi hlo Q hQ hsmall err hs
     (fun j => SlowBorelBase.normalized_correction_bound hh hf (SlowBorelBase.innerBox_isCompact lo
-      hi) ha j)
+        hi) ha j)
   have hc := normalizedCoordinates_polynomial hh hh1 hqlo H
   have hmap (i : ι) (p : Slow) (hp : p ∈ (unitScale D).carrier i) :
       normalizedCoordinates h p ∈ innerRegion qlo qhi lo hi := by
@@ -285,8 +292,9 @@ theorem scalar_envelope {ι E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E
   intro j
   refine ⟨1, zero_lt_one, fun i x hx => ?_⟩
   cases j with
-  | zero => simpa only [norm_iteratedFDeriv_zero, Real.norm_eq_abs, one_mul] using le_of_eq
-    (abs_of_nonneg (hw i))
+  | zero =>
+      simpa only [norm_iteratedFDeriv_zero, Real.norm_eq_abs, one_mul] using le_of_eq
+          (abs_of_nonneg (hw i))
   | succ j => simp only [iteratedFDeriv_succ_const, Pi.zero_apply, norm_zero, one_mul]; exact hw i
 
 /-- The actual physical radial coefficient has an all-order `Q^h`

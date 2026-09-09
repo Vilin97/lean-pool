@@ -8,8 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The actual positive-order divergence primitive
@@ -18,6 +20,9 @@ Equation (21) is derived from genuine radial averages of a jointly smooth
 axial profile. Its radial derivative is the actual similarity axial operator,
 and its physical reconstruction satisfies the flux form of incompressibility.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -139,10 +144,10 @@ theorem axial_source_intervalIntegrable (Ω : RadialDomain) {U : Field}
     ((((continuousOn_const.mul hu).add
       (continuousOn_const.mul hη)).sub
         (continuousOn_const.mul (continuousOn_id.mul hx))).div_const (CoordinateAlgebra.L h
-          p.2)).neg
+            p.2)).neg
   simpa only [SimilarityProfile.Z, CoordinateAlgebra.axialCoeff, SimilarityProfile.partialX,
     SimilarityProfile.partialEta, radialPartial, parameterPartial, mul_assoc] using
-      hc.intervalIntegrable
+        hc.intervalIntegrable
 
 /-- The printed expression is precisely the zero-axis integral of -Z U. -/
 theorem radialFlux_eq_integral (Ω : RadialDomain) {U : Field}
@@ -163,7 +168,7 @@ theorem physical_flux_axial_balance (Ω : RadialDomain) {U : Field}
     (hi : SimilarityProfile.inner h p ∈ Ω.carrier) :
     SimilarityProfile.partialS (SimilarityProfile.pullback h lam (radialFlux h lam U)) p +
       SimilarityProfile.partialZ (SimilarityProfile.pullback h (-CoordinateAlgebra.A h + lam) U) p
-        = 0 := by
+          = 0 := by
   have hL : CoordinateAlgebra.L h (SimilarityProfile.inner h p).2 ≠ 0 :=
     (SimilarityProfile.L_pos hh hh1 hp).ne'
   rw [SimilarityProfile.partialS_pullback hh hh1 hp

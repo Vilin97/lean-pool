@@ -9,18 +9,19 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
 
-@[expose] public section
-
 /-! The actual particle-parent Euler solution supplies the ordinary
 Sobolev evolution used by the H³ stability estimate. The solenoidal
 constraint at the endpoints follows by L² continuity from the interior. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerParentPacketFrames.SobolevData
 
 open Set MeasureTheory EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
-  EulerMeanSolenoidal EulerMeanClassical EulerOrdinarySobolev
+  EulerMeanSolenoidal  EulerOrdinarySobolev
 open scoped ContDiff
 
 variable {A : Parent} {E : EulerParentPacketFrames.Evolution A} (S : SobolevData E)
@@ -49,6 +50,8 @@ theorem velocity_solenoidal (t : Icc (0 : ℝ) A.T) : (S.velocity t).toLp ∈ so
   change (S.velocity (projIcc 0 A.T A.T_pos.le (t : ℝ))).toLp ∈ solenoidalSpace at hm
   simpa only [projIcc_of_mem A.T_pos.le t.property] using hm
 
+/-- Ordinary evolution, bundling `velocity`, `pressureForce`, `velocity_continuous`,
+`pressure_continuous` and the required compatibility proofs. -/
 def ordinaryEvolution : EulerOrdinarySobolev.Evolution A.T A.T_pos.le where
   velocity := S.velocity
   pressureForce := S.force

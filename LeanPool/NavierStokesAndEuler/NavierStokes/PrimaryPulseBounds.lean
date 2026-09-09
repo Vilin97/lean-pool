@@ -6,16 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedQuotients
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PartitionedCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JointODE
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurlClassBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianTailFlat
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCovariance
+import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedODEJets
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # Weighted bounds for the actual primary pulses
@@ -24,6 +22,9 @@ The homogeneous ODE is reparametrized onto a fixed unit interval.  Its
 current endpoint becomes an additional parameter, so the weighted ODE jet
 estimate controls actual joint parameter and slot derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,6 +42,8 @@ variable {Q E F : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Time linear, given by `(ContinuousLinearMap.fst ℝ Q ℝ).prod (σ • ContinuousLinearMap.snd ℝ Q
+ℝ)`. -/
 noncomputable def timeLinear (σ : ℝ) : (Q × ℝ) →L[ℝ] (Q × ℝ) :=
   (ContinuousLinearMap.fst ℝ Q ℝ).prod (σ • ContinuousLinearMap.snd ℝ Q ℝ)
 
@@ -150,6 +153,7 @@ theorem rescale_jet_bound {A : Q × ℝ → E} {U : Set (Q × ℝ)}
 
 end TimeRescaling
 
+/-- Rescale constant, given by `2 ^ N * K ^ 2 + K + 1`. -/
 noncomputable def rescaleConstant (N : ℕ) (K : ℝ) : ℝ := 2 ^ N * K ^ 2 + K + 1
 
 theorem le_rescaleConstant (N : ℕ) (K : ℝ) : K ≤ rescaleConstant N K := by
@@ -233,7 +237,7 @@ theorem homogeneous_joint_jet_bound
     calc
       _ ≤ (2 : ℝ) ^ N * (K * S) * (K * S ^ m) := by
         simpa only [JointODE.rescale, JointODE.timeMap, JointODE.affineTime, sub_zero, zero_add]
-          using hh
+            using hh
       _ = ((2 : ℝ) ^ N * K ^ 2) * S ^ (m + 1) := by rw [pow_succ]; ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hconst (by positivity)
   have hxjet : ∀ k ≤ N,
@@ -257,7 +261,7 @@ theorem homogeneous_joint_jet_bound
         1 * K' * S ^ (m + 1) * P ((σ : ℝ) * t) := by
     intro k _ σ
     simp only [JointODE.rescale, smul_zero, iteratedFDeriv_fun_zero, Pi.zero_apply, norm_zero,
-      one_mul]
+        one_mul]
     have hp0 := hP ((σ : ℝ) * t)
     exact mul_nonneg (mul_nonneg (zero_le_one.trans hK')
       (pow_nonneg (zero_le_one.trans hS) _)) hp0.le
@@ -287,6 +291,7 @@ structure EnvelopeJets {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ 
   bound : ∀ N : ℕ, ∃ C : ℝ, 1 ≤ C ∧ ∃ m : ℕ, ∀ i x, x ∈ D.carrier i →
     ∀ j ≤ N, ‖iteratedFDeriv ℝ j (f i) x‖ ≤ C * D.scale i ^ m * w i x
 
+/-- Product domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def productDomain {ι E : Type*} [NormedAddCommGroup E]
     (D : PhaseJetBounds.Domain ι E) (V : ι → Set ℝ) (hV : ∀ i, IsOpen (V i)) :
     PhaseJetBounds.Domain ι (E × ℝ) where
@@ -409,6 +414,7 @@ open WeightedClasses
 variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Phase domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def phaseDomain (s : StripData E) : PhaseJetBounds.Domain ℕ E where
   scale := s.slow
   carrier _ := s.domain
@@ -508,7 +514,7 @@ theorem pathFamily_polynomial (D : PhaseJetBounds.Domain ι Q)
     (hI : ∀ i, Icc a b ⊆ V i) {F : ι → Q × ℝ → H}
     (hF : PhaseJetBounds.PolynomialJets (productDomain D V hV) F) :
     PhaseJetBounds.PolynomialJets D (fun i => SmoothPathFamily.pathFamily (a := a) (b := b) (F i))
-      := by
+        := by
   refine ⟨fun i => SmoothPathFamily.contDiffOn_pathFamily_of_joint
     (D.carrier i) (V i) (D.isOpen i) (hV i) (hI i) (F i) (hF.smooth i), ?_⟩
   intro N
@@ -531,6 +537,8 @@ theorem pathFamily_polynomial (D : PhaseJetBounds.Domain ι Q)
 
 variable [CompleteSpace H]
 
+/-- Interval integral continuous linear map, given by `(ContinuousMap.evalCLM ℝ (⟨b, hab,
+le_rfl⟩ : Icc a b)).comp (ParametricODE.integrator hab)`. -/
 noncomputable def intervalIntegralCLM {a b : ℝ} (hab : a ≤ b) :
     C(Icc a b, H) →L[ℝ] H :=
   (ContinuousMap.evalCLM ℝ (⟨b, hab, le_rfl⟩ : Icc a b)).comp (ParametricODE.integrator hab)
@@ -556,19 +564,24 @@ theorem intervalIntegral_polynomial (D : PhaseJetBounds.Domain ι Q)
 
 end IntegratedJets
 
+/-- State: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev State := MovingFrameODE.Plane
+/-- Space: an abbreviation for `MovingFrameODE.Space`. -/
 abbrev Space := MovingFrameODE.Space
 
+/-- Positive seed, given by `!₂[1, 0]`. -/
 noncomputable def positiveSeed : State := !₂[1, 0]
 
 theorem positiveSeed_norm : ‖positiveSeed‖ = 1 := by
   have h : ‖positiveSeed‖ ^ 2 = 1 := by
     calc
       _ = (positiveSeed 0) ^ 2 + (positiveSeed 1) ^ 2 := ViscousPropagator.plane_norm_sq
-        positiveSeed
+          positiveSeed
       _ = 1 := by norm_num [positiveSeed]
   nlinarith [norm_nonneg positiveSeed]
 
+/-- Reference P, given by `GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L
+/ 2) t`. -/
 noncomputable def referenceP (lam u L t : ℝ) : ℝ :=
   GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L / 2) t
 
@@ -593,6 +606,8 @@ section ActualFundamental
 
 variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
+/-- Fundamental, given by `JointODE.reparamSolution 0 (d.coefficient 1) (fun _ => referenceP lam
+u L 0 • positiveSeed) (fun _ => 0)`. -/
 noncomputable def fundamental (d : PrimaryODE.FrameData Q) (lam u L : ℝ) : Q × ℝ → State :=
   JointODE.reparamSolution 0 (d.coefficient 1)
     (fun _ => referenceP lam u L 0 • positiveSeed) (fun _ => 0)
@@ -644,8 +659,9 @@ theorem fundamental_envelope_jets
     linarith
   · intro i p hp v hv x
     have he := (d i).energy_bound (p, v) (by norm_num : (1 : ℤ) ≠ 0)
-      (by rw [heigen i p hp v hv]; exact ViscousPropagator.referenceEigenvalue_nonneg (hlam i).le _
-        _ _)
+      (by
+          rw [heigen i p hp v hv]; exact ViscousPropagator.referenceEigenvalue_nonneg (hlam i).le _
+              _ _)
       (hν i p hp v hv) (hνerr i p hp v hv) (herr i p hp v hv) x
     rw [heigen i p hp v hv] at he
     exact he
@@ -715,6 +731,8 @@ section GeometrySynthesis
 
 variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
+/-- Synthesis column, given by `MovingFrameODE.pack 1 ((-d.rho z) • d.frame z 0 + (if j = 0 then
+d.eigenvector z else -d.eigenvector z) • d.frame z 1)`. -/
 noncomputable def synthesisColumn (d : PrimaryODE.FrameData Q) (j : Fin 2) (z : Q × ℝ) : Space :=
   MovingFrameODE.pack 1 ((-d.rho z) • d.frame z 0 +
     (if j = 0 then d.eigenvector z else -d.eigenvector z) • d.frame z 1)
@@ -725,7 +743,7 @@ theorem ambient_eq_synthesis (d : PrimaryODE.FrameData Q) (z : Q × ℝ) (w : St
   ext i
   fin_cases i <;>
     simp [PrimaryODE.FrameData.ambient, MovingFrameODE.tangent, MovingFrameODE.pack,
-      synthesisColumn] <;> ring
+        synthesisColumn] <;> ring
 
 theorem synthesisColumn_polynomial {D : PhaseJetBounds.Domain ι (Q × ℝ)}
     {d : ι → PrimaryODE.FrameData Q} (hd : PhaseJetBounds.FrameJets D d) (j : Fin 2) :
@@ -840,6 +858,7 @@ open WeightedClasses
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {s : StripData E}
 
+/-- Normalized matrix, defined pointwise by `r * H i j`. -/
 noncomputable def normalizedMatrix (r : ℝ) (H : SmoothCovariance.Mat2) :
     SmoothCovariance.Mat2 := fun i j => r * H i j
 
@@ -1146,6 +1165,8 @@ theorem ambient_envelope_jets {D : PhaseJetBounds.Domain ι (Q × ℝ)}
   intro i x hx
   exact (ambient_eq_synthesis _ _ _).symm
 
+/-- Normalized pulse, given by `d.ambient (z.1, L * z.2) (fundamental d lam u L (z.1, L *
+z.2))`. -/
 noncomputable def normalizedPulse (d : PrimaryODE.FrameData Q) (lam u L : ℝ)
     (z : Q × ℝ) : Space :=
   d.ambient (z.1, L * z.2) (fundamental d lam u L (z.1, L * z.2))
@@ -1278,7 +1299,7 @@ theorem primaryCovariance_eq_pairMatrix
         (normalizedPulse (d c n) (lam c n) (u c n) (L c n) (p, s / L c n) 0 *
           normalizedPulse (d c n) (lam c n) (u c n) (L c n) (p, s / L c n) r.succ)) :
     primaryCovariance pref d lam u L n p = PartitionedCovariance.pairMatrix vr vt radius ci pulses
-      := by
+        := by
   ext r c
   rw [PartitionedCovariance.pairMatrix, PartitionedCovariance.Pulse.column,
     actualColumn_normalization (hL c) (ci c) (pulses c).ψ (pulses c).x (pulses c).t
@@ -1397,6 +1418,7 @@ section CutoffPulse
 
 variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
+/-- Cutoff pulse, given by `GaussianTailFlat.profile z.2 • normalizedPulse d lam u L z`. -/
 noncomputable def cutoffPulse (d : PrimaryODE.FrameData Q) (lam u L : ℝ)
     (z : Q × ℝ) : Space :=
   GaussianTailFlat.profile z.2 • normalizedPulse d lam u L z
@@ -1511,11 +1533,13 @@ open WeightedClasses
 variable {Q E : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Chart covariance, defined pointwise by `primaryCovariance pref d lam u L n (χ n x).1`. -/
 noncomputable def chartCovariance
     (pref : Fin 2 → ℕ → ℝ) (d : Fin 2 → ℕ → PrimaryODE.FrameData Q)
     (lam u L : Fin 2 → ℕ → ℝ) (χ : ℕ → E → Q × ℝ) :
     ℕ → E → SmoothCovariance.Mat2 := fun n x => primaryCovariance pref d lam u L n (χ n x).1
 
+/-- Primary wave, constructed using `primaryCoefficient`. -/
 noncomputable def primaryWave (s : StripData E)
     (pref : Fin 2 → ℕ → ℝ) (d : Fin 2 → ℕ → PrimaryODE.FrameData Q)
     (lam u L : Fin 2 → ℕ → ℝ) (χ : ℕ → E → Q × ℝ)
@@ -1579,22 +1603,38 @@ variable {ι : Type*}
 no solution, propagator, covariance, or output-jet assumptions in this
 record. The error fields are the order-zero moving-frame estimates. -/
 structure PhaseConstruction (D : Domain ι Slow) where
+  /-- Phase of `PhaseConstruction`, of type `PhaseFamily ι`. -/
   phase : PhaseFamily ι
+  /-- V of `PhaseConstruction`, of type `ι → Set ℝ`. -/
   V : ι → Set ℝ
   openV : ∀ i, IsOpen (V i)
+  /-- Lam of `PhaseConstruction`, of type `ι → ℝ`. -/
   lam : ι → ℝ
+  /-- C0 of `PhaseConstruction`, of type `ι → ℝ`. -/
   c0 : ι → ℝ
+  /-- U of `PhaseConstruction`, of type `ι → ℝ`. -/
   u : ι → ℝ
+  /-- L of `PhaseConstruction`, of type `ι → ℝ`. -/
   L : ι → ℝ
+  /-- Viscosity of `PhaseConstruction`, of type `ι → ℝ`. -/
   viscosity : ι → ℝ
+  /-- Bound parameter of `PhaseConstruction`, of type `ι → ℝ`. -/
   B : ι → ℝ
+  /-- K of `PhaseConstruction`, of type `ι → Plane`. -/
   K : ι → Plane
+  /-- Slope of `PhaseConstruction`, of type `ι → Slow × ℝ → ℝ`. -/
   slope : ι → Slow × ℝ → ℝ
+  /-- Error of `PhaseConstruction`, of type `ι → Slow × ℝ → ℝ`. -/
   error : ι → Slow × ℝ → ℝ
+  /-- R of `PhaseConstruction`, of type `ℝ`. -/
   r : ℝ
+  /-- B of `PhaseConstruction`, of type `ℝ`. -/
   b : ℝ
+  /-- M of `PhaseConstruction`, of type `ℝ`. -/
   M : ℝ
+  /-- Bound coefficient of `PhaseConstruction`, of type `ℝ`. -/
   C : ℝ
+  /-- E of `PhaseConstruction`, of type `ℝ`. -/
   E : ℝ
   r_pos : 0 < r
   b_pos : 0 < b
@@ -1633,6 +1673,7 @@ structure PhaseConstruction (D : Domain ι Slow) where
     |(phase.frameData lam c0 u L viscosity i).error21 (p, v)| ≤ C / D.scale i ∧
     |(phase.frameData lam c0 u L viscosity i).error22 (p, v)| ≤ C / D.scale i
 
+/-- Frame, given by `p.phase.frameData p.lam p.c0 p.u p.L p.viscosity`. -/
 noncomputable def PhaseConstruction.frame {D : Domain ι Slow} (p : PhaseConstruction D) :
     ι → PrimaryODE.FrameData Slow := p.phase.frameData p.lam p.c0 p.u p.L p.viscosity
 
@@ -1661,11 +1702,15 @@ theorem PhaseConstruction.normal_range {D : Domain ι Slow} (p : PhaseConstructi
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Phase covariance, given by `primaryCovariance pref (fun c => (F c).frame) (fun c => (F
+c).lam) (fun c => (F c).u) (fun c => (F c).L)`. -/
 noncomputable def phaseCovariance {D : Domain ℕ Slow} (F : Fin 2 → PhaseConstruction D)
     (pref : Fin 2 → ℕ → ℝ) : ℕ → Slow → SmoothCovariance.Mat2 :=
   primaryCovariance pref (fun c => (F c).frame) (fun c => (F c).lam)
     (fun c => (F c).u) (fun c => (F c).L)
 
+/-- Phase wave, given by `primaryWave s pref (fun c => (F c).frame) (fun c => (F c).lam) (fun c
+=> (F c).u) (fun c => (F c).L) χ T mask c`. -/
 noncomputable def phaseWave (s : StripData E) {D : Domain ℕ Slow}
     (F : Fin 2 → PhaseConstruction D) (pref : Fin 2 → ℕ → ℝ)
     (χ : ℕ → E → Slow × ℝ) (T : ℕ → E → SmoothCovariance.Vec2)
@@ -1725,6 +1770,8 @@ theorem cutoffPulse_eq_ambient_primary
   rw [hLt, fundamental_eq_primary hL U hA hp ht]
   rfl
 
+/-- Local primary profile, given by `PartitionedCovariance.cutoff radius z.1 • cutoffPulse d lam
+u L (p, z.2 / L)`. -/
 noncomputable def localPrimaryProfile (d : PrimaryODE.FrameData Q) (lam u L radius : ℝ)
     (p : Q) (z : TorusInverse.Plane) : Space :=
   PartitionedCovariance.cutoff radius z.1 • cutoffPulse d lam u L (p, z.2 / L)
@@ -1764,6 +1811,7 @@ open PhaseJetBounds WeightedClasses
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   {s : StripData E} {D : Domain ℕ Slow}
 
+/-- Chart normal, given by `p.phase.normal n ((χ n x).1, p.L n * (χ n x).2)`. -/
 noncomputable def PhaseConstruction.chartNormal (p : PhaseConstruction D)
     (χ : ℕ → E → Slow × ℝ) (n : ℕ) (x : E) : Space :=
   p.phase.normal n ((χ n x).1, p.L n * (χ n x).2)
@@ -1892,7 +1940,7 @@ theorem canonicalPrimaryPulse_t
     (p : Q) (hp : p ∈ U) (hk : d.Kinematics p (Icc 0 L)) {t : ℝ} (ht : t ∈ Icc 0 L) (i : Fin 2) :
     (canonicalPrimaryPulse d lam u hL U hA p hp hk).t t i =
       (d.ambient (p, t) (PrimaryODE.primary hL.le d (fun z => referenceP lam u L z.2) p t)) i.succ
-        :=
+          :=
   congrArg (fun v : Space => v i.succ) (ParametricODE.extend_coe hL.le
     (canonicalPrimaryPath d lam u hL U hA p hp hk) ⟨t, ht⟩)
 
@@ -1911,7 +1959,7 @@ theorem canonicalPrimaryPulse_radialProfile
     have hpz : GaussianTailFlat.profile (z.2 / L) = 0 := hzero
     simp only [canonicalPrimaryPulse, PartitionedCovariance.Pulse.radialProfile, hzero,
       mul_zero, zero_mul, localPrimaryProfile, cutoffPulse, hpz, zero_smul, smul_zero,
-        PiLp.zero_apply]
+          PiLp.zero_apply]
 
 theorem canonicalPrimaryPulse_tangentProfile
     (d : PrimaryODE.FrameData Q) (lam u radius : ℝ) {L : ℝ} (hL : 0 < L)
@@ -1926,7 +1974,7 @@ theorem canonicalPrimaryPulse_tangentProfile
     have hpz : GaussianTailFlat.profile (z.2 / L) = 0 := hzero
     simp only [canonicalPrimaryPulse, PartitionedCovariance.Pulse.tangentProfile, hzero,
       mul_zero, zero_mul, localPrimaryProfile, cutoffPulse, hpz, zero_smul, smul_zero,
-        PiLp.zero_apply]
+          PiLp.zero_apply]
 
 theorem canonicalPrimaryPulse_integrand
     (d : PrimaryODE.FrameData Q) (lam u : ℝ) {L : ℝ} (hL : 0 < L)
@@ -2020,6 +2068,7 @@ open WeightedClasses
 variable {Q E : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Uncut primary wave, constructed using `primaryCoefficient`. -/
 noncomputable def uncutPrimaryWave (s : StripData E)
     (pref : Fin 2 → ℕ → ℝ) (d : Fin 2 → ℕ → PrimaryODE.FrameData Q)
     (lam u L : Fin 2 → ℕ → ℝ) (χ : ℕ → E → Q × ℝ)

@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramPath
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedInverseGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import LeanPool.NavierStokesAndEuler.Euler.BoundedInverseGevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Uniform-time factorial bounds for the actual Gram inverse
@@ -19,6 +22,9 @@ The inverse is a genuinely smooth continuous operator path. Applying the
 frozen-coefficient recurrence in the uniform norm gives actual inverse-path
 and solution estimates, without a Hilbert structure on the path space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -43,13 +49,25 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-private local instance : NormedAddCommGroup (U →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] U) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,U →L[ℝ] U) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,U →L[ℝ] U) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instContinuousGramGevrey1 : NormedAddCommGroup (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instContinuousGramGevrey2 : NormedSpace ℝ (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,U →L[ℝ] U)` instance to shorten
+typeclass synthesis. -/
+local instance instContinuousGramGevrey3 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,U →L[ℝ] U) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousGramGevrey4 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,U →L[ℝ] U) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(Icc (0 : ℝ) T,U →L[ℝ] U) →L[ℝ] C(Icc (0 : ℝ) T,U
+→L[ℝ] U))` instance to shorten typeclass synthesis. -/
+local instance instContinuousGramGevrey5 (T : ℝ) : NormedAddCommGroup
     (C(Icc (0 : ℝ) T,U →L[ℝ] U) →L[ℝ] C(Icc (0 : ℝ) T,U →L[ℝ] U)) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (C(Icc (0 : ℝ) T,U →L[ℝ] U) →L[ℝ] C(Icc (0 : ℝ) T,U →L[ℝ]
+U))` instance to shorten typeclass synthesis. -/
+local instance instContinuousGramGevrey6 (T : ℝ) : NormedSpace ℝ
     (C(Icc (0 : ℝ) T,U →L[ℝ] U) →L[ℝ] C(Icc (0 : ℝ) T,U →L[ℝ] U)) := inferInstance
 
 /-- Bounded left multiplication on continuous endomorphism paths, as a
@@ -73,16 +91,16 @@ theorem leftMultiplicationMap_norm (T : ℝ) : ‖leftMultiplicationMap (U := U)
     (mul_le_mul (A.norm_coe_le_norm t) (B.norm_coe_le_norm t) (norm_nonneg (B t)) (norm_nonneg A))
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
-  (T : ℝ) (Q : P → C(Icc (0 : ℝ) T,U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+  (T : ℝ) (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
   (hQ : ContDiff ℝ ∞ Q)
   (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C*majorant Rc 0 n)
+  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C * majorant Rc 0 n)
 
 include hQ hRc hC hbQ
 
 /-- The actual continuous inverse path has one factorial shift, uniformly in time. -/
-theorem inversePath_gevrey (R : ℝ) (hR : 2*gramCost c C 1*(Rc+1) ≤ R) (n : ℕ) (x : P) :
+theorem inversePath_gevrey (R : ℝ) (hR : 2 * gramCost c C 1 * (Rc + 1) ≤ R) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => gramInversePath T (Q y) c hc (hLower y)) x‖ ≤
       majorant R 1 n := by
   let B := fun y => gramPath T (Q y)
@@ -90,7 +108,7 @@ theorem inversePath_gevrey (R : ℝ) (hR : 2*gramCost c C 1*(Rc+1) ≤ R) (n : �
   let A := fun y => leftMultiplicationMap (U := U) T (B y)
   let I := fun y => leftMultiplicationMap (U := U) T (V y)
   let onePath : C(Icc (0 : ℝ) T,U →L[ℝ] U) := ⟨fun _ => ContinuousLinearMap.id ℝ U,
-    continuous_const⟩
+      continuous_const⟩
   have hB : ContDiff ℝ ∞ B := gramPath_contDiff T Q hQ
   have hV : ContDiff ℝ ∞ V := gramInversePath_contDiff T c hc Q hLower hQ
   have hA : ContDiff ℝ ∞ A :=
@@ -132,9 +150,9 @@ theorem inversePath_gevrey (R : ℝ) (hR : 2*gramCost c C 1*(Rc+1) ≤ R) (n : �
     (const_bound onePath R 1 hR0 hone) n x
 
 /-- The actual continuous solution has the same one-shift inverse estimate. -/
-theorem solution_gevrey (f : P → C(Icc (0 : ℝ) T,U)) (hf : ContDiff ℝ ∞ f)
-    (D R : ℝ) (hD : 0 ≤ D) (hR : 2*gramCost c C D*(Rc+1) ≤ R)
-    (d : ℕ) (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D*majorant R d n)
+theorem solution_gevrey (f : P → C(Icc (0 : ℝ) T, U)) (hf : ContDiff ℝ ∞ f)
+    (D R : ℝ) (hD : 0 ≤ D) (hR : 2 * gramCost c C D * (Rc + 1) ≤ R)
+    (d : ℕ) (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => solve T (Q y) c hc (hLower y) (f y)) x‖ ≤
       majorant R (d+1) n := by

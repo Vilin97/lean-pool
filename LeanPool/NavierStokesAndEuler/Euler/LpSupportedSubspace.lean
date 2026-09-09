@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # The actual supported subspace of ordinary spatial L²
@@ -17,6 +18,9 @@ Support is imposed on genuine Bochner L² functions by the closed kernel of
 identity minus measurable-set projection. This gives a complete Hilbert space
 for localized propagators and keeps the support restriction explicit.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

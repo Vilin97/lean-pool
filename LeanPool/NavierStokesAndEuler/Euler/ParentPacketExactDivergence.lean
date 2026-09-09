@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketExactEuler
-public import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalEuler
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalEuler
 
 /-! Incompressibility of the actual corrected parent velocity. The
 normalized packet uses the parent's genuine determinant-one Jacobian,
 and the final physical rescaling preserves divergence exactly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,7 +24,7 @@ open EulerSmoothLimit
 
 theorem divergence_eq (ell : ℝ) (hell : ell ≠ 0)
     (u : ℝ × Space → Space) (t : ℝ) (x : Space)
-    (hu : DifferentiableAt ℝ (fun y => u (t,y)) (ell⁻¹ • x)) :
+    (hu : DifferentiableAt ℝ (fun y => u (t, y)) (ell⁻¹ • x)) :
     divergence (fun y => velocity ell u (t,y)) x =
       divergence (fun y => u (t,y)) (ell⁻¹ • x) := by
   rw [divergence_eq_trace,spatial_derivative ell hell u t x hu]
@@ -41,7 +42,7 @@ open scoped ContDiff Topology
 variable (A : EulerParentPacketFrames.Parent)
 
 theorem normalizedVelocity_divergence (u : ℝ × Space → Space) (t : ℝ) (x : Space)
-    (hu : DifferentiableAt ℝ (fun y => u (t,y)) (A.ell • x)) :
+    (hu : DifferentiableAt ℝ (fun y => u (t, y)) (A.ell • x)) :
     divergence (fun y => A.normalizedVelocity u (t,y)) x =
       divergence (fun y => u (t,y)) (A.ell • x) := by
   have h := EulerSpatialRescaling.divergence_eq A.ell⁻¹ (inv_ne_zero A.ell_pos.ne')
@@ -60,29 +61,29 @@ theorem packetFrame_det (t : Icc (0 : ℝ) A.T) (x : Space) :
   exact A.frame_det t x
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   {P : ℝ} [Fact (0 < P)] {κ : ℝ} {hκ : |κ| ≤ 1}
   {Z R : FieldTower P A.T}
   (B : Budget P A.T_pos (correctionData (A.transverseData m hm J support hSupport) P κ hκ Z R))
   (residual : ApproximationResidual P A.T_pos
     (correctionData (A.transverseData m hm J support hSupport) P κ hκ Z R))
-  (k : ℝ) (hk : k*κ=1) (Y : Icc (0 : ℝ) A.T → Space → Space)
-  (hYX : ∀ t x, Y t (A.position t x)=x)
-  (hXY : ∀ t x, A.position t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
+  (k : ℝ) (hk : k * κ = 1) (Y : Icc (0 : ℝ) A.T → Space → Space)
+  (hYX : ∀ t x, Y t (A.position t x) = x)
+  (hXY : ∀ t x, A.position t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
   (u : ℝ × Space → Space) (p : ℝ × Space → ℝ)
-  (hvelocity : ∀ (t : Icc (0 : ℝ) A.T) x, A.velocity.field t x=u (t,A.position t x))
-  (hu : ∀ t ∈ Ioo 0 A.T, ∀ x, DifferentiableAt ℝ u (t,x))
-  (hp : ∀ (t : Icc (0 : ℝ) A.T) x, DifferentiableAt ℝ (fun y => p (t,y)) x)
-  (heuler : ∀ t ∈ Ioo 0 A.T, ∀ x, momentumResidual u p (t,x)=0)
-  (hdiv : ∀ t ∈ Ioo 0 A.T, ∀ x, divergence (fun y => u (t,y)) x=0)
+  (hvelocity : ∀ (t : Icc (0 : ℝ) A.T) x, A.velocity.field t x = u (t, A.position t x))
+  (hu : ∀ t ∈ Ioo 0 A.T, ∀ x, DifferentiableAt ℝ u (t, x))
+  (hp : ∀ (t : Icc (0 : ℝ) A.T) x, DifferentiableAt ℝ (fun y => p (t, y)) x)
+  (heuler : ∀ t ∈ Ioo 0 A.T, ∀ x, momentumResidual u p (t, x) = 0)
+  (hdiv : ∀ t ∈ Ioo 0 A.T, ∀ x, divergence (fun y => u (t, y)) x = 0)
 
 include hYX hXY hY hvelocity hu hp heuler hdiv hk in
 theorem normalizedExact_euler (t : ℝ) (ht : t ∈ Ioo 0 A.T) (x : Space) :
     momentumResidual (A.normalizedExactVelocity m hm J support hSupport B residual k Y u)
       (A.normalizedExactPressure m hm J support hSupport B residual k Y p) (t,x)=0 ∧
     divergence (fun y => A.normalizedExactVelocity m hm J support hSupport B residual k Y u (t,y))
-      x=0 := by
+        x=0 := by
   let y := A.packetInverse Y (t,x)
   have hy : A.packetPosition (t,y)=x := A.packetInverse_right Y hXY (t,x)
   have hd : divergence (fun z => A.normalizedVelocity u (t,z)) (A.packetPosition (t,y))=0 := by
@@ -116,7 +117,7 @@ theorem exactPacket_euler (t : ℝ) (ht : t ∈ Ioo 0 A.T) (x : Space) :
     momentumResidual (A.exactPacketVelocity m hm J support hSupport B residual k Y u)
       (A.exactPacketPressure m hm J support hSupport B residual k Y p) (t,x)=0 ∧
     divergence (fun y => A.exactPacketVelocity m hm J support hSupport B residual k Y u (t,y)) x=0
-      := by
+        := by
   refine ⟨A.exactPacket_momentum m hm J support hSupport B residual k hk Y
     hYX hXY hY u p hvelocity hu hp heuler t ht x,?_⟩
   have hd : DifferentiableAt ℝ

@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalNormBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFamily
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketStage
+import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalNormBounds
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 Early physical amplitudes are exponentially small relative to the center
 target amplitude.  The initial scalar slope cancels, including for
 neighboring initial data controlled by the common reference.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,15 +29,15 @@ open Set Real EulerSmoothLimit EulerPacketRay EulerPacketStage InnerProductSpace
 
 theorem early_neighbor_state_bound {α : Type*} (center : α) (U V : α → ℝ → ℝ)
     {σ Θ T lam δ : ℝ} {F F₁ Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ) (hT : T ≤ Θ)
-    (hTtarget : 1/σ ≤ T) (hlam : 0 ≤ lam) (hδ : 0 ≤ δ) (hδsmall : 4*exp 6*δ ≤ 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ) (hT : T ≤ Θ)
+    (hTtarget : 1 / σ ≤ T) (hlam : 0 ≤ lam) (hδ : 0 ≤ δ) (hδsmall : 4 * exp 6 * δ ≤ 1)
     (hF : ∀ t, HasDerivAt F (F₁ t) t) (hZ : ∀ t, HasDerivAt Z (Z₁ t) t)
-    (hfluxF : ∀ t, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*F₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*F t) t)
-    (hfluxZ : ∀ t, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxF : ∀ t, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
+    (hfluxZ : ∀ t, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hZ0 : Z 0 = 1) (hZ₁0 : Z₁ 0 = lam)
-    (herror : ∀ ξ t, t ∈ Icc 0 T → |V ξ t-Z t|+|U ξ t+Z₁ t| ≤ δ*(1+lam)*F t) :
+    (herror : ∀ ξ t, t ∈ Icc 0 T → |V ξ t - Z t| + |U ξ t + Z₁ t| ≤ δ * (1 + lam) * F t) :
     0 < V center T ∧ ∀ ξ s, s ∈ Icc 0 1 →
       (|U ξ s|+|V ξ s|)/V center T ≤ 84*exp 9*Θ*exp (-(1/(4*σ))) := by
   have hcenter := early_forward_exponential_suppression hσ hσsmall hΘ hT hTtarget hlam hδ hδsmall
@@ -63,25 +66,25 @@ theorem early_physical_size_suppression {α : Type*} (center : α)
     (m v : ℝ → Space) (r w : α → ℝ → Space)
     {s₀ t₀ a ε σ Θ T lam δ ρ : ℝ} {F F₁ Z Z₁ : ℝ → ℝ}
     (hs₀ : 0 < s₀) (hε : 0 < ε) (hε1 : ε ≤ 1)
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ) (hT : T ≤ Θ)
-    (hTtarget : 1/σ ≤ T) (hlam : 0 ≤ lam) (hδ : 0 ≤ δ) (hδsmall : 4*exp 6*δ ≤ 1)
-    (hρ0 : 0 ≤ ρ) (hρ : ρ ≤ 1/2)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ) (hT : T ≤ Θ)
+    (hTtarget : 1 / σ ≤ T) (hlam : 0 ≤ lam) (hδ : 0 ≤ δ) (hδsmall : 4 * exp 6 * δ ≤ 1)
+    (hρ0 : 0 ≤ ρ) (hρ : ρ ≤ 1 / 2)
     (hm : ∀ τ ∈ Icc 0 T, m (physicalTime t₀ a ε τ) ≠ 0)
     (hv : ∀ τ ∈ Icc 0 T, v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ∀ τ ∈ Icc 0 T, ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hrw : ∀ ξ τ, τ ∈ Icc 0 T → ⟪r ξ (physicalTime t₀ a ε τ),w ξ (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hP : ∀ ξ τ, τ ∈ Icc 0 T → |scaledRay m v (r ξ) s₀ t₀ a ε τ 0-σ^2*τ^2| ≤ ρ)
-    (hQ : ∀ ξ τ, τ ∈ Icc 0 T → |scaledRay m v (r ξ) s₀ t₀ a ε τ 1-(-2*σ^2*τ)| ≤ ρ)
-    (hN : ∀ ξ τ, τ ∈ Icc 0 T → |scaledRay m v (r ξ) s₀ t₀ a ε τ 2-1| ≤ ρ)
+    (hmv : ∀ τ ∈ Icc 0 T, ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ∀ ξ τ, τ ∈ Icc 0 T → ⟪r ξ (physicalTime t₀ a ε τ), w ξ (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hP : ∀ ξ τ, τ ∈ Icc 0 T → |scaledRay m v (r ξ) s₀ t₀ a ε τ 0 - σ ^ 2 * τ ^ 2| ≤ ρ)
+    (hQ : ∀ ξ τ, τ ∈ Icc 0 T → |scaledRay m v (r ξ) s₀ t₀ a ε τ 1 - (-2 * σ ^ 2 * τ)| ≤ ρ)
+    (hN : ∀ ξ τ, τ ∈ Icc 0 T → |scaledRay m v (r ξ) s₀ t₀ a ε τ 2 - 1| ≤ ρ)
     (hF : ∀ t, HasDerivAt F (F₁ t) t) (hZ : ∀ t, HasDerivAt Z (Z₁ t) t)
-    (hfluxF : ∀ t, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*F₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*F t) t)
-    (hfluxZ : ∀ t, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxF : ∀ t, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
+    (hfluxZ : ∀ t, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hZ0 : Z 0 = 1) (hZ₁0 : Z₁ 0 = lam)
     (herror : ∀ ξ τ, τ ∈ Icc 0 T →
-      |scaledVelocity m v (w ξ) t₀ a ε τ 1-Z τ|+
-        |scaledVelocity m v (w ξ) t₀ a ε τ 0+Z₁ τ| ≤ δ*(1+lam)*F τ) :
+      |scaledVelocity m v (w ξ) t₀ a ε τ 1 - Z τ| +
+        |scaledVelocity m v (w ξ) t₀ a ε τ 0 + Z₁ τ| ≤ δ * (1 + lam) * F τ) :
     0 < ‖r center (physicalTime t₀ a ε T)‖*‖w center (physicalTime t₀ a ε T)‖ ∧
     ∀ ξ τ, τ ∈ Icc 0 1 →
       (‖r ξ (physicalTime t₀ a ε τ)‖*‖w ξ (physicalTime t₀ a ε τ)‖)/

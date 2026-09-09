@@ -7,8 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothPathFamily
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Joint parameter and current-time smoothness for linear ODE solutions
@@ -22,6 +23,9 @@ The reparametrized solution is a locally smooth extension of the original
 solution on the prescribed closed interval. We do not assert smoothness of
 the original clamped extension outside that interval.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.JointODE
 

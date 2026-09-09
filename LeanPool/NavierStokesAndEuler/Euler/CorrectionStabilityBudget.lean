@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifferenceMetric
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityConstants
+
+/-! Concrete coefficient and inverse-metric data for actual vanishing-viscosity stability. -/
 
 @[expose] public section
 
-/-! Concrete coefficient and inverse-metric data for actual vanishing-viscosity stability. -/
 
 noncomputable section
 
@@ -18,14 +19,15 @@ namespace EulerCorrectionStabilityBudget
 
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobolevSpace
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerCorrectionStabilityConstants
-    EulerVolterraConvolution
+      EulerVolterraConvolution
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Actual coefficient and inverse-metric budgets for L² comparison; no PDE estimate or solution comparison is a field. -/
+/-- Actual coefficient and inverse-metric budgets for L² comparison; no PDE estimate or solution
+comparison is a field. -/
 structure StabilityBudget {q : ℕ} {T : ℝ} (hT : 0 ≤ T) (D : CorrectionData period q (Icc (0 : ℝ)
-  T)) where
+    T)) where
   /-- The actual inverse metric coefficient. -/
   metric : Icc (0 : ℝ) T → SmoothCoefficient period
   /-- The actual metric multiplier is continuous in time. -/
@@ -70,9 +72,10 @@ structure StabilityBudget {q : ℕ} {T : ℝ} (hT : 0 ≤ T) (D : CorrectionData
 def StabilityBudget.operatorPath {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
     {D : CorrectionData period q (Icc (0 : ℝ) T)} (B : StabilityBudget period hT D) :
     C(Icc (0 : ℝ) T,LiftL2 period →L[ℝ] LiftL2 period) := ⟨fun t => (B.metric
-      t).operator,B.continuous⟩
+        t).operator,B.continuous⟩
 
-/-- The fixed squared-energy growth coefficient obtained from the actual background path and a solution norm bound. -/
+/-- The fixed squared-energy growth coefficient obtained from the actual background path and a
+solution norm bound. -/
 def StabilityBudget.growth {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
     {D : CorrectionData period q (Icc (0 : ℝ) T)} (B : StabilityBudget period hT D) (R : ℝ) : ℝ :=
   growthConstant B.c B.bound B.first B.time (velocityBound period q ‖D.approximation‖ R)
@@ -93,18 +96,18 @@ theorem StabilityBudget.nonneg {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
     (norm_nonneg _).trans (B.time_le t),
     (D.linear.coefficient t).bound.coe_nonneg.trans (B.linear_le t),
     (Finset.sum_nonneg (fun i _ => ((D.quadratic i).coefficient t).bound.coe_nonneg)).trans
-      (B.quadratic_le t)⟩
+        (B.quadratic_le t)⟩
 
 /-- The actual fixed growth coefficient is nonnegative for every nonnegative solution bound. -/
 theorem StabilityBudget.growth_nonneg {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
     {D : CorrectionData period q (Icc (0 : ℝ) T)} (B : StabilityBudget period hT D) (R : ℝ) (hR : 0
-      ≤ R) :
+        ≤ R) :
     0 ≤ B.growth period R := by
   obtain ⟨hb,hf,ht,hl,hq⟩ := B.nonneg period
   exact growthConstant_nonneg B.c B.bound B.first B.time _ _ hb hf ht
     (velocityBound_nonneg period q ‖D.approximation‖ R (norm_nonneg D.approximation) hR)
     (lowerConstant_nonneg period q B.linear B.quadratic ‖D.approximation‖ R hl hq (norm_nonneg
-      D.approximation) hR)
+        D.approximation) hR)
 
 /-- The explicit comparison coefficient is nonnegative. -/
 theorem StabilityBudget.comparisonConstant_nonneg {q : ℕ} {T : ℝ} {hT : 0 ≤ T}

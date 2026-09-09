@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowDivergence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # The curl of the finite slow potentials
@@ -18,6 +16,9 @@ The finite Borel prefixes use the average of the axial coefficient and the
 primitive of the angular coefficient.  Their curl is identified here with
 the finite slow field, using the actual radial flux formula and FTC.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,7 +53,7 @@ theorem radialFlux_eq_neg_X_Z_average {U : Inner → ℝ} (hU : ContDiff ℝ ∞
     (h lam : ℝ) (w : Inner) :
     SlowDivergence.radialFlux h lam U w =
       -w.1 * SimilarityProfile.Z h (-CoordinateAlgebra.A h + lam) (ProfileHistories.average U) w :=
-        by
+          by
   have hi := average_radial_identity hU w
   unfold SlowDivergence.radialFlux SimilarityProfile.Z CoordinateAlgebra.axialCoeff
   rw [← hi]
@@ -64,7 +65,7 @@ germ throughout the past-time chart. -/
 theorem physicalUncutPrefix_germ {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (b : ℝ) (f : ℕ → Inner → ℝ) (J : ℕ) {p : Chart} (hp : p.1 < 1) :
     SlowBorelBase.physicalUncutPrefix h b f J =ᶠ[𝓝 p] SlowExpansionResidual.finiteProfile J h b f
-      := by
+        := by
   filter_upwards [(isOpen_lt continuous_fst continuous_const).mem_nhds hp] with y hy
   exact SlowBorelBase.physicalUncutPrefix_eq_finiteProfile hh hh1 b f J hy
 
@@ -73,7 +74,7 @@ theorem partialS_physicalUncutPrefix {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (hf : ∀ n ≤ J, DifferentiableAt ℝ (f n) (SimilarityProfile.inner h p)) :
     AxisymmetricFields.partialS (SlowBorelBase.physicalUncutPrefix h b f J) p =
       SlowExpansionResidual.finiteProfile J h (b - 1) (fun n => SimilarityProfile.partialX (f n)) p
-        := by
+          := by
   change fderiv ℝ _ p (0, (1, 0)) = _
   rw [(physicalUncutPrefix_germ hh hh1 b f J hp).fderiv_eq]
   exact SlowExpansionResidual.partialS_finiteProfile hh hh1 J f hp hf
@@ -99,25 +100,25 @@ theorem prefixStream_axial {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {d : Coefficients} (hd : SmoothCoefficients d) (J : ℕ) (C : ℝ)
     {p : Chart} (hp : p.1 < 1) :
     BaseResidual.prefixStream J h C d p + p.2.1 * AxisymmetricFields.partialS
-      (BaseResidual.prefixStream J h C d) p =
+        (BaseResidual.prefixStream J h C d) p =
       SlowExpansionResidual.slowAxial J h (profiles h d) p := by
   have hq := SimilarityProfile.q_pos hh hh1 hp
   rw [BaseResidual.prefixStream, SlowBorelBase.physicalUncutPrefix_eq_finiteProfile hh hh1 _ _ _ hp]
   rw [partialS_physicalUncutPrefix hh hh1 J _ hp
     (fun n _ => ((SlowBorelBase.bundleComponent_smooth hd C 0 n).differentiable (by
-      simp)).differentiableAt)]
+        simp)).differentiableAt)]
   simp only [SlowExpansionResidual.slowAxial, SlowExpansionResidual.axialExponent, profiles,
-    SlowExpansionResidual.finiteProfile,
+      SlowExpansionResidual.finiteProfile,
     Finset.mul_sum, ← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro n hn
   change SimilarityProfile.pullback h (-CoordinateAlgebra.A h + SlowExpansionResidual.slowOrder h n)
       (ProfileHistories.average (d.axial n)) p +
       p.2.1 * SimilarityProfile.pullback h (-CoordinateAlgebra.A h - 1 +
-        SlowExpansionResidual.slowOrder h n)
+          SlowExpansionResidual.slowOrder h n)
         (SimilarityProfile.partialX (ProfileHistories.average (d.axial n))) p =
     SimilarityProfile.pullback h (-CoordinateAlgebra.A h + SlowExpansionResidual.slowOrder h n)
-      (d.axial n) p
+        (d.axial n) p
   have hi := average_radial_identity (hd.axial n) (SimilarityProfile.inner h p)
   rw [show -CoordinateAlgebra.A h - 1 + SlowExpansionResidual.slowOrder h n =
     (-CoordinateAlgebra.A h + SlowExpansionResidual.slowOrder h n) - 1 by ring]
@@ -133,14 +134,14 @@ theorem prefixSwirl_radial {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       SlowExpansionResidual.slowSwirl J h C (profiles h d) p := by
   rw [BaseResidual.prefixSwirl, partialS_physicalUncutPrefix hh hh1 J _ hp
     (fun n _ => ((SlowBorelBase.bundleComponent_smooth hd C 1 n).differentiable (by
-      simp)).differentiableAt)]
+        simp)).differentiableAt)]
   have he : (fun n => SimilarityProfile.partialX (SlowBorelBase.bundleComponent C d 1 n)) =
       fun n w => -C⁻¹ * d.phi n w := by
     funext n
     exact SlowBorelBase.partialX_swirl_primitive (hd.phi n) C
   rw [he]
   simp only [SlowExpansionResidual.slowSwirl, SlowExpansionResidual.angularExponent, profiles,
-    SlowExpansionResidual.finiteProfile,
+      SlowExpansionResidual.finiteProfile,
     Finset.mul_sum, ← Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl
   intro n hn
@@ -157,9 +158,9 @@ theorem prefixStream_flux {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hq := SimilarityProfile.q_pos hh hh1 hp
   rw [BaseResidual.prefixStream, partialZ_physicalUncutPrefix hh hh1 J _ hp
     (fun n _ => ((SlowBorelBase.bundleComponent_smooth hd C 0 n).differentiable (by
-      simp)).differentiableAt)]
+        simp)).differentiableAt)]
   simp only [SlowExpansionResidual.slowFlux, profiles, SlowExpansionResidual.finiteProfile,
-    Finset.mul_sum, zero_add]
+      Finset.mul_sum, zero_add]
   apply Finset.sum_congr rfl
   intro n hn
   change -p.2.1 * SimilarityProfile.pullback h
@@ -213,11 +214,11 @@ theorem prefixVelocity_eq_profiles {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     norm_num [AxisymmetricResidual.pack, ProblemStatement.coordinateVector, PiLp.single_apply]
     norm_num [Fin.ext_iff]
     dsimp only [AxisymmetricFields.profilePoint]
-    field_simp [hs.ne'] ; ring
+    field_simp [hs.ne']; ring
   · change AxisymmetricFields.velocity (BaseResidual.prefixStream J h C d)
       (BaseResidual.prefixSwirl J h C d) (t, x) 2 = _
     rw [AxisymmetricFields.velocity_two _ _ _ _ hH hK]
-    simp [AxisymmetricResidual.pack, ProblemStatement.coordinateVector] at hu ⊢
+    simp only [Fin.isValue, Fin.reduceFinMk, AxisymmetricResidual.pack_two] at hu ⊢
     exact hu
 
 /-- The physical similarity coordinates range inside this open half strip. -/
@@ -383,7 +384,7 @@ theorem VelocityMatches.flux_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hL := (CoordinateAlgebra.L_pos hh.le hh1 hs).ne'
   exact (SlowDivergence.radialFlux_smoothAt SlowBorelBase.globalRadialDomain
     (hd.axial n).contDiffOn h (SlowExpansionResidual.slowOrder h n) (mem_univ _)
-      hL).congr_of_eventuallyEq
+        hL).congr_of_eventuallyEq
       (coefficient_germ (hm.flux n) hw).symm
 
 theorem CoefficientMatches.pressure_contDiffAt {h C : ℝ} {d : Coefficients}
@@ -398,7 +399,7 @@ theorem finiteIdentities_of_coefficients {h C : ℝ} (hh : 0 < h) (hh1 : h < 1 /
     {d : Coefficients} (hd : SmoothCoefficients d) {f : SlowExpansionResidual.SlowProfiles}
     (hm : CoefficientMatches h C d f)
     (hTheta : ∀ n, SlowStressSupport.Smooth (Ioo (-1) 1) (SlowResidualMatching.thetaDensity h C f
-      n))
+        n))
     (hZ : ∀ n, SlowStressSupport.Smooth (Ioo (-1) 1) (SlowResidualMatching.zDensity h f n))
     (hp : ∀ n, ∀ w ∈ profileWindow, SlowExpansionResidual.pressureCoefficient h C f n w = 0) :
     BaseResidual.FiniteIdentities h C d f := by

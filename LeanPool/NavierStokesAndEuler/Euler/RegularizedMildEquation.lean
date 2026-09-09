@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.HeatRegularizedPaths
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatDerivativeCommutation
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatDerivativeCommutation
+
+/-! Genuine heat regularizations of the constructed mild solution satisfy the differentiated heat
+equation. -/
 
 @[expose] public section
 
-/-! Genuine heat regularizations of the constructed mild solution satisfy the differentiated heat
-  equation. -/
 
 noncomputable section
 
@@ -30,11 +32,12 @@ def regularizedState (T : ℝ) (n : ℕ) (u : C(Icc (0 : ℝ) T, SobolevSpace pe
     C(Icc (0 : ℝ) T, SobolevSpace period 3) :=
   mapPath period T ((heatRegularizer period 0 n).comp (truncateOperator period 0)) u
 
-/-- The same genuine heat regularization of the source, retained at the gradient-energy source order. -/
+/-- The same genuine heat regularization of the source, retained at the gradient-energy source
+order. -/
 def regularizedForcing (T : ℝ) (n : ℕ) (f : C(Icc (0 : ℝ) T, SobolevSpace period 0)) :
     C(Icc (0 : ℝ) T, SobolevSpace period 1) :=
-  mapPath period T ((restrictOperator period (by norm_num : 1 ≤ 3)).comp (heatRegularizer period 0
-    n)) f
+  mapPath period T ((restrictOperator period (by
+      norm_num : 1 ≤ 3)).comp (heatRegularizer period 0 n)) f
 
 /-- The original-order restriction of the regularized state is exactly the actual H¹ heat path. -/
 theorem regularizedState_low_eq (T : ℝ) (n : ℕ) (u : C(Icc (0 : ℝ) T, SobolevSpace period 1)) :
@@ -63,13 +66,13 @@ theorem regularizedState_low_tendsto (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSp
 /-- The source's actual L² value is regularized by the same genuine heat operator. -/
 theorem regularizedForcing_value_eq (T : ℝ) (n : ℕ) (f : C(Icc (0 : ℝ) T, SobolevSpace period 0)) :
     (valueOperator period 1).compLeftContinuous ℝ (Icc (0 : ℝ) T) (regularizedForcing period T n f)
-      =
+        =
       (valueOperator period 0).compLeftContinuous ℝ (Icc (0 : ℝ) T)
         (pathHeat period 0 T (regularizerVariance n) f) := by
   apply ContinuousMap.ext
   intro t
-  change value period (restrictOperator period (by norm_num : 1 ≤ 3) (heatRegularizer period 0 n (f
-    t))) =
+  change value period (restrictOperator period (by
+      norm_num : 1 ≤ 3) (heatRegularizer period 0 n (f t))) =
     value period (heatOperator period 0 (regularizerVariance n) (f t))
   rw [value_restrictOperator, heatRegularizer_value, heatOperator_value]
 
@@ -85,7 +88,7 @@ theorem regularizedForcing_value_tendsto (T : ℝ) (f : C(Icc (0 : ℝ) T, Sobol
     exact heatOperator_zero period (f t)
   rw [hzero] at h
   have hv := ((valueOperator period 0).compLeftContinuous ℝ (Icc (0 : ℝ)
-    T)).continuous.continuousAt.tendsto.comp h
+      T)).continuous.continuousAt.tendsto.comp h
   simpa only [regularizedForcing_value_eq, Function.comp_def] using hv
 
 /-- The first derivative of the genuine regularizer, as a bounded heat-commuting block. -/
@@ -104,7 +107,7 @@ theorem regularizerFirst_heat (n : ℕ) (i : Fin 4) (v : ℝ≥0) (x : SobolevSp
 theorem regularizerFirst_laplacian (n : ℕ) (i : Fin 4) (x : SobolevSpace period 0) :
     laplacianEvaluation period 2 (by norm_num) (regularizerFirst period n i x) =
       value period (derivativeOperator period 0 i (laplacianOperator period 1 (heatRegularizer
-        period 0 n x))) := by
+          period 0 n x))) := by
   rw [← laplacianOperator_value]
   exact congrArg (value period) (laplacian_derivative period i (heatRegularizer period 0 n x))
 
@@ -118,7 +121,7 @@ theorem regularizerFirst_source (n : ℕ) (i : Fin 4) (x : SobolevSpace period 0
 theorem value_derivative_smul_add (i : Fin 4) (ν : ℝ) (a b : SobolevSpace period 1) :
     value period (derivativeOperator period 0 i (ν • a+b)) =
       ν • value period (derivativeOperator period 0 i a) + value period (derivativeOperator period
-        0 i b) := by
+          0 i b) := by
   let L := (valueOperator period 0).comp (derivativeOperator period 0 i)
   change L (ν • a+b) = ν • L a + L b
   rw [map_add, map_smul]
@@ -126,8 +129,8 @@ theorem value_derivative_smul_add (i : Fin 4) (ν : ℝ) (a b : SobolevSpace per
 /-- The exact algebraic form of the regularized first-word heat right-hand side. -/
 theorem regularizerFirst_rhs (n : ℕ) (i : Fin 4) (ν : ℝ)
     (u : SobolevSpace period 1) (f : SobolevSpace period 0) :
-    ν • laplacianEvaluation period 2 (by norm_num) (regularizerFirst period n i (truncateOperator
-      period 0 u)) +
+    ν • laplacianEvaluation period 2 (by
+        norm_num) (regularizerFirst period n i (truncateOperator period 0 u)) +
       value period (regularizerFirst period n i f) =
       value period (derivativeOperator period 0 i
         (ν • laplacianOperator period 1 (heatRegularizer period 0 n (truncateOperator period 0 u)) +
@@ -136,7 +139,8 @@ theorem regularizerFirst_rhs (n : ℕ) (i : Fin 4) (ν : ℝ)
     regularizerFirst_source period n i f]
   exact (value_derivative_smul_add period i ν _ _).symm
 
-/-- Every genuine spatial heat regularization of the actual mild solution satisfies the first-word heat equation used in maximal regularity. -/
+/-- Every genuine spatial heat regularization of the actual mild solution satisfies the first-word
+heat equation used in maximal regularity. -/
 theorem regularizedState_first_time_derivative (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < ν)
     (u₀ : SobolevSpace period 1) (f : C(Icc (0 : ℝ) T, SobolevSpace period 0))
     (u : C(Icc (0 : ℝ) T, SobolevSpace period 1))
@@ -155,12 +159,12 @@ theorem regularizedState_first_time_derivative (T : ℝ) (hT : 0 ≤ T) (ν : �
     (regularizerFirst period n i) (regularizerFirst_heat period n i) ν hν T hT u₀
     (fun t _ => f t) hF u hsol t ht
   have hd' := hd.congr_deriv (regularizerFirst_rhs period n i ν (u ⟨t, ht.1.le, ht.2.le⟩) (f ⟨t,
-    ht.1.le, ht.2.le⟩))
+      ht.1.le, ht.2.le⟩))
   change HasDerivAt _ (value period (derivativeOperator period 0 i
     (ν • laplacianOperator period 1 (heatRegularizer period 0 n (truncateOperator period 0 (u
-      (projIcc 0 T hT t)))) +
-      restrictOperator period (by norm_num : 1 ≤ 3) (heatRegularizer period 0 n (f (projIcc 0 T hT
-        t)))))) t
+        (projIcc 0 T hT t)))) +
+      restrictOperator period (by
+          norm_num : 1 ≤ 3) (heatRegularizer period 0 n (f (projIcc 0 T hT t)))))) t
   rw [projIcc_of_mem hT ⟨ht.1.le, ht.2.le⟩]
   exact hd'
 

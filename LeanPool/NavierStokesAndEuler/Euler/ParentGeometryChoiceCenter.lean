@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryJoinedChoice
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryForwardChoice
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStateGeometry
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentStateGeometry
 
 /-! The center error in a geometric packet choice is the gradient of
 the actual increment between its two Euler states. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +34,7 @@ variable (I : EulerPacketInitial.Input U) (S : SmoothState I.parent)
   (F : GeometryJoinedChoice I S k hk nextEll hnext hnext1)
   (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
 
+/-- Residual type used in parent geometry choice center. -/
 abbrev residual := initializedApproximationResidual I.meanData I.data rfl
   I.historyTime I.history_pos I.history_lt I.history I.geometry.δ I.delta_pos
   I.terminal I.cutoff_support I.alpha I.agreement (truncation k) F.hn k hk.four
@@ -57,7 +59,7 @@ theorem increment_fderiv (t : Icc (0 : ℝ) I.parent.T) (x : Space) :
   rw [he,add_sub_cancel_left]
 
 theorem center_error (t : Icc (0 : ℝ) I.parent.T) :
-    ‖fderiv ℝ (S.velocityIncrement T t) 0-
+    ‖fderiv ℝ (S.velocityIncrement T t) 0 -
       shearTerm (I.geometry.primaryAmplitude I.halfBall)
         (deriv (EulerPeriodicProfile.profile I.geometry.δ)
           (k*⟪I.normal,S.evolution.inverse.normalized t 0⟫_ℝ))
@@ -78,6 +80,7 @@ variable (I : GeometryForwardInput U) (S : SmoothState I.parent)
   (F : GeometryForwardChoice I S k hk nextEll hnext hnext1)
   (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
 
+/-- Residual type used in parent geometry choice center. -/
 abbrev residual := forwardInitializedApproximationResidual I.meanData I.data rfl
   I.geometry.δ I.delta_pos I.geometry.initialCoordinate I.cutoff_support I.alpha
   I.agreement (truncation k) F.hn k hk.four
@@ -102,7 +105,7 @@ theorem increment_fderiv (t : Icc (0 : ℝ) I.parent.T) (x : Space) :
   rw [he,add_sub_cancel_left]
 
 theorem center_error (t : Icc (0 : ℝ) I.parent.T) :
-    ‖fderiv ℝ (S.velocityIncrement T t) 0-
+    ‖fderiv ℝ (S.velocityIncrement T t) 0 -
       shearTerm (I.geometry.primaryAmplitude I.halfBall)
         (deriv (EulerPeriodicProfile.profile I.geometry.δ)
           (k*⟪I.normal,S.evolution.inverse.normalized t 0⟫_ℝ))

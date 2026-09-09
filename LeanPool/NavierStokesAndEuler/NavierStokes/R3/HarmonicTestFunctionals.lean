@@ -8,11 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierSobolevWeights
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HilbertFunctionalExtension
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeakFourierUniqueness
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzCompactApproximation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HilbertFunctionalExtension
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzCompactApproximation
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeakFourierUniqueness
 
 /-!
 # Harmonic functionals bounded in an inhomogeneous Fourier Sobolev norm
@@ -23,6 +21,9 @@ representing function vanishes away from the origin. Since volume has no atom
 at the origin, the whole functional vanishes.
 -/
 
+@[expose] public section
+
+
 
 noncomputable section
 
@@ -32,6 +33,7 @@ namespace NavierStokesR3.HarmonicTestFunctionals
 
 open ProblemStatement Comparison
 
+/-- Frequency L²: an abbreviation for `Lp ℂ 2 (volume : Measure Space)`. -/
 abbrev FrequencyL2 := Lp ℂ 2 (volume : Measure Space)
 
 /-- The `H³` bound supplies a Hilbert-space representative after a polynomial
@@ -43,9 +45,9 @@ theorem exists_inner_representation_of_fourierHNormSq_bound
       F ψ = @inner ℂ FrequencyL2 _ q (FourierSobolevWeights.B ψ) := by
   apply HilbertFunctionalExtension.exists_inner_representation
     FourierSobolevWeights.B FourierSobolevWeights.B_injective F
-  intro ψ
-  exact (hbound ψ).trans (mul_le_mul_of_nonneg_left
-    (FourierSobolevWeights.sqrt_fourierHNormSq_three_le_norm_B ψ) hC)
+  · intro ψ
+    exact (hbound ψ).trans (mul_le_mul_of_nonneg_left
+      (FourierSobolevWeights.sqrt_fourierHNormSq_three_le_norm_B ψ) hC)
 
 /-- In particular, a functional with the stated Fourier bound is continuous
 for the Schwartz topology. -/

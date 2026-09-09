@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDecomposition
-public import LeanPool.NavierStokesAndEuler.Euler.MeanMollificationHarmonic
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicComponents
 public import LeanPool.NavierStokesAndEuler.Euler.MeanLocalL2Energy
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicScaling
+public import LeanPool.NavierStokesAndEuler.Euler.MeanMollifierLimit
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicComponents
+import LeanPool.NavierStokesAndEuler.Euler.MeanMollificationHarmonic
+
+/-! The proved harmonic interior bound for the actual weak L² solution. -/
 
 @[expose] public section
 
-/-! The proved harmonic interior bound for the actual weak L² solution. -/
 
 noncomputable section
 
@@ -50,6 +53,8 @@ theorem weakHarmonic_pointwise (u : L2) (hu : WeakHarmonicOn (Metric.ball (0 : S
       (scalarWeakHarmonicOn_of_vector_tests _ u hu i))
   simpa only [lpNorm_coe_L2] using H
 
+/-- Weak harmonic small ball constant, given by `(Real.pi * 4 / 3) *
+harmonicQuarterBallConstant`. -/
 def weakHarmonicSmallBallConstant : ℝ := (Real.pi * 4 / 3) * harmonicQuarterBallConstant
 
 theorem weakHarmonicSmallBallConstant_nonneg : 0 ≤ weakHarmonicSmallBallConstant := by
@@ -59,7 +64,7 @@ theorem weakHarmonicSmallBallConstant_nonneg : 0 ≤ weakHarmonicSmallBallConsta
 /-- Source localization for weakly harmonic fields: the radius enters with the genuine power 3. -/
 theorem weakHarmonic_smallBall_energy (u : L2)
     (hu : WeakHarmonicOn (Metric.ball (0 : Space) 1) u)
-    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4) :
+    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4) :
     localL2Energy (Metric.ball (0 : Space) r) u ≤
       weakHarmonicSmallBallConstant * r^3 * ‖u‖^2 := by
   have hb : ∀ᵐ x ∂volume, x ∈ Metric.ball (0 : Space) r →

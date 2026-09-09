@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
+public import Mathlib.MeasureTheory.Function.AbsolutelyContinuous
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
 
 /-!
 # Operator products of genuine H¹ fields with arbitrary terminal trace
@@ -17,6 +17,9 @@ Unlike a terminal primitive, a momentum field need not vanish at the final time.
 This file constructs the derivative of a C¹ coefficient times any actual AC
 representative with Bochner L² value and derivative classes.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

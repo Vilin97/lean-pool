@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonBaseContext
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CopyAngularInvariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeStateCoherence
-
-@[expose] public section
 
 /-!
 # The actual fixed-base residual in every common chart
@@ -19,6 +16,9 @@ Pressure and error are normalized values of the same final Cartesian base.
 The equation is derived from its proved residual identity on the entire
 free auxiliary lift, rather than only on a physical graph.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -72,9 +72,9 @@ theorem graphResidual_scaled_viscosity {Ω : Set E} {U : Set F} {Γ : E → F}
     simp only [graphResidual, LinearWaveResidual.realTransport,
       LinearWaveResidual.realFrameLaplacian, LinearWaveResidual.realAngularGenerator,
       cylindricalLaplacian, Matrix.cons_val_zero', Matrix.cons_val_succ', Matrix.cons_val_zero,
-        Matrix.cons_val_one, hAr, hAθ, hAz, hAt, hArr, hAθθ, hAzz, hPr, hPθ, hPz,
+          Matrix.cons_val_one, hAr, hAθ, hAz, hAt, hArr, hAθθ, hAzz, hPr, hPθ, hPz,
       smul_eq_mul, G.radius x hx] <;>
-    field_simp [hl, hr] ; ring
+    field_simp [hl, hr]; ring
 
 
 /-- The full residual depends only on germs, including its second derivatives. -/
@@ -96,9 +96,13 @@ theorem graphResidual_congr {U : Set E} (hU : IsOpen U) (ε : ℝ)
 
 end Pullback
 
+/-- Point: an abbreviation for `CommonBaseContext.Point`. -/
 abbrev Point := CommonBaseContext.Point
+/-- Full: an abbreviation for `Point × ℝ`. -/
 abbrev Full := Point × ℝ
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- Translation invariance propagates through every derivative in the residual. -/
@@ -124,8 +128,10 @@ theorem graphResidual_invariant (θ : Full) (ε : ℝ) (R : Full → ℝ)
     hpressure Vr hr, hpressure Vθ htheta, hpressure Vz hz]
 
 
+/-- Domain, given by `{x | 0 < x.1.1 ∧ 0 < x.1.2.1.1}`. -/
 noncomputable def domain : Set Full := {x | 0 < x.1.1 ∧ 0 < x.1.2.1.1}
 
+/-- Time domain, given by `{x | 0 < x.1.2.1.1}`. -/
 noncomputable def timeDomain : Set Full := {x | 0 < x.1.2.1.1}
 
 theorem domain_open : IsOpen domain :=
@@ -135,6 +141,7 @@ theorem domain_open : IsOpen domain :=
 theorem timeDomain_open : IsOpen timeDomain :=
   isOpen_lt continuous_const continuous_fst.snd.fst.fst
 
+/-- Cylinder linear, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def cylinderLinear (h Q : ℝ) : Full →L[ℝ] SpaceTime where
   toFun x := (-Q * x.1.2.1.1,
     AxisymmetricResidual.pack (Real.sqrt Q * x.1.1) x.2
@@ -158,6 +165,8 @@ noncomputable def cylinderLinear (h Q : ℝ) : Full →L[ℝ] SpaceTime where
         (continuous_snd.smul continuous_const)).add
           ((continuous_const.mul continuous_fst.snd.fst.snd).smul continuous_const)
 
+/-- Cylinder point, given by `(1 - Q * x.1.2.1.1, AxisymmetricResidual.pack (Real.sqrt Q *
+x.1.1) x.2 (Q ^ CoordinateAlgebra.D h * x.1.2.1.2))`. -/
 noncomputable def cylinderPoint (h Q : ℝ) (x : Full) : SpaceTime :=
   (1 - Q * x.1.2.1.1, AxisymmetricResidual.pack (Real.sqrt Q * x.1.1) x.2
     (Q ^ CoordinateAlgebra.D h * x.1.2.1.2))
@@ -183,6 +192,8 @@ theorem cylinderPoint_hasFDerivAt (h Q : ℝ) (x : Full) :
   rw [he]
   exact (cylinderLinear h Q).hasFDerivAt.const_add (1, 0)
 
+/-- Physical point, given by `((cylinderPoint h Q x).1, CylindricalResidual.chart (cylinderPoint
+h Q x).2)`. -/
 noncomputable def physicalPoint (h Q : ℝ) (x : Full) : SpaceTime :=
   ((cylinderPoint h Q x).1, CylindricalResidual.chart (cylinderPoint h Q x).2)
 
@@ -319,6 +330,7 @@ theorem cylinderPullback {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ) :
 
 section CylindricalRegularity
 
+/-- Cartesian cylinder, given by `(x.1, CylindricalResidual.chart x.2)`. -/
 noncomputable def cartesianCylinder (x : SpaceTime) : SpaceTime :=
   (x.1, CylindricalResidual.chart x.2)
 
@@ -359,11 +371,14 @@ theorem axisymmetric_components (b f u : AxisymmetricFields.Profile) (t : ℝ) (
   · linear_combination (q 0 * f (t, ((q 0)^2 / 2, q 2))) * Real.cos_sq_add_sin_sq (q 1)
 
 
+/-- Profile at scale, given by `(1 - Q * x.2.1.1, (Q * x.1 ^ 2 / 2, Q ^ CoordinateAlgebra.D h *
+x.2.1.2))`. -/
 noncomputable def profileAtScale (h Q : ℝ) (x : Point) : AxisymmetricFields.ProfilePoint :=
   (1 - Q * x.2.1.1, (Q * x.1 ^ 2 / 2, Q ^ CoordinateAlgebra.D h * x.2.1.2))
 
+/-- Profile jacobian as an element of `Point →L[ℝ] AxisymmetricFields.ProfilePoint`. -/
 noncomputable def profileJacobian (h Q : ℝ) (x : Point) : Point →L[ℝ]
-  AxisymmetricFields.ProfilePoint :=
+    AxisymmetricFields.ProfilePoint :=
   ((-Q) • (ContinuousLinearMap.fst ℝ ℝ ℝ).comp
     ((ContinuousLinearMap.fst ℝ (ℝ × ℝ) (ℝ × ℝ)).comp (ContinuousLinearMap.snd ℝ ℝ _))).prod
   (((Q * x.1) • ContinuousLinearMap.fst ℝ ℝ _).prod
@@ -440,7 +455,7 @@ theorem tangentialStressForce_components (theta axial : AxisymmetricFields.Profi
   have he : AxisymmetricFields.radialEnergy (CylindricalResidual.chart q) = (q 0)^2/2 :=
     congrArg (fun p : AxisymmetricFields.ProfilePoint => p.2.1) (profilePoint_chart t q)
   have hsqrt : Real.sqrt (2 * AxisymmetricFields.radialEnergy (CylindricalResidual.chart q)) = q 0
-    := by
+      := by
     rw [he, show 2 * ((q 0)^2 / 2) = (q 0)^2 by ring,
       Real.sqrt_sq_eq_abs, abs_of_pos hr]
   simp only [SlowResidualMatching.tangentialStressForce, hsqrt, profilePoint_chart]
@@ -471,7 +486,11 @@ theorem cylinderPoint_bandChart (h : ℝ) (n m k : ℕ) (x : Point) (theta : ℝ
   · field_simp [(ChartScales.Q_pos m).ne']
   · apply PiLp.ext
     intro i
-    fin_cases i <;> simp [AxisymmetricResidual.pack, ProblemStatement.coordinateVector]
+    fin_cases i <;> simp only [AxisymmetricResidual.pack, one_div,
+        ProblemStatement.coordinateVector, Fin.isValue, Fin.zero_eta, PiLp.add_apply,
+            PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+                not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq,
+                    Fin.mk_one, one_ne_zero, zero_add, Fin.reduceFinMk]
     · rw [Real.sqrt_eq_rpow, Real.sqrt_eq_rpow, ← mul_assoc]
       norm_num only [one_div] at ⊢
       rw [band_power_product]
@@ -500,19 +519,23 @@ noncomputable def errorAtScale (Q : ℝ) (x : Full) : Fin 3 → ℝ := fun i =>
     CylindricalResidual.frame (-x.2)
       (FinalSlowBase.error H v upper B (physicalPoint F.data.h Q x)) i
 
+/-- Velocity at scale as an element of `Fin 3 → ℝ`. -/
 noncomputable def velocityAtScale (Q : ℝ) (x : Full) : Fin 3 → ℝ := fun i =>
   Q ^ CoordinateAlgebra.A F.data.h *
     CylindricalResidual.frame (-x.2)
       (FinalSlowBase.velocity H v upper B (physicalPoint F.data.h Q x)) i
 
+/-- Stress at scale as an element of `Fin 3 → ℝ`. -/
 noncomputable def stressAtScale (Q : ℝ) (x : Full) : Fin 3 → ℝ := fun i =>
   Q ^ (2 * CoordinateAlgebra.A F.data.h + 1 / 2) *
     CylindricalResidual.frame (-x.2)
       (FinalSlowBase.stressForce H v upper B (physicalPoint F.data.h Q x)) i
 
+/-- Base pressure, given by `pressureAtScale H v upper B (ChartScales.Q n)`. -/
 noncomputable def basePressure (n : ℕ) : Full → ℝ :=
   pressureAtScale H v upper B (ChartScales.Q n)
 
+/-- Base error, given by `errorAtScale H v upper B (ChartScales.Q n)`. -/
 noncomputable def baseError (n : ℕ) : Full → Fin 3 → ℝ :=
   errorAtScale H v upper B (ChartScales.Q n)
 
@@ -520,13 +543,13 @@ theorem pressureAtScale_smooth {Q : ℝ} (hQ : 0 < Q) :
     ContDiffOn ℝ ∞ (pressureAtScale H v upper B Q) timeDomain :=
   contDiffOn_const.mul ((FinalSlowBase.pressure_smooth H v upper B).comp
     (physicalPoint_smooth F.data.h Q).contDiffOn (fun _ hx => ⟨physicalPoint_time (h := F.data.h)
-      hQ hx, Set.mem_univ _⟩))
+        hQ hx, Set.mem_univ _⟩))
 
 theorem errorAtScale_smooth {Q : ℝ} (hQ : 0 < Q) (i : Fin 3) :
     ContDiffOn ℝ ∞ (fun x => errorAtScale H v upper B Q x i) timeDomain := by
   have he := (FinalSlowBase.error_smooth H v upper B).comp
     (physicalPoint_smooth F.data.h Q).contDiffOn (fun _ hx => ⟨physicalPoint_time (h := F.data.h)
-      hQ hx, Set.mem_univ _⟩)
+        hQ hx, Set.mem_univ _⟩)
   have hr := (CylindricalResidual.contDiff_frame.comp contDiff_snd.neg).contDiffOn.clm_apply he
   exact contDiffOn_const.mul ((AxisymmetricFields.projection i).contDiff.comp_contDiffOn hr)
 
@@ -577,7 +600,7 @@ theorem scaled_residual {Q : ℝ} (hQ : 0 < Q) (k : ℕ) {x : Full} (hx : x ∈ 
   rw [hfun, hpfun, (scale_identities hQ F.data.h).2.2.2] at hscale
   rw [hscale]
   have htarget : cylinderPoint F.data.h Q x ∈ BaseResidual.past := ⟨physicalPoint_time (h :=
-    F.data.h) hQ hx.2, Set.mem_univ _⟩
+      F.data.h) hQ hx.2, Set.mem_univ _⟩
   erw [congrFun (graphResidual_eq_cylindrical BaseResidual.past_isOpen hu hp htarget) i]
   have huv := (FinalSlowBase.velocity_smooth H v upper B).contDiffAt
     (BaseResidual.past_isOpen.mem_nhds
@@ -721,12 +744,12 @@ theorem stressAtScale_eq_virtualDivergence (index : ℕ → ℕ) (n : ℕ) {x : 
   have hθeq : c.virtualTheta n =ᶠ[𝓝 x.1]
       (fun y => Q ^ (2 * CoordinateAlgebra.A F.data.h) * Sθ (profileAtScale F.data.h Q y)) := by
     filter_upwards [(isOpen_lt continuous_const (continuous_fst : Continuous (fun y : Point =>
-      y.1))).mem_nhds hx.1] with y hy
+        y.1))).mem_nhds hx.1] with y hy
     exact virtualTheta_eq H v upper B index n hy
   have hzeq : c.virtualAxial n =ᶠ[𝓝 x.1]
       (fun y => Q ^ (2 * CoordinateAlgebra.A F.data.h) * Sz (profileAtScale F.data.h Q y)) := by
     filter_upwards [(isOpen_lt continuous_const (continuous_fst : Continuous (fun y : Point =>
-      y.1))).mem_nhds hx.1] with y hy
+        y.1))).mem_nhds hx.1] with y hy
     exact virtualAxial_eq H v upper B index n hy
   have hθdiv := normalized_profile_radialDiv c.operators n rfl rfl
     (w := TorusInverse.vector .radial) rfl (ChartScales.Q_pos n) F.data.h 2 Sθ hx.1 hθ
@@ -750,7 +773,7 @@ theorem stressAtScale_eq_virtualDivergence (index : ℕ → ℕ) (n : ℕ) {x : 
       profileAtScale F.data.h Q x.1 := by
     simp only [cylinderPoint, profileAtScale, AxisymmetricResidual.pack_zero,
       AxisymmetricResidual.pack_two, mul_pow, Real.sq_sqrt (show 0 ≤ Q from (ChartScales.Q_pos
-        n).le)]
+          n).le)]
   rw [hp] at hs
   simp only [cylinderPoint, AxisymmetricResidual.pack_one] at hs
   ext i
@@ -823,7 +846,7 @@ theorem baseError_angular_continuous (n : ℕ) {x : Point} (hx : 0 < x.2.1.1) (i
   intro theta
   exact ((baseError_smooth H v upper B n i).contDiffAt
     (timeDomain_open.mem_nhds hx)).continuousAt.comp (continuous_const.prodMk
-      continuous_id).continuousAt
+        continuous_id).continuousAt
 
 
 /-- The pressure stored separately from the correction's pressure increment. -/
@@ -839,7 +862,7 @@ theorem basePressure_band (n m k : ℕ) (x : Point) (theta : ℝ) :
     basePressure H v upper B n (x, theta) =
       (ChartScales.Q n / ChartScales.Q m) ^ (2 * CoordinateAlgebra.A F.data.h) *
         basePressure H v upper B m (GaugeStateCoherence.bandChartEquiv F.data.h n m k x, theta) :=
-          by
+            by
   simp only [basePressure, pressureAtScale, physicalPoint_bandChart]
   rw [← mul_assoc, mul_comm ((ChartScales.Q n / ChartScales.Q m) ^ _) (ChartScales.Q m ^ _),
     band_power_product]
@@ -852,6 +875,8 @@ theorem baseError_band (n m k : ℕ) (x : Point) (theta : ℝ) (i : Fin 3) :
   rw [← mul_assoc, mul_comm ((ChartScales.Q n / ChartScales.Q m) ^ _) (ChartScales.Q m ^ _),
     band_power_product]
 
+/-- Error state, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the
+required compatibility proofs. -/
 noncomputable def errorState : CorrectionState.State Point where
   mean := ⟨0, 0, 0⟩
   pressure := 0
@@ -932,8 +957,8 @@ theorem baseError_angle_eq (n : ℕ) {x : Point} (hR : 0 < x.1) (hT : 0 < x.2.1.
     (PhysicalResidualTZ.graphAxialTZ G) (PhysicalResidualTZ.graphTemporalTZ G)
     (baseComponents c n) (basePressure H v upper B n) hr hvr hvtheta hvz hvt ha hp i
   have he := hinv (x, 0) theta
-  simp only [Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.mk_add_mk, add_zero, zero_add] at
-    he
+  simp only [Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.mk_add_mk, add_zero, zero_add]
+      at he
   have ht := fixed_base_residual H v upper B (fun _ => 0) n (x := (x, theta)) ⟨hR, hT⟩ i
   have h0 := fixed_base_residual H v upper B (fun _ => 0) n (x := (x, 0)) ⟨hR, hT⟩ i
   change _ = _ at he

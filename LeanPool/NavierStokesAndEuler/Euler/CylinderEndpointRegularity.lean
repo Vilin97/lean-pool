@@ -7,16 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
 
 /-!
 Genuine mixed spatial/angular regularity of the nonzero-terminal cylinder
 inverse. The terminal datum's actual translation orbit is the only field
 regularity assumption; output regularity follows from the forced inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -106,7 +107,7 @@ theorem endpointDerivative_orbit_contDiff :
   have ha := product_orbit_contDiff P D.Q hQ _
     (D.endpointAcceleration_orbit_contDiff P hQ hQ₁ hH Y hY)
   have he : D.endpointDerivative P Y =
-      fullMultiplierMap P D.Q₁ (D.endpointCoordinate P Y)+
+      fullMultiplierMap P D.Q₁ (D.endpointCoordinate P Y) +
         fullMultiplierMap P D.Q (D.endpointAcceleration P Y) := rfl
   simpa only [he,map_add] using hv.add ha
 

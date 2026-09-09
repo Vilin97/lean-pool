@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Time averages of finite-energy fields
@@ -20,6 +20,9 @@ interval. Their spatial integrability follows from joint continuity and the
 uniform spatial integral bounds; no time derivative or global spatial
 derivative bound is used.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -32,7 +35,7 @@ namespace NavierStokesR3.Comparison
 open ProblemStatement
 
 /-- The time average against a scalar weight on the comparison interval. -/
-def timeAverage {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+def timeAverage {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (T : ℝ) (a : ℝ → ℝ) (f : SpaceTime → E) (x : Space) : E :=
   ∫ t in Icc 0 T, a t • f (t, x)
 
@@ -110,7 +113,7 @@ theorem timeAverage_integrand_integrable {E : Type*} [NormedAddCommGroup E]
 
 /-- The time average of a uniformly `L¹` field lies in spatial `L¹`. -/
 theorem timeAverage_integrable {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
     (ha : ContinuousOn a (Icc 0 T)) (hf : ContinuousOn f (slab 0 T))
     (hslice : ∀ t ∈ Icc 0 T, Integrable (fun x : Space => f (t, x)))
     (hbound : ∀ t ∈ Icc 0 T, (∫ x : Space, ‖f (t, x)‖) ≤ M) :
@@ -120,7 +123,7 @@ theorem timeAverage_integrable {E : Type*} [NormedAddCommGroup E]
 /-- The spatial `L¹` norm of an average is bounded by the uniform spatial
 norm bound times the time integral of the weight's absolute value. -/
 theorem timeAverage_norm_integral_le {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
     (ha : ContinuousOn a (Icc 0 T)) (hf : ContinuousOn f (slab 0 T))
     (hslice : ∀ t ∈ Icc 0 T, Integrable (fun x : Space => f (t, x)))
     (hbound : ∀ t ∈ Icc 0 T, (∫ x : Space, ‖f (t, x)‖) ≤ M) :
@@ -142,7 +145,7 @@ theorem timeAverage_norm_integral_le {E : Type*} [NormedAddCommGroup E]
 
 /-- Fubini for a uniformly `L¹` field and a continuous time weight. -/
 theorem integral_timeAverage_eq {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
     (ha : ContinuousOn a (Icc 0 T)) (hf : ContinuousOn f (slab 0 T))
     (hslice : ∀ t ∈ Icc 0 T, Integrable (fun x : Space => f (t, x)))
     (hbound : ∀ t ∈ Icc 0 T, (∫ x : Space, ‖f (t, x)‖) ≤ M) :
@@ -184,7 +187,7 @@ theorem norm_integral_sq_le_measure_mul_integral_sq
 /-- Integrating in the finite time variable sends a square-integrable joint
 field to a square-integrable spatial field. -/
 theorem memLp_two_timeIntegral {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T : ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T : ℝ} {f : SpaceTime → E}
     (hf : AEStronglyMeasurable f
       (((volume : Measure ℝ).restrict (Icc 0 T)).prod (volume : Measure Space)))
     (hsq : Integrable (fun z : SpaceTime => ‖f z‖ ^ 2)
@@ -202,7 +205,7 @@ theorem memLp_two_timeIntegral {E : Type*} [NormedAddCommGroup E]
 /-- The quantitative estimate behind square-integrability of the time
 integral. -/
 theorem l2Sq_timeIntegral_le {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T : ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T : ℝ} {f : SpaceTime → E}
     (hf : AEStronglyMeasurable f
       (((volume : Measure ℝ).restrict (Icc 0 T)).prod (volume : Measure Space)))
     (hsq : Integrable (fun z : SpaceTime => ‖f z‖ ^ 2)
@@ -247,7 +250,7 @@ theorem timeAverage_integrand_integrable_sq_norm {E : Type*} [NormedAddCommGroup
 /-- The time average of a uniformly square-integrable field lies in spatial
 `L²`. -/
 theorem timeAverage_memLp_two {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
     (ha : ContinuousOn a (Icc 0 T)) (hf : ContinuousOn f (slab 0 T))
     (hslice : ∀ t ∈ Icc 0 T, Integrable (fun x : Space => ‖f (t, x)‖ ^ 2))
     (hbound : ∀ t ∈ Icc 0 T, (∫ x : Space, ‖f (t, x)‖ ^ 2) ≤ M) :
@@ -258,7 +261,7 @@ theorem timeAverage_memLp_two {E : Type*} [NormedAddCommGroup E]
 /-- A quantitative square-integral estimate using only the time weight and
 the uniform spatial square-integral bound. -/
 theorem timeAverage_l2Sq_le {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [CompleteSpace E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
+    [NormedSpace ℝ E] {T M : ℝ} {a : ℝ → ℝ} {f : SpaceTime → E}
     (hT : 0 ≤ T) (ha : ContinuousOn a (Icc 0 T)) (hf : ContinuousOn f (slab 0 T))
     (hslice : ∀ t ∈ Icc 0 T, Integrable (fun x : Space => ‖f (t, x)‖ ^ 2))
     (hbound : ∀ t ∈ Icc 0 T, (∫ x : Space, ‖f (t, x)‖ ^ 2) ≤ M) :
@@ -363,7 +366,7 @@ theorem continuousOn_tensorDiff_field {T : ℝ} {u v : VelocityField}
   have hvi := (EuclideanSpace.proj i : Space →L[ℝ] ℝ).continuous.comp_continuousOn hv
   have hvj := (EuclideanSpace.proj j : Space →L[ℝ] ℝ).continuous.comp_continuousOn hv
   simpa only [tensorDiff, Prod.mk.eta, Pi.sub_apply, Pi.mul_apply, Function.comp_def,
-    EuclideanSpace.coe_proj] using! (hui.mul huj).sub (hvi.mul hvj)
+      EuclideanSpace.coe_proj] using! (hui.mul huj).sub (hvi.mul hvj)
 
 /-- Uniform finite kinetic energy gives spatial `L¹` for each averaged
 nonlinear tensor component. -/

@@ -6,14 +6,22 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Tactic
-
-@[expose] public section
+public import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.NatFactorial
+import Mathlib.Tactic.Ring.RingNF
 
 /-! Products of intermediate entries of a nonnegative log-convex
 sequence are bounded by the corresponding endpoint product.  The
 proof also covers zero entries and uses no logarithm or division. -/
+
+@[expose] public section
+
 
 namespace EulerNonnegativeLogConvex
 

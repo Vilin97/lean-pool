@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpLinearity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpMap
+
+/-! Uniform-time spatial word bounds imply the genuine Bochner word bounds. -/
 
 @[expose] public section
 
-/-! Uniform-time spatial word bounds imply the genuine Bochner word bounds. -/
 
 noncomputable section
 
@@ -33,13 +35,13 @@ theorem pathLpOperator_norm_sqrt {E : Type*} [NormedAddCommGroup E] [NormedSpace
   simpa only [pathLpOperator_apply, hm, ← Real.sqrt_eq_rpow] using pathLp_bound T hT f
 
 theorem timeTranslation_pathLp (T : ℝ) (hT : 0 ≤ T) (a : Space)
-    (p : C(Icc (0 : ℝ) T,L2)) :
+    (p : C(Icc (0 : ℝ) T, L2)) :
     timeTranslation T a (pathLp T hT p) = pathLp T hT (pathTranslation T a p) :=
   pathLp_map T hT (translation a).toContinuousLinearMap p
 
 /-- The genuine Bochner embedding commutes with all external spatial words. -/
 theorem pathLp_block_le {ι : Type*} [Fintype ι] (directions : ι → Space) (q : ℕ)
-    (T : ℝ) (hT : 0 ≤ T) (p : C(Icc (0 : ℝ) T,L2))
+    (T : ℝ) (hT : 0 ≤ T) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) (n : ℕ) (x : Space) :
     block directions q (fun a : Space => timeTranslation T a (pathLp T hT p)) n x ≤
       Real.sqrt T*block directions q (fun a : Space => pathTranslation T a p) n x := by

@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.H5RealCylinderAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.ExternalTransportCommutator
+public import LeanPool.NavierStokesAndEuler.Euler.GeneralCylinderAlgebra
+public import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
+import LeanPool.NavierStokesAndEuler.Euler.ExternalTransportCommutator
+import LeanPool.NavierStokesAndEuler.Euler.H5RealCylinderAlgebra
+
+/-! Actual lower-base Sobolev bounds for the transport pressure, without an external derivative
+loss. -/
 
 @[expose] public section
 
-/-! Actual lower-base Sobolev bounds for the transport pressure, without an external derivative
-  loss. -/
 
 noncomputable section
 
@@ -37,17 +40,17 @@ theorem product_wordH5Norm_bound (q n : ℕ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w g) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period 5 n (fun x => f x • g x) ≤
       lowerProductConstant period q * leibnizConvolution
         (fun l => wordSobolevNorm period 5 l f) (fun l => wordSobolevNorm period 5 l g) n := by
   induction n generalizing f g with
   | zero =>
     simpa [leibnizConvolution, lowerProductConstant, mul_assoc] using
-      EulerH5CylinderAlgebra.cylinder_Hq_scalar_vector_product period (by norm_num : 5 ≤ 5) q f g
-        hf hg (fun j _ w => hfL2 j w) (fun j _ w => hgL2 j w)
+      EulerH5CylinderAlgebra.cylinder_Hq_scalar_vector_product period (by
+          norm_num : 5 ≤ 5) q f g hf hg (fun j _ w => hfL2 j w) (fun j _ w => hgL2 j w)
   | succ n ih =>
     rw [wordSobolevNorm_succ]
     calc
@@ -58,7 +61,7 @@ theorem product_wordH5Norm_bound (q n : ℕ)
            leibnizConvolution
             (fun l => wordSobolevNorm period 5 l f)
             (fun l => wordSobolevNorm period 5 l (fieldDerivative period (standardDirection i) g))
-              n) := by
+                n) := by
         apply Finset.sum_le_sum
         intro i _
         rw [fieldDerivative_smul period _ f g hf hg]
@@ -74,7 +77,7 @@ theorem product_wordH5Norm_bound (q n : ℕ)
           (product_all_memLp period q _ g hdf hg hdfL2 hgL2)
           (product_all_memLp period q f _ hf hdg hfL2 hdgL2)).trans
           ((add_le_add (ih _ _ hdf hg hdfL2 hgL2) (ih _ _ hf hdg hfL2 hdgL2)).trans_eq (mul_add
-            ..).symm)
+              ..).symm)
       _ = _ := by
         rw [← Finset.mul_sum, Finset.sum_add_distrib,
           sum_leibnizConvolution_left, sum_leibnizConvolution_right]
@@ -86,7 +89,7 @@ theorem product_wordH5Norm_bound (q n : ℕ)
 theorem derivative_H5_le_H6 {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (i : Fin 4) (f : LiftDomain period → F) :
     liftSobolevNorm period 5 (fieldDerivative period (standardDirection i) f) ≤ 1365 *
-      liftSobolevNorm period 6 f := by
+        liftSobolevNorm period 6 f := by
   have h : liftSobolevNorm period 5 (fieldDerivative period (standardDirection i) f) ≤
       ∑ r ∈ Finset.range (5+1), ∑ _w : Fin r → Fin 4, liftSobolevNorm period 6 f := by
     apply Finset.sum_le_sum
@@ -95,7 +98,7 @@ theorem derivative_H5_le_H6 {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ 
     intro w _
     obtain ⟨v, hv⟩ := iteratedFieldDerivative_comp_exists period w (fun _ : Fin 1 => i) f
     change (eLpNorm (iteratedFieldDerivative period w (iteratedFieldDerivative period (fun _ : Fin
-      1 => i) f)) 2 (liftMeasure period)).toReal ≤ _
+        1 => i) f)) 2 (liftMeasure period)).toReal ≤ _
     rw [hv]
     exact word_L2_le_liftSobolevNorm period (by have := Finset.mem_range.mp hr; omega) v f
   apply h.trans_eq
@@ -103,7 +106,8 @@ theorem derivative_H5_le_H6 {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ 
   norm_num [Finset.sum_range_succ]
   ring
 
-/-- Raising the external count by one while lowering the fixed base index consumes no higher Sobolev norm. -/
+/-- Raising the external count by one while lowering the fixed base index consumes no higher Sobolev
+norm. -/
 theorem lower_word_shift_le {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (n : ℕ) (f : LiftDomain period → F)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x)) :
@@ -119,7 +123,7 @@ theorem lower_word_shift_le {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ 
   have he : (∑ i : Fin 4, liftSobolevNorm period 5
       (iteratedFieldDerivative period w (fieldDerivative period (standardDirection i) f))) =
       ∑ i : Fin 4, liftSobolevNorm period 5 (fieldDerivative period (standardDirection i)
-        (iteratedFieldDerivative period w f)) := by
+          (iteratedFieldDerivative period w f)) := by
     apply Finset.sum_congr rfl
     intro i _
     rw [word_derivative_comm period w (standardDirection i) f hf]
@@ -138,13 +142,13 @@ theorem transport_wordH5Norm_bound (q n : ℕ)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period 5 n (transportField period q b e) ≤
       lowerProductConstant period q * leibnizConvolution
         (fun l => wordSobolevNorm period 5 l b) (fun l => wordSobolevNorm period 5 (l + 1) e) n :=
-          by
+            by
   have hbi (i : Fin 4) := postcomp_smooth period (coordinate 4 i) b hb
   have hbiL2 (i : Fin 4) : ∀ j, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w (coordinate 4 i ∘ b)) 2 (liftMeasure period) :=
@@ -159,7 +163,7 @@ theorem transport_wordH5Norm_bound (q n : ℕ)
     _ ≤ ∑ i : Fin 4, lowerProductConstant period q * leibnizConvolution
         (fun l => wordSobolevNorm period 5 l b)
         (fun l => wordSobolevNorm period 5 l (fieldDerivative period (standardDirection i) e)) n :=
-          by
+            by
       apply Finset.sum_le_sum
       intro i _
       have hp := product_wordH5Norm_bound period q n (coordinate 4 i ∘ b) _ (hbi i)
@@ -171,7 +175,7 @@ theorem transport_wordH5Norm_bound (q n : ℕ)
       exact mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left
           (wordSobolevNorm_postcomp_le period 5 l (coordinate 4 i) (coordinate_norm_le 4 i) b hb
-            hbL2)
+              hbL2)
           (Nat.cast_nonneg _)) (wordSobolevNorm_nonneg period 5 (n-l) _)
     _ = _ := by
       rw [← Finset.mul_sum, sum_leibnizConvolution_right]
@@ -183,9 +187,9 @@ theorem transport_lower_no_loss (n : ℕ)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period 5 n (transportField period 3 b e) ≤
       (5460 * lowerProductConstant period 3) * leibnizConvolution
         (fun l => wordSobolevNorm period 6 l b) (fun l => wordSobolevNorm period 6 l e) n := by
@@ -193,14 +197,14 @@ theorem transport_lower_no_loss (n : ℕ)
   have hconv : leibnizConvolution (fun l => wordSobolevNorm period 5 l b)
       (fun l => wordSobolevNorm period 5 (l+1) e) n ≤
       5460 * leibnizConvolution (fun l => wordSobolevNorm period 6 l b) (fun l => wordSobolevNorm
-        period 6 l e) n := by
+          period 6 l e) n := by
     unfold leibnizConvolution
     rw [Finset.mul_sum]
     apply Finset.sum_le_sum
     intro l _
     have h := mul_le_mul
-      (mul_le_mul_of_nonneg_left (wordSobolevNorm_mono period (by norm_num : 5 ≤ 6) l b)
-        (Nat.cast_nonneg (n.choose l)))
+      (mul_le_mul_of_nonneg_left (wordSobolevNorm_mono period (by
+          norm_num : 5 ≤ 6) l b) (Nat.cast_nonneg (n.choose l)))
       (lower_word_shift_le period (n-l) e he) (wordSobolevNorm_nonneg period 5 (n-l+1) e)
       (mul_nonneg (Nat.cast_nonneg (n.choose l)) (wordSobolevNorm_nonneg period 6 l b))
     exact h.trans_eq (by ring)

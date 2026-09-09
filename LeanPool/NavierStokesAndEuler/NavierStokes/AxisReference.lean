@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalAxisBridge
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisSeries
 
-@[expose] public section
-
 /-!
 # Identification and positivity of the actual natural-axis reference
 
@@ -19,6 +17,9 @@ resolvent. Its coefficient recurrence identifies its evaluation with the entire
 leading series. Uniform estimates for the actual nonlinear profiles then preserve
 positivity and a strict logarithmic-slope margin at one common parameter scale.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -112,7 +113,7 @@ theorem reference_coefficient (I : Window) {ε : ℝ} (hε : 0 < ε)
       have hn2 : (n : ℝ) + 2 ≠ 0 := by positivity
       simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one,
         radialDivisor, Nat.cast_ofNat, pow_succ]
-      field_simp ; ring
+      field_simp; ring
 
 /-- Evaluation of the actual coefficient-space reference equals the
 entire leading series at every real radius. -/

@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryPressureCancellation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
 
 /-! Every genuine derivative word preserves the ordinary Helmholtz
 constraint, and consequently the pressure pairing vanishes at every order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +39,7 @@ theorem projection_word (A : SmoothL2Field Space) {n : ℕ} (w : Fin n → Fin 3
     solenoidalProjection (wordField A w).toLp = wordDerivative axis
       (fun a : Space => EulerLpTranslation.translation a (solenoidalProjection A.toLp)) w 0 := by
   rw [word_toLp_eq_orbit,← wordDerivative_comp_clm axis solenoidalProjection _
-    A.translation_contDiff]
+      A.translation_contDiff]
   congr 2
   funext a
   exact (solenoidalProjection_translation a A.toLp).symm

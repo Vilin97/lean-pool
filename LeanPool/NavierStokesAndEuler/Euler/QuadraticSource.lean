@@ -6,19 +6,26 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatVolterra
-public import LeanPool.NavierStokesAndEuler.Euler.VolterraUniqueness
+public import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Quantitative bounds for the actual projected linear-plus-quadratic source of the correction
+equation. -/
 
 @[expose] public section
 
-/-! Quantitative bounds for the actual projected linear-plus-quadratic source of the correction
-  equation. -/
 
 noncomputable section
 
 namespace EulerQuadraticSource
 
-open MeasureTheory Set
+open Set
 open scoped Topology
 
 variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
@@ -54,7 +61,7 @@ theorem source_bound (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y) (B : X →L
   have hs : ‖r + A u + B u u‖ ≤ ‖r‖ + ‖A‖ * R + ‖B‖ * R^2 := by
     calc
       ‖r + A u + B u u‖ ≤ ‖r‖ + ‖A u‖ + ‖B u u‖ := (norm_add_le _ _).trans (add_le_add (norm_add_le
-        _ _) le_rfl)
+          _ _) le_rfl)
       _ ≤ ‖r‖ + ‖A‖ * R + ‖B‖ * R * R := add_le_add (add_le_add le_rfl hA) hB
       _ = _ := by ring
   simpa only [source, norm_neg] using (P.le_opNorm (r + A u + B u u)).trans
@@ -76,11 +83,11 @@ theorem source_sub_bound (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y) (B : X 
       ‖A (u-v) + B (u-v) u + B v (u-v)‖ ≤ ‖A (u-v)‖ + ‖B (u-v) u‖ + ‖B v (u-v)‖ :=
         (norm_add_le _ _).trans (add_le_add (norm_add_le _ _) le_rfl)
       _ ≤ ‖A‖ * ‖u-v‖ + ‖B‖ * ‖u-v‖ * R + ‖B‖ * R * ‖u-v‖ := add_le_add (add_le_add (A.le_opNorm _)
-        h1) h2
+          h1) h2
       _ = _ := by ring
   rw [he, norm_neg]
   exact (P.le_opNorm _).trans ((mul_le_mul_of_nonneg_left hs (norm_nonneg P)).trans_eq (mul_assoc _
-    _ _).symm)
+      _ _).symm)
 
 /-- Uniform pointwise coefficient bounds imply the actual source bound on every ball. -/
 theorem source_uniform_bound (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y) (B : X →L[ℝ] X →L[ℝ] Y)
@@ -90,7 +97,7 @@ theorem source_uniform_bound (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y) (B 
   apply (source_bound P r A B R hR u hu).trans
   apply mul_le_mul hp
     (add_le_add (add_le_add hr (mul_le_mul_of_nonneg_right ha hR)) (mul_le_mul_of_nonneg_right hb
-      (sq_nonneg R)))
+        (sq_nonneg R)))
   · positivity
   · exact (norm_nonneg P).trans hp
 

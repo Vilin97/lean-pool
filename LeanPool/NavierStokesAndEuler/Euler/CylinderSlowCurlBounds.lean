@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurl
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+
+/-! The literal slow curl as a continuous cylinder L² path with same-radius bounds. -/
 
 @[expose] public section
 
-/-! The literal slow curl as a continuous cylinder L² path with same-radius bounds. -/
 
 noncomputable section
 
@@ -25,23 +28,50 @@ open scoped ContDiff BoundedContinuousFunction
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (LiftTangent →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (LiftTangent →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlBounds1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlBounds2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds3 : NormedAddCommGroup (LiftTangent →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlBounds4 : NormedSpace ℝ (LiftTangent →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds5 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds6 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds7 : NormedAddCommGroup C(K,Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds8 : NormedSpace ℝ C(K,Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds9 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds10 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlBounds11 : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderSlowCurlBounds12 : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
 
 variable
-  (G : C(K,Space →ᵇ Space →L[ℝ] Space))
+  (G : C(K, Space →ᵇ Space →L[ℝ] Space))
   (hG : ContDiff ℝ ∞ (translateCoefficientPath G))
-  (p : C(K,LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 
 include hG hp in
@@ -49,7 +79,7 @@ include hG hp in
 theorem path_block_bound (q : ℕ) (Rc C R D : ℝ)
     (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C*majorant Rc 0 n)
+    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ) (hbp : ∀ n, block standardDirection q
       (fun a : LiftTangent => pathTranslate P a p) n 0 ≤ D*majorant R d n) (n : ℕ) :
     block standardDirection q (fun a : LiftTangent => pathTranslate P a (path P G p)) n 0 ≤
@@ -60,9 +90,9 @@ theorem path_block_bound (q : ℕ) (Rc C R D : ℝ)
       block standardDirection q (fun a : LiftTangent => pathTranslate P a (term P G p i)) n 0 ≤
         (3*sobolevCoefficientAmplitude (Fin 4) q Rc C*D)*majorant R (d+1) n := by
     have h := product_orbit_block_bound P (curlCoefficientPath i G) (curlCoefficientPath_orbit i G
-      hG)
+        hG)
       standardDirection hdirections q (derivativePath P p i.succ) (derivativePath_orbit P p hp
-        i.succ)
+          i.succ)
       Rc C R D hRc hC hD hR
       (fun j a => curlCoefficientPath_bound i G hG j (C*majorant Rc 0 j) (hbG j) a)
       (d+1) (derivativePath_majorant P p hp i.succ q R D d hbp) n

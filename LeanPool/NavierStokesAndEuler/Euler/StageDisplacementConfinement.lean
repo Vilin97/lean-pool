@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInfiniteConstruction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
 
 /-!
 # Uniform confinement of the constructed particle maps
@@ -23,6 +22,9 @@ This is a statement about the actual selected packet family, not an assumed
 bound on its velocity or velocity gradients. Vorticity confinement additionally
 requires its transport identity along these particle maps.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -126,6 +128,7 @@ theorem stages_displacement_norm_le_partial_sum (n : ℕ) :
     rw [sum_range_succ, ← add_assoc]
     exact (stages S hq hB n).successor_displacement_norm_le hq hB ih t x
 
+/-- Particle displacement cap, given by `‖(stages S hq hB 0).parent.displacement.field‖ + S.δ`. -/
 def particleDisplacementCap : ℝ := ‖(stages S hq hB 0).parent.displacement.field‖ + S.δ
 
 theorem stages_displacement_norm_le (n : ℕ)

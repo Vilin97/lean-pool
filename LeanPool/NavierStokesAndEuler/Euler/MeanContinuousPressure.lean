@@ -6,10 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
+public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousVelocity
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoordinatePath
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPhysical
+import LeanPool.NavierStokesAndEuler.Euler.MeanMomentumRegularity
+import LeanPool.NavierStokesAndEuler.Euler.MeanTimeSobolev
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # The actual continuous mean pressure residual
@@ -19,6 +25,9 @@ Its F-adjoint lies in the ordinary closed gradient space at every time.
 The true physical equation and fixed-Sobolev estimates hold in the same
 continuous path space, including the interval endpoints.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,15 +42,15 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 variable {T : ℝ} {hT : 0 ≤ T}
-  {FInv F F₁ : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)}
+  {FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)}
   {A : L2 →L[ℝ] L2} {L : ℝ} {u f : TimeLp T L2}
   (s : StrongMeanEvolution T hT FInv F F₁ A L u f)
-  (c : ℝ) (hc : 0 < c) (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
-  (fC : C(Icc (0 : ℝ) T,L2))
+  (c : ℝ) (hc : 0 < c) (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
+  (fC : C(Icc (0 : ℝ) T, L2))
 
 /-- The physical pressure force in the actual continuous strong equation. -/
 def pressurePath : C(Icc (0 : ℝ) T,L2) :=
-  fC-multiplier (solenoidalFrame T F) (s.classicalAcceleration c hc hLower fC)-
+  fC-multiplier (solenoidalFrame T F) (s.classicalAcceleration c hc hLower fC) -
     (2 : ℝ) • multiplier (solenoidalFrame T F₁) s.coordinateVelocityPath
 
 /-- The projected equation forces the actual pullback residual to be a gradient
@@ -52,9 +61,9 @@ theorem pressurePath_gradient (t : Icc (0 : ℝ) T) :
     c hc hLower s.coordinateVelocityPath fC t
   have hz : (solenoidalFrame T F t).adjoint (s.pressurePath c hc hLower fC t) = 0 := by
     have he : s.pressurePath c hc hLower fC t =
-        fC t-(2 : ℝ) • solenoidalFrame T F₁ t (s.coordinateVelocityPath t)-
+        fC t-(2 : ℝ) • solenoidalFrame T F₁ t (s.coordinateVelocityPath t) -
           solenoidalFrame T F t (s.classicalAcceleration c hc hLower fC t) := by
-      change fC t-solenoidalFrame T F t (s.classicalAcceleration c hc hLower fC t)-
+      change fC t-solenoidalFrame T F t (s.classicalAcceleration c hc hLower fC t) -
         (2 : ℝ) • solenoidalFrame T F₁ t (s.coordinateVelocityPath t) = _
       abel
     exact (congrArg (solenoidalFrame T F t).adjoint he).trans
@@ -71,13 +80,13 @@ theorem pressurePath_equation (hTpos : 0 < T)
       HasDerivWithinAt (extendPath T hT F) (F₁ t) (Icc (0 : ℝ) T) t)
     (M : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2))
     (hMF : ∀ t v, F₁ t v = M t (F t v)) (t : Icc (0 : ℝ) T) :
-    s.classicalPhysicalDerivative c hc hLower fC t+M t (s.continuousVelocity t)+
+    s.classicalPhysicalDerivative c hc hLower fC t+M t (s.continuousVelocity t) +
       s.pressurePath c hc hLower fC t = fC t := by
   rw [s.continuousVelocity_eq_frame hTpos hFTime]
-  change F₁ t (s.coordinateVelocityPath t : L2)+
-    F t (s.classicalAcceleration c hc hLower fC t : L2)+
-    M t (F t (s.coordinateVelocityPath t : L2))+
-    (fC t-F t (s.classicalAcceleration c hc hLower fC t : L2)-
+  change F₁ t (s.coordinateVelocityPath t : L2) +
+    F t (s.classicalAcceleration c hc hLower fC t : L2) +
+    M t (F t (s.coordinateVelocityPath t : L2)) +
+    (fC t-F t (s.classicalAcceleration c hc hLower fC t : L2) -
       (2 : ℝ) • F₁ t (s.coordinateVelocityPath t : L2)) = fC t
   rw [← hMF]
   simp only [two_smul]
@@ -86,9 +95,9 @@ theorem pressurePath_equation (hTpos : 0 < T)
 /-- The actual spatial orbit of the pressure force has the literal residual formula. -/
 theorem pressurePath_orbit_eq :
     (fun a : Space => pathTranslation T a (s.pressurePath c hc hLower fC)) =
-      (fun a : Space => pathTranslation T a fC)-
+      (fun a : Space => pathTranslation T a fC) -
       (fun a : Space => pathTranslation T a (multiplier (solenoidalFrame T F)
-        (s.classicalAcceleration c hc hLower fC)))-
+        (s.classicalAcceleration c hc hLower fC))) -
       (fun a : Space => (2 : ℝ) • pathTranslation T a
         (multiplier (solenoidalFrame T F₁) s.coordinateVelocityPath)) := by
   funext a
@@ -100,7 +109,7 @@ theorem pressurePath_translation_contDiff
     (hF₁ : ContDiff ℝ ∞ (fun a : Space => translatePath T a F₁))
     (hv : ContDiff ℝ ∞ (fun a : Space => coordinatePathTranslation T a s.coordinateVelocityPath))
     (ha : ContDiff ℝ ∞ (fun a : Space => coordinatePathTranslation T a (s.classicalAcceleration c
-      hc hLower fC)))
+        hc hLower fC)))
     (hfC : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a fC)) :
     ContDiff ℝ ∞ (fun a : Space => pathTranslation T a (s.pressurePath c hc hLower fC)) := by
   rw [s.pressurePath_orbit_eq c hc hLower fC]
@@ -114,23 +123,23 @@ theorem pressurePath_translation_block_gevrey {ι : Type*} [Fintype ι]
     (hF₁ : ContDiff ℝ ∞ (fun a : Space => translatePath T a F₁))
     (hv : ContDiff ℝ ∞ (fun a : Space => coordinatePathTranslation T a s.coordinateVelocityPath))
     (ha : ContDiff ℝ ∞ (fun a : Space => coordinatePathTranslation T a (s.classicalAcceleration c
-      hc hLower fC)))
+        hc hLower fC)))
     (hfC : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a fC))
     (Rc R CF CF₁ Cf Cv Ca : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCv : 0 ≤ Cv) (hCa : 0 ≤ Ca) (d : ℕ)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant Rc 0
-      n)
+        n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant Rc
-      0 n)
+        0 n)
     (hfb : ∀ n a, block directions q (fun b : Space => pathTranslation T b fC) n a ≤ Cf*majorant R
-      d n)
+        d n)
     (hvb : ∀ n a, block directions q (fun b : Space => coordinatePathTranslation T b
-      s.coordinateVelocityPath) n a ≤ Cv*majorant R d n)
+        s.coordinateVelocityPath) n a ≤ Cv*majorant R d n)
     (hab : ∀ n a, block directions q (fun b : Space => coordinatePathTranslation T b
-      (s.classicalAcceleration c hc hLower fC)) n a ≤ Ca*majorant R d n)
+        (s.classicalAcceleration c hc hLower fC)) n a ≤ Ca*majorant R d n)
     (n : ℕ) (a : Space) :
     block directions q (fun b : Space => pathTranslation T b (s.pressurePath c hc hLower fC)) n a ≤
-      (Cf+3*sobolevCoefficientAmplitude ι q Rc CF*Ca+
+      (Cf+3*sobolevCoefficientAmplitude ι q Rc CF*Ca +
         6*sobolevCoefficientAmplitude ι q Rc CF₁*Cv)*majorant R d n := by
   have hbA := framePathApply_translation_block_gevrey directions hd q T F _ hF ha
     Rc R CF Ca hRc hRcR hCF hCa d hFb hab

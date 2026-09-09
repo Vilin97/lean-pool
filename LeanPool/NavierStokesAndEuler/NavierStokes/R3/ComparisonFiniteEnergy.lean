@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Finite-energy bounds for whole-space comparison
@@ -18,6 +17,9 @@ The hypotheses in this module concern only square integrability and
 measurability. In particular, the comparison field need not have compact
 support or any globally bounded derivative.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

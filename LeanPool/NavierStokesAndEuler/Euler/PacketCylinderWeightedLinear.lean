@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldWeight
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAverage
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+
+/-! Linear operations and spatial derivatives of actual profile-normalized packet fields. -/
 
 @[expose] public section
 
-/-! Linear operations and spatial derivatives of actual profile-normalized packet fields. -/
 
 noncomputable section
 
@@ -32,7 +34,7 @@ theorem WordBound.of_path_eq {q d : ℕ} {R A : ℝ} (hG : G.WordBound q R A d)
   rw [he]
   exact hG
 
-variable (G H) (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+variable (G H) (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
 theorem normalized_add_path : ((G.add H).normalized hT g hg).path =
     ((G.normalized hT g hg).add (H.normalized hT g hg)).path :=
@@ -88,7 +90,7 @@ theorem WordBound.normalized_multiply {q d : ℕ} {R A : ℝ}
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hA : 0 ≤ A)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
     (hK : ∀ n a, ‖iteratedFDeriv ℝ n (EulerMeanCoefficients.translateCoefficientPath K.path) a‖ ≤
-      C*majorant Rc 0 n) :
+      C * majorant Rc 0 n) :
     ((K.multiply G).normalized hT g hg).WordBound q R
       (3*sobolevCoefficientAmplitude (Fin 4) q Rc C*A) d :=
   (hG.multiply K Rc C hRc hC hA hR hK).of_path_eq _ (G.normalized_multiply_path hT g hg K)

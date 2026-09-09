@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedDynamics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ClosedNativeWaveIdentities
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModeSolenoidalReindex
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedDynamics
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanBoundsReindex
+import LeanPool.NavierStokesAndEuler.NavierStokes.ModeSolenoidalReindex
+import LeanPool.NavierStokesAndEuler.NavierStokes.NativePrincipalEquations
 
 /-!
 # Exact dynamics of the actual particular correction
@@ -21,6 +21,9 @@ carrier identities are proved for the actual selected primary labels;
 quantitative controls are supplied by `ActualParticularStageControls`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualParticularDynamics
@@ -28,18 +31,21 @@ namespace NavierStokes.ActualParticularDynamics
 open Set Function Filter HarmonicCalculus
 open CorrectionInitialization CorrectionState CorrectionStep
 open ActualParticularStageControls CommonCoverSolve TorusInverse ParticularWaveBounds
-  ParticularWaveAssembly
+    ParticularWaveAssembly
 open scoped ContDiff Topology InnerProductSpace BigOperators
 
 
 variable {B N0 : ℕ}
 
+/-- Primary carrier as an element of `HarmonicBlock CyclePoint`. -/
 noncomputable def primaryCarrier (l : Label B N0) : HarmonicBlock CyclePoint :=
   (ActualPrimary.piece ActualPrimary.standardRegion l.1 l.2).tangentBlock
     (fun n x => (ActualPrimary.chartCoefficients l.1 l.2).phase n (x,0))
     (fun _ => PrimaryGeometryAssembly.angularMode ActualPrimary.certificate
       ActualPrimary.modulation (ActualPrimary.choice B N0).prepared l.1 l.2)
 
+/-- Preserves carriers: an abbreviation for `∀ l, SameCarrier (x.coefficients.blocks l)
+(primaryCarrier l)`. -/
 abbrev PreservesCarriers (x : CycleState (Label B N0)) : Prop :=
   ∀ l, SameCarrier (x.coefficients.blocks l) (primaryCarrier l)
 
@@ -51,6 +57,7 @@ theorem carrier_frequency {x : CycleState (Label B N0)} (H : PreservesCarriers x
 @[simp] theorem nativeToFull_apply (z : Native) :
     nativeToFull z = ((z.1.1.1,(z.1.1.2,z.2)),z.1.2) := rfl
 
+/-- Reference point as an element of `ActualSignedGeometry.Native`. -/
 noncomputable def referencePoint (l : Label B N0) (n : ℕ) (k : Frequency)
     (z : Native) : ActualSignedGeometry.Native :=
   (ActualSignedGeometry.swapParameter
@@ -89,6 +96,7 @@ theorem normalWeight_eq (l : Label B N0) (n : ℕ) (j : ℤ) (hj : j ≠ 0) :
   simp only [PhysicalParticularWave.normalWeight, ActualPrimaryDynamics.normalScale,
     ActualPrimaryDynamics.radialScale_eq]
 
+/-- Data used in actual particular dynamics. -/
 noncomputable def data (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (parameters x l).copyData (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput j
@@ -122,12 +130,12 @@ theorem native_strip_eq :
       ParticularWaveBounds.reindexStrip nativeToFull
         (HarmonicWaveInteraction.productStrip
           (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion)) :=
-            rfl
+              rfl
 
 theorem background_normal (l : Label B N0) (n : ℕ) {z : Native}
     (hR : 0 < z.1.1.1) (hT : 0 < z.1.1.2.1) :
     (background l).normal (ParticularParameters.nativeStrip associatedStrip) (directions (B := B))
-      n z =
+        n z =
       (ActualPrimary.chartCoefficients l.1 l.2).normal
         (HarmonicWaveInteraction.productStrip
           (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion))
@@ -135,7 +143,8 @@ theorem background_normal (l : Label B N0) (n : ℕ) {z : Native}
   have hΦ := ((ActualPrimaryCoherence.chart_phase_smooth l.1 l.2 n).contDiffAt
     (ActualPrimaryCoherence.positiveRadialChart_open.mem_nhds
       (show nativeToFull z ∈ ActualPrimaryCoherence.positiveRadialChart from
-        ⟨hR,hT⟩))).differentiableAt (by simp)
+          ⟨hR,hT⟩))).differentiableAt (by
+          simp)
   rw [native_strip_eq]
   have he := ParticularWaveBounds.phaseNormal_reindex nativeToFull
     ((ActualPrimary.chartCoefficients l.1 l.2).radius n)
@@ -152,16 +161,16 @@ theorem background_normal (l : Label B N0) (n : ℕ) {z : Native}
 theorem data_normal {x : CycleState (Label B N0)} (H : PreservesCarriers x)
     (l : Label B N0) (j : ℤ) (n : ℕ) (z : Native) :
     (data x l j).background.normal (ParticularParameters.nativeStrip associatedStrip) (directions
-      (B := B)) n z =
+        (B := B)) n z =
       (background l).normal (ParticularParameters.nativeStrip associatedStrip) (directions (B :=
-        B)) n z := by
+          B)) n z := by
   unfold LinearWaveBounds.WaveCoefficients.normal
   rw [data_phase H]
   rfl
 
 theorem tangent_normal {x : CycleState (Label B N0)}
     (hfrequency : ∀ l n, (x.coefficients.blocks l).frequency n = ChartScales.carrier
-      ActualPrimary.h n)
+        ActualPrimary.h n)
     (l : Label B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) (k : Frequency) (z : Native) :
     ((parameters x l).nativeTangent j n).normal
       (ParticularWaveBounds.nativePoint ((parameters x l).geometry n) k z) =
@@ -191,11 +200,11 @@ theorem native_normal_match {x : CycleState (Label B N0)} (H : PreservesCarriers
     (hR : 0 < z.1.1.1) (hT : 0 < z.1.1.2.1)
     (hp : (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (ht : (referencePoint l n k z).2.2 ∈ Icc 0 ((ActualPrimary.phases B N0 l.1).L l.2))
     (hc : (referencePoint l n k z).2 ∈ (ActualPrimary.clockWindow l.2).core) :
     (data x l j).background.normal (ParticularParameters.nativeStrip associatedStrip) (directions
-      (B := B)) n z =
+        (B := B)) n z =
       ((parameters x l).nativeTangent j n).normal
         (ParticularWaveBounds.nativePoint ((parameters x l).geometry n) k z) := by
   rw [data_normal H, background_normal l n hR hT,
@@ -278,8 +287,8 @@ theorem native_damping_match {x : CycleState (Label B N0)} (H : PreservesCarrier
           (ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand l.2) : ℝ)^2 *
           ‖(ActualPrimary.phases B N0 l.1).phase.normal l.2
             (ActualPrimary.phasePoint l.2
-              (ActualPrimaryDynamics.copyPoint l.1 l.2 n k (nativeToFull z)))‖^2)) := by simp only
-                [ActualPrimary.phasePoint]; ring
+              (ActualPrimaryDynamics.copyPoint l.1 l.2 n k (nativeToFull z)))‖^2)) := by
+                  simp only [ActualPrimary.phasePoint]; ring
     _ = _ := by rw [← ActualPrimaryDynamics.damping_scale]; ring
 
 theorem reference_slotDirection (l : Label B N0) :
@@ -317,7 +326,7 @@ theorem native_fast (x : CycleState (Label B N0)) (l : Label B N0) (n : ℕ)
     congr 1
     rw [← ActualPrimaryDynamics.clockScale_eq]
     unfold CommonBaseContext.fastCoefficient ChartScales.timeCoefficient
-      ActualPrimaryDynamics.clockScale
+        ActualPrimaryDynamics.clockScale
     have he : CommonWindow.index ActualPrimary.h n + gap l n =
         ChartScales.nativeIndex ActualPrimary.h (BaseChartJets.cellBand l.2) := Nat.add_sub_of_le hi
     rw [← he, pow_add]
@@ -346,11 +355,11 @@ theorem native_action_match (x : CycleState (Label B N0)) (l : Label B N0)
   obtain ⟨hFr,hGr⟩ := ActualPrimaryDynamics.native_base_differentiable l.1 l.2 n k (x := q) hR hT
   have hF : DifferentiableAt ℝ (a.frequencyBase n) q :=
     ((hFr.comp q (ActualPrimaryDynamics.copyPoint_hasFDerivAt l.1 l.2 n k
-      q).fst.differentiableAt).const_mul
+        q).fst.differentiableAt).const_mul
       (ActualPrimaryDynamics.clockScale l.2 n)).congr_of_eventuallyEq hfg
   have hG : DifferentiableAt ℝ (a.axialBase n) q :=
     ((hGr.comp q (ActualPrimaryDynamics.copyPoint_hasFDerivAt l.1 l.2 n k
-      q).fst.differentiableAt).const_mul
+        q).fst.differentiableAt).const_mul
       (ActualPrimaryDynamics.velocityScale l.2 n)).congr_of_eventuallyEq hgg
   have hr : LinearWaveResidual.shear ((data x l j).background.radius n)
       ((data x l j).background.frequencyBase n) ((data x l j).background.axialBase n)
@@ -390,7 +399,7 @@ theorem native_normal_germ {x : CycleState (Label B N0)} (H : PreservesCarriers 
     (hR : 0 < z.1.1.1) (hT : 0 < z.1.1.2.1)
     (hp : (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (ht : (referencePoint l n k z).2.2 ∈ Ioo 0 ((ActualPrimary.phases B N0 l.1).L l.2))
     (hc : (referencePoint l n k z).2 ∈ (ActualPrimary.clockWindow l.2).core) :
     (data x l j).background.normal (ParticularParameters.nativeStrip associatedStrip)
@@ -403,7 +412,7 @@ theorem native_normal_germ {x : CycleState (Label B N0)} (H : PreservesCarriers 
     (ActualSignedDynamics.normal_eq_copy_germ l.1 l.2 n ActualPrimary.standardRegion k hR hT hc')
   have hp' := (referencePoint_contDiff l n k hi).continuous.fst.continuousAt.eventually
     ((PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-      N0).prepared.N).isOpen l.2
+        N0).prepared.N).isOpen l.2
       |>.mem_nhds hp)
   have ht' := (referencePoint_contDiff l n k hi).continuous.snd.snd.continuousAt.eventually
     (isOpen_Ioo.mem_nhds ht)
@@ -444,7 +453,7 @@ theorem complexCopy_tangent_germ
       fun y => (t n).normal (ParticularWaveBounds.nativePoint (g n) k y)) :
     (fun y => normalDot (a.normal s ds n y)
       ((ParticularWaveBounds.complexCopyCoefficients a t source g (fun _ => k) len hL).amplitude n
-        y))
+          y))
       =ᶠ[𝓝 z] fun _ => 0 := by
   filter_upwards [hN,
     (hr.open_neighborhood n k).mem_nhds (hr.contains n k z hz hC),
@@ -458,7 +467,7 @@ theorem complexCopy_tangent_germ
   rw [hy]
   change normalDot ((t n).normal (ParticularWaveBounds.nativePoint (g n) k y))
     (ParticularWaveBounds.copyVelocity (ParticularWaveBounds.realData (t n) (source n)) (g n) (hL
-      n).le k y +
+        n).le k y +
       Complex.I • ParticularWaveBounds.copyVelocity
         (ParticularWaveBounds.imagData (t n) (source n)) (g n) (hL n).le k y) = 0
   have hadd (N : ProblemStatement.Space) (u v : ComplexVector) :
@@ -467,10 +476,10 @@ theorem complexCopy_tangent_germ
     ring
   change normalDot ((t n).normal (ParticularWaveBounds.nativePoint (g n) k y))
     (ParticularWaveBounds.copyVelocity (ParticularWaveBounds.realData (t n) (source n)) (g n) (hL
-      n).le k y) = 0 at htR
+        n).le k y) = 0 at htR
   change normalDot ((t n).normal (ParticularWaveBounds.nativePoint (g n) k y))
     (ParticularWaveBounds.copyVelocity (ParticularWaveBounds.imagData (t n) (source n)) (g n) (hL
-      n).le k y) = 0 at htI
+        n).le k y) = 0 at htI
   rw [hadd,htR,htI,mul_zero,add_zero]
 
 end ModalTangency
@@ -500,7 +509,7 @@ theorem geometryAt_reindex (e : E ≃ₗᵢ[ℝ] F) {R : F → ℝ} {Vr Vθ Vz :
     e.symm.contDiff.contDiffAt.comp z (hV.comp z e.contDiff.contDiffAt)
   refine ⟨G.radius_smooth.comp z e.contDiff.contDiffAt, G.radius_ne,
     smooth Vr G.radial_smooth, smooth Vθ G.angular_smooth, smooth Vz G.axial_smooth, ?_, ?_, ?_,
-      ?_, ?_, ?_⟩
+        ?_, ?_, ?_⟩
   · rw [ParticularWaveBounds.along_reindex e _ (G.radius_smooth.differentiableAt (by simp))]
     exact G.radial_radius
   · rw [ParticularWaveBounds.along_reindex e _ (G.radius_smooth.differentiableAt (by simp))]
@@ -534,7 +543,7 @@ theorem native_geometry (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ)
     ClosedNativeWaveIdentities.GeometryAt ((data x l j).background.radius n)
       ((directions (B := B)).radialField n) (fun _ => (directions (B := B)).angular)
       ((directions (B := B)).axialField (ParticularParameters.nativeStrip associatedStrip) n) z :=
-        by
+          by
   have G := geometryAt_of_cylindrical
     (ActualPrimaryCoherence.piece_geometry ActualPrimary.standardRegion B n)
     (show nativeToFull z ∈ ActualPrimaryCoherence.positiveRadialChart from ⟨hR,hT⟩)
@@ -545,9 +554,9 @@ theorem native_geometry (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ)
   exact he
 
 theorem invariant_native {E : Type} {f : ActualPrimary.FullPoint → E}
-    (hf : CopyAngularInvariance.Invariant ((0 : CyclePoint),1) f) :
+    (hf : CopyAngularInvariance.Invariant ((0 : CyclePoint), 1) f) :
     CopyAngularInvariance.Invariant (directions (B := B)).angular (fun z => f (nativeToFull z)) :=
-      by
+        by
   intro z t
   have he : nativeToFull (z+t • (directions (B := B)).angular) =
       nativeToFull z + t • ((0 : CyclePoint),1) := by
@@ -576,22 +585,22 @@ theorem native_angular (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ)
       (assembly x l).carrierBlock j n⟩
   · exact ParticularWaveAssembly.complexCopyVelocity_invariant
       (ParticularWaveAssembly.angleTangent_invariant _) (ParticularWaveAssembly.angleLift_invariant
-        _)
+          _)
       ((parameters x l).geometry n) ((parameters x l).length_pos n).le k
   · exact ParticularWaveAssembly.complexCopyPressure_invariant
       (ParticularWaveAssembly.angleTangent_invariant _) (ParticularWaveAssembly.angleLift_invariant
-        _)
+          _)
       ((parameters x l).geometry n) ((parameters x l).length_pos n).le k _
   · exact CopyAngularInvariance.nativeCutoff_invariant ((0 : Parameter), (1 : ℝ))
       ((parameters x l).geometry n) ((parameters x l).cutoff n) k
 
 theorem associated_frame_match (l : Label B N0) :
     WaveFrameMatch (associatedContext (B := B)) (HarmonicWaveInteraction.productStrip
-      associatedStrip)
+        associatedStrip)
       (ParticularWaveBounds.reindexDirections ParticularWaveAssembly.angleShuffle (directions (B :=
-        B)))
+          B)))
       (ParticularWaveBounds.reindexCoefficients ParticularWaveAssembly.angleShuffle (background l))
-        := by
+          := by
   refine ⟨fun _ => rfl, fun _ => rfl, ?_, rfl, ?_, ?_,
     fun _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl⟩
   · intro n
@@ -605,7 +614,7 @@ theorem native_radialProfile_smoothAt {z : Native} (hR : 0 < z.1.1.1) :
     ContDiffAt ℝ ∞ (directions (B := B)).radialProfile z := by
   change ContDiffAt ℝ ∞ (fun y : Native =>
     ChartScales.radialExponent ActualPrimary.h * y.1.1.1 ^ (ChartScales.radialExponent
-      ActualPrimary.h - 1)) z
+        ActualPrimary.h - 1)) z
   exact contDiffAt_const.mul (contDiffAt_fst.fst.fst.rpow_const_of_ne hR.ne')
 
 theorem native_base_smoothAt (x : CycleState (Label B N0)) (l : Label B N0)
@@ -618,7 +627,7 @@ theorem native_base_smoothAt (x : CycleState (Label B N0)) (l : Label B N0)
     (contDiff_fst.fst.snd.snd.prodMk contDiff_fst.fst.snd.fst)
   refine ⟨?_,?_,?_⟩
   · exact (BaseContextAssembly.radialSlow_smoothAt ActualPrimary.certificate
-    ActualPrimary.modulation
+      ActualPrimary.modulation
       ActualPrimary.upper B n (p := χ z) hT).comp z hχ.contDiffAt
   · exact (ActualPrimaryCoherence.frequencySlow_smoothAt B n (p := χ z) hR hT).comp z hχ.contDiffAt
   · exact (ActualPrimaryCoherence.axialSlow_smoothAt B n (p := χ z) hT).comp z hχ.contDiffAt
@@ -661,7 +670,7 @@ theorem native_normal_ne {x : CycleState (Label B N0)} (H : PreservesCarriers x)
     (hR : 0 < z.1.1.1) (hT : 0 < z.1.1.2.1)
     (hp : (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (ht : (referencePoint l n k z).2.2 ∈ Icc 0 ((ActualPrimary.phases B N0 l.1).L l.2))
     (hc : (referencePoint l n k z).2 ∈ (ActualPrimary.clockWindow l.2).core) :
     (data x l j).background.normal (ParticularParameters.nativeStrip associatedStrip)
@@ -673,7 +682,7 @@ theorem native_normal_ne {x : CycleState (Label B N0)} (H : PreservesCarriers x)
   intro hzero
   have hn := ActualPrimaryDynamics.frame_tail_ne (ActualPrimary.phases B N0 l.1) l.2
     (z := ActualPrimary.phasePoint l.2 (ActualPrimaryDynamics.copyPoint l.1 l.2 n k (nativeToFull
-      z)))
+        z)))
     ⟨hp,(ActualPrimary.phases B N0 l.1).interval l.2 ht⟩
   exact hn (by rw [hzero]; ext i; fin_cases i <;> rfl)
 
@@ -684,7 +693,7 @@ theorem rawJets_at {x : CycleState (Label B N0)} (H : PreservesCarriers x)
     (hR : 0 < z.1.1.1) (hT : 0 < z.1.1.2.1)
     (hp : (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (ht : (referencePoint l n k z).2.2 ∈ Icc 0 ((ActualPrimary.phases B N0 l.1).L l.2))
     (hc : (referencePoint l n k z).2 ∈ (ActualPrimary.clockWindow l.2).core)
     (ha : ContDiffAt ℝ ∞ ((data x l j).amplitude n k) z)
@@ -697,7 +706,7 @@ theorem rawJets_at {x : CycleState (Label B N0)} (H : PreservesCarriers x)
     contDiffAt_fst.fst.fst, hb.differentiableAt (by simp), hF.differentiableAt (by simp),
     hG.differentiableAt (by simp), ha, hpres.differentiableAt (by simp),
     (native_cutoff_smooth x l j n k).contDiffAt, hR.ne', native_normal_ne H l j n k hi hR hT hp ht
-      hc⟩
+        hc⟩
 
 section ZeroCutoff
 
@@ -744,12 +753,14 @@ theorem cancellation_of_cutoff_germ (a : PeriodizedWaveBounds.CopyData D I)
 
 end ZeroCutoff
 
+/-- Selected directions as an element of `LinearWaveBounds.GraphDirections Native`. -/
 noncomputable def selectedDirections (e : ℕ → ActivePair B N0) :
     LinearWaveBounds.GraphDirections Native :=
   { directions (B := B) with
     radialScale := fun q => (directions (B := B)).radialScale (selectedBand e q)
     fastScale := fun q => (directions (B := B)).fastScale (selectedBand e q) }
 
+/-- Modal strip, constructed using `UniformPrimaryWeights.reindexedStrip`. -/
 noncomputable def modalStrip (e : ℕ → ActivePair B N0) :=
   UniformPrimaryWeights.reindexedStrip
     (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip (selectedStrip e)))
@@ -765,7 +776,7 @@ theorem selected_principal {x : CycleState (Label B N0)} (Hc : PreservesCarriers
     (hR : 0 < z.1.1.1) (hT : 0 < z.1.1.2.1)
     (hp : (referencePoint (selectedLabel e q) (selectedBand e q) k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier
+          N0).prepared.N).carrier
         (selectedLabel e q).2)
     (ht : (referencePoint (selectedLabel e q) (selectedBand e q) k z).2.2 ∈
       Icc 0 ((ActualPrimary.phases B N0 (selectedLabel e q).1).L (selectedLabel e q).2))
@@ -773,7 +784,7 @@ theorem selected_principal {x : CycleState (Label B N0)} (Hc : PreservesCarriers
       (ActualPrimary.clockWindow (selectedLabel e q).2).core) :
     ((data x (selectedLabel e q) j).raw k).principal
       (ParticularParameters.nativeStrip associatedStrip) (directions (B := B)) (selectedBand e q) z
-        =
+          =
         -(data x (selectedLabel e q) j).source (selectedBand e q) z := by
   let hr := (selectedActualControl e x (carrier_frequency Hc) j hj Hs
     ParticularWaveBounds.realPart).pull (fun q => (q, ()))
@@ -785,7 +796,7 @@ theorem selected_principal {x : CycleState (Label B N0)} (Hc : PreservesCarriers
     rw [data_frequency Hc]
     exact mul_ne_zero (Int.cast_ne_zero.mpr hj)
       (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos ActualPrimary.h (selectedBand e
-        q))).ne'
+          q))).ne'
   have hnormal :
       (selectedBackground e x j ()).normal (modalStrip e) (selectedDirections e) q z =
         (data x (selectedLabel e q) j).background.normal
@@ -815,7 +826,7 @@ theorem selected_principal {x : CycleState (Label B N0)} (Hc : PreservesCarriers
     (envelope := selectedPulseEnvelope e ()) (K := fun r => selectedPatch e () r)
     (selectedBackground e x j ())
     (fun r => ScaledActualParticularControl.length_pos (selectedConstruction e) (selectedClock e)
-      () r)
+        () r)
     hr hi q k hz hcell hfreq hN hδ hfast hA
   exact result
 
@@ -825,16 +836,16 @@ theorem controlPatch_geometry (x : CycleState (Label B N0)) (l : Label B N0)
     0 < z.1.1.1 ∧ 0 < z.1.1.2.1 ∧
     (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2 ∧
+          N0).prepared.N).carrier l.2 ∧
     (referencePoint l n k z).2.2 ∈ Ioo 0 ((ActualPrimary.phases B N0 l.1).L l.2) ∧
     (referencePoint l n k z).2 ∈ (ActualPrimary.clockWindow l.2).core := by
   have hp := ActualPrimaryCoherence.piece_domain_positive ActualPrimary.standardRegion
     (show nativeToFull z ∈ (HarmonicWaveInteraction.productStrip
       (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion)).domain
-        from hz.2.1.1)
+          from hz.2.1.1)
   have hslow : (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2 :=
+          N0).prepared.N).carrier l.2 :=
     hz.2.1.2.1
   have hclock : 0 < PhysicalParticularWave.clockWeight ActualPrimary.h
       (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) :=
@@ -854,7 +865,7 @@ theorem controlPatch_geometry (x : CycleState (Label B N0)) (l : Label B N0)
     exact hh
   refine ⟨hp.1,hp.2,hslow,ht,?_⟩
   change (referencePoint l n k z).2.1 ∈ Icc (-ActualPrimary.slots.radius)
-    ActualPrimary.slots.radius ∧
+      ActualPrimary.slots.radius ∧
     (referencePoint l n k z).2.2 ∈ Icc 0 ((ActualPrimary.phases B N0 0).L l.2)
   constructor
   · rw [hc]
@@ -911,7 +922,7 @@ theorem native_tangency_germ {x : CycleState (Label B N0)} (Hc : PreservesCarrie
     (envelope := selectedPulseEnvelope e ()) (C := fun r => selectedPatch e () r)
     (selectedBackground e x j ())
     (fun r => ScaledActualParticularControl.length_pos (selectedConstruction e) (selectedClock e)
-      () r)
+        () r)
     hr hi 0 k hz.2.1.1 hcell hN
   exact result
 
@@ -954,7 +965,7 @@ theorem native_cancellation {x : CycleState (Label B N0)} (Hc : PreservesCarrier
           carrier ((data x l j).background.frequency n) ((data x l j).background.phase n) z) =
       (fun i => ((data x l j).localGood (ParticularParameters.nativeStrip associatedStrip)
           (directions (B := B)) n k z i + (data x l j).localGaussian (directions (B := B)) n k z i)
-            *
+              *
         carrier ((data x l j).background.frequency n) ((data x l j).background.phase n) z) := by
   obtain ⟨hR,hT,_⟩ := controlPatch_geometry x l n k hz
   exact (native_rawJets Hc j hj Hs l n k hz).cancellation (native_angular x l j n k)
@@ -1004,6 +1015,7 @@ theorem native_divergence_zero {x : CycleState (Label B N0)} (Hc : PreservesCarr
 the common-cover cutoff. The last alternative is proved by zero source
 on the whole native solve path. It contains no differential equation. -/
 structure SupportData (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) where
+  /-- Cells of `SupportData`, of type `PeriodizedWaveBounds.Cells Native Frequency`. -/
   cells : PeriodizedWaveBounds.Cells Native Frequency
   cutoff_support : ∀ n k, support ((data x l j).cutoff n k) ⊆ cells.carrier n k
   cover : ∀ n k z, z ∈ (ParticularParameters.nativeStrip associatedStrip).domain →
@@ -1013,7 +1025,7 @@ structure SupportData (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) w
         ((data x l j).pressure n k =ᶠ[𝓝 z] fun _ => 0) ∧
         ((data x l j).source n =ᶠ[𝓝 z] fun _ => 0))
 
-theorem localized_zero_of_fields {D I : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+theorem localized_zero_of_fields {D I : Type} [NormedAddCommGroup D]
     (a : PeriodizedWaveBounds.CopyData D I) {n : ℕ} {k : I} {z : D}
     (ha : a.amplitude n k =ᶠ[𝓝 z] fun _ => 0)
     (hp : a.pressure n k =ᶠ[𝓝 z] fun _ => 0) :
@@ -1039,6 +1051,7 @@ theorem SupportData.localized_alternative {x : CycleState (Label B N0)}
   · exact Or.inr (localized_zero_of_cutoff_germ _ hcut)
   · exact Or.inr (localized_zero_of_fields _ ha hp)
 
+/-- Actual wave used in actual particular dynamics. -/
 noncomputable def actualWave (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (parameters x l).wave associatedStrip (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput j
@@ -1143,7 +1156,7 @@ theorem common_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
             (native_cutoff_smooth x l j n k).contDiffAt).mul (hr.smooth l n k z hz hc)
         · exact contDiffAt_const.congr_of_eventuallyEq hp
       exact hn.congr_of_eventuallyEq ((data x l j).common_pressure_germ S.cells S.cutoff_support n
-        hk)
+          hk)
     · exact contDiffAt_const.congr_of_eventuallyEq
         ((data x l j).common_zero_germs S.cells S.cutoff_support (not_exists.mp he)).2
 
@@ -1151,7 +1164,7 @@ theorem common_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
 theorem common_amplitude_invariant (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) :
     CopyAngularInvariance.Invariant (directions (B := B)).angular ((actualWave x l j).amplitude n)
-      := by
+        := by
   exact (data x l j).commonCorrected_invariant (ParticularParameters.nativeStrip associatedStrip)
     (directions (B := B)) (directions (B := B)).angular
     (fun m k => (native_angular x l j m k).cutoff)
@@ -1172,9 +1185,9 @@ theorem common_good_invariant (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) :
     CopyAngularInvariance.Invariant (directions (B := B)).angular
       ((data x l j).globalGood (ParticularParameters.nativeStrip associatedStrip) (directions (B :=
-        B)) n) :=
+          B)) n) :=
   (data x l j).globalGood_invariant (ParticularParameters.nativeStrip associatedStrip) (directions
-    (B := B))
+      (B := B))
     (fun m k => (native_angular x l j m k).cutoff)
     (fun m k => (native_angular x l j m k).amplitude)
     (fun m k => (native_angular x l j m k).pressure)
@@ -1206,14 +1219,17 @@ theorem source_frequency_ne {x : CycleState (Label B N0)} (Hc : PreservesCarrier
   rw [carrier_frequency Hc]
   exact (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos ActualPrimary.h n)).ne'
 
+/-- Actual update used in actual particular dynamics. -/
 noncomputable def actualUpdate (x : CycleState (Label B N0)) (l : Label B N0) (N : ℕ) :=
   (parameters x l).updateBlock associatedStrip (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput N
 
+/-- Actual good used in actual particular dynamics. -/
 noncomputable def actualGood (x : CycleState (Label B N0)) (l : Label B N0) (N : ℕ) :=
   (parameters x l).goodBlock associatedStrip (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput N
 
+/-- Actual gaussian used in actual particular dynamics. -/
 noncomputable def actualGaussian (x : CycleState (Label B N0)) (l : Label B N0) (N : ℕ) :=
   (parameters x l).gaussianBlock (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput N
@@ -1237,7 +1253,7 @@ theorem update_represents {x : CycleState (Label B N0)} (Hc : PreservesCarriers 
     have hi := invariant_angleShuffle hinv z.1 z.2
     change Complex.re (_ * _) = ((actualWave x l j).amplitude n (angleShuffle z) i *
       carrier ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).frequency
-        n)
+          n)
         ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).phase n)
         (angleShuffle z)).re
     rw [actualCarrier_character (parameters x l).background (assembly x l).carrierBlock j
@@ -1252,7 +1268,7 @@ theorem update_represents {x : CycleState (Label B N0)} (Hc : PreservesCarriers 
     have hi := invariant_angleShuffle hinv z.1 z.2
     change Complex.re (_ * _) = ((actualWave x l j).pressure n (angleShuffle z) *
       carrier ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).frequency
-        n)
+          n)
         ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).phase n)
         (angleShuffle z)).re
     rw [actualCarrier_character (parameters x l).background (assembly x l).carrierBlock j
@@ -1268,7 +1284,7 @@ theorem native_phase_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarrier
   have hp := ActualPrimaryCoherence.piece_domain_positive ActualPrimary.standardRegion
     (show nativeToFull z ∈ (HarmonicWaveInteraction.productStrip
       (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion)).domain
-        from hz)
+          from hz)
   exact data_phase_smoothAt Hc l j n hp.1 hp.2
 
 theorem wave_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
@@ -1297,6 +1313,7 @@ theorem pressure_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
     (native_phase_smooth Hc l j n) (common_smooth Hc j hj Hs l S n).2
   exact hf.comp (angleShuffle (P := Parameter)).contDiff.contDiffOn (fun _ hz => hz.1)
 
+/-- Support data, bundling `cells`, `cutoff_support`, `cover`. -/
 noncomputable def supportData (x : CycleState (Label B N0))
     (hs : ActualParticularStageControls.InputSupport x)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (l : Label B N0) (j : ℤ) :
@@ -1312,7 +1329,7 @@ theorem source_phase_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarrier
     (angleShuffle (P := Parameter)).contDiff.comp (contDiff_id.prodMk contDiff_const)
   have hmap : MapsTo (fun z : Parameter × TorusInverse.Plane => angleShuffle (z,0))
       associatedStrip.domain (ParticularParameters.nativeStrip associatedStrip).domain := fun _ hz
-        => hz
+          => hz
   have hh := (native_phase_smooth Hc l 1 n).comp hsection.contDiffOn hmap
   have he : (fun z => (data x l 1).background.phase n (angleShuffle (z,0))) =
       (assembly x l).carrierBlock.phase n := by
@@ -1331,13 +1348,13 @@ theorem source_angular_ne {x : CycleState (Label B N0)} (Hc : PreservesCarriers 
   change (x.coefficients.blocks l).angularFrequency n ≠ 0
   rw [← (Hc l).angular]
   exact PrimaryGeometryAssembly.angularMode_ne_zero ActualPrimary.certificate
-    ActualPrimary.modulation
+      ActualPrimary.modulation
     (ActualPrimary.choice B N0).prepared l.1 l.2
 
 theorem associated_base_smooth :
     MeanIncrementBounds.SmoothTriple associatedStrip.domain (associatedContext (B := B)).base := by
   have hh := (CommonBaseContext.context_base_bounds ActualPrimary.certificate
-    ActualPrimary.modulation
+      ActualPrimary.modulation
     ActualPrimary.upper B ActualPrimary.standardRegion (CommonWindow.index ActualPrimary.h)).smooth
   exact ⟨fun n => (hh.radial n).comp cycleAssoc.symm.contDiff.contDiffOn (fun _ hz => hz),
     fun n => (hh.angular n).comp cycleAssoc.symm.contDiff.contDiffOn (fun _ hz => hz),
@@ -1353,7 +1370,7 @@ theorem associated_radial_smooth (n : ℕ) :
   have hp : ContDiffAt ℝ ∞ (associatedContext (B := B)).operators.radialProfile z := by
     change ContDiffAt ℝ ∞ (fun y : Parameter × TorusInverse.Plane =>
       ChartScales.radialExponent ActualPrimary.h * y.1.1 ^ (ChartScales.radialExponent
-        ActualPrimary.h - 1)) z
+          ActualPrimary.h - 1)) z
     exact contDiffAt_const.mul (contDiffAt_fst.fst.rpow_const_of_ne hR.ne')
   exact contDiffAt_const.add ((contDiffAt_const.mul hp).smul contDiffAt_const)
 
@@ -1370,20 +1387,20 @@ theorem update_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
       nativeEnvelope α (currentSource x j))
     (l : Label B N0) (S : ∀ j ∈ modes N, SupportData x l j) (n : ℕ) :
     (∀ i, HarmonicResidual.SmoothCoefficients associatedStrip.domain ((actualUpdate x l N).velocity
-      n i)) ∧
+        n i)) ∧
       HarmonicResidual.SmoothCoefficients associatedStrip.domain ((actualUpdate x l N).pressure n)
-        := by
+          := by
   have hj (j : ℤ) (h : j ∈ modes N) : j ≠ 0 := (mem_modes N j).mp h |>.1
   have hsection : ContDiff ℝ ∞ (fun z : Parameter × TorusInverse.Plane => angleShuffle (z,0)) :=
     (angleShuffle (P := Parameter)).contDiff.comp (contDiff_id.prodMk contDiff_const)
   have hmap : MapsTo (fun z : Parameter × TorusInverse.Plane => angleShuffle (z,0))
       associatedStrip.domain (ParticularParameters.nativeStrip associatedStrip).domain := fun _ hz
-        => hz
+          => hz
   constructor
   · intro i m
     change ContDiffOn ℝ ∞ ((∑ j ∈ modes N,
       ErrorHarmonics.conjugatePair j (fun z => (actualWave x l j).amplitude n (angleShuffle (z,0))
-        i)) m) _
+          i)) m) _
     rw [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
     convert! ContDiffOn.sum (fun j h => pair_smooth
       ((contDiffOn_pi.mp (common_smooth Hc j (hj j h) (Hs j h) l (S j h) n).1 i).comp
@@ -1393,7 +1410,7 @@ theorem update_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
   · intro m
     change ContDiffOn ℝ ∞ ((∑ j ∈ modes N,
       ErrorHarmonics.conjugatePair j (fun z => (actualWave x l j).pressure n (angleShuffle (z,0))))
-        m) _
+          m) _
     rw [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
     convert! ContDiffOn.sum (fun j h => pair_smooth
       ((common_smooth Hc j (hj j h) (Hs j h) l (S j h) n).2.comp
@@ -1401,6 +1418,7 @@ theorem update_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
     ext y
     simp only [Finset.sum_apply, Function.comp_def]
 
+/-- Source classes type used in actual particular dynamics. -/
 abbrev SourceClasses (x : CycleState (Label B N0)) (N : ℕ) (α : ℝ) : Prop :=
   ∀ j ∈ modes N, LabelSumBounds.UniformWaveClass
     (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip))
@@ -1438,14 +1456,14 @@ theorem section_equation {x : CycleState (Label B N0)} (Hc : PreservesCarriers x
     residualSource (assembly x l).context (assembly x l).state (assembly x l).carrierBlock
       (assembly x l).gaussianInput (assembly x l).aliasInput j n z.1 i *
       carrier ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).frequency
-        n)
+          n)
         ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).phase n)
         (angleShuffle z) =
     ((data x l j).globalGood (ParticularParameters.nativeStrip associatedStrip)
       (directions (B := B)) n (angleShuffle z) i +
       (data x l j).globalGaussian (directions (B := B)) n (angleShuffle z) i) *
       carrier ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).frequency
-        n)
+          n)
         ((actualCarrier (parameters x l).background (assembly x l).carrierBlock j).phase n)
         (angleShuffle z) at hh
   rw [actualCarrier_character (parameters x l).background (assembly x l).carrierBlock j
@@ -1457,19 +1475,19 @@ theorem cancellation_sum {x : CycleState (Label B N0)} (Hc : PreservesCarriers x
     (l : Label B N0) (S : ∀ j ∈ modes N, SupportData x l j)
     (hBand : (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
       (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-        l).aliasInput).BandLimited N)
+          l).aliasInput).BandLimited N)
     (n : ℕ) (z : (Parameter × TorusInverse.Plane) × ℝ) (hz : z.1 ∈ associatedStrip.domain) :
     (fun i => ∑ j ∈ modes N, ((actualWave x l j).harmonicResidual
       (ParticularParameters.nativeStrip associatedStrip) (directions (B := B)) n (angleShuffle z)
-        i).re) +
+          i).re) +
       (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-          l).aliasInput).oscillation n z =
+            l).aliasInput).oscillation n z =
       (actualGood x l N).oscillation n z + (actualGaussian x l N).oscillation n z := by
   apply finite_cancellation (assembly x l).context (assembly x l).state (assembly x l).carrierBlock
     (assembly x l).gaussianInput (assembly x l).aliasInput N hBand
     (fun j n z => (actualWave x l j).harmonicResidual (ParticularParameters.nativeStrip
-      associatedStrip)
+        associatedStrip)
       (directions (B := B)) n (angleShuffle z))
     (fun j n z => (data x l j).globalGood (ParticularParameters.nativeStrip associatedStrip)
       (directions (B := B)) n (angleShuffle (z,0)))
@@ -1484,7 +1502,7 @@ theorem context_linear_sum {x : CycleState (Label B N0)} (Hc : PreservesCarriers
     linearBlockField (assembly x l).context (assembly x l).carrierBlock (actualUpdate x l N) n z =
       fun i => ∑ j ∈ modes N, ((actualWave x l j).harmonicResidual
         (ParticularParameters.nativeStrip associatedStrip) (directions (B := B)) n (angleShuffle z)
-          i).re := by
+            i).re := by
   have hu := update_represents Hc l N
   have hv (j : ℤ) (hj : j ∈ modes N) (i : Fin 3) :=
     wave_smooth Hc j ((mem_modes N j).mp hj).1 (Hs j hj) l (S j hj) n i
@@ -1492,7 +1510,7 @@ theorem context_linear_sum {x : CycleState (Label B N0)} (Hc : PreservesCarriers
     pressure_smooth Hc j ((mem_modes N j).mp hj).1 (Hs j hj) l (S j hj) n
   have hvs (i : Fin 3) : ContDiffOn ℝ ∞
       (fun y => (actualUpdate x l N).oscillation n y i) (HarmonicResidual.liftDomain
-        associatedStrip.domain) := by
+          associatedStrip.domain) := by
     rw [hu.1]
     exact ContDiffOn.sum (fun j hj => Complex.reCLM.contDiff.comp_contDiffOn (hv j hj i))
   have hps : ContDiffOn ℝ ∞ ((actualUpdate x l N).oscillatoryPressure n)
@@ -1523,7 +1541,8 @@ theorem context_linear_sum {x : CycleState (Label B N0)} (Hc : PreservesCarriers
       ((actualWave x l j).pressure n) (angleShuffle y)) hv hp
     (fun i => ((contextRealBase_smooth hB n i).contDiffAt
       ((HarmonicResidual.liftDomain_open associatedStrip.isOpen_domain).mem_nhds
-        ⟨hz,trivial⟩)).differentiableAt (by simp))
+          ⟨hz,trivial⟩)).differentiableAt (by
+          simp))
     ⟨hz,trivial⟩
   rw [← complexBase_eq_realLift] at he
   rw [he]
@@ -1531,22 +1550,22 @@ theorem context_linear_sum {x : CycleState (Label B N0)} (Hc : PreservesCarriers
   apply Finset.sum_congr rfl
   intro j hj
   exact congrArg (fun f => (f i).re) ((parameters x l).native_context_residual associatedStrip
-    (assembly x l).context
+      (assembly x l).context
     (assembly x l).state (assembly x l).carrierBlock (assembly x l).gaussianInput
     (assembly x l).aliasInput j (associated_frame_match l) n z).symm
 
 theorem context_linear_cancellation_of_support {x : CycleState (Label B N0)} (Hc :
-  PreservesCarriers x)
+    PreservesCarriers x)
     {α : ℝ} (N : ℕ) (Hs : SourceClasses x N α)
     (l : Label B N0) (S : ∀ j ∈ modes N, SupportData x l j)
     (hBand : (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
       (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-        l).aliasInput).BandLimited N)
+          l).aliasInput).BandLimited N)
     (n : ℕ) (z : (Parameter × TorusInverse.Plane) × ℝ) (hz : z.1 ∈ associatedStrip.domain) :
     linearBlockField (assembly x l).context (assembly x l).carrierBlock (actualUpdate x l N) n z +
       (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-          l).aliasInput).oscillation n z =
+            l).aliasInput).oscillation n z =
       (actualGood x l N).oscillation n z + (actualGaussian x l N).oscillation n z := by
   rw [context_linear_sum Hc N Hs l S n z hz]
   exact cancellation_sum Hc N Hs l S hBand n z hz
@@ -1564,17 +1583,18 @@ theorem full_divergence_zero {x : CycleState (Label B N0)} (Hc : PreservesCarrie
   · intro j hj i
     exact ((wave_smooth Hc j ((mem_modes N j).mp hj).1 (Hs j hj) l (S j hj) n i).contDiffAt
       ((HarmonicResidual.liftDomain_open associatedStrip.isOpen_domain).mem_nhds
-        ⟨hz,trivial⟩)).differentiableAt (by simp)
+          ⟨hz,trivial⟩)).differentiableAt (by
+          simp)
   · intro j hj
     rw [(parameters x l).native_context_divergence associatedStrip (assembly x l).context
-      (associated_frame_match l)]
+        (associated_frame_match l)]
     exact common_divergence_zero Hc j ((mem_modes N j).mp hj).1 (Hs j hj) l (S j hj) n hz
 
 theorem modeSolenoidal_of_support {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
     {α : ℝ} (N : ℕ) (Hs : SourceClasses x N α)
     (l : Label B N0) (S : ∀ j ∈ modes N, SupportData x l j) :
     HarmonicWaveInteraction.ModeSolenoidal associatedStrip (assembly x l).context (actualUpdate x l
-      N) := by
+        N) := by
   apply HarmonicWaveInteraction.modeSolenoidal_of_full (assembly x l).context (actualUpdate x l N)
   · exact source_phase_smooth Hc l
   · exact source_angular_ne Hc l
@@ -1589,7 +1609,7 @@ theorem modeSolenoidal {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     {α : ℝ} (N : ℕ) (Hs : SourceClasses x N α) (l : Label B N0) :
     HarmonicWaveInteraction.ModeSolenoidal associatedStrip (assembly x l).context (actualUpdate x l
-      N) :=
+        N) :=
   modeSolenoidal_of_support Hc N Hs l (fun j _ => supportData x hs hN l j)
 
 /-- The actual current residual is cancelled by the finite common-cover
@@ -1600,15 +1620,16 @@ theorem context_linear_cancellation {x : CycleState (Label B N0)} (Hc : Preserve
     {α : ℝ} (N : ℕ) (Hs : SourceClasses x N α) (l : Label B N0)
     (hBand : (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
       (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-        l).aliasInput).BandLimited N)
+          l).aliasInput).BandLimited N)
     (n : ℕ) (z : (Parameter × TorusInverse.Plane) × ℝ) (hz : z.1 ∈ associatedStrip.domain) :
     linearBlockField (assembly x l).context (assembly x l).carrierBlock (actualUpdate x l N) n z +
       (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-          l).aliasInput).oscillation n z =
+            l).aliasInput).oscillation n z =
       (actualGood x l N).oscillation n z + (actualGaussian x l N).oscillation n z :=
   context_linear_cancellation_of_support Hc N Hs l (fun j _ => supportData x hs hN l j) hBand n z hz
 
+/-- Cycle update, given by `StateReindex.block cycleAssoc (actualUpdate x l N)`. -/
 noncomputable def cycleUpdate (x : CycleState (Label B N0)) (l : Label B N0) (N : ℕ) :=
   StateReindex.block cycleAssoc (actualUpdate x l N)
 
@@ -1627,7 +1648,7 @@ theorem cycle_modeSolenoidal {x : CycleState (Label B N0)} (Hc : PreservesCarrie
 theorem actualUpdate_eq_canonical {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
     (l : Label B N0) (N : ℕ) : actualUpdate x l N =
       (canonicalParameters l).updateBlock associatedStrip (assembly x l).context (assembly x
-        l).state
+          l).state
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput N := by
   unfold actualUpdate
   rw [parameters_eq_canonical x l (carrier_frequency Hc l)]
@@ -1637,13 +1658,13 @@ theorem linearBlockField_pull {D E : Type} [NormedAddCommGroup D] [NormedSpace �
     [NormedAddCommGroup E] [NormedSpace ℝ E] (e : D ≃ₗᵢ[ℝ] E)
     (c : Context E) (a b : HarmonicBlock E) (n : ℕ) (z : D × ℝ) :
     linearBlockField (StateReindex.context e c) (StateReindex.block e a) (StateReindex.block e b) n
-      z =
+        z =
       linearBlockField c a b n (StateReindex.cylinder e z) := by
   have hcar : HarmonicWaveInteraction.withCarrier (StateReindex.block e a) (StateReindex.block e b)
-    =
+      =
       StateReindex.block e (HarmonicWaveInteraction.withCarrier a b) := rfl
   have he := StateReindex.linearResidual_field_pull (StateReindex.cylinder e) (c.operators.epsilon
-    n)
+      n)
     (fun y : E × ℝ => c.operators.radius y.1) (radialDirection c n) angularDirection
     (axialDirection c n) (timeDirection c n) (complexBase c n)
     (LinearWaveResidual.realLift ((HarmonicWaveInteraction.withCarrier a b).oscillation n))
@@ -1677,27 +1698,27 @@ theorem cycle_context_linear_cancellation {x : CycleState (Label B N0)} (Hc : Pr
     {α : ℝ} (N : ℕ) (Hs : SourceClasses x N α) (l : Label B N0)
     (hBand : (HarmonicResidual.residualBlock (ActualPrimary.commonContext B) x.state
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients
-        l)).BandLimited N)
+          l)).BandLimited N)
     (n : ℕ) (z : CyclePoint × ℝ)
     (hz : z.1 ∈ (BaseContextAssembly.nativeStrip ActualPrimary.nominal
-      ActualPrimary.standardRegion).domain) :
+        ActualPrimary.standardRegion).domain) :
     linearBlockField (ActualPrimary.commonContext B) (x.coefficients.blocks l) (cycleUpdate x l N)
-      n z +
+        n z +
       (HarmonicResidual.residualBlock (ActualPrimary.commonContext B) x.state
         (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients
-          l)).oscillation n z =
+            l)).oscillation n z =
       (StateReindex.block cycleAssoc (actualGood x l N)).oscillation n z +
         (StateReindex.block cycleAssoc (actualGaussian x l N)).oscillation n z := by
   have hBand' : (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
       (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-        l).aliasInput).BandLimited N := by
+          l).aliasInput).BandLimited N := by
     change (HarmonicResidual.residualBlock (StateReindex.context cycleAssoc.symm
-      (ActualPrimary.commonContext B))
+        (ActualPrimary.commonContext B))
       (StateReindex.state cycleAssoc.symm x.state) (StateReindex.block cycleAssoc.symm
-        (x.coefficients.blocks l))
+          (x.coefficients.blocks l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.gaussian l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.aliasCoefficients
-        l))).BandLimited N
+          l))).BandLimited N
     rw [StateReindex.residualBlock_pull]
     exact StateReindex.block_bandLimited cycleAssoc.symm hBand
   have hz' : (StateReindex.cylinder cycleAssoc z).1 ∈ associatedStrip.domain := by
@@ -1705,11 +1726,11 @@ theorem cycle_context_linear_cancellation {x : CycleState (Label B N0)} (Hc : Pr
       (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion).domain
     simpa only [cycleAssoc.symm_apply_apply] using hz
   have hh := context_linear_cancellation Hc hs hN N Hs l hBand' n (StateReindex.cylinder cycleAssoc
-    z) hz'
+      z) hz'
   have hlin := linearBlockField_pull cycleAssoc (assembly x l).context (assembly x l).carrierBlock
     (actualUpdate x l N) n z
   have hlin' : linearBlockField (ActualPrimary.commonContext B) (x.coefficients.blocks l)
-    (cycleUpdate x l N) n z =
+      (cycleUpdate x l N) n z =
       linearBlockField (assembly x l).context (assembly x l).carrierBlock (actualUpdate x l N) n
         (StateReindex.cylinder cycleAssoc z) := by
     simp only [assembly, associatedContext, StateReindex.context_roundtrip,
@@ -1717,18 +1738,18 @@ theorem cycle_context_linear_cancellation {x : CycleState (Label B N0)} (Hc : Pr
     exact hlin
   have hres : (HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
       (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x
-        l).aliasInput).oscillation n
+          l).aliasInput).oscillation n
         (StateReindex.cylinder cycleAssoc z) =
       (HarmonicResidual.residualBlock (ActualPrimary.commonContext B) x.state
         (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients
-          l)).oscillation n z := by
+            l)).oscillation n z := by
     change (HarmonicResidual.residualBlock (StateReindex.context cycleAssoc.symm
-      (ActualPrimary.commonContext B))
+        (ActualPrimary.commonContext B))
       (StateReindex.state cycleAssoc.symm x.state) (StateReindex.block cycleAssoc.symm
-        (x.coefficients.blocks l))
+          (x.coefficients.blocks l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.gaussian l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.aliasCoefficients
-        l))).oscillation n _ = _
+          l))).oscillation n _ = _
     rw [StateReindex.residualBlock_pull, StateReindex.block_oscillation]
     simp only [StateReindex.oscillation, StateReindex.cylinder_apply,
       cycleAssoc.symm_apply_apply, Prod.eta]

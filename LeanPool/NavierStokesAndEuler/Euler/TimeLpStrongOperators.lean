@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMap
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Genuine strong operator approximation on Bochner L² time spaces. -/
 
 @[expose] public section
 
-/-! Genuine strong operator approximation on Bochner L² time spaces. -/
 
 noncomputable section
 
@@ -22,9 +26,10 @@ open scoped Topology
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-/-- Uniformly bounded strong operator approximation converges on every actual Bochner L² time field. -/
+/-- Uniformly bounded strong operator approximation converges on every actual Bochner L² time field.
+-/
 theorem strong_operator_timeLp_tendsto (T : ℝ) (A : ℕ → E →L[ℝ] E) (M : ℝ)
-    (hA : ∀ n x, ‖A n x‖ ≤ M*‖x‖)
+    (hA : ∀ n x, ‖A n x‖ ≤ M * ‖x‖)
     (hlim : ∀ x, Filter.Tendsto (fun n => A n x) Filter.atTop (𝓝 x))
     (u : TimeLp T E) :
     Filter.Tendsto (fun n => (A n).compLpL 2 (timeMeasure T) u) Filter.atTop (𝓝 u) := by
@@ -56,7 +61,7 @@ theorem strong_operator_timeLp_tendsto (T : ℝ) (A : ℕ → E →L[ℝ] E) (M 
     rw [hs, Pi.sub_apply, ha]
   rw [tendsto_iff_norm_sub_tendsto_zero]
   have hh : Filter.Tendsto (fun n => ‖(A n).compLpL 2 (timeMeasure T) u-u‖^2) Filter.atTop (𝓝 (0 :
-    ℝ)) := by
+      ℝ)) := by
     simpa only [he, integral_zero] using hint
   have h := hh.sqrt
   simpa only [Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg _), Real.sqrt_zero] using h

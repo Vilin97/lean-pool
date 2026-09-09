@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordLocal
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordLocal
+
+/-! Local equality preserves genuine fixed-Sobolev external derivative blocks. -/
 
 @[expose] public section
 
-/-! Local equality preserves genuine fixed-Sobolev external derivative blocks. -/
 
 noncomputable section
 

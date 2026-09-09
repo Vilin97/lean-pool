@@ -6,13 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeEndpoint
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialBorelExtension
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-!
 # Joint smooth gluing from matching normal time jets
@@ -22,6 +20,9 @@ The final interface uses the actual one-sided `iteratedDerivWithin` of time
 slices. Equality of full mixed derivative tensors is not an input assumption.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter
@@ -29,9 +30,12 @@ open scoped Topology ContDiff
 
 namespace NavierStokes.SpacetimeGluing
 
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
+/-- Time vector, given by `(1, 0)`. -/
 noncomputable def timeVector : SpaceTime := (1, 0)
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -42,9 +46,12 @@ private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Directional, given by `fderivWithin ℝ f s z v`. -/
 noncomputable def directional (s : Set SpaceTime) (f : SpaceTime → V) (v : SpaceTime)
     (z : SpaceTime) : V := fderivWithin ℝ f s z v
 
+/-- Normal iter as an element of `ℕ → SpaceTime → V | 0 => f | n + 1 => directional s
+(normalIter s f n) timeVector`. -/
 noncomputable def normalIter (s : Set SpaceTime) (f : SpaceTime → V) : ℕ → SpaceTime → V
   | 0 => f
   | n + 1 => directional s (normalIter s f n) timeVector
@@ -79,7 +86,9 @@ theorem directional_commute {s : Set SpaceTime} {f : SpaceTime → V}
   simp only [fderivWithin_const_apply, ContinuousLinearMap.comp_zero, zero_add,
     ContinuousLinearMap.flip_apply]
   exact ((hf z hz).isSymmSndFDerivWithinAt
-    (by simp [minSmoothness_of_isRCLikeNormedField, le_rfl])
+    (by
+        rw [minSmoothness_of_isRCLikeNormedField]; exact ENat.natCast_le_of_coe_top_le_withTop
+            le_rfl 2)
     hs (hregular hz) hz).eq w v
 
 /-- Any fixed directional derivative commutes with every normal iterate. -/
@@ -173,7 +182,9 @@ theorem normal_match_directional {s t : Set SpaceTime} {f g : SpaceTime → V} {
     (normalIter_contDiffOn hg ht n) hBs hBt (hmatch n) (hmatch (n + 1)) x
   exact congrArg (fun A : SpaceTime →L[ℝ] V => A v) hD
 
+/-- Past: an abbreviation for `SpacetimeEndpoint.closedPast T`. -/
 abbrev past (T : ℝ) : Set SpaceTime := SpacetimeEndpoint.closedPast T
+/-- Future, given by `Ici T ×ˢ univ`. -/
 def future (T : ℝ) : Set SpaceTime := Ici T ×ˢ univ
 
 theorem past_uniqueDiff (T : ℝ) : UniqueDiffOn ℝ (past T) :=

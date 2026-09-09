@@ -7,8 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureMean
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarClassical
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarPrimitive
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
 
 /-!
 # The actual normalized pressure in the transverse forward equation
@@ -18,6 +20,9 @@ Its angular derivative closes equation (11) for the constructed physical
 field. The pressure is smooth in the cylinder variables, has zero angular
 mean, and retains the same spatial support.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,11 +37,11 @@ variable (P : ℝ) [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported P Space S hS)) (a₀ : Supported P U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported P Space S hS)) (a₀ : Supported P U S hS)
   (M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
-  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖^2)
+  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
 
 /-- The actual bounded angular inverse applied to the solved scalar source. -/
 def pressurePath : C(Icc (0 : ℝ) T,CylinderL2 P ℝ) :=
@@ -65,13 +70,13 @@ variable (P : ℝ) [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (S : Set Space) (hS : MeasurableSet S) (hSc : IsCompact S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported P Space S hS)) (a₀ : Supported P U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported P Space S hS)) (a₀ : Supported P U S hS)
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)))
   (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a (a₀ : CylinderL2 P U)))
   (M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
-  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖^2)
+  (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
   (hf₀ : ∀ t, average P (f t : CylinderL2 P Space) = 0)
   (ha₀zero : average P (a₀ : CylinderL2 P U) = 0)
 
@@ -85,7 +90,7 @@ def pressureField (t : Icc (0 : ℝ) T) : LiftDomain P → ℝ :=
 
 theorem pressureField_ae (t : Icc (0 : ℝ) T) :
     (pressurePath P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm t : LiftDomain P → ℝ) =ᵐ[liftMeasure
-      P]
+        P]
       pressureField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t :=
   primitive_ae_constructed P _
     (pressureSource_slice_contDiff P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm hSc hf ha₀ t)
@@ -98,14 +103,14 @@ theorem pressureField_ae (t : Icc (0 : ℝ) T) :
 theorem pressureField_angle (t : Icc (0 : ℝ) T) (y : Space) (θ : ℝ) :
     HasDerivAt (fun s : ℝ =>
       pressureField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t (y,(s :
-        AddCircle P)))
+          AddCircle P)))
       (normalResidual P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m t (y,(θ : AddCircle P))) θ :=
   classicalPrimitive_angle P _ _ _ y θ
 
 theorem pressureField_mean_zero (t : Icc (0 : ℝ) T) (y : Space) :
     (∫ θ in (0 : ℝ)..P,
       pressureField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t (y,(θ :
-        AddCircle P))) = 0 :=
+          AddCircle P))) = 0 :=
   classicalPrimitive_mean_zero P _ _ _ y
 
 theorem pressureField_smooth (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
@@ -117,7 +122,7 @@ theorem pressureField_smooth (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
 
 theorem pressureField_continuous (t : Icc (0 : ℝ) T) :
     Continuous (pressureField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t)
-      :=
+        :=
   smoothField_continuous P _
     (pressureField_smooth P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t)
 
@@ -149,7 +154,7 @@ theorem pressureField_tsupport_subset (t : Icc (0 : ℝ) T) :
 
 theorem pressureField_hasCompactSupport (t : Icc (0 : ℝ) T) :
     HasCompactSupport (pressureField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀
-      ha₀zero t) := by
+        ha₀zero t) := by
   have hcompact : IsCompact (spatialSet P S) := by
     have he : spatialSet P S = S ×ˢ (univ : Set (AddCircle P)) := by
       ext x
@@ -158,12 +163,12 @@ theorem pressureField_hasCompactSupport (t : Icc (0 : ℝ) T) :
     exact hSc.prod isCompact_univ
   exact hcompact.of_isClosed_subset (isClosed_tsupport _)
     (pressureField_tsupport_subset P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀
-      ha₀zero t)
+        ha₀zero t)
 
 /-- Equation (11) with the actual angular derivative of the normalized pressure. -/
 theorem field_pressure_equation
-    (hTangent : ∀ t x v, ⟪m.field t x,Q.field t x v⟫_ℝ = 0)
-    (hRange : ∀ t x η, ⟪m.field t x,η⟫_ℝ = 0 → ∃ v, Q.field t x v = η)
+    (hTangent : ∀ t x v, ⟪m.field t x, Q.field t x v⟫_ℝ = 0)
+    (hRange : ∀ t x η, ⟪m.field t x, η⟫_ℝ = 0 → ∃ v, Q.field t x v = η)
     (hFlow : ∀ t x, Q₁.field t x = (M.field t x).comp (Q.field t x))
     (t : Icc (0 : ℝ) T) (y : Space) (θ : ℝ) :
     derivativeField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ t (y,(θ : AddCircle P)) +
@@ -172,7 +177,7 @@ theorem field_pressure_equation
         hf₀ ha₀zero t (y,(s : AddCircle P))) θ • m.field t y =
       pointField P (includePath P S hS f) hf t (y,(θ : AddCircle P)) := by
   rw [(pressureField_angle P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t y
-    θ).deriv]
+      θ).deriv]
   exact field_balance P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m
     (normal_ne_zero_of_lower T m cm hcm hm) hTangent hRange hFlow t (y,(θ : AddCircle P))
 

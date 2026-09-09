@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Recovering the source's transverse coordinates
@@ -18,6 +18,9 @@ the fixed plane `m₀⊥`.  Orthogonal projection gives a bounded coordinate map
 and on the moving plane its reconstruction is the identity.  These are
 coefficient identities, not assumptions about a differential inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

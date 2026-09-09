@@ -7,11 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAlgebra
-public import Mathlib.Algebra.BigOperators.NatAntidiagonal
+public import Mathlib.Data.Finset.NatAntidiagonal
+import Mathlib.Algebra.BigOperators.NatAntidiagonal
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
+
+/-! The finite residual convolution is exactly the source's sum over i+j=n. -/
 
 @[expose] public section
 
-/-! The finite residual convolution is exactly the source's sum over i+j=n. -/
 
 noncomputable section
 

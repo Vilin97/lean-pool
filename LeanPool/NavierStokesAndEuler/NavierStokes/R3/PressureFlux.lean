@@ -7,14 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFluxTest
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureRecoveryHelpers
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTensorBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ActualPressureFlux
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCommutator
-public import Mathlib.Analysis.Calculus.MeanValue
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelPairedBound
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureRecovery
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ActualPressureFlux
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCommutator
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTensorBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszPairing
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
 
 /-!
 # Canonical pressure flux
@@ -23,6 +23,9 @@ The pressure is paired with compact smooth tests through its canonical Riesz
 functional. Every integral used to split the weighted pairing is shown to be
 integrable before its norm is estimated.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -189,7 +192,7 @@ theorem fluxTest_eq_multiplier_rTest (R : ℝ) (hR : 0 < R) (w : Space → Space
 theorem lpNorm_rTest (R : ℝ) (hR : 0 < R) (w : Space → Space)
     (hw : ContDiff ℝ ∞ w) (p : ℝ≥0∞) :
     comparisonLpNorm p (rTest R hR w hw : Space → ℂ) = comparisonLpNorm p
-      (PressureFluxTest.cutoffTest R w) :=
+        (PressureFluxTest.cutoffTest R w) :=
   lpNorm_ofReal _ _
 
 theorem lpNorm_fderiv_rTest (R : ℝ) (hR : 0 < R) (w : Space → Space)
@@ -292,6 +295,8 @@ def rieszSobolevConstant : ℝ := 3 * WeightedSobolev.sobolevConstant
 theorem rieszSobolevConstant_nonneg : 0 ≤ rieszSobolevConstant :=
   mul_nonneg (by norm_num) WeightedSobolev.sobolevConstant_nonneg
 
+/-- Local pair constant, given by `rieszSobolevConstant *
+PressureFluxTest.cutoffDerivativeConstant`. -/
 def localPairConstant : ℝ := rieszSobolevConstant * PressureFluxTest.cutoffDerivativeConstant
 
 theorem localPairConstant_nonneg : 0 ≤ localPairConstant :=
@@ -336,7 +341,7 @@ theorem localized_pair_bound {R : ℝ} (hR : 0 < R) {u v : VelocityField} {t : �
         (comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
             cutoffL6 (ComparisonCutoffs.cutoff R) (u - v) t ^ (1 / 2 : ℝ) +
           2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t,
-            x))) *
+              x))) *
         (dissipationRoot (ComparisonCutoffs.cutoff R) (u - v) t / R +
           comparisonLpNorm 2 (fun x => (u - v) (t, x)) / R ^ 2) := by
   have ht := LocalizedTensorBounds.weighted_tensorDiff_bound
@@ -349,16 +354,16 @@ theorem localized_pair_bound {R : ℝ} (hR : 0 < R) {u v : VelocityField} {t : �
   have hM := LpNormTools.lpNorm_nonneg 2 (fun x => (u - v) (t, x))
   have hU := LpNormTools.lpNorm_nonneg 3 (fun x => u (t, x))
   have hB := LpNormTools.lpNorm_nonneg 6 (fun x => ComparisonCutoffs.cutoff R x ^ 4 • (u - v) (t,
-    x))
+      x))
   calc
     _ ≤ comparisonLpNorm (6 / 5) (fun x => ComparisonCutoffs.cutoff R x ^ 2 * tensorDiff u v t i j
-      x) *
+        x) *
         comparisonLpNorm 6 (rieszTest i j (rTest R hR (fun x => (u - v) (t, x)) (hu.sub hv))) :=
       norm_holder_pair_le ht.1 hr
     _ ≤ (comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
             cutoffL6 (ComparisonCutoffs.cutoff R) (u - v) t ^ (1 / 2 : ℝ) +
           2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t,
-            x))) *
+              x))) *
         (localPairConstant * (dissipationRoot (ComparisonCutoffs.cutoff R) (u - v) t / R +
           comparisonLpNorm 2 (fun x => (u - v) (t, x)) / R ^ 2)) := by
       apply mul_le_mul ht.2 (riesz_rTest_bound hR (hu.sub hv) hw2 i j)
@@ -379,7 +384,7 @@ theorem norm_cutoff_pressurePair_le_local_commutator {R : ℝ} (hR : 0 < R)
         (comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
             cutoffL6 (ComparisonCutoffs.cutoff R) (u - v) t ^ (1 / 2 : ℝ) +
           2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t,
-            x))) *
+              x))) *
         (dissipationRoot (ComparisonCutoffs.cutoff R) (u - v) t / R +
           comparisonLpNorm 2 (fun x => (u - v) (t, x)) / R ^ 2) +
       ‖commutatorPair i j (ComparisonCutoffs.multiplier R) (tensorDiff u v t i j)
@@ -498,7 +503,7 @@ theorem cutoff_commutator_bound {R : ℝ} (hR : 0 < R) {w : Space → Space}
   calc
     _ ≤ (Comparison.rieszCommutatorConstant * max (2 * ComparisonCutoffs.derivativeConstant 1) 1) *
         R ^ (-(3 / 4 : ℝ)) * comparisonLpNorm 1 g * comparisonLpNorm 4 (rTest R hR w hw : Space →
-          ℂ) := h
+            ℂ) := h
     _ ≤ (Comparison.rieszCommutatorConstant * max (2 * ComparisonCutoffs.derivativeConstant 1) 1) *
         R ^ (-(3 / 4 : ℝ)) * comparisonLpNorm 1 g *
           ((8 * ComparisonCutoffs.derivativeConstant 1 / R) * comparisonLpNorm 2 w ^ (1 / 4 : ℝ) *
@@ -521,7 +526,7 @@ theorem cutoff_pressurePair_bound {R : ℝ} (hR : 0 < R) {u v : VelocityField} {
         (comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
             cutoffL6 (ComparisonCutoffs.cutoff R) (u - v) t ^ (1 / 2 : ℝ) +
           2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t,
-            x))) *
+              x))) *
         (dissipationRoot (ComparisonCutoffs.cutoff R) (u - v) t / R +
           comparisonLpNorm 2 (fun x => (u - v) (t, x)) / R ^ 2) +
       commutatorConstant * comparisonLpNorm 1 (tensorDiff u v t i j) *
@@ -542,7 +547,7 @@ theorem canonicalCutoffFlux_bound {R : ℝ} (hR : 0 < R) {u v : VelocityField} {
         (comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
             cutoffL6 (ComparisonCutoffs.cutoff R) (u - v) t ^ (1 / 2 : ℝ) +
           2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t,
-            x))) *
+              x))) *
         (dissipationRoot (ComparisonCutoffs.cutoff R) (u - v) t / R +
           comparisonLpNorm 2 (fun x => (u - v) (t, x)) / R ^ 2) +
       commutatorConstant * G * comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (1 / 4 : ℝ) *
@@ -579,7 +584,7 @@ theorem exists_uniform_canonicalCutoffFlux_bound (M₀ U₀ G₀ : ℝ)
   refine ⟨9 * uniformCoefficient localPairConstant commutatorConstant M₀ U₀ G₀,
     mul_nonneg (by norm_num)
       (uniformCoefficient_nonneg localPairConstant_nonneg commutatorConstant_nonneg hM₀ hU₀ hG₀),
-        ?_⟩
+          ?_⟩
   intro R hR u v t hu hv hw2 hu3 hg hM hU hG
   have hR0 : 0 < R := zero_lt_one.trans_le hR
   have hA : 0 ≤ dissipationRoot (ComparisonCutoffs.cutoff R) (u - v) t := Real.sqrt_nonneg _

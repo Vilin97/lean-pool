@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftCorrection
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressure
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionResidualCancellation
 
-@[expose] public section
-
 /-!
 # Actual residual cancellation for the constructed all-order correction
 
@@ -24,6 +22,9 @@ These results concern the genuine Sobolev paths and coefficients of `Data`.
 They neither construct the approximate packet nor identify arbitrary coefficients
 with the physical Euler equation in parent-flow coordinates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -107,7 +108,7 @@ theorem Budget.correctedFieldTower_error_energy (B : Budget period hT A)
         (B.radius t) (B.metric.operatorPath period t)
         ((B.correctedFieldTower period).realization ((P+6)+1) t -
           A.approximation.realization ((P+6)+1) t) ≤
-      2*(B.spatial (P+6) (by omega)).full.residual*
+      2*(B.spatial (P+6) (by omega)).full.residual *
         Real.exp (3*B.growthCoefficient*t.val) ∧
     energyNorm period P (by omega : P+6 ≤ (P+6)+1)
         (B.radius t) (B.metric.operatorPath period t)
@@ -159,7 +160,7 @@ theorem exists_exact_lifted_solution (B : Budget period hT A)
         energyNorm period P (by omega : P+6 ≤ (P+6)+1)
             (B.radius t) (B.metric.operatorPath period t)
             (Z.realization ((P+6)+1) t - A.approximation.realization ((P+6)+1) t) ≤
-          2*(B.spatial (P+6) (by omega)).full.residual*
+          2*(B.spatial (P+6) (by omega)).full.residual *
             Real.exp (3*B.growthCoefficient*t.val) ∧
         energyNorm period P (by omega : P+6 ≤ (P+6)+1)
             (B.radius t) (B.metric.operatorPath period t)

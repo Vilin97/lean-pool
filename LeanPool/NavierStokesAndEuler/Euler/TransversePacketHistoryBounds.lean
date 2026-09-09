@@ -7,10 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketIntervalForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletPhysicalBounds
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionSobolev
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletPhysicalBounds
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletTimeBounds
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-!
 # Source bounds for the actual transverse history and its terminal trace
@@ -19,6 +20,9 @@ The only quantitative inputs are the literal source coefficient jets and
 the forcing's fixed-Sobolev mixed-word bounds. The output is the constructed
 history path and its actual terminal coordinate, at the identical radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,7 +56,7 @@ open scoped ContDiff
 theorem trace_block_le (P : ℝ) [Fact (0 < P)]
     {K V ι : Type*} [TopologicalSpace K] [CompactSpace K]
     [NormedAddCommGroup V] [NormedSpace ℝ V] [Fintype ι]
-    (directions : ι → LiftTangent) (q : ℕ) (p : C(K,CylinderL2 P V))
+    (directions : ι → LiftTangent) (q : ℕ) (p : C(K, CylinderL2 P V))
     (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p)) (t : K) (n : ℕ) (a : LiftTangent) :
     block directions q (fun b => translate P b (p t)) n a ≤
       block directions q (fun b => pathTranslate P b p) n a := by
@@ -73,7 +77,7 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths
   EulerPacketProfileRecursion EulerGevrey EulerParameterWordGevrey
   EulerTransverseFixedSobolev EulerFixedEvolutionSobolev
-  EulerTimeLpGramSobolev EulerTimeLpAccelerationSobolev
+  EulerTimeLpGramSobolev
 open scoped ContDiff BoundedContinuousFunction
 
 variable {P : ℝ} [Fact (0 < P)]
@@ -82,18 +86,22 @@ variable {P : ℝ} [Fact (0 < P)]
   {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
   (Rc C₀ C₁ CH Cf R : ℝ) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀)
   (hC₁ : 0 ≤ C₁) (hCH : 0 ≤ CH) (hCf : 0 ≤ Cf)
-  (hbF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C₀*majorant Rc
-    0 n)
-  (hbF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C₁*majorant
-    Rc 0 n)
-  (hbH : ∀ n t x, ‖iteratedFDeriv ℝ n (B.H.field t : Space → Space →L[ℝ] Space) x‖ ≤ CH*majorant Rc
-    0 n)
-  (hRweak : 2*blockCost ι q D.T Rc C₀ C₁ CH D.frameLower Cf*(sobolevCoefficientRadius ι Rc+1) ≤ R)
-  (hRstrong : 2*gramBlockCost ι q D.frameLower Rc C₀
-    (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf 1)*(sobolevCoefficientRadius ι Rc+1) ≤ R)
+  (hbF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C₀ * majorant
+      Rc
+      0 n)
+  (hbF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C₁ * majorant
+      Rc 0 n)
+  (hbH : ∀ n t x, ‖iteratedFDeriv ℝ n (B.H.field t : Space → Space →L[ℝ] Space) x‖ ≤ CH * majorant
+      Rc
+      0 n)
+  (hRweak : 2 * blockCost ι q D.T Rc C₀ C₁ CH D.frameLower Cf * (sobolevCoefficientRadius ι Rc + 1)
+      ≤ R)
+  (hRstrong : 2 * gramBlockCost ι q D.frameLower Rc C₀
+    (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf 1) *
+ (sobolevCoefficientRadius ι Rc + 1) ≤ R)
   (hT1 : D.T ≤ 1) (d : ℕ)
-  (hforce : ∀ n, block directions q (fun a => pathTranslate P a (forcingPath G)) n 0 ≤ Cf*majorant
-    R d n)
+  (hforce : ∀ n, block directions q (fun a => pathTranslate P a (forcingPath G)) n 0 ≤ Cf * majorant
+      R d n)
 
 include hdir hRc hC₀ hC₁ hCH hCf hbF hbF₁ hbH hRweak hRstrong hT1 hforce
 
@@ -108,7 +116,7 @@ theorem source_coordinate_bound (n : ℕ) :
       (mul_nonneg hC₀ (majorant_nonneg Rc hRc 0 j)) (D.frame_spatial_bound j _ (hbF j)) a)
     (fun j a => D.frameDerivative.norm_iteratedFDeriv_translation_le j _
       (mul_nonneg hC₁ (majorant_nonneg Rc hRc 0 j)) (D.frameDerivative_spatial_bound j _ (hbF₁ j))
-        a)
+          a)
     (fun j a => B.H.norm_iteratedFDeriv_translation_le j _
       (mul_nonneg hCH (majorant_nonneg Rc hRc 0 j)) (hbH j) a)
     hRweak hRstrong hT1 (forcingPath G) G.path_orbit d hforce n 0
@@ -133,19 +141,20 @@ theorem source_velocity_bound (n : ℕ) :
       (mul_nonneg hC₀ (majorant_nonneg Rc hRc 0 j)) (D.frame_spatial_bound j _ (hbF j)) a)
     (fun j a => D.frameDerivative.norm_iteratedFDeriv_translation_le j _
       (mul_nonneg hC₁ (majorant_nonneg Rc hRc 0 j)) (D.frameDerivative_spatial_bound j _ (hbF₁ j))
-        a)
+          a)
     (fun j a => B.H.norm_iteratedFDeriv_translation_le j _
       (mul_nonneg hCH (majorant_nonneg Rc hRc 0 j)) (hbH j) a)
     hRweak hRstrong hT1 (forcingPath G) G.path_orbit d hforce n
 
 /-- The genuine history time derivative, at the identical spatial radius. -/
 theorem source_derivative_bound
-    (hRuniform : 2*gramBlockCost ι q D.frameLower Rc C₀
-      (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf (traceCost D.T))*(sobolevCoefficientRadius ι
-        Rc+1) ≤ R)
+    (hRuniform : 2 * gramBlockCost ι q D.frameLower Rc C₀
+      (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf (traceCost D.T)) *
+ (sobolevCoefficientRadius ι
+          Rc + 1) ≤ R)
     (n : ℕ) :
     block directions q (fun a => pathTranslate P a (B.derivativePath G)) n 0 ≤
-      (3*sobolevCoefficientAmplitude ι q Rc C₁*traceCost D.T+
+      (3*sobolevCoefficientAmplitude ι q Rc C₁*traceCost D.T +
         3*sobolevCoefficientAmplitude ι q Rc C₀)*majorant R (d+3) n := by
   exact B.coefficients.physicalDerivative_block_bound P directions hdir q
     D.frame.translation_contDiff D.frameDerivative.translation_contDiff B.H.translation_contDiff
@@ -154,7 +163,7 @@ theorem source_derivative_bound
       (mul_nonneg hC₀ (majorant_nonneg Rc hRc 0 j)) (D.frame_spatial_bound j _ (hbF j)) a)
     (fun j a => D.frameDerivative.norm_iteratedFDeriv_translation_le j _
       (mul_nonneg hC₁ (majorant_nonneg Rc hRc 0 j)) (D.frameDerivative_spatial_bound j _ (hbF₁ j))
-        a)
+          a)
     (fun j a => B.H.norm_iteratedFDeriv_translation_le j _
       (mul_nonneg hCH (majorant_nonneg Rc hRc 0 j)) (hbH j) a)
     hRweak hRstrong hT1 hRuniform (forcingPath G) G.path_orbit d hforce n

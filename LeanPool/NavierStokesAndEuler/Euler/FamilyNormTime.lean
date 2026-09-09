@@ -8,10 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual L²-time convergence of finite Hilbert forcing norms. -/
 
 @[expose] public section
 
-/-! Actual L²-time convergence of finite Hilbert forcing norms. -/
 
 noncomputable section
 
@@ -33,10 +36,10 @@ theorem familyNorm_eq_piLp (u : I → H) : familyNorm u = ‖familyHilbertMap u�
 
 /-- The finite forcing norm is Lipschitz, with a fixed base-cardinality constant. -/
 theorem familyNorm_lipschitz : LipschitzWith ‖(familyHilbertMap : (I → H) →L[ℝ] PiLp 2 (fun _ : I
-  => H))‖₊
+    => H))‖₊
     (familyNorm : (I → H) → ℝ) := by
   have h := lipschitzWith_one_norm.comp (familyHilbertMap : (I → H) →L[ℝ] PiLp 2 (fun _ : I =>
-    H)).lipschitzWith
+      H)).lipschitz
   simpa only [one_mul, Function.comp_def, ← familyNorm_eq_piLp] using h
 
 /-- The actual scalar finite-family norm represented in Bochner L² time. -/
@@ -52,8 +55,8 @@ theorem familyNormTime_ae (T : ℝ) (u : TimeLp T (I → H)) :
 theorem familyNormTime_tendsto (T : ℝ) (u : ℕ → TimeLp T (I → H)) (v : TimeLp T (I → H))
     (hu : Filter.Tendsto u Filter.atTop (𝓝 v)) :
     Filter.Tendsto (fun n => familyNormTime T (u n)) Filter.atTop (𝓝 (familyNormTime T v)) :=
-  (familyNorm_lipschitz.continuous_compLp (by simp [familyNorm,
-    familySquaredNorm])).continuousAt.tendsto.comp hu
+  (familyNorm_lipschitz.continuous_compLp (by
+      simp [familyNorm, familySquaredNorm])).continuousAt.tendsto.comp hu
 
 /-- Weighted time integrals of actual family forcing norms pass through strong L² approximations. -/
 theorem integral_familyNorm_tendsto (T : ℝ) (a : TimeLp T ℝ)
@@ -69,7 +72,7 @@ theorem integral_familyNorm_tendsto (T : ℝ) (a : TimeLp T ℝ)
     rw [ht]
     simp [RCLike.inner_apply, mul_comm]
   have h : Filter.Tendsto (fun n => ⟪a, familyNormTime T (u n)⟫_ℝ) Filter.atTop (𝓝 ⟪a,
-    familyNormTime T v⟫_ℝ) :=
+      familyNormTime T v⟫_ℝ) :=
     Filter.Tendsto.inner tendsto_const_nhds (familyNormTime_tendsto T u v hu)
   simpa only [he] using h
 

@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSlowAxis
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowResidualMatching
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-!
 # The natural core solves the actual order-zero residual equations
@@ -19,6 +18,9 @@ Its scalar swirl is normalized as `phi = C*f`, its pressure is unchanged, and
 its radial flux is `X*beta`.  The two residual equations below are derived from
 the constructed natural equations, not assumed as slow-order hypotheses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -93,9 +95,11 @@ noncomputable def naturalFlux (h : ℝ) (U V : InnerProfile) (w : InnerPoint) : 
     (2 * w.2 * U w - 2 * CoordinateAlgebra.D h * w.2 * V w -
       CoordinateAlgebra.d w.2 * NaturalAxisBridge.partialEta V w)
 
+/-- Zero sequence, with branches according to `n = 0`. -/
 noncomputable def zeroSequence (f : InnerProfile) (n : ℕ) : InnerProfile :=
   if n = 0 then f else fun _ => 0
 
+/-- Natural profiles, bundling `phi`, `axial`, `flux`, `pressure`. -/
 noncomputable def naturalProfiles (h C : ℝ) (f U V P : InnerProfile) : SlowProfiles where
   phi := zeroSequence (fun w => C * f w)
   axial := zeroSequence U
@@ -140,7 +144,7 @@ theorem natural_angular_zero {h j Λ : ℝ} {P0 a0 : ℝ → ℝ} {f U V P : Inn
     (partialEta_eq_slice (hf.differentiableAt (by simp))).symm
   rw [hx, he] at hn
   dsimp only [naturalFlux, angularExponent, CoordinateAlgebra.A, CoordinateAlgebra.D,
-    CoordinateAlgebra.d,
+      CoordinateAlgebra.d,
     NaturalProfile.transportW, NaturalProfile.transportH, NaturalAxisData.A, NaturalAxisData.D,
     NaturalAxisData.d] at hn ⊢
   change _ ≠ 0 at hL
@@ -170,7 +174,7 @@ theorem natural_axial_zero {h j Λ : ℝ} {P0 a0 : ℝ → ℝ} {f U V P : Inner
     (partialEta_eq_slice (hp.differentiableAt (by simp))).symm
   rw [hx, he, hpx, hpe] at hn
   dsimp only [naturalFlux, axialExponent, pressureExponent, CoordinateAlgebra.A,
-    CoordinateAlgebra.D,
+      CoordinateAlgebra.D,
     CoordinateAlgebra.d, NaturalProfile.transportW, NaturalProfile.transportH, NaturalAxisData.A,
     NaturalAxisData.D, NaturalAxisData.d] at hn ⊢
   change 2 * CoordinateAlgebra.L h w.2 * _ = _ at hn
@@ -220,7 +224,7 @@ theorem natural_pressure_zero {h j Λ C : ℝ} {P0 a0 : ℝ → ℝ} {f U V P : 
   simp only [pressureCoefficient, naturalProfiles, zeroSequence, ↓reduceIte,
     convolution, Finset.Nat.antidiagonal_zero, Finset.sum_singleton, previous_zero,
     zero_div, add_zero, hd]
-  field_simp ; ring
+  field_simp; ring
 
 /-- Germ transfer to any actual slow sequence. Higher coefficients are
 irrelevant at order zero. No order-zero residual equation is a hypothesis. -/
@@ -271,6 +275,7 @@ the natural fields. Its parameter interval is open and contains `[-1,1]`. -/
 noncomputable def initialBand (Λ : ℝ) : Set InnerPoint :=
   Icc (0 : ℝ) (4 / Λ) ×ˢ ReferencePath.parameterInterval
 
+/-- Initial core, given by `Ioo (0 : ℝ) (4 / Λ) ×ˢ ReferencePath.parameterInterval`. -/
 noncomputable def initialCore (Λ : ℝ) : Set InnerPoint :=
   Ioo (0 : ℝ) (4 / Λ) ×ˢ ReferencePath.parameterInterval
 

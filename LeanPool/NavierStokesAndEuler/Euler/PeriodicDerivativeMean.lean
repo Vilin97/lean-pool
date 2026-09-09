@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Tactic.Positivity.Finset
+
+/-! The mean of a genuine derivative of a periodic field is zero. -/
 
 @[expose] public section
 
-/-! The mean of a genuine derivative of a periodic field is zero. -/
 
 noncomputable section
 

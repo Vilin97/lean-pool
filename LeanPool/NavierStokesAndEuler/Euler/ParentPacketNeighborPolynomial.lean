@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationSourceData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentHistoryCostPolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryNeighbor
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationSourceData
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryPolynomial
 
 /-! A fixed polynomial controls the full actual neighboring-label cost,
 including the normal normalization and the selected terminal datum. The
 small label scale is kept outside this polynomial. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,24 +25,29 @@ namespace EulerParentNeighborCost
 open EulerPacketParentLabelBounds EulerParentHistoryCost EulerPolynomialCost
   EulerTransverseActivationSelection
 
+/-- Formula, given by `27*F^2*V*R+27*F^2*R*(1+F)*Ei + 16*Hist*(5+64*CM^2+2*CH)*(1+3*F^2)*Hi*Ei`. -/
 def formula (F V R Hist Ei Hi CM CH : ℝ) : ℝ :=
-  27*F^2*V*R+27*F^2*R*(1+F)*Ei+
+  27*F^2*V*R+27*F^2*R*(1+F)*Ei +
     16*Hist*(5+64*CM^2+2*CH)*(1+3*F^2)*Hi*Ei
 
+/-- Envelope, constructed using `formula`. -/
 def envelope (K Ti Ei Hi CM CH : ℝ) : ℝ :=
   formula (frameAmplitude K) (gradientAmplitude K) (coefficientRadius K)
     (labelHistoryConstant*(1+K+Ti)^labelHistoryPower) Ei Hi CM CH
 
+/-- Polynomial as an element of `Polynomial ℝ`. -/
 def polynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let V := Polynomial.C embeddingCost*X^2
   let F := 1+V
   let R := 1024+4*X
   let Hist := Polynomial.C labelHistoryConstant*X^labelHistoryPower
-  27*F^2*V*R+27*F^2*R*(1+F)*X+
+  27*F^2*V*R+27*F^2*R*(1+F)*X +
     16*Hist*(5+64*X^2+2*X)*(1+3*F^2)*X*X
 
+/-- Bound constant, given by `coefficientCost polynomial`. -/
 def boundConstant : ℝ := coefficientCost polynomial
+/-- Degree, given by `polynomial.natDegree`. -/
 def degree : ℕ := polynomial.natDegree
 
 theorem constant_pos : 0 < boundConstant := coefficientCost_pos _
@@ -105,7 +113,7 @@ open EulerSmoothLimit EulerTransversePacketProvider
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   {D : Data U} {τ : ℝ} (P : ParentFrame D τ)
 
-theorem epsilon_inv_le_twice_shear (ha : 1/2 ≤ P.a) (hH : 1 ≤ P.shear) :
+theorem epsilon_inv_le_twice_shear (ha : 1 / 2 ≤ P.a) (hH : 1 ≤ P.shear) :
     P.epsilon⁻¹ ≤ 2*P.shear := by
   have ha0 : 0 < P.a := by linarith only [ha]
   have hH0 : 0 ≤ P.shear := zero_le_one.trans hH
@@ -128,7 +136,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerMeanCoeffic
 
 variable {G : Parent} (L : LabelData G)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S) (H : LowBounds G)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (P : ParentFrame (G.transverseData m hm R S hS) τ)
@@ -171,8 +179,8 @@ theorem neighborScaleCost_envelope :
   have hRayPos := Guards.rayScale_pos hτ hτT P
   have hHistConst := labelHistoryConstant_pos
   have heq : L.neighborScaleCost m hm R S hS H τ hτ hτT P CM CH =
-      L.strainDifferenceCost+3*L.normalDifferenceCost*(P.rayScale hτ hτT)⁻¹*P.epsilon⁻¹+
-      16*(L.initialHistoryDifferenceScaleCost m hm R S hS H τ hτ hτT)*
+      L.strainDifferenceCost+3*L.normalDifferenceCost*(P.rayScale hτ hτT)⁻¹*P.epsilon⁻¹ +
+      16*(L.initialHistoryDifferenceScaleCost m hm R S hS H τ hτ hτT) *
         (5+64*CM^2+2*CH)*D.inverseBound*P.shear⁻¹*P.epsilon⁻¹ := by
     unfold neighborScaleCost ParentFrame.terminalBound activationConstant
     simp only [div_eq_mul_inv,mul_inv_rev]
@@ -180,9 +188,9 @@ theorem neighborScaleCost_envelope :
   rw [heq]
   unfold envelope formula strainDifferenceCost normalDifferenceCost
   calc
-    _ ≤ 27*(frameAmplitude L.K)^2*gradientAmplitude L.K*coefficientRadius L.K+
-        3*(9*(frameAmplitude L.K)^2*coefficientRadius L.K)*(1+frameAmplitude L.K)*P.epsilon⁻¹+
-        16*(labelHistoryConstant*(1+L.K+Ti)^labelHistoryPower)*
+    _ ≤ 27*(frameAmplitude L.K)^2*gradientAmplitude L.K*coefficientRadius L.K +
+        3*(9*(frameAmplitude L.K)^2*coefficientRadius L.K)*(1+frameAmplitude L.K)*P.epsilon⁻¹ +
+        16*(labelHistoryConstant*(1+L.K+Ti)^labelHistoryPower) *
           (5+64*CM^2+2*CH)*(1+3*(frameAmplitude L.K)^2)*P.shear⁻¹*P.epsilon⁻¹ := by
       gcongr
     _ = _ := by ring
@@ -190,7 +198,7 @@ theorem neighborScaleCost_envelope :
 include hτ1 hTi hCM hCH hshear heps in
 theorem neighborScaleCost_polynomial :
     L.neighborScaleCost m hm R S hS H τ hτ hτT P CM CH ≤
-      EulerParentNeighborCost.boundConstant*
+      EulerParentNeighborCost.boundConstant *
         (1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH)^EulerParentNeighborCost.degree :=
   (L.neighborScaleCost_envelope m hm R S hS H τ hτ hτT P Ti CM CH hτ1 hTi hCH hshear heps).trans
     (envelope_power L.K Ti P.epsilon⁻¹ P.shear⁻¹ CM CH (zero_le_one.trans L.K_one)
@@ -199,7 +207,7 @@ theorem neighborScaleCost_polynomial :
 include hτ1 hTi hCM hCH hshear heps in
 theorem source_neighbor_polynomial :
     P.neighborCost hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ≤
-      (EulerParentNeighborCost.boundConstant*
+      (EulerParentNeighborCost.boundConstant *
         (1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH)^EulerParentNeighborCost.degree)*G.ell :=
   (L.source_neighbor_scale m hm R S hS H τ hτ hτT P CM CH hCM hCH hshear heps).trans
     (mul_le_mul_of_nonneg_right
@@ -209,9 +217,9 @@ theorem source_neighbor_polynomial :
 include hτ1 hTi hCM hCH in
 /-- With the actual activation scales, only the positive shear itself is
 needed as a polynomial variable. CM and CH remain fixed low constants. -/
-theorem neighborScaleCost_low_polynomial (ha : 1/2 ≤ P.a) (hH : 1 ≤ P.shear) :
+theorem neighborScaleCost_low_polynomial (ha : 1 / 2 ≤ P.a) (hH : 1 ≤ P.shear) :
     L.neighborScaleCost m hm R S hS H τ hτ hτT P CM CH ≤
-      (EulerParentNeighborCost.boundConstant*(2*(1+CM+CH))^EulerParentNeighborCost.degree)*
+      (EulerParentNeighborCost.boundConstant*(2*(1+CM+CH))^EulerParentNeighborCost.degree) *
         (1+L.K+Ti+P.shear)^EulerParentNeighborCost.degree := by
   have hK : 0 ≤ L.K := zero_le_one.trans L.K_one
   have hTi0 : 0 ≤ Ti := (inv_pos.mpr hτ).le.trans hTi
@@ -228,17 +236,17 @@ theorem neighborScaleCost_low_polynomial (ha : 1/2 ≤ P.a) (hH : 1 ≤ P.shear)
   have hA0 : 0 ≤ 1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH := by positivity
   have hC := EulerParentNeighborCost.constant_pos
   calc
-    _ ≤ EulerParentNeighborCost.boundConstant*
+    _ ≤ EulerParentNeighborCost.boundConstant *
         (1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH)^EulerParentNeighborCost.degree :=
       L.neighborScaleCost_polynomial m hm R S hS H τ hτ hτT P Ti CM CH hτ1 hTi hCM hCH hHp hEp
-    _ ≤ EulerParentNeighborCost.boundConstant*
+    _ ≤ EulerParentNeighborCost.boundConstant *
         (2*(1+CM+CH)*(1+L.K+Ti+P.shear))^EulerParentNeighborCost.degree := by gcongr
     _ = _ := by rw [mul_pow]; ring
 
 include hτ1 hTi hCM hCH in
-theorem source_neighbor_low_polynomial (ha : 1/2 ≤ P.a) (hH : 1 ≤ P.shear) :
+theorem source_neighbor_low_polynomial (ha : 1 / 2 ≤ P.a) (hH : 1 ≤ P.shear) :
     P.neighborCost hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ≤
-      ((EulerParentNeighborCost.boundConstant*(2*(1+CM+CH))^EulerParentNeighborCost.degree)*
+      ((EulerParentNeighborCost.boundConstant*(2*(1+CM+CH))^EulerParentNeighborCost.degree) *
         (1+L.K+Ti+P.shear)^EulerParentNeighborCost.degree)*G.ell := by
   have hHp : 0 < P.shear := zero_lt_one.trans_le hH
   have ha0 : 0 < P.a := by linarith only [ha]

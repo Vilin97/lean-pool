@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryDynamics
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NormalScaling
 
 /-!
 # Exact dynamics of the selected signed unit
@@ -18,6 +17,9 @@ Its scalar signed amplitude is deliberately absent here.  The time equation,
 base action, and tangency germ therefore apply to either signed column before
 the separate scalar multiplication and compact cutoff.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,7 +31,9 @@ open ActualPrimaryDynamics
 open scoped ContDiff Topology InnerProductSpace BigOperators
 
 
+/-- Native: an abbreviation for `ActualSignedGeometry.Native`. -/
 abbrev Native := ActualSignedGeometry.Native
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
 
 variable {B N0 : ℕ}
@@ -45,11 +49,14 @@ noncomputable def unitPulse (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space :=
   nativeUnit j L (copyPoint j L n k x)
 
+/-- Unit motion, given by `(normalScale L n * clockScale L n) • (phases B N0 j).phase.velocity L
+(phasePoint L (copyPoint j L n k x))`. -/
 noncomputable def unitMotion (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space :=
   (normalScale L n * clockScale L n) •
     (phases B N0 j).phase.velocity L (phasePoint L (copyPoint j L n k x))
 
+/-- Unit action, constructed using `clockScale`. -/
 noncomputable def unitAction (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space →L[ℝ] Space :=
   clockScale L n • PrimaryCopyBridge.baseOperator
@@ -107,7 +114,7 @@ theorem nativeUnit_hasDerivAt (j : Fin 2) (L : Label B N0) {x : Native}
     exact ⟨hz, (div_le_one hL).mp hθ.2.le⟩
   have hz : phasePoint L x ∈
       ((PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).slot P.V P.openV).carrier
-        L :=
+          L :=
     ⟨hp, P.interval L htime⟩
   have hd' := hd.scomp x.2.2 ((hasDerivAt_id x.2.2).div_const ell)
   simp only [hv, one_div, smul_smul, inv_mul_cancel₀ hL.ne', one_smul] at hd'
@@ -124,7 +131,7 @@ theorem nativeUnit_hasDerivAt (j : Fin 2) (L : Label B N0) {x : Native}
 
 /-- The copied unit satisfies the exact equation used by the signed principal. -/
 theorem unitPulse_ode (j : Fin 2) (L : Label B N0) (n : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*h)) (k : TorusInverse.Frequency) {x : FullPoint}
+    (U : LocalSignedRequest.SlowRegion (2 * h)) (k : TorusInverse.Frequency) {x : FullPoint}
     (hR : 0 < x.1.1) (hT : 0 < x.1.2.1.1)
     (hp : (copyPoint j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
@@ -193,7 +200,7 @@ theorem nativeUnit_tangent (j : Fin 2) (L : Label B N0) {x : Native}
     exact ⟨hz, (div_le_one hL).mp hθ.2⟩
   have hz : phasePoint L x ∈
       ((PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).slot P.V P.openV).carrier
-        L :=
+          L :=
     ⟨hp, P.interval L htime⟩
   change ⟪P.phase.normal L (phasePoint L x),
     PrimaryPulseBounds.normalizedPulse (P.frame L) (P.lam L) (P.u L) ell
@@ -207,7 +214,7 @@ theorem nativeUnit_tangent (j : Fin 2) (L : Label B N0) {x : Native}
 neighborhood of every point in the closed clock core.  The proof differentiates
 the padded plateau's phase germ, so the core itself need not be open. -/
 theorem normal_eq_copy_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*h)) (k : TorusInverse.Frequency) {x : FullPoint}
+    (U : LocalSignedRequest.SlowRegion (2 * h)) (k : TorusInverse.Frequency) {x : FullPoint}
     (hR : 0 < x.1.1) (hT : 0 < x.1.2.1.1)
     (hc : (copyPoint j L n k x).2 ∈ (clockWindow L).core) :
     (chartCoefficients j L).normal
@@ -225,7 +232,7 @@ theorem normal_eq_copy_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
     ((phases B N0 j).phase.F L) ((phases B N0 j).phase.G L) (slotPoint j L n k y) hF hG
   have hd := (((hp.hasFDerivAt.comp y (slotPoint_hasFDerivAt j L n k y)).const_mul
     ((ChartScales.carrier h (BaseChartJets.cellBand L) : ℝ) / (ChartScales.carrier h n :
-      ℝ)))).congr_of_eventuallyEq hy
+        ℝ)))).congr_of_eventuallyEq hy
   have htheta : PhaseCalculus.phaseNormal ((phases B N0 j).phase.epsilon L)
       ((phases B N0 j).phase.p L) ((phases B N0 j).phase.pz L) ((phases B N0 j).phase.x0 L)
       ((phases B N0 j).phase.F L) ((phases B N0 j).phase.G L) (slotPoint j L n k y) =
@@ -241,14 +248,14 @@ theorem normal_eq_copy_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   rw [← htheta]
   have hrad : (chartCoefficients j L).radius n y = y.1.1 := rfl
   have heps : (phases B N0 j).phase.epsilon L = ChartScales.epsilon h (BaseChartJets.cellBand L) :=
-    rfl
+      rfl
   ext i
   fin_cases i <;>
-    simp [LinearWaveBounds.WaveCoefficients.normal, HarmonicCalculus.phaseNormal,
-      HarmonicCalculus.along, hd.fderiv,
-      ContinuousLinearMap.comp_apply, slotLinear_radial, slotLinear_angular j L n y,
-      slotLinear_axial, map_smul, smul_eq_mul, PiLp.smul_apply,
-      PhaseCalculus.phaseNormal, normalScale, hrad, heps]
+    simp only [LinearWaveBounds.WaveCoefficients.normal, phaseNormal, along, hd.fderiv, heps,
+        smul_apply, ContinuousLinearMap.comp_apply, slotLinear_radial, map_smul, smul_eq_mul,
+            slotLinear_angular j L n y, hrad, slotLinear_axial, Fin.zero_eta, Fin.isValue,
+                Matrix.cons_val_zero, normalScale, PhaseCalculus.phaseNormal, PiLp.smul_apply,
+                    Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   · ring
   · rw [slotPoint_radius]
     field_simp [(radialScale_pos L n).ne', hyR.ne']
@@ -256,7 +263,7 @@ theorem normal_eq_copy_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
 
 /-- True ambient tangency near every admissible closed-core point. -/
 theorem unitPulse_tangent_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*h)) (k : TorusInverse.Frequency) {x : FullPoint}
+    (U : LocalSignedRequest.SlowRegion (2 * h)) (k : TorusInverse.Frequency) {x : FullPoint}
     (hR : 0 < x.1.1) (hT : 0 < x.1.2.1.1)
     (hp : (copyPoint j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)
@@ -274,7 +281,7 @@ theorem unitPulse_tangent_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   rw [hy, inner_smul_left, unitPulse, nativeUnit_tangent j L hyp ⟨hyt.1.le, hyt.2.le⟩, mul_zero]
 
 theorem unitPulse_tangent (j : Fin 2) (L : Label B N0) (n : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*h)) (k : TorusInverse.Frequency) {x : FullPoint}
+    (U : LocalSignedRequest.SlowRegion (2 * h)) (k : TorusInverse.Frequency) {x : FullPoint}
     (hR : 0 < x.1.1) (hT : 0 < x.1.2.1.1)
     (hp : (copyPoint j L n k x).1 ∈
       (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).carrier L)

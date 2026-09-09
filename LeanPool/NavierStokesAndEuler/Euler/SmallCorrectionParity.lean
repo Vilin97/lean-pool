@@ -6,15 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionResidual
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldParityAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyParity
+public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldParityAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteParity
 
 /-! Odd static data give the genuine parity hypotheses of the constructed
 correction. In particular the actual convection residual is odd; this is
 proved from its derivative formula. -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalAxisCoefficients
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisReference
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AxisReference
 
 /-!
 # Actual natural profiles in the original radial variable
@@ -20,6 +17,9 @@ solutions of the coefficient-space problem. Derivative identities refer to
 ordinary derivatives of the reconstructed real functions.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.NaturalProfile
@@ -28,16 +28,21 @@ open Set Filter NaturalAxisBridge NaturalAxisCoefficients
 open scoped Topology ContDiff
 
 
+/-- Rescale point, given by `(Λ * p.1, p.2)`. -/
 def rescalePoint (Λ : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (Λ * p.1, p.2)
 
+/-- Domain, given by `rescalePoint Λ ⁻¹' AxisEvaluation.strip window 20`. -/
 def domain (Λ : ℝ) : Set (ℝ × ℝ) :=
   rescalePoint Λ ⁻¹' AxisEvaluation.strip window 20
 
+/-- Pullback, given by `F (rescalePoint Λ p)`. -/
 def pullback (Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := F (rescalePoint Λ p)
 
+/-- Affine profile, given by `b p.2 + c * pullback Λ F p`. -/
 def affineProfile (b : ℝ → ℝ) (c Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   b p.2 + c * pullback Λ F p
 
+/-- Angular profile, given by `a p.2 * pullback Λ Φ p`. -/
 def angularProfile (a : ℝ → ℝ) (Λ : ℝ) (Φ : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   a p.2 * pullback Λ Φ p
 
@@ -87,7 +92,7 @@ theorem pullback_hasDerivAt_Y {F : ℝ × ℝ → ℝ}
   have hf := (sliceY_smooth hF hp).differentiableAt (by norm_num)
   have hd := hf.hasDerivAt.comp p.1 ((hasDerivAt_id p.1).const_mul Λ)
   simp only [Function.comp_def, mul_one] at hd
-  convert! hd using 1 ; simp only [rescalePoint, partialY, mul_comm]
+  convert! hd using 1; simp only [rescalePoint, partialY, mul_comm]
 
 theorem pullback_partialY {F : ℝ × ℝ → ℝ}
     (hF : ContDiffOn ℝ ∞ F (AxisEvaluation.strip window 20))
@@ -106,7 +111,7 @@ theorem pullback_second_Y {F : ℝ × ℝ → ℝ}
   have hs := sliceY_smooth hF hp
   have hs' : ContDiffAt ℝ 1 (deriv (fun Y : ℝ => F (Y, p.2))) (Λ * p.1) := by
     exact (hs.fderiv_right (m := 1)
-        (by simp)).clm_apply
+        (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2)).clm_apply
         contDiffAt_const
   have hd := ((hs'.differentiableAt (by norm_num)).hasDerivAt.comp p.1
     ((hasDerivAt_id p.1).const_mul Λ)).const_mul Λ
@@ -269,6 +274,7 @@ theorem uStar_smooth (j : ℝ) : ContDiff ℝ ∞ (NaturalAxisData.U j) := by
 def transportW (h : ℝ) (V : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   1 - 2 * NaturalAxisData.D h * p.2 * V p - NaturalAxisData.d p.2 * partialEta V p
 
+/-- Transport H, given by `NaturalAxisData.D h * p.2 + NaturalAxisData.d p.2 * U p`. -/
 def transportH (h : ℝ) (U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   NaturalAxisData.D h * p.2 + NaturalAxisData.d p.2 * U p
 
@@ -346,7 +352,7 @@ private theorem angular_rescale_identity
       field_simp
     _ = _ := by
       rw [hH]
-      field_simp ; ring
+      field_simp; ring
 
 private theorem axial_rescale_identity
     {Λ L X η A d Us UsEta Hs W u uY uEta P0 P0Eta P PY PEta R : ℝ}
@@ -372,7 +378,7 @@ private theorem axial_rescale_identity
             (1 / Λ) * d * u * uEta - 4 * A * η * P + d * PEta -
             2 * η * (Λ * X * PY))) := by rw [heq]
     _ = _ := by
-      field_simp ; ring
+      field_simp; ring
 
 theorem angular_equation_reconstruct {h j σ Λ : ℝ} {P0 a₀ : ℝ → ℝ}
     (hsmall : NaturalAxisData.SmallParameters h j) (hΛ : Λ ≠ 0)
@@ -392,14 +398,14 @@ theorem angular_equation_reconstruct {h j σ Λ : ℝ} {P0 a₀ : ℝ → ℝ}
     angularProfile_partialEta hs.phi_smooth Λ hp ha,
     transportW_reconstruct P0 hs.average_smooth hp,
     transportH_reconstruct h j σ Λ P0 u p]
-  have hL : NaturalAxisData.L h p.2 ≠ 0 :=
-    (L_pos_on_window hsmall ⟨hp.2.1.le, hp.2.2.le⟩).ne'
-  apply angular_rescale_identity hΛ hL (gradient_identity h j σ p.2)
-    (H := reconstructedH (actualData h j σ P0) (1 / Λ) u (rescalePoint Λ p))
-    (Hs := NaturalAxisData.H h j p.2)
-  · rfl
-  · simpa only [angularRemainder, actualData, reconstructedU, rescalePoint,
-      affineProfile, pullback, mul_assoc] using hs.angular_equation (rescalePoint Λ p) hp
+  · have hL : NaturalAxisData.L h p.2 ≠ 0 :=
+      (L_pos_on_window hsmall ⟨hp.2.1.le, hp.2.2.le⟩).ne'
+    apply angular_rescale_identity hΛ hL (gradient_identity h j σ p.2)
+      (H := reconstructedH (actualData h j σ P0) (1 / Λ) u (rescalePoint Λ p))
+      (Hs := NaturalAxisData.H h j p.2)
+    · rfl
+    · simpa only [angularRemainder, actualData, reconstructedU, rescalePoint,
+        affineProfile, pullback, mul_assoc] using hs.angular_equation (rescalePoint Λ p) hp
 
 theorem axial_equation_reconstruct {h j σ Λ : ℝ} {P0 a₀ : ℝ → ℝ}
     (hsmall : NaturalAxisData.SmallParameters h j) (hΛ : Λ ≠ 0)
@@ -426,13 +432,13 @@ theorem axial_equation_reconstruct {h j σ Λ : ℝ} {P0 a₀ : ℝ → ℝ}
       ((hP0.differentiable (by norm_num)).differentiableAt.hasDerivAt),
     transportW_reconstruct P0 hs.average_smooth hp,
     transportH_reconstruct h j σ Λ P0 u p]
-  simp only [one_div_mul_cancel hΛ, one_mul]
-  have hL : NaturalAxisData.L h p.2 ≠ 0 :=
-    (L_pos_on_window hsmall ⟨hp.2.1.le, hp.2.2.le⟩).ne'
-  apply axial_rescale_identity hΛ hL
-  simpa only [axialRemainder, actualData, NaturalAxisData.Z, reconstructedH,
-    rescalePoint, affineProfile, pullback, mul_assoc] using
-      hs.axial_equation (rescalePoint Λ p) hp
+  · simp only [one_div_mul_cancel hΛ, one_mul]
+    have hL : NaturalAxisData.L h p.2 ≠ 0 :=
+      (L_pos_on_window hsmall ⟨hp.2.1.le, hp.2.2.le⟩).ne'
+    apply axial_rescale_identity hΛ hL
+    simpa only [axialRemainder, actualData, NaturalAxisData.Z, reconstructedH,
+      rescalePoint, affineProfile, pullback, mul_assoc] using
+        hs.axial_equation (rescalePoint Λ p) hp
 
 theorem domain_segment {Λ : ℝ} (hΛ : 0 < Λ) {p : ℝ × ℝ} (hp : p ∈ domain Λ)
     {X : ℝ} (hX : X ∈ uIcc (0 : ℝ) p.1) : (X, p.2) ∈ domain Λ := by
@@ -440,12 +446,14 @@ theorem domain_segment {Λ : ℝ} (hΛ : 0 < Λ) {p : ℝ × ℝ} (hp : p ∈ do
   change (-20 < Λ * p.1 ∧ Λ * p.1 < 20) ∧ _ at hp
   refine ⟨?_, hp.2⟩
   rcases le_total 0 p.1 with hpos | hneg
-  · rw [uIcc_of_le hpos] at hX
+  · rw [uIcc_of_le hpos]
+      at hX
     constructor
     · have := mul_nonneg hΛ.le hX.1
       linarith
     · exact (mul_le_mul_of_nonneg_left hX.2 hΛ.le).trans_lt hp.1.2
-  · rw [uIcc_of_ge hneg] at hX
+  · rw [uIcc_of_ge hneg]
+      at hX
     constructor
     · exact hp.1.1.trans_le (mul_le_mul_of_nonneg_left hX.1 hΛ.le)
     · have := mul_nonpos_of_nonneg_of_nonpos hΛ.le hX.2
@@ -557,8 +565,9 @@ theorem angularProfile_log_slope_at_four {Λ : ℝ} (hΛ : 0 < Λ)
     exact ⟨by norm_num, hη⟩
   rw [angularProfile_partialY hΦ a Λ hp]
   simp only [angularProfile, pullback, rescalePoint, hrad]
-  field_simp ; ring
+  field_simp; ring
 
+/-- Profile error constant, constructed using `errorConstant`. -/
 def profileErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ}
     (d : AnalyticInputs h j σ P0) : ℝ :=
   errorConstant window d.coefficients.epsilon_pos (d.coefficients.elements .chi)
@@ -568,9 +577,13 @@ def profileErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ}
 fixed point. All unscaled functions are explicit expressions in these fields. -/
 structure ProfileFamily {h j σ : ℝ} {P0 : ℝ → ℝ}
     (d : AnalyticInputs h j σ P0) (Λ C : ℝ) where
+  /-- Phi of `ProfileFamily`, of type `ℝ × ℝ → ℝ`. -/
   phi : ℝ × ℝ → ℝ
+  /-- U of `ProfileFamily`, of type `ℝ × ℝ → ℝ`. -/
   u : ℝ × ℝ → ℝ
+  /-- Average of `ProfileFamily`, of type `ℝ × ℝ → ℝ`. -/
   average : ℝ × ℝ → ℝ
+  /-- Pressure field of `ProfileFamily`, of type `ℝ × ℝ → ℝ`. -/
   pressure : ℝ × ℝ → ℝ
   natural : IsNaturalSolution h j Λ P0 (realAmplitude h j σ Λ C)
     (angularProfile (realAmplitude h j σ Λ C) Λ phi)
@@ -592,18 +605,22 @@ structure ProfileFamily {h j σ : ℝ} {P0 : ℝ → ℝ}
       -2 * (4 / Λ) * partialY (angularProfile (realAmplitude h j σ Λ C) Λ phi) (4 / Λ, η) /
         angularProfile (realAmplitude h j σ Λ C) Λ phi (4 / Λ, η)
 
+/-- F, given by `angularProfile (realAmplitude h j σ Λ C) Λ F.phi`. -/
 def ProfileFamily.f {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   angularProfile (realAmplitude h j σ Λ C) Λ F.phi
 
+/-- U, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.u`. -/
 def ProfileFamily.U {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.u
 
+/-- Ubar, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.average`. -/
 def ProfileFamily.Ubar {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.average
 
+/-- Pi, given by `affineProfile P0 (1 / Λ) Λ F.pressure`. -/
 def ProfileFamily.Pi {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile P0 (1 / Λ) Λ F.pressure

@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetric
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramPath
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCorrectionCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
 
 /-! The time derivative of the actual inverse pressure metric, first as
 a bounded matrix field and then as its cylinder L² multiplier. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,18 +24,33 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerPacketPointJets
   EulerVolterraConvolution EulerTransverseGramPath EulerMeanCoefficients
 open scoped BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCorrectionMetricTime1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCorrectionMetricTime2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCorrectionMetricTime3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCorrectionMetricTime4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
 
+/-- Raw inverse metric time, given by `(rawFrameTime D z).adjoint.comp (rawFrame D z) +
+(rawFrame D z).adjoint.comp (rawFrameTime D z)`. -/
 def rawInverseMetricTime (z : Domain) : Space →L[ℝ] Space :=
   (rawFrameTime D z).adjoint.comp (rawFrame D z) +
     (rawFrame D z).adjoint.comp (rawFrameTime D z)
 
+/-- Inverse metric time coefficient, given by `((frameTimeCoefficient D).adjoint.comp
+(frameCoefficient D)).add ((frameCoefficient D).adjoint.comp (frameTimeCoefficient D))`. -/
 def inverseMetricTimeCoefficient : MatrixCoefficient D.T (rawInverseMetricTime D) :=
   ((frameTimeCoefficient D).adjoint.comp (frameCoefficient D)).add
     ((frameCoefficient D).adjoint.comp (frameTimeCoefficient D))
@@ -70,6 +85,8 @@ theorem inverseMetric_field_hasDerivWithinAt (t : ℝ) (ht : t ∈ Icc (0 : ℝ)
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Inverse metric derivative path, given by `fullPathMap P (inverseMetricTimeCoefficient
+D).path`. -/
 def inverseMetricDerivativePath : C(Icc (0 : ℝ) D.T,LiftL2 P →L[ℝ] LiftL2 P) :=
   fullPathMap P (inverseMetricTimeCoefficient D).path
 
@@ -83,7 +100,7 @@ theorem inverseMetric_operator_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) :
 theorem inverseMetricDerivativePath_norm (t : Icc (0 : ℝ) D.T) :
     ‖inverseMetricDerivativePath D P t‖ ≤ ‖(inverseMetricTimeCoefficient D).path‖ := by
   exact ((fullOperatorMap (E := Space) (F := Space) P).le_opNorm ((inverseMetricTimeCoefficient
-    D).path t)).trans
+      D).path t)).trans
     ((mul_le_mul_of_nonneg_right (fullOperatorMap_norm (E := Space) (F := Space) P)
       (norm_nonneg ((inverseMetricTimeCoefficient D).path t))).trans
         (by simpa only [one_mul] using (inverseMetricTimeCoefficient D).path.norm_coe_le_norm t))

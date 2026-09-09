@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SourceForwardCoefficient
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPathMap
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # The actual scalar normal coefficient as a one-column Gram inverse
@@ -19,6 +18,9 @@ left inverse is therefore exactly v↦⟪m,v⟫/‖m‖². This derives uniform 
 regularity and factorial multiplier bounds from the normal field and its
 positive lower bound, without assuming regularity of a reciprocal field.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,13 +44,13 @@ omit [CompleteSpace E] in
     (normalColumn m).field t x r = r • m.field t x := rfl
 
 omit [CompleteSpace E] in
-theorem normalColumn_lower (c : ℝ) (hm : ∀ t x, c ≤ ‖m.field t x‖^2)
+theorem normalColumn_lower (c : ℝ) (hm : ∀ t x, c ≤ ‖m.field t x‖ ^ 2)
     (t : K) (x : Space) (r : ℝ) :
     c*‖r‖^2 ≤ ‖(normalColumn m).field t x r‖^2 := by
   rw [normalColumn_apply,norm_smul,mul_pow]
   exact (mul_le_mul_of_nonneg_right (hm t x) (sq_nonneg ‖r‖)).trans_eq (mul_comm _ _)
 
-variable (c : ℝ) (hc : 0 < c) (hm : ∀ t x, c ≤ ‖m.field t x‖^2)
+variable (c : ℝ) (hc : 0 < c) (hm : ∀ t x, c ≤ ‖m.field t x‖ ^ 2)
 
 /-- The actual scalar coefficient used by the pressure in equation (11). -/
 def normalFunctional : C(K,Space →ᵇ E →L[ℝ] ℝ) :=
@@ -78,8 +80,8 @@ theorem normalFunctional_translation_contDiff :
 
 theorem normalFunctional_translation_bound
     (Rc C Ri : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hRi : 2*gramCost c C 1*(Rc+1) ≤ Ri)
-    (hbm : ∀ n t x, ‖iteratedFDeriv ℝ n (m.field t : Space → E) x‖ ≤ C*majorant Rc 0 n)
+    (hRi : 2 * gramCost c C 1 * (Rc + 1) ≤ Ri)
+    (hbm : ∀ n t x, ‖iteratedFDeriv ℝ n (m.field t : Space → E) x‖ ≤ C * majorant Rc 0 n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (normalFunctional m c hc hm)) a‖ ≤
       (3*Ri*C)*majorant (4*Ri) 0 n := by

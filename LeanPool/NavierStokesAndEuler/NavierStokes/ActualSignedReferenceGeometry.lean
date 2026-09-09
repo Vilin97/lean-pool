@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 
-@[expose] public section
-
 /-!
 # Reference geometry of the actual signed family
 
@@ -20,6 +18,9 @@ fields below come from these primitive identities; no equality of output
 physical fields or native regularity is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedReferenceGeometry
@@ -28,6 +29,7 @@ open Set Function CorrectionState CorrectionInitialization
 open CorrectionInitialization.ActualPrimary
 
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
 
 variable {B N0 : ℕ}
@@ -82,7 +84,7 @@ noncomputable def singletonGeometryOfAngular
       L.val.1 = _
     rw [ActualSignedPhysicalBinding.primary_phase]
     have hl : ActualSignedPhysicalBinding.spatialLabel (ActualSignedExterior.actualLabel L) = L.val
-      :=
+        :=
       congrArg Subtype.val (ActualSignedExterior.bandLabel_actualLabel L)
     erw [hl, ActualSignedExterior.actualLabel_reference]
     rfl
@@ -113,7 +115,7 @@ noncomputable def singletonGeometryOfAngular
     change (ActualSignedExterior.payload s L).1.referenceScale = ChartScales.Q L.val.1
     erw [ActualSignedExterior.payload, reband_scale]
     change ChartScales.Q (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel
-      L)) = _
+        L)) = _
     erw [ActualSignedExterior.actualLabel_reference]
   cover K := by
     rw [singleton_index_eq (ActualSignedExterior.family s) L K]
@@ -173,6 +175,8 @@ noncomputable def cycleSingletonGeometry
     ((ActualCycleParameters.fixedParameters B N0).afterParticular
       x.coefficients (commonContext B) x.state) H hp L
 
+/-- Cycle native geometry, given by `cycleSingletonGeometry x H hp
+(ActualSignedExterior.nativeLabel l)`. -/
 noncomputable def cycleNativeGeometry (l : Label B N0) :
     ActualSignedPhysicalData.ReferenceGeometry (h := h) slots
       ((ActualSignedExterior.cycleFamily x H hp).singleton (ActualSignedExterior.nativeLabel l)) :=

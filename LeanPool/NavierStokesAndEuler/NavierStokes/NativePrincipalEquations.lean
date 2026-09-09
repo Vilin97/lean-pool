@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularCopyBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCopyBounds
 
 /-!
 # Principal equations on actual native cells
@@ -18,6 +17,9 @@ particular coefficient uses the literal finite-path modal solve. All
 regularity needed in these equations is obtained on the selected native
 cell. No global covariance-control or solved-output class is required.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,7 +65,8 @@ theorem signed_coefficients_principal_at
     (SignedWaveUpdate.coefficients (a i) s (dirs i) (H i) (T i) (R i) (mask i)
       (v i) (Ndot i) (A i) j).principal s (dirs i) n x = 0 := by
   have hsD := ((SignedCopyBounds.signedScalar_jets hcov hR hm j).smooth n i x hx
-    hi).differentiableAt (by simp)
+      hi).differentiableAt (by
+      simp)
   have hvD := (hv.smooth n i x hx hi).differentiableAt (by simp)
   have hfreeze := (SignedWaveUpdate.signedScalar_frozen hHf hTf hRf hmf j).derivative n hsD
   have hfast : along ((dirs i).fastField n)

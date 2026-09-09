@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-! A translation-kernel formula for the literal normalized periodic primitive. -/
 
 @[expose] public section
 
-/-! A translation-kernel formula for the literal normalized periodic primitive. -/
 
 noncomputable section
 
@@ -23,7 +27,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E
 /-- This formula realizes the angular primitive as an integral of translations. -/
 theorem primitive_eq_translation_kernel (P : ℝ) (hP : P ≠ 0) (f : ℝ → E)
     (hf : Continuous f) (hper : Function.Periodic f P)
-    (hmean : (∫ s in (0 : ℝ)..P, f s)=0) (θ : ℝ) :
+    (hmean : (∫ s in (0 : ℝ)..P, f s) = 0) (θ : ℝ) :
     primitive P f θ = P⁻¹ • (∫ s in (0 : ℝ)..P, s • f (θ+s)) := by
   let q := primitive P f
   have hq : Continuous q := primitive_continuous P f hf

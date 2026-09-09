@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MatchingDebtBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatSwitchCone
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalProfile
+public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingHistories
+import LeanPool.NavierStokesAndEuler.NavierStokes.HeatSwitchCone
 
 /-!
 # The actual restore and five-row repair interval
@@ -19,6 +18,9 @@ and the actual repair coefficients are the only perturbation parameters.
 All histories are recovered from the exact five-row match at the right end.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -27,19 +29,27 @@ open NavierStokes.OutgoingProfile (Profile)
 
 namespace NavierStokes.RepairConeBounds
 
+/-- Point: an abbreviation for `ℝ × ℝ`. -/
 abbrev Point := ℝ × ℝ
+/-- Coefficient: an abbreviation for `FiveProfileMoments.Coeff`. -/
 abbrev Coeff := FiveProfileMoments.Coeff
+/-- Parameter: an abbreviation for `ℝ × Coeff`. -/
 abbrev Parameter := ℝ × Coeff
+/-- Control: an abbreviation for `Parameter × Parameter`. -/
 abbrev Control := Parameter × Parameter
+/-- Raw: an abbreviation for `Parameter × Point`. -/
 abbrev Raw := Parameter × Point
 
+/-- Window, given by `Icc (-8) (-5) ×ˢ Icc (-1) 1`. -/
 noncomputable def window : Set Point := Icc (-8) (-5) ×ˢ Icc (-1) 1
 
+/-- Free U, constructed using `4`. -/
 noncomputable def freeU (F : Profile) (z : Raw) : ℝ :=
   4 * z.2.2 + (1 - OutgoingSchedule.sigma (z.2.1 + 8)) * z.1.1 +
     NominalProfile.idealAmplitude F z.2.2 *
       FiveProfileMoments.u NominalProfile.resetPatch z.1.2 (Real.exp z.2.1)
 
+/-- Free E, constructed using `NominalProfile.idealAmplitude`. -/
 noncomputable def freeE (F : Profile) (z : Raw) : ℝ :=
   NominalProfile.idealAmplitude F z.2.2 * (Real.exp (z.2.1 / 10) +
     FiveProfileMoments.e NominalProfile.resetPatch z.1.2 (Real.exp z.2.1))
@@ -52,7 +62,7 @@ theorem freeU_contDiff (F : Profile) : ContDiff ℝ ∞ (freeU F) := by
     intro i _
     exact ((contDiff_apply ℝ ℝ i).comp contDiff_fst.snd.fst).mul
       ((FiveProfileMoments.bump_contDiff NominalProfile.resetPatch.leftHalf i).comp
-        contDiff_snd.fst.exp)
+          contDiff_snd.fst.exp)
   exact ((contDiff_const.mul contDiff_snd.snd).add
     ((contDiff_const.sub (OutgoingSchedule.sigma_contDiff.comp
       (contDiff_snd.fst.add contDiff_const))).mul contDiff_fst.fst)).add
@@ -66,7 +76,7 @@ theorem freeE_contDiff (F : Profile) : ContDiff ℝ ∞ (freeE F) := by
     intro i _
     exact ((contDiff_apply ℝ ℝ i).comp contDiff_fst.snd.snd).mul
       ((FiveProfileMoments.bump_contDiff NominalProfile.resetPatch.rightHalf i).comp
-        contDiff_snd.fst.exp)
+          contDiff_snd.fst.exp)
   exact ((NominalProfile.idealAmplitude_smooth F).comp contDiff_snd.snd).mul
     ((contDiff_snd.fst.div_const 10).exp.add hb)
 
@@ -87,10 +97,14 @@ theorem freeE_zero_clean (F : Profile) {p : Point} (hp : p.1 ≤ 0) :
   rw [freeE_zero]
   exact (OutgoingHistories.E_ideal F.reset p.2 hp).symm
 
+/-- Raw point, given by `(z.1.1, z.2)`. -/
 noncomputable def rawPoint (z : Control × Point) : Raw := (z.1.1, z.2)
+/-- Value, given by `f (rawPoint z)`. -/
 noncomputable def value (f : Raw → ℝ) (z : Control × Point) : ℝ := f (rawPoint z)
+/-- Radial jet, given by `fderiv ℝ f (rawPoint z) (0, (1, 0))`. -/
 noncomputable def radialJet (f : Raw → ℝ) (z : Control × Point) : ℝ :=
   fderiv ℝ f (rawPoint z) (0, (1, 0))
+/-- Parameter jet, given by `fderiv ℝ f (rawPoint z) (z.1.2, (0, 1))`. -/
 noncomputable def parameterJet (f : Raw → ℝ) (z : Control × Point) : ℝ :=
   fderiv ℝ f (rawPoint z) (z.1.2, (0, 1))
 
@@ -103,6 +117,7 @@ theorem parameterJet_contDiff {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f) : Cont
   ((hf.fderiv_right (m := ∞) (by simp)).comp rawPoint_contDiff).clm_apply
     (contDiff_fst.snd.prodMk contDiff_const)
 
+/-- Finite prefix, given by `∫ t in (-5 : ℝ)..z.2.1, f (z.1, (t, z.2.2))`. -/
 noncomputable def finitePrefix (f : Raw → ℝ) (z : Raw) : ℝ :=
   ∫ t in (-5 : ℝ)..z.2.1, f (z.1, (t, z.2.2))
 
@@ -119,20 +134,28 @@ theorem finitePrefix_contDiff {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f) :
   have hh := hi.comp hp
   exact hh
 
+/-- Free M, given by `OutgoingHistories.M F.data F.amp z.2 + finitePrefix (fun q => Real.exp
+q.2.1 * (freeU F q - F.logU q.2)) z`. -/
 noncomputable def freeM (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.M F.data F.amp z.2 + finitePrefix
     (fun q => Real.exp q.2.1 * (freeU F q - F.logU q.2)) z
+/-- Free I, given by `OutgoingHistories.I F.reset z.2 + finitePrefix (fun q => Real.exp (3 *
+q.2.1 / 2) * (freeE F q - F.logE q.2)) z`. -/
 noncomputable def freeI (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.I F.reset z.2 + finitePrefix
     (fun q => Real.exp (3 * q.2.1 / 2) * (freeE F q - F.logE q.2)) z
+/-- Free J, constructed using `OutgoingHistories.J`. -/
 noncomputable def freeJ (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.J F.reset F.amp z.2 + finitePrefix
     (fun q => Real.exp (3 * q.2.1 / 2) *
       (freeE F q * freeU F q - F.logE q.2 * F.logU q.2)) z
+/-- Free S, constructed using `OutgoingHistories.S`. -/
 noncomputable def freeS (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.S F.reset F.amp z.2 + finitePrefix
     (fun q => Real.exp q.2.1 *
       ((freeU F q ^ 2 - freeE F q ^ 2 / 2) - (F.logU q.2 ^ 2 - F.logE q.2 ^ 2 / 2))) z
+/-- Free pi, given by `OutgoingHistories.Pi F.reset z.2 + (1 / 2 : ℝ) * finitePrefix (fun q =>
+freeE F q ^ 2 - F.logE q.2 ^ 2) z`. -/
 noncomputable def freePi (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.Pi F.reset z.2 + (1 / 2 : ℝ) * finitePrefix
     (fun q => freeE F q ^ 2 - F.logE q.2 ^ 2) z
@@ -257,11 +280,16 @@ theorem radialJet_freeE_zero (F : Profile) (p : Point) :
   simp only [id_eq]
   ring
 
+/-- Endpoint error, given by `c.initialAxial eta - 4 * eta`. -/
 noncomputable def endpointError {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (eta : ℝ) : ℝ := c.initialAxial eta - 4 * eta
+/-- Data parameter, given by `(endpointError c eta, NominalProfile.resetCoefficients F c.debt
+eta)`. -/
 noncomputable def dataParameter {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (eta : ℝ) : Parameter :=
   (endpointError c eta, NominalProfile.resetCoefficients F c.debt eta)
+/-- Controls, given by `(dataParameter c eta, (deriv (endpointError c) eta, deriv
+(NominalProfile.resetCoefficients F c.debt) eta))`. -/
 noncomputable def controls {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (eta : ℝ) : Control :=
   (dataParameter c eta,
@@ -303,7 +331,7 @@ theorem actual_fields {F : Profile} {A : NominalProfile.AxisStage F}
       NominalProfile.Controls.debt]
     ring
   · change NominalProfile.baseE F A.normalization c.shapeTime c.initialShape c.seedF (Real.exp p.1,
-    p.2) + _ = _
+      p.2) + _ = _
     rw [hb.2]
     simp only [NominalProfile.idealE, Real.rpow_def_of_pos (Real.exp_pos p.1), Real.log_exp,
       freeE, dataParameter, NominalProfile.Controls.debt]
@@ -338,6 +366,7 @@ theorem integral_exp_Ioc (f : ℝ → ℝ) {a b : ℝ} (hab : a ≤ b) :
     intervalIntegral.integral_of_le hab]
   simp only [abs_of_pos (Real.exp_pos _), smul_eq_mul]
 
+/-- Log rows as an element of `Fin 5 → ℝ`. -/
 noncomputable def logRows (F : Profile) (p : Point) : Fin 5 → ℝ :=
   ![OutgoingHistories.M F.data F.amp p,
     Real.sqrt 2 * OutgoingHistories.I F.reset p,
@@ -345,6 +374,8 @@ noncomputable def logRows (F : Profile) (p : Point) : Fin 5 → ℝ :=
     OutgoingHistories.S F.reset F.amp p,
     OutgoingHistories.Pi F.reset p - F.axisDatum p.2]
 
+/-- Free rows, given by `![freeM F z, Real.sqrt 2 * freeI F z, Real.sqrt 2 * freeJ F z, freeS F
+z, freePi F z - F.axisDatum z.2.2]`. -/
 noncomputable def freeRows (F : Profile) (z : Raw) : Fin 5 → ℝ :=
   ![freeM F z, Real.sqrt 2 * freeI F z, Real.sqrt 2 * freeJ F z, freeS F z,
     freePi F z - F.axisDatum z.2.2]
@@ -394,6 +425,7 @@ theorem outgoing_moments_log (F : Profile) (p : Point) :
     change Real.exp t * (F.logE (t, p.2) ^ 2 / (2 * Real.exp t)) = F.logE (t, p.2) ^ 2 / 2
     field_simp [Real.exp_ne_zero]
 
+/-- Log density as an element of `Fin 5 → ℝ`. -/
 noncomputable def logDensity (U E : ℝ) (y : ℝ) : Fin 5 → ℝ :=
   ![Real.exp y * U, Real.sqrt 2 * Real.exp (3 * y / 2) * E,
     Real.sqrt 2 * Real.exp (3 * y / 2) * E * U,
@@ -421,7 +453,8 @@ theorem density_comp_exp (U E : NominalProfile.Field) (y eta : ℝ) (i : Fin 5) 
     rw [hs]
     calc
       _ = Real.sqrt 2 * (Real.exp y * Real.exp (y / 2)) * E (Real.exp y, eta) * U (Real.exp y, eta)
-        := by ring
+          := by
+          ring
       _ = _ := by rw [he]
   · rfl
   · change Real.exp y * (E (Real.exp y, eta) ^ 2 / (2 * Real.exp y)) = E (Real.exp y, eta) ^ 2 / 2
@@ -457,7 +490,7 @@ theorem freeRows_sub_logRows (F : Profile) (z : Raw) (i : Fin 5) :
   · change (_ + ∫ t in (-5 : ℝ)..z.2.1, Real.exp t *
       ((freeU F (z.1, (t, z.2.2)) ^ 2 - freeE F (z.1, (t, z.2.2)) ^ 2 / 2) -
         (F.logU (t, z.2.2) ^ 2 - F.logE (t, z.2.2) ^ 2 / 2))) - OutgoingHistories.S F.reset F.amp
-          z.2 = _
+            z.2 = _
     rw [add_sub_cancel_left]
     apply intervalIntegral.integral_congr
     intro t _
@@ -544,44 +577,57 @@ theorem actual_moments {F : Profile} {A : NominalProfile.AxisStage F}
 
 open StressAlgebra
 
+/-- Family W as an element of `ℝ`. -/
 noncomputable def familyW (F : Profile) (z : Control × Point) : ℝ :=
   (Real.exp z.2.1 - 2 * axialExponent F.data.h * z.2.2 * value (freeM F) z -
     coordinateFactor z.2.2 * parameterJet (freeM F) z) / Real.exp z.2.1
+/-- Angular numerator as an element of `ℝ`. -/
 noncomputable def angularNumerator (F : Profile) (z : Control × Point) : ℝ :=
   -familyW F z * (Real.exp (3 * z.2.1 / 2) * value (freeE F) z) +
     ((1 - F.data.h) * value (freeI F) z - axialExponent F.data.h * z.2.2 * parameterJet (freeI F) z
-      -
+        -
       coordinateFactor z.2.2 * parameterJet (freeJ F) z +
       2 * (F.data.h - axialExponent F.data.h) * z.2.2 * value (freeJ F) z)
+/-- Family Q, given by `angularNumerator F z / (Real.exp (3 * z.2.1 / 2) * value (freeE F) z)`. -/
 noncomputable def familyQ (F : Profile) (z : Control × Point) : ℝ :=
   angularNumerator F z / (Real.exp (3 * z.2.1 / 2) * value (freeE F) z)
+/-- Family N as an element of `ℝ`. -/
 noncomputable def familyN (F : Profile) (z : Control × Point) : ℝ :=
   -familyW F z * value (freeU F) z +
     axialExponent F.data.h * (value (freeM F) z - z.2.2 * parameterJet (freeM F) z) / Real.exp
-      z.2.1 +
+        z.2.1 +
     (4 * F.data.h * z.2.2 * value (freeS F) z - coordinateFactor z.2.2 * parameterJet (freeS F) z) /
       Real.exp z.2.1 + 4 * velocityExponent F.data.h * z.2.2 * value (freePi F) z -
       coordinateFactor z.2.2 * parameterJet (freePi F) z
+/-- Radial numerator, given by `value (freeE F) z - 2 * radialJet (freeE F) z`. -/
 noncomputable def radialNumerator (F : Profile) (z : Control × Point) : ℝ :=
   value (freeE F) z - 2 * radialJet (freeE F) z
+/-- Family A, given by `radialNumerator F z / value (freeE F) z`. -/
 noncomputable def familyA (F : Profile) (z : Control × Point) : ℝ :=
   radialNumerator F z / value (freeE F) z
+/-- Family B, given by `-2 * radialJet (freeU F) z / value (freeE F) z`. -/
 noncomputable def familyB (F : Profile) (z : Control × Point) : ℝ :=
   -2 * radialJet (freeU F) z / value (freeE F) z
+/-- Family P1, given by `Real.exp z.2.1 * familyQ F z / NaturalAxisData.L F.data.h z.2.2`. -/
 noncomputable def familyP1 (F : Profile) (z : Control × Point) : ℝ :=
   Real.exp z.2.1 * familyQ F z / NaturalAxisData.L F.data.h z.2.2
+/-- Family P2, given by `Real.exp z.2.1 * familyN F z / (NaturalAxisData.L F.data.h z.2.2 *
+value (freeE F) z)`. -/
 noncomputable def familyP2 (F : Profile) (z : Control × Point) : ℝ :=
   Real.exp z.2.1 * familyN F z / (NaturalAxisData.L F.data.h z.2.2 * value (freeE F) z)
+/-- Family speed, given by `ActivationContinuation.shearSize (familyA F z) (familyB F z)`. -/
 noncomputable def familySpeed (F : Profile) (z : Control × Point) : ℝ :=
   ActivationContinuation.shearSize (familyA F z) (familyB F z)
+/-- Family projection, given by `ActivationContinuation.projection (familyP1 F z) (familyP2 F z)
+(familyA F z) (familyB F z)`. -/
 noncomputable def familyProjection (F : Profile) (z : Control × Point) : ℝ :=
   ActivationContinuation.projection (familyP1 F z) (familyP2 F z) (familyA F z) (familyB F z)
 
 theorem coordinateFactor_contDiff : ContDiff ℝ ∞ (fun z : Control × Point => coordinateFactor
-  z.2.2) :=
+    z.2.2) :=
   contDiff_const.sub (contDiff_snd.snd.pow 2)
 theorem L_contDiff (F : Profile) : ContDiff ℝ ∞ (fun z : Control × Point => NaturalAxisData.L
-  F.data.h z.2.2) :=
+    F.data.h z.2.2) :=
   contDiff_const.sub (contDiff_const.mul (contDiff_snd.snd.pow 2))
 
 theorem familyW_contDiff (F : Profile) : ContDiff ℝ ∞ (familyW F) :=
@@ -614,8 +660,10 @@ theorem familyN_contDiff (F : Profile) : ContDiff ℝ ∞ (familyN F) := by
 
 theorem radialNumerator_contDiff (F : Profile) : ContDiff ℝ ∞ (radialNumerator F) :=
   (value_contDiff (freeE_contDiff F)).sub (contDiff_const.mul (radialJet_contDiff (freeE_contDiff
-    F)))
+      F)))
 
+/-- Regular, given by `{z | value (freeE F) z ≠ 0 ∧ radialNumerator F z ≠ 0 ∧ NaturalAxisData.L
+F.data.h z.2.2 ≠ 0}`. -/
 noncomputable def regular (F : Profile) : Set (Control × Point) :=
   {z | value (freeE F) z ≠ 0 ∧ radialNumerator F z ≠ 0 ∧ NaturalAxisData.L F.data.h z.2.2 ≠ 0}
 
@@ -647,7 +695,7 @@ theorem familySpeed_contDiffOn (F : Profile) : ContDiffOn ℝ ∞ (familySpeed F
   (familyA_contDiffOn F).mul (contDiffOn_const.add
     (((familyB_contDiffOn F).div (familyA_contDiffOn F) (fun _ hz => familyA_ne F hz)).pow 2))
 theorem familyProjection_contDiffOn (F : Profile) : ContDiffOn ℝ ∞ (familyProjection F) (regular F)
-  :=
+    :=
   (familyP1_contDiffOn F).add ((familyP2_contDiffOn F).mul
     ((familyB_contDiffOn F).div (familyA_contDiffOn F) (fun _ hz => familyA_ne F hz)))
 
@@ -655,7 +703,7 @@ theorem familyW_zero (F : Profile) {p : Point} (hp : p.1 ≤ 0) :
     familyW F (0, p) = OutgoingHistories.W F.data F.amp p := by
   have hM : value (freeM F) (0, p) = OutgoingHistories.M F.data F.amp p := freeM_zero F hp
   have hM' := parameterJet_zero (freeM_contDiff F) (OutgoingHistories.M_smooth F.data
-    F.amp_contDiff)
+      F.amp_contDiff)
     (p := p) (fun eta => freeM_zero F (p := (p.1, eta)) hp)
   rw [familyW, hM, hM']
   rfl
@@ -668,7 +716,7 @@ theorem familyQ_zero (F : Profile) {p : Point} (hp : p.1 ≤ 0) :
   have hI' := parameterJet_zero (freeI_contDiff F) (OutgoingHistories.I_smooth F.reset)
     (p := p) (fun eta => freeI_zero F (p := (p.1, eta)) hp)
   have hJ' := parameterJet_zero (freeJ_contDiff F) (OutgoingHistories.J_smooth F.reset
-    F.amp_contDiff)
+      F.amp_contDiff)
     (p := p) (fun eta => freeJ_zero F (p := (p.1, eta)) hp)
   rw [familyQ, angularNumerator, familyW_zero F hp, hE, hI, hJ, hI', hJ',
     OutgoingHistories.Qs_integrated]
@@ -683,7 +731,7 @@ theorem familyA_zero (F : Profile) (p : Point) : familyA F (0, p) = 4 / 5 := by
     change 0 < freeE F (0, p)
     rw [freeE_zero]
     exact mul_pos (NominalProfile.idealAmplitude_pos F p.2) (Real.exp_pos _)
-  field_simp [he.ne'] ; ring
+  field_simp [he.ne']; ring
 
 theorem familyB_zero (F : Profile) (p : Point) : familyB F (0, p) = 0 := by
   simp only [familyB, radialJet_freeU_zero, mul_zero, zero_div]
@@ -806,7 +854,9 @@ theorem model_margins (F : Profile) (hh : F.data.h ≤ 1 / 100) :
   · linarith [(abs_le.mp hs).2]
   · linarith [(abs_le.mp hproj).1, zero_projection_lower F hh hp]
 
+/-- Chart, given by `(R * Real.exp p.1, p.2)`. -/
 noncomputable def chart (R : ℝ) (p : Point) : Point := (R * Real.exp p.1, p.2)
+/-- Angular scale, given by `R * Real.sqrt R * Real.sqrt 2`. -/
 noncomputable def angularScale (R : ℝ) : ℝ := R * Real.sqrt R * Real.sqrt 2
 
 theorem chart_mem {F : Profile} {A : NominalProfile.AxisStage F} (c : NominalProfile.Controls A)
@@ -833,7 +883,7 @@ theorem physical_rows {F : Profile} {A : NominalProfile.AxisStage F}
       NominalProfile.dilationFactor c.radius i * freeRows F (dataParameter c p.2, p) i := by
   have hX : 0 < (chart c.radius p).1 := mul_pos c.radius_pos (Real.exp_pos _)
   have hpr : ProfileHistories.primitive (fun q => NominalProfile.regularDensity (c.profiles hsep) q
-    i)
+      i)
       (chart c.radius p) = NominalProfile.moments c.U c.E (chart c.radius p).1 p.2 i := by
     rw [ProfileHistories.primitive, intervalIntegral.integral_of_le hX.le]
     apply setIntegral_congr_fun measurableSet_Ioc
@@ -851,9 +901,9 @@ theorem physical_stock_values {F : Profile} {A : NominalProfile.AxisStage F}
     (hs : NominalProfile.SmallDebt F c.debt p.2) :
     (c.profiles hsep).M (chart c.radius p) = c.radius * value (freeM F) (controls c p.2, p) ∧
     (c.profiles hsep).I (chart c.radius p) = angularScale c.radius * value (freeI F) (controls c
-      p.2, p) ∧
+        p.2, p) ∧
     (c.profiles hsep).J (chart c.radius p) = angularScale c.radius * value (freeJ F) (controls c
-      p.2, p) ∧
+        p.2, p) ∧
     (c.profiles hsep).S (chart c.radius p) = c.radius * value (freeS F) (controls c p.2, p) ∧
     (c.profiles hsep).pressure (chart c.radius p) = value (freePi F) (controls c p.2, p) := by
   have h0 := physical_rows c hsep hy heta hs 0
@@ -861,14 +911,14 @@ theorem physical_stock_values {F : Profile} {A : NominalProfile.AxisStage F}
   have h2 := physical_rows c hsep hy heta hs 2
   have h3 := physical_rows c hsep hy heta hs 3
   have h4 := physical_rows c hsep hy heta hs 4
-  change (c.profiles hsep).M (chart c.radius p) = c.radius * value (freeM F) (controls c p.2, p) at
-    h0
+  change (c.profiles hsep).M (chart c.radius p) = c.radius * value (freeM F) (controls c p.2, p)
+      at h0
   change (c.profiles hsep).I (chart c.radius p) =
     (c.radius * Real.sqrt c.radius) * (Real.sqrt 2 * value (freeI F) (controls c p.2, p)) at h1
   change (c.profiles hsep).J (chart c.radius p) =
     (c.radius * Real.sqrt c.radius) * (Real.sqrt 2 * value (freeJ F) (controls c p.2, p)) at h2
-  change (c.profiles hsep).S (chart c.radius p) = c.radius * value (freeS F) (controls c p.2, p) at
-    h3
+  change (c.profiles hsep).S (chart c.radius p) = c.radius * value (freeS F) (controls c p.2, p)
+      at h3
   change ProfileHistories.primitive (fun q => c.f q ^ 2) (chart c.radius p) =
     1 * (value (freePi F) (controls c p.2, p) - F.axisDatum p.2) at h4
   refine ⟨h0, ?_, ?_, h3, ?_⟩
@@ -913,11 +963,11 @@ theorem physical_stock_parameters {F : Profile} {A : NominalProfile.AxisStage F}
     filter_upwards [hn] with e he
     exact (physical_stock_values c hsep (p := (p.1, e)) hy he.1 he.2).1
   · apply parameter_of_germ (c.profiles hsep).I_smooth (freeI_contDiff F) c heta hs (angularScale
-    c.radius) _ hp
+      c.radius) _ hp
     filter_upwards [hn] with e he
     exact (physical_stock_values c hsep (p := (p.1, e)) hy he.1 he.2).2.1
   · apply parameter_of_germ (c.profiles hsep).J_smooth (freeJ_contDiff F) c heta hs (angularScale
-    c.radius) _ hp
+      c.radius) _ hp
     filter_upwards [hn] with e he
     exact (physical_stock_values c hsep (p := (p.1, e)) hy he.1 he.2).2.2.1
   · apply parameter_of_germ (c.profiles hsep).S_smooth (freeS_contDiff F) c heta hs c.radius _ hp
@@ -925,7 +975,8 @@ theorem physical_stock_parameters {F : Profile} {A : NominalProfile.AxisStage F}
     exact (physical_stock_values c hsep (p := (p.1, e)) hy he.1 he.2).2.2.2.1
   · have h := parameter_of_germ (c.profiles hsep).pressure_smooth (freePi_contDiff F) c heta hs 1
       (chart c.radius p).1 hp ?_
-    · simp only [one_mul] at h
+    · simp only [one_mul]
+        at h
       exact h
     · filter_upwards [hn] with e he
       have hv := (physical_stock_values c hsep (p := (p.1, e)) hy he.1 he.2).2.2.2.2
@@ -1010,7 +1061,7 @@ theorem physical_lags {F : Profile} {A : NominalProfile.AxisStage F}
     intro hz
     rw [hz, mul_zero] at hweight
     exact (ne_of_gt (mul_pos (angularScale_pos c.radius_pos) (mul_pos (Real.exp_pos _) he)))
-      hweight.symm
+        hweight.symm
   constructor
   · rw [(c.profiles hsep).angularLag_integrated F.data.h hp hX.ne' hH,
       hw, hI, hJ, hI', hJ', hweight]
@@ -1074,7 +1125,8 @@ theorem physical_field_radials {F : Profile} {A : NominalProfile.AxisStage F}
     exact (physical_field_values c hsep (p := (y, p.2)) hy' heta).1
   · apply derivative_eq_on_interval (by norm_num : (-8 : ℝ) < -5) hy
       (((physicalE_smoothAt (c.profiles hsep) hp (mul_pos c.radius_pos (Real.exp_pos _))).comp p.1
-        hc).differentiableAt (by simp))
+          hc).differentiableAt (by
+          simp))
       (radialJet_hasDerivAt (freeE_contDiff F) (controls c p.2) p)
     intro y hy'
     exact (physical_field_values c hsep (p := (y, p.2)) hy' heta).2
@@ -1092,7 +1144,8 @@ theorem physical_field_parameters {F : Profile} {A : NominalProfile.AxisStage F}
   constructor
   · have hd := parameter_of_germ (c.profiles hsep).U_smooth (freeU_contDiff F) c heta hs 1
       (chart c.radius p).1 hp ?_
-    · simp only [one_mul] at hd
+    · simp only [one_mul]
+        at hd
       exact hd
     · filter_upwards [hn] with e he
       have hv := (physical_field_values c hsep (p := (p.1, e)) hy he.1).1
@@ -1106,7 +1159,7 @@ theorem physical_field_parameters {F : Profile} {A : NominalProfile.AxisStage F}
           ((hasDerivAt_const p.2 (chart c.radius p).1).prodMk (hasDerivAt_id p.2))
     apply hd.unique
     apply (parameterJet_hasDerivAt (freeE_contDiff F) (dataParameter_hasDerivAt c heta hs)
-      p.1).congr_of_eventuallyEq
+        p.1).congr_of_eventuallyEq
     filter_upwards [hn] with e he
     exact (physical_field_values c hsep (p := (p.1, e)) hy he.1).2
 
@@ -1116,7 +1169,7 @@ theorem shear_dilation_cancel {r z f : ℝ} (hr : r ≠ 0) (hz : z ≠ 0) (hf : 
   rw [show (2 : ℝ) * (r * (z * (1 / 2)) * f + r * z * (df * X)) =
     (r * z) * (f + 2 * df * X) by ring,
     mul_div_mul_left _ _ (mul_ne_zero hr hz)]
-  field_simp [hf] ; ring
+  field_simp [hf]; ring
 
 /-- This chart identity uses actual radial derivatives and the square-root
 relation between the regular angular profile and the physical angular field. -/
@@ -1154,9 +1207,9 @@ theorem physical_shears {F : Profile} {A : NominalProfile.AxisStage F}
     {p : Point} (hy : p.1 ∈ Icc (-8) (-5)) (heta : p.2 ∈ ReferencePath.parameterInterval)
     (hs : NominalProfile.SmallDebt F c.debt p.2) :
     ActivationContinuation.shearA (c.profiles hsep) (chart c.radius p) = familyA F (controls c p.2,
-      p) ∧
+        p) ∧
       ActivationContinuation.shearB (c.profiles hsep) (chart c.radius p) = familyB F (controls c
-        p.2, p) := by
+          p.2, p) := by
   have hp := chart_mem c heta hs
   have hX : 0 < (chart c.radius p).1 := mul_pos c.radius_pos (Real.exp_pos _)
   have hpos : 0 < (c.profiles hsep).E (chart c.radius p) := by
@@ -1197,7 +1250,7 @@ normalized histories and their parameter derivatives, and integrated cone
 coordinates. The projection is divided by the physical matching radius. -/
 noncomputable def actualObservations {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (hsep : c.separation ≤ Real.exp (-8)) (p : Point) : Fin 22 → ℝ
-      :=
+        :=
   let P := c.profiles hsep
   let q := chart c.radius p
   ![P.E q, P.U q,
@@ -1210,13 +1263,13 @@ noncomputable def actualObservations {F : Profile} {A : NominalProfile.AxisStage
     ProfileHistories.parameterPartial P.I q / angularScale c.radius,
     ProfileHistories.parameterPartial P.J q / angularScale c.radius,
     ProfileHistories.parameterPartial P.S q / c.radius, ProfileHistories.parameterPartial
-      P.pressure q,
+        P.pressure q,
     P.angularLag F.data.h q, P.axialLag F.data.h q,
     ActivationContinuation.shearA P q, ActivationContinuation.shearB P q,
     ActivationContinuation.shearSize (ActivationContinuation.shearA P q)
-      (ActivationContinuation.shearB P q),
+        (ActivationContinuation.shearB P q),
     ActivationContinuation.projection (ReferenceBounds.p1 P F.data.h q) (ReferenceBounds.p2 P
-      F.data.h q)
+        F.data.h q)
       (ActivationContinuation.shearA P q) (ActivationContinuation.shearB P q) / c.radius]
 
 theorem actualObservations_eq {F : Profile} {A : NominalProfile.AxisStage F}

@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerConcatenation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerConcatenation
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
 
 /-! Characterization of the ordinary smooth Euler class by its actual
 velocity alone. Pressure regularity follows from the projected equation.
 Every solution has one continuous strong time derivative in every
 spatial Sobolev order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +27,7 @@ open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Is smooth projected euler as an element of `Prop`. -/
 def IsSmoothProjectedEuler (A : Icc (0 : ℝ) T → SmoothL2Field Space) : Prop :=
   (∀ n, Continuous (fun t => (A t).jetLp n)) ∧
   (∀ t, (A t).toLp ∈ solenoidalSpace) ∧
@@ -31,6 +35,8 @@ def IsSmoothProjectedEuler (A : Icc (0 : ℝ) T → SmoothL2Field Space) : Prop 
     HasDerivAt (fun r => (A (projIcc 0 T hT r)).toLp)
       (projectedRhs (A ⟨t,ht.1.le,ht.2.le⟩)).toLp t)
 
+/-- Evolution of projected equation, bundling `velocity`, `pressureForce`,
+`velocity_continuous`, `pressure_continuous` and the required compatibility proofs. -/
 def evolutionOfProjectedEquation (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : IsSmoothProjectedEuler (hT := hT) A) : Evolution T hT where
   velocity := A

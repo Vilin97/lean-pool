@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Topology.MetricSpace.Thickening
-
-@[expose] public section
+import Mathlib.Topology.MetricSpace.Thickening
 
 /-!
 # Compact-family uniformity and stability of the stress cone
@@ -19,6 +16,9 @@ The input functions are actual continuous functions on a compact parameter
 set. Uniform margins, a single amplitude threshold, and a common perturbation
 radius are conclusions of the theorems, not assumptions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

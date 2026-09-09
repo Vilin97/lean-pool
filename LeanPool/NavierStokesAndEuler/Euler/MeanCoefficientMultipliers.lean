@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Continuous matrix fields act as genuine bounded operators on ordinary R³ L². -/
 
 @[expose] public section
 
-/-! Continuous matrix fields act as genuine bounded operators on ordinary R³ L². -/
 
 noncomputable section
 
@@ -20,8 +22,11 @@ namespace EulerMeanCoefficients
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerLiftedPressure
 open scoped NNReal BoundedContinuousFunction
 
+/-- Field: an abbreviation for `Space →ᵇ (Space →L[ℝ] Space)`. -/
 abbrev Field := Space →ᵇ (Space →L[ℝ] Space)
 
+/-- Multiplier, given by `coefficientOperator A A.continuous.aestronglyMeasurable ‖A‖₊
+A.norm_coe_le_norm`. -/
 def multiplier (A : Field) : L2 →L[ℝ] L2 :=
   coefficientOperator A A.continuous.aestronglyMeasurable ‖A‖₊ A.norm_coe_le_norm
 
@@ -56,6 +61,7 @@ theorem multiplier_smul (c : ℝ) (A : Field) : multiplier (c • A) = c • mul
   rw [ha]
   rfl
 
+/-- Multiplier linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def multiplierLinear : Field →ₗ[ℝ] (L2 →L[ℝ] L2) where
   toFun := multiplier
   map_add' := multiplier_add
@@ -116,7 +122,7 @@ theorem multiplier_eq_coefficientOperator (A : Field) (C : ℝ≥0)
     (coefficientOperator_ae A A.continuous.aestronglyMeasurable C hC u).symm
 
 theorem multiplier_quadratic_upper (A : Field) (K : ℝ)
-    (hA : ∀ x v, ⟪A x v, v⟫_ℝ ≤ K * ‖v‖^2) (u : L2) :
+    (hA : ∀ x v, ⟪A x v, v⟫_ℝ ≤ K * ‖v‖ ^ 2) (u : L2) :
     ⟪multiplier A u, u⟫_ℝ ≤ K * ‖u‖^2 := by
   rw [← real_inner_self_eq_norm_sq, MeasureTheory.L2.inner_def, MeasureTheory.L2.inner_def,
     ← integral_const_mul]

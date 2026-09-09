@@ -8,13 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedPointwise
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
-
-@[expose] public section
 
 /-! For a static approximation the prescribed residual is exactly its
 spatial convection, at every finite Sobolev order. This verifies the
 equation input to the correction theorem rather than assuming it. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -70,6 +70,8 @@ theorem scaled_zero_tower (ε : ℝ) (q : ℕ) (t : Icc (0 : ℝ) T) :
   change ε • (0 : LiftL2 P)=0
   exact smul_zero ε
 
+/-- Approximation residual, bundling `pressure`, `gradient`, `equation`, `let` and the required
+compatibility proofs. -/
 def approximationResidual (hT : 0 < T) (ε : ℝ)
     (hstatic : TimeDerivative hT.le G (Field.zero P T)) :
     ApproximationResidual P hT (input G ε) where
@@ -81,9 +83,9 @@ def approximationResidual (hT : 0 < T) (ε : ℝ)
       hT.le (hstatic.smul ε) q s).hasDerivAt (Icc_mem_nhds ht.1 ht.2)
     rw [scaled_zero_tower ε q s] at hd
     change HasDerivAt (extendPath T hT.le ((G.smul ε).toFieldTower.realization q))
-      ((residual G ε).toFieldTower.realization q s-
+      ((residual G ε).toFieldTower.realization q s -
         nonlinearity P ((input G ε).atOrder P q) hq s
-          ((G.smul ε).toFieldTower.realization (q+1) s)-
+          ((G.smul ε).toFieldTower.realization (q+1) s) -
         coefficientSobolevOperator P ((input G ε).metric.jet q s)
           ((Field.zero P T).toFieldTower.realization q s)) t
     rw [nonlinearity_eq_residual G ε q hq s,zero_tower,sub_self,map_zero,sub_zero]

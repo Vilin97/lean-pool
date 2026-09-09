@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianTimeKernel
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianScale
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
+import Mathlib.Analysis.Calculus.ParametricIntegral
+
+/-! The true heat-time evolution of Gaussian averaging on ordinary space. -/
 
 @[expose] public section
 
-/-! The true heat-time evolution of Gaussian averaging on ordinary space. -/
 
 noncomputable section
 
@@ -34,10 +35,10 @@ theorem average_hasDerivAt_kernel {t : ℝ} (ht : 0 < t)
   let F' : ℝ → Space → V := fun s y => timeKernel s y • f (x+y)
   have hF (s : ℝ) : AEStronglyMeasurable (F s) volume :=
     ((kernel_smooth s).continuous.smul (hf.comp (continuous_const.add
-      continuous_id))).aestronglyMeasurable
+        continuous_id))).aestronglyMeasurable
   have hFd : AEStronglyMeasurable (F' t) volume :=
     ((timeKernel_continuous t).smul (hf.comp (continuous_const.add
-      continuous_id))).aestronglyMeasurable
+        continuous_id))).aestronglyMeasurable
   have hb (y : Space) (s : ℝ) (hs : s ∈ Ioo (t/2) (2*t)) :
       ‖F' s y‖ ≤ timeEnvelope t y*C₀ := by
     change ‖timeKernel s y • f (x+y)‖ ≤ _
@@ -57,6 +58,8 @@ theorem average_hasDerivAt_kernel {t : ℝ} (ht : 0 < t)
     (Eventually.of_forall hd)
   exact h.2
 
+/-- Second average, given by `∑ i : Fin 3, average t (fun z => fderiv ℝ (fun y => fderiv ℝ f y
+(EuclideanSpace.single i 1)) z (EuclideanSpace.single i 1)) x`. -/
 def secondAverage (t : ℝ) (f : Space → V) (x : Space) : V :=
   ∑ i : Fin 3, average t (fun z =>
     fderiv ℝ (fun y => fderiv ℝ f y (EuclideanSpace.single i 1)) z

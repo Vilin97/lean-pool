@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradient
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldSupport
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
+
+/-! Support and joint odd parity of the actual high-pressure gradient used in the recursion. -/
 
 @[expose] public section
 
-/-! Support and joint odd parity of the actual high-pressure gradient used in the recursion. -/
 
 noncomputable section
 
@@ -42,7 +44,7 @@ theorem scalarGradient_odd
     (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
     (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-    (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ)))
+    (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
     (hinit : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
     (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     pressureGradient (G.scalar I) (t,(-x,-θ)) = -pressureGradient (G.scalar I) (t,(x,θ)) :=

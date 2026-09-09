@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevPair
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevPair
 
 /-!
 # Uniform-time reconstruction preserves fixed Sobolev word blocks
@@ -18,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevPair
 Time reconstruction is a fixed bounded linear map. Therefore it commutes
 with every external and base spatial word and costs no derivative shift.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,10 +31,21 @@ open scoped ContDiff
 variable {P E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Fintype ι]
 
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T E) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ (TimeLp T E) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T E)` instance to shorten typeclass
+synthesis. -/
+local instance instTimeH1SobolevReconstruction1 (T : ℝ) : NormedAddCommGroup (TimeLp T E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (TimeLp T E)` instance to shorten typeclass synthesis. -/
+local instance instTimeH1SobolevReconstruction2 (T : ℝ) : NormedSpace ℝ (TimeLp T E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instTimeH1SobolevReconstruction3 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instTimeH1SobolevReconstruction4 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,E) :=
+    inferInstance
 
 /-- The exact finite Sobolev block is bounded by the blocks of the L² value
 and its genuine L² time derivative. -/
@@ -41,7 +53,7 @@ theorem reconstruction_block_le (directions : ι → P) (q : ℕ)
     (T : ℝ) (hT : 0 < T) (p v : P → TimeLp T E)
     (hp : ContDiff ℝ ∞ p) (hv : ContDiff ℝ ∞ v) (n : ℕ) (x : P) :
     block directions q (fun y => reconstruction T hT.le (p y,v y)) n x ≤
-      (T⁻¹*Real.sqrt T)*block directions q p n x+
+      (T⁻¹*Real.sqrt T)*block directions q p n x +
         (2*Real.sqrt T)*block directions q v n x :=
   block_linear_pair_le (P := P) (E := TimeLp T E) (F := TimeLp T E)
     (G := C(Icc (0 : ℝ) T,E)) directions q (reconstruction (E := E) T hT.le)
@@ -53,8 +65,8 @@ theorem reconstruction_block_gevrey (directions : ι → P) (q : ℕ)
     (T : ℝ) (hT : 0 < T) (p v : P → TimeLp T E)
     (hp : ContDiff ℝ ∞ p) (hv : ContDiff ℝ ∞ v)
     (R C D : ℝ) (d : ℕ)
-    (hbp : ∀ n x, block directions q p n x ≤ C*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ D*majorant R d n)
+    (hbp : ∀ n x, block directions q p n x ≤ C * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => reconstruction T hT.le (p y,v y)) n x ≤
       (T⁻¹*Real.sqrt T*C+2*Real.sqrt T*D)*majorant R d n := by

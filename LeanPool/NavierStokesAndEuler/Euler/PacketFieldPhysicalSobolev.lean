@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalL2Scaling
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Fixed physical Sobolev bounds from the genuine all-order cylinder
 word bounds. The constants are finite polynomials at each fixed order;
 the oscillating phase costs only the indicated power of its frequency. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,10 +30,12 @@ namespace EulerPhysicalL2Scaling
 
 open Finset MeasureTheory EulerSmoothLimit
 
+/-- Derivative sum, given by `∑ n ∈ range (m+1), lpNorm (iteratedFDeriv ℝ n f) 2 volume`. -/
 def derivativeSum {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (m : ℕ) (f : Space → V) : ℝ :=
   ∑ n ∈ range (m+1), lpNorm (iteratedFDeriv ℝ n f) 2 volume
 
+/-- Jet polynomial, given by `∑ n ∈ range (m+1), R^n*(n.factorial : ℝ)^2`. -/
 def jetPolynomial (R : ℝ) (m : ℕ) : ℝ :=
   ∑ n ∈ range (m+1), R^n*(n.factorial : ℝ)^2
 
@@ -37,6 +44,8 @@ theorem jetPolynomial_nonneg (R : ℝ) (hR : 0 ≤ R) (m : ℕ) :
   unfold jetPolynomial
   positivity
 
+/-- Physical derivative cost, given by `∑ n ∈ range (m+1), (4*C)^n*Real.sqrt
+(2/P+2*P)*jetPolynomial R (n+1)`. -/
 def physicalDerivativeCost (P R C : ℝ) (m : ℕ) : ℝ :=
   ∑ n ∈ range (m+1), (4*C)^n*Real.sqrt (2/P+2*P)*jetPolynomial R (n+1)
 
@@ -74,7 +83,7 @@ theorem WordBound.slice_word_le (hG : G.WordBound q R A d)
     rw [block_eq_sum_levels standardDirection q _ G.orbit]
     have h := single_le_sum (s := range (q+1))
       (f := fun j => wordSum standardDirection (fun a : LiftTangent => pathTranslate P a G.path)
-        (n+j) 0)
+          (n+j) 0)
       (fun j _ => wordSum_nonneg _ _ _ _) (show 0 ∈ range (q+1) by simp)
     simpa only [Nat.add_zero] using h
   exact he.trans (hb.trans (hG n))
@@ -116,7 +125,7 @@ theorem WordBound.scaled_graph_derivativeSum_le (hG : G.WordBound q R A 0)
     (hR : 0 ≤ R) (hA : 0 ≤ A) (t : Icc (0 : ℝ) T)
     (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (k : ℝ) (m : Space) (C K : ℝ) (hC : 0 ≤ C) (hK : 1 ≤ K)
-    (hfrequency : frequencyFactor k m ≤ C*K) (s : ℕ) :
+    (hfrequency : frequencyFactor k m ≤ C * K) (s : ℕ) :
     derivativeSum s (scale ell (fun x : Space => raw (t,(x,k*inner ℝ m x)))) ≤
       (ell⁻¹)^s*K^s*A*physicalDerivativeCost P R C s := by
   have hellinv : 1 ≤ ell⁻¹ := (one_le_inv₀ hell).mpr hell1
@@ -137,15 +146,15 @@ theorem WordBound.scaled_graph_derivativeSum_le (hG : G.WordBound q R A 0)
   have htail : 0 ≤ (4 : ℝ)^n*Real.sqrt (2/P+2*P)*(A*jetPolynomial R (n+1)) := by positivity
   apply (hs.trans (mul_le_mul_of_nonneg_left hp (pow_nonneg (inv_nonneg.mpr hell.le) n))).trans
   calc
-    _ = ((ell⁻¹)^n*frequencyFactor k m^n)*
+    _ = ((ell⁻¹)^n*frequencyFactor k m^n) *
         (4^n*Real.sqrt (2/P+2*P)*(A*jetPolynomial R (n+1))) := by ring
-    _ ≤ ((ell⁻¹)^s*(C*K)^n)*
+    _ ≤ ((ell⁻¹)^s*(C*K)^n) *
         (4^n*Real.sqrt (2/P+2*P)*(A*jetPolynomial R (n+1))) :=
       mul_le_mul_of_nonneg_right
         (mul_le_mul hePow hfPow (pow_nonneg hf0 n) (pow_nonneg (inv_nonneg.mpr hell.le) s)) htail
-    _ = ((ell⁻¹)^s*C^n*K^n)*
+    _ = ((ell⁻¹)^s*C^n*K^n) *
         (4^n*Real.sqrt (2/P+2*P)*(A*jetPolynomial R (n+1))) := by rw [mul_pow]; ring
-    _ ≤ ((ell⁻¹)^s*C^n*K^s)*
+    _ ≤ ((ell⁻¹)^s*C^n*K^s) *
         (4^n*Real.sqrt (2/P+2*P)*(A*jetPolynomial R (n+1))) :=
       mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left hkPow

@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.BasePacketSetup
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFirstLowBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryLowBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerState
 
 /-! Fixed low-order constants are chosen before the stage and base scale.
 Their slack absorbs the universal good-time and first-packet ratios. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,8 +21,12 @@ namespace EulerPacketLowConstants
 
 open EulerBaseDatum EulerPacketFirstLowBounds EulerPacketGeometryLowBounds
 
+/-- Gradient constant, given by `8*(1+initialCoefficientCost+firstRatio+goodRatio)`. -/
 def gradientConstant : ℝ := 8*(1+initialCoefficientCost+firstRatio+goodRatio)
+/-- Hessian constant, given by
+`8*(1+initialCoefficientCost+2*gradientConstant*(firstRatio+goodRatio))`. -/
 def hessianConstant : ℝ := 8*(1+initialCoefficientCost+2*gradientConstant*(firstRatio+goodRatio))
+/-- Frame constant, given by `1+gradientConstant+hessianConstant`. -/
 def frameConstant : ℝ := 1+gradientConstant+hessianConstant
 
 theorem gradient_properties : 4 ≤ gradientConstant ∧
@@ -33,8 +37,8 @@ theorem gradient_properties : 4 ≤ gradientConstant ∧
   unfold gradientConstant
   exact ⟨by linarith,by linarith,by linarith⟩
 
-theorem gradient_nonneg : 0 ≤ gradientConstant := (by norm_num : (0 : ℝ) ≤ 4).trans
-  gradient_properties.1
+theorem gradient_nonneg : 0 ≤ gradientConstant := (by
+    norm_num : (0 : ℝ) ≤ 4).trans gradient_properties.1
 
 theorem hessian_properties : 4 ≤ hessianConstant ∧
     initialCoefficientCost+2*initialCoefficientCost*firstRatio+1 ≤ hessianConstant ∧
@@ -51,8 +55,8 @@ theorem hessian_properties : 4 ≤ hessianConstant ∧
   unfold hessianConstant
   exact ⟨by nlinarith,by nlinarith,by nlinarith⟩
 
-theorem hessian_nonneg : 0 ≤ hessianConstant := (by norm_num : (0 : ℝ) ≤ 4).trans
-  hessian_properties.1
+theorem hessian_nonneg : 0 ≤ hessianConstant := (by
+    norm_num : (0 : ℝ) ≤ 4).trans hessian_properties.1
 
 theorem frame_properties : 1 ≤ frameConstant ∧ gradientConstant ≤ frameConstant ∧
     gradientConstant^2+hessianConstant ≤ frameConstant^2 := by

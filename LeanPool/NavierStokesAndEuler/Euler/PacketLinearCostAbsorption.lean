@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
+
+/-! A single spare shift absorbs every fixed linear-operator amplitude at the same radius. -/
 
 @[expose] public section
 
-/-! A single spare shift absorbs every fixed linear-operator amplitude at the same radius. -/
 
 namespace EulerGevrey
 
@@ -36,7 +38,7 @@ theorem WordBound.absorb_amplitude (hG : G.WordBound q R A d) (hA : 0 ≤ A) (hA
   simpa only [one_mul] using (hG n).trans (amplitude_absorbed A R hA hAR d n)
 
 theorem WordBound.absorb_amplitude_to (hG : G.WordBound q R A d)
-    (hR : 1 ≤ R) (hA : 0 ≤ A) (hAR : A ≤ R) (hde : d+1 ≤ e) : G.WordBound q R 1 e :=
+    (hR : 1 ≤ R) (hA : 0 ≤ A) (hAR : A ≤ R) (hde : d + 1 ≤ e) : G.WordBound q R 1 e :=
   (hG.absorb_amplitude hA hAR).mono_shift hR zero_le_one hde
 
 end EulerPacketCylinderField.Field

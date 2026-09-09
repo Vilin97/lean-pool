@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothBanachFlow
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousInverseDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousInverseDerivative
+import LeanPool.NavierStokesAndEuler.Euler.SmoothImplicitLift
 
 /-!
 # The genuine invertible Jacobian of the constructed nonlinear flow
@@ -19,6 +19,9 @@ the actual homogeneous linear evolution. The already constructed inverse
 flow is therefore differentiable and smooth; its derivative is the actual
 inverse fundamental operator, without an independent inverse assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,11 +35,13 @@ open Set EulerContinuousTimeIntegral EulerLinearDuhamel
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
+/-- Jacobian evolution, given by `constructedEvolution T hT (A.derivative.superposition
+(pathFamily T hT A x))`. -/
 def jacobianEvolution (x : E) :
     Evolution T hT (A.derivative.superposition (pathFamily T hT A x)) :=
   constructedEvolution T hT (A.derivative.superposition (pathFamily T hT A x))
 
-private theorem volterra_initialOperator {B : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
+private theorem volterra_initialOperator {B : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
     (U : Evolution T hT B) (v : E) :
     volterraOperator T hT B (U.initialOperator v) =
       (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) v := by
@@ -89,6 +94,7 @@ theorem forward_fderiv (t : Icc (0 : ℝ) T) (x : E) :
       (jacobianEvolution T hT A x).forward t :=
   (forward_hasFDerivAt_label T hT A t x).fderiv
 
+/-- Jacobian equiv, constructed using `ContinuousLinearEquiv.equivOfInverse`. -/
 def jacobianEquiv (t : Icc (0 : ℝ) T) (x : E) : E ≃L[ℝ] E :=
   ContinuousLinearEquiv.equivOfInverse ((jacobianEvolution T hT A x).forward t)
     ((jacobianEvolution T hT A x).backward t)

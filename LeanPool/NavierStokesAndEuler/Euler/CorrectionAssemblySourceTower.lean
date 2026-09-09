@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftCorrection
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressure
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+
+/-! Continuous all-order realizations of the actual nonlinear source and time derivative. -/
 
 @[expose] public section
 
-/-! Continuous all-order realizations of the actual nonlinear source and time derivative. -/
 
 noncomputable section
 
@@ -23,8 +24,12 @@ open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerAllOrderCorrect
 variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace period q)` instance to shorten
+typeclass synthesis. -/
 local instance sourceTowerGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace period q)` instance to shorten typeclass
+synthesis. -/
 local instance sourceTowerSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 theorem FiniteFamily.rawSourcePath_value_base (F : FiniteFamily period hT A)
@@ -93,9 +98,13 @@ open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerAllOrderCorrect
 variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
+/-- Raw source tower, given by `(B.family period).rawSourceTower period (B.comparisonData
+period)`. -/
 def Budget.rawSourceTower (B : Budget period hT A) : FieldTower period T :=
   (B.family period).rawSourceTower period (B.comparisonData period)
 
+/-- Time derivative tower, given by `(B.family period).timeDerivativeTower period
+(B.comparisonData period)`. -/
 def Budget.timeDerivativeTower (B : Budget period hT A) : FieldTower period T :=
   (B.family period).timeDerivativeTower period (B.comparisonData period)
 

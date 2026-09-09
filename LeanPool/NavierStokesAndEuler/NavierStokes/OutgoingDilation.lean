@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalCompensation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ReleaseMoments
 
 /-!
 # Actual radial dilation of the constructed outgoing profile
@@ -19,6 +18,9 @@ proved by change of variables in the actual integrals. The final section
 locates the clean terminal switch and the second reserved compensation patch.
 No heat edit is applied in this module.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -58,7 +60,7 @@ theorem integrable_dilate_Ioc (f : ℝ → ℝ) (R X : ℝ) (hR : 0 < R)
   apply (integrableOn_image_iff_integrableOn_abs_deriv_smul measurableSet_Ioc hd
     (fun _ _ _ _ h => mul_left_cancel₀ hR.ne' h) _).mpr
   simpa only [IntegrableOn, abs_of_pos hR, smul_eq_mul, mul_div_cancel_left₀ _ hR.ne'] using
-    hf.const_mul R
+      hf.const_mul R
 
 theorem integral_dilate_Ioi (f : ℝ → ℝ) (R X : ℝ) (hR : 0 < R) :
     (∫ x in Ioi X, f (x / R)) = R * ∫ x in Ioi (X / R), f x := by
@@ -69,25 +71,40 @@ theorem integrable_dilate_Ioi_iff (f : ℝ → ℝ) (R X : ℝ) (hR : 0 < R) :
     IntegrableOn (fun x => f (x / R)) (Ioi X) ↔ IntegrableOn f (Ioi (X / R)) := by
   simpa only [div_eq_mul_inv] using integrableOn_Ioi_comp_mul_right_iff f X (inv_pos.mpr hR)
 
+/-- E, given by `F.E (p.1 / XR, p.2)`. -/
 def E (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.E (p.1 / XR, p.2)
+/-- U, given by `F.U (p.1 / XR, p.2)`. -/
 def U (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.U (p.1 / XR, p.2)
+/-- H, given by `Real.sqrt (2 * p.1) * E F XR p`. -/
 def H (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := Real.sqrt (2 * p.1) * E F XR p
+/-- Pi, given by `F.Pi (p.1 / XR, p.2)`. -/
 def Pi (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.Pi (p.1 / XR, p.2)
 
+/-- Power E, given by `F.powerE (X / XR)`. -/
 def powerE (F : Profile) (XR X : ℝ) : ℝ := F.powerE (X / XR)
+/-- Power H, given by `Real.sqrt (2 * X) * powerE F XR X`. -/
 def powerH (F : Profile) (XR X : ℝ) : ℝ := Real.sqrt (2 * X) * powerE F XR X
 
+/-- Energy density, given by `U F XR (X, eta) ^ 2 - E F XR (X, eta) ^ 2 / 2`. -/
 def energyDensity (F : Profile) (XR eta X : ℝ) : ℝ := U F XR (X, eta) ^ 2 - E F XR (X, eta) ^ 2 / 2
+/-- Canonical kernel, given by `E F XR (X, eta) ^ 2 / X`. -/
 def canonicalKernel (F : Profile) (XR eta X : ℝ) : ℝ := E F XR (X, eta) ^ 2 / X
 
+/-- M, given by `∫ u in Ioc 0 X, U F XR (u, eta)`. -/
 def M (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, U F XR (u, eta)
+/-- I, given by `∫ u in Ioc 0 X, H F XR (u, eta)`. -/
 def I (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, H F XR (u, eta)
+/-- J, given by `∫ u in Ioc 0 X, H F XR (u, eta) * U F XR (u, eta)`. -/
 def J (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, H F XR (u, eta) * U F XR (u, eta)
+/-- S, given by `∫ u in Ioc 0 X, energyDensity F XR eta u`. -/
 def S (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, energyDensity F XR eta u
+/-- Total S, given by `∫ u in Ioi 0, energyDensity F XR eta u`. -/
 def totalS (F : Profile) (XR eta : ℝ) : ℝ := ∫ u in Ioi 0, energyDensity F XR eta u
+/-- Renormalized I, given by `∫ u in Ioi 0, H F XR (u, eta) - powerH F XR u`. -/
 def renormalizedI (F : Profile) (XR eta : ℝ) : ℝ := ∫ u in Ioi 0, H F XR (u, eta) - powerH F XR u
+/-- Axis datum, given by `-(1 / 2 : ℝ) * ∫ u in Ioi 0, canonicalKernel F XR eta u`. -/
 def axisDatum (F : Profile) (XR eta : ℝ) : ℝ := -(1 / 2 : ℝ) * ∫ u in Ioi 0, canonicalKernel F XR
-  eta u
+    eta u
 
 theorem H_scaling (F : Profile) (XR : ℝ) (hXR : 0 < XR) (p : ℝ × ℝ) :
     H F XR p = Real.sqrt XR * F.H (p.1 / XR, p.2) := by
@@ -146,7 +163,7 @@ theorem renormalizedI_scaling (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
   unfold renormalizedI
   simp_rw [H_scaling F XR hXR, powerH_scaling F XR _ hXR, ← mul_sub]
   rw [integral_const_mul, integral_dilate_Ioi (fun u => F.H (u, eta) - F.powerH u) XR 0 hXR,
-    zero_div]
+      zero_div]
   ring
 
 theorem positive (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : 0 < E F XR p := F.E_pos _
@@ -172,6 +189,7 @@ theorem H_contDiffOn (F : Profile) (XR : ℝ) (hXR : 0 < XR) : ContDiffOn ℝ �
 theorem Pi_contDiffOn (F : Profile) (XR : ℝ) (hXR : 0 < XR) : ContDiffOn ℝ ∞ (Pi F XR) domain :=
   F.Pi_contDiffOn.comp (dilation_contDiffOn XR) (dilation_mapsTo XR hXR)
 
+/-- Family domain, given by `Ioi 0 ×ˢ domain`. -/
 def familyDomain : Set (ℝ × (ℝ × ℝ)) := Ioi 0 ×ˢ domain
 
 theorem dilation_family_contDiffOn :
@@ -223,7 +241,7 @@ theorem renormalized_integrable (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
   have hi := (integrable_dilate_Ioi_iff (fun X => F.H (X, eta) - F.powerH X) XR 0 hXR).mpr
     (by simpa only [zero_div] using F.renormalized_integrable eta)
   simpa only [IntegrableOn, H_scaling F XR hXR, powerH_scaling F XR _ hXR, mul_sub] using
-    hi.const_mul (Real.sqrt XR)
+      hi.const_mul (Real.sqrt XR)
 
 theorem normalized_I_integrable (F : Profile) (eta X : ℝ) (hX : 0 < X) :
     IntegrableOn (fun u => F.H (u, eta)) (Ioc 0 X) := by
@@ -245,7 +263,7 @@ theorem mass_total_zero (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
     (∫ X in Ioi 0, U F XR (X, eta)) = 0 := by
   change (∫ X in Ioi 0, F.U (X / XR, eta)) = 0
   rw [integral_dilate_Ioi (fun X => F.U (X, eta)) XR 0 hXR, zero_div, F.mass_integral_zero,
-    mul_zero]
+      mul_zero]
 
 theorem angular_total_zero (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
     (∫ X in Ioi 0, H F XR (X, eta) * U F XR (X, eta)) = 0 := by
@@ -254,7 +272,7 @@ theorem angular_total_zero (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
     zero_div, F.angular_integral_zero, mul_zero, mul_zero]
 
 theorem renormalized_zero (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) : renormalizedI F XR eta = 0 :=
-  by
+    by
   rw [renormalizedI_scaling F XR eta hXR, F.renormalized_angular_moment, mul_zero]
 
 theorem energy_zero {F : Profile} {C : ℝ} (hF : Specification F C)
@@ -292,7 +310,7 @@ theorem normalized_axisDatum_integral (F : Profile) (eta : ℝ) :
   rfl
 
 theorem axisDatum_unchanged (F : Profile) (XR : ℝ) (hXR : 0 < XR) : axisDatum F XR = F.axisDatum :=
-  by
+    by
   funext eta
   rw [axisDatum, canonicalKernel_integral F XR eta 0 hXR, zero_div, ← normalized_axisDatum_integral]
 
@@ -308,7 +326,9 @@ theorem Pi_tendsto_axis (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
   · filter_upwards [self_mem_nhdsWithin] with X hX
     exact div_pos hX hXR
 
+/-- Clock, given by `Real.log (X / XR)`. -/
 def clock (XR X : ℝ) : ℝ := Real.log (X / XR)
+/-- Radius, given by `XR * Real.exp y`. -/
 def radius (XR y : ℝ) : ℝ := XR * Real.exp y
 
 theorem radius_pos (XR y : ℝ) (hXR : 0 < XR) : 0 < radius XR y := mul_pos hXR (Real.exp_pos y)
@@ -338,9 +358,13 @@ theorem radius_lt_iff (XR X y : ℝ) (hXR : 0 < XR) (hX : 0 < X) :
   rw [clock, Real.lt_log_iff_exp_lt (div_pos hX hXR), lt_div_iff₀ hXR]
   simp only [radius, mul_comm]
 
+/-- Pulse end radius, given by `radius XR F.data.core.endpoint`. -/
 def pulseEndRadius (F : Profile) (XR : ℝ) : ℝ := radius XR F.data.core.endpoint
+/-- Tail radius, given by `radius XR (tailEnd F.data)`. -/
 def tailRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (tailEnd F.data)
+/-- Switch radius, given by `radius XR (HeatTailEdit.switchStart F.data)`. -/
 def switchRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (HeatTailEdit.switchStart F.data)
+/-- Carrier amplitude, given by `HeatTailEdit.outgoingAmplitude F.data`. -/
 def carrierAmplitude (F : Profile) : ℝ := HeatTailEdit.outgoingAmplitude F.data
 
 theorem switchRadius_eq (F : Profile) (XR : ℝ) :
@@ -372,7 +396,7 @@ theorem after_pulse (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR) (hX : 0 < X)
 
 theorem powerE_coefficient (F : Profile) (XR X : ℝ) (hXR : 0 < XR) (hX : 0 < X) :
     powerE F XR X = (powerConstant F.data * XR ^ (1 / 2 + F.data.h)) * X ^ (-(1 / 2 + F.data.h)) :=
-      by
+        by
   rw [powerE, Profile.powerE, Real.div_rpow hX.le hXR.le, Real.rpow_neg hXR.le, div_inv_eq_mul]
   ring
 
@@ -382,7 +406,7 @@ theorem eventual_power (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR) (hX : 0 < X
       I F XR eta X = X * H F XR (X, eta) / (1 - F.data.h) := by
   have hy := (radius_le_iff XR X (tailEnd F.data) hXR hX).mp hfar
   refine ⟨F.U_after eta (F.tailEnd_after_endpoint.trans hy), F.E_eventual eta (div_pos hX hXR) hy,
-    ?_⟩
+      ?_⟩
   rw [I_scaling F XR eta X hXR, F.angular_history_eventual eta (div_pos hX hXR) hy,
     H_scaling F XR hXR]
   field_simp [hXR.ne', F.data.one_sub_h_pos.ne']
@@ -423,14 +447,20 @@ theorem switchRadius_tendsto (F : Profile) : Tendsto (switchRadius F) atTop atTo
 
 /-! ## The actual second reserved shaped-wait patch -/
 
+/-- Patch clock, given by `F.data.core.pulseStart - 20`. -/
 def patchClock (F : Profile) : ℝ := F.data.core.pulseStart - 20
+/-- Patch radius, given by `radius XR (patchClock F)`. -/
 def patchRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (patchClock F)
+/-- Patch ratio, given by `Real.exp (patchClock F - HeatTailEdit.switchStart F.data)`. -/
 def patchRatio (F : Profile) : ℝ := Real.exp (patchClock F - HeatTailEdit.switchStart F.data)
+/-- Patch amplitude, given by `OutgoingSchedule.radialAmplitude F.data.core.P
+F.data.core.dropLength F.data.core.lam (patchClock F)`. -/
 def patchAmplitude (F : Profile) : ℝ :=
   OutgoingSchedule.radialAmplitude F.data.core.P F.data.core.dropLength F.data.core.lam (patchClock
-    F)
+      F)
+/-- Shaped patch amplitude, given by `patchAmplitude F * OutgoingSchedule.shape eta`. -/
 def shapedPatchAmplitude (F : Profile) (eta : ℝ) : ℝ := patchAmplitude F * OutgoingSchedule.shape
-  eta
+    eta
 
 /-- In the coordinate `x = X / patchRadius`, the second reserved patch is
 the fixed interval `(1, exp 5)`. -/
@@ -562,7 +592,7 @@ theorem patch_model (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR)
   rw [mul_div_cancel₀ X (patchRadius_pos F XR hXR).ne'] at he
   rw [he]
   unfold TerminalCompensation.cleanProfile TerminalCompensation.baseProfile
-    TerminalCompensation.slope
+      TerminalCompensation.slope
   congr 2
   ring
 
@@ -580,7 +610,7 @@ unchanged, before solving its three compensation moments. -/
 theorem correction_times_U_zero (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR)
     (c : TerminalCompensation.Coeff) :
     TerminalCompensation.correction compensationPatch c (X / patchRadius F XR) * U F XR (X, eta) =
-      0 := by
+        0 := by
   by_cases hn : TerminalCompensation.correction compensationPatch c (X / patchRadius F XR) = 0
   · rw [hn, zero_mul]
   · have hs := TerminalCompensation.correction_support compensationPatch c hn

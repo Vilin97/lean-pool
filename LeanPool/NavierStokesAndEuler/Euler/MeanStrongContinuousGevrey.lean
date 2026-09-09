@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPhysical
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousAcceleration
+import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPhysical
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongGevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 
 /-!
 # Uniform-time factorial bounds for the strong mean solution
@@ -18,6 +18,9 @@ The proved H¹ reconstruction estimates the continuous coordinate velocity.
 The actual continuous Gram inverse then controls acceleration and the
 physical time derivative. All bounds concern genuine spatial derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,12 +47,12 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
 open scoped ContDiff
 
 variable {T : ℝ} {hT : 0 ≤ T}
-  {FInv F F₁ : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)}
+  {FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)}
   {A : L2 →L[ℝ] L2} {L : ℝ} {u f : TimeLp T L2}
   (s : StrongMeanEvolution T hT FInv F F₁ A L u f)
   (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
-  (fC : C(Icc (0 : ℝ) T,L2))
+  (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
+  (fC : C(Icc (0 : ℝ) T, L2))
 
 /-- Actual continuous acceleration and B_t obey uniform-time spatial
 factorial bounds, with a fixed H¹ trace cost and one further Gram-inverse shift. -/
@@ -62,16 +65,16 @@ theorem continuous_strong_spatial_gevrey (hTpos : 0 < T)
     (Rc R CF CF₁ Cf : ℝ) (hRc : 0 ≤ Rc) (hR : 1 ≤ R) (hRcR : Rc ≤ R)
     (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCf : 0 ≤ Cf)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant Rc 0
-      n)
+        n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant Rc
-      0 n)
+        0 n)
     (d : ℕ)
     (hvb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b s.velocityLp)
-      a‖ ≤ majorant R (d+1) n)
+        a‖ ≤ majorant R (d+1) n)
     (hab : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b
-      s.acceleration) a‖ ≤ majorant R (d+2) n)
+        s.acceleration) a‖ ≤ majorant R (d+2) n)
     (hfb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => pathTranslation T b fC) a‖ ≤ Cf*majorant R
-      d n)
+        d n)
     (hstrong : 2*gramCost c CF (3*CF*(Cf+6*CF₁*coordinateTraceCost T))*(Rc+1) ≤ R) :
     (∀ n a, ‖iteratedFDeriv ℝ n
       (fun b : Space => coordinatePathTranslation T b (s.classicalAcceleration c hc hLower fC)) a‖ ≤
@@ -84,7 +87,7 @@ theorem continuous_strong_spatial_gevrey (hTpos : 0 < T)
   have hvc := s.coordinateVelocityPath_translation_contDiff hTpos hv ha
   have hvcb (n : ℕ) (a : Space) :
       ‖iteratedFDeriv ℝ n (fun b : Space => coordinatePathTranslation T b s.coordinateVelocityPath)
-        a‖ ≤
+          a‖ ≤
         coordinateTraceCost T*majorant R (d+2) n := by
     have h := s.coordinateVelocityPath_translation_gevrey hTpos hv ha R 1 1 hR0
       zero_le_one zero_le_one (d+2)
@@ -103,7 +106,7 @@ theorem continuous_strong_spatial_gevrey (hTpos : 0 < T)
   have hacb (n : ℕ) (a : Space) :
       ‖iteratedFDeriv ℝ n
         (fun b : Space => coordinatePathTranslation T b (s.classicalAcceleration c hc hLower fC))
-          a‖ ≤
+            a‖ ≤
           majorant R (d+3) n := by
     have h := meanAccelerationPath_translation_gevrey T F F₁ c hc hLower s.coordinateVelocityPath fC
       hF hF₁ hvc hfC Rc R CF CF₁ Cf (coordinateTraceCost T) hRc hR0 hRcR

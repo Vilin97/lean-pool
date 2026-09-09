@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseHighSolveFields
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderRecursiveAdmissibility
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorSupport
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientProperties
+
+/-! One literal profile-recursion step carries genuine path, time-derivative and locality witnesses.
+-/
 
 @[expose] public section
 
-/-! One literal profile-recursion step carries genuine path, time-derivative and locality
-  witnesses. -/
 
 noncomputable section
 
@@ -38,10 +41,10 @@ def step (hp : 2 ≤ p)
   let F := prefixFields G
   let W := G (p-1) (by omega)
   let hm : Nonempty (EulerMeanPacketProvider.Forcing M (EulerPacketProfileRecursion.meanForce O p
-    a)) :=
+      a)) :=
     ⟨F.meanForcing M C (by omega) W.correctorDerivative W.corrector_time W.pressure⟩
   let hh : Nonempty (EulerTransversePacketProvider.Forcing P D
-    (EulerPacketProfileRecursion.highForce O p a)) :=
+      (EulerPacketProfileRecursion.highForce O p a)) :=
     ⟨F.highForcing M D hT C hp W.correctorDerivative W.corrector_time W.pressure hmean
       (prefixLocality G) W.pressure_zero⟩
   let GM := Classical.choice hm
@@ -59,7 +62,7 @@ def step (hp : 2 ≤ p)
       change O.curlCorrector (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1 _ = _
       rw [hcorrector,hhigh,EulerTransversePacketProvider.highSolve_of_admissible D I _ hh])
   let pressure : Field P M.T (pressureGradient (EulerPacketProfileRecursion.step O p
-    a).highPressure) :=
+      a).highPressure) :=
     ((GH.scalarGradientField I).changeTime hT.symm).congr (fun _ _ _ => by
       change pressureGradient (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).2 _ = _
       rw [hhigh,EulerTransversePacketProvider.highSolve_of_admissible D I _ hh])
@@ -68,9 +71,9 @@ def step (hp : 2 ≤ p)
     mean := mean
     corrector := corrector
     pressure := pressure
-    high_t := GH.vectorDerivative I
-    mean_t := GM.vectorDerivative
-    corrector_t := GH.correctorDerivative I
+    highT := GH.vectorDerivative I
+    meanT := GM.vectorDerivative
+    correctorT := GH.correctorDerivative I
     highDerivative := (GH.vectorDerivativeField I).changeTime hT.symm
     meanDerivative := GM.vectorDerivativeCylinderField P
     correctorDerivative := (GH.correctorDerivativeField I).changeTime hT.symm
@@ -93,13 +96,13 @@ def step (hp : 2 ≤ p)
     exact GH.vector_zero_outside I t x hx θ
   · intro t x hx θ
     change O.curlCorrector (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).1 (t,(x,θ))
-      = 0
+        = 0
     rw [hcorrector,hhigh,EulerTransversePacketProvider.highSolve_of_admissible D I _ hh]
     let td : Icc (0 : ℝ) D.T := ⟨t,by rw [← hT]; exact t.property⟩
     exact (GH.curlCorrector_eq I td x θ).trans (GH.corrector_zero_outside I t x hx θ)
   · intro t x hx θ
     change pressureGradient (O.highSolve (EulerPacketProfileRecursion.highForce O p a)).2 (t,(x,θ))
-      = 0
+        = 0
     rw [hhigh,EulerTransversePacketProvider.highSolve_of_admissible D I _ hh]
     exact GH.scalarGradient_zero_outside I t x hx θ
   · intro t x θ

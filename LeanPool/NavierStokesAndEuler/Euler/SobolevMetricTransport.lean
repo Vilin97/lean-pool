@@ -7,12 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LiftedTransportComponents
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDensity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.RepresentativeMetricEvolution
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevL2Product
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDensity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderGradient
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+
+/-! Genuine metric transport energy on finite Sobolev fields, obtained by smooth convolution limits.
+-/
 
 @[expose] public section
 
-/-! Genuine metric transport energy on finite Sobolev fields, obtained by smooth convolution
-  limits. -/
 
 noncomputable section
 
@@ -31,14 +37,15 @@ def transportOperator {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
   ∑ i : Fin 4, (scalarProductBilinear period hq (velocityComponents κ m i) z).comp
     ((valueOperator period 0).comp (derivativeOperator period 0 i))
 
-/-- The Sobolev transport operator is the literal sum of coefficient-times-coordinate-derivative products. -/
+/-- The Sobolev transport operator is the literal sum of coefficient-times-coordinate-derivative
+products. -/
 theorem transportOperator_apply {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
     (z : SobolevSpace period q) (e : SobolevSpace period 1) :
     transportOperator period hq κ m z e = ∑ i : Fin 4,
       scalarProduct period hq (velocityComponents κ m i) z
         (value period (derivativeOperator period 0 i e)) := by
   simp only [transportOperator, sum_apply, ContinuousLinearMap.comp_apply,
-    scalarProductBilinear_apply]
+      scalarProductBilinear_apply]
   rfl
 
 /-- A smooth representative of an actual H¹ class has its full classical gradient in L². -/
@@ -50,11 +57,12 @@ theorem representative_fderiv_memLp (e : SobolevSpace period 1)
   apply fieldFDeriv_memLp_of_coordinates period g hg
   intro i
   exact (Lp.memLp _).ae_eq (EulerStrongSmoothJet.translation_derivative_ae period
-    (standardDirection i)
+      (standardDirection i)
     (value period e) (value period (derivativeOperator period 0 i e)) g he hg
     (derivativeOperator_hasDerivAt period i e))
 
-/-- On any actual smooth representative, Sobolev transport equals the genuine classical lifted differential expression. -/
+/-- On any actual smooth representative, Sobolev transport equals the genuine classical lifted
+differential expression. -/
 theorem transportOperator_eq_representative {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
     (z : SobolevSpace period q) (e : SobolevSpace period 1) (g : LiftDomain period → Vector3)
     (he : (value period e : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g)
@@ -63,7 +71,7 @@ theorem transportOperator_eq_representative {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) 
     (B : ℝ≥0) (hzB : ∀ᵐ x ∂liftMeasure period, ‖value period z x‖ ≤ B) :
     transportOperator period hq κ m z e =
       EulerRepresentativeMetricEvolution.liftedTransport period κ m g (value period z) hDg B hzB :=
-        by
+          by
   rw [transportOperator_apply]
   apply Lp.ext
   have hd (i : Fin 4) := EulerStrongSmoothJet.translation_derivative_ae period (standardDirection i)
@@ -71,7 +79,7 @@ theorem transportOperator_eq_representative {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) 
     (derivativeOperator_hasDerivAt period i e)
   filter_upwards [Lp.coeFn_finsetSum Finset.univ (fun i : Fin 4 =>
     scalarProduct period hq (velocityComponents κ m i) z (value period (derivativeOperator period 0
-      i e))),
+        i e))),
     ae_all_iff.mpr (fun i => scalarProduct_ae period hq (velocityComponents κ m i) z
       (value period (derivativeOperator period 0 i e))), ae_all_iff.mpr hd,
     EulerRepresentativeMetricEvolution.liftedTransport_ae period κ m g (value period z) hDg B hzB]
@@ -110,7 +118,7 @@ theorem metric_transport_bound {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
   change |⟪K.operator (value period (E n)), transportOperator period hq κ m z (E n)⟫_ℝ| ≤ _
   rw [heq]
   exact EulerRepresentativeMetricEvolution.metric_transport_inner_bound period κ m K.coefficient
-    K.measurable
+      K.measurable
     (value period (E n)) (g n) (value period z) hrep K.smooth hg hDg hsym hz
     K.bound K.firstBound B K.norm_bound K.norm_first hzB
 

@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerGraph
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphDerivative
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphDerivative
 
 /-! Genuine Sobolev time derivatives of coherent towers pass to actual
 spatial L² derivatives after restriction to any fixed phase graph. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,8 +35,8 @@ variable {P T : ℝ} [Fact (0 < P)]
 
 theorem graphWordPath_hasDerivWithinAt (hT : 0 ≤ T) (n : ℕ) (w : Fin n → Fin 4)
     (t : Icc (0 : ℝ) T)
-    (hd : HasDerivWithinAt (extendPath T hT (A.realization (n+1)))
-      (B.realization (n+1) t) (Icc (0 : ℝ) T) t) :
+    (hd : HasDerivWithinAt (extendPath T hT (A.realization (n + 1)))
+      (B.realization (n + 1) t) (Icc (0 : ℝ) T) t) :
     HasDerivWithinAt (extendPath T hT (A.graphWordPath f hf ha θ hθ n w))
       (B.graphWordPath g hg hb θ hθ n w t) (Icc (0 : ℝ) T) t := by
   refine graph_hasDerivWithinAt P
@@ -57,14 +58,14 @@ theorem graphWordPath_hasDerivWithinAt (hT : 0 ≤ T) (n : ℕ) (w : Fin n → F
     (B.graphWordPath_ae g hg hb θ hθ n w t) (Icc (0 : ℝ) T) t ?_ ?_
   · exact (wordOperator P (⟨⟨n,by omega⟩,w⟩ : SobolevWord (n+1))).hasFDerivAt.comp_hasDerivWithinAt
       (t : ℝ) hd
-  · exact (wordOperator P (⟨⟨n+1,by omega⟩,Fin.cons 0 w⟩ : SobolevWord
-    (n+1))).hasFDerivAt.comp_hasDerivWithinAt
+  · exact (wordOperator P (⟨⟨n+1,by
+      omega⟩,Fin.cons 0 w⟩ : SobolevWord (n+1))).hasFDerivAt.comp_hasDerivWithinAt
       (t : ℝ) hd
 
 theorem graphWordPath_hasDerivAt (hT : 0 ≤ T) (n : ℕ) (w : Fin n → Fin 4)
     (t : ℝ) (ht : t ∈ Ioo 0 T)
-    (hd : HasDerivAt (extendPath T hT (A.realization (n+1)))
-      (B.realization (n+1) ⟨t,ht.1.le,ht.2.le⟩) t) :
+    (hd : HasDerivAt (extendPath T hT (A.realization (n + 1)))
+      (B.realization (n + 1) ⟨t, ht.1.le, ht.2.le⟩) t) :
     HasDerivAt (extendPath T hT (A.graphWordPath f hf ha θ hθ n w))
       (B.graphWordPath g hg hb θ hθ n w ⟨t,ht.1.le,ht.2.le⟩) t :=
   (A.graphWordPath_hasDerivWithinAt B f g hf hg ha hb θ hθ hT n w

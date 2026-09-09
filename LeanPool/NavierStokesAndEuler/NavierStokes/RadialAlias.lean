@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Logic.Function.Iterate
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The translated radial integral and repeated integration by parts
@@ -23,6 +20,9 @@ Fréchet derivatives. The auxiliary variable may be the universal cover of a
 torus. A separately constructed directional primitive supplies the inverse
 identity; no decay estimate for the integral is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

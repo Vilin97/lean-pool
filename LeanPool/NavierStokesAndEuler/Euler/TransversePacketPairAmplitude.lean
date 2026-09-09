@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketAmplitude
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
 
 /-! Homogeneity restores a common arbitrary envelope for genuine forcing
 and initial data, without adding either envelope to the radius guards. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,25 +32,25 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {ι : Type*} [Fintype ι]
 
 theorem pair_amplitude_bound
-    (S : ∀ {r : VectorField}, Forcing P D r → InitialData P D → C(Icc (0 : ℝ) D.T,LiftL2 P))
+    (S : ∀ {r : VectorField}, Forcing P D r → InitialData P D → C(Icc (0 : ℝ) D.T, LiftL2 P))
     (hs : ∀ {r} (G : Forcing P D r) (I : InitialData P D),
       ContDiff ℝ ∞ (fun a => pathTranslate P a (S G I)))
     (hm : ∀ {r r'} (G : Forcing P D r) (H : Forcing P D r') (I J : InitialData P D) (a : ℝ),
       H.path = a • G.path → J.value = a • I.value → S H J = a • S G I)
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
     (directions : ι → LiftTangent) (q : ℕ) (R C : ℝ) (d e : ℕ)
     (hunit : ∀ {r} (G : Forcing P D r) (I : InitialData P D),
       (∀ n, block directions q (fun a => pathTranslate P a
         (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ majorant R d n) →
       (∀ n, block directions q (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ majorant R
-        d n) →
+          d n) →
       ∀ n, block directions q (fun a => pathTranslate P a (normalize g hg (S G I))) n 0 ≤
-        C*majorant R e n)
+          C * majorant R e n)
     {r : VectorField} (G : Forcing P D r) (I : InitialData P D) (A : ℝ) (hA : 0 ≤ A)
     (hb : ∀ n, block directions q (fun a => pathTranslate P a
-      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ A*majorant R d n)
+      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ A * majorant R d n)
     (hi : ∀ n, block directions q (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤
-      A*majorant R d n)
+        A * majorant R d n)
     (n : ℕ) :
     block directions q (fun a => pathTranslate P a (normalize g hg (S G I))) n 0 ≤
       (C*A)*majorant R e n := by

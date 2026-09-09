@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionBudget
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyStabilityBudget
 
+/-! One concrete stability budget compares every finite realization of the same prescribed data. -/
+
 @[expose] public section
 
-/-! One concrete stability budget compares every finite realization of the same prescribed data. -/
 
 noncomputable section
 
@@ -23,7 +24,8 @@ open MeasureTheory Set EulerLiftedGradientSpace EulerLiftedPressure EulerCylinde
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The genuine base-order data bounds construct the comparison budget at every Sobolev order of the coherent coefficient family. -/
+/-- The genuine base-order data bounds construct the comparison budget at every Sobolev order of the
+coherent coefficient family. -/
 def stabilityBudget {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A) (q : ℕ) :
     StabilityBudget period hT.le (A.atOrder period q) where
   metric := B.metric.metric

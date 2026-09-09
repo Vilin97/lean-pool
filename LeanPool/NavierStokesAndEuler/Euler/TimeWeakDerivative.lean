@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
 # Recovering actual time derivatives from the zero-endpoint weak identity
@@ -18,6 +18,9 @@ The terminal primitive is an explicit integral of an L² equivalence class.
 Integration by parts and the kernel of its initial trace identify the strong
 momentum representative used by the mean and transverse variational inverses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

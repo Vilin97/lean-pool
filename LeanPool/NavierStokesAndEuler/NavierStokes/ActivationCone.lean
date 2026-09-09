@@ -7,15 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
-public import LeanPool.NavierStokesAndEuler.NavierStokes.StressActivation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalEntrance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Topology.UniformSpace.HeineCantor
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # Initial activation cone estimates
@@ -24,6 +18,9 @@ The scalar estimates keep every error proportional to the activation itself.
 In particular, none of their constants involves the inverse of the retained
 damping parameter. The later results use the constructed activation fields.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,7 +48,7 @@ theorem inverse_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     referenceAngular L (T * u, η) / activatedAngular T κ L (T * u, η) - 1 =
       ActivationBounds.scaledDistance ((κ, T), (u, η)) * inverseRelativeError L ((κ, T), (u, η)) :=
-        by
+          by
   have hd := ActivationBounds.controlled_scaled_factor hT κ hJ hL u hη
   have hrev : L (T * u, η) - controlled T κ L (T * u, η) =
       -ActivationBounds.scaledDistance ((κ, T), (u, η)) *
@@ -241,7 +238,7 @@ theorem uniform_ramp_from_comparison {K : Set ℝ} {r : Field}
   have hve : |v T κ (y, η) - (1 - activation T κ y) * r (y, η)| ≤
       (C * y) * activation T κ y := herrors.2.1
   obtain ⟨hgap, hPgt, hquad⟩ := ramp_cone_of_errors hc hr.1 hr.2 he heone hs hsq hsc hsB herrors.1
-    hve herrors.2.2
+      hve herrors.2.2
   have hP2 : 2 < P T κ (y, η) := by linarith
   have hroot : v T κ (y, η) < coneBound (P T κ (y, η)) (J T κ (y, η)) := by
     by_cases hv2 : 2 < v T κ (y, η)
@@ -342,14 +339,18 @@ theorem normalizedConeGap_edge_positive {r : ℝ} (hr : r ≠ 0) (v dP dv dJ : �
 
 /-- The actual cone coordinates formed from two stock coordinates and a shear ratio. -/
 noncomputable def stockProjection (p q t : ℝ) : ℝ := p + q * t
+/-- Stock cross, given by `q - p * t`. -/
 noncomputable def stockCross (p q t : ℝ) : ℝ := q - p * t
 
+/-- Projection error, given by `dA + dB * (B / A) * (1 + z * dR) + (B ^ 2 / A) * dR`. -/
 noncomputable def projectionError (A B z dA dB dR : ℝ) : ℝ :=
   dA + dB * (B / A) * (1 + z * dR) + (B ^ 2 / A) * dR
 
+/-- Cross error, given by `dB - B * dR - dA * (B / A) * (1 + z * dR)`. -/
 noncomputable def crossError (A B z dA dB dR : ℝ) : ℝ :=
   dB - B * dR - dA * (B / A) * (1 + z * dR)
 
+/-- Size error, given by `κ * (B ^ 2 / A) * dR * (2 + z * dR)`. -/
 noncomputable def sizeError (κ A B z dR : ℝ) : ℝ :=
   κ * (B ^ 2 / A) * dR * (2 + z * dR)
 
@@ -368,6 +369,7 @@ theorem cone_error_factorizations (κ A B z dA dB dR : ℝ) (hA : A ≠ 0) :
     ring
   constructor <;> field_simp [hA] <;> ring
 
+/-- Comparison constant, given by `M + 2 * M ^ 2 + M ^ 3`. -/
 noncomputable def comparisonConstant (M : ℝ) : ℝ := M + 2 * M ^ 2 + M ^ 3
 
 /-- One bound for the transported error factors, depending only on the
@@ -456,26 +458,34 @@ theorem shearSize_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0
   unfold referenceSize at h
   nlinarith
 
+/-- Activated stock one, given by `ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
+(logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))`. -/
 noncomputable def activatedStockOne (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field :=
   ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
     (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))
 
+/-- Activated stock two, constructed using `ActivationStocks.logViewTwo`. -/
 noncomputable def activatedStockTwo (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field :=
   ActivationStocks.logViewTwo h X0 (activatedAngular T κ L) (controlled T κ U)
     (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))
 
+/-- Activated projection, defined pointwise by `stockProjection (activatedStockOne h X0 initial
+L U T κ p) (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)`. -/
 noncomputable def activatedProjection (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field := fun p =>
   stockProjection (activatedStockOne h X0 initial L U T κ p)
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
+/-- Activated cross, defined pointwise by `stockCross (activatedStockOne h X0 initial L U T κ p)
+(activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)`. -/
 noncomputable def activatedCross (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field := fun p =>
   stockCross (activatedStockOne h X0 initial L U T κ p)
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
+/-- Activated stress as an element of `ℝ × ℝ`. -/
 noncomputable def activatedStress (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) (p : Point) : ℝ × ℝ :=
   (activatedAngular T κ L p * (activatedStockOne h X0 initial L U T κ p - actualP1 T κ L p),
@@ -603,7 +613,7 @@ theorem actual_comparisons (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
           C * y * activation T κ y ∧
         |activatedCross h X0 initial L U T κ (y, η)| ≤ C * y * activation T κ y := by
   obtain ⟨Cs, hCs, hs⟩ := ActivationStocks.log_stocks_uniform_jets h hX0 initial hJ hL hU hi hcoef
-    hK hKJ T0 0
+      hK hKJ T0 0
   obtain ⟨Cr, hCr, hr⟩ := inverse_relative_uniform_jets hJ hK hKJ hL T0 0
   let M := max Mref (max Cs Cr)
   have hM : 0 ≤ M := hMref.trans (le_max_left _ _)
@@ -724,17 +734,17 @@ theorem referenceP1_natural {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLim
     referenceP1 (FromReference.refLog N δ) (y, η) =
       NaturalEntrance.p1 N.f (N.fromLog (y, η)) := by
   have hp : (y, η) ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-    parameterInterval_open).carrier :=
+      parameterInterval_open).carrier :=
     ⟨show y < rampLimit by linarith, hη⟩
   have href := radialPartial_hasDerivAt (logDomain parameterInterval parameterInterval_open)
     (FromReference.refLog_smooth N hδ hδlim) (p := (y, η)) ⟨mem_univ _, hη⟩
   have hnat := continuation_hasDerivAt rampLimit_pos hδ hδlim parameterInterval_open N.logF_smooth
-    (p := (y, η)) hη
+      (p := (y, η)) hη
   have hd : radialPartial (FromReference.refLog N δ) (y, η) = radialPartial N.logF (y, η) := by
     simpa only [FromReference.refLog, slopeCutoff_one hδ hy, one_mul] using href.unique hnat
   rw [referenceP1, hd, N.radialPartial_logF hp]
   rw [radialPartial_eq_partialY (N.f_smooth.contDiffAt ((NaturalProfile.domain_isOpen
-    N.scale).mem_nhds (N.fromLog_mem hp)))]
+      N.scale).mem_nhds (N.fromLog_mem hp)))]
   unfold NaturalEntrance.p1
   ring
 
@@ -743,12 +753,12 @@ theorem referenceP2_natural {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLim
     referenceP2 N.endpoint (FromReference.refLog N δ) (FromReference.refAxial N δ) (y, η) =
       NaturalEntrance.p2 N.f N.U (N.fromLog (y, η)) := by
   have hp : (y, η) ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-    parameterInterval_open).carrier :=
+      parameterInterval_open).carrier :=
     ⟨show y < rampLimit by linarith, hη⟩
   have href := radialPartial_hasDerivAt (logDomain parameterInterval parameterInterval_open)
     (FromReference.refAxial_smooth N hδ hδlim) (p := (y, η)) ⟨mem_univ _, hη⟩
   have hnat := continuation_hasDerivAt rampLimit_pos hδ hδlim parameterInterval_open N.logU_smooth
-    (p := (y, η)) hη
+      (p := (y, η)) hη
   have hd : radialPartial (FromReference.refAxial N δ) (y, η) = radialPartial N.logU (y, η) := by
     simpa only [FromReference.refAxial, slopeCutoff_one hδ hy, one_mul] using href.unique hnat
   have hf : referenceAngular (FromReference.refLog N δ) (y, η) = N.f (N.fromLog (y, η)) := by
@@ -757,11 +767,11 @@ theorem referenceP2_natural {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLim
     exact Real.exp_log (N.fromLog_f_pos hp)
   rw [referenceP2, hd, N.radialPartial_logU hp]
   rw [radialPartial_eq_partialY (N.U_smooth.contDiffAt ((NaturalProfile.domain_isOpen
-    N.scale).mem_nhds (N.fromLog_mem hp)))]
+      N.scale).mem_nhds (N.fromLog_mem hp)))]
   dsimp only [velocity]
   rw [hf]
   dsimp only [NaturalEntrance.p2, NaturalEntrance.ns, NaturalEntrance.angularVelocity, radius,
-    Input.fromLog]
+      Input.fromLog]
   ring
 
 theorem referenceP1_smooth {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLimit) :
@@ -775,16 +785,16 @@ theorem referenceP2_smooth {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLimi
       (logDomain parameterInterval parameterInterval_open).carrier := by
   have hs : ContDiff ℝ ∞ (fun p : Point => Real.sqrt (2 * radius N.endpoint p.1)) :=
     (contDiff_const.mul (contDiff_const.mul (Real.contDiff_exp.comp contDiff_fst))).sqrt
-      (fun p => (mul_pos (by norm_num : (0 : ℝ) < 2) (mul_pos N.endpoint_pos (Real.exp_pos
-        p.1))).ne')
+      (fun p => (mul_pos (by
+          norm_num : (0 : ℝ) < 2) (mul_pos N.endpoint_pos (Real.exp_pos p.1))).ne')
   have he : ContDiffOn ℝ ∞ (referenceAngular (FromReference.refLog N δ))
       (logDomain parameterInterval parameterInterval_open).carrier :=
     Real.contDiff_exp.comp_contDiffOn (FromReference.refLog_smooth N hδ hδlim)
   exact (contDiffOn_const.mul (radialPartial_smooth (logDomain parameterInterval
-    parameterInterval_open)
+      parameterInterval_open)
     (FromReference.refAxial_smooth N hδ hδlim))).div (hs.contDiffOn.mul he)
-    (fun p _ => (mul_pos (Real.sqrt_pos.mpr (mul_pos (by norm_num) (mul_pos N.endpoint_pos
-      (Real.exp_pos p.1))))
+    (fun p _ => (mul_pos (Real.sqrt_pos.mpr (mul_pos (by
+        norm_num) (mul_pos N.endpoint_pos (Real.exp_pos p.1))))
       (Real.exp_pos _)).ne')
 
 end NaturalReference
@@ -815,7 +825,7 @@ theorem natural_reference_bounds {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     ((referenceP2_smooth N hδ hδlim).continuousOn.mono hsub)
   · intro p hp
     rw [referenceP1_natural N hδ hδlim hp.1.2 (NaturalAxisCoefficients.original_interval_interior
-      hp.2)]
+        hp.2)]
     apply F.slope_positive
     · change (Λ * (N.fromLog p).1, p.2) ∈ NaturalEntrance.entranceSet
       have he : Real.exp p.1 < 41 / 40 := by
@@ -826,10 +836,10 @@ theorem natural_reference_bounds {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
       exact ⟨⟨by rw [hid]; positivity, by rw [hid]; linarith⟩, hp.2⟩
     · exact mul_pos N.endpoint_pos (Real.exp_pos p.1)
   · intro η hη
-    rw [referenceP1_natural N hδ hδlim (by linarith)
-      (NaturalAxisCoefficients.original_interval_interior hη),
-      referenceP2_natural N hδ hδlim (by linarith)
-        (NaturalAxisCoefficients.original_interval_interior hη)]
+    rw [referenceP1_natural N hδ hδlim (by
+        linarith) (NaturalAxisCoefficients.original_interval_interior hη),
+      referenceP2_natural N hδ hδlim (by
+          linarith) (NaturalAxisCoefficients.original_interval_interior hη)]
     have hm := F.cone_margin η hη
     rw [show (2 + 2 * (1 / 8) : ℝ) = 9 / 4 by norm_num]
     simpa only [NaturalEntrance.coneSize, ReferencePath.Input.fromLog, Real.exp_zero,
@@ -849,7 +859,7 @@ theorem natural_reference_log_match {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
         (logHistory N.endpoint I (referenceAngular L) U) (y, η) = referenceP1 L (y, η) ∧
       ActivationStocks.logViewTwo h N.endpoint (referenceAngular L) U
         (logHistory N.endpoint I (referenceAngular L) U) (y, η) = referenceP2 N.endpoint L U (y, η)
-          := by
+            := by
   let N := ReferencePath.Input.ofNatural hΛ F
   have hηJ := NaturalAxisCoefficients.original_interval_interior hη
   have hm := ActivationStocks.reference_stocks_natural F hΛ hP0 hδ hδlim hsmall y hy hη
@@ -893,7 +903,7 @@ theorem natural_initial_activation {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
   have hU := FromReference.refAxial_smooth N hδ hδlim
   have hi := ActivationStocks.FromReference.initial_smooth N hδ hδlim P0 hP0
   have hKJ : Icc (-1 : ℝ) 1 ⊆ ReferencePath.parameterInterval :=
-    NaturalAxisCoefficients.original_interval_interior
+      NaturalAxisCoefficients.original_interval_interior
   have hcoef : ∀ η ∈ ReferencePath.parameterInterval, NaturalAxisData.L h η ≠ 0 := by
     intro η hη
     exact (NaturalAxisCoefficients.L_pos_on_window hsmall ⟨hη.1.le, hη.2.le⟩).ne'
@@ -915,15 +925,15 @@ theorem natural_initial_activation {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
           (logHistory N.endpoint I (referenceAngular L) U) (y, η) = referenceP1 L (y, η) ∧
       ActivationStocks.logViewTwo h N.endpoint (referenceAngular L) U
           (logHistory N.endpoint I (referenceAngular L) U) (y, η) = referenceP2 N.endpoint L U (y,
-            η) := by
+              η) := by
     intro y hy η hη
     exact natural_reference_log_match hΛ F.profile.family hP0 hsmall hδ hδlim (hy.2.trans hT0δ) hη
   obtain ⟨Cerr, hCerr, he⟩ := actual_comparisons h N.endpoint_pos I
-    ReferencePath.parameterInterval_open
+      ReferencePath.parameterInterval_open
     isCompact_Icc hKJ hL hU hi hcoef (min_le_right τ 1) hM0 href hm
   have hr : ∀ y ∈ Icc (0 : ℝ) T0, ∀ η ∈ Icc (-1 : ℝ) 1,
       2 + 1 / 8 ≤ referenceSize N.endpoint L U (y, η) ∧ referenceSize N.endpoint L U (y, η) ≤ M :=
-        by
+          by
     intro y hy η hη
     have hx := hb y ⟨hy.1, hy.2.trans hT0τ⟩ η hη
     exact ⟨hx.2.1.le, hx.2.2.1⟩
@@ -965,7 +975,7 @@ theorem natural_activation_direction {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
   have hU := FromReference.refAxial_smooth N hδ hδlim
   have hi := ActivationStocks.FromReference.initial_smooth N hδ hδlim P0 hP0
   have hKJ : K ⊆ ReferencePath.parameterInterval :=
-    NaturalAxisCoefficients.original_interval_interior
+      NaturalAxisCoefficients.original_interval_interior
   have hcoef : ∀ η ∈ ReferencePath.parameterInterval, NaturalAxisData.L h η ≠ 0 := by
     intro η hη
     exact (NaturalAxisCoefficients.L_pos_on_window hsmall ⟨hη.1.le, hη.2.le⟩).ne'
@@ -974,7 +984,7 @@ theorem natural_activation_direction {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
           (logHistory N.endpoint I (referenceAngular L) U) (y, η) = referenceP1 L (y, η) ∧
       ActivationStocks.logViewTwo h N.endpoint (referenceAngular L) U
           (logHistory N.endpoint I (referenceAngular L) U) (y, η) = referenceP2 N.endpoint L U (y,
-            η) := by
+              η) := by
     intro y hy η hη
     exact natural_reference_log_match hΛ F.profile.family hP0 hsmall hδ hδlim hy.2 hη
   obtain ⟨D, hD, hedge, hfactor⟩ := exists_actual_stress_direction h N.endpoint_pos I

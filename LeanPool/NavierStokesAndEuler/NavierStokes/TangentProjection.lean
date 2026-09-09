@@ -6,15 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Module
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Tangent projection and pressure cancellation
@@ -24,6 +20,9 @@ Appendix A.3.  The vectors are in an arbitrary real inner-product space;
 `Kt` denotes the value of the matrix `K` on `t`.  No assertion about the
 existence, size, or differentiated estimates of a pulse is made here.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.TangentProjection
 

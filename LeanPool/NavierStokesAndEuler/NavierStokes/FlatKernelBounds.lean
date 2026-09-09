@@ -7,17 +7,11 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Derivative bounds for the normalized flat primitive kernel
@@ -28,6 +22,9 @@ many derivatives of its smooth profile and proves continuity in the integral
 parameter. Exponential-majorant integrability is supplied separately.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set
@@ -35,8 +32,10 @@ open scoped ContDiff
 
 namespace NavierStokes.FlatKernelBounds
 
+/-- Denominator, given by `Real.sqrt (1 + x ^ 2 * t)`. -/
 def denominator (x t : ℝ) : ℝ := Real.sqrt (1 + x ^ 2 * t)
 
+/-- Coordinate, given by `x / denominator x t`. -/
 def coordinate (x t : ℝ) : ℝ := x / denominator x t
 
 theorem base_pos {x t : ℝ} (ht : 0 ≤ t) : 0 < 1 + x ^ 2 * t := by
@@ -93,6 +92,7 @@ inductive Expr where
   | add (e f : Expr)
   | mul (e f : Expr)
 
+/-- Eval used in flat kernel bounds. -/
 def Expr.eval : Expr → (ℝ → ℝ) → ℝ → ℝ → ℝ
   | .const c, _, _, _ => c
   | .x, _, xv, _ => xv
@@ -103,6 +103,7 @@ def Expr.eval : Expr → (ℝ → ℝ) → ℝ → ℝ → ℝ
   | .add e f, b, xv, tv => e.eval b xv tv + f.eval b xv tv
   | .mul e f, b, xv, tv => e.eval b xv tv * f.eval b xv tv
 
+/-- Pow as an element of `ℕ → Expr | 0 => .const 1 | n + 1 => .mul (e.pow n) e`. -/
 def Expr.pow (e : Expr) : ℕ → Expr
   | 0 => .const 1
   | n + 1 => .mul (e.pow n) e
@@ -113,6 +114,7 @@ def Expr.pow (e : Expr) : ℕ → Expr
   | zero => simp [Expr.pow, Expr.eval]
   | succ n ih => simp [Expr.pow, Expr.eval, ih, pow_succ]
 
+/-- Diff used in flat kernel bounds. -/
 def Expr.diff : Expr → Expr
   | .const _ => .const 0
   | .x => .const 1
@@ -340,6 +342,7 @@ theorem Expr.jetOrder_iterate_diff_le (e : Expr) (n : ℕ) :
       exact ((Expr.diff^[n]) e).jetOrder_diff_le.trans
         (by simpa only [Nat.add_assoc] using Nat.add_le_add_right ih 1)
 
+/-- Kernel expr, given by `.mul (.mul (Expr.root.pow j) (Expr.invRoot.pow 3)) (.jet 0)`. -/
 def kernelExpr (j : ℕ) : Expr :=
   .mul (.mul (Expr.root.pow j) (Expr.invRoot.pow 3)) (.jet 0)
 
@@ -350,6 +353,8 @@ theorem kernelExpr_jetOrder (j : ℕ) : (kernelExpr j).jetOrder = 0 := by
   have hinv' : (Expr.invRoot.pow 3).jetOrder = 0 := Nat.eq_zero_of_le_zero hinv
   simp [kernelExpr, Expr.jetOrder, hroot', hinv']
 
+/-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator x t ^ j / denominator x t ^
+3) * b (coordinate x t)`. -/
 def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (denominator x t ^ j / denominator x t ^ 3) * b (coordinate x t)

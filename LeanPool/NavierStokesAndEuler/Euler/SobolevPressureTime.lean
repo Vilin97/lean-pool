@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevPressureResolvent
-public import LeanPool.NavierStokesAndEuler.Euler.ResolventCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevCoefficientPressure
+import LeanPool.NavierStokesAndEuler.Euler.ResolventCalculus
+import LeanPool.NavierStokesAndEuler.Euler.SobolevPressureResolvent
+
+/-! Time regularity of the actual Sobolev pressure inverse, derived from its genuine resolvent. -/
 
 @[expose] public section
 
-/-! Time regularity of the actual Sobolev pressure inverse, derived from its genuine resolvent. -/
 
 noncomputable section
 
@@ -23,7 +25,8 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The inherited normed group of Sobolev endomorphisms, named to keep instance inference shallow. -/
+/-- The inherited normed group of Sobolev endomorphisms, named to keep instance inference shallow.
+-/
 local instance sobolevEndNormedGroup (q : ℕ) :
     NormedAddCommGroup (SobolevSpace period q →L[ℝ] SobolevSpace period q) :=
   ContinuousLinearMap.toNormedAddCommGroup
@@ -33,7 +36,8 @@ local instance sobolevEndNormedSpace (q : ℕ) :
     NormedSpace ℝ (SobolevSpace period q →L[ℝ] SobolevSpace period q) :=
   ContinuousLinearMap.toNormedSpace
 
-/-- Coefficient-multiplier continuity implies continuity of the actual pressure operator in Hq norm. -/
+/-- Coefficient-multiplier continuity implies continuity of the actual pressure operator in Hq norm.
+-/
 theorem pressureSobolev_continuousAt {α : Type*} [TopologicalSpace α] {q : ℕ}
     (A : α → SmoothCoefficient period) (K : ∀ s, CoefficientJet period standardDirection q (A s))
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
@@ -46,7 +50,8 @@ theorem pressureSobolev_continuousAt {α : Type*} [TopologicalSpace α] {q : ℕ
   intro s r
   exact pressure_resolvent period (K s) (K r) κ m c c hc hc (hpos s) (hpos r)
 
-/-- The actual pressure-corrected source operator is continuous whenever the coefficient multiplier is continuous. -/
+/-- The actual pressure-corrected source operator is continuous whenever the coefficient multiplier
+is continuous. -/
 theorem projectedSource_continuousAt {α : Type*} [TopologicalSpace α] {q : ℕ}
     (A : α → SmoothCoefficient period) (K : ∀ s, CoefficientJet period standardDirection q (A s))
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
@@ -73,7 +78,8 @@ theorem pressureSobolev_hasDerivAt {q : ℕ}
   intro s r
   exact pressure_resolvent period (K s) (K r) κ m c c hc hc (hpos s) (hpos r)
 
-/-- The complete Sobolev pressure-corrected source has the actual derivative obtained by the product rule. -/
+/-- The complete Sobolev pressure-corrected source has the actual derivative obtained by the product
+rule. -/
 theorem projectedSource_hasDerivAt {q : ℕ}
     (A : ℝ → SmoothCoefficient period) (K : ∀ s, CoefficientJet period standardDirection q (A s))
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)

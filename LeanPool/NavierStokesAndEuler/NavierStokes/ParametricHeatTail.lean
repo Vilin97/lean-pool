@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatTailEdit
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # The physical heat edit: diffusion is `1 - eta^2`
@@ -19,6 +17,9 @@ The diffusion variable is allowed to reach zero.  All endpoint derivatives
 below are derivatives within the closed parameter domain; no extension to
 negative diffusion is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -192,15 +193,20 @@ theorem jetProduct_bound {a b A B : ℕ → ℝ} {X : ℝ} (hX : 1 ≤ X)
 
 open HeatTailEdit
 
+/-- Heat jet bound, given by `|(Real.Gamma (1 + h))⁻¹ * RadialHeatProfile.derivativeCoeff (1 +
+h) n| * Real.Gamma (1 + h + (n : ℝ))`. -/
 noncomputable def heatJetBound (h : ℝ) (n : ℕ) : ℝ :=
   |(Real.Gamma (1 + h))⁻¹ * RadialHeatProfile.derivativeCoeff (1 + h) n| *
     Real.Gamma (1 + h + (n : ℝ))
 
+/-- Correction jet used in parametric heat tail. -/
 noncomputable def correctionJet (h K : ℝ) : ℕ → ℝ → ℝ → ℝ
   | 0, ν, X => switch K X * (RadialHeatProfile.profile (1 + h) (2 * ν / X) - 1)
   | n + 1, ν, X => switch K X * (2 / X) ^ (n + 1) *
       RadialHeatProfile.profileJet (1 + h) (n + 1) (2 * ν / X)
 
+/-- Correction bound as an element of `ℕ → ℝ | 0 => heatConstant h L | n + 1 => 2 ^ (n + 1) *
+heatJetBound h (n + 1)`. -/
 noncomputable def correctionBound (h L : ℝ) : ℕ → ℝ
   | 0 => heatConstant h L
   | n + 1 => 2 ^ (n + 1) * heatJetBound h (n + 1)
@@ -303,6 +309,8 @@ noncomputable def squareCorrectionJet (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :
   2 * correctionJet h K n ν X +
     jetProduct (fun i => correctionJet h K i ν X) (fun i => correctionJet h K i ν X) n
 
+/-- Square correction bound, given by `2 * correctionBound h L n + jetProduct (correctionBound h
+L) (correctionBound h L) n`. -/
 noncomputable def squareCorrectionBound (h L : ℝ) (n : ℕ) : ℝ :=
   2 * correctionBound h L n + jetProduct (correctionBound h L) (correctionBound h L) n
 
@@ -353,6 +361,7 @@ theorem squareCorrectionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
 noncomputable def editJet (square : Bool) (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
   if square then squareCorrectionJet h K n ν X else correctionJet h K n ν X
 
+/-- Edit bound, with branches according to `square`. -/
 noncomputable def editBound (square : Bool) (h L : ℝ) (n : ℕ) : ℝ :=
   if square then squareCorrectionBound h L n else correctionBound h L n
 
@@ -384,9 +393,11 @@ theorem editJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
   · exact correctionJet_bound hh hX hν n
   · exact squareCorrectionJet_bound hh hX hν n
 
+/-- Weighted jet, given by `X ^ q * W X * editJet square h K n ν X`. -/
 noncomputable def weightedJet (W : ℝ → ℝ) (square : Bool) (h K q : ℝ)
     (n : ℕ) (ν X : ℝ) : ℝ := X ^ q * W X * editJet square h K n ν X
 
+/-- Weighted debt jet, given by `∫ X in Ioi K, weightedJet W square h K q n ν X`. -/
 noncomputable def weightedDebtJet (W : ℝ → ℝ) (square : Bool) (h K q : ℝ)
     (n : ℕ) (ν : ℝ) : ℝ := ∫ X in Ioi K, weightedJet W square h K q n ν X
 
@@ -496,19 +507,25 @@ end Weighted
 
 open OutgoingTail
 
+/-- Tail weight, with branches according to `square`. -/
 noncomputable def tailWeight (d : TailData) (K : ℝ) (square : Bool) (X : ℝ) : ℝ :=
   if square then (powerTail d.h (outgoingAmplitude d) K (outgoingShape d) X) ^ 2
   else powerTail d.h (outgoingAmplitude d) K (outgoingShape d) X
 
+/-- Tail decay, with branches according to `square`. -/
 noncomputable def tailDecay (d : TailData) (square : Bool) : ℝ :=
   if square then -2 * exponent d.h else -exponent d.h
 
+/-- Tail size, with branches according to `square`. -/
 noncomputable def tailSize (d : TailData) (square : Bool) : ℝ :=
   if square then outgoingAmplitude d ^ 2 else outgoingAmplitude d
 
+/-- Nu debt jet, given by `weightedDebtJet (tailWeight d K square) square d.h K q n ν`. -/
 noncomputable def nuDebtJet (d : TailData) (K : ℝ) (square : Bool) (q : ℝ)
     (n : ℕ) (ν : ℝ) : ℝ := weightedDebtJet (tailWeight d K square) square d.h K q n ν
 
+/-- Nu constant, given by `tailSize d square * editBound square d.h 1 n / (-tailDecay d square -
+q)`. -/
 noncomputable def nuConstant (d : TailData) (square : Bool) (q : ℝ) (n : ℕ) : ℝ :=
   tailSize d square * editBound square d.h 1 n / (-tailDecay d square - q)
 
@@ -520,7 +537,7 @@ theorem tailSize_nonneg (d : TailData) (square : Bool) : 0 ≤ tailSize d square
 theorem tailWeight_continuousOn (d : TailData) {K : ℝ} (hK : 0 < K) (square : Bool) :
     ContinuousOn (tailWeight d K square) (Ioi K) := by
   have hc := (powerTail_contDiffOn hK d.h (outgoingAmplitude d) (outgoingShape_contDiff
-    d)).continuousOn
+      d)).continuousOn
   cases square
   · exact hc.mono (Ioi_subset_Ioi hK.le)
   · exact (hc.pow 2).mono (Ioi_subset_Ioi hK.le)
@@ -577,16 +594,20 @@ theorem nuDebtJet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
   have hb' := weightedDebtJet_bound d.h_pos hK
     (tailSize_nonneg d square) (tailWeight_bound d (lt_of_lt_of_le zero_lt_one hK) square)
     hq square n (by norm_num : (0 : ℝ) < 1) hν
-  convert! hb' using 1 ; unfold nuConstant ; ring
+  convert! hb' using 1; unfold nuConstant; ring
 
+/-- Diffusion, given by `1 - eta ^ 2`. -/
 noncomputable def diffusion (eta : ℝ) : ℝ := 1 - eta ^ 2
 
+/-- Physical pressure, given by `pressureDebt (outgoingProfile d K eta) d.h (diffusion eta) K`. -/
 noncomputable def physicalPressure (d : TailData) (K eta : ℝ) : ℝ :=
   pressureDebt (outgoingProfile d K eta) d.h (diffusion eta) K
 
+/-- Physical energy, given by `energyDebt (outgoingProfile d K eta) d.h (diffusion eta) K`. -/
 noncomputable def physicalEnergy (d : TailData) (K eta : ℝ) : ℝ :=
   energyDebt (outgoingProfile d K eta) d.h (diffusion eta) K
 
+/-- Physical angular, given by `angularDebt (outgoingProfile d K eta) d.h (diffusion eta) K`. -/
 noncomputable def physicalAngular (d : TailData) (K eta : ℝ) : ℝ :=
   angularDebt (outgoingProfile d K eta) d.h (diffusion eta) K
 
@@ -634,8 +655,8 @@ theorem diffusion_mem {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1) :
   constructor <;> nlinarith [sq_nonneg eta]
 
 theorem diffusion_hasDerivAt (eta : ℝ) : HasDerivAt diffusion (-2 * eta) eta := by
-  convert! (hasDerivAt_const eta (1 : ℝ)).sub ((hasDerivAt_id eta).pow 2) using 1 ;
-    simp only [Nat.cast_ofNat, id_eq] ; ring
+  convert! (hasDerivAt_const eta (1 : ℝ)).sub ((hasDerivAt_id eta).pow 2) using 1;
+    simp only [Nat.cast_ofNat, id_eq]; ring
 
 theorem diffusion_deriv : deriv diffusion = fun eta => -2 * eta :=
   funext fun eta => (diffusion_hasDerivAt eta).deriv
@@ -675,9 +696,12 @@ theorem diffusion_jet_bound {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1)
     simp only [norm_zero]
     positivity
 
+/-- Eta debt, given by `nuDebtJet d K square q 0 (diffusion eta)`. -/
 noncomputable def etaDebt (d : TailData) (K : ℝ) (square : Bool) (q eta : ℝ) : ℝ :=
   nuDebtJet d K square q 0 (diffusion eta)
 
+/-- Eta constant, given by `(n.factorial : ℝ) * (∑ i ∈ Finset.range (n + 1), nuConstant d square
+q i) * 2 ^ n`. -/
 noncomputable def etaConstant (d : TailData) (square : Bool) (q : ℝ) (n : ℕ) : ℝ :=
   (n.factorial : ℝ) * (∑ i ∈ Finset.range (n + 1), nuConstant d square q i) * 2 ^ n
 
@@ -713,7 +737,7 @@ theorem etaDebt_jet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool
     (C := (∑ i ∈ Finset.range (n + 1), nuConstant d square q i) * K ^ q)
     (D := 2) (n := n) ?_ ?_
   · rw [norm_iteratedFDerivWithin_eq_norm_iteratedDerivWithin, Real.norm_eq_abs] at hb'
-    convert! hb' using 1 ; simp only [etaConstant] ; ring
+    convert! hb' using 1; simp only [etaConstant]; ring
   · intro i hi
     rw [norm_iteratedFDerivWithin_eq_norm_iteratedDerivWithin, Real.norm_eq_abs,
       nuDebtJet_eq_iteratedDerivWithin d hK square hq i (diffusion_mem hη).1]
@@ -941,6 +965,7 @@ theorem physical_debts_zero (d : TailData) (K : ℝ) {eta : ℝ} (hη : diffusio
   simp [physicalPressure, physicalEnergy, physicalAngular, pressureDebt, energyDebt, angularDebt,
     hη, squareChange, change, edit, multiplier_zero d.h_pos]
 
+/-- Physical edit, given by `outgoingEdit d (diffusion eta) K eta X`. -/
 noncomputable def physicalEdit (d : TailData) (K eta X : ℝ) : ℝ :=
   outgoingEdit d (diffusion eta) K eta X
 

@@ -10,9 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalGraphBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverSolve
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SquaredPartition
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
-public import Mathlib.Data.Set.Card
-
-@[expose] public section
 
 /-!
 # Physical waves on common covers and locally finite label sums
@@ -20,6 +17,9 @@ public import Mathlib.Data.Set.Card
 Cover changes are the actual powers of `J_g`. Bounds use actual Fréchet
 derivatives and the constructed dyadic and spatial masks.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,9 +30,13 @@ open ProblemStatement
 open scoped Topology ContDiff BigOperators
 
 
+/-- Plane: an abbreviation for `PhysicalGraphBounds.Plane`. -/
 abbrev Plane := PhysicalGraphBounds.Plane
+/-- Lift point: an abbreviation for `PhysicalGraphBounds.LiftPoint`. -/
 abbrev LiftPoint := PhysicalGraphBounds.LiftPoint
+/-- Label: an abbreviation for `SlotColoring.Label`. -/
 abbrev Label := SlotColoring.Label
+/-- Position: an abbreviation for `SlotColoring.Position`. -/
 abbrev Position := SlotColoring.Position
 
 private theorem nat_le_infty (k : ℕ) : (k : WithTop ℕ∞) ≤ ∞ :=
@@ -43,6 +47,8 @@ noncomputable def downLift (d : ℕ) : LiftPoint →L[ℝ] LiftPoint :=
   (ContinuousLinearMap.id ℝ PhysicalGraphBounds.ChartPoint).prodMap
     ((CommonCoverSolve.coverPower d).symm : Plane →L[ℝ] Plane)
 
+/-- Up lift, given by `(ContinuousLinearMap.id ℝ PhysicalGraphBounds.ChartPoint).prodMap
+(CommonCoverSolve.coverPower d : Plane →L[ℝ] Plane)`. -/
 noncomputable def upLift (d : ℕ) : LiftPoint →L[ℝ] LiftPoint :=
   (ContinuousLinearMap.id ℝ PhysicalGraphBounds.ChartPoint).prodMap
     (CommonCoverSolve.coverPower d : Plane →L[ℝ] Plane)
@@ -53,9 +59,10 @@ noncomputable def upLift (d : ℕ) : LiftPoint →L[ℝ] LiftPoint :=
 @[simp] theorem upLift_apply (d : ℕ) (y : LiftPoint) :
     upLift d y = (y.1, CommonCoverSolve.coverPower d y.2) := rfl
 
-@[simp] theorem up_down (d : ℕ) (y : LiftPoint) : upLift d (downLift d y) = y := by simp
-@[simp] theorem down_up (d : ℕ) (y : LiftPoint) : downLift d (upLift d y) = y := by simp
+theorem up_down (d : ℕ) (y : LiftPoint) : upLift d (downLift d y) = y := by simp
+theorem down_up (d : ℕ) (y : LiftPoint) : downLift d (upLift d y) = y := by simp
 
+/-- Cover bound, given by `1 + CommonCoverSolve.coveringBound Δ`. -/
 noncomputable def coverBound (Δ : ℕ) : ℝ := 1 + CommonCoverSolve.coveringBound Δ
 
 theorem coverBound_ge_one (Δ : ℕ) : 1 ≤ coverBound Δ := by
@@ -92,6 +99,7 @@ theorem norm_upLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖upLift d‖ ≤ coverBo
         mul_le_mul hc (norm_snd_le y) (norm_nonneg _) (CommonCoverSolve.coveringBound_pos Δ).le
       _ ≤ _ := by unfold coverBound; nlinarith [norm_nonneg y]
 
+/-- Common lift, given by `downLift d ∘ PhysicalGraphBounds.physicalLift h n`. -/
 noncomputable def commonLift (h : ℝ) (n d : ℕ) : SpaceTime → LiftPoint :=
   downLift d ∘ PhysicalGraphBounds.physicalLift h n
 
@@ -103,7 +111,7 @@ theorem commonLift_formula (h : ℝ) (n d : ℕ) (hd : d ≤ ChartScales.nativeI
       (PhysicalGraphBounds.physicalChart h n w,
         (SlotGeometry.cover ^ (ChartScales.nativeIndex h n - d))
           (PhysicalGraphBounds.radialProfile (ChartScales.radialExponent h)
-            (PhysicalGraphBounds.radialProjection w) +
+              (PhysicalGraphBounds.radialProjection w) +
             w.1 • PhysicalGraphBounds.timeDirection)) := by
   apply Prod.ext
   · rfl
@@ -117,7 +125,7 @@ theorem commonLift_smoothAt (h : ℝ) (n d : ℕ) {w : SpaceTime}
     (hw : PhysicalGraphBounds.radialProjection w ≠ 0) : ContDiffAt ℝ ∞ (commonLift h n d) w :=
   (downLift d).contDiff.contDiffAt.comp w
     ((PhysicalGraphBounds.physicalChart_smooth h n).contDiffAt.prodMk
-      (PhysicalGraphBounds.contDiffAt_nativeGraph h n hw))
+        (PhysicalGraphBounds.contDiffAt_nativeGraph h n hw))
 
 theorem downLift_jet_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : LiftPoint → E} (hf : ContDiff ℝ ∞ f) {d Δ m : ℕ} (hd : d ≤ Δ)
@@ -141,7 +149,7 @@ theorem common_stripped_physical_bound {E : Type*}
     (Δ m : ℕ) (g e A : ℝ) (hA : 0 ≤ A) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ n : ℕ, 4 ≤ n → ∀ d : ℕ, d ≤ Δ →
       ∀ w : SpaceTime, PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a b →
-        |w.1| ≤ 1 →
+          |w.1| ≤ 1 →
       ∀ q : ℝ, 0 < q → q / 2 ≤ ChartScales.Q n → ChartScales.Q n ≤ 2 * q →
       ∀ f : LiftPoint → E, ContDiff ℝ ∞ f →
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i f (commonLift h n d w)‖ ≤
@@ -150,7 +158,7 @@ theorem common_stripped_physical_bound {E : Type*}
         C * q ^ (g - (PhysicalGraphBounds.graphLoss m + 1)) := by
   have hK : 0 ≤ coverBound Δ := zero_le_one.trans (coverBound_ge_one Δ)
   obtain ⟨C, hC, hb⟩ := PhysicalGraphBounds.stripped_class_physical_bound (E := E) (b := b) hh hh1
-    ha m
+      ha m
     g e (A * coverBound Δ ^ m) (by positivity)
   refine ⟨C, hC, ?_⟩
   intro n hn d hd w hw ht q hq hlo hhi f hf hfb
@@ -164,19 +172,29 @@ theorem common_stripped_physical_bound {E : Type*}
 
 /-- Native phase data remain distinct from a source on a common cover. -/
 structure CarrierData where
+  /-- Chart of `CarrierData`, of type `PolarCharts.Index`. -/
   chart : PolarCharts.Index
+  /-- Center of `CarrierData`, of type `Plane`. -/
   center : Plane
+  /-- Angular of `CarrierData`, of type `ℝ`. -/
   angular : ℝ
+  /-- Axial of `CarrierData`, of type `ℝ`. -/
   axial : ℝ
+  /-- Radial of `CarrierData`, of type `ℝ`. -/
   radial : ℝ
+  /-- F of `CarrierData`, of type `PhysicalGraphBounds.Slow → ℝ`. -/
   F : PhysicalGraphBounds.Slow → ℝ
+  /-- Geometric data of `CarrierData`, of type `PhysicalGraphBounds.Slow → ℝ`. -/
   G : PhysicalGraphBounds.Slow → ℝ
 
+/-- Phase, given by `PhysicalGraphBounds.liftedPhase (PolarCharts.chart a c.chart) h n c.center
+r0 c.angular c.axial c.radial c.F c.G`. -/
 noncomputable def CarrierData.phase (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ) :
     LiftPoint → ℝ :=
   PhysicalGraphBounds.liftedPhase (PolarCharts.chart a c.chart) h n c.center r0
     c.angular c.axial c.radial c.F c.G
 
+/-- Common wave, constructed using `amp`. -/
 noncomputable def commonWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
     (amp : LiftPoint → ℂ) (j : ℤ) (w : SpaceTime) : ℂ :=
   amp (commonLift h n d w) *
@@ -215,12 +233,12 @@ theorem common_carrier_physical_bound {h a b Z r0 P B eBase : ℝ}
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i c.F
         (PhysicalGraphBounds.slotMap (PolarCharts.chart a c.chart)
           (ChartScales.timeCoefficient h n) c.center r0 (PhysicalGraphBounds.physicalLift h n
-            w)).1‖ ≤
+              w)).1‖ ≤
             B * ChartScales.S n ^ eBase) →
       (∀ i ≤ m, ‖iteratedFDeriv ℝ i c.G
         (PhysicalGraphBounds.slotMap (PolarCharts.chart a c.chart)
           (ChartScales.timeCoefficient h n) c.center r0 (PhysicalGraphBounds.physicalLift h n
-            w)).1‖ ≤
+              w)).1‖ ≤
             B * ChartScales.S n ^ eBase) →
       ‖iteratedFDeriv ℝ m (commonWave a h n d r0 c amp j) w‖ ≤
         C * q ^ (g - PhysicalGraphBounds.waveLoss h m) := by
@@ -248,6 +266,8 @@ noncomputable def labelRegion (D : ℝ) (L : Label) : Set (ℝ × Position) :=
 theorem labelRegion_closed (D : ℝ) (L : Label) : IsClosed (labelRegion D L) :=
   isClosed_closure.prod isClosed_closure
 
+/-- Physical mask, given by `SquaredPartition.dyadicMask (L.1 : ℤ) z.1 *
+SquaredPartition.physicalSlowMask D L.1 L.2.1 z.2`. -/
 noncomputable def physicalMask (D : ℝ) (L : Label) (z : ℝ × Position) : ℝ :=
   SquaredPartition.dyadicMask (L.1 : ℤ) z.1 *
     SquaredPartition.physicalSlowMask D L.1 L.2.1 z.2
@@ -325,6 +345,7 @@ theorem labelRegion_card_le {D : ℝ} {z : ℝ × Position} (hq : 0 < z.1)
     (fun L _ => Finset.mem_univ _) hi
   simpa only [Finset.card_univ, SlotColoring.palette_card] using hc
 
+/-- Positive param: an abbreviation for `Ioi (0 : ℝ) × Position`. -/
 abbrev PositiveParam := Ioi (0 : ℝ) × Position
 
 theorem dyadic_closed_locallyFinite :
@@ -333,7 +354,7 @@ theorem dyadic_closed_locallyFinite :
   have hc : Continuous (fun q : Ioi (0 : ℝ) => SquaredPartition.logCoordinate q) :=
     ((continuous_subtype_val.log (fun q => q.property.ne')).neg).div_const (Real.log 2)
   have hl := (SquaredPartition.lineMask_locallyFinite.comp_injective
-    Int.ofNat_injective).preimage_continuous hc
+      Int.ofNat_injective).preimage_continuous hc
   apply hl.subset
   intro n q hq
   change SquaredPartition.logCoordinate q ∈ tsupport (SquaredPartition.lineMask (n : ℤ))
@@ -356,8 +377,11 @@ theorem labelRegion_locallyFinite (D : ℝ) :
       (fun _ => locallyFinite_of_finite (fun _ : Bool => (univ : Set PositiveParam)))
   exact SquaredPartition.locallyFinite_pair_inter hb hs
 
+/-- Band label: an abbreviation for `{L : Label // 4 ≤ L.1}`. -/
 abbrev BandLabel := {L : Label // 4 ≤ L.1}
+/-- Harmonic: an abbreviation for `↥(Finset.Icc (-(H : ℤ)) (H : ℤ))`. -/
 abbrev Harmonic (H : ℕ) := ↥(Finset.Icc (-(H : ℤ)) (H : ℤ))
+/-- Wave index: an abbreviation for `BandLabel × Harmonic H`. -/
 abbrev WaveIndex (H : ℕ) := BandLabel × Harmonic H
 
 theorem harmonic_bound {H : ℕ} (j : Harmonic H) : |((j : ℤ) : ℝ)| ≤ (H : ℝ) := by
@@ -368,6 +392,7 @@ theorem harmonic_card (H : ℕ) : Fintype.card (Harmonic H) = 2 * H + 1 := by
   simp only [Harmonic, Fintype.card_coe, Int.card_Icc]
   omega
 
+/-- Wave color, given by `(SlotColoring.colorData I.1.val, I.2)`. -/
 noncomputable def waveColor {H : ℕ} (I : WaveIndex H) : SlotColoring.Palette × Harmonic H :=
   (SlotColoring.colorData I.1.val, I.2)
 
@@ -400,6 +425,7 @@ theorem waveRegion_locallyFinite (D : ℝ) (H : ℕ) :
   simpa only [inter_univ, Function.comp_def] using SquaredPartition.locallyFinite_pair_inter hb
     (fun _ => locallyFinite_of_finite (fun _ : Harmonic H => (univ : Set PositiveParam)))
 
+/-- Preterminal, given by `{w | w.1 < 1}`. -/
 noncomputable def preterminal : Set SpaceTime := {w | w.1 < 1}
 
 theorem preterminal_open : IsOpen preterminal := isOpen_lt continuous_fst continuous_const
@@ -429,6 +455,7 @@ theorem physicalPosition_continuous : Continuous physicalPosition := by
   · exact ((AxisymmetricFields.projection 2).continuous.comp continuous_snd)
   · exact continuous_const.sub continuous_fst
 
+/-- Physical params, given by `(physicalQ h w, physicalPosition w)`. -/
 noncomputable def physicalParams (h : ℝ) (w : SpaceTime) : ℝ × Position :=
   (physicalQ h w, physicalPosition w)
 
@@ -436,6 +463,8 @@ theorem physicalParams_continuousAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {w : SpaceTime} (hw : w ∈ preterminal) : ContinuousAt (physicalParams h) w :=
   (physicalQ_smoothAt hh hh1 hw).continuousAt.prodMk physicalPosition_continuous.continuousAt
 
+/-- Positive params, given by `(⟨physicalQ h w, physicalQ_pos hh hh1 w.property⟩,
+physicalPosition w)`. -/
 noncomputable def positiveParams {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (w : preterminal) : PositiveParam :=
   (⟨physicalQ h w, physicalQ_pos hh hh1 w.property⟩, physicalPosition w)
@@ -451,7 +480,7 @@ theorem positiveParams_continuous {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
 theorem waveRegion_closed (D : ℝ) {H : ℕ} (I : WaveIndex H) :
     IsClosed {z : PositiveParam | ((z.1 : ℝ), z.2) ∈ labelRegion D I.1.val} :=
   (labelRegion_closed D I.1.val).preimage ((continuous_subtype_val.comp continuous_fst).prodMk
-    continuous_snd)
+      continuous_snd)
 
 /-- A locally finite closed family has a neighborhood with no new
 indices beyond the finite family active at the point. -/
@@ -571,23 +600,27 @@ theorem jet_zero_off_tsupport {E F : Type*} [NormedAddCommGroup E] [NormedSpace 
   by_contra hn
   exact hx ((tsupport_iteratedFDeriv_subset m) (subset_tsupport _ hn))
 
+/-- With chart, given by `{c with chart := i}`. -/
 noncomputable def CarrierData.withChart (c : CarrierData) (i : PolarCharts.Index) : CarrierData :=
   {c with chart := i}
 
+/-- Choose chart, choosing the witness provided by `hi`. -/
 noncomputable def chooseChart (a : ℝ) (x : Plane) : PolarCharts.Index := by
   classical
   exact if hi : ∃ i : PolarCharts.Index, x ∈ PolarCharts.chartDomain a i then Classical.choose hi
-    else 0
+      else 0
 
 theorem chooseChart_valid {a b : ℝ} (ha : 0 < a) {x : Plane}
     (hx : x ∈ PhysicalGraphBounds.annulus a b) : x ∈ PolarCharts.chartDomain a (chooseChart a x) :=
-      by
+        by
   obtain ⟨i, hi⟩ := PolarCharts.annulus_covered ha hx
   have he : ∃ j : PolarCharts.Index, x ∈ PolarCharts.chartDomain a j :=
     ⟨i, PolarCharts.sector_subset_chartDomain ha i hi⟩
   simp only [chooseChart, dite_eq_left he]
   exact Classical.choose_spec he
 
+/-- Polar carrier, given by `PhaseCalculus.harmonic k j ε c.angular c.axial c.radial c.F c.G
+((rθ.1, zt), (rθ.2, v))`. -/
 noncomputable def polarCarrier (c : CarrierData) (k : ℝ) (j : ℤ) (ε : ℝ)
     (zt : ℝ × ℝ) (v : ℝ) (rθ : Plane) : ℂ :=
   PhaseCalculus.harmonic k j ε c.angular c.axial c.radial c.F c.G ((rθ.1, zt), (rθ.2, v))
@@ -663,7 +696,7 @@ theorem globalWave_eventually_common {a b h r0 : ℝ} (ha : 0 < a) (n d : ℕ)
   by_cases hz : amp (commonLift h n d y) = 0
   · simp only [globalWave, commonWave, hz, zero_mul]
   · exact commonWave_charts_agree ha h n d r0 c amp j y m hkp _ i (chooseChart_valid ha (hs y hz))
-    hy
+      hy
 
 theorem globalWave_eventually_zero_off_annulus {a b h r0 : ℝ} {n d : ℕ}
     (c : CarrierData) (amp : LiftPoint → ℂ) (j : ℤ)
@@ -689,7 +722,7 @@ theorem globalWave_smooth {a b h r0 : ℝ} (ha : 0 < a) (n d : ℕ)
   by_cases hw : PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a b
   · let i := chooseChart a (PhysicalGraphBounds.scaledRadial n w)
     have hi : PhysicalGraphBounds.scaledRadial n w ∈ PolarCharts.chartDomain a i :=
-      chooseChart_valid ha hw
+        chooseChart_valid ha hw
     have he : globalWave a h n d r0 c amp j =ᶠ[𝓝 w] commonWave a h n d r0 (c.withChart i) amp j :=
       globalWave_eventually_common (r0 := r0) ha n d c amp j m hkp hs i hi
     have hc : ContDiffAt ℝ ∞ (commonWave a h n d r0 (c.withChart i) amp j) w :=
@@ -697,7 +730,7 @@ theorem globalWave_smooth {a b h r0 : ℝ} (ha : 0 < a) (n d : ℕ)
         (PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha hw))
     exact hc.congr_of_eventuallyEq he
   · exact contDiffAt_const.congr_of_eventuallyEq (globalWave_eventually_zero_off_annulus c amp j hs
-    hw)
+      hw)
 
 theorem globalWave_ne_zero_amp {a h r0 : ℝ} {n d : ℕ} {c : CarrierData}
     {amp : LiftPoint → ℂ} {j : ℤ} {w : SpaceTime}
@@ -717,18 +750,18 @@ theorem physicalSlowPair_continuous (h : ℝ) (n : ℕ) :
     Continuous (fun w => PhysicalGraphBounds.liftZT (PhysicalGraphBounds.physicalLift h n w)) := by
   simp_rw [physicalSlowPair_eq]
   exact (continuous_const.mul ((AxisymmetricFields.projection 2).continuous.comp
-    continuous_snd)).prodMk
+      continuous_snd)).prodMk
     ((continuous_const.sub continuous_fst).div_const _)
 
 theorem nativeSlotCoordinate_eq (h : ℝ) (n : ℕ) (center : Plane) (w : SpaceTime) :
     PhysicalGraphBounds.etaCoordinate (PhysicalGraphBounds.nativeGraph h n w - center) =
       ChartScales.Tg ^ ChartScales.nativeIndex h n * w.1 - PhysicalGraphBounds.etaCoordinate center
-        := by
+          := by
   rw [map_sub, PhysicalGraphBounds.etaCoordinate_nativeGraph]
 
 theorem nativeSlotCoordinate_continuous (h : ℝ) (n : ℕ) (center : Plane) :
     Continuous (fun w => PhysicalGraphBounds.etaCoordinate (PhysicalGraphBounds.nativeGraph h n w -
-      center)) := by
+        center)) := by
   simp_rw [nativeSlotCoordinate_eq]
   exact (continuous_const.mul continuous_fst).sub continuous_const
 
@@ -742,7 +775,7 @@ theorem globalWave_tsupport_geometry {a b h r0 Z : ℝ} {n d : ℕ} (c : Carrier
     PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a b ∧
       ‖PhysicalGraphBounds.liftZT (PhysicalGraphBounds.physicalLift h n w)‖ ≤ Z ∧
       |PhysicalGraphBounds.etaCoordinate (PhysicalGraphBounds.nativeGraph h n w - c.center)| ≤ r0
-        := by
+          := by
   refine ⟨?_, ?_, ?_⟩
   · exact closed_property_on_tsupport isOpen_univ (mem_univ w)
       (PhysicalGraphBounds.scaledRadial n).continuous.continuousAt
@@ -755,15 +788,22 @@ theorem globalWave_tsupport_geometry {a b h r0 Z : ℝ} {n d : ℕ} (c : Carrier
       (nativeSlotCoordinate_continuous h n c.center).abs.continuousAt isClosed_Iic
       (fun y _ hy => (hs y (globalWave_ne_zero_amp hy)).2.2) hw
 
+/-- Wave family data, collecting `gap`, `carrier`, `amplitude`. -/
 structure WaveFamily (H : ℕ) where
+  /-- Gap of `WaveFamily`, of type `BandLabel → ℕ`. -/
   gap : BandLabel → ℕ
+  /-- Carrier of `WaveFamily`, of type `BandLabel → CarrierData`. -/
   carrier : BandLabel → CarrierData
+  /-- Amplitude of `WaveFamily`, of type `WaveIndex H → LiftPoint → ℂ`. -/
   amplitude : WaveIndex H → LiftPoint → ℂ
 
+/-- Term, given by `globalWave a h I.1.val.1 (f.gap I.1) r0 (f.carrier I.1) (f.amplitude I)
+I.2.val`. -/
 noncomputable def WaveFamily.term {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ)
     (I : WaveIndex H) : SpaceTime → ℂ :=
   globalWave a h I.1.val.1 (f.gap I.1) r0 (f.carrier I.1) (f.amplitude I) I.2.val
 
+/-- Sum, given by `∑ᶠ I : WaveIndex H, f.term a h r0 I w`. -/
 noncomputable def WaveFamily.sum {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ) (w : SpaceTime) : ℂ :=
   ∑ᶠ I : WaveIndex H, f.term a h r0 I w
 
@@ -874,7 +914,7 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
       obtain ⟨mode, hmode⟩ := hregular.angular_integer I.1
       let chart := chooseChart a (PhysicalGraphBounds.scaledRadial I.1.val.1 w)
       have hchart : PhysicalGraphBounds.scaledRadial I.1.val.1 w ∈ PolarCharts.chartDomain a chart
-        :=
+          :=
         chooseChart_valid ha hgeo.1
       have he := globalWave_eventually_common (r0 := r0) ha I.1.val.1 (f.gap I.1)
         (f.carrier I.1) (f.amplitude I) I.2.val mode hmode
@@ -888,13 +928,14 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
         ((f.carrier I.1).withChart chart) (f.amplitude I) I.2.val
         (hclass.parameters I.1).1 (hclass.parameters I.1).2.1 (hclass.parameters I.1).2.2 hgeo.2.2
         (hregular.amplitude_smooth I) (hregular.F_smooth I.1) (hregular.G_smooth I.1)
-          (harmonic_bound I.2)
+            (harmonic_bound I.2)
         (hclass.amplitude I w hw hregion hgeo.1)
         (hclass.base_F I w hw hregion hgeo.1 chart hchart)
         (hclass.base_G I w hw hregion hgeo.1 chart hchart)
     · rw [jet_zero_off_tsupport _ _ hs, norm_zero]
       positivity
 
+/-- Cover change, given by `(downLift e).comp (upLift d)`. -/
 noncomputable def coverChange (d e : ℕ) : LiftPoint →L[ℝ] LiftPoint :=
   (downLift e).comp (upLift d)
 
@@ -945,6 +986,7 @@ theorem mask_support_of_factorization {D h : ℝ} {L : Label} {n d : ℕ}
   apply hw
   rw [he, hz, Complex.ofReal_zero, zero_mul]
 
+/-- Real coordinate, given by `Complex.reCLM.smulRight (coordinateVector i)`. -/
 noncomputable def realCoordinate (i : Fin 3) : ℂ →L[ℝ] Space :=
   Complex.reCLM.smulRight (coordinateVector i)
 
@@ -989,7 +1031,7 @@ theorem vectorSum_jet_bound {H : ℕ} {f : Fin 3 → WaveFamily H} {a b h r0 Z :
     (((hf i).sum_smooth ha hh hh1).contDiffAt (preterminal_open.mem_nhds hw)).of_le (nat_le_infty m)
   unfold vectorSum
   rw [iteratedFDeriv_finset_sum_at (f := fun i y => realCoordinate i ((f i).sum a h r0 y))
-    Finset.univ
+      Finset.univ
     (fun i _ => (realCoordinate i).contDiff.contDiffAt.comp w (hlocal i))]
   calc
     _ ≤ ∑ i : Fin 3, ‖iteratedFDeriv ℝ m (fun y => realCoordinate i ((f i).sum a h r0 y)) w‖ :=
@@ -1014,11 +1056,11 @@ theorem physical_vector_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
       ‖iteratedFDeriv ℝ m (vectorSum f a h r0) w‖ ≤
         C * physicalQ h w ^ (g - PhysicalGraphBounds.waveLoss h m) := by
   obtain ⟨C, hC, hb⟩ := physical_sum_jet_bound (b := b) hh hh1 ha hZ hr0 hP hB heBase H Δ m g eAmp
-    A hA
+      A hA
   refine ⟨3 * C, by positivity, ?_⟩
   intro f hreg hclass w hw ht
   exact (vectorSum_jet_bound hreg ha hh hh1 hw m (fun i => hb (f i) (hreg i) (hclass i) w hw
-    ht)).trans_eq
+      ht)).trans_eq
     (by ring)
 
 end NavierStokes.PhysicalWaveSum

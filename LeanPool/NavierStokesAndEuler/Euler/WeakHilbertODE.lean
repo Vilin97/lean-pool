@@ -6,12 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Tactic
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Upgrading an equation tested against a dense set
@@ -23,6 +21,9 @@ Likewise, an integral equation on dense tests determines the vector-valued
 integral equation and hence its strong derivative when the right-hand side is
 continuous.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -138,10 +139,10 @@ theorem continuousOn_of_dense_integral_equation
   have hprimitive : ContinuousOn (fun t => ∫ s in a..t, b s) (Icc a c) :=
     (intervalIntegral.continuousOn_primitive_interval' hb left_mem_uIcc).mono Icc_subset_uIcc
   apply (continuousOn_const.add hprimitive).congr
-  intro t ht
-  have htint := hb.mono_set (uIcc_subset_uIcc_left (Icc_subset_uIcc ht))
-  have heq := sub_eq_integral_of_dense_pairing hD htint (hweak t ht)
-  exact (sub_eq_iff_eq_add.mp heq).trans (add_comm _ _)
+  · intro t ht
+    have htint := hb.mono_set (uIcc_subset_uIcc_left (Icc_subset_uIcc ht))
+    have heq := sub_eq_integral_of_dense_pairing hD htint (hweak t ht)
+    exact (sub_eq_iff_eq_add.mp heq).trans (add_comm _ _)
 
 /-- Continuous right-hand sides give a strong derivative of a path satisfying
 the integral equation on dense tests, including one-sided endpoint derivatives. -/

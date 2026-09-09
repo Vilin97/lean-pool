@@ -8,8 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficients
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Actual coefficient time derivatives on the cylinder
@@ -18,6 +19,9 @@ The rectangular multipliers agree with the square operators used in the
 constructed Duhamel evolution. Literal within-time derivatives of the
 coefficient fields induce true operator-path derivatives and product rules.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,7 +52,7 @@ theorem supportedOperator_eq_square (A : Space →ᵇ V →L[ℝ] V) :
       (u : CylinderL2 period V)] with x hl hr
   exact hl.trans hr.symm
 
-theorem supportedPath_eq_square (T : ℝ) (A : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V)) :
+theorem supportedPath_eq_square (T : ℝ) (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
     supportedPathMap period S hS A = liftedOperatorPath period S hS T A := by
   apply ContinuousMap.ext
   intro t
@@ -61,20 +65,45 @@ section Time
 variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
-  (A A₁ : C(Icc (0 : ℝ) T,Space →ᵇ E →L[ℝ] F))
+  (A A₁ : C(Icc (0 : ℝ) T, Space →ᵇ E →L[ℝ] F))
 
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (Supported period E S hS) := inferInstance
-private local instance : NormedSpace ℝ (Supported period E S hS) := inferInstance
-private local instance : NormedAddCommGroup (Supported period F S hS) := inferInstance
-private local instance : NormedSpace ℝ (Supported period F S hS) := inferInstance
-private local instance : NormedAddCommGroup (Supported period E S hS →L[ℝ] Supported period F S hS)
-  := inferInstance
-private local instance : NormedSpace ℝ (Supported period E S hS →L[ℝ] Supported period F S hS) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficientTime1 : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficientTime2 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderCoefficientTime3 : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderCoefficientTime4 : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period E S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderCoefficientTime5 : NormedAddCommGroup (Supported period E S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period E S hS)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderCoefficientTime6 : NormedSpace ℝ (Supported period E S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period F S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderCoefficientTime7 : NormedAddCommGroup (Supported period F S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period F S hS)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderCoefficientTime8 : NormedSpace ℝ (Supported period F S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period E S hS →L[ℝ] Supported period F S
+hS)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficientTime9 : NormedAddCommGroup (Supported period E S hS →L[ℝ]
+    Supported period F S hS)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period E S hS →L[ℝ] Supported period F S hS)`
+instance to shorten typeclass synthesis. -/
+local instance instLpCylinderCoefficientTime10 : NormedSpace ℝ (Supported period E S hS →L[ℝ]
+    Supported period F S hS) :=
+    inferInstance
 
 variable (hA : ∀ t ∈ Icc (0 : ℝ) T, ∀ x : Space,
   HasDerivWithinAt (fun s => extendPath T hT A s x)
@@ -102,7 +131,7 @@ theorem supportedPath_hasDerivWithinAt (t : Icc (0 : ℝ) T) :
 include hA in
 /-- The product rule is a genuine within-time statement, including the interval endpoints. -/
 theorem supportedProduct_hasDerivWithinAt
-    (u u₁ : C(Icc (0 : ℝ) T,Supported period E S hS))
+    (u u₁ : C(Icc (0 : ℝ) T, Supported period E S hS))
     (hu : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT u) (u₁ t) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) :

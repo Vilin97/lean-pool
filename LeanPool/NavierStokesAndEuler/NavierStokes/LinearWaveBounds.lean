@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurlClassBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianTailFlat
-
-@[expose] public section
 
 /-!
 # Weighted bounds for the actual linear wave remainder
@@ -20,6 +17,9 @@ The classes in this file bound `iteratedFDeriv` of the actual stripped
 coefficients uniformly in the band.  Radial graph differentiation, axial
 rescaling, and the fast direction are kept explicit.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -101,36 +101,52 @@ theorem mean_unweighted {s : StripData D} {α : ℝ} {f : ℕ → D → E}
 
 /-- Raw direction data. Its numerical and class hypotheses are separate. -/
 structure GraphDirections (D : Type*) [NormedAddCommGroup D] [NormedSpace ℝ D] where
+  /-- Radial of `GraphDirections`, of type `D`. -/
   radial : D
+  /-- Auxiliary of `GraphDirections`, of type `D`. -/
   auxiliary : D
+  /-- Axial of `GraphDirections`, of type `D`. -/
   axial : D
+  /-- Angular of `GraphDirections`, of type `D`. -/
   angular : D
+  /-- Slow of `GraphDirections`, of type `D`. -/
   slow : D
+  /-- Fast of `GraphDirections`, of type `D`. -/
   fast : D
+  /-- Radial scale of `GraphDirections`, of type `ℕ → ℝ`. -/
   radialScale : ℕ → ℝ
+  /-- Fast scale of `GraphDirections`, of type `ℕ → ℝ`. -/
   fastScale : ℕ → ℝ
+  /-- Radial profile of `GraphDirections`, of type `D → ℝ`. -/
   radialProfile : D → ℝ
 
 namespace GraphDirections
 
+/-- Radial field, given by `d.radial + d.radialScale n • (d.radialProfile x • d.auxiliary)`. -/
 noncomputable def radialField (d : GraphDirections D) (n : ℕ) (x : D) : D :=
   d.radial + d.radialScale n • (d.radialProfile x • d.auxiliary)
 
+/-- Axial field, given by `s.epsilon n • d.axial`. -/
 noncomputable def axialField (d : GraphDirections D) (s : StripData D) (n : ℕ) (_ : D) : D :=
   s.epsilon n • d.axial
 
+/-- Fast field, given by `d.fastScale n • d.fast`. -/
 noncomputable def fastField (d : GraphDirections D) (n : ℕ) (_ : D) : D :=
   d.fastScale n • d.fast
 
+/-- Dr, defined pointwise by `along (d.radialField n) (f n)`. -/
 noncomputable def Dr (d : GraphDirections D) (f : ℕ → D → E) : ℕ → D → E :=
   fun n => along (d.radialField n) (f n)
 
+/-- Dz, defined pointwise by `along (d.axialField s n) (f n)`. -/
 noncomputable def Dz (d : GraphDirections D) (s : StripData D) (f : ℕ → D → E) : ℕ → D → E :=
   fun n => along (d.axialField s n) (f n)
 
+/-- Dt, defined pointwise by `along (fun _ => d.slow) (f n)`. -/
 noncomputable def Dt (d : GraphDirections D) (f : ℕ → D → E) : ℕ → D → E :=
   fun n => along (fun _ => d.slow) (f n)
 
+/-- Dfast, defined pointwise by `along (d.fastField n) (f n)`. -/
 noncomputable def Dfast (d : GraphDirections D) (f : ℕ → D → E) : ℕ → D → E :=
   fun n => along (d.fastField n) (f n)
 
@@ -185,49 +201,66 @@ theorem frequency_mul {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ}
 
 /-- Families of actual phase, base, velocity, and pressure coefficients. -/
 structure WaveCoefficients (D : Type*) where
+  /-- Radius of `WaveCoefficients`, of type `ℕ → D → ℝ`. -/
   radius : ℕ → D → ℝ
+  /-- Radial base of `WaveCoefficients`, of type `ℕ → D → ℝ`. -/
   radialBase : ℕ → D → ℝ
+  /-- Frequency base of `WaveCoefficients`, of type `ℕ → D → ℝ`. -/
   frequencyBase : ℕ → D → ℝ
+  /-- Axial base of `WaveCoefficients`, of type `ℕ → D → ℝ`. -/
   axialBase : ℕ → D → ℝ
+  /-- Phase of `WaveCoefficients`, of type `ℕ → D → ℝ`. -/
   phase : ℕ → D → ℝ
+  /-- Amplitude of `WaveCoefficients`, of type `ℕ → D → ComplexVector`. -/
   amplitude : ℕ → D → ComplexVector
+  /-- Pressure field of `WaveCoefficients`, of type `ℕ → D → ℂ`. -/
   pressure : ℕ → D → ℂ
+  /-- Frequency of `WaveCoefficients`, of type `ℕ → ℝ`. -/
   frequency : ℕ → ℝ
 
 namespace WaveCoefficients
 
+/-- Normal, given by `phaseNormal (a.radius n) (d.radialField n) (fun _ => d.angular)
+(d.axialField s n) (a.phase n)`. -/
 noncomputable def normal (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → EuclideanSpace ℝ (Fin 3) :=
   phaseNormal (a.radius n) (d.radialField n) (fun _ => d.angular) (d.axialField s n) (a.phase n)
 
+/-- Defect, constructed using `LinearWaveResidual.materialPhaseDefect`. -/
 noncomputable def defect (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → ℝ :=
   LinearWaveResidual.materialPhaseDefect (a.radius n) (a.radialBase n) (a.frequencyBase n)
     (a.axialBase n) (d.radialField n) (fun _ => d.angular) (d.axialField s n)
     (LinearWaveResidual.timeDirection (s.epsilon n) (d.fastField n) (fun _ => d.slow)) (a.phase n)
 
+/-- Remainder, constructed using `LinearWaveResidual.remainder`. -/
 noncomputable def remainder (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → ComplexVector :=
   LinearWaveResidual.remainder (s.epsilon n) (a.frequency n) (a.radius n) (a.radialBase n)
     (a.frequencyBase n) (a.axialBase n) (d.radialField n) (fun _ => d.angular)
     (d.axialField s n) (d.fastField n) (fun _ => d.slow) (a.phase n) (a.amplitude n) (a.pressure n)
 
+/-- Principal, constructed using `LinearWaveResidual.principal`. -/
 noncomputable def principal (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → ComplexVector :=
   LinearWaveResidual.principal (s.epsilon n) (a.frequency n) (a.radius n) (a.frequencyBase n)
     (a.axialBase n) (d.radialField n) (fun _ => d.angular) (d.axialField s n) (d.fastField n)
     (a.phase n) (a.amplitude n) (a.pressure n)
 
+/-- Principal velocity, constructed using `LinearWaveResidual.principal`. -/
 noncomputable def principalVelocity (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections
-  D)
+    D)
     (f : ℕ → D → ComplexVector) (n : ℕ) : D → ComplexVector :=
   LinearWaveResidual.principal (s.epsilon n) (a.frequency n) (a.radius n) (a.frequencyBase n)
     (a.axialBase n) (d.radialField n) (fun _ => d.angular) (d.axialField s n) (d.fastField n)
     (a.phase n) (f n) (fun _ => 0)
 
+/-- Add amplitude, given by `{a with amplitude := fun n x => a.amplitude n x + f n x}`. -/
 noncomputable def addAmplitude (a : WaveCoefficients D) (f : ℕ → D → ComplexVector) :
     WaveCoefficients D := {a with amplitude := fun n x => a.amplitude n x + f n x}
 
+/-- With cutoff, given by `{ a with amplitude := fun n x => ψ n x • a.amplitude n x pressure :=
+fun n x => (ψ n x : ℂ) * a.pressure n x }`. -/
 noncomputable def withCutoff (a : WaveCoefficients D) (ψ : ℕ → D → ℝ) : WaveCoefficients D :=
   { a with
     amplitude := fun n x => ψ n x • a.amplitude n x
@@ -240,15 +273,16 @@ noncomputable def goodCoefficient (a : WaveCoefficients D) (s : StripData D)
     (n : ℕ) (x : D) : ComplexVector :=
   a.principalVelocity s d f n x + ((a.withCutoff ψ).addAmplitude f).remainder s d n x
 
+/-- Harmonic residual, constructed using `LinearWaveResidual.linearResidual`. -/
 noncomputable def harmonicResidual (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections
-  D)
+    D)
     (n : ℕ) : D → ComplexVector :=
   LinearWaveResidual.linearResidual (s.epsilon n) (a.radius n) (d.radialField n) (fun _ =>
-    d.angular)
+      d.angular)
     (d.axialField s n) (LinearWaveResidual.timeDirection (s.epsilon n) (d.fastField n) (fun _ =>
-      d.slow))
+        d.slow))
     (LinearWaveResidual.complexBase (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase
-      n))
+        n))
     (vectorMode (a.frequency n) (a.phase n) (a.amplitude n))
     (mode (a.frequency n) (a.phase n) (a.pressure n))
 
@@ -265,15 +299,18 @@ noncomputable def curlCorrection (a : WaveCoefficients D) (s : StripData D)
     (CurlClassBounds.coefficient (a.radius n) (d.radialField n) (fun _ => d.angular)
       (d.axialField s n) (a.phase n) (a.amplitude n))
 
+/-- Curl potential, constructed using `CurlClassBounds.vectorPotential`. -/
 noncomputable def curlPotential (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (n : ℕ) : D → ComplexVector :=
   CurlClassBounds.vectorPotential (a.frequency n) (a.radius n) (d.radialField n)
     (fun _ => d.angular) (d.axialField s n) (a.phase n) (a.amplitude n)
 
+/-- Corrected, given by `(a.withCutoff ψ).addAmplitude ((a.withCutoff ψ).curlCorrection s d)`. -/
 noncomputable def corrected (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (ψ : ℕ → D → ℝ) : WaveCoefficients D :=
   (a.withCutoff ψ).addAmplitude ((a.withCutoff ψ).curlCorrection s d)
 
+/-- Constructed good, given by `a.goodCoefficient s d ψ ((a.withCutoff ψ).curlCorrection s d)`. -/
 noncomputable def constructedGood (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (ψ : ℕ → D → ℝ) : ℕ → D → ComplexVector :=
   a.goodCoefficient s d ψ ((a.withCutoff ψ).curlCorrection s d)
@@ -303,6 +340,8 @@ structure InputBounds (s : StripData D) (P : ℕ → D → ℝ) (α κ : ℝ)
   amplitude : ∀ i, WaveClass s P α (fun n x => a.amplitude n x i)
   pressure : WaveClass s P (α + 1 / 2) a.pressure
 
+/-- Insert component, given by `ContinuousLinearMap.pi fun j => if j = i then
+ContinuousLinearMap.id ℝ ℂ else 0`. -/
 noncomputable def insertComponent (i : Fin 3) : ℂ →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi fun j => if j = i then ContinuousLinearMap.id ℝ ℂ else 0
 
@@ -341,7 +380,7 @@ theorem inverse_radius_sq (h : InputBounds s P α κ d a) :
 theorem base_components (h : InputBounds s P α κ d a) (i : Fin 3) :
     UnweightedClass s 0 (fun n x =>
       LinearWaveResidual.base (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase n) x
-        i) := by
+          i) := by
   fin_cases i
   · simpa [LinearWaveResidual.base] using h.b_unweighted.mono_exponent (by norm_num : (0 : ℝ) ≤ 1)
   · simpa [LinearWaveResidual.base] using unweighted_mul h.radius h.frequency_base
@@ -381,7 +420,7 @@ theorem baseDerivativeRemainder_mem (h : InputBounds s P α κ d a) (i : Fin 3) 
   have h1 := (real_mul_complex hbinv (h.amplitude 1)).mono_exponent
     (show α + 1 / 2 - 3 * κ ≤ (1 + 0) + α by linarith [h.loss_nonneg])
   have hz (j : Fin 3) := (complex_mul_real (h.amplitude 2) (d.Dz_mem (h.base_components
-    j))).mono_exponent
+      j))).mono_exponent
     (show α + 1 / 2 - 3 * κ ≤ α + (0 + 1) by linarith [h.loss_nonneg])
   fin_cases i
   · simpa [LinearWaveResidual.baseDerivativeRemainder, GraphDirections.Dr, GraphDirections.Dz]
@@ -397,13 +436,13 @@ theorem pressureGradient_mem (h : InputBounds s P α κ d a) (i : Fin 3) :
   fin_cases i
   · have hh := (d.Dr_mem h.pressure h.radial_profile h.radial_scale h.loss_nonneg).mono_exponent
       (show α + 1 / 2 - 3 * κ ≤ (α + 1 / 2) - κ by linarith [h.loss_nonneg])
-    simp [LinearWaveResidual.strippedPressureGradient] at hh ⊢
+    simp only [one_div, Fin.zero_eta, Fin.isValue] at hh ⊢
     exact hh
   · simpa [LinearWaveResidual.strippedPressureGradient] using
       (MemClass.zero (α := α + 1 / 2 - 3 * κ) (E := ℂ) (h.amplitude 0).weight_nonneg)
   · have hh := (d.Dz_mem h.pressure).mono_exponent
       (show α + 1 / 2 - 3 * κ ≤ (α + 1 / 2) + 1 by linarith [h.loss_nonneg])
-    simp [LinearWaveResidual.strippedPressureGradient] at hh ⊢
+    simp only [one_div, Fin.reduceFinMk, Fin.isValue] at hh ⊢
     exact hh
 
 theorem viscousRemainder_mem (h : InputBounds s P α κ d a) (i : Fin 3) :
@@ -475,7 +514,7 @@ theorem remainder_components (h : InputBounds s P α κ d a) (i : Fin 3) :
     ((((h.slowTransport_mem i).add (h.phaseDefect_mem i)).add
       (h.baseDerivativeRemainder_mem i)).add (h.pressureGradient_mem i)) (h.viscousPart_mem i)
   simpa only [WaveCoefficients.remainder, WaveCoefficients.defect, LinearWaveResidual.remainder]
-    using hh
+      using hh
 
 theorem remainder_class (h : InputBounds s P α κ d a) :
     WaveClass s P (α + 1 / 2 - 3 * κ) (a.remainder s d) :=
@@ -507,7 +546,7 @@ theorem shear_mem (h : InputBounds s P α κ d a) {β : ℝ} {f : ℕ → D → 
   · have h := real_mul_complex htheta (hf 0)
     simp only [LinearWaveResidual.shear,
       GraphDirections.Dr, Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_ofNat, zero_add]
-        at h ⊢
+          at h ⊢
     exact h
   · simpa [LinearWaveResidual.shear, GraphDirections.Dr] using real_mul_complex hGr (hf 0)
 
@@ -521,7 +560,7 @@ theorem principalVelocity_components (h : InputBounds s P α κ d a) {β : ℝ}
   have hn : WaveClass s P β (fun n x => (‖a.normal s d n x‖ ^ 2 : ℝ) • f n x i) := by
     simpa only [zero_add] using unweighted_smul h.normal_norm_sq (hf i)
   have hd := ((hn.band_smul h.frequency_scale).band_smul h.frequency_scale).band_smul (band_epsilon
-    s)
+      s)
   have he : ((β + -(1 / 2 : ℝ)) + -(1 / 2 : ℝ)) + 1 = β := by ring
   rw [he] at hd
   have hds : WaveClass s P β (fun n x =>
@@ -563,7 +602,7 @@ theorem goodCoefficient_class (h : InputBounds s P α κ d a) (hκ : κ ≤ 1 / 
     (hf : ∀ i, WaveClass s P (α + 1 / 2 - κ) (fun n x => f n x i)) :
     WaveClass s P (α + 1 / 2 - 3 * κ) (a.goodCoefficient s d ψ f) := by
   exact (h.curl_principal_gain hf).add (((h.with_cutoff hψ).add_curl_amplitude hκ
-    hf).remainder_class)
+      hf).remainder_class)
 
 /-- The preceding principal estimate now uses the constructed curl error,
 whose class follows from primitive normal and amplitude jets. -/
@@ -590,7 +629,7 @@ theorem curlCorrection_class (h : InputBounds s P α κ d a) {R : D → ℝ}
     simpa only [WaveCoefficients.normal, hR] using hlower
   have hhi : ∀ n x, x ∈ s.domain →
       ‖phaseNormal R (d.radialField n) (fun _ => d.angular) (d.axialField s n) (a.phase n) x‖ ≤ M
-        := by
+          := by
     simpa only [WaveCoefficients.normal, hR] using hupper
   have hc := CurlClassBounds.curlRemainder_waveClass hN' (component_classes h.amplitude)
     hb hlo hhi h.loss_nonneg hr (unweighted_const s d.angular) hz hRi hK
@@ -618,19 +657,20 @@ theorem principal_add_curl (h : InputBounds s P α κ d a) {β : ℝ}
     (a.addAmplitude f).principal s d n x =
       a.principal s d n x + a.principalVelocity s d f n x := by
   have haD i := (((h.amplitude i).smooth n).contDiffAt (s.isOpen_domain.mem_nhds
-    hx)).differentiableAt (by simp)
+      hx)).differentiableAt (by
+      simp)
   have hfD i := (((hf i).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-    simp)
+      simp)
   ext i
   change LinearWaveResidual.principal _ _ _ _ _ _ _ _ _ _ (fun y => a.amplitude n y + f n y) _ x i
-    = _
+      = _
   unfold LinearWaveResidual.principal
   rw [show along (d.fastField n) (fun y => (a.amplitude n y + f n y) i) x =
       along (d.fastField n) (fun y => a.amplitude n y i) x +
       along (d.fastField n) (fun y => f n y i) x from along_add _ (haD i) (hfD i)]
   fin_cases i <;>
     simp [WaveCoefficients.principal, WaveCoefficients.principalVelocity,
-      LinearWaveResidual.principal,
+        LinearWaveResidual.principal,
       WaveCoefficients.addAmplitude, LinearWaveResidual.shear, Pi.add_apply] <;> ring
 
 /-- After the actual principal equation is solved for the tangent coefficient,
@@ -641,7 +681,7 @@ theorem corrected_good_coefficient (h : InputBounds s P α κ d a) (hκ : κ ≤
     (hsolve : ∀ n x, x ∈ s.domain → a.principal s d n x = -source n x) :
     WaveClass s P (α + 1 / 2 - 3 * κ) (fun n x =>
       (a.addAmplitude f).principal s d n x + (a.addAmplitude f).remainder s d n x + source n x) :=
-        by
+          by
   have hrem := (h.add_curl_amplitude hκ hf).remainder_class
   have hp := h.curl_principal_gain hf
   apply class_congr (hp.add hrem)
@@ -655,14 +695,14 @@ end InputBounds
 /-- These hypotheses are the actual local geometric and angular conditions
 needed to apply the exact differential identity. -/
 structure ExactConditions (s : StripData D) (d : GraphDirections D) (a : WaveCoefficients D) : Prop
-  where
+    where
   phase_smooth : ∀ n, ContDiffOn ℝ ∞ (a.phase n) s.domain
   radius_nonzero : ∀ n x, x ∈ s.domain → a.radius n x ≠ 0
   radial_radius : ∀ n x, x ∈ s.domain → along (d.radialField n) (a.radius n) x = 1
   base_angular : ∀ n x, x ∈ s.domain → ∀ i,
     along (fun _ => d.angular) (fun y =>
       LinearWaveResidual.base (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase n) y
-        i) x = 0
+          i) x = 0
   amplitude_angular : ∀ n i, EqOn
     (along (fun _ => d.angular) (fun y => a.amplitude n y i)) (fun _ => 0) s.domain
   phase_angular : ∀ n, ∃ p : ℝ, EqOn (along (fun _ => d.angular) (a.phase n)) (fun _ => p) s.domain
@@ -677,16 +717,16 @@ theorem harmonicResidual_eq {s : StripData D} {P : ℕ → D → ℝ} {α κ : �
   obtain ⟨pθ, hpθ⟩ := hg.phase_angular n
   have hr : ContDiffOn ℝ ∞ (d.radialField n) s.domain :=
     contDiffOn_const.add (((h.radial_profile.smooth n).smul contDiffOn_const).const_smul
-      (d.radialScale n))
+        (d.radialScale n))
   exact LinearWaveResidual.linearResidual_mode_split (s.epsilon n) (a.frequency n)
     (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase n)
     (d.fastField n) (fun _ => d.slow) s.isOpen_domain hr contDiffOn_const contDiffOn_const
     (hg.phase_smooth n) (fun i => (h.amplitude i).smooth n)
     (((h.radius.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
     (((h.b_unweighted.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-      simp))
+        simp))
     (((h.frequency_base.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-      simp))
+        simp))
     (((h.axial_base.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
     (hg.radius_nonzero n x hx) (hg.radial_radius n x hx) (hg.base_angular n x hx)
     (hg.amplitude_angular n) hpθ
@@ -779,9 +819,10 @@ theorem principal_cutoff {s : StripData D} {P : ℕ → D → ℝ} {α κ : ℝ}
     (hx : x ∈ s.domain) (hψ : DifferentiableAt ℝ (ψ n) x) :
     (a.withCutoff ψ).principal s d n x + source n x =
       ψ n x • (a.principal s d n x + source n x) + excludedSlotError d ψ a.amplitude source n x :=
-        by
+          by
   have haD i := (((h.amplitude i).smooth n).contDiffAt (s.isOpen_domain.mem_nhds
-    hx)).differentiableAt (by simp)
+      hx)).differentiableAt (by
+      simp)
   have hψC : DifferentiableAt ℝ (fun y => (ψ n y : ℂ)) x :=
     (Complex.ofRealCLM.hasFDerivAt.comp x hψ.hasFDerivAt).differentiableAt
   have hD (i : Fin 3) :
@@ -805,7 +846,7 @@ theorem principal_cutoff_of_solve {s : StripData D} {P : ℕ → D → ℝ} {α 
     (hx : x ∈ s.domain) (hψ : DifferentiableAt ℝ (ψ n) x)
     (hsolve : a.principal s d n x = -source n x) :
     (a.withCutoff ψ).principal s d n x + source n x = excludedSlotError d ψ a.amplitude source n x
-      := by
+        := by
   rw [principal_cutoff h ψ source n hx hψ, hsolve]
   simp
 
@@ -840,7 +881,7 @@ theorem harmonicResidual_eq_good_add_excluded {s : StripData D}
         (fun i => source n x i * carrier (a.frequency n) (a.phase n) x) =
       (fun i => (a.goodCoefficient s d ψ f n x i +
         excludedSlotError d ψ a.amplitude source n x i) * carrier (a.frequency n) (a.phase n) x) :=
-          by
+            by
   rw [harmonicResidual_eq (((h.with_cutoff hψ).add_curl_amplitude hκ hf)) hg n hx]
   have he := corrected_coefficient_eq_good_add_excluded h hψ hf n hx hsolve
   ext i

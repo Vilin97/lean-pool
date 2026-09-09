@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeAmplitudeScaling
-public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
+import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphGevrey
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Quantitative spatial jet bounds under actual Euler time/amplitude
 rescaling. The constants are explicit and the spatial radius is unchanged. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,10 +27,21 @@ open scoped ContDiff BoundedContinuousFunction
 variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeAmplitudeBounds1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeAmplitudeBounds2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeAmplitudeBounds3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeAmplitudeBounds4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
 theorem smul_id_norm_le (a : ℝ) (ha : 0 ≤ a) : ‖a • ContinuousLinearMap.id ℝ V‖ ≤ a := by
   apply opNorm_le_bound _ ha

@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseAmplitude
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ResetEnergyBounds
-
-@[expose] public section
+import Mathlib.MeasureTheory.Function.JacobianOneDim
 
 /-!
 # Pulse amplitude after the actual angular-moment reset
@@ -18,6 +17,9 @@ The scalar energy equation here uses `UniformAngularReset.correctedAngular`.
 Its signed reset energy is retained in the constant coefficient, and the
 reset witness and amplitude are constructed together for small `lam`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,9 +30,12 @@ open NavierStokes.AngularMomentReset NavierStokes.UniformAngularReset
 
 namespace NavierStokes.CorrectedPulseAmplitude
 
+/-- Energy integrand, given by `Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 -
+correctedAngular d c (y, eta) ^ 2 / 2)`. -/
 def energyIntegrand (d : TailData) (c : ℝ → Coeff) (A eta y : ℝ) : ℝ :=
   Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 - correctedAngular d c (y, eta) ^ 2 / 2)
 
+/-- Total energy, given by `∫ y, energyIntegrand d c A eta y`. -/
 def totalEnergy (d : TailData) (c : ℝ → Coeff) (A eta : ℝ) : ℝ :=
   ∫ y, energyIntegrand d c A eta y
 
@@ -50,19 +55,23 @@ theorem energyIntegrand_integrable (d : TailData) (c : ℝ → Coeff) (A eta : �
 
 theorem totalEnergy_eq (d : TailData) (c : ℝ → Coeff) (A eta : ℝ) :
     totalEnergy d c A eta = PulseAmplitude.totalEnergy d A eta - ResetEnergyBounds.resetEnergy d c
-      eta / 2 := by
+        eta / 2 := by
   unfold totalEnergy
   simp_rw [energyIntegrand_eq]
   rw [integral_sub (PulseAmplitude.energyIntegrand_integrable d A eta)
     ((ResetEnergyBounds.resetDensity_integrable d c eta).div_const 2), integral_div]
   rfl
 
+/-- Energy shift, given by `ResetEnergyBounds.normalizedResetEnergy d c eta / 2`. -/
 def energyShift (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   ResetEnergyBounds.normalizedResetEnergy d c eta / 2
 
+/-- Constant term, given by `PulseAmplitude.constantTerm d eta - energyShift d c eta`. -/
 def constantTerm (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   PulseAmplitude.constantTerm d eta - energyShift d c eta
 
+/-- Energy polynomial, given by `PulseAmplitude.quadraticCoefficient d.core * A ^ 2 +
+PulseAmplitude.linearTerm d.core eta * A + constantTerm d c eta`. -/
 def energyPolynomial (d : TailData) (c : ℝ → Coeff) (A eta : ℝ) : ℝ :=
   PulseAmplitude.quadraticCoefficient d.core * A ^ 2 +
     PulseAmplitude.linearTerm d.core eta * A + constantTerm d c eta
@@ -73,7 +82,7 @@ theorem totalEnergy_normalized (d : TailData) (c : ℝ → Coeff) (A eta : ℝ) 
   rw [totalEnergy_eq, mul_sub, sub_div, PulseAmplitude.totalEnergy_normalized]
   unfold energyPolynomial constantTerm energyShift PulseAmplitude.energyPolynomial
     ResetEnergyBounds.normalizedResetEnergy ResetEnergyBounds.pulseNormalization
-      PulseAmplitude.normalization
+        PulseAmplitude.normalization
   ring
 
 theorem energyShift_contDiff (d : TailData) {c : ℝ → Coeff} (hc : ContDiff ℝ ∞ c) :
@@ -84,6 +93,7 @@ theorem constantTerm_contDiff (d : TailData) {c : ℝ → Coeff} (hc : ContDiff 
     ContDiff ℝ ∞ (constantTerm d c) :=
   (PulseAmplitude.constantTerm_contDiff d).sub (energyShift_contDiff d hc)
 
+/-- Discriminant, constructed using `PulseAmplitude.linearTerm`. -/
 def discriminant (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   PulseAmplitude.linearTerm d.core eta ^ 2 - 4 * PulseAmplitude.quadraticCoefficient d.core *
     PulseAmplitude.negativeClamp (constantTerm d c eta)
@@ -94,6 +104,8 @@ theorem discriminant_pos (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : 0 < di
   have hc := PulseAmplitude.negativeClamp_neg (constantTerm d c eta)
   nlinarith [sq_nonneg (PulseAmplitude.linearTerm d.core eta), mul_neg_of_pos_of_neg ha hc]
 
+/-- Amplitude, given by `(-PulseAmplitude.linearTerm d.core eta + Real.sqrt (discriminant d c
+eta)) / (2 * PulseAmplitude.quadraticCoefficient d.core)`. -/
 def amplitude (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   (-PulseAmplitude.linearTerm d.core eta + Real.sqrt (discriminant d c eta)) /
     (2 * PulseAmplitude.quadraticCoefficient d.core)
@@ -145,7 +157,10 @@ theorem amplitude_totalEnergy_zero (d : TailData) (c : ℝ → Coeff) (eta : ℝ
   · exact False.elim ((mul_pos (PulseAmplitude.normalization_pos d.core)
       (sq_pos_of_pos (shape_pos eta))).ne' hz)
 
+/-- Combined constant, given by `PulseAmplitude.errorConstant P m + 36 * K + 1`. -/
 def combinedConstant (P m K : ℝ) : ℝ := PulseAmplitude.errorConstant P m + 36 * K + 1
+/-- Combined scale, given by `combinedConstant d.core.P d.core.m K *
+PulseAmplitude.logarithmicRate d.core.lam`. -/
 def combinedScale (d : TailData) (K : ℝ) : ℝ :=
   combinedConstant d.core.P d.core.m K * PulseAmplitude.logarithmicRate d.core.lam
 
@@ -196,7 +211,7 @@ theorem energyShift_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K) (hK :
 theorem old_error_bounds (d : TailData) (K : ℝ) (hK : 0 < K)
     (hsmall : d.core.lam ≤ 1 / 120) (hwait : d.core.wait = 60 * Real.log (1 / d.core.lam))
     (eta : ℝ) (heta : eta ^ 2 ≤ 1) : PulseAmplitude.EnergyErrorBounds d eta (combinedScale d K) :=
-      by
+        by
   have h := PulseAmplitude.actual_energy_error_bounds d hsmall hwait eta heta
   have hm := oldScale_le d K hK
   exact ⟨h.scale_nonneg.trans hm, h.quadratic_error.trans hm, h.linear_error.trans hm,
@@ -220,7 +235,7 @@ theorem numerical_coefficient_bounds (d : TailData) (c : ℝ → Coeff) (eta e :
       PulseAmplitude.normalizedPrefixAxial d.core) * PulseAmplitude.etaPolynomial eta ^ 2 :=
     mul_nonneg (add_nonneg h.correction_nonneg h.prefix_axial_nonneg) (sq_nonneg _)
   have hprod : (PulseAmplitude.constantCorrection d.core + PulseAmplitude.normalizedPrefixAxial
-    d.core) *
+      d.core) *
       PulseAmplitude.etaPolynomial eta ^ 2 ≤ 8 * e := by
     have hm := mul_le_mul (add_le_add h.correction_error h.prefix_axial_error) hq2
       (sq_nonneg (PulseAmplitude.etaPolynomial eta)) (by linarith [h.scale_nonneg])
@@ -237,7 +252,7 @@ theorem amplitude_spec_of_bounds (d : TailData) (c : ℝ → Coeff) (eta e : ℝ
     (heta : eta ^ 2 ≤ 1) (h : PulseAmplitude.EnergyErrorBounds d eta e)
     (hshift : |energyShift d c eta| ≤ e) (he : e ≤ 1 / 1000) :
     9 / 10 < amplitude d c eta ∧ amplitude d c eta < 6 / 5 ∧ totalEnergy d c (amplitude d c eta)
-      eta = 0 := by
+        eta = 0 := by
   obtain ⟨ha, ha', hb, hc, hc'⟩ := numerical_coefficient_bounds d c eta e heta h hshift he
   have hneg : constantTerm d c eta ≤ -(1 / 5) := by linarith
   have hr := PulseAmplitude.quadratic_root_bracket ha ha' hb hc hc' (amplitude_pos d c eta)
@@ -253,7 +268,7 @@ theorem amplitude_derivative_identity (d : TailData) {c : ℝ → Coeff}
   let F : ℝ → ℝ := fun t => energyPolynomial d c (amplitude d c t) t
   have he : F =ᶠ[𝓝 eta] (fun _ => 0) := by
     filter_upwards [(isOpen_lt (constantTerm_contDiff d hc).continuous continuous_const).mem_nhds
-      hneg]
+        hneg]
       with t ht
     exact amplitude_energy_equation d c t ht.le
   have hz : deriv F eta = 0 := by rw [he.deriv_eq]; exact deriv_const _ _
@@ -261,7 +276,7 @@ theorem amplitude_derivative_identity (d : TailData) {c : ℝ → Coeff}
   have hb := ((PulseAmplitude.linearTerm_contDiff d.core).differentiable (by simp) eta).hasDerivAt
   have hcc := ((constantTerm_contDiff d hc).differentiable (by simp) eta).hasDerivAt
   have hd := (((hA.pow 2).const_mul (PulseAmplitude.quadraticCoefficient d.core)).add (hb.mul
-    hA)).add hcc
+      hA)).add hcc
   change HasDerivAt F _ eta at hd
   rw [hd.deriv] at hz
   convert! hz using 1
@@ -276,8 +291,8 @@ theorem coefficient_derivative_bounds (d : TailData) {c : ℝ → Coeff}
       |deriv (constantTerm d c) eta| ≤ 34 * e := by
   have hb := PulseAmplitude.coefficient_derivative_bounds d eta e heta h hT
   refine ⟨hb.1, ?_⟩
-  have hd := (((PulseAmplitude.constantTerm_contDiff d).differentiable (by simp)
-    eta).hasDerivAt).sub
+  have hd := (((PulseAmplitude.constantTerm_contDiff d).differentiable (by
+      simp) eta).hasDerivAt).sub
     (((energyShift_contDiff d hc).differentiable (by simp) eta).hasDerivAt)
   change HasDerivAt (constantTerm d c) _ eta at hd
   rw [hd.deriv]
@@ -364,9 +379,11 @@ theorem realized_energy_eq (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
     rw [PulseAmplitude.axial_eq_of_amplitude_eq d.core (amplitude d c)
       (fun _ => amplitude d c eta) eta y rfl])
 
+/-- Radial energy integrand, given by `axial d.core amp (Real.log (X / XR), eta) ^ 2 -
+correctedAngular d c (Real.log (X / XR), eta) ^ 2 / 2`. -/
 def radialEnergyIntegrand (d : TailData) (c : ℝ → Coeff) (amp : ℝ → ℝ) (eta XR X : ℝ) : ℝ :=
   axial d.core amp (Real.log (X / XR), eta) ^ 2 - correctedAngular d c (Real.log (X / XR), eta) ^ 2
-    / 2
+      / 2
 
 private theorem radialCoordinate_image (XR : ℝ) (hXR : 0 < XR) :
     (fun y : ℝ => XR * Real.exp y) '' univ = Ioi 0 := by
@@ -409,7 +426,7 @@ theorem radialEnergy_integrable (d : TailData) (c : ℝ → Coeff) (amp : ℝ �
 theorem radialEnergy_integral (d : TailData) (c : ℝ → Coeff) (amp : ℝ → ℝ)
     (eta XR : ℝ) (hXR : 0 < XR) :
     (∫ X in Ioi 0, radialEnergyIntegrand d c amp eta XR X) = XR * totalEnergy d c (amp eta) eta :=
-      by
+        by
   have hd : ∀ y ∈ (univ : Set ℝ), HasDerivWithinAt (fun y => XR * Real.exp y)
       (XR * Real.exp y) univ y := fun y _ => ((Real.hasDerivAt_exp y).const_mul XR).hasDerivWithinAt
   have hinj : InjOn (fun y : ℝ => XR * Real.exp y) univ := by
@@ -440,7 +457,7 @@ theorem amplitude_spec {d : TailData} {K : ℝ} (w : ResetWitness d K) (hK : 0 <
   exact ⟨hr.1, hr.2.1, hr.2.2,
     amplitude_derivative_bound d w.smooth eta (combinedScale d K) heta h hs.1 hscale hT hs.2,
     fun A hA hz => amplitude_unique d w.coefficients eta (combinedScale d K) heta h hs.1 hscale A
-      hA hz⟩
+        hA hz⟩
 
 /-- The scheduled angular reset and pulse amplitude are constructed together.
 The exact radial energy uses the corrected angular profile. The common
@@ -453,12 +470,12 @@ theorem exists_corrected_amplitude (P m : ℝ) (hP : 0 < P) :
           9 / 10 < amplitude d w.coefficients eta ∧ amplitude d w.coefficients eta < 6 / 5 ∧
           totalEnergy d w.coefficients (amplitude d w.coefficients eta) eta = 0 ∧
           |deriv (amplitude d w.coefficients) eta| ≤ C * d.core.lam * (1 + Real.log (1 /
-            d.core.lam)) ∧
+              d.core.lam)) ∧
           (∀ XR : ℝ, 0 < XR →
             IntegrableOn (radialEnergyIntegrand d w.coefficients (amplitude d w.coefficients) eta
-              XR) (Ioi 0) ∧
+                XR) (Ioi 0) ∧
             (∫ X in Ioi 0, radialEnergyIntegrand d w.coefficients (amplitude d w.coefficients) eta
-              XR X) = 0) ∧
+                XR X) = 0) ∧
           (∀ A ∈ Icc (9 / 10 : ℝ) (6 / 5), totalEnergy d w.coefficients A eta = 0 →
             A = amplitude d w.coefficients eta) := by
   obtain ⟨resetLam, K, hresetLam, hK, hreset⟩ := exists_scheduled_reset
@@ -486,6 +503,6 @@ theorem exists_corrected_amplitude (P m : ℝ) (hP : 0 < P) :
   · intro XR hXR
     refine ⟨radialEnergy_integrable d w.coefficients (amplitude d w.coefficients) eta XR hXR, ?_⟩
     rw [radialEnergy_integral d w.coefficients (amplitude d w.coefficients) eta XR hXR, hz,
-      mul_zero]
+        mul_zero]
 
 end NavierStokes.CorrectedPulseAmplitude

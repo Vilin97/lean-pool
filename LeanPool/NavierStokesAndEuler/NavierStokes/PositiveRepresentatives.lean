@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryRepresentatives
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityHomogeneity
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Positive-time representatives and the genuine stable inverse branch
@@ -19,6 +19,9 @@ constructed inverse extends the stable branch across its regular zero-time
 face.  The actual mask representatives stay at positive time.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PositiveRepresentatives
@@ -27,12 +30,18 @@ open Set Filter Function
 open scoped Topology ContDiff InnerProductSpace
 open SimilarityCoordinates
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Label: an abbreviation for `PartitionedCovariance.UnsignedLabel`. -/
 abbrev Label := PartitionedCovariance.UnsignedLabel
 
+/-- Positive time, given by `{p | 0 < p.2.2}`. -/
 noncomputable def positiveTime : Set Slow := {p | 0 < p.2.2}
+/-- Positive part, given by `K ∩ positiveTime`. -/
 noncomputable def positivePart (K : Set Slow) : Set Slow := K ∩ positiveTime
+/-- Active label, given by `PrimaryRepresentatives.ActiveLabel (positivePart K)`. -/
 noncomputable def ActiveLabel (K : Set Slow) := PrimaryRepresentatives.ActiveLabel (positivePart K)
+/-- Representative, given by `PrimaryRepresentatives.representative (positivePart K) L`. -/
 noncomputable def representative (K : Set Slow) (L : ActiveLabel K) : Slow :=
   PrimaryRepresentatives.representative (positivePart K) L
 
@@ -83,9 +92,11 @@ theorem physicalMask_has_positive_representative {h a b : ℝ} (L : Label) (hL :
 
 /-! ## A smooth inverse on the stable branch, including its zero-time face -/
 
+/-- Stable source, given by `{p | 0 < p.1 ∧ 0 < scalarSlope a p.2 p.1}`. -/
 noncomputable def stableSource (a : ℝ) : Set (ℝ × ℝ) :=
   {p | 0 < p.1 ∧ 0 < scalarSlope a p.2 p.1}
 
+/-- Stable target, given by `forwardMap a '' stableSource a`. -/
 noncomputable def stableTarget (a : ℝ) : Set (ℝ × ℝ) := forwardMap a '' stableSource a
 
 theorem scalarSlope_smoothAt {a : ℝ} {p : ℝ × ℝ} (hp : p.1 ≠ 0) :
@@ -152,6 +163,7 @@ theorem forwardMap_injOn_stable {a : ℝ} (ha : 0 ≤ a) (ha1 : a ≤ 1) :
     · exact False.elim ((ne_of_lt (forwardScalar_lt_on_stable ha ha1 hr.1 hr.2 hgt)) hf.symm)
   exact Prod.ext hqr rfl
 
+/-- Stable inverse, choosing the witness provided by `hp`. -/
 noncomputable def stableInverse (a : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := by
   classical
   exact if hp : p ∈ stableTarget a then Classical.choose hp else (1, p.2)
@@ -214,10 +226,14 @@ totalized inverse. -/
 noncomputable def forwardSlow (h : ℝ) (p : Slow) : Slow :=
   (p.1, (p.2.1, forwardScalar (2 * h) p.2.1 p.2.2))
 
+/-- Lifted box, given by `Icc (Real.sqrt a) (2 * Real.sqrt b) ×ˢ (Icc (-2 : ℝ) 2 ×ˢ Icc (1 / 2 :
+ℝ) 2)`. -/
 noncomputable def liftedBox (a b : ℝ) : Set Slow :=
   Icc (Real.sqrt a) (2 * Real.sqrt b) ×ˢ
     (Icc (-2 : ℝ) 2 ×ˢ Icc (1 / 2 : ℝ) 2)
 
+/-- Lifted reference, given by `liftedBox a b ∩ {p | 0 ≤ (forwardSlow h p).2.2 ∧ a * (2 * p.2.2)
+≤ p.1 ^ 2 ∧ p.1 ^ 2 ≤ b * (2 * p.2.2)}`. -/
 noncomputable def liftedReference (h a b : ℝ) : Set Slow :=
   liftedBox a b ∩ {p | 0 ≤ (forwardSlow h p).2.2 ∧
     a * (2 * p.2.2) ≤ p.1 ^ 2 ∧ p.1 ^ 2 ≤ b * (2 * p.2.2)}
@@ -269,22 +285,27 @@ theorem referenceCompact_eq_lifted_image {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h <
 theorem referenceCompact_eq_activeReference {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hab : a ≤ b) :
     PrimaryRepresentatives.referenceCompact h a b = PrimaryRepresentatives.activeReference h a b :=
-      by
+        by
   rw [referenceCompact_eq_lifted_image hh hh1 ha hab]
   exact Subset.antisymm lifted_image_subset_activeReference
     (activeReference_subset_lifted_image hh hh1 ha hab)
 
+/-- Stable domain, given by `{p | 0 < p.1 ∧ (p.2.2, p.2.1) ∈ stableTarget (2 * h)}`. -/
 noncomputable def stableDomain (h : ℝ) : Set Slow :=
   {p | 0 < p.1 ∧ (p.2.2, p.2.1) ∈ stableTarget (2 * h)}
 
+/-- Stable Q, given by `(stableInverse (2 * h) (p.2.2, p.2.1)).1`. -/
 noncomputable def stableQ (h : ℝ) (p : Slow) : ℝ :=
   (stableInverse (2 * h) (p.2.2, p.2.1)).1
 
+/-- Stable eta, given by `p.2.1 / stableQ h p ^ CoordinateAlgebra.D h`. -/
 noncomputable def stableEta (h : ℝ) (p : Slow) : ℝ :=
   p.2.1 / stableQ h p ^ CoordinateAlgebra.D h
 
+/-- Stable X, given by `p.1 ^ 2 / (2 * stableQ h p)`. -/
 noncomputable def stableX (h : ℝ) (p : Slow) : ℝ := p.1 ^ 2 / (2 * stableQ h p)
 
+/-- Stable inner, given by `(stableX h p, stableEta h p)`. -/
 noncomputable def stableInner (h : ℝ) (p : Slow) : ℝ × ℝ := (stableX h p, stableEta h p)
 
 theorem stableDomain_open (h : ℝ) : IsOpen (stableDomain h) :=
@@ -426,6 +447,7 @@ noncomputable def openGrid (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
     (Ioo (s * (k 1 : ℝ) - 3 * s) (s * (k 1 : ℝ) + 3 * s) ×ˢ
       Ioo (s * (k 2 : ℝ) - 3 * s) (s * (k 2 : ℝ) + 3 * s))
 
+/-- Positive cell, given by `openGrid n k ∩ positiveTime`. -/
 noncomputable def positiveCell (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
   openGrid n k ∩ positiveTime
 
@@ -453,7 +475,7 @@ theorem gridBox_two_subset_openGrid {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.G
   intro p hp
   have hs := SquaredPartition.nativeSpacing_pos hn
   have hc (j : Fin 3) : SquaredPartition.nativeSpacing n * (k j : ℝ) - 3 *
-    SquaredPartition.nativeSpacing n <
+      SquaredPartition.nativeSpacing n <
       PrimaryRepresentatives.position p j ∧
       PrimaryRepresentatives.position p j <
         SquaredPartition.nativeSpacing n * (k j : ℝ) + 3 * SquaredPartition.nativeSpacing n := by
@@ -467,7 +489,7 @@ theorem representative_mem_cell (K : Set Slow) (L : ActiveLabel K) :
   have hr := PrimaryRepresentatives.nativeMask_tsupport_subset L.property.1 L.val.2
     (representative_mem_tsupport K L)
   refine ⟨gridBox_two_subset_openGrid L.property.1 L.val.2 (fun j => ?_), representative_time_pos K
-    L⟩
+      L⟩
   exact (hr j).trans (by nlinarith)
 
 theorem enlarged_positive_subset_cell {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid) :
@@ -499,6 +521,7 @@ theorem positiveCell_eventually_subset {K U : Set Slow} (hK : IsCompact K)
     simpa only [show (3 : ℝ) + 1 = 4 by norm_num] using hd
   simpa only [dist_eq_norm] using hd'.trans (hN _ hL).le
 
+/-- Cell bound, given by `max (2 * Real.sqrt b + 1) 3`. -/
 noncomputable def cellBound (b : ℝ) : ℝ := max (2 * Real.sqrt b + 1) 3
 
 theorem cellBound_pos (b : ℝ) : 0 < cellBound b :=
@@ -526,9 +549,9 @@ theorem exists_positive_reference_charts {h a b : ℝ} (hh : 0 < h) (hh1 : h < 1
     ∃ N : ℕ, ∀ L : ActiveLabel (PrimaryRepresentatives.referenceCompact h a b), N ≤ L.val.1 →
       IsOpen (positiveCell L.val.1 L.val.2) ∧ Convex ℝ (positiveCell L.val.1 L.val.2) ∧
       representative (PrimaryRepresentatives.referenceCompact h a b) L ∈ positiveCell L.val.1
-        L.val.2 ∧
+          L.val.2 ∧
       PrimaryRepresentatives.gridBox L.val.1 L.val.2 2 ∩ positiveTime ⊆ positiveCell L.val.1
-        L.val.2 ∧
+          L.val.2 ∧
       ∀ p ∈ positiveCell L.val.1 L.val.2,
         0 < p.1 ∧ Real.sqrt a / 2 ≤ p.1 ∧ ‖p‖ ≤ cellBound b ∧ 0 < p.2.2 ∧
           SimilarityHomogeneity.chartQ h p ∈ Ioo (1 / 4 : ℝ) 4 ∧
@@ -579,7 +602,7 @@ theorem stableQ_iteratedFDeriv_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 theorem stableInner_iteratedFDeriv_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : Slow} (hp : 0 < p.2.2) (n : ℕ) :
     iteratedFDeriv ℝ n (stableInner h) p = iteratedFDeriv ℝ n (SimilarityHomogeneity.chartInner h)
-      p :=
+        p :=
   iteratedFDeriv_eq_of_eventuallyEq (stableInner_eventuallyEq_chartInner hh hh1 hp) n
 
 theorem compact_jet_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -594,9 +617,12 @@ theorem compact_jet_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   obtain ⟨C, hC, hb⟩ := (hK.image_of_continuousOn hc).isBounded.exists_pos_norm_le
   exact ⟨C, hC, fun p hp => hb _ ⟨p, hp, rfl⟩⟩
 
+/-- Stable pullback, given by `stableQ h p ^ exponent * f (stableInner h p)`. -/
 noncomputable def stablePullback (h exponent : ℝ) (f : (ℝ × ℝ) → ℝ) (p : Slow) : ℝ :=
   stableQ h p ^ exponent * f (stableInner h p)
 
+/-- Physical pullback, given by `SimilarityHomogeneity.chartQ h p ^ exponent * f
+(SimilarityHomogeneity.chartInner h p)`. -/
 noncomputable def physicalPullback (h exponent : ℝ) (f : (ℝ × ℝ) → ℝ) (p : Slow) : ℝ :=
   SimilarityHomogeneity.chartQ h p ^ exponent * f (SimilarityHomogeneity.chartInner h p)
 
@@ -650,6 +676,8 @@ theorem shearVector_eq_on_positive {F G Fext Gext : Slow → ℝ}
   have hdg : fderiv ℝ G p = fderiv ℝ Gext p := hg.fderiv_eq
   simp only [PhaseEstimates.shearVector, PhaseCalculus.slowR, hdf, hdg]
 
+/-- To closed, given by `⟨L.val, L.property.1, representative K L, representative_mem K L,
+representative_mem_tsupport K L⟩`. -/
 noncomputable def ActiveLabel.toClosed {K : Set Slow} (L : ActiveLabel K) :
     PrimaryRepresentatives.ActiveLabel K :=
   ⟨L.val, L.property.1, representative K L, representative_mem K L, representative_mem_tsupport K L⟩

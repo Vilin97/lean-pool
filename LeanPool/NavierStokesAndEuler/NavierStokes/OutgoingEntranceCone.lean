@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SchedulePressure
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingPulseBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FuturePressureBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingHistories
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Actual outgoing histories through the axial drop
@@ -21,6 +18,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 All lags below include the ideal incoming history. The scalar averages are
 integrals of the constructed schedule, and no cone estimate is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -168,6 +168,7 @@ theorem averagedDrop_small_on_second_ramp (c : Parameters) {y : ℝ}
     linarith
   nlinarith [Real.exp_pos (-(y - Real.exp c.m))]
 
+/-- Shape gradient, given by `2 * η / (1 + η ^ 2)`. -/
 noncomputable def shapeGradient (η : ℝ) : ℝ := 2 * η / (1 + η ^ 2)
 
 theorem shapeGradient_contDiff : ContDiff ℝ ∞ shapeGradient :=
@@ -207,6 +208,7 @@ theorem dropCoefficient_hasDerivAt {m y : ℝ} (hm : 0 < m) (hy : 0 < y) :
   simp only [div_eq_mul_inv, mul_inv_rev]
   ring
 
+/-- Drop speed, given by `4 * stepBound / m`. -/
 noncomputable def dropSpeed (m : ℝ) : ℝ := 4 * stepBound / m
 
 theorem dropSpeed_pos {m : ℝ} (hm : 0 < m) : 0 < dropSpeed m := by
@@ -236,23 +238,31 @@ theorem exists_small_dropSpeed {e : ℝ} (he : 0 < e) :
 
 /-! ## The actual angular source and its ideal incoming lag -/
 
+/-- Transport W, given by `1 - L h η * averagedDrop c y`. -/
 noncomputable def transportW (c : Parameters) (h y η : ℝ) : ℝ :=
   1 - L h η * averagedDrop c y
 
+/-- Angular rate, given by `1 + slope c.dropLength c.lam y`. -/
 noncomputable def angularRate (c : Parameters) (y : ℝ) : ℝ :=
   1 + slope c.dropLength c.lam y
 
+/-- Angular source as an element of `ℝ`. -/
 noncomputable def angularSource (c : Parameters) (h η y : ℝ) : ℝ :=
   -slope c.dropLength c.lam y * transportW c h y η -
     h * (1 - 2 * dropCoefficient c.m y * η ^ 2) +
       (D h + d η * dropCoefficient c.m y) * η * shapeGradient η
 
+/-- Ideal angular source, given by `(3 / 5) * (4 * L h η - 1) - h * (1 - 8 * η ^ 2) + (D h + 4 *
+d η) * η * shapeGradient η`. -/
 noncomputable def idealAngularSource (h η : ℝ) : ℝ :=
   (3 / 5) * (4 * L h η - 1) - h * (1 - 8 * η ^ 2) +
     (D h + 4 * d η) * η * shapeGradient η
 
+/-- Ideal angular lag, given by `idealAngularSource h η / (8 / 5)`. -/
 noncomputable def idealAngularLag (h η : ℝ) : ℝ := idealAngularSource h η / (8 / 5)
 
+/-- Angular lag, given by `linearLag (angularRate c) (angularSource c h η) (idealAngularLag h
+η)`. -/
 noncomputable def angularLag (c : Parameters) (h η : ℝ) : ℝ → ℝ :=
   linearLag (angularRate c) (angularSource c h η) (idealAngularLag h η)
 
@@ -380,7 +390,7 @@ theorem integral_integratingFactor_rate {r : ℝ → ℝ} (hr : Continuous r) (y
     exact (primitive_hasDerivAt hr t).exp
   simpa [OutgoingSchedule.primitive] using intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun t _ => hd t) (((Real.continuous_exp.comp (primitive_continuous_of_continuous hr)).mul
-      hr).intervalIntegrable 0 y)
+        hr).intervalIntegrable 0 y)
 
 theorem linearLag_constant {r b : ℝ → ℝ} (hr : Continuous r) {q₀ y : ℝ}
     (hb : ∀ t ∈ uIcc (0 : ℝ) y, b t = r t * q₀) : linearLag r b q₀ y = q₀ := by
@@ -399,11 +409,12 @@ theorem linearLag_constant {r b : ℝ → ℝ} (hr : Continuous r) {q₀ y : ℝ
     (q₀ + (∫ t in (0 : ℝ)..y, Real.exp (OutgoingSchedule.primitive r t) * b t)) = q₀
   rw [hi]
   have he : Real.exp (-OutgoingSchedule.primitive r y) * Real.exp (OutgoingSchedule.primitive r y)
-    = 1 := by
+      = 1 := by
     rw [← Real.exp_add]; simp
   calc
     _ = (Real.exp (-OutgoingSchedule.primitive r y) * Real.exp (OutgoingSchedule.primitive r y)) *
-      q₀ := by ring
+        q₀ := by
+        ring
     _ = q₀ := by rw [he, one_mul]
 
 theorem angularLag_ideal (c : Parameters) (h η : ℝ) {y : ℝ} (hy : y ≤ 0) :
@@ -434,7 +445,7 @@ theorem linearLag_lower_barrier {r b : ℝ → ℝ} (hr : Continuous r) (hb : Co
   change _ ≤ Real.exp (-OutgoingSchedule.primitive r y) *
     (q₀ + ∫ t in (0 : ℝ)..y, Real.exp (OutgoingSchedule.primitive r t) * b t)
   have hc : Real.exp (-OutgoingSchedule.primitive r y) * Real.exp (OutgoingSchedule.primitive r y)
-    = 1 := by
+      = 1 := by
     rw [← Real.exp_add]; simp
   calc
     _ = Real.exp (-OutgoingSchedule.primitive r y) *
@@ -502,6 +513,7 @@ theorem angularLag_barrier (c : Parameters) {h η y : ℝ} (hh : 0 ≤ h)
   exact (by linarith : η ^ 2 / 4 - 2 * h + (1 / 2) * Real.exp (-(y + 3 / 5)) ≤
     η ^ 2 / 4 - 2 * h + (1 / 2) * Real.exp (-OutgoingSchedule.primitive (angularRate c) y)).trans hq
 
+/-- Cone floor, given by `Real.exp (-(3 / 5 : ℝ)) / 4`. -/
 noncomputable def coneFloor : ℝ := Real.exp (-(3 / 5 : ℝ)) / 4
 
 theorem coneFloor_pos : 0 < coneFloor := div_pos (Real.exp_pos _) (by norm_num)
@@ -537,15 +549,19 @@ theorem angularLag_pos (c : Parameters) {h η y T : ℝ} (hh : 0 ≤ h)
 
 /-! ## The actual angular-energy history -/
 
+/-- Clock energy, given by `radialAmplitude c.P c.dropLength c.lam y ^ 2`. -/
 noncomputable def clockEnergy (c : Parameters) (y : ℝ) : ℝ :=
   radialAmplitude c.P c.dropLength c.lam y ^ 2
 
+/-- Weighted clock energy, given by `Real.exp y * clockEnergy c y`. -/
 noncomputable def weightedClockEnergy (c : Parameters) (y : ℝ) : ℝ :=
   Real.exp y * clockEnergy c y
 
+/-- Averaged clock energy, given by `historyAverage (clockEnergy c) ((5 / 6) * c.P ^ 2)`. -/
 noncomputable def averagedClockEnergy (c : Parameters) : ℝ → ℝ :=
   historyAverage (clockEnergy c) ((5 / 6) * c.P ^ 2)
 
+/-- Averaged energy, given by `shape η ^ 2 * averagedClockEnergy c y`. -/
 noncomputable def averagedEnergy (c : Parameters) (y η : ℝ) : ℝ :=
   shape η ^ 2 * averagedClockEnergy c y
 
@@ -620,7 +636,7 @@ theorem averagedEnergy_upper (c : Parameters) {y : ℝ} (hy : 0 ≤ y)
     averagedEnergy c y η ≤ (y + 5 / 6) * angular c.P c.dropLength c.lam (y, η) ^ 2 := by
   have hb := mul_le_mul_of_nonneg_left (averagedClockEnergy_upper c hy hy') (sq_nonneg (shape η))
   simpa only [averagedEnergy, angular, clockEnergy, mul_pow, mul_comm, mul_left_comm, mul_assoc]
-    using hb
+      using hb
 
 theorem angular_square_lower (c : Parameters) {y η : ℝ} (hy : 0 ≤ y)
     (hy' : y ≤ c.dropLength + 1) (hη : |η| ≤ 1) :
@@ -634,7 +650,7 @@ theorem angular_square_lower (c : Parameters) {y η : ℝ} (hy : 0 ≤ y)
   have hm := mul_le_mul (clockEnergy_lower c hy hy') hss (by norm_num : (0 : ℝ) ≤ 1 / 4)
     (clockEnergy_pos c y).le
   simpa only [angular, clockEnergy, mul_pow, div_eq_mul_inv, one_mul, mul_comm, mul_left_comm,
-    mul_assoc] using hm
+      mul_assoc] using hm
 
 theorem integral_exp_mul_real {a : ℝ} (ha : a ≠ 0) (y : ℝ) :
     (∫ t in (0 : ℝ)..y, Real.exp (a * t)) = (Real.exp (a * y) - 1) / a := by
@@ -680,12 +696,18 @@ theorem averagedClockEnergy_ideal (c : Parameters) {y : ℝ} (hy : y ≤ 0) :
 
 /-! ## Pressure and the axial lag with the full ideal incoming history -/
 
+/-- Pressure clock, given by `(5 / 2) * c.P ^ 2 + (1 / 2) * OutgoingSchedule.primitive
+(clockEnergy c) y`. -/
 noncomputable def pressureClock (c : Parameters) (y : ℝ) : ℝ :=
   (5 / 2) * c.P ^ 2 + (1 / 2) * OutgoingSchedule.primitive (clockEnergy c) y
 
+/-- Entrance pressure, given by `SchedulePressure.axisPressure v η + shape η ^ 2 * pressureClock
+v.core y`. -/
 noncomputable def entrancePressure (v : TailData) (y η : ℝ) : ℝ :=
   SchedulePressure.axisPressure v η + shape η ^ 2 * pressureClock v.core y
 
+/-- Pressure gradient, given by `deriv (SchedulePressure.axisPressure v) η - 2 * shapeGradient η
+* shape η ^ 2 * pressureClock v.core y`. -/
 noncomputable def pressureGradient (v : TailData) (y η : ℝ) : ℝ :=
   deriv (SchedulePressure.axisPressure v) η -
     2 * shapeGradient η * shape η ^ 2 * pressureClock v.core y
@@ -698,7 +720,7 @@ theorem shape_hasDerivAt (η : ℝ) :
   unfold shape shapeGradient
   field_simp
   ring_nf
-  simp ; ring
+  simp; ring
 
 theorem shapeSquare_hasDerivAt (η : ℝ) :
     HasDerivAt (fun t => shape t ^ 2) (-2 * shapeGradient η * shape η ^ 2) η := by
@@ -729,7 +751,7 @@ theorem pressureGradient_hasDerivAt_y (v : TailData) (y η : ℝ) :
       (-shapeGradient η * angular v.core.P v.core.dropLength v.core.lam (y, η) ^ 2) y := by
   convert! ((pressureClock_hasDerivAt v.core y).const_mul
     (2 * shapeGradient η * shape η ^ 2)).const_sub (deriv (SchedulePressure.axisPressure v) η)
-      using 1
+        using 1
   unfold angular clockEnergy
   ring
 
@@ -788,18 +810,22 @@ noncomputable def pressureAxialLag (v : TailData) (y η : ℝ) : ℝ :=
   -(2 * v.h * η + d η * shapeGradient η) * averagedEnergy v.core y η +
     4 * A v.h * η * entrancePressure v y η - d η * pressureGradient v y η
 
+/-- Axial lag, given by `geometricAxialLag v.core v.h y η + pressureAxialLag v y η`. -/
 noncomputable def axialLag (v : TailData) (y η : ℝ) : ℝ :=
   geometricAxialLag v.core v.h y η + pressureAxialLag v y η
 
+/-- Geometric axial source as an element of `ℝ`. -/
 noncomputable def geometricAxialSource (c : Parameters) (h y η : ℝ) : ℝ :=
   -transportW c h y η * deriv (dropCoefficient c.m) y * η -
     A h * (1 - 2 * dropCoefficient c.m y * η ^ 2) * (dropCoefficient c.m y * η) -
       (D h + d η * dropCoefficient c.m y) * η * dropCoefficient c.m y
 
+/-- Pressure axial source as an element of `ℝ`. -/
 noncomputable def pressureAxialSource (v : TailData) (y η : ℝ) : ℝ :=
   -d η * pressureGradient v y η + 4 * A v.h * η * entrancePressure v y η +
     η * angular v.core.P v.core.dropLength v.core.lam (y, η) ^ 2
 
+/-- Axial source, given by `geometricAxialSource v.core v.h y η + pressureAxialSource v y η`. -/
 noncomputable def axialSource (v : TailData) (y η : ℝ) : ℝ :=
   geometricAxialSource v.core v.h y η + pressureAxialSource v y η
 
@@ -886,6 +912,7 @@ theorem pressureGradient_eq_future (v : TailData) {y : ℝ} (hy : 0 ≤ y)
   rw [← entrancePressure_eq_future v hy hyend]
   exact (entrancePressure_hasDerivAt_eta v y η).deriv.symm
 
+/-- Pressure bound, given by `10 * FuturePressureBounds.envelopeConstant`. -/
 noncomputable def pressureBound : ℝ := 10 * FuturePressureBounds.envelopeConstant
 
 theorem pressureBound_pos : 0 < pressureBound :=
@@ -894,11 +921,11 @@ theorem pressureBound_pos : 0 < pressureBound :=
 theorem actual_pressure_bounds (v : TailData) {y η : ℝ} (hy : 0 ≤ y)
     (hyend : y ≤ v.core.endpoint) (hη : |η| ≤ 1) :
     |entrancePressure v y η| ≤ pressureBound * angular v.core.P v.core.dropLength v.core.lam (y, η)
-      ^ 2 ∧
+        ^ 2 ∧
     |pressureGradient v y η| ≤ pressureBound * |η| * angular v.core.P v.core.dropLength v.core.lam
-      (y, η) ^ 2 ∧
+        (y, η) ^ 2 ∧
     |deriv (pressureGradient v y) η| ≤ pressureBound * angular v.core.P v.core.dropLength
-      v.core.lam (y, η) ^ 2 := by
+        v.core.lam (y, η) ^ 2 := by
   rw [entrancePressure_eq_future v hy hyend, pressureGradient_eq_future v hy hyend]
   have hb := FuturePressureBounds.uniform_pressure_bounds v hy hη
   rw [finalAngular_before v η hyend] at hb
@@ -917,7 +944,7 @@ theorem geometricAxialLag_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h)
   have hK := averagedDropSquare_bounds c hy
   have hW : |transportW c h y η| ≤ 3 := by
     exact abs_le.mpr (transportW_bounds c hh hh1 hy hη |>.imp_right (fun h => h.trans (by
-      norm_num)))
+        norm_num)))
   have hsq := parameter_square_le_one hη
   have hd : 0 ≤ d η ∧ d η ≤ 1 := by unfold d; constructor <;> nlinarith [sq_nonneg η]
   have hc : |4 * h * η ^ 2 - 2 * d η| ≤ 3 := by
@@ -974,7 +1001,7 @@ theorem pressureAxialLag_bound (v : TailData) {y η : ℝ} (hh1 : v.h ≤ 1 / 10
   have hE : 0 ≤ averagedEnergy v.core y η :=
     mul_nonneg (sq_nonneg _) (averagedClockEnergy_nonneg v.core hy)
   have hEb : averagedEnergy v.core y η ≤ (y + 1) * angular v.core.P v.core.dropLength v.core.lam
-    (y, η) ^ 2 := by
+      (y, η) ^ 2 := by
     exact (averagedEnergy_upper v.core hy hy' η).trans
       (mul_le_mul_of_nonneg_right (by linarith) (sq_nonneg _))
   have hcoef := pressure_coefficient_bound v.h_pos.le hh1 hη
@@ -998,6 +1025,7 @@ theorem pressureAxialLag_bound (v : TailData) {y η : ℝ} (hh1 : v.h ≤ 1 / 10
           mul_le_mul hd.2 hp.2.1 (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)
     _ = _ := by ring
 
+/-- Axial bound, given by `259 + 4 * pressureBound`. -/
 noncomputable def axialBound : ℝ := 259 + 4 * pressureBound
 
 theorem axialBound_pos : 0 < axialBound := by unfold axialBound; linarith [pressureBound_pos]
@@ -1034,13 +1062,18 @@ theorem axialLag_drop_bound (v : TailData) {y η : ℝ} (hh1 : v.h ≤ 1 / 100)
 
 /-! ## The two small shear quantities in the cone test -/
 
+/-- Shear, given by `2 * deriv (dropCoefficient c.m) y * η / angular c.P c.dropLength c.lam (y,
+η)`. -/
 noncomputable def shear (c : Parameters) (y η : ℝ) : ℝ :=
   2 * deriv (dropCoefficient c.m) y * η / angular c.P c.dropLength c.lam (y, η)
 
+/-- Direction ratio, given by `axialLag v y η / (angular v.core.P v.core.dropLength v.core.lam
+(y, η) * angularLag v.core v.h η y)`. -/
 noncomputable def directionRatio (v : TailData) (y η : ℝ) : ℝ :=
   axialLag v y η /
     (angular v.core.P v.core.dropLength v.core.lam (y, η) * angularLag v.core v.h η y)
 
+/-- Radial A, given by `2 - 2 * slope c.dropLength c.lam y`. -/
 noncomputable def radialA (c : Parameters) (y : ℝ) : ℝ :=
   2 - 2 * slope c.dropLength c.lam y
 
@@ -1052,8 +1085,8 @@ theorem shear_is_actual (c : Parameters) (amp : ℝ → ℝ) {y : ℝ}
     filter_upwards [Iio_mem_nhds hy] with t ht
     exact axial_before_pulse c amp η ht.le
   rw [heq.deriv_eq,
-    ((((dropCoefficient_contDiff c.m_pos).differentiable (by simp) y).hasDerivAt).mul_const
-      η).deriv]
+    ((((dropCoefficient_contDiff c.m_pos).differentiable (by
+        simp) y).hasDerivAt).mul_const η).deriv]
   unfold shear
   ring
 
@@ -1142,7 +1175,7 @@ theorem shear_direction_drop_bound (v : TailData) {y η : ℝ}
       _ ≤ _ := by
         have h := mul_le_mul_of_nonneg_left hdy
           (show 0 ≤ 2 * axialBound * η ^ 2 * angular v.core.P v.core.dropLength v.core.lam (y, η) ^
-            2 by
+              2 by
             have := axialBound_pos
             positivity)
         convert! h using 1
@@ -1192,7 +1225,7 @@ theorem linearLag_pos_after {r b : ℝ → ℝ} (hr : Continuous r) (hb : Contin
     (hs : ∀ t ∈ Icc a y, 0 ≤ b t) : 0 < linearLag r b q₀ y := by
   let F := fun t => Real.exp (OutgoingSchedule.primitive r t) * b t
   have hF : Continuous F := (Real.continuous_exp.comp (primitive_continuous_of_continuous hr)).mul
-    hb
+      hb
   have hinit : 0 < q₀ + OutgoingSchedule.primitive F a := by
     exact (mul_pos_iff_of_pos_left (Real.exp_pos (-OutgoingSchedule.primitive r a))).mp ha
   have hi : 0 ≤ ∫ t in a..y, F t := intervalIntegral.integral_nonneg hay
@@ -1248,12 +1281,14 @@ theorem shape_interval {η : ℝ} (hη : |η| ≤ 1) : (1 / 2 : ℝ) ≤ shape �
     linarith
   · exact div_le_self (by norm_num) (by nlinarith [sq_nonneg η])
 
+/-- Entrance time, given by `Real.exp m + 12`. -/
 noncomputable def entranceTime (m : ℝ) : ℝ := Real.exp m + 12
 
 theorem holdStart_eq_entranceTime (c : Parameters) : c.holdStart = entranceTime c.m := by
   unfold Parameters.holdStart Parameters.dropLength entranceTime
   ring
 
+/-- Energy envelope, given by `P ^ 2 * Real.exp (2 * T)`. -/
 noncomputable def energyEnvelope (P T : ℝ) : ℝ := P ^ 2 * Real.exp (2 * T)
 
 theorem clockEnergy_le_envelope (c : Parameters) {y T : ℝ} (hy : 0 ≤ y) (hyT : y ≤ T) :
@@ -1354,6 +1389,7 @@ theorem axialLag_le_envelope (v : TailData) {y T η : ℝ} (hh1 : v.h ≤ 1 / 10
   have hp1 := mul_le_mul_of_nonneg_left hη hK
   nlinarith
 
+/-- Entrance ratio bound as an element of `ℝ`. -/
 noncomputable def entranceRatioBound (P m : ℝ) : ℝ :=
   (64 + (3 + 4 * pressureBound) * energyEnvelope P (entranceTime m)) /
     ((P * Real.exp (-entranceTime m) / 2) * (coneFloor * Real.exp (-entranceTime m)))
@@ -1402,7 +1438,7 @@ theorem directionRatio_entrance_bound (v : TailData) {y η : ℝ} (hh1 : v.h ≤
       div_le_div_of_nonneg_right hN hD.le
     _ ≤ (64 + (3 + 4 * pressureBound) * energyEnvelope v.core.P v.core.holdStart) /
         ((v.core.P * Real.exp (-v.core.holdStart) / 2) * (coneFloor * Real.exp
-          (-v.core.holdStart))) :=
+            (-v.core.holdStart))) :=
       div_le_div_of_nonneg_left hnum hlo hden
     _ = _ := by rw [holdStart_eq_entranceTime]; rfl
 
@@ -1420,7 +1456,7 @@ theorem linearLag_eq_of_solution {r b f : ℝ → ℝ} (hr : Continuous r)
     ring
   have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt hd
     (((Real.continuous_exp.comp (primitive_continuous_of_continuous hr)).mul hb).intervalIntegrable
-      0 y)
+        0 y)
   simp only [OutgoingSchedule.primitive, intervalIntegral.integral_same, Real.exp_zero,
     one_mul, hf₀] at hi
   change (∫ t in (0 : ℝ)..y, Real.exp (OutgoingSchedule.primitive r t) * b t) =
@@ -1480,7 +1516,7 @@ theorem canonical_H_radial_ratio {v : TailData} {K : ℝ}
       OutgoingHistories.H w (y, η) = slope v.core.dropLength v.core.lam y := by
   have he : (fun t => OutgoingHistories.H w (t, η)) =ᶠ[𝓝 y]
       (fun t => Real.exp (t / 2) * (radialAmplitude v.core.P v.core.dropLength v.core.lam t * shape
-        η)) := by
+          η)) := by
     filter_upwards [Iio_mem_nhds hy] with t ht
     simp only [OutgoingHistories.H, OutgoingHistories.E_before w η ht.le, angular]
   have hd := (((hasDerivAt_id y).div_const 2).exp).mul
@@ -1563,7 +1599,7 @@ theorem canonical_S_before {v : TailData} {K : ℝ}
     OutgoingHistories.S w Amp (y, η) / Real.exp y = normalizedEnergyHistory v.core y η := by
   have hk : IntervalIntegrable (fun t => Real.exp t * dropCoefficient v.core.m t ^ 2) volume 0 y :=
     (Real.continuous_exp.fun_mul ((dropCoefficient_contDiff v.core.m_pos).continuous.pow
-      2)).intervalIntegrable 0 y
+        2)).intervalIntegrable 0 y
   have he : IntervalIntegrable (fun t => Real.exp t * clockEnergy v.core t) volume 0 y :=
     (Real.continuous_exp.fun_mul (clockEnergy_contDiff v.core).continuous).intervalIntegrable 0 y
   have hi : (∫ t in (0 : ℝ)..y, OutgoingHistories.energyWeight w Amp (t, η)) =
@@ -1633,7 +1669,7 @@ theorem canonical_Ns_before {v : TailData} {K : ℝ}
     axialLag_integrated_history]
   simp only [OutgoingHistories.X, StressAlgebra.axialExponent,
     StressAlgebra.coordinateFactor, StressAlgebra.velocityExponent, d, A]
-  field_simp [(Real.exp_pos y).ne'] ; ring
+  field_simp [(Real.exp_pos y).ne']; ring
 
 /-! ## The first and last preliminary ramps -/
 
@@ -1664,7 +1700,7 @@ theorem shear_second_ramp (c : Parameters) {y : ℝ} (hy : c.dropLength + 1 ≤ 
   simp only [shear, dropCoefficient_deriv_late c.m_pos he, mul_zero, zero_mul, zero_div]
 
 theorem radialA_bounds (c : Parameters) (y : ℝ) : (4 / 5 : ℝ) ≤ radialA c y ∧ radialA c y ≤ 11 / 5
-  := by
+    := by
   have hb := angularRate_bounds c y
   unfold angularRate at hb
   unfold radialA
@@ -1687,8 +1723,8 @@ theorem first_ramp_cone_margins (v : TailData) {y : ℝ} (hy : y ≤ 1) (η : �
     unfold radialA
     linarith
   rw [shear_early v.core hy]
-  simp only [zero_mul, mul_zero, sub_zero, zero_pow (by decide : (2 : ℕ) ≠ 0), zero_div, zero_add,
-    add_zero]
+  simp only [zero_mul, mul_zero, sub_zero, zero_pow (by
+      decide : (2 : ℕ) ≠ 0), zero_div, zero_add, add_zero]
   refine ⟨(radialA_bounds v.core y).1, ?_⟩
   exact mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr ha) (sq_nonneg _)
 
@@ -1707,8 +1743,8 @@ theorem second_ramp_cone_margins (v : TailData) {y η : ℝ} (hh1 : v.h ≤ 1 / 
   have hw2 : directionRatio v y η ^ 2 ≤ entranceRatioBound v.core.P v.core.m ^ 2 := by
     simpa only [sq_abs] using pow_le_pow_left₀ (abs_nonneg _) hw 2
   rw [shear_second_ramp v.core hy]
-  simp only [zero_mul, mul_zero, sub_zero, zero_pow (by decide : (2 : ℕ) ≠ 0), zero_div, zero_add,
-    add_zero]
+  simp only [zero_mul, mul_zero, sub_zero, zero_pow (by
+      decide : (2 : ℕ) ≠ 0), zero_div, zero_add, add_zero]
   refine ⟨ha, ?_⟩
   have hmul := mul_le_mul (show radialA v.core y - 2 ≤ 2 * v.core.lam by linarith)
     hw2 (sq_nonneg _) (by linarith [v.core.lam_pos])
@@ -1733,18 +1769,19 @@ theorem pressureAxialSource_hasDerivAt_eta (v : TailData) (y η : ℝ) :
       ((2 + 4 * A v.h) * η * pressureGradient v y η -
         d η * deriv (pressureGradient v y) η + 4 * A v.h * entrancePressure v y η +
           (1 - 2 * η * shapeGradient η) * angular v.core.P v.core.dropLength v.core.lam (y, η) ^ 2)
-            η := by
+              η := by
   have hd : HasDerivAt d (-2 * η) η := by
     convert! (hasDerivAt_const η (1 : ℝ)).fun_sub ((hasDerivAt_id η).fun_pow 2) using 1
     simp []
   have hp := ((pressureGradient_contDiff_eta v y).differentiable (by simp) η).hasDerivAt
   convert! ((hd.fun_neg.fun_mul hp).fun_add
     (((hasDerivAt_id η).const_mul (4 * A v.h)).fun_mul (entrancePressure_hasDerivAt_eta v y
-      η))).fun_add
+        η))).fun_add
       ((hasDerivAt_id η).fun_mul (angularSquare_hasDerivAt_eta v.core y η)) using 1
   simp only [id_eq]
   ring
 
+/-- Pressure source bound, given by `10 * pressureBound + 10`. -/
 noncomputable def pressureSourceBound : ℝ := 10 * pressureBound + 10
 
 theorem pressureSourceBound_pos : 0 < pressureSourceBound := by
@@ -1784,7 +1821,7 @@ theorem pressureAxialSource_bound (v : TailData) {y η : ℝ} (hh1 : v.h ≤ 1 /
   rw [hthird] at hs
   unfold pressureSourceBound
   have hn := mul_nonneg (abs_nonneg η) (sq_nonneg (angular v.core.P v.core.dropLength v.core.lam
-    (y, η)))
+      (y, η)))
   nlinarith [mul_nonneg pressureBound_pos.le hn]
 
 theorem pressureAxialSource_deriv_bound (v : TailData) {y η : ℝ} (hh1 : v.h ≤ 1 / 100)
@@ -1800,7 +1837,7 @@ theorem pressureAxialSource_deriv_bound (v : TailData) {y η : ℝ} (hh1 : v.h �
     unfold A
     constructor <;> linarith [v.h_pos]
   have hp1 : |pressureGradient v y η| ≤ pressureBound * angular v.core.P v.core.dropLength
-    v.core.lam (y, η) ^ 2 := by
+      v.core.lam (y, η) ^ 2 := by
     apply hp.2.1.trans
     nlinarith [mul_le_mul_of_nonneg_right hη (mul_nonneg pressureBound_pos.le hE)]
   have hfirst : |(2 + 4 * A v.h) * η * pressureGradient v y η| ≤
@@ -1824,7 +1861,7 @@ theorem pressureAxialSource_deriv_bound (v : TailData) {y η : ℝ} (hh1 : v.h �
     have hb := eta_shapeGradient_bounds hη
     constructor <;> nlinarith [sq_nonneg η]
   have hfourth : |(1 - 2 * η * shapeGradient η) * angular v.core.P v.core.dropLength v.core.lam (y,
-    η) ^ 2| ≤
+      η) ^ 2| ≤
       angular v.core.P v.core.dropLength v.core.lam (y, η) ^ 2 := by
     rw [abs_mul, abs_of_nonneg hE]
     exact (mul_le_mul_of_nonneg_right hc hE).trans_eq (one_mul _)
@@ -1835,7 +1872,7 @@ theorem pressureAxialSource_deriv_bound (v : TailData) {y η : ℝ} (hh1 : v.h �
       |(2 + 4 * A v.h) * η * pressureGradient v y η| +
         |d η * deriv (pressureGradient v y) η| + |4 * A v.h * entrancePressure v y η| +
           |(1 - 2 * η * shapeGradient η) * angular v.core.P v.core.dropLength v.core.lam (y, η) ^
-            2| :=
+              2| :=
     (abs_add_le _ _).trans (add_le_add_left
       ((abs_add_le _ _).trans (add_le_add_left (abs_sub _ _) _)) _)
   unfold pressureSourceBound
@@ -1843,10 +1880,15 @@ theorem pressureAxialSource_deriv_bound (v : TailData) {y η : ℝ} (hh1 : v.h �
 
 /-! ## A single ordered choice of the preliminary parameters -/
 
+/-- Drop threshold, given by `min (1 / 8) (coneFloor / (16 * axialBound))`. -/
 noncomputable def dropThreshold : ℝ := min (1 / 8) (coneFloor / (16 * axialBound))
+/-- Amplitude threshold, given by `Real.exp (Real.exp m + 11) + 1`. -/
 noncomputable def amplitudeThreshold (m : ℝ) : ℝ := Real.exp (Real.exp m + 11) + 1
+/-- Lambda threshold, given by `min (1 / 20) (1 / (4 * (entranceRatioBound P m ^ 2 + 1)))`. -/
 noncomputable def lambdaThreshold (P m : ℝ) : ℝ :=
   min (1 / 20) (1 / (4 * (entranceRatioBound P m ^ 2 + 1)))
+/-- Height threshold, given by `min (1 / 100) (min (lam / 4) (Real.exp (-(entranceTime m + 3 /
+5)) / 8))`. -/
 noncomputable def heightThreshold (m lam : ℝ) : ℝ :=
   min (1 / 100) (min (lam / 4) (Real.exp (-(entranceTime m + 3 / 5)) / 8))
 
@@ -1898,7 +1940,7 @@ theorem chosen_parameters_bounds (v : TailData)
   have hl : v.core.lam ≤ 1 / (4 * (entranceRatioBound v.core.P v.core.m ^ 2 + 1)) :=
     hlam.trans (min_le_right _ _)
   have hl' := (le_div_iff₀ (show 0 < 4 * (entranceRatioBound v.core.P v.core.m ^ 2 + 1) by
-    positivity)).mp hl
+      positivity)).mp hl
   refine ⟨hp', (by nlinarith [v.core.lam_pos]), hh.trans (min_le_left _ _), ?_⟩
   rw [holdStart_eq_entranceTime]
   exact hh.trans ((min_le_right _ _).trans (min_le_right _ _))
@@ -1924,18 +1966,25 @@ theorem exists_ordered_preliminary_bounds :
 
 /-! ## The actual stress-cone fields and finite amplitude -/
 
+/-- Cone A, given by `2 - 2 * (OutgoingHistories.dY (OutgoingHistories.H w) p /
+OutgoingHistories.H w p)`. -/
 noncomputable def coneA {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (p : ℝ × ℝ) : ℝ :=
   2 - 2 * (OutgoingHistories.dY (OutgoingHistories.H w) p / OutgoingHistories.H w p)
 
+/-- Cone B, given by `2 * OutgoingHistories.dY (OutgoingHistories.U v Amp) p /
+OutgoingHistories.E w p`. -/
 noncomputable def coneB {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   2 * OutgoingHistories.dY (OutgoingHistories.U v Amp) p / OutgoingHistories.E w p
 
+/-- Cone ratio, given by `OutgoingHistories.Ns w Amp p / (OutgoingHistories.E w p *
+OutgoingHistories.Qs w Amp p)`. -/
 noncomputable def coneRatio {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingHistories.Ns w Amp p / (OutgoingHistories.E w p * OutgoingHistories.Qs w Amp p)
 
+/-- Preliminary window, given by `Icc 0 v.core.holdStart ×ˢ Icc (-1) 1`. -/
 noncomputable def preliminaryWindow (v : TailData) : Set (ℝ × ℝ) :=
   Icc 0 v.core.holdStart ×ˢ Icc (-1) 1
 
@@ -1992,7 +2041,7 @@ theorem coneA_continuous {v : TailData} {K : ℝ} (w : UniformAngularReset.Reset
 theorem coneB_continuous {v : TailData} {K : ℝ} (w : UniformAngularReset.ResetWitness v K)
     {Amp : ℝ → ℝ} (ha : ContDiff ℝ ∞ Amp) : Continuous (coneB w Amp) := by
   exact (continuous_const.mul (OutgoingHistories.dY_smooth (OutgoingHistories.U_smooth v
-    ha)).continuous).div
+      ha)).continuous).div
     (OutgoingHistories.E_smooth w).continuous (fun p => (OutgoingHistories.E_pos w p).ne')
 
 theorem coneRatio_continuousOn {v : TailData} {K : ℝ}
@@ -2002,7 +2051,7 @@ theorem coneRatio_continuousOn {v : TailData} {K : ℝ}
     ContinuousOn (coneRatio w Amp) (preliminaryWindow v) := by
   apply (OutgoingHistories.Ns_smooth w ha).continuous.continuousOn.div
     ((OutgoingHistories.E_smooth w).continuous.mul (OutgoingHistories.Qs_smooth w
-      ha).continuous).continuousOn
+        ha).continuous).continuousOn
   rintro ⟨y, η⟩ ⟨hy, hη⟩
   exact (mul_pos (OutgoingHistories.E_pos w (y, η))
     (canonical_Qs_pos w ha hh1 hy.1 hy.2 (abs_le.mpr hη) hhT)).ne'
@@ -2103,7 +2152,7 @@ theorem exists_actual_preliminary_cone_scale {v : TailData} {K : ℝ}
           ConeAlgebra.coneBound
             (OutgoingHistories.p1 XR w Amp p * (1 - coneB w Amp p * coneRatio w Amp p / coneA w p))
             (OutgoingHistories.p1 XR w Amp p * (coneRatio w Amp p + coneB w Amp p / coneA w p)) :=
-              by
+                by
   obtain ⟨gap, p₀, hg, hp₀, hcone⟩ := compact_actual_preliminary_cone w ha hh1 hP hhT he hlam
   refine ⟨gap, (p₀ + 1) / coneFloor, hg, div_pos (by linarith) coneFloor_pos, ?_⟩
   intro XR hXR p hp
@@ -2139,7 +2188,7 @@ theorem canonical_Qs_ideal {v : TailData} {K : ℝ}
     (ha : ContDiff ℝ ∞ Amp) {y : ℝ} (hy : y ≤ 0) (η : ℝ) :
     OutgoingHistories.Qs w Amp (y, η) = idealAngularLag v.h η := by
   rw [canonical_Qs_before_all w ha (hy.trans v.core.pulseStart_pos.le), angularLag_ideal v.core v.h
-    η hy]
+      η hy]
 
 theorem canonical_Qs_ideal_lower {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) {Amp : ℝ → ℝ}
@@ -2185,7 +2234,7 @@ the true angular field `E`, rather than a declared slope proxy. -/
 theorem coneA_eq_E_derivative {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (p : ℝ × ℝ) :
     coneA w p = 1 - 2 * OutgoingHistories.dY (OutgoingHistories.E w) p / OutgoingHistories.E w p :=
-      by
+        by
   rcases p with ⟨y, η⟩
   have hd := (((hasDerivAt_id y).div_const 2).exp).mul
     (OutgoingHistories.dY_hasDerivAt (OutgoingHistories.E_smooth w) (y, η))
@@ -2193,7 +2242,7 @@ theorem coneA_eq_E_derivative {v : TailData} {K : ℝ}
   unfold coneA
   rw [hh]
   simp only [OutgoingHistories.H, id_eq]
-  field_simp [(Real.exp_pos (y / 2)).ne', (OutgoingHistories.E_pos w (y, η)).ne'] ; ring
+  field_simp [(Real.exp_pos (y / 2)).ne', (OutgoingHistories.E_pos w (y, η)).ne']; ring
 
 /-- Ordered parameter selection for actual histories, followed by the final
 physical radial-scale choice. All thresholds before `XR` are explicit. -/
@@ -2213,9 +2262,9 @@ theorem exists_ordered_actual_preliminary_cone :
             coneA w p * (1 + (coneB w Amp p / coneA w p) ^ 2) + gap <
               ConeAlgebra.coneBound
                 (OutgoingHistories.p1 XR w Amp p * (1 - coneB w Amp p * coneRatio w Amp p / coneA w
-                  p))
+                    p))
                 (OutgoingHistories.p1 XR w Amp p * (coneRatio w Amp p + coneB w Amp p / coneA w p))
-                  := by
+                    := by
   obtain ⟨M, hM, hsmall⟩ := exists_small_dropSpeed dropThreshold_pos
   refine ⟨M, hM, ?_⟩
   intro v hm hP hlam hh K w Amp ha

@@ -6,23 +6,29 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ExternalScalarCommutator
+public import LeanPool.NavierStokesAndEuler.Euler.BaseTransportCommutator
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+public import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
+import LeanPool.NavierStokesAndEuler.Euler.ExternalScalarCommutator
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedConvolution
+
+/-! The actual external transport commutator and its cutoff-independent Gevrey radius-loss estimate.
+-/
 
 @[expose] public section
 
-/-! The actual external transport commutator and its cutoff-independent Gevrey radius-loss
-  estimate. -/
 
 noncomputable section
 
 namespace EulerExternalTransportCommutator
 
 open MeasureTheory EulerSobolev EulerLiftedGradientSpace EulerMetricTransport
-  EulerTransportDerivatives
-  EulerCylinderSobolev EulerRealCylinder EulerVectorCylinder EulerH6Nonlinear
-    EulerBaseTransportCommutator
+    EulerTransportDerivatives
+  EulerCylinderSobolev  EulerVectorCylinder EulerH6Nonlinear
+      EulerBaseTransportCommutator
   EulerExternalScalarCommutator EulerJetProductBounds EulerSpatialSobolevInverse EulerPacketWeights
-    EulerLiftedCurl
+      EulerLiftedCurl
 open scoped ContDiff ENNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -40,12 +46,12 @@ theorem word_derivative_comm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ
     rw [iteratedFieldDerivative_succ, ih (Fin.tail w)]
     funext x
     exact fieldDerivatives_commute period _ _ _ (iteratedFieldDerivative_smooth period (Fin.tail w)
-      f hf) x
+        f hf) x
 
 /-- The literal external transport commutator D^w(b·∇e)−b·∇D^w e. -/
 def transportCommutator {n : ℕ} (w : Fin n → Fin 4)
     (b : LiftDomain period → Domain 4) (e : LiftDomain period → Vector3) : LiftDomain period →
-      Vector3 :=
+        Vector3 :=
   iteratedFieldDerivative period w (transportField period 3 b e) -
     transportField period 3 b (iteratedFieldDerivative period w e)
 
@@ -57,12 +63,12 @@ theorem transportCommutator_eq_sum {n : ℕ} (w : Fin n → Fin 4)
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x)) :
     transportCommutator period w b e = ∑ i : Fin 4,
       scalarCommutator period w (coordinate 4 i ∘ b) (fieldDerivative period (standardDirection i)
-        e) := by
+          e) := by
   unfold transportCommutator transportField
   rw [word_sum period Finset.univ (fun i : Fin 4 => fun x => b x i • fieldDerivative period
-    (standardDirection i) e x) (fun i _ x =>
+      (standardDirection i) e x) (fun i _ x =>
     (postcomp_smooth period (coordinate 4 i) b hb x).smul (fieldDerivative_smooth period
-      (standardDirection i) e he x)) w,
+        (standardDirection i) e he x)) w,
     ← Finset.sum_sub_distrib]
   apply Finset.sum_congr rfl
   intro i _
@@ -71,10 +77,11 @@ theorem transportCommutator_eq_sum {n : ℕ} (w : Fin n → Fin 4)
 
 /-- Sum of the actual H⁶ norms of all external transport commutators at one order. -/
 def transportCommutatorNorm (n : ℕ) (b : LiftDomain period → Domain 4) (e : LiftDomain period →
-  Vector3) : ℝ :=
+    Vector3) : ℝ :=
   ∑ w : Fin n → Fin 4, liftSobolevNorm period 6 (transportCommutator period w b e)
 
-/-- Positivity allows monotonicity of the coefficient sequence in the genuine commutator convolution. -/
+/-- Positivity allows monotonicity of the coefficient sequence in the genuine commutator
+convolution. -/
 theorem commutatorConvolution_mono_left (n : ℕ) (A A' B : ℕ → ℝ)
     (hA : ∀ l, A l ≤ A' l) (hB : ∀ l, 0 ≤ B l) :
     commutatorConvolution A B n ≤ commutatorConvolution A' B n := by
@@ -88,9 +95,9 @@ theorem transportCommutatorNorm_bound (n : ℕ)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u b) 2 (liftMeasure
-      period))
+        period))
     (heL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u e) 2 (liftMeasure
-      period)) :
+        period)) :
     transportCommutatorNorm period n b e ≤ productConstant period 3 *
       commutatorConvolution (fun l => wordSobolevNorm period 6 l b)
         (fun l => wordSobolevNorm period 6 (l+1) e) n := by
@@ -101,15 +108,15 @@ theorem transportCommutatorNorm_bound (n : ℕ)
   have hw (w : Fin n → Fin 4) : liftSobolevNorm period 6 (transportCommutator period w b e) ≤
       ∑ i : Fin 4, liftSobolevNorm period 6
         (scalarCommutator period w (coordinate 4 i ∘ b) (fieldDerivative period (standardDirection
-          i) e)) := by
+            i) e)) := by
     rw [transportCommutator_eq_sum period w b e hb he]
     have h := wordSobolevNorm_sum_le period Finset.univ 6 0
       (fun i => scalarCommutator period w (coordinate 4 i ∘ b) (fieldDerivative period
-        (standardDirection i) e))
+          (standardDirection i) e))
       (fun i _ => scalarCommutator_smooth period w _ _ (hbi i) (fieldDerivative_smooth period _ e
-        he))
+          he))
       (fun i _ => scalarCommutator_all_memLp period w _ _ (hbi i) (fieldDerivative_smooth period _
-        e he)
+          e he)
         (hbiL i) (derivative_all_memLp period e heL i))
     simpa only [wordSobolevNorm_zero] using h
   have hsum := Finset.sum_le_sum (fun w (_ : w ∈ (Finset.univ : Finset (Fin n → Fin 4))) => hw w)
@@ -119,7 +126,7 @@ theorem transportCommutatorNorm_bound (n : ℕ)
     _ ≤ ∑ i : Fin 4, productConstant period 3 * commutatorConvolution
         (fun l => wordSobolevNorm period 6 l b)
         (fun l => wordSobolevNorm period 6 l (fieldDerivative period (standardDirection i) e)) n :=
-          by
+            by
       apply Finset.sum_le_sum
       intro i _
       have hi := commutatorH6Norm_bound period n _ _ (hbi i) (fieldDerivative_smooth period _ e he)
@@ -128,21 +135,22 @@ theorem transportCommutatorNorm_bound (n : ℕ)
       apply mul_le_mul_of_nonneg_left _ (productConstant_nonneg period 3)
       exact commutatorConvolution_mono_left n _ _ _
         (fun l => wordSobolevNorm_postcomp_le period 6 l (coordinate 4 i) (coordinate_norm_le 4 i)
-          b hb hbL)
+            b hb hbL)
         (fun l => wordSobolevNorm_nonneg period 6 l _)
     _ = _ := by
       rw [← Finset.mul_sum, sum_commutatorConvolution_right]
       simp_rw [← wordSobolevNorm_succ]
 
-/-- The actual external transport commutator obeys the radius-loss bound with no cutoff-dependent constant or cutoff-plus-one velocity. -/
+/-- The actual external transport commutator obeys the radius-loss bound with no cutoff-dependent
+constant or cutoff-plus-one velocity. -/
 theorem transportCommutator_weighted_bound (N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
     (b : LiftDomain period → Domain 4) (e : LiftDomain period → Vector3)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u b) 2 (liftMeasure
-      period))
+        period))
     (heL : ∀ j, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u e) 2 (liftMeasure
-      period)) :
+        period)) :
     (∑ n ∈ Finset.range (N+1), weight ρ n * transportCommutatorNorm period n b e) ≤
       productConstant period 3 * ρ⁻¹ *
         (∑ l ∈ Finset.range (N+1), weight ρ l * wordSobolevNorm period 6 l b) *
@@ -154,7 +162,7 @@ theorem transportCommutator_weighted_bound (N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
         (transportCommutatorNorm_bound period n b e hb he hbL heL) (weight_pos hρ n).le
     _ = productConstant period 3 * (∑ n ∈ Finset.range (N+1), ∑ l ∈ Finset.range n,
         weight ρ n * (n.choose (l+1) : ℝ) * wordSobolevNorm period 6 (l+1) b * wordSobolevNorm
-          period 6 (n-l) e) := by
+            period 6 (n-l) e) := by
       simp only [commutatorConvolution_eq_sum, Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro n _
@@ -167,7 +175,7 @@ theorem transportCommutator_weighted_bound (N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
       (EulerWeightedConvolution.external_commutator_sum ρ hρ N
         (fun l => wordSobolevNorm period 6 l b) (fun l => wordSobolevNorm period 6 l e)
         (fun l => wordSobolevNorm_nonneg period 6 l b) (fun l => wordSobolevNorm_nonneg period 6 l
-          e))
+            e))
       (productConstant_nonneg period 3)).trans_eq (by ring)
 
 end EulerExternalTransportCommutator

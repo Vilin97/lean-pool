@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorDifference
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorDifference
 
 /-! Every ordinary spatial derivative tensor of the actual physical graph
 field is a continuous L² path. The proof controls differences by the genuine
 continuous cylinder-word graph paths. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,16 +30,16 @@ variable {P T : ℝ} [Fact (0 < P)] (A : EulerAllOrderCorrectionData.FieldTower 
 theorem physicalTensorValue_sub_norm_le (n : ℕ) (t s : Icc (0 : ℝ) T) :
     ‖A.physicalTensorValue k m n t-A.physicalTensorValue k m n s‖ ≤
       frequencyFactor k m^n * ∑ w : Fin n → Fin 4,
-        ‖A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w t-
+        ‖A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w t -
           A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w s‖ :=
   physicalTensor_difference_norm_le P k m (A.pointField t) (A.pointField s)
     (A.pointField_smooth t) (A.pointField_smooth s) n
     (fun w => A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w t)
     (fun w => A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w s)
     (fun w => A.canonicalGraphWordPath_ae (physicalPhase P k m) (physicalPhase_continuous P k m) n
-      w t)
+        w t)
     (fun w => A.canonicalGraphWordPath_ae (physicalPhase P k m) (physicalPhase_continuous P k m) n
-      w s)
+        w s)
     (A.physicalTensorValue k m n t) (A.physicalTensorValue k m n s)
     (A.physicalTensorValue_ae k m n t) (A.physicalTensorValue_ae k m n s)
 
@@ -50,7 +51,7 @@ theorem physicalTensorValue_continuous (n : ℕ) :
   refine squeeze_zero (fun s => norm_nonneg _)
     (fun s => A.physicalTensorValue_sub_norm_le k m n s t) ?_
   have hc : Continuous (fun s : Icc (0 : ℝ) T => frequencyFactor k m^n * ∑ w : Fin n → Fin 4,
-      ‖A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w s-
+      ‖A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w s -
         A.canonicalGraphWordPath (physicalPhase P k m) (physicalPhase_continuous P k m) n w t‖) :=
     continuous_const.mul (continuous_finsetSum _ (fun w _ =>
       ((A.canonicalGraphWordPath (physicalPhase P k m)

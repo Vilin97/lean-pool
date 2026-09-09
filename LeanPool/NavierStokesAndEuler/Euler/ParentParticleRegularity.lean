@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousInverseDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyInverseMap
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousInverseDerivative
+import LeanPool.NavierStokesAndEuler.Euler.GevreyInverseMap
 
 /-! Spatial smoothness of the actual physical particle inverse follows
 from its inverse identities and the genuine determinant-one Jacobian. -/
+
+@[expose] public section
+
 
 noncomputable section
 

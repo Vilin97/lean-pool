@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleTime
-public import Mathlib.LinearAlgebra.Determinant
+
+/-! Exact Jacobian composition for the child displacement. -/
 
 @[expose] public section
 
-/-! Exact Jacobian composition for the child displacement. -/
 
 noncomputable section
 
@@ -34,10 +34,10 @@ theorem displacement_jacobian (P D : SmoothTimeField K E E) (t : K) (x : E) :
   apply hc.congr_of_eventuallyEq
   exact Filter.Eventually.of_forall (fun y => map_composition P D t y)
 
-theorem displacement_det_one [FiniteDimensional ℝ E]
+theorem displacement_det_one
     (P D : SmoothTimeField K E E) (t : K)
-    (hP : ∀ y, (ContinuousLinearMap.id ℝ E + fderiv ℝ (P.field t : E → E) y).det=1)
-    (hD : ∀ y, (ContinuousLinearMap.id ℝ E + fderiv ℝ (D.field t : E → E) y).det=1)
+    (hP : ∀ y, (ContinuousLinearMap.id ℝ E + fderiv ℝ (P.field t : E → E) y).det = 1)
+    (hD : ∀ y, (ContinuousLinearMap.id ℝ E + fderiv ℝ (D.field t : E → E) y).det = 1)
     (x : E) :
     (ContinuousLinearMap.id ℝ E + fderiv ℝ ((displacement P D).field t : E → E) x).det=1 := by
   rw [displacement_jacobian]

@@ -7,13 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualStageEstimates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularCycleData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualValidBandWaves
 public import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentParticularLabelBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentParticularLabelBounds
 
 /-!
 # Stage estimates with the current-band particular fields
@@ -22,6 +19,9 @@ The signed waves and mean increments retain their actual native inputs.
 The particular contribution is an independently constructed physical field,
 with no physical copy-family representation imposed on it.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +33,7 @@ open ActualPhysicalStageBounds
 open scoped ContDiff Topology BigOperators
 
 
+/-- Bound type used in glued stage estimates. -/
 abbrev Bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (qbig : ℝ) (f : SpaceTime → E) (m : ℕ) (r : ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ w ∈ CutStageEstimates.physicalSublevel h qbig,
@@ -43,7 +44,10 @@ abbrev Bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 particular copy-family field. -/
 structure SignedInputs (D : Type) [NormedAddCommGroup D] [NormedSpace ℝ D]
     (I K : Type*) where
+  /-- Potential of `SignedInputs`, of type `ℕ → PhysicalStageBounds.WaveData h D (Fin 3 × I) K
+  (Fin 3)`. -/
   potential : ℕ → PhysicalStageBounds.WaveData h D (Fin 3 × I) K (Fin 3)
+  /-- Pressure field of `SignedInputs`, of type `ℕ → PhysicalStageBounds.WaveData h D I K Unit`. -/
   pressure : ℕ → PhysicalStageBounds.WaveData h D I K Unit
   potential_exponent : ∀ j, 1 / 2 + ActualIterationLedger.sigma j - ChartScales.kappa ≤
     (potential j).alpha
@@ -61,15 +65,19 @@ variable {B N0 N : ℕ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (fun _ => ActualCycleParameters.fixedParameters B N0))
   (hN : 4 ≤ N) (W : SignedInputs D I K)
 
+/-- Signed mean potential as an element of `VelocityField`. -/
 noncomputable def signedMeanPotential (j : ℕ) : VelocityField := fun w =>
   (W.potential j).vector w +
     (ActualStageEstimates.temporalInput R M hN j).family.angularField w +
     (ActualStageEstimates.rankInput R M hN j).family.angularField w
 
+/-- Signed mean pressure, defined pointwise by `(W.pressure j).pressure w +
+(ActualStageEstimates.pressureInput R M hN j).family.field w`. -/
 noncomputable def signedMeanPressure (j : ℕ) : PressureField := fun w =>
   (W.pressure j).pressure w +
     (ActualStageEstimates.pressureInput R M hN j).family.field w
 
+/-- Direct, given by `(ActualStageEstimates.angularInput R M hN j).family.angularField`. -/
 noncomputable def direct (j : ℕ) : VelocityField :=
   (ActualStageEstimates.angularInput R M hN j).family.angularField
 
@@ -190,12 +198,16 @@ end FixedRun
 
 /-! ## A physical particular contribution and the same mixed sequence -/
 
+/-- Potential loss, given by `max (L m) (PhysicalStageBounds.potentialLoss h h 0 m)`. -/
 noncomputable def potentialLoss (L : ℕ → ℝ) (m : ℕ) : ℝ :=
   max (L m) (PhysicalStageBounds.potentialLoss h h 0 m)
 
+/-- Pressure loss, given by `max (L m) (PhysicalStageBounds.pressureLoss h (2 *
+CoordinateAlgebra.A h) 0 m)`. -/
 noncomputable def pressureLoss (L : ℕ → ℝ) (m : ℕ) : ℝ :=
   max (L m) (PhysicalStageBounds.pressureLoss h (2 * CoordinateAlgebra.A h) 0 m)
 
+/-- Background loss, constructed using `MixedFiniteBackground.initialBackgroundLoss`. -/
 noncomputable def backgroundLoss (L : ℕ → ℝ) (waveAlpha waveShift : ℝ) : ℕ → ℝ :=
   MixedFiniteBackground.initialBackgroundLoss
     (InitializedPhysicalBackground.initialLoss h waveAlpha waveShift
@@ -222,6 +234,8 @@ noncomputable def potential (j : ℕ) : VelocityField := fun w =>
     (ActualStageEstimates.temporalInput R M hN j).family.angularField w +
     (ActualStageEstimates.rankInput R M hN j).family.angularField w
 
+/-- Pressure, defined pointwise by `particularP j w + (W.pressure j).pressure w +
+(ActualStageEstimates.pressureInput R M hN j).family.field w`. -/
 noncomputable def pressure (j : ℕ) : PressureField := fun w =>
   particularP j w + (W.pressure j).pressure w +
     (ActualStageEstimates.pressureInput R M hN j).family.field w
@@ -365,15 +379,15 @@ theorem represented_raw_bounds {LA LP : ℕ → ℝ}
     ∃ CA CB CP : ℕ → ℕ → ℝ,
       (∀ j m, 0 ≤ CA j m ∧ 0 ≤ CB j m ∧ 0 ≤ CP j m) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) A (ActualIterationLedger.gain
-        h)
+          h)
         (potentialLoss LA) CA (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) Bdirect
-        (ActualIterationLedger.gain h)
+          (ActualIterationLedger.gain h)
         (PhysicalStageBounds.directLoss h 0) CB (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) ∧
       CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h) P (ActualIterationLedger.gain
-        h)
+          h)
         (pressureLoss LP) CP (fun _ _ => 0)
         (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig) := by
   obtain ⟨CA, hCA, ha⟩ := raw_of_positive_bounds (fun j m =>
@@ -389,7 +403,7 @@ theorem represented_raw_bounds {LA LP : ℕ → ℝ}
 
 /-- The residual floor is fixed to the next band.  Only exact physical
 realizations of finite prefixes enter the residual part of the proof. -/
-noncomputable def stageEstimates_of_component_bounds {LA LP : ℕ → ℝ}
+noncomputable def stageEstimatesOfComponentBounds {LA LP : ℕ → ℝ}
     (hsA : ∀ j, ContDiffOn ℝ ∞ (particularA j) (CutStageEstimates.physicalSublevel h qbig))
     (hsP : ∀ j, ContDiffOn ℝ ∞ (particularP j) (CutStageEstimates.physicalSublevel h qbig))
     (hbA : ∀ j m, Bound qbig (particularA j) m (ActualIterationLedger.gain h (j + 1) - LA m))
@@ -434,14 +448,14 @@ noncomputable def stageEstimates_of_component_bounds {LA LP : ℕ → ℝ}
     finite_background := ?_
     finite_residual := ?_ }
   · have hU := CutStageEstimates.physicalSublevel_open outgoing.data.h_pos outgoing.data.h_lt_half
-    qbig
+      qbig
     have hlU := InitializedPhysicalBackground.endpoint_sublevel
       outgoing.data.h_pos outgoing.data.h_lt_half hqbig
     apply MixedFiniteBackground.mixed_background_from_initial hU hlU
       (ActualBaseVelocityBounds.endpoint_past.and hlU)
       (ActualBaseVelocityBounds.endpoint_q_small outgoing.data.h_pos outgoing.data.h_lt_half)
       hsa hsb hc.2.1 hc.2.2.1 (fun j _ => ActualIterationLedger.gain_nonneg outgoing.data.h_pos.le
-        j)
+          j)
     intro m
     simpa only [actualInitialTemporalInput, actualInitialRankInput,
       actualInitialAngularInput, MeanInput.ofMoving, min_self] using
@@ -458,9 +472,13 @@ end MixedSequence
 
 /-! ## The literal fields and native source data of the fixed run -/
 
+/-- Current potential, given by `ActualValidBandWaves.gluedPotential
+(ActualCyclePreservation.state B N0 j) N`. -/
 noncomputable def currentPotential (B N0 N : ℕ) (j : ℕ) : VelocityField :=
   ActualValidBandWaves.gluedPotential (ActualCyclePreservation.state B N0 j) N
 
+/-- Current pressure, given by `ActualValidBandWaves.gluedPressure
+(ActualCyclePreservation.state B N0 j) N`. -/
 noncomputable def currentPressure (B N0 N : ℕ) (j : ℕ) : PressureField :=
   ActualValidBandWaves.gluedPressure (ActualCyclePreservation.state B N0 j) N
 
@@ -570,7 +588,7 @@ the actual label/coordinate reindexing. -/
 theorem current_source_class (j : ℕ) (k : ℤ) (hk : k ≠ 0) :
     LabelSumBounds.UniformWaveClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
-        ActualParticularStageControls.slowStrip))
+          ActualParticularStageControls.slowStrip))
       ActualParticularStageControls.nativeEnvelope (1 / 2 + ActualIterationLedger.sigma j)
       (ActualParticularStageControls.currentSource
         (ActualCycleParameters.particularState (ActualCyclePreservation.state B N0 j)) k) :=
@@ -608,7 +626,7 @@ theorem current_label_mem (j n : ℕ) (l : ActualParticularStageControls.Label B
 omit R in
 theorem gain_le_current_exponent (j : ℕ) :
     ActualIterationLedger.gain h (j + 1) ≤ h * ((1 / 2 + ActualIterationLedger.sigma j) + 1 / 2) :=
-      by
+        by
   have hg := ActualIterationLedger.gain_le_wave outgoing.data.h_pos.le
     ActualCyclePreservation.kappa_small (Nat.succ_pos j)
   rw [← ActualStageEstimates.nativePotential_eq_ledger j] at hg
@@ -709,7 +727,7 @@ noncomputable def actualStageEstimates
       (MixedDiagonalResidual.uncutVelocity A Bdirect J)
       (DiagonalJetBounds.uncutPrefix P (J + 1))) :
     MixedCandidateAssembly.StageEstimates h qbig A Bdirect P := by
-  let E := stageEstimates_of_component_bounds R M hN W
+  let E := stageEstimatesOfComponentBounds R M hN W
     (currentPotential B N0 N) (currentPressure B N0 N) hq
     (InitialPhysicalData.potentialWaveData B N0) (InitialPhysicalData.pressureWaveData B N0) e
     (fun j => (current_fields_smooth R C hGeom hq j).1)

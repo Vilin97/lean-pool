@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
 
 /-!
 # The differential operator norm and the coordinate gradient energy
@@ -17,6 +16,9 @@ The three coordinate derivatives control the operator norm of the full
 derivative. These pointwise estimates do not require differentiability: Lean's
 totalized `fderiv` is a continuous linear map for every function.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

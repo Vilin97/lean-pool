@@ -8,13 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
 
-@[expose] public section
-
 /-!
 Uniform finite-order product and pressure constants from bounds on the
 actual coefficient derivative tree. At each fixed Sobolev order these
 costs are finite polynomials in the coefficient bound and inverse coercivity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,10 +23,13 @@ namespace EulerCoefficientJetPressureBounds
 
 open Finset EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerJetProductBounds
 
+/-- Product cost as an element of `ℕ → ℝ | 0 => B | q+1 => B+8*productCost B q`. -/
 def productCost (B : ℝ) : ℕ → ℝ
   | 0 => B
   | q+1 => B+8*productCost B q
 
+/-- Pressure cost as an element of `ℕ → ℝ | 0 => c⁻¹ | q+1 => c⁻¹+4*(pressureCost c B
+q*(1+productCost B q*pressureCost c B q))`. -/
 def pressureCost (c B : ℝ) : ℕ → ℝ
   | 0 => c⁻¹
   | q+1 => c⁻¹+4*(pressureCost c B q*(1+productCost B q*pressureCost c B q))
@@ -46,6 +50,7 @@ theorem pressureCost_nonneg (c B : ℝ) (hc : 0 < c) (hB : 0 ≤ B) (q : ℕ) :
 
 variable {P : ℝ} [Fact (0 < P)] {dirs : Fin 4 → LiftTangent}
 
+/-- Tree bound as an element of `Prop`. -/
 def TreeBound {s : ℕ} {A : SmoothCoefficient P} (K : CoefficientJet P dirs s A) (B : ℝ) : Prop :=
   match K with
   | .zero A => (A.bound : ℝ) ≤ B
@@ -77,7 +82,7 @@ theorem treeBound_of_levels {s : ℕ} {A : SmoothCoefficient P} (K : Coefficient
 
 omit [Fact (0 < P)] in
 theorem TreeBound.truncate {s : ℕ} {A : SmoothCoefficient P}
-    {K : CoefficientJet P dirs (s+1) A} {B : ℝ} (hK : TreeBound K B) :
+    {K : CoefficientJet P dirs (s + 1) A} {B : ℝ} (hK : TreeBound K B) :
     TreeBound K.truncate B := by
   induction s generalizing A with
   | zero => cases K; exact hK.1
@@ -133,7 +138,7 @@ theorem TreeBound.pressureConstant_le {s : ℕ} {A : SmoothCoefficient P}
           have hP0 := pressureCost_nonneg c B hc hB s
           have hC0 := productCost_nonneg B hB s
           have ht (i : Fin 4) : K₀.pressureConstant c*(1+(lower
-            i).productConstant*K₀.pressureConstant c) ≤
+              i).productConstant*K₀.pressureConstant c) ≤
               pressureCost c B s*(1+productCost B s*pressureCost c B s) := by
             have hi := (hK.2 i).productConstant_le
             have hc0 := (lower i).productConstant_nonneg

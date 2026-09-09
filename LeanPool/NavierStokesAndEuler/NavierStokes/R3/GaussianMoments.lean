@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernel
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 
 /-!
 # Gaussian moments for Fourier differentiation
@@ -18,6 +16,9 @@ The zeroth, first and second norm moments of a Gaussian are integrable.
 The only polynomial estimate used here absorbs the square of the norm into
 a Gaussian with half the decay rate.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -59,7 +60,6 @@ private theorem sq_mul_gaussian_le (a r : ℝ) (ha : 0 < a) :
     r ^ 2 * Real.exp (-a * r ^ 2) =
         (2 / a) * (((a / 2) * r ^ 2) * Real.exp (-a * r ^ 2)) := by
       field_simp [ha.ne']
-
     _ ≤ (2 / a) * Real.exp (-(a / 2) * r ^ 2) :=
       mul_le_mul_of_nonneg_left hmul (by positivity)
 

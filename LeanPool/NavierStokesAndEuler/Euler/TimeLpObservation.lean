@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMap
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Exact bounded observations of genuine higher-order Bochner representatives. -/
 
 @[expose] public section
 
-/-! Exact bounded observations of genuine higher-order Bochner representatives. -/
 
 noncomputable section
 
@@ -31,7 +33,8 @@ theorem compLpL_comp (T : ℝ) (A : E →L[ℝ] F) (B : F →L[ℝ] G) (u : Time
   rw [h1, h2, h3]
   rfl
 
-/-- A continuous lower-order representative and an actual higher-order time field have identical bounded observations when the operators agree on restriction. -/
+/-- A continuous lower-order representative and an actual higher-order time field have identical
+bounded observations when the operators agree on restriction. -/
 theorem observation_time_eq (T : ℝ) (hT : 0 ≤ T) (A : E →L[ℝ] F) (D : F →L[ℝ] G) (W : E →L[ℝ] G)
     (hDA : ∀ x, D (A x) = W x) (u : TimeLp T E) (f : C(Icc (0 : ℝ) T, F))
     (hf : (fun t => A (u t)) =ᵐ[timeMeasure T] extendPath T hT f) :

@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeStateCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TemporalStateCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RankStateCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
 
 /-!
 # Full-fiber coherence through the actual correction recurrence
@@ -22,6 +19,9 @@ variable. Pressure reconstruction, the temporal inverse and the rank repair
 are the literal operations in `CorrectionStep.CycleState.step`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.CycleStateCoherence
@@ -30,22 +30,35 @@ open Set Function Filter CorrectionState CorrectionStep MeanIncrementBounds
 open PhysicalResidualNaturality GaugeStateCoherence
 open scoped Topology ContDiff BigOperators
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `CorrectionStep.CyclePoint`. -/
 abbrev Point := CorrectionStep.CyclePoint
 
 /-- Fixed physical geometry of the recurrence. The radial exponent, gauge
 and normalized rank coefficients are constructed from these parameters. -/
 structure Geometry where
+  /-- Step-size parameter of `Geometry`, of type `ℝ`. -/
   h : ℝ
+  /-- Inner of `Geometry`, of type `ℝ`. -/
   inner : ℝ
+  /-- Outer of `Geometry`, of type `ℝ`. -/
   outer : ℝ
+  /-- Frequency of `Geometry`, of type `ℝ`. -/
   frequency : ℝ
+  /-- Rank amplitude of `Geometry`, of type `ℝ`. -/
   rankAmplitude : ℝ
+  /-- Rank shape of `Geometry`, of type `ℝ`. -/
   rankShape : ℝ
+  /-- Rank inner of `Geometry`, of type `ℝ`. -/
   rankInner : ℝ
+  /-- Rank outer of `Geometry`, of type `ℝ`. -/
   rankOuter : ℝ
+  /-- Operator inner of `Geometry`, of type `ℝ`. -/
   operatorInner : ℝ
+  /-- Operator outer of `Geometry`, of type `ℝ`. -/
   operatorOuter : ℝ
+  /-- Index of `Geometry`, of type `ℕ → ℕ`. -/
   index : ℕ → ℕ
   h_pos : 0 < h
   h_lt_half : h < 1 / 2
@@ -53,20 +66,26 @@ structure Geometry where
   inner_lt_outer : inner < outer
   operator_lt : operatorInner < operatorOuter
 
+/-- Gauge, given by `VariableGaugeMean.similarityGauge G.h (ChartScales.radialExponent G.h)
+G.inner G.outer G.frequency G.inner_lt_outer G.index`. -/
 noncomputable def Geometry.gauge (G : Geometry) : VariableGaugeMean.GaugeData Plane :=
   VariableGaugeMean.similarityGauge G.h (ChartScales.radialExponent G.h)
     G.inner G.outer G.frequency G.inner_lt_outer G.index
 
+/-- Rank, given by `RankStateBounds.normalizedData (2 * G.h) (CoordinateAlgebra.A G.h)
+G.rankAmplitude G.rankShape G.rankInner G.rankOuter`. -/
 noncomputable def Geometry.rank (G : Geometry) : CorrectionState.RankData Plane :=
   RankStateBounds.normalizedData (2 * G.h) (CoordinateAlgebra.A G.h)
     G.rankAmplitude G.rankShape G.rankInner G.rankOuter
 
+/-- Operators, given by `CommonBaseContext.operators G.h G.index G.operatorInner G.operatorOuter
+G.operator_lt`. -/
 noncomputable def Geometry.operators (G : Geometry) : MeanIncrementBounds.Operators Point :=
   CommonBaseContext.operators G.h G.index G.operatorInner G.operatorOuter G.operator_lt
 
 /-- Identifications of primitive data, not conclusions about a state. -/
 structure Realizes {ι : Type} (G : Geometry) (p : CycleParameters ι) (c : Context Point) : Prop
-  where
+    where
   gauge : p.gauge = G.gauge
   rank : p.rank = G.rank
   timeExponent : p.timeExponent = G.h
@@ -74,14 +93,19 @@ structure Realizes {ι : Type} (G : Geometry) (p : CycleParameters ι) (c : Cont
   axial : p.axial = ((0, 1), 0)
   operators : c.operators = G.operators
 
+/-- State band, given by `StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
+(bandVelocityScale G.h n m) (bandScale n m) u u n m`. -/
 def StateBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (u : State Point) : Prop :=
   StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
     (bandVelocityScale G.h n m) (bandScale n m) u u n m
 
+/-- Context band, given by `ContextOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m
+k) (bandVelocityScale G.h n m) (bandScale n m) c c n m`. -/
 def ContextBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (c : Context Point) : Prop :=
   ContextOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
     (bandVelocityScale G.h n m) (bandScale n m) c c n m
 
+/-- Axis band as an element of `Prop`. -/
 def AxisBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (a : AxisymmetricAlias) : Prop :=
   ∀ x ∈ PhysicalMeanDomain.slowDomain V, ∀ i,
     a n x i = (bandVelocityScale G.h n m * bandVelocityScale G.h n m * bandScale n m) *
@@ -197,11 +221,11 @@ theorem refresh_pressure_alias_on {S T : Type} [NormedAddCommGroup S] [NormedSpa
     {old current : State (PressureStream.Lift S)} {oldr currentr : State (PressureStream.Lift T)}
     {n m : ℕ} (H : StateOn U e c l current currentr n m)
     (hnew : ∀ x ∈ U, ∀ theta i,
-      VariableGaugeMean.pressureAliasState g C current n (x,theta) i =
-        (c*c*l) * VariableGaugeMean.pressureAliasState gr Cr currentr m (e x,theta) i)
+      VariableGaugeMean.pressureAliasState g C current n (x, theta) i =
+        (c * c * l) * VariableGaugeMean.pressureAliasState gr Cr currentr m (e x, theta) i)
     (hold : ∀ x ∈ U, ∀ theta i,
-      VariableGaugeMean.pressureAliasState g C old n (x,theta) i =
-        (c*c*l) * VariableGaugeMean.pressureAliasState gr Cr oldr m (e x,theta) i) :
+      VariableGaugeMean.pressureAliasState g C old n (x, theta) i =
+        (c * c * l) * VariableGaugeMean.pressureAliasState gr Cr oldr m (e x, theta) i) :
     StateOn U e c l (gaugeRefreshPressureAlias g C old current)
       (gaugeRefreshPressureAlias gr Cr oldr currentr) n m := by
   refine ⟨H.mean, H.pressure, H.oscillation, H.oscillatoryPressure, H.baseError, H.gaussian, ?_⟩
@@ -308,7 +332,7 @@ theorem stage_primitives {ι : Type} {G : Geometry} {p : CycleParameters ι}
       (SignedMeanGain.covarianceIncrement u.oscillation (p.particularVelocity v c u) i j))
     (hX₂ : ∀ i j, GaugeMomentBalances.MovingField U p.gauge.radial.inner p.gauge.radial.outer
       (SignedMeanGain.covarianceIncrement (p.afterParticular v c u).oscillation (p.signedVelocity v
-        c u) i j))
+          c u) i j))
     (hg : LocalRankDefect.RankGeometry p.gauge p.rank U.carrier c u) :
     StagePrimitives G p v c u U := by
   have H₁ := H.waveStage p.gauge (p.particularVelocity v c u) (p.particularPressure v c u)
@@ -318,7 +342,7 @@ theorem stage_primitives {ι : Type} {G : Geometry} {p : CycleParameters ι}
   have H₃ := MeanStageRegularity.temporalStage_primitive H₂ R.inner_pos R.exponent_pos R.length rfl
     p.timeExponent p.commonIndex p.axial
   have Hgeom := MeanStageRegularity.rankGeometry_for_state H₃ R.inner_pos
-    p.gauge.radial.inner_lt_outer hg
+      p.gauge.radial.inner_lt_outer hg
   have H₄ := MeanStageRegularity.rankStage_primitive H₃ Hgeom R.length p.axial
   exact ⟨H₁, H₂, H₃, H₄, Hgeom⟩
 
@@ -341,7 +365,7 @@ theorem reconstruction_and_alias_band
         VariableGaugeMean.pressureAliasState p.gauge c u n (x,theta) i =
           (bandVelocityScale G.h n m * bandVelocityScale G.h n m * bandScale n m) *
             VariableGaugeMean.pressureAliasState p.gauge c u m (bandChartEquiv G.h n m k x,theta) i
-              := by
+                := by
   have hg := R.gauge_on n m k hi (fun s hs => U.time_pos s (hsub hs))
   have hr := H.source R.inner_pos p.gauge.radial.inner_lt_outer
   have hs : VariableGaugeMean.SupportedGauge p.gauge.radial.inner p.gauge.radial.outer
@@ -371,6 +395,7 @@ theorem wave_stage_band {w g : Oscillation Point} {q : OscillatoryScalar Point}
 
 end OnePair
 
+/-- Error band as an element of `Prop`. -/
 def ErrorBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (a : Oscillation Point) : Prop :=
   ∀ x ∈ PhysicalMeanDomain.slowDomain V, ∀ theta i,
     a n (x,theta) i = (bandVelocityScale G.h n m * bandVelocityScale G.h n m * bandScale n m) *
@@ -400,7 +425,7 @@ structure CycleTransport {ι : Type} (G : Geometry) (p : CycleParameters ι)
   next : StateBand G V n m k (p.next v c u)
   temporalAlias : ErrorBand G V n m k
     (VariableGaugeMean.temporalAliasState p.gauge p.timeExponent p.commonIndex c (p.afterSigned v c
-      u))
+        u))
   oldPressureAlias : ErrorBand G V n m k (VariableGaugeMean.pressureAliasState p.gauge c u)
   currentPressureAlias : ErrorBand G V n m k
     (VariableGaugeMean.pressureAliasState p.gauge c (p.afterRank v c u))
@@ -416,7 +441,7 @@ theorem cycle_transport {ι : Type} {G : Geometry} {p : CycleParameters ι}
       (SignedMeanGain.covarianceIncrement u.oscillation (p.particularVelocity v c u) i j))
     (hX₂ : ∀ i j, GaugeMomentBalances.MovingField U p.gauge.radial.inner p.gauge.radial.outer
       (SignedMeanGain.covarianceIncrement (p.afterParticular v c u).oscillation (p.signedVelocity v
-        c u) i j))
+          c u) i j))
     (hg : LocalRankDefect.RankGeometry p.gauge p.rank U.carrier c u)
     (HW : CycleWavesOn G p v c u V n m k) : CycleTransport G p v c u V n m k := by
   have HP := stage_primitives R H hX₁ hX₂ hg
@@ -446,7 +471,7 @@ theorem cycle_transport {ι : Type} {G : Geometry} {p : CycleParameters ι}
       (hTemporalSource.smooth m) (hTemporalSource.periodic m) hTemporalSupport
   have hAlias : ErrorBand G V n m k
       (VariableGaugeMean.temporalAliasState p.gauge p.timeExponent p.commonIndex c (p.afterSigned v
-        c u)) :=
+          c u)) :=
     TemporalStateCoherence.temporalAliasState_on (bandScale_pos n m) (bandSlowEquiv G.h n m) k
       hV U.isOpen hmap p.gauge p.gauge c c (p.afterSigned v c u) (p.afterSigned v c u)
       p.timeExponent p.commonIndex p.commonIndex n m R.inner_pos R.exponent_pos hGauge H₂ HC
@@ -476,18 +501,18 @@ theorem CycleTransport.axis {ι : Type} {G : Geometry} {p : CycleParameters ι}
   intro x hx i
   change a n x i +
     VariableGaugeMean.temporalAliasState p.gauge p.timeExponent p.commonIndex c (p.afterSigned v c
-      u) n (x,0) i +
+        u) n (x,0) i +
     (VariableGaugeMean.pressureAliasState p.gauge c (p.afterRank v c u) n (x,0) i -
       VariableGaugeMean.pressureAliasState p.gauge c u n (x,0) i) = _
   rw [HA x hx i, H.temporalAlias x hx 0 i, H.currentPressureAlias x hx 0 i, H.oldPressureAlias x hx
-    0 i]
+      0 i]
   change _ = (bandVelocityScale G.h n m * bandVelocityScale G.h n m * bandScale n m) *
     (a m (bandChartEquiv G.h n m k x) i +
       VariableGaugeMean.temporalAliasState p.gauge p.timeExponent p.commonIndex c (p.afterSigned v
-        c u) m
+          c u) m
         (bandChartEquiv G.h n m k x,0) i +
       (VariableGaugeMean.pressureAliasState p.gauge c (p.afterRank v c u) m (bandChartEquiv G.h n m
-        k x,0) i -
+          k x,0) i -
         VariableGaugeMean.pressureAliasState p.gauge c u m (bandChartEquiv G.h n m k x,0) i))
   ring
 
@@ -516,7 +541,7 @@ theorem iterate_labels {ι : Type} (p : ℕ → CycleParameters ι) (c : Context
 theorem iterate_aliasCoefficients {ι : Type} (p : ℕ → CycleParameters ι) (c : Context Point)
     (seed : CycleState ι) (j : ℕ) :
     (CycleState.iterate p c seed j).coefficients.aliasCoefficients =
-      seed.coefficients.aliasCoefficients := by
+        seed.coefficients.aliasCoefficients := by
   induction j with
   | zero => rfl
   | succ j ih => exact ih
@@ -535,12 +560,12 @@ theorem block_fields_next {ι : Type} {G : Geometry} {p : CycleParameters ι}
       ((p.nextCoefficients v c u).blocks l) ((p.nextCoefficients v c u).blocks l)
       ((p.nextCoefficients v c u).gaussian l) ((p.nextCoefficients v c u).aliasCoefficients l)
       ((p.nextCoefficients v c u).gaussian l) ((p.nextCoefficients v c u).aliasCoefficients l) n m
-        := by
+          := by
   refine ⟨H.phase, H.angular, H.angular_ne, ?_, ?_, ?_, H.aliasError⟩
   · intro x hx theta i
     change (p.finalBlock v c u l).oscillation n (x,theta) i =
       bandVelocityScale G.h n m * (p.finalBlock v c u l).oscillation m (bandChartEquiv G.h n m k
-        x,theta) i
+          x,theta) i
     rw [p.finalBlock_oscillation v c u hc l]
     simp only [Pi.add_apply]
     rw [H.velocity x hx theta i, (HW.particular.wave l).velocity x hx theta i,
@@ -557,10 +582,10 @@ theorem block_fields_next {ι : Type} {G : Geometry} {p : CycleParameters ι}
     ring
   · intro x hx theta i
     change coefficientField ((p.nextCoefficients v c u).blocks l) ((p.nextCoefficients v c
-      u).gaussian l) n (x,theta) i =
+        u).gaussian l) n (x,theta) i =
       (bandVelocityScale G.h n m * bandVelocityScale G.h n m * bandScale n m) *
         coefficientField ((p.nextCoefficients v c u).blocks l) ((p.nextCoefficients v c u).gaussian
-          l) m
+            l) m
           (bandChartEquiv G.h n m k x,theta) i
     rw [p.nextCoefficients_gaussian_field v c u hc l n (x,theta) i,
       p.nextCoefficients_gaussian_field v c u hc l m (bandChartEquiv G.h n m k x,theta) i]
@@ -590,14 +615,14 @@ theorem iterate_state_axis {ι : Type} (G : Geometry) (p : ℕ → CycleParamete
     (hX₂ : ∀ j, let x := CycleState.iterate p c seed j
       ∀ i l, GaugeMomentBalances.MovingField U G.inner G.outer
         (SignedMeanGain.covarianceIncrement ((p j).afterParticular x.coefficients c
-          x.state).oscillation
+            x.state).oscillation
           ((p j).signedVelocity x.coefficients c x.state) i l))
     (HW : ∀ j, let x := CycleState.iterate p c seed j
       CycleWavesOn G (p j) x.coefficients c x.state V n m k) :
     ∀ j, StateBand G V n m k (CycleState.iterate p c seed j).state ∧
       AxisBand G V n m k (CycleState.iterate p c seed j).axisymmetricAlias ∧
       MeanStateRegularity.PrimitiveData U G.inner G.outer c (CycleState.iterate p c seed j).state
-        := by
+          := by
   intro j
   induction j with
   | zero => exact ⟨HS, HA, HP⟩
@@ -606,22 +631,22 @@ theorem iterate_state_axis {ι : Type} (G : Geometry) (p : ℕ → CycleParamete
     have hinner : (p j).gauge.radial.inner = G.inner := by rw [(R j).gauge]; rfl
     have houter : (p j).gauge.radial.outer = G.outer := by rw [(R j).gauge]; rfl
     have Hp : MeanStateRegularity.PrimitiveData U (p j).gauge.radial.inner (p j).gauge.radial.outer
-      c x.state := by
+        c x.state := by
       rw [hinner, houter]
       exact ih.2.2
     have Hrank : LocalRankDefect.RankGeometry (p j).gauge (p j).rank U.carrier c x.state := by
       rw [(R j).gauge, (R j).rank]
       exact MeanStageRegularity.rankGeometry_for_state ih.2.2 G.inner_pos G.inner_lt_outer HG
     have HX₁ : ∀ i l, GaugeMomentBalances.MovingField U (p j).gauge.radial.inner (p
-      j).gauge.radial.outer
+        j).gauge.radial.outer
         (SignedMeanGain.covarianceIncrement x.state.oscillation ((p j).particularVelocity
-          x.coefficients c x.state) i l) := by
+            x.coefficients c x.state) i l) := by
       rw [hinner, houter]
       exact hX₁ j
     have HX₂ : ∀ i l, GaugeMomentBalances.MovingField U (p j).gauge.radial.inner (p
-      j).gauge.radial.outer
+        j).gauge.radial.outer
         (SignedMeanGain.covarianceIncrement ((p j).afterParticular x.coefficients c
-          x.state).oscillation
+            x.state).oscillation
           ((p j).signedVelocity x.coefficients c x.state) i l) := by
       rw [hinner, houter]
       exact hX₂ j
@@ -635,7 +660,7 @@ theorem iterate_block_fields {ι : Type} (G : Geometry) (p : ℕ → CycleParame
     (c : Context Point) (seed : CycleState ι) (V : Set Plane) (n m k : ℕ)
     (Hseed : ∀ l, BlockFieldsOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
       (bandVelocityScale G.h n m) (bandScale n m) (seed.coefficients.blocks l)
-        (seed.coefficients.blocks l)
+          (seed.coefficients.blocks l)
       (seed.coefficients.gaussian l) (seed.coefficients.aliasCoefficients l)
       (seed.coefficients.gaussian l) (seed.coefficients.aliasCoefficients l) n m)
     (HW : ∀ j, let x := CycleState.iterate p c seed j
@@ -645,7 +670,7 @@ theorem iterate_block_fields {ι : Type} (G : Geometry) (p : ℕ → CycleParame
     ∀ j l, let x := CycleState.iterate p c seed j
       BlockFieldsOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
         (bandVelocityScale G.h n m) (bandScale n m) (x.coefficients.blocks l)
-          (x.coefficients.blocks l)
+            (x.coefficients.blocks l)
         (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)
         (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) n m := by
   intro j
@@ -655,6 +680,7 @@ theorem iterate_block_fields {ι : Type} (G : Geometry) (p : ℕ → CycleParame
 
 /-! ## Explicit retention of the current pressure and all temporal aliases -/
 
+/-- Temporal alias at as an element of `Oscillation Point`. -/
 noncomputable def temporalAliasAt {ι : Type} (p : ℕ → CycleParameters ι)
     (c : Context Point) (seed : CycleState ι) (j : ℕ) : Oscillation Point :=
   let x := CycleState.iterate p c seed j
@@ -692,7 +718,7 @@ theorem iterate_alias_separated {ι : Type} (p : ℕ → CycleParameters ι) (c 
     (seed : CycleState ι) (g : VariableGaugeMean.GaugeData Plane)
     (hg : ∀ j, (p j).gauge = g) (other : Oscillation Point)
     (hseed : seed.state.errors.aliasError = other + VariableGaugeMean.pressureAliasState g c
-      seed.state)
+        seed.state)
     (J : ℕ) :
     (CycleState.iterate p c seed J).state.errors.aliasError =
       other + (∑ j ∈ Finset.range J, temporalAliasAt p c seed j) +
@@ -709,9 +735,9 @@ theorem waveOn_of_positive_fibers (h : ℝ) (n m k : ℕ) {V U : Set Plane}
     (H : WaveOn (PhysicalMeanDomain.slowDomain V ∩ {x | 0 < x.1}) (bandChartEquiv h n m k)
       (bandVelocityScale h n m) (bandScale n m) w q g w q g n m)
     (hzleft : ∀ x ∈ PhysicalMeanDomain.slowDomain V, x.1 ≤ 0 → ∀ theta,
-      w n (x,theta) = 0 ∧ q n (x,theta) = 0 ∧ g n (x,theta) = 0)
+      w n (x, theta) = 0 ∧ q n (x, theta) = 0 ∧ g n (x, theta) = 0)
     (hzright : ∀ x ∈ PhysicalMeanDomain.slowDomain U, x.1 ≤ 0 → ∀ theta,
-      w m (x,theta) = 0 ∧ q m (x,theta) = 0 ∧ g m (x,theta) = 0) :
+      w m (x, theta) = 0 ∧ q m (x, theta) = 0 ∧ g m (x, theta) = 0) :
     WaveOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv h n m k)
       (bandVelocityScale h n m) (bandScale n m) w q g w q g n m := by
   have he (x : Point) (hx : x ∈ PhysicalMeanDomain.slowDomain V) (theta : ℝ) :

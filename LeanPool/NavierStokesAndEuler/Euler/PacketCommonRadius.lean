@@ -9,11 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 
 /-! Monotone enlargement of the actual source budgets and a common external
 radius for the mean, forced transverse and nonlinear packet estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 

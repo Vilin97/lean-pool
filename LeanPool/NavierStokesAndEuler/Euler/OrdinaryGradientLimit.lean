@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientStability
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerCauchy
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientStability
 
 /-! Common-interval smooth Euler limits under a uniform bound on the
 actual time integral of the velocity gradient. The H³ bound, all higher
 bounds, and path Cauchy convergence are derived from the true equations. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +25,8 @@ open Set Filter MeasureTheory EulerSmoothLimit EulerLpTranslation
   EulerLpTranslation.SmoothL2Field EulerMeanSolenoidal
 open scoped Topology
 
+/-- Gradient tensor bound, given by `wordCount 3*Real.sqrt (wordCount 3*R^2*Real.exp
+(gradientEnergyConstant*G))`. -/
 def gradientTensorBound (R G : ℝ) : ℝ :=
   wordCount 3*Real.sqrt (wordCount 3*R^2*Real.exp (gradientEnergyConstant*G))
 
@@ -31,7 +35,7 @@ namespace Evolution
 variable {T : ℝ} {hT : 0 ≤ T}
 
 theorem h3_tensorNorm_gradient_uniform (U : Evolution T hT) (R G : ℝ)
-    (hR : tensorNorm 3 (U.velocity ⟨0,le_rfl,hT⟩) ≤ R)
+    (hR : tensorNorm 3 (U.velocity ⟨0, le_rfl, hT⟩) ≤ R)
     (hG : ∀ t, U.gradientIntegral t ≤ G) (t : Icc (0 : ℝ) T) :
     tensorNorm 3 (U.velocity t) ≤ gradientTensorBound R G := by
   apply (U.h3_tensorNorm_of_gradientIntegral G hG t).trans
@@ -44,7 +48,7 @@ theorem h3_tensorNorm_gradient_uniform (U : Evolution T hT) (R G : ℝ)
 
 theorem cauchyPath_of_initial_gradient (V : ℕ → Evolution T hT) (G : ℝ)
     (hG : ∀ k t, (V k).gradientIntegral t ≤ G)
-    (hinit : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) :
+    (hinit : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) :
     CauchySeq (fun k => fieldPath (V k).velocity (V k).velocity_continuous) := by
   apply Metric.cauchySeq_iff.mpr
   intro ε hε
@@ -61,21 +65,22 @@ end Evolution
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Limit evolution of gradient integral, constructed using `limitEvolution`. -/
 def limitEvolutionOfGradientIntegral (V : ℕ → Evolution T hT) (hpos : 0 < T)
-    (R G : ℝ) (hR : ∀ k, tensorNorm 3 ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R)
+    (R G : ℝ) (hR : ∀ k, tensorNorm 3 ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R)
     (hG : ∀ k t, (V k).gradientIntegral t ≤ G)
-    (hinit : ∀ q, ∃ C : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ C)
-    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) : Evolution T hT :=
+    (hinit : ∀ q, ∃ C : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ C)
+    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) : Evolution T hT :=
   limitEvolution V hpos
     (Evolution.all_order_bounds_of_h3 V (gradientTensorBound R G)
       (fun k => (V k).h3_tensorNorm_gradient_uniform R G (hR k) (hG k)) hinit)
     (Evolution.cauchyPath_of_initial_gradient V G hG hcauchy)
 
 theorem limitEvolutionOfGradientIntegral_convergence (V : ℕ → Evolution T hT) (hpos : 0 < T)
-    (R G : ℝ) (hR : ∀ k, tensorNorm 3 ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R)
+    (R G : ℝ) (hR : ∀ k, tensorNorm 3 ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R)
     (hG : ∀ k t, (V k).gradientIntegral t ≤ G)
-    (hinit : ∀ q, ∃ C : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ C)
-    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) (q : ℕ) :
+    (hinit : ∀ q, ∃ C : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ C)
+    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) (q : ℕ) :
     Tendsto (fun k => jetPath (V k).velocity (V k).velocity_continuous q) atTop
       (𝓝 (jetPath (limitEvolutionOfGradientIntegral V hpos R G hR hG hinit hcauchy).velocity
         (limitEvolutionOfGradientIntegral V hpos R G hR hG hinit hcauchy).velocity_continuous q)) :=
@@ -85,11 +90,11 @@ theorem limitEvolutionOfGradientIntegral_convergence (V : ℕ → Evolution T hT
     (Evolution.cauchyPath_of_initial_gradient V G hG hcauchy) q
 
 theorem limitEvolutionOfGradientIntegral_initial (V : ℕ → Evolution T hT) (hpos : 0 < T)
-    (R G : ℝ) (hR : ∀ k, tensorNorm 3 ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R)
+    (R G : ℝ) (hR : ∀ k, tensorNorm 3 ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R)
     (hG : ∀ k t, (V k).gradientIntegral t ≤ G)
-    (hinit : ∀ q, ∃ C : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ C)
-    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) (u0 : L2)
-    (hu0 : Tendsto (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp) atTop (𝓝 u0)) :
+    (hinit : ∀ q, ∃ C : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ C)
+    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) (u0 : L2)
+    (hu0 : Tendsto (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp) atTop (𝓝 u0)) :
     ((limitEvolutionOfGradientIntegral V hpos R G hR hG hinit hcauchy).velocity
       ⟨0,le_rfl,hT⟩).toLp=u0 :=
   limitEvolution_initial V hpos

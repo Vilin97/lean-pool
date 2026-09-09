@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualGaussianCoverage
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 
 /-!
 # The weighted Gaussian error of the actual particular update
@@ -19,6 +17,9 @@ transferred back to the original label and band in `raw_jets`.  Gaussian decay
 is applied at that original band.  The square-root moving-edge weight is kept
 through the entire estimate, including the uncovered source term.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,9 +33,13 @@ open scoped ContDiff Topology
 
 variable {B N0 : ℕ}
 
+/-- Native strip, given by `CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
+slowStrip)`. -/
 noncomputable def nativeStrip : StripData Native :=
   CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)
 
+/-- Band scales, bundling `power`, `epsilon_eq`, `boundConstant`, `constant_one_le` and the
+required compatibility proofs. -/
 noncomputable def bandScales : GaussianTailFlat.BandScaleControl nativeStrip where
   power := ActualPrimary.h
   epsilon_eq := fun _ => rfl
@@ -54,6 +59,8 @@ theorem fast_bound : BandBound nativeStrip 0 (directions (B := B)).fastScale :=
 
 /-! The clock bounds are imposed only on active pairs. -/
 
+/-- Clock upper, given by `ActualSignedGeometry.powerBound (CoordinateAlgebra.A ActualPrimary.h
++ 1 / 2)`. -/
 noncomputable def clockUpper : ℝ :=
   ActualSignedGeometry.powerBound (CoordinateAlgebra.A ActualPrimary.h + 1 / 2)
 
@@ -67,6 +74,8 @@ theorem clock_bounds {l : Label B N0} {n : ℕ} (ha : Active l n) :
   exact ⟨ActualSignedGeometry.dyadic_ratioPower_lower hd.1 hd.2 _,
     ActualSignedGeometry.dyadic_ratioPower_le hd.1 hd.2 _⟩
 
+/-- Transported length, given by `ActualCarrierTransportBase.referenceLength (supportLabel l) /
+ActualCarrierTransportBase.clock (supportLabel l) n`. -/
 noncomputable def transportedLength (l : Label B N0) (n : ℕ) : ℝ :=
   ActualCarrierTransportBase.referenceLength (supportLabel l) /
     ActualCarrierTransportBase.clock (supportLabel l) n
@@ -75,6 +84,7 @@ theorem transportedLength_pos (l : Label B N0) (n : ℕ) : 0 < transportedLength
   div_pos (ActualCarrierTransportBase.referenceLength_pos (supportLabel l))
     (ActualCarrierTransportBase.clock_pos (supportLabel l) n)
 
+/-- Length lower, given by `ActualInitialExcluded.gaussianLengthLower / clockUpper`. -/
 noncomputable def lengthLower : ℝ := ActualInitialExcluded.gaussianLengthLower / clockUpper
 
 theorem lengthLower_pos : 0 < lengthLower :=
@@ -111,10 +121,14 @@ theorem gaussianLength_lower (l : Label B N0) (n : ℕ) :
 theorem gaussianLength_eq {l : Label B N0} {n : ℕ} (ha : Active l n) :
     gaussianLength l n = transportedLength l n := max_eq_left (transportedLength_lower ha)
 
+/-- Theta, given by `((ActualCarrierTransportBase.geometry (supportLabel l) n).coordinates k
+z.2).2 / transportedLength l n`. -/
 noncomputable def theta (l : Label B N0) (n : ℕ) (k : Frequency) (z : Native) : ℝ :=
   ((ActualCarrierTransportBase.geometry (supportLabel l) n).coordinates k z.2).2 /
     transportedLength l n
 
+/-- Gaussian rate, given by `ActualGaussianCoverage.gaussianRate (ActualPrimary.choice B
+N0).prepared.M⁻¹ (ActualPrimary.choice B N0).prepared.u / clockUpper`. -/
 noncomputable def gaussianRate (B N0 : ℕ) : ℝ :=
   ActualGaussianCoverage.gaussianRate (ActualPrimary.choice B N0).prepared.M⁻¹
     (ActualPrimary.choice B N0).prepared.u / clockUpper
@@ -175,7 +189,7 @@ theorem cutoff_central (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ)
     (ActualCarrierTransportBase.referenceLength_pos (supportLabel l))
     (ActualCarrierTransportBase.clock_pos (supportLabel l) n) hrect hm).comp_tendsto
       (((ActualCarrierTransportBase.geometry (supportLabel l) n).coordinates_contDiff
-        k).continuous.comp
+          k).continuous.comp
         continuous_snd).continuousAt
 
 /-! The uncovered source is zero; it is not estimated without its edge weight. -/
@@ -216,7 +230,7 @@ constants chosen before the original spatial label and band.  The hypotheses
 concern the incoming source and its actual support, never the solved error. -/
 theorem globalGaussian_all_gains (x : CycleState (Label B N0))
     (hfrequency : ∀ l n, (x.coefficients.blocks l).frequency n = ChartScales.carrier
-      ActualPrimary.h n)
+        ActualPrimary.h n)
     (hs : InputSupport x) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     {α : ℝ} (j : ℤ) (hj : j ≠ 0)
     (H : LabelSumBounds.UniformWaveClass nativeStrip nativeEnvelope α (currentSource x j))
@@ -240,7 +254,7 @@ all-power estimate.  Its finite modal sum changes the constant, not its
 uniformity in the original spatial label and band. -/
 theorem gaussianBlock_all_gains (x : CycleState (Label B N0))
     (hfrequency : ∀ l n, (x.coefficients.blocks l).frequency n = ChartScales.carrier
-      ActualPrimary.h n)
+        ActualPrimary.h n)
     (hs : InputSupport x) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     {α : ℝ} (N : ℕ)
     (H : ∀ j ∈ ParticularWaveAssembly.modes N,
@@ -249,7 +263,7 @@ theorem gaussianBlock_all_gains (x : CycleState (Label B N0))
     LabelSumBounds.UniformClass associatedStrip (fun _ _ z => Real.sqrt (associatedStrip.zeta z)) β
       (fun l n z => ((parameters x l).gaussianBlock (assembly x l).context (assembly x l).state
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput
-          N).velocity
+            N).velocity
         n i m z) := by
   have hh := UniformBlockBounds.native_assembledBlock_original_uniform
     (s := associatedStrip)

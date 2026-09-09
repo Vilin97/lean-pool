@@ -6,13 +6,11 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
+public import LeanPool.NavierStokesAndEuler.Euler.MeanFrameCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceStrongInverse
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceSpatialRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPressureRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousForcingTimeLp
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpLinearity
-
-@[expose] public section
 
 /-!
 # Concrete source data for the mean packet provider
@@ -22,6 +20,9 @@ pointwise inequalities and time identities. Its solver and strong evolution
 are the previously constructed actual variational inverse, not input fields.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanPacketProvider
@@ -29,27 +30,41 @@ namespace EulerMeanPacketProvider
 open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerMeanSolenoidal EulerMeanCoefficients EulerMeanBoundary EulerMeanHarmonic
   EulerMeanSourceInverse EulerMeanVariationalInverse EulerLiftedPressure EulerTimeLp
-    EulerVolterraConvolution
+      EulerVolterraConvolution
 open scoped ContDiff NNReal
 
 /-- Literal coefficient data and source smallness hypotheses. -/
 structure Data where
+  /-- Time horizon of `Data`, of type `ℝ`. -/
   T : ℝ
   T_pos : 0 < T
+  /-- ℓ of `Data`, of type `ℝ`. -/
   ℓ : ℝ
   ℓ_pos : 0 < ℓ
   ℓ_le_one : ℓ ≤ 1
+  /-- F of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   F : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- F₁ of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   F₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- F₂ of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   F₂ : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- M of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- H of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   H : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- F inv of `Data`, of type `C(Icc (0 : ℝ) T,Field)`. -/
   FInv : C(Icc (0 : ℝ) T,Field)
+  /-- M0 of `Data`, of type `BoundedSmoothField (Space →L[ℝ] Space)`. -/
   M0 : BoundedSmoothField (Space →L[ℝ] Space)
+  /-- Be of `Data`, of type `ℝ`. -/
   Be : ℝ
+  /-- Bc of `Data`, of type `ℝ`. -/
   Bc : ℝ
+  /-- L of `Data`, of type `ℝ`. -/
   L : ℝ
+  /-- R of `Data`, of type `ℝ`. -/
   r : ℝ
+  /-- K of `Data`, of type `ℝ`. -/
   K : ℝ
   Be_nonneg : 0 ≤ Be
   Bc_nonneg : 0 ≤ Bc
@@ -78,11 +93,17 @@ namespace Data
 
 variable (D : Data)
 
+/-- Op F: an abbreviation for `operatorPath D.T D.F.field`. -/
 abbrev opF := operatorPath D.T D.F.field
+/-- Op F₁: an abbreviation for `operatorPath D.T D.F₁.field`. -/
 abbrev opF₁ := operatorPath D.T D.F₁.field
+/-- Op F₂: an abbreviation for `operatorPath D.T D.F₂.field`. -/
 abbrev opF₂ := operatorPath D.T D.F₂.field
+/-- Op M: an abbreviation for `operatorPath D.T D.M.field`. -/
 abbrev opM := operatorPath D.T D.M.field
+/-- Op H: an abbreviation for `operatorPath D.T D.H.field`. -/
 abbrev opH := operatorPath D.T D.H.field
+/-- Op inv: an abbreviation for `operatorPath D.T D.FInv`. -/
 abbrev opInv := operatorPath D.T D.FInv
 
 theorem opInv_left : ∀ t v, D.opInv t (D.opF t v) = v :=
@@ -138,6 +159,7 @@ def evolution (f : TimeLp D.T L2) :
     D.opInv_initial D.opCurvature_upper D.small D.opF_time D.opF₁_time
     D.opInv_left D.opInv_right D.opF₁_initial D.opF₂_eq f)
 
+/-- Frame lower: an abbreviation for `meanFrameCoercivity D.T D.opInv`. -/
 abbrev frameLower : ℝ := meanFrameCoercivity D.T D.opInv
 
 theorem frameLower_pos : 0 < D.frameLower := meanFrameCoercivity_pos D.T D.opInv

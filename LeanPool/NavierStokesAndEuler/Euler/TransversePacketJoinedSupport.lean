@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedField
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
+
+/-! Actual support and angular normalization of the joined transverse provider. -/
 
 @[expose] public section
 
-/-! Actual support and angular normalization of the joined transverse provider. -/
 
 noncomputable section
 
@@ -22,8 +25,8 @@ open Set
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem join_mem (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
-    (u : C(Icc (0 : ℝ) τ,E)) (v : C(Icc (0 : ℝ) (S-τ),E))
-    (hm : u ⟨τ,hτ0,le_rfl⟩ = v ⟨0,le_rfl,sub_nonneg.mpr hτS⟩)
+    (u : C(Icc (0 : ℝ) τ, E)) (v : C(Icc (0 : ℝ) (S - τ), E))
+    (hm : u ⟨τ, hτ0, le_rfl⟩ = v ⟨0, le_rfl, sub_nonneg.mpr hτS⟩)
     (J : Set E) (hu : ∀ t, u t ∈ J) (hv : ∀ t, v t ∈ J) (t : Icc (0 : ℝ) S) :
     join S τ hτ0 hτS u v hm t ∈ J := by
   by_cases ht : (t : ℝ) ≤ τ
@@ -65,7 +68,7 @@ theorem derivativePath_supported (t : Icc (0 : ℝ) D.T) :
     (fun s => ((G.tail τ hτ.le hτT).derivativePath (forwardInitial τ hτ hτT B G) s).property) t
 
 theorem velocityPath_mean_zero (t : Icc (0 : ℝ) D.T) : average P (velocityPath τ hτ hτT B G t) = 0
-  := by
+    := by
   apply join_mem D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B G)
     {u | average P u = 0} _ _ t
   · exact B.velocityPath_mean_zero (G.initial τ hτ hτT.le)
@@ -73,7 +76,7 @@ theorem velocityPath_mean_zero (t : Icc (0 : ℝ) D.T) : average P (velocityPath
     exact EulerSourceCylinderEquation.velocity_average_zero P D.support D.support_measurable
       (D.T-τ) (sub_pos.mpr hτT).le (D.tail τ hτ.le hτT).frame (D.tail τ hτ.le hτT).frameDerivative
       (D.tail τ hτ.le hτT).frameLower (D.tail τ hτ.le hτT).frameLower_pos (D.tail τ hτ.le
-        hτT).frame_lower
+          hτT).frame_lower
       (G.tail τ hτ.le hτT).path (forwardInitial τ hτ hτT B G).value
       (G.tail τ hτ.le hτT).mean_zero (forwardInitial τ hτ hτT B G).mean_zero s
 
@@ -126,12 +129,12 @@ theorem scalar_normalized (t : Icc (0 : ℝ) D.T) (x : Space) :
     exact (G.tail τ hτ.le hτT).scalar_normalized (forwardInitial τ hτ hτT B G) _ x
 
 theorem vector_periodic (t : ℝ) (x : Space) : Function.Periodic (fun θ => vector τ hτ hτT B G
-  (t,(x,θ))) P := by
+    (t,(x,θ))) P := by
   intro θ
   simp only [vector,AddCircle.coe_add_period]
 
 theorem scalar_periodic (t : ℝ) (x : Space) : Function.Periodic (fun θ => scalar τ hτ hτT B G
-  (t,(x,θ))) P := by
+    (t,(x,θ))) P := by
   intro θ
   simp only [scalar,AddCircle.coe_add_period]
 

@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TailEnergyBounds
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 /-!
 # Actual energy cost of the scheduled angular reset
@@ -18,6 +18,9 @@ Pressure neutrality has no extra factor `exp y`. This file instead integrates
 the actual energy difference, proves its parameter regularity, and uses the
 constructed reset's small coefficients to bound that difference.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,6 +55,8 @@ theorem relative_coeff_hasDerivAt {c : ℝ → Coeff} {c' : Coeff} {eta : ℝ}
   exact ((hasDerivAt_pi.mp hc 0).mul_const (bump 0 u)).add
     ((hasDerivAt_pi.mp hc 1).mul_const (bump 1 u))
 
+/-- Reset density, given by `Real.exp y * ((correctedAngular d c (y, eta)) ^ 2 - (finalAngular d
+(y, eta)) ^ 2)`. -/
 noncomputable def resetDensity (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   Real.exp y * ((correctedAngular d c (y, eta)) ^ 2 - (finalAngular d (y, eta)) ^ 2)
 
@@ -103,6 +108,7 @@ theorem resetDensity_integrable (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
   (resetDensity_continuous d c eta).integrable_of_hasCompactSupport
     (HasCompactSupport.of_support_subset_isCompact isCompact_Icc (resetDensity_support d c eta))
 
+/-- Reset energy, given by `∫ y, resetDensity d c eta y`. -/
 noncomputable def resetEnergy (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   ∫ y, resetDensity d c eta y
 
@@ -123,6 +129,7 @@ theorem resetEnergy_contDiff (d : TailData) {c : ℝ → Coeff} (hc : ContDiff �
   rw [he]
   exact compact_integral_contDiff (resetDensity d c) _ _ (by linarith) (resetDensity_contDiff d hc)
 
+/-- Reset density eta, constructed using `Real.exp`. -/
 noncomputable def resetDensityEta (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   Real.exp y * (baseE d.core.lam (referenceAmplitude d) y) ^ 2 *
     (2 * (1 + relative (c eta) (y - correctionCenter d)) *
@@ -161,7 +168,7 @@ theorem resetEnergy_hasDerivAt (d : TailData) {c : ℝ → Coeff}
   have hD := resetDensityEta_joint_continuous d hc
   obtain ⟨C, hC⟩ := ((isCompact_closedBall eta 1).prod
     (isCompact_uIcc : IsCompact (uIcc (d.releaseStart - 4)
-      d.releaseStart))).exists_bound_of_continuousOn
+        d.releaseStart))).exists_bound_of_continuousOn
       hD.continuousOn
   have hd := (intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (μ := volume) (F := resetDensity d c) (F' := resetDensityEta d c)
@@ -240,7 +247,7 @@ theorem resetDensityEta_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) {y : ℝ}
     (flattenEnd_gt_core d).le.trans ((last_four_after_flatten d).le.trans hy.1)
   have hE := energyDensity_prefix_le d eta heta hS hy.2
   have hid : resetDensityEta d w.coefficients eta y = energyDensity d eta y * (2 * (1 + r) * r') :=
-    by
+      by
     dsimp [resetDensityEta, energyDensity, r, r']
     rw [original_matches_reference d eta hy]
   rw [hid, abs_mul, abs_of_pos (energyDensity_pos d eta y)]
@@ -287,13 +294,13 @@ theorem corrected_energy_eq (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) :
 
 theorem corrected_energy_integrable_postPulse (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
     IntegrableOn (fun y => Real.exp y * correctedAngular d c (y, eta) ^ 2) (Ioi d.core.endpoint) :=
-      by
+        by
   have he : (fun y => Real.exp y * correctedAngular d c (y, eta) ^ 2) =
       (fun y => energyDensity d eta y + resetDensity d c eta y) :=
     funext (corrected_energy_eq d c eta)
   rw [he]
   exact (energyDensity_integrable_postPulse d eta).add (resetDensity_integrable d c
-    eta).integrableOn
+      eta).integrableOn
 
 theorem integral_corrected_energy (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
     (∫ y in Ioi d.core.endpoint, Real.exp y * correctedAngular d c (y, eta) ^ 2) =
@@ -324,12 +331,15 @@ theorem corrected_energy_contDiff (d : TailData) {c : ℝ → Coeff} (hc : ContD
 
 /-! ## Full normalization, including its parameter derivative -/
 
+/-- Pulse normalization, given by `Real.exp d.core.pulseStart * pulseAmplitude d.core ^ 2`. -/
 noncomputable def pulseNormalization (d : TailData) : ℝ :=
   Real.exp d.core.pulseStart * pulseAmplitude d.core ^ 2
 
 theorem pulseNormalization_pos (d : TailData) : 0 < pulseNormalization d :=
   mul_pos (Real.exp_pos _) (sq_pos_of_pos (pulseAmplitude_pos d.core))
 
+/-- Normalized reset energy, given by `d.core.lam * resetEnergy d c eta / (pulseNormalization d
+* shape eta ^ 2)`. -/
 noncomputable def normalizedResetEnergy (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   d.core.lam * resetEnergy d c eta / (pulseNormalization d * shape eta ^ 2)
 

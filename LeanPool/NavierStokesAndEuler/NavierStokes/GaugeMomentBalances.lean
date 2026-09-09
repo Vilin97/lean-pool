@@ -8,9 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StateMomentBalances
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalSignedRequest
-
-@[expose] public section
 
 /-!
 # Measured moment balances in the actual moving pressure gauge
@@ -20,6 +17,9 @@ physical density. It varies with the true similarity coordinate. All moment
 identities below use the actual state residual and the actual pressure recipe.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.GaugeMomentBalances
@@ -28,9 +28,13 @@ open Set Filter Function MeasureTheory
 open CorrectionState
 open scoped ContDiff Topology BigOperators Interval
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
 
+/-- Base pressure coefficient, given by `IntegratedMeanBalances.moment 2 (PressureStream.rho a b
+hab) / 2`. -/
 noncomputable def basePressureCoefficient (a b : ℝ) (hab : a < b) : ℝ :=
   IntegratedMeanBalances.moment 2 (PressureStream.rho a b hab) / 2
 
@@ -54,6 +58,8 @@ theorem basePressureCoefficient_pos {a b : ℝ} (ha : 0 < a) (hab : a < b) :
     0 < basePressureCoefficient a b hab :=
   lt_of_lt_of_le (by positivity : 0 < a ^ 2 / 2) (basePressureCoefficient_lower ha hab)
 
+/-- Pressure coefficient, given by `basePressureCoefficient g.radial.inner g.radial.outer
+g.radial.inner_lt_outer * g.length n s ^ 2`. -/
 noncomputable def pressureCoefficient {S : Type} (g : VariableGaugeMean.GaugeData S)
     (n : ℕ) (s : S) : ℝ :=
   basePressureCoefficient g.radial.inner g.radial.outer g.radial.inner_lt_outer * g.length n s ^ 2
@@ -73,7 +79,7 @@ theorem rho_second_moment_scale {l a b : ℝ} (hl : 0 < l) (hab : a < b) :
   change l⁻¹ * (∫ r, r ^ 2 * PressureStream.rho a b hab (l⁻¹ * r)) = _
   rw [SignedStressPrimitive.integral_dilate_weighted 2 _ (inv_pos.mpr hl)]
   unfold IntegratedMeanBalances.moment
-  field_simp [hl.ne'] ; ring_nf ; field_simp [hl.ne']
+  field_simp [hl.ne']; ring_nf; field_simp [hl.ne']
 
 section GeneralGauge
 
@@ -171,17 +177,17 @@ theorem similarity_pressureCoefficient_fderiv {h d a b M : ℝ} (hab : a < b) (i
       basePressureCoefficient a b hab *
         ((v.1 + 2 * s.2 * SimilarityCoordinates.coordinateQ (2 * h) s ^ (2 * h) * v.2) /
           SimilarityCoordinates.scalarSlope (2 * h) s.2 (SimilarityCoordinates.coordinateQ (2 * h)
-            s)) := by
+              s)) := by
   have he : pressureCoefficient (VariableGaugeMean.similarityGauge h d a b M hab index) n =ᶠ[𝓝 s]
       (fun t => basePressureCoefficient a b hab * SimilarityCoordinates.coordinateQ (2 * h) t) := by
     filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hs)] with t ht
     exact similarity_pressureCoefficient hab index hc hc1 n ht
   rw [he.fderiv_eq]
   have hd := ((SimilarityCoordinates.coordinateQ_smooth hc hc1 hs).differentiableAt (by
-    simp)).hasFDerivAt
+      simp)).hasFDerivAt
   rw [(hd.const_mul (basePressureCoefficient a b hab)).fderiv]
   change basePressureCoefficient a b hab * fderiv ℝ (SimilarityCoordinates.coordinateQ (2 * h)) s v
-    = _
+      = _
   rw [SimilarityCoordinates.coordinateQ_fderiv_apply hc hc1 hs]
 
 end SimilarityCoefficient
@@ -212,6 +218,7 @@ theorem LocalField.add {a b : ℝ} {U : Set S} {f g : ScalarField (PressureStrea
   · intro n R s hs Y k
     exact congrArg₂ (· + ·) (hf.periodic n R s hs Y k) (hg.periodic n R s hs Y k)
 
+/-- Localize family, defined pointwise by `PhysicalMeanDomain.localize χ (f n)`. -/
 noncomputable def localizeFamily (χ : S → ℝ) (f : ScalarField (PressureStream.Lift S)) :
     ScalarField (PressureStream.Lift S) := fun n => PhysicalMeanDomain.localize χ (f n)
 
@@ -304,7 +311,7 @@ theorem global_angular_moment {a b : ℝ} (ha : 0 < a)
     rfl
   have he : averaged (fluxResidual (nativeOperators r ε fast z t v) 2 1 u R Z T) n =
       angularBalanceAlong (ε n) z t (averaged u n) (averaged R n) (averaged Z n) (averaged T n) :=
-        by
+          by
     funext x
     rw [averaged_fluxResidual ha r ε fast z t v 2 1 H.velocity H.radial H.axial H.stress
       H.velocity_periodic H.radial_periodic H.axial_periodic H.stress_periodic, balance_angular]
@@ -336,6 +343,7 @@ theorem global_axial_moment {a b : ℝ} (ha : 0 < a)
   rw [show IntegratedMeanBalances.radialMoment 1 (averaged Z n) =
     CorrectionState.radialMoment 1 Z n from funext fun q => (state_radialMoment_eq 1 Z n q).symm]
 
+/-- Local flux inputs data, collecting `velocity`, `radial`, `axial`, `stress`. -/
 structure LocalFluxInputs (a b : ℝ) (U : Set S)
     (u R Z T : ScalarField (PressureStream.Lift S)) : Prop where
   velocity : LocalField a b U u
@@ -495,6 +503,7 @@ theorem MovingField.radialMoment_smooth {coord a b : ℝ} {U : SlowRegion coord}
   obtain ⟨c, e', _, _, _, _, _, hl, hr, _⟩ := VariableGaugeMean.qLength_reference_bounds U ha hab
   exact (hf.containing hl hr).radialMoment_smooth U.isOpen e n
 
+/-- Moving flux inputs data, collecting `velocity`, `radial`, `axial`, `stress`. -/
 structure MovingFluxInputs {coord : ℝ} (U : SlowRegion coord) (a b : ℝ)
     (u R Z T : ScalarField Point) : Prop where
   velocity : MovingField U a b u
@@ -502,18 +511,25 @@ structure MovingFluxInputs {coord : ℝ} (U : SlowRegion coord) (a b : ℝ)
   axial : MovingField U a b Z
   stress : MovingField U a b T
 
+/-- Moving angular inputs: an abbreviation for `MovingFluxInputs U a b u.mean.angular
+(thetaRadialFlux c u) (thetaAxialFlux c u) c.virtualTheta`. -/
 abbrev MovingAngularInputs {coord : ℝ} (U : SlowRegion coord) (a b : ℝ)
     (c : Context Point) (u : State Point) :=
   MovingFluxInputs U a b u.mean.angular (thetaRadialFlux c u) (thetaAxialFlux c u) c.virtualTheta
 
+/-- Moving axial inputs: an abbreviation for `MovingFluxInputs U a b u.mean.axial
+(axialRadialFlux c u) (axialAxialFlux c u) c.virtualAxial`. -/
 abbrev MovingAxialInputs {coord : ℝ} (U : SlowRegion coord) (a b : ℝ)
     (c : Context Point) (u : State Point) :=
   MovingFluxInputs U a b u.mean.axial (axialRadialFlux c u) (axialAxialFlux c u) c.virtualAxial
 
+/-- Pressure recipe, given by `(VariableGaugeMean.reconstructState g c u).pressure`. -/
 noncomputable def pressureRecipe (g : VariableGaugeMean.GaugeData Plane)
     (c : Context Point) (u : State Point) : ScalarField Point :=
   (VariableGaugeMean.reconstructState g c u).pressure
 
+/-- Axial debt potential, defined pointwise by `CorrectionState.axialDefect c u n s +
+pressureCoefficient g n s * CorrectionState.pressureDefect c u n s`. -/
 noncomputable def axialDebtPotential (g : VariableGaugeMean.GaugeData Plane)
     (c : Context Point) (u : State Point) : ScalarField Plane :=
   fun n s => CorrectionState.axialDefect c u n s +
@@ -537,7 +553,7 @@ theorem pressureRecipe_movingField {coord : ℝ} (U : SlowRegion coord)
     change VariableGaugeMean.SupportedGauge _ _ _ _
       (VariableGaugeMean.meanPressure g.radial.exponent g.radial.inner g.radial.outer
         (g.radial.frequency n) g.radial.inner_lt_outer (g.length n) g.radial.radialDirection (u.gr
-          c n))
+            c n))
     rw [hg n]
     exact VariableGaugeMean.meanPressure_q_supportedGauge U ha g.radial.inner_lt_outer hd
       (g.radial.frequency n) g.radial.radialDirection (hf.smooth n) (hf.supported n)
@@ -560,7 +576,7 @@ theorem pressureRecipe_moment {coord : ℝ} (U : SlowRegion coord)
   have hsp : VariableGaugeMean.SupportedGauge g.radial.inner g.radial.outer (g.length n)
       U.carrier (u.gr c n) := by rw [hg n]; exact hf.supported n
   have hh := moving_pressure_moment (M := g.radial.frequency n) ha g.radial.inner_lt_outer hd
-    (g.length n)
+      (g.length n)
     g.radial.radialDirection U.isOpen (hf.smooth n) hsp (hf.periodic n) hs hl
   rw [state_radialMoment_eq, state_radialMoment_eq]
   simpa only [pressureRecipe, VariableGaugeMean.reconstructState, averaged,
@@ -616,7 +632,7 @@ theorem reconstructed_state_axial_moment {coord : ℝ} (U : SlowRegion coord)
     (hmass : ∀ n s, s ∈ U.carrier → CorrectionState.radialMoment 1 u.mean.axial n s = 0)
     (n : ℕ) {s : Plane} (hs : s ∈ U.carrier) :
     CorrectionState.radialMoment 1 ((VariableGaugeMean.reconstructState g c u).axialResidual c) n s
-      =
+        =
       ε n * fderiv ℝ (axialDebtPotential g c u n) s z := by
   obtain ⟨a', b', _, ha', _, _, _, hl, hr, _⟩ :=
     VariableGaugeMean.qLength_reference_bounds U ha g.radial.inner_lt_outer
@@ -624,7 +640,7 @@ theorem reconstructed_state_axial_moment {coord : ℝ} (U : SlowRegion coord)
   have he : (VariableGaugeMean.reconstructState g c u).axialResidual c =
       fluxResidual (nativeOperators g.radial ε fast z t v) 1 0
         u.mean.axial (axialRadialFlux c u) (axialAxialFlux c u + pressureRecipe g c u)
-          c.virtualAxial := by
+            c.virtualAxial := by
     simp only [VariableGaugeMean.reconstructState, State.axialResidual,
       MeanIncrementBounds.axialResidual, fluxResidual, axialRadialFlux, axialAxialFlux,
       pressureRecipe, ho]
@@ -680,10 +696,10 @@ theorem pressureCoefficient_smooth {coord : ℝ} (U : SlowRegion coord)
     ContDiffOn ℝ ∞ (pressureCoefficient g n) U.carrier := by
   change ContDiffOn ℝ ∞ (fun s =>
     basePressureCoefficient g.radial.inner g.radial.outer g.radial.inner_lt_outer * g.length n s ^
-      2) _
+        2) _
   rw [hg n]
   exact contDiffOn_const.mul (((VariableGaugeMean.qLength_contDiffOn U.coord_pos
-    U.coord_lt_one).mono
+      U.coord_lt_one).mono
     (fun s hs => U.time_pos s hs)).pow 2)
 
 theorem q_pressureCoefficient_fderiv {coord : ℝ} (U : SlowRegion coord)
@@ -694,7 +710,7 @@ theorem q_pressureCoefficient_fderiv {coord : ℝ} (U : SlowRegion coord)
       basePressureCoefficient g.radial.inner g.radial.outer g.radial.inner_lt_outer *
         ((v.1 + 2 * s.2 * SimilarityCoordinates.coordinateQ coord s ^ coord * v.2) /
           SimilarityCoordinates.scalarSlope coord s.2 (SimilarityCoordinates.coordinateQ coord s))
-            := by
+              := by
   have he : pressureCoefficient g n =ᶠ[𝓝 s]
       (fun t => basePressureCoefficient g.radial.inner g.radial.outer g.radial.inner_lt_outer *
         SimilarityCoordinates.coordinateQ coord t) := by
@@ -781,7 +797,7 @@ theorem state_axial_moment_expanded {coord : ℝ} (U : SlowRegion coord)
         (basePressureCoefficient g.radial.inner g.radial.outer g.radial.inner_lt_outer *
           ((2 * s.2 * SimilarityCoordinates.coordinateQ coord s ^ coord) /
             SimilarityCoordinates.scalarSlope coord s.2 (SimilarityCoordinates.coordinateQ coord
-              s))) *
+                s))) *
           CorrectionState.pressureDefect c u n s) := by
   rw [state_axial_moment U g ha hd hg ε fast (0, 1) (1, 0) v c u ho H hf hfixed hmass n hs,
     axialDebtPotential_fderiv U g ha hg c u H.axial hf n hs,

@@ -7,26 +7,24 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EndpointCoordinates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedExterior
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JointResidualLimits
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeGluing
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-
-@[expose] public section
 
 /-!
 # Endpoint extensions of the actual summed slow base
 
 At nonzero axial coordinate the stable coordinate extension has positive q.
 The original cutoff schedule therefore gives a locally finite series on an
-open neighborhood crossing t = 1.  No new summation or cutoff choice is made.
+open neighborhood crossing t = 1. No new summation or cutoff choice is made.
 
 For velocity and pressure, the nonzero-axial extension combines with the
 proved heat exterior on the central plane.  The forward-integral potential
 is only extended at nonzero axial coordinate here; a central-plane gauge
 correction is a separate construction.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.SlowBaseEndpoint
 
@@ -47,6 +45,8 @@ noncomputable def profileExtension (a : ℕ → ℕ) (h b : ℝ) (f : ℕ → In
   (EndpointCoordinates.chartExtension h p).1 ^ b •
     slowSum a h f (EndpointCoordinates.chartExtension h p)
 
+/-- Cartesian profile extension, given by `profileExtension a h b f
+(AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def cartesianProfileExtension (a : ℕ → ℕ) (h b : ℝ)
     (f : ℕ → Inner → V) (z : SpaceTime) : V :=
   profileExtension a h b f (AxisymmetricFields.profilePoint z.1 z.2)
@@ -107,7 +107,7 @@ theorem endpoint_common_finite_index {a : ℕ → ℕ} (ha : StrictMono a) {h : 
         slowSum a h f (EndpointCoordinates.cartesianExtension h z) =
           f 0 (EndpointCoordinates.cartesianExtension h z).2 +
             ∑ j ∈ Finset.range N, slowStage a h f j (EndpointCoordinates.cartesianExtension h z) :=
-              by
+                by
   obtain ⟨U, hU, hxU, hsub, _, hroot, hq⟩ :=
     EndpointCoordinates.cartesian_endpoint_neighborhood hh hh1 hx
   obtain ⟨N, hN⟩ := SmoothCutoffs.scaledCutoffs_zero_on_common_neighborhood
@@ -129,18 +129,27 @@ end LocallyFiniteProfiles
 
 section ActualFields
 
+/-- Stream extension, given by `profileExtension a h (-CoordinateAlgebra.A h) (bundleComponent C
+d 0)`. -/
 noncomputable def streamExtension (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
   profileExtension a h (-CoordinateAlgebra.A h) (bundleComponent C d 0)
 
+/-- Swirl extension, given by `profileExtension a h (1 / 2 - CoordinateAlgebra.A h)
+(bundleComponent C d 1)`. -/
 noncomputable def swirlExtension (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
   profileExtension a h (1 / 2 - CoordinateAlgebra.A h) (bundleComponent C d 1)
 
+/-- Potential extension, given by `AxisymmetricFields.potential (streamExtension a h C d)
+(swirlExtension a h C d)`. -/
 noncomputable def potentialExtension (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (streamExtension a h C d) (swirlExtension a h C d)
 
+/-- Velocity extension, given by `SpatialCurl.spatialCurl (potentialExtension a h C d)`. -/
 noncomputable def velocityExtension (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   SpatialCurl.spatialCurl (potentialExtension a h C d)
 
+/-- Pressure extension, given by `cartesianProfileExtension a h (-2 * CoordinateAlgebra.A h)
+(bundleComponent C d 2)`. -/
 noncomputable def pressureExtension (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : PressureField :=
   cartesianProfileExtension a h (-2 * CoordinateAlgebra.A h) (bundleComponent C d 2)
 
@@ -209,6 +218,8 @@ noncomputable def potentialNonzeroAxial {a : ℕ → ℕ} (ha : StrictMono a) {h
   smooth := potentialExtension_smoothOn ha hh hh1 hd C
   agrees := fun _ hz => potentialExtension_eq a hh hh1 C d hz.2.1
 
+/-- Velocity nonzero axial, bundling `value`, `domain`, `isOpen`, `mem` and the required
+compatibility proofs. -/
 noncomputable def velocityNonzeroAxial {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) {d : Coefficients} (hd : SmoothCoefficients d)
     (C : ℝ) {x : Space} (hx : x 2 ≠ 0) :
@@ -220,6 +231,8 @@ noncomputable def velocityNonzeroAxial {a : ℕ → ℕ} (ha : StrictMono a) {h 
   smooth := velocityExtension_smoothOn ha hh hh1 hd C
   agrees := fun _ hz => (velocityExtension_eventuallyEq a hh hh1 C d hz.2.1).self_of_nhds
 
+/-- Pressure nonzero axial, bundling `value`, `domain`, `isOpen`, `mem` and the required
+compatibility proofs. -/
 noncomputable def pressureNonzeroAxial {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) {d : Coefficients} (hd : SmoothCoefficients d)
     (C : ℝ) {x : Space} (hx : x 2 ≠ 0) :
@@ -243,6 +256,7 @@ noncomputable def anchoredPotential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficie
   AxisymmetricFields.potential (streamFactor a h C d)
     (fun p => swirlPotential a h C d p - swirlPotential a h C d (radialAnchor p))
 
+/-- Anchored potential extension, constructed using `AxisymmetricFields.potential`. -/
 noncomputable def anchoredPotentialExtension (a : ℕ → ℕ) (h C : ℝ)
     (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (streamExtension a h C d)
@@ -252,10 +266,10 @@ theorem anchoredPotentialExtension_smoothOn {a : ℕ → ℕ} (ha : StrictMono a
     (hh : 0 < h) (hh1 : h < 1 / 2) {d : Coefficients}
     (hd : SmoothCoefficients d) (C : ℝ) :
     ContDiffOn ℝ ∞ (anchoredPotentialExtension a h C d) (EndpointCoordinates.cartesianDomain h) :=
-      by
+        by
   have hanchor : ContDiffOn ℝ ∞
       (fun z : SpaceTime => swirlExtension a h C d (radialAnchor (AxisymmetricFields.profilePoint
-        z.1 z.2)))
+          z.1 z.2)))
       (EndpointCoordinates.cartesianDomain h) := by
     intro z hz
     have hz' : radialAnchor (AxisymmetricFields.profilePoint z.1 z.2) ∈
@@ -263,7 +277,7 @@ theorem anchoredPotentialExtension_smoothOn {a : ℕ → ℕ} (ha : StrictMono a
     exact ((profileExtension_smoothAt ha hh hh1 (bundleComponent_smooth hd C 1)
       (1 / 2 - CoordinateAlgebra.A h) hz').comp z
         (radialAnchor_smooth.comp
-          AxisymmetricFields.contDiff_profilePoint).contDiffAt).contDiffWithinAt
+            AxisymmetricFields.contDiff_profilePoint).contDiffAt).contDiffWithinAt
   rw [anchoredPotentialExtension, BaseResidual.potential_eq_scalars]
   exact BaseResidual.potentialFromScalars_smooth
     (cartesianProfileExtension_smoothOn ha hh hh1 (bundleComponent_smooth hd C 0) _)
@@ -410,18 +424,21 @@ noncomputable def finalPotentialNonzeroAxial (upper : ℝ) (B : ℕ) {x : Space}
   potentialNonzeroAxial (FinalSlowBase.scales_strictMono H v upper B)
     F.data.h_pos F.data.h_lt_half (FinalSlowBase.coefficients_smooth H v) W.axis.normalization hx
 
+/-- Final velocity nonzero axial, constructed using `velocityNonzeroAxial`. -/
 noncomputable def finalVelocityNonzeroAxial (upper : ℝ) (B : ℕ) {x : Space}
     (hx : x 2 ≠ 0) :
     JointResidualLimits.OneSidedExtension (FinalSlowBase.velocity H v upper B) x :=
   velocityNonzeroAxial (FinalSlowBase.scales_strictMono H v upper B)
     F.data.h_pos F.data.h_lt_half (FinalSlowBase.coefficients_smooth H v) W.axis.normalization hx
 
+/-- Final pressure nonzero axial, constructed using `pressureNonzeroAxial`. -/
 noncomputable def finalPressureNonzeroAxial (upper : ℝ) (B : ℕ) {x : Space}
     (hx : x 2 ≠ 0) :
     JointResidualLimits.OneSidedExtension (FinalSlowBase.pressure H v upper B) x :=
   pressureNonzeroAxial (FinalSlowBase.scales_strictMono H v upper B)
     F.data.h_pos F.data.h_lt_half (FinalSlowBase.coefficients_smooth H v) W.axis.normalization hx
 
+/-- Final anchored potential nonzero axial, constructed using `anchoredPotentialNonzeroAxial`. -/
 noncomputable def finalAnchoredPotentialNonzeroAxial (upper : ℝ) (B : ℕ) {x : Space}
     (hx : x 2 ≠ 0) :
     JointResidualLimits.OneSidedExtension
@@ -439,7 +456,7 @@ theorem final_fields_awayExtensions (upper : ℝ) (B : ℕ) :
     (FinalSlowBase.realizesScheme H v) (EntranceAlignedBase.modulated_base_eq H v)
     (EntranceAlignedBase.modulated_outer H v) (FinalSlowBase.coefficients_smooth H v)
     (ModulatedExterior.actual_squared_swirl_restored v) (FinalSlowBase.scales_strictMono H v upper
-      B)
+        B)
 
 theorem final_potential_jets_tendsto (upper : ℝ) (B : ℕ) {x : Space}
     (hx : x 2 ≠ 0) (n : ℕ) :

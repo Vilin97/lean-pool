@@ -10,11 +10,13 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientBud
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCoefficientBudget
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBudget
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketNormalBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 
 /-! The actual forward source coefficients supply both the nonlinear-profile
 budget and the all-order correction coefficient budget. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +28,8 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (D : Data U) (hTime : M.T = D.T)
 
+/-- Forward coefficient budget, given by `sourceCoefficientBudget P M D (InitialData.zero P D)
+hTime NB.Rc NB.C NB.Rc_nonneg NB.C_nonneg NB.inverse_bound NB.strain_bound`. -/
 def forwardCoefficientBudget {R : ℝ} (NB : EulerTransversePacketJoin.NormalBudget D 6 R) :
     CoefficientBudget (sourceCoefficientData P M D (InitialData.zero P D) hTime) :=
   sourceCoefficientBudget P M D (InitialData.zero P D) hTime NB.Rc NB.C
@@ -42,6 +46,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   {D : Data U} (L : Budget D (Fin 4) 6)
   (NB : EulerTransversePacketJoin.NormalBudget D 6 L.R)
 
+/-- Correction coefficients, constructed using `correctionCoefficientBudget`. -/
 def correctionCoefficients (P : ℝ) [Fact (0 < P)] : CorrectionCoefficientBudget D P :=
   correctionCoefficientBudget D P (max L.Rc NB.Rc) L.C₀ L.C₁ NB.C
     (L.Rc_nonneg.trans (le_max_left _ _)) L.C₀_nonneg L.C₁_nonneg NB.C_nonneg
@@ -54,6 +59,6 @@ def correctionCoefficients (P : ℝ) [Fact (0 < P)] : CorrectionCoefficientBudge
     (fun n t x => (NB.inverse_bound n t x).trans
       (mul_le_mul_of_nonneg_left
         (majorant_radius_mono NB.Rc (max L.Rc NB.Rc) NB.Rc_nonneg (le_max_right _ _) 0 n)
-          NB.C_nonneg))
+            NB.C_nonneg))
 
 end EulerTransversePacketForward.Budget

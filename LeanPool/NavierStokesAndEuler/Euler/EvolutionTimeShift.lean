@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
-public import Mathlib.Analysis.Calculus.Deriv.Shift
+
+/-! Restriction of an ordinary Euler evolution to a translated closed interval. -/
 
 @[expose] public section
 
-/-! Restriction of an ordinary Euler evolution to a translated closed interval. -/
 
 noncomputable section
 
@@ -69,7 +69,7 @@ def shiftTime (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
     (U.shiftTime a ha T hT haT).pressureForce t =
       U.pressureForce (shiftTimeMap S T a ha haT t) := rfl
 
-@[simp] theorem shiftTime_initial (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
+theorem shiftTime_initial (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
     (T : ℝ) (hT : 0 ≤ T) (haT : a + T ≤ S) :
     (U.shiftTime a ha T hT haT).velocity ⟨0, le_rfl, hT⟩ =
       U.velocity ⟨a, ha, (le_add_of_nonneg_right hT).trans haT⟩ := by

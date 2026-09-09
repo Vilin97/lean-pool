@@ -6,12 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingDerivatives
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Pointwise factorial estimates suffice when one factor has compact
 support. In particular polynomial factors need not be globally bounded. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,8 +32,8 @@ variable {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem product_bound_at (f g : E → ℝ) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (R A B : ℝ) (hR : 0 ≤ R) (hA : 0 ≤ A) (hB : 0 ≤ B) (x : E)
-    (hb₁ : ∀ n, ‖iteratedFDeriv ℝ n f x‖ ≤ A*majorant R 0 n)
-    (hb₂ : ∀ n, ‖iteratedFDeriv ℝ n g x‖ ≤ B*majorant R 0 n) (n : ℕ) :
+    (hb₁ : ∀ n, ‖iteratedFDeriv ℝ n f x‖ ≤ A * majorant R 0 n)
+    (hb₂ : ∀ n, ‖iteratedFDeriv ℝ n g x‖ ≤ B * majorant R 0 n) (n : ℕ) :
     ‖iteratedFDeriv ℝ n (fun y => f y*g y) x‖ ≤ (3*A*B)*majorant R 0 n := by
   have hp := sequence_product_majorant R A B hR hA hB 0 0
     (fun k => ‖iteratedFDeriv ℝ k f x‖) (fun k => ‖iteratedFDeriv ℝ k g x‖)
@@ -55,15 +62,15 @@ theorem id_bound_on_ball (r R : ℝ) (hr : 1 ≤ r) (hR : 1 ≤ R)
 theorem linear_bound_on_ball (L : E →L[ℝ] V) (r R : ℝ) (hr : 1 ≤ r) (hR : 1 ≤ R)
     (x : E) (hx : ‖x‖ ≤ r) (n : ℕ) :
     ‖iteratedFDeriv ℝ n (L : E → V) x‖ ≤ (‖L‖*r)*majorant R 0 n := by
-  have h := L.norm_iteratedFDeriv_comp_left (f := id) (x := x) contDiffAt_id (by simp : (n : ℕ∞ω) ≤
-    ∞)
+  have h := L.norm_iteratedFDeriv_comp_left (f := id) (x := x) contDiffAt_id (by
+      simp : (n : ℕ∞ω) ≤ ∞)
   exact h.trans (by simpa only [mul_assoc] using
     mul_le_mul_of_nonneg_left (id_bound_on_ball r R hr hR x hx n) (norm_nonneg L))
 
 theorem compact_product_bound (f g : E → ℝ) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (K : Set E) (hK : tsupport f ⊆ K) (R A B : ℝ) (hR : 0 ≤ R) (hA : 0 ≤ A) (hB : 0 ≤ B)
-    (hb₁ : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ A*majorant R 0 n)
-    (hb₂ : ∀ x ∈ K, ∀ n, ‖iteratedFDeriv ℝ n g x‖ ≤ B*majorant R 0 n) :
+    (hb₁ : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ A * majorant R 0 n)
+    (hb₂ : ∀ x ∈ K, ∀ n, ‖iteratedFDeriv ℝ n g x‖ ≤ B * majorant R 0 n) :
     ∀ n x, ‖iteratedFDeriv ℝ n (fun y => f y*g y) x‖ ≤ (3*A*B)*majorant R 0 n := by
   intro n x
   by_cases hx : x ∈ K

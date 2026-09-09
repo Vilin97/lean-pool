@@ -7,15 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerSmoothTimeField
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressureBounds
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftRadiusBounds
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblySourceTower
 
 /-! The constructed all-order correction and its true time derivative
 are actual smooth bounded cover coefficients. Their quantitative bounds
 come from the checked weighted Sobolev estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,22 +23,34 @@ noncomputable section
 namespace EulerAllOrderDriftCorrection
 
 open Set EulerLiftedGradientSpace EulerAllOrderCorrectionData EulerCylinderSobolevSpace
-  EulerCylinderCoordinates EulerLiftedSmoothTimeField
+  EulerCylinderCoordinates
 open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {hT : 0 < T} {A : Data P T}
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Vector3) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Vector3) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Vector3)` instance to shorten
+typeclass synthesis. -/
+local instance instCorrectionSmoothTimeField1 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    Vector3) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Vector3)` instance to shorten
+typeclass synthesis. -/
+local instance instCorrectionSmoothTimeField2 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ]
+    Vector3) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Vector3))`
+instance to shorten typeclass synthesis. -/
+local instance instCorrectionSmoothTimeField3 (n : ℕ) : NormedAddCommGroup
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Vector3)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Vector3))` instance
+to shorten typeclass synthesis. -/
+local instance instCorrectionSmoothTimeField4 (n : ℕ) : NormedSpace ℝ
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Vector3)) := inferInstance
 
+/-- Correction coefficient, given by `(B.fieldTower P).toSmoothTimeField`. -/
 def Budget.correctionCoefficient (B : Budget P hT A) :
     SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Vector3 :=
   (B.fieldTower P).toSmoothTimeField
 
+/-- Correction derivative coefficient, given by `(B.timeDerivativeTower P).toSmoothTimeField`. -/
 def Budget.correctionDerivativeCoefficient (B : Budget P hT A) :
     SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Vector3 :=
   (B.timeDerivativeTower P).toSmoothTimeField
@@ -62,7 +74,7 @@ theorem Budget.correctionDerivativeCoefficient_jet_bound (B : Budget P hT A)
     (C : ℝ) (hC : 0 ≤ C)
     (hb : ∀ (n : ℕ) (t : Icc (0 : ℝ) T),
       EulerSobolevGevreyOperators.weightedNorm P 6 n (B.reducedRadius P)
-        ((B.timeDerivativeTower P).realization (n+6) t) ≤ C) (n : ℕ) :
+        ((B.timeDerivativeTower P).realization (n + 6) t) ≤ C) (n : ℕ) :
     ‖(B.correctionDerivativeCoefficient P).jet n‖ ≤
       (sobolevEmbeddingConstant P 3 * C) *
         (‖coordinateEquiv.symm.toContinuousLinearMap‖ * (B.reducedRadius P)⁻¹)^n *

@@ -6,20 +6,24 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalContinuity
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DeformationVolume
 public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-
-@[expose] public section
 
 /-! A genuine determinant-one flow transports continuous spatial L² paths
 through its actual inverse, preserving the norm exactly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerFlowL2Transport
 
-open Set MeasureTheory EulerLiftedGradientSpace EulerMetricTransport
+open Set MeasureTheory EulerLiftedGradientSpace
 
+/-- Inverse homeomorph, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
+compatibility proofs. -/
 def inverseHomeomorph (X Y : Vector3 → Vector3)
     (hYX : Function.LeftInverse Y X) (hXY : Function.RightInverse Y X)
     (hX : Continuous X) (hY : Continuous Y) : Vector3 ≃ₜ Vector3 where
@@ -34,7 +38,7 @@ theorem inverse_measurePreserving (X Y : Vector3 → Vector3)
     (F : Vector3 → Vector3 →L[ℝ] Vector3)
     (hX : ∀ x, HasFDerivAt X (F x) x)
     (hYX : Function.LeftInverse Y X) (hXY : Function.RightInverse Y X)
-    (hY : Continuous Y) (hdet : ∀ x, (F x).det=1) :
+    (hY : Continuous Y) (hdet : ∀ x, (F x).det = 1) :
     MeasurePreserving Y volume volume := by
   let e := inverseHomeomorph X Y hYX hXY
     (continuous_iff_continuousAt.mpr (fun x => (hX x).continuousAt)) hY
@@ -48,8 +52,9 @@ variable {K E : Type*} [TopologicalSpace K] [NormedAddCommGroup E]
   (hX : ∀ t x, HasFDerivAt (X t) (F t x) x)
   (hYX : ∀ t, Function.LeftInverse (Y t) (X t))
   (hXY : ∀ t, Function.RightInverse (Y t) (X t))
-  (hY : Continuous (Function.uncurry Y)) (hdet : ∀ t x, (F t x).det=1)
+  (hY : Continuous (Function.uncurry Y)) (hdet : ∀ t x, (F t x).det = 1)
 
+/-- Inverse path, given by `(⟨Function.uncurry Y,hY⟩ : C(K × Vector3,Vector3)).curry`. -/
 def inversePath : C(K,C(Vector3,Vector3)) :=
   (⟨Function.uncurry Y,hY⟩ : C(K × Vector3,Vector3)).curry
 
@@ -61,7 +66,7 @@ theorem inversePath_measurePreserving (t : K) :
 
 /-- No operator-norm continuity of composition is assumed. Joint strong
 continuity follows from actual continuity and preservation of volume. -/
-def transportPath (u : C(K,Lp E 2 (volume : Measure Vector3))) :
+def transportPath (u : C(K, Lp E 2 (volume : Measure Vector3))) :
     C(K,Lp E 2 (volume : Measure Vector3)) where
   toFun t := Lp.compMeasurePreserving (inversePath Y hY t)
     (inversePath_measurePreserving X Y F hX hYX hXY hY hdet t) (u t)
@@ -69,18 +74,18 @@ def transportPath (u : C(K,Lp E 2 (volume : Measure Vector3))) :
     (inversePath Y hY).continuous
     (inversePath_measurePreserving X Y F hX hYX hXY hY hdet) (by norm_num)
 
-theorem transportPath_norm (u : C(K,Lp E 2 (volume : Measure Vector3))) (t : K) :
+theorem transportPath_norm (u : C(K, Lp E 2 (volume : Measure Vector3))) (t : K) :
     ‖transportPath X Y F hX hYX hXY hY hdet u t‖ = ‖u t‖ :=
   Lp.norm_compMeasurePreserving (u t)
     (inversePath_measurePreserving X Y F hX hYX hXY hY hdet t)
 
-theorem transportPath_ae (u : C(K,Lp E 2 (volume : Measure Vector3)))
+theorem transportPath_ae (u : C(K, Lp E 2 (volume : Measure Vector3)))
     (f : K → Vector3 → E) (hu : ∀ t, (u t : Vector3 → E) =ᵐ[volume] f t) (t : K) :
     (transportPath X Y F hX hYX hXY hY hdet u t : Vector3 → E) =ᵐ[volume]
       fun x => f t (Y t x) :=
   (Lp.coeFn_compMeasurePreserving (u t)
     (inversePath_measurePreserving X Y F hX hYX hXY hY hdet t)).trans
     ((inversePath_measurePreserving X Y F hX hYX hXY hY hdet t).quasiMeasurePreserving.ae_eq_comp
-      (hu t))
+        (hu t))
 
 end EulerFlowL2Transport

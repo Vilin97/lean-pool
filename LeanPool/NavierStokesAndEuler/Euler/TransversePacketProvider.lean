@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
 
 /-!
 # The actual transverse forward operator on raw packet fields
@@ -20,6 +19,9 @@ the deformation data. This module covers the forward interval, with genuine
 prescribed initial coordinates; the zero initial datum gives the forced
 operator used when t₀ = 0.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,16 +40,19 @@ namespace Forcing
 
 variable {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
+/-- Vector as an element of `VectorField`. -/
 def vector : VectorField := fun z =>
   field P D.support D.support_measurable D.support_compact D.T D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
     G.path_orbit I.orbit (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Vector derivative as an element of `VectorField`. -/
 def vectorDerivative : VectorField := fun z =>
   derivativeField P D.support D.support_measurable D.support_compact D.T D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
     G.path_orbit I.orbit (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Scalar as an element of `ScalarField`. -/
 def scalar : ScalarField := fun z =>
   pressureField P D.support D.support_measurable D.support_compact D.T D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
@@ -64,10 +69,10 @@ theorem vector_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 /-- The literal transverse equation, including its constructed angular pressure. -/
 theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    G.vectorDerivative I (t,(x,θ))+D.strain (t,(x,θ)) (G.vector I (t,(x,θ)))+
+    G.vectorDerivative I (t,(x,θ))+D.strain (t,(x,θ)) (G.vector I (t,(x,θ))) +
       deriv (fun s : ℝ => G.scalar I (t,(x,s))) θ • D.normalField (t,(x,θ)) = raw (t,(x,θ)) := by
   have h := field_pressure_equation P D.support D.support_measurable D.support_compact D.T
-    D.T_pos.le
+      D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
     G.path_orbit I.orbit D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     G.mean_zero I.mean_zero D.frame_tangent D.frame_range D.frame_strain t x θ
@@ -142,12 +147,12 @@ theorem scalar_zero_outside (t : ℝ) (x : Space) (hx : x ∉ D.support) (θ : �
     G.mean_zero I.mean_zero (D.clamp t) x hx θ
 
 theorem vector_periodic (t : ℝ) (x : Space) : Function.Periodic (fun θ => G.vector I (t,(x,θ))) P
-  := by
+    := by
   intro θ
   simp only [vector,AddCircle.coe_add_period]
 
 theorem scalar_periodic (t : ℝ) (x : Space) : Function.Periodic (fun θ => G.scalar I (t,(x,θ))) P
-  := by
+    := by
   intro θ
   simp only [scalar,AddCircle.coe_add_period]
 
@@ -174,9 +179,9 @@ theorem highSolve_contract (D : Data U) (I : InitialData P D) (raw : VectorField
         HasDerivWithinAt (fun r => (highSolve P D I raw).1 (r,(x,θ)))
           (a_t (t,(x,θ))) (Icc (0 : ℝ) D.T) t) ∧
       (∀ (t : Icc (0 : ℝ) D.T) x θ,
-        a_t (t,(x,θ))+D.strain (t,(x,θ)) ((highSolve P D I raw).1 (t,(x,θ)))+
+        a_t (t,(x,θ))+D.strain (t,(x,θ)) ((highSolve P D I raw).1 (t,(x,θ))) +
           deriv (fun s => (highSolve P D I raw).2 (t,(x,s))) θ • D.normalField (t,(x,θ)) = raw
-            (t,(x,θ))) ∧
+              (t,(x,θ))) ∧
       (∀ t, ContDiff ℝ ∞ (fun y : Space × ℝ => (highSolve P D I raw).1 (t,y))) ∧
       (∀ t, ContDiff ℝ ∞ (fun y : Space × ℝ => (highSolve P D I raw).2 (t,y))) ∧
       (∀ t x, (∫ θ in (0 : ℝ)..P, (highSolve P D I raw).2 (t,(x,θ))) = 0) := by

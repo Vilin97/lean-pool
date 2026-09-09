@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceEquations
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderMeanSolenoidal
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceEquations
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketContract
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderMeanSolenoidal
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceEquations
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
+
+/-! Genuine mean and high constraints for the joined recursively constructed family. -/
 
 @[expose] public section
 
-/-! Genuine mean and high constraints for the joined recursively constructed family. -/
 
 noncomputable section
 
@@ -39,7 +44,7 @@ theorem joinedSource_corrector_eq
 
 include hT hprimary in
 theorem joinedSource_high_mean_zero
-    (hm : ∀ (t : Icc (0 : ℝ) M.T) x, (∫ θ in (0 : ℝ)..P, primary.high (t,(x,θ))) = 0)
+    (hm : ∀ (t : Icc (0 : ℝ) M.T) x, (∫ θ in (0 : ℝ)..P, primary.high (t, (x, θ))) = 0)
     (p : ℕ) (hp : 1 ≤ p) (t : Icc (0 : ℝ) M.T) (x : Space) :
     (∫ θ in (0 : ℝ)..P, (joinedSourceProfiles P M D τ hτ hτT B primary p).high (t,(x,θ))) = 0 := by
   by_cases hp1 : p = 1
@@ -49,7 +54,7 @@ theorem joinedSource_high_mean_zero
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_highForcing P M D hT τ hτ hτT B primary hprimary p hp2⟩
+    ⟨joinedSourceHighForcing P M D hT τ hτ hτT B primary hprimary p hp2⟩
   have he : joinedSourceProfiles P M D τ hτ hτT B primary p =
       EulerPacketProfileRecursion.step (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary) := profiles_step _ _ p hp2
@@ -62,7 +67,7 @@ theorem joinedSource_high_mean_zero
 include hT hprimary in
 theorem joinedSource_high_tangent_all
     (ht : ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (D.normalField (t,(x,θ))) (primary.high (t,(x,θ))) = 0)
+      inner ℝ (D.normalField (t, (x, θ))) (primary.high (t, (x, θ))) = 0)
     (p : ℕ) (hp : 1 ≤ p) (t : Icc (0 : ℝ) M.T) (x : Space) (θ : ℝ) :
     inner ℝ (D.normalField (t,(x,θ)))
       ((joinedSourceProfiles P M D τ hτ hτT B primary p).high (t,(x,θ))) = 0 := by
@@ -71,6 +76,8 @@ theorem joinedSource_high_tangent_all
     simpa only [joinedSourceProfiles,profiles_one] using ht t x θ
   exact joinedSource_high_tangent P M D hT τ hτ hτT B primary hprimary p (by omega) t x θ
 
+/-- Joined mean pullback field as an element of `Field P M.T (fun z => (joinedSourceOperators P
+M D τ hτ hτT B).inverseFrame z ((joinedSourceProfiles P M D τ hτ hτT B primary p).mean z))`. -/
 def joinedMeanPullbackField (p : ℕ) :
     Field P M.T (fun z => (joinedSourceOperators P M D τ hτ hτT B).inverseFrame z
       ((joinedSourceProfiles P M D τ hτ hτT B primary p).mean z)) :=
@@ -86,7 +93,7 @@ theorem joinedMeanPullback_divergence (hmean : primary.mean = 0)
   · subst p
     simp only [joinedSourceProfiles,profiles_zero]
     change divergence (fun y : Space => (joinedSourceOperators P M D τ hτ hτT B).inverseFrame
-      (t,(y,0)) 0) x = 0
+        (t,(y,0)) 0) x = 0
     simp [divergence]
   by_cases hp1 : p = 1
   · subst p
@@ -96,7 +103,7 @@ theorem joinedMeanPullback_divergence (hmean : primary.mean = 0)
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_meanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceMeanForcing P M D hT τ hτ hτT B primary hprimary p hp⟩
   have he : joinedSourceProfiles P M D τ hτ hτT B primary p =
       EulerPacketProfileRecursion.step (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary) := profiles_step _ _ p hp
@@ -119,7 +126,7 @@ theorem joinedMeanPullbackField_mem (hmean : primary.mean = 0)
   apply Field.mem_divergenceFree_of_angleIndependent _ κ m t
   · intro x θ
     change D.FInv.field (D.clamp t) x ((joinedSourceProfiles P M D τ hτ hτT B primary p).mean
-      (t,(x,θ))) =
+        (t,(x,θ))) =
       D.FInv.field (D.clamp t) x ((joinedSourceProfiles P M D τ hτ hτT B primary p).mean (t,(x,0)))
     rw [(joinedSourceProfileWitness P M D hT τ hτ hτT B primary hprimary p).mean_angle t x θ]
   · exact joinedMeanPullback_divergence P M D hT τ hτ hτT B primary hprimary hmean A p t

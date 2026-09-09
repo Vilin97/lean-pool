@@ -7,9 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedQuotients
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricKernelBounds
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Normed.Operator.Prod
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Topology.Algebra.Module.ModuleTopology
 
 /-!
 # Genuine derivative bounds for polynomially weighted Gaussian edges
@@ -18,6 +23,9 @@ The scalar derivative polynomials are the actual ones from `FlatCutoff`.
 Compactness bounds the derivatives of the smooth coefficient; the full
 Fréchet product rule then gives estimates for all joint derivative tensors.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +37,7 @@ namespace NavierStokes.EdgeWeightJets
 theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   WithTop.coe_le_coe.mpr le_top
 
+/-- Coefficient mass, given by `∑ i ∈ Finset.range (p.natDegree + 1), |p.coeff i|`. -/
 noncomputable def coefficientMass (p : ℝ[X]) : ℝ :=
   ∑ i ∈ Finset.range (p.natDegree + 1), |p.coeff i|
 
@@ -50,9 +59,13 @@ theorem polynomial_eval_bound (p : ℝ[X]) {x T : ℝ} (hT : 1 ≤ T) (hx : |x| 
         (pow_le_pow_right₀ hT (Nat.le_of_lt_succ (Finset.mem_range.mp hi)))
     _ = _ := by rw [← Finset.sum_mul]; rfl
 
+/-- Jet mass, given by `1 + ∑ i ∈ Finset.range (n + 1), coefficientMass
+(FlatCutoff.jetPolynomial c p i)`. -/
 noncomputable def jetMass (c : ℝ) (p : ℝ[X]) (n : ℕ) : ℝ :=
   1 + ∑ i ∈ Finset.range (n + 1), coefficientMass (FlatCutoff.jetPolynomial c p i)
 
+/-- Jet order, given by `∑ i ∈ Finset.range (n + 1), (FlatCutoff.jetPolynomial c p
+i).natDegree`. -/
 noncomputable def jetOrder (c : ℝ) (p : ℝ[X]) (n : ℕ) : ℕ :=
   ∑ i ∈ Finset.range (n + 1), (FlatCutoff.jetPolynomial c p i).natDegree
 
@@ -139,9 +152,9 @@ theorem norm_iteratedFDeriv_snd_le {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
   apply (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans
   have hprod : (∏ _i : Fin n, ‖L‖) ≤ 1 := by
     exact Finset.prod_le_one (fun _ _ => norm_nonneg _) (fun _ _ => ContinuousLinearMap.norm_snd_le
-      _ _ _)
+        _ _ _)
   exact (mul_le_mul_of_nonneg_left hprod (norm_nonneg (iteratedFDeriv ℝ n f (L y)))).trans_eq
-    (mul_one _)
+      (mul_one _)
 
 theorem compact_coefficient_jets {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     {B : E × ℝ → F} (hB : ContDiff ℝ ∞ B) {S : Set E} (hS : IsCompact S)
@@ -163,6 +176,7 @@ theorem compact_coefficient_jets {F : Type*} [NormedAddCommGroup F] [NormedSpace
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
     exact (hbound i (p, x) ⟨hp, hx⟩).trans (by linarith)
 
+/-- Weighted, given by `(FlatCutoff.edge c y.2 / y.2 ^ j) * B y`. -/
 noncomputable def weighted (c : ℝ) (j : ℕ) (B : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
   (FlatCutoff.edge c y.2 / y.2 ^ j) * B y
 
@@ -215,8 +229,8 @@ theorem edge_mul_iteratedFDeriv_bound_unit {c : ℝ} (hc : 0 < c) (j : ℕ)
       ‖iteratedFDeriv ℝ n (fun y : E × ℝ =>
         (FlatCutoff.edge c y.2 / y.2 ^ j) * B y) (p, x)‖ ≤
           C * FlatCutoff.edge c x / x ^ N := by
-  obtain ⟨C, hC, N, hbound⟩ := edge_mul_iteratedFDeriv_bound hc j hB hS n (by norm_num : (0 : ℝ) <
-    1)
+  obtain ⟨C, hC, N, hbound⟩ := edge_mul_iteratedFDeriv_bound hc j hB hS n (by
+      norm_num : (0 : ℝ) < 1)
   exact ⟨C, hC, N, fun p hp x hx => hbound n le_rfl p hp x hx.1 hx.2.le⟩
 
 theorem weightedJets_of_isCompact_closure {c : ℝ} (hc : 0 < c) (j : ℕ)
@@ -290,6 +304,8 @@ theorem norm_iteratedFDeriv_parameter_le {f : E × ℝ → ℝ} (hf : ContDiff �
   simpa only [g, iteratedFDeriv_comp_add_right, L, ContinuousLinearMap.prod_apply,
     ContinuousLinearMap.id_apply, _root_.zero_apply, Prod.mk_add_mk, add_zero, zero_add] using h
 
+/-- Radial iterate as an element of `ℕ → E × ℝ → ℝ | 0 => f | n + 1 => fun y => fderiv ℝ
+(radialIterate f n) y (0, 1)`. -/
 noncomputable def radialIterate (f : E × ℝ → ℝ) : ℕ → E × ℝ → ℝ
   | 0 => f
   | n + 1 => fun y => fderiv ℝ (radialIterate f n) y (0, 1)
@@ -415,7 +431,7 @@ theorem edge_smul_iteratedFDeriv_bound_on {c : ℝ} (hc : 0 < c) (j : ℕ)
     exact (norm_iteratedFDeriv_snd_le (FlatCutoff.edge_div_pow_contDiff hc j) k (p, x)).trans
       (hweight k (hk.trans hi) x hx hxd)
   have hprod := norm_iteratedFDerivWithin_smul_le hw.contDiffOn hB hV.uniqueDiffOn hy (nat_le_infty
-    i)
+      i)
   simp only [iteratedFDerivWithin_of_isOpen _ hV hy] at hprod
   apply hprod.trans
   calc

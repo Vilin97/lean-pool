@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpStrongContinuity
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpStrongContinuity
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 
 /-!
 # Actual spatial translations of the fixed mean time space
@@ -19,6 +18,9 @@ Translation preserves ordinary solenoidal L² and its Bochner time space. The
 action is isometric and strongly continuous and commutes with the actual
 terminal primitive and initial trace.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

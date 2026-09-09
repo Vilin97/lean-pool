@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CauchyRestriction
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactSmoothFamily
-
-@[expose] public section
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Joint real smoothness of smooth families of holomorphic disk functions
@@ -18,6 +18,9 @@ A fixed-contour Cauchy formula realizes evaluation inside a disk as a smooth
 supremum-norm kernel paired with the supplied Banach-valued curve. This proves
 joint smoothness, rather than inferring it from separate smoothness.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.HolomorphicFamily
 
@@ -28,6 +31,7 @@ open scoped Topology ContDiff Interval
 
 open CauchyRestriction
 
+/-- Angles: an abbreviation for `↥(Icc (0 : ℝ) (2 * Real.pi))`. -/
 abbrev Angles := ↥(Icc (0 : ℝ) (2 * Real.pi))
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
@@ -98,6 +102,8 @@ theorem norm_multiplyPaths_le (k : C(Angles, ℂ)) (v : C(Angles, E)) :
   exact mul_le_mul (k.norm_coe_le_norm _) (v.norm_coe_le_norm _)
     (norm_nonneg _) (norm_nonneg _)
 
+/-- Multiply paths linear, bundling `toFun`, `toFun`, `map_add`, `map_smul` and the required
+compatibility proofs. -/
 noncomputable def multiplyPathsLinear :
     C(Angles, ℂ) →ₗ[ℝ] C(Angles, E) →ₗ[ℝ] C(Angles, E) where
   toFun k := {

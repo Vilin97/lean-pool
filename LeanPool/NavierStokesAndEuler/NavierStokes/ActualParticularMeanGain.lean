@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
 
-@[expose] public section
-
 /-!
 # The actual post-particular mean data
 
@@ -17,6 +15,9 @@ Only the particular wave is needed to prepare the signed request.  The
 common assembly below is independent of a signed family or any signed
 output estimate.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,33 +28,48 @@ open CorrectionInitialization VariableGaugeMean
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
+/-- Particular blocks: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).particularBlock x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev particularBlocks {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Particular velocity: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).particularVelocity x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev particularVelocity {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).particularVelocity x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Particular pressure: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).particularPressure x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev particularPressure {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).particularPressure x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Particular gaussian: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).particularGaussian x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev particularGaussian {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).particularGaussian x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Post particular: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).afterParticular x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev postParticular {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).afterParticular x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Signed request: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).signedRequest x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev signedRequest {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).signedRequest x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Label: an abbreviation for `ActualPrimaryCovariance.signedLabelOf l`. -/
 noncomputable abbrev label {B N0 : ℕ} (_n : ℕ) (l : Index B N0) : SlotColoring.Label :=
   ActualPrimaryCovariance.signedLabelOf l
 
@@ -64,7 +80,7 @@ structure Inputs {B N0 : ℕ} (x : CycleState (Index B N0)) (σ : ℝ) : Prop wh
     ActualInitialization.envelope (1/2+σ)
     (fun l n z => (particularBlocks x l).velocity n i j z)
   smooth : WaveStateRegularity.AngularSmooth ActualInitialization.geometry.domain
-    (particularVelocity x)
+      (particularVelocity x)
   periodic : OscillationPeriodic ActualPrimary.standardRegion.carrier (particularVelocity x)
   supported : WaveStateRegularity.WaveSupport ActualPrimary.standardRegion
     ActualInitialization.patch.a ActualInitialization.patch.b (particularVelocity x)
@@ -112,11 +128,11 @@ include H d
 
 /-- Quantitative covariance of the literal first update, with uniform
 constants obtained from the fixed slot assembly. -/
-theorem covariance_class (hσ : 1/5 ≤ σ) :
+theorem covariance_class (hσ : 1 / 5 ≤ σ) :
     SignedMeanGain.TensorClass ActualInitialization.strip (1+σ)
       (SignedMeanGain.covarianceIncrement x.state.oscillation (particularVelocity x)) := by
   have hinj n : Set.InjOn (label (B := B) (N0 := N0) n) (x.coefficients.labels n : Set (Index B
-    N0)) :=
+      N0)) :=
     ActualPrimaryCovariance.signedLabelOf_injective.injOn
   have hlevel n (l : Index B N0) (_hl : l ∈ x.coefficients.labels n) : 1 ≤ (label n l).1 :=
     l.1.val.property.1
@@ -147,7 +163,7 @@ theorem covariance_moving : ∀ i j, GaugeMomentBalances.MovingField ActualPrima
 
 /-- Prepare the actual signed request without any signed-wave estimate
 or complete four-stage input record. -/
-theorem postParticular_gain (hσ : 1/5 ≤ σ) : Result x σ := by
+theorem postParticular_gain (hσ : 1 / 5 ≤ σ) : Result x σ := by
   have hCov := covariance_class H d hσ
   have hMove := covariance_moving H d
   have hPr := H.primitives.waveStage ActualPrimary.commonGauge (particularVelocity x)
@@ -160,7 +176,7 @@ theorem postParticular_gain (hσ : 1/5 ≤ σ) : Result x σ := by
     congrArg (fun u : State Point => u.pressure) H.reconstructed
   obtain ⟨hθ, hz⟩ := H.raw_mean_bounds
   obtain ⟨hp, hcum, htheta, haxial, hdebt, hrequest⟩ := waveStage_mean_gain
-    ActualInitialization.geometry
+      ActualInitialization.geometry
     (ActualPrimary.commonContext B) x.state (particularVelocity x) (particularPressure x)
     (particularGaussian x) hσ (ActualInitialization.operators B).kappa_nonneg
     (show ChartScales.kappa ≤ 1/100000 by rfl) H.primitives (ActualInitialization.operators B)

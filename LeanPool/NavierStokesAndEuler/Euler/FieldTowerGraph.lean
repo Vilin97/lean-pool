@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphPath
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 
 /-! Every smooth representative of a genuine all-order field tower has
 continuous spatial L² restrictions, including all cylinder derivative words.
 The graph estimate loses one angular derivative, with no frequency factor. -/
+
+@[expose] public section
+
 
 noncomputable section
 

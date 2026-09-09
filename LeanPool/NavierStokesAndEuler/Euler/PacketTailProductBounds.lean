@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteVelocityBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUnweightedAdvection
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderLinearTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteVelocityBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketUnweightedAdvection
+
+/-! Bounds for the actual advection products in the surviving finite packet tail. -/
 
 @[expose] public section
 
-/-! Bounds for the actual advection products in the surviving finite packet tail. -/
 
 noncomputable section
 
@@ -21,7 +25,7 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
   EulerPacketTimeProfile EulerPacketShiftArithmetic EulerParameterWordGevrey
 
 theorem tail_product_amplitude (H c C : ℝ) (hH : 1 ≤ H) (hc : 0 ≤ c) (hcC : c ≤ C)
-    (i j n : ℕ) (hij : i+j ≤ n+1) :
+    (i j n : ℕ) (hij : i + j ≤ n + 1) :
     c*(3*H^(2*i))*(3*H^(2*j)) ≤ 9*C*H^(2*n+2) := by
   have hH0 : 0 ≤ H := zero_le_one.trans hH
   have hC : 0 ≤ C := hc.trans hcC
@@ -32,7 +36,7 @@ theorem tail_product_amplitude (H c C : ℝ) (hH : 1 ≤ H) (hc : 0 ≤ c) (hcC 
     _ ≤ 9*C*H^(2*n+2) := mul_le_mul_of_nonneg_left
       (pow_le_pow_right₀ hH (by omega)) (mul_nonneg (by norm_num) hC)
 
-theorem tail_product_shift (i j n : ℕ) (hij : i+j ≤ n+1) :
+theorem tail_product_shift (i j n : ℕ) (hij : i + j ≤ n + 1) :
     highShift i+highShift j+1 ≤ 110*(n+1) := by
   unfold highShift
   omega
@@ -40,7 +44,7 @@ theorem tail_product_shift (i j n : ℕ) (hij : i+j ≤ n+1) :
 namespace PrefixBound
 
 variable {P T : ℝ} [Fact (0 < P)] {N : ℕ} {a : ℕ → Profile}
-  {F : PrefixFields P T (N+1) a} {hT : 0 ≤ T}
+  {F : PrefixFields P T (N + 1) a} {hT : 0 ≤ T}
   {S : Scales (Icc (0 : ℝ) T)} {R : ℝ} (B : PrefixBound F hT S R)
   {O : Operators} {C : CoefficientData P T O} (BC : CoefficientBudget C)
 
@@ -49,7 +53,7 @@ include B
 theorem tail_slow_product_bound (hN : 1 ≤ N) (hR : 1 ≤ R)
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
     (hc : (a 0).corrector = 0) (hb : (a 1).mean = 0)
-    (i j n : ℕ) (hij : i+j=n) :
+    (i j n : ℕ) (hij : i + j = n) :
     (SpatialJetField.slowAdvection C.inverse (F.knownJet O (by omega) i)
       (F.knownJet O (by omega) j)).WordBound 6 R
       (9*BC.termCost*S.H0^(2*n+2)) (110*(n+1)) := by
@@ -67,7 +71,7 @@ theorem tail_slow_product_bound (hN : 1 ≤ N) (hR : 1 ≤ R)
 theorem tail_fast_product_bound (hN : 1 ≤ N) (hR : 1 ≤ R)
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
     (hc : (a 0).corrector = 0) (hb : (a 1).mean = 0)
-    (i j n : ℕ) (hij : i+j=n+1) :
+    (i j n : ℕ) (hij : i + j = n + 1) :
     (SpatialJetField.fastAdvection C.normal (F.knownJet O (by omega) i)
       (F.knownJet O (by omega) j)).WordBound 6 R
       (9*BC.termCost*S.H0^(2*n+2)) (110*(n+1)) := by

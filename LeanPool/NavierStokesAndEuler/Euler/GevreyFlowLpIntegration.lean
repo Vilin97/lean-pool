@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyJetCompositionLp
-public import LeanPool.NavierStokesAndEuler.Euler.LpParameterIntegral
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.GevreyJetCompositionLp
+import LeanPool.NavierStokesAndEuler.Euler.LpParameterIntegral
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-! The all-order L² step for a volume-preserving flow.  The spatial base
 may be a periodic cylinder.  The output is the actual time integral of
 the finite Taylor composition; identifying it with the displacement jet
 uses the already constructed flow's differentiated integral equation. -/
+
+@[expose] public section
+
 
 noncomputable section
 

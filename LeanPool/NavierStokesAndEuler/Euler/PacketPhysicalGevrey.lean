@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Physical reconstruction preserves the small amplitude of a lifted
 correction. All spatial derivatives are actual derivatives of κF e
 evaluated on the phase graph and pulled through the inverse parent flow. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +28,7 @@ open scoped ContDiff
 theorem physicalField_gevrey (P k : ℝ) (m : Vector3) (e : LiftDomain P → Vector3)
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift P e x)) (A S : ℝ)
     (hb : ∀ n x, (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w e x‖) ≤
-      A*S^n*(n.factorial : ℝ)^2) (n : ℕ) (x : Vector3) :
+      A * S ^ n * (n.factorial : ℝ) ^ 2) (n : ℕ) (x : Vector3) :
     ‖iteratedFDeriv ℝ n (physicalField P k m e) x‖ ≤
       A*majorant (frequencyFactor k m*S) 0 n := by
   exact ((physicalTensor_norm_le P k m e he n x).trans
@@ -46,6 +49,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (e : Icc (0 : ℝ) D.T → LiftDomain P → Space)
   (he : ∀ t x, ContDiff ℝ ∞ (localFieldLift P (e t) x))
 
+/-- Graph reconstruction, given by `κ • D.F.field t x (physicalField P k D.m₀ (e t) x)`. -/
 def graphReconstruction (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   κ • D.F.field t x (physicalField P k D.m₀ (e t) x)
 
@@ -56,9 +60,9 @@ theorem graphReconstruction_contDiff (t : Icc (0 : ℝ) D.T) :
 
 variable (R C A S : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hA : 0 ≤ A) (hS : 0 ≤ S)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
   (hb : ∀ n t x, (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w (e t) x‖) ≤
-    A*S^n*(n.factorial : ℝ)^2)
+    A * S ^ n * (n.factorial : ℝ) ^ 2)
 
 include he hR hC hA hS hF hb in
 theorem graphReconstruction_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
@@ -81,8 +85,8 @@ theorem graphReconstruction_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space)
   rw [iteratedFDeriv_const_smul_apply'
     (((D.F.smooth t).clm_apply (physicalField_contDiff P k D.m₀ (e t) (he t))).contDiffAt.of_le
       (by simp : (n : ℕ∞ω) ≤ ∞)),norm_smul,Real.norm_eq_abs]
-  exact (mul_le_mul_of_nonneg_left hprod (abs_nonneg κ)).trans_eq (by simp only [Nat.zero_add];
-    ring)
+  exact (mul_le_mul_of_nonneg_left hprod (abs_nonneg κ)).trans_eq (by
+      simp only [Nat.zero_add]; ring)
 
 variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
@@ -90,9 +94,11 @@ variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hXY : ∀ t x, X t (Y t x) = x)
   (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
 
+/-- Physical reconstruction, given by `graphReconstruction D P κ k e t (Y t x)`. -/
 def physicalReconstruction (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   graphReconstruction D P κ k e t (Y t x)
 
+/-- Physical radius, given by `sourceInverseRadius C R*(9*C^2*(R+frequencyFactor k D.m₀*S)+2)`. -/
 def physicalRadius : ℝ :=
   sourceInverseRadius C R*(9*C^2*(R+frequencyFactor k D.m₀*S)+2)
 

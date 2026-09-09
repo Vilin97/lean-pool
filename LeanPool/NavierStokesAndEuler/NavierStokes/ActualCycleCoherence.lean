@@ -9,14 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanPhysicalData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionAnalyticStep
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualReferenceRebase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCoreSupport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedGaussianCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularCoherence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedGaussianCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
 
 /-!
 # Coherence of the actual correction recurrence
@@ -27,6 +24,9 @@ start the induction together.  The two literal wave constructions supply
 the transport used by the mean, pressure, and alias operations.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCycleCoherence
@@ -36,9 +36,13 @@ open PhysicalResidualNaturality GaugeStateCoherence
 open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open scoped ContDiff Topology BigOperators
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
+/-- Index: an abbreviation for `ActualInitialization.Index`. -/
 abbrev Index := ActualInitialization.Index
+/-- Geometry: an abbreviation for `ActualMeanPhysicalData.initialGeometry`. -/
 abbrev geometry := ActualMeanPhysicalData.initialGeometry
+/-- Overlap: an abbreviation for `ActualInitialCoherence.overlap`. -/
 abbrev overlap := ActualInitialCoherence.overlap
 
 /-- Every comparison is on the intersection of the two actual normalized
@@ -57,6 +61,8 @@ def BlocksCoherent {ι : Type} (v : CycleCoefficients ι) : Prop :=
       (v.blocks l) (v.blocks l) (v.gaussian l) (v.aliasCoefficients l)
       (v.gaussian l) (v.aliasCoefficients l) n m
 
+/-- Axis coherent, given by `∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
+CycleStateCoherence.AxisBand geometry (overlap n m) n m k a`. -/
 def AxisCoherent (a : AxisymmetricAlias) : Prop :=
   ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
     CycleStateCoherence.AxisBand geometry (overlap n m) n m k a
@@ -194,6 +200,7 @@ theorem label_waves_of_support {ι : Type}
 
 /-! ## The actual source on every fast-variable fiber -/
 
+/-- Particular source, constructed using `ParticularWaveAssembly.residualSource`. -/
 noncomputable def particularSource {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (n : ℕ) :
     PhysicalParticularWave.Parameter × PressureStream.Plane → HarmonicCalculus.ComplexVector :=
@@ -207,14 +214,14 @@ theorem particularSource_eq {B N0 : ℕ} (x : CycleState (Index B N0))
       (ActualParticularStageControls.assembly (ActualCycleParameters.particularState x) l).context
       (ActualParticularStageControls.assembly (ActualCycleParameters.particularState x) l).state
       (ActualParticularStageControls.assembly (ActualCycleParameters.particularState x)
-        l).carrierBlock
+          l).carrierBlock
       (ActualParticularStageControls.assembly (ActualCycleParameters.particularState x)
-        l).gaussianInput
+          l).gaussianInput
       (ActualParticularStageControls.assembly (ActualCycleParameters.particularState x)
-        l).aliasInput j n := by
+          l).aliasInput j n := by
   funext z
   exact (ActualReferenceRebase.assembly_source (ActualCycleParameters.particularState x) l j n
-    z).symm
+      z).symm
 
 theorem core_ordered {B N0 : ℕ} (l : Index B N0) (n : ℕ) {z : Point}
     (hz : z ∈ ActualInitialization.geometry.domain)
@@ -241,7 +248,7 @@ same overlap.  The Gaussian term is the differentiated-cutoff error. -/
 theorem signed_wave_on {B N0 : ℕ} (l : Index B N0) (u : State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
@@ -265,6 +272,7 @@ theorem signed_wave_on {B N0 : ℕ} (l : Index B N0) (u : State Point)
     ActualSignedCoherence.exactBlock_pressure_transport l u H hfixed n m k hi HS,
     ActualSignedGaussianCoherence.gaussianBlock_transport l u H hfixed n m k hi HS⟩
 
+/-- Particular point, given by `ParticularWaveAssembly.angleShuffle (cycleAssoc z, 0)`. -/
 noncomputable def particularPoint (z : Point) : PhysicalParticularWave.WaveSpace :=
   ParticularWaveAssembly.angleShuffle (cycleAssoc z, 0)
 
@@ -347,7 +355,7 @@ include H in
 theorem source_support (hS : ∀ l n, IsClosed (S l n))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (n : ℕ)
     {p : PhysicalParticularWave.Parameter} (hp : p.2 ∈ standardRegion.carrier)
-    {Y : PressureStream.Plane} (hne : particularSource x l j n (p,Y) ≠ 0) :
+    {Y : PressureStream.Plane} (hne : particularSource x l j n (p, Y) ≠ 0) :
     cycleAssoc.symm (p,Y) ∈ S (l.2,l.1) n := by
   by_contra hn
   exact hne (HarmonicSourceSupport.residualSource_zero_germ_on (commonContext B) x.state
@@ -359,7 +367,7 @@ include H in
 theorem source_positive_smooth (l : Index B N0) (j : ℤ) (n : ℕ) :
     ContDiffOn ℝ ∞ (ParticularWaveAssembly.residualSource (commonContext B) x.state
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) j
-        n)
+          n)
       (LocalRankDefect.positiveDomain standardRegion.carrier) := by
   let U := LocalRankDefect.positiveDomain standardRegion.carrier
   have hu : U ⊆ ActualInitialization.geometry.domain := fun _ hz => hz.2
@@ -377,7 +385,7 @@ theorem source_positive_smooth (l : Index B N0) (j : ℤ) (n : ℕ) :
     fin_cases i
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((H.primitives.mean.radial.smooth n).mono hu)
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((H.primitives.mean.angular.smooth n).mono
-      hu)
+        hu)
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((H.primitives.mean.axial.smooth n).mono hu)
   have hp : ContDiffOn ℝ ∞ ((x.coefficients.blocks l).phase n) U := by
     rw [← (H.carrier l).phase]
@@ -388,10 +396,10 @@ theorem source_positive_smooth (l : Index B N0) (j : ℤ) (n : ℕ) :
       (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) n).Regular U :=
     ⟨hp, fun i => (show HarmonicResidual.SmoothCoefficients U
       ((x.coefficients.blocks l).velocity n i) from fun k => (H.coefficientSmooth l n i k).mono
-        hu).realCoefficients,
+          hu).realCoefficients,
       (show HarmonicResidual.SmoothCoefficients U
       ((x.coefficients.blocks l).pressure n) from fun k => (H.pressureCoefficientSmooth l n k).mono
-        hu).realCoefficients⟩
+          hu).realCoefficients⟩
   have hg (i : Fin 3) : HarmonicResidual.SmoothCoefficients U
       (x.coefficients.gaussian l n i) := fun k => (H.gaussianCoefficientSmooth l n i k).mono hu
   have ha (i : Fin 3) : HarmonicResidual.SmoothCoefficients U
@@ -407,7 +415,7 @@ theorem source_smooth (hS : ∀ l n, IsClosed (S l n))
     (l : Index B N0) (j : ℤ) (n : ℕ) :
     ContDiffOn ℝ ∞ (ParticularWaveAssembly.residualSource (commonContext B) x.state
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) j
-        n)
+          n)
       ActualInitialization.geometry.domain := by
   apply ActualInitialization.geometry.domain_open.contDiffOn_iff.mpr
   intro z hz
@@ -445,7 +453,7 @@ theorem source_ordered (hS : ∀ l n, IsClosed (S l n))
     (hcore : ∀ l n, S l n ⊆ ActualCoreSupport.refinedCarrier l n)
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) (n : ℕ)
     (p : PhysicalParticularWave.Parameter) (hp : p.2 ∈ standardRegion.carrier)
-    (hne : ∃ Y, particularSource x l j n (p,Y) ≠ 0) :
+    (hne : ∃ Y, particularSource x l j n (p, Y) ≠ 0) :
     CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) := by
   obtain ⟨Y,hY⟩ := hne
   exact core_ordered (l.2,l.1) n hp (hcore _ _ (source_support H hS l j n hp hY))
@@ -522,23 +530,23 @@ theorem signed_cycle_wave_on (l : Index B N0) (n m k : ℕ)
     (HS : StateOn (PhysicalMeanDomain.slowDomain (overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m)
       ((ActualCycleParameters.fixedParameters B N0).afterParticular x.coefficients (commonContext
-        B) x.state)
+          B) x.state)
       ((ActualCycleParameters.fixedParameters B N0).afterParticular x.coefficients (commonContext
-        B) x.state) n m) :
+          B) x.state) n m) :
     CycleStateCoherence.WaveOn (PhysicalMeanDomain.slowDomain (overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m)
       ((ActualCycleParameters.fixedParameters B N0).signedBlock x.coefficients (commonContext B)
-        x.state l).oscillation
+          x.state l).oscillation
       ((ActualCycleParameters.fixedParameters B N0).signedBlock x.coefficients (commonContext B)
-        x.state l).oscillatoryPressure
+          x.state l).oscillatoryPressure
       ((ActualCycleParameters.fixedParameters B N0).signedGaussianBlock x.coefficients
-        (commonContext B) x.state l).oscillation
+          (commonContext B) x.state l).oscillation
       ((ActualCycleParameters.fixedParameters B N0).signedBlock x.coefficients (commonContext B)
-        x.state l).oscillation
+          x.state l).oscillation
       ((ActualCycleParameters.fixedParameters B N0).signedBlock x.coefficients (commonContext B)
-        x.state l).oscillatoryPressure
+          x.state l).oscillatoryPressure
       ((ActualCycleParameters.fixedParameters B N0).signedGaussianBlock x.coefficients
-        (commonContext B) x.state l).oscillation n m :=
+          (commonContext B) x.state l).oscillation n m :=
   signed_wave_on l _ (afterParticular_primitive H W) (afterParticular_pressure (x := x)) n m k hi HS
 
 theorem particular_pressure_zero
@@ -561,17 +569,17 @@ theorem particular_wave_on (hS : ∀ l n, IsClosed (S l n))
     CycleStateCoherence.WaveOn (PhysicalMeanDomain.slowDomain (overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m)
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients (commonContext
-        B) x.state l).oscillation
+          B) x.state l).oscillation
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients (commonContext
-        B) x.state l).oscillatoryPressure
+          B) x.state l).oscillatoryPressure
       ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock x.coefficients
-        (commonContext B) x.state l).oscillation
+          (commonContext B) x.state l).oscillation
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients (commonContext
-        B) x.state l).oscillation
+          B) x.state l).oscillation
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients (commonContext
-        B) x.state l).oscillatoryPressure
+          B) x.state l).oscillatoryPressure
       ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock x.coefficients
-        (commonContext B) x.state l).oscillation n m := by
+          (commonContext B) x.state l).oscillation n m := by
   let xp := ActualCycleParameters.particularState x
   let lp : ActualParticularStageControls.Label B N0 := (l.2,l.1)
   have I := particular_source_inputs H hS hcore lp
@@ -665,16 +673,16 @@ theorem particular_label_waves (n m k : ℕ)
     CycleStateCoherence.LabelWavesOn (PhysicalMeanDomain.slowDomain (overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) x.coefficients.labels
       ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients (commonContext
-        B) x.state)
+          B) x.state)
       ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock x.coefficients
-        (commonContext B) x.state)
+          (commonContext B) x.state)
       n m := by
   apply label_waves_of_support _ _ _ S W.particularSupport
     ((ActualCycleParameters.fixedParameters B N0).particularBlock_zero x.coefficients
-      (commonContext B) x.state)
+        (commonContext B) x.state)
     (particular_pressure_zero _ _ _ _)
     ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock_zero x.coefficients
-      (commonContext B) x.state)
+        (commonContext B) x.state)
     hcover n m k HP
 
 include W hcover in
@@ -696,15 +704,15 @@ theorem signed_label_waves (n m k : ℕ)
     CycleStateCoherence.LabelWavesOn (PhysicalMeanDomain.slowDomain (overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) x.coefficients.labels
       ((ActualCycleParameters.fixedParameters B N0).signedBlock x.coefficients (commonContext B)
-        x.state)
+          x.state)
       ((ActualCycleParameters.fixedParameters B N0).signedGaussianBlock x.coefficients
-        (commonContext B) x.state)
+          (commonContext B) x.state)
       n m := by
   apply label_waves_of_support _ _ _ S W.signedSupport
     (fun l => ((ActualCycleParameters.fixedParameters B N0).signed l).exactBlock_zero _ _)
     (fun l => ((ActualCycleParameters.fixedParameters B N0).signed l).exactBlock_pressure_zero _ _)
     ((ActualCycleParameters.fixedParameters B N0).signedGaussianBlock_zero x.coefficients
-      (commonContext B) x.state)
+        (commonContext B) x.state)
     hcover n m k HS
 
 include H W C in
@@ -724,9 +732,9 @@ theorem afterParticular_coherent
       CycleStateCoherence.LabelWavesOn (PhysicalMeanDomain.slowDomain (overlap n m))
         (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) x.coefficients.labels
         ((ActualCycleParameters.fixedParameters B N0).particularBlock x.coefficients (commonContext
-          B) x.state)
+            B) x.state)
         ((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock x.coefficients
-          (commonContext B) x.state)
+            (commonContext B) x.state)
         n m) :
     StateCoherent ((ActualCycleParameters.fixedParameters B N0).afterParticular
       x.coefficients (commonContext B) x.state) := by
@@ -778,7 +786,7 @@ include H W in
 theorem next_primitive :
     MeanStateRegularity.PrimitiveData standardRegion geometry.inner geometry.outer
       (commonContext B) (x.step (ActualCycleParameters.fixedParameters B N0) (commonContext
-        B)).state :=
+          B)).state :=
   ((ActualCycleParameters.fixedParameters B N0).next_primitive x.coefficients (commonContext B)
     x.state standardRegion (realizes B N0).inner_pos (realizes B N0).exponent_pos
     (realizes B N0).length H.primitives (covariance_moving H W).1 (covariance_moving H W).2
@@ -795,10 +803,10 @@ theorem temporal_potential_overlap (N : ℕ)
         (ActualCycleParameters.fixedParameters B N0).timeExponent
         (ActualCycleParameters.fixedParameters B N0).commonIndex (commonContext B)
         ((ActualCycleParameters.fixedParameters B N0).afterSigned x.coefficients (commonContext B)
-          x.state)) := by
+            x.state)) := by
   have HS : (ActualMeanPhysicalData.initialAtlas N).StateOverlap standardRegion.carrier
       ((ActualCycleParameters.fixedParameters B N0).afterSigned x.coefficients (commonContext B)
-        x.state) :=
+          x.state) :=
     fun n _ m _ k hi => (transport_of_waves H W C n m k hi (HW n m k hi)).signed
   exact (ActualMeanPhysicalData.initialAtlas N).temporal_overlap standardRegion
     (ActualCycleParameters.fixedParameters B N0).gauge (commonContext B) _
@@ -816,14 +824,14 @@ theorem rank_potential_overlap (N : ℕ)
       (VariableGaugeMean.rankPotential (ActualCycleParameters.fixedParameters B N0).gauge
         (ActualCycleParameters.fixedParameters B N0).rank (commonContext B)
         ((ActualCycleParameters.fixedParameters B N0).afterTemporal x.coefficients (commonContext
-          B) x.state)) := by
+            B) x.state)) := by
   have HS : (ActualMeanPhysicalData.initialAtlas N).StateOverlap standardRegion.carrier
       ((ActualCycleParameters.fixedParameters B N0).afterTemporal x.coefficients (commonContext B)
-        x.state) :=
+          x.state) :=
     fun n _ m _ k hi => (transport_of_waves H W C n m k hi (HW n m k hi)).temporal
   exact (ActualMeanPhysicalData.initialAtlas N).rank_overlap standardRegion
     (ActualCycleParameters.fixedParameters B N0).gauge (ActualCycleParameters.fixedParameters B
-      N0).rank
+        N0).rank
     (commonContext B) _ (ActualMeanPhysicalData.initial_context_overlap B N) HS
     (ActualMeanPhysicalData.initial_gauge_overlap N) (ActualMeanPhysicalData.initial_rank_overlap N)
     (stage_primitives H W).temporal (stage_primitives H W).rankGeometry
@@ -832,6 +840,7 @@ end Step
 
 /-! ## The fixed actual recurrence and the mean atlas input -/
 
+/-- State, constructed using `CycleState.iterate`. -/
 noncomputable def state (B N0 : ℕ) : ℕ → CycleState (Index B N0) :=
   CycleState.iterate (fun _ => ActualCycleParameters.fixedParameters B N0)
     (commonContext B) (ActualInitialization.initialCycleState B N0)
@@ -859,12 +868,12 @@ theorem mean_input_of_transport (B N0 N : ℕ) (sigma : ℕ → ℝ)
     (W : ∀ j, CorrectionAnalyticStep.WaveData ActualInitialization.geometry
       (ActualCycleParameters.fixedParameters B N0) (state B N0 j).coefficients
       (commonContext B) (state B N0 j).state ActualInitialization.envelope S (sigma j)
-        ChartScales.kappa)
+          ChartScales.kappa)
     (HW : ∀ j n m k, CommonWindow.index h n + k = CommonWindow.index h m →
       CycleStateCoherence.CycleWavesOn geometry (ActualCycleParameters.fixedParameters B N0)
         (state B N0 j).coefficients (commonContext B) (state B N0 j).state (overlap n m) n m k) :
     ActualMeanPhysicalData.InitialCycleInput B N0 N (fun _ => ActualCycleParameters.fixedParameters
-      B N0) where
+        B N0) where
   realizes := fun _ => realizes B N0
   covariance_particular := fun j => (covariance_moving (H j) (W j)).1
   covariance_signed := fun j => (covariance_moving (H j) (W j)).2
@@ -878,7 +887,7 @@ variable (B N0 : ℕ) (sigma : ℕ → ℝ) (S : Index B N0 → ℕ → Set Poin
     (W : ∀ j, CorrectionAnalyticStep.WaveData ActualInitialization.geometry
       (ActualCycleParameters.fixedParameters B N0) (state B N0 j).coefficients
       (commonContext B) (state B N0 j).state ActualInitialization.envelope S (sigma j)
-        ChartScales.kappa)
+          ChartScales.kappa)
     (hS : ∀ l n, IsClosed (S l n))
     (hcore : ∀ l n, S l n ⊆ ActualCoreSupport.refinedCarrier l n)
     (hcover : ∀ l n z, z ∈ ActualInitialization.geometry.domain → z ∈ S l n →
@@ -912,7 +921,7 @@ include H W hS hcore hcover in
 recurrence; its wave and covariance transports are conclusions. -/
 theorem mean_input (N : ℕ) :
     ActualMeanPhysicalData.InitialCycleInput B N0 N (fun _ => ActualCycleParameters.fixedParameters
-      B N0) :=
+        B N0) :=
   mean_input_of_transport B N0 N sigma S H W
     (iterate_waves B N0 sigma S H W hS hcore hcover)
 

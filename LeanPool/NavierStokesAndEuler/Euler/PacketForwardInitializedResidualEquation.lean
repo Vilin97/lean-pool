@@ -11,13 +11,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrec
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileFields
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftEquation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
 
 /-! The literal zero-history initialized packet supplies the all-order approximation
 residual identity, including its actual pressure gradient.  Its velocity,
 time derivative and residual are the fields already constructed from the
 source profiles, not additional approximation hypotheses. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,24 +50,31 @@ variable (M : EulerMeanPacketProvider.Data)
   (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized velocity, given by `fieldSum (N+1) κ (assembledVelocity N
+(forwardInitializedProfiles M D δ hδ ξ hs α))`. -/
 def forwardInitializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (assembledVelocity N (forwardInitializedProfiles M D δ hδ ξ hs α))
 
+/-- Forward initialized velocity field as an element of `Field period D.T
+(forwardInitializedVelocity M D δ hδ ξ hs α N κ)`. -/
 def forwardInitializedVelocityField (N : ℕ) (κ : ℝ) :
     Field period D.T (forwardInitializedVelocity M D δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityField M.T_pos
     (fun i (_ : i ≤ N) => forwardInitializedProfileWitness M D hTime δ hδ ξ hs α i) κ).changeTime
-      hTime
+        hTime
 
+/-- Forward initialized velocity derivative, constructed using `fieldSum`. -/
 def forwardInitializedVelocityDerivative (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (ProfileRegularity.velocityTimeCoefficients (T := M.T) (N := N)
     (a := forwardInitializedProfiles M D δ hδ ξ hs α))
 
+/-- Forward initialized velocity derivative field as an element of `Field period D.T
+(forwardInitializedVelocityDerivative M D δ hδ ξ hs α N κ)`. -/
 def forwardInitializedVelocityDerivativeField (N : ℕ) (κ : ℝ) :
     Field period D.T (forwardInitializedVelocityDerivative M D δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityDerivativeField M.T_pos
     (fun i (_ : i ≤ N) => forwardInitializedProfileWitness M D hTime δ hδ ξ hs α i) κ).changeTime
-      hTime
+        hTime
 
 theorem forwardInitializedVelocityField_time (N : ℕ) (κ : ℝ) :
     TimeDerivative D.T_pos.le
@@ -85,10 +94,12 @@ theorem forwardInitializedNormalizedField_path_eq (N : ℕ) (k : ℝ) :
 theorem forwardInitializedNormalizedField_tower_eq (N : ℕ) (k : ℝ) :
     (forwardInitializedNormalizedField M D hTime δ hδ ξ hs α N k).toFieldTower =
       (coordinateField D (forwardInitializedVelocityField M D hTime δ hδ ξ hs α N k⁻¹)
-        k).toFieldTower :=
+          k).toFieldTower :=
   Field.toFieldTower_eq_of_path_eq_forward _ _
     (forwardInitializedNormalizedField_path_eq M D hTime δ hδ ξ hs α N k)
 
+/-- Forward initialized coordinate residual field used in packet forward initialized residual
+equation. -/
 def forwardInitializedCoordinateResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     Field period D.T (normalizedResidual D k

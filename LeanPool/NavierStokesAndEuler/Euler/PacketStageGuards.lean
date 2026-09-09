@@ -7,13 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageGeometry
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardGeometryGuards
+public import LeanPool.NavierStokesAndEuler.Euler.ParentNeighborThreshold
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryGuards
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentHistoryFrequencyGuard
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketNeighborScaleGuard
 
 /-! Literal forward and joined source guards for the next packet of an
 actual finite stage. The radius is one, the spike and target shear are
 the prescribed source scales, and the physical target is nextTime. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,14 +61,15 @@ theorem joined_neighbor :
     (S.previousFrequency_one n)
     P.label_eq.le htime hcost hq (degree_le_requiredExponent.trans hq) P.scale_eq.le
 
+/-- Joined guards, constructed using `P.restrictedState.labels.geometryGuardsOfStage`. -/
 def joinedGuards : Guards (P.time_pos hn) P.time_lt_nextHorizon (P.joinedFrame hn) (P.joinedHistory
-  hn) :=
+    hn) :=
   P.restrictedState.labels.geometryGuardsOfStage
     (P.joinedNormal hn) (P.joinedNormal_unit hn)
     (LinearIsometryEquiv.refl ℝ (referencePlane (P.joinedNormal hn))) support compact
     P.restrictedLow P.time (P.time_pos hn) P.time_lt_nextHorizon (P.joinedFrame hn)
     (fun t x => P.restrictedState.evolution.pressure (t,x))
-      P.restrictedState.evolution.pressure_smooth
+        P.restrictedState.evolution.pressure_smooth
     (by
       intro t x
       rw [P.restrictedState.evolution.pressure_gradient]
@@ -89,7 +96,7 @@ def joinedGuards : Guards (P.time_pos hn) P.time_lt_nextHorizon (P.joinedFrame h
 
 theorem joined_source_neighbor :
     (P.joinedFrame hn).neighborCost (P.time_pos hn) P.time_lt_nextHorizon
-      (P.joinedHistory hn) (P.joinedGuards hn hq hB).CM (P.joinedGuards hn hq hB).CH*
+      (P.joinedHistory hn) (P.joinedGuards hn hq hB).CM (P.joinedGuards hn hq hB).CH *
         (P.joinedGuards hn hq hB).radius ≤ neighborError S.J S.D S.X (q : ℝ) n := by
   have hs := P.restrictedState.labels.source_neighbor_scale
     (P.joinedNormal hn) (P.joinedNormal_unit hn)
@@ -99,6 +106,8 @@ theorem joined_source_neighbor :
     (P.joinedGuards hn hq hB).shear_pos (P.joinedGuards hn hq hB).epsilon_pos
   exact (mul_le_mul_of_nonneg_right hs zero_le_one).trans (P.joined_neighbor hn hq hB)
 
+/-- Joined geometry, given by `(P.joinedGuards hn hq hB).lowGeometry (by rw
+[P.joinedGuards_radius]; norm_num)`. -/
 def joinedGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   (P.joinedGuards hn hq hB).lowGeometry (by rw [P.joinedGuards_radius]; norm_num)
 
@@ -124,6 +133,7 @@ theorem forward_neighbor : P.restrictedState.labels.strainDifferenceCost*P.restr
     S.X 1 S.x_one S.actual.initial_frequency 0 q zero_le_one le_rfl P.label_eq.le
     ((forwardThreshold_le_common _ _).trans (hB.trans (S.previous_floor 0))) hq P.scale_eq.le
 
+/-- Forward guards, constructed using `P.restrictedState.labels.forwardGeometryGuardsOfStage`. -/
 def forwardGuards : ForwardGuards P.forwardFrame :=
   P.restrictedState.labels.forwardGeometryGuardsOfStage P.forwardNormal P.forwardNormal_unit
     (LinearIsometryEquiv.refl ℝ (referencePlane P.forwardNormal)) support compact P.forwardFrame
@@ -149,6 +159,8 @@ theorem forward_source_neighbor :
     (LinearIsometryEquiv.refl ℝ (referencePlane P.forwardNormal)) support compact
   exact (mul_le_mul_of_nonneg_right hs zero_le_one).trans (P.forward_neighbor hq hB)
 
+/-- Forward geometry, given by `(P.forwardGuards hq hB).lowGeometry (by rw
+[P.forwardGuards_radius]; norm_num)`. -/
 def forwardGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   (P.forwardGuards hq hB).lowGeometry (by rw [P.forwardGuards_radius]; norm_num)
 

@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalStage
-public import LeanPool.NavierStokesAndEuler.Euler.PacketControlledPropagator
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTangentNorm
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
+import LeanPool.NavierStokesAndEuler.Euler.PacketControlledPropagator
+import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixContinuity
+import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocitySystem
+import LeanPool.NavierStokesAndEuler.Euler.PacketTangentInvariant
+import LeanPool.NavierStokesAndEuler.Euler.PacketTangentNorm
+import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 The arbitrary physical tangent propagator has polynomial loss relative to
@@ -18,45 +22,48 @@ the actual primary scalar profile.  All scaled coefficients and tangency
 properties are derived from the physical ODEs and parent decomposition.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
 namespace EulerPacketMovingFrame
 
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
-  EulerPacketStage EulerPacketPerturbation InnerProductSpace ContinuousLinearMap
+    InnerProductSpace ContinuousLinearMap
 
 theorem physical_tangent_propagator
     {B B₁ M E : ℝ → Space →L[ℝ] Space} {m v r w : ℝ → Space}
     {c s₀ t₀ a ε σ Θ T G d : ℝ} {S : Set ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hT0 : 0 < T) (hT : T ≤ Θ)
-    (ha : 1/2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hT0 : 0 < T) (hT : T ≤ Θ)
+    (ha : 1 / 2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
     (hs₀ : s₀ ≠ 0)
-    (hsmall : 8000000*(16*(ε*Θ*(4*G)^2+d))*Θ^21 ≤ 1)
+    (hsmall : 8000000 * (16 * (ε * Θ * (4 * G) ^ 2 + d)) * Θ ^ 21 ≤ 1)
     (hmap : MapsTo (physicalTime t₀ a ε) (Icc 0 Θ) S)
     (hMc : ContinuousOn M S)
     (hBd : ∀ t ∈ S, HasDerivWithinAt B (B₁ t) S t)
     (hmd : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
-    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t)+
-      (2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) S t)
+    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t) +
+      (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hrd : ∀ t ∈ S, HasDerivWithinAt r (-(M t).adjoint (r t)) S t)
-    (hwd : ∀ t ∈ S, HasDerivWithinAt w (-(M t) (w t)+
-      (2*⟪r t,(M t) (w t)⟫_ℝ/‖r t‖^2) • r t) S t)
+    (hwd : ∀ t ∈ S, HasDerivWithinAt w (-(M t) (w t) +
+      (2 * ⟪r t, (M t) (w t)⟫_ℝ / ‖r t‖ ^ 2) • r t) S t)
     (hm0 : ∀ t ∈ S, m t ≠ 0) (hv0 : ∀ t ∈ S, v t ≠ 0)
-    (hmv : ∀ t ∈ S, ⟪m t,v t⟫_ℝ = 0) (hrw0 : ⟪r t₀,w t₀⟫_ℝ = 0)
-    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G^2)
+    (hmv : ∀ t ∈ S, ⟪m t, v t⟫_ℝ = 0) (hrw0 : ⟪r t₀, w t₀⟫_ℝ = 0)
+    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G ^ 2)
     (hE : ∀ t ∈ S, ‖E t‖ ≤ d)
-    (hparent : ∀ t ∈ S, M t = B t+
-      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))+E t)
+    (hparent : ∀ t ∈ S, M t = B t +
+      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t)) + E t)
     (hb0 : rescaledFrame B m v t₀ a ε 0 0 1 = a)
-    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a*σ^2)
-    (hh0 : rescaledShear c m v t₀ a ε 0 = a/ε^2)
+    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a * σ ^ 2)
+    (hh0 : rescaledShear c m v t₀ a ε 0 = a / ε ^ 2)
     (hrInitial : norm3 (scaledRay m v r s₀ t₀ a ε 0 0) (scaledRay m v r s₀ t₀ a ε 0 1)
-      (scaledRay m v r s₀ t₀ a ε 0 2-1) ≤ 16*(ε*Θ*(4*G)^2+d))
+      (scaledRay m v r s₀ t₀ a ε 0 2 - 1) ≤ 16 * (ε * Θ * (4 * G) ^ 2 + d))
     {Z Z₁ : ℝ → ℝ}
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) :
     ContinuousOn Z (Icc 0 T) ∧ (∀ t ∈ Icc 0 T, 0 < Z t) ∧
       ∀ s t, 0 ≤ s → s ≤ t → t ≤ T →
@@ -132,10 +139,10 @@ theorem physical_tangent_propagator
   have hUV : ∀ τ ∈ Icc 0 T,
       HasDerivWithinAt (fun s => Vp s 0)
         (velocityFirstRhs (Amat τ) (Cmat τ) ε (Rp τ 0) (Rp τ 1) (Rp τ 2) (Vp τ 0) (Vp τ 1)) (Icc 0
-          T) τ ∧
+            T) τ ∧
       HasDerivWithinAt (fun s => Vp s 1)
         (velocitySecondRhs (Amat τ) (Cmat τ) ε (Rp τ 0) (Rp τ 1) (Rp τ 2) (Vp τ 0) (Vp τ 1)) (Icc 0
-          T) τ := by
+            T) τ := by
     intro τ hτ
     have ht := hmapT hτ
     have hNne : Rp τ 2 ≠ 0 := by linarith only [(hnear τ hτ).2]
@@ -183,7 +190,7 @@ theorem physical_tangent_propagator
   have hfinish := physical_velocity_le_scaled_state m v r w hs₀ hε hε1
     (hm0 _ htimeT) (hv0 _ htimeT) (hmv _ htimeT) (hpair t htT) hΘ hρ0 hρ hP₀ hQ₀ hPt hQt hNt
   have hstart := scaled_pair_le_physical_norm m v w hε hε1 (hm0 _ htimeS) (hv0 _ htimeS) (hmv _
-    htimeS)
+      htimeS)
   have hratio : 0 ≤ Z t/Z s := div_nonneg (hZpos t htT.1).le (hZpos s hs).le
   have h1 := mul_le_mul_of_nonneg_left (hprop s t hs hst ht) (show 0 ≤ 7*Θ^2 by positivity)
   have h2 := mul_le_mul_of_nonneg_left hstart (show 0 ≤ 280*Θ^10*(Z t/Z s) by positivity)

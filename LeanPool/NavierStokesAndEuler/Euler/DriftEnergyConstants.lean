@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.NonlinearEnergyConstants
+import LeanPool.NavierStokesAndEuler.Euler.GevreyGrowthCoefficient
+
+/-! Separate the full background norm from the drift norm in the radius-loss term. -/
 
 @[expose] public section
 
-/-! Separate the full background norm from the drift norm in the radius-loss term. -/
 
 noncomputable section
 

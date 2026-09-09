@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActualFrameEstimates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameQuantitative
+import LeanPool.NavierStokesAndEuler.Euler.PacketActualFrameEstimates
+import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrameRenewal
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 The pressure numerator of the actual primary is positive.  The scale
 condition `1 ≤ σ * Θ` is the source horizon condition; the smallness of the
 matrix and ray errors is converted to smallness relative to `σ^2`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,17 +31,17 @@ open EulerSmoothLimit EulerPacketRay EulerPacketGrowth EulerPacketFrameStability
 
 theorem controlled_pressure_ratio_lower
     {A : Fin 3 → Fin 3 → ℝ} {σ Θ K e τ P Q N r : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e)
-    (hσΘ : 1 ≤ σ*Θ) (hτ : 1 ≤ τ) (hτΘ : τ ≤ Θ) (hsmall : 1000000*K*e*Θ^40 ≤ 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e)
+    (hσΘ : 1 ≤ σ * Θ) (hτ : 1 ≤ τ) (hτΘ : τ ≤ Θ) (hsmall : 1000000 * K * e * Θ ^ 40 ≤ 1)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0)
-    (hP : |P-σ^2*τ^2| ≤ 800*e*Θ^5)
-    (hQ : |Q-(-2*σ^2*τ)| ≤ 800*e*Θ^5)
-    (hN : |N-1| ≤ 800*e*Θ^5)
-    (hratio : |r+Z₁ τ/Z τ| ≤ 10*(K*e*Θ^29))
-    (hA : ∀ i j, |A i j-idealVelocityEntry (σ^2) i j| ≤ 3*e) :
+    (hP : |P - σ ^ 2 * τ ^ 2| ≤ 800 * e * Θ ^ 5)
+    (hQ : |Q - (-2 * σ ^ 2 * τ)| ≤ 800 * e * Θ ^ 5)
+    (hN : |N - 1| ≤ 800 * e * Θ ^ 5)
+    (hratio : |r + Z₁ τ / Z τ| ≤ 10 * (K * e * Θ ^ 29))
+    (hA : ∀ i j, |A i j - idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e) :
     σ^2/2 ≤ velocityNumerator A P Q N r 1 (velocityThird P Q N r 1) := by
   let ρ := 800*e*Θ^5
   let η := K*e*Θ^29
@@ -69,7 +74,7 @@ theorem controlled_pressure_ratio_lower
   obtain ⟨_, hp, hq, hn, hw, _, _⟩ := ray_geometric_bounds (ε := 0) (U := r) (V := 1)
     hΘ hρ0 hρ hP₀ hQ₀ hP hQ hN
   have hβ : |σ^2| ≤ 1 := by simpa only [abs_of_nonneg (sq_nonneg σ)] using hσ2
-  have hJ : |velocityNumerator A P Q N r 1 (velocityThird P Q N r 1)-
+  have hJ : |velocityNumerator A P Q N r 1 (velocityThird P Q N r 1) -
       ((σ^2*τ^2+σ^2)*1+(-2*σ^2*τ)*r)| ≤ j*(|r|+|1|) := by
     have hh := velocity_numerator_error hΘ hρ0 (show 0 ≤ 3*e by positivity)
       hβ hA hp hq hn hP hQ hN hw
@@ -109,22 +114,22 @@ theorem physical_pressure_positive_order40 (M : Space →L[ℝ] Space) (m v r w 
     {s₀ t₀ a ε τ σ Θ K e : ℝ} {Z Z₁ : ℝ → ℝ}
     (ha : 0 < a) (hs₀ : 0 < s₀) (hε : 0 < ε)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hrw : ⟪r (physicalTime t₀ a ε τ),w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε τ), w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hV : 0 < scaledVelocity m v w t₀ a ε τ 1)
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e)
-    (hσΘ : 1 ≤ σ*Θ) (hτ : 1 ≤ τ) (hτΘ : τ ≤ Θ) (hsmall : 1000000*K*e*Θ^40 ≤ 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e)
+    (hσΘ : 1 ≤ σ * Θ) (hτ : 1 ≤ τ) (hτΘ : τ ≤ Θ) (hsmall : 1000000 * K * e * Θ ^ 40 ≤ 1)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0)
-    (hP : |scaledRay m v r s₀ t₀ a ε τ 0-σ^2*τ^2| ≤ 800*e*Θ^5)
-    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1-(-2*σ^2*τ)| ≤ 800*e*Θ^5)
-    (hN : |scaledRay m v r s₀ t₀ a ε τ 2-1| ≤ 800*e*Θ^5)
-    (hratio : |scaledVelocity m v w t₀ a ε τ 0/scaledVelocity m v w t₀ a ε τ 1+Z₁ τ/Z τ|
-      ≤ 10*(K*e*Θ^29))
-    (hA : ∀ i j, |scaledAction M m v a ε (physicalTime t₀ a ε τ) i j-
-      idealVelocityEntry (σ^2) i j| ≤ 3*e) :
+    (hP : |scaledRay m v r s₀ t₀ a ε τ 0 - σ ^ 2 * τ ^ 2| ≤ 800 * e * Θ ^ 5)
+    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1 - (-2 * σ ^ 2 * τ)| ≤ 800 * e * Θ ^ 5)
+    (hN : |scaledRay m v r s₀ t₀ a ε τ 2 - 1| ≤ 800 * e * Θ ^ 5)
+    (hratio : |scaledVelocity m v w t₀ a ε τ 0 / scaledVelocity m v w t₀ a ε τ 1 + Z₁ τ / Z τ|
+      ≤ 10 * (K * e * Θ ^ 29))
+    (hA : ∀ i j, |scaledAction M m v a ε (physicalTime t₀ a ε τ) i j -
+      idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e) :
     s₀*a*scaledVelocity m v w t₀ a ε τ 1*(σ^2/2) ≤
         ⟪r (physicalTime t₀ a ε τ), M (w (physicalTime t₀ a ε τ))⟫_ℝ ∧
       0 < ⟪r (physicalTime t₀ a ε τ), M (w (physicalTime t₀ a ε τ))⟫_ℝ := by

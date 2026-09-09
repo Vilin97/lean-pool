@@ -7,16 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisWeightEstimates
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-public import Mathlib.Topology.Order.ProjIcc
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.Normed.Module.Basic
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # A complete coefficient space with compatible actual derivatives
@@ -27,6 +21,9 @@ Banach space determines genuine smooth coefficient functions, not unrelated
 arrays masquerading as their derivatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AxisCoefficientSpace
@@ -36,10 +33,13 @@ open scoped Topology BoundedContinuousFunction ContDiff
 
 /-- A fixed nondegenerate compact real parameter interval. -/
 structure Window where
+  /-- Left of `Window`, of type `ℝ`. -/
   left : ℝ
+  /-- Right of `Window`, of type `ℝ`. -/
   right : ℝ
   nondegenerate : left < right
 
+/-- Interval, given by `Icc I.left I.right`. -/
 def Window.interval (I : Window) : Set ℝ := Icc I.left I.right
 
 /-- The continuous clamping map is only an extension device. Smoothness is
@@ -153,7 +153,7 @@ theorem hasDerivWithinAt_jet (I : Window) (w : ℕ → ℕ → ℝ)
     (A : CoefficientSpace I w) (n m : ℕ) {x : ℝ} (hx : x ∈ I.interval) :
     HasDerivWithinAt (jet I w A.1 n m) (jet I w A.1 n (m + 1) x) I.interval x := by
   have h := ((continuous_jet I w A.1 n (m + 1)).integral_hasStrictDerivAt I.left
-    x).hasDerivAt.const_add
+      x).hasDerivAt.const_add
     (jet I w A.1 n m I.left)
   exact h.hasDerivWithinAt.congr_of_mem (fun y hy => A.2 n m y hy) hx
 

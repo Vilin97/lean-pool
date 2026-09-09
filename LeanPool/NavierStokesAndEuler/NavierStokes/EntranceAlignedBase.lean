@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ConstructedSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedProfileAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FirstOrderBaseEdge
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ZerothStressIdentity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStressWeights
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStressWeights
+import LeanPool.NavierStokesAndEuler.NavierStokes.ZerothStressIdentity
 
 /-!
 # A slow base whose cutoffs are aligned with the natural entrance
@@ -22,6 +19,9 @@ Its cutoff transition lies inside the proved initial true-cone collar and
 before the finite modulation begins.  The same finite base, local hierarchy,
 and five-row exterior repair are used throughout.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,6 +37,7 @@ section Geometry
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (H : NominalConeAssembly.Certificate W)
 
+/-- True width, given by `H.initial.choose`. -/
 noncomputable def trueWidth : ℝ := H.initial.choose
 
 theorem trueWidth_pos : 0 < trueWidth W H := H.initial.choose_spec.1
@@ -47,18 +48,28 @@ theorem trueWidth_spec {y eta : ℝ} (hy : 0 < y) (ht : y ≤ trueWidth W H)
       (NominalConeAssembly.chart (NominalConeAssembly.activeLeft W) (y, eta)) :=
   H.initial.choose_spec.2.2 y eta hy ht heta
 
+/-- Analytic end, given by `NominalConeAssembly.activeLeft W * Real.exp
+W.controls.referenceWidth`. -/
 noncomputable def analyticEnd : ℝ :=
   NominalConeAssembly.activeLeft W * Real.exp W.controls.referenceWidth
 
+/-- Window cap, given by `min lo (min (NominalConeAssembly.activeLeft W * Real.exp (trueWidth W
+H)) (analyticEnd W))`. -/
 noncomputable def windowCap (lo : ℝ) : ℝ :=
   min lo (min (NominalConeAssembly.activeLeft W * Real.exp (trueWidth W H)) (analyticEnd W))
 
+/-- Zero end, given by `NominalConeAssembly.activeLeft W + (windowCap W H lo -
+NominalConeAssembly.activeLeft W) / 4`. -/
 noncomputable def zeroEnd (lo : ℝ) : ℝ :=
   NominalConeAssembly.activeLeft W + (windowCap W H lo - NominalConeAssembly.activeLeft W) / 4
 
+/-- Cutoff inner, given by `NominalConeAssembly.activeLeft W + (windowCap W H lo -
+NominalConeAssembly.activeLeft W) / 2`. -/
 noncomputable def cutoffInner (lo : ℝ) : ℝ :=
   NominalConeAssembly.activeLeft W + (windowCap W H lo - NominalConeAssembly.activeLeft W) / 2
 
+/-- Cutoff stop, given by `NominalConeAssembly.activeLeft W + 3 * (windowCap W H lo -
+NominalConeAssembly.activeLeft W) / 4`. -/
 noncomputable def cutoffStop (lo : ℝ) : ℝ :=
   NominalConeAssembly.activeLeft W + 3 * (windowCap W H lo - NominalConeAssembly.activeLeft W) / 4
 
@@ -96,7 +107,7 @@ theorem cutoffStop_lt_analyticEnd {lo : ℝ} (hlo : NominalConeAssembly.activeLe
 theorem cutoffInner_pos {lo : ℝ} (hlo : NominalConeAssembly.activeLeft W < lo) :
     0 < cutoffInner W H lo :=
   (NominalConeAssembly.activeLeft_pos W).trans ((window_order W H hlo).1.trans (window_order W H
-    hlo).2.1)
+      hlo).2.1)
 
 theorem zeroEnd_pos {lo : ℝ} (hlo : NominalConeAssembly.activeLeft W < lo) :
     0 < zeroEnd W H lo := (NominalConeAssembly.activeLeft_pos W).trans (window_order W H hlo).1
@@ -113,8 +124,9 @@ theorem analyticEnd_lt_patch :
   have hb := W.controls.activation_collar_le_Xi.trans_lt
     (((W.controls.Xi_lt_heatJoin W.separated).trans W.controls.heatJoin_lt_radius).trans hleft)
   rw [ReservedPatches.radialLeft, Real.sq_sqrt
-    (mul_nonneg (by norm_num) (ReservedPatches.left_pos F W.controls.radius W.controls.radius_pos
-      .positive).le)]
+    (mul_nonneg (by
+        norm_num) (ReservedPatches.left_pos F W.controls.radius W.controls.radius_pos
+            .positive).le)]
   dsimp [analyticEnd, NominalConeAssembly.activeLeft]
   linarith
 
@@ -163,7 +175,7 @@ noncomputable def scheme : Scheme S F.data.h W.axis.normalization :=
     (nominal_patch_before_outer W).le (modifiedBaseData W Q M)
 
 theorem localization : Localization (scheme W H Q M hlo) (nominalHierarchy W) (cutoffInner W H lo)
-  :=
+    :=
   localizationFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (modifiedDomain W Q M) (fun _ he => (M.subset he).2)
     W.axis.normalization_pos.ne' F.data.core.lam_pos (cutoffInner_pos W H hlo)
@@ -194,7 +206,7 @@ theorem modified_ACT_fields {p : ℝ × ℝ} (hX : 0 ≤ p.1) (hc : p.1 < cutoff
     (heta : p.2 ∈ S) :
     Q.f p = (nominalACT W).f p ∧ Q.U p = (nominalACT W).U p := by
   have hl : p.1 ≤ lo := (hc.trans ((window_order W H hlo).2.2.1.trans (cutoffStop_lt_lo W H
-    hlo))).le
+      hlo))).le
   have he := M.fields p hX heta (Or.inl hl)
   have ha := nominal_ACT_fields W hX
     (hc.trans ((window_order W H hlo).2.2.1.trans (cutoffStop_lt_analyticEnd W H hlo))).le
@@ -229,11 +241,11 @@ theorem base_phi_axial_pressure {p : ℝ × ℝ} (hX : 0 ≤ p.1) (hc : p.1 < cu
     rw [baseFields_phi _ _ _ _ hX, hf.1]
     exact hv.1.symm
   · change xProfile (baseFields (modifiedDomain W Q M) W.axis.normalization Q M.halfPlane).axial p
-    = _
+      = _
     rw [baseFields_axial _ _ _ _ hX, hf.2]
     exact hv.2.1.symm
   · change xProfile (baseFields (modifiedDomain W Q M) W.axis.normalization Q M.halfPlane).pressure
-    p = _
+      p = _
     rw [baseFields_pressure _ _ _ _ hX, hp]
     exact hv.2.2.2.symm
 
@@ -244,7 +256,7 @@ theorem base_beta_pos {p : ℝ × ℝ} (hX : 0 < p.1) (hc : p.1 < cutoffInner W 
   have hr : p.1 < nominalRadius W ^ 2 :=
     hc.trans ((window_order W H hlo).2.2.1.trans (cutoffStop_lt_radius W H hlo))
   have hf := NaturalCoefficientBridge.hierarchy_flux_zero (nominalTube W)
-    W.controls.activationTime_pos
+      W.controls.activationTime_pos
     W.controls.referenceWidth_pos W.controls.referenceWidth_small W.controls.kappa
     F.axisDatum_contDiff W.axis.normalization ⟨hX, hr⟩ (M.subset heta).2
   change p.1 * SlowRecursion.profile ((nominalHierarchy W).coefficients 0 4) p =
@@ -280,7 +292,7 @@ theorem base_beta_axis {eta : ℝ} (heta : eta ∈ S) :
   exact ⟨le_rfl, hs.le⟩
 
 theorem baseAgreement : BaseAgreement (scheme W H Q M hlo) (nominalHierarchy W) (cutoffInner W H
-  lo) := by
+    lo) := by
   constructor
   · intro p hx hc he
     exact (base_phi_axial_pressure W H Q M hlo hx hc he).1
@@ -308,7 +320,7 @@ theorem small_lt_cutoffInner : nominalInner W < cutoffInner W H lo :=
 /-- The extension constructor may use a small natural core independently
 of the larger radius retained by the actual seed cutoff. -/
 theorem smallLocalization : Localization (scheme W H Q M hlo) (nominalHierarchy W) (nominalInner W)
-  := by
+    := by
   let L := localization W H Q M hlo
   refine ⟨L.radius_pos, L.parameter_open, L.parameter_embedding, nominalInner_pos W,
     (small_lt_cutoffInner W H hlo).trans L.inner_radius,
@@ -319,7 +331,7 @@ theorem smallLocalization : Localization (scheme W H Q M hlo) (nominalHierarchy 
     exact L.phi_seed n p hp (hi.trans (small_lt_cutoffInner W H hlo).le)
 
 theorem smallBaseAgreement : BaseAgreement (scheme W H Q M hlo) (nominalHierarchy W) (nominalInner
-  W) := by
+    W) := by
   let B := baseAgreement W H Q M hlo
   exact ⟨fun p hp hi he => B.phi p hp (hi.trans (small_lt_cutoffInner W H hlo)) he,
     fun p hp hi he => B.axial p hp (hi.trans (small_lt_cutoffInner W H hlo)) he,
@@ -330,9 +342,9 @@ entrance from below.  They are obtained from the actual natural solution. -/
 theorem zero_coefficients {p : ℝ × ℝ} (hX : 0 < p.1)
     (he : p.1 < NominalConeAssembly.activeLeft W) (heta : p.2 ∈ S) :
     SlowExpansionResidual.angularCoefficient F.data.h (asSlowProfiles (scheme W H Q M hlo)) 0 p = 0
-      ∧
+        ∧
     SlowExpansionResidual.axialCoefficient F.data.h (asSlowProfiles (scheme W H Q M hlo)) 0 p = 0
-      := by
+        := by
   let s := scheme W H Q M hlo
   let f := asSlowProfiles s
   let g := SlowResidualMatching.hierarchyProfiles (nominalHierarchy W)
@@ -360,7 +372,7 @@ theorem zero_coefficients {p : ℝ × ℝ} (hX : 0 < p.1)
     have hj0 : j = 0 := Nat.eq_zero_of_le_zero hj
     subst j
     filter_upwards [profiles_x_beta_germ (localization W H Q M hlo) (baseAgreement W H Q M hlo) 0
-      hX hc heta]
+        hX hc heta]
       with q hq
     exact congrArg (q.1 * ·) hq
   have hp : f.pressure 0 =ᶠ[𝓝 p] g.pressure 0 := by
@@ -375,6 +387,8 @@ theorem smallZeroOrder : ZeroOrderSolved (scheme W H Q M hlo) (nominalInner W) :
   ⟨fun _ hx hi he => (zero_coefficients W H Q M hlo hx (hi.trans (small_lt_entrance W)) he).1,
    fun _ hx hi he => (zero_coefficients W H Q M hlo hx (hi.trans (small_lt_entrance W)) he).2⟩
 
+/-- Aligned coefficients, given by `coefficients (smallLocalization W H Q M hlo)
+(smallBaseAgreement W H Q M hlo) (smallZeroOrder W H Q M hlo) M.contains`. -/
 noncomputable def alignedCoefficients : SlowBorelBase.Coefficients :=
   coefficients (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M hlo)
     (smallZeroOrder W H Q M hlo) M.contains
@@ -392,7 +406,7 @@ theorem aligned_coefficientMatches :
 theorem positive_coefficients_zero {n : ℕ} (hn : 0 < n) {p : ℝ × ℝ}
     (hX : 0 < p.1) (hc : p.1 < cutoffInner W H lo) (heta : p.2 ∈ S) :
     SlowExpansionResidual.angularCoefficient F.data.h (asSlowProfiles (scheme W H Q M hlo)) n p = 0
-      ∧
+        ∧
     SlowExpansionResidual.axialCoefficient F.data.h (asSlowProfiles (scheme W H Q M hlo)) n p = 0 :=
   profiles_inner_tangential (localization W H Q M hlo) (baseAgreement W H Q M hlo) hn hX hc heta
 
@@ -401,7 +415,7 @@ theorem positive_densities_zero {n : ℕ} (hn : 0 < n) {R eta : ℝ}
     SlowResidualMatching.thetaDensity F.data.h W.axis.normalization
       (asSlowProfiles (scheme W H Q M hlo)) n (R, eta) = 0 ∧
     SlowResidualMatching.zDensity F.data.h (asSlowProfiles (scheme W H Q M hlo)) n (R, eta) = 0 :=
-      by
+        by
   by_cases hR0 : R = 0
   · simp [SlowResidualMatching.thetaDensity, SlowResidualMatching.zDensity, hR0]
   · have hs : R ^ 2 ≤ 2 * zeroEnd W H lo := by
@@ -431,11 +445,11 @@ theorem natural_densities_zero {R eta : ℝ}
     SlowResidualMatching.thetaDensity F.data.h W.axis.normalization
       (asSlowProfiles (scheme W H Q M hlo)) 0 (R, eta) = 0 ∧
     SlowResidualMatching.zDensity F.data.h (asSlowProfiles (scheme W H Q M hlo)) 0 (R, eta) = 0 :=
-      by
+        by
   let f := asSlowProfiles (scheme W H Q M hlo)
   let b := Real.sqrt (2 * NominalConeAssembly.activeLeft W)
-  have hb : 0 < b := Real.sqrt_pos.mpr (mul_pos (by norm_num) (NominalConeAssembly.activeLeft_pos
-    W))
+  have hb : 0 < b := Real.sqrt_pos.mpr (mul_pos (by
+      norm_num) (NominalConeAssembly.activeLeft_pos W))
   have hzero : ∀ r ∈ Ioo (0 : ℝ) b,
       SlowResidualMatching.thetaDensity F.data.h W.axis.normalization f 0 (r, eta) = 0 ∧
       SlowResidualMatching.zDensity F.data.h f 0 (r, eta) = 0 := by
@@ -451,7 +465,7 @@ theorem natural_densities_zero {R eta : ℝ}
     simp only [SlowResidualMatching.thetaDensity, SlowResidualMatching.zDensity,
       SlowResidualMatching.radiusPoint, hz.1, hz.2, mul_zero, and_self]
   have ht : EqOn (fun r => SlowResidualMatching.thetaDensity F.data.h W.axis.normalization f 0 (r,
-    eta))
+      eta))
       (fun _ => (0 : ℝ)) (Ioo 0 b) := fun r hr => (hzero r hr).1
   have hz : EqOn (fun r => SlowResidualMatching.zDensity F.data.h f 0 (r, eta))
       (fun _ => (0 : ℝ)) (Ioo 0 b) := fun r hr => (hzero r hr).2
@@ -531,7 +545,7 @@ theorem aligned_stress_zero_left (n : ℕ) {p : ℝ × ℝ}
 
 theorem aligned_stressZeroCore :
     BaseResidual.StressZeroCore (alignedCoefficients W H Q M hlo) (NominalConeAssembly.activeLeft
-      W) :=
+        W) :=
   fun n _ hX _ _ => aligned_stress_zero_left W H Q M hlo n hX.2.le
 
 theorem aligned_stress_zero_right {n : ℕ} (hn : 2 ≤ n) {p : ℝ × ℝ}
@@ -540,7 +554,7 @@ theorem aligned_stress_zero_right {n : ℕ} (hn : 2 ≤ n) {p : ℝ × ℝ}
     (alignedCoefficients W H Q M hlo).stressAxial n p = 0 := by
   have hs := GlobalStressSupport.raw_stresses_exterior (scheme W H Q M hlo) rfl hn
   apply coefficients_stress_zero_right (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M
-    hlo)
+      hlo)
     (smallZeroOrder W H Q M hlo) M.contains n (nominalOuterRadius_pos W).le hs.1 hs.2
   simpa only [nominalOuterRadius_square] using hp
 
@@ -590,19 +604,19 @@ theorem aligned_higherInteriorSupport :
 theorem zero_fields_eq :
     (asSlowProfiles (scheme W H Q M hlo)).phi 0 = (asSlowProfiles (modifiedScheme W Q M)).phi 0 ∧
     (asSlowProfiles (scheme W H Q M hlo)).axial 0 = (asSlowProfiles (modifiedScheme W Q M)).axial 0
-      ∧
+        ∧
     (asSlowProfiles (scheme W H Q M hlo)).flux 0 = (asSlowProfiles (modifiedScheme W Q M)).flux 0 ∧
     (asSlowProfiles (scheme W H Q M hlo)).pressure 0 = (asSlowProfiles (modifiedScheme W Q
-      M)).pressure 0 := by
+        M)).pressure 0 := by
   simp only [asSlowProfiles, SlowResidualMatching.ofBeta, profiles_zero, scheme_base, and_self]
 
 theorem zero_residuals_eq (p : ℝ × ℝ) :
     SlowExpansionResidual.angularCoefficient F.data.h (asSlowProfiles (scheme W H Q M hlo)) 0 p =
       SlowExpansionResidual.angularCoefficient F.data.h (asSlowProfiles (modifiedScheme W Q M)) 0 p
-        ∧
+          ∧
     SlowExpansionResidual.axialCoefficient F.data.h (asSlowProfiles (scheme W H Q M hlo)) 0 p =
       SlowExpansionResidual.axialCoefficient F.data.h (asSlowProfiles (modifiedScheme W Q M)) 0 p
-        := by
+          := by
   have hf := zero_fields_eq W H Q M hlo
   have hv : ∀ j ≤ 0, (asSlowProfiles (scheme W H Q M hlo)).flux j =ᶠ[𝓝 p]
       (asSlowProfiles (modifiedScheme W Q M)).flux j := by
@@ -647,9 +661,9 @@ theorem zero_raw_stresses_eq (R eta : ℝ) :
 including its actual integration constant. -/
 theorem aligned_zero_stresses_eq {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     (alignedCoefficients W H Q M hlo).stressTheta 0 p = (modifiedCoefficients W Q M).stressTheta 0
-      p ∧
+        p ∧
     (alignedCoefficients W H Q M hlo).stressAxial 0 p = (modifiedCoefficients W Q M).stressAxial 0
-      p := by
+        p := by
   have h1 := coefficients_stress_eq (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M hlo)
     (smallZeroOrder W H Q M hlo) M.contains 0 hX heta
   have h2 := coefficients_stress_eq (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M)
@@ -665,7 +679,7 @@ theorem leading_histories_eq :
   constructor
   · intro p hp
     rw [GlobalStressSupport.angularHistory_eq _ _ hp.2, GlobalStressSupport.angularHistory_eq _ _
-      hp.2,
+        hp.2,
       profiles_zero, profiles_zero, scheme_base]
   · intro p hp
     rw [GlobalStressSupport.axialHistory_eq _ _ hp.2, GlobalStressSupport.axialHistory_eq _ _ hp.2,
@@ -697,11 +711,11 @@ theorem aligned_positive_axis {n : ℕ} (hn : 0 < n) {eta : ℝ} (heta : |eta| �
     (alignedCoefficients W H Q M hlo).axial n (0, eta) = 0 ∧
     (alignedCoefficients W H Q M hlo).pressure n (0, eta) = 0 :=
   ⟨extendedCoefficient_axis (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M hlo)
-    M.contains hn 0 heta,
+      M.contains hn 0 heta,
    extendedCoefficient_axis (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M hlo)
-     M.contains hn 1 heta,
+       M.contains hn 1 heta,
    extendedCoefficient_axis (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M hlo)
-     M.contains hn 3 heta⟩
+       M.contains hn 3 heta⟩
 
 theorem aligned_moments_zero {n : ℕ} (hn : 0 < n) {eta : ℝ} (heta : eta ∈ S) :
     PositiveOrderMoments.moments n
@@ -724,7 +738,7 @@ theorem pressureCoefficient_zero (n : ℕ) {p : ℝ × ℝ} (hX : 0 < p.1) (heta
   · have hf := zero_fields_eq W H Q M hlo
     simpa only [SlowExpansionResidual.pressureCoefficient, SlowExpansionResidual.previous,
       SlowExpansionResidual.convolution, Finset.Nat.antidiagonal_zero, Finset.sum_singleton, hf.1,
-        hf.2.2.2] using
+          hf.2.2.2] using
       modified_pressureCoefficient W Q M 0 hX heta
   · exact profiles_pressureCoefficient (scheme W H Q M hlo) hn hX heta
 
@@ -781,9 +795,9 @@ theorem aligned_first_edgeJets
       (BaseResidual.outerWindow (Real.exp (ConstructedSlowBase.activeRight W - 1))
         (ConstructedSlowBase.activeRight W))
       (BaseResidual.activeZeta c (Real.log (NominalConeAssembly.activeLeft W))
-        (ConstructedSlowBase.activeRight W))
+          (ConstructedSlowBase.activeRight W))
       (BaseResidual.activeDelta (Real.log (NominalConeAssembly.activeLeft W))
-        (ConstructedSlowBase.activeRight W))
+          (ConstructedSlowBase.activeRight W))
       (BaseResidual.stressPair (alignedCoefficients W H Q M hlo) 1) := by
   have he := leading_histories_eq W H Q M hlo
   exact FirstOrderBaseEdge.coefficients_first_edgeJets W Q M
@@ -807,7 +821,7 @@ theorem aligned_leading_stress_eq {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2
     (alignedCoefficients W H Q M hlo).stressAxial 0 p = LeadingStress.axial Q F.data.h p :=
   ZerothStressIdentity.coefficients_stress_zero_eq Q (smallLocalization W H Q M hlo)
     (smallBaseAgreement W H Q M hlo) (smallZeroOrder W H Q M hlo) M.contains M.halfPlane rfl hX
-      heta hf
+        heta hf
 
 end Scheme
 
@@ -823,7 +837,7 @@ theorem exp_right_eq_cone :
     simp only [ConstructedSlowBase.activeRight, ConstructedSlowBase.terminalShift,
       TerminalHistoryBridge.shift, OutgoingDilation.switchRadius_eq,
       Real.log_mul W.controls.radius_pos.ne' (Real.exp_ne_zero _), Real.log_exp,
-        OutgoingTail.tailEnd]
+          OutgoingTail.tailEnd]
     ring
   rw [he, Real.exp_add, Real.exp_log W.controls.radius_pos]
   rfl
@@ -843,11 +857,15 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 /-- The actual finite modulation already supplies the required positive
 entrance margin; it is not an additional hypothesis on the final witness. -/
 theorem modulation_after_entrance : NominalConeAssembly.activeLeft W < d.modulation.left :=
-  d.after_initial
+    d.after_initial
 
+/-- Modulated scheme, given by `scheme W H v.profiles v.finiteModification
+(modulation_after_entrance (d := d))`. -/
 noncomputable def modulatedScheme : Scheme v.slowParameters F.data.h W.axis.normalization :=
   scheme W H v.profiles v.finiteModification (modulation_after_entrance (d := d))
 
+/-- Modulated coefficients, given by `alignedCoefficients W H v.profiles v.finiteModification
+(modulation_after_entrance (d := d))`. -/
 noncomputable def modulatedCoefficients : SlowBorelBase.Coefficients :=
   alignedCoefficients W H v.profiles v.finiteModification (modulation_after_entrance (d := d))
 
@@ -862,15 +880,15 @@ theorem modulated_outer : (modulatedScheme H v).B = nominalOuterRadius W := rfl
 
 theorem modulated_phi_eq_extended (n : ℕ) :
     (modulatedCoefficients H v).phi n = extendedCoefficient (modulatedScheme H v)
-      v.finiteModification.contains n 0 := rfl
+        v.finiteModification.contains n 0 := rfl
 
 theorem modulated_axial_eq_extended (n : ℕ) :
     (modulatedCoefficients H v).axial n = extendedCoefficient (modulatedScheme H v)
-      v.finiteModification.contains n 1 := rfl
+        v.finiteModification.contains n 1 := rfl
 
 theorem modulated_pressure_eq_extended (n : ℕ) :
     (modulatedCoefficients H v).pressure n = extendedCoefficient (modulatedScheme H v)
-      v.finiteModification.contains n 3 := rfl
+        v.finiteModification.contains n 3 := rfl
 
 theorem modulated_smooth : SlowBorelBase.SmoothCoefficients (modulatedCoefficients H v) :=
   aligned_smooth W H v.profiles v.finiteModification (modulation_after_entrance (d := d))
@@ -882,28 +900,28 @@ theorem modulated_stressZeroCore :
 theorem modulated_positive_stress_zero {n : ℕ} (hn : 0 < n) {p : ℝ × ℝ}
     (hp : p.1 ≤ zeroEnd W H d.modulation.left) :
     (modulatedCoefficients H v).stressTheta n p = 0 ∧ (modulatedCoefficients H v).stressAxial n p =
-      0 :=
+        0 :=
   aligned_positive_stress_zero W H v.profiles v.finiteModification (modulation_after_entrance (d :=
-    d)) hn hp
+      d)) hn hp
 
 theorem modulated_higherInteriorSupport :
     BaseResidual.HigherInteriorSupport (modulatedCoefficients H v)
       (Real.log (NominalConeAssembly.activeLeft W)) (ConstructedSlowBase.activeRight W) :=
   aligned_higherInteriorSupport W H v.profiles v.finiteModification (modulation_after_entrance (d
-    := d))
+      := d))
 
 theorem modulated_zero_fields {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     (modulatedCoefficients H v).phi 0 p = W.axis.normalization * v.profiles.f p ∧
     (modulatedCoefficients H v).axial 0 p = v.profiles.U p ∧
     (modulatedCoefficients H v).pressure 0 p = v.profiles.pressure p :=
   aligned_zero_fields W H v.profiles v.finiteModification (modulation_after_entrance (d := d)) hX
-    heta
+      heta
 
 theorem modulated_leading_stress_eq {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     (modulatedCoefficients H v).stressTheta 0 p = LeadingStress.theta v.profiles F.data.h p ∧
     (modulatedCoefficients H v).stressAxial 0 p = LeadingStress.axial v.profiles F.data.h p :=
   aligned_leading_stress_eq W H v.profiles v.finiteModification (modulation_after_entrance (d :=
-    d)) hX heta
+      d)) hX heta
     (fun X hXp _ => (v.positive_f (p := (X, p.2)) hXp (abs_le.mp heta)).ne')
 
 theorem modulated_leading_pair_eq {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
@@ -921,7 +939,7 @@ theorem modulated_positive_axis {n : ℕ} (hn : 0 < n) {eta : ℝ} (heta : |eta|
     (modulatedCoefficients H v).axial n (0, eta) = 0 ∧
     (modulatedCoefficients H v).pressure n (0, eta) = 0 :=
   aligned_positive_axis W H v.profiles v.finiteModification (modulation_after_entrance (d := d)) hn
-    heta
+      heta
 
 theorem modulated_finiteIdentities :
     BaseResidual.FiniteIdentities F.data.h W.axis.normalization (modulatedCoefficients H v)
@@ -933,9 +951,9 @@ theorem modulated_first_edgeJets {c : ℝ} (hc : 0 < c) :
       (BaseResidual.outerWindow (Real.exp (ConstructedSlowBase.activeRight W - 1))
         (ConstructedSlowBase.activeRight W))
       (BaseResidual.activeZeta c (Real.log (NominalConeAssembly.activeLeft W))
-        (ConstructedSlowBase.activeRight W))
+          (ConstructedSlowBase.activeRight W))
       (BaseResidual.activeDelta (Real.log (NominalConeAssembly.activeLeft W))
-        (ConstructedSlowBase.activeRight W))
+          (ConstructedSlowBase.activeRight W))
       (BaseResidual.stressPair (modulatedCoefficients H v) 1) :=
   aligned_first_edgeJets W H v.profiles v.finiteModification (modulation_after_entrance (d := d))
     (fun _ he => v.slow_outer_angular he) hc
@@ -943,16 +961,16 @@ theorem modulated_first_edgeJets {c : ℝ} (hc : 0 < c) :
 theorem modulated_positive_stress_zero_right {n : ℕ} (hn : 0 < n) {p : ℝ × ℝ}
     (hp : NominalConeAssembly.activeRight W ≤ p.1) (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
     (modulatedCoefficients H v).stressTheta n p = 0 ∧ (modulatedCoefficients H v).stressAxial n p =
-      0 := by
+        0 := by
   have hp' : Real.exp (ConstructedSlowBase.activeRight W) ≤ p.1 := by
     rwa [exp_right_eq_cone W]
   by_cases h1 : n = 1
   · subst n
     exact aligned_first_stress_zero_right W H v.profiles v.finiteModification
-      (modulation_after_entrance (d := d))
+        (modulation_after_entrance (d := d))
       (fun _ he => v.slow_outer_angular he) hp' heta
   · exact aligned_stress_zero_right W H v.profiles v.finiteModification (modulation_after_entrance
-    (d := d))
+      (d := d))
       (by omega) ((ConstructedSlowBase.outer_before_upper W).le.trans hp')
 
 theorem modulated_positive_radialSupport {n : ℕ} (hn : 0 < n) :
@@ -975,7 +993,7 @@ theorem modulated_positive_radialSupport {n : ℕ} (hn : 0 < n) :
 theorem modulated_stress_zero_right (n : ℕ) {p : ℝ × ℝ}
     (hp : NominalConeAssembly.activeRight W ≤ p.1) (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
     (modulatedCoefficients H v).stressTheta n p = 0 ∧ (modulatedCoefficients H v).stressAxial n p =
-      0 := by
+        0 := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · have hX : 0 ≤ p.1 := (LeadingStressWeights.activeRight_pos W).le.trans hp
     have he := modulated_leading_pair_eq H v hX (abs_le.mpr heta)
@@ -1031,7 +1049,7 @@ theorem modulated_transition_true {p : ℝ × ℝ}
   have hc := (NominalConeAssembly.isTrue_iff_loop W.profiles F.data.h p).mp
     (cutoff_transition_true W H (modulation_after_entrance (d := d)) hp heta)
   have hs := NominalConeAssembly.modulated_shears_eq W.profiles (W.domain_contains hx.le heta) hx
-    hf.ne'
+      hf.ne'
   simpa only [NominalConeAssembly.p1_eq_stock, NominalConeAssembly.p2_eq_stock, hs.1, hs.2] using hc
 
 theorem modulated_quotients_smooth {c : ℝ} (hc : 0 < c) (n : ℕ) :
@@ -1081,7 +1099,7 @@ noncomputable def scales (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) : ℕ �
   Classical.choose (exists_admissibleScales
     (weightedBundle_smooth (modulated_smooth H v) (modulated_quotients_smooth H v hc)
       W.axis.normalization) W.axis.small.h_pos (innerBox_isCompact 0
-        (ConstructedSlowBase.scaleUpper W upper)) B)
+          (ConstructedSlowBase.scaleUpper W upper)) B)
 
 open SlowBorelBase BaseResidual in
 theorem scales_spec (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
@@ -1089,12 +1107,12 @@ theorem scales_spec (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     AdmissibleScales F.data.h
       (weightedBundle W.axis.normalization (modulatedCoefficients H v)
         (activeZeta c (Real.log (NominalConeAssembly.activeLeft W))
-          (ConstructedSlowBase.activeRight W)))
+            (ConstructedSlowBase.activeRight W)))
       (innerBox 0 (ConstructedSlowBase.scaleUpper W upper)) (scales H v c hc upper B) :=
   Classical.choose_spec (exists_admissibleScales
     (weightedBundle_smooth (modulated_smooth H v) (modulated_quotients_smooth H v hc)
       W.axis.normalization) W.axis.small.h_pos (innerBox_isCompact 0
-        (ConstructedSlowBase.scaleUpper W upper)) B)
+          (ConstructedSlowBase.scaleUpper W upper)) B)
 
 open SlowBorelBase BaseResidual in
 theorem scales_admissible (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
@@ -1108,11 +1126,11 @@ theorem scales_strictMono (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
 
 theorem scales_weighted (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ConstructedSlowBase.WeightedStressBound (scales H v c hc upper B) F.data.h
-      (modulatedCoefficients H v)
+        (modulatedCoefficients H v)
       c (Real.log (NominalConeAssembly.activeLeft W)) (ConstructedSlowBase.activeRight W) := by
   apply modulated_weighted_on_actual_scales H v hc
     (SlowBorelBase.innerBox_isCompact 0 (ConstructedSlowBase.scaleUpper W upper)) _ (scales_spec H
-      v c hc upper B).2
+        v c hc upper B).2
   intro p hp
   exact ⟨⟨(Real.exp_pos _).le.trans hp.1.1.le,
     hp.1.2.le.trans (le_max_right _ _)⟩, hp.2⟩

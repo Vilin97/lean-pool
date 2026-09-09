@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularPhysical
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalPrefixFields
 
-@[expose] public section
-
 /-!
 # The Cartesian curl of the actual finite particular-wave sum
 
@@ -20,6 +18,9 @@ canonical solver used by the correction cycle.  On a valid current polar chart,
 the curl is therefore the actual particular velocity increment, with its physical
 scale and moving frame.  No output representation is an input to these identities.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,7 +76,7 @@ theorem particularVelocity_eq_sum {x : CycleState (ActualInitialization.Index B 
           (ActualWaveRegularity.particularChart z) k).re := by
   classical
   change (∑ l ∈ x.coefficients.labels n, (ActualParticularCycleData.block x l).oscillation n z k) =
-    _
+      _
   apply Finset.sum_congr rfl
   intro l _
   rw [ActualParticularCycleData.block_eq_modes H l]
@@ -91,7 +92,7 @@ theorem particularPressure_eq_sum {x : CycleState (ActualInitialization.Index B 
           (ActualWaveRegularity.particularChart z)).re := by
   classical
   change (∑ l ∈ x.coefficients.labels n, (ActualParticularCycleData.block x l).oscillatoryPressure
-    n z) = _
+      n z) = _
   apply Finset.sum_congr rfl
   intro l _
   rw [ActualParticularCycleData.particularBlock_pressure_eq_modes _ _ _ _ _ (H.frequency l)]
@@ -118,7 +119,7 @@ theorem pressureMap_apply (n : ℕ) (p : PhysicalResidualBridge.Cylinder → ℝ
       (ChartScales.Q n) ^ (-2 * CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) *
         p (PhysicalResidualTZ.graphMapTZ (ActualCycleResidualBounds.actualBandGraph n) z) := by
   change ((ChartScales.Q n) ^ (-CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h)) ^ 2
-    * _ = _
+      * _ = _
   rw [← Real.rpow_mul_natCast (ChartScales.Q_pos n).le]
   congr 2
   ring
@@ -166,7 +167,7 @@ theorem localPotential_curl_components
   have hw : (z.1, CylindricalResidual.chart z.2) ∈
       ActualMeanPotentialRealization.cartesianDomain a i := by
     simpa [ActualMeanPotentialRealization.cartesianDomain,
-      PhysicalGraphBounds.radialProjection_apply,
+        PhysicalGraphBounds.radialProjection_apply,
       CylindricalResidual.chart, PolarCharts.polar] using hz.2.2
   have hm' : nativePoint n (z.1, CylindricalResidual.chart z.2) ∈ nativeDomain := by
     apply (nativeMap_polar_mem_iff n a i _).mp
@@ -238,7 +239,7 @@ theorem localPressure_eq
   classical
   rw [localPressure_eq_sum]
   change (∑ l ∈ x.coefficients.labels n, ∑ j ∈ ParticularWaveAssembly.modes
-    x.coefficients.residualBand,
+      x.coefficients.residualBand,
     localPressureMode (ActualCycleParameters.particularState x) (l.2,l.1) j n w) =
     CyclePhysicalPrefixes.pressureMap (ActualCycleResidualBounds.actualBandGraph n) _
       (PhysicalCurlCovariance.polarCoordinates a i w)
@@ -250,13 +251,13 @@ theorem localPressure_eq
   intro j _
   rw [localPressureMode_eq_chart _ _ _
     (ActualParticularDynamics.carrier_frequency (ActualParticularCycleData.preservesCarriers H)
-      (l.2,l.1))
+        (l.2,l.1))
     n ha i hw]
   change (ChartScales.Q n) ^ (-2 * CoordinateAlgebra.A ActualPrimary.h) *
     (nativePressure (ActualCycleParameters.particularState x) (l.2,l.1) j n
       (PhysicalParticularWave.nativeMap ActualPrimary.h (ChartScales.Q n)
         (CommonWindow.index ActualPrimary.h n) (PhysicalCurlCovariance.polarCoordinates a i w))).re
-          = _
+            = _
   rw [nativeMap_eq_graph]
 
 theorem nativePoint_mem_of_chartDomain {qbig : ℝ} {n : ℕ} {a : ℝ} {i : PolarCharts.Index}

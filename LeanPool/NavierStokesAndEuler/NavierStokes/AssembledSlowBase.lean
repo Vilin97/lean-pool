@@ -9,14 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GlobalSlowProfiles
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRadialExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBorelBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedHistories
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ReservedPatches
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSlowAxis
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCoefficientBridge
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCoefficientBridge
 
 /-!
 # Assembling the actual global slow coefficients and their common base
@@ -25,6 +21,9 @@ All coefficient extensions in this module are constructed from the coherent
 `GlobalSlowProfiles` sequence.  One parameter window is fixed before any
 coefficient or derivative order is selected.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,10 +34,13 @@ namespace NavierStokes.AssembledSlowBase
 
 open GlobalSlowProfiles
 
+/-- Common window, given by `ParametricRadialExtension.parameterWindow s.domain.isOpen hI`. -/
 noncomputable def commonWindow {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) : ParametricRadialExtension.ParameterWindow S :=
   ParametricRadialExtension.parameterWindow s.domain.isOpen hI
 
+/-- Extend even, given by `ParametricRadialExtension.extension w f f.smooth (fun _ heta R =>
+f.even heta R)`. -/
 noncomputable def extendEven {S : Set ℝ} (w : ParametricRadialExtension.ParameterWindow S)
     (f : EvenProfile S) : Field :=
   ParametricRadialExtension.extension w f f.smooth (fun _ heta R => f.even heta R)
@@ -201,7 +203,7 @@ theorem extendedCoefficient_axis_jets {S : Set ℝ} {h C rho inner : ℝ} {U : S
     (heta : |eta| ≤ 1) :
     iteratedDeriv m (fun X => extendedCoefficient s hI n i (X, eta)) 0 =
       iteratedDerivWithin m (fun X => SlowRecursion.profile (A.coefficients n (localIndex i)) (X,
-        eta))
+          eta))
         (Ici 0) 0 := by
   unfold extendedCoefficient
   rw [extendEven_right_jets _ _ m le_rfl (heta.trans (commonWindow s hI).one_lt_inner.le)]
@@ -330,11 +332,13 @@ theorem densities_zero_inner (Z0 : ZeroOrderSolved s inner) (n : ℕ)
       SlowResidualMatching.radiusPoint, hz.1, hz.2, mul_zero]
     trivial
 
+/-- Theta even, constructed using `evenCorrection`. -/
 noncomputable def thetaEven (Z0 : ZeroOrderSolved s inner) (n : ℕ) : EvenProfile S :=
   evenCorrection (SlowStressSupport.stress_smooth s.domain.isOpen
     (thetaDensity_smooth L B0 Z0 n) 2 (Real.sqrt_pos.2 L.inner_pos)
     (fun _ he _ hR => (densities_zero_inner L B0 Z0 n hR he).1))
 
+/-- Z even, constructed using `evenCorrection`. -/
 noncomputable def zEven (Z0 : ZeroOrderSolved s inner) (n : ℕ) : EvenProfile S :=
   evenCorrection (SlowStressSupport.stress_smooth s.domain.isOpen
     (zDensity_smooth L B0 Z0 n) 1 (Real.sqrt_pos.2 L.inner_pos)
@@ -344,7 +348,7 @@ theorem thetaEven_eq (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
     (hR : 0 ≤ R) :
     thetaEven L B0 Z0 n (R, eta) =
       SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) n) (R,
-        eta) := by
+          eta) := by
   change _ + SlowStressSupport.stress 2 _ (-R, eta) = _
   simp only [SlowStressSupport.stress, ite_eq_right (by linarith : ¬0 < -R), add_zero]
 
@@ -352,7 +356,7 @@ theorem zEven_eq (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
     (hR : 0 ≤ R) :
     zEven L B0 Z0 n (R, eta) =
       SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h (asSlowProfiles s) n) (R, eta) :=
-        by
+          by
   change _ + SlowStressSupport.stress 1 _ (-R, eta) = _
   simp only [SlowStressSupport.stress, ite_eq_right (by linarith : ¬0 < -R), add_zero]
 
@@ -368,6 +372,8 @@ theorem zEven_zero (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
   exact SlowStressSupport.stress_inner 1
     (fun _ he _ hr => (densities_zero_inner L B0 Z0 n hr he).2) hR.2 heta
 
+/-- Coefficients, bundling `axial`, `phi`, `pressure`, `stressTheta` and the required
+compatibility proofs. -/
 noncomputable def coefficients (Z0 : ZeroOrderSolved s inner)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) : SlowBorelBase.Coefficients where
   axial := fun n => extendedCoefficient s hI n 1
@@ -406,9 +412,9 @@ theorem coefficients_stress_eq (Z0 : ZeroOrderSolved s inner)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) (n : ℕ) {w : ℝ × ℝ}
     (hX : 0 ≤ w.1) (heta : |w.2| ≤ 1) :
     (coefficients L B0 Z0 hI).stressTheta n w = SlowResidualMatching.thetaStress h C
-      (asSlowProfiles s) n w ∧
+        (asSlowProfiles s) n w ∧
     (coefficients L B0 Z0 hI).stressAxial n w = SlowResidualMatching.zStress h (asSlowProfiles s) n
-      w := by
+        w := by
   constructor
   · change extendCoreZero _ _ _ w = _
     rw [extendCoreZero_eq _ L.inner_pos _ (fun _ he _ hr => thetaEven_zero L B0 Z0 n hr he)
@@ -460,7 +466,7 @@ theorem coefficients_stress_support (Z0 : ZeroOrderSolved s inner)
     tsupport (fun w => ((coefficients L B0 Z0 hI).stressTheta n w,
         (coefficients L B0 Z0 hI).stressAxial n w)) ⊆
       Icc (inner / 8) (B ^ 2 / 2) ×ˢ Icc (-(commonWindow s hI).outer) (commonWindow s hI).outer :=
-        by
+          by
   apply closure_minimal _ (isClosed_Icc.prod isClosed_Icc)
   intro w hw
   have hn : ((coefficients L B0 Z0 hI).stressTheta n w,
@@ -511,7 +517,7 @@ theorem exists_assembled_base (Z0 : ZeroOrderSolved s inner)
         (Iio 1 ×ˢ (univ : Set ProblemStatement.Space)) ∧
       ∀ t : ℝ, t < 1 → ∀ x : ProblemStatement.Space,
         ProblemStatement.spatialDivergence (SlowBorelBase.baseVelocity a h C (coefficients L B0 Z0
-          hI)) t x = 0 :=
+            hI)) t x = 0 :=
   SlowBorelBase.exists_base_fields hh hh1 (coefficients_smooth L B0 Z0 hI) C lo hi N
 
 end StressConstruction
@@ -526,7 +532,7 @@ theorem massHistory_extendEven (w : ParametricRadialExtension.ParameterWindow S)
       ProfileHistories.primitive (extendEven w u) (R ^ 2 / 2, eta) := by
   apply massHistory_of_composition u _ hR
   · exact ((extendEven_contDiff w u).continuous.comp (continuous_id.prodMk
-    continuous_const)).continuousOn
+      continuous_const)).continuousOn
   · intro r _
     exact (extendEven_pullback w u r heta).symm
 
@@ -535,7 +541,7 @@ theorem parameterMassHistory_extendEven (hS : IsOpen S)
     (u : EvenProfile S) {R eta : ℝ} (hR : 0 ≤ R) (heta : |eta| < w.inner) :
     PositiveOrderMoments.parameterMassHistory u (R, eta) =
       ProfileHistories.primitive (ProfileHistories.parameterPartial (extendEven w u)) (R ^ 2 / 2,
-        eta) := by
+          eta) := by
   have heS : eta ∈ S := w.outer_subset (abs_lt.mp (heta.trans w.inner_lt_outer))
   have hmass := ProfileHistories.primitive_smooth (PositiveOrderMoments.parameterDomain S hS)
     (contDiffOn_fst.mul u.smooth)
@@ -574,7 +580,7 @@ theorem betaFromU_extended {h : ℝ} (d : Domain S h)
     (w : ParametricRadialExtension.ParameterWindow S) (lam : ℝ) (u : EvenProfile S)
     {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| < w.inner) :
     p.1 * extendEven w (betaFromU d lam u) p = SlowDivergence.radialFlux h lam (extendEven w u) p
-      := by
+        := by
   have heS : p.2 ∈ S := w.outer_subset (abs_lt.mp (heta.trans w.inner_lt_outer))
   have hr : (Real.sqrt (2 * p.1)) ^ 2 / 2 = p.1 := by
     rw [Real.sq_sqrt (mul_nonneg (by norm_num) hX)]
@@ -700,7 +706,7 @@ theorem baseFields_parameterMass {R eta : ℝ} (hR : 0 ≤ R) (heta : eta ∈ S)
   have hd := parameter_derivative d.isOpen hm heta R
   change HasDerivAt (fun t => PositiveOrderMoments.massHistory (baseFields d C P hD).axial (R, t))
     (ProfileHistories.parameterPartial (PositiveOrderMoments.massHistory (baseFields d C P
-      hD).axial) (R, eta)) eta at hd
+        hD).axial) (R, eta)) eta at hd
   rw [PositiveOrderMoments.massHistory_parameterPartial_on d.isOpen hu heta] at hd
   have hp := ProfileHistories.parameterPartial_hasDerivAt D P.M_smooth
     (hD (R ^ 2 / 2) (by positivity) eta heta)
@@ -719,7 +725,7 @@ theorem baseFields_beta_flux {R eta : ℝ} (hR : 0 ≤ R) (heta : eta ∈ S) :
     (hD (R ^ 2 / 2) (by positivity) eta heta)]
   change R ^ 2 / 2 * betaFromU d 0 (baseFields d C P hD).axial (R, eta) = _
   rw [betaFromU_eq_fluxHistory d 0 (baseFields d C P hD).axial (w := (R, eta)) heta,
-    PositiveOrderMoments.fluxHistory,
+      PositiveOrderMoments.fluxHistory,
     baseFields_mass d C P hD hR heta, baseFields_parameterMass d C P hD hR heta]
   change (eta * R ^ 2 * P.U (R ^ 2 / 2, eta) -
     2 * eta * (PositiveAxisSystem.dScale h + 0) * P.M (R ^ 2 / 2, eta) -
@@ -775,7 +781,7 @@ noncomputable def baseDataOfProfile {lam a b B : ℝ} (hC : C ≠ 0) (ha : 0 ≤
   amplitude_ne := hne
   axial_patch := hup
   angular_patch := fun eta he R hR => (baseFields_angular d C P hD hC (ha.trans hR.1.le)).trans
-    (hep eta he R hR)
+      (hep eta he R hR)
 
 end FiniteBase
 
@@ -866,10 +872,12 @@ section NominalBase
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Nominal outer X, constructed using `max`. -/
 noncomputable def nominalOuterX : ℝ :=
   max W.controls.radius (max (OutgoingDilation.pulseEndRadius F W.controls.radius)
     (ReservedPatches.right F W.controls.radius .positive)) + 1
 
+/-- Nominal outer radius, given by `Real.sqrt (2 * nominalOuterX W)`. -/
 noncomputable def nominalOuterRadius : ℝ := Real.sqrt (2 * nominalOuterX W)
 
 theorem nominalOuterX_gt_radius : W.controls.radius < nominalOuterX W := by
@@ -883,7 +891,7 @@ theorem nominalOuterX_pos : 0 < nominalOuterX W :=
   W.controls.radius_pos.trans (nominalOuterX_gt_radius W)
 
 theorem nominalOuterX_gt_pulse : OutgoingDilation.pulseEndRadius F W.controls.radius <
-  nominalOuterX W := by
+    nominalOuterX W := by
   have h₁ := le_max_left (OutgoingDilation.pulseEndRadius F W.controls.radius)
     (ReservedPatches.right F W.controls.radius .positive)
   have h₂ := le_max_right W.controls.radius
@@ -893,7 +901,7 @@ theorem nominalOuterX_gt_pulse : OutgoingDilation.pulseEndRadius F W.controls.ra
   linarith
 
 theorem nominalOuterX_gt_patch : ReservedPatches.right F W.controls.radius .positive <
-  nominalOuterX W := by
+    nominalOuterX W := by
   have h₁ := le_max_right (OutgoingDilation.pulseEndRadius F W.controls.radius)
     (ReservedPatches.right F W.controls.radius .positive)
   have h₂ := le_max_right W.controls.radius
@@ -916,12 +924,12 @@ theorem nominal_patch_before_outer :
   exact mul_lt_mul_of_pos_left (nominalOuterX_gt_patch W) (by norm_num)
 
 theorem nominal_pulse_gt_radius : W.controls.radius < OutgoingDilation.pulseEndRadius F
-  W.controls.radius := by
+    W.controls.radius := by
   have hp : 0 < F.data.core.endpoint := by
     dsimp only [OutgoingSchedule.Parameters.endpoint]
     linarith [F.data.core.pulseStart_pos, F.data.core.pulseLength_pos]
   simpa only [OutgoingDilation.radius, Real.exp_zero, mul_one, OutgoingDilation.pulseEndRadius]
-    using
+      using
     ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos hp
 
 theorem nominalOuterX_eq_pulse :
@@ -937,7 +945,7 @@ theorem nominalOuterX_eq_pulse :
 /-- The common higher-order support radius is strictly inside the later
 heat switch and hence before the order-one terminal collar. -/
 theorem nominalOuterX_lt_switch : nominalOuterX W < OutgoingDilation.switchRadius F
-  W.controls.radius := by
+    W.controls.radius := by
   have hflat : 1 < OutgoingTail.flattenLength := by
     have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
     dsimp only [OutgoingTail.flattenLength]
@@ -953,7 +961,7 @@ theorem nominalOuterX_lt_switch : nominalOuterX W < OutgoingDilation.switchRadiu
     norm_num [NominalProfile.Xi] at hx
     linarith
   have hp : 1 < OutgoingDilation.pulseEndRadius F W.controls.radius := hr.trans
-    (nominal_pulse_gt_radius W)
+      (nominal_pulse_gt_radius W)
   have he : (2 : ℝ) ≤ Real.exp 1 := by
     have he := Real.add_one_le_exp (1 : ℝ)
     linarith
@@ -965,7 +973,7 @@ theorem nominalOuterX_lt_switch : nominalOuterX W < OutgoingDilation.switchRadiu
       mul_le_mul_of_nonneg_left he (by linarith)
     _ = OutgoingDilation.radius W.controls.radius (F.data.core.endpoint + 1) := by
       rw [OutgoingDilation.pulseEndRadius, OutgoingDilation.radius, OutgoingDilation.radius,
-        Real.exp_add]
+          Real.exp_add]
       ring
     _ < OutgoingDilation.switchRadius F W.controls.radius :=
       ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos hc
@@ -984,9 +992,9 @@ theorem nominal_positive_patch {R eta : ℝ}
     W.U (R ^ 2 / 2, eta) = 0 ∧
     W.E (R ^ 2 / 2, eta) =
       FiveRowRank.background F.data.core.lam (ReservedPatches.radialAmplitude F W.controls.radius
-        eta) R := by
+          eta) R := by
   have hx := ReservedPatches.radial_mem_window F W.controls.radius W.controls.radius_pos .positive
-    hR
+      hR
   have hmatch := matching_before_window W .positive hx
   have hsep : ReservedPatches.right F W.controls.radius .heat ≤
       ReservedPatches.left F W.controls.radius .positive := by
@@ -998,9 +1006,9 @@ theorem nominal_positive_patch {R eta : ℝ}
     W.E_outgoing_between_patch_and_switch hmatch.le
       (by rw [← ReservedPatches.heat_right]; exact hsep.trans hx.1.le)
       (hx.2.le.trans (ReservedPatches.right_before_switch F W.controls.radius W.controls.radius_pos
-        .positive).le)
+          .positive).le)
   have hrpos := (ReservedPatches.radialLeft_pos F W.controls.radius W.controls.radius_pos
-    .positive).trans hR.1
+      .positive).trans hR.1
   have hc := ReservedPatches.clean_fields F W.controls.radius W.controls.radius_pos .positive eta hx
   refine ⟨(W.U_outgoing (W.controls.heatJoin_lt_radius.trans hmatch)).trans hc.1, ?_⟩
   rw [he, hc.2, ReservedPatches.square_half_power _ _ hrpos]
@@ -1046,7 +1054,8 @@ noncomputable def nominalBaseData :
       change Real.sqrt (2 * (R ^ 2 / 2)) * W.f (R ^ 2 / 2, eta) = _
       rw [← W.E_eq_sqrt_f (p := (R ^ 2 / 2, eta)) (div_pos (sq_pos_of_pos
         ((ReservedPatches.radialLeft_pos F W.controls.radius W.controls.radius_pos .positive).trans
-          hR.1)) (by norm_num))]
+            hR.1)) (by
+            norm_num))]
       exact (nominal_positive_patch W hR).2)
 
 theorem nominalBaseData_beta : (nominalBaseData W d hD).fields.beta =
@@ -1062,24 +1071,29 @@ theorem nominalPressure_eq : F.axisDatum = PressureDatum.pressure
     (SchedulePressure.clockWeight F.data) (SchedulePressure.shapeExponent F.data) :=
   F.axisDatum_eq.trans (SchedulePressure.axisPressure_eq F.data)
 
+/-- Nominal tube, constructed using `ActualSlowAxis.constructedTube`. -/
 noncomputable def nominalTube :=
   ActualSlowAxis.constructedTube (SchedulePressure.admissible F.data) (nominalPressure_eq (F := F))
     W.axis.natural.profile W.axis.scale_pos W.axis.small W.axis.preparation.sigma_pos
 
+/-- Nominal complex domain, constructed using `ActualSlowAxis.parameterDomain`. -/
 noncomputable def nominalComplexDomain : Set ℂ :=
   ActualSlowAxis.parameterDomain (AxisHolomorphic.parameterTube
-    ActivationHolomorphic.parameterWindow
+      ActivationHolomorphic.parameterWindow
     (ActualSlowAxis.tubeWidth (SchedulePressure.admissible F.data) (nominalPressure_eq (F := F))
       W.axis.natural.profile W.axis.scale_pos W.axis.small W.axis.preparation.sigma_pos))
 
 theorem nominalComplexDomain_open : IsOpen (nominalComplexDomain W) :=
   ActualSlowAxis.parameterDomain_open (nominalTube W).isOpen
 
+/-- Nominal hierarchy, constructed using `ActualSlowAxis.hierarchy`. -/
 noncomputable def nominalHierarchy :=
   ActualSlowAxis.hierarchy (nominalTube W) W.controls.activationTime_pos
-    W.controls.referenceWidth_pos
+      W.controls.referenceWidth_pos
     W.controls.referenceWidth_small W.controls.kappa F.axisDatum_contDiff W.axis.normalization
 
+/-- Nominal radius, given by `ActualSlowAxis.axisRadius W.axis.referenceInput
+W.controls.referenceWidth`. -/
 noncomputable def nominalRadius : ℝ :=
   ActualSlowAxis.axisRadius W.axis.referenceInput W.controls.referenceWidth
 
@@ -1110,7 +1124,9 @@ theorem nominalDomain : Domain (nominalParameters W) F.data.h where
   denominator := fun _ heta =>
     SlowRecursion.domain_real_denominator (ActualSlowAxis.domain (nominalTube W) zero_lt_one) heta.2
 
+/-- Nominal inner, given by `(4 / W.axis.scale) / 4`. -/
 noncomputable def nominalInner : ℝ := (4 / W.axis.scale) / 4
+/-- Nominal stop, given by `(4 / W.axis.scale) / 2`. -/
 noncomputable def nominalStop : ℝ := (4 / W.axis.scale) / 2
 
 theorem nominalInner_pos : 0 < nominalInner W := by
@@ -1145,10 +1161,11 @@ theorem nominalStop_lt_patch :
   have hsmall := (nominalStop_lt_initial W).trans_le
     ((nominalInitial_le_collar W).trans W.controls.activation_collar_le_Xi)
   have hbig := ((W.controls.Xi_lt_heatJoin W.separated).trans W.controls.heatJoin_lt_radius).trans
-    hleft
+      hleft
   rw [ReservedPatches.radialLeft, Real.sq_sqrt
-    (mul_nonneg (by norm_num) (ReservedPatches.left_pos F W.controls.radius W.controls.radius_pos
-      .positive).le)]
+    (mul_nonneg (by
+        norm_num) (ReservedPatches.left_pos F W.controls.radius W.controls.radius_pos
+            .positive).le)]
   linarith
 
 /-- The global recursive sequence uses the same nominal profile and the
@@ -1161,10 +1178,10 @@ noncomputable def nominalScheme : Scheme (nominalParameters W) F.data.h W.axis.n
     (ReservedPatches.radialLeft_pos F W.controls.radius W.controls.radius_pos .positive)
     (ReservedPatches.radial_left_lt_right F W.controls.radius W.controls.radius_pos .positive)
     (nominal_patch_before_outer W).le (nominalBaseData W (nominalDomain W)
-      (nominalParameters_domain W))
+        (nominalParameters_domain W))
 
 theorem nominalLocalization : Localization (nominalScheme W) (nominalHierarchy W) (nominalInner W)
-  :=
+    :=
   localizationFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (nominalDomain W) (fun _ heta => heta.2)
     W.axis.normalization_pos.ne' F.data.core.lam_pos (nominalInner_pos W) (nominalInner_lt_stop W)
@@ -1172,8 +1189,9 @@ theorem nominalLocalization : Localization (nominalScheme W) (nominalHierarchy W
     (ReservedPatches.radialLeft_pos F W.controls.radius W.controls.radius_pos .positive)
     (ReservedPatches.radial_left_lt_right F W.controls.radius W.controls.radius_pos .positive)
     (nominal_patch_before_outer W).le (nominalBaseData W (nominalDomain W)
-      (nominalParameters_domain W))
+        (nominalParameters_domain W))
 
+/-- Nominal ACT, constructed using `StressActivation.FromReference.histories`. -/
 noncomputable def nominalACT : ProfileHistories.Profiles W.axis.referenceInput.radialDomain :=
   StressActivation.FromReference.histories W.axis.referenceInput W.controls.activationTime_pos
     W.controls.referenceWidth_pos W.controls.referenceWidth_small W.controls.kappa
@@ -1204,7 +1222,7 @@ theorem nominalACT_flux {X eta : ℝ} (hX : 0 < X) (hi : X < 4 / W.axis.scale)
       SlowDivergence.radialFlux F.data.h 0 (nominalACT W).U (X, eta) := by
   have hn := (isOpen_Ioo.prod ReferencePath.parameterInterval_open).mem_nhds
     (show (X, eta) ∈ Ioo (0 : ℝ) (4 / W.axis.scale) ×ˢ ReferencePath.parameterInterval from ⟨⟨hX,
-      hi⟩, heta⟩)
+        hi⟩, heta⟩)
   have hu : W.profiles.U =ᶠ[𝓝 (X, eta)] (nominalACT W).U := by
     filter_upwards [hn] with p hp
     exact (nominalACT_fields W hp.1.1.le hp.1.2.le hp.2).2
@@ -1220,7 +1238,7 @@ theorem nominalHierarchy_base {X eta : ℝ} (hX : 0 ≤ X) (hi : X < nominalInne
         W.axis.normalization * W.profiles.f (X, eta) ∧
     SlowRecursion.profile ((nominalHierarchy W).coefficients 0 1) (X, eta) = W.profiles.U (X, eta) ∧
     SlowRecursion.profile ((nominalHierarchy W).coefficients 0 3) (X, eta) = W.profiles.pressure
-      (X, eta) := by
+        (X, eta) := by
   have hinit : X ≤ 4 / W.axis.scale :=
     (hi.trans ((nominalInner_lt_stop W).trans (nominalStop_lt_initial W))).le
   have hv := ActualSlowAxis.hierarchy_base_values (nominalTube W) W.controls.activationTime_pos
@@ -1240,15 +1258,15 @@ theorem nominalBase_beta_pos {X eta : ℝ} (hX : 0 < X) (hi : X < nominalInner W
   have hinit : X < 4 / W.axis.scale := hi.trans
     ((nominalInner_lt_stop W).trans (nominalStop_lt_initial W))
   have hf := NaturalCoefficientBridge.hierarchy_flux_zero (nominalTube W)
-    W.controls.activationTime_pos
+      W.controls.activationTime_pos
     W.controls.referenceWidth_pos W.controls.referenceWidth_small W.controls.kappa
     F.axisDatum_contDiff W.axis.normalization ⟨hX, hr⟩ heta.2
   change X * SlowRecursion.profile ((nominalHierarchy W).coefficients 0 4) (X, eta) =
     SlowDivergence.radialFlux F.data.h 0 (nominalACT W).U (X, eta) at hf
   change xProfile (baseFields (nominalDomain W) W.axis.normalization W.profiles
-    (nominalParameters_domain W)).beta (X, eta) = _
+      (nominalParameters_domain W)).beta (X, eta) = _
   rw [baseFields_beta_value _ _ _ _ hX heta, nominalACT_flux W hX hinit
-    (nominalParameters_reference W heta)]
+      (nominalParameters_reference W heta)]
   exact ((eq_div_iff hX.ne').mpr (by simpa only [mul_comm] using hf)).symm
 
 theorem nominalBase_beta_axis {eta : ℝ} (heta : eta ∈ nominalParameters W) :
@@ -1264,7 +1282,7 @@ theorem nominalBase_beta_axis {eta : ℝ} (heta : eta ∈ nominalParameters W) :
       rw [Real.sq_sqrt (nominalInner_pos W).le] at hh
       linarith [sq_nonneg R]
     change (nominalScheme W).base.beta (R, eta) = localExtension (nominalLocalization W) 0 4 (R,
-      eta)
+        eta)
     rw [← xProfile_radius (nominalScheme W).base.beta hR.1.le eta,
       nominalBase_beta_pos W (div_pos (sq_pos_of_pos hR.1) (by norm_num)) hi heta,
       localExtension_radial (nominalLocalization W) 0 4 hR.1.le hi.le]
@@ -1275,16 +1293,16 @@ theorem nominalBase_beta_axis {eta : ℝ} (heta : eta ∈ nominalParameters W) :
   exact ⟨le_rfl, hs.le⟩
 
 theorem nominalBaseAgreement : BaseAgreement (nominalScheme W) (nominalHierarchy W) (nominalInner
-  W) := by
+    W) := by
   constructor
   · intro p hX hi heta
     change xProfile (baseFields (nominalDomain W) W.axis.normalization W.profiles
-      (nominalParameters_domain W)).phi p = _
+        (nominalParameters_domain W)).phi p = _
     rw [baseFields_phi _ _ _ _ hX]
     exact (nominalHierarchy_base W hX hi heta).1.symm
   · intro p hX hi heta
     change xProfile (baseFields (nominalDomain W) W.axis.normalization W.profiles
-      (nominalParameters_domain W)).axial p = _
+        (nominalParameters_domain W)).axial p = _
     rw [baseFields_axial _ _ _ _ hX]
     exact (nominalHierarchy_base W hX hi heta).2.1.symm
   · intro p hX hi heta
@@ -1292,8 +1310,8 @@ theorem nominalBaseAgreement : BaseAgreement (nominalScheme W) (nominalHierarchy
     · have he := nominalBase_beta_axis W heta
       have hp : p = (0, p.2) := Prod.ext h0 rfl
       rw [hp]
-      simpa only [xProfile, mul_zero, Real.sqrt_zero, zero_pow (by norm_num : 2 ≠ 0), zero_div]
-        using
+      simpa only [xProfile, mul_zero, Real.sqrt_zero, zero_pow (by
+          norm_num : 2 ≠ 0), zero_div] using
         he.trans (localExtension_radial (nominalLocalization W) 0 4 le_rfl
           (by simpa using (nominalInner_pos W).le))
     · exact nominalBase_beta_pos W (lt_of_le_of_ne hX (Ne.symm h0)) hi heta
@@ -1303,7 +1321,7 @@ theorem nominal_pressure_inner {p : ℝ × ℝ} (hX : 0 ≤ p.1) (hi : p.1 < nom
     xProfile (nominalScheme W).base.pressure p =
       SlowRecursion.profile ((nominalHierarchy W).coefficients 0 3) p := by
   change xProfile (baseFields (nominalDomain W) W.axis.normalization W.profiles
-    (nominalParameters_domain W)).pressure p = _
+      (nominalParameters_domain W)).pressure p = _
   rw [baseFields_pressure _ _ _ _ hX]
   exact (nominalHierarchy_base W hX hi heta).2.2.symm
 
@@ -1332,7 +1350,7 @@ theorem nominal_zero_coefficients {p : ℝ × ℝ} (hX : 0 < p.1) (hi : p.1 < no
     exact congrArg (q.1 * ·) hq
   have hp : f.pressure 0 =ᶠ[𝓝 p] g.pressure 0 := by
     filter_upwards [(isOpen_Ioo.prod (nominalParameters_open W)).mem_nhds ⟨⟨hX, hi⟩, heta⟩] with q
-      hq
+        hq
     change xProfile (profiles (nominalScheme W) 0).pressure q = _
     rw [profiles_zero]
     exact nominal_pressure_inner W hq.1.1.le hq.1.2 hq.2
@@ -1375,28 +1393,28 @@ theorem nominalCoefficients_zero_fields {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta 
   · change xProfile (profiles (nominalScheme W) 0).phi p = _
     rw [profiles_zero]
     exact baseFields_phi (nominalDomain W) W.axis.normalization W.profiles
-      (nominalParameters_domain W) hX
+        (nominalParameters_domain W) hX
   · change xProfile (profiles (nominalScheme W) 0).axial p = _
     rw [profiles_zero]
     exact baseFields_axial (nominalDomain W) W.axis.normalization W.profiles
-      (nominalParameters_domain W) hX
+        (nominalParameters_domain W) hX
   · change xProfile (profiles (nominalScheme W) 0).pressure p = _
     rw [profiles_zero]
     exact baseFields_pressure (nominalDomain W) W.axis.normalization W.profiles
-      (nominalParameters_domain W) hX
+        (nominalParameters_domain W) hX
 
 theorem nominalCoefficients_stress_zero {p : ℝ × ℝ}
     (hp : p.1 ≤ nominalInner W / 8) (n : ℕ) :
     (nominalCoefficients W).stressTheta n p = 0 ∧ (nominalCoefficients W).stressAxial n p = 0 :=
   coefficients_stress_zero_left (nominalLocalization W) (nominalBaseAgreement W) (nominalZeroOrder
-    W)
+      W)
     (nominalParameters_contains W) n hp
 
 theorem nominalCoefficients_stress_eq {p : ℝ × ℝ}
     (hp : 0 ≤ p.1) (heta : |p.2| ≤ 1) (n : ℕ) :
     (nominalCoefficients W).stressTheta n p =
       SlowResidualMatching.thetaStress F.data.h W.axis.normalization (asSlowProfiles (nominalScheme
-        W)) n p ∧
+          W)) n p ∧
     (nominalCoefficients W).stressAxial n p =
       SlowResidualMatching.zStress F.data.h (asSlowProfiles (nominalScheme W)) n p :=
   coefficients_stress_eq (nominalLocalization W) (nominalBaseAgreement W) (nominalZeroOrder W)
@@ -1420,19 +1438,19 @@ theorem nominal_exists_base (lo hi : ℝ) (N : ℕ) :
         (SlowBorelBase.coefficientBundle W.axis.normalization (nominalCoefficients W))
         (SlowBorelBase.innerBox lo hi) a ∧
       ContDiffOn ℝ ∞ (SlowBorelBase.baseVelocity a F.data.h W.axis.normalization
-        (nominalCoefficients W))
+          (nominalCoefficients W))
         (Iio 1 ×ˢ (univ : Set ProblemStatement.Space)) ∧
       ∀ t : ℝ, t < 1 → ∀ x : ProblemStatement.Space,
         ProblemStatement.spatialDivergence
           (SlowBorelBase.baseVelocity a F.data.h W.axis.normalization (nominalCoefficients W)) t x
-            = 0 :=
+              = 0 :=
   SlowBorelBase.exists_base_fields W.axis.small.h_pos (by linarith [W.axis.small.h_le])
     (nominalCoefficients_smooth W) W.axis.normalization lo hi N
 
 theorem nominal_divergenceCoefficient (n : ℕ) {p : ℝ × ℝ}
     (hX : 0 < p.1) (heta : p.2 ∈ nominalParameters W) :
     SlowExpansionResidual.divergenceCoefficient F.data.h (asSlowProfiles (nominalScheme W)) n p = 0
-      := by
+        := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · change SimilarityProfile.partialX
         (AxisSourceRegularity.axisFactor (xProfile (profiles (nominalScheme W) 0).beta)) p +
@@ -1462,7 +1480,7 @@ theorem nominal_pressureCoefficient (n : ℕ) {p : ℝ × ℝ}
       rw [SimilarityProfile.partialX, hpg.fderiv_eq]
       exact W.profiles.radialPartial_pressure (nominalParameters_domain W p.1 hX.le p.2 heta)
     have hphi : (asSlowProfiles (nominalScheme W)).phi 0 p = W.axis.normalization * W.profiles.f p
-      := by
+        := by
       change xProfile (profiles (nominalScheme W) 0).phi p = _
       rw [profiles_zero]
       exact baseFields_phi (nominalDomain W) W.axis.normalization W.profiles
@@ -1470,13 +1488,13 @@ theorem nominal_pressureCoefficient (n : ℕ) {p : ℝ × ℝ}
     simp only [SlowExpansionResidual.pressureCoefficient, SlowExpansionResidual.previous,
       SlowExpansionResidual.convolution, Finset.Nat.antidiagonal_zero, Finset.sum_singleton,
       hpr, hphi, zero_div, add_zero]
-    field_simp [W.axis.normalization_pos.ne'] ; ring
+    field_simp [W.axis.normalization_pos.ne']; ring
   · exact profiles_pressureCoefficient (nominalScheme W) hn hX heta
 
 theorem nominal_densities_smooth (n : ℕ) :
     Smooth (nominalParameters W)
       (SlowResidualMatching.thetaDensity F.data.h W.axis.normalization (asSlowProfiles
-        (nominalScheme W)) n) ∧
+          (nominalScheme W)) n) ∧
     Smooth (nominalParameters W)
       (SlowResidualMatching.zDensity F.data.h (asSlowProfiles (nominalScheme W)) n) :=
   ⟨thetaDensity_smooth (nominalLocalization W) (nominalBaseAgreement W) (nominalZeroOrder W) n,
@@ -1509,7 +1527,7 @@ theorem nominalCoefficients_positive_exterior {n : ℕ} (hn : 0 < n) {p : ℝ ×
     change nominalOuterRadius W ^ 2 / 2 ≤ p.1
     rwa [nominalOuterRadius_square]
   exact ⟨extendedCoefficient_zero_exterior (nominalScheme W) (nominalParameters_contains W) hn 0
-    hp',
+      hp',
     extendedCoefficient_zero_exterior (nominalScheme W) (nominalParameters_contains W) hn 1 hp',
     extendedCoefficient_zero_exterior (nominalScheme W) (nominalParameters_contains W) hn 3 hp'⟩
 
@@ -1606,7 +1624,7 @@ theorem modified_original_domain (X : ℝ) (hX : 0 ≤ X) (eta : ℝ) (heta : et
 
 theorem modification_before_outer : hi < nominalOuterX W :=
   (M.outer.trans_lt (ReservedPatches.left_lt_right F W.controls.radius W.controls.radius_pos
-    .positive)).trans
+      .positive)).trans
     (nominalOuterX_gt_patch W)
 
 theorem modified_axial_exterior :
@@ -1628,9 +1646,9 @@ theorem modified_positive_patch {R eta : ℝ} (heta : eta ∈ S)
     Q.U (R ^ 2 / 2, eta) = 0 ∧
     Q.E (R ^ 2 / 2, eta) =
       FiveRowRank.background F.data.core.lam (ReservedPatches.radialAmplitude F W.controls.radius
-        eta) R := by
+          eta) R := by
   have hx := ReservedPatches.radial_mem_window F W.controls.radius W.controls.radius_pos .positive
-    hR
+      hR
   have hp := M.fields (R ^ 2 / 2, eta) (by positivity) heta (Or.inr (M.outer.trans hx.1.le))
   refine ⟨hp.2.trans (nominal_positive_patch W hR).1, ?_⟩
   change Real.sqrt (2 * (R ^ 2 / 2)) * Q.f (R ^ 2 / 2, eta) = _
@@ -1640,6 +1658,7 @@ theorem modified_positive_patch {R eta : ℝ} (heta : eta ∈ S)
     (ReservedPatches.mem_window_pos F W.controls.radius W.controls.radius_pos .positive hx)]
   exact (nominal_positive_patch W hR).2
 
+/-- Modified base data, constructed using `baseDataOfProfile`. -/
 noncomputable def modifiedBaseData :
     BaseData S W.axis.normalization F.data.core.lam
       (ReservedPatches.radialLeft F W.controls.radius .positive)
@@ -1654,6 +1673,7 @@ noncomputable def modifiedBaseData :
     (fun _ he _ hR => (modified_positive_patch W Q M he hR).1)
     (fun _ he _ hR => (modified_positive_patch W Q M he hR).2)
 
+/-- Modified scheme, constructed using `schemeFromHierarchy`. -/
 noncomputable def modifiedScheme : Scheme S F.data.h W.axis.normalization :=
   schemeFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (modifiedDomain W Q M) (fun _ heta => (M.subset heta).2)
@@ -1664,7 +1684,7 @@ noncomputable def modifiedScheme : Scheme S F.data.h W.axis.normalization :=
     (nominal_patch_before_outer W).le (modifiedBaseData W Q M)
 
 theorem modifiedLocalization : Localization (modifiedScheme W Q M) (nominalHierarchy W)
-  (nominalInner W) :=
+    (nominalInner W) :=
   localizationFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (modifiedDomain W Q M) (fun _ heta => (M.subset heta).2)
     W.axis.normalization_pos.ne' F.data.core.lam_pos (nominalInner_pos W) (nominalInner_lt_stop W)
@@ -1689,20 +1709,20 @@ theorem modifiedBaseAgreement :
   constructor
   · intro p hx hi he
     exact (modified_base_local W Q M 0 hx hi he).trans ((nominalBaseAgreement W).phi p hx hi
-      (M.subset he))
+        (M.subset he))
   · intro p hx hi he
     exact (modified_base_local W Q M 1 hx hi he).trans ((nominalBaseAgreement W).axial p hx hi
-      (M.subset he))
+        (M.subset he))
   · intro p hx hi he
     exact (modified_base_local W Q M 2 hx hi he).trans ((nominalBaseAgreement W).beta p hx hi
-      (M.subset he))
+        (M.subset he))
 
 theorem modified_zero_coefficients {p : ℝ × ℝ} (hX : 0 < p.1) (hinner : p.1 < nominalInner W)
     (heta : p.2 ∈ S) :
     SlowExpansionResidual.angularCoefficient F.data.h (asSlowProfiles (modifiedScheme W Q M)) 0 p =
-      0 ∧
+        0 ∧
     SlowExpansionResidual.axialCoefficient F.data.h (asSlowProfiles (modifiedScheme W Q M)) 0 p = 0
-      := by
+        := by
   let f := asSlowProfiles (modifiedScheme W Q M)
   let g := asSlowProfiles (nominalScheme W)
   have hg (i : Fin 4) :
@@ -1738,12 +1758,12 @@ theorem modifiedZeroOrder : ZeroOrderSolved (modifiedScheme W Q M) (nominalInner
 extensions are rebuilt from the actual finite modified profile. -/
 noncomputable def modifiedCoefficients : SlowBorelBase.Coefficients :=
   coefficients (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M) (modifiedZeroOrder W Q M)
-    M.contains
+      M.contains
 
 theorem modifiedCoefficients_smooth : SlowBorelBase.SmoothCoefficients (modifiedCoefficients W Q M)
-  :=
+    :=
   coefficients_smooth (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M) (modifiedZeroOrder
-    W Q M) M.contains
+      W Q M) M.contains
 
 theorem modifiedCoefficients_zero_fields {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     (modifiedCoefficients W Q M).phi 0 p = W.axis.normalization * Q.f p ∧
@@ -1767,11 +1787,11 @@ theorem modifiedCoefficients_axis {n : ℕ} (hn : 0 < n) {eta : ℝ} (heta : |et
     (modifiedCoefficients W Q M).axial n (0, eta) = 0 ∧
     (modifiedCoefficients W Q M).pressure n (0, eta) = 0 :=
   ⟨extendedCoefficient_axis (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M) M.contains
-    hn 0 heta,
+      hn 0 heta,
    extendedCoefficient_axis (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M) M.contains
-     hn 1 heta,
+       hn 1 heta,
    extendedCoefficient_axis (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M) M.contains
-     hn 3 heta⟩
+       hn 3 heta⟩
 
 theorem modified_extended_flux (n : ℕ) {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     p.1 * extendedCoefficient (modifiedScheme W Q M) M.contains n 2 p =
@@ -1786,7 +1806,7 @@ theorem modified_extended_flux (n : ℕ) {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta
 theorem modified_divergenceCoefficient (n : ℕ) {p : ℝ × ℝ}
     (hX : 0 < p.1) (heta : p.2 ∈ S) :
     SlowExpansionResidual.divergenceCoefficient F.data.h (asSlowProfiles (modifiedScheme W Q M)) n
-      p = 0 := by
+        p = 0 := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · change SimilarityProfile.partialX
         (AxisSourceRegularity.axisFactor (xProfile (profiles (modifiedScheme W Q M) 0).beta)) p +
@@ -1795,7 +1815,7 @@ theorem modified_divergenceCoefficient (n : ℕ) {p : ℝ × ℝ}
         (xProfile (profiles (modifiedScheme W Q M) 0).axial) p = 0
     rw [profiles_zero]
     have h := betaFromU_x_divergence (modifiedDomain W Q M) 0 (modifiedScheme W Q M).base.axial hX
-      heta
+        heta
     simp only [SlowExpansionResidual.axialExponent, SlowExpansionResidual.slowOrder,
       Nat.cast_zero, mul_zero, zero_mul] at h ⊢
     exact h
@@ -1812,7 +1832,7 @@ theorem modified_pressureCoefficient (n : ℕ) {p : ℝ × ℝ}
       rw [profiles_zero]
       exact baseFields_pressure (modifiedDomain W Q M) W.axis.normalization Q M.halfPlane hy.le
     have hpr : SimilarityProfile.partialX ((asSlowProfiles (modifiedScheme W Q M)).pressure 0) p =
-      Q.f p ^ 2 := by
+        Q.f p ^ 2 := by
       rw [SimilarityProfile.partialX, hpg.fderiv_eq]
       exact Q.radialPartial_pressure (M.halfPlane p.1 hX.le p.2 heta)
     have hphi : (asSlowProfiles (modifiedScheme W Q M)).phi 0 p = W.axis.normalization * Q.f p := by
@@ -1822,7 +1842,7 @@ theorem modified_pressureCoefficient (n : ℕ) {p : ℝ × ℝ}
     simp only [SlowExpansionResidual.pressureCoefficient, SlowExpansionResidual.previous,
       SlowExpansionResidual.convolution, Finset.Nat.antidiagonal_zero, Finset.sum_singleton,
       hpr, hphi, zero_div, add_zero]
-    field_simp [W.axis.normalization_pos.ne'] ; ring
+    field_simp [W.axis.normalization_pos.ne']; ring
   · exact profiles_pressureCoefficient (modifiedScheme W Q M) hn hX heta
 
 theorem modified_exists_base (lower upper : ℝ) (N : ℕ) :
@@ -1831,12 +1851,12 @@ theorem modified_exists_base (lower upper : ℝ) (N : ℕ) :
         (SlowBorelBase.coefficientBundle W.axis.normalization (modifiedCoefficients W Q M))
         (SlowBorelBase.innerBox lower upper) a ∧
       ContDiffOn ℝ ∞ (SlowBorelBase.baseVelocity a F.data.h W.axis.normalization
-        (modifiedCoefficients W Q M))
+          (modifiedCoefficients W Q M))
         (Iio 1 ×ˢ (univ : Set ProblemStatement.Space)) ∧
       ∀ t : ℝ, t < 1 → ∀ x : ProblemStatement.Space,
         ProblemStatement.spatialDivergence
           (SlowBorelBase.baseVelocity a F.data.h W.axis.normalization (modifiedCoefficients W Q M))
-            t x = 0 :=
+              t x = 0 :=
   SlowBorelBase.exists_base_fields W.axis.small.h_pos (by linarith [W.axis.small.h_le])
     (modifiedCoefficients_smooth W Q M) W.axis.normalization lower upper N
 

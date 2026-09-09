@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import Mathlib.MeasureTheory.Integral.Prod
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Cancellation in the heat-kernel commutator
@@ -19,6 +18,9 @@ is bounded by its Lipschitz variation near the diagonal and by `1` everywhere.
 The resulting minimum is the cancellation factor used before interchanging
 the heat-time and spatial integrals.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -199,7 +201,7 @@ theorem absoluteCancelledTimeKernel_measurable {K : ℝ → Space → ℝ}
     (hφ : Measurable φ) :
     Measurable (Function.uncurry (absoluteCancelledTimeKernel K φ)) := by
   change Measurable (fun z : Space × Space => ∫ s in Ioi (0 : ℝ), |K s (z.1 - z.2) *
-    cutoffSquareDifference φ z.1 z.2|)
+      cutoffSquareDifference φ z.1 z.2|)
   simpa only [Real.norm_eq_abs] using
     ((cancelledTimeIntegrand_measurable hK hφ).norm.stronglyMeasurable.integral_prod_right'
       (ν := volume.restrict (Ioi (0 : ℝ)))).measurable

@@ -7,15 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceOperators
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedProfilesParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedProfilesRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedProfilesParity
 
 /-!
 Actual source profiles for the complete high inverse. The primary datum is a
 genuine profile with its path/time witnesses; every later forcing is proved
 admissible and every later profile is constructed by the two source inverses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,27 +34,35 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (B : EulerTransversePacketProvider.HistoryData (D.initial τ hτ hτT.le))
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
 
+/-- Joined source profiles, given by `profiles (joinedSourceOperators P M D τ hτ hτT B)
+primary`. -/
 def joinedSourceProfiles : ℕ → Profile :=
   profiles (joinedSourceOperators P M D τ hτ hτT B) primary
 
+/-- Joined source profile witness, given by `joinedProfileWitness M D hT τ hτ hτT B
+(joinedSourceCoefficientData P M D τ hτ hτT B hT) rfl rfl rfl primary hprimary p`. -/
 def joinedSourceProfileWitness (p : ℕ) :
     ProfileRegularity P M.T M.T_pos.le D.support (joinedSourceProfiles P M D τ hτ hτT B primary p)
-      :=
+        :=
   joinedProfileWitness M D hT τ hτ hτT B (joinedSourceCoefficientData P M D τ hτ hτT B hT)
     rfl rfl rfl primary hprimary p
 
-def joinedSource_meanForcing (p : ℕ) (hp : 2 ≤ p) :
+/-- Joined source mean forcing, given by `joinedProfilesMeanForcing M D hT τ hτ hτT B
+(joinedSourceCoefficientData P M D τ hτ hτT B hT) rfl rfl rfl primary hprimary p hp`. -/
+def joinedSourceMeanForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary)) :=
-  joined_profiles_meanForcing M D hT τ hτ hτT B (joinedSourceCoefficientData P M D τ hτ hτT B hT)
+  joinedProfilesMeanForcing M D hT τ hτ hτT B (joinedSourceCoefficientData P M D τ hτ hτT B hT)
     rfl rfl rfl primary hprimary p hp
 
-def joinedSource_highForcing (p : ℕ) (hp : 2 ≤ p) :
+/-- Joined source high forcing, given by `joinedProfilesHighForcing M D hT τ hτ hτT B
+(joinedSourceCoefficientData P M D τ hτ hτT B hT) rfl rfl rfl primary hprimary p hp`. -/
+def joinedSourceHighForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerTransversePacketProvider.Forcing P D
       (highForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary)) :=
-  joined_profiles_highForcing M D hT τ hτ hτT B (joinedSourceCoefficientData P M D τ hτ hτT B hT)
+  joinedProfilesHighForcing M D hT τ hτ hτT B (joinedSourceCoefficientData P M D τ hτ hτT B hT)
     rfl rfl rfl primary hprimary p hp
 
 theorem joinedSourceCoefficientEven

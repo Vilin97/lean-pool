@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcing
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
 
-@[expose] public section
-
 /-!
 # Genuine algebraic closure of admissible mean forcing
 
@@ -18,6 +16,9 @@ Admissibility is preserved by finite sums, bounded linear maps, and actual
 spatial directional derivatives. Every witness consists of literal smooth
 fields and their continuous L² jets; no inverse or equation is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,9 +43,12 @@ def ofSlices (A : ℝ → SmoothL2Field Space)
   path_eq _ := rfl
   raw_eq := heq
 
+/-- Zero, given by `ofSlices (fun _ => zeroField) (fun _ => continuous_const) (fun _ _ _ =>
+rfl)`. -/
 def zero (D : Data) : Forcing D (0 : VectorField) :=
   ofSlices (fun _ => zeroField) (fun _ => continuous_const) (fun _ _ _ => rfl)
 
+/-- Add, constructed using `ofSlices`. -/
 def add (G : Forcing D raw) (H : Forcing D raw') : Forcing D (raw+raw') :=
   ofSlices (fun t => addField (G.slices t) (H.slices t))
     (continuous_jetLp_addField (fun t : Icc (0 : ℝ) D.T => G.slices t)
@@ -57,12 +61,15 @@ def map (G : Forcing D raw) (L : Space →L[ℝ] Space) : Forcing D (fun z => L 
     (continuous_jetLp_mapField L (fun t : Icc (0 : ℝ) D.T => G.slices t) G.jets_continuous)
     (fun t x θ => by simp only [G.raw_eq t x θ, mapField_field])
 
+/-- Smul, given by `G.map (c • ContinuousLinearMap.id ℝ Space)`. -/
 def smul (G : Forcing D raw) (c : ℝ) : Forcing D (c • raw) :=
   G.map (c • ContinuousLinearMap.id ℝ Space)
 
+/-- Neg, given by `G.map (-ContinuousLinearMap.id ℝ Space)`. -/
 def neg (G : Forcing D raw) : Forcing D (-raw) := G.map (-ContinuousLinearMap.id ℝ Space)
 
-/-- The derivative is the ordinary derivative of the prescribed raw field at fixed time and angle. -/
+/-- The derivative is the ordinary derivative of the prescribed raw field at fixed time and angle.
+-/
 def spatialDerivative (G : Forcing D raw) (v : Space) :
     Forcing D (fun z => fderiv ℝ (fun x => raw (z.1,(x,z.2.2))) z.2.1 v) :=
   ofSlices (fun t => directionalField (G.slices t) v)
@@ -84,9 +91,9 @@ theorem admissible_finset_sum {ι : Type*} (D : Data) (s : Finset ι) (raw : ι 
   | @insert i s his ih =>
     have hi : Nonempty (Forcing D (raw i)) := h i (Finset.mem_insert_self i s)
     have hs : Nonempty (Forcing D (∑ j ∈ s, raw j)) := ih (fun j hj => h j
-      (Finset.mem_insert_of_mem hj))
+        (Finset.mem_insert_of_mem hj))
     simpa only [Finset.sum_insert his] using
       (show Nonempty (Forcing D (raw i+∑ j ∈ s, raw j)) from ⟨(Classical.choice hi).add
-        (Classical.choice hs)⟩)
+          (Classical.choice hs)⟩)
 
 end EulerMeanPacketProvider

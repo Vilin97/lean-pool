@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+
+/-! The same-radius fixed-Sobolev product estimate needs bounds only at the base parameter. -/
 
 @[expose] public section
 
-/-! The same-radius fixed-Sobolev product estimate needs bounds only at the base parameter. -/
 
 noncomputable section
 
@@ -28,8 +30,8 @@ theorem block_clm_apply_gevrey_at (directions : ι → P) (q : ℕ)
     (A : P → E →L[ℝ] F) (f : P → E)
     (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f) (x : P)
     (Rc R C D : ℝ) (hRc : 0 ≤ Rc) (hRcR : Rc ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
-    (hcoeff : ∀ n, coefficientBlock directions q A n x ≤ C*majorant Rc 0 n)
-    (d : ℕ) (hfield : ∀ n, block directions q f n x ≤ D*majorant R d n)
+    (hcoeff : ∀ n, coefficientBlock directions q A n x ≤ C * majorant Rc 0 n)
+    (d : ℕ) (hfield : ∀ n, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) :
     block directions q (fun y => A y (f y)) n x ≤ (3*C*D)*majorant R d n := by
   have hR : 0 ≤ R := hRc.trans hRcR
@@ -44,7 +46,7 @@ theorem block_clm_apply_gevrey_at (directions : ι → P) (q : ℕ)
     (fun k => coefficientBlock directions q A k x)
     (fun k => block directions q f k x) hc hf' n
   exact (block_clm_apply_le directions q A f hA hf n x).trans
-    ((le_abs_self _).trans (by simpa only [Nat.zero_add, EulerJetProductBounds.leibnizConvolution]
-      using hp))
+    ((le_abs_self _).trans (by
+        simpa only [Nat.zero_add, EulerJetProductBounds.leibnizConvolution] using hp))
 
 end EulerParameterWordGevrey

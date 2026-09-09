@@ -11,8 +11,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicFields
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TemporalMeanUpdate
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanRankUpdate
 
-@[expose] public section
-
 /-!
 # Concrete fields and residuals for the correction construction
 
@@ -21,6 +19,9 @@ are actual angular integrals, and the mean residuals are the differential
 expressions in `MeanIncrementBounds`.  The three sorts of excluded additive
 errors are retained as fields on the same space as the oscillations.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,32 +32,46 @@ open scoped BigOperators ContDiff
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Scalar field: an abbreviation for `MeanIncrementBounds.Field D`. -/
 abbrev ScalarField (D : Type) := MeanIncrementBounds.Field D
 
+/-- Oscillation: an abbreviation for `ℕ → (D × ℝ) → Fin 3 → ℝ`. -/
 abbrev Oscillation (D : Type) := ℕ → (D × ℝ) → Fin 3 → ℝ
+/-- Oscillatory scalar: an abbreviation for `ℕ → (D × ℝ) → ℝ`. -/
 abbrev OscillatoryScalar (D : Type) := ℕ → (D × ℝ) → ℝ
+/-- Mean vector: an abbreviation for `ℕ → D → Fin 3 → ℝ`. -/
 abbrev MeanVector (D : Type) := ℕ → D → Fin 3 → ℝ
 
 /-- Fixed data used by every correction stage. -/
 structure Context (D : Type) where
+  /-- Operators of `Context`, of type `Operators D`. -/
   operators : Operators D
+  /-- Base of `Context`, of type `Triple D`. -/
   base : Triple D
+  /-- Virtual theta of `Context`, of type `ScalarField D`. -/
   virtualTheta : ScalarField D
+  /-- Virtual axial of `Context`, of type `ScalarField D`. -/
   virtualAxial : ScalarField D
 
 /-- Additive errors are fields, not an exemption from the residual identity. -/
 structure ExcludedErrors (D : Type) where
+  /-- Base of `ExcludedErrors`, of type `Oscillation D`. -/
   base : Oscillation D
+  /-- Gaussian of `ExcludedErrors`, of type `Oscillation D`. -/
   gaussian : Oscillation D
+  /-- Alias error of `ExcludedErrors`, of type `Oscillation D`. -/
   aliasError : Oscillation D
 
 namespace ExcludedErrors
 
+/-- Zero, given by `⟨0, 0, 0⟩`. -/
 noncomputable def zero : ExcludedErrors D := ⟨0, 0, 0⟩
 
+/-- Total, given by `e.base + e.gaussian + e.aliasError`. -/
 noncomputable def total (e : ExcludedErrors D) : Oscillation D :=
   e.base + e.gaussian + e.aliasError
 
+/-- Add, given by `⟨e.base + f.base, e.gaussian + f.gaussian, e.aliasError + f.aliasError⟩`. -/
 noncomputable def add (e f : ExcludedErrors D) : ExcludedErrors D :=
   ⟨e.base + f.base, e.gaussian + f.gaussian, e.aliasError + f.aliasError⟩
 
@@ -73,16 +88,22 @@ end ExcludedErrors
 
 /-- An actual velocity/pressure state on a lifted chart and angular circle. -/
 structure State (D : Type) where
+  /-- Mean field of `State`, of type `Triple D`. -/
   mean : Triple D
+  /-- Pressure field of `State`, of type `ScalarField D`. -/
   pressure : ScalarField D
+  /-- Oscillation of `State`, of type `Oscillation D`. -/
   oscillation : Oscillation D
+  /-- Oscillatory pressure of `State`, of type `OscillatoryScalar D`. -/
   oscillatoryPressure : OscillatoryScalar D
+  /-- Errors of `State`, of type `ExcludedErrors D`. -/
   errors : ExcludedErrors D
 
 /-- The angular normalization agrees with the physical mean over one period. -/
 noncomputable def angularAverage (f : OscillatoryScalar D) : ScalarField D :=
   fun n x => (∫ θ in (0 : ℝ)..2 * Real.pi, f n (x, θ)) / (2 * Real.pi)
 
+/-- Bilinear covariance, given by `angularAverage (fun n p => u n p i * v n p j)`. -/
 noncomputable def bilinearCovariance (u v : Oscillation D) (i j : Fin 3) : ScalarField D :=
   angularAverage (fun n p => u n p i * v n p j)
 
@@ -105,9 +126,11 @@ theorem bilinearCovariance_comm (u v : Oscillation D) (i j : Fin 3) :
 
 namespace State
 
+/-- Covariance, given by `bilinearCovariance s.oscillation s.oscillation i j`. -/
 noncomputable def covariance (s : State D) (i j : Fin 3) : ScalarField D :=
   bilinearCovariance s.oscillation s.oscillation i j
 
+/-- Total velocity as an element of `Oscillation D`. -/
 noncomputable def totalVelocity (s : State D) (c : Context D) : Oscillation D :=
   fun n p => ![c.base.radial n p.1 + s.mean.radial n p.1 + s.oscillation n p 0,
     c.base.angular n p.1 + s.mean.angular n p.1 + s.oscillation n p 1,
@@ -117,22 +140,31 @@ noncomputable def totalVelocity (s : State D) (c : Context D) : Oscillation D :=
 noncomputable def totalPressureIncrement (s : State D) : OscillatoryScalar D :=
   fun n p => s.pressure n p.1 + s.oscillatoryPressure n p
 
+/-- Theta residual, given by `MeanIncrementBounds.thetaResidual c.operators c.base s.mean
+s.covariance c.virtualTheta`. -/
 noncomputable def thetaResidual (s : State D) (c : Context D) : ScalarField D :=
   MeanIncrementBounds.thetaResidual c.operators c.base s.mean s.covariance c.virtualTheta
 
+/-- Axial residual, given by `MeanIncrementBounds.axialResidual c.operators c.base s.mean
+s.covariance s.pressure c.virtualAxial`. -/
 noncomputable def axialResidual (s : State D) (c : Context D) : ScalarField D :=
   MeanIncrementBounds.axialResidual c.operators c.base s.mean s.covariance
     s.pressure c.virtualAxial
 
+/-- Gr, given by `MeanIncrementBounds.gr c.operators c.base s.mean s.covariance`. -/
 noncomputable def gr (s : State D) (c : Context D) : ScalarField D :=
   MeanIncrementBounds.gr c.operators c.base s.mean s.covariance
 
+/-- Radial residual, given by `c.operators.dr s.pressure - s.gr c`. -/
 noncomputable def radialResidual (s : State D) (c : Context D) : ScalarField D :=
   c.operators.dr s.pressure - s.gr c
 
+/-- Reduced mean residual, defined pointwise by `![s.radialResidual c n x, s.thetaResidual c n
+x, s.axialResidual c n x]`. -/
 noncomputable def reducedMeanResidual (s : State D) (c : Context D) : MeanVector D :=
   fun n x => ![s.radialResidual c n x, s.thetaResidual c n x, s.axialResidual c n x]
 
+/-- Mean base error, defined pointwise by `angularAverage (fun k p => s.errors.base k p i) n x`. -/
 noncomputable def meanBaseError (s : State D) : MeanVector D :=
   fun n x i => angularAverage (fun k p => s.errors.base k p i) n x
 
@@ -140,6 +172,7 @@ noncomputable def meanBaseError (s : State D) : MeanVector D :=
 noncomputable def meanResidual (s : State D) (c : Context D) : MeanVector D :=
   s.reducedMeanResidual c + s.meanBaseError
 
+/-- Mean excluded, defined pointwise by `angularAverage (fun k p => s.errors.total k p i) n x`. -/
 noncomputable def meanExcluded (s : State D) : MeanVector D :=
   fun n x i => angularAverage (fun k p => s.errors.total k p i) n x
 
@@ -178,22 +211,33 @@ end State
 
 /-- A single grouped label.  The finite group algebra records actual harmonics. -/
 structure HarmonicBlock (D : Type) where
+  /-- Velocity field of `HarmonicBlock`, of type `ℕ → Fin 3 → HarmonicFields.Coefficients D`. -/
   velocity : ℕ → Fin 3 → HarmonicFields.Coefficients D
+  /-- Pressure field of `HarmonicBlock`, of type `ℕ → HarmonicFields.Coefficients D`. -/
   pressure : ℕ → HarmonicFields.Coefficients D
+  /-- Frequency of `HarmonicBlock`, of type `ℕ → ℝ`. -/
   frequency : ℕ → ℝ
+  /-- Phase of `HarmonicBlock`, of type `ℕ → D → ℝ`. -/
   phase : ℕ → D → ℝ
+  /-- Angular frequency of `HarmonicBlock`, of type `ℕ → ℤ`. -/
   angularFrequency : ℕ → ℤ
 
 namespace HarmonicBlock
 
+/-- Oscillation, defined pointwise by `(HarmonicFields.field (b.velocity n i) (b.frequency n)
+(b.phase n) (b.angularFrequency n) p).re`. -/
 noncomputable def oscillation (b : HarmonicBlock D) : Oscillation D :=
   fun n p i => (HarmonicFields.field (b.velocity n i) (b.frequency n)
     (b.phase n) (b.angularFrequency n) p).re
 
+/-- Oscillatory pressure, defined pointwise by `(HarmonicFields.field (b.pressure n)
+(b.frequency n) (b.phase n) (b.angularFrequency n) p).re`. -/
 noncomputable def oscillatoryPressure (b : HarmonicBlock D) : OscillatoryScalar D :=
   fun n p => (HarmonicFields.field (b.pressure n) (b.frequency n)
     (b.phase n) (b.angularFrequency n) p).re
 
+/-- Band limited, given by `(∀ n i, HarmonicFields.BandLimited (b.velocity n i) N) ∧ ∀ n,
+HarmonicFields.BandLimited (b.pressure n) N`. -/
 def BandLimited (b : HarmonicBlock D) (N : ℕ) : Prop :=
   (∀ n i, HarmonicFields.BandLimited (b.velocity n i) N) ∧
     ∀ n, HarmonicFields.BandLimited (b.pressure n) N
@@ -204,6 +248,7 @@ def WaveBounds (s : StripData D) (P : ℕ → D → ℝ) (α : ℝ)
   ∀ (i : Fin 3) (j : ℤ), j ≠ 0 →
     WaveClass s P α (fun n x => b.velocity n i j x)
 
+/-- Pressure bounds, given by `∀ j : ℤ, j ≠ 0 → WaveClass s P α (fun n x => b.pressure n j x)`. -/
 def PressureBounds (s : StripData D) (P : ℕ → D → ℝ) (α : ℝ)
     (b : HarmonicBlock D) : Prop :=
   ∀ j : ℤ, j ≠ 0 → WaveClass s P α (fun n x => b.pressure n j x)
@@ -236,13 +281,17 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 noncomputable def radialMoment (k : ℕ) (f : ScalarField (PressureStream.Lift S)) : ScalarField S :=
   fun n p => PressureStream.pressureMass (fun x => x.1 ^ k * f n x) p
 
+/-- Pressure defect, given by `radialMoment 0 (u.gr c)`. -/
 noncomputable def pressureDefect (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ScalarField S := radialMoment 0 (u.gr c)
 
+/-- Theta defect, given by `radialMoment 2 (thetaAxial c.base u.mean + u.covariance 2 1)`. -/
 noncomputable def thetaDefect (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ScalarField S :=
   radialMoment 2 (thetaAxial c.base u.mean + u.covariance 2 1)
 
+/-- Axial defect, given by `radialMoment 1 (axialAxial c.base u.mean + u.covariance 2 2) - (1 /
+2 : ℝ) • radialMoment 2 (u.gr c)`. -/
 noncomputable def axialDefect (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ScalarField S :=
   radialMoment 1 (axialAxial c.base u.mean + u.covariance 2 2) -
@@ -253,10 +302,13 @@ noncomputable def debt (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ℕ → S → Fin 3 → ℝ :=
   fun n x => ![pressureDefect c u n x, thetaDefect c u n x, axialDefect c u n x]
 
+/-- Defect bounds, given by `∀ i : Fin 3, UnweightedClass s (1 + σ) (fun n x => debt c u n x
+i)`. -/
 def DefectBounds (s : StripData S) (σ : ℝ) (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : Prop :=
   ∀ i : Fin 3, UnweightedClass s (1 + σ) (fun n x => debt c u n x i)
 
+/-- Zero masses, given by `radialMoment 2 u.mean.angular = 0 ∧ radialMoment 1 u.mean.axial = 0`. -/
 def ZeroMasses (u : State (PressureStream.Lift S)) : Prop :=
   radialMoment 2 u.mean.angular = 0 ∧ radialMoment 1 u.mean.axial = 0
 
@@ -264,17 +316,23 @@ end Moments
 
 /-- Geometry of the genuine compact shifted pressure/stream primitive. -/
 structure ReconstructionData where
+  /-- Exponent of `ReconstructionData`, of type `ℝ`. -/
   exponent : ℝ
+  /-- Inner of `ReconstructionData`, of type `ℝ`. -/
   inner : ℝ
+  /-- Outer of `ReconstructionData`, of type `ℝ`. -/
   outer : ℝ
   inner_lt_outer : inner < outer
+  /-- Frequency of `ReconstructionData`, of type `ℕ → ℝ`. -/
   frequency : ℕ → ℝ
+  /-- Radial direction of `ReconstructionData`, of type `PressureStream.Plane`. -/
   radialDirection : PressureStream.Plane
 
 section Fields
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Lift: an abbreviation for `PressureStream.Lift S`. -/
 abbrev Lift (S : Type) := PressureStream.Lift S
 
 /-- Recompute (33) from the current actual radial source. -/
@@ -387,6 +445,8 @@ noncomputable def temporalAlias (r : ReconstructionData) (h : ℝ)
     (TemporalMeanUpdate.axialAlias r.exponent r.inner r.outer (r.frequency n)
       r.radialDirection h n (u.axialResidual c n)) p.1]
 
+/-- Temporal stage, given by `reconstructPressure r c (u.addIncrement (temporalIncrement r h
+axial c u) 0 0 0 ⟨0, 0, temporalAlias r h c u⟩)`. -/
 noncomputable def temporalStage (r : ReconstructionData) (h : ℝ)
     (axial : S × PressureStream.Plane) (c : Context (Lift S)) (u : State (Lift S)) :
     State (Lift S) :=
@@ -407,7 +467,7 @@ theorem temporal_fast_cancellation (r : ReconstructionData) (h : ℝ)
     TemporalMeanUpdate.fastDerivative h n ((temporalIncrement r h axial c u).axial n) x +
         TemporalMeanUpdate.centered (u.axialResidual c n) x = temporalAlias r h c u n (x, 0) 2 := by
   have hv := TemporalMeanUpdate.temporal_mean_update (M := r.frequency n) ha r.inner_lt_outer hd
-    r.radialDirection
+      r.radialDirection
     (c.operators.epsilon n • axial) h n (hθ n) (hz n) (hpθ n) (hpz n) (hsz n) x
   exact ⟨hv.1, hv.2.1⟩
 
@@ -416,32 +476,44 @@ end Temporal
 /-- The physical length, velocity, and background amplitude used by the
 five-row inverse.  These may depend on the band and slow variables. -/
 structure RankData (S : Type) where
+  /-- Lambda of `RankData`, of type `ℝ`. -/
   lambda : ℝ
+  /-- Inner of `RankData`, of type `ℝ`. -/
   inner : ℝ
+  /-- Outer of `RankData`, of type `ℝ`. -/
   outer : ℝ
+  /-- Length of `RankData`, of type `ℕ → S → ℝ`. -/
   length : ℕ → S → ℝ
+  /-- Velocity field of `RankData`, of type `ℕ → S → ℝ`. -/
   velocity : ℕ → S → ℝ
+  /-- Coefficient of `RankData`, of type `ℕ → S → ℝ`. -/
   coefficient : ℕ → S → ℝ
 
 section Rank
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Rank angular, given by `MeanRankUpdate.angularFamily r.lambda r.inner r.outer (r.length n)
+(r.velocity n) (r.coefficient n) (debt c u n)`. -/
 noncomputable def rankAngular (r : RankData S) (c : Context (Lift S))
     (u : State (Lift S)) (n : ℕ) : ℝ × S → ℝ :=
   MeanRankUpdate.angularFamily r.lambda r.inner r.outer (r.length n) (r.velocity n)
     (r.coefficient n) (debt c u n)
 
+/-- Rank desired axial, given by `MeanRankUpdate.desiredAxialFamily r.lambda r.inner r.outer
+(r.length n) (r.velocity n) (r.coefficient n) (debt c u n)`. -/
 noncomputable def rankDesiredAxial (r : RankData S) (c : Context (Lift S))
     (u : State (Lift S)) (n : ℕ) : ℝ × S → ℝ :=
   MeanRankUpdate.desiredAxialFamily r.lambda r.inner r.outer (r.length n) (r.velocity n)
     (r.coefficient n) (debt c u n)
 
+/-- Rank potential, constructed using `PressureStream.streamPotential`. -/
 noncomputable def rankPotential (p : ReconstructionData) (r : RankData S)
     (c : Context (Lift S)) (u : State (Lift S)) (n : ℕ) : Lift S → ℝ :=
   PressureStream.streamPotential p.exponent p.inner p.outer (p.frequency n)
     ((0 : S), p.radialDirection) (MeanRankUpdate.slowLift (rankDesiredAxial r c u n))
 
+/-- Rank increment, bundling `radial`, `angular`, `axial`. -/
 noncomputable def rankIncrement (p : ReconstructionData) (r : RankData S)
     (axial : S × PressureStream.Plane) (c : Context (Lift S)) (u : State (Lift S)) :
     MeanIncrementBounds.Triple (Lift S) where
@@ -452,6 +524,8 @@ noncomputable def rankIncrement (p : ReconstructionData) (r : RankData S)
     (PressureStream.physicalSpeed p.exponent (p.frequency n)) ((0 : S), p.radialDirection)
     (rankPotential p r c u n)
 
+/-- Rank stage, given by `reconstructPressure p c (u.addIncrement (rankIncrement p r axial c u)
+0 0 0 ExcludedErrors.zero)`. -/
 noncomputable def rankStage (p : ReconstructionData) (r : RankData S)
     (axial : S × PressureStream.Plane) (c : Context (Lift S)) (u : State (Lift S)) :
     State (Lift S) :=

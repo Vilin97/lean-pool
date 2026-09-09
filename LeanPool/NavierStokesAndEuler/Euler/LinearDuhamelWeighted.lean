@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelOperator
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Duhamel operators in the source's time profile
@@ -20,6 +19,9 @@ frozen-coefficient identity is exact and will be differentiated for quantitative
 parameter estimates; no norm of the weighted primitive is used.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
@@ -29,11 +31,11 @@ open Set ContinuousLinearMap EulerVolterraConvolution EulerContinuousTimeIntegra
   EulerContinuousTimeWeight
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-variable {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
+variable {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
 
 namespace Evolution
 
-variable (U : Evolution T hT B) (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+variable (U : Evolution T hT B) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
 /-- The actual homogeneous data map, normalized by the profile. -/
 def weightedInitial : E →L[ℝ] C(Icc (0 : ℝ) T,E) :=
@@ -45,7 +47,7 @@ def weightedForcing : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
 
 omit [CompleteSpace E] in
 /-- The initial-data norm uses just the relative propagator constant. -/
-theorem weightedInitial_norm (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C : ℝ) (hC : 0 ≤ C)
+theorem weightedInitial_norm (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C : ℝ) (hC : 0 ≤ C)
     (hU : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ‖U.propagator t s‖ ≤ C*g t/g s) :
     ‖U.weightedInitial g hg‖ ≤ C := by
   apply opNorm_le_bound _ hC
@@ -56,7 +58,7 @@ theorem weightedInitial_norm (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C : ℝ) (hC : 0
 
 /-- The Green-operator norm is interval length times the relative propagator
 constant. Neither the maximum nor minimum of the profile appears. -/
-theorem weightedForcing_norm (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C : ℝ) (hC : 0 ≤ C)
+theorem weightedForcing_norm (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C : ℝ) (hC : 0 ≤ C)
     (hU : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ‖U.propagator t s‖ ≤ C*g t/g s) :
     ‖U.weightedForcing g hg‖ ≤ C*T := by
   apply opNorm_le_bound _ (mul_nonneg hC hT)
@@ -71,20 +73,20 @@ theorem weightedForcing_norm (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C : ℝ) (hC : 0
   nlinarith
 
 /-- The normalized constructed path, with normalized forcing as input. -/
-def weightedSolution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
+def weightedSolution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
   normalize g hg (U.solution (weight g f) a₀)
 
 /-- The normalized solution is still exactly the two actual data maps. -/
-theorem weightedSolution_eq (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem weightedSolution_eq (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     U.weightedSolution g hg f a₀ = U.weightedInitial g hg a₀ + U.weightedForcing g hg f := by
   unfold weightedSolution
   rw [U.solution_eq_operators, map_add]
   rfl
 
-variable {D : C(Icc (0 : ℝ) T,E →L[ℝ] E)} (V : Evolution T hT D)
+variable {D : C(Icc (0 : ℝ) T, E →L[ℝ] E)} (V : Evolution T hT D)
 
 /-- Freezing the coefficient is an actual identity of constructed solutions. -/
-theorem frozen_solution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem frozen_solution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     V.solution f a₀ = U.initialOperator a₀ +
       U.forcingOperator (f + multiplier (D-B) (V.solution f a₀)) := by
   rw [← U.solution_eq_operators]
@@ -99,7 +101,7 @@ theorem frozen_solution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
   abel
 
 /-- The exact frozen identity in the fixed profile-normalized path space. -/
-theorem weighted_frozen_solution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem weighted_frozen_solution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     V.weightedSolution g hg f a₀ = U.weightedInitial g hg a₀ +
       U.weightedForcing g hg (f + multiplier (D-B) (V.weightedSolution g hg f a₀)) := by
   have he := U.frozen_solution V (weight g f) a₀
@@ -111,7 +113,7 @@ theorem weighted_frozen_solution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
   change normalize g hg (V.solution (weight g f) a₀) =
     normalize g hg (U.initialOperator a₀) +
       normalize g hg (U.forcingOperator (weight g (f + multiplier (D-B) (V.weightedSolution g hg f
-        a₀))))
+          a₀))))
   rw [hw]
   simpa only [map_add] using congrArg (normalize g hg) he
 

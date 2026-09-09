@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalBinding
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedOutputBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPeriodizedSignedRealization
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedOutputBounds
 
 /-!
 # The actual signed coefficients with only the dyadic factor removed
@@ -18,6 +17,9 @@ The matrix, target, current request, normalized pulse and pressure operator
 are unchanged. The spatial mask is replaced by its actual native grid factor.
 All estimates are on the original native control cells.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 open Set Function Filter
@@ -30,17 +32,23 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open ActualSignedStageControls
 
 
+/-- Label: an abbreviation for `ActualSignedStageControls.SignedLabel B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualSignedStageControls.SignedLabel B N0
+/-- Full: an abbreviation for `ActualSignedStageControls.FullPoint`. -/
 abbrev Full := ActualSignedStageControls.FullPoint
+/-- Copy: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Copy := TorusInverse.Frequency
+/-- CV: an abbreviation for `CurlClassBounds.ComplexVector`. -/
 abbrev CV := CurlClassBounds.ComplexVector
 
 variable {B N0 : ℕ}
 
+/-- Grid mask, constructed using `PrimaryRepresentatives.nativeMask`. -/
 noncomputable def gridMask (l : Label B N0) (k : Copy) (n : ℕ) (x : Full) : ℝ :=
   PrimaryRepresentatives.nativeMask (BaseChartJets.cellBand l.1)
     (PrimaryGeometryAssembly.label nominal l.1).2 (nativePoint l n k x).1
 
+/-- Dyadic factor, constructed using `SquaredPartition.dyadicProfile`. -/
 noncomputable def dyadicFactor (l : Label B N0) (k : Copy) (n : ℕ) (x : Full) : ℝ :=
   SquaredPartition.dyadicProfile (SimilarityCoordinates.coordinateQ (2 * h)
     ((nativePoint l n k x).1.2.2, (nativePoint l n k x).1.2.1))
@@ -56,14 +64,17 @@ noncomputable def coefficients (request : ℕ → Full → SignedWaveUpdate.Vec2
     (matrix l k) (target l k) request (gridMask l k) (fundamental l k)
     (normalMotion l k) (action l k) l.2
 
+/-- Amplitude, given by `cutoff l k n x • (coefficients request l k).amplitude n x`. -/
 noncomputable def amplitude (request : ℕ → Full → SignedWaveUpdate.Vec2)
     (l : Label B N0) (k : Copy) (n : ℕ) (x : Full) : CV :=
   cutoff l k n x • (coefficients request l k).amplitude n x
 
+/-- Pressure, given by `cutoff l k n x • (coefficients request l k).pressure n x`. -/
 noncomputable def pressure (request : ℕ → Full → SignedWaveUpdate.Vec2)
     (l : Label B N0) (k : Copy) (n : ℕ) (x : Full) : ℂ :=
   cutoff l k n x • (coefficients request l k).pressure n x
 
+/-- Potential, constructed using `CurlClassBounds.inverseCarrier`. -/
 noncomputable def potential (request : ℕ → Full → SignedWaveUpdate.Vec2)
     (l : Label B N0) (k : Copy) (n : ℕ) (x : Full) : CV :=
   CurlClassBounds.inverseCarrier ((chartCoefficients l.2 l.1).frequency n) •
@@ -123,7 +134,7 @@ theorem potential_factor (request : ℕ → Full → SignedWaveUpdate.Vec2)
     (l : Label B N0) (k : Copy) (n : ℕ) (x : Full) :
     CurlClassBounds.inverseCarrier ((chartCoefficients l.2 l.1).frequency n) •
       CurlClassBounds.normalCoefficient ((chartCoefficients l.2 l.1).normal fullStrip (directions
-        B) n x)
+          B) n x)
         ((((parameters l).copyData ActualPrimaryBounds.strip request).localized k).amplitude n x) =
       dyadicFactor l k n x • potential request l k n x := by
   rw [amplitude_factor]
@@ -153,7 +164,7 @@ theorem gridMask_local_jets :
   intro y
   change PrimaryRepresentatives.nativeMask (BaseChartJets.cellBand l.1)
       (PrimaryGeometryAssembly.label nominal l.1).2 (ActualPrimaryBounds.fullCopy (l.2, l.1) n k
-        y).1 = _
+          y).1 = _
   rw [← nativePoint_eq_fullCopy l n k hc.1.1]
   rfl
 
@@ -165,7 +176,7 @@ theorem raw_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.Vec2}
       (fun _ n _ x => request n x q)) :
     PeriodizedWaveBounds.UniformLocalJets fullStrip
       (fun (l : Label B N0) n x => Real.sqrt (fullStrip.zeta x) * envelope l n x) (β + 1 / 2)
-        phaseCell
+          phaseCell
       (fun l n k => (coefficients request l k).amplitude n) ∧
     PeriodizedWaveBounds.UniformLocalJets fullStrip
       (fun (l : Label B N0) n x => Real.sqrt (fullStrip.zeta x) * envelope l n x) (β + 1) phaseCell
@@ -175,7 +186,7 @@ theorem raw_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.Vec2}
   | inl h =>
       let := h
       constructor <;> refine ⟨fun l => isEmptyElim l, fun _ => ⟨0, le_rfl, 0, fun l => isEmptyElim
-        l⟩⟩
+          l⟩⟩
   | inr h =>
       let := h
       have hw : ∀ l n x, x ∈ fullStrip.domain → 0 ≤ envelope (B := B) (N0 := N0) l n x :=
@@ -202,7 +213,7 @@ theorem localized_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.V
       (fun _ n _ x => request n x q)) :
     PeriodizedWaveBounds.UniformLocalJets fullStrip
       (fun (l : Label B N0) n x => Real.sqrt (fullStrip.zeta x) * envelope l n x) (β + 1 / 2)
-        phaseCell
+          phaseCell
       (fun l n k => amplitude request l k n) ∧
     PeriodizedWaveBounds.UniformLocalJets fullStrip
       (fun (l : Label B N0) n x => Real.sqrt (fullStrip.zeta x) * envelope l n x) (β + 1) phaseCell
@@ -212,11 +223,11 @@ theorem localized_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.V
   | inl h =>
       let := h
       constructor <;> refine ⟨fun l => isEmptyElim l, fun _ => ⟨0, le_rfl, 0, fun l => isEmptyElim
-        l⟩⟩
+          l⟩⟩
   | inr h =>
       let := h
       have hw (l : Label B N0) n x (_ : x ∈ fullStrip.domain) := mul_nonneg (Real.sqrt_nonneg
-        (fullStrip.zeta x))
+          (fullStrip.zeta x))
         (ActualPrimaryBounds.fullEnvelope_nonneg (l.2, l.1) n x)
       exact ⟨SignedCopyBounds.uniform_smul cutoff_local_jets (raw_jets hR).1 hw,
         SignedCopyBounds.uniform_smul cutoff_local_jets (raw_jets hR).2 hw⟩
@@ -235,7 +246,7 @@ theorem potential_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.V
   have hn := (ActualSignedOutputBounds.background_inputs (B := B) (N0 := N0) request).normal
   have hcross := (hn.map CurlClassBounds.complexify).bilinear ha CurlClassBounds.complexCrossLinear
   have hinv := (ActualSignedOutputBounds.background_inputs (B := B) (N0 := N0)
-    request).normalInverse_class
+      request).normalInverse_class
     (ActualPrimaryBounds.normalFloor_pos B N0)
     (fun n i x hx hi => (ActualSignedOutputBounds.normal_range request i.1 n i.2 hx hi).1)
     (fun n i x hx hi => (ActualSignedOutputBounds.normal_range request i.1 n i.2 hx hi).2)
@@ -264,6 +275,7 @@ theorem potential_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.V
 
 /-! ## Removing the cutoff preserves the literal own-band zero germs -/
 
+/-- Reference, given by `BaseChartJets.cellBand l.1`. -/
 noncomputable def reference (l : Label B N0) : ℕ := BaseChartJets.cellBand l.1
 
 theorem dyadicFactor_reference (l : Label B N0) (k : Copy) (x : Full) :
@@ -297,7 +309,7 @@ theorem own_phaseCell_or_zero (request : ℕ → Full → SignedWaveUpdate.Vec2)
        (pressure request l k (reference l) =ᶠ[𝓝 x] fun _ => 0) ∧
        (potential request l k (reference l) =ᶠ[𝓝 x] fun _ => 0)) := by
   rcases ActualSignedOutputBounds.phaseCell_or_localized_zero request l (reference l) k hx with hc
-    | ⟨ha, hp⟩
+      | ⟨ha, hp⟩
   · exact Or.inl hc
   · right
     have hne := dyadic_reference_nonzero_germ l k hx
@@ -385,7 +397,7 @@ theorem own_potential_pressure_class {β : ℝ} {request : ℕ → Full → Sign
       (ownField (pressure request)) := by
   have hw (l : Label B N0) n x (_ : x ∈ fullStrip.domain) :=
     mul_nonneg (Real.sqrt_nonneg (fullStrip.zeta x)) (ActualPrimaryBounds.fullEnvelope_nonneg (l.2,
-      l.1) n x)
+        l.1) n x)
   refine ⟨ownField_uniform hw (potential_jets hR) ?_, ownField_uniform hw (localized_jets hR).2 ?_⟩
   · intro l k x hx
     exact (own_phaseCell_or_zero request l k hx).imp id (fun hh => hh.2.2)

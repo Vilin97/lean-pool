@@ -6,16 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryPolynomial
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryLowBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryProfileEnvelope
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentHistoryCostPolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryNeighbor
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryProfileEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryPolynomial
 
 /-! The actual history contribution to the early-time size ratio is
 polynomial in the parent labels and reciprocal history length. The good
 interval keeps its absolute size constant. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -50,7 +52,7 @@ open Set EulerSmoothLimit EulerMeanCoefficients EulerPacketParentLabelBounds Eul
 
 variable {G : Parent} (L : LabelData G)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (H : LowBounds G)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
 
@@ -87,36 +89,44 @@ theorem initial_history_size_polynomial (Ti : ℝ) (hτ1 : τ ≤ 1) (hTi : τ�
   (L.initial_history_size_le_difference m hm R S hS H τ hτ hτT).trans
     ((L.initialHistoryDifferenceScaleCost_bound m hm R S hS H τ hτ hτT Ti hτ1 hTi).trans
       (labelHistoryEnvelope_power L.K Ti (zero_le_one.trans L.K_one) ((inv_pos.mpr hτ).le.trans
-        hTi)))
+          hTi)))
 
 end EulerParentPacketFrames.LabelData
 
 namespace EulerParentBadRatio
 
 open EulerPacketParentLabelBounds EulerParentHistoryCost EulerPolynomialCost
-  EulerPacketGeometryLowBounds
+    EulerPacketGeometryLowBounds
 
+/-- Formula, given by `8*(5+64*CM^2+2*CH)*(1+3*F^2)^2*(1+F)*Hist*Hi`. -/
 def formula (F Hist Hi CM CH : ℝ) : ℝ :=
   8*(5+64*CM^2+2*CH)*(1+3*F^2)^2*(1+F)*Hist*Hi
 
+/-- Envelope, given by `formula (frameAmplitude K)
+(labelHistoryConstant*(1+K+Ti)^labelHistoryPower) Hi CM CH`. -/
 def envelope (K Ti Hi CM CH : ℝ) : ℝ :=
   formula (frameAmplitude K) (labelHistoryConstant*(1+K+Ti)^labelHistoryPower) Hi CM CH
 
+/-- Polynomial as an element of `Polynomial ℝ`. -/
 def polynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let F := 1+Polynomial.C embeddingCost*X^2
   8*(5+64*X^2+2*X)*(1+3*F^2)^2*(1+F)*(Polynomial.C labelHistoryConstant*X^labelHistoryPower)*X
 
+/-- Bound constant, given by `coefficientCost polynomial`. -/
 def boundConstant : ℝ := coefficientCost polynomial
+/-- Degree, given by `polynomial.natDegree`. -/
 def degree : ℕ := polynomial.natDegree
 
 theorem constant_pos : 0 < boundConstant := coefficientCost_pos _
 
 theorem polynomial_eval (X : ℝ) :
     polynomial.eval X=formula (frameAmplitude X) (labelHistoryConstant*X^labelHistoryPower) X X X
-      := by
-  simp only [polynomial,formula,frameAmplitude,gradientAmplitude,Polynomial.eval_add,Polynomial.eval_mul,
-    Polynomial.eval_pow,Polynomial.eval_ofNat,Polynomial.eval_one,Polynomial.eval_C,Polynomial.eval_X]
+        := by
+  simp only [polynomial, formula, frameAmplitude, gradientAmplitude, Polynomial.eval_add,
+      Polynomial.eval_mul,
+    Polynomial.eval_pow, Polynomial.eval_ofNat, Polynomial.eval_one, Polynomial.eval_C,
+        Polynomial.eval_X]
 
 theorem envelope_power (K Ti Hi CM CH : ℝ) (hK : 0 ≤ K) (hTi : 0 ≤ Ti)
     (hHi : 0 ≤ Hi) (hCM : 0 ≤ CM) (hCH : 0 ≤ CH) :
@@ -136,7 +146,8 @@ theorem envelope_power (K Ti Hi CM CH : ℝ) (hK : 0 ≤ K) (hTi : 0 ≤ Ti)
   have hf0 := frameAmplitude_nonneg K
   have hX0 := zero_le_one.trans hX
   have hHist : labelHistoryConstant*(1+K+Ti)^labelHistoryPower ≤
-    labelHistoryConstant*X^labelHistoryPower := by gcongr
+      labelHistoryConstant*X^labelHistoryPower := by
+      gcongr
   have hpoly : envelope K Ti Hi CM CH ≤ polynomial.eval X := by
     rw [polynomial_eval]
     unfold envelope formula
@@ -144,6 +155,7 @@ theorem envelope_power (K Ti Hi CM CH : ℝ) (hK : 0 ≤ K) (hTi : 0 ≤ Ti)
     all_goals positivity [frameAmplitude_nonneg X]
   exact hpoly.trans ((le_abs_self _).trans (eval_bound polynomial X hX))
 
+/-- Bad constant, given by `cutoffBound*(8232*Real.exp 9+4*boundConstant)`. -/
 def badConstant : ℝ := cutoffBound*(8232*Real.exp 9+4*boundConstant)
 
 theorem badConstant_pos : 0 < badConstant := by
@@ -178,7 +190,7 @@ open Set EulerSmoothLimit EulerPacketParentLabelBounds EulerParentHistoryCost
 
 variable {G : Parent} (L : LabelData G)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (H : LowBounds G)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (P : ParentFrame (G.transverseData m hm R S hS) τ)
@@ -206,12 +218,12 @@ theorem historySizeRatio_envelope :
   have hHi := (inv_pos.mpr A.shear_pos).le
   have hHist := L.initial_history_size_polynomial m hm R S hS H τ hτ hτT Ti hτ1 hTi
   have hHist0 : 0 ≤ historyLabelSizeCost B := (norm_nonneg (B.coefficients.labelVelocity 0)).trans
-    (labelVelocity_norm B 0)
+      (labelVelocity_norm B 0)
   have hEq : A.historySizeCost/(P.rayScale hτ hτT) =
-      8*(5+64*A.CM^2+2*A.CH)*D.inverseBound^2*(P.rayScale hτ hτT)⁻¹*
+      8*(5+64*A.CM^2+2*A.CH)*D.inverseBound^2*(P.rayScale hτ hτT)⁻¹ *
         historyLabelSizeCost B*P.shear⁻¹ := by
     unfold Guards.historySizeCost ParentFrame.terminalBound
-      EulerTransverseActivationSelection.activationConstant
+        EulerTransverseActivationSelection.activationConstant
     simp only [div_eq_mul_inv]
     ring
   rw [hEq]
@@ -227,7 +239,7 @@ theorem historySizeRatio_polynomial :
       ((inv_pos.mpr hτ).le.trans hTi) (inv_pos.mpr A.shear_pos).le A.CM_nonneg A.CH_nonneg)
 
 theorem badRatio_polynomial :
-    A.badRatio ≤ badConstant*(1+L.K+Ti+P.shear⁻¹+A.CM+A.CH)^degree*
+    A.badRatio ≤ badConstant*(1+L.K+Ti+P.shear⁻¹+A.CM+A.CH)^degree *
       P.horizon^5*Real.exp (-(1/(4*P.sigma))) := by
   have hX : 1 ≤ 1+L.K+Ti+P.shear⁻¹+A.CM+A.CH := by
     have ht := (inv_pos.mpr hτ).le.trans hTi
@@ -236,15 +248,15 @@ theorem badRatio_polynomial :
   have hh := L.historySizeRatio_polynomial m hm R S hS H τ hτ hτT P A Ti hτ1 hTi
   rw [A.badRatio_formula]
   calc
-    _ = EulerPacketGeometryLowBounds.cutoffBound*(8232*Real.exp 9*P.horizon^5+
+    _ = EulerPacketGeometryLowBounds.cutoffBound*(8232*Real.exp 9*P.horizon^5 +
         4*P.horizon*(A.historySizeCost/(P.rayScale hτ hτT)))*Real.exp (-(1/(4*P.sigma))) := by ring
-    _ ≤ EulerPacketGeometryLowBounds.cutoffBound*(8232*Real.exp 9*P.horizon^5+
+    _ ≤ EulerPacketGeometryLowBounds.cutoffBound*(8232*Real.exp 9*P.horizon^5 +
         4*P.horizon*(boundConstant*(1+L.K+Ti+P.shear⁻¹+A.CM+A.CH)^degree))*Real.exp
-          (-(1/(4*P.sigma))) := by
+            (-(1/(4*P.sigma))) := by
       gcongr
       · exact EulerPacketGeometryLowBounds.cutoffBound_pos.le
       · positivity [A.horizon_lower]
     _ ≤ _ := mul_le_mul_of_nonneg_right (prefactor_bound _ P.horizon hX A.horizon_lower)
-      (Real.exp_pos _).le
+        (Real.exp_pos _).le
 
 end EulerParentPacketFrames.LabelData

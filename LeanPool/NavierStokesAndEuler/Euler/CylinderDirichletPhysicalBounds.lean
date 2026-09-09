@@ -6,16 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderActionWords
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderPathBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletTimeBounds
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletTimeBounds
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
 
 /-!
 # Actual physical history fields at the same external radius
@@ -25,6 +21,9 @@ They retain the fixed spatial/angular Sobolev block and use the true
 continuous time derivative, including both endpoints.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerCylinderDirichlet.Coefficients
@@ -33,7 +32,7 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderRectangular
   EulerTimeLp EulerTimeLpBoundedMap EulerMeanCoefficients EulerTransverseFixedSobolev
   EulerParameterWordGevrey EulerGevrey EulerFixedEvolutionSobolev
-  EulerTimeLpGramSobolev EulerTimeLpAccelerationSobolev
+  EulerTimeLpGramSobolev
 open scoped BoundedContinuousFunction ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
@@ -41,22 +40,56 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (D : Coefficients T U E)
 
-private local instance : NormedAddCommGroup (CylinderL2 P U) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P U) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P U →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P U →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E) :=
-  inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P U)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderDirichletPhysicalBounds1 : NormedAddCommGroup (CylinderL2 P U) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P U)` instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds2 : NormedSpace ℝ (CylinderL2 P U) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderDirichletPhysicalBounds3 : NormedAddCommGroup (CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E)` instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds4 : NormedSpace ℝ (CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P U →L[ℝ] CylinderL2 P E)` instance to
+shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds5 : NormedAddCommGroup (CylinderL2 P U →L[ℝ]
+    CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P U →L[ℝ] CylinderL2 P E)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds6 : NormedSpace ℝ (CylinderL2 P U →L[ℝ]
+    CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P E)` instance to
+shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds7 : NormedAddCommGroup (CylinderL2 P E →L[ℝ]
+    CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P E)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds8 : NormedSpace ℝ (CylinderL2 P E →L[ℝ]
+    CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds9 : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2
+    P U →L[ℝ] CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds10 : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P U
+    →L[ℝ] CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds11 : NormedAddCommGroup C(Icc (0 : ℝ)
+    T,CylinderL2 P E →L[ℝ] CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletPhysicalBounds12 : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P E
+    →L[ℝ] CylinderL2 P E) :=
+    inferInstance
 
 variable {ι : Type*} [Fintype ι]
   (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
@@ -65,22 +98,22 @@ variable {ι : Type*} [Fintype ι]
   (hH : ContDiff ℝ ∞ (translateCoefficientPath D.H))
   (Rc C₀ C₁ CH Cf R : ℝ) (hRc : 0 ≤ Rc)
   (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCH : 0 ≤ CH) (hCf : 0 ≤ Cf)
-  (hbQ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.Q) a‖ ≤ C₀*majorant Rc 0 n)
-  (hbQ₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.Q₁) a‖ ≤ C₁*majorant Rc 0 n)
-  (hbH : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.H) a‖ ≤ CH*majorant Rc 0 n)
-  (hRweak : 2*blockCost ι q T Rc C₀ C₁ CH D.lower Cf*(sobolevCoefficientRadius ι Rc+1) ≤ R)
-
-  (hRstrong : 2*gramBlockCost ι q D.lower Rc C₀
-    (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf 1)*(sobolevCoefficientRadius ι Rc+1) ≤ R)
+  (hbQ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.Q) a‖ ≤ C₀ * majorant Rc 0 n)
+  (hbQ₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.Q₁) a‖ ≤ C₁ * majorant Rc 0 n)
+  (hbH : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.H) a‖ ≤ CH * majorant Rc 0 n)
+  (hRweak : 2 * blockCost ι q T Rc C₀ C₁ CH D.lower Cf * (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+  (hRstrong : 2 * gramBlockCost ι q D.lower Rc C₀
+    (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf 1) *
+ (sobolevCoefficientRadius ι Rc + 1) ≤ R)
 
 
 include hdir hQ hQ₁ hH hRc hC₀ hC₁ hCH hCf hbQ hbQ₁ hbH hRweak hRstrong
 
 /-- The physical history velocity A=Q ξ_t, as a true cylinder path. -/
 theorem physicalVelocity_block_bound (hT1 : T ≤ 1)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+    (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f))
-    (d : ℕ) (hfb : ∀ n, block directions q (fun a => pathTranslate P a f) n 0 ≤ Cf*majorant R d n)
+    (d : ℕ) (hfb : ∀ n, block directions q (fun a => pathTranslate P a f) n 0 ≤ Cf * majorant R d n)
     (n : ℕ) :
     block directions q (fun a => pathTranslate P a (D.physicalVelocity P f)) n 0 ≤
       (3*sobolevCoefficientAmplitude ι q Rc C₀*traceCost T)*majorant R (d+2) n := by
@@ -101,15 +134,16 @@ theorem physicalVelocity_block_bound (hT1 : T ≤ 1)
 
 /-- The actual derivative A_t=Q_t ξ_t+Q ξ_tt, with no loss of spatial radius. -/
 theorem physicalDerivative_block_bound (hT1 : T ≤ 1)
-    (hRuniform : 2*gramBlockCost ι q D.lower Rc C₀
-      (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf (traceCost T))*(sobolevCoefficientRadius ι Rc+1)
-        ≤ R)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+    (hRuniform : 2 * gramBlockCost ι q D.lower Rc C₀
+      (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf (traceCost T)) *
+ (sobolevCoefficientRadius ι Rc + 1)
+          ≤ R)
+    (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f))
-    (d : ℕ) (hfb : ∀ n, block directions q (fun a => pathTranslate P a f) n 0 ≤ Cf*majorant R d n)
+    (d : ℕ) (hfb : ∀ n, block directions q (fun a => pathTranslate P a f) n 0 ≤ Cf * majorant R d n)
     (n : ℕ) :
     block directions q (fun a => pathTranslate P a (D.physicalDerivative P f)) n 0 ≤
-      (3*sobolevCoefficientAmplitude ι q Rc C₁*traceCost T+
+      (3*sobolevCoefficientAmplitude ι q Rc C₁*traceCost T +
         3*sobolevCoefficientAmplitude ι q Rc C₀)*majorant R (d+3) n := by
   obtain ⟨hR1,hRcR⟩ := weak_radius_bounds ι q T Rc C₀ C₁ CH D.lower Cf R
     D.time_pos.le hRc hC₀ hC₁ hCH hCf hRweak
@@ -138,7 +172,7 @@ theorem physicalDerivative_block_bound (hT1 : T ≤ 1)
     intro t
     rfl
   have he' : (fun b => pathTranslate P b (D.physicalDerivative P f)) =
-      fun b => pathTranslate P b (fullMultiplierMap P D.Q₁ v)+
+      fun b => pathTranslate P b (fullMultiplierMap P D.Q₁ v) +
         pathTranslate P b (fullMultiplierMap P D.Q a) := by
     funext b
     rw [he,map_add]

@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCancellation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RadialKernelBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RadialKernelBounds
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Fubini after insertion of the cutoff difference
@@ -19,6 +18,9 @@ The time kernel is multiplied by the cutoff difference before estimating its
 absolute integral. The resulting radial majorant belongs to `L^(4/3)`, so
 Hölder with the `L^4` test function proves integrability on space times time.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

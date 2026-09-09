@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanDisplacementRegularity
 
-@[expose] public section
-
 /-!
 # Actual coefficient adapters for the mean solenoidal frame
 
@@ -17,6 +15,9 @@ A bounded inverse deformation supplies a strictly positive lower frame bound
 on the ordinary infinite-dimensional solenoidal Hilbert space. The actual mean
 constraint supplies the range property needed to reconstruct coordinates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

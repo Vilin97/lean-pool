@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryTargetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Weighted native estimates for the constructed primary copies
@@ -19,6 +17,9 @@ The local domains retain the actual label-dependent slow cells.  Every
 constant is chosen before that label, its band, and the lattice copy.  The
 square-root estimates retain the vanishing flat weight.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,6 +39,7 @@ variable {ι : Type*} {D : Type} {E F G : Type*}
 
 /-- A local chart domain with the actual slow/inverse-edge growth. -/
 structure JetDomain (ι D : Type*) [NormedAddCommGroup D] extends Domain ι D where
+  /-- Growth of `JetDomain`, of type `ι → D → ℝ`. -/
   growth : ι → D → ℝ
   scale_le_growth : ∀ i x, x ∈ carrier i → scale i ≤ growth i x
 
@@ -145,8 +147,8 @@ theorem bilinear {f : ι → D → E} {g : ι → D → F}
   refine ⟨(‖L‖ + 1) * 2 ^ m * A * B, ?_, p + q, ?_⟩
   · exact one_le_mul_of_one_le_of_one_le
       (one_le_mul_of_one_le_of_one_le
-        (one_le_mul_of_one_le_of_one_le (by linarith [norm_nonneg L]) (one_le_pow₀ (by norm_num)))
-          hA) hB
+        (one_le_mul_of_one_le_of_one_le (by
+            linarith [norm_nonneg L]) (one_le_pow₀ (by norm_num))) hA) hB
   intro i x hx j hj
   have hG : 0 ≤ V.growth i x := zero_le_one.trans (V.one_le_growth i hx)
   have hw := hf.nonneg i x hx
@@ -242,7 +244,7 @@ theorem sqrt {g : ι → D → ℝ} (hg : NativeJets V w g)
     (WeightedQuotients.orderBound_le (1 / 2) hj).trans (by dsimp [A]; linarith)
   calc
     _ ≤ Real.sqrt (w i x) * ((j.factorial : ℝ) * WeightedQuotients.coeffBound (1 / 2) j) * B ^ (2 *
-      j + 1) := h
+        j + 1) := h
     _ ≤ Real.sqrt (w i x) * A * B ^ (2 * m + 1) := by
       apply mul_le_mul
       · exact mul_le_mul_of_nonneg_left hjA (Real.sqrt_nonneg _)
@@ -315,7 +317,7 @@ theorem covariance_amplitudes_jets
     (hlower : ∀ i x, x ∈ V.carrier i → ∀ k, c * w i x ≤ SmoothCovariance.weights (H i x) (T i x) k)
     (j : Fin 2) :
     NativeJets V (fun i x => Real.sqrt (w i x)) (fun i x => SmoothCovariance.amplitudes (H i x) (T
-      i x) j) :=
+        i x) j) :=
   (covariance_weights_jets hr hrne hH hT hb hM hdet hentry j).sqrt hw hc
     (fun i x hx => hlower i x hx j)
 
@@ -365,20 +367,28 @@ section ConstructedPulse
 
 variable {V : JetDomain ι D} {U : Domain ι PhaseCalculus.Slow}
 
+/-- Pulse matrix, defined pointwise by `primaryCovariance pref (fun j => (F j).frame) (fun j =>
+(F j).lam) (fun j => (F j).u) (fun j => (F j).L) i (χ i x).1`. -/
 noncomputable def pulseMatrix (F : Fin 2 → PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → D → PhaseCalculus.Slow × ℝ) :
     ι → D → SmoothCovariance.Mat2 := fun i x =>
   primaryCovariance pref (fun j => (F j).frame) (fun j => (F j).lam)
     (fun j => (F j).u) (fun j => (F j).L) i (χ i x).1
 
+/-- Pulse vector, defined pointwise by `normalizedPulse ((F j).frame i) ((F j).lam i) ((F j).u
+i) ((F j).L i) (χ i x)`. -/
 noncomputable def pulseVector (F : Fin 2 → PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ι → D → ProblemStatement.Space :=
   fun i x => normalizedPulse ((F j).frame i) ((F j).lam i) ((F j).u i) ((F j).L i) (χ i x)
 
+/-- Pulse envelope, defined pointwise by `referenceP ((F j).lam i) ((F j).u i) ((F j).L i) ((F
+j).L i * (χ i x).2)`. -/
 noncomputable def pulseEnvelope (F : Fin 2 → PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ι → D → ℝ := fun i x =>
   referenceP ((F j).lam i) ((F j).u i) ((F j).L i) ((F j).L i * (χ i x).2)
 
+/-- Primary velocity, defined pointwise by `PartitionedCovariance.amplitude (ε i) (mask i x)
+(pulseMatrix F pref χ i x) (T i x) j • pulseVector F χ j i x`. -/
 noncomputable def primaryVelocity (F : Fin 2 → PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → D → PhaseCalculus.Slow × ℝ) (ε : ι → ℝ)
     (T : ι → D → SmoothCovariance.Vec2) (mask : ι → D → ℝ) (j : Fin 2) :
@@ -578,6 +588,7 @@ noncomputable def phasePoint (p : PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) : ι → D → PhaseCalculus.Slow × ℝ :=
   fun i x => ((χ i x).1, p.L i * (χ i x).2)
 
+/-- Phase pressure as an element of `ι → D → ℂ`. -/
 noncomputable def phasePressure (p : PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (frequency : ι → ℝ)
     (u : ι → D → ProblemStatement.Space) : ι → D → ℂ := fun i =>
@@ -656,8 +667,8 @@ theorem phasePressure_carrier_jets (p : PhaseConstruction U)
     (fun i => ChartScales.epsilon h (band i)) _ (fun i => ChartScales.epsilon_pos h (band i))
     (C := 1) le_rfl 0
   intro i
-  rw [pow_zero, mul_one, one_mul, abs_of_nonneg (by positivity : 0 ≤ 1 / (ChartScales.carrier h
-    (band i) : ℝ))]
+  rw [pow_zero, mul_one, one_mul, abs_of_nonneg (by
+      positivity : 0 ≤ 1 / (ChartScales.carrier h (band i) : ℝ))]
   exact (ChartScales.carrier_inv_bounds h hh (band i)).2
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -676,12 +687,14 @@ end NativePressure
 
 /-! ### The actual outer slot cutoff -/
 
+/-- Outer bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 noncomputable def outerBump : ContDiffBump (1 / 2 : ℝ) where
   rIn := 3 / 8
   rOut := 5 / 12
   rIn_pos := by norm_num
   rIn_lt_rOut := by norm_num
 
+/-- Outer cutoff, given by `outerBump`. -/
 noncomputable def outerCutoff : ℝ → ℝ := outerBump
 
 theorem outerCutoff_smooth : ContDiff ℝ ∞ outerCutoff := outerBump.contDiff
@@ -787,6 +800,7 @@ section Copies
 variable {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
   {Λ I : Type*} {V : JetDomain ι D} {w : ι → D → ℝ} {f : ι → D → E}
 
+/-- Affine copy, defined pointwise by `f (index l n) (L l n i x + c l n i)`. -/
 noncomputable def affineCopy (f : ι → D → E) (index : Λ → ℕ → ι)
     (L : Λ → ℕ → I → X →L[ℝ] D) (c : Λ → ℕ → I → D) : Λ → ℕ → I → X → E :=
   fun l n i x => f (index l n) (L l n i x + c l n i)
@@ -1092,13 +1106,13 @@ theorem actualTarget_jets (hcone : LeadingStressWeights.FullTrueCone v₀)
   have hq := hcoord.clm (ContinuousLinearMap.fst ℝ ℝ SlowBorelBase.Inner)
   have hpower : PolynomialJets V.toDomain (fun _ p =>
       (BaseChartJets.normalizedCoordinates F₀.data.h p).1 ^ (-CoordinateAlgebra.A F₀.data.h - 1/2))
-        := by
+          := by
     apply hq.compact_comp isOpen_Ioi
       (show ContDiffOn ℝ ∞ (fun x : ℝ => x ^ (-CoordinateAlgebra.A F₀.data.h - 1/2))
         (Ioi 0) from fun x hx => (contDiffAt_id.rpow_const_of_ne hx.ne').contDiffWithinAt)
       isCompact_Icc (fun x hx => hqlo.trans_le hx.1)
-    intro i p hp
-    exact ⟨(hgeom.q_range i p hp).1.le, (hgeom.q_range i p hp).2.le⟩
+    · intro i p hp
+      exact ⟨(hgeom.q_range i p hp).1.le, (hgeom.q_range i p hp).2.le⟩
   have hactual : NativeJets V
       (fun _ p => FinalSlowBase.weight W₀ (BaseChartJets.normalizedCoordinates F₀.data.h p).2)
       (fun _ => PrimaryTargetBounds.actualTarget v₀) := by
@@ -1111,9 +1125,10 @@ theorem actualTarget_jets (hcone : LeadingStressWeights.FullTrueCone v₀)
   refine ⟨C, hC, q, ?_⟩
   intro i p hp j hj
   rw [PrimaryTargetBounds.movingWeight_eq W₀ (hgeom.time i p hp) (hr.trans_le (hgeom.radius i p
-    hp))]
+      hp))]
   exact hb i p hp j hj
 
+/-- Prepared prefactor, constructed using `PartitionedCovariance.nativePrefactor`. -/
 noncomputable def preparedPrefactor (r0 : ℝ) (vr vt : TorusInverse.Plane) {N : ℕ}
     (_j : Fin 2) (L : PrimaryGeometryAssembly.Index W₀ N) : ℝ :=
   PartitionedCovariance.nativePrefactor vr vt r0 *
@@ -1224,7 +1239,7 @@ theorem exists_prepared_pair_jets
         (phasePressure (F j) χ
           (fun L => (ChartScales.carrier F₀.data.h (BaseChartJets.cellBand L) : ℝ)) u) := by
   obtain ⟨a, ha⟩ := exists_prepared_primary_jets (D := D) H₀ v₀ hcone upper B r0 hr0 hbox N0 vr vt
-    hdet
+      hdet
   refine ⟨a, ?_⟩
   intro V S χ mask r M qlo qhi hscale hχ hmap hpositive hS hgrowth hr hqlo hgeom hedge hmask j
   dsimp only
@@ -1264,6 +1279,7 @@ end Prepared
 
 /-! ### Actual slow-mask jets and zero germs -/
 
+/-- Position continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def positionCLM : PhaseCalculus.Slow →L[ℝ] SlotColoring.Position :=
   LinearMap.toContinuousLinearMap {
     toFun := PrimaryRepresentatives.position
@@ -1382,6 +1398,8 @@ theorem NativeJets.prepared_mask_outer_localize
 
 /-! ### The two orientations share one family of constants -/
 
+/-- Sign domain, bundling `carrier`, `isOpen`, `scale`, `one_le_scale` and the required
+compatibility proofs. -/
 noncomputable def signDomain (V : JetDomain ι D) : JetDomain (Fin 2 × ι) D where
   carrier i := V.carrier i.2
   isOpen i := V.isOpen i.2
@@ -1419,8 +1437,10 @@ open CommonCoverSolve TorusInverse
 variable {P H : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup H] [NormedSpace ℝ H] {Λ : Type*}
 
+/-- Native point linear, given by `(ContinuousLinearMap.fst ℝ P TorusInverse.Plane).prod
+(g.coordinateLinear.comp (ContinuousLinearMap.snd ℝ P TorusInverse.Plane))`. -/
 noncomputable def nativePointLinear (g : Geometry) : (P × TorusInverse.Plane) →L[ℝ] (P ×
-  TorusInverse.Plane) :=
+    TorusInverse.Plane) :=
   (ContinuousLinearMap.fst ℝ P TorusInverse.Plane).prod
     (g.coordinateLinear.comp (ContinuousLinearMap.snd ℝ P TorusInverse.Plane))
 
@@ -1451,7 +1471,7 @@ theorem norm_nativePointLinear_le (g : Geometry) :
 /-- For the actual band basis, the affine derivative cost is uniform in
 the center and lattice translation. -/
 theorem nativePointLinear_band_bound (B : TorusInverse.Plane ≃L[ℝ] TorusInverse.Plane) {h : ℝ} (hh
-  : 0 ≤ h)
+    : 0 ≤ h)
     {n gap Δ : ℕ} (hn : 4 ≤ n) (hgap : gap ≤ Δ) (center : TorusInverse.Plane) :
     ‖nativePointLinear (P := P) (CommonCoverClass.bandGeometry B h n gap center)‖ ≤
       CommonCoverClass.bandArgumentCost B Δ * ChartScales.S n :=
@@ -1460,7 +1480,7 @@ theorem nativePointLinear_band_bound (B : TorusInverse.Plane ≃L[ℝ] TorusInve
 
 theorem NativeJets.native_copy_localJets
     {V : JetDomain ι (P × TorusInverse.Plane)} {w : ι → P × TorusInverse.Plane → ℝ} {f : ι → P ×
-      TorusInverse.Plane → H}
+        TorusInverse.Plane → H}
     (hf : NativeJets V w f) (s : StripData (P × TorusInverse.Plane))
     (W : Λ → ℕ → P × TorusInverse.Plane → ℝ) (α : ℝ)
     (index : Λ → ℕ → ι) (g : Λ → ℕ → Geometry) (Ω : Λ → ℕ → Set TorusInverse.Plane)
@@ -1498,7 +1518,7 @@ lattice.  Support is proved from the scalar cutoff, and the native cells
 are constructed from compactness and injectivity of that patch. -/
 theorem NativeJets.native_copy_sum_uniformClass
     {V : JetDomain ι (P × TorusInverse.Plane)} {w : ι → P × TorusInverse.Plane → ℝ} {f : ι → P ×
-      TorusInverse.Plane → H}
+        TorusInverse.Plane → H}
     (hf : NativeJets V w f) (s : StripData (P × TorusInverse.Plane))
     (W : Λ → ℕ → P × TorusInverse.Plane → ℝ) (α : ℝ)
     (index : Λ → ℕ → ι) (g : Λ → ℕ → Geometry) (Ω : Λ → ℕ → Set TorusInverse.Plane)

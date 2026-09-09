@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeCopyFamily
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeSignedLocalization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeProfiles
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
+import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeSignedLocalization
 
 /-!
 # Signed physical data from positive native time
@@ -22,6 +19,9 @@ uses an explicit zero extension of the physical copy amplitudes outside
 positive native time, while retaining the original masks, sources, and
 carrier profiles on their genuine domains.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -120,13 +120,19 @@ source and every carrier are the original ones. -/
 noncomputable def potentialCopies (i : Fin 3) : PhysicalCopyBounds.CopyFamily 1 Frequency :=
   PositiveTimeCopyFamily.gate (ActualSignedPhysicalData.potentialFamily sys hh f i)
 
+/-- Pressure copies, given by `PositiveTimeCopyFamily.gate
+(ActualSignedPhysicalData.pressureFamily sys hh f)`. -/
 noncomputable def pressureCopies : PhysicalCopyBounds.CopyFamily 1 Frequency :=
   PositiveTimeCopyFamily.gate (ActualSignedPhysicalData.pressureFamily sys hh f)
 
+/-- Potential cells, given by `PositiveTimeCopyFamily.gateCells (localizedPotentialCells sys hh
+f i)`. -/
 noncomputable def potentialCells (i : Fin 3) :
     PhysicalCopyBounds.SupportCells (potentialCopies sys hh f i) :=
   PositiveTimeCopyFamily.gateCells (localizedPotentialCells sys hh f i)
 
+/-- Pressure cells, given by `PositiveTimeCopyFamily.gateCells (localizedPressureCells sys hh
+f)`. -/
 noncomputable def pressureCells :
     PhysicalCopyBounds.SupportCells (pressureCopies sys hh f) :=
   PositiveTimeCopyFamily.gateCells (localizedPressureCells sys hh f)
@@ -229,6 +235,7 @@ theorem pressure_support :
     exact hm
 
 omit hloc G hh0 hh1 hb in
+/-- Potential carrier, constructed using `PositiveTimeCopyFamily.gateCarrier`. -/
 noncomputable def potentialCarrier (hp : NativeProfiles (h := h) f) (i : Fin 3) :
     PhysicalCopyBounds.CarrierBounds (potentialCopies sys hh f i)
       (potentialCells sys hh f i) (a / 4) (2 * b) h sys.radius :=
@@ -236,6 +243,8 @@ noncomputable def potentialCarrier (hp : NativeProfiles (h := h) f) (i : Fin 3) 
     (ActualSignedPhysicalData.potentialCarrier sys hh f ha hp i)
 
 omit hloc G hh0 hh1 hb in
+/-- Pressure carrier, given by `PositiveTimeCopyFamily.gateCarrier (localizedPressureCells sys
+hh f) (ActualSignedPhysicalData.pressureCarrier sys hh f ha hp)`. -/
 noncomputable def pressureCarrier (hp : NativeProfiles (h := h) f) :
     PhysicalCopyBounds.CarrierBounds (pressureCopies sys hh f)
       (pressureCells sys hh f) (a / 4) (2 * b) h sys.radius :=
@@ -276,10 +285,10 @@ theorem potentialSmooth (hp : NativeProfiles (h := h) f) (hn : NativeRegular sys
         ActualSignedPhysicalData.potentialFamily, commonLift_zero] using hc.2)
     change LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).F
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _) ∧
+            _) ∧
       LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).G
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _)
+            _)
     rw [slotSlow_eq_nativeSlow (div_pos ha (by norm_num)) _ _ _ _ _ _ hj]
     exact ⟨LocalPhysicalCopyBounds.SmoothNear.of_open (hp.region_open I.1)
       (hp.jets.smooth (k, I.1)).fst hp',
@@ -303,10 +312,10 @@ theorem pressureSmooth (hp : NativeProfiles (h := h) f) (hn : NativeRegular sys 
         ActualSignedPhysicalData.pressureFamily, commonLift_zero] using hc.2)
     change LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).F
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _) ∧
+            _) ∧
       LocalPhysicalCopyBounds.SmoothNear (extendedCarrier (h := h) f I.1 k).G
         (LocalPhysicalCopyBounds.slotSlow ((extendedCarrier (h := h) f I.1 k).withChart j) _ _ _ _
-          _)
+            _)
     rw [slotSlow_eq_nativeSlow (div_pos ha (by norm_num)) _ _ _ _ _ _ hj]
     exact ⟨LocalPhysicalCopyBounds.SmoothNear.of_open (hp.region_open I.1)
       (hp.jets.smooth (k, I.1)).fst hp',
@@ -442,6 +451,8 @@ noncomputable def potentialWaveData
   smooth := potentialSmooth sys hh f hloc G hh0 hh1 ha hb hp hn
   frequencies _ := carrier_frequencies f hP hf
 
+/-- Pressure wave data, bundling `lowerRadius`, `upperRadius`, `nativeWidth`, `slowBound` and
+the required compatibility proofs. -/
 noncomputable def pressureWaveData
     (hs : LocalPhysicalCopyBounds.LocalSourceBounds s h α w
       (nativePressureSource sys hh f)) :
@@ -585,7 +596,7 @@ theorem singletonLocalization
       (ActualSignedExterior.actualLabel L) x hx
     rw [ActualSignedExterior.actualLabel_reference L] at he
     have hl : ActualSignedPhysicalBinding.spatialLabel (ActualSignedExterior.actualLabel L) = L.val
-      :=
+        :=
       congrArg Subtype.val (ActualSignedExterior.bandLabel_actualLabel L)
     simpa only [hl] using he
 

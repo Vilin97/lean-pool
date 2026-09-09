@@ -6,9 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamel
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.ODE.ExistUnique
 
 /-!
 # Construction of a homogeneous fundamental solution
@@ -20,6 +22,9 @@ and ODE uniqueness. This result is qualitative. No exponential estimate from
 this construction is used in the later profile estimates.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerLinearFundamentalExistence
@@ -27,7 +32,7 @@ namespace EulerLinearFundamentalExistence
 open Set ContinuousLinearMap EulerVolterraConvolution EulerPacketExistence
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
-  (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,A))
+  (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, A))
 
 /-- A continuous coefficient field has two-sided inverse fundamental paths. -/
 theorem exists_fundamental : ∃ Φ Ψ : ℝ → A,

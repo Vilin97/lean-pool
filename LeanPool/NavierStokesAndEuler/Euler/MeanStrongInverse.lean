@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEquation
 
-@[expose] public section
-
 /-!
 # Strong regularity of the genuinely constructed mean inverse
 
@@ -18,6 +16,9 @@ The input boundary inequality still has to be supplied by the concrete cutoff
 operator and harmonic localization. No solution, momentum equation, acceleration,
 or initial velocity condition is included in the hypotheses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +33,7 @@ theorem meanSolver_strong (T : ℝ) (hT : 0 ≤ T)
     (FInv F F₁ F₂ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (M0 A : L2 →L[ℝ] L2) (L K B : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B)
     (hFInv₀ : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
-    (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K*‖z‖^2)
+    (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
     (hboundary : ∀ z : L2, z ∈ solenoidalSpace →
       -B*‖z‖^2 ≤ ⟪M0 z, z⟫_ℝ+L*⟪A z, z⟫_ℝ)
     (hsmall : K*(T^2/2)+B*T ≤ 1/2)

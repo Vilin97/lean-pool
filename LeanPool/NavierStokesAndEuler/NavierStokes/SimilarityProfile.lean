@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityCoordinates
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CoordinateAlgebra
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Actual derivatives of reconstructed similarity profiles
@@ -18,6 +17,9 @@ The physical variables are `(t,s,z)`, with `s = r²/2`. Inner profiles use
 `(X,η)`. All partial derivatives below are genuine Fréchet derivatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SimilarityProfile
@@ -25,38 +27,58 @@ namespace NavierStokes.SimilarityProfile
 open Set Filter
 open scoped Topology ContDiff
 
+/-- Physical point: an abbreviation for `ℝ × (ℝ × ℝ)`. -/
 abbrev PhysicalPoint := ℝ × (ℝ × ℝ)
+/-- Inner point: an abbreviation for `ℝ × ℝ`. -/
 abbrev InnerPoint := ℝ × ℝ
+/-- Inner profile: an abbreviation for `InnerPoint → ℝ`. -/
 abbrev InnerProfile := InnerPoint → ℝ
+/-- Physical profile: an abbreviation for `PhysicalPoint → ℝ`. -/
 abbrev PhysicalProfile := PhysicalPoint → ℝ
 
+/-- D: an abbreviation for `CoordinateAlgebra.D`. -/
 abbrev D := CoordinateAlgebra.D
+/-- D: an abbreviation for `CoordinateAlgebra.d`. -/
 abbrev d := CoordinateAlgebra.d
+/-- L: an abbreviation for `CoordinateAlgebra.L`. -/
 abbrev L := CoordinateAlgebra.L
 
+/-- Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)`. -/
 def q (h : ℝ) (p : PhysicalPoint) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)
 
+/-- Eta, given by `SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)`. -/
 def eta (h : ℝ) (p : PhysicalPoint) : ℝ :=
   SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)
 
+/-- X, given by `p.2.1 / q h p`. -/
 def X (h : ℝ) (p : PhysicalPoint) : ℝ := p.2.1 / q h p
+/-- Inner, given by `(X h p, eta h p)`. -/
 def inner (h : ℝ) (p : PhysicalPoint) : InnerPoint := (X h p, eta h p)
 
+/-- Partial X, given by `fderiv ℝ f w (1, 0)`. -/
 def partialX (f : InnerProfile) (w : InnerPoint) : ℝ := fderiv ℝ f w (1, 0)
+/-- Partial eta, given by `fderiv ℝ f w (0, 1)`. -/
 def partialEta (f : InnerProfile) (w : InnerPoint) : ℝ := fderiv ℝ f w (0, 1)
 
+/-- T, given by `CoordinateAlgebra.timeCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f w)`. -/
 def T (h b : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
   CoordinateAlgebra.timeCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f w)
 
+/-- Z, given by `CoordinateAlgebra.axialCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f
+w)`. -/
 def Z (h b : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
   CoordinateAlgebra.axialCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f w)
 
+/-- Pullback, given by `q h p ^ b * f (inner h p)`. -/
 def pullback (h b : ℝ) (f : InnerProfile) (p : PhysicalPoint) : ℝ :=
   q h p ^ b * f (inner h p)
 
+/-- Partial T, given by `fderiv ℝ F p (1, (0, 0))`. -/
 def partialT (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (1, (0, 0))
+/-- Partial S, given by `fderiv ℝ F p (0, (1, 0))`. -/
 def partialS (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (0, (1, 0))
+/-- Partial Z, given by `fderiv ℝ F p (0, (0, 1))`. -/
 def partialZ (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (0, (0, 1))
 
 theorem D_eq (h : ℝ) : (1 - 2 * h) / 2 = D h := by unfold D CoordinateAlgebra.D; ring

@@ -6,11 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MetricHeatEnergy
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Finite sums of genuine Hilbert metric energies, with viscosity and explicit norm comparison. -/
 
 @[expose] public section
 
-/-! Finite sums of genuine Hilbert metric energies, with viscosity and explicit norm comparison. -/
 
 noncomputable section
 
@@ -62,7 +74,7 @@ omit [InnerProductSpace ℝ H] in
 theorem sum_norm_le_card_sqrt_familyNorm (v : ι → H) :
     (∑ i, ‖v i‖) ≤ √(Fintype.card ι : ℝ) * familyNorm v := by
   simpa only [one_mul, one_pow, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
-    familyNorm, familySquaredNorm]
+      familyNorm, familySquaredNorm]
     using Real.sum_mul_le_sqrt_mul_sqrt Finset.univ (fun _ : ι => (1 : ℝ)) (fun i => ‖v i‖)
 
 /-- Pointwise operator coercivity sums exactly over a finite family. -/
@@ -119,7 +131,8 @@ theorem family_energy_hasDerivAt (K : ℝ → H →L[ℝ] H) (e : ι → ℝ →
     metric_energy_evolution K (e i) t K' (e' i) (transport i) (pressure i)
       (forcing i + ν • lap i) hK (he i) hsym (heq i) (hp i))
 
-/-- The finite energy estimate keeps forcing in the Hilbert sum norm and treats heat through its proved quadratic bound. -/
+/-- The finite energy estimate keeps forcing in the Hilbert sum norm and treats heat through its
+proved quadratic bound. -/
 theorem family_energy_derivative_bound (K K' : H →L[ℝ] H)
     (e transport forcing lap : ι → H) (B C ν : ℝ)
     (hB : 0 ≤ B) (hν : 0 ≤ ν)
@@ -173,7 +186,7 @@ theorem family_regularized_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ι 
     rw [← hN2, ← div_pow]
     exact pow_le_pow_left₀ (familyNorm_nonneg v) hN 2
   have hdiff := family_energy_hasDerivAt K e t ν K' e' transport pressure forcing lap hK he hsym
-    heq hp
+      heq hp
   have hroot := HasDerivAt.sqrt (hdiff.add_const (δ ^ 2))
     (by nlinarith : familyEnergy (K t) v + δ ^ 2 ≠ 0)
   rw [hroot.deriv]

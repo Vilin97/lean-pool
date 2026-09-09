@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+public import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual integral pairings and their strong limits for metric energy passage. -/
 
 @[expose] public section
 
-/-! Actual integral pairings and their strong limits for metric energy passage. -/
 
 noncomputable section
 
@@ -68,17 +71,18 @@ theorem integral_three_paths (T : ℝ) (hT : 0 ≤ T)
       (∫ t in (0 : ℝ)..T, extendPath T hT b t * extendPath T hT y t) +
       ∫ t in (0 : ℝ)..T, extendPath T hT c t * extendPath T hT f t := by
   have ha := ((extendPath_continuous T hT a).mul (extendPath_continuous T hT x)).intervalIntegrable
-    (μ := volume) 0 T
+      (μ := volume) 0 T
   have hb := ((extendPath_continuous T hT b).mul (extendPath_continuous T hT y)).intervalIntegrable
-    (μ := volume) 0 T
+      (μ := volume) 0 T
   have hc := ((extendPath_continuous T hT c).mul (extendPath_continuous T hT f)).intervalIntegrable
-    (μ := volume) 0 T
+      (μ := volume) 0 T
   change IntervalIntegrable (fun t => extendPath T hT a t * extendPath T hT x t) volume 0 T at ha
   change IntervalIntegrable (fun t => extendPath T hT b t * extendPath T hT y t) volume 0 T at hb
   change IntervalIntegrable (fun t => extendPath T hT c t * extendPath T hT f t) volume 0 T at hc
   rw [intervalIntegral.integral_add (ha.add hb) hc, intervalIntegral.integral_add ha hb]
 
-/-- An actual integral energy inequality survives uniform state convergence and strong L² forcing convergence, with the signed loss term unchanged. -/
+/-- An actual integral energy inequality survives uniform state convergence and strong L² forcing
+convergence, with the signed loss term unchanged. -/
 theorem integral_energy_limit (T : ℝ) (hT : 0 ≤ T)
     (a b : C(Icc (0 : ℝ) T, ℝ)) (c : TimeLp T ℝ)
     (X Y : ℕ → C(Icc (0 : ℝ) T, ℝ)) (F : ℕ → TimeLp T ℝ)

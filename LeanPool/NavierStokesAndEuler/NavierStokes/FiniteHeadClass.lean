@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 /-!
 # Exact-weight exponent changes for finitely many initial bands
@@ -16,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
 Only the band exponent changes.  The weight, domain, polynomial degree,
 and finite band cutoff are preserved, including at the spatial edges.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

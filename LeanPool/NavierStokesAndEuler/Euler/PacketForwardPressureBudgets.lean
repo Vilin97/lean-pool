@@ -6,16 +6,24 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardScalarPressureGrade
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardStepBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedPressureBudgets
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimary
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardScalarPressureGrade
+import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureStepBound
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! The angular derivative of the actual recursive high pressure retains
 the unit grade budget. This is derived from the same source solve used by
 the velocity recursion. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,7 +44,7 @@ theorem forwardAngularPressure_step_exists
     {O : Operators} (C : CoefficientData P M.T O) (BC : CoefficientBudget C)
     (hmean : O.meanSolve = EulerMeanPacketProvider.meanSolve M)
     (hhigh : O.highSolve = EulerTransversePacketProvider.highSolve P D
-      (EulerTransversePacketProvider.InitialData.zero P D))
+        (EulerTransversePacketProvider.InitialData.zero P D))
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
     (S : Scales (Icc (0 : ℝ) M.T))
     {p : ℕ} {a : ℕ → Profile} (hp : 2 ≤ p)
@@ -44,7 +52,7 @@ theorem forwardAngularPressure_step_exists
     (hG : ∀ i (hi : i < p), 1 ≤ i → ProfileBudget (G i hi) S L.R i)
     (hc₀ : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
     (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (c : ℝ) (hc : 0 < c)
     (hprofile : timeProfileChange (S.high p) hTime = c • L.g) :
     ∃ Q : Field P M.T (fun z => (pressureJet (step O p a).highPressure z).2 angleDirection • D.m₀),
@@ -94,17 +102,17 @@ theorem forwardAngularPressure_step_exists
     hTime.symm M.T_pos.le (S.high p) (S.high_pos p) hback
   have hHighSolve : O.highSolve (highForce O p a) =
       (GH.vector (EulerTransversePacketProvider.InitialData.zero P D),GH.scalar
-        (EulerTransversePacketProvider.InitialData.zero P D)) := by
+          (EulerTransversePacketProvider.InitialData.zero P D)) := by
     rw [hhigh]
     exact EulerTransversePacketProvider.highSolve_of_admissible D
-      (EulerTransversePacketProvider.InitialData.zero P D) _ hh
+        (EulerTransversePacketProvider.InitialData.zero P D) _ hh
   have hscalar : (step O p a).highPressure = GH.scalar
-    (EulerTransversePacketProvider.InitialData.zero P D) :=
+      (EulerTransversePacketProvider.InitialData.zero P D) :=
     congrArg Prod.snd hHighSolve
   let Q : Field P M.T (fun z => (pressureJet (step O p a).highPressure z).2 angleDirection • D.m₀)
-    :=
+      :=
     ((EulerTransversePacketForward.angularField GH (EulerTransversePacketProvider.InitialData.zero
-      P D)).changeTime hTime.symm).congr
+        P D)).changeTime hTime.symm).congr
       (fun _ _ _ => by rw [hscalar])
   exact ⟨Q,hbound.of_path_eq _ rfl⟩
 
@@ -120,7 +128,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
   (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
   (NB : EulerTransversePacketJoin.NormalBudget D 6 L.R)
@@ -131,9 +139,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.g)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.g)
 
 include NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
@@ -163,7 +171,7 @@ theorem forwardInitializedPressureBudget_exists (p : ℕ) :
       simp [pressureJet_zero]
     let Q := (Field.zero period M.T).congr (fun _ _ _ => congrFun hb0 _)
     let A : Field period M.T (fun z => (pressureJet (a 0).highPressure z).2 angleDirection • D.m₀)
-      :=
+        :=
       (Field.zero period M.T).congr (fun _ _ _ => congrFun han _)
     refine ⟨⟨Q,A,?_,?_⟩⟩
     · exact (Field.wordBound_normalized_of_zero Q (fun _ _ _ => congrFun hb0 _)
@@ -180,13 +188,13 @@ theorem forwardInitializedPressureBudget_exists (p : ℕ) :
       rw [← hgrowth,timeProfileChange_roundtrip,hs1]
     have hYb : ∀ n, block standardDirection 6
         (fun a => translate period a ((initialData D δ hδ (α • ξ) hs).value : CylinderL2 period U))
-          n 0 ≤
+            n 0 ≤
           (α*(wordCost (Fin 4) 6 δ*‖ξ‖))*majorant L.R 0 n := by
       intro n
       have hh := initialData_common_radius D δ hδ (α • ξ) hs standardDirection
         (fun i => by cases i using Fin.cases <;> simp [Prod.norm_def]) 6 hδ1 L.R hR n
       simpa only [norm_smul,Real.norm_eq_abs,abs_of_pos hα,mul_assoc,mul_left_comm,mul_comm] using
-        hh
+          hh
     have hb := (L.primary_scalar_and_angular_grade_bound NB _ WP
       (initialData D δ hδ (α • ξ) hs) α hα hYb).2
     have hb' := hb.normalized_changeTime D.T_pos.le (α • L.g)
@@ -196,9 +204,9 @@ theorem forwardInitializedPressureBudget_exists (p : ℕ) :
       simp only [a,forwardInitializedProfiles,sourceProfiles,profiles_one]
       rfl
     let A : Field period M.T (fun z => (pressureJet (a 1).highPressure z).2 angleDirection • D.m₀)
-      :=
+        :=
       ((EulerTransversePacketForward.angularField (forcing D) (initialData D δ hδ (α • ξ)
-        hs)).changeTime hTime.symm).congr
+          hs)).changeTime hTime.symm).congr
         (fun _ _ _ => by rw [he])
     refine ⟨⟨Q,A,?_,hb'.of_path_eq _ rfl⟩⟩
     exact (Field.wordBound_normalized_of_zero Q (fun _ _ _ => congrFun hb1 _)

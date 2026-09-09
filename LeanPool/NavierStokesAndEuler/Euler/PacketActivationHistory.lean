@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryUncut
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseActivationSelection
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointUniqueness
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
+import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointUniqueness
 
 /-! The stationary path selected by the actual activation argument is the
 same history used by the packet, after matching its physical terminal trace. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,21 +24,23 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerTransversePacketProvider EulerTimeLp EulerInitialTimePrimitive
   EulerVolterraConvolution EulerTransverseEndpointEnergy EulerTransverseEndpointVelocity
   EulerTransverseEndpointUniqueness EulerTransverseEndpointParameter
-    EulerTransverseEndpointCoordinates
+      EulerTransverseEndpointCoordinates
   EulerTransverseInitialCoordinates EulerTransverseFrameCoordinates
-    EulerTransverseSourceCoefficientPath
-  EulerTransverseActivationSelection EulerTransverseActivationTrial
+      EulerTransverseSourceCoefficientPath
+
 
 variable {U V : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup V] [InnerProductSpace ℝ V]
   {D : Data U} (B : HistoryData D) (x : Space)
 
+/-- Stationary derivative, constructed using `endpointDerivative`. -/
 def stationaryDerivative (L : V →L[ℝ] TimeLp D.T Space) : V →L[ℝ] TimeLp D.T Space :=
   endpointDerivative D.T D.T_pos.le (fun t => D.normal.field t x)
     (B.coefficients.labelHessian x) B.potential B.potential_nonneg
     (B.coefficients.labelHessian_upper x) B.small L
 
+/-- Stationary corrected velocity, constructed using `physicalVelocityPath`. -/
 def stationaryCorrectedVelocity (L : V →L[ℝ] TimeLp D.T Space) (Y : V)
     (t : Icc (0 : ℝ) D.T) : Space :=
   physicalVelocityPath D.T D.T_pos.le (B.coefficients.labelFrame x)
@@ -47,10 +50,10 @@ def stationaryCorrectedVelocity (L : V →L[ℝ] TimeLp D.T Space) (Y : V)
       D.M.field t x (initialRealPrimitive D.T (stationaryDerivative B x L Y) t)
 
 theorem history_eq_stationary_of_terminal (L : V →L[ℝ] TimeLp D.T Space)
-    (hL : ∀ Y t, ⟪D.normal.field t x,initialPrimitive D.T D.T_pos.le (L Y) t⟫_ℝ=0)
+    (hL : ∀ Y t, ⟪D.normal.field t x, initialPrimitive D.T D.T_pos.le (L Y) t⟫_ℝ = 0)
     (Y : V) (ξ : U)
     (hterminal : initialRealPrimitive D.T (L Y) D.T =
-      D.frame.field ⟨D.T,D.T_pos.le,le_rfl⟩ x ξ)
+      D.frame.field ⟨D.T, D.T_pos.le, le_rfl⟩ x ξ)
     (t : Icc (0 : ℝ) D.T) :
     B.coefficients.labelVelocity x ξ t = stationaryCorrectedVelocity B x L Y t := by
   let C := B.coefficients

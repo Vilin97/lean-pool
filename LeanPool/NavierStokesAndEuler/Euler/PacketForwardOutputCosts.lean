@@ -6,15 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedOutputCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGlobalShear
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardHessianError
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCanonicalRadius
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedFlowData
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCostPolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.PacketWeightedPhysicalErrors
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformCosts
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 
 /-! The direct-forward physical output costs obey the same fixed
 polynomial envelope, with no bound on extrema of the growth profile. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,7 +30,7 @@ namespace EulerPacketInitializedOutputCost
 open EulerPacketTerminalDatum EulerPacketProfileRecursion EulerPacketCylinderField
   EulerPacketCorrectionConstants EulerPacketCorrectionScalar EulerPacketCorrectionCoefficients
   EulerPacketPhysicalCost EulerPacketFiveCost EulerAllOrderDriftCorrection
-    EulerPacketCorrectionOutput
+      EulerPacketCorrectionOutput
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : EulerTransversePacketProvider.Data U}
@@ -44,13 +51,13 @@ theorem forward_output_costs (W H0 : ℝ) (hδ : 0 < δ)
     EulerPacketInitializedCost.weightSize W ≤ extraEnvelope Z ∧
     physicalInputRadius (4*R) (4*R) ρ ≤ extraEnvelope Z ∧
     liftedInputConstant period*(velocity R H0 BC.multiplierCost+normal R H0 BC.multiplierCost) ≤
-      extraEnvelope Z ∧
+        extraEnvelope Z ∧
     2*liftedInputConstant period*EulerPacketInitializedCost.weightSize W ≤ extraEnvelope Z ∧
-    2*liftedInputConstant period*(6*NB.blockAmplitude*
-      (fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1)+
+    2*liftedInputConstant period*(6*NB.blockAmplitude *
+      (fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1) +
       EulerPacketInitializedCost.weightSize W) ≤ extraEnvelope Z ∧
     weightedPhysicalGradientCost D period L.Rc L.C₀ ρ (EulerPacketInitializedCost.weightSize W) ≤
-      extraEnvelope Z ∧
+        extraEnvelope Z ∧
     forwardInitializedGlobalShearCost R H0 NB.C ≤ extraEnvelope Z ∧
     forwardInitializedPressureHessianCost NB R H0 L.Rc L.C₀ ≤ extraEnvelope Z := by
   let R := forwardInitializedRadius LM L NB BC δ ξ
@@ -100,15 +107,15 @@ theorem forward_output_costs (W H0 : ℝ) (hδ : 0 < δ)
   have hn : normal R H0 BC.multiplierCost ≤ normal Z Z Z := by unfold normal; gcongr
   have hl := zero_le_one.trans (liftedInputConstant_one_le period)
   have hav : liftedInputConstant period*(velocity R H0 BC.multiplierCost+normal R H0
-    BC.multiplierCost) ≤
+      BC.multiplierCost) ≤
       velocityInputEnvelope Z := by unfold velocityInputEnvelope; gcongr
   have hb := EulerPacketRadiusPolynomial.normal_block_le NB Z hZ hNR hNC hNI
   have hb0 := NB.blockAmplitude_nonneg
   have hbZ := hb0.trans hb
   have ht : 6*NB.blockAmplitude*(fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1) ≤
       timeEnvelope Z := by unfold timeEnvelope; gcongr
-  have hat : 2*liftedInputConstant period*(6*NB.blockAmplitude*
-      (fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1)+
+  have hat : 2*liftedInputConstant period*(6*NB.blockAmplitude *
+      (fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1) +
       EulerPacketInitializedCost.weightSize W) ≤ timeInputEnvelope Z := by
     unfold timeInputEnvelope EulerPacketInitializedCost.weightSize
     gcongr
@@ -120,23 +127,23 @@ theorem forward_output_costs (W H0 : ℝ) (hδ : 0 < δ)
   have he := EulerCylinderSobolevSpace.sobolevEmbeddingConstant_nonneg period 3
   have ho := zero_le_one.trans (output_components period Z hZ).1
   have herr : weightedPhysicalGradientCost D period L.Rc L.C₀ ρ
-    (EulerPacketInitializedCost.weightSize W) ≤
+      (EulerPacketInitializedCost.weightSize W) ≤
       weightedErrorEnvelope Z := by
     calc
-      _ = ((1+9*L.C₀)*EulerPacketPhysicalGevrey.physicalFixedCost D L.Rc L.C₀ ρ⁻¹ 1*
+      _ = ((1+9*L.C₀)*EulerPacketPhysicalGevrey.physicalFixedCost D L.Rc L.C₀ ρ⁻¹ 1 *
           EulerCylinderSobolevSpace.sobolevEmbeddingConstant period 3)*outputEnvelope period Z := by
         unfold weightedPhysicalGradientCost EulerPacketInitializedCost.weightSize
         ring
-      _ ≤ ((1+9*Z)*physicalEnvelope Z (4*inverseRadiusEnvelope Z)*
-          EulerCylinderSobolevSpace.sobolevEmbeddingConstant period 3)*outputEnvelope period Z :=
-            by gcongr
+      _ ≤ ((1+9*Z)*physicalEnvelope Z (4*inverseRadiusEnvelope Z) *
+          EulerCylinderSobolevSpace.sobolevEmbeddingConstant period 3)*outputEnvelope period Z := by
+              gcongr
       _ = _ := rfl
   have hshear := shearCost_le R H0 NB.C Z hR0 hH0 NB.C_nonneg hRZ hHZ hNC
   have hhess := hessianCost_le D NB R H0 L.Rc L.C₀ Z hR0 hH0 L.Rc_nonneg L.C₀_nonneg
     hRZ hHZ hLR hLC hNR hNC
   obtain ⟨hwe,hr,ha,hb,ht',he',hs,hp⟩ := extra_components Z hZ
   exact ⟨hwe,hrf.trans hr,hav.trans ha,hb,hat.trans ht',herr.trans he',hshear.trans hs,hhess.trans
-    hp⟩
+      hp⟩
 
 
 end EulerPacketInitializedOutputCost

@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressure
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 
 /-! The signed pressure correction has a genuine scalar potential in
 physical coordinates. Its gradient is exactly the inverse-transpose
 reconstruction used in the quantitative correction estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +30,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   {A : Data P D.T} (B : Budget P D.T_pos A)
 
+/-- Physical potential, given by `B.normalizedGraphPotential P k t ∘ Y t`. -/
 def Budget.physicalPotential (k : ℝ) (Y : Icc (0 : ℝ) D.T → Space → Space)
     (t : Icc (0 : ℝ) D.T) : Space → ℝ :=
   B.normalizedGraphPotential P k t ∘ Y t
@@ -44,18 +48,18 @@ theorem Budget.physicalPotential_joint_continuous (k : ℝ)
 
 variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-  (hXY : ∀ t x, X t (Y t x)=x)
+  (hXY : ∀ t x, X t (Y t x) = x)
   (hY : Continuous (Function.uncurry Y))
 
 include hX hXY hY in
-theorem Budget.physicalPotential_smooth (k : ℝ) (hk : k*A.κ=1)
+theorem Budget.physicalPotential_smooth (k : ℝ) (hk : k * A.κ = 1)
     (t : Icc (0 : ℝ) D.T) :
     ContDiff ℝ ∞ (B.physicalPotential D P k Y t) :=
   (B.normalizedGraphPotential_smooth P k hk t).comp
     (continuousInverse_contDiff D X Y hX hXY hY t)
 
 include hX hXY hY in
-theorem Budget.physicalPotential_gradient (k : ℝ) (hk : k*A.κ=1)
+theorem Budget.physicalPotential_gradient (k : ℝ) (hk : k * A.κ = 1)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     gradient (B.physicalPotential D P k Y t) x =
       A.κ • (D.FInv.field t (Y t x)).adjoint
@@ -66,7 +70,7 @@ theorem Budget.physicalPotential_gradient (k : ℝ) (hk : k*A.κ=1)
     B.normalizedGraphPotential_gradient P k hk t (Y t x), map_smul]
 
 include hX hXY hY in
-theorem Budget.physicalPotential_gradient_jet (k : ℝ) (hk : k*A.κ=1)
+theorem Budget.physicalPotential_gradient_jet (k : ℝ) (hk : k * A.κ = 1)
     (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
     iteratedFDeriv ℝ n (gradient (B.physicalPotential D P k Y t)) x =
       iteratedFDeriv ℝ n (fun y => A.κ • (D.FInv.field t (Y t y)).adjoint
@@ -76,7 +80,7 @@ theorem Budget.physicalPotential_gradient_jet (k : ℝ) (hk : k*A.κ=1)
   exact B.physicalPotential_gradient D P X Y hX hXY hY k hk t y
 
 include hX hXY hY in
-theorem Budget.physicalPotential_hessian_norm (k : ℝ) (hk : k*A.κ=1)
+theorem Budget.physicalPotential_hessian_norm (k : ℝ) (hk : k * A.κ = 1)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖fderiv ℝ (gradient (B.physicalPotential D P k Y t)) x‖ =
       ‖iteratedFDeriv ℝ 1 (fun y => A.κ • (D.FInv.field t (Y t y)).adjoint

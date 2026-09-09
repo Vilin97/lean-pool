@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SchedulePressure
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.TailEnergyBounds
 
 /-!
 # Uniform future-pressure bounds for the actual outgoing schedule
@@ -20,6 +18,9 @@ assumed envelope.  Its clock decay is obtained directly from the prescribed
 slopes, including the first unit ramp.  Angular derivatives are derivatives of
 the actual improper integral.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,6 +38,7 @@ noncomputable def logClock (d : TailData) (y : ℝ) : ℝ :=
     releaseAdjustment d (y - d.releaseStart) +
     Real.log (tailShape d (y - tailStart d))
 
+/-- Clock slope, constructed using `slope`. -/
 noncomputable def clockSlope (d : TailData) (y : ℝ) : ℝ :=
   slope d.core.dropLength d.core.lam y - 1 / 2 -
     deriv sigma ((y - d.core.endpoint) / flattenLength) / flattenLength * Real.log 2 +
@@ -230,6 +232,7 @@ noncomputable def Pi (d : TailData) (y eta : ℝ) : ℝ :=
 noncomputable def futureMass (d : TailData) (y : ℝ) (n : ℕ) (eta : ℝ) : ℝ :=
   ∫ t in Ioi y, shapeExponent d t ^ n * finalAngular d (t, eta) ^ 2
 
+/-- Future weight, given by `(Ioi y).indicator (clockWeight d) t * shapeExponent d t ^ n`. -/
 noncomputable def futureWeight (d : TailData) (y : ℝ) (n : ℕ) (t : ℝ) : ℝ :=
   (Ioi y).indicator (clockWeight d) t * shapeExponent d t ^ n
 
@@ -370,7 +373,7 @@ theorem Pi_second_hasDerivAt_eta (d : TailData) (y eta : ℝ) :
   rw [hfun]
   convert! hk.fun_mul (futureMass_hasDerivAt d y 1 eta) using 1
   norm_num
-  field_simp ; ring
+  field_simp; ring
 
 theorem Pi_second_deriv_eta (d : TailData) (y eta : ℝ) :
     deriv (deriv (Pi d y)) eta =

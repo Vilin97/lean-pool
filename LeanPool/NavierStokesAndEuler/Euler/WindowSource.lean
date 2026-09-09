@@ -6,19 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GainedMildPasting
+public import LeanPool.NavierStokesAndEuler.Euler.QuadraticHeatLocal
+public import LeanPool.NavierStokesAndEuler.Euler.TimePathGluing
+public import LeanPool.NavierStokesAndEuler.Euler.UniformHeatLocal
+
+/-! Actual nonlinear source paths commute with restriction and adjacent-interval solution pasting.
+-/
 
 @[expose] public section
 
-/-! Actual nonlinear source paths commute with restriction and adjacent-interval solution pasting.
-  -/
 
 noncomputable section
 
 namespace EulerWindowSource
 
 open MeasureTheory Set EulerVolterraConvolution EulerUniformHeatLocal EulerQuadraticSource
-  EulerTimePathGluing EulerGainedMildPasting
+  EulerTimePathGluing
 open scoped Topology
 
 variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
@@ -26,19 +29,20 @@ variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 /-- The actual nonlinear forcing evaluated along a solution on a translated compact time window. -/
 def windowSource {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y)
-    (a T : ℝ) (ha : 0 ≤ a) (haT : a+T ≤ S) (u : C(Icc (0 : ℝ) T, X)) : C(Icc (0 : ℝ) T, Y) :=
+    (a T : ℝ) (ha : 0 ≤ a) (haT : a + T ≤ S) (u : C(Icc (0 : ℝ) T, X)) : C(Icc (0 : ℝ) T, Y) :=
   ⟨fun t => C.apply (timeWindow a T ha haT t) (u t),
     C.continuous.comp ((timeWindow a T ha haT).continuous.prodMk u.continuous)⟩
 
 /-- The clamped source has its literal nonlinear value at every time inside its actual window. -/
 theorem windowSource_extend {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y)
-    (a T : ℝ) (ha : 0 ≤ a) (hT : 0 ≤ T) (haT : a+T ≤ S)
+    (a T : ℝ) (ha : 0 ≤ a) (hT : 0 ≤ T) (haT : a + T ≤ S)
     (u : C(Icc (0 : ℝ) T, X)) (r : ℝ) (hr : r ∈ Icc 0 T) :
     extendPath T hT (windowSource C a T ha haT u) r =
       C.apply (timeWindow a T ha haT ⟨r,hr⟩) (extendPath T hT u r) :=
   congrArg (fun t => C.apply (timeWindow a T ha haT t) (extendPath T hT u r)) (projIcc_of_mem hT hr)
 
-/-- At zero offset the actual source path is exactly the initial-interval source used by the local solver. -/
+/-- At zero offset the actual source path is exactly the initial-interval source used by the local
+solver. -/
 theorem windowSource_zero {S T : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y)
     (hT : 0 ≤ T) (hTS : T ≤ S) (u : C(Icc (0 : ℝ) T, X)) (r : ℝ) :
     extendPath T hT (windowSource C 0 T le_rfl (by simpa using hTS) u) r =
@@ -49,9 +53,9 @@ theorem windowSource_zero {S T : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y)
 
 /-- Before the restart, the literal nonlinear source of the pasted solution is the old source. -/
 theorem windowSource_glue_left {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y)
-    (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (habS : a+b ≤ S)
+    (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (habS : a + b ≤ S)
     (u : C(Icc (0 : ℝ) a, X)) (v : C(Icc (0 : ℝ) b, X))
-    (hmatch : u ⟨a,ha,le_rfl⟩ = v ⟨0,le_rfl,hb⟩) (r : ℝ) (hr : r ∈ Icc 0 a) :
+    (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩) (r : ℝ) (hr : r ∈ Icc 0 a) :
     extendPath (a+b) (add_nonneg ha hb)
       (windowSource C 0 (a+b) le_rfl (by simpa using habS) (gluePath a b ha hb u v hmatch)) r =
       extendPath a ha (windowSource C 0 a le_rfl (by linarith) u) r := by
@@ -63,11 +67,12 @@ theorem windowSource_glue_left {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y
       timeWindow 0 a le_rfl (by linarith) ⟨r,hr⟩ := by apply Subtype.ext; rfl
   exact h1.trans ((congrArg₂ C.apply ht (gluePath_left a b ha hb u v hmatch r hr)).trans h2.symm)
 
-/-- After the restart, the literal nonlinear source of the pasted solution is the translated new source. -/
+/-- After the restart, the literal nonlinear source of the pasted solution is the translated new
+source. -/
 theorem windowSource_glue_right {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y)
-    (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (habS : a+b ≤ S)
+    (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (habS : a + b ≤ S)
     (u : C(Icc (0 : ℝ) a, X)) (v : C(Icc (0 : ℝ) b, X))
-    (hmatch : u ⟨a,ha,le_rfl⟩ = v ⟨0,le_rfl,hb⟩) (r : ℝ) (hr : r ∈ Icc 0 b) :
+    (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩) (r : ℝ) (hr : r ∈ Icc 0 b) :
     extendPath (a+b) (add_nonneg ha hb)
       (windowSource C 0 (a+b) le_rfl (by simpa using habS) (gluePath a b ha hb u v hmatch)) (a+r) =
       extendPath b hb (windowSource C a b ha habS v) r := by

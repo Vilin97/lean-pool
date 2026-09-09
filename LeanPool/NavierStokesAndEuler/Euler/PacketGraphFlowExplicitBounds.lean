@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowFieldBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowSupBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
+public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowBounds
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowFrequency
+import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
+import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowSupBounds
 
 /-! The quarter-power physical-flow bounds follow from the same tiny-power
 source comparison and one parent-independent numerical margin. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,9 +28,9 @@ open Real EulerSmoothFlowGevrey EulerPacketSourceFrequency
 theorem physical_bounds_of_costs (K B R T C1 k ell : ℝ)
     (hK : 0 ≤ K) (hB : 0 ≤ B) (hR : 0 ≤ R) (hT : 0 ≤ T) (hC1 : 0 ≤ C1)
     (hk : 1 ≤ k) (hell : 0 < ell)
-    (hw : max 71 K ≤ k^(1/24 : ℝ)) (hroot : 16 ≤ k^(1/4 : ℝ))
+    (hw : max 71 K ≤ k ^ (1 / 24 : ℝ)) (hroot : 16 ≤ k ^ (1 / 4 : ℝ))
     (hRk : R ≤ smallPower k) (hTk : T ≤ smallPower k) (hCk : C1 ≤ smallPower k)
-    (hsmall : B ≤ 2*k^(-(1/2 : ℝ))) :
+    (hsmall : B ≤ 2 * k ^ (-(1 / 2 : ℝ))) :
     K*(T*B)*(1+flowRadius B R T R) ≤ k^(-(1/4 : ℝ)) ∧
     K*B*(1+flowRadius B R T R) ≤ k^(-(1/4 : ℝ)) ∧
     K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ k^(1/4 : ℝ) ∧
@@ -54,11 +58,11 @@ open Set Real EulerLiftedGradientSpace EulerSmoothFlowGevrey
 variable (P T : ℝ) [Fact (0 < P)]
 
 theorem data_field_bounds_explicit (G : Data P T) (k : ℝ)
-    (hC : G.C=G.B) (hS : G.S=G.R) (hS1 : G.S₁=G.R)
-    (hk : 1 ≤ k) (hw : max 71 (Real.sqrt (2/P+2*P)) ≤ k^(1/24 : ℝ))
-    (hroot : 16 ≤ k^(1/4 : ℝ)) (hB : G.B ≤ 2*k^(-(1/2 : ℝ)))
+    (hC : G.C = G.B) (hS : G.S = G.R) (hS1 : G.S₁ = G.R)
+    (hk : 1 ≤ k) (hw : max 71 (Real.sqrt (2 / P + 2 * P)) ≤ k ^ (1 / 24 : ℝ))
+    (hroot : 16 ≤ k ^ (1 / 4 : ℝ)) (hB : G.B ≤ 2 * k ^ (-(1 / 2 : ℝ)))
     (hR : G.R ≤ smallPower k) (hC1 : G.C₁ ≤ smallPower k) (hT : T ≤ smallPower k)
-    (m : Vector3) (hm : ‖m‖=1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
+    (m : Vector3) (hm : ‖m‖ = 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (t : Icc (0 : ℝ) T) :
     (G.displacementField k m ell hell t).HasJetBound (k^(-(1/4 : ℝ))) (ell⁻¹*k^(5/4 : ℝ)) ∧
     (G.velocityField k m ell hell t).HasJetBound (k^(-(1/4 : ℝ))) (ell⁻¹*k^(5/4 : ℝ)) ∧
@@ -98,9 +102,9 @@ theorem data_field_bounds_explicit (G : Data P T) (k : ℝ)
     · simpa only [har,hgf] using hn.2.2.2.2
 
 theorem data_sup_bounds_explicit (G : Data P T) (k : ℝ)
-    (hk : 1 ≤ k) (hw : 71 ≤ k^(1/24 : ℝ)) (hroot : 16 ≤ k^(1/4 : ℝ))
-    (hB : G.B ≤ 2*k^(-(1/2 : ℝ))) (hR : G.R ≤ smallPower k) (hT : T ≤ smallPower k)
-    (m : Vector3) (hm : ‖m‖=1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
+    (hk : 1 ≤ k) (hw : 71 ≤ k ^ (1 / 24 : ℝ)) (hroot : 16 ≤ k ^ (1 / 4 : ℝ))
+    (hB : G.B ≤ 2 * k ^ (-(1 / 2 : ℝ))) (hR : G.R ≤ smallPower k) (hT : T ≤ smallPower k)
+    (m : Vector3) (hm : ‖m‖ = 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (t : Icc (0 : ℝ) T) :
     HasSupBound (G.displacementField k m ell hell t).field (k^(-(1/4 : ℝ))) (ell⁻¹*k^(5/4 : ℝ)) ∧
     HasSupBound (G.velocityField k m ell hell t).field (k^(-(1/4 : ℝ))) (ell⁻¹*k^(5/4 : ℝ)) := by
@@ -129,8 +133,8 @@ theorem data_sup_bounds_explicit (G : Data P T) (k : ℝ)
     have h := mul_le_mul hleft hright hR0 (by positivity : 0 ≤ 4*G.R+1)
     simpa only [one_mul,flowRadius] using h
   constructor
-  · apply (G.displacement_sup_bound k m ell hell hell1 t).mono (mul_nonneg hB0 hT0) (by positivity)
-    hdisp
+  · apply (G.displacement_sup_bound k m ell hell hell1 t).mono (mul_nonneg hB0 hT0) (by
+      positivity) hdisp
     rw [hgf]
     apply le_trans _ hrad
     gcongr

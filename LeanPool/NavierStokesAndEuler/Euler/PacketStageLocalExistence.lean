@@ -7,15 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
-public import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLocalCauchy
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Series
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldPhysicalSobolev
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLocalCauchy
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Series
 
 /-! An actual stage family with convergent initial data has a genuine
 positive-time Euler solution for its limiting datum. Only the already
 proved common packet interval and actual stability are used. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -43,7 +49,7 @@ open scoped Topology
 
 variable {c B : ℝ} {S : Scales c B} (P : ∀ n, Stage S n) (u₀ : SmoothL2Field Space)
   (hinit : ∀ q, Tendsto (fun n => derivativeSum q
-    ((fun x => (P n).state.evolution.velocity (0,x))-u₀.field)) atTop (𝓝 0))
+    ((fun x => (P n).state.evolution.velocity (0, x)) - u₀.field)) atTop (𝓝 0))
 
 include hinit in
 theorem exists_local_evolution :
@@ -53,13 +59,13 @@ theorem exists_local_evolution :
   have hT : 0 < T := div_pos (baseHorizon_pos S.J S.j_one S.x_pos) (by norm_num)
   let V : ℕ → Evolution T hT.le := fun n =>
     ((P n).state.regularity.ordinaryEvolution).restrictTime T hT.le (P n).horizon_lower.le
-  have hv (n : ℕ) : ((V n).velocity ⟨0,le_rfl,hT.le⟩).field=
+  have hv (n : ℕ) : ((V n).velocity ⟨0,le_rfl,hT.le⟩).field =
       fun x => (P n).state.evolution.velocity (0,x) := by
     funext x
     exact ((P n).state.regularity.velocity_match ⟨0,le_rfl,(P n).parent.T_pos.le⟩ x).symm
   have herr (q : ℕ) : Tendsto (fun n => tensorNorm q
       (fieldSub ((V n).velocity ⟨0,le_rfl,hT.le⟩) u₀)) atTop (𝓝 0) := by
-    have heq (n : ℕ) : tensorNorm q (fieldSub ((V n).velocity ⟨0,le_rfl,hT.le⟩) u₀)=
+    have heq (n : ℕ) : tensorNorm q (fieldSub ((V n).velocity ⟨0,le_rfl,hT.le⟩) u₀) =
         derivativeSum q ((fun x => (P n).state.evolution.velocity (0,x))-u₀.field) := by
       rw [tensorNorm_eq_derivativeSum]
       congr 1

@@ -7,16 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletSupport
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletMean
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletMean
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletSupport
 
 /-!
 Spatial support and zero angular mean of the actual affine-terminal
 cylinder inverse. Both properties are inherited from its genuine L²
 terminal datum through the explicit forced reduction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -91,7 +93,7 @@ variable (Y : CylinderL2 P U) (hY : average P Y = 0)
 include hY
 
 theorem endpointForcing_mean_zero (t : Icc (0 : ℝ) T) : average P (D.endpointForcing P Y t) = 0 :=
-  by
+    by
   rw [D.endpointForcing_apply P Y t,map_smul]
   change (2 : ℝ) • average P (fullOperatorMap P (D.Q₁ t) (T⁻¹ • Y)) = 0
   rw [average_fullOperator,map_smul,hY,smul_zero,map_zero,smul_zero]
@@ -100,13 +102,13 @@ theorem endpointCoordinate_mean_zero (t : Icc (0 : ℝ) T) :
     average P (D.endpointCoordinate P Y t) = 0 := by
   rw [D.endpointCoordinate_eq_const_sub P Y t,map_sub,map_smul,hY,smul_zero,
     D.velocityPath_mean_zero P (D.endpointForcing P Y) (D.endpointForcing_mean_zero P Y hY)
-      t,sub_zero]
+        t,sub_zero]
 
 theorem endpointAcceleration_mean_zero (t : Icc (0 : ℝ) T) :
     average P (D.endpointAcceleration P Y t) = 0 := by
   rw [D.endpointAcceleration_eq_forced P Y,ContinuousMap.neg_apply,map_neg,
     D.accelerationPath_mean_zero P (D.endpointForcing P Y) (D.endpointForcing_mean_zero P Y hY)
-      t,neg_zero]
+        t,neg_zero]
 
 theorem endpointVelocity_mean_zero (t : Icc (0 : ℝ) T) :
     average P (D.endpointVelocity P Y t) = 0 := by
@@ -115,7 +117,7 @@ theorem endpointVelocity_mean_zero (t : Icc (0 : ℝ) T) :
 
 theorem endpointDerivative_mean_zero (t : Icc (0 : ℝ) T) :
     average P (D.endpointDerivative P Y t) = 0 := by
-  change average P (fullOperatorMap P (D.Q₁ t) (D.endpointCoordinate P Y t)+
+  change average P (fullOperatorMap P (D.Q₁ t) (D.endpointCoordinate P Y t) +
     fullOperatorMap P (D.Q t) (D.endpointAcceleration P Y t)) = 0
   rw [map_add,average_fullOperator,average_fullOperator,
     D.endpointCoordinate_mean_zero P Y hY t,D.endpointAcceleration_mean_zero P Y hY t,

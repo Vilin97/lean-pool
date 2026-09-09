@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicSourceSupport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedWaveBounds
 
-@[expose] public section
-
 /-!
 # Gaussian cutoff errors from support-local primitive estimates
 
@@ -20,6 +18,9 @@ the Gaussian estimate.  On the remainder of the cell, actual input zero
 germs imply a zero germ of the two-term cutoff error.  The global source
 complement is retained once, exactly as in `CopyData.globalGaussian`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -243,8 +244,8 @@ theorem indexed_gaussian_all_gains {s : StripData D} {K : ℕ → J → Set D}
   intro m
   obtain ⟨A, hA, p, hb⟩ := indexed_gaussian_tail_bound hf edges scales θ L hL
     ell hell hLell hc hW hzero m
-  obtain ⟨B, hB, hflat⟩ := gaussian_beats_Q_power (by positivity : 0 < c * ell / 50) p
-    (scales.power * β)
+  obtain ⟨B, hB, hflat⟩ := gaussian_beats_Q_power (by
+      positivity : 0 < c * ell / 50) p (scales.power * β)
   refine ⟨A * B, mul_nonneg hA hB.le, 0, ?_⟩
   intro n i x hx hi j hj
   have ht := (hb n i x hx hi j hj).trans
@@ -252,7 +253,7 @@ theorem indexed_gaussian_all_gains {s : StripData D} {K : ℕ → J → Set D}
       (A * B) * ChartScales.Q n ^ (scales.power * β) by
         calc
           _ = A * ((1 + ChartScales.S n) ^ p * Real.exp (-(c * ell / 50) * ChartScales.S n)) := by
-            ring
+              ring
           _ ≤ A * (B * ChartScales.Q n ^ (scales.power * β)) :=
             mul_le_mul_of_nonneg_left (hflat n) hA
           _ = _ := by ring)
@@ -355,6 +356,8 @@ open LocalizedWaveBounds
 
 variable {D I L : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Indexed cutoff error, given by `d.Dfast (fun n => ψ n i) n x • u n i x + (1 - ψ n i x) • f n
+i x`. -/
 noncomputable def indexedCutoffError (d : GraphDirections D)
     (ψ : ℕ → I → D → ℝ) (u f : ℕ → I → D → ComplexVector)
     (n : ℕ) (i : I) (x : D) : ComplexVector :=

@@ -7,14 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalStress
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatProfileExtension
-public import LeanPool.NavierStokesAndEuler.NavierStokes.EdgeWeightJets
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalHeatCoordinates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalPressure
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
+import LeanPool.NavierStokesAndEuler.NavierStokes.EdgeWeightJets
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalHeatCoordinates
+import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalPressure
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # Actual terminal stress factors at the outer edge
@@ -24,6 +22,9 @@ and to `OutgoingTail.tailShape`.  A positive global physical chart keeps the
 parameter coefficients smooth without assuming a normalized stress factor.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter MeasureTheory
@@ -32,19 +33,27 @@ open NavierStokes.OutgoingTail NavierStokes.TerminalStress
 
 namespace NavierStokes.TerminalEdgeFactor
 
+/-- Edge param: an abbreviation for `ℝ × ℝ`. -/
 abbrev EdgeParam := ℝ × ℝ
 
+/-- Time of, given by `1 - Real.exp p.1`. -/
 noncomputable def timeOf (p : EdgeParam) : ℝ := 1 - Real.exp p.1
+/-- Axis point, given by `(timeOf p, (0, p.2))`. -/
 noncomputable def axisPoint (p : EdgeParam) : SimilarityProfile.PhysicalPoint :=
   (timeOf p, (0, p.2))
+/-- Chart Q, given by `SimilarityProfile.q d.h (axisPoint p)`. -/
 noncomputable def chartQ (d : TailData) (p : EdgeParam) : ℝ :=
   SimilarityProfile.q d.h (axisPoint p)
+/-- Chart eta, given by `SimilarityProfile.eta d.h (axisPoint p)`. -/
 noncomputable def chartEta (d : TailData) (p : EdgeParam) : ℝ :=
   SimilarityProfile.eta d.h (axisPoint p)
+/-- Outer radius, given by `Real.sqrt (2 * chartQ d p * Real.exp (y0 + 3))`. -/
 noncomputable def outerRadius (d : TailData) (y0 : ℝ) (p : EdgeParam) : ℝ :=
   Real.sqrt (2 * chartQ d p * Real.exp (y0 + 3))
+/-- Radius, given by `outerRadius d y0 y.1 * Real.exp (-y.2 / 2)`. -/
 noncomputable def radius (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   outerRadius d y0 y.1 * Real.exp (-y.2 / 2)
+/-- Chart point, given by `radiusPoint (timeOf y.1) (radius d y0 y) y.1.2`. -/
 noncomputable def chartPoint (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) :
     SimilarityProfile.PhysicalPoint := radiusPoint (timeOf y.1) (radius d y0 y) y.1.2
 
@@ -112,6 +121,7 @@ theorem chart_logX (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) :
     Real.log (SimilarityProfile.X d.h (chartPoint d y0 y)) = y0 + 3 - y.2 := by
   rw [chartX, Real.log_exp]
 
+/-- Carrier, given by `physicalHeat C (1 + d.h) (chartPoint d y0 y)`. -/
 noncomputable def carrier (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   physicalHeat C (1 + d.h) (chartPoint d y0 y)
 
@@ -131,6 +141,8 @@ theorem carrier_pos {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ) (y : EdgePa
     0 < carrier C d y0 y :=
   heatAmplitude_pos hC (by linarith [d.h_pos]) (timeOf_lt_one y.1) (radius_pos d y0 y)
 
+/-- Carrier radial, given by `radius d y0 y * SimilarityProfile.partialS (physicalHeat C (1 +
+d.h)) (chartPoint d y0 y)`. -/
 noncomputable def carrierRadial (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   radius d y0 y * SimilarityProfile.partialS (physicalHeat C (1 + d.h)) (chartPoint d y0 y)
 
@@ -153,6 +165,7 @@ theorem carrierRadial_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ((partialS_contDiffAt hp (m := ∞) (by simp)).comp y
       (chartPoint_contDiff d y0).contDiffAt)
 
+/-- Denominator, given by `timeDenominator d.h (timeOf p) p.2`. -/
 noncomputable def denominator (d : TailData) (p : EdgeParam) : ℝ :=
   timeDenominator d.h (timeOf p) p.2
 
@@ -213,6 +226,8 @@ theorem integrableOn_Ioi_of_eventually_zero {f : ℝ → ℝ} {r : ℝ} (hr : 0 
   · have hbu : b ≤ u := (le_max_right r b).trans (le_of_not_ge hmax)
     rw [indicator_of_notMem (show u ∉ Icc r (max r b) from fun h => hmax h.2), hb u hbu]
 
+/-- Radial flat density, given by `(2 / u) * FlatPrimitive.integrand c j a (edgeCoordinate R
+u)`. -/
 noncomputable def radialFlatDensity (c : ℝ) (j : ℕ) (a : ℝ → ℝ) (R u : ℝ) : ℝ :=
   (2 / u) * FlatPrimitive.integrand c j a (edgeCoordinate R u)
 
@@ -262,7 +277,9 @@ theorem physical_heat_argument (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) 
   rw [chart_tau_identity, radius_square]
   field_simp [(chartQ_pos d y.1).ne']
 
+/-- Log taper, given by `tailShape d (y - y0)`. -/
 noncomputable def logTaper (d : TailData) (y0 : ℝ) (y : ℝ) : ℝ := tailShape d (y - y0)
+/-- Radial taper, given by `radialSlice (flattening d.h (logTaper d y0)) (timeOf p) p.2`. -/
 noncomputable def radialTaper (d : TailData) (y0 : ℝ) (p : EdgeParam) : ℝ → ℝ :=
   radialSlice (flattening d.h (logTaper d y0)) (timeOf p) p.2
 
@@ -310,12 +327,18 @@ theorem radialTaper_plateau (d : TailData) (y0 : ℝ) (p : EdgeParam) :
   filter_upwards [eventually_ge_atTop (y0 + 3)] with y hy
   exact tailShape_late d (by linarith)
 
+/-- Boundary coefficient, given by `(2 * carrier C d y0 y / radius d y0 y) * taperSlopeFactor d
+y.2`. -/
 noncomputable def boundaryCoefficient (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   (2 * carrier C d y0 y / radius d y0 y) * taperSlopeFactor d y.2
 
+/-- Time coefficient, given by `(radius d y0 y ^ 3 * carrier C d y0 y / (2 * denominator d y.1))
+* taperSlopeFactor d y.2`. -/
 noncomputable def timeCoefficient (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   (radius d y0 y ^ 3 * carrier C d y0 y / (2 * denominator d y.1)) * taperSlopeFactor d y.2
 
+/-- Correction coefficient, given by `(radius d y0 y * carrier C d y0 y - radius d y0 y ^ 2 *
+carrierRadial C d y0 y) * taperSlopeFactor d y.2`. -/
 noncomputable def correctionCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : EdgeParam × ℝ) : ℝ :=
   (radius d y0 y * carrier C d y0 y - radius d y0 y ^ 2 * carrierRadial C d y0 y) *
@@ -383,13 +406,13 @@ theorem correction_eq_density (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeParam
 theorem time_weight_integrable (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeParam) {r : ℝ}
     (hr : 0 < r) :
     IntegrableOn (fun u => u ^ 2 * timeResidual C d.h (logTaper d y0) (timeOf p) p.2 u) (Ioi r) :=
-      by
+        by
   apply (radialFlatDensity_integrable (by norm_num : (0 : ℝ) < 4)
     (outerRadius_pos d y0 p) hr 3
     ((timeCoefficient_contDiff C d y0).continuous.comp
       (continuous_const.prodMk continuous_id))).congr
-  filter_upwards [ae_restrict_mem measurableSet_Ioi] with u hu
-  exact (time_weight_eq_density C d y0 p (hr.trans hu)).symm
+  · filter_upwards [ae_restrict_mem measurableSet_Ioi] with u hu
+    exact (time_weight_eq_density C d y0 p (hr.trans hu)).symm
 
 theorem correction_integrable (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeParam) {r : ℝ}
     (hr : 0 < r) :
@@ -399,8 +422,8 @@ theorem correction_integrable (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeParam
     (outerRadius_pos d y0 p) hr 3
     ((correctionCoefficient_contDiff C d y0).continuous.comp
       (continuous_const.prodMk continuous_id))).congr
-  filter_upwards [ae_restrict_mem measurableSet_Ioi] with u hu
-  exact (correction_eq_density C d y0 p (hr.trans hu)).symm
+  · filter_upwards [ae_restrict_mem measurableSet_Ioi] with u hu
+    exact (correction_eq_density C d y0 p (hr.trans hu)).symm
 
 theorem time_weight_integral (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) :
     (∫ u in Ioi (radius d y0 y),
@@ -463,9 +486,12 @@ theorem viscous_weight_integrable (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeP
     filter_upwards [hg, hgg] with u hu huu
     simp only [viscousResidual, hu, huu, zero_div, add_zero, mul_zero, sub_self]
 
+/-- Angular stress, given by `terminalStress C d.h (logTaper d y0) (timeOf y.1) y.1.2 (radius d
+y0 y)`. -/
 noncomputable def angularStress (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   terminalStress C d.h (logTaper d y0) (timeOf y.1) y.1.2 (radius d y0 y)
 
+/-- Angular factor, constructed using `boundaryCoefficient`. -/
 noncomputable def angularFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   boundaryCoefficient C d y0 y + (y.2 ^ 3 / radius d y0 y ^ 2) *
     (ParametricFlatFactor.factor 4 3 (timeCoefficient C d y0) y +
@@ -553,6 +579,7 @@ theorem logCoordinate_nonpos {S s : ℝ} (hS : 0 < S) (hSs : S ≤ s) :
     logCoordinate S s ≤ 0 :=
   div_nonpos_of_nonpos_of_nonneg (edgeCoordinate_nonpos hS hSs) (by norm_num)
 
+/-- Outer S, given by `chartQ d p * Real.exp (y0 + 3)`. -/
 noncomputable def outerS (d : TailData) (y0 : ℝ) (p : EdgeParam) : ℝ :=
   chartQ d p * Real.exp (y0 + 3)
 
@@ -596,6 +623,7 @@ theorem carrier_at_s (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeParam) {s : �
   dsimp only
   rw [radialS_logCoordinate d y0 p hs]
 
+/-- Scalar flat density, given by `(1 / s) * FlatPrimitive.integrand c j a (logCoordinate S s)`. -/
 noncomputable def scalarFlatDensity (c : ℝ) (j : ℕ) (a : ℝ → ℝ) (S s : ℝ) : ℝ :=
   (1 / s) * FlatPrimitive.integrand c j a (logCoordinate S s)
 
@@ -630,6 +658,8 @@ theorem scalarFlatDensity_integral {c S s : ℝ} (hc : 0 < c) (hS : 0 < S) (hs :
   simpa only [sub_neg_eq_add, zero_add] using
     integral_Ioi_of_hasDerivAt_of_tendsto' hd (scalarFlatDensity_integrable hc hS hs j ha) hz
 
+/-- Chi, given by `2 * chartEta d p / (chartQ d p ^ CoordinateAlgebra.D d.h *
+CoordinateAlgebra.L d.h (chartEta d p))`. -/
 noncomputable def chi (d : TailData) (p : EdgeParam) : ℝ :=
   2 * chartEta d p /
     (chartQ d p ^ CoordinateAlgebra.D d.h * CoordinateAlgebra.L d.h (chartEta d p))
@@ -651,6 +681,8 @@ theorem chi_eq_logScale (d : TailData) (p : EdgeParam) :
     (Real.rpow_pos_of_pos (chartQ_pos d p) (CoordinateAlgebra.D d.h)).ne',
     (chartL_pos d p).ne']
 
+/-- Pressure coefficient, given by `carrier C d y0 y ^ 2 * tailShape d (3 - y.2) *
+taperSlopeFactor d y.2`. -/
 noncomputable def pressureCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : EdgeParam × ℝ) : ℝ :=
   carrier C d y0 y ^ 2 * tailShape d (3 - y.2) * taperSlopeFactor d y.2
@@ -661,6 +693,8 @@ theorem pressureCoefficient_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ((tailShape_contDiff d).comp (contDiff_const.sub contDiff_snd))).mul
       ((taperSlopeFactor_contDiff d).comp contDiff_snd)
 
+/-- Pressure factor, given by `chi d y.1 * ParametricFlatFactor.factor 4 3 (pressureCoefficient
+C d y0) y`. -/
 noncomputable def pressureFactor (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : EdgeParam × ℝ) : ℝ :=
   chi d y.1 * ParametricFlatFactor.factor 4 3 (pressureCoefficient C d y0) y
@@ -671,6 +705,7 @@ theorem pressureFactor_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     (ParametricFlatFactor.factor_contDiff (by norm_num : (0 : ℝ) < 4) 3
       (pressureCoefficient_contDiff C d y0))
 
+/-- Axial coefficient, given by `(radius d y0 y ^ 2 / 2) * pressureFactor C d y0 y`. -/
 noncomputable def axialCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : EdgeParam × ℝ) : ℝ :=
   (radius d y0 y ^ 2 / 2) * pressureFactor C d y0 y
@@ -679,6 +714,8 @@ theorem axialCoefficient_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (axialCoefficient C d y0) :=
   (((radius_contDiff d y0).pow 2).div_const 2).mul (pressureFactor_contDiff C d y0)
 
+/-- Axial factor, given by `ParametricFlatFactor.factor 4 0 (axialCoefficient C d y0) y / radius
+d y0 y`. -/
 noncomputable def axialFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) : ℝ :=
   ParametricFlatFactor.factor 4 0 (axialCoefficient C d y0) y / radius d y0 y
 
@@ -708,6 +745,8 @@ neighborhood of that closed interval.  No value of the implicit coordinates
 at zero backward time is used.
 -/
 
+/-- Positive extension, given by `m / 2 + (x - m / 2) * OutgoingSchedule.sigma ((x - m / 2) / (m
+/ 2))`. -/
 noncomputable def positiveExtension (m x : ℝ) : ℝ :=
   m / 2 + (x - m / 2) * OutgoingSchedule.sigma ((x - m / 2) / (m / 2))
 
@@ -733,6 +772,7 @@ theorem positiveExtension_eq {m x : ℝ} (hm : 0 < m) (hx : m ≤ x) :
     (by linarith))]
   ring
 
+/-- Profile L, given by `positiveExtension (1 - 2 * d.h) (CoordinateAlgebra.L d.h η)`. -/
 noncomputable def profileL (d : TailData) (η : ℝ) : ℝ :=
   positiveExtension (1 - 2 * d.h) (CoordinateAlgebra.L d.h η)
 
@@ -753,9 +793,12 @@ theorem eta_sq_le_one {η : ℝ} (hη : η ∈ Icc (-1 : ℝ) 1) : η ^ 2 ≤ 1 
   nlinarith [mul_nonneg (show 0 ≤ η + 1 by linarith [hη.1])
     (show 0 ≤ 1 - η by linarith [hη.2])]
 
+/-- Profile S, given by `Real.exp (y0 + 3 - x)`. -/
 noncomputable def profileS (y0 x : ℝ) : ℝ := Real.exp (y0 + 3 - x)
+/-- Profile radius, given by `Real.sqrt (2 * Real.exp (y0 + 3)) * Real.exp (-x / 2)`. -/
 noncomputable def profileRadius (y0 x : ℝ) : ℝ :=
   Real.sqrt (2 * Real.exp (y0 + 3)) * Real.exp (-x / 2)
+/-- Profile Z, given by `2 * (1 - y.1 ^ 2) / profileS y0 y.2`. -/
 noncomputable def profileZ (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   2 * (1 - y.1 ^ 2) / profileS y0 y.2
 
@@ -784,10 +827,13 @@ theorem profileZ_contDiff (y0 : ℝ) : ContDiff ℝ ∞ (profileZ y0) :=
 theorem profileZ_nonneg (y0 : ℝ) {y : ℝ × ℝ} (hη : y.1 ^ 2 ≤ 1) :
     0 ≤ profileZ y0 y := div_nonneg (by nlinarith) (profileS_pos y0 y.2).le
 
+/-- Profile carrier, given by `C * (profileS y0 y.2) ^ RadialHeatProfile.spatialExponent (1 +
+d.h) * HeatProfileExtension.extension (1 + d.h) (profileZ y0 y)`. -/
 noncomputable def profileCarrier (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   C * (profileS y0 y.2) ^ RadialHeatProfile.spatialExponent (1 + d.h) *
     HeatProfileExtension.extension (1 + d.h) (profileZ y0 y)
 
+/-- Profile carrier radial, constructed using `C`. -/
 noncomputable def profileCarrierRadial (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   C * (profileS y0 y.2) ^ (RadialHeatProfile.spatialExponent (1 + d.h) - 1) *
     (RadialHeatProfile.spatialExponent (1 + d.h) *
@@ -820,20 +866,26 @@ theorem profileCarrier_pos {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ)
   mul_pos (mul_pos hC (Real.rpow_pos_of_pos (profileS_pos y0 y.2) _))
     (HeatProfileExtension.extension_pos (by linarith [d.h_pos]) (profileZ_nonneg y0 hη))
 
+/-- Profile chi, given by `2 * η / profileL d η`. -/
 noncomputable def profileChi (d : TailData) (η : ℝ) : ℝ := 2 * η / profileL d η
 
 theorem profileChi_contDiff (d : TailData) : ContDiff ℝ ∞ (profileChi d) :=
   (contDiff_const.mul contDiff_id).div (profileL_contDiff d) (fun η => (profileL_pos d η).ne')
 
+/-- Profile boundary coefficient, given by `(2 * profileCarrier C d y0 y / profileRadius y0 y.2)
+* taperSlopeFactor d y.2`. -/
 noncomputable def profileBoundaryCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ :=
   (2 * profileCarrier C d y0 y / profileRadius y0 y.2) * taperSlopeFactor d y.2
 
+/-- Profile time coefficient, given by `(profileRadius y0 y.2 ^ 3 * profileCarrier C d y0 y / (2
+* profileL d y.1)) * taperSlopeFactor d y.2`. -/
 noncomputable def profileTimeCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ :=
   (profileRadius y0 y.2 ^ 3 * profileCarrier C d y0 y / (2 * profileL d y.1)) *
     taperSlopeFactor d y.2
 
+/-- Profile correction coefficient as an element of `ℝ`. -/
 noncomputable def profileCorrectionCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ :=
   (profileRadius y0 y.2 * profileCarrier C d y0 y -
@@ -862,6 +914,7 @@ theorem profileCorrectionCoefficient_contDiff (C : ℝ) (d : TailData) (y0 : ℝ
       (profileCarrierRadial_contDiff C d y0))).mul
     ((taperSlopeFactor_contDiff d).comp contDiff_snd)
 
+/-- Profile angular factor, constructed using `profileBoundaryCoefficient`. -/
 noncomputable def profileAngularFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   profileBoundaryCoefficient C d y0 y + (y.2 ^ 3 / profileRadius y0 y.2 ^ 2) *
     (ParametricFlatFactor.factor 4 3 (profileTimeCoefficient C d y0) y +
@@ -906,6 +959,8 @@ theorem profileAngularFactor_zero_pos {C : ℝ} (hC : 0 < C) (d : TailData) (y0 
     (profileCarrier_pos hC d y0 (eta_sq_le_one hη))) (profileRadius_pos y0 0))
     (taperSlopeFactor_zero_pos d)
 
+/-- Profile pressure coefficient, given by `profileCarrier C d y0 y ^ 2 * tailShape d (3 - y.2)
+* taperSlopeFactor d y.2`. -/
 noncomputable def profilePressureCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ :=
   profileCarrier C d y0 y ^ 2 * tailShape d (3 - y.2) * taperSlopeFactor d y.2
@@ -916,6 +971,8 @@ theorem profilePressureCoefficient_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) 
     ((tailShape_contDiff d).comp (contDiff_const.sub contDiff_snd))).mul
     ((taperSlopeFactor_contDiff d).comp contDiff_snd)
 
+/-- Profile pressure factor, given by `profileChi d y.1 * ParametricFlatFactor.factor 4 3
+(profilePressureCoefficient C d y0) y`. -/
 noncomputable def profilePressureFactor (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ :=
   profileChi d y.1 * ParametricFlatFactor.factor 4 3 (profilePressureCoefficient C d y0) y
@@ -944,9 +1001,12 @@ theorem profilePressureGradient_factorization (C : ℝ) (d : TailData) (y0 : ℝ
   rw [ParametricFlatFactor.primitive_eq_scale_mul_factor, scale_three]
   ring
 
+/-- Profile axial coefficient, given by `profileS y0 y.2 * profilePressureFactor C d y0 y`. -/
 noncomputable def profileAxialCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ := profileS y0 y.2 * profilePressureFactor C d y0 y
 
+/-- Profile axial factor, given by `ParametricFlatFactor.factor 4 0 (profileAxialCoefficient C d
+y0) y / profileRadius y0 y.2`. -/
 noncomputable def profileAxialFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   ParametricFlatFactor.factor 4 0 (profileAxialCoefficient C d y0) y / profileRadius y0 y.2
 
@@ -1096,6 +1156,7 @@ theorem axialStress_factorization (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeP
 
 /-! ## Agreement with the physical section away from the endpoints -/
 
+/-- Normalized param, given by `(Real.log (1 - η ^ 2), η)`. -/
 noncomputable def normalizedParam (η : ℝ) : EdgeParam := (Real.log (1 - η ^ 2), η)
 
 theorem timeOf_normalizedParam {η : ℝ} (hη : η ^ 2 < 1) :
@@ -1174,7 +1235,7 @@ theorem chi_normalizedParam (d : TailData) {η : ℝ} (hη : η ^ 2 < 1) :
 theorem boundaryCoefficient_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
     {η : ℝ} (hη : η ^ 2 < 1) :
     boundaryCoefficient C d y0 (normalizedParam η, x) = profileBoundaryCoefficient C d y0 (η, x) :=
-      by
+        by
   unfold boundaryCoefficient profileBoundaryCoefficient
   rw [carrier_normalizedParam C d y0 x hη, radius_normalizedParam d y0 x hη]
 
@@ -1188,7 +1249,7 @@ theorem timeCoefficient_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
 theorem correctionCoefficient_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
     {η : ℝ} (hη : η ^ 2 < 1) :
     correctionCoefficient C d y0 (normalizedParam η, x) = profileCorrectionCoefficient C d y0 (η,
-      x) := by
+        x) := by
   unfold correctionCoefficient profileCorrectionCoefficient
   rw [carrier_normalizedParam C d y0 x hη, radius_normalizedParam d y0 x hη,
     carrierRadial_normalizedParam C d y0 x hη]
@@ -1196,7 +1257,7 @@ theorem correctionCoefficient_normalizedParam (C : ℝ) (d : TailData) (y0 x : �
 theorem pressureCoefficient_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
     {η : ℝ} (hη : η ^ 2 < 1) :
     pressureCoefficient C d y0 (normalizedParam η, x) = profilePressureCoefficient C d y0 (η, x) :=
-      by
+        by
   unfold pressureCoefficient profilePressureCoefficient
   rw [carrier_normalizedParam C d y0 x hη]
 
@@ -1256,9 +1317,12 @@ theorem axialStress_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
 
 /-! ## Full profile stress, all jets, and the edge direction -/
 
+/-- Profile stress, given by `(profileAngularStress C d y0 y, profileAxialStress C d y0 y)`. -/
 noncomputable def profileStress (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ × ℝ :=
   (profileAngularStress C d y0 y, profileAxialStress C d y0 y)
 
+/-- Profile stress factor, given by `(profileAngularFactor C d y0 y, y.2 ^ 6 *
+profileAxialFactor C d y0 y)`. -/
 noncomputable def profileStressFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ × ℝ :=
   (profileAngularFactor C d y0 y, y.2 ^ 6 * profileAxialFactor C d y0 y)
 
@@ -1330,6 +1394,8 @@ theorem profileAxialStress_edge_jets (C : ℝ) (d : TailData) (y0 : ℝ) (n : �
   exact EdgeWeightJets.weighted_iteratedFDeriv_zero (by norm_num) 0
     ((contDiff_snd.pow 3).mul (profileAxialFactor_contDiff C d y0)) n η
 
+/-- Profile tilt, given by `y.2 ^ 6 * profileAxialFactor C d y0 y / profileAngularFactor C d y0
+y`. -/
 noncomputable def profileTilt (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   y.2 ^ 6 * profileAxialFactor C d y0 y / profileAngularFactor C d y0 y
 
@@ -1383,6 +1449,7 @@ theorem profileSpeed_contDiffAt {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ)
     {y : ℝ × ℝ} (hη : y.1 ^ 2 ≤ 1) : ContDiffAt ℝ ∞ (profileSpeed C d y0) y :=
   profileSpeed_contDiffAt_of_ne C d y0 (profileCarrier_pos hC d y0 hη).ne'
 
+/-- Profile domain, given by `{y | profileCarrier C d y0 y ≠ 0}`. -/
 noncomputable def profileDomain (C : ℝ) (d : TailData) (y0 : ℝ) : Set (ℝ × ℝ) :=
   {y | profileCarrier C d y0 y ≠ 0}
 
@@ -1448,6 +1515,7 @@ theorem profileSpeed_zero_gt_two {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ
   simp only [profileSpeed, sub_zero, hz, mul_zero, zero_div]
   linarith
 
+/-- Profile cone gap, given by `2 - (profileSpeed C d y0 y - 2) * profileTilt C d y0 y ^ 2`. -/
 noncomputable def profileConeGap (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   2 - (profileSpeed C d y0 y - 2) * profileTilt C d y0 y ^ 2
 
@@ -1504,6 +1572,7 @@ theorem profile_uniform_cone {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ) :
 
 /-! ## The shear formula is the derivative of the actual profile velocity -/
 
+/-- Profile angular velocity, given by `profileCarrier C d y0 y * tailShape d (3 - y.2)`. -/
 noncomputable def profileAngularVelocity (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   profileCarrier C d y0 y * tailShape d (3 - y.2)
 
@@ -1522,7 +1591,7 @@ theorem profileZ_hasDerivAt (y0 η x : ℝ) :
     (profileS_hasDerivAt y0 x) (profileS_pos y0 x).ne' using 1
   unfold profileZ
   dsimp only
-  field_simp [(profileS_pos y0 x).ne'] ; ring
+  field_simp [(profileS_pos y0 x).ne']; ring
 
 theorem profileCarrier_hasDerivAt_edge (C : ℝ) (d : TailData) (y0 η x : ℝ) :
     HasDerivAt (fun u => profileCarrier C d y0 (η, u))
@@ -1596,9 +1665,11 @@ theorem profile_relative_cone {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ) :
 
 /-! ## The same weighted estimates on compact physical parameter sets -/
 
+/-- Physical stress, given by `(angularStress C d y0 y, axialStress C d y0 y)`. -/
 noncomputable def physicalStress (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : EdgeParam × ℝ) : ℝ × ℝ := (angularStress C d y0 y, axialStress C d y0 y)
 
+/-- Physical stress factor, given by `(angularFactor C d y0 y, y.2 ^ 6 * axialFactor C d y0 y)`. -/
 noncomputable def physicalStressFactor (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : EdgeParam × ℝ) : ℝ × ℝ := (angularFactor C d y0 y, y.2 ^ 6 * axialFactor C d y0 y)
 
@@ -1650,10 +1721,12 @@ theorem physicalStress_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
     {η : ℝ} (hη : η ^ 2 < 1) :
     physicalStress C d y0 (normalizedParam η, x) = profileStress C d y0 (η, x) := by
   exact Prod.ext (angularStress_normalizedParam C d y0 x hη) (axialStress_normalizedParam C d y0 x
-    hη)
+      hη)
 
 /-! ## The genuine root-form cone on the terminal collar -/
 
+/-- Profile swirl coefficient, given by `profileAngularVelocity C d y0 y / profileRadius y0
+y.2`. -/
 noncomputable def profileSwirlCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ := profileAngularVelocity C d y0 y / profileRadius y0 y.2
 
@@ -1663,9 +1736,12 @@ theorem profileSwirlCoefficient_pos {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : 
   div_pos (mul_pos (profileCarrier_pos hC d y0 (eta_sq_le_one hη)) (tailShape_pos d _))
     (profileRadius_pos y0 y.2)
 
+/-- Profile P, given by `profileSpeed C d y0 y + profileAngularStress C d y0 y /
+profileSwirlCoefficient C d y0 y`. -/
 noncomputable def profileP (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   profileSpeed C d y0 y + profileAngularStress C d y0 y / profileSwirlCoefficient C d y0 y
 
+/-- Profile J, given by `profileAxialStress C d y0 y / profileSwirlCoefficient C d y0 y`. -/
 noncomputable def profileJ (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   profileAxialStress C d y0 y / profileSwirlCoefficient C d y0 y
 

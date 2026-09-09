@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MetricRootLimit
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+import LeanPool.NavierStokesAndEuler.Euler.MetricRootLimit
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-! Weighted removal of root regularization, preserving the signed derivative of the radius. -/
 
 @[expose] public section
 
-/-! Weighted removal of root regularization, preserving the signed derivative of the radius. -/
 
 noncomputable section
 
@@ -34,7 +37,7 @@ theorem regularized_integral_tendsto (Q A F : ℝ → ℝ) (s t : ℝ) (hst : s 
   have hAQn : Integrable (fun u => A u * √(Q u)) μ := hAQ.mono_set Ioc_subset_Icc_self
   have hmeas (n : ℕ) : AEStronglyMeasurable (fn n) μ :=
     (((hA.mul_continuousOn ((hQ.add continuousOn_const).sqrt) isCompact_Icc).add hF).mono_set
-      Ioc_subset_Icc_self).aestronglyMeasurable
+        Ioc_subset_Icc_self).aestronglyMeasurable
   have hbound (n : ℕ) : ∀ᵐ u ∂μ,
       ‖fn n u‖ ≤ ‖A u * √(Q u)‖ + ‖A u‖ + ‖F u‖ := by
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with u hu
@@ -74,7 +77,8 @@ theorem weighted_root_integral_limit (Q A F w : ℝ → ℝ) (s t : ℝ) (hst : 
     (regularized_integral_tendsto Q A F s t hst hQ hQ0 hA hF)
     (fun n => hineq (cutoffScale n) (cutoffScale_pos n))
 
-/-- A nonnegative differentiable weight preserves an energy differential bound with its signed derivative. -/
+/-- A nonnegative differentiable weight preserves an energy differential bound with its signed
+derivative. -/
 theorem weighted_root_integral_of_deriv_bound (Q a F w w' : ℝ → ℝ) (s t : ℝ)
     (hst : s ≤ t) (hQ : ContinuousOn Q (Icc s t)) (hQ0 : ∀ u ∈ Icc s t, 0 ≤ Q u)
     (hwc : ContinuousOn w (Icc s t)) (hw : ∀ u ∈ Ioo s t, 0 ≤ w u)
@@ -99,7 +103,7 @@ theorem weighted_root_integral_of_deriv_bound (Q a F w w' : ℝ → ℝ) (s t : 
     (g' := fun u => deriv (fun v => w v * √(Q v + δ ^ 2)) u) hst hcont ?_ hφint ?_
   · intro u hu
     exact ((hwd u hu).fun_mul (hregd δ hδ u
-      hu).hasDerivAt).differentiableAt.hasDerivAt.hasDerivWithinAt
+        hu).hasDerivAt).differentiableAt.hasDerivAt.hasDerivWithinAt
   · intro u hu
     rw [((hwd u hu).fun_mul (hregd δ hδ u hu).hasDerivAt).deriv]
     have h := mul_le_mul_of_nonneg_left (hreg δ hδ u hu) (hw u hu)

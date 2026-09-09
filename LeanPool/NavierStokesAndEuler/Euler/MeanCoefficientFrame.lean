@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
 
+/-! Genuine matrix-frame identities induce the operator identities used by the mean inverse. -/
+
 @[expose] public section
 
-/-! Genuine matrix-frame identities induce the operator identities used by the mean inverse. -/
 
 noncomputable section
 
@@ -20,9 +21,12 @@ open MeasureTheory InnerProductSpace Set EulerSmoothLimit EulerMeanSolenoidal
   EulerLiftedPressure
 open scoped BoundedContinuousFunction NNReal
 
-private local instance : NormedAddCommGroup Field := inferInstance
-private local instance : NormedSpace ℝ Field := inferInstance
+/-- Cache the standard `NormedAddCommGroup Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientFrame1 : NormedAddCommGroup Field := inferInstance
+/-- Cache the standard `NormedSpace ℝ Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientFrame2 : NormedSpace ℝ Field := inferInstance
 
+/-- Adjoint field as an element of `Field`. -/
 def adjointField (A : Field) : Field :=
   (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap
     : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space)).compLeftContinuousBounded Space A
@@ -31,7 +35,7 @@ def adjointField (A : Field) : Field :=
     adjointField A x = (A x).adjoint := rfl
 
 theorem multiplier_adjointField (A : Field) : multiplier (adjointField A) = (multiplier A).adjoint
-  :=
+    :=
   multiplier_adjoint A (adjointField A) (fun _ => rfl)
 
 theorem operatorPath_comp (T : ℝ) (A B C : C(Icc (0 : ℝ) T, Field))

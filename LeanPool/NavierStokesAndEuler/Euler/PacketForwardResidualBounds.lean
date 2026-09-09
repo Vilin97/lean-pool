@@ -8,11 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceResidualFields
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileTailEstimates
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileTailEstimates
+
+/-! Exponentially small literal residual for the actual zero-history packet. -/
 
 @[expose] public section
 
-/-! Exponentially small literal residual for the actual zero-history packet. -/
 
 noncomputable section
 
@@ -39,9 +42,9 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 include NB W LM WM BC hRc hcost hα hgrowth hprimaryBudget
 
 theorem forwardTailSum_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ))
-    (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ))
+    (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (((sourceCoefficientData P M D (InitialData.zero P D) hTime).inverse.multiply
       (sourceTailSumField P M D hTime (InitialData.zero P D) Y N k⁻¹)).smul k).WordBound
         6 (4*L.R) (Real.exp (-(7/10)*X*Real.log k)) 0 := by
@@ -59,9 +62,9 @@ theorem forwardTailSum_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk
 
 theorem forwardResidual_normalized_bound (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ))
-    (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ))
+    (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (((sourceCoefficientData P M D (InitialData.zero P D) hTime).inverse.multiply
       (sourceResidualField P M D hTime (InitialData.zero P D) Y Cagree N hN
         k⁻¹ (inv_ne_zero (by linarith)))).smul k).WordBound

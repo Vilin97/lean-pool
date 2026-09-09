@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+
+/-! Exact ordinary derivatives of the raw covering field of a smooth cylinder representative. -/
 
 @[expose] public section
 
-/-! Exact ordinary derivatives of the raw covering field of a smooth cylinder representative. -/
 
 noncomputable section
 

@@ -10,12 +10,13 @@ public import LeanPool.NavierStokesAndEuler.Euler.StaticCylinderField
 public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionBudget
 public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionResidual
 
-@[expose] public section
-
 /-! An actual exact lifted Euler solution is constructed from any genuine
 smooth solenoidal L² datum with factorial derivative bounds. The amplitude
 is an explicit function of the supplied bounds and does not depend on the
 particular datum realizing them. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +27,9 @@ open Set EulerSmoothLimit EulerLiftedGradientSpace EulerParameterWordGevrey
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Mixed radius, given by `sobolevCoefficientRadius (Fin 4) R`. -/
 def mixedRadius (R : ℝ) : ℝ := sobolevCoefficientRadius (Fin 4) R
+/-- Mixed amplitude, given by `Real.sqrt P*sobolevCoefficientAmplitude (Fin 4) 6 R C`. -/
 def mixedAmplitude (C R : ℝ) : ℝ := Real.sqrt P*sobolevCoefficientAmplitude (Fin 4) 6 R C
 
 theorem mixedRadius_nonneg (R : ℝ) (hR : 0 ≤ R) : 0 ≤ mixedRadius R :=
@@ -36,12 +39,15 @@ omit [Fact (0 < P)] in
 theorem mixedAmplitude_nonneg (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : 0 ≤ mixedAmplitude P C R :=
   mul_nonneg (Real.sqrt_nonneg P) (sobolevCoefficientAmplitude_nonneg (ι := Fin 4) 6 R C hR hC)
 
+/-- Scales, given by `scale P _ _ _ (mixedAmplitude_nonneg P C R hC hR) (mixedRadius_nonneg R
+hR) (residualCost_pos P _ _ (mixedRadius_nonneg R hR))`. -/
 def scales (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     Scale P (mixedAmplitude P C R) (mixedRadius R)
       (residualCost P (mixedAmplitude P C R) (mixedRadius R)) :=
   scale P _ _ _ (mixedAmplitude_nonneg P C R hC hR) (mixedRadius_nonneg R hR)
     (residualCost_pos P _ _ (mixedRadius_nonneg R hR))
 
+/-- Amplitude, given by `(scales P C R hC hR).value`. -/
 def amplitude (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : ℝ := (scales P C R hC hR).value
 
 theorem amplitude_pos (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : 0 < amplitude P C R hC hR :=
@@ -51,17 +57,20 @@ theorem amplitude_le_one (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : amplitude P
   (scales P C R hC hR).one
 
 variable (u : SmoothL2Field Space) (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
-  (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
+  (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
 
+/-- Input data, given by `input (EulerStaticCylinder.field P 1 u) (amplitude P C R hC hR)`. -/
 def inputData := input (EulerStaticCylinder.field P 1 u) (amplitude P C R hC hR)
 
+/-- Correction budget, constructed using `budget`. -/
 def correctionBudget :
     Budget P (by norm_num : (0 : ℝ) < 1) (inputData P u C R hC hR) :=
   budget (EulerStaticCylinder.field P 1 u) (EulerStaticCylinder.field_wordBound P 1 u 6 C R hC hR
-    hu)
+      hu)
     (mixedAmplitude_nonneg P C R hC hR) (mixedRadius_nonneg R hR) (scales P C R hC hR)
     (EulerStaticCylinder.field_divergence P 1 u 1 0 hdiv)
 
+/-- Exact packet, constructed using `exactPacketOfResidual`. -/
 def exactPacket : ExactLiftedPacket P (by norm_num : (0 : ℝ) < 1)
     (inputData P u C R hC hR) (correctionBudget P u C R hC hR hu hdiv) :=
   exactPacketOfResidual P (correctionBudget P u C R hC hR hu hdiv)

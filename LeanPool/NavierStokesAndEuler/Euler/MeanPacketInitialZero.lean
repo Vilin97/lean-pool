@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketContract
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketConstraints
 
 /-! The actual localized mean initial condition vanishes when the source
 boundary coefficient L is zero. -/
+
+@[expose] public section
+
 
 noncomputable section
 

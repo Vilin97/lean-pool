@@ -7,11 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceScales
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldWeight
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+
+/-! Quantitative bounds on the actual masked fields used in the known forcing. -/
 
 @[expose] public section
 
-/-! Quantitative bounds on the actual masked fields used in the known forcing. -/
 
 noncomputable section
 
@@ -22,6 +26,7 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
 
 variable {P T : ℝ} [Fact (0 < P)] {p : ℕ} {a : ℕ → Profile}
 
+/-- Prefix bound data, collecting `high`, `mean`, `corrector`. -/
 structure PrefixBound (F : PrefixFields P T p a) (hT : 0 ≤ T)
     (S : Scales (Icc (0 : ℝ) T)) (R : ℝ) : Prop where
   high : ∀ i (hi : i < p), 1 ≤ i →
@@ -40,7 +45,7 @@ include B
 
 theorem piece (hR : 0 ≤ R) (k : KnownPiece) (i : ℕ) :
     ((F.piece k i).normalized hT (k.profile S i) (k.profile_pos S i)).WordBound 6 R 1 (k.shift i)
-      := by
+        := by
   by_cases hi : k.active p i
   · cases k with
     | high =>

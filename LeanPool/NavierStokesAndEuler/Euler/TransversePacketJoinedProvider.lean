@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedParity
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedEquation
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPressure
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrector
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSliceRepresentatives
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedEquation
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPressure
 
 /-!
 # Total raw-field provider for a positive history time
@@ -21,6 +22,9 @@ Every admissible input is sent to the constructed history/forward solution.
 Its raw PDE, tangent constraint, parity, actual Field witnesses, true time
 derivative, pressure gradient and literal curl corrector are all exported.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -68,9 +72,9 @@ theorem scalar_independent_of_witness : scalar τ hτ hτT B G = scalar τ hτ h
   have hp : pressurePath τ hτ hτT B G = pressurePath τ hτ hτT B H := by
     rw [pressurePath_eq_source,pressurePath_eq_source,hv]
     exact congrArg (fun p => sourcePressure P D.M D.normal D.normalLower D.normalLower_pos
-      D.normal_lower
+        D.normal_lower
       (includePath P D.support D.support_measurable p) (velocityPath τ hτ hτT B H)) (G.path_unique
-        H)
+          H)
   funext z
   exact congrFun (scalarPointField_eq_of_slice_eq P _ _ (pressurePath_orbit τ hτ hτT B G)
     (pressurePath_orbit τ hτ hτT B H) (D.clamp z.1) (D.clamp z.1)
@@ -119,10 +123,13 @@ theorem highSolve_eq : highSolve (P := P) τ hτ hτT B raw =
 
 variable (h : Nonempty (Forcing P D raw))
 
+/-- High vector field, given by `(vectorField τ hτ hτT B (Classical.choice h)).congr (fun t x θ
+=> by rw [highSolve_of_admissible τ hτ hτT B h])`. -/
 def highVectorField : Field P D.T (highSolve (P := P) τ hτ hτT B raw).1 :=
   (vectorField τ hτ hτT B (Classical.choice h)).congr (fun t x θ => by
     rw [highSolve_of_admissible τ hτ hτT B h])
 
+/-- High derivative field, given by `vectorDerivativeField τ hτ hτT B (Classical.choice h)`. -/
 def highDerivativeField : Field P D.T (vectorDerivative τ hτ hτT B (Classical.choice h)) :=
   vectorDerivativeField τ hτ hτT B (Classical.choice h)
 
@@ -130,11 +137,14 @@ theorem highVectorField_time : TimeDerivative D.T_pos.le
     (highVectorField τ hτ hτT B h) (highDerivativeField τ hτ hτT B h) :=
   vectorField_time τ hτ hτT B (Classical.choice h)
 
+/-- High pressure gradient field, given by `(scalarGradientField τ hτ hτT B (Classical.choice
+h)).congr (fun t x θ => by rw [highSolve_of_admissible τ hτ hτT B h])`. -/
 def highPressureGradientField : Field P D.T (pressureGradient (highSolve (P := P) τ hτ hτT B
-  raw).2) :=
+    raw).2) :=
   (scalarGradientField τ hτ hτT B (Classical.choice h)).congr (fun t x θ => by
     rw [highSolve_of_admissible τ hτ hτT B h])
 
+/-- High corrector field, bundling `path`, `orbit`, `raw_eq`. -/
 def highCorrectorField : Field P D.T (D.curlCorrector P (highSolve (P := P) τ hτ hτT B raw).1) where
   path := correctorPath τ hτ hτT B (Classical.choice h)
   orbit := correctorPath_orbit τ hτ hτT B (Classical.choice h)
@@ -142,8 +152,9 @@ def highCorrectorField : Field P D.T (D.curlCorrector P (highSolve (P := P) τ h
     rw [highSolve_of_admissible τ hτ hτT B h]
     exact (correctorField τ hτ hτT B (Classical.choice h)).raw_eq t x θ
 
+/-- High corrector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
 def highCorrectorDerivativeField : Field P D.T (correctorDerivative τ hτ hτT B (Classical.choice
-  h)) where
+    h)) where
   path := correctorTimePath τ hτ hτT B (Classical.choice h)
   orbit := correctorTimePath_orbit τ hτ hτT B (Classical.choice h)
   raw_eq t x θ := (correctorDerivativeField τ hτ hτT B (Classical.choice h)).raw_eq t x θ
@@ -156,7 +167,7 @@ theorem highCorrectorField_time : TimeDerivative D.T_pos.le
 include h in
 theorem highSolve_equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     linearPart (D.strain (t,(x,θ)))
-        (slicedJet (Icc (0 : ℝ) D.T) (highSolve (P := P) τ hτ hτT B raw).1 (t,(x,θ)))+
+        (slicedJet (Icc (0 : ℝ) D.T) (highSolve (P := P) τ hτ hτT B raw).1 (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ)))
         (pressureJet (highSolve (P := P) τ hτ hτT B raw).2 (t,(x,θ))) = raw (t,(x,θ)) := by
   rw [highSolve_of_admissible τ hτ hτT B h]
@@ -168,7 +179,7 @@ theorem highSolve_parity
     (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
     (hH : ∀ t x, B.H.field t (-x) = B.H.field t x)
-    (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ))) :
+    (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ))) :
     (∀ (t : Icc (0 : ℝ) D.T) x θ, (highSolve (P := P) τ hτ hτT B raw).1 (t,(-x,-θ)) =
       -(highSolve (P := P) τ hτ hτT B raw).1 (t,(x,θ))) ∧
     (∀ (t : Icc (0 : ℝ) D.T) x θ, (highSolve (P := P) τ hτ hτT B raw).2 (t,(-x,-θ)) =

@@ -7,14 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentInitializedRadiusPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryProfileEnvelope
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedOutputCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardRadiusPolynomial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryJoinedBudget
+public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardGeometryInput
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryProfileEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 
 /-! The chosen geometric profile contributes only another fixed
 polynomial in the source primitives, including the target shear. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,9 +26,12 @@ namespace EulerPacketUniformSource
 
 open EulerParentInitializedRadius EulerPolynomialCost
 
+/-- Profile envelope, given by `1+sourceEnvelope X+8*Real.exp 6*X*(1+sourceEnvelope X)`. -/
 def profileEnvelope (X : ℝ) : ℝ :=
   1+sourceEnvelope X+8*Real.exp 6*X*(1+sourceEnvelope X)
 
+/-- Profile polynomial, given by `1+sourcePolynomial+Polynomial.C (8*Real.exp
+6)*Polynomial.X*(1+sourcePolynomial)`. -/
 def profilePolynomial : Polynomial ℝ :=
   1+sourcePolynomial+Polynomial.C (8*Real.exp 6)*Polynomial.X*(1+sourcePolynomial)
 
@@ -57,24 +64,29 @@ theorem profile_amplitude_le (X δ h C : ℝ) (hX : 1 ≤ X)
     _ = 8*Real.exp 6*X*(1+sourceEnvelope X) := by ring
     _ ≤ _ := (profileEnvelope_bounds X hX).2.2
 
+/-- Frequency polynomial, given by `Polynomial.C
+EulerPacketInitializedOutputCost.uniformConstant *
+profilePolynomial^EulerPacketInitializedOutputCost.uniformPower`. -/
 def frequencyPolynomial : Polynomial ℝ :=
-  Polynomial.C EulerPacketInitializedOutputCost.uniformConstant*
+  Polynomial.C EulerPacketInitializedOutputCost.uniformConstant *
     profilePolynomial^EulerPacketInitializedOutputCost.uniformPower
 
+/-- Frequency constant, given by `coefficientCost frequencyPolynomial`. -/
 def frequencyConstant : ℝ := coefficientCost frequencyPolynomial
+/-- Frequency power, given by `frequencyPolynomial.natDegree`. -/
 def frequencyPower : ℕ := frequencyPolynomial.natDegree
 
 theorem frequencyConstant_pos : 0 < frequencyConstant := coefficientCost_pos _
 
 theorem frequencyPolynomial_eval (X : ℝ) :
-    frequencyPolynomial.eval X=EulerPacketInitializedOutputCost.uniformConstant*
+    frequencyPolynomial.eval X=EulerPacketInitializedOutputCost.uniformConstant *
       (profileEnvelope X)^EulerPacketInitializedOutputCost.uniformPower := by
   unfold frequencyPolynomial
   simp only [Polynomial.eval_mul,Polynomial.eval_C,Polynomial.eval_pow,
     profilePolynomial_eval]
 
 theorem frequency_bound (X : ℝ) (hX : 1 ≤ X) :
-    EulerPacketInitializedOutputCost.uniformConstant*
+    EulerPacketInitializedOutputCost.uniformConstant *
       (profileEnvelope X)^EulerPacketInitializedOutputCost.uniformPower ≤
       frequencyConstant*X^frequencyPower := by
   rw [← frequencyPolynomial_eval]
@@ -91,9 +103,9 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketUniformSource
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)} (J : Guards hτ hτT P H)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (L : EulerTransversePacketJoin.Budget D τ hτ hτT H (Fin 4) 6)
-  (hg : L.g=J.sourceGrowthProfile hball)
+  (hg : L.g = J.sourceGrowthProfile hball)
   {M : EulerMeanPacketProvider.Data} {Rm Tc : ℝ} {O : Operators}
   {C : CoefficientData period Tc O}
   (LM : EulerMeanPacketProvider.Budget M 6 Rm)
@@ -160,9 +172,9 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketUniformSource
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {P : ParentFrame D 0} (J : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
-  (hg : L.g=J.sourceGrowthProfile hball)
+  (hg : L.g = J.sourceGrowthProfile hball)
   {M : EulerMeanPacketProvider.Data} {Rm Tc : ℝ} {O : Operators}
   {C : CoefficientData period Tc O}
   (LM : EulerMeanPacketProvider.Budget M 6 Rm)

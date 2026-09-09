@@ -6,12 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CutStageEstimates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalExtensions
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ValidBandGluing
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.EndpointCoordinates
+public import LeanPool.NavierStokesAndEuler.NavierStokes.JointResidualLimits
+import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalExtensions
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
 
 /-!
 # Gluing on the actual open dyadic validity regions
@@ -25,6 +25,9 @@ This module transfers local formulas, jets, zero germs, and already proved
 local endpoint extensions.  It does not manufacture their local smoothness
 or identify them with a reference formula outside its validity region.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -66,8 +69,10 @@ theorem exists_band {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
   · have := ChartScales.Q_pos n
     linarith
 
+/-- Index: an abbreviation for `{n : ℕ // N ≤ n}`. -/
 abbrev Index (N : ℕ) := {n : ℕ // N ≤ n}
 
+/-- Charts, given by `band h n.val`. -/
 noncomputable def charts (h : ℝ) (N : ℕ) (n : Index N) : Set SpaceTime := band h n.val
 
 theorem sublevel_covered {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
@@ -79,9 +84,11 @@ theorem sublevel_covered {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Compatible, given by `ValidBandGluing.Compatible (charts h N) (fun n => f n.val)`. -/
 def Compatible (h : ℝ) (N : ℕ) (f : ℕ → SpaceTime → E) : Prop :=
   ValidBandGluing.Compatible (charts h N) (fun n => f n.val)
 
+/-- Field, given by `ValidBandGluing.representative (charts h N) (fun n => f n.val)`. -/
 noncomputable def field (h : ℝ) (N : ℕ) (f : ℕ → SpaceTime → E) : SpaceTime → E :=
   ValidBandGluing.representative (charts h N) (fun n => f n.val)
 

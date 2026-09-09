@@ -6,16 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 The actual orthogonal projection onto a moving ray's perpendicular plane.
 The derivative bound depends on the ray equation through `‖m'‖/‖m‖`, and
 therefore costs only the parent matrix norm, with no deformation-gradient loss.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,15 +32,21 @@ open InnerProductSpace ContinuousLinearMap
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
-private local instance : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
-private local instance : AddCommGroup (E →L[ℝ] E) :=
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instMovingNormalProjection1 : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instMovingNormalProjection2 : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `AddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instMovingNormalProjection3 : AddCommGroup (E →L[ℝ] E) :=
   (inferInstance : NormedAddCommGroup (E →L[ℝ] E)).toAddCommGroup
-private local instance : Module ℝ (E →L[ℝ] E) :=
+/-- Cache the standard `Module ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instMovingNormalProjection4 : Module ℝ (E →L[ℝ] E) :=
   (inferInstance : NormedSpace ℝ (E →L[ℝ] E)).toModule
-private local instance : TopologicalSpace (E →L[ℝ] E) :=
+/-- Cache the standard `TopologicalSpace (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instMovingNormalProjection5 : TopologicalSpace (E →L[ℝ] E) :=
   (inferInstance : PseudoMetricSpace (E →L[ℝ] E)).toUniformSpace.toTopologicalSpace
 
+/-- Normal projection, given by `ContinuousLinearMap.id ℝ E - (‖m‖ ^ 2)⁻¹ • rankOne ℝ m m`. -/
 def normalProjection (m : E) : E →L[ℝ] E :=
   ContinuousLinearMap.id ℝ E - (‖m‖ ^ 2)⁻¹ • rankOne ℝ m m
 
@@ -72,6 +84,8 @@ theorem normalProjection_norm_le (m : E) (hm : m ≠ 0) : ‖normalProjection m�
   rw [normalProjection_norm_sq m hm]
   exact sub_le_self _ (div_nonneg (sq_nonneg _) (sq_nonneg _))
 
+/-- Normal projection derivative, given by `-((- (2 * ⟪m, m₁⟫_ℝ) / (‖m‖ ^ 2) ^ 2) • rankOne ℝ m
+m + (‖m‖ ^ 2)⁻¹ • (rankOne ℝ m₁ m + rankOne ℝ m m₁))`. -/
 def normalProjectionDerivative (m m₁ : E) : E →L[ℝ] E :=
   -((- (2 * ⟪m, m₁⟫_ℝ) / (‖m‖ ^ 2) ^ 2) • rankOne ℝ m m +
     (‖m‖ ^ 2)⁻¹ • (rankOne ℝ m₁ m + rankOne ℝ m m₁))

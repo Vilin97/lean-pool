@@ -6,13 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCancellation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelFourier
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierConvolution
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelFubini
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelPairedBound
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszHeatRepresentation
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierConvolution
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelFourier
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelFubini
 
 /-!
 # The pressure commutator
@@ -22,6 +20,9 @@ We first subtract the two time-integrable heat evolutions, insert the cutoff
 difference, and only then use the absolute-integrability theorem to interchange
 time and space. The resulting kernel has the proved radial `L^(4/3)` majorant.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

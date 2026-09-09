@@ -7,13 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFlowBootstrap
-
-@[expose] public section
+import Mathlib.Algebra.Order.Field.GeomSum
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! The finite Gevrey-two generating sum obeys an actual composition
 estimate.  In contrast to replacing all jets by one order-dependent bound,
 this estimate retains the finite sum of the inner derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,25 +40,25 @@ theorem norm_taylorComp_le_coefficient
     (p q : ℝ[X]) (hp0 : p.coeff 0 = 0)
     (hp : NonnegativeCoefficients p) (hq : NonnegativeCoefficients q)
     (n : ℕ) (hn : 0 < n)
-    (hP : ∀ j, 0 < j → j ≤ n → ‖P j‖ ≤ (j.factorial : ℝ)^2*p.coeff j)
-    (hQ : ∀ j, 0 < j → j ≤ n → ‖Q j‖ ≤ (j.factorial : ℝ)^2*q.coeff j) :
+    (hP : ∀ j, 0 < j → j ≤ n → ‖P j‖ ≤ (j.factorial : ℝ) ^ 2 * p.coeff j)
+    (hQ : ∀ j, 0 < j → j ≤ n → ‖Q j‖ ≤ (j.factorial : ℝ) ^ 2 * q.coeff j) :
     ‖Q.taylorComp P n‖ ≤ (n.factorial : ℝ)^2*(q.comp p).coeff n := by
   have hc (c : OrderedFinpartition n) :
-      ‖Q.compAlongOrderedFinpartition P c‖ ≤ (n.factorial : ℝ)*
-        (((c.length.factorial : ℝ)*q.coeff c.length)*
+      ‖Q.compAlongOrderedFinpartition P c‖ ≤ (n.factorial : ℝ) *
+        (((c.length.factorial : ℝ)*q.coeff c.length) *
           ∏ i, ((c.partSize i).factorial : ℝ)*p.coeff (c.partSize i)) := by
     calc
       _ ≤ ‖Q c.length‖*∏ i, ‖P (c.partSize i)‖ :=
         c.norm_compAlongOrderedFinpartition_le _ _
-      _ ≤ ((c.length.factorial : ℝ)^2*q.coeff c.length)*
+      _ ≤ ((c.length.factorial : ℝ)^2*q.coeff c.length) *
           ∏ i, ((c.partSize i).factorial : ℝ)^2*p.coeff (c.partSize i) := by
         apply mul_le_mul (hQ _ (c.length_pos hn) c.length_le)
         · exact Finset.prod_le_prod (fun i _ => norm_nonneg _)
             (fun i _ => hP _ (c.partSize_pos i) (c.partSize_le i))
         · exact Finset.prod_nonneg (fun i _ => norm_nonneg _)
         · exact mul_nonneg (sq_nonneg _) (hq _)
-      _ = ((c.length.factorial : ℝ)*factorialProduct c)*
-          (((c.length.factorial : ℝ)*q.coeff c.length)*
+      _ = ((c.length.factorial : ℝ)*factorialProduct c) *
+          (((c.length.factorial : ℝ)*q.coeff c.length) *
             ∏ i, ((c.partSize i).factorial : ℝ)*p.coeff (c.partSize i)) := by
         simp only [factorialProduct, Finset.prod_mul_distrib, Finset.prod_pow]
         ring
@@ -61,8 +67,8 @@ theorem norm_taylorComp_le_coefficient
           (Finset.prod_nonneg fun i _ => mul_nonneg (Nat.cast_nonneg _) (hp _)))
   calc
     _ ≤ ∑ c : OrderedFinpartition n, ‖Q.compAlongOrderedFinpartition P c‖ := norm_sum_le _ _
-    _ ≤ ∑ c : OrderedFinpartition n, (n.factorial : ℝ)*
-        (((c.length.factorial : ℝ)*q.coeff c.length)*
+    _ ≤ ∑ c : OrderedFinpartition n, (n.factorial : ℝ) *
+        (((c.length.factorial : ℝ)*q.coeff c.length) *
           ∏ i, ((c.partSize i).factorial : ℝ)*p.coeff (c.partSize i)) :=
       Finset.sum_le_sum fun c _ => hc c
     _ = (n.factorial : ℝ)*((n.factorial : ℝ)*(q.comp p).coeff n) := by
@@ -76,8 +82,8 @@ theorem generating_sum_le_polynomial
     (N : ℕ) (a b : ℕ → ℝ)
     (ha : ∀ j ∈ Finset.Icc 1 N, 0 ≤ a j)
     (hb : ∀ j ∈ Finset.Icc 1 N, 0 ≤ b j)
-    (hP : ∀ j ∈ Finset.Icc 1 N, ‖P j‖ ≤ (j.factorial : ℝ)^2*a j)
-    (hQ : ∀ j ∈ Finset.Icc 1 N, ‖Q j‖ ≤ (j.factorial : ℝ)^2*b j)
+    (hP : ∀ j ∈ Finset.Icc 1 N, ‖P j‖ ≤ (j.factorial : ℝ) ^ 2 * a j)
+    (hQ : ∀ j ∈ Finset.Icc 1 N, ‖Q j‖ ≤ (j.factorial : ℝ) ^ 2 * b j)
     (z : ℝ) (hz : 0 ≤ z) :
     (∑ n ∈ Finset.Icc 1 N, ‖Q.taylorComp P n‖/(n.factorial : ℝ)^2*z^n) ≤
       (jetPolynomial N b).eval ((jetPolynomial N a).eval z) := by
@@ -105,9 +111,11 @@ theorem generating_sum_le_polynomial
       coefficient_sum_le_eval (q.comp p) (nonnegative_comp hpc hqc) _ z hz
     _ = _ := by simp only [Polynomial.eval_comp, p, q]
 
+/-- Normalized jet, given by `‖P n‖/(n.factorial : ℝ)^2`. -/
 def normalizedJet (P : FormalMultilinearSeries ℝ E F) (n : ℕ) : ℝ :=
   ‖P n‖/(n.factorial : ℝ)^2
 
+/-- Generating sum, given by `∑ n ∈ Finset.Icc 1 N, normalizedJet P n*z^n`. -/
 def generatingSum (P : FormalMultilinearSeries ℝ E F) (N : ℕ) (z : ℝ) : ℝ :=
   ∑ n ∈ Finset.Icc 1 N, normalizedJet P n*z^n
 
@@ -120,8 +128,8 @@ bootstrap.  The inner generating sum is retained without a radius loss. -/
 theorem generatingSum_taylorComp_le
     (P : FormalMultilinearSeries ℝ E F) (Q : FormalMultilinearSeries ℝ F G)
     (N : ℕ) (B R z : ℝ) (hB : 0 ≤ B) (hR : 0 ≤ R) (hz : 0 ≤ z)
-    (hQ : ∀ j ∈ Finset.Icc 1 N, ‖Q j‖ ≤ B*R^j*(j.factorial : ℝ)^2)
-    (hsmall : R*generatingSum P N z < 1) :
+    (hQ : ∀ j ∈ Finset.Icc 1 N, ‖Q j‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2)
+    (hsmall : R * generatingSum P N z < 1) :
     generatingSum (Q.taylorComp P) N z ≤
       B*(R*generatingSum P N z)/(1-R*generatingSum P N z) := by
   have hP (j : ℕ) : ‖P j‖ = (j.factorial : ℝ)^2*normalizedJet P j := by

@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MatchingDebtBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingEntranceCone
 
-@[expose] public section
-
 /-!
 # Cone bounds through the shape transition and moment repair
 
@@ -18,6 +16,9 @@ The source estimates use the actual fields and their radial averages.  The
 large natural logarithmic gradient is retained in the growing term rather
 than estimated by an absolute constant.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -89,17 +90,22 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
     mul_le_mul hW hl (by norm_num) (by linarith)
   linarith
 
+/-- Shape remainder as an element of `ℝ`. -/
 noncomputable def shapeRemainder (h j sigma eta theta ell : ℝ) (v : Fin 5 → ℝ) (t : ℝ) : ℝ :=
   let Wc := W h j eta - t * (2 * D h * eta * v 2 + d eta * v 3)
   let Uc := U j eta + t * v 1
   let Hc := H h j eta + t * d eta * v 1
   show ℝ from -Wc * ell - h * (1 - 2 * eta * Uc) + theta * Hc * OutgoingEntranceCone.shapeGradient
-    eta -
+      eta -
     (1 - theta) * (Hc * v 4 + d eta * v 1 * NaturalAxisCoefficients.realGradient h j sigma eta)
 
+/-- Shape parameter: an abbreviation for `Icc (-1 : ℝ) 1 × (Icc (0 : ℝ) 1 × (Icc (11 / 20 : ℝ)
+(13 / 20) × ReferenceBounds.BoundedJets B))`. -/
 abbrev ShapeParameter (B : ℝ) :=
   Icc (-1 : ℝ) 1 × (Icc (0 : ℝ) 1 × (Icc (11 / 20 : ℝ) (13 / 20) × ReferenceBounds.BoundedJets B))
 
+/-- Shape model, given by `shapeRemainder h j sigma p.1.val p.2.1.val p.2.2.1.val p.2.2.2.val
+t`. -/
 noncomputable def shapeModel (h j sigma B : ℝ) (p : ShapeParameter B) (t : ℝ) : ℝ :=
   shapeRemainder h j sigma p.1.val p.2.1.val p.2.2.1.val p.2.2.2.val t
 
@@ -169,6 +175,8 @@ theorem shapeModel_uniform_lower {h j sigma : ℝ} (hs : SmallParameters h j)
   have hm := hmain Λ ((le_max_left _ _).trans hΛ) p
   linarith
 
+/-- Shape jet, given by `![1, Λ * (P.U p - U j p.2), Λ * (P.Ubar p - U j p.2), Λ * (average
+(parameterPartial P.U) p - 4), g]`. -/
 noncomputable def shapeJet {D : RadialDomain} (P : Profiles D) (_h j Λ g : ℝ)
     (p : Point) : Fin 5 → ℝ :=
   ![1, Λ * (P.U p - U j p.2), Λ * (P.Ubar p - U j p.2),
@@ -184,24 +192,24 @@ theorem shapeSource_identity {D : RadialDomain} (P : Profiles D)
       Λ * ((1 - theta) * L h p.2 * chi h j sigma p.2) +
         shapeRemainder h j sigma p.2 theta ell (shapeJet P h j Λ g p) (1 / Λ) := by
   have hU : U j p.2 + (1 / Λ) * (Λ * (P.U p - U j p.2)) = P.U p := by
-    field_simp ; ring
+    field_simp; ring
   have hW : W h j p.2 - (1 / Λ) *
       (2 * NaturalAxisData.D h * p.2 * (Λ * (P.Ubar p - U j p.2)) +
         d p.2 * (Λ * (average (parameterPartial P.U) p - 4))) = P.W h p := by
     unfold W U Profiles.W NaturalAxisData.D d StressAlgebra.axialExponent
-      StressAlgebra.coordinateFactor
-    field_simp ; ring
+        StressAlgebra.coordinateFactor
+    field_simp; ring
   have hH : H h j p.2 + (1 / Λ) * d p.2 * (Λ * (P.U p - U j p.2)) =
       NaturalAxisData.D h * p.2 + d p.2 * P.U p := by
     unfold H
-    field_simp ; ring
+    field_simp; ring
   rw [ReferenceBounds.sourceQ, hl, hg]
   simp only [shapeRemainder, shapeJet, Matrix.cons_val_zero, Matrix.cons_val_one,
     Matrix.cons_val, Fin.isValue, hU, hW, hH]
   have hid := NaturalProfile.gradient_identity h j sigma p.2
   unfold H at hid
   dsimp only [StressAlgebra.axialExponent, StressAlgebra.coordinateFactor, NaturalAxisData.D, d] at
-    *
+      *
   linear_combination -(1 - theta) * Λ * hid
 
 /-- Uniform positivity for the literal convex interpolation of the old and
@@ -236,6 +244,7 @@ theorem actual_shape_source_threshold {h j sigma B : ℝ}
   rw [shapeSource_identity P h j sigma Λ theta ell g (hM.trans_le hΛ).ne' p hle hg]
   exact he
 
+/-- Angular gap, given by `primitive (P.angularSource h) (X, eta) - 2 * L h eta * P.H (X, eta)`. -/
 noncomputable def angularGap {D : RadialDomain} (P : Profiles D) (h eta X : ℝ) : ℝ :=
   primitive (P.angularSource h) (X, eta) - 2 * L h eta * P.H (X, eta)
 
@@ -277,7 +286,7 @@ theorem angular_barrier {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
       linarith [hs.1]
     have hprod : 0 ≤ P.H (s, eta) *
         (s * ReferenceBounds.sourceQ P h (s, eta) - 2 * L h eta * ReferenceBounds.logSlope P (s,
-          eta)) :=
+            eta)) :=
       mul_nonneg (hHpos s hs).le (by linarith)
     rw [he]
     nlinarith [hspos s hs]
@@ -362,7 +371,7 @@ theorem seedU_error_jets {N : ℕ} {eps X eta : ℝ}
       nlinarith
     have hb := (ReferenceJetBounds.coefficient_jet_bound A.preparation.inputs.coefficients
       A.natural.profile.coefficients A.natural.profile.norm_ball 0 n (p := (A.scale * X, eta))
-        hY5).2
+          hY5).2
     have hh := mul_le_mul_of_nonneg_left hb (one_div_nonneg.mpr A.scale_pos.le)
     calc
       _ ≤ (1 / A.scale) * ReferenceJetBounds.jetConstant A.preparation.inputs.coefficients 0 n := hh
@@ -372,7 +381,7 @@ theorem seedU_error_jets {N : ℕ} {eps X eta : ℝ}
       Real.log_nonneg ((one_le_div c.reference.radius0_pos).mpr hxR.le)
     have he : (fun e => c.seedU (X, e)) =
         fun e => c.reference.axialVelocity c.activationTime c.kappa c.axialWidth
-          (c.reference.logTime X, e) := by
+            (c.reference.logTime X, e) := by
       funext e
       exact ite_eq_right hx
     have hp : (X, eta) ∈ A.referenceInput.radialDomain.carrier :=
@@ -407,7 +416,7 @@ theorem seedU_scaled_error_jets {N : ℕ} {eps X eta : ℝ}
   have hb := mul_le_mul_of_nonneg_left (seedU_error_jets c hc heps hX hη hn) A.scale_pos.le
   calc
     _ ≤ A.scale * (ReferenceJetBounds.jetConstant A.preparation.inputs.coefficients 0 n / A.scale +
-      eps) := hb
+        eps) := hb
     _ = _ := by rw [mul_add, mul_div_cancel₀ _ A.scale_pos.ne']
 
 theorem initialShape_gradient_bound {N : ℕ} {eps eta : ℝ}
@@ -434,7 +443,7 @@ theorem initialShape_gradient_bound {N : ℕ} {eps eta : ℝ}
         ((differentiableAt_const c.reference.finalTime).prodMk differentiableAt_id)
   have herr := hc.positive_log_jets c.reference.finalTime
     ⟨c.reference_before_big.le.trans c.reference.finalTime_gt_bigTime.le, le_rfl⟩ eta hη 1 hN (by
-      norm_num)
+        norm_num)
   change |iteratedDeriv 1 (fun e => L1 e - L0 e) eta| < eps at herr
   rw [iteratedDeriv_one, deriv_fun_sub h1 h0] at herr
   have hfinal : deriv c.initialShape eta = deriv L1 eta := by
@@ -450,7 +459,7 @@ theorem initialShape_gradient_bound {N : ℕ} {eps eta : ℝ}
       ((NaturalProfile.domain_isOpen A.scale).mem_nhds hm))).log hn.ne'
   have hinit : deriv L0 eta = parameterPartial A.natural.profile.family.f
       (A.referenceInput.endpoint, eta) / A.natural.profile.family.f (A.referenceInput.endpoint,
-        eta) := by
+          eta) := by
     rw [hi]
     exact hd.deriv
   have hnat := ReferenceJetBounds.natural_log_bound A.natural.profile A.preparation.sigma_pos
@@ -463,8 +472,8 @@ theorem initialShape_gradient_bound {N : ℕ} {eps eta : ℝ}
   rw [hfinal]
   calc
     _ = |(deriv L1 eta - deriv L0 eta) + (deriv L0 eta - A.scale *
-      NaturalAxisCoefficients.realGradient F.data.h A.j A.preparation.sigma eta)| := by congr 1;
-        ring
+      NaturalAxisCoefficients.realGradient F.data.h A.j A.preparation.sigma eta)| := by
+          congr 1; ring
     _ ≤ |deriv L1 eta - deriv L0 eta| + |deriv L0 eta - A.scale *
       NaturalAxisCoefficients.realGradient F.data.h A.j A.preparation.sigma eta| := abs_add_le _ _
     _ ≤ _ := by
@@ -580,6 +589,8 @@ theorem deriv_eqOn_Iic {f g : ℝ → ℝ} {a x : ℝ} (hx : x ≤ a)
   exact (uniqueDiffOn_Iic a x hx).eq_deriv _ hf.hasDerivAt.hasDerivWithinAt
     (hg.hasDerivAt.hasDerivWithinAt.congr_of_mem he hx)
 
+/-- Shape value, given by `ShapeTransition.angular C T li (Real.log (X / NominalProfile.Xi),
+eta) / Real.sqrt (2 * X)`. -/
 noncomputable def shapeValue (C T : ℝ) (li : ℝ → ℝ) (X eta : ℝ) : ℝ :=
   ShapeTransition.angular C T li (Real.log (X / NominalProfile.Xi), eta) / Real.sqrt (2 * X)
 
@@ -587,7 +598,7 @@ theorem shapeValue_hasDerivAt_x (C T : ℝ) (li : ℝ → ℝ) {X : ℝ} (hX : 0
     HasDerivAt (fun s => shapeValue C T li s eta)
       (shapeValue C T li X eta *
         (ShapeTransition.logarithmicSlope T li (Real.log (X / NominalProfile.Xi), eta) - 1) / X) X
-          := by
+            := by
   have hx : HasDerivAt (fun s : ℝ => Real.log (s / NominalProfile.Xi)) (1 / X) X := by
     convert! ((hasDerivAt_id X).div_const NominalProfile.Xi).log
       (div_ne_zero hX.ne' NominalProfile.Xi_pos.ne') using 1
@@ -623,7 +634,7 @@ theorem shapeValue_hasDerivAt_eta (C T : ℝ) {li : ℝ → ℝ} {X eta : ℝ}
         (-Real.log C + Real.log (X / NominalProfile.Xi) / 10)).exp.div_const (Real.sqrt (2 * X))
   convert! hd using 1
   dsimp only [shapeValue, ShapeTransition.angular, ShapeTransition.logProfile,
-    ShapeTransition.blend]
+      ShapeTransition.blend]
   ring
 
 section ShapeCoordinates
@@ -694,7 +705,7 @@ theorem profiles_shape_logSlope {X eta : ℝ} (hX : NominalProfile.Xi ≤ X)
   unfold ReferenceBounds.logSlope
   rw [profiles_shape_radialF c hsep hX hR hη hsmall]
   dsimp only
-  field_simp ; ring
+  field_simp; ring
 
 theorem profiles_shape_gradient {X eta : ℝ} (hX : NominalProfile.Xi ≤ X)
     (hR : X ≤ c.radius * Real.exp (-8)) (hη : eta ∈ ReferencePath.parameterInterval)
@@ -721,6 +732,8 @@ theorem profiles_shape_gradient {X eta : ℝ} (hX : NominalProfile.Xi ≤ X)
 
 end ShapeCoordinates
 
+/-- Shape constant, given by `1 + ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 0 +
+9 * ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 1`. -/
 noncomputable def shapeConstant {F : OutgoingProfile.Profile} {j : ℝ}
     (prep : NominalProfile.AxisPreparation F j) : ℝ :=
   1 + ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 0 +
@@ -765,10 +778,10 @@ theorem actual_shape_source {eps X eta : ℝ}
     (le_max_left _ _).trans ((le_max_right _ _).trans hscale)
   have hthreshold := Classical.choose_spec
     (actual_shape_source_threshold A.small A.preparation.sigma_pos (shapeConstant_one
-      A.preparation))
+        A.preparation))
   have hM : Classical.choose
       (actual_shape_source_threshold A.small A.preparation.sigma_pos (shapeConstant_one
-        A.preparation)) ≤ A.scale :=
+          A.preparation)) ≤ A.scale :=
     (le_max_right _ _).trans ((le_max_right _ _).trans hscale)
   have hjets := profiles_source_jets c hsep hc heps le_rfl
     (NominalProfile.Xi_pos.le.trans hX) hR hη hsmall
@@ -967,29 +980,37 @@ theorem exists_ordered_prepared_continuation (F : OutgoingProfile.Profile) (N : 
     exact fun n hn eta hη => (hco n hn eta hη).trans hcoefdelta
   · intro eta hη n hn
     have hb := MatchingDebtBounds.actual_endpoint_drift c (hc.of_le (le_max_left _ _)) hη hn
-    change _ ≤ ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 n / Λ + tolerance + |j| at
-      hb
+    change _ ≤ ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 n / Λ + tolerance + |j|
+        at hb
     have hjD : |j| ≤ delta / 3 := hjbound.trans (min_le_right _ _)
     exact hb.trans (by linarith [hjet n hn])
 
 /-- The actual entrance profile and continuation are stored, so subsequent
 cone gluing uses the same controls that produced the small repair debt. -/
 structure PreparedWitness (F : OutgoingProfile.Profile) (N : ℕ) (delta radiusFloor : ℝ) where
+  /-- Axis of `PreparedWitness`, of type `NominalProfile.AxisStage F`. -/
   axis : NominalProfile.AxisStage F
+  /-- Order of `PreparedWitness`, of type `ℕ`. -/
   order : ℕ
   order_ge : N ≤ order
+  /-- Tolerance of `PreparedWitness`, of type `ℝ`. -/
   tolerance : ℝ
   tolerance_pos : 0 < tolerance
+  /-- Continuation supplied by `PreparedWitness`. -/
   continuation : ActivationContinuation.ContinuationWitness axis.natural axis.scale_pos
     axis.small F.axisDatum_contDiff order tolerance
+  /-- Shape time of `PreparedWitness`, of type `ℝ`. -/
   shapeTime : ℝ
   shapeTime_pos : 0 < shapeTime
+  /-- Rho of `PreparedWitness`, of type `ℝ`. -/
   rho : ℝ
   rho_pos : 0 < rho
   bounds : PreparedBounds
     (NominalProfile.Controls.ofContinuation axis continuation shapeTime shapeTime_pos)
     N rho delta radiusFloor
 
+/-- Controls, given by `NominalProfile.Controls.ofContinuation W.axis W.continuation W.shapeTime
+W.shapeTime_pos`. -/
 noncomputable def PreparedWitness.controls {F : OutgoingProfile.Profile} {N : ℕ}
     {delta radiusFloor : ℝ} (W : PreparedWitness F N delta radiusFloor) :
     NominalProfile.Controls W.axis :=

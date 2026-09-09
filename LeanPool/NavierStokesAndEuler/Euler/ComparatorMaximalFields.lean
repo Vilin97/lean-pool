@@ -6,13 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorSingularityNorms
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerKineticEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.EulerC1Breakdown
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryMaximalVorticityIntegral
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorSingularityNorms
+import LeanPool.NavierStokesAndEuler.Euler.EulerC1Limsup
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerBKM
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerKineticEnergy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
 
 /-! The canonical maximal fields in the challenge's position-first, real-time
 convention. Extension by zero outside the lifespan has no role in the equation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,9 +31,11 @@ namespace Euler.ComparatorBridge
 
 variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 
+/-- Maximal velocity extension, with branches according to `ht : t ∈ Ico (0 : ℝ) L.duration`. -/
 def maximalVelocityExtension (x : Space) (t : ℝ) : Space :=
   if ht : t ∈ Ico (0 : ℝ) L.duration then L.maximalVelocity ⟨t, ht⟩ x else 0
 
+/-- Maximal pressure extension, with branches according to `ht : t ∈ Ico (0 : ℝ) L.duration`. -/
 def maximalPressureExtension (x : Space) (t : ℝ) : ℝ :=
   if ht : t ∈ Ico (0 : ℝ) L.duration then L.maximalPressure ⟨t, ht⟩ x else 0
 

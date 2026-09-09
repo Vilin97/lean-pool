@@ -9,19 +9,20 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyTransportCommutator
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricComparison
 
+/-! Fixed-base pointwise and metric-loss control by actual finite Gevrey norms. -/
+
 @[expose] public section
 
-/-! Fixed-base pointwise and metric-loss control by actual finite Gevrey norms. -/
 
 noncomputable section
 
 namespace EulerGevreyLowNorms
 
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerCylinderSobolev
+    EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerH6Pressure EulerJetProductBounds EulerPacketWeights
   EulerSobolevGevreyOperators EulerBaseWordMetric EulerFiniteMetricEnergy
-    EulerWeightedCylinderEnergy
+      EulerWeightedCylinderEnergy
   EulerGevreyMetricComparison EulerSobolevTransportCommutator
 open scoped Topology
 
@@ -44,22 +45,23 @@ theorem restrict_norm_le_weighted {s q : ℕ} (N : ℕ) (hq : q ≤ s) (ρ : ℝ
     have heq : sobolevSize period (directions := standardDirection) q (value period u) =
         sumNorm period (restrictOperator period hq u) := by
       rw [sumNorm_eq_jet, ← sobolevSize_eq period (toJet period (restrictOperator period hq u)),
-        value_restrictOperator]
+          value_restrictOperator]
     rw [heq]
     exact norm_le_sumNorm period _
   have hsum := Finset.single_le_sum (s := Finset.range (N+1))
     (fun n _ => mul_nonneg (weight_pos hρ n).le (show 0 ≤ blockNorm period (toJet period u) q n
-      from blockNorm_nonneg _))
+        from blockNorm_nonneg _))
     (show 0 ∈ Finset.range (N+1) by simp)
   have hsum' : blockNorm period (toJet period u) q 0 ≤ weightedNorm period q N ρ u := by
     simpa [weight, weightedNorm] using hsum
   exact hbase.trans hsum'
 
-/-- The actual pointwise bound has a constant depending only on the fixed base order six, never on the external cutoff. -/
+/-- The actual pointwise bound has a constant depending only on the fixed base order six, never on
+the external cutoff. -/
 theorem value_ae_weighted {s : ℕ} (N : ℕ) (hs : 6 ≤ s) (ρ : ℝ) (hρ : 0 < ρ)
     (u : SobolevSpace period s) :
     ∀ᵐ x ∂liftMeasure period, ‖value period u x‖ ≤ sobolevEmbeddingConstant period 6 * weightedNorm
-      period 6 N ρ u := by
+        period 6 N ρ u := by
   have h := value_ae_bound period (by norm_num : 3 ≤ 6) (restrictOperator period hs u)
   filter_upwards [h] with x hx
   rw [value_restrictOperator] at hx
@@ -67,23 +69,24 @@ theorem value_ae_weighted {s : ℕ} (N : ℕ) (hs : 6 ≤ s) (ρ : ℝ) (hρ : 0
     (sobolevEmbeddingConstant_nonneg period 6))
 
 /-- The exact metric radius-loss sum in fixed-base word notation. -/
-theorem metricLoss_eq {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (ρ : ℝ)
+theorem metricLoss_eq {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (ρ : ℝ)
     (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) :
     weightedMetricLoss ρ (fun I : ExternalWord N => I.1.val) K (energyValues period q N hN u) =
       ∑ n : Fin (N+1), (n.val : ℝ)*weight ρ n.val * ∑ w : Fin n.val → Fin 4,
         baseWordMetricNorm period K (EulerH6Pressure.SpatialJet.derivativeJet (q := q) (toJet
-          period u) w
+            period u) w
           (by have := n.isLt; omega)) := by
   simp only [weightedMetricLoss, Fintype.sum_sigma, Finset.mul_sum, energyValues,
-    baseWordMetricNorm]
+      baseWordMetricNorm]
 
-/-- The actual derivative-loss Sobolev sum is controlled by metric roots with only the fixed base-order constant. -/
-theorem weightedLoss_metric_lower {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (ρ : ℝ) (hρ : 0 < ρ)
+/-- The actual derivative-loss Sobolev sum is controlled by metric roots with only the fixed
+base-order constant. -/
+theorem weightedLoss_metric_lower {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (hρ : 0 < ρ)
     (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) (c : ℝ) (hc : 0 < c)
-    (hK : ∀ v, c^2*‖v‖^2 ≤ ⟪K v,v⟫_ℝ) :
+    (hK : ∀ v, c ^ 2 * ‖v‖ ^ 2 ≤ ⟪K v, v⟫_ℝ) :
     weightedLoss period q N ρ u ≤ (Real.sqrt (Fintype.card (BaseWord q) : ℝ)/c) *
       weightedMetricLoss ρ (fun I : ExternalWord N => I.1.val) K (energyValues period q N hN u) :=
-        by
+          by
   rw [metricLoss_eq, weightedLoss, ← Fin.sum_univ_eq_sum_range, Finset.mul_sum]
   apply Finset.sum_le_sum
   intro n _

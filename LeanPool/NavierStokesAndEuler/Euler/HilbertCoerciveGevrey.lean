@@ -6,10 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Actual all-order estimates for a coercive inverse
@@ -20,6 +24,9 @@ vanishes at `x`, so differentiating gives a triangular estimate with no
 highest-order solution term on the right. The factorial estimate below is
 therefore derived from genuine derivatives of the constructed inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -86,7 +93,7 @@ variable {P E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- The recurrence for the actual Lax--Milgram inverse, with its coercivity bound. -/
 theorem coerciveSolution_derivative_recurrence
     (A : P → E →L[ℝ] E) (c : P → ℝ) (hc : ∀ x, 0 < c x)
-    (hcoercive : ∀ x v, c x * ‖v‖^2 ≤ ⟪A x v, v⟫_ℝ)
+    (hcoercive : ∀ x v, c x * ‖v‖ ^ 2 ≤ ⟪A x v, v⟫_ℝ)
     (f : P → E) (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f)
     (x : P) (n : ℕ) :
     ‖iteratedFDeriv ℝ n
@@ -107,12 +114,12 @@ theorem coerciveSolution_derivative_recurrence
 /-- A single factorial shift controls every actual derivative of the inverse solve. -/
 theorem coerciveSolution_gevrey
     (A : P → E →L[ℝ] E) (c : P → ℝ) (hc : ∀ x, 0 < c x)
-    (hcoercive : ∀ x v, c x * ‖v‖^2 ≤ ⟪A x v, v⟫_ℝ)
+    (hcoercive : ∀ x v, c x * ‖v‖ ^ 2 ≤ ⟪A x v, v⟫_ℝ)
     (f : P → E) (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f)
-    (M Rc R : ℝ) (hM : 1 ≤ M) (hRc : 0 ≤ Rc) (hR : 2*M*(Rc+1) ≤ R)
+    (M Rc R : ℝ) (hM : 1 ≤ M) (hRc : 0 ≤ Rc) (hR : 2 * M * (Rc + 1) ≤ R)
     (hinv : ∀ x, (c x)⁻¹ ≤ M)
-    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j+1) A x‖ ≤
-      Rc^(j+1) * ((j+1).factorial : ℝ)^2)
+    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j + 1) A x‖ ≤
+      Rc ^ (j + 1) * ((j + 1).factorial : ℝ) ^ 2)
     (d : ℕ) (hforce : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n
@@ -144,14 +151,14 @@ theorem coerciveSolution_gevrey
 constant, not the derivative-order radius. -/
 theorem coerciveSolution_gevrey_amplitudes
     (A : P → E →L[ℝ] E) (c : P → ℝ) (hc : ∀ x, 0 < c x)
-    (hcoercive : ∀ x v, c x * ‖v‖^2 ≤ ⟪A x v, v⟫_ℝ)
+    (hcoercive : ∀ x v, c x * ‖v‖ ^ 2 ≤ ⟪A x v, v⟫_ℝ)
     (f : P → E) (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f)
     (I C D M Rc R : ℝ) (hC : 0 ≤ C) (hD : 0 ≤ D)
-    (hM : 1 ≤ M) (hMC : I*C ≤ M) (hMD : I*D ≤ M)
-    (hRc : 0 ≤ Rc) (hR : 2*M*(Rc+1) ≤ R)
+    (hM : 1 ≤ M) (hMC : I * C ≤ M) (hMD : I * D ≤ M)
+    (hRc : 0 ≤ Rc) (hR : 2 * M * (Rc + 1) ≤ R)
     (hinv : ∀ x, (c x)⁻¹ ≤ I)
-    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j+1) A x‖ ≤
-      C * (Rc^(j+1) * ((j+1).factorial : ℝ)^2))
+    (hcoeff : ∀ j x, ‖iteratedFDeriv ℝ (j + 1) A x‖ ≤
+      C * (Rc ^ (j + 1) * ((j + 1).factorial : ℝ) ^ 2))
     (d : ℕ) (hforce : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n

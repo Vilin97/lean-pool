@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLogarithmicControl
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVorticity
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLifespan
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
 
 /-! Reduction of the vorticity blowup criterion to the whole-space
 logarithmic gradient inequality. The geometric inequality remains an
 explicit hypothesis here and is discharged by the kernel argument. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +28,7 @@ open Set Real EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Fie
 variable (C : ℝ) (hC : 0 ≤ C)
   (hlog : ∀ (A : SmoothL2Field Space) (W : ℝ), A.toLp ∈ solenoidalSpace →
     (∀ x, ‖EulerMeanCutoffCurl.vectorCurl A.field x‖ ≤ W) → ∀ x,
-      ‖fderiv ℝ A.field x‖ ≤ C*(1+‖A.toLp‖+W*log (exp 1+tensorNorm 3 A)))
+      ‖fderiv ℝ A.field x‖ ≤ C * (1 + ‖A.toLp‖ + W * log (exp 1 + tensorNorm 3 A)))
 
 include hC hlog
 

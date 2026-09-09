@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Arithmetic of the residual-order ledger
@@ -25,6 +25,9 @@ The manuscript fixes `κ = 10⁻⁵` in §8.1 and again in §10.2. The results b
 hold uniformly for `0 ≤ κ ≤ 10⁻⁵` and `σ ≥ 1/5`. Fractions are exact rationals
 in the real numbers; no floating-point calculation is used.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ExponentLedger
 

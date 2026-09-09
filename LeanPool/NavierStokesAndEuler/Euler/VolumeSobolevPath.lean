@@ -6,37 +6,53 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.VolumeSobolevComposition
 public import LeanPool.NavierStokesAndEuler.Euler.LpPointwiseMultiplier
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
+public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-! Strong Sobolev continuity under genuine varying volume-preserving
 maps. Faà di Bruno gives actual derivative tensors, and dominated
 convergence handles the bounded, pointwise continuous coefficients. -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerVolumeSobolevPath
 
-open MeasureTheory Filter EulerMetricTransport EulerLiftedGradientSpace
+open MeasureTheory Filter EulerLiftedGradientSpace
   EulerLpPointwiseMultiplier
 open scoped Topology ContDiff
 
+/-- Tensor: an abbreviation for `Vector3 [×n]→L[ℝ] Vector3`. -/
 abbrev Tensor (n : ℕ) := Vector3 [×n]→L[ℝ] Vector3
 
-private local instance (n : ℕ) : NormedAddCommGroup (Tensor n) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Tensor n) := inferInstance
-private local instance (a b : ℕ) : NormedAddCommGroup (Tensor a →L[ℝ] Tensor b) := inferInstance
-private local instance (a b : ℕ) : NormedSpace ℝ (Tensor a →L[ℝ] Tensor b) := inferInstance
-private local instance (a b : ℕ) : SecondCountableTopologyEither Vector3 (Tensor a →L[ℝ] Tensor b)
-  :=
+/-- Cache the standard `NormedAddCommGroup (Tensor n)` instance to shorten typeclass synthesis. -/
+local instance instVolumeSobolevPath1 (n : ℕ) : NormedAddCommGroup (Tensor n) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Tensor n)` instance to shorten typeclass synthesis. -/
+local instance instVolumeSobolevPath2 (n : ℕ) : NormedSpace ℝ (Tensor n) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Tensor a →L[ℝ] Tensor b)` instance to shorten
+typeclass synthesis. -/
+local instance instVolumeSobolevPath3 (a b : ℕ) : NormedAddCommGroup (Tensor a →L[ℝ] Tensor b) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Tensor a →L[ℝ] Tensor b)` instance to shorten typeclass
+synthesis. -/
+local instance instVolumeSobolevPath4 (a b : ℕ) : NormedSpace ℝ (Tensor a →L[ℝ] Tensor b) :=
+    inferInstance
+local instance instVolumeSobolevPath5 (a b : ℕ) : SecondCountableTopologyEither Vector3 (Tensor a
+    →L[ℝ] Tensor b)
+    :=
   ⟨Or.inl inferInstance⟩
 
 variable {K : Type*} [TopologicalSpace K]
-  (Y : C(K,C(Vector3,Vector3))) (hmp : ∀ t, MeasurePreserving (Y t) volume volume)
-  (u : ∀ i : ℕ, C(K,Lp (Tensor i) 2 (volume : Measure Vector3)))
+  (Y : C(K, C(Vector3, Vector3))) (hmp : ∀ t, MeasurePreserving (Y t) volume volume)
+  (u : ∀ i : ℕ, C(K, Lp (Tensor i) 2 (volume : Measure Vector3)))
 
+/-- Pulled jet path, bundling `toFun`, `continuous_toFun`. -/
 def pulledJetPath (i : ℕ) : C(K,Lp (Tensor i) 2 (volume : Measure Vector3)) where
   toFun t := Lp.compMeasurePreserving (Y t) (hmp t) (u i t)
   continuous_toFun := (u i).continuous.compMeasurePreservingLp Y.continuous hmp (by norm_num)
@@ -51,6 +67,8 @@ theorem pulledJetPath_ae (g : K → Vector3 → Vector3)
 
 variable {n : ℕ}
 
+/-- Partition coefficient, given by `(c.compAlongOrderedFinpartitionL ℝ Vector3 Vector3
+Vector3).flipMultilinear (fun i => iteratedFDeriv ℝ (c.partSize i) (Y t) x)`. -/
 def partitionCoefficient (c : OrderedFinpartition n) (t : K) (x : Vector3) :
     Tensor c.length →L[ℝ] Tensor n :=
   (c.compAlongOrderedFinpartitionL ℝ Vector3 Vector3 Vector3).flipMultilinear
@@ -61,13 +79,14 @@ theorem partitionCoefficient_apply (c : OrderedFinpartition n) (t : K) (x : Vect
     partitionCoefficient Y c t x v = c.compAlongOrderedFinpartition v
       (fun i => iteratedFDeriv ℝ (c.partSize i) (Y t) x) := rfl
 
+/-- Partition bound, given by `∏ i : Fin c.length, D^(c.partSize i)`. -/
 def partitionBound (D : ℝ) (c : OrderedFinpartition n) : ℝ :=
   ∏ i : Fin c.length, D^(c.partSize i)
 
 variable (D : ℝ) (hD : 0 ≤ D)
   (hJ : ∀ i, 1 ≤ i → i ≤ n →
     Continuous (fun z : K × Vector3 => iteratedFDeriv ℝ i (Y z.1) z.2))
-  (hB : ∀ i, 1 ≤ i → i ≤ n → ∀ t x, ‖iteratedFDeriv ℝ i (Y t) x‖ ≤ D^i)
+  (hB : ∀ i, 1 ≤ i → i ≤ n → ∀ t x, ‖iteratedFDeriv ℝ i (Y t) x‖ ≤ D ^ i)
 
 include hJ in
 theorem partitionCoefficient_continuous (c : OrderedFinpartition n) :
@@ -91,14 +110,15 @@ theorem partitionCoefficient_bound (c : OrderedFinpartition n) (t : K) (x : Vect
 
 variable [FirstCountableTopology K]
 
+/-- Partition path, bundling `toFun`, `continuous_toFun`. -/
 def partitionPath (c : OrderedFinpartition n) :
     C(K,Lp (Tensor n) 2 (volume : Measure Vector3)) where
   toFun t := operator volume (partitionCoefficient Y c t)
     ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable
     (partitionBound D c) (partitionCoefficient_bound Y D hD hB c t) (pulledJetPath Y hmp u c.length
-      t)
+        t)
   continuous_toFun := operator_path_continuous volume (partitionBound D c) (partitionCoefficient Y
-    c)
+      c)
     (fun t => ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable)
     (fun _ => (partitionCoefficient_continuous Y hJ c).comp (continuous_id.prodMk continuous_const))
     (partitionCoefficient_bound Y D hD hB c) _ (pulledJetPath Y hmp u c.length).continuous
@@ -112,10 +132,11 @@ theorem partitionPath_ae (g : K → Vector3 → Vector3)
   have h := operator_ae volume (partitionCoefficient Y c t)
     ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable
     (partitionBound D c) (partitionCoefficient_bound Y D hD hB c t) (pulledJetPath Y hmp u c.length
-      t)
+        t)
   filter_upwards [h,pulledJetPath_ae Y hmp u g hu c.length t] with x hx hy
   exact hx.trans (by rw [hy,partitionCoefficient_apply])
 
+/-- Tensor path, given by `∑ c : OrderedFinpartition n, partitionPath Y hmp u D hD hJ hB c`. -/
 def tensorPath : C(K,Lp (Tensor n) 2 (volume : Measure Vector3)) :=
   ∑ c : OrderedFinpartition n, partitionPath Y hmp u D hD hJ hB c
 
@@ -137,7 +158,8 @@ theorem tensorPath_ae (g : K → Vector3 → Vector3)
   simp only [Finset.sum_apply]
   rw [iteratedFDeriv_comp (i := n) ((hg t).contDiffAt.of_le (show (n : ℕ∞ω) ≤ ∞ by simp))
     ((hY t).contDiffAt.of_le (show (n : ℕ∞ω) ≤ ∞ by simp)) le_rfl]
-  simp only [FormalMultilinearSeries.taylorComp,FormalMultilinearSeries.compAlongOrderedFinpartition,
+  simp only [FormalMultilinearSeries.taylorComp,
+      FormalMultilinearSeries.compAlongOrderedFinpartition,
     ftaylorSeries]
   exact Finset.sum_congr rfl (fun c _ => hx c)
 

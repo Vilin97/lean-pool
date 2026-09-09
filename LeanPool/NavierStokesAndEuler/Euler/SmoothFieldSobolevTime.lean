@@ -6,16 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
-public import LeanPool.NavierStokesAndEuler.Euler.SeparatingTimeDerivative
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.Euler.SeparatingTimeDerivative
 
 /-! Pointwise evolution of smooth L² fields upgrades to genuine strong
 Sobolev evolution when all spatial L² jets of the field and its prescribed
 time derivative are continuous. The ordinary field is represented by its
 isometric, angle-independent lift to the unit cylinder. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +32,7 @@ open Set MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerMeanOrdinaryLif
   EulerVolterraConvolution
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instSmoothFieldSobolevTime1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 variable {K : Type*} [TopologicalSpace K]
 
@@ -46,8 +51,10 @@ theorem continuous_sobolev (A : K → SmoothL2Field Space)
     simpa only [EulerLpTranslation.translation,EulerMeanSolenoidal.translation] using h
   rw [he]
   exact (EulerLpDerivative.multilinearBundling (P := Space) (V := Space) volume n).continuous.comp
-    (hA n)
+      (hA n)
 
+/-- Sobolev path, given by `⟨fun t => ordinarySobolev q (A t).toLp (A
+t).translation_contDiff,continuous_sobolev A hA q⟩`. -/
 def sobolevPath (A : K → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) (q : ℕ) : C(K,SobolevSpace 1 q) :=
   ⟨fun t => ordinarySobolev q (A t).toLp (A t).translation_contDiff,continuous_sobolev A hA q⟩
@@ -60,6 +67,7 @@ theorem restrict_sobolev {p q : ℕ} (h : q ≤ p) (A : SmoothL2Field Space) :
     ((ordinarySobolev_value p A.toLp A.translation_contDiff).trans
       (ordinarySobolev_value q A.toLp A.translation_contDiff).symm)
 
+/-- Observation, given by `(pointEvaluation 1 x).comp (restrictOperator 1 hq)`. -/
 def observation (q : ℕ) (hq : 3 ≤ q) (x : LiftDomain 1) : SobolevSpace 1 q →L[ℝ] Space :=
   (pointEvaluation 1 x).comp (restrictOperator 1 hq)
 
@@ -78,7 +86,7 @@ theorem observation_apply (q : ℕ) (hq : 3 ≤ q) (x : LiftDomain 1) (A : Smoot
 
 theorem observation_injective (q : ℕ) (hq : 3 ≤ q) :
     Function.Injective (fun u : SobolevSpace 1 q => fun x : LiftDomain 1 => observation q hq x u)
-      := by
+        := by
   intro u v h
   apply value_injective 1
   apply Lp.ext
@@ -92,7 +100,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (hB : ∀ n, Continuous (fun t => (B t).jetLp n))
   (hd : ∀ t (ht : t ∈ Ioo 0 T) x,
     HasDerivAt (fun r => (A (projIcc 0 T hT r)).field x)
-      ((B ⟨t,ht.1.le,ht.2.le⟩).field x) t)
+      ((B ⟨t, ht.1.le, ht.2.le⟩).field x) t)
 
 include hd in
 theorem sobolevPath_hasDerivWithinAt_of_three_le (q : ℕ) (hq : 3 ≤ q)

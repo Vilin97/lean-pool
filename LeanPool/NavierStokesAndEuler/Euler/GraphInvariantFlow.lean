@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFlowContinuity
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BoundedLipschitzFlow
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
+public import Mathlib.Analysis.InnerProductSpace.Dual
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFlowContinuity
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-! A lifted flow tangent to the oscillating graph gives an actual
 three-dimensional flow, with inverse and the projected differential
 equation. Graph invariance follows from a conserved linear functional. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,29 +25,32 @@ namespace EulerGraphInvariantFlow
 
 open Set InnerProductSpace ContinuousLinearMap EulerLiftedGradientSpace EulerMetricTransport
 
+/-- Graph linear, given by `(ContinuousLinearMap.id ℝ Vector3).prod (k • toDual ℝ Vector3 m)`. -/
 def graphLinear (k : ℝ) (m : Vector3) : Vector3 →L[ℝ] LiftTangent :=
   (ContinuousLinearMap.id ℝ Vector3).prod (k • toDual ℝ Vector3 m)
 
 @[simp] theorem graphLinear_apply (k : ℝ) (m x : Vector3) :
     graphLinear k m x = (x,k*inner ℝ m x) := rfl
 
+/-- Graph constraint, given by `snd ℝ Vector3 ℝ - k • (toDual ℝ Vector3 m).comp (fst ℝ Vector3
+ℝ)`. -/
 def graphConstraint (k : ℝ) (m : Vector3) : LiftTangent →L[ℝ] ℝ :=
   snd ℝ Vector3 ℝ - k • (toDual ℝ Vector3 m).comp (fst ℝ Vector3 ℝ)
 
 @[simp] theorem graphConstraint_apply (k : ℝ) (m : Vector3) (z : LiftTangent) :
     graphConstraint k m z = z.2-k*inner ℝ m z.1 := rfl
 
-@[simp] theorem graphConstraint_graph (k : ℝ) (m x : Vector3) :
+theorem graphConstraint_graph (k : ℝ) (m x : Vector3) :
     graphConstraint k m (graphLinear k m x)=0 := by simp
 
-theorem graphConstraint_transport (k κ : ℝ) (hk : k*κ=1) (m v : Vector3) :
+theorem graphConstraint_transport (k κ : ℝ) (hk : k * κ = 1) (m v : Vector3) :
     graphConstraint k m (transportDirection κ m v)=0 := by
   change inner ℝ m v-k*inner ℝ m (κ • v)=0
   rw [inner_smul_right]
   simp only [← mul_assoc,hk,one_mul,sub_self]
 
 variable (k : ℝ) (m : Vector3) (V : EulerBoundedLipschitzFlow.Data LiftTangent)
-  (hV : ∀ t z, graphConstraint k m (V.velocity t z)=0)
+  (hV : ∀ t z, graphConstraint k m (V.velocity t z) = 0)
 
 include hV in
 theorem graphConstraint_flow (s t : ℝ) (z : LiftTangent) :
@@ -56,6 +63,7 @@ theorem graphConstraint_flow (s t : ℝ) (z : LiftTangent) :
     (fun r => (hd r).deriv) t s
   simpa only [V.flow_initial] using he
 
+/-- Graph flow, given by `(V.flow s t (graphLinear k m x)).1`. -/
 def graphFlow (s t : ℝ) (x : Vector3) : Vector3 := (V.flow s t (graphLinear k m x)).1
 
 include hV in

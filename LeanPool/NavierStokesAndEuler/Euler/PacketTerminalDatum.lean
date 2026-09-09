@@ -7,15 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderCompactTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPeriodicPotential
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PeriodicProfile
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialCutoffs
 
 /-!
 The literal compact terminal datum χ₁(y) fδ(θ) ξT.  The periodic variable
 has period 2π.  The constant vector is multiplied by the spatial cutoff
 before it is placed in the genuine cylinder L² space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,13 +28,16 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
   EulerCylinderCompact EulerLpCylinderTranslation
 open scoped ContDiff
 
+/-- Period: an abbreviation for `2 * Real.pi`. -/
 abbrev period : ℝ := 2 * Real.pi
 
 instance period_pos : Fact (0 < period) := ⟨mul_pos (by norm_num) Real.pi_pos⟩
 
+/-- Scalar field, given by `innerCutoff x.1 * (profile_periodic δ).lift x.2`. -/
 def scalarField (δ : ℝ) (x : LiftDomain period) : ℝ :=
   innerCutoff x.1 * (profile_periodic δ).lift x.2
 
+/-- Field, given by `scalarField δ x • ξ`. -/
 def field {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (ξ : U) (x : LiftDomain period) : U := scalarField δ x • ξ
 
@@ -65,6 +70,7 @@ theorem field_smooth {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     ContDiff ℝ ∞ (localFieldLift period (field δ ξ) x) :=
   (scalarField_smooth δ hδ x).smul contDiff_const
 
+/-- Support set, given by `tsupport innerCutoff ×ˢ Set.univ`. -/
 def supportSet : Set (LiftDomain period) := tsupport innerCutoff ×ˢ Set.univ
 
 theorem supportSet_compact : IsCompact supportSet :=
@@ -87,12 +93,14 @@ theorem field_compact {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (ξ : U) : HasCompactSupport (field δ ξ) :=
   supportSet_compact.of_isClosed_subset (isClosed_tsupport _) (field_support δ ξ)
 
+/-- Compact field, bundling `field`, `compact`, `smooth`. -/
 def compactField {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (hδ : 0 < δ) (ξ : U) : CompactField period U where
   field := field δ ξ
   compact := field_compact δ ξ
   smooth := field_smooth δ hδ ξ
 
+/-- Terminal, given by `(compactField δ hδ ξ).toLp`. -/
 def terminal {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (hδ : 0 < δ) (ξ : U) : CylinderL2 period U := (compactField δ hδ ξ).toLp
 

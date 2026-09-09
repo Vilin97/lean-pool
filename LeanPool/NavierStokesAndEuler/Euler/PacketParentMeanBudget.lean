@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanCoercivity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
 
 /-! A genuine mean-solver budget from parent deformation jets.  All inverse
 costs and the final radius are explicit finite polynomials in those jets,
 the initial boundary size, and an upper bound for the inverse time length. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,25 +27,34 @@ open Set Real EulerSmoothLimit EulerMeanCoefficients EulerPacketPiola EulerPacke
   EulerMeanTranslatedGevrey EulerMeanSourceFixedInverse EulerMeanStrongContinuousGevrey
   EulerTimeLpGramSobolev EulerPacketParentMeanCoercivity
 
+/-- Curvature amplitude, given by `27*C^2*C₂`. -/
 def curvatureAmplitude (C C₂ : ℝ) : ℝ := 27*C^2*C₂
 
+/-- Operator cost, given by `operatorBlockAmplitude (Fin 4) q T R C C₁ (curvatureAmplitude C C₂)
+C₁ scaledBoundaryOperatorAmplitude L`. -/
 def operatorCost (q : ℕ) (T R C C₁ C₂ L : ℝ) : ℝ :=
   operatorBlockAmplitude (Fin 4) q T R C C₁ (curvatureAmplitude C C₂) C₁
     scaledBoundaryOperatorAmplitude L
 
+/-- Forcing cost, given by `forcingBlockAmplitude (Fin 4) q T R C C₁ 1`. -/
 def forcingCost (q : ℕ) (T R C C₁ : ℝ) : ℝ :=
   forcingBlockAmplitude (Fin 4) q T R C C₁ 1
 
+/-- Weak cost as an element of `ℝ`. -/
 def weakCost (q : ℕ) (T R C C₁ C₂ L : ℝ) : ℝ :=
-  1+sobolevInverseCost (inverseEnvelope C C₁) (operatorCost q T R C C₁ C₂ L) q*
+  1+sobolevInverseCost (inverseEnvelope C C₁) (operatorCost q T R C C₁ C₂ L) q *
     (operatorCost q T R C C₁ C₂ L+forcingCost q T R C C₁)
 
+/-- Gram cost, given by `inverseBlockCost (Fin 4) q (gramInverseEnvelope C) R (3*C^2)
+(accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)`. -/
 def gramCost (q : ℕ) (R C C₁ V : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) q (gramInverseEnvelope C) R (3*C^2)
     (accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)
 
+/-- Radius, given by `1+2*(weakCost q T R C C₁ C₂ L+gramCost q R C C₁ 1+gramCost q R C C₁
+(Ti+2)) * (sobolevCoefficientRadius (Fin 4) R+1)`. -/
 def radius (q : ℕ) (T Ti R C C₁ C₂ L : ℝ) : ℝ :=
-  1+2*(weakCost q T R C C₁ C₂ L+gramCost q R C C₁ 1+gramCost q R C C₁ (Ti+2))*
+  1+2*(weakCost q T R C C₁ C₂ L+gramCost q R C C₁ 1+gramCost q R C C₁ (Ti+2)) *
     (sobolevCoefficientRadius (Fin 4) R+1)
 
 theorem operatorCost_nonneg (q : ℕ) (T R C C₁ C₂ L : ℝ)
@@ -86,7 +97,7 @@ theorem radius_guards (q : ℕ) (T Ti R C C₁ C₂ L : ℝ)
     2*weakCost q T R C C₁ C₂ L*(sobolevCoefficientRadius (Fin 4) R+1) ≤ radius q T Ti R C C₁ C₂ L ∧
     2*gramCost q R C C₁ 1*(sobolevCoefficientRadius (Fin 4) R+1) ≤ radius q T Ti R C C₁ C₂ L ∧
     2*gramCost q R C C₁ (Ti+2)*(sobolevCoefficientRadius (Fin 4) R+1) ≤ radius q T Ti R C C₁ C₂ L
-      := by
+        := by
   have hw := zero_le_one.trans (weakCost_one_le q T R C C₁ C₂ L hT hR hC hC₁ hC₂)
   have hg := gramCost_nonneg q R C C₁ 1 hR hC hC₁ zero_le_one
   have hgc := gramCost_nonneg q R C C₁ (Ti+2) hR hC hC₁ (by positivity)
@@ -103,10 +114,12 @@ variable (D : EulerMeanPacketProvider.Data) (q : ℕ) (Ti R C C₁ C₂ : ℝ)
   (hT : D.T ≤ 1) (hTi : D.T⁻¹ ≤ Ti) (hR : 1024 ≤ R)
   (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂)
   (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
-  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-  (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁*majorant R 0 n)
-  (hF₂ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₂.field t : Space → EndSpace) x‖ ≤ C₂*majorant R 0 n)
+  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+  (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁ * majorant R 0 n)
+  (hF₂ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₂.field t : Space → EndSpace) x‖ ≤ C₂ * majorant R 0 n)
 
+/-- Source mean budget as an element of `EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C
+C₁ C₂ D.L)`. -/
 def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C₁ C₂ D.L) := by
   have hR0 : 0 ≤ R := (by norm_num : (0 : ℝ) ≤ 1024).trans hR
   have hTi0 : 0 ≤ Ti := (inv_nonneg.mpr D.T_pos.le).trans hTi
@@ -146,7 +159,7 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
   have ht0 := coordinateTraceCost_nonneg D.T D.T_pos.le
   have hg0 : 0 ≤ D.frameLower⁻¹ := inv_nonneg.mpr D.frameLower_pos.le
   have hd0 := accelerationBlockAmplitude_nonneg (ι := Fin 4) q R C C₁ 1 1 hR0 hC hC₁ zero_le_one
-    zero_le_one
+      zero_le_one
   have hdt := accelerationBlockAmplitude_nonneg (ι := Fin 4) q R C C₁ 1 (coordinateTraceCost D.T)
     hR0 hC hC₁ zero_le_one ht0
   have hacc : accelerationBlockAmplitude (Fin 4) q R C C₁ 1 (coordinateTraceCost D.T) ≤
@@ -155,10 +168,10 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
     have hb := sobolevCoefficientAmplitude_nonneg (ι := Fin 4) q R C₁ hR0 hC₁
     unfold accelerationBlockAmplitude
     gcongr
-  have hg := inverseBlockCost_mono (ι := Fin 4) q hg0 hR0 (by positivity : 0 ≤ 3*C^2) hd0 hGram
-    le_rfl le_rfl
-  have hgc := inverseBlockCost_mono (ι := Fin 4) q hg0 hR0 (by positivity : 0 ≤ 3*C^2) hdt hGram
-    le_rfl hacc
+  have hg := inverseBlockCost_mono (ι := Fin 4) q hg0 hR0 (by
+      positivity : 0 ≤ 3*C^2) hd0 hGram le_rfl le_rfl
+  have hgc := inverseBlockCost_mono (ι := Fin 4) q hg0 hR0 (by
+      positivity : 0 ≤ 3*C^2) hdt hGram le_rfl hacc
   have hr := radius_guards q D.T Ti R C C₁ C₂ D.L D.T_pos.le hTi0 hR0 hC hC₁ hC₂
   have hr0 := add_nonneg (sobolevCoefficientRadius_nonneg (ι := Fin 4) R hR0) zero_le_one
   refine {
@@ -188,10 +201,10 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
     initial_strain_bound := ?_
     forcing_one := le_rfl
     forcing_time := hsqrt }
-  · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hg (by norm_num : (0 : ℝ) ≤ 2))
-    hr0).trans hr.2.1
-  · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hgc (by norm_num : (0 : ℝ) ≤ 2))
-    hr0).trans hr.2.2
+  · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hg (by
+      norm_num : (0 : ℝ) ≤ 2)) hr0).trans hr.2.1
+  · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hgc (by
+      norm_num : (0 : ℝ) ≤ 2)) hr0).trans hr.2.2
   · intro n x
     have he : (D.M0.field : Space → EndSpace) = D.F₁.field ⟨0,le_rfl,D.T_pos.le⟩ :=
       funext (fun y => (D.derivative_initial y).symm)

@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureRecoveryHelpers
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFunctionals
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
 
 /-!
 # From scalar pressure-gradient identification to the cutoff pressure flux
@@ -20,6 +17,9 @@ This module is an integration-by-parts bridge. Its input is an explicit
 identification of every compact scalar pressure-gradient pairing. It does not
 assume a pressure-flux formula or any bound on the pressure at infinity.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -109,7 +109,7 @@ def canonicalPressureLinear (g : Fin 3 → Fin 3 → Space → ℝ)
     (hg : ∀ i j : Fin 3, Integrable (g i j)) (ψ : ComplexTest) :
     canonicalPressureLinear g hg ψ = ∑ i : Fin 3, ∑ j : Fin 3, pressurePair i j (g i j) ψ := by
   simp only [canonicalPressureLinear, LinearMap.sum_apply,
-    PressureFunctionals.pressurePairLinear_apply]
+      PressureFunctionals.pressurePairLinear_apply]
 
 theorem integrable_canonical_flux_terms {χ : Space → ℝ} {w : Space → Space}
     (hχ : ContDiff ℝ ∞ χ) (hw : ContDiff ℝ ∞ w) (hcχ : HasCompactSupport χ)

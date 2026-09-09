@@ -9,13 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentLabelCoefficients
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentNormalBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanBudget
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
-
-@[expose] public section
 
 /-! Concrete source budgets from (21), stated in the actual classical
 physical-label H⁶ word norms of the displacement, velocity and acceleration.
 No multiplier bound or inverse-solver estimate is an input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,7 +47,7 @@ theorem coefficient_gradient_bound (F : SmoothCoefficientPath J EndSpace)
 
 theorem coefficient_deformation_bound (F : SmoothCoefficientPath J EndSpace)
     (A : J → SmoothL2Field Space) (L : Space →L[ℝ] Space) (hL : ‖L‖ ≤ 1)
-    (heq : ∀ t x, F.field t x = ContinuousLinearMap.id ℝ Space+fderiv ℝ (A t).field (L x))
+    (heq : ∀ t x, F.field t x = ContinuousLinearMap.id ℝ Space + fderiv ℝ (A t).field (L x))
     (K : ℝ) (hK : 0 ≤ K) (hb : ∀ t, HasLabelBound K (A t))
     (n : ℕ) (t : J) (x : Space) :
     ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤
@@ -73,14 +73,14 @@ def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     (A V : Icc (0 : ℝ) D.T → SmoothL2Field Space)
     (ℓ K : ℝ) (hℓ : 0 ≤ ℓ) (hℓ1 : ℓ ≤ 1) (hK : 0 ≤ K)
     (hA : ∀ t, HasLabelBound K (A t)) (hV : ∀ t, HasLabelBound K (V t))
-    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space+fderiv ℝ (A t).field (ℓ • x))
+    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space + fderiv ℝ (A t).field (ℓ • x))
     (hF₁ : ∀ t x, D.F₁.field t x = fderiv ℝ (V t).field (ℓ • x))
     (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1) :
     EulerTransversePacketJoin.NormalBudget D q
       (EulerPacketParentNormalBudget.radius (coefficientRadius K) (frameAmplitude K)
-        (gradientAmplitude K)) :=
+          (gradientAmplitude K)) :=
   EulerPacketParentNormalBudget.sourceNormalBudget D (coefficientRadius K) (frameAmplitude K)
-    (gradientAmplitude K)
+      (gradientAmplitude K)
     (coefficientRadius_nonneg K) (frameAmplitude_nonneg K) (gradientAmplitude_nonneg K) hdet
     (coefficient_deformation_bound D.F A (ℓ • ContinuousLinearMap.id ℝ Space)
       (labelScaling_norm_le ℓ hℓ hℓ1) hF K hK hA)
@@ -94,7 +94,7 @@ def meanBudget (D : EulerMeanPacketProvider.Data) (q : ℕ)
     (Ti K : ℝ) (hT : D.T ≤ 1) (hTi : D.T⁻¹ ≤ Ti) (hK : 0 ≤ K)
     (hA : ∀ t, HasLabelBound K (A t)) (hV : ∀ t, HasLabelBound K (V t))
     (hW : ∀ t, HasLabelBound K (W t))
-    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space+fderiv ℝ (A t).field (D.ℓ • x))
+    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space + fderiv ℝ (A t).field (D.ℓ • x))
     (hF₁ : ∀ t x, D.F₁.field t x = fderiv ℝ (V t).field (D.ℓ • x))
     (hF₂ : ∀ t x, D.F₂.field t x = fderiv ℝ (W t).field (D.ℓ • x))
     (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1) :

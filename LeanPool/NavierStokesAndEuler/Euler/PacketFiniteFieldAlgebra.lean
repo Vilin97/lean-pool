@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJetAssembly
+public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAssembly
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
+
+/-! Actual path and time-derivative witnesses for finite coefficient assembly. -/
 
 @[expose] public section
 
-/-! Actual path and time-derivative witnesses for finite coefficient assembly. -/
 
 noncomputable section
 
@@ -23,18 +26,21 @@ variable {P T : ℝ} [Fact (0 < P)]
 
 namespace Field
 
+/-- Truncate family as an element of `Field P T (truncate M f n)`. -/
 def truncateFamily (M : ℕ) (f : ℕ → VectorField)
     (G : ∀ i, i ≤ M → Field P T (f i)) (n : ℕ) : Field P T (truncate M f n) := by
   by_cases hn : n ≤ M
   · exact (G n hn).congr (fun _ _ _ => by rw [truncate_of_le M n f hn])
   · exact (Field.zero P T).congr (fun _ _ _ => by rw [truncate_of_gt M n f (by omega)])
 
+/-- Assemble family used in packet finite field algebra. -/
 def assembleFamily (M : ℕ) (f c : ℕ → VectorField)
     (G : ∀ i, i ≤ M → Field P T (f i)) (H : ∀ i, i ≤ M → Field P T (c i)) :
     (n : ℕ) → Field P T (assemble M f c n)
   | 0 => (truncateFamily M f G 0).congr (fun _ _ _ => by simp only [assemble,shiftUp,add_zero])
   | n+1 => (truncateFamily M f G (n+1)).add (truncateFamily M c H n)
 
+/-- Evaluate family as an element of `Field P T (fieldSum M κ f)`. -/
 def evaluateFamily (M : ℕ) (κ : ℝ) (f : ℕ → VectorField) (G : ∀ i, Field P T (f i)) :
     Field P T (fieldSum M κ f) :=
   (Field.finsetSum (range (M+1)) (fun i => κ^i • f i) (fun i => (G i).smul (κ^i))).congr
@@ -62,7 +68,7 @@ theorem assembleFamily (M : ℕ) (f f' c c' : ℕ → VectorField)
     (hG : ∀ i (hi : i ≤ M), TimeDerivative hT (G i hi) (G' i hi))
     (hH : ∀ i (hi : i ≤ M), TimeDerivative hT (H i hi) (H' i hi)) (n : ℕ) :
     TimeDerivative hT (Field.assembleFamily M f c G H n) (Field.assembleFamily M f' c' G' H' n) :=
-      by
+        by
   cases n with
   | zero => exact truncateFamily M f f' G G' hG 0
   | succ n => exact (truncateFamily M f f' G G' hG (n+1)).add (truncateFamily M c c' H H' hH n)

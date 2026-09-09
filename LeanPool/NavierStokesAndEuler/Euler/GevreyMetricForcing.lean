@@ -7,46 +7,51 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricEstimate
+public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionBound
+public import LeanPool.NavierStokesAndEuler.Euler.GevreyOrderZero
+import LeanPool.NavierStokesAndEuler.Euler.GevreyNonlinearEstimate
+
+/-! The actual complete Euler forcing estimate in metric-energy variables. -/
 
 @[expose] public section
 
-/-! The actual complete Euler forcing estimate in metric-energy variables. -/
 
 noncomputable section
 
 namespace EulerGevreyMetricEstimate
 
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerCylinderSobolev
+    EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerH6Pressure EulerSobolevGevreyOperators
-    EulerGevreyCorrectionForcing
+      EulerGevreyCorrectionForcing
   EulerH6Nonlinear EulerSobolevTransportCommutator EulerGevreyPressureTransport
-    EulerSobolevCoefficientPressure
-  EulerGevreyMetricComparison EulerWeightedCylinderEnergy EulerGevreyRestriction
-    EulerGevreyOrderZero
+      EulerSobolevCoefficientPressure
+  EulerGevreyMetricComparison EulerWeightedCylinderEnergy
+      EulerGevreyOrderZero
   EulerGevreyCorrectionBound EulerGevreyNonlinearEstimate
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The complete actual correction forcing has the metric polynomial bound used in the shrinking-radius energy argument. -/
+/-- The complete actual correction forcing has the metric polynomial bound used in the
+shrinking-radius energy argument. -/
 theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (KG : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (KG0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c*‖v‖^2 ≤ ⟪A.coefficient x v,v⟫_ℝ)
-    (N : ℕ) (hN : N+6 ≤ s) (ρ Rc M B : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M) (hB : 0 ≤ B)
+    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (N : ℕ) (hN : N + 6 ≤ s) (ρ Rc M B : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M) (hB : 0 ≤ B)
     (hbase5 : (EulerH6Pressure.CoefficientJet.restrict KG 5 (by omega)).pressureConstant c ≤ M)
     (hbase6 : (EulerH6Pressure.CoefficientJet.restrict KG 6 (by omega)).pressureConstant c ≤ M)
-    (hsmall : 4*M*(ρ*Rc) ≤ 1)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period KG 6 l ≤ Rc^l*(l.factorial : ℝ)^2)
+    (hsmall : 4 * M * (ρ * Rc) ≤ 1)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period KG 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2)
     (hG : ∀ r ≤ 6, EulerJetProductBounds.boundLevel period KG r ≤ B)
     (hG0 : ∀ r ≤ 6, EulerJetProductBounds.boundLevel period KG0 r ≤ B)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C0 : SmoothCoefficient period) (K0 : EulerSpatialSobolevInverse.CoefficientJet period
-      standardDirection s C0)
+        standardDirection s C0)
     (C : Fin 3 → SmoothCoefficient period)
     (K : ∀ i, EulerSpatialSobolevInverse.CoefficientJet period standardDirection s (C i))
-    (z e : SobolevSpace period (s+1)) (r : SobolevSpace period s)
+    (z e : SobolevSpace period (s + 1)) (r : SobolevSpace period s)
     (B0 B1 A0 A2 R : ℝ) (hA2 : 0 ≤ A2)
     (hz : weightedNorm period 6 N ρ z ≤ B0)
     (hdz : (∑ i : Fin 4, weightedNorm period 6 N ρ (derivativeOperator period s i z)) ≤ B1)
@@ -54,22 +59,22 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
     (hC : (∑ i : Fin 3, weightedCoefficient period (K i) 6 N ρ) ≤ A2)
     (hr : weightedNorm period 6 N ρ r ≤ R)
     (KM : LiftL2 period →L[ℝ] LiftL2 period) (cM : ℝ) (hcM : 0 < cM)
-    (hKM : ∀ v, cM^2*‖v‖^2 ≤ ⟪KM v,v⟫_ℝ) :
+    (hKM : ∀ v, cM ^ 2 * ‖v‖ ^ 2 ≤ ⟪KM v, v⟫_ℝ) :
     let f := orderZeroSource period hs L hL (coefficientSobolevOperator period K0)
       (fun i => coefficientSobolevOperator period (K i)) z r (truncateOperator period s e)
     weightedForcingSum ρ (fun I : ExternalWord N => I.1.val)
       (correctionForcing period hs KG KG0 N hN L hL (z+e) e f
         (pressureSobolevOperator period KG κ m c hc hpos f) (transportPressure period hs KG κ m c
-          hc hpos L hL (z+e) e)) ≤
-      sourceConstant B M*R+
+            hc hpos L hL (z+e) e)) ≤
+      sourceConstant B M*R +
       ((sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
-        3*B0)+transportConstant period B M*B0)*
-        metricAmplification cM)*energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e+
+          3*B0)+transportConstant period B M*B0) *
+        metricAmplification cM)*energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e +
       ((sourceConstant B M*A2*productConstant period 3+transportConstant period B
-        M)*(metricAmplification cM)^2)*
-        (energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e)^2+
-      ((lossConstant period M*(ρ⁻¹+Rc))*(metricAmplification cM)^2)*
-        (B0+energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e)*
+          M)*(metricAmplification cM)^2) *
+        (energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e)^2 +
+      ((lossConstant period M*(ρ⁻¹+Rc))*(metricAmplification cM)^2) *
+        (B0+energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e) *
         energyLoss period N (by omega : N+6 ≤ s+1) ρ KM e := by
   let f := orderZeroSource period hs L hL (coefficientSobolevOperator period K0)
     (fun i => coefficientSobolevOperator period (K i)) z r (truncateOperator period s e)
@@ -85,20 +90,20 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
   have htf := transportConstant_nonneg period hB hM0
   have hlf := lossConstant_nonneg period hM0
   have hlin : 0 ≤ sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
-    3*B0)+
+      3*B0) +
       transportConstant period B M*B0 := by positivity
-  have hquad : 0 ≤ sourceConstant B M*A2*productConstant period 3+transportConstant period B M :=
-    by positivity
+  have hquad : 0 ≤ sourceConstant B M*A2*productConstant period 3+transportConstant period B M := by
+      positivity
   exact metric_polynomial_conversion (sourceConstant B M)
     (sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
-      3*B0)+transportConstant period B M*B0)
+        3*B0)+transportConstant period B M*B0)
     (sourceConstant B M*A2*productConstant period 3+transportConstant period B M)
     (lossConstant period M*(ρ⁻¹+Rc)) R B0 (metricAmplification cM)
     (weightedNorm period 6 N ρ e) (weightedLoss period 6 N ρ e)
-    (energyNorm period N (by omega : N+6 ≤ s+1) ρ KM e) (energyLoss period N (by omega : N+6 ≤ s+1)
-      ρ KM e) _
+    (energyNorm period N (by
+        omega : N+6 ≤ s+1) ρ KM e) (energyLoss period N (by omega : N+6 ≤ s+1) ρ KM e) _
     hlin hquad (mul_nonneg hlf (add_nonneg (inv_nonneg.mpr hρ.le) hRc)) hb0
-      (metricAmplification_one_le hcM)
+        (metricAmplification_one_le hcM)
     (weightedNorm_nonneg period 6 N ρ hρ e) (weightedLoss_nonneg period 6 N ρ hρ e)
     (energyNorm_nonneg period N (by omega : N+6 ≤ s+1) ρ hρ KM e)
     (weightedNorm_le_energy period N (by omega : N+6 ≤ s+1) ρ hρ KM e cM hcM hKM)

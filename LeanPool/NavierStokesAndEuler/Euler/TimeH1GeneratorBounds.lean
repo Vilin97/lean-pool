@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
-public import LeanPool.NavierStokesAndEuler.Euler.CoerciveEndpointBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
+import LeanPool.NavierStokesAndEuler.Euler.CoerciveEndpointBounds
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
+import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointBounds
+
+/-! Uniform-time polynomial bounds from an actual L² value and generator derivative. -/
 
 @[expose] public section
 
-/-! Uniform-time polynomial bounds from an actual L² value and generator derivative. -/
 
 noncomputable section
 
@@ -36,6 +40,7 @@ def generatorTrace (B : C(Icc (0 : ℝ) T, U →L[ℝ] U)) :
     TimeLp T U →L[ℝ] C(Icc (0 : ℝ) T, U) :=
   valuePart T hT + (derivativePart T hT).comp (timeMultiplier T hT B)
 
+/-- Trace cost, given by `(1+T) * (T⁻¹ + 2*b)`. -/
 def traceCost (T b : ℝ) : ℝ := (1+T) * (T⁻¹ + 2*b)
 
 theorem sqrt_le_one_add (hT : 0 ≤ T) : Real.sqrt T ≤ 1+T := by
@@ -98,7 +103,7 @@ theorem transportedTrace_sub_norm_le (hTpos : 0 < T)
     (Q P : C(Icc (0 : ℝ) T, U →L[ℝ] E))
     (B B' : C(Icc (0 : ℝ) T, U →L[ℝ] U)) (S S' : V →L[ℝ] TimeLp T U)
     (q b s δq δb δs : ℝ) (hP : ‖P‖ ≤ q) (hB : ‖B‖ ≤ b) (hB' : ‖B'‖ ≤ b)
-    (hS : ‖S‖ ≤ s) (hδq : ‖Q-P‖ ≤ δq) (hδb : ‖B-B'‖ ≤ δb) (hδs : ‖S-S'‖ ≤ δs) :
+    (hS : ‖S‖ ≤ s) (hδq : ‖Q - P‖ ≤ δq) (hδb : ‖B - B'‖ ≤ δb) (hδs : ‖S - S'‖ ≤ δs) :
     ‖(multiplier Q).comp ((generatorTrace T hT B).comp S) -
       (multiplier P).comp ((generatorTrace T hT B').comp S')‖ ≤
       δq * traceCost T b * s + q * (2*(1+T)*δb*s + traceCost T b*δs) := by

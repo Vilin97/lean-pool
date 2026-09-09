@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Energy
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordTime
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothEulerEvolution
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryPressureCancellation
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordTime
 
 /-! Actual Euler evolutions and their genuine H³ difference-energy law.
 The record contains only the fields, their classical Euler equation,
 the Helmholtz constraints, and continuity of their ordinary L² jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,11 +28,17 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit Eu
   EulerVolterraConvolution Finset
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instOrdinaryEulerDifference1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instOrdinaryEulerDifference2 : NormedSpace ℝ Space := inferInstance
 
+/-- Evolution data, collecting `velocity`, `pressureForce`, `velocity_continuous`,
+`pressure_continuous`, `solenoidal`, `gradient` and their compatibility conditions. -/
 structure Evolution (T : ℝ) (hT : 0 ≤ T) where
+  /-- Velocity field of `Evolution`, of type `Icc (0 : ℝ) T → SmoothL2Field Space`. -/
   velocity : Icc (0 : ℝ) T → SmoothL2Field Space
+  /-- Pressure force of `Evolution`, of type `Icc (0 : ℝ) T → SmoothL2Field Space`. -/
   pressureForce : Icc (0 : ℝ) T → SmoothL2Field Space
   velocity_continuous : ∀ n, Continuous (fun t => (velocity t).jetLp n)
   pressure_continuous : ∀ n, Continuous (fun t => (pressureForce t).jetLp n)
@@ -38,20 +47,22 @@ structure Evolution (T : ℝ) (hT : 0 ≤ T) where
   time_law : ∀ t (ht : t ∈ Ioo 0 T) x,
     HasDerivAt (fun r => (velocity (projIcc 0 T hT r)).field x)
       (-fderiv ℝ (velocity ⟨t,ht.1.le,ht.2.le⟩).field x
-        ((velocity ⟨t,ht.1.le,ht.2.le⟩).field x)-
+        ((velocity ⟨t,ht.1.le,ht.2.le⟩).field x) -
           (pressureForce ⟨t,ht.1.le,ht.2.le⟩).field x) t
 
+/-- Evolution of classical, bundling `velocity`, `pressureForce`, `velocity_continuous`,
+`pressure_continuous` and the required compatibility proofs. -/
 def evolutionOfClassical (T : ℝ) (hT : 0 ≤ T)
     (U G : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hU : ∀ n, Continuous (fun t => (U t).jetLp n))
     (hG : ∀ n, Continuous (fun t => (G t).jetLp n))
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ)
-    (hu : ∀ (t : Icc (0 : ℝ) T) x, u (t,x)=(U t).field x)
-    (hp : ∀ (t : Icc (0 : ℝ) T), Differentiable ℝ (fun x => p (t,x)))
-    (hg : ∀ (t : Icc (0 : ℝ) T) x, gradient (fun y => p (t,y)) x=(G t).field x)
-    (hdiv : ∀ t x, divergence (U t).field x=0)
-    (hdiff : ∀ t ∈ Ioo 0 T, ∀ x, DifferentiableAt ℝ u (t,x))
-    (heuler : ∀ t ∈ Ioo 0 T, ∀ x, EulerLagrangian.momentumResidual u p (t,x)=0) :
+    (hu : ∀ (t : Icc (0 : ℝ) T) x, u (t, x) = (U t).field x)
+    (hp : ∀ (t : Icc (0 : ℝ) T), Differentiable ℝ (fun x => p (t, x)))
+    (hg : ∀ (t : Icc (0 : ℝ) T) x, gradient (fun y => p (t, y)) x = (G t).field x)
+    (hdiv : ∀ t x, divergence (U t).field x = 0)
+    (hdiff : ∀ t ∈ Ioo 0 T, ∀ x, DifferentiableAt ℝ u (t, x))
+    (heuler : ∀ t ∈ Ioo 0 T, ∀ x, EulerLagrangian.momentumResidual u p (t, x) = 0) :
     Evolution T hT where
   velocity := U
   pressureForce := G
@@ -75,11 +86,13 @@ namespace Evolution
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Derivative, given by `EulerSmoothEulerEvolution.rhs U.velocity U.velocity_continuous
+U.pressureForce`. -/
 def derivative (U : Evolution T hT) : Icc (0 : ℝ) T → SmoothL2Field Space :=
   EulerSmoothEulerEvolution.rhs U.velocity U.velocity_continuous U.pressureForce
 
 theorem derivative_field (U : Evolution T hT) (t : Icc (0 : ℝ) T) (x : Space) :
-    (U.derivative t).field x = -fderiv ℝ (U.velocity t).field x ((U.velocity t).field x)-
+    (U.derivative t).field x = -fderiv ℝ (U.velocity t).field x ((U.velocity t).field x) -
       (U.pressureForce t).field x :=
   EulerSmoothEulerEvolution.rhs_field U.velocity U.velocity_continuous U.pressureForce t x
 
@@ -88,12 +101,15 @@ theorem derivative_continuous (U : Evolution T hT) (n : ℕ) :
   EulerSmoothEulerEvolution.rhs_jet_continuous U.velocity U.velocity_continuous
     U.pressureForce U.pressure_continuous n
 
+/-- Difference, given by `fieldSub (V.velocity t) (U.velocity t)`. -/
 def difference (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : SmoothL2Field Space :=
   fieldSub (V.velocity t) (U.velocity t)
 
+/-- Pressure difference, given by `fieldSub (V.pressureForce t) (U.pressureForce t)`. -/
 def pressureDifference (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : SmoothL2Field Space :=
   fieldSub (V.pressureForce t) (U.pressureForce t)
 
+/-- Difference derivative, given by `fieldSub (V.derivative t) (U.derivative t)`. -/
 def differenceDerivative (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : SmoothL2Field Space :=
   fieldSub (V.derivative t) (U.derivative t)
 
@@ -104,7 +120,7 @@ theorem difference_continuous (U V : Evolution T hT) (n : ℕ) :
 theorem differenceDerivative_continuous (U V : Evolution T hT) (n : ℕ) :
     Continuous (fun t => (U.differenceDerivative V t).jetLp n) :=
   continuous_jet_fieldSub V.derivative U.derivative V.derivative_continuous U.derivative_continuous
-    n
+      n
 
 theorem differenceDerivative_eq (U V : Evolution T hT) (t : Icc (0 : ℝ) T) :
     U.differenceDerivative V t =
@@ -128,9 +144,13 @@ theorem difference_time_law (U V : Evolution T hT) :
   convert! h using 1
   simp only [differenceDerivative,fieldSub_field,derivative_field]
 
+/-- Energy path, given by `⟨fun t => wordEnergy 3 (U.difference V t),wordEnergy_continuous _
+(U.difference_continuous V) 3⟩`. -/
 def energyPath (U V : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => wordEnergy 3 (U.difference V t),wordEnergy_continuous _ (U.difference_continuous V) 3⟩
 
+/-- Energy derivative, given by `energyProduction (U.difference V t) (U.differenceDerivative V
+t)`. -/
 def energyDerivative (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : ℝ :=
   energyProduction (U.difference V t) (U.differenceDerivative V t)
 
@@ -143,7 +163,7 @@ theorem energy_hasDerivWithinAt (U V : Evolution T hT) (t : Icc (0 : ℝ) T) :
 theorem energyDerivative_bound (U V : Evolution T hT) (M : ℝ)
     (hM : ∀ t, WordBound 4 M (U.velocity t)) (t : Icc (0 : ℝ) T) :
     U.energyDerivative V t ≤ 3600*h3ProductConstant*(M+Real.sqrt (U.energyPath V t))*U.energyPath V
-      t := by
+        t := by
   rw [energyDerivative,differenceDerivative_eq]
   apply difference_energy_bound _ _ _ M (hM t)
   · have he : (addField (U.velocity t) (U.difference V t)).field=(V.velocity t).field := by

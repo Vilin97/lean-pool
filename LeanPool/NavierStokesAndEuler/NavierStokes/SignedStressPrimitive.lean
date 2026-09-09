@@ -7,10 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.IntegratedMeanBalances
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
-public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialPullback
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricKernelBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # The actual compact signed-stress primitive
@@ -19,6 +20,9 @@ A positive normalized bump is constructed in a chosen interior slow patch.
 Subtracting its exact weighted moment makes the negative radial primitive
 compact. The physical construction is normalized by the physical scale.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,10 +34,16 @@ namespace NavierStokes.SignedStressPrimitive
 private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   WithTop.coe_le_coe.mpr le_top
 
+/-- Patch data, collecting `a`, `b`, `left`, `right`, `a_pos`, `a_lt_left` and their
+compatibility conditions. -/
 structure Patch where
+  /-- A of `Patch`, of type `ℝ`. -/
   a : ℝ
+  /-- B of `Patch`, of type `ℝ`. -/
   b : ℝ
+  /-- Left of `Patch`, of type `ℝ`. -/
   left : ℝ
+  /-- Right of `Patch`, of type `ℝ`. -/
   right : ℝ
   a_pos : 0 < a
   a_lt_left : a < left
@@ -45,6 +55,7 @@ theorem Patch.a_lt_b (P : Patch) : P.a < P.b :=
 
 theorem Patch.left_pos (P : Patch) : 0 < P.left := P.a_pos.trans P.a_lt_left
 
+/-- Density, given by `PressureStream.rho P.left P.right P.left_lt_right`. -/
 noncomputable def density (P : Patch) : ℝ → ℝ :=
   PressureStream.rho P.left P.right P.left_lt_right
 
@@ -58,6 +69,7 @@ theorem density_integral (P : Patch) : (∫ r, density P r) = 1 := PressureStrea
 
 theorem density_nonneg (P : Patch) (r : ℝ) : 0 ≤ density P r := PressureStream.rho_nonneg _ _ _ r
 
+/-- Density lift, given by `density P z.1`. -/
 noncomputable def densityLift (P : Patch) (z : ℝ × ℝ) : ℝ := density P z.1
 
 theorem densityLift_contDiff (P : Patch) : ContDiff ℝ ∞ (densityLift P) :=
@@ -67,6 +79,7 @@ theorem densityLift_supported (P : Patch) :
     RadialAlias.RadiallySupported P.left P.right (densityLift P) :=
   fun _ h => density_support P h
 
+/-- Cutoff, given by `TransportPrimitive.pastIntegral 0 (0 : ℝ) (densityLift P) (r, 0)`. -/
 noncomputable def cutoff (P : Patch) (r : ℝ) : ℝ :=
   TransportPrimitive.pastIntegral 0 (0 : ℝ) (densityLift P) (r, 0)
 
@@ -108,6 +121,7 @@ theorem cutoff_hasDerivAt (P : Patch) (r : ℝ) : HasDerivAt (cutoff P) (density
 theorem cutoff_deriv (P : Patch) (r : ℝ) : deriv (cutoff P) r = density P r :=
   (cutoff_hasDerivAt P r).deriv
 
+/-- Inverse power, given by `((RadialPullback.positiveRadius (P.a / 4) r) ^ e)⁻¹`. -/
 noncomputable def inversePower (P : Patch) (e : ℕ) (r : ℝ) : ℝ :=
   ((RadialPullback.positiveRadius (P.a / 4) r) ^ e)⁻¹
 
@@ -123,6 +137,7 @@ theorem inversePower_eq (P : Patch) (e : ℕ) {r : ℝ} (hr : P.a ≤ r) :
   unfold inversePower
   rw [RadialPullback.positiveRadius_eq_self (by linarith [P.a_pos]) (by linarith [P.a_pos])]
 
+/-- Moment density, given by `inversePower P e r * density P r`. -/
 noncomputable def momentDensity (P : Patch) (e : ℕ) (r : ℝ) : ℝ := inversePower P e r * density P r
 
 theorem momentDensity_contDiff (P : Patch) (e : ℕ) : ContDiff ℝ ∞ (momentDensity P e) :=
@@ -132,7 +147,7 @@ theorem momentDensity_nonneg (P : Patch) (e : ℕ) (r : ℝ) : 0 ≤ momentDensi
   mul_nonneg (inversePower_nonneg P e r) (density_nonneg P r)
 
 theorem momentDensity_support (P : Patch) (e : ℕ) : support (momentDensity P e) ⊆ Icc P.left
-  P.right :=
+    P.right :=
   fun _ h => density_support P (right_ne_zero_of_mul h)
 
 theorem weighted_momentDensity (P : Patch) (e : ℕ) (r : ℝ) :
@@ -156,7 +171,7 @@ theorem momentDensity_positive_moment (P : Patch) (e : ℕ) :
     exact momentDensity_support P e (right_ne_zero_of_mul hr)
 
 theorem momentDensity_tsupport (P : Patch) (e : ℕ) : tsupport (momentDensity P e) ⊆ Ioo P.a P.b :=
-  by
+    by
   intro r hr
   have h := closure_minimal (momentDensity_support P e) isClosed_Icc hr
   exact ⟨P.a_lt_left.trans_le h.1, h.2.trans_lt P.right_lt_b⟩
@@ -165,14 +180,21 @@ section Primitive
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Weighted source, given by `z.1 ^ e * F z`. -/
 noncomputable def weightedSource (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ := z.1 ^ e * F z
+/-- Mass, given by `IntegratedMeanBalances.radialMoment e F`. -/
 noncomputable def mass (e : ℕ) (F : ℝ × E → ℝ) : E → ℝ := IntegratedMeanBalances.radialMoment e F
+/-- Bump correction, given by `momentDensity P e z.1 * mass e F z.2`. -/
 noncomputable def bumpCorrection (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   momentDensity P e z.1 * mass e F z.2
+/-- Adjusted, given by `F z - bumpCorrection P e F z`. -/
 noncomputable def adjusted (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   F z - bumpCorrection P e F z
+/-- Primitive, given by `TransportPrimitive.compactIntegral (cutoff P) 0 0 (weightedSource e
+F)`. -/
 noncomputable def primitive (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) : ℝ × E → ℝ :=
   TransportPrimitive.compactIntegral (cutoff P) 0 0 (weightedSource e F)
+/-- Sigma, given by `-inversePower P e z.1 * primitive P e F z`. -/
 noncomputable def sigma (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   -inversePower P e z.1 * primitive P e F z
 
@@ -252,14 +274,14 @@ theorem past_zero_eq_integral {a b : ℝ} (ha : 0 ≤ a) {F : ℝ × E → ℝ} 
 
 theorem cutoff_eq_integral (P : Patch) (r : ℝ) : cutoff P r = ∫ s in (0 : ℝ)..r, density P s :=
   past_zero_eq_integral P.left_pos.le (densityLift_contDiff P).continuous (densityLift_supported P)
-    (r, 0)
+      (r, 0)
 
 theorem primitive_eq_integral (P : Patch) (e : ℕ) {F : ℝ × E → ℝ} (hF : ContDiff ℝ ∞ F)
     (hs : RadialAlias.RadiallySupported P.a P.b F) (z : ℝ × E) :
     primitive P e F z = ∫ r in (0 : ℝ)..z.1, r ^ e * adjusted P e F (r, z.2) := by
   have hiF : IntervalIntegrable (fun r => r ^ e * F (r, z.2)) volume 0 z.1 :=
     ((continuous_id.pow e).mul (hF.continuous.comp (continuous_id.prodMk
-      continuous_const))).intervalIntegrable _ _
+        continuous_const))).intervalIntegrable _ _
   have hiD : IntervalIntegrable (fun r => density P r * mass e F z.2) volume 0 z.1 :=
     ((density_contDiff P).continuous.mul continuous_const).intervalIntegrable _ _
   have heq : (fun r => r ^ e * adjusted P e F (r, z.2)) =
@@ -354,7 +376,7 @@ theorem weighted_sigma_hasDerivAt (P : Patch) (e : ℕ) {F : ℝ × E → ℝ}
     HasDerivAt (fun t => t ^ e * sigma P e F (t, p)) (-r ^ e * adjusted P e F (r, p)) r := by
   have he : (fun t => t ^ e * sigma P e F (t, p)) =
       fun t => -primitive P e F (t, p) := funext (fun t => weighted_sigma_eq P e hF.continuous hs
-        (t, p))
+          (t, p))
   rw [he]
   convert! (primitive_hasDerivAt P e hF hs p r).neg using 1
   ring
@@ -366,34 +388,36 @@ theorem sigma_slice_compact (P : Patch) (e : ℕ) {F : ℝ × E → ℝ}
 
 theorem angular_divergence (P : Patch) {F : ℝ × E → ℝ}
     (hF : ContDiff ℝ ∞ F) (hs : RadialAlias.RadiallySupported P.a P.b F) (p : E) {r : ℝ} (hr : 0 <
-      r) :
+        r) :
     IntegratedMeanBalances.radialDivergence 2 (fun t => sigma P 2 F (t, p)) r =
       -adjusted P 2 F (r, p) := by
   have hsD := ((IntegratedMeanBalances.radial_slice_smooth (sigma_contDiff P 2 hF hs)
-    p).differentiable (by simp) r).hasDerivAt
+      p).differentiable (by
+      simp) r).hasDerivAt
   have he := ((hasDerivAt_pow 2 r).mul hsD).unique (weighted_sigma_hasDerivAt P 2 hF hs p r)
   norm_num at he
   apply mul_left_cancel₀ (pow_ne_zero 2 hr.ne')
   dsimp [IntegratedMeanBalances.radialDivergence]
   calc
     _ = 2 * r * sigma P 2 F (r, p) + r ^ 2 * deriv (fun t => sigma P 2 F (t, p)) r := by
-      field_simp ; ring
+      field_simp; ring
     _ = _ := by nlinarith [he]
 
 theorem axial_divergence (P : Patch) {F : ℝ × E → ℝ}
     (hF : ContDiff ℝ ∞ F) (hs : RadialAlias.RadiallySupported P.a P.b F) (p : E) {r : ℝ} (hr : 0 <
-      r) :
+        r) :
     IntegratedMeanBalances.radialDivergence 1 (fun t => sigma P 1 F (t, p)) r =
       -adjusted P 1 F (r, p) := by
   have hsD := ((IntegratedMeanBalances.radial_slice_smooth (sigma_contDiff P 1 hF hs)
-    p).differentiable (by simp) r).hasDerivAt
+      p).differentiable (by
+      simp) r).hasDerivAt
   have he := ((hasDerivAt_pow 1 r).mul hsD).unique (weighted_sigma_hasDerivAt P 1 hF hs p r)
   norm_num at he
   apply mul_left_cancel₀ hr.ne'
   dsimp [IntegratedMeanBalances.radialDivergence]
   calc
     _ = sigma P 1 F (r, p) + r * deriv (fun t => sigma P 1 F (t, p)) r := by
-      field_simp ; ring
+      field_simp; ring
     _ = _ := by nlinarith [he]
 
 /-- All fixed-order constants come from the proved weighted integral estimate
@@ -419,7 +443,7 @@ theorem sigma_finiteJets_uniform (P : Patch) (e : ℕ) {cL cR : ℝ}
   have hweight (r : ℝ) (hr : r ∈ Ioo P.a P.b) :
       0 ≤ WeightedRadialPrimitive.logWeight cL cR P.a P.b p r :=
     (WeightedRadialPrimitive.weight_pos cL cR p (WeightedRadialPrimitive.logPosition_mem P.a_pos
-      hr)).le
+        hr)).le
   have hweighted : ∀ i ≤ m, ∀ r ∈ Ioo P.a P.b, ∀ y : E,
       ‖iteratedFDeriv ℝ i (weightedSource e F) (r, y)‖ ≤
         (K1 * A) * WeightedRadialPrimitive.logWeight cL cR P.a P.b p r := by
@@ -446,7 +470,7 @@ theorem meanClass_sigma (P : Patch) (e : ℕ) {cL cR : ℝ} (hcL : 0 < cL) (hcR 
     (hs : ∀ n, RadialAlias.RadiallySupported P.a P.b (F n))
     (hclass : WeightedClasses.MeanClass
       (WeightedRadialPrimitive.logStripData P.a P.b cL cR P.a_pos hcL hcR ε slow hε hε1 hslow) α F)
-        :
+          :
     WeightedClasses.MeanClass
       (WeightedRadialPrimitive.logStripData P.a P.b cL cR P.a_pos hcL hcR ε slow hε hε1 hslow) α
       (fun n => sigma P e (F n)) := by
@@ -481,7 +505,7 @@ theorem momentDensity_meanClass (P : Patch) (e : ℕ) {cL cR : ℝ} (hcL : 0 < c
       (WeightedRadialPrimitive.logStripData P.a P.b cL cR P.a_pos hcL hcR ε slow hε hε1 hslow)
       0 (fun _ (z : ℝ × E) => momentDensity P e z.1) := by
   let s := WeightedRadialPrimitive.logStripData (E := E) P.a P.b cL cR P.a_pos hcL hcR ε slow hε
-    hε1 hslow
+      hε1 hslow
   have hmem : ∀ r ∈ Icc P.left P.right, (r, (0 : E)) ∈ s.domain := by
     intro r hr
     exact ⟨P.a_lt_left.trans_le hr.1, hr.2.trans_lt P.right_lt_b⟩
@@ -538,7 +562,7 @@ theorem bump_improvedClass_of_moment_identity (P : Patch) (e : ℕ) {cL cR : ℝ
       (WeightedRadialPrimitive.logStripData P.a P.b cL cR P.a_pos hcL hcR ε slow hε hε1 hslow)
       (α + 1) (fun n => bumpCorrection P e (F n)) := by
   let s := WeightedRadialPrimitive.logStripData (E := E) P.a P.b cL cR P.a_pos hcL hcR ε slow hε
-    hε1 hslow
+      hε1 hslow
   have hd := hclass.directional ((0 : ℝ), v)
   have hb := (momentDensity_meanClass (E := E) P e hcL hcR ε slow hε hε1 hslow).mul hd
   have hmean : WeightedClasses.MeanClass s α (fun n (z : ℝ × E) =>
@@ -553,6 +577,7 @@ theorem bump_improvedClass_of_moment_identity (P : Patch) (e : ℕ) {cL cR : ℝ
     ring
   rwa [heq] at hh
 
+/-- Bar sigma, given by `sigma P e (PressureStream.torusAverage F)`. -/
 noncomputable def barSigma (P : Patch) (e : ℕ) (F : PressureStream.Lift E → ℝ) : ℝ × E → ℝ :=
   sigma P e (PressureStream.torusAverage F)
 
@@ -560,7 +585,7 @@ theorem barSigma_contDiff (P : Patch) (e : ℕ) {F : PressureStream.Lift E → �
     (hF : ContDiff ℝ ∞ F) (hs : RadialAlias.RadiallySupported P.a P.b F) :
     ContDiff ℝ ∞ (barSigma P e F) :=
   sigma_contDiff P e (PressureStream.torusAverage_contDiff hF)
-    (PressureStream.torusAverage_supported hs)
+      (PressureStream.torusAverage_supported hs)
 
 theorem barSigma_eq_primitive (P : Patch) (e : ℕ) {F : PressureStream.Lift E → ℝ}
     (hF : ContDiff ℝ ∞ F) (hs : RadialAlias.RadiallySupported P.a P.b F) (z : ℝ × E) :
@@ -577,15 +602,15 @@ theorem sigma_slow_mul (P : Patch) (e : ℕ) (k : E → ℝ) (F : ℝ × E → �
     unfold TransportPrimitive.pastIntegral
     rw [← integral_const_mul]
     apply integral_congr_ae
-    exact Filter.Eventually.of_forall (fun u => by simp [weightedSource, TransportPrimitive.shift];
-      ring)
+    exact Filter.Eventually.of_forall (fun u => by
+        simp [weightedSource, TransportPrimitive.shift]; ring)
   have ht : TransportPrimitive.totalIntegral 0 (0 : E) (weightedSource e (fun y => k y.2 * F y)) z =
       k z.2 * TransportPrimitive.totalIntegral 0 (0 : E) (weightedSource e F) z := by
     unfold TransportPrimitive.totalIntegral
     rw [← integral_const_mul]
     apply integral_congr_ae
-    exact Filter.Eventually.of_forall (fun u => by simp [weightedSource, TransportPrimitive.shift];
-      ring)
+    exact Filter.Eventually.of_forall (fun u => by
+        simp [weightedSource, TransportPrimitive.shift]; ring)
   unfold sigma primitive TransportPrimitive.compactIntegral
   rw [hp, ht]
   simp only [smul_eq_mul]
@@ -613,15 +638,22 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The physical radial length is sqrt q, as in the chart R = r / sqrt Q. -/
 noncomputable def lengthScale (q : E → ℝ) (p : E) : ℝ := Real.sqrt (q p)
+/-- Native source, given by `F (lengthScale q z.2 * z.1, z.2)`. -/
 noncomputable def nativeSource (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   F (lengthScale q z.2 * z.1, z.2)
+/-- Physical density, given by `momentDensity P e (z.1 / lengthScale q z.2) / lengthScale q z.2
+^ (e + 1)`. -/
 noncomputable def physicalDensity (P : Patch) (e : ℕ) (q : E → ℝ) (z : ℝ × E) : ℝ :=
   momentDensity P e (z.1 / lengthScale q z.2) / lengthScale q z.2 ^ (e + 1)
+/-- Physical bump, given by `physicalDensity P e q z * mass e F z.2`. -/
 noncomputable def physicalBump (P : Patch) (e : ℕ) (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   physicalDensity P e q z * mass e F z.2
+/-- Physical adjusted, given by `F z - physicalBump P e q F z`. -/
 noncomputable def physicalAdjusted (P : Patch) (e : ℕ) (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ
-  :=
+    :=
   F z - physicalBump P e q F z
+/-- Physical sigma, given by `lengthScale q z.2 * sigma P e (nativeSource q F) (z.1 /
+lengthScale q z.2, z.2)`. -/
 noncomputable def physicalSigma (P : Patch) (e : ℕ) (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   lengthScale q z.2 * sigma P e (nativeSource q F) (z.1 / lengthScale q z.2, z.2)
 
@@ -639,7 +671,7 @@ theorem lengthScale_contDiff {q : E → ℝ} (hq : ContDiff ℝ ∞ q) (hpos : �
 theorem nativeSource_contDiff {q : E → ℝ} (hq : ContDiff ℝ ∞ q) (hpos : ∀ p, 0 < q p)
     {F : ℝ × E → ℝ} (hF : ContDiff ℝ ∞ F) : ContDiff ℝ ∞ (nativeSource q F) :=
   hF.comp ((((lengthScale_contDiff hq hpos).comp contDiff_snd).mul contDiff_fst).prodMk
-    contDiff_snd)
+      contDiff_snd)
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
 theorem nativeSource_supported (P : Patch) {q : E → ℝ} (hq : ∀ p, 0 < q p)
@@ -716,7 +748,7 @@ theorem physicalBump_contDiff (P : Patch) (e : ℕ) {q : E → ℝ}
     (hq : ContDiff ℝ ∞ q) (hpos : ∀ p, 0 < q p) {F : ℝ × E → ℝ}
     (hF : ContDiff ℝ ∞ F) (hs : PhysicalSupport P q F) : ContDiff ℝ ∞ (physicalBump P e q F) :=
   (physicalDensity_contDiff P e hq hpos).mul ((physical_mass_contDiff P e hq hpos hF hs).comp
-    contDiff_snd)
+      contDiff_snd)
 
 theorem physicalSigma_contDiff (P : Patch) (e : ℕ) {q : E → ℝ}
     (hq : ContDiff ℝ ∞ q) (hpos : ∀ p, 0 < q p) {F : ℝ × E → ℝ}
@@ -730,7 +762,7 @@ theorem physicalSigma_contDiff (P : Patch) (e : ℕ) {q : E → ℝ}
 theorem physicalSigma_supported (P : Patch) (e : ℕ) {q : E → ℝ}
     (hq : ContDiff ℝ ∞ q) (hpos : ∀ p, 0 < q p) {F : ℝ × E → ℝ}
     (hF : ContDiff ℝ ∞ F) (hs : PhysicalSupport P q F) : PhysicalSupport P q (physicalSigma P e q
-      F) := by
+        F) := by
   intro z hz
   exact sigma_supported P e (nativeSource_contDiff hq hpos hF).continuous
     (nativeSource_supported P hpos hs) (right_ne_zero_of_mul hz)
@@ -741,7 +773,7 @@ theorem native_adjusted_eq (P : Patch) (e : ℕ) {q : E → ℝ} (hq : ∀ p, 0 
     adjusted P e (nativeSource q F) z =
       physicalAdjusted P e q F (lengthScale q z.2 * z.1, z.2) := by
   simp only [adjusted, bumpCorrection, nativeSource, physicalAdjusted, physicalBump,
-    physicalDensity,
+      physicalDensity,
     nativeSource_mass e hq, mul_div_cancel_left₀ _ (lengthScale_pos hq z.2).ne']
   ring
 
@@ -755,7 +787,7 @@ theorem physicalSigma_eq_negative_primitive (P : Patch) (e : ℕ) {q : E → ℝ
   have hl := lengthScale_pos hpos z.2
   unfold physicalSigma
   rw [sigma_eq_negative_primitive P e (nativeSource_contDiff hq hpos hF) (nativeSource_supported P
-    hpos hs)]
+      hpos hs)]
   simp_rw [native_adjusted_eq P e hpos]
   rw [interval_dilate_weighted e (fun r => physicalAdjusted P e q F (r, z.2)) hl,
     mul_div_cancel₀ z.1 hl.ne']
@@ -782,7 +814,7 @@ theorem physicalDensity_positive_moment (P : Patch) (e : ℕ) {q : E → ℝ}
     (hq : ∀ p, 0 < q p) (p : E) :
     (∫ r in Ioi (0 : ℝ), r ^ e * physicalDensity P e q (r, p)) = 1 := by
   rw [IntegratedMeanBalances.positive_integral_eq_integral (mul_pos (lengthScale_pos hq p)
-    P.left_pos)]
+      P.left_pos)]
   · exact physicalDensity_moment P e hq p
   · intro r hr
     exact physicalDensity_support P e hq p (right_ne_zero_of_mul hr)
@@ -806,7 +838,7 @@ theorem physicalAdjusted_moment_zero (P : Patch) (e : ℕ) {q : E → ℝ}
   rw [he, hz] at hh
   have hm := congrArg (fun t => t * lengthScale q p ^ (e + 1)) hh
   simpa only [zero_mul, div_mul_cancel₀ _ (pow_ne_zero _ (lengthScale_pos hpos p).ne')] using
-    hm.symm
+      hm.symm
 
 theorem physicalSigma_slice_compact (P : Patch) (e : ℕ) {q : E → ℝ}
     (hq : ContDiff ℝ ∞ q) (hpos : ∀ p, 0 < q p) {F : ℝ × E → ℝ}
@@ -858,7 +890,7 @@ theorem physical_angular_divergence (P : Patch) {q : E → ℝ}
     IntegratedMeanBalances.radialDivergence 2 (fun t => physicalSigma P 2 q F (t, p)) r =
       -physicalAdjusted P 2 q F (r, p) := by
   have hd := ((IntegratedMeanBalances.radial_slice_smooth (physicalSigma_contDiff P 2 hq hpos hF
-    hs) p).differentiable
+      hs) p).differentiable
     (by simp) r).hasDerivAt
   have he := ((hasDerivAt_pow 2 r).mul hd).unique
     (physical_weighted_sigma_hasDerivAt P 2 hq hpos hF hs p r)
@@ -867,7 +899,7 @@ theorem physical_angular_divergence (P : Patch) {q : E → ℝ}
   dsimp [IntegratedMeanBalances.radialDivergence]
   calc
     _ = 2 * r * physicalSigma P 2 q F (r, p) +
-        r ^ 2 * deriv (fun t => physicalSigma P 2 q F (t, p)) r := by field_simp ; ring
+        r ^ 2 * deriv (fun t => physicalSigma P 2 q F (t, p)) r := by field_simp; ring
     _ = _ := by nlinarith [he]
 
 theorem physical_axial_divergence (P : Patch) {q : E → ℝ}
@@ -876,7 +908,7 @@ theorem physical_axial_divergence (P : Patch) {q : E → ℝ}
     IntegratedMeanBalances.radialDivergence 1 (fun t => physicalSigma P 1 q F (t, p)) r =
       -physicalAdjusted P 1 q F (r, p) := by
   have hd := ((IntegratedMeanBalances.radial_slice_smooth (physicalSigma_contDiff P 1 hq hpos hF
-    hs) p).differentiable
+      hs) p).differentiable
     (by simp) r).hasDerivAt
   have he := ((hasDerivAt_pow 1 r).mul hd).unique
     (physical_weighted_sigma_hasDerivAt P 1 hq hpos hF hs p r)
@@ -885,7 +917,7 @@ theorem physical_axial_divergence (P : Patch) {q : E → ℝ}
   dsimp [IntegratedMeanBalances.radialDivergence]
   calc
     _ = physicalSigma P 1 q F (r, p) + r * deriv (fun t => physicalSigma P 1 q F (t, p)) r := by
-      field_simp ; ring
+      field_simp; ring
     _ = _ := by nlinarith [he]
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
@@ -902,6 +934,7 @@ theorem physical_torusAverage_supported (P : Patch) {q : E → ℝ}
   by_contra hF
   exact hn (hs (z.1, (z.2, Y)) hF)
 
+/-- Physical bar sigma, given by `physicalSigma P e q (PressureStream.torusAverage F)`. -/
 noncomputable def physicalBarSigma (P : Patch) (e : ℕ) (q : E → ℝ)
     (F : PressureStream.Lift E → ℝ) : ℝ × E → ℝ :=
   physicalSigma P e q (PressureStream.torusAverage F)
@@ -925,10 +958,14 @@ theorem physicalBarSigma_eq_negative_primitive (P : Patch) (e : ℕ) {q : E → 
 noncomputable def normalizedResidual (q : E → ℝ) (A : ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   q z.2 ^ (2 * A + 1 / 2) * nativeSource q F z
 
+/-- Q chart tensor, given by `q z.2 ^ (2 * A) * physicalSigma P e q F (lengthScale q z.2 * z.1,
+z.2)`. -/
 noncomputable def qChartTensor (P : Patch) (e : ℕ) (q : E → ℝ) (A : ℝ)
     (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   q z.2 ^ (2 * A) * physicalSigma P e q F (lengthScale q z.2 * z.1, z.2)
 
+/-- Q chart bump, given by `q z.2 ^ (2 * A + 1 / 2) * physicalBump P e q F (lengthScale q z.2 *
+z.1, z.2)`. -/
 noncomputable def qChartBump (P : Patch) (e : ℕ) (q : E → ℝ) (A : ℝ)
     (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   q z.2 ^ (2 * A + 1 / 2) * physicalBump P e q F (lengthScale q z.2 * z.1, z.2)
@@ -936,7 +973,7 @@ noncomputable def qChartBump (P : Patch) (e : ℕ) (q : E → ℝ) (A : ℝ)
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
 theorem qChartBump_eq (P : Patch) (e : ℕ) {q : E → ℝ} (hq : ∀ p, 0 < q p)
     (A : ℝ) (F : ℝ × E → ℝ) : qChartBump P e q A F = bumpCorrection P e (normalizedResidual q A F)
-      := by
+        := by
   funext z
   unfold qChartBump normalizedResidual
   rw [bump_slow_mul P e (fun p => q p ^ (2 * A + 1 / 2)) (nativeSource q F)]
@@ -1035,6 +1072,8 @@ theorem angular_bump_identity (P : Patch) (ε : ℝ)
   unfold bumpCorrection mass
   rw [integrated_angular_balance ε hv hr hz hT hmass]
 
+/-- Axial moment potential, given by `axialDefect axialFlux gr p + pressureCoefficient ρ p *
+pressureTotal gr p`. -/
 noncomputable def axialMomentPotential (axialFlux gr ρ : MeanField) (p : MeanParameter) : ℝ :=
   axialDefect axialFlux gr p + pressureCoefficient ρ p * pressureTotal gr p
 
@@ -1158,7 +1197,7 @@ theorem compact_change_jet_bound {X : Type*} [NormedAddCommGroup X] [NormedSpace
   obtain ⟨L, hL, hφB⟩ := compact_jet_bounds hK hφ m
   let D : ℝ := (m.factorial : ℝ) * L ^ m
   have hD : 0 < D := mul_pos (Nat.cast_pos.mpr (Nat.factorial_pos m)) (pow_pos
-    (zero_lt_one.trans_le hL) m)
+      (zero_lt_one.trans_le hL) m)
   refine ⟨(2 : ℝ) ^ m * A * D, by positivity, ?_⟩
   intro f hf x hx B hB hfb j hj
   have hcomp : ∀ i ≤ m, ‖iteratedFDeriv ℝ i (f ∘ φ) x‖ ≤ D * B := by
@@ -1188,8 +1227,10 @@ theorem compact_change_jet_bound {X : Type*} [NormedAddCommGroup X] [NormedSpace
         (mul_nonneg hD.le hB)
     _ = _ := by ring
 
+/-- Change chart, given by `ρ z.2 ^ (-2 * A) * F (z.1 / Real.sqrt (ρ z.2), z.2)`. -/
 noncomputable def changeChart (ρ : E → ℝ) (A : ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   ρ z.2 ^ (-2 * A) * F (z.1 / Real.sqrt (ρ z.2), z.2)
+/-- Inverse change chart, given by `ρ z.2 ^ (2 * A) * F (Real.sqrt (ρ z.2) * z.1, z.2)`. -/
 noncomputable def inverseChangeChart (ρ : E → ℝ) (A : ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   ρ z.2 ^ (2 * A) * F (Real.sqrt (ρ z.2) * z.1, z.2)
 

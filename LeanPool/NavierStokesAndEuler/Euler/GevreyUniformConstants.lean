@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionForcing
-public import LeanPool.NavierStokesAndEuler.Euler.H6PressureConstants
+public import LeanPool.NavierStokesAndEuler.Euler.BasePressureCommutator
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevGevreyOperators
+import LeanPool.NavierStokesAndEuler.Euler.H6PressureConstants
+import LeanPool.NavierStokesAndEuler.Euler.PressureCommutatorWeights
+
+/-! Explicit cutoff-independent coefficient and inverse constants in the nonlinear correction
+estimate. -/
 
 @[expose] public section
 
-/-! Explicit cutoff-independent coefficient and inverse constants in the nonlinear correction
-  estimate. -/
 
 noncomputable section
 
@@ -29,8 +32,8 @@ omit [Fact (0 < period)] in
 theorem coefficientBlock_zero_le {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A) (L : ℝ)
     (hL : ∀ r ≤ 6, boundLevel period K r ≤ L) : coefficientBlock period K 6 0 ≤ 448*L := by
-  have h := Finset.sum_le_sum (s := Finset.range 7) (fun r hr => hL r (by have :=
-    Finset.mem_range.mp hr; omega))
+  have h := Finset.sum_le_sum (s := Finset.range 7) (fun r hr => hL r (by
+      have := Finset.mem_range.mp hr; omega))
   have hh := mul_le_mul_of_nonneg_left h (by norm_num : (0 : ℝ) ≤ 64)
   calc
     _ = 64 * ∑ r ∈ Finset.range 7, boundLevel period K r := by norm_num [coefficientBlock]
@@ -41,11 +44,11 @@ omit [Fact (0 < period)] in
 /-- The finite weighted coefficient sum is bounded by its base block and a geometric tail. -/
 theorem weightedCoefficient_le {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
-    (N : ℕ) (ρ Rc : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hsmall : ρ*Rc ≤ 1/2)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc^l*(l.factorial : ℝ)^2) :
+    (N : ℕ) (ρ Rc : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hsmall : ρ * Rc ≤ 1 / 2)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2) :
     weightedCoefficient period K 6 N ρ ≤ coefficientBlock period K 6 0+2*(ρ*Rc) := by
   have h := positiveCoefficientSum_bound ρ Rc hρ hRc hsmall N (coefficientBlock period K 6) hcoeff
-  have he : weightedCoefficient period K 6 N ρ = coefficientBlock period K 6 0+
+  have he : weightedCoefficient period K 6 N ρ = coefficientBlock period K 6 0 +
       ∑ l ∈ Finset.range (N+1), weight ρ l*positivePart (coefficientBlock period K 6) l := by
     rw [weightedCoefficient, Finset.sum_range_succ', Finset.sum_range_succ']
     simp only [positivePart, Nat.add_one_ne_zero, ite_false, ite_true, mul_zero, add_zero]
@@ -55,12 +58,13 @@ theorem weightedCoefficient_le {s : ℕ} {A : SmoothCoefficient period}
   exact add_le_add le_rfl h
 
 omit [Fact (0 < period)] in
-/-- Under the fixed geometric smallness condition the coefficient multiplier bound is independent of N. -/
+/-- Under the fixed geometric smallness condition the coefficient multiplier bound is independent of
+N. -/
 theorem weightedCoefficient_uniform {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
-    (N : ℕ) (ρ Rc L : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hsmall : ρ*Rc ≤ 1/2)
+    (N : ℕ) (ρ Rc L : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hsmall : ρ * Rc ≤ 1 / 2)
     (hL : ∀ r ≤ 6, boundLevel period K r ≤ L)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc^l*(l.factorial : ℝ)^2) :
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2) :
     weightedCoefficient period K 6 N ρ ≤ 448*L+1 := by
   have h := weightedCoefficient_le period K N ρ Rc hρ hRc hsmall hcoeff
   have hz := coefficientBlock_zero_le period K L hL
@@ -71,8 +75,8 @@ omit [Fact (0 < period)] in
 theorem baseCoefficientSum_le {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A) (L : ℝ)
     (hL : ∀ r ≤ 6, boundLevel period K r ≤ L) : baseCoefficientSum period K ≤ 6*L := by
-  have h := Finset.sum_le_sum (s := Finset.range 6) (fun r hr => hL (r+1) (by have :=
-    Finset.mem_range.mp hr; omega))
+  have h := Finset.sum_le_sum (s := Finset.range 6) (fun r hr => hL (r+1) (by
+      have := Finset.mem_range.mp hr; omega))
   simpa [baseCoefficientSum] using h
 
 omit [Fact (0 < period)] in
@@ -87,7 +91,8 @@ theorem pressureConstant_le_six {q : ℕ} (hq : q ≤ 6) {A : SmoothCoefficient 
   exact h.trans (pow_le_pow_right₀ (by linarith : 1 ≤ 9*L) he)
 
 omit [Fact (0 < period)] in
-/-- Both fixed inverse orders needed by the actual pressure forcing have the same cutoff-independent polynomial bound. -/
+/-- Both fixed inverse orders needed by the actual pressure forcing have the same cutoff-independent
+polynomial bound. -/
 theorem fixed_pressure_constants {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (c L : ℝ) (hc : 0 < c) (hL : 1 ≤ L) (hcL : c⁻¹ ≤ L)

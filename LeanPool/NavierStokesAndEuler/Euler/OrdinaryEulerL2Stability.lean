@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerStability
-public import Mathlib.Analysis.ODE.Gronwall
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.ODE.Gronwall
 
 /-! Actual L² stability of two ordinary Euler solutions.  The pressure
 and the entire transport term cancel before estimating the remaining
 reference-gradient term.  All time derivatives are genuine one-sided
 derivatives at the endpoints. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,7 +40,7 @@ theorem advection_norm_gradient (W U : SmoothL2Field Space) (K : ℝ)
 
 theorem differenceRhs_l2_bound (U W P : SmoothL2Field Space) (K : ℝ)
     (hK : ∀ x, ‖fderiv ℝ U.field x‖ ≤ K)
-    (hdiv : ∀ x, divergence (addField U W).field x=0)
+    (hdiv : ∀ x, divergence (addField U W).field x = 0)
     (hW : W.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace) :
     2*⟪W.toLp,(differenceRhs U W P).toLp⟫_ℝ ≤ 2*K*‖W.toLp‖^2 := by
   have he := differenceRhs_pairing U W P hdiv hW hP (Fin.elim0 : Fin 0 → Fin 3)
@@ -56,7 +60,7 @@ theorem differenceRhs_l2_bound (U W P : SmoothL2Field Space) (K : ℝ)
 theorem linear_stability_within (X X' : ℝ → ℝ) (C T : ℝ)
     (hcont : ContinuousOn X (Icc 0 T))
     (hder : ∀ t ∈ Ico 0 T, HasDerivWithinAt X (X' t) (Icc 0 T) t)
-    (hineq : ∀ t ∈ Ico 0 T, X' t ≤ C*X t) :
+    (hineq : ∀ t ∈ Ico 0 T, X' t ≤ C * X t) :
     ∀ t ∈ Icc 0 T, X t ≤ X 0*Real.exp (C*t) := by
   have h := le_gronwallBound_of_liminf_deriv_right_le (K := C) (ε := 0) hcont
     (fun t ht r hr => ((hder t ht).mono_of_mem_nhdsWithin
@@ -68,6 +72,8 @@ namespace Evolution
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Velocity path, given by `ordinaryWordPath U.velocity U.velocity_continuous (Fin.elim0 : Fin
+0 → Fin 3)`. -/
 def velocityPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,L2) :=
   ordinaryWordPath U.velocity U.velocity_continuous (Fin.elim0 : Fin 0 → Fin 3)
 
@@ -75,6 +81,7 @@ def velocityPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,L2) :=
     U.velocityPath t=(U.velocity t).toLp := by
   simp only [velocityPath,ordinaryWordPath_apply,wordField_zero]
 
+/-- L2 energy path as an element of `C(Icc (0 : ℝ) T,ℝ)`. -/
 def l2EnergyPath (U V : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => ‖(U.difference V t).toLp‖^2,by
     have h := (ordinaryWordPath (U.difference V) (U.difference_continuous V)
@@ -82,6 +89,8 @@ def l2EnergyPath (U V : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
     simpa only [Function.comp_def,ordinaryWordPath_apply,wordField_zero] using
       (continuous_pow 2).comp h.norm⟩
 
+/-- L2 energy derivative, given by `2*⟪(U.difference V t).toLp,(U.differenceDerivative V
+t).toLp⟫_ℝ`. -/
 def l2EnergyDerivative (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : ℝ :=
   2*⟪(U.difference V t).toLp,(U.differenceDerivative V t).toLp⟫_ℝ
 

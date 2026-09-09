@@ -9,8 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingDilation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricTerminalCompensation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatProfileExtension
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
 
 /-!
 # The physical heat continuation with exact terminal compensation
@@ -20,47 +19,67 @@ Its radial dilation is heated with diffusion `1 - eta^2`, and three additive
 bumps on its actual second reserved patch restore the three changed moments.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
 open scoped ContDiff Topology BigOperators
 open NavierStokes.OutgoingProfile (Profile)
 open NavierStokes.OutgoingDilation (switchRadius patchRadius patchRatio compensationPatch
-  shapedPatchAmplitude)
+    shapedPatchAmplitude)
 
 namespace NavierStokes.HeatedOutgoing
 
+/-- Coefficient: an abbreviation for `TerminalCompensation.Coeff`. -/
 abbrev Coeff := TerminalCompensation.Coeff
 
+/-- Parameter domain, given by `Icc (-1) 1`. -/
 def parameterDomain : Set ℝ := Icc (-1) 1
+/-- Domain, given by `Ioi 0 ×ˢ parameterDomain`. -/
 def domain : Set (ℝ × ℝ) := Ioi 0 ×ˢ parameterDomain
 
+/-- Heat E, given by `OutgoingDilation.E F XR p * HeatTailEdit.multiplier F.data.h
+(ParametricHeatTail.diffusion p.2) (switchRadius F XR) p.1`. -/
 noncomputable def heatE (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingDilation.E F XR p * HeatTailEdit.multiplier F.data.h
     (ParametricHeatTail.diffusion p.2) (switchRadius F XR) p.1
 
+/-- Patch increment, given by `shapedPatchAmplitude F p.2 * TerminalCompensation.correction
+compensationPatch (c p.2) (p.1 / patchRadius F XR)`. -/
 noncomputable def patchIncrement (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   shapedPatchAmplitude F p.2 * TerminalCompensation.correction compensationPatch (c p.2)
     (p.1 / patchRadius F XR)
 
+/-- E, given by `heatE F XR p + patchIncrement F XR c p`. -/
 noncomputable def E (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   heatE F XR p + patchIncrement F XR c p
 
+/-- U, given by `OutgoingDilation.U F XR`. -/
 noncomputable def U (F : Profile) (XR : ℝ) : ℝ × ℝ → ℝ := OutgoingDilation.U F XR
+/-- H, given by `Real.sqrt (2 * p.1) * E F XR c p`. -/
 noncomputable def H (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   Real.sqrt (2 * p.1) * E F XR c p
 
+/-- Canonical kernel, given by `E F XR c (X, eta) ^ 2 / X`. -/
 noncomputable def canonicalKernel (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   E F XR c (X, eta) ^ 2 / X
+/-- Pi, given by `-(1 / 2 : ℝ) * ∫ X in Ioi p.1, canonicalKernel F XR c p.2 X`. -/
 noncomputable def Pi (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ X in Ioi p.1, canonicalKernel F XR c p.2 X
+/-- Axis datum, given by `-(1 / 2 : ℝ) * ∫ X in Ioi 0, canonicalKernel F XR c eta X`. -/
 noncomputable def axisDatum (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ X in Ioi 0, canonicalKernel F XR c eta X
+/-- Energy density, given by `U F XR (X, eta) ^ 2 - E F XR c (X, eta) ^ 2 / 2`. -/
 noncomputable def energyDensity (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   U F XR (X, eta) ^ 2 - E F XR c (X, eta) ^ 2 / 2
+/-- Total S, given by `∫ X in Ioi 0, energyDensity F XR c eta X`. -/
 noncomputable def totalS (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   ∫ X in Ioi 0, energyDensity F XR c eta X
+/-- M, given by `∫ u in Ioc 0 X, U F XR (u, eta)`. -/
 noncomputable def M (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, U F XR (u, eta)
+/-- J, given by `∫ u in Ioc 0 X, H F XR c (u, eta) * U F XR (u, eta)`. -/
 noncomputable def J (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, H F XR c (u, eta) * U F XR (u, eta)
 
@@ -131,12 +150,12 @@ theorem patch_below_switch (F : Profile) (XR X : ℝ) (hXR : 0 < XR)
     X < switchRadius F XR := by
   have hx : X ≤ patchRadius F XR * compensationPatch.right := by
     simpa only [mul_comm] using (div_le_iff₀ (OutgoingDilation.patchRadius_pos F XR hXR)).mp
-      hpatch.2
+        hpatch.2
   exact hx.trans_lt (OutgoingDilation.patch_before_switch F XR hXR)
 
 theorem E_on_patch (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) (hXR : 0 < XR)
     (hX : 0 < X) (hpatch : X / patchRadius F XR ∈ Icc compensationPatch.left
-      compensationPatch.right) :
+        compensationPatch.right) :
     E F XR c (X, eta) = TerminalCompensation.physicalProfile compensationPatch F.data.core.lam
       (patchRadius F XR) (shapedPatchAmplitude F eta) (c eta) X := by
   rw [E, heatE_before F XR eta X hXR hX (patch_below_switch F XR X hXR hpatch).le,
@@ -149,7 +168,7 @@ theorem patchIncrement_eq_difference (F : Profile) (XR : ℝ) (c : ℝ → Coeff
       TerminalCompensation.physicalProfile compensationPatch F.data.core.lam
         (patchRadius F XR) (shapedPatchAmplitude F eta) (c eta) X -
       TerminalCompensation.cleanProfile F.data.core.lam (patchRadius F XR) (shapedPatchAmplitude F
-        eta) X := by
+          eta) X := by
   unfold patchIncrement TerminalCompensation.physicalProfile TerminalCompensation.cleanProfile
   ring
 
@@ -167,10 +186,10 @@ theorem E_before_patch (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ
     ((le_mul_of_one_le_right (OutgoingDilation.patchRadius_pos F XR hXR).le hright).trans
       (OutgoingDilation.patch_before_switch F XR hXR).le)
   have hc : TerminalCompensation.correction compensationPatch (c eta) (X / patchRadius F XR) = 0 :=
-    by
+      by
     by_contra hn
     have ht := TerminalCompensation.correction_tsupport compensationPatch (c eta) (subset_tsupport
-      _ hn)
+        _ hn)
     have hx := (div_le_one (OutgoingDilation.patchRadius_pos F XR hXR)).mpr hpatch
     exact (not_lt_of_ge hx) ht.1
   rw [E, heatE_before F XR eta X hXR hX hK, patchIncrement, hc, mul_zero, add_zero]
@@ -180,25 +199,28 @@ theorem heatE_pos (F : Profile) (XR eta X : ℝ) (hX : 0 < X) (heta : eta ∈ pa
   mul_pos (OutgoingDilation.positive F XR _) (HeatTailEdit.multiplier_bounds F.data.h_pos
     (ParametricHeatTail.diffusion_mem heta).1 hX).1
 
+/-- Heat row as an element of `ℝ`. -/
 noncomputable def heatRow (F : Profile) (XR eta : ℝ) (i : Fin 3) (X : ℝ) : ℝ :=
   ![HeatTailEdit.squareChange (HeatTailEdit.outgoingProfile F.data (switchRadius F XR) eta)
       F.data.h (ParametricHeatTail.diffusion eta) (switchRadius F XR) X / X,
     HeatTailEdit.squareChange (HeatTailEdit.outgoingProfile F.data (switchRadius F XR) eta)
       F.data.h (ParametricHeatTail.diffusion eta) (switchRadius F XR) X,
     Real.sqrt (2 * X) * HeatTailEdit.change (HeatTailEdit.outgoingProfile F.data (switchRadius F
-      XR) eta)
+        XR) eta)
       F.data.h (ParametricHeatTail.diffusion eta) (switchRadius F XR) X] i
 
+/-- Patch row as an element of `ℝ`. -/
 noncomputable def patchRow (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) (i : Fin 3) (X : ℝ) : ℝ
-  :=
+    :=
   let A := TerminalCompensation.physicalProfile compensationPatch F.data.core.lam
     (patchRadius F XR) (shapedPatchAmplitude F eta) (c eta) X
   let B := TerminalCompensation.cleanProfile F.data.core.lam (patchRadius F XR)
-    (shapedPatchAmplitude F eta) X
+      (shapedPatchAmplitude F eta) X
   ![(A ^ 2 - B ^ 2) / X, A ^ 2 - B ^ 2, Real.sqrt (2 * X) * (A - B)] i
 
+/-- Change row as an element of `ℝ`. -/
 noncomputable def changeRow (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) (i : Fin 3) (X : ℝ) :
-  ℝ :=
+    ℝ :=
   ![(E F XR c (X, eta) ^ 2 - OutgoingDilation.E F XR (X, eta) ^ 2) / X,
     E F XR c (X, eta) ^ 2 - OutgoingDilation.E F XR (X, eta) ^ 2,
     Real.sqrt (2 * X) * (E F XR c (X, eta) - OutgoingDilation.E F XR (X, eta))] i
@@ -214,10 +236,10 @@ theorem heat_differences (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR) (hX : 0 <
   · rw [heatE_before F XR eta X hXR hX hle]
     simp only [HeatTailEdit.change, HeatTailEdit.squareChange,
       HeatTailEdit.edit_before _ _ _ (OutgoingDilation.switchRadius_pos F XR hXR) hX hle, sub_self,
-        and_self]
+          and_self]
   · have hge := (lt_of_not_ge hle).le
     rw [heatE_after F XR eta X hXR hge, OutgoingDilation.E_eq_clean_switch_profile F XR eta X hXR
-      hge]
+        hge]
     exact ⟨rfl, rfl⟩
 
 theorem patch_square_difference (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ)
@@ -300,7 +322,7 @@ theorem patchRow_integrable (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : 
     (i : Fin 3) (hXR : 0 < XR) : IntegrableOn (patchRow F XR c eta i) (Ioi 0) := by
   have hi := TerminalCompensation.physicalMoments_integrable compensationPatch F.data.core.lam
     (patchRadius F XR) (shapedPatchAmplitude F eta) (OutgoingDilation.patchRadius_pos F XR hXR) (c
-      eta)
+        eta)
   fin_cases i
   · exact hi.1.integrableOn
   · exact hi.2.1.integrableOn
@@ -313,7 +335,7 @@ theorem patchRow_integral (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : �
         (patchRadius F XR) (shapedPatchAmplitude F eta) (c eta) i := by
   have he := TerminalCompensation.physicalMoments_positive_radius compensationPatch F.data.core.lam
     (patchRadius F XR) (shapedPatchAmplitude F eta) (OutgoingDilation.patchRadius_pos F XR hXR) (c
-      eta)
+        eta)
   fin_cases i
   · exact (congrFun he 0).symm
   · exact (congrFun he 1).symm
@@ -324,6 +346,7 @@ The base profile, hence its original reset and amplitude, is retained. -/
 structure CompensationWitness (F : Profile) (XR C : ℝ) where
   radius_pos : 0 < XR
   switch_large : 1 ≤ switchRadius F XR
+  /-- Coefficients of `CompensationWitness`, of type `ℝ → Coeff`. -/
   coefficients : ℝ → Coeff
   smooth : ContDiffOn ℝ ∞ coefficients parameterDomain
   moments : ∀ eta ∈ parameterDomain,
@@ -404,7 +427,7 @@ theorem changeRow_integral_zero (eta : ℝ) (i : Fin 3) (heta : eta ∈ paramete
     _ = _ := by
       rw [integral_add (heatRow_integrable F XR eta i w.radius_pos heta)
         (patchRow_integrable F XR w.coefficients eta i w.radius_pos), heatRow_integral F XR eta i
-          w.radius_pos,
+            w.radius_pos,
         patchRow_integral F XR w.coefficients eta i w.radius_pos]
       have h := congrFun (w.moments eta heta) i
       simp only [Pi.add_apply, Pi.zero_apply] at h
@@ -414,14 +437,14 @@ end CompensationWitness
 
 theorem kernel_decomposition (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) :
     canonicalKernel F XR c eta X = OutgoingDilation.canonicalKernel F XR eta X + changeRow F XR c
-      eta 0 X := by
+        eta 0 X := by
   change E F XR c (X, eta) ^ 2 / X = OutgoingDilation.E F XR (X, eta) ^ 2 / X +
     (E F XR c (X, eta) ^ 2 - OutgoingDilation.E F XR (X, eta) ^ 2) / X
   ring
 
 theorem energy_decomposition (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) :
     energyDensity F XR c eta X = OutgoingDilation.energyDensity F XR eta X - changeRow F XR c eta 1
-      X / 2 := by
+        X / 2 := by
   change OutgoingDilation.U F XR (X, eta) ^ 2 - E F XR c (X, eta) ^ 2 / 2 =
     OutgoingDilation.U F XR (X, eta) ^ 2 - OutgoingDilation.E F XR (X, eta) ^ 2 / 2 -
       (E F XR c (X, eta) ^ 2 - OutgoingDilation.E F XR (X, eta) ^ 2) / 2
@@ -430,15 +453,15 @@ theorem energy_decomposition (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X
 theorem renormalized_decomposition (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) :
     H F XR c (X, eta) - OutgoingDilation.powerH F XR X =
       (OutgoingDilation.H F XR (X, eta) - OutgoingDilation.powerH F XR X) + changeRow F XR c eta 2
-        X := by
+          X := by
   change Real.sqrt (2 * X) * E F XR c (X, eta) - _ =
     (Real.sqrt (2 * X) * OutgoingDilation.E F XR (X, eta) - _) +
       Real.sqrt (2 * X) * (E F XR c (X, eta) - OutgoingDilation.E F XR (X, eta))
   ring
 
 theorem parameter_sq_le_one {eta : ℝ} (heta : eta ∈ parameterDomain) : eta ^ 2 ≤ 1 := by
-  have h := mul_nonneg (show 0 ≤ eta + 1 by linarith [heta.1]) (show 0 ≤ 1 - eta by linarith
-    [heta.2])
+  have h := mul_nonneg (show 0 ≤ eta + 1 by
+      linarith [heta.1]) (show 0 ≤ 1 - eta by linarith [heta.2])
   nlinarith
 
 theorem pulseEnd_le_switch (F : Profile) (XR : ℝ) (hXR : 0 < XR) :
@@ -477,12 +500,12 @@ theorem E_times_U (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ)
 theorem J_integrand_eq (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ)
     (hXR : 0 < XR) (hX : 0 < X) :
     H F XR c (X, eta) * U F XR (X, eta) = OutgoingDilation.H F XR (X, eta) * OutgoingDilation.U F
-      XR (X, eta) := by
+        XR (X, eta) := by
   simpa only [H, OutgoingDilation.H, U, mul_assoc] using
     congrArg (fun z => Real.sqrt (2 * X) * z) (E_times_U F XR c eta X hXR hX)
 
 theorem M_unchanged (F : Profile) (XR eta X : ℝ) : M F XR eta X = OutgoingDilation.M F XR eta X :=
-  rfl
+    rfl
 
 theorem J_unchanged (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) (hXR : 0 < XR) :
     J F XR c eta X = OutgoingDilation.J F XR eta X :=
@@ -538,11 +561,11 @@ theorem energy_zero {B : ℝ} (hF : OutgoingProfile.Specification F B) (eta : �
 
 theorem renormalized_integrable (eta : ℝ) (heta : eta ∈ parameterDomain) :
     IntegrableOn (fun X => H F XR w.coefficients (X, eta) - OutgoingDilation.powerH F XR X) (Ioi 0)
-      := by
+        := by
   have he := funext (renormalized_decomposition F XR w.coefficients eta)
   rw [he]
   exact (OutgoingDilation.renormalized_integrable F XR eta w.radius_pos).add
-    (w.changeRow_integrable eta 2 heta)
+      (w.changeRow_integrable eta 2 heta)
 
 theorem renormalized_zero (eta : ℝ) (heta : eta ∈ parameterDomain) :
     (∫ X in Ioi 0, H F XR w.coefficients (X, eta) - OutgoingDilation.powerH F XR X) = 0 := by
@@ -569,7 +592,7 @@ theorem angular_zero (eta : ℝ) :
   calc
     _ = ∫ X in Ioi 0, OutgoingDilation.H F XR (X, eta) * OutgoingDilation.U F XR (X, eta) :=
       setIntegral_congr_fun measurableSet_Ioi (fun X hX => J_integrand_eq F XR w.coefficients eta X
-        w.radius_pos hX)
+          w.radius_pos hX)
     _ = 0 := OutgoingDilation.angular_total_zero F XR eta w.radius_pos
 
 theorem after_pulse (eta X : ℝ) (hX : 0 < X) (hfar : OutgoingDilation.pulseEndRadius F XR ≤ X) :
@@ -579,7 +602,7 @@ theorem after_pulse (eta X : ℝ) (hX : 0 < X) (hfar : OutgoingDilation.pulseEnd
 
 theorem Pi_before_patch (eta X : ℝ) (heta : eta ∈ parameterDomain) (hX : 0 < X)
     (hpatch : X ≤ patchRadius F XR) : Pi F XR w.coefficients (X, eta) = OutgoingDilation.Pi F XR
-      (X, eta) := by
+        (X, eta) := by
   have hs : Ioi X ⊆ Ioi (0 : ℝ) := fun u hu => hX.trans hu
   have hi := (w.changeRow_integrable eta 0 heta).mono_set hs
   have hb := (OutgoingDilation.canonicalKernel_integrable F XR eta w.radius_pos).mono_set hs
@@ -587,7 +610,7 @@ theorem Pi_before_patch (eta X : ℝ) (heta : eta ∈ parameterDomain) (hX : 0 <
     rw [← integral_positive_tail _ X hX (fun u hu huX => ?_), w.changeRow_integral_zero eta 0 heta]
     change (E F XR w.coefficients (u, eta) ^ 2 - OutgoingDilation.E F XR (u, eta) ^ 2) / u = 0
     rw [E_before_patch F XR w.coefficients eta u w.radius_pos hu (huX.trans hpatch), sub_self,
-      zero_div]
+        zero_div]
   unfold Pi
   simp_rw [kernel_decomposition]
   rw [integral_add hb hi, hz, add_zero]
@@ -595,13 +618,13 @@ theorem Pi_before_patch (eta X : ℝ) (heta : eta ∈ parameterDomain) (hX : 0 <
 
 theorem ideal_prefix (eta X : ℝ) (heta : eta ∈ parameterDomain) (hX : 0 < X) (hX' : X ≤ XR) :
     E F XR w.coefficients (X, eta) = F.data.core.P * OutgoingSchedule.shape eta * (X / XR) ^ (1 /
-      10 : ℝ) ∧
+        10 : ℝ) ∧
     U F XR (X, eta) = 4 * eta ∧
     Pi F XR w.coefficients (X, eta) = F.axisDatum eta +
       (5 / 2) * F.data.core.P ^ 2 * OutgoingSchedule.shape eta ^ 2 * (X / XR) ^ (1 / 5 : ℝ) := by
   have hp := hX'.trans (entrance_before_patch F XR w.radius_pos).le
   rw [E_before_patch F XR w.coefficients eta X w.radius_pos hX hp, w.Pi_before_patch eta X heta hX
-    hp]
+      hp]
   have h := OutgoingDilation.ideal_prefix F XR eta X w.radius_pos hX hX'
   rw [OutgoingDilation.axisDatum_unchanged F XR w.radius_pos] at h
   exact h
@@ -611,6 +634,7 @@ end CompensationWitness
 /-! Pressure regularity is proved using finite integrals with free bump
 coefficients, then composing with the constructed relative smooth branch. -/
 
+/-- Free log E, constructed using `extendedHeatE`. -/
 noncomputable def freeLogE (F : Profile) (XR : ℝ) (z : (Coeff × ℝ) × ℝ) : ℝ :=
   extendedHeatE F XR (Real.exp z.2, z.1.2) + shapedPatchAmplitude F z.1.2 *
     TerminalCompensation.correction compensationPatch z.1.1 (Real.exp z.2 / patchRadius F XR)
@@ -623,7 +647,7 @@ theorem freeLogE_contDiff (F : Profile) (XR : ℝ) (hXR : 0 < XR) :
       (contDiff_snd.exp.prodMk contDiff_fst.snd) (fun z => ⟨Real.exp_pos _, mem_univ _⟩)
   have hc : ContDiff ℝ ∞ (fun z : (Coeff × ℝ) × ℝ =>
       TerminalCompensation.correction compensationPatch z.1.1 (Real.exp z.2 / patchRadius F XR)) :=
-        by
+          by
     apply ContDiff.sum
     intro j _
     exact ((contDiff_apply ℝ ℝ j).comp contDiff_fst.fst).mul
@@ -728,8 +752,8 @@ theorem Pi_log_contDiffOn : ContDiffOn ℝ ∞
       (contDiffOn_const.prodMk contDiffOn_snd)
       (fun _ _ => ⟨OutgoingDilation.patchRadius_pos F XR w.radius_pos, mem_univ _⟩)
   apply (hb.add (contDiffOn_const.mul (hi.comp_contDiffOn hc))).congr
-  intro p hp
-  exact w.Pi_exp_primitive p.2 p.1 hp.2
+  · intro p hp
+    exact w.Pi_exp_primitive p.2 p.1 hp.2
 
 theorem Pi_contDiffOn : ContDiffOn ℝ ∞ (Pi F XR w.coefficients) domain := by
   have hl : ContDiffOn ℝ ∞ (fun p : ℝ × ℝ => (Real.log p.1, p.2)) domain :=
@@ -746,13 +770,13 @@ theorem E_between_patch_and_switch (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (hpatch : patchRadius F XR * compensationPatch.right ≤ X)
     (hswitch : X ≤ switchRadius F XR) : E F XR c (X, eta) = OutgoingDilation.E F XR (X, eta) := by
   have hc : TerminalCompensation.correction compensationPatch (c eta) (X / patchRadius F XR) = 0 :=
-    by
+      by
     by_contra hn
     have ht := TerminalCompensation.correction_tsupport compensationPatch (c eta) (subset_tsupport
-      _ hn)
+        _ hn)
     have hx : compensationPatch.right ≤ X / patchRadius F XR :=
-      (le_div_iff₀ (OutgoingDilation.patchRadius_pos F XR hXR)).mpr (by simpa only [mul_comm] using
-        hpatch)
+      (le_div_iff₀ (OutgoingDilation.patchRadius_pos F XR hXR)).mpr (by
+          simpa only [mul_comm] using hpatch)
     exact (not_lt_of_ge hx) ht.2
   rw [E, heatE_before F XR eta X hXR hX hswitch, patchIncrement, hc, mul_zero, add_zero]
 
@@ -780,8 +804,8 @@ theorem E_eventual_heat (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : �
     E F XR c (X, eta) =
       (OutgoingDilation.carrierAmplitude F * (switchRadius F XR) ^ HeatTailEdit.exponent F.data.h) *
         RadialHeatProfile.spatialProfile (1 + F.data.h) (ParametricHeatTail.diffusion eta) X := by
-  rw [E_full_switch F XR c eta X hXR hX (by linarith), OutgoingTail.tailShape_late F.data hlate,
-    mul_one]
+  rw [E_full_switch F XR c eta X hXR hX (by
+      linarith), OutgoingTail.tailShape_late F.data hlate, mul_one]
 
 theorem E_eventual_heat_carrier (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     {q s τ eta : ℝ} (hXR : 0 < XR) (hq : 0 < q) (hs : 0 < s)
@@ -792,7 +816,7 @@ theorem E_eventual_heat_carrier (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
         RadialHeatProfile.spatialProfile (1 + F.data.h) τ s := by
   rw [E_after_switch F XR c eta (s / q) hXR
     (full_switch_above_radius (OutgoingDilation.switchRadius_pos F XR hXR) (div_pos hs hq) (by
-      linarith))]
+        linarith))]
   exact ParametricHeatTail.physicalEdit_eventual_heat_carrier F.data
     (OutgoingDilation.switchRadius_pos F XR hXR) hq hs hν hlate
 
@@ -802,8 +826,8 @@ theorem Pi_after_switch (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : �
       ParametricHeatTail.physicalEdit F.data (switchRadius F XR) eta u ^ 2 / u := by
   unfold Pi canonicalKernel
   congr 1
-  exact setIntegral_congr_fun measurableSet_Ioi (fun u hu => by rw [E_after_switch F XR c eta u hXR
-    (hX.trans hu.le)])
+  exact setIntegral_congr_fun measurableSet_Ioi (fun u hu => by
+      rw [E_after_switch F XR c eta u hXR (hX.trans hu.le)])
 
 namespace CompensationWitness
 
@@ -815,7 +839,7 @@ theorem Pi_tendsto_axis (eta : ℝ) (heta : eta ∈ parameterDomain) :
       (fun X => OutgoingDilation.Pi F XR (X, eta)) := by
     filter_upwards [self_mem_nhdsWithin,
       mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (OutgoingDilation.patchRadius_pos F XR
-        w.radius_pos))] with X hX hp
+          w.radius_pos))] with X hX hp
     exact w.Pi_before_patch eta X heta hX hp.le
   have ht := OutgoingDilation.Pi_tendsto_axis F XR eta w.radius_pos
   rw [OutgoingDilation.axisDatum_unchanged F XR w.radius_pos] at ht
@@ -836,6 +860,8 @@ end CompensationWitness
 outgoing profile. The coefficient witness also retains its quantitative
 relative first-jet bounds. -/
 
+/-- Specification data, collecting `angular_smooth`, `axial_smooth`, `momentum_smooth`,
+`pressure_smooth`, `angular_positive`, `axial_unchanged` and their compatibility conditions. -/
 structure Specification (F : Profile) (XR : ℝ) (c : ℝ → Coeff) : Prop where
   angular_smooth : ContDiffOn ℝ ∞ (E F XR c) domain
   axial_smooth : ContDiffOn ℝ ∞ (U F XR) domain
@@ -865,7 +891,7 @@ structure Specification (F : Profile) (XR : ℝ) (c : ℝ → Coeff) : Prop wher
   axis_limit : ∀ eta ∈ parameterDomain,
     Tendsto (fun X => Pi F XR c (X, eta)) (𝓝[>] (0 : ℝ)) (𝓝 (F.axisDatum eta))
   analytic_axis_datum : AnalyticOnNhd ℂ (SchedulePressure.complexAxisPressure F.data)
-    PressureDatum.strip ∧
+      PressureDatum.strip ∧
     ∀ eta ∈ parameterDomain, SchedulePressure.complexAxisPressure F.data (eta : ℂ) =
       (axisDatum F XR c eta : ℂ)
   before_patch : ∀ eta ∈ parameterDomain, ∀ X : ℝ, 0 < X → X ≤ patchRadius F XR →
@@ -912,11 +938,11 @@ theorem CompensationWitness.specification {F : Profile} {XR B C : ℝ}
   analytic_axis_datum := w.axisDatum_analytic_extension
   before_patch := fun eta heta X hX hp =>
     ⟨E_before_patch F XR w.coefficients eta X w.radius_pos hX hp, w.Pi_before_patch eta X heta hX
-      hp⟩
+        hp⟩
   ideal_prefix := fun eta heta X hX hp => w.ideal_prefix eta X heta hX hp
   switch_overlap := fun eta X hX => E_after_switch F XR w.coefficients eta X w.radius_pos hX
   terminal_heat := fun eta X hX htail => E_eventual_heat F XR w.coefficients eta X w.radius_pos hX
-    htail
+      htail
   patch_disjoint := OutgoingDilation.patch_switch_disjoint F XR w.radius_pos
 
 /-- For a single fixed outgoing profile, every sufficiently large entrance

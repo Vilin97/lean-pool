@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramAcceleration
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
 
 /-!
 # Classical time evolution for the fixed-coordinate Dirichlet solve
@@ -18,6 +18,9 @@ Continuous forcing gives a continuous Gram acceleration. The genuine H¹
 velocity therefore has its actual derivative throughout the closed interval.
 The displacement keeps both zero endpoint conditions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,25 +35,32 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T)
-  (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+  (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
-  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v,v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
-def classicalAcceleration (f : C(Icc (0 : ℝ) T,E)) : C(Icc (0 : ℝ) T,U) :=
+/-- Classical acceleration, constructed using
+`EulerContinuousGramAcceleration.accelerationPath`. -/
+def classicalAcceleration (f : C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T,U) :=
   EulerContinuousGramAcceleration.accelerationPath T Q Q₁ c hc hQ
     (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f)) f
 
+/-- Displacement path, given by `terminalPrimitive T hT (velocityLp T hT Q Q₁ H c hc hQ hd K hK
+hH hsmall f)`. -/
 def displacementPath (f : TimeLp T E) : C(Icc (0 : ℝ) T,U) :=
   terminalPrimitive T hT (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
 
-def physicalVelocityPath (f : C(Icc (0 : ℝ) T,E)) : C(Icc (0 : ℝ) T,E) :=
+/-- Physical velocity path, given by `multiplier Q (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH
+hsmall (pathLp T hT f))`. -/
+def physicalVelocityPath (f : C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T,E) :=
   multiplier Q (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f))
 
-def physicalDerivativePath (f : C(Icc (0 : ℝ) T,E)) : C(Icc (0 : ℝ) T,E) :=
-  multiplier Q₁ (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f))+
+/-- Physical derivative path, constructed using `multiplier`. -/
+def physicalDerivativePath (f : C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T,E) :=
+  multiplier Q₁ (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f)) +
     multiplier Q (classicalAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
 
 theorem displacementPath_initial (f : TimeLp T E) :
@@ -61,20 +71,20 @@ theorem displacementPath_terminal (f : TimeLp T E) :
     displacementPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall f ⟨T,hT,le_rfl⟩ = 0 :=
   terminalPrimitive_terminal T hT _
 
-theorem classicalAcceleration_equation (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) T) :
+theorem classicalAcceleration_equation (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     gram (Q t) (classicalAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t) =
       (Q t).adjoint (f t-(2 : ℝ) • Q₁ t
         (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f) t)) :=
   EulerContinuousGramAcceleration.accelerationPath_equation T Q Q₁ c hc hQ _ f t
 
-variable (Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
+variable (Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (hd₁ : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q₁) (Q₂ t) (Icc (0 : ℝ) T) t)
   (hframe : ∀ t, Q₂ t = -((H t).comp (Q t)))
   (hTpos : 0 < T)
 
 include hd₁ hframe hTpos in
-theorem classicalAcceleration_ae (f : C(Icc (0 : ℝ) T,E)) :
+theorem classicalAcceleration_ae (f : C(Icc (0 : ℝ) T, E)) :
     (accelerationLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f) : ℝ → U) =ᵐ[timeMeasure T]
       extendPath T hT (classicalAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) :=
   EulerContinuousGramAcceleration.accelerationPath_ae T Q Q₁ c hc hQ hT
@@ -87,7 +97,7 @@ theorem classicalAcceleration_ae (f : C(Icc (0 : ℝ) T,E)) :
 include hd₁ hframe hTpos in
 /-- The actual coordinate history has the genuine time derivative in (10),
 including within-interval derivatives at both endpoints. -/
-theorem velocityPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) T) :
+theorem velocityPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT
       (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f)))
       (classicalAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t) (Icc (0 : ℝ) T) t := by
@@ -105,7 +115,7 @@ theorem velocityPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : �
   exact velocityPath_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall hTpos _ v hv hrep hder ⟨s,hs⟩
 
 include hd₁ hframe hTpos in
-theorem displacementPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) T) :
+theorem displacementPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT
       (displacementPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f)))
       (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f) t) (Icc (0 : ℝ) T) t := by
@@ -121,7 +131,7 @@ theorem displacementPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0
   rw [projIcc_of_mem hT hs]
 
 include hd₁ hframe hTpos in
-theorem physicalVelocityPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) T) :
+theorem physicalVelocityPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT
       (physicalVelocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall f))
       (physicalDerivativePath T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t) (Icc (0 : ℝ) T) t := by
@@ -130,7 +140,7 @@ theorem physicalVelocityPath_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Ic
   change HasDerivWithinAt
     (fun s => extendPath T hT Q s
       (extendPath T hT (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f)) s))
-    (Q₁ t (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f) t)+
+    (Q₁ t (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f) t) +
       Q t (classicalAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t)) (Icc (0 : ℝ) T) t
   simpa only [extendPath,projIcc_of_mem hT t.property] using h
 

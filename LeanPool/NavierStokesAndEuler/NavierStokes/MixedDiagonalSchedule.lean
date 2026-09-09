@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CutStageEstimates
 
-@[expose] public section
-
 /-!
 # One physical diagonal schedule for potentials, direct fields, and pressure
 
@@ -17,6 +15,9 @@ The three input sequences are fixed actual fields. Separate raw losses and
 logarithmic factors are combined before applying the proved cutoff estimates.
 The initial stage is retained explicitly in every resulting full sum.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,16 +27,21 @@ open Set Function Filter ProblemStatement
 open scoped Topology ContDiff BigOperators
 
 
+/-- Component: an abbreviation for `Fin 3`. -/
 abbrev Component := Fin 3
 
 namespace Component
 
+/-- Potential, given by `0`. -/
 noncomputable def potential : Component := 0
+/-- Direct, given by `1`. -/
 noncomputable def direct : Component := 1
+/-- Pressure, given by `2`. -/
 noncomputable def pressure : Component := 2
 
 end Component
 
+/-- Component space, with branches according to `c = 2`. -/
 @[reducible] noncomputable def ComponentSpace (c : Component) : Type :=
   if c = 2 then ℝ else Space
 
@@ -54,12 +60,15 @@ noncomputable def family (A B : ℕ → VelocityField) (P : ℕ → PressureFiel
     (c : Component) → ℕ → SpaceTime → ComponentSpace c :=
   Fin.cases A (Fin.cases B (Fin.cases P (fun i => Fin.elim0 i)))
 
+/-- Scalar family, given by `Fin.cases A (Fin.cases B (Fin.cases P (fun i => Fin.elim0 i)))`. -/
 noncomputable def scalarFamily (A B P : ℕ → ℕ → ℝ) : Component → ℕ → ℕ → ℝ :=
   Fin.cases A (Fin.cases B (Fin.cases P (fun i => Fin.elim0 i)))
 
+/-- Common raw loss, given by `max (LA m) (max (LB m) (LP m))`. -/
 noncomputable def commonRawLoss (LA LB LP : ℕ → ℝ) (m : ℕ) : ℝ :=
   max (LA m) (max (LB m) (LP m))
 
+/-- Common loss, given by `CutStageEstimates.cutLoss (commonRawLoss LA LB LP)`. -/
 noncomputable def commonLoss (LA LB LP : ℕ → ℝ) : ℕ → ℝ :=
   CutStageEstimates.cutLoss (commonRawLoss LA LB LP)
 
@@ -77,22 +86,23 @@ All three refer to the supplied full sequences, including their initial terms. -
 structure ThreeCutBounds (a : ℕ → ℕ) (h : ℝ) (A B : ℕ → VelocityField)
     (P : ℕ → PressureField) (g L : ℕ → ℝ) (S : Set SpaceTime) : Prop where
   potential : DiagonalJetBounds.CutStageBounds (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A
-    g L S
+      g L S
   direct : DiagonalJetBounds.CutStageBounds (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) B g
-    L S
+      L S
   pressure : DiagonalJetBounds.CutStageBounds (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) P
-    g L S
+      g L S
 
+/-- Three smooth sums data, collecting `potential`, `direct`, `pressure`. -/
 structure ThreeSmoothSums (a : ℕ → ℕ) (h : ℝ) (A B : ℕ → VelocityField)
     (P : ℕ → PressureField) : Prop where
   potential : ContDiffOn ℝ ∞ (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ))
-    (PhysicalWaveSum.physicalQ h) A)
+      (PhysicalWaveSum.physicalQ h) A)
     PhysicalWaveSum.preterminal
   direct : ContDiffOn ℝ ∞ (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ))
-    (PhysicalWaveSum.physicalQ h) B)
+      (PhysicalWaveSum.physicalQ h) B)
     PhysicalWaveSum.preterminal
   pressure : ContDiffOn ℝ ∞ (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ))
-    (PhysicalWaveSum.physicalQ h) P)
+      (PhysicalWaveSum.physicalQ h) P)
     PhysicalWaveSum.preterminal
 
 section RawLoss
@@ -126,7 +136,7 @@ theorem cut_bounds_of_positiveStages {a : ℕ → ℝ} {q : E → ℝ}
     DiagonalJetBounds.CutStageBounds a q A g L S := by
   intro j hj m hm x hx
   have he : SolenoidalDiagonal.cutStage a q (CutStageEstimates.positiveStages A) j =
-    SolenoidalDiagonal.cutStage a q A j := by
+      SolenoidalDiagonal.cutStage a q A j := by
     funext y
     simp only [SolenoidalDiagonal.cutStage, CutStageEstimates.positiveStages_of_pos hj]
   have hjb := hb j hj m hm x hx
@@ -176,11 +186,11 @@ theorem exists_three_component_schedule {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     · exact hP
   obtain ⟨a, hal, hap, had, ham, hat, hb⟩ :=
     CutStageEstimates.exists_physical_finite_diagonal_cut_bounds hh hh1 hS hs g (commonRawLoss LA
-      LB LP)
+        LB LP)
       (scalarFamily (fun j m => |CA j m|) (fun j m => |CB j m|) (fun j m => |CP j m|))
       (scalarFamily pA pB pP)
       (family_raw_bounds (fun w hw => PhysicalWaveSum.physicalQ_pos hh hh1 (hS hw)) rawA rawB rawP)
-        hg lower
+          hg lower
   exact ⟨a, hal, hap, had, ham, hat,
     ⟨hb Component.potential, hb Component.direct, hb Component.pressure⟩⟩
 
@@ -202,11 +212,11 @@ theorem full_sum_eq_initial_add_positive {a : ℕ → ℝ} (ha : Tendsto a atTop
       SolenoidalDiagonal.cutStage a q A (n + 1) x := by
     intro n
     simp only [SolenoidalDiagonal.cutStage, CutStageEstimates.positiveStages_of_pos (Nat.succ_pos
-      n)]
+        n)]
   rw [SolenoidalDiagonal.potentialSum, hs.tsum_eq_zero_add]
   rw [SolenoidalDiagonal.potentialSum, hp.tsum_eq_zero_add]
   simp only [SolenoidalDiagonal.cutStage, CutStageEstimates.positiveStages_zero, Pi.zero_apply,
-    smul_zero, zero_add] at *
+      smul_zero, zero_add] at *
   simp only [← ht]
 
 end InitialStage
@@ -216,14 +226,14 @@ theorem physical_initial_split {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     [NormedAddCommGroup V] [NormedSpace ℝ V] (A : ℕ → SpaceTime → V) :
     EqOn (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A)
       (fun w => SolenoidalDiagonal.cutStage (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A 0
-        w +
+          w +
         SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h)
-          (CutStageEstimates.positiveStages A) w)
+            (CutStageEstimates.positiveStages A) w)
       PhysicalWaveSum.preterminal := by
   intro w hw
   exact full_sum_eq_initial_add_positive (SolenoidalDiagonal.realScales_tendsto ha)
     (PhysicalWaveSum.physicalQ_smoothAt hh hh1 hw).continuousAt (PhysicalWaveSum.physicalQ_pos hh
-      hh1 hw) A
+        hh1 hw) A
 
 theorem physical_initial_split_germ {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {a : ℕ → ℕ} (ha : StrictMono a) {V : Type*}
@@ -231,7 +241,7 @@ theorem physical_initial_split_germ {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {w : SpaceTime} (hw : w ∈ PhysicalWaveSum.preterminal) :
     SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A =ᶠ[𝓝 w]
       (fun z => SolenoidalDiagonal.cutStage (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A 0
-        z +
+          z +
         SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h)
           (CutStageEstimates.positiveStages A) z) := by
   filter_upwards [PhysicalWaveSum.preterminal_open.mem_nhds hw] with z hz
@@ -245,7 +255,7 @@ theorem physical_initial_split_jets {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
         (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A) w =
       iteratedFDeriv ℝ m
         (fun z => SolenoidalDiagonal.cutStage (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A
-          0 z +
+            0 z +
           SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h)
             (CutStageEstimates.positiveStages A) z) w :=
   (SolenoidalDiagonal.iteratedFDeriv_eventuallyEq

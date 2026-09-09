@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverTensor
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderDescentJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverTensor
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderMeasureDescent
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The genuine descended derivative tensors of a smooth cylinder field
 lie in cylinder L² whenever its actual coordinate words do. The bound
 keeps the ordered-word sum; there is no extra alphabet factor. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +36,7 @@ theorem cover_periodic (f : LiftDomain P → V) (c : AddSubgroup.zmultiples P) (
     f (coveringMap P (z.1,(c : ℝ)+z.2)) = f (coveringMap P z) :=
   congrArg f (EulerCylinderMeasureDescent.coveringMap_deck P c z)
 
+/-- Tensor, given by `jetSeries P (fun z => f (coveringMap P z)) q n`. -/
 def tensor (f : LiftDomain P → V) (n : ℕ) (q : LiftDomain P) : LiftTangent [×n]→L[ℝ] V :=
   jetSeries P (fun z => f (coveringMap P z)) q n
 
@@ -67,7 +73,7 @@ theorem tensor_eLpNorm_le (f : LiftDomain P → V)
     (eLpNorm (tensor P f n) 2 (liftMeasure P)).toReal ≤
       ‖coordinateEquiv.symm.toContinuousLinearMap‖^n *
         ∑ w : Fin n → Fin 4, (eLpNorm (iteratedFieldDerivative P w f) 2 (liftMeasure P)).toReal :=
-          by
+            by
   let C : ℝ≥0 := ⟨‖coordinateEquiv.symm.toContinuousLinearMap‖^n, pow_nonneg (norm_nonneg _) n⟩
   have hA : eLpNorm (tensor P f n) 2 (liftMeasure P) ≤
       (C : ℝ≥0∞) * eLpNorm

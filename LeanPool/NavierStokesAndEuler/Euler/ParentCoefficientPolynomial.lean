@@ -11,10 +11,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentNormalBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentTransverseCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
 
-@[expose] public section
-
 /-! A fixed polynomial in the genuine parent label bound controls the
 coefficient leaves of the normal, joined and mean packet budgets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,23 +24,35 @@ namespace EulerParentCoefficientPolynomial
 open EulerPacketParentLabelBounds EulerPacketParentMeanCoercivity
   EulerPolynomialCost EulerMeanSmoothRepresentative
 
+/-- Radius ceiling, given by `1024+4*K`. -/
 def radiusCeiling (K : ℝ) : ℝ := 1024+4*K
+/-- Curvature ceiling, given by `27*(frameAmplitude K)^2*gradientAmplitude K`. -/
 def curvatureCeiling (K : ℝ) : ℝ := 27*(frameAmplitude K)^2*gradientAmplitude K
+/-- Normal amplitude, given by `EulerPacketParentNormalBudget.amplitude (frameAmplitude K)
+(gradientAmplitude K)`. -/
 def normalAmplitude (K : ℝ) : ℝ :=
   EulerPacketParentNormalBudget.amplitude (frameAmplitude K) (gradientAmplitude K)
+/-- Normal inverse, given by `EulerPacketParentNormalBudget.inverseRadius (radiusCeiling K)
+(frameAmplitude K) (gradientAmplitude K)`. -/
 def normalInverse (K : ℝ) : ℝ :=
   EulerPacketParentNormalBudget.inverseRadius (radiusCeiling K) (frameAmplitude K)
-    (gradientAmplitude K)
+      (gradientAmplitude K)
+/-- Normal radius, given by `EulerPacketParentNormalBudget.radius (radiusCeiling K)
+(frameAmplitude K) (gradientAmplitude K)`. -/
 def normalRadius (K : ℝ) : ℝ :=
   EulerPacketParentNormalBudget.radius (radiusCeiling K) (frameAmplitude K) (gradientAmplitude K)
+/-- Transverse inverse, given by `EulerPacketParentTransverseCosts.inverseRadius (radiusCeiling
+K) (frameAmplitude K)`. -/
 def transverseInverse (K : ℝ) : ℝ :=
   EulerPacketParentTransverseCosts.inverseRadius (radiusCeiling K) (frameAmplitude K)
+/-- Leaf envelope as an element of `ℝ`. -/
 def leafEnvelope (K : ℝ) : ℝ :=
-  1+radiusCeiling K+gradientAmplitude K+frameAmplitude K+curvatureCeiling K+
-    normalAmplitude K+normalInverse K+normalRadius K+
-    gramInverseEnvelope (frameAmplitude K)+transverseInverse K+
+  1+radiusCeiling K+gradientAmplitude K+frameAmplitude K+curvatureCeiling K +
+    normalAmplitude K+normalInverse K+normalRadius K +
+    gramInverseEnvelope (frameAmplitude K)+transverseInverse K +
     inverseEnvelope (frameAmplitude K) (gradientAmplitude K)
 
+/-- Leaf polynomial as an element of `Polynomial ℝ`. -/
 def leafPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let R := 1024+4*X
@@ -63,7 +76,9 @@ theorem leafPolynomial_eval (K : ℝ) : leafPolynomial.eval K=leafEnvelope K := 
     Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_ofNat,
     Polynomial.eval_one,Polynomial.eval_X,Polynomial.eval_C]
 
+/-- Leaf constant, given by `coefficientCost leafPolynomial`. -/
 def leafConstant : ℝ := coefficientCost leafPolynomial
+/-- Leaf power, given by `leafPolynomial.natDegree`. -/
 def leafPower : ℕ := leafPolynomial.natDegree
 
 theorem leafConstant_pos : 0 < leafConstant := coefficientCost_pos _
@@ -87,7 +102,7 @@ theorem leaf_bounds (K : ℝ) (hK : 0 ≤ K) :
       (gradientAmplitude K) ≤ leafEnvelope K ∧
     gramInverseEnvelope (frameAmplitude K) ≤ leafEnvelope K ∧
     EulerPacketParentTransverseCosts.inverseRadius (coefficientRadius K) (frameAmplitude K) ≤
-      leafEnvelope K ∧
+        leafEnvelope K ∧
     inverseEnvelope (frameAmplitude K) (gradientAmplitude K) ≤ leafEnvelope K := by
   have hG := gradientAmplitude_nonneg K
   have hF := frameAmplitude_nonneg K
@@ -122,7 +137,7 @@ open EulerSmoothLimit EulerPacketPiola
 
 theorem frameLower_inv_le {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     (D : EulerTransversePacketProvider.Data U) (K : ℝ) (hK : 0 ≤ K)
-    (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det=1)
+    (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
     (hF : ∀ t x, ‖D.F.field t x‖ ≤ frameAmplitude K) :
     D.frameLower⁻¹ ≤ leafEnvelope K := by
   have hi : D.frameLower⁻¹ ≤ gramInverseEnvelope (frameAmplitude K) := by

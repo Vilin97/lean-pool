@@ -7,16 +7,16 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Topology.Algebra.Module.ClosedSubmodule
 public import Mathlib.Topology.ContinuousMap.Algebra
-
-@[expose] public section
 
 /-!
 Every closed subspace of a finite product of Hilbert spaces has a bounded
 retraction. We use the equivalent Hilbert product norm only to construct the
 retraction; all stated spaces retain their original sup norms.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,18 +27,22 @@ open ContinuousLinearMap
 variable {ι E : Type*} [Fintype ι] [NormedAddCommGroup E]
   [InnerProductSpace ℝ E] [CompleteSpace E]
 
+/-- Hilbert equiv, given by `(PiLp.continuousLinearEquiv 2 ℝ (fun _ : ι => E)).symm`. -/
 def hilbertEquiv : (ι → E) ≃L[ℝ] PiLp 2 (fun _ : ι => E) :=
   (PiLp.continuousLinearEquiv 2 ℝ (fun _ : ι => E)).symm
 
+/-- Hilbert subspace, given by `S.mapEquiv hilbertEquiv`. -/
 def hilbertSubspace (S : ClosedSubmodule ℝ (ι → E)) :
     ClosedSubmodule ℝ (PiLp 2 (fun _ : ι => E)) := S.mapEquiv hilbertEquiv
 
+/-- Restriction as an element of `hilbertSubspace S →L[ℝ] S`. -/
 def restriction (S : ClosedSubmodule ℝ (ι → E)) : hilbertSubspace S →L[ℝ] S :=
   (hilbertEquiv.symm.toContinuousLinearMap.comp (hilbertSubspace
-    S).toSubmodule.subtypeL).codRestrict
+      S).toSubmodule.subtypeL).codRestrict
     S.toSubmodule (fun u => (ClosedSubmodule.mem_mapEquiv_iff hilbertEquiv S u).mp u.property)
 
-/-- A genuine bounded retraction, obtained from orthogonal projection in the equivalent Hilbert norm. -/
+/-- A genuine bounded retraction, obtained from orthogonal projection in the equivalent Hilbert
+norm. -/
 def retraction (S : ClosedSubmodule ℝ (ι → E)) : (ι → E) →L[ℝ] S :=
   (restriction S).comp ((hilbertSubspace S).toSubmodule.orthogonalProjectionOnto.comp
     hilbertEquiv.toContinuousLinearMap)
@@ -68,10 +72,12 @@ def packPaths : (ι → C(K,V)) →L[ℝ] C(K,ι → V) := by
     (ContinuousLinearMap.proj i)
 
 omit [CompactSpace K] in
-@[simp] theorem packPaths_apply (p : ι → C(K,V)) (t : K) (i : ι) :
+@[simp] theorem packPaths_apply (p : ι → C(K, V)) (t : K) (i : ι) :
     packPaths (ι := ι) (K := K) (V := V) p t i = p i t := by
   classical
-  simp [packPaths, sum_apply]
+  simp only [packPaths, sum_apply, comp_apply, proj_apply, compLeftContinuous_apply,
+      ZeroHom.toFun_eq_coe,
+    AddMonoidHom.toZeroHom_coe, ContinuousMap.coe_sum, Finset.sum_apply]
   change (∑ j : ι, Pi.single j (p j t) i) = p i t
   simp [Pi.single_apply]
 

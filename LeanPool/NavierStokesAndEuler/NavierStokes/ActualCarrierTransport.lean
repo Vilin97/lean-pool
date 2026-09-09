@@ -6,10 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierTransportBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
-
-@[expose] public section
 
 /-!
 # Binding the primitive carrier transport to the actual cycle parameters
@@ -18,6 +15,9 @@ The geometry and support proofs live below the stage controls in
 `ActualCarrierTransportBase`.  This module identifies them with the literal
 canonical parameter record without adding a solved-field assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

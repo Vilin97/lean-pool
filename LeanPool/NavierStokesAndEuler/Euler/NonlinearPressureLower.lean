@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.UnshiftedProducts
-public import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearPressure
+public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
+public import LeanPool.NavierStokesAndEuler.Euler.LowerTransportSource
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearPressure
+import LeanPool.NavierStokesAndEuler.Euler.UnshiftedPressure
+import LeanPool.NavierStokesAndEuler.Euler.UnshiftedProducts
+
+/-! The lower Sobolev pressure estimate needed for the base energy commutator. -/
 
 @[expose] public section
 
-/-! The lower Sobolev pressure estimate needed for the base energy commutator. -/
 
 noncomputable section
 
@@ -24,7 +29,8 @@ open scoped ContDiff ENNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The genuine pressure of transport has an unshifted H⁵ bound using only H⁶ velocity at the same external cutoff. -/
+/-- The genuine pressure of transport has an unshifted H⁵ bound using only H⁶ velocity at the same
+external cutoff. -/
 theorem nonlinear_pressure_lower_bound {s : ℕ} {A : SmoothCoefficient period} {F : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period standardDirection s F)
@@ -38,11 +44,11 @@ theorem nonlinear_pressure_lower_bound {s : ℕ} {A : SmoothCoefficient period} 
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period))
+        period))
     (hsource : (F : LiftDomain period → Vector3) =ᵐ[liftMeasure period] transportField period 3 b
-      e) :
+        e) :
     (∑ n ∈ Finset.range (N+1), weight ρ n *
       blockNorm period (J.solvePressure K κ m c hc hpos) 5 n) ≤
       2 * M * (5460 * lowerProductConstant period 3) *
@@ -52,7 +58,7 @@ theorem nonlinear_pressure_lower_bound {s : ℕ} {A : SmoothCoefficient period} 
     apply smooth_sum period Finset.univ
     intro i _ x
     exact (postcomp_smooth period (coordinate 4 i) b hb x).smul (fieldDerivative_smooth period _ e
-      he x)
+        he x)
   have heq : (∑ n ∈ Finset.range (N+1), weight ρ n * blockNorm period J 5 n) =
       ∑ n ∈ Finset.range (N+1), weight ρ n *
         wordSobolevNorm period 5 n (transportField period 3 b e) := by

@@ -6,12 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! A polynomial base controls every surviving finite packet grade after the final factorial split.
+-/
 
 @[expose] public section
 
-/-! A polynomial base controls every surviving finite packet grade after the final factorial split.
-  -/
 
 namespace EulerPacketCoarseMajorant
 
@@ -31,15 +41,16 @@ theorem gradeBase_ge_one (R : ℝ) (hR : 1 ≤ R) (N : ℕ) (hN : 1 ≤ N) :
   have hbase : (1 : ℝ) ≤ 4*R*(550*(N : ℝ))^2 := by nlinarith
   exact one_le_pow₀ hbase
 
-theorem factorial_le_grade_power (N p d : ℕ) (hN : 1 ≤ N) (hp : p ≤ 2*N+2)
-    (hd : d ≤ 110*(p+1)) : (d.factorial : ℝ) ≤ (550*(N : ℝ))^d := by
+theorem factorial_le_grade_power (N p d : ℕ) (hN : 1 ≤ N) (hp : p ≤ 2 * N + 2)
+    (hd : d ≤ 110 * (p + 1)) : (d.factorial : ℝ) ≤ (550*(N : ℝ))^d := by
   have hdN : d ≤ 550*N := by omega
   have h := (Nat.factorial_le_pow d).trans (Nat.pow_le_pow_left hdN d)
   exact_mod_cast h
 
-/-- The external derivative radius is enlarged once; all grade dependence is in one polynomial base. -/
+/-- The external derivative radius is enlarged once; all grade dependence is in one polynomial base.
+-/
 theorem majorant_grade_bound (R : ℝ) (hR : 1 ≤ R) (N p d n : ℕ)
-    (hN : 1 ≤ N) (hp : p ≤ 2*N+2) (hd : d ≤ 110*(p+1)) :
+    (hN : 1 ≤ N) (hp : p ≤ 2 * N + 2) (hd : d ≤ 110 * (p + 1)) :
     majorant R d n ≤ (gradeBase R N)^(p+1)*majorant (4*R) 0 n := by
   have hB : (1 : ℝ) ≤ 550*(N : ℝ) := by
     have hn : (1 : ℝ) ≤ N := by exact_mod_cast hN

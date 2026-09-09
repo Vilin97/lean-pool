@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WholeSpaceUniqueness
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3CompactCandidate
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorR3Bridge
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WholeSpaceUniqueness
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Comparison with the compact candidate on all of R³
@@ -20,6 +20,9 @@ The competitor retains exactly the smoothness and finite-energy conditions
 of the comparator. The candidate's compact support supplies the reference
 solution's bounds on each closed interval before time one.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

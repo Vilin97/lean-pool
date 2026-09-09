@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketChildChoice
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformChild
 public import LeanPool.NavierStokesAndEuler.Euler.PacketUniversalFrequency
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketExactPressureError
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedOutputCosts
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketJoinedInput
+public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformChild
 
 /-! The positive-history packet at the fixed frequency constructs the
 actual next parent, with the same errors and the k^80 label bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +30,7 @@ open Set InnerProductSpace EulerSmoothLimit EulerSpatialCutoffs
 
 variable {A : Parent} (L : LabelData A) (I : ParticleInverse A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
   (J : JoinedInputs (A.meanData H) (A.transverseData m hm R S hS) τ hτ hτT
@@ -37,11 +41,11 @@ variable {A : Parent} (L : LabelData A) (I : ParticleInverse A) (H : LowBounds A
   (hW : EulerPacketRadiusPolynomial.RadiusPrimitives J.mean J.linear J.normal
     (joinedCoefficientBudget period (A.meanData H) (A.transverseData m hm R S hS)
       rfl τ hτ hτT (A.historyOn H m hm R S hS τ hτ hτT) J.normal) δ ξ W)
-  (hprofile : ∀ t, α*J.linear.fullProfile t ≤ W)
+  (hprofile : ∀ t, α * J.linear.fullProfile t ≤ W)
   (k : ℝ) (hk : UniversalFrequency k)
-  (hfrequency : EulerPacketInitializedOutputCost.uniformConstant*
-    W^EulerPacketInitializedOutputCost.uniformPower ≤ smallPower k)
-  (hKk : L.K ≤ k) (hinv : A.ell⁻¹ ≤ k^(3/4 : ℝ))
+  (hfrequency : EulerPacketInitializedOutputCost.uniformConstant *
+    W ^ EulerPacketInitializedOutputCost.uniformPower ≤ smallPower k)
+  (hKk : L.K ≤ k) (hinv : A.ell⁻¹ ≤ k ^ (3 / 4 : ℝ))
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
 
 include hδ1 hα J hW hprofile hfrequency hKk hinv in
@@ -60,7 +64,7 @@ theorem joined_uniform_child :
         ‖fderiv ℝ (initializedExactPhysicalVelocity (A.meanData H)
           (A.transverseData m hm R S hS) rfl τ hτ hτT (A.historyOn H m hm R S hS τ hτ hτT)
           δ hδ ξ hs α (A.sourceAgreement m hm R S hS H)
-          (truncation k) hn k hk.four Q t (I.normalized t)) x-
+          (truncation k) hn k hk.four Q t (I.normalized t)) x -
           (α*deriv (profile δ) (k*⟪m,I.normalized t x⟫_ℝ)) •
             rankOne ℝ (canonicalVelocity τ hτ hτT (A.historyOn H m hm R S hS τ hτ hτT)
               ξ hs t (I.normalized t x))
@@ -68,12 +72,12 @@ theorem joined_uniform_child :
         ‖fderiv ℝ (gradient (initializedExactPhysicalPressure (A.meanData H)
           (A.transverseData m hm R S hS) rfl τ hτ hτT (A.historyOn H m hm R S hS τ hτ hτT)
           δ hδ ξ hs α (A.sourceAgreement m hm R S hS H)
-          (truncation k) hn k hk.four Q t (I.normalized t))) x-
+          (truncation k) hn k hk.four Q t (I.normalized t))) x -
           (EulerPacketPrimaryPressure.coefficient τ hτ hτT (A.historyOn H m hm R S hS τ hτ hτT)
             ξ hs α t (I.normalized t x)*deriv (profile δ) (k*⟪m,I.normalized t x⟫_ℝ)) •
               rankOne ℝ ((A.transverseData m hm R S hS).normal.field t (I.normalized t x))
                 ((A.transverseData m hm R S hS).normal.field t (I.normalized t x))‖ ≤ k^(-(1/4 :
-                  ℝ))) ∧
+                    ℝ))) ∧
       (∀ (t : Icc (0 : ℝ) A.T) (x : Space),
         ‖(G.displacementField k m A.ell A.ell_pos t).field x‖ ≤ k^(-(1/4 : ℝ))) ∧
       ∃ LC : LabelData (A.child G k m hgraph nextEll hnext hnext1), LC.K=k^80 := by

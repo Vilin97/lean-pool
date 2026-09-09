@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAngularDiagonal
+public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalExtensions
 
 /-!
 # A common shrinking support for actual physical increments
@@ -20,6 +19,9 @@ outer-support constant for every stage. Coherent means are represented in
 a comparable native band; no physical support property is an input.
 The zeroth support assertion concerns the finite initialization increment.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -305,9 +307,9 @@ theorem candidate_support_inputs (hh : 0 < h) (hh1 : h < 1 / 2) {qbig R : ℝ}
     (hqP : ∀ j, qbig ≤ ChartScales.Q (MP j).firstBand)
     (H : NativeOuterBounds R WA MA MB WP MP)
     (initial : MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h
-      qbig))
+        qbig))
     (stages : ℕ → MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h
-      qbig))
+        qbig))
     (D : ℕ → DirectAngularDiagonal.AngularData (LocalAngularDiagonal.localSlowDomain h qbig))
     (pInitial : PressureField) (pStages : ℕ → PressureField)
     (hInitial : EqOn initial.field (potentialIncrement (WA 0) (MA 0))
@@ -386,6 +388,7 @@ end InitializedSequences
 
 section FixedPatch
 
+/-- Geometry outer constant, given by `outerConstant G.patch.b`. -/
 noncomputable def geometryOuterConstant (G : SignedMeanGain.Geometry) : ℝ :=
   outerConstant G.patch.b
 
@@ -412,9 +415,9 @@ theorem actual_coherent_support {degree : ℝ} {N gap : ℕ}
       CorrectionInitialization.ActualPrimary.standardRegion.carrier D.native)
     {qbig : ℝ} (hq : qbig ≤ ChartScales.Q N) :
     SublevelShrinkingSupport CorrectionInitialization.ActualPrimary.h actualOuterConstant qbig
-      D.field ∧
+        D.field ∧
     SublevelShrinkingSupport CorrectionInitialization.ActualPrimary.h actualOuterConstant qbig
-      D.angularField := by
+        D.angularField := by
   have hcover : PhysicalMeanDomain.normalizedSlowDomain
       (2 * CorrectionInitialization.ActualPrimary.h) (1 / 2) 2 ⊆
       CorrectionInitialization.ActualPrimary.standardRegion.carrier := fun _ hx => hx
@@ -476,7 +479,7 @@ theorem actual_coherent_families_support
     (WP : ℕ → WaveData CorrectionInitialization.ActualPrimary.h DP IP KP Unit)
     {NA GA NB GB NP GP : ℕ → ℕ}
     (MA : ∀ j, ActualMeanFamily (CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h - 1 /
-      2)
+        2)
       (NA j) (GA j))
     (MB : ∀ j, ActualMeanFamily (CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h)
       (NB j) (GB j))

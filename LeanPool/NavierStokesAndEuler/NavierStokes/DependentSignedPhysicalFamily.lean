@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 
-@[expose] public section
-
 /-!
 # Signed physical families with label-dependent phase domains
 
@@ -19,6 +17,9 @@ constructors. Physical copies are then assembled before the locally finite
 sum is estimated; no maximum over infinitely many per-label constants occurs.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.DependentSignedPhysicalFamily
@@ -27,21 +28,31 @@ open Set Function Filter ProblemStatement PhysicalWaveSum PhysicalCopyBounds
 open WeightedClasses
 open scoped Topology ContDiff BigOperators
 
+/-- Native label: an abbreviation for `ActualSignedPhysicalData.NativeLabel`. -/
 abbrev NativeLabel := ActualSignedPhysicalData.NativeLabel
 
 /-- Only active labels carry primary data, and their phase domains may differ. -/
 structure Family where
+  /-- Active of `Family`, of type `Set BandLabel`. -/
   active : Set BandLabel
+  /-- Domain of `Family`, of type `NativeLabel active → PhaseJetBounds.Domain ℕ
+  PhaseCalculus.Slow`. -/
   domain : NativeLabel active → PhaseJetBounds.Domain ℕ PhaseCalculus.Slow
+  /-- Primary of `Family`, of type `(L : NativeLabel active) → PhysicalSignedWave.PrimaryData
+  (domain L)`. -/
   primary : (L : NativeLabel active) → PhysicalSignedWave.PrimaryData (domain L)
+  /-- View of `Family`, of type `(L : NativeLabel active) → (primary L).Views L.val.1`. -/
   view : (L : NativeLabel active) → (primary L).Views L.val.1
+  /-- State of `Family`, of type `(L : NativeLabel active) → (view L).StateData`. -/
   state : (L : NativeLabel active) → (view L).StateData
+  /-- Column of `Family`, of type `NativeLabel active → Fin 2`. -/
   column : NativeLabel active → Fin 2
 
 namespace Family
 
 variable (f : Family)
 
+/-- Singleton label, given by `⟨L.val, L.property, Set.mem_singleton _⟩`. -/
 noncomputable def singletonLabel (L : NativeLabel f.active) :
     NativeLabel ({(L : BandLabel)} : Set BandLabel) :=
   ⟨L.val, L.property, Set.mem_singleton _⟩
@@ -50,6 +61,7 @@ theorem singleton_label_val (L : NativeLabel f.active)
     (K : NativeLabel ({(L : BandLabel)} : Set BandLabel)) : K.val = L.val :=
   congrArg Subtype.val (Set.mem_singleton_iff.mp K.mem)
 
+/-- Singleton payload as an element of `(f.primary L).Views K.val.1, V.StateData`. -/
 noncomputable def singletonPayload (L : NativeLabel f.active)
     (K : NativeLabel ({(L : BandLabel)} : Set BandLabel)) :
     Σ V : (f.primary L).Views K.val.1, V.StateData := by
@@ -86,12 +98,12 @@ noncomputable def singleton (L : NativeLabel f.active) :
     (K : NativeLabel (f.singleton L).active) :
     (f.singleton L).column K = f.column L := rfl
 
-@[simp] theorem singleton_referenceRequest (L : NativeLabel f.active) :
+theorem singleton_referenceRequest (L : NativeLabel f.active) :
     ((f.singleton L).state (f.singletonLabel L)).referenceRequest =
       (f.state L).referenceRequest := by
   rfl
 
-@[simp] theorem singleton_request (L : NativeLabel f.active) :
+theorem singleton_request (L : NativeLabel f.active) :
     ((f.singleton L).state (f.singletonLabel L)).request = (f.state L).request := by
   rfl
 
@@ -119,6 +131,7 @@ end Family
 
 variable {H : ℕ} {K : Type*}
 
+/-- Zero copies, bundling `gap`, `carrier`, `amplitude`. -/
 noncomputable def zeroCopies : CopyFamily H K where
   gap _ := 0
   carrier _ _ := ⟨0, 0, 0, 0, 0, fun _ => 0, fun _ => 0⟩
@@ -129,6 +142,8 @@ noncomputable def zeroCopies : CopyFamily H K where
   funext w
   exact globalWave_eq_zero rfl
 
+/-- Zero cells, bundling `cells`, `carrier`, `closed`, `locallyFinite` and the required
+compatibility proofs. -/
 noncomputable def zeroCells : SupportCells (zeroCopies : CopyFamily H K) where
   cells _ := {
     carrier := fun _ _ => ∅
@@ -152,6 +167,7 @@ theorem zeroSmooth {a h r0 : ℝ} :
     ⟨⟨univ, isOpen_univ, mem_univ _, contDiffOn_const⟩,
       ⟨univ, isOpen_univ, mem_univ _, contDiffOn_const⟩⟩
 
+/-- Diagonal, bundling `gap`, `carrier`, `amplitude`. -/
 noncomputable def diagonal (f : BandLabel → CopyFamily H K) : CopyFamily H K where
   gap L := (f L).gap L
   carrier k L := (f L).carrier k L
@@ -177,6 +193,7 @@ noncomputable def diagonal (f : BandLabel → CopyFamily H K) : CopyFamily H K w
 theorem diagonal_sum (f : BandLabel → CopyFamily H K) (a h r0 : ℝ) (w : SpaceTime) :
     (diagonal f).sum a h r0 w = ∑ᶠ I : WaveIndex H, (f I.1).periodized a h r0 I w := rfl
 
+/-- Diagonal cells, bundling `cells`, `support`. -/
 noncomputable def diagonalCells (f : BandLabel → CopyFamily H K)
     (c : ∀ L, SupportCells (f L)) : SupportCells (diagonal f) where
   cells L := (c L).cells L
@@ -243,6 +260,7 @@ theorem copyAt_inactive (copies : NativeLabel f.active → CopyFamily H K)
   classical
   simp only [copyAt, dite_eq_right hL]
 
+/-- Assembled, given by `diagonal (f.copyAt copies)`. -/
 noncomputable def assembled (copies : NativeLabel f.active → CopyFamily H K) :
     CopyFamily H K := diagonal (f.copyAt copies)
 
@@ -257,6 +275,7 @@ theorem assembled_term_inactive (copies : NativeLabel f.active → CopyFamily H 
     (f.assembled copies).term a h r0 I k = 0 := by
   rw [assembled, diagonal_term, copyAt_inactive f copies hI, zeroCopies_term]
 
+/-- Branch cells as an element of `SupportCells (f.copyAt copies L)`. -/
 noncomputable def branchCells (copies : NativeLabel f.active → CopyFamily H K)
     (c : ∀ L, SupportCells (copies L)) (L : BandLabel) :
     SupportCells (f.copyAt copies L) := by
@@ -305,6 +324,8 @@ noncomputable def potentialSource (L : BandLabel) :
       HarmonicCalculus.ComplexVector :=
   f.valueAt (fun L => ActualSignedPhysicalData.nativePotentialSource sys hh (f.singleton L)) L
 
+/-- Pressure source, given by `f.valueAt (fun L => ActualSignedPhysicalData.nativePressureSource
+sys hh (f.singleton L)) L`. -/
 noncomputable def pressureSource (L : BandLabel) :
     ActualSignedPhysicalData.SourceIndex → ℕ → ActualSignedPhysicalData.Native → ℂ :=
   f.valueAt (fun L => ActualSignedPhysicalData.nativePressureSource sys hh (f.singleton L)) L
@@ -319,10 +340,14 @@ noncomputable def pressureSource (L : BandLabel) :
       ActualSignedPhysicalData.nativePressureSource sys hh (f.singleton L) :=
   f.valueAt_active _ L
 
+/-- Potential copies, given by `f.assembled (fun L => ActualSignedPhysicalData.potentialFamily
+sys hh (f.singleton L) i)`. -/
 noncomputable def potentialCopies (i : Fin 3) :
     CopyFamily 1 TorusInverse.Frequency :=
   f.assembled (fun L => ActualSignedPhysicalData.potentialFamily sys hh (f.singleton L) i)
 
+/-- Pressure copies, given by `f.assembled (fun L => ActualSignedPhysicalData.pressureFamily sys
+hh (f.singleton L))`. -/
 noncomputable def pressureCopies : CopyFamily 1 TorusInverse.Frequency :=
   f.assembled (fun L => ActualSignedPhysicalData.pressureFamily sys hh (f.singleton L))
 
@@ -385,6 +410,7 @@ end Family
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   {ι : BandLabel → Type*}
 
+/-- Joint source, defined pointwise by `source I.1 I.2`. -/
 noncomputable def jointSource {V : Type*}
     (source : (L : BandLabel) → ι L → ℕ → E → V) :
     (Σ L, ι L) → ℕ → E → V := fun I => source I.1 I.2
@@ -406,6 +432,8 @@ theorem localSourceBounds_slice {V : Type} [NormedAddCommGroup V] [NormedSpace �
 
 /-! ## Native chart and carrier bounds are uniform before label selection -/
 
+/-- Diagonal chart, bundling `sourceIndex`, `map`, `domain`, `open_domain` and the required
+compatibility proofs. -/
 noncomputable def diagonalChart (f : BandLabel → CopyFamily H K)
     (c : ∀ L, SupportCells (f L)) {a b h r0 σ : ℝ}
     (source : (L : BandLabel) → ι L → ℕ → E → ℂ)
@@ -424,6 +452,7 @@ noncomputable def diagonalChart (f : BandLabel → CopyFamily H K)
   amplitude_eq k I := (ch I.1).amplitude_eq k I
   contains k I := (ch I.1).contains k I
 
+/-- Diagonal carrier, bundling `region`, `open_region`, `jets`, `contains`. -/
 noncomputable def diagonalCarrier (f : BandLabel → CopyFamily H K)
     (c : ∀ L, SupportCells (f L)) {a b h r0 : ℝ}
     (bc : ∀ L, CarrierBounds (f L) (c L) a b h r0)
@@ -445,6 +474,8 @@ noncomputable def zeroCarrier {a b h r0 : ℝ} :
   jets := PhaseJetBounds.PolynomialJets.const_fixed (0 : ℝ × ℝ)
   contains _ _ _ _ _ _ hx := hx.elim
 
+/-- Zero chart, bundling `sourceIndex`, `map`, `domain`, `open_domain` and the required
+compatibility proofs. -/
 noncomputable def zeroChart {ν : Type*} {a b h r0 σ : ℝ}
     (source : ν → ℕ → E → ℂ) (index : K → WaveIndex H → ν) :
     LocalPhysicalCopyBounds.CommonChart (zeroCopies : CopyFamily H K) zeroCells

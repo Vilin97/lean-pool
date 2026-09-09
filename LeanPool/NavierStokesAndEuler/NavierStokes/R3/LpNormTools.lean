@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-
-@[expose] public section
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Real-valued whole-space `Lᵖ` norms
@@ -17,6 +16,9 @@ These lemmas convert extended `Lᵖ` seminorms to the real-valued norms used by
 the comparison argument. Bounds that require a finite right-hand norm retain
 an explicit `MemLp` hypothesis.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

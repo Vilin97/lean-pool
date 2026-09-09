@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryCorrector
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveBase
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
 
 /-! The actual terminal-data primary supplies the grade-one profile and all
 regularity/locality data required by the recursive packet construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,9 +39,9 @@ def profileRegularity : ProfileRegularity P D.T D.T_pos.le D.support
     change O.curlCorrector (vector τ hτ hτT B Y) _ = D.curlCorrector P (vector τ hτ hτT B Y) _
     rw [hcorrector])
   pressure := scalarGradientField τ hτ hτT B Y
-  high_t := vectorDerivative τ hτ hτT B Y
-  mean_t := 0
-  corrector_t := correctorDerivative τ hτ hτT B Y
+  highT := vectorDerivative τ hτ hτT B Y
+  meanT := 0
+  correctorT := correctorDerivative τ hτ hτT B Y
   highDerivative := vectorDerivativeField τ hτ hτT B Y
   meanDerivative := Field.zero P D.T
   correctorDerivative := correctorDerivativeField τ hτ hτT B Y

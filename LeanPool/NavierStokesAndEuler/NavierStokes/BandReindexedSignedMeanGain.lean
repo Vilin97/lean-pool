@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedMeanGain
 
-@[expose] public section
-
 /-!
 # Signed mean gain with fixed physical labels
 
@@ -19,6 +17,9 @@ relative native labels used by `SignedMeanGain.NativeData`.  Finite-sum
 reindexing then gives the actual native cross identity.  The mean-gain theorem
 is applied to the original family, with its original uniform constants.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

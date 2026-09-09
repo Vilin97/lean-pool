@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityCoordinates
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Fixed-order bounds for the physical similarity coordinates
@@ -21,6 +18,9 @@ Jacobian. Their normalized values extend smoothly to the compact set
 one power of `q` per physical derivative.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function
@@ -30,6 +30,7 @@ namespace NavierStokes.PhysicalCoordinateBounds
 
 open SimilarityCoordinates
 
+/-- Point: an abbreviation for `ℝ × (ℝ × ℝ)`. -/
 abbrev Point := ℝ × (ℝ × ℝ)
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -38,14 +39,19 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
   simpa only [ENat.coe_top_add_one] using (le_rfl : (∞ : WithTop ℕ∞) ≤ ∞)
 
+/-- D, given by `(1 - a) / 2`. -/
 noncomputable def D (a : ℝ) : ℝ := (1 - a) / 2
 
+/-- Positive time, given by `{p | 0 < p.1}`. -/
 noncomputable def positiveTime : Set Point := {p | 0 < p.1}
 
+/-- Q coord, given by `coordinateQ a (p.1, p.2.2)`. -/
 noncomputable def qCoord (a : ℝ) (p : Point) : ℝ := coordinateQ a (p.1, p.2.2)
 
+/-- Inverse coordinates, given by `(qCoord a p, p.2)`. -/
 noncomputable def inverseCoordinates (a : ℝ) (p : Point) : Point := (qCoord a p, p.2)
 
+/-- Inverse differential as an element of `Point →L[ℝ] Point`. -/
 noncomputable def inverseDifferential (a : ℝ) (y : Point) : Point →L[ℝ] Point :=
   (((ContinuousLinearMap.id ℝ ℝ).prod (0 : ℝ →L[ℝ] ℝ × ℝ)).comp
     ((scalarSlope a y.2.2 y.1)⁻¹ • ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ) +
@@ -82,14 +88,14 @@ theorem inverseCoordinates_contDiffAt {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : 
 theorem inverseCoordinates_slope_pos {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : Point}
     (hp : p ∈ positiveTime) : 0 < scalarSlope a p.2.2 (qCoord a p) := by
   have hq := coordinateQ_spec ha ha1 (p := (p.1, p.2.2)) hp
-  exact scalarSlope_pos ha ha1 hq.1 (by change 0 < forwardScalar a p.2.2 (coordinateQ a (p.1,
-    p.2.2)); rwa [hq.2])
+  exact scalarSlope_pos ha ha1 hq.1 (by
+      change 0 < forwardScalar a p.2.2 (coordinateQ a (p.1, p.2.2)); rwa [hq.2])
 
 theorem inverseCoordinates_hasFDerivAt {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : Point}
     (hp : p ∈ positiveTime) :
     HasFDerivAt (inverseCoordinates a) (inverseDifferential a (inverseCoordinates a p)) p := by
   have hq := ((coordinateQ_smooth ha ha1 (p := (p.1, p.2.2)) hp).differentiableAt (by
-    simp)).hasFDerivAt
+      simp)).hasFDerivAt
   have hm : HasFDerivAt (fun p : Point => (p.1, p.2.2))
       ((ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).prod
         ((ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ)))) p :=
@@ -170,6 +176,7 @@ theorem iteratedFDeriv_comp_inverse {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
       (inverseCoordinates_hasFDerivAt ha ha1 hp).fderiv]
     rfl
 
+/-- Normalized compact, given by `({1} : Set ℝ) ×ˢ (Icc lo hi ×ˢ Icc (-1 : ℝ) 1)`. -/
 noncomputable def normalizedCompact (lo hi : ℝ) : Set Point :=
   ({1} : Set ℝ) ×ˢ (Icc lo hi ×ˢ Icc (-1 : ℝ) 1)
 
@@ -239,8 +246,10 @@ theorem inverseCoordinates_dilation {a r : ℝ} (ha : 0 < a) (ha1 : a < 1) (hr :
   · exact qCoord_dilation ha ha1 hr hp
   · rfl
 
+/-- Eta coord, given by `p.2.2 / qCoord a p ^ D a`. -/
 noncomputable def etaCoord (a : ℝ) (p : Point) : ℝ := p.2.2 / qCoord a p ^ D a
 
+/-- X coord, given by `p.2.1 / qCoord a p`. -/
 noncomputable def xCoord (a : ℝ) (p : Point) : ℝ := p.2.1 / qCoord a p
 
 theorem normalized_inverseCoordinates {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
@@ -290,6 +299,7 @@ theorem norm_dilation_le {r : ℝ} (hr : 0 ≤ r) (a : ℝ) :
     (max_le (mul_le_mul (le_max_left _ _) h2 (norm_nonneg _) hB)
       (mul_le_mul (le_max_right _ _) h3 (norm_nonneg _) hB))
 
+/-- Scale factor, given by `max 1 (qbig ^ (1 - D a))`. -/
 noncomputable def scaleFactor (a qbig : ℝ) : ℝ := max 1 (qbig ^ (1 - D a))
 
 theorem scaleFactor_pos (a qbig : ℝ) : 0 < scaleFactor a qbig :=
@@ -372,10 +382,13 @@ theorem homogeneous_derivative_bound {a b : ℝ} (ha : 0 < a) (ha1 : a < 1)
       rw [Real.rpow_sub hq, Real.rpow_natCast, div_pow]
       ring
 
+/-- Power lift, given by `y.1 ^ b`. -/
 noncomputable def powerLift (b : ℝ) (y : Point) : ℝ := y.1 ^ b
 
+/-- Eta lift, given by `y.2.2 / y.1 ^ D a`. -/
 noncomputable def etaLift (a : ℝ) (y : Point) : ℝ := y.2.2 / y.1 ^ D a
 
+/-- X lift, given by `y.2.1 / y.1`. -/
 noncomputable def xLift (y : Point) : ℝ := y.2.1 / y.1
 
 theorem powerLift_contDiffOn (b : ℝ) : ContDiffOn ℝ ∞ (powerLift b) positiveTime := by
@@ -443,6 +456,7 @@ theorem x_derivative_bound {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     homogeneous_derivative_bound ha ha1 xLift_contDiffOn
       (fun _r hr _y hy => xLift_homogeneous a hr hy) lo hi qbig n
 
+/-- Time reflection, bundling `toLinearEquiv`, `norm_map`. -/
 noncomputable def timeReflection : Point ≃ₗᵢ[ℝ] Point where
   toLinearEquiv := LinearEquiv.prodCongr (LinearEquiv.neg ℝ) (LinearEquiv.refl ℝ (ℝ × ℝ))
   norm_map' := by
@@ -450,6 +464,7 @@ noncomputable def timeReflection : Point ≃ₗᵢ[ℝ] Point where
     change max ‖-p.1‖ ‖p.2‖ = max ‖p.1‖ ‖p.2‖
     rw [norm_neg]
 
+/-- Time shift, given by `(1 - p.1, p.2)`. -/
 noncomputable def timeShift (p : Point) : Point := (1 - p.1, p.2)
 
 theorem timeShift_eq (p : Point) :
@@ -473,8 +488,10 @@ theorem norm_iteratedFDeriv_timeShift (F : Point → ℝ) (n : ℕ) (p : Point) 
 `a = 2h`, so these definitions agree with the coordinates used by NaturalCore. -/
 noncomputable def physicalQ (a : ℝ) : Point → ℝ := qCoord a ∘ timeShift
 
+/-- Physical eta, given by `etaCoord a ∘ timeShift`. -/
 noncomputable def physicalEta (a : ℝ) : Point → ℝ := etaCoord a ∘ timeShift
 
+/-- Physical X, given by `xCoord a ∘ timeShift`. -/
 noncomputable def physicalX (a : ℝ) : Point → ℝ := xCoord a ∘ timeShift
 
 theorem physicalQ_pos {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : Point} (hp : p.1 < 1) :

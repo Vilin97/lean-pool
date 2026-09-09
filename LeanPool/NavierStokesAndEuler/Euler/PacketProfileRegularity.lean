@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderRecursiveAdmissibility
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPrefixLocality
+import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
+
+/-! Genuine regularity and locality data carried by each recursively constructed profile. -/
 
 @[expose] public section
 
-/-! Genuine regularity and locality data carried by each recursively constructed profile. -/
 
 noncomputable section
 
@@ -32,18 +34,31 @@ theorem raw_zero_changeTime {raw : VectorField} {T' : ℝ} (h : T = T') (S : Set
   subst T'
   exact hs
 
+/-- Profile regularity data, collecting `high`, `mean`, `corrector`, `pressure`, `highT`,
+`meanT` and their compatibility conditions. -/
 structure ProfileRegularity (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T)
     (S : Set Space) (a : Profile) where
+  /-- High-frequency field of `ProfileRegularity`, of type `Field P T a.high`. -/
   high : Field P T a.high
+  /-- Mean field of `ProfileRegularity`, of type `Field P T a.mean`. -/
   mean : Field P T a.mean
+  /-- Correction field of `ProfileRegularity`, of type `Field P T a.corrector`. -/
   corrector : Field P T a.corrector
+  /-- Pressure field of `ProfileRegularity`, of type `Field P T (pressureGradient
+  a.highPressure)`. -/
   pressure : Field P T (pressureGradient a.highPressure)
-  high_t : VectorField
-  mean_t : VectorField
-  corrector_t : VectorField
-  highDerivative : Field P T high_t
-  meanDerivative : Field P T mean_t
-  correctorDerivative : Field P T corrector_t
+  /-- High T of `ProfileRegularity`, of type `VectorField`. -/
+  highT : VectorField
+  /-- Mean T of `ProfileRegularity`, of type `VectorField`. -/
+  meanT : VectorField
+  /-- Corrector T of `ProfileRegularity`, of type `VectorField`. -/
+  correctorT : VectorField
+  /-- High derivative of `ProfileRegularity`, of type `Field P T highT`. -/
+  highDerivative : Field P T highT
+  /-- Mean derivative of `ProfileRegularity`, of type `Field P T meanT`. -/
+  meanDerivative : Field P T meanT
+  /-- Corrector derivative of `ProfileRegularity`, of type `Field P T correctorT`. -/
+  correctorDerivative : Field P T correctorT
   high_time : TimeDerivative hT high highDerivative
   mean_time : TimeDerivative hT mean meanDerivative
   corrector_time : TimeDerivative hT corrector correctorDerivative
@@ -57,8 +72,11 @@ namespace ProfileRegularity
 
 variable {hT : 0 ≤ T} {S : Set Space} {a b : Profile}
 
+/-- Congr, given by `h ▸ G`. -/
 def congr (G : ProfileRegularity P T hT S a) (h : a = b) : ProfileRegularity P T hT S b := h ▸ G
 
+/-- Zero, bundling `high`, `mean`, `corrector`, `pressure` and the required compatibility
+proofs. -/
 def zero (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T) (S : Set Space) :
     ProfileRegularity P T hT S (0 : Profile) where
   high := Field.zero P T
@@ -67,9 +85,9 @@ def zero (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T) (S : Set Space) :
   pressure := (Field.zero P T).congr (fun t x θ => by
     change pressureGradient (0 : ScalarField) (t,(x,θ)) = 0
     simp [pressureGradient,pressureJet_zero])
-  high_t := 0
-  mean_t := 0
-  corrector_t := 0
+  highT := 0
+  meanT := 0
+  correctorT := 0
   highDerivative := Field.zero P T
   meanDerivative := Field.zero P T
   correctorDerivative := Field.zero P T
@@ -83,6 +101,7 @@ def zero (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T) (S : Set Space) :
     simp [pressureGradient,pressureJet_zero]
   mean_angle _ _ _ := rfl
 
+/-- Prefix fields, bundling `high`, `mean`, `corrector`. -/
 def prefixFields {p : ℕ} {a : ℕ → Profile}
     (G : ∀ i, i < p → ProfileRegularity P T hT S (a i)) : PrefixFields P T p a where
   high i hi := (G i hi).high

@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlWeight
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTimeWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTimeWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlWeight
+
+/-! Same-radius estimates for the actual corrector, divided by the prescribed time profile. -/
 
 @[expose] public section
 
-/-! Same-radius estimates for the actual corrector, divided by the prescribed time profile. -/
 
 noncomputable section
 
@@ -29,22 +31,23 @@ private theorem direction_norm_bound (i : Fin 4) : ‖standardDirection i‖ ≤
 variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
-  (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
+  (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
   (q : ℕ) (Rc C R A : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hA : 0 ≤ A)
   (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R) (d : ℕ)
   (hbA : ∀ n, block standardDirection q
     (fun a : LiftTangent => pathTranslate P a (normalize g hg (G.fullVelocityPath I))) n 0 ≤
-      A*majorant R d n)
+      A * majorant R d n)
   (hbAt : ∀ n, block standardDirection q
     (fun a : LiftTangent => pathTranslate P a (normalize g hg (G.fullDerivativePath I))) n 0 ≤
-      A*majorant R d n)
+      A * majorant R d n)
   (hbK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialCoefficientPath) a‖ ≤
-    C*majorant Rc 0 n)
+    C * majorant Rc 0 n)
   (hbKt : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialDerivative) a‖ ≤
-    C*majorant Rc 0 n)
-  (hbI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ C*majorant Rc 0 n)
+    C * majorant Rc 0 n)
+  (hbI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ C * majorant Rc 0
+      n)
   (hbIt : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.inverseDerivative) a‖ ≤
-    C*majorant Rc 0 n)
+    C * majorant Rc 0 n)
 
 include hRc hC hA hR hbA hbK in
 theorem potentialPath_normalized_bound (n : ℕ) :
@@ -54,7 +57,7 @@ theorem potentialPath_normalized_bound (n : ℕ) :
   EulerCylinderPotential.normalized_potentialPath_block_bound P g (G.fullVelocityPath I)
     D.potentialCoefficientPath hg D.potentialCoefficientPath_orbit
     (EulerCylinderPotential.weighted_orbit P (reciprocal g hg) (G.fullVelocityPath I)
-      (G.velocityPath_orbit I))
+        (G.velocityPath_orbit I))
     standardDirection direction_norm_bound q Rc C R A hRc hC hA hR hbK d hbA n
 
 include hRc hC hA hR hbA hbAt hbK hbKt in
@@ -64,9 +67,9 @@ theorem potentialTimePath_normalized_bound (n : ℕ) :
       (6*sobolevCoefficientAmplitude (Fin 4) q Rc C*(P*A))*majorant R d n :=
   EulerCylinderPotential.normalized_potentialDerivative_block_bound P D.T
     D.potentialCoefficientPath D.potentialDerivative D.potentialCoefficientPath_orbit
-      D.potentialDerivative_orbit
+        D.potentialDerivative_orbit
     (G.fullVelocityPath I) (G.fullDerivativePath I) (G.velocityPath_orbit I)
-      (G.derivativePath_orbit I)
+        (G.derivativePath_orbit I)
     g hg standardDirection direction_norm_bound q Rc C R A hRc hC hA hR hbK hbKt d hbA hbAt n
 
 include hRc hC hA hR hbA hbK hbI in
@@ -101,10 +104,10 @@ theorem correctorTimePath_normalized_bound (n : ℕ) :
   have h := EulerCylinderSlowCurl.normalized_derivative_block_bound P D.T g hg
     D.FInv.field D.inverseDerivative (G.potentialPath I) (G.potentialTimePath I)
     (G.potentialPath_orbit I) (G.potentialTimePath_orbit I) D.FInv.translation_contDiff
-      D.inverseDerivative_orbit
+        D.inverseDerivative_orbit
     q Rc C R (6*sobolevCoefficientAmplitude (Fin 4) q Rc C*(P*A)) hRc hC (by positivity) hR
     hbI hbIt d hQ (G.potentialTimePath_normalized_bound I g hg q Rc C R A hRc hC hA hR d hbA hbAt
-      hbK hbKt) n
+        hbK hbKt) n
   exact h.trans_eq (by ring)
 
 end EulerTransversePacketProvider.Forcing

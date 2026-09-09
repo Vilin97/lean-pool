@@ -8,11 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteIntervalFlow
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeSuperposition
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothImplicitLift
-public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelOperator
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
+import LeanPool.NavierStokesAndEuler.Euler.SmoothImplicitLift
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Smooth dependence of the constructed flow on its initial position
@@ -22,6 +22,9 @@ equation is inverted locally on the path Banach space: the derivative is
 the genuine Volterra operator, whose two-sided inverse was constructed
 from the linear ODE. This proves smooth label dependence at every order.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,9 +50,12 @@ theorem velocity_lipschitz (t : Icc (0 : ℝ) T) :
   exact ((A.derivative.field t).norm_coe_le_norm x).trans
     (A.derivative.field.norm_coe_le_norm t)
 
+/-- Flow data, given by `ofTimeInterval T hT A.field ‖A.derivative.field‖₊ (velocity_lipschitz T
+A)`. -/
 def flowData : EulerBoundedLipschitzFlow.Data E :=
   ofTimeInterval T hT A.field ‖A.derivative.field‖₊ (velocity_lipschitz T A)
 
+/-- Path family as an element of `C(E, C(Icc (0 : ℝ) T, E))`. -/
 def pathFamily : C(E, C(Icc (0 : ℝ) T, E)) :=
   (⟨fun p : E × Icc (0 : ℝ) T => (flowData T hT A).forward p.2 p.1,
     (flowData T hT A).forward_joint_continuous.comp
@@ -59,6 +65,7 @@ def pathFamily : C(E, C(Icc (0 : ℝ) T, E)) :=
 @[simp] theorem pathFamily_apply (x : E) (t : Icc (0 : ℝ) T) :
     pathFamily T hT A x t = (flowData T hT A).forward t x := rfl
 
+/-- Path operator, given by `u - EulerContinuousTimeIntegral.integral T hT (A.superposition u)`. -/
 def pathOperator (u : C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T, E) :=
   u - EulerContinuousTimeIntegral.integral T hT (A.superposition u)
 

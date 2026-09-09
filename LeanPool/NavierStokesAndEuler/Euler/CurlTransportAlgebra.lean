@@ -6,12 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
-public import LeanPool.NavierStokesAndEuler.Euler.MeanScalarProductDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarProductDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! The ordinary curl identity for the Euler convection term on ℝ³. -/
 
 @[expose] public section
 
-/-! The ordinary curl identity for the Euler convection term on ℝ³. -/
 
 noncomputable section
 

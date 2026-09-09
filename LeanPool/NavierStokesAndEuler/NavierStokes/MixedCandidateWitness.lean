@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CandidateConsequences
 
-@[expose] public section
-
 /-!
 # Retaining the actual mixed candidate and its consequences
 
@@ -19,6 +17,9 @@ The finite-stage inputs are exactly those of
 schedule supplies the actual velocity and pressure sums, their endpoint
 extensions, and the force with all proved consequences.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -61,7 +62,7 @@ theorem exists_candidate_witness_of_finite_stages (upper : ℝ) (bandFloor : ℕ
       (pressureStages H v upper bandFloor pInitial pStages))
     (hInitial : MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig initial.field)
     (hStages : ∀ j, MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig (stages
-      j).field)
+        j).field)
     (hDirect : ∀ j, MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig
       (LocalAngularDiagonal.rawSeries D j))
     (hpInitial : MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig pInitial)
@@ -98,7 +99,7 @@ theorem exists_candidate_witness_of_finite_stages (upper : ℝ) (bandFloor : ℕ
           (TimeLocalization.activatedPressure (SpatialLocalization.periodicPressure PSum)) forcing ∧
         Tendsto (fun t => PeriodicSobolev.derivativeH3Norm (fun x =>
           TimeLocalization.activatedVelocity (MixedPeriodicAssembly.periodicVelocity ASum BSum) (t,
-            x)))
+              x)))
           (𝓝[<] (1 : ℝ)) atTop ∧
         (∀ m : ℕ, ∀ K : ℝ, 0 ≤ K → ∃ C : ℝ, 0 < C ∧
           ∀ t : ℝ, 0 ≤ t → ∀ x : Space, ∀ directions : Fin m → Fin 4, ∀ j : Fin 3,
@@ -123,12 +124,12 @@ theorem exists_candidate_witness_of_finite_stages (upper : ℝ) (bandFloor : ℕ
     intro x hx hxz
     exact MixedDiagonalExtensions.initial_add_extension F.data.h_pos F.data.h_lt_half hqbig
       hInitial hx hxz (Classical.choice (TailGaugePotential.finalPotential_awayExtensions H v upper
-        bandFloor x hx))
+          bandFloor x hx))
   have hP0 : ∀ x : Space, x ≠ 0 → x 2 = 0 → Nonempty (OneSidedExtension (P 0) x) := by
     intro x hx hxz
     have h := MixedDiagonalExtensions.initial_add_extension F.data.h_pos F.data.h_lt_half hqbig
       hpInitial hx hxz (Classical.choice ((SlowBaseEndpoint.final_fields_awayExtensions H v upper
-        bandFloor).2 x hx))
+          bandFloor).2 x hx))
     simp only [P]
     exact h
   have hB0 : ∀ x : Space, x ≠ 0 → x 2 = 0 → Nonempty (OneSidedExtension (B 0) x) := by

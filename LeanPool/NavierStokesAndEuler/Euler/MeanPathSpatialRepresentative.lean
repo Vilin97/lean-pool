@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSobolev
+import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Jointly continuous ordinary spatial representatives of continuous L² paths with smooth spatial
+orbits. -/
 
 @[expose] public section
 
-/-! Jointly continuous ordinary spatial representatives of continuous L² paths with smooth spatial
-  orbits. -/
 
 noncomputable section
 
@@ -24,7 +28,7 @@ open Set MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerMeanOrdinaryLif
   EulerMeanTimeContinuousTranslation
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanPathSpatialRepresentative1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 /-- Evaluation at time commutes with every actual spatial derivative tensor. -/
 theorem path_orbit_tensor_evaluation (T : ℝ) (p : C(Icc (0 : ℝ) T, EulerMeanSolenoidal.L2))
@@ -40,7 +44,7 @@ No operator-norm continuity of the time-evaluation operators is needed. -/
 theorem ordinarySobolev_path_continuous (T : ℝ) (p : C(Icc (0 : ℝ) T, EulerMeanSolenoidal.L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) (q : ℕ) :
     Continuous (fun t => ordinarySobolev q (p t) (pathTranslation_evaluation_contDiff T p hp t)) :=
-      by
+        by
   apply Continuous.subtype_mk
   apply continuous_pi
   intro w

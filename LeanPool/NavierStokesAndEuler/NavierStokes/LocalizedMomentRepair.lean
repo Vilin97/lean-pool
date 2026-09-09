@@ -8,9 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PowerMomentMatrix
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 /-!
 # Constructed smooth moment repairs
@@ -21,6 +20,9 @@ intervals. The generalized-power determinant theorem then gives exact
 finite-moment repair by an actual compactly supported smooth function.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open scoped BigOperators ContDiff
@@ -28,7 +30,9 @@ open Set Function MeasureTheory
 
 namespace NavierStokes.LocalizedMomentRepair
 
+/-- Inner lower, given by `(3 * l + u) / 4`. -/
 def innerLower (l u : ℝ) : ℝ := (3 * l + u) / 4
+/-- Inner upper, given by `(l + 3 * u) / 4`. -/
 def innerUpper (l u : ℝ) : ℝ := (l + 3 * u) / 4
 
 /-- A concrete smooth bump in the middle half of `(l,u)`. -/

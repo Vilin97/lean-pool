@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
+
+/-! Continuous operators and exact norm comparisons on the actual complete cylinder Sobolev spaces.
+-/
 
 @[expose] public section
 
-/-! Continuous operators and exact norm comparisons on the actual complete cylinder Sobolev spaces.
-  -/
 
 noncomputable section
 
@@ -53,7 +55,8 @@ theorem norm_le_sumNorm {q : ℕ} (u : SobolevSpace period q) : ‖u‖ ≤ sumN
   intro w
   exact Finset.single_le_sum (fun _ _ => norm_nonneg _) (Finset.mem_univ w)
 
-/-- The source's derivative sum is bounded by a fixed Sobolev-order multiple of the complete norm. -/
+/-- The source's derivative sum is bounded by a fixed Sobolev-order multiple of the complete norm.
+-/
 theorem sumNorm_le_card_norm {q : ℕ} (u : SobolevSpace period q) :
     sumNorm period u ≤ (Fintype.card (SobolevWord q) : ℝ) * ‖u‖ := by
   change (∑ w : SobolevWord q, ‖u.val w‖) ≤
@@ -118,17 +121,17 @@ theorem norm_liftOperator_le (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 perio
 theorem value_liftOperator {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (hA : ∀ a f, A (translation period a f) = translation period a (A f))
     (u : SobolevSpace period q) : value period (liftOperator period q A hA u) = A (value period u)
-      := rfl
+        := rfl
 
 /-- Translations commute in the cylinder's additive group. -/
 theorem translations_commute (a b : LiftDomain period) (f : LiftL2 period) :
     translation period a (translation period b f) = translation period b (translation period a f)
-      := by
+        := by
   rw [translation_add, translation_add, add_comm a b]
 
 /-- Actual cylinder translation as a bounded operator on the complete Sobolev space. -/
 def sobolevTranslation (q : ℕ) (a : LiftDomain period) : SobolevSpace period q →L[ℝ] SobolevSpace
-  period q :=
+    period q :=
   liftOperator period q (translation period a).toContinuousLinearMap (translations_commute period a)
 
 /-- Cylinder translation preserves the complete Sobolev norm exactly. -/

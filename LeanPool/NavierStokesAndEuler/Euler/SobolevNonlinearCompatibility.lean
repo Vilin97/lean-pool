@@ -7,27 +7,34 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AsymmetricTransport
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevPressureResolvent
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionOperators
+
+/-! Exact consistency of actual products, transport, and pressure across the Sobolev scale. -/
 
 @[expose] public section
 
-/-! Exact consistency of actual products, transport, and pressure across the Sobolev scale. -/
 
 noncomputable section
 
 namespace EulerSobolevNonlinearCompatibility
 
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerCylinderSobolev
+    EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerSobolevL2Product EulerSobolevTransport EulerAsymmetricTransport
   EulerSobolevCoefficientPressure EulerGevreyOrderZero EulerCorrectionOperators EulerVectorCylinder
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace period q)` instance to shorten
+typeclass synthesis. -/
 local instance nonlinearCompatGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace period q)` instance to shorten typeclass
+synthesis. -/
 local instance nonlinearCompatSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
+/-- Cache the standard `SeminormedAddCommGroup (SobolevSpace period q →L[ℝ] SobolevSpace period
+q →L[ℝ] SobolevSpace period q)` instance to shorten typeclass synthesis. -/
 local instance nonlinearCompatBilinearGroup (q : ℕ) : SeminormedAddCommGroup
     (SobolevSpace period q →L[ℝ] SobolevSpace period q →L[ℝ] SobolevSpace period q) := inferInstance
 
@@ -44,7 +51,7 @@ theorem restrict_productHq {p q : ℕ} (hp : 6 ≤ p) (hq : 6 ≤ q) (hqp : q �
 /-- Actual asymmetric transport restricts to the identical lower-order nonlinear field. -/
 theorem restrict_asymmetricTransport {p q : ℕ} (hp : 6 ≤ p) (hq : 6 ≤ q) (hqp : q ≤ p)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
-    (u : SobolevSpace period p) (v : SobolevSpace period (p+1)) :
+    (u : SobolevSpace period p) (v : SobolevSpace period (p + 1)) :
     restrictOperator period hqp (asymmetricTransport period hp L hL u v) =
       asymmetricTransport period hq L hL (restrictOperator period hqp u)
         (restrictOperator period (Nat.succ_le_succ hqp) v) := by
@@ -57,50 +64,50 @@ theorem restrict_asymmetricTransport {p q : ℕ} (hp : 6 ≤ p) (hq : 6 ≤ q) (
 /-- The genuine pointwise coefficient action is independent of the chosen Sobolev order. -/
 theorem restrict_coefficient {p q : ℕ} (hqp : q ≤ p) {A : SmoothCoefficient period}
     (KP : CoefficientJet period standardDirection p A) (KQ : CoefficientJet period
-      standardDirection q A)
+        standardDirection q A)
     (u : SobolevSpace period p) :
     restrictOperator period hqp (coefficientSobolevOperator period KP u) =
       coefficientSobolevOperator period KQ (restrictOperator period hqp u) := by
   apply value_injective period
   rw [value_restrictOperator, coefficientSobolevOperator_value, coefficientSobolevOperator_value,
-    value_restrictOperator]
+      value_restrictOperator]
 
 /-- The actual coercive pressure solve agrees at every Sobolev order by its unique L² value. -/
 theorem restrict_pressure {p q : ℕ} (hqp : q ≤ p) {A : SmoothCoefficient period}
     (KP : CoefficientJet period standardDirection p A) (KQ : CoefficientJet period
-      standardDirection q A)
+        standardDirection q A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c*‖v‖^2 ≤ ⟪A.coefficient x v,v⟫_ℝ) (u : SobolevSpace period p) :
+    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) (u : SobolevSpace period p) :
     restrictOperator period hqp (pressureSobolevOperator period KP κ m c hc hpos u) =
       pressureSobolevOperator period KQ κ m c hc hpos (restrictOperator period hqp u) := by
   apply value_injective period
   rw [value_restrictOperator, pressureSobolevOperator_value, pressureSobolevOperator_value,
-    value_restrictOperator]
+      value_restrictOperator]
 
 /-- The projected Euler forcing is exactly consistent across the finite Sobolev scale. -/
 theorem restrict_projectedSource {p q : ℕ} (hqp : q ≤ p) {A : SmoothCoefficient period}
     (KP : CoefficientJet period standardDirection p A) (KQ : CoefficientJet period
-      standardDirection q A)
+        standardDirection q A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c*‖v‖^2 ≤ ⟪A.coefficient x v,v⟫_ℝ) (u : SobolevSpace period p) :
+    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) (u : SobolevSpace period p) :
     restrictOperator period hqp (projectedSourceOperator period KP κ m c hc hpos u) =
       projectedSourceOperator period KQ κ m c hc hpos (restrictOperator period hqp u) := by
   apply value_injective period
   rw [value_restrictOperator, projectedSourceOperator_value, projectedSourceOperator_value,
-    value_restrictOperator]
+      value_restrictOperator]
 
 /-- The actual order-zero algebraic term as a bilinear map on one complete Sobolev level. -/
 def algebraicAtBilinear {s : ℕ} (hs : 6 ≤ s)
     (C : Fin 3 → SobolevSpace period s →L[ℝ] SobolevSpace period s) :
     SobolevSpace period s →L[ℝ] SobolevSpace period s →L[ℝ] SobolevSpace period s :=
   ∑ i : Fin 3, postcompose (C i) (productHqBilinear period hs (coordinate 3 i) (coordinate_norm_le
-    3 i))
+      3 i))
 
 /-- This bilinear map is precisely the already bounded order-zero Euler term. -/
 theorem algebraicAtBilinear_apply {s : ℕ} (hs : 6 ≤ s)
     (C : Fin 3 → SobolevSpace period s →L[ℝ] SobolevSpace period s) (u v : SobolevSpace period s) :
     algebraicAtBilinear period hs C u v = algebraicAt period hs C u v := by
   simp only [algebraicAtBilinear, sum_apply, postcompose_apply, productHqBilinear_apply,
-    algebraicAt]
+      algebraicAt]
 
 end EulerSobolevNonlinearCompatibility

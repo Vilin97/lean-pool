@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleChoice
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Algebra.EuclideanDomain.Basic
+import Mathlib.Algebra.EuclideanDomain.Field
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Finite-prefix control of the actual coupling recurrence. Each step
 may use only the bounds already proved on its preceding prefix. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,7 +27,7 @@ open Finset EulerPacketSourceScaleChoice EulerPacketSourceScaleGuards
   EulerPacketSourceScaleActual EulerScale
 
 theorem relative_step_error {a b e : ℝ} (ha : 0 < a) (ha2 : a ≤ 2)
-    (he : 0 ≤ e) (h : |b/a-1| ≤ e) : |b-a| ≤ 2*e := by
+    (he : 0 ≤ e) (h : |b / a - 1| ≤ e) : |b-a| ≤ 2*e := by
   have hid : (b/a-1)*a=b-a := by field_simp
   calc
     |b-a| = |b/a-1| * a := by rw [← hid,abs_mul,abs_of_pos ha]
@@ -35,16 +40,16 @@ theorem partial_sum_le {e : ℕ → ℝ} {η : ℝ} (he : SmallSeries e η) (n :
   (he.summable.sum_le_tsum (range n) (fun i _ => he.nonneg i)).trans he.total_le
 
 theorem bounds_of_accumulated_error {e : ℕ → ℝ} {η v : ℝ}
-    (he : SmallSeries e η) (hη : η ≤ 1/4) (n : ℕ)
-    (hv : |v-1| ≤ 2*∑ i ∈ range n, e i) : 1/2 ≤ v ∧ v ≤ 2 := by
+    (he : SmallSeries e η) (hη : η ≤ 1 / 4) (n : ℕ)
+    (hv : |v - 1| ≤ 2 * ∑ i ∈ range n, e i) : 1/2 ≤ v ∧ v ≤ 2 := by
   have hs := partial_sum_le he n
   have ha := abs_le.mp hv
   constructor <;> linarith only [hs,hη,ha.1,ha.2]
 
 theorem accumulate_step {a e : ℕ → ℝ} (n : ℕ)
-    (ha : 1/2 ≤ a n) (ha2 : a n ≤ 2) (he : 0 ≤ e n)
-    (hprev : |a n-1| ≤ 2*∑ i ∈ range n, e i)
-    (hstep : |a (n+1)/a n-1| ≤ e n) :
+    (ha : 1 / 2 ≤ a n) (ha2 : a n ≤ 2) (he : 0 ≤ e n)
+    (hprev : |a n - 1| ≤ 2 * ∑ i ∈ range n, e i)
+    (hstep : |a (n + 1) / a n - 1| ≤ e n) :
     |a (n+1)-1| ≤ 2*∑ i ∈ range (n+1), e i := by
   have hi := relative_step_error (by linarith only [ha] : 0 < a n) ha2 he hstep
   have ht := abs_add_le (a (n+1)-a n) (a n-1)
@@ -55,9 +60,9 @@ theorem accumulate_step {a e : ℕ → ℝ} (n : ℕ)
 /-- No bound on a future coupling is an input. The step estimate can
 be established only after the previous finite prefix has been bounded. -/
 theorem coupling_prefix {a e : ℕ → ℝ} {η : ℝ} (N : ℕ)
-    (he : SmallSeries e η) (hη : η ≤ 1/4) (hzero : a 0=1)
-    (hstep : ∀ n < N, (∀ i ≤ n, 1/2 ≤ a i ∧ a i ≤ 2) →
-      |a (n+1)/a n-1| ≤ e n) :
+    (he : SmallSeries e η) (hη : η ≤ 1 / 4) (hzero : a 0 = 1)
+    (hstep : ∀ n < N, (∀ i ≤ n, 1 / 2 ≤ a i ∧ a i ≤ 2) →
+      |a (n + 1) / a n - 1| ≤ e n) :
     ∀ n ≤ N, (1/2 ≤ a n ∧ a n ≤ 2) ∧ |a n-1| ≤ 2*∑ i ∈ range n, e i := by
   intro n
   induction n using Nat.strong_induction_on with
@@ -77,12 +82,12 @@ theorem coupling_prefix {a e : ℕ → ℝ} {η : ℝ} (N : ℕ)
 /-- The same finite induction propagates the normalized tilt invariant
 along with the coupling. Its hypotheses mention only already-built stages. -/
 theorem coupling_and_tilt_prefix {a β x e : ℕ → ℝ} {η : ℝ} (N : ℕ)
-    (he : SmallSeries e η) (hη : η ≤ 1/4) (hzero : a 0=1)
-    (hβzero : 1/2 ≤ β 0*(x 0)^2 ∧ β 0*(x 0)^2 ≤ 2)
+    (he : SmallSeries e η) (hη : η ≤ 1 / 4) (hzero : a 0 = 1)
+    (hβzero : 1 / 2 ≤ β 0 * (x 0) ^ 2 ∧ β 0 * (x 0) ^ 2 ≤ 2)
     (hstep : ∀ n < N,
-      (∀ i ≤ n, (1/2 ≤ a i ∧ a i ≤ 2) ∧ (1/2 ≤ β i*(x i)^2 ∧ β i*(x i)^2 ≤ 2)) →
-      |a (n+1)/a n-1| ≤ e n ∧
-        (1/2 ≤ β (n+1)*(x (n+1))^2 ∧ β (n+1)*(x (n+1))^2 ≤ 2)) :
+      (∀ i ≤ n, (1 / 2 ≤ a i ∧ a i ≤ 2) ∧ (1 / 2 ≤ β i * (x i) ^ 2 ∧ β i * (x i) ^ 2 ≤ 2)) →
+      |a (n + 1) / a n - 1| ≤ e n ∧
+        (1 / 2 ≤ β (n + 1) * (x (n + 1)) ^ 2 ∧ β (n + 1) * (x (n + 1)) ^ 2 ≤ 2)) :
     ∀ n ≤ N, (1/2 ≤ a n ∧ a n ≤ 2) ∧
       (1/2 ≤ β n*(x n)^2 ∧ β n*(x n)^2 ≤ 2) ∧
       |a n-1| ≤ 2*∑ i ∈ range n, e i := by
@@ -93,7 +98,7 @@ theorem coupling_and_tilt_prefix {a β x e : ℕ → ℝ} {η : ℝ} (N : ℕ)
     cases n with
     | zero =>
       refine ⟨?_,hβzero,?_⟩ <;> simp only [hzero,sub_self,abs_zero,sum_range_zero,mul_zero] <;>
-        norm_num
+          norm_num
     | succ n =>
       have hp := ih n (by omega) (by omega)
       have hprefix : ∀ i ≤ n,
@@ -106,7 +111,7 @@ theorem coupling_and_tilt_prefix {a β x e : ℕ → ℝ} {η : ℝ} (N : ℕ)
       exact ⟨bounds_of_accumulated_error he hη (n+1) hs,ht.2,hs⟩
 
 theorem stage_congr_at {J D : ℕ} {C c X K : ℝ} {a β b γ : ℕ → ℝ} {n : ℕ}
-    (G : StageGuards J D C c X K a β n) (ha : a n=b n) (hβ : β n=γ n) :
+    (G : StageGuards J D C c X K a β n) (ha : a n = b n) (hβ : β n = γ n) :
     StageGuards J D C c X K b γ n where
   epsilon_pos := by simpa only [ha] using G.epsilon_pos
   epsilon_small := by simpa only [ha] using G.epsilon_small
@@ -126,12 +131,12 @@ theorem stage_congr_at {J D : ℕ} {C c X K : ℝ} {a β b γ : ℕ → ℝ} {n 
 sequence, apply the uniform theorem, then transfer its local conclusion.
 No hypotheses on any future stage are required. -/
 theorem stage_guards_at (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
-    (hC : 4 ≤ C) (hX : 8 ≤ X) (hK : 1 ≤ K) (hδ : δ ≤ 1/2)
-    (hδK : 1000000*K*δ ≤ 1) (hb : ActualBounds J D C c X δ)
+    (hC : 4 ≤ C) (hX : 8 ≤ X) (hK : 1 ≤ K) (hδ : δ ≤ 1 / 2)
+    (hδK : 1000000 * K * δ ≤ 1) (hb : ActualBounds J D C c X δ)
     (a β : ℕ → ℝ) (n : ℕ)
-    (ha : 1/2 ≤ a n) (ha2 : a n ≤ 2)
-    (hβ : 1/2 ≤ β n*(scaleSequence J X n)^2)
-    (hβ2 : β n*(scaleSequence J X n)^2 ≤ 2) :
+    (ha : 1 / 2 ≤ a n) (ha2 : a n ≤ 2)
+    (hβ : 1 / 2 ≤ β n * (scaleSequence J X n) ^ 2)
+    (hβ2 : β n * (scaleSequence J X n) ^ 2 ≤ 2) :
     StageGuards J D C c X K a β n := by
   let b : ℕ → ℝ := fun _ => a n
   let γ : ℕ → ℝ := fun i => β n*(scaleSequence J X n)^2/(scaleSequence J X i)^2

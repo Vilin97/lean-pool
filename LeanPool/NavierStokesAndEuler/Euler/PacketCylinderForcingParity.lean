@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderMeanParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
+
+/-! The literal recursive force preserves joint odd parity from its actual prefix data. -/
 
 @[expose] public section
 
-/-! The literal recursive force preserves joint odd parity from its actual prefix data. -/
 
 noncomputable section
 
@@ -19,6 +22,7 @@ namespace EulerPacketCylinderField
 
 open Set Finset EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion EulerFiniteGrades
 
+/-- Prefix odd data, collecting `high`, `mean`, `corrector`. -/
 structure PrefixOdd (T : ℝ) (p : ℕ) (a : ℕ → Profile) : Prop where
   high : ∀ i, i < p → JointOdd T (a i).high
   mean : ∀ i, i < p → JointOdd T (a i).mean
@@ -60,10 +64,10 @@ theorem PrefixOdd.knownJet_value_odd (H : PrefixOdd T p a) (hp : 1 ≤ p) (i : �
 
 theorem PrefixFields.nonlinear_odd (F : PrefixFields P T p a) (H : PrefixOdd T p a)
     (hp : 1 ≤ p)
-    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, O.inverseFrame (t,(-x,-θ)) = O.inverseFrame (t,(x,θ)))
-    (hN : ∀ (t : Icc (0 : ℝ) T) x θ, O.normal (t,(-x,-θ)) = O.normal (t,(x,θ))) :
+    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, O.inverseFrame (t, (-x, -θ)) = O.inverseFrame (t, (x, θ)))
+    (hN : ∀ (t : Icc (0 : ℝ) T) x θ, O.normal (t, (-x, -θ)) = O.normal (t, (x, θ))) :
     JointOdd T (fun z => nonlinearGrade (p+1) p (O.inverseFrame z) (O.normal z) (knownJets O p a
-      z)) := by
+        z)) := by
   have hs (i j : ℕ) := (F.knownJet O hp j).slowAdvection_odd O.inverseFrame hI
     (H.knownJet_value_odd (O := O) hp i) (H.knownJet_value_odd (O := O) hp j)
   have ha (i j : ℕ) := (F.knownJet O hp j).fastAdvection_odd O.normal hN
@@ -72,18 +76,18 @@ theorem PrefixFields.nonlinear_odd (F : PrefixFields P T p a) (H : PrefixOdd T p
 
 theorem PrefixFields.knownForce_odd (F : PrefixFields P T p a) (H : PrefixOdd T p a)
     (C : CoefficientData P T O) (hp : 1 ≤ p) (hT : 0 < T)
-    {corrector_t : VectorField} (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-    (hpressure : JointOdd T (pressureGradient (a (p-1)).highPressure))
-    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, O.inverseFrame (t,(-x,-θ)) = O.inverseFrame (t,(x,θ)))
-    (hM : ∀ (t : Icc (0 : ℝ) T) x θ, O.strain (t,(-x,-θ)) = O.strain (t,(x,θ)))
-    (hN : ∀ (t : Icc (0 : ℝ) T) x θ, O.normal (t,(-x,-θ)) = O.normal (t,(x,θ))) :
+    {correctorT : VectorField} (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+    (hpressure : JointOdd T (pressureGradient (a (p - 1)).highPressure))
+    (hI : ∀ (t : Icc (0 : ℝ) T) x θ, O.inverseFrame (t, (-x, -θ)) = O.inverseFrame (t, (x, θ)))
+    (hM : ∀ (t : Icc (0 : ℝ) T) x θ, O.strain (t, (-x, -θ)) = O.strain (t, (x, θ)))
+    (hN : ∀ (t : Icc (0 : ℝ) T) x θ, O.normal (t, (-x, -θ)) = O.normal (t, (x, θ))) :
     JointOdd T (EulerPacketProfileRecursion.knownForce O p a) := by
   have hC := H.corrector (p-1) (by omega)
-  have ht : JointOdd T corrector_t :=
+  have ht : JointOdd T correctorT :=
     (F.corrector (p-1) (by omega)).timeDerivative_odd Ct hT hCt hC
   have hL : JointOdd T (fun z => linearPart (O.strain z) (slicedJet O.interval (a (p-1)).corrector
-    z)) := by
+      z)) := by
     intro t x θ
     change (slicedJet O.interval (a (p-1)).corrector (t,(-x,-θ))).2 timeDirection +
       O.strain (t,(-x,-θ)) ((a (p-1)).corrector (t,(-x,-θ))) =
@@ -92,10 +96,10 @@ theorem PrefixFields.knownForce_odd (F : PrefixFields P T p a) (H : PrefixOdd T 
     simp only [C.interval_eq,(F.corrector (p-1) (by omega)).slicedJet_temporal hT Ct hCt,
       ht t x θ,hM t x θ,hC t x θ,map_neg,neg_add]
   have hQ : JointOdd T (fun z => slowPressure (O.inverseFrame z) (pressureJet (a
-    (p-1)).highPressure z)) := by
+      (p-1)).highPressure z)) := by
     intro t x θ
     change (O.inverseFrame (t,(-x,-θ))).adjoint (pressureGradient (a (p-1)).highPressure
-      (t,(-x,-θ))) =
+        (t,(-x,-θ))) =
       -((O.inverseFrame (t,(x,θ))).adjoint (pressureGradient (a (p-1)).highPressure (t,(x,θ))))
     rw [hI,hpressure,map_neg]
   exact ((hL.add hQ).add (F.nonlinear_odd H hp hI hN)).neg

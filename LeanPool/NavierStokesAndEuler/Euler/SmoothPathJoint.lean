@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothPathTimeJets
-public import Mathlib.Analysis.Calculus.FDeriv.Partial
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.FDeriv.Partial
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-! Joint time-space differentiability of a genuine smooth family of
 continuous paths, and the actual mixed derivative of its spatial Jacobian. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,8 +28,9 @@ open Set Filter EulerVolterraConvolution EulerSmoothPathTimeJets
 variable {E V : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-  (T : ℝ) (hT : 0 ≤ T) (f q : E → C(Icc (0 : ℝ) T,V))
+  (T : ℝ) (hT : 0 ≤ T) (f q : E → C(Icc (0 : ℝ) T, V))
 
+/-- Time slice, given by `extendPath T hT (f x) t`. -/
 def timeSlice (t : ℝ) (x : E) : V := extendPath T hT (f x) t
 
 omit [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedSpace ℝ V] [FiniteDimensional ℝ V] in
@@ -36,9 +39,10 @@ theorem timeSlice_joint_continuous (hf : Continuous f) :
   unfold timeSlice extendPath
   fun_prop
 
+/-- Spatial derivative as an element of `C(Icc (0 : ℝ) T,E →L[ℝ] V)`. -/
 def spatialDerivative (x : E) : C(Icc (0 : ℝ) T,E →L[ℝ] V) :=
   ((continuousMultilinearCurryFin1 ℝ E
-    V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous
+      V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous
     ℝ (Icc (0 : ℝ) T)) (jetFamily T f 1 x)
 
 theorem spatialDerivative_contDiff (hf : ContDiff ℝ ∞ f) :
@@ -46,7 +50,7 @@ theorem spatialDerivative_contDiff (hf : ContDiff ℝ ∞ f) :
   exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
     (E := C(Icc (0 : ℝ) T,E [×1]→L[ℝ] V)) (F := C(Icc (0 : ℝ) T,E →L[ℝ] V))
     ((continuousMultilinearCurryFin1 ℝ E
-      V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous
+        V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous
       ℝ (Icc (0 : ℝ) T))).comp (jetFamily_contDiff T f hf 1)
 
 theorem spatialDerivative_apply (hf : ContDiff ℝ ∞ f) (x : E) (t : Icc (0 : ℝ) T) :
@@ -64,6 +68,8 @@ theorem timeSlice_hasFDerivAt (hf : ContDiff ℝ ∞ f) (t : ℝ) (x : E) :
   exact (((ContinuousMap.evalCLM ℝ (projIcc 0 T hT t)).contDiff.comp hf).differentiable
     (by simp) x).hasFDerivAt
 
+/-- Joint derivative, given by `(ContinuousLinearMap.toSpanSingleton ℝ (timeSlice T hT q t
+x)).coprod (timeSlice T hT (spatialDerivative T f) t x)`. -/
 def jointDerivative (t : ℝ) (x : E) : (ℝ × E) →L[ℝ] V :=
   (ContinuousLinearMap.toSpanSingleton ℝ (timeSlice T hT q t x)).coprod
     (timeSlice T hT (spatialDerivative T f) t x)
@@ -120,7 +126,7 @@ theorem spatialDerivative_time (x : E) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (spatialDerivative T f x))
       (spatialDerivative T q x t) (Icc (0 : ℝ) T) t := by
   have h := (continuousMultilinearCurryFin1 ℝ E
-    V).toContinuousLinearEquiv.toContinuousLinearMap.hasFDerivAt.comp_hasDerivWithinAt
+      V).toContinuousLinearEquiv.toContinuousLinearMap.hasFDerivAt.comp_hasDerivWithinAt
     (t : ℝ) (jetFamily_hasDerivWithinAt T hT f q hf hq hd 1 x t)
   exact h
 

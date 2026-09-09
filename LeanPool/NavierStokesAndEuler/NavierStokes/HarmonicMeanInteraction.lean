@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
 
-@[expose] public section
-
 /-!
 # Actual harmonic residual changes under a mean increment
 
@@ -18,6 +16,9 @@ The wave and its pressure are held fixed.  Every coefficient below belongs to
 the actual differential residual in `HarmonicResidual`; excluded errors are
 kept as separate additive differences.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -97,11 +98,11 @@ theorem angularDifferentiate_constant (kp : ℤ) (f : D → ℂ) :
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem rotate_constant (m : D → ComplexVector) (i : Fin 3) :
     HarmonicResidual.rotate (HarmonicResidual.constantVector m) i = constantCoefficient (fun x =>
-      angularGenerator (m x) i) := by
+        angularGenerator (m x) i) := by
   ext j x
-  fin_cases i <;>
+  fin_cases i <;> by_cases hj : j = 0 <;>
     simp [HarmonicResidual.rotate, HarmonicResidual.constantVector, angularGenerator,
-      constantCoefficient] <;> split_ifs <;> simp
+      constantCoefficient, hj]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem rotate_apply (a : HarmonicResidual.VectorCoefficients D) (j : ℤ) (x : D) (i : Fin 3) :
@@ -110,7 +111,7 @@ theorem rotate_apply (a : HarmonicResidual.VectorCoefficients D) (j : ℤ) (x : 
 
 theorem transport_constant_left (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (m : D → ComplexVector) (a : HarmonicResidual.VectorCoefficients D) (j : ℤ) (x : D) (i : Fin 3)
-      :
+        :
     HarmonicResidual.transport g k Φ kp (HarmonicResidual.constantVector m) a i j x =
       m x 0 * derivativeCoefficient g.radial k Φ j (a i j) x +
       (m x 1 / (g.radius x : ℂ)) *
@@ -118,37 +119,37 @@ theorem transport_constant_left (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D
       m x 2 * derivativeCoefficient g.axial k Φ j (a i j) x := by
   simp only [HarmonicResidual.transport, HarmonicResidual.constantVector, coeff_add, constant_mul,
     constant_mul_constant, angularDifferentiate_apply, differentiate_apply, rotate_apply,
-      div_eq_mul_inv]
+        div_eq_mul_inv]
 
 theorem transport_constant_right (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (a : HarmonicResidual.VectorCoefficients D) (m : D → ComplexVector) (j : ℤ) (x : D) (i : Fin 3)
-      :
+        :
     HarmonicResidual.transport g k Φ kp a (HarmonicResidual.constantVector m) i j x =
       a 0 j x * along g.radial (fun y => m y i) x +
       (a 1 j x / (g.radius x : ℂ)) * angularGenerator (m x) i +
       a 2 j x * along g.axial (fun y => m y i) x := by
   simp only [HarmonicResidual.transport, HarmonicResidual.constantVector, coeff_add,
-    differentiate_constant, mul_constant,
+      differentiate_constant, mul_constant,
     angularDifferentiate_constant, zero_add, rotate_constant, div_eq_mul_inv]
 
 /-- The two actual cross-advections at coefficient level, before any zero-mode deletion. -/
 noncomputable def crossCoefficients (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (m : D → ComplexVector) (a : HarmonicResidual.VectorCoefficients D) :
-      HarmonicResidual.VectorCoefficients D := fun i =>
+        HarmonicResidual.VectorCoefficients D := fun i =>
   HarmonicResidual.transport g k Φ kp (HarmonicResidual.constantVector m) a i +
     HarmonicResidual.transport g k Φ kp a (HarmonicResidual.constantVector m) i
 
 theorem nonlinear_mean_difference (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (B m : D → ComplexVector) (a : HarmonicResidual.VectorCoefficients D) (p : Coefficients D) {x :
-      D}
+        D}
     (hB : ∀ i, DifferentiableAt ℝ (fun y => B y i) x)
     (hm : ∀ i, DifferentiableAt ℝ (fun y => m y i) x) (j : ℤ) (i : Fin 3) :
     HarmonicResidual.nonlinearResidual g k Φ kp (HarmonicResidual.constantVector (B + m)) a p i j x
-      -
+        -
       HarmonicResidual.nonlinearResidual g k Φ kp (HarmonicResidual.constantVector B) a p i j x =
         crossCoefficients g k Φ kp m a i j x := by
   simp only [HarmonicResidual.nonlinearResidual, HarmonicResidual.linearResidual,
-    crossCoefficients, coeff_add, coeff_sub,
+      crossCoefficients, coeff_add, coeff_sub,
     transport_constant_left, transport_constant_right, Pi.add_apply,
     along_add _ (hB i) (hm i), HarmonicResidual.Actual.angularGenerator_add]
   ring
@@ -156,7 +157,7 @@ theorem nonlinear_mean_difference (g : HarmonicResidual.Frame D) (k : ℝ) (Φ :
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem realCoefficients_sub (a b : Coefficients D) :
     HarmonicResidual.realCoefficients (a - b) = HarmonicResidual.realCoefficients a -
-      HarmonicResidual.realCoefficients b := by
+        HarmonicResidual.realCoefficients b := by
   ext j x
   simp only [HarmonicResidual.realCoefficients_apply, coeff_sub, map_sub]
   ring
@@ -164,7 +165,7 @@ theorem realCoefficients_sub (a b : Coefficients D) :
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem realCoefficients_add (a b : Coefficients D) :
     HarmonicResidual.realCoefficients (a + b) = HarmonicResidual.realCoefficients a +
-      HarmonicResidual.realCoefficients b := by
+        HarmonicResidual.realCoefficients b := by
   ext j x
   simp only [HarmonicResidual.realCoefficients_apply, coeff_add, map_add]
   ring
@@ -175,6 +176,7 @@ theorem realCoefficients_local_congr {U : Set D} {a b : Coefficients D}
     HarmonicResidual.realCoefficients a j x = HarmonicResidual.realCoefficients b j x := by
   simp only [HarmonicResidual.realCoefficients_apply, hab j x hx, hab (-j) x hx]
 
+/-- Triple field, given by `![(h.radial n x : ℂ), (h.angular n x : ℂ), (h.axial n x : ℂ)]`. -/
 noncomputable def tripleField (h : MeanIncrementBounds.Triple D) (n : ℕ) (x : D) : ComplexVector :=
   ![(h.radial n x : ℂ), (h.angular n x : ℂ), (h.axial n x : ℂ)]
 
@@ -185,22 +187,24 @@ theorem stateMean_updated (s₀ s₁ : CorrectionState.State D) (h : MeanIncreme
   ext x i
   fin_cases i <;> simp [HarmonicResidual.stateMean, tripleField, he, MeanIncrementBounds.updated]
 
+/-- Block amplitude, defined pointwise by `HarmonicResidual.realCoefficients (b.velocity n i)`. -/
 noncomputable def blockAmplitude (b : CorrectionState.HarmonicBlock D) (n : ℕ) :
-  HarmonicResidual.VectorCoefficients D :=
+    HarmonicResidual.VectorCoefficients D :=
   fun i => HarmonicResidual.realCoefficients (b.velocity n i)
 
+/-- Mean cross, constructed using `crossCoefficients`. -/
 noncomputable def meanCross (c : CorrectionState.Context D) (h : MeanIncrementBounds.Triple D) (b :
-  CorrectionState.HarmonicBlock D)
+    CorrectionState.HarmonicBlock D)
     (n : ℕ) : HarmonicResidual.VectorCoefficients D :=
   crossCoefficients (HarmonicResidual.contextFrame c n) (b.frequency n) (b.phase n)
-    (b.angularFrequency n)
+      (b.angularFrequency n)
     (tripleField h n) (blockAmplitude b n)
 
 /-- General additive error differences are retained, including their zero modes. -/
 theorem residualCoefficients_mean_update (c : CorrectionState.Context D) (s₀ s₁ :
-  CorrectionState.State D)
+    CorrectionState.State D)
     (h : MeanIncrementBounds.Triple D) (he : s₁.mean = MeanIncrementBounds.updated s₀.mean h) (b :
-      CorrectionState.HarmonicBlock D)
+        CorrectionState.HarmonicBlock D)
     (G₀ G₁ A₀ A₁ : HarmonicResidual.BlockCoefficients D) (n : ℕ) {x : D}
     (hB : ∀ i, DifferentiableAt ℝ (fun y => HarmonicResidual.contextBase c n y i) x)
     (hM : ∀ i, DifferentiableAt ℝ (fun y => HarmonicResidual.stateMean s₀ n y i) x)
@@ -210,7 +214,7 @@ theorem residualCoefficients_mean_update (c : CorrectionState.Context D) (s₀ s
       (HarmonicResidual.ofBlock b G₀ A₀ n).residualCoefficients (HarmonicResidual.contextFrame c n)
         (HarmonicResidual.contextBase c n) (HarmonicResidual.stateMean s₀ n) i j x =
       HarmonicResidual.realCoefficients (meanCross c h b n i - (G₁ n i - G₀ n i) - (A₁ n i - A₀ n
-        i)) j x := by
+          i)) j x := by
   have hsum : HarmonicResidual.contextBase c n + HarmonicResidual.stateMean s₁ n =
       (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean s₀ n) + tripleField h n := by
     rw [stateMean_updated s₀ s₁ h he n]
@@ -218,12 +222,12 @@ theorem residualCoefficients_mean_update (c : CorrectionState.Context D) (s₀ s
   have hdiff (l : ℤ) := nonlinear_mean_difference (HarmonicResidual.contextFrame c n)
     (b.frequency n) (b.phase n) (b.angularFrequency n)
     (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean s₀ n) (tripleField h n)
-      (blockAmplitude b n)
+        (blockAmplitude b n)
     (HarmonicResidual.realCoefficients (b.pressure n)) (fun t => (hB t).add (hM t)) hh l i
   let N₀ := HarmonicResidual.nonlinearResidual (HarmonicResidual.contextFrame c n)
     (b.frequency n) (b.phase n) (b.angularFrequency n)
     (HarmonicResidual.constantVector (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean
-      s₀ n))
+        s₀ n))
     (blockAmplitude b n) (HarmonicResidual.realCoefficients (b.pressure n)) i
   let N₁ := HarmonicResidual.nonlinearResidual (HarmonicResidual.contextFrame c n)
     (b.frequency n) (b.phase n) (b.angularFrequency n)
@@ -265,6 +269,7 @@ noncomputable def slowGeometry {s : StripData D} {κ : ℝ} (c : CorrectionState
       axial_vector_class s c.operators.eZ
   inverse_radius_class := ho.invRadius
 
+/-- Slow normal, constructed using `phaseNormal`. -/
 noncomputable def slowNormal {s : StripData D} {κ : ℝ} (c : CorrectionState.Context D)
     (ho : MeanIncrementBounds.OperatorBounds s c.operators κ)
     (hR : ∀ x ∈ s.domain, 0 < c.operators.radius x) (Φ : ℕ → D → ℝ) (n : ℕ) (x : D) :
@@ -312,14 +317,14 @@ theorem meanCross_eq {s : StripData D} {κ : ℝ} (c : CorrectionState.Context D
         (tripleField h) (fun n x i => blockAmplitude b n i j x) n x i +
         angularCarrierTerm c b h j n x i := by
   simp only [meanCross, crossCoefficients, coeff_add, transport_constant_left,
-    transport_constant_right,
+      transport_constant_right,
     derivativeCoefficient, waveMeanCoefficient, strippedTransport, normalDot, phaseNormal,
     slowGeometry, HarmonicResidual.contextFrame, angularCarrierTerm, phaseFactor,
     along, map_zero, zero_mul,
     Complex.ofReal_mul, Complex.ofReal_intCast, Int.cast_mul, div_eq_mul_inv]
   simp only [ Matrix.cons_val_zero, Matrix.cons_val_one,
     Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons, Complex.ofReal_zero, zero_mul,
-      add_zero]
+        add_zero]
   ring
 
 theorem angularCarrierTerm_class {s : StripData D} {κ α H : ℝ} {P : ℕ → D → ℝ}
@@ -464,15 +469,20 @@ theorem residualBlock_mean_update_class {s : StripData D} {κ α H : ℝ} {P : �
   apply residualBlock_axisymmetric_alias_update c s₀ s₁ h he b G A₀ A₁ hA n
   · intro t
     exact ((tripleField_smooth hbase n t).contDiffAt (s.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · intro t
     exact ((tripleField_smooth hmean n t).contDiffAt (s.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · intro t
     exact ((tripleField_smooth hh.smooth n t).contDiffAt (s.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · exact hj
 
+/-- Residual difference block, bundling `velocity`, `pressure`, `frequency`, `phase` and the
+required compatibility proofs. -/
 noncomputable def residualDifferenceBlock (c : CorrectionState.Context D)
     (s₀ s₁ : CorrectionState.State D) (b : CorrectionState.HarmonicBlock D)
     (G A₀ A₁ : HarmonicResidual.BlockCoefficients D) : CorrectionState.HarmonicBlock D where
@@ -525,6 +535,7 @@ theorem nonconstant_sub (a b : Coefficients D) :
     simp [HarmonicResidual.nonconstant]
   · simp only [nonconstant_apply_of_ne _ hj, coeff_sub]
 
+/-- Transport difference as an element of `Coefficients D`. -/
 noncomputable def transportDifference (g : HarmonicResidual.Frame D)
     (k : ℝ) (Φ : D → ℝ) (kp : ℤ) (B₀ B₁ : D → ComplexVector)
     (a : HarmonicResidual.VectorCoefficients D) (i : Fin 3) : Coefficients D :=
@@ -545,20 +556,20 @@ theorem nonlinear_difference_algebra (g : HarmonicResidual.Frame D)
 theorem transportDifference_band (g : HarmonicResidual.Frame D)
     (k : ℝ) (Φ : D → ℝ) (kp : ℤ) (B₀ B₁ : D → ComplexVector)
     {a : HarmonicResidual.VectorCoefficients D} {N : ℕ} (ha : ∀ i, BandLimited (a i) N) (i : Fin 3)
-      :
+        :
     BandLimited (transportDifference g k Φ kp B₀ B₁ a i) N := by
   have hleft (B : D → ComplexVector) :
       BandLimited (HarmonicResidual.transport g k Φ kp (HarmonicResidual.constantVector B) a i) N
-        := by
+          := by
     have h := HarmonicResidual.band_transport g k Φ kp (fun j => band_constantCoefficient (fun x =>
-      B x j)) ha i
+        B x j)) ha i
     simp only [zero_add] at h
     exact h
   have hright (B : D → ComplexVector) :
       BandLimited (HarmonicResidual.transport g k Φ kp a (HarmonicResidual.constantVector B) i) N
-        := by
+          := by
     have h := HarmonicResidual.band_transport g k Φ kp ha (fun j => band_constantCoefficient (fun x
-      => B x j)) i
+        => B x j)) i
     simp only [add_zero] at h
     exact h
   exact (HarmonicResidual.band_sub (hleft B₁) (hleft B₀)).add
@@ -577,12 +588,12 @@ theorem residualDifferenceBlock_algebra (c : CorrectionState.Context D)
   let N₀ := HarmonicResidual.nonlinearResidual (HarmonicResidual.contextFrame c n)
     (b.frequency n) (b.phase n) (b.angularFrequency n)
     (HarmonicResidual.constantVector (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean
-      s₀ n))
+        s₀ n))
     (blockAmplitude b n) (HarmonicResidual.realCoefficients (b.pressure n)) i
   let N₁ := HarmonicResidual.nonlinearResidual (HarmonicResidual.contextFrame c n)
     (b.frequency n) (b.phase n) (b.angularFrequency n)
     (HarmonicResidual.constantVector (HarmonicResidual.contextBase c n + HarmonicResidual.stateMean
-      s₁ n))
+        s₁ n))
     (blockAmplitude b n) (HarmonicResidual.realCoefficients (b.pressure n)) i
   change HarmonicResidual.nonconstant (HarmonicResidual.realCoefficients (N₁ - G n i - A₁ n i)) -
     HarmonicResidual.nonconstant (HarmonicResidual.realCoefficients (N₀ - G n i - A₀ n i)) = _
@@ -628,7 +639,7 @@ theorem crossCoefficients_field {U : Set D} (hU : IsOpen U) (g : HarmonicResidua
     (k : ℝ) {Φ : D → ℝ} (hΦ : ContDiffOn ℝ ∞ Φ U) (kp : ℤ)
     (m : D → ComplexVector) (hm : ∀ i, ContDiffOn ℝ ∞ (fun x => m x i) U)
     (a : HarmonicResidual.VectorCoefficients D) (ha : ∀ i, HarmonicResidual.SmoothCoefficients U (a
-      i))
+        i))
     {x : D × ℝ} (hx : x ∈ HarmonicResidual.liftDomain U) :
     HarmonicResidual.vectorField (crossCoefficients g k Φ kp m a) k Φ kp x =
       LinearWaveResidual.transport (fun y => g.radius y.1) (HarmonicResidual.liftDirection g.radial)
@@ -640,7 +651,7 @@ theorem crossCoefficients_field {U : Set D} (hU : IsOpen U) (g : HarmonicResidua
   have hm' : ∀ i, HarmonicResidual.SmoothCoefficients U (HarmonicResidual.constantVector m i) :=
     fun i => HarmonicResidual.smoothCoefficients_constant (hm i)
   have hleft := HarmonicResidual.field_transport hU g (HarmonicResidual.constantVector m) ha hΦ k
-    kp hx
+      kp hx
   have hright := HarmonicResidual.field_transport hU g a hm' hΦ k kp hx
   have he : HarmonicResidual.vectorField (HarmonicResidual.constantVector m) k Φ kp =
       fun y : D × ℝ => m y.1 := by
@@ -666,7 +677,7 @@ theorem grouped_wave_change {ι : Type*} {U : Set D} (hU : IsOpen U)
     HarmonicResidual.stateGoodWaveResidual c s₁ n x i -
       HarmonicResidual.stateGoodWaveResidual c s₀ n x i =
       ∑ l ∈ labels n, (residualDifferenceBlock c s₀ s₁ (blocks l) (G l) (A₀ l) (A₁ l)).oscillation
-        n x i := by
+          n x i := by
   rw [HarmonicResidual.stateGoodWaveResidual_grouped hU hrep₁ h₁ hx i,
     HarmonicResidual.stateGoodWaveResidual_grouped hU hrep₀ h₀ hx i]
   simp only [residualDifferenceBlock_field, Finset.sum_sub_distrib]

@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalizedMomentRepair
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothMomentRepair
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.Topology.Algebra.Module.FiniteDimension
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothMomentRepair
+import Mathlib.MeasureTheory.Group.Integral
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # A pressure-neutral angular-moment reset
@@ -22,6 +19,9 @@ preserving the pressure integral exactly. The actual two-row derivative matrix
 is proved nonsingular, and the small smooth nonlinear branch is constructed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter MeasureTheory
@@ -29,10 +29,13 @@ open scoped BigOperators ContDiff Topology
 
 namespace NavierStokes.AngularMomentReset
 
+/-- Coefficient: an abbreviation for `Fin 2 → ℝ`. -/
 abbrev Coeff := Fin 2 → ℝ
 
+/-- Template, given by `LocalizedMomentRepair.bump (-3 / 10) (3 / 10)`. -/
 def template : ℝ → ℝ := LocalizedMomentRepair.bump (-3 / 10) (3 / 10)
 
+/-- Bump, given by `template (y - 2 * (j.val : ℝ))`. -/
 def bump (j : Fin 2) (y : ℝ) : ℝ := template (y - 2 * (j.val : ℝ))
 
 theorem template_contDiff : ContDiff ℝ ∞ template :=
@@ -80,6 +83,7 @@ theorem bumps_disjoint (y : ℝ) : bump 0 y * bump 1 y = 0 := by
   norm_num at hs0 hs1
   linarith [hs0.2, hs1.1]
 
+/-- Moment, given by `∫ y, Real.exp (s * y) * template y`. -/
 def moment (s : ℝ) : ℝ := ∫ y, Real.exp (s * y) * template y
 
 theorem weighted_bump_integrable (s : ℝ) (j : Fin 2) :
@@ -98,7 +102,7 @@ theorem weighted_bump_sq_integrable (s : ℝ) (j : Fin 2) :
 theorem moment_pos (s : ℝ) : 0 < moment s := by
   apply Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero
     ((Real.continuous_exp.comp (continuous_const.mul continuous_id)).mul
-      template_contDiff.continuous)
+        template_contDiff.continuous)
     template_hasCompactSupport.mul_left
   · intro y
     exact mul_nonneg (Real.exp_pos _).le (LocalizedMomentRepair.bump_nonneg _ _ _)
@@ -118,7 +122,9 @@ theorem bump_moment (s : ℝ) (j : Fin 2) :
   rw [hf, integral_const_mul]
   rfl
 
+/-- Angular slope, given by `1 - lam`. -/
 def angularSlope (lam : ℝ) : ℝ := 1 - lam
+/-- Pressure slope, given by `-1 - 2 * lam`. -/
 def pressureSlope (lam : ℝ) : ℝ := -1 - 2 * lam
 
 /-- The actual derivative matrix of the two integral changes at zero coefficients. -/
@@ -158,6 +164,7 @@ def linearEquiv (lam : ℝ) (hlam : 0 < lam) : Coeff ≃L[ℝ] Coeff :=
         rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _
           (isUnit_iff_ne_zero.mpr (linearMatrix_det_ne_zero lam hlam)), Matrix.one_mulVec] }
 
+/-- Relative, given by `c 0 * bump 0 y + c 1 * bump 1 y`. -/
 def relative (c : Coeff) (y : ℝ) : ℝ := c 0 * bump 0 y + c 1 * bump 1 y
 
 theorem relative_contDiff (c : Coeff) : ContDiff ℝ ∞ (relative c) :=
@@ -177,9 +184,12 @@ theorem relative_support (c : Coeff) : support (relative c) ⊆ Icc (-3 / 20 : �
 theorem relative_hasCompactSupport (c : Coeff) : HasCompactSupport (relative c) :=
   HasCompactSupport.of_support_subset_isCompact isCompact_Icc (relative_support c)
 
+/-- Quadratic moment, given by `∫ y, Real.exp (pressureSlope lam * y) * (bump j y) ^ 2`. -/
 def quadraticMoment (lam : ℝ) (j : Fin 2) : ℝ :=
   ∫ y, Real.exp (pressureSlope lam * y) * (bump j y) ^ 2
 
+/-- Quadratic bilin, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
+compatibility proofs. -/
 def quadraticBilin (lam : ℝ) : Coeff →ₗ[ℝ] Coeff →ₗ[ℝ] Coeff where
   toFun c :=
     { toFun := fun d => ![0, quadraticMoment lam 0 * c 0 * d 0 + quadraticMoment lam 1 * c 1 * d 1]
@@ -200,6 +210,7 @@ def quadraticBilin (lam : ℝ) : Coeff →ₗ[ℝ] Coeff →ₗ[ℝ] Coeff where
     fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul]
     ring
 
+/-- Quadratic continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 def quadraticCLM (lam : ℝ) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
   LinearMap.toContinuousLinearMap
     ((LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Coeff) (F' := Coeff)).toLinearMap.comp
@@ -222,7 +233,7 @@ theorem weighted_relative_sq_integrable (s : ℝ) (c : Coeff) :
     Integrable (fun y => Real.exp (s * y) * (relative c y) ^ 2) := by
   have hc : HasCompactSupport (fun y => (relative c y) ^ 2) := by
     simpa only [pow_two, Pi.mul_def] using (relative_hasCompactSupport c).mul_right (f' := relative
-      c)
+        c)
   exact ((Real.continuous_exp.comp (continuous_const.mul continuous_id)).mul
     ((relative_contDiff c).continuous.pow 2)).integrable_of_hasCompactSupport hc.mul_left
 
@@ -281,7 +292,7 @@ theorem pressure_change_moment (lam : ℝ) (c : Coeff) :
         Real.exp (pressureSlope lam * y) * (relative c y) ^ 2) := by funext y; ring
   rw [hf, integral_add ((weighted_relative_integrable _ c).const_mul 2)
     (weighted_relative_sq_integrable _ c), integral_const_mul, relative_moment,
-      relative_square_moment]
+        relative_square_moment]
   ring
 
 /-- The quadratic coefficient map equals the two actual integral changes. -/
@@ -294,6 +305,7 @@ theorem moment_map_identity (lam : ℝ) (hlam : 0 < lam) (c : Coeff) :
   fin_cases i <;> simp [linearMatrix, dotProduct, Fin.sum_univ_two]
   ring
 
+/-- Debt, given by `![δ, 0]`. -/
 def debt (δ : ℝ) : Coeff := ![δ, 0]
 
 theorem debt_contDiff : ContDiff ℝ ∞ debt := by
@@ -390,8 +402,11 @@ theorem positive_and_slope_of_small (lam : ℝ) (hlam : 0 < lam) (c : Coeff) (y 
 
 /-- A constructed branch, with exact normalized integrals and quantitative first-jet control. -/
 structure ResetBranch (lam : ℝ) where
+  /-- Coefficients of `ResetBranch`, of type `ℝ → Coeff`. -/
   coefficients : ℝ → Coeff
+  /-- Radius of `ResetBranch`, of type `ℝ`. -/
   radius : ℝ
+  /-- Bound of `ResetBranch`, of type `ℝ`. -/
   bound : ℝ
   radius_pos : 0 < radius
   bound_pos : 0 < bound
@@ -467,22 +482,28 @@ def resetBranch (lam : ℝ) (hlam : 0 < lam) : ResetBranch lam :=
 
 /-! ## Actual modified angular fields -/
 
+/-- Base E, given by `e0 * Real.exp ((-1 / 2 - lam) * y)`. -/
 def baseE (lam e0 y : ℝ) : ℝ := e0 * Real.exp ((-1 / 2 - lam) * y)
 
 /-- The first bump is centered at `y0`, and the second at `y0 + 2`. -/
 def modifiedE (lam e0 y0 : ℝ) (c : Coeff) (y : ℝ) : ℝ :=
   baseE lam e0 y * (1 + relative c (y - y0))
 
+/-- Radius X, given by `X0 * Real.exp y`. -/
 def radiusX (X0 y : ℝ) : ℝ := X0 * Real.exp y
 
+/-- Base H, given by `Real.sqrt (2 * radiusX X0 y) * baseE lam e0 y`. -/
 def baseH (lam e0 X0 y : ℝ) : ℝ := Real.sqrt (2 * radiusX X0 y) * baseE lam e0 y
 
+/-- Modified H, given by `Real.sqrt (2 * radiusX X0 y) * modifiedE lam e0 y0 c y`. -/
 def modifiedH (lam e0 X0 y0 : ℝ) (c : Coeff) (y : ℝ) : ℝ :=
   Real.sqrt (2 * radiusX X0 y) * modifiedE lam e0 y0 c y
 
+/-- Angular scale, given by `X0 * Real.sqrt (2 * X0) * e0 * Real.exp (angularSlope lam * y0)`. -/
 def angularScale (lam e0 X0 y0 : ℝ) : ℝ :=
   X0 * Real.sqrt (2 * X0) * e0 * Real.exp (angularSlope lam * y0)
 
+/-- Log slope, given by `1 / 2 + deriv E y / E y`. -/
 def logSlope (E : ℝ → ℝ) (y : ℝ) : ℝ := 1 / 2 + deriv E y / E y
 
 theorem baseE_contDiff (lam e0 : ℝ) : ContDiff ℝ ∞ (baseE lam e0) :=
@@ -550,7 +571,7 @@ theorem modifiedE_logSlope (lam e0 y0 : ℝ) (c : Coeff) (y : ℝ) (he0 : e0 ≠
     (baseE lam e0 y * (-1 / 2 - lam) * (1 + relative c (y - y0)) +
       baseE lam e0 y * deriv (relative c) (y - y0)) /
     (baseE lam e0 y * (1 + relative c (y - y0))) = _
-  field_simp ; ring
+  field_simp; ring
 
 theorem weighted_translate_integral (s y0 : ℝ) (f : ℝ → ℝ) :
     (∫ y, Real.exp (s * y) * f (y - y0)) =
@@ -577,7 +598,7 @@ theorem pressure_integral_formula (lam e0 y0 : ℝ) (c : Coeff) :
         ∫ y, Real.exp (pressureSlope lam * y) * ((1 + relative c y) ^ 2 - 1) := by
   have hf : (fun y => (modifiedE lam e0 y0 c y) ^ 2 - (baseE lam e0 y) ^ 2) =
       (fun y => e0 ^ 2 * (Real.exp (pressureSlope lam * y) * ((1 + relative c (y - y0)) ^ 2 - 1)))
-        := by
+          := by
     funext y
     calc
       _ = (baseE lam e0 y) ^ 2 * ((1 + relative c (y - y0)) ^ 2 - 1) := by
@@ -643,7 +664,7 @@ theorem pressure_delta_integrable (lam e0 y0 : ℝ) (c : Coeff) :
   rw [hf]
   exact (((modifiedE_contDiff lam e0 y0 c).continuous.add (baseE_contDiff lam e0).continuous).mul
     ((modifiedE_contDiff lam e0 y0 c).continuous.sub (baseE_contDiff lam
-      e0).continuous)).integrable_of_hasCompactSupport
+        e0).continuous)).integrable_of_hasCompactSupport
       (modifiedE_sub_hasCompactSupport lam e0 y0 c).mul_left
 
 theorem angular_delta_integrable (lam e0 X0 y0 : ℝ) (c : Coeff) :
@@ -739,7 +760,7 @@ theorem angular_interval_change (lam e0 X0 y0 a b : ℝ) (c : Coeff)
       angularScale lam e0 X0 y0 * ∫ y, Real.exp (angularSlope lam * y) * relative c y := by
   have hm : IntegrableOn (fun y => radiusX X0 y * modifiedH lam e0 X0 y0 c y) (Icc a b) :=
     ((radiusX_continuous X0).mul (modifiedH_continuous lam e0 X0 y0
-      c)).continuousOn.integrableOn_Icc
+        c)).continuousOn.integrableOn_Icc
   have he : IntegrableOn (fun y => radiusX X0 y * baseH lam e0 X0 y) (Icc a b) :=
     ((radiusX_continuous X0).mul (baseH_continuous lam e0 X0)).continuousOn.integrableOn_Icc
   rw [← integral_sub hm he]
@@ -776,6 +797,7 @@ theorem ResetBranch.pressure_interval_neutral {lam : ℝ} (B : ResetBranch lam)
   apply sub_eq_zero.mp
   rw [pressure_interval_change lam e0 y0 a b (B.coefficients δ) ha hb, B.pressure δ hδ, mul_zero]
 
+/-- Prefix I, given by `Iprior + ∫ y in Icc a b, radiusX X0 y * baseH lam e0 X0 y`. -/
 def prefixI (lam e0 X0 a b Iprior : ℝ) : ℝ :=
   Iprior + ∫ y in Icc a b, radiusX X0 y * baseH lam e0 X0 y
 

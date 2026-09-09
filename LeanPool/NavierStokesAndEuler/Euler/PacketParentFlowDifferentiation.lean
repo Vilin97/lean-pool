@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Tactic.Measurability.Init
 
 /-! The frame evolution is derived by differentiating the actual parent
 flow. Symmetry of the genuine second derivative supplies the mixed-derivative
 identity; no independent strain evolution is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +30,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 omit [CompleteSpace E] in
 theorem flow_time_derivative_eq (X u : ℝ × E → E) (q : ℝ × E)
     (hX : DifferentiableAt ℝ X q)
-    (hflow : HasDerivAt (fun s => X (s,q.2)) (u (q.1,X q)) q.1) :
+    (hflow : HasDerivAt (fun s => X (s, q.2)) (u (q.1, X q)) q.1) :
     fderiv ℝ X q (1,0) = u (q.1,X q) := by
   have h := hX.hasFDerivAt.comp_hasDerivAt q.1
     ((hasDerivAt_id q.1).prodMk (hasDerivAt_const q.1 q.2))
@@ -36,9 +40,9 @@ omit [CompleteSpace E] in
 theorem parent_frame_time (X u : ℝ × E → E) (F : ℝ × E → E →L[ℝ] E)
     (q : ℝ × E) (DF : (ℝ × E) →L[ℝ] (E →L[ℝ] E)) (Du : (ℝ × E) →L[ℝ] E)
     (hX : ContDiffAt ℝ 2 X q) (hF : HasFDerivAt F DF q)
-    (hu : HasFDerivAt u Du (q.1,X q))
+    (hu : HasFDerivAt u Du (q.1, X q))
     (hframe : F =ᶠ[𝓝 q] fun r => (fderiv ℝ X r).comp (inr ℝ ℝ E))
-    (hflow : (fun r => fderiv ℝ X r (1,0)) =ᶠ[𝓝 q] fun r => u (r.1,X r))
+    (hflow : (fun r => fderiv ℝ X r (1, 0)) =ᶠ[𝓝 q] fun r => u (r.1, X r))
     (v : E) : DF (1,0) v = Du (0,F q v) := by
   have hDX : DifferentiableAt ℝ (fderiv ℝ X) q :=
     (hX.fderiv_right (m := 1) le_rfl).differentiableAt one_ne_zero
@@ -70,28 +74,28 @@ theorem parent_frame_time (X u : ℝ × E → E) (F : ℝ × E → E →L[ℝ] E
 evolution used by the physical Euler transformation. The identities need
 only hold in a neighborhood of the current interior spacetime point. -/
 theorem physical_euler_momentum_of_flow
-    (κ k : ℝ) (hκ : k*κ=1) (m : E)
+    (κ k : ℝ) (hκ : k * κ = 1) (m : E)
     (F : ℝ × E → E →L[ℝ] E) (z : ℝ × (E × ℝ) → E)
     (u : ℝ × E → E) (p Q : ℝ × E → ℝ) (X Y : ℝ × E → E)
     (t : ℝ) (x : E) (A : E ≃L[ℝ] E)
     (DF : (ℝ × E) →L[ℝ] (E →L[ℝ] E)) (Dz : (ℝ × (E × ℝ)) →L[ℝ] E)
     (Du : (ℝ × E) →L[ℝ] E) (P : E)
-    (hleft : ∀ s y, Y (s,X (s,y)) = y)
-    (hY : DifferentiableAt ℝ (inverseCoordinates Y) (t,X (t,x)))
-    (hX : ContDiffAt ℝ 2 X (t,x))
-    (hframe : F =ᶠ[𝓝 (t,x)] fun r => (fderiv ℝ X r).comp (inr ℝ ℝ E))
-    (hflow : (fun r => fderiv ℝ X r (1,0)) =ᶠ[𝓝 (t,x)] fun r => u (r.1,X r))
-    (hF : HasFDerivAt F DF (t,x)) (hz : HasFDerivAt z Dz (spaceTimeGraph k m (t,x)))
-    (hA : F (t,x) = A.toContinuousLinearMap)
-    (hu : HasFDerivAt u Du (t,X (t,x)))
-    (hp : DifferentiableAt ℝ (fun y => p (t,y)) (X (t,x)))
-    (hQ : DifferentiableAt ℝ (fun y => Q (t,y)) x)
-    (hQgradient : gradient (fun y => Q (t,y)) x = κ • P)
-    (hparent : momentumResidual u p (t,X (t,x)) = 0)
-    (hlift : Dz (1,(0,0)) +
-      (2 : ℝ) • A.symm (DF (1,0) (z (spaceTimeGraph k m (t,x)))) +
-      Dz (0,(κ • z (spaceTimeGraph k m (t,x)),⟪m,z (spaceTimeGraph k m (t,x))⟫_ℝ)) +
-      κ • A.symm (DF (0,z (spaceTimeGraph k m (t,x))) (z (spaceTimeGraph k m (t,x)))) +
+    (hleft : ∀ s y, Y (s, X (s, y)) = y)
+    (hY : DifferentiableAt ℝ (inverseCoordinates Y) (t, X (t, x)))
+    (hX : ContDiffAt ℝ 2 X (t, x))
+    (hframe : F =ᶠ[𝓝 (t, x)] fun r => (fderiv ℝ X r).comp (inr ℝ ℝ E))
+    (hflow : (fun r => fderiv ℝ X r (1, 0)) =ᶠ[𝓝 (t, x)] fun r => u (r.1, X r))
+    (hF : HasFDerivAt F DF (t, x)) (hz : HasFDerivAt z Dz (spaceTimeGraph k m (t, x)))
+    (hA : F (t, x) = A.toContinuousLinearMap)
+    (hu : HasFDerivAt u Du (t, X (t, x)))
+    (hp : DifferentiableAt ℝ (fun y => p (t, y)) (X (t, x)))
+    (hQ : DifferentiableAt ℝ (fun y => Q (t, y)) x)
+    (hQgradient : gradient (fun y => Q (t, y)) x = κ • P)
+    (hparent : momentumResidual u p (t, X (t, x)) = 0)
+    (hlift : Dz (1, (0, 0)) +
+      (2 : ℝ) • A.symm (DF (1, 0) (z (spaceTimeGraph k m (t, x)))) +
+      Dz (0, (κ • z (spaceTimeGraph k m (t, x)), ⟪m, z (spaceTimeGraph k m (t, x))⟫_ℝ)) +
+      κ • A.symm (DF (0, z (spaceTimeGraph k m (t, x))) (z (spaceTimeGraph k m (t, x)))) +
       A.symm (A.symm.toContinuousLinearMap.adjoint P) = 0) :
     momentumResidual (fun q => u q+physicalVelocity κ k m F z Y q)
       (fun q => p q+physicalPressure Q Y q) (t,X (t,x)) = 0 := by
@@ -108,7 +112,7 @@ theorem physical_euler_momentum_of_flow
   have hstrain (v : E) : Du (0,v) = DF (1,0) (A.symm v) := by
     have h := parent_frame_time X u F (t,x) DF Du hX hF hu hframe hflow (A.symm v)
     simpa only [hA,ContinuousLinearEquiv.coe_coe,ContinuousLinearEquiv.apply_symm_apply] using
-      h.symm
+        h.symm
   exact physical_euler_momentum κ k hκ m F z u p Q X Y t x A DF Dz Du P
     hleft hY hXt hXs hF hz hA hu hp hQ hstrain hQgradient hparent hlift
 

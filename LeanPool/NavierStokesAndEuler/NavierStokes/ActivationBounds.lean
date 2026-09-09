@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StressActivation
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # Bounds for a shrinking activation ramp
@@ -17,6 +16,9 @@ The clock `u = y / T` keeps the cutoff fixed while the width tends to zero.
 All error factors below are actual transformed integrals and are smooth at
 `T = 0`. Compactness therefore gives width-uniform parameter-jet estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,9 +31,12 @@ section ParameterFactor
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
+/-- Parameter coefficient, given by `B (q.1.1, (q.2, q.1.2)) / stepDenominator 1 q.2`. -/
 noncomputable def parameterCoefficient (B : E × Point → ℝ) (q : (E × ℝ) × ℝ) : ℝ :=
   B (q.1.1, (q.2, q.1.2)) / stepDenominator 1 q.2
 
+/-- Parameter factor, given by `q.2.1 ^ 2 * stepDenominator 1 q.2.1 *
+ParametricFlatFactor.factor 1 0 (parameterCoefficient B) ((q.1, q.2.2), q.2.1)`. -/
 noncomputable def parameterFactor (B : E × Point → ℝ) (q : E × Point) : ℝ :=
   q.2.1 ^ 2 * stepDenominator 1 q.2.1 *
     ParametricFlatFactor.factor 1 0 (parameterCoefficient B) ((q.1, q.2.2), q.2.1)
@@ -97,8 +102,10 @@ theorem compact_parameter_jet_bound {S Q : Set E} (hS : IsOpen S) (hQ : IsCompac
 
 end ParameterFactor
 
+/-- Scaled point: an abbreviation for `(ℝ × ℝ) × Point`. -/
 abbrev ScaledPoint := (ℝ × ℝ) × Point
 
+/-- Scaled domain, given by `univ ×ˢ (univ ×ˢ J)`. -/
 noncomputable def scaledDomain (J : Set ℝ) : Set ScaledPoint := univ ×ˢ (univ ×ˢ J)
 
 theorem scaledDomain_open {J : Set ℝ} (hJ : IsOpen J) : IsOpen (scaledDomain J) :=
@@ -114,6 +121,7 @@ theorem rescale_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
   hF.comp ((contDiff_fst.snd.mul contDiff_snd.fst).prodMk contDiff_snd.snd).contDiffOn
     (fun _ hp => ⟨mem_univ _, hp.2.2⟩)
 
+/-- Scaled distance, given by `q.1.2 * q.2.1 * activation 1 q.1.1 q.2.1`. -/
 noncomputable def scaledDistance (q : ScaledPoint) : ℝ :=
   q.1.2 * q.2.1 * activation 1 q.1.1 q.2.1
 
@@ -152,6 +160,7 @@ theorem weightedPrimitive_rescaled {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B : Fiel
   dsimp only [weightedField]
   rw [activation_scaled hT]
 
+/-- Primitive error factor, given by `parameterFactor (rescale B)`. -/
 noncomputable def primitiveErrorFactor (B : Field) : ScaledPoint → ℝ :=
   parameterFactor (rescale B)
 
@@ -169,6 +178,7 @@ theorem weightedPrimitive_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B :
   dsimp only [scaledDistance, primitiveErrorFactor]
   ring
 
+/-- Controlled error factor, defined pointwise by `-primitiveErrorFactor (radialPartial F) q`. -/
 noncomputable def controlledErrorFactor (F : Field) : ScaledPoint → ℝ :=
   fun q => -primitiveErrorFactor (radialPartial F) q
 
@@ -186,6 +196,7 @@ theorem controlled_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   dsimp only [controlledErrorFactor]
   ring
 
+/-- Controlled value, given by `rescale F q + scaledDistance q * controlledErrorFactor F q`. -/
 noncomputable def controlledValue (F : Field) (q : ScaledPoint) : ℝ :=
   rescale F q + scaledDistance q * controlledErrorFactor F q
 
@@ -193,7 +204,7 @@ theorem controlledValue_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (controlledValue F) (scaledDomain J) :=
   (rescale_smooth hJ hF).add (scaledDistance_smooth.contDiffOn.mul (controlledErrorFactor_smooth hJ
-    hF))
+      hF))
 
 theorem controlledValue_eq {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
     {J : Set ℝ} (hJ : IsOpen J) {F : Field}
@@ -203,9 +214,12 @@ theorem controlledValue_eq {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   dsimp only [controlledValue, rescale]
   linarith
 
+/-- Angular value, defined pointwise by `Real.exp (controlledValue L q)`. -/
 noncomputable def angularValue (L : Field) : ScaledPoint → ℝ :=
   fun q => Real.exp (controlledValue L q)
 
+/-- Relative error factor, given by `controlledErrorFactor L q * meanExp (scaledDistance q *
+controlledErrorFactor L q)`. -/
 noncomputable def relativeErrorFactor (L : Field) (q : ScaledPoint) : ℝ :=
   controlledErrorFactor L q * meanExp (scaledDistance q * controlledErrorFactor L q)
 
@@ -226,6 +240,7 @@ theorem angular_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   dsimp only [relativeErrorFactor]
   ring
 
+/-- Angular error factor, given by `Real.exp (rescale L q) * relativeErrorFactor L q`. -/
 noncomputable def angularErrorFactor (L : Field) (q : ScaledPoint) : ℝ :=
   Real.exp (rescale L q) * relativeErrorFactor L q
 
@@ -338,6 +353,7 @@ theorem angular_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
 
 /-! ## Width-uniform factors for the actual five histories -/
 
+/-- Density error factor as an element of `ℝ`. -/
 noncomputable def densityErrorFactor (X0 : ℝ) (L U : Field)
     (r : HistoryRow) (q : ScaledPoint) : ℝ :=
   let x := radius X0 (q.1.2 * q.2.1)
@@ -403,10 +419,12 @@ theorem density_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
   cases r <;> dsimp only [radialDensity, densityErrorFactor] <;>
     simp only [hf', hu'] <;> ring
 
+/-- History coefficient, given by `q.1.2 * q.2.1 * densityErrorFactor X0 L U r q`. -/
 noncomputable def historyCoefficient (X0 : ℝ) (L U : Field)
     (r : HistoryRow) (q : ScaledPoint) : ℝ :=
   q.1.2 * q.2.1 * densityErrorFactor X0 L U r q
 
+/-- History error factor, given by `parameterFactor (historyCoefficient X0 L U r)`. -/
 noncomputable def historyErrorFactor (X0 : ℝ) (L U : Field)
     (r : HistoryRow) : ScaledPoint → ℝ :=
   parameterFactor (historyCoefficient X0 L U r)
@@ -439,7 +457,7 @@ theorem history_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
     (logDensity_smooth X0 hJ hL.exp hU r) (p := (T * u, η)) ⟨mem_univ _, hη⟩
   change IntervalIntegrable
     (fun t => logDensity X0 (activatedAngular T κ L) (controlled T κ U) r (t, η)) volume 0 (T * u)
-      at ha
+        at ha
   change IntervalIntegrable
     (fun t => logDensity X0 (referenceAngular L) U r (t, η)) volume 0 (T * u) at hr
   have hsub : logHistory X0 initial (activatedAngular T κ L) (controlled T κ U) r (T * u, η) -
@@ -479,9 +497,11 @@ theorem history_uniform_jets (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
 
 /-! ## Genuine parameter differentiation of the scaled factors -/
 
+/-- Eta D, given by `deriv (fun ξ => H (q.1, (q.2.1, ξ))) q.2.2`. -/
 noncomputable def etaD (H : ScaledPoint → ℝ) (q : ScaledPoint) : ℝ :=
   deriv (fun ξ => H (q.1, (q.2.1, ξ))) q.2.2
 
+/-- Eta linear, given by `fderiv ℝ H q ((0, 0), (0, 1))`. -/
 noncomputable def etaLinear (H : ScaledPoint → ℝ) (q : ScaledPoint) : ℝ :=
   fderiv ℝ H q ((0, 0), (0, 1))
 
@@ -703,7 +723,7 @@ theorem diagonal_histories_uniform_jets {δ0 : ℝ} (hδ0 : 0 < δ0)
       ∀ κ ∈ Icc (0 : ℝ) 1, ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
         |iteratedDeriv n (fun ξ =>
           profileHistory (FromReference.histories N hT.1 hT.1 hTR κ P0 hP0) r (radius N.endpoint y,
-            ξ) -
+              ξ) -
             profileHistory (N.histories hT.1 hTR P0 hP0) r (radius N.endpoint y, ξ)) η| ≤
               M * y * activation T κ y := by
   obtain ⟨M, hM, hb⟩ := history_uniform_jets N.endpoint (fun _ _ => 0)
@@ -728,7 +748,7 @@ theorem diagonal_histories_uniform_jets {δ0 : ℝ} (hδ0 : 0 < δ0)
     exact (diagonal_history_scaled_factor N hT.1 hTR hδ0 hδ0R hT.2 κ P0 hP0 r hu hξ).trans
       (history_scaled_factor hT.1.ne' κ N.endpoint (fun _ _ => 0) parameterInterval_open
         (FromReference.refLog_smooth N hδ0 hδ0R) (FromReference.refAxial_smooth N hδ0 hδ0R) r u
-          hξ).symm
+            hξ).symm
   rw [heq.iteratedDeriv_eq n]
   exact hb T hT κ hκ y hy η hη
 

@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphRealization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierUniform
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Restriction to a fixed continuous phase graph preserves time continuity
 in actual spatial L². The proof uses the uniform trace estimate for differences. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,13 +26,14 @@ open scoped ContDiff Topology
 
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K]
-  (u v : C(K,LiftL2 P)) (f : K → LiftDomain P → Vector3)
+  (u v : C(K, LiftL2 P)) (f : K → LiftDomain P → Vector3)
   (hf : ∀ t x, ContDiff ℝ ∞ (localFieldLift P (f t) x))
   (hu : ∀ t, (u t : LiftDomain P → Vector3) =ᵐ[liftMeasure P] f t)
   (hv : ∀ t, (v t : LiftDomain P → Vector3) =ᵐ[liftMeasure P]
-    fieldDerivative P (0,1) (f t))
+    fieldDerivative P (0, 1) (f t))
   (θ : Vector3 → AddCircle P) (hθ : Continuous θ)
 
+/-- Graph path value, given by `graphRealization P (f t) (hf t) (u t) (v t) (hu t) (hv t) θ hθ`. -/
 def graphPathValue (t : K) : Lp Vector3 2 (volume : Measure Vector3) :=
   graphRealization P (f t) (hf t) (u t) (v t) (hu t) (hv t) θ hθ
 
@@ -39,7 +43,7 @@ theorem graphPathValue_ae (t : K) :
   graphRealization_ae P (f t) (hf t) (u t) (v t) (hu t) (hv t) θ hθ
 
 theorem graphPathValue_sub_norm_sq_le (t s : K) :
-    ‖graphPathValue P u v f hf hu hv θ hθ t-
+    ‖graphPathValue P u v f hf hu hv θ hθ t -
       graphPathValue P u v f hf hu hv θ hθ s‖^2 ≤
       (2/P)*‖u t-u s‖^2+(2*P)*‖v t-v s‖^2 := by
   refine graph_norm_sq_le P (fun x => f t x-f s x)
@@ -68,7 +72,7 @@ theorem graphPathValue_continuous :
       ((((u.continuous.tendsto t).sub_const (u t)).norm.pow 2).const_mul (2/P)).add
         ((((v.continuous.tendsto t).sub_const (v t)).norm.pow 2).const_mul (2*P))
   have hsq := squeeze_zero
-    (fun s => sq_nonneg ‖graphPathValue P u v f hf hu hv θ hθ s-
+    (fun s => sq_nonneg ‖graphPathValue P u v f hf hu hv θ hθ s -
       graphPathValue P u v f hf hu hv θ hθ t‖)
     (fun s => graphPathValue_sub_norm_sq_le P u v f hf hu hv θ hθ s t) hlim
   have hr := Real.continuous_sqrt.continuousAt.tendsto.comp hsq

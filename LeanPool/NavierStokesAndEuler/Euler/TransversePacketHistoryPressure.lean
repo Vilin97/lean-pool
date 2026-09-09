@@ -7,10 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarTime
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
 
 /-!
 # The actual normalized scalar pressure for the transverse history
@@ -20,13 +21,16 @@ residual of the constructed history. Its L² realization, zero mean, spatial
 smoothness, support, and pointwise equation (11) are proved here.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketProvider.HistoryData
 
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoefficients
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths
-    EulerLpCylinderRectangular
+      EulerLpCylinderRectangular
   EulerCylinderSmoothOrbit EulerCylinderAngleAverage EulerVolterraConvolution EulerMetricTransport
   EulerSourceNormalResidualBounds EulerSourceNormalCoefficient EulerPacketProfileRecursion
   EulerCylinderScalarPrimitive
@@ -36,12 +40,17 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} (B : HistoryData D) {raw : VectorField} (G : Forcing P D raw)
 
+/-- Force field: an abbreviation for `pointField P (forcingPath G) G.path_orbit t`. -/
 abbrev forceField (t : Icc (0 : ℝ) D.T) := pointField P (forcingPath G) G.path_orbit t
 
+/-- Normal residual, given by `(⟪D.normal.field t x.1,forceField G t x⟫_ℝ - 2*⟪D.normal.field t
+x.1,D.M.field t x.1 (B.field G t x)⟫_ℝ)/‖D.normal.field t x.1‖^2`. -/
 def normalResidual (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) : ℝ :=
-  (⟪D.normal.field t x.1,forceField G t x⟫_ℝ-
+  (⟪D.normal.field t x.1,forceField G t x⟫_ℝ -
     2*⟪D.normal.field t x.1,D.M.field t x.1 (B.field G t x)⟫_ℝ)/‖D.normal.field t x.1‖^2
 
+/-- Residual path, given by `sourceResidual P D.M D.normal D.normalLower D.normalLower_pos
+D.normal_lower (forcingPath G) (B.velocityPath G)`. -/
 def residualPath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourceResidual P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (forcingPath G) (B.velocityPath G)
@@ -114,7 +123,7 @@ theorem residualPath_ae (t : Icc (0 : ℝ) D.T) :
   change ⟪D.normal.field t x.1,forcingPath G t x-(2 : ℝ) •
     (EulerLpOperatorField.full (liftMeasure P) (fieldLift P (D.M.field t)) v) x⟫_ℝ/_ = _
   rw [hM,inner_sub_right,inner_smul_right]
-  change (⟪D.normal.field t x.1,forcingPath G t x⟫_ℝ-
+  change (⟪D.normal.field t x.1,forcingPath G t x⟫_ℝ -
     2*⟪D.normal.field t x.1,D.M.field t x.1 (B.velocityPath G t x)⟫_ℝ)/_ = _
   rw [hv,hf]
   rfl
@@ -171,9 +180,9 @@ theorem pressureField_zero_outside (t : Icc (0 : ℝ) D.T) (y : Space) (hy : y �
 
 /-- Equation (11) before taking the angular integral, valid at every point. -/
 theorem field_balance (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
-    B.derivativeField G t x+D.M.field t x.1 (B.field G t x)+
+    B.derivativeField G t x+D.M.field t x.1 (B.field G t x) +
       B.normalResidual G t x • D.normal.field t x.1 = forceField G t x := by
-  have hae : (fun y : LiftDomain P => B.derivativeField G t y+D.M.field t y.1 (B.field G t y)+
+  have hae : (fun y : LiftDomain P => B.derivativeField G t y+D.M.field t y.1 (B.field G t y) +
       B.normalResidual G t y • D.normal.field t y.1) =ᵐ[liftMeasure P] forceField G t := by
     filter_upwards [B.balance_ae G t,B.field_ae G t,B.derivativeField_ae G t,
       pointField_ae P (forcingPath G) G.path_orbit t] with y he ha hd hf
@@ -191,8 +200,8 @@ theorem field_balance (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
 
 /-- The constructed history and its literal normalized pressure solve (11). -/
 theorem field_pressure_equation (t : Icc (0 : ℝ) D.T) (y : Space) (θ : ℝ) :
-    B.derivativeField G t (y,(θ : AddCircle P))+
-      D.M.field t y (B.field G t (y,(θ : AddCircle P)))+
+    B.derivativeField G t (y,(θ : AddCircle P)) +
+      D.M.field t y (B.field G t (y,(θ : AddCircle P))) +
       deriv (fun s : ℝ => B.pressureField G t (y,(s : AddCircle P))) θ • D.normal.field t y =
         raw (t,(y,θ)) := by
   rw [(B.pressureField_angle G t y θ).deriv,G.raw_eq t y θ]

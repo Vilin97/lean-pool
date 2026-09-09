@@ -9,10 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevMetricTransport
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderViscousEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Finite-family viscous metric energy for actual finite Sobolev solutions. -/
 
 @[expose] public section
 
-/-! Finite-family viscous metric energy for actual finite Sobolev solutions. -/
 
 noncomputable section
 
@@ -21,7 +23,7 @@ namespace EulerSobolevViscousEnergy
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerLiftedPressure
   EulerSpatialSobolevInverse EulerCylinderSobolev EulerCylinderSobolevSpace
   EulerMetricHeatEnergy EulerFiniteMetricEnergy EulerCylinderViscousEnergy
-    EulerSobolevMetricTransport
+      EulerSobolevMetricTransport
 open scoped ContDiff ENNReal NNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -43,8 +45,8 @@ theorem finite_sobolev_viscous_energy {ι : Type*} [Fintype ι] {q : ℕ} (hq : 
     (hp : ∀ i, p i ∈ gradientSpace period κ m)
     (hz : value period z ∈ divergenceFreeSpace period κ m) (B : ℝ≥0)
     (hzB : ∀ᵐ x ∂liftMeasure period, ‖value period z x‖ ≤ B)
-    (heq : ∀ i, e' i + transportOperator period hq κ m z (restrictOperator period (by norm_num : 1
-      ≤ 2) (e i t)) +
+    (heq : ∀ i, e' i + transportOperator period hq κ m z (restrictOperator period (by
+        norm_num : 1 ≤ 2) (e i t)) +
       G.operator (p i) = forcing i + ν • jetLaplacian period (toJet period (e i t))) :
     deriv (fun s => √(familyEnergy (K s).operator (fun i => value period (e i s)) + δ ^ 2)) t ≤
       ((‖K'‖ + 2 * transportEnergyConstant period (K t) κ m B +
@@ -66,14 +68,14 @@ theorem finite_sobolev_viscous_energy {ι : Type*} [Fintype ι] {q : ℕ} (hq : 
       (K t).measurable G.measurable (K t).bound G.bound (K t).norm_bound G.norm_bound
       hsym hKG (hediv i) (hp i)
   have htL (i : ι) : |⟪(K t).operator (value period (e i t)),
-      transportOperator period hq κ m z (restrictOperator period (by norm_num : 1 ≤ 2) (e i t))⟫_ℝ|
-        ≤
+      transportOperator period hq κ m z (restrictOperator period (by
+          norm_num : 1 ≤ 2) (e i t))⟫_ℝ| ≤
       β * ‖value period (e i t)‖ ^ 2 :=
-    metric_transport_bound period hq κ m (K t) z (restrictOperator period (by norm_num : 1 ≤ 2) (e
-      i t))
+    metric_transport_bound period hq κ m (K t) z (restrictOperator period (by
+        norm_num : 1 ≤ 2) (e i t))
       hsym hz B hzB
   have hheat (i : ι) : ⟪(K t).operator (value period (e i t)), jetLaplacian period (toJet period (e
-    i t))⟫_ℝ ≤
+      i t))⟫_ℝ ≤
       C * ‖value period (e i t)‖ ^ 2 := by
     have h := metric_heat_bound period (K t) (value period (e i t)) (toJet period (e i t)) c hc hpos
     have hd : 0 ≤ ∑ j : Fin 4, ‖(toJet period (e i t)).word (fun _ : Fin 1 => j)‖ ^ 2 :=
@@ -81,10 +83,10 @@ theorem finite_sobolev_viscous_energy {ι : Type*} [Fintype ι] {q : ℕ} (hq : 
     dsimp [C, heatEnergyConstant]
     nlinarith [sq_nonneg c]
   have h := family_regularized_energy_evolution (fun s => (K s).operator) (fun i s => value period
-    (e i s))
+      (e i s))
     t δ c β C ν K' e'
-    (fun i => transportOperator period hq κ m z (restrictOperator period (by norm_num : 1 ≤ 2) (e i
-      t)))
+    (fun i => transportOperator period hq κ m z (restrictOperator period (by
+        norm_num : 1 ≤ 2) (e i t)))
     (fun i => G.operator (p i)) forcing (fun i => jetLaplacian period (toJet period (e i t)))
     hδ hc hβ hC hν hcoer hKt het hsymL heq hpL htL hheat
   have hop : ‖(K t).operator‖ ≤ (K t).bound :=

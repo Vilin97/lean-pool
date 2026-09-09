@@ -7,11 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityBudget
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidDifferencePDE
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifferenceMetric
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
+import LeanPool.NavierStokesAndEuler.Euler.InviscidDifferencePDE
+import LeanPool.NavierStokesAndEuler.Euler.SquaredMetricStability
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Uniqueness of the actual finite-order inviscid correction equation. -/
 
 @[expose] public section
 
-/-! Uniqueness of the actual finite-order inviscid correction equation. -/
 
 noncomputable section
 
@@ -20,35 +25,36 @@ namespace EulerInviscidCorrectionUniqueness
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerLiftedPressure
   EulerCylinderSobolevSpace EulerCorrectionOperators EulerQuadraticSource EulerVolterraConvolution
   EulerSobolevHeat EulerCorrectionDifferencePDE EulerCorrectionDifferenceMetric
-    EulerCorrectionStabilityConstants
+      EulerCorrectionStabilityConstants
   EulerCorrectionStabilityBudget EulerSquaredMetricStability EulerMetricEnergyEvolution
-    EulerInviscidDifferencePDE
+      EulerInviscidDifferencePDE
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The existing Sobolev normed-group instance for the actual viscosity comparison. -/
 local instance comparisonSobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 /-- The existing real Sobolev module instance for the actual viscosity comparison. -/
 local instance comparisonSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
-/-- Actual inviscid corrections with equal initial data and the concrete metric/coefficient bounds are unique.
+/-- Actual inviscid corrections with equal initial data and the concrete metric/coefficient bounds
+are unique.
 The squared energy inequality and the zero-difference conclusion are derived from their actual
-  equations. -/
+equations. -/
 theorem inviscid_correction_unique {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period q (Icc (0 : ℝ) T)) (B : StabilityBudget period hT D)
-    (u v : C(Icc (0 : ℝ) T,SobolevSpace period (q+1)))
-    (hi : u ⟨0,le_rfl,hT⟩ = v ⟨0,le_rfl,hT⟩)
+    (u v : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
+    (hi : u ⟨0, le_rfl, hT⟩ = v ⟨0, le_rfl, hT⟩)
     (hu : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (fun r => value period (extendPath T hT u r))
-        (value period ((D.coefficients period hq).apply ⟨t,ht.1.le,ht.2.le⟩ (u
-          ⟨t,ht.1.le,ht.2.le⟩))) t)
+        (value period ((D.coefficients period hq).apply ⟨t, ht.1.le, ht.2.le⟩ (u
+            ⟨t, ht.1.le, ht.2.le⟩))) t)
     (hv : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (fun r => value period (extendPath T hT v r))
-        (value period ((D.coefficients period hq).apply ⟨t,ht.1.le,ht.2.le⟩ (v
-          ⟨t,ht.1.le,ht.2.le⟩))) t)
+        (value period ((D.coefficients period hq).apply ⟨t, ht.1.le, ht.2.le⟩ (v
+            ⟨t, ht.1.le, ht.2.le⟩))) t)
     (hz : ∀ t, value period (D.approximation t) ∈ divergenceFreeSpace period D.κ D.direction)
     (hud : ∀ t, value period (u t) ∈ divergenceFreeSpace period D.κ D.direction)
     (hvd : ∀ t, value period (v t) ∈ divergenceFreeSpace period D.κ D.direction) : u = v := by
@@ -61,7 +67,7 @@ theorem inviscid_correction_unique {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 �
   have hR : 0 ≤ R := (norm_nonneg u).trans huR
   have hKc : Continuous K := B.continuous.comp continuous_projIcc
   have hec : Continuous e := ((valueOperator period (q+1)).continuous.comp (extendPath_continuous T
-    hT u)).sub
+      hT u)).sub
     ((valueOperator period (q+1)).continuous.comp (extendPath_continuous T hT v))
   have hEc : Continuous E := (hKc.clm_apply hec).inner (𝕜 := ℝ) hec
   have hKv (t : Icc (0 : ℝ) T) : K t.val=(B.metric t).operator := by
@@ -92,14 +98,16 @@ theorem inviscid_correction_unique {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 �
       exact B.time_le _
     have hb := difference_metric_deriv_bound period D hq τ (u τ) (v τ) (B.metric τ) K e t 0 0
       B.c B.bound B.first B.time B.linear B.quadratic ‖D.approximation‖ R (extendPath T hT
-        B.derivative t)
-      B.c_pos (by norm_num : (0 : ℝ) ≤ 0) (by norm_num : (0 : ℝ) ≤ 1) (hKv τ) (hev τ) (B.hasDeriv t
-        ht) hd (B.bound_le τ) (B.first_le τ) htime
+          B.derivative t)
+      B.c_pos (by
+          norm_num : (0 : ℝ) ≤ 0) (by
+              norm_num : (0 : ℝ) ≤ 1) (hKv τ) (hev τ) (B.hasDeriv t ht) hd (B.bound_le τ)
+                  (B.first_le τ) htime
       (B.linear_le τ) (B.quadratic_le τ) (D.approximation.norm_coe_le_norm τ)
       ((u.norm_coe_le_norm τ).trans huR) ((v.norm_coe_le_norm τ).trans hvR)
       (B.symmetric τ) (B.coercive τ) (B.inverse τ) (hz τ) (hud τ) (hvd τ)
-    simpa only [E,StabilityBudget.growth,sub_self,abs_zero,zero_pow (by decide : (2 : ℕ) ≠
-      0),mul_zero] using hb
+    simpa only [E,StabilityBudget.growth,sub_self,abs_zero,zero_pow (by
+        decide : (2 : ℕ) ≠ 0),mul_zero] using hb
   have hbound := linear_growth_bound E (deriv E) (B.growth period R)
     0 T (B.growth_nonneg period R hR) (le_refl 0) hT hEc.continuousOn hzero hder hineq
   apply ContinuousMap.ext

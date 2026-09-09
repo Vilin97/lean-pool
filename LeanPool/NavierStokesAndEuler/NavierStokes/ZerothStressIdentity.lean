@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AssembledSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCoefficientBridge
 
 /-!
 # The canonical zeroth stress is the explicit leading stress
@@ -18,6 +16,9 @@ The weighted stresses have regular primitives through the axis. Their actual
 derivatives are the negative weighted residuals, so the lower integration
 endpoint fixes the constant and identifies the constructed stress.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +32,7 @@ open scoped Topology ContDiff BigOperators
 
 variable {Ω : RadialDomain} (P : Profiles Ω)
 
+/-- Leading profiles, bundling `phi`, `axial`, `flux`, `pressure`. -/
 noncomputable def leadingProfiles (h C : ℝ) : SlowProfiles where
   phi := NaturalCoefficientBridge.zeroSequence (fun w => C * P.f w)
   axial := NaturalCoefficientBridge.zeroSequence P.U
@@ -62,7 +64,7 @@ theorem leading_angular_coefficient (h C : ℝ) {w : InnerPoint} (hw : w ∈ Ω.
   simp only [leadingProfiles, NaturalCoefficientBridge.zeroSequence, ↓reduceIte,
     T_const_mul h (angularExponent h) C hd, Z_const_mul h (angularExponent h) C hd,
     NaturalCoefficientBridge.partialX_const_mul C hd, NaturalCoefficientBridge.secondX_const_mul C
-      hs]
+        hs]
   have he := LeadingStress.theta_transport_coefficient P h hw hX hf hL
   simp only [angularExponent] at ⊢
   linear_combination C * he
@@ -106,10 +108,10 @@ theorem weightedTheta_hasDerivAt (h : ℝ) {R eta : ℝ}
         4 * R ^ 3 * partialX P.f (R ^ 2 / 2, eta) +
         R ^ 5 * partialX (partialX P.f) (R ^ 2 / 2, eta)) R := by
   have hprim := (primitive_hasDerivAt Ω (P.angularSource_smooth h) hw).comp R
-    (square_half_hasDerivAt R)
+      (square_half_hasDerivAt R)
   have hfx := (LeadingStress.partialX_hasDerivAt
     (((radialPartial_smooth Ω P.f_smooth).contDiffAt (Ω.isOpen.mem_nhds hw)).differentiableAt (by
-      simp))).comp R
+        simp))).comp R
       (square_half_hasDerivAt R)
   change HasDerivAt ((fun x => partialX P.f (x, eta)) ∘ fun r => r ^ 2 / 2)
     (partialX (partialX P.f) (R ^ 2 / 2, eta) * R) R at hfx
@@ -125,10 +127,10 @@ theorem weightedAxial_hasDerivAt (h : ℝ) {R eta : ℝ}
         2 * R * partialX P.U (R ^ 2 / 2, eta) +
         R ^ 3 * partialX (partialX P.U) (R ^ 2 / 2, eta)) R := by
   have hprim := (primitive_hasDerivAt Ω (P.axialSource_smooth h) hw).comp R (square_half_hasDerivAt
-    R)
+      R)
   have hux := (LeadingStress.partialX_hasDerivAt
     (((radialPartial_smooth Ω P.U_smooth).contDiffAt (Ω.isOpen.mem_nhds hw)).differentiableAt (by
-      simp))).comp R
+        simp))).comp R
       (square_half_hasDerivAt R)
   change HasDerivAt ((fun x => partialX P.U (x, eta)) ∘ fun r => r ^ 2 / 2)
     (partialX (partialX P.U) (R ^ 2 / 2, eta) * R) R at hux
@@ -150,7 +152,7 @@ theorem weightedAxial_eq (h : ℝ) {R eta : ℝ} (hR : 0 < R)
   unfold weightedAxial LeadingStress.axial Profiles.axialLag
   dsimp only
   rw [show 2 * (R ^ 2 / 2) = R ^ 2 by ring, Real.sqrt_sq hR.le]
-  field_simp ; ring
+  field_simp; ring
 
 theorem leading_thetaDensity (h C : ℝ) (hC : C ≠ 0) {R eta : ℝ} (hR : 0 < R)
     (hw : (R ^ 2 / 2, eta) ∈ Ω.carrier) (hf : P.f (R ^ 2 / 2, eta) ≠ 0)
@@ -163,7 +165,7 @@ theorem leading_thetaDensity (h C : ℝ) (hC : C ≠ 0) {R eta : ℝ} (hR : 0 < 
   rw [leading_angular_coefficient P h C hw (by positivity) hf hL]
   unfold LeadingStress.sourceTheta Profiles.H
   dsimp only
-  field_simp ; ring
+  field_simp; ring
 
 theorem leading_zDensity (h C : ℝ) {R eta : ℝ}
     (hw : (R ^ 2 / 2, eta) ∈ Ω.carrier) (hL : CoordinateAlgebra.L h eta ≠ 0) :
@@ -215,7 +217,7 @@ theorem scheme_leading_germs {S : Set ℝ} {h C : ℝ}
     (GlobalSlowProfiles.asSlowProfiles s).axial 0 =ᶠ[𝓝 p] (leadingProfiles P h C).axial 0 ∧
     (GlobalSlowProfiles.asSlowProfiles s).flux 0 =ᶠ[𝓝 p] (leadingProfiles P h C).flux 0 ∧
     (GlobalSlowProfiles.asSlowProfiles s).pressure 0 =ᶠ[𝓝 p] (leadingProfiles P h C).pressure 0 :=
-      by
+        by
   have hn := (isOpen_Ioi.prod s.domain.isOpen).mem_nhds (show p ∈ Ioi 0 ×ˢ S from ⟨hX, heta⟩)
   refine ⟨?_, ?_, ?_, ?_⟩
   · filter_upwards [hn] with q hq
@@ -310,7 +312,7 @@ theorem raw_stresses_eq
   constructor
   · have hd : ∀ r ∈ Ioo 0 R, HasDerivAt (fun t => weightedTheta P h t eta)
         (-SlowResidualMatching.thetaDensity h C (GlobalSlowProfiles.asSlowProfiles s) 0 (r, eta)) r
-          := by
+            := by
       intro r hr
       have hrpos : 0 < r := hr.1
       have hxr : r ^ 2 / 2 ≤ R ^ 2 / 2 :=
@@ -325,7 +327,7 @@ theorem raw_stresses_eq
       (fun r => weightedTheta P h r eta) hR
       (weightedTheta_continuous P h hslice).continuousOn (weightedTheta_zero P h eta) hd
       ((SlowStressSupport.slice_smooth (AssembledSlowBase.thetaDensity_smooth L B0 Z0 0)
-        heta).continuous.intervalIntegrable 0 R)
+          heta).continuous.intervalIntegrable 0 R)
     rw [he]
     change weightedTheta P h R eta / R ^ 2 = _
     rw [weightedTheta_eq P h hR (hf _ (by positivity) le_rfl) hL]
@@ -342,7 +344,7 @@ theorem raw_stresses_eq
       (fun r => weightedAxial P h r eta) hR
       (weightedAxial_continuous P h hslice).continuousOn (weightedAxial_zero P h eta) hd
       ((SlowStressSupport.slice_smooth (AssembledSlowBase.zDensity_smooth L B0 Z0 0)
-        heta).continuous.intervalIntegrable 0 R)
+          heta).continuous.intervalIntegrable 0 R)
     rw [he]
     change weightedAxial P h R eta / R ^ 1 = _
     rw [weightedAxial_eq P h hR hL]

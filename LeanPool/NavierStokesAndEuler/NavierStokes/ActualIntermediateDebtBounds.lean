@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularMeanGain
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionAnalyticStep
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
 
 /-!
 # Measured debt before the actual rank correction
@@ -18,6 +17,9 @@ The first-wave debt, the signed covariance change, and the temporal mean
 change are evaluated on the literal intermediate states.  No estimate of
 the post-temporal debt is supplied as a premise.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,29 +30,43 @@ open CorrectionInitialization VariableGaugeMean
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
+/-- Signed velocity: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).signedVelocity x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev signedVelocity {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).signedVelocity x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Signed pressure: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).signedPressure x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev signedPressure {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).signedPressure x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Signed gaussian: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).signedGaussian x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev signedGaussian {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).signedGaussian x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Post signed: an abbreviation for `(ActualCycleParameters.fixedParameters B N0).afterSigned
+x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev postSigned {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).afterSigned x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Temporal increment: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).temporalIncrement x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev temporalIncrement {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).temporalIncrement x.coefficients
     (ActualPrimary.commonContext B) x.state
 
+/-- Post temporal: an abbreviation for `(ActualCycleParameters.fixedParameters B
+N0).afterTemporal x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev postTemporal {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (ActualCycleParameters.fixedParameters B N0).afterTemporal x.coefficients
     (ActualPrimary.commonContext B) x.state
@@ -61,16 +77,16 @@ variable {B N0 : ℕ} {x : CycleState (Index B N0)} {σ : ℝ}
     {S : Index B N0 → ℕ → Set Point}
     (H : CycleAnalyticInvariant ActualInitialization.geometry (ActualPrimary.commonContext B)
       ActualInitialization.tangentBlock ActualInitialization.envelope S σ x)
-    (hσ : 1/5 ≤ σ)
+    (hσ : 1 / 5 ≤ σ)
     (first : ActualParticularMeanGain.Result x σ)
-    (hCov : SignedMeanGain.TensorClass ActualInitialization.strip (1+σ-ChartScales.kappa)
+    (hCov : SignedMeanGain.TensorClass ActualInitialization.strip (1 + σ - ChartScales.kappa)
       (SignedMeanGain.covarianceIncrement (ActualParticularMeanGain.postParticular x).oscillation
         (signedVelocity x)))
     (hX : ∀ i j, GaugeMomentBalances.MovingField ActualPrimary.standardRegion
       ActualInitialization.patch.a ActualInitialization.patch.b
       (SignedMeanGain.covarianceIncrement (ActualParticularMeanGain.postParticular x).oscillation
         (signedVelocity x) i j))
-    (hTemporal : IncrementBounds ActualInitialization.strip (1+σ-2*ChartScales.kappa)
+    (hTemporal : IncrementBounds ActualInitialization.strip (1 + σ - 2 * ChartScales.kappa)
       (temporalIncrement x))
 
 include H hσ first hCov hX hTemporal
@@ -96,8 +112,8 @@ theorem stage_debt_bounds :
       norm_num [ChartScales.kappa]; linarith) first.debt
   have hS : ∀ i : Fin 3, UnweightedClass ActualInitialization.slowStrip (1+σ-2*ChartScales.kappa)
       (fun n z => debt (ActualPrimary.commonContext B) (postSigned x) n z i) := by
-    simp only [show (1+σ-ChartScales.kappa)-ChartScales.kappa = 1+σ-2*ChartScales.kappa by ring] at
-      hSigned
+    simp only [show (1+σ-ChartScales.kappa)-ChartScales.kappa = 1+σ-2*ChartScales.kappa by
+        ring] at hSigned
     exact hSigned
   have HP : MeanStateRegularity.PrimitiveData G.region G.patch.a G.patch.b
       (ActualPrimary.commonContext B) (postSigned x) :=
@@ -108,7 +124,7 @@ theorem stage_debt_bounds :
   have hMoving := MeanStageRegularity.temporalIncrement_moving HPg G.inner_pos G.exponent_pos
     G.length_eq rfl ActualPrimary.h (CommonWindow.index ActualPrimary.h) ActualInitialization.axial
   have hRegular : GaugeDebtIncrement.RegularTriple G.region G.patch.a G.patch.b (temporalIncrement
-    x) := by
+      x) := by
     have hr := hMoving.regular
     simp only [G.inner_eq, G.outer_eq] at hr ⊢
     exact hr
@@ -119,7 +135,7 @@ theorem stage_debt_bounds :
     G.left_pos G.right_pos G.epsilon G.slow G.epsilon_pos G.epsilon_le_one G.slow_ge_one
     G.gauge ActualPrimary.h (CommonWindow.index ActualPrimary.h) ActualInitialization.axial
     (ActualPrimary.commonContext B) (postSigned x) HP.operators.regular HP.base.smooth
-      HP.mean.regular
+        HP.mean.regular
     hRegular (fun i j => MeanStateRegularity.MovingField.regular (HP.covariance i j))
     (ActualInitialization.operators B) (ActualInitialization.base_bounds B) hm hTemporal
     (show 9/10 ≤ 1+σ-2*ChartScales.kappa by norm_num [ChartScales.kappa]; linarith)
@@ -137,11 +153,11 @@ variable {B N0 : ℕ} {x : CycleState (Index B N0)} {σ : ℝ}
       (ActualPrimary.commonContext B) ChartScales.kappa)
     (H : CycleAnalyticInvariant ActualInitialization.geometry (ActualPrimary.commonContext B)
       ActualInitialization.tangentBlock ActualInitialization.envelope S σ x)
-    (hσ : 1/5 ≤ σ) (particular : ActualParticularMeanGain.Inputs x σ)
+    (hσ : 1 / 5 ≤ σ) (particular : ActualParticularMeanGain.Inputs x σ)
     (d : CorrectionAnalyticStep.StepData ActualInitialization.geometry ActualPrimary.h
       (CommonWindow.index ActualPrimary.h) ActualInitialization.axial
       (fun l => ActualParticularStageControls.canonicalParameters (ActualCycleParameters.swap B N0
-        l))
+          l))
       ActualSignedStageControls.parameters ActualPrimary.rankData (ActualPrimary.commonContext B)
       x ActualInitialization.tangentBlock ActualInitialization.envelope S D H hσ)
 
@@ -164,14 +180,14 @@ theorem stage_debt_from_stepData :
   let a : SignedMeanGain.Assembly F := d.assembly
   have hlabels : a.labels = x.coefficients.labels := d.labels
   have hOld : (ActualParticularMeanGain.postParticular x).oscillation = SignedMeanGain.oldField F a
-    := by
+      := by
     simpa only [SignedMeanGain.oldField, F, CycleParameters.signedFamily, hlabels] using
       p.beforeSignedBlock_represents x.coefficients c x.state H.representation
   have hWave : SignedMeanGain.tangentField F a + SignedMeanGain.curlField F a = signedVelocity x :=
-    by
+      by
     simpa only [SignedMeanGain.tangentField, SignedMeanGain.curlField, F,
       CycleParameters.signedFamily, hlabels] using (p.signedVelocity_split x.coefficients c
-        x.state).symm
+          x.state).symm
   have hCov : SignedMeanGain.TensorClass ActualInitialization.strip (1+σ-ChartScales.kappa)
       (SignedMeanGain.covarianceIncrement (ActualParticularMeanGain.postParticular x).oscillation
         (signedVelocity x)) := by

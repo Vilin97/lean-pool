@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CoerciveEndpointBounds
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
 
 /-!
 The neighboring-label estimate for the actual nonzero-terminal inverse.
@@ -16,6 +16,9 @@ The inverse is the same coercive inverse as the packet construction.  All
 constants below bound coefficients or their explicit frame-transport cost;
 no bound on an unknown inverse or on a supplied solution is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -7,15 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermFields
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
 
 /-!
 Exact mean and high forcing sums.  Periodic BA/BC terms are absent from the
 mean force, and the angle-constant BB term is absent from the high force.
 Every summand is the genuine continuous cylinder L² path already constructed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,7 +44,7 @@ theorem angleMean_neg_finsetSum {ι : Type*} (s : Finset ι) (raw : ι → Vecto
   unfold angleMean
   rw [intervalIntegral.integral_neg,
     intervalIntegral.integral_finsetSum (fun i _ => ((G i).raw_angle_continuous t
-      x).intervalIntegrable 0 P)]
+        x).intervalIntegrable 0 P)]
   simp only [smul_neg, Finset.smul_sum]
 
 variable {O : Operators} {p : ℕ} {a : ℕ → Profile}
@@ -49,9 +52,9 @@ variable {O : Operators} {p : ℕ} {a : ℕ → Profile}
 theorem PrefixFields.knownForce_decomposition (F : PrefixFields P T p a)
     (hp : 2 ≤ p) (hc : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
     (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     EulerPacketProfileRecursion.knownForce O p a (t,(x,θ)) =
       -(∑ q ∈ knownTermIndices p, q.1.raw O p a q.2.1 q.2.2 (t,(x,θ))) :=
@@ -60,15 +63,15 @@ theorem PrefixFields.knownForce_decomposition (F : PrefixFields P T p a)
     (fun i => (F.meanPiece_angleIndependent hB i t x).angular θ)
 
 variable (F : PrefixFields P T p a) (C : CoefficientData P T O)
-    (hp : 2 ≤ p) (hT : 0 < T) {corrector_t : VectorField}
-    (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-    (pressure : Field P T (pressureGradient (a (p-1)).highPressure))
+    (hp : 2 ≤ p) (hT : 0 < T) {correctorT : VectorField}
+    (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+    (pressure : Field P T (pressureGradient (a (p - 1)).highPressure))
     (hc : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
     (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (hB : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
 
 include C hp hT Ct hCt pressure hc hB₁ hA hB in
 theorem PrefixFields.meanForce_decomposition (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :

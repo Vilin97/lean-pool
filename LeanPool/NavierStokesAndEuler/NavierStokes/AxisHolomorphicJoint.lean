@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisHolomorphic
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CauchyRestriction
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactSmoothFamily
+import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
 
 /-!
 # Joint smoothness of the actual holomorphic axis profile
@@ -20,6 +20,9 @@ then identifies the actual derivative of the disk-valued curve. Iterating this
 argument and using the fixed-contour holomorphic-family theorem proves joint
 real smoothness of the constructed extension.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -178,7 +181,7 @@ theorem complexProfile_joint_smooth (I : Window) {ε R s : ℝ} (hε : 0 < ε)
     (diskProfile I ε A p.2 σ k) (complexProfile I ε A k)
     (diskProfile_contDiffOn I hε hR hs hs1 A p.2 σ hK k)
     (fun y hy => (complexProfile_analytic I hε hR hs hs1 A k (abs_lt.mpr
-      hy).le).differentiableOn.mono
+        hy).le).differentiableOn.mono
       (ball_subset_closedBall.trans hK))
     (fun y hy z => diskProfile_apply I hε hR hs hs1 A p.2 σ hK k (abs_lt.mpr hy).le z)
   exact (hlocal.contDiffAt ((isOpen_Ioo.prod isOpen_ball).mem_nhds

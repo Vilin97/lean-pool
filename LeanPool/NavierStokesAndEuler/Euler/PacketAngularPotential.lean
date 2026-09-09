@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCrossProduct
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveBounds
+public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveBounds
+
+/-! The vector potential Q of a tangent, mean-zero, periodic high coefficient. -/
 
 @[expose] public section
 
-/-! The vector potential Q of a tangent, mean-zero, periodic high coefficient. -/
 
 noncomputable section
 
@@ -20,6 +22,7 @@ namespace EulerPacketAngularPotential
 open EulerSmoothLimit EulerPacketCrossProduct EulerAngleMeanZeroPrimitive
   MeasureTheory Set InnerProductSpace
 
+/-- Potential, given by `primitive P (fun θ => potentialMultiplier m (A θ))`. -/
 def potential (P : ℝ) (m : Space) (A : ℝ → Space) : ℝ → Space :=
   primitive P (fun θ => potentialMultiplier m (A θ))
 
@@ -30,14 +33,14 @@ theorem potential_hasDerivAt (P : ℝ) (m : Space) (A : ℝ → Space)
 
 /-- The actual angular derivative recovers A after crossing with m. -/
 theorem cross_deriv_potential (P : ℝ) (m : Space) (hm : m ≠ 0) (A : ℝ → Space)
-    (hA : Continuous A) (htan : ∀ θ, ⟪m,A θ⟫_ℝ=0) (θ : ℝ) :
+    (hA : Continuous A) (htan : ∀ θ, ⟪m, A θ⟫_ℝ = 0) (θ : ℝ) :
     cross m (deriv (potential P m A) θ)=A θ := by
   rw [(potential_hasDerivAt P m A hA θ).deriv]
   exact cross_potentialMultiplier m (A θ) hm (htan θ)
 
 theorem potential_periodic (P : ℝ) (m : Space) (A : ℝ → Space)
     (hA : Continuous A) (hper : Function.Periodic A P)
-    (hmean : ∫ θ in 0..P, A θ=0) : Function.Periodic (potential P m A) P := by
+    (hmean : ∫ θ in 0..P, A θ = 0) : Function.Periodic (potential P m A) P := by
   apply primitive_periodic P _ ((potentialMultiplier m).continuous.comp hA)
   · intro θ
     exact congrArg (potentialMultiplier m) (hper θ)
@@ -55,7 +58,7 @@ theorem potential_zero (P : ℝ) (m : Space) :
   simp [potential, primitive, rawPrimitive]
 
 /-- The angular construction creates no values at labels where the whole input vanishes. -/
-theorem potential_vanishes (P : ℝ) (m : Space) (A : ℝ → Space) (hA : ∀ θ, A θ=0) :
+theorem potential_vanishes (P : ℝ) (m : Space) (A : ℝ → Space) (hA : ∀ θ, A θ = 0) :
     ∀ θ, potential P m A θ=0 := by
   have h : A=fun _ => 0 := funext hA
   rw [h, potential_zero]

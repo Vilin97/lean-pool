@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarParity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+
+/-! Even parity of the actual normalized transverse pressure from the odd solved velocity. -/
 
 @[expose] public section
 
-/-! Even parity of the actual normalized transverse pressure from the odd solved velocity. -/
 
 noncomputable section
 
@@ -27,6 +30,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
+/-- Normal residual field type used in transverse packet pressure parity. -/
 abbrev normalResidualField := EulerSourceCylinderClassical.normalResidual
   P D.support D.support_measurable D.support_compact D.T D.T_pos.le
   D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
@@ -36,14 +40,14 @@ theorem normalResidualField_formula (t : Icc (0 : ℝ) D.T) (x : Space) (θ : �
     G.normalResidualField I t (x,(θ : AddCircle P)) =
       (⟪D.normal.field t x,raw (t,(x,θ))⟫_ℝ -
         2*⟪D.normal.field t x,D.M.field t x (G.vector I (t,(x,θ)))⟫_ℝ) / ‖D.normal.field t x‖^2 :=
-          by
+            by
   simp only [normalResidualField,EulerSourceCylinderClassical.normalResidual,
     vector,Data.clamp_coe,G.raw_eq]
 
 variable (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ)))
+  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
   (hinit : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
 
 include hSym hF hM hraw hinit in
@@ -73,7 +77,7 @@ include h in
 theorem highSolve_parity (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
     (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-    (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ)))
+    (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
     (hinit : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U)) :
     (∀ (t : Icc (0 : ℝ) D.T) x θ,
       (highSolve P D I raw).1 (t,(-x,-θ)) = -(highSolve P D I raw).1 (t,(x,θ))) ∧

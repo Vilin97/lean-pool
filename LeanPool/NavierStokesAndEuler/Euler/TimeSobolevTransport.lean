@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AsymmetricTransport
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevTimeRegularization
+public import LeanPool.NavierStokesAndEuler.Euler.HeatRegularizedPaths
+import LeanPool.NavierStokesAndEuler.Euler.SobolevTimeRegularization
+
+/-! Actual derivative-losing transport on continuous coefficients and square-integrable higher
+Sobolev states. -/
 
 @[expose] public section
 
-/-! Actual derivative-losing transport on continuous coefficients and square-integrable higher
-  Sobolev states. -/
 
 noncomputable section
 
@@ -28,7 +30,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- A named local normed-group instance for the actual Sobolev scale. -/
 local instance transportTimeGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
 /-- A named local real normed-space instance for the actual Sobolev scale. -/
 local instance transportTimeSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
@@ -40,27 +42,30 @@ def transportPath {s : ℕ} (hs : 6 ≤ s)
     C(Icc (0 : ℝ) T, SobolevSpace period (s+1) →L[ℝ] SobolevSpace period s) :=
   (asymmetricTransport period hs L hL).compLeftContinuous ℝ (Icc (0 : ℝ) T) u
 
-/-- Actual nonlinear transport of a higher Sobolev time field belongs to the full energy-order Bochner space. -/
+/-- Actual nonlinear transport of a higher Sobolev time field belongs to the full energy-order
+Bochner space. -/
 def transportTime {s : ℕ} (hs : 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1) (T : ℝ) (hT : 0 ≤ T)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period s))
-    (v : TimeLp T (SobolevSpace period (s+1))) : TimeLp T (SobolevSpace period s) :=
+    (v : TimeLp T (SobolevSpace period (s + 1))) : TimeLp T (SobolevSpace period s) :=
   timeMultiplier T hT (transportPath period hs L hL T u) v
 
-/-- The actual Bochner transport is literal asymmetric Sobolev transport almost everywhere in time. -/
+/-- The actual Bochner transport is literal asymmetric Sobolev transport almost everywhere in time.
+-/
 theorem transportTime_ae {s : ℕ} (hs : 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1) (T : ℝ) (hT : 0 ≤ T)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period s))
-    (v : TimeLp T (SobolevSpace period (s+1))) :
+    (v : TimeLp T (SobolevSpace period (s + 1))) :
     (transportTime period hs L hL T hT u v : ℝ → SobolevSpace period s) =ᵐ[timeMeasure T]
       fun t => asymmetricTransport period hs L hL (extendPath T hT u t) (v t) :=
   timeMultiplier_ae T hT (transportPath period hs L hL T u) v
 
-/-- Genuine heat smoothing and actual transport commute asymptotically in the energy-order L² time space. -/
+/-- Genuine heat smoothing and actual transport commute asymptotically in the energy-order L² time
+space. -/
 theorem transport_regularization_commutator {s : ℕ} (hs : 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1) (T : ℝ) (hT : 0 ≤ T)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period s))
-    (v : TimeLp T (SobolevSpace period (s+1))) :
+    (v : TimeLp T (SobolevSpace period (s + 1))) :
     Filter.Tendsto (fun n =>
       transportTime period hs L hL T hT u
         ((heatOperator period (s+1) (regularizerVariance n)).compLpL 2 (timeMeasure T) v) -

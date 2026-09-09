@@ -7,15 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardForcedBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseHighSolveFields
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardForcedBounds
+
+/-! One complete quantitative recursion step, using the actual mean and zero-initial direct-forward
+transverse solvers. -/
 
 @[expose] public section
 
-/-! One complete quantitative recursion step, using the actual mean and zero-initial direct-forward
-  transverse solvers. -/
 
 noncomputable section
 
@@ -36,7 +42,7 @@ theorem forwardStep
     {O : Operators} (C : CoefficientData P M.T O) (BC : CoefficientBudget C)
     (hmean : O.meanSolve = EulerMeanPacketProvider.meanSolve M)
     (hhigh : O.highSolve = EulerTransversePacketProvider.highSolve P D
-      (EulerTransversePacketProvider.InitialData.zero P D))
+        (EulerTransversePacketProvider.InitialData.zero P D))
     (hcorrector : O.curlCorrector = D.curlCorrector P)
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
     (S : Scales (Icc (0 : ℝ) M.T))
@@ -45,7 +51,7 @@ theorem forwardStep
     (hG : ∀ i (hi : i < p), 1 ≤ i → ProfileBudget (G i hi) S L.R i)
     (hc₀ : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
     (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (c : ℝ) (hc : 0 < c)
     (hprofile : timeProfileChange (S.high p) hTime = c • L.g)
     (H : ProfileRegularity P M.T M.T_pos.le D.support (EulerPacketProfileRecursion.step O p a)) :
@@ -110,7 +116,7 @@ theorem forwardStep
   have hHighVal : (EulerPacketProfileRecursion.step O p a).high =
       GH.vector I := congrArg Prod.fst hHighSolve
   have hMeanVal : (EulerPacketProfileRecursion.step O p a).mean = GM.vector := congrArg Prod.fst
-    hMeanSolve
+      hMeanSolve
   have hCorrectorVal : (EulerPacketProfileRecursion.step O p a).corrector =
       D.curlCorrector P (GH.vector I) := by
     change O.curlCorrector (O.highSolve (highForce O p a)).1 = _
@@ -146,12 +152,12 @@ theorem forwardStep
     mean := hmBounds.1.normalized_of_raw_eq H.mean M.T_pos.le (S.mean p) (S.mean_pos p)
       (fun t x θ => congrFun hMeanVal (t,(x,θ)))
     meanDerivative := hmBounds.2.1.normalized_of_raw_eq H.meanDerivative M.T_pos.le (S.mean p)
-      (S.mean_pos p)
+        (S.mean_pos p)
       (TimeDerivative.raw_eq (hT := M.T_pos) H.mean_time hMeanTime)
     corrector := hcv.normalized_of_raw_eq H.corrector M.T_pos.le (S.high p) (S.high_pos p)
       (fun t x θ => congrFun hCorrectorVal (t,(x,θ)))
     correctorDerivative := hct.normalized_of_raw_eq H.correctorDerivative M.T_pos.le (S.high p)
-      (S.high_pos p)
+        (S.high_pos p)
       (TimeDerivative.raw_eq (hT := M.T_pos) H.corrector_time hCorrectorTime)
     pressure := hpv.normalized_of_raw_eq H.pressure M.T_pos.le (S.high p) (S.high_pos p)
       (fun t x θ => congrFun hPressureVal (t,(x,θ)))

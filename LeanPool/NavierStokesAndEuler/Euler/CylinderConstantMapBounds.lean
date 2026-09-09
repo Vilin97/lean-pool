@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMap
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+
+/-! Fixed bounded maps preserve the same external-word radius for actual cylinder paths. -/
 
 @[expose] public section
 
-/-! Fixed bounded maps preserve the same external-word radius for actual cylinder paths. -/
 
 noncomputable section
 
@@ -26,7 +29,7 @@ variable (P : ℝ) [Fact (0 < P)]
   {ι : Type*} [Fintype ι]
 
 theorem pathMap_block_bound (directions : ι → LiftTangent) (q : ℕ) (L : E →L[ℝ] F)
-    (p : C(K,CylinderL2 P E))
+    (p : C(K, CylinderL2 P E))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (n : ℕ) (a : LiftTangent) :
     block directions q (fun b : LiftTangent => pathTranslate P b (pathMap P L p)) n a ≤
       ‖L‖ * block directions q (fun b : LiftTangent => pathTranslate P b p) n a := by

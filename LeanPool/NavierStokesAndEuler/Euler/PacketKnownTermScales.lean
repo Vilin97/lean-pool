@@ -9,14 +9,16 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownDecomposition
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceScales
 
+/-! Every nonzero known summand fits strictly below its target forcing shift. -/
+
 @[expose] public section
 
-/-! Every nonzero known summand fits strictly below its target forcing shift. -/
 
 namespace EulerPacketCylinderField.KnownTerm
 
 open EulerPacketShiftArithmetic
 
+/-- Budget shift as an element of `ℕ`. -/
 def budgetShift (k : KnownTerm) (p i j : ℕ) : ℕ :=
   match k with
   | .previousLinear | .previousPressure => if i=0 ∧ j=0 then highShift (p-1) else 0

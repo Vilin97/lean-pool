@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevParityOperators
 public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionEquation
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevReflection
+import LeanPool.NavierStokesAndEuler.Euler.SobolevParityOperators
+
+/-! Joint odd symmetry of the actual correction source and its coercive pressure. -/
 
 @[expose] public section
 
-/-! Joint odd symmetry of the actual correction source and its coercive pressure. -/
 
 noncomputable section
 
@@ -20,7 +22,7 @@ namespace EulerCorrectionParity
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerPressureSpatialRegularity
   EulerSpatialSobolevInverse EulerCylinderSobolev EulerCylinderSobolevSpace
   EulerSobolevCoefficientPressure EulerSobolevTransport EulerCorrectionOperators
-  EulerCylinderReflection EulerGradientReflection EulerSobolevReflection EulerSobolevParityOperators
+  EulerCylinderReflection  EulerSobolevReflection EulerSobolevParityOperators
 
 variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup Y] [NormedSpace ℝ Y]
@@ -37,10 +39,10 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The inherited Sobolev additive normed-group instance. -/
 local instance correctionParityGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 /-- The inherited real Sobolev module instance. -/
 local instance correctionParitySpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
 /-- Signed reflection on Sobolev fields has the literal signed L² value. -/
 theorem value_oddReflection {q : ℕ} (u : SobolevSpace period q) :
@@ -63,7 +65,7 @@ theorem oddReflection_fixed_of_ae {q : ℕ} (u : SobolevSpace period q)
   rw [hh, neg_neg]
 
 /-- Signed reflection commutes with restriction to the next Sobolev order. -/
-theorem truncate_oddReflection {q : ℕ} (u : SobolevSpace period (q+1)) :
+theorem truncate_oddReflection {q : ℕ} (u : SobolevSpace period (q + 1)) :
     truncateOperator period q (oddReflection period (q+1) u) =
       oddReflection period q (truncateOperator period q u) := by
   simp only [oddReflection_apply, map_neg]
@@ -83,7 +85,7 @@ theorem pressure_oddReflection {q : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period standardDirection q A)
     (hA : ∀ x, A.coefficient (-x) = A.coefficient x)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v,v⟫_ℝ) (u : SobolevSpace period q) :
+    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) (u : SobolevSpace period q) :
     oddReflection period q (pressureSobolevOperator period K κ m c hc hpos u) =
       pressureSobolevOperator period K κ m c hc hpos (oddReflection period q u) := by
   simp only [oddReflection_apply, map_neg]
@@ -94,7 +96,7 @@ theorem projectedSource_oddReflection {q : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period standardDirection q A)
     (hA : ∀ x, A.coefficient (-x) = A.coefficient x)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v,v⟫_ℝ) (u : SobolevSpace period q) :
+    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) (u : SobolevSpace period q) :
     oddReflection period q (projectedSourceOperator period K κ m c hc hpos u) =
       projectedSourceOperator period K κ m c hc hpos (oddReflection period q u) := by
   simp only [oddReflection_apply, map_neg]
@@ -106,26 +108,26 @@ theorem rawSource_oddReflection {q : ℕ} (hq : 6 ≤ q) {T : Type*} [Topologica
     (D : CorrectionData period q T) (t : T)
     (hL : ∀ x, (D.linear.coefficient t).coefficient (-x) = (D.linear.coefficient t).coefficient x)
     (hQ : ∀ i x, ((D.quadratic i).coefficient t).coefficient (-x) = -((D.quadratic i).coefficient
-      t).coefficient x)
-    (hz : oddReflection period (q+1) (D.approximation t) = D.approximation t)
+        t).coefficient x)
+    (hz : oddReflection period (q + 1) (D.approximation t) = D.approximation t)
     (hr : oddReflection period q (D.residual t) = D.residual t)
-    (e : SobolevSpace period (q+1)) :
+    (e : SobolevSpace period (q + 1)) :
     oddReflection period q (D.rawSource period hq t e) =
       D.rawSource period hq t (oddReflection period (q+1) e) := by
   let L := velocityComponents D.κ D.direction
   let hLnorm := velocityComponents_norm D.κ D.direction D.scale_bound D.direction_bound
   let F := eulerBilinear period hq L hLnorm (fun i => coefficientSobolevOperator period
-    ((D.quadratic i).jet t))
+      ((D.quadratic i).jet t))
   let C := (coefficientSobolevOperator period (D.linear.jet t)).comp (truncateOperator period q)
   have hF (u v : SobolevSpace period (q+1)) : oddReflection period q (F u v) =
       F (oddReflection period (q+1) u) (oddReflection period (q+1) v) :=
     eulerBilinear_oddReflection period hq L hLnorm (fun i => (D.quadratic i).coefficient t)
       (fun i => (D.quadratic i).jet t) hQ u v
   have hC (u : SobolevSpace period (q+1)) : oddReflection period q (C u) = C (oddReflection period
-    (q+1) u) :=
+      (q+1) u) :=
     (coefficient_oddReflection period (D.linear.jet t) hL (truncateOperator period q u)).trans
       (congrArg (coefficientSobolevOperator period (D.linear.jet t)) (truncate_oddReflection period
-        u).symm)
+          u).symm)
   exact linearized_source_equivariant (oddReflection period (q+1)) (oddReflection period q) F C
     (D.approximation t) (D.residual t) hF hC hz hr e
 
@@ -136,10 +138,10 @@ theorem correction_pressure_oddReflection {q : ℕ} (hq : 6 ≤ q) {T : Type*} [
     (hG : ∀ x, (D.metric.coefficient t).coefficient (-x) = (D.metric.coefficient t).coefficient x)
     (hL : ∀ x, (D.linear.coefficient t).coefficient (-x) = (D.linear.coefficient t).coefficient x)
     (hQ : ∀ i x, ((D.quadratic i).coefficient t).coefficient (-x) = -((D.quadratic i).coefficient
-      t).coefficient x)
-    (hz : oddReflection period (q+1) (D.approximation t) = D.approximation t)
+        t).coefficient x)
+    (hz : oddReflection period (q + 1) (D.approximation t) = D.approximation t)
     (hr : oddReflection period q (D.residual t) = D.residual t)
-    (e : SobolevSpace period (q+1)) :
+    (e : SobolevSpace period (q + 1)) :
     oddReflection period q (D.pressure period hq t e) =
       D.pressure period hq t (oddReflection period (q+1) e) := by
   change oddReflection period q (-(pressureSobolevOperator period (D.metric.jet t) D.κ D.direction
@@ -148,7 +150,7 @@ theorem correction_pressure_oddReflection {q : ℕ} (hq : 6 ≤ q) {T : Type*} [
   exact congrArg Neg.neg ((pressure_oddReflection period (D.metric.jet t) hG D.κ D.direction
     D.coercivity D.coercivity_pos (D.metric_pos t) (D.rawSource period hq t e)).trans
     (congrArg (pressureSobolevOperator period (D.metric.jet t) D.κ D.direction D.coercivity
-      D.coercivity_pos
+        D.coercivity_pos
       (D.metric_pos t)) (rawSource_oddReflection period hq D t hL hQ hz hr e)))
 
 /-- The literal projected nonlinear correction equation has the required
@@ -158,10 +160,10 @@ theorem correction_source_oddReflection {q : ℕ} (hq : 6 ≤ q) {T : Type*} [To
     (hG : ∀ x, (D.metric.coefficient t).coefficient (-x) = (D.metric.coefficient t).coefficient x)
     (hL : ∀ x, (D.linear.coefficient t).coefficient (-x) = (D.linear.coefficient t).coefficient x)
     (hQ : ∀ i x, ((D.quadratic i).coefficient t).coefficient (-x) = -((D.quadratic i).coefficient
-      t).coefficient x)
-    (hz : oddReflection period (q+1) (D.approximation t) = D.approximation t)
+        t).coefficient x)
+    (hz : oddReflection period (q + 1) (D.approximation t) = D.approximation t)
     (hr : oddReflection period q (D.residual t) = D.residual t)
-    (e : SobolevSpace period (q+1)) :
+    (e : SobolevSpace period (q + 1)) :
     oddReflection period q ((D.coefficients period hq).apply t e) =
       (D.coefficients period hq).apply t (oddReflection period (q+1) e) := by
   change oddReflection period q (-(projectedSourceOperator period (D.metric.jet t) D.κ D.direction
@@ -170,7 +172,7 @@ theorem correction_source_oddReflection {q : ℕ} (hq : 6 ≤ q) {T : Type*} [To
   exact congrArg Neg.neg ((projectedSource_oddReflection period (D.metric.jet t) hG D.κ D.direction
     D.coercivity D.coercivity_pos (D.metric_pos t) (D.rawSource period hq t e)).trans
     (congrArg (projectedSourceOperator period (D.metric.jet t) D.κ D.direction D.coercivity
-      D.coercivity_pos
+        D.coercivity_pos
       (D.metric_pos t)) (rawSource_oddReflection period hq D t hL hQ hz hr e)))
 
 end EulerCorrectionParity

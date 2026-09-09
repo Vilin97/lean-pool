@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketOrbitForcing
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketNonlinearForcing
+
+/-! The actual scalar pressure gradient is an admissible smooth L² field. -/
 
 @[expose] public section
 
-/-! The actual scalar pressure gradient is an admissible smooth L² field. -/
 
 noncomputable section
 
@@ -21,6 +23,7 @@ open Set EulerSmoothLimit EulerMeanCoefficients EulerMeanScalarPressure
 
 variable {D : Data} {raw : VectorField} (G : Forcing D raw)
 
+/-- Scalar gradient, defined pointwise by `gradient (fun x => G.scalar (z.1,(x,z.2.2))) z.2.1`. -/
 def scalarGradient : VectorField := fun z =>
   gradient (fun x => G.scalar (z.1,(x,z.2.2))) z.2.1
 
@@ -33,7 +36,7 @@ theorem scalarGradient_eq (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 /-- All actual pressure-gradient jets are square-integrable and continuous in time. -/
 def scalarGradientForcing : Forcing D G.scalarGradient := by
   let A := SmoothCoefficientPath.map (EulerTransverseGramInverse.realAdjoint (U := Space) (E :=
-    Space)) D.F
+      Space)) D.F
   have hAdj (M : Space →L[ℝ] Space) :
       EulerTransverseGramInverse.realAdjoint M = M.adjoint := rfl
   apply (G.pressureForceForcing.multiply A).congr

@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyStabilityBudget
 
+/-! Actual finite correction families and input comparison bounds, independent of any Gevrey
+radius-loss budget. -/
+
 @[expose] public section
 
-/-! Actual finite correction families and input comparison bounds, independent of any Gevrey
-  radius-loss budget. -/
 
 noncomputable section
 
@@ -24,7 +25,8 @@ open MeasureTheory Set EulerLiftedGradientSpace EulerLiftedPressure EulerCylinde
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- One genuine inverse metric and actual base coefficient bounds provide stability at every finite Sobolev order.
+/-- One genuine inverse metric and actual base coefficient bounds provide stability at every finite
+Sobolev order.
 No shrinking-radius condition or smallness of the approximate velocity is required. -/
 def stabilityBudgetOfBase {T : ℝ} (hT : 0 < T) (A : Data period T)
     (K : MetricBudget period T hT.le (A.atOrder period 1))
@@ -73,8 +75,8 @@ def ComparisonData.stabilityBudget {T : ℝ} {hT : 0 < T} {A : Data period T}
   stabilityBudgetOfBase period hT A C.metric C.radius C.spatial q
 
 /-- An actual finite-order correction family supplied by separate finite-existence theorems.
-Only its paths, zero initial data, divergence constraints and literal PDEs are inputs;
-  compatibility is not assumed. -/
+Only its paths, zero initial data, divergence constraints and literal PDEs are inputs; compatibility
+is not assumed. -/
 structure FiniteFamily {T : ℝ} (hT : 0 < T) (A : Data period T) where
   /-- A genuine continuous finite Sobolev correction at each order. -/
   solution : ∀ q, 6 ≤ q → C(Icc (0 : ℝ) T, SobolevSpace period (q+1))
@@ -90,9 +92,9 @@ structure FiniteFamily {T : ℝ} (hT : 0 < T) (A : Data period T) where
 
 /-- Choose an actual finite correction family from proved finite-existence statements.
 This is an assembly helper conditional on finite existence, not an independent source existence
-  theorem. -/
+theorem. -/
 def finiteFamilyOfExists {T : ℝ} (hT : 0 < T) (A : Data period T)
-    (H : ∀ q (hq : 6 ≤ q), ∃ e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)),
+    (H : ∀ q (hq : 6 ≤ q), ∃ e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)),
       e ⟨0, le_rfl, hT.le⟩ = 0 ∧
       (∀ t, value period (e t) ∈ divergenceFreeSpace period A.κ A.direction) ∧
       ∀ t (ht : t ∈ Ioo 0 T),

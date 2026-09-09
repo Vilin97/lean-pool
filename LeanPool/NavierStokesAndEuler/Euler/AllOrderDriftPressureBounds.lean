@@ -9,11 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftRadiusBounds
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblySourceTower
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionSourceBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressure
+import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Smaller-radius quantitative bounds for the constructed common pressure
 and the actual first time derivative of the correction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -64,9 +68,12 @@ def Budget.sourceCost (B : Budget period hT A) (q : ℕ) (hq : 6 ≤ q) : ℝ :=
   sourceBound period S.B0 S.B1 S.A0 S.A2 1
     (B.baseCorrectionSize period) ((8/B.initialRadius)*B.baseCorrectionSize period)
 
+/-- Pressure cost, given by `2*(B.spatial q hq).full.M*B.sourceCost period q hq`. -/
 def Budget.pressureCost (B : Budget period hT A) (q : ℕ) (hq : 6 ≤ q) : ℝ :=
   2*(B.spatial q hq).full.M*B.sourceCost period q hq
 
+/-- Time derivative cost, given by `(1+2*(B.spatial q hq).full.M*(448*(B.spatial q
+hq).full.B+1))*B.sourceCost period q hq`. -/
 def Budget.timeDerivativeCost (B : Budget period hT A) (q : ℕ) (hq : 6 ≤ q) : ℝ :=
   (1+2*(B.spatial q hq).full.M*(448*(B.spatial q hq).full.B+1))*B.sourceCost period q hq
 
@@ -98,7 +105,7 @@ theorem Budget.sourceCost_nonneg (B : Budget period hT A) (q : ℕ) (hq : 6 ≤ 
     (mul_nonneg (div_nonneg (by norm_num) B.radius_pos.le) (B.baseCorrectionSize_nonneg period))
 
 private theorem tower_weightedNorm_eq (F : FieldTower period T) (s u N : ℕ)
-    (hs : N+6 ≤ s) (hu : N+6 ≤ u) (r : ℝ) (t : Icc (0 : ℝ) T) :
+    (hs : N + 6 ≤ s) (hu : N + 6 ≤ u) (r : ℝ) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N r (F.realization s t) =
       weightedNorm period 6 N r (F.realization u t) := by
   apply weightedNorm_unique period 6 N r _ _ _ hs hu
@@ -107,8 +114,8 @@ private theorem tower_weightedNorm_eq (F : FieldTower period T) (s u N : ℕ)
 /-- The common raw source is bounded at the fixed smaller radius, using
 only the actual correction and derivative bounds already proved. -/
 theorem Budget.rawSourceTower_reducedNorm (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N+4 ≤ q)
-    (s : ℕ) (hs : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N + 4 ≤ q)
+    (s : ℕ) (hs : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.reducedRadius period) ((B.rawSourceTower period).realization s t) ≤
       B.sourceSize period q hq := by
   have hrR : B.reducedRadius period ≤ B.radius t := by
@@ -131,8 +138,8 @@ theorem Budget.rawSourceTower_reducedNorm (B : Budget period hT A)
 /-- The pressure is the actual common signed pressure obtained from the
 coercive elliptic inverse, with an explicit smaller-radius bound. -/
 theorem Budget.pressureTower_reducedNorm (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N+4 ≤ q)
-    (s : ℕ) (hs : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N + 4 ≤ q)
+    (s : ℕ) (hs : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.reducedRadius period) ((B.pressureTower period).realization s t) ≤
       2*(B.spatial q hq).full.M*B.sourceSize period q hq := by
   have hrR : B.reducedRadius period ≤ B.radius t := by
@@ -156,10 +163,10 @@ theorem Budget.pressureTower_reducedNorm (B : Budget period hT A)
 /-- The actual continuous time-derivative field has the bound obtained
 from its literal raw-source and signed-pressure equation. -/
 theorem Budget.timeDerivativeTower_reducedNorm (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N+4 ≤ q)
-    (s : ℕ) (hs : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N + 4 ≤ q)
+    (s : ℕ) (hs : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.reducedRadius period) ((B.timeDerivativeTower period).realization s
-      t) ≤
+        t) ≤
       (1+2*(B.spatial q hq).full.M*(448*(B.spatial q hq).full.B+1))*B.sourceSize period q hq := by
   have hrR : B.reducedRadius period ≤ B.radius t := by
     have h := B.reducedRadius_le_half period t
@@ -181,8 +188,8 @@ theorem Budget.timeDerivativeTower_reducedNorm (B : Budget period hT A)
 
 /-- The actual pressure-gradient norm is linear in the target error. -/
 theorem Budget.pressureTower_reducedNorm_delta (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N+4 ≤ q)
-    (s : ℕ) (hs : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N + 4 ≤ q)
+    (s : ℕ) (hs : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.reducedRadius period) ((B.pressureTower period).realization s t) ≤
       B.pressureCost period q hq*B.delta := by
   have hM := zero_le_one.trans (B.spatial q hq).full.M_one_le
@@ -193,10 +200,10 @@ theorem Budget.pressureTower_reducedNorm_delta (B : Budget period hT A)
 /-- The actual first time derivative has the same linear target-error
 factor, at the same fixed radius and every finite external cutoff. -/
 theorem Budget.timeDerivativeTower_reducedNorm_delta (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N+4 ≤ q)
-    (s : ℕ) (hs : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hNq : N + 4 ≤ q)
+    (s : ℕ) (hs : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.reducedRadius period) ((B.timeDerivativeTower period).realization s
-      t) ≤
+        t) ≤
       B.timeDerivativeCost period q hq*B.delta := by
   have hM := zero_le_one.trans (B.spatial q hq).full.M_one_le
   have hB := (B.spatial q hq).full.B_nonneg

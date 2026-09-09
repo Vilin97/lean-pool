@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualBaseVelocityBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedFiniteBackground
 
-@[expose] public section
-
 /-!
 # Initial physical velocity bounds from the actual base and native data
 
@@ -20,6 +18,9 @@ Its curl is the constructed `FinalSlowBase.velocity`.  Only the finite
 initialization potential pays the derivative used by the curl estimate;
 no growth estimate on the base potential or its gauge is required.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,6 +35,7 @@ assumption on the initialization gain. -/
 noncomputable def seedPotentialLoss (h waveAlpha waveShift meanAlpha : ℝ) (m : ℕ) : ℝ :=
   potentialLoss h (-(h * waveAlpha + waveShift)) (-(h * meanAlpha)) m
 
+/-- Seed direct loss, given by `directLoss h (-(h * meanAlpha)) m`. -/
 noncomputable def seedDirectLoss (h meanAlpha : ℝ) (m : ℕ) : ℝ :=
   directLoss h (-(h * meanAlpha)) m
 
@@ -121,6 +123,8 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (v : ModulatedProfileAssembly.Witness ld)
   {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
+/-- Initialized potential, defined pointwise by `TailGaugePotential.finalPotential H v upper B w
++ potentialIncrement WA MA w`. -/
 noncomputable def initializedPotential (upper : ℝ) (B : ℕ)
     (WA : WaveData F.data.h D I K (Fin 3))
     (MA : MeanData F.data.h (CoordinateAlgebra.A F.data.h - 1 / 2)) : VelocityField :=
@@ -321,7 +325,7 @@ theorem native_background_rate (upper : ℝ) (B : ℕ)
   obtain ⟨CA, _, hrawA⟩ := potentialStages_raw (TailGaugePotential.finalPotential H v upper B)
     WA MA F.data.h_pos F.data.h_lt_half hqA g waveOffset potentialOffset hwave hpotential
   obtain ⟨CB, _, hrawB⟩ := directStages_raw MB F.data.h_pos F.data.h_lt_half hqB g directOffset
-    hdirect
+      hdirect
   exact MixedFiniteBackground.mixed_background_from_initial hU hlU
     (ActualBaseVelocityBounds.endpoint_past.and hlU)
     (ActualBaseVelocityBounds.endpoint_q_small F.data.h_pos F.data.h_lt_half)

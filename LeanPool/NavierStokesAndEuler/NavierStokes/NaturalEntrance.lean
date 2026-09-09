@@ -7,12 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalProfile
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisReference
 
 /-!
 # Entrance estimates for the actual natural profiles
@@ -22,6 +17,9 @@ profiles. Uniform estimates and the regular radial integral are used to check
 the entrance test before any outgoing controlled continuation.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.NaturalEntrance
@@ -29,26 +27,37 @@ namespace NavierStokes.NaturalEntrance
 open Set Filter NaturalProfile NaturalAxisBridge NaturalAxisCoefficients
 open scoped Topology ContDiff
 
-private local instance (I : AxisCoefficientSpace.Window) (ε : ℝ) :
+/-- Cache the standard `NormedAddCommGroup (AxisCoefficientSpace.AxisSpace I ε)` instance to
+shorten typeclass synthesis. -/
+local instance instNaturalEntrance1 (I : AxisCoefficientSpace.Window) (ε : ℝ) :
     NormedAddCommGroup (AxisCoefficientSpace.AxisSpace I ε) := inferInstance
-private local instance (I : AxisCoefficientSpace.Window) (ε : ℝ) :
+/-- Cache the standard `NormedSpace ℝ (AxisCoefficientSpace.AxisSpace I ε)` instance to shorten
+typeclass synthesis. -/
+local instance instNaturalEntrance2 (I : AxisCoefficientSpace.Window) (ε : ℝ) :
     NormedSpace ℝ (AxisCoefficientSpace.AxisSpace I ε) := inferInstance
 
+/-- Sq, given by `-transportW h V p * (1 + p.1 * partialY f p / f p) - h * (1 - 2 * p.2 * U p) -
+transportH h U p * (partialEta f p / f p)`. -/
 def Sq (h : ℝ) (f U V : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -transportW h V p * (1 + p.1 * partialY f p / f p) -
     h * (1 - 2 * p.2 * U p) - transportH h U p * (partialEta f p / f p)
 
+/-- P1, given by `-2 * p.1 * partialY f p / f p`. -/
 def p1 (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -2 * p.1 * partialY f p / f p
 
+/-- Ns, given by `-2 * partialY U p`. -/
 def ns (U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := -2 * partialY U p
 
+/-- Angular velocity, given by `Real.sqrt (2 * p.1) * f p`. -/
 def angularVelocity (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.sqrt (2 * p.1) * f p
 
+/-- P2, given by `p.1 * ns U p / angularVelocity f p`. -/
 def p2 (f U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   p.1 * ns U p / angularVelocity f p
 
+/-- Cone size, given by `p1 f p + (p2 f U p) ^ 2 / p1 f p`. -/
 def coneSize (f U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   p1 f p + (p2 f U p) ^ 2 / p1 f p
 
@@ -206,6 +215,7 @@ theorem derivative_neg_of_regular_source {f : ℝ → ℝ} {R L : ℝ}
   have hm := mul_nonneg (sq_nonneg R) (le_of_not_gt hd)
   linarith
 
+/-- Entrance set, constructed using `Icc`. -/
 def entranceSet : Set (ℝ × ℝ) := Icc (0 : ℝ) (41 / 10) ×ˢ Icc (-1 : ℝ) 1
 
 instance : CompactSpace entranceSet :=
@@ -220,6 +230,8 @@ theorem entrance_abs_le_five {p : ℝ × ℝ} (hp : p ∈ entranceSet) : |p.1| �
   rw [abs_of_nonneg hp.1.1]
   linarith [hp.1.2]
 
+/-- Coefficient pair: an abbreviation for `AxisCoefficientSpace.AxisSpace window ε ×
+AxisCoefficientSpace.AxisSpace window ε`. -/
 abbrev CoefficientPair (ε : ℝ) :=
   AxisCoefficientSpace.AxisSpace window ε × AxisCoefficientSpace.AxisSpace window ε
 
@@ -233,6 +245,8 @@ def sourceJets {ε : ℝ} (hε : 0 < ε) (x : CoefficientPair ε) (p : ℝ × �
     AxisEvaluation.mixedSeries window ε (AxisOperators.average window hε x.2) 0 0 p,
     AxisEvaluation.mixedSeries window ε (AxisOperators.average window hε x.2) 0 1 p]
 
+/-- Source jet constant, given by `1 + AxisEvaluation.jetBound ε 5 0 0 + AxisEvaluation.jetBound
+ε 5 1 0 + AxisEvaluation.jetBound ε 5 0 1`. -/
 def sourceJetConstant (ε : ℝ) : ℝ := 1 + AxisEvaluation.jetBound ε 5 0 0 +
   AxisEvaluation.jetBound ε 5 1 0 + AxisEvaluation.jetBound ε 5 0 1
 
@@ -334,10 +348,14 @@ theorem sourceRemainder_continuous (h j : ℝ) {σ : ℝ} (hσ : 0 < σ) :
     NaturalAxisData.U, NaturalAxisData.d]
   fun_prop (disch := first | exact fun x => hn x.2.2 | exact hn _ | positivity)
 
+/-- Reference pair, given by `referenceCoefficients window v.epsilon_pos (v.elements .chi)
+v.axisData`. -/
 def referencePair {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFamily h j σ P0) :
     CoefficientPair v.epsilon :=
   referenceCoefficients window v.epsilon_pos (v.elements .chi) v.axisData
 
+/-- Reference remainder, given by `sourceRemainder h j σ p 0 (sourceJets v.epsilon_pos
+(referencePair v) p)`. -/
 def referenceRemainder {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFamily h j σ P0)
     (p : entranceSet) : ℝ :=
   sourceRemainder h j σ p 0 (sourceJets v.epsilon_pos (referencePair v) p)
@@ -430,6 +448,8 @@ theorem reference_source_absorption {h j σ : ℝ} {P0 : ℝ → ℝ}
     rw [referenceRemainder_at_chi_zero v hσ p hchi]
     linarith [base_source_lower hsmall p.property.2]
 
+/-- Perturbation source, given by `sourceRemainder h j σ q.1 q.2.1 (sourceJets v.epsilon_pos
+(referencePair v) q.1 + q.2.2)`. -/
 def perturbationSource {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFamily h j σ P0)
     (q : entranceSet × (ℝ × (Fin 6 → ℝ))) : ℝ :=
   sourceRemainder h j σ q.1 q.2.1 (sourceJets v.epsilon_pos (referencePair v) q.1 + q.2.2)
@@ -535,7 +555,7 @@ private theorem source_remainder_algebra {Λ L χ Hs κ d u W h η U Y φ φY φ
   calc
     _ = (-W * (1 + Y * φY / φ) - h * (1 - 2 * η * U) -
         (Hs + (1 / Λ) * d * u) * (φEta / φ) - d * u * κ) - Λ * (Hs * κ) := by
-      field_simp ; ring
+      field_simp; ring
     _ = _ := by rw [hgrad]; ring
 
 theorem Sq_reconstruction {h j σ Λ : ℝ} (P0 : ℝ → ℝ) {a : ℝ → ℝ}
@@ -578,14 +598,20 @@ theorem sourceJets_eq {ε : ℝ} (hε : 0 < ε) (x : CoefficientPair ε)
   simp only [sourceJets, partialY_profile window hε _ hp,
     partialEta_profile window hε _ hp, AxisEvaluation.mixedSeries_zero]
 
+/-- Angular field, given by `angularProfile (realAmplitude h j σ Λ C) Λ (AxisEvaluation.profile
+window ε x.1)`. -/
 noncomputable def angularField (h j σ Λ C : ℝ) {ε : ℝ} (x : CoefficientPair ε) :
     ℝ × ℝ → ℝ := angularProfile (realAmplitude h j σ Λ C) Λ
       (AxisEvaluation.profile window ε x.1)
 
+/-- Axial field, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ (AxisEvaluation.profile
+window ε x.2)`. -/
 noncomputable def axialField (j Λ : ℝ) {ε : ℝ} (x : CoefficientPair ε) :
     ℝ × ℝ → ℝ := affineProfile (NaturalAxisData.U j) (1 / Λ) Λ
       (AxisEvaluation.profile window ε x.2)
 
+/-- Average field, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ
+(AxisEvaluation.profile window ε (AxisOperators.average window hε x.2))`. -/
 noncomputable def averageField (j Λ : ℝ) {ε : ℝ} (hε : 0 < ε) (x : CoefficientPair ε) :
     ℝ × ℝ → ℝ := affineProfile (NaturalAxisData.U j) (1 / Λ) Λ
       (AxisEvaluation.profile window ε (AxisOperators.average window hε x.2))
@@ -785,7 +811,7 @@ theorem ns_error {h j σ Λ K : ℝ} {P0 : ℝ → ℝ}
     rw [ns, axialField_partialY v.epsilon_pos hΛ.ne' x hq,
       reference_u_derivative v ⟨hq.2.1.le, hq.2.2.le⟩]
     dsimp only [q, rescalePoint]
-    field_simp ; ring
+    field_simp; ring
   rw [heq, abs_mul, show |(-2 : ℝ)| = 2 by norm_num]
   calc
     2 * |partialY (AxisEvaluation.profile window v.epsilon x.2) q -
@@ -833,6 +859,8 @@ theorem ns_separated {h j σ Λ K δ : ℝ} {P0 : ℝ → ℝ}
   rw [abs_sub_comm] at habs
   linarith
 
+/-- Profile bound, given by `1 + AxisEvaluation.jetBound v.epsilon 5 0 0 * (‖referencePair v‖ +
+1)`. -/
 noncomputable def profileBound {h j σ : ℝ} {P0 : ℝ → ℝ}
     (v : CoefficientFamily h j σ P0) : ℝ :=
   1 + AxisEvaluation.jetBound v.epsilon 5 0 0 * (‖referencePair v‖ + 1)
@@ -903,7 +931,7 @@ theorem angularField_small {h j σ Λ C δ : ℝ} {P0 : ℝ → ℝ}
       ⟨(original_interval_interior hp.2).1.le, (original_interval_interior hp.2).2.le⟩)
   have hφ := (le_abs_self (AxisEvaluation.profile window d.coefficients.epsilon x.1
       (rescalePoint Λ p))).trans (coefficient_profile_le d.coefficients x hx (entrance_abs_le_five
-        hp))
+          hp))
   have hf : angularField h j σ Λ C x p ≤ d.normalizationThreshold Λ / C *
       profileBound d.coefficients := by
     exact (mul_le_mul_of_nonneg_left hφ (realAmplitude_pos h j σ Λ hCpos p.2).le).trans
@@ -961,7 +989,9 @@ The witness supplies all radial and parameter jet bounds needed by later
 continuation estimates. -/
 structure CoefficientProfile {h j σ : ℝ} {P0 : ℝ → ℝ}
     (d : AnalyticInputs h j σ P0) (Λ C : ℝ) where
+  /-- Family of `CoefficientProfile`, of type `ProfileFamily d Λ C`. -/
   family : ProfileFamily d Λ C
+  /-- Coefficients of `CoefficientProfile`, of type `CoefficientPair d.coefficients.epsilon`. -/
   coefficients : CoefficientPair d.coefficients.epsilon
   phi_eq : family.phi = AxisEvaluation.profile window d.coefficients.epsilon coefficients.1
   u_eq : family.u = AxisEvaluation.profile window d.coefficients.epsilon coefficients.2
@@ -1026,9 +1056,9 @@ theorem exists_coefficientProfile {h j σ : ℝ} {P0 : ℝ → ℝ}
     phi := AxisEvaluation.profile window v.epsilon x.1
     u := AxisEvaluation.profile window v.epsilon x.2
     average := AxisEvaluation.profile window v.epsilon (AxisOperators.average window v.epsilon_pos
-      x.2)
+        x.2)
     pressure := AxisEvaluation.profile window v.epsilon (pressureCoefficient window v.epsilon_pos a
-      x.1)
+        x.1)
     natural := reconstruct_solution hsmall hΛpos hP0 (amplitude_smooth d Λ C)
       (fun η hη => d.realAmplitude_hasDerivAt Λ C ⟨hη.1.le, hη.2.le⟩) hs'
     mixed_error := he
@@ -1123,6 +1153,7 @@ theorem CoefficientProfile.cone_at_four {h j σ Λ C δ : ℝ} {P0 : ℝ → ℝ
 strict cone margin and their complete coefficient-space witness. -/
 structure EntranceProfile {h j σ : ℝ} {P0 : ℝ → ℝ}
     (d : AnalyticInputs h j σ P0) (Λ C : ℝ) where
+  /-- Profile of `EntranceProfile`, of type `CoefficientProfile d Λ C`. -/
   profile : CoefficientProfile d Λ C
   source_lower : ∀ p : ℝ × ℝ, rescalePoint Λ p ∈ entranceSet →
     (19 / 20 : ℝ) * NaturalAxisData.L h p.2 * Λ * NaturalAxisData.chi h j σ p.2 + 5 / 2 <
@@ -1282,8 +1313,8 @@ theorem angular_source_integral {h j Λ : ℝ} {P0 a : ℝ → ℝ}
       dsimp only
       rw [Sq_eq_radial hs (hmem x hx) (hf x hx)]
       simp only [radialDifferential, partialY, iteratedDeriv_succ, iteratedDeriv_zero,
-        Nat.cast_ofNat]
-      field_simp [hf x hx] ; ring
+          Nat.cast_ofNat]
+      field_simp [hf x hx]; ring
     _ = _ := angular_flux_integral (NaturalAxisData.L h p.2) p.1 hreg
 
 theorem regularAngularLag_eq {h j Λ : ℝ} {P0 a : ℝ → ℝ}
@@ -1293,7 +1324,7 @@ theorem regularAngularLag_eq {h j Λ : ℝ} {P0 a : ℝ → ℝ}
     regularAngularLag h f U V p = -2 * NaturalAxisData.L h p.2 * partialY f p / f p := by
   have hfp : f p ≠ 0 := by simpa only [Prod.eta] using hf p.1 right_mem_uIcc
   rw [regularAngularLag, angular_source_integral hs hΛ hp hf]
-  field_simp ; ring
+  field_simp; ring
 
 /-- The positive first coordinate is the actual scaled regular lag, not
 an independently supplied slope. -/
@@ -1308,12 +1339,14 @@ theorem p1_eq_scaled_regularAngularLag {h j Λ : ℝ} {P0 a : ℝ → ℝ}
   apply (eq_div_iff hL).mpr
   ring
 
+/-- Sn as an element of `ℝ`. -/
 noncomputable def Sn (h : ℝ) (U V Pr : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -transportW h V p * (p.1 * partialY U p) -
     NaturalAxisData.A h * (1 - 2 * p.2 * U p) * U p -
     transportH h U p * partialEta U p - NaturalAxisData.d p.2 * partialEta Pr p +
     4 * NaturalAxisData.A h * p.2 * Pr p + 2 * p.2 * p.1 * partialY Pr p
 
+/-- Regular axial lag, given by `(∫ x in (0 : ℝ)..p.1, Sn h U V Pr (x, p.2)) / p.1`. -/
 noncomputable def regularAxialLag (h : ℝ) (U V Pr : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (∫ x in (0 : ℝ)..p.1, Sn h U V Pr (x, p.2)) / p.1
 
@@ -1346,7 +1379,7 @@ theorem axial_source_integral {h j Λ : ℝ} {P0 a : ℝ → ℝ}
       dsimp only
       rw [Sn_eq_radial hs (hmem x hx)]
       simp only [radialDifferential, partialY, iteratedDeriv_succ, iteratedDeriv_zero,
-        Nat.cast_one, one_mul]
+          Nat.cast_one, one_mul]
     _ = _ := axial_flux_integral (NaturalAxisData.L h p.2) p.1 hreg
 
 theorem regularAxialLag_eq {h j Λ : ℝ} {P0 a : ℝ → ℝ}

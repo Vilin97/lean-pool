@@ -8,13 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketIntervalForcing
 
-@[expose] public section
-
 /-!
 The joined inverse uses coercivity only on the actual history interval.
 Its source Hessian need not satisfy a smallness condition on the full
 history-plus-forward time interval.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

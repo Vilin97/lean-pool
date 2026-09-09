@@ -11,9 +11,10 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMeanRepresentat
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
 
+/-! The literal angular mean of a solved cylinder path is an actual smooth spatial L² path. -/
+
 @[expose] public section
 
-/-! The literal angular mean of a solved cylinder path is an actual smooth spatial L² path. -/
 
 noncomputable section
 
@@ -26,7 +27,7 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (p : C(K,LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 include hp
 

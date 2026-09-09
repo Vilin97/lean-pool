@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialCutoffs
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! The actual source outer cutoff in rescaled particle labels. -/
 
 @[expose] public section
 
-/-! The actual source outer cutoff in rescaled particle labels. -/
 
 noncomputable section
 
@@ -19,6 +22,7 @@ namespace EulerMeanBoundary
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerGevrey
 open scoped ContDiff
 
+/-- Scaled cutoff, bundling `field`, `smooth`, `compact`. -/
 def scaledCutoff (ℓ : ℝ) (hℓ : 0 < ℓ) : Cutoff where
   field := fun x => EulerSpatialCutoffs.outerCutoff (ℓ • x)
   smooth := EulerSpatialCutoffs.outerCutoff_contDiff.comp (contDiff_id.const_smul ℓ)

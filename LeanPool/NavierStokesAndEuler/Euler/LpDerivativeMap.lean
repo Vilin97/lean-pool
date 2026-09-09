@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-public import Mathlib.MeasureTheory.Function.ContinuousMapDense
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.NormNum.GCD
+
+/-! Currying an actual L² field of derivatives into a bounded derivative operator. -/
 
 @[expose] public section
 
-/-! Currying an actual L² field of derivatives into a bounded derivative operator. -/
 
 noncomputable section
 
@@ -24,6 +27,7 @@ variable {X P V : Type*} [MeasurableSpace X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   (μ : Measure X)
 
+/-- Apply derivative, given by `(ContinuousLinearMap.apply ℝ V a).compLpL 2 μ D`. -/
 def applyDerivative (D : Lp (P →L[ℝ] V) 2 μ) (a : P) : Lp V 2 μ :=
   (ContinuousLinearMap.apply ℝ V a).compLpL 2 μ D
 
@@ -39,6 +43,7 @@ theorem applyDerivative_norm_le (D : Lp (P →L[ℝ] V) 2 μ) (a : P) :
   rw [hx, mul_comm]
   exact (D x).le_opNorm a
 
+/-- Derivative linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def derivativeLinear (D : Lp (P →L[ℝ] V) 2 μ) : P →ₗ[ℝ] Lp V 2 μ where
   toFun := applyDerivative μ D
   map_add' a b := by

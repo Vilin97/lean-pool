@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevrey
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # One-time coefficient absorption for a genuine fixed-Sobolev inverse
@@ -17,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
 Only the given operator coefficients use tensor bounds. Forcing and solved
 fields retain their literal fixed-base ordered-word blocks at the same radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +31,7 @@ open scoped ContDiff
 /-- For fixed q this is an explicit polynomial in the original inverse,
 coefficient, and forcing constants. It has no grade dependence. -/
 def inverseBlockCost (ι : Type*) [Fintype ι] (q : ℕ) (I Rc C D : ℝ) : ℝ :=
-  1+sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q*
+  1+sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q *
     (sobolevCoefficientAmplitude ι q Rc C+D)
 
 variable {P E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
@@ -44,9 +47,9 @@ theorem inverse_block_gevrey_of_tensor (directions : ι → P)
     (inverse : P → E →L[ℝ] E) (hleft : ∀ x v, inverse x (A x v) = v)
     (I Rc C D R : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hinv : ∀ x, ‖inverse x‖ ≤ I)
-    (hcoeff : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C*majorant Rc 0 n)
-    (hR : 2*inverseBlockCost ι q I Rc C D*(sobolevCoefficientRadius ι Rc+1) ≤ R)
-    (d : ℕ) (hforce : ∀ n x, block directions q f n x ≤ D*majorant R d n)
+    (hcoeff : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant Rc 0 n)
+    (hR : 2 * inverseBlockCost ι q I Rc C D * (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+    (d : ℕ) (hforce : ∀ n x, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) : block directions q u n x ≤ majorant R (d+1) n := by
   have hI : 0 ≤ I := (norm_nonneg (inverse x)).trans (hinv x)
   have hB : 0 ≤ sobolevCoefficientAmplitude ι q Rc C :=
@@ -55,7 +58,7 @@ theorem inverse_block_gevrey_of_tensor (directions : ι → P)
   have hM : 1 ≤ inverseBlockCost ι q I Rc C D := by
     unfold inverseBlockCost
     linarith [mul_nonneg hcost (add_nonneg hB hD)]
-  have hMC : sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q*
+  have hMC : sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q *
       sobolevCoefficientAmplitude ι q Rc C ≤ inverseBlockCost ι q I Rc C D := by
     unfold inverseBlockCost
     nlinarith

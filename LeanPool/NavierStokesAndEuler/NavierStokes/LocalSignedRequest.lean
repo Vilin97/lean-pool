@@ -10,8 +10,8 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanDomain
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedWaveUpdate
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanChartCompatibility
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricKernelBounds
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # A physical signed request on its moving radial shell
@@ -22,6 +22,9 @@ particular no positive or bounded extension of `q` to the entire plane is
 assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.LocalSignedRequest
@@ -30,7 +33,9 @@ open Set Function Filter MeasureTheory
 open WeightedClasses WeightedRadialPrimitive
 open scoped ContDiff Topology Interval BigOperators
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -119,19 +124,24 @@ end Composition
 /-- A genuine open positive-time region with bounds on the actual normalized
 similarity coordinate.  Its endpoints and constants are independent of bands. -/
 structure SlowRegion (coord : ℝ) where
+  /-- Carrier of `SlowRegion`, of type `Set Plane`. -/
   carrier : Set Plane
   isOpen : IsOpen carrier
   coord_pos : 0 < coord
   coord_lt_one : coord < 1
+  /-- Qlo of `SlowRegion`, of type `ℝ`. -/
   qlo : ℝ
+  /-- Qhi of `SlowRegion`, of type `ℝ`. -/
   qhi : ℝ
   qlo_pos : 0 < qlo
   time_pos : ∀ s ∈ carrier, 0 < s.1
   q_mem : ∀ s ∈ carrier, SimilarityCoordinates.coordinateQ coord s ∈ Icc qlo qhi
 
+/-- Profile map, given by `(x.1 / Real.sqrt (MeanRankUpdate.chartQ coord x), x.2)`. -/
 noncomputable def profileMap (coord : ℝ) (x : Point) : Point :=
   (x.1 / Real.sqrt (MeanRankUpdate.chartQ coord x), x.2)
 
+/-- Inverse profile map, given by `(Real.sqrt (MeanRankUpdate.chartQ coord x) * x.1, x.2)`. -/
 noncomputable def inverseProfileMap (coord : ℝ) (x : Point) : Point :=
   (Real.sqrt (MeanRankUpdate.chartQ coord x) * x.1, x.2)
 
@@ -189,6 +199,7 @@ theorem SlowRegion.chartQ_pos {coord : ℝ} (U : SlowRegion coord) {x : Point}
     (hx : x.2.1 ∈ U.carrier) : 0 < MeanRankUpdate.chartQ coord x :=
   U.qlo_pos.trans_le (U.q_mem x.2.1 hx).1
 
+/-- Moving strip data, constructed using `localPullbackStrip`. -/
 noncomputable def movingStripData {coord : ℝ} (U : SlowRegion coord)
     (a b cL cR : ℝ) (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR)
     (ε L : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hL : ∀ n, 1 ≤ L n) :
@@ -248,7 +259,7 @@ theorem profileMap_positiveJets {coord rlo rhi : ℝ} (U : SlowRegion coord)
     (hR : ∀ x ∈ S, x.1 ∈ Icc rlo rhi) : BoundedPositiveJets (profileMap coord) S := by
   have hφ := MeanRankUpdate.chartKernel_contDiffOn U.coord_pos U.coord_lt_one
     (fun x (hx : x ∈ PhysicalMeanDomain.slowDomain U.carrier) => U.time_pos x.2.1 hx)
-      profileModel_smooth
+        profileModel_smooth
   exact radialMap_positiveJets U.isOpen (φ := MeanRankUpdate.chartKernel coord profileModel) hφ hS
     (MeanRankUpdate.chartKernel_finiteJetBounds U.coord_pos U.coord_lt_one U.qlo_pos
       (fun x hx => U.time_pos x.2.1 (hS hx))
@@ -259,9 +270,9 @@ theorem inverseProfileMap_positiveJets {coord rlo rhi : ℝ} (U : SlowRegion coo
     (hR : ∀ x ∈ S, x.1 ∈ Icc rlo rhi) : BoundedPositiveJets (inverseProfileMap coord) S := by
   have hφ := MeanRankUpdate.chartKernel_contDiffOn U.coord_pos U.coord_lt_one
     (fun x (hx : x ∈ PhysicalMeanDomain.slowDomain U.carrier) => U.time_pos x.2.1 hx)
-      inverseProfileModel_smooth
+        inverseProfileModel_smooth
   exact radialMap_positiveJets U.isOpen (φ := MeanRankUpdate.chartKernel coord inverseProfileModel)
-    hφ hS
+      hφ hS
     (MeanRankUpdate.chartKernel_finiteJetBounds U.coord_pos U.coord_lt_one U.qlo_pos
       (fun x hx => U.time_pos x.2.1 (hS hx))
       (fun x hx => U.q_mem x.2.1 (hS hx)) hR inverseProfileModel_smooth)
@@ -311,13 +322,13 @@ theorem meanClass_inverseProfileMap {V : Type} [NormedAddCommGroup V] [NormedSpa
       (fun n x => f n (inverseProfileMap coord x)) := by
   have hm : MapsTo (inverseProfileMap coord)
       (PhysicalMeanDomain.localStripData a b cL cR ha hcL hcR ε L hε hεone hL U.carrier
-        U.isOpen).domain
+          U.isOpen).domain
       (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL).domain := by
     intro x hx
     refine ⟨hx.2, ?_⟩
     change profileMap coord (inverseProfileMap coord x) ∈
       (PhysicalMeanDomain.localStripData a b cL cR ha hcL hcR ε L hε hεone hL U.carrier
-        U.isOpen).domain
+          U.isOpen).domain
     rw [profileMap_inverse coord x (U.chartQ_pos hx.2)]
     exact hx
   have h := class_comp
@@ -611,6 +622,8 @@ noncomputable def requestedStress (P : SignedStressPrimitive.Patch) (coord : ℝ
     SignedStressPrimitive.physicalBarSigma P 1 (SimilarityCoordinates.coordinateQ coord)
       (u.axialResidual c n) (x.1, x.2.1)]
 
+/-- Normalized request, defined pointwise by `(s.epsilon n)⁻¹ • requestedStress P coord c u n
+x`. -/
 noncomputable def normalizedRequest (s : StripData Point) (P : SignedStressPrimitive.Patch)
     (coord : ℝ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     ℕ → Point → SignedWaveUpdate.Vec2 :=
@@ -638,9 +651,9 @@ theorem normalizedRequest_class {coord : ℝ} (U : SlowRegion coord)
   intro i
   fin_cases i
   · simpa [normalizedRequest, requestedStress, Real.rpow_neg_one, sub_eq_add_neg] using
-    h1.band_smul hscale
+      h1.band_smul hscale
   · simpa [normalizedRequest, requestedStress, Real.rpow_neg_one, sub_eq_add_neg] using
-    h2.band_smul hscale
+      h2.band_smul hscale
 
 end PhysicalRequest
 
@@ -738,7 +751,7 @@ theorem torusAverage_coverPull_local (l : ℝ) (C : S →L[ℝ] T) (k : ℕ) (u 
   simp only [intervalIntegral.integral_const_mul]
   congr 1
   change TorusAverages.squareAverage (fun Y => f (l * r, (C s, TemporalMeanUpdate.coverMap k Y))) =
-    _
+      _
   simp_rw [TemporalMeanUpdate.coverMap_eq_iterate]
   exact TorusAverages.squareAverage_covering_iterate_real hg.continuous (hp (l * r) (C s) hs) k
 
@@ -773,7 +786,7 @@ noncomputable def physicalRequestedStress (P : SignedStressPrimitive.Patch) (q :
 theorem stress_unit_factor {Q : ℝ} (hQ : 0 < Q) (A : ℝ) :
     Q ^ (2 * A) * (Q ^ (-(2 * A + 1 / 2)) / Q ^ (-(1 / 2 : ℝ))) = 1 := by
   rw [← Real.rpow_sub hQ, ← Real.rpow_add hQ]
-  convert! Real.rpow_zero Q using 1 ; ring_nf
+  convert! Real.rpow_zero Q using 1; ring_nf
 
 /-- Exact Q-normalization of one physical primitive.  The hypotheses refer
 to the actual represented source, not to the desired stress or its bounds. -/
@@ -877,7 +890,7 @@ theorem physicalBarSigma_eq_negative_primitive {coord : ℝ} (U : SlowRegion coo
     SignedStressPrimitive.physicalBarSigma P e (SimilarityCoordinates.coordinateQ coord) f (r, s) =
       -(∫ t in (0 : ℝ)..r, t ^ e * SignedStressPrimitive.physicalAdjusted P e
         (SimilarityCoordinates.coordinateQ coord) (PressureStream.torusAverage f) (t, s)) / r ^ e
-          := by
+            := by
   rw [frozenBar_sigma]
   exact SignedStressPrimitive.physicalSigma_eq_negative_primitive P e contDiff_const
     (fun _ => U.qlo_pos.trans_le (U.q_mem s hsp).1)
@@ -890,7 +903,7 @@ theorem physicalBarSigma_angular_divergence {coord : ℝ} (U : SlowRegion coord)
     {r : ℝ} (hr : 0 < r) :
     IntegratedMeanBalances.radialDivergence 2
       (fun t => SignedStressPrimitive.physicalBarSigma P 2 (SimilarityCoordinates.coordinateQ
-        coord) f (t, s)) r =
+          coord) f (t, s)) r =
       -SignedStressPrimitive.physicalAdjusted P 2 (SimilarityCoordinates.coordinateQ coord)
         (PressureStream.torusAverage f) (r, s) := by
   simp_rw [frozenBar_sigma]
@@ -905,7 +918,7 @@ theorem physicalBarSigma_axial_divergence {coord : ℝ} (U : SlowRegion coord)
     {r : ℝ} (hr : 0 < r) :
     IntegratedMeanBalances.radialDivergence 1
       (fun t => SignedStressPrimitive.physicalBarSigma P 1 (SimilarityCoordinates.coordinateQ
-        coord) f (t, s)) r =
+          coord) f (t, s)) r =
       -SignedStressPrimitive.physicalAdjusted P 1 (SimilarityCoordinates.coordinateQ coord)
         (PressureStream.torusAverage f) (r, s) := by
   simp_rw [frozenBar_sigma]
@@ -998,7 +1011,7 @@ theorem physicalDensity_meanClass {coord : ℝ} (U : SlowRegion coord)
   have h := MeanIncrementBounds.Class.coefficient_mul hm hp
   simp only [zero_add, SignedStressPrimitive.physicalDensity, SignedStressPrimitive.lengthScale,
     profileMap, MeanRankUpdate.chartQ, MeanRankUpdate.chartInput_apply,
-      PhysicalCoordinateBounds.qCoord,
+        PhysicalCoordinateBounds.qCoord,
     div_eq_mul_inv, mul_comm] at h ⊢
   exact h
 

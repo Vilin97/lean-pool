@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularPhysical
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalParticularWave
-
-@[expose] public section
 
 /-!
 # Removing the native scales from the current particular modes
@@ -18,6 +15,9 @@ The native potential and pressure transformation laws imply equality of
 their actual physical modes. The angle and Cartesian rotation are the same
 at both bands, so the native scale cancels before applying either map.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

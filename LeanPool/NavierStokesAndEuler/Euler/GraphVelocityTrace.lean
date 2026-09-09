@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GraphInvariantFlow
-
-@[expose] public section
+public import Mathlib.LinearAlgebra.Trace
 
 /-! A graph-tangent lifted velocity has the same ordinary divergence
 as its three-dimensional graph restriction. This identifies the
 volume-preservation hypothesis for the actual physical-label flow. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,10 +24,11 @@ open ContinuousLinearMap EulerLiftedGradientSpace
 
 variable (k : ℝ) (m : Vector3) (f : LiftTangent → LiftTangent)
 
+/-- Graph velocity, given by `(f (graphLinear k m x)).1`. -/
 def graphVelocity (x : Vector3) : Vector3 := (f (graphLinear k m x)).1
 
 theorem graphVelocity_trace (hf : Differentiable ℝ f)
-    (hgraph : ∀ z, graphConstraint k m (f z)=0) (x : Vector3) :
+    (hgraph : ∀ z, graphConstraint k m (f z) = 0) (x : Vector3) :
     LinearMap.trace ℝ Vector3 (fderiv ℝ (graphVelocity k m f) x).toLinearMap =
       LinearMap.trace ℝ LiftTangent (fderiv ℝ f (graphLinear k m x)).toLinearMap := by
   let J := graphLinear k m
@@ -49,8 +52,8 @@ theorem graphVelocity_trace (hf : Differentiable ℝ f)
     _ = LinearMap.trace ℝ LiftTangent D.toLinearMap := by rw [← hD]
 
 theorem graphVelocity_trace_zero (hf : Differentiable ℝ f)
-    (hgraph : ∀ z, graphConstraint k m (f z)=0)
-    (hdiv : ∀ z, LinearMap.trace ℝ LiftTangent (fderiv ℝ f z).toLinearMap=0)
+    (hgraph : ∀ z, graphConstraint k m (f z) = 0)
+    (hdiv : ∀ z, LinearMap.trace ℝ LiftTangent (fderiv ℝ f z).toLinearMap = 0)
     (x : Vector3) :
     LinearMap.trace ℝ Vector3 (fderiv ℝ (graphVelocity k m f) x).toLinearMap=0 := by
   rw [graphVelocity_trace k m f hf hgraph]

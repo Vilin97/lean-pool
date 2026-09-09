@@ -9,8 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVariationalOperator
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # A genuine mean time-variational inverse on ordinary spatial L²
@@ -27,6 +26,9 @@ strong interior equation, or the initial derivative boundary identity.  The
 recovered `z=FInv η` is continuous here; its H¹ regularity additionally uses the
 source's C¹-in-time inverse deformation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -177,15 +179,15 @@ argument was constructed. This also keeps the integral interface lightweight. -/
 theorem weak_integral_of_weak (T : ℝ) (hT : 0 ≤ T)
     (FInv H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
     (u v : meanDerivatives T hT FInv) (f : TimeLp T L2)
-    (h : ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ-
-      ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ+
-      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ+
-      L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
+    (h : ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ -
+      ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ +
+      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
+      L * ⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
       -⟪f, meanPrimitive T hT FInv v⟫_ℝ) :
-    (∫ t, ⟪(u : TimeLp T L2) t, (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T)-
+    (∫ t, ⟪(u : TimeLp T L2) t, (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T) -
       (∫ t, ⟪H (projIcc 0 T hT t) (realPrimitive T (u : TimeLp T L2) t),
-        realPrimitive T (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T)+
-      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ+
+        realPrimitive T (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T) +
+      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
       L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
       -(∫ t, ⟪f t, realPrimitive T (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T) := by
   have hi : ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ =
@@ -204,10 +206,10 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2)
   (L K B : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B)
   (hF0 : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
-  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K*‖z‖^2)
+  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
   (hboundary : ∀ z : L2, z ∈ solenoidalSpace →
-    -B*‖z‖^2 ≤ ⟪M0 z, z⟫_ℝ+L*⟪A z, z⟫_ℝ)
-  (hsmall : K*(T^2/2)+B*T ≤ 1/2)
+    -B * ‖z‖ ^ 2 ≤ ⟪M0 z, z⟫_ℝ + L * ⟪A z, z⟫_ℝ)
+  (hsmall : K * (T ^ 2 / 2) + B * T ≤ 1 / 2)
 
 /-- The mean forcing-to-displacement-derivative map is constructed by Lax--Milgram. -/
 def meanSolver : TimeLp T L2 →L[ℝ] meanDerivatives T hT FInv :=
@@ -266,9 +268,9 @@ theorem meanEta_absolutelyContinuous (f : TimeLp T L2) :
 /-- The exact mean form with the two original initial boundary terms. -/
 theorem meanSolver_weak (f : TimeLp T L2) (v : meanDerivatives T hT FInv) :
     let u := meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f
-    ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ-
-      ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ+
-      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ+
+    ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ -
+      ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ +
+      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
       L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
       -⟪f, meanPrimitive T hT FInv v⟫_ℝ := by
   simpa only [meanSolver, Submodule.coe_inner, add_apply, smul_apply, inner_add_left,
@@ -295,10 +297,10 @@ theorem meanSolver_norm (f : TimeLp T L2) :
 two actual initial boundary terms from the source. -/
 theorem meanSolver_weak_integral (f : TimeLp T L2) (v : meanDerivatives T hT FInv) :
     let u := meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f
-    (∫ t, ⟪(u : TimeLp T L2) t, (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T)-
+    (∫ t, ⟪(u : TimeLp T L2) t, (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T) -
       (∫ t, ⟪H (projIcc 0 T hT t) (realPrimitive T (u : TimeLp T L2) t),
-        realPrimitive T (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T)+
-      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ+
+        realPrimitive T (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T) +
+      ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
       L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
       -(∫ t, ⟪f t, realPrimitive T (v : TimeLp T L2) t⟫_ℝ ∂timeMeasure T) := by
   exact weak_integral_of_weak T hT FInv H M0 A L
@@ -308,9 +310,9 @@ theorem meanSolver_weak_integral (f : TimeLp T L2) (v : meanDerivatives T hT FIn
 /-- No other admissible derivative solves this same genuine mean form. -/
 theorem meanSolver_unique (f : TimeLp T L2) (u : meanDerivatives T hT FInv)
     (hu : ∀ v : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ+
+      ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv v⟫_ℝ) :
     u = meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f := by
@@ -329,9 +331,9 @@ include hK hB hF0 hH hboundary hsmall in
 explicit coefficient and solenoidal boundary lower bounds. -/
 theorem existsUnique_mean_weak_solution (f : TimeLp T L2) :
     ∃! u : meanDerivatives T hT FInv, ∀ v : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ+
+      ⟪(u : TimeLp T L2), (v : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv v⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv v⟫_ℝ :=
   ⟨meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f,

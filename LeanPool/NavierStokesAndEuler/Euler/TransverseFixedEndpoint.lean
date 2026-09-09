@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.InitialH1OperatorProduct
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointUniqueness
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSpaceInverse
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
+import LeanPool.NavierStokesAndEuler.Euler.InitialH1OperatorProduct
 
 /-!
 The nonzero-terminal variational inverse on the same fixed coordinate Hilbert
@@ -18,6 +16,9 @@ space used by the packet inverse.  The zero-trace correction is an actual
 coercive solve.  Full-range frame transport proves exact equality with the
 physical endpoint solution, rather than introducing a second unrelated solve.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -64,6 +65,7 @@ theorem fixedFrame_energy (u v : zeroTraceDerivatives (U := U) T hT) :
       (fixedFrameDerivative_trace_zero T hT Q Q₁ hd v)]
   rfl
 
+/-- Fixed endpoint correction as an element of `V →L[ℝ] zeroTraceDerivatives (U := U) T hT`. -/
 def fixedEndpointCorrection (L : V →L[ℝ] TimeLp T E) :
     V →L[ℝ] zeroTraceDerivatives (U := U) T hT :=
   (coerciveInverse (fixedFrameOperator T hT Q Q₁ H) (fixedCoercivity T Q Q₁ c)
@@ -71,6 +73,8 @@ def fixedEndpointCorrection (L : V →L[ℝ] TimeLp T E) :
     (fixedFrameOperator_coercive T hT Q Q₁ H c hc hQ hd K hK hH hsmall)).comp
       ((fixedFrameDerivative T hT Q Q₁).adjoint.comp ((energyOperator T hT H).comp L))
 
+/-- Fixed endpoint derivative, given by `L - (fixedFrameDerivative T hT Q Q₁).comp
+(fixedEndpointCorrection T hT Q Q₁ H c hc hQ hd K hK hH hsmall L)`. -/
 def fixedEndpointDerivative (L : V →L[ℝ] TimeLp T E) : V →L[ℝ] TimeLp T E :=
   L - (fixedFrameDerivative T hT Q Q₁).comp
     (fixedEndpointCorrection T hT Q Q₁ H c hc hQ hd K hK hH hsmall L)
@@ -144,7 +148,7 @@ theorem fixedEndpointDerivative_eq_endpoint (L : V →L[ℝ] TimeLp T E) :
   let d : transverseDerivatives T hT m := ⟨u - w, hdiff⟩
   have hu : ⟪energyOperator T hT H u, (d : TimeLp T E)⟫_ℝ = 0 :=
     fixedEndpointDerivative_physical_orthogonal T hT Q Q₁ H c hc hQ hd K hK hH hsmall m hm hRange L
-      Y d
+        Y d
   have hw : ⟪energyOperator T hT H w, (d : TimeLp T E)⟫_ℝ = 0 := by
     rw [energyOperator_inner, initialPrimitiveTimeLp_transverse T hT m d]
     exact endpointDerivative_weak T hT m H K hK hH hsmall L Y d

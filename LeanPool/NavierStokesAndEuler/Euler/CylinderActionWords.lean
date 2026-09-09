@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionWords
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderOrbit
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderTranslationAdjoint
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathLpBlocks
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderTranslationAdjoint
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionWords
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderOrbit
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathLpBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+
+/-! Exact mixed-word invariance on cylinder L² and its time-function spaces. -/
 
 @[expose] public section
 
-/-! Exact mixed-word invariance on cylinder L² and its time-function spaces. -/
 
 noncomputable section
 
@@ -29,7 +34,7 @@ section Path
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-theorem pathTranslate_norm_map (a : LiftTangent) (f : C(K,CylinderL2 P V)) :
+theorem pathTranslate_norm_map (a : LiftTangent) (f : C(K, CylinderL2 P V)) :
     ‖pathTranslate P a f‖ = ‖f‖ := by
   apply le_antisymm
   · apply (ContinuousMap.norm_le _ (norm_nonneg f)).2
@@ -42,13 +47,14 @@ theorem pathTranslate_norm_map (a : LiftTangent) (f : C(K,CylinderL2 P V)) :
     rw [← (translate P a).norm_map (f t)]
     exact (pathTranslate P a f).norm_coe_le_norm t
 
+/-- Path translate isometry, bundling `toLinearMap`, `norm_map`. -/
 def pathTranslateIsometry (a : LiftTangent) : C(K,CylinderL2 P V) →ₗᵢ[ℝ] C(K,CylinderL2 P V) where
   toLinearMap := (pathTranslate P a).toLinearMap
   norm_map' := pathTranslate_norm_map P a
 
 theorem path_block_constant {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
-    (f : C(K,CylinderL2 P V)) (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) (n : ℕ) (a :
-      LiftTangent) :
+    (f : C(K, CylinderL2 P V)) (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) (n : ℕ) (a :
+        LiftTangent) :
     block directions q (fun b => pathTranslate P b f) n a =
       block directions q (fun b => pathTranslate P b f) n 0 :=
   EulerIsometricAction.block_orbit_constant (X := LiftTangent)
@@ -57,16 +63,17 @@ theorem path_block_constant {ι : Type*} [Fintype ι] (directions : ι → LiftT
 
 end Path
 
+/-- Time translate isometry, given by `timeLiftIsometry T (translate P a)`. -/
 def timeTranslateIsometry (T : ℝ) (a : LiftTangent) :
     TimeLp T (CylinderL2 P V) →ₗᵢ[ℝ] TimeLp T (CylinderL2 P V) :=
   timeLiftIsometry T (translate P a)
 
 theorem timeTranslateIsometry_add (T : ℝ) (a b : LiftTangent) (f : TimeLp T (CylinderL2 P V)) :
     timeTranslateIsometry P T a (timeTranslateIsometry P T b f) = timeTranslateIsometry P T (a+b) f
-      := by
+        := by
   apply Lp.ext
   filter_upwards [timeLift_ae T (translate P a).toContinuousLinearMap (timeTranslateIsometry P T b
-    f),
+      f),
     timeLift_ae T (translate P b).toContinuousLinearMap f,
     timeLift_ae T (translate P (a+b)).toContinuousLinearMap f] with t ha hb hab
   change timeTranslateIsometry P T a (timeTranslateIsometry P T b f) t = _ at ha
@@ -94,7 +101,7 @@ theorem time_block_constant {ι : Type*} [Fintype ι] (directions : ι → LiftT
     (fun a b u => timeTranslateIsometry_add P T a b u)
     (fun u => timeTranslateIsometry_zero P T u) directions q f hf n a
 
-theorem pathLp_orbit_contDiff (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T,CylinderL2 P V))
+theorem pathLp_orbit_contDiff (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, CylinderL2 P V))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) :
     ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap (pathLp T hT f)) := by
   have he : (fun a => timeLift T (translate P a).toContinuousLinearMap (pathLp T hT f)) =
@@ -108,10 +115,10 @@ theorem pathLp_orbit_contDiff (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T,Cy
 /-- The actual Ctime-to-time-L² inclusion preserves all mixed word blocks
 with exactly the square-root time length factor. -/
 theorem pathLp_block_le {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
-    (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T,CylinderL2 P V))
+    (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, CylinderL2 P V))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) (n : ℕ) (a : LiftTangent) :
     block directions q (fun b => timeLift T (translate P b).toContinuousLinearMap (pathLp T hT f))
-      n a ≤
+        n a ≤
       Real.sqrt T*block directions q (fun b => pathTranslate P b f) n a := by
   have he : (fun b => timeLift T (translate P b).toContinuousLinearMap (pathLp T hT f)) =
       (pathLpOperator T hT) ∘ (fun b => pathTranslate P b f) := by

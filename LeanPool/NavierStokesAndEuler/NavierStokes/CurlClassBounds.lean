@@ -10,11 +10,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.OscillatoryCurl
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.Scaling
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.ContDiff.WithLp
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Weighted classes of actual cylindrical curl corrections
@@ -24,6 +22,9 @@ oscillatory carrier is removed only after applying the product rule. The
 radial graph derivative and every cylindrical connection are retained.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.CurlClassBounds
@@ -32,7 +33,9 @@ open Set Filter Function WeightedClasses
 open scoped Topology ContDiff BigOperators InnerProductSpace
 
 
+/-- Real vector: an abbreviation for `ProblemStatement.Space`. -/
 abbrev RealVector := ProblemStatement.Space
+/-- Complex vector: an abbreviation for `HarmonicCalculus.ComplexVector`. -/
 abbrev ComplexVector := HarmonicCalculus.ComplexVector
 
 private theorem nat_le_smooth (m : ℕ) : (m : WithTop ℕ∞) ≤ ∞ :=
@@ -124,6 +127,8 @@ noncomputable def complexify : RealVector →L[ℝ] ComplexVector :=
 
 @[simp] theorem complexify_apply (a : RealVector) (i : Fin 3) : complexify a i = (a i : ℂ) := rfl
 
+/-- Complex cross linear as an element of `ComplexVector →L[ℝ] ComplexVector →L[ℝ]
+ComplexVector`. -/
 noncomputable def complexCrossLinear : ComplexVector →L[ℝ] ComplexVector →L[ℝ] ComplexVector :=
   (ContinuousLinearMap.proj 1).smulRight
       ((ContinuousLinearMap.proj 2).smulRight (Pi.single 0 (1 : ℂ))) -
@@ -138,6 +143,7 @@ noncomputable def complexCrossLinear : ComplexVector →L[ℝ] ComplexVector →
   (ContinuousLinearMap.proj 1).smulRight
       ((ContinuousLinearMap.proj 0).smulRight (Pi.single 2 (1 : ℂ)))
 
+/-- Normal cross, given by `complexCrossLinear (complexify n) a`. -/
 noncomputable def normalCross (n : RealVector) (a : ComplexVector) : ComplexVector :=
   complexCrossLinear (complexify n) a
 
@@ -311,6 +317,7 @@ theorem normalCurlRemainder_class {N : ℕ → D → RealVector} {a : ℕ → D 
         (fun x => normalCoefficient (N n x) (a n x))) :=
   curlRemainder_class (normalCoefficient_class hN ha hb hlower hupper) hκ hr hθ hz hR hK
 
+/-- Carrier frequency, given by `Scaling.carrierFrequency (s.epsilon n)`. -/
 noncomputable def carrierFrequency (s : StripData D) (n : ℕ) : ℝ :=
   Scaling.carrierFrequency (s.epsilon n)
 
@@ -500,7 +507,7 @@ theorem divergence_curl_zero {U : Set D} {R : D → ℝ} {Vr Vθ Vz : D → D}
     rw [along_inv Vz dR (G.radius_ne x hx), G.axial_radius x hx, mul_zero]
   simp only [HarmonicCalculus.cylindricalDivergence, cylindricalCurl,
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-      Matrix.tail_cons]
+        Matrix.tail_cons]
   rw [along_sub Vr (dinv.fun_smul (dθ 2)) (dz 1),
     along_sub Vθ (dz 0) (dr 2),
     along_sub Vz ((dr 1).fun_add (dinv.fun_smul (db 1))) (dinv.fun_smul (dθ 0)),
@@ -516,6 +523,7 @@ section ExplicitGraph
 
 variable {A : Type*} [NormedAddCommGroup A] [NormedSpace ℝ A]
 
+/-- Radial field, given by `(1, K x.1 • v)`. -/
 noncomputable def radialField (K : ℝ → ℝ) (v : A) (x : ℝ × A) : ℝ × A :=
   (1, K x.1 • v)
 
@@ -584,12 +592,15 @@ theorem normalCoefficient_contDiffOn {U : Set D} {N : D → RealVector} {a : D �
   have hnorm := (contDiff_norm_sq ℝ).comp_contDiffOn hN
   exact (hnorm.inv (fun x hx => pow_ne_zero 2 (norm_ne_zero_iff.mpr (hne x hx)))).smul
     (((hN.continuousLinearMap_comp complexify).continuousLinearMap_comp
-      complexCrossLinear).clm_apply ha)
+        complexCrossLinear).clm_apply ha)
 
+/-- Coefficient, given by `normalCoefficient (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a
+x)`. -/
 noncomputable def coefficient (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) (x : D) : ComplexVector :=
   normalCoefficient (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a x)
 
+/-- Inverse carrier, given by `Complex.I / (K : ℂ)`. -/
 noncomputable def inverseCarrier (K : ℝ) : ℂ := Complex.I / (K : ℂ)
 
 theorem inverseCarrier_phaseFactor {K : ℝ} (hK : K ≠ 0) :
@@ -608,10 +619,14 @@ theorem curlRemainder_eq (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
   simp [curlRemainder, inverseCarrier, Complex.real_smul, div_eq_mul_inv,
     mul_comm, mul_left_comm, mul_assoc]
 
+/-- Vector potential, given by `HarmonicCalculus.vectorMode K Φ (fun x => inverseCarrier K •
+coefficient R Vr Vθ Vz Φ a x)`. -/
 noncomputable def vectorPotential (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) : D → ComplexVector :=
   HarmonicCalculus.vectorMode K Φ (fun x => inverseCarrier K • coefficient R Vr Vθ Vz Φ a x)
 
+/-- Realized coefficient, given by `a x + curlRemainder K R Vr Vθ Vz (coefficient R Vr Vθ Vz Φ
+a) x`. -/
 noncomputable def realizedCoefficient (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) (x : D) : ComplexVector :=
   a x + curlRemainder K R Vr Vθ Vz (coefficient R Vr Vθ Vz Φ a) x
@@ -634,14 +649,14 @@ theorem cylindricalCurl_vectorPotential {U : Set D} {R : D → ℝ} {Vr Vθ Vz :
     {Φ : D → ℝ} {a : D → ComplexVector} (hΦ : ContDiffOn ℝ ∞ Φ U) (ha : ContDiffOn ℝ ∞ a U)
     (hn : ∀ x ∈ U, HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x ≠ 0)
     (ht : ∀ x ∈ U, HarmonicCalculus.normalDot (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a x) =
-      0)
+        0)
     {x : D} (hx : x ∈ U) :
     cylindricalCurl R Vr Vθ Vz (vectorPotential K R Vr Vθ Vz Φ a) x =
       HarmonicCalculus.vectorMode K Φ (realizedCoefficient K R Vr Vθ Vz Φ a) x := by
   have hB : ContDiffOn ℝ ∞ (coefficient R Vr Vθ Vz Φ a) U :=
     normalCoefficient_contDiffOn (phaseNormal_contDiffOn G hΦ) ha hn
   have db i := ((contDiffOn_pi.mp hB i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by
-    simp)
+      simp)
   have dΦ := (hΦ.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
   have hcross := normalCross_normalCoefficient (hn x hx) (ht x hx)
   rw [vectorPotential, cylindricalCurl_vectorMode R Vr Vθ Vz K
@@ -650,7 +665,7 @@ theorem cylindricalCurl_vectorPotential {U : Set D} {R : D → ℝ} {Vr Vθ Vz :
     cylindricalCurl_const_smul R Vr Vθ Vz (inverseCarrier K) db,
     normalCross_smul]
   change (fun i => ((inverseCarrier K • cylindricalCurl R Vr Vθ Vz (coefficient R Vr Vθ Vz Φ a) x)
-    i +
+      i +
       HarmonicCalculus.phaseFactor K * (inverseCarrier K •
         normalCross (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x)
           (normalCoefficient (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a x))) i) *
@@ -683,7 +698,7 @@ theorem realizedCoefficient_divergence {U : Set D} {R : D → ℝ} {Vr Vθ Vz : 
     {Φ : D → ℝ} {a : D → ComplexVector} (hΦ : ContDiffOn ℝ ∞ Φ U) (ha : ContDiffOn ℝ ∞ a U)
     (hn : ∀ x ∈ U, HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x ≠ 0)
     (ht : ∀ x ∈ U, HarmonicCalculus.normalDot (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a x) =
-      0)
+        0)
     {x : D} (hx : x ∈ U) :
     HarmonicCalculus.cylindricalDivergence R Vr Vθ Vz
       (HarmonicCalculus.vectorMode K Φ (realizedCoefficient K R Vr Vθ Vz Φ a)) x = 0 := by
@@ -776,9 +791,9 @@ theorem curlRemainder_waveClass
       (fun n => HarmonicCalculus.phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n)))
     (ha : WaveClass s P α a) {b M : ℝ} (hb : 0 < b)
     (hlower : ∀ n x, x ∈ s.domain → b ≤ ‖HarmonicCalculus.phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n)
-      x‖)
+        x‖)
     (hupper : ∀ n x, x ∈ s.domain → ‖HarmonicCalculus.phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n) x‖ ≤
-      M)
+        M)
     (hκ : 0 ≤ κ) (hr : UnweightedClass s (-κ) Vr) (hθ : UnweightedClass s 0 Vθ)
     (hz : UnweightedClass s 1 Vz) (hR : UnweightedClass s 0 (fun _ x => (R x)⁻¹))
     (hK : BandBound s (1 / 2) (fun n => 1 / K n)) :
@@ -792,9 +807,9 @@ theorem realizedCoefficient_waveClass
       (fun n => HarmonicCalculus.phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n)))
     (ha : WaveClass s P α a) {b M : ℝ} (hb : 0 < b)
     (hlower : ∀ n x, x ∈ s.domain → b ≤ ‖HarmonicCalculus.phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n)
-      x‖)
+        x‖)
     (hupper : ∀ n x, x ∈ s.domain → ‖HarmonicCalculus.phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n) x‖ ≤
-      M)
+        M)
     (hκ : 0 ≤ κ) (hκhalf : κ ≤ 1 / 2)
     (hr : UnweightedClass s (-κ) Vr) (hθ : UnweightedClass s 0 Vθ)
     (hz : UnweightedClass s 1 Vz) (hR : UnweightedClass s 0 (fun _ x => (R x)⁻¹))
@@ -869,7 +884,7 @@ theorem physicalCurl_class (hB : MemClass s w α B) :
   change SpatialCurl.curlLinear (ResidualStability.spaceRestriction Space (fderiv ℝ (B n) x)) =
     SpatialCurl.curlLinear (fderiv ℝ (fun y => B n (x.1, y)) x.2)
   rw [ResidualStability.space_fderiv_eq_full ((hB.contDiffAt n hx 1).differentiableAt (by
-    norm_num))]
+      norm_num))]
 
 theorem physical_strippedRemainder_class (hB : MemClass s w α B)
     (hK : BandBound s (1 / 2) (fun n => 1 / K n)) :
@@ -892,7 +907,7 @@ theorem physical_normalCoefficient_class {N a : ℕ → VelocityField}
 claimed class once its actual normal and amplitude jets are supplied. -/
 theorem physical_actualRemainder_class {Φ : ℕ → PressureField} {a : ℕ → VelocityField}
     (hN : PhaseJetBounds.PolynomialJets (phaseDomain s) (fun n => OscillatoryCurl.phaseNormal (Φ
-      n)))
+        n)))
     (ha : MemClass s w α a) {b M : ℝ} (hb : 0 < b)
     (hlower : ∀ n x, x ∈ s.domain → b ≤ ‖OscillatoryCurl.phaseNormal (Φ n) x‖)
     (hupper : ∀ n x, x ∈ s.domain → ‖OscillatoryCurl.phaseNormal (Φ n) x‖ ≤ M)

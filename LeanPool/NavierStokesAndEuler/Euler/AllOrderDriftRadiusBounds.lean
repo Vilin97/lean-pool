@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftCorrection
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
+import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
+
+/-! Actual weighted correction and derivative bounds at a fixed positive radius. -/
 
 @[expose] public section
 
-/-! Actual weighted correction and derivative bounds at a fixed positive radius. -/
 
 noncomputable section
 
@@ -64,8 +65,8 @@ theorem Budget.correctionSize_nonneg (B : Budget period hT A) : 0 ≤ B.correcti
 /-- The actual common correction retains the quantitative residual energy
 of any finite realization containing the requested words. -/
 theorem Budget.fieldTower_weightedNorm_residual (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hN : N ≤ q-4) (hNq : N+6 ≤ q+1)
-    (s : ℕ) (hs : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (N : ℕ) (hN : N ≤ q - 4) (hNq : N + 6 ≤ q + 1)
+    (s : ℕ) (hs : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.radius t) ((B.fieldTower period).realization s t) ≤
       metricAmplification B.metric.c *
         (2*(B.spatial q hq).full.residual*Real.exp (3*B.growthCoefficient*t.val)) := by
@@ -82,7 +83,7 @@ theorem Budget.fieldTower_weightedNorm_residual (B : Budget period hT A)
 
 /-- At every finite cutoff, the norm bounds the one constructed common field. -/
 theorem Budget.fieldTower_weightedNorm_delta (B : Budget period hT A)
-    (s N : ℕ) (hN : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (s N : ℕ) (hN : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.radius t) ((B.fieldTower period).realization s t) ≤
       B.correctionSize period := by
   have hv : value period ((B.fieldTower period).realization s t) =
@@ -101,7 +102,7 @@ theorem Budget.fieldTower_weightedNorm_delta (B : Budget period hT A)
 /-- The correction estimate holds at the same fixed quarter of the initial
 radius for the whole time interval. -/
 theorem Budget.fieldTower_reducedNorm (B : Budget period hT A)
-    (s N : ℕ) (hN : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (s N : ℕ) (hN : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     weightedNorm period 6 N (B.reducedRadius period)
       ((B.fieldTower period).realization s t) ≤ B.correctionSize period := by
   have hr : B.reducedRadius period ≤ B.radius t := by
@@ -114,7 +115,7 @@ theorem Budget.fieldTower_reducedNorm (B : Budget period hT A)
 /-- One extra derivative costs only the fixed reciprocal initial radius.
 The estimate is simultaneous in all four genuine coordinate derivatives. -/
 theorem Budget.fieldTower_reducedDerivativeNorm (B : Budget period hT A)
-    (s N : ℕ) (hN : N+6 ≤ s) (t : Icc (0 : ℝ) T) :
+    (s N : ℕ) (hN : N + 6 ≤ s) (t : Icc (0 : ℝ) T) :
     (∑ i : Fin 4, weightedNorm period 6 N (B.reducedRadius period)
       (derivativeOperator period s i ((B.fieldTower period).realization (s+1) t))) ≤
       (8/B.initialRadius)*B.correctionSize period := by
@@ -142,8 +143,8 @@ theorem Budget.residual_le_delta (B : Budget period hT A) (q : ℕ) (hq : 6 ≤ 
   have he : 1 ≤ Real.exp (3*B.growthCoefficient*T) :=
     Real.one_le_exp_iff.mpr (by have hG := (B.growth_pos period).le; positivity)
   have hm := mul_le_mul_of_nonneg_left he
-    (show 0 ≤ 2*(B.spatial q hq).full.residual by have := (B.spatial q hq).full.residual_pos;
-      positivity)
+    (show 0 ≤ 2*(B.spatial q hq).full.residual by
+        have := (B.spatial q hq).full.residual_pos; positivity)
   have hs := B.small q hq
   linarith
 

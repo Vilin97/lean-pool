@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanL2Scaling
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
+import LeanPool.NavierStokesAndEuler.Euler.MeanL2Scaling
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! The physical dilation f(x) ↦ ell*f(x/ell), including actual spatial
 derivatives and their genuine Banach-valued L² norms. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,6 +60,7 @@ theorem lpNorm_inv_dilation (f : Space → V) (hf : MemLp f 2 volume)
 
 variable [NormedSpace ℝ V]
 
+/-- Scale, defined pointwise by `ell • f (ell⁻¹ • x)`. -/
 def scale (ell : ℝ) (f : Space → V) : Space → V := fun x => ell • f (ell⁻¹ • x)
 
 theorem scale_contDiff (ell : ℝ) (f : Space → V) (hf : ContDiff ℝ ∞ f) :
@@ -104,8 +110,9 @@ theorem lpNorm_scale_jet_le (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   have hfac : ell*Real.sqrt (ell^3) ≤ 1 := by
     exact (mul_le_mul hell1 hs (Real.sqrt_nonneg _) zero_le_one).trans_eq (one_mul 1)
   exact mul_le_mul_of_nonneg_right
-    (by simpa only [one_mul] using mul_le_mul_of_nonneg_right hfac (pow_nonneg (inv_nonneg.mpr
-      hell.le) n))
+    (by
+        simpa only [one_mul] using mul_le_mul_of_nonneg_right hfac (pow_nonneg (inv_nonneg.mpr
+            hell.le) n))
     lpNorm_nonneg
 
 end EulerPhysicalL2Scaling

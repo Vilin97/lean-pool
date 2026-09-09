@@ -10,9 +10,10 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketAngularForcing
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
 
+/-! Literal angular averaging preserves actual raw cylinder-path admissibility. -/
+
 @[expose] public section
 
-/-! Literal angular averaging preserves actual raw cylinder-path admissibility. -/
 
 noncomputable section
 
@@ -32,13 +33,14 @@ def angleMean (G : Field P T raw) : Field P T (EulerPacketProfileRecursion.angle
     (fun t x => rawMean P (pointField P G.path G.orbit t) x.1)
     (fun t => (rawMean_continuous P (sobolevPath P 3 G.path G.orbit t)
       (pointField P G.path G.orbit t) (smoothField_continuous P _ (pointField_smooth P G.path
-        G.orbit t))
-      (by simpa only [sobolevPath_value] using pointField_ae P G.path G.orbit t)).comp
-        continuous_fst)
+          G.orbit t))
+      (by
+          simpa only [sobolevPath_value] using pointField_ae P G.path G.orbit t)).comp
+              continuous_fst)
     (fun t => by
       have h := average_ae_rawMean P (sobolevPath P 3 G.path G.orbit t)
         (pointField P G.path G.orbit t) (smoothField_continuous P _ (pointField_smooth P G.path
-          G.orbit t))
+            G.orbit t))
         (by simpa only [sobolevPath_value] using pointField_ae P G.path G.orbit t)
       simpa only [sobolevPath_value,pathAverage_apply] using h)
     (fun t x θ => by
@@ -56,10 +58,11 @@ def highPart (G : Field P T raw) : Field P T (raw-EulerPacketProfileRecursion.an
 @[simp] theorem angleMean_path (G : Field P T raw) :
     G.angleMean.path = pathAverage P G.path := rfl
 
-/-- The same actual angular integral is admissible for the constructed ordinary-space mean solver. -/
+/-- The same actual angular integral is admissible for the constructed ordinary-space mean solver.
+-/
 def meanForcing (D : EulerMeanPacketProvider.Data) {raw : VectorField}
     (G : Field P D.T raw) :
     EulerMeanPacketProvider.Forcing D (EulerPacketProfileRecursion.angleMean P raw) :=
-  EulerMeanPacketProvider.angularMeanForcing_of_raw D P G.path G.orbit raw G.raw_eq
+  EulerMeanPacketProvider.angularMeanForcingOfRaw D P G.path G.orbit raw G.raw_eq
 
 end EulerPacketCylinderField.Field

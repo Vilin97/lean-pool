@@ -6,11 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
 
 /-!
 # Covariance of actual finite real harmonic fields
@@ -19,6 +16,9 @@ Angular integration is evaluated exactly before applying the weighted product
 estimates. Real projection includes both conjugate harmonics. The constants are
 uniform over a fixed bound on the harmonic index.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,7 +75,7 @@ theorem realCoefficients_mem {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ
     WaveClass s P α (fun n x => HarmonicResidual.realCoefficients (a n) j x) := by
   simp only [HarmonicResidual.realCoefficients_apply]
   exact WaveInteractionBounds.class_const_cmul ((ha j).add (WaveInteractionBounds.class_conj (ha
-    (-j))))
+      (-j))))
     (2 : ℂ)⁻¹
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in

@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
-public import Mathlib.Analysis.Calculus.Deriv.Add
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Time translation preserves the independent whole-space Euler class,
 including its one-sided initial-time equation and uniform energy bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 

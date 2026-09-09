@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BasePacketSetup
-public import LeanPool.NavierStokesAndEuler.Euler.ParentHomogeneousPacketLowBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFirstLowBounds
+import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSign
+import LeanPool.NavierStokesAndEuler.Euler.PacketChildLowBounds
 
 /-! The first packet's size and sign hypotheses are proved for the
 concrete base solution on its actual restricted horizon. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +27,8 @@ open Set InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   (T : ℝ) (hT : 0 < T) (hTB : T ≤ initialTime)
 
+/-- First packet data, given by `(packetBaseParent β hβ ell hell hell1 T hT hTB).transverseData
+firstNormal firstNormal_unit firstFrame support compact`. -/
 def firstPacketData : EulerTransversePacketProvider.Data FirstPlane :=
   (packetBaseParent β hβ ell hell hell1 T hT hTB).transverseData
     firstNormal firstNormal_unit firstFrame support compact
@@ -59,7 +64,7 @@ theorem firstPacket_primary_flux (t : Icc (0 : ℝ) T) (x : Space) :
 
 theorem packetBase_physical_strain (t : Icc (0 : ℝ) T) (x : Space) :
     ‖fderiv ℝ (fun y => (packetBaseState β hβ ell hell hell1 T hT hTB).evolution.velocity (t,y)) x‖
-      ≤
+        ≤
       initialCoefficientCost := by
   rw [← (packetBaseState β hβ ell hell hell1 T hT hTB).evolution.strain_at_normalized_inverse t x]
   exact packetBase_strain_bound β hβ ell hell hell1 T hT hTB t _
@@ -73,7 +78,7 @@ theorem packetBase_physical_force (t : Icc (0 : ℝ) T) (x : Space) :
   erw [E.curvature_eq] at h
   change ‖fderiv ℝ (E.force t)
     ((packetBaseParent β hβ ell hell hell1 T hT hTB).position t (ell • (ell⁻¹ • E.inverse.field t
-      x)))‖ ≤ _ at h
+        x)))‖ ≤ _ at h
   simp only [smul_smul,mul_inv_cancel₀ hell.ne',one_smul] at h
   erw [E.inverse.right_inverse] at h
   exact h

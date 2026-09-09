@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometrySourceGrowth
 
-@[expose] public section
-
 /-! The first normal stage satisfies the full physical amplification
 geometry. The source normal, primary and all ODEs are the actual forward
 fields, including exact initial data at time zero. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,6 +35,7 @@ theorem error_le_scaled_error : P.forwardError G.radius ≤
     mul_nonneg (mul_nonneg G.epsilon_pos.le (zero_le_one.trans G.horizon_lower)) (sq_nonneg _)
   linarith only [he,hbase]
 
+/-- Geometry data, bundling `center`, `B`, `B₁`, `M` and the required compatibility proofs. -/
 def geometryData (Ω : Set Space) (h0 : 0 ∈ Ω) (hΩ : ∀ x ∈ Ω, ‖x‖ ≤ G.radius) :
     PhysicalGeometryData {x : Space // x ∈ Ω} where
   center := ⟨0,h0⟩
@@ -143,7 +145,7 @@ theorem exists_geometry_and_growth (Ω : Set Space) (h0 : 0 ∈ Ω)
     change D.normal.field (D.clamp (0+t)) x=D.normal.field t x
     rw [zero_add,Data.clamp_coe]
 
-theorem halfBall_physicalGrowth (hball : (1/2 : ℝ) ≤ G.radius) :
+theorem halfBall_physicalGrowth (hball : (1 / 2 : ℝ) ≤ G.radius) :
     ∃ g : C(Icc (0 : ℝ) D.T,ℝ), (∀ t, 0 < g t) ∧
       g ⟨0,le_rfl,D.T_pos.le⟩=1 ∧
       PhysicalGrowth D {x | ‖x‖ ≤ (1/2 : ℝ)} g (560*P.horizon^10/P.epsilon) := by

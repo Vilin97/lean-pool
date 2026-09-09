@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMovingFrame
-
-@[expose] public section
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 The physical parent decomposition and moving-frame coefficient bounds in
 source (23).  Frame motion and primary shear motion are derived from the
 actual homogeneous ray and velocity equations.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,14 +34,14 @@ theorem abs_inner_map_le (B : Space →L[ℝ] Space) {p q : Space}
   simpa only [hp, hq, mul_one, one_mul] using h
 
 theorem frameMatrix_abs_le (B : Space →L[ℝ] Space) (p q : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0)
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0)
     (i j : Fin 3) : |frameMatrix B p q i j| ≤ ‖B‖ :=
   abs_inner_map_le B ((frame_orthonormal p q hp hq hpq).norm_eq_one i)
     ((frame_orthonormal p q hp hq hpq).norm_eq_one j)
 
 /-- The shear is exactly the `(q,p)` entry in the actual orthonormal frame. -/
 theorem frameMatrix_parent (B E : Space →L[ℝ] Space) (h : ℝ) (p q : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0) :
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) :
     frameMatrix (B + h • rankOne ℝ q p + E) p q =
       parentEntry (frameMatrix B p q) (frameMatrix E p q) h := by
   have horth := orthonormal_iff_ite.mp (frame_orthonormal p q hp hq hpq)
@@ -89,6 +92,8 @@ theorem frameRate_norm_le (B : Space →L[ℝ] Space) (p q : Space)
     simp only [hp, hq, mul_one, one_mul] at h
     linarith only [h, hr, hv]
 
+/-- Frame matrix rate, given by `⟪frameRate B p q i,B (frame p q j)⟫_ℝ + ⟪frame p q i,B₁ (frame
+p q j)+B (frameRate B p q j)⟫_ℝ`. -/
 def frameMatrixRate (B B₁ : Space →L[ℝ] Space) (p q : Space) (i j : Fin 3) : ℝ :=
   ⟪frameRate B p q i,B (frame p q j)⟫_ℝ +
     ⟪frame p q i,B₁ (frame p q j)+B (frameRate B p q j)⟫_ℝ
@@ -98,8 +103,8 @@ theorem frameMatrix_hasDerivWithinAt {B : ℝ → Space →L[ℝ] Space}
     (hB : HasDerivWithinAt B B₁ S t)
     (hm : HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
     (hv : HasDerivWithinAt v (-(B t) (v t) +
-      (2*⟪m t,(B t) (v t)⟫_ℝ / ‖m t‖^2) • m t) S t)
-    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t,v t⟫_ℝ = 0) (i j : Fin 3) :
+      (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
+    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i j : Fin 3) :
     HasDerivWithinAt (fun s => frameMatrix (B s) (unit (m s)) (unit (v s)) i j)
       (frameMatrixRate (B t) B₁ (unit (m t)) (unit (v t)) i j) S t := by
   have hi := normalizedFrame_hasDerivWithinAt (B t) hm hv hm0 hv0 hmv i
@@ -107,7 +112,7 @@ theorem frameMatrix_hasDerivWithinAt {B : ℝ → Space →L[ℝ] Space}
   exact (hi.inner ℝ (hB.clm_apply hj)).congr_deriv (add_comm _ _)
 
 theorem frameMatrixRate_abs_le (B B₁ : Space →L[ℝ] Space) (p q : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0)
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0)
     (i j : Fin 3) : |frameMatrixRate B B₁ p q i j| ≤ ‖B₁‖+12*‖B‖^2 := by
   have hn := (frame_orthonormal p q hp hq hpq).norm_eq_one
   have hp' : ‖p‖ = 1 := by simpa only [frame, Matrix.cons_val_zero] using hn 0
@@ -116,8 +121,8 @@ theorem frameMatrixRate_abs_le (B B₁ : Space →L[ℝ] Space) (p q : Space)
   have hr := frameRate_norm_le B p q hp' hq' i
   have hs := frameRate_norm_le B p q hp' hq' j
   have hBj : ‖B (frame p q j)‖ ≤ ‖B‖ := by simpa only [hn, mul_one] using B.le_opNorm (frame p q j)
-  have hB₁j : ‖B₁ (frame p q j)‖ ≤ ‖B₁‖ := by simpa only [hn, mul_one] using B₁.le_opNorm (frame p
-    q j)
+  have hB₁j : ‖B₁ (frame p q j)‖ ≤ ‖B₁‖ := by
+      simpa only [hn, mul_one] using B₁.le_opNorm (frame p q j)
   have hBr := B.le_opNorm (frameRate B p q j)
   have h1 := (abs_real_inner_le_norm (frameRate B p q i) (B (frame p q j))).trans
     (mul_le_mul hr hBj (norm_nonneg _) (by positivity : 0 ≤ 6*‖B‖))
@@ -130,6 +135,7 @@ theorem frameMatrixRate_abs_le (B B₁ : Space →L[ℝ] Space) (p q : Space)
   unfold frameMatrixRate
   nlinarith only [h1, h2, h3, h4, h5, hB₁j, hBr]
 
+/-- Primary shear, given by `c*(‖m t‖*‖v t‖)`. -/
 def primaryShear (c : ℝ) (m v : ℝ → Space) (t : ℝ) : ℝ := c*(‖m t‖*‖v t‖)
 
 /-- In particular, the logarithmic shear law in source (23) holds for the
@@ -137,10 +143,10 @@ actual amplitude `c * ‖m‖ * ‖v‖`. -/
 theorem primaryShear_hasDerivWithinAt (B : Space →L[ℝ] Space) (c : ℝ)
     {m v : ℝ → Space} {t : ℝ} {S : Set ℝ}
     (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t)
-    (hv : HasDerivWithinAt v (-B (v t) + (2*⟪m t,B (v t)⟫_ℝ / ‖m t‖^2) • m t) S t)
-    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t,v t⟫_ℝ = 0) :
+    (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
+    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) :
     HasDerivWithinAt (primaryShear c m v)
-      (-(frameMatrix B (unit (m t)) (unit (v t)) 0 0+
+      (-(frameMatrix B (unit (m t)) (unit (v t)) 0 0 +
         frameMatrix B (unit (m t)) (unit (v t)) 1 1)*primaryShear c m v t) S t := by
   have hmnorm := norm_ne_zero_iff.mpr hm0
   have hvnorm := norm_ne_zero_iff.mpr hv0
@@ -163,8 +169,8 @@ theorem primaryShear_hasDerivWithinAt (B : Space →L[ℝ] Space) (c : ℝ)
 
 theorem primaryShear_rate_bound (B : Space →L[ℝ] Space) (c : ℝ)
     (m v : ℝ → Space) (t : ℝ) (hm0 : m t ≠ 0) (hv0 : v t ≠ 0)
-    (hmv : ⟪m t,v t⟫_ℝ = 0) :
-    |-(frameMatrix B (unit (m t)) (unit (v t)) 0 0+
+    (hmv : ⟪m t, v t⟫_ℝ = 0) :
+    |-(frameMatrix B (unit (m t)) (unit (v t)) 0 0 +
       frameMatrix B (unit (m t)) (unit (v t)) 1 1)*primaryShear c m v t| ≤
         2*‖B‖*|primaryShear c m v t| := by
   have hp := unit_inner_self hm0
@@ -173,7 +179,7 @@ theorem primaryShear_rate_bound (B : Space →L[ℝ] Space) (c : ℝ)
   have h0 := frameMatrix_abs_le B _ _ hp hq hpq 0 0
   have h1 := frameMatrix_abs_le B _ _ hp hq hpq 1 1
   rw [abs_mul, abs_neg]
-  have hsum : |frameMatrix B (unit (m t)) (unit (v t)) 0 0+
+  have hsum : |frameMatrix B (unit (m t)) (unit (v t)) 0 0 +
       frameMatrix B (unit (m t)) (unit (v t)) 1 1| ≤ 2*‖B‖ := by
     linarith only [abs_add_le (frameMatrix B (unit (m t)) (unit (v t)) 0 0)
       (frameMatrix B (unit (m t)) (unit (v t)) 1 1), h0, h1]

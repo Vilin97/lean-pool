@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedLipschitzFlow
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-! A bounded quadratic vector field whose radial energy vanishes has
 a genuine global flow on a real Hilbert space. Radial normalization
 first gives a globally Lipschitz equation; its conserved norm then
 removes the normalization by a constant rescaling of time. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +32,7 @@ section Normed
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Radial, given by `(1+‖x‖)⁻¹ • x`. -/
 def radial (x : E) : E := (1+‖x‖)⁻¹ • x
 
 theorem radial_norm (x : E) : ‖radial x‖ ≤ 1 := by
@@ -42,7 +48,7 @@ theorem radial_sub_norm (x y : E) : ‖radial x-radial y‖ ≤ 2*‖x-y‖ := b
       ((1+‖x‖)⁻¹*(‖y‖-‖x‖))*(1+‖y‖)⁻¹ := by
     field_simp
     ring
-  have hv : radial x-radial y = (1+‖x‖)⁻¹ • (x-y)+
+  have hv : radial x-radial y = (1+‖x‖)⁻¹ • (x-y) +
       ((1+‖x‖)⁻¹*(‖y‖-‖x‖)) • radial y := by
     calc
       _ = (1+‖x‖)⁻¹ • (x-y)+((1+‖x‖)⁻¹-(1+‖y‖)⁻¹) • y := by
@@ -68,6 +74,7 @@ theorem radial_sub_norm (x y : E) : ‖radial x-radial y‖ ≤ 2*‖x-y‖ := b
 theorem radial_lipschitz : LipschitzWith 2 (radial : E → E) :=
   lipschitzWith_iff_norm_sub_le.mpr radial_sub_norm
 
+/-- Normalized, given by `B (radial x) (radial x)`. -/
 def normalized (B : E →L[ℝ] E →L[ℝ] E) (x : E) : E := B (radial x) (radial x)
 
 theorem bilinear_bound (B : E →L[ℝ] E →L[ℝ] E) (x y : E) :
@@ -92,8 +99,8 @@ theorem normalized_lipschitz (B : E →L[ℝ] E →L[ℝ] E) :
     apply (bilinear_bound B _ _).trans
     exact (mul_le_mul (mul_le_mul_of_nonneg_left (radial_norm y) (norm_nonneg B))
       (radial_sub_norm x y) (norm_nonneg _) (by positivity)).trans_eq (by ring)
-  exact (add_le_add h1 h2).trans_eq (by simp only [NNReal.coe_mul,NNReal.coe_ofNat,coe_nnnorm];
-    ring)
+  exact (add_le_add h1 h2).trans_eq (by
+      simp only [NNReal.coe_mul,NNReal.coe_ofNat,coe_nnnorm]; ring)
 
 theorem normalized_eq (B : E →L[ℝ] E →L[ℝ] E) (x : E) :
     normalized B x=((1+‖x‖)⁻¹)^2 • B x x := by
@@ -106,7 +113,7 @@ section Hilbert
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 theorem exists_global_quadratic (B : E →L[ℝ] E →L[ℝ] E)
-    (hB : ∀ x, ⟪x,B x x⟫_ℝ=0) (x : E) :
+    (hB : ∀ x, ⟪x, B x x⟫_ℝ = 0) (x : E) :
     ∃ u : ℝ → E, u 0=x ∧ (∀ t, HasDerivAt u (B (u t) (u t)) t) ∧
       ∀ t, ‖u t‖=‖x‖ := by
   have hc : Continuous (Function.uncurry (fun _t : ℝ => normalized B)) :=

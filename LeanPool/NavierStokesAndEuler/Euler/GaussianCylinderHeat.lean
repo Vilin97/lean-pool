@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
 public import Mathlib.Probability.Distributions.Gaussian.Real
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureSpatialRegularity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Gaussian heat averaging in the genuine cylinder L² translation representation. -/
 
 @[expose] public section
 
-/-! Gaussian heat averaging in the genuine cylinder L² translation representation. -/
 
 noncomputable section
 
@@ -35,11 +39,11 @@ theorem lineOrbit_continuous (a : LiftTangent) (f : LiftL2 period) :
     ‖lineOrbit period a f x‖ = ‖f‖ := translation_norm period _ f
 
 @[simp] theorem lineOrbit_zero (a : LiftTangent) (f : LiftL2 period) : lineOrbit period a f 0 = f
-  := by
+    := by
   rw [lineOrbit, translationPath_zero, translation_zero]
 
 theorem lineOrbit_integrable (a : LiftTangent) (f : LiftL2 period) (μ : Measure ℝ) [IsFiniteMeasure
-  μ] :
+    μ] :
     Integrable (lineOrbit period a f) μ :=
   Integrable.of_bound (lineOrbit_continuous period a f).aestronglyMeasurable ‖f‖
     (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f x).le))
@@ -49,16 +53,16 @@ def lineHeat (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period
   ∫ x, lineOrbit period a f x ∂gaussianReal 0 v
 
 @[simp] theorem lineHeat_zero (a : LiftTangent) (f : LiftL2 period) : lineHeat period a 0 f = f :=
-  by
+    by
   simp [lineHeat]
 
 /-- Gaussian averaging is contractive, including variance zero. -/
 theorem lineHeat_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
     ‖lineHeat period a v f‖ ≤ ‖f‖ := by
   have h := norm_integral_le_of_norm_le (integrable_const ‖f‖ : Integrable (fun _ : ℝ => ‖f‖)
-    (gaussianReal 0 v))
+      (gaussianReal 0 v))
     (f := lineOrbit period a f) (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f
-      x).le))
+        x).le))
   simpa [lineHeat, measureReal_def] using h
 
 theorem lineHeat_add (a : LiftTangent) (v : ℝ≥0) (f g : LiftL2 period) :
@@ -82,18 +86,18 @@ def lineHeatOperator (a : LiftTangent) (v : ℝ≥0) : LiftL2 period →L[ℝ] L
     lineHeatOperator period a v f = lineHeat period a v f := rfl
 
 theorem lineHeatOperator_norm_le (a : LiftTangent) (v : ℝ≥0) : ‖lineHeatOperator period a v‖ ≤ 1 :=
-  ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by simpa using lineHeat_norm_le
-    period a v f)
+  ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by
+      simpa using lineHeat_norm_le period a v f)
 
 /-- The heat average commutes with every cylinder translation. -/
 theorem lineHeat_translation (a : LiftTangent) (v : ℝ≥0) (b : LiftDomain period) (f : LiftL2
-  period) :
+    period) :
     translation period b (lineHeat period a v f) = lineHeat period a v (translation period b f) :=
-      by
+        by
   change (translation period b).toContinuousLinearMap (∫ x, lineOrbit period a f x ∂gaussianReal 0
-    v) = _
+      v) = _
   rw [← (translation period b).toContinuousLinearMap.integral_comp_comm (lineOrbit_integrable
-    period a f _)]
+      period a f _)]
   apply integral_congr_ae
   apply Filter.Eventually.of_forall
   intro x
@@ -147,13 +151,13 @@ theorem lineHeat_commute (a b : LiftTangent) (v w : ℝ≥0) (f : LiftL2 period)
 /-- Fixed standard-Gaussian representation of every nonnegative-variance average. -/
 theorem lineHeat_eq_standardGaussian (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
     lineHeat period a v f = ∫ x, lineOrbit period a f (Real.sqrt (v : ℝ) * x) ∂gaussianReal 0 1 :=
-      by
+        by
   have hvar : (⟨Real.sqrt (v : ℝ) ^ 2, sq_nonneg _⟩ : ℝ≥0) * 1 = v := by
     ext
     simp [Real.sq_sqrt v.coe_nonneg]
   have hmap := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt (v : ℝ))
   have hmap' : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianReal 0 1) = gaussianReal 0 v
-    := by
+      := by
     convert hmap using 2
     · simp
     · ext
@@ -170,7 +174,7 @@ theorem lineHeat_continuous (a : LiftTangent) (f : LiftL2 period) :
     (bound := fun _ : ℝ => ‖f‖)
   · intro v
     exact ((lineOrbit_continuous period a f).comp (continuous_const.mul
-      continuous_id)).aestronglyMeasurable
+        continuous_id)).aestronglyMeasurable
   · intro v
     exact Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f _).le)
   · exact integrable_const _

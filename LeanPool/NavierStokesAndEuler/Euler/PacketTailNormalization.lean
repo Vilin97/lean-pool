@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderLinearTermBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketExponentialTail
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketExponentialTail
+
+/-! Actual inverse-frame normalization preserves the exponentially small residual estimate. -/
 
 @[expose] public section
 
-/-! Actual inverse-frame normalization preserves the exponentially small residual estimate. -/
 
 noncomputable section
 
@@ -31,11 +32,11 @@ theorem normalized_inverse_bound {R A : ℝ} {d : ℕ}
   simpa only [abs_of_nonneg hk,multiplierCost,mul_assoc] using h
 
 theorem normalized_tail_exponential {R B k X : ℝ} (N : ℕ)
-    (hG : G.WordBound 6 R (2*B*(k⁻¹*B)^(N+1)) 0)
+    (hG : G.WordBound 6 R (2 * B * (k⁻¹ * B) ^ (N + 1)) 0)
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
     (hR : 0 ≤ R) (hk : 4 ≤ k) (hB0 : 0 ≤ B)
-    (hB : B ≤ k^(1/100 : ℝ)) (hC : BC.multiplierCost ≤ k^(1/100 : ℝ))
-    (hX : 6 ≤ X) (hN : X-1 ≤ (N : ℝ)) :
+    (hB : B ≤ k ^ (1 / 100 : ℝ)) (hC : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ))
+    (hX : 6 ≤ X) (hN : X - 1 ≤ (N : ℝ)) :
     ((C.inverse.multiply G).smul k).WordBound 6 R
       (Real.exp (-(7/10)*X*Real.log k)) 0 := by
   have hk0 : 0 ≤ k := by linarith

@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathSobolev
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
 
 /-! Actual packet matrix coefficients provide the complete coefficient
 towers required by the all-order nonlinear correction construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +26,7 @@ open Set EulerSmoothLimit EulerLiftedGradientSpace EulerCylinderSobolevSpace
 
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {raw : Domain → Space →L[ℝ] Space}
 
+/-- To coefficient tower, bundling `coefficient`, `jet`, `continuous`. -/
 def toCoefficientTower (A : MatrixCoefficient T raw) :
     EulerAllOrderCorrectionData.CoefficientTower P T where
   coefficient := smoothCoefficient P A.path A.orbit

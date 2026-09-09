@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialMeanEquation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
 
 /-!
 # The actual angular mean equation along the correction cycle
@@ -18,6 +16,9 @@ The analytic input is on the primitive harmonic coefficients and the
 actual stream reconstructions.  Incompressibility and the angular mean
 identity are conclusions for the literal stored states.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -88,7 +89,7 @@ theorem ofReal_realDivergence (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D
       along V (fun y => (v y i : ℂ)) x = ((along V (fun y => v y i) x : ℝ) : ℂ) := by
     exact LinearWaveResidual.along_map Complex.ofRealCLM V (hv i)
   simp only [LiftedMeanResidual.realDivergence, cylindricalDivergence, hd, Complex.ofReal_add,
-    Complex.ofReal_div, Complex.real_smul]
+      Complex.ofReal_div, Complex.real_smul]
   push_cast
   ring
 
@@ -141,7 +142,7 @@ theorem block_divergence_zero {s : WeightedClasses.StripData D} {c : Context D}
       exact hsingle j θ
     have he := coefficient_eq_of_field_eq_at _ 0 (b.frequency n) (b.phase n) (hk n) j x.1 hfield
     simpa only [AddMonoidAlgebra.coeff_single, AddMonoidAlgebra.coeff_zero, Finsupp.single_eq_same,
-      Finsupp.zero_apply, Pi.zero_apply] using he
+        Finsupp.zero_apply, Pi.zero_apply] using he
   have hfield : HarmonicResidual.vectorField (blockAmplitude b n)
       (b.frequency n) (b.phase n) (b.angularFrequency n) =
       fun y i => (b.oscillation n y i : ℂ) := by
@@ -153,7 +154,7 @@ theorem block_divergence_zero {s : WeightedClasses.StripData D} {c : Context D}
   apply Complex.ofReal_eq_zero.mp
   rw [ofReal_realDivergence _ _ _ _ (fun i =>
     ((H.oscillation n i).contDiffAt ((LiftedMeanResidual.cylinder_open s.isOpen_domain).mem_nhds
-      hx)).differentiableAt
+        hx)).differentiableAt
       (by simp))]
   exact hdiv.symm
 
@@ -196,14 +197,16 @@ theorem pressureSum_mean_zero {ι : Type} (labels : ℕ → Finset ι) (b : ι �
     (fun l _ => block_pressure_continuous (b l) n x)]
   exact Finset.sum_eq_zero (fun l _ => block_pressure_mean_zero (b l) (hz l) (hk l) n x)
 
+/-- Point: an abbreviation for `CyclePoint`. -/
 abbrev Point := CyclePoint
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
 
 /-- Inputs on the existing state, the two actual waves, and the primitive
 stream construction. No outgoing divergence or mean equation is a field. -/
 structure StepData {ι : Type} {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord)
     (p : CycleParameters ι) (v : CycleCoefficients ι) (c : Context Point) (u : State Point) : Prop
-      where
+        where
   inner_pos : 0 < p.gauge.radial.inner
   exponent_pos : 0 < p.gauge.radial.exponent
   length : ∀ n, p.gauge.length n = VariableGaugeMean.qLength coord
@@ -372,11 +375,11 @@ theorem next_oscillation_mean_zero
   have hpc : Continuous (fun θ => p.particularVelocity v c u n (x, θ) i) :=
     LabelSumBounds.fieldSum_angularContinuous v.labels
     (fun l => (p.particularBlock v c u l).oscillation) (fun _ =>
-      CorrectionStep.block_angularContinuous _) n x i
+        CorrectionStep.block_angularContinuous _) n x i
   have hsc : Continuous (fun θ => p.signedVelocity v c u n (x, θ) i) :=
     LabelSumBounds.fieldSum_angularContinuous v.labels
     (fun l => (p.signedBlock v c u l).oscillation) (fun _ => CorrectionStep.block_angularContinuous
-      _) n x i
+        _) n x i
   have hpz : angularMeanVector (p.particularVelocity v c u) n x i = 0 :=
     congrFun (congrFun (congrFun (fieldSum_angularMean_zero v.labels
     (p.particularBlock v c u) (p.particularBlock_zero v c u) H.particular_angular) n) x) i
@@ -506,7 +509,7 @@ theorem next_fullDivergence
   have hnhds := (LiftedMeanResidual.cylinder_open p.strip.isOpen_domain).mem_nhds hx
   have du₀ (i : Fin 3) : DifferentiableAt ℝ (fun y => u.totalVelocity c n y i) x :=
     ((ActualInitialMeanEquation.totalVelocity_smooth_of_primitive H.primitive H.domain hu n
-      i).contDiffAt
+        i).contDiffAt
       hnhds).differentiableAt (by simp)
   have du₁ (i : Fin 3) : DifferentiableAt ℝ
       (fun y => (p.afterParticular v c u).totalVelocity c n y i) x :=
@@ -574,7 +577,7 @@ theorem iterate_meanHypotheses {ι : Type} {coord : ℝ}
     have hn := (H j).next_meanHypotheses hi
     change LiftedMeanResidual.MeanHypotheses V c
       ((p j).next (CycleState.iterate p c seed j).coefficients c (CycleState.iterate p c seed
-        j).state)
+          j).state)
     simpa only [hV j] using hn
 
 theorem iterate_divergence_zero {ι : Type} {coord : ℝ}
@@ -599,7 +602,7 @@ theorem iterate_angularMean_fullGoodResidual {ι : Type} {coord : ℝ}
     angularMeanVector (fullGoodResidual c (CycleState.iterate p c seed j).state) n x i =
       (CycleState.iterate p c seed j).state.meanGoodResidual c n x i :=
   LiftedMeanResidual.angularMean_fullGoodResidual (iterate_meanHypotheses U p c seed V hV H₀ H j) n
-    hx i
+      hx i
 
 /-- Specialization to the literal initializer: its mean-PDE hypotheses
 come from the proved initialization theorem, not an additional premise. -/
@@ -610,14 +613,14 @@ theorem iterate_meanHypotheses_of_initialized {ι : Type} {coord : ℝ}
     (hV : ∀ j, (p j).strip.domain = ActualInitialMeanEquation.strip.domain)
     (H : ∀ j, StepData U (p j)
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed
-        j).coefficients
+          j).coefficients
       (CorrectionInitialization.ActualPrimary.commonContext B)
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed j).state)
     (j : ℕ) :
     LiftedMeanResidual.MeanHypotheses ActualInitialMeanEquation.strip.domain
       (CorrectionInitialization.ActualPrimary.commonContext B)
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed j).state
-        := by
+          := by
   apply iterate_meanHypotheses U p (CorrectionInitialization.ActualPrimary.commonContext B)
     seed ActualInitialMeanEquation.strip.domain hV ?_ H j
   rw [hseed]
@@ -630,15 +633,15 @@ theorem iterate_angularMean_fullGoodResidual_of_initialized {ι : Type} {coord :
     (hV : ∀ j, (p j).strip.domain = ActualInitialMeanEquation.strip.domain)
     (H : ∀ j, StepData U (p j)
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed
-        j).coefficients
+          j).coefficients
       (CorrectionInitialization.ActualPrimary.commonContext B)
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed j).state)
     (j n : ℕ) {x : Point} (hx : x ∈ ActualInitialMeanEquation.strip.domain) (i : Fin 3) :
     angularMeanVector (fullGoodResidual (CorrectionInitialization.ActualPrimary.commonContext B)
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed j).state)
-        n x i =
+          n x i =
       (CycleState.iterate p (CorrectionInitialization.ActualPrimary.commonContext B) seed
-        j).state.meanGoodResidual
+          j).state.meanGoodResidual
         (CorrectionInitialization.ActualPrimary.commonContext B) n x i :=
   LiftedMeanResidual.angularMean_fullGoodResidual
     (iterate_meanHypotheses_of_initialized U B N0 p seed hseed hV H j) n hx i

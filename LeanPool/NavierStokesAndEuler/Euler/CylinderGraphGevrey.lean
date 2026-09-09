@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetGraphTrace
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDescentJets
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+import LeanPool.NavierStokesAndEuler.Euler.CylinderJetGraphTrace
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Periodic cover Gevrey bounds give actual physical graph bounds.
 The L² trace uses one extra angular derivative but no extra factor of
 the graph frequency. Only the n physical derivatives cost its n-th power. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +31,7 @@ open scoped ContDiff
 
 variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
 
+/-- Graph factor, given by `1+|k| * ‖m‖`. -/
 def graphFactor (k : ℝ) (m : Vector3) : ℝ := 1+|k| * ‖m‖
 
 theorem graphFactor_nonneg (k : ℝ) (m : Vector3) : 0 ≤ graphFactor k m := by
@@ -50,7 +56,7 @@ theorem norm_graph_derivative_le (f : LiftTangent → W) (hf : ContDiff ℝ ∞ 
 omit [CompleteSpace W] in
 theorem graph_sup_bound (f : LiftTangent → W) (hf : ContDiff ℝ ∞ f)
     (k : ℝ) (m : Vector3) (B R : ℝ)
-    (hb : ∀ n z, ‖iteratedFDeriv ℝ n f z‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n z, ‖iteratedFDeriv ℝ n f z‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (x : Vector3) :
     ‖iteratedFDeriv ℝ n (f ∘ graphMap k m) x‖ ≤
       B*(R*graphFactor k m)^n*(n.factorial : ℝ)^2 := by
@@ -59,7 +65,7 @@ theorem graph_sup_bound (f : LiftTangent → W) (hf : ContDiff ℝ ∞ f)
     (by rw [mul_pow]; ring)
 
 variable (P : ℝ) [Fact (0 < P)] (f : LiftTangent → W)
-  (hperiod : ∀ (c : AddSubgroup.zmultiples P) z, f (z.1,(c : ℝ)+z.2)=f z)
+  (hperiod : ∀ (c : AddSubgroup.zmultiples P) z, f (z.1, (c : ℝ) + z.2) = f z)
   (hf : ContDiff ℝ ∞ f)
 
 include hperiod hf in
@@ -67,7 +73,7 @@ theorem graph_evaluated_tensor_bound (k : ℝ) (m : Vector3) (C R : ℝ)
     (hC : 0 ≤ C) (hR : 0 ≤ R)
     (hLp : ∀ n, MemLp (fun q => jetSeries P f q n) 2 (liftMeasure P))
     (hn : ∀ n, (eLpNorm (fun q => jetSeries P f q n) 2 (liftMeasure P)).toReal ≤
-      C*R^n*(n.factorial : ℝ)^2) (n : ℕ) :
+      C * R ^ n * (n.factorial : ℝ) ^ 2) (n : ℕ) :
     MemLp (fun x => iteratedFDeriv ℝ n f (graphMap k m x)) 2 volume ∧
       (eLpNorm (fun x => iteratedFDeriv ℝ n f (graphMap k m x)) 2 volume).toReal ≤
         (Real.sqrt (2/P+2*P)*C*(1+R))*(4*R)^n*(n.factorial : ℝ)^2 := by
@@ -96,20 +102,20 @@ theorem graph_Lp_bound (k : ℝ) (m : Vector3) (C R : ℝ)
     (hC : 0 ≤ C) (hR : 0 ≤ R)
     (hLp : ∀ n, MemLp (fun q => jetSeries P f q n) 2 (liftMeasure P))
     (hn : ∀ n, (eLpNorm (fun q => jetSeries P f q n) 2 (liftMeasure P)).toReal ≤
-      C*R^n*(n.factorial : ℝ)^2) (n : ℕ) :
+      C * R ^ n * (n.factorial : ℝ) ^ 2) (n : ℕ) :
     MemLp (iteratedFDeriv ℝ n (f ∘ graphMap k m)) 2 volume ∧
       (eLpNorm (iteratedFDeriv ℝ n (f ∘ graphMap k m)) 2 volume).toReal ≤
         (Real.sqrt (2/P+2*P)*C*(1+R))*(4*R*graphFactor k m)^n*(n.factorial : ℝ)^2 := by
   obtain ⟨hg,hgNorm⟩ := graph_evaluated_tensor_bound P f hperiod hf k m C R hC hR hLp hn n
   have hm : AEStronglyMeasurable (iteratedFDeriv ℝ n (f ∘ graphMap k m)) volume :=
     ((hf.comp (graphMap k m).contDiff).continuous_iteratedFDeriv (m := n) (by
-      simp)).aestronglyMeasurable
+        simp)).aestronglyMeasurable
   have hbound := norm_graph_derivative_le f hf k m n
   have hcomp : MemLp (iteratedFDeriv ℝ n (f ∘ graphMap k m)) 2 volume :=
     hg.of_le_mul hm (Eventually.of_forall hbound)
   have hnorm : (eLpNorm (iteratedFDeriv ℝ n (f ∘ graphMap k m)) 2 volume).toReal ≤
       (graphFactor k m)^n*(eLpNorm (fun x => iteratedFDeriv ℝ n f (graphMap k m x)) 2
-        volume).toReal := by
+          volume).toReal := by
     have h : ‖hcomp.toLp _‖ ≤ (graphFactor k m)^n*‖hg.toLp _‖ := by
       apply Lp.norm_le_mul_norm_of_ae_le_mul
       filter_upwards [hcomp.coeFn_toLp,hg.coeFn_toLp] with x hx hy

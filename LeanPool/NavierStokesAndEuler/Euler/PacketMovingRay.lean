@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMovingFrame
+import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-! The physical ray ODE in the actual normalized moving frame. -/
 
 @[expose] public section
 
-/-! The physical ray ODE in the actual normalized moving frame. -/
 
 noncomputable section
 
@@ -20,7 +22,7 @@ namespace EulerPacketMovingFrame
 open EulerSmoothLimit EulerPacketNormalizedPrimary InnerProductSpace ContinuousLinearMap
 
 theorem frame_inner_expand (p q : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0) (x y : Space) :
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) (x y : Space) :
     (∑ j : Fin 3, ⟪frame p q j,x⟫_ℝ * ⟪frame p q j,y⟫_ℝ) = ⟪x,y⟫_ℝ := by
   have hb := (frameBasis p q hp hq hpq).sum_inner_mul_inner x y
   simp only [frameBasis_apply] at hb
@@ -33,7 +35,7 @@ theorem frame_inner_expand (p q : Space)
     _ = _ := hb
 
 theorem movingRayRate_identity (B M : Space →L[ℝ] Space) (p q x : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0) (i : Fin 3) :
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) (i : Fin 3) :
     -⟪M (frame p q i),x⟫_ℝ + ⟪frameRate B p q i,x⟫_ℝ =
       -(∑ j : Fin 3, (frameMatrix M p q j i -
         EulerPacketRay.frameSkew (frameMatrix B p q) j i) * ⟪frame p q j,x⟫_ℝ) := by
@@ -43,6 +45,7 @@ theorem movingRayRate_identity (B M : Space →L[ℝ] Space) (p q x : Space)
   rw [frame_inner_expand p q hp hq hpq, frame_inner_expand p q hp hq hpq]
   ring
 
+/-- Moving ray, given by `⟪normalizedFrame m v t i,r t⟫_ℝ`. -/
 def movingRay (m v r : ℝ → Space) (t : ℝ) (i : Fin 3) : ℝ :=
   ⟪normalizedFrame m v t i,r t⟫_ℝ
 
@@ -51,9 +54,9 @@ matrix already derived from the older primary ODE. -/
 theorem movingRay_hasDerivAt (B M : Space →L[ℝ] Space)
     {m v r : ℝ → Space} {t : ℝ}
     (hm : HasDerivAt m (-B.adjoint (m t)) t)
-    (hv : HasDerivAt v (-B (v t) + (2*⟪m t,B (v t)⟫_ℝ / ‖m t‖^2) • m t) t)
+    (hv : HasDerivAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) t)
     (hr : HasDerivAt r (-M.adjoint (r t)) t)
-    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t,v t⟫_ℝ = 0) (i : Fin 3) :
+    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
     HasDerivAt (fun s => movingRay m v r s i)
       (-(∑ j : Fin 3, (frameMatrix M (unit (m t)) (unit (v t)) j i -
         EulerPacketRay.frameSkew (frameMatrix B (unit (m t)) (unit (v t))) j i) *
@@ -67,9 +70,9 @@ theorem movingRay_hasDerivAt (B M : Space →L[ℝ] Space)
 theorem movingRay_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     {m v r : ℝ → Space} {t : ℝ} {S : Set ℝ}
     (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t)
-    (hv : HasDerivWithinAt v (-B (v t) + (2*⟪m t,B (v t)⟫_ℝ / ‖m t‖^2) • m t) S t)
+    (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hr : HasDerivWithinAt r (-M.adjoint (r t)) S t)
-    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t,v t⟫_ℝ = 0) (i : Fin 3) :
+    (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
     HasDerivWithinAt (fun s => movingRay m v r s i)
       (-(∑ j : Fin 3, (frameMatrix M (unit (m t)) (unit (v t)) j i -
         EulerPacketRay.frameSkew (frameMatrix B (unit (m t)) (unit (v t))) j i) *

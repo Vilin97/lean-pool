@@ -7,10 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
+import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicCovariance
+import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
 
 /-!
 # Uniform weighted bounds for actual label sums
@@ -19,6 +19,9 @@ The constants in `UniformClass` are chosen before the label.  The spatial
 sum estimates use the actual closed label windows and the existing finite
 coloring, rather than the total number of labels in an active finite set.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,10 +51,13 @@ structure UniformClass (s : StripData D) (w : ι → ℕ → D → ℝ) (α : �
     ∀ l n x, x ∈ s.domain → ∀ j : ℕ, j ≤ m →
       ‖iteratedFDeriv ℝ j (f l n) x‖ ≤ majorant s (w l) α C p n x
 
+/-- Uniform mean class: an abbreviation for `UniformClass s (fun _ _ x => s.zeta x) α f`. -/
 noncomputable abbrev UniformMeanClass (s : StripData D) (α : ℝ)
     (f : ι → ℕ → D → E) : Prop :=
   UniformClass s (fun _ _ x => s.zeta x) α f
 
+/-- Uniform wave class: an abbreviation for `UniformClass s (fun l n x => Real.sqrt (s.zeta x) *
+P l n x) α f`. -/
 noncomputable abbrev UniformWaveClass (s : StripData D) (P : ι → ℕ → D → ℝ) (α : ℝ)
     (f : ι → ℕ → D → E) : Prop :=
   UniformClass s (fun l n x => Real.sqrt (s.zeta x) * P l n x) α f
@@ -170,8 +176,8 @@ theorem sum (F : Finset κ) (f : κ → ι → ℕ → D → E)
     UniformClass s w α (fun l n x => ∑ k ∈ F, f k l n x) := by
   classical
   induction F using Finset.induction_on with
-  | empty => simpa only [Finset.sum_empty] using (zero hw : UniformClass s w α (fun _ _ _ => (0 :
-    E)))
+  | empty =>
+      simpa only [Finset.sum_empty] using (zero hw : UniformClass s w α (fun _ _ _ => (0 : E)))
   | @insert a F ha ih =>
       simpa only [Finset.sum_insert ha] using
         (hf a (Finset.mem_insert_self _ _)).add
@@ -255,6 +261,7 @@ theorem uniform_wave_bilinear_mean {s : StripData D} {P : ι → ℕ → D → �
 
 /-! ## Closed, enlarged label windows -/
 
+/-- Window point: an abbreviation for `ℝ × SlotColoring.Position`. -/
 abbrev WindowPoint := ℝ × SlotColoring.Position
 
 /-- The first coordinate is the logarithmic dyadic coordinate.  The
@@ -507,9 +514,11 @@ theorem uniform_blockCovariance {s : StripData D} {P : ι → ℕ → D → ℝ}
 
 /-! ## Actual finite sums and support-induced covariance diagonality -/
 
+/-- Field sum, defined pointwise by `∑ l ∈ labels n, u l n p i`. -/
 noncomputable def fieldSum (labels : ℕ → Finset ι) (u : ι → Oscillation D) : Oscillation D :=
   fun n p i => ∑ l ∈ labels n, u l n p i
 
+/-- Angular continuous, given by `∀ n x i, Continuous (fun θ : ℝ => u n (x, θ) i)`. -/
 noncomputable def AngularContinuous (u : Oscillation D) : Prop :=
   ∀ n x i, Continuous (fun θ : ℝ => u n (x, θ) i)
 
@@ -604,7 +613,7 @@ theorem covariance_window_support {d h : ℝ} {vr vt : TorusInverse.Plane}
     exact hout (hsu l n x hx θ i hn).1
   apply hne
   simp only [bilinearCovariance, angularAverage, hz, zero_mul, intervalIntegral.integral_zero,
-    zero_div]
+      zero_div]
 
 /-- Generic covariance adapter. The next theorem supplies the uniform
 single-label estimates directly from harmonic coefficients. -/
@@ -752,8 +761,10 @@ theorem signedTailLabel_admissible {N : ℕ} (hN : 1 ≤ N) :
 
 /-! ## The full signed covariance remainder, below CorrectionStep -/
 
+/-- Tensor: an abbreviation for `Fin 3 → Fin 3 → ScalarField D`. -/
 abbrev Tensor (D : Type) := Fin 3 → Fin 3 → ScalarField D
 
+/-- Symmetric covariance, given by `bilinearCovariance u v + bilinearCovariance v u`. -/
 noncomputable def symmetricCovariance (u v : Oscillation D) : Tensor D :=
   bilinearCovariance u v + bilinearCovariance v u
 
@@ -778,7 +789,7 @@ theorem covariance_add_left {u v w : Oscillation D}
     bilinearCovariance (u + v) w = bilinearCovariance u w + bilinearCovariance v w := by
   funext i j n x
   change HarmonicResidual.realAngularMean (fun θ => (u n (x, θ) i + v n (x, θ) i) * w n (x, θ) j) =
-    _
+      _
   simp only [add_mul]
   exact HarmonicResidual.realAngularMean_add
     ((hu n x i).fun_mul (hw n x j)) ((hv n x i).fun_mul (hw n x j))
@@ -789,7 +800,7 @@ theorem covariance_add_right {u v w : Oscillation D}
     bilinearCovariance u (v + w) = bilinearCovariance u v + bilinearCovariance u w := by
   funext i j n x
   change HarmonicResidual.realAngularMean (fun θ => u n (x, θ) i * (v n (x, θ) j + w n (x, θ) j)) =
-    _
+      _
   simp only [mul_add]
   exact HarmonicResidual.realAngularMean_add
     ((hu n x i).fun_mul (hv n x j)) ((hu n x i).fun_mul (hw n x j))
@@ -824,15 +835,20 @@ theorem signedRemainder_exact (primary old tangent curl : Oscillation D)
     covariance_sub_left ho hp ht, covariance_sub_right ht ho hp]
   abel
 
+/-- Same carrier data, collecting `frequency`, `phase`, `angular`. -/
 structure SameCarrier (a b : HarmonicBlock D) : Prop where
   frequency : b.frequency = a.frequency
   phase : b.phase = a.phase
   angular : b.angularFrequency = a.angularFrequency
 
+/-- Add block, given by `{ a with velocity := fun n i => a.velocity n i + b.velocity n i
+pressure := fun n => a.pressure n + b.pressure n }`. -/
 noncomputable def addBlock (a b : HarmonicBlock D) : HarmonicBlock D :=
   { a with velocity := fun n i => a.velocity n i + b.velocity n i
            pressure := fun n => a.pressure n + b.pressure n }
 
+/-- Sub block, given by `{ a with velocity := fun n i => a.velocity n i - b.velocity n i
+pressure := fun n => a.pressure n - b.pressure n }`. -/
 noncomputable def subBlock (a b : HarmonicBlock D) : HarmonicBlock D :=
   { a with velocity := fun n i => a.velocity n i - b.velocity n i
            pressure := fun n => a.pressure n - b.pressure n }
@@ -873,7 +889,7 @@ theorem uniform_symmetricCovariance {s : StripData D} {P : ι → ℕ → D → 
     (hP1 : ∀ l n x, x ∈ s.domain → P l n x ≤ 1)
     (hkp : ∀ l n, (a l).angularFrequency n ≠ 0) (i j : Fin 3) :
     UniformMeanClass s (α + β) (fun l => symmetricCovariance (a l).oscillation (b l).oscillation i
-      j) := by
+        j) := by
   have hf := uniform_mixedBlockCovariance a b N hband
     (fun l => (hcarrier l).frequency) (fun l => (hcarrier l).phase) (fun l => (hcarrier l).angular)
     ha hb hP0 hP1 hkp
@@ -887,10 +903,15 @@ theorem uniform_symmetricCovariance {s : StripData D} {P : ι → ℕ → D → 
 /-- Input coefficient bounds with one witness uniform in all spatial
 labels. The improved old-minus-primary bound is explicitly retained. -/
 structure SignedFamily (s : StripData D) (P : ι → ℕ → D → ℝ) (α δ β η : ℝ) where
+  /-- Primary of `SignedFamily`, of type `ι → HarmonicBlock D`. -/
   primary : ι → HarmonicBlock D
+  /-- Old of `SignedFamily`, of type `ι → HarmonicBlock D`. -/
   old : ι → HarmonicBlock D
+  /-- Tangent of `SignedFamily`, of type `ι → HarmonicBlock D`. -/
   tangent : ι → HarmonicBlock D
+  /-- Curl of `SignedFamily`, of type `ι → HarmonicBlock D`. -/
   curl : ι → HarmonicBlock D
+  /-- Bandwidth of `SignedFamily`, of type `ℕ`. -/
   bandwidth : ℕ
   primary_band : ∀ l, (primary l).BandLimited bandwidth
   old_band : ∀ l, (old l).BandLimited bandwidth
@@ -986,9 +1007,9 @@ theorem supported_signedRemainder_fieldSum_eq {d h : ℝ} {vr vt : TorusInverse.
   have hii := supported_covariance_fieldSum_eq labels label hinj hlevel χ Y
     (fun l => t l + c l) (fun l => t l + c l) hi hi hsi hsi n hx i j
   have hpt := supported_covariance_fieldSum_eq labels label hinj hlevel χ Y p t hp ht hsp hst n hx
-    i j
+      i j
   have htp := supported_covariance_fieldSum_eq labels label hinj hlevel χ Y t p ht hp hst hsp n hx
-    i j
+      i j
   simp only [fieldSum_add] at hoi hio hii
   simp only [signedRemainder, symmetricCovariance, Pi.sub_apply, Pi.add_apply,
     hoi, hio, hii, hpt, htp, Finset.sum_add_distrib, Finset.sum_sub_distrib]
@@ -1101,9 +1122,9 @@ theorem harmonic_covariance_increment_sum_mem
     MeanClass s (α + β) (fun n x =>
       bilinearCovariance
         (fieldSum labels (fun l => (a l).oscillation) + fieldSum labels (fun l => (b
-          l).oscillation))
+            l).oscillation))
         (fieldSum labels (fun l => (a l).oscillation) + fieldSum labels (fun l => (b
-          l).oscillation)) i j n x -
+            l).oscillation)) i j n x -
       bilinearCovariance (fieldSum labels (fun l => (a l).oscillation))
         (fieldSum labels (fun l => (a l).oscillation)) i j n x) := by
   let u := fieldSum labels (fun l => (a l).oscillation)
@@ -1152,7 +1173,7 @@ theorem uniformClass_of_envelopeJets {s : StripData D}
       _ = K ^ m * s.slow n ^ (q * m) := by rw [mul_pow, ← pow_mul]
       _ ≤ _ := mul_le_mul_of_nonneg_left
         (pow_le_pow_left₀ (zero_le_one.trans (s.one_le_slow n)) (s.slow_le_growth n x) _) (by
-          positivity)
+            positivity)
   calc
     _ ≤ C * V.scale (n, l) ^ m * W (n, l) x := hb (n, l) x (hdom n l hx) j hj
     _ ≤ C * V.scale (n, l) ^ m * (s.epsilon n ^ α * w l n x) :=
@@ -1209,6 +1230,6 @@ theorem native_jet_tsupport_subset {h r : ℝ} {vr vt : TorusInverse.Plane}
     (hf : support f ⊆ PartitionedCovariance.slotSet h r vr vt l) (m : ℕ) :
     tsupport (iteratedFDeriv ℝ m f) ⊆ PartitionedCovariance.slotSet h r vr vt l :=
   (tsupport_iteratedFDeriv_subset m).trans (closure_minimal hf (slotSet_isCompact h r vr vt
-    l).isClosed)
+      l).isClosed)
 
 end NavierStokes.LabelSumBounds

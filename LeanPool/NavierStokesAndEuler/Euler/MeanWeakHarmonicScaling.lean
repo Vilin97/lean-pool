@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicInterior
-public import LeanPool.NavierStokesAndEuler.Euler.MeanL2Scaling
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicComponents
+import LeanPool.NavierStokesAndEuler.Euler.MeanL2Scaling
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Scale-independent local L² control of weak harmonic fields on ordinary R³. -/
 
 @[expose] public section
 
-/-! Scale-independent local L² control of weak harmonic fields on ordinary R³. -/
 
 noncomputable section
 
@@ -54,7 +57,7 @@ theorem weakHarmonic_pointwise_scaled (u : L2) (R : ℝ) (hR : 0 < R)
 /-- The radius R of the ambient harmonic ball cancels exactly from the local-energy estimate. -/
 theorem weakHarmonic_scaled_smallBall_energy (u : L2) (R : ℝ) (hR : 0 < R)
     (hu : WeakHarmonicOn (Metric.ball (0 : Space) R) u)
-    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4) :
+    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4) :
     localL2Energy (Metric.ball (0 : Space) (R*r)) u ≤
       weakHarmonicSmallBallConstant * r^3 * ‖u‖^2 := by
   have hrr : R*r ≤ R/4 := by nlinarith

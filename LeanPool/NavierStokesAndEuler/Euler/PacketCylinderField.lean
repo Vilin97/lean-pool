@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRecursion
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-!
 # Actual cylinder-path witnesses for raw packet fields
@@ -19,6 +19,9 @@ translation orbit, and equality with the raw field on the time interval.
 Time derivatives are an actual L² evolution identity, stated separately.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerPacketCylinderField
@@ -26,10 +29,12 @@ namespace EulerPacketCylinderField
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerCylinderSmoothOrbit EulerLpCylinderTranslation EulerMetricTransport
   EulerLiftedWeakDerivative EulerPacketPointJets EulerPacketProfileRecursion
-    EulerVolterraConvolution
+      EulerVolterraConvolution
 open scoped ContDiff
 
+/-- Field data, collecting `path`, `orbit`, `raw_eq`. -/
 structure Field (P T : ℝ) [Fact (0 < P)] (raw : VectorField) where
+  /-- Time-dependent path of `Field`, of type `C(Icc (0 : ℝ) T,LiftL2 P)`. -/
   path : C(Icc (0 : ℝ) T,LiftL2 P)
   orbit : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a path)
   raw_eq : ∀ (t : Icc (0 : ℝ) T) x θ,

@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.MeanValue
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Products of genuine time-H¹ paths and differentiable operator paths
@@ -20,6 +17,9 @@ The product derivative is constructed in the actual Bochner L² space from the
 coefficient multiplier and terminal primitive. Its integral is identified with
 the literal pointwise product by absolute continuity and uniqueness of primitives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

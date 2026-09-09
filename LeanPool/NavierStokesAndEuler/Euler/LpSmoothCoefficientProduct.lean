@@ -9,8 +9,9 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPathMap
 public import LeanPool.NavierStokesAndEuler.Euler.LpOperatorField
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Actual smooth L² multiplication by bounded smooth coefficients
@@ -19,6 +20,9 @@ The coefficient derivatives are genuine uniform-norm jets. The product
 derivatives are actual Fréchet derivatives, proved square integrable by the
 Leibniz estimate. The derivative identity remains a literal function equality.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,7 +49,7 @@ theorem product_memLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
   have hm : AEStronglyMeasurable
       (iteratedFDeriv ℝ n (fun x => A.field t x (f.field x))) volume :=
     (((A.smooth t).clm_apply f.smooth).continuous_iteratedFDeriv (m := n) (by
-      simp)).aestronglyMeasurable
+        simp)).aestronglyMeasurable
   apply hsum.mono' hm
   apply Eventually.of_forall
   intro x
@@ -57,8 +61,9 @@ theorem product_memLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     rw [← A.jet_eq]
     exact (A.jet i t).norm_coe_le_norm x
   exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hA (Nat.cast_nonneg _)) (norm_nonneg
-    _)
+      _)
 
+/-- Product, bundling `field`, `smooth`, `integrable`. -/
 def product (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     (f : SmoothL2Field V) : SmoothL2Field W where
   field x := A.field t x (f.field x)
@@ -76,11 +81,14 @@ theorem product_toLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     EulerLpOperatorField.full_ae volume (A.field t) f.toLp, f.toLp_ae] with x h₁ h₂ h₃
   exact h₁.trans ((congrArg (A.field t x) h₃).symm.trans h₂.symm)
 
+/-- Left derivative, given by `SmoothCoefficientPath.map (flipₗᵢ ℝ Space V
+W).toContinuousLinearEquiv.toContinuousLinearMap A.derivative`. -/
 def leftDerivative (A : SmoothCoefficientPath K (V →L[ℝ] W)) :
     SmoothCoefficientPath K (V →L[ℝ] (Space →L[ℝ] W)) :=
   SmoothCoefficientPath.map (flipₗᵢ ℝ Space V W).toContinuousLinearEquiv.toContinuousLinearMap
-    A.derivative
+      A.derivative
 
+/-- Right derivative, given by `SmoothCoefficientPath.map (compL ℝ Space V W) A`. -/
 def rightDerivative (A : SmoothCoefficientPath K (V →L[ℝ] W)) :
     SmoothCoefficientPath K ((Space →L[ℝ] V) →L[ℝ] (Space →L[ℝ] W)) :=
   SmoothCoefficientPath.map (compL ℝ Space V W) A
@@ -112,7 +120,7 @@ theorem jetLp_congr (f g : SmoothL2Field V) (h : f.field = g.field) (n : ℕ) :
 theorem product_derivative_jetLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     (f : SmoothL2Field V) (n : ℕ) :
     (product A t f).derivative.jetLp n =
-      (product (rightDerivative A) t f.derivative).jetLp n+
+      (product (rightDerivative A) t f.derivative).jetLp n +
         (product (leftDerivative A) t f).jetLp n :=
   (jetLp_congr _ _ (product_derivative_field A t f) n).trans (jetLp_addField _ _ n)
 

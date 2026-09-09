@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Dominated convergence in genuine L², also for Banach-valued representatives. -/
 
 @[expose] public section
 
-/-! Dominated convergence in genuine L², also for Banach-valued representatives. -/
 
 noncomputable section
 

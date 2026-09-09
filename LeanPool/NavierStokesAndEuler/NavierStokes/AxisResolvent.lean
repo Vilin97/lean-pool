@@ -6,14 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisCoefficientSpace
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisOperators
-public import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Topology.Algebra.InfiniteSum.Ring
-public import Mathlib.Tactic.GCongr
-
-@[expose] public section
 
 /-!
 # The natural-axis resolvent from factorial decay of radial shifts
@@ -23,6 +16,9 @@ small-operator-norm hypothesis is used. The generic Banach-ring lemmas isolate
 the analytic implication of the factorial estimate from its radial proof.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AxisResolvent
@@ -30,9 +26,13 @@ namespace NavierStokes.AxisResolvent
 open scoped BigOperators Topology
 open Filter
 
-private local instance (I : AxisCoefficientSpace.Window) (ε : ℝ) :
+/-- Cache the standard `NormedAddCommGroup (AxisCoefficientSpace.AxisSpace I ε)` instance to
+shorten typeclass synthesis. -/
+local instance instAxisResolvent1 (I : AxisCoefficientSpace.Window) (ε : ℝ) :
     NormedAddCommGroup (AxisCoefficientSpace.AxisSpace I ε) := inferInstance
-private local instance (I : AxisCoefficientSpace.Window) (ε : ℝ) :
+/-- Cache the standard `NormedSpace ℝ (AxisCoefficientSpace.AxisSpace I ε)` instance to shorten
+typeclass synthesis. -/
+local instance instAxisResolvent2 (I : AxisCoefficientSpace.Window) (ε : ℝ) :
     NormedSpace ℝ (AxisCoefficientSpace.AxisSpace I ε) := inferInstance
 
 /-- The majorant produced by `k` applications of the regular radial inverse. -/
@@ -71,7 +71,7 @@ theorem factorialMajorant_succ (K : ℝ) (k : ℕ) :
   have h₂ : (k : ℝ) + 2 ≠ 0 := by positivity
   simp only [factorialMajorant, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add,
     Nat.cast_one, pow_succ]
-  field_simp ; ring
+  field_simp; ring
 
 section RadialJets
 

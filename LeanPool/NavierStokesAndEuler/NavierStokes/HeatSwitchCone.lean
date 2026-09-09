@@ -8,10 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatedOutgoing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingCone
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Topology.MetricSpace.Thickening
-
-@[expose] public section
 
 /-!
 # The compensated heat switch preserves the outgoing cone
@@ -22,6 +18,9 @@ All estimates are on a fixed logarithmic interval, before the fully switched
 terminal edge.  Constants are chosen after the outgoing profile and before
 the entrance radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -69,9 +68,13 @@ theorem compact_control_estimate
   simpa only [Prod.mk_sub_mk, sub_zero, sub_self, Prod.norm_mk, norm_zero,
     max_eq_left (norm_nonneg p)] using he
 
+/-- Point: an abbreviation for `ℝ × ℝ`. -/
 abbrev Point := ℝ × ℝ
+/-- Coefficient: an abbreviation for `TerminalCompensation.Coeff`. -/
 abbrev Coeff := TerminalCompensation.Coeff
+/-- Raw: an abbreviation for `(ℝ × Coeff) × Point`. -/
 abbrev Raw := (ℝ × Coeff) × Point
+/-- Control: an abbreviation for `ℝ × (Coeff × Coeff)`. -/
 abbrev Control := ℝ × (Coeff × Coeff)
 
 /-- The genuine heat multiplier, smoothly continued only in the auxiliary
@@ -82,7 +85,7 @@ noncomputable def freeE (F : Profile) (z : Raw) : ℝ :=
       (HeatProfileExtension.extension (1 + F.data.h)
         (2 * (1 - z.2.2 ^ 2) * z.1.1 * Real.exp (-z.2.1)) - 1)) +
   OutgoingDilation.shapedPatchAmplitude F z.2.2 * TerminalCompensation.correction
-    OutgoingDilation.compensationPatch z.1.2
+      OutgoingDilation.compensationPatch z.1.2
     (Real.exp (z.2.1 - OutgoingDilation.patchClock F))
 
 theorem freeE_contDiff (F : Profile) : ContDiff ℝ ∞ (freeE F) := by
@@ -97,7 +100,7 @@ theorem freeE_contDiff (F : Profile) : ContDiff ℝ ∞ (freeE F) := by
   have hh := (HeatProfileExtension.extension_contDiff
     (show 1 < 1 + F.data.h by linarith [F.data.h_pos])).comp hz
   have hb : ContDiff ℝ ∞ (fun z : Raw => TerminalCompensation.correction
-    OutgoingDilation.compensationPatch z.1.2
+      OutgoingDilation.compensationPatch z.1.2
       (Real.exp (z.2.1 - OutgoingDilation.patchClock F))) := by
     apply ContDiff.sum
     intro j _
@@ -131,14 +134,19 @@ theorem finitePrefix_contDiff (F : Profile) {f : Raw → ℝ} (hf : ContDiff ℝ
   have hh := hi.comp hm
   exact hh
 
+/-- Free I, given by `OutgoingHistories.I F.reset z.2 + finitePrefix F (fun q => Real.exp (3 *
+q.2.1 / 2) * (freeE F q - F.logE q.2)) z`. -/
 noncomputable def freeI (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.I F.reset z.2 + finitePrefix F
     (fun q => Real.exp (3 * q.2.1 / 2) * (freeE F q - F.logE q.2)) z
 
+/-- Free S, constructed using `OutgoingHistories.S`. -/
 noncomputable def freeS (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.S F.reset F.amp z.2 - (1 / 2 : ℝ) * finitePrefix F
     (fun q => Real.exp q.2.1 * (freeE F q ^ 2 - F.logE q.2 ^ 2)) z
 
+/-- Free pi, given by `OutgoingHistories.Pi F.reset z.2 + (1 / 2 : ℝ) * finitePrefix F (fun q =>
+freeE F q ^ 2 - F.logE q.2 ^ 2) z`. -/
 noncomputable def freePi (F : Profile) (z : Raw) : ℝ :=
   OutgoingHistories.Pi F.reset z.2 + (1 / 2 : ℝ) * finitePrefix F
     (fun q => freeE F q ^ 2 - F.logE q.2 ^ 2) z
@@ -179,11 +187,15 @@ theorem freePi_contDiff (F : Profile) : ContDiff ℝ ∞ (freePi F) := by
       freeE F ((0, 0), (t, p.2)) ^ 2 - F.logE (t, p.2) ^ 2) = _
   simp only [freeE_zero, sub_self, intervalIntegral.integral_zero, mul_zero, add_zero]
 
+/-- Raw point, given by `((z.1.1, z.1.2.1), z.2)`. -/
 noncomputable def rawPoint (z : Control × Point) : Raw := ((z.1.1, z.1.2.1), z.2)
 
+/-- Value, given by `f (rawPoint z)`. -/
 noncomputable def value (f : Raw → ℝ) (z : Control × Point) : ℝ := f (rawPoint z)
+/-- Radial jet, given by `fderiv ℝ f (rawPoint z) ((0, 0), (1, 0))`. -/
 noncomputable def radialJet (f : Raw → ℝ) (z : Control × Point) : ℝ :=
   fderiv ℝ f (rawPoint z) ((0, 0), (1, 0))
+/-- Parameter jet, given by `fderiv ℝ f (rawPoint z) ((0, z.1.2.2), (0, 1))`. -/
 noncomputable def parameterJet (f : Raw → ℝ) (z : Control × Point) : ℝ :=
   fderiv ℝ f (rawPoint z) ((0, z.1.2.2), (0, 1))
 
@@ -267,6 +279,8 @@ theorem freeE_eq_physical (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     HeatProfileExtension.physicalProfile, HeatProfileExtension.scaledProfile,
     mul_div_cancel_left₀ _ hXR.ne', radius_quotient XR y _ hXR, Real.log_exp, hz]
 
+/-- Controls, given by `(1 / XR, (w.coefficients eta, derivWithin w.coefficients
+HeatedOutgoing.parameterDomain eta))`. -/
 noncomputable def controls (F : Profile) {XR C : ℝ}
     (w : HeatedOutgoing.CompensationWitness F XR C) (eta : ℝ) : Control :=
   (1 / XR, (w.coefficients eta, derivWithin w.coefficients HeatedOutgoing.parameterDomain eta))
@@ -292,6 +306,7 @@ theorem controls_norm (F : Profile) {XR C : ℝ}
 
 open StressAlgebra
 
+/-- Angular numerator as an element of `ℝ`. -/
 noncomputable def angularNumerator (F : Profile) (z : Control × Point) : ℝ :=
   -OutgoingHistories.W F.data F.amp z.2 *
       (Real.exp (3 * z.2.1 / 2) * value (freeE F) z) +
@@ -301,12 +316,15 @@ noncomputable def angularNumerator (F : Profile) (z : Control × Point) : ℝ :=
       2 * (F.data.h - axialExponent F.data.h) * z.2.2 *
         OutgoingHistories.J F.reset F.amp z.2)
 
+/-- Radial numerator, given by `value (freeE F) z - 2 * radialJet (freeE F) z`. -/
 noncomputable def radialNumerator (F : Profile) (z : Control × Point) : ℝ :=
   value (freeE F) z - 2 * radialJet (freeE F) z
 
+/-- Family Q, given by `angularNumerator F z / (Real.exp (3 * z.2.1 / 2) * value (freeE F) z)`. -/
 noncomputable def familyQ (F : Profile) (z : Control × Point) : ℝ :=
   angularNumerator F z / (Real.exp (3 * z.2.1 / 2) * value (freeE F) z)
 
+/-- Family N as an element of `ℝ`. -/
 noncomputable def familyN (F : Profile) (z : Control × Point) : ℝ :=
   -OutgoingHistories.W F.data F.amp z.2 * F.logU z.2 +
     axialExponent F.data.h * (OutgoingHistories.M F.data F.amp z.2 -
@@ -316,18 +334,25 @@ noncomputable def familyN (F : Profile) (z : Control × Point) : ℝ :=
     4 * velocityExponent F.data.h * z.2.2 * value (freePi F) z -
       coordinateFactor z.2.2 * parameterJet (freePi F) z
 
+/-- Family A, given by `radialNumerator F z / value (freeE F) z`. -/
 noncomputable def familyA (F : Profile) (z : Control × Point) : ℝ :=
   radialNumerator F z / value (freeE F) z
+/-- Family B, given by `2 * OutgoingHistories.dY F.logU z.2 / value (freeE F) z`. -/
 noncomputable def familyB (F : Profile) (z : Control × Point) : ℝ :=
   2 * OutgoingHistories.dY F.logU z.2 / value (freeE F) z
+/-- Family R, given by `familyN F z / (value (freeE F) z * familyQ F z)`. -/
 noncomputable def familyR (F : Profile) (z : Control × Point) : ℝ :=
   familyN F z / (value (freeE F) z * familyQ F z)
+/-- Family C, given by `1 - familyB F z * familyR F z / familyA F z`. -/
 noncomputable def familyC (F : Profile) (z : Control × Point) : ℝ :=
   1 - familyB F z * familyR F z / familyA F z
+/-- Family J, given by `familyR F z + familyB F z / familyA F z`. -/
 noncomputable def familyJ (F : Profile) (z : Control × Point) : ℝ :=
   familyR F z + familyB F z / familyA F z
+/-- Family V, given by `familyA F z * (1 + (familyB F z / familyA F z) ^ 2)`. -/
 noncomputable def familyV (F : Profile) (z : Control × Point) : ℝ :=
   familyA F z * (1 + (familyB F z / familyA F z) ^ 2)
+/-- Family gap, given by `2 * familyC F z ^ 2 - (familyV F z - 2) * familyJ F z ^ 2`. -/
 noncomputable def familyGap (F : Profile) (z : Control × Point) : ℝ :=
   2 * familyC F z ^ 2 - (familyV F z - 2) * familyJ F z ^ 2
 
@@ -351,7 +376,7 @@ theorem angularNumerator_contDiff (F : Profile) : ContDiff ℝ ∞ (angularNumer
 
 theorem radialNumerator_contDiff (F : Profile) : ContDiff ℝ ∞ (radialNumerator F) :=
   (value_contDiff (freeE_contDiff F)).sub (contDiff_const.mul (radialJet_contDiff (freeE_contDiff
-    F)))
+      F)))
 
 theorem familyN_contDiff (F : Profile) : ContDiff ℝ ∞ (familyN F) := by
   have hw := (OutgoingHistories.W_smooth F.data F.amp_contDiff).comp
@@ -439,7 +464,7 @@ theorem familyGap_contDiffOn (F : Profile) : ContDiffOn ℝ ∞ (familyGap F) (r
     (freePi_zero F) p
   rw [OutgoingHistories.Ns_integrated]
   simp only [familyN, value, rawPoint, Prod.fst_zero, Prod.snd_zero, freeS_zero, freePi_zero, hs,
-    hp]
+      hp]
   rfl
 
 @[simp] theorem familyA_zero (F : Profile) (p : Point) :
@@ -509,11 +534,13 @@ noncomputable def logI (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) 
   OutgoingHistories.I F.reset p + ∫ t in OutgoingDilation.patchClock F..p.1,
     Real.exp (3 * t / 2) * (logE F XR c (t, p.2) - F.logE (t, p.2))
 
+/-- Log S, constructed using `OutgoingHistories.S`. -/
 noncomputable def logS (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   OutgoingHistories.S F.reset F.amp p - (1 / 2 : ℝ) *
     ∫ t in OutgoingDilation.patchClock F..p.1,
       Real.exp t * (logE F XR c (t, p.2) ^ 2 - F.logE (t, p.2) ^ 2)
 
+/-- Log pi, constructed using `OutgoingHistories.Pi`. -/
 noncomputable def logPi (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   OutgoingHistories.Pi F.reset p + (1 / 2 : ℝ) *
     ∫ t in OutgoingDilation.patchClock F..p.1,
@@ -780,10 +807,11 @@ theorem logPi_eq_canonical (F : Profile) {XR C : ℝ}
     (F.logE_contDiff.continuous.comp (continuous_id.prodMk continuous_const)).pow 2
   unfold logPi
   rw [intervalIntegral.integral_sub (hheated.intervalIntegrable _ _) (hcleanc.intervalIntegrable _
-    _)]
+      _)]
   dsimp only [a] at hh hclean
   linarith
 
+/-- Qs as an element of `ℝ`. -/
 noncomputable def Qs (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   -OutgoingHistories.W F.data F.amp p +
     ((1 - F.data.h) * logI F XR c p - axialExponent F.data.h * p.2 *
@@ -792,6 +820,7 @@ noncomputable def Qs (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : 
       2 * (F.data.h - axialExponent F.data.h) * p.2 * OutgoingHistories.J F.reset F.amp p) /
         (Real.exp (3 * p.1 / 2) * logE F XR c p)
 
+/-- Ns as an element of `ℝ`. -/
 noncomputable def Ns (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   -OutgoingHistories.W F.data F.amp p * F.logU p +
     axialExponent F.data.h * (OutgoingHistories.M F.data F.amp p -
@@ -802,18 +831,26 @@ noncomputable def Ns (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : 
       coordinateFactor p.2 * derivWithin (fun eta => logPi F XR c (p.1, eta))
         HeatedOutgoing.parameterDomain p.2
 
+/-- Radial A, given by `1 - 2 * deriv (fun y => logE F XR c (y, p.2)) p.1 / logE F XR c p`. -/
 noncomputable def radialA (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   1 - 2 * deriv (fun y => logE F XR c (y, p.2)) p.1 / logE F XR c p
+/-- Radial B, given by `2 * OutgoingHistories.dY F.logU p / logE F XR c p`. -/
 noncomputable def radialB (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   2 * OutgoingHistories.dY F.logU p / logE F XR c p
+/-- Ratio, given by `Ns F XR c p / (logE F XR c p * Qs F XR c p)`. -/
 noncomputable def ratio (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   Ns F XR c p / (logE F XR c p * Qs F XR c p)
+/-- Source C, given by `1 - radialB F XR c p * ratio F XR c p / radialA F XR c p`. -/
 noncomputable def sourceC (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   1 - radialB F XR c p * ratio F XR c p / radialA F XR c p
+/-- Source J, given by `ratio F XR c p + radialB F XR c p / radialA F XR c p`. -/
 noncomputable def sourceJ (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   ratio F XR c p + radialB F XR c p / radialA F XR c p
+/-- Normal V, given by `radialA F XR c p * (1 + (radialB F XR c p / radialA F XR c p) ^ 2)`. -/
 noncomputable def normalV (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   radialA F XR c p * (1 + (radialB F XR c p / radialA F XR c p) ^ 2)
+/-- Leading gap, given by `2 * sourceC F XR c p ^ 2 - (normalV F XR c p - 2) * sourceJ F XR c p
+^ 2`. -/
 noncomputable def leadingGap (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   2 * sourceC F XR c p ^ 2 - (normalV F XR c p - 2) * sourceJ F XR c p ^ 2
 
@@ -886,6 +923,7 @@ theorem normalized_eq_family (F : Profile) {XR C : ℝ}
   rw [leadingGap, hc, hj, hv]
   rfl
 
+/-- Actual observations as an element of `Fin 18 → ℝ`. -/
 noncomputable def actualObservations (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (p : Point) : Fin 18 → ℝ :=
   ![logE F XR c p, deriv (fun y => logE F XR c (y, p.2)) p.1,
@@ -1013,10 +1051,13 @@ theorem compensated_source_margins (F : Profile) {anchor left : ℝ}
       _ ≤ err + M := add_le_add hv hVM
       _ ≤ T := by dsimp [T]; linarith [le_max_right (1 : ℝ) (M + 1)]
 
+/-- Stress scale, given by `XR * Real.exp p.1 * Qs F XR c p / CoordinateAlgebra.L F.data.h p.2`. -/
 noncomputable def stressScale (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   XR * Real.exp p.1 * Qs F XR c p / CoordinateAlgebra.L F.data.h p.2
+/-- Normal P, given by `stressScale F XR c p * sourceC F XR c p`. -/
 noncomputable def normalP (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   stressScale F XR c p * sourceC F XR c p
+/-- Normal J, given by `stressScale F XR c p * sourceJ F XR c p`. -/
 noncomputable def normalJ (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   stressScale F XR c p * sourceJ F XR c p
 
@@ -1025,7 +1066,7 @@ as the clean outgoing theorem. -/
 def TrueAt (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : Prop :=
   0 < Qs F XR c p ∧ 0 < radialA F XR c p ∧ 2 < normalV F XR c p ∧
   2 < normalP F XR c p ∧ normalV F XR c p < ConeAlgebra.coneBound (normalP F XR c p) (normalJ F XR
-    c p)
+      c p)
 
 /-- Compensation and the full switch-on interval preserve the strict true
 cone. The outgoing profile, its reset and its axial amplitude remain fixed.
@@ -1183,7 +1224,7 @@ theorem logS_eq_past_integral (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c : ℝ �
   let f : ℝ → ℝ := fun t => Real.exp t * (F.logU (t, eta) ^ 2 - F.logE (t, eta) ^ 2 / 2)
   let g : ℝ → ℝ := fun t => Real.exp t * (F.logU (t, eta) ^ 2 - logE F XR c (t, eta) ^ 2 / 2)
   have hu := F.logU_contDiff.continuous.comp (continuous_id.prodMk (continuous_const : Continuous
-    (fun _ : ℝ => eta)))
+      (fun _ : ℝ => eta)))
   have hf : Continuous f := Real.continuous_exp.mul ((hu.pow 2).sub
     (((F.logE_contDiff.continuous.comp (continuous_id.prodMk continuous_const)).pow 2).div_const 2))
   have hg : Continuous g := Real.continuous_exp.mul ((hu.pow 2).sub

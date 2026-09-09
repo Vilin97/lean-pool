@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
+import Mathlib.Algebra.Order.Star.Real
+
+/-! A finite packet sum keeps its first two grades separate from the geometric tail. -/
 
 @[expose] public section
 
-/-! A finite packet sum keeps its first two grades separate from the geometric tail. -/
 
 noncomputable section
 
@@ -22,9 +25,9 @@ namespace EulerPacketCylinderField
 open Set Finset EulerPacketProfileRecursion EulerPacketTailBound
 
 theorem weighted_low_high_sum_le (N : ℕ) (hN : 1 ≤ N) (κ B C₁ C₂ : ℝ)
-    (hκ : 0 ≤ κ) (hB : 0 ≤ B) (hsmall : κ*B ≤ 1/2) (A : ℕ → ℝ)
-    (hzero : A 0=0) (hone : A 1 ≤ C₁) (htwo : A 2 ≤ C₂)
-    (htail : ∀ n, 3 ≤ n → n ≤ N+1 → A n ≤ B^(n+1)) :
+    (hκ : 0 ≤ κ) (hB : 0 ≤ B) (hsmall : κ * B ≤ 1 / 2) (A : ℕ → ℝ)
+    (hzero : A 0 = 0) (hone : A 1 ≤ C₁) (htwo : A 2 ≤ C₂)
+    (htail : ∀ n, 3 ≤ n → n ≤ N + 1 → A n ≤ B ^ (n + 1)) :
     (∑ n ∈ range (N+2), κ^n*A n) ≤ κ*C₁+κ^2*C₂+2*B*(κ*B)^3 := by
   have hlow : (∑ n ∈ range 3, κ^n*A n) ≤ κ*C₁+κ^2*C₂ := by
     simp only [sum_range_succ,sum_range_zero,pow_zero,pow_one,hzero,mul_zero,zero_add]
@@ -47,6 +50,7 @@ theorem weighted_low_high_sum_le (N : ℕ) (hN : 1 ≤ N) (κ B C₁ C₂ : ℝ)
   rw [← sum_range_add_sum_Ico _ (show 3 ≤ N+2 by omega)]
   exact add_le_add hlow hhigh
 
+/-- Low high envelope, with branches according to `n=0`. -/
 def lowHighEnvelope (B C₁ C₂ : ℝ) (n : ℕ) : ℝ :=
   if n=0 then 0 else if n=1 then C₁ else if n=2 then C₂ else B^(n+1)
 
@@ -56,7 +60,7 @@ variable {P T : ℝ} [Fact (0 < P)]
 
 theorem wordBound_evaluateFamily (M : ℕ) (κ : ℝ) (f : ℕ → VectorField)
     (G : ∀ i, Field P T (f i)) (q : ℕ) (R : ℝ) (A : ℕ → ℝ) (d : ℕ) (hκ : 0 ≤ κ)
-    (hG : ∀ i ∈ range (M+1), (G i).WordBound q R (A i) d) :
+    (hG : ∀ i ∈ range (M + 1), (G i).WordBound q R (A i) d) :
     (evaluateFamily M κ f G).WordBound q R (∑ i ∈ range (M+1), κ^i*A i) d := by
   have h := wordBound_finsetSum (range (M+1)) (fun i => κ^i • f i) (fun i => (G i).smul (κ^i))
     (fun i => κ^i*A i) (fun i hi => by
@@ -64,11 +68,11 @@ theorem wordBound_evaluateFamily (M : ℕ) (κ : ℝ) (f : ℕ → VectorField)
   exact h.of_path_eq _ rfl
 
 theorem wordBound_evaluate_low_high (N : ℕ) (hN : 1 ≤ N) (κ B C₁ C₂ : ℝ)
-    (hκ : 0 ≤ κ) (hB : 0 ≤ B) (hsmall : κ*B ≤ 1/2)
+    (hκ : 0 ≤ κ) (hB : 0 ≤ B) (hsmall : κ * B ≤ 1 / 2)
     (f : ℕ → VectorField) (G : ∀ i, Field P T (f i)) (q : ℕ) (R : ℝ) (hR : 0 ≤ R)
-    (hzero : ∀ (t : Icc (0 : ℝ) T) x θ, f 0 (t,(x,θ))=0)
+    (hzero : ∀ (t : Icc (0 : ℝ) T) x θ, f 0 (t, (x, θ)) = 0)
     (hone : (G 1).WordBound q R C₁ 0) (htwo : (G 2).WordBound q R C₂ 0)
-    (htail : ∀ n, 3 ≤ n → n ≤ N+1 → (G n).WordBound q R (B^(n+1)) 0) :
+    (htail : ∀ n, 3 ≤ n → n ≤ N + 1 → (G n).WordBound q R (B ^ (n + 1)) 0) :
     (evaluateFamily (N+1) κ f G).WordBound q R (κ*C₁+κ^2*C₂+2*B*(κ*B)^3) 0 := by
   have hG : ∀ i ∈ range (N+1+1), (G i).WordBound q R (lowHighEnvelope B C₁ C₂ i) 0 := by
     intro i hi

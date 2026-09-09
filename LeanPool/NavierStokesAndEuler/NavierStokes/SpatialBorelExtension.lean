@@ -8,12 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BorelExtension
 public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-public import Mathlib.Algebra.Order.Algebra
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Data.EReal.Inv
-
-@[expose] public section
 
 /-!
 # Jointly smooth Taylor–Borel extension of spatially smooth jets
@@ -22,6 +16,9 @@ There is one cutoff scale per Taylor degree. Its finite list of constraints
 includes all joint derivatives and all spatial localizations up to that degree.
 This gives joint smoothness without imposing global bounds on the input jets.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,12 +33,14 @@ variable {X V : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 private theorem nat_le_infty (k : ℕ) : (k : WithTop ℕ∞) ≤ ∞ := by
   exact_mod_cast (le_top : (k : ℕ∞) ≤ ⊤)
 
+/-- Spatial bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 def spatialBump (m : ℕ) : ContDiffBump (0 : X) where
   rIn := (m : ℝ) + 1
   rOut := (m : ℝ) + 2
   rIn_pos := by positivity
   rIn_lt_rOut := by linarith
 
+/-- Spatial cutoff, given by `(spatialBump (X := X) m : X → ℝ)`. -/
 def spatialCutoff (m : ℕ) : X → ℝ := (spatialBump (X := X) m : X → ℝ)
 
 theorem spatialCutoff_contDiff (m : ℕ) : ContDiff ℝ ∞ (spatialCutoff (X := X) m) :=
@@ -70,12 +69,15 @@ theorem exists_compact_spatial_plateau {K : Set X} (hK : IsCompact K) :
   obtain ⟨m, hm⟩ := exists_nat_gt C
   exact ⟨m, fun x hx => lt_of_le_of_lt (hC x hx) (by linarith)⟩
 
+/-- Term, given by `BorelExtension.term b j (a z.2) z.1`. -/
 def term (b : ℝ) (j : ℕ) (a : X → V) (z : ℝ × X) : V :=
   BorelExtension.term b j (a z.2) z.1
 
+/-- Localized term, given by `spatialCutoff m z.2 • term b j a z`. -/
 def localizedTerm (m : ℕ) (b : ℝ) (j : ℕ) (a : X → V) (z : ℝ × X) : V :=
   spatialCutoff m z.2 • term b j a z
 
+/-- Template, given by `localizedTerm m 1 j a`. -/
 def template (m j : ℕ) (a : X → V) : ℝ × X → V := localizedTerm m 1 j a
 
 omit [FiniteDimensional ℝ X] in
@@ -112,6 +114,8 @@ theorem template_hasCompactSupport (m j : ℕ) (a : X → V) :
     isClosed_closure
   exact closure_minimal hs (isClosed_Icc.prod isClosed_closedBall)
 
+/-- Time scale, given by `(b • ContinuousLinearMap.fst ℝ ℝ X).prod (ContinuousLinearMap.snd ℝ ℝ
+X)`. -/
 def timeScale (b : ℝ) : (ℝ × X) →L[ℝ] (ℝ × X) :=
   (b • ContinuousLinearMap.fst ℝ ℝ X).prod (ContinuousLinearMap.snd ℝ ℝ X)
 
@@ -143,6 +147,7 @@ theorem exists_template_bound {a : X → V} (ha : ContDiff ℝ ∞ a) (m j k : �
     ((template_contDiff ha m j).continuous_iteratedFDeriv (nat_le_infty k))
   exact ⟨max C 0, le_max_right _ _, fun z => (hC z).trans (le_max_left _ _)⟩
 
+/-- Template bound, given by `Classical.choose (exists_template_bound ha m j k)`. -/
 def templateBound {a : X → V} (ha : ContDiff ℝ ∞ a) (m j k : ℕ) : ℝ :=
   Classical.choose (exists_template_bound ha m j k)
 
@@ -203,6 +208,7 @@ theorem templateBound_le_boundSum {m j k : ℕ} (hm : m < j) (hk : k < j) :
     (fun i _ => Finset.sum_nonneg fun l _ => templateBound_nonneg (ha j) i j l)
     (Finset.mem_range.mpr hm)
 
+/-- Local scale, given by `Classical.choose (exists_nat_gt ((2 : ℝ) ^ j * boundSum a ha j))`. -/
 def localScale (j : ℕ) : ℕ := Classical.choose (exists_nat_gt ((2 : ℝ) ^ j * boundSum a ha j))
 
 theorem localScale_bound (j : ℕ) : (2 : ℝ) ^ j * boundSum a ha j < localScale a ha j :=
@@ -257,6 +263,7 @@ theorem localized_derivative_tail_bound {m j k : ℕ} (hm : m < j) (hk : k < j) 
       mul_le_mul_of_nonneg_left (boundSum_le_scale a ha j) (by positivity)
     _ = (1 / 2 : ℝ) ^ j := by field_simp
 
+/-- Majorant, with branches according to `m < j ∧ k < j`. -/
 def majorant (m k j : ℕ) : ℝ :=
   if m < j ∧ k < j then (1 / 2 : ℝ) ^ j
   else (((scale a ha j : ℝ) ^ k) / (scale a ha j : ℝ) ^ j) * templateBound (ha j) m j k
@@ -308,8 +315,10 @@ section Complete
 
 variable [CompleteSpace V]
 
+/-- Extension, given by `∑' j : ℕ, term (scale a ha j) j (a j) z`. -/
 def extension (z : ℝ × X) : V := ∑' j : ℕ, term (scale a ha j) j (a j) z
 
+/-- Localized extension, given by `∑' j : ℕ, localizedTerm m (scale a ha j) j (a j) z`. -/
 def localizedExtension (m : ℕ) (z : ℝ × X) : V :=
   ∑' j : ℕ, localizedTerm m (scale a ha j) j (a j) z
 
@@ -482,6 +491,7 @@ theorem extension_zero_of_coefficients_zero {x : X} (hx : ∀ j, a j x = 0) (t :
   simp only [extension, term, BorelExtension.term, BorelExtension.monomial, hx,
     smul_zero, tsum_zero]
 
+/-- Right extension, given by `extension a ha (z.1 - T, z.2)`. -/
 def rightExtension (T : ℝ) (z : ℝ × X) : V := extension a ha (z.1 - T, z.2)
 
 theorem rightExtension_contDiff (T : ℝ) : ContDiff ℝ ∞ (rightExtension a ha T) :=

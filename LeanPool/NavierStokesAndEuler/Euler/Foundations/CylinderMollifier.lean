@@ -6,105 +6,18 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.RealMixedTransport
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderCoordinates
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
+
+/-! Genuine approximate identities for the lifted L² translation representation. -/
 
 @[expose] public section
 
 noncomputable section
-
-/-! Genuine approximate identities for the lifted L² translation representation. -/
-
 
 namespace EulerCylinderMollifier
 
@@ -130,7 +43,7 @@ theorem translation_continuous (f : LiftL2 period) :
 omit [Fact (0 < period)] in
 theorem euclideanCover_continuous : Continuous (euclideanCover period) := by
   exact ((continuous_fst).prodMk ((AddCircle.continuous_mk' period).comp continuous_snd)).comp
-    coordinateEquiv.continuous
+      coordinateEquiv.continuous
 
 omit [Fact (0 < period)] in
 theorem euclideanCover_add (x y : Domain 4) :
@@ -181,7 +94,8 @@ theorem mollifierKernel_integral (n : ℕ) : ∫ x, mollifierKernel n x = 1 :=
 def smoothOrbit (n : ℕ) (f : LiftL2 period) : Domain 4 → LiftL2 period :=
   convolution (mollifierKernel n) (orbit period f) (ContinuousLinearMap.lsmul ℝ ℝ) volume
 
-/-- The actual L² mollification; its expected representative is the classical periodic convolution. -/
+/-- The actual L² mollification; its expected representative is the classical periodic convolution.
+-/
 def mollify (n : ℕ) (f : LiftL2 period) : LiftL2 period := smoothOrbit period n f 0
 
 theorem smoothOrbit_contDiff (n : ℕ) (f : LiftL2 period) : ContDiff ℝ ∞ (smoothOrbit period n f) :=
@@ -194,7 +108,7 @@ theorem mollify_tendsto (f : LiftL2 period) :
   have hr : Filter.Tendsto (fun n => (mollifierBump n).rOut) Filter.atTop (𝓝 (0 : ℝ)) := by
     simpa only [mollifierBump, mul_zero] using cutoffScale_tendsto.const_mul 2
   have h := ContDiffBump.convolution_tendsto_right_of_continuous (μ := (volume : Measure (Domain
-    4)))
+      4)))
     hr (orbit_continuous period f) 0
   simpa only [orbit_zero, mollify, smoothOrbit, mollifierKernel] using h
 
@@ -205,7 +119,7 @@ theorem mollify_eq_integral (n : ℕ) (f : LiftL2 period) :
 theorem kernel_orbit_integrable (n : ℕ) (f : LiftL2 period) :
     Integrable (fun y : Domain 4 => mollifierKernel n y • orbit period f (-y)) :=
   ((mollifierKernel_smooth n).continuous.smul ((orbit_continuous period f).comp
-    continuous_neg)).integrable_of_hasCompactSupport
+      continuous_neg)).integrable_of_hasCompactSupport
     (mollifierKernel_compact n).smul_right
 
 /-- Smoothing is contractive in the actual cylinder L² norm. -/
@@ -215,7 +129,7 @@ theorem mollify_norm_le (n : ℕ) (f : LiftL2 period) : ‖mollify period n f‖
     (((mollifierBump n).integrable_normed (μ := (volume : Measure (Domain 4)))).mul_const ‖f‖)
     (f := fun y : Domain 4 => mollifierKernel n y • orbit period f (-y)) ?_
   · simpa only [integral_mul_const, mollifierKernel, (mollifierBump n).integral_normed, one_mul]
-    using h
+      using h
   apply Filter.Eventually.of_forall
   intro y
   rw [norm_smul, orbit_norm, Real.norm_eq_abs, abs_of_nonneg (mollifierKernel_nonneg n y)]
@@ -259,13 +173,13 @@ theorem mollify_translation (n : ℕ) (a : LiftDomain period) (f : LiftL2 period
   change (translation period a).toContinuousLinearMap
     (∫ y : Domain 4, mollifierKernel n y • orbit period f (-y)) = _
   rw [← (translation period a).toContinuousLinearMap.integral_comp_comm (kernel_orbit_integrable
-    period n f)]
+      period n f)]
   apply integral_congr_ae
   apply Filter.Eventually.of_forall
   intro y
   simp only [map_smul, orbit]
   change mollifierKernel n y • translation period a (translation period (euclideanCover period
-    (-y)) f) = _
+      (-y)) f) = _
   rw [translation_add, translation_add, add_comm a]
 
 /-- Smoothing produces actual strong Sobolev jets and commutes with every derivative word. -/
@@ -306,7 +220,7 @@ theorem sub_word {directions : Fin 4 → LiftTangent} {s k : ℕ} {f g : LiftL2 
 
 /-- The same genuine mollifiers converge in every finite Sobolev jet norm. -/
 theorem mollifyJet_sobolevNorm_tendsto {directions : Fin 4 → LiftTangent} {s : ℕ} {f : LiftL2
-  period}
+    period}
     (J : SpatialJet period directions s f) :
     Filter.Tendsto (fun n => ((mollifyJet period J n).sub J).sobolevNorm) Filter.atTop (𝓝 0) := by
   have hword : ∀ k (w : Fin k → Fin 4), Filter.Tendsto
@@ -317,12 +231,13 @@ theorem mollifyJet_sobolevNorm_tendsto {directions : Fin 4 → LiftTangent} {s :
       ‖mollify period n (J.word w) - J.word w‖) Filter.atTop (𝓝 (0 : ℝ)) := by
     intro k
     simpa using tendsto_finsetSum (s := (Finset.univ : Finset (Fin k → Fin 4))) (fun w _ => hword k
-      w)
+        w)
   have h := tendsto_finsetSum (s := Finset.range (s + 1)) (fun k _ => hlevel k)
   simpa only [SpatialJet.sobolevNorm_eq_sum_words, sub_word, mollifyJet_word,
-    Finset.sum_const_zero] using h
+      Finset.sum_const_zero] using h
 
-/-- The smooth Hilbert-valued convolution is exactly the translation orbit of the mollified field. -/
+/-- The smooth Hilbert-valued convolution is exactly the translation orbit of the mollified field.
+-/
 theorem smoothOrbit_eq_orbit_mollify (n : ℕ) (f : LiftL2 period) (x : Domain 4) :
     smoothOrbit period n f x = orbit period (mollify period n f) x := by
   rw [orbit, mollify_eq_integral]
@@ -355,7 +270,7 @@ theorem mollify_diagonal_sequence {directions : Fin 4 → LiftTangent} {f : Lift
     (J : ∀ s : ℕ, SpatialJet period directions s f) :
     ∃ index : ℕ → ℕ, (∀ n, n ≤ index n) ∧
       ∀ n s, s ≤ n → ((mollifyJet period (J s) (index n)).sub (J s)).sobolevNorm ≤ (1 / 2 : ℝ) ^ n
-        := by
+          := by
   have hex : ∀ n : ℕ, ∃ k : ℕ, n ≤ k ∧
       ∀ s ≤ n, ((mollifyJet period (J s) k).sub (J s)).sobolevNorm ≤ (1 / 2 : ℝ) ^ n := by
     intro n
@@ -373,7 +288,7 @@ theorem mollify_diagonal_sequence {directions : Fin 4 → LiftTangent} {f : Lift
     refine ⟨k, hkn, fun s hs => ?_⟩
     have hs' : s ∈ Finset.range (n + 1) := Finset.mem_range.mpr (by omega)
     exact (Finset.single_le_sum (fun j _ => ((mollifyJet period (J j) k).sub (J j)).nonneg)
-      hs').trans hk.le
+        hs').trans hk.le
   choose index hindex using hex
   exact ⟨index, fun n => (hindex n).1, fun n s hs => (hindex n).2 s hs⟩
 

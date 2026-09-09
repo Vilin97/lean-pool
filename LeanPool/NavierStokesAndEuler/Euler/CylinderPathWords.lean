@@ -6,11 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeWords
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderClassicalWordBounds
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevWordBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Actual continuous L² paths for every ordered cylinder derivative. -/
 
 @[expose] public section
 
-/-! Actual continuous L² paths for every ordered cylinder derivative. -/
 
 noncomputable section
 
@@ -26,10 +33,10 @@ variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The actual uniform-time derivative word, evaluated at the untranslated path. -/
-def wordPath (p : C(K,LiftL2 P)) {n : ℕ} (w : Fin n → Fin 4) : C(K,LiftL2 P) :=
+def wordPath (p : C(K, LiftL2 P)) {n : ℕ} (w : Fin n → Fin 4) : C(K,LiftL2 P) :=
   wordDerivative standardDirection (fun a : LiftTangent => pathTranslate P a p) w 0
 
-variable (p : C(K,LiftL2 P))
+variable (p : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 include hp in
@@ -105,7 +112,7 @@ include hp in
 /-- Differentiation uses one external word, with no dimension-dependent radius loss. -/
 theorem derivativePath_block_bound (i : Fin 4) (q n : ℕ) (a : LiftTangent) :
     block standardDirection q (fun b : LiftTangent => pathTranslate P b (derivativePath P p i)) n a
-      ≤
+        ≤
       block standardDirection q (fun b : LiftTangent => pathTranslate P b p) (n+1) a := by
   have he : (fun b : LiftTangent => pathTranslate P b (derivativePath P p i)) =
       directional standardDirection (fun b : LiftTangent => pathTranslate P b p) i :=
@@ -123,12 +130,12 @@ theorem derivativePath_majorant (i : Fin 4) (q : ℕ) (R D : ℝ) (d : ℕ)
     (hb : ∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P a p) n 0 ≤
       D*majorant R d n) (n : ℕ) :
     block standardDirection q (fun a : LiftTangent => pathTranslate P a (derivativePath P p i)) n 0
-      ≤
+        ≤
       D*majorant R (d+1) n := by
   have h := (derivativePath_block_bound P p hp i q n 0).trans (hb (n+1))
   simpa only [majorant, show n+1+d=n+(d+1) by omega] using h
 
-variable (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T,LiftL2 P))
+variable (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a u))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT u) (f t) (Icc (0 : ℝ) T) t)

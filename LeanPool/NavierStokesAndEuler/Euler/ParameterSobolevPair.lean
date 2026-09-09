@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
+import Mathlib.Analysis.Calculus.ContDiff.Basic
+
+/-! Direct two-input linear bounds for genuine fixed Sobolev word blocks. -/
 
 @[expose] public section
 
-/-! Direct two-input linear bounds for genuine fixed Sobolev word blocks. -/
 
 noncomputable section
 
@@ -45,7 +48,7 @@ theorem wordDerivative_linear_pair (directions : ι → P) (L : (E × F) →L[�
 variable [Fintype ι]
 
 theorem wordSum_linear_pair_le (directions : ι → P) (L : (E × F) →L[ℝ] G)
-    (a b : ℝ) (hL : ∀ p q, ‖L (p,q)‖ ≤ a*‖p‖+b*‖q‖)
+    (a b : ℝ) (hL : ∀ p q, ‖L (p, q)‖ ≤ a * ‖p‖ + b * ‖q‖)
     (f : P → E) (g : P → F) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (n : ℕ) (x : P) :
     wordSum directions (fun y => L (f y,g y)) n x ≤
@@ -58,7 +61,7 @@ theorem wordSum_linear_pair_le (directions : ι → P) (L : (E × F) →L[ℝ] G
   exact hL _ _
 
 theorem baseSize_linear_pair_le (directions : ι → P) (q : ℕ) (L : (E × F) →L[ℝ] G)
-    (a b : ℝ) (hL : ∀ p r, ‖L (p,r)‖ ≤ a*‖p‖+b*‖r‖)
+    (a b : ℝ) (hL : ∀ p r, ‖L (p, r)‖ ≤ a * ‖p‖ + b * ‖r‖)
     (f : P → E) (g : P → F) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (x : P) :
     baseSize directions q (fun y => L (f y,g y)) x ≤
@@ -68,7 +71,7 @@ theorem baseSize_linear_pair_le (directions : ι → P) (q : ℕ) (L : (E × F) 
   exact sum_le_sum (fun k _ => wordSum_linear_pair_le directions L a b hL f g hf hg k x)
 
 theorem block_linear_pair_le (directions : ι → P) (q : ℕ) (L : (E × F) →L[ℝ] G)
-    (a b : ℝ) (hL : ∀ p r, ‖L (p,r)‖ ≤ a*‖p‖+b*‖r‖)
+    (a b : ℝ) (hL : ∀ p r, ‖L (p, r)‖ ≤ a * ‖p‖ + b * ‖r‖)
     (f : P → E) (g : P → F) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (n : ℕ) (x : P) :
     block directions q (fun y => L (f y,g y)) n x ≤

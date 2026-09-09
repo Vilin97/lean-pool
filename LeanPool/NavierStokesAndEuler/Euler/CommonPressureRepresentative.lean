@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderSmoothPressure
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderPressureCoherence
+public import LeanPool.NavierStokesAndEuler.Euler.GraphPressurePotential
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderSmoothPressure
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+
+/-! A canonical, jointly continuous representative of the constructed common signed pressure. -/
 
 @[expose] public section
 
-/-! A canonical, jointly continuous representative of the constructed common signed pressure. -/
 
 noncomputable section
 
@@ -25,7 +30,8 @@ open scoped ContDiff
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The canonical pointwise pressure, obtained by bounded evaluation of its actual continuous H3 realization. -/
+/-- The canonical pointwise pressure, obtained by bounded evaluation of its actual continuous H3
+realization. -/
 def pointPressure {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 6)
@@ -84,9 +90,10 @@ theorem graphPressure_joint_continuous {T : ℝ} (hT : 0 < T) (A : Data period T
     Continuous (graphPressure period hT A B k).uncurry :=
   ((pointPressure_joint_continuous period hT A B).comp
     (continuous_fst.prodMk ((cylinderGraph_continuous period k A.direction).comp
-      continuous_snd))).const_smul A.κ
+        continuous_snd))).const_smul A.κ
 
-/-- Each actual canonical graph field has a genuine smooth potential by the proved lifted gradient-space reconstruction. -/
+/-- Each actual canonical graph field has a genuine smooth potential by the proved lifted
+gradient-space reconstruction. -/
 theorem graphPressure_has_potential {T : ℝ} (hT : 0 < T) (A : Data period T)
     (B : Budget period hT A) (k : ℝ) (hk : k * A.κ = 1) (t : Icc (0 : ℝ) T) :
     ∃ q : Vector3 → ℝ, ContDiff ℝ ∞ q ∧

@@ -8,9 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketOrbitForcing
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMean
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialEmbedding
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMean
 
 /-!
 # Actual mean outputs as constant-angle cylinder paths
@@ -19,6 +18,9 @@ The ordinary spatial L² field is embedded in the product measure. Its genuine
 translation orbit, literal raw representative and true time derivative are
 preserved by the same bounded linear embedding.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,32 +34,45 @@ open scoped ContDiff
 
 variable (P T : ℝ) [Fact (0 < P)]
 
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,L2) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,L2) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPacketCylinderFields1 : NormedAddCommGroup C(Icc (0 : ℝ) T,L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPacketCylinderFields2 : NormedSpace ℝ C(Icc (0 : ℝ) T,L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanPacketCylinderFields3 : NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPacketCylinderFields4 : NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P) :=
+    inferInstance
 
+/-- Spatial embedding path, given by `(embedding (V := Space) P).compLeftContinuous ℝ (Icc (0 :
+ℝ) T)`. -/
 def spatialEmbeddingPath : C(Icc (0 : ℝ) T,L2) →L[ℝ] C(Icc (0 : ℝ) T,LiftL2 P) :=
   (embedding (V := Space) P).compLeftContinuous ℝ (Icc (0 : ℝ) T)
 
-@[simp] theorem spatialEmbeddingPath_apply (p : C(Icc (0 : ℝ) T,L2))
+@[simp] theorem spatialEmbeddingPath_apply (p : C(Icc (0 : ℝ) T, L2))
     (t : Icc (0 : ℝ) T) : spatialEmbeddingPath P T p t = embedding P (p t) := rfl
 
-theorem spatialEmbeddingPath_translation (p : C(Icc (0 : ℝ) T,L2)) (a : LiftTangent) :
+theorem spatialEmbeddingPath_translation (p : C(Icc (0 : ℝ) T, L2)) (a : LiftTangent) :
     pathTranslate P a (spatialEmbeddingPath P T p) =
       spatialEmbeddingPath P T (pathTranslation T a.1 p) := by
   apply ContinuousMap.ext
   intro t
   exact EulerCylinderSpatialMean.embedding_translate P a (p t)
 
-theorem spatialEmbeddingPath_orbit (p : C(Icc (0 : ℝ) T,L2))
+theorem spatialEmbeddingPath_orbit (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (spatialEmbeddingPath P T p)) := by
   have h := (spatialEmbeddingPath P T).contDiff.comp
     (hp.comp (contDiff_fst : ContDiff ℝ ∞ (Prod.fst : LiftTangent → Space)))
   simpa only [Function.comp_def,spatialEmbeddingPath_translation] using h
 
-theorem spatialEmbeddingPath_time (hT : 0 ≤ T) (p q : C(Icc (0 : ℝ) T,L2))
+theorem spatialEmbeddingPath_time (hT : 0 ≤ T) (p q : C(Icc (0 : ℝ) T, L2))
     (h : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) :
@@ -88,8 +103,10 @@ def toCylinderField : Field P D.T raw :=
 @[simp] theorem toCylinderField_path :
     (G.toCylinderField P).path = spatialEmbeddingPath P D.T G.path := rfl
 
+/-- Vector cylinder field, given by `G.vectorForcing.toCylinderField P`. -/
 def vectorCylinderField : Field P D.T G.vector := G.vectorForcing.toCylinderField P
 
+/-- Vector derivative cylinder field, given by `G.vectorDerivativeForcing.toCylinderField P`. -/
 def vectorDerivativeCylinderField : Field P D.T G.vectorDerivative :=
   G.vectorDerivativeForcing.toCylinderField P
 
@@ -99,6 +116,8 @@ theorem vectorCylinderField_time :
 
 end Forcing
 
+/-- Mean solve cylinder field, given by `((Classical.choice h).vectorCylinderField P).congr (fun
+_ _ _ => by rw [meanSolve_of_admissible D raw h])`. -/
 def meanSolveCylinderField (D : Data) (raw : VectorField) (h : Nonempty (Forcing D raw)) :
     Field P D.T (meanSolve D raw).1 :=
   ((Classical.choice h).vectorCylinderField P).congr (fun _ _ _ => by

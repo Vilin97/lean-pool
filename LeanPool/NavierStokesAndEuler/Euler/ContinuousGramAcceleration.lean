@@ -6,9 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramPath
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Continuous acceleration from the genuine Gram inverse
@@ -19,19 +18,22 @@ Its norm and its identification with the strong L² acceleration are proved
 directly, for arbitrary complete real Hilbert coefficient spaces.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerContinuousGramAcceleration
 
 open Set MeasureTheory ContinuousLinearMap EulerTimeLp EulerVolterraConvolution
-  EulerTransverseGramInverse EulerTransverseGramPath EulerTransverseStrongEstimates
+  EulerTransverseGramInverse EulerTransverseGramPath
 
 variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 variable (T : ℝ) (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
 
 /-- The actual continuous acceleration recovered from velocity and forcing. -/
 def accelerationPath (v : C(Icc (0 : ℝ) T, U)) (f : C(Icc (0 : ℝ) T, E)) :
@@ -64,7 +66,7 @@ theorem accelerationPath_norm (v : C(Icc (0 : ℝ) T, U))
   have hQv : ‖Q₁ t (v t)‖ ≤ ‖Q₁‖*‖v‖ :=
     ((Q₁ t).le_opNorm _).trans
       (mul_le_mul (Q₁.norm_coe_le_norm t) (v.norm_coe_le_norm t) (norm_nonneg (v t)) (norm_nonneg
-        Q₁))
+          Q₁))
   have hr : ‖f t-(2 : ℝ) • Q₁ t (v t)‖ ≤ ‖f‖+2*‖Q₁‖*‖v‖ := by
     calc
       _ ≤ ‖f t‖+‖(2 : ℝ) • Q₁ t (v t)‖ := norm_sub_le _ _
@@ -85,7 +87,7 @@ theorem accelerationPath_norm (v : C(Icc (0 : ℝ) T, U))
         (norm_nonneg _) (inv_nonneg.mpr hc.le)
     _ ≤ c⁻¹*(‖Q‖*(‖f‖+2*‖Q₁‖*‖v‖)) :=
       mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hr (norm_nonneg Q)) (inv_nonneg.mpr
-        hc.le)
+          hc.le)
     _ = _ := by ring
 
 /-- Every genuine L² strong acceleration with the given continuous data is
@@ -95,7 +97,7 @@ theorem accelerationPath_ae (hT : 0 ≤ T) (v a : TimeLp T U) (f : TimeLp T E)
     (hv : (v : ℝ → U) =ᵐ[timeMeasure T] extendPath T hT vC)
     (hf : (f : ℝ → E) =ᵐ[timeMeasure T] extendPath T hT fC)
     (heq : ∀ᵐ t ∂timeMeasure T, gram (extendPath T hT Q t) (a t) =
-      (extendPath T hT Q t).adjoint (f t-(2 : ℝ) • extendPath T hT Q₁ t (v t))) :
+      (extendPath T hT Q t).adjoint (f t - (2 : ℝ) • extendPath T hT Q₁ t (v t))) :
     (a : ℝ → U) =ᵐ[timeMeasure T] extendPath T hT (accelerationPath T Q Q₁ c hc hQ vC fC) := by
   filter_upwards [heq, hv, hf] with t ht hvt hft
   dsimp only [extendPath] at ht hvt hft ⊢

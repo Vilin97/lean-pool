@@ -9,9 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCancellation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelTimeBound
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RadialKernelBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
 
 /-!
 # The paired estimate for the heat commutator kernel
@@ -20,6 +18,9 @@ The time-integrated heat Hessian, after cutoff cancellation, is dominated by
 the radial `L^(4/3)` kernel. Its exact scaling and the sectionwise Hölder bound
 give the factor `R^(-3/4)` in the paired commutator estimate.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

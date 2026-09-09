@@ -6,15 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisHolomorphicJoint
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ReferenceJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StressActivation
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Algebra.Group.EvenFunction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisHolomorphic
+import LeanPool.NavierStokesAndEuler.NavierStokes.AxisHolomorphicJoint
+import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 
 /-!
 # A common holomorphic parameter neighborhood through initial activation
@@ -22,6 +20,9 @@ public import Mathlib.Algebra.Group.EvenFunction
 All continuations below are explicit integrals of the actual natural slopes.
 The complex neighborhood is obtained from compactness and real positivity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,9 +32,12 @@ open Set Filter Metric MeasureTheory Complex
 open scoped Topology ContDiff
 
 
+/-- C point: an abbreviation for `ℝ × ℂ`. -/
 abbrev CPoint := ℝ × ℂ
+/-- C field: an abbreviation for `CPoint → ℂ`. -/
 abbrev CField := CPoint → ℂ
 
+/-- Radial, given by `deriv (fun x => F (x, p.2)) p.1`. -/
 def radial (F : CField) (p : CPoint) : ℂ := deriv (fun x => F (x, p.2)) p.1
 
 /-- Joint real smoothness and actual holomorphic parameter slices. -/
@@ -156,7 +160,7 @@ variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H] [ProperSpace H]
     {s : Set H} {G : H × ℝ → ℂ}
 
 theorem compact_integral_smooth (hs : IsOpen s)
-    (hG : ∀ p ∈ s, ∀ t ∈ Icc (0 : ℝ) 1, ContDiffAt ℝ ∞ G (p,t)) :
+    (hG : ∀ p ∈ s, ∀ t ∈ Icc (0 : ℝ) 1, ContDiffAt ℝ ∞ G (p, t)) :
     ContDiffOn ℝ ∞ (fun p => ∫ t in (0 : ℝ)..1, G (p,t)) s := by
   apply SmoothParameterIntegral.contDiffOn_intervalIntegral_of_continuous_jet hs zero_le_one
   · intro t ht p hp
@@ -166,13 +170,15 @@ theorem compact_integral_smooth (hs : IsOpen s)
     have hflip : ContDiffAt ℝ ∞ (Function.uncurry (fun t p => G (p,t))) (t,p) :=
       (hG p hp t ht).comp (t,p) (contDiffAt_snd.prodMk contDiffAt_fst)
     have hd := ParametricFlatFactor.contDiffAt_partial_iteratedFDeriv (fun t p => G (p,t)) k t p
-      hflip
+        hflip
     exact ((hd.comp (p,t) (contDiffAt_snd.prodMk contDiffAt_fst)).continuousAt).continuousWithinAt
 
 end CompactIntegral
 
+/-- Segment: an abbreviation for `↥(Icc (0 : ℝ) 1)`. -/
 abbrev Segment := ↥(Icc (0 : ℝ) 1)
 
+/-- Segment extend, given by `f (projIcc 0 1 zero_le_one t)`. -/
 def segmentExtend (f : C(Segment, ℂ)) (t : ℝ) : ℂ :=
   f (projIcc 0 1 zero_le_one t)
 
@@ -186,6 +192,7 @@ theorem segmentIntegral_norm (f : C(Segment, ℂ)) :
     (fun t _ => f.norm_coe_le_norm (projIcc 0 1 zero_le_one t))
   simpa only [sub_zero, abs_one, mul_one, one_mul] using h
 
+/-- Segment integral, constructed using `LinearMap.mkContinuous`. -/
 noncomputable def segmentIntegral : C(Segment, ℂ) →L[ℂ] ℂ :=
   LinearMap.mkContinuous {
     toFun f := ∫ t in (0 : ℝ)..1, segmentExtend f t
@@ -202,8 +209,8 @@ noncomputable def segmentIntegral : C(Segment, ℂ) →L[ℂ] ℂ :=
 /-- Holomorphic integration only requires smoothness near the actual compact
 integration segment, with no assumptions outside that segment. -/
 theorem compact_integral_holomorphic {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : ℂ × ℝ → ℂ}
-    (hG : ∀ z ∈ Ω, ∀ t ∈ Icc (0 : ℝ) 1, ContDiffAt ℝ ∞ G (z,t))
-    (hhol : ∀ t ∈ Icc (0 : ℝ) 1, DifferentiableOn ℂ (fun z => G (z,t)) Ω) :
+    (hG : ∀ z ∈ Ω, ∀ t ∈ Icc (0 : ℝ) 1, ContDiffAt ℝ ∞ G (z, t))
+    (hhol : ∀ t ∈ Icc (0 : ℝ) 1, DifferentiableOn ℂ (fun z => G (z, t)) Ω) :
     DifferentiableOn ℂ (fun z => ∫ t in (0 : ℝ)..1, G (z,t)) Ω := by
   let K : Set ℝ := Icc 0 1
   let D : ℂ × ℝ → ℂ →L[ℝ] ℂ := fun p => fderiv ℝ (fun z => G (z,p.2)) p.1
@@ -222,8 +229,8 @@ theorem compact_integral_holomorphic {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : ℂ �
     apply HolomorphicFamily.differentiableAt_of_evaluations (CompactSmoothFamily.family K G)
     · exact (CompactSmoothFamily.hasFDerivAt_family K hΩ G D hGc hDc
         (fun z hz t => ((hG z hz t t.2).comp z
-          (contDiffAt_id.prodMk contDiffAt_const)).differentiableAt (by simp) |>.hasFDerivAt)
-            hz).differentiableAt
+          (contDiffAt_id.prodMk contDiffAt_const)).differentiableAt (by
+              simp) |>.hasFDerivAt) hz).differentiableAt
     · intro t
       apply ((hhol t t.2).differentiableAt (hΩ.mem_nhds hz)).congr_of_eventuallyEq
       filter_upwards [hΩ.mem_nhds hz] with w hw
@@ -241,7 +248,9 @@ theorem compact_integral_holomorphic {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : ℂ �
   exact (CompactSmoothFamily.family_apply K G z
     (CompactSmoothFamily.slice_continuous hGc hz) ⟨t,ht'⟩).symm
 
+/-- Average, given by `∫ t in (0 : ℝ)..1, F (t*p.1,p.2)`. -/
 def average (F : CField) (p : CPoint) : ℂ := ∫ t in (0 : ℝ)..1, F (t*p.1,p.2)
+/-- Primitive, given by `∫ x in (0 : ℝ)..p.1, F (x,p.2)`. -/
 def primitive (F : CField) (p : CPoint) : ℂ := ∫ x in (0 : ℝ)..p.1, F (x,p.2)
 
 theorem primitive_eq_mul_average (F : CField) (p : CPoint) :
@@ -251,7 +260,7 @@ theorem primitive_eq_mul_average (F : CField) (p : CPoint) :
 
 theorem Regular.average {S : Set ℝ} {Ω : Set ℂ} {F : CField}
     (hF : Regular S Ω F) (hS : IsOpen S) (hΩ : IsOpen Ω)
-    (hscale : ∀ x ∈ S, ∀ t ∈ Icc (0 : ℝ) 1, t*x ∈ S) : Regular S Ω (average F) := by
+    (hscale : ∀ x ∈ S, ∀ t ∈ Icc (0 : ℝ) 1, t * x ∈ S) : Regular S Ω (average F) := by
   constructor
   · unfold ActivationHolomorphic.average
     apply compact_integral_smooth (G := fun q : CPoint × ℝ => F (q.2*q.1.1,q.1.2)) (hS.prod hΩ)
@@ -271,12 +280,12 @@ theorem Regular.average {S : Set ℝ} {Ω : Set ℂ} {F : CField}
 
 theorem Regular.primitive {S : Set ℝ} {Ω : Set ℂ} {F : CField}
     (hF : Regular S Ω F) (hS : IsOpen S) (hΩ : IsOpen Ω)
-    (hscale : ∀ x ∈ S, ∀ t ∈ Icc (0 : ℝ) 1, t*x ∈ S) : Regular S Ω (primitive F) := by
+    (hscale : ∀ x ∈ S, ∀ t ∈ Icc (0 : ℝ) 1, t * x ∈ S) : Regular S Ω (primitive F) := by
   have hb := (regular_radius (Ω := Ω) (contDiffOn_id : ContDiffOn ℝ ∞ id S)).mul (hF.average hS hΩ
-    hscale)
+      hscale)
   have he : ActivationHolomorphic.primitive F =
       (fun p => (p.1 : ℂ) * ActivationHolomorphic.average F p) := funext (primitive_eq_mul_average
-        F)
+          F)
   rw [he]
   exact hb
 
@@ -302,13 +311,15 @@ theorem primitive_hasDerivAt {Ω : Set ℂ} {F : CField} (hΩ : IsOpen Ω)
   exact intervalIntegral.integral_hasDerivAt_right (hc.intervalIntegrable 0 p.1)
     hc.aestronglyMeasurable.stronglyMeasurableAtFilter hc.continuousAt
 
+/-- Damped slope, given by `(ReferencePath.slopeCutoff δ p.1 : ℂ) * radial G p`. -/
 def dampedSlope (δ : ℝ) (G : CField) (p : CPoint) : ℂ :=
   (ReferencePath.slopeCutoff δ p.1 : ℂ) * radial G p
 
+/-- Continuation, given by `G (0,p.2) + primitive (dampedSlope δ G) p`. -/
 def continuation (δ : ℝ) (G : CField) (p : CPoint) : ℂ :=
   G (0,p.2) + primitive (dampedSlope δ G) p
 
-theorem regular_dampedSlope {T δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < T)
+theorem regular_dampedSlope {T δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < T)
     {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : CField} (hG : Regular (Iio T) Ω G) :
     Regular univ Ω (dampedSlope δ G) := by
   have hD := hG.radial isOpen_Iio hΩ
@@ -333,7 +344,7 @@ theorem regular_dampedSlope {T δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < T)
       rw [hzero]
       exact differentiableOn_const _
 
-theorem regular_continuation {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2*δ < T)
+theorem regular_continuation {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
     {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : CField} (hG : Regular (Iio T) Ω G) :
     Regular univ Ω (continuation δ G) := by
   have hi := (regular_dampedSlope hδ hδT hΩ hG).primitive isOpen_univ hΩ (by intros; trivial)
@@ -345,7 +356,7 @@ theorem regular_continuation {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2*
       exact hG.holomorphic 0 hT
   exact hzero.add hi
 
-theorem continuation_hasDerivAt {T δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < T)
+theorem continuation_hasDerivAt {T δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < T)
     {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : CField} (hG : Regular (Iio T) Ω G)
     {p : CPoint} (hp : p.2 ∈ Ω) :
     HasDerivAt (fun x => continuation δ G (x,p.2)) (dampedSlope δ G p) p.1 := by
@@ -353,7 +364,7 @@ theorem continuation_hasDerivAt {T δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < T)
   simpa only [zero_add] using (hasDerivAt_const p.1 (G (0,p.2))).fun_add
     (primitive_hasDerivAt hΩ (regular_dampedSlope hδ hδT hΩ hG).smooth hp)
 
-theorem continuation_eq_initial {T δ : ℝ} (_ : 0 < T) (hδ : 0 < δ) (hδT : 2*δ < T)
+theorem continuation_eq_initial {T δ : ℝ} (_ : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
     {Ω : Set ℂ} (hΩ : IsOpen Ω) {G : CField} (hG : Regular (Iio T) Ω G)
     {p : CPoint} (hp : p.2 ∈ Ω) (hx : p.1 ≤ δ) : continuation δ G p = G p := by
   have hd : ∀ t ∈ uIcc 0 p.1,
@@ -369,6 +380,8 @@ theorem continuation_eq_initial {T δ : ℝ} (_ : 0 < T) (hδ : 0 < δ) (hδT : 
   rw [show primitive (dampedSlope δ G) p = G p-G (0,p.2) from hi]
   ring
 
+/-- Controlled, given by `G (0,p.2) + primitive (fun q => (StressActivation.damping T κ q.1 : ℂ)
+* radial G q) p`. -/
 def controlled (T κ : ℝ) (G : CField) (p : CPoint) : ℂ :=
   G (0,p.2) + primitive (fun q => (StressActivation.damping T κ q.1 : ℂ) * radial G q) p
 
@@ -380,7 +393,7 @@ theorem regular_controlled (T κ : ℝ) {Ω : Set ℂ} (hΩ : IsOpen Ω)
   have hzero : Regular univ Ω (fun p => G (0,p.2)) := by
     constructor
     · exact hG.smooth.comp (contDiff_const.prodMk contDiff_snd).contDiffOn (fun _ hp =>
-      ⟨trivial,hp.2⟩)
+        ⟨trivial,hp.2⟩)
     · intro _ _
       exact hG.holomorphic 0 (mem_univ _)
   exact hzero.add hi
@@ -405,18 +418,18 @@ theorem controlled_eq_initial {T : ℝ} (hT : 0 < T) (κ : ℝ) {Ω : Set ℂ} (
   ring
 
 theorem radial_ofReal {S : Set ℝ} (hS : IsOpen S) {G : CField} {g : ProfileHistories.Field}
-    {x η : ℝ} (hx : x ∈ S) (hg : ContDiffAt ℝ ∞ g (x,η))
-    (heq : ∀ y ∈ S, G (y,(η : ℂ)) = (g (y,η) : ℂ)) :
+    {x η : ℝ} (hx : x ∈ S) (hg : ContDiffAt ℝ ∞ g (x, η))
+    (heq : ∀ y ∈ S, G (y, (η : ℂ)) = (g (y, η) : ℂ)) :
     radial G (x,(η : ℂ)) = (ProfileHistories.radialPartial g (x,η) : ℂ) := by
   have he : (fun y => G (y,(η : ℂ))) =ᶠ[𝓝 x] (fun y => (g (y,η) : ℂ)) := by
     filter_upwards [hS.mem_nhds hx] with y hy
     exact heq y hy
   exact he.deriv_eq.trans (ReferenceJetBounds.radial_deriv hg).ofReal_comp.deriv
 
-theorem continuation_ofReal {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2*δ < T)
+theorem continuation_ofReal {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
     {J : Set ℝ} (hJ : IsOpen J) {G : CField} {g : ProfileHistories.Field}
     (hg : ContDiffOn ℝ ∞ g (Iio T ×ˢ J))
-    (heq : ∀ x < T, ∀ η ∈ J, G (x,(η : ℂ)) = (g (x,η) : ℂ))
+    (heq : ∀ x < T, ∀ η ∈ J, G (x, (η : ℂ)) = (g (x, η) : ℂ))
     (x : ℝ) {η : ℝ} (hη : η ∈ J) :
     continuation δ G (x,(η : ℂ)) = (ReferencePath.continuation δ g (x,η) : ℂ) := by
   have hD (y : ℝ) : dampedSlope δ G (y,(η : ℂ)) = (ReferencePath.dampedSlope δ g (y,η) : ℂ) := by
@@ -426,7 +439,8 @@ theorem continuation_ofReal {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2*�
       simp only [dampedSlope,ReferencePath.dampedSlope,hd,Complex.ofReal_mul]
     · have hz := ReferencePath.slopeCutoff_zero hδ (hδT.le.trans (le_of_not_gt hy))
       simp only [dampedSlope,ReferencePath.dampedSlope,hz,Complex.ofReal_zero,zero_mul]
-  simp only [continuation,ReferencePath.continuation,primitive,ProfileHistories.primitive,Complex.ofReal_add]
+  simp only [continuation, ReferencePath.continuation, primitive, ProfileHistories.primitive,
+      Complex.ofReal_add]
   rw [heq 0 hT η hη]
   congr 1
   calc
@@ -442,7 +456,8 @@ theorem controlled_ofReal (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
   have hD (y : ℝ) : radial G (y,(η : ℂ)) = (ProfileHistories.radialPartial g (y,η) : ℂ) :=
     radial_ofReal isOpen_univ (mem_univ _)
       (hg.contDiffAt ((isOpen_univ.prod hJ).mem_nhds ⟨mem_univ _,hη⟩)) (fun z _ => heq z η hη)
-  simp only [controlled,StressActivation.controlled,primitive,ProfileHistories.primitive,Complex.ofReal_add]
+  simp only [controlled, StressActivation.controlled, primitive, ProfileHistories.primitive,
+      Complex.ofReal_add]
   rw [heq 0 η hη]
   congr 1
   calc
@@ -455,7 +470,9 @@ theorem controlled_ofReal (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
       rw [hD y,Complex.ofReal_mul]
     _ = _ := intervalIntegral.integral_ofReal
 
+/-- Log point, given by `(N.logTime p.1,p.2)`. -/
 def logPoint (N : ReferencePath.Input) (p : CPoint) : CPoint := (N.logTime p.1,p.2)
+/-- Exp point, given by `(N.endpoint*Real.exp p.1,p.2)`. -/
 def expPoint (N : ReferencePath.Input) (p : CPoint) : CPoint := (N.endpoint*Real.exp p.1,p.2)
 
 theorem logPoint_smoothAt (N : ReferencePath.Input) {p : CPoint} (hp : 0 < p.1) :
@@ -474,6 +491,7 @@ theorem expPoint_logPoint (N : ReferencePath.Input) {p : CPoint} (hp : 0 < p.1) 
     rw [Real.exp_log (div_pos hp N.endpoint_pos),mul_div_cancel₀ _ N.endpoint_pos.ne']
   · rfl
 
+/-- Attach, with branches according to `p.1 ≤ N.endpoint`. -/
 def attach (N : ReferencePath.Input) (F G : CField) (p : CPoint) : ℂ :=
   if p.1 ≤ N.endpoint then F p else G (logPoint N p)
 
@@ -519,7 +537,9 @@ needed by the logarithm. It is constructed from the coefficient series below. -/
 structure NaturalExtension (N : ReferencePath.Input) (Ω : Set ℂ) (R : ℝ) where
   radius_pos : 0 < R
   endpoint_lt : N.endpoint < R
+  /-- F of `NaturalExtension`, of type `CField`. -/
   f : CField
+  /-- U of `NaturalExtension`, of type `CField`. -/
   U : CField
   f_regular : Regular (Ioo (-R) R) Ω f
   U_regular : Regular (Ioo (-R) R) Ω U
@@ -533,7 +553,9 @@ namespace NaturalExtension
 
 variable {N : ReferencePath.Input} {Ω : Set ℂ} {R : ℝ} (E : NaturalExtension N Ω R)
 
+/-- Log F, defined pointwise by `Complex.log (E.f (expPoint N p))`. -/
 def logF : CField := fun p => Complex.log (E.f (expPoint N p))
+/-- Log U, defined pointwise by `E.U (expPoint N p)`. -/
 def logU : CField := fun p => E.U (expPoint N p)
 
 theorem logF_regular : Regular (Iio ReferencePath.rampLimit) Ω E.logF := by
@@ -561,29 +583,40 @@ theorem logF_real {t η : ℝ} (ht : t < ReferencePath.rampLimit)
 
 theorem logU_real (t η : ℝ) : E.logU (t,(η : ℂ)) = (N.logU (t,η) : ℂ) := E.U_real _ _
 
+/-- Ref log, given by `continuation δ E.logF`. -/
 def refLog (δ : ℝ) : CField := continuation δ E.logF
+/-- Ref axial, given by `continuation δ E.logU`. -/
 def refAxial (δ : ℝ) : CField := continuation δ E.logU
+/-- Ref F, given by `attach N E.f (fun p => Complex.exp (E.refLog δ p))`. -/
 def refF (δ : ℝ) : CField := attach N E.f (fun p => Complex.exp (E.refLog δ p))
+/-- Ref U, given by `attach N E.U (E.refAxial δ)`. -/
 def refU (δ : ℝ) : CField := attach N E.U (E.refAxial δ)
+/-- Act log, given by `controlled T κ (E.refLog δ)`. -/
 def actLog (T κ δ : ℝ) : CField := controlled T κ (E.refLog δ)
+/-- Act axial, given by `controlled T κ (E.refAxial δ)`. -/
 def actAxial (T κ δ : ℝ) : CField := controlled T κ (E.refAxial δ)
+/-- Act F, given by `attach N E.f (fun p => Complex.exp (E.actLog T κ δ p))`. -/
 def actF (T κ δ : ℝ) : CField := attach N E.f (fun p => Complex.exp (E.actLog T κ δ p))
+/-- Act U, given by `attach N E.U (E.actAxial T κ δ)`. -/
 def actU (T κ δ : ℝ) : CField := attach N E.U (E.actAxial T κ δ)
 
-theorem refLog_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit) :
+theorem refLog_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
+    :
     Regular univ Ω (E.refLog δ) :=
   regular_continuation ReferencePath.rampLimit_pos hδ hδT hΩ E.logF_regular
 
-theorem refAxial_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
-  :
+theorem refAxial_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ <
+    ReferencePath.rampLimit)
+    :
     Regular univ Ω (E.refAxial δ) :=
   regular_continuation ReferencePath.rampLimit_pos hδ hδT hΩ E.logU_regular
 
-theorem refLog_initial (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem refLog_initial (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     {p : CPoint} (hp : p.2 ∈ Ω) (ht : p.1 ≤ 0) : E.refLog δ p = E.logF p :=
   continuation_eq_initial ReferencePath.rampLimit_pos hδ hδT hΩ E.logF_regular hp (ht.trans hδ.le)
 
-theorem refAxial_initial (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem refAxial_initial (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ <
+    ReferencePath.rampLimit)
     {p : CPoint} (hp : p.2 ∈ Ω) (ht : p.1 ≤ 0) : E.refAxial δ p = E.logU p :=
   continuation_eq_initial ReferencePath.rampLimit_pos hδ hδT hΩ E.logU_regular hp (ht.trans hδ.le)
 
@@ -592,8 +625,8 @@ theorem angular_attach_regular (hΩ : IsOpen Ω) {G : CField} (hG : Regular univ
     Regular (Ioi (-R)) Ω (attach N E.f (fun p => Complex.exp (G p))) := by
   apply regular_attach N E.radius_pos E.endpoint_lt hΩ E.f_regular hG.cexp
   intro p hp hxe hz
-  have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hp).2 (by simpa only [Real.exp_zero,mul_one]
-    using hxe)
+  have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hp).2 (by
+      simpa only [Real.exp_zero,mul_one] using hxe)
   rw [hinit (logPoint N p) hz ht]
   change Complex.exp (Complex.log (E.f (expPoint N (logPoint N p)))) = E.f p
   rw [expPoint_logPoint N hp]
@@ -609,49 +642,49 @@ theorem axial_attach_regular (hΩ : IsOpen Ω) {G : CField} (hG : Regular univ �
     Regular (Ioi (-R)) Ω (attach N E.U G) := by
   apply regular_attach N E.radius_pos E.endpoint_lt hΩ E.U_regular hG
   intro p hp hxe hz
-  have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hp).2 (by simpa only [Real.exp_zero,mul_one]
-    using hxe)
+  have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hp).2 (by
+      simpa only [Real.exp_zero,mul_one] using hxe)
   rw [hinit (logPoint N p) hz ht]
   change E.U (expPoint N (logPoint N p)) = E.U p
   rw [expPoint_logPoint N hp]
 
-theorem refF_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit) :
+theorem refF_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit) :
     Regular (Ioi (-R)) Ω (E.refF δ) :=
   E.angular_attach_regular hΩ (E.refLog_regular hΩ hδ hδT)
     (fun _ hp ht => E.refLog_initial hΩ hδ hδT hp ht)
 
-theorem refU_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit) :
+theorem refU_regular (hΩ : IsOpen Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit) :
     Regular (Ioi (-R)) Ω (E.refU δ) :=
   E.axial_attach_regular hΩ (E.refAxial_regular hΩ hδ hδT)
     (fun _ hp ht => E.refAxial_initial hΩ hδ hδT hp ht)
 
 theorem actF_regular (hΩ : IsOpen Ω) {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) : Regular (Ioi (-R)) Ω (E.actF T κ δ) := by
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) : Regular (Ioi (-R)) Ω (E.actF T κ δ) := by
   apply E.angular_attach_regular hΩ (regular_controlled T κ hΩ (E.refLog_regular hΩ hδ hδT))
   intro p hp ht
   exact (controlled_eq_initial hT κ hΩ (E.refLog_regular hΩ hδ hδT) hp ht).trans
     (E.refLog_initial hΩ hδ hδT hp ht)
 
 theorem actU_regular (hΩ : IsOpen Ω) {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) : Regular (Ioi (-R)) Ω (E.actU T κ δ) := by
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) : Regular (Ioi (-R)) Ω (E.actU T κ δ) := by
   apply E.axial_attach_regular hΩ (regular_controlled T κ hΩ (E.refAxial_regular hΩ hδ hδT))
   intro p hp ht
   exact (controlled_eq_initial hT κ hΩ (E.refAxial_regular hΩ hδ hδT) hp ht).trans
     (E.refAxial_initial hΩ hδ hδT hp ht)
 
-theorem refLog_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem refLog_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.refLog δ (x,(η : ℂ)) = (StressActivation.FromReference.refLog N δ (x,η) : ℂ) :=
   continuation_ofReal ReferencePath.rampLimit_pos hδ hδT ReferencePath.parameterInterval_open
     N.logF_smooth (fun _ ht _ hη => E.logF_real ht hη) x hη
 
-theorem refAxial_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem refAxial_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.refAxial δ (x,(η : ℂ)) = (StressActivation.FromReference.refAxial N δ (x,η) : ℂ) :=
   continuation_ofReal ReferencePath.rampLimit_pos hδ hδT ReferencePath.parameterInterval_open
     N.logU_smooth (fun _ _ _ _ => E.logU_real _ _) x hη
 
-theorem actLog_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem actLog_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (T κ x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.actLog T κ δ (x,(η : ℂ)) =
       (StressActivation.controlled T κ (StressActivation.FromReference.refLog N δ) (x,η) : ℂ) :=
@@ -659,7 +692,7 @@ theorem actLog_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampL
     (StressActivation.FromReference.refLog_smooth N hδ hδT)
     (fun x _ hη => E.refLog_real hδ hδT x hη) x hη
 
-theorem actAxial_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem actAxial_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (T κ x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.actAxial T κ δ (x,(η : ℂ)) =
       (StressActivation.controlled T κ (StressActivation.FromReference.refAxial N δ) (x,η) : ℂ) :=
@@ -667,7 +700,7 @@ theorem actAxial_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.ram
     (StressActivation.FromReference.refAxial_smooth N hδ hδT)
     (fun x _ hη => E.refAxial_real hδ hδT x hη) x hη
 
-theorem refF_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem refF_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.refF δ (x,(η : ℂ)) = (N.refF δ (x,η) : ℂ) := by
   by_cases hx : x ≤ N.endpoint
@@ -676,7 +709,7 @@ theorem refF_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLim
     rw [E.refLog_real hδ hδT _ hη,Complex.ofReal_exp]
     rfl
 
-theorem refU_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem refU_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.refU δ (x,(η : ℂ)) = (N.refU δ (x,η) : ℂ) := by
   by_cases hx : x ≤ N.endpoint
@@ -684,22 +717,22 @@ theorem refU_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLim
   · simp only [refU,attach,ite_eq_right hx,ReferencePath.Input.refU,logPoint]
     exact E.refAxial_real hδ hδT _ hη
 
-theorem actF_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem actF_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (T κ x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.actF T κ δ (x,(η : ℂ)) = (StressActivation.FromReference.f N T κ δ (x,η) : ℂ) := by
   by_cases hx : x ≤ N.endpoint
   · simp only [actF,attach,ite_eq_left
-    hx,StressActivation.FromReference.f,ReferencePath.Input.refF,E.f_real]
+      hx,StressActivation.FromReference.f,ReferencePath.Input.refF,E.f_real]
   · simp only [actF,attach,ite_eq_right
-    hx,StressActivation.FromReference.f,logPoint,StressActivation.activatedAngular]
+      hx,StressActivation.FromReference.f,logPoint,StressActivation.activatedAngular]
     rw [E.actLog_real hδ hδT T κ _ hη,Complex.ofReal_exp]
 
-theorem actU_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem actU_real {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (T κ x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     E.actU T κ δ (x,(η : ℂ)) = (StressActivation.FromReference.U N T κ δ (x,η) : ℂ) := by
   by_cases hx : x ≤ N.endpoint
   · simp only [actU,attach,ite_eq_left
-    hx,StressActivation.FromReference.U,ReferencePath.Input.refU,E.U_real]
+      hx,StressActivation.FromReference.U,ReferencePath.Input.refU,E.U_real]
   · simp only [actU,attach,ite_eq_right hx,StressActivation.FromReference.U,logPoint]
     exact E.actAxial_real hδ hδT T κ _ hη
 
@@ -717,6 +750,7 @@ end NaturalExtension
 
 open NaturalAxisCoefficients NaturalEntrance
 
+/-- Parameter window, bundling `left`, `right`, `nondegenerate`. -/
 def parameterWindow : AxisCoefficientSpace.Window where
   left := -21/20
   right := 21/20
@@ -746,10 +780,13 @@ section NaturalConstruction
 variable {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
 variable (F : CoefficientProfile d Λ C)
 
+/-- Natural F as an element of `ℂ`. -/
 def naturalF (p : CPoint) : ℂ :=
   (Complex.exp ((Λ : ℂ) * axisPhase h j σ p.2) / (C : ℂ)) *
     AxisHolomorphic.complexProfile window d.coefficients.epsilon F.coefficients.1 0 (Λ*p.1) p.2
 
+/-- Natural U, given by `complexU j p.2 + (1/(Λ : ℂ)) * AxisHolomorphic.complexProfile window
+d.coefficients.epsilon F.coefficients.2 0 (Λ*p.1) p.2`. -/
 def naturalU (p : CPoint) : ℂ :=
   complexU j p.2 + (1/(Λ : ℂ)) *
     AxisHolomorphic.complexProfile window d.coefficients.epsilon F.coefficients.2 0 (Λ*p.1) p.2
@@ -769,7 +806,7 @@ theorem naturalU_real (x η : ℝ) : naturalU F (x,(η : ℂ)) = (F.family.U (x,
   simp only [complexU,NaturalAxisData.U,Complex.ofReal_add,Complex.ofReal_mul,Complex.ofReal_div,
     Complex.ofReal_one,Complex.ofReal_ofNat]
 
-theorem scaled_radius_mem (hΛ : 0 < Λ) {x : ℝ} (hx : x ∈ Ioo (-(5/Λ)) (5/Λ)) :
+theorem scaled_radius_mem (hΛ : 0 < Λ) {x : ℝ} (hx : x ∈ Ioo (-(5 / Λ)) (5 / Λ)) :
     Λ*x ∈ Ioo (-5 : ℝ) 5 := by
   constructor
   · have ht := (mul_lt_mul_of_pos_left hx.1 hΛ)
@@ -779,7 +816,7 @@ theorem scaled_radius_mem (hΛ : 0 < Λ) {x : ℝ} (hx : x ∈ Ioo (-(5/Λ)) (5/
     simpa only [mul_div_cancel₀ 5 hΛ.ne'] using ht
 
 theorem coefficient_regular (hΛ : 0 < Λ) {Ω : Set ℂ}
-    (hΩ : Ω ⊆ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon*(1-(1/2 : ℝ))))
+    (hΩ : Ω ⊆ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon * (1 - (1 / 2 : ℝ))))
     (A : AxisCoefficientSpace.AxisSpace window d.coefficients.epsilon) :
     Regular (Ioo (-(5/Λ)) (5/Λ)) Ω
       (fun p => AxisHolomorphic.complexProfile window d.coefficients.epsilon A 0 (Λ*p.1) p.2) := by
@@ -787,7 +824,7 @@ theorem coefficient_regular (hΛ : 0 < Λ) {Ω : Set ℂ}
   · have hb : ContDiffOn ℝ ∞
         (fun p : CPoint => AxisHolomorphic.complexProfile window d.coefficients.epsilon A 0 p.1 p.2)
         (Ioo (-5 : ℝ) 5 ×ˢ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon*(1-(1/2 :
-          ℝ)))) :=
+            ℝ)))) :=
       AxisHolomorphicJoint.complexProfile_joint_smooth window d.coefficients.epsilon_pos
       (by norm_num : (1 : ℝ) ≤ 5) (by norm_num : (5 : ℝ)/20 < 1/2)
       (by norm_num : (1/2 : ℝ) < 1) A 0
@@ -799,22 +836,25 @@ theorem coefficient_regular (hΛ : 0 < Λ) {Ω : Set ℂ}
   · intro x hx
     exact ((AxisHolomorphic.complexProfile_analytic window d.coefficients.epsilon_pos
       (by norm_num : (1 : ℝ) ≤ 5) (by norm_num : (5 : ℝ)/20 < 1/2)
-      (by norm_num : (1/2 : ℝ) < 1) A 0 (abs_lt.mpr (scaled_radius_mem hΛ hx)).le).mono
-        hΩ).differentiableOn
+      (by
+          norm_num : (1/2 : ℝ) < 1) A 0 (abs_lt.mpr (scaled_radius_mem hΛ hx)).le).mono
+              hΩ).differentiableOn
 
 theorem naturalF_regular (hΛ : 0 < Λ) {Ω : Set ℂ}
-    (hstrip : Ω ⊆ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon*(1-(1/2 : ℝ))))
+    (hstrip : Ω ⊆ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon * (1 - (1 / 2 :
+        ℝ))))
     (hphase : Ω ⊆ d.compactSet) : Regular (Ioo (-(5/Λ)) (5/Λ)) Ω (naturalF F) := by
   have hA : AnalyticOnNhd ℂ (fun z => Complex.exp ((Λ : ℂ)*axisPhase h j σ z)/(C : ℂ)) Ω := by
     intro z hz
     have hp : AnalyticAt ℂ (fun w => (Λ : ℂ)*axisPhase h j σ w) z :=
       analyticAt_const.mul (d.phase_analytic z (hphase hz))
     simpa only [div_eq_mul_inv, Function.comp_def] using hp.cexp.fun_mul (analyticAt_const (v := (C
-      : ℂ)⁻¹))
+        : ℂ)⁻¹))
   exact (regular_parameter hA).mul (coefficient_regular hΛ hstrip F.coefficients.1)
 
 theorem naturalU_regular (hΛ : 0 < Λ) {Ω : Set ℂ}
-    (hstrip : Ω ⊆ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon*(1-(1/2 : ℝ)))) :
+    (hstrip : Ω ⊆ AxisHolomorphic.parameterStrip window (d.coefficients.epsilon * (1 - (1 / 2 :
+        ℝ)))) :
     Regular (Ioo (-(5/Λ)) (5/Λ)) Ω (naturalU F) := by
   have hbase : AnalyticOnNhd ℂ (complexU j) Ω := by
     intro z _
@@ -863,7 +903,7 @@ theorem exists_positive_natural_tube (hΛ : 0 < Λ) (hsmall : NaturalAxisData.Sm
     intro p hp
     have hdom := (isOpen_Ioo.prod hΩ).mem_nhds hp.1
     have hpos := (Complex.continuous_re.continuousAt.comp (hf.smooth.contDiffAt
-      hdom).continuousAt).eventually
+        hdom).continuousAt).eventually
       (Ioi_mem_nhds hp.2)
     filter_upwards [hdom,hpos] with q hq hqpos
     exact ⟨hq,hqpos⟩
@@ -951,6 +991,7 @@ theorem exists_natural_extension (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallP
 
 end NaturalConstruction
 
+/-- Radial jet, given by `iteratedDeriv k (fun x => F (x,p.2)) p.1`. -/
 def radialJet (F : CField) (k : ℕ) (p : CPoint) : ℂ :=
   iteratedDeriv k (fun x => F (x,p.2)) p.1
 
@@ -978,6 +1019,7 @@ theorem Regular.pow {S : Set ℝ} {Ω : Set ℂ} {F : CField} (hF : Regular S Ω
     Regular S Ω (fun p => F p ^ n) :=
   ⟨hF.smooth.pow n,fun x hx => (hF.holomorphic x hx).pow n⟩
 
+/-- Pressure, given by `P0 p.2 + primitive (fun q => f q ^ 2) p`. -/
 def pressure (P0 : ℂ → ℂ) (f : CField) (p : CPoint) : ℂ :=
   P0 p.2 + primitive (fun q => f q ^ 2) p
 
@@ -1014,6 +1056,7 @@ theorem pressure_ofReal {F : CField} {g : ProfileHistories.Field} {η : ℝ}
   intro y
   simp only [heq,Complex.ofReal_pow]
 
+/-- Pull back a complex field along the square of its radial coordinate. -/
 def signedSquare (F : CField) (p : CPoint) : ℂ := F (p.1^2,p.2)
 
 theorem Regular.signedSquare {R : ℝ} (hR : 0 < R) {Ω : Set ℂ} {F : CField}
@@ -1032,10 +1075,12 @@ theorem signedSquare_even (F : CField) (z : ℂ) : Function.Even (fun r => signe
 supplies the pressure extension from its proved defining integral. -/
 structure InitialTube (N : ReferencePath.Input) (h : ℝ) (P0 : ℝ → ℝ)
     (R : ℝ) (Ω : Set ℂ) where
+  /-- Natural of `InitialTube`, of type `NaturalExtension N Ω R`. -/
   natural : NaturalExtension N Ω R
   isOpen : IsOpen Ω
   real_mem : ∀ η ∈ Icc (-1 : ℝ) 1, (η : ℂ) ∈ Ω
   elliptic_ne_zero : ∀ z ∈ Ω, complexL h z ≠ 0
+  /-- Pressure0 of `InitialTube`, of type `ℂ → ℂ`. -/
   pressure0 : ℂ → ℂ
   pressure0_analytic : AnalyticOnNhd ℂ pressure0 Ω
   pressure0_real : ∀ η : ℝ, pressure0 (η : ℂ) = (P0 η : ℂ)
@@ -1045,13 +1090,17 @@ namespace InitialTube
 variable {N : ReferencePath.Input} {h R : ℝ} {P0 : ℝ → ℝ} {Ω : Set ℂ}
 variable (E : InitialTube N h P0 R Ω)
 
+/-- F, given by `E.natural.actF T κ δ`. -/
 def f (T κ δ : ℝ) : CField := E.natural.actF T κ δ
+/-- U, given by `E.natural.actU T κ δ`. -/
 def U (T κ δ : ℝ) : CField := E.natural.actU T κ δ
+/-- Ubar, given by `average (E.U T κ δ)`. -/
 def Ubar (T κ δ : ℝ) : CField := average (E.U T κ δ)
+/-- Pi, given by `pressure E.pressure0 (E.f T κ δ)`. -/
 def Pi (T κ δ : ℝ) : CField := pressure E.pressure0 (E.f T κ δ)
 
 theorem regular {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) :
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) :
     Regular (Ioi (-R)) Ω (E.f T κ δ) ∧
     Regular (Ioi (-R)) Ω (E.U T κ δ) ∧
     Regular (Ioi (-R)) Ω (E.Ubar T κ δ) ∧
@@ -1065,7 +1114,7 @@ theorem regular {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
 /-- The width of the holomorphic domain is unchanged at every fixed radial
 derivative order. These are actual iterated derivatives of the functions. -/
 theorem all_radial_jets {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) (k : ℕ) :
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) (k : ℕ) :
     Regular (Ioi (-R)) Ω (radialJet (E.f T κ δ) k) ∧
     Regular (Ioi (-R)) Ω (radialJet (E.U T κ δ) k) ∧
     Regular (Ioi (-R)) Ω (radialJet (E.Ubar T κ δ) k) ∧
@@ -1077,7 +1126,7 @@ theorem all_radial_jets {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
 /-- The signed-square pullbacks are smooth and holomorphic through the axis,
 and are even in the signed radius. -/
 theorem signed_regular {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) :
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) :
     Regular univ Ω (signedSquare (E.f T κ δ)) ∧
     Regular univ Ω (signedSquare (E.U T κ δ)) ∧
     Regular univ Ω (signedSquare (E.Ubar T κ δ)) ∧
@@ -1092,7 +1141,7 @@ theorem f_ne_zero (T κ δ : ℝ) {x : ℝ} (hx : 0 ≤ x) {z : ℂ} (hz : z ∈
 /-- Agreement includes the literal axis-to-radius average and pressure,
 with no independently prescribed moment data. -/
 theorem real_profiles {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) (hP0 : ContDiff ℝ ∞ P0)
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) (hP0 : ContDiff ℝ ∞ P0)
     (x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     let P := StressActivation.FromReference.histories N hT hδ hδT κ P0 hP0
     E.f T κ δ (x,(η : ℂ)) = (P.f (x,η) : ℂ) ∧
@@ -1104,7 +1153,7 @@ theorem real_profiles {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
   · exact average_ofReal (fun y => E.natural.actU_real hδ hδT T κ y hη) x
   · exact pressure_ofReal (fun y => E.natural.actF_real hδ hδT T κ y hη) (E.pressure0_real η) x
 
-theorem reference_regular {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit) :
+theorem reference_regular {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit) :
     Regular (Ioi (-R)) Ω (E.natural.refF δ) ∧
     Regular (Ioi (-R)) Ω (E.natural.refU δ) ∧
     Regular (Ioi (-R)) Ω (average (E.natural.refU δ)) ∧
@@ -1115,7 +1164,7 @@ theorem reference_regular {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath
     (fun _ hx _ ht => scale_half_interval E.natural.radius_pos hx ht),
       regular_pressure E.natural.radius_pos E.isOpen hf E.pressure0_analytic⟩
 
-theorem reference_real_profiles {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit)
+theorem reference_real_profiles {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit)
     (hP0 : ContDiff ℝ ∞ P0) (x : ℝ) {η : ℝ} (hη : η ∈ ReferencePath.parameterInterval) :
     let P := N.histories hδ hδT P0 hP0
     E.natural.refF δ (x,(η : ℂ)) = (P.f (x,η) : ℂ) ∧
@@ -1142,18 +1191,18 @@ theorem exists_initialTube {h j σ Λ C : ℝ} {g a : ℝ → ℝ} {cap : ℝ}
     natural := E
     isOpen := parameterTube_open _ _
     real_mem := fun η hη => AxisHolomorphic.parameterTube_contains_real parameterWindow hρ
-      (closed_parameter_subset hη)
+        (closed_parameter_subset hη)
     elliptic_ne_zero := fun z hz => (hreg hz).1.2
     pressure0 := PressureDatum.complexPressure g a
     pressure0_analytic := (PressureDatum.complexPressure_analytic hp).mono (fun z hz => (hreg
-      hz).1.1)
+        hz).1.1)
     pressure0_real := PressureDatum.complexPressure_ofReal g a
   }⟩⟩
 
 theorem natural_average_identity {h j Λ : ℝ} {P0 a : ℝ → ℝ}
     {f U V Pr : ProfileHistories.Field} (hs : NaturalProfile.IsNaturalSolution h j Λ P0 a f U V Pr)
     {p : ProfileHistories.Point} (hp : p ∈ NaturalProfile.domain Λ) : ProfileHistories.average U p
-      = V p := by
+        = V p := by
   by_cases hx : p.1 = 0
   · have he : p = (0,p.2) := Prod.ext hx rfl
     rw [he,ProfileHistories.average_at_axis,hs.U_axis p.2 hp.2,hs.average_axis p.2 hp.2]
@@ -1206,7 +1255,7 @@ theorem iteratedDeriv_ofReal {S : Set ℝ} (hS : IsOpen S) {g : ℝ → ℝ}
 including at the axis; agreement is derived from equality of the functions. -/
 theorem radialJet_real {S : Set ℝ} {Ω : Set ℂ} (hS : IsOpen S) (_ : IsOpen Ω)
     {F : CField} (hF : Regular S Ω F) {g : ℝ → ℝ} {η : ℝ} (hη : (η : ℂ) ∈ Ω)
-    (heq : ∀ x ∈ S, F (x,(η : ℂ)) = (g x : ℂ)) (k : ℕ) {x : ℝ} (hx : x ∈ S) :
+    (heq : ∀ x ∈ S, F (x, (η : ℂ)) = (g x : ℂ)) (k : ℕ) {x : ℝ} (hx : x ∈ S) :
     radialJet F k (x,(η : ℂ)) = ((iteratedDeriv k g x : ℝ) : ℂ) := by
   have hs : ContDiffOn ℝ ∞ (fun x => F (x,(η : ℂ))) S :=
     hF.smooth.comp (contDiff_id.prodMk contDiff_const).contDiffOn (fun _ hx => ⟨hx,hη⟩)
@@ -1222,14 +1271,14 @@ theorem radialJet_real {S : Set ℝ} {Ω : Set ℂ} (hS : IsOpen S) (_ : IsOpen 
 
 theorem InitialTube.real_radial_jets {N : ReferencePath.Input} {h R : ℝ} {P0 : ℝ → ℝ} {Ω : Set ℂ}
     (E : InitialTube N h P0 R Ω) {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
-    (hδT : 2*δ < ReferencePath.rampLimit) (κ : ℝ) (hP0 : ContDiff ℝ ∞ P0)
+    (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) (hP0 : ContDiff ℝ ∞ P0)
     (k : ℕ) {x η : ℝ} (hx : x ∈ Ioi (-R)) (hη : η ∈ Icc (-1 : ℝ) 1) :
     let P := StressActivation.FromReference.histories N hT hδ hδT κ P0 hP0
     radialJet (E.f T κ δ) k (x,(η : ℂ)) = ((iteratedDeriv k (fun y => P.f (y,η)) x : ℝ) : ℂ) ∧
     radialJet (E.U T κ δ) k (x,(η : ℂ)) = ((iteratedDeriv k (fun y => P.U (y,η)) x : ℝ) : ℂ) ∧
     radialJet (E.Ubar T κ δ) k (x,(η : ℂ)) = ((iteratedDeriv k (fun y => P.Ubar (y,η)) x : ℝ) : ℂ) ∧
     radialJet (E.Pi T κ δ) k (x,(η : ℂ)) = ((iteratedDeriv k (fun y => P.pressure (y,η)) x : ℝ) :
-      ℂ) := by
+        ℂ) := by
   have hη' := NaturalAxisCoefficients.original_interval_interior hη
   obtain ⟨hf,hu,hv,hp⟩ := E.regular hT hδ hδT κ
   refine ⟨radialJet_real isOpen_Ioi E.isOpen hf (E.real_mem η hη) ?_ k hx,
@@ -1267,7 +1316,7 @@ theorem InitialTube.natural_regular {N : ReferencePath.Input} {h R : ℝ} {P0 : 
         (fun _ hx _ ht => scale_symmetric_interval hx ht))
 
 theorem InitialTube.natural_all_radial_jets {N : ReferencePath.Input} {h R : ℝ} {P0 : ℝ → ℝ} {Ω :
-  Set ℂ}
+    Set ℂ}
     (E : InitialTube N h P0 R Ω) (k : ℕ) :
     Regular (Ioo (-R) R) Ω (radialJet E.natural.f k) ∧
     Regular (Ioo (-R) R) Ω (radialJet E.natural.U k) ∧
@@ -1278,9 +1327,10 @@ theorem InitialTube.natural_all_radial_jets {N : ReferencePath.Input} {h R : ℝ
     hv.radialJet isOpen_Ioo E.isOpen k,hp.radialJet isOpen_Ioo E.isOpen k⟩
 
 theorem InitialTube.reference_all_radial_jets {N : ReferencePath.Input} {h R : ℝ} {P0 : ℝ → ℝ} {Ω :
-  Set ℂ}
-    (E : InitialTube N h P0 R Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2*δ < ReferencePath.rampLimit) (k : ℕ)
-      :
+    Set ℂ}
+    (E : InitialTube N h P0 R Ω) {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < ReferencePath.rampLimit) (k :
+        ℕ)
+        :
     Regular (Ioi (-R)) Ω (radialJet (E.natural.refF δ) k) ∧
     Regular (Ioi (-R)) Ω (radialJet (E.natural.refU δ) k) ∧
     Regular (Ioi (-R)) Ω (radialJet (average (E.natural.refU δ)) k) ∧

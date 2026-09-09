@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentTransverseCosts
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentJacobiCoefficient
-
-@[expose] public section
 
 /-! Construct the joined transverse budget from the parent deformation,
 its two actual time derivatives, and the source weighted propagator.
 Every radius guard is discharged by the fixed polynomial source envelopes;
 the construction is independent of forcing amplitude and recursive grade. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,23 +27,27 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients
   EulerTransversePacketProvider EulerTransversePacketJoin EulerPacketPiola EulerPacketCofactor
   EulerPacketParentTransverseCosts EulerPacketParentMeanCoercivity EulerGevrey
   EulerParameterWordGevrey EulerFixedEvolutionSobolev EulerTransverseFixedSobolev
-  EulerTimeLpGramSobolev EulerTimeLpAccelerationSobolev EulerTimeLpGramGevrey
+  EulerTimeLpGramSobolev  EulerTimeLpGramGevrey
   EulerSourceForwardCoefficient EulerLinearFundamentalExistence EulerVolterraConvolution
   EulerTimeIntervalRestriction
 open scoped ContDiff BoundedContinuousFunction
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
-private local instance : NormedRing (U →L[ℝ] U) := inferInstance
-private local instance : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instPacketParentJoinedBudget1 : NormedRing (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentJoinedBudget2 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
 
+/-- Source joined budget as an element of `Budget D τ hτ hτT B (Fin 4) q`. -/
 def sourceJoinedBudget (D : Data U) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (q : ℕ)
     (Ti R C C₁ C₂ Cp : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
     (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) (hCp : 0 ≤ Cp)
     (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁*majorant R 0 n)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁ * majorant R 0 n)
     (F₂ : SmoothCoefficientPath (Icc (0 : ℝ) τ) EndSpace)
     (h₂ : ∀ t ∈ Icc (0 : ℝ) τ, ∀ x : Space,
       HasDerivWithinAt (fun s => extendPath τ hτ.le (D.initial τ hτ hτT.le).F₁.field s x)
@@ -70,7 +77,7 @@ def sourceJoinedBudget (D : Data U) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   have hfdet : ∀ t x, (operatorMatrix ((D.tail τ hτ.le hτT).F.field t x)).det = 1 :=
     fun t x => hdet (tailInclusion D.T τ hτ.le t) x
   have hhF : ∀ n t x, ‖iteratedFDeriv ℝ n ((D.initial τ hτ hτT.le).F.field t : Space → EndSpace) x‖
-    ≤
+      ≤
       C*majorant R 0 n := fun n t x => hF n (initialInclusion D.T τ hτT.le t) x
   have hhzero : ∀ t x, ‖(D.initial τ hτ hτT.le).F.field t x‖ ≤ C :=
     fun t x => hzero (initialInclusion D.T τ hτT.le t) x
@@ -132,8 +139,8 @@ def sourceJoinedBudget (D : Data U) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     propagator := hprop }
   · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hw (by norm_num)) hr0).trans hr.1
   · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hs (by norm_num)) hr0).trans hr.2.1
-  · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hu (by norm_num)) hr0).trans
-    hr.2.2.1
+  · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hu (by
+      norm_num)) hr0).trans hr.2.2.1
   · simpa only [mul_one] using
       (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hf (by norm_num)) hri).trans hr.2.2.2.2
 

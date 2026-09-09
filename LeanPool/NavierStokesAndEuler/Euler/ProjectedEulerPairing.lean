@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WeakTimeContinuity
-public import LeanPool.NavierStokesAndEuler.Euler.CurlTimeDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.CompactPressurePairing
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+import LeanPool.NavierStokesAndEuler.Euler.CompactPressurePairing
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # The Euler equation tested against compact vector fields
@@ -22,6 +22,9 @@ Differentiation under the compact spatial integral uses joint smoothness on
 positive times. It does not assume an `L²` time derivative or any pressure
 decay.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

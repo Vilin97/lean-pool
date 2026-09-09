@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NativeBandExtension
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEdgeExtension
+import LeanPool.NavierStokesAndEuler.NavierStokes.NativeBandExtension
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Literal flat dyadic products from locally bounded interior jets
@@ -18,6 +18,9 @@ interior jets are locally bounded at each face.  Flatness of the fixed cutoff
 then proves smoothness and vanishing of all jets of the literal product,
 without assigning new values to the unmasked factor outside the band.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -122,6 +125,8 @@ theorem product_jet_extension_isLittleO {Ω : Set D} (hΩ : IsOpen Ω)
 
 /-! ## A Taylor family for the literal window extension -/
 
+/-- Small O jets, given by `∀ n : ℕ, ∀ x ∈ Ω, q x = a ∨ q x = b → extension q a b
+(iteratedFDeriv ℝ n f) =o[𝓝 x] (fun y => y - x)`. -/
 def SmallOJets (Ω : Set D) (q : D → ℝ) (a b : ℝ) (f : D → E) : Prop :=
   ∀ n : ℕ, ∀ x ∈ Ω, q x = a ∨ q x = b →
     extension q a b (iteratedFDeriv ℝ n f) =o[𝓝 x] (fun y => y - x)

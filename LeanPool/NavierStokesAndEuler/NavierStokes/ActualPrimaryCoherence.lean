@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCurlCovariance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TemporalStateCoherence
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeStateCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.TemporalStateCoherence
 
 /-!
 # Coherence of the constructed primary waves
@@ -19,6 +17,9 @@ The phase, coefficient, cutoff, and chart in this file are the actual
 `CorrectionInitialization.ActualPrimary` constructors.  Their differentiated
 curl correction and Gaussian term are transported on the whole free lift.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -67,8 +68,8 @@ theorem cylindricalCurl_equiv (e : E ≃L[ℝ] F) {l : ℝ} (hl : l ≠ 0)
     CurlClassBounds.cylindricalCurl r Sr St Sz (fun y => c • a (e y)) x =
       (c*l) • CurlClassBounds.cylindricalCurl R Vr Vt Vz a (e x) := by
   have hd1 i := PhysicalResidualNaturality.along_pull e c l Sr Vr (fun y => a y i) x (hDr x)
-  have hd2 i := PhysicalResidualNaturality.along_pull e c 1 St Vt (fun y => a y i) x (by simpa
-    using hDt x)
+  have hd2 i := PhysicalResidualNaturality.along_pull e c 1 St Vt (fun y => a y i) x (by
+      simpa using hDt x)
   have hd3 i := PhysicalResidualNaturality.along_pull e c l Sz Vz (fun y => a y i) x (hDz x)
   have hc : (l : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hl
   simp only [Complex.real_smul, mul_one, Complex.ofReal_mul] at hd1 hd2 hd3
@@ -81,7 +82,7 @@ theorem cylindricalCurl_equiv (e : E ≃L[ℝ] F) {l : ℝ} (hl : l ≠ 0)
     simp [mul_assoc, mul_comm, hc]
 
 theorem realizedCoefficient_equiv (e : E ≃L[ℝ] F) {l b K L : ℝ}
-    (hl : l ≠ 0) (hb : b ≠ 0) (hK : K ≠ 0) (hKL : K*b = L)
+    (hl : l ≠ 0) (hb : b ≠ 0) (hK : K ≠ 0) (hKL : K * b = L)
     (r : E → ℝ) (R : F → ℝ) (Sr St Sz : E → E) (Vr Vt Vz : F → F)
     (hr : ∀ x, R (e x) = l * r x)
     (hDr : ∀ x, e (Sr x) = l • Vr (e x))
@@ -110,9 +111,13 @@ end ExactCalculus
 
 /-! ## The literal absolute chart and its directions -/
 
+/-- Chart point: an abbreviation for `LocalSignedRequest.Point × ℝ`. -/
 abbrev ChartPoint := LocalSignedRequest.Point × ℝ
+/-- Absolute: an abbreviation for `AbsolutePoint × ℝ`. -/
 abbrev Absolute := AbsolutePoint × ℝ
 
+/-- Absolute chart, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
+compatibility proofs. -/
 noncomputable def absoluteChart (n : ℕ) : ChartPoint ≃L[ℝ] Absolute where
   toFun x := (toAbsolute n x.1, x.2)
   invFun x := (fromAbsolute n x.1, x.2)
@@ -122,7 +127,7 @@ noncomputable def absoluteChart (n : ℕ) : ChartPoint ≃L[ℝ] Absolute where
   map_smul' c x := by ext <;> simp [toAbsolute, mul_assoc, mul_comm]
   continuous_toFun := ((toAbsolute_smooth n).continuous.comp continuous_fst).prodMk continuous_snd
   continuous_invFun := ((fromAbsolute_smooth n).continuous.comp continuous_fst).prodMk
-    continuous_snd
+      continuous_snd
 
 @[simp] theorem absoluteChart_apply (n : ℕ) (x : ChartPoint) :
     absoluteChart n x = (toAbsolute n x.1, x.2) := rfl
@@ -130,19 +135,25 @@ noncomputable def absoluteChart (n : ℕ) : ChartPoint ≃L[ℝ] Absolute where
 @[simp] theorem absoluteChart_symm_apply (n : ℕ) (x : Absolute) :
     (absoluteChart n).symm x = (fromAbsolute n x.1, x.2) := rfl
 
+/-- Absolute radius, given by `x.1.1.1`. -/
 noncomputable def absoluteRadius (x : Absolute) : ℝ := x.1.1.1
 
+/-- Absolute radial, given by `(((1,(0,0)), RadialPullback.radialJacobian
+(ChartScales.radialExponent h) x.1.1.1 • radialVector), 0)`. -/
 noncomputable def absoluteRadial (x : Absolute) : Absolute :=
   (((1,(0,0)), RadialPullback.radialJacobian (ChartScales.radialExponent h) x.1.1.1 •
-    radialVector), 0)
+      radialVector), 0)
 
+/-- Absolute axial, given by `(((0,(1,0)),0),0)`. -/
 noncomputable def absoluteAxial (_ : Absolute) : Absolute := (((0,(1,0)),0),0)
+/-- Absolute angular, given by `(0,1)`. -/
 noncomputable def absoluteAngular (_ : Absolute) : Absolute := (0,1)
+/-- Absolute fast, given by `(((0,(0,0)),temporalVector),0)`. -/
 noncomputable def absoluteFast (_ : Absolute) : Absolute := (((0,(0,0)),temporalVector),0)
 
 theorem cover_inverse_radial (i : ℕ) (a : ℝ) :
     (CommonCoverSolve.coverPower i).symm ((ChartScales.Lambda^i * a) • radialVector) = a •
-      radialVector := by
+        radialVector := by
   apply (CommonCoverSolve.coverPower i).injective
   rw [ContinuousLinearEquiv.apply_symm_apply, map_smul]
   rw [show CommonCoverSolve.coverPower i radialVector = ChartScales.Lambda^i • radialVector from
@@ -152,7 +163,7 @@ theorem cover_inverse_radial (i : ℕ) (a : ℝ) :
 
 theorem cover_inverse_temporal (i : ℕ) (a : ℝ) :
     (CommonCoverSolve.coverPower i).symm ((ChartScales.Tg^i * a) • temporalVector) = a •
-      temporalVector := by
+        temporalVector := by
   apply (CommonCoverSolve.coverPower i).injective
   rw [ContinuousLinearEquiv.apply_symm_apply, map_smul]
   rw [show CommonCoverSolve.coverPower i temporalVector = ChartScales.Tg^i • temporalVector from
@@ -183,7 +194,7 @@ theorem absoluteChart_radial (B n : ℕ) (x : ChartPoint) :
       ((1, ((0,0), ((ChartScales.Lambda ^ CommonWindow.index h n *
         ChartScales.Q n ^ (ChartScales.radialExponent h / 2)) *
         RadialPullback.radialJacobian (ChartScales.radialExponent h) x.1.1) • radialVector)),0) :=
-          by
+            by
     simp [LinearWaveBounds.GraphDirections.radialField, PrimaryResidualClass.directions,
       commonContext, CommonBaseContext.context, CommonBaseContext.operators,
       CorrectionState.graphOperators, CommonBaseContext.reconstruction,
@@ -198,12 +209,12 @@ theorem absoluteChart_radial (B n : ℕ) (x : ChartPoint) :
   rw [mul_assoc, cover_inverse_radial, sqrt_radialJacobian (ChartScales.Q_pos n)]
   simp [absoluteRadial, absoluteChart_apply, toAbsolute, smul_smul]
 
-theorem absoluteChart_axial (B n : ℕ) (U : LocalSignedRequest.SlowRegion (2*h)) (x : ChartPoint) :
+theorem absoluteChart_axial (B n : ℕ) (U : LocalSignedRequest.SlowRegion (2 * h)) (x : ChartPoint) :
     absoluteChart n ((PrimaryResidualClass.directions (commonContext B)).axialField
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal U)) n x) =
       Real.sqrt (ChartScales.Q n) • absoluteAxial (absoluteChart n x) := by
   have he : ChartScales.Q n ^ CoordinateAlgebra.D h * ChartScales.Q n ^ h = Real.sqrt
-    (ChartScales.Q n) := by
+      (ChartScales.Q n) := by
     rw [← Real.rpow_add (ChartScales.Q_pos n), Real.sqrt_eq_rpow]
     congr 1
     unfold CoordinateAlgebra.D
@@ -244,28 +255,36 @@ theorem absoluteChart_fast (B n : ℕ) (x : ChartPoint) :
 
 variable {B N0 : ℕ}
 
+/-- Absolute cut amplitude, given by `periodicGaussian j L x.1.2 • absoluteAmplitude j L x.1`. -/
 noncomputable def absoluteCutAmplitude (j : Fin 2) (L : Label B N0) (x : Absolute) : ComplexVector
-  :=
+    :=
   periodicGaussian j L x.1.2 • absoluteAmplitude j L x.1
 
+/-- Absolute exact amplitude, constructed using `CurlClassBounds.realizedCoefficient`. -/
 noncomputable def absoluteExactAmplitude (j : Fin 2) (L : Label B N0) : Absolute → ComplexVector :=
   CurlClassBounds.realizedCoefficient 1 absoluteRadius absoluteRadial absoluteAngular absoluteAxial
     (absolutePhase j L) (absoluteCutAmplitude j L)
 
+/-- Absolute velocity, defined pointwise by `(vectorMode 1 (absolutePhase j L)
+(absoluteExactAmplitude j L) x i).re`. -/
 noncomputable def absoluteVelocity (j : Fin 2) (L : Label B N0) (x : Absolute) : Fin 3 → ℝ :=
   fun i => (vectorMode 1 (absolutePhase j L) (absoluteExactAmplitude j L) x i).re
 
+/-- Absolute gaussian coefficient, given by `along absoluteFast (fun y => periodicGaussian j L
+y.1.2) x • absoluteAmplitude j L x.1`. -/
 noncomputable def absoluteGaussianCoefficient (j : Fin 2) (L : Label B N0) (x : Absolute) :
-  ComplexVector :=
+    ComplexVector :=
   along absoluteFast (fun y => periodicGaussian j L y.1.2) x • absoluteAmplitude j L x.1
 
+/-- Absolute gaussian, defined pointwise by `(vectorMode 1 (absolutePhase j L)
+(absoluteGaussianCoefficient j L) x i).re`. -/
 noncomputable def absoluteGaussian (j : Fin 2) (L : Label B N0) (x : Absolute) : Fin 3 → ℝ :=
   fun i => (vectorMode 1 (absolutePhase j L) (absoluteGaussianCoefficient j L) x i).re
 
 theorem cutAmplitude_representation (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude n =
       fun x => ChartScales.Q n ^ CoordinateAlgebra.A h • absoluteCutAmplitude j L (absoluteChart n
-        x) := by
+          x) := by
   funext x
   simp only [LinearWaveBounds.WaveCoefficients.withCutoff, chartCutoff, chartCoefficients,
     absoluteCutAmplitude, absoluteChart_apply, smul_smul]
@@ -279,7 +298,7 @@ theorem phase_representation (j : Fin 2) (L : Label B N0) (n : ℕ) :
 
 /-- Full-fiber transport of the coefficient actually used by the iteration.
 No equality of corrected fields, nor a tangency assertion, is an input. -/
-theorem exactAmplitude_representation (U : LocalSignedRequest.SlowRegion (2*h))
+theorem exactAmplitude_representation (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     (piece U j L).exactCoefficients.amplitude n x =
       ChartScales.Q n ^ CoordinateAlgebra.A h • absoluteExactAmplitude j L (absoluteChart n x) := by
@@ -297,7 +316,7 @@ theorem exactAmplitude_representation (U : LocalSignedRequest.SlowRegion (2*h))
     (absoluteChart_radius n) (absoluteChart_radial B n) (absoluteChart_angular B n)
     (absoluteChart_axial B n U) _ _ _ x
 
-theorem piece_velocity_representation (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_velocity_representation (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     (piece U j L).velocity n x =
       ChartScales.Q n ^ CoordinateAlgebra.A h • absoluteVelocity j L (absoluteChart n x) := by
@@ -307,16 +326,16 @@ theorem piece_velocity_representation (U : LocalSignedRequest.SlowRegion (2*h))
   rw [exactAmplitude_representation, chartCoefficients_carrier]
   simp only [absoluteVelocity, vectorMode, mode, Pi.smul_apply, Complex.real_smul,
     absoluteChart_apply, smul_eq_mul, Complex.mul_re, Complex.mul_im, Complex.ofReal_re,
-      Complex.ofReal_im,
+        Complex.ofReal_im,
     zero_mul, add_zero]
   ring
 
-theorem gaussianCoefficient_representation (U : LocalSignedRequest.SlowRegion (2*h))
+theorem gaussianCoefficient_representation (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     LinearWaveBounds.excludedSlotError (piece U j L).directions (piece U j L).cutoff
       (piece U j L).coefficients.amplitude 0 n x =
       ChartScales.Q n ^ (2 * CoordinateAlgebra.A h + 1/2) • absoluteGaussianCoefficient j L
-        (absoluteChart n x) := by
+          (absoluteChart n x) := by
   have hd := PhysicalResidualNaturality.along_pull (absoluteChart n) 1
     (ChartScales.Q n ^ (1+h)) ((PrimaryResidualClass.directions (commonContext B)).fastField n)
     absoluteFast (fun y => periodicGaussian j L y.1.2) x (absoluteChart_fast B n x)
@@ -330,17 +349,17 @@ theorem gaussianCoefficient_representation (U : LocalSignedRequest.SlowRegion (2
   change along ((PrimaryResidualClass.directions (commonContext B)).fastField n)
     (fun y => periodicGaussian j L (toAbsolute n y.1).2) x •
       (ChartScales.Q n ^ CoordinateAlgebra.A h • absoluteAmplitude j L (toAbsolute n x.1)) + (1 -
-        _) • (0 : ComplexVector) = _
+          _) • (0 : ComplexVector) = _
   rw [smul_zero, add_zero]
   rw [hd]
   simp only [absoluteGaussianCoefficient, smul_smul, absoluteChart_apply]
   rw [mul_right_comm, hs]
 
-theorem piece_excluded_representation (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_excluded_representation (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     (piece U j L).excluded n x =
       ChartScales.Q n ^ (2 * CoordinateAlgebra.A h + 1/2) • absoluteGaussian j L (absoluteChart n
-        x) := by
+          x) := by
   funext i
   change (LinearWaveBounds.excludedSlotError (piece U j L).directions (piece U j L).cutoff
     (piece U j L).coefficients.amplitude 0 n x i *
@@ -348,7 +367,7 @@ theorem piece_excluded_representation (U : LocalSignedRequest.SlowRegion (2*h))
   rw [gaussianCoefficient_representation, chartCoefficients_carrier]
   simp only [absoluteGaussian, vectorMode, mode, Pi.smul_apply, Complex.real_smul,
     absoluteChart_apply, smul_eq_mul, Complex.mul_re, Complex.mul_im, Complex.ofReal_re,
-      Complex.ofReal_im,
+        Complex.ofReal_im,
     zero_mul, add_zero]
   ring
 
@@ -383,7 +402,7 @@ theorem toAbsolute_bandChart (n m k : ℕ)
       CopySolveCompatibility.coverPower_add, ContinuousLinearEquiv.apply_symm_apply,
       MeanChartCompatibility.coverMap_eq_coverPower]
 
-theorem piece_velocity_band (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_velocity_band (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n m k : ℕ)
     (hi : CommonWindow.index h n + k = CommonWindow.index h m) (x : ChartPoint) :
     (piece U j L).velocity n x = GaugeStateCoherence.bandVelocityScale h n m •
@@ -396,9 +415,9 @@ theorem piece_velocity_band (U : LocalSignedRequest.SlowRegion (2*h))
 theorem band_pressure_cancel (n m : ℕ) :
     (GaugeStateCoherence.bandVelocityScale h n m * GaugeStateCoherence.bandVelocityScale h n m) *
       ChartScales.Q m ^ (2 * CoordinateAlgebra.A h) = ChartScales.Q n ^ (2 * CoordinateAlgebra.A h)
-        := by
+          := by
   rw [GaugeStateCoherence.bandVelocityScale, ← Real.rpow_add (div_pos (ChartScales.Q_pos n)
-    (ChartScales.Q_pos m))]
+      (ChartScales.Q_pos m))]
   rw [show CoordinateAlgebra.A h + CoordinateAlgebra.A h = 2 * CoordinateAlgebra.A h by ring,
     mul_comm, band_power_cancel]
 
@@ -410,10 +429,10 @@ theorem band_source_cancel (n m : ℕ) :
     ← Real.rpow_add (div_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m)),
     ← Real.rpow_add (div_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m))]
   rw [show CoordinateAlgebra.A h + CoordinateAlgebra.A h + 1/2 = 2 * CoordinateAlgebra.A h + 1/2 by
-    ring,
+      ring,
     mul_comm, band_power_cancel]
 
-theorem piece_pressure_band (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_pressure_band (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n m k : ℕ)
     (hi : CommonWindow.index h n + k = CommonWindow.index h m) (x : ChartPoint) :
     (piece U j L).pressure n x =
@@ -422,7 +441,7 @@ theorem piece_pressure_band (U : LocalSignedRequest.SlowRegion (2*h))
   rw [piece_pressure_representation, piece_pressure_representation,
     toAbsolute_bandChart n m k hi, ← mul_assoc, band_pressure_cancel]
 
-theorem piece_excluded_band (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_excluded_band (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n m k : ℕ)
     (hi : CommonWindow.index h n + k = CommonWindow.index h m) (x : ChartPoint) :
     (piece U j L).excluded n x =
@@ -435,9 +454,13 @@ theorem piece_excluded_band (U : LocalSignedRequest.SlowRegion (2*h))
 
 /-! ## Ordinary regularity before restricting to a bounded strip -/
 
+/-- Positive chart, given by `{x | 0 < x.1.2.1.1}`. -/
 noncomputable def positiveChart : Set ChartPoint := {x | 0 < x.1.2.1.1}
+/-- Positive radial chart, given by `{x | 0 < x.1.1 ∧ 0 < x.1.2.1.1}`. -/
 noncomputable def positiveRadialChart : Set ChartPoint := {x | 0 < x.1.1 ∧ 0 < x.1.2.1.1}
+/-- Positive absolute, given by `{x | 0 < x.1.1.2.2}`. -/
 noncomputable def positiveAbsolute : Set Absolute := {x | 0 < x.1.1.2.2}
+/-- Positive radial absolute, given by `{x | 0 < x.1.1.1 ∧ 0 < x.1.1.2.2}`. -/
 noncomputable def positiveRadialAbsolute : Set Absolute := {x | 0 < x.1.1.1 ∧ 0 < x.1.1.2.2}
 
 theorem positiveChart_open : IsOpen positiveChart :=
@@ -454,7 +477,7 @@ theorem frequencySlow_smoothAt (B n : ℕ) {p : PhaseCalculus.Slow}
     ContDiffAt ℝ ∞ (BaseContextAssembly.frequencySlow certificate modulation upper B n) p := by
   have hs := (BaseContextAssembly.physicalComponent_smoothAt certificate modulation upper B n 1
     (x := BaseContextAssembly.insertSlow p) hT).comp p
-      BaseContextAssembly.insertSlow.contDiff.contDiffAt
+        BaseContextAssembly.insertSlow.contDiff.contDiffAt
   have he : (fun y => BaseContextAssembly.frequencySlow certificate modulation upper B n y) =ᶠ[𝓝 p]
       (fun y => (ChartScales.Q n ^ CoordinateAlgebra.A h *
         FinalSlowBase.velocity certificate modulation upper B
@@ -474,7 +497,7 @@ theorem axialSlow_smoothAt (B n : ℕ) {p : PhaseCalculus.Slow} (hT : 0 < p.2.2)
     ContDiffAt ℝ ∞ (BaseContextAssembly.axialSlow certificate modulation upper B n) p := by
   have hs := (BaseContextAssembly.physicalComponent_smoothAt certificate modulation upper B n 2
     (x := BaseContextAssembly.insertSlow p) hT).comp p
-      BaseContextAssembly.insertSlow.contDiff.contDiffAt
+        BaseContextAssembly.insertSlow.contDiff.contDiffAt
   have he : (fun y => BaseContextAssembly.axialSlow certificate modulation upper B n y) =ᶠ[𝓝 p]
       (fun y => ChartScales.Q n ^ CoordinateAlgebra.A h *
         FinalSlowBase.velocity certificate modulation upper B
@@ -525,7 +548,7 @@ theorem absolutePhase_smooth (j : Fin 2) (L : Label B N0) :
   have hc : ContDiffAt ℝ ∞ (fun y : Absolute =>
       PeriodicPhaseAssembly.periodicClock (geometry j L) (clockWindow L).cutoff y.1.2) x :=
     ((PeriodicPhaseAssembly.periodicClock_contDiff (geometry j L) (clockWindow L)).comp
-      contDiff_fst.snd).contDiffAt
+        contDiff_fst.snd).contDiffAt
   have hP : ContDiffAt ℝ ∞ (fun y : Absolute => periodicPhase j L (nativeSlow L y.1) y.1.2) x :=
     ((contDiffAt_const.mul hp.snd.fst).add (contDiffAt_const.mul hp.fst)).sub
       (hc.mul ((contDiffAt_const.mul hF).add (contDiffAt_const.mul hG)))
@@ -537,8 +560,10 @@ theorem absoluteRadial_smooth : ContDiffOn ℝ ∞ absoluteRadial positiveRadial
       RadialPullback.radialJacobian (ChartScales.radialExponent h) y.1.1.1) x :=
     contDiffAt_const.mul (contDiffAt_fst.fst.fst.rpow_const_of_ne hx.1.ne')
   exact ((contDiffAt_const.prodMk (hr.smul contDiffAt_const)).prodMk
-    contDiffAt_const).contDiffWithinAt
+      contDiffAt_const).contDiffWithinAt
 
+/-- Absolute normal, given by `phaseNormal absoluteRadius absoluteRadial absoluteAngular
+absoluteAxial (absolutePhase j L)`. -/
 noncomputable def absoluteNormal (j : Fin 2) (L : Label B N0) : Absolute → ProblemStatement.Space :=
   phaseNormal absoluteRadius absoluteRadial absoluteAngular absoluteAxial (absolutePhase j L)
 
@@ -548,12 +573,12 @@ theorem absoluteNormal_smooth (j : Fin 2) (L : Label B N0) :
   intro i
   fin_cases i
   · exact HarmonicCalculus.contDiffOn_along positiveRadialAbsolute_open absoluteRadial_smooth
-    (absolutePhase_smooth j L)
+      (absolutePhase_smooth j L)
   · exact (HarmonicCalculus.contDiffOn_along positiveRadialAbsolute_open contDiffOn_const
-    (absolutePhase_smooth j L)).div
+      (absolutePhase_smooth j L)).div
       contDiffOn_fst.fst.fst (fun x hx => hx.1.ne')
   · exact HarmonicCalculus.contDiffOn_along positiveRadialAbsolute_open contDiffOn_const
-    (absolutePhase_smooth j L)
+      (absolutePhase_smooth j L)
 
 theorem absolutePhase_angular (j : Fin 2) (L : Label B N0) :
     CopyAngularInvariance.AffinePhase ((0 : AbsolutePoint),1)
@@ -568,17 +593,18 @@ theorem absoluteNormal_ne (j : Fin 2) (L : Label B N0) {x : Absolute}
     (hx : x ∈ positiveRadialAbsolute) : absoluteNormal j L x ≠ 0 := by
   have hd := (absolutePhase_angular j L).directional_eq
     (((absolutePhase_smooth j L).contDiffAt (positiveRadialAbsolute_open.mem_nhds
-      hx)).differentiableAt (by simp))
+        hx)).differentiableAt (by
+        simp))
   have hc : absoluteNormal j L x 1 =
       (PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared j L : ℝ) /
-        x.1.1.1 := by
+          x.1.1.1 := by
     simpa only [absoluteNormal, phaseNormal, absoluteAngular, absoluteRadius, along,
       PiLp.single_apply, Matrix.cons_val_one, Matrix.cons_val_zero] using congrArg (fun a : ℝ => a
-        / x.1.1.1) hd
+          / x.1.1.1) hd
   have hp : (PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared j L
-    : ℝ) ≠ 0 :=
+      : ℝ) ≠ 0 :=
     Int.cast_ne_zero.mpr (PrimaryGeometryAssembly.angularMode_ne_zero certificate modulation
-      (choice B N0).prepared j L)
+        (choice B N0).prepared j L)
   intro hz
   have hh := congrArg (fun v : ProblemStatement.Space => v 1) hz
   change absoluteNormal j L x 1 = 0 at hh
@@ -605,6 +631,7 @@ theorem absoluteVelocity_smooth_radial (j : Fin 2) (L : Label B N0) :
     (HarmonicCalculus.contDiffOn_mode 1 (absolutePhase_smooth j L)
       (contDiffOn_pi.mp (absoluteExactAmplitude_smooth j L) i))
 
+/-- Amplitude radius, given by `PrimaryTargetBounds.profileRadius h (nativeSlow L x.1)`. -/
 noncomputable def amplitudeRadius (L : Label B N0) (x : Absolute) : ℝ :=
   PrimaryTargetBounds.profileRadius h (nativeSlow L x.1)
 
@@ -615,14 +642,14 @@ theorem amplitudeRadius_smoothAt (L : Label B N0) {x : Absolute}
   have hp : ContDiffAt ℝ ∞ (fun y : Absolute => nativeSlow L y.1) x :=
     ((nativeSlow_smooth L).comp contDiff_fst).contDiffAt
   have hq := BaseChartJets.normalizedCoordinates_q_pos outgoing.data.h_pos outgoing.data.h_lt_half
-    hy
+      hy
   have hs := (BaseChartJets.normalizedCoordinates_smoothAt outgoing.data.h_pos
-    outgoing.data.h_lt_half hy).comp x hp
+      outgoing.data.h_lt_half hy).comp x hp
   exact hp.fst.div (hs.fst.sqrt hq.ne') (Real.sqrt_pos.mpr hq).ne'
 
 theorem absoluteAmplitude_zero_outside (j : Fin 2) (L : Label B N0) (x : Absolute)
     (hx : amplitudeRadius L x ∉ Ioo (PrimaryTargetBounds.leftRadius nominal)
-      (PrimaryTargetBounds.rightRadius nominal)) :
+        (PrimaryTargetBounds.rightRadius nominal)) :
     absoluteAmplitude j L x.1 = 0 := by
   change _ • (∑' k : TorusInverse.Frequency, CurlClassBounds.complexify
     (WaveEdgeExtension.nativeExtension nominal (outerRawVelocity j L)
@@ -632,7 +659,7 @@ theorem absoluteAmplitude_zero_outside (j : Fin 2) (L : Label B N0) (x : Absolut
       (nativeSlow L x.1,(geometry j L).coordinates k x.1.2))) = 0 := by
     simpa only [tsum_zero] using (tsum_congr (fun k : TorusInverse.Frequency =>
       show CurlClassBounds.complexify (WaveEdgeExtension.nativeExtension nominal (outerRawVelocity
-        j L)
+          j L)
         (nativeSlow L x.1,(geometry j L).coordinates k x.1.2)) = 0 by
           rw [WaveEdgeExtension.nativeExtension_outside nominal _
             (x := (nativeSlow L x.1,(geometry j L).coordinates k x.1.2)) hx, map_zero]))
@@ -640,7 +667,7 @@ theorem absoluteAmplitude_zero_outside (j : Fin 2) (L : Label B N0) (x : Absolut
 
 theorem absolutePressure_zero_outside (j : Fin 2) (L : Label B N0) (x : Absolute)
     (hx : amplitudeRadius L x ∉ Ioo (PrimaryTargetBounds.leftRadius nominal)
-      (PrimaryTargetBounds.rightRadius nominal)) :
+        (PrimaryTargetBounds.rightRadius nominal)) :
     absolutePressure j L x.1 = 0 := by
   change _ • (∑' k : TorusInverse.Frequency,
     WaveEdgeExtension.nativeExtension nominal (outerRawPressure j L)
@@ -657,7 +684,7 @@ theorem absolutePressure_zero_outside (j : Fin 2) (L : Label B N0) (x : Absolute
 theorem absolutePair_zero_germ_outside (j : Fin 2) (L : Label B N0) {x : Absolute}
     (hT : x ∈ positiveAbsolute)
     (hx : amplitudeRadius L x ∉ Icc (PrimaryTargetBounds.leftRadius nominal)
-      (PrimaryTargetBounds.rightRadius nominal)) :
+        (PrimaryTargetBounds.rightRadius nominal)) :
     ((fun y : Absolute => absoluteAmplitude j L y.1) =ᶠ[𝓝 x] fun _ => 0) ∧
     ((fun y : Absolute => absolutePressure j L y.1) =ᶠ[𝓝 x] fun _ => 0) := by
   have hn : ∀ᶠ y in 𝓝 x, amplitudeRadius L y ∉
@@ -687,7 +714,7 @@ theorem absoluteVelocity_tsupport (j : Fin 2) (L : Label B N0) :
 theorem absoluteVelocity_zero_germ_outside (j : Fin 2) (L : Label B N0) {x : Absolute}
     (hT : x ∈ positiveAbsolute)
     (hx : amplitudeRadius L x ∉ Icc (PrimaryTargetBounds.leftRadius nominal)
-      (PrimaryTargetBounds.rightRadius nominal)) :
+        (PrimaryTargetBounds.rightRadius nominal)) :
     absoluteVelocity j L =ᶠ[𝓝 x] fun _ => 0 := by
   have ha := (absolutePair_zero_germ_outside j L hT hx).1
   have hc : absoluteCutAmplitude j L =ᶠ[𝓝 x] fun _ => 0 := by
@@ -705,7 +732,7 @@ theorem amplitudeRadius_nonpositive (L : Label B N0) {x : Absolute} (hx : x.1.1.
 
 theorem amplitudeRadius_outside_nonpositive (L : Label B N0) {x : Absolute} (hx : x.1.1.1 ≤ 0) :
     amplitudeRadius L x ∉ Icc (PrimaryTargetBounds.leftRadius nominal)
-      (PrimaryTargetBounds.rightRadius nominal) := by
+        (PrimaryTargetBounds.rightRadius nominal) := by
   intro hi
   exact (not_lt_of_ge (amplitudeRadius_nonpositive L hx))
     ((PrimaryTargetBounds.leftRadius_pos nominal).trans_le hi.1)
@@ -726,7 +753,7 @@ theorem absolutePressureMode_smooth (j : Fin 2) (L : Label B N0) :
     (absolutePressureCoefficient_smooth j L).mono (fun _ hx => hx.2)
   have hs : ContDiffOn ℝ ∞ (absolutePressureMode j L) positiveRadialAbsolute :=
     Complex.reCLM.contDiff.comp_contDiffOn (HarmonicCalculus.contDiffOn_mode 1
-      (absolutePhase_smooth j L)
+        (absolutePhase_smooth j L)
       ((absoluteCutoff_smooth j L).contDiffOn.smul hp))
   intro x hx
   by_cases hr : 0 < x.1.1.1
@@ -738,7 +765,7 @@ theorem absolutePressureMode_smooth (j : Fin 2) (L : Label B N0) :
       simp [absolutePressureMode, mode, hy]
     exact (contDiffAt_const.congr_of_eventuallyEq hz).contDiffWithinAt
 
-theorem piece_velocity_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_velocity_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((piece U j L).velocity n) positiveChart := by
   have hm : MapsTo (absoluteChart n) positiveChart positiveAbsolute := by
@@ -748,7 +775,7 @@ theorem piece_velocity_smooth (U : LocalSignedRequest.SlowRegion (2*h))
     (ChartScales.Q n ^ CoordinateAlgebra.A h)).congr
       (fun x _ => piece_velocity_representation U j L n x)
 
-theorem piece_pressure_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_pressure_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((piece U j L).pressure n) positiveChart := by
   have hm : MapsTo (absoluteChart n) positiveChart positiveAbsolute := by
@@ -778,7 +805,7 @@ theorem absoluteTangent_smooth (j : Fin 2) (L : Label B N0) :
       simp [absoluteTangent, vectorMode, mode, hy]
     exact (contDiffAt_const.congr_of_eventuallyEq hz).contDiffWithinAt
 
-theorem piece_tangentVelocity_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_tangentVelocity_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((piece U j L).tangentVelocity n) positiveChart := by
   have hm : MapsTo (absoluteChart n) positiveChart positiveAbsolute := by
@@ -791,7 +818,7 @@ theorem piece_tangentVelocity_smooth (U : LocalSignedRequest.SlowRegion (2*h))
 theorem absoluteGaussianCoefficient_smooth (j : Fin 2) (L : Label B N0) :
     ContDiffOn ℝ ∞ (absoluteGaussianCoefficient j L) positiveAbsolute := by
   have hd : ContDiffOn ℝ ∞ (along absoluteFast (fun y => periodicGaussian j L y.1.2))
-    positiveAbsolute :=
+      positiveAbsolute :=
     HarmonicCalculus.contDiffOn_along positiveAbsolute_open contDiffOn_const
       (absoluteCutoff_smooth j L).contDiffOn
   exact hd.smul (absoluteAmplitude_smooth j L)
@@ -816,7 +843,7 @@ theorem absoluteGaussian_smooth (j : Fin 2) (L : Label B N0) :
       simp [absoluteGaussian, absoluteGaussianCoefficient, vectorMode, mode, hy]
     exact (contDiffAt_const.congr_of_eventuallyEq hz).contDiffWithinAt
 
-theorem piece_excluded_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_excluded_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((piece U j L).excluded n) positiveChart := by
   have hm : MapsTo (absoluteChart n) positiveChart positiveAbsolute := by
@@ -837,7 +864,7 @@ theorem amplitudeRadius_chart (L : Label B N0) (n : ℕ) {x : ChartPoint}
   rw [BaseChartJets.normalizedCoordinates_eq]
   rfl
 
-theorem piece_velocity_zero_germ_nonpositive (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_velocity_zero_germ_nonpositive (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hT : 0 < x.1.2.1.1) (hR : x.1.1 ≤ 0) :
     (piece U j L).velocity n =ᶠ[𝓝 x] fun _ => 0 := by
@@ -845,13 +872,13 @@ theorem piece_velocity_zero_germ_nonpositive (U : LocalSignedRequest.SlowRegion 
   have hr : (absoluteChart n x).1.1.1 ≤ 0 :=
     mul_nonpos_of_nonneg_of_nonpos (Real.sqrt_nonneg _) hR
   have hz := (absoluteVelocity_zero_germ_outside j L ht (amplitudeRadius_outside_nonpositive L
-    hr)).comp_tendsto
+      hr)).comp_tendsto
     (absoluteChart n).continuous.continuousAt
   filter_upwards [hz] with y hy
   change absoluteVelocity j L (absoluteChart n y) = 0 at hy
   rw [piece_velocity_representation, hy, smul_zero]
 
-theorem piece_velocity_support (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_velocity_support (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hT : 0 < x.1.2.1.1) (hne : (piece U j L).velocity n x ≠ 0) :
     x.1.1 ∈ Icc (VariableGaugeMean.qLength (2*h) x.1.2.1 * PrimaryTargetBounds.leftRadius nominal)
@@ -881,23 +908,23 @@ variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 theorem along_translate (w : E) {f : E → F} {V : E → E}
-    (hf : ∀ x, f (x+w) = f x) (hV : ∀ x, V (x+w) = V x) (x : E) :
+    (hf : ∀ x, f (x + w) = f x) (hV : ∀ x, V (x + w) = V x) (x : E) :
     along V f (x+w) = along V f x := by
   unfold along
   rw [← fderiv_comp_add_right w, show (fun y => f (y+w)) = f from funext hf, hV]
 
 theorem phaseNormal_translate (w : E) {R Φ : E → ℝ} {Vr Vt Vz : E → E}
-    (hR : ∀ x, R (x+w) = R x) (hΦ : ∀ x, Φ (x+w) = Φ x)
-    (hr : ∀ x, Vr (x+w) = Vr x) (ht : ∀ x, Vt (x+w) = Vt x)
-    (hz : ∀ x, Vz (x+w) = Vz x) (x : E) :
+    (hR : ∀ x, R (x + w) = R x) (hΦ : ∀ x, Φ (x + w) = Φ x)
+    (hr : ∀ x, Vr (x + w) = Vr x) (ht : ∀ x, Vt (x + w) = Vt x)
+    (hz : ∀ x, Vz (x + w) = Vz x) (x : E) :
     phaseNormal R Vr Vt Vz Φ (x+w) = phaseNormal R Vr Vt Vz Φ x := by
   simp only [phaseNormal, hR, along_translate w hΦ hr,
     along_translate w hΦ ht, along_translate w hΦ hz]
 
 theorem cylindricalCurl_translate (w : E) {R : E → ℝ} {Vr Vt Vz : E → E}
-    {a : E → ComplexVector} (hR : ∀ x, R (x+w) = R x)
-    (ha : ∀ x, a (x+w) = a x) (hr : ∀ x, Vr (x+w) = Vr x)
-    (ht : ∀ x, Vt (x+w) = Vt x) (hz : ∀ x, Vz (x+w) = Vz x) (x : E) :
+    {a : E → ComplexVector} (hR : ∀ x, R (x + w) = R x)
+    (ha : ∀ x, a (x + w) = a x) (hr : ∀ x, Vr (x + w) = Vr x)
+    (ht : ∀ x, Vt (x + w) = Vt x) (hz : ∀ x, Vz (x + w) = Vz x) (x : E) :
     CurlClassBounds.cylindricalCurl R Vr Vt Vz a (x+w) =
       CurlClassBounds.cylindricalCurl R Vr Vt Vz a x := by
   have hi i : ∀ y, a (y+w) i = a y i := fun y => congrFun (ha y) i
@@ -909,9 +936,9 @@ theorem cylindricalCurl_translate (w : E) {R : E → ℝ} {Vr Vt Vz : E → E}
 
 theorem realizedCoefficient_translate (w : E) (K : ℝ) {R Φ : E → ℝ}
     {Vr Vt Vz : E → E} {a : E → ComplexVector}
-    (hR : ∀ x, R (x+w) = R x) (hΦ : ∀ x, Φ (x+w) = Φ x)
-    (ha : ∀ x, a (x+w) = a x) (hr : ∀ x, Vr (x+w) = Vr x)
-    (ht : ∀ x, Vt (x+w) = Vt x) (hz : ∀ x, Vz (x+w) = Vz x) (x : E) :
+    (hR : ∀ x, R (x + w) = R x) (hΦ : ∀ x, Φ (x + w) = Φ x)
+    (ha : ∀ x, a (x + w) = a x) (hr : ∀ x, Vr (x + w) = Vr x)
+    (ht : ∀ x, Vt (x + w) = Vt x) (hz : ∀ x, Vz (x + w) = Vz x) (x : E) :
     CurlClassBounds.realizedCoefficient K R Vr Vt Vz Φ a (x+w) =
       CurlClassBounds.realizedCoefficient K R Vr Vt Vz Φ a x := by
   have hc : ∀ y, CurlClassBounds.coefficient R Vr Vt Vz Φ a (y+w) =
@@ -923,6 +950,7 @@ theorem realizedCoefficient_translate (w : E) (K : ℝ) {R Φ : E → ℝ}
 
 end PeriodicCalculus
 
+/-- Chart deck, given by `((0, ((0,0), TorusAverages.latticePoint k)),0)`. -/
 noncomputable def chartDeck (k : TorusInverse.Frequency) : ChartPoint :=
   ((0, ((0,0), TorusAverages.latticePoint k)),0)
 
@@ -932,7 +960,7 @@ theorem native_copy_sum_periodic {E : Type} [NormedAddCommGroup E]
     (f : TorusInverse.Plane → E) (Y : TorusInverse.Plane) (k : TorusInverse.Frequency) :
     (∑' a : TorusInverse.Frequency, f ((geometry j L).coordinates a
       ((CommonCoverSolve.coverPower (CommonWindow.index h n)).symm (Y + TorusAverages.latticePoint
-        k)))) =
+          k)))) =
     ∑' a : TorusInverse.Frequency, f ((geometry j L).coordinates a
       ((CommonCoverSolve.coverPower (CommonWindow.index h n)).symm Y)) := by
   simp only [chartGeometry_coordinates n j L hi]
@@ -948,7 +976,7 @@ theorem native_clock_periodic (j : Fin 2) (L : Label B N0) (n : ℕ)
     (Y : TorusInverse.Plane) (k : TorusInverse.Frequency) :
     PeriodicPhaseAssembly.periodicClock (geometry j L) (clockWindow L).cutoff
       ((CommonCoverSolve.coverPower (CommonWindow.index h n)).symm (Y + TorusAverages.latticePoint
-        k)) =
+          k)) =
     PeriodicPhaseAssembly.periodicClock (geometry j L) (clockWindow L).cutoff
       ((CommonCoverSolve.coverPower (CommonWindow.index h n)).symm Y) :=
   native_copy_sum_periodic j L n hi (fun z => (clockWindow L).cutoff z * z.2) Y k
@@ -964,21 +992,21 @@ theorem chart_amplitude_periodic (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
     (chartCoefficients j L).amplitude n (x + chartDeck k) = (chartCoefficients j L).amplitude n x
-      := by
+        := by
   simp only [chartCoefficients, absoluteAmplitude, nativeSlow, toAbsolute,
     chartDeck, Prod.fst_add, Prod.snd_add, add_zero, uncutAmplitude]
   exact congrArg (fun a : ComplexVector => ChartScales.Q n ^ CoordinateAlgebra.A h •
     (ChartScales.Q (BaseChartJets.cellBand L) ^ (-CoordinateAlgebra.A h) • a))
     (native_copy_sum_periodic j L n hi
       (fun z => CurlClassBounds.complexify (attachedRawVelocity j L (nativeSlow L (toAbsolute n
-        x.1), z)))
+          x.1), z)))
       x.1.2.2 k)
 
 theorem chart_pressure_periodic (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
     (chartCoefficients j L).pressure n (x + chartDeck k) = (chartCoefficients j L).pressure n x :=
-      by
+        by
   simp only [chartCoefficients, absolutePressure, nativeSlow, toAbsolute,
     chartDeck, Prod.fst_add, Prod.snd_add, add_zero, uncutPressure]
   exact congrArg (fun a : ℂ => ChartScales.Q n ^ (2*CoordinateAlgebra.A h) •
@@ -1000,7 +1028,7 @@ theorem chart_radial_periodic (B n : ℕ) (k : TorusInverse.Frequency) (x : Char
   rw [absoluteChart_radial, absoluteChart_radial]
   simp [absoluteRadial, absoluteChart_apply, toAbsolute, chartDeck]
 
-theorem piece_exactAmplitude_periodic (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_exactAmplitude_periodic (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
@@ -1013,14 +1041,14 @@ theorem piece_exactAmplitude_periodic (U : LocalSignedRequest.SlowRegion (2*h))
   · exact chart_phase_periodic j L n hi k
   · intro y
     change chartCutoff j L n (y+chartDeck k) • (chartCoefficients j L).amplitude n (y+chartDeck k)
-      = _
+        = _
     rw [chart_cutoff_periodic j L n hi k, chart_amplitude_periodic j L n hi k]
     rfl
   · exact chart_radial_periodic B n k
   · intro y; rfl
   · intro y; rfl
 
-theorem piece_velocity_periodic (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_velocity_periodic (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
@@ -1028,38 +1056,38 @@ theorem piece_velocity_periodic (U : LocalSignedRequest.SlowRegion (2*h))
   funext i
   change ((piece U j L).exactCoefficients.amplitude n (x+chartDeck k) i *
     carrier ((chartCoefficients j L).frequency n) ((chartCoefficients j L).phase n) (x+chartDeck
-      k)).re = _
+        k)).re = _
   rw [piece_exactAmplitude_periodic U j L n hi k]
   simp only [carrier, chart_phase_periodic j L n hi k]
   rfl
 
-theorem piece_tangentVelocity_periodic (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_tangentVelocity_periodic (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
     (piece U j L).tangentVelocity n (x+chartDeck k) = (piece U j L).tangentVelocity n x := by
   funext i
   change ((chartCutoff j L n (x+chartDeck k) • (chartCoefficients j L).amplitude n (x+chartDeck k))
-    i *
+      i *
     carrier ((chartCoefficients j L).frequency n) ((chartCoefficients j L).phase n) (x+chartDeck
-      k)).re = _
+        k)).re = _
   rw [chart_cutoff_periodic j L n hi k, chart_amplitude_periodic j L n hi k]
   simp only [carrier, chart_phase_periodic j L n hi k]
   rfl
 
-theorem piece_pressure_periodic (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_pressure_periodic (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
     (piece U j L).pressure n (x+chartDeck k) = (piece U j L).pressure n x := by
   change ((chartCutoff j L n (x+chartDeck k) • (chartCoefficients j L).pressure n (x+chartDeck k)) *
     carrier ((chartCoefficients j L).frequency n) ((chartCoefficients j L).phase n) (x+chartDeck
-      k)).re = _
+        k)).re = _
   rw [chart_cutoff_periodic j L n hi k, chart_pressure_periodic j L n hi k]
   simp only [carrier, chart_phase_periodic j L n hi k]
   rfl
 
-theorem piece_excluded_periodic (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_excluded_periodic (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint) :
@@ -1093,7 +1121,7 @@ theorem radius_mem_of_amplitudeRadius_mem (L : Label B N0) (n : ℕ) {x : ChartP
   exact ⟨by simpa only [mul_comm] using (le_div_iff₀ hq).mp hm.1,
     by simpa only [mul_comm] using (div_le_iff₀ hq).mp hm.2⟩
 
-theorem piece_pressure_support (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_pressure_support (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hT : 0 < x.1.2.1.1) (hne : (piece U j L).pressure n x ≠ 0) :
     x.1.1 ∈ Icc (VariableGaugeMean.qLength (2*h) x.1.2.1 * PrimaryTargetBounds.leftRadius nominal)
@@ -1101,13 +1129,13 @@ theorem piece_pressure_support (U : LocalSignedRequest.SlowRegion (2*h))
   apply radius_mem_of_amplitudeRadius_mem L n hT
   by_contra hh
   have hp := (absolutePair_zero_germ_outside j L (mul_pos (ChartScales.Q_pos n) hT)
-    hh).2.self_of_nhds
+      hh).2.self_of_nhds
   change absolutePressure j L (toAbsolute n x.1) = 0 at hp
   apply hne
   rw [piece_pressure_representation]
   simp [absolutePressureMode, mode, hp]
 
-theorem piece_excluded_support (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_excluded_support (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hT : 0 < x.1.2.1.1) (hne : (piece U j L).excluded n x ≠ 0) :
     x.1.1 ∈ Icc (VariableGaugeMean.qLength (2*h) x.1.2.1 * PrimaryTargetBounds.leftRadius nominal)
@@ -1115,7 +1143,7 @@ theorem piece_excluded_support (U : LocalSignedRequest.SlowRegion (2*h))
   apply radius_mem_of_amplitudeRadius_mem L n hT
   by_contra hh
   have hp := (absolutePair_zero_germ_outside j L (mul_pos (ChartScales.Q_pos n) hT)
-    hh).1.self_of_nhds
+      hh).1.self_of_nhds
   change absoluteAmplitude j L (toAbsolute n x.1) = 0 at hp
   apply hne
   rw [piece_excluded_representation]
@@ -1135,7 +1163,7 @@ theorem constructed_frame_normal {ι : Type} {D : PhaseJetBounds.Domain ι Phase
 
 theorem native_pulse_tangent (j : Fin 2) (L : Label B N0) {x : ActualSignedGeometry.Native}
     (hx : x ∈ (ActualSignedGeometry.nativeDomain certificate modulation (choice B
-      N0).prepared).carrier L) :
+        N0).prepared).carrier L) :
     ⟪(phases B N0 j).phase.normal L (x.1,x.2.2), cutVelocity j L x⟫_ℝ = 0 := by
   have hz : (x.1,x.2.2) ∈
       ((PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N).slot
@@ -1157,7 +1185,7 @@ theorem cutVelocity_native_mem (j : Fin 2) (L : Label B N0) {x : ActualSignedGeo
       Ioo (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal))
     (hne : cutVelocity j L x ≠ 0) :
     x ∈ (ActualSignedGeometry.nativeDomain certificate modulation (choice B N0).prepared).carrier L
-      := by
+        := by
   have hraw : rawVelocity j L x ≠ 0 := by
     intro he; exact hne (by simp [cutVelocity,he])
   have hg : GaussianTailFlat.profile (pulseCoordinates L x).2 ≠ 0 := by
@@ -1184,7 +1212,7 @@ theorem cutVelocity_core (j : Fin 2) (L : Label B N0) {x : ActualSignedGeometry.
 
 theorem commonAmplitude_eq_copy (j : Fin 2) (L : Label B N0) (p : PhaseCalculus.Slow)
     (Y : TorusInverse.Plane) (k : TorusInverse.Frequency)
-    (hk : cutVelocity j L (p,(geometry j L).coordinates k Y) ≠ 0) :
+    (hk : cutVelocity j L (p, (geometry j L).coordinates k Y) ≠ 0) :
     commonAmplitude j L p Y =
       CurlClassBounds.complexify (cutVelocity j L (p,(geometry j L).coordinates k Y)) := by
   unfold commonAmplitude
@@ -1193,13 +1221,13 @@ theorem commonAmplitude_eq_copy (j : Fin 2) (L : Label B N0) (p : PhaseCalculus.
   have hm : cutVelocity j L (p,(geometry j L).coordinates m Y) = 0 := by
     by_contra hh
     have he := (copyCells j L).unique 0 m k (p,Y) (cutVelocity_core j L hh) (cutVelocity_core j L
-      hk)
+        hk)
     exact hmk he
   rw [hm,map_zero]
 
 theorem chart_radial_swap (B n : ℕ) (x : ChartPoint) :
     PhysicalResidualTZ.swapCylinder ((PrimaryResidualClass.directions (commonContext
-      B)).radialField n x) =
+        B)).radialField n x) =
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).radial
         (PhysicalResidualTZ.swapCylinder x) := by
   simp [PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply,
@@ -1208,23 +1236,23 @@ theorem chart_radial_swap (B n : ℕ) (x : ChartPoint) :
     CommonBaseContext.reconstruction, CommonBaseContext.radialFrequency,
     LinearWaveBounds.GraphDirections.radialField, PhysicalResidualBridge.ScaledGraph.radial,
     PhysicalResidualBridge.commonGraph, GraphCalculus.radialSpeed, RadialPullback.radialJacobian,
-      PhysicalGraphBounds.radialDirection, TorusInverse.vector]
+        PhysicalGraphBounds.radialDirection, TorusInverse.vector]
   ring
 
-theorem chart_axial_swap (B n : ℕ) (U : LocalSignedRequest.SlowRegion (2*h)) (x : ChartPoint) :
+theorem chart_axial_swap (B n : ℕ) (U : LocalSignedRequest.SlowRegion (2 * h)) (x : ChartPoint) :
     PhysicalResidualTZ.swapCylinder ((PrimaryResidualClass.directions (commonContext B)).axialField
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal U)) n x) =
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).axial
         (PhysicalResidualTZ.swapCylinder x) := by
   change PhysicalResidualTZ.swapCylinder (ChartScales.Q n ^ h • (((0,((0,1),0)),0) : ChartPoint)) =
-    _
+      _
   simp [PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply,
     PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualBridge.commonGraph]
 
-theorem chart_normal_view (U : LocalSignedRequest.SlowRegion (2*h))
+theorem chart_normal_view (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L)) (x :
-      ChartPoint) :
+        ChartPoint) :
     (chartCoefficients j L).normal (piece U j L).strip (piece U j L).directions n x =
       phaseNormal PhysicalResidualBridge.ScaledGraph.radius
         (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).radial
@@ -1274,26 +1302,26 @@ theorem chart_cutoff_smooth (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiff ℝ ∞ (chartCutoff j L n) :=
   (periodicGaussian_smooth j L).comp (((toAbsolute_smooth n).comp contDiff_fst).snd)
 
-theorem piece_domain_positive (U : LocalSignedRequest.SlowRegion (2*h)) :
+theorem piece_domain_positive (U : LocalSignedRequest.SlowRegion (2 * h)) :
     (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal U)).domain ⊆
       positiveRadialChart := by
   intro x hx
   have he := (BaseContextAssembly.nativeStrip_mem nominal U x.1).mp hx
   exact ⟨BaseContextAssembly.nativeStrip_radius nominal U hx, U.time_pos _ he.1⟩
 
-theorem piece_phase_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_phase_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((chartCoefficients j L).phase n)
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal U)).domain :=
   (chart_phase_smooth j L n).mono (piece_domain_positive U)
 
-theorem piece_amplitude_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_amplitude_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((chartCoefficients j L).amplitude n)
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal U)).domain :=
   (chart_amplitude_smooth j L n).mono (fun _ hx => (piece_domain_positive U hx).2)
 
-theorem chart_normal_copy (U : LocalSignedRequest.SlowRegion (2*h))
+theorem chart_normal_copy (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     (k : TorusInverse.Frequency) (x : ChartPoint)
@@ -1301,23 +1329,23 @@ theorem chart_normal_copy (U : LocalSignedRequest.SlowRegion (2*h))
       (ActualSignedGeometry.nativeDomain certificate modulation (choice B N0).prepared).carrier L) :
     (chartCoefficients j L).normal (piece U j L).strip (piece U j L).directions n x =
       PhysicalParticularWave.normalWeight (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand
-        L))
+          L))
         (ChartScales.carrier h n) (ChartScales.carrier h (BaseChartJets.cellBand L)) •
           (phases B N0 j).phase.normal L
             (nativeSlow L (toAbsolute n x.1), ((geometry j L).coordinates k (toAbsolute n
-              x.1).2).2) := by
+                x.1).2).2) := by
   have hp : ActualSignedGeometry.copyPoint slots vectors_det
       (PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal L) j)
       n (CommonWindow.index h n) k (ActualSignedGeometry.cylinderNative
-        (PhysicalResidualTZ.swapCylinder x)) =
+          (PhysicalResidualTZ.swapCylinder x)) =
       (nativeSlow L (toAbsolute n x.1), (geometry j L).coordinates k (toAbsolute n x.1).2) :=
     (chart_nativePoint j L n hi k x.1).symm
   have hc : ActualSignedGeometry.copyPoint slots vectors_det
       (PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal L) j)
       n (CommonWindow.index h n) k (ActualSignedGeometry.cylinderNative
-        (PhysicalResidualTZ.swapCylinder x)) ∈
+          (PhysicalResidualTZ.swapCylinder x)) ∈
       (ActualSignedGeometry.nativeDomain certificate modulation (choice B N0).prepared).carrier L
-        := by
+          := by
     rwa [hp]
   have hg := (ActualSignedGeometry.preparedView_normal_germ certificate modulation slots
     (choice B N0).prepared j L n (CommonWindow.index h n) k hc).self_of_nhds
@@ -1360,7 +1388,7 @@ theorem cutAmplitude_outside (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPo
     absoluteAmplitude j L (absoluteChart n x).1) = 0
   rw [hz,smul_zero,smul_zero]
 
-theorem piece_cutAmplitude_tangent (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_cutAmplitude_tangent (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ)
     (hi : CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand L))
     {x : ChartPoint} (hT : 0 < x.1.2.1.1) :
@@ -1372,13 +1400,13 @@ theorem piece_cutAmplitude_tangent (U : LocalSignedRequest.SlowRegion (2*h))
   · rw [cutAmplitude_inside j L n x hr]
     by_cases hc : ∃ k : TorusInverse.Frequency,
         cutVelocity j L (nativeSlow L (toAbsolute n x.1), (geometry j L).coordinates k (toAbsolute
-          n x.1).2) ≠ 0
+            n x.1).2) ≠ 0
     · obtain ⟨k,hk⟩ := hc
       have ht : 0 < (nativeSlow L (toAbsolute n x.1)).2.2 :=
         div_pos (mul_pos (ChartScales.Q_pos n) hT) (ChartScales.Q_pos _)
       have hm := cutVelocity_native_mem j L
         (x := (nativeSlow L (toAbsolute n x.1), (geometry j L).coordinates k (toAbsolute n x.1).2))
-          ht hr hk
+            ht hr hk
       rw [commonAmplitude_eq_copy j L _ _ k hk, chart_normal_copy U j L n hi k x hm,
         PhysicalParticularWave.normalDot_scaled, SignedWaveUpdate.normalDot_complexify,
         native_pulse_tangent j L hm, Complex.ofReal_zero, mul_zero]
@@ -1391,9 +1419,12 @@ theorem piece_cutAmplitude_tangent (U : LocalSignedRequest.SlowRegion (2*h))
     simp [normalDot]
 
 
+/-- Chart radius linear, given by `(ContinuousLinearMap.fst ℝ ℝ _).comp (ContinuousLinearMap.fst
+ℝ _ ℝ)`. -/
 noncomputable def chartRadiusLinear : ChartPoint →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ _).comp (ContinuousLinearMap.fst ℝ _ ℝ)
 
+/-- Chart radial curve, constructed using `PhysicalResidualTZ.swapCylinder`. -/
 noncomputable def chartRadialCurve (n : ℕ) (r : ℝ) : ChartPoint :=
   PhysicalResidualTZ.swapCylinder
     (PhysicalCurlCovariance.ScaledGraph.radialCurve
@@ -1423,7 +1454,7 @@ theorem chart_radial_aux_derivative (B n : ℕ) {x : ChartPoint} (hx : x.1.1 ≠
   change fderiv ℝ (chartRadialCurve n) x.1.1 v.1.1 = 0
   rw [hv,map_zero]
 
-theorem piece_geometry (U : LocalSignedRequest.SlowRegion (2*h)) (B n : ℕ) :
+theorem piece_geometry (U : LocalSignedRequest.SlowRegion (2 * h)) (B n : ℕ) :
     CurlClassBounds.CylindricalGeometry positiveRadialChart (fun x : ChartPoint => x.1.1)
       ((PrimaryResidualClass.directions (commonContext B)).radialField n)
       (fun _ => (PrimaryResidualClass.directions (commonContext B)).angular)
@@ -1464,7 +1495,7 @@ theorem piece_geometry (U : LocalSignedRequest.SlowRegion (2*h)) (B n : ℕ) :
     simp
 
 
-theorem chart_normal_absolute (U : LocalSignedRequest.SlowRegion (2*h))
+theorem chart_normal_absolute (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     (chartCoefficients j L).normal (piece U j L).strip (piece U j L).directions n x =
       ((1 / (ChartScales.carrier h n : ℝ)) * Real.sqrt (ChartScales.Q n)) •
@@ -1499,7 +1530,7 @@ theorem absoluteCutAmplitude_tangent (j : Fin 2) (L : Label B N0) {x : Absolute}
 
 /-- Tangency holds on every band.  A valid native cover proves it first,
 then the exact absolute normal and amplitude laws remove any index restriction. -/
-theorem piece_tangent (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_tangent (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hx : x ∈ positiveChart) :
     normalDot ((chartCoefficients j L).normal (piece U j L).strip (piece U j L).directions n x)
@@ -1507,7 +1538,7 @@ theorem piece_tangent (U : LocalSignedRequest.SlowRegion (2*h))
   rw [chart_normal_absolute, cutAmplitude_representation, PhysicalParticularWave.normalDot_scaled,
     absoluteCutAmplitude_tangent j L (mul_pos (ChartScales.Q_pos n) hx), mul_zero]
 
-theorem piece_normal_ne (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_normal_ne (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hx : x ∈ positiveRadialChart) :
     (chartCoefficients j L).normal (piece U j L).strip (piece U j L).directions n x ≠ 0 := by
@@ -1518,7 +1549,7 @@ theorem piece_normal_ne (U : LocalSignedRequest.SlowRegion (2*h))
   · exact absoluteNormal_ne j L ⟨mul_pos (Real.sqrt_pos.mpr (ChartScales.Q_pos n)) hx.1,
       mul_pos (ChartScales.Q_pos n) hx.2⟩
 
-theorem piece_exactAmplitude_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_exactAmplitude_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((piece U j L).exactCoefficients.amplitude n) positiveRadialChart := by
   have hm : MapsTo (absoluteChart n) positiveRadialChart positiveRadialAbsolute := by
@@ -1526,21 +1557,21 @@ theorem piece_exactAmplitude_smooth (U : LocalSignedRequest.SlowRegion (2*h))
     exact ⟨mul_pos (Real.sqrt_pos.mpr (ChartScales.Q_pos n)) hx.1,
       mul_pos (ChartScales.Q_pos n) hx.2⟩
   exact (((absoluteExactAmplitude_smooth j L).comp (absoluteChart n).contDiff.contDiffOn
-    hm).const_smul
+      hm).const_smul
     (ChartScales.Q n ^ CoordinateAlgebra.A h)).congr
       (fun x _ => exactAmplitude_representation U j L n x)
 
-theorem piece_complexVelocity_smooth (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_complexVelocity_smooth (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ (vectorMode ((chartCoefficients j L).frequency n) ((chartCoefficients j L).phase
-      n)
+        n)
       ((piece U j L).exactCoefficients.amplitude n)) positiveRadialChart := by
   apply contDiffOn_pi.mpr
   intro i
   exact HarmonicCalculus.contDiffOn_mode _ (chart_phase_smooth j L n)
     (contDiffOn_pi.mp (piece_exactAmplitude_smooth U j L n) i)
 
-theorem piece_complex_divergence (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_complex_divergence (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hx : x ∈ positiveRadialChart) :
     cylindricalDivergence (fun y : ChartPoint => y.1.1)
@@ -1556,7 +1587,7 @@ theorem piece_complex_divergence (U : LocalSignedRequest.SlowRegion (2*h))
     (fun _ hy => piece_normal_ne U j L n hy) (fun _ hy => piece_tangent U j L n hy.2) hx
 
 /-- Literal real corrected field, with the radial connection term included. -/
-theorem piece_full_divergence (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_full_divergence (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint}
     (hx : x ∈ positiveRadialChart) :
     cylindricalDivergence (fun y : ChartPoint => y.1.1)
@@ -1585,30 +1616,37 @@ theorem absoluteChart_physical (n : ℕ) {z : ProblemStatement.SpaceTime} (hr : 
       physicalLift z := by
   apply (absoluteChart n).symm.injective
   rw [ContinuousLinearEquiv.symm_apply_apply, PhysicalResidualBridge.commonGraph_eq_physicalToChart
-    h n _ hr,
+      h n _ hr,
     MeanChartCompatibility.physicalToChart_apply, MeanChartCompatibility.coverMap_eq_coverPower]
   simp only [absoluteChart_symm_apply, fromAbsolute, physicalLift,
-    PhysicalResidualBridge.absoluteLift,
+      PhysicalResidualBridge.absoluteLift,
     PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply,
-      MeanChartCompatibility.chartScale,
+        MeanChartCompatibility.chartScale,
     Real.rpow_neg (ChartScales.Q_pos n).le, Real.rpow_one, Real.sqrt_eq_rpow, div_eq_mul_inv]
   ext <;> ring
 
+/-- Physical phase, defined pointwise by `absolutePhase j L (physicalLift z)`. -/
 noncomputable def physicalPhase (j : Fin 2) (L : Label B N0) : ProblemStatement.SpaceTime → ℝ :=
   fun z => absolutePhase j L (physicalLift z)
 
+/-- Physical amplitude, defined pointwise by `absoluteCutAmplitude j L (physicalLift z)`. -/
 noncomputable def physicalAmplitude (j : Fin 2) (L : Label B N0) : ProblemStatement.SpaceTime →
-  ComplexVector :=
+    ComplexVector :=
   fun z => absoluteCutAmplitude j L (physicalLift z)
 
+/-- Lifted phase, defined pointwise by `(chartCoefficients j L).phase n
+(PhysicalResidualTZ.swapCylinder x)`. -/
 noncomputable def liftedPhase (j : Fin 2) (L : Label B N0) (n : ℕ) : ChartPoint → ℝ :=
   fun x => (chartCoefficients j L).phase n (PhysicalResidualTZ.swapCylinder x)
 
+/-- Lifted amplitude, defined pointwise by `((chartCoefficients j L).withCutoff (chartCutoff j
+L)).amplitude n (PhysicalResidualTZ.swapCylinder x)`. -/
 noncomputable def liftedAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) : ChartPoint → ComplexVector
-  :=
+    :=
   fun x => ((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude n
     (PhysicalResidualTZ.swapCylinder x)
 
+/-- Lifted domain, given by `PhysicalResidualTZ.swapCylinder ⁻¹' positiveRadialChart`. -/
 noncomputable def liftedDomain : Set ChartPoint :=
   PhysicalResidualTZ.swapCylinder ⁻¹' positiveRadialChart
 
@@ -1628,7 +1666,7 @@ theorem liftedAmplitude_smooth (j : Fin 2) (L : Label B N0) (n : ℕ) :
       ((chart_amplitude_smooth j L n).mono (fun _ hx => hx.2))
   exact hc.comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hx => hx)
 
-theorem chart_normal_lifted (U : LocalSignedRequest.SlowRegion (2*h))
+theorem chart_normal_lifted (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     (chartCoefficients j L).normal (piece U j L).strip (piece U j L).directions n
         (PhysicalResidualTZ.swapCylinder x) =
@@ -1651,7 +1689,7 @@ theorem chart_normal_lifted (U : LocalSignedRequest.SlowRegion (2*h))
   simp only [liftedPhase, one_mul, one_smul] at he ⊢
   exact he
 
-theorem lifted_realized (U : LocalSignedRequest.SlowRegion (2*h))
+theorem lifted_realized (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) (x : ChartPoint) :
     (piece U j L).exactCoefficients.amplitude n (PhysicalResidualTZ.swapCylinder x) =
       CurlClassBounds.realizedCoefficient ((chartCoefficients j L).frequency n)
@@ -1679,7 +1717,7 @@ theorem physicalPhase_eq (j : Fin 2) (L : Label B N0) (n : ℕ)
     {z : ProblemStatement.SpaceTime} (hr : 0 < z.2 0) :
     physicalPhase j L z = (chartCoefficients j L).frequency n * liftedPhase j L n
       ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).map z) :=
-        by
+          by
   rw [liftedPhase, chartCoefficients_phase]
   exact congrArg (absolutePhase j L) (absoluteChart_physical n hr).symm
 
@@ -1687,13 +1725,14 @@ theorem physicalAmplitude_eq (j : Fin 2) (L : Label B N0) (n : ℕ)
     {z : ProblemStatement.SpaceTime} (hr : 0 < z.2 0) :
     physicalAmplitude j L z = ChartScales.Q n ^ (-CoordinateAlgebra.A h) • liftedAmplitude j L n
       ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).map z) :=
-        by
+          by
   rw [liftedAmplitude, cutAmplitude_representation]
   dsimp only
   rw [absoluteChart_physical n hr, smul_smul,
     ← Real.rpow_add (ChartScales.Q_pos n), neg_add_cancel, Real.rpow_zero, one_smul]
   rfl
 
+/-- Physical angular, given by `(0,ProblemStatement.coordinateVector 1)`. -/
 noncomputable def physicalAngular : ProblemStatement.SpaceTime :=
   (0,ProblemStatement.coordinateVector 1)
 
@@ -1716,6 +1755,8 @@ theorem physicalAmplitude_angular (j : Fin 2) (L : Label B N0) :
   rw [physicalLift_angular]
   simp [absoluteCutAmplitude,physicalAmplitude]
 
+/-- Physical potential, given by `PhysicalCurlCovariance.referencePotential 1 (physicalPhase j
+L) (physicalAmplitude j L)`. -/
 noncomputable def physicalPotential (j : Fin 2) (L : Label B N0) :
     ProblemStatement.SpaceTime → ComplexVector :=
   PhysicalCurlCovariance.referencePotential 1 (physicalPhase j L) (physicalAmplitude j L)
@@ -1723,7 +1764,7 @@ noncomputable def physicalPotential (j : Fin 2) (L : Label B N0) :
 theorem physicalPotential_periodic (j : Fin 2) (L : Label B N0) (t r z : ℝ) :
     Periodic (fun θ => physicalPotential j L (t,AxisymmetricResidual.pack r θ z)) (2*Real.pi) := by
   have hR : CopyAngularInvariance.Invariant physicalAngular LinearWaveResidual.coordinateRadius :=
-    by
+      by
     intro x s
     simp [physicalAngular, LinearWaveResidual.coordinateRadius, ProblemStatement.coordinateVector]
   have hturn := PhysicalCurlCovariance.vectorPotential_fullTurn
@@ -1750,7 +1791,7 @@ noncomputable def physicalAxisRadius (L : Label B N0) : ℝ :=
 
 theorem physicalAxisRadius_pos (L : Label B N0) : 0 < physicalAxisRadius L :=
   div_pos (mul_pos (Real.sqrt_pos.mpr (ChartScales.Q_pos _)) (PrimaryTargetBounds.leftRadius_pos
-    nominal))
+      nominal))
     (by norm_num)
 
 theorem absoluteAmplitude_zero_mask (j : Fin 2) (L : Label B N0) (x : AbsolutePoint)
@@ -1787,7 +1828,8 @@ theorem physicalAmplitude_zero_axis (j : Fin 2) (L : Label B N0) (z : ProblemSta
       ring
     intro hx
     have hx1 := hx.1
-    simp only [amplitudeRadius,PrimaryTargetBounds.profileRadius,BaseChartJets.normalizedCoordinates_eq,
+    simp only [amplitudeRadius, PrimaryTargetBounds.profileRadius,
+        BaseChartJets.normalizedCoordinates_eq,
       SimilarityHomogeneity.chartQ] at hx1
     have hn := (lt_div_iff₀ (lt_trans (by norm_num : (0:ℝ)<1/2) hs)).mp hx1
     have hp := PrimaryTargetBounds.leftRadius_pos nominal
@@ -1808,9 +1850,9 @@ theorem physicalPotential_zero_axis (j : Fin 2) (L : Label B N0) (z : ProblemSta
 
 
 theorem periodic_value_of_polar_eq {E : Type} (f : TorusInverse.Plane → E)
-    (hf : ∀ r, Periodic (fun θ => f (r,θ)) (2*Real.pi))
+    (hf : ∀ r, Periodic (fun θ => f (r, θ)) (2 * Real.pi))
     {r θ : ℝ} (hr : r ≠ 0) {q : TorusInverse.Plane} (hqr : q.1 = r)
-    (hq : PolarCharts.polar q = PolarCharts.polar (r,θ)) : f q = f (r,θ) := by
+    (hq : PolarCharts.polar q = PolarCharts.polar (r, θ)) : f q = f (r,θ) := by
   have hc : Real.cos q.2 = Real.cos θ := by
     apply mul_left_cancel₀ hr
     simpa only [PolarCharts.polar,hqr] using congrArg Prod.fst hq
@@ -1836,10 +1878,10 @@ theorem globalPotential_forward {a : ℝ} (ha : 0 < a)
       PolarCharts.polar (z.2 0,z.2 1) := by
     simp [PhysicalGraphBounds.radialProjection_apply,CylindricalResidual.chart,PolarCharts.polar]
   by_cases hc : ∃ j : PolarCharts.Index, PolarCharts.polar (z.2 0,z.2 1) ∈ PolarCharts.chartDomain
-    a j
+      a j
   · obtain ⟨j,hj⟩ := hc
-    rw [PhysicalCurlCovariance.globalCartesianPotential_eq_local ha B hper j (by simpa only [he]
-      using hj)]
+    rw [PhysicalCurlCovariance.globalCartesianPotential_eq_local ha B hper j (by
+        simpa only [he] using hj)]
     let f : TorusInverse.Plane → ProblemStatement.Space := fun p =>
       CylindricalResidual.frame p.2 (PhysicalCurlCovariance.realVector
         (B (z.1,AxisymmetricResidual.pack p.1 p.2 (z.2 2))))
@@ -1859,14 +1901,15 @@ theorem globalPotential_forward {a : ℝ} (ha : 0 < a)
       fin_cases i <;> simp
     calc
       _ = f (PolarCharts.chart a j (PolarCharts.polar (z.2 0,z.2 1))) := by
-        simp only [PhysicalCurlCovariance.cartesianPotential,PhysicalCurlCovariance.polarCoordinates,
+        simp only [PhysicalCurlCovariance.cartesianPotential,
+            PhysicalCurlCovariance.polarCoordinates,
           PhysicalCurlCovariance.polarInput,he,f]
         simp only [CylindricalResidual.chart,AxisymmetricResidual.pack_two]
       _ = f (z.2 0,z.2 1) := hp
       _ = _ := by dsimp only [f]; rw [hpack]
   · have hn : ‖PolarCharts.polar (z.2 0,z.2 1)‖ ≤ a/4 := by
       obtain ⟨j,hj⟩ := PolarCharts.exists_rotate_fst_ge (p := PolarCharts.polar (z.2 0,z.2 1))
-        le_rfl
+          le_rfl
       apply le_of_not_gt
       intro hh
       exact hc ⟨j,lt_of_lt_of_le hh hj⟩
@@ -1876,7 +1919,7 @@ theorem globalPotential_forward {a : ℝ} (ha : 0 < a)
       linarith
     have hc' : ¬∃ j : PolarCharts.Index,
         PhysicalGraphBounds.radialProjection (z.1,CylindricalResidual.chart z.2) ∈
-          PolarCharts.chartDomain a j := by
+            PolarCharts.chartDomain a j := by
       simpa only [he] using hc
     rw [PhysicalCurlCovariance.globalCartesianPotential,dite_eq_right hc',hzero z hz]
     have hp : AxisymmetricResidual.pack 0 0 0 = (0 : ProblemStatement.Space) := by
@@ -1890,10 +1933,10 @@ theorem globalPotential_forward_germ {a : ℝ} (ha : 0 < a)
     (hzero : ∀ z : ProblemStatement.SpaceTime, z.2 0 ≤ a → B z = 0)
     {z : ProblemStatement.SpaceTime} (hr : 0 < z.2 0) :
     (fun y => PhysicalCurlCovariance.globalCartesianPotential a B (y.1,CylindricalResidual.chart
-      y.2)) =ᶠ[𝓝 z]
+        y.2)) =ᶠ[𝓝 z]
       (fun y => CylindricalResidual.frame (y.2 1) (PhysicalCurlCovariance.realVector (B y))) :=
   eventually_of_mem ((isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection
-    0).continuous).mem_nhds hr)
+      0).continuous).mem_nhds hr)
     (fun _ hy => globalPotential_forward ha B hper hzero hy)
 
 
@@ -1902,17 +1945,17 @@ theorem globalPotential_forward_germ {a : ℝ} (ha : 0 < a)
 theorem physical_source (n : ℕ) {z : ProblemStatement.SpaceTime}
     (ht : z.1 < 1) (hr : 0 < z.2 0) :
     z ∈ (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).source
-      liftedDomain := by
+        liftedDomain := by
   refine ⟨hr,?_⟩
   change (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).map z ∈
-    liftedDomain
+      liftedDomain
   rw [PhysicalResidualBridge.commonGraph_map (ChartScales.Q_pos n) h _ hr]
   change 0 < ChartScales.Q n ^ (-(1/2:ℝ)) * z.2 0 ∧ 0 < (1-z.1) / ChartScales.Q n
   exact ⟨mul_pos (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) hr,
     div_pos (sub_pos.mpr ht) (ChartScales.Q_pos n)⟩
 
 theorem liftedNormal_ne (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint} (hx : x ∈
-  liftedDomain) :
+    liftedDomain) :
     phaseNormal PhysicalResidualBridge.ScaledGraph.radius
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).radial
       PhysicalResidualBridge.ScaledGraph.angular
@@ -1922,7 +1965,7 @@ theorem liftedNormal_ne (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint} 
   exact piece_normal_ne standardRegion j L n hx
 
 theorem lifted_tangent (j : Fin 2) (L : Label B N0) (n : ℕ) {x : ChartPoint} (hx : x ∈
-  liftedDomain) :
+    liftedDomain) :
     normalDot (phaseNormal PhysicalResidualBridge.ScaledGraph.radius
       (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).radial
       PhysicalResidualBridge.ScaledGraph.angular
@@ -1944,9 +1987,9 @@ theorem liftedPotential_smooth (j : Fin 2) (L : Label B N0) (n : ℕ) :
 
 theorem physicalPotential_smooth (j : Fin 2) (L : Label B N0) :
     ContDiffOn ℝ ∞ (physicalPotential j L) {z : ProblemStatement.SpaceTime | z.1 < 1 ∧ 0 < z.2 0}
-      := by
+        := by
   have he := PhysicalCurlCovariance.referencePotential_eq_on (ChartScales.Q_pos 0) h
-    (CommonWindow.index h 0)
+      (CommonWindow.index h 0)
     liftedDomain_open one_ne_zero (chartCoefficients_frequency_pos j L 0).ne'
     (liftedPhase_smooth j L 0) (liftedAmplitude j L 0) (physicalPhase j L) (physicalAmplitude j L)
     (fun z hz => by simpa only [one_mul] using physicalPhase_eq j L 0 hz.1)
@@ -1954,7 +1997,7 @@ theorem physicalPotential_smooth (j : Fin 2) (L : Label B N0) :
   intro z hz
   have hs := physical_source 0 hz.1 hz.2
   have hm := (PhysicalResidualBridge.commonGraph (ChartScales.Q 0) h (CommonWindow.index h
-    0)).map_smoothAt
+      0)).map_smoothAt
     (mul_pos (Real.rpow_pos_of_pos (ChartScales.Q_pos 0) _) hz.2).ne'
   have hc := ((liftedPotential_smooth j L 0).contDiffAt (liftedDomain_open.mem_nhds hs.2)).comp z hm
   apply ContDiffAt.contDiffWithinAt
@@ -1967,9 +2010,10 @@ theorem physicalPotential_smooth (j : Fin 2) (L : Label B N0) :
 /-- No band index occurs in this Cartesian potential.  The cutoff is the
 original periodic Gaussian, and the polar chart is chosen from its full-turn-compatible values. -/
 noncomputable def cartesianPotential (j : Fin 2) (L : Label B N0) : ProblemStatement.VelocityField
-  :=
+    :=
   PhysicalCurlCovariance.globalCartesianPotential (physicalAxisRadius L) (physicalPotential j L)
 
+/-- Cartesian velocity, given by `SpatialCurl.spatialCurl (cartesianPotential j L)`. -/
 noncomputable def cartesianVelocity (j : Fin 2) (L : Label B N0) : ProblemStatement.VelocityField :=
   SpatialCurl.spatialCurl (cartesianPotential j L)
 
@@ -1977,11 +2021,11 @@ theorem cartesianPotential_smooth (j : Fin 2) (L : Label B N0) :
     ContDiffOn ℝ ∞ (cartesianPotential j L) {z : ProblemStatement.SpaceTime | z.1 < 1} :=
   (PhysicalCurlCovariance.globalCartesianPotential_smoothOn (physicalAxisRadius_pos L) isOpen_Iio
     (physicalPotential_smooth j L) (physicalPotential_periodic j L) (physicalPotential_zero_axis j
-      L)).mono
+        L)).mono
       (fun _ hz => ⟨hz,trivial⟩)
 
 theorem cartesianVelocity_axis_zero (j : Fin 2) (L : Label B N0) (t : ℝ) (x :
-  ProblemStatement.Space)
+    ProblemStatement.Space)
     (hx : x 0 = 0) (hy : x 1 = 0) : cartesianVelocity j L (t,x) = 0 := by
   apply PhysicalCurlCovariance.spatialCurl_zero_of_zero_near
   apply PhysicalCurlCovariance.globalCartesianPotential_zero_germ (physicalAxisRadius_pos L)
@@ -1992,7 +2036,7 @@ theorem cartesianVelocity_axis_zero (j : Fin 2) (L : Label B N0) (t : ℝ) (x :
 /-- Every actual band velocity is the rotating-frame representation of
 the curl of the same constructed Cartesian potential.  This includes all
 positive radii and all angles, without a native-cover restriction. -/
-theorem piece_cartesian_velocity (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_cartesian_velocity (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {z : ProblemStatement.SpaceTime}
     (ht : z.1 < 1) (hr : 0 < z.2 0) (i : Fin 3) :
     (piece U j L).velocity n (PhysicalResidualTZ.swapCylinder
@@ -2005,7 +2049,7 @@ theorem piece_cartesian_velocity (U : LocalSignedRequest.SlowRegion (2*h))
   have he := globalPotential_forward_germ (physicalAxisRadius_pos L) (physicalPotential j L)
     (physicalPotential_periodic j L) (physicalPotential_zero_axis j L) hr
   have hc := PhysicalCurlCovariance.reference_correctedWave (ChartScales.Q_pos n) h
-    (CommonWindow.index h n)
+      (CommonWindow.index h n)
     liftedDomain_open (fun _ hx => hx.1.ne') one_ne_zero (chartCoefficients_frequency_pos j L n).ne'
     (liftedPhase_smooth j L n) (liftedAmplitude_smooth j L n)
     (fun _ hx => liftedNormal_ne j L n hx) (fun _ hx => lifted_tangent j L n hx)
@@ -2017,10 +2061,11 @@ theorem piece_cartesian_velocity (U : LocalSignedRequest.SlowRegion (2*h))
   rw [lifted_realized U j L n]
   exact hc
 
+/-- Physical pressure, defined pointwise by `absolutePressureMode j L (physicalLift z)`. -/
 noncomputable def physicalPressure (j : Fin 2) (L : Label B N0) : ProblemStatement.SpaceTime → ℝ :=
   fun z => absolutePressureMode j L (physicalLift z)
 
-theorem piece_physical_pressure (U : LocalSignedRequest.SlowRegion (2*h))
+theorem piece_physical_pressure (U : LocalSignedRequest.SlowRegion (2 * h))
     (j : Fin 2) (L : Label B N0) (n : ℕ) {z : ProblemStatement.SpaceTime} (hr : 0 < z.2 0) :
     (piece U j L).pressure n (PhysicalResidualTZ.swapCylinder
       ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).map z)) =
@@ -2034,7 +2079,7 @@ theorem piece_physical_pressure (U : LocalSignedRequest.SlowRegion (2*h))
 theorem cartesianVelocity_smooth (j : Fin 2) (L : Label B N0) :
     ContDiffOn ℝ ∞ (cartesianVelocity j L) {z : ProblemStatement.SpaceTime | z.1 < 1} := by
   have ha : ContDiffOn ℝ ∞ (cartesianPotential j L) ((Iio 1) ×ˢ (univ : Set
-    ProblemStatement.Space)) :=
+      ProblemStatement.Space)) :=
     (cartesianPotential_smooth j L).mono (fun _ hx => hx.1)
   exact (SpatialCurl.contDiffOn_spatialCurl ha (by simp)).mono (fun _ hx => ⟨hx,trivial⟩)
 
@@ -2042,7 +2087,7 @@ theorem cartesianVelocity_divergence (j : Fin 2) (L : Label B N0) {t : ℝ}
     (ht : t < 1) (x : ProblemStatement.Space) :
     ProblemStatement.spatialDivergence (cartesianVelocity j L) t x = 0 := by
   have ha : ContDiffOn ℝ 2 (cartesianPotential j L) ((Iio 1) ×ˢ (univ : Set
-    ProblemStatement.Space)) :=
+      ProblemStatement.Space)) :=
     ((cartesianPotential_smooth j L).mono (fun _ hx => hx.1)).of_le (WithTop.coe_le_coe.mpr le_top)
   exact SpatialCurl.spatialDivergence_spatialCurl_on ha ht x
 

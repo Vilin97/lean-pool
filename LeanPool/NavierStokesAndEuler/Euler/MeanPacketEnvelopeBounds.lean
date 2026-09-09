@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketZeroForcing
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketSobolevData
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcingAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketZeroForcing
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
 
 /-!
 # Mean inverse estimates with an external forcing envelope
@@ -20,6 +20,9 @@ proved homogeneity. Every radius condition depends only on the fixed source
 data and the fixed normalized forcing scale, never on the recursive grade
 or its forcing envelope. Zero envelope is treated by actual zero forcing.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -97,16 +100,16 @@ theorem envelope_bounds (E : SobolevData D ι q R)
       apply block_restore_bound directions q _ _ H.velocityPath_orbit A hpos.le
         (fun b => (congrArg (pathTranslation D.T b) hVB).trans
           ((pathTranslation D.T b).map_smul A H.velocityPath)) R E.velocityAmplitude (d+2) n a
-            (hbounds.1 n a)
+              (hbounds.1 n a)
     · intro n a
       apply block_restore_bound directions q _ _ H.derivativePath_orbit A hpos.le
         (fun b => (congrArg (pathTranslation D.T b) hVD).trans
           ((pathTranslation D.T b).map_smul A H.derivativePath)) R E.derivativeAmplitude (d+3) n a
-            (hbounds.2.1 n a)
+              (hbounds.2.1 n a)
     · intro n a
       apply block_restore_bound directions q _ _ H.pressureForcePath_orbit A hpos.le
         (fun b => (congrArg (pathTranslation D.T b) hVP).trans
           ((pathTranslation D.T b).map_smul A H.pressureForcePath)) R E.pressureAmplitude (d+3) n a
-            (hbounds.2.2 n a)
+              (hbounds.2.2 n a)
 
 end EulerMeanPacketProvider.SobolevData

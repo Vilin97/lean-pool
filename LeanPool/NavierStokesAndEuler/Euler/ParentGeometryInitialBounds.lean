@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentInitializedUniformCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryInitialAmplitude
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialPolynomialBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialCostPolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedInitial
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialPolynomialBounds
 
 /-! Source-only initial estimates for the actual packet constructed from
 a parent and its activation geometry. No initial-field estimate is an input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,15 +29,15 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {G : Parent} (L : LabelData G) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (P : ParentFrame (G.transverseData m hm R S hS) τ)
   (J : Guards hτ hτT P (G.historyOn H m hm R S hS τ hτ hτT))
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (Ti TiTotal : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
   (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
 local notation "A" => L.geometryInputs H m hm R S hS τ hτ hτT P J hball Ti TiTotal
   hτ1 hTi hT1 hTiTotal Ω hΩ hΩo hsub hΩball
@@ -69,9 +72,9 @@ theorem geometry_initial_primitives (ξ : U) (hδ : 0 < J.δ) :
 include hτ1 hTi hT1 hTiTotal hΩ hΩo hsub hΩball
 
 theorem geometry_initial_amplitude (ξ : U) (hδ : 0 < J.δ) (hδ1 : J.δ ≤ 1)
-    (x : ℝ) (hσ : P.sigma*x ≤ 2) :
+    (x : ℝ) (hσ : P.sigma * x ≤ 2) :
     let X := L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ
-    J.primaryAmplitude hball ≤ EulerPacketInitialAmplitude.boundConstant*
+    J.primaryAmplitude hball ≤ EulerPacketInitialAmplitude.boundConstant *
       X^EulerPacketInitialAmplitude.degree*Real.exp (-x/8) := by
   obtain ⟨hX,hH,hh,hp⟩ := L.geometry_initial_primitives H m hm R S hS τ hτ hτT P J hball
     Ti TiTotal hτ1 hTi hT1 hTiTotal Ω hΩ hΩo hsub hΩball ξ hδ
@@ -79,22 +82,24 @@ theorem geometry_initial_amplitude (ξ : U) (hδ : 0 < J.δ) (hδ1 : J.δ ≤ 1)
 
 theorem geometry_initial_bounds (ξ : U) (hs : tsupport EulerSpatialCutoffs.innerCutoff ⊆ S)
     (hδ : 0 < J.δ) (hδ1 : J.δ ≤ 1) (hh : 0 < J.hchild)
-    (x : ℝ) (hσ : P.sigma*x ≤ 2) (k : ℝ) (hk : 4 ≤ k)
-    (hfrequency : frequencyConstant*
-      (L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ)^frequencyPower ≤ smallPower
-        k)
+    (x : ℝ) (hσ : P.sigma * x ≤ 2) (k : ℝ) (hk : 4 ≤ k)
+    (hfrequency : frequencyConstant *
+      (L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ) ^ frequencyPower ≤
+          smallPower
+          k)
     (s : ℕ) :
     let X := L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ
     derivativeSum s (initializedInitialHigh (G.meanData H) (G.transverseData m hm R S hS)
       τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) J.δ hδ ξ hs
       (J.primaryAmplitude hball) (truncation k) k) ≤
-      (G.ell⁻¹)^s*k^s*(EulerPacketInitialAmplitude.boundConstant*EulerPacketInitialCost.sourceConstant s*
+      (G.ell⁻¹)^s*k^s*(EulerPacketInitialAmplitude.boundConstant *
+        EulerPacketInitialCost.sourceConstant s *
         X^(EulerPacketInitialAmplitude.degree+EulerPacketInitialCost.sourcePower s))*Real.exp
-          (-x/8) ∧
+            (-x/8) ∧
     derivativeSum s (initializedInitialMean (G.meanData H) (G.transverseData m hm R S hS)
       τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) J.δ hδ ξ hs
       (J.primaryAmplitude hball) (truncation k) k) ≤
-      (G.ell⁻¹)^s/k^2*(EulerPacketInitialCost.sourceConstant s*
+      (G.ell⁻¹)^s/k^2*(EulerPacketInitialCost.sourceConstant s *
         X^EulerPacketInitialCost.sourcePower s) := by
   let X := L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ
   have hp := L.geometry_uniform_primitives H m hm R S hS τ hτ hτT P J hball
@@ -113,8 +118,8 @@ theorem geometry_initial_bounds (ξ : U) (hs : tsupport EulerSpatialCutoffs.inne
   have hC0 := (EulerPacketInitialCost.sourceConstant_pos s).le
   refine ⟨hb.1.trans ?_,hb.2⟩
   calc
-    _ ≤ (G.ell⁻¹)^s*k^s*(EulerPacketInitialAmplitude.boundConstant*
-        X^EulerPacketInitialAmplitude.degree*Real.exp (-x/8))*
+    _ ≤ (G.ell⁻¹)^s*k^s*(EulerPacketInitialAmplitude.boundConstant *
+        X^EulerPacketInitialAmplitude.degree*Real.exp (-x/8)) *
         (EulerPacketInitialCost.sourceConstant s*X^EulerPacketInitialCost.sourcePower s) := by
       exact mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left ha (by positivity)) (by positivity)

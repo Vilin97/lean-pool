@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! Canonical smooth pointwise representatives of any genuine all-order
 field tower. All spatial regularity follows from its actual Sobolev jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,10 +30,12 @@ open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] (A : EulerAllOrderCorrectionData.FieldTower P T)
 
+/-- Spatial jet, given by `A.value_eq q t ▸ toJet P (A.realization q t)`. -/
 def spatialJet (q : ℕ) (t : Icc (0 : ℝ) T) :
     SpatialJet P standardDirection q (A.field t) :=
   A.value_eq q t ▸ toJet P (A.realization q t)
 
+/-- Point field, given by `pointEvaluation P x (A.realization 3 t)`. -/
 def pointField (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
   pointEvaluation P x (A.realization 3 t)
 

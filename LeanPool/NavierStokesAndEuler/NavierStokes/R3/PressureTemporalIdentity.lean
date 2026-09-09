@@ -7,9 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ConservativeDifference
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Compact time tests of the conservative pressure identity
@@ -18,6 +21,9 @@ The temporal test has topological support inside the open time interval. The
 spatial test is smooth and compactly supported. Consequently all pairings are
 ordinary Lebesgue integrals even when the pressure grows at spatial infinity.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -125,7 +131,7 @@ theorem compact_time_integration_by_parts {T : ℝ} {a F D : ℝ → ℝ}
     intro h
     exact (lt_irrefl T) (hsupp h).2)
   rw [intervalIntegral.integral_add hi₁ hi₂, Pi.mul_apply, Pi.mul_apply, ha0, haT, zero_mul,
-    zero_mul, sub_self] at hFTC
+      zero_mul, sub_self] at hFTC
   linarith
 
 /-- The compact pressure-gradient identity integrated against a time test.

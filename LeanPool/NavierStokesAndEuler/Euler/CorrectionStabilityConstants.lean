@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifference
 
+/-! Fixed, actual coefficient budgets for L² viscosity stability. -/
+
 @[expose] public section
 
-/-! Fixed, actual coefficient budgets for L² viscosity stability. -/
 
 noncomputable section
 
@@ -37,7 +38,8 @@ def defectConstant (Kb R : ℝ) : ℝ := (Kb*(4*R))^2
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Nonnegative actual coefficient and norm budgets give a nonnegative lower-order Lipschitz constant. -/
+/-- Nonnegative actual coefficient and norm budgets give a nonnegative lower-order Lipschitz
+constant. -/
 theorem lowerConstant_nonneg (q : ℕ) (A0 A2 Z R : ℝ)
     (hA0 : 0 ≤ A0) (hA2 : 0 ≤ A2) (hZ : 0 ≤ Z) (hR : 0 ≤ R) :
     0 ≤ lowerConstant period q A0 A2 Z R := by
@@ -53,7 +55,7 @@ theorem velocityBound_nonneg (q : ℕ) (Z R : ℝ) (hZ : 0 ≤ Z) (hR : 0 ≤ R)
 /-- Actual higher Sobolev and coefficient bounds give the lower-order difference estimate in L². -/
 theorem differenceRemainder_uniform {q : ℕ} {T : Type*} [TopologicalSpace T]
     (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T)
-    (u v : SobolevSpace period (q+1)) (A0 A2 Z R : ℝ)
+    (u v : SobolevSpace period (q + 1)) (A0 A2 Z R : ℝ)
     (hA0 : ((D.linear.coefficient t).bound : ℝ) ≤ A0)
     (hA2 : (∑ i : Fin 3, (((D.quadratic i).coefficient t).bound : ℝ)) ≤ A2)
     (hZ : ‖D.approximation t‖ ≤ Z) (hu : ‖u‖ ≤ R) (hv : ‖v‖ ≤ R) :
@@ -62,7 +64,7 @@ theorem differenceRemainder_uniform {q : ℕ} {T : Type*} [TopologicalSpace T]
   have hz0 := (norm_nonneg (D.approximation t)).trans hZ
   have hr0 := (norm_nonneg u).trans hu
   have ha20 : 0 ≤ A2 := (Finset.sum_nonneg (fun i _ => ((D.quadratic i).coefficient
-    t).bound.coe_nonneg)).trans hA2
+      t).bound.coe_nonneg)).trans hA2
   have hzu : ‖D.approximation t+u‖ ≤ Z+R := (norm_add_le _ _).trans (add_le_add hZ hu)
   have hzv : ‖D.approximation t+v‖ ≤ Z+R := (norm_add_le _ _).trans (add_le_add hZ hv)
   apply (differenceRemainder_norm period D hq t u v).trans

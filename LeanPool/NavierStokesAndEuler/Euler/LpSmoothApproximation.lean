@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSpatialCutoff
-public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
+public import LeanPool.NavierStokesAndEuler.Euler.LpCompactTranslation
+import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
+
+/-! Compact approximation proves actual translation differentiability for noncompact smooth L²
+fields. -/
 
 @[expose] public section
 
-/-! Compact approximation proves actual translation differentiability for noncompact smooth L²
-  fields. -/
 
 noncomputable section
 
@@ -23,9 +26,13 @@ open scoped ContDiff Topology
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Cutoff Lᵖ, given by `compactField (cutoffField f n) (cutoffField_compact f n)
+(cutoffField_smooth f hf n)`. -/
 def cutoffLp (f : Space → V) (hf : ContDiff ℝ ∞ f) (n : ℕ) : L2Space V :=
   compactField (cutoffField f n) (cutoffField_compact f n) (cutoffField_smooth f hf n)
 
+/-- Cutoff derivative Lᵖ, given by `compactDerivative (cutoffField f n) (cutoffField_compact f
+n) (cutoffField_smooth f hf n)`. -/
 def cutoffDerivativeLp (f : Space → V) (hf : ContDiff ℝ ∞ f) (n : ℕ) :
     L2Space (Space →L[ℝ] V) :=
   compactDerivative (cutoffField f n) (cutoffField_compact f n) (cutoffField_smooth f hf n)
@@ -76,12 +83,13 @@ theorem cutoffDerivativeLp_tendsto (f : Space → V) (hf : ContDiff ℝ ∞ f)
     apply add_le_add
     · rw [norm_smul]
       simpa only [one_mul] using mul_le_mul_of_nonneg_right (cutoff_sub_one_norm n x) (norm_nonneg
-        _)
+          _)
     · rw [ContinuousLinearMap.norm_smulRight_apply]
       exact mul_le_mul_of_nonneg_right (hD n x) (norm_nonneg _)
   · exact Eventually.of_forall (cutoffField_fderiv_tendsto f hf)
 
-/-- No compact support assumption is needed once the actual field and its actual derivative lie in L². -/
+/-- No compact support assumption is needed once the actual field and its actual derivative lie in
+L². -/
 theorem smooth_hasFDerivAt (f : Space → V) (hf : ContDiff ℝ ∞ f)
     (hLp : MemLp f 2 volume) (hDLp : MemLp (fderiv ℝ f) 2 volume) :
     HasFDerivAt (fun a : Space => translation a (hLp.toLp f))

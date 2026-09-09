@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceProfiles
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
+
+/-! Literal slice and scalar-pressure regularity of the actually generated source profiles. -/
 
 @[expose] public section
 
-/-! Literal slice and scalar-pressure regularity of the actually generated source profiles. -/
 
 noncomputable section
 
@@ -46,7 +48,7 @@ theorem source_mean_slice (p : ℕ) (t : Icc (0 : ℝ) M.T) (x : Space) (θ : �
 include hT in
 theorem source_corrector_slice (p : ℕ) (t : Icc (0 : ℝ) M.T) (x : Space) (θ : ℝ) :
     SliceDifferentiable (Icc (0 : ℝ) M.T) (sourceProfiles P M D I Iprimary p).corrector (t,(x,θ))
-      := by
+        := by
   let W := sourceProfileWitness P M D hT I Iprimary p
   exact W.corrector.sliceDifferentiable W.correctorDerivative M.T_pos.le W.corrector_time t x θ
 
@@ -65,7 +67,7 @@ theorem source_highPressure_smooth (p : ℕ) (t : ℝ) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_highForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceHighForcing P M D hT I Iprimary p hp⟩
   unfold sourceProfiles
   rw [profiles_step _ _ p hp]
   change ContDiff ℝ ∞ (fun y : Space × ℝ =>
@@ -90,7 +92,7 @@ theorem source_meanPressure_smooth (p : ℕ) (t : ℝ) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_meanForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceMeanForcing P M D hT I Iprimary p hp⟩
   unfold sourceProfiles
   rw [profiles_step _ _ p hp]
   change ContDiff ℝ ∞ (fun y : Space × ℝ =>
@@ -102,7 +104,7 @@ theorem source_meanPressure_smooth (p : ℕ) (t : ℝ) :
 include hT in
 theorem source_meanPressure_angle (p : ℕ) (t : ℝ) (x : Space) (θ : ℝ) :
     (pressureJet (sourceProfiles P M D I Iprimary p).meanPressure (t,(x,θ))).2 angleDirection = 0
-      := by
+        := by
   by_cases hp0 : p = 0
   · subst p
     simp only [sourceProfiles,profiles_zero]
@@ -117,7 +119,7 @@ theorem source_meanPressure_angle (p : ℕ) (t : ℝ) (x : Space) (θ : ℝ) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_meanForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceMeanForcing P M D hT I Iprimary p hp⟩
   unfold sourceProfiles
   rw [profiles_step _ _ p hp]
   change (pressureJet (EulerMeanPacketProvider.meanSolve M
@@ -140,7 +142,7 @@ theorem source_high_tangent (p : ℕ) (t : ℝ) (x : Space) (θ : ℝ) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_highForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceHighForcing P M D hT I Iprimary p hp⟩
   unfold sourceProfiles
   rw [profiles_step _ _ p hp]
   change inner ℝ (D.normalField (t,(x,θ)))

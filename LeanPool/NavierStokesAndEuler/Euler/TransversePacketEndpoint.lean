@@ -6,18 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointEquation
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointSupport
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointData
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointEquation
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointSupport
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
 
 /-!
 The actual source history with prescribed compact terminal displacement.
 `Y.value` is an L² field of reference-plane coordinates. It is passed to
 the constructed affine-endpoint inverse, not imposed as a solution law.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,18 +36,25 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} (B : HistoryData D) (Y : InitialData P D)
 
+/-- Displacement path, given by `B.coefficients.endpointDisplacement P (Y.value : CylinderL2 P
+U)`. -/
 def displacementPath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.endpointDisplacement P (Y.value : CylinderL2 P U)
 
+/-- Coordinate path, given by `B.coefficients.endpointCoordinate P (Y.value : CylinderL2 P U)`. -/
 def coordinatePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.endpointCoordinate P (Y.value : CylinderL2 P U)
 
+/-- Coordinate derivative path, given by `B.coefficients.endpointAcceleration P (Y.value :
+CylinderL2 P U)`. -/
 def coordinateDerivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.endpointAcceleration P (Y.value : CylinderL2 P U)
 
+/-- Velocity path, given by `B.coefficients.endpointVelocity P (Y.value : CylinderL2 P U)`. -/
 def velocityPath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.endpointVelocity P (Y.value : CylinderL2 P U)
 
+/-- Derivative path, given by `B.coefficients.endpointDerivative P (Y.value : CylinderL2 P U)`. -/
 def derivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.endpointDerivative P (Y.value : CylinderL2 P U)
 
@@ -115,6 +126,7 @@ theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) :
     average P (derivativePath B Y t) = 0 :=
   B.coefficients.endpointDerivative_mean_zero P Y.value Y.mean_zero t
 
+/-- Terminal initial, bundling `value`, `orbit`, `mean_zero`. -/
 def terminalInitial : InitialData P D where
   value := ⟨coordinatePath B Y ⟨D.T,D.T_pos.le,le_rfl⟩,
     coordinatePath_supported B Y _⟩
@@ -129,7 +141,7 @@ theorem velocityPath_ae (t : Icc (0 : ℝ) D.T) :
 
 theorem balance_ae (t : Icc (0 : ℝ) D.T) :
     ∀ᵐ x ∂liftMeasure P,
-      derivativePath B Y t x+D.M.field t x.1 (velocityPath B Y t x)+
+      derivativePath B Y t x+D.M.field t x.1 (velocityPath B Y t x) +
         (-(2*⟪D.normal.field t x.1,D.M.field t x.1 (velocityPath B Y t x)⟫_ℝ)/
           ‖D.normal.field t x.1‖^2) • D.normal.field t x.1 = 0 :=
   B.coefficients.endpoint_physical_balance_ae P Y.value

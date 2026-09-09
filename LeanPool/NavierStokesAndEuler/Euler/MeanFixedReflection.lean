@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorReflection
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedSpaceInverse
 
 /-!
 # Reflection covariance of the full mean variational inverse
@@ -17,6 +16,9 @@ Every identity concerns the real time derivative, terminal primitive, initial
 trace, and nonlocal boundary form. Uniqueness of the actual coercive inverse
 then transports reflection without an assumed symmetry of a solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,17 +29,33 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerMeanSolenoidal
   EulerMeanVariationalInverse EulerMeanFixedSpaceInverse EulerTimeH1OperatorProduct
   EulerCoerciveProjection
 
-private local instance : NormedAddCommGroup L2 := inferInstance
-private local instance : InnerProductSpace ℝ L2 := inferInstance
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup L2` instance to shorten typeclass synthesis. -/
+local instance instMeanFixedReflection1 : NormedAddCommGroup L2 := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ L2` instance to shorten typeclass synthesis. -/
+local instance instMeanFixedReflection2 : InnerProductSpace ℝ L2 := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedReflection3 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedReflection4 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedReflection5 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedReflection6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedReflection7 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedReflection8 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) :=
+    inferInstance
 
 variable (T : ℝ) (hT : 0 ≤ T)
-  (F F₁ H : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
+  (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
   (hF : ∀ t, ReflectionInvariant (F t)) (hF₁ : ∀ t, ReflectionInvariant (F₁ t))
   (hH : ∀ t, ReflectionInvariant (H t)) (hM0 : ReflectionInvariant M0) (hA : ReflectionInvariant A)
 
@@ -46,7 +64,7 @@ theorem fixedMeanDerivative_reflection (u : TimeLp T solenoidalSpace) :
     fixedMeanDerivative T hT F F₁ (timeSolenoidalReflection T u) =
       timeReflection T (fixedMeanDerivative T hT F F₁ u) := by
   change timeMultiplier T hT (solenoidalFrame T F₁)
-      (primitiveTimeLp T hT (timeSolenoidalReflection T u))+
+      (primitiveTimeLp T hT (timeSolenoidalReflection T u)) +
     timeMultiplier T hT (solenoidalFrame T F) (timeSolenoidalReflection T u) = _
   have h₁ := (congrArg (timeMultiplier T hT (solenoidalFrame T F₁))
     (timeSolenoidalReflection_primitiveTimeLp T hT u)).trans
@@ -95,7 +113,8 @@ theorem fixedMeanForm_reflection (u v : TimeLp T solenoidalSpace) :
       (fixedMeanOperator_inner T hT F F₁ H M0 A L u v).symm)
 
 theorem eq_of_reflected_pairing (x y : TimeLp T solenoidalSpace)
-    (h : ∀ v, ⟪x,timeSolenoidalReflection T v⟫_ℝ = ⟪y,timeSolenoidalReflection T v⟫_ℝ) : x = y := by
+    (h : ∀ v, ⟪x, timeSolenoidalReflection T v⟫_ℝ = ⟪y, timeSolenoidalReflection T v⟫_ℝ) : x = y :=
+        by
   apply ext_inner_right ℝ
   intro v
   have hi := timeSolenoidalReflection_involutive T v
@@ -125,12 +144,12 @@ theorem fixedMeanPrimitive_adjoint_reflection (f : TimeLp T L2) :
       (((timeReflection T).inner_map_map f (fixedMeanPrimitive T hT F F₁ v)).trans
         ((adjoint_inner_left (fixedMeanPrimitive T hT F F₁) v f).symm.trans
           ((timeSolenoidalReflection T).inner_map_map ((fixedMeanPrimitive T hT F F₁).adjoint f)
-            v).symm)))
+              v).symm)))
 
 include hF hF₁ hH hM0 hA in
 /-- Uniqueness of the actual coercive solve forces reflection covariance. -/
 theorem coerciveSolution_reflection (c : ℝ) (hc : 0 < c)
-    (hO : ∀ v, c*‖v‖^2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v,v⟫_ℝ)
+    (hO : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v, v⟫_ℝ)
     (f : TimeLp T L2) :
     timeSolenoidalReflection T
       (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hO

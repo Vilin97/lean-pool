@@ -6,19 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryDerivative
-public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryDerivative
+import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+
+/-! Full spatial-parameter smoothness of the actual localized Newtonian operators. -/
 
 @[expose] public section
 
-/-! Full spatial-parameter smoothness of the actual localized Newtonian operators. -/
 
 noncomputable section
 
 namespace EulerMeanBoundary
 
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerMeanGradientTest
-  Filter
+    Filter
 open scoped ContDiff Topology
 
 theorem Cutoff.translate_add (χ : Cutoff) (a b : Space) :
@@ -130,7 +132,7 @@ theorem cutoffOperation_contDiff (L : Cutoff → E)
       apply contDiff_clm_apply_iff.mpr
       intro b
       simpa only [cutoffDirectionalMap_apply, Cutoff.directional_translate] using ih (ψ.directional
-        b)
+          b)
   exact contDiff_iff_forall_nat_le.mpr (fun n _ => hnat n χ)
 
 end LinearCutoffOperation
@@ -146,7 +148,7 @@ theorem cutoffCurl_hasFDerivAt (χ : Cutoff) (a : Space) :
 theorem weakPotential_hasFDerivAt (χ : Cutoff) (a : Space) :
     HasFDerivAt (fun b : Space => weakPotential (χ.translate b))
       (cutoffDirectionalMap weakPotential weakPotential_add weakPotential_scale (χ.translate a)) a
-        :=
+          :=
   cutoffOperation_hasFDerivAt weakPotential weakPotential_add weakPotential_scale weakPotential_sub
     weakPotential_operatorNorm_le χ a
 

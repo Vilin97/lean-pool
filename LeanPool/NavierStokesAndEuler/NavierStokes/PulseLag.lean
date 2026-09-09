@@ -6,13 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingPulseBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseAmplitude
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectedPulseAmplitude
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The actual outgoing pulse lag
@@ -22,6 +17,9 @@ The resulting remainder is controlled by the actual second derivative of
 the forcing, with constants uniform in the pulse duration.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PulseLag
@@ -29,11 +27,14 @@ namespace NavierStokes.PulseLag
 open Set MeasureTheory
 open scoped Topology ContDiff
 
+/-- Kernel, given by `Real.exp (-β * (y - t))`. -/
 noncomputable def kernel (β y t : ℝ) : ℝ := Real.exp (-β * (y - t))
 
+/-- Convolution, given by `∫ t in (0 : ℝ)..y, kernel β y t * f t`. -/
 noncomputable def convolution (β : ℝ) (f : ℝ → ℝ) (y : ℝ) : ℝ :=
   ∫ t in (0 : ℝ)..y, kernel β y t * f t
 
+/-- Lag, given by `m₀ * Real.exp (-β * y) + convolution β f y`. -/
 noncomputable def lag (β m₀ : ℝ) (f : ℝ → ℝ) (y : ℝ) : ℝ :=
   m₀ * Real.exp (-β * y) + convolution β f y
 
@@ -106,7 +107,7 @@ theorem convolution_second_order {β : ℝ} (hβ : β ≠ 0)
       (kernel β y t * f t - (kernel β y t * f₂ t) / β ^ 2) t := by
     convert! (kernel_hasDerivAt β y t).fun_mul ((hf t).div_const β |>.fun_sub
       ((hf₁ t).div_const (β ^ 2))) using 1
-    field_simp ; ring
+    field_simp; ring
   have hi : IntervalIntegrable (fun t => kernel β y t * f t) volume 0 y :=
     ((kernel_continuous β y).fun_mul hc).intervalIntegrable 0 y
   have hi₂ : IntervalIntegrable (fun t => (kernel β y t * f₂ t) / β ^ 2) volume 0 y :=
@@ -172,6 +173,7 @@ section ActualPulse
 
 open OutgoingSchedule OutgoingPulseBounds
 
+/-- Decay, given by `1 / 2 - c.lam`. -/
 noncomputable def decay (c : Parameters) : ℝ := 1 / 2 - c.lam
 
 theorem decay_pos (c : Parameters) : 0 < decay c := by
@@ -200,8 +202,10 @@ theorem exponential_correction_quadratic {lam : ℝ} (hlam : 0 < lam) :
   norm_num only [Nat.cast_ofNat] at hi
   rw [harg, one_div, ← Real.exp_neg] at hi
   convert! hi using 1
-  field_simp ; ring
+  field_simp; ring
 
+/-- Main second bound, choosing the witness provided by
+`LocalizedMomentRepair.smooth_compact_derivative_bound`. -/
 noncomputable def mainSecondBound : ℝ := 1 + Classical.choose
   (LocalizedMomentRepair.smooth_compact_derivative_bound mainPulse
     mainPulse_contDiff mainPulse_hasCompactSupport 2)
@@ -218,6 +222,7 @@ theorem main_second_le (z : ℝ) : |iteratedDeriv 2 mainPulse z| ≤ mainSecondB
   dsimp [mainSecondBound]
   linarith
 
+/-- Forcing, given by `A * mainPulse (c.lam * y) + affineProfile c q A y`. -/
 noncomputable def forcing (c : Parameters) (q A y : ℝ) : ℝ :=
   A * mainPulse (c.lam * y) + affineProfile c q A y
 
@@ -268,6 +273,7 @@ theorem forcing_jet_formula (c : Parameters) (q A : ℝ) (k : ℕ) (y : ℝ) :
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl k)) c.lam]
   ring
 
+/-- Forcing bound, given by `mainSecondBound + 64 * correctionJetBound P m 2`. -/
 noncomputable def forcingBound (P m : ℝ) : ℝ := mainSecondBound + 64 * correctionJetBound P m 2
 
 theorem forcingBound_pos {P : ℝ} (hP : 0 < P) (m : ℝ) : 0 < forcingBound P m := by
@@ -299,9 +305,11 @@ theorem forcing_second_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
         correctionJetBound c.P c.m 2 * (64 * c.lam ^ 2) * (|q| + |A|) := add_le_add hm hc'
     _ ≤ _ := by dsimp [forcingBound]; nlinarith
 
+/-- Affine lag, given by `lag (decay c) (prefixCoefficient c 0 * q) (forcing c q A) y`. -/
 noncomputable def affineLag (c : Parameters) (q A y : ℝ) : ℝ :=
   lag (decay c) (prefixCoefficient c 0 * q) (forcing c q A) y
 
+/-- Lag bound, given by `16 * forcingBound P m`. -/
 noncomputable def lagBound (P m : ℝ) : ℝ := 16 * forcingBound P m
 
 theorem lagBound_pos {P : ℝ} (hP : 0 < P) (m : ℝ) : 0 < lagBound P m :=
@@ -321,7 +329,7 @@ theorem affineLag_error (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
     intro t
     simpa only [iteratedDeriv_one, iteratedDeriv_succ, iteratedDeriv_zero] using
       (hf.differentiable_iteratedDeriv 1 (ENat.natCast_lt_of_coe_top_le_withTop le_rfl 1)
-        t).hasDerivAt
+          t).hasDerivAt
   have hc₂ := hf.continuous_iteratedDeriv 2 (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2)
   have hM : 0 ≤ forcingBound c.P c.m * (|q| + |A|) * c.lam ^ 2 := by
     have hp := forcingBound_pos c.P_pos c.m
@@ -362,7 +370,7 @@ theorem massMoment_pulse (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ)
     massMoment c amp eta (c.pulseStart + y) = massMoment c amp eta c.pulseStart +
       (momentScale c 0 * shape eta) *
         ∫ t in (0 : ℝ)..y, Real.exp (decay c * t) * forcing c (parameterPolynomial eta) (amp eta) t
-          := by
+            := by
   let g : ℝ → ℝ := fun t => Real.exp t * axial c amp (t, eta)
   have hg : Continuous g := Real.continuous_exp.mul (axial_radial_contDiff c amp eta).continuous
   have hadd := intervalIntegral.integral_add_adjacent_intervals
@@ -373,7 +381,7 @@ theorem massMoment_pulse (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ)
   have hpart : (∫ t in c.pulseStart..c.pulseStart + y, g t) =
       (momentScale c 0 * shape eta) *
         ∫ t in (0 : ℝ)..y, Real.exp (decay c * t) * forcing c (parameterPolynomial eta) (amp eta) t
-          := by
+            := by
     rw [← hshift, ← intervalIntegral.integral_const_mul]
     apply intervalIntegral.integral_congr
     intro t ht
@@ -487,6 +495,7 @@ theorem normalizedLag_eta_hasDerivAt (c : Parameters) {amp : ℝ → ℝ} {eta a
   (affineLag_eta_hasDerivAt c ha y).congr_of_eventuallyEq
     (Filter.Eventually.of_forall (fun t => normalizedLag_eq_affineLag c amp t hy))
 
+/-- Affine error, constructed using `affineLag`. -/
 noncomputable def affineError (c : Parameters) (q A y : ℝ) : ℝ :=
   affineLag c q A y - (forcing c q A y / decay c - deriv (forcing c q A) y / decay c ^ 2 +
     (prefixCoefficient c 0 * q) * Real.exp (-decay c * y))
@@ -523,7 +532,7 @@ theorem pulseError_eq_affineError (c : Parameters) (amp : ℝ → ℝ) (eta : �
     {y : ℝ} (hy : 0 ≤ y) :
     pulseError c amp eta y = affineError c (parameterPolynomial eta) (amp eta) y := by
   have hF : (fun t => pulseRatio c amp (t, eta)) = forcing c (parameterPolynomial eta) (amp eta) :=
-    by
+      by
     funext t
     exact (forcing_eq_pulseRatio c amp eta t).symm
   rw [pulseError, affineError, normalizedLag_eq_affineLag c amp eta hy, hF,
@@ -545,10 +554,11 @@ theorem pulseError_eta_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
   apply (affineLag_error c hsmall _ _ hy).trans
   have hq : |1 + 3 * eta ^ 2| ≤ 4 := by
     simpa only [(parameterPolynomial_hasDerivAt eta).deriv] using
-      parameterPolynomial_derivative_bound heta
+        parameterPolynomial_derivative_bound heta
   have hpos := lagBound_pos c.P_pos c.m
   gcongr
 
+/-- Scaled pulse, given by `pulseRatio c amp (z / c.lam, eta)`. -/
 noncomputable def scaledPulse (c : Parameters) (amp : ℝ → ℝ) (eta z : ℝ) : ℝ :=
   pulseRatio c amp (z / c.lam, eta)
 
@@ -556,7 +566,7 @@ theorem scaledPulse_deriv (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) :
     c.lam * deriv (scaledPulse c amp eta) (c.lam * y) =
       deriv (fun t => pulseRatio c amp (t, eta)) y := by
   have hF : (fun t => pulseRatio c amp (t, eta)) = forcing c (parameterPolynomial eta) (amp eta) :=
-    by
+      by
     funext t
     exact (forcing_eq_pulseRatio c amp eta t).symm
   have hf := forcing_contDiff c (parameterPolynomial eta) (amp eta)
@@ -582,6 +592,7 @@ theorem pulseError_scaled (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) :
   rw [scaledPulse_deriv]
   rfl
 
+/-- Full error, constructed using `normalizedLag`. -/
 noncomputable def fullError (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
   normalizedLag c amp eta y - (pulseRatio c amp (y, eta) / decay c -
     c.lam * deriv (scaledPulse c amp eta) (c.lam * y) / decay c ^ 2)
@@ -628,6 +639,7 @@ theorem initial_memory_bound (c : Parameters)
         (mul_nonneg (prefixBound_pos c.P_pos c.m 0).le (abs_nonneg q))
       nlinarith
 
+/-- Full lag bound, given by `5 * lagBound P m + 4 * prefixBound P m 0`. -/
 noncomputable def fullLagBound (P m : ℝ) : ℝ := 5 * lagBound P m + 4 * prefixBound P m 0
 
 theorem fullLagBound_pos {P : ℝ} (hP : 0 < P) (m : ℝ) : 0 < fullLagBound P m := by
@@ -650,7 +662,7 @@ theorem fullError_bounds_of_amplitude_bounds (c : Parameters)
   have hq := parameterPolynomial_bound heta
   have hq' : |1 + 3 * eta ^ 2| ≤ 4 := by
     simpa only [(parameterPolynomial_hasDerivAt eta).deriv] using
-      parameterPolynomial_derivative_bound heta
+        parameterPolynomial_derivative_bound heta
   constructor
   · have hmain : |pulseError c amp eta y| ≤ 4 * lagBound c.P c.m * c.lam ^ 2 := by
       apply (normalizedLag_error c hsmall amp heta hy).trans
@@ -752,8 +764,8 @@ theorem corrected_amplitude_fullError_bounds
     ∀ eta y : ℝ, eta ^ 2 ≤ 1 → 0 ≤ y →
       |fullError d.core (CorrectedPulseAmplitude.amplitude d w.coefficients) eta y| ≤
         fullLagBound d.core.P d.core.m * d.core.lam ^ 2 ∧
-      |deriv (fun t => fullError d.core (CorrectedPulseAmplitude.amplitude d w.coefficients) t y)
-        eta| ≤
+      |deriv (fun t =>
+          fullError d.core (CorrectedPulseAmplitude.amplitude d w.coefficients) t y) eta| ≤
         fullLagBound d.core.P d.core.m * d.core.lam ^ 2 := by
   have hs := CorrectedPulseAmplitude.amplitude_spec w hK hsmall hwait hscale
   apply smooth_amplitude_fullError_bounds d.core hwait hsmall hs.1
@@ -781,8 +793,8 @@ theorem exists_corrected_uniform_lag_threshold (P m : ℝ) (hP : 0 < P) :
           ∀ y : ℝ, 0 ≤ y →
             |fullError d.core (CorrectedPulseAmplitude.amplitude d w.coefficients) eta y| ≤
               C * d.core.lam ^ 2 ∧
-            |deriv (fun t => fullError d.core (CorrectedPulseAmplitude.amplitude d w.coefficients)
-              t y) eta| ≤
+            |deriv (fun t =>
+                fullError d.core (CorrectedPulseAmplitude.amplitude d w.coefficients) t y) eta| ≤
               C * d.core.lam ^ 2 := by
   obtain ⟨lamA, K, Cderiv, hlamA, hK, hCderiv, hA⟩ :=
     CorrectedPulseAmplitude.exists_corrected_amplitude P m hP

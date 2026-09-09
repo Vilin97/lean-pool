@@ -6,19 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisCoefficientSpace
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisEvaluation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisOperators
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisResolvent
-public import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
-public import Mathlib.Topology.MetricSpace.Contracting
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Topology.MetricSpace.Contracting
 
 /-!
 # The nonlinear natural-axis fixed point
@@ -27,6 +17,9 @@ The local bounds below are computed from bounded linear and bilinear
 operations. In particular, the nonlinear remainders' Lipschitz estimates
 are conclusions, not assumptions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,8 +37,11 @@ variable {E F G H : Type*}
 /-- A function with explicit bounds on a fixed norm ball. -/
 structure Controlled (E F : Type*) [NormedAddCommGroup E] [NormedAddCommGroup F]
     (R : ℝ) where
+  /-- Eval of `Controlled`, of type `E → F`. -/
   eval : E → F
+  /-- Bound of `Controlled`, of type `ℝ`. -/
   bound : ℝ
+  /-- Lip of `Controlled`, of type `ℝ`. -/
   lip : ℝ
   bound_nonneg : 0 ≤ bound
   lip_nonneg : 0 ≤ lip
@@ -57,6 +53,8 @@ namespace Controlled
 
 variable {R : ℝ}
 
+/-- Const bound, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility
+proofs. -/
 noncomputable def constBound (a : F) (B : ℝ) (hB : 0 ≤ B) (ha : ‖a‖ ≤ B) :
     Controlled E F R where
   eval := fun _ => a
@@ -67,9 +65,11 @@ noncomputable def constBound (a : F) (B : ℝ) (hB : 0 ≤ B) (ha : ‖a‖ ≤ 
   norm_le := fun _ _ => ha
   sub_le := by intro x y hx hy; simp
 
+/-- Const, given by `constBound a ‖a‖ (norm_nonneg a) le_rfl`. -/
 noncomputable def const (a : F) : Controlled E F R :=
   constBound a ‖a‖ (norm_nonneg a) le_rfl
 
+/-- Fst, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility proofs. -/
 noncomputable def fst (hR : 0 ≤ R) : Controlled (E × F) E R where
   eval := Prod.fst
   bound := R
@@ -81,6 +81,7 @@ noncomputable def fst (hR : 0 ≤ R) : Controlled (E × F) E R where
     intro x y hx hy
     simpa only [one_mul, Prod.fst_sub] using norm_fst_le (x - y)
 
+/-- Snd, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility proofs. -/
 noncomputable def snd (hR : 0 ≤ R) : Controlled (E × F) F R where
   eval := Prod.snd
   bound := R
@@ -92,6 +93,7 @@ noncomputable def snd (hR : 0 ≤ R) : Controlled (E × F) F R where
     intro x y hx hy
     simpa only [one_mul, Prod.snd_sub] using norm_snd_le (x - y)
 
+/-- Add, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility proofs. -/
 noncomputable def add (f g : Controlled E F R) : Controlled E F R where
   eval := fun x => f.eval x + g.eval x
   bound := f.bound + g.bound
@@ -108,6 +110,7 @@ noncomputable def add (f g : Controlled E F R) : Controlled E F R where
     rw [hid, add_mul]
     exact (norm_add_le _ _).trans (add_le_add (f.sub_le x y hx hy) (g.sub_le x y hx hy))
 
+/-- Neg, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility proofs. -/
 noncomputable def neg (f : Controlled E F R) : Controlled E F R where
   eval := fun x => -f.eval x
   bound := f.bound
@@ -119,6 +122,7 @@ noncomputable def neg (f : Controlled E F R) : Controlled E F R where
     intro x y hx hy
     simpa only [neg_sub_neg, norm_sub_rev] using f.sub_le x y hx hy
 
+/-- Sub, given by `add f (neg g)`. -/
 noncomputable def sub (f g : Controlled E F R) : Controlled E F R := add f (neg g)
 
 /-- Scaling by a scalar of absolute value at most one keeps the same upper
@@ -145,6 +149,8 @@ noncomputable def unitSmul (c : ℝ) (hc : |c| ≤ 1) (f : Controlled E F R) :
         mul_le_mul hc (f.sub_le x y hx hy) (norm_nonneg _) (by norm_num)
       _ = _ := one_mul _
 
+/-- Linear, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility
+proofs. -/
 noncomputable def linear (L : F →L[ℝ] G) (f : Controlled E F R) : Controlled E G R where
   eval := fun x => L (f.eval x)
   bound := ‖L‖ * f.bound
@@ -162,6 +168,8 @@ noncomputable def linear (L : F →L[ℝ] G) (f : Controlled E F R) : Controlled
       ((mul_le_mul_of_nonneg_left (f.sub_le x y hx hy) (norm_nonneg _)).trans_eq
         (mul_assoc _ _ _).symm)
 
+/-- Bilinear, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility
+proofs. -/
 noncomputable def bilinear (B : F →L[ℝ] G →L[ℝ] H)
     (f : Controlled E F R) (g : Controlled E G R) : Controlled E H R where
   eval := fun x => B (f.eval x) (g.eval x)
@@ -210,6 +218,7 @@ noncomputable def bilinear (B : F →L[ℝ] G →L[ℝ] H)
             (mul_nonneg (norm_nonneg B) f.bound_nonneg))
       _ = (‖B‖ * (f.lip * g.bound + f.bound * g.lip)) * ‖x - y‖ := by ring
 
+/-- Pair, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility proofs. -/
 noncomputable def pair (f : Controlled E F R) (g : Controlled E G R) : Controlled E (F × G) R where
   eval := fun x => (f.eval x, g.eval x)
   bound := f.bound + g.bound
@@ -295,52 +304,86 @@ theorem exists_fixedPoint_of_controlled [CompleteSpace E]
 /-- Actual bounded coefficient operators, later instantiated by AxisOperators.
 The derivative operators occur only after their regular radial inverses. -/
 structure NaturalOperators (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Product of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   product : V →L[ℝ] V →L[ℝ] V
+  /-- Average of `NaturalOperators`, of type `V →L[ℝ] V`. -/
   average : V →L[ℝ] V
+  /-- Primitive of `NaturalOperators`, of type `V →L[ℝ] V`. -/
   primitive : V →L[ℝ] V
+  /-- Parameter primitive of `NaturalOperators`, of type `V →L[ℝ] V`. -/
   parameterPrimitive : V →L[ℝ] V
+  /-- Mul Y of `NaturalOperators`, of type `V →L[ℝ] V`. -/
   mulY : V →L[ℝ] V
+  /-- J1 of `NaturalOperators`, of type `V →L[ℝ] V`. -/
   j1 : V →L[ℝ] V
+  /-- J2 of `NaturalOperators`, of type `V →L[ℝ] V`. -/
   j2 : V →L[ℝ] V
+  /-- Param1 of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   param1 : V →L[ℝ] V →L[ℝ] V
+  /-- Param2 of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   param2 : V →L[ℝ] V →L[ℝ] V
+  /-- Dot1 of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   dot1 : V →L[ℝ] V →L[ℝ] V
+  /-- Dot2 of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   dot2 : V →L[ℝ] V →L[ℝ] V
+  /-- Mixed1 of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   mixed1 : V →L[ℝ] V →L[ℝ] V
+  /-- Mixed2 of `NaturalOperators`, of type `V →L[ℝ] V →L[ℝ] V`. -/
   mixed2 : V →L[ℝ] V →L[ℝ] V
 
 /-- Fixed analytic coefficient data. In the manuscript all entries have
 radial degree zero. The normalized gradient is ξ₀/Λ, independent of Λ. -/
 structure AxisData (V : Type*) where
+  /-- A of `AxisData`, of type `ℝ`. -/
   A : ℝ
+  /-- Domain data of `AxisData`, of type `ℝ`. -/
   D : ℝ
+  /-- Step-size parameter of `AxisData`, of type `ℝ`. -/
   h : ℝ
+  /-- One of `AxisData`, of type `V`. -/
   one : V
+  /-- Eta of `AxisData`, of type `V`. -/
   eta : V
+  /-- D of `AxisData`, of type `V`. -/
   d : V
+  /-- Inverse L of `AxisData`, of type `V`. -/
   inverseL : V
+  /-- U star of `AxisData`, of type `V`. -/
   uStar : V
+  /-- U star eta of `AxisData`, of type `V`. -/
   uStarEta : V
+  /-- W star of `AxisData`, of type `V`. -/
   wStar : V
+  /-- H star of `AxisData`, of type `V`. -/
   hStar : V
+  /-- Normalized gradient of `AxisData`, of type `V`. -/
   normalizedGradient : V
+  /-- Z star of `AxisData`, of type `V`. -/
   zStar : V
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Angular linear coefficient, given by `d.wStar + d.h • d.one - (2 * d.h) • O.product d.eta
+d.uStar`. -/
 def angularLinearCoefficient (O : NaturalOperators V) (d : AxisData V) : V :=
   d.wStar + d.h • d.one - (2 * d.h) • O.product d.eta d.uStar
 
+/-- Angular quadratic coefficient, given by `O.product d.d d.normalizedGradient`. -/
 def angularQuadraticCoefficient (O : NaturalOperators V) (d : AxisData V) : V :=
   O.product d.d d.normalizedGradient
 
+/-- Average coefficient, given by `(2 * d.D) • d.eta`. -/
 def averageCoefficient (d : AxisData V) : V := (2 * d.D) • d.eta
 
+/-- Angular slow coefficient, given by `(2 * d.h) • d.eta`. -/
 def angularSlowCoefficient (d : AxisData V) : V := (2 * d.h) • d.eta
 
+/-- Axial linear coefficient, given by `d.A • d.one - (4 * d.A) • O.product d.eta d.uStar +
+O.product d.d d.uStarEta`. -/
 def axialLinearCoefficient (O : NaturalOperators V) (d : AxisData V) : V :=
   d.A • d.one - (4 * d.A) • O.product d.eta d.uStar + O.product d.d d.uStarEta
 
+/-- Axial quadratic coefficient, given by `(2 * d.A) • d.eta`. -/
 def axialQuadraticCoefficient (d : AxisData V) : V := (2 * d.A) • d.eta
 
 /-- The exact expanded, radially integrated nonlinear remainders.
@@ -477,6 +520,8 @@ def remainderBound (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) : ℝ :=
   (controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa using hM)).bound
 
+/-- Remainder lip, given by `(controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa using
+hM)).lip`. -/
 def remainderLip (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) : ℝ :=
   (controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa using hM)).lip

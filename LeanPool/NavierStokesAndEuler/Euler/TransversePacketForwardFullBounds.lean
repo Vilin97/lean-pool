@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardNorms
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketNormalBudget
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBudget
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradient
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardNorms
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradientBounds
 
 /-!
 All eight genuine direct-forward outputs obey one fixed mixed-word Sobolev
@@ -19,6 +22,9 @@ budget.  The input radius is retained, both data amplitudes remain outside
 the solve, and at most two derivative shifts are spent.  All normalization
 uses the literal positive time profile without differentiating that profile.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,18 +44,23 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {q : ℕ} (L : Budget D (Fin 4) q)
   (N : EulerTransversePacketJoin.NormalBudget D q L.R)
 
+/-- Pressure amplitude, given by `P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost`. -/
 def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost
+/-- Potential amplitude, given by `3*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialAmplitude : ℝ := 3*N.blockAmplitude*(P*L.commonCost)
+/-- Potential time amplitude, given by `6*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialTimeAmplitude : ℝ := 6*N.blockAmplitude*(P*L.commonCost)
+/-- Corrector amplitude, given by `27*N.blockAmplitude^2*(P*L.commonCost)`. -/
 def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*L.commonCost)
+/-- Corrector time amplitude, given by `108*N.blockAmplitude^2*(P*L.commonCost)`. -/
 def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*L.commonCost)
 
 variable {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
   (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
   (hforce : ∀ n, block standardDirection q (fun a => pathTranslate P a
-    (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ A*majorant L.R d n)
+    (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ A * majorant L.R d n)
   (hinitial : ∀ n, block standardDirection q
-    (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ A*majorant L.R d n)
+    (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ A * majorant L.R d n)
 
 include hA hforce hinitial
 
@@ -90,8 +101,8 @@ theorem potential_bound (n : ℕ) :
     hc.1 hc.2.1 (mul_nonneg L.commonCost_nonneg hA) N.radius (d+1)
     (L.velocity_common_bound G I standardDirection standard_norm A hA d hforce hinitial)
     (fun j a => (hc.2.2 j a).2.2.1) n
-  exact h.trans_eq (by unfold potentialAmplitude
-    EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
+  exact h.trans_eq (by
+      unfold potentialAmplitude EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
 
 theorem potential_time_bound (n : ℕ) :
     block standardDirection q (fun a => pathTranslate P a
@@ -104,8 +115,8 @@ theorem potential_time_bound (n : ℕ) :
     (L.velocity_common_bound G I standardDirection standard_norm A hA d hforce hinitial)
     (L.derivative_common_bound G I standardDirection standard_norm A hA d hforce hinitial)
     (fun j a => (hc.2.2 j a).2.2.1) (fun j a => (hc.2.2 j a).2.2.2) n
-  exact h.trans_eq (by unfold potentialTimeAmplitude
-    EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
+  exact h.trans_eq (by
+      unfold potentialTimeAmplitude EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
 
 theorem corrector_bound (n : ℕ) :
     block standardDirection q (fun a => pathTranslate P a
@@ -118,8 +129,8 @@ theorem corrector_bound (n : ℕ) :
     (L.velocity_common_bound G I standardDirection standard_norm A hA d hforce hinitial)
     (fun j a => (hc.2.2 j a).2.2.1) (fun j a => (hc.2.2 j a).1) n
   rw [show d+1+1=d+2 by omega] at h
-  exact h.trans_eq (by unfold correctorAmplitude
-    EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
+  exact h.trans_eq (by
+      unfold correctorAmplitude EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
 
 theorem corrector_time_bound (n : ℕ) :
     block standardDirection q (fun a => pathTranslate P a
@@ -134,7 +145,7 @@ theorem corrector_time_bound (n : ℕ) :
     (fun j a => (hc.2.2 j a).2.2.1) (fun j a => (hc.2.2 j a).2.2.2)
     (fun j a => (hc.2.2 j a).1) (fun j a => (hc.2.2 j a).2.1) n
   rw [show d+1+1=d+2 by omega] at h
-  exact h.trans_eq (by unfold correctorTimeAmplitude
-    EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
+  exact h.trans_eq (by
+      unfold correctorTimeAmplitude EulerTransversePacketJoin.NormalBudget.blockAmplitude; ring)
 
 end EulerTransversePacketForward.Budget

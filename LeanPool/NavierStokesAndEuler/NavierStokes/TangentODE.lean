@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TangentProjection
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.ODE.ExistUnique
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Topology.MetricSpace.Contracting
+import Mathlib.Analysis.ODE.ExistUnique
 
 /-!
 # Existence on finite intervals for the projected tangent equation
@@ -21,6 +19,9 @@ curves on a compact interval. A globally Lipschitz vector field therefore
 has a solution on the whole prescribed interval, without a small-time
 assumption. Continuous linear coefficients provide the required bound.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.TangentODE
 
@@ -34,11 +35,16 @@ variable {E : Type*} [NormedAddCommGroup E]
 /-- Continuous vector field, globally Lipschitz in its state variable,
 on a prescribed compact time interval. -/
 structure IntervalSystem (E : Type*) [NormedAddCommGroup E] where
+  /-- Left of `IntervalSystem`, of type `ℝ`. -/
   left : ℝ
+  /-- Right of `IntervalSystem`, of type `ℝ`. -/
   right : ℝ
   ordered : left ≤ right
+  /-- Initial of `IntervalSystem`, of type `E`. -/
   initial : E
+  /-- Underlying field of `IntervalSystem`, of type `ℝ → E → E`. -/
   field : ℝ → E → E
+  /-- Lip of `IntervalSystem`, of type `ℝ≥0`. -/
   lip : ℝ≥0
   lipschitz : ∀ t ∈ Icc left right, LipschitzWith lip (field t)
   continuous : Continuous (fun p : Icc left right × E => field p.1 p.2)
@@ -47,6 +53,7 @@ namespace IntervalSystem
 
 variable (v : IntervalSystem E)
 
+/-- Proj, given by `projIcc v.left v.right v.ordered`. -/
 def proj : ℝ → Icc v.left v.right := projIcc v.left v.right v.ordered
 
 theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.left v.right) :
@@ -56,6 +63,7 @@ theorem proj_coe (t : Icc v.left v.right) : v.proj t = t := projIcc_val _ _
 
 theorem continuous_proj : Continuous v.proj := continuous_projIcc
 
+/-- Compose field, given by `v.field (v.proj t) (f (v.proj t))`. -/
 def composeField (f : C(Icc v.left v.right, E)) (t : ℝ) : E :=
   v.field (v.proj t) (f (v.proj t))
 
@@ -69,6 +77,7 @@ theorem integrable_composeField (f : C(Icc v.left v.right, E)) (a b : ℝ) :
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Integral curve, given by `v.initial + ∫ s in v.left..t, v.composeField f s`. -/
 def integralCurve (f : C(Icc v.left v.right, E)) (t : ℝ) : E :=
   v.initial + ∫ s in v.left..t, v.composeField f s
 
@@ -78,6 +87,7 @@ theorem hasDerivAt_integralCurve (f : C(Icc v.left v.right, E)) (t : ℝ) :
     ((v.continuous_composeField f).stronglyMeasurableAtFilter _ _)
     (v.continuous_composeField f).continuousAt).const_add v.initial
 
+/-- Next as an element of `C(Icc v.left v.right, E)`. -/
 def next (f : C(Icc v.left v.right, E)) : C(Icc v.left v.right, E) :=
   ⟨fun t => v.integralCurve f t,
     (continuous_iff_continuousAt.mpr (fun t =>
@@ -176,7 +186,7 @@ theorem linear_uniform_lipschitz {a b : ℝ} (hab : a ≤ b)
   have hC0 : 0 ≤ C := (norm_nonneg (A a)).trans (hC a ⟨le_rfl, hab⟩)
   refine ⟨⟨C, hC0⟩, fun t ht => LipschitzWith.of_dist_le_mul fun x y => ?_⟩
   rw [dist_add_right]
-  exact ((A t).lipschitzWith.dist_le_mul x y).trans
+  exact ((A t).lipschitz.dist_le_mul x y).trans
     (mul_le_mul_of_nonneg_right (hC t ht) dist_nonneg)
 
 /-- Actual existence for a continuous-coefficient inhomogeneous linear ODE

@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentTransverseCosts
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 
 /-! The zero-history forward budget has an explicit polynomial source
 radius.  Cofactor bounds discharge the Gram inverse cost.  The sole growth
 estimate supplied here is the genuine weighted homogeneous propagator H3. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,9 +27,10 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerTransve
   EulerSourceForwardCoefficient EulerLinearFundamentalExistence
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Radius as an element of `ℝ`. -/
 def radius (q : ℕ) (T R C C₁ Cp : ℝ) : ℝ :=
-  1+sobolevCoefficientRadius (Fin 4) R+
-    sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C)+
+  1+sobolevCoefficientRadius (Fin 4) R +
+    sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C) +
     2*forwardCost q T 0 R C C₁ Cp*(sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C)+1)
 
 theorem radius_guards (q : ℕ) (T R C C₁ Cp : ℝ)
@@ -51,25 +54,29 @@ theorem radius_guards (q : ℕ) (T R C C₁ Cp : ℝ)
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
-private local instance : NormedRing (U →L[ℝ] U) := inferInstance
-private local instance : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instPacketParentForwardBudget1 : NormedRing (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentForwardBudget2 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
 
+/-- Source forward budget as an element of `EulerTransversePacketForward.Budget D (Fin 4) q`. -/
 def sourceForwardBudget (D : Data U) (q : ℕ) (R C C₁ Cp : ℝ)
     (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hCp : 0 ≤ Cp)
     (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁*majorant R 0 n)
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
-    (hg0 : g ⟨0,le_rfl,D.T_pos.le⟩ = 1)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁ * majorant R 0 n)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
+    (hg0 : g ⟨0, le_rfl, D.T_pos.le⟩ = 1)
     (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-    (hsub : D.support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+    (hsub : D.support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
     (hprop : ∀ t s : Icc (0 : ℝ) D.T, s ≤ t → ∀ x : Space, ‖x‖ ≤ (1/2 : ℝ) →
       ‖((fundamentalPath D.T D.T_pos.le
           (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos
-            D.frame_lower)).forward t x).comp
+              D.frame_lower)).forward t x).comp
         ((fundamentalPath D.T D.T_pos.le
           (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos
-            D.frame_lower)).backward s x)‖ ≤ Cp*g t/g s) :
+              D.frame_lower)).backward s x)‖ ≤ Cp*g t/g s) :
     EulerTransversePacketForward.Budget D (Fin 4) q := by
   have hzero : ∀ t x, ‖D.F.field t x‖ ≤ C := by
     intro t x

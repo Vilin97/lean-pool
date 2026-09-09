@@ -6,15 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatedOutgoing
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalEdgeFactor
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatSwitchCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatSwitchHistoryDerivatives
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatTailHistoryLimits
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.HeatTailHistoryLimits
+import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalHeatCoordinates
 
 /-!
 # The same compensated histories and the terminal backward stress
@@ -23,6 +19,9 @@ All forward histories in this file use the supplied compensation witness.
 The base outgoing energy identity is kept explicit; zero changes alone do
 not imply a zero total energy moment.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,12 +34,15 @@ open HeatedOutgoing (CompensationWitness Coeff)
 
 private theorem two_le_infty : (2 : WithTop ℕ∞) ≤ ∞ := WithTop.coe_le_coe.mpr le_top
 
+/-- Angular history, given by `∫ u in Ioc 0 X, HeatedOutgoing.H F XR c (u,η)`. -/
 noncomputable def angularHistory (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (η X : ℝ) : ℝ := ∫ u in Ioc 0 X, HeatedOutgoing.H F XR c (u,η)
 
+/-- Energy history, given by `∫ u in Ioc 0 X, HeatedOutgoing.energyDensity F XR c η u`. -/
 noncomputable def energyHistory (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (η X : ℝ) : ℝ := ∫ u in Ioc 0 X, HeatedOutgoing.energyDensity F XR c η u
 
+/-- Power history, given by `∫ u in Ioc 0 X, OutgoingDilation.powerH F XR u`. -/
 noncomputable def powerHistory (F : Profile) (XR X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, OutgoingDilation.powerH F XR u
 
@@ -137,17 +139,24 @@ theorem transport_histories_zero_after_switch {F : Profile} {XR C : ℝ}
   w.after_pulse η X ((OutgoingDilation.switchRadius_pos F XR w.radius_pos).trans_le hX)
     ((HeatedOutgoing.pulseEnd_le_switch F XR w.radius_pos).trans hX)
 
+/-- Normalization, given by `TerminalPressure.releasedNormalization F.data
+(OutgoingDilation.switchRadius F XR)`. -/
 noncomputable def normalization (F : Profile) (XR : ℝ) : ℝ :=
   TerminalPressure.releasedNormalization F.data (OutgoingDilation.switchRadius F XR)
 
+/-- Shift, given by `Real.log (OutgoingDilation.switchRadius F XR) - 1/5`. -/
 noncomputable def shift (F : Profile) (XR : ℝ) : ℝ :=
   Real.log (OutgoingDilation.switchRadius F XR) - 1/5
 
+/-- Physical angular, given by `SimilarityProfile.pullback F.data.h
+(-TerminalPressure.amplitudeExponent F.data.h) (HeatedOutgoing.E F XR c)`. -/
 noncomputable def physicalAngular (F : Profile) (XR : ℝ) (c : ℝ → Coeff) :
     SimilarityProfile.PhysicalProfile :=
   SimilarityProfile.pullback F.data.h (-TerminalPressure.amplitudeExponent F.data.h)
     (HeatedOutgoing.E F XR c)
 
+/-- Physical pressure, given by `SimilarityProfile.pullback F.data.h
+(-2*TerminalPressure.amplitudeExponent F.data.h) (HeatedOutgoing.Pi F XR c)`. -/
 noncomputable def physicalPressure (F : Profile) (XR : ℝ) (c : ℝ → Coeff) :
     SimilarityProfile.PhysicalProfile :=
   SimilarityProfile.pullback F.data.h (-2*TerminalPressure.amplitudeExponent F.data.h)
@@ -156,12 +165,12 @@ noncomputable def physicalPressure (F : Profile) (XR : ℝ) (c : ℝ → Coeff) 
 theorem physicalAngular_eq_terminal (F : Profile) {XR : ℝ} (hXR : 0 < XR)
     (c : ℝ → Coeff) {p : SimilarityProfile.PhysicalPoint}
     (ht : p.1 < 1) (hs : 0 < p.2.1)
-    (hfull : 1/2 ≤ Real.log (SimilarityProfile.X F.data.h p /
-      OutgoingDilation.switchRadius F XR) + 1/5) :
+    (hfull : 1 / 2 ≤ Real.log (SimilarityProfile.X F.data.h p /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     physicalAngular F XR c p =
       TerminalStress.physicalHeat (normalization F XR) (1+F.data.h) p *
         TerminalPressure.outgoingTaper F.data (shift F XR) (Real.log (SimilarityProfile.X F.data.h
-          p)) := by
+            p)) := by
   have hK := OutgoingDilation.switchRadius_pos F XR hXR
   have hX := div_pos hs (SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half ht)
   unfold physicalAngular SimilarityProfile.pullback SimilarityProfile.inner
@@ -171,8 +180,8 @@ theorem physicalAngular_eq_terminal (F : Profile) {XR : ℝ} (hXR : 0 < XR)
 
 theorem full_switch_radial {F : Profile} {XR : ℝ} (hXR : 0 < XR)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1)
-    (hfull : 1/2 ≤ Real.log (SimilarityProfile.X F.data.h p /
-      OutgoingDilation.switchRadius F XR) + 1/5) {u : ℝ} (hu : p.2.1 ≤ u) :
+    (hfull : 1 / 2 ≤ Real.log (SimilarityProfile.X F.data.h p /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) {u : ℝ} (hu : p.2.1 ≤ u) :
     1/2 ≤ Real.log (SimilarityProfile.X F.data.h (p.1,(u,p.2.2)) /
       OutgoingDilation.switchRadius F XR) + 1/5 := by
   have hq := SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half ht
@@ -189,8 +198,8 @@ This is a change of variables in the actual improper integral. -/
 theorem physicalPressure_eq_terminal (F : Profile) {XR : ℝ} (hXR : 0 < XR)
     (c : ℝ → Coeff) {p : SimilarityProfile.PhysicalPoint}
     (ht : p.1 < 1) (hs : 0 < p.2.1)
-    (hfull : 1/2 ≤ Real.log (SimilarityProfile.X F.data.h p /
-      OutgoingDilation.switchRadius F XR) + 1/5) :
+    (hfull : 1 / 2 ≤ Real.log (SimilarityProfile.X F.data.h p /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     physicalPressure F XR c p =
       TerminalPressure.outgoingPressure (normalization F XR) F.data (shift F XR) p := by
   let q := SimilarityProfile.q F.data.h p
@@ -227,12 +236,15 @@ theorem physicalPressure_eq_terminal (F : Profile) {XR : ℝ} (hXR : 0 < XR)
 
 /-! ## The actual forward stress on the switched tail -/
 
+/-- Forward theta, constructed using `HeatSwitchCone.logE`. -/
 noncomputable def forwardTheta (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (p : ℝ × ℝ) : ℝ :=
   HeatSwitchCone.logE F XR c p / Real.sqrt (2 * XR * Real.exp p.1) *
     (XR * Real.exp p.1 * HeatSwitchCone.Qs F XR c p /
       CoordinateAlgebra.L F.data.h p.2 - HeatSwitchCone.radialA F XR c p)
 
+/-- Forward axial, given by `XR * Real.exp p.1 * HeatSwitchCone.Ns F XR c p /
+(CoordinateAlgebra.L F.data.h p.2 * Real.sqrt (2 * XR * Real.exp p.1))`. -/
 noncomputable def forwardAxial (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (p : ℝ × ℝ) : ℝ :=
   XR * Real.exp p.1 * HeatSwitchCone.Ns F XR c p /
@@ -403,31 +415,38 @@ theorem energyHistory_eq_logS (F : Profile) {XR : ℝ} (hXR : 0 < XR)
 open HeatSwitchCone (logE logI logS logPi)
 open ProfileHistories (radialPartial parameterPartial)
 
+/-- Eta derivative, given by `derivWithin (fun η => G (p.1,η)) HeatedOutgoing.parameterDomain
+p.2`. -/
 noncomputable def etaDerivative (G : (ℝ × ℝ) → ℝ) (p : ℝ × ℝ) : ℝ :=
   derivWithin (fun η => G (p.1,η)) HeatedOutgoing.parameterDomain p.2
 
+/-- Theta stock as an element of `ℝ`. -/
 noncomputable def thetaStock (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
-  (1-F.data.h)*logI F XR c p - StressAlgebra.axialExponent F.data.h*p.2*
+  (1-F.data.h)*logI F XR c p - StressAlgebra.axialExponent F.data.h*p.2 *
     etaDerivative (logI F XR c) p - Real.exp (3*p.1/2)*logE F XR c p
 
+/-- Theta weight as an element of `ℝ`. -/
 noncomputable def thetaWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   (XR*Real.sqrt (2*XR))*thetaStock F XR c p / CoordinateAlgebra.L F.data.h p.2 +
-    Real.sqrt (2*XR)*Real.exp (p.1/2)*
+    Real.sqrt (2*XR)*Real.exp (p.1/2) *
       (2*radialPartial (logE F XR c) p-logE F XR c p)
 
+/-- Axial weight as an element of `ℝ`. -/
 noncomputable def axialWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
-  (XR*(4*F.data.h*p.2*logS F XR c p - StressAlgebra.coordinateFactor p.2*
-    etaDerivative (logS F XR c) p) + XR*Real.exp p.1*
+  (XR*(4*F.data.h*p.2*logS F XR c p - StressAlgebra.coordinateFactor p.2 *
+    etaDerivative (logS F XR c) p) + XR*Real.exp p.1 *
     (4*StressAlgebra.velocityExponent F.data.h*p.2*logPi F XR c p -
       StressAlgebra.coordinateFactor p.2*etaDerivative (logPi F XR c) p)) /
         CoordinateAlgebra.L F.data.h p.2
 
+/-- Angular residual as an element of `ℝ`. -/
 noncomputable def angularResidual (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   (StressAlgebra.velocityExponent F.data.h*logE F XR c p +
     StressAlgebra.axialExponent F.data.h*p.2*etaDerivative (logE F XR c) p +
     radialPartial (logE F XR c) p) / CoordinateAlgebra.L F.data.h p.2 -
       (2*radialPartial (radialPartial (logE F XR c)) p-logE F XR c p/2) / (XR*Real.exp p.1)
 
+/-- Axial residual as an element of `ℝ`. -/
 noncomputable def axialResidual (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   (-4*StressAlgebra.velocityExponent F.data.h*p.2*logPi F XR c p +
     StressAlgebra.coordinateFactor p.2*etaDerivative (logPi F XR c) p -
@@ -455,11 +474,11 @@ theorem thetaWeight_hasDerivAt (F : Profile) {XR C : ℝ} (w : CompensationWitne
     {p : ℝ × ℝ} (hp : p.2 ∈ Ioo (-1) 1) :
     HasDerivAt (fun y => thetaWeight F XR w.coefficients (y,p.2))
       (-(XR*Real.exp p.1)*Real.sqrt (2*(XR*Real.exp p.1))*angularResidual F XR w.coefficients p)
-        p.1 := by
+          p.1 := by
   have hm : p ∈ HeatSwitchHistoryDerivatives.interiorDomain.carrier := ⟨mem_univ _,hp⟩
   have hs := HeatSwitchHistoryDerivatives.logE_contDiffOn F w
   have he := ProfileHistories.radialPartial_hasDerivAt HeatSwitchHistoryDerivatives.interiorDomain
-    hs hm
+      hs hm
   have he' := ProfileHistories.radialPartial_hasDerivAt HeatSwitchHistoryDerivatives.interiorDomain
     (ProfileHistories.radialPartial_smooth HeatSwitchHistoryDerivatives.interiorDomain hs) hm
   have hx := ((hasDerivAt_id p.1).div_const 2).exp
@@ -474,7 +493,7 @@ theorem thetaWeight_hasDerivAt (F : Profile) {XR C : ℝ} (w : CompensationWitne
   have hL : CoordinateAlgebra.L F.data.h p.2 ≠ 0 :=
     (CoordinateAlgebra.L_pos F.data.h_pos.le F.data.h_lt_half
       (TerminalEdgeFactor.eta_sq_le_one ⟨hp.1.le,hp.2.le⟩)).ne'
-  field_simp [hX,hL,w.radius_pos.ne',Real.exp_ne_zero] ; ring
+  field_simp [hX,hL,w.radius_pos.ne',Real.exp_ne_zero]; ring
 
 theorem axialWeight_hasDerivAt (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C)
     {p : ℝ × ℝ} (hp : p.2 ∈ Ioo (-1) 1) (hy : F.data.core.endpoint ≤ p.1) :
@@ -538,11 +557,13 @@ theorem axialWeight_eq_forward (F : Profile) {XR C : ℝ} (w : CompensationWitne
   generalize Real.sqrt (2*XR*Real.exp p.1) = r at *
   by_cases hL : CoordinateAlgebra.L F.data.h p.2 = 0
   · simp [hL]
-  field_simp [hR,hL,Real.exp_ne_zero] ; ring
+  field_simp [hR,hL,Real.exp_ne_zero]; ring
 
 /-! ## Genuine physical derivatives of logarithmic profiles -/
 
+/-- Log point, given by `(Real.log (p.1/XR),p.2)`. -/
 noncomputable def logPoint (XR : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (Real.log (p.1/XR),p.2)
+/-- Radial lift, given by `G (logPoint XR p)`. -/
 noncomputable def radialLift (XR : ℝ) (G : (ℝ × ℝ) → ℝ) (p : ℝ × ℝ) : ℝ := G (logPoint XR p)
 
 theorem logPoint_contDiffAt {XR : ℝ} (hXR : 0 < XR) {p : ℝ × ℝ} (hp : 0 < p.1) :
@@ -573,7 +594,8 @@ theorem radialLift_partialX {XR : ℝ} (hXR : 0 < XR) {G : (ℝ × ℝ) → ℝ}
   have hd := hg.hasFDerivAt.comp_hasDerivAt p.1
     ((log_radius_hasDerivAt hXR hp).prodMk (hasDerivAt_const p.1 p.2))
   have hh := LeadingStress.partialX_hasDerivAt ((radialLift_contDiffAt hXR hG hp
-    hη).differentiableAt (by simp))
+      hη).differentiableAt (by
+      simp))
   have he := hh.unique hd
   rw [SimilarityProfile.fderiv_inner_apply] at he
   simp only [mul_zero,add_zero,mul_one_div] at he
@@ -589,7 +611,7 @@ theorem radialLift_partialEta {XR : ℝ} (hXR : 0 < XR) {G : (ℝ × ℝ) → �
   have hd := hg.hasFDerivAt.comp_hasDerivAt p.2
     ((hasDerivAt_const p.2 (Real.log (p.1/XR))).prodMk (hasDerivAt_id p.2))
   have hh := ((radialLift_contDiffAt hXR hG hp hη).differentiableAt (by
-    simp)).hasFDerivAt.comp_hasDerivAt p.2
+      simp)).hasFDerivAt.comp_hasDerivAt p.2
     ((hasDerivAt_const p.2 p.1).prodMk (hasDerivAt_id p.2))
   have he := hh.unique hd
   simpa only [SimilarityProfile.partialEta,parameterPartial] using he
@@ -628,23 +650,25 @@ theorem logPi_radialLift (F : Profile) {XR C : ℝ} (w : CompensationWitness F X
   dsimp only [logPoint]
   rw [Real.exp_log (div_pos hp w.radius_pos),mul_div_cancel₀ _ w.radius_pos.ne',Prod.mk.eta]
 
+/-- Physical log, given by `SimilarityProfile.pullback h b (radialLift XR G)`. -/
 noncomputable def physicalLog (h b XR : ℝ) (G : (ℝ × ℝ) → ℝ) : SimilarityProfile.PhysicalProfile :=
   SimilarityProfile.pullback h b (radialLift XR G)
 
+/-- Amplitude operator, constructed using `SimilarityProfile.partialT`. -/
 noncomputable def amplitudeOperator (V : SimilarityProfile.PhysicalProfile)
     (p : SimilarityProfile.PhysicalPoint) : ℝ :=
   SimilarityProfile.partialT V p - 2*p.2.1*SimilarityProfile.partialS (SimilarityProfile.partialS
-    V) p -
+      V) p -
     2*SimilarityProfile.partialS V p + V p/(2*p.2.1)
 
-theorem physicalLog_amplitudeOperator {h b XR : ℝ} (hh : 0 < h) (hh' : h < 1/2) (hXR : 0 < XR)
+theorem physicalLog_amplitudeOperator {h b XR : ℝ} (hh : 0 < h) (hh' : h < 1 / 2) (hXR : 0 < XR)
     {G : (ℝ × ℝ) → ℝ} (hG : ContDiffOn ℝ ∞ G HeatSwitchHistoryDerivatives.interiorDomain.carrier)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
     amplitudeOperator (physicalLog h b XR G) p =
       SimilarityProfile.q h p^(b-1) *
         (((-b)*G (logPoint XR (SimilarityProfile.inner h p)) +
           CoordinateAlgebra.D h*SimilarityProfile.eta h p*parameterPartial G (logPoint XR
-            (SimilarityProfile.inner h p)) +
+              (SimilarityProfile.inner h p)) +
           radialPartial G (logPoint XR (SimilarityProfile.inner h p))) /
             CoordinateAlgebra.L h (SimilarityProfile.eta h p) -
           (2*radialPartial (radialPartial G) (logPoint XR (SimilarityProfile.inner h p)) -
@@ -655,7 +679,7 @@ theorem physicalLog_amplitudeOperator {h b XR : ℝ} (hh : 0 < h) (hh' : h < 1/2
     change SimilarityProfile.eta h p ∈ Ioo (-1) 1
     have he := SimilarityProfile.eta_sq_lt_one hh hh' ht
     constructor <;> nlinarith [sq_nonneg (SimilarityProfile.eta h p+1),sq_nonneg
-      (SimilarityProfile.eta h p-1)]
+        (SimilarityProfile.eta h p-1)]
   have hd := radialLift_contDiffAt hXR hG hx heta
   have hL := SimilarityProfile.L_pos hh hh' ht
   unfold amplitudeOperator physicalLog
@@ -670,7 +694,7 @@ theorem physicalLog_amplitudeOperator {h b XR : ℝ} (hh : 0 < h) (hh' : h < 1/2
   simp only [Real.rpow_sub_one hq.ne']
   rw [← SlowExpansionResidual.q_mul_X hh hh' ht]
   dsimp only [SimilarityProfile.inner] at hx ⊢
-  field_simp [hq.ne',hx.ne',hL.ne'] ; ring
+  field_simp [hq.ne',hx.ne',hL.ne']; ring
 
 theorem physicalLog_angularResidual (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
@@ -685,22 +709,22 @@ theorem physicalLog_angularResidual (F : Profile) {XR C : ℝ} (w : Compensation
   have heta : SimilarityProfile.eta F.data.h p ∈ Ioo (-1) 1 := by
     have he := SimilarityProfile.eta_sq_lt_one F.data.h_pos F.data.h_lt_half ht
     constructor <;> nlinarith [sq_nonneg (SimilarityProfile.eta F.data.h p+1),sq_nonneg
-      (SimilarityProfile.eta F.data.h p-1)]
+        (SimilarityProfile.eta F.data.h p-1)]
   have hp : logPoint XR (SimilarityProfile.inner F.data.h p) ∈
-    HeatSwitchHistoryDerivatives.interiorDomain.carrier :=
+      HeatSwitchHistoryDerivatives.interiorDomain.carrier :=
     ⟨mem_univ _,heta⟩
   unfold angularResidual etaDerivative
   rw [HeatSwitchHistoryDerivatives.within_parameter_eq
-    (HeatSwitchHistoryDerivatives.logE_contDiffOn F w) hp]
+      (HeatSwitchHistoryDerivatives.logE_contDiffOn F w) hp]
   simp only [logPoint,SimilarityProfile.inner,Real.exp_log (div_pos hx w.radius_pos),
     mul_div_cancel₀ _
-      w.radius_pos.ne',TerminalPressure.amplitudeExponent,StressAlgebra.velocityExponent,
+        w.radius_pos.ne',TerminalPressure.amplitudeExponent,StressAlgebra.velocityExponent,
     StressAlgebra.axialExponent,CoordinateAlgebra.D,neg_neg]
 
 theorem physicalLog_axialResidual (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
     SimilarityProfile.partialZ (physicalLog F.data.h (-2*TerminalPressure.amplitudeExponent
-      F.data.h)
+        F.data.h)
       XR (logPi F XR w.coefficients)) p =
       SimilarityProfile.q F.data.h p^(-TerminalPressure.amplitudeExponent F.data.h-1) *
         axialResidual F XR w.coefficients (logPoint XR (SimilarityProfile.inner F.data.h p)) := by
@@ -710,20 +734,20 @@ theorem physicalLog_axialResidual (F : Profile) {XR C : ℝ} (w : CompensationWi
     change SimilarityProfile.eta F.data.h p ∈ Ioo (-1) 1
     have he := SimilarityProfile.eta_sq_lt_one F.data.h_pos F.data.h_lt_half ht
     constructor <;> nlinarith [sq_nonneg (SimilarityProfile.eta F.data.h p+1),sq_nonneg
-      (SimilarityProfile.eta F.data.h p-1)]
+        (SimilarityProfile.eta F.data.h p-1)]
   have hm : logPoint XR (SimilarityProfile.inner F.data.h p) ∈
-    HeatSwitchHistoryDerivatives.interiorDomain.carrier :=
+      HeatSwitchHistoryDerivatives.interiorDomain.carrier :=
     ⟨mem_univ _,heta⟩
   have hg := HeatSwitchHistoryDerivatives.logPi_contDiffOn F w
   have hd := radialLift_contDiffAt w.radius_pos hg hx heta
   have hp := HeatSwitchHistoryDerivatives.logPi_hasDerivAt F w
     (logPoint XR (SimilarityProfile.inner F.data.h p)) ⟨heta.1.le,heta.2.le⟩
   have hpd := ProfileHistories.radialPartial_hasDerivAt HeatSwitchHistoryDerivatives.interiorDomain
-    hg hm
+      hg hm
   have hpy := hpd.unique hp
   unfold physicalLog
   rw [SimilarityProfile.partialZ_pullback F.data.h_pos F.data.h_lt_half ht (hd.differentiableAt (by
-    simp))]
+      simp))]
   simp only [SimilarityProfile.pullback,SimilarityProfile.Z,CoordinateAlgebra.axialCoeff]
   rw [radialLift_partialX w.radius_pos hg hx heta,radialLift_partialEta w.radius_pos hg hx heta,hpy]
   unfold axialResidual etaDerivative
@@ -737,7 +761,7 @@ theorem physicalLog_axialResidual (F : Profile) {XR C : ℝ} (w : CompensationWi
     StressAlgebra.velocityExponent,TerminalPressure.amplitudeExponent,CoordinateAlgebra.d]
   dsimp only [SimilarityProfile.inner] at hx
   have hL := SimilarityProfile.L_pos F.data.h_pos F.data.h_lt_half ht
-  field_simp [hx.ne',hL.ne'] ; ring
+  field_simp [hx.ne',hL.ne']; ring
 
 theorem amplitudeOperator_congr {V W : SimilarityProfile.PhysicalProfile}
     {p : SimilarityProfile.PhysicalPoint} (he : V =ᶠ[𝓝 p] W) :
@@ -753,6 +777,8 @@ theorem amplitudeOperator_congr {V W : SimilarityProfile.PhysicalProfile}
   unfold SimilarityProfile.partialT SimilarityProfile.partialS
   rw [he.fderiv_eq,he.self_of_nhds]
 
+/-- Terminal amplitude, given by `TerminalStress.physicalHeat C (1+d.h) p *
+TerminalStress.flattening d.h (TerminalPressure.outgoingTaper d y0) p`. -/
 noncomputable def terminalAmplitude (C : ℝ) (d : OutgoingTail.TailData) (y0 : ℝ)
     (p : SimilarityProfile.PhysicalPoint) : ℝ :=
   TerminalStress.physicalHeat C (1+d.h) p * TerminalStress.flattening d.h
@@ -770,8 +796,8 @@ theorem terminalAmplitude_operator (C : ℝ) (d : OutgoingTail.TailData) (y0 : �
       (Real.log (SimilarityProfile.X d.h (TerminalStress.radiusPoint t r z))) :=
     (TerminalPressure.outgoingTaper_contDiff d y0).contDiffAt.of_le two_le_infty
   have hA : ContDiffAt ℝ 2 (terminalAmplitude C d y0) (TerminalStress.radiusPoint t r z) :=
-    ((TerminalStress.physicalHeat_contDiffAt C (by linarith [d.h_pos]) hp hs).of_le
-      two_le_infty).mul
+    ((TerminalStress.physicalHeat_contDiffAt C (by
+        linarith [d.h_pos]) hp hs).of_le two_le_infty).mul
       (TerminalStress.flattening_contDiffAt d.h_pos d.h_lt_half hp hs hf)
   have he := TerminalStress.terminal_radial_residual C d.h_pos d.h_lt_half ht hr hf
   change deriv (fun u => terminalAmplitude C d y0 (TerminalStress.radiusPoint u r z)) t -
@@ -788,30 +814,30 @@ theorem terminalAmplitude_operator (C : ℝ) (d : OutgoingTail.TailData) (y0 : �
   apply Eq.trans _ he
   unfold amplitudeOperator
   dsimp only [TerminalStress.radiusPoint]
-  field_simp [hr.ne'] ; ring
+  field_simp [hr.ne']; ring
 
 theorem terminal_germs (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h p /
-      OutgoingDilation.switchRadius F XR) + 1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h p /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     physicalLog F.data.h (-TerminalPressure.amplitudeExponent F.data.h) XR (logE F XR
-      w.coefficients)
+        w.coefficients)
         =ᶠ[𝓝 p] terminalAmplitude (normalization F XR) F.data (shift F XR) ∧
     physicalLog F.data.h (-2*TerminalPressure.amplitudeExponent F.data.h) XR (logPi F XR
-      w.coefficients)
+        w.coefficients)
         =ᶠ[𝓝 p] TerminalPressure.outgoingPressure (normalization F XR) F.data (shift F XR) := by
   have hX := div_pos hs (SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half ht)
   have hK := OutgoingDilation.switchRadius_pos F XR w.radius_pos
   have hc : ContinuousAt (fun q => Real.log (SimilarityProfile.X F.data.h q /
       OutgoingDilation.switchRadius F XR) + 1/5) p :=
     ((((SimilarityProfile.inner_smoothAt F.data.h_pos F.data.h_lt_half
-      ht).continuousAt.fst).div_const _).log
+        ht).continuousAt.fst).div_const _).log
       (div_pos hX hK).ne').add_const _
   have hev : ∀ᶠ q in 𝓝 p, q.1 < 1 ∧ 0 < q.2.1 ∧
       1/2 < Real.log (SimilarityProfile.X F.data.h q / OutgoingDilation.switchRadius F XR)+1/5 := by
     filter_upwards [continuousAt_fst.eventually (Iio_mem_nhds ht),
       continuousAt_snd.fst.eventually (Ioi_mem_nhds hs),hc.eventually (Ioi_mem_nhds hfull)] with q
-        hqt hqs hqf
+          hqt hqs hqf
     exact ⟨hqt,hqs,hqf⟩
   constructor
   · filter_upwards [hev] with q hq
@@ -824,19 +850,19 @@ theorem terminal_germs (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR 
     have heta : SimilarityProfile.eta F.data.h q ∈ HeatedOutgoing.parameterDomain := by
       have he := SimilarityProfile.eta_sq_lt_one F.data.h_pos F.data.h_lt_half hq.1
       constructor <;> nlinarith [sq_nonneg (SimilarityProfile.eta F.data.h q+1),sq_nonneg
-        (SimilarityProfile.eta F.data.h q-1)]
+          (SimilarityProfile.eta F.data.h q-1)]
     unfold physicalLog SimilarityProfile.pullback
     rw [logPi_radialLift F w hx heta]
     exact physicalPressure_eq_terminal F w.radius_pos w.coefficients hq.1 hq.2.1 hq.2.2.le
 
 theorem terminal_angularResidual (F : Profile) {XR C t r z : ℝ}
     (w : CompensationWitness F XR C) (ht : t < 1) (hr : 0 < r)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
-      OutgoingDilation.switchRadius F XR) + 1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     TerminalStress.leadingResidual (normalization F XR) F.data.h
       (TerminalPressure.outgoingTaper F.data (shift F XR)) t r z =
       SimilarityProfile.q F.data.h (TerminalStress.radiusPoint t r
-        z)^(-TerminalPressure.amplitudeExponent F.data.h-1) *
+          z)^(-TerminalPressure.amplitudeExponent F.data.h-1) *
         angularResidual F XR w.coefficients
           (logPoint XR (SimilarityProfile.inner F.data.h (TerminalStress.radiusPoint t r z))) := by
   have hs : 0 < (TerminalStress.radiusPoint t r z).2.1 := by
@@ -848,10 +874,10 @@ theorem terminal_angularResidual (F : Profile) {XR C t r z : ℝ}
 
 theorem terminal_axialResidual (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h p /
-      OutgoingDilation.switchRadius F XR) + 1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h p /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     SimilarityProfile.partialZ (TerminalPressure.outgoingPressure (normalization F XR) F.data
-      (shift F XR)) p =
+        (shift F XR)) p =
       SimilarityProfile.q F.data.h p^(-TerminalPressure.amplitudeExponent F.data.h-1) *
         axialResidual F XR w.coefficients (logPoint XR (SimilarityProfile.inner F.data.h p)) := by
   have he := (terminal_germs F w ht hs hfull).2
@@ -888,9 +914,9 @@ theorem angularHistory_eta_eq_logI (F : Profile) {XR C : ℝ} (w : CompensationW
       (XR*Real.sqrt (2*XR))*etaDerivative (logI F XR w.coefficients) (y,η) := by
   have hg := HeatSwitchHistoryDerivatives.logI_contDiffOn F w
   have hd := (ProfileHistories.parameterPartial_hasDerivAt
-    HeatSwitchHistoryDerivatives.interiorDomain hg
+      HeatSwitchHistoryDerivatives.interiorDomain hg
     (show (y,η) ∈ HeatSwitchHistoryDerivatives.interiorDomain.carrier from ⟨mem_univ
-      _,hη⟩)).const_mul
+        _,hη⟩)).const_mul
       (XR*Real.sqrt (2*XR))
   have he : (fun t => angularHistory F XR w.coefficients t (XR*Real.exp y)) =ᶠ[𝓝 η]
       fun t => (XR*Real.sqrt (2*XR))*logI F XR w.coefficients (y,t) := by
@@ -906,9 +932,9 @@ theorem energyHistory_eta_eq_logS (F : Profile) {XR C : ℝ} (w : CompensationWi
       XR*etaDerivative (logS F XR w.coefficients) (y,η) := by
   have hg := HeatSwitchHistoryDerivatives.logS_contDiffOn F w
   have hd := (ProfileHistories.parameterPartial_hasDerivAt
-    HeatSwitchHistoryDerivatives.interiorDomain hg
+      HeatSwitchHistoryDerivatives.interiorDomain hg
     (show (y,η) ∈ HeatSwitchHistoryDerivatives.interiorDomain.carrier from ⟨mem_univ
-      _,hη⟩)).const_mul XR
+        _,hη⟩)).const_mul XR
   have he : (fun t => energyHistory F XR w.coefficients t (XR*Real.exp y)) =ᶠ[𝓝 η]
       fun t => XR*logS F XR w.coefficients (y,t) := by
     filter_upwards [isOpen_Ioo.mem_nhds hη] with t ht
@@ -923,7 +949,7 @@ theorem pressure_eta_eq_logPi (F : Profile) {XR C : ℝ} (w : CompensationWitnes
       etaDerivative (logPi F XR w.coefficients) (y,η) := by
   have hg := HeatSwitchHistoryDerivatives.logPi_contDiffOn F w
   have hd := ProfileHistories.parameterPartial_hasDerivAt
-    HeatSwitchHistoryDerivatives.interiorDomain hg
+      HeatSwitchHistoryDerivatives.interiorDomain hg
     (show (y,η) ∈ HeatSwitchHistoryDerivatives.interiorDomain.carrier from ⟨mem_univ _,hη⟩)
   have he : (fun t => HeatedOutgoing.Pi F XR w.coefficients (XR*Real.exp y,t)) =ᶠ[𝓝 η]
       fun t => logPi F XR w.coefficients (y,t) := by
@@ -936,7 +962,7 @@ theorem pressure_eta_eq_logPi (F : Profile) {XR C : ℝ} (w : CompensationWitnes
 theorem H_log_derivative (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C)
     {η : ℝ} (hη : η ∈ Ioo (-1) 1) (y : ℝ) :
     (XR*Real.exp y)*deriv (fun u => HeatedOutgoing.H F XR w.coefficients (u,η)) (XR*Real.exp y) =
-      Real.sqrt (2*XR)*Real.exp (y/2)*
+      Real.sqrt (2*XR)*Real.exp (y/2) *
         (radialPartial (logE F XR w.coefficients) (y,η)+logE F XR w.coefficients (y,η)/2) := by
   let X := XR*Real.exp y
   have hX : 0 < X := mul_pos w.radius_pos (Real.exp_pos _)
@@ -961,7 +987,7 @@ theorem H_log_derivative (F : Profile) {XR C : ℝ} (w : CompensationWitness F X
   change X*(_*logE F XR w.coefficients (y,η) +
     Real.sqrt (2*X)*(radialPartial (logE F XR w.coefficients) (y,η)/X)) =
       Real.sqrt (2*X)*(radialPartial (logE F XR w.coefficients) (y,η)+logE F XR w.coefficients
-        (y,η)/2)
+          (y,η)/2)
   generalize Real.sqrt (2*X) = r at *
   field_simp [hX.ne',hr]
   linear_combination -logE F XR w.coefficients (y,η)*hr2
@@ -970,14 +996,14 @@ theorem thetaWeight_eq_moments (F : Profile) {XR C : ℝ} (w : CompensationWitne
     {η : ℝ} (hη : η ∈ Ioo (-1) 1) (y : ℝ) :
     thetaWeight F XR w.coefficients (y,η) =
       ((1-F.data.h)*(angularHistory F XR w.coefficients η (XR*Real.exp y)-powerHistory F XR
-        (XR*Real.exp y)) -
-        StressAlgebra.axialExponent F.data.h*η*
+          (XR*Real.exp y)) -
+        StressAlgebra.axialExponent F.data.h*η *
           deriv (fun t => angularHistory F XR w.coefficients t (XR*Real.exp y)) η -
-        (XR*Real.exp y)*(HeatedOutgoing.H F XR w.coefficients (XR*Real.exp y,η)-
+        (XR*Real.exp y)*(HeatedOutgoing.H F XR w.coefficients (XR*Real.exp y,η) -
           OutgoingDilation.powerH F XR (XR*Real.exp y))) / CoordinateAlgebra.L F.data.h η -
         2*HeatedOutgoing.H F XR w.coefficients (XR*Real.exp y,η) +
         2*((XR*Real.exp y)*deriv (fun u => HeatedOutgoing.H F XR w.coefficients (u,η)) (XR*Real.exp
-          y)) := by
+            y)) := by
   have hpower := powerHistory_identity F w.radius_pos (mul_pos w.radius_pos (Real.exp_pos y))
   rw [angularHistory_eq_logI F w.radius_pos w.coefficients ⟨hη.1.le,hη.2.le⟩,
     angularHistory_eta_eq_logI F w hη,H_log_derivative F w hη]
@@ -996,11 +1022,11 @@ theorem axialWeight_eq_moments (F : Profile) {XR C : ℝ} (w : CompensationWitne
     axialWeight F XR w.coefficients (y,η) =
       (4*F.data.h*η*energyHistory F XR w.coefficients η (XR*Real.exp y) -
         StressAlgebra.coordinateFactor η*deriv (fun t => energyHistory F XR w.coefficients t
-          (XR*Real.exp y)) η +
+            (XR*Real.exp y)) η +
         4*StressAlgebra.velocityExponent F.data.h*η*((XR*Real.exp y)*HeatedOutgoing.Pi F XR
-          w.coefficients (XR*Real.exp y,η)) -
+            w.coefficients (XR*Real.exp y,η)) -
         StressAlgebra.coordinateFactor η*((XR*Real.exp y)*deriv (fun t => HeatedOutgoing.Pi F XR
-          w.coefficients
+            w.coefficients
           (XR*Real.exp y,t)) η)) / CoordinateAlgebra.L F.data.h η := by
   rw [energyHistory_eq_logS F w.radius_pos w.coefficients ⟨hη.1.le,hη.2.le⟩,
     energyHistory_eta_eq_logS F w hη,pressure_eta_eq_logPi F w hη,
@@ -1018,7 +1044,7 @@ theorem thetaWeight_tendsto_zero (F : Profile) {XR C : ℝ} (w : CompensationWit
   have hHx := HeatTailHistoryLimits.mul_H_deriv_tendsto_zero F w.radius_pos w.coefficients hb
   have hHd := HeatTailHistoryLimits.mul_H_sub_powerH_tendsto_zero F w.radius_pos w.coefficients hb
   have hh := (((((hI.const_mul (1-F.data.h)).sub (hIm.const_mul (StressAlgebra.axialExponent
-    F.data.h*η))).sub hHd).div_const
+      F.data.h*η))).sub hHd).div_const
     (CoordinateAlgebra.L F.data.h η)).sub (hH.const_mul 2)).add (hHx.const_mul 2)
   have hr : Tendsto (fun y => XR*Real.exp y) atTop atTop :=
     Real.tendsto_exp_atTop.const_mul_atTop w.radius_pos
@@ -1037,9 +1063,9 @@ theorem axialWeight_tendsto_zero (F : Profile) {XR C B : ℝ}
   have hP := HeatTailHistoryLimits.mul_pressure_tendsto_zero F w.radius_pos w.coefficients hb
   have hPm := HeatTailHistoryLimits.mul_pressure_eta_tendsto_zero F w.radius_pos w.coefficients hη
   have hh := (((hS.const_mul (4*F.data.h*η)).sub (hSm.const_mul (StressAlgebra.coordinateFactor
-    η))).add
+      η))).add
     (hP.const_mul (4*StressAlgebra.velocityExponent F.data.h*η))).sub (hPm.const_mul
-      (StressAlgebra.coordinateFactor η))
+        (StressAlgebra.coordinateFactor η))
     |>.div_const (CoordinateAlgebra.L F.data.h η)
   have hr : Tendsto (fun y => XR*Real.exp y) atTop atTop :=
     Real.tendsto_exp_atTop.const_mul_atTop w.radius_pos
@@ -1048,15 +1074,15 @@ theorem axialWeight_tendsto_zero (F : Profile) {XR C B : ℝ}
   apply ht.congr'
   exact Eventually.of_forall fun y => (axialWeight_eq_moments F w hη y).symm
 
-theorem eta_mem_interior {h : ℝ} (hh : 0 < h) (hh' : h < 1/2)
+theorem eta_mem_interior {h : ℝ} (hh : 0 < h) (hh' : h < 1 / 2)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) :
     SimilarityProfile.eta h p ∈ Ioo (-1) 1 := by
   have he := SimilarityProfile.eta_sq_lt_one hh hh' ht
   constructor <;> nlinarith [sq_nonneg (SimilarityProfile.eta h p+1),sq_nonneg
-    (SimilarityProfile.eta h p-1)]
+      (SimilarityProfile.eta h p-1)]
 
 theorem full_switch_late (F : Profile) {XR X : ℝ} (hXR : 0 < XR) (hX : 0 < X)
-    (hfull : 1/2 ≤ Real.log (X/OutgoingDilation.switchRadius F XR)+1/5) :
+    (hfull : 1 / 2 ≤ Real.log (X / OutgoingDilation.switchRadius F XR) + 1 / 5) :
     TerminalCone.terminalStart F.data ≤ Real.log (X/XR) := by
   have he := TerminalCone.tailTime_clock F hXR (Real.log (X/XR))
   rw [Real.exp_log (div_pos hX hXR),mul_div_cancel₀ _ hXR.ne'] at he
@@ -1065,8 +1091,8 @@ theorem full_switch_late (F : Profile) {XR X : ℝ} (hXR : 0 < XR) (hX : 0 < X)
 
 theorem full_switch_radial_strict {F : Profile} {XR : ℝ} (hXR : 0 < XR)
     {p : SimilarityProfile.PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h p /
-      OutgoingDilation.switchRadius F XR)+1/5) {u : ℝ} (hu : p.2.1 ≤ u) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h p /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) {u : ℝ} (hu : p.2.1 ≤ u) :
     1/2 < Real.log (SimilarityProfile.X F.data.h (p.1,(u,p.2.2)) /
       OutgoingDilation.switchRadius F XR)+1/5 := by
   have hq := SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half ht
@@ -1077,13 +1103,15 @@ theorem full_switch_radial_strict {F : Profile} {XR : ℝ} (hXR : 0 < XR)
   exact hfull.trans_le (add_le_add_left
     (Real.log_le_log (div_pos hx hK) (div_le_div_of_nonneg_right hle hK.le)) _)
 
+/-- Regular clock, given by `Real.log ((s/q)/XR)`. -/
 noncomputable def regularClock (q XR s : ℝ) : ℝ := Real.log ((s/q)/XR)
+/-- Radius clock, given by `regularClock q XR (r^2/2)`. -/
 noncomputable def radiusClock (q XR r : ℝ) : ℝ := regularClock q XR (r^2/2)
 
 theorem regularClock_hasDerivAt {q XR s : ℝ} (hq : 0 < q) (hXR : 0 < XR) (hs : 0 < s) :
     HasDerivAt (regularClock q XR) (1/s) s := by
   convert! (log_radius_hasDerivAt hXR (div_pos hs hq)).comp s ((hasDerivAt_id s).div_const q) using
-    1
+      1
   field_simp [hq.ne',hs.ne']
 
 theorem radiusClock_hasDerivAt {q XR r : ℝ} (hq : 0 < q) (hXR : 0 < XR) (hr : 0 < r) :
@@ -1102,8 +1130,8 @@ theorem regularClock_tendsto {q XR : ℝ} (hq : 0 < q) (hXR : 0 < XR) :
 
 theorem radiusClock_tendsto {q XR : ℝ} (hq : 0 < q) (hXR : 0 < XR) :
     Tendsto (radiusClock q XR) atTop atTop :=
-  (regularClock_tendsto hq hXR).comp ((tendsto_pow_atTop (by decide : (2:ℕ) ≠ 0)).atTop_div_const
-    (by norm_num))
+  (regularClock_tendsto hq hXR).comp ((tendsto_pow_atTop (by
+      decide : (2:ℕ) ≠ 0)).atTop_div_const (by norm_num))
 
 theorem sqrt_radius_quotient {q r : ℝ} (_hq : 0 < q) (hr : 0 < r) :
     Real.sqrt (2*(r^2/2/q)) = r/Real.sqrt q := by
@@ -1118,11 +1146,13 @@ theorem theta_power_identity {q : ℝ} (hq : 0 < q) (h : ℝ) :
       ring
     _ = _ := by rw [Real.rpow_add hq,Real.rpow_add hq,Real.rpow_one,Real.sqrt_eq_rpow]
 
+/-- Physical theta weight as an element of `ℝ`. -/
 noncomputable def physicalThetaWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (t z r : ℝ) : ℝ :=
   let q := SimilarityProfile.q F.data.h (t,(0,z))
   let η := SimilarityProfile.eta F.data.h (t,(0,z))
   q^(-F.data.h)*thetaWeight F XR c (radiusClock q XR r,η)
 
+/-- Physical axial weight as an element of `ℝ`. -/
 noncomputable def physicalAxialWeight (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (t z s : ℝ) : ℝ :=
   let q := SimilarityProfile.q F.data.h (t,(0,z))
   let η := SimilarityProfile.eta F.data.h (t,(0,z))
@@ -1130,8 +1160,9 @@ noncomputable def physicalAxialWeight (F : Profile) (XR : ℝ) (c : ℝ → Coef
 
 theorem physicalThetaWeight_hasDerivAt (F : Profile) {XR C t r z : ℝ}
     (w : CompensationWitness F XR C) (ht : t < 1) (hr : 0 < r)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
-      OutgoingDilation.switchRadius F XR)+1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
+      OutgoingDilation.switchRadius F XR) +
+ 1 / 5) :
     HasDerivAt (physicalThetaWeight F XR w.coefficients t z)
       (-(r^2*TerminalStress.leadingResidual (normalization F XR) F.data.h
         (TerminalPressure.outgoingTaper F.data (shift F XR)) t r z)) r := by
@@ -1144,9 +1175,9 @@ theorem physicalThetaWeight_hasDerivAt (F : Profile) {XR C t r z : ℝ}
   apply hd.congr_deriv
   rw [terminal_angularResidual F w ht hr hfull]
   change q^(-F.data.h) *
-    ((-(XR*Real.exp (radiusClock q XR r))*Real.sqrt (2*(XR*Real.exp (radiusClock q XR r)))*
+    ((-(XR*Real.exp (radiusClock q XR r))*Real.sqrt (2*(XR*Real.exp (radiusClock q XR r))) *
       angularResidual F XR w.coefficients (radiusClock q XR r,η))*(2/r)) =
-    -(r^2*(q^(-TerminalPressure.amplitudeExponent F.data.h-1)*
+    -(r^2*(q^(-TerminalPressure.amplitudeExponent F.data.h-1) *
       angularResidual F XR w.coefficients (radiusClock q XR r,η)))
   rw [radiusClock,exp_regularClock hq w.radius_pos (by positivity : 0 < r^2/2),
     sqrt_radius_quotient hq hr,theta_power_identity hq F.data.h]
@@ -1154,11 +1185,11 @@ theorem physicalThetaWeight_hasDerivAt (F : Profile) {XR C t r z : ℝ}
 
 theorem physicalAxialWeight_hasDerivAt (F : Profile) {XR C t s z : ℝ}
     (w : CompensationWitness F XR C) (ht : t < 1) (hs : 0 < s)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (t,(s,z)) /
-      OutgoingDilation.switchRadius F XR)+1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (t, (s, z)) /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     HasDerivAt (physicalAxialWeight F XR w.coefficients t z)
       (-SimilarityProfile.partialZ (TerminalPressure.outgoingPressure (normalization F XR) F.data
-        (shift F XR)) (t,(s,z))) s := by
+          (shift F XR)) (t,(s,z))) s := by
   let q := SimilarityProfile.q F.data.h (t,(0,z))
   let η := SimilarityProfile.eta F.data.h (t,(0,z))
   have hq : 0 < q := SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half ht
@@ -1168,14 +1199,14 @@ theorem physicalAxialWeight_hasDerivAt (F : Profile) {XR C t s z : ℝ}
     (terminalStart_after_endpoint F).le.trans (full_switch_late F w.radius_pos hx hfull.le)
   have hd := ((axialWeight_hasDerivAt F w (p := (regularClock q XR s,η)) heta hy).comp s
     (regularClock_hasDerivAt hq w.radius_pos hs)).const_mul (q^(-TerminalPressure.amplitudeExponent
-      F.data.h))
+        F.data.h))
   apply hd.congr_deriv
   rw [terminal_axialResidual F w ht hs hfull]
-  change q^(-TerminalPressure.amplitudeExponent F.data.h)*
+  change q^(-TerminalPressure.amplitudeExponent F.data.h) *
     ((-(XR*Real.exp (regularClock q XR s))*axialResidual F XR w.coefficients (regularClock q XR
-      s,η))*(1/s)) =
+        s,η))*(1/s)) =
     -(q^(-TerminalPressure.amplitudeExponent F.data.h-1)*axialResidual F XR w.coefficients
-      (regularClock q XR s,η))
+        (regularClock q XR s,η))
   rw [exp_regularClock hq w.radius_pos hs,Real.rpow_sub_one hq.ne']
   field_simp [hq.ne',hs.ne']
 
@@ -1185,7 +1216,7 @@ theorem physicalThetaWeight_tendsto_zero (F : Profile) {XR C t z : ℝ}
   have hq := SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half (p := (t,(0,z))) ht
   have heta := eta_mem_interior F.data.h_pos F.data.h_lt_half (p := (t,(0,z))) ht
   have h := ((thetaWeight_tendsto_zero F w heta).comp (radiusClock_tendsto hq
-    w.radius_pos)).const_mul
+      w.radius_pos)).const_mul
     (SimilarityProfile.q F.data.h (t,(0,z))^(-F.data.h))
   simp only [mul_zero] at h
   exact h
@@ -1196,7 +1227,7 @@ theorem physicalAxialWeight_tendsto_zero (F : Profile) {XR C B t z : ℝ}
   have hq := SimilarityProfile.q_pos F.data.h_pos F.data.h_lt_half (p := (t,(0,z))) ht
   have heta := eta_mem_interior F.data.h_pos F.data.h_lt_half (p := (t,(0,z))) ht
   have h := ((axialWeight_tendsto_zero F hF w heta).comp (regularClock_tendsto hq
-    w.radius_pos)).const_mul
+      w.radius_pos)).const_mul
     (SimilarityProfile.q F.data.h (t,(0,z))^(-TerminalPressure.amplitudeExponent F.data.h))
   simp only [mul_zero] at h
   exact h
@@ -1224,14 +1255,15 @@ theorem terminal_axial_integrable {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailD
   have hi := (TerminalPressure.axialBackwardStress_bound hC d.h_pos d.h_lt_half ht hr hR
     (TerminalPressure.outgoingTaper_contDiff d y0) (TerminalPressure.outgoingTaper_bounds d y0)
     (TerminalPressure.outgoingTaper_deriv_nonneg d y0) (TerminalPressure.outgoingTaper_plateau d
-      y0) hY).1
+        y0) hY).1
   simpa only [TerminalPressure.outgoingPressure,Real.sq_sqrt (by positivity : 0 ≤ 2*s),
     mul_div_cancel_left₀ s (by norm_num : (2:ℝ)≠0)] using hi
 
 theorem physicalThetaWeight_eq_tail (F : Profile) {XR C t r z : ℝ}
     (w : CompensationWitness F XR C) (ht : t < 1) (hr : 0 < r)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
-      OutgoingDilation.switchRadius F XR)+1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
+      OutgoingDilation.switchRadius F XR) +
+ 1 / 5) :
     physicalThetaWeight F XR w.coefficients t z r =
       ∫ u in Ioi r, u^2*TerminalStress.leadingResidual (normalization F XR) F.data.h
         (TerminalPressure.outgoingTaper F.data (shift F XR)) t u z := by
@@ -1242,35 +1274,35 @@ theorem physicalThetaWeight_eq_tail (F : Profile) {XR C t r z : ℝ}
     change r ≤ u at hu
     apply physicalThetaWeight_hasDerivAt F w ht (hr.trans_le hu)
     have hh := full_switch_radial_strict w.radius_pos ht
-      (show 0 < (TerminalStress.radiusPoint t r z).2.1 by dsimp [TerminalStress.radiusPoint];
-        positivity)
+      (show 0 < (TerminalStress.radiusPoint t r z).2.1 by
+          dsimp [TerminalStress.radiusPoint]; positivity)
       hfull (u := u^2/2) (by dsimp [TerminalStress.radiusPoint]; nlinarith)
     exact hh
   have hi := terminal_angular_integrable (normalization F XR) F.data (shift F XR) (z := z) ht hr
   have hh := integral_Ioi_of_hasDerivAt_of_tendsto' hd hi.neg (physicalThetaWeight_tendsto_zero F w
-    ht)
+      ht)
   rw [integral_neg] at hh
   linarith
 
 theorem physicalAxialWeight_eq_tail (F : Profile) {XR C B t s z : ℝ}
     (hF : OutgoingProfile.Specification F B) (w : CompensationWitness F XR C)
     (ht : t < 1) (hs : 0 < s)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (t,(s,z)) /
-      OutgoingDilation.switchRadius F XR)+1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (t, (s, z)) /
+      OutgoingDilation.switchRadius F XR) + 1 / 5) :
     physicalAxialWeight F XR w.coefficients t z s =
       ∫ u in Ioi s, SimilarityProfile.partialZ
         (TerminalPressure.outgoingPressure (normalization F XR) F.data (shift F XR)) (t,(u,z)) := by
   have hd : ∀ u ∈ Ici s, HasDerivAt (physicalAxialWeight F XR w.coefficients t z)
       (-SimilarityProfile.partialZ
         (TerminalPressure.outgoingPressure (normalization F XR) F.data (shift F XR)) (t,(u,z))) u
-          := by
+            := by
     intro u hu
     exact physicalAxialWeight_hasDerivAt F w ht (hs.trans_le hu)
       (full_switch_radial_strict w.radius_pos ht hs hfull hu)
   have hC : 0 < normalization F XR := TerminalCone.normalization_pos F w.radius_pos
   have hi := terminal_axial_integrable hC F.data (shift F XR) (z := z) ht hs
   have hh := integral_Ioi_of_hasDerivAt_of_tendsto' hd hi.neg (physicalAxialWeight_tendsto_zero F
-    hF w ht)
+      hF w ht)
   rw [integral_neg] at hh
   linarith
 
@@ -1278,12 +1310,13 @@ theorem physicalAxialWeight_eq_tail (F : Profile) {XR C B t s z : ℝ}
 backward physical stress.  Its similarity factor is `q^(-A-1/2)`. -/
 theorem physical_forwardTheta_eq_terminal (F : Profile) {XR C t r z : ℝ}
     (w : CompensationWitness F XR C) (ht : t < 1) (hr : 0 < r)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
-      OutgoingDilation.switchRadius F XR)+1/5) :
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
+      OutgoingDilation.switchRadius F XR) +
+ 1 / 5) :
     SimilarityProfile.q F.data.h (TerminalStress.radiusPoint t r
-      z)^(-TerminalPressure.amplitudeExponent F.data.h-1/2) *
+        z)^(-TerminalPressure.amplitudeExponent F.data.h-1/2) *
       forwardTheta F XR w.coefficients (logPoint XR (SimilarityProfile.inner F.data.h
-        (TerminalStress.radiusPoint t r z))) =
+          (TerminalStress.radiusPoint t r z))) =
         TerminalStress.terminalStress (normalization F XR) F.data.h
           (TerminalPressure.outgoingTaper F.data (shift F XR)) t z r := by
   let q := SimilarityProfile.q F.data.h (t,(0,z))
@@ -1298,27 +1331,28 @@ theorem physical_forwardTheta_eq_terminal (F : Profile) {XR C t r z : ℝ}
   change q^(-F.data.h)*thetaWeight F XR w.coefficients (radiusClock q XR r,η) = _ at he
   unfold TerminalStress.terminalStress TerminalStress.backwardStress
   rw [← he,hw]
-  change q^(-TerminalPressure.amplitudeExponent F.data.h-1/2)*
+  change q^(-TerminalPressure.amplitudeExponent F.data.h-1/2) *
     forwardTheta F XR w.coefficients (radiusClock q XR r,η) =
     q^(-F.data.h)*(2*(XR*Real.exp (radiusClock q XR r))*forwardTheta F XR w.coefficients
-      (radiusClock q XR r,η))/r^2
+        (radiusClock q XR r,η))/r^2
   rw [show -TerminalPressure.amplitudeExponent F.data.h-1/2=-F.data.h-1 by
     unfold TerminalPressure.amplitudeExponent
-    ring,Real.rpow_sub_one hq.ne',radiusClock,exp_regularClock hq w.radius_pos (by positivity : 0 <
-      r^2/2)]
+    ring,Real.rpow_sub_one hq.ne',radiusClock,exp_regularClock hq w.radius_pos (by
+        positivity : 0 < r^2/2)]
   field_simp [hq.ne',hr.ne']
 
 /-- The same witness and the original zero-energy identity also fix the
 axial integration constant; the pressure is the actual canonical pressure. -/
 theorem physical_forwardAxial_eq_terminal (F : Profile) {XR C B t r z : ℝ}
     (hF : OutgoingProfile.Specification F B) (w : CompensationWitness F XR C) (ht : t < 1) (hr : 0
-      < r)
-    (hfull : 1/2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
-      OutgoingDilation.switchRadius F XR)+1/5) :
+        < r)
+    (hfull : 1 / 2 < Real.log (SimilarityProfile.X F.data.h (TerminalStress.radiusPoint t r z) /
+      OutgoingDilation.switchRadius F XR) +
+ 1 / 5) :
     SimilarityProfile.q F.data.h (TerminalStress.radiusPoint t r
-      z)^(-TerminalPressure.amplitudeExponent F.data.h-1/2) *
+        z)^(-TerminalPressure.amplitudeExponent F.data.h-1/2) *
       forwardAxial F XR w.coefficients (logPoint XR (SimilarityProfile.inner F.data.h
-        (TerminalStress.radiusPoint t r z))) =
+          (TerminalStress.radiusPoint t r z))) =
         TerminalPressure.axialBackwardStress (normalization F XR) F.data.h
           (TerminalPressure.outgoingTaper F.data (shift F XR)) t z r := by
   let q := SimilarityProfile.q F.data.h (t,(0,z))
@@ -1330,29 +1364,29 @@ theorem physical_forwardAxial_eq_terminal (F : Profile) {XR C B t r z : ℝ}
   have hw := axialWeight_eq_forward F w (p := (radiusClock q XR r,η)) hy
   have he := physicalAxialWeight_eq_tail F hF w ht (by positivity : 0 < r^2/2) hfull
   change q^(-TerminalPressure.amplitudeExponent F.data.h)*axialWeight F XR w.coefficients
-    (radiusClock q XR r,η) = _ at he
+      (radiusClock q XR r,η) = _ at he
   unfold TerminalPressure.axialBackwardStress
   change _ = (∫ u in Ioi (r^2/2), SimilarityProfile.partialZ
     (TerminalPressure.outgoingPressure (normalization F XR) F.data (shift F XR)) (t,(u,z)))/r
   rw [← he,hw]
-  change q^(-TerminalPressure.amplitudeExponent F.data.h-1/2)*
+  change q^(-TerminalPressure.amplitudeExponent F.data.h-1/2) *
     forwardAxial F XR w.coefficients (radiusClock q XR r,η) =
-    q^(-TerminalPressure.amplitudeExponent F.data.h)*
+    q^(-TerminalPressure.amplitudeExponent F.data.h) *
       (Real.sqrt (2*XR*Real.exp (radiusClock q XR r))*forwardAxial F XR w.coefficients (radiusClock
-        q XR r,η))/r
+          q XR r,η))/r
   rw [show 2*XR*Real.exp (radiusClock q XR r)=2*(XR*Real.exp (radiusClock q XR r)) by ring,
-    radiusClock,exp_regularClock hq w.radius_pos (by positivity : 0 < r^2/2),sqrt_radius_quotient
-      hq hr,
+    radiusClock,exp_regularClock hq w.radius_pos (by
+        positivity : 0 < r^2/2),sqrt_radius_quotient hq hr,
     Real.rpow_sub hq,← Real.sqrt_eq_rpow]
   field_simp [hr.ne',(Real.sqrt_pos.mpr hq).ne']
 
 theorem normalized_inner (F : Profile) {XR : ℝ} (hXR : 0 < XR) (y : ℝ)
-    {η : ℝ} (hη : η^2 < 1) :
+    {η : ℝ} (hη : η ^ 2 < 1) :
     SimilarityProfile.q F.data.h (TerminalStress.radiusPoint (η^2)
       (TerminalEdgeFactor.profileRadius (shift F XR) (TerminalCone.edgeDistance F y)) η) = 1 ∧
     SimilarityProfile.inner F.data.h (TerminalStress.radiusPoint (η^2)
       (TerminalEdgeFactor.profileRadius (shift F XR) (TerminalCone.edgeDistance F y)) η) =
-        (XR*Real.exp y,η) := by
+          (XR*Real.exp y,η) := by
   let r := TerminalEdgeFactor.profileRadius (shift F XR) (TerminalCone.edgeDistance F y)
   have hq : SimilarityProfile.q F.data.h (TerminalStress.radiusPoint (η^2) r η) = 1 :=
     PhysicalHeatCoordinates.q_normalizedSection F.data.h_pos F.data.h_lt_half hη (r^2/2)
@@ -1368,7 +1402,7 @@ theorem normalized_inner (F : Profile) {XR : ℝ} (hXR : 0 < XR) (y : ℝ)
   have hr2 : r^2 = 2*(XR*Real.exp y) := by
     rw [TerminalEdgeFactor.profileRadius_square]
     change 2*TerminalEdgeFactor.profileS (TerminalCone.shift F XR) (TerminalCone.edgeDistance F y)
-      = _
+        = _
     rw [TerminalCone.profileS_clock F hXR]
   rw [hr2]
   congr 1
@@ -1381,10 +1415,10 @@ theorem forward_stresses_eq_profile_interior (F : Profile) {XR C B y η : ℝ}
     (hy : TerminalCone.terminalStart F.data < y) (hη : η ∈ Ioo (-1) 1) :
     forwardTheta F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileAngularStress (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) ∧
+          (TerminalCone.profilePoint F y η) ∧
     forwardAxial F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileAxialStress (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := by
+          (TerminalCone.profilePoint F y η) := by
   have he2 : η^2 < 1 := TerminalCone.eta_sq_lt_one hη
   let r := TerminalEdgeFactor.profileRadius (shift F XR) (TerminalCone.edgeDistance F y)
   have hr : 0 < r := TerminalEdgeFactor.profileRadius_pos _ _
@@ -1404,6 +1438,7 @@ theorem forward_stresses_eq_profile_interior (F : Profile) {XR C B y η : ℝ}
     TerminalCone.normalized_axialStress _ F.data _ _ he2] at hz
   exact ⟨ht,hz⟩
 
+/-- Closed log domain, given by `univ ×ˢ HeatedOutgoing.parameterDomain`. -/
 noncomputable def closedLogDomain : Set (ℝ × ℝ) := univ ×ˢ HeatedOutgoing.parameterDomain
 
 theorem controls_continuousOn (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C) :
@@ -1421,9 +1456,9 @@ theorem scalar_fields_continuousOn (F : Profile) {XR C : ℝ} (w : CompensationW
   have hc : ContinuousOn G closedLogDomain :=
     ((controls_continuousOn F w).comp continuousOn_snd (fun _ hp => hp.2)).prodMk continuousOn_id
   have he : ContinuousOn (fun p => HeatSwitchCone.value (HeatSwitchCone.freeE F) (G p))
-    closedLogDomain :=
+      closedLogDomain :=
     (HeatSwitchCone.value_contDiff (HeatSwitchCone.freeE_contDiff F)).continuous.comp_continuousOn
-      hc
+        hc
   have heq (p : ℝ × ℝ) (hp : p ∈ closedLogDomain) :
       logE F XR w.coefficients p = HeatSwitchCone.value (HeatSwitchCone.freeE F) (G p) :=
     HeatSwitchCone.logE_eq_realize F XR w.coefficients w.radius_pos p hp.2
@@ -1457,26 +1492,27 @@ theorem forward_fields_continuousOn (F : Profile) {XR C : ℝ} (w : Compensation
     continuousOn_const.sub (continuousOn_const.mul (continuousOn_snd.pow 2))
   have hln (p : ℝ × ℝ) (hp : p ∈ closedLogDomain) : CoordinateAlgebra.L F.data.h p.2 ≠ 0 :=
     (CoordinateAlgebra.L_pos F.data.h_pos.le F.data.h_lt_half (TerminalEdgeFactor.eta_sq_le_one
-      hp.2)).ne'
+        hp.2)).ne'
   exact ⟨(he.div hr (fun p _ => hrn p)).mul (((hx.mul hq).div hl hln).sub ha),
     (hx.mul hn).div (hl.mul hr) (fun p hp => mul_ne_zero (hln p hp) (hrn p))⟩
 
+/-- Terminal map, given by `(p.2,OutgoingTail.tailEnd F.data-p.1)`. -/
 noncomputable def terminalMap (F : Profile) (p : ℝ × ℝ) : ℝ × ℝ := (p.2,OutgoingTail.tailEnd
-  F.data-p.1)
+    F.data-p.1)
 
 theorem terminalMap_continuous (F : Profile) : Continuous (terminalMap F) :=
   continuous_snd.prodMk (continuous_const.sub continuous_fst)
 
 theorem terminal_speed_continuousOn (F : Profile) {XR C : ℝ} (w : CompensationWitness F XR C) :
     ContinuousOn (fun p => TerminalEdgeFactor.profileSpeed (normalization F XR) F.data (shift F XR)
-      (terminalMap F p))
+        (terminalMap F p))
       closedLogDomain := by
   apply (TerminalEdgeFactor.profileSpeed_contDiffOn (normalization F XR) F.data (shift F
-    XR)).continuousOn.comp
+      XR)).continuousOn.comp
     (terminalMap_continuous F).continuousOn
   intro p hp
   exact TerminalEdgeFactor.profileDomain_contains_closed (TerminalCone.normalization_pos F
-    w.radius_pos)
+      w.radius_pos)
     F.data (shift F XR) ⟨hp.2,mem_univ _⟩
 
 /-- Joint closure in log radius and parameter includes the switch-attachment
@@ -1487,13 +1523,13 @@ theorem forward_stresses_eq_profile (F : Profile) {XR C B y η : ℝ}
     (hy : TerminalCone.terminalStart F.data ≤ y) (hη : η ∈ HeatedOutgoing.parameterDomain) :
     forwardTheta F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileAngularStress (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) ∧
+          (TerminalCone.profilePoint F y η) ∧
     forwardAxial F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileAxialStress (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) ∧
+          (TerminalCone.profilePoint F y η) ∧
     HeatSwitchCone.radialA F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileSpeed (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := by
+          (TerminalCone.profilePoint F y η) := by
   let S : Set (ℝ × ℝ) := Ioi (TerminalCone.terminalStart F.data) ×ˢ Ioo (-1) 1
   let T : Set (ℝ × ℝ) := Ici (TerminalCone.terminalStart F.data) ×ˢ HeatedOutgoing.parameterDomain
   have hST : S ⊆ T := by
@@ -1506,27 +1542,27 @@ theorem forward_stresses_eq_profile (F : Profile) {XR C B y η : ℝ}
     simp only [S,T,HeatedOutgoing.parameterDomain,closure_prod_eq,closure_Ioi,
       closure_Ioo (by norm_num : (-1:ℝ)≠1),subset_refl]
   have hs := (TerminalEdgeFactor.profileStress_contDiff (normalization F XR) F.data (shift F
-    XR)).continuous.comp
+      XR)).continuous.comp
     (terminalMap_continuous F)
   have heΘ : EqOn (forwardTheta F XR w.coefficients)
       (fun p => TerminalEdgeFactor.profileAngularStress (normalization F XR) F.data (shift F XR)
-        (terminalMap F p)) S := by
+          (terminalMap F p)) S := by
     intro p hp
     exact (forward_stresses_eq_profile_interior F hF w hp.1 hp.2).1
   have heZ : EqOn (forwardAxial F XR w.coefficients)
       (fun p => TerminalEdgeFactor.profileAxialStress (normalization F XR) F.data (shift F XR)
-        (terminalMap F p)) S := by
+          (terminalMap F p)) S := by
     intro p hp
     exact (forward_stresses_eq_profile_interior F hF w hp.1 hp.2).2
   have heA : EqOn (HeatSwitchCone.radialA F XR w.coefficients)
       (fun p => TerminalEdgeFactor.profileSpeed (normalization F XR) F.data (shift F XR)
-        (terminalMap F p)) S := by
+          (terminalMap F p)) S := by
     intro p hp
     exact radialA_eq_profileSpeed F w hp.1 ⟨hp.2.1.le,hp.2.2.le⟩
   have hΘ := heΘ.of_subset_closure ((forward_fields_continuousOn F w).1.mono hTc)
-    hs.fst.continuousOn hST hTS
+      hs.fst.continuousOn hST hTS
   have hZ := heZ.of_subset_closure ((forward_fields_continuousOn F w).2.mono hTc)
-    hs.snd.continuousOn hST hTS
+      hs.snd.continuousOn hST hTS
   have hA := heA.of_subset_closure ((scalar_fields_continuousOn F w).2.2.2.mono hTc)
     ((terminal_speed_continuousOn F w).mono hTc) hST hTS
   exact ⟨hΘ (show (y,η) ∈ T from ⟨hy,hη⟩),
@@ -1536,13 +1572,13 @@ theorem logSwirl_eq_profile (F : Profile) {XR C y η : ℝ} (w : CompensationWit
     (hy : TerminalCone.terminalStart F.data ≤ y) (hη : η ∈ HeatedOutgoing.parameterDomain) :
     logE F XR w.coefficients (y,η)/Real.sqrt (2*XR*Real.exp y) =
       TerminalEdgeFactor.profileSwirlCoefficient (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := by
+          (TerminalCone.profilePoint F y η) := by
   have he := TerminalCone.E_eq_profileAngularVelocity F w.coefficients w.radius_pos hy hη
   have hr : Real.sqrt (2*XR*Real.exp y) =
       TerminalEdgeFactor.profileRadius (shift F XR) (TerminalCone.edgeDistance F y) := by
     have hs := TerminalEdgeFactor.profileRadius_square (shift F XR) (TerminalCone.edgeDistance F y)
     change TerminalEdgeFactor.profileRadius (TerminalCone.shift F XR) (TerminalCone.edgeDistance F
-      y)^2 =
+        y)^2 =
       2*TerminalEdgeFactor.profileS (TerminalCone.shift F XR) (TerminalCone.edgeDistance F y) at hs
     rw [TerminalCone.profileS_clock F w.radius_pos] at hs
     rw [show 2*XR*Real.exp y=2*(XR*Real.exp y) by ring,← hs,
@@ -1550,21 +1586,21 @@ theorem logSwirl_eq_profile (F : Profile) {XR C y η : ℝ} (w : CompensationWit
     rfl
   rw [hr]
   exact congrArg (fun a => a/TerminalEdgeFactor.profileRadius (shift F XR)
-    (TerminalCone.edgeDistance F y)) he
+      (TerminalCone.edgeDistance F y)) he
 
 theorem normalP_eq_profile (F : Profile) {XR C B y η : ℝ}
     (hF : OutgoingProfile.Specification F B) (w : CompensationWitness F XR C)
     (hy : TerminalCone.terminalStart F.data ≤ y) (hη : η ∈ HeatedOutgoing.parameterDomain) :
     HeatSwitchCone.normalP F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileP (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := by
+          (TerminalCone.profilePoint F y η) := by
   have hafter := (terminalStart_after_endpoint F).trans_le hy
   have he := forward_stresses_eq_profile F hF w hy hη
   have hsw := logSwirl_eq_profile F w hy hη
   have hE : logE F XR w.coefficients (y,η)/Real.sqrt (2*XR*Real.exp y) ≠ 0 := by
     rw [hsw]
     exact (TerminalEdgeFactor.profileSwirlCoefficient_pos (TerminalCone.normalization_pos F
-      w.radius_pos)
+        w.radius_pos)
       F.data (shift F XR) (y := TerminalCone.profilePoint F y η) hη).ne'
   simp only [HeatSwitchCone.normalP,HeatSwitchCone.sourceC,
     radialB_after_endpoint F XR w.coefficients (p := (y,η)) hafter,
@@ -1585,10 +1621,10 @@ theorem terminal_forward_cone (F : Profile) {XR C B y η : ℝ}
     HeatSwitchCone.TrueAt F XR w.coefficients (y,η) ∧
     HeatSwitchCone.normalP F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileP (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) ∧
+          (TerminalCone.profilePoint F y η) ∧
     HeatSwitchCone.normalJ F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileJ (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := by
+          (TerminalCone.profilePoint F y η) := by
   have hafter := (terminalStart_after_endpoint F).trans_le hy
   have hB := radialB_after_endpoint F XR w.coefficients (p := (y,η)) hafter
   have he := forward_stresses_eq_profile F hF w hy hη
@@ -1606,7 +1642,7 @@ theorem terminal_forward_cone (F : Profile) {XR C B y η : ℝ}
     CoordinateAlgebra.L_pos F.data.h_pos.le F.data.h_lt_half (TerminalEdgeFactor.eta_sq_le_one hη)
   have hQ : 0 < HeatSwitchCone.Qs F XR w.coefficients (y,η) := by
     have hp0 : 0 < XR*Real.exp y*HeatSwitchCone.Qs F XR w.coefficients (y,η)/CoordinateAlgebra.L
-      F.data.h η := by
+        F.data.h η := by
       rw [← hscale]
       linarith
     exact (mul_pos_iff_of_pos_left (mul_pos w.radius_pos (Real.exp_pos y))).mp
@@ -1615,10 +1651,10 @@ theorem terminal_forward_cone (F : Profile) {XR C B y η : ℝ}
   rw [he.2.1,logSwirl_eq_profile F w hy hη] at hJ
   have hJ' : HeatSwitchCone.normalJ F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileJ (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := hJ
+          (TerminalCone.profilePoint F y η) := hJ
   have hV : HeatSwitchCone.normalV F XR w.coefficients (y,η) =
       TerminalEdgeFactor.profileSpeed (normalization F XR) F.data (shift F XR)
-        (TerminalCone.profilePoint F y η) := by
+          (TerminalCone.profilePoint F y η) := by
     simp only [HeatSwitchCone.normalV,hB,zero_div,zero_pow (by decide : (2:ℕ)≠0),add_zero,mul_one]
     exact he.2.2
   have ha2 : 2 < HeatSwitchCone.radialA F XR w.coefficients (y,η) := by

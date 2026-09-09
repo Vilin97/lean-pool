@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePiola
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaPair
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
+
+/-! Every joined high/corrector pair lies in the actual lifted solenoidal space. -/
 
 @[expose] public section
 
-/-! Every joined high/corrector pair lies in the actual lifted solenoidal space. -/
 
 noncomputable section
 
@@ -28,6 +32,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (B : EulerTransversePacketProvider.HistoryData (D.initial τ hτ hτT.le))
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
 
+/-- Joined pair field used in packet joined source piola. -/
 def joinedPairField (κ : ℝ) (p : ℕ) :
     Field P M.T (fun z => (joinedSourceOperators P M D τ hτ hτT B).inverseFrame z
       (κ^p • (joinedSourceProfiles P M D τ hτ hτT B primary p).high z +
@@ -35,13 +40,13 @@ def joinedPairField (κ : ℝ) (p : ℕ) :
   (joinedSourceCoefficientData P M D τ hτ hτT B hT).inverse.multiply
     (((joinedSourceProfileWitness P M D hT τ hτ hτT B primary hprimary p).high.smul (κ^p)).add
       ((joinedSourceProfileWitness P M D hT τ hτ hτT B primary hprimary p).corrector.smul
-        (κ^(p+1))))
+          (κ^(p+1))))
 
 theorem joinedPairField_mem
     (hc : primary.corrector = D.curlCorrector P primary.high)
-    (hm : ∀ (t : Icc (0 : ℝ) M.T) x, (∫ θ in (0 : ℝ)..P, primary.high (t,(x,θ))) = 0)
+    (hm : ∀ (t : Icc (0 : ℝ) M.T) x, (∫ θ in (0 : ℝ)..P, primary.high (t, (x, θ))) = 0)
     (ht : ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (D.normalField (t,(x,θ))) (primary.high (t,(x,θ))) = 0)
+      inner ℝ (D.normalField (t, (x, θ))) (primary.high (t, (x, θ))) = 0)
     (κ : ℝ) (p : ℕ) (hp : 1 ≤ p) (t : Icc (0 : ℝ) M.T)
     (Ξ : Space → Space) (hΞ : ContDiff ℝ ∞ Ξ)
     (hF : ∀ x, fderiv ℝ Ξ x = D.F.field (sourceTime M D hT t) x)
@@ -71,7 +76,7 @@ theorem joinedPairField_mem
     change D.FInv.field (D.clamp r) x
         (κ^p • (joinedSourceProfiles P M D τ hτ hτT B primary p).high (r,(x,θ)) +
           κ^(p+1) • D.curlCorrector P (joinedSourceProfiles P M D τ hτ hτT B primary p).high
-            (r,(x,θ))) =
+              (r,(x,θ))) =
       D.FInv.field (D.clamp r) x
         (κ^p • (joinedSourceProfiles P M D τ hτ hτT B primary p).high (r,(x,θ)) +
           κ^(p+1) • (joinedSourceProfiles P M D τ hτ hτT B primary p).corrector (r,(x,θ)))

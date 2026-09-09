@@ -7,12 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicLocalization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CylindricalResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TimeLocalization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
 
 /-!
 # Spatial localization through actual Cartesian potentials
@@ -26,6 +24,9 @@ The pressure is cut and periodized as a scalar.
 The conclusions concern the spatial construction and the existing time
 activation.  No terminal residual limit is assumed or asserted here.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.SpatialLocalization
 
@@ -175,9 +176,11 @@ theorem plateau_subset_innerCube : plateau ⊆ PeriodicLocalization.innerCube (1
 noncomputable def cutPotential (A : VelocityField) : VelocityField :=
   fun z => spatialCutoff z.2 • A z
 
+/-- Cut pressure, defined pointwise by `spatialCutoff z.2 * p z`. -/
 noncomputable def cutPressure (p : PressureField) : PressureField :=
   fun z => spatialCutoff z.2 * p z
 
+/-- Cut velocity, given by `SpatialCurl.spatialCurl (cutPotential A)`. -/
 noncomputable def cutVelocity (A : VelocityField) : VelocityField :=
   SpatialCurl.spatialCurl (cutPotential A)
 
@@ -220,9 +223,11 @@ theorem cutVelocity_product_rule (A : VelocityField) (t : ℝ) (x : Space)
 noncomputable def periodicPotential (A : VelocityField) : VelocityField :=
   PeriodicLocalization.periodize (cutPotential A)
 
+/-- Periodic velocity, given by `SpatialCurl.spatialCurl (periodicPotential A)`. -/
 noncomputable def periodicVelocity (A : VelocityField) : VelocityField :=
   SpatialCurl.spatialCurl (periodicPotential A)
 
+/-- Periodic pressure, given by `PeriodicLocalization.periodize (cutPressure p)`. -/
 noncomputable def periodicPressure (p : PressureField) : PressureField :=
   PeriodicLocalization.periodize (cutPressure p)
 
@@ -346,13 +351,13 @@ theorem periodicVelocity_jets_eq (A : VelocityField) {z : SpaceTime}
     iteratedFDeriv ℝ m (periodicVelocity A) z =
       iteratedFDeriv ℝ m (SpatialCurl.spatialCurl A) z :=
   (SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (periodicVelocity_eventuallyEq A hz)
-    m).self_of_nhds
+      m).self_of_nhds
 
 theorem periodicPressure_jets_eq (p : PressureField) {z : SpaceTime}
     (hz : z.2 ∈ plateau) (m : ℕ) :
     iteratedFDeriv ℝ m (periodicPressure p) z = iteratedFDeriv ℝ m p z :=
   (SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (periodicPressure_eventuallyEq p hz)
-    m).self_of_nhds
+      m).self_of_nhds
 
 theorem periodic_residual_eventuallyEq (A : VelocityField) (p : PressureField)
     {z : SpaceTime} (hz : z.2 ∈ plateau) :
@@ -393,6 +398,7 @@ localized fields.  It is independent of the spatial variables. -/
 noncomputable def localizedVelocity (A : VelocityField) : VelocityField :=
   TimeLocalization.activatedVelocity (periodicVelocity A)
 
+/-- Localized pressure, given by `TimeLocalization.activatedPressure (periodicPressure p)`. -/
 noncomputable def localizedPressure (p : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (periodicPressure p)
 

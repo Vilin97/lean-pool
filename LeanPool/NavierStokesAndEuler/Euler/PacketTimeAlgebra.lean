@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
 
+/-! Genuine within-interval time derivatives commute with the finite packet algebra. -/
+
 @[expose] public section
 
-/-! Genuine within-interval time derivatives commute with the finite packet algebra. -/
 
 noncomputable section
 
@@ -49,7 +50,7 @@ theorem finsetSum {ι : Type*} (s : Finset ι) (f f' : ι → VectorField)
   exact h
 
 theorem of_path_eq (hG : TimeDerivative hT G G')
-    (h : H.path=G.path) (h' : H'.path=G'.path) : TimeDerivative hT H H' := by
+    (h : H.path = G.path) (h' : H'.path = G'.path) : TimeDerivative hT H H' := by
   unfold TimeDerivative
   rw [h,h']
   exact hG

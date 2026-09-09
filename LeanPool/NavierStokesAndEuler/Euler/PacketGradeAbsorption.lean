@@ -8,15 +8,18 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import Mathlib.Algebra.Order.Star.Real
+
+/-! One spare factorial shift pays all finite grade sums without changing the external radius. -/
 
 @[expose] public section
 
-/-! One spare factorial shift pays all finite grade sums without changing the external radius. -/
 
 namespace EulerGevrey
 
 theorem finite_cost_absorbed (C R : ℝ) (hC : 0 ≤ C) (hCR : C ≤ R)
-    (m d n : ℕ) (hd : 0 < d) (hm : m ≤ d^2) :
+    (m d n : ℕ) (hd : 0 < d) (hm : m ≤ d ^ 2) :
     (C*(m : ℝ))*majorant R (d-1) n ≤ majorant R d n := by
   have hR : 0 ≤ R := hC.trans hCR
   have hdn : d^2 ≤ (n+d)^2 := Nat.pow_le_pow_left (by omega : d ≤ n+d) 2
@@ -39,7 +42,7 @@ variable {P T : ℝ} [Fact (0 < P)]
 theorem wordBound_finset_absorb {ι : Type*} (s : Finset ι) (f : ι → VectorField)
     (G : ∀ i, Field P T (f i)) (q : ℕ) (R C : ℝ) (d : ℕ) (shift : ι → ℕ)
     (hR : 1 ≤ R) (hC : 0 ≤ C) (hCR : C ≤ R) (hd : 0 < d)
-    (hcount : s.card ≤ d^2) (hshift : ∀ i ∈ s, shift i < d)
+    (hcount : s.card ≤ d ^ 2) (hshift : ∀ i ∈ s, shift i < d)
     (hG : ∀ i ∈ s, (G i).WordBound q R C (shift i)) :
     (Field.finsetSum s f G).WordBound q R 1 d := by
   have hs := wordBound_finsetSum s f G (fun _ => C)

@@ -6,9 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSupportPreservation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualGaussianCoverage
+import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSupportPreservation
 
 /-!
 # Scalar-clock support of the actual particular solve
@@ -17,6 +16,9 @@ This support argument uses the literal complex Volterra solve and the
 Gaussian-times-padding cutoff. Clock factors only need to be positive
 at each band; no uniform range for the complete clock family is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -60,6 +62,7 @@ variable
       ((fun z => (g n).center + (g n).basis z) ''
         ActualGaussianCoverage.outerCell (r n) (L n) (rate n)))
 
+/-- Scalar cells, constructed using `nativeCells`. -/
 noncomputable def scalarCells : Cells ((P × ℝ) × Plane) Frequency :=
   nativeCells g (fun n => ActualGaussianCoverage.outerCell (r n) (L n) (rate n))
     (fun _ => ActualGaussianCoverage.outerCell_compact _ _ _) hinj

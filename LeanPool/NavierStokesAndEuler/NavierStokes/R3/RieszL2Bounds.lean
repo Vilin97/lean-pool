@@ -6,12 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszPairing
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszPairing
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 
 /-!
 # The `L²` bound for Riesz operators on Schwartz tests
@@ -21,6 +21,9 @@ against a compact smooth cutoff times the output bounds every truncated
 energy. Fatou's lemma then proves both square integrability and the global
 bound, without extending the Fourier transform to arbitrary `L²` functions.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

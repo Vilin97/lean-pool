@@ -7,9 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseCoefficientGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.TransverseParameterRegularity
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Uniform factorial estimates for the constructed transverse inverse
@@ -19,6 +22,9 @@ bounds, potential bound, and reciprocal frame lower bound. The same radius
 works at every derivative order and input shift. The recurrence is derived
 from the actual inverse equation, not assumed for an abstract jet.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -80,12 +86,12 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (H : P → C(Icc (0 : ℝ) T, E →L[ℝ] E))
   (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ x t v, c * ‖v‖^2 ≤ ‖Q x t v‖^2)
+  (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
   (hd : ∀ x (t : Icc (0 : ℝ) T),
     HasDerivWithinAt (EulerVolterraConvolution.extendPath T hT (Q x)) (Q₁ x t) (Icc (0 : ℝ) T) t)
   (K : ℝ) (hK : 0 ≤ K)
-  (hPotential : ∀ x t v, ⟪H x t v, v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+  (hPotential : ∀ x t v, ⟪H x t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
   (hQ : ContDiff ℝ ∞ Q) (hQ₁ : ContDiff ℝ ∞ Q₁) (hH : ContDiff ℝ ∞ H)
   (Rc C₀ C₁ CH : ℝ) (hRc : 0 ≤ Rc)
   (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCH : 0 ≤ CH)
@@ -97,7 +103,7 @@ include hQ hQ₁ hH hRc hC₀ hC₁ hCH hbQ hbQ₁ hbH in
 /-- The actual zero-endpoint coordinate solve has a single-shift factorial
 bound with a radius uniform in the derivative order and input shift. -/
 theorem fixedFrameSolution_gevrey
-    (R : ℝ) (hR : 2 * solveCost T C₀ C₁ CH c * (Rc+1) ≤ R)
+    (R : ℝ) (hR : 2 * solveCost T C₀ C₁ CH c * (Rc + 1) ≤ R)
     (f : P → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d : ℕ)
     (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ majorant R d n)
     (n : ℕ) (x : P) :
@@ -154,7 +160,7 @@ theorem transverseCoordinates_gevrey
     (m : P → Icc (0 : ℝ) T → E)
     (hTangent : ∀ y t v, ⟪m y t, Q y t v⟫_ℝ = 0)
     (hRange : ∀ y t η, ⟪m y t, η⟫_ℝ = 0 → ∃ v : U, Q y t v = η)
-    (R : ℝ) (hR : 2 * solveCost T C₀ C₁ CH c * (Rc+1) ≤ R)
+    (R : ℝ) (hR : 2 * solveCost T C₀ C₁ CH c * (Rc + 1) ≤ R)
     (f : P → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d : ℕ)
     (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ majorant R d n)
     (n : ℕ) (x : P) :
@@ -192,7 +198,7 @@ theorem transverseVelocity_gevrey
     (m : P → Icc (0 : ℝ) T → E)
     (hTangent : ∀ y t v, ⟪m y t, Q y t v⟫_ℝ = 0)
     (hRange : ∀ y t η, ⟪m y t, η⟫_ℝ = 0 → ∃ v : U, Q y t v = η)
-    (R : ℝ) (hR : 2 * solveCost T C₀ C₁ CH c * (Rc+1) ≤ R)
+    (R : ℝ) (hR : 2 * solveCost T C₀ C₁ CH c * (Rc + 1) ≤ R)
     (f : P → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d : ℕ)
     (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ majorant R d n)
     (n : ℕ) (x : P) :

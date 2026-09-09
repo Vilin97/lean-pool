@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSummability
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Series
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialInput
+public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSummability
 
 /-! The actual packet initial increments converge in every finite
 Sobolev norm to a single smooth field with the same compact support. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +31,7 @@ namespace Input
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (A : Input U)
 
+/-- Increment, given by `addField (A.highField k) (A.meanField k)`. -/
 def increment (k : ℝ) : SmoothL2Field Space := addField (A.highField k) (A.meanField k)
 
 theorem increment_field (k : ℝ) : (A.increment k).field=A.high k+A.mean k := rfl
@@ -49,8 +53,8 @@ variable {U : ℕ → Type} [∀ n, NormedAddCommGroup (U n)] [∀ n, InnerProdu
   (J : ℕ) (hJ : 2 ≤ J) (C c : ℝ) (hC : 0 < C) (hc : 0 ≤ c)
   (p q : ℕ) (X : ℝ) (hX : 1 ≤ X)
   (hparameter : ∀ n, (A n).parameterSize ≤ parameterEnvelope J C c p q X n)
-  (hscale : ∀ n, (A n).parent.ell=supportScale J X n)
-  (hσ : ∀ n, (A n).frame.sigma*scaleSequence J X n ≤ 2)
+  (hscale : ∀ n, (A n).parent.ell = supportScale J X n)
+  (hσ : ∀ n, (A n).frame.sigma * scaleSequence J X n ≤ 2)
   (hk : ∀ n, 4 ≤ frequency J X n)
   (hfrequency : ∀ n, (A n).frequencyGuard (frequency J X n))
 
@@ -62,6 +66,8 @@ theorem actual_increment_summable (s : ℕ) :
   exact (hh.add hm).of_nonneg_of_le (fun n => tensorNorm_nonneg s _)
     (fun n => (A n).increment_norm_le (frequency J X n) s)
 
+/-- Initial partial, defined pointwise by `∑ n ∈ range N, ((A n).high (frequency J X n) x+(A
+n).mean (frequency J X n) x)`. -/
 def initialPartial (N : ℕ) : Space → Space :=
   fun x => ∑ n ∈ range N, ((A n).high (frequency J X n) x+(A n).mean (frequency J X n) x)
 
@@ -70,6 +76,7 @@ theorem initialPartial_field (N : ℕ) :
   funext x
   exact partialSum_field (fun n => (A n).increment (frequency J X n)) N x
 
+/-- Initial limit, constructed using `sumField`. -/
 def initialLimit : SmoothL2Field Space :=
   sumField (fun n => (A n).increment (frequency J X n))
     (actual_increment_summable A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency)
@@ -86,26 +93,27 @@ theorem initialLimit_support : tsupport (V).field ⊆ Metric.closedBall 0 2 :=
   sumField_support (fun n => (A n).increment (frequency J X n))
     (actual_increment_summable A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency)
     (Metric.closedBall 0 2) Metric.isClosed_closedBall (fun n => (A n).increment_support (frequency
-      J X n))
+        J X n))
 
 theorem initialLimit_compact : HasCompactSupport (V).field :=
   (isCompact_closedBall (0 : Space) 2).of_isClosed_subset (isClosed_tsupport _)
     (initialLimit_support A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency)
 
+/-- Full initial limit, given by `addField base V`. -/
 def fullInitialLimit (base : SmoothL2Field Space) : SmoothL2Field Space := addField base V
 
 theorem fullInitialLimit_Hm (base : SmoothL2Field Space) (s : ℕ) :
-    Tendsto (fun N => derivativeSum s ((base.field+initialPartial A J X N)-
+    Tendsto (fun N => derivativeSum s ((base.field+initialPartial A J X N) -
       (fullInitialLimit A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency base).field))
       atTop (𝓝 0) := by
-  have he (N : ℕ) : (base.field+initialPartial A J X N)-
-      (fullInitialLimit A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency base).field=
+  have he (N : ℕ) : (base.field+initialPartial A J X N) -
+      (fullInitialLimit A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency base).field =
       initialPartial A J X N-(V).field := by
     funext x
-    change (base.field x+initialPartial A J X N x)-(base.field x+(V).field x)=
+    change (base.field x+initialPartial A J X N x)-(base.field x+(V).field x) =
       initialPartial A J X N x-(V).field x
     abel
   simpa only [he] using initialLimit_Hm A J hJ C c hC hc p q X hX hparameter hscale hσ hk
-    hfrequency s
+      hfrequency s
 
 end EulerPacketInitial

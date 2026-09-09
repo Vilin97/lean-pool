@@ -7,10 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanInteriorCutoffs
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicCutoffEnergy
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Two local energy steps for smooth harmonic functions on the unit ball. -/
 
 @[expose] public section
 
-/-! Two local energy steps for smooth harmonic functions on the unit ball. -/
 
 noncomputable section
 
@@ -19,9 +26,14 @@ namespace EulerMeanHarmonic
 open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerVectorCalculus
 open scoped ContDiff
 
+/-- Outer derivative bound, given by `derivativeBound outerCutoff outer_compact outer_smooth 1`. -/
 def outerDerivativeBound : ℝ := derivativeBound outerCutoff outer_compact outer_smooth 1
+/-- Middle derivative bound, given by `derivativeBound middleCutoff middle_compact middle_smooth
+1`. -/
 def middleDerivativeBound : ℝ := derivativeBound middleCutoff middle_compact middle_smooth 1
+/-- Inner derivative bound, given by `derivativeBound innerCutoff inner_compact inner_smooth 1`. -/
 def innerDerivativeBound : ℝ := derivativeBound innerCutoff inner_compact inner_smooth 1
+/-- Inner second bound, given by `derivativeBound innerCutoff inner_compact inner_smooth 2`. -/
 def innerSecondBound : ℝ := derivativeBound innerCutoff inner_compact inner_smooth 2
 
 theorem outer_bound_nonneg : 0 ≤ outerDerivativeBound :=

@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEquation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalInverse
+import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEquation
 
 /-!
 # The source frame `Q = F R⊥`
@@ -17,6 +17,9 @@ These coefficient lemmas discharge the moving-plane range and lower-frame
 hypotheses using the prescribed invertible deformation and orthonormal reference
 plane. No inverse solution or acceleration is supplied as input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -107,7 +110,7 @@ theorem framePath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
     HasDerivWithinAt (extendPath T hT (framePath m₀ R T A))
       (framePath m₀ R T A₁ t) (Icc (0 : ℝ) T) t := by
   have h := (hd t).clm_comp (hasDerivWithinAt_const (t : ℝ) (Icc (0 : ℝ) T) (referenceEmbedding m₀
-    R))
+      R))
   convert h using 1
   · rfl
   · simp only [comp_zero, add_zero]

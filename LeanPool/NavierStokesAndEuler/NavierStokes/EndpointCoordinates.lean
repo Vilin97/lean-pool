@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveRepresentatives
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBorelBase
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Actual similarity coordinates across the nonzero axial endpoint
@@ -19,6 +18,9 @@ branch.  The extension below is built from that branch and agrees with all
 actual physical coordinate jets at every point with `t<1`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.EndpointCoordinates
@@ -27,7 +29,9 @@ open Set Filter Function
 open scoped Topology ContDiff
 open SimilarityCoordinates
 
+/-- Physical point: an abbreviation for `SimilarityProfile.PhysicalPoint`. -/
 abbrev PhysicalPoint := SimilarityProfile.PhysicalPoint
+/-- Chart: an abbreviation for `SlowBorelBase.Chart`. -/
 abbrev Chart := SlowBorelBase.Chart
 
 /-- The positive solution of the zero-time similarity equation. -/
@@ -79,22 +83,29 @@ theorem stableInverse_zeroTime {a z : ℝ} (ha : 0 < a) (ha1 : a < 1) (hz : z �
     Prod.ext (endpointRoot_equation ha1 hz) rfl
   rwa [hf] at he
 
+/-- Time axial, given by `(1 - p.1, p.2.2)`. -/
 noncomputable def timeAxial (p : PhysicalPoint) : ℝ × ℝ := (1 - p.1, p.2.2)
 
+/-- Domain, given by `timeAxial ⁻¹' PositiveRepresentatives.stableTarget (2 * h)`. -/
 noncomputable def domain (h : ℝ) : Set PhysicalPoint :=
   timeAxial ⁻¹' PositiveRepresentatives.stableTarget (2 * h)
 
+/-- Q extension, given by `(PositiveRepresentatives.stableInverse (2 * h) (timeAxial p)).1`. -/
 noncomputable def qExtension (h : ℝ) (p : PhysicalPoint) : ℝ :=
   (PositiveRepresentatives.stableInverse (2 * h) (timeAxial p)).1
 
+/-- Eta extension, given by `p.2.2 / qExtension h p ^ ((1 - 2 * h) / 2)`. -/
 noncomputable def etaExtension (h : ℝ) (p : PhysicalPoint) : ℝ :=
   p.2.2 / qExtension h p ^ ((1 - 2 * h) / 2)
 
+/-- X extension, given by `p.2.1 / qExtension h p`. -/
 noncomputable def XExtension (h : ℝ) (p : PhysicalPoint) : ℝ := p.2.1 / qExtension h p
 
+/-- Inner extension, given by `(XExtension h p, etaExtension h p)`. -/
 noncomputable def innerExtension (h : ℝ) (p : PhysicalPoint) : ℝ × ℝ :=
   (XExtension h p, etaExtension h p)
 
+/-- Chart extension, given by `(qExtension h p, innerExtension h p)`. -/
 noncomputable def chartExtension (h : ℝ) (p : PhysicalPoint) : Chart :=
   (qExtension h p, innerExtension h p)
 
@@ -159,7 +170,7 @@ theorem chartExtension_endpoint {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (endpointRoot (2 * h) z,
         (s / endpointRoot (2 * h) z, z / endpointRoot (2 * h) z ^ ((1 - 2 * h) / 2))) := by
   simp only [chartExtension, innerExtension, XExtension, etaExtension, qExtension_endpoint hh hh1 s
-    hz]
+      hz]
 
 theorem qExtension_eq_physical {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : qExtension h p = SimilarityProfile.q h p := by
@@ -196,9 +207,10 @@ theorem jets_eq_of_eventuallyEq {E V : Type*} [NormedAddCommGroup E] [NormedSpac
 theorem chartExtension_jets_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) (n : ℕ) :
     iteratedFDeriv ℝ n (chartExtension h) p = iteratedFDeriv ℝ n (SlowBorelBase.physicalChart h) p
-      :=
+        :=
   jets_eq_of_eventuallyEq (chartExtension_eventuallyEq hh hh1 hp) n
 
+/-- Lower domain, given by `domain h ∩ {p | c < qExtension h p}`. -/
 noncomputable def lowerDomain (h c : ℝ) : Set PhysicalPoint :=
   domain h ∩ {p | c < qExtension h p}
 
@@ -237,9 +249,12 @@ theorem endpoint_neighborhood {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-! ## The actual Cartesian chart used by the slow base -/
 
+/-- Cartesian domain, given by `(fun z => AxisymmetricFields.profilePoint z.1 z.2) ⁻¹' domain
+h`. -/
 noncomputable def cartesianDomain (h : ℝ) : Set ProblemStatement.SpaceTime :=
   (fun z => AxisymmetricFields.profilePoint z.1 z.2) ⁻¹' domain h
 
+/-- Cartesian extension, given by `chartExtension h (AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def cartesianExtension (h : ℝ) (z : ProblemStatement.SpaceTime) : Chart :=
   chartExtension h (AxisymmetricFields.profilePoint z.1 z.2)
 

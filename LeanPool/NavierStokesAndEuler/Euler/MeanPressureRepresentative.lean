@@ -7,13 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPressure
-public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalWordBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CanonicalGraphPotential
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.MeanPressurePotential
 
 /-!
 # A normalized scalar pressure for the actual mean solution
@@ -24,6 +24,9 @@ The resulting scalar is spatially smooth, normalized at zero, and gives the
 pointwise physical equation. No scalar potential or pressure time derivative
 is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,20 +39,20 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 /-- The canonical smooth spatial representative of an actual continuous L² path. -/
-def pathRepresentative (T : ℝ) (p : C(Icc (0 : ℝ) T,L2))
+def pathRepresentative (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (t : Icc (0 : ℝ) T) : Space → Space :=
   representative (p t) (pathTranslation_evaluation_contDiff T p hp t)
 
-theorem pathRepresentative_smooth (T : ℝ) (p : C(Icc (0 : ℝ) T,L2))
+theorem pathRepresentative_smooth (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) (t : Icc (0 : ℝ) T) :
     ContDiff ℝ ∞ (pathRepresentative T p hp t) := representative_smooth _ _
 
-theorem pathRepresentative_ae (T : ℝ) (p : C(Icc (0 : ℝ) T,L2))
+theorem pathRepresentative_ae (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) (t : Icc (0 : ℝ) T) :
     (p t : Space → Space) =ᵐ[volume] pathRepresentative T p hp t := representative_ae _ _
 
-theorem pathRepresentative_continuous (T : ℝ) (p : C(Icc (0 : ℝ) T,L2))
+theorem pathRepresentative_continuous (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) :
     Continuous (fun z : Icc (0 : ℝ) T × Space => pathRepresentative T p hp z.1 z.2) :=
   path_representative_joint_continuous T p hp
@@ -57,7 +60,7 @@ theorem pathRepresentative_continuous (T : ℝ) (p : C(Icc (0 : ℝ) T,L2))
 /-- An actual L² equation between continuous spatial representatives holds everywhere. -/
 theorem representative_equation (B D R f : L2)
     (hB : SmoothOrbit B) (hD : SmoothOrbit D) (hR : SmoothOrbit R) (hf : SmoothOrbit f)
-    (M : Field) (heq : D+multiplier M B+R=f) (x : Space) :
+    (M : Field) (heq : D + multiplier M B + R = f) (x : Space) :
     representative D hD x+M x (representative B hB x)+representative R hR x =
       representative f hf x := by
   have hae : (fun y => representative D hD y+M y (representative B hB y)+representative R hR y)
@@ -77,7 +80,7 @@ theorem representative_equation (B D R f : L2)
     (representative_smooth f hf).continuous) x
 
 theorem pathRepresentative_equation (T : ℝ)
-    (B D R f : C(Icc (0 : ℝ) T,L2))
+    (B D R f : C(Icc (0 : ℝ) T, L2))
     (hB : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a B))
     (hD : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a D))
     (hR : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a R))
@@ -85,7 +88,7 @@ theorem pathRepresentative_equation (T : ℝ)
     (M : C(Icc (0 : ℝ) T,Field))
     (heq : ∀ t, D t+multiplier (M t) (B t)+R t=f t)
     (t : Icc (0 : ℝ) T) (x : Space) :
-    pathRepresentative T D hD t x+M t x (pathRepresentative T B hB t x)+
+    pathRepresentative T D hD t x+M t x (pathRepresentative T B hB t x) +
       pathRepresentative T R hR t x = pathRepresentative T f hf t x :=
   representative_equation (B t) (D t) (R t) (f t)
     (pathTranslation_evaluation_contDiff T B hB t) (pathTranslation_evaluation_contDiff T D hD t)
@@ -94,12 +97,12 @@ theorem pathRepresentative_equation (T : ℝ)
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (F F₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
-  (FInv : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2))
+  (FInv : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
   {A : L2 →L[ℝ] L2} {L : ℝ} {u f : TimeLp T L2}
   (s : StrongMeanEvolution T hT FInv (operatorPath T F.field) (operatorPath T F₁.field) A L u f)
   (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T (operatorPath T F.field) t v‖^2)
-  (fC : C(Icc (0 : ℝ) T,L2))
+  (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T (operatorPath T F.field) t v‖ ^ 2)
+  (fC : C(Icc (0 : ℝ) T, L2))
   (hR : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a (s.pressurePath c hc hLower fC)))
 
 /-- The concrete normalized scalar mean pressure, constructed by a radial integral. -/
@@ -131,7 +134,7 @@ theorem pressureProfile_angle_derivative (t : Icc (0 : ℝ) T) (x : Space) (θ :
 /-- The physical pressure force is exactly the actual residual, because the
 inverse-transpose cancels the transpose of the given frame. -/
 theorem pressureScalar_physicalGradient
-    (Finv : C(Icc (0 : ℝ) T,Field))
+    (Finv : C(Icc (0 : ℝ) T, Field))
     (hFinv : ∀ t x v, F.field t x (Finv t x v) = v)
     (t : Icc (0 : ℝ) T) (x : Space) :
     (Finv t x).adjoint (gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x) =
@@ -152,11 +155,11 @@ theorem pressureScalar_equation
     (Finv : C(Icc (0 : ℝ) T,Field)) (hFinv : ∀ t x v, F.field t x (Finv t x v) = v)
     (hB : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a s.continuousVelocity))
     (hD : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a (s.classicalPhysicalDerivative c hc
-      hLower fC)))
+        hLower fC)))
     (hfC : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a fC))
     (t : Icc (0 : ℝ) T) (x : Space) :
-    pathRepresentative T (s.classicalPhysicalDerivative c hc hLower fC) hD t x+
-      M.field t x (pathRepresentative T s.continuousVelocity hB t x)+
+    pathRepresentative T (s.classicalPhysicalDerivative c hc hLower fC) hD t x +
+      M.field t x (pathRepresentative T s.continuousVelocity hB t x) +
       (Finv t x).adjoint (gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x) =
         pathRepresentative T fC hfC t x := by
   rw [pressureScalar_physicalGradient T hT F F₁ FInv s c hc hLower fC hR Finv hFinv t x]

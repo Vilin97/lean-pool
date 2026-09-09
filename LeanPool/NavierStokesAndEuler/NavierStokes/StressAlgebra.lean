@@ -6,13 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Exact radial stress identities
@@ -22,6 +19,9 @@ candidate manuscript. Parameter derivatives are supplied as independent radial
 functions, with their requisite radial derivative identities stated explicitly.
 No existence of the candidate profiles or estimates for them is asserted.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -136,16 +136,27 @@ theorem axialPrimitive_hasDerivAt
 /-- Data for the angular integrated identity on a specified closed radial interval.
 The fields are differential and initial conditions, not an assumed integral identity. -/
 structure AngularMomentData (h η X : ℝ) where
+  /-- W of `AngularMomentData`, of type `ℝ → ℝ`. -/
   W : ℝ → ℝ
+  /-- Wx of `AngularMomentData`, of type `ℝ → ℝ`. -/
   Wx : ℝ → ℝ
+  /-- H of `AngularMomentData`, of type `ℝ → ℝ`. -/
   H : ℝ → ℝ
+  /-- Hx of `AngularMomentData`, of type `ℝ → ℝ`. -/
   Hx : ℝ → ℝ
+  /-- Hη of `AngularMomentData`, of type `ℝ → ℝ`. -/
   Hη : ℝ → ℝ
+  /-- U of `AngularMomentData`, of type `ℝ → ℝ`. -/
   U : ℝ → ℝ
+  /-- Uη of `AngularMomentData`, of type `ℝ → ℝ`. -/
   Uη : ℝ → ℝ
+  /-- I of `AngularMomentData`, of type `ℝ → ℝ`. -/
   I : ℝ → ℝ
+  /-- Iη of `AngularMomentData`, of type `ℝ → ℝ`. -/
   Iη : ℝ → ℝ
+  /-- J of `AngularMomentData`, of type `ℝ → ℝ`. -/
   J : ℝ → ℝ
+  /-- Jη of `AngularMomentData`, of type `ℝ → ℝ`. -/
   Jη : ℝ → ℝ
   W_deriv : ∀ x ∈ uIcc 0 X, HasDerivAt W (Wx x) x
   H_deriv : ∀ x ∈ uIcc 0 X, HasDerivAt H (Hx x) x
@@ -186,20 +197,35 @@ theorem angular_integrated_identity
 
 /-- Differential and initial data required for the axial integrated identity. -/
 structure AxialMomentData (h η X : ℝ) where
+  /-- W of `AxialMomentData`, of type `ℝ → ℝ`. -/
   W : ℝ → ℝ
+  /-- Wx of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Wx : ℝ → ℝ
+  /-- U of `AxialMomentData`, of type `ℝ → ℝ`. -/
   U : ℝ → ℝ
+  /-- Ux of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Ux : ℝ → ℝ
+  /-- Uη of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Uη : ℝ → ℝ
+  /-- E of `AxialMomentData`, of type `ℝ → ℝ`. -/
   E : ℝ → ℝ
+  /-- Eη of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Eη : ℝ → ℝ
+  /-- P of `AxialMomentData`, of type `ℝ → ℝ`. -/
   P : ℝ → ℝ
+  /-- Px of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Px : ℝ → ℝ
+  /-- Pη of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Pη : ℝ → ℝ
+  /-- Pηx of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Pηx : ℝ → ℝ
+  /-- M of `AxialMomentData`, of type `ℝ → ℝ`. -/
   M : ℝ → ℝ
+  /-- Mη of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Mη : ℝ → ℝ
+  /-- Parameter `S` of `AxialMomentData`, of type `ℝ → ℝ`. -/
   S : ℝ → ℝ
+  /-- Sη of `AxialMomentData`, of type `ℝ → ℝ`. -/
   Sη : ℝ → ℝ
   W_deriv : ∀ x ∈ uIcc 0 X, HasDerivAt W (Wx x) x
   U_deriv : ∀ x ∈ uIcc 0 X, HasDerivAt U (Ux x) x

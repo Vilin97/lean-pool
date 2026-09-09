@@ -7,12 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+/-! Compact smooth data satisfy the independent challenge's rapid-decay condition. -/
 
 @[expose] public section
 
-/-! Compact smooth data satisfy the independent challenge's rapid-decay condition. -/
 
 noncomputable section
 
@@ -33,7 +32,7 @@ theorem initialVelocityConditionDecay_of_compact
   have hg : Continuous g :=
     ((continuous_const.add continuous_norm).rpow_const
       (fun x => Or.inl (hpos x).ne')).mul
-      ((hs.continuous_iteratedFDeriv (by simp)).norm)
+      ((hs.continuous_iteratedFDeriv (ENat.natCast_le_of_coe_top_le_withTop le_rfl _)).norm)
   have hgc : HasCompactSupport g := (hc.iteratedFDeriv m).norm.mul_left
   obtain ⟨x₀, hx₀⟩ := hg.exists_forall_ge_of_hasCompactSupport hgc
   refine ⟨g x₀, fun x => (le_div_iff₀ (Real.rpow_pos_of_pos (hpos x) K)).mpr ?_⟩

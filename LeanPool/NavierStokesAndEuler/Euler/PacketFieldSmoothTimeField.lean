@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSmoothTimeField
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
 
 /-! The actual finite packet fields supply bounded smooth cover
 coefficients. Their fixed-Hq word bounds give uniform tensor-jet bounds,
 with a single fixed coordinate radius conversion. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,13 +31,24 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {P T : ℝ} [Fact (0 < P)] {raw raw_t : VectorField}
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketFieldSmoothTimeField1 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketFieldSmoothTimeField2 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instPacketFieldSmoothTimeField3 (n : ℕ) : NormedAddCommGroup
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))` instance
+to shorten typeclass synthesis. -/
+local instance instPacketFieldSmoothTimeField4 (n : ℕ) : NormedSpace ℝ
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
 
+/-- To smooth time field, given by `ofPath P G.path G.orbit`. -/
 def toSmoothTimeField (G : Field P T raw) : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Space :=
   ofPath P G.path G.orbit
 

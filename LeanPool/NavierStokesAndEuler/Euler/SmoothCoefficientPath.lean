@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
 
+/-! All-order spatial translation regularity uniformly over a compact parameter interval. -/
+
 @[expose] public section
 
-/-! All-order spatial translation regularity uniformly over a compact parameter interval. -/
 
 noncomputable section
 
@@ -27,11 +28,18 @@ variable {K : Type u} [TopologicalSpace K] [CompactSpace K]
   {V : Type v} [NormedAddCommGroup V] [NormedSpace ℝ V]
   {W : Type w} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ W) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ W) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothCoefficientPath1 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothCoefficientPath2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ W)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothCoefficientPath3 : NormedAddCommGroup (Space →ᵇ W) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ W)` instance to shorten typeclass synthesis. -/
+local instance instSmoothCoefficientPath4 : NormedSpace ℝ (Space →ᵇ W) := inferInstance
 
+/-- Map coefficient path, given by `(L.compLeftContinuousBounded Space).compLeftContinuous ℝ K`. -/
 def mapCoefficientPath (L : V →L[ℝ] W) : C(K, Space →ᵇ V) →L[ℝ] C(K, Space →ᵇ W) :=
   (L.compLeftContinuousBounded Space).compLeftContinuous ℝ K
 
@@ -41,11 +49,14 @@ omit [CompactSpace K] in
 
 end Mapping
 
-/-- Actual coefficient jets, continuous in the uniform time-path norm at every fixed spatial order. -/
+/-- Actual coefficient jets, continuous in the uniform time-path norm at every fixed spatial order.
+-/
 structure SmoothCoefficientPath (K : Type u) [TopologicalSpace K] [CompactSpace K]
     (V : Type v) [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Underlying field of `SmoothCoefficientPath`, with values in `C(K, Space →ᵇ V)`. -/
   field : C(K, Space →ᵇ V)
   smooth : ∀ t, ContDiff ℝ ∞ (field t : Space → V)
+  /-- Jet of `SmoothCoefficientPath`, of type `(n : ℕ) → C(K, Space →ᵇ (Space [×n]→L[ℝ] V))`. -/
   jet : (n : ℕ) → C(K, Space →ᵇ (Space [×n]→L[ℝ] V))
   jet_eq : ∀ n t x, jet n t x = iteratedFDeriv ℝ n (field t : Space → V) x
 
@@ -54,17 +65,34 @@ namespace SmoothCoefficientPath
 variable {K : Type u} [TopologicalSpace K] [CompactSpace K]
   {V : Type v} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothCoefficientPath5 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothCoefficientPath6 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothCoefficientPath7 : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothCoefficientPath8 : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothCoefficientPath9 (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ]
+    V)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothCoefficientPath10 (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] V))
+    := inferInstance
 
+/-- Derivative field, given by `mapCoefficientPath (continuousMultilinearCurryFin1 ℝ Space
+V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet 1)`. -/
 def derivativeField (A : SmoothCoefficientPath K V) : C(K, Space →ᵇ (Space →L[ℝ] V)) :=
   mapCoefficientPath
     (continuousMultilinearCurryFin1 ℝ Space V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet
-      1)
+        1)
 
 theorem derivativeField_eq (A : SmoothCoefficientPath K V) (t : K) (x : Space) :
     A.derivativeField t x = fderiv ℝ (A.field t : Space → V) x := by
@@ -75,12 +103,13 @@ theorem derivativeField_eq (A : SmoothCoefficientPath K V) (t : K) (x : Space) :
   rw [continuousMultilinearCurryFin1_apply, iteratedFDeriv_one_apply]
   simp
 
+/-- Derivative jet, constructed using `mapCoefficientPath`. -/
 def derivativeJet (A : SmoothCoefficientPath K V) (n : ℕ) :
     C(K, Space →ᵇ (Space [×n]→L[ℝ] (Space →L[ℝ] V))) :=
   mapCoefficientPath (K := K) (V := Space [×(n+1)]→L[ℝ] V)
     (W := Space [×n]→L[ℝ] (Space →L[ℝ] V))
     (continuousMultilinearCurryRightEquiv' ℝ n Space
-      V).toContinuousLinearEquiv.toContinuousLinearMap
+        V).toContinuousLinearEquiv.toContinuousLinearMap
       (A.jet (n+1))
 
 theorem derivativeJet_eq (A : SmoothCoefficientPath K V) (n : ℕ) (t : K) (x : Space) :
@@ -89,6 +118,8 @@ theorem derivativeJet_eq (A : SmoothCoefficientPath K V) (n : ℕ) (t : K) (x : 
   rw [A.jet_eq, iteratedFDeriv_succ_eq_comp_right]
   exact (continuousMultilinearCurryRightEquiv' ℝ n Space V).apply_symm_apply _
 
+/-- Derivative, bundling `field`, `smooth`, `fderiv`, `exact` and the required compatibility
+proofs. -/
 def derivative (A : SmoothCoefficientPath K V) : SmoothCoefficientPath K (Space →L[ℝ] V) where
   field := A.derivativeField
   smooth t := by

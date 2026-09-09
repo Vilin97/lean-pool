@@ -7,17 +7,22 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleActual
-
-@[expose] public section
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Reconstruct the numerical source guards from a supplied common
 finite cost budget, without making a second choice of the starting stage. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPacketSourceScaleChoice
 
-open Real EulerScale EulerPacketSourceScales EulerPacketSourceTime
+open Real EulerPacketSourceScales EulerPacketSourceTime
   EulerPacketSourceScaleBounds EulerPacketSourceScaleSequence EulerPacketSourceScaleActual
 
 theorem uniformBounds_of_costs (J : ℕ) (hJ : 3 ≤ J) (C c δ : ℝ)
@@ -33,7 +38,7 @@ theorem uniformBounds_of_costs (J : ℕ) (hJ : 3 ≤ J) (C c δ : ℝ)
     (hsmall i).weaken (by linarith only [hδ])
   have hsum : SmallSeries (fun n => f .shear n+f .prior n+f .neighbor n) δ := by
     have hs := ((hsmall .shear).summable.add (hsmall .prior).summable).add (hsmall
-      .neighbor).summable
+        .neighbor).summable
     refine ⟨fun n => add_nonneg (add_nonneg ((hsmall .shear).nonneg n)
       ((hsmall .prior).nonneg n)) ((hsmall .neighbor).nonneg n), hs, ?_⟩
     rw [Summable.tsum_add ((hsmall .shear).summable.add (hsmall .prior).summable)
@@ -45,7 +50,7 @@ theorem uniformBounds_of_costs (J : ℕ) (hJ : 3 ≤ J) (C c δ : ℝ)
   · intro n
     have hθ : 0 ≤ sourceTheta J C x n := zero_le_one.trans (sourceTheta_bounds hJ1 hC hx1 n).1
     unfold coefficientCost sourceCoefficientError sourceEpsilon sourceOlderGradient
-      sourcePriorError sourceNeighborError
+        sourcePriorError sourceNeighborError
     positivity
   · intro n
     exact sourceCoefficientError_bound J hJ C c hC hc A x hx1 n
@@ -75,10 +80,10 @@ theorem uniformBounds_of_costs (J : ℕ) (hJ : 3 ≤ J) (C c δ : ℝ)
 
 theorem actualBounds_of_uniform (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
     (hC : 1 ≤ C) (hc : 0 ≤ c) (hX : 1 ≤ X) (hδ : 0 ≤ δ)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
-    (hbase : baseErrorCost J D C X ≤ δ/2)
-    (hn : UniformBounds J C c 60 (scaleSequence J X) (δ/32)) :
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
+    (hbase : baseErrorCost J D C X ≤ δ / 2)
+    (hn : UniformBounds J C c 60 (scaleSequence J X) (δ / 32)) :
     ActualBounds J D C c X δ := by
   have hXp : 0 < X := zero_lt_one.trans_le hX
   have hw : δ/32 ≤ δ := by linarith only [hδ]

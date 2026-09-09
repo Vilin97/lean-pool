@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEdgeExtension
 
-@[expose] public section
-
 /-!
 # Qualitative regularity of the actual finite wave updates
 
@@ -19,6 +17,9 @@ quantitative strip is used only for its fixed differential operators.
 Native smoothness and genuine zero germs, rather than estimates on a
 smaller strip, supply the continuation away from the active phase patches.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -56,7 +57,9 @@ theorem commonCorrected_onDomain (a : CopyData D I) (s : StripData D)
 the common corrected velocity is a conclusion, not a field of this record. -/
 structure NativeData (a : CopyData D I) (s : StripData D) (d : GraphDirections D)
     (Ω : Set D) (hΩ : IsOpen Ω) where
+  /-- Cells of `NativeData`, of type `Cells D I`. -/
   cells : Cells D I
+  /-- Patch of `NativeData`, of type `ℕ → I → Set D`. -/
   patch : ℕ → I → Set D
   raw : LocalizedCurlRealization.RawData a (onDomain s Ω hΩ) d patch
   cutoff_support : ∀ n i, support (a.cutoff n i) ⊆ cells.carrier n i
@@ -93,7 +96,7 @@ theorem glue_smooth {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   · obtain ⟨i, hi⟩ := hi
     rcases h.cover n i x hx hi with hC | h0
     · exact ((hs n i).contDiffAt ((h.raw.geometry n i).isOpen.mem_nhds ⟨hx,
-      hC⟩)).congr_of_eventuallyEq
+        hC⟩)).congr_of_eventuallyEq
         (hg n i x hi)
     · exact contDiffAt_const.congr_of_eventuallyEq ((hg n i x hi).trans (hflat n i x h0))
   · exact contDiffAt_const.congr_of_eventuallyEq (hz n x (not_exists.mp hi))
@@ -129,7 +132,7 @@ theorem common_normal_smooth (n : ℕ) :
   · exact fun n _ _ hi => hmap (a.common_amplitude_germ h.cells h.cutoff_support n hi)
   · intro m x hi
     simpa only [B, coefficient_zero] using hmap (n := m) (a.common_zero_germs h.cells
-      h.cutoff_support hi).1
+        h.cutoff_support hi).1
   · exact h.native_normal_smooth
   · intro m i x hz
     simpa only [B, coefficient_zero] using hmap (n := m) hz
@@ -181,6 +184,7 @@ actual fields on the physical slow domain.  Derivatives are genuine
 Fréchet derivatives, transferred through an open neighborhood.
 -/
 
+/-- Translation on, given by `∀ x ∈ Ω, f (x + z) = f x`. -/
 noncomputable def TranslationOn {E : Type} (Ω : Set D) (z : D) (f : D → E) : Prop :=
   ∀ x ∈ Ω, f (x + z) = f x
 
@@ -303,10 +307,13 @@ neighborhood of each entire Volterra path. No solved field occurs here. -/
 structure ModalSmooth (t : ℕ → TangentData P ProblemStatement.Space)
     (harmonic : ℤ) (g : ℕ → Geometry) (L : ℕ → ℝ)
     (Ω : Set (P × Plane)) (C : ℕ → Frequency → Set (P × Plane)) where
+  /-- Frame of `ModalSmooth`, of type `ℕ → PrimaryODE.FrameData (P × ℝ)`. -/
   frame : ℕ → PrimaryODE.FrameData (P × ℝ)
+  /-- Neighborhood of `ModalSmooth`, of type `ℕ → Frequency → Set (P × Plane)`. -/
   neighborhood : ℕ → Frequency → Set (P × Plane)
   open_neighborhood : ∀ n k, IsOpen (neighborhood n k)
   contains : ∀ n k, Ω ∩ C n k ⊆ neighborhood n k
+  /-- Interval of `ModalSmooth`, of type `ℕ → Set ℝ`. -/
   interval : ℕ → Set ℝ
   open_interval : ∀ n, IsOpen (interval n)
   contains_interval : ∀ n, Icc 0 (L n) ⊆ interval n
@@ -371,9 +378,13 @@ theorem signed_coefficients_smooth (s : StripData D) (d : GraphDirections D)
 
 /-! ## One actual mode on the full physical slow domain -/
 
+/-- Point: an abbreviation for `CorrectionStep.CyclePoint`. -/
 abbrev Point := CorrectionStep.CyclePoint
+/-- Cylinder: an abbreviation for `Point × ℝ`. -/
 abbrev Cylinder := Point × ℝ
 
+/-- Full domain, given by `HarmonicResidual.liftDomain (PhysicalMeanDomain.slowDomain
+U.carrier)`. -/
 noncomputable def fullDomain {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord) : Set Cylinder :=
   HarmonicResidual.liftDomain (PhysicalMeanDomain.slowDomain U.carrier)
 
@@ -381,6 +392,7 @@ theorem fullDomain_open {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord) 
     IsOpen (fullDomain U) :=
   (PhysicalMeanDomain.slowDomain_open U.isOpen).prod isOpen_univ
 
+/-- Native domain, given by `e.symm ⁻¹' fullDomain U`. -/
 noncomputable def nativeDomain {coord : ℝ} (e : Cylinder ≃ₗᵢ[ℝ] D)
     (U : LocalSignedRequest.SlowRegion coord) : Set D := e.symm ⁻¹' fullDomain U
 
@@ -388,9 +400,12 @@ theorem nativeDomain_open {coord : ℝ} (e : Cylinder ≃ₗᵢ[ℝ] D)
     (U : LocalSignedRequest.SlowRegion coord) : IsOpen (nativeDomain e U) :=
   (fullDomain_open U).preimage e.symm.continuous
 
+/-- Deck shift, given by `((0, (0, ((k.1 : ℝ), (k.2 : ℝ)))), 0)`. -/
 noncomputable def deckShift (k : TorusInverse.Frequency) : Cylinder :=
   ((0, (0, ((k.1 : ℝ), (k.2 : ℝ)))), 0)
 
+/-- Mode oscillation, defined pointwise by `(vectorMode (a.background.frequency n)
+(a.background.phase n) ((a.commonCorrected s d).amplitude n) (e x) i).re`. -/
 noncomputable def modeOscillation (a : CopyData D I) (s : StripData D)
     (d : GraphDirections D) (e : Cylinder ≃ₗᵢ[ℝ] D) : Oscillation Point :=
   fun n x i => (vectorMode (a.background.frequency n) (a.background.phase n)
@@ -402,7 +417,10 @@ proved using localized raw-amplitude zero germs. -/
 structure ModeData (a : CopyData D I) (s : StripData D) (d : GraphDirections D)
     (e : Cylinder ≃ₗᵢ[ℝ] D) {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord)
     (r₀ r₁ : ℝ) where
+  /-- Native of `ModeData`, of type `NativeData a s d (nativeDomain e U) (nativeDomain_open e
+  U)`. -/
   native : NativeData a s d (nativeDomain e U) (nativeDomain_open e U)
+  /-- Reindex of `ModeData`, of type `ℕ → TorusInverse.Frequency → I ≃ I`. -/
   reindex : ℕ → TorusInverse.Frequency → I ≃ I
   cutoff_deck : ∀ n k i x, x ∈ nativeDomain e U →
     a.cutoff n (reindex n k i) (x + e (deckShift k)) = a.cutoff n i x
@@ -519,14 +537,19 @@ section ParticularCycle
 
 open CorrectionStep ParticularWaveAssembly ParticularWaveBounds CopyAngularInvariance
 
+/-- Particular space: an abbreviation for `(CycleSlow × ℝ) × TorusInverse.Plane`. -/
 abbrev ParticularSpace := (CycleSlow × ℝ) × TorusInverse.Plane
 
+/-- Particular chart, given by `(StateReindex.cylinder cycleAssoc).trans angleShuffle`. -/
 noncomputable def particularChart : Cylinder ≃ₗᵢ[ℝ] ParticularSpace :=
   (StateReindex.cylinder cycleAssoc).trans angleShuffle
 
+/-- Particular strip, given by `ParticularParameters.nativeStrip (reindexStrip cycleAssoc.symm
+p.strip)`. -/
 noncomputable def particularStrip {ι : Type} (p : CycleParameters ι) : StripData ParticularSpace :=
   ParticularParameters.nativeStrip (reindexStrip cycleAssoc.symm p.strip)
 
+/-- Particular copy data as an element of `CopyData ParticularSpace TorusInverse.Frequency`. -/
 noncomputable def particularCopyData {ι : Type} (p : CycleParameters ι)
     (v : CycleCoefficients ι) (c : Context Point) (u : State Point) (l : ι) (j : ℤ) :
     CopyData ParticularSpace TorusInverse.Frequency :=
@@ -618,6 +641,7 @@ incoming residual data used by `CycleParameters.particularBlock`. -/
 structure ParticularData {ι : Type} (p : CycleParameters ι) (v : CycleCoefficients ι)
     (c : Context Point) (u : State Point) {coord : ℝ}
     (U : LocalSignedRequest.SlowRegion coord) (r₀ r₁ : ℝ) where
+  /-- Mode supplied by `ParticularData`. -/
   mode : ∀ l j, j ∈ modes v.residualBand →
     ModeData (particularCopyData p v c u l j) (particularStrip p)
       (p.particular l).directions particularChart U r₀ r₁
@@ -676,6 +700,7 @@ theorem signed_amplitude_deck (p : PeriodizedSignedParameters Point I) (s : Stri
 corrected field, and no regularity away from the native support, is assumed. -/
 structure SignedAngles (p : PeriodizedSignedParameters Point I) (s : StripData Point)
     (request : ℕ → Cylinder → SignedWaveUpdate.Vec2) where
+  /-- Slope of `SignedAngles`, of type `ℕ → ℝ`. -/
   slope : ℕ → ℝ
   radius : ∀ n, Invariant ((0 : Point), 1) (p.base.radius n)
   radial : ∀ n, Invariant ((0 : Point), 1) (p.directions.radialField n)
@@ -741,8 +766,8 @@ end SignedAngles
 
 /-- The existing native angular inputs imply the smaller qualitative
 record. Their quantitative-domain smoothness field is not extended or used. -/
-noncomputable def signedAngles_of_inputs (p : PeriodizedSignedParameters Point I) (s : StripData
-  Point)
+noncomputable def signedAnglesOfInputs (p : PeriodizedSignedParameters Point I) (s : StripData
+    Point)
     (request : ℕ → Cylinder → SignedWaveUpdate.Vec2) (m : ℕ → ℝ) (i₀ : I)
     (hθ : p.directions.angular = ((0 : Point), 1))
     (hf : ∀ n, p.base.frequency n * m n = (p.angularFrequency n : ℝ))
@@ -786,9 +811,12 @@ profile, and native data are not reselected. -/
 structure SignedData {ι : Type} (p : CycleParameters ι) (v : CycleCoefficients ι)
     (c : Context Point) (u : State Point) {coord : ℝ}
     (U : LocalSignedRequest.SlowRegion coord) (r₀ r₁ : ℝ) where
+  /-- Mode supplied by `SignedData`. -/
   mode : ∀ l, ModeData ((p.signed l).copyData p.strip (p.signedRequest v c u))
     (HarmonicWaveInteraction.productStrip p.strip) (p.signed l).directions
       (LinearIsometryEquiv.refl ℝ Cylinder) U r₀ r₁
+  /-- Angles of `SignedData`, of type `∀ l, SignedAngles (p.signed l) p.strip (p.signedRequest v
+  c u)`. -/
   angles : ∀ l, SignedAngles (p.signed l) p.strip (p.signedRequest v c u)
 
 theorem SignedData.block_regular {ι : Type} {p : CycleParameters ι} {v : CycleCoefficients ι}

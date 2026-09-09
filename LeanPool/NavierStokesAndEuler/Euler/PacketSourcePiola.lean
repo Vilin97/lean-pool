@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaPair
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceMeanZero
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaPair
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceMeanZero
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
+
+/-! The genuine Piola constraint for every generated source high/corrector pair. -/
 
 @[expose] public section
 
-/-! The genuine Piola constraint for every generated source high/corrector pair. -/
 
 noncomputable section
 
@@ -33,9 +36,11 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (D : EulerTransversePacketProvider.Data U) (hT : M.T = D.T)
   (I Iprimary : EulerTransversePacketProvider.InitialData P D)
 
+/-- Source time, given by `⟨t,by rw [← hT]; exact t.property⟩`. -/
 def sourceTime (t : Icc (0 : ℝ) M.T) : Icc (0 : ℝ) D.T :=
   ⟨t,by rw [← hT]; exact t.property⟩
 
+/-- Source pair field used in packet source piola. -/
 def sourcePairField (κ : ℝ) (p : ℕ) :
     Field P M.T (fun z => (sourceOperators P M D I).inverseFrame z
       (κ^p • (sourceProfiles P M D I Iprimary p).high z +
@@ -51,8 +56,8 @@ theorem sourcePairField_mem (κ : ℝ) (p : ℕ) (hp : 1 ≤ p) (t : Icc (0 : �
     (sourcePairField P M D hT I Iprimary κ p).path t ∈ divergenceFreeSpace P κ D.m₀ := by
   let W := sourceProfileWitness P M D hT I Iprimary p
   let G := W.high.changeTime hT
-  let C := (W.corrector.congr (fun _ _ _ => by rw [source_corrector_eq P M D I Iprimary p
-    hp])).changeTime hT
+  let C := (W.corrector.congr (fun _ _ _ => by
+      rw [source_corrector_eq P M D I Iprimary p hp])).changeTime hT
   let V := piolaPairField D G C κ p
   have hs : G.path (sourceTime M D hT t) ∈ Supported P Space D.support D.support_measurable :=
     G.supported_of_raw_zero D.support D.support_measurable

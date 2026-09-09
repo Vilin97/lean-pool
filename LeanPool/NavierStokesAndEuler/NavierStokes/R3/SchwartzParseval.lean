@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 
-@[expose] public section
-
 /-!
 # Fourier pairings and Parseval on Schwartz functions
 
@@ -17,6 +15,9 @@ These identities concern the ordinary Fourier integral on Euclidean space.
 They use Fourier inversion on Schwartz functions, without introducing an
 extension of the Fourier transform to all of `L²`.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

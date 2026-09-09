@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointDifferentiation
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointUniqueness
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardInverse
-
-@[expose] public section
 
 /-!
 The actual nonzero-terminal stationary displacement satisfies source (10).
@@ -18,6 +15,9 @@ Its coordinate velocity solves the very same homogeneous first-order
 generator used by the packet's forward inverse.  The identity is proved by
 differentiating the constructed momentum, including the endpoint derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

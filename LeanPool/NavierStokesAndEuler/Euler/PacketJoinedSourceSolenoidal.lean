@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourcePiola
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJetAssembly
+
+/-! The actual finite joined packet, including its terminal corrector, satisfies the lifted
+constraint. -/
 
 @[expose] public section
 
-/-! The actual finite joined packet, including its terminal corrector, satisfies the lifted
-  constraint. -/
 
 noncomputable section
 
@@ -29,10 +31,11 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (B : EulerTransversePacketProvider.HistoryData (D.initial τ hτ hτT.le))
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
 
+/-- Joined packet pullback field used in packet joined source solenoidal. -/
 def joinedPacketPullbackField (N : ℕ) (κ : ℝ) :
     Field P M.T (fun z => (joinedSourceOperators P M D τ hτ hτT B).inverseFrame z
       (fieldSum (N+1) κ (assembledVelocity N (joinedSourceProfiles P M D τ hτ hτT B primary)) z))
-        := by
+          := by
   let a := joinedSourceProfiles P M D τ hτ hτT B primary
   let term := fun i : ℕ =>
     (joinedPairField P M D hT τ hτ hτT B primary hprimary κ (i+1)).add
@@ -57,7 +60,7 @@ def joinedPacketPullbackField (N : ℕ) (κ : ℝ) :
     (joinedSourceOperators P M D τ hτ hτT B).inverseFrame (t,(x,θ))
       (κ^(i+1) • (a (i+1)).high (t,(x,θ)) + κ^(i+2) • (a (i+1)).corrector (t,(x,θ))) +
       κ^(i+1) • (joinedSourceOperators P M D τ hτ hτT B).inverseFrame (t,(x,θ)) ((a (i+1)).mean
-        (t,(x,θ)))
+          (t,(x,θ)))
   simp only [map_add,map_smul,smul_add]
   abel
 
@@ -69,9 +72,9 @@ theorem joinedPacketPullbackField_path (N : ℕ) (κ : ℝ) :
 theorem joinedPacketPullbackField_mem
     (hmean : primary.mean = 0)
     (hc : primary.corrector = D.curlCorrector P primary.high)
-    (hm : ∀ (t : Icc (0 : ℝ) M.T) x, (∫ θ in (0 : ℝ)..P, primary.high (t,(x,θ))) = 0)
+    (hm : ∀ (t : Icc (0 : ℝ) M.T) x, (∫ θ in (0 : ℝ)..P, primary.high (t, (x, θ))) = 0)
     (ht : ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (D.normalField (t,(x,θ))) (primary.high (t,(x,θ))) = 0)
+      inner ℝ (D.normalField (t, (x, θ))) (primary.high (t, (x, θ))) = 0)
     (A : SourceCoefficientAgreement M D) (N : ℕ) (κ : ℝ) (t : Icc (0 : ℝ) M.T)
     (Ξ : Space → Space) (hΞ : ContDiff ℝ ∞ Ξ)
     (hF : ∀ x, fderiv ℝ Ξ x = D.F.field (sourceTime M D hT t) x)
@@ -88,8 +91,8 @@ theorem joinedPacketPullbackField_mem
   apply (divergenceFreeSpace P κ D.m₀).sum_mem
   intro i _
   apply (divergenceFreeSpace P κ D.m₀).add_mem
-  · exact joinedPairField_mem P M D hT τ hτ hτT B primary hprimary hc hm ht κ (i+1) (by omega) t Ξ
-    hΞ hF hdet
+  · exact joinedPairField_mem P M D hT τ hτ hτT B primary hprimary hc hm ht κ (i+1) (by
+      omega) t Ξ hΞ hF hdet
   · exact (divergenceFreeSpace P κ D.m₀).smul_mem (κ^(i+1))
       (joinedMeanPullbackField_mem P M D hT τ hτ hτT B primary hprimary hmean A κ D.m₀ (i+1) t)
 

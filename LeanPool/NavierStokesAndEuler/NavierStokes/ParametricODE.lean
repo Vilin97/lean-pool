@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TangentODE
-public import Mathlib.Analysis.Normed.Operator.Banach
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Smooth dependence of finite-interval linear ODE solutions
@@ -21,6 +20,9 @@ Volterra operator. Smooth inversion then gives parameter dependence without
 assuming smoothness of a pre-existing family of solutions.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.ParametricODE
 
 noncomputable section
@@ -30,13 +32,16 @@ open scoped Topology NNReal Nat Interval ContDiff
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Curve: an abbreviation for `C(Icc a b, E)`. -/
 abbrev Curve (a b : ℝ) (E : Type*) [TopologicalSpace E] := C(Icc a b, E)
 
+/-- Coefficient: an abbreviation for `Curve a b (E →L[ℝ] E)`. -/
 abbrev Coefficient (a b : ℝ) (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
   Curve a b (E →L[ℝ] E)
 
 variable {a b : ℝ} (hab : a ≤ b)
 
+/-- Extend, given by `f (projIcc a b hab t)`. -/
 def extend (f : Curve a b E) (t : ℝ) : E := f (projIcc a b hab t)
 
 omit [NormedSpace ℝ E] [CompleteSpace E] in
@@ -47,6 +52,7 @@ omit [NormedSpace ℝ E] [CompleteSpace E] in
 theorem extend_coe (f : Curve a b E) (t : Icc a b) : extend hab f t = f t := by
   simp only [extend, projIcc_val]
 
+/-- Integral path as an element of `Curve a b E`. -/
 def integralPath (f : Curve a b E) : Curve a b E :=
   ⟨fun t => ∫ s in a..t, extend hab f s, by
     have hd (t : ℝ) : HasDerivAt (fun t => ∫ s in a..t, extend hab f s)
@@ -71,6 +77,7 @@ theorem norm_integralPath_le (f : Curve a b E) :
       exact sub_le_sub_right t.2.2 a
     _ = _ := mul_comm _ _
 
+/-- Integrator, constructed using `LinearMap.mkContinuous`. -/
 def integrator : Curve a b E →L[ℝ] Curve a b E :=
   LinearMap.mkContinuous {
     toFun := integralPath hab
@@ -88,6 +95,7 @@ def integrator : Curve a b E →L[ℝ] Curve a b E :=
 theorem integrator_apply (f : Curve a b E) (t : Icc a b) :
     integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := rfl
 
+/-- Apply coefficient, given by `⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩`. -/
 noncomputable def applyCoefficient (A : Coefficient a b E) (u : Curve a b E) : Curve a b E :=
   ⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩
 
@@ -101,6 +109,8 @@ theorem norm_applyCoefficient_le (A : Coefficient a b E) (u : Curve a b E) :
     (mul_le_mul (A.norm_coe_le_norm t) (u.norm_coe_le_norm t)
       (norm_nonneg _) (norm_nonneg _))
 
+/-- Coefficient linear, bundling `toFun`, `toFun`, `map_add`, `map_smul` and the required
+compatibility proofs. -/
 def coefficientLinear : Coefficient a b E →ₗ[ℝ] Curve a b E →ₗ[ℝ] Curve a b E where
   toFun A := {
     toFun := applyCoefficient A
@@ -109,6 +119,7 @@ def coefficientLinear : Coefficient a b E →ₗ[ℝ] Curve a b E →ₗ[ℝ] Cu
   map_add' := by intro A B; ext u t; rfl
   map_smul' := by intro c A; ext u t; rfl
 
+/-- Coefficient action as an element of `Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve a b E`. -/
 def coefficientAction : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve a b E :=
   (coefficientLinear (a := a) (b := b) (E := E)).mkContinuous₂
     (𝕜 := ℝ) (𝕜₂ := ℝ) (𝕜₃ := ℝ) 1
@@ -120,6 +131,8 @@ omit [CompleteSpace E] in
 theorem coefficientAction_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
     coefficientAction (E := E) A u t = A t (u t) := rfl
 
+/-- Volterra, given by `((ContinuousLinearMap.compL ℝ (Curve a b E) (Curve a b E) (Curve a b E))
+(integrator hab)).comp (coefficientAction (E := E))`. -/
 def volterra : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve a b E :=
   ((ContinuousLinearMap.compL ℝ (Curve a b E) (Curve a b E) (Curve a b E))
     (integrator hab)).comp (coefficientAction (E := E))
@@ -135,6 +148,7 @@ theorem norm_volterra_apply_le (A : Coefficient a b E) (u : Curve a b E) :
     ((mul_le_mul_of_nonneg_left (norm_applyCoefficient_le A u)
       (sub_nonneg.mpr hab)).trans_eq (mul_assoc _ _ _).symm)
 
+/-- Homogeneous system as an element of `TangentODE.IntervalSystem E`. -/
 def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
   left := a
   right := b
@@ -142,7 +156,7 @@ def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
   initial := 0
   field := fun t x => extend hab A t x
   lip := ‖A‖₊
-  lipschitz := fun t _ => (extend hab A t).lipschitzWith.weaken (A.norm_coe_le_norm _)
+  lipschitz := fun t _ => (extend hab A t).lipschitz.weaken (A.norm_coe_le_norm _)
   continuous := by
     have he : Continuous (fun t : Icc a b => extend hab A t) :=
       (continuous_extend hab A).comp continuous_subtype_val
@@ -214,6 +228,8 @@ theorem contDiff_inverse_family {X Q : Type*}
   intro q
   exact (hInv q).contDiffAt_map_inverse.comp q hL.contDiffAt
 
+/-- Equation operator, given by `ContinuousLinearMap.id ℝ (Curve a b E) - volterra (E := E) hab
+A`. -/
 def equationOperator (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
   ContinuousLinearMap.id ℝ (Curve a b E) - volterra (E := E) hab A
 
@@ -235,6 +251,7 @@ theorem contDiff_resolvent : ContDiff ℝ ∞ (resolvent (E := E) hab) := by
       (volterra (E := E) hab)
   · exact equationOperator_isInvertible hab
 
+/-- Constant curve, constructed using `LinearMap.mkContinuous`. -/
 def constantCurve : E →L[ℝ] Curve a b E :=
   LinearMap.mkContinuous {
     toFun := ContinuousMap.const (Icc a b)
@@ -246,6 +263,7 @@ def constantCurve : E →L[ℝ] Curve a b E :=
       (ContinuousMap.norm_le (ContinuousMap.const (Icc a b) x) (norm_nonneg x)).mpr
         (fun _ => le_rfl))
 
+/-- Source, given by `constantCurve x₀ + integrator hab f`. -/
 def source (x₀ : E) (f : Curve a b E) : Curve a b E :=
   constantCurve x₀ + integrator hab f
 
@@ -279,6 +297,8 @@ theorem solution_initial (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) :
   simp only [integrator_apply, intervalIntegral.integral_same, add_zero] at h
   exact h
 
+/-- Solution extension, given by `x₀ + ∫ s in a..t, extend hab (applyCoefficient A (solution hab
+A x₀ f) + f) s`. -/
 def solutionExtension (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) (t : ℝ) : E :=
   x₀ + ∫ s in a..t, extend hab (applyCoefficient A (solution hab A x₀ f) + f) s
 

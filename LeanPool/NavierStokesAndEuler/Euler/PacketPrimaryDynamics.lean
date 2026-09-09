@@ -7,15 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointClassical
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointClassical
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
 
 /-! Tangency, the physical tangent ODE, and nonvanishing of the actual
 canonical primary. Nonvanishing follows from the prescribed nonzero
 terminal displacement, rather than from an assumption on the solved velocity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +26,7 @@ namespace EulerLinearDuhamel.Evolution
 open Set ContinuousLinearMap EulerVolterraConvolution
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  {T : ℝ} {hT : 0 ≤ T} {G : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
+  {T : ℝ} {hT : 0 ≤ T} {G : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
 
 /-- A zero of a genuine homogeneous solution propagates in either time direction. -/
 theorem homogeneous_zero_at (U : Evolution T hT G) (f : ℝ → E)
@@ -76,14 +78,14 @@ theorem labelVelocity_exists_ne_zero (x : Space) (ξ : U) (hξ : ξ ≠ 0) :
     have hs : ‖D.labelCoordinate x ξ t‖^2 ≤ 0 := nonpos_of_mul_nonpos_right h D.lower_pos
     exact norm_eq_zero.mp (by nlinarith [norm_nonneg (D.labelCoordinate x ξ t)])
   let z := EulerFixedEndpointClassical.displacement T D.time_pos.le (D.labelFrame x)
-    (D.labelFrameDerivative x)
+      (D.labelFrameDerivative x)
     (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)
     D.potential D.potential_nonneg (D.labelHessian_upper x) D.small ξ
   have hd : ∀ t ∈ Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T D.time_pos.le z) 0 (Icc (0 : ℝ) T) t := by
     intro t ht
     have h := EulerFixedEndpointClassical.displacement_hasDerivWithinAt T D.time_pos.le
-      (D.labelFrame x)
+        (D.labelFrame x)
       (D.labelFrameDerivative x) (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x)
       (D.labelFrame_derivative x) D.potential D.potential_nonneg (D.labelHessian_upper x) D.small
       (D.labelFrameSecond x) D.time_pos (D.labelFrame_second_derivative x) (D.labelFrame_equation x)
@@ -99,16 +101,16 @@ theorem labelVelocity_exists_ne_zero (x : Space) (ξ : U) (hξ : ξ ≠ 0) :
     simpa only [zero_mul,norm_le_zero_iff,sub_eq_zero] using h
   have hz0 : extendPath T D.time_pos.le z 0 = 0 := by
     rw [extendPath,projIcc_of_mem D.time_pos.le (show (0 : ℝ) ∈ Icc 0 T from
-      ⟨le_rfl,D.time_pos.le⟩)]
+        ⟨le_rfl,D.time_pos.le⟩)]
     exact EulerFixedEndpointClassical.displacement_initial T D.time_pos.le (D.labelFrame x)
-      (D.labelFrameDerivative x)
+        (D.labelFrameDerivative x)
       (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)
       D.potential D.potential_nonneg (D.labelHessian_upper x) D.small ξ
   have hzT : extendPath T D.time_pos.le z T = ξ := by
     rw [extendPath,projIcc_of_mem D.time_pos.le (show T ∈ Icc (0 : ℝ) T from
-      ⟨D.time_pos.le,le_rfl⟩)]
+        ⟨D.time_pos.le,le_rfl⟩)]
     exact EulerFixedEndpointClassical.displacement_terminal T D.time_pos.le (D.labelFrame x)
-      (D.labelFrameDerivative x)
+        (D.labelFrameDerivative x)
       (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)
       D.potential D.potential_nonneg (D.labelHessian_upper x) D.small D.time_pos ξ
   exact hξ (hzT.symm.trans (he.trans hz0))
@@ -143,7 +145,7 @@ theorem canonicalVelocity_tangent (t : Icc (0 : ℝ) D.T) (x : Space) :
 
 theorem canonicalVelocity_equation (t : Icc (0 : ℝ) D.T) (x : Space) :
     HasDerivWithinAt (fun s => canonicalVelocity τ hτ hτT B ξ hs s x)
-      (-D.M.field t x (canonicalVelocity τ hτ hτT B ξ hs t x)+
+      (-D.M.field t x (canonicalVelocity τ hτ hτT B ξ hs t x) +
         (2*⟪D.normal.field t x,D.M.field t x (canonicalVelocity τ hτ hτT B ξ hs t x)⟫_ℝ/
           ‖D.normal.field t x‖^2) • D.normal.field t x) (Icc (0 : ℝ) D.T) t := by
   simpa only [physicalGenerator_apply] using canonicalVelocity_homogeneous_time τ hτ hτT B ξ hs t x
@@ -169,6 +171,7 @@ theorem canonical_size_pos (hξ : ξ ≠ 0) (t : Icc (0 : ℝ) D.T) :
   mul_pos (norm_pos_iff.mpr (HistoryData.normal_ne_zero t 0))
     (norm_pos_iff.mpr (canonicalVelocity_center_ne_zero τ hτ hτT B ξ hs hξ t))
 
+/-- Canonical velocity path, bundling `toFun`, `continuous_toFun`. -/
 def canonicalVelocityPath (x : Space) : C(Icc (0 : ℝ) D.T,Space) where
   toFun t := canonicalVelocity τ hτ hτT B ξ hs t x
   continuous_toFun := (show ContinuousOn (fun t => canonicalVelocity τ hτ hτT B ξ hs t x)
@@ -185,7 +188,7 @@ gradient norm; nonvanishing is proved from its nonzero terminal direction. -/
 theorem scaled_terminal_target_shear (hξ : ξ ≠ 0) (δ : ℝ) (hδ : 0 < δ)
     (h k : ℝ) (hh : 0 ≤ h) (hk : k ≠ 0) (t : Icc (0 : ℝ) D.T)
     (X Y : Space → Space) (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     let α := δ*h/(‖D.normal.field t 0‖*‖canonicalVelocity τ hτ hτT B ξ hs t 0‖)
     ‖fderiv ℝ (fun x => k⁻¹ • vector τ hτ hτT B (initialData D δ hδ (α • ξ) hs)
       (t,(Y x,k*inner ℝ D.m₀ (Y x)))) (X 0)‖ = h := by

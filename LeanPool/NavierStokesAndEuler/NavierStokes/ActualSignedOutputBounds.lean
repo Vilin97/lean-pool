@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
 
 /-!
 # Actual signed outputs from native support estimates
@@ -18,6 +16,9 @@ The background is the same chosen primary background.  Its local controls
 are restricted to the signed phase cells before applying the native-copy
 localization and periodization estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,13 +29,16 @@ open scoped ContDiff Topology BigOperators
 
 variable {B N0 : ℕ}
 
+/-- Copies, given by `(parameters l).copyData ActualPrimaryBounds.strip request`. -/
 noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) : PeriodizedWaveBounds.CopyData FullPoint Frequency :=
   (parameters l).copyData ActualPrimaryBounds.strip request
 
+/-- Joint cell, given by `phaseCell i.1 n i.2`. -/
 noncomputable def jointCell (n : ℕ) (i : SignedLabel B N0 × Frequency) : Set FullPoint :=
   phaseCell i.1 n i.2
 
+/-- Primary index, given by `((i.1.2, i.1.1), i.2)`. -/
 noncomputable def primaryIndex (i : SignedLabel B N0 × Frequency) :
     ActualPrimaryBounds.CopyIndex B N0 := ((i.1.2, i.1.1), i.2)
 
@@ -58,12 +62,12 @@ theorem envelope_nonneg (l : SignedLabel B N0) (n : ℕ) (x : FullPoint) :
 theorem background_normal_eq (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) :
     (jointRawBackground (copies (B := B) (N0 := N0) request)).normal fullStrip (directions B) =
       fun n i => ActualPrimaryBounds.actualFamily.normal fullStrip (directions B) n (primaryIndex
-        i) := rfl
+          i) := rfl
 
 theorem background_defect_eq (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) :
     (jointRawBackground (copies (B := B) (N0 := N0) request)).defect fullStrip (directions B) =
       fun n i => ActualPrimaryBounds.actualFamily.defect fullStrip (directions B) n (primaryIndex
-        i) := rfl
+          i) := rfl
 
 /-- This background certificate has zero amplitude and pressure.  Every
 nonzero field in it is an actual primary background or phase expression. -/
@@ -109,7 +113,7 @@ theorem normal_range (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
 theorem inverse_frequency (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) :
     LocalizedWaveBounds.LocalUnweighted fullStrip jointCell (1 / 2)
       (fun n i (_ : FullPoint) => 1 / (copies (B := B) (N0 := N0) request i.1).background.frequency
-        n) :=
+          n) :=
   primary_local (ActualPrimaryBounds.inverse_carrier_local (B := B) (N0 := N0))
 
 /-- A genuine cutoff zero germ kills both localized input fields. -/
@@ -221,6 +225,7 @@ theorem actual_common_bounds (G : SignedMeanGain.Geometry)
     exact hr
   simpa only [show α - 1 + 1 / 2 = α - 1 / 2 by ring] using common_bounds hr'
 
+/-- Mean envelope, given by `envelope l n (x, 0)`. -/
 noncomputable def meanEnvelope (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
   envelope l n (x, 0)
 
@@ -233,11 +238,11 @@ theorem block_bounds {β : ℝ} {request : ℕ → FullPoint → SignedWaveUpdat
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (β + 1 / 2)
       (fun l n x => ((parameters l).tangentBlock ActualPrimaryBounds.strip request).velocity n i j
-        x)) ∧
+          x)) ∧
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (β + 1 / 2)
       (fun l n x => ((parameters l).exactBlock ActualPrimaryBounds.strip request).velocity n i j
-        x)) ∧
+          x)) ∧
     (∀ j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (β + 1)
       (fun l n x => ((parameters l).exactBlock ActualPrimaryBounds.strip request).pressure n j x)) ∧
@@ -245,12 +250,12 @@ theorem block_bounds {β : ℝ} {request : ℕ → FullPoint → SignedWaveUpdat
       (meanEnvelope (B := B) (N0 := N0))
       (β + 1 - ChartScales.kappa)
       (fun l n x => ((parameters l).curlBlock ActualPrimaryBounds.strip request).velocity n i j x))
-        ∧
+          ∧
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0))
       (β + 1 - 3 * ChartScales.kappa)
       (fun l n x => ((parameters l).goodBlock ActualPrimaryBounds.strip request).velocity n i j x))
-        := by
+          := by
   have h := common_bounds hR
   simpa only [show β + 1 / 2 + 1 / 2 = β + 1 by ring] using
     PeriodizedSignedParameters.uniform_block_bounds (parameters (B := B) (N0 := N0))
@@ -271,22 +276,22 @@ theorem actual_block_bounds (G : SignedMeanGain.Geometry)
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (α - 1 / 2)
       (fun l n x => ((parameters l).tangentBlock ActualPrimaryBounds.strip request).velocity n i j
-        x)) ∧
+          x)) ∧
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (α - 1 / 2)
       (fun l n x => ((parameters l).exactBlock ActualPrimaryBounds.strip request).velocity n i j
-        x)) ∧
+          x)) ∧
     (∀ j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) α
       (fun l n x => ((parameters l).exactBlock ActualPrimaryBounds.strip request).pressure n j x)) ∧
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (α - ChartScales.kappa)
       (fun l n x => ((parameters l).curlBlock ActualPrimaryBounds.strip request).velocity n i j x))
-        ∧
+          ∧
     (∀ i j, LabelSumBounds.UniformWaveClass ActualPrimaryBounds.strip
       (meanEnvelope (B := B) (N0 := N0)) (α - 3 * ChartScales.kappa)
       (fun l n x => ((parameters l).goodBlock ActualPrimaryBounds.strip request).velocity n i j x))
-        := by
+          := by
   dsimp only
   have h := actual_common_bounds (B := B) (N0 := N0) G hs c u α H hfixed hθ hz
   simpa only [sub_add_cancel] using

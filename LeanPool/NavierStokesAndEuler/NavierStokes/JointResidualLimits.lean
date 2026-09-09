@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeEndpoint
-public import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Endpoint limits from actual joint jets and local one-sided extensions
@@ -20,6 +18,9 @@ each other point of the terminal slice. The boundary tensor family and its
 local uniform convergence are constructed below.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.JointResidualLimits
@@ -27,7 +28,9 @@ namespace NavierStokes.JointResidualLimits
 open Set Filter
 open scoped Topology ContDiff
 
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 section JointTopology
@@ -81,16 +84,21 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 /-- A genuine smooth extension on a neighborhood, agreeing with the original
 function on the portion of that neighborhood with `t < 1`. -/
 structure OneSidedExtension (f : SpaceTime → V) (x : Space) where
+  /-- Value of `OneSidedExtension`, of type `SpaceTime → V`. -/
   value : SpaceTime → V
+  /-- Domain of `OneSidedExtension`, of type `Set SpaceTime`. -/
   domain : Set SpaceTime
   isOpen : IsOpen domain
   mem : (1, x) ∈ domain
   smooth : ContDiffOn ℝ ∞ value domain
   agrees : EqOn value f (domain ∩ SpacetimeEndpoint.openPast 1)
 
+/-- Away extensions, given by `∀ x : Space, x ≠ 0 → Nonempty (OneSidedExtension f x)`. -/
 def AwayExtensions (f : SpaceTime → V) : Prop :=
   ∀ x : Space, x ≠ 0 → Nonempty (OneSidedExtension f x)
 
+/-- Vanishing joint jets, given by `∀ n : ℕ, Tendsto (iteratedFDeriv ℝ n f)
+(𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))) (𝓝 0)`. -/
 def VanishingJointJets (f : SpaceTime → V) : Prop :=
   ∀ n : ℕ, Tendsto (iteratedFDeriv ℝ n f)
     (𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))) (𝓝 0)
@@ -168,7 +176,7 @@ theorem boundaryLimits_uniformOn_compact {f : SpaceTime → V} (hzero : Vanishin
     TendstoUniformlyOn (fun t x => iteratedFDeriv ℝ n f (t, x))
       (fun x => boundaryLimits f hext x n) (𝓝[<] (1 : ℝ)) K :=
   (tendstoLocallyUniformly_iff_forall_isCompact.mp (boundaryLimits_locallyUniform hzero hext n)) K
-    hK
+      hK
 
 theorem past_filter_neBot (x : Space) :
     (𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), x)).NeBot := by
@@ -242,7 +250,7 @@ theorem extendedJets_compatible {f : SpaceTime → V}
     HasFDerivWithinAt
       (fun y => SpacetimeEndpoint.extendJets 1 (ftaylorSeries ℝ f) (boundaryLimits f hext) y n)
       (SpacetimeEndpoint.extendJets 1 (ftaylorSeries ℝ f) (boundaryLimits f hext) z (n +
-        1)).curryLeft
+          1)).curryLeft
       (SpacetimeEndpoint.closedPast 1) z :=
   SpacetimeEndpoint.extendedJets_hasFDerivWithinAt (J := ftaylorSeries ℝ f)
     (actual_derivative_recurrence hf) (boundaryLimits_locallyUniform hzero hext) n z hz
@@ -287,7 +295,7 @@ theorem extendedResidual_boundary_jets {f : SpaceTime → V}
       (SpacetimeEndpoint.closedPast 1) (1, x) = boundaryLimits f hext x n :=
   SpacetimeEndpoint.boundary_jets_eq_limits (J := ftaylorSeries ℝ f)
     (fun _ _ => rfl) (actual_derivative_recurrence hf) (boundaryLimits_locallyUniform hzero hext) n
-      x
+        x
 
 theorem extendedResidual_flat_at_origin {f : SpaceTime → V}
     (hf : ContDiffOn ℝ ∞ f (SpacetimeEndpoint.openPast 1))

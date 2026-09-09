@@ -8,10 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalPhysicalCopyBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DirectAngularDiagonal
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisPreservation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TailGaugePotential
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AxisPreservation
+import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCore
 
 /-!
 # Axis preservation for the mixed physical diagonal
@@ -25,6 +23,9 @@ as `t < 1` and `physicalQ h < qbig`.  No global smoothness of an uncut stage,
 common annular radius for all stages, or blow-up of the resulting diagonal
 is postulated.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -74,19 +75,29 @@ theorem copy_vector_zero_germ {H : ℕ} {K : Type*}
 /-- Primitive data for one actual vector-valued copy sum.  Support cells
 retain the genuine locally finite meaning of the copy periodization. -/
 structure CopyPotential (h : ℝ) where
+  /-- Copy of `CopyPotential`, of type `Type u`. -/
   Copy : Type u
+  /-- Harmonics of `CopyPotential`, of type `ℕ`. -/
   harmonics : ℕ
+  /-- Family of `CopyPotential`, of type `Fin 3 → PhysicalCopyBounds.CopyFamily harmonics Copy`. -/
   family : Fin 3 → PhysicalCopyBounds.CopyFamily harmonics Copy
+  /-- Inner of `CopyPotential`, of type `ℝ`. -/
   inner : ℝ
+  /-- Outer of `CopyPotential`, of type `ℝ`. -/
   outer : ℝ
+  /-- Width of `CopyPotential`, of type `ℝ`. -/
   width : ℝ
+  /-- Axial radius of `CopyPotential`, of type `ℝ`. -/
   axialRadius : ℝ
+  /-- Gap of `CopyPotential`, of type `ℕ`. -/
   gap : ℕ
   inner_pos : 0 < inner
   support : ∀ i, LocalPhysicalCopyBounds.SupportData (family i)
     inner outer h width axialRadius gap
+  /-- Cells of `CopyPotential`, of type `∀ i, PhysicalCopyBounds.SupportCells (family i)`. -/
   cells : ∀ i, PhysicalCopyBounds.SupportCells (family i)
 
+/-- Field, given by `PhysicalCopyBounds.vectorSum p.family p.inner h p.width`. -/
 noncomputable def CopyPotential.field {h : ℝ} (p : CopyPotential.{u} h) : VelocityField :=
   PhysicalCopyBounds.vectorSum p.family p.inner h p.width
 
@@ -103,16 +114,21 @@ theorem CopyPotential.zero_germ {h : ℝ} (p : CopyPotential.{u} h)
 Smoothness is deliberately absent: the domain can be the raw stage's
 small-`q` domain, and axis preservation uses only these support facts. -/
 structure AngularSupport (Ω : Set SpaceTime) where
+  /-- Scalar of `AngularSupport`, of type `DirectAngularDiagonal.Coefficient`. -/
   scalar : DirectAngularDiagonal.Coefficient
+  /-- Inner of `AngularSupport`, of type `DirectAngularDiagonal.Slow → ℝ`. -/
   inner : DirectAngularDiagonal.Slow → ℝ
   inner_continuous : ContinuousOn (fun w => inner (DirectAngularDiagonal.slowPoint w)) Ω
   inner_pos : ∀ w ∈ Ω, 0 < inner (DirectAngularDiagonal.slowPoint w)
   vanishes : ∀ w ∈ Ω, DirectAngularDiagonal.radius w < inner (DirectAngularDiagonal.slowPoint w) →
     scalar (DirectAngularDiagonal.cylPoint w) = 0
 
+/-- Field, given by `DirectAngularDiagonal.angularField D.scalar`. -/
 noncomputable def AngularSupport.field {Ω : Set SpaceTime} (D : AngularSupport Ω) : VelocityField :=
   DirectAngularDiagonal.angularField D.scalar
 
+/-- Zero, bundling `scalar`, `inner`, `inner_continuous`, `inner_pos` and the required
+compatibility proofs. -/
 noncomputable def AngularSupport.zero (Ω : Set SpaceTime) : AngularSupport Ω where
   scalar := 0
   inner := fun _ => 1
@@ -176,11 +192,17 @@ theorem radius_zero_of_axis {w : SpaceTime}
 finitely many literal azimuthal mean stream potentials.  Direct angular
 velocities are not included in this potential. -/
 structure PotentialStage (h : ℝ) (Ω : Set SpaceTime) where
+  /-- Wave count of `PotentialStage`, of type `ℕ`. -/
   waveCount : ℕ
+  /-- Waves of `PotentialStage`, of type `Fin waveCount → CopyPotential.{u} h`. -/
   waves : Fin waveCount → CopyPotential.{u} h
+  /-- Stream count of `PotentialStage`, of type `ℕ`. -/
   streamCount : ℕ
+  /-- Streams of `PotentialStage`, of type `Fin streamCount → AngularSupport Ω`. -/
   streams : Fin streamCount → AngularSupport Ω
 
+/-- Field, defined pointwise by `(∑ i : Fin p.waveCount, (p.waves i).field w) + ∑ i : Fin
+p.streamCount, (p.streams i).field w`. -/
 noncomputable def PotentialStage.field {h : ℝ} {Ω : Set SpaceTime}
     (p : PotentialStage.{u} h Ω) : VelocityField :=
   fun w => (∑ i : Fin p.waveCount, (p.waves i).field w) +
@@ -219,14 +241,20 @@ theorem potentialSeries_zero_germ {h : ℝ} {Ω : Set SpaceTime} (base : Velocit
 
 /-! ## The actual two diagonal sums -/
 
+/-- Potential diagonal, given by `SolenoidalDiagonal.potentialSum scales
+(PhysicalWaveSum.physicalQ h) (potentialSeries base p)`. -/
 noncomputable def potentialDiagonal {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (p : ℕ → PotentialStage.{u} h Ω) (scales : ℕ → ℝ) : VelocityField :=
   SolenoidalDiagonal.potentialSum scales (PhysicalWaveSum.physicalQ h) (potentialSeries base p)
 
+/-- Direct diagonal, given by `DirectAngularDiagonal.angularSum scales
+(PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar)`. -/
 noncomputable def directDiagonal (h : ℝ) {Ω : Set SpaceTime}
     (D : ℕ → AngularSupport Ω) (scales : ℕ → ℝ) : VelocityField :=
   DirectAngularDiagonal.angularSum scales (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar)
 
+/-- Mixed diagonal, given by `DirectAngularDiagonal.mixedVelocity scales
+(PhysicalWaveSum.physicalQ h) (potentialSeries base p) (fun j => (D j).scalar)`. -/
 noncomputable def mixedDiagonal {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (p : ℕ → PotentialStage.{u} h Ω)
     (D : ℕ → AngularSupport Ω) (scales : ℕ → ℝ) : VelocityField :=
@@ -238,7 +266,7 @@ theorem mixedDiagonal_eq {h : ℝ} {Ω : Set SpaceTime}
     (D : ℕ → AngularSupport Ω) (scales : ℕ → ℝ) :
     mixedDiagonal base p D scales = fun w =>
       SpatialCurl.spatialCurl (potentialDiagonal base p scales) w + directDiagonal h D scales w :=
-        rfl
+          rfl
 
 theorem directDiagonal_zero_germ {h : ℝ} {Ω : Set SpaceTime}
     (D : ℕ → AngularSupport Ω) (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -276,13 +304,13 @@ theorem mixedDiagonal_eq_cutBase_germ {h : ℝ} {Ω : Set SpaceTime}
     (haxis : PhysicalGraphBounds.radialProjection w = 0) :
     mixedDiagonal base p D scales =ᶠ[𝓝 w] SpatialCurl.spatialCurl
       (fun y => SmoothCutoffs.scaledCutoff (scales 0) (PhysicalWaveSum.physicalQ h y) • base y) :=
-        by
+          by
   have hp := SolenoidalDiagonal.spatialCurl_eventuallyEq
     (potentialDiagonal_eq_cutBase_germ base p hh hh1 hs hΩ hw ht haxis)
   have hd := directDiagonal_zero_germ D hh hh1 hs hΩ hw ht haxis
   filter_upwards [hp, hd] with y hy hdy
   change SpatialCurl.spatialCurl (potentialDiagonal base p scales) y + directDiagonal h D scales y
-    = _
+      = _
   rw [hdy, add_zero, hy]
 
 /-- On the zeroth cutoff plateau all potential and direct corrections
@@ -299,7 +327,7 @@ theorem mixedDiagonal_eq_base_germ {h : ℝ} {Ω : Set SpaceTime}
   have hc := (SmoothCutoffs.scaledCutoff_eventually_one hsmall).comp_tendsto
     (PhysicalWaveSum.physicalQ_smoothAt hh hh1 ht).continuousAt
   have hbase : (fun y => SmoothCutoffs.scaledCutoff (scales 0) (PhysicalWaveSum.physicalQ h y) •
-    base y)
+      base y)
       =ᶠ[𝓝 w] base := by
     filter_upwards [hc] with y hy
     change SmoothCutoffs.scaledCutoff (scales 0) (PhysicalWaveSum.physicalQ h y) = 1 at hy
@@ -364,6 +392,7 @@ theorem origin_blowup {h : ℝ} {Ω : Set SpaceTime}
 
 /-! ## Finite initialization stays in stage zero -/
 
+/-- Initialized base, defined pointwise by `base w + initial.field w`. -/
 noncomputable def initializedBase {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (initial : PotentialStage.{u} h Ω) : VelocityField :=
   fun w => base w + initial.field w
@@ -375,6 +404,7 @@ noncomputable def initializedSeries {h : ℝ} {Ω : Set SpaceTime}
     (p : ℕ → PotentialStage.{u} h Ω) : ℕ → VelocityField :=
   potentialSeries (initializedBase base initial) p
 
+/-- Initialized diagonal, given by `mixedDiagonal (initializedBase base initial) p D scales`. -/
 noncomputable def initializedDiagonal {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (initial : PotentialStage.{u} h Ω)
     (p : ℕ → PotentialStage.{u} h Ω) (D : ℕ → AngularSupport Ω)
@@ -417,9 +447,9 @@ theorem initialized_eq_base_germ {h : ℝ} {Ω : Set SpaceTime}
     (hsmall : |scales 0 * PhysicalWaveSum.physicalQ h w| < 1 / 2) :
     initializedDiagonal base initial p D scales =ᶠ[𝓝 w] SpatialCurl.spatialCurl base :=
   (mixedDiagonal_eq_base_germ (initializedBase base initial) p D hh hh1 hs hΩ hw ht haxis
-    hsmall).trans
+      hsmall).trans
     (SolenoidalDiagonal.spatialCurl_eventuallyEq (initializedBase_germ base initial hh hh1 hΩ hw ht
-      haxis))
+        haxis))
 
 theorem initialized_axis_jets {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (initial : PotentialStage.{u} h Ω)
@@ -442,9 +472,9 @@ theorem initialized_origin_eventually {h : ℝ} {Ω : Set SpaceTime}
     (hΩaxis : ∀ᶠ t : ℝ in 𝓝[<] 1, (t, (0 : Space)) ∈ Ω) :
     ∀ᶠ t : ℝ in 𝓝[<] 1,
       initializedDiagonal base initial p D scales =ᶠ[𝓝 (t, (0 : Space))] SpatialCurl.spatialCurl
-        base := by
+          base := by
   filter_upwards [origin_eventually_base_germ (initializedBase base initial) p D hh hh1 hs hΩ
-    hΩaxis,
+      hΩaxis,
     hΩaxis, self_mem_nhdsWithin (a := (1 : ℝ)) (s := Iio 1)] with t he ht ht1
   exact he.trans (SolenoidalDiagonal.spatialCurl_eventuallyEq
     (initializedBase_germ base initial hh hh1 hΩ ht ht1 (radialProjection_origin t)))
@@ -463,6 +493,7 @@ theorem initialized_origin_blowup {h : ℝ} {Ω : Set SpaceTime}
 
 /-! ## The actual small-similarity-parameter domain -/
 
+/-- Local domain, given by `{w | w.1 < 1 ∧ PhysicalWaveSum.physicalQ h w < qbig}`. -/
 noncomputable def localDomain (h qbig : ℝ) : Set SpaceTime :=
   {w | w.1 < 1 ∧ PhysicalWaveSum.physicalQ h w < qbig}
 
@@ -547,7 +578,7 @@ theorem final_speedUnbounded (upper : ℝ) (B : ℕ) {Ω : Set SpaceTime}
     {scales : ℕ → ℝ} (hs : Tendsto scales atTop atTop) (hΩ : IsOpen Ω)
     (hΩaxis : ∀ᶠ t : ℝ in 𝓝[<] 1, (t, (0 : Space)) ∈ Ω) :
     SpeedUnboundedAtOne (mixedDiagonal (TailGaugePotential.finalPotential H v upper B) p D scales)
-      :=
+        :=
   NaturalCore.speedUnbounded_of_axis_tendsto (final_origin_blowup H v upper B p D hs hΩ hΩaxis)
 
 /-- Raw stage support is needed only where `q < qbig`.  The concrete base,
@@ -567,7 +598,7 @@ theorem local_final_speedUnbounded (upper : ℝ) (B : ℕ) {qbig : ℝ} (hqbig :
     (D : ℕ → AngularSupport (localDomain F.data.h qbig))
     {scales : ℕ → ℝ} (hs : Tendsto scales atTop atTop) :
     SpeedUnboundedAtOne (mixedDiagonal (TailGaugePotential.finalPotential H v upper B) p D scales)
-      :=
+        :=
   NaturalCore.speedUnbounded_of_axis_tendsto (local_final_origin_blowup H v upper B hqbig p D hs)
 
 theorem local_initialized_final_origin_blowup (upper : ℝ) (B : ℕ)
@@ -578,7 +609,7 @@ theorem local_initialized_final_origin_blowup (upper : ℝ) (B : ℕ)
     {scales : ℕ → ℝ} (hs : Tendsto scales atTop atTop) :
     Tendsto (fun t : ℝ =>
       ‖initializedDiagonal (TailGaugePotential.finalPotential H v upper B) initial p D scales (t,
-        0)‖)
+          0)‖)
       (𝓝[<] 1) atTop :=
   initialized_origin_blowup _ initial p D F.data.h_pos F.data.h_lt_half hs
     (localDomain_open F.data.h_pos F.data.h_lt_half qbig)
@@ -616,7 +647,7 @@ theorem constructed_speedUnbounded (upper : ℝ) (B : ℕ) {qbig : ℝ} (hqbig :
     (D : ℕ → AngularSupport (localDomain constructedExponent qbig))
     {scales : ℕ → ℝ} (hs : Tendsto scales atTop atTop) :
     SpeedUnboundedAtOne (mixedDiagonal (TailGaugePotential.constructedPotential upper B) p D
-      scales) :=
+        scales) :=
   NaturalCore.speedUnbounded_of_axis_tendsto (constructed_origin_blowup upper B hqbig p D hs)
 
 theorem initialized_constructed_origin_blowup (upper : ℝ) (B : ℕ) {qbig : ℝ} (hqbig : 0 < qbig)
@@ -626,7 +657,7 @@ theorem initialized_constructed_origin_blowup (upper : ℝ) (B : ℕ) {qbig : �
     {scales : ℕ → ℝ} (hs : Tendsto scales atTop atTop) :
     Tendsto (fun t : ℝ =>
       ‖initializedDiagonal (TailGaugePotential.constructedPotential upper B) initial p D scales (t,
-        0)‖)
+          0)‖)
       (𝓝[<] 1) atTop :=
   local_initialized_final_origin_blowup FinalSlowBase.actualProfile.certificate
     FinalSlowBase.actualProfile.modulation upper B hqbig initial p D hs

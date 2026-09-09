@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathOrbit
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-! Genuine bounded smooth cylinder coefficients and all their derivative
 jets are constructed from the actual coefficient translation orbit. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,8 +33,11 @@ section General
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathSmooth1 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instCoefficientPathSmooth2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
 
 theorem cylinder_norm_iteratedFDeriv_le (P : ℝ) (A : C(K, Space →ᵇ V))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
@@ -75,10 +81,20 @@ theorem cylinder_fieldDerivative (P : ℝ) (A : C(K, Space →ᵇ V))
 
 end General
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathSmooth3 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathSmooth4 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCoefficientPathSmooth5 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCoefficientPathSmooth6 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 section Basic
 
@@ -86,6 +102,8 @@ variable (P : ℝ) [Fact (0 < P)]
   (A : C(K, Space →ᵇ Space →L[ℝ] Space))
   (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
 
+/-- Smooth coefficient, bundling `coefficient`, `smooth`, `bound`, `norm_bound` and the required
+compatibility proofs. -/
 def smoothCoefficient (t : K) : SmoothCoefficient P where
   coefficient x := A t x.1
   smooth x := (coefficientOrbit_smooth A hA t).comp (contDiff_const.add contDiff_fst)
@@ -106,6 +124,8 @@ omit [Fact (0 < P)] in
 
 end Basic
 
+/-- Coefficient jet as an element of `CoefficientJet P standardDirection q (smoothCoefficient P
+A hA t)`. -/
 def coefficientJet (P : ℝ) [Fact (0 < P)]
     (A : C(K, Space →ᵇ Space →L[ℝ] Space))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A)) (q : ℕ) (t : K) :

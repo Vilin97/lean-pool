@@ -8,14 +8,18 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldWeight
+public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
 
 /-! The actual mean solver closes a grade at its constant source profile.
 Only fixed source costs are absorbed into the radius; the grade amplitude
 cancels without any loss. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +39,7 @@ theorem normalized_const_path :
 
 variable {G} {q d : ℕ} {R A : ℝ}
 
-theorem WordBound.normalize_const (hG : G.WordBound q R (A*c) d) :
+theorem WordBound.normalize_const (hG : G.WordBound q R (A * c) d) :
     (G.normalized hT (ContinuousMap.const (Icc (0 : ℝ) T) c) (fun _ => hc)).WordBound q R A d := by
   have hh := hG.smul c⁻¹
   have he : |c⁻¹| * (A*c) = A := by
@@ -46,7 +50,7 @@ theorem WordBound.normalize_const (hG : G.WordBound q R (A*c) d) :
 
 theorem WordBound.of_normalized_const
     (hG : (G.normalized hT (ContinuousMap.const (Icc (0 : ℝ) T) c) (fun _ => hc)).WordBound q R A
-      d) :
+        d) :
     G.WordBound q R (c*A) d := by
   have hh := hG.smul c
   rw [abs_of_pos hc] at hh

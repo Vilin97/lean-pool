@@ -6,18 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatSmoothing
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatDerivative
+import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatSmoothing
+
+/-! The genuine four-coordinate cylinder heat semigroup and simultaneous derivative gain. -/
 
 @[expose] public section
 
-/-! The genuine four-coordinate cylinder heat semigroup and simultaneous derivative gain. -/
 
 noncomputable section
 
 namespace EulerGaussianCylinderHeat
 
 open MeasureTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
-  EulerSpatialSobolevInverse
+    EulerSpatialSobolevInverse
   EulerCylinderSobolev
 open scoped ENNReal NNReal Topology
 
@@ -37,7 +40,7 @@ theorem heatList_norm_le (directions : List LiftTangent) (v : ℝ≥0) (f : Lift
 
 theorem heatList_add (directions : List LiftTangent) (v : ℝ≥0) (f g : LiftL2 period) :
     heatList period directions v (f+g) = heatList period directions v f + heatList period
-      directions v g := by
+        directions v g := by
   induction directions with
   | nil => rfl
   | cons a tail ih => simp only [heatList, ih, lineHeat_add]
@@ -48,8 +51,9 @@ theorem heatList_smul (directions : List LiftTangent) (v : ℝ≥0) (c : ℝ) (f
   | nil => rfl
   | cons a tail ih => simp only [heatList, ih, lineHeat_smul]
 
+/-- Heat list operator, constructed using `LinearMap.mkContinuous`. -/
 def heatListOperator (directions : List LiftTangent) (v : ℝ≥0) : LiftL2 period →L[ℝ] LiftL2 period
-  :=
+    :=
   LinearMap.mkContinuous
     { toFun := heatList period directions v
       map_add' := heatList_add period directions v
@@ -57,13 +61,13 @@ def heatListOperator (directions : List LiftTangent) (v : ℝ≥0) : LiftL2 peri
     1 (fun f => by simpa using heatList_norm_le period directions v f)
 
 @[simp] theorem heatListOperator_apply (directions : List LiftTangent) (v : ℝ≥0) (f : LiftL2
-  period) :
+    period) :
     heatListOperator period directions v f = heatList period directions v f := rfl
 
 theorem heatList_translation (directions : List LiftTangent) (v : ℝ≥0) (b : LiftDomain period) (f :
-  LiftL2 period) :
+    LiftL2 period) :
     translation period b (heatList period directions v f) = heatList period directions v
-      (translation period b f) := by
+        (translation period b f) := by
   induction directions with
   | nil => rfl
   | cons a tail ih => rw [heatList, heatList, lineHeat_translation, ih]
@@ -72,7 +76,7 @@ theorem heatList_translation (directions : List LiftTangent) (v : ℝ≥0) (b : 
 theorem heatList_lineHeat_commute (directions : List LiftTangent) (a : LiftTangent)
     (v w : ℝ≥0) (f : LiftL2 period) :
     heatList period directions v (lineHeat period a w f) = lineHeat period a w (heatList period
-      directions v f) := by
+        directions v f) := by
   induction directions with
   | nil => rfl
   | cons b tail ih => rw [heatList, heatList, ih, lineHeat_commute]
@@ -86,7 +90,7 @@ theorem heatList_lineHeat_commute (directions : List LiftTangent) (a : LiftTange
 /-- The finite product is itself a semigroup with additive variance. -/
 theorem heatList_semigroup (directions : List LiftTangent) (v w : ℝ≥0) (f : LiftL2 period) :
     heatList period directions v (heatList period directions w f) = heatList period directions
-      (v+w) f := by
+        (v+w) f := by
   induction directions with
   | nil => rfl
   | cons a tail ih =>
@@ -112,12 +116,12 @@ theorem lineHeat_joint_continuous (a : LiftTangent) :
   obtain ⟨δ, hδ, hδbound⟩ := ht
   refine ⟨min δ (ε/2), lt_min hδ (by linarith), ?_⟩
   intro q hq
-  have htimeclose : dist q.1 p.1 < δ := (show dist q.1 p.1 ≤ dist q p by exact le_max_left _
-    _).trans_lt ((lt_min_iff.mp hq).1)
-  have hfieldclose : dist q.2 p.2 < ε/2 := (show dist q.2 p.2 ≤ dist q p by exact le_max_right _
-    _).trans_lt ((lt_min_iff.mp hq).2)
+  have htimeclose : dist q.1 p.1 < δ := (show dist q.1 p.1 ≤ dist q p by
+      exact le_max_left _ _).trans_lt ((lt_min_iff.mp hq).1)
+  have hfieldclose : dist q.2 p.2 < ε/2 := (show dist q.2 p.2 ≤ dist q p by
+      exact le_max_right _ _).trans_lt ((lt_min_iff.mp hq).2)
   have h := dist_triangle (lineHeat period a q.1 q.2) (lineHeat period a q.1 p.2) (lineHeat period
-    a p.1 p.2)
+      a p.1 p.2)
   have ha := lineHeat_dist_le period a q.1 q.2 p.2
   have hb := hδbound htimeclose
   linarith
@@ -165,12 +169,12 @@ theorem cylinderHeat_semigroup (v w : ℝ≥0) (f : LiftL2 period) :
   heatList_semigroup period cylinderDirections v w f
 
 theorem cylinderHeat_continuous (f : LiftL2 period) : Continuous (fun v : ℝ≥0 => cylinderHeat
-  period v f) :=
+    period v f) :=
   heatList_continuous period cylinderDirections f
 
 theorem cylinderHeat_translation (v : ℝ≥0) (a : LiftDomain period) (f : LiftL2 period) :
     cylinderHeat period v (translation period a f) = translation period a (cylinderHeat period v f)
-      :=
+        :=
   (heatList_translation period cylinderDirections v a f).symm
 
 /-- The actual heat average gains all four first derivatives with a uniform parabolic bound. -/

@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerHigherEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevCauchyInterpolation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordInterpolation
+import LeanPool.NavierStokesAndEuler.Euler.NonnegativeLogConvex
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.SobolevCauchyInterpolation
 
 /-! Actual ordinary L² convergence upgrades to convergence in every
 fixed Sobolev norm under uniform higher-order bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +28,7 @@ open Set Filter MeasureTheory EulerSmoothLimit EulerLpTranslation
   EulerCylinderSobolevSpace EulerSobolevCauchyInterpolation Finset
 open scoped ContDiff Topology
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instOrdinaryCauchyInterpolation1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 theorem wordMaximum_zero (A : SmoothL2Field Space) : wordMaximum 0 A=‖A.toLp‖ := by
   apply sup'_eq_of_forall
@@ -32,7 +36,7 @@ theorem wordMaximum_zero (A : SmoothL2Field Space) : wordMaximum 0 A=‖A.toLp�
   rfl
 
 theorem tensorNorm_interpolate_zero (A : SmoothL2Field Space) (q : ℕ) (N : ℝ)
-    (hN : WordBound (2*q) N A) :
+    (hN : WordBound (2 * q) N A) :
     tensorNorm q A ≤ wordCount q*Real.sqrt (‖A.toLp‖*N) := by
   apply tensorNorm_le_wordCount
   intro n hn w
@@ -56,6 +60,7 @@ theorem ordinarySobolev_norm_le_tensor (A : SmoothL2Field Space) (q : ℕ) :
 
 variable {T : ℝ}
 
+/-- Field path, given by `⟨fun t => (A t).toLp,continuous_toLp A (hA 0)⟩`. -/
 def fieldPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : C(Icc (0 : ℝ) T,EulerMeanSolenoidal.L2) :=
   ⟨fun t => (A t).toLp,continuous_toLp A (hA 0)⟩
@@ -82,7 +87,7 @@ theorem sobolevPath_cauchy_of_l2 (hT : 0 ≤ T)
   have hl : CauchySeq (fun k => L (fieldPath (A k) (hA k))) := by
     have h := h0.map L.uniformContinuous
     simpa only [CauchySeq,Filter.map_map,Function.comp_def] using h
-  have hv (k : ℕ) : (valueOperator 1 (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) (u k)=
+  have hv (k : ℕ) : (valueOperator 1 (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) (u k) =
       L (fieldPath (A k) (hA k)) := by
     apply ContinuousMap.ext
     intro t

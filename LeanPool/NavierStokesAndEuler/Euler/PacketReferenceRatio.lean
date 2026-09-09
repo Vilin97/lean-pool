@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+/-! Relative growth of the primary scalar reference dominates zero slope. -/
 
 @[expose] public section
 
-/-! Relative growth of the primary scalar reference dominates zero slope. -/
 
 noncomputable section
 
@@ -21,13 +26,13 @@ open Set EulerPacketGrowth
 
 theorem equation30_slope_ratio_dominates
     {σ lam s t : ℝ} {F F₁ Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hlam : 0 ≤ lam)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hlam : 0 ≤ lam)
     (hF : ∀ x, 0 ≤ x → HasDerivAt F (F₁ x) x)
     (hZ : ∀ x, 0 ≤ x → HasDerivAt Z (Z₁ x) x)
-    (hfluxF : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*F₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*F x) x)
-    (hfluxZ : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*Z₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*Z x) x)
+    (hfluxF : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * F₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * F x) x)
+    (hfluxZ : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * Z₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * Z x) x)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hZ0 : Z 0 = 1) (hZ₁0 : Z₁ 0 = lam)
     (hs : 0 ≤ s) (hst : s ≤ t) :
     F t/F s ≤ Z t/Z s := by

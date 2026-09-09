@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalDatum
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarPrimitive
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSmoothOrbit
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarPrimitive
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSmoothOrbit
+
+/-! The literal terminal datum belongs to the actual supported, mean-zero cylinder space. -/
 
 @[expose] public section
 
-/-! The literal terminal datum belongs to the actual supported, mean-zero cylinder space. -/
 
 noncomputable section
 
@@ -23,7 +26,7 @@ namespace EulerPacketTerminalDatum
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerSpatialCutoffs EulerLpCylinderTranslation EulerLpCylinderPaths EulerLpSupportedSubspace
   EulerCylinderAngleAverage EulerCylinderConstantMap EulerCylinderSmoothOrbit
-    EulerCylinderSobolevSpace
+      EulerCylinderSobolevSpace
   EulerCylinderScalarPrimitive EulerCylinderFieldReflection
 open scoped ContDiff
 

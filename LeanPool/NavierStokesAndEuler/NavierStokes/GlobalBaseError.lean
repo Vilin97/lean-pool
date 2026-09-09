@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityApproach
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JointResidualLimits
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityApproach
 
 /-!
 # Joint flatness of the actual excluded slow-base error
@@ -23,6 +21,9 @@ the similarity radius of the approach to the origin.
 The field estimated here is `FinalSlowBase.error`, which is the actual
 Navier--Stokes residual minus its virtual stress force.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -166,6 +167,7 @@ end FixedSchedule
 
 /-! ## The joint past filter at the physical origin -/
 
+/-- Origin past, given by `𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))`. -/
 noncomputable def originPast : Filter SpaceTime :=
   𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))
 
@@ -224,6 +226,8 @@ the supplied constant, never on the physical point, derivative order, or `q`. -/
 noncomputable def actualUpper (upper : ℝ) : ℝ :=
   max upper (BaseExterior.nominalExteriorRadius FinalSlowBase.actualProfile.nominal)
 
+/-- Actual error, given by `FinalSlowBase.error FinalSlowBase.actualProfile.certificate
+FinalSlowBase.actualProfile.modulation (actualUpper upper) B`. -/
 noncomputable def actualError (upper : ℝ) (B : ℕ) : VelocityField :=
   FinalSlowBase.error FinalSlowBase.actualProfile.certificate FinalSlowBase.actualProfile.modulation
     (actualUpper upper) B
@@ -240,13 +244,13 @@ theorem actual_error_joint_allJetsFlat (upper : ℝ) (B : ℕ) :
       (fun z => (cartesianChart FinalSlowBase.actualProfile.outgoing.data.h z).1)
       (actualError upper B) :=
   error_joint_allJetsFlat FinalSlowBase.actualProfile.certificate
-    FinalSlowBase.actualProfile.modulation
+      FinalSlowBase.actualProfile.modulation
     (actualUpper upper) B (le_max_right _ _)
 
 theorem actual_error_vanishingJointJets (upper : ℝ) (B : ℕ) :
     JointResidualLimits.VanishingJointJets (actualError upper B) :=
   error_vanishingJointJets FinalSlowBase.actualProfile.certificate
-    FinalSlowBase.actualProfile.modulation
+      FinalSlowBase.actualProfile.modulation
     (actualUpper upper) B (le_max_right _ _)
 
 end NavierStokes.GlobalBaseError

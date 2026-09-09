@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPiola
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
 
 /-!
 Curl in the constant lifted directions `(κ eᵢ, m₀ᵢ)` on the actual periodic
@@ -16,6 +16,9 @@ cylinder.  Mixed covering derivatives commute, so its lifted divergence
 vanishes.  Compact smooth potentials also produce members of the existing
 closed divergence-free Bochner L² space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,6 +38,8 @@ theorem liftedDirection_coordinate (κ : ℝ) (m : Vector3) (i : Fin 3) :
   rw [EulerGraphPullback.liftedDirection_apply]
   simp only [coordinateDirection, EuclideanSpace.inner_single_right, conj_trivial, one_mul]
 
+/-- Lifted curl, given by `curlMatrix ((fieldFDeriv period Q x).comp
+(EulerGraphPullback.liftedDirection κ m))`. -/
 def liftedCurl (κ : ℝ) (m : Vector3) (Q : LiftDomain period → Vector3)
     (x : LiftDomain period) : Vector3 :=
   curlMatrix ((fieldFDeriv period Q x).comp (EulerGraphPullback.liftedDirection κ m))
@@ -162,33 +167,34 @@ theorem component_compact (Q : LiftDomain period → Vector3) (hQ : HasCompactSu
 
 variable [Fact (0 < period)]
 
+/-- Lifted curl Lᵖ, constructed using `curlTestLp`. -/
 def liftedCurlLp (κ : ℝ) (m : Vector3) (Q : LiftDomain period → Vector3)
     (hc : HasCompactSupport Q) (hQ : ∀ x, ContDiff ℝ ∞ (localFieldLift period Q x)) :
     LiftL2 period :=
   curlTestLp period κ m 0 1 (fun y => Q y 2) (component_compact period Q hc 2) (component_smooth
-    period Q hQ 2) +
+      period Q hQ 2) +
   curlTestLp period κ m 1 2 (fun y => Q y 0) (component_compact period Q hc 0) (component_smooth
-    period Q hQ 0) +
+      period Q hQ 0) +
   curlTestLp period κ m 2 0 (fun y => Q y 1) (component_compact period Q hc 1) (component_smooth
-    period Q hQ 1)
+      period Q hQ 1)
 
 theorem liftedCurlLp_ae (κ : ℝ) (m : Vector3) (Q : LiftDomain period → Vector3)
     (hc : HasCompactSupport Q) (hQ : ∀ x, ContDiff ℝ ∞ (localFieldLift period Q x)) :
     (liftedCurlLp period κ m Q hc hQ : LiftDomain period → Vector3) =ᵐ[liftMeasure period]
       liftedCurl period κ m Q := by
   let a := curlTestLp period κ m 0 1 (fun y => Q y 2) (component_compact period Q hc 2)
-    (component_smooth period Q hQ 2)
+      (component_smooth period Q hQ 2)
   let b := curlTestLp period κ m 1 2 (fun y => Q y 0) (component_compact period Q hc 0)
-    (component_smooth period Q hQ 0)
+      (component_smooth period Q hQ 0)
   let c := curlTestLp period κ m 2 0 (fun y => Q y 1) (component_compact period Q hc 1)
-    (component_smooth period Q hQ 1)
+      (component_smooth period Q hQ 1)
   filter_upwards [Lp.coeFn_add (a + b) c, Lp.coeFn_add a b,
     curlTestLp_ae period κ m 0 1 (fun y => Q y 2) (component_compact period Q hc 2)
-      (component_smooth period Q hQ 2),
+        (component_smooth period Q hQ 2),
     curlTestLp_ae period κ m 1 2 (fun y => Q y 0) (component_compact period Q hc 0)
-      (component_smooth period Q hQ 0),
+        (component_smooth period Q hQ 0),
     curlTestLp_ae period κ m 2 0 (fun y => Q y 1) (component_compact period Q hc 1)
-      (component_smooth period Q hQ 1)]
+        (component_smooth period Q hQ 1)]
     with x habc hab ha hb hc'
   change (a + b + c) x = _
   change (a + b + c) x = (a + b) x + c x at habc

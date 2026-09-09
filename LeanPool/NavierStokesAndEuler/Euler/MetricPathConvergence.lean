@@ -6,19 +6,26 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WeightedCylinderEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
+public import Mathlib.Topology.ContinuousMap.Algebra
+import Mathlib.Analysis.InnerProductSpace.Continuous
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Uniform convergence of actual finite metric energies along continuous Hilbert-space paths. -/
 
 @[expose] public section
 
-/-! Uniform convergence of actual finite metric energies along continuous Hilbert-space paths. -/
 
 noncomputable section
 
 namespace EulerMetricPathConvergence
 
-open MeasureTheory Set EulerFiniteMetricEnergy EulerWeightedCylinderEnergy EulerPacketWeights
-  EulerVolterraConvolution EulerTimeLp
+open Set EulerFiniteMetricEnergy
+
 open scoped Topology
 
 variable {I H : Type*} [Fintype I] [NormedAddCommGroup H] [InnerProductSpace ℝ H]
@@ -46,7 +53,8 @@ theorem metricPath_continuous (T : ℝ) (K : C(Icc (0 : ℝ) T, H →L[ℝ] H)) 
   exact familyMetricNorm_continuous.comp
     ((K.continuous.comp continuous_snd).prodMk continuous_eval)
 
-/-- Strong uniform field convergence gives uniform convergence of the actual square-root metric energy, including zeros. -/
+/-- Strong uniform field convergence gives uniform convergence of the actual square-root metric
+energy, including zeros. -/
 theorem metricPath_tendsto (T : ℝ) (K : C(Icc (0 : ℝ) T, H →L[ℝ] H))
     (u : ℕ → C(Icc (0 : ℝ) T, I → H)) (v : C(Icc (0 : ℝ) T, I → H))
     (hu : Filter.Tendsto u Filter.atTop (𝓝 v)) :
@@ -65,7 +73,7 @@ theorem weightedMetricPath_apply {A : Type*} [Fintype A] (T : ℝ)
     (u : A → C(Icc (0 : ℝ) T, I → H)) (t : Icc (0 : ℝ) T) :
     weightedMetricPath T w K u t = ∑ i, w i t * familyMetricNorm (K t) (u i t) := by
   simp only [weightedMetricPath, ContinuousMap.sum_apply, ContinuousMap.mul_apply, metricPath,
-    ContinuousMap.coe_mk]
+      ContinuousMap.coe_mk]
 
 /-- Every finite Gevrey metric sum passes uniformly through actual strong field approximations. -/
 theorem weightedMetricPath_tendsto {A : Type*} [Fintype A] (T : ℝ)

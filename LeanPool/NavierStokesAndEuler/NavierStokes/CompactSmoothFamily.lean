@@ -6,12 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import Mathlib.Topology.ContinuousMap.Compact
-public import Mathlib.Topology.CompactOpen
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Jointly smooth functions as smooth families on a compact set
@@ -20,6 +18,9 @@ This generalizes `SmoothPathFamily` from a compact real interval to any
 compact subset of a real normed space. The Fréchet derivative in the
 supremum norm is proved by a uniform mean-value remainder estimate.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.CompactSmoothFamily
 
@@ -54,7 +55,7 @@ theorem slice_continuous {K : Set Z} {U : Set P} {F : P × Z → E}
     (fun z => ⟨hp, z.2⟩)
 
 omit [NormedSpace ℝ P] [NormedSpace ℝ Z] [NormedSpace ℝ E] in
-theorem continuousOn_family {K : Set Z} [CompactSpace K] {U : Set P} {F : P × Z → E}
+theorem continuousOn_family {K : Set Z} {U : Set P} {F : P × Z → E}
     (hF : ContinuousOn F (U ×ˢ K)) : ContinuousOn (family K F) U := by
   apply continuousOn_iff_continuous_domRestrict.mpr
   apply ContinuousMap.continuous_of_continuous_uncurry
@@ -67,6 +68,8 @@ theorem continuousOn_family {K : Set Z} [CompactSpace K] {U : Set P} {F : P × Z
   funext z
   exact family_apply K F z.1 (slice_continuous hF z.1.2) z.2
 
+/-- Flip linear, bundling `toFun`, `toFun`, `map_add`, `map_smul` and the required compatibility
+proofs. -/
 noncomputable def flipLinear (K : Set Z) :
     C(K, P →L[ℝ] E) →ₗ[ℝ] P →ₗ[ℝ] C(K, E) where
   toFun g := {
@@ -85,6 +88,7 @@ theorem norm_flipLinear_le (K : Set Z) [CompactSpace K]
   exact ((g z).le_opNorm v).trans
     (mul_le_mul_of_nonneg_right (g.norm_coe_le_norm z) (norm_nonneg v))
 
+/-- Flip continuous linear map as an element of `C(K, P →L[ℝ] E) →L[ℝ] P →L[ℝ] C(K, E)`. -/
 noncomputable def flipCLM (K : Set Z) [CompactSpace K] :
     C(K, P →L[ℝ] E) →L[ℝ] P →L[ℝ] C(K, E) :=
   (flipLinear (P := P) (E := E) K).mkContinuous₂
@@ -149,6 +153,7 @@ theorem hasFDerivAt_family (K : Set Z) [CompactSpace K] {U : Set P} (hU : IsOpen
   rw [heq]
   simpa only [add_sub_cancel_left] using hmean
 
+/-- Parameter derivative, given by `(fderiv ℝ F z).comp (ContinuousLinearMap.inl ℝ P Z)`. -/
 noncomputable def parameterDerivative (F : P × Z → E) (z : P × Z) : P →L[ℝ] E :=
   (fderiv ℝ F z).comp (ContinuousLinearMap.inl ℝ P Z)
 

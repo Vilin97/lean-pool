@@ -6,9 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Absorbing a fixed factorial shift into a coefficient radius
@@ -17,6 +24,9 @@ The factor `(n+1)²` costs only `4^n`. Thus the one-shift estimate for an actual
 bounded inverse becomes a shift-zero coefficient estimate at a larger fixed
 radius. The enlargement is independent of the derivative order.
 -/
+
+@[expose] public section
+
 
 namespace EulerGevrey
 

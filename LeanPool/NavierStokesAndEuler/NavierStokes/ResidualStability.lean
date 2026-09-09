@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualCalculus
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
-public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.Flatness
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualCalculus
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Stability of the actual Navier--Stokes residual under flat perturbations
@@ -22,6 +20,9 @@ Flatness and power growth below are bounds on norms of actual iterated
 Fréchet derivatives. The differential and bilinear closure lemmas are proved
 from the derivative identities and Leibniz estimates, not assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -504,9 +505,14 @@ section FullJetExpression
 
 open ProblemStatement
 
-private local instance : NormedAddCommGroup (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) :=
+/-- Cache the standard `NormedAddCommGroup (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space)` instance to
+shorten typeclass synthesis. -/
+local instance instResidualStability1 : NormedAddCommGroup (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space)
+    :=
   inferInstance
-private local instance : NormedSpace ℝ (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) :=
+/-- Cache the standard `NormedSpace ℝ (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space)` instance to
+shorten typeclass synthesis. -/
+local instance instResidualStability2 : NormedSpace ℝ (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) :=
   inferInstance
 
 theorem norm_iteratedFDeriv_spatialCurl_le {U : Set SpaceTime} {A : VelocityField}
@@ -523,14 +529,17 @@ theorem norm_iteratedFDeriv_spatialCurl_le {U : Set SpaceTime} {A : VelocityFiel
   rw [iteratedFDeriv_eqOn hU heq m hz]
   exact norm_jet_linear_map_fderiv _ hU hA hz m
 
+/-- Time jet, given by `ContinuousLinearMap.apply ℝ Space (1, 0)`. -/
 def timeJet : (SpaceTime →L[ℝ] Space) →L[ℝ] Space :=
   ContinuousLinearMap.apply ℝ Space (1, 0)
 
+/-- Laplace jet as an element of `(SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) →L[ℝ] Space`. -/
 def laplaceJet : (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) →L[ℝ] Space :=
   ∑ i : Fin 3,
     (ContinuousLinearMap.apply ℝ Space (0, coordinateVector i)).comp
       (ContinuousLinearMap.apply ℝ (SpaceTime →L[ℝ] Space) (0, coordinateVector i))
 
+/-- Pressure jet as an element of `(SpaceTime →L[ℝ] ℝ) →L[ℝ] Space`. -/
 def pressureJet : (SpaceTime →L[ℝ] ℝ) →L[ℝ] Space :=
   ∑ i : Fin 3,
     ((ContinuousLinearMap.id ℝ ℝ).smulRight (coordinateVector i)).comp
@@ -580,6 +589,7 @@ theorem pressureGradient_eq_full {U : Set SpaceTime} {r : PressureField}
   rw [space_fderiv_eq_full ((hr.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))]
   rfl
 
+/-- Residual jet expression as an element of `VelocityField`. -/
 def residualJetExpression (u w : VelocityField) (r : PressureField) : VelocityField :=
   fun z => timeJet (fderiv ℝ w z) - laplaceJet (fderiv ℝ (fderiv ℝ w) z) +
     pressureJet (fderiv ℝ r z) +

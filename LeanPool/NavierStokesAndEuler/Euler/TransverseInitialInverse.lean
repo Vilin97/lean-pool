@@ -6,17 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseInitialCoordinates
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.InitialH1OperatorProduct
+public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FrameTransport
+import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
 
 /-!
 The actual left inverse of initial-zero moving-frame differentiation.  This
 gives polynomial coordinate estimates for nonzero-terminal paths, including
 differences between frames, without estimating a forward evolution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,6 +44,8 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
 
+/-- Initial coordinate operator, given by `initialProductDerivative T hT (frameLeftInversePath T
+Q c hc hQ) (frameLeftInverseDerivativePath T Q Q₁ c hc hQ)`. -/
 def initialCoordinateOperator : TimeLp T E →L[ℝ] TimeLp T U :=
   initialProductDerivative T hT (frameLeftInversePath T Q c hc hQ)
     (frameLeftInverseDerivativePath T Q Q₁ c hc hQ)

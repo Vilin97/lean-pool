@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CompactCurlBounds
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerBKM
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.CompactCurlBounds
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerBKM
 
 /-! A classical comparison field with uniformly confined vorticity cannot
 agree with the maximal ordinary solution throughout a finite lifespan.
 The contradiction uses the proved Beale--Kato--Majda integral criterion. -/
+
+@[expose] public section
+
 
 noncomputable section
 

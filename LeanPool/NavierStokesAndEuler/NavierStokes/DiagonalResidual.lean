@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualStability
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # Residual flatness from quantitative finite-stage data
@@ -20,6 +19,9 @@ the loss of powers in the background estimates must not. All jet estimates
 refer to actual iterated Fréchet derivatives of the displayed fields.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.DiagonalResidual
@@ -27,10 +29,16 @@ namespace NavierStokes.DiagonalResidual
 open Set Filter Function
 open scoped Topology BigOperators ContDiff
 
-private local instance : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (ProblemStatement.SpaceTime →L[ℝ]
+ProblemStatement.SpaceTime →L[ℝ] ProblemStatement.Space)` instance to shorten typeclass
+synthesis. -/
+local instance instDiagonalResidual1 : NormedAddCommGroup
     (ProblemStatement.SpaceTime →L[ℝ] ProblemStatement.SpaceTime →L[ℝ] ProblemStatement.Space) :=
   inferInstance
-private local instance : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (ProblemStatement.SpaceTime →L[ℝ]
+ProblemStatement.SpaceTime →L[ℝ] ProblemStatement.Space)` instance to shorten typeclass
+synthesis. -/
+local instance instDiagonalResidual2 : NormedSpace ℝ
     (ProblemStatement.SpaceTime →L[ℝ] ProblemStatement.SpaceTime →L[ℝ] ProblemStatement.Space) :=
   inferInstance
 

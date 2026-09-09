@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
 
-@[expose] public section
-
 /-! One finite source radius accommodates the zero-history primary, every
 forced direct-forward grade, the mean solve and the nonlinear coefficients.
 Neither the positive packet amplitude nor the recursive grade enters it. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +27,7 @@ variable {P : ℝ}
   {D : Data U} (L : Budget D (Fin 4) 6)
   (N : EulerTransversePacketJoin.NormalBudget D 6 L.R) (C : ℝ)
 
+/-- Grade radius, constructed using `max`. -/
 def gradeRadius : ℝ :=
   max L.R (max (L.commonCost*C) (max (L.correctorAmplitude (P := P) N*C)
     (max (L.correctorTimeAmplitude (P := P) N*C) (3*L.pressureAmplitude (P := P) N*C))))
@@ -71,9 +73,10 @@ variable {P Tc : ℝ} [Fact (0 < P)] {O : Operators} {C : CoefficientData P Tc O
   (N : EulerTransversePacketJoin.NormalBudget D 6 L.R) (CB : CoefficientBudget C)
   (terminalCost extra : ℝ)
 
+/-- Common radius as an element of `ℝ`. -/
 def commonRadius : ℝ :=
-  Rm+L.R+CB.termCost+sobolevCoefficientRadius (Fin 4) CB.Rc+
-    M.velocityCost+M.derivativeCost+M.pressureGradientCost+
+  Rm+L.R+CB.termCost+sobolevCoefficientRadius (Fin 4) CB.Rc +
+    M.velocityCost+M.derivativeCost+M.pressureGradientCost +
       L.gradeRadius (P := P) N 1+L.gradeRadius (P := P) N terminalCost+max 0 extra
 
 theorem commonRadius_bounds :

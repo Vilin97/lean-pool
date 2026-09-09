@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
 public import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Bounded linear maps act on the actual descended tensors and their
 L² classes. In particular the small normal component is retained in the
 four-dimensional transport estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -96,7 +99,7 @@ theorem tensor_transport_norm_le :
   let H := tensor P (fun x => angularInjection (normalComponentMap m (f x))) n
   have hF : MemLp F 2 (liftMeasure P) := tensor_map_memLp P (transportLinear κ m) f hf n hLp
   have hG : MemLp G 2 (liftMeasure P) := tensor_map_memLp P (ContinuousLinearMap.inl ℝ Vector3 ℝ) f
-    hf n hLp
+      hf n hLp
   have hN := tensor_map_memLp P (normalComponentMap m) f hf n hLp
   have hH : MemLp H 2 (liftMeasure P) :=
     tensor_map_memLp P angularInjection _ (normal_smooth P m f hf) n hN

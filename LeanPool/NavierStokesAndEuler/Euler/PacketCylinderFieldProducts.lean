@@ -9,10 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathAdvection
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+
+/-! Actual nonlinear and coefficient operations on raw cylinder-path witnesses. -/
 
 @[expose] public section
 
-/-! Actual nonlinear and coefficient operations on raw cylinder-path witnesses. -/
 
 noncomputable section
 
@@ -26,6 +28,7 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
+/-- Map, constructed using `ofLifted`. -/
 def map (G : Field P T raw) (L : Space →L[ℝ] Space) :
     Field P T (fun z => L (raw z)) :=
   ofLifted (pathMap P L G.path) (pathMap_orbit_contDiff P L G.path G.orbit)
@@ -45,6 +48,7 @@ def derivative (G : Field P T raw) (i : Fin 4) :
     rw [G.raw_fderiv]
     exact (pointField_derivativePath P G.path G.orbit i t (x,(θ : AddCircle P))).symm
 
+/-- Scalar product, bundling `path`, `orbit`, `raw_eq`. -/
 def scalarProduct (G : Field P T raw) (H : Field P T raw')
     (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) : Field P T (fun z => L (raw z) • raw' z) where
   path := scalarProductPath P L hL G.path H.path G.orbit H.orbit
@@ -52,8 +56,9 @@ def scalarProduct (G : Field P T raw) (H : Field P T raw')
   raw_eq t x θ := by
     rw [G.raw_eq,H.raw_eq]
     exact (pointField_scalarProductPath P L hL G.path H.path G.orbit H.orbit t (x,(θ : AddCircle
-      P))).symm
+        P))).symm
 
+/-- Bilinear, bundling `path`, `orbit`, `raw_eq`. -/
 def bilinear (G : Field P T raw) (H : Field P T raw')
     (B : Space →L[ℝ] Space →L[ℝ] Space) : Field P T (fun z => B (raw z) (raw' z)) where
   path := bilinearProductPath P B G.path H.path G.orbit H.orbit
@@ -61,7 +66,7 @@ def bilinear (G : Field P T raw) (H : Field P T raw')
   raw_eq t x θ := by
     rw [G.raw_eq,H.raw_eq]
     exact (pointField_bilinearProductPath P B G.path H.path G.orbit H.orbit t (x,(θ : AddCircle
-      P))).symm
+        P))).symm
 
 /-- Spatial advection is the literal ordinary derivative of the second raw field. -/
 def advection (G : Field P T raw) (H : Field P T raw') :
@@ -76,16 +81,27 @@ def advection (G : Field P T raw) (H : Field P T raw') :
       G.raw_eq,comp_apply,inl_apply]
     exact (pointField_advectionPath P G.path H.path G.orbit H.orbit t (x,(θ : AddCircle P))).symm
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCylinderFieldProducts1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCylinderFieldProducts2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCylinderFieldProducts3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCylinderFieldProducts4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 /-- A genuine smooth coefficient path multiplies a raw field without a new regularity premise. -/
-def multiply (G : Field P T raw) (A : C(Icc (0 : ℝ) T,Space →ᵇ Space →L[ℝ] Space))
+def multiply (G : Field P T raw) (A : C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
     (coef : EulerPacketPointJets.Domain → Space →L[ℝ] Space)
-    (hcoef : ∀ (t : Icc (0 : ℝ) T) x θ, coef (t,(x,θ)) = A t x) :
+    (hcoef : ∀ (t : Icc (0 : ℝ) T) x θ, coef (t, (x, θ)) = A t x) :
     Field P T (fun z => coef z (raw z)) :=
   ofLifted (fullMultiplierMap P A G.path) (product_orbit_contDiff P A hA G.path G.orbit)
     (fun t x => A t x.1 (pointField P G.path G.orbit t x))

@@ -7,13 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketRadiusCostPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCanonicalRadius
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentTransverseCosts
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
+import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
 
 /-! A uniform polynomial bound for the actual initialized common radius.
 Primitive scalar bounds are stated explicitly, including the original
 source radii; later source constructors discharge them polynomially. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,13 +27,13 @@ namespace EulerPacketRadiusPolynomial
 open Set EulerParameterWordGevrey EulerPacketTerminalDatum EulerTransversePacketProvider
   EulerTransversePacketJoin EulerTransversePacketPrimary EulerTransverseFixedSobolev
   EulerTransverseGevreyInverse EulerTransverseCoefficientGevrey EulerFixedEvolutionSobolev
-  EulerTimeLpGramSobolev EulerTimeLpAccelerationSobolev EulerCylinderDirichlet.Coefficients
+  EulerTimeLpGramSobolev  EulerCylinderDirichlet.Coefficients
   EulerSourceCylinderTimeBounds EulerLinearDuhamel EulerPacketCylinderField
-    EulerPacketProfileRecursion
+      EulerPacketProfileRecursion
   EulerTransverseForwardCoefficientGevrey
 
 attribute [local gcongr] sobolevCoefficientAmplitude_mono_all inverseBlockCost_mono_all
-  sobolevInverseCost_mono
+    sobolevInverseCost_mono
 
 theorem coefficientRadius_eq (R : ℝ) : sobolevCoefficientRadius (Fin 4) R=16*R := by
   norm_num [sobolevCoefficientRadius]
@@ -143,7 +148,7 @@ theorem primary_weak_le : weakRadius L ≤ 2*weakEnvelope W*(16*W+1) := by
     (by positivity) (by positivity)
 
 include hW hτi hci hRc hC0 hC1 in
-theorem primary_gram_le (V : ℝ) (hV : 0 ≤ V) (hVW : V ≤ 2*W+2) :
+theorem primary_gram_le (V : ℝ) (hV : 0 ≤ V) (hVW : V ≤ 2 * W + 2) :
     gramBlockCost (Fin 4) 6 (D.initial τ hτ hτT.le).frameLower L.Rc L.C₀
       (accelerationBlockAmplitude (Fin 4) 6 L.Rc L.C₀ L.C₁
         (endpointForcingCost (Fin 4) 6 τ L.Rc L.C₁) V) ≤ strongEnvelope W := by
@@ -333,7 +338,7 @@ theorem physicalCost_le (Ri C0 C1 Df Da W : ℝ)
       _ = _ := by ring
   unfold physicalCost coordinateCost
   calc
-    _ ≤ 3*coeff (4*W) W*1+3*coeff (4*W) W*
+    _ ≤ 3*coeff (4*W) W*1+3*coeff (4*W) W *
         (3*coeff (4*W) (18*W^3)*1+3*coeff (4*W) (3*W^2)*1) := by gcongr
     _ = _ := by unfold physicalEnvelope; ring
 
@@ -357,7 +362,7 @@ theorem joined_common_le : L.commonCost ≤ commonEnvelope W := by
   unfold EulerTransversePacketJoin.Budget.commonCost EulerTransversePacketJoin.Budget.velocityCost
     EulerTransversePacketJoin.Budget.derivativeCost
   calc
-    _ ≤ (3*coeff W W*(2*W+2)+3*coeff W W)+
+    _ ≤ (3*coeff W W*(2*W+2)+3*coeff W W) +
         (3*coeff W W*(2*W+2)+3*coeff W W+physicalEnvelope W) := by gcongr
     _ = _ := by unfold commonEnvelope; ring
 
@@ -380,11 +385,11 @@ theorem primary_common_le (H : EulerTransversePacketPrimary.Budget L) :
   have h1' : coeff L.Rc L.C₁ ≤ coeff W W := sobolevCoefficientAmplitude_mono_all 6 hr h1 hRc hC1
   have hp := physicalCost_le L.Ri L.C₀ L.C₁ 0 1 W hi0 h0 h1 le_rfl zero_le_one hW0
     hRi hC0 hC1 zero_le_one le_rfl
-  change (3*coeff L.Rc L.C₀*(τ⁻¹+traceCost τ)+3*coeff L.Rc L.C₀)+
-    (3*coeff L.Rc L.C₁*(τ⁻¹+traceCost τ)+3*coeff L.Rc L.C₀+
+  change (3*coeff L.Rc L.C₀*(τ⁻¹+traceCost τ)+3*coeff L.Rc L.C₀) +
+    (3*coeff L.Rc L.C₁*(τ⁻¹+traceCost τ)+3*coeff L.Rc L.C₀ +
       physicalCost (Fin 4) 6 L.Ri L.C₀ L.C₁ 0 1) ≤ _
   calc
-    _ ≤ (3*coeff W W*(2*W+2)+3*coeff W W)+
+    _ ≤ (3*coeff W W*(2*W+2)+3*coeff W W) +
         (3*coeff W W*(2*W+2)+3*coeff W W+physicalEnvelope W) := by gcongr
     _ = _ := by unfold commonEnvelope; ring
 
@@ -430,7 +435,7 @@ theorem pressureCost_le (Ri C Df Dv W : ℝ)
 theorem joined_grade_sum_le (N : NormalBudget D 6 L.R) (W : ℝ) (hW : 0 ≤ W)
     (hNR : N.Rc ≤ W) (hNC : N.C ≤ W) (hNI : N.Ri ≤ W)
     (hcommon : L.commonCost ≤ commonEnvelope W) :
-    L.commonCost+L.correctorAmplitude (P := period) N+L.correctorTimeAmplitude (P := period) N+
+    L.commonCost+L.correctorAmplitude (P := period) N+L.correctorTimeAmplitude (P := period) N +
       3*L.pressureAmplitude (P := period) N ≤ gradeEnvelope W := by
   have hn := normal_block_le N W hW hNR hNC hNI
   have hp := pressureCost_le N.Ri N.C 1 L.commonCost W N.Ri_nonneg N.C_nonneg zero_le_one
@@ -444,16 +449,16 @@ theorem joined_grade_sum_le (N : NormalBudget D 6 L.R) (W : ℝ) (hW : 0 ≤ W)
     EulerTransversePacketJoin.Budget.correctorTimeAmplitude
     EulerTransversePacketJoin.Budget.pressureAmplitude
   calc
-    _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W)+
+    _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W) +
         108*(normalEnvelope W)^2*(period*commonEnvelope W)+3*(period*pressureEnvelope W) := by
-          gcongr
+            gcongr
     _ = _ := by unfold gradeEnvelope; ring
 
 theorem primary_grade_sum_le (H : EulerTransversePacketPrimary.Budget L)
     (N : NormalBudget D 6 L.R) (W : ℝ) (hW : 0 ≤ W)
     (hNR : N.Rc ≤ W) (hNC : N.C ≤ W) (hNI : N.Ri ≤ W)
     (hcommon : H.commonCost ≤ commonEnvelope W) :
-    H.commonCost+H.correctorAmplitude (P := period) N+H.correctorTimeAmplitude (P := period) N+
+    H.commonCost+H.correctorAmplitude (P := period) N+H.correctorTimeAmplitude (P := period) N +
       3*H.pressureAmplitude (P := period) N ≤ gradeEnvelope W := by
   have hn := normal_block_le N W hW hNR hNC hNI
   have hp := pressureCost_le N.Ri N.C 0 H.commonCost W N.Ri_nonneg N.C_nonneg le_rfl
@@ -467,9 +472,9 @@ theorem primary_grade_sum_le (H : EulerTransversePacketPrimary.Budget L)
     EulerTransversePacketPrimary.Budget.correctorTimeAmplitude
     EulerTransversePacketPrimary.Budget.pressureAmplitude
   calc
-    _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W)+
+    _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W) +
         108*(normalEnvelope W)^2*(period*commonEnvelope W)+3*(period*pressureEnvelope W) := by
-          gcongr
+            gcongr
     _ = _ := by unfold gradeEnvelope; ring
 
 theorem mean_costs_le {M : EulerMeanPacketProvider.Data} {Rm : ℝ}
@@ -491,10 +496,10 @@ theorem mean_costs_le {M : EulerMeanPacketProvider.Data} {Rm : ℝ}
     sobolevCoefficientAmplitude_mono_all 6 hR0 hF0 hRc hCF
   have h1b : coeff LM.Rc LM.CF₁ ≤ coeff W W :=
     sobolevCoefficientAmplitude_mono_all 6 hR0 hF10 hRc hCF1
-  change 3*coeff LM.Rc LM.CF*EulerMeanStrongContinuousGevrey.coordinateTraceCost M.T+
+  change 3*coeff LM.Rc LM.CF*EulerMeanStrongContinuousGevrey.coordinateTraceCost M.T +
     3*(coeff LM.Rc LM.CF₁*EulerMeanStrongContinuousGevrey.coordinateTraceCost M.T+coeff LM.Rc
-      LM.CF)+
-    3*coeff LM.Rc LM.CF*(LM.Cf+3*coeff LM.Rc LM.CF+
+        LM.CF) +
+    3*coeff LM.Rc LM.CF*(LM.Cf+3*coeff LM.Rc LM.CF +
       6*coeff LM.Rc LM.CF₁*EulerMeanStrongContinuousGevrey.coordinateTraceCost M.T) ≤ _
   dsimp only [meanEnvelope]
   gcongr
@@ -536,7 +541,7 @@ end EulerPacketRadiusPolynomial
 namespace EulerPacketRadiusPolynomial
 
 open EulerParameterWordGevrey EulerPacketTerminalDatum EulerPacketCylinderField
-  EulerPacketProfileRecursion
+    EulerPacketProfileRecursion
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : EulerTransversePacketProvider.Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T}
@@ -595,9 +600,9 @@ theorem initializedRadius_le_envelope (W : ℝ) (hδ : 0 < δ)
     primary_common_le Lp W H.one H.history_inverse_time H.joined_radius H.joined_frame
       H.joined_first H.joined_inverse Hp
   have hLS := joined_grade_sum_le Lp Np W hW0 H.normal_radius H.normal_amplitude H.normal_inverse
-    hLC
+      hLC
   have hHS := primary_grade_sum_le Lp Hp Np W hW0 H.normal_radius H.normal_amplitude
-    H.normal_inverse hHC
+      H.normal_inverse hHC
   have hMS := mean_costs_le LM W hW0 H.mean_time H.mean_inverse_time H.mean_radius H.mean_frame
     H.mean_first H.mean_forcing
   have hTC := terminal_cost_le δ W ξ hδ H.delta_inverse H.terminal
@@ -616,12 +621,12 @@ theorem initializedRadius_le_envelope (W : ℝ) (hδ : 0 < δ)
   have h2 := Hp.correctorTimeAmplitude_nonneg (P := period) Np
   have h3 := Hp.pressureAmplitude_nonneg (P := period) Np
   have hb0 : Hp.commonCost ≤ gradeEnvelope W := by linarith only [hHS,h1,h2,h3]
-  have hb1 : Hp.correctorAmplitude (P := period) Np ≤ gradeEnvelope W := by linarith only
-    [hHS,h0,h2,h3]
-  have hb2 : Hp.correctorTimeAmplitude (P := period) Np ≤ gradeEnvelope W := by linarith only
-    [hHS,h0,h1,h3]
-  have hb3 : 3*Hp.pressureAmplitude (P := period) Np ≤ gradeEnvelope W := by linarith only
-    [hHS,h0,h1,h2]
+  have hb1 : Hp.correctorAmplitude (P := period) Np ≤ gradeEnvelope W := by
+      linarith only [hHS,h0,h2,h3]
+  have hb2 : Hp.correctorTimeAmplitude (P := period) Np ≤ gradeEnvelope W := by
+      linarith only [hHS,h0,h1,h3]
+  have hb3 : 3*Hp.pressureAmplitude (P := period) Np ≤ gradeEnvelope W := by
+      linarith only [hHS,h0,h1,h2]
   have hmul {a : ℝ} (ha : a ≤ gradeEnvelope W) :
       a*(wordCost (Fin 4) 6 δ*‖ξ‖) ≤ requiredEnvelope W+gradeEnvelope W*terminalEnvelope W :=
     (mul_le_mul ha hTC hTC0 hgrade0).trans (le_add_of_nonneg_left hreq0)

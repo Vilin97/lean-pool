@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketOrbitForcing
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketReflection
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcing
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketReflection
+import LeanPool.NavierStokesAndEuler.Euler.MeanTimeSobolev
 
 /-!
 # Homogeneity of the genuine mean packet solution
@@ -19,12 +18,15 @@ coercive inverse. Consequently scalar forcing envelopes remain outside the
 velocity, time-derivative, and physical-pressure estimates.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanPacketProvider.Forcing
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
-  EulerMeanVariationalInverse EulerMeanScalarPressure EulerTimeLp EulerVolterraConvolution
+  EulerMeanVariationalInverse  EulerTimeLp EulerVolterraConvolution
   EulerMeanTimeContinuousTranslation EulerPacketPointJets EulerPacketProfileRecursion
 open scoped ContDiff
 
@@ -38,7 +40,7 @@ theorem path_ae_raw (G : Forcing D raw) (t : Icc (0 : ℝ) D.T) (θ : ℝ) :
 section Scaling
 
 variable (G : Forcing D raw) (H : Forcing D raw') (a : ℝ)
-  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw' (t,(x,θ)) = a • raw (t,(x,θ)))
+  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw' (t, (x, θ)) = a • raw (t, (x, θ)))
 
 include hraw
 

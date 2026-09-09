@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothPathFamily
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ViscousPropagator
-public import Mathlib.Data.List.OfFn
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ViscousPropagator
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Topology.Algebra.Module.PerfectSpace
 
 /-!
 # Weighted estimates for actual parameter derivatives of linear ODE solutions
@@ -19,6 +18,9 @@ Parameter derivatives are genuine iterated Fréchet derivatives in prescribed
 directions. The differentiated Volterra equation gives a triangular system;
 the energy estimate, rather than an uncontrolled inverse norm, estimates it.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.WeightedODEJets
 
@@ -236,7 +238,7 @@ theorem directional_product {U : Set P} (hU : IsOpen U)
     (hlin.clm_apply hdu.hasFDerivAt).fderiv
   simp only [_root_.add_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.flip_apply, add_comm] at h
-  convert! h using 1 ; apply add_comm
+  convert! h using 1; apply add_comm
 
 theorem jet_product {U : Set P} (hU : IsOpen U)
     {A : P → Coefficient a b E} {u : P → Curve a b E}
@@ -372,7 +374,7 @@ theorem jet_solution_eq_solution (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
     calc
       jet u l p = jet
           (fun q => constantCurve (x₀ q) + integrator hab (applyCoefficient (A q) (u q) + f q)) l p
-            :=
+              :=
         jet_congr hU hright l hp
       _ = jet (fun q => constantCurve (x₀ q)) l p +
           jet (fun q => integrator hab (applyCoefficient (A q) (u q) + f q)) l p :=

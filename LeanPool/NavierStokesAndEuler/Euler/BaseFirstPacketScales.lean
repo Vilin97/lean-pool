@@ -8,13 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BasePacketFrequencyCost
 public import LeanPool.NavierStokesAndEuler.Euler.PacketUniversalFrequency
-public import LeanPool.NavierStokesAndEuler.Euler.PacketLowConstants
-public import LeanPool.NavierStokesAndEuler.Euler.PacketLowBoundPropagation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFirstLowBounds
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBaseScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketLowBoundPropagation
+import LeanPool.NavierStokesAndEuler.Euler.PacketLowConstants
 
 /-! The literal polynomial first-packet scales satisfy every local,
 frequency and localized lower-bound guard after the final base choice. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,8 +28,11 @@ open Real Filter EulerPacketBaseScales EulerPacketBaseGuardScales EulerPacketSou
   EulerPacketFirstLowBounds EulerMeanHarmonic
 open scoped Topology
 
+/-- Literal initial error, given by `(X^D)^(-(1/4 : ℝ))`. -/
 def literalInitialError (D : ℕ) (X : ℝ) : ℝ := (X^D)^(-(1/4 : ℝ))
 
+/-- Literal initial pressure cost, given by `2*initialCoefficientCost*X^(-1010 :
+ℝ)*(X^1000*firstRatio)+literalInitialError D X`. -/
 def literalInitialPressureCost (D : ℕ) (X : ℝ) : ℝ :=
   2*initialCoefficientCost*X^(-1010 : ℝ)*(X^1000*firstRatio)+literalInitialError D X
 
@@ -60,6 +66,8 @@ theorem literal_radius_frequency_bound (D : ℕ) (hD : 2000 ≤ D) (X : ℝ) (hX
     _ ≤ X^((D : ℝ)*(3/4 : ℝ)) := rpow_le_rpow_of_exponent_le hX (by linarith)
     _ = _ := by rw [rpow_mul hX0,rpow_natCast]
 
+/-- First scale guards data, collecting `x_one`, `radius_small`, `local_time`, `frequency`,
+`label_frequency`, `radius_frequency` and their compatibility conditions. -/
 structure FirstScaleGuards (J D : ℕ) (X : ℝ) : Prop where
   x_one : 1 ≤ X
   radius_small : baseRadius X ≤ 1/4
@@ -67,18 +75,18 @@ structure FirstScaleGuards (J D : ℕ) (X : ℝ) : Prop where
   frequency : UniversalFrequency (X^D)
   label_frequency : solutionLabelConstant ≤ X^D
   radius_frequency : (baseRadius X)⁻¹ ≤ (X^D)^(3/4 : ℝ)
-  source_frequency : EulerPacketInitializedOutputCost.uniformConstant*
+  source_frequency : EulerPacketInitializedOutputCost.uniformConstant *
     (profileEnvelope (firstParameterSize (baseHorizon J X) (X^(-1010 : ℝ)) (X^1000)))^
       EulerPacketInitializedOutputCost.uniformPower ≤ smallPower (X^D)
   error_small : literalInitialError D X ≤ 1
   pressure_small : literalInitialPressureCost D X ≤ 1/4
-  localized : (initialCoefficientCost+literalInitialPressureCost D X)*((baseHorizon J X)^2/2)+
-    initialCoefficientCost*baseHorizon J X+
-    boundaryLocalizationC2*(initialCoefficientCost+X^1000*firstRatio+literalInitialError D X)*
+  localized : (initialCoefficientCost+literalInitialPressureCost D X)*((baseHorizon J X)^2/2) +
+    initialCoefficientCost*baseHorizon J X +
+    boundaryLocalizationC2*(initialCoefficientCost+X^1000*firstRatio+literalInitialError D X) *
       (baseRadius X)^3*baseHorizon J X ≤ 1/2
 
 theorem eventually_firstScaleGuards (J : ℕ) (hJ : 1 ≤ J) (D : ℕ) (hD : 2000 ≤ D)
-    (hDfreq : (firstFrequencyPower : ℝ) < (D : ℝ)*(theta/100)) :
+    (hDfreq : (firstFrequencyPower : ℝ) < (D : ℝ) * (theta / 100)) :
     ∀ᶠ X : ℝ in atTop, FirstScaleGuards J D X := by
   have hDpos : 0 < D := by omega
   have hp : Tendsto (fun X : ℝ => X^D) atTop atTop := tendsto_pow_atTop (Nat.ne_of_gt hDpos)
@@ -88,8 +96,8 @@ theorem eventually_firstScaleGuards (J : ℕ) (hJ : 1 ≤ J) (D : ℕ) (hD : 200
     hp.eventually (eventually_ge_atTop solutionLabelConstant),
     first_frequency_guard_eventually J hJ D hDfreq,
     (literalInitialError_tendsto_zero D hDpos).eventually_le_const zero_lt_one,
-    (literalInitialPressureCost_tendsto_zero D hDpos).eventually_le_const (by norm_num : (0 : ℝ) <
-      1/4)]
+    (literalInitialPressureCost_tendsto_zero D hDpos).eventually_le_const (by
+        norm_num : (0 : ℝ) < 1/4)]
     with X hb hfreq hlabel hsource herr hpressure
   have hX : 1 ≤ X := hb.1.le
   have hX0 := zero_le_one.trans hX

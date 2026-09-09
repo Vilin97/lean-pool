@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalModeGerms
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentWaveSupport
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalChartJets
 
 /-!
 # Geometry of the actual current-mode evaluation point
@@ -20,6 +19,9 @@ same current common-cover chart has the actual native slow domain and
 exactly the physical profile radius.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.CurrentModeGeometry
@@ -28,8 +30,10 @@ open Set Function Filter ProblemStatement CorrectionInitialization
 open scoped Topology ContDiff
 
 
+/-- Chart inner, given by `PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4`. -/
 noncomputable def chartInner : ℝ := PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4
 
+/-- Chart outer, given by `2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal`. -/
 noncomputable def chartOuter : ℝ := 2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal
 
 theorem chartInner_pos : 0 < chartInner :=
@@ -124,11 +128,11 @@ theorem point_profileRadius (n : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.In
           (ActualCurrentParticularPhysical.nativePoint n w).2) := by
     change (PhysicalParticularWave.nativeMap ActualPrimary.h (ChartScales.Q n)
         (CommonWindow.index ActualPrimary.h n) (ResidualPolarGraph.cylindricalPoint a i n w)).1.1.1
-          /
+            /
         VariableGaugeMean.qLength (2 * ActualPrimary.h)
           (PhysicalParticularWave.nativeMap ActualPrimary.h (ChartScales.Q n)
             (CommonWindow.index ActualPrimary.h n) (ResidualPolarGraph.cylindricalPoint a i n
-              w)).1.1.2 =
+                w)).1.1.2 =
       (ActualCurrentParticularPhysical.nativePoint n w).1.1.1 /
         VariableGaugeMean.qLength (2 * ActualPrimary.h)
           (ActualCurrentParticularPhysical.nativePoint n w).1.1.2

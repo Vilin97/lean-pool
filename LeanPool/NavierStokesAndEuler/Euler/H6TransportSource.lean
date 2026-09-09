@@ -7,11 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearProduct
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.RealCylinder
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedConvolution
+
+/-! The actual transport forcing has the shifted Gevrey H⁶ estimate without a cutoff-plus-one loss.
+-/
 
 @[expose] public section
 
-/-! The actual transport forcing has the shifted Gevrey H⁶ estimate without a cutoff-plus-one loss.
-  -/
 
 noncomputable section
 
@@ -92,10 +97,10 @@ theorem wordSobolevNorm_sum_le {α : Type*} (s : Finset α) (q n : ℕ)
     rw [Finset.sum_insert ha, Finset.sum_insert ha]
     exact (wordSobolevNorm_add_le period q n (f a) (∑ i ∈ s, f i)
       (hf a (Finset.mem_insert_self ..)) (smooth_sum period s f (fun i hi => hf i
-        (Finset.mem_insert_of_mem hi)))
+          (Finset.mem_insert_of_mem hi)))
       (hfL2 a (Finset.mem_insert_self ..)) (sum_all_memLp period s f
         (fun i hi => hf i (Finset.mem_insert_of_mem hi)) (fun i hi => hfL2 i
-          (Finset.mem_insert_of_mem hi)))).trans
+            (Finset.mem_insert_of_mem hi)))).trans
       (add_le_add le_rfl (ih (fun i hi => hf i (Finset.mem_insert_of_mem hi))
         (fun i hi => hfL2 i (Finset.mem_insert_of_mem hi))))
 
@@ -108,7 +113,7 @@ variable {F G : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 theorem wordSobolevNorm_postcomp_le (q n : ℕ) (L : F →L[ℝ] G) (hL : ‖L‖ ≤ 1)
     (f : LiftDomain period → F) (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hfL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period q n (L ∘ f) ≤ wordSobolevNorm period q n f := by
   apply Finset.sum_le_sum
   intro w _
@@ -124,20 +129,20 @@ def transportField (q : ℕ) (b : LiftDomain period → Domain 4) (e : LiftDomai
   ∑ i : Fin 4, (fun x => b x i • fieldDerivative period (standardDirection i) e x)
 
 theorem transport_all_memLp (q : ℕ) (b : LiftDomain period → Domain 4) (e : LiftDomain period →
-  Domain q)
+    Domain q)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period)) :
+        period)) :
     ∀ j, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w (transportField period q b e)) 2 (liftMeasure period)
-        := by
+          := by
   apply sum_all_memLp period Finset.univ
   · intro i _ x
     exact (postcomp_smooth period (coordinate 4 i) b hb x).smul (fieldDerivative_smooth period _ e
-      he x)
+        he x)
   · intro i _
     exact product_all_memLp period q (coordinate 4 i ∘ b) _
       (postcomp_smooth period _ b hb) (fieldDerivative_smooth period _ e he)
@@ -150,13 +155,13 @@ theorem transport_wordSobolevNorm_bound (q n : ℕ)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period 6 n (transportField period q b e) ≤
       productConstant period q * leibnizConvolution
         (fun l => wordSobolevNorm period 6 l b) (fun l => wordSobolevNorm period 6 (l + 1) e) n :=
-          by
+            by
   have hbi (i : Fin 4) := postcomp_smooth period (coordinate 4 i) b hb
   have hbiL2 (i : Fin 4) : ∀ j, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w (coordinate 4 i ∘ b)) 2 (liftMeasure period) :=
@@ -171,7 +176,7 @@ theorem transport_wordSobolevNorm_bound (q n : ℕ)
     _ ≤ ∑ i : Fin 4, productConstant period q * leibnizConvolution
         (fun l => wordSobolevNorm period 6 l b)
         (fun l => wordSobolevNorm period 6 l (fieldDerivative period (standardDirection i) e)) n :=
-          by
+            by
       apply Finset.sum_le_sum
       intro i _
       have hp := product_wordSobolevNorm_bound period q n (coordinate 4 i ∘ b) _ (hbi i)
@@ -183,7 +188,7 @@ theorem transport_wordSobolevNorm_bound (q n : ℕ)
       exact mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left
           (wordSobolevNorm_postcomp_le period 6 l (coordinate 4 i) (coordinate_norm_le 4 i) b hb
-            hbL2)
+              hbL2)
           (Nat.cast_nonneg _)) (wordSobolevNorm_nonneg period 6 (n-l) _)
     _ = _ := by
       rw [← Finset.mul_sum, sum_leibnizConvolution_right]
@@ -195,9 +200,9 @@ theorem transport_shifted_weighted_bound (q N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
     (hbL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w b) 2 (liftMeasure
-      period))
+        period))
     (heL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w e) 2 (liftMeasure
-      period)) :
+        period)) :
     (∑ n ∈ Finset.range N, ((n+1 : ℕ) : ℝ) * weight ρ (n+1) *
       wordSobolevNorm period 6 n (transportField period q b e)) ≤
       2 * productConstant period q *
@@ -207,11 +212,11 @@ theorem transport_shifted_weighted_bound (q N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
     _ ≤ ∑ n ∈ Finset.range N, ((n+1 : ℕ) : ℝ) * weight ρ (n+1) *
         (productConstant period q * leibnizConvolution
           (fun l => wordSobolevNorm period 6 l b) (fun l => wordSobolevNorm period 6 (l+1) e) n) :=
-            by
+              by
       apply Finset.sum_le_sum
       intro n _
       exact mul_le_mul_of_nonneg_left (transport_wordSobolevNorm_bound period q n b e hb he hbL2
-        heL2)
+          heL2)
         (mul_nonneg (Nat.cast_nonneg _) (weight_pos hρ _).le)
     _ = productConstant period q * (∑ n ∈ Finset.range N, ∑ l ∈ Finset.range (n+1),
         ((n+1 : ℕ) : ℝ) * weight ρ (n+1) * (n.choose l : ℝ) *
@@ -227,7 +232,7 @@ theorem transport_shifted_weighted_bound (q N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
         (EulerWeightedConvolution.shifted_source_sum ρ hρ N
           (fun l => wordSobolevNorm period 6 l b) (fun l => wordSobolevNorm period 6 l e)
           (fun l => wordSobolevNorm_nonneg period 6 l b) (fun l => wordSobolevNorm_nonneg period 6
-            l e))
+              l e))
         (productConstant_nonneg period q)
       simpa only [mul_assoc, mul_left_comm, mul_comm] using h
 

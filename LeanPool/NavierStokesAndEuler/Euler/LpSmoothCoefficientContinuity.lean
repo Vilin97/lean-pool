@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 
 /-!
 # Continuity of actual L² product jets
@@ -17,6 +16,9 @@ The ordinary derivative product rule reduces each spatial order to lower
 orders with differentiated bounded coefficients. This proves continuity of
 the genuine L² jets, including for operator-valued derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,7 +36,7 @@ variable {K : Type v} [TopologicalSpace K] [CompactSpace K]
 theorem jetLp_zero_from_value (f : SmoothL2Field V) :
     f.jetLp 0 =
       (continuousMultilinearCurryFin0 ℝ Space
-        V).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
+          V).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
         2 volume f.toLp := by
   let L : V →L[ℝ] (Space [×0]→L[ℝ] V) :=
     (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
@@ -46,11 +48,11 @@ theorem jetLp_zero_from_value (f : SmoothL2Field V) :
 theorem jetLp_succ_from_derivative (f : SmoothL2Field V) (n : ℕ) :
     f.jetLp (n+1) =
       (continuousMultilinearCurryRightEquiv' ℝ n Space
-        V).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
+          V).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
         2 volume (f.derivative.jetLp n) := by
   let L : (Space [×n]→L[ℝ] (Space →L[ℝ] V)) →L[ℝ] (Space [×(n+1)]→L[ℝ] V) :=
     (continuousMultilinearCurryRightEquiv' ℝ n Space
-      V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+        V).symm.toContinuousLinearEquiv.toContinuousLinearMap
   apply Lp.ext
   filter_upwards [f.jetLp_ae (n+1),
     ContinuousLinearMap.coeFn_compLpL (𝕜 := ℝ) (𝕜' := ℝ)
@@ -81,7 +83,7 @@ private theorem continuous_product_jet_aux (n : ℕ) :
     intro V W _ _ _ _ A f hf
     have he : (fun t => (product A t (f t)).jetLp 0) =
         fun t => (continuousMultilinearCurryFin0 ℝ Space
-          W).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
+            W).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
           2 volume (product A t (f t)).toLp :=
       funext (fun t => jetLp_zero_from_value (product A t (f t)))
     rw [he]
@@ -93,14 +95,14 @@ private theorem continuous_product_jet_aux (n : ℕ) :
     have hleft := ih V (Space →L[ℝ] W) (leftDerivative A) f hf
     have hd : Continuous (fun t => (product A t (f t)).derivative.jetLp n) := by
       have he : (fun t => (product A t (f t)).derivative.jetLp n) =
-          (fun t => (product (rightDerivative A) t (f t).derivative).jetLp n)+
+          (fun t => (product (rightDerivative A) t (f t).derivative).jetLp n) +
             (fun t => (product (leftDerivative A) t (f t)).jetLp n) :=
         funext (fun t => product_derivative_jetLp A t (f t) n)
       rw [he]
       exact hright.add hleft
     have he : (fun t => (product A t (f t)).jetLp (n+1)) =
         fun t => (continuousMultilinearCurryRightEquiv' ℝ n Space
-          W).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
+            W).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
           2 volume ((product A t (f t)).derivative.jetLp n) :=
       funext (fun t => jetLp_succ_from_derivative (product A t (f t)) n)
     rw [he]

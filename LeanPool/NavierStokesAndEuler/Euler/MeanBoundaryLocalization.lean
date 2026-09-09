@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicScaling
+public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicInterior
+import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicScaling
+import Mathlib.Algebra.Order.Star.Real
+
+/-! The source localization estimate for the constructed nonlocal boundary operator. -/
 
 @[expose] public section
 
-/-! The source localization estimate for the constructed nonlocal boundary operator. -/
 
 noncomputable section
 
@@ -19,7 +22,9 @@ namespace EulerMeanHarmonic
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerMeanBoundary
   EulerMeanCurlTensor
 
+/-- Boundary localization C1, given by `36 * (2 + 4 * weakHarmonicSmallBallConstant)`. -/
 def boundaryLocalizationC1 : ℝ := 36 * (2 + 4 * weakHarmonicSmallBallConstant)
+/-- Boundary localization C2, given by `4 * weakHarmonicSmallBallConstant`. -/
 def boundaryLocalizationC2 : ℝ := 4 * weakHarmonicSmallBallConstant
 
 theorem boundaryLocalizationC1_nonneg : 0 ≤ boundaryLocalizationC1 := by
@@ -43,7 +48,7 @@ theorem norm_sub_sq_le_twice_L2 (z w : L2) :
 theorem boundary_localization (χ : Cutoff) (R : ℝ) (hR : 0 < R) (z : L2)
     (hz : z ∈ solenoidalSpace)
     (hχ : ∀ x ∈ Metric.ball (0 : Space) R, χ.field x = 1)
-    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4) :
+    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4) :
     localL2Energy (Metric.ball (0 : Space) (R*r)) z ≤
       boundaryLocalizationC1 * ‖weakPotential χ z‖^2 +
       boundaryLocalizationC2 * r^3 * ‖z‖^2 := by
@@ -91,7 +96,7 @@ theorem boundary_localization (χ : Cutoff) (R : ℝ) (hR : 0 < R) (z : L2)
 theorem boundary_localization_form (χ : Cutoff) (R : ℝ) (hR : 0 < R) (z : L2)
     (hz : z ∈ solenoidalSpace)
     (hχ : ∀ x ∈ Metric.ball (0 : Space) R, χ.field x = 1)
-    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4) :
+    (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4) :
     localL2Energy (Metric.ball (0 : Space) (R*r)) z ≤
       boundaryLocalizationC1 * ⟪boundaryOperator χ z, z⟫_ℝ +
       boundaryLocalizationC2 * r^3 * ‖z‖^2 := by

@@ -6,13 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
-public import LeanPool.NavierStokesAndEuler.NavierStokes.IntegratedMeanBalances
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanMomentBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DefectIncrementBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedStressPrimitive
-
-@[expose] public section
 
 /-!
 # Actual state moment balances
@@ -20,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedStressPrimitive
 Auxiliary torus averaging, radial integration, and the pressure constructor
 connect the literal state residual to its actual slow debt derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +28,7 @@ open scoped BigOperators ContDiff Topology
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Mean bar, defined pointwise by `MeanMomentBounds.liftedTorusAverage (f n)`. -/
 noncomputable def meanBar (f : ScalarField (Lift S)) : ScalarField (Lift S) :=
   fun n => MeanMomentBounds.liftedTorusAverage (f n)
 
@@ -46,6 +45,7 @@ noncomputable def unshuffle : (((ℝ × S) × ℝ) × ℝ) →L[ℝ] Lift S wher
   cont := continuous_fst.fst.fst.prodMk
     (continuous_fst.fst.snd.prodMk (continuous_snd.prodMk continuous_fst.snd))
 
+/-- Slow projection, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def slowProjection : Lift S →L[ℝ] (ℝ × S) where
   toFun x := (x.1, x.2.1)
   map_add' _ _ := rfl
@@ -152,7 +152,7 @@ theorem average_linear {f : Lift S → ℝ} (hf : ContDiff ℝ ∞ f)
       a (x.1, x.2.1) * fderiv ℝ f y w + b (x.1, x.2.1) * f y) (x.1, x.2.1) :=
     PressureStream.torusAverage_congr_slice _ (fun _ => rfl)
   rw [he, average_add (hv.fun_add (continuous_const.fun_mul hw)) (continuous_const.fun_mul
-    hf.continuous),
+      hf.continuous),
     average_add hv (continuous_const.fun_mul hw), average_const_mul, average_const_mul,
     average_derivative hf hp, average_derivative hf hp]
   rfl
@@ -306,11 +306,11 @@ theorem meanBar_time (o : MeanIncrementBounds.Operators (Lift S))
     meanBar (o.time f) = o.time (meanBar f) := by
   funext n x
   have ht : Continuous (fun y => -(o.epsilon n * fderiv ℝ (f n) y o.eT)) :=
-    (continuous_const.mul (((hf n).fderiv_right (m := ∞) (by simp)).clm_apply
-      contDiff_const).continuous).neg
+    (continuous_const.mul (((hf n).fderiv_right (m := ∞) (by
+        simp)).clm_apply contDiff_const).continuous).neg
   have hv : Continuous (fun y => o.fastCoefficient n * fderiv ℝ (f n) y o.vT) :=
-    continuous_const.mul (((hf n).fderiv_right (m := ∞) (by simp)).clm_apply
-      contDiff_const).continuous
+    continuous_const.mul (((hf n).fderiv_right (m := ∞) (by
+        simp)).clm_apply contDiff_const).continuous
   change PressureStream.torusAverage (fun y => -(o.epsilon n * fderiv ℝ (f n) y o.eT) +
     o.fastCoefficient n * fderiv ℝ (f n) y o.vT) (x.1, x.2.1) = _
   rw [average_add ht hv]
@@ -348,7 +348,7 @@ theorem meanBar_viscosity {a b : ℝ} (ha : 0 < a)
       (x.1, x.2.1) = _
   rw [average_const_mul,
     PressureStream.torusAverage_sub (((hrr.smooth n).continuous.fun_add hric).fun_add (hzz.smooth
-      n).continuous)
+        n).continuous)
       hiic,
     average_add ((hrr.smooth n).continuous.fun_add hric) (hzz.smooth n).continuous,
     average_add (hrr.smooth n).continuous hric]
@@ -364,12 +364,15 @@ end AuxiliaryAverage
 
 /-! ## Explicit graph operators acting on the actual torus means -/
 
+/-- Averaged, defined pointwise by `PressureStream.torusAverage (f n)`. -/
 noncomputable def averaged (f : ScalarField (Lift S)) : ℕ → ℝ × S → ℝ :=
   fun n => PressureStream.torusAverage (f n)
 
+/-- Lift slow, defined pointwise by `f n (x.1, x.2.1)`. -/
 noncomputable def liftSlow (f : ℕ → ℝ × S → ℝ) : ScalarField (Lift S) :=
   fun n x => f n (x.1, x.2.1)
 
+/-- Native operators, given by `graphOperators r ε fast (z, 0) (t, 0) v`. -/
 noncomputable def nativeOperators (r : ReconstructionData) (ε fast : ℕ → ℝ)
     (z t : S) (v : PressureStream.Plane) : MeanIncrementBounds.Operators (Lift S) :=
   graphOperators r ε fast (z, 0) (t, 0) v
@@ -388,6 +391,7 @@ theorem nativeOperators_profile (r : ReconstructionData) (ε fast : ℕ → ℝ)
     (nativeOperators r ε fast z t v).radialProfile (R, (s, Y)) =
       (nativeOperators r ε fast z t v).radialProfile (R, (s, 0)) := rfl
 
+/-- Radial partial, given by `fderiv ℝ F x (1, 0)`. -/
 noncomputable def radialPartial (F : ℝ × S → ℝ) (x : ℝ × S) : ℝ :=
   fderiv ℝ F x (1, 0)
 
@@ -441,7 +445,7 @@ theorem native_time_lift (r : ReconstructionData) (ε fast : ℕ → ℝ) (z t :
     MeanIncrementBounds.Operators.fastTime, Pi.add_apply, nativeOperators, graphOperators,
     fderiv_liftSlow hF]
   simp [liftSlow, IntegratedMeanBalances.parameterPartial, neg_mul, show ((0 : ℝ), (0 : S)) = (0 :
-    ℝ × S) from rfl]
+      ℝ × S) from rfl]
 
 theorem parameterPartial_const_mul {F : ℝ × S → ℝ} (hF : ContDiff ℝ ∞ F)
     (c : ℝ) (v : S) :
@@ -489,6 +493,8 @@ theorem native_viscosity_lift (r : ReconstructionData) (ε fast : ℕ → ℝ) (
   simp only [div_eq_mul_inv]
   ring
 
+/-- Flux residual, given by `o.time u + o.radialDiv d R + o.dz Z - o.viscosity k u - o.radialDiv
+d T`. -/
 noncomputable def fluxResidual (o : MeanIncrementBounds.Operators (Lift S)) (d k : ℝ)
     (u R Z T : ScalarField (Lift S)) : ScalarField (Lift S) :=
   o.time u + o.radialDiv d R + o.dz Z - o.viscosity k u - o.radialDiv d T
@@ -521,6 +527,7 @@ theorem meanBar_fluxResidual {a b : ℝ} (ha : 0 < a)
     AuxiliaryAverage.meanBar_viscosity ha o ho hprofile u hu pu,
     AuxiliaryAverage.meanBar_radialDiv o ho.radius_eq hprofile T hT.smooth pT]
 
+/-- Balance as an element of `ℝ`. -/
 noncomputable def balance (ε : ℝ) (z t : S) (d k : ℝ)
     (u R Z T : ℝ × S → ℝ) (x : ℝ × S) : ℝ :=
   -ε * IntegratedMeanBalances.parameterPartial t u x +
@@ -560,6 +567,7 @@ theorem averaged_fluxResidual {a b : ℝ} (ha : 0 < a)
       (fun n => PressureStream.torusAverage_contDiff (hT.smooth n))] at hh
   exact hh
 
+/-- Angular balance along as an element of `ℝ`. -/
 noncomputable def angularBalanceAlong (ε : ℝ) (z t : S) (u R Z T : ℝ × S → ℝ)
     (x : ℝ × S) : ℝ :=
   -ε * IntegratedMeanBalances.parameterPartial t u x +
@@ -570,6 +578,7 @@ noncomputable def angularBalanceAlong (ε : ℝ) (z t : S) (u R Z T : ℝ × S �
         (IntegratedMeanBalances.parameterPartial z u) x) -
     IntegratedMeanBalances.radialDivergence 2 (fun q => T (q, x.2)) x.1
 
+/-- Axial balance along as an element of `ℝ`. -/
 noncomputable def axialBalanceAlong (ε : ℝ) (z t : S) (u R Z T : ℝ × S → ℝ)
     (x : ℝ × S) : ℝ :=
   -ε * IntegratedMeanBalances.parameterPartial t u x +
@@ -603,6 +612,7 @@ section MomentIntegration
 
 open IntegratedMeanBalances
 
+/-- Radial shell data, collecting `smooth`, `supported`. -/
 structure RadialShell (a b : ℝ) (F : (ℝ × S → ℝ)) : Prop where
   smooth : ContDiff ℝ ∞ F
   supported : RadialAlias.RadiallySupported a b F
@@ -689,14 +699,17 @@ theorem integrated_axial_along {a b : ℝ} (ε : ℝ) (z t : S)
     (fun r => parameterPartial z (parameterPartial z γ) (r, p))
     (radialDivergence 1 (fun r => virtualFlux (r, p)))
     ((hγ.parameterDerivative t).weighted_integrable 1 p)
-    (by simpa only [pow_one] using axial_divergence_integrable (hr.slice_smooth p)
-      (hr.slice_compact p))
+    (by
+        simpa only [pow_one] using axial_divergence_integrable (hr.slice_smooth p)
+            (hr.slice_compact p))
     ((hz.parameterDerivative z).weighted_integrable 1 p)
-    (by simpa only [pow_one] using axial_viscosity_integrable (hγ.slice_smooth p) (hγ.slice_compact
-      p))
+    (by
+        simpa only [pow_one] using axial_viscosity_integrable (hγ.slice_smooth p) (hγ.slice_compact
+            p))
     (((hγ.parameterDerivative z).parameterDerivative z).weighted_integrable 1 p)
-    (by simpa only [pow_one] using axial_divergence_integrable (hT.slice_smooth p)
-      (hT.slice_compact p))
+    (by
+        simpa only [pow_one] using axial_divergence_integrable (hT.slice_smooth p)
+            (hT.slice_compact p))
   have ht := zero_mass_parameterPartial hγ.smooth hγ.supported 1 hmass p t
   have hzz := zero_mass_parameterPartial_twice hγ.smooth hγ.supported 1 hmass p z z
   have hd := radialMoment_parameterPartial hz.smooth hz.supported 1 p z
@@ -722,20 +735,28 @@ end MomentIntegration
 
 /-! ## Literal state fluxes and actual debt identities -/
 
+/-- Theta radial flux, given by `MeanIncrementBounds.thetaRadial c.base u.mean + u.covariance 0
+1`. -/
 noncomputable def thetaRadialFlux (c : Context (Lift S)) (u : State (Lift S)) : ScalarField (Lift
-  S) :=
+    S) :=
   MeanIncrementBounds.thetaRadial c.base u.mean + u.covariance 0 1
 
+/-- Theta axial flux, given by `MeanIncrementBounds.thetaAxial c.base u.mean + u.covariance 2
+1`. -/
 noncomputable def thetaAxialFlux (c : Context (Lift S)) (u : State (Lift S)) : ScalarField (Lift S)
-  :=
+    :=
   MeanIncrementBounds.thetaAxial c.base u.mean + u.covariance 2 1
 
+/-- Axial radial flux, given by `MeanIncrementBounds.axialRadial c.base u.mean + u.covariance 0
+2`. -/
 noncomputable def axialRadialFlux (c : Context (Lift S)) (u : State (Lift S)) : ScalarField (Lift
-  S) :=
+    S) :=
   MeanIncrementBounds.axialRadial c.base u.mean + u.covariance 0 2
 
+/-- Axial axial flux, given by `MeanIncrementBounds.axialAxial c.base u.mean + u.covariance 2
+2`. -/
 noncomputable def axialAxialFlux (c : Context (Lift S)) (u : State (Lift S)) : ScalarField (Lift S)
-  :=
+    :=
   MeanIncrementBounds.axialAxial c.base u.mean + u.covariance 2 2
 
 /-- Regularity of the actual pointwise fields; no averaged equation or moment
@@ -750,9 +771,13 @@ structure FluxInputs (a b : ℝ) (u R Z T : ScalarField (Lift S)) : Prop where
   axial_periodic : ∀ n, PressureStream.TorusPeriodicLift (Z n)
   stress_periodic : ∀ n, PressureStream.TorusPeriodicLift (T n)
 
+/-- Angular inputs: an abbreviation for `FluxInputs a b u.mean.angular (thetaRadialFlux c u)
+(thetaAxialFlux c u) c.virtualTheta`. -/
 abbrev AngularInputs (a b : ℝ) (c : Context (Lift S)) (u : State (Lift S)) :=
   FluxInputs a b u.mean.angular (thetaRadialFlux c u) (thetaAxialFlux c u) c.virtualTheta
 
+/-- Axial inputs: an abbreviation for `FluxInputs a b u.mean.axial (axialRadialFlux c u)
+(axialAxialFlux c u) c.virtualAxial`. -/
 abbrev AxialInputs (a b : ℝ) (c : Context (Lift S)) (u : State (Lift S)) :=
   FluxInputs a b u.mean.axial (axialRadialFlux c u) (axialAxialFlux c u) c.virtualAxial
 
@@ -765,7 +790,7 @@ theorem state_radialMoment_eq (k : ℕ) (f : ScalarField (Lift S)) (n : ℕ) (s 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem periodic_add {f g : Lift S → ℝ} (hf : PressureStream.TorusPeriodicLift f)
     (hg : PressureStream.TorusPeriodicLift g) : PressureStream.TorusPeriodicLift (fun x => f x + g
-      x) := by
+        x) := by
   intro R s Y k
   exact congrArg₂ (· + ·) (hf R s Y k) (hg R s Y k)
 
@@ -807,6 +832,8 @@ theorem state_angular_moment {a b : ℝ} (ha : 0 < a)
     (averaged_radialShell H.radial n) (averaged_radialShell H.axial n)
     (averaged_radialShell H.stress n) hm s
 
+/-- Pressure recipe, defined pointwise by `PressureStream.meanPressure r.exponent r.inner
+r.outer (r.frequency n) r.inner_lt_outer r.radialDirection (u.gr c n)`. -/
 noncomputable def pressureRecipe (r : ReconstructionData) (c : Context (Lift S))
     (u : State (Lift S)) : ScalarField (Lift S) :=
   fun n => PressureStream.meanPressure r.exponent r.inner r.outer (r.frequency n)
@@ -814,7 +841,7 @@ noncomputable def pressureRecipe (r : ReconstructionData) (c : Context (Lift S))
 
 theorem pressure_recipe_of_fixed (r : ReconstructionData) (c : Context (Lift S))
     (u : State (Lift S)) (h : reconstructPressure r c u = u) : u.pressure = pressureRecipe r c u :=
-      by
+        by
   exact (congrArg State.pressure h).symm
 
 theorem pressureRecipe_shell (r : ReconstructionData) (ha : 0 < r.inner) (hd : 0 < r.exponent)
@@ -826,9 +853,13 @@ theorem pressureRecipe_shell (r : ReconstructionData) (ha : 0 < r.inner) (hd : 0
     fun n => PressureStream.meanPressure_supported ha r.inner_lt_outer hd r.radialDirection
       (hg.smooth n) (hg.supported n)⟩
 
+/-- Pressure coefficient, given by `IntegratedMeanBalances.moment 2 (PressureStream.rho r.inner
+r.outer r.inner_lt_outer) / 2`. -/
 noncomputable def pressureCoefficient (r : ReconstructionData) : ℝ :=
   IntegratedMeanBalances.moment 2 (PressureStream.rho r.inner r.outer r.inner_lt_outer) / 2
 
+/-- Axial debt potential, defined pointwise by `CorrectionState.axialDefect c u n s +
+pressureCoefficient r * CorrectionState.pressureDefect c u n s`. -/
 noncomputable def axialDebtPotential (r : ReconstructionData) (c : Context (Lift S))
     (u : State (Lift S)) : ScalarField S :=
   fun n s => CorrectionState.axialDefect c u n s +
@@ -880,7 +911,7 @@ theorem physicalCompact_periodic (d a b M : ℝ) (v : PressureStream.Plane)
   simp only [RadialPullback.physicalCompact, RadialPullback.pullback, RadialPullback.liftChart,
     Function.comp_def,
     TransportPrimitive.compactIntegral, TransportPrimitive.pastIntegral,
-      TransportPrimitive.totalIntegral,
+        TransportPrimitive.totalIntegral,
     he]
 
 theorem physicalAlias_periodic (d a b M : ℝ) (v : PressureStream.Plane)
@@ -914,10 +945,10 @@ theorem pressureAlias_state_average_zero (r : ReconstructionData)
     (hg : DefectIncrementBounds.Shell r.inner r.outer (u.gr c))
     (pg : ∀ n, PressureStream.TorusPeriodicLift (u.gr c n)) (n : ℕ) (x : ℝ × S) (i : Fin 3) :
     PressureStream.torusAverage (fun y => CorrectionState.pressureAlias r c u n (y, 0) i) x = 0 :=
-      by
+        by
   fin_cases i
   · change PressureStream.torusAverage (fun y => -PressureStream.pressureAlias r.exponent r.inner
-    r.outer
+      r.outer
       (r.frequency n) r.inner_lt_outer r.radialDirection (u.gr c n) y) x = 0
     rw [average_neg, pressureAlias_average_zero r ha hd c u hg pg, neg_zero]
   · simp [CorrectionState.pressureAlias, PressureStream.torusAverage, PressureStream.torusInner]
@@ -948,7 +979,7 @@ theorem temporalAlias_average_zero [FiniteDimensional ℝ S]
     change -PressureStream.torusAverage (fun y => ChartScales.timeCoefficient h n *
       fderiv ℝ (TemporalMeanUpdate.axialAlias r.exponent r.inner r.outer (r.frequency n)
         r.radialDirection h n (u.axialResidual c n)) y (0, (0, TorusInverse.vector .temporal))) x =
-          0
+            0
     rw [AuxiliaryAverage.average_const_mul,
       AuxiliaryAverage.average_torusDerivative
         (TemporalMeanUpdate.axialAlias_smooth ha r.inner_lt_outer hd r.radialDirection h n
@@ -988,14 +1019,14 @@ theorem axial_flux_pressure_moment (r : ReconstructionData) (ha : 0 < r.inner) (
     (pg : ∀ n, PressureStream.TorusPeriodicLift (u.gr c n))
     (hrecipe : u.pressure = pressureRecipe r c u) :
     CorrectionState.radialMoment 1 (axialAxialFlux c u + u.pressure) = axialDebtPotential r c u :=
-      by
+        by
   have hp : DefectIncrementBounds.Shell r.inner r.outer u.pressure := by
     rw [hrecipe]
     exact pressureRecipe_shell r ha hd c u hg
   have hsum := DefectIncrementBounds.barMoment_add hZ hp 1
   change CorrectionState.radialMoment 1 (axialAxialFlux c u + u.pressure) =
     CorrectionState.radialMoment 1 (axialAxialFlux c u) + CorrectionState.radialMoment 1 u.pressure
-      at hsum
+        at hsum
   rw [hsum]
   funext n s
   have hpval : CorrectionState.radialMoment 1 u.pressure n s =
@@ -1060,6 +1091,8 @@ theorem slowClass_globalBandJets {ε slow : ℕ → ℝ}
   simpa only [majorant, slowStripData, StripData.growth, inv_one, max_self, mul_one]
     using hb n x (Set.mem_univ x) j hj
 
+/-- Slow projection, given by `(ContinuousLinearMap.fst ℝ S PressureStream.Plane).comp
+(ContinuousLinearMap.snd ℝ ℝ (S × PressureStream.Plane))`. -/
 noncomputable def slowProjection : Lift S →L[ℝ] S :=
   (ContinuousLinearMap.fst ℝ S PressureStream.Plane).comp
     (ContinuousLinearMap.snd ℝ ℝ (S × PressureStream.Plane))

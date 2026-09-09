@@ -6,9 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 /-!
 # The Laplacian in a compactly weighted energy identity
@@ -17,6 +19,9 @@ All integrals are ordinary volume integrals on Euclidean three-space. The
 weight is smooth and compactly supported; the vector field is smooth but is
 not required to have compact support or globally integrable derivatives.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -66,7 +71,7 @@ theorem laplacian_integrable_cutoff_second_partial {χ : Space → ℝ} {w : Spa
     Integrable (fun x => ‖w x‖ ^ 2 * spatialPartial i (spatialPartial i χ) x) :=
   ((hw.norm.pow 2).mul
     (spatial_partial_contDiff (spatial_partial_contDiff hχ i)
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
     (CompactEnergy.compact_partial (CompactEnergy.compact_partial hcχ i) i).mul_left
 
 theorem laplacian_integrable_cutoff_laplacian {χ : Space → ℝ} {w : Space → Space}
@@ -115,7 +120,7 @@ theorem integral_weighted_second_partial {χ : Space → ℝ} {w : Space → Spa
     rw [laplacian_partial_smul hχ hw i x, inner_add_left]
     simp only [real_inner_smul_left, real_inner_self_eq_norm_sq]
   change (∫ x, ⟪χ x • w x, spatialPartial i (spatialPartial i w) x⟫_ℝ) = -(∫ x, ⟪spatialPartial i
-    (fun y => χ y • w y) x, spatialPartial i w x⟫_ℝ) at hfirst
+      (fun y => χ y • w y) x, spatialPartial i w x⟫_ℝ) at hfirst
   simp only [real_inner_smul_left] at hfirst
   rw [hfirst_rhs, integral_add hi_grad hi_cross] at hfirst
   have hsecond := CompactEnergy.integral_mul_partial hdχ (hw.norm_sq ℝ)
@@ -144,14 +149,14 @@ theorem integral_weighted_laplacian {χ : Space → ℝ} {w : Space → Space}
       χ x * ⟪w x, spatialPartial i (spatialPartial i w) x⟫_ℝ) :=
     (hχ.continuous.mul (hw.continuous.inner
       (spatial_partial_contDiff (spatial_partial_contDiff hw i)
-        i).continuous)).integrable_of_hasCompactSupport
+          i).continuous)).integrable_of_hasCompactSupport
       hcχ.mul_right
   simp only [inner_sum, Finset.mul_sum]
   rw [integral_finsetSum _ (fun i _ => hi_left i),
     integral_finsetSum _ (fun i _ => laplacian_integrable_weighted_partial_sq hχ.continuous hw hcχ
-      i),
+        i),
     integral_finsetSum _ (fun i _ => laplacian_integrable_cutoff_second_partial hχ hw.continuous
-      hcχ i)]
+        hcχ i)]
   simp_rw [integral_weighted_second_partial hχ hw hcχ]
   rw [Finset.sum_add_distrib, Finset.sum_neg_distrib, ← Finset.mul_sum]
 

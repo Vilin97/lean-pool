@@ -9,9 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedOutputBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedUnmaskedBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
 
 /-!
 # Joint native bounds for the actual signed physical sources
@@ -20,6 +18,9 @@ The sources are the literal masked sources of the canonical dependent
 family. Bounds are uniform before selecting an outer label, a harmonic,
 a band, or a lattice copy. No physical derivative estimate is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,10 +31,16 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open scoped Topology ContDiff BigOperators
 
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Native: an abbreviation for `ActualSignedPhysicalData.Native`. -/
 abbrev Native := ActualSignedPhysicalData.Native
+/-- Full: an abbreviation for `ActualSignedStageControls.FullPoint`. -/
 abbrev Full := ActualSignedStageControls.FullPoint
+/-- Copy: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Copy := TorusInverse.Frequency
+/-- Source index: an abbreviation for `Σ (_ : PhysicalWaveSum.BandLabel),
+ActualSignedPhysicalData.SourceIndex`. -/
 abbrev SourceIndex := Σ (_ : PhysicalWaveSum.BandLabel), ActualSignedPhysicalData.SourceIndex
 
 variable {B N0 : ℕ}
@@ -44,20 +51,28 @@ variable (P : SignedStressPrimitive.Patch) (u : State LocalSignedRequest.Point)
   (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
   (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure)
 
+/-- Family, given by `ActualSignedExterior.family (fun l : Label B N0 =>
+ActualSignedPhysicalBinding.nativeStateData l P u H hp)`. -/
 noncomputable def family : DependentSignedPhysicalFamily.Family :=
   ActualSignedExterior.family (fun l : Label B N0 => ActualSignedPhysicalBinding.nativeStateData l
-    P u H hp)
+      P u H hp)
 
+/-- Potential source, given by `DependentSignedPhysicalFamily.jointSource ((family (N0 := N0) P
+u H hp).potentialSource slots outgoing.data.h_pos.le)`. -/
 noncomputable def potentialSource : SourceIndex → ℕ → Native → HarmonicCalculus.ComplexVector :=
   DependentSignedPhysicalFamily.jointSource
     ((family (N0 := N0) P u H hp).potentialSource slots outgoing.data.h_pos.le)
 
+/-- Pressure source, given by `DependentSignedPhysicalFamily.jointSource ((family (N0 := N0) P u
+H hp).pressureSource slots outgoing.data.h_pos.le)`. -/
 noncomputable def pressureSource : SourceIndex → ℕ → Native → ℂ :=
   DependentSignedPhysicalFamily.jointSource
     ((family (N0 := N0) P u H hp).pressureSource slots outgoing.data.h_pos.le)
 
 end Sources
 
+/-- Weight, given by `Real.sqrt (ActualPrimaryBounds.strip.zeta y) /-! ## The reference pullback
+is a contraction on the free coordinates -/`. -/
 noncomputable def weight (_ : SourceIndex) (_ : ℕ) (y : Native) : ℝ :=
   Real.sqrt (ActualPrimaryBounds.strip.zeta y)
 
@@ -97,6 +112,7 @@ theorem norm_coverPower_symm_le (d : ℕ) (y : TorusInverse.Plane) :
       change ‖(CommonCoverSolve.coverPower d).symm (CommonCoverSolve.coverEquiv.symm y)‖ ≤ ‖y‖
       exact (ih _).trans (norm_coverEquiv_symm_le y)
 
+/-- Native to common as an element of `Native →L[ℝ] Full`. -/
 noncomputable def nativeToCommon (l : Label B N0) : Native →L[ℝ] Full :=
   (ActualSignedPhysicalBinding.toCommonCylinder l).toContinuousLinearMap.comp
     (PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv.toContinuousLinearMap.comp
@@ -131,7 +147,7 @@ theorem nativeToCommon_mem (l : Label B N0) {y : Native}
 theorem nativeToCommon_majorant (l : Label B N0) (α C : ℝ) (p n : ℕ) (y : Native) :
     majorant ActualSignedStageControls.fullStrip
       (fun _ x => Real.sqrt (ActualSignedStageControls.fullStrip.zeta x)) α C p n (nativeToCommon l
-        y) =
+          y) =
     majorant ActualPrimaryBounds.strip
       (fun _ x => Real.sqrt (ActualPrimaryBounds.strip.zeta x)) α C p n y := by
   rw [nativeToCommon_apply]
@@ -142,7 +158,7 @@ theorem uniform_nativeToCommon {E : Type} [NormedAddCommGroup E] [NormedSpace �
     (hf : UniformClass ActualSignedStageControls.fullStrip
       (fun _ _ x => Real.sqrt (ActualSignedStageControls.fullStrip.zeta x)) α f) :
     UniformClass ActualPrimaryBounds.strip (fun _ _ y => Real.sqrt (ActualPrimaryBounds.strip.zeta
-      y)) α
+        y)) α
       (fun i n y => f i n (nativeToCommon i.1 y)) := by
   refine ⟨fun _ _ _ _ => Real.sqrt_nonneg _, ?_, ?_⟩
   · intro i n
@@ -162,11 +178,15 @@ theorem uniform_nativeToCommon {E : Type} [NormedAddCommGroup E] [NormedSpace �
 
 /-! ## The masked native coefficients on their complete own-band strip -/
 
+/-- Own potential, given by `ActualSignedUnmaskedBounds.ownField (fun l k n =>
+ActualSignedOutputBounds.localPotential request l n k)`. -/
 noncomputable def ownPotential (request : ℕ → Full → SignedWaveUpdate.Vec2) :
     (Label B N0 × Copy) → ℕ → Full → HarmonicCalculus.ComplexVector :=
   ActualSignedUnmaskedBounds.ownField
     (fun l k n => ActualSignedOutputBounds.localPotential request l n k)
 
+/-- Own pressure, given by `ActualSignedUnmaskedBounds.ownField (fun l k n =>
+((ActualSignedOutputBounds.copies request l).localized k).pressure n)`. -/
 noncomputable def ownPressure (request : ℕ → Full → SignedWaveUpdate.Vec2) :
     (Label B N0 × Copy) → ℕ → Full → ℂ :=
   ActualSignedUnmaskedBounds.ownField
@@ -209,13 +229,15 @@ theorem own_potential_pressure_uniform {β : ℝ} {request : ℕ → Full → Si
       · exact Or.inr hz.2)
   have hweight (i : Label B N0 × Copy) n x (_ : x ∈ ActualSignedStageControls.fullStrip.domain) :
       Real.sqrt (ActualSignedStageControls.fullStrip.zeta x) * ActualSignedStageControls.envelope
-        i.1 n x ≤
+          i.1 n x ≤
         Real.sqrt (ActualSignedStageControls.fullStrip.zeta x) :=
     mul_le_of_le_one_right (Real.sqrt_nonneg _)
       (ActualPrimaryBounds.fullEnvelope_le_one (i.1.2, i.1.1) n x)
   exact ⟨hp.mono_weight (fun _ _ _ _ => Real.sqrt_nonneg _) hweight,
     hq.mono_weight (fun _ _ _ _ => Real.sqrt_nonneg _) hweight⟩
 
+/-- Request, given by `LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P (2 * h)
+(commonContext B) u`. -/
 noncomputable def request (P : SignedStressPrimitive.Patch) (u : State LocalSignedRequest.Point) :
     ℕ → Full → SignedWaveUpdate.Vec2 :=
   LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P (2 * h) (commonContext B) u
@@ -224,20 +246,23 @@ section NativeCoefficients
 
 variable (l : Label B N0) (P : SignedStressPrimitive.Patch) (u : State LocalSignedRequest.Point)
 
+/-- Native potential coefficient, constructed using `ActualSignedPhysicalData.potentialMap`. -/
 noncomputable def nativePotentialCoefficient (k : Copy) (z : ActualSignedPhysicalBinding.Cylinder) :
     HarmonicCalculus.ComplexVector :=
   ActualSignedPhysicalData.potentialMap
     ((ActualSignedPhysicalBinding.primary l).base.frequency (ActualSignedPhysicalBinding.reference
-      l))
+        l))
     ((ActualSignedPhysicalBinding.primary l).base.normal (ActualSignedPhysicalBinding.primary
-      l).strip
+        l).strip
       (ActualSignedPhysicalBinding.primary l).directions (ActualSignedPhysicalBinding.reference l)
-        z)
+          z)
     (((ActualSignedPhysicalBinding.nativeCopies l P u).localized k).amplitude
       (ActualSignedPhysicalBinding.reference l) z)
 
+/-- Native pressure coefficient, given by `((ActualSignedPhysicalBinding.nativeCopies l P
+u).localized k).pressure (ActualSignedPhysicalBinding.reference l) z`. -/
 noncomputable def nativePressureCoefficient (k : Copy) (z : ActualSignedPhysicalBinding.Cylinder) :
-  ℂ :=
+    ℂ :=
   ((ActualSignedPhysicalBinding.nativeCopies l P u).localized k).pressure
     (ActualSignedPhysicalBinding.reference l) z
 
@@ -249,7 +274,7 @@ theorem native_cutoff (n : ℕ) (k : Copy) (z : ActualSignedPhysicalBinding.Cyli
       ((ActualSignedPhysicalBinding.geometry l).coordinates k
         ((ActualSignedPhysicalBinding.nativeViews l).map n z).1.2.2).1 *
     (ActualSignedPhysicalBinding.layout l).nativeGaussian (ActualSignedPhysicalBinding.reference l)
-      k
+        k
       ((ActualSignedPhysicalBinding.nativeViews l).map n z).1.2.2 = _
   rw [ActualSignedPhysicalBinding.nativeViews_map]
   rfl
@@ -259,7 +284,7 @@ theorem native_raw_amplitude (k : Copy) (z : ActualSignedPhysicalBinding.Cylinde
       (ActualSignedPhysicalBinding.reference l) k z =
       ActualPeriodizedSignedRealization.referenceScalar (ActualSignedPhysicalBinding.primary l)
         (ActualSignedPhysicalBinding.nativeRequest l P u) l.2
-          (ActualSignedPhysicalBinding.reference l) z •
+            (ActualSignedPhysicalBinding.reference l) z •
       CurlClassBounds.complexify (ActualPeriodizedSignedRealization.referenceNativeUnit
         (ActualSignedPhysicalBinding.primary l) (ActualSignedPhysicalBinding.layout l) l.2
           (ActualSignedPhysicalBinding.reference l) k z) := by
@@ -273,7 +298,7 @@ theorem native_raw_amplitude (k : Copy) (z : ActualSignedPhysicalBinding.Cylinde
     ActualPeriodizedSignedRealization.coefficients_amplitude_at]
   simp only [ActualPeriodizedSignedRealization.nativeUnit,
     ActualSignedPhysicalBinding.nativeViews_map,
-      ActualPeriodizedSignedRealization.referenceNativeUnit]
+        ActualPeriodizedSignedRealization.referenceNativeUnit]
   rfl
 
 theorem native_raw_pressure (k : Copy) (z : ActualSignedPhysicalBinding.Cylinder) :
@@ -281,21 +306,21 @@ theorem native_raw_pressure (k : Copy) (z : ActualSignedPhysicalBinding.Cylinder
       (ActualSignedPhysicalBinding.reference l) k z =
       ActualPeriodizedSignedRealization.referenceScalar (ActualSignedPhysicalBinding.primary l)
         (ActualSignedPhysicalBinding.nativeRequest l P u) l.2
-          (ActualSignedPhysicalBinding.reference l) z •
+            (ActualSignedPhysicalBinding.reference l) z •
       ActualPeriodizedSignedRealization.homogeneousPressure
         ((ActualSignedPhysicalBinding.primary l).base.frequency
-          (ActualSignedPhysicalBinding.reference l))
+            (ActualSignedPhysicalBinding.reference l))
         ((ActualSignedPhysicalBinding.primary l).base.normal (ActualSignedPhysicalBinding.primary
-          l).strip
+            l).strip
           (ActualSignedPhysicalBinding.primary l).directions (ActualSignedPhysicalBinding.reference
-            l) z)
+              l) z)
         ((ActualSignedPhysicalBinding.primary l).normalMotion
-          (ActualSignedPhysicalBinding.reference l) z)
+            (ActualSignedPhysicalBinding.reference l) z)
         ((ActualSignedPhysicalBinding.primary l).action (ActualSignedPhysicalBinding.reference l) z)
         (ActualPeriodizedSignedRealization.referenceNativeUnit (ActualSignedPhysicalBinding.primary
-          l)
+            l)
           (ActualSignedPhysicalBinding.layout l) l.2 (ActualSignedPhysicalBinding.reference l) k z)
-            := by
+              := by
   change (ActualSignedPhysicalData.dynamicCoefficients slots outgoing.data.h_pos.le
     (ActualSignedPhysicalBinding.spatialLabel l) (ActualSignedPhysicalBinding.label_large l) 0
     (ActualSignedPhysicalBinding.primary l) (ActualSignedPhysicalBinding.nativeViews l)
@@ -306,7 +331,7 @@ theorem native_raw_pressure (k : Copy) (z : ActualSignedPhysicalBinding.Cylinder
     ActualPeriodizedSignedRealization.coefficients_pressure_at]
   simp only [ActualPeriodizedSignedRealization.nativeUnit,
     ActualSignedPhysicalBinding.nativeViews_map,
-      ActualPeriodizedSignedRealization.referenceNativeUnit]
+        ActualPeriodizedSignedRealization.referenceNativeUnit]
   rfl
 
 variable (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
@@ -315,13 +340,13 @@ variable (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonCo
 include H hp in
 theorem localPotential_reference (k : Copy) (z : ActualSignedPhysicalBinding.Cylinder) :
     ActualSignedOutputBounds.localPotential (request (B := B) P u) l
-      (ActualSignedPhysicalBinding.reference l) k
+        (ActualSignedPhysicalBinding.reference l) k
       (ActualSignedPhysicalBinding.toCommonCylinder l z) = nativePotentialCoefficient l P u k z :=
-        by
+          by
   exact congrArg₂
     (fun N v => CurlClassBounds.inverseCarrier
       ((ActualSignedPhysicalBinding.primary l).base.frequency
-        (ActualSignedPhysicalBinding.reference l)) •
+          (ActualSignedPhysicalBinding.reference l)) •
         CurlClassBounds.normalCoefficient N v)
     (ActualSignedPhysicalBinding.primary_normal_reference l
       (ActualSignedPhysicalBinding.reference l) z).symm
@@ -358,16 +383,16 @@ theorem singleton_rawPotential (l : Label B N0) (k : Copy)
       ((family P u H hp).singletonLabel (ActualSignedExterior.nativeLabel l)) k z =
     ActualSignedPhysicalData.potentialMap
       ((ActualSignedPhysicalBinding.primary l).base.frequency
-        (ActualSignedPhysicalBinding.reference l))
+          (ActualSignedPhysicalBinding.reference l))
       ((ActualSignedPhysicalBinding.primary l).base.normal (ActualSignedPhysicalBinding.primary
-        l).strip
+          l).strip
         (ActualSignedPhysicalBinding.primary l).directions (ActualSignedPhysicalBinding.reference
-          l) z)
+            l) z)
       ((ActualSignedPhysicalBinding.nativeCopies l P u).amplitude
         (ActualSignedPhysicalBinding.reference l) k z) := by
   rw [native_raw_amplitude]
   simp only [ActualSignedPhysicalData.rawPotential, ActualSignedPhysicalData.rawSignedAmplitude,
-    singleton_referenceRequest]
+      singleton_referenceRequest]
   dsimp only [DependentSignedPhysicalFamily.Family.singleton]
   simp only [family, ActualSignedExterior.family, ActualSignedExterior.actualLabel_nativeLabel]
   dsimp only [DependentSignedPhysicalFamily.Family.singletonLabel]
@@ -400,7 +425,7 @@ theorem nativePotentialCoefficient_eq (l : Label B N0) (k : Copy)
   unfold nativePotentialCoefficient
   change ActualSignedPhysicalData.potentialMap _ _
     ((ActualSignedPhysicalBinding.nativeCopies l P u).cutoff (ActualSignedPhysicalBinding.reference
-      l) k z •
+        l) k z •
       (ActualSignedPhysicalBinding.nativeCopies l P u).amplitude
         (ActualSignedPhysicalBinding.reference l) k z) = _
   rw [map_smul, native_cutoff, singleton_rawPotential]
@@ -414,7 +439,7 @@ theorem nativePressureCoefficient_eq (l : Label B N0) (k : Copy)
         ((family P u H hp).singleton (ActualSignedExterior.nativeLabel l))
         ((family P u H hp).singletonLabel (ActualSignedExterior.nativeLabel l)) k z := by
   change (ActualSignedPhysicalBinding.nativeCopies l P u).cutoff
-    (ActualSignedPhysicalBinding.reference l) k z •
+      (ActualSignedPhysicalBinding.reference l) k z •
     (ActualSignedPhysicalBinding.nativeCopies l P u).pressure
       (ActualSignedPhysicalBinding.reference l) k z = _
   rw [native_cutoff, singleton_rawPressure]
@@ -431,14 +456,14 @@ theorem potentialSource_on_label (l : Label B N0) (j : PhysicalWaveSum.Harmonic 
   erw [DependentSignedPhysicalFamily.Family.potentialSource_active]
   have hm : ActualSignedExterior.bandLabel l ∈
       ((family P u H hp).singleton (ActualSignedExterior.nativeLabel l)).active :=
-        Set.mem_singleton _
+          Set.mem_singleton _
   have hband : (ActualSignedExterior.bandLabel l).val.1 = ActualSignedPhysicalBinding.reference l
-    := rfl
+      := rfl
   erw [ActualSignedPhysicalData.nativePotentialSource, dite_eq_left hm]
   simp only [hband]
   split_ifs with hj
   · exact (nativePotentialCoefficient_eq P u H hp l k (ActualSignedPhysicalData.nativeCylinder
-    y)).symm
+      y)).symm
   · rfl
 
 theorem pressureSource_on_label (l : Label B N0) (j : PhysicalWaveSum.Harmonic 1)
@@ -453,20 +478,21 @@ theorem pressureSource_on_label (l : Label B N0) (j : PhysicalWaveSum.Harmonic 1
   erw [DependentSignedPhysicalFamily.Family.pressureSource_active]
   have hm : ActualSignedExterior.bandLabel l ∈
       ((family P u H hp).singleton (ActualSignedExterior.nativeLabel l)).active :=
-        Set.mem_singleton _
+          Set.mem_singleton _
   have hband : (ActualSignedExterior.bandLabel l).val.1 = ActualSignedPhysicalBinding.reference l
-    := rfl
+      := rfl
   erw [ActualSignedPhysicalData.nativePressureSource, dite_eq_left hm]
   simp only [hband]
   split_ifs with hj
   · exact (nativePressureCoefficient_eq P u H hp l k (ActualSignedPhysicalData.nativeCylinder
-    y)).symm
+      y)).symm
   · rfl
 
 end SingletonSources
 
 /-! ## Joint selection, with literal zeros at every omitted index -/
 
+/-- Selection as an element of `E`. -/
 noncomputable def selection {E : Type*} [Zero E]
     (g : (Label B N0 × Copy) → ℕ → Native → E) (I : SourceIndex) (n : ℕ) (y : Native) : E := by
   classical
@@ -485,7 +511,7 @@ theorem selection_on_label {E : Type*} [Zero E]
   have hL : ActualSignedExterior.bandLabel l ∈ ActualSignedExterior.labels B N0 := ⟨l, rfl⟩
   simp only [selection, dite_eq_left hL, true_and]
   change (if j.val = 1 then g (ActualSignedExterior.actualLabel (ActualSignedExterior.nativeLabel
-    l), k) n y
+      l), k) n y
     else 0) = _
   erw [ActualSignedExterior.actualLabel_nativeLabel]
 
@@ -508,7 +534,7 @@ theorem selection_active_function {E : Type*} [Zero E]
     (hL : I.1 ∈ ActualSignedExterior.labels B N0)
     (hI : I.2.1.1 = I.1 ∧ I.2.1.2.val = 1) :
     selection g I n = g (ActualSignedExterior.actualLabel ⟨I.1.val, I.1.property, hL⟩, I.2.2) n :=
-      by
+        by
   classical
   funext y
   simp only [selection, dite_eq_left hL, ite_eq_left hI]
@@ -590,7 +616,7 @@ theorem potentialSource_other_label (L : PhysicalWaveSum.BandLabel)
   · simp only [DependentSignedPhysicalFamily.Family.valueAt, dite_eq_left hL]
     have hm : I.1.1 ∉ ((family P u H hp).singleton ⟨L.val, L.property, hL⟩).active := by
       simpa only [DependentSignedPhysicalFamily.Family.singleton_active, Set.mem_singleton_iff]
-        using hI
+          using hI
     erw [ActualSignedPhysicalData.nativePotentialSource, dite_eq_right hm]
   · rw [DependentSignedPhysicalFamily.Family.valueAt_inactive _ _ hL]
     rfl
@@ -606,7 +632,7 @@ theorem pressureSource_other_label (L : PhysicalWaveSum.BandLabel)
   · simp only [DependentSignedPhysicalFamily.Family.valueAt, dite_eq_left hL]
     have hm : I.1.1 ∉ ((family P u H hp).singleton ⟨L.val, L.property, hL⟩).active := by
       simpa only [DependentSignedPhysicalFamily.Family.singleton_active, Set.mem_singleton_iff]
-        using hI
+          using hI
     erw [ActualSignedPhysicalData.nativePressureSource, dite_eq_right hm]
   · rw [DependentSignedPhysicalFamily.Family.valueAt_inactive _ _ hL]
     rfl
@@ -614,7 +640,7 @@ theorem pressureSource_other_label (L : PhysicalWaveSum.BandLabel)
 theorem potentialSource_eq_selection :
     potentialSource (N0 := N0) P u H hp = selection
       (fun (i : Label B N0 × Copy) n y => ownPotential (request (B := B) P u) i n (nativeToCommon
-        i.1 y)) := by
+          i.1 y)) := by
   funext I n y
   rcases I with ⟨L, ⟨⟨M, j⟩, k⟩⟩
   by_cases hL : L ∈ ActualSignedExterior.labels B N0
@@ -631,10 +657,10 @@ theorem potentialSource_eq_selection :
             (ActualSignedUnmaskedBounds.reference l) (nativeToCommon l y)
           rw [ActualSignedUnmaskedBounds.ownField_reference
             (fun l k n => ActualSignedOutputBounds.localPotential (request (B := B) P u) l n k) (l,
-              k),
+                k),
             nativeToCommon_eq]
           exact (localPotential_reference l P u H hp k (ActualSignedPhysicalData.nativeCylinder
-            y)).symm
+              y)).symm
         · rw [ite_eq_right hn]
           change _ = ActualSignedUnmaskedBounds.ownField _ (l, k) n (nativeToCommon l y)
           rw [ActualSignedUnmaskedBounds.ownField_other _ _ hn]
@@ -647,7 +673,7 @@ theorem potentialSource_eq_selection :
 theorem pressureSource_eq_selection :
     pressureSource (N0 := N0) P u H hp = selection
       (fun (i : Label B N0 × Copy) n y => ownPressure (request (B := B) P u) i n (nativeToCommon
-        i.1 y)) := by
+          i.1 y)) := by
   funext I n y
   rcases I with ⟨L, ⟨⟨M, j⟩, k⟩⟩
   by_cases hL : L ∈ ActualSignedExterior.labels B N0
@@ -664,10 +690,10 @@ theorem pressureSource_eq_selection :
             (ActualSignedUnmaskedBounds.reference l) (nativeToCommon l y)
           rw [ActualSignedUnmaskedBounds.ownField_reference
             (fun l k n => ((ActualSignedOutputBounds.copies (request (B := B) P u) l).localized
-              k).pressure n) (l, k),
+                k).pressure n) (l, k),
             nativeToCommon_eq]
           exact (localPressure_reference l P u H hp k (ActualSignedPhysicalData.nativeCylinder
-            y)).symm
+              y)).symm
         · rw [ite_eq_right hn]
           change _ = ActualSignedUnmaskedBounds.ownField _ (l, k) n (nativeToCommon l y)
           rw [ActualSignedUnmaskedBounds.ownField_other _ _ hn]

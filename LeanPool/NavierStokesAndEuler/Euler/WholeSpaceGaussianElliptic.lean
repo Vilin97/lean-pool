@@ -6,12 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianHigh
-public import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
+public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianEvolution
+public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianLow
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianFields
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianHigh
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.DistLEIntegral
+
+/-! The logarithmic middle heat scales for an actual elliptic curl equation. -/
 
 @[expose] public section
 
-/-! The logarithmic middle heat scales for an actual elliptic curl equation. -/
 
 noncomputable section
 
@@ -22,12 +31,13 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit Filter Set ContinuousLinea
   EulerOrdinarySobolev EulerVectorCalculus EulerMeanHarmonic EulerMeanVectorIdentities Laplacian
 open scoped ContDiff ENNReal RealInnerProductSpace Topology
 
+/-- Middle cost, given by `5*(2:ℝ)^((3:ℝ)/2)`. -/
 def middleCost : ℝ := 5*(2:ℝ)^((3:ℝ)/2)
 
 theorem middleCost_nonneg : 0 ≤ middleCost := by unfold middleCost; positivity
 
 theorem secondAverage_elliptic (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
-    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y-partialDerivative H.field b y)
+    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y - partialDerivative H.field b y)
     {t : ℝ} (ht : 0 < t) (x : Space) :
     secondAverage t (A.directionalField (axis j)).field x =
       average t ((G.directionalField (axis a)).directionalField (axis j)).field x -
@@ -46,7 +56,7 @@ theorem secondAverage_elliptic (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
     ((H.directionalField (axis b)).directionalField (axis j)).memLp]
 
 theorem secondAverage_elliptic_bound (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
-    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y-partialDerivative H.field b y)
+    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y - partialDerivative H.field b y)
     (W : ℝ) (hG : ∀ y, ‖G.field y‖ ≤ W) (hH : ∀ y, ‖H.field y‖ ≤ W)
     {t : ℝ} (ht : 0 < t) (x : Space) :
     ‖(1/4:ℝ) • secondAverage t (A.directionalField (axis j)).field x‖ ≤
@@ -62,7 +72,7 @@ theorem secondAverage_elliptic_bound (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
 
 /-- Integrating the genuine 1/t estimate gives the logarithmic middle term. -/
 theorem derivative_elliptic_middle (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
-    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y-partialDerivative H.field b y)
+    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y - partialDerivative H.field b y)
     (W : ℝ) (hG : ∀ y, ‖G.field y‖ ≤ W) (hH : ∀ y, ‖H.field y‖ ≤ W)
     (x : Space) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
     ‖average ε (A.directionalField (axis j)).field x -
@@ -99,7 +109,7 @@ theorem derivative_elliptic_middle (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
 
 /-- The three heat scales, with every term attached to the original field. -/
 theorem elliptic_derivative_split (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
-    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y-partialDerivative H.field b y)
+    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y - partialDerivative H.field b y)
     (W : ℝ) (hG : ∀ y, ‖G.field y‖ ≤ W) (hH : ∀ y, ‖H.field y‖ ≤ W)
     (x : Space) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
     ‖partialDerivative A.field j x‖ ≤

@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficients
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelNaturality
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeighted
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeightedNaturality
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeightedNaturality
 
 /-!
 # The cylinder forward solution has its actual mixed translation orbit
@@ -21,6 +18,9 @@ initial-value problem with the genuine mixed translation of the original
 solution. Compact support gives an equality on a neighborhood of the zero
 translation. No norm estimate depends on the size of that neighborhood.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,30 +37,66 @@ variable (period : ℝ) [Fact (0 < period)]
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   (T : ℝ) (hT : 0 ≤ T)
   (K Ω : Set Space) (hK : MeasurableSet K) (hΩ : MeasurableSet Ω)
-  (B : C(Icc (0 : ℝ) T,Field (α := Space) (V := V)))
+  (B : C(Icc (0 : ℝ) T, Field (α := Space) (V := V)))
   (U : Evolution (E := Supported period V K hK) T hT (liftedOperatorPath period K hK T B))
 
-private local instance : NormedAddCommGroup (CylinderL2 period V) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 period V) := inferInstance
-private local instance : NormedAddCommGroup (Supported period V K hK) := inferInstance
-private local instance : NormedSpace ℝ (Supported period V K hK) := inferInstance
-private local instance : NormedAddCommGroup (Supported period V Ω hΩ) := inferInstance
-private local instance : NormedSpace ℝ (Supported period V Ω hΩ) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 period V) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 period V) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period V K hK) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V K hK) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period V Ω hΩ) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V Ω hΩ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 period V)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderSolutionTranslation1 : NormedAddCommGroup (CylinderL2 period V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 period V)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderSolutionTranslation2 : NormedSpace ℝ (CylinderL2 period V) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period V K hK)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation3 : NormedAddCommGroup (Supported period V K hK) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period V K hK)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderSolutionTranslation4 : NormedSpace ℝ (Supported period V K hK) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period V Ω hΩ)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation5 : NormedAddCommGroup (Supported period V Ω hΩ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period V Ω hΩ)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderSolutionTranslation6 : NormedSpace ℝ (Supported period V Ω hΩ) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 period V)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation7 : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2
+    period V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 period V)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation8 : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 period
+    V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period V K hK)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation9 : NormedAddCommGroup C(Icc (0 : ℝ) T,Supported
+    period V K hK) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V K hK)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation10 : NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period
+    V K hK) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period V Ω hΩ)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation11 : NormedAddCommGroup C(Icc (0 : ℝ) T,Supported
+    period V Ω hΩ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V Ω hΩ)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderSolutionTranslation12 : NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period
+    V Ω hΩ) := inferInstance
 
 /-- The normalized supported solution has the actual normalized translation orbit. -/
 theorem weighted_solution_translation (a : LiftTangent) (ha : shiftedSet a.1 K ⊆ Ω)
     (W : Evolution (E := Supported period V Ω hΩ) T hT (liftedOperatorPath period Ω hΩ T
       (EulerMeanCoefficients.translateCoefficientPath B a.1)))
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-    (f : C(Icc (0 : ℝ) T,Supported period V K hK))
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+    (f : C(Icc (0 : ℝ) T, Supported period V K hK))
     (a₀ : Supported period V K hK) :
     includePath period Ω hΩ (W.weightedSolution g hg
       (translatedForcing period Ω hΩ (includePath period K hK f) a)
@@ -90,7 +126,7 @@ theorem weighted_solution_translation (a : LiftTangent) (ha : shiftedSet a.1 K �
 theorem weighted_solution_translation_eventually
     (hKc : IsCompact K) (hΩo : IsOpen Ω) (hsub : K ⊆ Ω)
     (W : ∀ a : LiftTangent, Evolution (E := Supported period V Ω hΩ) T hT (liftedOperatorPath
-      period Ω hΩ T
+        period Ω hΩ T
       (EulerMeanCoefficients.translateCoefficientPath B a.1)))
     (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
     (f : C(Icc (0 : ℝ) T,Supported period V K hK))

@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointStrong
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
+import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointStrong
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
 
 /-!
 # The actual affine-terminal inverse on the cylinder
@@ -19,6 +19,9 @@ space. The affine lift and its zero-endpoint correction are constructed by
 the same coercive form as the forced history inverse. In particular, no
 spatially constant nonzero vector is silently treated as L² data.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,7 +33,7 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerInitialTimePrimitive EulerTimeH1OperatorProduct EulerTransverseFixedEndpoint
   EulerTransverseEndpointParameter EulerTransverseEndpointCoordinates
   EulerTransverseGramInverse EulerTransverseForwardInverse
-  EulerTransverseInitialCoordinates EulerTransverseInitialInverse
+  EulerTransverseInitialCoordinates
 
 variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -73,7 +76,7 @@ def endpointVelocity : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E
 
 /-- The product-rule expression for the actual physical time derivative. -/
 def endpointDerivative : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
-  (EulerContinuousTimeIntegral.multiplier (D.frameDerivative P)).comp (D.endpointCoordinate P)+
+  (EulerContinuousTimeIntegral.multiplier (D.frameDerivative P)).comp (D.endpointCoordinate P) +
     (EulerContinuousTimeIntegral.multiplier (D.frame P)).comp (D.endpointAcceleration P)
 
 theorem endpointDisplacement_initial (Y : CylinderL2 P U) :
@@ -86,7 +89,7 @@ theorem endpointDisplacement_terminal (Y : CylinderL2 P U) :
       (D.endpointCorrection P Y : TimeLp T (CylinderL2 P U)) = 0 :=
     (D.endpointCorrection P Y).property
   change initialPrimitive T D.time_pos.le
-    (constantFieldOperator T D.time_pos.le (T⁻¹ • Y)-
+    (constantFieldOperator T D.time_pos.le (T⁻¹ • Y) -
       (D.endpointCorrection P Y : TimeLp T (CylinderL2 P U))) _ = Y
   rw [map_sub,ContinuousMap.sub_apply,initialPrimitive_constantFieldOperator,
     initialPrimitive_eq_terminal_sub,terminalPrimitive_terminal]
@@ -155,7 +158,7 @@ theorem endpointVelocity_hasDerivWithinAt (Y : CylinderL2 P U) (t : Icc (0 : ℝ
   change HasDerivWithinAt
     (fun s => extendPath (Y := CylinderL2 P U →L[ℝ] CylinderL2 P E) T D.time_pos.le (D.frame P) s
       (extendPath T D.time_pos.le (D.endpointCoordinate P Y) s))
-    (D.frameDerivative P t (D.endpointCoordinate P Y t)+
+    (D.frameDerivative P t (D.endpointCoordinate P Y t) +
       D.frame P t (D.endpointAcceleration P Y t)) (Icc (0 : ℝ) T) t
   simpa only [extendPath,projIcc_of_mem D.time_pos.le t.property] using hd
 

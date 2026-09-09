@@ -7,15 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceLogarithmic
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryVorticityCoordinates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryVorticityCoordinates
 
 /-!
 The whole-space logarithmic gradient estimate.  Every input norm belongs
 to the given smooth L² field, and the vorticity is its literal curl.
 The proof uses the constructed Gaussian kernel and its true heat equation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +31,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit Filter Set Finset
   EulerVectorCalculus EulerMeanCutoffCurl EulerMeanClassical EulerWholeSpaceGaussian
 open scoped ContDiff ENNReal RealInnerProductSpace Topology
 
+/-- Logarithmic gradient constant, given by `36*splitCost`. -/
 def logarithmicGradientConstant : ℝ := 36*splitCost
 
 theorem logarithmicGradientConstant_pos : 0 < logarithmicGradientConstant :=
@@ -39,7 +45,7 @@ velocity, its actual H³ tensors, and its actual vorticity. -/
 theorem logarithmic_gradient_bound (A : SmoothL2Field Space)
     (hdiv : ∀ y, divergence A.field y = 0) (W : ℝ)
     (hW : ∀ y, ‖vectorCurl A.field y‖ ≤ W) (x : Space) :
-    ‖fderiv ℝ A.field x‖ ≤ logarithmicGradientConstant*
+    ‖fderiv ℝ A.field x‖ ≤ logarithmicGradientConstant *
       (1+‖A.toLp‖+W*Real.log (Real.exp 1+tensorNorm 3 A)) := by
   have hW0 : 0 ≤ W := (norm_nonneg (vectorCurl A.field 0)).trans (hW 0)
   have hH0 := tensorNorm_nonneg 3 A
@@ -72,7 +78,7 @@ theorem logarithmic_gradient_bound (A : SmoothL2Field Space)
 the ordinary Euler continuation theorem. -/
 theorem logarithmic_gradient_bound_solenoidal (A : SmoothL2Field Space) (W : ℝ)
     (hA : A.toLp ∈ solenoidalSpace) (hW : ∀ y, ‖vectorCurl A.field y‖ ≤ W) (x : Space) :
-    ‖fderiv ℝ A.field x‖ ≤ logarithmicGradientConstant*
+    ‖fderiv ℝ A.field x‖ ≤ logarithmicGradientConstant *
       (1+‖A.toLp‖+W*Real.log (Real.exp 1+tensorNorm 3 A)) :=
   logarithmic_gradient_bound A
     (solenoidal_representative_divergence A.toLp hA A.field A.smooth A.toLp_ae) W hW x

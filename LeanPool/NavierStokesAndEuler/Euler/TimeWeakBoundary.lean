@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 
-@[expose] public section
-
 /-!
 # Recovering the actual initial trace from a full time weak identity
 
@@ -17,6 +15,9 @@ The terminal primitive and its exact integration-by-parts identity identify
 both an absolutely continuous representative and its initial trace.  The
 boundary value is a conclusion of testing against all terminal-zero H¹ paths.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryControlledGrowth
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentPhysicalBudgets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryGrowth
 
 /-! The actual activation geometry supplies H3 in the complete joined
 packet budget.  Source label bounds and the original curvature hypotheses
 remain inputs; no propagator estimate or chosen growth profile is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,12 +28,13 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerLpTrans
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)} (J : Guards hτ hτT P H)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
 
+/-- Source growth profile, given by `(J.halfBall_controlledGrowth hball).choose`. -/
 def sourceGrowthProfile : C(Icc (0 : ℝ) (D.T-τ),ℝ) :=
   (J.halfBall_controlledGrowth hball).choose
 
-theorem sourceGrowthProfile_positive (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem sourceGrowthProfile_positive (t : Icc (0 : ℝ) (D.T - τ)) :
     0 < J.sourceGrowthProfile hball t := (J.halfBall_controlledGrowth hball).choose_spec.1 t
 
 theorem sourceGrowthProfile_initial :
@@ -43,7 +46,7 @@ theorem sourceGrowthProfile_propagator :
       (J.sourceGrowthProfile hball) (560*P.horizon^10/P.epsilon) :=
   (J.halfBall_controlledGrowth hball).choose_spec.2.2.1
 
-theorem sourceGrowthProfile_amplitude (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem sourceGrowthProfile_amplitude (t : Icc (0 : ℝ) (D.T - τ)) :
     J.primaryAmplitude hball*J.sourceGrowthProfile hball t ≤
       8*Real.exp 6*J.δ*J.hchild/P.rayScale hτ hτT :=
   (J.halfBall_controlledGrowth hball).choose_spec.2.2.2 t
@@ -53,6 +56,7 @@ theorem primaryAmplitude_bound : J.primaryAmplitude hball ≤
   have h := J.sourceGrowthProfile_amplitude hball ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩
   simpa only [J.sourceGrowthProfile_initial hball,mul_one] using h
 
+/-- Joined budget, constructed using `EulerPacketParentPhysicalBudgets.joinedBudget`. -/
 def joinedBudget (q : ℕ)
     (A V : Icc (0 : ℝ) D.T → SmoothL2Field Space)
     (W : Icc (0 : ℝ) τ → SmoothL2Field Space)
@@ -61,7 +65,7 @@ def joinedBudget (q : ℕ)
     (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
     (hA : ∀ t, HasLabelBound K (A t)) (hV : ∀ t, HasLabelBound K (V t))
     (hW : ∀ t, HasLabelBound K (W t))
-    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space+fderiv ℝ (A t).field (ℓ • x))
+    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space + fderiv ℝ (A t).field (ℓ • x))
     (hF₁ : ∀ t x, D.F₁.field t x = fderiv ℝ (V t).field (ℓ • x))
     (hF₂ : ∀ t x, F₂.field t x = fderiv ℝ (W t).field (ℓ • x))
     (h₂ : ∀ t ∈ Icc (0 : ℝ) τ, ∀ x : Space,

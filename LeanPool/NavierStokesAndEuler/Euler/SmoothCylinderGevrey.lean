@@ -8,14 +8,17 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderJets
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowTimeGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFlowLpIntegration
-public import Mathlib.LinearAlgebra.Multilinear.FiniteDimensional
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFlowLpIntegration
+import LeanPool.NavierStokesAndEuler.Euler.GevreyJetCompositionLp
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowGevrey
+import Mathlib.LinearAlgebra.Multilinear.FiniteDimensional
 
 /-! The actual periodic flow displacement has simultaneous uniform and
 L² Gevrey bounds. The L² estimate uses the cylinder's own Haar measure
 and the differentiated equation of the constructed flow. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,16 +28,33 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderCoverDescent
   EulerSmoothBanachFlow EulerSmoothFlowGevrey
 open scoped ContDiff Interval BoundedContinuousFunction
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] LiftTangent) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] LiftTangent) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ]
-  LiftTangent)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))
-  := inferInstance
-private local instance (n : ℕ) : MeasurableSpace (LiftTangent [×n]→L[ℝ] LiftTangent) := borel _
-private local instance (n : ℕ) : BorelSpace (LiftTangent [×n]→L[ℝ] LiftTangent) := ⟨rfl⟩
-private local instance (n : ℕ) : FiniteDimensional ℝ (LiftTangent [×n]→L[ℝ] LiftTangent) := by
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] LiftTangent)` instance to
+shorten typeclass synthesis. -/
+local instance instSmoothCylinderGevrey1 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    LiftTangent) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] LiftTangent)` instance to shorten
+typeclass synthesis. -/
+local instance instSmoothCylinderGevrey2 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instSmoothCylinderGevrey3 (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ]
+    LiftTangent)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instSmoothCylinderGevrey4 (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ] LiftTangent))
+    := inferInstance
+/-- The `MeasurableSpace (LiftTangent [×n]→L[ℝ] LiftTangent)` structure used in smooth cylinder
+gevrey. -/
+local instance instSmoothCylinderGevrey5 (n : ℕ) : MeasurableSpace (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := borel _
+local instance instSmoothCylinderGevrey6 (n : ℕ) : BorelSpace (LiftTangent [×n]→L[ℝ] LiftTangent)
+    := ⟨rfl⟩
+local instance instSmoothCylinderGevrey7 (n : ℕ) : FiniteDimensional ℝ (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := by
   let J : (LiftTangent [×n]→L[ℝ] LiftTangent) →ₗ[ℝ]
       MultilinearMap ℝ (fun _ : Fin n => LiftTangent) LiftTangent :=
     ContinuousMultilinearMap.toMultilinearMapLinear
@@ -43,24 +63,25 @@ private local instance (n : ℕ) : FiniteDimensional ℝ (LiftTangent [×n]→L[
 variable (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T)
   (A : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
   (hA : ∀ (c : AddSubgroup.zmultiples P) (t : Icc (0 : ℝ) T) z,
-    A.field t (z.1,(c : ℝ)+z.2)=A.field t z)
+    A.field t (z.1, (c : ℝ) + z.2) = A.field t z)
 
 theorem displacementJet_bound (B R : ℝ)
-    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) T) (q : LiftDomain P) :
     ‖displacementJet P T hT A t q n‖ ≤ B*(t : ℝ)*(4*R)^n*(n.factorial : ℝ)^2 :=
   EulerSmoothFlowGevrey.displacement_bound T hT A B R hB hR hsmall hb
     n t t.property (sectionPoint P q)
 
 variable (hdiv : ∀ t x,
-  LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) x).toLinearMap=0)
+  LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) x).toLinearMap =
+      0)
 
 include hA hdiv in
 theorem compositionJet_memLp_and_bound (B R C S : ℝ)
     (hB : 0 ≤ B) (hR : 0 < R) (hC : 0 ≤ C) (hS : 0 ≤ S)
-    (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ)
     (hLp : ∀ t : Icc (0 : ℝ) T, ∀ j ≤ n,
       MemLp (fun q => jetSeries P (A.field t : LiftTangent → LiftTangent) q j) 2 (liftMeasure P))
@@ -76,7 +97,7 @@ theorem compositionJet_memLp_and_bound (B R C S : ℝ)
     (forward_measurePreserving P T hT A hA hdiv (projIcc 0 T hT t))
     (jetSeries P (forwardCover T hT A t)) (jetSeries P (velocityCover T hT A t)) n
     ((compositionJet_joint_measurable P T hT A hA n).comp (measurable_const.prodMk
-      measurable_id)).aestronglyMeasurable
+        measurable_id)).aestronglyMeasurable
     C (1+B*T) (4*R+1) S hC (by positivity) (by positivity) hS
   · exact hLp (projIcc 0 T hT t)
   · exact hNorm (projIcc 0 T hT t)
@@ -87,8 +108,8 @@ theorem compositionJet_memLp_and_bound (B R C S : ℝ)
 include hA hdiv in
 theorem displacementJet_memLp_and_bound (B R C S : ℝ)
     (hB : 0 ≤ B) (hR : 0 < R) (hC : 0 ≤ C) (hS : 0 ≤ S)
-    (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ)
     (hLp : ∀ t : Icc (0 : ℝ) T, ∀ j ≤ n,
       MemLp (fun q => jetSeries P (A.field t : LiftTangent → LiftTangent) q j) 2 (liftMeasure P))

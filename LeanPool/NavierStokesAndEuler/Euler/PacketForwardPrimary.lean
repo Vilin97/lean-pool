@@ -7,18 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitialRepresentative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitialRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
 
 /-!
 The actual compact-wave primary starting at time zero.  It is the genuine
 homogeneous forward evolution, has the prescribed initial field, and supplies
 the literal homogeneous equation and all primary regularity/parity inputs.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,9 +35,13 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (D : Data U) (Y : InitialData P D)
 
+/-- Forcing: an abbreviation for `homogeneousForcing D`. -/
 abbrev forcing : Forcing P D (0 : VectorField) := homogeneousForcing D
+/-- Vector: an abbreviation for `(forcing D).vector Y`. -/
 abbrev vector : VectorField := (forcing D).vector Y
+/-- Scalar: an abbreviation for `(forcing D).scalar Y`. -/
 abbrev scalar : ScalarField := (forcing D).scalar Y
+/-- Derivative: an abbreviation for `(forcing D).vectorDerivative Y`. -/
 abbrev derivative : VectorField := (forcing D).vectorDerivative Y
 
 omit [CompleteSpace U] in
@@ -45,14 +51,16 @@ theorem forcing_path_zero : (forcing (P := P) D).path = 0 := by
   apply Subtype.ext
   rfl
 
+/-- Profile, given by `homogeneousPrimary D Y O`. -/
 def profile (O : Operators) : Profile := homogeneousPrimary D Y O
 
+/-- Regularity, given by `homogeneousPrimaryRegularity D Y O hcorrector`. -/
 def regularity (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector P) :
     ProfileRegularity P D.T D.T_pos.le D.support (profile D Y O) :=
   homogeneousPrimaryRegularity D Y O hcorrector
 
 theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) (vector D Y) (t,(x,θ)))+
+    linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) D.T) (vector D Y) (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ))) (pressureJet (scalar D Y) (t,(x,θ))) = 0 :=
   (forcing D).jet_equation Y t x θ
 
@@ -89,17 +97,20 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (D : Data U) (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support)
 
+/-- Forward primary, given by `EulerPacketForwardPrimary.profile D (initialData D δ hδ ξ hs) O`. -/
 def forwardPrimary (O : Operators) : Profile :=
   EulerPacketForwardPrimary.profile D (initialData D δ hδ ξ hs) O
 
+/-- Forward primary regularity, given by `EulerPacketForwardPrimary.regularity D (initialData D
+δ hδ ξ hs) O hcorrector`. -/
 def forwardPrimaryRegularity (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector
-  period) :
+    period) :
     ProfileRegularity period D.T D.T_pos.le D.support (forwardPrimary D δ hδ ξ hs O) :=
   EulerPacketForwardPrimary.regularity D (initialData D δ hδ ξ hs) O hcorrector
 
 theorem forwardPrimary_equation (O : Operators) (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     linearPart (D.strain (t,(x,θ)))
-        (slicedJet (Icc (0 : ℝ) D.T) (forwardPrimary D δ hδ ξ hs O).high (t,(x,θ)))+
+        (slicedJet (Icc (0 : ℝ) D.T) (forwardPrimary D δ hδ ξ hs O).high (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ)))
         (pressureJet (forwardPrimary D δ hδ ξ hs O).highPressure (t,(x,θ))) = 0 :=
   EulerPacketForwardPrimary.equation D (initialData D δ hδ ξ hs) t x θ
@@ -113,7 +124,7 @@ theorem forwardPrimary_mean_zero (O : Operators) (t : ℝ) (x : Space) :
   EulerPacketForwardPrimary.mean_zero D (initialData D δ hδ ξ hs) t x
 
 theorem forwardPrimary_parity (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector
-  period)
+    period)
     (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
     (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (hM : ∀ t x, D.M.field t (-x) = D.M.field t x) :

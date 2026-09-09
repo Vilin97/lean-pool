@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-! Fixed bounded linear maps preserve the actual spatial and time jets of
 smooth bounded coefficient paths. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,15 +30,36 @@ variable {K E V W : Type u} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] W) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] W) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] W)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] W)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldLinear1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldLinear2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] W)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldLinear3 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] W) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] W)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldLinear4 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] W) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldLinear5 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldLinear6 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] W))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldLinear7 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] W)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] W))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldLinear8 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] W)) :=
+    inferInstance
 
+/-- Map, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
 def map (L : V →L[ℝ] W) (A : SmoothTimeField K E V) : SmoothTimeField K E W where
   field := mapPath L A.field
   smooth t := L.contDiff.comp (A.smooth t)

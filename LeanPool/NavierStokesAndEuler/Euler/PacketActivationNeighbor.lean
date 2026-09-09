@@ -6,21 +6,26 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationInitial
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationLipschitz
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationRay
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryUncut
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientLipschitz
+import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborInitial
 
 /-! The actual source normal and the same selected terminal coordinate
 give the scaled neighboring-label initial errors.  Their constants only
 involve coefficient norms, the terminal size, and the stated scaling. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPacketActivationHistory
 
 open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
-  EulerTransversePacketProvider EulerTransverseActivationSelection
+  EulerTransversePacketProvider
   EulerPacketMovingFrame EulerPacketNormalizedPrimary EulerPacketCrossProduct
   EulerPacketPrimaryFactorization EulerPacketRay
 
@@ -44,7 +49,7 @@ theorem actual_scaled_velocity_initial_error
     (hu : scaledVelocity m v (fun s => uncutVelocity τ hτ hτT B ξ s 0) τ a ε 0 0 = -lam)
     (hw : scaledVelocity m v (fun s => uncutVelocity τ hτ hτT B ξ s 0) τ a ε 0 1 = 1)
     (x : Space) :
-    |scaledVelocity m v (fun s => uncutVelocity τ hτ hτT B ξ s x) τ a ε 0 1-1|+
+    |scaledVelocity m v (fun s => uncutVelocity τ hτ hτT B ξ s x) τ a ε 0 1-1| +
       |scaledVelocity m v (fun s => uncutVelocity τ hτ hτT B ξ s x) τ a ε 0 0+lam| ≤
       2*historyLabelDifferenceCost B*‖x‖*‖ξ‖/ε := by
   have hd := uncutVelocity_activation_difference τ hτ hτT B ξ x 0
@@ -58,8 +63,8 @@ theorem actual_scaled_velocity_initial_error
 
 omit [CompleteSpace U] in
 theorem actual_scaled_ray_initial_error
-    (m v : ℝ → Space) (hm : m τ ≠ 0) (hv : v τ ≠ 0) (hmv : ⟪m τ,v τ⟫_ℝ=0)
-    (hchoice : D.m₀=activationDirection (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
+    (m v : ℝ → Space) (hm : m τ ≠ 0) (hv : v τ ≠ 0) (hmv : ⟪m τ, v τ⟫_ℝ = 0)
+    (hchoice : D.m₀ = activationDirection (D.deformationEquiv ⟨τ, hτ.le, hτT.le⟩ 0)
       (cross (unit (m τ)) (unit (v τ))))
     (a ε : ℝ) (hε : 0 < ε) (hε1 : ε ≤ 1) (x : Space) :
     let s₀ := activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
@@ -74,7 +79,7 @@ theorem actual_scaled_ray_initial_error
   have hd := coefficient_difference D.normal ⟨τ,hτ.le,hτT.le⟩ x 0
   rw [sub_zero,hn] at hd
   have hclamp : D.clamp τ = ⟨τ,hτ.le,hτT.le⟩ := Data.clamp_coe D ⟨τ,hτ.le,hτT.le⟩
-  have hd' : ‖D.normal.field (D.clamp τ) x-
+  have hd' : ‖D.normal.field (D.clamp τ) x -
       activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
         (cross (unit (m τ)) (unit (v τ))) • cross (unit (m τ)) (unit (v τ))‖ ≤
       ‖D.normal.derivative.field‖*‖x‖ := by rw [hclamp]; exact hd

@@ -6,17 +6,16 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Topology.Order.Compact
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.Tactic
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
 
 /-! The finite generating-sum bootstrap used for the small lifted flow in
 source (21).  A first-hitting argument proves the bound from an integral
 inequality valid only inside its radius of convergence.  No global
 smallness of the unknown path or exponential flow bound is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -64,6 +63,7 @@ theorem continuous_barrier (f : ℝ → ℝ) (T B a : ℝ)
   intro t ht
   exact hstep t ht (fun s hs => (hstrict s ⟨hs.1,hs.2.trans ht.2⟩).le)
 
+/-- Rational rate, given by `B*(R*(a+u))/(1-R*(a+u))`. -/
 def rationalRate (B R a u : ℝ) : ℝ := B*(R*(a+u))/(1-R*(a+u))
 
 theorem rationalRate_le (B R a u : ℝ) (hB : 0 ≤ B)
@@ -76,7 +76,7 @@ theorem rationalRate_le (B R a u : ℝ) (hB : 0 ≤ B)
 /-- The nonlinear generating-sum inequality closes at BRT≤1/8.  The bound
 is linear in the velocity size B and time, with no exponential factor. -/
 theorem rational_integral_bootstrap (f : ℝ → ℝ) (T B R : ℝ)
-    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R*T ≤ 1 / 8)
+    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
     (hf : ContinuousOn f (Icc 0 T)) (hf0 : f 0 = 0)
     (hineq : ∀ t ∈ Icc 0 T,
       (∀ s ∈ Icc 0 t, R * ((4 * R)⁻¹ + f s) ≤ 1 / 2) →

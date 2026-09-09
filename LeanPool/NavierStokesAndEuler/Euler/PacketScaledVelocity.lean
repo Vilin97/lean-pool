@@ -9,14 +9,17 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledRay
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMovingVelocity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocityAlgebra
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 The actual projected velocity equation after the source scaling, with its
 pressure numerator and denominator identified exactly.  The first two rows
 therefore feed the existing scalar-amplification estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +28,8 @@ namespace EulerPacketMovingFrame
 
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay InnerProductSpace
 
+/-- Scaled velocity, given by `movingVelocity m v w (physicalTime t₀ a ε τ) i / velocityScale ε
+i`. -/
 def scaledVelocity (m v w : ℝ → Space) (t₀ a ε τ : ℝ) (i : Fin 3) : ℝ :=
   movingVelocity m v w (physicalTime t₀ a ε τ) i / velocityScale ε i
 
@@ -37,13 +42,15 @@ theorem scaledRay_restore (m v r : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
 theorem scaledVelocity_restore (m v w : ℝ → Space) {t₀ a ε τ : ℝ}
     (hε : ε ≠ 0) (i : Fin 3) :
     velocityScale ε i*scaledVelocity m v w t₀ a ε τ i = movingVelocity m v w (physicalTime t₀ a ε
-      τ) i := by
+        τ) i := by
   unfold scaledVelocity
   field_simp [velocityScale_ne_zero hε i]
 
+/-- Scaled action, given by `scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))`. -/
 def scaledAction (M : Space →L[ℝ] Space) (m v : ℝ → Space) (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
   scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))
 
+/-- Scaled transport, constructed using `scaledVelocityEntry`. -/
 def scaledTransport (B M : Space →L[ℝ] Space) (m v : ℝ → Space) (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
   scaledVelocityEntry a ε (fun i j => frameMatrix M (unit (m t)) (unit (v t)) i j +
     frameSkew (frameMatrix B (unit (m t)) (unit (v t))) i j)
@@ -59,7 +66,7 @@ theorem movingDenominator_scaling (m v r : ℝ → Space) {s₀ t₀ a ε τ : �
 
 theorem movingFlux_scaling (M : Space →L[ℝ] Space) (m v r w : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
     (ha : a ≠ 0) (hs₀ : s₀ ≠ 0) (hε : ε ≠ 0) :
-    movingFlux M m v r w (physicalTime t₀ a ε τ) = s₀*a*
+    movingFlux M m v r w (physicalTime t₀ a ε τ) = s₀*a *
       velocityNumerator (scaledAction M m v a ε (physicalTime t₀ a ε τ))
         (scaledRay m v r s₀ t₀ a ε τ 0) (scaledRay m v r s₀ t₀ a ε τ 1)
         (scaledRay m v r s₀ t₀ a ε τ 2)
@@ -72,8 +79,8 @@ theorem movingFlux_scaling (M : Space →L[ℝ] Space) (m v r w : ℝ → Space)
 theorem scaled_pairing_zero (m v r w : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
     (hs₀ : s₀ ≠ 0) (hε : ε ≠ 0)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hrw : ⟪r (physicalTime t₀ a ε τ),w (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε τ), w (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
     scaledRay m v r s₀ t₀ a ε τ 0*scaledVelocity m v w t₀ a ε τ 0 +
       scaledRay m v r s₀ t₀ a ε τ 1*scaledVelocity m v w t₀ a ε τ 1 +
       scaledRay m v r s₀ t₀ a ε τ 2*scaledVelocity m v w t₀ a ε τ 2 = 0 := by
@@ -86,7 +93,7 @@ theorem scaled_pairing_zero (m v r w : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
 theorem scaled_denominator_ne_zero (m v r : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
     (hs₀ : s₀ ≠ 0) (hε : ε ≠ 0)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hr : r (physicalTime t₀ a ε τ) ≠ 0) :
     rayDenominator ε (scaledRay m v r s₀ t₀ a ε τ 0)
       (scaledRay m v r s₀ t₀ a ε τ 1) (scaledRay m v r s₀ t₀ a ε τ 2) ≠ 0 := by
@@ -104,13 +111,13 @@ theorem scaledVelocity_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
     (hm : HasDerivWithinAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hv : HasDerivWithinAt v (-B (v (physicalTime t₀ a ε τ)) +
-      (2*⟪m (physicalTime t₀ a ε τ),B (v (physicalTime t₀ a ε τ))⟫_ℝ /
-        ‖m (physicalTime t₀ a ε τ)‖^2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
+      (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
+        ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
     (hw : HasDerivWithinAt w (-M (w (physicalTime t₀ a ε τ)) +
-      (2*⟪r (physicalTime t₀ a ε τ),M (w (physicalTime t₀ a ε τ))⟫_ℝ /
-        ‖r (physicalTime t₀ a ε τ)‖^2) • r (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
+      (2 * ⟪r (physicalTime t₀ a ε τ), M (w (physicalTime t₀ a ε τ))⟫_ℝ /
+        ‖r (physicalTime t₀ a ε τ)‖ ^ 2) • r (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
     (hm0 : m (physicalTime t₀ a ε τ) ≠ 0) (hv0 : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hr0 : r (physicalTime t₀ a ε τ) ≠ 0) (i : Fin 3) :
     HasDerivWithinAt (fun σ => scaledVelocity m v w t₀ a ε σ i)
       (scaledVelocityRhs (scaledAction M m v a ε (physicalTime t₀ a ε τ))
@@ -120,9 +127,9 @@ theorem scaledVelocity_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     (physicalTime_hasDerivAt t₀ a ε τ).hasDerivWithinAt hmap).div_const (velocityScale ε i)
   rw [movingFlux_scaling M m v r w ha hs₀ hε, movingDenominator_scaling m v r hs₀ hε] at h
   simp_rw [← scaledVelocity_restore m v w hε, ← scaledRay_restore m v r hs₀ hε] at h
-  rw [scaling_velocity_rate ha hε hs₀ (scaled_denominator_ne_zero m v r hs₀ hε hm0 hv0 hmv hr0)] at
-    h
+  rw [scaling_velocity_rate ha hε hs₀ (scaled_denominator_ne_zero m v r hs₀ hε hm0 hv0 hmv hr0)]
+      at h
   simpa only [scaledVelocityRhs, scaledTransport, scaledAction, scaledVelocity, Function.comp_def]
-    using h
+      using h
 
 end EulerPacketMovingFrame

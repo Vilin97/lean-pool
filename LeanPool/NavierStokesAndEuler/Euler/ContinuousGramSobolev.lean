@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramPath
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+
+/-! The actual uniform-time Gram inverse in fixed Sobolev word blocks. -/
 
 @[expose] public section
 
-/-! The actual uniform-time Gram inverse in fixed Sobolev word blocks. -/
 
 noncomputable section
 
@@ -19,7 +21,7 @@ namespace EulerContinuousGramSobolev
 
 open Set ContinuousLinearMap EulerContinuousTimeIntegral EulerContinuousPathCalculus
   EulerContinuousPathComposition EulerTransverseGramPath EulerContinuousGramPath
-    EulerTimeLpGramSobolev
+      EulerTimeLpGramSobolev
   EulerParameterWordGevrey EulerGevrey
 open scoped ContDiff
 
@@ -31,15 +33,15 @@ variable {P U E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 external radius as its input, with one factorial shift and a fixed cost. -/
 theorem solution_block_gevrey (directions : ι → P)
     (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ) (T : ℝ)
-    (Q : P → C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+    (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
     (hQ : ContDiff ℝ ∞ Q)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C*majorant Rc 0 n)
-    (f : P → C(Icc (0 : ℝ) T,U)) (hf : ContDiff ℝ ∞ f)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C * majorant Rc 0 n)
+    (f : P → C(Icc (0 : ℝ) T, U)) (hf : ContDiff ℝ ∞ f)
     (D R : ℝ) (hD : 0 ≤ D)
-    (hR : 2*gramBlockCost ι q c Rc C D*(sobolevCoefficientRadius ι Rc+1) ≤ R)
-    (d : ℕ) (hbf : ∀ n x, block directions q f n x ≤ D*majorant R d n)
+    (hR : 2 * gramBlockCost ι q c Rc C D * (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+    (d : ℕ) (hbf : ∀ n x, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => solve T (Q y) c hc (hLower y) (f y)) n x ≤
       majorant R (d+1) n := by

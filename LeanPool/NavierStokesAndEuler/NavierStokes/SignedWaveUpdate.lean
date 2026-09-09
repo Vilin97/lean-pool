@@ -8,13 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedStressPrimitive
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ErrorHarmonics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanMomentBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CopyAngularInvariance
-
-@[expose] public section
 
 /-!
 # Constructed signed wave increments
@@ -25,6 +21,9 @@ The homogeneous pressure, exact curl, signed square, and slot-cutoff error are
 retained as actual fields.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SignedWaveUpdate
@@ -34,8 +33,11 @@ open WeightedClasses HarmonicCalculus
 open scoped ContDiff Topology BigOperators ComplexConjugate InnerProductSpace
 
 
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
 
 variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
@@ -43,6 +45,8 @@ variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-! ## The requested stress is the negative primitive of the actual state -/
 
+/-- Requested stress, defined pointwise by `![SignedStressPrimitive.barSigma p 2
+(u.thetaResidual c n) z, SignedStressPrimitive.barSigma p 1 (u.axialResidual c n) z]`. -/
 noncomputable def requestedStress (p : SignedStressPrimitive.Patch)
     (c : CorrectionState.Context (PressureStream.Lift E))
     (u : CorrectionState.State (PressureStream.Lift E)) : ℕ → ℝ × E → Vec2 :=
@@ -90,10 +94,10 @@ theorem requestedStress_divergence (p : SignedStressPrimitive.Patch)
     (z : E) {r : ℝ} (hr : 0 < r) :
     IntegratedMeanBalances.radialDivergence 2 (fun t => requestedStress p c u n (t,z) 0) r =
       -SignedStressPrimitive.adjusted p 2 (PressureStream.torusAverage (u.thetaResidual c n)) (r,z)
-        ∧
+          ∧
     IntegratedMeanBalances.radialDivergence 1 (fun t => requestedStress p c u n (t,z) 1) r =
       -SignedStressPrimitive.adjusted p 1 (PressureStream.torusAverage (u.axialResidual c n)) (r,z)
-        := by
+          := by
   exact ⟨SignedStressPrimitive.angular_divergence p
     (PressureStream.torusAverage_contDiff ht) (PressureStream.torusAverage_supported hst) z hr,
     SignedStressPrimitive.axial_divergence p
@@ -115,8 +119,11 @@ structure CovarianceControl (s : StripData D) (H : ℕ → D → Mat2)
     (fun n x => H n x i j)
   target_jets : ∀ i, MeanClass s 0 (fun n x => T n x i)
   zeta_pos : ∀ x ∈ s.domain, 0 < s.zeta x
+  /-- B of `CovarianceControl`, of type `ℝ`. -/
   b : ℝ
+  /-- M of `CovarianceControl`, of type `ℝ`. -/
   M : ℝ
+  /-- C of `CovarianceControl`, of type `ℝ`. -/
   c : ℝ
   b_pos : 0 < b
   M_one : 1 ≤ M
@@ -177,11 +184,14 @@ theorem increment_class (h : CovarianceControl s H T) {R : ℕ → D → Vec2} {
 
 end CovarianceControl
 
+/-- Signed scalar, defined pointwise by `Real.sqrt (s.epsilon n) * SignedCovariance.increment (H
+n x) (T n x) (R n x) j * mask n x`. -/
 noncomputable def signedScalar (s : StripData D) (H : ℕ → D → Mat2)
     (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ) (j : Fin 2) : ℕ → D → ℝ :=
   fun n x => Real.sqrt (s.epsilon n) * SignedCovariance.increment (H n x) (T n x) (R n x) j * mask
-    n x
+      n x
 
+/-- Signed vector, defined pointwise by `signedScalar s H T R mask j n x • v n x`. -/
 noncomputable def signedVector (s : StripData D) (H : ℕ → D → Mat2)
     (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ) (v : ℕ → D → Space) (j : Fin 2) :
     ℕ → D → Space := fun n x => signedScalar s H T R mask j n x • v n x
@@ -193,7 +203,7 @@ theorem signedScalar_class {s : StripData D} {H : ℕ → D → Mat2} {T R : ℕ
     WaveClass s (fun _ _ => 1) (β + 1 / 2) (signedScalar s H T R mask j) := by
   have hi := h.increment_class hR j
   have hh := (LinearWaveBounds.unweighted_smul hm (show MemClass s (fun _ x => Real.sqrt (s.zeta
-    x)) β
+      x)) β
     (fun n x => SignedCovariance.increment (H n x) (T n x) (R n x) j) from by
       simpa only [WaveClass, mul_one] using hi))
   have hh' := hh.band_smul (bandBound_rpow s (1 / 2))
@@ -214,6 +224,7 @@ theorem signedVector_class {s : StripData D} {H : ℕ → D → Mat2} {T R : ℕ
 
 /-! ## The same homogeneous fundamental and its constructed pressure -/
 
+/-- Homogeneous coefficients as an element of `LinearWaveBounds.WaveCoefficients D`. -/
 noncomputable def homogeneousCoefficients (a : LinearWaveBounds.WaveCoefficients D)
     (s : StripData D) (d : LinearWaveBounds.GraphDirections D)
     (v Ndot : ℕ → D → Space) (A : ℕ → D → Space →L[ℝ] Space) :
@@ -223,6 +234,8 @@ noncomputable def homogeneousCoefficients (a : LinearWaveBounds.WaveCoefficients
     pressure := fun n => ParticularWaveBounds.projectedPressure (a.frequency n)
       (a.normal s d n) (Ndot n) (v n) (fun x => A n x (v n x)) (fun _ => 0) }
 
+/-- Coefficients, given by `homogeneousCoefficients a s d (signedVector s H T R mask v j) Ndot
+A`. -/
 noncomputable def coefficients (a : LinearWaveBounds.WaveCoefficients D)
     (s : StripData D) (d : LinearWaveBounds.GraphDirections D)
     (H : ℕ → D → Mat2) (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ)
@@ -343,7 +356,7 @@ theorem coefficients_principal_zero
   have hact : CurlClassBounds.complexify (A n x (signedVector s H T R mask v j n x)) =
       LinearWaveResidual.shear (a.radius n) (a.frequencyBase n) (a.axialBase n)
         (d.radialField n) (fun y => CurlClassBounds.complexify (signedVector s H T R mask v j n y))
-          x := by
+            x := by
     simp only [signedVector, map_smul]
     rw [shear_smul, haction n x hx]
   have hh := ParticularWaveBounds.principal_eq_neg_source_of_projected
@@ -357,18 +370,24 @@ theorem coefficients_principal_zero
 
 /-! ## Instantiation with the constructed primary phase and pulse -/
 
+/-- Phase matrix, given by `PrimaryPulseBounds.chartCovariance pref (fun j => (F j).frame) (fun
+j => (F j).lam) (fun j => (F j).u) (fun j => (F j).L) χ`. -/
 noncomputable def phaseMatrix {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U) (pref : Fin 2 → ℕ → ℝ)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) : ℕ → D → Mat2 :=
   PrimaryPulseBounds.chartCovariance pref (fun j => (F j).frame)
     (fun j => (F j).lam) (fun j => (F j).u) (fun j => (F j).L) χ
 
+/-- Phase fundamental, defined pointwise by `PrimaryPulseBounds.normalizedPulse ((F j).frame n)
+((F j).lam n) ((F j).u n) ((F j).L n) (χ n x)`. -/
 noncomputable def phaseFundamental {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ℕ → D → Space :=
   fun n x => PrimaryPulseBounds.normalizedPulse ((F j).frame n)
     ((F j).lam n) ((F j).u n) ((F j).L n) (χ n x)
 
+/-- Phase envelope, defined pointwise by `PrimaryPulseBounds.referenceP ((F j).lam n) ((F j).u
+n) ((F j).L n) ((F j).L n * (χ n x).2)`. -/
 noncomputable def phaseEnvelope {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ℕ → D → ℝ :=
@@ -420,7 +439,7 @@ noncomputable def phaseControl {s : StripData D}
     {b M c : ℝ} (hb : 0 < b) (hM : 1 ≤ M) (hc : 0 < c)
     (hdet : ∀ n x, x ∈ s.domain →
       b ≤ |(PrimaryPulseBounds.normalizedMatrix (Real.sqrt (s.slow n)) (phaseMatrix F pref χ n
-        x)).det|)
+          x)).det|)
     (hentry : ∀ n x, x ∈ s.domain → ∀ i j,
       |Real.sqrt (s.slow n) * phaseMatrix F pref χ n x i j| ≤ M)
     (hlower : ∀ n x, x ∈ s.domain → ∀ j,
@@ -454,7 +473,7 @@ theorem phase_signedVector_class {s : StripData D}
     {b M c : ℝ} (hb : 0 < b) (hM : 1 ≤ M) (hc : 0 < c)
     (hdet : ∀ n x, x ∈ s.domain →
       b ≤ |(PrimaryPulseBounds.normalizedMatrix (Real.sqrt (s.slow n)) (phaseMatrix F pref χ n
-        x)).det|)
+          x)).det|)
     (hentry : ∀ n x, x ∈ s.domain → ∀ i j,
       |Real.sqrt (s.slow n) * phaseMatrix F pref χ n x i j| ≤ M)
     (hlower : ∀ n x, x ∈ s.domain → ∀ j,
@@ -481,6 +500,8 @@ theorem conjugatePair_apply (a : D → ℂ) (j : ℤ) (x : D) :
   by_cases hj : j = 1 <;> by_cases hjn : -j = 1 <;>
     simp [hj, hjn, eq_comm]
 
+/-- Coefficient block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def coefficientBlock (frequency : ℕ → ℝ) (phase : ℕ → D → ℝ)
     (angularFrequency : ℕ → ℤ) (v : ℕ → D → ComplexVector) (p : ℕ → D → ℂ) :
     CorrectionState.HarmonicBlock D where
@@ -572,8 +593,8 @@ theorem blockOfCoefficients_represents
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (kp : ℕ → ℤ)
     (ha : ErrorHarmonics.AngleIndependent a.amplitude)
     (hp : ErrorHarmonics.AngleIndependent a.pressure)
-    (hphase : ∀ n x θ, a.frequency n * a.phase n (x,θ) =
-      a.frequency n * a.phase n (x,0) + (kp n : ℝ) * θ) :
+    (hphase : ∀ n x θ, a.frequency n * a.phase n (x, θ) =
+      a.frequency n * a.phase n (x, 0) + (kp n : ℝ) * θ) :
     (blockOfCoefficients a kp).oscillation =
       (fun n x i => (vectorMode (a.frequency n) (a.phase n) (a.amplitude n) x i).re) ∧
     (blockOfCoefficients a kp).oscillatoryPressure =
@@ -673,7 +694,7 @@ theorem meanClass_barSigma
     MeanClass (WeightedRadialPrimitive.logStripData p.a p.b cL cR p.a_pos hcL hcR
       ε S hε hεone hS) α
       (fun n (x : PressureStream.Lift E) => SignedStressPrimitive.barSigma p e (f n) (x.1,x.2.1))
-        := by
+          := by
   have hb := meanClass_liftedTorusAverage p.a_pos hcL hcR ε S hε hεone hS hf hs hclass
   have hh := SignedStressPrimitive.meanClass_sigma p e hcL hcR ε S hε hεone hS α
     (fun n => MeanMomentBounds.liftedTorusAverage (f n))
@@ -684,6 +705,8 @@ theorem meanClass_barSigma
   simp only [sigma_liftedTorusAverage] at hh
   exact hh
 
+/-- Normalized request, defined pointwise by `(s.epsilon n)⁻¹ • requestedStress p c u n
+(x.1,x.2.1)`. -/
 noncomputable def normalizedRequest (s : StripData (PressureStream.Lift E))
     (p : SignedStressPrimitive.Patch) (c : CorrectionState.Context (PressureStream.Lift E))
     (u : CorrectionState.State (PressureStream.Lift E)) : ℕ → PressureStream.Lift E → Vec2 :=
@@ -700,7 +723,7 @@ theorem normalizedRequest_class
     (p : SignedStressPrimitive.Patch) {cL cR : ℝ} (hcL : 0 < cL) (hcR : 0 < cR)
     (ε S : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hS : ∀ n, 1 ≤ S n)
     (c : CorrectionState.Context (PressureStream.Lift E)) (u : CorrectionState.State
-      (PressureStream.Lift E))
+        (PressureStream.Lift E))
     {α : ℝ} (ht : ∀ n, ContDiff ℝ ∞ (u.thetaResidual c n))
     (hz : ∀ n, ContDiff ℝ ∞ (u.axialResidual c n))
     (hst : ∀ n, RadialAlias.RadiallySupported p.a p.b (u.thetaResidual c n))
@@ -717,16 +740,18 @@ theorem normalizedRequest_class
   let s : StripData (PressureStream.Lift E) :=
     WeightedRadialPrimitive.logStripData p.a p.b cL cR p.a_pos hcL hcR ε S hε hεone hS
   have hbar : MeanClass s α (fun n (x : PressureStream.Lift E) => requestedStress p c u n
-    (x.1,x.2.1) i) := by
+      (x.1,x.2.1) i) := by
     fin_cases i
     · exact meanClass_barSigma p 2 hcL hcR ε S hε hεone hS ht hst hct
     · exact meanClass_barSigma p 1 hcL hcR ε S hε hεone hS hz hsz hcz
   have hh := hbar.band_smul (bandBound_rpow s (-1))
   simpa only [normalizedRequest, Pi.smul_apply, smul_eq_mul, Real.rpow_neg_one, sub_eq_add_neg]
-    using hh
+      using hh
 
 /-! ## Angular independence is proved before taking a zero-angle section -/
 
+/-- Angular inputs data, collecting `radius`, `radial_base`, `frequency_base`, `axial_base`,
+`radial_profile`, `phase` and their compatibility conditions. -/
 structure AngularInputs (s : StripData D) (d : LinearWaveBounds.GraphDirections D)
     (a : LinearWaveBounds.WaveCoefficients D) (H : ℕ → D → Mat2) (T R : ℕ → D → Vec2)
     (mask : ℕ → D → ℝ) (v Ndot : ℕ → D → Space) (A : ℕ → D → Space →L[ℝ] Space)
@@ -766,7 +791,7 @@ theorem normal (h : AngularInputs s d a H T R mask v Ndot A ψ m) (n : ℕ) :
 
 theorem amplitude (h : AngularInputs s d a H T R mask v Ndot A ψ m) (j : Fin 2) (n : ℕ) :
     CopyAngularInvariance.Invariant d.angular ((coefficients a s d H T R mask v Ndot A j).amplitude
-      n) := by
+        n) := by
   intro x t
   simp only [coefficients, homogeneousCoefficients, signedVector, signedScalar,
     h.matrix n x t, h.primary_target n x t, h.signed_target n x t,
@@ -774,7 +799,7 @@ theorem amplitude (h : AngularInputs s d a H T R mask v Ndot A ψ m) (j : Fin 2)
 
 theorem pressure (h : AngularInputs s d a H T R mask v Ndot A ψ m) (j : Fin 2) (n : ℕ) :
     CopyAngularInvariance.Invariant d.angular ((coefficients a s d H T R mask v Ndot A j).pressure
-      n) := by
+        n) := by
   intro x t
   simp only [coefficients, homogeneousCoefficients, ParticularWaveBounds.projectedPressure,
     signedVector, signedScalar, h.matrix n x t, h.primary_target n x t,
@@ -817,7 +842,7 @@ theorem signedBlock_represents
     {v Ndot : ℕ → D × ℝ → Space} {A : ℕ → D × ℝ → Space →L[ℝ] Space}
     {ψ : ℕ → D × ℝ → ℝ} {m : ℕ → ℝ}
     (h : AngularInputs s d a H T R mask v Ndot A ψ m)
-    (hθ : d.angular = (0,1)) (kp : ℕ → ℤ) (hkp : ∀ n, a.frequency n * m n = (kp n : ℝ))
+    (hθ : d.angular = (0, 1)) (kp : ℕ → ℤ) (hkp : ∀ n, a.frequency n * m n = (kp n : ℝ))
     (j : Fin 2) :
     let z := (coefficients a s d H T R mask v Ndot A j).corrected s d ψ
     (blockOfCoefficients z kp).oscillation =
@@ -833,12 +858,13 @@ theorem signedBlock_represents
     simpa only [hθ] using h.corrected_pressure j n
   · intro n x t
     change a.frequency n * a.phase n (x,t) = a.frequency n * a.phase n (x,0) + _
-    have hp := CopyAngularInvariance.affinePhase_eq_zeroSlice (by simpa only [hθ] using h.phase n)
-      x t
+    have hp := CopyAngularInvariance.affinePhase_eq_zeroSlice (by
+        simpa only [hθ] using h.phase n) x t
     rw [hp, mul_add, ← mul_assoc, hkp]
 
 /-! ## Restriction of actual coefficient jets to the angular section -/
 
+/-- Zero section, given by `(ContinuousLinearMap.id ℝ D).prod 0`. -/
 noncomputable def zeroSection : D →L[ℝ] (D × ℝ) := (ContinuousLinearMap.id ℝ D).prod 0
 
 theorem zeroSection_norm_le : ‖zeroSection (D := D)‖ ≤ 1 := by
@@ -846,6 +872,8 @@ theorem zeroSection_norm_le : ‖zeroSection (D := D)‖ ≤ 1 := by
   intro x
   simp [zeroSection, Prod.norm_def]
 
+/-- Section strip, bundling `domain`, `isOpen_domain`, `epsilon`, `epsilon_pos` and the required
+compatibility proofs. -/
 noncomputable def sectionStrip (s : StripData (D × ℝ)) : StripData D where
   domain := (zeroSection (D := D)) ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage (zeroSection (D := D)).continuous
@@ -903,14 +931,14 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem coefficientBlock_mean_zero (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (v : ℕ → D → ComplexVector) (p : ℕ → D → ℂ) (hkp : ∀ n, kp n ≠ 0) :
     (∀ i, CorrectionState.angularAverage (fun n x => (coefficientBlock k Φ kp v p).oscillation n x
-      i) = 0) ∧
+        i) = 0) ∧
     CorrectionState.angularAverage (coefficientBlock k Φ kp v p).oscillatoryPressure = 0 := by
   constructor
   · intro i
     funext n x
     change (∫ θ in (0 : ℝ)..2 * Real.pi,
       (HarmonicFields.field ((coefficientBlock k Φ kp v p).velocity n i) (k n) (Φ n) (kp n)
-        (x,θ)).re) /
+          (x,θ)).re) /
       (2 * Real.pi) = 0
     rw [angularAverage_re_field, HarmonicFields.angularMean_field _ _ _ (hkp n),
       (coefficientBlock_zero_coefficient k Φ kp v p).1 n i]
@@ -918,7 +946,7 @@ theorem coefficientBlock_mean_zero (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (k
   · funext n x
     change (∫ θ in (0 : ℝ)..2 * Real.pi,
       (HarmonicFields.field ((coefficientBlock k Φ kp v p).pressure n) (k n) (Φ n) (kp n)
-        (x,θ)).re) /
+          (x,θ)).re) /
       (2 * Real.pi) = 0
     rw [angularAverage_re_field, HarmonicFields.angularMean_field _ _ _ (hkp n),
       (coefficientBlock_zero_coefficient k Φ kp v p).2 n]
@@ -927,7 +955,7 @@ theorem coefficientBlock_mean_zero (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (k
 /-! ## Actual homogeneous ODE under the native clock -/
 
 theorem normalizedPulse_along
-    {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
+    {Q : Type} [NormedAddCommGroup Q]
     (f : PrimaryODE.FrameData Q) (lam u : ℝ) {L : ℝ} (hL : 0 < L)
     (U : Set Q) (hA : ContinuousOn (f.coefficient 1) (U ×ˢ Icc 0 L))
     (χ : D → Q × ℝ) (V : D → D) {x : D}
@@ -940,7 +968,7 @@ theorem normalizedPulse_along
         (f.normalMotion ((χ x).1,L*(χ x).2)) (PrimaryPulseBounds.normalizedPulse f lam u L (χ x))
         (MovingFrameODE.baseAction (f.F ((χ x).1,L*(χ x).2)) (f.shear ((χ x).1,L*(χ x).2))
           (PrimaryPulseBounds.normalizedPulse f lam u L (χ x))) 0 (f.viscosity ((χ x).1,L*(χ x).2))
-            := by
+              := by
   have hd := PrimaryPulseBounds.normalizedPulse_hasDerivAt f lam u hL U hA hp hk ht
   have ht' : HasDerivAt (fun t : ℝ => (χ x).2 + t / L) (1 / L) 0 := by
     simpa using (((hasDerivAt_id (0 : ℝ)).div_const L).const_add (χ x).2)
@@ -950,14 +978,14 @@ theorem normalizedPulse_along
           (f.normalMotion ((χ x).1,L*(χ x).2)) (PrimaryPulseBounds.normalizedPulse f lam u L (χ x))
           (MovingFrameODE.baseAction (f.F ((χ x).1,L*(χ x).2)) (f.shear ((χ x).1,L*(χ x).2))
             (PrimaryPulseBounds.normalizedPulse f lam u L (χ x))) 0 (f.viscosity ((χ x).1,L*(χ
-              x).2)))) 0 := by
+                x).2)))) 0 := by
     simpa only [Prod.mk.eta, Function.comp_def] using hd.scomp_of_eq (0 : ℝ) ht' (by simp)
   have hl : HasDerivAt (fun t : ℝ => x + t • V x) (V x) 0 := by
     simpa using ((hasDerivAt_id (0 : ℝ)).smul_const (V x)).const_add x
   have hv' : HasDerivAt (fun t : ℝ => PrimaryPulseBounds.normalizedPulse f lam u L (χ (x+t•V x)))
       (along V (fun y => PrimaryPulseBounds.normalizedPulse f lam u L (χ y)) x) 0 := by
     simpa only [along, Function.comp_def] using hv.hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) hl (by
-      simp)
+        simp)
   simp only [hclock] at hv'
   have he := hv'.unique hd'
   simpa only [smul_smul, one_div, inv_mul_cancel₀ hL.ne', one_smul, Prod.mk.eta] using he
@@ -967,7 +995,7 @@ theorem phaseFundamental_tangent {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Sl
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) (n : ℕ) (x : D) :
     ⟪((F j).frame n).normal ((χ n x).1, (F j).L n * (χ n x).2), phaseFundamental F χ j n x⟫_ℝ = 0
-      := by
+        := by
   exact ((F j).frame n).ambient_tangent _ _
 
 theorem phase_coefficients_principal_zero
@@ -990,33 +1018,34 @@ theorem phase_coefficients_principal_zero
     (hclock : ∀ n x, x ∈ s.domain → ∀ t : ℝ,
       χ n (x + t • d.fastField n x) = ((χ n x).1, (χ n x).2 + t / (F j).L n))
     (hnormal : ∀ n x, x ∈ s.domain → ((F j).frame n).normal ((χ n x).1,(F j).L n*(χ n x).2) =
-      a.normal s d n x)
+        a.normal s d n x)
     (hmotion : ∀ n x, x ∈ s.domain → ((F j).frame n).normalMotion ((χ n x).1,(F j).L n*(χ n x).2) =
-      Ndot n x)
+        Ndot n x)
     (haction : ∀ n x, x ∈ s.domain → ∀ z : Space,
       MovingFrameODE.baseAction (((F j).frame n).F ((χ n x).1,(F j).L n*(χ n x).2))
         (((F j).frame n).shear ((χ n x).1,(F j).L n*(χ n x).2)) z = A n x z)
     (hdamp : ∀ n x, x ∈ s.domain → ((F j).frame n).viscosity ((χ n x).1,(F j).L n*(χ n x).2) =
       s.epsilon n * a.frequency n ^ 2 * ‖a.normal s d n x‖ ^ 2)
     (hphysical : ∀ n x, x ∈ s.domain → CurlClassBounds.complexify (A n x (phaseFundamental F χ j n
-      x)) =
+        x)) =
       LinearWaveResidual.shear (a.radius n) (a.frequencyBase n) (a.axialBase n) (d.radialField n)
         (fun y => CurlClassBounds.complexify (phaseFundamental F χ j n y)) x) :
     ∀ n x, x ∈ s.domain →
       (coefficients a s d (phaseMatrix F pref χ) T R mask (phaseFundamental F χ j) Ndot A
-        j).principal s d n x = 0 := by
+          j).principal s d n x = 0 := by
   have hv := phaseFundamental_class F χ hscale hχ hmap j
   apply coefficients_principal_zero a hcov hR hm hv hHf hTf hRf hmf hK _ hphysical j
   intro n x hx
   have hd := normalizedPulse_along ((F j).frame n) ((F j).lam n) ((F j).u n) ((F j).L_pos n)
     (U.carrier n) (hcoef n) (χ n) (d.fastField n) (hmap n x hx).1 (hmap n x hx).2 (hkin n x hx)
-    (((hv.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)) (hclock n
-      x hx)
+    (((hv.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
+        simp)) (hclock n x hx)
   simp only [phaseFundamental, hnormal n x hx, hmotion n x hx, haction n x hx, hdamp n x hx] at hd ⊢
   exact hd
 
 /-! ## The constructed curl, pressure, and retained linear error -/
 
+/-- Exact coefficients, given by `(coefficients a s d H T R mask v Ndot A j).corrected s d ψ`. -/
 noncomputable def exactCoefficients (a : LinearWaveBounds.WaveCoefficients D)
     (s : StripData D) (d : LinearWaveBounds.GraphDirections D)
     (H : ℕ → D → Mat2) (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ)
@@ -1081,7 +1110,7 @@ theorem coefficients_tangent {s : StripData D} {d : LinearWaveBounds.GraphDirect
     normalDot ((coefficients a s d H T R mask v Ndot A j).normal s d n x)
       ((coefficients a s d H T R mask v Ndot A j).amplitude n x) = 0 := by
   change normalDot (a.normal s d n x) (CurlClassBounds.complexify (signedScalar s H T R mask j n x
-    • v n x)) = 0
+      • v n x)) = 0
   rw [normalDot_complexify, inner_smul_right, ht n x hx, mul_zero]
   rfl
 
@@ -1173,7 +1202,7 @@ theorem signed_linear_identity
   ext i
   have hv := congrFun (hres n x hx) i
   simpa only [Pi.add_apply, Pi.zero_apply, zero_mul, add_zero, coefficients,
-    homogeneousCoefficients] using hv
+      homogeneousCoefficients] using hv
 
 /-! ## The same native pulse blocks in the exact covariance identity -/
 
@@ -1181,6 +1210,7 @@ section NativeBlocks
 
 open PartitionedCovariance
 
+/-- Native unit as an element of `Space`. -/
 noncomputable def nativeUnit {D h : ℝ} {vr vt : TorusInverse.Plane}
     {sys : SlotSystem D h vr vt} {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) (Y : TorusInverse.Plane) : Space :=
@@ -1188,6 +1218,7 @@ noncomputable def nativeUnit {D h : ℝ} {vr vt : TorusInverse.Plane}
     covered (SlotColoring.nativeIndex h U.1) (P.rawTangent hdet j 0) Y,
     covered (SlotColoring.nativeIndex h U.1) (P.rawTangent hdet j 1) Y]
 
+/-- Native tangent block, constructed using `coefficientBlock`. -/
 noncomputable def nativeTangentBlock {D h : ℝ} {vr vt : TorusInverse.Plane}
     {sys : SlotSystem D h vr vt} {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : ℝ) (a : Vec2)
@@ -1228,6 +1259,8 @@ theorem nativeTangentBlock_tangent {D h : ℝ} {vr vt : TorusInverse.Plane}
   rw [real_character_one]
   simp only [SignedCovariance.tangentWith, wave, one_mul, add_comm, smul_eq_mul]
 
+/-- Native assembly, defined pointwise by `∑ᶠ v : UnsignedLabel × Fin 2, (nativeTangentBlock (P
+v.1) hdet (outer v.1) (ε v.1) (a v.1) q x v.2).oscillation 0 (Y,θ) i`. -/
 noncomputable def nativeAssembly {D h : ℝ} {vr vt : TorusInverse.Plane}
     {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
@@ -1242,7 +1275,7 @@ theorem nativeAssembly_radial {D h : ℝ} {vr vt : TorusInverse.Plane}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (a : UnsignedLabel → Vec2) (q : ℝ) (x : SlotColoring.Position) (Y : TorusInverse.Plane) (θ : ℝ)
-      :
+        :
     nativeAssembly P hdet outer ε a q x Y θ 0 =
       SignedCovariance.assembledRadialWith P hdet outer ε a q x Y θ := by
   simp only [nativeAssembly, nativeTangentBlock_radial, SignedCovariance.assembledRadialWith]
@@ -1263,7 +1296,7 @@ theorem nativeAssembly_requested_cross {D h : ℝ} {vr vt : TorusInverse.Plane}
     {q : ℝ} (hq : 0 < q) (hqN : q ≤ ChartScales.Q N) (x : SlotColoring.Position)
     (T0 : Vec2) (p : SignedStressPrimitive.Patch)
     (c : CorrectionState.Context (PressureStream.Lift E)) (u : CorrectionState.State
-      (PressureStream.Lift E))
+        (PressureStream.Lift E))
     (n : ℕ) (z : ℝ × E)
     (hcone : ∀ U, mask D (tailLabel N U) q x ≠ 0 →
       SmoothCovariance.StrictCone (P U).matrix (chartTarget h q N T0 U)) (i : Fin 2) :
@@ -1273,7 +1306,7 @@ theorem nativeAssembly_requested_cross {D h : ℝ} {vr vt : TorusInverse.Plane}
       (fun U => SignedCovariance.increment (P U).matrix (chartTarget h q N T0 U)
         (SignedCovariance.chartStress h N (requestedStress p c u n z) U)) q x
     doubleAverage (fun Y θ => primary Y θ 0 * signed Y θ i.succ + signed Y θ 0 * primary Y θ
-      i.succ) =
+        i.succ) =
       requestedStress p c u n z i := by
   dsimp only
   simp_rw [nativeAssembly_radial, nativeAssembly_tangent]
@@ -1322,20 +1355,20 @@ theorem phaseMatrix_eq_canonical_pair
     (hpulse : ∀ j, P.pulses j = PrimaryPulseBounds.canonicalPrimaryPulse ((F j).frame n)
       ((F j).lam n) ((F j).u n) ((F j).L_pos n) (U.carrier n) (hA j) (χ n x).1 hp (hk j))
     (hpref : ∀ j, pref j n = PartitionedCovariance.nativePrefactor vr vt sys.radius * P.ci j * (F
-      j).L n) :
+        j).L n) :
     phaseMatrix F pref χ n x = P.matrix := by
   have he := PrimaryPulseBounds.primaryCovariance_eq_canonicalPairMatrix pref
     (fun j => (F j).frame) (fun j => (F j).lam) (fun j => (F j).u) (fun j => (F j).L)
     n (U.carrier n) (χ n x).1 hp (fun j => (F j).L_pos n) hA hk vr vt sys.radius P.ci hpref
   have hps : P.pulses = fun j => PrimaryPulseBounds.canonicalPrimaryPulse ((F j).frame n)
       ((F j).lam n) ((F j).u n) ((F j).L_pos n) (U.carrier n) (hA j) (χ n x).1 hp (hk j) := funext
-        hpulse
+          hpulse
   simpa only [phaseMatrix, PrimaryPulseBounds.chartCovariance,
-    PartitionedCovariance.PairData.matrix,
+      PartitionedCovariance.PairData.matrix,
     hps] using he
 
 theorem nativeUnit_eq_canonical_pulse
-    {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
+    {Q : Type} [NormedAddCommGroup Q]
     {D₀ h : ℝ} {vr vt : TorusInverse.Plane} {sys : PartitionedCovariance.SlotSystem D₀ h vr vt}
     {label : PartitionedCovariance.UnsignedLabel} (P : PartitionedCovariance.PairData sys label)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2)
@@ -1353,13 +1386,13 @@ theorem nativeUnit_eq_canonical_pulse
     funext z
     rw [hpulse]
     exact PrimaryPulseBounds.canonicalPrimaryPulse_radialProfile f lam u sys.radius hL U hA p hp hk
-      z
+        z
   have ht (i : Fin 2) : (P.pulses j).tangentProfile sys.radius i =
       fun z => PrimaryPulseBounds.localPrimaryProfile f lam u L sys.radius p z i.succ := by
     funext z
     rw [hpulse]
     exact PrimaryPulseBounds.canonicalPrimaryPulse_tangentProfile f lam u sys.radius hL U hA p hp
-      hk z i
+        hk z i
   fin_cases i
   · change PartitionedCovariance.covered _ (P.rawRadial hdet j) _ = _
     simp only [PartitionedCovariance.PairData.rawRadial, hr]
@@ -1377,13 +1410,15 @@ theorem masked_signed_square_class {s : StripData D} {H : ℕ → D → Mat2} {T
     {mask : ℕ → D → ℝ} (hm : UnweightedClass s 0 mask) (i : Fin 2) :
     MeanClass s (2 * B - 2 * κ)
       (fun n x => mask n x ^ 2 * (s.epsilon n * SignedCovariance.squareColumn (H n x) (T n x) (R n
-        x) i)) := by
+          x) i)) := by
   have hmm := LinearWaveBounds.unweighted_mul hm hm
   have hh := LinearWaveBounds.unweighted_smul hmm (signed_square_class h B κ hR i)
   simpa only [zero_add, smul_eq_mul, pow_two] using hh
 
 /-! ## Exported blocks for the correction state -/
 
+/-- Signed block, given by `blockOfCoefficients (exactCoefficients a s d H T R mask v Ndot A ψ
+j) kp`. -/
 noncomputable def signedBlock (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
     (s : StripData (D × ℝ)) (d : LinearWaveBounds.GraphDirections (D × ℝ))
     (H : ℕ → D × ℝ → Mat2) (T R : ℕ → D × ℝ → Vec2) (mask : ℕ → D × ℝ → ℝ)
@@ -1424,6 +1459,8 @@ theorem signedBlock_band
     (signedBlock a s d H T R mask v Ndot A ψ kp j).BandLimited 1 :=
   coefficientBlock_band _ _ _ _ _
 
+/-- Gaussian block, given by `ErrorHarmonics.gaussianBlock d ψ a.amplitude 0 1 a.frequency (fun
+n x => a.phase n (x,0)) kp`. -/
 noncomputable def gaussianBlock (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
     (d : LinearWaveBounds.GraphDirections (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ)
     (kp : ℕ → ℤ) : CorrectionState.HarmonicBlock D :=
@@ -1438,7 +1475,7 @@ theorem gaussianBlock_represents
     {v Ndot : ℕ → D × ℝ → Space} {A : ℕ → D × ℝ → Space →L[ℝ] Space}
     {ψ : ℕ → D × ℝ → ℝ} {m : ℕ → ℝ}
     (h : AngularInputs s d a H T R mask v Ndot A ψ m)
-    (hθ : d.angular = (0,1)) (hψ : ∀ n, ContDiff ℝ ∞ (ψ n))
+    (hθ : d.angular = (0, 1)) (hψ : ∀ n, ContDiff ℝ ∞ (ψ n))
     (kp : ℕ → ℤ) (hkp : ∀ n, a.frequency n * m n = (kp n : ℝ)) (j : Fin 2) :
     let z := coefficients a s d H T R mask v Ndot A j
     (gaussianBlock z d ψ kp).oscillation = fun n x i =>
@@ -1451,7 +1488,7 @@ theorem gaussianBlock_represents
     simp only [hθ] at hc
     exact hc
   have ha : ErrorHarmonics.AngleIndependent (coefficients a s d H T R mask v Ndot A j).amplitude :=
-    by
+      by
     intro n x t
     apply CopyAngularInvariance.invariant_eq_zeroSlice
     simpa only [hθ] using h.amplitude j n

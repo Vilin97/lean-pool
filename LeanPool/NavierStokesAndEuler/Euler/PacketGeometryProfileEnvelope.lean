@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryJoinedBudget
 public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardGeometryInput
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileEnvelope
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationSourceData
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileEnvelope
 
 /-! The chosen geometric growth profile carries a polynomial amplitude
 bound. This controls the actual grade scale, including its history part. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,9 +47,9 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerGevrey
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)} (J : Guards hτ hτT P H)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
 
-theorem sourceGrowthProfile_amplitude_frame (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem sourceGrowthProfile_amplitude_frame (t : Icc (0 : ℝ) (D.T - τ)) :
     J.primaryAmplitude hball*J.sourceGrowthProfile hball t ≤
       8*Real.exp 6*J.δ*J.hchild*D.frameBound := by
   apply (J.sourceGrowthProfile_amplitude hball t).trans
@@ -56,7 +58,7 @@ theorem sourceGrowthProfile_amplitude_frame (t : Icc (0 : ℝ) (D.T-τ)) :
     (by positivity [J.delta_nonneg,J.child_nonneg])
 
 variable (L : EulerTransversePacketJoin.Budget D τ hτ hτT H (Fin 4) 6)
-  (hg : L.g=J.sourceGrowthProfile hball)
+  (hg : L.g = J.sourceGrowthProfile hball)
 
 include hg in
 theorem budget_fullProfile_amplitude (t : Icc (0 : ℝ) D.T) :
@@ -78,7 +80,7 @@ theorem budget_fullProfile_amplitude (t : Icc (0 : ℝ) D.T) :
     (J.primaryAmplitude hball) _ ha hf t
 
 include hg in
-theorem budget_H0_bound {T' : ℝ} (hTime : D.T=T')
+theorem budget_H0_bound {T' : ℝ} (hTime : D.T = T')
     (hδ : 0 < J.δ) (hh : 0 < J.hchild) :
     (Scales.ofTimeProfile L.fullProfile L.fullProfile_pos hTime (J.primaryAmplitude hball)
       (J.primaryAmplitude_pos hball hδ hh)).H0 ≤ max 1 (8*Real.exp 6*J.δ*J.hchild*(1+L.C₀)) :=
@@ -93,9 +95,9 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketTimeProfile
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {P : ParentFrame D 0} (J : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
-  (hg : L.g=J.sourceGrowthProfile hball)
+  (hg : L.g = J.sourceGrowthProfile hball)
 
 include hg in
 theorem budget_profile_amplitude (t : Icc (0 : ℝ) D.T) :
@@ -104,7 +106,7 @@ theorem budget_profile_amplitude (t : Icc (0 : ℝ) D.T) :
   exact J.sourceGrowthProfile_amplitude hball t
 
 include hg in
-theorem budget_H0_bound {T' : ℝ} (hTime : D.T=T')
+theorem budget_H0_bound {T' : ℝ} (hTime : D.T = T')
     (hδ : 0 < J.δ) (hh : 0 < J.hchild) :
     (Scales.ofTimeProfile L.g L.positive hTime (J.primaryAmplitude hball)
       (J.primaryAmplitude_pos hball hδ hh)).H0 ≤ max 1 (8*Real.exp 6*J.δ*J.hchild) :=

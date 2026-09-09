@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileSpectralCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EntranceAlignedBase
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStressWeights
 
 /-!
 # The spectral cone of the actual aligned modulated base
@@ -17,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.EntranceAlignedBase
 This module binds the generic profile and physical-shear identities to the
 same finite modulation, aligned coefficient family, and covariance target.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,7 +77,7 @@ theorem modulated_shear_eq {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1) :
       BaseChartJets.leadingFrequency F.data.h W.axis.normalization
         (EntranceAlignedBase.modulatedCoefficients H v) p •
           !₂[-ModulatedCone.angularShear v.profiles.E (BaseChartJets.normalizedCoordinates F.data.h
-            p).2,
+              p).2,
             -ModulatedCone.signedAxialShear v.profiles.E v.profiles.U
               (BaseChartJets.normalizedCoordinates F.data.h p).2] := by
   have hh := ConstructedSlowBase.height_pos W
@@ -100,7 +102,7 @@ theorem modulated_spectral_cones
     {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1)
     (hl : NominalConeAssembly.activeLeft W < (BaseChartJets.normalizedCoordinates F.data.h p).2.1)
     (hr : (BaseChartJets.normalizedCoordinates F.data.h p).2.1 < NominalConeAssembly.activeRight W)
-      :
+        :
     let F₀ := BaseChartJets.leadingFrequency F.data.h W.axis.normalization
       (EntranceAlignedBase.modulatedCoefficients H v)
     let G₀ := BaseChartJets.leadingAxial F.data.h (EntranceAlignedBase.modulatedCoefficients H v)
@@ -138,7 +140,7 @@ theorem modulated_chartTarget_cones
       ![coeff.stressTheta 0 w, coeff.stressAxial 0 w] U
     PrimaryRepresentatives.ReferenceCone (F₀ p) (PhaseEstimates.shearVector F₀ G₀ p) ∧
       PrimaryRepresentatives.TargetCone (F₀ p) (PhaseEstimates.shearVector F₀ G₀ p) !₂[T 0, T 1] :=
-        by
+          by
   have hbase := modulated_spectral_cones H v hcone hT hR hl hr
   have hX := normalized_X_pos (ConstructedSlowBase.height_pos W)
     (ConstructedSlowBase.height_lt_half W) hT hR
@@ -171,7 +173,7 @@ theorem modulated_continuousOn {K : Set Slow}
   have hF : ContinuousOn (BaseChartJets.leadingFrequency F.data.h W.axis.normalization
       (EntranceAlignedBase.modulatedCoefficients H v)) K :=
     fun p hp => (leadingFrequency_smoothAt hh hh1 hd (hpos p hp).1 (hpos p
-      hp).2).continuousAt.continuousWithinAt
+        hp).2).continuousAt.continuousWithinAt
   have hA : ContinuousOn (fun p => ActivationContinuation.shearA v.profiles
       (BaseChartJets.normalizedCoordinates F.data.h p).2) K := by
     intro p hp
@@ -181,7 +183,7 @@ theorem modulated_continuousOn {K : Set Slow}
       (d.domain_nonnegative hx.le (d.parameters_contains he)) hx (v.positive_f hx he).ne'
     exact (hs.1.continuousAt.comp_of_eq
       (BaseChartJets.normalizedCoordinates_smoothAt hh hh1 (hpos p hp).1).snd.continuousAt
-        rfl).continuousWithinAt
+          rfl).continuousWithinAt
   have hC : ContinuousOn (fun p => ActivationContinuation.shearB v.profiles
       (BaseChartJets.normalizedCoordinates F.data.h p).2) K := by
     intro p hp
@@ -191,7 +193,7 @@ theorem modulated_continuousOn {K : Set Slow}
       (d.domain_nonnegative hx.le (d.parameters_contains he)) hx (v.positive_f hx he).ne'
     exact (hs.2.continuousAt.comp_of_eq
       (BaseChartJets.normalizedCoordinates_smoothAt hh hh1 (hpos p hp).1).snd.continuousAt
-        rfl).continuousWithinAt
+          rfl).continuousWithinAt
   refine ⟨hF, ?_, ?_⟩
   · apply (signedShear_continuousOn hF hA hC).congr
     intro p hp
@@ -204,26 +206,26 @@ theorem modulated_continuousOn {K : Set Slow}
     change ContinuousOn (fun p => (![LeadingStress.theta v.profiles F.data.h
         (BaseChartJets.normalizedCoordinates F.data.h p).2,
       LeadingStress.axial v.profiles F.data.h (BaseChartJets.normalizedCoordinates F.data.h p).2] :
-        Fin 2 → ℝ)) K
+          Fin 2 → ℝ)) K
     have hS (p : Slow) (hp : p ∈ K) := by
       have hx := normalized_X_pos hh hh1 (hpos p hp).1 (hpos p hp).2
       have he := abs_le.mp (BaseChartJets.normalizedCoordinates_eta hh hh1 (hpos p hp).1).le
       have hdom := d.domain_nonnegative hx.le (d.parameters_contains he)
       have hL : CoordinateAlgebra.L F.data.h (BaseChartJets.normalizedCoordinates F.data.h p).2.2 ≠
-        0 :=
+          0 :=
         (NaturalAxisData.L_pos W.axis.small he).ne'
       exact And.intro (LeadingStress.theta_smoothAt v.profiles F.data.h hdom hx.ne'
         (v.positive_f hx he).ne' hL) (LeadingStress.axial_smoothAt v.profiles F.data.h hdom hx.ne'
-          hL)
+            hL)
     apply continuousOn_pi.mpr
     intro i
     fin_cases i
     · exact fun p hp => ((hS p hp).1.continuousAt.comp_of_eq
         (BaseChartJets.normalizedCoordinates_smoothAt hh hh1 (hpos p hp).1).snd.continuousAt
-          rfl).continuousWithinAt
+            rfl).continuousWithinAt
     · exact fun p hp => ((hS p hp).2.continuousAt.comp_of_eq
         (BaseChartJets.normalizedCoordinates_smoothAt hh hh1 (hpos p hp).1).snd.continuousAt
-          rfl).continuousWithinAt
+            rfl).continuousWithinAt
 
 /-- Uniform reference bounds and one mixed target margin for any compact
 positive-time subset of the actual active annulus. -/
@@ -237,7 +239,7 @@ theorem modulated_compact_bounds (hcone : LeadingStressWeights.FullTrueCone v)
     let G₀ := BaseChartJets.leadingAxial F.data.h (EntranceAlignedBase.modulatedCoefficients H v)
     let g₀ := PhaseEstimates.shearVector F₀ G₀
     let T₀ := fun p => stressVector v.profiles F.data.h (BaseChartJets.normalizedCoordinates
-      F.data.h p).2
+        F.data.h p).2
     ∃ M u eta delta : ℝ, 1 ≤ M ∧ 0 < u ∧ 0 < eta ∧ 0 < delta ∧
       (∀ p ∈ K, PrimaryRepresentatives.ParameterBounds M p.1 (F₀ p) (g₀ p)) ∧
       ∀ p₀ ∈ K, ∀ p ∈ K, dist p p₀ < delta →
@@ -261,6 +263,7 @@ end Modulated
 
 /-! ## A single Euclidean direction through both zero-amplitude edges -/
 
+/-- Plane of pair, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def planeOfPair : (ℝ × ℝ) →L[ℝ] Plane :=
   LinearMap.toContinuousLinearMap {
     toFun := fun p => !₂[p.1, p.2]
@@ -273,6 +276,8 @@ theorem planeOfPair_injective : Injective planeOfPair := by
   · exact congrArg (fun z : Plane => z 0) h
   · exact congrArg (fun z : Plane => z 1) h
 
+/-- Plane edge factor, bundling `coefficient`, `order`, `width`, `width_pos` and the required
+compatibility proofs. -/
 noncomputable def planeEdgeFactor {J : Set ℝ} {c : ℝ} {S : (ℝ × ℝ) → ℝ × ℝ}
     (F : ActiveAnnulusWeight.EdgeFactor J c S) :
     ActiveAnnulusWeight.EdgeFactor J c (fun p => planeOfPair (S p)) where
@@ -314,7 +319,7 @@ noncomputable def gluedDirection (a b : ℝ) (S BL BR : (ℝ × ℝ) → Plane)
 
 theorem gluedDirection_interior {a b : ℝ} (S BL BR : (ℝ × ℝ) → Plane) {p : ℝ × ℝ}
     (hp : p.2 ∈ Ioo a b) : gluedDirection a b S BL BR p = PrimaryRepresentatives.normalDirection (S
-      p) := by
+        p) := by
   simp [gluedDirection, not_le.mpr hp.1, not_le.mpr hp.2]
 
 private theorem gluedDirection_left_germ {J : Set ℝ} {a b cL cR : ℝ}
@@ -447,6 +452,8 @@ section ClosedDirection
 variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     {d : ModulatedProfileAssembly.LoopData W} (v : ModulatedProfileAssembly.Witness d)
 
+/-- Log shear, given by `omega • !₂[-LeadingStressWeights.logShearA v.profiles p,
+-LeadingStressWeights.logShearB v.profiles p]`. -/
 noncomputable def logShear (omega : ℝ) (p : ℝ × ℝ) : Plane :=
   omega • !₂[-LeadingStressWeights.logShearA v.profiles p,
     -LeadingStressWeights.logShearB v.profiles p]
@@ -456,32 +463,32 @@ with the strict spectral target cone on the entire closed annulus. -/
 theorem exists_closed_direction (hcone : LeadingStressWeights.FullTrueCone v) :
     ∃ D : (ℝ × ℝ) → Plane,
       ContinuousOn D (Icc (-1 : ℝ) 1 ×ˢ Icc (LeadingStressWeights.leftEdge W)
-        (LeadingStressWeights.rightEdge W)) ∧
+          (LeadingStressWeights.rightEdge W)) ∧
       (∀ p ∈ Icc (-1 : ℝ) 1 ×ˢ Icc (LeadingStressWeights.leftEdge W)
-        (LeadingStressWeights.rightEdge W), ‖D p‖ = 1) ∧
+          (LeadingStressWeights.rightEdge W), ‖D p‖ = 1) ∧
       (∀ p ∈ Icc (-1 : ℝ) 1 ×ˢ Ioo (LeadingStressWeights.leftEdge W)
-        (LeadingStressWeights.rightEdge W),
+          (LeadingStressWeights.rightEdge W),
         D p = PrimaryRepresentatives.normalDirection
           (planeOfPair (LeadingStressWeights.logStress v.profiles F.data.h p))) ∧
       ∀ p ∈ Icc (-1 : ℝ) 1 ×ˢ Icc (LeadingStressWeights.leftEdge W) (LeadingStressWeights.rightEdge
-        W),
+          W),
         ∀ omega : ℝ, 0 < omega → PrimaryRepresentatives.ReferenceCone omega (logShear v omega p) ∧
           PrimaryRepresentatives.TargetCone omega (logShear v omega p) (D p) := by
   obtain ⟨FL, hFL, hDL⟩ := LeadingStressWeights.inner_direction_positive v hcone
   obtain ⟨FR, hFR, hDR⟩ := LeadingStressWeights.outer_direction_positive v
   let S : (ℝ × ℝ) → Plane := fun p => planeOfPair (LeadingStressWeights.logStress v.profiles
-    F.data.h p)
+      F.data.h p)
   let L : ActiveAnnulusWeight.EdgeFactor (Icc (-1 : ℝ) 1) (W.controls.activationTime ^ 2)
       (ActiveAnnulusWeight.leftChart (LeadingStressWeights.leftEdge W) S) := planeEdgeFactor FL
   let R : ActiveAnnulusWeight.EdgeFactor (Icc (-1 : ℝ) 1) 4
       (ActiveAnnulusWeight.rightChart (LeadingStressWeights.rightEdge W) S) := planeEdgeFactor FR
   let D : (ℝ × ℝ) → Plane := gluedDirection (LeadingStressWeights.leftEdge W)
-    (LeadingStressWeights.rightEdge W)
+      (LeadingStressWeights.rightEdge W)
     S L.coefficient R.coefficient
   have hab := LeadingStressWeights.edges_ordered W
   have hS (p : ℝ × ℝ) (hp : p ∈ Icc (-1 : ℝ) 1 ×ˢ
       Ioo (LeadingStressWeights.leftEdge W) (LeadingStressWeights.rightEdge W)) : ContinuousAt S p
-        := by
+          := by
     have hm := LeadingStressWeights.logStress_mem v (p := p) hp.1
     exact planeOfPair.continuous.continuousAt.comp_of_eq
       ((LeadingStressWeights.logStress_smooth v.profiles F.data.h).continuousOn.continuousAt
@@ -551,16 +558,22 @@ theorem exists_closed_direction (hcone : LeadingStressWeights.FullTrueCone v) :
 
 end ClosedDirection
 
+/-- Reference set, given by `PrimaryRepresentatives.referenceCompact F.data.h
+(NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W)`. -/
 noncomputable def referenceSet {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : Set
-  Slow :=
+    Slow :=
   PrimaryRepresentatives.referenceCompact F.data.h (NominalConeAssembly.activeLeft W)
     (NominalConeAssembly.activeRight W)
 
+/-- Reference log point, given by `((PositiveRepresentatives.stableInner F.data.h p).2, Real.log
+(PositiveRepresentatives.stableInner F.data.h p).1)`. -/
 noncomputable def referenceLogPoint {F : OutgoingProfile.Profile} (_W : NominalProfile.Witness F)
     (p : Slow) : ℝ × ℝ :=
   ((PositiveRepresentatives.stableInner F.data.h p).2,
     Real.log (PositiveRepresentatives.stableInner F.data.h p).1)
 
+/-- Reference point data, collecting `stable`, `radius`, `scalar`, `inner_pos`, `parameter`,
+`log_mem`. -/
 structure ReferencePointData {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (p : Slow) : Prop where
   stable : p ∈ PositiveRepresentatives.stableDomain F.data.h
@@ -582,7 +595,7 @@ theorem referenceSet_compact {F : OutgoingProfile.Profile} (W : NominalProfile.W
     IsCompact (referenceSet W) :=
   PrimaryRepresentatives.referenceCompact_isCompact (ConstructedSlowBase.height_pos W).le
     (ConstructedSlowBase.height_lt_half W) (NominalConeAssembly.activeLeft_pos W) (active_order
-      W).le
+        W).le
 
 theorem reference_point {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     {p : Slow} (hp : p ∈ referenceSet W) : ReferencePointData W p := by
@@ -603,23 +616,26 @@ section ReferenceFunctions
 variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     {d : ModulatedProfileAssembly.LoopData W} (v : ModulatedProfileAssembly.Witness d)
 
+/-- Reference frequency, given by `PositiveRepresentatives.stablePullback F.data.h
+(-CoordinateAlgebra.A F.data.h - 1 / 2) v.profiles.f`. -/
 noncomputable def referenceFrequency : Slow → ℝ :=
   PositiveRepresentatives.stablePullback F.data.h (-CoordinateAlgebra.A F.data.h - 1 / 2)
-    v.profiles.f
+      v.profiles.f
 
+/-- Reference shear, constructed using `referenceFrequency`. -/
 noncomputable def referenceShear (p : Slow) : Plane :=
   referenceFrequency v p • !₂[-ActivationContinuation.shearA v.profiles
-    (PositiveRepresentatives.stableInner F.data.h p),
+      (PositiveRepresentatives.stableInner F.data.h p),
     -ActivationContinuation.shearB v.profiles (PositiveRepresentatives.stableInner F.data.h p)]
 
 theorem referenceFrequency_pos {p : Slow} (hp : p ∈ referenceSet W) : 0 < referenceFrequency v p :=
-  by
+    by
   have h := reference_point W hp
   exact mul_pos (Real.rpow_pos_of_pos h.scalar _) (v.positive_f h.inner_pos h.parameter)
 
 theorem reference_continuous : ContinuousOn (referenceFrequency v) (referenceSet W) ∧
     ContinuousOn (referenceShear v) (referenceSet W) ∧ ContinuousOn (referenceLogPoint W)
-      (referenceSet W) := by
+        (referenceSet W) := by
   have hh := (ConstructedSlowBase.height_pos W).le
   have hh1 := (ConstructedSlowBase.height_lt_half W).le
   have hF : ContinuousOn (referenceFrequency v) (referenceSet W) := by
@@ -628,7 +644,7 @@ theorem reference_continuous : ContinuousOn (referenceFrequency v) (referenceSet
     exact (PositiveRepresentatives.stablePullback_smoothAt hh hh1 _ h.stable
       (v.profiles.f_smooth.contDiffAt (d.domain.isOpen.mem_nhds
         (d.domain_nonnegative h.inner_pos.le (d.parameters_contains
-          h.parameter))))).continuousAt.continuousWithinAt
+            h.parameter))))).continuousAt.continuousWithinAt
   have hA : ContinuousOn (fun p => ActivationContinuation.shearA v.profiles
       (PositiveRepresentatives.stableInner F.data.h p)) (referenceSet W) := by
     intro p hp
@@ -637,7 +653,7 @@ theorem reference_continuous : ContinuousOn (referenceFrequency v) (referenceSet
       (d.domain_nonnegative h.inner_pos.le (d.parameters_contains h.parameter)) h.inner_pos
       (v.positive_f h.inner_pos h.parameter).ne'
     exact (hs.1.comp p (PositiveRepresentatives.stableInner_smoothAt hh hh1
-      h.stable)).continuousAt.continuousWithinAt
+        h.stable)).continuousAt.continuousWithinAt
   have hC : ContinuousOn (fun p => ActivationContinuation.shearB v.profiles
       (PositiveRepresentatives.stableInner F.data.h p)) (referenceSet W) := by
     intro p hp
@@ -646,7 +662,7 @@ theorem reference_continuous : ContinuousOn (referenceFrequency v) (referenceSet
       (d.domain_nonnegative h.inner_pos.le (d.parameters_contains h.parameter)) h.inner_pos
       (v.positive_f h.inner_pos h.parameter).ne'
     exact (hs.2.comp p (PositiveRepresentatives.stableInner_smoothAt hh hh1
-      h.stable)).continuousAt.continuousWithinAt
+        h.stable)).continuousAt.continuousWithinAt
   refine ⟨hF, signedShear_continuousOn hF hA hC, ?_⟩
   intro p hp
   have h := reference_point W hp
@@ -655,7 +671,7 @@ theorem reference_continuous : ContinuousOn (referenceFrequency v) (referenceSet
 
 theorem stableInner_eq_normalized (W : NominalProfile.Witness F) {p : Slow} (hT : 0 < p.2.2) :
     PositiveRepresentatives.stableInner F.data.h p = (BaseChartJets.normalizedCoordinates F.data.h
-      p).2 := by
+        p).2 := by
   rw [PositiveRepresentatives.stableInner_eq_chartInner (ConstructedSlowBase.height_pos W)
     (ConstructedSlowBase.height_lt_half W) hT, BaseChartJets.normalizedCoordinates_eq]
   rfl
@@ -675,7 +691,7 @@ theorem referenceShear_eq_actual (H : NominalConeAssembly.Certificate W)
       PhaseEstimates.shearVector (BaseChartJets.leadingFrequency F.data.h W.axis.normalization
         (EntranceAlignedBase.modulatedCoefficients H v))
         (BaseChartJets.leadingAxial F.data.h (EntranceAlignedBase.modulatedCoefficients H v)) p :=
-          by
+            by
   have hh := ConstructedSlowBase.height_pos W
   have hh1 := ConstructedSlowBase.height_lt_half W
   have hx := normalized_X_pos hh hh1 hT hR
@@ -687,7 +703,7 @@ theorem referenceShear_eq_actual (H : NominalConeAssembly.Certificate W)
 
 theorem referenceLogPoint_profile {p : Slow} (hp : p ∈ referenceSet W) :
     LeadingStressWeights.logPoint (referenceLogPoint W p) = PositiveRepresentatives.stableInner
-      F.data.h p := by
+        F.data.h p := by
   have h := reference_point W hp
   apply Prod.ext
   · exact Real.exp_log h.inner_pos
@@ -713,7 +729,7 @@ theorem modulated_positive_reference_cone (H : NominalConeAssembly.Certificate W
       (PhaseEstimates.shearVector (BaseChartJets.leadingFrequency F.data.h W.axis.normalization
         (EntranceAlignedBase.modulatedCoefficients H v))
         (BaseChartJets.leadingAxial F.data.h (EntranceAlignedBase.modulatedCoefficients H v)) p) :=
-          by
+            by
   have h := reference_cone v hcone hp.1
   rwa [referenceFrequency_eq_actual v H hp.2 (reference_point W hp.1).radius,
     referenceShear_eq_actual v H hp.2 (reference_point W hp.1).radius] at h
@@ -729,16 +745,16 @@ theorem exists_reference_direction (hcone : LeadingStressWeights.FullTrueCone v)
           Ioo (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W) →
           T p = PrimaryRepresentatives.normalDirection
             (stressVector v.profiles F.data.h (PositiveRepresentatives.stableInner F.data.h p))) :=
-              by
+                by
   obtain ⟨D, hDc, hDn, hDi, hDs⟩ := exists_closed_direction v hcone
   let T : Slow → Plane := fun p => D (referenceLogPoint W p)
   refine ⟨T, hDc.comp (reference_continuous v).2.2 (fun p hp => (reference_point W hp).log_mem), ?_⟩
   intro p hp
   have h := reference_point W hp
   have hs := hDs (referenceLogPoint W p) h.log_mem (referenceFrequency v p) (referenceFrequency_pos
-    v hp)
+      v hp)
   have hshear : logShear v (referenceFrequency v p) (referenceLogPoint W p) = referenceShear v p :=
-    by
+      by
     unfold logShear referenceShear LeadingStressWeights.logShearA LeadingStressWeights.logShearB
     rw [referenceLogPoint_profile hp]
   rw [hshear] at hs
@@ -780,13 +796,13 @@ theorem modulated_representative_bounds (H : NominalConeAssembly.Certificate W)
         ∀ p ∈ PositiveRepresentatives.positivePart K,
           p ∈ PrimaryRepresentatives.gridBox L.val.1 L.val.2 2 →
           ⟪T p, PrimaryRepresentatives.normalDirection (g₀ (PositiveRepresentatives.representative
-            K L))⟫_ℝ ≤ -eta ∧
+              K L))⟫_ℝ ≤ -eta ∧
           |PrimaryRepresentatives.c0 (F₀ (PositiveRepresentatives.representative K L))
               (g₀ (PositiveRepresentatives.representative K L)) *
             ⟪T p, PrimaryRepresentatives.transverseDirection (g₀
-              (PositiveRepresentatives.representative K L))⟫_ℝ /
+                (PositiveRepresentatives.representative K L))⟫_ℝ /
             ⟪T p, PrimaryRepresentatives.normalDirection (g₀
-              (PositiveRepresentatives.representative K L))⟫_ℝ| + eta ≤
+                (PositiveRepresentatives.representative K L))⟫_ℝ| + eta ≤
             PrimaryRepresentatives.slopeRatio u := by
   dsimp only
   obtain ⟨T, hT, hspec⟩ := exists_reference_direction v hcone
@@ -798,7 +814,7 @@ theorem modulated_representative_bounds (H : NominalConeAssembly.Certificate W)
     exact (referenceFrequency_eq_actual v H hp.2 (reference_point W hp.1).radius).symm
   have hg : EqOn (PhaseEstimates.shearVector
       (BaseChartJets.leadingFrequency F.data.h W.axis.normalization
-        (EntranceAlignedBase.modulatedCoefficients H v))
+          (EntranceAlignedBase.modulatedCoefficients H v))
       (BaseChartJets.leadingAxial F.data.h (EntranceAlignedBase.modulatedCoefficients H v)))
       (referenceShear v) (PositiveRepresentatives.positivePart (referenceSet W)) := by
     intro p hp

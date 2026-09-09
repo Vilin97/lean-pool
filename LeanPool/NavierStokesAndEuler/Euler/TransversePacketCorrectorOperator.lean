@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCylinderFields
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorMean
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorMean
+
+/-! The literal raw-field corrector operator used by the recursive packet definition. -/
 
 @[expose] public section
 
-/-! The literal raw-field corrector operator used by the recursive packet definition. -/
 
 noncomputable section
 

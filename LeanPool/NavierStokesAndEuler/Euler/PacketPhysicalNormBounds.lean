@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrameRenewal
+public import LeanPool.NavierStokesAndEuler.Euler.PacketOrientedCoordinates
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+
+/-! Actual Euclidean norm estimates for the scaled moving coordinates. -/
 
 @[expose] public section
 
-/-! Actual Euclidean norm estimates for the scaled moving coordinates. -/
 
 noncomputable section
 
@@ -20,15 +22,15 @@ namespace EulerPacketMovingFrame
 open EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay InnerProductSpace
 
 theorem frame_coordinate_abs_le_norm (p q x : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0) (i : Fin 3) :
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) (i : Fin 3) :
     |frameCoordinates p q x i| ≤ ‖x‖ := by
   have h := abs_real_inner_le_norm (frame p q i) x
   simpa only [frameCoordinates, (frame_orthonormal p q hp hq hpq).norm_eq_one i, one_mul] using h
 
 theorem norm_le_frame_norm3 (p q x : Space)
-    (hp : ⟪p,p⟫_ℝ = 1) (hq : ⟪q,q⟫_ℝ = 1) (hpq : ⟪p,q⟫_ℝ = 0) :
+    (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) :
     ‖x‖ ≤ norm3 (frameCoordinates p q x 0) (frameCoordinates p q x 1) (frameCoordinates p q x 2) :=
-      by
+        by
   have heq := (frameBasis p q hp hq hpq).sum_repr' x
   calc
     ‖x‖ = ‖∑ i : Fin 3, ⟪frameBasis p q hp hq hpq i,x⟫_ℝ • frameBasis p q hp hq hpq i‖ :=
@@ -38,12 +40,12 @@ theorem norm_le_frame_norm3 (p q x : Space)
     _ = _ := by
       simp only [norm_smul, Real.norm_eq_abs, frameBasis_apply,
         (frame_orthonormal p q hp hq hpq).norm_eq_one, mul_one, Fin.sum_univ_three, norm3,
-          frameCoordinates]
+            frameCoordinates]
 
 theorem scaledRay_norm_le_norm3 (m v r : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
     (hs₀ : 0 < s₀) (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
     ‖r (physicalTime t₀ a ε τ)‖ ≤ s₀*norm3
       (scaledRay m v r s₀ t₀ a ε τ 0) (scaledRay m v r s₀ t₀ a ε τ 1)
       (scaledRay m v r s₀ t₀ a ε τ 2) := by
@@ -63,7 +65,7 @@ theorem scaledRay_norm_le_norm3 (m v r : ℝ → Space) {s₀ t₀ a ε τ : ℝ
 theorem scaledVelocity_norm_le_norm3 (m v w : ℝ → Space) {t₀ a ε τ : ℝ}
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
     ‖w (physicalTime t₀ a ε τ)‖ ≤ norm3
       (scaledVelocity m v w t₀ a ε τ 0) (scaledVelocity m v w t₀ a ε τ 1)
       (scaledVelocity m v w t₀ a ε τ 2) := by
@@ -72,7 +74,7 @@ theorem scaledVelocity_norm_le_norm3 (m v w : ℝ → Space) {t₀ a ε τ : ℝ
     (unit_inner_self hm) (unit_inner_self hv) (unit_inner_zero hmv)
   change ‖w (physicalTime t₀ a ε τ)‖ ≤ norm3
     (movingVelocity m v w (physicalTime t₀ a ε τ) 0) (movingVelocity m v w (physicalTime t₀ a ε τ)
-      1)
+        1)
     (movingVelocity m v w (physicalTime t₀ a ε τ) 2) at hh
   simp_rw [← scaledVelocity_restore m v w (ne_of_gt hε)] at hh
   norm_num [velocityScale, Fin.ext_iff, norm3, abs_mul, abs_of_pos hε] at hh
@@ -84,8 +86,8 @@ theorem scaledVelocity_norm_le_norm3 (m v w : ℝ → Space) {t₀ a ε τ : ℝ
 theorem physical_size_ge_second (m v r w : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
     (hs₀ : 0 < s₀) (hε : ε ≠ 0)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hN : 1/2 ≤ scaledRay m v r s₀ t₀ a ε τ 2)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hN : 1 / 2 ≤ scaledRay m v r s₀ t₀ a ε τ 2)
     (hV : 0 ≤ scaledVelocity m v w t₀ a ε τ 1) :
     s₀*scaledVelocity m v w t₀ a ε τ 1/2 ≤
       ‖r (physicalTime t₀ a ε τ)‖*‖w (physicalTime t₀ a ε τ)‖ := by
@@ -113,13 +115,13 @@ theorem physical_size_le_scaled_state (m v r w : ℝ → Space)
     {s₀ t₀ a ε τ Θ ρ P₀ Q₀ : ℝ}
     (hs₀ : 0 < s₀) (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hrw : ⟪r (physicalTime t₀ a ε τ),w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hΘ : 1 ≤ Θ) (hρ0 : 0 ≤ ρ) (hρ : ρ ≤ 1/2)
-    (hP₀ : |P₀| ≤ Θ^2) (hQ₀ : |Q₀| ≤ 2*Θ^2)
-    (hP : |scaledRay m v r s₀ t₀ a ε τ 0-P₀| ≤ ρ)
-    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1-Q₀| ≤ ρ)
-    (hN : |scaledRay m v r s₀ t₀ a ε τ 2-1| ≤ ρ) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε τ), w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hΘ : 1 ≤ Θ) (hρ0 : 0 ≤ ρ) (hρ : ρ ≤ 1 / 2)
+    (hP₀ : |P₀| ≤ Θ ^ 2) (hQ₀ : |Q₀| ≤ 2 * Θ ^ 2)
+    (hP : |scaledRay m v r s₀ t₀ a ε τ 0 - P₀| ≤ ρ)
+    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1 - Q₀| ≤ ρ)
+    (hN : |scaledRay m v r s₀ t₀ a ε τ 2 - 1| ≤ ρ) :
     ‖r (physicalTime t₀ a ε τ)‖*‖w (physicalTime t₀ a ε τ)‖ ≤
       49*s₀*Θ^4*(|scaledVelocity m v w t₀ a ε τ 0|+|scaledVelocity m v w t₀ a ε τ 1|) := by
   let R := scaledRay m v r s₀ t₀ a ε τ

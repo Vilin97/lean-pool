@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatGenerator
+import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatTotal
+
+/-! Differentiation of jointly continuous operator families without operator-norm differentiability.
+-/
 
 @[expose] public section
 
-/-! Differentiation of jointly continuous operator families without operator-norm
-  differentiability. -/
 
 noncomputable section
 
@@ -39,7 +41,7 @@ theorem hasDerivAt_apply (A : ℝ → E →L[ℝ] F) (u : ℝ → E) (t : ℝ) (
   apply hasDerivAt_iff_tendsto_slope.mpr
   have hfirst : Tendsto (fun s => A s (slope u t s)) (𝓝[≠] t) (𝓝 (A t u')) :=
     hc.tendsto.comp ((show Tendsto (fun r : ℝ => r) (𝓝[≠] t) (𝓝 t) from
-      nhdsWithin_le_nhds).prodMk_nhds hu.tendsto_slope)
+        nhdsWithin_le_nhds).prodMk_nhds hu.tendsto_slope)
   exact (hfirst.add ha.tendsto_slope).congr'
     (Filter.Eventually.of_forall (fun s => (slope_apply A u t s).symm))
 
@@ -51,7 +53,7 @@ theorem hasDerivWithinAt_apply (A : ℝ → E →L[ℝ] F) (u : ℝ → E) (t : 
   apply hasDerivWithinAt_iff_tendsto_slope.mpr
   have hfirst : Tendsto (fun r => A r (slope u t r)) (𝓝[s \ {t}] t) (𝓝 (A t u')) :=
     hc.tendsto.comp ((show Tendsto (fun r : ℝ => r) (𝓝[s \ {t}] t) (𝓝 t) from
-      nhdsWithin_le_nhds).prodMk_nhds
+        nhdsWithin_le_nhds).prodMk_nhds
       (hasDerivWithinAt_iff_tendsto_slope.mp hu))
   exact (hfirst.add (hasDerivWithinAt_iff_tendsto_slope.mp ha)).congr'
     (Filter.Eventually.of_forall (fun r => (slope_apply A u t r).symm))
@@ -61,7 +63,7 @@ end EulerStrongOperatorDerivative
 namespace EulerGaussianCylinderHeat
 
 open MeasureTheory ProbabilityTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
-  EulerLiftedWeakDerivative EulerClosedTranslationGraph EulerStrongOperatorDerivative
+    EulerStrongOperatorDerivative
 open scoped ENNReal NNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -96,10 +98,12 @@ theorem realLineHeat_varying_input (a : LiftTangent) (u : ℝ → LiftL2 period)
       (realLineHeat period a t u' + (1/2 : ℝ) • realLineHeat period a t h) t := by
   have h := hasDerivAt_apply (realLineHeatOperator period a) u t u'
     ((1/2 : ℝ) • realLineHeat period a t h) hu
-    (by simpa only [realLineHeatOperator_apply] using realLineHeat_generator_pos period a (u t) g h
-      hD hDD ht)
-    (by simpa only [realLineHeatOperator_apply] using (realLineHeat_joint_continuous period
-      a).continuousAt (x := (t,u')))
+    (by
+        simpa only [realLineHeatOperator_apply] using realLineHeat_generator_pos period a (u t) g h
+            hD hDD ht)
+    (by
+        simpa only [realLineHeatOperator_apply] using (realLineHeat_joint_continuous period
+            a).continuousAt (x := (t,u')))
   simpa only [realLineHeatOperator_apply] using h
 
 end EulerGaussianCylinderHeat

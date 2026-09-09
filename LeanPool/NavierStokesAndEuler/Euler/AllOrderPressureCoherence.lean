@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderLiftedCorrection
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionSourceRestriction
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionFamily
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionSourceRestriction
+
+/-! The actual nonlinear source and signed coercive pressure agree across the constructed Sobolev
+solutions. -/
 
 @[expose] public section
 
-/-! The actual nonlinear source and signed coercive pressure agree across the constructed Sobolev
-  solutions. -/
 
 noncomputable section
 
@@ -21,7 +22,7 @@ namespace EulerAllOrderPressureCoherence
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
   EulerCorrectionOperators EulerCorrectionLowerData EulerCorrectionSourceRestriction
   EulerAllOrderCorrectionData EulerAllOrderCorrectionBudget EulerAllOrderCorrectionFamily
-  EulerAllOrderLiftedCorrection EulerSobolevCoefficientPressure
+   EulerSobolevCoefficientPressure
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -47,7 +48,7 @@ theorem rawSourcePath_truncate {T : ℝ} (hT : 0 < T) (A : Data period T) (B : B
     t (solution period hT A B (q+1) (hq.trans (Nat.le_succ q)) t)
   rw [A.lower_atOrder period q] at h
   have he := congrArg (fun f => f t) (solution_compatible period hT A B q hq)
-  change truncateOperator period (q+1) (solution period hT A B (q+1) (hq.trans (Nat.le_succ q)) t)=
+  change truncateOperator period (q+1) (solution period hT A B (q+1) (hq.trans (Nat.le_succ q)) t) =
     solution period hT A B q hq t at he
   rw [he] at h
   exact h
@@ -55,15 +56,15 @@ theorem rawSourcePath_truncate {T : ℝ} (hT : 0 < T) (A : Data period T) (B : B
 /-- Adjacent genuine raw sources represent the same actual L² field. -/
 theorem rawSourcePath_value_succ {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
-    value period (rawSourcePath period hT A B (q+1) (hq.trans (Nat.le_succ q)) t)=
+    value period (rawSourcePath period hT A B (q+1) (hq.trans (Nat.le_succ q)) t) =
       value period (rawSourcePath period hT A B q hq t) :=
   congrArg (value period (q := q)) (rawSourcePath_truncate period hT A B q hq t)
 
 /-- The actual signed coercive pressures represent the same L² field at adjacent Sobolev orders. -/
 theorem signedPressurePath_value_succ {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period
-  hT A)
+    hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
-    value period (signedPressurePath period hT A B (q+1) (hq.trans (Nat.le_succ q)) t)=
+    value period (signedPressurePath period hT A B (q+1) (hq.trans (Nat.le_succ q)) t) =
       value period (signedPressurePath period hT A B q hq t) := by
   change -value period (pressureSobolevOperator period (A.metric.jet (q+1) t) A.κ A.direction
     A.coercivity A.coercivity_pos (A.metric_pos t)
@@ -74,11 +75,11 @@ theorem signedPressurePath_value_succ {T : ℝ} (hT : 0 < T) (A : Data period T)
 
 /-- Every finite-order signed pressure represents the same actual base pressure. -/
 theorem signedPressurePath_value_base {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period
-  hT A)
+    hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
-    value period (signedPressurePath period hT A B q hq t)=
+    value period (signedPressurePath period hT A B q hq t) =
       value period (signedPressurePath period hT A B 6 le_rfl t) := by
-  exact Nat.le_induction (P := fun n hn => value period (signedPressurePath period hT A B n hn t)=
+  exact Nat.le_induction (P := fun n hn => value period (signedPressurePath period hT A B n hn t) =
       value period (signedPressurePath period hT A B 6 le_rfl t)) rfl
     (fun n hn ih => (signedPressurePath_value_succ period hT A B n hn t).trans ih) q hq
 
@@ -86,11 +87,11 @@ theorem signedPressurePath_value_base {T : ℝ} (hT : 0 < T) (A : Data period T)
 def commonPressure {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A) :
     C(Icc (0 : ℝ) T,LiftL2 period) :=
   (valueOperator period 6).compLeftContinuous ℝ (Icc (0 : ℝ) T) (signedPressurePath period hT A B 6
-    le_rfl)
+      le_rfl)
 
 /-- Every finite-order pressure realizes the common pressure field. -/
 theorem signedPressurePath_value_common {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period
-  hT A)
+    hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     value period (signedPressurePath period hT A B q hq t)=commonPressure period hT A B t :=
   signedPressurePath_value_base period hT A B q hq t

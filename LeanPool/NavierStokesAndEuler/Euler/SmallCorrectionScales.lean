@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ConstantCorrectionData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.NonlinearEnergyConstants
 
 /-! An explicit positive amplitude puts any finite Gevrey datum and
 quadratic residual envelope in the all-order correction regime. The
 growth constant belongs to the identity-metric equation, not to an
 assumed solution. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +25,7 @@ open Set EulerConstantCorrection EulerNonlinearEnergyConstants
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Growth, given by `energyConstant P 0 0 1 1 pressureBound 1 1 0 0 1`. -/
 def growth : ℝ := energyConstant P 0 0 1 1 pressureBound 1 1 0 0 1
 
 theorem growth_pos : 0 < growth P :=
@@ -30,6 +33,7 @@ theorem growth_pos : 0 < growth P :=
     zero_le_one zero_le_one (zero_le_one.trans pressureBound_one_le)
     zero_le_one zero_le_one le_rfl le_rfl zero_lt_one
 
+/-- Initial radius, given by `1/(2*(R+1))`. -/
 def initialRadius (R : ℝ) : ℝ := 1/(2*(R+1))
 
 theorem initialRadius_pos (R : ℝ) (hR : 0 ≤ R) : 0 < initialRadius R := by
@@ -46,6 +50,7 @@ theorem initialRadius_mul (R : ℝ) (hR : 0 ≤ R) : initialRadius R*R ≤ 1/2 :
 
 /-- These are scalar smallness inequalities, obtained explicitly below. -/
 structure Scale (C R E : ℝ) where
+  /-- Value of `Scale`, of type `ℝ`. -/
   value : ℝ
   positive : 0 < value
   one : value ≤ 1
@@ -54,6 +59,7 @@ structure Scale (C R E : ℝ) where
   shrink : 2*growth P*(8*value*C+value) ≤ initialRadius R/2
   residual : 2*(value^2*E)*Real.exp (3*growth P) ≤ value/2
 
+/-- Scale as an element of `Scale P C R E`. -/
 def scale (C R E : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) (hE : 0 < E) : Scale P C R E := by
   let a := 1/(2*C+1)
   let b := 1/(12*C*R+1)
@@ -87,6 +93,7 @@ def scale (C R E : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) (hE : 0 < E) : Scale P C R
   · have hh := mul_le_mul_of_nonneg_left hd' hv.le
     nlinarith only [hh,sq_nonneg v]
 
+/-- Radius as an element of `C(Icc (0 : ℝ) 1,ℝ)`. -/
 def Scale.radius {C R E : ℝ} (S : Scale P C R E) : C(Icc (0 : ℝ) 1,ℝ) :=
   ⟨fun t => initialRadius R-2*growth P*(8*S.value*C+S.value)*t.val,
     continuous_const.sub (continuous_const.mul continuous_subtype_val)⟩

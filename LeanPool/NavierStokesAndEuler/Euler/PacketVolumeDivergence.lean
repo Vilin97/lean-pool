@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentFlowDifferentiation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DeformationVolume
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-! Divergence under the actual determinant-one pushforward. Jacobi's
 formula controls the derivative of the Jacobian, and symmetry of the
 second derivative supplies the Piola cancellation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,8 +25,12 @@ namespace EulerPacketVolumeDivergence
 open Set Filter ContinuousLinearMap EulerSmoothLimit EulerPacketPiola
 open scoped Topology ContDiff
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketVolumeDivergence1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketVolumeDivergence2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 theorem coordinateTrace_eq_matrix (A : Space →L[ℝ] Space) :
     coordinateTrace A = (operatorMatrix A).trace := by
@@ -79,7 +86,7 @@ theorem determinant_derivative_trace_zero (F : Space → Space →L[ℝ] Space)
     rw [hmat]
     exact (EuclideanSpace.proj i).hasFDerivAt.comp_hasDerivAt 0
       ((ContinuousLinearMap.apply ℝ Space (EuclideanSpace.single j 1)).hasFDerivAt.comp_hasDerivAt
-        0 hline)
+          0 hline)
   have hd := EulerDeformationVolume.determinant_hasDerivAt L (fun _ => M) 0 hentry
   have hlim : Tendsto (fun s : ℝ => x+s•v) (𝓝 0) (𝓝 x) := by
     have hc : Continuous (fun s : ℝ => x+s•v) :=

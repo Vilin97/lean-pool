@@ -11,13 +11,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionDat
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileFields
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftEquation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
 
 /-! The literal initialized packet supplies the all-order approximation
 residual identity, including its actual pressure gradient.  Its velocity,
 time derivative and residual are the fields already constructed from the
 source profiles, not additional approximation hypotheses. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,24 +51,31 @@ variable (M : EulerMeanPacketProvider.Data)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Initialized velocity, given by `fieldSum (N+1) κ (assembledVelocity N (initializedProfiles M
+D τ hτ hτT B δ hδ ξ hs α))`. -/
 def initializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (assembledVelocity N (initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 
+/-- Initialized velocity field as an element of `Field period D.T (initializedVelocity M D τ hτ
+hτT B δ hδ ξ hs α N κ)`. -/
 def initializedVelocityField (N : ℕ) (κ : ℝ) :
     Field period D.T (initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityField M.T_pos
     (fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i)
-      κ).changeTime hTime
+        κ).changeTime hTime
 
+/-- Initialized velocity derivative, constructed using `fieldSum`. -/
 def initializedVelocityDerivative (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (ProfileRegularity.velocityTimeCoefficients (T := M.T) (N := N)
     (a := initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 
+/-- Initialized velocity derivative field as an element of `Field period D.T
+(initializedVelocityDerivative M D τ hτ hτT B δ hδ ξ hs α N κ)`. -/
 def initializedVelocityDerivativeField (N : ℕ) (κ : ℝ) :
     Field period D.T (initializedVelocityDerivative M D τ hτ hτT B δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityDerivativeField M.T_pos
     (fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i)
-      κ).changeTime hTime
+        κ).changeTime hTime
 
 theorem initializedVelocityField_time (N : ℕ) (κ : ℝ) :
     TimeDerivative D.T_pos.le
@@ -81,16 +90,17 @@ the same normalized coordinate field. -/
 theorem initializedNormalizedField_path_eq (N : ℕ) (k : ℝ) :
     (initializedNormalizedField M D hTime τ hτ hτT B δ hδ ξ hs α N k).path =
       (coordinateField D (initializedVelocityField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹) k).path
-        :=
+          :=
   Field.path_eq_of_raw_eq _ _ (fun _ _ _ => rfl)
 
 theorem initializedNormalizedField_tower_eq (N : ℕ) (k : ℝ) :
     (initializedNormalizedField M D hTime τ hτ hτT B δ hδ ξ hs α N k).toFieldTower =
       (coordinateField D (initializedVelocityField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹)
-        k).toFieldTower :=
+          k).toFieldTower :=
   Field.toFieldTower_eq_of_path_eq _ _
     (initializedNormalizedField_path_eq M D hTime τ hτ hτT B δ hδ ξ hs α N k)
 
+/-- Initialized coordinate residual field used in packet initialized residual equation. -/
 def initializedCoordinateResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     Field period D.T (normalizedResidual D k
@@ -139,7 +149,7 @@ def initializedApproximationResidual (Cagree : SourceCoefficientAgreement M D)
     exact initializedCoordinatePressureField_mem M D hTime τ hτ hτT B δ hδ ξ hs α N k hk0 t
   · intro q hq t ht
     rw [initializedCorrectionData_eq_coordinate M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk
-      hκ]
+        hκ]
     exact approximation_hasDerivAt D k hk0 hκ
       (initializedVelocityField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹)
       (initializedVelocityDerivativeField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹)

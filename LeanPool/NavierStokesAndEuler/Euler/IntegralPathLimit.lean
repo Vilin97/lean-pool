@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Passing genuine Banach-valued evolution equations through uniform time-path limits. -/
 
 @[expose] public section
 
-/-! Passing genuine Banach-valued evolution equations through uniform time-path limits. -/
 
 noncomputable section
 
@@ -40,14 +44,15 @@ def pathIntegralOperator (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) : C(Icc (0 : ℝ) 
       exact h.trans_eq (mul_comm _ _))
 
 /-- The time-integral operator is the literal Bochner interval integral. -/
-theorem pathIntegralOperator_apply (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) (f : C(Icc (0 : ℝ) T,E)) :
+theorem pathIntegralOperator_apply (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) (f : C(Icc (0 : ℝ) T, E)) :
     pathIntegralOperator T hT a b f = ∫ t in a..b, extendPath T hT f t := rfl
 
 variable [CompleteSpace E]
 
-/-- Interior time derivatives with continuous endpoint traces give the exact integral evolution formula. -/
+/-- Interior time derivatives with continuous endpoint traces give the exact integral evolution
+formula. -/
 theorem integral_equation_of_hasDerivAt (T : ℝ) (hT : 0 ≤ T)
-    (u f : C(Icc (0 : ℝ) T,E))
+    (u f : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t ∈ Ioo 0 T, HasDerivAt (extendPath T hT u) (extendPath T hT f t) t)
     (t : Icc (0 : ℝ) T) :
     u t = u ⟨0,le_rfl,hT⟩ + pathIntegralOperator T hT 0 t.val f := by
@@ -61,11 +66,12 @@ theorem integral_equation_of_hasDerivAt (T : ℝ) (hT : 0 ≤ T)
   exact (eq_add_of_sub_eq h.symm).trans (add_comm _ _)
 
 omit [CompleteSpace E] in
-/-- Actual integral evolution equations pass to uniform limits of the solution and derivative paths. -/
+/-- Actual integral evolution equations pass to uniform limits of the solution and derivative paths.
+-/
 theorem integral_equation_limit (T : ℝ) (hT : 0 ≤ T)
-    (u f : ℕ → C(Icc (0 : ℝ) T,E)) (v g : C(Icc (0 : ℝ) T,E))
+    (u f : ℕ → C(Icc (0 : ℝ) T, E)) (v g : C(Icc (0 : ℝ) T, E))
     (hu : Filter.Tendsto u Filter.atTop (𝓝 v)) (hf : Filter.Tendsto f Filter.atTop (𝓝 g))
-    (heq : ∀ n t, u n t = u n ⟨0,le_rfl,hT⟩ + pathIntegralOperator T hT 0 t.val (f n))
+    (heq : ∀ n t, u n t = u n ⟨0, le_rfl, hT⟩ + pathIntegralOperator T hT 0 t.val (f n))
     (t : Icc (0 : ℝ) T) :
     v t = v ⟨0,le_rfl,hT⟩ + pathIntegralOperator T hT 0 t.val g := by
   have hv := ((ContinuousMap.evalCLM ℝ t).continuous.tendsto v).comp hu
@@ -73,14 +79,15 @@ theorem integral_equation_limit (T : ℝ) (hT : 0 ≤ T)
   have hi := ((pathIntegralOperator T hT 0 t.val).continuous.tendsto g).comp hf
   exact tendsto_nhds_unique hv ((hz.add hi).congr (fun n => (heq n t).symm))
 
-/-- A continuous path satisfying the actual integral equation has the prescribed interior derivative. -/
+/-- A continuous path satisfying the actual integral equation has the prescribed interior
+derivative. -/
 theorem hasDerivAt_of_integral_equation (T : ℝ) (hT : 0 ≤ T)
-    (u f : C(Icc (0 : ℝ) T,E))
-    (heq : ∀ t, u t = u ⟨0,le_rfl,hT⟩ + pathIntegralOperator T hT 0 t.val f)
+    (u f : C(Icc (0 : ℝ) T, E))
+    (heq : ∀ t, u t = u ⟨0, le_rfl, hT⟩ + pathIntegralOperator T hT 0 t.val f)
     (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (extendPath T hT u) (extendPath T hT f t) t := by
   have hd := ((extendPath_continuous T hT f).integral_hasStrictDerivAt 0 t).hasDerivAt.const_add (u
-    ⟨0,le_rfl,hT⟩)
+      ⟨0,le_rfl,hT⟩)
   apply hd.congr_of_eventuallyEq
   filter_upwards [Ioo_mem_nhds ht.1 ht.2] with r hr
   change u (projIcc 0 T hT r) = _

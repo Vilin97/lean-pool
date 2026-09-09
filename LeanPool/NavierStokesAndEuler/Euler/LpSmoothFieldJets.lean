@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
 public import LeanPool.NavierStokesAndEuler.Euler.LpMultilinearBundling
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Exact identification of ordinary spatial derivatives with all translation jets in L². -/
 
 @[expose] public section
 
-/-! Exact identification of ordinary spatial derivatives with all translation jets in L². -/
 
 noncomputable section
 
@@ -67,7 +69,8 @@ theorem iteratedFDeriv_translation_ae (A : SmoothL2Field V) (n : ℕ)
       fun x => iteratedFDeriv ℝ n A.field (x+a) v :=
   iteratedFDeriv_translation_ae_aux n V A a v
 
-/-- The entire parameter derivative tensor is a bounded linear image of the actual spatial L² tensor. -/
+/-- The entire parameter derivative tensor is a bounded linear image of the actual spatial L²
+tensor. -/
 theorem iteratedFDeriv_translation_eq (A : SmoothL2Field V) (n : ℕ) (a : Space) :
     iteratedFDeriv ℝ n (fun b : Space => translation b A.toLp) a =
       multilinearBundling (P := Space) (V := V) volume n (translation a (A.jetLp n)) := by

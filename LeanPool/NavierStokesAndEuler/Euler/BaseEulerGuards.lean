@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketScaledBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFirstPressureSign
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketScaledBounds
 
 /-! The genuine base parent can be restricted to one explicit positive
 time on which the low-order source guards hold. The constants depend
 only on its fixed label envelope; the initial core is empty. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,14 +25,17 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerParentPacketFrames EulerPacketParentLabelBounds EulerGevrey
   EulerPacketFirstPressureSign EulerTimeIntervalRestriction
 
+/-- Coefficient cost, given by `27*(frameAmplitude K)^2*gradientAmplitude K`. -/
 def coefficientCost (K : ℝ) : ℝ := 27*(frameAmplitude K)^2*gradientAmplitude K
 
 theorem coefficientCost_nonneg (K : ℝ) : 0 ≤ coefficientCost K := by
   unfold coefficientCost
   positivity [gradientAmplitude_nonneg K]
 
+/-- Guard time, given by `min T (min 1 (1/(4*(1+coefficientCost K + firstSignRate
+(coefficientCost K) (coefficientCost K)))))`. -/
 def guardTime (T K : ℝ) : ℝ :=
-  min T (min 1 (1/(4*(1+coefficientCost K+
+  min T (min 1 (1/(4*(1+coefficientCost K +
     firstSignRate (coefficientCost K) (coefficientCost K)))))
 
 theorem guardTime_pos (T K : ℝ) (hT : 0 < T) : 0 < guardTime T K := by
@@ -107,8 +111,9 @@ theorem initialStrain_norm (x : Space) :
   rw [← he]
   exact strain_norm L G.zeroTime x
 
+/-- Low bounds on, bundling `Be`, `Bc`, `L`, `r` and the required compatibility proofs. -/
 def lowBoundsOn (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
-    (hSone : S ≤ 1) (hsmall : coefficientCost L.K*S ≤ 1/4) :
+    (hSone : S ≤ 1) (hsmall : coefficientCost L.K * S ≤ 1 / 4) :
     LowBounds (G.restrictTime S hS hST) where
   Be := coefficientCost L.K
   Bc := 0
@@ -136,6 +141,8 @@ def lowBoundsOn (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
     have hc := mul_le_mul_of_nonneg_left hsquare (coefficientCost_nonneg L.K)
     nlinarith
 
+/-- Low bounds, given by `lowBoundsOn L _ _ _ (guardTime_le_one G.T L.K) (guardTime_small G.T
+L.K).1`. -/
 def lowBounds : LowBounds
     (G.restrictTime (guardTime G.T L.K) (guardTime_pos G.T L.K G.T_pos)
       (guardTime_le G.T L.K)) :=

@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
+
+/-! The literal recursively constructed high forcing has zero angular mean. -/
 
 @[expose] public section
 
-/-! The literal recursively constructed high forcing has zero angular mean. -/
 
 noncomputable section
 
@@ -24,7 +27,7 @@ open Set MeasureTheory EulerSmoothLimit EulerPacketPointJets EulerPacketProfileR
 variable {P T : ℝ} [Fact (0 < P)]
 
 theorem Field.average_zero_of_raw_integral {raw : VectorField} (G : Field P T raw)
-    (h : ∀ (t : Icc (0 : ℝ) T) x, (∫ θ in (0 : ℝ)..P, raw (t,(x,θ))) = 0)
+    (h : ∀ (t : Icc (0 : ℝ) T) x, (∫ θ in (0 : ℝ)..P, raw (t, (x, θ))) = 0)
     (t : Icc (0 : ℝ) T) : average P (G.path t) = 0 := by
   apply (pointField_mean_zero_iff P G.path G.orbit t).mpr
   intro x
@@ -37,12 +40,12 @@ variable {O : Operators} {p : ℕ} {a : ℕ → Profile}
 
 theorem PrefixFields.highForce_mean_zero (F : PrefixFields P T p a)
     (C : CoefficientData P T O) (hp : 2 ≤ p) (hT : 0 < T)
-    {corrector_t : VectorField} (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
-    (pressure : Field P T (pressureGradient (a (p-1)).highPressure))
+    {correctorT : VectorField} (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
+    (pressure : Field P T (pressureGradient (a (p - 1)).highPressure))
     (newMean : Field P T (meanResult O p a).1)
     (hB : ∀ (t : Icc (0 : ℝ) T) x θ,
-      (meanResult O p a).1 (t,(x,θ)) = (meanResult O p a).1 (t,(x,0)))
+      (meanResult O p a).1 (t, (x, θ)) = (meanResult O p a).1 (t, (x, 0)))
     (t : Icc (0 : ℝ) T) (x : Space) :
     (∫ θ in (0 : ℝ)..P, EulerPacketProfileRecursion.highForce O p a (t,(x,θ))) = 0 := by
   let K := F.knownForce C (by omega) hT Ct hCt pressure

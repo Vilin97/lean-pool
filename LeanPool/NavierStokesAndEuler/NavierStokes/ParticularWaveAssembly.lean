@@ -7,12 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ErrorHarmonics
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CopyAngularInvariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedWaveUpdate
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CopySolveCompatibility
 
 /-!
 # Actual particular-wave assembly
@@ -21,6 +17,9 @@ The residual source is the coefficient of `HarmonicResidual.residualBlock`.
 All signed nonzero harmonics are retained inside their original spatial
 label. A fixed reference solve supplies the compatible band views.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,7 +37,7 @@ noncomputable def modes (N : ℕ) : Finset ℤ := (Finset.Icc (-(N : ℤ)) N).er
   simp only [modes, Finset.mem_erase, Finset.mem_Icc]
   omega
 
-@[simp] theorem neg_mem_modes (N : ℕ) (j : ℤ) : -j ∈ modes N ↔ j ∈ modes N := by
+theorem neg_mem_modes (N : ℕ) (j : ℤ) : -j ∈ modes N ↔ j ∈ modes N := by
   simp only [mem_modes, neg_ne_zero, Int.natAbs_neg]
 
 theorem pair_apply {D : Type} (j m : ℤ) (a : D → ℂ) (x : D) :
@@ -49,7 +48,7 @@ theorem pair_apply {D : Type} (j m : ℤ) (a : D → ℂ) (x : D) :
     conj (Finsupp.single j (fun x => a x / 2) (-m) x) = _
   by_cases hm : j = m <;> by_cases hn : j = -m
   · simp only [Finsupp.single_apply, ite_eq_left hm, ite_eq_left hn, ite_eq_left hm.symm,
-    ite_eq_left hn.symm]
+      ite_eq_left hn.symm]
   · simp only [Finsupp.single_apply, ite_eq_left hm, ite_eq_right hn, ite_eq_left hm.symm,
       ite_eq_right (Ne.symm hn), Pi.zero_apply]
   · simp only [Finsupp.single_apply, ite_eq_right hm, ite_eq_left hn, ite_eq_right (Ne.symm hm),
@@ -123,7 +122,7 @@ theorem modeBlock_real {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D �
     (kp : ℕ → ℤ) (v : ℕ → D → ComplexVector) (p : ℕ → D → ℂ) :
     RealBlock (modeBlock j k Φ kp v p) :=
   ⟨fun n i => conjugatePair_symmetric j (fun x => v n x i), fun n => conjugatePair_symmetric j (p
-    n)⟩
+      n)⟩
 
 theorem modeBlock_zero {D : Type} {j : ℤ} (hj : j ≠ 0)
     (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
@@ -134,11 +133,11 @@ theorem modeBlock_zero {D : Type} {j : ℤ} (hj : j ≠ 0)
   · intro n i
     funext x
     simp only [modeBlock, pair_apply, neg_zero, ite_eq_right (Ne.symm hj), map_zero, add_zero,
-      Pi.zero_apply]
+        Pi.zero_apply]
   · intro n
     funext x
     simp only [modeBlock, pair_apply, neg_zero, ite_eq_right (Ne.symm hj), map_zero, add_zero,
-      Pi.zero_apply]
+        Pi.zero_apply]
 
 theorem pair_class {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
     {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ} {a : ℕ → D → ℂ}
@@ -149,13 +148,13 @@ theorem pair_class {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   have hz := MemClass.zero (s := s) (α := α) (E := ℂ) ha.weight_nonneg
   by_cases hm : m = j <;> by_cases hm' : -m = j
   · have h := hp.add hn
-    simp only [pair_apply, ite_eq_left hm, ite_eq_left hm', div_eq_mul_inv, one_mul, mul_comm] at h
-      ⊢
+    simp only [pair_apply, ite_eq_left hm, ite_eq_left hm', div_eq_mul_inv, one_mul, mul_comm]
+        at h ⊢
     exact h
   · simpa only [pair_apply, ite_eq_left hm, ite_eq_right hm', div_eq_mul_inv, one_mul, mul_comm,
       map_zero, add_zero] using hp
   · simp only [pair_apply, ite_eq_right hm, ite_eq_left hm', div_eq_mul_inv, one_mul, mul_comm,
-    zero_add] at hn ⊢
+      zero_add] at hn ⊢
     exact hn
   · simpa only [pair_apply, ite_eq_right hm, ite_eq_right hm', map_zero, add_zero] using hz
 
@@ -169,6 +168,8 @@ theorem modeBlock_classes {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   ⟨fun i m _ => pair_class (CurlClassBounds.class_component hv i) j m,
     fun m _ => pair_class hp j m⟩
 
+/-- Assembled block, given by `sumBlock (modes N) k Φ kp (fun j => modeBlock j k Φ kp (v j) (p
+j))`. -/
 noncomputable def assembledBlock {D : Type} (N : ℕ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (v : ℤ → ℕ → D → ComplexVector) (p : ℤ → ℕ → D → ℂ) : HarmonicBlock D :=
   sumBlock (modes N) k Φ kp (fun j => modeBlock j k Φ kp (v j) (p j))
@@ -219,7 +220,7 @@ noncomputable def transportTangent (t : TangentData P H) (φ : Q → P)
   source z := amplitude • t.source (φ z.1, coverPower gap z.2)
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] [NormedAddCommGroup Q] [NormedSpace ℝ Q]
-  [CompleteSpace H] in
+    [CompleteSpace H] in
 theorem transportTangent_linearData (t : TangentData P H) (φ : Q → P)
     (gap : ℕ) (amplitude : ℝ) :
     (transportTangent t φ gap amplitude).linearData =
@@ -272,7 +273,7 @@ theorem copyPressure_transport (t : TangentData P H) (φ : Q → P)
       (CopySolveCompatibility.refineGeometry g gap) hab copy frequency (q, Y) =
         (amplitude * referenceFrequency / frequency) •
           ParticularWaveBounds.copyPressure t g hab copy referenceFrequency (φ q, coverPower gap Y)
-            := by
+              := by
   have hr : (referenceFrequency : ℂ) ≠ 0 := by exact_mod_cast hreference
   have hf : (frequency : ℂ) ≠ 0 := by exact_mod_cast hfrequency
   simp only [ParticularWaveBounds.copyPressure, copyPressureReal_transport,
@@ -338,7 +339,7 @@ theorem assembledBlock_classes {D : Type} [NormedAddCommGroup D] [NormedSpace �
     rw [he]
     exact hh
 
-theorem assembledBlock_mean_zero {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+theorem assembledBlock_mean_zero {D : Type}
     (N : ℕ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (v : ℤ → ℕ → D → ComplexVector) (p : ℤ → ℕ → D → ℂ)
     (hkp : ∀ n, kp n ≠ 0) :
@@ -361,15 +362,17 @@ theorem assembledBlock_mean_zero {D : Type} [NormedAddCommGroup D] [NormedSpace 
       (assembledBlock_zero N k Φ kp v p).2 n]
     rfl
 
+/-- Full mode block, given by `modeBlock j k Φ kp (fun n x => a.amplitude n (x,0)) (fun n x =>
+a.pressure n (x,0))`. -/
 noncomputable def fullModeBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) : HarmonicBlock D :=
   modeBlock j k Φ kp (fun n x => a.amplitude n (x,0)) (fun n x => a.pressure n (x,0))
 
-theorem fullModeBlock_represents {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+theorem fullModeBlock_represents {D : Type}
     (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
     (ha : AngleIndependent a.amplitude) (hp : AngleIndependent a.pressure)
-    (hphase : ∀ n x θ, a.frequency n * a.phase n (x,θ) =
+    (hphase : ∀ n x θ, a.frequency n * a.phase n (x, θ) =
       (j : ℝ) * (k n * Φ n x + (kp n : ℝ) * θ)) :
     (fullModeBlock j k Φ kp a).oscillation =
       (fun n x i => (vectorMode (a.frequency n) (a.phase n) (a.amplitude n) x i).re) ∧
@@ -400,11 +403,11 @@ theorem fullModeBlock_classes {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
     (ha : WaveClass s W α a.amplitude) (hp : WaveClass s W γ a.pressure) :
     (fullModeBlock j k Φ kp a).WaveBounds (SignedWaveUpdate.sectionStrip s) (fun n x => W n (x,0))
-      α ∧
+        α ∧
       (fullModeBlock j k Φ kp a).PressureBounds (SignedWaveUpdate.sectionStrip s) (fun n x => W n
-        (x,0)) γ :=
+          (x,0)) γ :=
   modeBlock_classes j k Φ kp (SignedWaveUpdate.class_zeroSection ha)
-    (SignedWaveUpdate.class_zeroSection hp)
+      (SignedWaveUpdate.class_zeroSection hp)
 
 /-! ## Complex reference transport, including pressure -/
 
@@ -415,6 +418,7 @@ open CommonCoverSolve TorusInverse ParticularWaveBounds
 variable {P Q : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
+/-- Transport source, defined pointwise by `amplitude • f (φ q.1, coverPower gap q.2)`. -/
 noncomputable def transportSource (f : P × Plane → ComplexVector) (φ : Q → P)
     (gap : ℕ) (amplitude : ℝ) : Q × Plane → ComplexVector :=
   fun q => amplitude • f (φ q.1, coverPower gap q.2)
@@ -477,7 +481,7 @@ theorem complexCopyPressure_transport (t : TangentData P ProblemStatement.Space)
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem periodizedCopies_transport {H : Type} [NormedAddCommGroup H] [NormedSpace ℝ H]
-    [CompleteSpace H] (g : Geometry) (κ : Plane → ℝ)
+    (g : Geometry) (κ : Plane → ℝ)
     (F : Frequency → P × Plane → H) (φ : Q → P) (gap : ℕ) (amplitude : ℝ)
     (q : Q) (Y : Plane) :
     periodizedCopies (CopySolveCompatibility.refineGeometry g gap) κ
@@ -514,7 +518,7 @@ theorem commonPressure_transport (t : TangentData P ProblemStatement.Space)
   unfold commonPressure periodizedCopies
   simp only [complexCopyPressure_transport _ _ _ _ _ _ _ _ _ hreference hfrequency,
     CopySolveCompatibility.coordinates_refine, smul_comm _ (amplitude * referenceFrequency /
-      frequency)]
+        frequency)]
   exact tsum_const_smul'' (amplitude * referenceFrequency / frequency)
 
 end ComplexTransport
@@ -530,39 +534,55 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- The choices are made once for a spatial label. The native interval,
 center, cover, and cutoff are shared by all its band views and harmonics. -/
 structure Reference (P : Type) where
+  /-- Band of `Reference`, of type `ℕ`. -/
   band : ℕ
+  /-- Geometry of `Reference`, of type `Geometry`. -/
   geometry : Geometry
+  /-- Length of `Reference`, of type `ℝ`. -/
   length : ℝ
   length_pos : 0 < length
+  /-- Tangent of `Reference`, of type `ℤ → TangentData P ProblemStatement.Space`. -/
   tangent : ℤ → TangentData P ProblemStatement.Space
+  /-- Cutoff of `Reference`, of type `Plane → ℝ`. -/
   cutoff : Plane → ℝ
   cutoff_compact : HasCompactSupport cutoff
 
 /-- Only chart/source input data, never an independently chosen solution. -/
 structure BandCharts (P : Type) where
+  /-- Parameter of `BandCharts`, of type `ℕ → P → P`. -/
   parameter : ℕ → P → P
+  /-- Gap of `BandCharts`, of type `ℕ → ℕ`. -/
   gap : ℕ → ℕ
+  /-- Amplitude of `BandCharts`, of type `ℕ → ℝ`. -/
   amplitude : ℕ → ℝ
 
+/-- Reference velocity, given by `commonVelocity (r.tangent j) (residualSource c u b G A j
+r.band) r.geometry r.length_pos.le r.cutoff`. -/
 noncomputable def referenceVelocity (r : Reference P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) : P × Plane → ComplexVector :=
   commonVelocity (r.tangent j) (residualSource c u b G A j r.band) r.geometry
     r.length_pos.le r.cutoff
 
+/-- Reference pressure, constructed using `commonPressure`. -/
 noncomputable def referencePressure (r : Reference P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) : P × Plane → ℂ :=
   commonPressure (r.tangent j) (residualSource c u b G A j r.band) r.geometry
     r.length_pos.le r.cutoff ((j : ℝ) * b.frequency r.band)
 
+/-- Band tangent, given by `transportTangent (r.tangent j) (charts.parameter n) (charts.gap n)
+(charts.amplitude n)`. -/
 noncomputable def bandTangent (r : Reference P) (charts : BandCharts P) (j : ℤ) (n : ℕ) :
     TangentData P ProblemStatement.Space :=
   transportTangent (r.tangent j) (charts.parameter n) (charts.gap n) (charts.amplitude n)
 
+/-- Band geometry, given by `CopySolveCompatibility.refineGeometry r.geometry (charts.gap n)`. -/
 noncomputable def bandGeometry (r : Reference P) (charts : BandCharts P) (n : ℕ) : Geometry :=
   CopySolveCompatibility.refineGeometry r.geometry (charts.gap n)
 
+/-- Actual band velocity, given by `commonVelocity (bandTangent r charts j n) (residualSource c
+u b G A j n) (bandGeometry r charts n) r.length_pos.le r.cutoff`. -/
 noncomputable def actualBandVelocity (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) (n : ℕ) :
@@ -570,6 +590,7 @@ noncomputable def actualBandVelocity (r : Reference P) (charts : BandCharts P)
   commonVelocity (bandTangent r charts j n) (residualSource c u b G A j n)
     (bandGeometry r charts n) r.length_pos.le r.cutoff
 
+/-- Actual band pressure, constructed using `commonPressure`. -/
 noncomputable def actualBandPressure (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) (n : ℕ) : P × Plane → ℂ :=
@@ -665,7 +686,7 @@ theorem commonVelocity_invariant {θ : P} {t : TangentData P ProblemStatement.Sp
     {source : P × Plane → ComplexVector} (ht : TangentInvariant θ t)
     (hs : Invariant (θ, (0 : Plane)) source) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) : Invariant (θ, (0 : Plane)) (ParticularWaveBounds.commonVelocity t source g
-      hab κ) := by
+        hab κ) := by
   apply Invariant.tsum_invariant
   intro k
   exact (nativeCutoff_invariant θ g κ k).map₂
@@ -676,12 +697,13 @@ theorem commonPressure_invariant {θ : P} {t : TangentData P ProblemStatement.Sp
     (hs : Invariant (θ, (0 : Plane)) source) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (κ : Plane → ℝ) (frequency : ℝ) :
     Invariant (θ, (0 : Plane)) (ParticularWaveBounds.commonPressure t source g hab κ frequency) :=
-      by
+        by
   apply Invariant.tsum_invariant
   intro k
   exact (nativeCutoff_invariant θ g κ k).map₂
     (complexCopyPressure_invariant ht hs g hab k frequency) (fun r v => r • v)
 
+/-- Angle lift, defined pointwise by `f (z.1.1, z.2)`. -/
 noncomputable def angleLift {E : Type} (f : P × Plane → E) : (P × ℝ) × Plane → E :=
   fun z => f (z.1.1, z.2)
 
@@ -690,6 +712,8 @@ theorem angleLift_invariant {E : Type} (f : P × Plane → E) :
   rintro ⟨⟨p,θ⟩,Y⟩ t
   simp [angleLift]
 
+/-- Angle tangent, bundling `normal`, `normalDot`, `action`, `damping` and the required
+compatibility proofs. -/
 noncomputable def angleTangent (t : TangentData P ProblemStatement.Space) :
     TangentData (P × ℝ) ProblemStatement.Space where
   normal := angleLift t.normal
@@ -784,7 +808,7 @@ theorem remainder_invariant (ε K : ℝ) (hR : Invariant θ R) (hb : Invariant �
     simp only [slowTransport, hb x t, hG x t, (ha.component i).along hs x t,
       (ha.component i).along hr x t, (ha.component i).along hz x t]
   have hgrad : strippedPressureGradient Vr Vz p (x + t • θ) = strippedPressureGradient Vr Vz p x :=
-    by
+      by
     simp only [strippedPressureGradient, hp.along hr x t, hp.along hz x t]
   funext i
   simp only [remainder, hslow, hdef, ha x t, hder, hgrad, hvis]
@@ -930,7 +954,7 @@ theorem complexCopyPressure_angle (t : TangentData P ProblemStatement.Space)
     complexCopyPressure (angleTangent t) (angleLift source) g hab copy K ((p,θ),Y) =
       complexCopyPressure t source g hab copy K (p,Y) := by
   have he := complexCopyPressure_transport t source (Prod.fst : P × ℝ → P) g hab 0 1 K K hK hK copy
-    (p,θ) Y
+      (p,θ) Y
   simpa only [← angleTangent_eq_transport, ← angleSource_eq_transport,
     CopySolveCompatibility.refineGeometry, Nat.add_zero, coverPower,
     ContinuousLinearEquiv.refl_apply, one_mul, div_self hK, one_smul] using he
@@ -961,6 +985,7 @@ theorem actualCarrier_affine (base : WaveCoefficients ((P × ℝ) × Plane))
     smul_zero, add_zero, smul_eq_mul, mul_one]
   ring
 
+/-- Actual copy coefficients, constructed using `complexCopyCoefficients`. -/
 noncomputable def actualCopyCoefficients (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
@@ -971,6 +996,7 @@ noncomputable def actualCopyCoefficients (r : Reference P) (charts : BandCharts 
     (fun n => angleLift (residualSource c u b G A j n))
     (bandGeometry r charts) copy (fun _ => r.length) (fun _ => r.length_pos)
 
+/-- Actual common coefficients as an element of `WaveCoefficients ((P × ℝ) × Plane)`. -/
 noncomputable def actualCommonCoefficients (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
@@ -1005,7 +1031,7 @@ theorem actualCommon_amplitude_periodization (r : Reference P) (charts : BandCha
       periodizedCopies (bandGeometry r charts n) r.cutoff
         (fun k => complexCopyVelocity (angleTangent (bandTangent r charts j n))
           (angleLift (residualSource c u b G A j n)) (bandGeometry r charts n) r.length_pos.le k)
-            := by
+              := by
   funext z
   rcases z with ⟨⟨p,θ⟩,Y⟩
   apply tsum_congr
@@ -1099,7 +1125,7 @@ theorem vectorLaplacian_germ {a b : E → ComplexVector} {x : E} (h : a =ᶠ[�
   filter_upwards [h, Filter.eventually_all.mpr hl, Filter.eventually_all.mpr hθ] with y hy hly hyθ
   dsimp only [Function.comp_def] at hly hyθ
   have he : (fun i => along Vθ (fun y => a y i) y) = (fun i => along Vθ (fun y => b y i) y) :=
-    funext hyθ
+      funext hyθ
   funext i
   simp only [cylindricalVectorLaplacian, hly, he, hy]
 
@@ -1129,6 +1155,8 @@ open CommonCoverSolve TorusInverse TorusAverages ParticularWaveBounds LinearWave
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Native cutoff, defined pointwise by `r.cutoff ((bandGeometry r charts n).coordinates (copy
+n) z.2)`. -/
 noncomputable def nativeCutoff (r : Reference P) (charts : BandCharts P) (copy : ℕ → Frequency) :
     ℕ → (P × ℝ) × Plane → ℝ :=
   fun n z => r.cutoff ((bandGeometry r charts n).coordinates (copy n) z.2)
@@ -1196,13 +1224,13 @@ theorem actualCommon_corrected_germ (r : Reference P) (charts : BandCharts P)
       (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs ψ).amplitude n) ∧
     (actualCorrectedCommon r charts c u b G A j base s dirs).pressure n =ᶠ[𝓝 x]
       (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs ψ).pressure n) :=
-        by
+          by
   obtain ⟨ha,hp⟩ := actualCommon_raw_germ r charts c u b G A hj hfrequency base copy ψ n x
     hΩ hinj hsupp hx hψ
   refine ⟨?_, hp⟩
   exact realizedCoefficient_germ ha ((j : ℝ) * b.frequency n) (base.radius n)
     (dirs.radialField n) (fun _ => dirs.angular) (dirs.axialField s n) ((actualCarrier base b
-      j).phase n)
+        j).phase n)
 
 theorem actualCommon_residual_germ (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
@@ -1219,9 +1247,9 @@ theorem actualCommon_residual_germ (r : Reference P) (charts : BandCharts P)
     (hψ : nativeCutoff r charts copy n =ᶠ[𝓝 x] ψ n) :
     (actualCorrectedCommon r charts c u b G A j base s dirs).harmonicResidual s dirs n =ᶠ[𝓝 x]
       (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs
-        ψ).harmonicResidual s dirs n) := by
+          ψ).harmonicResidual s dirs n) := by
   obtain ⟨ha,hp⟩ := actualCommon_corrected_germ r charts c u b G A hj hfrequency base copy s dirs ψ
-    n x
+      n x
     hΩ hinj hsupp hx hψ
   exact linearResidual_germ
     (vectorMode_germ ha ((j : ℝ) * b.frequency n) ((actualCarrier base b j).phase n))
@@ -1304,9 +1332,9 @@ theorem finite_cancellation {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D
     (fun i => ∑ j ∈ modes N, (res j n x i).re) +
         (HarmonicResidual.residualBlock c u b G A).oscillation n x =
       (assembledBlock N b.frequency b.phase b.angularFrequency good (fun _ _ _ => 0)).oscillation n
-        x +
+          x +
         (assembledBlock N b.frequency b.phase b.angularFrequency gaussian (fun _ _ _ =>
-          0)).oscillation n x := by
+            0)).oscillation n x := by
   funext i
   simp only [Pi.add_apply, residualSource_field c u b G A N hN, assembledBlock_value]
   rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
@@ -1347,9 +1375,13 @@ open CommonCoverSolve TorusInverse ParticularWaveBounds CopyAngularInvariance Li
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Section strip, given by `SignedWaveUpdate.sectionStrip (reindexStrip (angleShuffle (P := P))
+s)`. -/
 noncomputable def sectionStrip (s : StripData ((P × ℝ) × Plane)) : StripData (P × Plane) :=
   SignedWaveUpdate.sectionStrip (reindexStrip (angleShuffle (P := P)) s)
 
+/-- Native mode block, given by `fullModeBlock j b.frequency b.phase b.angularFrequency
+(reindexCoefficients angleShuffle a)`. -/
 noncomputable def nativeModeBlock (j : ℤ) (b : HarmonicBlock (P × Plane))
     (a : WaveCoefficients ((P × ℝ) × Plane)) : HarmonicBlock (P × Plane) :=
   fullModeBlock j b.frequency b.phase b.angularFrequency (reindexCoefficients angleShuffle a)
@@ -1376,23 +1408,23 @@ theorem nativeModeBlock_classes {s : StripData ((P × ℝ) × Plane)}
     (ha : WaveClass s W α a.amplitude) (hp : WaveClass s W γ a.pressure) :
     (nativeModeBlock j b a).WaveBounds (sectionStrip s) (fun n x => W n (angleShuffle (x,0))) α ∧
     (nativeModeBlock j b a).PressureBounds (sectionStrip s) (fun n x => W n (angleShuffle (x,0))) γ
-      :=
+        :=
   modeBlock_classes j b.frequency b.phase b.angularFrequency (nativeSlice_waveClass ha)
-    (nativeSlice_waveClass hp)
+      (nativeSlice_waveClass hp)
 
 theorem nativeModeBlock_represents (j : ℤ) (b : HarmonicBlock (P × Plane))
     (a : WaveCoefficients ((P × ℝ) × Plane))
     (ha : ∀ n, Invariant (((0 : P), (1 : ℝ)), (0 : Plane)) (a.amplitude n))
     (hp : ∀ n, Invariant (((0 : P), (1 : ℝ)), (0 : Plane)) (a.pressure n))
-    (hphase : ∀ n x θ, a.frequency n * a.phase n (angleShuffle (x,θ)) =
+    (hphase : ∀ n x θ, a.frequency n * a.phase n (angleShuffle (x, θ)) =
       (j : ℝ) * (b.frequency n * b.phase n x + (b.angularFrequency n : ℝ) * θ)) :
     (nativeModeBlock j b a).oscillation =
       (fun n x i => (vectorMode (a.frequency n) (a.phase n) (a.amplitude n) (angleShuffle x) i).re)
-        ∧
+          ∧
     (nativeModeBlock j b a).oscillatoryPressure =
       (fun n x => (mode (a.frequency n) (a.phase n) (a.pressure n) (angleShuffle x)).re) := by
   exact fullModeBlock_represents j b.frequency b.phase b.angularFrequency (reindexCoefficients
-    angleShuffle a)
+      angleShuffle a)
     (fun n x θ => invariant_angleShuffle (ha n) x θ)
     (fun n x θ => invariant_angleShuffle (hp n) x θ) hphase
 
@@ -1400,7 +1432,7 @@ theorem actualCarrier_character (base : WaveCoefficients ((P × ℝ) × Plane))
     (b : HarmonicBlock (P × Plane)) (j : ℤ) (hfrequency : ∀ n, b.frequency n ≠ 0)
     (n : ℕ) (x : (P × Plane) × ℝ) :
     carrier ((actualCarrier base b j).frequency n) ((actualCarrier base b j).phase n) (angleShuffle
-      x) =
+        x) =
       character j (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ) * x.2) := by
   have he := congrArg Complex.ofReal (actualCarrier_phase base b j hfrequency n x.1 x.2)
   push_cast at he
@@ -1424,15 +1456,19 @@ open ParticularWaveBounds CopyAngularInvariance CorrectionState
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Source family, defined pointwise by `angleLift (residualSource c u b G A j n)`. -/
 noncomputable def sourceFamily (c : Context (P × Plane)) (u : State (P × Plane))
     (b : HarmonicBlock (P × Plane)) (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) :
     ℕ → (P × ℝ) × Plane → ComplexVector :=
   fun n => angleLift (residualSource c u b G A j n)
 
+/-- Tangent family, defined pointwise by `angleTangent (bandTangent r charts j n)`. -/
 noncomputable def tangentFamily (r : Reference P) (charts : BandCharts P) (j : ℤ) :
     ℕ → TangentData (P × ℝ) ProblemStatement.Space :=
   fun n => angleTangent (bandTangent r charts j n)
 
+/-- Envelope weight, defined pointwise by `W n ((bandGeometry r charts n).coordinates (copy n)
+p.2).2`. -/
 noncomputable def envelopeWeight (r : Reference P) (charts : BandCharts P)
     (copy : ℕ → Frequency) (W : ℕ → ℝ → ℝ) : ℕ → (P × ℝ) × Plane → ℝ :=
   fun n p => W n ((bandGeometry r charts n).coordinates (copy n) p.2).2
@@ -1465,12 +1501,16 @@ structure LocalControl (r : Reference P) (charts : BandCharts P)
     (s : StripData ((P × ℝ) × Plane)) (dirs : GraphDirections ((P × ℝ) × Plane)) (α κ : ℝ) where
   harmonic_ne : j ≠ 0
   frequency_ne : ∀ n, b.frequency n ≠ 0
+  /-- Envelope of `LocalControl`, of type `ℕ → ℝ → ℝ`. -/
   envelope : ℕ → ℝ → ℝ
+  /-- Frame of `LocalControl`, of type `ℕ → PrimaryODE.FrameData ((P × ℝ) × ℝ)`. -/
   frame : ℕ → PrimaryODE.FrameData ((P × ℝ) × ℝ)
-  modal_real : ModalCopyControl s α frame
+  /-- Modal real supplied by `LocalControl`. -/
+  modalReal : ModalCopyControl s α frame
     (fun n => realData (tangentFamily r charts j n) (sourceFamily c u b G A j n))
     j (bandGeometry r charts) copy (fun _ => r.length) envelope
-  modal_imag : ModalCopyControl s α frame
+  /-- Modal imag supplied by `LocalControl`. -/
+  modalImag : ModalCopyControl s α frame
     (fun n => imagData (tangentFamily r charts j n) (sourceFamily c u b G A j n))
     j (bandGeometry r charts) copy (fun _ => r.length) envelope
   base_bounds : InputBounds s (envelopeWeight r charts copy envelope) α κ dirs
@@ -1478,37 +1518,45 @@ structure LocalControl (r : Reference P) (charts : BandCharts P)
   background : BackgroundControl s dirs base b j
   normal_jets : PhaseJetBounds.PolynomialJets (CurlClassBounds.phaseDomain s)
     (fun n x => (tangentFamily r charts j n).normal (nativePoint (bandGeometry r charts n) (copy n)
-      x))
+        x))
   normal_derivative : UnweightedClass s 0
     (fun n x => (tangentFamily r charts j n).normalDot (nativePoint (bandGeometry r charts n) (copy
-      n) x))
+        n) x))
   action_bounds : UnweightedClass s 0
     (fun n x => (tangentFamily r charts j n).action (nativePoint (bandGeometry r charts n) (copy n)
-      x))
+        x))
   source_bounds : WaveClass s (envelopeWeight r charts copy envelope) α (sourceFamily c u b G A j)
-  normal_min : ℝ
-  normal_max : ℝ
-  normal_min_pos : 0 < normal_min
-  normal_lower : ∀ n x, x ∈ s.domain → normal_min ≤
+  /-- Normal min of `LocalControl`, of type `ℝ`. -/
+  normalMin : ℝ
+  /-- Normal max of `LocalControl`, of type `ℝ`. -/
+  normalMax : ℝ
+  normal_min_pos : 0 < normalMin
+  normal_lower : ∀ n x, x ∈ s.domain → normalMin ≤
     ‖(tangentFamily r charts j n).normal (nativePoint (bandGeometry r charts n) (copy n) x)‖
   normal_upper : ∀ n x, x ∈ s.domain →
     ‖(tangentFamily r charts j n).normal (nativePoint (bandGeometry r charts n) (copy n) x)‖ ≤
-      normal_max
+        normalMax
   inverse_frequency : BandBound s (1 / 2) (fun n => 1 / ((j : ℝ) * b.frequency n))
   geometry : CopyGeometryMatch s dirs (actualCarrier base b j) (tangentFamily r charts j)
     (bandGeometry r charts) copy
   loss_le_half : κ ≤ 1 / 2
+  /-- Radius of `LocalControl`, of type `(P × ℝ) × Plane → ℝ`. -/
   radius : (P × ℝ) × Plane → ℝ
   radius_eq : base.radius = fun _ => radius
+  /-- Slot of `LocalControl`, of type `GaussianTailFlat.SlotFamily s`. -/
   slot : GaussianTailFlat.SlotFamily s
   slot_angular : ∀ n, slot.linear n dirs.angular = 0
   slot_fast : ∀ n, slot.linear n (dirs.fastScale n • dirs.fast) = (slot.length n)⁻¹
-  flat_edges : GaussianTailFlat.FlatEdges s
-  band_scales : GaussianTailFlat.BandScaleControl s
-  gaussian_rate : ℝ
-  gaussian_rate_pos : 0 < gaussian_rate
+  /-- Flat edges of `LocalControl`, of type `GaussianTailFlat.FlatEdges s`. -/
+  flatEdges : GaussianTailFlat.FlatEdges s
+  /-- Band scales of `LocalControl`, of type `GaussianTailFlat.BandScaleControl s`. -/
+  bandScales : GaussianTailFlat.BandScaleControl s
+  /-- Gaussian rate of `LocalControl`, of type `ℝ`. -/
+  gaussianRate : ℝ
+  gaussian_rate_pos : 0 < gaussianRate
   gaussian_envelope : ∀ n x, x ∈ s.domain → envelopeWeight r charts copy envelope n x ≤
-    Real.exp (-gaussian_rate * (slot.coordinate n x - 1 / 2) ^ 2 * slot.length n)
+    Real.exp (-gaussianRate * (slot.coordinate n x - 1 / 2) ^ 2 * slot.length n)
+  /-- Patch of `LocalControl`, of type `ℕ → Set Plane`. -/
   patch : ℕ → Set Plane
   patch_open : ∀ n, IsOpen (patch n)
   patch_injective : ∀ n, InjOn TorusAverages.quotientPoint
@@ -1528,6 +1576,7 @@ variable {r : Reference P} {charts : BandCharts P}
 
 include C
 
+/-- Weight, given by `envelopeWeight r charts copy C.envelope`. -/
 noncomputable def weight : ℕ → (P × ℝ) × Plane → ℝ := envelopeWeight r charts copy C.envelope
 
 theorem frequency_nonzero (n : ℕ) : (j : ℝ) * b.frequency n ≠ 0 :=
@@ -1539,7 +1588,7 @@ theorem slot_invariant (n : ℕ) : Invariant dirs.angular (C.slot.cutoff n) := b
     map_add, map_smul, C.slot_angular, smul_zero, add_zero]
 
 theorem affine_phase (n : ℕ) : ∃ m, AffinePhase dirs.angular m ((actualCarrier base b j).phase n)
-  := by
+    := by
   rw [C.background.angular]
   exact ⟨_, actualCarrier_affine base b j n⟩
 
@@ -1558,7 +1607,7 @@ theorem exact_conditions : ExactConditions s dirs
   exactConditions_corrected_of_invariants C.slot.cutoff C.background.phase_smooth
     C.background.radius_ne C.background.radial_radius C.background.radius_invariant
     C.background.radial_base_invariant C.background.frequency_base_invariant
-      C.background.axial_base_invariant
+        C.background.axial_base_invariant
     C.background.radial_invariant C.background.axial_invariant C.affine_phase
     C.amplitude_invariant C.pressure_invariant C.slot_invariant
 
@@ -1566,7 +1615,7 @@ theorem raw_bounds : InputBounds s C.weight α κ dirs
     (actualCopyCoefficients r charts c u b G A j base copy) :=
   complexCopy_inputBounds_of_modal (actualCarrier base b j) (tangentFamily r charts j)
     (sourceFamily c u b G A j) (bandGeometry r charts) copy (fun _ => r.length)
-    (fun _ => r.length_pos) C.envelope C.frame j C.modal_real C.modal_imag C.base_bounds
+    (fun _ => r.length_pos) C.envelope C.frame j C.modalReal C.modalImag C.base_bounds
     C.normal_jets C.normal_derivative C.action_bounds C.source_bounds
     C.normal_min_pos C.normal_lower C.normal_upper C.inverse_frequency
 
@@ -1584,7 +1633,7 @@ theorem local_result :
           carrier (a.frequency n) (a.phase n) x) :=
   constructed_modal_particular_wave (actualCarrier base b j) (tangentFamily r charts j)
     (sourceFamily c u b G A j) (bandGeometry r charts) copy (fun _ => r.length)
-    (fun _ => r.length_pos) C.envelope C.frame j C.modal_real C.modal_imag C.base_bounds
+    (fun _ => r.length_pos) C.envelope C.frame j C.modalReal C.modalImag C.base_bounds
     C.normal_jets C.normal_derivative C.action_bounds C.source_bounds C.normal_min_pos
     C.normal_lower C.normal_upper C.inverse_frequency C.geometry C.frequency_nonzero
     C.loss_le_half C.slot.cutoff C.slot.cutoff_memClass C.radius_eq C.exact_conditions
@@ -1592,8 +1641,8 @@ theorem local_result :
 theorem gaussian_flat (β : ℝ) : UnweightedClass s β
     (excludedSlotError dirs C.slot.cutoff
       (actualCopyCoefficients r charts c u b G A j base copy).amplitude (sourceFamily c u b G A j))
-        :=
-  LinearWaveBounds.excludedSlotError_all_gains C.slot dirs C.slot_fast C.flat_edges C.band_scales
+          :=
+  LinearWaveBounds.excludedSlotError_all_gains C.slot dirs C.slot_fast C.flatEdges C.bandScales
     C.local_result.1 C.source_bounds C.gaussian_rate_pos C.gaussian_envelope β
 
 theorem raw_tangent : ∀ n x, x ∈ s.domain →
@@ -1601,7 +1650,7 @@ theorem raw_tangent : ∀ n x, x ∈ s.domain →
       ((actualCopyCoefficients r charts c u b G A j base copy).amplitude n x) = 0 :=
   complexCopyCoefficients_tangent_of_modal (actualCarrier base b j) (tangentFamily r charts j)
     (sourceFamily c u b G A j) (bandGeometry r charts) copy (fun _ => r.length)
-    (fun _ => r.length_pos) C.envelope C.frame j C.modal_real C.modal_imag C.geometry
+    (fun _ => r.length_pos) C.envelope C.frame j C.modalReal C.modalImag C.geometry
 
 theorem normal_nonzero (n : ℕ) (x : (P × ℝ) × Plane) (hx : x ∈ s.domain) :
     (actualCarrier base b j).normal s dirs n x ≠ 0 := by
@@ -1613,7 +1662,7 @@ theorem exact_curl (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ s.domain) :
     CurlClassBounds.cylindricalCurl (base.radius n) (dirs.radialField n) (fun _ => dirs.angular)
       (dirs.axialField s n) ((a.withCutoff C.slot.cutoff).curlPotential s dirs n) x =
         vectorMode (a.frequency n) (a.phase n) ((a.corrected s dirs C.slot.cutoff).amplitude n) x
-          := by
+            := by
   exact corrected_realizes_curl C.raw_bounds C.slot.cutoff_memClass n (C.background.cylindrical n)
     (C.frequency_nonzero n) (C.background.phase_smooth n) (C.normal_nonzero n) (C.raw_tangent n) hx
 
@@ -1632,28 +1681,28 @@ theorem cutoff_germ (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ s.domain) :
 theorem common_germ (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ s.domain) :
     (actualCorrectedCommon r charts c u b G A j base s dirs).amplitude n =ᶠ[𝓝 x]
       (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs
-        C.slot.cutoff).amplitude n) ∧
+          C.slot.cutoff).amplitude n) ∧
     (actualCorrectedCommon r charts c u b G A j base s dirs).pressure n =ᶠ[𝓝 x]
       (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs
-        C.slot.cutoff).pressure n) :=
+          C.slot.cutoff).pressure n) :=
   actualCommon_corrected_germ r charts c u b G A C.harmonic_ne C.frequency_ne base copy s dirs
-    C.slot.cutoff n x
+      C.slot.cutoff n x
     (C.patch_open n) (C.patch_injective n) (C.cutoff_support n) (C.domain_patch n x hx)
-      (C.cutoff_germ n hx)
+        (C.cutoff_germ n hx)
 
 theorem common_residual_germ (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ s.domain) :
     (actualCorrectedCommon r charts c u b G A j base s dirs).harmonicResidual s dirs n =ᶠ[𝓝 x]
       (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs
-        C.slot.cutoff).harmonicResidual s dirs n) :=
+          C.slot.cutoff).harmonicResidual s dirs n) :=
   actualCommon_residual_germ r charts c u b G A C.harmonic_ne C.frequency_ne base copy s dirs
-    C.slot.cutoff n x
+      C.slot.cutoff n x
     (C.patch_open n) (C.patch_injective n) (C.cutoff_support n) (C.domain_patch n x hx)
-      (C.cutoff_germ n hx)
+        (C.cutoff_germ n hx)
 
 theorem common_classes :
     WaveClass s C.weight α (actualCorrectedCommon r charts c u b G A j base s dirs).amplitude ∧
     WaveClass s C.weight (α + 1 / 2) (actualCorrectedCommon r charts c u b G A j base s
-      dirs).pressure := by
+        dirs).pressure := by
   refine ⟨LinearWaveBounds.class_congr C.local_result.2.1 ?_,
     LinearWaveBounds.class_congr C.local_result.2.2.1 ?_⟩
   · intro n x hx
@@ -1676,17 +1725,17 @@ theorem common_cancellation (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ s.do
 
 theorem good_invariant (n : ℕ) : Invariant dirs.angular
     ((actualCopyCoefficients r charts c u b G A j base copy).constructedGood s dirs C.slot.cutoff
-      n) :=
+        n) :=
   constructedGood_invariant (a := actualCopyCoefficients r charts c u b G A j base copy)
     C.slot.cutoff C.background.radius_invariant
     C.background.radial_base_invariant C.background.frequency_base_invariant
-      C.background.axial_base_invariant
+        C.background.axial_base_invariant
     C.background.radial_invariant C.background.axial_invariant C.affine_phase
     C.amplitude_invariant C.pressure_invariant C.slot_invariant n
 
 theorem gaussian_invariant (n : ℕ) : Invariant dirs.angular
     (excludedSlotError dirs C.slot.cutoff (actualCopyCoefficients r charts c u b G A j base
-      copy).amplitude
+        copy).amplitude
       (sourceFamily c u b G A j) n) := by
   have hs : Invariant dirs.angular (sourceFamily c u b G A j n) := by
     rw [C.background.angular]
@@ -1721,17 +1770,21 @@ theorem common_divergence_zero (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ s
         ((actualCorrectedCommon r charts c u b G A j base s dirs).amplitude n))
       (vectorMode ((j : ℝ) * b.frequency n) ((actualCarrier base b j).phase n)
         (((actualCopyCoefficients r charts c u b G A j base copy).corrected s dirs
-          C.slot.cutoff).amplitude n))
+            C.slot.cutoff).amplitude n))
       s.domain := by
     intro y hy
     exact (vectorMode_germ (C.common_germ n hy).1 _ _).self_of_nhds
   exact (CurlClassBounds.cylindricalDivergence_congr s.isOpen_domain (base.radius n)
     (dirs.radialField n) (fun _ => dirs.angular) (dirs.axialField s n) he hx).trans
-      (C.divergence_zero n hx)
+        (C.divergence_zero n hx)
 
+/-- Good, given by `(actualCopyCoefficients r charts c u b G A j base copy).constructedGood s
+dirs C.slot.cutoff`. -/
 noncomputable def good : ℕ → (P × ℝ) × Plane → ComplexVector :=
   (actualCopyCoefficients r charts c u b G A j base copy).constructedGood s dirs C.slot.cutoff
 
+/-- Gaussian, given by `excludedSlotError dirs C.slot.cutoff (actualCopyCoefficients r charts c
+u b G A j base copy).amplitude (sourceFamily c u b G A j)`. -/
 noncomputable def gaussian : ℕ → (P × ℝ) × Plane → ComplexVector :=
   excludedSlotError dirs C.slot.cutoff
     (actualCopyCoefficients r charts c u b G A j base copy).amplitude (sourceFamily c u b G A j)
@@ -1739,13 +1792,13 @@ noncomputable def gaussian : ℕ → (P × ℝ) × Plane → ComplexVector :=
 theorem section_cancellation (n : ℕ) (x : (P × Plane) × ℝ)
     (hx : angleShuffle x ∈ s.domain) (i : Fin 3) :
     (actualCorrectedCommon r charts c u b G A j base s dirs).harmonicResidual s dirs n
-      (angleShuffle x) i +
+        (angleShuffle x) i +
       residualSource c u b G A j n x.1 i *
         HarmonicFields.character j (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ) *
-          x.2) =
+            x.2) =
       (C.good n (angleShuffle (x.1,0)) i + C.gaussian n (angleShuffle (x.1,0)) i) *
         HarmonicFields.character j (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ) *
-          x.2) := by
+            x.2) := by
   have hg := C.good_invariant n
   have he := C.gaussian_invariant n
   rw [C.background.angular] at hg he
@@ -1755,12 +1808,12 @@ theorem section_cancellation (n : ℕ) (x : (P × Plane) × ℝ)
     invariant_angleShuffle he x.1 x.2
   have hh := congrFun (C.common_cancellation n hx) i
   change (actualCorrectedCommon r charts c u b G A j base s dirs).harmonicResidual s dirs n
-    (angleShuffle x) i +
+      (angleShuffle x) i +
     residualSource c u b G A j n x.1 i * carrier ((actualCarrier base b j).frequency n)
       ((actualCarrier base b j).phase n) (angleShuffle x) =
     (C.good n (angleShuffle x) i + C.gaussian n (angleShuffle x) i) *
       carrier ((actualCarrier base b j).frequency n) ((actualCarrier base b j).phase n)
-        (angleShuffle x) at hh
+          (angleShuffle x) at hh
   rw [actualCarrier_character base b j C.frequency_ne n x, hgs, hes] at hh
   exact hh
 
@@ -1768,12 +1821,12 @@ theorem block_represents :
     (nativeModeBlock j b (actualCorrectedCommon r charts c u b G A j base s dirs)).oscillation =
       (fun n x i => (vectorMode ((j : ℝ) * b.frequency n) ((actualCarrier base b j).phase n)
         ((actualCorrectedCommon r charts c u b G A j base s dirs).amplitude n) (angleShuffle x)
-          i).re) ∧
+            i).re) ∧
     (nativeModeBlock j b (actualCorrectedCommon r charts c u b G A j base s
-      dirs)).oscillatoryPressure =
+        dirs)).oscillatoryPressure =
       (fun n x => (mode ((j : ℝ) * b.frequency n) ((actualCarrier base b j).phase n)
         ((actualCorrectedCommon r charts c u b G A j base s dirs).pressure n) (angleShuffle x)).re)
-          := by
+            := by
   apply nativeModeBlock_represents
   · intro n
     rw [← C.background.angular]
@@ -1802,63 +1855,86 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- All primitive choices for one original spatial label. There is only
 one reference and one family of band charts for its entire harmonic sum. -/
 structure AssemblyData (P : Type) [NormedAddCommGroup P] [NormedSpace ℝ P] where
+  /-- Reference of `AssemblyData`, of type `Reference P`. -/
   reference : Reference P
+  /-- Charts of `AssemblyData`, of type `BandCharts P`. -/
   charts : BandCharts P
+  /-- Context of `AssemblyData`, of type `Context (P × Plane)`. -/
   context : Context (P × Plane)
+  /-- State of `AssemblyData`, of type `State (P × Plane)`. -/
   state : State (P × Plane)
+  /-- Carrier block of `AssemblyData`, of type `HarmonicBlock (P × Plane)`. -/
   carrierBlock : HarmonicBlock (P × Plane)
+  /-- Gaussian input of `AssemblyData`, of type `HarmonicResidual.BlockCoefficients (P ×
+  Plane)`. -/
   gaussianInput : HarmonicResidual.BlockCoefficients (P × Plane)
+  /-- Alias input of `AssemblyData`, of type `HarmonicResidual.BlockCoefficients (P × Plane)`. -/
   aliasInput : HarmonicResidual.BlockCoefficients (P × Plane)
+  /-- Background of `AssemblyData`, of type `WaveCoefficients ((P × ℝ) × Plane)`. -/
   background : WaveCoefficients ((P × ℝ) × Plane)
+  /-- Copy of `AssemblyData`, of type `ℕ → Frequency`. -/
   copy : ℕ → Frequency
+  /-- Strip of `AssemblyData`, of type `StripData ((P × ℝ) × Plane)`. -/
   strip : StripData ((P × ℝ) × Plane)
+  /-- Directions of `AssemblyData`, of type `GraphDirections ((P × ℝ) × Plane)`. -/
   directions : GraphDirections ((P × ℝ) × Plane)
 
 namespace AssemblyData
 
 variable (D : AssemblyData P)
 
+/-- Wave, constructed using `actualCorrectedCommon`. -/
 noncomputable def wave (j : ℤ) : WaveCoefficients ((P × ℝ) × Plane) :=
   actualCorrectedCommon D.reference D.charts D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j D.background D.strip D.directions
 
+/-- Controls as an element of `Type`. -/
 noncomputable def controls (N : ℕ) (α κ : ℝ) : Type :=
   ∀ j ∈ modes N, LocalControl D.reference D.charts D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j D.background D.copy D.strip D.directions α κ
 
+/-- Velocity, defined pointwise by `∑ j ∈ modes N, (vectorMode ((D.wave j).frequency n) ((D.wave
+j).phase n) ((D.wave j).amplitude n) x i).re`. -/
 noncomputable def velocity (N : ℕ) : ℕ → (P × ℝ) × Plane → Fin 3 → ℝ :=
   fun n x i => ∑ j ∈ modes N, (vectorMode ((D.wave j).frequency n) ((D.wave j).phase n)
     ((D.wave j).amplitude n) x i).re
 
+/-- Pressure, defined pointwise by `∑ j ∈ modes N, (mode ((D.wave j).frequency n) ((D.wave
+j).phase n) ((D.wave j).pressure n) x).re`. -/
 noncomputable def pressure (N : ℕ) : ℕ → (P × ℝ) × Plane → ℝ :=
   fun n x => ∑ j ∈ modes N, (mode ((D.wave j).frequency n) ((D.wave j).phase n)
     ((D.wave j).pressure n) x).re
 
+/-- Update block, constructed using `assembledBlock`. -/
 noncomputable def updateBlock (N : ℕ) : HarmonicBlock (P × Plane) :=
   assembledBlock N D.carrierBlock.frequency D.carrierBlock.phase D.carrierBlock.angularFrequency
     (fun j n x => (D.wave j).amplitude n (angleShuffle (x,0)))
     (fun j n x => (D.wave j).pressure n (angleShuffle (x,0)))
 
+/-- Good family, with branches according to `hj : j ∈ modes N`. -/
 noncomputable def goodFamily {N : ℕ} {α κ : ℝ} (C : D.controls N α κ) (j : ℤ) :
     ℕ → (P × ℝ) × Plane → ComplexVector :=
   if hj : j ∈ modes N then (C j hj).good else fun _ _ => 0
 
+/-- Gaussian family, with branches according to `hj : j ∈ modes N`. -/
 noncomputable def gaussianFamily {N : ℕ} {α κ : ℝ} (C : D.controls N α κ) (j : ℤ) :
     ℕ → (P × ℝ) × Plane → ComplexVector :=
   if hj : j ∈ modes N then (C j hj).gaussian else fun _ _ => 0
 
+/-- Good block, constructed using `assembledBlock`. -/
 noncomputable def goodBlock {N : ℕ} {α κ : ℝ} (C : D.controls N α κ) : HarmonicBlock (P × Plane) :=
   assembledBlock N D.carrierBlock.frequency D.carrierBlock.phase D.carrierBlock.angularFrequency
     (fun j n x => D.goodFamily C j n (angleShuffle (x,0))) (fun _ _ _ => 0)
 
+/-- Gaussian block, constructed using `assembledBlock`. -/
 noncomputable def gaussianBlock {N : ℕ} {α κ : ℝ} (C : D.controls N α κ) : HarmonicBlock (P ×
-  Plane) :=
+    Plane) :=
   assembledBlock N D.carrierBlock.frequency D.carrierBlock.phase D.carrierBlock.angularFrequency
     (fun j n x => D.gaussianFamily C j n (angleShuffle (x,0))) (fun _ _ _ => 0)
 
 theorem update_band (N : ℕ) : (D.updateBlock N).BandLimited N := assembledBlock_band _ _ _ _ _ _
 theorem update_real (N : ℕ) : ErrorHarmonics.RealBlock (D.updateBlock N) := assembledBlock_real _ _
-  _ _ _ _
+    _ _ _ _
 
 variable {D} {N : ℕ} {α κ : ℝ} (C : D.controls N α κ)
 
@@ -1866,7 +1942,7 @@ theorem good_band : (D.goodBlock C).BandLimited N := assembledBlock_band _ _ _ _
 theorem gaussian_band : (D.gaussianBlock C).BandLimited N := assembledBlock_band _ _ _ _ _ _
 theorem good_real : ErrorHarmonics.RealBlock (D.goodBlock C) := assembledBlock_real _ _ _ _ _ _
 theorem gaussian_real : ErrorHarmonics.RealBlock (D.gaussianBlock C) := assembledBlock_real _ _ _ _
-  _ _
+    _ _
 
 theorem error_mean_zero (hkp : ∀ n, D.carrierBlock.angularFrequency n ≠ 0) :
     ((∀ i, angularAverage (fun n x => (D.goodBlock C).oscillation n x i) = 0) ∧
@@ -1891,17 +1967,17 @@ theorem update_represents :
     intro j hj
     have he := congrFun (congrFun (congrFun (C j hj).block_represents.1 n) x) i
     exact (modeBlock_value j D.carrierBlock.frequency D.carrierBlock.phase
-      D.carrierBlock.angularFrequency
+        D.carrierBlock.angularFrequency
       (fun n x => (D.wave j).amplitude n (angleShuffle (x,0)))
       (fun n x => (D.wave j).pressure n (angleShuffle (x,0))) n x i).symm.trans he
   · funext n x
     rw [show (D.updateBlock N).oscillatoryPressure n x = _ from assembledBlock_pressure_value _ _ _
-      _ _ _ n x]
+        _ _ _ n x]
     apply Finset.sum_congr rfl
     intro j hj
     have he := congrFun (congrFun (C j hj).block_represents.2 n) x
     exact (modeBlock_pressure_value j D.carrierBlock.frequency D.carrierBlock.phase
-      D.carrierBlock.angularFrequency
+        D.carrierBlock.angularFrequency
       (fun n x => (D.wave j).amplitude n (angleShuffle (x,0)))
       (fun n x => (D.wave j).pressure n (angleShuffle (x,0))) n x).symm.trans he
 
@@ -1910,7 +1986,7 @@ theorem update_classes (W : ℕ → (P × ℝ) × Plane → ℝ)
     (hCW : ∀ j hj n x, x ∈ D.strip.domain → (C j hj).weight n x ≤ W n x) :
     (D.updateBlock N).WaveBounds (sectionStrip D.strip) (fun n x => W n (angleShuffle (x,0))) α ∧
     (D.updateBlock N).PressureBounds (sectionStrip D.strip) (fun n x => W n (angleShuffle (x,0)))
-      (α + 1 / 2) := by
+        (α + 1 / 2) := by
   have hw : ∀ n x, x ∈ D.strip.domain → 0 ≤ Real.sqrt (D.strip.zeta x) * W n x :=
     fun n x hx => mul_nonneg (Real.sqrt_nonneg _) (hW n x hx)
   apply assembledBlock_classes
@@ -1953,7 +2029,7 @@ theorem gaussian_classes (β : ℝ) (i : Fin 3) (m : ℤ) :
         (fun x => D.gaussianFamily C j n (angleShuffle (x,0)) i) m x) := by
     simp only [gaussianFamily, dite_eq_left h]
     exact pair_class (CurlClassBounds.class_component (nativeSlice_class ((C j h).gaussian_flat β))
-      i) j m
+        i) j m
   have hh := MemClass.sum (modes N)
     (fun j n x => ErrorHarmonics.conjugatePair j
       (fun x => D.gaussianFamily C j n (angleShuffle (x,0)) i) m x)
@@ -1966,12 +2042,12 @@ theorem gaussian_classes (β : ℝ) (i : Fin 3) (m : ℤ) :
 
 theorem cancellation_sum
     (hN : (HarmonicResidual.residualBlock D.context D.state D.carrierBlock D.gaussianInput
-      D.aliasInput).BandLimited N)
+        D.aliasInput).BandLimited N)
     (n : ℕ) (x : (P × Plane) × ℝ) (hx : angleShuffle x ∈ D.strip.domain) :
     (fun i => ∑ j ∈ modes N, ((D.wave j).harmonicResidual D.strip D.directions n (angleShuffle x)
-      i).re) +
+        i).re) +
       (HarmonicResidual.residualBlock D.context D.state D.carrierBlock D.gaussianInput
-        D.aliasInput).oscillation n x =
+          D.aliasInput).oscillation n x =
         (D.goodBlock C).oscillation n x + (D.gaussianBlock C).oscillation n x := by
   apply finite_cancellation D.context D.state D.carrierBlock D.gaussianInput D.aliasInput N hN
     (fun j n x => (D.wave j).harmonicResidual D.strip D.directions n (angleShuffle x))
@@ -2043,7 +2119,8 @@ theorem divergence_zero (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ D.strip.
   apply real_divergence_sum_zero (modes N)
   · intro j hj i
     exact ((D.wave_smooth C j hj n i).contDiffAt (D.strip.isOpen_domain.mem_nhds
-      hx)).differentiableAt (by simp)
+        hx)).differentiableAt (by
+        simp)
   · intro j hj
     exact (C j hj).common_divergence_zero n hx
 
@@ -2051,18 +2128,18 @@ theorem divergence_zero (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ D.strip.
 computed good field and both Gaussian tails retained on the right. -/
 theorem real_cancellation (hpos : 0 < N)
     (hN : (HarmonicResidual.residualBlock D.context D.state D.carrierBlock D.gaussianInput
-      D.aliasInput).BandLimited N)
+        D.aliasInput).BandLimited N)
     (n : ℕ) (x : (P × Plane) × ℝ) (hx : angleShuffle x ∈ D.strip.domain) :
     LinearWaveResidual.realComponentLinearResidual (D.strip.epsilon n) (D.background.radius n)
       (D.directions.radialField n) (fun _ => D.directions.angular) (D.directions.axialField D.strip
-        n)
+          n)
       (LinearWaveResidual.timeDirection (D.strip.epsilon n) (D.directions.fastField n) (fun _ =>
-        D.directions.slow))
+          D.directions.slow))
       (LinearWaveResidual.base (D.background.radius n) (D.background.radialBase n)
         (D.background.frequencyBase n) (D.background.axialBase n))
       (D.velocity N n) (D.pressure N n) (angleShuffle x) +
       (HarmonicResidual.residualBlock D.context D.state D.carrierBlock D.gaussianInput
-        D.aliasInput).oscillation n x =
+          D.aliasInput).oscillation n x =
         (D.goodBlock C).oscillation n x + (D.gaussianBlock C).oscillation n x := by
   have h1 : (1 : ℤ) ∈ modes N := by rw [mem_modes]; norm_num; omega
   let C0 := C 1 h1
@@ -2071,17 +2148,21 @@ theorem real_cancellation (hpos : 0 < N)
       (D.background.axialBase n) y i) (angleShuffle x) :=
     LinearWaveResidual.differentiableAt_base
       (((C0.background.cylindrical n).radius_smooth.contDiffAt (D.strip.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by simp))
+          hx)).differentiableAt (by
+          simp))
       (((C0.base_bounds.radial_base.smooth n).contDiffAt (D.strip.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by simp))
+          hx)).differentiableAt (by
+          simp))
       (((C0.base_bounds.frequency_base.smooth n).contDiffAt (D.strip.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by simp))
+          hx)).differentiableAt (by
+          simp))
       (((C0.base_bounds.axial_base.smooth n).contDiffAt (D.strip.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by simp)) i
+          hx)).differentiableAt (by
+          simp)) i
   have he := real_linearResidual_sum (modes N) D.strip.isOpen_domain (D.strip.epsilon n)
     (D.background.radius n)
     (LinearWaveResidual.timeDirection (D.strip.epsilon n) (D.directions.fastField n) (fun _ =>
-      D.directions.slow))
+        D.directions.slow))
     (C0.background.cylindrical n).radial_smooth (C0.background.cylindrical n).angular_smooth
     (C0.background.cylindrical n).axial_smooth
     (LinearWaveResidual.base (D.background.radius n) (D.background.radialBase n)
@@ -2093,7 +2174,7 @@ theorem real_cancellation (hpos : 0 < N)
     _ = (fun i => ∑ j ∈ modes N,
         ((D.wave j).harmonicResidual D.strip D.directions n (angleShuffle x) i).re) +
           (HarmonicResidual.residualBlock D.context D.state D.carrierBlock D.gaussianInput
-            D.aliasInput).oscillation n x :=
+              D.aliasInput).oscillation n x :=
       congrArg (fun v => v + (HarmonicResidual.residualBlock D.context D.state D.carrierBlock
         D.gaussianInput D.aliasInput).oscillation n x) he
     _ = _ := D.cancellation_sum C hN n x hx

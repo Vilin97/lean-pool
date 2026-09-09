@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalHeatCoordinates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalPressure
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatProfileExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AssembledSlowBase
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCore
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # The actual pure-heat exterior of the summed slow base
@@ -21,6 +18,9 @@ The exterior comparison is with the physical radial heat solution and its
 canonical improper-integral pressure. All stream cutoffs are retained until
 their coefficients are shown to vanish in an exterior neighborhood.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,9 +44,12 @@ noncomputable def heatCoefficient (C h : ℝ) : PhysicalProfile :=
 noncomputable def heatPressure (C h : ℝ) : PhysicalProfile :=
   TerminalStress.canonicalPressure (heatCoefficient C h)
 
+/-- Heat velocity, given by `AxisymmetricResidual.velocity (fun _ => 0) (heatCoefficient C h)
+(fun _ => 0)`. -/
 noncomputable def heatVelocity (C h : ℝ) : VelocityField :=
   AxisymmetricResidual.velocity (fun _ => 0) (heatCoefficient C h) (fun _ => 0)
 
+/-- Heat pressure field, given by `AxisymmetricResidual.pressure (heatPressure C h)`. -/
 noncomputable def heatPressureField (C h : ℝ) : PressureField :=
   AxisymmetricResidual.pressure (heatPressure C h)
 
@@ -120,7 +123,7 @@ theorem heatCoefficient_sq_continuous (C : ℝ) {h : ℝ} (hh : 0 < h)
   intro s hs
   exact (((heatCoefficient_smoothAt C hh (p := (t, (s, z))) ht (ha.trans hs)).comp s
     (contDiffAt_const.prodMk (contDiffAt_id.prodMk contDiffAt_const))).pow
-      2).continuousAt.continuousWithinAt
+        2).continuousAt.continuousWithinAt
 
 theorem heatPressure_partialS (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
@@ -192,9 +195,11 @@ theorem physical_eta_mem {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   (physicalChart_inner_mem (lo := (physicalChart h p).2.1) (hi := (physicalChart h p).2.1)
     hh hh1 ht ⟨le_rfl, le_rfl⟩).2
 
+/-- Exterior domain, given by `{p | p.1 < 1 ∧ R < (physicalChart h p).2.1}`. -/
 noncomputable def exteriorDomain (h R : ℝ) : Set PhysicalPoint :=
   {p | p.1 < 1 ∧ R < (physicalChart h p).2.1}
 
+/-- Cartesian exterior, given by `{z | z.1 < 1 ∧ R < (cartesianChart h z).2.1}`. -/
 noncomputable def cartesianExterior (h R : ℝ) : Set SpaceTime :=
   {z | z.1 < 1 ∧ R < (cartesianChart h z).2.1}
 
@@ -233,9 +238,13 @@ theorem exterior_stream_germ {a : ℕ → ℕ} {h C R : ℝ} {d : Coefficients}
   filter_upwards [(exteriorDomain_isOpen hh hh1 R).mem_nhds hp] with y hy
   exact exterior_stream_zero hh hh1 hR hd hy
 
+/-- Leading angular, defined pointwise by `C⁻¹ * SimilarityProfile.pullback h
+(-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) p`. -/
 noncomputable def leadingAngular (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
   fun p => C⁻¹ * SimilarityProfile.pullback h (-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) p
 
+/-- Leading pressure, given by `SimilarityProfile.pullback h (-2 * CoordinateAlgebra.A h)
+(d.pressure 0)`. -/
 noncomputable def leadingPressure (h : ℝ) (d : Coefficients) : PhysicalProfile :=
   SimilarityProfile.pullback h (-2 * CoordinateAlgebra.A h) (d.pressure 0)
 
@@ -258,10 +267,12 @@ theorem exterior_velocity_eq_leading {a : ℕ → ℕ} (ha : StrictMono a) {h C 
   have hp : p ∈ exteriorDomain h R := hz
   have hH : DifferentiableAt ℝ (streamFactor a h C d) p :=
     (physicalProfile_smoothAt ha hh hh1 (bundleComponent_smooth hds C 0) _ hp.1).differentiableAt
-      (by simp)
+        (by
+        simp)
   have hK : DifferentiableAt ℝ (swirlPotential a h C d) p :=
     (physicalProfile_smoothAt ha hh hh1 (bundleComponent_smooth hds C 1) _ hp.1).differentiableAt
-      (by simp)
+        (by
+        simp)
   have he := exterior_stream_germ (a := a) (C := C) hh hh1 hR hd hp
   have h0 := he.self_of_nhds
   have hS : AxisymmetricFields.partialS (streamFactor a h C d) p = 0 := by
@@ -381,7 +392,7 @@ theorem canonicalPressure_congr_tail {F G : PhysicalProfile} {p : PhysicalPoint}
   unfold TerminalStress.canonicalPressure
   congr 1
   exact setIntegral_congr_fun measurableSet_Ioi (fun s hs => congrArg (fun x : ℝ => x ^ 2) (he s
-    hs))
+      hs))
 
 theorem physical_angular_from_profile (h : ℝ) {f E : InnerProfile} {p : PhysicalPoint}
     (hq : 0 < q h p) (hs : 0 < p.2.1)
@@ -400,6 +411,7 @@ end PressureScaling
 
 section ClosedTimeRegularity
 
+/-- Closed heat domain, given by `{p | p.1 ≤ 1 ∧ 0 < p.2.1}`. -/
 noncomputable def closedHeatDomain : Set PhysicalPoint := {p | p.1 ≤ 1 ∧ 0 < p.2.1}
 
 theorem heatCoefficient_sq_scaled (C h : ℝ) {p : PhysicalPoint} (hs : 0 < p.2.1)
@@ -461,8 +473,8 @@ theorem heatPressure_contDiffOn_closed (C : ℝ) {h : ℝ} (hh : 0 < h) :
       p.2.1 ^ (-2 * TerminalPressure.amplitudeExponent h)) closedHeatDomain :=
     contDiffOn_snd.fst.rpow_const_of_ne (fun _ hp => hp.2.ne')
   apply ((contDiffOn_const.mul hpow).mul hfac).congr
-  intro p hp
-  exact heatPressure_formula C h hp.2
+  · intro p hp
+    exact heatPressure_formula C h hp.2
 
 end ClosedTimeRegularity
 
@@ -472,11 +484,16 @@ open AssembledSlowBase
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Nominal heat switch, given by `OutgoingDilation.switchRadius F W.controls.radius`. -/
 noncomputable def nominalHeatSwitch : ℝ := OutgoingDilation.switchRadius F W.controls.radius
 
+/-- Nominal exterior radius, given by `max (nominalOuterX W) (max W.controls.radius
+(nominalHeatSwitch W * Real.exp 3))`. -/
 noncomputable def nominalExteriorRadius : ℝ :=
   max (nominalOuterX W) (max W.controls.radius (nominalHeatSwitch W * Real.exp 3))
 
+/-- Nominal heat normalization, given by `PhysicalHeatCoordinates.normalization F.data
+(nominalHeatSwitch W)`. -/
 noncomputable def nominalHeatNormalization : ℝ :=
   PhysicalHeatCoordinates.normalization F.data (nominalHeatSwitch W)
 
@@ -487,13 +504,13 @@ theorem nominalExteriorRadius_pos : 0 < nominalExteriorRadius W :=
   (nominalOuterX_pos W).trans_le (le_max_left _ _)
 
 theorem nominalExteriorRadius_ge_outer : nominalOuterX W ≤ nominalExteriorRadius W := le_max_left _
-  _
+    _
 
 theorem nominalExteriorRadius_ge_radius : W.controls.radius ≤ nominalExteriorRadius W :=
   (le_max_left _ _).trans (le_max_right _ _)
 
 theorem nominalExteriorRadius_ge_late : nominalHeatSwitch W * Real.exp 3 ≤ nominalExteriorRadius W
-  :=
+    :=
   (le_max_right _ _).trans (le_max_right _ _)
 
 theorem nominalExteriorRadius_gt_switch : nominalHeatSwitch W < nominalExteriorRadius W := by
@@ -557,7 +574,7 @@ theorem nominal_angular_pure_heat {p : PhysicalPoint}
     (nominalExteriorRadius_gt_switch W).le.trans hp.2.le
   have hE : W.E (inner F.data.h p) =
       ParametricHeatTail.physicalEdit F.data (nominalHeatSwitch W) (eta F.data.h p) (X F.data.h p)
-        :=
+          :=
     (W.heat_agreement hjoin he).2.1.trans
       (HeatedOutgoing.E_after_switch F W.controls.radius W.heat.physical.coefficients
         (eta F.data.h p) (X F.data.h p) W.controls.radius_pos hswitch)
@@ -602,7 +619,7 @@ theorem nominal_pressure_pullback {p : PhysicalPoint}
   change q F.data.h p ^ (-2 * CoordinateAlgebra.A F.data.h) *
     W.Pi (X F.data.h p, eta F.data.h p) = _
   rw [nominal_pressure_regular_integral W hX (show eta F.data.h p ∈ HeatedOutgoing.parameterDomain
-    from he)]
+      from he)]
   exact hp.symm
 
 theorem nominal_pressure_pure_heat {p : PhysicalPoint}
@@ -663,13 +680,15 @@ theorem nominal_base_residual_jets_zero {a : ℕ → ℕ} (ha : StrictMono a)
       (baseVelocity a F.data.h W.axis.normalization (nominalCoefficients W))
       (basePressure a F.data.h W.axis.normalization (nominalCoefficients W)) y.1 y.2) z = 0 := by
   rw [(SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (nominal_base_residual_germ_zero W ha hz)
-    m).self_of_nhds,
+      m).self_of_nhds,
     iteratedFDeriv_fun_zero, Pi.zero_apply]
 
 end NominalExterior
 
 section TerminalExtension
 
+/-- Closed cartesian heat domain, given by `{z | z.1 ≤ 1 ∧ 0 < AxisymmetricFields.radialEnergy
+z.2}`. -/
 noncomputable def closedCartesianHeatDomain : Set SpaceTime :=
   {z | z.1 ≤ 1 ∧ 0 < AxisymmetricFields.radialEnergy z.2}
 
@@ -692,7 +711,7 @@ theorem heatVelocity_contDiffOn_closed (C : ℝ) {h : ℝ} (hh : 0 < h) :
       closedCartesianHeatDomain closedHeatDomain from fun _ hz => hz)
   have he : heatVelocity C h = (fun z =>
       heatCoefficient C h (AxisymmetricFields.profilePoint z.1 z.2) • BaseResidual.angularVector z)
-        :=
+          :=
     funext (heatVelocity_eq_angularVector C h)
   rw [he]
   exact hs.smul BaseResidual.angularVector_smooth.contDiffOn
@@ -736,12 +755,12 @@ theorem nominal_base_terminal_extension {F : OutgoingProfile.Profile} (W : Nomin
           heatPressureField (nominalHeatNormalization W) F.data.h (t, x)) ∧
       ContDiffOn ℝ ∞ (fun t => heatVelocity (nominalHeatNormalization W) F.data.h (t, x)) (Iic 1) ∧
       ContDiffOn ℝ ∞ (fun t => heatPressureField (nominalHeatNormalization W) F.data.h (t, x)) (Iic
-        1) := by
+          1) := by
   refine ⟨AxisymmetricFields.radialEnergy x / (nominalExteriorRadius W + 1),
     div_pos hs (by linarith [nominalExteriorRadius_pos W]), ?_, ?_, ?_⟩
   · intro t ht
     have hm := near_one_in_exterior F.data.h_pos F.data.h_lt_half (nominalExteriorRadius_pos W).le
-      hx hs ht
+        hx hs ht
     exact ⟨(nominal_base_eq_heat W ha).1 hm, (nominal_base_eq_heat W ha).2 hm⟩
   · exact (heatVelocity_contDiffOn_closed (nominalHeatNormalization W) F.data.h_pos).comp
       (contDiffOn_id.prodMk contDiffOn_const) (fun _ ht => ⟨ht, hs⟩)

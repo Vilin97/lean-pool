@@ -8,12 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
-public import Mathlib.Analysis.Calculus.FDeriv.Extend
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Algebra.Group.EvenFunction
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Descent of an even smooth curve through the square map
@@ -22,6 +17,9 @@ The regularized radial derivative is obtained from the integral Hadamard
 formula, not from a convergent power series. Its iterates are the genuine
 one-sided derivatives of `X ↦ f (sqrt X)`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,6 +46,7 @@ theorem iteratedDeriv_iteratedDeriv (f : ℝ → E) (m n : ℕ) :
     iteratedDeriv m (iteratedDeriv n f) = iteratedDeriv (m + n) f := by
   simp only [iteratedDeriv_eq_iterate, Function.iterate_add_apply]
 
+/-- Average, given by `∫ t in (0 : ℝ)..1, f (t * x)`. -/
 noncomputable def average (f : ℝ → E) (x : ℝ) : E :=
   ∫ t in (0 : ℝ)..1, f (t * x)
 
@@ -124,6 +123,7 @@ theorem average_deriv_identity {f : ℝ → E} (hf : ContDiff ℝ ∞ f) (x : �
     (fun _ _ => (contDiff_infty_iff_deriv.mp hf).1 _)
     ((contDiff_infty_iff_deriv.mp hf).2.continuous.intervalIntegrable 0 x)
 
+/-- Radial derivative, given by `(1 / 2 : ℝ) • average (iteratedDeriv 2 f) x`. -/
 noncomputable def radialDerivative (f : ℝ → E) (x : ℝ) : E :=
   (1 / 2 : ℝ) • average (iteratedDeriv 2 f) x
 
@@ -197,6 +197,7 @@ theorem iteratedDeriv_radialDerivative_zero {f : ℝ → E} (hf : ContDiff ℝ �
   congr 1
   field_simp
 
+/-- Descent, given by `f (Real.sqrt X)`. -/
 noncomputable def descent (f : ℝ → E) (X : ℝ) : E := f (Real.sqrt X)
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] in
@@ -246,6 +247,7 @@ theorem hasDerivWithinAt_descent {f : ℝ → E} (hf : ContDiff ℝ ∞ f)
     simpa only [descent, Real.sqrt_zero] using hasDerivWithinAt_descent_zero hf he
   · exact (hasDerivAt_descent_pos hf he h).hasDerivWithinAt
 
+/-- Radial iterate, given by `(radialDerivative^[n]) f`. -/
 noncomputable def radialIterate (f : ℝ → E) (n : ℕ) : ℝ → E :=
   (radialDerivative^[n]) f
 
@@ -311,7 +313,7 @@ theorem radialIterate_at_zero (n : ℕ) {f : ℝ → E} (hf : ContDiff ℝ ∞ f
     rw [show 2 * (n + 1) = (2 * n + 1) + 1 by omega,
       Nat.factorial_succ (2 * n + 1), Nat.factorial_succ (2 * n), Nat.factorial_succ n]
     push_cast
-    field_simp ; ring
+    field_simp; ring
 
 /-- Exact right jets of the descended function. -/
 theorem iteratedDerivWithin_descent_zero {f : ℝ → E} (hf : ContDiff ℝ ∞ f)
@@ -324,9 +326,12 @@ theorem iteratedDerivWithin_descent_zero {f : ℝ → E} (hf : ContDiff ℝ ∞ 
 /-! The local theorem uses an explicit cutoff extension. This extension is
 constructed here; the input is not assumed to have a global even extension. -/
 
+/-- Even cutoff, given by `SmoothCutoffs.scaledCutoff (2 / r) x * SmoothCutoffs.scaledCutoff (2
+/ r) (-x)`. -/
 noncomputable def evenCutoff (r x : ℝ) : ℝ :=
   SmoothCutoffs.scaledCutoff (2 / r) x * SmoothCutoffs.scaledCutoff (2 / r) (-x)
 
+/-- Localized, given by `evenCutoff r x • f x`. -/
 noncomputable def localized (r : ℝ) (f : ℝ → E) (x : ℝ) : E :=
   evenCutoff r x • f x
 

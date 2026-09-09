@@ -12,14 +12,15 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualTZ
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StateReindex
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledTangentTransport
 
-@[expose] public section
-
 /-!
 # Actual reference particular waves in physical coordinates
 
 The input is the constructed reference Volterra solve.  Curl identities
 are conclusions, not compatibility assumptions on solved velocities.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.PhysicalParticularWave
 
@@ -32,14 +33,19 @@ noncomputable section
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Raw common, given by `actualCommonCoefficients D.reference D.charts D.context D.state
+D.carrierBlock D.gaussianInput D.aliasInput j D.background`. -/
 noncomputable def rawCommon (D : AssemblyData P) (j : ℤ) : WaveCoefficients ((P × ℝ) × Plane) :=
   actualCommonCoefficients D.reference D.charts D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j D.background
 
+/-- Common potential, given by `(rawCommon D j).curlPotential D.strip D.directions n`. -/
 noncomputable def commonPotential (D : AssemblyData P) (j : ℤ) (n : ℕ) :
     ((P × ℝ) × Plane) → ComplexVector :=
   (rawCommon D j).curlPotential D.strip D.directions n
 
+/-- Common pressure, given by `mode ((rawCommon D j).frequency n) ((rawCommon D j).phase n)
+((rawCommon D j).pressure n)`. -/
 noncomputable def commonPressure (D : AssemblyData P) (j : ℤ) (n : ℕ) :
     ((P × ℝ) × Plane) → ℂ :=
   mode ((rawCommon D j).frequency n) ((rawCommon D j).phase n) ((rawCommon D j).pressure n)
@@ -74,9 +80,9 @@ theorem commonRaw_tangent (n : ℕ) {x : (P × ℝ) × Plane} (hx : x ∈ D.stri
       ((rawCommon D j).amplitude n x) = 0 := by
   rw [(commonRaw_germ D C n hx).eq_of_nhds]
   change normalDot ((actualCarrier D.background D.carrierBlock j).normal D.strip D.directions n x)
-    _ = 0
+      _ = 0
   have he : normalDot ((actualCarrier D.background D.carrierBlock j).normal D.strip D.directions n
-    x)
+      x)
       (C.slot.cutoff n x •
         (actualCopyCoefficients D.reference D.charts D.context D.state D.carrierBlock
           D.gaussianInput D.aliasInput j D.background D.copy).amplitude n x) =
@@ -168,9 +174,13 @@ end ActualInputs
 
 /-! ## The actual physical changes of band and cover -/
 
+/-- Lift: an abbreviation for `PhysicalResidualBridge.Lift`. -/
 abbrev Lift := PhysicalResidualBridge.Lift
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
+/-- Parameter: an abbreviation for `ℝ × Plane`. -/
 abbrev Parameter := ℝ × Plane
+/-- Wave space: an abbreviation for `(Parameter × ℝ) × Plane`. -/
 abbrev WaveSpace := (Parameter × ℝ) × Plane
 
 /-- The wave solver uses `(R,(T,Z),theta,Y)`. The physical graph theorem
@@ -182,9 +192,11 @@ noncomputable def waveEquiv : Cylinder ≃ₗᵢ[ℝ] WaveSpace :=
 @[simp] theorem waveEquiv_apply (x : Cylinder) :
     waveEquiv x = (((x.1.1, (x.1.2.1.2, x.1.2.1.1)), x.2), x.1.2.2) := rfl
 
+/-- Native map, given by `waveEquiv ((PhysicalResidualBridge.commonGraph Q h i).map z)`. -/
 noncomputable def nativeMap (h Q : ℝ) (i : ℕ) (z : SpaceTime) : WaveSpace :=
   waveEquiv ((PhysicalResidualBridge.commonGraph Q h i).map z)
 
+/-- Ratio power, given by `Q ^ a / Qr ^ a`. -/
 noncomputable def ratioPower (Q Qr a : ℝ) : ℝ := Q ^ a / Qr ^ a
 
 theorem ratioPower_pos {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (a : ℝ) :
@@ -229,6 +241,8 @@ noncomputable def chartChange (h Q Qr : ℝ) (gap : ℕ) : Lift →L[ℝ] Lift :
         ((ratioPower Q Qr (CoordinateAlgebra.D h) * x.2.1.1,
           ratioPower Q Qr 1 * x.2.1.2), coverPower gap x.2.2)) := rfl
 
+/-- Cylinder change, given by `((chartChange h Q Qr gap).comp (ContinuousLinearMap.fst ℝ Lift
+ℝ)).prod (ContinuousLinearMap.snd ℝ Lift ℝ)`. -/
 noncomputable def cylinderChange (h Q Qr : ℝ) (gap : ℕ) : Cylinder →L[ℝ] Cylinder :=
   ((chartChange h Q Qr gap).comp (ContinuousLinearMap.fst ℝ Lift ℝ)).prod
     (ContinuousLinearMap.snd ℝ Lift ℝ)
@@ -255,11 +269,16 @@ theorem cylinderChange_graph {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
         rw [coverPower_apply, ← _root_.mul_apply_eq_comp, ← pow_add, Nat.add_comm gap i]
   · rfl
 
+/-- Velocity weight, given by `ratioPower Q Qr (CoordinateAlgebra.A h)`. -/
 noncomputable def velocityWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (CoordinateAlgebra.A h)
+/-- Clock weight, given by `ratioPower Q Qr (CoordinateAlgebra.A h + 1 / 2)`. -/
 noncomputable def clockWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (CoordinateAlgebra.A h + 1 / 2)
+/-- Source weight, given by `ratioPower Q Qr (2 * CoordinateAlgebra.A h + 1 / 2)`. -/
 noncomputable def sourceWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (2 * CoordinateAlgebra.A h + 1 /
-  2)
+    2)
+/-- Pressure weight, given by `ratioPower Q Qr (2 * CoordinateAlgebra.A h)`. -/
 noncomputable def pressureWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (2 * CoordinateAlgebra.A h)
+/-- Normal weight, given by `(Kr / K) * ratioPower Q Qr (1 / 2)`. -/
 noncomputable def normalWeight (Q Qr K Kr : ℝ) : ℝ := (Kr / K) * ratioPower Q Qr (1 / 2)
 
 theorem clock_mul_velocity {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (h : ℝ) :
@@ -388,7 +407,7 @@ theorem cylinderChange_radial {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
   let z : SpaceTime := (0, AxisymmetricResidual.pack (Q ^ (1 / 2 : ℝ) * x.1.1) 0 0)
   have hz : 0 < z.2 0 := by
     simpa only [z, AxisymmetricResidual.pack_zero] using mul_pos (Real.rpow_pos_of_pos hQ (1 / 2))
-      hx
+        hx
   have hn : (G.map z).1.1 = x.1.1 := by
     change Q ^ (-(1 / 2 : ℝ)) * (AxisymmetricResidual.pack (Q ^ (1 / 2 : ℝ) * x.1.1) 0 0) 0 = x.1.1
     rw [AxisymmetricResidual.pack_zero]
@@ -442,10 +461,10 @@ theorem phaseNormal_chartChange {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
   exact PhysicalCurlCovariance.phaseNormal_pull
     (Γ := cylinderChange h Q Qr gap) (x := x)
     (R := PhysicalResidualBridge.ScaledGraph.radius) (r :=
-      PhysicalResidualBridge.ScaledGraph.radius)
+        PhysicalResidualBridge.ScaledGraph.radius)
     (Sr := (PhysicalResidualBridge.commonGraph Q h i).radial)
     (Sθ := PhysicalResidualBridge.ScaledGraph.angular) (Sz := (PhysicalResidualBridge.commonGraph Q
-      h i).axial)
+        h i).axial)
     (Vr := (PhysicalResidualBridge.commonGraph Qr h (i + gap)).radial)
     (Vθ := PhysicalResidualBridge.ScaledGraph.angular)
     (Vz := (PhysicalResidualBridge.commonGraph Qr h (i + gap)).axial)
@@ -486,23 +505,33 @@ theorem phaseNormal_chartChange_of_phase {Q Qr K Kr : ℝ} (hQ : 0 < Q) (hQr : 0
 
 /-! ## One potential built from the actual reference solve -/
 
+/-- Reference raw, given by `angleLift (referenceVelocity D.reference D.context D.state
+D.carrierBlock D.gaussianInput D.aliasInput j)`. -/
 noncomputable def referenceRaw (D : AssemblyData Parameter) (j : ℤ) : WaveSpace → ComplexVector :=
   angleLift (referenceVelocity D.reference D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j)
 
+/-- Reference raw pressure, given by `angleLift (ParticularWaveAssembly.referencePressure
+D.reference D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j)`. -/
 noncomputable def referenceRawPressure (D : AssemblyData Parameter) (j : ℤ) : WaveSpace → ℂ :=
   angleLift (ParticularWaveAssembly.referencePressure D.reference D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j)
 
+/-- Reference frequency, given by `(j : ℝ) * D.carrierBlock.frequency D.reference.band`. -/
 noncomputable def referenceFrequency (D : AssemblyData Parameter) (j : ℤ) : ℝ :=
   (j : ℝ) * D.carrierBlock.frequency D.reference.band
 
+/-- Reference phase, given by `(actualCarrier D.background D.carrierBlock j).phase
+D.reference.band`. -/
 noncomputable def referencePhase (D : AssemblyData Parameter) (j : ℤ) : WaveSpace → ℝ :=
   (actualCarrier D.background D.carrierBlock j).phase D.reference.band
 
+/-- Physical phase, defined pointwise by `referencePhase D j (nativeMap h Qr I z)`. -/
 noncomputable def physicalPhase (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ) (j : ℤ) :
     SpaceTime → ℝ := fun z => referencePhase D j (nativeMap h Qr I z)
 
+/-- Physical raw, defined pointwise by `Qr ^ (-CoordinateAlgebra.A h) • referenceRaw D j
+(nativeMap h Qr I z)`. -/
 noncomputable def physicalRaw (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ) (j : ℤ) :
     SpaceTime → ComplexVector :=
   fun z => Qr ^ (-CoordinateAlgebra.A h) • referenceRaw D j (nativeMap h Qr I z)
@@ -514,10 +543,13 @@ noncomputable def referencePotential (D : AssemblyData Parameter) (h Qr : ℝ) (
   PhysicalCurlCovariance.referencePotential (referenceFrequency D j)
     (physicalPhase D h Qr I j) (physicalRaw D h Qr I j)
 
+/-- Physical potential, given by `PhysicalCurlCovariance.globalCartesianPotential delta
+(referencePotential D h Qr I j)`. -/
 noncomputable def physicalPotential (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (j : ℤ) : VelocityField :=
   PhysicalCurlCovariance.globalCartesianPotential delta (referencePotential D h Qr I j)
 
+/-- Physical velocity, given by `SpatialCurl.spatialCurl (physicalPotential D h Qr I delta j)`. -/
 noncomputable def physicalVelocity (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (j : ℤ) : VelocityField :=
   SpatialCurl.spatialCurl (physicalPotential D h Qr I delta j)
@@ -528,6 +560,7 @@ noncomputable def labelPotential (D : AssemblyData Parameter) (h Qr : ℝ) (I : 
     (delta : ℝ) (N : ℕ) : VelocityField :=
   fun z => ∑ j ∈ modes N, physicalPotential D h Qr I delta j z
 
+/-- Label velocity, given by `SpatialCurl.spatialCurl (labelPotential D h Qr I delta N)`. -/
 noncomputable def labelVelocity (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (N : ℕ) : VelocityField :=
   SpatialCurl.spatialCurl (labelPotential D h Qr I delta N)
@@ -588,7 +621,7 @@ theorem referencePotential_periodic (D : AssemblyData Parameter) (h Qr : ℝ) (I
     (physicalPhase_affine D h Qr I j) (physicalRaw_invariant D h Qr I j) hf
     (t, AxisymmetricResidual.pack r theta z)
   simpa only [referencePotential, PhysicalCurlCovariance.referencePotential, angle_translate_pack]
-    using he
+      using he
 
 /-- These are identities of the input chart at its own reference band. -/
 structure ReferenceIdentity (D : AssemblyData Parameter) : Prop where
@@ -599,9 +632,9 @@ structure ReferenceIdentity (D : AssemblyData Parameter) : Prop where
 theorem referenceRaw_eq_common (D : AssemblyData Parameter) (H : ReferenceIdentity D) (j : ℤ) :
     referenceRaw D j = (rawCommon D j).amplitude D.reference.band := by
   have hs : residualSource D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j
-    D.reference.band =
+      D.reference.band =
       transportSource (residualSource D.context D.state D.carrierBlock D.gaussianInput D.aliasInput
-        j D.reference.band)
+          j D.reference.band)
         (D.charts.parameter D.reference.band) (D.charts.gap D.reference.band)
         (D.charts.amplitude D.reference.band) := by
     rw [H.parameter, H.gap, H.amplitude]
@@ -622,22 +655,25 @@ structure ReferenceChart (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ) : P
     PhysicalResidualBridge.ScaledGraph.radius
   radial : PhysicalCurlCovariance.reindexVector waveEquiv.toContinuousLinearEquiv
       (D.directions.radialField D.reference.band) = (PhysicalResidualBridge.commonGraph Qr h
-        I).radial
+          I).radial
   angular : PhysicalCurlCovariance.reindexVector waveEquiv.toContinuousLinearEquiv
       (fun _ => D.directions.angular) = PhysicalResidualBridge.ScaledGraph.angular
   axial : PhysicalCurlCovariance.reindexVector waveEquiv.toContinuousLinearEquiv
       (D.directions.axialField D.strip D.reference.band) = (PhysicalResidualBridge.commonGraph Qr h
-        I).axial
+          I).axial
 
+/-- Reference domain, given by `waveEquiv ⁻¹' D.strip.domain`. -/
 noncomputable def referenceDomain (D : AssemblyData Parameter) : Set Cylinder :=
   waveEquiv ⁻¹' D.strip.domain
 
 theorem referenceDomain_open (D : AssemblyData Parameter) : IsOpen (referenceDomain D) :=
   D.strip.isOpen_domain.preimage waveEquiv.continuous
 
+/-- Lift phase, defined pointwise by `referencePhase D j (waveEquiv x)`. -/
 noncomputable def liftPhase (D : AssemblyData Parameter) (j : ℤ) : Cylinder → ℝ :=
   fun x => referencePhase D j (waveEquiv x)
 
+/-- Lift raw, defined pointwise by `referenceRaw D j (waveEquiv x)`. -/
 noncomputable def liftRaw (D : AssemblyData Parameter) (j : ℤ) : Cylinder → ComplexVector :=
   fun x => referenceRaw D j (waveEquiv x)
 
@@ -661,7 +697,7 @@ theorem liftRaw_smooth : ContDiffOn ℝ ∞ (liftRaw D j) (referenceDomain D) :=
 
 theorem liftNormal_eq {x : Cylinder} (hx : x ∈ referenceDomain D) :
     phaseNormal PhysicalResidualBridge.ScaledGraph.radius (PhysicalResidualBridge.commonGraph Qr h
-      I).radial
+        I).radial
       PhysicalResidualBridge.ScaledGraph.angular (PhysicalResidualBridge.commonGraph Qr h I).axial
       (liftPhase D j) x =
       (rawCommon D j).normal D.strip D.directions D.reference.band (waveEquiv x) := by
@@ -675,7 +711,7 @@ theorem liftNormal_eq {x : Cylinder} (hx : x ∈ referenceDomain D) :
 
 theorem liftNormal_ne {x : Cylinder} (hx : x ∈ referenceDomain D) :
     phaseNormal PhysicalResidualBridge.ScaledGraph.radius (PhysicalResidualBridge.commonGraph Qr h
-      I).radial
+        I).radial
       PhysicalResidualBridge.ScaledGraph.angular (PhysicalResidualBridge.commonGraph Qr h I).axial
       (liftPhase D j) x ≠ 0 := by
   rw [liftNormal_eq D H C hx]
@@ -697,7 +733,7 @@ theorem reference_radius_ne {x : Cylinder} (hx : x ∈ referenceDomain D) : x.1.
 
 theorem liftPotential_eq {x : Cylinder} (hx : x ∈ referenceDomain D) :
     CurlClassBounds.vectorPotential (referenceFrequency D j)
-      PhysicalResidualBridge.ScaledGraph.radius
+        PhysicalResidualBridge.ScaledGraph.radius
       (PhysicalResidualBridge.commonGraph Qr h I).radial PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph Qr h I).axial (liftPhase D j) (liftRaw D j) x =
       commonPotential D j D.reference.band (waveEquiv x) := by
@@ -719,9 +755,10 @@ theorem referencePotential_eq_common (hQr : 0 < Qr) {z : SpaceTime} (hz : 0 < z.
       Qr ^ (-h) • commonPotential D j D.reference.band (nativeMap h Qr I z) := by
   have hK : referenceFrequency D j ≠ 0 := C.frequency_nonzero D.reference.band
   have hp := ((liftPhase_smooth D C).contDiffAt ((referenceDomain_open D).mem_nhds
-    hx)).differentiableAt (by simp)
+      hx)).differentiableAt (by
+      simp)
   have he := PhysicalCurlCovariance.commonGraph_vectorPotential_pull hQr h I hK hK hz hp (liftRaw D
-    j)
+      j)
   simp only [div_self hK, one_mul] at he
   change referencePotential D h Qr I j z = _ at he
   rw [liftPotential_eq D H C hx] at he
@@ -733,12 +770,12 @@ theorem referencePotential_smoothAt (hQr : 0 < Qr) {z : SpaceTime} (hz : 0 < z.2
   let G := PhysicalResidualBridge.commonGraph Qr h I
   have hm : ContDiffAt ℝ ∞ (nativeMap h Qr I) z :=
     waveEquiv.contDiff.contDiffAt.comp z (G.map_smoothAt (mul_pos (Real.rpow_pos_of_pos hQr _)
-      hz).ne')
+        hz).ne')
   have hs := (((commonPotential_smooth D C D.reference.band).contDiffAt
     (D.strip.isOpen_domain.mem_nhds hx)).comp z hm).const_smul (Qr ^ (-h))
   have hn : {y : SpaceTime | 0 < y.2 0} ∩ (nativeMap h Qr I) ⁻¹' D.strip.domain ∈ 𝓝 z :=
     inter_mem ((isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection
-      0).continuous).mem_nhds hz)
+        0).continuous).mem_nhds hz)
       (hm.continuousAt (D.strip.isOpen_domain.mem_nhds hx))
   apply hs.congr_of_eventuallyEq
   exact eventually_of_mem hn (fun y hy => referencePotential_eq_common D H C hQr hy.1 hy.2)
@@ -756,11 +793,12 @@ theorem reference_physical_velocity (hQr : 0 < Qr) {z : SpaceTime} (hz : 0 < z.2
   have hP := referencePotential_smoothAt D H C hQr hz hx
   have hper := referencePotential_periodic D h Qr I j (C.frequency_ne D.reference.band)
   have hA := (PhysicalCurlCovariance.globalCartesianPotential_smoothAt_forward hdelta chart hper
-    hchart hP).differentiableAt (by simp)
+      hchart hP).differentiableAt (by
+      simp)
   have hB (i : Fin 3) : DifferentiableAt ℝ (fun x => B x i) (G.map z) := by
     exact (((contDiffOn_pi.mp (commonPotential_smooth D C D.reference.band)) i).contDiffAt
-      (D.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by simp) |>.comp (G.map z)
-        waveEquiv.differentiableAt
+      (D.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by
+          simp) |>.comp (G.map z) waveEquiv.differentiableAt
   have hvalue := PhysicalCurlCovariance.globalCartesianPotential_forward_germ hdelta chart
     (referencePotential D h Qr I j) hper hchart
   have hm : ContinuousAt (nativeMap h Qr I) z := waveEquiv.continuous.continuousAt.comp
@@ -771,7 +809,7 @@ theorem reference_physical_velocity (hQr : 0 < Qr) {z : SpaceTime} (hz : 0 < z.2
         (PhysicalCurlCovariance.ScaledGraph.realPotential G (Qr ^ (-h)) B y)) := by
     filter_upwards [hvalue,
       (isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous).mem_nhds
-        hz,
+          hz,
       hm (D.strip.isOpen_domain.mem_nhds hx)] with y hv hyr hy
     unfold physicalPotential
     rw [hv, referencePotential_eq_common D H C hQr hyr hy]
@@ -797,6 +835,8 @@ end ReferenceRealization
 
 /-! ## Actual solves with the rescaled native clock -/
 
+/-- Parameter change, given by `(ratioPower Q Qr (1 / 2) * p.1, (ratioPower Q Qr 1 * p.2.1,
+ratioPower Q Qr (CoordinateAlgebra.D h) * p.2.2))`. -/
 noncomputable def parameterChange (h Q Qr : ℝ) (p : Parameter) : Parameter :=
   (ratioPower Q Qr (1 / 2) * p.1,
     (ratioPower Q Qr 1 * p.2.1, ratioPower Q Qr (CoordinateAlgebra.D h) * p.2.2))
@@ -808,12 +848,15 @@ theorem parameterChange_smooth (h Q Qr : ℝ) : ContDiff ℝ ∞ (parameterChang
 theorem waveEquiv_cylinderChange (h Q Qr : ℝ) (gap : ℕ) (x : Cylinder) :
     waveEquiv (cylinderChange h Q Qr gap x) =
       ((parameterChange h Q Qr (waveEquiv x).1.1, (waveEquiv x).1.2), coverPower gap (waveEquiv
-        x).2) := rfl
+          x).2) := rfl
 
+/-- Reference source, given by `residualSource D.context D.state D.carrierBlock D.gaussianInput
+D.aliasInput j D.reference.band`. -/
 noncomputable def referenceSource (D : AssemblyData Parameter) (j : ℤ) : Parameter × Plane →
-  ComplexVector :=
+    ComplexVector :=
   residualSource D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j D.reference.band
 
+/-- Band amplitude, constructed using `ParticularWaveBounds.commonVelocity`. -/
 noncomputable def bandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Parameter × Plane → ComplexVector :=
   ParticularWaveBounds.commonVelocity
@@ -826,6 +869,7 @@ noncomputable def bandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
     (div_pos D.reference.length_pos (ratioPower_pos hQ hQr (CoordinateAlgebra.A h + 1 / 2))).le
     (D.reference.cutoff ∘ CopySolveCompatibility.nativeTimeMap 0 (clockWeight h Q Qr))
 
+/-- Band pressure, constructed using `ParticularWaveBounds.commonPressure`. -/
 noncomputable def bandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Parameter × Plane → ℂ :=
   ParticularWaveBounds.commonPressure
@@ -858,7 +902,7 @@ theorem bandAmplitude_eq_reference (D : AssemblyData Parameter) (h : ℝ) {Q Qr 
       velocityWeight h Q Qr • referenceVelocity D.reference D.context D.state D.carrierBlock
         D.gaussianInput D.aliasInput j (parameterChange h Q Qr p, coverPower gap Y) := by
   exact ScaledTangentTransport.commonVelocity_zeroEntry (D.reference.tangent j) (referenceSource D
-    j)
+      j)
     (parameterChange h Q Qr) D.reference.geometry gap D.reference.length (clockWeight h Q Qr)
     (velocityWeight h Q Qr) (normalWeight Q Qr K (referenceFrequency D j)) D.reference.length_pos
     (ratioPower_pos hQ hQr _) (normalWeight_ne hQ hQr hK hKr)
@@ -870,30 +914,37 @@ theorem bandPressure_eq_reference (D : AssemblyData Parameter) (h : ℝ) {Q Qr :
     (p : Parameter) (hp : parameterChange h Q Qr p ∈ U) (Y : Plane) :
     bandPressure D h hQ hQr gap K j (p, Y) =
       pressureWeight h Q Qr • ParticularWaveAssembly.referencePressure D.reference D.context
-        D.state D.carrierBlock
+          D.state D.carrierBlock
         D.gaussianInput D.aliasInput j (parameterChange h Q Qr p, coverPower gap Y) := by
   have he := ScaledTangentTransport.commonPressure_zeroEntry (D.reference.tangent j)
-    (referenceSource D j)
+      (referenceSource D j)
     (parameterChange h Q Qr) D.reference.geometry gap D.reference.length (clockWeight h Q Qr)
     (velocityWeight h Q Qr) (normalWeight Q Qr K (referenceFrequency D j)) (referenceFrequency D j)
-      K
+        K
     D.reference.length_pos (ratioPower_pos hQ hQr _) (normalWeight_ne hQ hQr hK hKr) hKr hK
     R.coefficient R.forcing R.source D.reference.cutoff R.cutoff p hp Y
   rw [pressure_scaling hQ hQr hK hKr] at he
   exact he
 
+/-- Band raw, defined pointwise by `bandAmplitude D h hQ hQr gap K j ((waveEquiv x).1.1,
+(waveEquiv x).2)`. -/
 noncomputable def bandRaw (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Cylinder → ComplexVector :=
   fun x => bandAmplitude D h hQ hQr gap K j ((waveEquiv x).1.1, (waveEquiv x).2)
 
+/-- Band raw pressure, defined pointwise by `bandPressure D h hQ hQr gap K j ((waveEquiv x).1.1,
+(waveEquiv x).2)`. -/
 noncomputable def bandRawPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Cylinder → ℂ :=
   fun x => bandPressure D h hQ hQr gap K j ((waveEquiv x).1.1, (waveEquiv x).2)
 
+/-- Band phase, defined pointwise by `(referenceFrequency D j / K) * liftPhase D j
+(cylinderChange h Q Qr gap x)`. -/
 noncomputable def bandPhase (D : AssemblyData Parameter) (h Q Qr : ℝ) (gap : ℕ) (K : ℝ) (j : ℤ) :
     Cylinder → ℝ := fun x => (referenceFrequency D j / K) * liftPhase D j (cylinderChange h Q Qr
-      gap x)
+        gap x)
 
+/-- Band velocity as an element of `Cylinder → ComplexVector`. -/
 noncomputable def bandVelocity (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (i gap : ℕ) (K : ℝ) (j : ℤ) : Cylinder → ComplexVector :=
   let G := PhysicalResidualBridge.commonGraph Q h i
@@ -910,6 +961,8 @@ theorem bandRaw_eq_lift (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
       velocityWeight h Q Qr • liftRaw D j (cylinderChange h Q Qr gap x) := by
   exact bandAmplitude_eq_reference D h hQ hQr gap hK j hKr R (waveEquiv x).1.1 hx (waveEquiv x).2
 
+/-- Band domain, given by `{x | 0 < x.1.1 ∧ cylinderChange h Q Qr gap x ∈ referenceDomain D ∧
+parameterChange h Q Qr (waveEquiv x).1.1 ∈ U}`. -/
 noncomputable def bandDomain (D : AssemblyData Parameter) (h Q Qr : ℝ) (gap : ℕ)
     (U : Set Parameter) : Set Cylinder :=
   {x | 0 < x.1.1 ∧ cylinderChange h Q Qr gap x ∈ referenceDomain D ∧
@@ -938,12 +991,12 @@ include H C R hK hQ hQr
 
 omit hQ hQr H hK R in
 theorem bandPhase_smooth : ContDiffOn ℝ ∞ (bandPhase D h Q Qr gap K j) (bandDomain D h Q Qr gap U)
-  :=
+    :=
   contDiffOn_const.mul ((liftPhase_smooth D C).comp (s := bandDomain D h Q Qr gap U)
     (cylinderChange h Q Qr gap).contDiff.contDiffOn (fun _ hx => hx.2.1))
 
 theorem bandRaw_smooth : ContDiffOn ℝ ∞ (bandRaw D h hQ hQr gap K j) (bandDomain D h Q Qr gap U) :=
-  by
+    by
   have hs := ((liftRaw_smooth D H C).comp (cylinderChange h Q Qr gap).contDiff.contDiffOn
     (s := bandDomain D h Q Qr gap U) (fun _ hx => hx.2.1)).const_smul (velocityWeight h Q Qr)
   apply hs.congr
@@ -953,11 +1006,12 @@ theorem bandRaw_smooth : ContDiffOn ℝ ∞ (bandRaw D h hQ hQr gap K j) (bandDo
 omit R in
 theorem bandNormal_ne {x : Cylinder} (hx : x ∈ bandDomain D h Q Qr gap U) :
     phaseNormal PhysicalResidualBridge.ScaledGraph.radius (PhysicalResidualBridge.commonGraph Q h
-      i).radial
+        i).radial
       PhysicalResidualBridge.ScaledGraph.angular (PhysicalResidualBridge.commonGraph Q h i).axial
       (bandPhase D h Q Qr gap K j) x ≠ 0 := by
   have hp := ((liftPhase_smooth D C).contDiffAt ((referenceDomain_open D).mem_nhds
-    hx.2.1)).differentiableAt (by simp)
+      hx.2.1)).differentiableAt (by
+      simp)
   have he := phaseNormal_chartChange hQ hQr h i gap K (referenceFrequency D j) hx.1 hp
   change phaseNormal _ _ _ _ (bandPhase D h Q Qr gap K j) x = _ at he
   rw [he]
@@ -970,7 +1024,8 @@ theorem bandRaw_tangent {x : Cylinder} (hx : x ∈ bandDomain D h Q Qr gap U) :
       (PhysicalResidualBridge.commonGraph Q h i).axial (bandPhase D h Q Qr gap K j) x)
       (bandRaw D h hQ hQr gap K j x) = 0 := by
   have hp := ((liftPhase_smooth D C).contDiffAt ((referenceDomain_open D).mem_nhds
-    hx.2.1)).differentiableAt (by simp)
+      hx.2.1)).differentiableAt (by
+      simp)
   have he := phaseNormal_chartChange hQ hQr h i gap K (referenceFrequency D j) hx.1 hp
   change phaseNormal _ _ _ _ (bandPhase D h Q Qr gap K j) x = _ at he
   rw [he, bandRaw_eq_lift D h hQ hQr gap hK j (C.frequency_nonzero D.reference.band) R x hx.2.2,
@@ -986,17 +1041,17 @@ theorem band_physical_velocity {z : SpaceTime}
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) (component : Fin 3) :
     (bandVelocity D h hQ hQr i gap K j ((PhysicalResidualBridge.commonGraph Q h i).map z)
-      component).re =
+        component).re =
       Q ^ CoordinateAlgebra.A h * CylindricalResidual.frame (-(z.2 1))
         (physicalVelocity D h Qr (i + gap) delta j (z.1, CylindricalResidual.chart z.2)) component
-          := by
+            := by
   have hKr : referenceFrequency D j ≠ 0 := C.frequency_nonzero D.reference.band
   have hphase : ∀ y ∈ (PhysicalResidualBridge.commonGraph Q h i).source (bandDomain D h Q Qr gap U),
       referenceFrequency D j * physicalPhase D h Qr (i + gap) j y =
         K * bandPhase D h Q Qr gap K j ((PhysicalResidualBridge.commonGraph Q h i).map y) := by
     intro y hy
     change referenceFrequency D j * liftPhase D j ((PhysicalResidualBridge.commonGraph Qr h (i +
-      gap)).map y) =
+        gap)).map y) =
       K * ((referenceFrequency D j / K) * liftPhase D j
         (cylinderChange h Q Qr gap ((PhysicalResidualBridge.commonGraph Q h i).map y)))
     rw [cylinderChange_graph hQ hQr h i gap hy.1]
@@ -1009,7 +1064,7 @@ theorem band_physical_velocity {z : SpaceTime}
     rw [bandRaw_eq_lift D h hQ hQr gap hK j hKr R _ hy.2.2.2,
       cylinderChange_graph hQ hQr h i gap hy.1, smul_smul]
     have hw : Q ^ (-CoordinateAlgebra.A h) * velocityWeight h Q Qr = Qr ^ (-CoordinateAlgebra.A h)
-      := by
+        := by
       rw [mul_comm]
       exact ratioPower_cancel hQ hQr _
     rw [hw]
@@ -1027,14 +1082,19 @@ end BandRealization
 
 /-! ## The pressure from the same reference solve -/
 
+/-- Physical pressure coefficient, defined pointwise by `(Qr ^ (-(2 * CoordinateAlgebra.A h)) :
+ℝ) • referenceRawPressure D j (nativeMap h Qr I z)`. -/
 noncomputable def physicalPressureCoefficient (D : AssemblyData Parameter) (h Qr : ℝ)
     (I : ℕ) (j : ℤ) : SpaceTime → ℂ :=
   fun z => (Qr ^ (-(2 * CoordinateAlgebra.A h)) : ℝ) • referenceRawPressure D j (nativeMap h Qr I z)
 
+/-- Complex physical pressure, given by `mode (referenceFrequency D j) (physicalPhase D h Qr I
+j) (physicalPressureCoefficient D h Qr I j)`. -/
 noncomputable def complexPhysicalPressure (D : AssemblyData Parameter) (h Qr : ℝ)
     (I : ℕ) (j : ℤ) : SpaceTime → ℂ :=
   mode (referenceFrequency D j) (physicalPhase D h Qr I j) (physicalPressureCoefficient D h Qr I j)
 
+/-- Pressure vector, given by `![0, 0, p z]`. -/
 noncomputable def pressureVector (p : SpaceTime → ℂ) (z : SpaceTime) : ComplexVector := ![0, 0, p z]
 
 /-- A scalar is the axial component of its Cartesian coordinate lift;
@@ -1044,6 +1104,8 @@ noncomputable def physicalPressure (D : AssemblyData Parameter) (h Qr : ℝ) (I 
   fun z => PhysicalCurlCovariance.globalCartesianPotential delta
     (pressureVector (complexPhysicalPressure D h Qr I j)) z 2
 
+/-- Band pressure mode, given by `mode K (bandPhase D h Q Qr gap K j) (bandRawPressure D h hQ
+hQr gap K j)`. -/
 noncomputable def bandPressureMode (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Cylinder → ℂ :=
   mode K (bandPhase D h Q Qr gap K j) (bandRawPressure D h hQ hQr gap K j)
@@ -1074,11 +1136,11 @@ theorem complexPhysicalPressure_periodic (D : AssemblyData Parameter) (h Qr : �
     rw [nativeMap_add_angle]
     congr 1
     exact angleLift_invariant (ParticularWaveAssembly.referencePressure D.reference D.context
-      D.state
+        D.state
       D.carrierBlock D.gaussianInput D.aliasInput j) (nativeMap h Qr I x) s
   have hf : referenceFrequency D j *
       ((D.carrierBlock.angularFrequency D.reference.band : ℝ) / D.carrierBlock.frequency
-        D.reference.band) =
+          D.reference.band) =
       ((j * D.carrierBlock.angularFrequency D.reference.band : ℤ) : ℝ) := by
     unfold referenceFrequency
     push_cast
@@ -1110,7 +1172,7 @@ theorem bandRawPressure_eq_lift (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
     (x : Cylinder) (hx : parameterChange h Q Qr (waveEquiv x).1.1 ∈ U) :
     bandRawPressure D h hQ hQr gap K j x =
       pressureWeight h Q Qr • referenceRawPressure D j (waveEquiv (cylinderChange h Q Qr gap x)) :=
-        by
+          by
   exact bandPressure_eq_reference D h hQ hQr gap hK j hKr R (waveEquiv x).1.1 hx (waveEquiv x).2
 
 theorem bandPressureMode_eq_physical (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
@@ -1124,17 +1186,17 @@ theorem bandPressureMode_eq_physical (D : AssemblyData Parameter) (h : ℝ) {Q Q
     ((PhysicalResidualBridge.commonGraph Q h i).map z) hp
   rw [cylinderChange_graph hQ hQr h i gap hz] at hraw
   have hc : carrier K (bandPhase D h Q Qr gap K j) ((PhysicalResidualBridge.commonGraph Q h i).map
-    z) =
+      z) =
       carrier (referenceFrequency D j) (physicalPhase D h Qr (i + gap) j) z := by
     apply PhysicalCurlCovariance.carrier_eq_of_products
     change K * ((referenceFrequency D j / K) * liftPhase D j
       (cylinderChange h Q Qr gap ((PhysicalResidualBridge.commonGraph Q h i).map z))) =
       referenceFrequency D j * liftPhase D j ((PhysicalResidualBridge.commonGraph Qr h (i +
-        gap)).map z)
+          gap)).map z)
     rw [cylinderChange_graph hQ hQr h i gap hz]
     field_simp
   have hw : pressureWeight h Q Qr = Q ^ (2 * CoordinateAlgebra.A h) * Qr ^ (-(2 *
-    CoordinateAlgebra.A h)) := by
+      CoordinateAlgebra.A h)) := by
     unfold pressureWeight ratioPower
     rw [Real.rpow_neg hQr.le, div_eq_mul_inv]
   unfold bandPressureMode complexPhysicalPressure HarmonicCalculus.mode
@@ -1162,15 +1224,20 @@ theorem band_physical_pressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
 
 /-! ## Finite harmonic assembly uses one potential -/
 
+/-- Label band velocity, given by `∑ j ∈ modes N, (bandVelocity D h hQ hQr i gap (frequency j) j
+x component).re`. -/
 noncomputable def labelBandVelocity (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (i gap : ℕ) (frequency : ℤ → ℝ) (N : ℕ)
     (x : Cylinder) (component : Fin 3) : ℝ :=
   ∑ j ∈ modes N, (bandVelocity D h hQ hQr i gap (frequency j) j x component).re
 
+/-- Label band pressure, given by `∑ j ∈ modes N, (bandPressureMode D h hQ hQr gap (frequency j)
+j x).re`. -/
 noncomputable def labelBandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (frequency : ℤ → ℝ) (N : ℕ)
     (x : Cylinder) : ℝ := ∑ j ∈ modes N, (bandPressureMode D h hQ hQr gap (frequency j) j x).re
 
+/-- Label pressure, defined pointwise by `∑ j ∈ modes N, physicalPressure D h Qr I delta j z`. -/
 noncomputable def labelPressure (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (N : ℕ) : PressureField :=
   fun z => ∑ j ∈ modes N, physicalPressure D h Qr I delta j z
@@ -1194,20 +1261,20 @@ theorem label_physical_velocity (D : AssemblyData Parameter) {h Q Qr : ℝ}
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) (component : Fin 3) :
     labelBandVelocity D h hQ hQr i gap frequency N ((PhysicalResidualBridge.commonGraph Q h i).map
-      z) component =
+        z) component =
       Q ^ CoordinateAlgebra.A h * CylindricalResidual.frame (-(z.2 1))
         (labelVelocity D h Qr (i + gap) delta N (z.1, CylindricalResidual.chart z.2)) component :=
-          by
+            by
   have href : nativeMap h Qr (i + gap) z ∈ D.strip.domain := by
     have hx := hz.2.2.1
     rw [cylinderChange_graph hQ hQr h i gap hz.1] at hx
     exact hx
   have hA (j : ℤ) (hj : j ∈ modes N) :
       DifferentiableAt ℝ (physicalPotential D h Qr (i + gap) delta j) (z.1,
-        CylindricalResidual.chart z.2) :=
+          CylindricalResidual.chart z.2) :=
     (PhysicalCurlCovariance.globalCartesianPotential_smoothAt_forward hdelta chart
       (referencePotential_periodic D h Qr (i + gap) j ((C j hj).frequency_ne D.reference.band))
-        hchart
+          hchart
       (referencePotential_smoothAt D H (C j hj) hQr hz.1 href)).differentiableAt (by simp)
   have hsum := spatialCurl_finset_sum (modes N)
     (fun j => physicalPotential D h Qr (i + gap) delta j) hA
@@ -1220,12 +1287,12 @@ theorem label_physical_velocity (D : AssemblyData Parameter) {h Q Qr : ℝ}
         (SpatialCurl.spatialCurl (physicalPotential D h Qr (i + gap) delta j)
           (z.1, CylindricalResidual.chart z.2)) component :=
     map_sum ((AxisymmetricFields.projection component).comp (CylindricalResidual.frame (-(z.2 1))))
-      _ _
+        _ _
   rw [hframe, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j hj
   exact band_physical_velocity D hQ hQr i gap H (C j hj) (hfrequency j hj) hU (R j hj) hz hdelta
-    chart hchart component
+      chart hchart component
 
 theorem label_physical_pressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (i gap : ℕ) {N : ℕ} (frequency : ℤ → ℝ)
@@ -1236,7 +1303,7 @@ theorem label_physical_pressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     labelBandPressure D h hQ hQr gap frequency N ((PhysicalResidualBridge.commonGraph Q h i).map z)
-      =
+        =
       Q ^ (2 * CoordinateAlgebra.A h) *
         labelPressure D h Qr (i + gap) delta N (z.1, CylindricalResidual.chart z.2) := by
   unfold labelBandPressure labelPressure
@@ -1251,7 +1318,7 @@ theorem label_physical_pressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
 theorem referenceVelocity_zero_of_source (D : AssemblyData Parameter) (j : ℤ) (p : Parameter)
     (hf : ∀ Y : Plane, referenceSource D j (p, Y) = 0) (Y : Plane) :
     referenceVelocity D.reference D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j
-      (p, Y) = 0 := by
+        (p, Y) = 0 := by
   unfold referenceVelocity ParticularWaveBounds.commonVelocity periodizedCopies
   trans ∑' _ : Frequency, (0 : ComplexVector)
   · apply tsum_congr
@@ -1274,11 +1341,11 @@ theorem referencePotential_zero_of_source (D : AssemblyData Parameter) (h Qr : �
   have ha : physicalRaw D h Qr I j z = 0 := by
     change Qr ^ (-CoordinateAlgebra.A h) • referenceVelocity D.reference D.context D.state
       D.carrierBlock D.gaussianInput D.aliasInput j ((nativeMap h Qr I z).1.1, (nativeMap h Qr I
-        z).2) = 0
+          z).2) = 0
     rw [referenceVelocity_zero_of_source D j _ (hf _ hp), smul_zero]
   ext component
   simp [referencePotential, PhysicalCurlCovariance.referencePotential,
-    CurlClassBounds.vectorPotential,
+      CurlClassBounds.vectorPotential,
     HarmonicCalculus.vectorMode, HarmonicCalculus.mode, CurlClassBounds.coefficient,
     CurlClassBounds.normalCoefficient, CurlClassBounds.normalCross, ha]
 
@@ -1308,7 +1375,7 @@ theorem label_velocity_on_cover (D : AssemblyData Parameter) {h Q Qr : ℝ}
   have hcover : i + (I - i) = I := by omega
   have H' : ReferenceChart D h Qr (i + (I - i)) := by simpa only [hcover] using H
   simpa only [hcover] using label_physical_velocity D hQ hQr i (I - i) H' C frequency hfrequency hU
-    R
+      R
     hz hdelta chart hchart component
 
 theorem label_pressure_on_cover (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
@@ -1320,12 +1387,12 @@ theorem label_pressure_on_cover (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     labelBandPressure D h hQ hQr (I - i) frequency N ((PhysicalResidualBridge.commonGraph Q h
-      i).map z) =
+        i).map z) =
       Q ^ (2 * CoordinateAlgebra.A h) *
         labelPressure D h Qr I delta N (z.1, CylindricalResidual.chart z.2) := by
   have hcover : i + (I - i) = I := by omega
   simpa only [hcover] using label_physical_pressure D h hQ hQr i (I - i) frequency hfrequency
-    hreference R
+      hreference R
     hz hp hdelta chart hchart
 
 /-! ## Regularity of the constructed physical fields -/
@@ -1334,9 +1401,9 @@ theorem referenceRawPressure_eq_common (D : AssemblyData Parameter) (H : Referen
     {j : ℤ} (hj : j ≠ 0) (hfrequency : ∀ n, D.carrierBlock.frequency n ≠ 0) :
     referenceRawPressure D j = (rawCommon D j).pressure D.reference.band := by
   have hs : residualSource D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j
-    D.reference.band =
+      D.reference.band =
       transportSource (residualSource D.context D.state D.carrierBlock D.gaussianInput D.aliasInput
-        j D.reference.band)
+          j D.reference.band)
         (D.charts.parameter D.reference.band) (D.charts.gap D.reference.band)
         (D.charts.amplitude D.reference.band) := by
     rw [H.parameter, H.gap, H.amplitude]
@@ -1371,23 +1438,24 @@ theorem physicalPotential_smoothAt : ContDiffAt ℝ ∞ (physicalPotential D h Q
 theorem physicalVelocity_smoothAt : ContDiffAt ℝ ∞ (physicalVelocity D h Qr I delta j)
     (z.1, CylindricalResidual.chart z.2) :=
   SpatialCurl.contDiffAt_spatialCurl (physicalPotential_smoothAt D H C hQr hz hx hdelta chart
-    hchart) (by simp)
+      hchart) (by
+      simp)
 
 omit hdelta hchart in
 theorem complexPhysicalPressure_smoothAt : ContDiffAt ℝ ∞ (complexPhysicalPressure D h Qr I j) z :=
-  by
+    by
   let G := PhysicalResidualBridge.commonGraph Qr h I
   have hm : ContDiffAt ℝ ∞ (nativeMap h Qr I) z := waveEquiv.contDiff.contDiffAt.comp z
     (G.map_smoothAt (mul_pos (Real.rpow_pos_of_pos hQr _) hz).ne')
   have hpref : ContDiffAt ℝ ∞ (referenceRawPressure D j) (nativeMap h Qr I z) := by
     rw [referenceRawPressure_eq_common D H.identity C.harmonic_ne C.frequency_ne]
     exact (C.common_classes.2.smooth D.reference.band).contDiffAt (D.strip.isOpen_domain.mem_nhds
-      hx)
+        hx)
   have hp : ContDiffAt ℝ ∞ (physicalPressureCoefficient D h Qr I j) z :=
     (hpref.comp z hm).const_smul (Qr ^ (-(2 * CoordinateAlgebra.A h)))
   have hphi : ContDiffAt ℝ ∞ (physicalPhase D h Qr I j) z :=
     ((C.background.phase_smooth D.reference.band).contDiffAt (D.strip.isOpen_domain.mem_nhds
-      hx)).comp z hm
+        hx)).comp z hm
   exact hp.mul ((contDiffAt_const.mul (Complex.ofRealCLM.contDiff.comp_contDiffAt z hphi)).cexp)
 
 theorem physicalPressure_smoothAt : ContDiffAt ℝ ∞ (physicalPressure D h Qr I delta j)
@@ -1426,7 +1494,8 @@ theorem labelVelocity_smoothAt (D : AssemblyData Parameter) {h Qr : ℝ} {I : �
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     ContDiffAt ℝ ∞ (labelVelocity D h Qr I delta N) (z.1, CylindricalResidual.chart z.2) :=
   SpatialCurl.contDiffAt_spatialCurl (labelPotential_smoothAt D H C hQr hz hx hdelta chart hchart)
-    (by simp)
+      (by
+      simp)
 
 theorem labelPressure_smoothAt (D : AssemblyData Parameter) {h Qr : ℝ} {I : ℕ}
     (H : ReferenceChart D h Qr I) {N : ℕ} {α κ : ℝ} (C : D.controls N α κ)
@@ -1451,11 +1520,13 @@ theorem labelVelocity_divergence (D : AssemblyData Parameter) {h Qr : ℝ} {I : 
 
 /-! ## Substitution of the actual target-band residual source -/
 
+/-- Transported residual source, constructed using `ScaledTangentTransport.transportSource`. -/
 noncomputable def transportedResidualSource (D : AssemblyData Parameter) (h Q Qr : ℝ)
     (gap : ℕ) (j : ℤ) : Parameter × Plane → ComplexVector :=
   ScaledTangentTransport.transportSource (referenceSource D j) (parameterChange h Q Qr) gap
     (clockWeight h Q Qr) (velocityWeight h Q Qr)
 
+/-- Residual band amplitude, constructed using `ParticularWaveBounds.commonVelocity`. -/
 noncomputable def residualBandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) (n : ℕ) :
     Parameter × Plane → ComplexVector :=
@@ -1468,6 +1539,7 @@ noncomputable def residualBandAmplitude (D : AssemblyData Parameter) (h : ℝ) {
     (div_pos D.reference.length_pos (ratioPower_pos hQ hQr (CoordinateAlgebra.A h + 1 / 2))).le
     (D.reference.cutoff ∘ CopySolveCompatibility.nativeTimeMap 0 (clockWeight h Q Qr))
 
+/-- Residual band pressure, constructed using `ParticularWaveBounds.commonPressure`. -/
 noncomputable def residualBandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) (n : ℕ) :
     Parameter × Plane → ℂ :=
@@ -1502,7 +1574,7 @@ theorem transportedResidualSource_apply (D : AssemblyData Parameter) (h : ℝ) {
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (j : ℤ) (x : Parameter × Plane) :
     transportedResidualSource D h Q Qr gap j x =
       sourceWeight h Q Qr • referenceSource D j (parameterChange h Q Qr x.1, coverPower gap x.2) :=
-        by
+          by
   unfold transportedResidualSource ScaledTangentTransport.transportSource
   rw [clock_mul_velocity hQ hQr]
 
@@ -1514,7 +1586,7 @@ theorem bandPhase_eq_actualCarrier (D : AssemblyData Parameter) (h Q Qr : ℝ)
       D.carrierBlock.frequency D.reference.band * D.carrierBlock.phase D.reference.band
         (parameterChange h Q Qr p, coverPower gap Y))
     (hangular : D.carrierBlock.angularFrequency n = D.carrierBlock.angularFrequency
-      D.reference.band) :
+        D.reference.band) :
     bandPhase D h Q Qr gap ((j : ℝ) * D.carrierBlock.frequency n) j =
       fun x => (actualCarrier D.background D.carrierBlock j).phase n (waveEquiv x) := by
   funext x

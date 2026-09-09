@@ -8,13 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceOperators
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 
 /-! The nonlinear packet coefficient budget follows from the original spatial
 jets of the inverse deformation and strain.  The transported unit normal uses
 the same radius and amplitude. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +28,7 @@ open scoped ContDiff BoundedContinuousFunction
 theorem MatrixCoefficient.path_eq_of_raw_eq {T : ℝ}
     {raw raw' : Domain → Space →L[ℝ] Space}
     (G : MatrixCoefficient T raw) (H : MatrixCoefficient T raw')
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = raw' (t,(x,θ))) :
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t, (x, θ)) = raw' (t, (x, θ))) :
     G.path = H.path := by
   apply ContinuousMap.ext
   intro t
@@ -37,7 +38,7 @@ theorem MatrixCoefficient.path_eq_of_raw_eq {T : ℝ}
 
 theorem VectorCoefficient.path_eq_of_raw_eq {T : ℝ} {raw raw' : VectorField}
     (G : VectorCoefficient T raw) (H : VectorCoefficient T raw')
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = raw' (t,(x,θ))) :
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t, (x, θ)) = raw' (t, (x, θ))) :
     G.path = H.path := by
   apply ContinuousMap.ext
   intro t
@@ -47,15 +48,15 @@ theorem VectorCoefficient.path_eq_of_raw_eq {T : ℝ} {raw raw' : VectorField}
 
 /-- Changing the solver fields of the packet operators does not change the
 coefficient budget when the three actual coefficients agree on the interval. -/
-def CoefficientBudget.of_raw_eq {P T : ℝ} {O O' : Operators}
+def CoefficientBudget.ofRawEq {P T : ℝ} {O O' : Operators}
     {G : CoefficientData P T O} (B : CoefficientBudget G)
     (H : CoefficientData P T O')
     (hi : ∀ (t : Icc (0 : ℝ) T) x θ,
-      O.inverseFrame (t,(x,θ)) = O'.inverseFrame (t,(x,θ)))
+      O.inverseFrame (t, (x, θ)) = O'.inverseFrame (t, (x, θ)))
     (hs : ∀ (t : Icc (0 : ℝ) T) x θ,
-      O.strain (t,(x,θ)) = O'.strain (t,(x,θ)))
+      O.strain (t, (x, θ)) = O'.strain (t, (x, θ)))
     (hn : ∀ (t : Icc (0 : ℝ) T) x θ,
-      O.normal (t,(x,θ)) = O'.normal (t,(x,θ))) : CoefficientBudget H where
+      O.normal (t, (x, θ)) = O'.normal (t, (x, θ))) : CoefficientBudget H where
   Rc := B.Rc
   amplitude := B.amplitude
   Rc_nonneg := B.Rc_nonneg
@@ -97,10 +98,10 @@ normal has no independent bound and there is no loss in radius or amplitude. -/
 def sourceCoefficientBudget (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
     (hI : ∀ n t x,
       ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤
-        C*majorant Rc 0 n)
+        C * majorant Rc 0 n)
     (hM : ∀ n t x,
       ‖iteratedFDeriv ℝ n (D.M.field t : Space → Space →L[ℝ] Space) x‖ ≤
-        C*majorant Rc 0 n) : CoefficientBudget (sourceCoefficientData P M D I hT) where
+        C * majorant Rc 0 n) : CoefficientBudget (sourceCoefficientData P M D I hT) where
   Rc := Rc
   amplitude := C
   Rc_nonneg := hRc

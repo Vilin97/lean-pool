@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalEntrance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ReferencePath
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # Ordered jet bounds for the actual reference path
@@ -18,11 +17,17 @@ Coefficient-space norm bounds first give constants independent of the
 normalization C. Only afterwards is the short REF transition chosen.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ReferenceJetBounds
 
-private local instance (ε : ℝ) : NormedAddCommGroup (NaturalEntrance.CoefficientPair ε) :=
+/-- Cache the standard `NormedAddCommGroup (NaturalEntrance.CoefficientPair ε)` instance to
+shorten typeclass synthesis. -/
+local instance instReferenceJetBounds1 (ε : ℝ) : NormedAddCommGroup
+    (NaturalEntrance.CoefficientPair ε) :=
   inferInstance
 
 open Set Filter MeasureTheory
@@ -43,13 +48,14 @@ theorem radial_deriv {F : ProfileHistories.Field} {p : Point} (hF : ContDiffAt �
       ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
 
 theorem parameterPartial_eq_partialEta {F : ProfileHistories.Field} {p : Point} (hF : ContDiffAt ℝ
-  ∞ F p) :
+    ∞ F p) :
     parameterPartial F p = NaturalAxisBridge.partialEta F p := (parameter_deriv hF).deriv.symm
 
 theorem radialPartial_eq_partialY {F : ProfileHistories.Field} {p : Point} (hF : ContDiffAt ℝ ∞ F
-  p) :
+    p) :
     radialPartial F p = NaturalAxisBridge.partialY F p := (radial_deriv hF).deriv.symm
 
+/-- Jet constant, given by `AxisEvaluation.jetBound v.epsilon 5 k m * (‖referencePair v‖ + 1)`. -/
 def jetConstant {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFamily h j σ P0) (k m : ℕ) : ℝ :=
   AxisEvaluation.jetBound v.epsilon 5 k m * (‖referencePair v‖ + 1)
 
@@ -73,8 +79,8 @@ theorem coefficient_jet_bound {h j σ : ℝ} {P0 : ℝ → ℝ}
       |AxisEvaluation.mixedSeries window v.epsilon x.2 k m p| ≤ jetConstant v k m := by
   have hb (A : AxisCoefficientSpace.AxisSpace window v.epsilon) (hA : ‖A‖ ≤ ‖x‖) :
       |AxisEvaluation.mixedSeries window v.epsilon A k m p| ≤ jetConstant v k m := by
-    have h := AxisEvaluation.mixedSeries_bound window v.epsilon_pos (by norm_num) (by norm_num) A k
-      m hp
+    have h := AxisEvaluation.mixedSeries_bound window v.epsilon_pos (by
+        norm_num) (by norm_num) A k m hp
     rw [Real.norm_eq_abs] at h
     exact h.trans (mul_le_mul_of_nonneg_left (hA.trans (norm_pair_le v x hx))
       (AxisEvaluation.jetBound_nonneg v.epsilon_pos (by norm_num) k m))
@@ -90,26 +96,26 @@ theorem natural_U_value (hΛ : Λ ≠ 0) (p : Point) :
       AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.2 (rescalePoint Λ p) := by
   rw [F.U_eq]
   dsimp [axialField, affineProfile, pullback]
-  field_simp ; ring
+  field_simp; ring
 
 theorem natural_U_parameter (hΛ : Λ ≠ 0) {p : Point} (hp : p ∈ domain Λ) :
     Λ * (parameterPartial F.family.U p - 4) =
       NaturalAxisBridge.partialEta (AxisEvaluation.profile window d.coefficients.epsilon
-        F.coefficients.2)
+          F.coefficients.2)
         (rescalePoint Λ p) := by
   have hpart : parameterPartial F.family.U p = NaturalAxisBridge.partialEta F.family.U p :=
     parameterPartial_eq_partialEta (F.family.natural.U_smooth.contDiffAt ((domain_isOpen
-      Λ).mem_nhds hp))
+        Λ).mem_nhds hp))
   rw [hpart, F.U_eq]
   rw [axialField, affineProfile_partialEta
     (AxisEvaluation.profile_smooth window d.coefficients.epsilon_pos F.coefficients.2)
     (1 / Λ) Λ hp (uStar_hasDerivAt j p.2)]
-  field_simp ; ring
+  field_simp; ring
 
 theorem natural_U_radial (hΛ : Λ ≠ 0) {p : Point} (hp : p ∈ domain Λ) :
     Λ * p.1 * radialPartial F.family.U p = (rescalePoint Λ p).1 *
       NaturalAxisBridge.partialY (AxisEvaluation.profile window d.coefficients.epsilon
-        F.coefficients.2)
+          F.coefficients.2)
         (rescalePoint Λ p) := by
   have hpart : radialPartial F.family.U p = NaturalAxisBridge.partialY F.family.U p :=
     radialPartial_eq_partialY (F.family.natural.U_smooth.contDiffAt ((domain_isOpen Λ).mem_nhds hp))
@@ -118,16 +124,16 @@ theorem natural_U_radial (hΛ : Λ ≠ 0) {p : Point} (hp : p ∈ domain Λ) :
 
 theorem natural_log_parameter (_ : 0 < Λ) (hC : 0 < C) {p : Point} (hp : p ∈ domain Λ)
     (hφ : AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1 (rescalePoint Λ p)
-      ≠ 0) :
+        ≠ 0) :
     parameterPartial F.family.f p / F.family.f p - Λ * realGradient h j σ p.2 =
       NaturalAxisBridge.partialEta (AxisEvaluation.profile window d.coefficients.epsilon
-        F.coefficients.1)
+          F.coefficients.1)
         (rescalePoint Λ p) /
           AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1 (rescalePoint Λ p)
-            := by
+              := by
   have hpart : parameterPartial F.family.f p = NaturalAxisBridge.partialEta F.family.f p :=
     parameterPartial_eq_partialEta (F.family.natural.f_smooth.contDiffAt ((domain_isOpen
-      Λ).mem_nhds hp))
+        Λ).mem_nhds hp))
   rw [hpart, F.f_eq]
   rw [angularField, angularProfile_parameter_log_derivative
     (AxisEvaluation.profile_smooth window d.coefficients.epsilon_pos F.coefficients.1) hp
@@ -137,14 +143,14 @@ theorem natural_log_parameter (_ : 0 < Λ) (hC : 0 < C) {p : Point} (hp : p ∈ 
 
 theorem natural_log_radial (hC : 0 < C) {p : Point} (hp : p ∈ domain Λ)
     (hφ : AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1 (rescalePoint Λ p)
-      ≠ 0) :
+        ≠ 0) :
     p.1 * radialPartial F.family.f p / F.family.f p =
       (rescalePoint Λ p).1 *
         NaturalAxisBridge.partialY (AxisEvaluation.profile window d.coefficients.epsilon
-          F.coefficients.1)
+            F.coefficients.1)
           (rescalePoint Λ p) /
             AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1 (rescalePoint Λ
-              p) := by
+                p) := by
   have hpart : radialPartial F.family.f p = NaturalAxisBridge.partialY F.family.f p :=
     radialPartial_eq_partialY (F.family.natural.f_smooth.contDiffAt ((domain_isOpen Λ).mem_nhds hp))
   rw [hpart, F.f_eq]
@@ -158,11 +164,11 @@ theorem natural_U_bounds (hΛ : 0 < Λ) {p : Point} (hp : rescalePoint Λ p ∈ 
         |Λ * p.1 * radialPartial F.family.U p| ≤ 5 * jetConstant d.coefficients 1 0 := by
   have hdom : p ∈ domain Λ := entrance_mem_strip hp
   have h0 := (coefficient_jet_bound d.coefficients F.coefficients F.norm_ball 0 0
-    (entrance_abs_le_five hp)).2
+      (entrance_abs_le_five hp)).2
   have hη := (coefficient_jet_bound d.coefficients F.coefficients F.norm_ball 0 1
-    (entrance_abs_le_five hp)).2
+      (entrance_abs_le_five hp)).2
   have hx := (coefficient_jet_bound d.coefficients F.coefficients F.norm_ball 1 0
-    (entrance_abs_le_five hp)).2
+      (entrance_abs_le_five hp)).2
   rw [AxisEvaluation.mixedSeries_zero] at h0
   rw [natural_U_value F hΛ.ne', natural_U_parameter F hΛ.ne' hdom,
     natural_U_radial F hΛ.ne' hdom]
@@ -181,16 +187,18 @@ theorem natural_log_bound (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
   have hφ := coefficient_phi_lower d.coefficients hσ (profileErrorConstant_nonneg d)
     hscale F.coefficients F.norm_error hp.1.1 hp.1.2 (original_interval_interior hp.2)
   have hφpos : 0 < AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1
-    (rescalePoint Λ p) :=
+      (rescalePoint Λ p) :=
     lt_trans (by norm_num) hφ
   rw [natural_log_parameter F hΛ hC (entrance_mem_strip hp) hφpos.ne', abs_div, abs_of_pos hφpos]
   have hη := (coefficient_jet_bound d.coefficients F.coefficients F.norm_ball 0 1
-    (entrance_abs_le_five hp)).1
+      (entrance_abs_le_five hp)).1
   rw [partialEta_profile window d.coefficients.epsilon_pos _ (entrance_mem_strip hp)]
   apply (div_le_iff₀ hφpos).2
   have hE := jetConstant_nonneg d.coefficients 0 1
   nlinarith
 
+/-- Amplitude constant, given by `d.normalizationThreshold Λ * jetConstant d.coefficients 0 0 *
+(1 + Λ * G + 8 * jetConstant d.coefficients 0 1)`. -/
 def amplitudeConstant (d : AnalyticInputs h j σ P0) (Λ G : ℝ) : ℝ :=
   d.normalizationThreshold Λ * jetConstant d.coefficients 0 0 *
     (1 + Λ * G + 8 * jetConstant d.coefficients 0 1)
@@ -211,11 +219,11 @@ theorem natural_amplitude_bounds (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
   have hT : 0 < d.normalizationThreshold Λ := Real.exp_pos _
   have hbase : 0 ≤ d.normalizationThreshold Λ * jetConstant d.coefficients 0 0 / C := by positivity
   have hφ := (coefficient_jet_bound d.coefficients F.coefficients F.norm_ball 0 0
-    (entrance_abs_le_five hp)).1
+      (entrance_abs_le_five hp)).1
   rw [AxisEvaluation.mixedSeries_zero] at hφ
   have ha := realAmplitude_le_threshold d hΛ.le hC
     (show p.2 ∈ window.interval from ⟨(original_interval_interior hp.2).1.le,
-      (original_interval_interior hp.2).2.le⟩)
+        (original_interval_interior hp.2).2.le⟩)
   have hf0 : |F.family.f p| ≤ d.normalizationThreshold Λ * jetConstant d.coefficients 0 0 / C := by
     rw [F.f_eq]
     change |realAmplitude h j σ Λ C p.2 *
@@ -228,7 +236,7 @@ theorem natural_amplitude_bounds (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
   have hfp : 0 < F.family.f p := F.family.positive p (entrance_mem_strip hp) hp.1.1 hp.1.2
   have hl := natural_log_bound F hσ hΛ hC hscale hp
   have hlg : |parameterPartial F.family.f p / F.family.f p| ≤ Λ * G + 8 * jetConstant
-    d.coefficients 0 1 := by
+      d.coefficients 0 1 := by
     calc
       _ = |(parameterPartial F.family.f p / F.family.f p - Λ * realGradient h j σ p.2) +
           Λ * realGradient h j σ p.2| := by ring_nf
@@ -259,6 +267,7 @@ theorem natural_amplitude_bounds (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
 
 end Natural
 
+/-- Hold set, given by `Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1`. -/
 def holdSet : Set Point := Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1
 
 theorem reference_mem (N : ReferencePath.Input) {p : Point} (hX : 0 ≤ p.1)
@@ -290,6 +299,8 @@ theorem first_log_difference {F G : ProfileHistories.Field} {x y η : ℝ}
   rw [iteratedDeriv_one]
   exact (((parameter_deriv hF).log hFn).sub ((parameter_deriv hG).log hGn)).deriv
 
+/-- Transition control data, collecting `length_pos`, `length_bound`, `U_value`, `U_parameter`,
+`log_parameter`, `f_value` and their compatibility conditions. -/
 structure TransitionControl (N : ReferencePath.Input) (δ εU εF : ℝ) : Prop where
   length_pos : 0 < δ
   length_bound : 2 * δ < ReferencePath.rampLimit
@@ -313,11 +324,11 @@ theorem exists_transition_control (N : ReferencePath.Input) {εU εF : ℝ}
   obtain ⟨u0, hu0, hU0⟩ := N.ref_U_error_jet_close isCompact_Icc original_interval_interior 0 hεU
   obtain ⟨u1, hu1, hU1⟩ := N.ref_U_error_jet_close isCompact_Icc original_interval_interior 1 hεU
   obtain ⟨l1, hl1, hL1⟩ := N.ref_log_error_jet_close isCompact_Icc original_interval_interior 1
-    zero_lt_one
+      zero_lt_one
   obtain ⟨f0, hf0, hF0⟩ := N.ref_field_error_jet_close isCompact_Icc original_interval_interior 0
-    hεF
+      hεF
   obtain ⟨f1, hf1, hF1⟩ := N.ref_field_error_jet_close isCompact_Icc original_interval_interior 1
-    hεF
+      hεF
   let r := min (ReferencePath.rampLimit / 4) (min u0 (min u1 (min l1 (min f0 f1))))
   have hr : 0 < r := lt_min (div_pos ReferencePath.rampLimit_pos (by norm_num))
     (lt_min hu0 (lt_min hu1 (lt_min hl1 (lt_min hf0 hf1))))
@@ -372,7 +383,7 @@ theorem reference_initial_eventually (N : ReferencePath.Input) {δ : ℝ}
   have hn : ∀ᶠ q in 𝓝 p, q.1 < N.endpoint * Real.exp δ ∧ q.2 ∈ ReferencePath.parameterInterval :=
     (continuousAt_fst.eventually (Iio_mem_nhds hm)).and
       (continuousAt_snd.eventually (ReferencePath.parameterInterval_open.mem_nhds
-        (original_interval_interior hη)))
+          (original_interval_interior hη)))
   constructor
   · filter_upwards [hn] with q hq
     exact N.refF_eq_natural hδ hδT hq.2 hq.1.le
@@ -413,6 +424,8 @@ theorem logtime_entrance (N : ReferencePath.Input) {p : Point} (hX : 0 < p.1)
   rw [hs]
   linarith
 
+/-- Uniform bound, given by `2 + jetConstant v 0 0 + 9 * jetConstant v 0 1 + 5 * jetConstant v 1
+0`. -/
 def uniformBound {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFamily h j σ P0) : ℝ :=
   2 + jetConstant v 0 0 + 9 * jetConstant v 0 1 + 5 * jetConstant v 1 0
 
@@ -432,6 +445,8 @@ theorem uniformBound_controls {h j σ : ℝ} {P0 : ℝ → ℝ} (v : Coefficient
   · linarith
   constructor <;> linarith
 
+/-- Jet bounds data, collecting `axial_value`, `axial_parameter`, `axial_radial`,
+`log_parameter`, `angular_value`, `angular_parameter`. -/
 structure JetBounds (h j σ Λ C B K : ℝ) (f U : ProfileHistories.Field) : Prop where
   axial_value : ∀ p ∈ holdSet, |Λ * (U p - NaturalAxisData.U j p.2)| ≤ B
   axial_parameter : ∀ p ∈ holdSet, |Λ * (parameterPartial U p - 4)| ≤ B
@@ -446,6 +461,7 @@ section ReferenceEstimates
 variable {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
 variable (F : CoefficientProfile d Λ C) (hΛ : 0 < Λ)
 
+/-- Reference input: an abbreviation for `ReferencePath.Input.ofNatural hΛ F.family`. -/
 abbrev referenceInput : ReferencePath.Input := ReferencePath.Input.ofNatural hΛ F.family
 
 theorem reference_U_radial_bound {δ : ℝ} (hδ : 0 < δ)
@@ -471,7 +487,7 @@ theorem reference_U_radial_bound {δ : ℝ} (hδ : 0 < δ)
         _ = _ := by
           rw [hs]
           change Λ * (ReferencePath.slopeCutoff δ (N.logTime p.1) * (p.1 * radialPartial F.family.U
-            p)) = _
+              p)) = _
           ring
     rw [heq, abs_mul, abs_of_nonneg (ReferencePath.slopeCutoff_mem δ (N.logTime p.1)).1]
     have hb := (natural_U_bounds F hΛ (logtime_entrance N hX hp.2 ht)).2.2
@@ -503,8 +519,8 @@ theorem transfer_difference {a b c r s : ℝ} (hclose : |a - b| ≤ r) (hbase : 
 
 theorem transfer_absolute {a b r s : ℝ} (hclose : |a - b| ≤ r) (hbase : |b| ≤ s) :
     |a| ≤ r + s := by
-  simpa only [sub_zero] using transfer_difference (c := (0 : ℝ)) hclose (by simpa only [sub_zero]
-    using hbase)
+  simpa only [sub_zero] using transfer_difference (c := (0 : ℝ)) hclose (by
+      simpa only [sub_zero] using hbase)
 
 /-- The qualitative REF convergence has now been used only after Λ and C
 were fixed, with explicit tolerances 1/Λ, 1, and 1/C. -/
@@ -557,23 +573,25 @@ theorem bounds_of_control (hσ : 0 < σ) (hC : 0 < C)
     by_cases hx : p.1 ≤ N.endpoint
     · rw [N.refF_eq_natural_initial δ hx]
       exact (natural_amplitude_bounds F hσ hΛ hC hscale hG (hinit p hp hx) (hgrad p.2
-        hp.2)).1.trans hKle
+          hp.2)).1.trans hKle
     · have hxe := (lt_of_not_ge hx).le
       have hb := (natural_amplitude_bounds F hσ hΛ hC hscale hG (hend p.2 hp.2) (hgrad p.2 hp.2)).1
       have hb' := transfer_absolute (hc.f_value p hxe hp.2).le hb
-      convert! hb' using 1 ; ring
+      convert! hb' using 1; ring
   · intro p hp
     by_cases hx : p.1 ≤ N.endpoint
     · rw [(reference_initial_partials N hc.length_pos hc.length_bound hx hp.2).1]
       exact (natural_amplitude_bounds F hσ hΛ hC hscale hG (hinit p hp hx) (hgrad p.2
-        hp.2)).2.trans hKle
+          hp.2)).2.trans hKle
     · have hxe := (lt_of_not_ge hx).le
       have hb := (natural_amplitude_bounds F hσ hΛ hC hscale hG (hend p.2 hp.2) (hgrad p.2 hp.2)).2
       have hb' := transfer_absolute (hc.f_parameter p hxe hp.2).le hb
-      convert! hb' using 1 ; ring
+      convert! hb' using 1; ring
 
 end ReferenceEstimates
 
+/-- Radial error constant, given by `AxisEvaluation.jetBound d.coefficients.epsilon 5 1 0 *
+profileErrorConstant d`. -/
 def radialErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ} (d : AnalyticInputs h j σ P0) : ℝ :=
   AxisEvaluation.jetBound d.coefficients.epsilon 5 1 0 * profileErrorConstant d
 
@@ -585,19 +603,19 @@ theorem radialErrorConstant_nonneg {h j σ : ℝ} {P0 : ℝ → ℝ} (d : Analyt
 theorem natural_radial_jet_error {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : CoefficientProfile d Λ C) (hΛ : 0 < Λ) {p : Point} (hp : p ∈ entranceSet) :
     |NaturalAxisBridge.partialY (AxisEvaluation.profile window d.coefficients.epsilon
-      F.coefficients.1) p -
+        F.coefficients.1) p -
       sourceJets d.coefficients.epsilon_pos (referencePair d.coefficients) p 1| ≤
-        radialErrorConstant d / Λ := by
+          radialErrorConstant d / Λ := by
   rw [partialY_profile window d.coefficients.epsilon_pos _ (entrance_mem_strip hp)]
   change |AxisEvaluation.mixedSeries window d.coefficients.epsilon F.coefficients.1 1 0 p -
     AxisEvaluation.mixedSeries window d.coefficients.epsilon (referencePair d.coefficients).1 1 0
-      p| ≤ _
+        p| ≤ _
   have hb := AxisEvaluation.mixedSeries_sub_bound window d.coefficients.epsilon_pos
     (by norm_num) (by norm_num) F.coefficients.1 (referencePair d.coefficients).1 1 0
       (entrance_abs_le_five hp)
   have hn := (norm_fst_le (F.coefficients - referencePair d.coefficients)).trans F.norm_error
-  have hj := AxisEvaluation.jetBound_nonneg d.coefficients.epsilon_pos (by norm_num : (1 : ℝ) ≤ 5)
-    1 0
+  have hj := AxisEvaluation.jetBound_nonneg d.coefficients.epsilon_pos (by
+      norm_num : (1 : ℝ) ≤ 5) 1 0
   have hk := profileErrorConstant_nonneg d
   rw [Real.norm_eq_abs] at hb
   apply hb.trans
@@ -614,9 +632,13 @@ theorem natural_radial_jet_error {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Ana
 still controlled by the coefficient norm. -/
 structure SlopeSample {h j σ : ℝ} {P0 : ℝ → ℝ} (d : AnalyticInputs h j σ P0)
     (Λ B Kerr : ℝ) (f : ProfileHistories.Field) (p : Point) where
+  /-- Y of `SlopeSample`, of type `ℝ`. -/
   Y : ℝ
+  /-- Theta of `SlopeSample`, of type `ℝ`. -/
   theta : ℝ
+  /-- Phi of `SlopeSample`, of type `ℝ`. -/
   phi : ℝ
+  /-- Error of `SlopeSample`, of type `ℝ`. -/
   error : ℝ
   point_mem : (Y, p.2) ∈ entranceSet
   theta_mem : theta ∈ Icc (0 : ℝ) 1
@@ -640,20 +662,20 @@ theorem reference_slope_sample {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Analy
   have hd : deriv (fun X => Real.log (N.refF δ (X, p.2))) p.1 =
       radialPartial (N.refF δ) p / N.refF δ p :=
     ((radial_deriv ((N.refF_smooth hδ hδT).contDiffAt (N.radialDomain.isOpen.mem_nhds hmem))).log
-      hfpos.ne').deriv
+        hfpos.ne').deriv
   by_cases ht : N.logTime p.1 < ReferencePath.rampLimit
   · have hp := logtime_entrance N hXp hη ht
     have hφ := coefficient_phi_lower d.coefficients hσ (profileErrorConstant_nonneg d)
       hscale F.coefficients F.norm_error hp.1.1 hp.1.2 (original_interval_interior hη)
     have hφpos : 0 < AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1
-      (rescalePoint Λ p) :=
+        (rescalePoint Λ p) :=
       lt_trans (by norm_num) hφ
     let φ := AxisEvaluation.profile window d.coefficients.epsilon F.coefficients.1 (rescalePoint Λ
-      p)
+        p)
     let e := NaturalAxisBridge.partialY (AxisEvaluation.profile window d.coefficients.epsilon
-      F.coefficients.1)
+        F.coefficients.1)
       (rescalePoint Λ p) - sourceJets d.coefficients.epsilon_pos (referencePair d.coefficients)
-        (rescalePoint Λ p) 1
+          (rescalePoint Λ p) 1
     refine ⟨{
       Y := Λ * p.1
       theta := ReferencePath.slopeCutoff δ (N.logTime p.1)
@@ -666,15 +688,15 @@ theorem reference_slope_sample {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Analy
       error_bound := natural_radial_jet_error F hΛ hp
       slope_eq := ?_ }⟩
     · have hb := (coefficient_jet_bound d.coefficients F.coefficients F.norm_ball 0 0
-      (entrance_abs_le_five hp)).1
+        (entrance_abs_le_five hp)).1
       rw [AxisEvaluation.mixedSeries_zero] at hb
-      exact (le_abs_self φ).trans (hb.trans (by linarith [(uniformBound_controls
-        d.coefficients).2.1]))
+      exact (le_abs_self φ).trans (hb.trans (by
+          linarith [(uniformBound_controls d.coefficients).2.1]))
     · have hs := N.same_radius_log_slope hδ hδT (original_interval_interior hη) hXp ht
       rw [hd] at hs
       change p.1 * (radialPartial (N.refF δ) p / N.refF δ p) =
         ReferencePath.slopeCutoff δ (N.logTime p.1) * (p.1 * radialPartial F.family.f p /
-          F.family.f p) at hs
+            F.family.f p) at hs
       rw [natural_log_radial F hC (entrance_mem_strip hp) hφpos.ne'] at hs
       dsimp [e, φ]
       simpa only [add_sub_cancel, rescalePoint, mul_div_assoc, mul_assoc] using hs

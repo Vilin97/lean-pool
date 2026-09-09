@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualReferenceRebase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TorusMeanRequestRebase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
-
-@[expose] public section
 
 /-!
 # The actual signed family at its native reference bands
@@ -27,6 +24,9 @@ Only the wave geometry is put in native coordinates: inverse-cover pullback
 of the entire state would in general have only subcover periodicity.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedPhysicalBinding
@@ -35,23 +35,35 @@ open Set Function Filter WeightedClasses CorrectionState TorusMeanRequestRebase
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Cylinder: an abbreviation for `PhysicalSignedWave.Cylinder`. -/
 abbrev Cylinder := PhysicalSignedWave.Cylinder
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Label: an abbreviation for `ActualSignedStageControls.SignedLabel B N0 open
+CorrectionInitialization CorrectionInitialization.ActualPrimary`. -/
 abbrev Label (B N0 : ℕ) := ActualSignedStageControls.SignedLabel B N0
 
 open CorrectionInitialization CorrectionInitialization.ActualPrimary
 
 variable {B N0 : ℕ}
 
+/-- Reference, given by `BaseChartJets.cellBand l.1`. -/
 noncomputable def reference (l : Label B N0) : ℕ := BaseChartJets.cellBand l.1
 
+/-- Domain, given by `ActualParticularStageControls.reindexDomain
+(PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) (fun _ => l.1)`. -/
 noncomputable def domain (l : Label B N0) : PhaseJetBounds.Domain ℕ Slow :=
   ActualParticularStageControls.reindexDomain
     (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) (fun _ => l.1)
 
+/-- Pulse, given by `ActualParticularStageControls.reindexConstruction (phases B N0 j) (fun _ =>
+l.1)`. -/
 noncomputable def pulse (l : Label B N0) (j : Fin 2) :
     PrimaryPulseBounds.PhaseConstruction (domain l) :=
   ActualParticularStageControls.reindexConstruction (phases B N0 j) (fun _ => l.1)
@@ -59,12 +71,17 @@ noncomputable def pulse (l : Label B N0) (j : Fin 2) :
 @[simp] theorem pulse_frame (l : Label B N0) (j : Fin 2) (n : ℕ) :
     (pulse l j).frame n = (phases B N0 j).frame l.1 := rfl
 
+/-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
+nominal l.1) l.2`. -/
 noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
+/-- Geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0`. -/
 noncomputable def geometry (l : Label B N0) : CommonCoverSolve.Geometry :=
   ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0
 
+/-- Native clock, given by `PeriodicPhaseAssembly.periodicClock (geometry l) (clockWindow
+l.1).cutoff Y`. -/
 noncomputable def nativeClock (l : Label B N0) (Y : Plane) : ℝ :=
   PeriodicPhaseAssembly.periodicClock (geometry l) (clockWindow l.1).cutoff Y
 
@@ -75,6 +92,8 @@ noncomputable def toCommon (l : Label B N0) : Point ≃L[ℝ] Point :=
       (ChartScales.nativeIndex h (reference l) - CommonWindow.index h (reference l)))).trans
         CorrectionStep.cycleAssoc.symm.toContinuousLinearEquiv
 
+/-- To common cylinder, given by `PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv.trans
+((toCommon l).prodCongr (ContinuousLinearEquiv.refl ℝ ℝ))`. -/
 noncomputable def toCommonCylinder (l : Label B N0) : Cylinder ≃L[ℝ] Cylinder :=
   PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv.trans
     ((toCommon l).prodCongr (ContinuousLinearEquiv.refl ℝ ℝ))
@@ -97,15 +116,19 @@ noncomputable def toCommonCylinder (l : Label B N0) : Cylinder ≃L[ℝ] Cylinde
   rw [ContinuousLinearEquiv.apply_symm_apply, toCommonCylinder_apply]
   simp only [ContinuousLinearEquiv.symm_apply_apply]
 
+/-- Strip, constructed using `freezeStrip`. -/
 noncomputable def strip (l : Label B N0) : StripData Cylinder :=
   freezeStrip (ParticularWaveBounds.reindexStrip PhysicalResidualTZ.swapCylinder
     (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal standardRegion)))
       (reference l)
 
+/-- Base, given by `freezeWave (ActualReferenceRebase.pullWave (toCommonCylinder l)
+(chartCoefficients l.2 l.1)) (reference l)`. -/
 noncomputable def base (l : Label B N0) : LinearWaveBounds.WaveCoefficients Cylinder :=
   freezeWave (ActualReferenceRebase.pullWave (toCommonCylinder l)
     (chartCoefficients l.2 l.1)) (reference l)
 
+/-- Directions, constructed using `freezeDirections`. -/
 noncomputable def directions (l : Label B N0) : LinearWaveBounds.GraphDirections Cylinder :=
   freezeDirections (ActualReferenceRebase.pullDirections (toCommonCylinder l)
     (PrimaryResidualClass.directions (commonContext B))) (reference l)
@@ -136,7 +159,7 @@ noncomputable def nativeViews (l : Label B N0) : (primary l).Views (reference l)
     (nativeViews l).map n x = x := by
   simp [PhysicalSignedWave.PrimaryData.Views.map, nativeViews, identityViews,
     PhysicalParticularWave.cylinderChange, ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos
-      _),
+        _),
     CommonCoverSolve.coverPower]
 
 @[simp] theorem nativeViews_velocity (l : Label B N0) (n : ℕ) :
@@ -177,7 +200,7 @@ theorem primary_phase (l : Label B N0) (n : ℕ) :
   change ((ChartScales.carrier h (reference l) : ℝ) / ChartScales.carrier h (reference l)) *
     ActualSignedGeometry.preparedPhase certificate modulation slots (choice B N0).prepared l.2 l.1
       (PhysicalParticularWave.cylinderChange h (ChartScales.Q (reference l)) (ChartScales.Q
-        (reference l))
+          (reference l))
         (ChartScales.nativeIndex h (reference l) - CommonWindow.index h (reference l))
         (PhysicalResidualTZ.swapCylinder (toCommonCylinder l x))) = _
   rw [native_change_cancel l x]
@@ -218,17 +241,28 @@ theorem primary_radial (l : Label B N0) (n : ℕ) :
   rw [ContinuousLinearEquiv.apply_symm_apply]
   apply PhysicalResidualTZ.swapCylinder.injective
   rw [hr]
-  simp [toCommonCylinder, toCommon, PhysicalResidualTZ.swapCylinder_apply,
-    PhysicalResidualTZ.swapSlow_apply, CorrectionStep.cycleAssoc, ParticularWaveBounds.liftAssoc,
-    ActualReferenceRebase.inverseCover, PhysicalResidualBridge.ScaledGraph.radial,
-    PhysicalResidualBridge.commonGraph]
+  simp only [PhysicalResidualBridge.ScaledGraph.radial, PhysicalResidualBridge.commonGraph,
+      one_div, toCommonCylinder, toCommon, CorrectionStep.cycleAssoc,
+          ParticularWaveBounds.liftAssoc, LinearIsometryEquiv.toContinuousLinearEquiv_symm,
+              ActualReferenceRebase.inverseCover, LinearIsometryEquiv.symm_symm,
+                  ContinuousLinearEquiv.trans_apply,
+                      LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+                          PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply,
+                              ContinuousLinearEquiv.prodCongr_apply,
+                                  LinearIsometryEquiv.coe_symm_toContinuousLinearEquiv,
+                                      LinearIsometryEquiv.coe_prodAssoc_symm,
+                                          Equiv.prodAssoc_symm_apply,
+                                              ContinuousLinearEquiv.refl_apply,
+                                                  LinearIsometryEquiv.coe_prodAssoc,
+                                                      Equiv.prodAssoc_apply, Prod.mk.eta, map_smul,
+                                                          Prod.mk.injEq, true_and, and_true]
   apply (CommonCoverSolve.coverPower (ChartScales.nativeIndex h (reference l) -
     CommonWindow.index h (reference l))).injective
   simp only [map_smul, ContinuousLinearEquiv.apply_symm_apply]
   rw [show CommonCoverSolve.coverPower (ChartScales.nativeIndex h (reference l) -
       CommonWindow.index h (reference l)) PhysicalGraphBounds.radialDirection =
       ChartScales.Lambda ^ (ChartScales.nativeIndex h (reference l) - CommonWindow.index h
-        (reference l)) •
+          (reference l)) •
         PhysicalGraphBounds.radialDirection from CommonBaseContext.coverPower_radial _,
     smul_smul]
   congr 1
@@ -251,7 +285,7 @@ theorem primary_axial (l : Label B N0) (n : ℕ) :
     (toCommonCylinder l).symm (((0, ((0, 1), 0)), 0) : Cylinder) = _
   rw [primary_epsilon, toCommonCylinder_symm_apply]
   simp [PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualBridge.commonGraph,
-    ChartScales.epsilon]
+      ChartScales.epsilon]
 
 theorem primary_chart (l : Label B N0) (n : ℕ) :
     PhysicalSignedWave.ChartGeometry (primary l).base (primary l).strip (primary l).directions n
@@ -292,7 +326,7 @@ theorem nativeStateData_referenceRequest (l : Label B N0) (P : SignedStressPrimi
 theorem primary_phase_affine (l : Label B N0) (n : ℕ) :
     CopyAngularInvariance.AffinePhase (0, 1)
       ((PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared l.2 l.1 :
-        ℤ) /
+          ℤ) /
         (primary l).base.frequency n) ((primary l).base.phase n) := by
   have hK : (ChartScales.carrier h (reference l) : ℝ) ≠ 0 :=
     (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos h _)).ne'
@@ -300,7 +334,7 @@ theorem primary_phase_affine (l : Label B N0) (n : ℕ) :
     (choice B N0).prepared slots.radius_pos l.2 l.1
   have hp : (pulse l l.2).phase.p (reference l) =
       (PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared l.2 l.1 :
-        ℝ) /
+          ℝ) /
         (ChartScales.carrier h (reference l) : ℝ) := by
     apply (eq_div_iff hK).mpr
     simp only [mul_comm]
@@ -313,6 +347,8 @@ theorem primary_phase_affine (l : Label B N0) (n : ℕ) :
   rw [hp]
   ring
 
+/-- Primary angular, bundling `mode`, `phase`, `coordinate`, `target` and the required
+compatibility proofs. -/
 noncomputable def primaryAngular (l : Label B N0) (P : SignedStressPrimitive.Patch)
     (u : State Point)
     (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
@@ -332,6 +368,8 @@ noncomputable def primaryAngular (l : Label B N0) (P : SignedStressPrimitive.Pat
 theorem label_large (l : Label B N0) : 4 ≤ (spatialLabel l).1 :=
   ActualPrimaryBounds.label_large (l.2, l.1)
 
+/-- Layout, given by `ActualSignedPhysicalData.layout slots outgoing.data.h_pos.le (spatialLabel
+l) (label_large l) 0`. -/
 noncomputable def layout (l : Label B N0) : ActualPeriodizedSignedRealization.Layout :=
   ActualSignedPhysicalData.layout slots outgoing.data.h_pos.le (spatialLabel l) (label_large l) 0
 
@@ -344,6 +382,7 @@ noncomputable def layout (l : Label B N0) : ActualPeriodizedSignedRealization.La
 @[simp] theorem pulse_length (l : Label B N0) (j : Fin 2) (n : ℕ) :
     (pulse l j).L n = ChartScales.slotLength slots.radius h (reference l) := rfl
 
+/-- Native copy point, given by `((x.1.1, x.1.2.1), (geometry l).coordinates k x.1.2.2)`. -/
 noncomputable def nativeCopyPoint (l : Label B N0) (k : TorusInverse.Frequency)
     (x : Cylinder) : ActualSignedGeometry.Native :=
   ((x.1.1, x.1.2.1), (geometry l).coordinates k x.1.2.2)
@@ -460,7 +499,7 @@ retains the individual copy midpoint. -/
 theorem carrier_midpoint (l : Label B N0) (k : TorusInverse.Frequency) :
     ActualSignedPhysicalData.center (h := h) (spatialLabel l) k =
       (geometry l).center + TorusAverages.latticePoint k + slots.radius •
-        ActualSignedGeometry.temporalVector :=
+          ActualSignedGeometry.temporalVector :=
   ActualSignedPhysicalData.center_eq_anchor slots (spatialLabel l) 0 k
 
 theorem primary_radial_pull (l : Label B N0) (n : ℕ) (x : Cylinder) :
@@ -474,7 +513,7 @@ theorem primary_axial_pull (l : Label B N0) (n : ℕ) (x : Cylinder) :
     (primary l).directions.axialField (primary l).strip n x =
       (toCommonCylinder l).symm ((PrimaryResidualClass.directions (commonContext B)).axialField
         (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-          standardRegion))
+            standardRegion))
           (reference l) (toCommonCylinder l x)) := by
   simp only [primary, directions, freezeDirections, ActualReferenceRebase.pullDirections,
     LinearWaveBounds.GraphDirections.axialField, map_smul]
@@ -486,9 +525,9 @@ theorem primary_normal_reference (l : Label B N0) (n : ℕ) (x : Cylinder) :
     (primary l).base.normal (primary l).strip (primary l).directions n x =
       (chartCoefficients l.2 l.1).normal
         (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-          standardRegion))
+            standardRegion))
         (PrimaryResidualClass.directions (commonContext B)) (reference l) (toCommonCylinder l x) :=
-          by
+            by
   unfold LinearWaveBounds.WaveCoefficients.normal
   have he := ActualPrimaryCoherence.phaseNormal_equiv (toCommonCylinder l) one_ne_zero
     ((primary l).base.radius n) ((chartCoefficients l.2 l.1).radius (reference l))
@@ -498,7 +537,7 @@ theorem primary_normal_reference (l : Label B N0) (n : ℕ) (x : Cylinder) :
     (fun _ => (PrimaryResidualClass.directions (commonContext B)).angular)
     ((PrimaryResidualClass.directions (commonContext B)).axialField
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-        standardRegion))
+          standardRegion))
         (reference l))
     (fun _ => by simp only [one_mul]; rfl)
     (fun y => by rw [primary_radial_pull, ContinuousLinearEquiv.apply_symm_apply, one_smul])
@@ -518,12 +557,12 @@ theorem nativeView_base (l : Label B N0) :
     (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos h _)).ne'
   have hphase : (fun n x => ((primary l).base.frequency (reference l) /
       (nativeViews l).frequency n) * (primary l).base.phase (reference l) ((nativeViews l).map n
-        x)) =
+          x)) =
       (primary l).base.phase := by
     funext n x
     rw [nativeViews_map]
     change ((primary l).base.frequency (reference l) / (primary l).base.frequency (reference l)) *
-      _ = _
+        _ = _
     rw [div_self hK, one_mul]
     rfl
   change { (primary l).base with
@@ -543,7 +582,7 @@ theorem nativeViews_normal (l : Label B N0) (n : ℕ) : (nativeViews l).normal n
 theorem nativeView_target (l : Label B N0) :
     (ActualPeriodizedSignedRealization.periodizedPrimary (primary l) (layout l)).viewTarget
       (nativeViews l).strip (nativeViews l).velocity (fun n => (nativeViews l).map n) (reference l)
-        =
+          =
       (primary l).target := by
   funext n x
   simp only [PhysicalSignedWave.PrimaryData.viewTarget, nativeViews_velocity, nativeViews_map]
@@ -557,6 +596,7 @@ theorem nativeView_target (l : Label B N0) :
   simp only [one_pow, one_smul]
   rfl
 
+/-- Native coefficients, constructed using `SignedWaveUpdate.coefficients`. -/
 noncomputable def nativeCoefficients (l : Label B N0)
     (R : ℕ → Cylinder → SignedWaveUpdate.Vec2) (k : TorusInverse.Frequency) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
@@ -572,6 +612,7 @@ noncomputable def nativeRequest (l : Label B N0) (P : SignedStressPrimitive.Patc
   PhysicalSignedWave.stateRequest (primary l).strip P h
     (freezeContext (commonContext B) (reference l)) (freezeState u (reference l))
 
+/-- Native copies, constructed using `ActualSignedPhysicalData.dynamicCopyData`. -/
 noncomputable def nativeCopies (l : Label B N0) (P : SignedStressPrimitive.Patch)
     (u : State Point) : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   ActualSignedPhysicalData.dynamicCopyData slots outgoing.data.h_pos.le (spatialLabel l)
@@ -613,10 +654,13 @@ variable (l : Label B N0) (P : SignedStressPrimitive.Patch) (u : State Point)
     (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
     (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure)
 
+/-- Reference copies, constructed using `ActualSignedPhysicalData.dynamicCopyData`. -/
 noncomputable def referenceCopies : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   ActualSignedPhysicalData.dynamicCopyData slots outgoing.data.h_pos.le (spatialLabel l)
     (label_large l) 0 (primary l) (nativeViews l) (nativeStateData l P u H hp).referenceRequest l.2
 
+/-- Common copies as an element of `PeriodizedWaveBounds.CopyData Cylinder
+TorusInverse.Frequency`. -/
 noncomputable def commonCopies : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   (ActualSignedStageControls.parameters l).copyData
     (BaseContextAssembly.nativeStrip nominal standardRegion)
@@ -626,7 +670,7 @@ noncomputable def commonCopies : PeriodizedWaveBounds.CopyData Cylinder TorusInv
 theorem signedVector_reference (k : TorusInverse.Frequency) (x : Cylinder) :
     SignedWaveUpdate.signedVector
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-        standardRegion))
+          standardRegion))
       (ActualSignedStageControls.matrix l k) (ActualSignedStageControls.target l k)
       (LocalSignedRequest.fullRequest (BaseContextAssembly.nativeStrip nominal standardRegion)
         P (2 * h) (commonContext B) u)
@@ -710,7 +754,7 @@ theorem localized_pressure_reference (k : TorusInverse.Frequency) (x : Cylinder)
       ((referenceCopies l P u H hp).localized k).pressure (reference l) x := by
   change ((commonCopies l P u).cutoff _ _ _ : ℂ) * (commonCopies l P u).pressure _ _ _ =
     ((referenceCopies l P u H hp).cutoff _ _ _ : ℂ) * (referenceCopies l P u H hp).pressure _ _ _
-  rw [cutoff_reference]
+  rw [cutoff_reference l P u H hp]
   by_cases hc : (referenceCopies l P u H hp).cutoff (reference l) k x = 0
   · simp only [hc, Complex.ofReal_zero, zero_mul]
   · rw [raw_pressure_reference l P u H hp k (reference_cutoff_core l P u H hp k hc)]
@@ -746,7 +790,7 @@ theorem reference_background : (referenceCopies l P u H hp).background = (primar
 
 theorem reference_common_normal :
     (referenceCopies l P u H hp).common.normal (primary l).strip (primary l).directions (reference
-      l) =
+        l) =
       (primary l).base.normal (primary l).strip (primary l).directions (reference l) := by
   simp only [LinearWaveBounds.WaveCoefficients.normal, PeriodizedWaveBounds.CopyData.common,
     reference_background]
@@ -764,7 +808,7 @@ theorem curlCoefficient_reference (x : Cylinder) :
         (fun _ => (PrimaryResidualClass.directions (commonContext B)).angular)
         ((PrimaryResidualClass.directions (commonContext B)).axialField
           (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-            standardRegion))
+              standardRegion))
             (reference l)) ((commonCopies l P u).common.phase (reference l))
         ((commonCopies l P u).common.amplitude (reference l)) (toCommonCylinder l x) := by
   unfold CurlClassBounds.coefficient
@@ -788,7 +832,7 @@ theorem curlPotential_reference (x : Cylinder) :
       (reference l) x =
     (commonCopies l P u).common.curlPotential
       (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-        standardRegion))
+          standardRegion))
       (PrimaryResidualClass.directions (commonContext B)) (reference l) (toCommonCylinder l x) := by
   funext i
   simp only [LinearWaveBounds.WaveCoefficients.curlPotential, CurlClassBounds.vectorPotential,
@@ -801,7 +845,7 @@ theorem curlPotential_reference (x : Cylinder) :
 theorem reference_exactCoefficients :
     (referenceCopies l P u H hp).commonCorrected (primary l).strip (primary l).directions =
       (ActualPeriodizedSignedRealization.views (primary l) (layout l) (nativeViews
-        l)).exactCoefficients
+          l)).exactCoefficients
         (nativeStateData l P u H hp).referenceRequest l.2 :=
   ActualSignedPhysicalData.dynamic_commonCorrected_eq slots outgoing.data.h_pos.le
     (spatialLabel l) (label_large l) 0 (primary l) (nativeViews l)
@@ -811,10 +855,14 @@ end LocalizedComparison
 
 /-! Bind to the literal request after the actual particular update. -/
 
+/-- After particular, given by `(ActualCycleParameters.fixedParameters B N0).afterParticular
+x.coefficients (commonContext B) x.state`. -/
 noncomputable def afterParticular (x : CorrectionStep.CycleState (Label B N0)) : State Point :=
   (ActualCycleParameters.fixedParameters B N0).afterParticular x.coefficients (commonContext B)
-    x.state
+      x.state
 
+/-- Cycle state data, given by `nativeStateData l ActualInitialization.patch (afterParticular x)
+H hp`. -/
 noncomputable def cycleStateData (l : Label B N0) (x : CorrectionStep.CycleState (Label B N0))
     (H : MeanStateRegularity.PrimitiveData standardRegion ActualInitialization.patch.a
       ActualInitialization.patch.b (commonContext B) (afterParticular x))
@@ -830,11 +878,13 @@ theorem afterParticular_pressure (x : CorrectionStep.CycleState (Label B N0))
   H.pressure (g := ActualInitialization.geometry.gauge) ActualInitialization.geometry.inner_pos
     ActualInitialization.geometry.exponent_pos ActualInitialization.geometry.length_eq rfl
 
+/-- Cycle state data of primitive, given by `cycleStateData l x H (afterParticular_pressure x
+H)`. -/
 noncomputable def cycleStateDataOfPrimitive (l : Label B N0) (x : CorrectionStep.CycleState (Label
-  B N0))
+    B N0))
     (H : MeanStateRegularity.PrimitiveData standardRegion ActualInitialization.patch.a
       ActualInitialization.patch.b (commonContext B) (afterParticular x)) : (nativeViews
-        l).StateData :=
+          l).StateData :=
   cycleStateData l x H (afterParticular_pressure x H)
 
 theorem cycleStateData_request (l : Label B N0) (x : CorrectionStep.CycleState (Label B N0))

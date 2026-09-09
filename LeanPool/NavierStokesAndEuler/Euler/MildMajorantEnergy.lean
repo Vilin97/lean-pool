@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PDEMajorantLimit
 public import LeanPool.NavierStokesAndEuler.Euler.RegularizedMetricPaths
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevMaximalRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.TransportL2Time
+import LeanPool.NavierStokesAndEuler.Euler.PDEMajorantLimit
+
+/-! Full energy-order signed Gevrey bounds from genuine viscous mild solutions with continuous
+scalar coefficient majorants. -/
 
 @[expose] public section
 
-/-! Full energy-order signed Gevrey bounds from genuine viscous mild solutions with continuous
-  scalar coefficient majorants. -/
 
 noncomputable section
 
@@ -21,7 +22,7 @@ namespace EulerMildMajorantEnergy
 
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerSpatialSobolevInverse
   EulerCylinderSobolevSpace EulerSobolevHeat EulerMetricHeatEnergy EulerFiniteMetricEnergy
-  EulerSobolevMetricTransport EulerSobolevViscousEnergy EulerWeightedCylinderEnergy
+  EulerSobolevMetricTransport  EulerWeightedCylinderEnergy
   EulerRegularizedWordEquation EulerRegularizedWordTime EulerRegularizedForcingWord
   EulerRegularizedEnergyFamily EulerRegularizedMetricPaths EulerRegularizedTopBlocks
   EulerTransportL2Time EulerMetricPathConvergence EulerWeightedForcingTime EulerSobolevEnergyPaths
@@ -30,13 +31,14 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Every full-order finite Gevrey word family of an actual viscous mild solution obeys the signed integral estimate with continuous scalar majorants on every subinterval.
-The derivative and forcing limits are obtained from actual heat regularization; no energy
-  inequality or differentiability of a zero norm is assumed. -/
+/-- Every full-order finite Gevrey word family of an actual viscous mild solution obeys the signed
+integral estimate with continuous scalar majorants on every subinterval.
+The derivative and forcing limits are obtained from actual heat regularization; no energy inequality
+or differentiability of a zero norm is assumed. -/
 theorem mild_majorized_energy_subinterval {α β : Type*} [Fintype α] [Fintype β] {q : ℕ} (hq : 3 ≤
-  q+1)
+    q + 1)
     (T : ℝ) (hT : 0 ≤ T) (s t : ℝ) (h0s : 0 ≤ s) (hst : s ≤ t) (htT : t ≤ T)
-    (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4) (hw : ∀ i j, d i j ≤ q+1) (order : α → ℕ)
+    (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4) (hw : ∀ i j, d i j ≤ q + 1) (order : α → ℕ)
     (ν : ℝ) (hν : 0 < ν) (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (R Rdot : C(Icc (0 : ℝ) T, ℝ)) (hR : ∀ r, 0 < R r)
     (hRd : ∀ r ∈ Ioo 0 T, HasDerivAt (extendPath T hT R) (extendPath T hT Rdot r) r)
@@ -45,12 +47,12 @@ theorem mild_majorized_energy_subinterval {α β : Type*} [Fintype α] [Fintype 
     (Kdot : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
     (hKd : ∀ r ∈ Ioo 0 T, HasDerivAt (extendPath T hT (metricOperatorPath period T K hK))
       (extendPath T hT Kdot r) r)
-    (hKsym : ∀ r x v v', ⟪(K r).coefficient x v,v'⟫_ℝ = ⟪v,(K r).coefficient x v'⟫_ℝ)
-    (hKpos : ∀ r x v, c^2*‖v‖^2 ≤ ⟪(K r).coefficient x v,v⟫_ℝ)
+    (hKsym : ∀ r x v v', ⟪(K r).coefficient x v, v'⟫_ℝ = ⟪v, (K r).coefficient x v'⟫_ℝ)
+    (hKpos : ∀ r x v, c ^ 2 * ‖v‖ ^ 2 ≤ ⟪(K r).coefficient x v, v⟫_ℝ)
     (hKG : ∀ r x v, (K r).coefficient x ((G r).coefficient x v) = v)
     (B : Icc (0 : ℝ) T → NNReal)
-    (z u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
-    (u₀ : SobolevSpace period (q+1)) (f p : C(Icc (0 : ℝ) T, SobolevSpace period q))
+    (z u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
+    (u₀ : SobolevSpace period (q + 1)) (f p : C(Icc (0 : ℝ) T, SobolevSpace period q))
     (hsol : ∀ r : Icc (0 : ℝ) T, u r = heatOperator period (q+1) (2*ν*r.val).toNNReal u₀ +
       ∫ v in (0 : ℝ)..r.val, heatKernel period q ν hν v (extendPath T hT f (r.val-v)))
     (hu : ∀ r, value period (u r) ∈ divergenceFreeSpace period κ m)
@@ -59,7 +61,7 @@ theorem mild_majorized_energy_subinterval {α β : Type*} [Fintype α] [Fintype 
     (hzB : ∀ r, ∀ᵐ x ∂liftMeasure period, ‖value period (z r) x‖ ≤ B r)
     (U : TimeLp T (SobolevSpace period (2+q))) (F P : TimeLp T (SobolevSpace period (q+1)))
     (hU : Filter.Tendsto (fun n => pathLp T hT (maximalApproximation period q T n u)) Filter.atTop
-      (𝓝 U))
+        (𝓝 U))
     (hF : (fun r => truncateOperator period q (F r)) =ᵐ[timeMeasure T] extendPath T hT f)
     (hP : (fun r => truncateOperator period q (P r)) =ᵐ[timeMeasure T] extendPath T hT p)
     (a b k : C(Icc (0 : ℝ) T, ℝ))
@@ -90,20 +92,20 @@ theorem mild_majorized_energy_subinterval {α β : Type*} [Fintype α] [Fintype 
   let X := fun n => weightedMetricPath T weights Kp (regularizedValueFamily period d w hw n T u)
   let Y := fun n => weightedMetricPath T losses Kp (regularizedValueFamily period d w hw n T u)
   let Z := fun n => weightedForcingPath T weights (regularizedForcingFamily period d w hw n T A Gp
-    u f p)
+      u f p)
   have hAc (i : α) : IntegrableOn (fun r => weight (extendPath T hT R r) (order i) * extendPath T
-    hT a r +
+      hT a r +
       (extendPath T hT Rdot r / extendPath T hT R r) * (order i : ℝ) * weight (extendPath T hT R r)
-        (order i)) (Icc 0 T) := by
+          (order i)) (Icc 0 T) := by
     have he : (fun r => weight (extendPath T hT R r) (order i) * extendPath T hT a r +
         (extendPath T hT Rdot r / extendPath T hT R r) * (order i : ℝ) * weight (extendPath T hT R
-          r) (order i)) =
+            r) (order i)) =
         (fun r => extendPath T hT (weights i) r * extendPath T hT a r +
           extendPath T hT b r * (order i : ℝ) * extendPath T hT (weights i) r) := by
       funext r
       change weight (R (projIcc 0 T hT r)) (order i) * a (projIcc 0 T hT r) +
         (Rdot (projIcc 0 T hT r) / R (projIcc 0 T hT r)) * (order i : ℝ) * weight (R (projIcc 0 T
-          hT r)) (order i) = _
+            hT r)) (order i) = _
       rw [hb]
       rfl
     rw [he]
@@ -111,7 +113,7 @@ theorem mild_majorized_energy_subinterval {α β : Type*} [Fintype α] [Fintype 
   have hFc (n : ℕ) (i : α) : IntegrableOn (fun r => weight (extendPath T hT R r) (order i) *
       (extendPath T hT k r * familyNorm (fun j => H n i j r))) (Icc 0 T) :=
     forcing_path_integrable period T hT (weights i) k (regularizedForcingFamily period d w hw n T A
-      Gp u f p i)
+        Gp u f p i)
   apply weighted_pde_majorized_subinterval_limit period hq T hT s t h0s hst htT order a b k
     (extendPath T hT R) (extendPath T hT Rdot) κ m
     (fun r => K (projIcc 0 T hT r)) (fun r => G (projIcc 0 T hT r)) E Edot Q H (extendPath T hT z)
@@ -120,9 +122,9 @@ theorem mild_majorized_energy_subinterval {α β : Type*} [Fintype α] [Fintype 
     (extendPath_continuous T hT Kp).continuousOn
     (fun n i j => ((valueOperator period 2).continuous.comp
       (extendPath_continuous T hT (regularizedWordPath period (hw i j) n (w i j) T
-        u))).continuousOn)
+          u))).continuousOn)
     hKd (fun n i j r hr => regularized_word_hasDerivAt_clamped period (hw i j) n (w i j) ν hν T hT
-      u₀ f u hsol r hr)
+        u₀ f u hsol r hr)
     (fun r _ => hKsym (projIcc 0 T hT r)) (fun r _ => hKpos (projIcc 0 T hT r))
     (fun r _ => hKG (projIcc 0 T hT r))
     (fun n i j r _ => regularized_word_divergenceFree period (hw i j) n (w i j) κ m

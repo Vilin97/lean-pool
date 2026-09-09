@@ -8,14 +8,20 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedResidualEquation
 public import LeanPool.NavierStokesAndEuler.Euler.PacketRemainderBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalL2
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
 
 /-! The literal initialized finite packet is its actual primary plus a
 remainder with a proved physical C1 bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,10 +55,14 @@ theorem initializedProfiles_one_mean :
   simp only [initializedProfiles,joinedSourceProfiles,profiles_one]
   rfl
 
+/-- Initialized primary remainder, given by `initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N κ
+- κ • vector τ hτ hτT B (initialData D δ hδ (α • ξ) hs)`. -/
 def initializedPrimaryRemainder (N : ℕ) (κ : ℝ) : VectorField :=
   initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N κ -
     κ • vector τ hτ hτT B (initialData D δ hδ (α • ξ) hs)
 
+/-- Initialized primary remainder field as an element of `Field period D.T
+(initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N κ)`. -/
 def initializedPrimaryRemainderField (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) :
     Field period D.T (initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N κ) :=
   ((ProfileRegularity.primaryRemainderField M.T_pos
@@ -67,7 +77,7 @@ velocity and transported normal. -/
 theorem initializedVelocity_gradient_split (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     fderiv ℝ (fun y => initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
       (t,(Y y,k*inner ℝ D.m₀ (Y y)))) (X 0) =
       (α/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0) +
@@ -76,13 +86,13 @@ theorem initializedVelocity_gradient_split (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (h
   let V := vectorField τ hτ hτT B (initialData D δ hδ (α • ξ) hs)
   have hp := ((V.smul k⁻¹).raw_graph_contDiff t k D.m₀).differentiable (by simp)
   have hr := ((initializedPrimaryRemainderField M D hTime τ hτ hτT B δ hδ ξ hs α N hN
-    k⁻¹).raw_graph_contDiff
+      k⁻¹).raw_graph_contDiff
     t k D.m₀).differentiable (by simp)
   have hp' : DifferentiableAt ℝ (fun y => k⁻¹ • vector τ hτ hτT B
       (initialData D δ hδ (α • ξ) hs) (t,(Y y,k*inner ℝ D.m₀ (Y y)))) (X 0) := by
     simpa only [Function.comp_def,Pi.smul_apply] using (hp (Y (X 0))).comp (X 0) hY
   have hr' : DifferentiableAt ℝ (fun y => initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N
-    k⁻¹
+      k⁻¹
       (t,(Y y,k*inner ℝ D.m₀ (Y y)))) (X 0) := by
     simpa only [Function.comp_def] using (hr (Y (X 0))).comp (X 0) hY
   have he : (fun y => initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
@@ -108,14 +118,14 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem initializedPrimaryRemainder_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (initializedPrimaryRemainderField M D hTime τ hτ hτT B δ hδ ξ hs α N hN k⁻¹).WordBound
       6 (4*L.R) ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2) 0 := by
   let G := fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i
@@ -125,10 +135,10 @@ theorem initializedPrimaryRemainder_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk
   have h := ProfileRegularity.primaryRemainder_bound M.T_pos G hG L.radius_bounds.1
     (initializedProfiles_zero M D τ hτ hτT B δ hδ ξ hs α)
     (initializedProfiles_one_mean M D τ hτ hτT B δ hδ ξ hs α) hN BC k hk hbase
-  exact (h.changeTime hTime).of_raw_eq _ (fun _ _ _ => by rw [initializedProfiles_one_high]; rfl)
+  exact (h.changeTime hTime).ofRawEq _ (fun _ _ _ => by rw [initializedProfiles_one_high]; rfl)
 
 theorem initializedPrimaryRemainder_physical_norm (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space) :
     ‖initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
       (t,(Y x,k*inner ℝ D.m₀ (Y x)))‖ ≤
@@ -138,12 +148,12 @@ theorem initializedPrimaryRemainder_physical_norm (N : ℕ) (hN : 1 ≤ N) (k : 
       (by norm_num) t k D.m₀ (Y x)
 
 theorem initializedPrimaryRemainder_physical_fderiv (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space)
     (hY : DifferentiableAt ℝ Y x) :
     ‖fderiv ℝ (fun y => initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
       (t,(Y y,k*inner ℝ D.m₀ (Y y)))) x‖ ≤
-      (frequencyFactor k D.m₀*(sobolevEmbeddingConstant period 3*
+      (frequencyFactor k D.m₀*(sobolevEmbeddingConstant period 3 *
         ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R)))*‖fderiv ℝ Y x‖ :=
   (initializedPrimaryRemainder_bound M D hTime τ hτ hτT B δ hδ ξ hs α
     L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase).raw_physical_fderiv_le
@@ -152,11 +162,11 @@ theorem initializedPrimaryRemainder_physical_fderiv (N : ℕ) (hN : 1 ≤ N) (k 
 omit H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth in
 /-- The constant contains no packet frequency or derivative of the inverse flow. -/
 def initializedRemainderDerivativeCost (R H0 : ℝ) : ℝ :=
-  8*‖coordinateEquiv.symm.toContinuousLinearMap‖*sobolevEmbeddingConstant period 3*
+  8*‖coordinateEquiv.symm.toContinuousLinearMap‖*sobolevEmbeddingConstant period 3 *
     R*(fixedVelocityGradeCost R H0 2+2)
 
 theorem initializedPrimaryRemainder_physical_fderiv_inv (N : ℕ) (hN : 1 ≤ N)
-    (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space)
     (hY : DifferentiableAt ℝ Y x) :
     ‖fderiv ℝ (fun y => initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
@@ -166,7 +176,7 @@ theorem initializedPrimaryRemainder_physical_fderiv_inv (N : ℕ) (hN : 1 ≤ N)
   have hc := fixedVelocityGradeCost_nonneg L.R S.H0 (zero_le_one.trans L.radius_bounds.1) 2
   have he := sobolevEmbeddingConstant_nonneg period 3
   have hr : 0 ≤ L.R := zero_le_one.trans L.radius_bounds.1
-  have hb : 0 ≤ sobolevEmbeddingConstant period 3*
+  have hb : 0 ≤ sobolevEmbeddingConstant period 3 *
       ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R) := by positivity
   have hf := frequencyFactor_le_linear k (by linarith) D.m₀
   rw [D.m₀_unit] at hf
@@ -174,9 +184,9 @@ theorem initializedPrimaryRemainder_physical_fderiv_inv (N : ℕ) (hN : 1 ≤ N)
   have h := initializedPrimaryRemainder_physical_fderiv M D hTime τ hτ hτT B δ hδ ξ hs α
     L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase t Y x hY
   calc
-    _ ≤ (frequencyFactor k D.m₀*(sobolevEmbeddingConstant period 3*
+    _ ≤ (frequencyFactor k D.m₀*(sobolevEmbeddingConstant period 3 *
         ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R)))*‖fderiv ℝ Y x‖ := h
-    _ ≤ ((‖coordinateEquiv.symm.toContinuousLinearMap‖*2*k)*(sobolevEmbeddingConstant period 3*
+    _ ≤ ((‖coordinateEquiv.symm.toContinuousLinearMap‖*2*k)*(sobolevEmbeddingConstant period 3 *
         ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R)))*‖fderiv ℝ Y x‖ :=
       mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hf hb) (norm_nonneg _)
     _ = _ := by unfold initializedRemainderDerivativeCost; field_simp; ring
@@ -184,10 +194,10 @@ theorem initializedPrimaryRemainder_physical_fderiv_inv (N : ℕ) (hN : 1 ≤ N)
 /-- The finite packet's actual center gradient differs from its exact
 primary shear by O(1/k), with the genuine inverse frame norm. -/
 theorem initializedVelocity_gradient_error (N : ℕ) (hN : 1 ≤ N)
-    (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     ‖fderiv ℝ (fun y => initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
       (t,(Y y,k*inner ℝ D.m₀ (Y y)))) (X 0) -
       (α/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0)‖ ≤

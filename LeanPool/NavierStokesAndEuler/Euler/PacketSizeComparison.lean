@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActualFrameEstimates
-public import LeanPool.NavierStokesAndEuler.Euler.PacketIdealSize
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameQuantitative
+import LeanPool.NavierStokesAndEuler.Euler.PacketActualFrameEstimates
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Uniform comparison between actual and ideal physical primary sizes. -/
 
 @[expose] public section
 
-/-! Uniform comparison between actual and ideal physical primary sizes. -/
 
 noncomputable section
 
@@ -22,8 +25,8 @@ open EulerSmoothLimit EulerPacketRay EulerPacketFrameStability EulerPacketFrameQ
   InnerProductSpace
 
 theorem scalar_size_comparison {s₀ D D₀ E V Z : ℝ}
-    (hs₀ : 0 ≤ s₀) (hD₀ : 1 ≤ D₀) (hD : |D-D₀| ≤ 1/2)
-    (hElo : 1 ≤ E) (hEup : E ≤ 2) (hZ : 0 < Z) (hV : |V-Z| ≤ Z/2) :
+    (hs₀ : 0 ≤ s₀) (hD₀ : 1 ≤ D₀) (hD : |D - D₀| ≤ 1 / 2)
+    (hElo : 1 ≤ E) (hEup : E ≤ 2) (hZ : 0 < Z) (hV : |V - Z| ≤ Z / 2) :
     s₀*Real.sqrt D₀*Z/4 ≤ s₀*Real.sqrt D*V*Real.sqrt E ∧
       s₀*Real.sqrt D*V*Real.sqrt E ≤ 8*s₀*Real.sqrt D₀*Z := by
   have hd := abs_le.mp hD
@@ -56,17 +59,18 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
     {s₀ t₀ a ε τ Θ K e P₀ Q₀ r₀ Z : ℝ}
     (hs₀ : 0 < s₀) (hε : 0 < ε)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hrw : ⟪r (physicalTime t₀ a ε τ),w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε τ), w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e) (hεe : ε ≤ e)
-    (hsmall : 1000000*K*e*Θ^40 ≤ 1)
-    (hP₀ : |P₀| ≤ Θ^2) (hQ₀ : |Q₀| ≤ 2*Θ^2) (hr₀ : |r₀| ≤ 4) (hZ : 0 < Z)
-    (hP : |scaledRay m v r s₀ t₀ a ε τ 0-P₀| ≤ 800*e*Θ^5)
-    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1-Q₀| ≤ 800*e*Θ^5)
-    (hN : |scaledRay m v r s₀ t₀ a ε τ 2-1| ≤ 800*e*Θ^5)
-    (hVrel : |scaledVelocity m v w t₀ a ε τ 1/Z-1| ≤ K*e*Θ^29)
-    (hratio : |scaledVelocity m v w t₀ a ε τ 0/scaledVelocity m v w t₀ a ε τ 1-r₀| ≤ 10*(K*e*Θ^29))
-      :
+    (hsmall : 1000000 * K * e * Θ ^ 40 ≤ 1)
+    (hP₀ : |P₀| ≤ Θ ^ 2) (hQ₀ : |Q₀| ≤ 2 * Θ ^ 2) (hr₀ : |r₀| ≤ 4) (hZ : 0 < Z)
+    (hP : |scaledRay m v r s₀ t₀ a ε τ 0 - P₀| ≤ 800 * e * Θ ^ 5)
+    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1 - Q₀| ≤ 800 * e * Θ ^ 5)
+    (hN : |scaledRay m v r s₀ t₀ a ε τ 2 - 1| ≤ 800 * e * Θ ^ 5)
+    (hVrel : |scaledVelocity m v w t₀ a ε τ 1 / Z - 1| ≤ K * e * Θ ^ 29)
+    (hratio : |scaledVelocity m v w t₀ a ε τ 0 / scaledVelocity m v w t₀ a ε τ 1 - r₀| ≤ 10 * (K *
+        e * Θ ^ 29))
+        :
     s₀*Real.sqrt (1+P₀^2)*Z/4 ≤ ‖r (physicalTime t₀ a ε τ)‖*‖w (physicalTime t₀ a ε τ)‖ ∧
       ‖r (physicalTime t₀ a ε τ)‖*‖w (physicalTime t₀ a ε τ)‖ ≤ 8*s₀*Real.sqrt (1+P₀^2)*Z := by
   let R := scaledRay m v r s₀ t₀ a ε τ

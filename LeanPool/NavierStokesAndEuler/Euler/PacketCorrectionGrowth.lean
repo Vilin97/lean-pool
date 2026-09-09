@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetricBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientBudget
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.NonlinearEnergyConstants
 
 /-! The exact nonlinear energy constant is a fixed source quantity,
 independent of the Sobolev order, truncation and oscillation frequency. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,17 +22,18 @@ namespace EulerPacketCorrectionCoefficients
 
 open EulerPacketCylinderField EulerAllOrderCorrectionData EulerCorrectionEnergyData
   EulerNonlinearEnergyConstants EulerGevreyGrowthCoefficient EulerGevreyMetricEstimate
-  EulerGevreyRestriction EulerLiftedGradientSpace EulerCylinderSobolevSpace
+   EulerLiftedGradientSpace EulerCylinderSobolevSpace
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   (Kc : CorrectionCoefficientBudget D P)
 
+/-- Growth coefficient as an element of `ℝ`. -/
 def growthCoefficient (B0 B1 : ℝ) : ℝ :=
   let c := D.inverseBound⁻¹
   let first := inverseMetricFirstBound D
   energyConstant P
-    (growthBudgetBase c (inverseMetricTimeBound D) first+
+    (growthBudgetBase c (inverseMetricTimeBound D) first +
       growthBudgetSlope c first*sobolevEmbeddingConstant P 6*B0)
     (growthBudgetSlope c first*sobolevEmbeddingConstant P 6*metricAmplification c)
     (inverseMetricBound D/c) Kc.B Kc.M B0 B1 Kc.A0 Kc.A2 c

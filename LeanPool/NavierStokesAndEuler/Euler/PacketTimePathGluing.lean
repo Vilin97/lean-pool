@@ -7,11 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeIntervalGlue
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
+public import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Gluing matching continuous paths is one fixed linear contraction. -/
 
 @[expose] public section
 
-/-! Gluing matching continuous paths is one fixed linear contraction. -/
 
 noncomputable section
 
@@ -24,15 +30,18 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 local instance compactInterval (a b : ℝ) : CompactSpace (Icc a b) :=
   isCompact_iff_compactSpace.mp isCompact_Icc
 
+/-- Pair: an abbreviation for `C(Icc (0 : ℝ) τ,E) × C(Icc τ S,E)`. -/
 abbrev Pair (S τ : ℝ) (E : Type*) [TopologicalSpace E] :=
   C(Icc (0 : ℝ) τ,E) × C(Icc τ S,E)
 
+/-- Mismatch as an element of `Pair S τ E →L[ℝ] E`. -/
 def mismatch (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) : Pair S τ E →L[ℝ] E :=
   (ContinuousMap.evalCLM ℝ ⟨τ,hτ0,le_rfl⟩).comp
-      (ContinuousLinearMap.fst ℝ C(Icc (0 : ℝ) τ,E) C(Icc τ S,E))-
+      (ContinuousLinearMap.fst ℝ C(Icc (0 : ℝ) τ,E) C(Icc τ S,E)) -
     (ContinuousMap.evalCLM ℝ ⟨τ,le_rfl,hτS⟩).comp
       (ContinuousLinearMap.snd ℝ C(Icc (0 : ℝ) τ,E) C(Icc τ S,E))
 
+/-- Matching: an abbreviation for `(mismatch (E := E) S τ hτ0 hτS).ker`. -/
 abbrev Matching (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) : Submodule ℝ (Pair S τ E) :=
   (mismatch (E := E) S τ hτ0 hτS).ker
 
@@ -42,6 +51,7 @@ theorem matching_values (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
   have h : mismatch S τ hτ0 hτS u.val=0 := u.property
   exact sub_eq_zero.mp h
 
+/-- Glue path as an element of `C(Icc (0 : ℝ) S,E)`. -/
 def gluePath (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) : C(Icc (0 : ℝ) S,E) :=
   ⟨fun t => glue τ (fun r => u.val.1 (projIcc 0 τ hτ0 r))
@@ -64,6 +74,7 @@ theorem gluePath_norm_le (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
   · simp only [glue, ht, ite_false]
     exact (u.val.2.norm_coe_le_norm _).trans (norm_snd_le u.val)
 
+/-- Glue operator as an element of `Matching (E := E) S τ hτ0 hτS →L[ℝ] C(Icc (0 : ℝ) S,E)`. -/
 def glueOperator (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) :
     Matching (E := E) S τ hτ0 hτS →L[ℝ] C(Icc (0 : ℝ) S,E) :=
   ({ toFun := gluePath S τ hτ0 hτS

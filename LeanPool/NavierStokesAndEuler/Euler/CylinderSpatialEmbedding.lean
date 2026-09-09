@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.LpBochnerRealization
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Prod
+import LeanPool.NavierStokesAndEuler.Euler.LpBochnerRealization
+import Mathlib.MeasureTheory.Integral.Prod
+
+/-! The genuine constant-angle embedding of ordinary spatial L² into cylinder L². -/
 
 @[expose] public section
 
-/-! The genuine constant-angle embedding of ordinary spatial L² into cylinder L². -/
 
 noncomputable section
 
@@ -23,6 +24,7 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Spatial L²: an abbreviation for `Lp V 2 (volume : Measure Space)`. -/
 abbrev SpatialL2 (V : Type*) [NormedAddCommGroup V] := Lp V 2 (volume : Measure Space)
 
 section Embedding
@@ -34,6 +36,7 @@ theorem lifted_memLp (u : SpatialL2 V) :
     MemLp (fun z : LiftDomain P => u z.1) 2 (liftMeasure P) :=
   (Lp.memLp u).comp_fst (volume : Measure (AddCircle P))
 
+/-- Lift, given by `(lifted_memLp P u).toLp (fun z : LiftDomain P => u z.1)`. -/
 def lift (u : SpatialL2 V) : CylinderL2 P V :=
   (lifted_memLp P u).toLp (fun z : LiftDomain P => u z.1)
 
@@ -91,11 +94,13 @@ theorem lift_norm_le (u : SpatialL2 V) : ‖lift P u‖ ≤ Real.sqrt P*‖u‖ 
   rw [mul_pow, Real.sq_sqrt (le_of_lt (Fact.out : 0 < P))]
   exact le_of_eq (lift_norm_sq P u)
 
+/-- Embedding linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def embeddingLinear : SpatialL2 V →ₗ[ℝ] CylinderL2 P V where
   toFun := lift P
   map_add' := lift_add P
   map_smul' := lift_smul P
 
+/-- Embedding, given by `(embeddingLinear P).mkContinuous (Real.sqrt P) (lift_norm_le P)`. -/
 def embedding : SpatialL2 V →L[ℝ] CylinderL2 P V :=
   (embeddingLinear P).mkContinuous (Real.sqrt P) (lift_norm_le P)
 

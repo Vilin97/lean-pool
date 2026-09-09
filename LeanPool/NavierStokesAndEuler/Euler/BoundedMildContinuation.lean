@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticMildPasting
+public import LeanPool.NavierStokesAndEuler.Euler.QuadraticHeatLocal
+import LeanPool.NavierStokesAndEuler.Euler.QuadraticMildPasting
+
+/-! Genuine finite-time continuation of actual viscous mild solutions from an a priori Sobolev
+bound. -/
 
 @[expose] public section
 
-/-! Genuine finite-time continuation of actual viscous mild solutions from an a priori Sobolev
-  bound. -/
 
 noncomputable section
 
@@ -30,7 +32,7 @@ theorem advance_time_eq (a δ S : ℝ) : a+min δ (S-a) = min (a+δ) S := by
 
 /-- Repeated genuine local windows reach each successive point of a fixed finite time grid. -/
 theorem advance_grid (S δ a : ℝ) (hδ : 0 ≤ δ) (n : ℕ)
-    (hgrid : min ((n : ℝ)*δ) S ≤ a) :
+    (hgrid : min ((n : ℝ) * δ) S ≤ a) :
     min (((n+1 : ℕ) : ℝ)*δ) S ≤ a+min δ (S-a) := by
   rw [advance_time_eq]
   apply le_min
@@ -45,14 +47,15 @@ theorem advance_grid (S δ a : ℝ) (hδ : 0 ≤ δ) (n : ℕ)
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- An actual uniform Sobolev bound on partial solutions yields a genuine solution on the whole prescribed interval.
+/-- An actual uniform Sobolev bound on partial solutions yields a genuine solution on the whole
+prescribed interval.
 The continuation is constructed by finitely many actual local heat solves and exact nonlinear
-  pasting. -/
+pasting. -/
 theorem exists_global_mild_of_bound (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ) (hS : 0 < S)
-    (R : ℝ) (hR : 0 ≤ R) (u₀ : SobolevSpace period (q+1)) (hu₀ : ‖u₀‖ ≤ R)
-    (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q+1)) (SobolevSpace period q))
+    (R : ℝ) (hR : 0 ≤ R) (u₀ : SobolevSpace period (q + 1)) (hu₀ : ‖u₀‖ ≤ R)
+    (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q + 1)) (SobolevSpace period q))
     (hbound : ∀ (T : ℝ) (hT : 0 ≤ T) (hTS : T ≤ S)
-      (u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1))),
+      (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))),
       (∀ t, u t = quadraticDuhamel period ν hν hT hTS C u₀ u t) → ‖u‖ ≤ R) :
     ∃ u : C(Icc (0 : ℝ) S, SobolevSpace period (q+1)),
       ‖u‖ ≤ R ∧ u ⟨0,le_rfl,hS.le⟩ = u₀ ∧
@@ -90,6 +93,7 @@ theorem exists_global_mild_of_bound (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
   subst a
   refine ⟨u,hbound S ha haS u hsol,?_,hsol⟩
   have hz := hsol ⟨0,le_rfl,hS.le⟩
-  simpa only [quadraticDuhamel,mul_zero,Real.toNNReal_zero,heatOperator_zero,intervalIntegral.integral_same,add_zero] using hz
+  simpa only [quadraticDuhamel, mul_zero, Real.toNNReal_zero, heatOperator_zero,
+      intervalIntegral.integral_same, add_zero] using hz
 
 end EulerBoundedMildContinuation

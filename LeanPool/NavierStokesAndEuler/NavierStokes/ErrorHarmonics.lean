@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicFields
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidual
-
-@[expose] public section
 
 /-!
 # Explicit harmonic witnesses for the retained error fields
@@ -21,6 +17,9 @@ Gaussian errors retain the original carrier and its conjugate, while actual
 mean aliases occupy the zero mode. No full-residual identity is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ErrorHarmonics
@@ -29,6 +28,7 @@ open Set Filter Function MeasureTheory
 open HarmonicFields CorrectionState
 open scoped BigOperators ContDiff Topology ComplexConjugate
 
+/-- Conjugate pair as an element of `Coefficients D`. -/
 noncomputable def conjugatePair {D : Type} (j : ℤ) (a : D → ℂ) : Coefficients D := by
   let c : Coefficients D := AddMonoidAlgebra.single j (fun x => a x / 2)
   exact c + conjugateReverse c
@@ -84,6 +84,8 @@ theorem norm_pair_field_le {D : Type} (j : ℤ) (a : D → ℂ) (k : ℝ) (Φ : 
   apply (Complex.abs_re_le_norm _).trans
   rw [norm_mul, norm_character, mul_one]
 
+/-- Paired block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def pairedBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (a : ℕ → D → HarmonicCalculus.ComplexVector) : HarmonicBlock D where
   velocity n i := conjugatePair j (fun x => a n x i)
@@ -112,6 +114,8 @@ theorem pairedBlock_evaluation {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ 
   simp only [Complex.ofReal_re] at h
   exact h
 
+/-- Zero block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def zeroBlock {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (a : MeanVector D) : HarmonicBlock D where
   velocity n i := constantCoefficient (fun x => (a n x i : ℂ))
@@ -192,6 +196,8 @@ noncomputable def gaussianField (d : LinearWaveBounds.GraphDirections (D × ℝ)
   fun n p i => (HarmonicCalculus.vectorMode (k n * (j : ℝ)) (Ψ n)
     (LinearWaveBounds.excludedSlotError d ψ a source n) p i).re
 
+/-- Gaussian block, given by `pairedBlock j k Φ kp (fun n x =>
+LinearWaveBounds.excludedSlotError d ψ a source n (x, 0))`. -/
 noncomputable def gaussianBlock (d : LinearWaveBounds.GraphDirections (D × ℝ))
     (ψ : ℕ → D × ℝ → ℝ) (a source : ℕ → D × ℝ → HarmonicCalculus.ComplexVector)
     (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) : HarmonicBlock D :=
@@ -257,7 +263,7 @@ theorem gaussianField_eq_gaussianTailError {s : WeightedClasses.StripData (D × 
     (j : ℤ) (k : ℕ → ℝ) (Ψ : ℕ → D × ℝ → ℝ) :
     gaussianField d g.cutoff a source j k Ψ =
       fun n p i => (HarmonicCalculus.vectorMode (k n * (j : ℝ)) (Ψ n) (g.error a source n) p i).re
-        := by
+          := by
   unfold gaussianField
   rw [LinearWaveBounds.excludedSlotError_eq_gaussianError g d hfast]
 
@@ -455,20 +461,31 @@ variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 /-- Only primitive data are stored. The error field and its coefficients are
 computed from the cutoff derivative, amplitudes, and carrier. -/
 structure GaussianData (D : Type) [NormedAddCommGroup D] [NormedSpace ℝ D] where
+  /-- Directions of `GaussianData`, of type `LinearWaveBounds.GraphDirections (D × ℝ)`. -/
   directions : LinearWaveBounds.GraphDirections (D × ℝ)
+  /-- Cutoff of `GaussianData`, of type `ℕ → D × ℝ → ℝ`. -/
   cutoff : ℕ → D × ℝ → ℝ
+  /-- Amplitude of `GaussianData`, of type `ℕ → D × ℝ → HarmonicCalculus.ComplexVector`. -/
   amplitude : ℕ → D × ℝ → HarmonicCalculus.ComplexVector
+  /-- Source of `GaussianData`, of type `ℕ → D × ℝ → HarmonicCalculus.ComplexVector`. -/
   source : ℕ → D × ℝ → HarmonicCalculus.ComplexVector
+  /-- Harmonic of `GaussianData`, of type `ℤ`. -/
   harmonic : ℤ
+  /-- Phase of `GaussianData`, of type `ℕ → D × ℝ → ℝ`. -/
   phase : ℕ → D × ℝ → ℝ
 
+/-- Error, given by `gaussianField g.directions g.cutoff g.amplitude g.source g.harmonic k
+g.phase`. -/
 noncomputable def GaussianData.error (g : GaussianData D) (k : ℕ → ℝ) : Oscillation D :=
   gaussianField g.directions g.cutoff g.amplitude g.source g.harmonic k g.phase
 
+/-- Block, given by `gaussianBlock g.directions g.cutoff g.amplitude g.source g.harmonic k Φ
+kp`. -/
 noncomputable def GaussianData.block (g : GaussianData D)
     (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) : HarmonicBlock D :=
   gaussianBlock g.directions g.cutoff g.amplitude g.source g.harmonic k Φ kp
 
+/-- Compatible as an element of `Prop`. -/
 def GaussianData.Compatible (g : GaussianData D)
     (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) : Prop :=
   (∀ n, ContDiff ℝ ∞ (g.cutoff n)) ∧ AngleIndependent g.cutoff ∧
@@ -481,6 +498,8 @@ theorem GaussianData.block_represents (g : GaussianData D)
   gaussianBlock_represents g.directions g.harmonic k Φ g.phase kp
     hg.1 hg.2.1 hg.2.2.1 hg.2.2.2.1 hg.2.2.2.2
 
+/-- Accumulated gaussian block, given by `sumBlock (Finset.range steps) k Φ kp (fun s => (g
+s).block k Φ kp)`. -/
 noncomputable def accumulatedGaussianBlock (steps : ℕ) (g : ℕ → GaussianData D)
     (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) : HarmonicBlock D :=
   sumBlock (Finset.range steps) k Φ kp (fun s => (g s).block k Φ kp)
@@ -537,6 +556,8 @@ noncomputable def accumulatedAlias (steps : ℕ) (r : ReconstructionData) (h : �
   CorrectionState.pressureAlias r c (u steps) +
     ∑ s ∈ Finset.range steps, CorrectionState.temporalAlias r h c (u s)
 
+/-- Accumulated alias block, given by `zeroBlock k Φ kp (fun n x => accumulatedAlias steps r h c
+u n (x, 0))`. -/
 noncomputable def accumulatedAliasBlock (steps : ℕ) (r : ReconstructionData) (h : ℝ)
     (c : Context (Lift S)) (u : ℕ → State (Lift S))
     (k : ℕ → ℝ) (Φ : ℕ → Lift S → ℝ) (kp : ℕ → ℤ) : HarmonicBlock (Lift S) :=
@@ -643,6 +664,7 @@ open ProblemStatement AxisymmetricFields
 noncomputable def polarSpace (r z θ : ℝ) : Space :=
   AxisymmetricResidual.pack (r * Real.cos θ) (r * Real.sin θ) z
 
+/-- Polar profile, given by `(q.1, (q.2.1 ^ 2 / 2, q.2.2))`. -/
 noncomputable def polarProfile (q : ProfilePoint) : ProfilePoint :=
   (q.1, (q.2.1 ^ 2 / 2, q.2.2))
 
@@ -666,15 +688,25 @@ theorem cylindricalComponents_pack (r θ A B C : ℝ) :
       (r * Real.sin θ * A - r * Real.cos θ * B) C) = ![r * A, -r * B, C] := by
   funext i
   fin_cases i
-  · simp [cylindricalComponents]
+  · simp only [cylindricalComponents, Fin.isValue, AxisymmetricResidual.pack_zero,
+      AxisymmetricResidual.pack_one,
+      neg_mul, AxisymmetricResidual.pack_two, Fin.zero_eta, Matrix.cons_val_zero,
+          Nat.succ_eq_add_one, Nat.reduceAdd]
     calc
       _ = r * A * (Real.sin θ ^ 2 + Real.cos θ ^ 2) := by ring
       _ = _ := by rw [Real.sin_sq_add_cos_sq, mul_one]
-  · simp [cylindricalComponents]
+  · simp only [cylindricalComponents, Fin.isValue, AxisymmetricResidual.pack_zero,
+      AxisymmetricResidual.pack_one,
+      neg_mul, AxisymmetricResidual.pack_two, Fin.mk_one, Matrix.cons_val_one,
+          Matrix.cons_val_zero, Nat.succ_eq_add_one,
+      Nat.reduceAdd]
     calc
       _ = -r * B * (Real.sin θ ^ 2 + Real.cos θ ^ 2) := by ring
       _ = _ := by simp only [Real.sin_sq_add_cos_sq, mul_one, neg_mul]
-  · simp [cylindricalComponents]
+  · simp only [cylindricalComponents, Fin.isValue, AxisymmetricResidual.pack_zero,
+      AxisymmetricResidual.pack_one,
+      neg_mul, AxisymmetricResidual.pack_two, Fin.reduceFinMk, Matrix.cons_val,
+          Nat.succ_eq_add_one, Nat.reduceAdd]
 
 theorem axisymmetricVelocity_components (B F U : Profile) (q : ProfilePoint) (θ : ℝ) :
     cylindricalComponents θ (AxisymmetricResidual.velocity B F U
@@ -695,6 +727,7 @@ noncomputable def axisymmetricBaseError (B F U P : ℕ → Profile) : Oscillatio
     (navierStokesResidual (AxisymmetricResidual.velocity (B n) (F n) (U n))
       (AxisymmetricResidual.pressure (P n)) p.1.1 (polarSpace p.1.2.1 p.1.2.2 p.2))
 
+/-- Axisymmetric base value as an element of `MeanVector ProfilePoint`. -/
 noncomputable def axisymmetricBaseValue (B F U P : ℕ → Profile) : MeanVector ProfilePoint :=
   fun n q => ![q.2.1 * AxisymmetricResidual.residualRadial (B n) (F n) (U n) (P n) (polarProfile q),
     -q.2.1 * AxisymmetricResidual.residualAngular (B n) (F n) (U n) (polarProfile q),
@@ -728,6 +761,7 @@ theorem axisymmetricBaseError_angleIndependent_at (B F U P : ℕ → Profile) (n
   rw [axisymmetricBaseError_eq_value B F U P n q θ hB hF hU hP,
     axisymmetricBaseError_eq_value B F U P n q 0 hB hF hU hP]
 
+/-- Axisymmetric base block, given by `zeroBlock k Φ kp (axisymmetricBaseValue B F U P)`. -/
 noncomputable def axisymmetricBaseBlock (B F U P : ℕ → Profile)
     (k : ℕ → ℝ) (Φ : ℕ → ProfilePoint → ℝ) (kp : ℕ → ℤ) : HarmonicBlock ProfilePoint :=
   zeroBlock k Φ kp (axisymmetricBaseValue B F U P)

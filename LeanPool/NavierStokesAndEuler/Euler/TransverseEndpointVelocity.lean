@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointGreen
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongAlgebra
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 Classical first-time regularity of the actual endpoint solution.  The genuine
@@ -18,6 +17,9 @@ proved to represent the variational derivative and to be the displacement's
 within-interval derivative at every time.  The endpoint energy operator is
 therefore the actual projected terminal derivative.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,11 +47,13 @@ theorem initialCoordinates_continuous (u : TimeLp T E) :
   (extendPath_continuous T hT (frameLeftInversePath T Q c hc hQ)).clm_apply
     (initialRealPrimitive_continuous T u)
 
+/-- Coordinate velocity path, constructed using `extendPath`. -/
 def coordinateVelocityPath (u : TimeLp T E) (t : ℝ) : U :=
   extendPath T hT (gramInversePath T Q c hc hQ) t
     (momentumPath T hT Q Q₁ H u t -
       extendPath T hT (mixedPath T Q Q₁) t (initialCoordinates T hT Q c hc hQ u t))
 
+/-- Physical velocity path, constructed using `extendPath`. -/
 def physicalVelocityPath (u : TimeLp T E) (t : ℝ) : E :=
   extendPath T hT Q₁ t (initialCoordinates T hT Q c hc hQ u t) +
     extendPath T hT Q t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)

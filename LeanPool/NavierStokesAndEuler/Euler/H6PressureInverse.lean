@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.H6PressureCommutator
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedPressure
+
+/-! The actual coercive pressure inverse in fixed Sobolev blocks, followed by external Gevrey
+weighting. -/
 
 @[expose] public section
 
-/-! The actual coercive pressure inverse in fixed Sobolev blocks, followed by external Gevrey
-  weighting. -/
 
 noncomputable section
 
@@ -53,7 +56,7 @@ theorem pressure_block_inverse {s q n : ℕ} {A : SmoothCoefficient period} {f :
         K₀.pressureConstant c * (sobolevSize period (directions := directions) q (J.word w) +
           sobolevSize period (directions := directions) q
             ((EulerSpatialSobolevInverse.SpatialJet.multiply K P).word w - A.operator (P.word w)))
-              := by
+                := by
     intro w
     let R := J.word w -
       ((EulerSpatialSobolevInverse.SpatialJet.multiply K P).word w - A.operator (P.word w))
@@ -75,7 +78,7 @@ theorem pressure_block_inverse {s q n : ℕ} {A : SmoothCoefficient period} {f :
         (sobolevSize period (directions := directions) q (J.word w) +
           sobolevSize period (directions := directions) q
             ((EulerSpatialSobolevInverse.SpatialJet.multiply K P).word w - A.operator (P.word w)))
-              :=
+                :=
       Finset.sum_le_sum (fun w _ => hw w)
     _ = _ := by
       rw [← Finset.mul_sum, Finset.sum_add_distrib, ← blockNorm_eq_word_sizes J h]
@@ -101,7 +104,7 @@ theorem pressure_block_recurrence {s q n : ℕ} {A : SmoothCoefficient period} {
     apply Finset.sum_nonneg
     intro l _
     exact mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (coefficientBlock_nonneg K)) (blockNorm_nonneg
-      P)
+        P)
   calc
     _ ≤ K₀.pressureConstant c * (blockNorm period J q n + commutatorBlock K P q n) :=
       pressure_block_inverse K J κ m c hc hpos hq h
@@ -116,7 +119,7 @@ theorem pressure_block_recurrence {s q n : ℕ} {A : SmoothCoefficient period} {
 
 /-- Source equation18's shifted inverse estimate in genuine fixed Hq blocks.
 The constant depends on q and base coefficient bounds, and is independent of the external cutoff N.
-  -/
+-/
 theorem pressure_shifted_Hq_bound {s q : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f)

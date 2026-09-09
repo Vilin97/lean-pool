@@ -9,11 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimary
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
 
 /-! The literal compact initial wave supplies the seven-field primary
 budget for the direct-forward, zero-history packet construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,7 +35,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (C : ℝ) (W : GradeGuards (P := P) L N C) (Y : InitialData P D)
   (α : ℝ) (hα : 0 < α)
   (hYb : ∀ n, block standardDirection 6
-    (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α*C)*majorant L.R 0 n)
+    (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n)
 
 include W hα hYb
 
@@ -89,12 +93,13 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
   (hR : wordRadius (Fin 4) δ ≤ L.R)
-  (W : EulerTransversePacketForward.Budget.GradeGuards (P := period) L N (wordCost (Fin 4) 6 δ*‖ξ‖))
+  (W : EulerTransversePacketForward.Budget.GradeGuards (P := period) L N (wordCost (Fin 4) 6 δ *
+      ‖ξ‖))
 
 include hδ1 hR hα W
 
 theorem forwardPrimary_profile_budget (O : Operators) (hcorrector : O.curlCorrector =
-  D.curlCorrector period)
+    D.curlCorrector period)
     (S : Scales (Icc (0 : ℝ) D.T)) (hgrowth : S.growth = α • L.g) :
     ProfileBudget (forwardPrimaryRegularity D δ hδ (α • ξ) hs O hcorrector) S L.R 1 := by
   apply L.primary_profile_budget N _ W (initialData D δ hδ (α • ξ) hs) α hα _ O hcorrector S hgrowth

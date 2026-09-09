@@ -9,13 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPressureBudgets
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedPressure
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastHessian
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
 
 /-! The actual forward finite pressure has its actual leading angular force
 and a uniformly small covector remainder. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,9 +46,13 @@ theorem forwardInitializedProfiles_one_meanPressure :
   simp only [forwardInitializedProfiles,sourceProfiles,profiles_one]
   rfl
 
+/-- Forward initialized angular pressure, defined pointwise by `(pressureJet (scalar D
+(initialData D δ hδ (α • ξ) hs)) z).2 angleDirection`. -/
 def forwardInitializedAngularPressure : ScalarField := fun z =>
   (pressureJet (scalar D (initialData D δ hδ (α • ξ) hs)) z).2 angleDirection
 
+/-- Forward initialized covector remainder, given by `covectorRemainder (N := N) (a :=
+forwardInitializedProfiles M D δ hδ ξ hs α) D.m₀ κ`. -/
 def forwardInitializedCovectorRemainder (N : ℕ) (κ : ℝ) : VectorField :=
   covectorRemainder (N := N) (a := forwardInitializedProfiles M D δ hδ ξ hs α) D.m₀ κ
 
@@ -108,14 +114,17 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.g)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.g)
 
+/-- Forward initialized pressure budget, constructed using `Classical.choice`. -/
 def forwardInitializedPressureBudget (p : ℕ) :=
   Classical.choice (forwardInitializedPressureBudget_exists M D hTime δ hδ ξ hs α
     L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth p)
 
+/-- Forward initialized angular pressure field as an element of `Field period D.T (fun z =>
+forwardInitializedAngularPressure D δ hδ ξ hs α z • D.m₀)`. -/
 def forwardInitializedAngularPressureField :
     Field period D.T (fun z => forwardInitializedAngularPressure D δ hδ ξ hs α z • D.m₀) :=
   (((forwardInitializedPressureBudget M D hTime δ hδ ξ hs α
@@ -136,9 +145,11 @@ theorem forwardInitializedAngularPressure_bound :
     nlinarith [sq_nonneg S.H0]
   have hc := (hb.mono_amplitude (zero_le_one.trans L.radius_one) ha).fixed_velocity_grade
     (n := 1) (zero_le_one.trans L.radius_one) S.H0_pos.le
-  exact (hc.changeTime hTime).of_raw_eq _
+  exact (hc.changeTime hTime).ofRawEq _
     (fun _ _ _ => by rw [forwardInitializedProfiles_one_highPressure]; rfl)
 
+/-- Forward initialized covector remainder field as an element of `Field period D.T
+(forwardInitializedCovectorRemainder M D δ hδ ξ hs α N κ)`. -/
 def forwardInitializedCovectorRemainderField (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) :
     Field period D.T (forwardInitializedCovectorRemainder M D δ hδ ξ hs α N κ) :=
   (covectorRemainderField M.T_pos D.m₀
@@ -150,7 +161,7 @@ def forwardInitializedCovectorRemainderField (N : ℕ) (hN : 1 ≤ N) (κ : ℝ)
 
 include NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 theorem forwardInitializedCovectorRemainder_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (forwardInitializedCovectorRemainderField M D hTime δ hδ ξ hs α
       L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k⁻¹).WordBound
       6 (4*L.R) ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2) 0 := by

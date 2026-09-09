@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Exponential
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
+import Mathlib.Analysis.ODE.ExistUnique
 
 /-!
 # An actual global flow for a bounded, uniformly Lipschitz velocity
@@ -19,6 +20,9 @@ bounded velocity and Grönwall estimate will give joint continuity in both
 times and the initial point.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Metric
@@ -28,11 +32,16 @@ namespace EulerBoundedLipschitzFlow
 
 variable (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Data, collecting `velocity`, `continuous`, `lipschitzConstant`, `lipschitz`, `speedBound`,
+`speed`. -/
 structure Data where
+  /-- Velocity field of `Data`, of type `ℝ → E → E`. -/
   velocity : ℝ → E → E
   continuous : Continuous (Function.uncurry velocity)
+  /-- Lipschitz constant of `Data`, of type `ℝ≥0`. -/
   lipschitzConstant : ℝ≥0
   lipschitz : ∀ t, LipschitzWith lipschitzConstant (velocity t)
+  /-- Speed bound of `Data`, of type `ℝ≥0`. -/
   speedBound : ℝ≥0
   speed : ∀ t x, ‖velocity t x‖ ≤ speedBound
 
@@ -51,6 +60,7 @@ theorem curve_exists (s : ℝ) (x : E) :
   have h := (hα (t-s)).scomp t ((hasDerivAt_id t).sub_const s)
   simpa only [Function.comp_def, id_eq, sub_add_cancel, one_smul] using h
 
+/-- Flow, given by `(V.curve_exists s x).choose t`. -/
 def flow (s t : ℝ) (x : E) : E := (V.curve_exists s x).choose t
 
 @[simp] theorem flow_initial (s : ℝ) (x : E) : V.flow s s x = x :=

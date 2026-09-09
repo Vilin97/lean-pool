@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSumBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
-public import Mathlib.Data.Countable.Defs
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCovariance
 
 /-!
 # Uniform primary weights and curl estimates
@@ -20,6 +18,9 @@ weighted analysis without losing any inverse-edge factors.  The reindexed
 strip retains the same domain, edge distance, and vanishing weight.  Every
 constant is chosen before both the original band and the label.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -50,6 +51,7 @@ noncomputable def reindexedStrip (s : StripData D) (e : ℕ → ℕ × ι) : Str
   zeta_smooth := s.zeta_smooth
   zeta_nonneg := s.zeta_nonneg
 
+/-- Pull, defined pointwise by `f (e k).2 (e k).1`. -/
 noncomputable def pull (e : ℕ → ℕ × ι) (f : ι → ℕ → D → E) : ℕ → D → E :=
   fun k => f (e k).2 (e k).1
 
@@ -91,6 +93,7 @@ theorem uniform_of_pull {s : StripData D} {w : ι → ℕ → D → ℝ} {α : �
     obtain ⟨k, hk⟩ := he (n, l)
     simpa only [reindexed_majorant, pull, hk] using hb k x hx j hj
 
+/-- Enumeration, given by `Classical.choose (exists_surjective_nat (ℕ × ι))`. -/
 noncomputable def enumeration (ι : Type*) [Countable ι] [Nonempty ι] : ℕ → ℕ × ι :=
   Classical.choose (exists_surjective_nat (ℕ × ι))
 
@@ -109,7 +112,7 @@ theorem pull_polynomial {s : StripData D} {f : ι → ℕ → D → E}
     (hf : PhaseJetBounds.PolynomialJets (jointDomain s) (fun q => f q.2 q.1))
     (e : ℕ → ℕ × ι) :
     PhaseJetBounds.PolynomialJets (CurlClassBounds.phaseDomain (reindexedStrip s e)) (pull e f) :=
-      by
+        by
   refine ⟨fun k => hf.smooth (e k), ?_⟩
   intro m
   obtain ⟨C, hC, p, hb⟩ := hf.bound m
@@ -237,6 +240,8 @@ theorem class_of_single {w : ℕ → D → ℝ} {f : ℕ → D → E} (hf : MemC
   obtain ⟨C, hC, p, hb⟩ := hf.bounds m
   exact ⟨C, hC, p, fun _ => hb⟩
 
+/-- Uniform band bound, given by `∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ, ∀ l n, ‖a l n‖ ≤ C * s.epsilon n ^ β
+* s.slow n ^ p`. -/
 noncomputable def UniformBandBound (s : StripData D) (β : ℝ) (a : ι → ℕ → ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ, ∀ l n,
     ‖a l n‖ ≤ C * s.epsilon n ^ β * s.slow n ^ p
@@ -278,7 +283,7 @@ theorem covariance_weights_class
     (hT : ∀ i, UniformClass s w 0 (fun l n x => T l n x i))
     {b M : ℝ} (hb : 0 < b) (hM : 1 ≤ M)
     (hdet : ∀ l n x, x ∈ s.domain → b ≤ |(PrimaryPulseBounds.normalizedMatrix (r l n) (H l n
-      x)).det|)
+        x)).det|)
     (hentry : ∀ l n x, x ∈ s.domain → ∀ i j, |r l n * H l n x i j| ≤ M)
     (j : Fin 2) :
     UniformClass s w 0 (fun l n x => SmoothCovariance.weights (H l n x) (T l n x) j) := by
@@ -301,7 +306,7 @@ theorem covariance_amplitudes_class
     (hT : ∀ i, UniformClass s w 0 (fun l n x => T l n x i))
     {b M c : ℝ} (hb : 0 < b) (hM : 1 ≤ M) (hc : 0 < c)
     (hdet : ∀ l n x, x ∈ s.domain → b ≤ |(PrimaryPulseBounds.normalizedMatrix (r l n) (H l n
-      x)).det|)
+        x)).det|)
     (hentry : ∀ l n x, x ∈ s.domain → ∀ i j, |r l n * H l n x i j| ≤ M)
     (hw : ∀ l n x, x ∈ s.domain → 0 < w l n x)
     (hlower : ∀ l n x, x ∈ s.domain → ∀ j,
@@ -362,11 +367,11 @@ theorem primaryCoefficient_waveClass
     hH hT hb hM hc hdet hentry (fun _ _ x hx => hζ x hx) hlower j
   have ham : UniformWaveClass s P 0 (fun l n x =>
       SmoothCovariance.amplitudes (H l n x) (T l n x) j • CurlClassBounds.complexify (v l n x)) :=
-        by
+          by
     simpa only [zero_add] using smul_class ha (hv.map CurlClassBounds.complexify)
   have hm : UniformWaveClass s P 0 (fun l n x => mask l n x •
       (SmoothCovariance.amplitudes (H l n x) (T l n x) j • CurlClassBounds.complexify (v l n x)))
-        := by
+          := by
     simpa only [zero_add] using real_smul_class hmask ham
   have he : UniformBandBound (ι := ι) s (1 / 2) (fun _ n => Real.sqrt (s.epsilon n)) := by
     refine ⟨1, zero_le_one, 0, fun l n => ?_⟩
@@ -374,8 +379,8 @@ theorem primaryCoefficient_waveClass
     simp only [pow_zero, mul_one, one_mul, le_refl]
   apply (show UniformWaveClass s P (1 / 2) (fun l n x => Real.sqrt (s.epsilon n) •
     (mask l n x • (SmoothCovariance.amplitudes (H l n x) (T l n x) j •
-      CurlClassBounds.complexify (v l n x)))) from by simpa only [zero_add] using band_smul_class
-        hm he).congr
+      CurlClassBounds.complexify (v l n x)))) from by
+          simpa only [zero_add] using band_smul_class hm he).congr
   intro l n x hx
   simp only [PrimaryPulseBounds.primaryCoefficient, PartitionedCovariance.amplitude, smul_smul]
   congr 1
@@ -399,7 +404,7 @@ theorem vector_class {a : ι → ℕ → D → ComplexVector}
   have hsum := UniformClass.sum Finset.univ
     (fun i l n x => (ContinuousLinearMap.single ℝ (fun _ : Fin 3 => ℂ) i) (a l n x i))
     (ha 0).weight_nonneg (fun i _ => (ha i).map (ContinuousLinearMap.single ℝ (fun _ : Fin 3 => ℂ)
-      i))
+        i))
   apply hsum.congr
   intro l n x hx
   ext i
@@ -519,23 +524,31 @@ noncomputable def phaseMatrix (A : Fin 2 → PhaseConstruction U)
   primaryCovariance pref (fun j => (A j).frame) (fun j => (A j).lam)
     (fun j => (A j).u) (fun j => (A j).L) (n, l) (χ (n, l) x).1
 
+/-- Phase fundamental, defined pointwise by `normalizedPulse ((A j).frame (n, l)) ((A j).lam (n,
+l)) ((A j).u (n, l)) ((A j).L (n, l)) (χ (n, l) x)`. -/
 noncomputable def phaseFundamental (A : Fin 2 → PhaseConstruction U)
     (χ : (ℕ × ι) → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) :
     ι → ℕ → D → ProblemStatement.Space := fun l n x =>
   normalizedPulse ((A j).frame (n, l)) ((A j).lam (n, l)) ((A j).u (n, l))
     ((A j).L (n, l)) (χ (n, l) x)
 
+/-- Phase envelope, defined pointwise by `referenceP ((A j).lam (n, l)) ((A j).u (n, l)) ((A
+j).L (n, l)) ((A j).L (n, l) * (χ (n, l) x).2)`. -/
 noncomputable def phaseEnvelope (A : Fin 2 → PhaseConstruction U)
     (χ : (ℕ × ι) → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ι → ℕ → D → ℝ := fun l n x =>
   referenceP ((A j).lam (n, l)) ((A j).u (n, l)) ((A j).L (n, l))
     ((A j).L (n, l) * (χ (n, l) x).2)
 
+/-- Phase cutoff fundamental, defined pointwise by `cutoffPulse ((A j).frame (n, l)) ((A j).lam
+(n, l)) ((A j).u (n, l)) ((A j).L (n, l)) (χ (n, l) x)`. -/
 noncomputable def phaseCutoffFundamental (A : Fin 2 → PhaseConstruction U)
     (χ : (ℕ × ι) → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) :
     ι → ℕ → D → ProblemStatement.Space := fun l n x =>
   cutoffPulse ((A j).frame (n, l)) ((A j).lam (n, l)) ((A j).u (n, l))
     ((A j).L (n, l)) (χ (n, l) x)
 
+/-- Phase slot envelope, defined pointwise by `GaussianTailFlat.referenceSlotEnvelope ((A j).lam
+(n, l)) ((A j).u (n, l)) ((A j).L (n, l)) (χ (n, l) x).2`. -/
 noncomputable def phaseSlotEnvelope (A : Fin 2 → PhaseConstruction U)
     (χ : (ℕ × ι) → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ι → ℕ → D → ℝ := fun l n x =>
   GaussianTailFlat.referenceSlotEnvelope ((A j).lam (n, l)) ((A j).u (n, l))
@@ -583,7 +596,7 @@ theorem phaseCutoffFundamental_class {s : StripData D} (A : Fin 2 → PhaseConst
     (hmap : ∀ q x, x ∈ s.domain → (χ q x).1 ∈ U.carrier q)
     (j : Fin 2) : UniformClass s (phaseSlotEnvelope A χ j) 0 (phaseCutoffFundamental A χ j) := by
   have hp := (cutoffPulse_envelope_jets U (A j).frame (A j).lam (A j).u (A j).L (A
-    j).pulse_jets).comp
+      j).pulse_jets).comp
     hχ hscale (fun q x hx => ⟨hmap q x hx, mem_univ _⟩)
   apply LabelSumBounds.uniformClass_of_envelopeJets hp (K := 1) (q := 1) le_rfl
     (fun n l => by simp [jointDomain]) (fun _ _ => subset_rfl)
@@ -632,9 +645,9 @@ theorem phase_primary_waveClass [Countable ι] [Nonempty ι] {s : StripData D}
     (j : Fin 2) :
     UniformWaveClass s (phaseEnvelope A χ j) (1 / 2)
       (fun l => primaryCoefficient s (phaseMatrix A pref χ l) (T l) (mask l) (phaseFundamental A χ
-        j l) j) :=
+          j l) j) :=
   primaryCoefficient_waveClass (phaseMatrix_jets A pref χ hscale hχ (fun q x hx => (hmap q x hx).1)
-    hpref)
+      hpref)
     hT hmask (phaseFundamental_class A χ hscale hχ hmap j) hb hM hc hdet hentry hζ hlower j
 
 end ActualPhase

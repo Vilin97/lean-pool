@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.BaseStaticEuler
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerUniform
 
-@[expose] public section
-
 /-! A single positive time and a single label bound work for every
 compact base datum with |β|≤1. The parent, inverse and Euler evolution
 below are the actual constructed objects. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,35 +22,43 @@ namespace EulerBaseDatum
 
 open Set EulerSmoothLimit EulerParentPacketFrames
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨zero_lt_one⟩
+local instance instBaseEulerInput1 : Fact (0 < (1 : ℝ)) := ⟨zero_lt_one⟩
 
+/-- Solution time, given by `EulerStaticEuler.baseTime 1 uniformL2Amplitude 1024
+uniformL2Amplitude_nonneg (by norm_num)`. -/
 def solutionTime : ℝ :=
   EulerStaticEuler.baseTime 1 uniformL2Amplitude 1024 uniformL2Amplitude_nonneg (by norm_num)
 
 theorem solutionTime_pos : 0 < solutionTime :=
   EulerStaticEuler.baseTime_pos 1 uniformL2Amplitude 1024 uniformL2Amplitude_nonneg (by norm_num)
 
+/-- Solution label constant, given by `EulerStaticEuler.baseLabelConstant 1 uniformL2Amplitude
+1024 uniformL2Amplitude_nonneg (by norm_num)`. -/
 def solutionLabelConstant : ℝ :=
   EulerStaticEuler.baseLabelConstant 1 uniformL2Amplitude 1024 uniformL2Amplitude_nonneg (by
-    norm_num)
+      norm_num)
 
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
 
+/-- Solution parent, constructed using `EulerStaticEuler.baseParent`. -/
 def solutionParent : Parent :=
   EulerStaticEuler.baseParent 1 (field (linear β)) uniformL2Amplitude 1024
     uniformL2Amplitude_nonneg (by norm_num) (field_uniform_jet β hβ)
     (velocity_divergence (linear β)) ell hell hell1
 
+/-- Solution label data, constructed using `EulerStaticEuler.baseLabelData`. -/
 def solutionLabelData : LabelData (solutionParent β hβ ell hell hell1) :=
   EulerStaticEuler.baseLabelData 1 (field (linear β)) uniformL2Amplitude 1024
     uniformL2Amplitude_nonneg (by norm_num) (field_uniform_jet β hβ)
     (velocity_divergence (linear β)) ell hell hell1
 
+/-- Solution inverse, constructed using `EulerStaticEuler.baseInverse`. -/
 def solutionInverse : ParticleInverse (solutionParent β hβ ell hell hell1) :=
   EulerStaticEuler.baseInverse 1 (field (linear β)) uniformL2Amplitude 1024
     uniformL2Amplitude_nonneg (by norm_num) (field_uniform_jet β hβ)
     (velocity_divergence (linear β)) ell hell hell1
 
+/-- Solution evolution, constructed using `EulerStaticEuler.baseEvolution`. -/
 def solutionEvolution : Evolution (solutionParent β hβ ell hell hell1) :=
   EulerStaticEuler.baseEvolution 1 (field (linear β)) uniformL2Amplitude 1024
     uniformL2Amplitude_nonneg (by norm_num) (field_uniform_jet β hβ)
@@ -66,7 +75,7 @@ theorem solutionOddData : OddData (solutionParent β hβ ell hell hell1) :=
     (velocity_divergence (linear β)) ell hell hell1 (velocity_odd (linear β))
 
 theorem solution_initial_velocity (x : Space) :
-    (solutionParent β hβ ell hell hell1).velocity.field ⟨0,le_rfl,solutionTime_pos.le⟩ x=
+    (solutionParent β hβ ell hell hell1).velocity.field ⟨0,le_rfl,solutionTime_pos.le⟩ x =
       velocity (linear β) x :=
   EulerStaticEuler.baseParent_initial_velocity 1 (field (linear β)) uniformL2Amplitude 1024
     uniformL2Amplitude_nonneg (by norm_num) (field_uniform_jet β hβ)

@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProduct
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevWordBounds
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordProduct
 
 /-!
 # Same-radius fixed-H6 estimates for actual cylinder products
@@ -19,6 +17,9 @@ The product is the literal pointwise product already constructed in H6.
 Both input word sums pass directly through the bilinear Leibniz formula.
 The only norm equivalence constant is the fixed size of the H6 array.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,14 +33,26 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (C(K,SobolevSpace P 6)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,SobolevSpace P 6)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,SobolevSpace P 6) →L[ℝ] C(K,SobolevSpace P 6)) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(K,SobolevSpace P 6) →L[ℝ] C(K,SobolevSpace P 6)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,SobolevSpace P 6))` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderPathProductBounds1 : NormedAddCommGroup (C(K,SobolevSpace P 6)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,SobolevSpace P 6))` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderPathProductBounds2 : NormedSpace ℝ (C(K,SobolevSpace P 6)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,SobolevSpace P 6) →L[ℝ] C(K,SobolevSpace P 6))`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProductBounds3 : NormedAddCommGroup (C(K,SobolevSpace P 6) →L[ℝ]
+    C(K,SobolevSpace P 6)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,SobolevSpace P 6) →L[ℝ] C(K,SobolevSpace P 6))`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderPathProductBounds4 : NormedSpace ℝ (C(K,SobolevSpace P 6) →L[ℝ]
+    C(K,SobolevSpace P 6)) :=
+    inferInstance
 
-variable (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (p q : C(K,LiftL2 P))
+variable (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (p q : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
 
@@ -77,7 +90,7 @@ theorem scalarProductPath_block_bound (n : ℕ) (a : LiftTangent) :
       productBlockConstant P * leibnizConvolution
         (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) k a)
         (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) k a) n :=
-          by
+            by
   let B := pathBilinear (K := K) (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
   have he := funext (scalarProductPath_sobolevOrbit P L hL p q hp hq)
   have hc : leibnizConvolution
@@ -86,7 +99,7 @@ theorem scalarProductPath_block_bound (n : ℕ) (a : LiftTangent) :
       leibnizConvolution
         (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) k a)
         (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) k a) n :=
-          by
+            by
     unfold leibnizConvolution
     apply sum_le_sum
     intro k _

@@ -8,9 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlotColoring
 public import LeanPool.NavierStokesAndEuler.NavierStokes.Scaling
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The actual native chart scales
@@ -21,6 +20,9 @@ their reciprocal bounds, the rounded carrier scale, and polynomial/exponential
 decay along the actual dyadic sequence.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ChartScales
@@ -28,18 +30,29 @@ namespace NavierStokes.ChartScales
 open Filter
 open scoped Topology
 
+/-- Tg: an abbreviation for `SlotColoring.coverGrowth`. -/
 abbrev Tg : ℝ := SlotColoring.coverGrowth
+/-- Lambda, given by `4 - Real.sqrt 2`. -/
 def Lambda : ℝ := 4 - Real.sqrt 2
+/-- Rho, given by `Real.log Lambda / Real.log Tg`. -/
 def rho : ℝ := Real.log Lambda / Real.log Tg
+/-- Kappa, given by `1 / 100000`. -/
 def kappa : ℝ := 1 / 100000
+/-- Radial exponent, given by `2 * ((1 + h) * rho - h * kappa)`. -/
 def radialExponent (h : ℝ) : ℝ := 2 * ((1 + h) * rho - h * kappa)
 
+/-- Q: an abbreviation for `SlotColoring.dyadicQ n`. -/
 abbrev Q (n : ℕ) : ℝ := SlotColoring.dyadicQ n
+/-- S, given by `(n : ℝ) ^ 2`. -/
 def S (n : ℕ) : ℝ := (n : ℝ) ^ 2
+/-- Epsilon, given by `Q n ^ h`. -/
 def epsilon (h : ℝ) (n : ℕ) : ℝ := Q n ^ h
+/-- Native index: an abbreviation for `SlotColoring.nativeIndex h n`. -/
 abbrev nativeIndex (h : ℝ) (n : ℕ) : ℕ := SlotColoring.nativeIndex h n
 
+/-- Time coefficient, given by `Tg ^ nativeIndex h n * Q n ^ (1 + h)`. -/
 def timeCoefficient (h : ℝ) (n : ℕ) : ℝ := Tg ^ nativeIndex h n * Q n ^ (1 + h)
+/-- Radial coefficient, given by `Lambda ^ nativeIndex h n * Q n ^ (radialExponent h / 2)`. -/
 def radialCoefficient (h : ℝ) (n : ℕ) : ℝ :=
   Lambda ^ nativeIndex h n * Q n ^ (radialExponent h / 2)
 
@@ -239,6 +252,7 @@ theorem timeCoefficient_inv_lower (h : ℝ) (hh : 0 ≤ h) {n : ℕ} (hn : 4 ≤
   have hi := one_div_le_one_div_of_le (timeCoefficient_pos h n) (timeCoefficient_bounds h hh hn).2
   simpa only [one_div, inv_inv] using hi
 
+/-- Slot length, given by `2 * r0 / timeCoefficient h n`. -/
 def slotLength (r0 h : ℝ) (n : ℕ) : ℝ := 2 * r0 / timeCoefficient h n
 
 /-- The native slot has length comparable to the actual slow scale `n²`. -/

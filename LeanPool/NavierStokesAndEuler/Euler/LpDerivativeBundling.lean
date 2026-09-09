@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.NormNum.GCD
+
+/-! The L² derivative-field construction is a contraction between the actual Banach spaces. -/
 
 @[expose] public section
 
-/-! The L² derivative-field construction is a contraction between the actual Banach spaces. -/
 
 noncomputable section
 
@@ -24,6 +27,7 @@ variable {X P V : Type*} [MeasurableSpace X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   (μ : Measure X)
 
+/-- Bundling linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def bundlingLinear : Lp (P →L[ℝ] V) 2 μ →ₗ[ℝ] (P →L[ℝ] Lp V 2 μ) where
   toFun := derivativeMap μ
   map_add' D E := by
@@ -35,6 +39,7 @@ def bundlingLinear : Lp (P →L[ℝ] V) 2 μ →ₗ[ℝ] (P →L[ℝ] Lp V 2 μ)
     intro a
     exact ((ContinuousLinearMap.apply ℝ V a).compLpL 2 μ).map_smul c D
 
+/-- Derivative bundling, bundling `toLinearMap`, `cont`. -/
 def derivativeBundling : Lp (P →L[ℝ] V) 2 μ →L[ℝ] (P →L[ℝ] Lp V 2 μ) where
   toLinearMap := bundlingLinear μ
   cont := AddMonoidHomClass.continuous_of_bound (bundlingLinear (P := P) (V := V) μ) 1

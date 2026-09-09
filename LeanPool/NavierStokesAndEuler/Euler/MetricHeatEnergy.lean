@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Dissipation of the genuine cylinder Laplacian in a variable positive metric. -/
 
 @[expose] public section
 
-/-! Dissipation of the genuine cylinder Laplacian in a variable positive metric. -/
 
 noncomputable section
 
@@ -30,7 +35,7 @@ def directionalCoefficientOperator (K : SmoothCoefficient period) (a : LiftTange
     (translatedCoefficientDerivative_measurable period a K.coefficient K.smooth)
     (K.firstBound * ‖a‖₊)
     (fun x => translatedCoefficientDerivative_bound period a K.coefficient K.firstBound
-      K.norm_first x)
+        K.norm_first x)
 
 /-- The directional coefficient multiplier has the expected first-derivative norm bound. -/
 theorem directionalCoefficientOperator_bound (K : SmoothCoefficient period) (a : LiftTangent)
@@ -40,7 +45,7 @@ theorem directionalCoefficientOperator_bound (K : SmoothCoefficient period) (a :
     (translatedCoefficientDerivative_measurable period a K.coefficient K.smooth)
     (K.firstBound * ‖a‖₊)
     (fun x => translatedCoefficientDerivative_bound period a K.coefficient K.firstBound
-      K.norm_first x)
+        K.norm_first x)
   have h' : ‖directionalCoefficientOperator period K a‖ ≤ (K.firstBound : ℝ) * ‖a‖ := by
     simpa only [directionalCoefficientOperator, NNReal.coe_mul, coe_nnnorm] using h
   exact ((directionalCoefficientOperator period K a).le_opNorm f).trans
@@ -56,7 +61,7 @@ theorem metric_product_hasDerivAt (K : SmoothCoefficient period) (a : LiftTangen
   have hcov : (fun t => coefficientOperator
       (translatedCoefficient period (translationPath period a t) K.coefficient)
       (translatedCoefficient_measurable period (translationPath period a t) K.coefficient
-        K.measurable)
+          K.measurable)
       K.bound (fun x => K.norm_bound (x + translationPath period a t))
       (translation period (translationPath period a t) f)) =
       fun t => translation period (translationPath period a t) (K.operator f) := by
@@ -67,7 +72,7 @@ theorem metric_product_hasDerivAt (K : SmoothCoefficient period) (a : LiftTangen
   have hop0 : coefficientOperator
       (translatedCoefficient period (translationPath period a 0) K.coefficient)
       (translatedCoefficient_measurable period (translationPath period a 0) K.coefficient
-        K.measurable)
+          K.measurable)
       K.bound (fun x => K.norm_bound (x + translationPath period a 0)) = K.operator := by
     apply ContinuousLinearMap.ext
     intro u
@@ -75,7 +80,7 @@ theorem metric_product_hasDerivAt (K : SmoothCoefficient period) (a : LiftTangen
     filter_upwards [coefficientOperator_ae
       (translatedCoefficient period (translationPath period a 0) K.coefficient)
       (translatedCoefficient_measurable period (translationPath period a 0) K.coefficient
-        K.measurable)
+          K.measurable)
       K.bound (fun x => K.norm_bound (x + translationPath period a 0)) u,
       K.operator_ae u] with x hx hy
     rw [hx, hy]
@@ -111,7 +116,8 @@ theorem metric_cross_young (c D x y : ℝ) (hc : 0 < c) :
   rw [← heq] at h
   linarith
 
-/-- A positive metric absorbs half of the second-derivative dissipation, leaving an explicit L² error. -/
+/-- A positive metric absorbs half of the second-derivative dissipation, leaving an explicit L²
+error. -/
 theorem metric_second_derivative_bound (K : SmoothCoefficient period) (a : LiftTangent)
     (f f' f'' : LiftL2 period)
     (hf : HasDerivAt (fun t => translation period (translationPath period a t) f) f' 0)
@@ -140,7 +146,7 @@ theorem standardDirection_norm (i : Fin 4) : ‖standardDirection i‖ = 1 := by
 
 /-- The actual cylinder Laplacian assembled from strong second coordinate derivatives. -/
 def jetLaplacian {f : LiftL2 period} (J : SpatialJet period standardDirection 2 f) : LiftL2 period
-  :=
+    :=
   ∑ i : Fin 4, J.word (fun _ : Fin 2 => i)
 
 /-- The L² metric heat estimate for an actual second-order cylinder jet. -/
@@ -181,7 +187,8 @@ def classicalLaplacian (g : LiftDomain period → Vector3) : LiftDomain period �
   fun x => ∑ i : Fin 4, fieldDerivative period (standardDirection i)
     (fieldDerivative period (standardDirection i) g) x
 
-/-- The jet Laplacian is represented by the actual classical Laplacian of every smooth representative. -/
+/-- The jet Laplacian is represented by the actual classical Laplacian of every smooth
+representative. -/
 theorem jetLaplacian_ae {f : LiftL2 period} (J : SpatialJet period standardDirection 2 f)
     (g : LiftDomain period → Vector3)
     (hrep : (f : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g)

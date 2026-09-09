@@ -7,14 +7,14 @@ Authors: OpenAI
 module
 
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-
-@[expose] public section
 
 /-! Unbounded finite partial integrals of a nonnegative function force
 its extended integral on the half-open interval to be infinite. Local
 integrability is explicit, so no totalized real integral is used as a
 substitute for an improper integral. -/
+
+@[expose] public section
+
 
 noncomputable section
 

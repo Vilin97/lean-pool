@@ -8,12 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothLimit
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Passing the actual nonlinear advection and Helmholtz pressure to a
 strong ordinary Sobolev limit. Only a uniform H³ bound is used in the
 product estimate; pressure convergence is a consequence. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,7 +40,7 @@ theorem jetLp_fieldSub (A B : SmoothL2Field Space) (n : ℕ) :
   exact hh.trans ((congrArg₂ (fun u v : Space [×n]→L[ℝ] Space => u-v) hb hc).symm.trans hd.symm)
 
 theorem advection_difference (A B : SmoothL2Field Space) :
-    fieldSub (advectionField A A) (advectionField B B)=
+    fieldSub (advectionField A A) (advectionField B B) =
       addField (advectionField (fieldSub A B) A) (advectionField B (fieldSub A B)) := by
   apply field_ext
   funext x
@@ -68,14 +72,20 @@ theorem advection_sub_norm (A B : SmoothL2Field Space) (G K : ℝ)
 
 variable {T : ℝ}
 
+/-- Advection path, given by `fieldPath (fun t => advectionField (A t) (A t))
+(advectionField_continuous A hA)`. -/
 def advectionPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : C(Icc (0 : ℝ) T,L2) :=
   fieldPath (fun t => advectionField (A t) (A t)) (advectionField_continuous A hA)
 
+/-- Projected rhs path, given by `fieldPath (fun t => projectedRhs (A t))
+(projectedRhs_continuous A hA)`. -/
 def projectedRhsPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : C(Icc (0 : ℝ) T,L2) :=
   fieldPath (fun t => projectedRhs (A t)) (projectedRhs_continuous A hA)
 
+/-- Pressure path, given by `fieldPath (fun t => pressureField (A t)) (pressureField_continuous
+A hA)`. -/
 def pressurePath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : C(Icc (0 : ℝ) T,L2) :=
   fieldPath (fun t => pressureField (A t)) (pressureField_continuous A hA)
@@ -118,7 +128,7 @@ variable {A : ℕ → Icc (0 : ℝ) T → SmoothL2Field Space}
 theorem advectionPath_convergence (hT : 0 ≤ T) (M : ℝ)
     (hb : ∀ k t, tensorNorm 3 (A k t) ≤ M) :
     Tendsto (fun k => advectionPath (A k) (hA k)) atTop (𝓝 (advectionPath L.field
-      L.field_continuous)) := by
+        L.field_continuous)) := by
   have hM : 0 ≤ M := (tensorNorm_nonneg 3 (A 0 ⟨0,le_rfl,hT⟩)).trans (hb 0 _)
   let G := (9*smoothEmbeddingConstant)*M
   let K := (13*smoothEmbeddingConstant)*M
@@ -146,7 +156,7 @@ theorem advectionPath_convergence (hT : 0 ≤ T) (M : ℝ)
 theorem projectedRhsPath_convergence (hT : 0 ≤ T) (M : ℝ)
     (hb : ∀ k t, tensorNorm 3 (A k t) ≤ M) :
     Tendsto (fun k => projectedRhsPath (A k) (hA k)) atTop (𝓝 (projectedRhsPath L.field
-      L.field_continuous)) := by
+        L.field_continuous)) := by
   simp only [projectedRhsPath_eq]
   exact ((-solenoidalProjection).compLeftContinuous ℝ (Icc (0 : ℝ) T)).continuous.tendsto _
     |>.comp (L.advectionPath_convergence hT M hb)
@@ -154,7 +164,7 @@ theorem projectedRhsPath_convergence (hT : 0 ≤ T) (M : ℝ)
 theorem pressurePath_convergence (hT : 0 ≤ T) (M : ℝ)
     (hb : ∀ k t, tensorNorm 3 (A k t) ≤ M) :
     Tendsto (fun k => pressurePath (A k) (hA k)) atTop (𝓝 (pressurePath L.field
-      L.field_continuous)) := by
+        L.field_continuous)) := by
   simp only [pressurePath_eq]
   exact ((solenoidalProjection-ContinuousLinearMap.id ℝ L2).compLeftContinuous ℝ
     (Icc (0 : ℝ) T)).continuous.tendsto _ |>.comp (L.advectionPath_convergence hT M hb)

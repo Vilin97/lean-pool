@@ -6,16 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrameRenewal
-public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocitySystem
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalSize
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameQuantitative
+import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrameRenewal
 
 /-!
 The quantified source frame-renewal bounds concern the actual normalized
 physical vectors.  The third ratio is eliminated using actual tangency,
 and the scalar estimate is transported through the checked exact formulas.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +28,7 @@ open EulerSmoothLimit EulerPacketRay EulerPacketFrameStability
   EulerPacketFrameQuantitative InnerProductSpace
 
 theorem thirdRatio_from_pairing (R V : Fin 3 → ℝ) (hN : R 2 ≠ 0) (hV : V 1 ≠ 0)
-    (hpair : R 0*V 0+R 1*V 1+R 2*V 2 = 0) :
+    (hpair : R 0 * V 0 + R 1 * V 1 + R 2 * V 2 = 0) :
     V 2/V 1 = velocityThird (R 0) (R 1) (R 2) (V 0/V 1) 1 := by
   unfold velocityThird
   apply (eq_div_iff hN).mpr
@@ -36,29 +38,29 @@ theorem thirdRatio_from_pairing (R V : Fin 3 → ℝ) (hN : R 2 ≠ 0) (hV : V 1
 theorem physical_frame_renewal_order40 (M : Space →L[ℝ] Space) (m v r w : ℝ → Space)
     {s₀ t₀ a ε σ y Θ K e : ℝ} {Z Z₁ : ℝ → ℝ}
     (ha : a ≠ 0) (hs₀ : 0 < s₀) (hε : 0 < ε)
-    (hm : m (physicalTime t₀ a ε (y⁻¹/σ)) ≠ 0)
-    (hv : v (physicalTime t₀ a ε (y⁻¹/σ)) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε (y⁻¹/σ)),v (physicalTime t₀ a ε (y⁻¹/σ))⟫_ℝ = 0)
-    (hrw : ⟪r (physicalTime t₀ a ε (y⁻¹/σ)),w (physicalTime t₀ a ε (y⁻¹/σ))⟫_ℝ = 0)
-    (hV : 0 < scaledVelocity m v w t₀ a ε (y⁻¹/σ) 1)
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hy : 0 < y) (hysmall : y ≤ 1/2)
+    (hm : m (physicalTime t₀ a ε (y⁻¹ / σ)) ≠ 0)
+    (hv : v (physicalTime t₀ a ε (y⁻¹ / σ)) ≠ 0)
+    (hmv : ⟪m (physicalTime t₀ a ε (y⁻¹ / σ)), v (physicalTime t₀ a ε (y⁻¹ / σ))⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε (y⁻¹ / σ)), w (physicalTime t₀ a ε (y⁻¹ / σ))⟫_ℝ = 0)
+    (hV : 0 < scaledVelocity m v w t₀ a ε (y⁻¹ / σ) 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hy : 0 < y) (hysmall : y ≤ 1 / 2)
     (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e) (hεe : ε ≤ e)
-    (htΘ : y⁻¹/σ ≤ Θ) (hsmall : 1000000*K*e*Θ^40 ≤ 1)
+    (htΘ : y⁻¹ / σ ≤ Θ) (hsmall : 1000000 * K * e * Θ ^ 40 ≤ 1)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0)
-    (hP : |scaledRay m v r s₀ t₀ a ε (y⁻¹/σ) 0-(y⁻¹)^2| ≤ 800*e*Θ^5)
-    (hQ : |scaledRay m v r s₀ t₀ a ε (y⁻¹/σ) 1+2*σ*y⁻¹| ≤ 800*e*Θ^5)
-    (hN : |scaledRay m v r s₀ t₀ a ε (y⁻¹/σ) 2-1| ≤ 800*e*Θ^5)
-    (hratio : |scaledVelocity m v w t₀ a ε (y⁻¹/σ) 0/scaledVelocity m v w t₀ a ε (y⁻¹/σ) 1+
-      Z₁ (y⁻¹/σ)/Z (y⁻¹/σ)| ≤ 10*(K*e*Θ^29))
-    (hA : ∀ i j, |scaledAction M m v a ε (physicalTime t₀ a ε (y⁻¹/σ)) i j-
-      idealVelocityEntry (σ^2) i j| ≤ 3*e) :
+    (hP : |scaledRay m v r s₀ t₀ a ε (y⁻¹ / σ) 0 - (y⁻¹) ^ 2| ≤ 800 * e * Θ ^ 5)
+    (hQ : |scaledRay m v r s₀ t₀ a ε (y⁻¹ / σ) 1 + 2 * σ * y⁻¹| ≤ 800 * e * Θ ^ 5)
+    (hN : |scaledRay m v r s₀ t₀ a ε (y⁻¹ / σ) 2 - 1| ≤ 800 * e * Θ ^ 5)
+    (hratio : |scaledVelocity m v w t₀ a ε (y⁻¹ / σ) 0 / scaledVelocity m v w t₀ a ε (y⁻¹ / σ) 1 +
+      Z₁ (y⁻¹ / σ) / Z (y⁻¹ / σ)| ≤ 10 * (K * e * Θ ^ 29))
+    (hA : ∀ i j, |scaledAction M m v a ε (physicalTime t₀ a ε (y⁻¹ / σ)) i j -
+      idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e) :
     |normalizedCoupling M (r (physicalTime t₀ a ε (y⁻¹/σ))) (w (physicalTime t₀ a ε (y⁻¹/σ)))/a-1| ≤
       y^4+σ^2*y^2+8*σ*y^3+30000000*K*e*Θ^40 ∧
     |(y⁻¹)^2*normalizedTilt M (r (physicalTime t₀ a ε (y⁻¹/σ))) (w (physicalTime t₀ a ε
-      (y⁻¹/σ)))-1| ≤
+        (y⁻¹/σ)))-1| ≤
       1500*σ+30000000*K*e*Θ^40 := by
   let R := scaledRay m v r s₀ t₀ a ε (y⁻¹/σ)
   let V := scaledVelocity m v w t₀ a ε (y⁻¹/σ)

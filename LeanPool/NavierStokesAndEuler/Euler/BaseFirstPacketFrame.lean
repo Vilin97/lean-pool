@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketEvolution
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BasePacketFrameValues
 
 /-! The first actual packet has the precise initial frame parameters
 a=1, sigma=sqrt(beta), and the prescribed polynomial shear. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,9 +28,10 @@ variable {β : ℝ} {hβ : |β| ≤ 1} {ell : ℝ} {hell : 0 < ell} {hell1 : ell
   {nextEll : ℝ} {hnext : 0 < nextEll} {hnext1 : nextEll ≤ 1}
   (F : FirstPacketChoice β hβ ell hell hell1 T hT hTB δ hδ hchild k hk nextEll hnext hnext1)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S)
 
+/-- Initial frame as an element of `ParentFrame (F.parent.transverseData m hm R S hS) 0`. -/
 def initialFrame : ParentFrame (F.parent.transverseData m hm R S hS) 0 := by
   let B := packetBaseState β hβ ell hell hell1 T hT hTB
   have h0 := initialCoefficientCost_nonneg

@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialEmbedding
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! The actual constant-angle embedding preserves the closed gradient
 spaces.  Compact ordinary scalar tests give compact cylinder scalar tests,
 and the bounded embedding carries their closures into one another. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +26,7 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Scalar lift, defined pointwise by `φ z.1`. -/
 def scalarLift (φ : Space → ℝ) : LiftDomain P → ℝ := fun z => φ z.1
 
 theorem scalarLift_compact (φ : Space → ℝ) (hφ : HasCompactSupport φ) :

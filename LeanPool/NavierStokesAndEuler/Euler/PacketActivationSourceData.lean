@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationRay
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
 
-@[expose] public section
-
 /-! The source deformation can be equipped with the actual activation
 normal.  The new reference plane is the literal orthogonal complement,
 and the history hypotheses are inherited without any new analytic input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +25,9 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
-def Data.reframe (D : Data U) (m : Space) (hm : ‖m‖=1) : Data (referencePlane m) where
+/-- Reframe, bundling `T`, `T_pos`, `support`, `support_compact` and the required compatibility
+proofs. -/
+def Data.reframe (D : Data U) (m : Space) (hm : ‖m‖ = 1) : Data (referencePlane m) where
   T := D.T
   T_pos := D.T_pos
   support := D.support
@@ -41,7 +44,9 @@ def Data.reframe (D : Data U) (m : Space) (hm : ‖m‖=1) : Data (referencePlan
   frame_time := D.frame_time
   strain_equation := D.strain_equation
 
-def HistoryData.reframe {D : Data U} (B : HistoryData D) (m : Space) (hm : ‖m‖=1) :
+/-- Reframe, bundling `H`, `jacobi`, `potential`, `potential_nonneg` and the required
+compatibility proofs. -/
+def HistoryData.reframe {D : Data U} (B : HistoryData D) (m : Space) (hm : ‖m‖ = 1) :
     HistoryData (D.reframe m hm) where
   H := B.H
   jacobi := B.jacobi
@@ -50,6 +55,8 @@ def HistoryData.reframe {D : Data U} (B : HistoryData D) (m : Space) (hm : ‖m�
   potential_bound := B.potential_bound
   small := B.small
 
+/-- Activation, given by `D.reframe (activationDirection (D.deformationEquiv t₀ 0) n)
+(activationDirection_unit _ hn)`. -/
 def Data.activation (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (n : Space) (hn : n ≠ 0) :
     Data (referencePlane (activationDirection (D.deformationEquiv t₀ 0) n)) :=
   D.reframe (activationDirection (D.deformationEquiv t₀ 0) n)
@@ -57,15 +64,17 @@ def Data.activation (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (n : Space) (hn : n 
 
 theorem Data.activation_normal (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (n : Space) (hn : n ≠ 0) :
     (D.activation t₀ n hn).normal.field t₀ 0 = activationRayScale (D.deformationEquiv t₀ 0) n • n
-      := by
+        := by
   exact activationDirection_transport (D.deformationEquiv t₀ 0) n
 
+/-- Activation, given by `B.reframe (activationDirection (D.deformationEquiv t₀ 0) n)
+(activationDirection_unit _ hn)`. -/
 def HistoryData.activation {D : Data U} (B : HistoryData D)
     (t₀ : Icc (0 : ℝ) D.T) (n : Space) (hn : n ≠ 0) : HistoryData (D.activation t₀ n hn) :=
   B.reframe (activationDirection (D.deformationEquiv t₀ 0) n) (activationDirection_unit _ hn)
 
 theorem Data.activationRayScale_bounds (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (n : Space)
-    (hn : ‖n‖=1) :
+    (hn : ‖n‖ = 1) :
     0 < activationRayScale (D.deformationEquiv t₀ 0) n ∧
       activationRayScale (D.deformationEquiv t₀ 0) n ≤ D.inverseBound ∧
       (activationRayScale (D.deformationEquiv t₀ 0) n)⁻¹ ≤ D.frameBound := by

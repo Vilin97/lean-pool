@@ -6,15 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFamily
 public import LeanPool.NavierStokesAndEuler.Euler.PacketAmplitudeBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborControlled
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalSize
 
 /-!
 Literal physical data and scale guards for one geometric propagation stage.
 The record contains no amplification, sign, size, or frame-renewal conclusion.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,30 +26,56 @@ namespace EulerPacketMovingFrame
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
   InnerProductSpace ContinuousLinearMap
 
+/-- Physical geometry data, collecting `center`, `B`, `B₁`, `M`, `E`, `m` and their
+compatibility conditions. -/
 structure PhysicalGeometryData (α : Type*) where
+  /-- Center of `PhysicalGeometryData`, of type `α`. -/
   center : α
+  /-- Bound parameter of `PhysicalGeometryData`, of type `ℝ → Space →L[ℝ] Space`. -/
   B : ℝ → Space →L[ℝ] Space
+  /-- B₁ of `PhysicalGeometryData`, of type `ℝ → Space →L[ℝ] Space`. -/
   B₁ : ℝ → Space →L[ℝ] Space
+  /-- M of `PhysicalGeometryData`, of type `α → ℝ → Space →L[ℝ] Space`. -/
   M : α → ℝ → Space →L[ℝ] Space
+  /-- E of `PhysicalGeometryData`, of type `α → ℝ → Space →L[ℝ] Space`. -/
   E : α → ℝ → Space →L[ℝ] Space
+  /-- M of `PhysicalGeometryData`, of type `ℝ → Space`. -/
   m : ℝ → Space
+  /-- V of `PhysicalGeometryData`, of type `ℝ → Space`. -/
   v : ℝ → Space
+  /-- R of `PhysicalGeometryData`, of type `α → ℝ → Space`. -/
   r : α → ℝ → Space
+  /-- W of `PhysicalGeometryData`, of type `α → ℝ → Space`. -/
   w : α → ℝ → Space
+  /-- C of `PhysicalGeometryData`, of type `ℝ`. -/
   c : ℝ
+  /-- S₀ of `PhysicalGeometryData`, of type `ℝ`. -/
   s₀ : ℝ
+  /-- T₀ of `PhysicalGeometryData`, of type `ℝ`. -/
   t₀ : ℝ
+  /-- A of `PhysicalGeometryData`, of type `ℝ`. -/
   a : ℝ
+  /-- Ε of `PhysicalGeometryData`, of type `ℝ`. -/
   ε : ℝ
+  /-- Σ of `PhysicalGeometryData`, of type `ℝ`. -/
   σ : ℝ
+  /-- Y of `PhysicalGeometryData`, of type `ℝ`. -/
   y : ℝ
+  /-- Θ of `PhysicalGeometryData`, of type `ℝ`. -/
   Θ : ℝ
+  /-- H of `PhysicalGeometryData`, of type `ℝ`. -/
   H : ℝ
+  /-- Geometric data of `PhysicalGeometryData`, of type `ℝ`. -/
   G : ℝ
+  /-- D of `PhysicalGeometryData`, of type `ℝ`. -/
   d : ℝ
+  /-- Lam of `PhysicalGeometryData`, of type `ℝ`. -/
   lam : ℝ
+  /-- Δ of `PhysicalGeometryData`, of type `ℝ`. -/
   δ : ℝ
+  /-- Hchild of `PhysicalGeometryData`, of type `ℝ`. -/
   hchild : ℝ
+  /-- Parameter `S` of `PhysicalGeometryData`, of type `Set ℝ`. -/
   S : Set ℝ
   sigma_pos : 0 < σ
   sigma_small : σ ≤ 1/4
@@ -82,7 +111,7 @@ structure PhysicalGeometryData (α : Type*) where
   B_bound : ∀ t ∈ S, ‖B t‖ ≤ G
   B_derivative_bound : ∀ t ∈ S, ‖B₁ t‖ ≤ G^2
   E_bound : ∀ ξ t, t ∈ S → ‖E ξ t‖ ≤ d
-  parent_decomposition : ∀ ξ t, t ∈ S → M ξ t = B t+
+  parent_decomposition : ∀ ξ t, t ∈ S → M ξ t = B t +
     primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))+E ξ t
   initial_coupling : rescaledFrame B m v t₀ a ε 0 0 1 = a
   initial_tilt : rescaledFrame B m v t₀ a ε 0 2 1 = a*σ^2
@@ -90,47 +119,64 @@ structure PhysicalGeometryData (α : Type*) where
   initial_ray_error : ∀ ξ,
     norm3 (scaledRay m v (r ξ) s₀ t₀ a ε 0 0) (scaledRay m v (r ξ) s₀ t₀ a ε 0 1)
       (scaledRay m v (r ξ) s₀ t₀ a ε 0 2-1) ≤ 16*(ε*Θ*(4*G)^2+d)
-  initial_velocity_error : ∀ ξ, |scaledVelocity m v (w ξ) t₀ a ε 0 1-1|+
+  initial_velocity_error : ∀ ξ, |scaledVelocity m v (w ξ) t₀ a ε 0 1-1| +
     |scaledVelocity m v (w ξ) t₀ a ε 0 0+lam| ≤ 16*(ε*Θ*(4*G)^2+d)
 
 namespace PhysicalGeometryData
 
 variable {α : Type*}
 
+/-- Error, given by `16*(D.ε*D.Θ*(4*D.G)^2+D.d)`. -/
 def error (D : PhysicalGeometryData α) : ℝ := 16*(D.ε*D.Θ*(4*D.G)^2+D.d)
 
+/-- Target, given by `D.y⁻¹/D.σ`. -/
 def target (D : PhysicalGeometryData α) : ℝ := D.y⁻¹/D.σ
 
+/-- Time, given by `physicalTime D.t₀ D.a D.ε τ`. -/
 def time (D : PhysicalGeometryData α) (τ : ℝ) : ℝ := physicalTime D.t₀ D.a D.ε τ
 
+/-- Target time, given by `D.time D.target`. -/
 def targetTime (D : PhysicalGeometryData α) : ℝ := D.time D.target
 
+/-- Ray, given by `scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ`. -/
 def ray (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
   scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ
 
+/-- Velocity, given by `scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ`. -/
 def velocity (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
   scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ
 
+/-- Size, given by `‖D.r ξ (D.time τ)‖*‖D.w ξ (D.time τ)‖`. -/
 def size (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : ℝ :=
   ‖D.r ξ (D.time τ)‖*‖D.w ξ (D.time τ)‖
 
+/-- Target size, given by `D.size D.center D.target`. -/
 def targetSize (D : PhysicalGeometryData α) : ℝ := D.size D.center D.target
 
+/-- Amplitude, given by `primaryAmplitude D.δ D.hchild (D.r D.center) (D.w D.center)
+D.targetTime`. -/
 def amplitude (D : PhysicalGeometryData α) : ℝ :=
   primaryAmplitude D.δ D.hchild (D.r D.center) (D.w D.center) D.targetTime
 
+/-- Next coupling, given by `normalizedCoupling (D.M D.center D.targetTime) (D.r D.center
+D.targetTime) (D.w D.center D.targetTime)`. -/
 def nextCoupling (D : PhysicalGeometryData α) : ℝ :=
   normalizedCoupling (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.w D.center D.targetTime)
 
+/-- Next tilt, given by `normalizedTilt (D.M D.center D.targetTime) (D.r D.center D.targetTime)
+(D.w D.center D.targetTime)`. -/
 def nextTilt (D : PhysicalGeometryData α) : ℝ :=
   normalizedTilt (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.w D.center D.targetTime)
 
+/-- Next compression, given by `normalizedCoupling (D.M D.center D.targetTime) (D.r D.center
+D.targetTime) (D.r D.center D.targetTime)`. -/
 def nextCompression (D : PhysicalGeometryData α) : ℝ :=
   normalizedCoupling (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.r D.center D.targetTime)
 
+/-- Target shear, given by `primaryShear D.c D.m D.v D.targetTime`. -/
 def targetShear (D : PhysicalGeometryData α) : ℝ :=
   primaryShear D.c D.m D.v D.targetTime
 

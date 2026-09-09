@@ -7,8 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalEdgeFactor
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalHeatCoordinates
+public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalPressure
+import LeanPool.NavierStokesAndEuler.NavierStokes.EdgeWeightJets
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # The first slow-order stress at the terminal edge
@@ -17,6 +19,9 @@ The source is the angular axial-viscosity term.  Its primitive is the actual
 backward integral with weight `R²`.  The coefficient chart is `(η,δ)`, including
 both endpoints `η=±1`; its heat carrier uses the genuine smooth heat extension.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +33,8 @@ open NavierStokes.TerminalEdgeFactor
 
 namespace NavierStokes.SlowFirstOrderEdge
 
+/-- Beta, given by `(2 * CoordinateAlgebra.D d.h * η * profileChi d η - (1 - η ^ 2) * deriv
+(profileChi d) η) / profileL d η`. -/
 noncomputable def beta (d : TailData) (η : ℝ) : ℝ :=
   (2 * CoordinateAlgebra.D d.h * η * profileChi d η -
     (1 - η ^ 2) * deriv (profileChi d) η) / profileL d η
@@ -38,6 +45,8 @@ theorem beta_contDiff (d : TailData) : ContDiff ℝ ∞ (beta d) :=
       (contDiff_infty_iff_deriv.mp (profileChi_contDiff d)).2)).div
     (profileL_contDiff d) (fun η => (profileL_pos d η).ne')
 
+/-- Taper second factor, given by `-8 * taperSlopeFactor d x + 3 * x ^ 2 * taperSlopeFactor d x
+- x ^ 3 * deriv (taperSlopeFactor d) x`. -/
 noncomputable def taperSecondFactor (d : TailData) (x : ℝ) : ℝ :=
   -8 * taperSlopeFactor d x + 3 * x ^ 2 * taperSlopeFactor d x -
     x ^ 3 * deriv (taperSlopeFactor d) x
@@ -97,6 +106,8 @@ noncomputable def profileSource (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × 
     (profileChi d y.1 ^ 2 * deriv (tailShapeDeriv d) (3 - y.2) +
       beta d y.1 * tailShapeDeriv d (3 - y.2))
 
+/-- Source factor, given by `-profileCarrier C d y0 y * (profileChi d y.1 ^ 2 *
+taperSecondFactor d y.2 + beta d y.1 * y.2 ^ 3 * taperSlopeFactor d y.2)`. -/
 noncomputable def sourceFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   -profileCarrier C d y0 y *
     (profileChi d y.1 ^ 2 * taperSecondFactor d y.2 +
@@ -125,6 +136,7 @@ theorem profileSource_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
   rw [he]
   exact EdgeWeightJets.weighted_contDiff (by norm_num) 6 (sourceFactor_contDiff C d y0)
 
+/-- Primitive coefficient, given by `(profileRadius y0 y.2 ^ 3 / 2) * sourceFactor C d y0 y`. -/
 noncomputable def primitiveCoefficient (C : ℝ) (d : TailData) (y0 : ℝ)
     (y : ℝ × ℝ) : ℝ :=
   (profileRadius y0 y.2 ^ 3 / 2) * sourceFactor C d y0 y
@@ -142,9 +154,12 @@ noncomputable def radialSource (C : ℝ) (d : TailData) (y0 η R : ℝ) : ℝ :=
 noncomputable def radialStress (C : ℝ) (d : TailData) (y0 η R : ℝ) : ℝ :=
   backwardStress (radialSource C d y0 η) R
 
+/-- Profile stress, given by `radialStress C d y0 y.1 (profileRadius y0 y.2)`. -/
 noncomputable def profileStress (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   radialStress C d y0 y.1 (profileRadius y0 y.2)
 
+/-- Stress factor, given by `ParametricFlatFactor.factor 4 6 (primitiveCoefficient C d y0) y /
+profileRadius y0 y.2 ^ 2`. -/
 noncomputable def stressFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
   ParametricFlatFactor.factor 4 6 (primitiveCoefficient C d y0) y / profileRadius y0 y.2 ^ 2
 
@@ -260,9 +275,11 @@ theorem profileStress_jets (C : ℝ) (d : TailData) (y0 : ℝ) (n : ℕ)
 
 /-! ## The actual `(X,η)` profile coordinates -/
 
+/-- X chart, given by `(w.2, y0 + 3 - Real.log w.1)`. -/
 noncomputable def xChart (y0 : ℝ) (w : ℝ × ℝ) : ℝ × ℝ :=
   (w.2, y0 + 3 - Real.log w.1)
 
+/-- Stress X, given by `profileStress C d y0 (xChart y0 w)`. -/
 noncomputable def stressX (C : ℝ) (d : TailData) (y0 : ℝ) (w : ℝ × ℝ) : ℝ :=
   profileStress C d y0 (xChart y0 w)
 
@@ -342,6 +359,7 @@ theorem stressX_jets (C : ℝ) (d : TailData) (y0 : ℝ) (n : ℕ)
 noncomputable def zeta (cL a y0 X : ℝ) : ℝ :=
   FlatCutoff.edge cL (Real.log (X / a)) * FlatCutoff.edge 4 (y0 + 3 - Real.log X)
 
+/-- Edge distance, given by `min 1 (min (Real.log (X / a)) (y0 + 3 - Real.log X))`. -/
 noncomputable def edgeDistance (a y0 X : ℝ) : ℝ :=
   min 1 (min (Real.log (X / a)) (y0 + 3 - Real.log X))
 
@@ -408,8 +426,10 @@ theorem stressX_weighted_jets (C : ℝ) (d : TailData) (y0 : ℝ) (n : ℕ)
 
 open SimilarityProfile
 
+/-- Physical point: an abbreviation for `SimilarityProfile.PhysicalPoint`. -/
 abbrev PhysicalPoint := SimilarityProfile.PhysicalPoint
 
+/-- Physical chi, given by `q d.h p ^ (-CoordinateAlgebra.D d.h) * profileChi d (eta d.h p)`. -/
 noncomputable def physicalChi (d : TailData) (p : PhysicalPoint) : ℝ :=
   q d.h p ^ (-CoordinateAlgebra.D d.h) * profileChi d (eta d.h p)
 
@@ -445,6 +465,7 @@ theorem physicalChi_hasDerivAt_z (d : TailData) {p : PhysicalPoint} (ht : p.1 < 
       rw [profileL_eq d (eta_sq_lt_one d.h_pos d.h_lt_half ht).le]
       ring
 
+/-- Physical taper, given by `tailShape d (Real.log (X d.h p) - y0)`. -/
 noncomputable def physicalTaper (d : TailData) (y0 : ℝ) (p : PhysicalPoint) : ℝ :=
   tailShape d (Real.log (X d.h p) - y0)
 
@@ -586,7 +607,9 @@ theorem stressX_eq_radialStress (C : ℝ) (d : TailData) (y0 : ℝ)
   rw [profileRadius_xChart y0 hX]
   rfl
 
+/-- Physical scale, given by `q d.h (t, (0, z))`. -/
 noncomputable def physicalScale (d : TailData) (t z : ℝ) : ℝ := q d.h (t, (0, z))
+/-- Physical eta, given by `eta d.h (t, (0, z))`. -/
 noncomputable def physicalEta (d : TailData) (t z : ℝ) : ℝ := eta d.h (t, (0, z))
 
 theorem physicalScale_pos (d : TailData) {t z : ℝ} (ht : t < 1) :
@@ -629,6 +652,8 @@ theorem backwardStress_scale (b : ℝ) {Q r : ℝ} (hQ : 0 < Q) (hr : 0 < r) (g 
   rw [← mul_assoc, hp, div_pow, Real.sq_sqrt hQ.le]
   field_simp [hQ.ne', hr.ne']
 
+/-- Physical stress, given by `backwardStress (fun u => physicalSource C d y0 (radiusPoint t u
+z)) r`. -/
 noncomputable def physicalStress (C : ℝ) (d : TailData) (y0 t z r : ℝ) : ℝ :=
   backwardStress (fun u => physicalSource C d y0 (radiusPoint t u z)) r
 

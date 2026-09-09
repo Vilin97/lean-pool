@@ -7,24 +7,25 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+
+/-! Fixed bounded maps on actual cylinder L² classes and continuous paths. -/
 
 @[expose] public section
 
-/-! Fixed bounded maps on actual cylinder L² classes and continuous paths. -/
 
 noncomputable section
 
 namespace EulerCylinderConstantMap
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
-  EulerLpCylinderTranslation EulerParameterWordGevrey
+  EulerLpCylinderTranslation
 open scoped ContDiff
 
 variable (period : ℝ) [Fact (0 < period)]
   {E F G : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G]
 
+/-- Map, given by `L.compLpL 2 (liftMeasure period)`. -/
 def map (L : E →L[ℝ] F) : CylinderL2 period E →L[ℝ] CylinderL2 period F :=
   L.compLpL 2 (liftMeasure period)
 
@@ -59,11 +60,12 @@ theorem map_translation (L : E →L[ℝ] F) (a : LiftTangent) (u : CylinderL2 pe
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
+/-- Path map, given by `(map period L).compLeftContinuous ℝ K`. -/
 def pathMap (L : E →L[ℝ] F) : C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period F) :=
   (map period L).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem pathMap_apply (L : E →L[ℝ] F) (u : C(K,CylinderL2 period E)) (t : K) :
+@[simp] theorem pathMap_apply (L : E →L[ℝ] F) (u : C(K, CylinderL2 period E)) (t : K) :
     pathMap period L u t = map period L (u t) := rfl
 
 theorem pathMap_norm (L : E →L[ℝ] F) : ‖pathMap (K := K) period L‖ ≤ ‖L‖ := by
@@ -76,13 +78,13 @@ theorem pathMap_norm (L : E →L[ℝ] F) : ‖pathMap (K := K) period L‖ ≤ �
       (mul_le_mul_of_nonneg_left (u.norm_coe_le_norm t) (norm_nonneg L)))
 
 omit [CompactSpace K] in
-theorem pathMap_translation (L : E →L[ℝ] F) (a : LiftTangent) (u : C(K,CylinderL2 period E)) :
+theorem pathMap_translation (L : E →L[ℝ] F) (a : LiftTangent) (u : C(K, CylinderL2 period E)) :
     pathMap period L (pathTranslate period a u) = pathTranslate period a (pathMap period L u) := by
   apply ContinuousMap.ext
   intro t
   exact map_translation period L a (u t)
 
-theorem pathMap_orbit_contDiff (L : E →L[ℝ] F) (u : C(K,CylinderL2 period E))
+theorem pathMap_orbit_contDiff (L : E →L[ℝ] F) (u : C(K, CylinderL2 period E))
     (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (pathMap period L u)) := by
   have he : (fun a : LiftTangent => pathTranslate period a (pathMap period L u)) =

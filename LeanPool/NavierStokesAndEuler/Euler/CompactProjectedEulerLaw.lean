@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ProjectedEulerPairing
-public import LeanPool.NavierStokesAndEuler.Euler.CompactProjectedPairing
 public import LeanPool.NavierStokesAndEuler.Euler.CompactSolenoidalDensity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.CompactProjectedPairing
+import LeanPool.NavierStokesAndEuler.Euler.ProjectedEulerPairing
 
 /-!
 # The Comparator solution satisfies the weak projected Euler equation
@@ -19,6 +19,9 @@ The test family is the dense family of compact smooth solenoidal fields.
 Only pointwise identification of the supplied smooth `L²` fields with the
 Comparator velocity is assumed; no time regularity of those fields is used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

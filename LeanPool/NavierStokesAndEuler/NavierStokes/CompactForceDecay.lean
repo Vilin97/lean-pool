@@ -7,15 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.Floor.Ring
-public import Mathlib.Algebra.Ring.Periodic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 /-!
 # Decay of all derivatives of a smooth periodic force with bounded time support
@@ -24,6 +16,9 @@ Each actual iterated derivative is continuous and spatially periodic, hence
 bounded on a compact time interval after reduction to a fundamental cube.
 Beyond the time support it is zero by locality of differentiation.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.CompactForceDecay
 

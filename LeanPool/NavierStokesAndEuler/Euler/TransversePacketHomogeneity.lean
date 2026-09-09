@@ -6,17 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseSolutionHomogeneity
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPaths
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TransverseSolutionHomogeneity
 
 /-!
 Exact homogeneity of admissible forcing and the actual joined inverse.
 This permits one fixed unit-amplitude radius budget for every recursive
 forcing amplitude, including zero.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,11 +53,11 @@ theorem derivativePath_eq_smul (G : Forcing P D raw) (H : Forcing P D raw')
     (I J : InitialData P D) (a : ℝ) (h : H.path = a • G.path) (hi : J.value = a • I.value) :
     H.derivativePath J = a • G.derivativePath I := by
   change EulerSourceCylinderEquation.velocityDerivative P D.support D.support_measurable D.T
-    D.T_pos.le
+      D.T_pos.le
       D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower H.path J.value = _
   rw [h,hi]
   exact EulerSourceCylinderEquation.velocityDerivative_smul P D.support D.support_measurable D.T
-    D.T_pos.le
+      D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower a G.path I.value
 
 end EulerTransversePacketProvider.Forcing
@@ -99,8 +100,8 @@ open Set EulerPacketTimePathGluing
 
 theorem join_smul {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (S τ : ℝ) (hτ : 0 ≤ τ) (hτS : τ ≤ S)
-    (u : C(Icc (0 : ℝ) τ,E)) (v : C(Icc (0 : ℝ) (S-τ),E))
-    (hm : u ⟨τ,hτ,le_rfl⟩ = v ⟨0,le_rfl,sub_nonneg.mpr hτS⟩) (a : ℝ) :
+    (u : C(Icc (0 : ℝ) τ, E)) (v : C(Icc (0 : ℝ) (S - τ), E))
+    (hm : u ⟨τ, hτ, le_rfl⟩ = v ⟨0, le_rfl, sub_nonneg.mpr hτS⟩) (a : ℝ) :
     join S τ hτ hτS (a • u) (a • v) (congrArg (a • ·) hm) =
       a • join S τ hτ hτS u v hm := by
   apply ContinuousMap.ext
@@ -129,7 +130,7 @@ include h
 
 omit [CompleteSpace U] in
 theorem initial_forcing_eq_smul : (H.initial τ hτ hτT.le).path = a • (G.initial τ hτ hτT.le).path
-  := by
+    := by
   change initialPath D.T τ hτT.le H.path = a • initialPath D.T τ hτT.le G.path
   rw [h,map_smul]
 
@@ -162,7 +163,7 @@ theorem futureVelocity_eq_smul : futureVelocity τ hτ hτT B H = a • futureVe
   exact (includePath P D.support D.support_measurable).map_smul a _
 
 theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B H = a • futureDerivative τ hτ hτT B
-  G := by
+    G := by
   unfold futureDerivative
   rw [(G.tail τ hτ.le hτT).derivativePath_eq_smul (H.tail τ hτ.le hτT)
     (forwardInitial τ hτ hτT B G) (forwardInitial τ hτ hτT B H) a

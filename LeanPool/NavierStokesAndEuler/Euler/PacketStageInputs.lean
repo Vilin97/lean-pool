@@ -7,15 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageGuards
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryForwardChoice
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialInput
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardNormalParameters
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentForwardNormalParameters
 
 /-! Actual packet inputs at every finite stage, together with the
 source-only parameter cap and the chosen frequency guard. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,6 +49,8 @@ variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B} {n : ℕ} (P : Stage S n)
   (hn : n ≠ 0) (hq : requiredExponent ≤ q)
   (hB : commonThreshold gradientConstant hessianConstant ≤ B)
 
+/-- Joined input, bundling `parent`, `label`, `low`, `normal` and the required compatibility
+proofs. -/
 def joinedInput : EulerPacketInitial.Input (referencePlane (P.joinedNormal hn)) where
   parent := P.restrictedParent
   label := P.restrictedState.labels
@@ -68,8 +71,8 @@ def joinedInput : EulerPacketInitial.Input (referencePlane (P.joinedNormal hn)) 
   neighborhood_measurable := Metric.isOpen_ball.measurableSet
   neighborhood_open := Metric.isOpen_ball
   support_subset := subset_halfBall
-  neighborhood_bound := fun x hx => le_of_lt (by simpa only [Metric.mem_ball,dist_zero_right] using
-    hx)
+  neighborhood_bound := fun x hx => le_of_lt (by
+      simpa only [Metric.mem_ball,dist_zero_right] using hx)
   terminal := (P.joinedGuards hn hq hB).terminal
   cutoff_support := subset_rfl
   delta_pos := by rw [P.joinedGuards_delta]; exact S.spike_pos n
@@ -81,7 +84,7 @@ def joinedInput : EulerPacketInitial.Input (referencePlane (P.joinedNormal hn)) 
 @[simp] theorem joinedInput_low : (P.joinedInput hn hq hB).low=P.restrictedLow := rfl
 @[simp] theorem joinedInput_frame : (P.joinedInput hn hq hB).frame=P.joinedFrame hn := rfl
 @[simp] theorem joinedInput_geometry : (P.joinedInput hn hq hB).geometry=P.joinedGuards hn hq hB :=
-  rfl
+    rfl
 @[simp] theorem joinedInput_terminal :
     (P.joinedInput hn hq hB).terminal=(P.joinedGuards hn hq hB).terminal := rfl
 
@@ -104,7 +107,7 @@ theorem joinedInput_frequency : (P.joinedInput hn hq hB).frequencyGuard (frequen
 
 theorem joinedInput_targetTime :
     ((P.joinedInput hn hq hB).geometry.lowGeometry (P.joinedInput hn hq
-      hB).halfBall).targetTime=P.nextTime :=
+        hB).halfBall).targetTime=P.nextTime :=
   P.joinedGeometry_targetTime hn hq hB
 
 theorem joinedInput_sigma_bound :
@@ -122,6 +125,8 @@ section Forward
 variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B} (P : Stage S 0)
   (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
 
+/-- Forward input, bundling `parent`, `label`, `low`, `normal` and the required compatibility
+proofs. -/
 def forwardInput : GeometryForwardInput (referencePlane P.forwardNormal) where
   parent := P.restrictedParent
   label := P.restrictedState.labels
@@ -139,8 +144,8 @@ def forwardInput : GeometryForwardInput (referencePlane P.forwardNormal) where
   neighborhood_measurable := Metric.isOpen_ball.measurableSet
   neighborhood_open := Metric.isOpen_ball
   support_subset := subset_halfBall
-  neighborhood_bound := fun x hx => le_of_lt (by simpa only [Metric.mem_ball,dist_zero_right] using
-    hx)
+  neighborhood_bound := fun x hx => le_of_lt (by
+      simpa only [Metric.mem_ball,dist_zero_right] using hx)
   cutoff_support := subset_rfl
   delta_pos := by rw [P.forwardGuards_delta]; exact S.spike_pos 0
   delta_le_one := by rw [P.forwardGuards_delta]; exact S.spike_one 0
@@ -161,21 +166,21 @@ theorem forwardInput_parameterSize : (P.forwardInput hq hB).parameterSize ≤ en
     S.actual.initial_shear S.actual.initial_frequency P.label_eq.le P.restricted_horizon_reciprocal
     P.core_cap P.boundary_eq
     ((P.forwardFrame_horizon.trans P.restrictedFrame_horizon).le.trans
-      P.source_stage.horizon_le_Theta)
+        P.source_stage.horizon_le_Theta)
     (P.forwardGuards_delta hq hB) (P.forwardGuards_shear hq hB)
     (P.forwardFrame_shear.trans P.frame_shear)
 
 theorem forwardInput_frequency : (P.forwardInput hq hB).frequencyGuard (frequency S.J S.X 0) :=
   S.source_frequency 0 _ (P.forwardInput hq hB).parameterSize_one (P.forwardInput_parameterSize hq
-    hB)
+      hB)
 
 theorem forwardInput_targetTime :
     ((P.forwardInput hq hB).geometry.lowGeometry (P.forwardInput hq
-      hB).halfBall).targetTime=P.nextTime :=
+        hB).halfBall).targetTime=P.nextTime :=
   P.forwardGeometry_targetTime hq hB
 
 theorem forwardInput_sigma_bound : (P.forwardInput hq hB).frame.sigma*scaleSequence S.J S.X 0 ≤ 2
-  := by
+    := by
   change P.forwardFrame.sigma*scaleSequence S.J S.X 0 ≤ 2
   rw [P.forwardFrame_sigma]
   exact P.normalized_sigma

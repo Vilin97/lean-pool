@@ -9,10 +9,9 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityCoordinates
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricFields
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BlowupImplication
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.BlowupImplication
+import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # The physical natural core
@@ -22,6 +21,9 @@ obtained from the natural profiles. All regularity assertions are on the
 explicit open physical domain where those profiles have been constructed.
 No assertion about the regularity of the final Navier--Stokes force is made.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,18 +40,23 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
   simpa only [ENat.coe_top_add_one] using (le_rfl : (∞ : WithTop ℕ∞) ≤ ∞)
 
+/-- Physical Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)`. -/
 noncomputable def physicalQ (h : ℝ) (p : ProfilePoint) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)
 
+/-- Physical eta, given by `SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)`. -/
 noncomputable def physicalEta (h : ℝ) (p : ProfilePoint) : ℝ :=
   SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)
 
+/-- Similarity point, given by `(p.2.1 / physicalQ h p, physicalEta h p)`. -/
 noncomputable def similarityPoint (h : ℝ) (p : ProfilePoint) : ℝ × ℝ :=
   (p.2.1 / physicalQ h p, physicalEta h p)
 
+/-- Profile domain, given by `{p | p.1 < 1 ∧ similarityPoint h p ∈ NaturalProfile.domain Λ}`. -/
 noncomputable def profileDomain (h Λ : ℝ) : Set ProfilePoint :=
   {p | p.1 < 1 ∧ similarityPoint h p ∈ NaturalProfile.domain Λ}
 
+/-- Core domain, given by `{z | profilePoint z.1 z.2 ∈ profileDomain h Λ}`. -/
 noncomputable def coreDomain (h Λ : ℝ) : Set SpaceTime :=
   {z | profilePoint z.1 z.2 ∈ profileDomain h Λ}
 
@@ -57,15 +64,21 @@ noncomputable def coreDomain (h Λ : ℝ) : Set SpaceTime :=
 noncomputable def radialPrimitive (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   ∫ v in (0 : ℝ)..p.1, f (v, p.2)
 
+/-- Meridional potential, defined pointwise by `physicalQ h p ^ (-NaturalAxisData.A h) * V
+(similarityPoint h p)`. -/
 noncomputable def meridionalPotential (h : ℝ) (V : ℝ × ℝ → ℝ) : Profile := fun p =>
   physicalQ h p ^ (-NaturalAxisData.A h) * V (similarityPoint h p)
 
+/-- Swirl potential, defined pointwise by `-(physicalQ h p ^ (-h)) * radialPrimitive f
+(similarityPoint h p)`. -/
 noncomputable def swirlPotential (h : ℝ) (f : ℝ × ℝ → ℝ) : Profile := fun p =>
   -(physicalQ h p ^ (-h)) * radialPrimitive f (similarityPoint h p)
 
+/-- Core potential, given by `potential (meridionalPotential h V) (swirlPotential h f)`. -/
 noncomputable def corePotential (h : ℝ) (f V : ℝ × ℝ → ℝ) : VelocityField :=
   potential (meridionalPotential h V) (swirlPotential h f)
 
+/-- Core velocity, given by `velocity (meridionalPotential h V) (swirlPotential h f)`. -/
 noncomputable def coreVelocity (h : ℝ) (f V : ℝ × ℝ → ℝ) : VelocityField :=
   velocity (meridionalPotential h V) (swirlPotential h f)
 

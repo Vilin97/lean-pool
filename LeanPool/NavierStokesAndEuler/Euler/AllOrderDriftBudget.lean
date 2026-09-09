@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionCoherence
 public import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBudget
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyData
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
+
+/-! Actual all-order Gevrey input budgets with radius loss controlled by the transport drift. -/
 
 @[expose] public section
 
-/-! Actual all-order Gevrey input budgets with radius loss controlled by the transport drift. -/
 
 noncomputable section
 
@@ -26,7 +27,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- Genuine coherent input budgets for the drift-aware all-order correction theorem.
 Full background norms enter the proved polynomial constants; only the actual transport drift enters
-  the shrinking-radius slope. -/
+the shrinking-radius slope. -/
 structure Budget {T : ℝ} (hT : 0 < T) (A : Data period T) where
   /-- The actual common inverse metric and its genuine time derivative. -/
   metric : MetricBudget period T hT.le (A.atOrder period 1)
@@ -62,7 +63,8 @@ structure Budget {T : ℝ} (hT : 0 < T) (A : Data period T) where
   /-- The prescribed approximation satisfies the actual lifted divergence constraint. -/
   divergence : ∀ t, A.approximation.field t ∈ divergenceFreeSpace period A.κ A.direction
 
-/-- The drift-aware input budget provides the genuine comparison data required by finite-order uniqueness. -/
+/-- The drift-aware input budget provides the genuine comparison data required by finite-order
+uniqueness. -/
 def Budget.comparisonData {T : ℝ} {hT : 0 < T} {A : Data period T}
     (B : Budget period hT A) : ComparisonData period hT A where
   metric := B.metric

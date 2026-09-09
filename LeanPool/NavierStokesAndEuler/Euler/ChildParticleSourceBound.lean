@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleFieldBounds
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevSourceExponent
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The explicit polynomial losses of child composition fit the
 manuscript's C*=10(s+2). This includes the sum of the three actual
 physical-label Hs word norms, not just a separate bound for each field. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +26,7 @@ open EulerPacketParentLabelBounds EulerSobolevSourceExponent EulerMeanClassicalW
 variable (G : Data)
 
 theorem amplitude_le_power (k : ℝ) (hk1 : 1 ≤ k)
-    (hbig : 2+45*embeddingCost ≤ k) (hK : G.K ≤ k) (hM : G.amp ≤ k) :
+    (hbig : 2 + 45 * embeddingCost ≤ k) (hK : G.K ≤ k) (hM : G.amp ≤ k) :
     G.amplitude ≤ k^6 := by
   have hk0 : 0 ≤ k := zero_le_one.trans hk1
   have hk15 : k ≤ k^5 := by simpa using pow_le_pow_right₀ hk1 (show 1 ≤ 5 by omega)
@@ -41,7 +43,7 @@ theorem amplitude_le_power (k : ℝ) (hk1 : 1 ≤ k)
   have h5 : 36*embeddingCost*(G.K^3*G.amp^2) ≤ 36*embeddingCost*k^5 :=
     mul_le_mul_of_nonneg_left hprod5 (mul_nonneg (by norm_num) embeddingCost_nonneg)
   have hs := add_le_add (add_le_add (add_le_add (hK.trans hk15) (hM.trans hk15)) h3) h5
-  have he : G.amplitude = G.K+G.amp+9*embeddingCost*(G.K^2*G.amp)+
+  have he : G.amplitude = G.K+G.amp+9*embeddingCost*(G.K^2*G.amp) +
       36*embeddingCost*(G.K^3*G.amp^2) := by
     unfold amplitude secondAmplitude firstAmplitude
     ring
@@ -51,15 +53,15 @@ theorem amplitude_le_power (k : ℝ) (hk1 : 1 ≤ k)
     _ = k^6 := by ring
 
 theorem radius_le_power (k : ℝ) (hk : 69 ≤ k)
-    (hK : G.K ≤ k) (hM : G.amp ≤ k) (hR : G.rad ≤ k^2) : G.radius ≤ k^5 := by
+    (hK : G.K ≤ k) (hM : G.amp ≤ k) (hR : G.rad ≤ k ^ 2) : G.radius ≤ k^5 := by
   have hk0 : 0 ≤ k := by linarith
   have hk1 : 1 ≤ k := by linarith
   have hk2 : (1 : ℝ) ≤ k^2 := one_le_pow₀ hk1
   have hrad : 1+G.rad ≤ 2*k^2 := by linarith
   have hamp : 1+G.amp ≤ 2*k := by linarith
   have h16 : 16*G.K ≤ 16*k := mul_le_mul_of_nonneg_left hK (by norm_num)
-  have hm := mul_le_mul hamp h16 (mul_nonneg (by norm_num) G.K_nonneg) (mul_nonneg (by norm_num)
-    hk0)
+  have hm := mul_le_mul hamp h16 (mul_nonneg (by
+      norm_num) G.K_nonneg) (mul_nonneg (by norm_num) hk0)
   have hinner : (1+G.amp)*(16*G.K)+2 ≤ 34*k^2 := by nlinarith [hm]
   have hinner0 : 0 ≤ (1+G.amp)*(16*G.K)+2 := by
     have := G.amp_nonneg
@@ -74,16 +76,16 @@ theorem radius_le_power (k : ℝ) (hk : 69 ≤ k)
     _ = k^5 := by ring
 
 theorem source_physical_label_bound (q : ℕ) (k : ℝ) (hk : 69 ≤ k)
-    (hbig : 2+45*embeddingCost ≤ k) (hcost : fixedCost q ≤ k)
-    (hK : G.K ≤ k) (hM : G.amp ≤ k) (hR : G.rad ≤ k^2) (n : ℕ) :
+    (hbig : 2 + 45 * embeddingCost ≤ k) (hcost : fixedCost q ≤ k)
+    (hK : G.K ≤ k) (hM : G.amp ≤ k) (hR : G.rad ≤ k ^ 2) (n : ℕ) :
     classicalBlockSize direction q G.childDisplacement.toLp
-      G.childDisplacement.translation_contDiff n+
-      classicalBlockSize direction q G.childVelocity.toLp G.childVelocity.translation_contDiff n+
+        G.childDisplacement.translation_contDiff n +
+      classicalBlockSize direction q G.childVelocity.toLp G.childVelocity.translation_contDiff n +
       classicalBlockSize direction q G.childAcceleration.toLp
-        G.childAcceleration.translation_contDiff n ≤
+          G.childAcceleration.translation_contDiff n ≤
         (k^(10*(q+2)))^(n+1)*(n.factorial : ℝ)^2 :=
   source_triple_classical_bound q G.childDisplacement G.childVelocity G.childAcceleration k
-    G.amplitude G.radius
+      G.amplitude G.radius
     (by linarith) hcost G.amplitude_nonneg G.radius_nonneg
     (G.amplitude_le_power k (by linarith) hbig hK hM) (G.radius_le_power k hk hK hM hR)
     G.childDisplacement_bound G.childVelocity_bound G.childAcceleration_bound n

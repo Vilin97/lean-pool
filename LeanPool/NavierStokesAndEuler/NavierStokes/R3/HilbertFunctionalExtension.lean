@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Dual
-public import Mathlib.Analysis.Normed.Module.HahnBanach
-
-@[expose] public section
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Normed.Module.HahnBanach
 
 /-!
 # Hilbert-space representation of a functional bounded through an embedding
@@ -18,6 +18,9 @@ A linear functional on a complex vector space that is bounded in the norm of an
 injective linear map into a Hilbert space is represented by an inner product in
 that Hilbert space. No topology on the source vector space is needed.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokesR3.HilbertFunctionalExtension
 

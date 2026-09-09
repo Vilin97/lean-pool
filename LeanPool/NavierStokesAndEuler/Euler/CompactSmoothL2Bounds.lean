@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffDifferenceBound
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffDifferenceBound
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Compact support turns actual uniform tensor bounds into the ordinary
 L² tensor bounds used in the label Sobolev estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 

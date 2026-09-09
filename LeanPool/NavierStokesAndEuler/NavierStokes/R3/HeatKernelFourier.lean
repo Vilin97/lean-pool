@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernel
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GaussianMoments
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszHeatRepresentation
-public import Mathlib.Analysis.Fourier.Inversion
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GaussianMoments
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
 
 /-!
 # Fourier representation of the heat kernel
@@ -21,6 +18,9 @@ The ordinary Gaussian Fourier formula is normalized to the three dimensional
 heat kernel used in the comparison proof. Two justified differentiations of
 the inverse Fourier integral identify the Hessian multiplier with its kernel.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

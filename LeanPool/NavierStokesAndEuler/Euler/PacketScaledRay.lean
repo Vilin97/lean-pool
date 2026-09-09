@@ -7,10 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMovingRay
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-! The actual ray in the source time and coordinate scaling. -/
 
 @[expose] public section
 
-/-! The actual ray in the source time and coordinate scaling. -/
 
 noncomputable section
 
@@ -19,6 +23,7 @@ namespace EulerPacketMovingFrame
 
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay InnerProductSpace
 
+/-- Physical time, given by `t₀ + (ε/a)*τ`. -/
 def physicalTime (t₀ a ε τ : ℝ) : ℝ := t₀ + (ε/a)*τ
 
 theorem physicalTime_hasDerivAt (t₀ a ε τ : ℝ) :
@@ -42,6 +47,7 @@ theorem scaledRayRate_algebra {a ε s₀ : ℝ} (ha : a ≠ 0) (hε : ε ≠ 0) 
   unfold scaledRayEntry
   field_simp [ha, hs₀, rayScale_ne_zero hε i, rayScale_ne_zero hε j]
 
+/-- Scaled ray, given by `movingRay m v r (physicalTime t₀ a ε τ) i / (s₀*rayScale ε i)`. -/
 def scaledRay (m v r : ℝ → Space) (s₀ t₀ a ε τ : ℝ) (i : Fin 3) : ℝ :=
   movingRay m v r (physicalTime t₀ a ε τ) i / (s₀*rayScale ε i)
 
@@ -52,16 +58,16 @@ theorem scaledRay_hasDerivAt (B M : Space →L[ℝ] Space)
     (ha : a ≠ 0) (hε : ε ≠ 0) (hs₀ : s₀ ≠ 0)
     (hm : HasDerivAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) (physicalTime t₀ a ε τ))
     (hv : HasDerivAt v (-B (v (physicalTime t₀ a ε τ)) +
-      (2*⟪m (physicalTime t₀ a ε τ),B (v (physicalTime t₀ a ε τ))⟫_ℝ /
-        ‖m (physicalTime t₀ a ε τ)‖^2) • m (physicalTime t₀ a ε τ)) (physicalTime t₀ a ε τ))
+      (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
+        ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) (physicalTime t₀ a ε τ))
     (hr : HasDerivAt r (-M.adjoint (r (physicalTime t₀ a ε τ))) (physicalTime t₀ a ε τ))
     (hm0 : m (physicalTime t₀ a ε τ) ≠ 0) (hv0 : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0) (i : Fin 3) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) (i : Fin 3) :
     HasDerivAt (fun σ => scaledRay m v r s₀ t₀ a ε σ i)
       (∑ j : Fin 3, scaledRayEntry a ε
         (frameMatrix M (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε τ))))
         (frameSkew (frameMatrix B (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε
-          τ)))))
+            τ)))))
         i j * scaledRay m v r s₀ t₀ a ε τ j) τ := by
   have h := ((movingRay_hasDerivAt B M hm hv hr hm0 hv0 hmv i).comp τ
     (physicalTime_hasDerivAt t₀ a ε τ)).div_const (s₀*rayScale ε i)
@@ -75,16 +81,16 @@ theorem scaledRay_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
     (hm : HasDerivWithinAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hv : HasDerivWithinAt v (-B (v (physicalTime t₀ a ε τ)) +
-      (2*⟪m (physicalTime t₀ a ε τ),B (v (physicalTime t₀ a ε τ))⟫_ℝ /
-        ‖m (physicalTime t₀ a ε τ)‖^2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
+      (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
+        ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
     (hr : HasDerivWithinAt r (-M.adjoint (r (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hm0 : m (physicalTime t₀ a ε τ) ≠ 0) (hv0 : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0) (i : Fin 3) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) (i : Fin 3) :
     HasDerivWithinAt (fun σ => scaledRay m v r s₀ t₀ a ε σ i)
       (∑ j : Fin 3, scaledRayEntry a ε
         (frameMatrix M (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε τ))))
         (frameSkew (frameMatrix B (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε
-          τ)))))
+            τ)))))
         i j * scaledRay m v r s₀ t₀ a ε τ j) U τ := by
   have h := ((movingRay_hasDerivWithinAt B M hm hv hr hm0 hv0 hmv i).comp τ
     (physicalTime_hasDerivAt t₀ a ε τ).hasDerivWithinAt hmap).div_const (s₀*rayScale ε i)

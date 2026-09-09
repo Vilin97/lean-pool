@@ -6,24 +6,26 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FlowL2Transport
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Actual Sobolev integrability under a smooth volume-preserving change
 of variables, with an explicit finite-order composition constant. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerVolumeSobolevComposition
 
-open Set MeasureTheory EulerMetricTransport EulerLiftedGradientSpace
+open Set MeasureTheory EulerLiftedGradientSpace
 open scoped ContDiff NNReal ENNReal
 
 variable (f g : Vector3 → Vector3) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
   (n : ℕ) (D : ℝ) (hD : 0 ≤ D)
-  (hjet : ∀ i, 1 ≤ i → i ≤ n → ∀ x, ‖iteratedFDeriv ℝ i f x‖ ≤ D^i)
+  (hjet : ∀ i, 1 ≤ i → i ≤ n → ∀ x, ‖iteratedFDeriv ℝ i f x‖ ≤ D ^ i)
 
 include hf hg hjet in
 theorem compositionTensor_pointwise (x : Vector3) :
@@ -42,7 +44,7 @@ variable (hmp : MeasurePreserving f volume volume)
   (hLp : ∀ i, i ≤ n → MemLp (iteratedFDeriv ℝ i g) 2 volume)
 
 include hmp hLp in
-theorem composedJetNorm_memLp (i : Fin (n+1)) :
+theorem composedJetNorm_memLp (i : Fin (n + 1)) :
     MemLp (fun x => ‖iteratedFDeriv ℝ i.val g (f x)‖) 2 volume :=
   ((hLp i (by omega)).norm).comp_measurePreserving hmp
 
@@ -59,6 +61,8 @@ theorem compositionTensor_memLp :
     (Finset.sum_nonneg (fun _ _ => norm_nonneg _)))]
   exact compositionTensor_pointwise f g hf hg n D hjet x
 
+/-- Composition tensor Lᵖ, given by `(compositionTensor_memLp f g hf hg n D hD hjet hmp
+hLp).toLp (iteratedFDeriv ℝ n (g ∘ f))`. -/
 def compositionTensorLp :
     Lp (Vector3 [×n]→L[ℝ] Vector3) 2 (volume : Measure Vector3) :=
   (compositionTensor_memLp f g hf hg n D hD hjet hmp hLp).toLp (iteratedFDeriv ℝ n (g ∘ f))
@@ -73,7 +77,7 @@ theorem compositionTensorLp_norm_le :
     apply eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul
     filter_upwards [] with x
     apply NNReal.coe_le_coe.mp
-    change ‖iteratedFDeriv ℝ n (g ∘ f) x‖ ≤ ((n.factorial : ℝ)*D^n)*
+    change ‖iteratedFDeriv ℝ n (g ∘ f) x‖ ≤ ((n.factorial : ℝ)*D^n) *
       ‖∑ i : Fin (n+1), ‖iteratedFDeriv ℝ i.val g (f x)‖‖
     rw [Real.norm_of_nonneg (Finset.sum_nonneg (fun _ _ => norm_nonneg _))]
     exact compositionTensor_pointwise f g hf hg n D hjet x
@@ -88,8 +92,8 @@ theorem compositionTensorLp_norm_le :
   have hc (i : Fin (n+1)) : eLpNorm (fun x => ‖iteratedFDeriv ℝ i.val g (f x)‖) 2 volume =
       eLpNorm (iteratedFDeriv ℝ i.val g) 2 volume := by
     change eLpNorm ((fun y => ‖iteratedFDeriv ℝ i.val g y‖) ∘ f) 2 volume = _
-    rw [eLpNorm_comp_measurePreserving (hLp i (by omega)).aestronglyMeasurable.norm
-      hmp,eLpNorm_norm]
+    rw [eLpNorm_comp_measurePreserving (hLp i (by
+        omega)).aestronglyMeasurable.norm hmp,eLpNorm_norm]
   simp_rw [hc] at hB
   have hAB : eLpNorm (iteratedFDeriv ℝ n (g ∘ f)) 2 volume ≤
       (β : ℝ≥0∞)*∑ i : Fin (n+1), eLpNorm (iteratedFDeriv ℝ i.val g) 2 volume := by

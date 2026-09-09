@@ -6,15 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpMultilinearBundling
-public import Mathlib.LinearAlgebra.Multilinear.Basis
-public import Mathlib.LinearAlgebra.Basis.VectorSpace
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-public import Mathlib.MeasureTheory.SpecificCodomains.Pi
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
 
 /-!
 # Reconstructing actual L² tensors from finitely many coordinate fields
@@ -23,6 +15,9 @@ This qualitative finite-dimensional construction supplies literal tensor-valued
 L² derivatives. Quantitative Gevrey estimates continue to use the ordered-word
 norms directly, and do not pass through these coordinate norm equivalences.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -64,6 +59,8 @@ end Tuple
 /-- Coordinate directions in the ordinary spatial domain. -/
 def direction (i : Fin 3) : Space := EuclideanSpace.single i 1
 
+/-- Tensor coordinates, given by `ContinuousLinearMap.pi (fun w => (ContinuousLinearMap.id ℝ
+(Space [×n]→L[ℝ] V)).flipMultilinear (fun i => direction (w i)))`. -/
 def tensorCoordinates (n : ℕ) :
     (Space [×n]→L[ℝ] V) →L[ℝ] ((Fin n → Fin 3) → V) :=
   ContinuousLinearMap.pi (fun w =>
@@ -104,7 +101,7 @@ theorem tensorLpReassembly_ae (μ : Measure X) (n : ℕ)
     (tensorLpReassembly μ n u : X → (Space [×n]→L[ℝ] V)) =ᵐ[μ]
       fun x => tensorReassembly n (fun w => u w x) := by
   filter_upwards [(tensorReassembly (V := V) n).coeFn_compLpL (tupleLp (V := V) (ι := Fin n → Fin
-    3) μ u),
+      3) μ u),
     tupleLp_ae μ u]
     with x h₁ h₂
   exact h₁.trans (congrArg (tensorReassembly n) h₂)

@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPointJets
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAssembly
+import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeSupport
+
+/-! The literal packet sums and their genuine first derivatives match the graded assembly. -/
 
 @[expose] public section
 
-/-! The literal packet sums and their genuine first derivatives match the graded assembly. -/
 
 noncomputable section
 
@@ -75,7 +77,7 @@ theorem differentiableAt_assemble (N n : ℕ) (u c : ℕ → Domain → E) (z : 
 
 /-- The extra degree N+1 is precisely the final divergence corrector in (13). -/
 theorem fieldSum_assemble_from_one (N : ℕ) (κ : ℝ) (u c : ℕ → Domain → E)
-    (hu : u 0=0) (hc : c 0=0) (z : Domain) :
+    (hu : u 0 = 0) (hc : c 0 = 0) (z : Domain) :
     fieldSum (N+1) κ (assemble N u c) z =
       ∑ i ∈ range N, (κ^(i+1) • u (i+1) z+κ^(i+2) • c (i+1) z) := by
   have h := congrArg (fun f : Domain → E => f z)

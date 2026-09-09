@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
-public import Mathlib.Analysis.Normed.Group.InfiniteSum
-
-@[expose] public section
 
 /-!
 # Quantitative jets of the actual diagonal sum
@@ -20,6 +17,9 @@ tail estimates. The stage estimates themselves are explicit hypotheses, not
 conclusions of the numerical cutoff selection. The prefix must depend on the
 requested derivative order and decay power; no fixed tail is declared flat.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

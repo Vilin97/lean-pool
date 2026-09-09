@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPeriodizedSignedRealization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CycleStateCoherence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPeriodizedSignedRealization
 
 /-!
 # Coherence of the literal signed correction
@@ -22,6 +19,9 @@ the periodized amplitude and the curl correction are then compared in
 the actual charts.  No coherence of a signed output is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedCoherence
@@ -30,25 +30,35 @@ open Set Function Filter HarmonicCalculus WeightedClasses
 open CorrectionInitialization CorrectionInitialization.ActualPrimary GaugeStateCoherence
 open scoped ContDiff Topology BigOperators InnerProductSpace
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Full point: an abbreviation for `Point × ℝ`. -/
 abbrev FullPoint := Point × ℝ
+/-- Signed label: an abbreviation for `ActualSignedStageControls.SignedLabel B N0`. -/
 abbrev SignedLabel (B N0 : ℕ) := ActualSignedStageControls.SignedLabel B N0
 
 variable {B N0 : ℕ}
 
+/-- Full strip, given by `HarmonicWaveInteraction.productStrip
+ActualInitialization.geometry.strip`. -/
 noncomputable def fullStrip : StripData FullPoint :=
   HarmonicWaveInteraction.productStrip ActualInitialization.geometry.strip
 
+/-- Request, constructed using `LocalSignedRequest.fullRequest`. -/
 noncomputable def request (B : ℕ) (u : CorrectionState.State Point) :
     ℕ → FullPoint → SignedWaveUpdate.Vec2 :=
   LocalSignedRequest.fullRequest ActualInitialization.geometry.strip
     ActualInitialization.geometry.patch ActualInitialization.geometry.coord (commonContext B) u
 
+/-- Copies, given by `(ActualSignedStageControls.parameters l).copyData
+ActualInitialization.geometry.strip (request B u)`. -/
 noncomputable def copies (l : SignedLabel B N0) (u : CorrectionState.State Point) :
     PeriodizedWaveBounds.CopyData FullPoint TorusInverse.Frequency :=
   (ActualSignedStageControls.parameters l).copyData ActualInitialization.geometry.strip (request B
-    u)
+      u)
 
+/-- Chart, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required compatibility
+proofs. -/
 noncomputable def chart (n m k : ℕ) : FullPoint ≃L[ℝ] FullPoint where
   toFun x := (bandChartEquiv h n m k x.1, x.2)
   invFun x := ((bandChartEquiv h n m k).symm x.1, x.2)
@@ -57,20 +67,25 @@ noncomputable def chart (n m k : ℕ) : FullPoint ≃L[ℝ] FullPoint where
   map_add' x y := Prod.ext (map_add (bandChartEquiv h n m k) x.1 y.1) rfl
   map_smul' a x := Prod.ext (map_smul (bandChartEquiv h n m k) a x.1) rfl
   continuous_toFun := ((bandChartEquiv h n m k).continuous.comp continuous_fst).prodMk
-    continuous_snd
+      continuous_snd
   continuous_invFun := ((bandChartEquiv h n m k).symm.continuous.comp continuous_fst).prodMk
-    continuous_snd
+      continuous_snd
 
 @[simp] theorem chart_apply (n m k : ℕ) (x : FullPoint) :
     chart n m k x = (bandChartEquiv h n m k x.1, x.2) := rfl
 
+/-- Coefficient weight, given by `PhysicalSignedWave.coefficientScale (ChartScales.epsilon h n)
+(ChartScales.epsilon h m) (bandVelocityScale h n m)`. -/
 noncomputable def coefficientWeight (n m : ℕ) : ℝ :=
   PhysicalSignedWave.coefficientScale (ChartScales.epsilon h n) (ChartScales.epsilon h m)
     (bandVelocityScale h n m)
 
+/-- Phase weight, given by `(ChartScales.carrier h m : ℝ) / (ChartScales.carrier h n : ℝ)`. -/
 noncomputable def phaseWeight (n m : ℕ) : ℝ :=
   (ChartScales.carrier h m : ℝ) / (ChartScales.carrier h n : ℝ)
 
+/-- Clock weight, given by `PhysicalParticularWave.clockWeight h (ChartScales.Q n)
+(ChartScales.Q m)`. -/
 noncomputable def clockWeight (n m : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q m)
 
@@ -165,17 +180,17 @@ theorem chart_axial (n m k : ℕ)
     (hi : CommonWindow.index h n + k = CommonWindow.index h m) (x : FullPoint) :
     chart n m k ((ActualSignedStageControls.directions B).axialField fullStrip n x) =
       bandScale n m • (ActualSignedStageControls.directions B).axialField fullStrip m (chart n m k
-        x) := by
+          x) := by
   apply (ActualPrimaryCoherence.absoluteChart m).injective
   rw [chart_absolute n m k hi, map_smul]
   change ActualPrimaryCoherence.absoluteChart n
       ((PrimaryResidualClass.directions (commonContext B)).axialField
         (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-          standardRegion)) n x) =
+            standardRegion)) n x) =
     bandScale n m • ActualPrimaryCoherence.absoluteChart m
       ((PrimaryResidualClass.directions (commonContext B)).axialField
         (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal
-          standardRegion)) m (chart n m k x))
+            standardRegion)) m (chart n m k x))
   rw [ActualPrimaryCoherence.absoluteChart_axial, ActualPrimaryCoherence.absoluteChart_axial,
     chart_absolute n m k hi, smul_smul, ← sqrt_scale]
 
@@ -224,10 +239,10 @@ theorem coefficientScale_comp (l : SignedLabel B N0) (n m : ℕ) :
     ActualSignedStageControls.coefficientScale l n =
       coefficientWeight n m * ActualSignedStageControls.coefficientScale l m := by
   unfold ActualSignedStageControls.coefficientScale coefficientWeight
-    PhysicalSignedWave.coefficientScale
+      PhysicalSignedWave.coefficientScale
   rw [← velocityWeight_eq]
   change (PhysicalParticularWave.ratioPower (ChartScales.Q n) (ChartScales.Q
-    (BaseChartJets.cellBand l.1))
+      (BaseChartJets.cellBand l.1))
       (CoordinateAlgebra.A h) * _ / _) = _
   rw [ratioPower_comp n m (BaseChartJets.cellBand l.1)]
   unfold PhysicalParticularWave.velocityWeight
@@ -276,7 +291,7 @@ theorem carrier_transport (l : SignedLabel B N0) (n m k : ℕ)
     (hi : CommonWindow.index h n + k = CommonWindow.index h m) (x : FullPoint) :
     (chartCoefficients l.2 l.1).frequency n * (chartCoefficients l.2 l.1).phase n x =
       (chartCoefficients l.2 l.1).frequency m * (chartCoefficients l.2 l.1).phase m (chart n m k x)
-        := by
+          := by
   rw [chartCoefficients_phase, chartCoefficients_phase]
   exact congrArg (absolutePhase l.2 l.1) (chart_absolute n m k hi x).symm
 
@@ -285,7 +300,7 @@ theorem normal_transport (l : SignedLabel B N0) (n m k : ℕ)
     (chartCoefficients l.2 l.1).normal fullStrip (ActualSignedStageControls.directions B) n x =
       (phaseWeight n m * bandScale n m) •
         (chartCoefficients l.2 l.1).normal fullStrip (ActualSignedStageControls.directions B) m
-          (chart n m k x) := by
+            (chart n m k x) := by
   unfold LinearWaveBounds.WaveCoefficients.normal
   rw [phase_transport l n m k hi]
   exact ActualPrimaryCoherence.phaseNormal_equiv (chart n m k) (bandScale_pos n m).ne'
@@ -316,23 +331,23 @@ theorem action_transport (l : SignedLabel B N0) (n m k : ℕ)
 theorem fullRequest_transport (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap n m) :
     request B u n x = coefficientWeight n m ^ 2 • request B u m (chart n m k x) := by
   have H' : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.gauge.radial.inner
-        ActualInitialization.geometry.gauge.radial.outer
+          ActualInitialization.geometry.gauge.radial.outer
       (commonContext B) u := by
     simpa only [ActualInitialization.geometry.inner_eq, ActualInitialization.geometry.outer_eq]
-      using H
+        using H
   have htheta := H.theta ActualInitialization.geometry.patch.a_pos
-    ActualInitialization.geometry.patch.a_lt_b
+      ActualInitialization.geometry.patch.a_lt_b
   have hz := H'.axial_reconstructed ActualInitialization.geometry.inner_pos
     ActualInitialization.geometry.exponent_pos ActualInitialization.geometry.length_eq hfixed
   have ht : 0 < x.1.2.1.1 := standardRegion.time_pos x.1.2.1 hx.1
@@ -340,7 +355,7 @@ theorem fullRequest_transport (u : CorrectionState.State Point)
     (V := ActualInitialCoherence.overlap n m) (fun t ht => standardRegion.time_pos t ht.1) n m k hi
   have he := PhysicalSignedWave.fullRequest_of_state
     ActualInitialization.geometry.strip ActualInitialization.geometry.strip
-      ActualInitialization.geometry.patch
+        ActualInitialization.geometry.patch
     outgoing.data.h_pos outgoing.data.h_lt_half (ChartScales.Q_pos n) (ChartScales.Q_pos m)
     (commonContext B) (commonContext B) u u n m k
     ((ActualInitialCoherence.overlap_open n m).preimage (continuous_fst.comp continuous_snd))
@@ -360,12 +375,12 @@ theorem signedVector_of_request (l : SignedLabel B N0) (u : CorrectionState.Stat
     (hR : request B u n x = coefficientWeight n m ^ 2 • request B u m (chart n m k x)) :
     SignedWaveUpdate.signedVector fullStrip (ActualSignedStageControls.matrix l copy)
       (ActualSignedStageControls.target l copy) (request B u) (ActualSignedStageControls.mask l
-        copy)
+          copy)
       (ActualSignedStageControls.fundamental l copy) l.2 n x =
     bandVelocityScale h n m •
       SignedWaveUpdate.signedVector fullStrip (ActualSignedStageControls.matrix l copy)
         (ActualSignedStageControls.target l copy) (request B u) (ActualSignedStageControls.mask l
-          copy)
+            copy)
         (ActualSignedStageControls.fundamental l copy) l.2 m (chart n m k x) := by
   apply PhysicalSignedWave.signedVector_transport fullStrip fullStrip
     (ActualSignedStageControls.matrix l copy) (ActualSignedStageControls.matrix l copy)
@@ -389,27 +404,27 @@ theorem raw_amplitude_of_request (l : SignedLabel B N0) (u : CorrectionState.Sta
   change CurlClassBounds.complexify
       (SignedWaveUpdate.signedVector fullStrip (ActualSignedStageControls.matrix l copy)
         (ActualSignedStageControls.target l copy) (request B u) (ActualSignedStageControls.mask l
-          copy)
+            copy)
         (ActualSignedStageControls.fundamental l copy) l.2 n x) =
     bandVelocityScale h n m • CurlClassBounds.complexify
       (SignedWaveUpdate.signedVector fullStrip (ActualSignedStageControls.matrix l copy)
         (ActualSignedStageControls.target l copy) (request B u) (ActualSignedStageControls.mask l
-          copy)
+            copy)
         (ActualSignedStageControls.fundamental l copy) l.2 m (chart n m k x))
   rw [signedVector_of_request l u n m k hi copy x hR, map_smul]
 
 theorem raw_amplitude_transport (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (copy : TorusInverse.Frequency) (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap
-      n m) :
+        n m) :
     (copies l u).amplitude n copy x =
       bandVelocityScale h n m • (copies l u).amplitude m copy (chart n m k x) :=
   raw_amplitude_of_request l u n m k hi copy x (fullRequest_transport u H hfixed n m k hi HS x hx)
@@ -439,7 +454,7 @@ theorem raw_pressure_of_request (l : SignedLabel B N0) (u : CorrectionState.Stat
     (bandVelocityScale h n m * bandVelocityScale h n m) •
       ActualPeriodizedSignedRealization.homogeneousPressure (ChartScales.carrier h m)
         ((chartCoefficients l.2 l.1).normal fullStrip (ActualSignedStageControls.directions B) m
-          (chart n m k x))
+            (chart n m k x))
         (ActualSignedStageControls.normalMotion l copy m (chart n m k x))
         (ActualSignedStageControls.action l copy m (chart n m k x)) (v m (chart n m k x))
   unfold ActualPeriodizedSignedRealization.homogeneousPressure
@@ -450,12 +465,12 @@ theorem raw_pressure_of_request (l : SignedLabel B N0) (u : CorrectionState.Stat
       ((ChartScales.carrier h m : ℝ) / (ChartScales.carrier h n : ℝ)) =
       bandVelocityScale h n m * bandVelocityScale h n m := pressure_factor n m
   have hp := PhysicalSignedWave.homogeneousPressure_scale (ChartScales.carrier h n)
-    (ChartScales.carrier h m)
+      (ChartScales.carrier h m)
       (clockWeight n m) (bandVelocityScale h n m) (phaseWeight n m * bandScale n m)
       (carrier_pos n).ne' (carrier_pos m).ne' (mul_ne_zero (phaseWeight_ne n m) (bandScale_pos n
-        m).ne')
+          m).ne')
       ((chartCoefficients l.2 l.1).normal fullStrip (ActualSignedStageControls.directions B) m
-        (chart n m k x))
+          (chart n m k x))
       (ActualSignedStageControls.normalMotion l copy m (chart n m k x))
       (v m (chart n m k x))
       (ActualSignedStageControls.action l copy m (chart n m k x) (v m (chart n m k x)))
@@ -506,12 +521,12 @@ theorem common_pressure_of_request (l : SignedLabel B N0) (u : CorrectionState.S
 theorem common_amplitude_germ (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap n m) :
     (copies l u).common.amplitude n =ᶠ[𝓝 x]
@@ -520,24 +535,24 @@ theorem common_amplitude_germ (l : SignedLabel B N0) (u : CorrectionState.State 
     ((ActualInitialCoherence.overlap_open n m).preimage continuous_fst.snd.fst).mem_nhds hx
   filter_upwards [hU] with y hy
   exact common_amplitude_of_request l u n m k hi y (fullRequest_transport u H hfixed n m k hi HS y
-    hy)
+      hy)
 
 theorem corrected_amplitude_transport (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap n m) :
     ((copies l u).commonCorrected fullStrip (ActualSignedStageControls.directions B)).amplitude n x
-      =
+        =
       bandVelocityScale h n m •
         ((copies l u).commonCorrected fullStrip (ActualSignedStageControls.directions B)).amplitude
-          m
+            m
           (chart n m k x) := by
   change CurlClassBounds.realizedCoefficient (ChartScales.carrier h n) (fun y : FullPoint => y.1.1)
       ((ActualSignedStageControls.directions B).radialField n)
@@ -563,17 +578,17 @@ theorem corrected_amplitude_transport (l : SignedLabel B N0) (u : CorrectionStat
     (fun y => y.1.1) (fun y => y.1.1) _ _ _ _ _ _ (chart_radius n m k)
     (chart_radial n m k hi) (chart_angular n m k hi) (chart_axial n m k hi)
     (bandVelocityScale h n m) ((chartCoefficients l.2 l.1).phase m) ((copies l u).common.amplitude
-      m) x
+        m) x
 
 theorem exactBlock_velocity_transport (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (x : Point) (hx : x.2.1 ∈ ActualInitialCoherence.overlap n m) (theta : ℝ) (i : Fin 3) :
     ((ActualSignedStageControls.parameters l).exactBlock ActualInitialization.geometry.strip
@@ -606,12 +621,12 @@ theorem exactBlock_velocity_transport (l : SignedLabel B N0) (u : CorrectionStat
 theorem exactBlock_pressure_transport (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (x : Point) (hx : x.2.1 ∈ ActualInitialCoherence.overlap n m) (theta : ℝ) :
     ((ActualSignedStageControls.parameters l).exactBlock ActualInitialization.geometry.strip
@@ -624,13 +639,13 @@ theorem exactBlock_pressure_transport (l : SignedLabel B N0) (u : CorrectionStat
   have hp : C.pressure n (x,0) = (bandVelocityScale h n m * bandVelocityScale h n m) •
       C.pressure m (bandChartEquiv h n m k x,0) :=
     common_pressure_of_request l u n m k hi (x,0) (fullRequest_transport u H hfixed n m k hi HS
-      (x,0) hx)
+        (x,0) hx)
   have hmode : a n = a m := rfl
   have hphase := carrier_transport l n m k hi (x,0)
   change (SignedWaveUpdate.blockOfCoefficients C a).oscillatoryPressure n (x,theta) =
     (bandVelocityScale h n m * bandVelocityScale h n m) *
       (SignedWaveUpdate.blockOfCoefficients C a).oscillatoryPressure m (bandChartEquiv h n m k
-        x,theta)
+          x,theta)
   simp only [SignedWaveUpdate.blockOfCoefficients, SignedWaveUpdate.coefficientBlock_pressure]
   change (C.pressure n (x,0) * HarmonicFields.character 1
       ((chartCoefficients l.2 l.1).frequency n * (chartCoefficients l.2 l.1).phase n (x,0) +
@@ -638,7 +653,7 @@ theorem exactBlock_pressure_transport (l : SignedLabel B N0) (u : CorrectionStat
     (bandVelocityScale h n m * bandVelocityScale h n m) *
       (C.pressure m (bandChartEquiv h n m k x,0) * HarmonicFields.character 1
         ((chartCoefficients l.2 l.1).frequency m * (chartCoefficients l.2 l.1).phase m (chart n m k
-          (x,0)) +
+            (x,0)) +
           (a m : ℝ) * theta)).re
   rw [hp, hphase, hmode]
   simp only [Complex.real_smul, Complex.mul_re, Complex.mul_im,

@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ViscosityCauchy
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyData
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityBudget
+
+/-! The already-proved Gevrey budgets supply every actual vanishing-viscosity stability budget. -/
 
 @[expose] public section
 
-/-! The already-proved Gevrey budgets supply every actual vanishing-viscosity stability budget. -/
 
 noncomputable section
 
@@ -22,7 +23,7 @@ open MeasureTheory Set EulerLiftedGradientSpace EulerLiftedPressure EulerCylinde
   EulerCylinderSobolev EulerSpatialSobolevInverse EulerJetProductBounds EulerH6Pressure
   EulerSobolevGevreyOperators EulerPacketWeights EulerSobolevCoefficientPressure
   EulerCorrectionOperators EulerCorrectionLowerData EulerCorrectionEnergyData
-    EulerCorrectionStabilityBudget
+      EulerCorrectionStabilityBudget
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -36,7 +37,7 @@ theorem coefficient_bound_le_block {s : ℕ} {A : SmoothCoefficient period}
     Finset.sum_nonneg (fun r _ => boundLevel_nonneg K)
   have hsingle : boundLevel period K 0 ≤ ∑ r ∈ Finset.range 7, boundLevel period K r :=
     Finset.single_le_sum (f := fun r => boundLevel period K r) (fun r _ => boundLevel_nonneg K) (by
-      norm_num : 0 ∈ Finset.range 7)
+        norm_num : 0 ∈ Finset.range 7)
   have hzero : boundLevel period K 0 = (A.bound : ℝ) := by cases K <;> simp only [boundLevel]
   rw [hzero] at hsingle
   unfold coefficientBlock
@@ -44,7 +45,8 @@ theorem coefficient_bound_le_block {s : ℕ} {A : SmoothCoefficient period}
   nlinarith only [hsum,hsingle]
 
 omit [Fact (0 < period)] in
-/-- The actual uniform coefficient bound is contained in every positive-radius truncated Gevrey coefficient sum. -/
+/-- The actual uniform coefficient bound is contained in every positive-radius truncated Gevrey
+coefficient sum. -/
 theorem coefficient_bound_le_weighted {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (N : ℕ) (ρ : ℝ) (hρ : 0 < ρ) :
@@ -56,19 +58,20 @@ theorem coefficient_bound_le_weighted {s : ℕ} {A : SmoothCoefficient period}
   norm_num only [weight,pow_zero,Nat.factorial_zero,Nat.cast_one,one_pow,div_one,one_mul] at hsingle
   exact (coefficient_bound_le_block period K).trans hsingle
 
-/-- The concrete global Gevrey and metric budgets directly construct the viscosity comparison budget on the genuine lower equation. -/
+/-- The concrete global Gevrey and metric budgets directly construct the viscosity comparison budget
+on the genuine lower equation. -/
 def stabilityBudgetLower {q : ℕ} {T : ℝ} (hT : 0 ≤ T)
-    (D : CorrectionData period (q+1) (Icc (0 : ℝ) T))
+    (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (KG : ∀ t, EulerSpatialSobolevInverse.CoefficientJet period standardDirection q
-      (D.metric.coefficient t))
+        (D.metric.coefficient t))
     (KL : ∀ t, EulerSpatialSobolevInverse.CoefficientJet period standardDirection q
-      (D.linear.coefficient t))
+        (D.linear.coefficient t))
     (KQ : ∀ i t, EulerSpatialSobolevInverse.CoefficientJet period standardDirection q ((D.quadratic
-      i).coefficient t))
+        i).coefficient t))
     (hG : Continuous (fun t => coefficientSobolevOperator period (KG t)))
     (hL : Continuous (fun t => coefficientSobolevOperator period (KL t)))
     (hQ : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ i t)))
-    (N : ℕ) (R : C(Icc (0 : ℝ) T,ℝ)) (hq : 6 ≤ q+1)
+    (N : ℕ) (R : C(Icc (0 : ℝ) T, ℝ)) (hq : 6 ≤ q + 1)
     (B : SpatialBudget period hq D N R) (K : MetricBudget period T hT D) :
     StabilityBudget period hT (lowerData period D KG KL KQ hG hL hQ) where
   metric := K.metric
@@ -90,9 +93,9 @@ def stabilityBudgetLower {q : ℕ} {T : ℝ} (hT : 0 ≤ T)
   first_le := K.first_le
   time_le := K.time_le
   linear_le t := (coefficient_bound_le_weighted period (D.linear.jet t) N (R t) (B.radius_pos
-    t)).trans (B.linear t)
+      t)).trans (B.linear t)
   quadratic_le t := (Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin 3))) =>
     coefficient_bound_le_weighted period ((D.quadratic i).jet t) N (R t) (B.radius_pos t))).trans
-      (B.quadratic t)
+        (B.quadratic t)
 
 end EulerGevreyStabilityBudget

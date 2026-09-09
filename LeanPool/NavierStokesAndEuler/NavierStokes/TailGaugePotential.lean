@@ -6,11 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedExterior
-public import LeanPool.NavierStokesAndEuler.NavierStokes.JointResidualLimits
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBaseEndpoint
-
-@[expose] public section
 
 /-!
 # A radial gauge for the actual slow-base potential
@@ -22,6 +18,9 @@ heat exterior the resulting potential is a finite, anchored heat primitive,
 which has a smooth extension through the terminal central plane.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.TailGaugePotential
@@ -30,11 +29,13 @@ open Set Filter MeasureTheory ProblemStatement
 open scoped Topology ContDiff
 
 
+/-- Point: an abbreviation for `AxisymmetricFields.ProfilePoint`. -/
 abbrev Point := AxisymmetricFields.ProfilePoint
 
 /-- The radial anchor is physical and independent of the similarity scale. -/
 noncomputable def radialAnchor (p : Point) : Point := (p.1, (1, p.2.2))
 
+/-- Radial normalize, given by `K p - K (radialAnchor p)`. -/
 noncomputable def radialNormalize (K : Point → ℝ) (p : Point) : ℝ :=
   K p - K (radialAnchor p)
 
@@ -59,7 +60,7 @@ theorem partialS_radialNormalize {K : Point → ℝ} {p : Point}
     AxisymmetricFields.partialS (radialNormalize K) p = AxisymmetricFields.partialS K p := by
   have hN : DifferentiableAt ℝ (radialNormalize K) p :=
     hK.sub (hA.comp p ((radialAnchor_contDiff (n := 1)).differentiable (by
-      norm_num)).differentiableAt)
+        norm_num)).differentiableAt)
   exact (radial_slice_hasDerivAt hN).unique
     ((radial_slice_hasDerivAt hK).sub_const (K (radialAnchor p)))
 
@@ -73,10 +74,12 @@ noncomputable def gaugedSwirl (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.C
 theorem gaugedSwirl_apply (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients) (p : Point) :
     gaugedSwirl a h C d p =
       SlowBorelBase.swirlPotential a h C d p - SlowBorelBase.swirlPotential a h C d (p.1, (1,
-        p.2.2)) := rfl
+          p.2.2)) := rfl
 
+/-- Potential, given by `AxisymmetricFields.potential (SlowBorelBase.streamFactor a h C d)
+(gaugedSwirl a h C d)`. -/
 noncomputable def potential (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients) : VelocityField
-  :=
+    :=
   AxisymmetricFields.potential (SlowBorelBase.streamFactor a h C d) (gaugedSwirl a h C d)
 
 theorem potential_eq_sub_gauge (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients)
@@ -93,9 +96,9 @@ theorem gaugedSwirl_smoothAt {a : ℕ → ℕ} (ha : StrictMono a) {h C : ℝ}
     ContDiffAt ℝ ∞ (gaugedSwirl a h C d) p :=
   radialNormalize_contDiffAt
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1 (SlowBorelBase.bundleComponent_smooth hd C 1)
-      _ ht)
+        _ ht)
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1 (SlowBorelBase.bundleComponent_smooth hd C 1)
-      _ ht)
+        _ ht)
 
 theorem potential_smooth {a : ℕ → ℕ} (ha : StrictMono a) {h C : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) {d : SlowBorelBase.Coefficients}
@@ -103,7 +106,7 @@ theorem potential_smooth {a : ℕ → ℕ} (ha : StrictMono a) {h C : ℝ}
     ContDiffOn ℝ ∞ (potential a h C d) (Iio 1 ×ˢ (univ : Set Space)) :=
   AxisymmetricFields.contDiffOn_potential
     (SlowBorelBase.physicalProfile_smoothOn ha hh hh1 (SlowBorelBase.bundleComponent_smooth hd C 0)
-      _)
+        _)
     (fun _ hp => (gaugedSwirl_smoothAt ha hh hh1 hd hp.1).contDiffWithinAt)
 
 /-- Equality of the actual Euclidean curls, also on the spatial axis. -/
@@ -112,26 +115,26 @@ theorem spatialCurl_potential {a : ℕ → ℕ} (ha : StrictMono a) {h C : ℝ}
     (hd : SlowBorelBase.SmoothCoefficients d) {w : SpaceTime} (ht : w.1 < 1) :
     SpatialCurl.spatialCurl (potential a h C d) w = SlowBorelBase.baseVelocity a h C d w := by
   have hH : DifferentiableAt ℝ (SlowBorelBase.streamFactor a h C d)
-    (AxisymmetricFields.profilePoint w.1 w.2) :=
+      (AxisymmetricFields.profilePoint w.1 w.2) :=
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1 (SlowBorelBase.bundleComponent_smooth hd C 0)
-      _ ht).differentiableAt
+        _ ht).differentiableAt
       (by simp)
   have hK : DifferentiableAt ℝ (SlowBorelBase.swirlPotential a h C d)
-    (AxisymmetricFields.profilePoint w.1 w.2) :=
+      (AxisymmetricFields.profilePoint w.1 w.2) :=
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1 (SlowBorelBase.bundleComponent_smooth hd C 1)
-      _ ht).differentiableAt
+        _ ht).differentiableAt
       (by simp)
   have hA : DifferentiableAt ℝ (SlowBorelBase.swirlPotential a h C d)
       (radialAnchor (AxisymmetricFields.profilePoint w.1 w.2)) :=
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1 (SlowBorelBase.bundleComponent_smooth hd C 1)
-      _ ht).differentiableAt
+        _ ht).differentiableAt
       (by simp)
   have hN := (gaugedSwirl_smoothAt (C := C) ha hh hh1 hd
     (p := AxisymmetricFields.profilePoint w.1 w.2) ht).differentiableAt (by simp)
   have he : AxisymmetricFields.partialS (gaugedSwirl a h C d) (AxisymmetricFields.profilePoint w.1
-    w.2) =
+      w.2) =
       AxisymmetricFields.partialS (SlowBorelBase.swirlPotential a h C d)
-        (AxisymmetricFields.profilePoint w.1 w.2) :=
+          (AxisymmetricFields.profilePoint w.1 w.2) :=
     partialS_radialNormalize hK hA
   change AxisymmetricFields.velocity _ _ w = AxisymmetricFields.velocity _ _ w
   ext i
@@ -139,15 +142,15 @@ theorem spatialCurl_potential {a : ℕ → ℕ} (ha : StrictMono a) {h C : ℝ}
   · change AxisymmetricFields.velocity _ _ (w.1, w.2) 0 =
       AxisymmetricFields.velocity _ _ (w.1, w.2) 0
     rw [AxisymmetricFields.velocity_zero _ _ _ _ hH hN, AxisymmetricFields.velocity_zero _ _ _ _ hH
-      hK, he]
+        hK, he]
   · change AxisymmetricFields.velocity _ _ (w.1, w.2) 1 =
       AxisymmetricFields.velocity _ _ (w.1, w.2) 1
     rw [AxisymmetricFields.velocity_one _ _ _ _ hH hN, AxisymmetricFields.velocity_one _ _ _ _ hH
-      hK, he]
+        hK, he]
   · change AxisymmetricFields.velocity _ _ (w.1, w.2) 2 =
       AxisymmetricFields.velocity _ _ (w.1, w.2) 2
     rw [AxisymmetricFields.velocity_two _ _ _ _ hH hN, AxisymmetricFields.velocity_two _ _ _ _ hH
-      hK]
+        hK]
 
 /-! ## An actual smooth heat primitive through the terminal time -/
 
@@ -190,10 +193,11 @@ noncomputable def shiftedRadialDomain : ProfileHistories.RadialDomain where
     by_cases hpos : 0 ≤ p.1
     · exact lt_of_lt_of_le (by norm_num) (mul_nonneg hv.1 hpos)
     · have hneg : p.1 ≤ 0 := le_of_not_ge hpos
-      have hle : p.1 ≤ v * p.1 := by nlinarith [mul_nonneg (sub_nonneg.mpr hv.2) (neg_nonneg.mpr
-        hneg)]
+      have hle : p.1 ≤ v * p.1 := by
+          nlinarith [mul_nonneg (sub_nonneg.mpr hv.2) (neg_nonneg.mpr hneg)]
       exact hp.trans_le hle
 
+/-- Shifted heat, given by `extendedHeatCoefficient C h (p.2, (p.1 + 1, 0))`. -/
 noncomputable def shiftedHeat (C h : ℝ) (p : ℝ × ℝ) : ℝ :=
   extendedHeatCoefficient C h (p.2, (p.1 + 1, 0))
 
@@ -203,7 +207,7 @@ theorem shiftedHeat_smooth (C : ℝ) {h : ℝ} (hh : 0 < h) :
   have hs : 0 < p.1 + 1 := by change -1 < p.1 at hp; linarith
   exact ((extendedHeatCoefficient_smoothAt C hh (p := (p.2, (p.1 + 1, 0))) hs).comp p
     (contDiffAt_snd.prodMk ((contDiffAt_fst.add contDiffAt_const).prodMk
-      contDiffAt_const))).contDiffWithinAt
+        contDiffAt_const))).contDiffWithinAt
 
 /-- A finite heat primitive anchored at physical `s = 1`, for every time.
 It equals `-∫ᵣ₌₁ˢ F(t,r)dr` and has no gauge divergence as `t → 1`. -/
@@ -228,7 +232,7 @@ theorem heatPrimitive_smoothAt (C : ℝ) {h : ℝ} (hh : 0 < h)
     change -1 < p.2.1 - 1
     linarith
   exact (((ProfileHistories.primitive_smooth shiftedRadialDomain (shiftedHeat_smooth C
-    hh)).contDiffAt
+      hh)).contDiffAt
     (shiftedRadialDomain.isOpen.mem_nhds hp)).comp p
       ((contDiffAt_snd.fst.sub contDiffAt_const).prodMk contDiffAt_fst)).neg
 
@@ -243,6 +247,8 @@ theorem heatPrimitive_hasDerivAt (C : ℝ) {h : ℝ} (hh : 0 < h)
   simpa only [heatPrimitive, shiftedHeat, extendedHeatCoefficient, Function.comp_def,
     sub_add_cancel, mul_one, id_eq] using (hd.comp s ((hasDerivAt_id s).sub_const 1)).fun_neg
 
+/-- Heat potential, defined pointwise by `heatPrimitive C h (AxisymmetricFields.profilePoint w.1
+w.2) • coordinateVector 2`. -/
 noncomputable def heatPotential (C h : ℝ) : VelocityField :=
   fun w => heatPrimitive C h (AxisymmetricFields.profilePoint w.1 w.2) • coordinateVector 2
 
@@ -322,7 +328,7 @@ theorem exists_terminal_segment_neighborhood {h R : ℝ}
       SimilarityCoordinates.forwardScalar (2 * h) (w.2 2) b) :=
     continuous_const.sub
       ((((AxisymmetricFields.projection 2).continuous.comp continuous_snd).pow 2).mul
-        continuous_const)
+          continuous_const)
   have hU : IsOpen U :=
     (isOpen_lt continuous_const
       ((AxisymmetricFields.contDiff_radialEnergy (n := ∞)).continuous.comp continuous_snd)).inter
@@ -411,7 +417,7 @@ theorem realized_central_oneSidedExtension {F : OutgoingProfile.Profile}
     Nonempty (JointResidualLimits.OneSidedExtension
       (potential a F.data.h W.axis.normalization d) x) :=
   central_oneSidedExtension ha F.data.h_pos F.data.h_lt_half
-    (BaseExterior.nominalExteriorRadius_pos W).le
+      (BaseExterior.nominalExteriorRadius_pos W).le
     hds (ModulatedExterior.realized_exterior_coefficients W Q M hd hbase houter)
     (fun _ hp => ModulatedExterior.realized_angular_pure_heat W Q M hd hbase hp) hx hs
 
@@ -421,6 +427,8 @@ theorem potential_eq_anchoredPotential (a : ℕ → ℕ) (h C : ℝ)
     (d : SlowBorelBase.Coefficients) :
     potential a h C d = SlowBaseEndpoint.anchoredPotential a h C d := rfl
 
+/-- Nonzero axial extension, given by `SlowBaseEndpoint.anchoredPotentialNonzeroAxial ha hh hh1
+hd C hx`. -/
 noncomputable def nonzeroAxialExtension {a : ℕ → ℕ} (ha : StrictMono a) {h C : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) {d : SlowBorelBase.Coefficients}
     (hd : SlowBorelBase.SmoothCoefficients d) {x : Space} (hx : x 2 ≠ 0) :
@@ -494,7 +502,7 @@ end FinalBase
 hierarchy, modulation, and common cutoff schedule. -/
 noncomputable def constructedPotential (upper : ℝ) (B : ℕ) : VelocityField :=
   finalPotential FinalSlowBase.actualProfile.certificate FinalSlowBase.actualProfile.modulation
-    upper B
+      upper B
 
 theorem constructedPotential_properties (upper : ℝ) (B : ℕ) :
     ContDiffOn ℝ ∞ (constructedPotential upper B) BaseResidual.past ∧

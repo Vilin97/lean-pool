@@ -7,17 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ValidDyadicBandCover
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CartesianCopySource
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularPaddedBackground
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentCarrierJets
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularPhysical
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalChartJets
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalModeGerms
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentParticularLabelBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentModeGeometry
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentModeGeometry
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Quantitative bounds for actual current-band particular fields
@@ -26,6 +20,9 @@ The estimates use the actual current coefficient and phase on their open
 validity domains. No reference-field smoothness or auxiliary copy-family
 representation is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -74,6 +71,7 @@ section CommonPotential
 
 variable {E L I : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Stripped potential, constructed using `CurlClassBounds.inverseCarrier`. -/
 noncomputable def strippedPotential (a : PeriodizedWaveBounds.CopyData E I)
     (s : StripData E) (d : GraphDirections E) (n : ℕ) (x : E) : ComplexVector :=
   CurlClassBounds.inverseCarrier (a.background.frequency n) •
@@ -148,13 +146,19 @@ open CorrectionStep
 
 variable {B N0 : ℕ}
 
+/-- Label: an abbreviation for `ActualParticularStageControls.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualParticularStageControls.Label B N0
+/-- Native: an abbreviation for `ActualParticularStageControls.Native`. -/
 abbrev Native := ActualParticularStageControls.Native
 
+/-- Native strip, given by `CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
+ActualParticularStageControls.slowStrip)`. -/
 noncomputable def nativeStrip : StripData Native :=
   CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
-    ActualParticularStageControls.slowStrip)
+      ActualParticularStageControls.slowStrip)
 
+/-- Potential coefficient, given by `strippedPotential (ActualParticularStageControls.data x l
+j) nativeStrip (ActualParticularStageControls.directions (B := B))`. -/
 noncomputable def potentialCoefficient (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) : ℕ → Native → ComplexVector :=
   strippedPotential (ActualParticularStageControls.data x l j) nativeStrip
@@ -390,7 +394,7 @@ theorem smoothNear_mode {a : E → ℂ} {Φ : E → ℝ} {x : E}
     (ha : LocalPhysicalCopyBounds.SmoothNear a x)
     (hΦ : LocalPhysicalCopyBounds.SmoothNear Φ x) (c : ℝ) :
     LocalPhysicalCopyBounds.SmoothNear (fun y => a y * PhysicalGraphBounds.character c (Φ y)) x :=
-      by
+        by
   obtain ⟨U, hU, hxU, haU⟩ := ha
   obtain ⟨V, hV, hxV, hΦV⟩ := hΦ
   exact ⟨U ∩ V, hU.inter hV, ⟨hxU, hxV⟩,
@@ -401,6 +405,7 @@ end Carrier
 
 /-! ## The current physical graph, with no copy-family premise -/
 
+/-- Current loss, given by `degree + ρ * m + PhysicalGraphBounds.graphLoss m + 1`. -/
 noncomputable def currentLoss (degree ρ : ℝ) (m : ℕ) : ℝ :=
   degree + ρ * m + PhysicalGraphBounds.graphLoss m + 1
 
@@ -437,10 +442,10 @@ theorem native_modulated_smoothNear {α : ℝ}
     (j : ℤ) (l : Label B N0) (n : ℕ) {z : Native} (hz : z ∈ nativeStrip.domain) :
     LocalPhysicalCopyBounds.SmoothNear (fun y =>
       PhysicalGraphBounds.character (j : ℝ) (ActualCurrentCarrierJets.weightedPhase l n y) • f l n
-        y) z := by
+          y) z := by
   rcases hzero l n z hz with ⟨k, hk⟩ | h0
   · obtain ⟨U, hU, hzU, hPhi⟩ := ActualCurrentCarrierJets.weightedPhase_smoothNear_controlPatch l n
-    k hk
+      k hk
     have hc : ContDiffOn ℝ ∞ (fun y => PhysicalGraphBounds.character (j : ℝ)
         (ActualCurrentCarrierJets.weightedPhase l n y)) (nativeStrip.domain ∩ U) :=
       (PhysicalGraphBounds.character_smooth (j : ℝ)).comp_contDiffOn
@@ -481,8 +486,8 @@ theorem native_modulated_bound {α : ℝ}
   rcases hzero l n z hz with ⟨k, hk⟩ | h0
   · have hQ := ChartScales.Q_pos n
     have hS : 1 ≤ ChartScales.S n := PhysicalGraphBounds.S_ge_one (by omega)
-    have hρ : 0 ≤ 2 * h := mul_nonneg (by norm_num)
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_pos.le
+    have hρ : 0 ≤ 2 * h := mul_nonneg (by
+        norm_num) CorrectionInitialization.ActualPrimary.outgoing.data.h_pos.le
     have hQR : 1 ≤ ChartScales.Q n ^ (-(2 * h)) :=
       Real.one_le_rpow_of_pos_of_le_one_of_nonpos hQ (ChartScales.Q_le_one n) (neg_nonpos.mpr hρ)
     have hD' : 1 ≤ D * ChartScales.Q n ^ (-(2 * h)) * ChartScales.S n ^ r :=
@@ -594,7 +599,7 @@ theorem actual_native_potential_smoothNear (x : CycleState (Label B N0))
       α (ActualParticularStageControls.currentSource x j))
     (l : Label B N0) (n : ℕ) {z : Native} (hz : z ∈ nativeStrip.domain) :
     LocalPhysicalCopyBounds.SmoothNear (ActualCurrentParticularPhysical.nativePotential x l j n) z
-      := by
+        := by
   rw [actual_nativePotential_eq_character x hx]
   exact native_modulated_smoothNear (actual_potential_coefficient_class x hx hs hN j hj H)
     (fun l n z hz => (common_control_or_zero x hs hN l j n hz).imp_right And.left) j l n hz
@@ -608,7 +613,7 @@ theorem actual_native_pressure_smoothNear (x : CycleState (Label B N0))
       α (ActualParticularStageControls.currentSource x j))
     (l : Label B N0) (n : ℕ) {z : Native} (hz : z ∈ nativeStrip.domain) :
     LocalPhysicalCopyBounds.SmoothNear (ActualCurrentParticularPhysical.nativePressure x l j n) z
-      := by
+        := by
   rw [actual_nativePressure_eq_character x hx]
   exact native_modulated_smoothNear (actual_pressure_coefficient_class x hx hs hN j hj H)
     (fun l n z hz => (common_control_or_zero x hs hN l j n hz).imp_right And.right) j l n hz
@@ -622,7 +627,7 @@ theorem actual_native_pressure_re_bound (x : CycleState (Label B N0))
       α (ActualParticularStageControls.currentSource x j)) (m : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ, ∀ l n, 4 ≤ n → ∀ z ∈ nativeStrip.domain, ∀ i ≤ m,
       ‖iteratedFDeriv ℝ i (fun y => (ActualCurrentParticularPhysical.nativePressure x l j n y).re)
-        z‖ ≤
+          z‖ ≤
       C * ChartScales.Q n ^ (CorrectionInitialization.ActualPrimary.h * (α + 1 / 2) -
         2 * CorrectionInitialization.ActualPrimary.h * m) * ChartScales.S n ^ p := by
   obtain ⟨C, hC, p, hb⟩ := actual_native_pressure_bound x hx hs hN j hj H m
@@ -652,19 +657,19 @@ theorem native_closed_mem_closure {z : Native}
   let ell := VariableGaugeMean.qLength (2 * CorrectionInitialization.ActualPrimary.h) z.1.1.2
   have hslow : z.1.1.2 ∈ U.carrier := hz.1
   have hell : 0 < ell := VariableGaugeMean.qLength_pos U.coord_pos U.coord_lt_one (U.time_pos _
-    hslow)
+      hslow)
   let g : ℝ → Native := fun r => (((ell * r, z.1.1.2), z.1.2), z.2)
   have hg : Continuous g := by
     exact (((continuous_const.mul continuous_id).prodMk continuous_const).prodMk
       continuous_const).prodMk continuous_const
   have he : g (ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z)) = z
-    := by
+      := by
     change (((ell * (z.1.1.1 / ell), z.1.1.2), z.1.2), z.2) = z
     rw [show ell * (z.1.1.1 / ell) = z.1.1.1 by field_simp]
   have hmap : MapsTo g
       (Ioo (PrimaryTargetBounds.leftRadius CorrectionInitialization.ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius CorrectionInitialization.ActualPrimary.nominal))
-          nativeStrip.domain := by
+            nativeStrip.domain := by
     intro r hrr
     apply ActualCurrentParticularPhysical.nativeStrip_mem (show g r ∈
       ActualCurrentParticularPhysical.nativeDomain from hz)
@@ -672,11 +677,11 @@ theorem native_closed_mem_closure {z : Native}
     rwa [mul_div_cancel_left₀ _ hell.ne']
   have hcl : g (ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z)) ∈
       closure (g '' Ioo (PrimaryTargetBounds.leftRadius
-        CorrectionInitialization.ActualPrimary.nominal)
+          CorrectionInitialization.ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius CorrectionInitialization.ActualPrimary.nominal)) := by
     apply mem_closure_image hg.continuousAt
     rw [closure_Ioo (PrimaryTargetBounds.radii_ordered
-      CorrectionInitialization.ActualPrimary.nominal).ne]
+        CorrectionInitialization.ActualPrimary.nominal).ne]
     exact hr
   rw [he] at hcl
   exact closure_mono hmap.image_subset hcl
@@ -839,7 +844,7 @@ theorem current_mode_physical_bound {h a b : ℝ}
   let A' : ℝ := (2 : ℝ) ^ m * A * (m.factorial : ℝ) * (1 + H) ^ m * B ^ m
   have hA' : 0 ≤ A' := by dsimp [A']; positivity
   obtain ⟨C, hC, hbound⟩ := PhysicalMeanJetBounds.common_stripped_physical_bound_local (E := ℂ) (b
-    := b)
+      := b)
     hh hh1 ha Δ m (gain - degree - ρ * m) (p + r * m : ℕ) A' hA'
   refine ⟨C, hC, ?_⟩
   intro n hn d hd w hann ht q hq hlo hhi amp Φ c hc hamp hPhi hab hPhib
@@ -923,9 +928,9 @@ theorem current_potential_mode_bound (H : ActualParticularCycleData.Invariant σ
         PolarCharts.chartDomain CurrentModeGeometry.chartInner chart :=
       PhysicalWaveSum.chooseChart_valid CurrentModeGeometry.chartInner_pos hann
     have hz := CurrentModeGeometry.point_mem_nativeDomain n CurrentModeGeometry.chartInner_pos
-      chart hw hchart
+        chart hw hchart
     have hzrad := CurrentModeGeometry.point_profileRadius n CurrentModeGeometry.chartInner_pos
-      chart hw.1 hchart
+        chart hw.1 hchart
     have hs : ContDiffOn ℝ ∞ (ActualCurrentParticularPhysical.nativePotential y l j n)
         ActualCurrentParticularPhysical.nativeDomain :=
       (ActualCurrentParticularPhysical.native_smooth_of_invariant H hN (l.2,l.1) j hj n).1
@@ -992,11 +997,11 @@ theorem current_pressure_mode_bound (H : ActualParticularCycleData.Invariant σ 
         PolarCharts.chartDomain CurrentModeGeometry.chartInner chart :=
       PhysicalWaveSum.chooseChart_valid CurrentModeGeometry.chartInner_pos hann
     have hz := CurrentModeGeometry.point_mem_nativeDomain n CurrentModeGeometry.chartInner_pos
-      chart hw hchart
+        chart hw hchart
     have hzrad := CurrentModeGeometry.point_profileRadius n CurrentModeGeometry.chartInner_pos
-      chart hw.1 hchart
+        chart hw.1 hchart
     have hs : ContDiffOn ℝ ∞ (fun z => (ActualCurrentParticularPhysical.nativePressure y l j n
-      z).re)
+        z).re)
         ActualCurrentParticularPhysical.nativeDomain :=
       (ActualCurrentParticularPhysical.native_smooth_of_invariant H hN (l.2,l.1) j hj n).2
     have hnear : LocalPhysicalCopyBounds.SmoothNear
@@ -1015,7 +1020,7 @@ theorem current_pressure_mode_bound (H : ActualParticularCycleData.Invariant σ 
     have he := hb n hn (CurrentPhysicalModeGerms.commonGap n) (commonGap_bound n) w hann
       (PhysicalStageBounds.abs_time_le_one outgoing.data.h_pos outgoing.data.h_lt_half hw.1 hq)
       _ hqpos hlo hhi chart (fun z => (ActualCurrentParticularPhysical.nativePressure y l j n
-        z).re) hnear hjets
+          z).re) hnear hjets
     rw [PhysicalWaveSum.iteratedFDeriv_eq_of_eventuallyEq
       (CurrentPhysicalModeGerms.localPressureMode_germ y l j
         (ActualParticularStageControls.preserves_frequency hcar l) n

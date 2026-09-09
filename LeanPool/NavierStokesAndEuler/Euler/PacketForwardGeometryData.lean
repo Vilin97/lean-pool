@@ -8,12 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardFactorization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientLipschitz
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialGeometry
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
 
 /-! The first amplification stage starts at time zero. Its primary is
 the actual homogeneous forward solution with a fixed initial coordinate;
 no stationary-history solve is used in this stage. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,13 +31,20 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   {D : Data U}
 
+/-- Forward error, given by `P.error+‖D.M.derivative.field‖*radius`. -/
 def ParentFrame.forwardError (P : ParentFrame D 0) (radius : ℝ) : ℝ :=
   P.error+‖D.M.derivative.field‖*radius
 
+/-- Forward guards data, collecting `radius`, `y`, `δ`, `hchild`, `radius_nonneg`,
+`delta_nonneg` and their compatibility conditions. -/
 structure ForwardGuards (P : ParentFrame D 0) where
+  /-- Radius of `ForwardGuards`, of type `ℝ`. -/
   radius : ℝ
+  /-- Y of `ForwardGuards`, of type `ℝ`. -/
   y : ℝ
+  /-- Δ of `ForwardGuards`, of type `ℝ`. -/
   δ : ℝ
+  /-- Hchild of `ForwardGuards`, of type `ℝ`. -/
   hchild : ℝ
   radius_nonneg : 0 ≤ radius
   delta_nonneg : 0 ≤ δ
@@ -47,7 +58,7 @@ structure ForwardGuards (P : ParentFrame D 0) where
   target_le_horizon : y⁻¹/P.sigma ≤ P.horizon
   horizon_lower : 1 ≤ P.horizon
   short_extension : P.horizon-y⁻¹/P.sigma ≤ 1
-  small : 1000000*neighborStabilityConstant*
+  small : 1000000*neighborStabilityConstant *
     (16*(P.epsilon*P.horizon*(4*P.G)^2+P.forwardError radius))*P.horizon^40 ≤ 1
   compression_guard : 60*(P.G+P.forwardError radius)*(y⁻¹/P.sigma)*P.epsilon < P.a
   initial_frame : ∀ x, D.F.field ⟨0,le_rfl,D.T_pos.le⟩ x=ContinuousLinearMap.id ℝ Space
@@ -67,6 +78,7 @@ theorem epsilon_pos : 0 < P.epsilon :=
 theorem error_nonneg : 0 ≤ P.forwardError G.radius :=
   add_nonneg P.error_nonneg (mul_nonneg (norm_nonneg _) G.radius_nonneg)
 
+/-- Initial coordinate, constructed using `D.R.symm`. -/
 def initialCoordinate : U := D.R.symm
   ⟨unit (P.v 0),Submodule.mem_orthogonal_singleton_iff_inner_right.mpr (by
     rw [G.normal_choice,real_inner_comm]
@@ -103,6 +115,8 @@ theorem initial_normal (x : Space) : sourceRay D x 0=cross (unit (P.m 0)) (unit 
 
 variable [CompleteSpace U]
 
+/-- Source velocity, given by `EulerPacketForwardFactorization.uncutVelocity D
+G.initialCoordinate t x`. -/
 def sourceVelocity (x : Space) (t : ℝ) : Space :=
   EulerPacketForwardFactorization.uncutVelocity D G.initialCoordinate t x
 
@@ -113,7 +127,7 @@ theorem initial_velocity (x : Space) : G.sourceVelocity x 0=unit (P.v 0) := by
 
 theorem sourceVelocity_equation (x : Space) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) :
     HasDerivWithinAt (G.sourceVelocity x)
-      (-(sourceMatrix D x t) (G.sourceVelocity x t)+
+      (-(sourceMatrix D x t) (G.sourceVelocity x t) +
         (2*⟪sourceRay D x t,(sourceMatrix D x t) (G.sourceVelocity x t)⟫_ℝ/
           ‖sourceRay D x t‖^2) • sourceRay D x t) (Icc (0 : ℝ) D.T) t := by
   have h := uncutVelocity_equation D G.initialCoordinate ⟨t,ht⟩ x

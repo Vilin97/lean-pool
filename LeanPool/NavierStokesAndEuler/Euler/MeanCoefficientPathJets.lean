@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedCoefficientJets
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Uniform time-path bounds for actual spatial derivatives of the multiplication operators. -/
 
 @[expose] public section
 
-/-! Uniform time-path bounds for actual spatial derivatives of the multiplication operators. -/
 
 noncomputable section
 
@@ -26,8 +29,11 @@ section Paths
 variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCoefficientPathJets1 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPathJets2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
 
 theorem SmoothCoefficientPath.iteratedFDeriv_translation_apply (A : SmoothCoefficientPath K V)
     (n : ℕ) (a : Space) (t : K) (x : Space) (v : Fin n → Space) :
@@ -61,11 +67,17 @@ theorem SmoothCoefficientPath.norm_iteratedFDeriv_translation_le (A : SmoothCoef
 
 end Paths
 
-private local instance : NormedAddCommGroup Field := inferInstance
-private local instance : NormedSpace ℝ Field := inferInstance
-private local instance : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPathJets3 : NormedAddCommGroup Field := inferInstance
+/-- Cache the standard `NormedSpace ℝ Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPathJets4 : NormedSpace ℝ Field := inferInstance
+/-- Cache the standard `NormedAddCommGroup (L2 →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCoefficientPathJets5 : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (L2 →L[ℝ] L2)` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientPathJets6 : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
 
+/-- Operator path map, given by `multiplierMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)`. -/
 def operatorPathMap (T : ℝ) : C(Icc (0 : ℝ) T, Field) →L[ℝ]
     C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) :=
   multiplierMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)

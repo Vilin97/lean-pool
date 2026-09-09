@@ -6,12 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedProfileAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryRepresentatives
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseChartJets
-
-@[expose] public section
 
 /-!
 # From the actual profile cone to the primary spectral cone
@@ -22,6 +17,9 @@ leading stress is a positive multiple of `(p₁-a,p₂-c)`.  The results
 below derive the primary spectral and target cones from these identities.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ProfileSpectralCone
@@ -30,7 +28,9 @@ open Set Function Filter
 open scoped ContDiff Topology InnerProductSpace
 
 
+/-- Plane: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev Plane := MovingFrameODE.Plane
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 private theorem shear_size_mul {a c : ℝ} (ha : a ≠ 0) :
@@ -78,7 +78,7 @@ theorem stress_inner_normal (F τ p₁ p₂ a c : ℝ) (ha : a ≠ 0) :
         (p₁ + p₂ * (c / a) - a * (1 + (c / a) ^ 2)) := by
   have he : a * (p₁ + p₂ * (c / a) - a * (1 + (c / a) ^ 2)) =
       a * p₁ + c * p₂ - a ^ 2 - c ^ 2 := by
-    field_simp ; ring
+    field_simp; ring
   calc
     _ = -(τ * F / ‖F • !₂[-a, -c]‖) *
         (a * p₁ + c * p₂ - a ^ 2 - c ^ 2) := by
@@ -387,14 +387,14 @@ theorem leading_shear_eq_profile {D : RadialDomain} (P : Profiles D)
     {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1)
     (hp : (BaseChartJets.normalizedCoordinates h p).2 ∈ D.carrier)
     (hf : P.f (BaseChartJets.normalizedCoordinates h p).2 ≠ 0)
-    (hphi : (fun X => d.phi 0 (X, (BaseChartJets.normalizedCoordinates h p).2.2)) =ᶠ[
-      𝓝 (BaseChartJets.normalizedCoordinates h p).2.1]
+    (hphi : (fun X => d.phi 0 (X, (BaseChartJets.normalizedCoordinates h p).2.2))
+      =ᶠ[𝓝 (BaseChartJets.normalizedCoordinates h p).2.1]
       (fun X => C * P.f (X, (BaseChartJets.normalizedCoordinates h p).2.2)))
-    (hU : (fun X => d.axial 0 (X, (BaseChartJets.normalizedCoordinates h p).2.2)) =ᶠ[
-      𝓝 (BaseChartJets.normalizedCoordinates h p).2.1]
+    (hU : (fun X => d.axial 0 (X, (BaseChartJets.normalizedCoordinates h p).2.2))
+      =ᶠ[𝓝 (BaseChartJets.normalizedCoordinates h p).2.1]
       (fun X => P.U (X, (BaseChartJets.normalizedCoordinates h p).2.2))) :
     PhaseEstimates.shearVector (BaseChartJets.leadingFrequency h C d) (BaseChartJets.leadingAxial h
-      d) p =
+        d) p =
       BaseChartJets.leadingFrequency h C d p •
         !₂[-ModulatedCone.angularShear P.E (BaseChartJets.normalizedCoordinates h p).2,
           -ModulatedCone.signedAxialShear P.E P.U (BaseChartJets.normalizedCoordinates h p).2] := by
@@ -514,7 +514,7 @@ theorem weighted_target_margin {F eta u zeta : ℝ} {g T : Plane}
     (hz : 0 ≤ zeta)
     (hin : ⟪T, PrimaryRepresentatives.normalDirection g⟫_ℝ ≤ -eta)
     (hratio : PrimaryRepresentatives.targetRatio F g T + eta ≤ PrimaryRepresentatives.slopeRatio u)
-      :
+        :
     ⟪zeta • T, PrimaryRepresentatives.normalDirection g⟫_ℝ ≤ -eta * zeta ∧
       (0 < zeta → PrimaryRepresentatives.targetRatio F g (zeta • T) + eta ≤
         PrimaryRepresentatives.slopeRatio u) := by

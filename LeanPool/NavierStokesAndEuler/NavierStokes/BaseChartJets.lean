@@ -6,13 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BasePhaseGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBorelBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityHomogeneity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ConstructedSlowBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveRepresentatives
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.BasePhaseGeometry
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Actual summed base fields in normalized band charts
@@ -22,6 +20,9 @@ The constants remain uniform as that time approaches zero while the
 normalized positive branch stays in a fixed annulus.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.BaseChartJets
@@ -29,10 +30,14 @@ namespace NavierStokes.BaseChartJets
 open Set Filter Function PhaseJetBounds PrimaryPulseBounds
 open scoped Topology ContDiff BigOperators
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Chart: an abbreviation for `SlowBorelBase.Chart`. -/
 abbrev Chart := SlowBorelBase.Chart
+/-- Inner: an abbreviation for `SlowBorelBase.Inner`. -/
 abbrev Inner := SlowBorelBase.Inner
 
+/-- One domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def oneDomain (ι : Type*) {E : Type*} [NormedAddCommGroup E]
     (U : ι → Set E) (hU : ∀ i, IsOpen (U i)) : Domain ι E where
   scale _ := 1
@@ -72,6 +77,7 @@ theorem uniform_envelope {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace �
     simpa only [oneDomain, pow_zero, mul_one] using (hbound j i x hx).trans
       (mul_le_mul_of_nonneg_right (by linarith) (hw i))
 
+/-- Sum region, given by `Ioi 0 ×ˢ (Ioi 0 ×ˢ univ)`. -/
 noncomputable def sumRegion : Set Chart := Ioi 0 ×ˢ (Ioi 0 ×ˢ univ)
 
 theorem sumRegion_open : IsOpen sumRegion := isOpen_Ioi.prod (isOpen_Ioi.prod isOpen_univ)
@@ -119,6 +125,7 @@ theorem scaled_jet_from_blown {f : Chart → ℝ}
   rw [hpoint]
   exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (norm_nonneg _) hnorm j) (norm_nonneg _)
 
+/-- Inner region, given by `Ioo qlo qhi ×ˢ (Ioo lo hi ×ˢ Ioo (-1) 1)`. -/
 noncomputable def innerRegion (qlo qhi lo hi : ℝ) : Set Chart :=
   Ioo qlo qhi ×ˢ (Ioo lo hi ×ˢ Ioo (-1) 1)
 
@@ -166,13 +173,16 @@ theorem normalized_error_envelope {ι : Type*} {h qlo qhi lo hi : ℝ}
       _ ≤ (B * Q i ^ (2 * h) * qhi ^ (2 * h)) * K ^ j :=
         mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_left hr (mul_nonneg hB.le (Real.rpow_nonneg (hQ i).le _))) (by
-            positivity)
+              positivity)
       _ = _ := by ring
 
+/-- Swirl error, given by `SlowBorelBase.normalizedSwirl a h C d y - SlowBorelBase.leadingSwirl
+C d y.2`. -/
 noncomputable def swirlError (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients) (y : Chart) : ℝ
-  :=
+    :=
   SlowBorelBase.normalizedSwirl a h C d y - SlowBorelBase.leadingSwirl C d y.2
 
+/-- Axial error, given by `SlowBorelBase.slowSum a h d.axial y - d.axial 0 y.2`. -/
 noncomputable def axialError (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients) (y : Chart) : ℝ :=
   SlowBorelBase.slowSum a h d.axial y - d.axial 0 y.2
 
@@ -184,8 +194,8 @@ theorem errors_smooth {a : ℕ → ℕ} (ha : StrictMono a) (h C : ℝ)
   · intro y hy
     have hX : 0 < y.2.1 := hy.2.1
     have hr : ContDiffAt ℝ ∞ (fun z : Chart => Real.sqrt (2 * z.2.1) / C) y :=
-      ((contDiffAt_const.mul contDiffAt_snd.fst).sqrt (by positivity : (2 : ℝ) * y.2.1 ≠
-        0)).div_const C
+      ((contDiffAt_const.mul contDiffAt_snd.fst).sqrt (by
+          positivity : (2 : ℝ) * y.2.1 ≠ 0)).div_const C
     have hs := SlowBorelBase.slowSum_smoothAt ha hd.phi h hy.1
     have h0 := (hd.phi 0).contDiffAt.comp y contDiffAt_snd
     exact ((hr.mul hs).sub (hr.mul h0)).contDiffWithinAt
@@ -216,12 +226,14 @@ theorem actual_error_envelopes {ι : Type*} {a : ℕ → ℕ} {h C qlo qhi lo hi
     obtain ⟨B, hB, hb⟩ := SlowBorelBase.normalized_tangential_bounds hh hlo hd ha j
     exact ⟨B, hB, fun q hq hq1 w hw => (hb q hq hq1 w hw).2⟩
 
+/-- Physical input, given by `(1 - p.2.2, (p.1 ^ 2 / 2, p.2.1))`. -/
 noncomputable def physicalInput (p : Slow) : Chart := (1 - p.2.2, (p.1 ^ 2 / 2, p.2.1))
 
 theorem physicalInput_smooth : ContDiff ℝ ∞ physicalInput :=
   (contDiff_const.sub contDiff_snd.snd).prodMk
     (((contDiff_fst.pow 2).div_const 2).prodMk contDiff_snd.fst)
 
+/-- Normalized coordinates, given by `SlowBorelBase.physicalChart h (physicalInput p)`. -/
 noncomputable def normalizedCoordinates (h : ℝ) (p : Slow) : Chart :=
   SlowBorelBase.physicalChart h (physicalInput p)
 
@@ -266,6 +278,7 @@ structure GeometryBounds {ι : Type*} (D : Domain ι Slow)
   x_range : ∀ i p, p ∈ D.carrier i →
     lo < (normalizedCoordinates h p).2.1 ∧ (normalizedCoordinates h p).2.1 < hi
 
+/-- Unit scale, given by `oneDomain ι D.carrier D.isOpen`. -/
 noncomputable def unitScale {ι E : Type*} [NormedAddCommGroup E] (D : Domain ι E) : Domain ι E :=
   oneDomain ι D.carrier D.isOpen
 
@@ -307,7 +320,7 @@ theorem physicalChart_jet_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   obtain ⟨bq, be, bx⟩ := hb p hp hq hX
   change ‖iteratedFDeriv ℝ j (fun y => (PhysicalCoordinateBounds.physicalQ (2 * h) y,
     (PhysicalCoordinateBounds.physicalX (2 * h) y, PhysicalCoordinateBounds.physicalEta (2 * h)
-      y))) p‖ ≤ _
+        y))) p‖ ≤ _
   rw [iteratedFDeriv_pair hqj (hxj.prodMk hej), iteratedFDeriv_pair hxj hej,
     ContinuousMultilinearMap.opNorm_prod, ContinuousMultilinearMap.opNorm_prod]
   exact max_le bq (max_le bx be)
@@ -362,16 +375,19 @@ theorem normalizedCoordinates_polynomial {ι : Type*} {D : Domain ι Slow}
     have hchain := norm_iteratedFDerivWithin_comp_le hF physicalInput_smooth.contDiffOn
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl N) hV.uniqueDiffOn hU.uniqueDiffOn hmap hT
       (C := A) (D := B) (fun j hj => ?_) (fun j hj1 hj => ?_)
-    · simp only [iteratedFDerivWithin_of_isOpen N hU hT] at hchain
+    · simp only [iteratedFDerivWithin_of_isOpen N hU hT]
+        at hchain
       exact hchain
     · rw [iteratedFDerivWithin_of_isOpen j hV (hmap hT)]
       exact houter j hj
     · rw [iteratedFDerivWithin_of_isOpen j hU hT]
       exact (hBj j hj p hpnorm).trans (by simpa only [pow_one] using pow_le_pow_right₀ hB hj1)
 
+/-- Axial factor, given by `(normalizedCoordinates h p).1 ^ (-CoordinateAlgebra.A h)`. -/
 noncomputable def axialFactor (h : ℝ) (p : Slow) : ℝ :=
   (normalizedCoordinates h p).1 ^ (-CoordinateAlgebra.A h)
 
+/-- Frequency factor, given by `axialFactor h p / p.1`. -/
 noncomputable def frequencyFactor (h : ℝ) (p : Slow) : ℝ := axialFactor h p / p.1
 
 /-- The actual `Q^A`-normalized angular velocity divided by the normalized
@@ -381,14 +397,19 @@ noncomputable def frequency (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coe
   frequencyFactor h p * SlowBorelBase.normalizedSwirl a h C d
     (SlowBorelBase.scaleMap Q (normalizedCoordinates h p))
 
+/-- Axial, given by `axialFactor h p * SlowBorelBase.slowSum a h d.axial (SlowBorelBase.scaleMap
+Q (normalizedCoordinates h p))`. -/
 noncomputable def axial (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   axialFactor h p * SlowBorelBase.slowSum a h d.axial
     (SlowBorelBase.scaleMap Q (normalizedCoordinates h p))
 
+/-- Leading frequency, given by `frequencyFactor h p * SlowBorelBase.leadingSwirl C d
+(normalizedCoordinates h p).2`. -/
 noncomputable def leadingFrequency (h C : ℝ) (d : SlowBorelBase.Coefficients) (p : Slow) : ℝ :=
   frequencyFactor h p * SlowBorelBase.leadingSwirl C d (normalizedCoordinates h p).2
 
+/-- Leading axial, given by `axialFactor h p * d.axial 0 (normalizedCoordinates h p).2`. -/
 noncomputable def leadingAxial (h : ℝ) (d : SlowBorelBase.Coefficients) (p : Slow) : ℝ :=
   axialFactor h p * d.axial 0 (normalizedCoordinates h p).2
 
@@ -405,8 +426,8 @@ theorem geometry_factors_polynomial {ι : Type*} {D : Domain ι Slow}
       (show ContDiffOn ℝ ∞ (fun x : ℝ => x ^ (-CoordinateAlgebra.A h)) (Ioi 0) from
         fun x hx => (contDiffAt_id.rpow_const_of_ne hx.ne').contDiffWithinAt)
       isCompact_Icc (fun x hx => hqlo.trans_le hx.1)
-    intro i p hp
-    exact ⟨(H.q_range i p hp).1.le, (H.q_range i p hp).2.le⟩
+    · intro i p hp
+      exact ⟨(H.q_range i p hp).1.le, (H.q_range i p hp).2.le⟩
   have hR : PolynomialJets (unitScale D) (fun _ p => p.1) := by
     have hrange (i : ι) (p : Slow) (hp : p ∈ (unitScale D).carrier i) : |p.1| ≤ M := by
       simpa only [Real.norm_eq_abs] using (norm_fst_le p).trans (H.bounded i p hp)
@@ -414,7 +435,7 @@ theorem geometry_factors_polynomial {ι : Type*} {D : Domain ι Slow}
       (PolynomialJets.affine (D := unitScale D) (ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ))
         (fun _ => 0) (m := 0) hM (by
           simpa only [ContinuousLinearMap.coe_fst', add_zero, pow_zero, mul_one, Real.norm_eq_abs]
-            using hrange))
+              using hrange))
   have hRi := hR.inv hr (fun i p hp => by
       rw [abs_of_pos (hr.trans_le (H.radius i p hp))]
       exact H.radius i p hp)
@@ -434,7 +455,7 @@ theorem leading_fields_polynomial {ι : Type*} {D : Domain ι Slow}
   have hc := normalizedCoordinates_polynomial hh hh1 hqlo H
   have hcinner := hc.clm (ContinuousLinearMap.snd ℝ ℝ Inner)
   have hmap (i : ι) (p : Slow) (hp : p ∈ (unitScale D).carrier i) : (normalizedCoordinates h p).2 ∈
-    SlowBorelBase.innerBox lo hi := by
+      SlowBorelBase.innerBox lo hi := by
     have he := normalizedCoordinates_eta hh hh1 (H.time i p hp)
     exact ⟨⟨(H.x_range i p hp).1.le, (H.x_range i p hp).2.le⟩,
       (abs_lt.mp he).1.le, (abs_lt.mp he).2.le⟩
@@ -475,7 +496,7 @@ theorem actual_estimates {ι : Type*} {D : Domain ι Slow}
   have he := actual_error_envelopes hh hqlo hqhi hlo hd ha Q hQ hsmall
   have hc := normalizedCoordinates_polynomial hh hh1 hqlo H
   have hmap (i : ι) (p : Slow) (hp : p ∈ (unitScale D).carrier i) : normalizedCoordinates h p ∈
-    innerRegion qlo qhi lo hi := by
+      innerRegion qlo qhi lo hi := by
     have heta := abs_lt.mp (normalizedCoordinates_eta hh hh1 (H.time i p hp))
     exact ⟨H.q_range i p hp, H.x_range i p hp, heta⟩
   have hev := he.1.comp hc (fun _ => rfl) hmap
@@ -487,13 +508,13 @@ theorem actual_estimates {ι : Type*} {D : Domain ι Slow}
     apply (hev.polynomial_smul hf.1).congr
     intro i p _
     simp only [frequency, leadingFrequency, swirlError, Function.comp_apply, smul_eq_mul, mul_sub,
-      SlowBorelBase.scaleMap_apply]
+        SlowBorelBase.scaleMap_apply]
   have hG : EnvelopeJets (unitScale D) (fun i _ => Q i ^ (2 * h))
       (fun i p => axial a h d (Q i) p - leadingAxial h d p) := by
     apply (heg.polynomial_smul hf.2).congr
     intro i p _
     simp only [axial, leadingAxial, axialError, Function.comp_apply, smul_eq_mul, mul_sub,
-      SlowBorelBase.scaleMap_apply]
+        SlowBorelBase.scaleMap_apply]
   have hw i p (_hp : p ∈ (unitScale D).carrier i) : Q i ^ (2 * h) ≤ 1 :=
     Real.rpow_le_one (hQ i).le (hQ1 i) (by linarith)
   refine ⟨hF, hG, h0.1, h0.2, ?_, ?_⟩
@@ -507,8 +528,8 @@ theorem polynomial_unit_bound {ι E F : Type*} [NormedAddCommGroup E] [NormedSpa
     ∃ C : ℝ, 1 ≤ C ∧ ∀ i j, j ≤ N → ∀ x ∈ D.carrier i,
       ‖iteratedFDeriv ℝ j (f i) x‖ ≤ C := by
   obtain ⟨C, hC, m, hm⟩ := hf.bound N
-  exact ⟨C, hC, fun i j hj x hx => by simpa only [unitScale, oneDomain, one_pow, mul_one] using hm
-    i j hj x hx⟩
+  exact ⟨C, hC, fun i j hj x hx => by
+      simpa only [unitScale, oneDomain, one_pow, mul_one] using hm i j hj x hx⟩
 
 theorem envelope_unit_bound {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] {D : Domain ι E} {f : ι → E → F} {w : ι → E → ℝ}
@@ -516,8 +537,8 @@ theorem envelope_unit_bound {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace
     ∃ C : ℝ, 1 ≤ C ∧ ∀ i x, x ∈ D.carrier i → ∀ j, j ≤ N →
       ‖iteratedFDeriv ℝ j (f i) x‖ ≤ C * w i x := by
   obtain ⟨C, hC, m, hm⟩ := hf.bound N
-  exact ⟨C, hC, fun i x hx j hj => by simpa only [unitScale, oneDomain, one_pow, mul_one] using hm
-    i x hx j hj⟩
+  exact ⟨C, hC, fun i x hx j hj => by
+      simpa only [unitScale, oneDomain, one_pow, mul_one] using hm i x hx j hj⟩
 
 theorem polynomial_of_unit {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] {D : Domain ι E} {f : ι → E → F}
@@ -584,10 +605,10 @@ theorem Estimates.localBaseBounds {ι : Type*} {D : Domain ι Slow} {Q : ι → 
     (fun x hx => (hG x hx).differentiableAt (by simp))
     (fun x hx => (hF0 x hx).differentiableAt (by simp))
     (fun x hx => (hG0 x hx).differentiableAt (by simp))
-    (fun x hx => ((hF0 x hx).fderiv_right (show (∞ : WithTop ℕ∞) + 1 ≤ ∞ by simp)).differentiableAt
-      (by simp))
-    (fun x hx => ((hG0 x hx).fderiv_right (show (∞ : WithTop ℕ∞) + 1 ≤ ∞ by simp)).differentiableAt
-      (by simp))
+    (fun x hx => ((hF0 x hx).fderiv_right (show (∞ : WithTop ℕ∞) + 1 ≤ ∞ by
+        simp)).differentiableAt (by simp))
+    (fun x hx => ((hG0 x hx).fderiv_right (show (∞ : WithTop ℕ∞) + 1 ≤ ∞ by
+        simp)).differentiableAt (by simp))
   · intro x hx
     rw [norm_fderiv_eq_jet_one]
     exact (hBFj i 1 (by norm_num) x hx).trans hBFK
@@ -678,9 +699,12 @@ theorem leadingFrequency_eq {h C : ℝ} {d : SlowBorelBase.Coefficients}
   calc
     _ = (p.1 / p.1) * (((normalizedCoordinates h p).1 ^ (-CoordinateAlgebra.A h) /
         (normalizedCoordinates h p).1 ^ (1 / 2 : ℝ)) / C * d.phi 0 (normalizedCoordinates h p).2)
-          := by ring
+            := by
+            ring
     _ = _ := by rw [div_self hR.ne', one_mul]
 
+/-- Band point, given by `(1 - Q * p.2.2, !₂[Real.sqrt Q * p.1, 0, Q ^ CoordinateAlgebra.D h *
+p.2.1])`. -/
 noncomputable def bandPoint (h Q : ℝ) (p : Slow) : ProblemStatement.SpaceTime :=
   (1 - Q * p.2.2, !₂[Real.sqrt Q * p.1, 0, Q ^ CoordinateAlgebra.D h * p.2.1])
 
@@ -744,7 +768,7 @@ theorem frequency_eq_normalized_velocity {a : ℕ → ℕ} (ha : StrictMono a) {
   have hv : SlowBorelBase.baseVelocity a h C d (bandPoint h Q p) 1 =
       (SlowBorelBase.scaleMap Q (normalizedCoordinates h p)).1 ^ (-CoordinateAlgebra.A h) *
         SlowBorelBase.normalizedSwirl a h C d (SlowBorelBase.scaleMap Q (normalizedCoordinates h
-          p)) := by
+            p)) := by
     apply mul_left_cancel₀ hr.ne'
     simpa only [mul_assoc] using hm
   rw [hv]
@@ -851,6 +875,7 @@ noncomputable def CellIndex (h lo hi : ℝ) (N : ℕ) :=
   {L : PositiveRepresentatives.ActiveLabel (PrimaryRepresentatives.referenceCompact h lo hi) //
     N ≤ L.val.1}
 
+/-- Cell band, given by `L.val.val.1`. -/
 noncomputable def cellBand {h lo hi : ℝ} {N : ℕ} (L : CellIndex h lo hi N) : ℕ := L.val.val.1
 
 /-- The actual convex positive-time three-mesh cells. The slow scale is
@@ -875,7 +900,7 @@ theorem positiveCellDomain_representative (h lo hi : ℝ) (N : ℕ) (L : CellInd
 
 theorem positiveCellDomain_covers (h lo hi : ℝ) (N : ℕ) (L : CellIndex h lo hi N) :
     PrimaryRepresentatives.gridBox L.val.val.1 L.val.val.2 2 ∩ PositiveRepresentatives.positiveTime
-      ⊆
+        ⊆
       (positiveCellDomain h lo hi N).carrier L :=
   PositiveRepresentatives.enlarged_positive_subset_cell L.val.property.1 _
 

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevInterpolation
-public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
+import LeanPool.NavierStokesAndEuler.Euler.SobolevInterpolation
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Actual uniform-in-time interpolation and its Cauchy consequence. -/
 
 @[expose] public section
 
-/-! Actual uniform-in-time interpolation and its Cauchy consequence. -/
 
 noncomputable section
 
@@ -20,10 +22,11 @@ namespace EulerSobolevPathInterpolation
 open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerSobolevInterpolation
 open scoped Topology
 
-/-- A squared difference estimate transfers the Cauchy property without an unproved interpolation premise. -/
+/-- A squared difference estimate transfers the Cauchy property without an unproved interpolation
+premise. -/
 theorem cauchySeq_of_square_bound {E F : Type*} [NormedAddCommGroup E] [NormedAddCommGroup F]
     (f : ℕ → E) (g : ℕ → F) (A : ℝ) (hA : 0 ≤ A) (hf : CauchySeq f)
-    (h : ∀ m n, ‖g m-g n‖^2 ≤ A*‖f m-f n‖) : CauchySeq g := by
+    (h : ∀ m n, ‖g m - g n‖ ^ 2 ≤ A * ‖f m - f n‖) : CauchySeq g := by
   apply Metric.cauchySeq_iff.mpr
   intro ε hε
   have hd : 0 < ε^2/(A+1) := div_pos (sq_pos_of_pos hε) (by linarith)
@@ -43,7 +46,7 @@ theorem cauchySeq_of_square_bound {E F : Type*} [NormedAddCommGroup E] [NormedAd
 private theorem clm_difference_square_bound {V W : Type*}
     [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup W] [NormedSpace ℝ W]
-    (A B : V →L[ℝ] W) (h : ∀ u, ‖A u‖^2 ≤ ‖B u‖*‖u‖)
+    (A B : V →L[ℝ] W) (h : ∀ u, ‖A u‖ ^ 2 ≤ ‖B u‖ * ‖u‖)
     (M : ℝ) (u v : V) (hu : ‖u‖ ≤ M) (hv : ‖v‖ ≤ M) :
     ‖A u-A v‖^2 ≤ 2*M*‖B u-B v‖ := by
   have hb := h (u-v)
@@ -56,7 +59,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The inherited normed group on each actual Sobolev space. -/
 local instance interpolationGroup (s : ℕ) : NormedAddCommGroup (SobolevSpace period s) :=
-  inferInstance
+    inferInstance
 
 /-- The inherited real normed space on each actual Sobolev space. -/
 local instance interpolationSpace (s : ℕ) : NormedSpace ℝ (SobolevSpace period s) := inferInstance
@@ -68,12 +71,13 @@ def wordPathOperator {s n : ℕ} (h : n ≤ s) (w : Fin n → Fin 4) (T : ℝ) :
 
 /-- The derivative path is its literal derivative coordinate at each time. -/
 theorem wordPathOperator_apply {s n : ℕ} (h : n ≤ s) (w : Fin n → Fin 4) (T : ℝ)
-    (u : C(Icc (0 : ℝ) T,SobolevSpace period s)) (t : Icc (0 : ℝ) T) :
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period s)) (t : Icc (0 : ℝ) T) :
     wordPathOperator period h w T u t = word period (u t) h w := rfl
 
-/-- The exact strong-derivative interpolation inequality also controls the uniform time-path norm. -/
-theorem wordPath_square_bound {s n : ℕ} (h : n+2 ≤ s) (w : Fin n → Fin 4) (i : Fin 4)
-    (T : ℝ) (u : C(Icc (0 : ℝ) T,SobolevSpace period s)) :
+/-- The exact strong-derivative interpolation inequality also controls the uniform time-path norm.
+-/
+theorem wordPath_square_bound {s n : ℕ} (h : n + 2 ≤ s) (w : Fin n → Fin 4) (i : Fin 4)
+    (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSpace period s)) :
     ‖wordPathOperator period (by omega : n+1 ≤ s) (Fin.cons i w) T u‖^2 ≤
       ‖wordPathOperator period (by omega : n ≤ s) w T u‖*‖u‖ := by
   let A := ‖wordPathOperator period (by omega : n ≤ s) w T u‖*‖u‖
@@ -92,19 +96,20 @@ theorem wordPath_square_bound {s n : ℕ} (h : n+2 ≤ s) (w : Fin n → Fin 4) 
 
 /-- Actual derivative-coordinate paths preserve subtraction. -/
 theorem wordPath_sub {s n : ℕ} (h : n ≤ s) (w : Fin n → Fin 4) (T : ℝ)
-    (u v : C(Icc (0 : ℝ) T,SobolevSpace period s)) :
+    (u v : C(Icc (0 : ℝ) T, SobolevSpace period s)) :
     wordPathOperator period h w T (u-v) = wordPathOperator period h w T u-wordPathOperator period h
-      w T v := by
+        w T v := by
   ext t
   rfl
 
-/-- The actual difference interpolation estimate depends only on the two given uniform state bounds. -/
-theorem wordPath_difference_square_bound {s n : ℕ} (h : n+2 ≤ s) (w : Fin n → Fin 4) (i : Fin 4)
-    (T M : ℝ) (u v : C(Icc (0 : ℝ) T,SobolevSpace period s)) (hu : ‖u‖ ≤ M) (hv : ‖v‖ ≤ M) :
-    ‖wordPathOperator period (by omega : n+1 ≤ s) (Fin.cons i w) T u-
+/-- The actual difference interpolation estimate depends only on the two given uniform state bounds.
+-/
+theorem wordPath_difference_square_bound {s n : ℕ} (h : n + 2 ≤ s) (w : Fin n → Fin 4) (i : Fin 4)
+    (T M : ℝ) (u v : C(Icc (0 : ℝ) T, SobolevSpace period s)) (hu : ‖u‖ ≤ M) (hv : ‖v‖ ≤ M) :
+    ‖wordPathOperator period (by omega : n+1 ≤ s) (Fin.cons i w) T u -
       wordPathOperator period (by omega : n+1 ≤ s) (Fin.cons i w) T v‖^2 ≤
-      2*M*‖wordPathOperator period (by omega : n ≤ s) w T u-wordPathOperator period (by omega : n ≤
-        s) w T v‖ := by
+      2*M*‖wordPathOperator period (by
+          omega : n ≤ s) w T u-wordPathOperator period (by omega : n ≤ s) w T v‖ := by
   exact clm_difference_square_bound
     (V := C(Icc (0 : ℝ) T,SobolevSpace period s))
     (W := C(Icc (0 : ℝ) T,LiftL2 period))
@@ -112,9 +117,10 @@ theorem wordPath_difference_square_bound {s n : ℕ} (h : n+2 ≤ s) (w : Fin n 
     (wordPathOperator period (by omega : n ≤ s) w T)
     (wordPath_square_bound period h w i T) M u v hu hv
 
-/-- Uniformly bounded actual Sobolev paths transfer Cauchy control from a parent word to a derivative. -/
-theorem wordPath_cauchy_step {s n : ℕ} (h : n+2 ≤ s) (w : Fin n → Fin 4) (i : Fin 4)
-    (T M : ℝ) (hM : 0 ≤ M) (u : ℕ → C(Icc (0 : ℝ) T,SobolevSpace period s))
+/-- Uniformly bounded actual Sobolev paths transfer Cauchy control from a parent word to a
+derivative. -/
+theorem wordPath_cauchy_step {s n : ℕ} (h : n + 2 ≤ s) (w : Fin n → Fin 4) (i : Fin 4)
+    (T M : ℝ) (hM : 0 ≤ M) (u : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period s))
     (hu : ∀ k, ‖u k‖ ≤ M)
     (hw : CauchySeq (fun k => wordPathOperator period (by omega : n ≤ s) w T (u k))) :
     CauchySeq (fun k => wordPathOperator period (by omega : n+1 ≤ s) (Fin.cons i w) T (u k)) :=

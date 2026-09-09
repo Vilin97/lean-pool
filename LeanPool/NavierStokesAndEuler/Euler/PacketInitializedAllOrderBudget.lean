@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedSpatialBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedSolenoidal
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedSolenoidal
 
 /-! The literal initialized packet supplies a complete drift-aware
 all-order correction budget, from fixed source data and explicit scalar
 frequency guards. No solution or energy estimate is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +28,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   (Kc : CorrectionCoefficientBudget D P)
 
+/-- Growth, given by `growthCoefficient D P Kc (2*velocity R H C) (12*velocity R H C*(4*R))`. -/
 def growth (R H C : ℝ) : ℝ :=
   growthCoefficient D P Kc (2*velocity R H C) (12*velocity R H C*(4*R))
 
@@ -46,7 +49,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
@@ -61,9 +64,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
   (Kc : CorrectionCoefficientBudget D period)
 
 local notation "cg" => growth D period Kc L.R S.H0 BC.multiplierCost
@@ -76,12 +79,12 @@ def initializedAllOrderBudget (k : ℝ) (hk : 4 ≤ k)
     (hX : 64 ≤ expansion k) (hlog : 1 ≤ Real.log k)
     (htail : tailPolynomialConstant L.R S.H0 BC.termCost ≤ smallPower k)
     (hcoefficient : BC.multiplierCost ≤ smallPower k)
-    (hgrowthCost : 12*cg*D.T ≤ smallPower k)
-    (hdriftCost : 8*cg*D.T*dg/ρg ≤ smallPower k)
-    (herrorCost : 8*cg*D.T/ρg ≤ smallPower k)
+    (hgrowthCost : 12 * cg * D.T ≤ smallPower k)
+    (hdriftCost : 8 * cg * D.T * dg / ρg ≤ smallPower k)
+    (herrorCost : 8 * cg * D.T / ρg ≤ smallPower k)
     (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
     (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
-    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1) :
+    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1) :
     EulerAllOrderDriftCorrection.Budget period D.T_pos
       (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree
         (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
@@ -111,7 +114,7 @@ def initializedAllOrderBudget (k : ℝ) (hk : 4 ≤ k)
       (mul_le_mul_of_nonneg_right (hρbounds t).2 Kc.Rc_nonneg) (by positivity)).trans hinit.2.2.1
   refine {
     metric := initializedMetricBudget M D hTime τ hτ hτT B δ hδ ξ hs α Cagree (truncation k) hn k
-      hk 0
+        hk 0
     radius := ρ
     growthCoefficient := cg
     delta := delta (expansion k)

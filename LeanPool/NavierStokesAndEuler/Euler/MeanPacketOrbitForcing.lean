@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSmoothL2Field
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketNonlinearForcing
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
-
-@[expose] public section
 
 /-!
 # Solved mean fields are actual admissible forcing fields
@@ -20,14 +17,17 @@ orbit produce the literal smooth L² slices required by the forcing interface.
 The same construction applies to its actual time derivative and pressure force.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanPacketProvider
 
 open Set MeasureTheory EulerSmoothLimit EulerMeanSolenoidal
   EulerMeanSmoothRepresentative EulerMeanTimeContinuousTranslation
-  EulerMeanPathTimeDerivative EulerMeanScalarPressure EulerPacketPointJets
-    EulerPacketProfileRecursion
+   EulerMeanScalarPressure EulerPacketPointJets
+      EulerPacketProfileRecursion
 open scoped ContDiff
 
 namespace Forcing
@@ -35,13 +35,13 @@ namespace Forcing
 variable {D : Data} {raw : VectorField}
 
 /-- Actual path-orbit regularity is converted into literal spatial derivative data. -/
-def ofOrbitPath (p : C(Icc (0 : ℝ) D.T,L2))
+def ofOrbitPath (p : C(Icc (0 : ℝ) D.T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation D.T a p))
     (heq : ∀ (t : Icc (0 : ℝ) D.T) x θ,
       raw (t,(x,θ)) = representative (p t) (pathTranslation_evaluation_contDiff D.T p hp t) x) :
     Forcing D raw where
   slices t := smoothL2Field (p (D.clamp t)) (pathTranslation_evaluation_contDiff D.T p hp (D.clamp
-    t))
+      t))
   jets_continuous n := by
     simpa only [Data.clamp_coe] using smoothL2Field_path_jet_continuous D.T p hp n
   path := p
@@ -60,10 +60,13 @@ def vectorDerivativeForcing (G : Forcing D raw) : Forcing D G.vectorDerivative :
   ofOrbitPath G.derivativePath G.derivativePath_orbit (fun t x θ => by
     simp only [vectorDerivative, pathRepresentative, Data.clamp_coe])
 
+/-- Pressure force, defined pointwise by `pathRepresentative D.T G.pressureForcePath
+G.pressureForcePath_orbit (D.clamp z.1) z.2.1`. -/
 def pressureForce (G : Forcing D raw) : VectorField := fun z =>
   pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit (D.clamp z.1) z.2.1
 
-/-- The physical pressure gradient, rather than the unneeded scalar pressure value, is spatially L². -/
+/-- The physical pressure gradient, rather than the unneeded scalar pressure value, is spatially L².
+-/
 def pressureForceForcing (G : Forcing D raw) : Forcing D G.pressureForce :=
   ofOrbitPath G.pressureForcePath G.pressureForcePath_orbit (fun t x θ => by
     simp only [pressureForce, pathRepresentative, Data.clamp_coe])

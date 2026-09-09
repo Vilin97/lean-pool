@@ -7,12 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCanonicalRadius
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitiveBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformCosts
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
 
 /-! The direct-forward branch uses the identical fixed polynomial cost
 envelope as the positive-history branch. -/
+
+@[expose] public section
+
 
 noncomputable section
 

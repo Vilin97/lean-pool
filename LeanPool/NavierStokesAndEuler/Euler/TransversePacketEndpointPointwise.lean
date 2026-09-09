@@ -6,16 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointPointwise
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketEndpoint
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointPointwise
 
 /-!
 The actual compact-terminal source history is the manuscript's pointwise
 stationary history multiplied by the literal cutoff and periodic wave.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,8 +27,11 @@ open ContinuousLinearMap EulerSmoothLimit EulerTransverseFrameCoordinates EulerT
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
 
+/-- Coordinate embedding, given by `referenceEmbedding D.m₀ D.R`. -/
 def coordinateEmbedding : U →L[ℝ] Space := referenceEmbedding D.m₀ D.R
 
+/-- Coordinate retraction, given by `D.R.symm.toContinuousLinearEquiv.toContinuousLinearMap.comp
+(referencePlane D.m₀).orthogonalProjectionOnto`. -/
 def coordinateRetraction : Space →L[ℝ] U :=
   D.R.symm.toContinuousLinearEquiv.toContinuousLinearMap.comp
     (referencePlane D.m₀).orthogonalProjectionOnto

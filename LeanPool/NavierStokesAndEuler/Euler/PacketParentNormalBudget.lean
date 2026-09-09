@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketNormalBudget
 
-@[expose] public section
-
 /-! The normal/pressure/corrector budget follows from the actual deformation
 and its first time derivative. Its radius is an explicit polynomial in their
 Gevrey radius and amplitudes; no inverse or strain jet bound is an input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,11 +23,14 @@ namespace EulerPacketParentNormalBudget
 open Set EulerSmoothLimit EulerMeanCoefficients EulerPacketCofactor EulerPacketPiola
   EulerGevrey EulerTimeLpGramGevrey EulerParameterWordGevrey EulerSourceCylinderTimeBounds
 
+/-- Amplitude, given by `9*C^2+27*C^2*C₁`. -/
 def amplitude (C C₁ : ℝ) : ℝ := 9*C^2+27*C^2*C₁
 
+/-- Inverse radius, given by `2*(1+(1+C)^2*(3*(amplitude C C₁)^2+2))*(R+1)`. -/
 def inverseRadius (R C C₁ : ℝ) : ℝ :=
   2*(1+(1+C)^2*(3*(amplitude C C₁)^2+2))*(R+1)
 
+/-- Radius, given by `16*(R+4*inverseRadius R C C₁+1)`. -/
 def radius (R C C₁ : ℝ) : ℝ := 16*(R+4*inverseRadius R C C₁+1)
 
 theorem amplitude_nonneg (C C₁ : ℝ) (hC₁ : 0 ≤ C₁) : 0 ≤ amplitude C C₁ := by
@@ -46,8 +50,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
   (R C C₁ : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁)
   (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
-  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-  (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁*majorant R 0 n)
+  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+  (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → EndSpace) x‖ ≤ C₁ * majorant R 0 n)
 
 include hR hC hF in
 theorem inverse_guard :
@@ -63,6 +67,8 @@ theorem inverse_guard :
       ring
     _ ≤ 2*(1+(1+C)^2*(3*(amplitude C C₁)^2+2))*(R+1) := by gcongr
 
+/-- Source normal budget, bundling `Rc`, `C`, `Ri`, `Rc_nonneg` and the required compatibility
+proofs. -/
 def sourceNormalBudget (q : ℕ) : EulerTransversePacketJoin.NormalBudget D q (radius R C C₁) where
   Rc := R
   C := amplitude C C₁
@@ -81,7 +87,8 @@ def sourceNormalBudget (q : ℕ) : EulerTransversePacketJoin.NormalBudget D q (r
         (le_add_of_nonneg_left (by positivity : 0 ≤ 9*C^2))
         (majorant_nonneg R hR 0 n))
   radius := by
-    norm_num [sobolevCoefficientRadius,EulerTransversePacketProvider.Data.correctorCoefficientRadius,radius]
+    norm_num [sobolevCoefficientRadius,
+        EulerTransversePacketProvider.Data.correctorCoefficientRadius, radius]
     ring_nf
     exact le_rfl
 

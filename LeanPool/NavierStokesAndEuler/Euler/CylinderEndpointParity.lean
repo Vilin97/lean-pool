@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletParity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletParity
+
+/-! Actual odd terminal data give odd endpoint histories under even coefficients. -/
 
 @[expose] public section
 
-/-! Actual odd terminal data give odd endpoint histories under even coefficients. -/
 
 noncomputable section
 
@@ -58,7 +60,7 @@ theorem endpointVelocity_odd (t : Icc (0 : ℝ) T) :
 
 theorem endpointDerivative_odd (t : Icc (0 : ℝ) T) :
     reflection P (D.endpointDerivative P Y t) = -D.endpointDerivative P Y t := by
-  change reflection P (fullOperatorMap P (D.Q₁ t) (D.endpointCoordinate P Y t)+
+  change reflection P (fullOperatorMap P (D.Q₁ t) (D.endpointCoordinate P Y t) +
     fullOperatorMap P (D.Q t) (D.endpointAcceleration P Y t)) = _
   rw [map_add,reflection_fullOperator P (D.Q₁ t) (hQ₁ t),reflection_fullOperator P (D.Q t) (hQ t),
     D.endpointCoordinate_odd P hQ hQ₁ hH Y hY t,D.endpointAcceleration_odd P hQ hQ₁ hH Y hY t,

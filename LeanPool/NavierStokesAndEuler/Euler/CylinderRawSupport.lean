@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSmoothOrbit
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderPaths
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! The actual smooth representative retains the proved compact spatial support of its L² class. -/
 
 @[expose] public section
 
-/-! The actual smooth representative retains the proved compact spatial support of its L² class. -/
 
 noncomputable section
 
@@ -22,7 +24,8 @@ open Set MeasureTheory EulerSmoothLimit EulerLiftedGradientSpace EulerMetricTran
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Vanishing outside a closed support region passes from the actual L² class to its smooth representative. -/
+/-- Vanishing outside a closed support region passes from the actual L² class to its smooth
+representative. -/
 theorem representative_zero_outside (S : Set Space) (hS : MeasurableSet S) (hSc : IsClosed S)
     (u : LiftL2 period) (hu : SmoothOrbit period u) (hs : u ∈ Supported period Space S hS)
     (x : LiftDomain period) (hx : x.1 ∉ S) : representative period u hu x = 0 := by
@@ -31,7 +34,7 @@ theorem representative_zero_outside (S : Set Space) (hS : MeasurableSet S) (hSc 
       (fun _ => 0) := by
     apply (ae_restrict_iff' hset.measurableSet.compl).2
     filter_upwards [(mem_supportedSpace_ae _ _ _ u).1 hs,representative_ae period u hu] with y hy
-      he hnot
+        he hnot
     exact he.symm.trans (hy hnot)
   exact Measure.eqOn_open_of_ae_eq hout hset.isOpen_compl
     (smoothField_continuous period _ (representative_smooth period u hu)).continuousOn

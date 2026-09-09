@@ -9,12 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeSuperposition
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothPathTimeJets
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-! A literal time derivative of smooth bounded fields differentiates
 every actual spatial jet, both pointwise and in the uniform field norm. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,11 +31,22 @@ variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensio
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
   (T : ℝ) (hT : 0 ≤ T) (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) E V)
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldTimeJets1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldTimeJets2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldTimeJets3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldTimeJets4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
+/-- Slice family, given by `A.superposition ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) x)`. -/
 def sliceFamily (x : E) : C(Icc (0 : ℝ) T,V) :=
   A.superposition ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) x)
 

@@ -6,19 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.TangentCone.Prod
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Algebra.Ring.Periodic
-public import Mathlib.Algebra.Order.Floor.Ring
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Calculus.TangentCone.Prod
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Classical uniqueness for periodic Navier--Stokes fields
@@ -26,6 +18,9 @@ public import Mathlib.Tactic.Ring
 The differential operators are those of `ProblemStatement`. The energy
 estimate is derived from the equations and periodic integration by parts.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,6 +37,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
   simpa only [ENat.coe_top_add_one] using (le_rfl : (∞ : WithTop ℕ∞) ≤ ∞)
 
+/-- Slab, given by `Icc a b ×ˢ univ`. -/
 noncomputable def slab (a b : ℝ) : Set SpaceTime := Icc a b ×ˢ univ
 
 theorem spatial_smooth {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -217,7 +213,7 @@ theorem exists_gradient_bound {a b : ℝ} (hab : a < b) {u : VelocityField}
   have hDK : ContinuousOn (fderivWithin ℝ u (slab a b)) (Icc a b ×ˢ K) :=
     hD.mono (fun z hz => ⟨hz.1, mem_univ z.2⟩)
   obtain ⟨B, hBpos, hB⟩ := ((isCompact_Icc.prod hK).image_of_continuousOn
-    hDK).isBounded.exists_pos_norm_le
+      hDK).isBounded.exists_pos_norm_le
   refine ⟨B, hBpos, ?_⟩
   intro t ht x hx
   apply ContinuousLinearMap.opNorm_le_bound _ hBpos.le
@@ -481,12 +477,18 @@ theorem unitPeriods_sub {V : Type*} [Sub V] {f g : Space → V}
 noncomputable def energy (u v : VelocityField) (t : ℝ) : ℝ :=
   cubeIntegral (fun x => ‖(u - v) (t, x)‖ ^ 2)
 
+/-- Energy rate, given by `cubeIntegral (fun x => 2 * ⟪(u - v) (t, x), temporalDerivative (u -
+v) t x⟫_ℝ)`. -/
 noncomputable def energyRate (u v : VelocityField) (t : ℝ) : ℝ :=
   cubeIntegral (fun x => 2 * ⟪(u - v) (t, x), temporalDerivative (u - v) t x⟫_ℝ)
 
+/-- Dissipation, given by `∑ i : Fin 3, cubeIntegral (fun x => ‖spatialPartial i (fun y => w (t,
+y)) x‖ ^ 2)`. -/
 noncomputable def dissipation (w : VelocityField) (t : ℝ) : ℝ :=
   ∑ i : Fin 3, cubeIntegral (fun x => ‖spatialPartial i (fun y => w (t, y)) x‖ ^ 2)
 
+/-- Coupling, given by `cubeIntegral (fun x => ⟪w (t, x), spatialDerivative u t x (w (t,
+x))⟫_ℝ)`. -/
 noncomputable def coupling (u w : VelocityField) (t : ℝ) : ℝ :=
   cubeIntegral (fun x => ⟪w (t, x), spatialDerivative u t x (w (t, x))⟫_ℝ)
 

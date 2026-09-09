@@ -6,11 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothApproximation
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
+public import LeanPool.NavierStokesAndEuler.Euler.LpTranslation
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothApproximation
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Actual all-order translation regularity from ordinary square-integrable spatial derivatives. -/
 
 @[expose] public section
 
-/-! Actual all-order translation regularity from ordinary square-integrable spatial derivatives. -/
 
 noncomputable section
 
@@ -37,8 +43,10 @@ theorem derivativeMap_translation (D : L2Space (Space →L[ℝ] V)) (a : Space) 
   change derivativeMap volume (translation a D) v x = translation a (derivativeMap volume D v) x
   rw [hm, ht, hv, hd]
 
-/-- The hypotheses are ordinary derivatives of a concrete smooth function, not translation-orbit regularity. -/
+/-- The hypotheses are ordinary derivatives of a concrete smooth function, not translation-orbit
+regularity. -/
 structure SmoothL2Field (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Underlying field of `SmoothL2Field`, of type `Space → V`. -/
   field : Space → V
   smooth : ContDiff ℝ ∞ field
   integrable : ∀ n : ℕ, MemLp (iteratedFDeriv ℝ n field) 2 volume
@@ -49,19 +57,22 @@ theorem memLp (A : SmoothL2Field V) : MemLp A.field 2 volume :=
   (A.integrable 0).congr_norm A.smooth.continuous.aestronglyMeasurable
     (Eventually.of_forall (fun _ => norm_iteratedFDeriv_zero))
 
+/-- To Lᵖ, given by `A.memLp.toLp A.field`. -/
 def toLp (A : SmoothL2Field V) : L2Space V := A.memLp.toLp A.field
 
 theorem toLp_ae (A : SmoothL2Field V) : A.toLp =ᵐ[volume] A.field := A.memLp.coeFn_toLp
 
+/-- Jet Lᵖ, given by `(A.integrable n).toLp (iteratedFDeriv ℝ n A.field)`. -/
 def jetLp (A : SmoothL2Field V) (n : ℕ) : L2Space (Space [×n]→L[ℝ] V) :=
   (A.integrable n).toLp (iteratedFDeriv ℝ n A.field)
 
+/-- Derivative, bundling `field`, `smooth`, `integrable`. -/
 def derivative (A : SmoothL2Field V) : SmoothL2Field (Space →L[ℝ] V) where
   field := fderiv ℝ A.field
   smooth := A.smooth.fderiv_right (m := ∞) (by simp)
   integrable n := (A.integrable (n+1)).congr_norm
-    ((A.smooth.fderiv_right (m := ∞) (by simp)).continuous_iteratedFDeriv (by
-      simp)).aestronglyMeasurable
+    ((A.smooth.fderiv_right (m := ∞) (by
+        simp)).continuous_iteratedFDeriv (by simp)).aestronglyMeasurable
     (Eventually.of_forall (fun x => norm_iteratedFDeriv_fderiv.symm))
 
 theorem translation_hasFDerivAt (A : SmoothL2Field V) (a : Space) :
@@ -92,7 +103,8 @@ private theorem translation_contDiff_nat_aux (n : ℕ) :
       (E := L2Space (Space →L[ℝ] V)) (F := Space →L[ℝ] L2Space V)
       (derivativeBundling volume)).comp (ih (Space →L[ℝ] V) A.derivative)
 
-/-- Genuine all-order smoothness of the translation orbit follows from the ordinary spatial L² jets. -/
+/-- Genuine all-order smoothness of the translation orbit follows from the ordinary spatial L² jets.
+-/
 theorem translation_contDiff (A : SmoothL2Field V) :
     ContDiff ℝ ∞ (fun a : Space => translation a A.toLp) :=
   contDiff_infty.mpr (fun n => translation_contDiff_nat_aux n V A)

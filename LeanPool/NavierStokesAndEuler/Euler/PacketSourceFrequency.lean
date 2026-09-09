@@ -7,12 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionScalar
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The literal source truncation floor(k^ϑ), ϑ=10⁻⁶, meets the packet
 and correction guards from finitely many fixed-cost bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,9 +27,13 @@ namespace EulerPacketSourceFrequency
 
 open Real Filter EulerPacketCoarseMajorant EulerPacketCorrectionScalar
 
+/-- Theta, given by `1/1000000`. -/
 def theta : ℝ := 1/1000000
+/-- Expansion, given by `k^theta`. -/
 def expansion (k : ℝ) : ℝ := k^theta
+/-- Truncation, given by `Nat.floor (expansion k)`. -/
 def truncation (k : ℝ) : ℕ := Nat.floor (expansion k)
+/-- Small power, given by `k^(theta/100)`. -/
 def smallPower (k : ℝ) : ℝ := k^(theta/100)
 
 theorem expansion_pos (k : ℝ) (hk : 0 < k) : 0 < expansion k :=
@@ -79,9 +90,9 @@ theorem smallPower_le_exp_sqrt (k : ℝ) (hk : 0 < k) :
 
 theorem correction_guards (C T D ρ0 k : ℝ) (hk : 1 ≤ k) (hρ : 0 < ρ0)
     (hX : 64 ≤ expansion k) (hlog : 1 ≤ Real.log k)
-    (hgrowth : 12*C*T ≤ smallPower k)
-    (hdrift : 8*C*T*D/ρ0 ≤ smallPower k)
-    (herror : 8*C*T/ρ0 ≤ smallPower k) :
+    (hgrowth : 12 * C * T ≤ smallPower k)
+    (hdrift : 8 * C * T * D / ρ0 ≤ smallPower k)
+    (herror : 8 * C * T / ρ0 ≤ smallPower k) :
     2*residual k (expansion k)*Real.exp (3*C*T) ≤ delta (expansion k)/2 ∧
       2*C*(D/k+delta (expansion k))*T ≤ ρ0/2 := by
   have hk0 : 0 < k := zero_lt_one.trans_le hk

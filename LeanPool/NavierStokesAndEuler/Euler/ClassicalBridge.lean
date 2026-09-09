@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-! Ordinary spatial smoothness, finite energy, and the pointwise time equation
 follow from the independent Comparator solution class. -/
+
+@[expose] public section
+
 
 noncomputable section
 

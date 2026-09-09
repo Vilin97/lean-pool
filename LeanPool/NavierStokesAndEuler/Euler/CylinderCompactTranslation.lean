@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
-public import Mathlib.Analysis.Calculus.MeanValue
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedDerivative
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Compact smooth fields have actual smooth mixed L² translation orbits
@@ -20,6 +20,9 @@ This is a full Fréchet derivative in the four-dimensional covering space.
 The compact support argument controls every small covering translation,
 including its angular component, before dominated L² differentiation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +38,9 @@ universe u
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Compact field data, collecting `field`, `compact`, `smooth`. -/
 structure CompactField (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Underlying field of `CompactField`, of type `LiftDomain P → V`. -/
   field : LiftDomain P → V
   compact : HasCompactSupport field
   smooth : ∀ x, ContDiff ℝ ∞ (localFieldLift P field x)
@@ -48,12 +53,14 @@ omit [Fact (0 < P)] in
 theorem continuous (A : CompactField P V) : Continuous A.field :=
   smoothField_continuous P A.field A.smooth
 
+/-- To Lᵖ, given by `(A.continuous.memLp_of_hasCompactSupport A.compact).toLp A.field`. -/
 def toLp (A : CompactField P V) : CylinderL2 P V :=
   (A.continuous.memLp_of_hasCompactSupport A.compact).toLp A.field
 
 theorem toLp_ae (A : CompactField P V) : A.toLp =ᵐ[liftMeasure P] A.field :=
   (A.continuous.memLp_of_hasCompactSupport A.compact).coeFn_toLp
 
+/-- Derivative, bundling `field`, `compact`, `smooth`. -/
 def derivative (A : CompactField P V) : CompactField P (LiftTangent →L[ℝ] V) where
   field := fieldFDeriv P A.field
   compact := fieldFDeriv_compact P A.field A.compact
@@ -63,7 +70,7 @@ omit [Fact (0 < P)] in
 theorem derivative_bound (A : CompactField P V) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x a, ‖fderiv ℝ (localFieldLift P A.field x) a‖ ≤ C := by
   obtain ⟨C,hC,hb⟩ := (A.derivative.compact.isCompact_range
-    A.derivative.continuous).isBounded.exists_pos_norm_le
+      A.derivative.continuous).isBounded.exists_pos_norm_le
   refine ⟨C,hC.le,fun x a => ?_⟩
   have hx := hb (A.derivative.field (x.1+a.1,x.2+(a.2 : AddCircle P))) (mem_range_self _)
   change ‖fieldFDeriv P A.field (x.1+a.1,x.2+(a.2 : AddCircle P))‖ ≤ C at hx
@@ -110,7 +117,7 @@ theorem increment_bound (A : CompactField P V) :
       add_zero,sub_zero] using hh
   · have hzero : A.field x = 0 := image_eq_zero_of_notMem_tsupport (fun hs => hx (hsub hs))
     simp only [hshift a ha x hx,hzero,sub_zero,norm_zero,Set.indicator_of_notMem
-      hx,zero_mul,le_refl]
+        hx,zero_mul,le_refl]
 
 theorem hasFDerivAt_zero (A : CompactField P V) :
     HasFDerivAt (fun a : LiftTangent => translate P a A.toLp)
@@ -119,7 +126,7 @@ theorem hasFDerivAt_zero (A : CompactField P V) :
   refine hasFDerivAt_of_dominated (liftMeasure P)
     (fun a : LiftTangent => translate P a A.toLp)
     (fun a x => A.field (x+coveringMap P a)) ?_ A.derivative.toLp ?_ M hM (Eventually.of_forall
-      hM0) ?_
+        hM0) ?_
   · intro a
     filter_upwards [translate_ae P a A.toLp,
       (measurePreserving_translation P (coveringMap P a)).quasiMeasurePreserving.ae A.toLp_ae]
@@ -131,7 +138,8 @@ theorem hasFDerivAt_zero (A : CompactField P V) :
   · filter_upwards [Metric.ball_mem_nhds (0 : LiftTangent) zero_lt_one] with a ha
     apply Eventually.of_forall
     intro x
-    simpa only [coveringMap,Prod.fst_zero,Prod.snd_zero,AddCircle.coe_zero,Prod.mk_zero_zero,add_zero] using
+    simpa only [coveringMap, Prod.fst_zero, Prod.snd_zero, AddCircle.coe_zero, Prod.mk_zero_zero,
+        add_zero] using
       hb a ((by simpa only [Metric.mem_ball,dist_zero_right] using ha : ‖a‖ < 1).le) x
 
 theorem derivativeMap_translation (D : CylinderL2 P (LiftTangent →L[ℝ] V)) (a : LiftTangent) :
@@ -145,7 +153,7 @@ theorem derivativeMap_translation (D : CylinderL2 P (LiftTangent →L[ℝ] V)) (
     (measurePreserving_translation P (coveringMap P a)).quasiMeasurePreserving.ae
       (derivativeMap_ae (liftMeasure P) D v)] with x hm ht hv hd
   change derivativeMap (liftMeasure P) (translate P a D) v x = translate P a (derivativeMap
-    (liftMeasure P) D v) x
+      (liftMeasure P) D v) x
   rw [hm,ht,hv,hd]
 
 theorem translation_hasFDerivAt (A : CompactField P V) (a : LiftTangent) :

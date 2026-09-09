@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Topology.Order.ProjIcc
-public import Mathlib.Topology.ContinuousMap.Compact
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+
+/-! A genuine singular-kernel Volterra convolution on continuous Banach-valued paths. -/
 
 @[expose] public section
 
-/-! A genuine singular-kernel Volterra convolution on continuous Banach-valued paths. -/
 
 noncomputable section
 

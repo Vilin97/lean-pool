@@ -7,15 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketScales
-public import LeanPool.NavierStokesAndEuler.Euler.NormalPacketFrequencyGuards
-public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalPrefix
 public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalScaleCosts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
+public import LeanPool.NavierStokesAndEuler.Euler.ParentNormalPacketParameters
+import LeanPool.NavierStokesAndEuler.Euler.PacketCommonScaleChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
+import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalPrefix
 
 /-! A single scale choice for the first packet and every normal stage.
 The record contains only numerical inequalities and convergent series;
 it does not assume the existence of a packet or of a future frame. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +34,7 @@ open Real Filter EulerScale EulerBaseDatum EulerPacketLowConstants
   EulerPacketMovingFrame EulerTransverseActivationSelection EulerMeanHarmonic
 open scoped Topology
 
+/-- Geometry constant, given by `neighborStabilityConstant*frameConstant^2`. -/
 def geometryConstant : ℝ := neighborStabilityConstant*frameConstant^2
 
 theorem geometryConstant_one : 1 ≤ geometryConstant := by
@@ -36,6 +42,8 @@ theorem geometryConstant_one : 1 ≤ geometryConstant := by
     linarith only [neighborStabilityConstant_ge]
   exact one_le_mul_of_one_le_of_one_le hn (one_le_pow₀ frame_properties.1)
 
+/-- Activation margin, given by `1/(32*(activationConstant gradientConstant
+hessianConstant+1))`. -/
 def activationMargin : ℝ :=
   1/(32*(activationConstant gradientConstant hessianConstant+1))
 
@@ -52,6 +60,7 @@ theorem activationMargin_small :
   field_simp
   linarith only [hp]
 
+/-- Correction cost spec, bundling `d`, `B`, `N`, `a` and the required compatibility proofs. -/
 def correctionCostSpec : CostSpec where
   d := 1
   B := 3
@@ -77,23 +86,35 @@ theorem correctionCost_eq (J : ℕ) (X : ℝ) (n : ℕ) :
   congr 1
   ring
 
+/-- Extra cost used in packet induction scales. -/
 def extraCost : Sum Unit Bool → CostSpec
   | .inl _ => EulerNormalPacketParameters.frequencySpec 4
   | .inr false => activationCostSpec frameConstant frame_properties.1
   | .inr true => correctionCostSpec
 
+/-- Initial increment, given by `badCost J 4 gradientConstant gradientConstant hessianConstant
+80 (scaleSequence J X) n + (frequency J X n)^(-(1/4 : ℝ))`. -/
 def initialIncrement (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
-  badCost J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence J X) n+
+  badCost J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence J X) n +
     (frequency J X n)^(-(1/4 : ℝ))
 
+/-- Pressure increment, given by
+`2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio*goodCost J (scaleSequence J X) n
++ initialIncrement J X n`. -/
 def pressureIncrement (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
-  2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio*goodCost J (scaleSequence J X) n+
+  2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio*goodCost J (scaleSequence J X) n +
     initialIncrement J X n
 
+/-- Scales data, collecting `J`, `D`, `X`, `δ`, `stage_large`, `base_power` and their
+compatibility conditions. -/
 structure Scales (c B : ℝ) where
+  /-- J of `Scales`, of type `ℕ`. -/
   J : ℕ
+  /-- Domain data of `Scales`, of type `ℕ`. -/
   D : ℕ
+  /-- X of `Scales`, of type `ℝ`. -/
   X : ℝ
+  /-- Δ of `Scales`, of type `ℝ`. -/
   δ : ℝ
   stage_large : 3 ≤ J
   base_power : 2000 ≤ D
@@ -114,7 +135,7 @@ structure Scales (c B : ℝ) where
   bad_series : SmallSeries
     (badCost J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence J X)) δ
   good_series : SmallSeries
-    (fun n => 2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio*
+    (fun n => 2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio *
       goodCost J (scaleSequence J X) n) δ
   renewal_series : SmallSeries (renewalCost J D 4 c frameConstant X) (1/4)
   time_small : baseHorizon J X ≤ 1
@@ -219,9 +240,9 @@ theorem pressure_series : SmallSeries (pressureIncrement S.J S.X) (3*S.δ) := by
   · ring
 
 theorem stage (a β : ℕ → ℝ) (n : ℕ)
-    (ha : 1/2 ≤ a n) (ha2 : a n ≤ 2)
-    (hβ : 1/2 ≤ β n*(scaleSequence S.J S.X n)^2)
-    (hβ2 : β n*(scaleSequence S.J S.X n)^2 ≤ 2) :
+    (ha : 1 / 2 ≤ a n) (ha2 : a n ≤ 2)
+    (hβ : 1 / 2 ≤ β n * (scaleSequence S.J S.X n) ^ 2)
+    (hβ2 : β n * (scaleSequence S.J S.X n) ^ 2 ≤ 2) :
     StageGuards S.J S.D 4 c S.X geometryConstant a β n :=
   EulerParentRenewalPrefix.stage_guards_at S.J S.D S.stage_large 4 c S.X geometryConstant S.δ
     (by norm_num) S.x_large geometryConstant_one (S.delta_small.trans (by norm_num))

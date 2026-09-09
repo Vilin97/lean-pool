@@ -7,15 +7,26 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoarseMajorant
-
-@[expose] public section
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A single polynomial base absorbs the finite residual multiplicity and
 the fixed profile envelope, before the geometric tail is summed. -/
 
+@[expose] public section
+
+
 namespace EulerPacketCoarseMajorant
 
 
+/-- Tail base, given by `(1+C*(1+18*((N+2 : ℕ) : ℝ)^2))*H^2*gradeBase R N`. -/
 def tailBase (R H C : ℝ) (N : ℕ) : ℝ :=
   (1+C*(1+18*((N+2 : ℕ) : ℝ)^2))*H^2*gradeBase R N
 
@@ -51,7 +62,7 @@ theorem tailBase_absorption (R H C : ℝ) (hC : 0 ≤ C) (N n : ℕ) :
     rw [← pow_mul]
     congr 1
   calc
-    _ = ((1+18*((N+2 : ℕ) : ℝ)^2)*C)*
+    _ = ((1+18*((N+2 : ℕ) : ℝ)^2)*C) *
         ((H^2)^(n+1)*(gradeBase R N)^(n+1)) := by rw [hH]; ring
     _ ≤ A^(n+1)*((H^2)^(n+1)*(gradeBase R N)^(n+1)) :=
       mul_le_mul_of_nonneg_right hf
@@ -63,6 +74,7 @@ theorem tailBase_absorption (R H C : ℝ) (hC : 0 ≤ C) (N n : ℕ) :
         (A^(n+1)*(H^2)^(n+1))*(gradeBase R N)^(n+1)
       ring
 
+/-- Tail polynomial constant, given by `(1+163*C)*H^2*(4*R*550^2)^110`. -/
 def tailPolynomialConstant (R H C : ℝ) : ℝ :=
   (1+163*C)*H^2*(4*R*550^2)^110
 

@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedFieldParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyParity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionData
+import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedFieldParity
 
 /-! The actual initialized correction data have all the joint parities
 required by the drift-aware correction and pressure construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 

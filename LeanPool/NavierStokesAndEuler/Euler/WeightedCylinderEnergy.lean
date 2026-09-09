@@ -6,12 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderViscousEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedEnergy
+import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Actual Gevrey-weighted cylinder energy with signed radius derivative and no zero-norm
+differentiation. -/
 
 @[expose] public section
 
-/-! Actual Gevrey-weighted cylinder energy with signed radius derivative and no zero-norm
-  differentiation. -/
 
 noncomputable section
 
@@ -52,7 +58,7 @@ def viscousGrowthCoefficient (K : SmoothCoefficient period)
 
 /-- The finite Gevrey-weighted integral energy inequality derived from the actual viscous PDE.
 The signed radius term is retained exactly, and no differentiability of the unregularized norm is
-  assumed. -/
+assumed. -/
 theorem weighted_cylinder_energy_integral {α β : Type*} [Fintype α] [Fintype β]
     (order : α → ℕ) (ρ ρ' : ℝ → ℝ)
     (κ : ℝ) (m : Vector3) (K G : ℝ → SmoothCoefficient period)
@@ -61,7 +67,7 @@ theorem weighted_cylinder_energy_integral {α β : Type*} [Fintype α] [Fintype 
     (J : ∀ i j u, u ∈ Ioo s t → SpatialJet period standardDirection 2 (e i j u))
     (g : α → β → ℝ → LiftDomain period → Vector3)
     (hrep : ∀ i j u, u ∈ Ioo s t → (e i j u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] g
-      i j u)
+        i j u)
     (hg : ∀ i j u, u ∈ Ioo s t → ∀ x, ContDiff ℝ ∞ (localFieldLift period (g i j u) x))
     (hDg : ∀ i j u, u ∈ Ioo s t → MemLp (fun x => fderiv ℝ (localFieldLift period (g i j u) x) 0)
       2 (liftMeasure period))
@@ -122,8 +128,8 @@ theorem weighted_cylinder_energy_integral {α β : Type*} [Fintype α] [Fintype 
         metric_energy_hasDerivAt (fun v => (K v).operator) (e i j) u (K' u) (e' i j u)
           (hKt u hu) (het i j u hu) hsymL)
     have hq := hQ0 i u ⟨hu.1.le, hu.2.le⟩
-    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by nlinarith : Q i u + δ ^ 2 ≠
-      0)).differentiableAt
+    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by
+        nlinarith : Q i u + δ ^ 2 ≠ 0)).differentiableAt
   have hreg (i : α) (δ : ℝ) (hδ : 0 < δ) (u : ℝ) (hu : u ∈ Ioo s t) :
       deriv (fun v => √(Q i v + δ ^ 2)) u ≤ a u * √(Q i u + δ ^ 2) + F i u := by
     exact finite_cylinder_viscous_energy period κ m K (G u) (e i) u δ c ν (K' u)

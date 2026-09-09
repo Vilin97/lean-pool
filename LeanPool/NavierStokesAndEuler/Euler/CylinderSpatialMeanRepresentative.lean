@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMean
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
+
+/-! The bounded cylinder-to-space operator is the literal angular integral on smooth fields. -/
 
 @[expose] public section
 
-/-! The bounded cylinder-to-space operator is the literal angular integral on smooth fields. -/
 
 noncomputable section
 
@@ -37,6 +39,7 @@ theorem continuous_memLp_of_lift {V : Type*} [NormedAddCommGroup V]
   have hu := hm.smul_measure (c := (ENNReal.ofReal P)⁻¹) (ENNReal.inv_ne_top.mpr hP)
   simpa only [smul_smul, ENNReal.inv_mul_cancel hP ENNReal.ofReal_ne_top, one_smul] using hu
 
+/-- Raw mean, given by `P⁻¹ • (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P)))`. -/
 def rawMean (f : LiftDomain P → Space) (y : Space) : Space :=
   P⁻¹ • (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P)))
 

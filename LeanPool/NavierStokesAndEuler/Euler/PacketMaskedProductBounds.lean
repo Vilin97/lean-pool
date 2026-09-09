@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderLinearTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+
+/-! Bounds on the actual masked slow and fast products, with zero terms charged no shifts. -/
 
 @[expose] public section
 
-/-! Bounds on the actual masked slow and fast products, with zero terms charged no shifts. -/
 
 noncomputable section
 
@@ -27,13 +30,14 @@ variable {P T : ℝ} [Fact (0 < P)] {p : ℕ} {a : ℕ → Profile}
 include BF
 
 theorem maskedSlow_bound (l r : KnownPiece) (i j n : ℕ) {raw : VectorField} (W : Field P T raw)
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = if i+j=n then
-      slowAdvection (O.inverseFrame (t,(x,θ))) (l.jet O p a (t,(x,θ)) i) (r.jet O p a (t,(x,θ)) j)
-        else 0)
-    (b : C(Icc (0 : ℝ) T,ℝ)) (hb : ∀ t, 0 < b t)
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t, (x, θ)) = if i + j = n then
+      slowAdvection (O.inverseFrame (t, (x, θ))) (l.jet O p a (t, (x, θ)) i) (r.jet O p a (t, (x,
+          θ)) j)
+          else 0)
+    (b : C(Icc (0 : ℝ) T, ℝ)) (hb : ∀ t, 0 < b t)
     (hR : 0 ≤ R) (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
-    (hprofile : i+j=n → l.active p i → r.active p j →
-      ∀ t, l.profile S i t*r.profile S j t ≤ b t) :
+    (hprofile : i + j = n → l.active p i → r.active p j →
+      ∀ t, l.profile S i t * r.profile S j t ≤ b t) :
     (W.normalized hT b hb).WordBound 6 R BC.slowCost
       (if i+j=n ∧ l.active p i ∧ r.active p j then l.shift i+r.shift j+1 else 0) := by
   by_cases hactive : i+j=n ∧ l.active p i ∧ r.active p j
@@ -55,16 +59,17 @@ theorem maskedSlow_bound (l r : KnownPiece) (i j n : ℕ) {raw : VectorField} (W
         · rw [l.jet_zero_of_inactive O p a (t,(x,θ)) i hl,map_zero,LinearMap.zero_apply]
       · rw [ite_eq_right hn]
     have ht := (Field.wordBound_normalized_of_zero W hz hT b hb 6 R 0).mono_amplitude hR
-      BC.slowCost_nonneg
+        BC.slowCost_nonneg
     simpa only [ite_eq_right hactive] using ht
 
 theorem maskedFast_bound (l r : KnownPiece) (i j n : ℕ) {raw : VectorField} (W : Field P T raw)
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = if i+j=n then
-      fastAdvection (O.normal (t,(x,θ))) (l.jet O p a (t,(x,θ)) i) (r.jet O p a (t,(x,θ)) j) else 0)
-    (b : C(Icc (0 : ℝ) T,ℝ)) (hb : ∀ t, 0 < b t)
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t, (x, θ)) = if i + j = n then
+      fastAdvection (O.normal (t, (x, θ))) (l.jet O p a (t, (x, θ)) i) (r.jet O p a (t, (x, θ)) j)
+          else 0)
+    (b : C(Icc (0 : ℝ) T, ℝ)) (hb : ∀ t, 0 < b t)
     (hR : 0 ≤ R) (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R)
-    (hprofile : i+j=n → l.active p i → r.active p j →
-      ∀ t, l.profile S i t*r.profile S j t ≤ b t) :
+    (hprofile : i + j = n → l.active p i → r.active p j →
+      ∀ t, l.profile S i t * r.profile S j t ≤ b t) :
     (W.normalized hT b hb).WordBound 6 R BC.fastCost
       (if i+j=n ∧ l.active p i ∧ r.active p j then l.shift i+r.shift j+1 else 0) := by
   by_cases hactive : i+j=n ∧ l.active p i ∧ r.active p j
@@ -86,7 +91,7 @@ theorem maskedFast_bound (l r : KnownPiece) (i j n : ℕ) {raw : VectorField} (W
         · rw [l.jet_zero_of_inactive O p a (t,(x,θ)) i hl,map_zero,LinearMap.zero_apply]
       · rw [ite_eq_right hn]
     have ht := (Field.wordBound_normalized_of_zero W hz hT b hb 6 R 0).mono_amplitude hR
-      BC.fastCost_nonneg
+        BC.fastCost_nonneg
     simpa only [ite_eq_right hactive] using ht
 
 end EulerPacketCylinderField.PrefixBound

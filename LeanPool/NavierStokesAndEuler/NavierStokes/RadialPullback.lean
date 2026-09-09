@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Physical power-coordinate pullback of the weighted radial inverse
@@ -19,6 +19,9 @@ regularizations below the annulus make every source and output a genuine
 globally defined smooth function. They agree with the prescribed power maps
 where the source or the output can be nonzero.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,8 +78,11 @@ theorem positiveRadius_lt {ℓ x t : ℝ} (hℓ : 0 < ℓ) (hℓt : ℓ < t) (hx
     positiveRadius ℓ x < t :=
   (positiveRadius_le_max hℓ x).trans_lt (max_lt hℓt hxt)
 
+/-- Power chart, given by `(positiveRadius (a / 4) R) ^ d`. -/
 noncomputable def powerChart (d a R : ℝ) : ℝ := (positiveRadius (a / 4) R) ^ d
+/-- Inverse chart, given by `(positiveRadius (a ^ d / 4) U) ^ d⁻¹`. -/
 noncomputable def inverseChart (d a U : ℝ) : ℝ := (positiveRadius (a ^ d / 4) U) ^ d⁻¹
+/-- Radial jacobian, given by `d * R ^ (d - 1)`. -/
 noncomputable def radialJacobian (d R : ℝ) : ℝ := d * R ^ (d - 1)
 
 theorem powerChart_contDiff {a : ℝ} (ha : 0 < a) (d : ℝ) :
@@ -182,6 +188,7 @@ section Sources
 variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Lift chart, given by `(φ z.1, z.2)`. -/
 noncomputable def liftChart (φ : ℝ → ℝ) (z : ℝ × E) : ℝ × E := (φ z.1, z.2)
 
 theorem liftChart_contDiff {φ : ℝ → ℝ} (hφ : ContDiff ℝ ∞ φ) :
@@ -193,7 +200,9 @@ theorem liftChart_hasFDerivAt {φ : ℝ → ℝ} {c : ℝ} (z : ℝ × E) (hφ :
   exact (hφ.comp_hasFDerivAt z (ContinuousLinearMap.fst ℝ ℝ E).hasFDerivAt).prodMk
     (ContinuousLinearMap.snd ℝ ℝ E).hasFDerivAt
 
+/-- Source multiplier, given by `(radialJacobian d (inverseChart d a U))⁻¹`. -/
 noncomputable def sourceMultiplier (d a U : ℝ) : ℝ := (radialJacobian d (inverseChart d a U))⁻¹
+/-- Normalize source, given by `sourceMultiplier d a z.1 • g (liftChart (inverseChart d a) z)`. -/
 noncomputable def normalizeSource (d a : ℝ) (g : ℝ × E → V) (z : ℝ × E) : V :=
   sourceMultiplier d a z.1 • g (liftChart (inverseChart d a) z)
 
@@ -246,6 +255,7 @@ theorem normalizeSource_eq_formula {a b d U : ℝ} (ha : 0 < a) (hab : a < b)
     rw [TransportPrimitive.radial_zero_of_lt (normalizeSource_supported ha hab hd hs) hsmall,
       TransportPrimitive.radial_zero_of_lt hs hR, smul_zero]
 
+/-- Pullback, given by `F ∘ liftChart (powerChart d a)`. -/
 noncomputable def pullback (d a : ℝ) (F : ℝ × E → V) : ℝ × E → V :=
   F ∘ liftChart (powerChart d a)
 
@@ -265,6 +275,7 @@ theorem pullback_supported {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
   · by_contra h
     exact (not_lt_of_ge hr.2) (powerChart_gt_right ha hab hd (lt_of_not_ge h))
 
+/-- Physical graph derivative, given by `fderiv ℝ F z (1, (radialJacobian d z.1 * M) • v)`. -/
 noncomputable def physicalGraphDeriv (d M : ℝ) (v : E) (F : ℝ × E → V) (z : ℝ × E) : V :=
   fderiv ℝ F z (1, (radialJacobian d z.1 * M) • v)
 
@@ -340,10 +351,12 @@ theorem total_normalized_eq_radialIntegral {a b d : ℝ}
     TransportPrimitive.totalIntegral M v (normalizeSource d a g) (U, Y) =
       ∫ s in a..b, g (s, Y + (M * (s ^ d - U)) • v) := by
   rw [TransportPrimitive.totalIntegral_eq_radialInterval (normalizeSource_contDiff ha hd
-    hg).continuous
+      hg).continuous
     (normalizeSource_supported ha hab hd hs)]
   exact normalized_radial_integral ha hd hab.le hg M U v Y
 
+/-- Physical compact, given by `pullback d a (TransportPrimitive.compactIntegral
+(TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) M v (normalizeSource d a g))`. -/
 noncomputable def physicalCompact (d a b M : ℝ) (v : E) (g : ℝ × E → V) : ℝ × E → V :=
   pullback d a (TransportPrimitive.compactIntegral
     (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) M v (normalizeSource d a g))
@@ -382,11 +395,14 @@ theorem physicalCompact_eq_radialIntegral {a b d : ℝ}
     TransportPrimitive.totalIntegral_eq_radialInterval hF hS]
   simp only [normalized_radial_integral ha hd hz hg, normalized_radial_integral ha hd hab.le hg]
 
+/-- Physical alias as an element of `V`. -/
 noncomputable def physicalAlias (d a b M : ℝ) (v : E) (g : ℝ × E → V) (z : ℝ × E) : V :=
   (radialJacobian d z.1 * deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d))
       (powerChart d a z.1)) •
     TransportPrimitive.totalIntegral M v (normalizeSource d a g) (liftChart (powerChart d a) z)
 
+/-- Physical cutoff, given by `TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (powerChart d a
+R)`. -/
 noncomputable def physicalCutoff (d a b R : ℝ) : ℝ :=
   TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (powerChart d a R)
 
@@ -406,7 +422,7 @@ theorem physicalAlias_eq_cutoff_derivative {a d b M : ℝ} (ha : 0 < a)
     (v : E) (g : ℝ × E → V) (z : ℝ × E) (hz : a / 2 < z.1) :
     physicalAlias d a b M v g z = deriv (physicalCutoff d a b) z.1 •
       TransportPrimitive.totalIntegral M v (normalizeSource d a g) (liftChart (powerChart d a) z)
-        := by
+          := by
   rw [deriv_physicalCutoff ha hz]
   rfl
 
@@ -454,7 +470,7 @@ theorem physicalAlias_supported {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0
     exact hz (by simp only [physicalAlias, hc, mul_zero, zero_smul])
   · by_contra h
     have hc := deriv_interiorCutoff_zero_right habU (powerChart_gt_right ha hab hd (lt_of_not_ge
-      h)).le
+        h)).le
     exact hz (by simp only [physicalAlias, hc, mul_zero, zero_smul])
 
 theorem physicalCutoff_zero_left {a b d R : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
@@ -474,7 +490,7 @@ theorem physicalAlias_eq_cutoff_derivative_global {a b d M : ℝ}
     (ha : 0 < a) (hab : a < b) (hd : 0 < d) (v : E) (g : ℝ × E → V) (z : ℝ × E) :
     physicalAlias d a b M v g z = deriv (physicalCutoff d a b) z.1 •
       TransportPrimitive.totalIntegral M v (normalizeSource d a g) (liftChart (powerChart d a) z)
-        := by
+          := by
   by_cases hz : a / 2 < z.1
   · exact physicalAlias_eq_cutoff_derivative ha v g z hz
   · have hza : z.1 < a := by linarith
@@ -488,13 +504,13 @@ theorem physicalAlias_contDiff [CompleteSpace V] {a b d : ℝ}
   have heq : physicalAlias d a b M v g = (fun z : ℝ × E =>
       deriv (physicalCutoff d a b) z.1 •
         TransportPrimitive.totalIntegral M v (normalizeSource d a g) (liftChart (powerChart d a)
-          z)) :=
+            z)) :=
     funext (physicalAlias_eq_cutoff_derivative_global ha hab hd v g)
   rw [heq]
   exact (((contDiff_infty_iff_deriv.mp (physicalCutoff_contDiff ha d b)).2).comp contDiff_fst).smul
     ((TransportPrimitive.totalIntegral_contDiff (normalizeSource_contDiff ha hd hg)
       (normalizeSource_supported ha hab hd hs)).comp (liftChart_contDiff (powerChart_contDiff ha
-        d)))
+          d)))
 
 /-- Global physical inverse identity. Below the positive annulus, the source,
 the output derivative, and the alias all vanish by their proved support. -/
@@ -503,7 +519,7 @@ theorem physicalGraphDeriv_physicalCompact_global [CompleteSpace V] {a b d : ℝ
     (hg : ContDiff ℝ ∞ g) (hs : RadialAlias.RadiallySupported a b g)
     (M : ℝ) (v : E) (z : ℝ × E) :
     physicalGraphDeriv d M v (physicalCompact d a b M v g) z = g z - physicalAlias d a b M v g z :=
-      by
+        by
   by_cases hz : a ≤ z.1
   · exact physicalGraphDeriv_physicalCompact ha hab hd hg hs M v z hz
   · have hza : z.1 < a := lt_of_not_ge hz
@@ -670,7 +686,7 @@ theorem radial_comp_finiteJets_uniform (a b : ℝ) {φ : ℝ → ℝ}
       ∀ j : ℕ, j ≤ m → ‖iteratedFDeriv ℝ j (F ∘ liftChart φ) z‖ ≤ K * C := by
   obtain ⟨B, hB, hb⟩ := liftChart_positive_jets_bound (E := E) a b hφ m
   refine ⟨(m.factorial : ℝ) * B ^ m, mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (zero_le_one.trans
-    hB) _), ?_⟩
+      hB) _), ?_⟩
   intro F hF z hz C hC hsource j hj
   have h := norm_iteratedFDeriv_comp_le hF (liftChart_contDiff hφ) (nat_le_smooth j) z
     (fun i hi => hsource i (hi.trans hj)) (fun i hi hij =>
@@ -707,7 +723,7 @@ theorem radial_multiplier_finiteJets_uniform (a b : ℝ) {h : ℝ → ℝ}
       intro i hi
       exact mul_le_mul
         (mul_le_mul_of_nonneg_left (hb i ((Nat.le_of_lt_succ (Finset.mem_range.mp hi)).trans hj) z
-          hz)
+            hz)
           (Nat.cast_nonneg _))
         (hsource (j - i) ((Nat.sub_le _ _).trans hj)) (norm_nonneg _)
         (mul_nonneg (Nat.cast_nonneg _) hB)
@@ -787,7 +803,7 @@ theorem physicalCompact_finiteJets_uniform {a b d cL cR : ℝ}
   have hcRU : 0 < d ^ 2 * cR := mul_pos (sq_pos_of_pos hd) hcR
   obtain ⟨KN, hKN, hbN⟩ := normalizeSource_finiteJets_uniform (E := E) (V := V) ha hab hd cL cR p m
   obtain ⟨KT, hKT, hbT⟩ := canonical_transport_finiteJets_uniform (E := E) (V := V) haU habU hcLU
-    hcRU p m
+      hcRU p m
   obtain ⟨KP, hKP, hbP⟩ := radial_comp_finiteJets_uniform (E := E) (V := V) a b
     (powerChart_contDiff ha d) m
   let Q := ((min 1 d) ^ p)⁻¹
@@ -810,14 +826,14 @@ theorem physicalCompact_finiteJets_uniform {a b d cL cR : ℝ}
   have ht (i : ℕ) (hi : i ≤ m) :
       ‖iteratedFDeriv ℝ i F (liftChart (powerChart d a) z)‖ ≤
         KT * (KN * A) * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (powerChart d a z.1)
-          :=
+            :=
     hbT M v _ hnf hns (KN * A) (mul_nonneg hKN hA) hnsource _ hU i hi
   have hp := hbP F hF z ⟨hz.1.le, hz.2.le⟩
     (KT * (KN * A) * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (powerChart d a z.1))
     (mul_nonneg (mul_nonneg hKT (mul_nonneg hKN hA)) hwU) ht j hj
   change ‖iteratedFDeriv ℝ j (physicalCompact d a b M v g) z‖ ≤
     KP * (KT * (KN * A) * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (powerChart d a
-      z.1)) at hp
+        z.1)) at hp
   rw [powerChart_eq ha (show a / 2 ≤ z.1 by linarith [hz.1]) d] at hp
   have hw := logWeight_power_forward ha hd hz cL cR p
   calc

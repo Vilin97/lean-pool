@@ -8,13 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJets
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
-public import LeanPool.NavierStokesAndEuler.Euler.SeparatingTimeDerivative
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SeparatingTimeDerivative
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! The actual acceleration of the constructed nonlinear flow is the
 material derivative of its velocity, including the one-sided endpoint
 identities. All coefficient time derivatives are literal hypotheses. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +31,8 @@ open Set Filter EulerVolterraConvolution EulerContinuousTimeIntegral
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
+/-- Acceleration family, given by `A₁.superposition (pathFamily T hT A x) + multiplier
+(A.derivative.superposition (pathFamily T hT A x)) (velocityFamily T hT A x)`. -/
 def accelerationFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
   A₁.superposition (pathFamily T hT A x) +
     multiplier (A.derivative.superposition (pathFamily T hT A x)) (velocityFamily T hT A x)

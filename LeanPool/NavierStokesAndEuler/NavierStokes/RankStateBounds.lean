@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalRankDefect
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # Actual moving-strip bounds for the rank increment
@@ -19,6 +18,9 @@ State increment.  A fixed containing shell is used only to estimate the
 integral; the final class retains the original moving profile weight.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.RankStateBounds
 
 noncomputable section
@@ -27,11 +29,16 @@ open Set Function Filter MeasureTheory
 open scoped ContDiff Topology Interval BigOperators
 open WeightedClasses MeanIncrementBounds
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `MeanRankUpdate.ChartPoint /-! ## Lifting the actual slow debt
+-/`. -/
 abbrev Point := MeanRankUpdate.ChartPoint
 
 /-! ## Lifting the actual slow debt -/
 
+/-- Slow projection, given by `(ContinuousLinearMap.fst ℝ Plane Plane).comp
+(ContinuousLinearMap.snd ℝ ℝ (Plane × Plane))`. -/
 noncomputable def slowProjection : Point →L[ℝ] Plane :=
   (ContinuousLinearMap.fst ℝ Plane Plane).comp
     (ContinuousLinearMap.snd ℝ ℝ (Plane × Plane))
@@ -105,6 +112,8 @@ structure NormalizedParameters (coord A B : ℝ) (r : CorrectionState.RankData P
   coefficient : ∀ n x, x ∈ U →
     r.coefficient n x = MeanRankUpdate.shapedAmplitude B (MeanRankUpdate.chartEta coord (0, x, 0))
 
+/-- Normalized data, bundling `lambda`, `inner`, `outer`, `length` and the required
+compatibility proofs. -/
 noncomputable def normalizedData (coord A B lam a b : ℝ) : CorrectionState.RankData Plane where
   lambda := lam
   inner := a
@@ -112,7 +121,7 @@ noncomputable def normalizedData (coord A B lam a b : ℝ) : CorrectionState.Ran
   length := fun _ x => Real.sqrt (MeanRankUpdate.chartQ coord (0, x, 0))
   velocity := fun _ x => MeanRankUpdate.chartQ coord (0, x, 0) ^ (-A)
   coefficient := fun _ x => MeanRankUpdate.shapedAmplitude B (MeanRankUpdate.chartEta coord (0, x,
-    0))
+      0))
 
 theorem normalizedData_parameters (coord A B lam a b : ℝ) (U : Set Plane) :
     NormalizedParameters coord A B (normalizedData coord A B lam a b) U :=
@@ -179,7 +188,7 @@ theorem fixed_weight_margin {lo hi a b qlo qhi cL cR : ℝ}
       ε L hε hεone hL U hU).domain,
       p ∈ MeanRankUpdate.supportBand a b qlo qhi →
         δ ≤ (PhysicalMeanDomain.localStripData lo hi cL cR hlo hcL hcR ε L hε hεone hL U hU).zeta p
-          := by
+            := by
   let base : StripData Point := logStripData lo hi cL cR hlo hcL hcR ε L hε hεone hL
   have hmem : ∀ R ∈ Icc (Real.sqrt qlo * a) (Real.sqrt qhi * b), R ∈ Ioo lo hi :=
     fun R hR => ⟨hleft.trans_le hR.1, hR.2.trans_lt hright⟩
@@ -209,13 +218,13 @@ theorem rankSources_fixedClass {H : ℝ}
     (hdebt : UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen
       ε L hε hεone hL) H (CorrectionState.debt c u)) :
     MeanClass (PhysicalMeanDomain.localStripData lo hi cL cR hlo hcL hcR ε L hε hεone hL U.carrier
-      U.isOpen) H
+        U.isOpen) H
       (fun n => MeanRankUpdate.slowLift (CorrectionState.rankAngular r c u n)) ∧
     MeanClass (PhysicalMeanDomain.localStripData lo hi cL cR hlo hcL hcR ε L hε hεone hL U.carrier
-      U.isOpen) H
+        U.isOpen) H
       (fun n => MeanRankUpdate.slowLift (CorrectionState.rankDesiredAxial r c u n)) := by
   let st := PhysicalMeanDomain.localStripData lo hi cL cR hlo hcL hcR ε L hε hεone hL U.carrier
-    U.isOpen
+      U.isOpen
   have hd := slowClass_lift st U.isOpen (fun _ hx => hx.2) hdebt
   have hz := fixed_weight_margin hlo hcL hcR ε L hε hεone hL U.carrier U.isOpen hleft hright
   have hr := MeanRankUpdate.rank_update_meanClass (A := A) (B := B) (lam := r.lambda)
@@ -240,7 +249,7 @@ support and full local band jets. -/
 theorem fixedClass_to_moving {H : ℝ} {f : ℕ → Point → ℝ}
     (hf : LocalRankDefect.LocalShell lo hi U.carrier f)
     (hs : ∀ n, VariableGaugeMean.SupportedGauge inner outer (VariableGaugeMean.qLength coord)
-      U.carrier (f n))
+        U.carrier (f n))
     (hclass : MeanClass (PhysicalMeanDomain.localStripData lo hi cL cR hlo hcL hcR
       ε L hε hεone hL U.carrier U.isOpen) H f) :
     MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H f :=
@@ -275,7 +284,7 @@ theorem rankIncrementState_bounds {H : ℝ}
     IncrementBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR
       ε L hε hεone hL) H (VariableGaugeMean.rankIncrementState g r axial c u) := by
   obtain ⟨lo, hi, hlo, horder, hlo', hhi', hlow, hupp⟩ := containingShell U hg.inner_pos
-    hg.inner_lt_outer
+      hg.inner_lt_outer
   have hlow' (n : ℕ) (x : Plane) (hx : x ∈ U.carrier) : lo ≤ r.length n x * r.inner := by
     rw [hparam.length n x hx]
     exact hlow x hx
@@ -308,11 +317,11 @@ theorem rankIncrementState_bounds {H : ℝ}
     have hh := (hsup n).2.2 z hz hn
     rwa [hparam.length n _ hz] at hh
   exact ⟨fixedClass_to_moving U ha hlo hcL hcR ε L hε hεone hL hleft hright hlocal.radial hsR
-    hfixed.radial,
+      hfixed.radial,
     fixedClass_to_moving U ha hlo hcL hcR ε L hε hεone hL hleft hright hlocal.angular hsT
-      hfixed.angular,
+        hfixed.angular,
     fixedClass_to_moving U ha hlo hcL hcR ε L hε hεone hL hleft hright hlocal.axial hsZ
-      hfixed.axial⟩
+        hfixed.axial⟩
 
 theorem rankIncrementState_bounds_of_components {H : ℝ}
     (heps : BandBound (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR
@@ -322,7 +331,7 @@ theorem rankIncrementState_bounds_of_components {H : ℝ}
     IncrementBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR
       ε L hε hεone hL) H (VariableGaugeMean.rankIncrementState g r axial c u) :=
   rankIncrementState_bounds U g r ha hcL hcR ε L hε hεone hL c u hg hparam hB hleft hright axial
-    heps
+      heps
     (debtClass_of_components _ hdebt)
 
 theorem rankIncrementState_bounds_of_defectBounds {σ H : ℝ} (hH : H ≤ 1 + σ)
@@ -333,7 +342,7 @@ theorem rankIncrementState_bounds_of_defectBounds {σ H : ℝ} (hH : H ≤ 1 + �
     IncrementBounds (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR
       ε L hε hεone hL) H (VariableGaugeMean.rankIncrementState g r axial c u) :=
   rankIncrementState_bounds_of_components U g r ha hcL hcR ε L hε hεone hL c u hg hparam hB hleft
-    hright axial heps
+      hright axial heps
     (fun i => (hdebt i).mono_exponent hH)
 
 omit hB in
@@ -366,7 +375,7 @@ theorem rankIncrementState_support_margin :
       · exact hsup.2.1 z hz hT
     · exact hsup.1 z hz hR
   obtain ⟨δ, hδ, hb⟩ := LocalRankDefect.normalized_support_margin hleft hright r.length U.carrier f
-    hg.length_pos hs
+      hg.length_pos hs
   refine ⟨δ, hδ, ?_⟩
   intro n z hz hn
   have hpos : 0 < f n z := by

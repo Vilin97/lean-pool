@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BasePhaseGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AlignedProfileSpectralCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryGeometryAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalSignedRequest
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AlignedProfileSpectralCone
 
 /-!
 # Actual primary covariance and the flat target
@@ -21,6 +18,9 @@ actual Volterra primary.  Target smallness at the attachment points is
 retained as a scalar factor throughout the finite matrix solve.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function Matrix
@@ -28,12 +28,17 @@ open scoped Topology ContDiff InnerProductSpace BigOperators
 
 namespace NavierStokes.PrimaryTargetBounds
 
+/-- Plane: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev Plane := MovingFrameODE.Plane
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
 
 
+/-- Phase sign, with branches according to `j = 0`. -/
 noncomputable def phaseSign (j : Fin 2) : ℝ := if j = 0 then 1 else -1
 
 theorem phaseSign_abs (j : Fin 2) : |phaseSign j| = 1 := by
@@ -43,10 +48,13 @@ theorem phaseSign_abs (j : Fin 2) : |phaseSign j| = 1 := by
 noncomputable def basisMatrix (K : Plane) : Mat2 :=
   fun i j => if j = 0 then MovingFrameODE.quarterTurn K i else K i
 
+/-- Model matrix, given by `basisMatrix K * PulseCovariance.signedModel c u`. -/
 noncomputable def modelMatrix (c u : ℝ) (K : Plane) : Mat2 :=
   basisMatrix K * PulseCovariance.signedModel c u
 
+/-- Model normal, given by `-⟪T, MovingFrameODE.quarterTurn K⟫_ℝ`. -/
 noncomputable def modelNormal (K T : Plane) : ℝ := -⟪T, MovingFrameODE.quarterTurn K⟫_ℝ
+/-- Model transverse, given by `⟪T, K⟫_ℝ`. -/
 noncomputable def modelTransverse (K T : Plane) : ℝ := ⟪T, K⟫_ℝ
 
 theorem basisMatrix_det (K : Plane) (hK : ‖K‖ = 1) : (basisMatrix K).det = -1 := by
@@ -110,8 +118,10 @@ theorem modelMatrix_strictCone {c u eta : ℝ} {K T : Plane}
   have hh := strictCone_mul_left (B := basisMatrix K) (by rw [basisMatrix_det K hK]; norm_num) hbase
   rwa [basisMatrix_target K T hK] at hh
 
+/-- Model point: an abbreviation for `ℝ × (Plane × Plane)`. -/
 abbrev ModelPoint := ℝ × (Plane × Plane)
 
+/-- Model set as an element of `Set ModelPoint`. -/
 noncomputable def modelSet (M u eta : ℝ) : Set ModelPoint :=
   {p | p.1 ∈ Icc (-M) (-(1 / M)) ∧ ‖p.2.1‖ = 1 ∧ ‖p.2.2‖ = 1 ∧
     eta ≤ modelNormal p.2.1 p.2.2 ∧
@@ -122,7 +132,7 @@ theorem modelNormal_continuous : Continuous (fun p : ModelPoint => modelNormal p
   ((continuous_snd.snd.inner (MovingFrameODE.quarterTurn.continuous.comp continuous_snd.fst))).neg
 
 theorem modelTransverse_continuous : Continuous (fun p : ModelPoint => modelTransverse p.2.1 p.2.2)
-  :=
+    :=
   continuous_snd.snd.inner continuous_snd.fst
 
 theorem modelSet_compact (M u eta : ℝ) : IsCompact (modelSet M u eta) := by
@@ -157,6 +167,8 @@ theorem compact_model_data {M u eta : ℝ} (hM : 1 ≤ M) (hu : 0 < u) (heta : 0
   have hc : p.1 < 0 := hp.1.2.trans_lt (neg_neg_of_pos (one_div_pos.mpr (zero_lt_one.trans_le hM)))
   exact modelMatrix_strictCone hc hu heta hp.2.1 hp.2.2.2.1 hp.2.2.2.2
 
+/-- Model vector, given by `(-s) • K + (c * Real.sqrt (1 + s ^ 2)) • MovingFrameODE.quarterTurn
+K`. -/
 noncomputable def modelVector (c s : ℝ) (K : Plane) : Plane :=
   (-s) • K + (c * Real.sqrt (1 + s ^ 2)) • MovingFrameODE.quarterTurn K
 
@@ -209,7 +221,7 @@ theorem frame_combination_error (k K : Plane) (hk : ‖k‖ = 1) (a b a0 b0 : �
 
 theorem tangent_ratio_error {n : MovingFrameODE.Space} {K : Plane} {B s delta r h : ℝ}
     (hB : 0 < B) (hK : ‖K‖ = 1) (hd : delta ≤ B / 2)
-    (hn : ‖n - MovingFrameODE.pack (B*s) (B • K)‖ ≤ delta) :
+    (hn : ‖n - MovingFrameODE.pack (B * s) (B • K)‖ ≤ delta) :
     ‖(-MovingFrameODE.radialSlope n) • MovingFrameODE.normalDirection n +
         r • MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection n) -
       ((-s) • K + h • MovingFrameODE.quarterTurn K)‖ ≤
@@ -231,8 +243,9 @@ theorem tangent_ratio_error {n : MovingFrameODE.Space} {K : Plane} {B s delta r 
       add_le_add (add_le_add_left hs _) (mul_le_mul_of_nonneg_left hk (by positivity))
     _ = _ := by ring
 
+/-- Pulse ratio as an element of `Plane`. -/
 noncomputable def pulseRatio (d : PrimaryODE.FrameData Slow) (lam u L : ℝ) (p : Slow) (v : ℝ) :
-  Plane :=
+    Plane :=
   !₂[PrimaryPulseBounds.normalizedPulse d lam u L (p, v/L) 1 /
       PrimaryPulseBounds.normalizedPulse d lam u L (p, v/L) 0,
     PrimaryPulseBounds.normalizedPulse d lam u L (p, v/L) 2 /
@@ -246,9 +259,9 @@ theorem pulseRatio_eq (d : PrimaryODE.FrameData Slow) (lam u : ℝ) {L : ℝ} (h
     pulseRatio d lam u L p v =
       (-d.rho (p,v)) • d.frame (p,v) 0 +
         (PrimaryODE.transversePrimary hL.le d (fun z => PrimaryPulseBounds.referenceP lam u L z.2)
-          p v /
+            p v /
           PrimaryODE.radialPrimary hL.le d (fun z => PrimaryPulseBounds.referenceP lam u L z.2) p
-            v) •
+              v) •
             d.frame (p,v) 1 := by
   have hLv : L * (v / L) = v := by field_simp
   unfold pulseRatio PrimaryPulseBounds.normalizedPulse
@@ -260,10 +273,12 @@ theorem pulseRatio_eq (d : PrimaryODE.FrameData Slow) (lam u : ℝ) {L : ℝ} (h
       PrimaryODE.transversePrimary] at * <;>
     field_simp
 
+/-- Geometric ratio constant as an element of `ℝ`. -/
 noncomputable def geometricRatioConstant (M u : ℝ) : ℝ :=
   (2 * (1 + 3*M) + 4 * (3*M + BasePhaseGeometry.eigenBound M)) *
     BasePhaseGeometry.phaseConstant M / BasePhaseGeometry.normalLower M u
 
+/-- Ratio constant, constructed using `geometricRatioConstant`. -/
 noncomputable def ratioConstant (M u gap : ℝ) : ℝ :=
   geometricRatioConstant M u + 4 * BasePhaseGeometry.eigenBound M *
     GrowingMode.coneConstant gap (BasePhaseGeometry.modalConstant M u)
@@ -290,7 +305,7 @@ theorem signedSlot_center {u L : ℝ} (hu : 0 ≤ u) (hL : 0 < L)
   have he : PhaseEstimates.signedSlot (phaseSign j) u L v - phaseSign j * u =
       phaseSign j * u * (v-L/2) / L := by
     unfold PhaseEstimates.signedSlot
-    field_simp ; ring
+    field_simp; ring
   rw [he, abs_div, abs_mul, abs_mul, phaseSign_abs, one_mul, abs_of_nonneg hu,
     abs_of_pos hL]
 
@@ -331,7 +346,7 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
   have hPeq (t : ℝ) (ht : t ∈ Icc 0 (a.length i)) :
       HasDerivAt (PrimaryPulseBounds.referenceP (a.lam i) u (a.length i))
         (((a.frame i).eigenvalue (p,t) - ViscousPropagator.referenceViscosity (a.lam i) u (a.length
-          i) t) *
+            i) t) *
           PrimaryPulseBounds.referenceP (a.lam i) u (a.length i) t) t := by
     rw [hc.eigenvalue t ht]
     exact PrimaryPulseBounds.referenceP_hasDerivAt _ _ _ _
@@ -376,10 +391,10 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
           MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection (a.phase.normal i (p,v))) -
         ((-a.slope i (p,v)) • a.K i +
           PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v • MovingFrameODE.quarterTurn (a.K
-            i)) := by
+              i)) := by
     rw [pulseRatio_eq (a.frame i) (a.lam i) u hlength hA hp hv hprimary.1.ne']
     simp only [FamilyData.frame, PhaseJetBounds.PhaseFamily.frameData,
-      PrimaryODE.FrameData.ofNormalLocal,
+        PrimaryODE.FrameData.ofNormalLocal,
       PrimaryODE.localFrame_eq hne, MovingFrameODE.normalFrame_zero, MovingFrameODE.normalFrame_one]
     rw [hprofile]
     rfl
@@ -389,7 +404,7 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
   have hcoef : 0 ≤ 2*(1+3*M)+4*(3*M+eigenBound M) := by unfold eigenBound; positivity
   have hph : 0 ≤ phaseConstant M / D.scale i := div_nonneg (phaseConstant_pos hM).le hS.le
   have hgeometric :
-      (2*(1+|a.slope i (p,v)|)+4*(|a.slope i (p,v)|+
+      (2*(1+|a.slope i (p,v)|)+4*(|a.slope i (p,v)| +
         |PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v|)) *
           (phaseConstant M / D.scale i) / a.B i ≤ geometricRatioConstant M u / D.scale i := by
     calc
@@ -406,7 +421,7 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
     PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v| ≤ _ at hratiobound
   have hratiobound' := hratiobound.trans (mul_le_mul_of_nonneg_right
     (show 4 * |PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v| ≤ 4 * eigenBound M by
-      linarith)
+        linarith)
     (div_nonneg hconeNonneg hS.le))
   exact (add_le_add hgeometric hratiobound').trans_eq (by unfold ratioConstant; ring)
 
@@ -503,7 +518,7 @@ representative and a unit target direction. -/
 theorem exists_family_bounds (vr vt : TorusInverse.Plane)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M) (hu : 0 < u) (huM : u ≤ M)
-    (hL : 1 / (2*r0) ≤ M) (hslot : 4*r0*ChartScales.Tg ≤ M)
+    (hL : 1 / (2 * r0) ≤ M) (hslot : 4 * r0 * ChartScales.Tg ≤ M)
     {eta : ℝ} (heta : 0 < eta) :
     ∃ N : ℕ, 4 ≤ N ∧ ∃ detGap entryBound inverseLower : ℝ,
       0 < detGap ∧ 1 ≤ entryBound ∧ 0 < inverseLower ∧
@@ -536,7 +551,7 @@ theorem exists_family_bounds (vr vt : TorusInverse.Plane)
       (fun p => modelMatrix p.1 u p.2.1) (fun p k => p.2.2 k) hH0 hT0 hcone vr vt hdet
       (B := B) hr hh (primaryLower_pos _ _ _) (primaryUpper_pos _ _ _) hb hE hF
   obtain ⟨N1, hN14, hN1⟩ := eventually_slow_large (2*GrowingMode.coneConstant gap (modalConstant M
-    u))
+      u))
   obtain ⟨N2, hN24, hN2⟩ := eventually_slotRadius_large hr hh 1
   refine ⟨max N0 (max N1 N2), hN04.trans (le_max_left _ _),
     detGap, entryBound, inverseLower, hd, he, hi, ?_⟩
@@ -640,11 +655,12 @@ theorem prepared_model_mem (L : Index W a.N) {p : Slow}
       change |PrimaryRepresentatives.c0 _ _ * ⟪a.target p,
           PrimaryRepresentatives.transverseDirection _⟫_ℝ| /
           -⟪a.target p, MovingFrameODE.quarterTurn (PrimaryRepresentatives.transverseDirection
-            _)⟫_ℝ ≤ _
+              _)⟫_ℝ ≤ _
       rw [PrimaryRepresentatives.quarterTurn_transverseDirection]
       linarith [hmargin.2]
     exact (div_le_iff₀ hmpos).mp hratio
 
+/-- Prepared covariance, given by `familyCovariance vr vt (family H v a)`. -/
 noncomputable def preparedCovariance (vr vt : TorusInverse.Plane) : Index W a.N → Slow → Mat2 :=
   familyCovariance vr vt (family H v a)
 
@@ -684,7 +700,9 @@ section MovingWeight
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Left radius, given by `Real.sqrt (2 * NominalConeAssembly.activeLeft W)`. -/
 noncomputable def leftRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeLeft W)
+/-- Right radius, given by `Real.sqrt (2 * NominalConeAssembly.activeRight W)`. -/
 noncomputable def rightRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeRight W)
 
 theorem leftRadius_pos : 0 < leftRadius W :=
@@ -711,7 +729,7 @@ theorem edge_double (c x : ℝ) : FlatCutoff.edge c (2*x) = FlatCutoff.edge (c/4
   by_cases hx : 0 < x
   · rw [FlatCutoff.edge_of_pos _ (by positivity), FlatCutoff.edge_of_pos _ hx]
     congr 1
-    field_simp ; ring_nf
+    field_simp; ring_nf
   · rw [FlatCutoff.edge_of_nonpos _ (by linarith), FlatCutoff.edge_of_nonpos _ (le_of_not_gt hx)]
 
 theorem log_square_half {r : ℝ} (hr : 0 < r) :
@@ -724,12 +742,12 @@ theorem stripWeight_eq (r eta : ℝ) (hr : 0 < r) :
   have ha := leftRadius_pos W
   have hb := rightRadius_pos W
   have hasq : (leftRadius W)^2/2 = NominalConeAssembly.activeLeft W := by
-    rw [leftRadius, Real.sq_sqrt (mul_nonneg (by norm_num) (NominalConeAssembly.activeLeft_pos
-      W).le)]
+    rw [leftRadius, Real.sq_sqrt (mul_nonneg (by
+        norm_num) (NominalConeAssembly.activeLeft_pos W).le)]
     ring
   have hbsq : (rightRadius W)^2/2 = NominalConeAssembly.activeRight W := by
-    rw [rightRadius, Real.sq_sqrt (mul_nonneg (by norm_num) (LeadingStressWeights.activeRight_pos
-      W).le)]
+    rw [rightRadius, Real.sq_sqrt (mul_nonneg (by
+        norm_num) (LeadingStressWeights.activeRight_pos W).le)]
     ring
   have halog := log_square_half ha
   have hblog := log_square_half hb
@@ -753,9 +771,11 @@ theorem stripWeight_eq (r eta : ℝ) (hr : 0 < r) :
   rw [hl, hh, edge_double, edge_double]
   norm_num [stripWeight, WeightedRadialPrimitive.zeta]
 
+/-- Profile radius, given by `p.1 / Real.sqrt (BaseChartJets.normalizedCoordinates h p).1`. -/
 noncomputable def profileRadius (h : ℝ) (p : Slow) : ℝ :=
   p.1 / Real.sqrt (BaseChartJets.normalizedCoordinates h p).1
 
+/-- Moving weight, given by `stripWeight W (profileRadius F.data.h p)`. -/
 noncomputable def movingWeight (p : Slow) : ℝ := stripWeight W (profileRadius F.data.h p)
 
 theorem movingWeight_nonneg (p : Slow) : 0 ≤ movingWeight W p := stripWeight_nonneg W _
@@ -775,7 +795,7 @@ theorem profileRadius_sq {p : Slow} (hT : 0 < p.2.2) :
 
 theorem movingWeight_eq {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1) :
     movingWeight W p = FinalSlowBase.weight W (BaseChartJets.normalizedCoordinates F.data.h p).2 :=
-      by
+        by
   rw [movingWeight, stripWeight_eq W _ _ (profileRadius_pos hT hR), profileRadius_sq hT]
 
 /-- The mean-variable ordering `(R,((T,Z),Y))` uses exactly the same
@@ -790,7 +810,7 @@ theorem meanPoint_scalar (x : LocalSignedRequest.Point) :
   rfl
 
 /-- Exact equality with the strip used for the signed correction. -/
-theorem movingStripData_zeta (U : LocalSignedRequest.SlowRegion (2*F.data.h))
+theorem movingStripData_zeta (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     (epsilon S : ℕ → ℝ) (hepsilon : ∀ n, 0 < epsilon n)
     (hepsilon_one : ∀ n, epsilon n ≤ 1) (hS : ∀ n, 1 ≤ S n)
     (x : LocalSignedRequest.Point) :
@@ -807,14 +827,16 @@ theorem weight_zero_of_not_active {w : ℝ × ℝ}
     FinalSlowBase.weight W w = 0 := by
   by_cases hl : w.1 ≤ NominalConeAssembly.activeLeft W
   · exact ActiveAnnulusWeight.radialWeight_zero_left _ _
-      (by simpa only [FinalSlowBase.logLeft, Real.exp_log (NominalConeAssembly.activeLeft_pos W)]
-        using hl)
+      (by
+          simpa only [FinalSlowBase.logLeft, Real.exp_log (NominalConeAssembly.activeLeft_pos W)]
+              using hl)
   · have hr : NominalConeAssembly.activeRight W ≤ w.1 := by
       by_contra hn
       exact hx ⟨lt_of_not_ge hl, lt_of_not_ge hn⟩
     exact ActiveAnnulusWeight.radialWeight_zero_right _ _
-      (by simpa only [FinalSlowBase.logRight, Real.exp_log (LeadingStressWeights.activeRight_pos
-        W)] using hr)
+      (by
+          simpa only [FinalSlowBase.logRight, Real.exp_log (LeadingStressWeights.activeRight_pos
+              W)] using hr)
 
 end MovingWeight
 
@@ -830,6 +852,7 @@ noncomputable def actualTarget (p : Slow) : Plane :=
     ProfileSpectralCone.stressVector v.profiles F.data.h
       (BaseChartJets.normalizedCoordinates F.data.h p).2
 
+/-- Target amplitude as an element of `ℝ`. -/
 noncomputable def targetAmplitude (p : Slow) : ℝ :=
   (BaseChartJets.normalizedCoordinates F.data.h p).1 ^ (-CoordinateAlgebra.A F.data.h - 1/2) *
     ‖ProfileSpectralCone.stressVector v.profiles F.data.h
@@ -841,7 +864,7 @@ theorem targetAmplitude_nonneg {p : Slow} (hT : 0 < p.2.2) : 0 ≤ targetAmplitu
 
 theorem stress_norm_le_plane (w : ℝ × ℝ) :
     ‖FinalSlowBase.leadingStress v w‖ ≤ ‖ProfileSpectralCone.stressVector v.profiles F.data.h w‖ :=
-      by
+        by
   apply max_le
   · exact PiLp.norm_apply_le (ProfileSpectralCone.stressVector v.profiles F.data.h w) 0
   · exact PiLp.norm_apply_le (ProfileSpectralCone.stressVector v.profiles F.data.h w) 1
@@ -859,7 +882,7 @@ theorem targetAmplitude_lower (hcone : LeadingStressWeights.FullTrueCone v) :
     intro p hp
     have hp' := AlignedProfileSpectralCone.reference_point W hp
     exact ((PositiveRepresentatives.stableQ_smoothAt F.data.h_pos.le F.data.h_lt_half.le
-      hp'.stable).rpow_const_of_ne
+        hp'.stable).rpow_const_of_ne
       hp'.scalar.ne').continuousAt.continuousWithinAt
   obtain ⟨k, hk, hb⟩ := hK.exists_forall_le' hs (fun p hp =>
     Real.rpow_pos_of_pos (AlignedProfileSpectralCone.reference_point W hp).scalar _)
@@ -958,16 +981,18 @@ theorem covarianceTarget_eq_actual {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1)
       (ChartScales.Q (U.1+N) * (BaseChartJets.normalizedCoordinates F.data.h p).1)) ^
         (PartitionedCovariance.velocityExponent F.data.h + 1/2) =
       (BaseChartJets.normalizedCoordinates F.data.h p).1 ^ (-CoordinateAlgebra.A F.data.h - 1/2) :=
-        by
+          by
     rw [hdiv, Real.inv_rpow hq.le, ← Real.rpow_neg hq.le]
     congr 1
     unfold PartitionedCovariance.velocityExponent CoordinateAlgebra.A
     ring
   ext k
   fin_cases k <;>
-    simp [FinalSlowBase.covarianceTarget, PartitionedCovariance.chartTarget,
-      actualTarget, ProfileSpectralCone.stressVector, FinalSlowBase.coefficients,
-      he.1, he.2, PiLp.smul_apply, smul_eq_mul] <;>
+    simp only [FinalSlowBase.covarianceTarget, PartitionedCovariance.chartTarget, one_div,
+        FinalSlowBase.coefficients, he.1, he.2, Fin.isValue, Pi.smul_apply, cons_val_zero,
+            smul_eq_mul, cons_val_one, cons_val_fin_one, Fin.zero_eta, actualTarget,
+                ProfileSpectralCone.stressVector, PiLp.smul_apply, mul_eq_mul_right_iff,
+                    Fin.mk_one] <;>
     exact Or.inl (by simpa only [one_div] using hfactor)
 
 end ActualTarget

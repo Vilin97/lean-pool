@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GainedMildFormula
-public import LeanPool.NavierStokesAndEuler.Euler.DuhamelPasting
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
+public import LeanPool.NavierStokesAndEuler.Euler.TimePathGluing
+import LeanPool.NavierStokesAndEuler.Euler.DuhamelPasting
+import LeanPool.NavierStokesAndEuler.Euler.GainedMildFormula
+
+/-! Pasting actual high-order viscous mild solutions preserves the derivative-gaining Duhamel
+formula. -/
 
 @[expose] public section
 
-/-! Pasting actual high-order viscous mild solutions preserves the derivative-gaining Duhamel
-  formula. -/
 
 noncomputable section
 
@@ -20,7 +23,7 @@ namespace EulerGainedMildPasting
 
 open MeasureTheory Set EulerCylinderSobolevSpace EulerSobolevHeat EulerSobolevHeatGenerator
   EulerVolterraConvolution EulerDuhamelDifferentiation EulerTimePathGluing EulerDuhamelPasting
-    EulerGainedMildFormula
+      EulerGainedMildFormula
 open scoped Topology
 
 /-- Applying an actual bounded spatial map commutes with matching-endpoint time pasting. -/
@@ -28,7 +31,7 @@ theorem gluePath_map_apply {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
     [NormedAddCommGroup F] [NormedSpace ℝ F] (A : E →L[ℝ] F)
     (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b)
     (u : C(Icc (0 : ℝ) a, E)) (v : C(Icc (0 : ℝ) b, E))
-    (hmatch : u ⟨a,ha,le_rfl⟩ = v ⟨0,le_rfl,hb⟩) (t : Icc (0 : ℝ) (a+b)) :
+    (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩) (t : Icc (0 : ℝ) (a + b)) :
     A (gluePath a b ha hb u v hmatch t) =
       gluePath a b ha hb (A.compLeftContinuous ℝ (Icc (0 : ℝ) a) u)
         (A.compLeftContinuous ℝ (Icc (0 : ℝ) b) v) (congrArg A hmatch) t := by
@@ -38,25 +41,26 @@ theorem gluePath_map_apply {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Matching actual solutions on adjacent intervals give a genuine gained-derivative mild solution on the union. -/
+/-- Matching actual solutions on adjacent intervals give a genuine gained-derivative mild solution
+on the union. -/
 theorem glue_gained_mild {q : ℕ} (ν : ℝ) (hν : 0 < ν) (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b)
-    (u : C(Icc (0 : ℝ) a, SobolevSpace period (q+1)))
-    (v : C(Icc (0 : ℝ) b, SobolevSpace period (q+1)))
-    (hmatch : u ⟨a,ha,le_rfl⟩ = v ⟨0,le_rfl,hb⟩)
-    (f : C(Icc (0 : ℝ) (a+b), SobolevSpace period q))
+    (u : C(Icc (0 : ℝ) a, SobolevSpace period (q + 1)))
+    (v : C(Icc (0 : ℝ) b, SobolevSpace period (q + 1)))
+    (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩)
+    (f : C(Icc (0 : ℝ) (a + b), SobolevSpace period q))
     (f1 : C(Icc (0 : ℝ) a, SobolevSpace period q))
-    (f2 : C(Icc (0 : ℝ) b, SobolevSpace period q)) (u₀ : SobolevSpace period (q+1))
-    (hF1 : ∀ r ∈ Icc 0 a, extendPath (a+b) (add_nonneg ha hb) f r = extendPath a ha f1 r)
-    (hF2 : ∀ r ∈ Icc 0 b, extendPath (a+b) (add_nonneg ha hb) f (a+r) = extendPath b hb f2 r)
-    (hsolu : ∀ t : Icc (0 : ℝ) a, u t = heatOperator period (q+1) (2*ν*t.val).toNNReal u₀+
+    (f2 : C(Icc (0 : ℝ) b, SobolevSpace period q)) (u₀ : SobolevSpace period (q + 1))
+    (hF1 : ∀ r ∈ Icc 0 a, extendPath (a + b) (add_nonneg ha hb) f r = extendPath a ha f1 r)
+    (hF2 : ∀ r ∈ Icc 0 b, extendPath (a + b) (add_nonneg ha hb) f (a + r) = extendPath b hb f2 r)
+    (hsolu : ∀ t : Icc (0 : ℝ) a, u t = heatOperator period (q+1) (2*ν*t.val).toNNReal u₀ +
       ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (extendPath a ha f1 (t.val-r)))
     (hsolv : ∀ t : Icc (0 : ℝ) b, v t = heatOperator period (q+1) (2*ν*t.val).toNNReal (u
-      ⟨a,ha,le_rfl⟩)+
+        ⟨a,ha,le_rfl⟩) +
       ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (extendPath b hb f2 (t.val-r))) :
     ∀ t : Icc (0 : ℝ) (a+b), gluePath a b ha hb u v hmatch t =
-      heatOperator period (q+1) (2*ν*t.val).toNNReal u₀+
+      heatOperator period (q+1) (2*ν*t.val).toNNReal u₀ +
         ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (extendPath (a+b) (add_nonneg ha hb) f
-          (t.val-r)) := by
+            (t.val-r)) := by
   let ul := (truncateOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) a) u
   let vl := (truncateOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) b) v
   have hml : ul ⟨a,ha,le_rfl⟩ = vl ⟨0,le_rfl,hb⟩ := congrArg (truncateOperator period q) hmatch

@@ -9,13 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerVolumeSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowSobolevBound
 public import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
-public import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FlowL2Transport
+import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
 
 /-! Spatial Sobolev paths for the actual inverse parent flow. Its
 measure preservation, smoothness, derivative bounds and jet continuity
 are all derived from the source deformation and inverse identities. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,7 +39,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
   (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
 
 include hX hYX hXY hYjoint hdet in
 theorem inversePath_volume (t : Icc (0 : ℝ) D.T) :
@@ -47,6 +49,7 @@ theorem inversePath_volume (t : Icc (0 : ℝ) D.T) :
   rw [← EulerPacketVolumeDivergence.operatorMatrix_det]
   exact hdet s x
 
+/-- Tensor path, constructed using `Z.volumeTensorPath`. -/
 def tensorPath (n : ℕ) :
     C(Icc (0 : ℝ) D.T,Lp (Space [×n]→L[ℝ] Space) 2 (volume : Measure Space)) :=
   Z.volumeTensorPath k m (inversePath Y hYjoint)

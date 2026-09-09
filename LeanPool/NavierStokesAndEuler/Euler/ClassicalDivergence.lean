@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+/-! Actual smooth representatives of the closed divergence-free space have pointwise lifted
+divergence zero. -/
 
 @[expose] public section
 
-/-! Actual smooth representatives of the closed divergence-free space have pointwise lifted
-  divergence zero. -/
 
 noncomputable section
 
@@ -23,7 +27,8 @@ open scoped ContDiff Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- A genuine smooth representative of a weakly lifted-divergence-free L² field has zero pointwise lifted divergence. -/
+/-- A genuine smooth representative of a weakly lifted-divergence-free L² field has zero pointwise
+lifted divergence. -/
 theorem divergenceFree_classical_divergence_zero (κ : ℝ) (m : Vector3)
     (u : LiftL2 period) (hu : u ∈ divergenceFreeSpace period κ m)
     (g : LiftDomain period → Vector3)
@@ -45,7 +50,7 @@ theorem divergenceFree_classical_divergence_zero (κ : ℝ) (m : Vector3)
   have hzero := smooth_eq_zero_of_compact_test_integrals period q hq (fun ψ hψc hψ => by
     have hw := weak_divergence_test_integral period κ m hu ψ ⟨hψc,hψ⟩
     have hw' : (∫ y, ∑ i : Fin 3, φ i y * fieldDerivative period (a i) ψ y ∂liftMeasure period) = 0
-      := by
+        := by
       rw [← hw]
       apply integral_congr_ae
       filter_upwards [hrep] with y hy

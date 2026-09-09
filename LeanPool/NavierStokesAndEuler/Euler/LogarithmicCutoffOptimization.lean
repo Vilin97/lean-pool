@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Tactic
-
-@[expose] public section
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-! Optimization of the actual heat-scale estimate used in the
 whole-space logarithmic gradient bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 

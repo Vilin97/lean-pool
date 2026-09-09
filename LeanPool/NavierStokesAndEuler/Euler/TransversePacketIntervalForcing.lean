@@ -10,9 +10,10 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketIntervalData
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimePrecomposition
 
+/-! Actual admissible forcing restriction and the history trace used as forward initial data. -/
+
 @[expose] public section
 
-/-! Actual admissible forcing restriction and the history trace used as forward initial data. -/
 
 noncomputable section
 
@@ -27,6 +28,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {raw : VectorField}
 
+/-- Shifted raw, defined pointwise by `raw (τ+z.1,z.2)`. -/
 def shiftedRaw (τ : ℝ) (raw : VectorField) : VectorField := fun z => raw (τ+z.1,z.2)
 
 namespace Forcing

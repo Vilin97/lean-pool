@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeStateCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonBaseContext
 
-@[expose] public section
-
 /-!
 # Naturality of the actual common-index temporal state update
 
@@ -18,6 +16,9 @@ All equalities are on full radial and free-torus fibers.  The angular inverse,
 stream construction, retained alias and recomputed pressure are the literal
 operators used by `VariableGaugeMean.temporalStageState`.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.TemporalStateCoherence
 
@@ -27,6 +28,7 @@ open Set Function Filter
 open scoped ContDiff Topology
 open PhysicalResidualNaturality GaugeStateCoherence
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
 
 variable {S T : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
@@ -173,6 +175,7 @@ theorem streamBeta_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
 
 /-! ## The actual common-index inverse and its normalization -/
 
+/-- Clock, given by `ChartScales.Tg ^ i * ChartScales.Q n ^ (1+h)`. -/
 noncomputable def clock (h : ℝ) (n i : ℕ) : ℝ :=
   ChartScales.Tg ^ i * ChartScales.Q n ^ (1+h)
 
@@ -180,7 +183,7 @@ theorem clock_pos (h : ℝ) (n i : ℕ) : 0 < clock h n i :=
   mul_pos (pow_pos ChartScales.Tg_pos _) (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _)
 
 theorem clock_factor (h : ℝ) (n i nr ir k : ℕ) (c l : ℝ)
-    (hclock : clock h n i * ChartScales.Tg ^ k = (c*l) * clock h nr ir) :
+    (hclock : clock h n i * ChartScales.Tg ^ k = (c * l) * clock h nr ir) :
     (clock h n i)⁻¹ * (ChartScales.Tg ^ k)⁻¹ * (c*c*l) = c * (clock h nr ir)⁻¹ := by
   field_simp [(clock_pos h n i).ne', (clock_pos h nr ir).ne',
     (pow_pos ChartScales.Tg_pos k).ne']
@@ -190,7 +193,7 @@ theorem clock_factor (h : ℝ) (n i nr ir k : ℕ) (c l : ℝ)
 
 theorem temporalAtIndex_coverPull (h : ℝ) (n i nr ir k : ℕ) (c l : ℝ)
     (P : S →L[ℝ] T)
-    (hclock : clock h n i * ChartScales.Tg ^ k = (c*l) * clock h nr ir)
+    (hclock : clock h n i * ChartScales.Tg ^ k = (c * l) * clock h nr ir)
     {f : PressureStream.Lift T → ℝ} (hf : ContDiff ℝ ∞ f)
     (hp : PressureStream.TorusPeriodicLift f) (z : PressureStream.Lift S) :
     MeanChartCompatibility.temporalAtIndex h n i
@@ -205,8 +208,8 @@ theorem temporalAtIndex_coverPull (h : ℝ) (n i nr ir k : ℕ) (c l : ℝ)
   calc
     _ = -((clock h n i)⁻¹ * (ChartScales.Tg ^ k)⁻¹ * (c*c*l)) *
         TemporalMeanUpdate.temporalInverse (TemporalMeanUpdate.centered f)
-          (MeanChartCompatibility.chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z) :=
-            by ring
+          (MeanChartCompatibility.chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z) := by
+              ring
     _ = _ := by rw [clock_factor h n i nr ir k c l hclock]; dsimp only [clock]; ring
 
 section FiniteParameters
@@ -216,10 +219,10 @@ variable [FiniteDimensional ℝ S] [FiniteDimensional ℝ T]
 omit [FiniteDimensional ℝ S] [FiniteDimensional ℝ T] in
 theorem temporalAtIndex_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     (h : ℝ) (n i nr ir : ℕ)
-    (hclock : clock h n i * ChartScales.Tg ^ k = (c*l) * clock h nr ir)
+    (hclock : clock h n i * ChartScales.Tg ^ k = (c * l) * clock h nr ir)
     {V : Set S} {U : Set T} (hU : IsOpen U) (hmap : MapsTo P V U)
     {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (c*c*l) f fr)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (c * c * l) f fr)
     (hf : ContDiffOn ℝ ∞ fr (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U fr) :
     ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c
@@ -280,11 +283,11 @@ variable [FiniteDimensional ℝ S] [FiniteDimensional ℝ T]
   (hg : GaugeOn V l P.toContinuousLinearMap k g gr n nr)
   (H : StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l s r n nr)
   (G : ContextOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l C Cr n nr)
-  (hclock : clock h n (index n) * ChartScales.Tg ^ k = (c*l) * clock h nr (indexr nr))
+  (hclock : clock h n (index n) * ChartScales.Tg ^ k = (c * l) * clock h nr (indexr nr))
   (hfz : ContDiffOn ℝ ∞ (r.axialResidual Cr nr) (PhysicalMeanDomain.slowDomain U))
   (hpz : PhysicalMeanDomain.PeriodicOn U (r.axialResidual Cr nr))
   (hsz : VariableGaugeMean.SupportedGauge gr.radial.inner gr.radial.outer (gr.length nr) U
-    (r.axialResidual Cr nr))
+      (r.axialResidual Cr nr))
 
 include hV hU hmap ha hd hg H G hclock hfz hpz hsz
 
@@ -311,7 +314,7 @@ theorem temporalPotential_on :
 
 variable (axial : S × Plane) (axialr : T × Plane)
   (haxial : (P.toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap k)) (C.operators.epsilon
-    n • axial) =
+      n • axial) =
     l • (Cr.operators.epsilon nr • axialr))
   (hfθ : ContDiffOn ℝ ∞ (r.thetaResidual Cr nr) (PhysicalMeanDomain.slowDomain U))
   (hpθ : PhysicalMeanDomain.PeriodicOn U (r.thetaResidual Cr nr))
@@ -345,7 +348,7 @@ theorem temporalAxialDifference_on :
   exact hD.sub hI.axial
 
 variable (hfast : chartEquiv l hl.ne' P k (C.operators.fastCoefficient n • C.operators.vT) =
-  (c*l) • (Cr.operators.fastCoefficient nr • Cr.operators.vT))
+  (c * l) • (Cr.operators.fastCoefficient nr • Cr.operators.vT))
 
 include hfast
 
@@ -386,7 +389,7 @@ theorem temporalBeforePressure_on :
     simpa only [add_zero] using H.pressure z hz
   · intro z hz theta i
     change s.oscillation n (z,theta) i + 0 = c * (r.oscillation nr (chartEquiv l hl.ne' P k
-      z,theta) i + 0)
+        z,theta) i + 0)
     simpa only [add_zero] using H.oscillation z hz theta i
   · intro z hz theta
     change s.oscillatoryPressure n (z,theta) + 0 =
@@ -402,10 +405,10 @@ theorem temporalBeforePressure_on :
     simpa only [add_zero] using H.gaussian z hz theta i
   · intro z hz theta i
     change s.errors.aliasError n (z,theta) i + VariableGaugeMean.temporalAliasState g h index C s n
-      (z,theta) i =
+        (z,theta) i =
       (c*c*l) * (r.errors.aliasError nr (chartEquiv l hl.ne' P k z,theta) i +
         VariableGaugeMean.temporalAliasState gr h indexr Cr r nr (chartEquiv l hl.ne' P k z,theta)
-          i)
+            i)
     rw [H.aliasError z hz theta i, hA z hz theta i, mul_add]
 
 omit [FiniteDimensional ℝ S] in
@@ -414,7 +417,7 @@ pressure. The analytic conditions concern the source supplied to that pressure
 integral; output coherence is derived. -/
 theorem temporalStage_on
     (hfpost : ContDiffOn ℝ ∞ ((VariableGaugeMean.temporalStageState gr h indexr axialr Cr r).gr Cr
-      nr)
+        nr)
       (PhysicalMeanDomain.slowDomain U))
     (hppost : PhysicalMeanDomain.PeriodicOn U
       ((VariableGaugeMean.temporalStageState gr h indexr axialr Cr r).gr Cr nr))
@@ -436,7 +439,7 @@ theorem temporalStage_gr_eq (g : VariableGaugeMean.GaugeData S) (h : ℝ) (index
     (VariableGaugeMean.temporalStageState g h index axial C s).gr C =
       MeanIncrementBounds.gr C.operators C.base
         (MeanIncrementBounds.updated s.mean (VariableGaugeMean.temporalIncrementState g h index
-          axial C s))
+            axial C s))
         s.covariance := by
   change MeanIncrementBounds.gr _ _ _
     (CorrectionState.bilinearCovariance (s.oscillation + 0) (s.oscillation + 0)) = _
@@ -445,7 +448,7 @@ theorem temporalStage_gr_eq (g : VariableGaugeMean.GaugeData S) (h : ℝ) (index
 
 /-! ## Actual similarity bands and common graph operators -/
 
-theorem clock_band_transport (h : ℝ) (n m i ir k : ℕ) (hi : i+k = ir) :
+theorem clock_band_transport (h : ℝ) (n m i ir k : ℕ) (hi : i + k = ir) :
     clock h n i * ChartScales.Tg ^ k =
       (bandVelocityScale h n m * bandScale n m) * clock h m ir := by
   have hu : bandVelocityScale h n m * bandScale n m =
@@ -459,6 +462,7 @@ theorem clock_band_transport (h : ℝ) (n m i ir k : ℕ) (hi : i+k = ir) :
     Real.div_rpow (ChartScales.Q_pos n).le (ChartScales.Q_pos m).le]
   field_simp [(Real.rpow_pos_of_pos (ChartScales.Q_pos m) (1+h)).ne']
 
+/-- Axial direction, given by `((0,1),0)`. -/
 noncomputable def axialDirection : Plane × Plane := ((0,1),0)
 
 theorem band_axial_scalar (h : ℝ) (n m : ℕ) :
@@ -489,7 +493,7 @@ theorem band_temporalVector_transport (h : ℝ) (n m k : ℕ) :
   simp
 
 theorem common_fast_transport (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b)
-    (n m k : ℕ) (hi : index n+k = index m) :
+    (n m k : ℕ) (hi : index n + k = index m) :
     bandChartEquiv h n m k ((CommonBaseContext.operators h index a b hab).fastCoefficient n •
       (CommonBaseContext.operators h index a b hab).vT) =
       (bandVelocityScale h n m * bandScale n m) •
@@ -505,8 +509,8 @@ theorem common_fast_transport (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab :
 section Similarity
 
 variable {h d a b M ca cb : ℝ}
-  (hh : 0 < h) (hh1 : h < 1/2) (ha : 0 < a) (hab : a < b) (hd : 0 < d) (hcab : ca < cb)
-  (index : ℕ → ℕ) (n m k : ℕ) (hi : index n+k = index m)
+  (hh : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hab : a < b) (hd : 0 < d) (hcab : ca < cb)
+  (index : ℕ → ℕ) (n m k : ℕ) (hi : index n + k = index m)
   {V U : Set Plane} (hV : IsOpen V) (hU : IsOpen U) (htime : ∀ s ∈ V, 0 < s.1)
   (hmap : MapsTo (bandSlowEquiv h n m) V U)
   (C Cr : CorrectionState.Context (PressureStream.Lift Plane))
@@ -519,8 +523,8 @@ variable {h d a b M ca cb : ℝ}
     (bandVelocityScale h n m) (bandScale n m) C Cr n m)
   (hfz : ContDiffOn ℝ ∞ (r.axialResidual Cr m) (PhysicalMeanDomain.slowDomain U))
   (hpz : PhysicalMeanDomain.PeriodicOn U (r.axialResidual Cr m))
-  (hsz : VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength (2*h)) U (r.axialResidual
-    Cr m))
+  (hsz : VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength (2 * h)) U (r.axialResidual
+      Cr m))
   (hfθ : ContDiffOn ℝ ∞ (r.thetaResidual Cr m) (PhysicalMeanDomain.slowDomain U))
   (hpθ : PhysicalMeanDomain.PeriodicOn U (r.thetaResidual Cr m))
 
@@ -530,69 +534,70 @@ include hh hh1 ha hd hi hV hU htime hmap hC hCr H G hfz hpz hsz hfθ hpθ
 theorem similarity_temporalFields_on :
     TripleOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv h n m k) (bandVelocityScale h n m)
       (VariableGaugeMean.temporalIncrementState (VariableGaugeMean.similarityGauge h d a b M hab
-        index) h index axialDirection C s)
+          index) h index axialDirection C s)
       (VariableGaugeMean.temporalIncrementState (VariableGaugeMean.similarityGauge h d a b M hab
-        index) h index axialDirection Cr r) n m ∧
+          index) h index axialDirection Cr r) n m ∧
     ∀ z ∈ PhysicalMeanDomain.slowDomain V, ∀ theta i,
       VariableGaugeMean.temporalAliasState (VariableGaugeMean.similarityGauge h d a b M hab index)
-        h index C s n (z,theta) i =
+          h index C s n (z,theta) i =
       (bandVelocityScale h n m * bandVelocityScale h n m * bandScale n m) *
         VariableGaugeMean.temporalAliasState (VariableGaugeMean.similarityGauge h d a b M hab
-          index) h index Cr r m (bandChartEquiv h n m k z,theta) i := by
+            index) h index Cr r m (bandChartEquiv h n m k z,theta) i := by
   have hg := similarityGaugeOn hh hh1 d a b M hab index n m k hi htime
   have hclock := clock_band_transport h n m (index n) (index m) k hi
   have haxial : ((bandSlowEquiv h n m).toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap
-    k))
+      k))
       (C.operators.epsilon n • axialDirection) =
         bandScale n m • (Cr.operators.epsilon m • axialDirection) := by
     rw [hC, hCr]
     exact band_axial_transport h n m k
   have hfast : bandChartEquiv h n m k (C.operators.fastCoefficient n • C.operators.vT) =
       (bandVelocityScale h n m * bandScale n m) • (Cr.operators.fastCoefficient m •
-        Cr.operators.vT) := by
+          Cr.operators.vT) := by
     rw [hC, hCr]
     exact common_fast_transport h index ca cb hcab n m k hi
   exact ⟨temporalIncrement_on (bandScale_pos n m) (bandSlowEquiv h n m) k hV hU hmap
     (VariableGaugeMean.similarityGauge h d a b M hab index) (VariableGaugeMean.similarityGauge h d
-      a b M hab index) C Cr s r h index index n m ha hd hg H G hclock hfz hpz hsz
+        a b M hab index) C Cr s r h index index n m ha hd hg H G hclock hfz hpz hsz
     axialDirection axialDirection haxial hfθ hpθ,
     temporalAliasState_on (bandScale_pos n m) (bandSlowEquiv h n m) k hV hU hmap
     (VariableGaugeMean.similarityGauge h d a b M hab index) (VariableGaugeMean.similarityGauge h d
-      a b M hab index) C Cr s r h index index n m ha hd hg H G hclock hfz hpz hsz
+        a b M hab index) C Cr s r h index index n m ha hd hg H G hclock hfz hpz hsz
     axialDirection axialDirection haxial hfθ hpθ hfast⟩
 
 theorem similarity_temporalStage_on
     (hfpost : ContDiffOn ℝ ∞ ((VariableGaugeMean.temporalStageState
-      (VariableGaugeMean.similarityGauge h d a b M hab index) h index axialDirection Cr r).gr Cr m)
+        (VariableGaugeMean.similarityGauge h d a b M hab index) h index axialDirection Cr r).gr Cr
+            m)
       (PhysicalMeanDomain.slowDomain U))
     (hppost : PhysicalMeanDomain.PeriodicOn U
       ((VariableGaugeMean.temporalStageState (VariableGaugeMean.similarityGauge h d a b M hab
-        index) h index axialDirection Cr r).gr Cr m))
-    (hspost : VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength (2*h)) U
+          index) h index axialDirection Cr r).gr Cr m))
+    (hspost : VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength (2 * h)) U
       ((VariableGaugeMean.temporalStageState (VariableGaugeMean.similarityGauge h d a b M hab
-        index) h index axialDirection Cr r).gr Cr m)) :
+          index) h index axialDirection Cr r).gr Cr m)) :
     StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv h n m k)
       (bandVelocityScale h n m) (bandScale n m)
       (VariableGaugeMean.temporalStageState (VariableGaugeMean.similarityGauge h d a b M hab index)
-        h index axialDirection C s)
+          h index axialDirection C s)
       (VariableGaugeMean.temporalStageState (VariableGaugeMean.similarityGauge h d a b M hab index)
-        h index axialDirection Cr r) n m := by
+          h index axialDirection Cr r) n m := by
   have hg := similarityGaugeOn hh hh1 d a b M hab index n m k hi htime
   have hclock := clock_band_transport h n m (index n) (index m) k hi
   have haxial : ((bandSlowEquiv h n m).toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap
-    k))
+      k))
       (C.operators.epsilon n • axialDirection) =
         bandScale n m • (Cr.operators.epsilon m • axialDirection) := by
     rw [hC, hCr]
     exact band_axial_transport h n m k
   have hfast : bandChartEquiv h n m k (C.operators.fastCoefficient n • C.operators.vT) =
       (bandVelocityScale h n m * bandScale n m) • (Cr.operators.fastCoefficient m •
-        Cr.operators.vT) := by
+          Cr.operators.vT) := by
     rw [hC, hCr]
     exact common_fast_transport h index ca cb hcab n m k hi
   exact temporalStage_on (bandScale_pos n m) (bandSlowEquiv h n m) k hV hU hmap
     (VariableGaugeMean.similarityGauge h d a b M hab index) (VariableGaugeMean.similarityGauge h d
-      a b M hab index) C Cr s r h index index n m ha hd hg H G hclock hfz hpz hsz
+        a b M hab index) C Cr s r h index index n m ha hd hg H G hclock hfz hpz hsz
     axialDirection axialDirection haxial hfθ hpθ hfast hfpost hppost hspost
 
 end Similarity

@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderAngularRegularity
+
+/-! Literal angular averaging preserves the joint odd parity of a genuine periodic field. -/
 
 @[expose] public section
 
-/-! Literal angular averaging preserves the joint odd parity of a genuine periodic field. -/
 
 noncomputable section
 

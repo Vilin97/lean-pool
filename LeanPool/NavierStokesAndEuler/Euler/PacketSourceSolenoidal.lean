@@ -10,14 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePiola
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderMeanSolenoidal
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJetAssembly
 
-@[expose] public section
-
 /-!
 # The actual finite source packet satisfies the lifted L² constraint
 
 The terminal corrector is retained in the finite assembly. Each genuine Piola
 pair and every inverse-frame mean belongs to the same closed constraint space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,6 +33,9 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (D : EulerTransversePacketProvider.Data U) (hT : M.T = D.T)
   (I Iprimary : EulerTransversePacketProvider.InitialData P D)
 
+/-- Source packet pullback field as an element of `Field P M.T (fun z => (sourceOperators P M D
+I).inverseFrame z (fieldSum (N+1) κ (assembledVelocity N (sourceProfiles P M D I Iprimary))
+z))`. -/
 def sourcePacketPullbackField (N : ℕ) (κ : ℝ) :
     Field P M.T (fun z => (sourceOperators P M D I).inverseFrame z
       (fieldSum (N+1) κ (assembledVelocity N (sourceProfiles P M D I Iprimary)) z)) := by

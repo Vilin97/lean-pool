@@ -6,19 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # The actual slot phase and its material defect
@@ -30,24 +20,38 @@ The primary material operator uses the manuscript's backward-time convention
 `∂v - ε ∂T` from equation (25).
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PhaseCalculus
 
 open scoped ContDiff
 
+/-- Slow: an abbreviation for `ℝ × (ℝ × ℝ)`. -/
 abbrev Slow := ℝ × (ℝ × ℝ)
+/-- Slot: an abbreviation for `Slow × (ℝ × ℝ)`. -/
 abbrev Slot := Slow × (ℝ × ℝ)
+/-- Vec3: an abbreviation for `EuclideanSpace ℝ (Fin 3)`. -/
 abbrev Vec3 := EuclideanSpace ℝ (Fin 3)
 
+/-- E R, given by `((1, (0, 0)), (0, 0))`. -/
 def eR : Slot := ((1, (0, 0)), (0, 0))
+/-- E Z, given by `((0, (1, 0)), (0, 0))`. -/
 def eZ : Slot := ((0, (1, 0)), (0, 0))
+/-- E T, given by `((0, (0, 1)), (0, 0))`. -/
 def eT : Slot := ((0, (0, 1)), (0, 0))
+/-- E theta, given by `((0, (0, 0)), (1, 0))`. -/
 def eTheta : Slot := ((0, (0, 0)), (1, 0))
+/-- E V, given by `((0, (0, 0)), (0, 1))`. -/
 def eV : Slot := ((0, (0, 0)), (0, 1))
 
+/-- Slow R, given by `fderiv ℝ F s (1, (0, 0))`. -/
 def slowR (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (1, (0, 0))
+/-- Slow Z, given by `fderiv ℝ F s (0, (1, 0))`. -/
 def slowZ (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (0, (1, 0))
+/-- Slow T, given by `fderiv ℝ F s (0, (0, 1))`. -/
 def slowT (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (0, (0, 1))
 
 /-- Equation (26). The axial term `(pz/ε)*Z` equals `pz*Z/ε`. -/
@@ -151,6 +155,7 @@ def signedMaterialOp (σ ε : ℝ) (b F G : Slow → ℝ) (f : Slot → ℝ) (q 
     b q.1 * fderiv ℝ f q eR + (baseV F q.1 / q.1.1) * fderiv ℝ f q eTheta +
       ε * G q.1 * fderiv ℝ f q eZ
 
+/-- Backward material op, given by `signedMaterialOp (-1) ε b F G f q`. -/
 def backwardMaterialOp (ε : ℝ) (b F G : Slow → ℝ) (f : Slot → ℝ) (q : Slot) : ℝ :=
   signedMaterialOp (-1) ε b F G f q
 
@@ -168,7 +173,7 @@ theorem signedMaterialOp_phase (σ ε p pz x0 : ℝ) (b F G : Slow → ℝ) (q :
     phase_dR ε p pz x0 F G q hF hG, phase_dTheta ε p pz x0 F G q hF hG,
     phase_dZ ε p pz x0 F G q hF hG]
   unfold baseV
-  field_simp [hε, ne_of_gt hR] ; ring
+  field_simp [hε, ne_of_gt hR]; ring
 
 /-- The manuscript convention `t* = ∂v - ε∂T` gives the MINUS sign
 inside the slow-time part of the bracket (equivalently a positive term
@@ -185,6 +190,7 @@ theorem backwardMaterialOp_phase (ε p pz x0 : ℝ) (b F G : Slow → ℝ) (q : 
   rw [signedMaterialOp_phase (-1) ε p pz x0 b F G q hε hR hF hG]
   ring
 
+/-- Angular shift, given by `(q.1, (q.2.1 + h, q.2.2))`. -/
 def angularShift (h : ℝ) (q : Slot) : Slot := (q.1, (q.2.1 + h, q.2.2))
 
 theorem phase_angularShift (ε p pz x0 h : ℝ) (F G : Slow → ℝ) (q : Slot) :

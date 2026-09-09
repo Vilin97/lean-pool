@@ -6,15 +6,12 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.TangentCone.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.FDeriv.Extend
-public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 public import Mathlib.Topology.ExtendFrom
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialBorelExtension
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-!
 # A dimension-independent smooth extension of a bounded-jet open strip
@@ -24,6 +21,9 @@ Frechet derivatives, using completeness and the mean-value theorem. The
 normal-jet gluing argument is generalized from `SpacetimeGluing`; no existing
 project source is altered and no extension or closed-side regularity is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,6 +35,7 @@ namespace NavierStokes.GenericEndpointExtension.Gluing
 variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [FiniteDimensional ℝ X]
 
+/-- Time vector, given by `(1, 0)`. -/
 noncomputable def timeVector : (ℝ × X) := (1, 0)
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -45,9 +46,12 @@ private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Directional, given by `fderivWithin ℝ f s z v`. -/
 noncomputable def directional (s : Set (ℝ × X)) (f : (ℝ × X) → V) (v : (ℝ × X))
     (z : (ℝ × X)) : V := fderivWithin ℝ f s z v
 
+/-- Normal iter as an element of `ℕ → (ℝ × X) → V | 0 => f | n + 1 => directional s (normalIter
+s f n) timeVector`. -/
 noncomputable def normalIter (s : Set (ℝ × X)) (f : (ℝ × X) → V) : ℕ → (ℝ × X) → V
   | 0 => f
   | n + 1 => directional s (normalIter s f n) timeVector
@@ -85,7 +89,9 @@ theorem directional_commute {s : Set (ℝ × X)} {f : (ℝ × X) → V}
   simp only [fderivWithin_const_apply, ContinuousLinearMap.comp_zero, zero_add,
     ContinuousLinearMap.flip_apply]
   exact ((hf z hz).isSymmSndFDerivWithinAt
-    (by simp [minSmoothness_of_isRCLikeNormedField])
+    (by
+        rw [minSmoothness_of_isRCLikeNormedField]; exact ENat.natCast_le_of_coe_top_le_withTop
+            le_rfl 2)
     hs (hregular hz) hz).eq w v
 
 omit [FiniteDimensional ℝ X] in
@@ -183,7 +189,9 @@ theorem normal_match_directional {s t : Set (ℝ × X)} {f g : (ℝ × X) → V}
     (normalIter_contDiffOn hg ht n) hBs hBt (hmatch n) (hmatch (n + 1)) x
   exact congrArg (fun A : (ℝ × X) →L[ℝ] V => A v) hD
 
+/-- Past, given by `Iic T ×ˢ univ`. -/
 noncomputable def past (T : ℝ) : Set (ℝ × X) := Iic T ×ˢ univ
+/-- Future, given by `Ici T ×ˢ univ`. -/
 noncomputable def future (T : ℝ) : Set (ℝ × X) := Ici T ×ˢ univ
 
 omit [FiniteDimensional ℝ X] in
@@ -530,7 +538,7 @@ theorem closureJet_hasFDerivWithinAt {s : Set Y} {f : Y → V}
     (fun y hy => (closureJet_continuousOn hs hc hf hb n y hy).mono subset_closure)
   let A : (Y[×(n + 1)]→L[ℝ] V) →L[ℝ] (Y →L[ℝ] (Y[×n]→L[ℝ] V)) :=
     (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => Y)
-      V).toContinuousLinearEquiv.toContinuousLinearMap
+        V).toContinuousLinearEquiv.toContinuousLinearMap
   have hlim := A.continuous.continuousAt.tendsto.comp (closureJet_limit hs hc hf hb (n + 1) hx)
   apply hlim.congr'
   filter_upwards [self_mem_nhdsWithin] with y hy
@@ -571,7 +579,9 @@ section Strip
 variable {X V : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [FiniteDimensional ℝ X] [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V]
 
+/-- Open strip, given by `Ioo (-1 : ℝ) 1 ×ˢ univ`. -/
 def openStrip : Set (ℝ × X) := Ioo (-1 : ℝ) 1 ×ˢ univ
+/-- Closed strip, given by `Icc (-1 : ℝ) 1 ×ˢ univ`. -/
 def closedStrip : Set (ℝ × X) := Icc (-1 : ℝ) 1 ×ˢ univ
 
 omit [NormedSpace ℝ X] [FiniteDimensional ℝ X] in
@@ -667,6 +677,7 @@ theorem lowerClamp_mem {t : ℝ} (ht : t ≤ 1) : lowerClamp t ∈ Icc (-1 : ℝ
     · rw [lowerClamp_eq (by linarith)]
       exact ⟨hgt.le, ht⟩
 
+/-- Clamped, given by `f (lowerClamp z.1, z.2)`. -/
 noncomputable def clamped (f : ℝ × X → V) (z : ℝ × X) : V :=
   f (lowerClamp z.1, z.2)
 
@@ -696,6 +707,7 @@ theorem Gluing.smoothExtension_zero_fiber {T : ℝ} {f : ℝ × X → V}
     simp only [iteratedDerivWithin_eq_iteratedFDerivWithin,
       iteratedFDerivWithin_fun_zero, Pi.zero_apply, _root_.zero_apply]
 
+/-- Upper closed, given by `Gluing.smoothExtension 1 (clamped f) (clamped_contDiffOn hf)`. -/
 noncomputable def upperClosed (f : ℝ × X → V) (hf : ContDiffOn ℝ ∞ f closedStrip) :
     ℝ × X → V := Gluing.smoothExtension 1 (clamped f) (clamped_contDiffOn hf)
 
@@ -723,6 +735,7 @@ theorem upperClosed_add_period {f : ℝ × X → V} (hf : ContDiffOn ℝ ∞ f c
   Gluing.smoothExtension_add_period (clamped_contDiffOn hf) p
     (fun _ hs y => hp _ (lowerClamp_mem hs) y) t x
 
+/-- Reflect, given by `f (-z.1, z.2)`. -/
 noncomputable def reflect (f : ℝ × X → V) (z : ℝ × X) : V := f (-z.1, z.2)
 
 omit [FiniteDimensional ℝ X] [CompleteSpace V] in
@@ -738,6 +751,7 @@ theorem reflect_contDiffOn {f : ℝ × X → V} (hf : ContDiffOn ℝ ∞ f close
   change -1 ≤ -z.1 ∧ -z.1 ≤ 1
   constructor <;> linarith [hz.1.1, hz.1.2]
 
+/-- Lower closed, given by `reflect (upperClosed (reflect f) (reflect_contDiffOn hf))`. -/
 noncomputable def lowerClosed (f : ℝ × X → V) (hf : ContDiffOn ℝ ∞ f closedStrip) :
     ℝ × X → V := reflect (upperClosed (reflect f) (reflect_contDiffOn hf))
 

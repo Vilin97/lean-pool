@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionData
 
-@[expose] public section
-
 /-! The zero-history initialized approximation satisfies the lifted divergence
 constraint for an actual volume-preserving source deformation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -46,7 +47,7 @@ theorem forwardInitializedCorrectionData_divergence (N : ℕ) (hN : 1 ≤ N) (k 
     (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
     (t : Icc (0 : ℝ) D.T) :
     (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k hk).approximation.field t
-      ∈
+        ∈
       divergenceFreeSpace period k⁻¹ D.m₀ := by
   let tm : Icc (0 : ℝ) M.T := ⟨t.val,by simpa only [hTime] using t.property⟩
   let G := forwardInitializedPacketField M D hTime δ hδ ξ hs α N k⁻¹

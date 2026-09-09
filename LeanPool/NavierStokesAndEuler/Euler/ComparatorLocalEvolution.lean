@@ -7,14 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ComparatorEvolutionIdentification
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalCompactVorticity
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorUniformSpatialJets
 public import LeanPool.NavierStokesAndEuler.Euler.DivCurlTensorRecovery
-public import LeanPool.NavierStokesAndEuler.Euler.CompactVorticityTimeUpgrade
-public import LeanPool.NavierStokesAndEuler.Euler.CompactProjectedEulerLaw
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+import LeanPool.NavierStokesAndEuler.Euler.CompactProjectedEulerLaw
+import LeanPool.NavierStokesAndEuler.Euler.CompactVorticityTimeUpgrade
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalCompactVorticity
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorUniformSpatialJets
 
 /-!
 # The concrete local Comparator-to-development conversion
@@ -24,6 +23,9 @@ Elliptic recovery gives all spatial L² derivatives on that interval, and
 the genuine Euler pairings against dense compact solenoidal tests provide
 the time regularity needed for an ordinary Euler evolution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,7 +44,7 @@ def recoveredVelocity (h : EulerExistenceAndSmoothnessR3 u₀ v p)
     (T : ℝ) (K : Set Space) (hK : IsCompact K)
     (hsupport : ∀ t ∈ Icc (0 : ℝ) T, tsupport (vectorCurl (v · t)) ⊆ K) :
     Icc (0 : ℝ) T → SmoothL2Field Space := fun t =>
-  smoothL2Field_of_curl_compact (v · (t : ℝ))
+  smoothL2FieldOfCurlCompact (v · (t : ℝ))
     (h.velocity_contDiff t t.property.1)
     (h.velocity_memLp t t.property.1)
     (fun x => h.div_free x t t.property.1)

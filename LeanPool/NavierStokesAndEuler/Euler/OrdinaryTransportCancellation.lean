@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
 
 /-! The exact ordinary transport energy cancellation on noncompact
 smooth L² fields. Products and all required pairings are actual L²/L¹ objects. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,7 +23,7 @@ open MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerL
   EulerLpTranslation.SmoothL2Field EulerMeanSolenoidal EulerVectorCalculus Finset
 open scoped ContDiff
 
-theorem field_toLp_zero (A : SmoothL2Field Space) (hA : A.field=0) : A.toLp=0 := by
+theorem field_toLp_zero (A : SmoothL2Field Space) (hA : A.field = 0) : A.toLp=0 := by
   apply Lp.ext
   filter_upwards [A.toLp_ae,Lp.coeFn_zero Space 2 (volume : Measure Space)] with x ha hz
   rw [ha,hA,hz]
@@ -50,7 +51,7 @@ theorem coordinate_directional_field (A : SmoothL2Field Space) (i : Fin 3) (v x 
   exact fderiv_coordinate A.field x (A.smooth.differentiable (by simp) x) i v
 
 theorem advection_inner_zero (A B : SmoothL2Field Space)
-    (hdiv : ∀ x, divergence A.field x=0) :
+    (hdiv : ∀ x, divergence A.field x = 0) :
     ⟪(advectionField A B).toLp,B.toLp⟫_ℝ=0 := by
   let a := fun i : Fin 3 => mapField (EuclideanSpace.proj i) A
   let c := fun i : Fin 3 => scalarProduct ((a i).directionalField (axis i)) B
@@ -67,7 +68,7 @@ theorem advection_inner_zero (A B : SmoothL2Field Space)
   have hp (i : Fin 3) := scalar_transport_pair (a i) B (axis i)
   have hsum := congrArg (fun f : Fin 3 → ℝ => ∑ i, f i) (funext hp)
   simp only [← Finset.mul_sum,Finset.sum_neg_distrib] at hsum
-  change 2*(∑ i : Fin 3, ⟪(coordinateProduct i A (B.directionalField (axis i))).toLp,B.toLp⟫_ℝ)=
+  change 2*(∑ i : Fin 3, ⟪(coordinateProduct i A (B.directionalField (axis i))).toLp,B.toLp⟫_ℝ) =
     -(∑ i : Fin 3, ⟪(c i).toLp,B.toLp⟫_ℝ) at hsum
   rw [hc] at hsum
   rw [advectionField,toLp_sumField,sum_inner]

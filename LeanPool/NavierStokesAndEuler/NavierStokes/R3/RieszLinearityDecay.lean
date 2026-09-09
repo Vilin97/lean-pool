@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
-public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
+import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
 
 /-!
 # Linearity and decay of Riesz test operators
@@ -17,6 +16,9 @@ public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
 The integrable Fourier multipliers defining the test operators respect complex
 linear combinations. Their inverse Fourier integrals vanish at spatial infinity.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficientTime
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-! Genuine time derivatives for the full-cylinder rectangular products. -/
 
 @[expose] public section
 
-/-! Genuine time derivatives for the full-cylinder rectangular products. -/
 
 noncomputable section
 
@@ -24,16 +28,28 @@ variable (P : ℝ) [Fact (0 < P)]
   {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
   (T : ℝ) (hT : 0 ≤ T)
-  (A A₁ : C(Icc (0 : ℝ) T,Space →ᵇ E →L[ℝ] F))
+  (A A₁ : C(Icc (0 : ℝ) T, Space →ᵇ E →L[ℝ] F))
 
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P F) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderFullTime1 : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderFullTime2 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderFullTime3 : NormedAddCommGroup (Space →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderFullTime4 : NormedSpace ℝ (Space →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderFullTime5 : NormedAddCommGroup (CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderFullTime6 : NormedSpace ℝ (CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderFullTime7 : NormedAddCommGroup (CylinderL2 P F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P F)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderFullTime8 : NormedSpace ℝ (CylinderL2 P F) := inferInstance
 
 variable
   (hA : ∀ t ∈ Icc (0 : ℝ) T, ∀ x : Space,
@@ -58,7 +74,7 @@ theorem fullPath_hasDerivWithinAt (t : Icc (0 : ℝ) T) :
   rwa [projIcc_of_mem hT t.property] at hd
 
 theorem fullProduct_hasDerivWithinAt
-    (u u₁ : C(Icc (0 : ℝ) T,CylinderL2 P E))
+    (u u₁ : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hu : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT u) (u₁ t) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) :

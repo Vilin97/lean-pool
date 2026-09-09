@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionSourceData
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetParity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 
 /-! The source deformation symmetries imply the literal parity of the
 correction coefficients, including the odd differentiated quadratic term. -/
+
+@[expose] public section
+
 
 noncomputable section
 

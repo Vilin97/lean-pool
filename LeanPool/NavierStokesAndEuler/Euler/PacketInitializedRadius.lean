@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryCommonRadius
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryCommonRadius
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! One source-dependent radius accommodates the literal terminal wave, the
 primary endpoint solve, all later linear solves, and every recursive grade. -/
+
+@[expose] public section
+
 
 noncomputable section
 

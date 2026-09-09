@@ -7,26 +7,26 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevMetricTransport
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
+
+/-! Genuine time-continuous transport operators at the H¹→L² metric-energy level. -/
 
 @[expose] public section
 
-/-! Genuine time-continuous transport operators at the H¹→L² metric-energy level. -/
 
 noncomputable section
 
 namespace EulerTransportL2Time
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerSobolevMetricTransport
-  EulerSobolevL2Product EulerSobolevTransport EulerTimeLp EulerVolterraConvolution
+    EulerSobolevMetricTransport
+  EulerSobolevL2Product EulerSobolevTransport
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- A named local normed-group instance for the actual Sobolev scale. -/
 local instance transportL2Group (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
 /-- A named local real normed-space instance for the actual Sobolev scale. -/
 local instance transportL2Space (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
@@ -38,10 +38,11 @@ def transportL2Bilinear {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3) :
     (ContinuousLinearMap.id ℝ (SobolevSpace period q))
     ((valueOperator period 0).comp (derivativeOperator period 0 i))
 
-/-- This actual bilinear map is exactly the transport operator used in the proved metric cancellation. -/
+/-- This actual bilinear map is exactly the transport operator used in the proved metric
+cancellation. -/
 theorem transportL2Bilinear_apply {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
     (z : SobolevSpace period q) : transportL2Bilinear period hq κ m z = transportOperator period hq
-      κ m z := by
+        κ m z := by
   apply ContinuousLinearMap.ext
   intro e
   simp only [transportL2Bilinear, sum_apply, ContinuousLinearMap.bilinearComp_apply,

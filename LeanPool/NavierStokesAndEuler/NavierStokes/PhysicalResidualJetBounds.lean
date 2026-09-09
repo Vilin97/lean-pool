@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualTZ
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformHarmonicInteraction
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualPolarGraph
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeEndpoint
+import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Physical jets of the actual finite-state residual
@@ -23,6 +21,9 @@ mean residuals and excluded errors are combined before the physical graph
 restriction.  Phase regularity is needed only on coefficient support.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PhysicalResidualJetBounds
@@ -31,8 +32,11 @@ open Set Function Filter ProblemStatement WeightedClasses LabelSumBounds
 open LocalPhysicalCopyBounds PhysicalWaveSum
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `PhysicalMeanJetBounds.Point`. -/
 abbrev Point := PhysicalMeanJetBounds.Point
+/-- Cylinder: an abbreviation for `Point × ℝ`. -/
 abbrev Cylinder := Point × ℝ
+/-- Components: an abbreviation for `Fin 3 → ℝ`. -/
 abbrev Components := Fin 3 → ℝ
 
 private theorem nat_le_infty (m : ℕ) : (m : WithTop ℕ∞) ≤ ∞ :=
@@ -108,6 +112,7 @@ theorem mode_jet_bound_local {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ 
 
 /-! ## Actual residual reconstruction and Cartesian scaling -/
 
+/-- Vector map as an element of `Components →L[ℝ] Space`. -/
 noncomputable def vectorMap : Components →L[ℝ] Space :=
   (ContinuousLinearMap.proj (0 : Fin 3)).smulRight (coordinateVector 0) +
     (ContinuousLinearMap.proj (1 : Fin 3)).smulRight (coordinateVector 1) +
@@ -116,6 +121,7 @@ noncomputable def vectorMap : Components →L[ℝ] Space :=
 @[simp] theorem vectorMap_apply (v : Components) (i : Fin 3) : vectorMap v i = v i := by
   fin_cases i <;> simp [vectorMap, coordinateVector]
 
+/-- Residual degree, given by `2 * CoordinateAlgebra.A h + 1 / 2`. -/
 noncomputable def residualDegree (h : ℝ) : ℝ := 2 * CoordinateAlgebra.A h + 1 / 2
 
 /-- Invert the actual residual scaling and cylindrical frame. -/
@@ -150,6 +156,8 @@ theorem state_fullResidual_reconstructed {D : Type} [NormedAddCommGroup D] [Norm
 
 /-! ## The actual polar common graph and rotating Cartesian basis -/
 
+/-- Polar assoc, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
+compatibility proofs. -/
 noncomputable def polarAssoc :
     (PhysicalGraphBounds.Plane × ((ℝ × ℝ) × PhysicalGraphBounds.Plane)) ≃ₗᵢ[ℝ] Cylinder where
   toFun x := ((x.1.1, x.2), x.1.2)
@@ -163,9 +171,12 @@ noncomputable def polarAssoc :
     simp only [Prod.norm_def]
     ac_rfl
 
+/-- Polar lift, given by `polarAssoc (PolarCharts.chart a j (PhysicalGraphBounds.liftXY x),
+PhysicalClassBounds.slowFast x)`. -/
 noncomputable def polarLift (a : ℝ) (j : PolarCharts.Index) (x : LiftPoint) : Cylinder :=
   polarAssoc (PolarCharts.chart a j (PhysicalGraphBounds.liftXY x), PhysicalClassBounds.slowFast x)
 
+/-- Polar graph, given by `polarLift a j ∘ commonLift h n d`. -/
 noncomputable def polarGraph (a h : ℝ) (j : PolarCharts.Index) (n d : ℕ) : SpaceTime → Cylinder :=
   polarLift a j ∘ commonLift h n d
 
@@ -190,7 +201,7 @@ theorem polarLift_positiveJets {a b : ℝ} (ha : 0 < a) (m : ℕ) :
         PhysicalClassBounds.slowFast y)) x‖ ≤ B := by
     change ‖iteratedFDeriv ℝ k (fun y =>
       ((PolarCharts.chart a j ∘ PhysicalGraphBounds.liftXY) y, PhysicalClassBounds.slowFast y)) x‖
-        ≤ B
+          ≤ B
     rw [PhysicalGraphBounds.iteratedFDeriv_pair
       (((PolarCharts.chart_contDiff ha j).comp PhysicalGraphBounds.liftXY.contDiff).contDiffAt.of_le
         (nat_le_infty k)) (PhysicalClassBounds.slowFast.contDiff.contDiffAt.of_le (nat_le_infty k)),
@@ -212,6 +223,8 @@ theorem polarLift_positiveJets {a b : ℝ} (ha : 0 < a) (m : ℕ) :
         PhysicalClassBounds.slowFast y))) x‖ ≤ B
   exact he.trans ((mul_le_mul hnorm hpair (norm_nonneg _) zero_le_one).trans_eq (one_mul B))
 
+/-- Rotation base, given by `(CylindricalResidual.frame (PolarCharts.chart a j x).2).comp
+vectorMap`. -/
 noncomputable def rotationBase (a : ℝ) (j : PolarCharts.Index) (x : PhysicalGraphBounds.Plane) :
     Components →L[ℝ] Space :=
   (CylindricalResidual.frame (PolarCharts.chart a j x).2).comp vectorMap
@@ -219,14 +232,15 @@ noncomputable def rotationBase (a : ℝ) (j : PolarCharts.Index) (x : PhysicalGr
 theorem rotationBase_smooth {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) :
     ContDiff ℝ ∞ (rotationBase a j) :=
   (CylindricalResidual.contDiff_frame.comp (PolarCharts.chart_contDiff ha j).snd).clm_comp
-    contDiff_const
+      contDiff_const
 
-theorem finite_compact_jet_bound {ι E F : Type*} [Fintype ι]
+theorem finite_compact_jet_bound {ι E F : Type*} [Finite ι]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
     {f : ι → E → F} {U K : Set E} (hU : IsOpen U) (hf : ∀ i, ContDiffOn ℝ ∞ (f i) U)
     (hK : IsCompact K) (hKU : K ⊆ U) (m : ℕ) :
     ∃ C : ℝ, 1 ≤ C ∧ ∀ i k, k ≤ m → ∀ x ∈ K, ‖iteratedFDeriv ℝ k (f i) x‖ ≤ C := by
   classical
+  let := Fintype.ofFinite ι
   choose C hC hb using fun i => PhysicalGraphBounds.compact_jet_bound hU (hf i) hK hKU m
   refine ⟨1 + ∑ i, |C i|, ?_, ?_⟩
   · have hsum : 0 ≤ ∑ i, |C i| := Finset.sum_nonneg (fun i _ => abs_nonneg (C i))
@@ -313,10 +327,10 @@ theorem cartesianPull_jet_bound {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1 / 2)
   let u : LiftPoint → Space := fun y => ChartScales.Q n ^ (-degree) • r y (f y)
   have hu : ContDiff ℝ ∞ u := (hr.clm_apply hf).const_smul _
   have haxis := PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-    hann)
+      hann)
   have hgraph : ContinuousAt (polarGraph a h j n d) w :=
     (polarLift_smooth ha j).continuous.continuousAt.comp (commonLift_smoothAt h n d
-      haxis).continuousAt
+        haxis).continuousAt
   have he' : cartesianPull a h j n d degree F =ᶠ[𝓝 w] u ∘ commonLift h n d := by
     filter_upwards [he.comp_tendsto hgraph] with z hz
     change ChartScales.Q n ^ (-degree) •
@@ -437,7 +451,7 @@ theorem add (hN : 1 ≤ N) (hU : IsOpen U) (hf : NativeBounds N U gain loss f)
   intro l n hn x hx j hj
   have hS := PhysicalGraphBounds.S_ge_one (hN.trans hn)
   have hQ : 0 ≤ ChartScales.Q n ^ (gain - loss m) := Real.rpow_pos_of_pos (ChartScales.Q_pos n) _
-    |>.le
+      |>.le
   rw [fun_iteratedFDeriv_add_apply
     (((hf.smooth l n hn).contDiffAt (hU.mem_nhds hx)).of_le (nat_le_infty j))
     (((hg.smooth l n hn).contDiffAt (hU.mem_nhds hx)).of_le (nat_le_infty j))]
@@ -458,8 +472,9 @@ theorem sum (hN : 1 ≤ N) (hU : IsOpen U) (K : Finset κ) (a : κ → ι → �
     NativeBounds N U gain loss (fun l n x => ∑ k ∈ K, a k l n x) := by
   classical
   induction K using Finset.induction_on with
-  | empty => simpa only [Finset.sum_empty] using (zero : NativeBounds N U gain loss (fun (_ : ι) _
-    _ => (0 : E)))
+  | empty =>
+      simpa only [Finset.sum_empty] using (zero : NativeBounds N U gain loss (fun (_ : ι) _ _ => (0
+          : E)))
   | @insert k K hk ih =>
     simpa only [Finset.sum_insert hk] using
       (ha k (Finset.mem_insert_self _ _)).add hN hU
@@ -549,7 +564,7 @@ structure SupportedPhaseBounds {D ι : Type*} [NormedAddCommGroup D] [NormedSpac
     x ∈ tsupport (a l n) → ∀ j, 1 ≤ j → j ≤ m →
       ‖iteratedFDeriv ℝ j (Φ l n) x‖ ≤ B * ChartScales.S n ^ p * ChartScales.Q n ^ (-β)
 
-theorem mode_zero_germ {D : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
+theorem mode_zero_germ {D : Type*} [NormedAddCommGroup D]
     {a : D → ℂ} (Φ : D → ℝ) (c : ℝ) {x : D} (hx : x ∉ tsupport a) :
     (fun y => a y * PhysicalGraphBounds.character c (Φ y)) =ᶠ[𝓝 x] fun _ => 0 := by
   filter_upwards [notMem_tsupport_iff_eventuallyEq.mp hx] with y hy
@@ -620,7 +635,7 @@ theorem NativeBounds.pi {D ι κ : Type*} [NormedAddCommGroup D] [NormedSpace �
   intro l n hn x hx j hj
   have hS := PhysicalGraphBounds.S_ge_one (hN.trans hn)
   have hQ : 0 ≤ ChartScales.Q n ^ (gain - loss m) := (Real.rpow_pos_of_pos (ChartScales.Q_pos n)
-    _).le
+      _).le
   have hSA : 0 ≤ ∑ i, A i := Finset.sum_nonneg (fun i _ => hA i)
   have hSp : 0 ≤ ChartScales.S n ^ (∑ i, p i) := pow_nonneg (zero_le_one.trans hS) _
   apply finite_pi_iteratedFDeriv_norm_le
@@ -655,6 +670,8 @@ theorem NativeBounds.pull_linear {D E F ι : Type} [NormedAddCommGroup D] [Norme
   rw [← iteratedFDeriv_eq_of_eventuallyEq he i]
   exact hb l n hn (L x) hx i hi
 
+/-- Full phase, given by `(j : ℝ) * (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ)
+* x.2)`. -/
 noncomputable def fullPhase (b : CorrectionState.HarmonicBlock Point) (j : ℤ)
     (n : ℕ) (x : Cylinder) : ℝ :=
   (j : ℝ) * (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ) * x.2)
@@ -692,7 +709,7 @@ theorem block_nativeBounds {ι : Type} {N : ℕ} {U : Set Cylinder} {gain β : �
   have hj : ∀ j ∈ J, NativeBounds N U gain (fun m => β * m)
       (fun l n (x : Cylinder) =>
         ((b l).velocity n i j x.1 * PhysicalGraphBounds.character 1 (fullPhase (b l) j n x)).re) :=
-          by
+            by
     intro j hj
     simpa only [zero_add, Complex.reCLM_apply] using
       ((ha i j hj).mode hN hU hβ (hΦ i j hj)).map hU Complex.reCLM
@@ -736,9 +753,11 @@ theorem state_nativeBounds {ι : Type} {N : ℕ} {V : Set Point}
 
 /-! ## One physical residual, selected comparable bands, and the base patch -/
 
+/-- Residual, defined pointwise by `navierStokesResidual u p w.1 w.2`. -/
 noncomputable def residual (u : VelocityField) (p : PressureField) : SpaceTime → Space :=
   fun w => navierStokesResidual u p w.1 w.2
 
+/-- Changed support, given by `tsupport (fun w => u w - u₀ w) ∪ tsupport (fun w => p w - p₀ w)`. -/
 noncomputable def changedSupport (u u₀ : VelocityField) (p p₀ : PressureField) : Set SpaceTime :=
   tsupport (fun w => u w - u₀ w) ∪ tsupport (fun w => p w - p₀ w)
 
@@ -779,7 +798,7 @@ theorem ChartIdentity.germ {a b h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : Set 
     (hx : polarGraph a h j n (gap n) w ∈ U) :
     R =ᶠ[𝓝 w] cartesianPull a h j n (gap n) (residualDegree h) (F n) := by
   have haxis := PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-    hann)
+      hann)
   have hg : ContinuousAt (polarGraph a h j n (gap n)) w :=
     (polarLift_smooth ha j).continuous.continuousAt.comp
       (commonLift_smoothAt h n (gap n) haxis).continuousAt
@@ -792,8 +811,10 @@ theorem ChartIdentity.germ {a b h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : Set 
 fields. No physical residual bound or global raw smoothness is a field. -/
 structure ResidualChartData (a b h : ℝ) (N Δ : ℕ) (U : Set Cylinder)
     (F : ℕ → Cylinder → Components) (u u₀ : VelocityField) (p p₀ : PressureField) where
+  /-- Active of `ResidualChartData`, of type `Set SpaceTime`. -/
   active : Set SpaceTime
   changed_subset : changedSupport u u₀ p p₀ ⊆ active
+  /-- Gap of `ResidualChartData`, of type `ℕ → ℕ`. -/
   gap : ℕ → ℕ
   gap_le : ∀ n, N ≤ n → gap n ≤ Δ
   realization : ChartIdentity a h N gap U F (residual u p)
@@ -881,6 +902,8 @@ theorem ResidualChartData.residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {U
 
 /-! ## Primitive physical-state realization -/
 
+/-- Band graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
+(ChartScales.nativeIndex h n - d)`. -/
 noncomputable def bandGraph (h : ℝ) (n d : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n - d)
 
@@ -975,10 +998,10 @@ theorem StateRealization.chartIdentity {a h : ℝ} {N : ℕ} {gap : ℕ → ℕ}
       (r.pressure_smooth n hn) hzU (r.base_equation n hn _ hzU.2) hu hP
       (r.velocity_germ n hn z hztime hzU) (r.pressure_germ n hn z hztime hzU) i
     change LiftedMeanResidual.fullResidual c s n (PhysicalResidualTZ.graphMapTZ (bandGraph h n (gap
-      n)) z) i =
+        n)) z) i =
       ChartScales.Q n ^ residualDegree h *
         CylindricalResidual.frame (-(z.2 1)) (residual u P (z.1, CylindricalResidual.chart z.2)) i
-          at hi
+            at hi
     rw [hzgraph, hzangle, hzcart] at hi
     exact hi
   have hout := physical_vector_of_components (ChartScales.Q_pos n) h

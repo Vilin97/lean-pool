@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeSignedData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeCopyFamily
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeProfiles
+import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveTimeSignedData
 
 /-!
 # Support and local smoothness of the actual signed copy family
@@ -18,6 +19,9 @@ zero at omitted labels.  Positive lift-time gating commutes with this
 assembly.  The source-domain statements concern the original, ungated
 amplitudes on positive lift time.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -83,6 +87,7 @@ private theorem gated_assembled_smooth {H : ℕ} {K : Type*}
   rw [gate_assembled]
   exact DependentSignedPhysicalFamily.diagonalSmooth _ (f.branchSmooth _ hs)
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
 
 variable {B N0 : ℕ}
@@ -172,11 +177,11 @@ theorem potential_source_domain (i : Fin 3) (k : TorusInverse.Frequency)
     (I : WaveIndex 1) (x : PhysicalGraphBounds.LiftPoint)
     (hx : x ∈ PositiveTimeCopyFamily.liftPast)
     (hne : ((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le
-      i).amplitude
+        i).amplitude
       k I x ≠ 0) :
     x ∈ (CartesianCopySource.pullStrip ActualPrimaryBounds.strip
       ActualPolarCoverage.inner ActualPolarCoverage.outer ActualPolarCoverage.inner_pos).domain :=
-        by
+          by
   classical
   change ((ActualSignedExterior.family s).copyAt
     (fun L => ActualSignedPhysicalData.potentialFamily slots outgoing.data.h_pos.le
@@ -199,7 +204,7 @@ theorem pressure_source_domain (k : TorusInverse.Frequency)
       k I x ≠ 0) :
     x ∈ (CartesianCopySource.pullStrip ActualPrimaryBounds.strip
       ActualPolarCoverage.inner ActualPolarCoverage.outer ActualPolarCoverage.inner_pos).domain :=
-        by
+          by
   classical
   change ((ActualSignedExterior.family s).copyAt
     (fun L => ActualSignedPhysicalData.pressureFamily slots outgoing.data.h_pos.le

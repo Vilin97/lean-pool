@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftGraph
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedExactLifted
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftGraph
 
 /-! Pointwise decomposition of the actual corrected velocity and pressure.
 The identities concern the constructed exact packet, not an arbitrary
 pair satisfying an energy bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 

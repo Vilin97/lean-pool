@@ -7,15 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevTower
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldScaling
-public import Mathlib.Analysis.Normed.Operator.Banach
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
 /-! Actual smooth regularizers of ordinary solenoidal L². Their maps
 into every complete Sobolev space are bounded by the closed graph
 theorem, rather than by an assumed derivative estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,12 +29,15 @@ open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothL
   EulerParameterWordGevrey EulerSmoothSobolev Finset
 open scoped ContDiff Topology
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instOrdinarySmoothingOperator1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
+/-- Smoothing operator data, collecting `op`, `smooth`, `translation`, `symmetric`,
+`contraction`, `solenoidal`. -/
 structure SmoothingOperator where
+  /-- Op of `SmoothingOperator`, of type `L2 →L[ℝ] L2`. -/
   op : L2 →L[ℝ] L2
   smooth : ∀ u, SmoothOrbit (op u)
-  translation : ∀ a u, EulerMeanSolenoidal.translation a (op u)=
+  translation : ∀ a u, EulerMeanSolenoidal.translation a (op u) =
     op (EulerMeanSolenoidal.translation a u)
   symmetric : ∀ u v, ⟪op u,v⟫_ℝ=⟪u,op v⟫_ℝ
   contraction : ∀ u, ‖op u‖ ≤ ‖u‖
@@ -42,6 +47,7 @@ namespace SmoothingOperator
 
 variable (S : SmoothingOperator)
 
+/-- Field, given by `smoothL2Field (S.op u) (S.smooth u)`. -/
 def field (u : L2) : SmoothL2Field Space := smoothL2Field (S.op u) (S.smooth u)
 
 @[simp] theorem field_toLp (u : L2) : (S.field u).toLp=S.op u := smoothL2Field_toLp _ _
@@ -50,6 +56,7 @@ private theorem valueOperator_ordinary (q : ℕ) (u : L2) (hu : SmoothOrbit u) :
     valueOperator 1 q (ordinarySobolev q u hu)=ordinaryLift u :=
   ordinarySobolev_value q u hu
 
+/-- Lift linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def liftLinear (q : ℕ) : L2 →ₗ[ℝ] SobolevSpace 1 q where
   toFun u := ordinarySobolev q (S.op u) (S.smooth u)
   map_add' u v := by
@@ -68,6 +75,7 @@ def liftLinear (q : ℕ) : L2 →ₗ[ℝ] SobolevSpace 1 q where
 @[simp] theorem liftLinear_value (q : ℕ) (u : L2) :
     value 1 (S.liftLinear q u)=ordinaryLift (S.op u) := ordinarySobolev_value _ _ _
 
+/-- Lift, constructed using `ContinuousLinearMap.ofSeqClosedGraph`. -/
 def lift (q : ℕ) : L2 →L[ℝ] SobolevSpace 1 q :=
   ContinuousLinearMap.ofSeqClosedGraph (g := S.liftLinear q) (by
     intro u x y hu hy
@@ -84,6 +92,7 @@ def lift (q : ℕ) : L2 →L[ℝ] SobolevSpace 1 q :=
 @[simp] theorem lift_apply (q : ℕ) (u : L2) :
     S.lift q u=ordinarySobolev q (S.op u) (S.smooth u) := rfl
 
+/-- Jet map, given by `(ordinaryTensorOperator n).comp (S.lift n)`. -/
 def jetMap (n : ℕ) : L2 →L[ℝ] Lp (Space [×n]→L[ℝ] Space) 2 (volume : Measure Space) :=
   (ordinaryTensorOperator n).comp (S.lift n)
 
@@ -132,6 +141,7 @@ theorem field_energy_le (A : SmoothL2Field Space) (q : ℕ) :
   sum_le_sum (fun _ _ => sum_le_sum (fun w _ =>
     pow_le_pow_left₀ (norm_nonneg _) (S.field_word_norm A w) 2))
 
+/-- Pointwise cost, given by `smoothEmbeddingConstant*(∑ n ∈ range 3, ‖S.jetMap n‖)`. -/
 def pointwiseCost : ℝ := smoothEmbeddingConstant*(∑ n ∈ range 3, ‖S.jetMap n‖)
 
 theorem pointwiseCost_nonneg : 0 ≤ S.pointwiseCost :=

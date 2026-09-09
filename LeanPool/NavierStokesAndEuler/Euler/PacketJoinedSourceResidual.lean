@@ -6,16 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveResidual
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceEquations
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceEquations
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveResidual
 
 /-!
 The actual finite packet built by the complete joined inverse has precisely
 the uncancelled tail.  The primary field and its homogeneous equation are
 inputs; every nonprimary regularity and equation is discharged by construction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +35,8 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (B : EulerTransversePacketProvider.HistoryData (D.initial τ hτ hτT.le))
   (A : VectorField) (π : ScalarField)
 
+/-- Joined primary profiles: an abbreviation for `joinedSourceProfiles P M D τ hτ hτT B
+(primaryProfile (joinedSourceOperators P M D τ hτ hτT B) A π)`. -/
 abbrev joinedPrimaryProfiles : ℕ → Profile :=
   joinedSourceProfiles P M D τ hτ hτT B
     (primaryProfile (joinedSourceOperators P M D τ hτ hτT B) A π)
@@ -53,7 +59,7 @@ theorem joinedSource_residual_tail
         ((joinedSourceOperators P M D τ hτ hτT B).normal (t,(x,θ)))
         (fieldSum (N+1) κ (assembledVelocity N (joinedPrimaryProfiles P M D τ hτ hτT B A π)))
         (fieldSum (N+1) κ (assembledPressure N (joinedPrimaryProfiles P M D τ hτ hτT B A π)))
-          (t,(x,θ)) =
+            (t,(x,θ)) =
       ∑ n ∈ Ico (N+1) (2*N+3), κ^n •
         recursiveGrade (joinedSourceOperators P M D τ hτ hτT B) N
           (joinedPrimaryProfiles P M D τ hτ hτT B A π) (t,(x,θ)) n := by
@@ -67,11 +73,11 @@ theorem joinedSource_residual_tail
     exact joinedSource_corrector_slice P M D hT τ hτ hτT B _ hprimary p t x θ
   · intro p
     exact (joinedSource_meanPressure_smooth_all P M D hT τ hτ hτT B _ hprimary rfl p
-      t).differentiable
+        t).differentiable
       (by simp) (x,θ)
   · intro p
     exact (joinedSource_highPressure_smooth_all P M D hT τ hτ hτT B _ hprimary hπ p
-      t).differentiable
+        t).differentiable
       (by simp) (x,θ)
   · intro p _
     change (pressureJet (joinedPrimaryProfiles P M D τ hτ hτT B A π p).meanPressure (t,(x,θ))).2

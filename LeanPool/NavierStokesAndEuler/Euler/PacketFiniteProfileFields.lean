@@ -9,10 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFieldAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveCancellation
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
+
+/-! The literal finite packet and its genuine time derivative are actual cylinder fields. -/
 
 @[expose] public section
 
-/-! The literal finite packet and its genuine time derivative are actual cylinder fields. -/
 
 noncomputable section
 
@@ -20,11 +22,15 @@ namespace EulerPacketCylinderField
 
 open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion EulerFiniteGrades
 
+/-- Raw time derivative, defined pointwise by `derivWithin (fun t => raw (t,z.2)) (Icc (0 : ℝ)
+T) z.1`. -/
 def rawTimeDerivative (T : ℝ) (raw : VectorField) : VectorField := fun z =>
   derivWithin (fun t => raw (t,z.2)) (Icc (0 : ℝ) T) z.1
 
 variable {P T : ℝ} [Fact (0 < P)]
 
+/-- Time derivative field, given by `H.congr (fun t x θ => (G.raw_hasDerivWithinAt hT.le H ht t
+x θ).derivWithin ((uniqueDiffOn_Icc hT) _ t.property))`. -/
 def Field.timeDerivativeField {raw raw_t : VectorField} (G : Field P T raw) (hT : 0 < T)
     (H : Field P T raw_t) (ht : TimeDerivative hT.le G H) :
     Field P T (rawTimeDerivative T raw) :=
@@ -40,16 +46,20 @@ namespace ProfileRegularity
 variable {N : ℕ} {a : ℕ → Profile} {support : Set Space}
   (hT : 0 < T) (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le support (a i))
 
+/-- Velocity grade field, constructed using `Field.assembleFamily`. -/
 def velocityGradeField (i : ℕ) : Field P T (assembledVelocity N a i) :=
   Field.assembleFamily N (fun j => (a j).high+(a j).mean) (fun j => (a j).corrector)
     (fun j hj => (G j hj).high.add (G j hj).mean) (fun j hj => (G j hj).corrector) i
 
+/-- Velocity time coefficients, given by `assemble N (fun i => rawTimeDerivative T ((a
+i).high+(a i).mean)) (fun i => rawTimeDerivative T (a i).corrector)`. -/
 def velocityTimeCoefficients : ℕ → VectorField :=
   assemble N (fun i => rawTimeDerivative T ((a i).high+(a i).mean))
     (fun i => rawTimeDerivative T (a i).corrector)
 
+/-- Velocity grade derivative field, constructed using `Field.assembleFamily`. -/
 def velocityGradeDerivativeField (i : ℕ) : Field P T (velocityTimeCoefficients (T := T) (N := N) (a
-  := a) i) :=
+    := a) i) :=
   Field.assembleFamily N (fun j => rawTimeDerivative T ((a j).high+(a j).mean))
     (fun j => rawTimeDerivative T (a j).corrector)
     (fun j hj => ((G j hj).high.add (G j hj).mean).timeDerivativeField hT
@@ -64,9 +74,12 @@ theorem velocityGrade_time (i : ℕ) :
     (fun j hj => ((G j hj).high_time.add (G j hj).mean_time))
     (fun j hj => (G j hj).corrector_time) i
 
+/-- Velocity field, given by `Field.evaluateFamily (N+1) κ _ (velocityGradeField hT G)`. -/
 def velocityField (κ : ℝ) : Field P T (fieldSum (N+1) κ (assembledVelocity N a)) :=
   Field.evaluateFamily (N+1) κ _ (velocityGradeField hT G)
 
+/-- Velocity derivative field, given by `Field.evaluateFamily (N+1) κ _
+(velocityGradeDerivativeField hT G)`. -/
 def velocityDerivativeField (κ : ℝ) :
     Field P T (fieldSum (N+1) κ (velocityTimeCoefficients (T := T) (N := N) (a := a))) :=
   Field.evaluateFamily (N+1) κ _ (velocityGradeDerivativeField hT G)

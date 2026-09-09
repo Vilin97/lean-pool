@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.InverseRegularity
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Time-dependent inverse of a coercive transverse Gram matrix
@@ -19,12 +19,15 @@ its quantitative lower bound. These are coefficient theorems, independent of
 any chosen variational solution.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransverseGramPath
 
 open Set ContinuousLinearMap EulerCoerciveProjection EulerInverseRegularity
-  EulerTransverseGramInverse EulerTimeH1OperatorProduct EulerVolterraConvolution
+  EulerTransverseGramInverse  EulerVolterraConvolution
 
 variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]

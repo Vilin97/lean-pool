@@ -11,10 +11,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardSuccessor
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSuccessor
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageGrowth
 
-@[expose] public section
-
 /-! The actual infinite packet family, from the concrete first stage
 and the two genuine successor constructions. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +29,7 @@ namespace Stage
 
 variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B}
 
+/-- Successor as an element of `Stage S (n+1)`. -/
 def successor {n : ℕ} (P : Stage S n) (hq : requiredExponent ≤ q)
     (hB : commonThreshold gradientConstant hessianConstant ≤ B) : Stage S (n+1) := by
   cases n with
@@ -46,6 +48,8 @@ end Stage
 variable {q : ℕ} {B : ℝ} (S : Scales (q : ℝ) B) (hq : requiredExponent ≤ q)
   (hB : commonThreshold gradientConstant hessianConstant ≤ B)
 
+/-- Stages as an element of `(n : ℕ) → Stage S n | 0 => S.firstStage | n+1 => (stages
+n).successor hq hB`. -/
 def stages : (n : ℕ) → Stage S n
   | 0 => S.firstStage
   | n+1 => (stages n).successor hq hB
@@ -61,8 +65,8 @@ theorem stages_time (n : ℕ) :
 
 theorem stages_initial_step (n : ℕ) (hn : n ≠ 0) :
     (fun x => (stages S hq hB (n+1)).state.evolution.velocity (0,x)) =
-      (fun x => (stages S hq hB n).state.evolution.velocity (0,x))+
-      (((stages S hq hB n).joinedInput hn hq hB).high (frequency S.J S.X n)+
+      (fun x => (stages S hq hB n).state.evolution.velocity (0,x)) +
+      (((stages S hq hB n).joinedInput hn hq hB).high (frequency S.J S.X n) +
         ((stages S hq hB n).joinedInput hn hq hB).mean (frequency S.J S.X n)) := by
   cases n with
   | zero => exact (hn rfl).elim
@@ -72,13 +76,18 @@ theorem stages_gradient_atTop :
     Tendsto (fun n => (stages S hq hB n).activationGradient) atTop atTop :=
   Stage.gradient_atTop (stages S hq hB)
 
+/-- Construction scales: an abbreviation for `Scales (requiredExponent : ℝ) (commonThreshold
+gradientConstant hessianConstant)`. -/
 abbrev ConstructionScales :=
   Scales (requiredExponent : ℝ) (commonThreshold gradientConstant hessianConstant)
 
+/-- Construction scales, given by `Classical.choice (exists_scales (requiredExponent : ℝ)
+(commonThreshold gradientConstant hessianConstant) (Nat.cast_nonneg _))`. -/
 def constructionScales : ConstructionScales :=
   Classical.choice (exists_scales (requiredExponent : ℝ)
     (commonThreshold gradientConstant hessianConstant) (Nat.cast_nonneg _))
 
+/-- Packets, given by `stages constructionScales le_rfl le_rfl n`. -/
 def packets (n : ℕ) : Stage constructionScales n := stages constructionScales le_rfl le_rfl n
 
 theorem packets_gradient_atTop :

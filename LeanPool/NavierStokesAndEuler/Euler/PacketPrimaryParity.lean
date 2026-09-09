@@ -8,10 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryRegularity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
+
+/-! The actual homogeneous primary solution initializes the profile parity induction. -/
 
 @[expose] public section
 
-/-! The actual homogeneous primary solution initializes the profile parity induction. -/
 
 noncomputable section
 

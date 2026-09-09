@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The true lifted coefficient of an approximation plus correction has
 a small amplitude controlled by the scaled spatial field, the actual
 normal component, and the correction size. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,15 +28,39 @@ open scoped ContDiff BoundedContinuousFunction
 variable {K E : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] LiftTangent) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] LiftTangent) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] LiftTangent)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] LiftTangent)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] LiftTangent)` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds3 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ]
+    LiftTangent) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] LiftTangent)` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds4 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] LiftTangent)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds5 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ]
+    Space)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] Space))` instance to shorten typeclass
+synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds6 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] Space))
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] LiftTangent))` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds7 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ]
+    LiftTangent)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] LiftTangent))` instance to shorten
+typeclass synthesis. -/
+local instance instLiftedSmoothTimeFieldBounds8 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ]
+    LiftTangent)) := inferInstance
 
 theorem lift_add_jet_norm_le (A B : SmoothTimeField K E Space)
     (κ : ℝ) (m : Space) (n : ℕ) :
@@ -52,9 +78,9 @@ theorem lift_add_jet_norm_le (A B : SmoothTimeField K E Space)
 
 theorem lift_add_jet_bound (A B : SmoothTimeField K E Space)
     (κ : ℝ) (m : Space) (R C0 Cn Ce : ℝ)
-    (hA : ∀ n, ‖A.jet n‖ ≤ C0*R^n*(n.factorial : ℝ)^2)
-    (hN : ∀ n, ‖(A.map (normalComponentMap m)).jet n‖ ≤ Cn*R^n*(n.factorial : ℝ)^2)
-    (hE : ∀ n, ‖B.jet n‖ ≤ Ce*R^n*(n.factorial : ℝ)^2) (n : ℕ) :
+    (hA : ∀ n, ‖A.jet n‖ ≤ C0 * R ^ n * (n.factorial : ℝ) ^ 2)
+    (hN : ∀ n, ‖(A.map (normalComponentMap m)).jet n‖ ≤ Cn * R ^ n * (n.factorial : ℝ) ^ 2)
+    (hE : ∀ n, ‖B.jet n‖ ≤ Ce * R ^ n * (n.factorial : ℝ) ^ 2) (n : ℕ) :
     ‖(lift (A.add B) κ m).jet n‖ ≤
       (|κ| * C0+Cn+(|κ| + ‖m‖)*Ce)*R^n*(n.factorial : ℝ)^2 := by
   apply (lift_add_jet_norm_le A B κ m n).trans
@@ -68,9 +94,9 @@ theorem lift_add_jet_bound (A B : SmoothTimeField K E Space)
 theorem lift_add_inverse_scale_bound (A B : SmoothTimeField K E Space)
     (k : ℝ) (hk : 1 ≤ k) (m : Space) (hm : ‖m‖ ≤ 1)
     (R C0 Cn Ce : ℝ) (hR : 0 ≤ R) (hCe : 0 ≤ Ce)
-    (hA : ∀ n, ‖A.jet n‖ ≤ C0*R^n*(n.factorial : ℝ)^2)
-    (hN : ∀ n, ‖(A.map (normalComponentMap m)).jet n‖ ≤ (Cn/k)*R^n*(n.factorial : ℝ)^2)
-    (hE : ∀ n, ‖B.jet n‖ ≤ Ce*R^n*(n.factorial : ℝ)^2) (n : ℕ) :
+    (hA : ∀ n, ‖A.jet n‖ ≤ C0 * R ^ n * (n.factorial : ℝ) ^ 2)
+    (hN : ∀ n, ‖(A.map (normalComponentMap m)).jet n‖ ≤ (Cn / k) * R ^ n * (n.factorial : ℝ) ^ 2)
+    (hE : ∀ n, ‖B.jet n‖ ≤ Ce * R ^ n * (n.factorial : ℝ) ^ 2) (n : ℕ) :
     ‖(lift (A.add B) k⁻¹ m).jet n‖ ≤
       ((C0+Cn)/k+2*Ce)*R^n*(n.factorial : ℝ)^2 := by
   have hk0 : 0 < k := by linarith

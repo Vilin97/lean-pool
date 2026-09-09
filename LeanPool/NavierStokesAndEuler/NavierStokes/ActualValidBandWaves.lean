@@ -8,15 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ValidDyadicBandCover
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularPhysical
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCyclePreservation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentWaveSupport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularPotentialCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentParticularPhysicalCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularCycleData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.GermCandidateAssembly
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalStageSupport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentWaveSupport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCyclePreservation
+import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentParticularPhysicalCoherence
 
 /-!
 # The actual particular waves on valid physical charts
@@ -26,6 +24,9 @@ Its compatibility is obtained from the corresponding current-source
 transport laws.  No value of a reference solve on an excluded face is
 used to define the physical representative.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -43,6 +44,8 @@ noncomputable def localPotential
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (n : ℕ) : VelocityField :=
   ActualCurrentParticularPhysical.localPotential (ActualCycleParameters.particularState x) n
 
+/-- Local pressure, given by `ActualCurrentParticularPhysical.localPressure
+(ActualCycleParameters.particularState x) n`. -/
 noncomputable def localPressure
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (n : ℕ) : PressureField :=
   ActualCurrentParticularPhysical.localPressure (ActualCycleParameters.particularState x) n
@@ -52,11 +55,14 @@ noncomputable def potential
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (N : ℕ) : VelocityField :=
   ValidDyadicBandCover.field h N (localPotential x)
 
+/-- Pressure, given by `ValidDyadicBandCover.field h N (localPressure x)`. -/
 noncomputable def pressure
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (N : ℕ) : PressureField :=
   ValidDyadicBandCover.field h N (localPressure x)
 
+/-- Glued potential: an abbreviation for `@potential`. -/
 noncomputable abbrev gluedPotential := @potential
+/-- Glued pressure: an abbreviation for `@pressure`. -/
 noncomputable abbrev gluedPressure := @pressure
 
 /-- The same physical polar angle is used in both bands.  The comparison
@@ -68,7 +74,7 @@ theorem nativePoint_bandMap (n m k : ℕ)
       ActualCurrentParticularPhysical.nativePoint m w := by
   have hp : 0 < (ActualCurrentParticularPhysical.cylinderPoint w).2 0 := by
     simpa only [ActualCurrentParticularPhysical.cylinderPoint, AxisymmetricResidual.pack_zero]
-      using hr
+        using hr
   unfold ActualCurrentParticularPhysical.nativePoint PhysicalParticularWave.nativeMap
   rw [ActualParticularCoherence.bandMap_apply n m k hi,
     ← PhysicalParticularWave.waveEquiv_cylinderChange]
@@ -156,9 +162,9 @@ theorem refined_support (l : ActualParticularStageControls.Label B N0) :
 theorem nativePotential_eq_actual (l : ActualParticularStageControls.Label B N0)
     (j : ℤ) (n : ℕ) :
     ActualCurrentParticularPhysical.nativePotential (ActualCycleParameters.particularState x) l j n
-      =
+        =
       ActualParticularPotentialCoherence.potential (ActualCycleParameters.particularState x) l j n
-        := by
+          := by
   rw [ActualParticularPotentialCoherence.potential_eq_copyData]
   unfold ActualCurrentParticularPhysical.nativePotential
   rw [ActualCurrentParticularPhysical.copyData_eq_actual _ _ _ (current_frequency H l)]
@@ -167,7 +173,7 @@ theorem nativePressure_eq_actual (l : ActualParticularStageControls.Label B N0)
     (j : ℤ) (n : ℕ) :
     ActualCurrentParticularPhysical.nativePressure (ActualCycleParameters.particularState x) l j n =
       ActualParticularPotentialCoherence.pressureMode (ActualCycleParameters.particularState x) l j
-        n := by
+          n := by
   rw [ActualParticularPotentialCoherence.pressureMode_eq_copyData]
   unfold ActualCurrentParticularPhysical.nativePressure
   rw [ActualCurrentParticularPhysical.copyData_eq_actual _ _ _ (current_frequency H l)]
@@ -177,9 +183,9 @@ theorem modes_zero_of_inactive (l : ActualParticularStageControls.Label B N0)
     (j : ℤ) (n : ℕ) {w : SpaceTime} (hw : w ∈ ValidDyadicBandCover.band h n)
     (hl : l ∉ (ActualCycleParameters.particularState x).coefficients.labels n) :
     ActualCurrentParticularPhysical.localPotentialMode (ActualCycleParameters.particularState x) l
-      j n w = 0 ∧
+        j n w = 0 ∧
       ActualCurrentParticularPhysical.localPressureMode (ActualCycleParameters.particularState x) l
-        j n w = 0 := by
+          j n w = 0 := by
   apply ActualCurrentWaveSupport.current_modes_zero_off_carrier hN
     (ActualCycleParameters.particularState x) l (refined_support H hcore l) j n hw
   intro hc
@@ -196,13 +202,13 @@ theorem modes_eq_ordered (l : ActualParticularStageControls.Label B N0)
     (hm : w ∈ ValidDyadicBandCover.band h m)
     (hr : 0 < PolarCharts.radius (PhysicalGraphBounds.radialProjection w)) :
     ActualCurrentParticularPhysical.localPotentialMode (ActualCycleParameters.particularState x) l
-      j n w =
-        ActualCurrentParticularPhysical.localPotentialMode (ActualCycleParameters.particularState
-          x) l j m w ∧
-      ActualCurrentParticularPhysical.localPressureMode (ActualCycleParameters.particularState x) l
         j n w =
+        ActualCurrentParticularPhysical.localPotentialMode (ActualCycleParameters.particularState
+            x) l j m w ∧
+      ActualCurrentParticularPhysical.localPressureMode (ActualCycleParameters.particularState x) l
+          j n w =
         ActualCurrentParticularPhysical.localPressureMode (ActualCycleParameters.particularState x)
-          l j m w := by
+            l j m w := by
   have hs := ActualCycleCoherence.particular_source_inputs H hS hcore l
   have ht : ∀ s ∈ ActualInitialCoherence.overlap n m, 0 < s.1 :=
     fun s hs => standardRegion.time_pos s hs.1
@@ -352,7 +358,7 @@ theorem axis_zero {N : ℕ} {qbig : ℝ} (hqbig : qbig ≤ ChartScales.Q N) :
 include hcore in
 theorem refined_invariant : ActualParticularCycleData.Invariant σ x :=
   { H with inputSupport := fun l => ActualCycleAssembly.inputSupport_mono (H.inputSupport l) (hcore
-    l) }
+      l) }
 
 include hN hcore in
 theorem local_fields_smooth (n : ℕ) :
@@ -364,7 +370,7 @@ theorem local_fields_smooth (n : ℕ) :
     · have hz := ActualCurrentWaveSupport.current_local_axis_germs hN
         (ActualCycleParameters.particularState x) (refined_support H hcore) n hw haxis
       exact ⟨contDiffAt_const.congr_of_eventuallyEq hz.1, contDiffAt_const.congr_of_eventuallyEq
-        hz.2⟩
+          hz.2⟩
     · exact ActualCurrentParticularPhysical.localFields_contDiffAt_of_invariant
         (refined_invariant H hcore) hN n (norm_pos_iff.mpr haxis)
         (PhysicalWaveSum.chooseChart ‖PhysicalGraphBounds.radialProjection w‖

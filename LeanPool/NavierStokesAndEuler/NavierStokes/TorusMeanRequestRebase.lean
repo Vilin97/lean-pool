@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalSignedWave
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStateRegularity
 
-@[expose] public section
-
 /-!
 # A common-torus signed request with native wave geometry
 
@@ -20,6 +18,9 @@ its original torus while the primary wave uses native fast coordinates.
 Freezing the band index preserves every actual derivative and average.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.TorusMeanRequestRebase
@@ -28,14 +29,18 @@ open Set Function WeightedClasses CorrectionState
 open scoped Topology ContDiff
 
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Cylinder: an abbreviation for `PhysicalSignedWave.Cylinder`. -/
 abbrev Cylinder := PhysicalSignedWave.Cylinder
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
 
 section Freeze
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Freeze strip as an element of `StripData D`. -/
 noncomputable def freezeStrip (s : StripData D) (m : ℕ) : StripData D :=
   { s with
     epsilon := fun _ => s.epsilon m
@@ -44,10 +49,13 @@ noncomputable def freezeStrip (s : StripData D) (m : ℕ) : StripData D :=
     slow := fun _ => s.slow m
     one_le_slow := fun _ => s.one_le_slow m }
 
+/-- Freeze triple, given by `⟨fun _ => v.radial m, fun _ => v.angular m, fun _ => v.axial m⟩`. -/
 noncomputable def freezeTriple (v : MeanIncrementBounds.Triple D) (m : ℕ) :
     MeanIncrementBounds.Triple D :=
   ⟨fun _ => v.radial m, fun _ => v.angular m, fun _ => v.axial m⟩
 
+/-- Freeze context, bundling `operators`, `epsilon`, `radialFrequency`, `fastCoefficient` and
+the required compatibility proofs. -/
 noncomputable def freezeContext (c : Context D) (m : ℕ) : Context D where
   operators := { c.operators with
     epsilon := fun _ => c.operators.epsilon m
@@ -57,6 +65,8 @@ noncomputable def freezeContext (c : Context D) (m : ℕ) : Context D where
   virtualTheta := fun _ => c.virtualTheta m
   virtualAxial := fun _ => c.virtualAxial m
 
+/-- Freeze state, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the
+required compatibility proofs. -/
 noncomputable def freezeState (u : State D) (m : ℕ) : State D where
   mean := freezeTriple u.mean m
   pressure := fun _ => u.pressure m
@@ -65,6 +75,8 @@ noncomputable def freezeState (u : State D) (m : ℕ) : State D where
   errors := ⟨fun _ => u.errors.base m, fun _ => u.errors.gaussian m,
     fun _ => u.errors.aliasError m⟩
 
+/-- Freeze wave, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the required
+compatibility proofs. -/
 noncomputable def freezeWave (a : LinearWaveBounds.WaveCoefficients D) (m : ℕ) :
     LinearWaveBounds.WaveCoefficients D where
   radius := fun _ => a.radius m
@@ -76,6 +88,8 @@ noncomputable def freezeWave (a : LinearWaveBounds.WaveCoefficients D) (m : ℕ)
   pressure := fun _ => a.pressure m
   frequency := fun _ => a.frequency m
 
+/-- Freeze directions, given by `{ d with radialScale := fun _ => d.radialScale m, fastScale :=
+fun _ => d.fastScale m }`. -/
 noncomputable def freezeDirections (d : LinearWaveBounds.GraphDirections D) (m : ℕ) :
     LinearWaveBounds.GraphDirections D :=
   { d with radialScale := fun _ => d.radialScale m, fastScale := fun _ => d.fastScale m }
@@ -166,7 +180,7 @@ theorem stateRequest_freeze_full (s : StripData Point) (sr : StripData Cylinder)
 @[simp] theorem stateRequest_freezeStrip (s : StripData Cylinder) (P : SignedStressPrimitive.Patch)
     (h : ℝ) (c : Context Point) (u : State Point) (m n : ℕ) (x : Cylinder) :
     PhysicalSignedWave.stateRequest (freezeStrip s m) P h (freezeContext c m) (freezeState u m) n x
-      =
+        =
       PhysicalSignedWave.stateRequest s P h c u m x :=
   stateRequest_freeze s (freezeStrip s m) P h c u m n rfl x
 
@@ -250,7 +264,7 @@ noncomputable def stateData : (identityViews B m h Q cover hQ hfrequency).StateD
       (PhysicalParticularWave.velocityWeight h Q Q) (PhysicalParticularWave.ratioPower Q Q (1 / 2))
       (freezeState u m) (freezeState u m) n m
     simp only [Nat.sub_self, requestChart_self, PhysicalParticularWave.velocityWeight,
-      ratioPower_self hQ]
+        ratioPower_self hQ]
     exact freezeState_coherent u m n m _
   context_coherent n := by
     change PhysicalResidualNaturality.ContextOn (PhysicalMeanDomain.slowDomain R.carrier)
@@ -258,7 +272,7 @@ noncomputable def stateData : (identityViews B m h Q cover hQ hfrequency).StateD
       (PhysicalParticularWave.velocityWeight h Q Q) (PhysicalParticularWave.ratioPower Q Q (1 / 2))
       (freezeContext c m) (freezeContext c m) n m
     simp only [Nat.sub_self, requestChart_self, PhysicalParticularWave.velocityWeight,
-      ratioPower_self hQ]
+        ratioPower_self hQ]
     exact freezeContext_coherent c m n m _
   time_pos x hx := R.time_pos _ (hslow x hx)
   fibers _ x hx _ _ := hslow x hx
@@ -303,7 +317,7 @@ theorem stateData_referenceRequest_fast (s : StripData Point)
       LocalSignedRequest.fullRequest s P (2 * h) c u m
         (PhysicalResidualTZ.swapCylinder ((x.1.1, (x.1.2.1, mapFast x.1.2.2)), x.2)) := by
   rw [stateData_referenceRequest_full B m h Q cover hQ hfrequency hh hh1 R P c u H hp hslow s
-    hepsilon x]
+      hepsilon x]
   rfl
 
 end IdentityStateData

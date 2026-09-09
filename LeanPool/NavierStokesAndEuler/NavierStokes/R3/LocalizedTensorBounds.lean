@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
 
 /-!
 # Weighted tensor bounds for the localized pressure
@@ -17,6 +18,9 @@ The tensor difference is expanded around the reference velocity. Its two
 cross terms use `L³` of that velocity and `L²` of the difference; the quadratic
 term uses the cutoff interpolation estimate. All norms remain finite explicitly.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -57,14 +61,14 @@ theorem cross_norm_bound {u w : Space → Space}
     (hu : MemLp u 3 volume) (hw : MemLp w 2 volume) :
     MemLp (fun x => ‖u x‖ * ‖w x‖) (6 / 5) volume ∧
       comparisonLpNorm (6 / 5) (fun x => ‖u x‖ * ‖w x‖) ≤ comparisonLpNorm 3 u * comparisonLpNorm 2
-        w := by
+          w := by
   let : ENNReal.HolderTriple (3 : ℝ≥0∞) 2 (6 / 5) := ⟨by
     apply (ENNReal.toReal_eq_toReal_iff' (by finiteness)
       (ENNReal.inv_ne_top.mpr six_fifths_ne_zero)).mp
     rw [ENNReal.toReal_add (by finiteness) (by finiteness)]
     norm_num⟩
   simpa only [comparisonLpNorm, eLpNorm_norm] using scalar_product_bound (r := 6 / 5) hu.norm
-    hw.norm
+      hw.norm
 
 /-- The quadratic weighted difference has the endpoint interpolation bound. -/
 theorem quadratic_cutoff_bound {φ : Space → ℝ} {w : Space → Space}
@@ -190,7 +194,7 @@ theorem weighted_tensorDiff_bound {φ : Space → ℝ} {u v : VelocityField} {t 
         comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
           cutoffL6 φ (u - v) t ^ (1 / 2 : ℝ) +
         2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t, x))
-          := by
+            := by
   let P : Space → ℝ := fun x => ‖u (t, x)‖ * ‖(u - v) (t, x)‖
   let Q : Space → ℝ := fun x => ‖φ x • (u - v) (t, x)‖ ^ 2
   obtain ⟨hP, hPb⟩ := cross_norm_bound hu3 hw2

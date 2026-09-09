@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpFiniteTensorReconstruction
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Bounding a tensor by the energies of its coordinate evaluations
@@ -17,6 +16,9 @@ The reconstruction map is fixed in each derivative order.  Its operator norm
 therefore gives a finite constant converting the sum of the scalar coordinate
 energies into a bound for the literal tensor norm.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

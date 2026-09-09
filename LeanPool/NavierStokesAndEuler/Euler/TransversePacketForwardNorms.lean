@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBudget
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPairAmplitude
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPairAmplitude
 
 /-! The genuine direct-forward solution has amplitude-linear estimates at
 one source-dependent radius, for arbitrary admissible initial data and forcing. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,9 +33,9 @@ variable {P : ℝ} [Fact (0 < P)]
   (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1)
   (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
   (hforce : ∀ n, block directions q (fun a => pathTranslate P a
-    (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ A*majorant L.R d n)
+    (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ A * majorant L.R d n)
   (hinitial : ∀ n, block directions q (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤
-    A*majorant L.R d n)
+    A * majorant L.R d n)
 
 include hdir hA hforce hinitial
 

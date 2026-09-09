@@ -9,12 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureWitness
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketPressureForcing
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketCylinderFields
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderGradientEmbedding
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
 
 /-! The actual mean pressure enters the lifted gradient closure.
 Only its genuine L² gradient is embedded; its scalar potential need not be L². -/
+
+@[expose] public section
+
 
 noncomputable section
 

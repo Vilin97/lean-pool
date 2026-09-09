@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+
+/-! Exact parameter restriction and injective subalphabet bounds for genuine derivative words. -/
 
 @[expose] public section
 
-/-! Exact parameter restriction and injective subalphabet bounds for genuine derivative words. -/
 
 noncomputable section
 

@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierSobolevWeights
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierSobolevWeights
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
+
+/-! # Fourier bounds for pressure test functionals -/
 
 @[expose] public section
 
-/-! # Fourier bounds for pressure test functionals -/
 
 
 noncomputable section
@@ -161,7 +162,7 @@ theorem integral_norm_fourier_partialCLM_le_of_integrable (i : Fin 3) (ψ : Comp
         ∫ ξ : Space, (2 * Real.pi) *
           (‖ξ‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) := by
       apply integral_mono (FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i
-        ψ)).integrable.norm
+          ψ)).integrable.norm
         (hm.const_mul (2 * Real.pi))
       intro ξ
       simpa only [mul_assoc] using norm_fourier_partialCLM_le i ψ ξ
@@ -170,7 +171,7 @@ theorem integral_norm_fourier_partialCLM_le_of_integrable (i : Fin 3) (ψ : Comp
     _ ≤ (2 * Real.pi) * (fourierMomentConstant * Real.sqrt (fourierHNormSq 3 ψ)) :=
       mul_le_mul_of_nonneg_left
         (integral_first_moment_le (FourierTransform.fourierCLE ℂ ComplexTest
-          ψ).continuous.aestronglyMeasurable
+            ψ).continuous.aestronglyMeasurable
           hw) (by positivity)
     _ = _ := by ring
 
@@ -226,7 +227,7 @@ theorem fourier_first_moment_le (ψ : ComplexTest) :
     (∫ ξ : Space, ‖ξ‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) ≤
       fourierMomentConstant * Real.sqrt (fourierHNormSq 3 ψ) :=
   integral_first_moment_le (FourierTransform.fourierCLE ℂ ComplexTest
-    ψ).continuous.aestronglyMeasurable
+      ψ).continuous.aestronglyMeasurable
     (FourierSobolevWeights.integrable_fourierHNormSq_three ψ)
 
 theorem integral_norm_fourier_partialCLM_le (i : Fin 3) (ψ : ComplexTest) :

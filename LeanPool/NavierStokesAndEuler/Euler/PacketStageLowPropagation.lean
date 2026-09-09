@@ -7,11 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketLowBoundPropagation
+import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalPrefix
 
 /-! The summable scalar budgets propagate the genuine low source
 guards and absorb the absolute geometric errors. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +36,7 @@ theorem initial_step_bound (e : ℝ) (he : e ≤ initialIncrement S.J S.X n) :
   constructor <;> linarith only [P.exterior_bound,P.core_bound,he]
 
 theorem pressure_step_bound (e : ℝ) (he : e ≤ pressureIncrement S.J S.X n) :
-    P.low.K+e ≤ initialCoefficientCost+literalInitialPressureCost S.D S.X+
+    P.low.K+e ≤ initialCoefficientCost+literalInitialPressureCost S.D S.X +
       ∑ i ∈ range (n+1), pressureIncrement S.J S.X i := by
   rw [sum_range_succ]
   linarith only [P.pressure_bound,he]
@@ -40,7 +44,7 @@ theorem pressure_step_bound (e : ℝ) (he : e ≤ pressureIncrement S.J S.X n) :
 theorem next_localized (T ei ep : ℝ) (hT : 0 ≤ T) (hTcap : T ≤ baseHorizon S.J S.X)
     (hi0 : 0 ≤ ei) (hp0 : 0 ≤ ep)
     (hi : ei ≤ initialIncrement S.J S.X n) (hp : ep ≤ pressureIncrement S.J S.X n) :
-    (P.low.K+ep)*(T^2/2)+(P.low.Be+ei)*T+
+    (P.low.K+ep)*(T^2/2)+(P.low.Be+ei)*T +
       boundaryLocalizationC2*(P.low.Bc+ei)*P.low.r^3*T ≤ 1/2 := by
   have hib := P.initial_step_bound ei hi
   have hpb := P.pressure_step_bound ep hp
@@ -58,13 +62,13 @@ theorem next_localized (T ei ep : ℝ) (hT : 0 ≤ T) (hTcap : T ≤ baseHorizon
   · exact hTcap
 
 theorem ratio_absorption (r : ℝ) (hr : 0 ≤ r)
-    (hbad : 2*gradientConstant*previousShear S.J S.X n*shear S.J S.X n*r ≤
+    (hbad : 2 * gradientConstant * previousShear S.J S.X n * shear S.J S.X n * r ≤
       badCost S.J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence S.J S.X) n)
-        :
-    gradientConstant*previousShear S.J S.X n+shear S.J S.X n*(goodRatio+r)+
+          :
+    gradientConstant * previousShear S.J S.X n+shear S.J S.X n*(goodRatio+r) +
         (frequency S.J S.X n)^(-(1/4 : ℝ)) ≤ gradientConstant*shear S.J S.X n ∧
-    hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n+
-      2*gradientConstant*previousShear S.J S.X n*shear S.J S.X n*(goodRatio+r)+
+    hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n +
+      2 * gradientConstant*previousShear S.J S.X n * shear S.J S.X n*(goodRatio+r) +
         (frequency S.J S.X n)^(-(1/4 : ℝ)) ≤
       hessianConstant*shear S.J S.X n*previousShear S.J S.X n := by
   have hsum : badCost S.J 4 gradientConstant gradientConstant hessianConstant 80
@@ -81,7 +85,7 @@ theorem ratio_absorption (r : ℝ) (hr : 0 ≤ r)
     nlinarith only [h]
   have hg : shear S.J S.X n*r+(frequency S.J S.X n)^(-(1/4 : ℝ)) ≤ 1 := by
     linarith only [hgrad,hbad,hsum]
-  have hh : 2*gradientConstant*previousShear S.J S.X n*shear S.J S.X n*r+
+  have hh : 2*gradientConstant*previousShear S.J S.X n*shear S.J S.X n*r +
       (frequency S.J S.X n)^(-(1/4 : ℝ)) ≤ 1 := by linarith only [hbad,hsum]
   exact ⟨EulerPacketLowBoundPropagation.gradient_bound _ _ _ _ _ _ gradient_properties.1
       (S.previousShear_one n) (S.shear_one n) (S.shear_separation n) gradient_properties.2.2 hg,
@@ -92,7 +96,7 @@ theorem ratio_absorption (r : ℝ) (hr : 0 ≤ r)
 theorem next_frame_bounds :
     1 ≤ frameConstant*(1+previousShear S.J S.X n) ∧
     gradientConstant*previousShear S.J S.X n ≤ frameConstant*(1+previousShear S.J S.X n) ∧
-    (gradientConstant*previousShear S.J S.X n)^2+
+    (gradientConstant*previousShear S.J S.X n)^2 +
         hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n ≤
       (frameConstant*(1+previousShear S.J S.X n))^2 := by
   have hp := S.previousShear_one n
@@ -111,7 +115,7 @@ theorem next_frame_bounds :
     nlinarith only [h1,h2,h3]
 
 theorem coupling_step (a : ℝ)
-    (h : |a/P.frame.a-1| ≤ renewalCost S.J S.D 4 c frameConstant S.X n) :
+    (h : |a / P.frame.a - 1| ≤ renewalCost S.J S.D 4 c frameConstant S.X n) :
     |a-1| ≤ 2*∑ i ∈ range (n+1), renewalCost S.J S.D 4 c frameConstant S.X i := by
   have he := S.renewal_series.nonneg n
   have hd := relative_step_error P.coupling_pos P.coupling_bounds.2 he h
@@ -121,10 +125,10 @@ theorem coupling_step (a : ℝ)
   linarith only [hd,ht,P.coupling_error]
 
 theorem tilt_step (σ : ℝ)
-    (h : |(scaleSequence S.J S.X (n+1))^2*σ^2-1| ≤
+    (h : |(scaleSequence S.J S.X (n + 1)) ^ 2 * σ ^ 2 - 1| ≤
       renewalCost S.J S.D 4 c frameConstant S.X n) :
     1/2 ≤ σ^2*(scaleSequence S.J S.X (n+1))^2 ∧
-      σ^2*(scaleSequence S.J S.X (n+1))^2 ≤ 2 := by
+      σ^2*(scaleSequence S.J S.X (n + 1)) ^ 2 ≤ 2 := by
   have hh := abs_le.mp h
   have he := S.renewal_series.term_le n
   constructor <;> nlinarith only [hh.1,hh.2,he]

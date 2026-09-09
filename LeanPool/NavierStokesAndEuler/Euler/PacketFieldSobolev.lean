@@ -7,13 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevGevreyOperators
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldProducts
 
 /-! Exact identification of the packet's ordered-word blocks with the
 genuine Sobolev blocks used in the correction energy. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,7 +52,7 @@ theorem toFieldTower_levelNorm_eq (G : Field P T raw) (s n : ℕ) (hn : n ≤ s)
   exact congrArg norm (sobolev_coordinate P s (G.path t)
     (path_evaluation_smooth P G.path G.orbit t) ⟨⟨n,by omega⟩,w⟩)
 
-theorem toFieldTower_blockNorm_eq (G : Field P T raw) (s q n : ℕ) (hn : n+q ≤ s)
+theorem toFieldTower_blockNorm_eq (G : Field P T raw) (s q n : ℕ) (hn : n + q ≤ s)
     (t : Icc (0 : ℝ) T) :
     blockNorm P (toJet P (G.toFieldTower.realization s t)) q n =
       block standardDirection q (fun a : LiftTangent => translate P a (G.path t)) n 0 := by
@@ -62,7 +62,7 @@ theorem toFieldTower_blockNorm_eq (G : Field P T raw) (s q n : ℕ) (hn : n+q �
   exact G.toFieldTower_levelNorm_eq s (n+r) (by have := mem_range.mp hr; omega) t
 
 /-- Time evaluation is contractive for the full ordered-word block. -/
-theorem toFieldTower_blockNorm_le (G : Field P T raw) (s q n : ℕ) (hn : n+q ≤ s)
+theorem toFieldTower_blockNorm_le (G : Field P T raw) (s q n : ℕ) (hn : n + q ≤ s)
     (t : Icc (0 : ℝ) T) :
     blockNorm P (toJet P (G.toFieldTower.realization s t)) q n ≤
       block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) n 0 := by
@@ -73,7 +73,7 @@ theorem toFieldTower_blockNorm_le (G : Field P T raw) (s q n : ℕ) (hn : n+q �
 /-- Summing the four genuine coordinate derivatives spends exactly one
 external word; there is no additional dimension factor. -/
 theorem toFieldTower_derivative_block_sum_le (G : Field P T raw) (s q n : ℕ)
-    (hn : n+q ≤ s) (t : Icc (0 : ℝ) T) :
+    (hn : n + q ≤ s) (t : Icc (0 : ℝ) T) :
     (∑ i : Fin 4, blockNorm P
       (toJet P (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) q n) ≤
       block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) (n+1) 0 := by

@@ -6,10 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalStage
 public import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborControlled
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixContinuity
+import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocitySystem
+import LeanPool.NavierStokesAndEuler.Euler.PacketTangentInvariant
+import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 Actual neighboring physical primaries satisfy the amplification estimate
@@ -18,43 +22,46 @@ center frame.  Its neighboring matrix perturbation is part of the actual
 parent error; all scaled coefficient and ray bounds are derived here.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
 namespace EulerPacketMovingFrame
 
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
-  EulerPacketStage EulerPacketPerturbation InnerProductSpace ContinuousLinearMap
+    InnerProductSpace ContinuousLinearMap
 
 theorem physical_neighbor_stage_references
     {B B₁ M E : ℝ → Space →L[ℝ] Space} {m v r w : ℝ → Space}
     {c s₀ t₀ a ε σ Θ T G d lam : ℝ} {S : Set ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hT0 : 0 < T) (hT : T ≤ Θ)
-    (ha : 1/2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hT0 : 0 < T) (hT : T ≤ Θ)
+    (ha : 1 / 2 ≤ a) (hε : 0 < ε) (hΘ : 1 ≤ Θ) (hG : 1 ≤ G) (hd : 0 ≤ d)
     (hs₀ : s₀ ≠ 0) (hlam : 0 ≤ lam)
-    (hsmall : 1000000*neighborStabilityConstant*(16*(ε*Θ*(4*G)^2+d))*Θ^40 ≤ 1)
+    (hsmall : 1000000 * neighborStabilityConstant * (16 * (ε * Θ * (4 * G) ^ 2 + d)) * Θ ^ 40 ≤ 1)
     (hmap : MapsTo (physicalTime t₀ a ε) (Icc 0 Θ) S)
     (hMc : ContinuousOn M S)
     (hBd : ∀ t ∈ S, HasDerivWithinAt B (B₁ t) S t)
     (hmd : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
-    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t)+
-      (2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) S t)
+    (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t) +
+      (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hrd : ∀ t ∈ S, HasDerivWithinAt r (-(M t).adjoint (r t)) S t)
-    (hwd : ∀ t ∈ S, HasDerivWithinAt w (-(M t) (w t)+
-      (2*⟪r t,(M t) (w t)⟫_ℝ/‖r t‖^2) • r t) S t)
+    (hwd : ∀ t ∈ S, HasDerivWithinAt w (-(M t) (w t) +
+      (2 * ⟪r t, (M t) (w t)⟫_ℝ / ‖r t‖ ^ 2) • r t) S t)
     (hm0 : ∀ t ∈ S, m t ≠ 0) (hv0 : ∀ t ∈ S, v t ≠ 0)
-    (hmv : ∀ t ∈ S, ⟪m t,v t⟫_ℝ = 0) (hrw0 : ⟪r t₀,w t₀⟫_ℝ = 0)
-    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G^2)
+    (hmv : ∀ t ∈ S, ⟪m t, v t⟫_ℝ = 0) (hrw0 : ⟪r t₀, w t₀⟫_ℝ = 0)
+    (hB : ∀ t ∈ S, ‖B t‖ ≤ G) (hB₁ : ∀ t ∈ S, ‖B₁ t‖ ≤ G ^ 2)
     (hE : ∀ t ∈ S, ‖E t‖ ≤ d)
-    (hparent : ∀ t ∈ S, M t = B t+
-      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))+E t)
+    (hparent : ∀ t ∈ S, M t = B t +
+      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t)) + E t)
     (hb0 : rescaledFrame B m v t₀ a ε 0 0 1 = a)
-    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a*σ^2)
-    (hh0 : rescaledShear c m v t₀ a ε 0 = a/ε^2)
+    (hk0 : rescaledFrame B m v t₀ a ε 0 2 1 = a * σ ^ 2)
+    (hh0 : rescaledShear c m v t₀ a ε 0 = a / ε ^ 2)
     (hrInitial : norm3 (scaledRay m v r s₀ t₀ a ε 0 0) (scaledRay m v r s₀ t₀ a ε 0 1)
-      (scaledRay m v r s₀ t₀ a ε 0 2-1) ≤ 16*(ε*Θ*(4*G)^2+d))
-    (hvelocityInitial : |scaledVelocity m v w t₀ a ε 0 1-1|+
-      |scaledVelocity m v w t₀ a ε 0 0+lam| ≤ 16*(ε*Θ*(4*G)^2+d)) :
+      (scaledRay m v r s₀ t₀ a ε 0 2 - 1) ≤ 16 * (ε * Θ * (4 * G) ^ 2 + d))
+    (hvelocityInitial : |scaledVelocity m v w t₀ a ε 0 1 - 1| +
+      |scaledVelocity m v w t₀ a ε 0 0 + lam| ≤ 16 * (ε * Θ * (4 * G) ^ 2 + d)) :
     let e := 16*(ε*Θ*(4*G)^2+d)
     let U := fun τ => scaledVelocity m v w t₀ a ε τ 0
     let V := fun τ => scaledVelocity m v w t₀ a ε τ 1
@@ -148,10 +155,10 @@ theorem physical_neighbor_stage_references
   have hUV : ∀ τ ∈ Icc 0 T,
       HasDerivWithinAt (fun s => Vp s 0)
         (velocityFirstRhs (Amat τ) (Cmat τ) ε (Rp τ 0) (Rp τ 1) (Rp τ 2) (Vp τ 0) (Vp τ 1)) (Icc 0
-          T) τ ∧
+            T) τ ∧
       HasDerivWithinAt (fun s => Vp s 1)
         (velocitySecondRhs (Amat τ) (Cmat τ) ε (Rp τ 0) (Rp τ 1) (Rp τ 2) (Vp τ 0) (Vp τ 1)) (Icc 0
-          T) τ := by
+            T) τ := by
     intro τ hτ
     have ht := hmapT hτ
     have hNne : Rp τ 2 ≠ 0 := by linarith only [(hnear τ hτ).2]
@@ -164,7 +171,7 @@ theorem physical_neighbor_stage_references
     refine ⟨?_, (hnear τ hτ).2, hpair τ hτ⟩
     nlinarith only [(hnear τ hτ).1]
   · exact controlled_neighbor_stage_references_within hσ hσsmall hΘ hT0 hT he hε.le herr.1 hlam
-    hsmall
+      hsmall
       hRmc hAmc hCmc hP hQ hN (fun τ hτ => (hUV τ hτ).1) (fun τ hτ => (hUV τ hτ).2)
       hRclose (fun τ hτ => (herr.2 τ (hsub hτ)).2.1) (fun τ hτ => (herr.2 τ (hsub hτ)).2.2)
       hrInitial hvelocityInitial

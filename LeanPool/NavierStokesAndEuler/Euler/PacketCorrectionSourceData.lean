@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetric
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
 
-@[expose] public section
-
 /-! Actual all-order correction data from the source deformation and two
 prescribed packet fields. No correction solution or energy budget is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +25,8 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketCylinderField
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
 
+/-- Correction data, bundling `κ`, `direction`, `scale_bound`, `direction_bound` and the
+required compatibility proofs. -/
 def correctionData (κ : ℝ) (hκ : |κ| ≤ 1)
     (approximation residual : FieldTower P D.T) : Data P D.T where
   κ := κ
@@ -40,6 +43,7 @@ def correctionData (κ : ℝ) (hκ : |κ| ≤ 1)
   approximation := approximation
   residual := residual
 
+/-- Correction data of fields, given by `correctionData D P κ hκ Z.toFieldTower G.toFieldTower`. -/
 def correctionDataOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
     {z r : VectorField} (Z : Field P D.T z) (G : Field P D.T r) : Data P D.T :=
   correctionData D P κ hκ Z.toFieldTower G.toFieldTower

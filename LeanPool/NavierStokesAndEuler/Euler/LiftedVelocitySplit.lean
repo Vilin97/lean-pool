@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevDriftNorm
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAdvection
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FunctionalVelocity
+public import LeanPool.NavierStokesAndEuler.Euler.LiftedTransportComponents
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
 
 /-! The actual four-component transport vector retains the small normal
 component separately from its three scaled spatial components. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,9 +26,12 @@ open MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerFunctionalVelocity EulerVectorCylinder EulerCylinderConstantMap
   EulerCylinderScalarPrimitive EulerPacketCylinderField
 
+/-- Spatial velocity map, given by `velocityMap (Fin.cons 0 (fun i : Fin 3 => coordinate 3 i))`. -/
 def spatialVelocityMap : Space →L[ℝ] EulerSobolev.Domain 4 :=
   velocityMap (Fin.cons 0 (fun i : Fin 3 => coordinate 3 i))
 
+/-- Normal velocity map, given by `(toSpanSingleton ℝ (EuclideanSpace.single (0 : Fin 4) (1 :
+ℝ))).comp scalarProject`. -/
 def normalVelocityMap : Space →L[ℝ] EulerSobolev.Domain 4 :=
   (toSpanSingleton ℝ (EuclideanSpace.single (0 : Fin 4) (1 : ℝ))).comp scalarProject
 

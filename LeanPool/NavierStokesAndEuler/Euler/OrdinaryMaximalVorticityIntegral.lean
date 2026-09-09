@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryMaximalVorticity
-public import LeanPool.NavierStokesAndEuler.Euler.NonnegativeImproperIntegral
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.NonnegativeImproperIntegral
 
 /-! The actual nonnegative vorticity density of a maximal Euler solution
 has an infinite extended integral whenever its genuine partial vorticity
 integrals are unbounded. The only unboundedness input is the explicit
 family statement used by the BKM continuation argument. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -69,7 +70,7 @@ theorem maximalVorticityDensity_continuousOn (S : ℝ) (hS : 0 < S) (hSL : S < L
     (L.evolution S hS hSL).vorticityNormPath.continuous.comp continuous_projIcc
   apply hc.continuousOn.congr
   intro r hr
-  change L.maximalVorticityDensity r=
+  change L.maximalVorticityDensity r =
     (L.evolution S hS hSL).vorticityNormPath (projIcc 0 S hS.le r)
   rw [projIcc_of_mem hS.le hr]
   exact L.maximalVorticityDensity_eq_evolution S hS hSL ⟨r,hr⟩
@@ -80,14 +81,14 @@ theorem maximalVorticityDensity_intervalIntegrable (S : ℝ) (hS : 0 < S)
 
 theorem maximalVorticityDensity_integral_eq_evolution (S : ℝ) (hS : 0 < S)
     (hSL : S < L.duration) (t : Icc (0 : ℝ) S) :
-    (∫ r in (0 : ℝ)..(t : ℝ), L.maximalVorticityDensity r)=
+    (∫ r in (0 : ℝ)..(t : ℝ), L.maximalVorticityDensity r) =
       (L.evolution S hS hSL).vorticityIntegral t := by
   apply intervalIntegral.integral_congr
   intro r hr
   have hrt : r ∈ Icc (0 : ℝ) (t : ℝ) := by
     simpa only [uIcc_of_le t.property.1] using hr
   have hrS : r ∈ Icc (0 : ℝ) S := ⟨hrt.1,hrt.2.trans t.property.2⟩
-  change L.maximalVorticityDensity r=
+  change L.maximalVorticityDensity r =
     (L.evolution S hS hSL).vorticityNormPath (projIcc 0 S hS.le r)
   rw [projIcc_of_mem hS.le hrS]
   exact L.maximalVorticityDensity_eq_evolution S hS hSL ⟨r,hrS⟩

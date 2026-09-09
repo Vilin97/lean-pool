@@ -9,10 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalProfile
 public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Topology.UniformSpace.HeineCantor
-public import Mathlib.Topology.UniformSpace.UniformConvergence
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # The same-radius reference continuation
@@ -22,6 +20,9 @@ radius. A smooth cutoff damps those slopes to zero; no radial reparametrization
 is substituted for the prescribed differential equation.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ReferencePath
@@ -30,11 +31,13 @@ open Set Filter MeasureTheory Metric
 open scoped Topology ContDiff
 open ProfileHistories
 
+/-- Full strip, bundling `carrier`, `isOpen`, `scale_mem`. -/
 def fullStrip (J : Set ℝ) (hJ : IsOpen J) : RadialDomain where
   carrier := univ ×ˢ J
   isOpen := isOpen_univ.prod hJ
   scale_mem := fun _ hp _ _ => ⟨mem_univ _, hp.2⟩
 
+/-- Early strip, bundling `carrier`, `isOpen`, `scale_mem`. -/
 def earlyStrip (T : ℝ) (hT : 0 < T) (J : Set ℝ) (hJ : IsOpen J) : RadialDomain where
   carrier := Iio T ×ˢ J
   isOpen := isOpen_Iio.prod hJ
@@ -65,6 +68,7 @@ theorem slopeCutoff_zero {δ t : ℝ} (hδ : 0 < δ) (ht : 2 * δ ≤ t) : slope
   rw [slopeCutoff, Real.smoothTransition.one_of_one_le
     ((le_div_iff₀ hδ).2 (by linarith)), sub_self]
 
+/-- Damped slope, defined pointwise by `slopeCutoff δ p.1 * radialPartial G p`. -/
 def dampedSlope (δ : ℝ) (G : Field) : Field :=
   fun p => slopeCutoff δ p.1 * radialPartial G p
 
@@ -166,8 +170,10 @@ theorem compact_integral_smooth (hs : IsOpen s)
 
 end CompactSmoothIntegral
 
+/-- Master point: an abbreviation for `(ℝ × ℝ) × ℝ`. -/
 abbrev MasterPoint := (ℝ × ℝ) × ℝ
 
+/-- Master domain, given by `{p | |p.1.1 * p.1.2| < T ∧ p.2 ∈ J}`. -/
 def masterDomain (T : ℝ) (J : Set ℝ) : Set MasterPoint :=
   {p | |p.1.1 * p.1.2| < T ∧ p.2 ∈ J}
 
@@ -244,6 +250,7 @@ theorem continuation_eq_master_hold {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (h�
       holdTime, min_eq_right htdiv, ← continuation_rescaled G hδ.ne']
     rw [mul_comm δ 2]
 
+/-- Parameter jet, given by `iteratedDeriv k (fun η => F (p.1, η)) p.2`. -/
 def parameterJet (k : ℕ) (F : MasterPoint → ℝ) (p : MasterPoint) : ℝ :=
   iteratedDeriv k (fun η => F (p.1, η)) p.2
 
@@ -278,7 +285,7 @@ theorem master_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : Is
   have hc : ContinuousOn (parameterJet k F) C := by
     intro p hp
     exact (parameterJet_continuousAt (hF.contDiffAt ((masterDomain_open T hJ).mem_nhds (hCD hp)))
-      k).continuousWithinAt
+        k).continuousWithinAt
   obtain ⟨r, hr, hdist⟩ := (Metric.uniformContinuousOn_iff.mp
     (hC.uniformContinuousOn_of_continuous hc)) ε hε
   refine ⟨min a r, lt_min ha hr, ?_⟩
@@ -297,6 +304,7 @@ theorem master_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : Is
     exact hzero u x
   simpa only [Real.dist_eq, hz] using hdist _ hx _ hy hdxy
 
+/-- Transformed master, given by `Φ (master G p, G (0, p.2))`. -/
 def transformedMaster (Φ : ℝ × ℝ → ℝ) (G : Field) (p : MasterPoint) : ℝ :=
   Φ (master G p, G (0, p.2))
 
@@ -337,11 +345,14 @@ theorem continuation_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (h
   rw [heq.iteratedDeriv_eq k]
   exact hc δ hδr (holdTime δ t) (holdTime_mem hδ ht) η hη
 
+/-- Parameter interval, given by `Ioo NaturalAxisCoefficients.window.left
+NaturalAxisCoefficients.window.right`. -/
 def parameterInterval : Set ℝ :=
   Ioo NaturalAxisCoefficients.window.left NaturalAxisCoefficients.window.right
 
 theorem parameterInterval_open : IsOpen parameterInterval := isOpen_Ioo
 
+/-- Ramp limit, given by `Real.log (41 / 40 : ℝ)`. -/
 def rampLimit : ℝ := Real.log (41 / 40 : ℝ)
 
 theorem rampLimit_pos : 0 < rampLimit := Real.log_pos (by norm_num)
@@ -359,15 +370,19 @@ theorem exists_small_length {ε : ℝ} (hε : 0 < ε) :
 /-- Only the proved natural-profile regularity and positivity are used in
 constructing REF. The natural ODE is not replaced by a surrogate assumption. -/
 structure Input where
+  /-- Scale of `Input`, of type `ℝ`. -/
   scale : ℝ
   scale_pos : 0 < scale
+  /-- F of `Input`, of type `Field`. -/
   f : Field
+  /-- U of `Input`, of type `Field`. -/
   U : Field
   f_smooth : ContDiffOn ℝ ∞ f (NaturalProfile.domain scale)
   U_smooth : ContDiffOn ℝ ∞ U (NaturalProfile.domain scale)
   positive : ∀ p ∈ NaturalProfile.domain scale, 0 ≤ scale * p.1 →
     scale * p.1 ≤ 41 / 10 → 0 < f p
 
+/-- Of natural, bundling `scale`, `scale_pos`, `f`, `U` and the required compatibility proofs. -/
 def Input.ofNatural {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalProfile.ProfileFamily d Λ C) : Input where
@@ -383,6 +398,7 @@ namespace Input
 
 variable (N : Input)
 
+/-- Endpoint, given by `4 / N.scale`. -/
 def endpoint : ℝ := 4 / N.scale
 
 theorem endpoint_pos : 0 < N.endpoint := div_pos (by norm_num) N.scale_pos
@@ -391,9 +407,13 @@ theorem scale_endpoint : N.scale * N.endpoint = 4 := by
   dsimp [endpoint]
   field_simp [N.scale_pos.ne']
 
+/-- From log, given by `(N.endpoint * Real.exp p.1, p.2)`. -/
 def fromLog (p : Point) : Point := (N.endpoint * Real.exp p.1, p.2)
+/-- Log time, given by `Real.log (X / N.endpoint)`. -/
 def logTime (X : ℝ) : ℝ := Real.log (X / N.endpoint)
+/-- Log F, defined pointwise by `Real.log (N.f (N.fromLog p))`. -/
 def logF : Field := fun p => Real.log (N.f (N.fromLog p))
+/-- Log U, defined pointwise by `N.U (N.fromLog p)`. -/
 def logU : Field := fun p => N.U (N.fromLog p)
 
 theorem fromLog_smooth : ContDiff ℝ ∞ N.fromLog :=
@@ -405,26 +425,26 @@ theorem fromLog_scaled (p : Point) : N.scale * (N.fromLog p).1 = 4 * Real.exp p.
 
 theorem fromLog_mem {p : Point}
     (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-      parameterInterval_open).carrier) :
+        parameterInterval_open).carrier) :
     N.fromLog p ∈ NaturalProfile.domain N.scale := by
   change (-20 < N.scale * (N.fromLog p).1 ∧ N.scale * (N.fromLog p).1 < 20) ∧ p.2 ∈
-    parameterInterval
+      parameterInterval
   rw [N.fromLog_scaled]
   have hupper : Real.exp p.1 < 41 / 40 := by
-    simpa only [rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)] using
-      Real.exp_lt_exp.mpr hp.1
+    simpa only [rampLimit, Real.exp_log (by
+        norm_num : (0 : ℝ) < 41 / 40)] using Real.exp_lt_exp.mpr hp.1
   refine ⟨⟨?_, ?_⟩, hp.2⟩ <;> nlinarith [Real.exp_pos p.1]
 
 theorem fromLog_f_pos {p : Point}
     (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-      parameterInterval_open).carrier) :
+        parameterInterval_open).carrier) :
     0 < N.f (N.fromLog p) := by
   apply N.positive _ (N.fromLog_mem hp)
   · rw [N.fromLog_scaled]; positivity
   · rw [N.fromLog_scaled]
     have hupper : Real.exp p.1 < 41 / 40 := by
-      simpa only [rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)] using
-        Real.exp_lt_exp.mpr hp.1
+      simpa only [rampLimit, Real.exp_log (by
+          norm_num : (0 : ℝ) < 41 / 40)] using Real.exp_lt_exp.mpr hp.1
     linarith
 
 theorem logF_smooth : ContDiffOn ℝ ∞ N.logF
@@ -432,7 +452,7 @@ theorem logF_smooth : ContDiffOn ℝ ∞ N.logF
   intro p hp
   exact (((N.f_smooth.contDiffAt ((NaturalProfile.domain_isOpen N.scale).mem_nhds
     (N.fromLog_mem hp))).comp p N.fromLog_smooth.contDiffAt).log (N.fromLog_f_pos
-      hp).ne').contDiffWithinAt
+        hp).ne').contDiffWithinAt
 
 theorem logU_smooth : ContDiffOn ℝ ∞ N.logU
     (earlyStrip rampLimit rampLimit_pos parameterInterval parameterInterval_open).carrier :=
@@ -482,9 +502,13 @@ theorem natural_mem_of_le_endpoint {p : Point} (hp : p ∈ N.radialDomain.carrie
   rw [N.scale_endpoint] at hb
   linarith
 
+/-- Ref F, defined pointwise by `if p.1 ≤ N.endpoint then N.f p else Real.exp (continuation δ
+N.logF (N.logTime p.1, p.2))`. -/
 def refF (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.f p else
   Real.exp (continuation δ N.logF (N.logTime p.1, p.2))
 
+/-- Ref U, defined pointwise by `if p.1 ≤ N.endpoint then N.U p else continuation δ N.logU
+(N.logTime p.1, p.2)`. -/
 def refU (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.U p else
   continuation δ N.logU (N.logTime p.1, p.2)
 
@@ -517,7 +541,7 @@ theorem refF_eq_natural {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
       parameterInterval_open N.logF_smooth (p := (N.logTime p.1, p.2)) hη ht]
     change Real.exp (Real.log (N.f (N.fromLog (N.logTime p.1, p.2)))) = _
     rw [Real.exp_log (N.fromLog_f_pos (p := (N.logTime p.1, p.2)) ⟨htT, hη⟩), N.fromLog_logTime
-      hxpos]
+        hxpos]
 
 theorem refU_eq_natural {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
     {p : Point} (hη : p.2 ∈ parameterInterval) (hX : p.1 ≤ N.endpoint * Real.exp δ) :
@@ -527,7 +551,7 @@ theorem refU_eq_natural {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
   · have hxpos : 0 < p.1 := N.endpoint_pos.trans (lt_of_not_ge hx)
     rw [refU, ite_eq_right hx, continuation_eq_natural rampLimit_pos hδ hδT
       parameterInterval_open N.logU_smooth (p := (N.logTime p.1, p.2)) hη ((N.logTime_le_iff
-        hxpos).2 hX)]
+          hxpos).2 hX)]
     change N.U (N.fromLog (N.logTime p.1, p.2)) = _
     rw [N.fromLog_logTime hxpos]
 
@@ -535,8 +559,8 @@ theorem refF_eq_logtime {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
     {p : Point} (hη : p.2 ∈ parameterInterval) (hX : 0 < p.1) :
     N.refF δ p = Real.exp (continuation δ N.logF (N.logTime p.1, p.2)) := by
   by_cases hx : p.1 ≤ N.endpoint
-  · have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hX).2 (by simpa only [Real.exp_zero, mul_one]
-    using hx)
+  · have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hX).2 (by
+      simpa only [Real.exp_zero, mul_one] using hx)
     have htδ := ht.trans hδ.le
     rw [refF, ite_eq_left hx, continuation_eq_natural rampLimit_pos hδ hδT
       parameterInterval_open N.logF_smooth (p := (N.logTime p.1, p.2)) hη htδ]
@@ -549,8 +573,8 @@ theorem refU_eq_logtime {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
     {p : Point} (hη : p.2 ∈ parameterInterval) (hX : 0 < p.1) :
     N.refU δ p = continuation δ N.logU (N.logTime p.1, p.2) := by
   by_cases hx : p.1 ≤ N.endpoint
-  · have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hX).2 (by simpa only [Real.exp_zero, mul_one]
-    using hx)
+  · have ht : N.logTime p.1 ≤ 0 := (N.logTime_le_iff hX).2 (by
+      simpa only [Real.exp_zero, mul_one] using hx)
     rw [refU, ite_eq_left hx, continuation_eq_natural rampLimit_pos hδ hδT
       parameterInterval_open N.logU_smooth (p := (N.logTime p.1, p.2)) hη (ht.trans hδ.le)]
     change N.U p = N.U (N.fromLog (N.logTime p.1, p.2))
@@ -560,20 +584,20 @@ theorem refU_eq_logtime {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
 theorem logtime_smoothAt {p : Point} (hX : 0 < p.1) :
     ContDiffAt ℝ ∞ (fun q : Point => (N.logTime q.1, q.2)) p :=
   ((contDiffAt_fst.div_const N.endpoint).log (div_ne_zero hX.ne' N.endpoint_pos.ne')).prodMk
-    contDiffAt_snd
+      contDiffAt_snd
 
 theorem refF_smooth {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit) :
     ContDiffOn ℝ ∞ (N.refF δ) N.radialDomain.carrier := by
   intro p hp
   by_cases hX : 0 < p.1
   · have hs := ((continuation_smooth rampLimit_pos hδ hδT parameterInterval_open
-    N.logF_smooth).contDiffAt
+      N.logF_smooth).contDiffAt
       ((fullStrip parameterInterval parameterInterval_open).isOpen.mem_nhds
         (show (N.logTime p.1, p.2) ∈ (fullStrip parameterInterval parameterInterval_open).carrier
-          from
+            from
           ⟨mem_univ _, hp.2⟩))).comp p (N.logtime_smoothAt hX)
     have heq : N.refF δ =ᶠ[𝓝 p] (fun q => Real.exp (continuation δ N.logF (N.logTime q.1, q.2))) :=
-      by
+        by
       filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hX),
         continuousAt_snd.eventually (parameterInterval_open.mem_nhds hp.2)] with q hqX hqη
       exact N.refF_eq_logtime hδ hδT hqη hqX
@@ -591,10 +615,10 @@ theorem refU_smooth {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit) :
   intro p hp
   by_cases hX : 0 < p.1
   · have hs := ((continuation_smooth rampLimit_pos hδ hδT parameterInterval_open
-    N.logU_smooth).contDiffAt
+      N.logU_smooth).contDiffAt
       ((fullStrip parameterInterval parameterInterval_open).isOpen.mem_nhds
         (show (N.logTime p.1, p.2) ∈ (fullStrip parameterInterval parameterInterval_open).carrier
-          from
+            from
           ⟨mem_univ _, hp.2⟩))).comp p (N.logtime_smoothAt hX)
     have heq : N.refU δ =ᶠ[𝓝 p] (fun q => continuation δ N.logU (N.logTime q.1, q.2)) := by
       filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hX),
@@ -650,7 +674,7 @@ theorem log_refF_hasDerivAt {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit
     N.logF_smooth (p := (N.logTime p.1, p.2)) hη).comp p.1 (N.logTime_hasDerivAt hX)
   have hd' : HasDerivAt (fun X => continuation δ N.logF (N.logTime X, p.2))
       (slopeCutoff δ (N.logTime p.1) * radialPartial N.logF (N.logTime p.1, p.2) / p.1) p.1 := by
-    convert! hd using 1 ; ring
+    convert! hd using 1; ring
   apply hd'.congr_of_eventuallyEq
   filter_upwards [Ioi_mem_nhds hX] with X hXX
   rw [N.refF_eq_logtime hδ hδT (p := (X, p.2)) hη hXX, Real.log_exp]
@@ -663,18 +687,19 @@ theorem refU_hasDerivAt {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
     N.logU_smooth (p := (N.logTime p.1, p.2)) hη).comp p.1 (N.logTime_hasDerivAt hX)
   have hd' : HasDerivAt (fun X => continuation δ N.logU (N.logTime X, p.2))
       (slopeCutoff δ (N.logTime p.1) * radialPartial N.logU (N.logTime p.1, p.2) / p.1) p.1 := by
-    convert! hd using 1 ; ring
+    convert! hd using 1; ring
   apply hd'.congr_of_eventuallyEq
   filter_upwards [Ioi_mem_nhds hX] with X hXX
   exact N.refU_eq_logtime hδ hδT hη hXX
 
 theorem natural_logtime_deriv {F : Field} (hF : ContDiffOn ℝ ∞ F (NaturalProfile.domain N.scale))
     {p : Point} (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-      parameterInterval_open).carrier) :
+        parameterInterval_open).carrier) :
     HasDerivAt (fun t => F (N.fromLog (t, p.2)))
       ((N.fromLog p).1 * radialPartial F (N.fromLog p)) p.1 := by
   have hf := (hF.contDiffAt ((NaturalProfile.domain_isOpen N.scale).mem_nhds (N.fromLog_mem
-    hp))).differentiableAt (by simp)
+      hp))).differentiableAt (by
+      simp)
   have hs := hf.hasFDerivAt.comp_hasDerivAt (N.fromLog p).1
     ((hasDerivAt_id (N.fromLog p).1).prodMk (hasDerivAt_const (N.fromLog p).1 p.2))
   have hd := hs.comp p.1 ((Real.hasDerivAt_exp p.1).const_mul N.endpoint)
@@ -682,19 +707,19 @@ theorem natural_logtime_deriv {F : Field} (hF : ContDiffOn ℝ ∞ F (NaturalPro
 
 theorem radialPartial_logF {p : Point}
     (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-      parameterInterval_open).carrier) :
+        parameterInterval_open).carrier) :
     radialPartial N.logF p =
       (N.fromLog p).1 * radialPartial N.f (N.fromLog p) / N.f (N.fromLog p) :=
   (radialPartial_hasDerivAt (earlyStrip rampLimit rampLimit_pos parameterInterval
-    parameterInterval_open)
+      parameterInterval_open)
     N.logF_smooth hp).unique ((N.natural_logtime_deriv N.f_smooth hp).log (N.fromLog_f_pos hp).ne')
 
 theorem radialPartial_logU {p : Point}
     (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
-      parameterInterval_open).carrier) :
+        parameterInterval_open).carrier) :
     radialPartial N.logU p = (N.fromLog p).1 * radialPartial N.U (N.fromLog p) :=
   (radialPartial_hasDerivAt (earlyStrip rampLimit rampLimit_pos parameterInterval
-    parameterInterval_open)
+      parameterInterval_open)
     N.logU_smooth hp).unique (N.natural_logtime_deriv N.U_smooth hp)
 
 /-- Exact same-X damping of the natural logarithmic slope on the natural region. -/
@@ -717,7 +742,7 @@ theorem same_radius_U_slope {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit
 
 theorem endpoint_f_pos {η : ℝ} (hη : η ∈ parameterInterval) : 0 < N.f (N.endpoint, η) := by
   simpa only [fromLog, Real.exp_zero, mul_one] using N.fromLog_f_pos (p := (0, η)) ⟨rampLimit_pos,
-    hη⟩
+      hη⟩
 
 theorem ref_log_transformed_jet_close {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff ℝ ∞ Φ)
     {K : Set ℝ} (hK : IsCompact K) (hKJ : K ⊆ parameterInterval) (k : ℕ)
@@ -725,15 +750,15 @@ theorem ref_log_transformed_jet_close {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff 
     ∃ δ₀ > 0, ∀ δ, 0 < δ → δ < δ₀ → ∀ X, N.endpoint ≤ X → ∀ η ∈ K,
       |iteratedDeriv k (fun y => Φ (Real.log (N.refF δ (X, y)), Real.log (N.f (N.endpoint, y)))) η -
         iteratedDeriv k (fun y => Φ (Real.log (N.f (N.endpoint, y)), Real.log (N.f (N.endpoint,
-          y)))) η| < ε := by
+            y)))) η| < ε := by
   obtain ⟨r, hr, hc⟩ := continuation_parameter_jet_close rampLimit_pos parameterInterval_open
     N.logF_smooth hΦ hK hKJ k hε
   refine ⟨min r (rampLimit / 4), lt_min hr (div_pos rampLimit_pos (by norm_num)), ?_⟩
   intro δ hδ hδ₀ X hX η hη
   have hδT : 2 * δ < rampLimit := by have := hδ₀.trans_le (min_le_right _ _); linarith
   have hXpos := N.endpoint_pos.trans_le hX
-  have ht : 0 ≤ N.logTime X := (N.le_logTime_iff hXpos).2 (by simpa only [Real.exp_zero, mul_one]
-    using hX)
+  have ht : 0 ≤ N.logTime X := (N.le_logTime_iff hXpos).2 (by
+      simpa only [Real.exp_zero, mul_one] using hX)
   have heq : (fun y => Φ (Real.log (N.refF δ (X, y)), Real.log (N.f (N.endpoint, y)))) =ᶠ[𝓝 η]
       (fun y => Φ (continuation δ N.logF (N.logTime X, y), N.logF (0, y))) := by
     filter_upwards [parameterInterval_open.mem_nhds (hKJ hη)] with y hy
@@ -755,8 +780,8 @@ theorem ref_U_transformed_jet_close {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff �
   intro δ hδ hδ₀ X hX η hη
   have hδT : 2 * δ < rampLimit := by have := hδ₀.trans_le (min_le_right _ _); linarith
   have hXpos := N.endpoint_pos.trans_le hX
-  have ht : 0 ≤ N.logTime X := (N.le_logTime_iff hXpos).2 (by simpa only [Real.exp_zero, mul_one]
-    using hX)
+  have ht : 0 ≤ N.logTime X := (N.le_logTime_iff hXpos).2 (by
+      simpa only [Real.exp_zero, mul_one] using hX)
   have heq : (fun y => Φ (N.refU δ (X, y), N.U (N.endpoint, y))) =ᶠ[𝓝 η]
       (fun y => Φ (continuation δ N.logU (N.logTime X, y), N.logU (0, y))) := by
     filter_upwards [parameterInterval_open.mem_nhds (hKJ hη)] with y hy
@@ -778,8 +803,8 @@ theorem iteratedDeriv_zero_function (k : ℕ) :
 theorem ref_log_error_jet_close {K : Set ℝ} (hK : IsCompact K)
     (hKJ : K ⊆ parameterInterval) (k : ℕ) {ε : ℝ} (hε : 0 < ε) :
     ∃ δ₀ > 0, ∀ δ, 0 < δ → δ < δ₀ → ∀ X, N.endpoint ≤ X → ∀ η ∈ K,
-      |iteratedDeriv k (fun y => Real.log (N.refF δ (X, y)) - Real.log (N.f (N.endpoint, y))) η| <
-        ε := by
+      |iteratedDeriv k (fun y =>
+          Real.log (N.refF δ (X, y)) - Real.log (N.f (N.endpoint, y))) η| < ε := by
   obtain ⟨r, hr, hc⟩ := N.ref_log_transformed_jet_close
     (contDiff_fst.sub contDiff_snd) hK hKJ k hε
   refine ⟨r, hr, ?_⟩
@@ -809,7 +834,7 @@ theorem ref_relative_error_jet_close {K : Set ℝ} (hK : IsCompact K)
   have hb : |iteratedDeriv k (fun y => Real.exp
       (Real.log (N.refF δ (X, y)) - Real.log (N.f (N.endpoint, y))) - 1) η| < ε := by
     simpa only [sub_self, Real.exp_zero, iteratedDeriv_zero_function, sub_zero] using hc δ hδ hδr X
-      hX η hη
+        hX η hη
   have heq : (fun y => N.refF δ (X, y) / N.f (N.endpoint, y) - 1) =ᶠ[𝓝 η]
       (fun y => Real.exp (Real.log (N.refF δ (X, y)) - Real.log (N.f (N.endpoint, y))) - 1) := by
     filter_upwards [parameterInterval_open.mem_nhds (hKJ hη)] with y hy
@@ -833,7 +858,7 @@ theorem ref_field_error_jet_close {K : Set ℝ} (hK : IsCompact K)
     simpa only [sub_self, iteratedDeriv_zero_function, sub_zero] using hc δ hδ hδr X hX η hη
   have heq : (fun y => N.refF δ (X, y) - N.f (N.endpoint, y)) =ᶠ[𝓝 η]
       (fun y => Real.exp (Real.log (N.refF δ (X, y))) - Real.exp (Real.log (N.f (N.endpoint, y))))
-        := by
+          := by
     filter_upwards [parameterInterval_open.mem_nhds (hKJ hη)] with y hy
     have hp : (X, y) ∈ N.radialDomain.carrier :=
       ⟨lt_trans (by norm_num) (mul_pos N.scale_pos hXpos), hy⟩
@@ -841,14 +866,16 @@ theorem ref_field_error_jet_close {K : Set ℝ} (hK : IsCompact K)
   rw [heq.iteratedDeriv_eq k]
   exact hb
 
+/-- Xbig, given by `100`. -/
 def Xbig : ℝ := 100
+/-- Xi, given by `110`. -/
 def Xi : ℝ := 110
 
 theorem freeze_before_Xbig (hscale : 1 ≤ N.scale) {δ : ℝ} (hδT : 2 * δ < rampLimit) :
     N.endpoint * Real.exp (2 * δ) < Xbig := by
   have he : Real.exp (2 * δ) < 41 / 40 := by
-    simpa only [rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)] using
-      Real.exp_lt_exp.mpr hδT
+    simpa only [rampLimit, Real.exp_log (by
+        norm_num : (0 : ℝ) < 41 / 40)] using Real.exp_lt_exp.mpr hδT
   have hb : N.endpoint ≤ 4 := by
     change 4 / N.scale ≤ 4
     apply (div_le_iff₀ N.scale_pos).2

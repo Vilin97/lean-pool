@@ -7,15 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
-public import Mathlib.Analysis.Calculus.FDeriv.Analytic
-public import Mathlib.Topology.Instances.Matrix
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-public import Mathlib.Analysis.Matrix.Normed
-
-@[expose] public section
+public import Mathlib.LinearAlgebra.Trace
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.Normed
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-! Jacobi's formula in every finite dimension, and determinant preservation
 for the actual linear evolution with trace-free coefficient. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -100,7 +101,7 @@ namespace EulerLinearDuhamel.Evolution
 open Set EulerVolterraConvolution EulerLinearEvolutionDeterminant
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-  {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
+  {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
 
 theorem det_forward_eq_initial (U : Evolution T hT B)
     (htrace : ∀ t, LinearMap.trace ℝ E (B t).toLinearMap = 0)
@@ -128,7 +129,7 @@ open Set
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 theorem constructedEvolution_det_one (T : ℝ) (hT : 0 ≤ T)
-    (B : C(Icc (0 : ℝ) T,E →L[ℝ] E))
+    (B : C(Icc (0 : ℝ) T, E →L[ℝ] E))
     (htrace : ∀ t, LinearMap.trace ℝ E (B t).toLinearMap = 0)
     (t : Icc (0 : ℝ) T) : ((constructedEvolution T hT B).forward t).det = 1 := by
   rw [(constructedEvolution T hT B).det_forward_eq_initial htrace t,

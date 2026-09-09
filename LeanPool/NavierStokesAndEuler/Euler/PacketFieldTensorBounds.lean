@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradient
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Full space-angle derivative tensors are bounded by the actual packet
 word budgets. This includes the scalar pressure via its norm-one embedding. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -52,7 +56,8 @@ theorem WordBound.raw_tensor_le (hG : G.WordBound q R A d) (hq : 3 ≤ q)
       euclideanLift P (iteratedFieldDerivative P w (G.toFieldTower.pointField t)) 0
         (coordinateEquiv.symm z) =
       iteratedFieldDerivative P w (G.toFieldTower.pointField t) (z.1,(z.2 : AddCircle P)) := by
-    simp only [euclideanLift,Function.comp_apply,localFieldLift,ContinuousLinearEquiv.apply_symm_apply,
+    simp only [euclideanLift, Function.comp_apply, localFieldLift,
+        ContinuousLinearEquiv.apply_symm_apply,
       Prod.fst_zero,Prod.snd_zero,zero_add]
   simp_rw [he] at ht
   rw [G.raw_eq_euclidean t,

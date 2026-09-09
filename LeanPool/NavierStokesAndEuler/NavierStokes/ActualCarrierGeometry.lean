@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialExcluded
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCovariance
-
-@[expose] public section
 
 /-!
 # Geometry of the actual broad primary carrier
@@ -19,6 +16,9 @@ but does not keep a separate dyadic mask.  A single geometric threshold,
 chosen before the actual primary family, controls this larger carrier.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCarrierGeometry
@@ -27,7 +27,9 @@ open Set Function Filter
 open CorrectionInitialization ActualPrimary
 open scoped Topology
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 /-- This threshold depends only on the fixed nominal profile and its actual
@@ -217,7 +219,7 @@ theorem labelCarrier_phaseCell (hN : geometricThreshold ≤ N0)
   refine ⟨k, hn, ?_, ?_⟩
   · rw [← he]
     exact ActualGaussianCoverage.actualSlowCore_inside certificate modulation (choice B
-      N0).prepared l.2
+        N0).prepared l.2
       hk.1 (ActualPrimaryCovariance.nativePoint_time n
         (BaseContextAssembly.nativeStrip_time nominal standardRegion hx) l.2)
   · rw [← he]
@@ -232,7 +234,7 @@ variable {B N0 : ℕ}
 theorem position_component (L : Label B N0) (p : Slow) (j : Fin 3) :
     position L p j =
       ChartScales.Q (BaseChartJets.cellBand L) ^ SlotColoring.axisExponent (CoordinateAlgebra.D h)
-        j *
+          j *
         PrimaryRepresentatives.position p j := by
   fin_cases j <;>
     simp [position, PrimaryRepresentatives.position, SlotColoring.axisExponent, Real.sqrt_eq_rpow]
@@ -265,7 +267,7 @@ theorem nativeSlowCore_physicalBox (l : ActualPrimaryBounds.SignedLabel B N0)
     _ = (ChartScales.Q (BaseChartJets.cellBand l.2) ^
         SlotColoring.axisExponent (CoordinateAlgebra.D h) j) *
         |PrimaryRepresentatives.position p j - SquaredPartition.nativeSpacing
-          (BaseChartJets.cellBand l.2) *
+            (BaseChartJets.cellBand l.2) *
           ((PrimaryGeometryAssembly.label nominal l.2).2 j : ℝ)| := by
       rw [position_component, width_eq, mul_assoc, ← mul_sub, abs_mul, abs_of_pos ha]
     _ ≤ (ChartScales.Q (BaseChartJets.cellBand l.2) ^
@@ -306,8 +308,8 @@ theorem labelCarrier_window_card (hN : geometricThreshold ≤ N0)
     (hs : ∀ l ∈ s, x ∈ ActualInitialExcluded.labelCarrier l n) : s.card ≤ 2250 := by
   apply LabelSumBounds.window_card_le s
     (fun l => ActualPrimaryCovariance.signedLabelOf (l.2, l.1)) signedLabel_injective.injOn
-  intro l hl
-  exact ⟨l.2.val.property.1, labelCarrier_window hN l n hx (hs l hl)⟩
+  · intro l hl
+    exact ⟨l.2.val.property.1, labelCarrier_window hN l n hx (hs l hl)⟩
 
 end Windows
 
@@ -356,9 +358,9 @@ theorem labelCarrier_disjoint (hN : geometricThreshold ≤ N0)
     (n : ℕ) {l m : ActualPrimaryBounds.SignedLabel B N0} (hne : l ≠ m) :
     Disjoint
       ((BaseContextAssembly.nativeStrip nominal standardRegion).domain ∩
-        ActualInitialExcluded.labelCarrier l n)
+          ActualInitialExcluded.labelCarrier l n)
       ((BaseContextAssembly.nativeStrip nominal standardRegion).domain ∩
-        ActualInitialExcluded.labelCarrier m n) := by
+          ActualInitialExcluded.labelCarrier m n) := by
   apply Set.disjoint_left.mpr
   intro x hl hm
   have hadj := LabelSumBounds.closedWindow_adjacency l.2.val.property.1 m.2.val.property.1

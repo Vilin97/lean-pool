@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadius
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryCommonRadius
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! The literal common radius of the initialized packet, with named
 budgets that retain it. Quantitative bounds must concern this radius,
 rather than an arbitrary witness of a radius-existence theorem. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,17 +32,24 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (NB : EulerTransversePacketJoin.NormalBudget D 6 L.R)
   (BC : CoefficientBudget C) (δ : ℝ) (ξ : U)
 
+/-- Primary radius budget: an abbreviation for `EulerTransversePacketPrimary.enlargeForPrimary L
+(wordRadius (Fin 4) δ)`. -/
 abbrev primaryRadiusBudget := EulerTransversePacketPrimary.enlargeForPrimary L (wordRadius (Fin 4)
-  δ)
+    δ)
 
+/-- Primary radius normal: an abbreviation for `NB.enlargeRadius (primaryRadiusBudget L δ).R
+(EulerTransversePacketPrimary.le_requiredRadius L _)`. -/
 abbrev primaryRadiusNormal := NB.enlargeRadius (primaryRadiusBudget L δ).R
   (EulerTransversePacketPrimary.le_requiredRadius L _)
 
+/-- Primary radius primary: an abbreviation for `EulerTransversePacketPrimary.requiredBudget L
+(wordRadius (Fin 4) δ)`. -/
 abbrev primaryRadiusPrimary := EulerTransversePacketPrimary.requiredBudget L (wordRadius (Fin 4) δ)
 
+/-- Initialized radius, constructed using `max`. -/
 def initializedRadius : ℝ :=
   max (EulerPacketCommonRadius.commonRadius LM (primaryRadiusBudget L δ) (primaryRadiusNormal L NB
-    δ) BC)
+      δ) BC)
     ((primaryRadiusPrimary L δ).gradeRadius (P := period) (primaryRadiusNormal L NB δ)
       (wordCost (Fin 4) 6 δ*‖ξ‖))
 
@@ -55,6 +64,8 @@ theorem mean_le_initializedRadius : Rm ≤ initializedRadius LM L NB BC δ ξ :=
   (EulerPacketCommonRadius.commonRadius_bounds LM (primaryRadiusBudget L δ)
     (primaryRadiusNormal L NB δ) BC).1.trans (le_max_left _ _)
 
+/-- Initialized joined budget, given by `(primaryRadiusBudget L δ).enlargeRadius
+(initializedRadius LM L NB BC δ ξ) (primary_le_initializedRadius LM L NB BC δ ξ)`. -/
 def initializedJoinedBudget : EulerTransversePacketJoin.Budget D τ hτ hτT B (Fin 4) 6 :=
   (primaryRadiusBudget L δ).enlargeRadius (initializedRadius LM L NB BC δ ξ)
     (primary_le_initializedRadius LM L NB BC δ ξ)
@@ -64,11 +75,15 @@ theorem initializedPrimaryBudget : EulerTransversePacketPrimary.Budget
   (primaryRadiusPrimary L δ).enlargeRadius (initializedRadius LM L NB BC δ ξ)
     (primary_le_initializedRadius LM L NB BC δ ξ)
 
+/-- Initialized normal budget, given by `(primaryRadiusNormal L NB δ).enlargeRadius
+(initializedRadius LM L NB BC δ ξ) (primary_le_initializedRadius LM L NB BC δ ξ)`. -/
 def initializedNormalBudget : EulerTransversePacketJoin.NormalBudget D 6
     (initializedRadius LM L NB BC δ ξ) :=
   (primaryRadiusNormal L NB δ).enlargeRadius (initializedRadius LM L NB BC δ ξ)
     (primary_le_initializedRadius LM L NB BC δ ξ)
 
+/-- Initialized mean budget, given by `LM.enlargeRadius (initializedRadius LM L NB BC δ ξ)
+(mean_le_initializedRadius LM L NB BC δ ξ)`. -/
 def initializedMeanBudget : EulerMeanPacketProvider.Budget M 6
     (initializedRadius LM L NB BC δ ξ) :=
   LM.enlargeRadius (initializedRadius LM L NB BC δ ξ) (mean_le_initializedRadius LM L NB BC δ ξ)

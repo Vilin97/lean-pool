@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingDerivatives
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-! Finite-order small-flow estimates.  The only evolution input is the
 literal integral (or, in the final theorem, differential) equation for
 the actual spatial derivatives.  The nonlinear majorant is derived here
 from Faà di Bruno; no bound on the flow derivatives is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -50,7 +51,7 @@ theorem derivative_term_le_sum (f : E → F) (N n : ℕ) (z : ℝ) (x : E)
       (div_nonneg (norm_nonneg (iteratedFDeriv ℝ j f x)) (sq_nonneg (j.factorial : ℝ)))
       (pow_nonneg hz j)) hn
 
-theorem derivativeSum_le_integral [CompleteSpace F]
+theorem derivativeSum_le_integral
     (f : E → F) (v : ℝ → E → F) (N : ℕ) (z t : ℝ) (x : E)
     (ht : 0 ≤ t) (hz : 0 ≤ z)
     (hc : ∀ n ∈ Finset.Icc 1 N,
@@ -69,25 +70,23 @@ theorem derivativeSum_le_integral [CompleteSpace F]
   · intro n hn
     exact (((hc n hn).norm.div_const _).mul_const _).intervalIntegrable_of_Icc ht
 
-variable [CompleteSpace E]
-
 /-- Uniform finite-order bound for a genuine flow displacement, from its
 actual differentiated integral equation.  The smallness condition and the
 resulting radius are independent of N. -/
 theorem flow_generating_sum_bound
     (ψ b : ℝ → E → E) (N : ℕ) (T B R : ℝ)
-    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
+    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
     (hψ : ∀ t ∈ Icc 0 T, ContDiff ℝ N (ψ t))
     (hb : ∀ t ∈ Icc 0 T, ContDiff ℝ N (b t)) (hψ0 : ψ 0 = 0)
     (hbjet : ∀ t ∈ Icc 0 T, ∀ y, ∀ n ∈ Finset.Icc 1 N,
-      ‖iteratedFDeriv ℝ n (b t) y‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+      ‖iteratedFDeriv ℝ n (b t) y‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (hcψ : ∀ n ∈ Finset.Icc 1 N, ∀ x,
       ContinuousOn (fun t => iteratedFDeriv ℝ n (ψ t) x) (Icc 0 T))
     (hcv : ∀ n ∈ Finset.Icc 1 N, ∀ x,
-      ContinuousOn (fun t => iteratedFDeriv ℝ n (b t ∘ (id+ψ t)) x) (Icc 0 T))
+      ContinuousOn (fun t => iteratedFDeriv ℝ n (b t ∘ (id + ψ t)) x) (Icc 0 T))
     (heq : ∀ n ∈ Finset.Icc 1 N, ∀ t ∈ Icc 0 T, ∀ x,
       iteratedFDeriv ℝ n (ψ t) x =
-        ∫ s in 0..t, iteratedFDeriv ℝ n (b s ∘ (id+ψ s)) x) :
+        ∫ s in 0..t, iteratedFDeriv ℝ n (b s ∘ (id + ψ s)) x) :
     ∀ t ∈ Icc 0 T, ∀ x,
       derivativeSum (ψ t) N ((4*R)⁻¹) x ≤ B*t := by
   intro t ht x
@@ -125,12 +124,11 @@ theorem flow_generating_sum_bound
     (hψ r hrT).contDiffAt (hb r hrT).contDiffAt
     (hbjet r hrT _) (lt_of_le_of_lt (hbefore r hr) (by norm_num))
 
-omit [CompleteSpace E] in
 /-- Extracting one term from the same finite sum gives a single fixed
 Gevrey radius, rather than a radius enlarged at each derivative order. -/
 theorem derivative_bound_of_generating_sum (f : E → F) (N n : ℕ) (R A : ℝ)
     (x : E) (hR : 0 < R) (hn : n ∈ Finset.Icc 1 N)
-    (hbound : derivativeSum f N ((4*R)⁻¹) x ≤ A) :
+    (hbound : derivativeSum f N ((4 * R)⁻¹) x ≤ A) :
     ‖iteratedFDeriv ℝ n f x‖ ≤ A*(4*R)^n*(n.factorial : ℝ)^2 := by
   have hw := (derivative_term_le_sum f N n ((4*R)⁻¹) x hn (by positivity)).trans hbound
   have hm := mul_le_mul_of_nonneg_right hw (pow_nonneg (show 0 ≤ 4*R by positivity) n)
@@ -138,6 +136,8 @@ theorem derivative_bound_of_generating_sum (f : E → F) (N n : ℕ) (R A : ℝ)
     rw [← mul_pow, inv_mul_cancel₀ (show 4*R ≠ 0 by positivity), one_pow]
   rw [mul_assoc, hid, mul_one] at hm
   exact (div_le_iff₀ (by positivity : 0 < (n.factorial : ℝ)^2)).mp hm
+
+variable [CompleteSpace E]
 
 /-- The integral equation used above follows from the actual within-time
 derivative identity on the closed interval, including a degenerate end. -/
@@ -162,16 +162,16 @@ theorem jet_integral_of_hasDerivWithinAt
 jets, with no independent integral-equation assumption. -/
 theorem flow_generating_sum_bound_of_jet_derivative
     (ψ b : ℝ → E → E) (N : ℕ) (T B R : ℝ)
-    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
+    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
     (hψ : ∀ t ∈ Icc 0 T, ContDiff ℝ N (ψ t))
     (hb : ∀ t ∈ Icc 0 T, ContDiff ℝ N (b t)) (hψ0 : ψ 0 = 0)
     (hbjet : ∀ t ∈ Icc 0 T, ∀ y, ∀ n ∈ Finset.Icc 1 N,
-      ‖iteratedFDeriv ℝ n (b t) y‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+      ‖iteratedFDeriv ℝ n (b t) y‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (hd : ∀ n ∈ Finset.Icc 1 N, ∀ t ∈ Icc 0 T, ∀ x,
       HasDerivWithinAt (fun s => iteratedFDeriv ℝ n (ψ s) x)
-        (iteratedFDeriv ℝ n (b t ∘ (id+ψ t)) x) (Icc 0 T) t)
+        (iteratedFDeriv ℝ n (b t ∘ (id + ψ t)) x) (Icc 0 T) t)
     (hcv : ∀ n ∈ Finset.Icc 1 N, ∀ x,
-      ContinuousOn (fun t => iteratedFDeriv ℝ n (b t ∘ (id+ψ t)) x) (Icc 0 T)) :
+      ContinuousOn (fun t => iteratedFDeriv ℝ n (b t ∘ (id + ψ t)) x) (Icc 0 T)) :
     ∀ t ∈ Icc 0 T, ∀ x, derivativeSum (ψ t) N ((4*R)⁻¹) x ≤ B*t := by
   apply flow_generating_sum_bound ψ b N T B R hT hB hR hsmall hψ hb hψ0 hbjet
   · exact fun n hn x t ht => (hd n hn t ht x).continuousWithinAt
@@ -185,24 +185,24 @@ linear amplitude B*t.  Smoothness and the jet equation are qualitative
 inputs; the derivative estimates are conclusions. -/
 theorem flow_positive_derivative_bound
     (ψ b : ℝ → E → E) (T B R : ℝ)
-    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
+    (hT : 0 ≤ T) (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
     (hψ : ∀ t ∈ Icc 0 T, ContDiff ℝ ∞ (ψ t))
     (hb : ∀ t ∈ Icc 0 T, ContDiff ℝ ∞ (b t)) (hψ0 : ψ 0 = 0)
     (hbjet : ∀ t ∈ Icc 0 T, ∀ y, ∀ n, 0 < n →
-      ‖iteratedFDeriv ℝ n (b t) y‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+      ‖iteratedFDeriv ℝ n (b t) y‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (hd : ∀ n, 0 < n → ∀ t ∈ Icc 0 T, ∀ x,
       HasDerivWithinAt (fun s => iteratedFDeriv ℝ n (ψ s) x)
-        (iteratedFDeriv ℝ n (b t ∘ (id+ψ t)) x) (Icc 0 T) t)
+        (iteratedFDeriv ℝ n (b t ∘ (id + ψ t)) x) (Icc 0 T) t)
     (hcv : ∀ n, 0 < n → ∀ x,
-      ContinuousOn (fun t => iteratedFDeriv ℝ n (b t ∘ (id+ψ t)) x) (Icc 0 T)) :
+      ContinuousOn (fun t => iteratedFDeriv ℝ n (b t ∘ (id + ψ t)) x) (Icc 0 T)) :
     ∀ t ∈ Icc 0 T, ∀ x, ∀ n, 0 < n →
       ‖iteratedFDeriv ℝ n (ψ t) x‖ ≤ B*t*(4*R)^n*(n.factorial : ℝ)^2 := by
   intro t ht x n hn
   apply derivative_bound_of_generating_sum (ψ t) n n R (B*t) x hR
     (Finset.mem_Icc.mpr ⟨hn,le_rfl⟩)
   exact flow_generating_sum_bound_of_jet_derivative ψ b n T B R hT hB hR hsmall
-    (fun s hs => (hψ s hs).of_le (by simp))
-    (fun s hs => (hb s hs).of_le (by simp)) hψ0
+    (fun s hs => (hψ s hs).of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl _))
+    (fun s hs => (hb s hs).of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl _)) hψ0
     (fun s hs y j hj => hbjet s hs y j (Finset.mem_Icc.mp hj).1)
     (fun j hj => hd j (Finset.mem_Icc.mp hj).1)
     (fun j hj => hcv j (Finset.mem_Icc.mp hj).1) t ht x

@@ -7,11 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PartitionedCovariance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityHomogeneity
-public import Mathlib.Topology.UniformSpace.HeineCantor
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CoordinateAlgebra
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityCoordinates
+import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityHomogeneity
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # Actual grid representatives and uniform primary reference parameters
@@ -21,6 +20,9 @@ support and the fixed closed active set. The enlarged-box distance is then a
 consequence of the mesh, rather than a hypothesis on the selected point.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PrimaryRepresentatives
@@ -28,13 +30,20 @@ namespace NavierStokes.PrimaryRepresentatives
 open Set Function Filter
 open scoped ContDiff Topology InnerProductSpace
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Plane: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev Plane := MovingFrameODE.Plane
+/-- Grid: an abbreviation for `SlotColoring.Grid`. -/
 abbrev Grid := SlotColoring.Grid
+/-- Label: an abbreviation for `PartitionedCovariance.UnsignedLabel`. -/
 abbrev Label := PartitionedCovariance.UnsignedLabel
+/-- Position: an abbreviation for `SlotColoring.Position`. -/
 abbrev Position := SlotColoring.Position
 
+/-- Position, given by `![q.1, q.2.1, q.2.2]`. -/
 noncomputable def position (q : Slow) : Position := ![q.1, q.2.1, q.2.2]
+/-- Slow, given by `(x 0, (x 1, x 2))`. -/
 noncomputable def slow (x : Position) : Slow := (x 0, (x 1, x 2))
 
 @[simp] theorem position_slow (x : Position) : position (slow x) = x := by
@@ -60,9 +69,12 @@ theorem norm_slow_sub_le {x y : Position} {c : ℝ}
   change max |x 0 - y 0| (max |x 1 - y 1| |x 2 - y 2|) ≤ c
   exact max_le (h 0) (max_le (h 1) (h 2))
 
+/-- Native mask, given by `SquaredPartition.slowMask n k (position q)`. -/
 noncomputable def nativeMask (n : ℕ) (k : Grid) (q : Slow) : ℝ :=
   SquaredPartition.slowMask n k (position q)
 
+/-- Grid box, given by `{q | ∀ j, |position q j - SquaredPartition.nativeSpacing n * (k j : ℝ)|
+≤ a * SquaredPartition.nativeSpacing n}`. -/
 noncomputable def gridBox (n : ℕ) (k : Grid) (a : ℝ) : Set Slow :=
   {q | ∀ j, |position q j - SquaredPartition.nativeSpacing n * (k j : ℝ)| ≤
     a * SquaredPartition.nativeSpacing n}
@@ -71,7 +83,7 @@ theorem gridBox_closed (n : ℕ) (k : Grid) (a : ℝ) : IsClosed (gridBox n k a)
   simp only [gridBox, Set.ofPred_forall]
   exact isClosed_iInter fun j => isClosed_le
     (((continuous_apply j).comp position_smooth.continuous).sub continuous_const).abs
-      continuous_const
+        continuous_const
 
 theorem nativeMask_smooth (n : ℕ) (k : Grid) : ContDiff ℝ ∞ (nativeMask n k) :=
   (SquaredPartition.slowMask_smooth n k).comp position_smooth
@@ -102,6 +114,7 @@ theorem gridBox_distance {n : ℕ} {k : Grid} {a b : ℝ} {q q₀ : Slow}
 noncomputable def ActiveLabel (K : Set Slow) :=
   {L : Label // 1 ≤ L.1 ∧ (K ∩ tsupport (nativeMask L.1 L.2)).Nonempty}
 
+/-- Representative, given by `Classical.choose L.property.2`. -/
 noncomputable def representative (K : Set Slow) (L : ActiveLabel K) : Slow :=
   Classical.choose L.property.2
 
@@ -128,6 +141,7 @@ theorem representative_support_distance (K : Set Slow) (L : ActiveLabel K)
   simpa only [show (1 : ℝ) + 1 = 2 by norm_num, SquaredPartition.nativeSpacing,
     div_eq_mul_inv] using gridBox_distance hq' h₀
 
+/-- Normalized slow, given by `slow (SquaredPartition.slowCoordinates D n x)`. -/
 noncomputable def normalizedSlow (D : ℝ) (n : ℕ) (x : Position) : Slow :=
   slow (SquaredPartition.slowCoordinates D n x)
 
@@ -198,12 +212,17 @@ theorem enlarged_eventually_in_chart {K U : Set Slow} (hK : IsCompact K)
 
 /-! ## Reference frame and exact unstable-mode parameters -/
 
+/-- Normal direction, given by `‖g‖⁻¹ • g`. -/
 noncomputable def normalDirection (g : Plane) : Plane := ‖g‖⁻¹ • g
+/-- Transverse direction, given by `-MovingFrameODE.quarterTurn (normalDirection g)`. -/
 noncomputable def transverseDirection (g : Plane) : Plane :=
   -MovingFrameODE.quarterTurn (normalDirection g)
+/-- Coupling, given by `2 * F * normalDirection g 0`. -/
 noncomputable def coupling (F : ℝ) (g : Plane) : ℝ := 2 * F * normalDirection g 0
+/-- Lambda0, given by `Real.sqrt (-(coupling F g) * (coupling F g + ‖g‖))`. -/
 noncomputable def lambda0 (F : ℝ) (g : Plane) : ℝ :=
   Real.sqrt (-(coupling F g) * (coupling F g + ‖g‖))
+/-- C0, given by `lambda0 F g / coupling F g`. -/
 noncomputable def c0 (F : ℝ) (g : Plane) : ℝ := lambda0 F g / coupling F g
 
 /-- Primitive strict shear conditions. The last inequality is the positive
@@ -331,6 +350,8 @@ theorem c0_continuousOn (hF : ContinuousOn F K) (hg : ContinuousOn g K)
 
 end Continuity
 
+/-- Parameter scalars, given by `![q.1, F q, ‖g q‖, lambda0 (F q) (g q), c0 (F q) (g q), q.1⁻¹,
+‖g q‖⁻¹, (lambda0 (F q) (g q))⁻¹, (c0 (F q) (g q))⁻¹]`. -/
 noncomputable def parameterScalars (F : Slow → ℝ) (g : Slow → Plane) (q : Slow) : Fin 9 → ℝ :=
   ![q.1, F q, ‖g q‖, lambda0 (F q) (g q), c0 (F q) (g q),
     q.1⁻¹, ‖g q‖⁻¹, (lambda0 (F q) (g q))⁻¹, (c0 (F q) (g q))⁻¹]
@@ -414,7 +435,7 @@ theorem representative_parameter_bounds {K : Set Slow} (hK : IsCompact K)
     (hR : ∀ q ∈ K, 0 < q.1) (hc : ∀ q ∈ K, ReferenceCone (F q) (g q)) :
     ∃ M : ℝ, 1 ≤ M ∧ ∀ L : ActiveLabel K,
       ParameterBounds M (representative K L).1 (F (representative K L)) (g (representative K L)) :=
-        by
+          by
   obtain ⟨M, hM, hb⟩ := compact_parameter_bounds hK hF hg hR hc
   exact ⟨M, hM, fun L => hb _ (representative_mem K L)⟩
 
@@ -426,9 +447,12 @@ noncomputable def activeReference (h a b : ℝ) : Set Slow :=
     SimilarityCoordinates.forwardScalar (2 * h) p.2.1 q = p.2.2 ∧
       p.1 ^ 2 / (2 * q) ∈ Icc a b}
 
+/-- Reference box, given by `Icc (Real.sqrt a) (2 * Real.sqrt b) ×ˢ (Icc (-2 : ℝ) 2 ×ˢ Icc (0 :
+ℝ) 2)`. -/
 noncomputable def referenceBox (a b : ℝ) : Set Slow :=
   Icc (Real.sqrt a) (2 * Real.sqrt b) ×ˢ (Icc (-2 : ℝ) 2 ×ˢ Icc (0 : ℝ) 2)
 
+/-- Reference compact, given by `closure (activeReference h a b)`. -/
 noncomputable def referenceCompact (h a b : ℝ) : Set Slow := closure (activeReference h a b)
 
 theorem activeReference_subset_box {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
@@ -507,7 +531,7 @@ theorem reference_enlarged_eventually_in_chart {h a b : ℝ} (hh : 0 ≤ h)
 theorem normalizedSlow_coordinates (D : ℝ) (n : ℕ) (x : Position) :
     normalizedSlow D n x =
       (x 0 / ChartScales.Q n ^ (1 / 2 : ℝ), (x 1 / ChartScales.Q n ^ D, x 2 / ChartScales.Q n)) :=
-        by
+          by
   simp [normalizedSlow, slow, SquaredPartition.slowCoordinates, SlotColoring.axisExponent]
 
 /-- The physical similarity equation and the actual dyadic mask put every
@@ -563,6 +587,7 @@ theorem physicalMask_has_representative {h a b : ℝ} (L : Label) (hL : 1 ≤ L.
 
 /-! ## One target-direction parameter, with uniform mixed-point slack -/
 
+/-- Target ratio, given by `|c0 F g * ⟪T, transverseDirection g⟫_ℝ / ⟪T, normalDirection g⟫_ℝ|`. -/
 noncomputable def targetRatio (F : ℝ) (g T : Plane) : ℝ :=
   |c0 F g * ⟪T, transverseDirection g⟫_ℝ / ⟪T, normalDirection g⟫_ℝ|
 
@@ -571,6 +596,7 @@ structure TargetCone (F : ℝ) (g T : Plane) : Prop where
   inward : ⟪T, normalDirection g⟫_ℝ < 0
   ratio_lt_one : targetRatio F g T < 1
 
+/-- Slope ratio, given by `u / Real.sqrt (1 + u ^ 2)`. -/
 noncomputable def slopeRatio (u : ℝ) : ℝ := u / Real.sqrt (1 + u ^ 2)
 
 theorem exists_slopeRatio_gt {r : ℝ} (hr : 0 ≤ r) (hr1 : r < 1) :

@@ -8,13 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRemainder
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedPressureAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastHessian
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
 
 /-! The initialized finite pressure has its actual leading angular force
 and a uniformly small covector remainder. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,9 +47,13 @@ theorem initializedProfiles_one_meanPressure :
   simp only [initializedProfiles,joinedSourceProfiles,profiles_one]
   rfl
 
+/-- Initialized angular pressure, defined pointwise by `(pressureJet (scalar τ hτ hτT B
+(initialData D δ hδ (α • ξ) hs)) z).2 angleDirection`. -/
 def initializedAngularPressure : ScalarField := fun z =>
   (pressureJet (scalar τ hτ hτT B (initialData D δ hδ (α • ξ) hs)) z).2 angleDirection
 
+/-- Initialized covector remainder, given by `covectorRemainder (N := N) (a :=
+initializedProfiles M D τ hτ hτT B δ hδ ξ hs α) D.m₀ κ`. -/
 def initializedCovectorRemainder (N : ℕ) (κ : ℝ) : VectorField :=
   covectorRemainder (N := N) (a := initializedProfiles M D τ hτ hτT B δ hδ ξ hs α) D.m₀ κ
 
@@ -110,14 +117,17 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
+/-- Initialized pressure budget, constructed using `Classical.choice`. -/
 def initializedPressureBudget (p : ℕ) :=
   Classical.choice (initializedPressureBudget_exists M D hTime τ hτ hτT B δ hδ ξ hs α
     L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth p)
 
+/-- Initialized angular pressure field as an element of `Field period D.T (fun z =>
+initializedAngularPressure D τ hτ hτT B δ hδ ξ hs α z • D.m₀)`. -/
 def initializedAngularPressureField :
     Field period D.T (fun z => initializedAngularPressure D τ hτ hτT B δ hδ ξ hs α z • D.m₀) :=
   (((initializedPressureBudget M D hTime τ hτ hτT B δ hδ ξ hs α
@@ -138,9 +148,11 @@ theorem initializedAngularPressure_bound :
     nlinarith [sq_nonneg S.H0]
   have hc := (hb.mono_amplitude (zero_le_one.trans L.radius_bounds.1) ha).fixed_velocity_grade
     (n := 1) (zero_le_one.trans L.radius_bounds.1) S.H0_pos.le
-  exact (hc.changeTime hTime).of_raw_eq _
+  exact (hc.changeTime hTime).ofRawEq _
     (fun _ _ _ => by rw [initializedProfiles_one_highPressure]; rfl)
 
+/-- Initialized covector remainder field as an element of `Field period D.T
+(initializedCovectorRemainder M D τ hτ hτT B δ hδ ξ hs α N κ)`. -/
 def initializedCovectorRemainderField (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) :
     Field period D.T (initializedCovectorRemainder M D τ hτ hτT B δ hδ ξ hs α N κ) :=
   (covectorRemainderField M.T_pos D.m₀
@@ -152,7 +164,7 @@ def initializedCovectorRemainderField (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) :
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 theorem initializedCovectorRemainder_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (initializedCovectorRemainderField M D hTime τ hτ hτT B δ hδ ξ hs α
       L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k⁻¹).WordBound
       6 (4*L.R) ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2) 0 := by
@@ -164,6 +176,6 @@ theorem initializedCovectorRemainder_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (h
       L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth i hi)
     L.radius_bounds.1 (initializedProfiles_zero M D τ hτ hτT B δ hδ ξ hs α) hN
     (initializedProfiles_one_meanPressure M D τ hτ hτT B δ hδ ξ hs α) BC k hk hbase).changeTime
-      hTime
+        hTime
 
 end EulerPacketTerminalDatum

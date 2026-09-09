@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseMomentumRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseCoordinateRegularity
+import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
 
 /-!
 # Transport of actual H¹ derivative spaces by a moving frame
@@ -18,6 +18,9 @@ the actual derivative after applying the constructed Gram left inverse. This
 places parameter-dependent transverse variational problems on one fixed Hilbert
 space before coefficient differentiation or all-order estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +38,7 @@ variable {U E : Type*}
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖^2 ≤ ‖Q t x‖^2)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^ 2)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
 

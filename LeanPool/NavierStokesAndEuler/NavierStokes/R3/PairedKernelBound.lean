@@ -7,12 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 /-!
 # An integrable majorant for the paired commutator kernel
@@ -22,6 +18,9 @@ section. Pairing the resulting uniform bound with an `L¹` function also
 proves integrability on the product space, so Fubini is applicable.
 These results do not assume or construct a singular integral operator.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -263,8 +262,8 @@ theorem norm_paired_kernel_le_scaled
     ‖∫ x, g x • ∫ y, K x y • r y‖ ≤
         comparisonLpNorm 1 g * comparisonLpNorm (4 / 3) (fun y => D * k y) * comparisonLpNorm 4 r :=
       norm_paired_kernel_le hK (hk.const_mul D) hr hg hbound
-    _ = D * comparisonLpNorm 1 g * comparisonLpNorm (4 / 3) k * comparisonLpNorm 4 r := by rw
-      [hscale]; ring
+    _ = D * comparisonLpNorm 1 g * comparisonLpNorm (4 / 3) k * comparisonLpNorm 4 r := by
+        rw [hscale]; ring
 
 /-- Fubini for the paired expression follows from actual product integrability. -/
 theorem integral_pairing_swap

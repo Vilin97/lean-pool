@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanStageData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
 
-@[expose] public section
-
 /-!
 # Exact exterior vanishing of the actual mean fields
 
@@ -19,6 +17,9 @@ the exact normalized-radius identity places the physical support in the closed
 nominal active annulus, without enlarging either edge.  This applies to the
 literal initialized fields and to every mean stage of the same coherent cycle.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

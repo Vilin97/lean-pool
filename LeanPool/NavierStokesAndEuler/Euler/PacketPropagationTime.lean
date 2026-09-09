@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledRay
 
+/-! Exact transfer of relative propagation to physical time and its actual profile. -/
+
 @[expose] public section
 
-/-! Exact transfer of relative propagation to physical time and its actual profile. -/
 
 noncomputable section
 
@@ -19,8 +20,10 @@ namespace EulerPacketMovingFrame
 
 open Set
 
+/-- Scaled time, given by `(a/ε)*(t-t₀)`. -/
 def scaledTime (t₀ a ε t : ℝ) : ℝ := (a/ε)*(t-t₀)
 
+/-- Physical profile, given by `Z (scaledTime t₀ a ε t)`. -/
 def physicalProfile (Z : ℝ → ℝ) (t₀ a ε t : ℝ) : ℝ := Z (scaledTime t₀ a ε t)
 
 theorem physicalTime_scaledTime {t₀ a ε t : ℝ} (ha : a ≠ 0) (hε : ε ≠ 0) :
@@ -71,7 +74,7 @@ theorem physical_propagation_of_scaled {E : Type*} [NormedAddCommGroup E]
     (w : ℝ → E) (Z : ℝ → ℝ) {t₀ a ε T C : ℝ}
     (ha : 0 < a) (hε : 0 < ε)
     (hbound : ∀ s t, 0 ≤ s → s ≤ t → t ≤ T →
-      ‖w (physicalTime t₀ a ε t)‖ ≤ C*(Z t/Z s)*‖w (physicalTime t₀ a ε s)‖) :
+      ‖w (physicalTime t₀ a ε t)‖ ≤ C * (Z t / Z s) * ‖w (physicalTime t₀ a ε s)‖) :
     ∀ s t, s ∈ Icc t₀ (physicalTime t₀ a ε T) →
       t ∈ Icc t₀ (physicalTime t₀ a ε T) → s ≤ t →
       ‖w t‖ ≤ C*(physicalProfile Z t₀ a ε t/physicalProfile Z t₀ a ε s)*‖w s‖ := by

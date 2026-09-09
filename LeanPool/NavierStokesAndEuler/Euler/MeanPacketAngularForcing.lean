@@ -7,9 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketOrbitForcing
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMeanTime
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMeanPath
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMeanRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketNonlinearForcing
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMeanTime
 
 /-!
 # Literal angular averages are admissible mean forcing
@@ -18,6 +20,9 @@ The cylinder-to-space mean is the actual normalized angular integral. Its
 proved ordinary translation regularity is converted into literal spatial L²
 jets, so the mean packet provider receives an actual admissible input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,7 +35,7 @@ open Set MeasureTheory EulerSmoothLimit EulerLiftedGradientSpace
 open scoped ContDiff
 
 variable (D : Data) (P : ℝ) [Fact (0 < P)]
-  (p : C(Icc (0 : ℝ) D.T,LiftL2 P))
+  (p : C(Icc (0 : ℝ) D.T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 /-- The literal normalized integral of the actual cylinder representative. -/
@@ -50,9 +55,9 @@ def angularMeanForcing : Forcing D (angularMeanRaw D P p hp) :=
     exact congrFun (mean_pointField_eq P p hp t).symm x)
 
 /-- A raw cylinder field identified with that representative has the same admissible mean. -/
-def angularMeanForcing_of_raw (raw : VectorField)
+def angularMeanForcingOfRaw (raw : VectorField)
     (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ,
-      raw (t,(x,θ)) = pointField P p hp t (x,(θ : AddCircle P))) :
+      raw (t, (x, θ)) = pointField P p hp t (x, (θ : AddCircle P))) :
     Forcing D (fun z => P⁻¹ • (∫ θ in (0 : ℝ)..P, raw (z.1,(z.2.1,θ)))) := by
   apply (angularMeanForcing D P p hp).congr
   intro t x θ

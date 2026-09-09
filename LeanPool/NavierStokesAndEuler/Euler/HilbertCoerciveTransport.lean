@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Coercive operator transport between Hilbert models
@@ -16,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
 This elementary operator lemma applies equally to mean and transverse
 displacement spaces, including forms with nonlocal initial-trace terms.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,8 +42,8 @@ theorem transportedOperator_inner (D : V →L[ℝ] W) (A : W →L[ℝ] W) (u v :
 /-- Coercivity transports using only a proved lower bound for the coordinate map. -/
 theorem transportedOperator_coercive (D : V →L[ℝ] W) (A : W →L[ℝ] W)
     (a d : ℝ) (ha : 0 ≤ a)
-    (hA : ∀ w, a * ‖w‖^2 ≤ ⟪A w, w⟫_ℝ)
-    (hD : ∀ v, d * ‖v‖^2 ≤ ‖D v‖^2) (v : V) :
+    (hA : ∀ w, a * ‖w‖ ^ 2 ≤ ⟪A w, w⟫_ℝ)
+    (hD : ∀ v, d * ‖v‖ ^ 2 ≤ ‖D v‖ ^ 2) (v : V) :
     (a*d) * ‖v‖^2 ≤ ⟪transportedOperator D A v, v⟫_ℝ := by
   rw [transportedOperator_inner]
   calc

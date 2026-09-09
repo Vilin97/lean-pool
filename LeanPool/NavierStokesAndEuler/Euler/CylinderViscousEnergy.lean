@@ -7,10 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.RepresentativeMetricEvolution
+public import LeanPool.NavierStokesAndEuler.Euler.MetricHeatEnergy
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Finite-word viscous energy for the actual lifted transport and projected-pressure equation. -/
 
 @[expose] public section
 
-/-! Finite-word viscous energy for the actual lifted transport and projected-pressure equation. -/
 
 noncomputable section
 
@@ -31,7 +35,8 @@ def heatEnergyConstant (K : SmoothCoefficient period) (c : ℝ) : ℝ :=
 def transportEnergyConstant (K : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (B : ℝ≥0) : ℝ :=
   (1 / 2 : ℝ) * K.firstBound * ((|κ| + ‖m‖) * B)
 
-/-- The regularized root of a finite sum of actual cylinder word energies obeys the viscous estimate. -/
+/-- The regularized root of a finite sum of actual cylinder word energies obeys the viscous
+estimate. -/
 theorem finite_cylinder_viscous_energy {ι : Type*} [Fintype ι]
     (κ : ℝ) (m : Vector3) (K : ℝ → SmoothCoefficient period) (G : SmoothCoefficient period)
     (e : ι → ℝ → LiftL2 period) (t δ c ν : ℝ)

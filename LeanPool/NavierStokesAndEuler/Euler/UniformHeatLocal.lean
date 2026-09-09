@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticHeatLocal
+public import LeanPool.NavierStokesAndEuler.Euler.QuadraticCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
+import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatVolterra
+import LeanPool.NavierStokesAndEuler.Euler.VolterraUniqueness
+import Mathlib.Algebra.Order.Star.Real
+
+/-! A uniform positive restart time for bounded data in the actual viscous Sobolev equation. -/
 
 @[expose] public section
 
-/-! A uniform positive restart time for bounded data in the actual viscous Sobolev equation. -/
 
 noncomputable section
 
@@ -20,7 +25,7 @@ open MeasureTheory Set EulerCylinderSobolevSpace EulerSobolevHeat EulerQuadratic
 open scoped Topology
 
 /-- A translated compact time window inside the prescribed coefficient interval. -/
-def timeWindow {S : ℝ} (a T : ℝ) (ha : 0 ≤ a) (haT : a+T ≤ S) :
+def timeWindow {S : ℝ} (a T : ℝ) (ha : 0 ≤ a) (haT : a + T ≤ S) :
     C(Icc (0 : ℝ) T, Icc (0 : ℝ) S) where
   toFun t := ⟨a+t.val, by linarith [t.property.1], by linarith [t.property.2]⟩
   continuous_toFun := (continuous_const.add continuous_subtype_val).subtype_mk _
@@ -34,12 +39,13 @@ theorem parabolic_mass_mono (ν s t : ℝ) (hst : s ≤ t) :
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Uniformly bounded initial Sobolev data have genuine local solutions on every time window of one fixed positive length.
+/-- Uniformly bounded initial Sobolev data have genuine local solutions on every time window of one
+fixed positive length.
 The length depends only on the compact coefficient bounds and the data bound, not on the restart
-  time or state. -/
+time or state. -/
 theorem exists_uniform_restart_time (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ) (hS : 0 < S)
     (R : ℝ) (hR : 0 ≤ R)
-    (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q+1)) (SobolevSpace period q)) :
+    (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q + 1)) (SobolevSpace period q)) :
     ∃ δ : ℝ, 0 < δ ∧ δ ≤ S ∧
       ∀ (a T : ℝ) (ha : 0 ≤ a) (hT : 0 ≤ T) (haT : a+T ≤ S), T ≤ δ →
         ∀ u₀ : SobolevSpace period (q+1), ‖u₀‖ ≤ R →
@@ -71,6 +77,6 @@ theorem exists_uniform_restart_time (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
   refine ⟨u, hu, ?_, hsol⟩
   have hzero := hsol ⟨0, le_rfl, hT⟩
   simpa only [mul_zero, Real.toNNReal_zero, heatOperator_zero, intervalIntegral.integral_same,
-    add_zero] using hzero
+      add_zero] using hzero
 
 end EulerUniformHeatLocal

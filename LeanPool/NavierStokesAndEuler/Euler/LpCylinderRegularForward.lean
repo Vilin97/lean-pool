@@ -6,12 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderSolutionTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRegularCoefficient
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderOrbit
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeighted
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelGevrey
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderOrbit
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRegularCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderSolutionTranslation
 
 /-!
 # The actual fixed-space family for a genuinely regular bounded forward coefficient
@@ -22,6 +22,9 @@ from the proved Picard construction. On the support-margin neighborhood it
 is exactly the mixed cylinder translation orbit of the original solution.
 Only the zero-parameter propagator uses the quantitative H3 assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,21 +41,47 @@ variable (period : ℝ) [Fact (0 < period)]
 
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   (T : ℝ) (hT : 0 ≤ T) (Ω : Set Space) (hΩ : MeasurableSet Ω)
-  (B : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
+  (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
   (hB : ContDiff ℝ ∞ (translateCoefficientPath B))
 
-private local instance : NormedRing (V →L[ℝ] V) := inferInstance
-private local instance : NormedRing (Space →ᵇ V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instLpCylinderRegularForward1 : NormedRing (V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ V →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRegularForward2 : NormedRing (Space →ᵇ V →L[ℝ] V) := inferInstance
 
-private local instance : NormedAddCommGroup (CylinderL2 period V) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 period V) := inferInstance
-private local instance : NormedAddCommGroup (Supported period V Ω hΩ) := inferInstance
-private local instance : NormedSpace ℝ (Supported period V Ω hΩ) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 period V) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 period V) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period V Ω hΩ) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V Ω hΩ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 period V)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRegularForward3 : NormedAddCommGroup (CylinderL2 period V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 period V)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRegularForward4 : NormedSpace ℝ (CylinderL2 period V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported period V Ω hΩ)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderRegularForward5 : NormedAddCommGroup (Supported period V Ω hΩ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported period V Ω hΩ)` instance to shorten typeclass
+synthesis. -/
+local instance instLpCylinderRegularForward6 : NormedSpace ℝ (Supported period V Ω hΩ) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 period V)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderRegularForward7 : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 period
+    V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 period V)` instance to shorten
+typeclass synthesis. -/
+local instance instLpCylinderRegularForward8 : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 period V)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period V Ω hΩ)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderRegularForward9 : NormedAddCommGroup C(Icc (0 : ℝ) T,Supported period
+    V Ω hΩ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V Ω hΩ)` instance to
+shorten typeclass synthesis. -/
+local instance instLpCylinderRegularForward10 : NormedSpace ℝ C(Icc (0 : ℝ) T,Supported period V Ω
+    hΩ) := inferInstance
 
 /-- The actual multiplication coefficient on the one fixed supported space. -/
 def coefficientFamily (a : LiftTangent) :
@@ -64,21 +93,21 @@ def evolutionFamily (a : LiftTangent) : Evolution T hT (coefficientFamily period
   constructedEvolution period Ω hΩ T hT (translateCoefficientPath B a.1)
 
 /-- The genuine profile-normalized forced solution in this fixed space. -/
-def solutionFamily (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 period V)) (a₀ : CylinderL2 period V) (a : LiftTangent) :
+def solutionFamily (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+    (f : C(Icc (0 : ℝ) T, CylinderL2 period V)) (a₀ : CylinderL2 period V) (a : LiftTangent) :
     C(Icc (0 : ℝ) T,Supported period V Ω hΩ) :=
   (evolutionFamily period T hT Ω hΩ B a).weightedSolution g hg
     (translatedForcing period Ω hΩ f a) (translatedData period Ω hΩ a₀ a)
 
 include hB in
 /-- Actual coefficient and data regularity give actual smoothness of the solved family. -/
-theorem solutionFamily_contDiff (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-    (f : C(Icc (0 : ℝ) T,CylinderL2 period V)) (a₀ : CylinderL2 period V)
+theorem solutionFamily_contDiff (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+    (f : C(Icc (0 : ℝ) T, CylinderL2 period V)) (a₀ : CylinderL2 period V)
     (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f))
     (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a a₀)) :
     ContDiff ℝ ∞ (solutionFamily period T hT Ω hΩ B g hg f a₀) :=
   weightedSolution_contDiff T hT (coefficientFamily period T Ω hΩ B) (evolutionFamily period T hT Ω
-    hΩ B)
+      hΩ B)
     g hg (translatedForcing period Ω hΩ f) (translatedData period Ω hΩ a₀)
     (mixedCoefficient_contDiff period Ω hΩ T B hB)
     (translatedForcing_contDiff period Ω hΩ f hf) (translatedData_contDiff period Ω hΩ a₀ ha₀)
@@ -103,12 +132,12 @@ theorem evolutionFamily_propagator_zero
 of the actual normalized source solution. -/
 theorem solutionFamily_translation_eventually
     (K : Set Space) (hK : MeasurableSet K) (hKc : IsCompact K) (hΩo : IsOpen Ω) (hsub : K ⊆ Ω)
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-    (f : C(Icc (0 : ℝ) T,Supported period V K hK))
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+    (f : C(Icc (0 : ℝ) T, Supported period V K hK))
     (a₀ : Supported period V K hK) :
     (fun a : LiftTangent => includePath period Ω hΩ
       (solutionFamily period T hT Ω hΩ B g hg (includePath period K hK f) (a₀ : CylinderL2 period
-        V) a)) =ᶠ[𝓝 0]
+          V) a)) =ᶠ[𝓝 0]
       (fun a => pathTranslate period a (includePath period K hK
         ((constructedEvolution period K hK T hT B).weightedSolution g hg f a₀))) :=
   weighted_solution_translation_eventually period T hT K Ω hK hΩ B
@@ -121,8 +150,8 @@ include hΩ hB in
 mixed translation orbit of the actual solution. -/
 theorem source_solution_contDiff
     (K : Set Space) (hK : MeasurableSet K) (hKc : IsCompact K) (hΩo : IsOpen Ω) (hsub : K ⊆ Ω)
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-    (f : C(Icc (0 : ℝ) T,Supported period V K hK)) (a₀ : Supported period V K hK)
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+    (f : C(Icc (0 : ℝ) T, Supported period V K hK)) (a₀ : Supported period V K hK)
     (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period K hK f)))
     (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period V))) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period K hK
@@ -132,7 +161,7 @@ theorem source_solution_contDiff
     (a₀ : CylinderL2 period V) hf ha₀
   have hi : ContDiff ℝ ∞ (fun a : LiftTangent => includePath period Ω hΩ
       (solutionFamily period T hT Ω hΩ B g hg (includePath period K hK f) (a₀ : CylinderL2 period
-        V) a)) :=
+          V) a)) :=
     (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
       (E := C(Icc (0 : ℝ) T,Supported period V Ω hΩ))
       (F := C(Icc (0 : ℝ) T,CylinderL2 period V)) (includePath period Ω hΩ)).comp hu

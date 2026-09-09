@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitial
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCylinderFields
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCylinderFields
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitial
 
 /-! The raw forward field attains the actual continuous representative of
 its prescribed supported initial coordinates. -/
+
+@[expose] public section
+
 
 noncomputable section
 

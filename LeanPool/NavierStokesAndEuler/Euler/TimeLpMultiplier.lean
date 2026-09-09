@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMap
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual bounded time-dependent linear operators on Bochner L² time fields. -/
 
 @[expose] public section
 
-/-! Actual bounded time-dependent linear operators on Bochner L² time fields. -/
 
 noncomputable section
 
@@ -51,7 +53,7 @@ def timeApplyLinear (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ]
     apply Lp.ext
     filter_upwards [timeApply_ae T hT A (u+v), timeApply_ae T hT A u, timeApply_ae T hT A v,
       Lp.coeFn_add u v, Lp.coeFn_add (timeApply T hT A u) (timeApply T hT A v)] with t h1 h2 h3 h4
-        h5
+          h5
     simp only [Pi.add_apply] at h4 h5
     rw [h1, h5, h2, h3, h4, map_add]
   map_smul' r u := by
@@ -87,11 +89,11 @@ theorem timeMultiplier_pathLp (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E
     (u : C(Icc (0 : ℝ) T, E)) :
     timeMultiplier T hT A (pathLp T hT u) =
       pathLp T hT (⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩ : C(Icc (0 : ℝ) T, F))
-        := by
+          := by
   apply Lp.ext
   filter_upwards [timeMultiplier_ae T hT A (pathLp T hT u), pathLp_ae T hT u,
     pathLp_ae T hT (⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩ : C(Icc (0 : ℝ) T,
-      F))]
+        F))]
     with t h1 h2 h3
   rw [h1, h2, h3]
   rfl

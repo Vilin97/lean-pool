@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MovingFrameODE
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothPathFamily
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedODEJets
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseEstimates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.JointODE
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.JointODE
+import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedODEJets
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Constructed primary pulse solutions
@@ -24,6 +22,9 @@ extension.  Reconstruction into ambient coordinates satisfies the projected
 equation exactly.  Estimates are derived for this constructed solution.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PrimaryODE
@@ -31,82 +32,123 @@ namespace NavierStokes.PrimaryODE
 open Set Filter
 open scoped Topology ContDiff InnerProductSpace
 
+/-- State: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev State := MovingFrameODE.Plane
+/-- Space: an abbreviation for `MovingFrameODE.Space`. -/
 abbrev Space := MovingFrameODE.Space
+/-- Frame: an abbreviation for `MovingFrameODE.Frame`. -/
 abbrev Frame := MovingFrameODE.Frame
 
 /-- Smooth input quantities before any solution is constructed.  `eigenvector`
 is the scalar `h` in `x=p+q, y=h(p-q)`; its logarithmic derivative is
 `eigenRate`.  `viscosity` is the fundamental scalar damping. -/
 structure FrameData (Q : Type) where
+  /-- Beta of `FrameData`, of type `Q × ℝ → ℝ`. -/
   beta : Q × ℝ → ℝ
+  /-- Beta dot of `FrameData`, of type `Q × ℝ → ℝ`. -/
   betaDot : Q × ℝ → ℝ
+  /-- Rho of `FrameData`, of type `Q × ℝ → ℝ`. -/
   rho : Q × ℝ → ℝ
+  /-- Rho dot of `FrameData`, of type `Q × ℝ → ℝ`. -/
   rhoDot : Q × ℝ → ℝ
+  /-- Rotation of `FrameData`, of type `Q × ℝ → ℝ`. -/
   rotation : Q × ℝ → ℝ
+  /-- F of `FrameData`, of type `Q × ℝ → ℝ`. -/
   F : Q × ℝ → ℝ
+  /-- Shear of `FrameData`, of type `Q × ℝ → State`. -/
   shear : Q × ℝ → State
+  /-- Frame of `FrameData`, of type `Q × ℝ → Frame`. -/
   frame : Q × ℝ → Frame
+  /-- Eigenvalue of `FrameData`, of type `Q × ℝ → ℝ`. -/
   eigenvalue : Q × ℝ → ℝ
+  /-- Eigenvector of `FrameData`, of type `Q × ℝ → ℝ`. -/
   eigenvector : Q × ℝ → ℝ
+  /-- Eigen rate of `FrameData`, of type `Q × ℝ → ℝ`. -/
   eigenRate : Q × ℝ → ℝ
+  /-- Viscosity of `FrameData`, of type `Q × ℝ → ℝ`. -/
   viscosity : Q × ℝ → ℝ
 
 namespace FrameData
 
 variable {Q : Type} (d : FrameData Q)
 
+/-- Error A, given by `MovingFrameODE.coeff11 (d.rho z) (d.rhoDot z) ⟪d.frame z 0, d.shear
+z⟫_ℝ`. -/
 noncomputable def errorA (z : Q × ℝ) : ℝ :=
   MovingFrameODE.coeff11 (d.rho z) (d.rhoDot z) ⟪d.frame z 0, d.shear z⟫_ℝ
 
+/-- Error B, given by `MovingFrameODE.coeff12 (d.F z) (d.frame z 1 0) (d.rho z) (d.rotation z) -
+d.eigenvalue z / d.eigenvector z`. -/
 noncomputable def errorB (z : Q × ℝ) : ℝ :=
   MovingFrameODE.coeff12 (d.F z) (d.frame z 1 0) (d.rho z) (d.rotation z) -
     d.eigenvalue z / d.eigenvector z
 
+/-- Error C, constructed using `MovingFrameODE.coeff21`. -/
 noncomputable def errorC (z : Q × ℝ) : ℝ :=
   MovingFrameODE.coeff21 (d.F z) (d.frame z 1 0) ⟪d.frame z 1, d.shear z⟫_ℝ
     (d.rho z) (d.rotation z) - d.eigenvalue z * d.eigenvector z
 
+/-- Error11, given by `MovingFrameODE.modal11 (d.errorA z) (d.errorB z) (d.errorC z)
+(d.eigenvector z) (d.eigenRate z)`. -/
 noncomputable def error11 (z : Q × ℝ) : ℝ :=
   MovingFrameODE.modal11 (d.errorA z) (d.errorB z) (d.errorC z)
     (d.eigenvector z) (d.eigenRate z)
 
+/-- Error12, given by `MovingFrameODE.modal12 (d.errorA z) (d.errorB z) (d.errorC z)
+(d.eigenvector z) (d.eigenRate z)`. -/
 noncomputable def error12 (z : Q × ℝ) : ℝ :=
   MovingFrameODE.modal12 (d.errorA z) (d.errorB z) (d.errorC z)
     (d.eigenvector z) (d.eigenRate z)
 
+/-- Error21, given by `MovingFrameODE.modal21 (d.errorA z) (d.errorB z) (d.errorC z)
+(d.eigenvector z) (d.eigenRate z)`. -/
 noncomputable def error21 (z : Q × ℝ) : ℝ :=
   MovingFrameODE.modal21 (d.errorA z) (d.errorB z) (d.errorC z)
     (d.eigenvector z) (d.eigenRate z)
 
+/-- Error22, given by `MovingFrameODE.modal22 (d.errorA z) (d.errorB z) (d.errorC z)
+(d.eigenvector z) (d.eigenRate z)`. -/
 noncomputable def error22 (z : Q × ℝ) : ℝ :=
   MovingFrameODE.modal22 (d.errorA z) (d.errorB z) (d.errorC z)
     (d.eigenvector z) (d.eigenRate z)
 
+/-- Damping, given by `(j : ℝ) ^ 2 * d.viscosity z`. -/
 noncomputable def damping (j : ℤ) (z : Q × ℝ) : ℝ := (j : ℝ) ^ 2 * d.viscosity z
 
+/-- Coefficient, given by `GrowingMode.modalOperator (d.eigenvalue z) (d.damping j z) (d.error11
+z) (d.error12 z) (d.error21 z) (d.error22 z)`. -/
 noncomputable def coefficient (j : ℤ) (z : Q × ℝ) : State →L[ℝ] State :=
   GrowingMode.modalOperator (d.eigenvalue z) (d.damping j z)
     (d.error11 z) (d.error12 z) (d.error21 z) (d.error22 z)
 
+/-- Force X, given by `-(f z 0 - d.rho z * ⟪d.frame z 0, MovingFrameODE.tail (f z)⟫_ℝ) / (1 +
+d.rho z ^ 2)`. -/
 noncomputable def forceX (f : Q × ℝ → Space) (z : Q × ℝ) : ℝ :=
   -(f z 0 - d.rho z * ⟪d.frame z 0, MovingFrameODE.tail (f z)⟫_ℝ) /
     (1 + d.rho z ^ 2)
 
+/-- Force Y, given by `-⟪d.frame z 1, MovingFrameODE.tail (f z)⟫_ℝ`. -/
 noncomputable def forceY (f : Q × ℝ → Space) (z : Q × ℝ) : ℝ :=
   -⟪d.frame z 1, MovingFrameODE.tail (f z)⟫_ℝ
 
+/-- Forcing, given by `!₂[(d.forceX f z + d.forceY f z / d.eigenvector z) / 2, (d.forceX f z -
+d.forceY f z / d.eigenvector z) / 2]`. -/
 noncomputable def forcing (f : Q × ℝ → Space) (z : Q × ℝ) : State :=
   !₂[(d.forceX f z + d.forceY f z / d.eigenvector z) / 2,
     (d.forceX f z - d.forceY f z / d.eigenvector z) / 2]
 
+/-- Ambient, given by `MovingFrameODE.tangent (d.rho z) (d.frame z) (w 0 + w 1) (d.eigenvector z
+* (w 0 - w 1))`. -/
 noncomputable def ambient (z : Q × ℝ) (w : State) : Space :=
   MovingFrameODE.tangent (d.rho z) (d.frame z) (w 0 + w 1)
     (d.eigenvector z * (w 0 - w 1))
 
+/-- Normal, given by `MovingFrameODE.normal (d.beta z) (d.rho z) (d.frame z)`. -/
 noncomputable def normal (z : Q × ℝ) : Space :=
   MovingFrameODE.normal (d.beta z) (d.rho z) (d.frame z)
 
+/-- Normal motion, given by `MovingFrameODE.normalMotion (d.beta z) (d.betaDot z) (d.rho z)
+(d.rhoDot z) (d.rotation z) (d.frame z)`. -/
 noncomputable def normalMotion (z : Q × ℝ) : Space :=
   MovingFrameODE.normalMotion (d.beta z) (d.betaDot z) (d.rho z) (d.rhoDot z)
     (d.rotation z) (d.frame z)
@@ -187,10 +229,12 @@ theorem extendedFamily_hasDerivAt (hab : a ≤ b) {U : Set Q}
   simpa only [SmoothPathFamily.pathFamily_apply A p hAc,
     SmoothPathFamily.pathFamily_apply f p hfc] using hh
 
+/-- Solution, given by `extendedFamily hab (d.coefficient j) x₀ (d.forcing f) p`. -/
 noncomputable def solution (hab : a ≤ b) (d : FrameData Q) (j : ℤ)
     (x₀ : Q → State) (f : Q × ℝ → Space) (p : Q) : ℝ → State :=
   extendedFamily hab (d.coefficient j) x₀ (d.forcing f) p
 
+/-- Ambient solution, given by `d.ambient (p, v) (solution hab d j x₀ f p v)`. -/
 noncomputable def ambientSolution (hab : a ≤ b) (d : FrameData Q) (j : ℤ)
     (x₀ : Q → State) (f : Q × ℝ → Space) (p : Q) (v : ℝ) : Space :=
   d.ambient (p, v) (solution hab d j x₀ f p v)
@@ -409,14 +453,19 @@ section Primary
 variable {Q : Type} [NormedAddCommGroup Q]
 variable {a b : ℝ}
 
+/-- Primary seed, given by `!₂[P (p, a), 0]`. -/
 noncomputable def primarySeed (a : ℝ) (P : Q × ℝ → ℝ) (p : Q) : State := !₂[P (p, a), 0]
 
+/-- Primary, given by `solution hab d 1 (primarySeed a P) (fun _ => 0) p`. -/
 noncomputable def primary (hab : a ≤ b) (d : FrameData Q) (P : Q × ℝ → ℝ) (p : Q) : ℝ → State :=
   solution hab d 1 (primarySeed a P) (fun _ => 0) p
 
+/-- Radial primary, given by `primary hab d P p v 0 + primary hab d P p v 1`. -/
 noncomputable def radialPrimary (hab : a ≤ b) (d : FrameData Q) (P : Q × ℝ → ℝ)
     (p : Q) (v : ℝ) : ℝ := primary hab d P p v 0 + primary hab d P p v 1
 
+/-- Transverse primary, given by `d.eigenvector (p, v) * (primary hab d P p v 0 - primary hab d
+P p v 1)`. -/
 noncomputable def transversePrimary (hab : a ≤ b) (d : FrameData Q) (P : Q × ℝ → ℝ)
     (p : Q) (v : ℝ) : ℝ :=
   d.eigenvector (p, v) * (primary hab d P p v 0 - primary hab d P p v 1)
@@ -557,7 +606,7 @@ theorem homogeneous_forward_bound (hab : a ≤ b) (d : FrameData Q) {j : ℤ} (h
   have hbnd := solution_forward_bound hab d hj x₀ (fun _ => 0) hA hf hp referenceDamping rate P
     hS hC hD hPpos hP hreference hlam hν hνerr herr
   simp only [FrameData.forcing_zero, norm_zero, zero_div, intervalIntegral.integral_zero, add_zero]
-    at hbnd
+      at hbnd
   intro v hv
   have hexp : Real.exp (((D + 4 * C) / S) * (v - a)) ≤ Real.exp ((D + 4 * C) * L) := by
     apply Real.exp_le_exp.mpr
@@ -671,7 +720,7 @@ theorem FrameData.ofNormal_normalMotion (n nDot : Q × ℝ → Space)
     (lam h hRate viscosityScale : Q × ℝ → ℝ) {p : Q} {v : ℝ}
     (hn : HasDerivAt (fun t => n (p, t)) (nDot (p, v)) v) :
     (FrameData.ofNormal n nDot hne F g lam h hRate viscosityScale).normalMotion (p, v) = nDot (p,
-      v) := by
+        v) := by
   have hbeta := PhaseEstimates.hasDerivAt_normalScale hn (hne (p, v))
   have hrho := PhaseEstimates.hasDerivAt_radialSlope hn (hne (p, v))
   have hK : HasDerivAt (fun t => MovingFrameODE.normalFrame (n (p, t)) (hne (p, t)) 0)
@@ -682,7 +731,7 @@ theorem FrameData.ofNormal_normalMotion (n nDot : Q × ℝ → Space)
   have hd := MovingFrameODE.hasDerivAt_normal hbeta hrho hK
   have heq : (fun t => MovingFrameODE.normal (MovingFrameODE.normalScale (n (p, t)))
       (MovingFrameODE.radialSlope (n (p, t))) (MovingFrameODE.normalFrame (n (p, t)) (hne (p, t))))
-        =
+          =
       (fun t => n (p, t)) := by
     funext t
     exact MovingFrameODE.normal_reconstructed (hne (p, t))
@@ -739,9 +788,12 @@ theorem norm_iteratedFDeriv_solution_le_polynomial {a b : ℝ} (hab : a ≤ b) (
 
 end ParameterJets
 
+/-- Reference profile, given by `c₀ * Real.sqrt (1 + PulseGrowth.slotMagnitude u ell v ^ 2)`. -/
 noncomputable def referenceProfile (c₀ u ell v : ℝ) : ℝ :=
   c₀ * Real.sqrt (1 + PulseGrowth.slotMagnitude u ell v ^ 2)
 
+/-- Reference profile rate, given by `PulseGrowth.slotMagnitude u ell v * (u / ell) / (1 +
+PulseGrowth.slotMagnitude u ell v ^ 2)`. -/
 noncomputable def referenceProfileRate (u ell v : ℝ) : ℝ :=
   PulseGrowth.slotMagnitude u ell v * (u / ell) /
     (1 + PulseGrowth.slotMagnitude u ell v ^ 2)
@@ -776,6 +828,8 @@ theorem referenceEigenvalue_lower {lam u ell v : ℝ} (hlam : 0 < lam) (hu : 0 �
   apply Real.sqrt_le_sqrt
   nlinarith [hs.2]
 
+/-- Reference envelope, given by `GaussianEnvelope.envelope (GaussianEnvelope.referenceRate (lam
+z.1) (u z.1) ell) (ell / 2) z.2`. -/
 noncomputable def referenceEnvelope {Q : Type} (lam u : Q → ℝ) (ell : ℝ) (z : Q × ℝ) : ℝ :=
   GaussianEnvelope.envelope (GaussianEnvelope.referenceRate (lam z.1) (u z.1) ell)
     (ell / 2) z.2
@@ -811,7 +865,7 @@ theorem primary_gaussian_bounds {ell : ℝ} (hell : 0 < ell) (d : FrameData Q)
         (3 * Real.exp ((D + 2 * C) * L) / 2) * Real.exp (-b * (v - ell / 2) ^ 2 / ell) ∧
       |transversePrimary hell.le d (referenceEnvelope lam u ell) p v /
         radialPrimary hell.le d (referenceEnvelope lam u ell) p v - referenceProfile (c₀ p) (u p)
-          ell v| ≤
+            ell v| ≤
         4 * |referenceProfile (c₀ p) (u p) ell v| *
           (GrowingMode.coneConstant (lam p / Real.sqrt (1 + (3 * u p / 2) ^ 2)) C / S) := by
   have hgap : 0 < lam p / Real.sqrt (1 + (3 * u p / 2) ^ 2) :=
@@ -1082,7 +1136,7 @@ theorem FrameData.norm_le_ambient {Q : Type} (d : FrameData Q) (z : Q × ℝ) (w
   have hH : 0 ≤ H := (abs_nonneg _).trans hh
   have hx : |w 0 + w 1| ≤ ‖d.ambient z w‖ := by
     simpa only [FrameData.ambient, MovingFrameODE.tangent, MovingFrameODE.pack_zero,
-      Real.norm_eq_abs]
+        Real.norm_eq_abs]
       using PiLp.norm_apply_le (d.ambient z w) 0
   have hy : |d.eigenvector z * (w 0 - w 1)| ≤ ‖d.ambient z w‖ := by
     have he : ⟪d.frame z 1, MovingFrameODE.tail (d.ambient z w)⟫_ℝ =
@@ -1225,7 +1279,7 @@ theorem FrameData.ofNormalLocal_kinematics (n nDot : Q × ℝ → Space)
     fin_cases i
     · simpa only [Fin.zero_eta, ↓reduceIte] using MovingFrameODE.normalFrame_zero (n (p, t)) ht'
     · simpa only [Fin.mk_one, one_ne_zero, ↓reduceIte] using MovingFrameODE.normalFrame_one (n (p,
-      t)) ht'
+        t)) ht'
   refine ⟨fun v hv => (MovingFrameODE.normalScale_pos (hne v hv)).ne', hh,
     ?_, ?_, hdh, ?_, ?_⟩
   · intro v hv
@@ -1238,14 +1292,14 @@ theorem FrameData.ofNormalLocal_kinematics (n nDot : Q × ℝ → Space)
     have hd := (PhaseEstimates.hasDerivAt_actual_frame (hn v hv) (hne v hv)).1
     have hk := hd.congr_of_eventuallyEq he
     simpa only [FrameData.ofNormalLocal, localFrame_eq (hne v hv), MovingFrameODE.normalFrame_one]
-      using hk
+        using hk
   · intro v hv
     have he := hframe v hv 1
     simp only [one_ne_zero, ite_false] at he
     have hd := (PhaseEstimates.hasDerivAt_actual_frame (hn v hv) (hne v hv)).2
     have hk := hd.congr_of_eventuallyEq he
     simpa only [FrameData.ofNormalLocal, localFrame_eq (hne v hv), MovingFrameODE.normalFrame_zero]
-      using hk
+        using hk
 
 theorem FrameData.ofNormalLocal_normalMotion (n nDot : Q × ℝ → Space)
     (F : Q × ℝ → ℝ) (g : Q × ℝ → State)
@@ -1253,7 +1307,7 @@ theorem FrameData.ofNormalLocal_normalMotion (n nDot : Q × ℝ → Space)
     (hn : HasDerivAt (fun t => n (p, t)) (nDot (p, v)) v)
     (hne : MovingFrameODE.tail (n (p, v)) ≠ 0) :
     (FrameData.ofNormalLocal n nDot F g lam h hRate viscosityScale).normalMotion (p, v) = nDot (p,
-      v) := by
+        v) := by
   have htail := MovingFrameODE.tailCLM.hasFDerivAt.comp_hasDerivAt v hn
   have hnear := htail.continuousAt.eventually_ne hne
   have hKeq : (fun t => localFrame (n (p, t)) 0) =ᶠ[𝓝 v]

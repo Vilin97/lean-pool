@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalSignedRequest
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalParticularWave
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryFieldAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualNaturality
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicPhaseAssembly
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NormalScaling
 
 /-!
 # Signed quotient waves from one physical primary reference
@@ -22,6 +19,9 @@ band views use the same absolute-lift primary pulse and covariance
 matrix.  Compatibility is proved before restriction to a physical graph.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PhysicalSignedWave
@@ -30,11 +30,17 @@ open Set Function Filter Matrix HarmonicCalculus WeightedClasses
 open ProblemStatement CommonCoverSolve TorusInverse
 open scoped ContDiff Topology InnerProductSpace BigOperators
 
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
 
+/-- Fast translate, given by `((x.1.1, (x.1.2.1, x.1.2.2 + TorusAverages.latticePoint k)),
+x.2)`. -/
 noncomputable def fastTranslate (x : Cylinder) (k : TorusInverse.Frequency) : Cylinder :=
   ((x.1.1, (x.1.2.1, x.1.2.2 + TorusAverages.latticePoint k)), x.2)
 
@@ -70,6 +76,8 @@ theorem increment_square_scale (H : Mat2) (T R : Vec2) {a : ℝ} (ha : 0 < a) (j
   · simp only [hb, mul_zero, div_zero]
   · field_simp
 
+/-- Coefficient scale, given by `velocityScale * Real.sqrt referenceEpsilon / Real.sqrt
+epsilon`. -/
 noncomputable def coefficientScale (epsilon referenceEpsilon velocityScale : ℝ) : ℝ :=
   velocityScale * Real.sqrt referenceEpsilon / Real.sqrt epsilon
 
@@ -149,26 +157,38 @@ end QuotientAlgebra
 
 /-! ## A concrete periodic reference phase with native clock germs -/
 
+/-- Reference phase data, collecting `geometry`, `window`, `epsilon`, `axialFrequency`,
+`radialFrequency`, `angularMode` and their compatibility conditions. -/
 structure ReferencePhase where
+  /-- Geometry of `ReferencePhase`, of type `CommonCoverSolve.Geometry`. -/
   geometry : CommonCoverSolve.Geometry
+  /-- Window of `ReferencePhase`, of type `PeriodicPhaseAssembly.ClockWindow`. -/
   window : PeriodicPhaseAssembly.ClockWindow
+  /-- Epsilon of `ReferencePhase`, of type `ℝ`. -/
   epsilon : ℝ
+  /-- Axial frequency of `ReferencePhase`, of type `ℝ`. -/
   axialFrequency : ℝ
+  /-- Radial frequency of `ReferencePhase`, of type `ℝ`. -/
   radialFrequency : ℝ
+  /-- Angular mode of `ReferencePhase`, of type `ℤ`. -/
   angularMode : ℤ
+  /-- F of `ReferencePhase`, of type `PeriodicPhaseAssembly.Parameter → ℝ`. -/
   F : PeriodicPhaseAssembly.Parameter → ℝ
+  /-- Geometric data of `ReferencePhase`, of type `PeriodicPhaseAssembly.Parameter → ℝ`. -/
   G : PeriodicPhaseAssembly.Parameter → ℝ
 
 namespace ReferencePhase
 
 variable (C : ReferencePhase)
 
+/-- Phase, constructed using `PeriodicPhaseAssembly.angularLift`. -/
 noncomputable def phase (K : ℝ) (x : Cylinder) : ℝ :=
   PeriodicPhaseAssembly.angularLift
     (PeriodicPhaseAssembly.profilePhase C.geometry C.window.cutoff C.epsilon
       (C.angularMode / K) C.axialFrequency C.radialFrequency C.F C.G)
     (C.angularMode / K) (PhysicalParticularWave.waveEquiv x)
 
+/-- Native phase, constructed using `PhaseCalculus.phase`. -/
 noncomputable def nativePhase (K : ℝ) (copy : TorusInverse.Frequency) (x : Cylinder) : ℝ :=
   PhaseCalculus.phase C.epsilon (C.angularMode / K) C.axialFrequency C.radialFrequency
     (fun p => C.F (p.1, (p.2.2, p.2.1))) (fun p => C.G (p.1, (p.2.2, p.2.1)))
@@ -216,6 +236,7 @@ theorem phase_smooth (K : ℝ) (hF : ContDiff ℝ ∞ C.F) (hG : ContDiff ℝ �
     ((contDiff_const.mul contDiff_snd.snd).add (contDiff_const.mul contDiff_fst))
     ((contDiff_const.mul hF).add (contDiff_const.mul hG))
 
+/-- Base, given by `{ a with phase := fun n => C.phase (a.frequency n) }`. -/
 noncomputable def base (a : LinearWaveBounds.WaveCoefficients Cylinder) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   { a with phase := fun n => C.phase (a.frequency n) }
@@ -259,11 +280,11 @@ theorem fullRequest_chart (s sr : StripData Point) (P : SignedStressPrimitive.Pa
   fin_cases j
   · simp [LocalSignedRequest.fullRequest, LocalSignedRequest.normalizedRequest,
       LocalSignedRequest.requestedStress, Pi.smul_apply, smul_eq_mul,
-      Matrix.cons_val_zero, h1] ;
+      Matrix.cons_val_zero, h1];
     field_simp [hl.ne']
   · simp [LocalSignedRequest.fullRequest, LocalSignedRequest.normalizedRequest,
       LocalSignedRequest.requestedStress, Pi.smul_apply, smul_eq_mul,
-      Matrix.cons_val_one, h2] ;
+      Matrix.cons_val_one, h2];
     field_simp [hl.ne']
 
 theorem source_over_radial {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (h : ℝ) :
@@ -280,18 +301,20 @@ theorem physical_request_factor {Q Qr epsilon referenceEpsilon : ℝ}
     (PhysicalParticularWave.sourceWeight h Q Qr /
       PhysicalParticularWave.ratioPower Q Qr (1 / 2)) * referenceEpsilon / epsilon =
       coefficientScale epsilon referenceEpsilon (PhysicalParticularWave.velocityWeight h Q Qr) ^ 2
-        := by
+          := by
   rw [coefficientScale_square he hr, source_over_radial hQ hQr]
 
 end ActualRequest
 
 /-! ## The actual current-state request on the full free lift -/
 
+/-- Slow change as an element of `LocalSignedRequest.Plane →L[ℝ] LocalSignedRequest.Plane`. -/
 noncomputable def slowChange (h Q Qr : ℝ) : LocalSignedRequest.Plane →L[ℝ] LocalSignedRequest.Plane
-  :=
+    :=
   ((PhysicalParticularWave.ratioPower Q Qr 1) • ContinuousLinearMap.id ℝ ℝ).prodMap
     ((PhysicalParticularWave.ratioPower Q Qr (CoordinateAlgebra.D h)) • ContinuousLinearMap.id ℝ ℝ)
 
+/-- Request chart as an element of `Point ≃L[ℝ] Point`. -/
 noncomputable def requestChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) : Point ≃L[ℝ] Point :=
   (PhysicalResidualTZ.swapSlow.toContinuousLinearEquiv.trans
@@ -332,8 +355,10 @@ theorem slowChange_length {h Q Qr : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 definitionally the epsilon of the same full-angle wave strip. -/
 noncomputable def stateStrip (s : StripData Cylinder) : StripData Point :=
   SignedWaveUpdate.sectionStrip (ParticularWaveBounds.reindexStrip PhysicalResidualTZ.swapCylinder
-    s)
+      s)
 
+/-- State request, defined pointwise by `LocalSignedRequest.fullRequest (stateStrip s) P (2 * h)
+c u n (PhysicalResidualTZ.swapCylinder x)`. -/
 noncomputable def stateRequest (s : StripData Cylinder) (P : SignedStressPrimitive.Patch)
     (h : ℝ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     ℕ → Cylinder → Vec2 :=
@@ -375,9 +400,9 @@ theorem fullRequest_of_state (s sr : StripData Point) (P : SignedStressPrimitive
         (requestChart h hQ hQr gap (r, (t, Y)), angle) := by
   have hl := PhysicalParticularWave.ratioPower_pos hQ hQr (1 / 2)
   have hθeq (r : ℝ) (Y : LocalSignedRequest.Plane) := H.thetaResidual G hW hl.ne' (r, (t, Y))
-    (hfiber r Y)
+      (hfiber r Y)
   have hzeq (r : ℝ) (Y : LocalSignedRequest.Plane) := H.axialResidual G hW hl.ne' (r, (t, Y))
-    (hfiber r Y)
+      (hfiber r Y)
   simp only [requestChart_apply, PhysicalResidualNaturality.weight_source hQ hQr] at hθeq hzeq
   have he := fullRequest_chart s sr P (2 * h) (2 * h) c cr u ur n nr hl
     (slowChange h Q Qr) gap (PhysicalParticularWave.sourceWeight h Q Qr) t
@@ -460,27 +485,40 @@ end CoefficientTransport
 The pulse, covariance matrix, square roots and signed quotients are all
 computed by the existing constructors. -/
 structure PrimaryData (U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow) where
+  /-- Strip of `PrimaryData`, of type `StripData Cylinder`. -/
   strip : StripData Cylinder
+  /-- Base of `PrimaryData`, of type `LinearWaveBounds.WaveCoefficients Cylinder`. -/
   base : LinearWaveBounds.WaveCoefficients Cylinder
+  /-- Directions of `PrimaryData`, of type `LinearWaveBounds.GraphDirections Cylinder`. -/
   directions : LinearWaveBounds.GraphDirections Cylinder
+  /-- Pulse of `PrimaryData`, of type `Fin 2 → PrimaryPulseBounds.PhaseConstruction U`. -/
   pulse : Fin 2 → PrimaryPulseBounds.PhaseConstruction U
+  /-- Prefactor of `PrimaryData`, of type `Fin 2 → ℕ → ℝ`. -/
   prefactor : Fin 2 → ℕ → ℝ
+  /-- Coordinate of `PrimaryData`, of type `ℕ → Cylinder → PhaseCalculus.Slow × ℝ`. -/
   coordinate : ℕ → Cylinder → PhaseCalculus.Slow × ℝ
+  /-- Target of `PrimaryData`, of type `ℕ → Cylinder → Vec2`. -/
   target : ℕ → Cylinder → Vec2
+  /-- Mask of `PrimaryData`, of type `ℕ → Cylinder → ℝ`. -/
   mask : ℕ → Cylinder → ℝ
+  /-- Normal motion of `PrimaryData`, of type `ℕ → Cylinder → Space`. -/
   normalMotion : ℕ → Cylinder → Space
+  /-- Action of `PrimaryData`, of type `ℕ → Cylinder → Space →L[ℝ] Space`. -/
   action : ℕ → Cylinder → Space →L[ℝ] Space
 
 namespace PrimaryData
 
 variable {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (B : PrimaryData U)
 
+/-- With reference phase, given by `{ B with base := C.base B.base }`. -/
 noncomputable def withReferencePhase (C : ReferencePhase) : PrimaryData U :=
   { B with base := C.base B.base }
 
+/-- Matrix, given by `SignedWaveUpdate.phaseMatrix B.pulse B.prefactor B.coordinate`. -/
 noncomputable def matrix : ℕ → Cylinder → Mat2 :=
   SignedWaveUpdate.phaseMatrix B.pulse B.prefactor B.coordinate
 
+/-- Fundamental, given by `SignedWaveUpdate.phaseFundamental B.pulse B.coordinate j`. -/
 noncomputable def fundamental (j : Fin 2) : ℕ → Cylinder → Space :=
   SignedWaveUpdate.phaseFundamental B.pulse B.coordinate j
 
@@ -488,19 +526,25 @@ noncomputable def fundamental (j : Fin 2) : ℕ → Cylinder → Space :=
 noncomputable def cutoff (n : ℕ) (x : Cylinder) : ℝ :=
   GaussianTailFlat.profile (B.coordinate n x).2
 
+/-- Coefficients, constructed using `SignedWaveUpdate.coefficients`. -/
 noncomputable def coefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   SignedWaveUpdate.coefficients B.base B.strip B.directions B.matrix B.target request B.mask
     (B.fundamental j) B.normalMotion B.action j
 
+/-- Primary vector, given by `PartitionedCovariance.amplitude (B.strip.epsilon n) (B.mask n x)
+(B.matrix n x) (B.target n x) j • B.fundamental j n x`. -/
 noncomputable def primaryVector (j : Fin 2) (n : ℕ) (x : Cylinder) : Space :=
   PartitionedCovariance.amplitude (B.strip.epsilon n) (B.mask n x) (B.matrix n x)
     (B.target n x) j • B.fundamental j n x
 
+/-- Primary coefficients, given by `SignedWaveUpdate.homogeneousCoefficients B.base B.strip
+B.directions (B.primaryVector j) B.normalMotion B.action`. -/
 noncomputable def primaryCoefficients (j : Fin 2) : LinearWaveBounds.WaveCoefficients Cylinder :=
   SignedWaveUpdate.homogeneousCoefficients B.base B.strip B.directions
     (B.primaryVector j) B.normalMotion B.action
 
+/-- Primary request, defined pointwise by `(2 : ℝ) • B.target n x`. -/
 noncomputable def primaryRequest : ℕ → Cylinder → Vec2 := fun n x => (2 : ℝ) • B.target n x
 
 theorem primaryVector_eq_signed (j : Fin 2) :
@@ -538,11 +582,14 @@ noncomputable def viewBase (background : LinearWaveBounds.WaveCoefficients Cylin
     phase := fun n x => (B.base.frequency reference / frequency n) *
       B.base.phase reference (view n x) }
 
+/-- View target, defined pointwise by `coefficientScale (s.epsilon n) (B.strip.epsilon
+reference) (velocity n) ^ 2 • B.target reference (view n x)`. -/
 noncomputable def viewTarget (s : StripData Cylinder) (velocity : ℕ → ℝ)
     (view : ℕ → Cylinder → Cylinder) (reference : ℕ) : ℕ → Cylinder → Vec2 :=
   fun n x => coefficientScale (s.epsilon n) (B.strip.epsilon reference) (velocity n) ^ 2 •
     B.target reference (view n x)
 
+/-- View cutoff, defined pointwise by `B.cutoff reference (view n x)`. -/
 noncomputable def viewCutoff (view : ℕ → Cylinder → Cylinder) (reference : ℕ) :
     ℕ → Cylinder → ℝ := fun n x => B.cutoff reference (view n x)
 
@@ -593,14 +640,14 @@ theorem view_amplitude (s : StripData Cylinder) (d : LinearWaveBounds.GraphDirec
     (hrequest : request n x = coefficientScale (s.epsilon n) (B.strip.epsilon reference)
       (velocity n) ^ 2 • referenceRequest reference (view n x)) :
     (B.viewCoefficients s d background frequency velocity clock normal view reference request
-      j).amplitude n x =
+        j).amplitude n x =
       velocity n • (B.coefficients referenceRequest j).amplitude reference (view n x) := by
   change CurlClassBounds.complexify _ = velocity n • CurlClassBounds.complexify _
   rw [B.view_signedVector s velocity view reference n request referenceRequest j x hc hrequest,
     map_smul]
 
 theorem view_cutoff_amplitude (s : StripData Cylinder) (d : LinearWaveBounds.GraphDirections
-  Cylinder)
+    Cylinder)
     (background : LinearWaveBounds.WaveCoefficients Cylinder)
     (frequency velocity clock normal : ℕ → ℝ) (view : ℕ → Cylinder → Cylinder)
     (reference n : ℕ) (request referenceRequest : ℕ → Cylinder → Vec2) (j : Fin 2)
@@ -608,7 +655,7 @@ theorem view_cutoff_amplitude (s : StripData Cylinder) (d : LinearWaveBounds.Gra
     (hrequest : request n x = coefficientScale (s.epsilon n) (B.strip.epsilon reference)
       (velocity n) ^ 2 • referenceRequest reference (view n x)) :
     ((B.viewCoefficients s d background frequency velocity clock normal view reference request
-      j).withCutoff
+        j).withCutoff
       (B.viewCutoff view reference)).amplitude n x =
         velocity n • ((B.coefficients referenceRequest j).withCutoff B.cutoff).amplitude
           reference (view n x) := by
@@ -628,11 +675,11 @@ theorem view_pressure (s : StripData Cylinder) (d : LinearWaveBounds.GraphDirect
     (hN : (B.viewBase background frequency view reference).normal s d n x =
       normal n • B.base.normal B.strip B.directions reference (view n x)) :
     (B.viewCoefficients s d background frequency velocity clock normal view reference request
-      j).pressure n x =
+        j).pressure n x =
       ((clock n * velocity n / normal n) * (B.base.frequency reference / frequency n)) •
         (B.coefficients referenceRequest j).pressure reference (view n x) := by
   have hv := B.view_signedVector s velocity view reference n request referenceRequest j x hc
-    hrequest
+      hrequest
   change Complex.I * (TangentProjection.pressureCoefficient
       ((B.viewBase background frequency view reference).normal s d n x)
       ((normal n * clock n) • B.normalMotion reference (view n x))
@@ -644,7 +691,7 @@ theorem view_pressure (s : StripData Cylinder) (d : LinearWaveBounds.GraphDirect
     (velocity n) (normal n) hK hKr hs _ _ _ _
 
 theorem view_cutoff_pressure (s : StripData Cylinder) (d : LinearWaveBounds.GraphDirections
-  Cylinder)
+    Cylinder)
     (background : LinearWaveBounds.WaveCoefficients Cylinder)
     (frequency velocity clock normal : ℕ → ℝ) (view : ℕ → Cylinder → Cylinder)
     (reference n : ℕ) (request referenceRequest : ℕ → Cylinder → Vec2) (j : Fin 2)
@@ -655,17 +702,18 @@ theorem view_cutoff_pressure (s : StripData Cylinder) (d : LinearWaveBounds.Grap
     (hN : (B.viewBase background frequency view reference).normal s d n x =
       normal n • B.base.normal B.strip B.directions reference (view n x)) :
     ((B.viewCoefficients s d background frequency velocity clock normal view reference request
-      j).withCutoff
+        j).withCutoff
       (B.viewCutoff view reference)).pressure n x =
       ((clock n * velocity n / normal n) * (B.base.frequency reference / frequency n)) •
         ((B.coefficients referenceRequest j).withCutoff B.cutoff).pressure reference (view n x) :=
-          by
+            by
   simp only [LinearWaveBounds.WaveCoefficients.withCutoff, viewCutoff]
   rw [B.view_pressure s d background frequency velocity clock normal view reference n
     request referenceRequest j x hc hK hKr hs hrequest hN]
   simp only [Complex.real_smul]
   ring
 
+/-- View primary vector, constructed using `PartitionedCovariance.amplitude`. -/
 noncomputable def viewPrimaryVector (s : StripData Cylinder) (velocity : ℕ → ℝ)
     (view : ℕ → Cylinder → Cylinder) (reference : ℕ) (j : Fin 2) (n : ℕ) (x : Cylinder) : Space :=
   PartitionedCovariance.amplitude (s.epsilon n) (B.mask reference (view n x))
@@ -681,6 +729,7 @@ theorem view_primaryVector (s : StripData Cylinder) (velocity : ℕ → ℝ)
   rw [primary_scalar_scale _ _ _ (s.epsilon_pos n) (B.strip.epsilon_pos reference) hc j,
     smul_smul]
 
+/-- View primary coefficients, constructed using `SignedWaveUpdate.homogeneousCoefficients`. -/
 noncomputable def viewPrimaryCoefficients (s : StripData Cylinder)
     (d : LinearWaveBounds.GraphDirections Cylinder)
     (background : LinearWaveBounds.WaveCoefficients Cylinder)
@@ -692,15 +741,15 @@ noncomputable def viewPrimaryCoefficients (s : StripData Cylinder)
     (fun n x => clock n • B.action reference (view n x))
 
 theorem view_primary_amplitude (s : StripData Cylinder) (d : LinearWaveBounds.GraphDirections
-  Cylinder)
+    Cylinder)
     (background : LinearWaveBounds.WaveCoefficients Cylinder)
     (frequency velocity clock normal : ℕ → ℝ) (view : ℕ → Cylinder → Cylinder)
     (reference n : ℕ) (j : Fin 2) (x : Cylinder) (hc : 0 < velocity n) :
     ((B.viewPrimaryCoefficients s d background frequency velocity clock normal view reference
-      j).withCutoff
+        j).withCutoff
       (B.viewCutoff view reference)).amplitude n x =
       velocity n • ((B.primaryCoefficients j).withCutoff B.cutoff).amplitude reference (view n x)
-        := by
+          := by
   simp only [viewPrimaryCoefficients, primaryCoefficients, SignedWaveUpdate.homogeneousCoefficients,
     LinearWaveBounds.WaveCoefficients.withCutoff, viewCutoff]
   rw [B.view_primaryVector s velocity view reference j n x hc, map_smul]
@@ -753,7 +802,7 @@ theorem cutoff_smooth : ContDiffOn ℝ ∞ (B.cutoff reference) B.strip.domain :
 
 theorem signedScalar_smooth (j : Fin 2) :
     ContDiffOn ℝ ∞ (SignedWaveUpdate.signedScalar B.strip B.matrix B.target request B.mask j
-      reference)
+        reference)
       B.strip.domain := by
   have hi := SmoothCovariance.contDiffOn_inverse_solution H.matrix_smooth H.request
     (fun x hx => (H.cone x hx).det_ne_zero) j
@@ -771,7 +820,7 @@ theorem amplitude_smooth (j : Fin 2) :
 
 theorem cutoff_amplitude_smooth (j : Fin 2) :
     ContDiffOn ℝ ∞ (((B.coefficients request j).withCutoff B.cutoff).amplitude reference)
-      B.strip.domain :=
+        B.strip.domain :=
   H.cutoff_smooth.smul (H.amplitude_smooth j)
 
 theorem fundamental_tangent {x : Cylinder} (hx : x ∈ B.strip.domain) :
@@ -790,7 +839,7 @@ theorem cutoff_amplitude_tangent {x : Cylinder} (hx : x ∈ B.strip.domain) :
     normalDot (B.base.normal B.strip B.directions reference x)
       (((B.coefficients request column).withCutoff B.cutoff).amplitude reference x) = 0 := by
   change normalDot _ (B.cutoff reference x • (B.coefficients request column).amplitude reference x)
-    = 0
+      = 0
   have he : normalDot (B.base.normal B.strip B.directions reference x)
       (B.cutoff reference x • (B.coefficients request column).amplitude reference x) =
       (B.cutoff reference x : ℂ) * normalDot (B.base.normal B.strip B.directions reference x)
@@ -804,6 +853,7 @@ end Regular
 /-- Angular conditions concern the original phase, coordinate and scalar
 inputs. In particular the signed coefficient's invariance is a theorem. -/
 structure Angular (request : ℕ → Cylinder → Vec2) (reference : ℕ) where
+  /-- Mode of `Angular`, of type `ℤ`. -/
   mode : ℤ
   phase : CopyAngularInvariance.AffinePhase (0, 1) (mode / B.base.frequency reference)
     (B.base.phase reference)
@@ -814,6 +864,7 @@ structure Angular (request : ℕ → Cylinder → Vec2) (reference : ℕ) where
   normalMotion : CopyAngularInvariance.Invariant (0, 1) (B.normalMotion reference)
   action : CopyAngularInvariance.Invariant (0, 1) (B.action reference)
 
+/-- For primary, given by `{ H with request := H.target.map (fun t => (2 : ℝ) • t) }`. -/
 noncomputable def Angular.forPrimary {request : ℕ → Cylinder → Vec2} {reference : ℕ}
     (H : B.Angular request reference) : B.Angular B.primaryRequest reference :=
   { H with request := H.target.map (fun t => (2 : ℝ) • t) }
@@ -821,7 +872,7 @@ noncomputable def Angular.forPrimary {request : ℕ → Cylinder → Vec2} {refe
 /-- The angular phase and full auxiliary periodicity can be supplied by
 the explicit compact-clock construction, before any signed solve. -/
 noncomputable def periodicAngular (C : ReferencePhase) (request : ℕ → Cylinder → Vec2) (reference :
-  ℕ)
+    ℕ)
     (hc : CopyAngularInvariance.Invariant (0, 1) (B.coordinate reference))
     (hT : CopyAngularInvariance.Invariant (0, 1) (B.target reference))
     (hR : CopyAngularInvariance.Invariant (0, 1) (request reference))
@@ -838,6 +889,8 @@ noncomputable def periodicAngular (C : ReferencePhase) (request : ℕ → Cylind
   normalMotion := hn
   action := ha
 
+/-- Periodic state angular, given by `B.periodicAngular C _ reference hc hT
+(stateRequest_invariant B.strip P h context current reference) hm hn ha`. -/
 noncomputable def periodicStateAngular (C : ReferencePhase) (P : SignedStressPrimitive.Patch)
     (h : ℝ) (context : CorrectionState.Context Point) (current : CorrectionState.State Point)
     (reference : ℕ)
@@ -848,11 +901,14 @@ noncomputable def periodicStateAngular (C : ReferencePhase) (P : SignedStressPri
     (ha : CopyAngularInvariance.Invariant (0, 1) (B.action reference)) :
     (B.withReferencePhase C).Angular (stateRequest B.strip P h context current) reference :=
   B.periodicAngular C _ reference hc hT (stateRequest_invariant B.strip P h context current
-    reference) hm hn ha
+      reference) hm hn ha
 
+/-- Raw, given by `((B.coefficients request j).withCutoff B.cutoff).amplitude reference`. -/
 noncomputable def raw (request : ℕ → Cylinder → Vec2) (j : Fin 2) (reference : ℕ) :
     Cylinder → ComplexVector := ((B.coefficients request j).withCutoff B.cutoff).amplitude reference
 
+/-- Raw pressure, given by `((B.coefficients request j).withCutoff B.cutoff).pressure
+reference`. -/
 noncomputable def rawPressure (request : ℕ → Cylinder → Vec2) (j : Fin 2) (reference : ℕ) :
     Cylinder → ℂ := ((B.coefficients request j).withCutoff B.cutoff).pressure reference
 
@@ -861,10 +917,10 @@ theorem raw_invariant {request : ℕ → Cylinder → Vec2} {reference : ℕ}
     CopyAngularInvariance.Invariant (0, 1) (B.raw request j reference) := by
   intro x t
   simp only [raw, coefficients, SignedWaveUpdate.coefficients,
-    SignedWaveUpdate.homogeneousCoefficients,
+      SignedWaveUpdate.homogeneousCoefficients,
     LinearWaveBounds.WaveCoefficients.withCutoff, cutoff, SignedWaveUpdate.signedVector,
     SignedWaveUpdate.signedScalar, matrix, SignedWaveUpdate.phaseMatrix,
-      PrimaryPulseBounds.chartCovariance,
+        PrimaryPulseBounds.chartCovariance,
     fundamental, SignedWaveUpdate.phaseFundamental,
     H.coordinate x t, H.target x t, H.request x t, H.mask x t]
 
@@ -884,7 +940,7 @@ theorem ChartGeometry.normal {a : LinearWaveBounds.WaveCoefficients Cylinder}
     {n cover : ℕ} {h Q : ℝ} (G : ChartGeometry a s d n h Q cover) :
     a.normal s d n = phaseNormal PhysicalResidualBridge.ScaledGraph.radius
       (PhysicalResidualBridge.commonGraph Q h cover).radial
-        PhysicalResidualBridge.ScaledGraph.angular
+          PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph Q h cover).axial (a.phase n) := by
   unfold LinearWaveBounds.WaveCoefficients.normal
   rw [G.radius, G.radial, G.angular, G.axial]
@@ -896,9 +952,9 @@ theorem ChartGeometry.corrected_wave {a : LinearWaveBounds.WaveCoefficients Cyli
     vectorMode (a.frequency n) (a.phase n) ((a.corrected s d cutoff).amplitude n) =
       vectorMode (a.frequency n) (a.phase n)
         (CurlClassBounds.realizedCoefficient (a.frequency n)
-          PhysicalResidualBridge.ScaledGraph.radius
+            PhysicalResidualBridge.ScaledGraph.radius
           (PhysicalResidualBridge.commonGraph Q h cover).radial
-            PhysicalResidualBridge.ScaledGraph.angular
+              PhysicalResidualBridge.ScaledGraph.angular
           (PhysicalResidualBridge.commonGraph Q h cover).axial (a.phase n)
           ((a.withCutoff cutoff).amplitude n)) := by
   change vectorMode (a.frequency n) (a.phase n)
@@ -942,45 +998,66 @@ theorem rawPressure_invariant {request : ℕ → Cylinder → Vec2}
 backgrounds are primitive data; frequency, phase, target, pulse, cutoff,
 normal motion and action of each view are constructed below. -/
 structure Views (B : PrimaryData U) (reference : ℕ) where
+  /-- Exponent of `Views`, of type `ℝ`. -/
   exponent : ℝ
+  /-- Reference scale of `Views`, of type `ℝ`. -/
   referenceScale : ℝ
   referenceScale_pos : 0 < referenceScale
+  /-- Reference cover of `Views`, of type `ℕ`. -/
   referenceCover : ℕ
+  /-- Scale of `Views`, of type `ℕ → ℝ`. -/
   scale : ℕ → ℝ
   scale_pos : ∀ n, 0 < scale n
+  /-- Cover of `Views`, of type `ℕ → ℕ`. -/
   cover : ℕ → ℕ
   cover_le : ∀ n, cover n ≤ referenceCover
+  /-- Frequency of `Views`, of type `ℕ → ℝ`. -/
   frequency : ℕ → ℝ
   frequency_ne : ∀ n, frequency n ≠ 0
+  /-- Strip of `Views`, of type `StripData Cylinder`. -/
   strip : StripData Cylinder
+  /-- Directions of `Views`, of type `LinearWaveBounds.GraphDirections Cylinder`. -/
   directions : LinearWaveBounds.GraphDirections Cylinder
+  /-- Background of `Views`, of type `LinearWaveBounds.WaveCoefficients Cylinder`. -/
   background : LinearWaveBounds.WaveCoefficients Cylinder
 
 namespace Views
 
 variable {B reference} (V : B.Views reference)
 
+/-- Map, given by `PhysicalParticularWave.cylinderChange V.exponent (V.scale n) V.referenceScale
+(V.referenceCover - V.cover n)`. -/
 noncomputable def map (n : ℕ) : Cylinder →L[ℝ] Cylinder :=
   PhysicalParticularWave.cylinderChange V.exponent (V.scale n) V.referenceScale
     (V.referenceCover - V.cover n)
 
+/-- Velocity, given by `PhysicalParticularWave.velocityWeight V.exponent (V.scale n)
+V.referenceScale`. -/
 noncomputable def velocity (n : ℕ) : ℝ :=
   PhysicalParticularWave.velocityWeight V.exponent (V.scale n) V.referenceScale
 
+/-- Clock, given by `PhysicalParticularWave.clockWeight V.exponent (V.scale n)
+V.referenceScale`. -/
 noncomputable def clock (n : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight V.exponent (V.scale n) V.referenceScale
 
+/-- Normal, given by `PhysicalParticularWave.normalWeight (V.scale n) V.referenceScale
+(V.frequency n) (B.base.frequency reference)`. -/
 noncomputable def normal (n : ℕ) : ℝ :=
   PhysicalParticularWave.normalWeight (V.scale n) V.referenceScale (V.frequency n)
-    (B.base.frequency reference)
+      (B.base.frequency reference)
 
+/-- Coefficients, constructed using `B.viewCoefficients`. -/
 noncomputable def coefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   B.viewCoefficients V.strip V.directions V.background V.frequency V.velocity V.clock V.normal
     (fun n => V.map n) reference request j
 
+/-- Cutoff, given by `B.viewCutoff (fun n => V.map n) reference`. -/
 noncomputable def cutoff : ℕ → Cylinder → ℝ := B.viewCutoff (fun n => V.map n) reference
 
+/-- Exact coefficients, given by `(V.coefficients request j).corrected V.strip V.directions
+V.cutoff`. -/
 noncomputable def exactCoefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   (V.coefficients request j).corrected V.strip V.directions V.cutoff
@@ -1003,9 +1080,9 @@ theorem phase_periodic (request : ℕ → Cylinder → Vec2) (j : Fin 2)
     (hp : ∀ x k, B.base.phase reference (fastTranslate x k) = B.base.phase reference x)
     (n : ℕ) (x : Cylinder) (k : TorusInverse.Frequency) :
     (V.coefficients request j).phase n (fastTranslate x k) = (V.coefficients request j).phase n x
-      := by
+        := by
   change (B.base.frequency reference / V.frequency n) * B.base.phase reference (V.map n
-    (fastTranslate x k)) =
+      (fastTranslate x k)) =
     (B.base.frequency reference / V.frequency n) * B.base.phase reference (V.map n x)
   rw [V.map_fastTranslate, hp]
 
@@ -1018,19 +1095,19 @@ theorem carrier_periodic (request : ℕ → Cylinder → Vec2) (j : Fin 2)
 
 theorem normal_transport
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (n : ℕ)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     {x : Cylinder} (hx : 0 < x.1.1)
     (hΦ : DifferentiableAt ℝ (B.base.phase reference) (V.map n x)) :
     (B.viewBase V.background V.frequency (fun n => V.map n) reference).normal V.strip V.directions
-      n x =
+        n x =
       V.normal n • B.base.normal B.strip B.directions reference (V.map n x) := by
   rw [G.normal, H.normal]
   have he := PhysicalParticularWave.phaseNormal_chartChange (V.scale_pos n) V.referenceScale_pos
     V.exponent (V.cover n) (V.referenceCover - V.cover n) (V.frequency n) (B.base.frequency
-      reference) hx hΦ
+        reference) hx hΦ
   simp only [Nat.add_sub_of_le (V.cover_le n)] at he
   exact he
 
@@ -1040,7 +1117,7 @@ theorem amplitude_transport (request referenceRequest : ℕ → Cylinder → Vec
       (V.velocity n) ^ 2 • referenceRequest reference (V.map n x)) :
     ((V.coefficients request j).withCutoff V.cutoff).amplitude n x =
       V.velocity n • ((B.coefficients referenceRequest j).withCutoff B.cutoff).amplitude reference
-        (V.map n x) :=
+          (V.map n x) :=
   B.view_cutoff_amplitude V.strip V.directions V.background V.frequency V.velocity V.clock V.normal
     (fun n => V.map n) reference n request referenceRequest j x
     (PhysicalParticularWave.ratioPower_pos (V.scale_pos n) V.referenceScale_pos _) hrequest
@@ -1049,7 +1126,7 @@ theorem pressure_transport (request referenceRequest : ℕ → Cylinder → Vec2
     (j : Fin 2) (n : ℕ) {x : Cylinder} (hx : 0 < x.1.1)
     (hKr : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     (hΦ : DifferentiableAt ℝ (B.base.phase reference) (V.map n x))
@@ -1058,30 +1135,35 @@ theorem pressure_transport (request referenceRequest : ℕ → Cylinder → Vec2
     ((V.coefficients request j).withCutoff V.cutoff).pressure n x =
       PhysicalParticularWave.pressureWeight V.exponent (V.scale n) V.referenceScale •
         ((B.coefficients referenceRequest j).withCutoff B.cutoff).pressure reference (V.map n x) :=
-          by
+            by
   have he := B.view_cutoff_pressure V.strip V.directions V.background V.frequency V.velocity
-    V.clock V.normal
+      V.clock V.normal
     (fun n => V.map n) reference n request referenceRequest j x
     (PhysicalParticularWave.ratioPower_pos (V.scale_pos n) V.referenceScale_pos _) (V.frequency_ne
-      n) hKr
+        n) hKr
     (PhysicalParticularWave.normalWeight_ne (V.scale_pos n) V.referenceScale_pos (V.frequency_ne n)
-      hKr)
+        hKr)
     hrequest (V.normal_transport G n H hx hΦ)
   rw [show V.clock n * V.velocity n / V.normal n * (B.base.frequency reference / V.frequency n) =
       PhysicalParticularWave.pressureWeight V.exponent (V.scale n) V.referenceScale from
     PhysicalParticularWave.pressure_scaling (V.scale_pos n) V.referenceScale_pos (V.frequency_ne n)
-      hKr V.exponent] at he
+        hKr V.exponent] at he
   exact he
 
+/-- Physical phase, defined pointwise by `B.base.phase reference
+((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z)`. -/
 noncomputable def physicalPhase : SpaceTime → ℝ :=
   fun z => B.base.phase reference
     ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z)
 
+/-- Physical raw as an element of `SpaceTime → ComplexVector`. -/
 noncomputable def physicalRaw (referenceRequest : ℕ → Cylinder → Vec2) (j : Fin 2) :
     SpaceTime → ComplexVector :=
   fun z => V.referenceScale ^ (-CoordinateAlgebra.A V.exponent) • B.raw referenceRequest j reference
     ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z)
 
+/-- Reference potential, given by `PhysicalCurlCovariance.referencePotential (B.base.frequency
+reference) V.physicalPhase (V.physicalRaw referenceRequest j)`. -/
 noncomputable def referencePotential (referenceRequest : ℕ → Cylinder → Vec2) (j : Fin 2) :
     SpaceTime → ComplexVector :=
   PhysicalCurlCovariance.referencePotential (B.base.frequency reference) V.physicalPhase
@@ -1093,6 +1175,8 @@ noncomputable def physicalPotential (referenceRequest : ℕ → Cylinder → Vec
     (j : Fin 2) (delta : ℝ) : VelocityField :=
   PhysicalCurlCovariance.globalCartesianPotential delta (V.referencePotential referenceRequest j)
 
+/-- Physical velocity, given by `SpatialCurl.spatialCurl (V.physicalPotential referenceRequest j
+delta)`. -/
 noncomputable def physicalVelocity (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (delta : ℝ) : VelocityField :=
   SpatialCurl.spatialCurl (V.physicalPotential referenceRequest j delta)
@@ -1128,13 +1212,14 @@ theorem referencePotential_periodic {referenceRequest : ℕ → Cylinder → Vec
     field_simp
   intro angle
   have he := PhysicalCurlCovariance.vectorPotential_fullTurn (Vr :=
-    LinearWaveResidual.spaceDirection 0)
+      LinearWaveResidual.spaceDirection 0)
     (Vθ := LinearWaveResidual.spaceDirection 1) (Vz := LinearWaveResidual.spaceDirection 2)
     H.mode hR (CopyAngularInvariance.Invariant.const _) (CopyAngularInvariance.Invariant.const _)
     (CopyAngularInvariance.Invariant.const _) hphi ha hf (t, AxisymmetricResidual.pack r angle z)
   simpa only [referencePotential, PhysicalCurlCovariance.referencePotential,
     PhysicalParticularWave.angle_translate_pack] using he
 
+/-- Wave, constructed using `vectorMode`. -/
 noncomputable def wave (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ) :
     Cylinder → ComplexVector :=
   vectorMode (V.frequency n) ((V.coefficients request j).phase n)
@@ -1143,7 +1228,7 @@ noncomputable def wave (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : �
       PhysicalResidualBridge.ScaledGraph.angular
       (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).axial
       ((V.coefficients request j).phase n) (((V.coefficients request j).withCutoff
-        V.cutoff).amplitude n))
+          V.cutoff).amplitude n))
 
 theorem wave_eq_exact (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
@@ -1160,7 +1245,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (n : ℕ) (R : B.Regular referenceRequest reference j)
     (A : B.Angular referenceRequest reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     (hmap : MapsTo (V.map n) V.strip.domain B.strip.domain)
@@ -1170,14 +1255,14 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
         referenceRequest reference (V.map n x))
     {z : SpaceTime}
     (hz : z ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
-      V.strip.domain)
+        V.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) (component : Fin 3) :
     (V.wave request j n ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover
-      n)).map z) component).re =
+        n)).map z) component).re =
       V.scale n ^ CoordinateAlgebra.A V.exponent * CylindricalResidual.frame (-(z.2 1))
         (V.physicalVelocity referenceRequest j delta (z.1, CylindricalResidual.chart z.2))
-          component := by
+            component := by
   have hphi : ContDiffOn ℝ ∞ ((V.coefficients request j).phase n) V.strip.domain :=
     contDiffOn_const.mul (R.phase.comp (V.map n).contDiff.contDiffOn hmap)
   have ha : ContDiffOn ℝ ∞ (((V.coefficients request j).withCutoff V.cutoff).amplitude n)
@@ -1214,7 +1299,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     rw [hnrel x hx, V.amplitude_transport request referenceRequest j n x (hrequest x hx),
       PhysicalParticularWave.normalDot_scaled, R.cutoff_amplitude_tangent (hmap hx), mul_zero]
   have hp : ∀ y ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
-    V.strip.domain,
+      V.strip.domain,
       B.base.frequency reference * V.physicalPhase y =
         V.frequency n * (V.coefficients request j).phase n
           ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map y) := by
@@ -1226,7 +1311,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     rw [V.map_graph n hy.1]
     field_simp [V.frequency_ne n]
   have hav : ∀ y ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
-    V.strip.domain,
+      V.strip.domain,
       V.physicalRaw referenceRequest j y = V.scale n ^ (-CoordinateAlgebra.A V.exponent) •
         ((V.coefficients request j).withCutoff V.cutoff).amplitude n
           ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map y) := by
@@ -1239,7 +1324,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     rw [mul_comm]
     exact (PhysicalParticularWave.ratioPower_cancel (V.scale_pos n) V.referenceScale_pos _).symm
   exact PhysicalCurlCovariance.reference_correctedWave_constructed (V.scale_pos n) V.exponent
-    (V.cover n)
+      (V.cover n)
     V.strip.isOpen_domain (fun x hx => (hradius x hx).ne') hK (V.frequency_ne n) hphi ha hn ht
     V.physicalPhase (V.physicalRaw referenceRequest j) hp hav
     (V.referencePotential_periodic A hK j) hz hdelta chart hchart component
@@ -1248,29 +1333,29 @@ theorem referencePotential_smoothAt (referenceRequest : ℕ → Cylinder → Vec
     (j : Fin 2) (R : B.Regular referenceRequest reference j)
     (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (hradius : ∀ x ∈ B.strip.domain, 0 < x.1.1)
     {z : SpaceTime} (hz : 0 < z.2 0)
     (hx : (PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z ∈
-      B.strip.domain) :
+        B.strip.domain) :
     ContDiffAt ℝ ∞ (V.referencePotential referenceRequest j) z := by
   let g := PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover
   have hn : ∀ x ∈ B.strip.domain, phaseNormal PhysicalResidualBridge.ScaledGraph.radius
       g.radial PhysicalResidualBridge.ScaledGraph.angular g.axial (B.base.phase reference) x ≠ 0 :=
-        by
+          by
     intro x hx
     rw [← G.normal]
     exact R.normal_ne x hx
   have hs := CurlClassBounds.vectorPotential_contDiffOn
     (PhysicalCurlCovariance.ScaledGraph.geometry g B.strip.isOpen_domain (fun x hx => (hradius x
-      hx).ne'))
+        hx).ne'))
     (B.base.frequency reference) R.phase (R.cutoff_amplitude_smooth j) hn
   have hm : ContDiffAt ℝ ∞ g.map z :=
     g.map_smoothAt (mul_pos (Real.rpow_pos_of_pos V.referenceScale_pos _) hz).ne'
   have ht := ((hs.contDiffAt (B.strip.isOpen_domain.mem_nhds hx)).comp z hm).const_smul
     (V.referenceScale ^ (-V.exponent))
   have he := PhysicalCurlCovariance.referencePotential_eq_on V.referenceScale_pos V.exponent
-    V.referenceCover
+      V.referenceCover
     B.strip.isOpen_domain hK hK R.phase (B.raw referenceRequest j reference)
     V.physicalPhase (V.physicalRaw referenceRequest j) (fun _ _ => rfl) (fun _ _ => rfl)
   apply ht.congr_of_eventuallyEq
@@ -1281,15 +1366,15 @@ theorem physicalPotential_smoothAt (referenceRequest : ℕ → Cylinder → Vec2
     (j : Fin 2) (R : B.Regular referenceRequest reference j)
     (A : B.Angular referenceRequest reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (hradius : ∀ x ∈ B.strip.domain, 0 < x.1.1)
     {z : SpaceTime} (hz : 0 < z.2 0)
     (hx : (PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z ∈
-      B.strip.domain)
+        B.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     ContDiffAt ℝ ∞ (V.physicalPotential referenceRequest j delta) (z.1, CylindricalResidual.chart
-      z.2) :=
+        z.2) :=
   PhysicalCurlCovariance.globalCartesianPotential_smoothAt_forward hdelta chart
     (V.referencePotential_periodic A hK j) hchart
     (V.referencePotential_smoothAt referenceRequest j R hK G hradius hz hx)
@@ -1298,39 +1383,45 @@ theorem physicalVelocity_divergence (referenceRequest : ℕ → Cylinder → Vec
     (j : Fin 2) (R : B.Regular referenceRequest reference j)
     (A : B.Angular referenceRequest reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (hradius : ∀ x ∈ B.strip.domain, 0 < x.1.1)
     {z : SpaceTime} (hz : 0 < z.2 0)
     (hx : (PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z ∈
-      B.strip.domain)
+        B.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     spatialDivergence (V.physicalVelocity referenceRequest j delta) z.1 (CylindricalResidual.chart
-      z.2) = 0 := by
+        z.2) = 0 := by
   have hs := (V.physicalPotential_smoothAt referenceRequest j R A hK G hradius hz hx hdelta chart
-    hchart).comp
+      hchart).comp
     (CylindricalResidual.chart z.2) (contDiffAt_const.prodMk contDiffAt_id)
   exact SpatialCurl.spatialDivergence_spatialCurl _ _ _
     (hs.of_le (ENat.natCast_lt_of_coe_top_le_withTop le_rfl 2).le)
 
 /-! ## Pressure is transported from the same reference coefficient -/
 
+/-- Physical pressure coefficient as an element of `SpaceTime → ℂ`. -/
 noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) : SpaceTime → ℂ :=
   fun z => V.referenceScale ^ (-(2 * CoordinateAlgebra.A V.exponent)) •
     B.rawPressure referenceRequest j reference
       ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z)
 
+/-- Complex physical pressure, given by `mode (B.base.frequency reference) V.physicalPhase
+(V.physicalPressureCoefficient referenceRequest j)`. -/
 noncomputable def complexPhysicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) : SpaceTime → ℂ :=
   mode (B.base.frequency reference) V.physicalPhase (V.physicalPressureCoefficient referenceRequest
-    j)
+      j)
 
+/-- Physical pressure as an element of `PressureField`. -/
 noncomputable def physicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (delta : ℝ) : PressureField :=
   fun z => PhysicalCurlCovariance.globalCartesianPotential delta
     (PhysicalParticularWave.pressureVector (V.complexPhysicalPressure referenceRequest j)) z 2
 
+/-- Pressure mode, given by `mode (V.frequency n) ((V.coefficients request j).phase n)
+(((V.coefficients request j).withCutoff V.cutoff).pressure n)`. -/
 noncomputable def pressureMode (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ) :
     Cylinder → ℂ :=
   mode (V.frequency n) ((V.coefficients request j).phase n)
@@ -1339,7 +1430,7 @@ noncomputable def pressureMode (request : ℕ → Cylinder → Vec2) (j : Fin 2)
 theorem complexPhysicalPressure_periodic {referenceRequest : ℕ → Cylinder → Vec2}
     (A : B.Angular referenceRequest reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (j : Fin 2) (t r z : ℝ) :
     Function.Periodic (fun angle => V.complexPhysicalPressure referenceRequest j
       (t, AxisymmetricResidual.pack r angle z)) (2 * Real.pi) := by
@@ -1364,21 +1455,21 @@ theorem complexPhysicalPressure_periodic {referenceRequest : ℕ → Cylinder �
 theorem physicalPressure_forward {referenceRequest : ℕ → Cylinder → Vec2}
     (A : B.Angular referenceRequest reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (j : Fin 2) {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index) {z : SpaceTime}
     (hz : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     V.physicalPressure referenceRequest j delta (z.1, CylindricalResidual.chart z.2) =
       (V.complexPhysicalPressure referenceRequest j z).re := by
   have hper (t r z : ℝ) : Function.Periodic
       (fun angle => PhysicalParticularWave.pressureVector (V.complexPhysicalPressure
-        referenceRequest j)
+          referenceRequest j)
         (t, AxisymmetricResidual.pack r angle z)) (2 * Real.pi) := by
     intro angle
     simp only [PhysicalParticularWave.pressureVector,
       V.complexPhysicalPressure_periodic A hK G j t r z angle]
   have he := (PhysicalCurlCovariance.globalCartesianPotential_forward_germ hdelta chart
     (PhysicalParticularWave.pressureVector (V.complexPhysicalPressure referenceRequest j)) hper
-      hz).eq_of_nhds
+        hz).eq_of_nhds
   unfold physicalPressure
   rw [he]
   simp [CylindricalResidual.frame_apply, PhysicalCurlCovariance.realVector,
@@ -1387,21 +1478,21 @@ theorem physicalPressure_forward {referenceRequest : ℕ → Cylinder → Vec2}
 theorem pressureMode_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (n : ℕ) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     {z : SpaceTime} (hz : 0 < z.2 0)
     (hPhi : DifferentiableAt ℝ (B.base.phase reference)
       ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z))
     (hrequest : request n ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover
-      n)).map z) =
+        n)).map z) =
       coefficientScale (V.strip.epsilon n) (B.strip.epsilon reference) (V.velocity n) ^ 2 •
         referenceRequest reference ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent
-          V.referenceCover).map z)) :
+            V.referenceCover).map z)) :
     V.pressureMode request j n ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover
-      n)).map z) =
+        n)).map z) =
       V.scale n ^ (2 * CoordinateAlgebra.A V.exponent) • V.complexPhysicalPressure referenceRequest
-        j z := by
+          j z := by
   have hraw := V.pressure_transport request referenceRequest j n
     (x := (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z)
     (mul_pos (Real.rpow_pos_of_pos (V.scale_pos n) _) hz) hK G H
@@ -1413,7 +1504,7 @@ theorem pressureMode_physical (request referenceRequest : ℕ → Cylinder → V
     apply PhysicalCurlCovariance.carrier_eq_of_products
     have he := B.view_carrier V.background V.frequency (fun n => V.map n) reference n
       (V.frequency_ne n) ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover
-        n)).map z)
+          n)).map z)
     simp only [V.map_graph n hz] at he
     exact he
   have hw : PhysicalParticularWave.pressureWeight V.exponent (V.scale n) V.referenceScale =
@@ -1430,21 +1521,21 @@ theorem pressure_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (n : ℕ) (A : B.Angular referenceRequest reference)
     (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     {z : SpaceTime} (hz : 0 < z.2 0)
     (hPhi : DifferentiableAt ℝ (B.base.phase reference)
       ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z))
     (hrequest : request n ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover
-      n)).map z) =
+        n)).map z) =
       coefficientScale (V.strip.epsilon n) (B.strip.epsilon reference) (V.velocity n) ^ 2 •
         referenceRequest reference ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent
-          V.referenceCover).map z))
+            V.referenceCover).map z))
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     (V.pressureMode request j n ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent
-      (V.cover n)).map z)).re =
+        (V.cover n)).map z)).re =
       V.scale n ^ (2 * CoordinateAlgebra.A V.exponent) *
         V.physicalPressure referenceRequest j delta (z.1, CylindricalResidual.chart z.2) := by
   rw [V.pressureMode_physical request referenceRequest j n hK G H hz hPhi hrequest,
@@ -1457,16 +1548,22 @@ theorem pressureMode_eq_exact (request : ℕ → Cylinder → Vec2) (j : Fin 2) 
 
 /-! ## The primary coefficient is an exact specialization -/
 
+/-- Primary request, defined pointwise by `(2 : ℝ) • B.viewTarget V.strip V.velocity (fun n =>
+V.map n) reference n x`. -/
 noncomputable def primaryRequest : ℕ → Cylinder → Vec2 :=
   fun n x => (2 : ℝ) • B.viewTarget V.strip V.velocity (fun n => V.map n) reference n x
 
+/-- Primary coefficients, given by `B.viewPrimaryCoefficients V.strip V.directions V.background
+V.frequency V.velocity V.clock V.normal (fun n => V.map n) reference j`. -/
 noncomputable def primaryCoefficients (j : Fin 2) : LinearWaveBounds.WaveCoefficients Cylinder :=
   B.viewPrimaryCoefficients V.strip V.directions V.background V.frequency V.velocity V.clock
-    V.normal
+      V.normal
     (fun n => V.map n) reference j
 
+/-- Primary exact coefficients, given by `(V.primaryCoefficients j).corrected V.strip
+V.directions V.cutoff`. -/
 noncomputable def primaryExactCoefficients (j : Fin 2) : LinearWaveBounds.WaveCoefficients Cylinder
-  :=
+    :=
   (V.primaryCoefficients j).corrected V.strip V.directions V.cutoff
 
 theorem primaryCoefficients_eq_signed (j : Fin 2) :
@@ -1490,12 +1587,16 @@ theorem primaryRequest_transport (n : ℕ) (x : Cylinder) :
   simp only [primaryRequest, PrimaryData.primaryRequest, viewTarget]
   exact smul_comm _ _ _
 
+/-- Primary physical potential, given by `V.physicalPotential B.primaryRequest j delta`. -/
 noncomputable def primaryPhysicalPotential (delta : ℝ) (j : Fin 2) : VelocityField :=
   V.physicalPotential B.primaryRequest j delta
 
+/-- Primary physical velocity, given by `SpatialCurl.spatialCurl (V.primaryPhysicalPotential
+delta j)`. -/
 noncomputable def primaryPhysicalVelocity (delta : ℝ) (j : Fin 2) : VelocityField :=
   SpatialCurl.spatialCurl (V.primaryPhysicalPotential delta j)
 
+/-- Primary physical pressure, given by `V.physicalPressure B.primaryRequest j delta`. -/
 noncomputable def primaryPhysicalPressure (delta : ℝ) (j : Fin 2) : PressureField :=
   V.physicalPressure B.primaryRequest j delta
 
@@ -1505,21 +1606,21 @@ theorem primary_wave_physical {request : ℕ → Cylinder → Vec2}
     (j : Fin 2) (n : ℕ) (R : B.Regular request reference j)
     (A : B.Angular request reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     (hmap : MapsTo (V.map n) V.strip.domain B.strip.domain)
     (hradius : ∀ x ∈ V.strip.domain, 0 < x.1.1)
     {z : SpaceTime}
     (hz : z ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
-      V.strip.domain)
+        V.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) (component : Fin 3) :
     (vectorMode ((V.primaryExactCoefficients j).frequency n) ((V.primaryExactCoefficients j).phase
-      n)
+        n)
       ((V.primaryExactCoefficients j).amplitude n)
       ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z) component).re
-        =
+          =
         V.scale n ^ CoordinateAlgebra.A V.exponent * CylindricalResidual.frame (-(z.2 1))
           (V.primaryPhysicalVelocity delta j (z.1, CylindricalResidual.chart z.2)) component := by
   have he := V.wave_physical V.primaryRequest B.primaryRequest j n R.forPrimary (A.forPrimary B)
@@ -1532,16 +1633,16 @@ theorem primary_pressure_physical {request : ℕ → Cylinder → Vec2}
     (j : Fin 2) (n : ℕ) (R : B.Regular request reference j)
     (A : B.Angular request reference) (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     {z : SpaceTime} (hz : 0 < z.2 0)
     (hx : (PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z ∈
-      B.strip.domain)
+        B.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     (HarmonicCalculus.mode ((V.primaryExactCoefficients j).frequency n)
-      ((V.primaryExactCoefficients j).phase n)
+        ((V.primaryExactCoefficients j).phase n)
       ((V.primaryExactCoefficients j).pressure n)
       ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z)).re =
         V.scale n ^ (2 * CoordinateAlgebra.A V.exponent) *
@@ -1560,13 +1661,19 @@ theorem primary_pressure_physical {request : ℕ → Cylinder → Vec2}
 /-- All coherence fields concern the current state, background and
 integration domain before the signed wave is constructed. -/
 structure StateData (V : B.Views reference) where
+  /-- Patch of `StateData`, of type `SignedStressPrimitive.Patch`. -/
   patch : SignedStressPrimitive.Patch
+  /-- Context of `StateData`, of type `CorrectionState.Context Point`. -/
   context : CorrectionState.Context Point
+  /-- Reference context of `StateData`, of type `CorrectionState.Context Point`. -/
   referenceContext : CorrectionState.Context Point
+  /-- Current of `StateData`, of type `CorrectionState.State Point`. -/
   current : CorrectionState.State Point
+  /-- Reference state of `StateData`, of type `CorrectionState.State Point`. -/
   referenceState : CorrectionState.State Point
   exponent_pos : 0 < V.exponent
   exponent_lt_half : V.exponent < 1 / 2
+  /-- Domain of `StateData`, of type `ℕ → Set Point`. -/
   domain : ℕ → Set Point
   domain_open : ∀ n, IsOpen (domain n)
   state_coherent : ∀ n, PhysicalResidualNaturality.StateOn (domain n)
@@ -1580,15 +1687,16 @@ structure StateData (V : B.Views reference) where
   time_pos : ∀ x ∈ V.strip.domain, 0 < x.1.2.1.2
   fibers : ∀ n x, x ∈ V.strip.domain → ∀ r Y,
     (r, ((x.1.2.1.2, x.1.2.1.1), Y)) ∈ domain n
+  /-- Reference slow of `StateData`, of type `ℕ → Set LocalSignedRequest.Plane`. -/
   referenceSlow : ℕ → Set LocalSignedRequest.Plane
   referenceSlow_open : ∀ n, IsOpen (referenceSlow n)
   referenceSlow_mem : ∀ n x, x ∈ V.strip.domain →
     slowChange V.exponent (V.scale n) V.referenceScale (x.1.2.1.2, x.1.2.1.1) ∈ referenceSlow n
   reference_theta_smooth : ∀ n, ContDiffOn ℝ ∞ (referenceState.thetaResidual referenceContext
-    reference)
+      reference)
     (PhysicalMeanDomain.slowDomain (referenceSlow n))
   reference_axial_smooth : ∀ n, ContDiffOn ℝ ∞ (referenceState.axialResidual referenceContext
-    reference)
+      reference)
     (PhysicalMeanDomain.slowDomain (referenceSlow n))
   reference_theta_periodic : ∀ n, PhysicalMeanDomain.PeriodicOn (referenceSlow n)
     (referenceState.thetaResidual referenceContext reference)
@@ -1599,9 +1707,12 @@ namespace StateData
 
 variable {V} (D : V.StateData)
 
+/-- Request, given by `stateRequest V.strip D.patch V.exponent D.context D.current`. -/
 noncomputable def request : ℕ → Cylinder → Vec2 :=
   stateRequest V.strip D.patch V.exponent D.context D.current
 
+/-- Reference request, given by `stateRequest B.strip D.patch V.exponent D.referenceContext
+D.referenceState`. -/
 noncomputable def referenceRequest : ℕ → Cylinder → Vec2 :=
   stateRequest B.strip D.patch V.exponent D.referenceContext D.referenceState
 
@@ -1611,7 +1722,7 @@ theorem request_transport (n : ℕ) (x : Cylinder) (hx : x ∈ V.strip.domain) :
   stateRequest_of_state V.strip B.strip D.patch D.exponent_pos D.exponent_lt_half
     (V.scale_pos n) V.referenceScale_pos D.context D.referenceContext D.current D.referenceState
     n reference (V.referenceCover - V.cover n) (D.domain_open n) (D.state_coherent n)
-      (D.context_coherent n)
+        (D.context_coherent n)
     x (D.time_pos x hx) (D.fibers n x hx) (D.referenceSlow_open n) (D.referenceSlow_mem n x hx)
     (D.reference_theta_smooth n) (D.reference_axial_smooth n)
     (D.reference_theta_periodic n) (D.reference_axial_periodic n)
@@ -1620,24 +1731,24 @@ theorem actual_wave_physical (j : Fin 2) (n : ℕ)
     (R : B.Regular D.referenceRequest reference j) (A : B.Angular D.referenceRequest reference)
     (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     (hmap : MapsTo (V.map n) V.strip.domain B.strip.domain)
     (hradius : ∀ x ∈ V.strip.domain, 0 < x.1.1)
     {z : SpaceTime}
     (hz : z ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
-      V.strip.domain)
+        V.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) (component : Fin 3) :
     (vectorMode ((V.exactCoefficients D.request j).frequency n) ((V.exactCoefficients D.request
-      j).phase n)
+        j).phase n)
       ((V.exactCoefficients D.request j).amplitude n)
       ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z) component).re
-        =
+          =
         V.scale n ^ CoordinateAlgebra.A V.exponent * CylindricalResidual.frame (-(z.2 1))
           (V.physicalVelocity D.referenceRequest j delta (z.1, CylindricalResidual.chart z.2))
-            component := by
+              component := by
   have he := V.wave_physical D.request D.referenceRequest j n R A hK G H hmap hradius
     (D.request_transport n) hz hdelta chart hchart component
   rwa [V.wave_eq_exact D.request j n H] at he
@@ -1646,23 +1757,23 @@ theorem actual_pressure_physical (j : Fin 2) (n : ℕ)
     (R : B.Regular D.referenceRequest reference j) (A : B.Angular D.referenceRequest reference)
     (hK : B.base.frequency reference ≠ 0)
     (G : ChartGeometry B.base B.strip B.directions reference V.exponent V.referenceScale
-      V.referenceCover)
+        V.referenceCover)
     (H : ChartGeometry (B.viewBase V.background V.frequency (fun n => V.map n) reference)
       V.strip V.directions n V.exponent (V.scale n) (V.cover n))
     (hmap : MapsTo (V.map n) V.strip.domain B.strip.domain)
     {z : SpaceTime}
     (hz : z ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
-      V.strip.domain)
+        V.strip.domain)
     {delta : ℝ} (hdelta : 0 < delta) (chart : PolarCharts.Index)
     (hchart : z ∈ PhysicalCurlCovariance.validCylindrical delta chart) :
     (HarmonicCalculus.mode ((V.exactCoefficients D.request j).frequency n) ((V.exactCoefficients
-      D.request j).phase n)
+        D.request j).phase n)
       ((V.exactCoefficients D.request j).pressure n)
       ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z)).re =
         V.scale n ^ (2 * CoordinateAlgebra.A V.exponent) *
           V.physicalPressure D.referenceRequest j delta (z.1, CylindricalResidual.chart z.2) := by
   have hx : (PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z
-    ∈ B.strip.domain := by
+      ∈ B.strip.domain := by
     rw [← V.map_graph n hz.1]
     exact hmap hz.2
   have he := V.pressure_physical D.request D.referenceRequest j n A hK G H hz.1

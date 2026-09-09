@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryLowBounds
 
-@[expose] public section
-
 /-! The actual forward primary has the same universal good-time size
 and pressure sign as the joined primary. At time zero and on the early
 interval its size has the exponential target-ratio gain. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,16 +26,21 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {P : ParentFrame D 0} (G : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ G.radius)
+  (hball : (1 / 2 : ℝ) ≤ G.radius)
 
+/-- Low geometry, given by `G.geometryData {x | ‖x‖ ≤ (1/2 : ℝ)} (by norm_num) (fun _ hx =>
+hx.trans hball)`. -/
 def lowGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   G.geometryData {x | ‖x‖ ≤ (1/2 : ℝ)} (by norm_num) (fun _ hx => hx.trans hball)
 
+/-- Primary amplitude, given by `(G.lowGeometry hball).amplitude`. -/
 def primaryAmplitude : ℝ := (G.lowGeometry hball).amplitude
 
 theorem primaryAmplitude_nonneg : 0 ≤ G.primaryAmplitude hball :=
   EulerPacketGeometryLowBounds.amplitude_nonneg (G.lowGeometry hball)
 
+/-- Early ratio, given by `cutoffBound*(8232*Real.exp 9*P.horizon^5*Real.exp
+(-(1/(4*P.sigma))))`. -/
 def earlyRatio (_G : ForwardGuards P) : ℝ :=
   cutoffBound*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))
 
@@ -58,18 +64,18 @@ theorem scaledTime_mem (t : Icc (0 : ℝ) D.T) :
       _ ≤ (P.a/P.epsilon)*D.T := hh
       _ = _ := by unfold ParentFrame.horizon; ring
 
-theorem lowGeometry_size (t : Icc (0 : ℝ) D.T) (x : Space) (hx : ‖x‖ ≤ (1/2 : ℝ)) :
+theorem lowGeometry_size (t : Icc (0 : ℝ) D.T) (x : Space) (hx : ‖x‖ ≤ (1 / 2 : ℝ)) :
     (G.lowGeometry hball).size ⟨x,hx⟩ (scaledTime 0 P.a P.epsilon t) =
       ‖D.normal.field t x‖*‖uncutVelocity D G.initialCoordinate t x‖ := by
   change ‖D.normal.field (D.clamp (physicalTime 0 P.a P.epsilon (scaledTime 0 P.a P.epsilon t))) x‖*
     ‖uncutVelocity D G.initialCoordinate (physicalTime 0 P.a P.epsilon (scaledTime 0 P.a P.epsilon
-      t)) x‖ = _
+        t)) x‖ = _
   rw [physicalTime_scaledTime G.a_pos.ne' G.epsilon_pos.ne',Data.clamp_coe]
 
 theorem cutoff_amplitude_size (t : Icc (0 : ℝ) D.T) (x : Space) :
     G.primaryAmplitude hball*(‖D.normal.field t x‖*‖canonicalVelocity D G.initialCoordinate t x‖) =
       innerCutoff x*(G.primaryAmplitude hball*(‖D.normal.field t x‖*‖uncutVelocity D
-        G.initialCoordinate t x‖)) := by
+          G.initialCoordinate t x‖)) := by
   rw [canonicalVelocity,norm_smul,Real.norm_of_nonneg (innerCutoff_nonneg x)]
   ring
 
@@ -109,10 +115,10 @@ theorem good_primary_flux (t : Icc (0 : ℝ) D.T)
   have hg := good_flux (G.lowGeometry hball) ⟨x,hx⟩ (scaledTime 0 P.a P.epsilon t)
     ⟨ht,(G.scaledTime_mem t).2⟩
   change 0 < ⟪D.normal.field (D.clamp (physicalTime 0 P.a P.epsilon (scaledTime 0 P.a P.epsilon
-    t))) x,
+      t))) x,
     D.M.field (D.clamp (physicalTime 0 P.a P.epsilon (scaledTime 0 P.a P.epsilon t))) x
       (uncutVelocity D G.initialCoordinate (physicalTime 0 P.a P.epsilon (scaledTime 0 P.a
-        P.epsilon t)) x)⟫_ℝ at hg
+          P.epsilon t)) x)⟫_ℝ at hg
   rw [physicalTime_scaledTime G.a_pos.ne' G.epsilon_pos.ne',Data.clamp_coe] at hg
   exact mul_nonneg (innerCutoff_nonneg x) hg.le
 
@@ -136,8 +142,8 @@ theorem early_primary_size (t : Icc (0 : ℝ) D.T)
     _ ≤ innerCutoff x*(G.δ*G.hchild*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))) :=
       mul_le_mul_of_nonneg_left hg (innerCutoff_nonneg x)
     _ ≤ cutoffBound*(G.δ*G.hchild*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))) :=
-      mul_le_mul_of_nonneg_right (cutoff_le x) (by positivity
-        [G.delta_nonneg,G.child_nonneg,G.horizon_lower])
+      mul_le_mul_of_nonneg_right (cutoff_le x) (by
+          positivity [G.delta_nonneg,G.child_nonneg,G.horizon_lower])
     _ = _ := by unfold earlyRatio; ring
 
 end EulerPacketSourceGeometry.ForwardGuards

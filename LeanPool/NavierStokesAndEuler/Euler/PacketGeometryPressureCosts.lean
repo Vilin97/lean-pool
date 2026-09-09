@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 
 /-! Actual geometric pressure increments are dominated by the literal
 summable scale costs. The physical parent-strain bound is CM times the
 previous shear, while the activation constants remain fixed low constants. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +27,7 @@ open Set Real EulerSmoothLimit EulerPacketSourceGeometry EulerPacketGeometryLowB
 
 variable {G : Parent} (L : LabelData G)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (H : LowBounds G)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (P : ParentFrame (G.transverseData m hm R S hS) τ)
@@ -32,14 +35,14 @@ variable {G : Parent} (L : LabelData G)
   (Ti : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
   (J D : ℕ) (hJ : 3 ≤ J) (X Cθ CM CMn CHn c : ℝ)
   (hX : 1 ≤ X) (hCθ : 1 ≤ Cθ) (hCM : 0 ≤ CM) (hCMn : 0 ≤ CMn) (hCHn : 0 ≤ CHn) (hc : 1 ≤ c)
-  (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-  (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
+  (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+  (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
   (n : ℕ) (M : ℝ)
-  (hK : L.K ≤ previousFrequency J D X n^c) (hTib : Ti ≤ previousShear J X n)
+  (hK : L.K ≤ previousFrequency J D X n ^ c) (hTib : Ti ≤ previousShear J X n)
   (hCMb : A.CM ≤ CMn) (hCHb : A.CH ≤ CHn)
   (hTheta : P.horizon ≤ sourceTheta J Cθ (scaleSequence J X) n)
-  (hSigma : P.sigma*scaleSequence J X n ≤ 2)
-  (hchild : A.hchild ≤ shear J X n) (hMb : M ≤ CM*previousShear J X n)
+  (hSigma : P.sigma * scaleSequence J X n ≤ 2)
+  (hchild : A.hchild ≤ shear J X n) (hMb : M ≤ CM * previousShear J X n)
 
 include hτ1 hTi hJ hX hCθ hCM hCMn hCHn hc hbaseH hbaseK hK hTib hCMb hCHb hTheta hSigma hchild hMb
 
@@ -65,7 +68,7 @@ theorem joined_bad_pressure_cost_bound :
 
 theorem joined_upper_pressure_cost_bound (hdelta : A.δ ≤ spike J X n) :
     2*M*A.hchild*(A.δ*goodRatio+A.badRatio) ≤
-      2*CM*goodRatio*goodCost J (scaleSequence J X) n+
+      2*CM*goodRatio*goodCost J (scaleSequence J X) n +
         badCost J Cθ CM CMn CHn c (scaleSequence J X) n := by
   have hb := L.joined_bad_pressure_cost_bound m hm R S hS H τ hτ hτT P A Ti hτ1 hTi
     J D hJ X Cθ CM CMn CHn c hX hCθ hCM hCMn hCHn hc hbaseH hbaseK n M
@@ -109,15 +112,15 @@ theorem earlyRatio_bound :
     ring]
   apply (mul_le_mul_of_nonneg_right hh (exp_pos _).le).trans
   exact mul_le_mul_of_nonneg_right (prefactor_bound 1 P.horizon le_rfl A.horizon_lower) (exp_pos
-    _).le
+      _).le
 
 variable (J : ℕ) (hJ : 3 ≤ J) (X Cθ CM CMn CHn c : ℝ)
   (hX : 1 ≤ X) (hCθ : 1 ≤ Cθ) (hCM : 0 ≤ CM) (hCMn : 0 ≤ CMn) (hCHn : 0 ≤ CHn) (hc : 0 ≤ c)
-  (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
+  (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
   (n : ℕ) (M : ℝ)
   (hTheta : P.horizon ≤ sourceTheta J Cθ (scaleSequence J X) n)
-  (hSigma : P.sigma*scaleSequence J X n ≤ 2)
-  (hchild : A.hchild ≤ shear J X n) (hMb : M ≤ CM*previousShear J X n)
+  (hSigma : P.sigma * scaleSequence J X n ≤ 2)
+  (hchild : A.hchild ≤ shear J X n) (hMb : M ≤ CM * previousShear J X n)
 
 include hJ hX hCθ hCM hCMn hCHn hc hbaseH hTheta hSigma hchild hMb
 
@@ -129,7 +132,7 @@ theorem bad_pressure_cost_bound :
   have he := one_le_exp hz
   have hQ : 1 ≤ (4+CMn+CHn)*exp (c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^4)) := by
     nlinarith only [he,mul_nonneg hCMn (zero_le_one.trans he),mul_nonneg hCHn (zero_le_one.trans
-      he)]
+        he)]
   have hM' := hMb.trans (mul_le_mul_of_nonneg_left
     (previousShear_le_normal J (by omega) X hbaseH n) hCM)
   exact badCost_bound J hJ Cθ CM CMn CHn c hCθ hCM hCMn hCHn (scaleSequence J X) hx n
@@ -139,7 +142,7 @@ theorem bad_pressure_cost_bound :
 omit [CompleteSpace U] in
 theorem upper_pressure_cost_bound (hdelta : A.δ ≤ spike J X n) :
     2*M*A.hchild*(A.δ*goodRatio+A.earlyRatio) ≤
-      2*CM*goodRatio*goodCost J (scaleSequence J X) n+
+      2*CM*goodRatio*goodCost J (scaleSequence J X) n +
         badCost J Cθ CM CMn CHn c (scaleSequence J X) n := by
   have hb := A.bad_pressure_cost_bound J hJ X Cθ CM CMn CHn c hX hCθ hCM hCMn hCHn hc
     hbaseH n M hTheta hSigma hchild hMb

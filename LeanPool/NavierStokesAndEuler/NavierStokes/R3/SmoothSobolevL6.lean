@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
-public import Mathlib.MeasureTheory.Function.LpSpace.Complete
-
-@[expose] public section
+import Mathlib.Algebra.Order.Ring.Star
 
 /-!
 # Homogeneous Sobolev bounds for smooth square-integrable functions
@@ -19,6 +17,9 @@ Spatial cutoffs extend the compactly supported Sobolev inequality to a smooth
 function whose value and derivative belong to `L²`. The derivative of the
 cutoff contributes an error tending to zero; Fatou's lemma passes to the limit.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

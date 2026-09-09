@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCyclePreservation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentSignedCurl
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCoreSupport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCyclePreservation
 
 /-!
 # Omitted labels in the actual current signed fields
@@ -19,6 +18,9 @@ copy sum as the correction cycle.  Their support implies membership in the
 actual active-label set, before any physical pullback or finite sum.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedCurrentSupport
@@ -27,8 +29,11 @@ open Set Function Filter CorrectionState CorrectionStep HarmonicCalculus
 open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `ActualSignedCoherence.Point`. -/
 abbrev Point := ActualSignedCoherence.Point
+/-- Full point: an abbreviation for `ActualSignedCoherence.FullPoint`. -/
 abbrev FullPoint := ActualSignedCoherence.FullPoint
+/-- Index: an abbreviation for `ActualInitialization.Index`. -/
 abbrev Index := ActualInitialization.Index
 
 variable {B N0 : ℕ}
@@ -95,7 +100,7 @@ theorem cylindrical_zero (l : Index B N0) (u : State Point) (n : ℕ)
       ActualSignedPotentialCoherence.rescaledPotential, potential_zero l u n hz.2 hn, smul_zero]
   · simp only [ActualSignedPotentialCoherence.cylindricalPressureMode,
       ActualSignedPotentialCoherence.rescaledPressureMode, pressureMode_zero l u n hz.2 hn,
-        smul_zero]
+          smul_zero]
 
 theorem physicalDomain_of_source (n : ℕ) {z : ProblemStatement.SpaceTime}
     (hz : z ∈ ActualPhysicalPrefixFields.source n) :
@@ -171,7 +176,7 @@ theorem pressureMode_finsum (u : State Point) (n : ℕ) {x : FullPoint}
     (hx : x.1 ∈ ActualInitialization.geometry.domain) :
     (∑ᶠ l : Index B N0, ActualSignedPotentialCoherence.pressureMode l u n x) =
       ∑ l ∈ activeLabels standardRegion B N0 n, ActualSignedPotentialCoherence.pressureMode l u n x
-        :=
+          :=
   finsum_eq_active_sum n _ (fun l hn => pressureMode_zero l u n hx hn)
 
 theorem currentPotential_finsum (u : State Point) (n : ℕ)
@@ -193,7 +198,7 @@ theorem currentPotential_finsum_germ (u : State Point) (n : ℕ)
     (hz : z ∈ ActualPhysicalPrefixFields.cartesianChartDomain qbig n a i) :
     (fun w => ∑ᶠ l : Index B N0, CurrentSignedCurl.currentPotential l u n a i w) =ᶠ[𝓝 z]
       fun w => ∑ l ∈ activeLabels standardRegion B N0 n, CurrentSignedCurl.currentPotential l u n a
-        i w := by
+          i w := by
   filter_upwards [(ActualPhysicalPrefixFields.cartesianChartDomain_open qbig n ha i).mem_nhds hz]
     with w hw
   exact currentPotential_finsum u n hw
@@ -203,7 +208,7 @@ theorem currentPressure_finsum_germ (u : State Point) (n : ℕ)
     (hz : z ∈ ActualPhysicalPrefixFields.cartesianChartDomain qbig n a i) :
     (fun w => ∑ᶠ l : Index B N0, CurrentSignedCurl.currentPressure l u n a i w) =ᶠ[𝓝 z]
       fun w => ∑ l ∈ activeLabels standardRegion B N0 n, CurrentSignedCurl.currentPressure l u n a
-        i w := by
+          i w := by
   filter_upwards [(ActualPhysicalPrefixFields.cartesianChartDomain_open qbig n ha i).mem_nhds hz]
     with w hw
   exact currentPressure_finsum u n hw

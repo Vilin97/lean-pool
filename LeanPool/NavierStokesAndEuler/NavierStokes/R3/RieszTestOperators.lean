@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszL2Bounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SmoothSobolevL6
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszL2Bounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SmoothSobolevL6
 
 /-!
 # Differential identities for the Riesz test operators
@@ -21,6 +22,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
 The operators here are the actual inverse Fourier integrals from
 `ComparisonFourierSetup`. Differentiation uses their integrable Fourier moments.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -37,7 +41,7 @@ open HarmonicTestFunctionals
 abbrev partialTest (k : Fin 3) (ψ : ComplexTest) : ComplexTest :=
   LineDeriv.lineDerivOpCLM ℂ ComplexTest (NavierStokes.ProblemStatement.coordinateVector k) ψ
 
-@[simp] theorem partialTest_apply (k : Fin 3) (ψ : ComplexTest) (x : Space) :
+theorem partialTest_apply (k : Fin 3) (ψ : ComplexTest) (x : Space) :
     partialTest k ψ x = Comparison.partialD k (fun y => ψ y) x := rfl
 
 /-- The Fourier transform of a directional derivative of a Schwartz function. -/
@@ -51,7 +55,7 @@ theorem fourier_pderivTest (ψ : ComplexTest) (d ξ : Space) :
   rw [← Real.fourier_continuousLinearMap_apply hD,
     Real.fourier_fderiv ψ.integrable ψ.differentiable hD]
   simp only [VectorFourier.fourierSMulRight_apply, _root_.neg_apply, Complex.real_smul,
-    smul_eq_mul, Complex.ofReal_neg,
+      smul_eq_mul, Complex.ofReal_neg,
     FourierTransform.fourierCLE_apply, SchwartzMap.fourier_coe]
   erw [innerSL_apply_apply]
   ring
@@ -93,7 +97,7 @@ theorem fderiv_fourierInv_apply {f : Space → ℂ} (hf : Integrable f)
   apply congrArg (fun g : Space → ℂ => 𝓕⁻ g x)
   funext ξ
   simp only [L, VectorFourier.fourierSMulRight_apply, _root_.neg_apply, Complex.real_smul,
-    smul_eq_mul, Complex.ofReal_neg]
+      smul_eq_mul, Complex.ofReal_neg]
   erw [innerSL_apply_apply]
   ring
 

@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMomentumExpansion
+import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeDiagonal
+
+/-! The low coefficients of the actual packet residual, before solving their equations. -/
 
 @[expose] public section
 
-/-! The low coefficients of the actual packet residual, before solving their equations. -/
 
 noncomputable section
 
@@ -21,7 +23,7 @@ open Finset EulerFiniteGrades
 variable {V Q W : Type*} [AddCommGroup V] [Module ℝ V]
   [AddCommGroup Q] [Module ℝ Q] [AddCommGroup W] [Module ℝ W]
 
-theorem coefficient_eq_diagonal (M n : ℕ) (hn : n+1 ≤ M)
+theorem coefficient_eq_diagonal (M n : ℕ) (hn : n + 1 ≤ M)
     (L : V →ₗ[ℝ] W) (G H : Q →ₗ[ℝ] W) (B C : V →ₗ[ℝ] V →ₗ[ℝ] W)
     (u : ℕ → V) (p : ℕ → Q) :
     coefficient M L G H B C u p n =
@@ -40,7 +42,7 @@ namespace EulerPacketPointJets
 open Finset EulerSmoothLimit EulerPacketResidual
 
 /-- This is the coefficient equation used in the source recursion, with actual derivatives. -/
-theorem momentumGrade_eq_diagonal (N n : ℕ) (hn : n+1 ≤ N)
+theorem momentumGrade_eq_diagonal (N n : ℕ) (hn : n + 1 ≤ N)
     (FInv M : Space →L[ℝ] Space) (m : Space)
     (u : ℕ → Domain → Space) (p : ℕ → Domain → ℝ) (z : Domain) :
     momentumGrade N FInv M m u p z n =

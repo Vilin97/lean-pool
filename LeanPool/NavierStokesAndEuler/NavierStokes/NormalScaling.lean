@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverSolve
 
-@[expose] public section
-
 /-!
 # Normal, clock and amplitude rescaling in the tangent equation
 
@@ -19,6 +17,9 @@ velocity amplitude by `amp`. The projected equation then scales by
 `rate * amp / s`. These are identities of the actual operators, including
 the totalized zero-normal case.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.NormalScaling
 

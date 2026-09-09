@@ -8,14 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
 public import LeanPool.NavierStokesAndEuler.Euler.CompactSupportBoundedPath
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
-public import Mathlib.Analysis.Calculus.TangentCone.Prod
-
-@[expose] public section
+import Mathlib.Topology.Algebra.Module.PerfectSpace
 
 /-! Jointly smooth spatially compact families define smooth time fields.
 The compact support is common to the time slices, so compact joint continuity
 upgrades to continuity in the uniform spatial norm at every derivative order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,7 +63,7 @@ theorem contDiffOn_spatial_jet {s : Set P} {u : P × E → V}
   | succ n ih =>
     simp only [iteratedFDeriv_succ_eq_comp_left, Function.comp_def]
     exact (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => E)
-      V).symm.toContinuousLinearEquiv.contDiff.contDiffOn.comp
+        V).symm.toContinuousLinearEquiv.contDiff.contDiffOn.comp
       (contDiffOn_spatial_fderiv ih) (mapsTo_univ _ _)
 
 end EulerCompactSmoothTimeField
@@ -96,10 +96,20 @@ variable {A E V : Type} [TopologicalSpace A] [CompactSpace A]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instCompactSmoothTimeField1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instCompactSmoothTimeField2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instCompactSmoothTimeField3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instCompactSmoothTimeField4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
 /-- Continuous spatial jets with one common compact support yield a bounded
 smooth coefficient path. The support condition on derivatives is derived. -/

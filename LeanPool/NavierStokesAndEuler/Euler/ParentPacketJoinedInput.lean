@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentPhysicalBudgets
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
 
 /-! Actual parent fields and the physical tangent growth estimate supply
 the complete joined-packet input at one common radius. The history
 Jacobi law, inverse coefficients and all coefficient matches are proved. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,22 +27,30 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerLpTrans
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
+/-- Joined inputs data, collecting `linear`, `normal`, `mean`. -/
 structure JoinedInputs (M : EulerMeanPacketProvider.Data) (D : Data U)
     (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T) (H : HistoryData (D.initial τ hτ hτT.le)) where
+  /-- Linear of `JoinedInputs`, of type `EulerTransversePacketJoin.Budget D τ hτ hτT H (Fin 4)
+  6`. -/
   linear : EulerTransversePacketJoin.Budget D τ hτ hτT H (Fin 4) 6
+  /-- Normal of `JoinedInputs`, of type `EulerTransversePacketJoin.NormalBudget D 6 linear.R`. -/
   normal : EulerTransversePacketJoin.NormalBudget D 6 linear.R
+  /-- Mean field of `JoinedInputs`, of type `EulerMeanPacketProvider.Budget M 6 linear.R`. -/
   mean : EulerMeanPacketProvider.Budget M 6 linear.R
 
 namespace Parent
 
 variable (G : Parent) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
 
+/-- History on, given by `(G.historyData m hm R S hS H).initial τ hτ hτT.le`. -/
 def historyOn : HistoryData ((G.transverseData m hm R S hS).initial τ hτ hτT.le) :=
   (G.historyData m hm R S hS H).initial τ hτ hτT.le
 
 omit [CompleteSpace U] in
+/-- Second initial, given by `G.second.toSmoothCoefficientPath.comp (initialInclusion G.T τ
+hτT.le)`. -/
 def secondInitial : SmoothCoefficientPath (Icc (0 : ℝ) τ) (Space →L[ℝ] Space) :=
   G.second.toSmoothCoefficientPath.comp (initialInclusion G.T τ hτT.le)
 
@@ -49,7 +58,7 @@ omit [CompleteSpace U] in
 theorem secondInitial_derivative (t : ℝ) (ht : t ∈ Icc (0 : ℝ) τ) (x : Space) :
     HasDerivWithinAt
       (fun s => extendPath τ hτ.le ((G.transverseData m hm R S hS).initial τ hτ hτT.le).F₁.field s
-        x)
+          x)
       (extendPath τ hτ.le (G.secondInitial τ hτT).field t x) (Icc (0 : ℝ) τ) t :=
   initialPath_hasDerivWithinAt G.T τ G.T_pos.le hτ.le hτT.le
     (pathEvaluation x G.first.field) (pathEvaluation x G.second.field)
@@ -60,16 +69,17 @@ end Parent
 namespace LabelData
 
 variable {G : Parent} (L : LabelData G) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
   (Ti Cp : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti) (hCp : 0 ≤ Cp)
-  (g : C(Icc (0 : ℝ) (G.T-τ),ℝ)) (hg : ∀ t, 0 < g t)
-  (hg0 : g ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩=1)
+  (g : C(Icc (0 : ℝ) (G.T - τ), ℝ)) (hg : ∀ t, 0 < g t)
+  (hg0 : g ⟨0, le_rfl, (sub_pos.mpr hτT).le⟩ = 1)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
   (hphysical : PhysicalGrowth ((G.transverseData m hm R S hS).tail τ hτ.le hτT)
     EulerPacketParentPhysicalBudgets.halfBall g Cp)
 
+/-- Joined raw, constructed using `EulerPacketParentPhysicalBudgets.joinedBudget`. -/
 def joinedRaw : EulerTransversePacketJoin.Budget (G.transverseData m hm R S hS) τ hτ hτT
     (G.historyOn H m hm R S hS τ hτ hτT) (Fin 4) 6 :=
   EulerPacketParentPhysicalBudgets.joinedBudget (G.transverseData m hm R S hS) τ hτ hτT
@@ -82,11 +92,13 @@ def joinedRaw : EulerTransversePacketJoin.Budget (G.transverseData m hm R S hS) 
     (G.secondInitial_derivative m hm R S hS τ hτ hτT) G.frame_det
     g hg hg0 Ω hΩ hΩo hsub hΩball hphysical
 
+/-- Joined inputs as an element of `JoinedInputs (G.meanData H) (G.transverseData m hm R S hS) τ
+hτ hτT (G.historyOn H m hm R S hS τ hτ hτT)`. -/
 def joinedInputs (TiTotal : ℝ) (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal) :
     JoinedInputs (G.meanData H) (G.transverseData m hm R S hS) τ hτ hτT
       (G.historyOn H m hm R S hS τ hτ hτT) := by
   let A := L.joinedRaw H m hm R S hS τ hτ hτT Ti Cp hτ1 hTi hCp g hg hg0 Ω hΩ hΩo hsub hΩball
-    hphysical
+      hphysical
   let N := L.normalBudget m hm R S hS 6
   let M := L.meanBudget H 6 TiTotal hT1 hTiTotal
   let Rn := EulerPacketParentNormalBudget.radius (coefficientRadius L.K)

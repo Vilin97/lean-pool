@@ -6,9 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyInverseMap
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.GevreyInverseMap
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Joint continuity of the spatial jets of an inverse map
@@ -18,6 +20,9 @@ continuity of the map itself and of the prescribed coefficient jets, plus
 the actual equation `DY = A ∘ Y`, determines joint continuity of every
 spatial derivative of `Y`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -62,7 +67,7 @@ theorem continuous_iteratedFDeriv_of_fderiv_eq_comp
             fun i : Fin c.length => iteratedFDeriv ℝ (c.partSize i) (Y p.1) p.2) :=
           continuous_pi (fun i => ih (c.partSize i) (Nat.lt_succ_of_le (c.partSize_le i)))
         exact (c.compAlongOrderedFinpartitionL ℝ E F (E →L[ℝ]
-          F)).continuous_uncurry_of_multilinear.comp
+            F)).continuous_uncurry_of_multilinear.comp
           (hq.prodMk hp)
       have heq : (fun p : K × E => iteratedFDeriv ℝ (m+1) (Y p.1) p.2) =
           fun p => (continuousMultilinearCurryRightEquiv' ℝ m E F).symm

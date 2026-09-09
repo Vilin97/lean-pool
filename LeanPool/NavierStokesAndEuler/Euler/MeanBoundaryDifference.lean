@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryTranslation
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! Exact spatial difference-quotient commutators with the actual mixed boundary operator. -/
 
 @[expose] public section
 
-/-! Exact spatial difference-quotient commutators with the actual mixed boundary operator. -/
 
 noncomputable section
 
@@ -37,7 +39,7 @@ theorem cutoffBound_translate (χ : Cutoff) (a : Space) :
   rw [hgrad]
   change 3 * cutoffCurlConstant *
     (lpNorm (fun x => χ.field (x+a)) ∞ volume + lpNorm (fun x => gradient χ.field (x+a)) 3 volume)
-      = _
+        = _
   rw [lpNorm_translated χ.field χ.smooth.continuous,
     lpNorm_translated (gradient χ.field) (contDiff_gradient χ.smooth).continuous]
 
@@ -48,6 +50,7 @@ def spatialDifference (a : Space) (h : ℝ) : L2 →L[ℝ] L2 :=
 theorem spatialDifference_apply (a : Space) (h : ℝ) (z : L2) :
     spatialDifference a h z = h⁻¹ • (translation (h • a) z - z) := rfl
 
+/-- Difference quotient, given by `((χ.translate (h • a)).sub χ).scale h⁻¹`. -/
 def Cutoff.differenceQuotient (χ : Cutoff) (a : Space) (h : ℝ) : Cutoff :=
   ((χ.translate (h • a)).sub χ).scale h⁻¹
 
@@ -114,6 +117,6 @@ theorem mixedBoundaryOperator_differenceCommutator_norm_le_invariant
       cutoffBound (χ.differenceQuotient a h) * cutoffBound ψ +
         cutoffBound χ * cutoffBound (ψ.differenceQuotient a h) := by
   simpa only [cutoffBound_translate] using mixedBoundaryOperator_differenceCommutator_norm_le a h χ
-    ψ
+      ψ
 
 end EulerMeanBoundary

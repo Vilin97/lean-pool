@@ -8,15 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.EulerFiniteLifespan
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
 
 /-! C¹ breakdown for the concrete compactly supported datum. The
 infinite-limsup statement is expressed directly: after every time below
 the maximal time, the actual gradient supremum exceeds every real bound.
 The norms are bounded-continuous-function norms at individual times,
 not totalized real L∞ seminorms of unverified measurable fields. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,10 +28,13 @@ open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
 
 variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 
+/-- Maximal velocity norm, given by `‖finiteField (L.maximalField t)‖`. -/
 def maximalVelocityNorm (t : L.Time) : ℝ := ‖finiteField (L.maximalField t)‖
 
+/-- Maximal gradient norm, given by `‖finiteField (L.maximalField t).derivative‖`. -/
 def maximalGradientNorm (t : L.Time) : ℝ := ‖finiteField (L.maximalField t).derivative‖
 
+/-- Maximal C1 norm, given by `L.maximalVelocityNorm t+L.maximalGradientNorm t`. -/
 def maximalC1Norm (t : L.Time) : ℝ := L.maximalVelocityNorm t+L.maximalGradientNorm t
 
 theorem maximalVelocityNorm_nonneg (t : L.Time) : 0 ≤ L.maximalVelocityNorm t := norm_nonneg _
@@ -89,20 +93,26 @@ open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
   EulerOrdinarySobolev
 open scoped ContDiff
 
+/-- Maximal time: an abbreviation for `lifespan.Time`. -/
 abbrev MaximalTime : Type := lifespan.Time
 
+/-- Maximal velocity, given by `lifespan.maximalVelocity t`. -/
 def maximalVelocity (t : MaximalTime) : Space → Space := lifespan.maximalVelocity t
 
+/-- Maximal pressure, given by `lifespan.maximalPressure t`. -/
 def maximalPressure (t : MaximalTime) : Space → ℝ := lifespan.maximalPressure t
 
+/-- Maximal velocity norm, given by `lifespan.maximalVelocityNorm t`. -/
 def maximalVelocityNorm (t : MaximalTime) : ℝ := lifespan.maximalVelocityNorm t
 
+/-- Maximal gradient norm, given by `lifespan.maximalGradientNorm t`. -/
 def maximalGradientNorm (t : MaximalTime) : ℝ := lifespan.maximalGradientNorm t
 
+/-- Maximal C1 norm, given by `lifespan.maximalC1Norm t`. -/
 def maximalC1Norm (t : MaximalTime) : ℝ := lifespan.maximalC1Norm t
 
 theorem initialDatum_no_endpoint : ¬ HasSmoothEulerSolution initialDatum.field lifespan.duration :=
-  by
+    by
   intro h
   exact lifespan.no_endpoint ((hasSmoothEulerSolution_iff initialDatum lifespan.duration).mp h)
 

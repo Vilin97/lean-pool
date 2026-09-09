@@ -7,11 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryPressure
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletParity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+
+/-! Joint parity of the actual source history inverse and its normalized pressure. -/
 
 @[expose] public section
 
-/-! Joint parity of the actual source history inverse and its normalized pressure. -/
 
 noncomputable section
 
@@ -19,7 +23,7 @@ namespace EulerTransversePacketProvider.HistoryData
 
 open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerLiftedGradientSpace
   EulerLpCylinderTranslation EulerLpCylinderPaths EulerCylinderSmoothOrbit
-    EulerCylinderFieldReflection
+      EulerCylinderFieldReflection
   EulerPacketProfileRecursion EulerCylinderScalarPrimitive EulerMetricTransport
 
 variable {P : ℝ} [Fact (0 < P)]
@@ -28,7 +32,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
   (hH : ∀ t x, B.H.field t (-x) = B.H.field t x)
-  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ)))
+  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
 
 include hF hM hH hraw
 
@@ -64,7 +68,7 @@ theorem normalResidual_odd (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       -pointField P (forcingPath G) G.path_orbit t (x,(θ : AddCircle P))
     rw [← G.raw_eq t (-x) (-θ),← G.raw_eq t x θ]
     exact hraw t x θ
-  change (⟪D.normal.field t (-x),forceField G t (-x,((-θ : ℝ) : AddCircle P))⟫_ℝ-
+  change (⟪D.normal.field t (-x),forceField G t (-x,((-θ : ℝ) : AddCircle P))⟫_ℝ -
     2*⟪D.normal.field t (-x),D.M.field t (-x) (B.field G t (-x,((-θ : ℝ) : AddCircle P)))⟫_ℝ)/
     ‖D.normal.field t (-x)‖^2 = _
   rw [D.normal_even hF,hM,hf,B.field_odd G hF hM hH hraw]

@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVorticity
-public import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! Scalar components of genuine smooth velocity and vorticity fields,
 their exact elliptic identity, and a fixed coordinate operator bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +25,7 @@ open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap Laplacian
   EulerVectorCalculus EulerMeanCutoffCurl EulerMeanVectorIdentities Finset
 open scoped ContDiff
 
+/-- Component field, given by `mapField (EuclideanSpace.proj j) A`. -/
 def componentField (A : SmoothL2Field Space) (j : Fin 3) : SmoothL2Field ℝ :=
   mapField (EuclideanSpace.proj j) A
 
@@ -45,7 +48,7 @@ theorem componentField_jetLp_norm (A : SmoothL2Field Space) (j : Fin 3) (n : ℕ
   change ‖(mapField (EuclideanSpace.proj j) A).jetLp n‖ ≤ _
   rw [jetLp_mapField]
   exact ((jetPostcompose (EuclideanSpace.proj j : Space →L[ℝ] ℝ) n).norm_compLp_le (A.jetLp
-    n)).trans
+      n)).trans
     ((mul_le_mul_of_nonneg_right hJ (norm_nonneg _)).trans_eq (one_mul _))
 
 theorem componentField_partial (A : SmoothL2Field Space) (j i : Fin 3) (x : Space) :
@@ -53,25 +56,25 @@ theorem componentField_partial (A : SmoothL2Field Space) (j i : Fin 3) (x : Spac
   EulerVectorCalculus.fderiv_coordinate A.field x (A.smooth.differentiable (by simp) x) j (axis i)
 
 theorem componentField_laplacian (A : SmoothL2Field Space)
-    (hdiv : ∀ x, divergence A.field x=0) (j : Fin 3) (x : Space) :
-    Δ (componentField A j).field x=
-      partialDerivative (componentField (vorticityField A) (j+1)).field (j+2) x-
+    (hdiv : ∀ x, divergence A.field x = 0) (j : Fin 3) (x : Space) :
+    Δ (componentField A j).field x =
+      partialDerivative (componentField (vorticityField A) (j+1)).field (j+2) x -
         partialDerivative (componentField (vorticityField A) (j+2)).field (j+1) x := by
   have hz : _root_.gradient (divergence A.field) x=0 := by
     rw [show divergence A.field=(fun _ : Space => (0 : ℝ)) from funext hdiv]
     exact gradient_fun_const x 0
   have hc := congrArg (fun y : Space => y j) (congrFun (vectorCurl_vectorCurl A.field A.smooth) x)
   change (vectorCurl (vectorCurl A.field) x) j=(_root_.gradient (divergence A.field) x-Δ A.field x)
-    j at hc
+      j at hc
   rw [hz,zero_sub,PiLp.neg_apply,vector_laplacian_coordinate A.field A.smooth x j] at hc
-  have hv (i : Fin 3) : (componentField (vorticityField A) i).field=
+  have hv (i : Fin 3) : (componentField (vorticityField A) i).field =
       fun y => vectorCurl A.field y i := by
     funext y
     rw [componentField_apply,vorticityField_apply]
   rw [hv (j+1),hv (j+2)]
   change Δ (fun y => A.field y j) x=_
-  change partialDerivative (fun y => vectorCurl A.field y (j+2)) (j+1) x-
-      partialDerivative (fun y => vectorCurl A.field y (j+1)) (j+2) x=
+  change partialDerivative (fun y => vectorCurl A.field y (j+2)) (j+1) x -
+      partialDerivative (fun y => vectorCurl A.field y (j+1)) (j+2) x =
         -(Δ (fun y => A.field y j) x) at hc
   linarith
 

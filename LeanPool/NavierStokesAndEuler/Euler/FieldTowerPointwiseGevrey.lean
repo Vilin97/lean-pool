@@ -7,13 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevWordLevel
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
-
-@[expose] public section
 
 /-! Actual pointwise mixed derivatives from the finite weighted Sobolev
 norms of one coherent field tower. No pointwise estimate is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,7 +20,7 @@ namespace EulerAllOrderCorrectionData.FieldTower
 
 open Set MeasureTheory Finset EulerLiftedGradientSpace EulerCylinderSobolevSpace
   EulerCylinderSobolev EulerSpatialSobolevInverse EulerSobolevPointEvaluation
-  EulerSobolevWordLevel EulerH6Pressure EulerStrongSmoothJet EulerMetricTransport
+  EulerSobolevWordLevel EulerH6Pressure  EulerMetricTransport
   EulerSobolevGevreyOperators EulerPacketWeights
 open scoped ContDiff
 
@@ -29,7 +28,7 @@ variable {P T : ℝ} [Fact (0 < P)] (A : EulerAllOrderCorrectionData.FieldTower 
 
 /-- The canonical representative has exactly the mixed derivative
 represented by the genuine Sobolev word at any retained high order. -/
-theorem pointField_wordAtLevel (s q n : ℕ) (hq : 3 ≤ q) (hn : n+q ≤ s)
+theorem pointField_wordAtLevel (s q n : ℕ) (hq : 3 ≤ q) (hn : n + q ≤ s)
     (w : Fin n → Fin 4) (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
     iteratedFieldDerivative P w (A.pointField t) x =
       pointEvaluation P x (restrictOperator P hq
@@ -43,7 +42,7 @@ theorem pointField_wordAtLevel (s q n : ℕ) (hq : 3 ≤ q) (hn : n+q ≤ s)
 
 /-- The sum of all mixed pointwise words is bounded by the actual
 external Sobolev block, with a fixed base-order evaluation constant. -/
-theorem pointField_wordSum_le_block (s q n : ℕ) (hq : 3 ≤ q) (hn : n+q ≤ s)
+theorem pointField_wordSum_le_block (s q n : ℕ) (hq : 3 ≤ q) (hn : n + q ≤ s)
     (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
     (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w (A.pointField t) x‖) ≤
       sobolevEmbeddingConstant P 3*blockNorm P (toJet P (A.realization s t)) q n := by
@@ -59,12 +58,12 @@ theorem pointField_wordSum_le_block (s q n : ℕ) (hq : 3 ≤ q) (hn : n+q ≤ s
     have hu := norm_le_sumNorm P (wordAtLevel P q n w hn (A.realization s t))
     have he : sumNorm P (wordAtLevel P q n w hn (A.realization s t)) =
         sobolevSize P (directions := standardDirection) q ((toJet P (A.realization s t)).word w) :=
-          by
+            by
       rw [sumNorm_wordAtLevel, sobolevSize_eq P
         (EulerH6Pressure.SpatialJet.derivativeJet (toJet P (A.realization s t)) w hn)]
     exact hb.trans (mul_le_mul_of_nonneg_left ((hr.trans hu).trans_eq he) hS)
   calc
-    _ ≤ ∑ w : Fin n → Fin 4, sobolevEmbeddingConstant P 3*
+    _ ≤ ∑ w : Fin n → Fin 4, sobolevEmbeddingConstant P 3 *
         sobolevSize P (directions := standardDirection) q ((toJet P (A.realization s t)).word w) :=
       sum_le_sum fun w _ => hw w
     _ = _ := by rw [← mul_sum, blockNorm_eq_word_sizes (toJet P (A.realization s t)) hn]
@@ -72,7 +71,7 @@ theorem pointField_wordSum_le_block (s q n : ℕ) (hq : 3 ≤ q) (hn : n+q ≤ s
 /-- Selecting the actual nth summand of a weighted Sobolev norm gives
 the full pointwise mixed-word bound, without an alphabet factor. -/
 theorem pointField_wordSum_weighted (s q N n : ℕ) (hq : 3 ≤ q)
-    (hns : n+q ≤ s) (hnN : n ≤ N) (ρ : ℝ) (hρ : 0 < ρ)
+    (hns : n + q ≤ s) (hnN : n ≤ N) (ρ : ℝ) (hρ : 0 < ρ)
     (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
     weight ρ n*(∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w (A.pointField t) x‖) ≤
       sobolevEmbeddingConstant P 3*weightedNorm P q N ρ (A.realization s t) := by
@@ -84,15 +83,16 @@ theorem pointField_wordSum_weighted (s q N n : ℕ) (hq : 3 ≤ q)
     (weight_pos hρ n).le
   calc
     _ ≤ weight ρ n*(sobolevEmbeddingConstant P 3*blockNorm P (toJet P (A.realization s t)) q n) :=
-      hw
+        hw
     _ = sobolevEmbeddingConstant P 3*(weight ρ n*blockNorm P (toJet P (A.realization s t)) q n) :=
-      by ring
+        by
+        ring
     _ ≤ _ := mul_le_mul_of_nonneg_left hs (sobolevEmbeddingConstant_nonneg P 3)
 
 /-- A genuine weighted Hq bound gives the literal pointwise Gevrey
 estimate for every spatial/angular word, with radius reciprocal 1/ρ. -/
 theorem pointField_wordSum_gevrey (s q N n : ℕ) (hq : 3 ≤ q)
-    (hns : n+q ≤ s) (hnN : n ≤ N) (ρ C : ℝ) (hρ : 0 < ρ)
+    (hns : n + q ≤ s) (hnN : n ≤ N) (ρ C : ℝ) (hρ : 0 < ρ)
     (t : Icc (0 : ℝ) T) (hC : weightedNorm P q N ρ (A.realization s t) ≤ C)
     (x : LiftDomain P) :
     (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w (A.pointField t) x‖) ≤
@@ -106,13 +106,13 @@ theorem pointField_wordSum_gevrey (s q N n : ℕ) (hq : 3 ≤ q)
   exact hd.trans_eq (by rw [weight, div_div_eq_mul_div, inv_pow]; ring)
 
 theorem pointField_word_gevrey (s q N n : ℕ) (hq : 3 ≤ q)
-    (hns : n+q ≤ s) (hnN : n ≤ N) (ρ C : ℝ) (hρ : 0 < ρ)
+    (hns : n + q ≤ s) (hnN : n ≤ N) (ρ C : ℝ) (hρ : 0 < ρ)
     (t : Icc (0 : ℝ) T) (hC : weightedNorm P q N ρ (A.realization s t) ≤ C)
     (w : Fin n → Fin 4) (x : LiftDomain P) :
     ‖iteratedFieldDerivative P w (A.pointField t) x‖ ≤
       (sobolevEmbeddingConstant P 3*C)*(ρ⁻¹)^n*(n.factorial : ℝ)^2 :=
   (single_le_sum (fun v _ => norm_nonneg (iteratedFieldDerivative P v (A.pointField t) x))
-    (mem_univ w)).trans
+      (mem_univ w)).trans
     (A.pointField_wordSum_gevrey s q N n hq hns hnN ρ C hρ t hC x)
 
 end EulerAllOrderCorrectionData.FieldTower

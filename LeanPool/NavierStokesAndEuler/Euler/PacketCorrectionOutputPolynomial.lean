@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostPolynomial
 
-@[expose] public section
-
 /-! Uniform polynomial bounds for the actual correction, pressure and
 time-derivative amplitudes at the retained radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,15 +25,21 @@ open EulerPacketCorrectionConstants EulerPacketCorrectionCoefficients
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Base envelope, given by `(1+Real.sqrt 5461*X)/2`. -/
 def baseEnvelope (X : ℝ) : ℝ := (1+Real.sqrt 5461*X)/2
 
+/-- Source envelope, given by `sourceBound P (2*velocity X X X) (48*velocity X X X*X) X X 1
+(baseEnvelope X) (8*inverseRadiusEnvelope X*baseEnvelope X)`. -/
 def sourceEnvelope (X : ℝ) : ℝ :=
   sourceBound P (2*velocity X X X) (48*velocity X X X*X) X X 1
     (baseEnvelope X) (8*inverseRadiusEnvelope X*baseEnvelope X)
 
+/-- Output envelope, given by `1+baseEnvelope X+2*X*sourceEnvelope P
+X+(1+2*X*(448*X+1))*sourceEnvelope P X`. -/
 def outputEnvelope (X : ℝ) : ℝ :=
   1+baseEnvelope X+2*X*sourceEnvelope P X+(1+2*X*(448*X+1))*sourceEnvelope P X
 
+/-- Output polynomial as an element of `Polynomial ℝ`. -/
 def outputPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let p := Polynomial.C (productConstant P 3)
@@ -44,12 +51,15 @@ def outputPolynomial : Polynomial ℝ :=
 
 theorem outputPolynomial_eval (X : ℝ) : (outputPolynomial P).eval X=outputEnvelope P X := by
   unfold outputPolynomial outputEnvelope sourceEnvelope baseEnvelope inverseRadiusEnvelope
-    sourceBound
+      sourceBound
   dsimp only
   simp only [Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_one,Polynomial.eval_ofNat,
-    Polynomial.eval_C,Polynomial.eval_pow,Polynomial.eval_X,velocityPolynomial_eval,div_eq_mul_inv,one_mul]
+    Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X, velocityPolynomial_eval,
+        div_eq_mul_inv, one_mul]
 
+/-- Output constant, given by `coefficientCost (outputPolynomial P)`. -/
 def outputConstant : ℝ := coefficientCost (outputPolynomial P)
+/-- Output power, given by `(outputPolynomial P).natDegree`. -/
 def outputPower : ℕ := (outputPolynomial P).natDegree
 
 theorem outputConstant_pos : 0 < outputConstant P := coefficientCost_pos _

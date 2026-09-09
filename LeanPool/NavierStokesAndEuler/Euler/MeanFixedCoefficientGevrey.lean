@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFormGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedSpaceInverse
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Quantitative genuine coefficient calculus for the fixed mean inverse
@@ -19,6 +21,9 @@ The actual fixed operator has a polynomial amplitude depending on the time
 interval and coefficient bounds. The factorial radius and derivative shift
 are preserved by the coefficient-to-time-operator constructions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,26 +35,49 @@ open Set ContinuousLinearMap EulerTimeLp EulerTerminalTimePrimitive EulerMeanSol
   EulerMeanFormGevrey EulerGevrey EulerVolterraConvolution
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientGevrey1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientGevrey2 : InnerProductSpace ℝ solenoidalSpace :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedCoefficientGevrey3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (solenoidalSpace →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedCoefficientGevrey4 : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedCoefficientGevrey5 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2
+    →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedCoefficientGevrey6 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ]
+    L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance
+to shorten typeclass synthesis. -/
+local instance instMeanFixedCoefficientGevrey7 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance to
+shorten typeclass synthesis. -/
+local instance instMeanFixedCoefficientGevrey8 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
 private theorem scalar_bound {P E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
     [NormedAddCommGroup E] [NormedSpace ℝ E] (a : ℝ) (f : P → E) (hf : ContDiff ℝ ∞ f)
-    (r C : ℝ) (d : ℕ) (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*majorant r d n)
+    (r C : ℝ) (d : ℕ) (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C * majorant r d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun p => a • f p) x‖ ≤ (|a| *C)*majorant r d n := by
   calc
     _ = |a| *‖iteratedFDeriv ℝ n f x‖ := by
-      rw [iteratedFDeriv_const_smul_apply' (hf.contDiffAt.of_le (by simp)), norm_smul,
-        Real.norm_eq_abs]
+      rw [iteratedFDeriv_const_smul_apply' (hf.contDiffAt.of_le (by
+          simp)), norm_smul, Real.norm_eq_abs]
     _ ≤ |a| *(C*majorant r d n) := mul_le_mul_of_nonneg_left (hb n x) (abs_nonneg a)
     _ = _ := by ring
 
@@ -75,7 +103,7 @@ variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- Restriction to the actual solenoidal space does not enlarge any factorial bound. -/
 theorem solenoidalFrame_bound (hF : ContDiff ℝ ∞ F)
     (r C : ℝ) (hr : 0 ≤ r) (hC : 0 ≤ C) (d : ℕ)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C*majorant r d n) (n : ℕ) (x : P) :
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C * majorant r d n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun p => solenoidalFrame T (F p)) x‖ ≤ C*majorant r d n :=
   contraction_bound (P := P) (E := C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (F := C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2))
@@ -84,8 +112,8 @@ theorem solenoidalFrame_bound (hF : ContDiff ℝ ∞ F)
 /-- The genuine fixed derivative map has only polynomial time cost. -/
 theorem fixedMeanDerivative_bound (hF : ContDiff ℝ ∞ F) (hF₁ : ContDiff ℝ ∞ F₁)
     (r CF CF₁ : ℝ) (hr : 0 ≤ r) (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (d : ℕ)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF*majorant r d n)
-    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁*majorant r d n)
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF * majorant r d n)
+    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁ * majorant r d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun p => fixedMeanDerivative T hT (F p) (F₁ p)) x‖ ≤
       (T*CF₁+CF)*majorant r d n :=
@@ -95,17 +123,18 @@ theorem fixedMeanDerivative_bound (hF : ContDiff ℝ ∞ F) (hF₁ : ContDiff �
     (solenoidalFrame_bound T F hF r CF hr hCF d hFb)
     (solenoidalFrame_bound T F₁ hF₁ r CF₁ hr hCF₁ d hF₁b) n x
 
-/-- A fully explicit polynomial amplitude for actual derivatives of the entire fixed mean operator. -/
+/-- A fully explicit polynomial amplitude for actual derivatives of the entire fixed mean operator.
+-/
 theorem fixedMeanOperator_bound
     (hF : ContDiff ℝ ∞ F) (hF₁ : ContDiff ℝ ∞ F₁) (hH : ContDiff ℝ ∞ H)
     (hM0 : ContDiff ℝ ∞ M0) (hA : ContDiff ℝ ∞ A)
     (r CF CF₁ CH CM CA : ℝ) (hr : 0 ≤ r) (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁)
     (hCH : 0 ≤ CH) (hCM : 0 ≤ CM) (hCA : 0 ≤ CA)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF*majorant r 0 n)
-    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁*majorant r 0 n)
-    (hHb : ∀ n x, ‖iteratedFDeriv ℝ n H x‖ ≤ CH*majorant r 0 n)
-    (hMb : ∀ n x, ‖iteratedFDeriv ℝ n M0 x‖ ≤ CM*majorant r 0 n)
-    (hAb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ CA*majorant r 0 n)
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF * majorant r 0 n)
+    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁ * majorant r 0 n)
+    (hHb : ∀ n x, ‖iteratedFDeriv ℝ n H x‖ ≤ CH * majorant r 0 n)
+    (hMb : ∀ n x, ‖iteratedFDeriv ℝ n M0 x‖ ≤ CM * majorant r 0 n)
+    (hAb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ CA * majorant r 0 n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun p => fixedMeanOperator T hT (F p) (F₁ p) (H p) (M0 p) (A p) L) x‖ ≤
       (9*(T*CF₁+CF)^2*(1+(T^2/2)*CH+T*(CM+|L| *CA))) * majorant r 0 n := by
@@ -129,16 +158,16 @@ theorem fixedMeanOperator_bound
         (initialTrace (E := L2) T hT) CH (CM+|L| *CA))*majorant r 0 n := hb
   exact hb'.trans (mul_le_mul_of_nonneg_right
     (mul_le_mul_of_nonneg_left (baseAmplitude_time_bound T hT CH (CM+|L| *CA) hCH hC0) (by
-      positivity))
+        positivity))
     (majorant_nonneg r hr 0 n))
 
 /-- The actual force pullback preserves the forcing shift and has explicit polynomial amplitude. -/
 theorem fixedMeanForcing_bound (f : P → TimeLp T L2)
     (hF : ContDiff ℝ ∞ F) (hF₁ : ContDiff ℝ ∞ F₁) (hf : ContDiff ℝ ∞ f)
     (r CF CF₁ Cf : ℝ) (hr : 0 ≤ r) (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCf : 0 ≤ Cf) (d : ℕ)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF*majorant r 0 n)
-    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁*majorant r 0 n)
-    (hfb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ Cf*majorant r d n)
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF * majorant r 0 n)
+    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁ * majorant r 0 n)
+    (hfb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ Cf * majorant r d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun p => -(fixedMeanPrimitive T hT (F p) (F₁ p)).adjoint (f p)) x‖ ≤
       (3*(T*(T*CF₁+CF))*Cf)*majorant r d n := by

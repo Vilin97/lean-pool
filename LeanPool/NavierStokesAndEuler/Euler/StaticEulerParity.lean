@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerSolution
-public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionParity
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressureParity
+import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionParity
 
 /-! Odd initial velocity produces the actual odd local Euler velocity
 and odd pressure force. The scalar pressure, normalized at the origin,
 is even. These are consequences of correction uniqueness. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,8 +28,8 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
   EulerCanonicalGraphPotential EulerGraphPressurePotential
 
 variable (P : ℝ) [Fact (0 < P)] (u : SmoothL2Field Space) (C R : ℝ)
-  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
-  (hodd : ∀ x, u.field (-x)= -u.field x)
+  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
+  (hodd : ∀ x, u.field (-x) = -u.field x)
 
 include hodd
 

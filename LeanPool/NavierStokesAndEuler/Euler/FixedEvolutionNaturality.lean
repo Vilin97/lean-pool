@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FixedFrameNaturality
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.FixedFrameNaturality
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
 
 /-!
 # Naturality of the genuine continuous Dirichlet velocity
@@ -19,6 +18,9 @@ The constructed coordinate acceleration and its bounded H¹ reconstruction
 commute with the same spatial intertwiners as the variational inverse. This
 transports the actual continuous history path, including its endpoint values.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,7 +40,7 @@ variable {U V E F : Type*}
 
 /-- The backward test intertwiner gives the actual adjoint-multiplier identity. -/
 theorem adjointMultiplier_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T,V →L[ℝ] F))
+    (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T, V →L[ℝ] F))
     (hRQ : ∀ t v, Q t (A.adjoint v) = B.adjoint (R t v)) (f : TimeLp T E) :
     (timeMultiplier T hT R).adjoint (timeLift T B f) =
       timeLift T A ((timeMultiplier T hT Q).adjoint f) := by
@@ -50,7 +52,7 @@ theorem adjointMultiplier_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 
 /-- The true Gram operator commutes with compatible rectangular intertwiners. -/
 theorem gramOperator_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T,V →L[ℝ] F))
+    (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T, V →L[ℝ] F))
     (hQR : ∀ t u, R t (A u) = B (Q t u))
     (hRQ : ∀ t v, Q t (A.adjoint v) = B.adjoint (R t v)) (u : TimeLp T U) :
     gramOperator T hT R (timeLift T A u) = timeLift T A (gramOperator T hT Q u) := by
@@ -62,9 +64,9 @@ theorem gramOperator_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 /-- The constructed Gram inverse inherits the intertwining identity by its
 two-sided inverse property. -/
 theorem gramSolver_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T,V →L[ℝ] F))
-    (c : ℝ) (hc : 0 < c) (hQ : ∀ t u, c*‖u‖^2 ≤ ‖Q t u‖^2)
-    (d : ℝ) (hd : 0 < d) (hR : ∀ t v, d*‖v‖^2 ≤ ‖R t v‖^2)
+    (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T, V →L[ℝ] F))
+    (c : ℝ) (hc : 0 < c) (hQ : ∀ t u, c * ‖u‖ ^ 2 ≤ ‖Q t u‖ ^ 2)
+    (d : ℝ) (hd : 0 < d) (hR : ∀ t v, d * ‖v‖ ^ 2 ≤ ‖R t v‖ ^ 2)
     (hQR : ∀ t u, R t (A u) = B (Q t u))
     (hRQ : ∀ t v, Q t (A.adjoint v) = B.adjoint (R t v)) (f : TimeLp T U) :
     gramSolver T hT R d hd hR (timeLift T A f) =
@@ -81,15 +83,15 @@ theorem gramSolver_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
   exact hi
 
 variable (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-  (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T,V →L[ℝ] F))
-  (H : C(Icc (0 : ℝ) T,E →L[ℝ] E)) (J : C(Icc (0 : ℝ) T,F →L[ℝ] F))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t u, c*‖u‖^2 ≤ ‖Q t u‖^2)
-  (d : ℝ) (hd : 0 < d) (hR : ∀ t v, d*‖v‖^2 ≤ ‖R t v‖^2)
+  (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T, V →L[ℝ] F))
+  (H : C(Icc (0 : ℝ) T, E →L[ℝ] E)) (J : C(Icc (0 : ℝ) T, F →L[ℝ] F))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t u, c * ‖u‖ ^ 2 ≤ ‖Q t u‖ ^ 2)
+  (d : ℝ) (hd : 0 < d) (hR : ∀ t v, d * ‖v‖ ^ 2 ≤ ‖R t v‖ ^ 2)
   (hQtime : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
   (hRtime : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT R) (R₁ t) (Icc (0 : ℝ) T) t)
   (K L : ℝ) (hK : 0 ≤ K) (hL : 0 ≤ L)
-  (hH : ∀ t u, ⟪H t u,u⟫_ℝ ≤ K*‖u‖^2) (hJ : ∀ t v, ⟪J t v,v⟫_ℝ ≤ L*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2) (hsmall' : L*(T^2/2) ≤ 1/2)
+  (hH : ∀ t u, ⟪H t u, u⟫_ℝ ≤ K * ‖u‖ ^ 2) (hJ : ∀ t v, ⟪J t v, v⟫_ℝ ≤ L * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2) (hsmall' : L * (T ^ 2 / 2) ≤ 1 / 2)
   (hQR : ∀ t u, R t (A u) = B (Q t u))
   (hQR₁ : ∀ t u, R₁ t (A u) = B (Q₁ t u))
   (hRQ : ∀ t v, Q t (A.adjoint v) = B.adjoint (R t v))

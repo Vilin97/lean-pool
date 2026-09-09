@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Tactic.Positivity.Finset
+
+/-! The normalized angular primitive reverses joint reflection parity. -/
 
 @[expose] public section
 
-/-! The normalized angular primitive reverses joint reflection parity. -/
 
 noncomputable section
 
@@ -29,7 +34,7 @@ theorem primitive_neg (P : ℝ) (f : ℝ → E) :
 
 /-- Reflection of the argument contributes one minus sign to a primitive. -/
 theorem primitive_reflection (P : ℝ) (hP : P ≠ 0) (f : ℝ → E) (hf : Continuous f)
-    (hper : Function.Periodic f P) (hmean : ∫ θ in 0..P, f θ=0) :
+    (hper : Function.Periodic f P) (hmean : ∫ θ in 0..P, f θ = 0) :
     primitive P (fun θ => -f (-θ))=fun θ => primitive P f (-θ) := by
   symm
   apply primitive_unique P hP (fun θ => -f (-θ)) (hf.comp continuous_neg).neg

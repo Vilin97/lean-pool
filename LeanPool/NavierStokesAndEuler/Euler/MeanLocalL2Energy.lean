@@ -6,11 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicSmallBall
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicSmallBall
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! Local energies of actual L² fields, including the decomposition estimate. -/
 
 @[expose] public section
 
-/-! Local energies of actual L² fields, including the decomposition estimate. -/
 
 noncomputable section
 
@@ -18,6 +23,7 @@ namespace EulerMeanHarmonic
 
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal
 
+/-- Local L² energy, given by `∫ x in s, ‖u x‖ ^ 2`. -/
 def localL2Energy (s : Set Space) (u : L2) : ℝ := ∫ x in s, ‖u x‖ ^ 2
 
 theorem lpNorm_coe_L2 (u : L2) : lpNorm (u : Space → Space) 2 volume = ‖u‖ := by
@@ -68,7 +74,7 @@ theorem localL2Energy_le_of_decomposition (s : Set Space) (z w : L2) :
   linarith
 
 theorem localL2Energy_ball_le_of_ae_bound (u : L2) (C r : ℝ) (hr : 0 ≤ r)
-    (hbound : ∀ᵐ x ∂volume, x ∈ Metric.ball (0 : Space) r → ‖u x‖^2 ≤ C) :
+    (hbound : ∀ᵐ x ∂volume, x ∈ Metric.ball (0 : Space) r → ‖u x‖ ^ 2 ≤ C) :
     localL2Energy (Metric.ball (0 : Space) r) u ≤ (Real.pi * 4 / 3) * r^3 * C := by
   calc
     _ ≤ ∫ _x in Metric.ball (0 : Space) r, C := by

@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyRestriction
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevGevreyOperators
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Radius reduction for actual finite weighted Sobolev norms. -/
 
 @[expose] public section
 
-/-! Radius reduction for actual finite weighted Sobolev norms. -/
 
 noncomputable section
 
@@ -58,7 +60,7 @@ theorem weightedCoefficient_mono_cutoff {s : ℕ} {A : SmoothCoefficient period}
 /-- A retained weighted norm depends only on the genuine underlying field. -/
 theorem weightedNorm_unique {s t : ℕ} (q N : ℕ) (r : ℝ)
     (u : SobolevSpace period s) (v : SobolevSpace period t)
-    (huv : value period u = value period v) (hs : N+q ≤ s) (ht : N+q ≤ t) :
+    (huv : value period u = value period v) (hs : N + q ≤ s) (ht : N + q ≤ t) :
     weightedNorm period q N r u = weightedNorm period q N r v := by
   apply sum_congr rfl
   intro n hn
@@ -67,8 +69,8 @@ theorem weightedNorm_unique {s t : ℕ} (q N : ℕ) (r : ℝ)
     (by have := mem_range.mp hn; omega) (by have := mem_range.mp hn; omega)
 
 /-- The four actual coordinate derivatives form exactly the next external block. -/
-theorem derivative_block_sum {s : ℕ} (q n : ℕ) (hn : n+q ≤ s)
-    (u : SobolevSpace period (s+1)) :
+theorem derivative_block_sum {s : ℕ} (q n : ℕ) (hn : n + q ≤ s)
+    (u : SobolevSpace period (s + 1)) :
     (∑ i : Fin 4, blockNorm period (toJet period (derivativeOperator period s i u)) q n) =
       blockNorm period (toJet period u) q (n+1) := by
   let J : SpatialJet period standardDirection (s+1) (value period u) :=
@@ -112,13 +114,13 @@ theorem weight_half_le_shift (R : ℝ) (hR : 0 < R) (n : ℕ) :
   rw [he, div_div]
   apply (div_le_div_iff₀ (mul_pos hp (sq_pos_of_pos hf)) (by positivity)).mpr
   have hm := mul_le_mul_of_nonneg_left hn (mul_nonneg (pow_nonneg hR.le n) (sq_nonneg (n.factorial
-    : ℝ)))
+      : ℝ)))
   nlinarith only [hm]
 
 /-- Halving the positive radius pays for one full spatial/angular derivative,
 with no dependence on the external cutoff. -/
-theorem weightedNorm_derivative_half {s : ℕ} (q N : ℕ) (hN : N+q ≤ s)
-    (R : ℝ) (hR : 0 < R) (u : SobolevSpace period (s+1)) :
+theorem weightedNorm_derivative_half {s : ℕ} (q N : ℕ) (hN : N + q ≤ s)
+    (R : ℝ) (hR : 0 < R) (u : SobolevSpace period (s + 1)) :
     (∑ i : Fin 4, weightedNorm period q N (R/2) (derivativeOperator period s i u)) ≤
       (4/R)*weightedNorm period q (N+1) R u := by
   calc

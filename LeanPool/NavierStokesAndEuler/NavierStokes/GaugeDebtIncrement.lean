@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MovingMomentBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedMeanGain
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MovingMomentBounds
 
 /-!
 # Measured debt changes for actual gauge updates
@@ -19,6 +17,9 @@ The change estimates use the actual velocity and covariance increments;
 no improved bound on the whole updated covariance or debt is assumed.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.GaugeDebtIncrement
 
 noncomputable section
@@ -27,16 +28,20 @@ open Set Function Filter MeasureTheory
 open scoped ContDiff Topology Interval BigOperators
 open WeightedClasses MeanIncrementBounds CorrectionState LocalSignedRequest
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
+/-- Scalar: an abbreviation for `MeanIncrementBounds.Field Point`. -/
 abbrev Scalar := MeanIncrementBounds.Field Point
+/-- Tensor: an abbreviation for `Fin 3 → Fin 3 → Scalar`. -/
 abbrev Tensor := Fin 3 → Fin 3 → Scalar
 
 /-- Primitive local smoothness and actual support, without a class estimate. -/
 structure Regular {coord : ℝ} (U : SlowRegion coord) (a b : ℝ) (f : Scalar) : Prop where
   smooth : SmoothOn (PhysicalMeanDomain.slowDomain U.carrier) f
   supported : ∀ n, VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength coord) U.carrier
-    (f n)
+      (f n)
 
 namespace Regular
 
@@ -97,7 +102,7 @@ theorem dr (hf : Regular U a b f) (ha : 0 < a) (hab : a < b) {o : Operators Poin
     (ho : LocalRankDefect.LocalOperators U.carrier o) : Regular U a b (o.dr f) := by
   exact (hf.directional o.eR).add
     (((hf.directional o.vR).coefficient_mul ha hab (fun _ => ho.radialProfile)).band_mul
-      o.radialFrequency)
+        o.radialFrequency)
 
 theorem dz (hf : Regular U a b f) (o : Operators Point) : Regular U a b (o.dz f) :=
   (hf.directional o.eZ).band_mul o.epsilon
@@ -121,6 +126,7 @@ theorem viscosity (hf : Regular U a b f) (ha : 0 < a) (hab : a < b) {o : Operato
 
 end Regular
 
+/-- Regular triple data, collecting `radial`, `angular`, `axial`. -/
 structure RegularTriple {coord : ℝ} (U : SlowRegion coord) (a b : ℝ) (m : Triple Point) : Prop where
   radial : Regular U a b m.radial
   angular : Regular U a b m.angular
@@ -131,7 +137,7 @@ namespace RegularTriple
 variable {coord a b : ℝ} {U : SlowRegion coord} {m h base : Triple Point}
 
 theorem smooth (hm : RegularTriple U a b m) : SmoothTriple (PhysicalMeanDomain.slowDomain
-  U.carrier) m :=
+    U.carrier) m :=
   ⟨hm.radial.smooth, hm.angular.smooth, hm.axial.smooth⟩
 
 theorem updated (hm : RegularTriple U a b m) (hh : RegularTriple U a b h) :
@@ -199,6 +205,8 @@ theorem radialMoment_add_on {f g : Scalar} (hf : Regular U a b f) (hg : Regular 
 
 end Moments
 
+/-- Moment change, defined pointwise by `![radialMoment 0 G n x, radialMoment 2 T n x,
+radialMoment 1 Z n x - (1 / 2 : ℝ) * radialMoment 2 G n x]`. -/
 noncomputable def momentChange (G T Z : Scalar) : ℕ → Plane → Fin 3 → ℝ :=
   fun n x => ![radialMoment 0 G n x, radialMoment 2 T n x,
     radialMoment 1 Z n x - (1 / 2 : ℝ) * radialMoment 2 G n x]
@@ -220,9 +228,9 @@ theorem debt_sub_eq (n : ℕ) {x : Plane} (hx : x ∈ U.carrier) :
     debt c v n x - debt c u n x =
       momentChange (v.gr c - u.gr c)
         ((thetaAxial c.base v.mean + v.covariance 2 1) - (thetaAxial c.base u.mean + u.covariance 2
-          1))
+            1))
         ((axialAxial c.base v.mean + v.covariance 2 2) - (axialAxial c.base u.mean + u.covariance 2
-          2)) n x := by
+            2)) n x := by
   funext i
   fin_cases i
   · exact (radialMoment_sub_on U ha hab hgv hgu 0 n hx).symm
@@ -254,13 +262,13 @@ theorem momentChange_mem {H : ℝ} {G T Z : Scalar}
     UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL) H
       (fun n x => momentChange G T Z n x i) := by
   have h0 := MovingMomentBounds.radialMoment_mem U ha hab hcL hcR ε L hε hεone hL hG.smooth
-    hG.supported hcG 0
+      hG.supported hcG 0
   have h1 := MovingMomentBounds.radialMoment_mem U ha hab hcL hcR ε L hε hεone hL hT.smooth
-    hT.supported hcT 2
+      hT.supported hcT 2
   have h2 := MovingMomentBounds.radialMoment_mem U ha hab hcL hcR ε L hε hεone hL hZ.smooth
-    hZ.supported hcZ 1
+      hZ.supported hcZ 1
   have h3 := MovingMomentBounds.radialMoment_mem U ha hab hcL hcR ε L hε hεone hL hG.smooth
-    hG.supported hcG 2
+      hG.supported hcG 2
   fin_cases i
   · exact h0
   · exact h1
@@ -275,10 +283,10 @@ theorem debt_change_mem {H : ℝ} (c : Context Point) (u v : State Point)
     (hcG : MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H (v.gr c - u.gr c))
     (hcT : MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H
       ((thetaAxial c.base v.mean + v.covariance 2 1) - (thetaAxial c.base u.mean + u.covariance 2
-        1)))
+          1)))
     (hcZ : MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H
       ((axialAxial c.base v.mean + v.covariance 2 2) - (axialAxial c.base u.mean + u.covariance 2
-        2))) (i : Fin 3) :
+          2))) (i : Fin 3) :
     UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL) H
       (fun n x => debt c v n x i - debt c u n x i) := by
   apply class_congr (momentChange_mem U ha hab hcL hcR ε L hε hεone hL
@@ -333,7 +341,7 @@ theorem radialMoment_congr_on {U : Set Plane} {f g : Scalar}
   exact PhysicalMeanDomain.liftedPressureMass_fiberLocal
     (fun z => z.1 ^ k * f n z) (fun z => z.1 ^ k * g n z) x
     (fun R Y => congrArg (fun q : ℝ => R ^ k * q) (show f n (R, (x, Y)) = g n (R, (x, Y)) from he n
-      hx)) 0 0
+        hx)) 0 0
 
 end DomainTools
 
@@ -375,7 +383,7 @@ variable {coord a b : ℝ} (U : SlowRegion coord) (ha : 0 < a) (hab : a < b)
 
 include hm in
 theorem waveStage_mean_regular : RegularTriple U a b (SignedMeanGain.waveStage g c u w q
-  gaussian).mean := by
+    gaussian).mean := by
   rw [SignedMeanGain.waveStage_mean]
   exact hm
 
@@ -391,7 +399,7 @@ theorem waveStage_gr_agree :
     Agree (PhysicalMeanDomain.slowDomain U.carrier)
       ((SignedMeanGain.waveStage g c u w q gaussian).gr c - u.gr c)
       (SignedMeanGain.radialCovarianceChange c.operators (SignedMeanGain.covarianceIncrement
-        u.oscillation w)) := by
+          u.oscillation w)) := by
   have hmu := waveStage_mean_regular U g c u w q gaussian hm
   have hWv := waveStage_covariance_regular U g c u w q gaussian hW hX
   have hgu := hm.gr ha hab hb hop u.covariance hW
@@ -402,7 +410,7 @@ theorem waveStage_gr_agree :
       ((hX 1 1).inv_mul ha hab hop)
   apply agree_slow_of_positive ha (hgv.sub hgu) hR
   exact SignedMeanGain.waveStage_gr_change (LocalRankDefect.positiveDomain_open U.isOpen) g c u w q
-    gaussian
+      gaussian
     hb (smoothTriple_mono hm.smooth (fun _ hx => hx.2))
     (fun i j n => ((hW i j).smooth n).mono (fun _ hx => hx.2))
     (fun i j n => ((hX i j).smooth n).mono (fun _ hx => hx.2))
@@ -413,7 +421,7 @@ theorem waveStage_debt_change_formula (n : ℕ) {x : Plane} (hx : x ∈ U.carrie
     debt c (SignedMeanGain.waveStage g c u w q gaussian) n x - debt c u n x =
       momentChange
         (SignedMeanGain.radialCovarianceChange c.operators (SignedMeanGain.covarianceIncrement
-          u.oscillation w))
+            u.oscillation w))
         (SignedMeanGain.covarianceIncrement u.oscillation w 2 1)
         (SignedMeanGain.covarianceIncrement u.oscillation w 2 2) n x := by
   have hmu := waveStage_mean_regular U g c u w q gaussian hm
@@ -451,7 +459,7 @@ theorem waveStage_debt_change_mem {κ α : ℝ}
     (hcX : SignedMeanGain.TensorClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) α
       (SignedMeanGain.covarianceIncrement u.oscillation w)) (i : Fin 3) :
     UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL) (α -
-      κ)
+        κ)
       (fun n x => debt c (SignedMeanGain.waveStage g c u w q gaussian) n x i - debt c u n x i) := by
   have hR : Regular U a b (SignedMeanGain.radialCovarianceChange c.operators
       (SignedMeanGain.covarianceIncrement u.oscillation w)) :=
@@ -487,7 +495,7 @@ theorem temporal_thetaFlux_change :
       (VariableGaugeMean.temporalStageState g h index axial c u).covariance 2 1) -
         (thetaAxial c.base u.mean + u.covariance 2 1) =
       deltaThetaAxial c.base u.mean (VariableGaugeMean.temporalIncrementState g h index axial c u)
-        := by
+          := by
   rw [temporalStage_mean, temporalStage_covariance, thetaAxial_updated]
   abel
 
@@ -496,7 +504,7 @@ theorem temporal_axialFlux_change :
       (VariableGaugeMean.temporalStageState g h index axial c u).covariance 2 2) -
         (axialAxial c.base u.mean + u.covariance 2 2) =
       deltaAxialAxial c.base u.mean (VariableGaugeMean.temporalIncrementState g h index axial c u)
-        := by
+          := by
   rw [temporalStage_mean, temporalStage_covariance, axialAxial_updated]
   abel
 
@@ -533,9 +541,9 @@ theorem temporalStage_debt_change_formula (n : ℕ) {x : Plane} (hx : x ∈ U.ca
       momentChange
         ((VariableGaugeMean.temporalStageState g h index axial c u).gr c - u.gr c)
         (deltaThetaAxial c.base u.mean (VariableGaugeMean.temporalIncrementState g h index axial c
-          u))
+            u))
         (deltaAxialAxial c.base u.mean (VariableGaugeMean.temporalIncrementState g h index axial c
-          u)) n x := by
+            u)) n x := by
   have hmu := temporalStage_mean_regular U g h index axial c u hm hi
   have hWv := temporalStage_covariance_regular U g h index axial c u hW
   have he := debt_sub_eq U ha hab c u (VariableGaugeMean.temporalStageState g h index axial c u)
@@ -566,20 +574,20 @@ theorem temporalStage_debt_change_mem {κ H : ℝ}
     (ho : OperatorBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) c.operators κ)
     (hbC : BaseBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) c.base)
     (hmC : MeanIncrementBounds.CumulativeBounds (movingStripData U a b cL cR ha hcL hcR ε L hε
-      hεone hL) u.mean)
+        hεone hL) u.mean)
     (hiC : IncrementBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H
       (VariableGaugeMean.temporalIncrementState g h index axial c u))
     (hH : 9 / 10 ≤ H) (hκ : 2 * κ ≤ 9 / 10) (i : Fin 3) :
     UnweightedClass (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL) H
       (fun n x => debt c (VariableGaugeMean.temporalStageState g h index axial c u) n x i - debt c
-        u n x i) := by
+          u n x i) := by
   let st := movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL
   have hsub : st.domain ⊆ PhysicalMeanDomain.slowDomain U.carrier := fun z hz =>
     ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).1
   have hmu := temporalStage_mean_regular U g h index axial c u hm hi
   have hWv := temporalStage_covariance_regular U g h index axial c u hW
   have hcg : MeanClass st H ((VariableGaugeMean.temporalStageState g h index axial c u).gr c - u.gr
-    c) := by
+      c) := by
     simpa only [State.gr, temporalStage_mean, temporalStage_covariance] using
       gr_change_mem ho hbC hmC hiC hH u.covariance
         (fun i j n => ((hW i j).smooth n).mono hsub) hκ
@@ -601,7 +609,7 @@ theorem temporalStage_debt_change_mem {κ H : ℝ}
     (hmu.gr ha hab hb hop (VariableGaugeMean.temporalStageState g h index axial c u).covariance hWv)
     ((hm.thetaAxial ha hab hb).add (hW 2 1)) ((hmu.thetaAxial ha hab hb).add (hWv 2 1))
     ((hm.axialAxial ha hab hb).add (hW 2 2)) ((hmu.axialAxial ha hab hb).add (hWv 2 2)) hcg hct hcz
-      i
+        i
 
 end TemporalBounds
 
@@ -656,7 +664,7 @@ theorem waveStage_debt_mem {β : ℝ} (hβ : α - κ ≤ β)
       (fun n x => debt c (SignedMeanGain.waveStage g c u w q gaussian) n x i) :=
   debt_mem_after_change _ c u _ hβ le_rfl hold
     (waveStage_debt_change_mem U ha hab hcL hcR ε L hε hεone hL g c u w q gaussian hop hb hm hW hX
-      ho hcX)
+        ho hcX)
 
 theorem waveStage_defectBounds {σ τ : ℝ} (hσ : τ ≤ σ) (hτ : 1 + τ ≤ α - κ)
     (hold : DefectBounds (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen
@@ -665,7 +673,7 @@ theorem waveStage_defectBounds {σ τ : ℝ} (hσ : τ ≤ σ) (hτ : 1 + τ ≤
       ε L hε hεone hL) τ c (SignedMeanGain.waveStage g c u w q gaussian) :=
   defectBounds_after_change _ c u _ hσ hτ hold
     (waveStage_debt_change_mem U ha hab hcL hcR ε L hε hεone hL g c u w q gaussian hop hb hm hW hX
-      ho hcX)
+        ho hcX)
 
 end WaveNextDebt
 
@@ -685,7 +693,7 @@ variable {coord a b cL cR : ℝ} (U : SlowRegion coord)
     (ho : OperatorBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) c.operators κ)
     (hbC : BaseBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) c.base)
     (hmC : MeanIncrementBounds.CumulativeBounds (movingStripData U a b cL cR ha hcL hcR ε L hε
-      hεone hL) u.mean)
+        hεone hL) u.mean)
     (hiC : IncrementBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H
       (VariableGaugeMean.temporalIncrementState g h index axial c u))
     (hH : 9 / 10 ≤ H) (hκ : 2 * κ ≤ 9 / 10)

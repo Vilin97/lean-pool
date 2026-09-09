@@ -9,12 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianLow
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSobolevBoundedField
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
+public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianScale
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
+
+/-! The heat estimates specialized to genuine ordinary smooth L² fields. -/
 
 @[expose] public section
 
-/-! The heat estimates specialized to genuine ordinary smooth L² fields. -/
 
 noncomputable section
 
@@ -63,7 +66,7 @@ theorem secondAverage_directional_bound {t : ℝ} (ht : 0 < t)
   calc
     _ ≤ ∑ i : Fin 3, ‖average t (wordField A (w i)).field x‖ := by
       simpa only [he] using norm_sum_le Finset.univ (fun i : Fin 3 => average t (wordField A (w
-        i)).field x)
+          i)).field x)
     _ ≤ ∑ _i : Fin 3, t^(-(3:ℝ)/4)*‖A.jetLp 3‖ := Finset.sum_le_sum (fun i _ => h i)
     _ = _ := by simp; ring
 
@@ -83,7 +86,7 @@ theorem average_field_hasDerivAt {t : ℝ} (ht : 0 < t) (A : SmoothL2Field V) (x
 
 theorem scaledAverage_field_hasDerivAt {t : ℝ} (ht : 0 < t) (A : SmoothL2Field V) (x : Space) :
     HasDerivAt (fun s : ℝ => scaledAverage s A.field x) ((1/4:ℝ) • secondAverage t A.field x) t :=
-      by
+        by
   apply (average_field_hasDerivAt ht A x).congr_of_eventuallyEq
   filter_upwards [Ioi_mem_nhds ht] with s hs
   exact scaledAverage_eq hs A.field x
@@ -92,7 +95,7 @@ theorem average_field_first_bound (A : SmoothL2Field V) (a x : Space) :
     ‖average 1 (fun y => fderiv ℝ A.field y a) x‖ ≤ lowCost*‖a‖*‖A.toLp‖ := by
   simpa only [field_norm] using average_first_L2_bound A.field A.smooth A.memLp
     ‖finiteField A‖ ‖finiteField A.derivative‖ (field_sup_bound A) (field_sup_bound A.derivative) a
-      x
+        x
 
 theorem average_field_second_bound {t : ℝ} (ht : 0 < t)
     (A : SmoothL2Field V) (W : ℝ) (hW : ∀ x, ‖A.field x‖ ≤ W) (a b x : Space) :
@@ -112,7 +115,7 @@ theorem secondAverage_eq_laplacian {t : ℝ} (ht : 0 < t)
     funext y
     exact laplacian_eq_coordinate_sum A.field A.smooth y
   rw [he, average_sum ht _ (fun i => ((A.directionalField (axis i)).directionalField (axis
-    i)).memLp)]
+      i)).memLp)]
   rfl
 
 end EulerWholeSpaceGaussian

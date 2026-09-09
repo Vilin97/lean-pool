@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyCommon
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionSourceRestriction
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyCompatibility
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionSourceRestriction
+
+/-! Coherence and all-order regularity of the actual pressure associated with a finite correction
+family. -/
 
 @[expose] public section
 
-/-! Coherence and all-order regularity of the actual pressure associated with a finite correction
-  family. -/
 
 noncomputable section
 
@@ -38,7 +40,7 @@ def FiniteFamily.signedPressurePath (F : FiniteFamily period hT A) (q : ℕ) (hq
 
 /-- Proved correction compatibility gives exact restriction of the actual nonlinear sources. -/
 theorem FiniteFamily.rawSourcePath_truncate (F : FiniteFamily period hT A) (C : ComparisonData
-  period hT A)
+    period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     truncateOperator period q (F.rawSourcePath period (q+1) (hq.trans (Nat.le_succ q)) t) =
       F.rawSourcePath period q hq t := by
@@ -55,7 +57,7 @@ theorem FiniteFamily.rawSourcePath_truncate (F : FiniteFamily period hT A) (C : 
 
 /-- Adjacent nonlinear source realizations have the same actual L² value. -/
 theorem FiniteFamily.rawSourcePath_value_succ (F : FiniteFamily period hT A) (C : ComparisonData
-  period hT A)
+    period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     value period (F.rawSourcePath period (q+1) (hq.trans (Nat.le_succ q)) t) =
       value period (F.rawSourcePath period q hq t) :=
@@ -72,7 +74,7 @@ theorem FiniteFamily.signedPressurePath_value_succ (F : FiniteFamily period hT A
       -value period (pressureSobolevOperator period (A.metric.jet q t) A.κ A.direction
         A.coercivity A.coercivity_pos (A.metric_pos t) (F.rawSourcePath period q hq t))
   rw [pressureSobolevOperator_value, pressureSobolevOperator_value, F.rawSourcePath_value_succ
-    period C]
+      period C]
 
 /-- Every finite signed pressure is a realization of the same actual base pressure. -/
 theorem FiniteFamily.signedPressurePath_value_base (F : FiniteFamily period hT A)
@@ -86,7 +88,7 @@ theorem FiniteFamily.signedPressurePath_value_base (F : FiniteFamily period hT A
 /-- The actual common signed correction pressure is a continuous L² path. -/
 def FiniteFamily.commonPressure (F : FiniteFamily period hT A) : C(Icc (0 : ℝ) T, LiftL2 period) :=
   (valueOperator period 6).compLeftContinuous ℝ (Icc (0 : ℝ) T) (F.signedPressurePath period 6
-    le_rfl)
+      le_rfl)
 
 /-- Each finite pressure realizes the common actual signed pressure field. -/
 theorem FiniteFamily.signedPressurePath_value_common (F : FiniteFamily period hT A)
@@ -102,12 +104,13 @@ theorem FiniteFamily.commonPressure_gradient (F : FiniteFamily period hT A) (t :
 /-- The actual common pressure has genuine strong spatial jets of every order. -/
 def FiniteFamily.pressureJet (F : FiniteFamily period hT A) (C : ComparisonData period hT A)
     (n : ℕ) (t : Icc (0 : ℝ) T) : SpatialJet period standardDirection n (F.commonPressure period t)
-      := by
+        := by
   rw [← F.signedPressurePath_value_common period C (n+6) (by omega) t]
   exact EulerH6Pressure.SpatialJet.restrict
     (toJet period (F.signedPressurePath period (n+6) (by omega) t)) n (by omega)
 
-/-- The common correction satisfies the literal equation with its reconstructed actual signed pressure. -/
+/-- The common correction satisfies the literal equation with its reconstructed actual signed
+pressure. -/
 theorem FiniteFamily.commonPath_pressure_equation (F : FiniteFamily period hT A)
     (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (extendPath T hT.le (F.commonPath period))

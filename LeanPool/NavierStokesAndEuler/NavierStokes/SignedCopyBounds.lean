@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedWaveUpdate
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Uniform native-cell bounds for actual signed coefficients
@@ -20,6 +18,9 @@ The input functions need smoothness and jets only on their own native cells.
 The matrix inverse, signed square-root quotient and projected pressure are
 computed from the primitive input functions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -131,7 +132,7 @@ theorem local_indexed_band_smul {r : I → ℕ → ℝ} {f : ℕ → I → D →
         (mul_nonneg hC (Real.rpow_pos_of_pos (s.epsilon_pos n) β).le))
     · rw [iteratedFDeriv_const_of_ne hj0]
       simpa only [Pi.zero_apply, norm_zero] using majorant_nonneg s (fun _ _ => 1) β hC p n x
-        zero_le_one
+          zero_le_one
   have hh := hc.bilinear hf (ContinuousLinearMap.lsmul ℝ ℝ) (fun _ _ _ => zero_le_one) hw
   simp only [one_mul, add_comm] at hh
   exact hh
@@ -168,8 +169,8 @@ theorem local_compact_comp {f : ℕ → I → D → ℝ}
     _ ≤ j.factorial * B * ((A + 1) * s.growth n x ^ p) ^ j := hh
     _ ≤ m.factorial * B * ((A + 1) * s.growth n x ^ p) ^ m := by
       apply mul_le_mul
-      · exact mul_le_mul_of_nonneg_right (by exact_mod_cast Nat.factorial_le hj) (zero_le_one.trans
-        hB)
+      · exact mul_le_mul_of_nonneg_right (by
+          exact_mod_cast Nat.factorial_le hj) (zero_le_one.trans hB)
       · exact pow_le_pow_right₀ hJ hj
       · positivity
       · positivity
@@ -190,8 +191,8 @@ theorem local_inv {f : ℕ → I → D → ℝ}
     rw [Set.mem_singleton_iff.mp he, abs_zero] at hh
     linarith
   · intro n i x hx hi
-    exact ⟨by simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hu n i x
-      hx hi,
+    exact ⟨by
+        simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hu n i x hx hi,
       hl n i x hx hi⟩
 
 end LocalOperations
@@ -260,7 +261,7 @@ theorem signed_jet_at {g r : D → ℝ} {x : D}
       Real.sqrt w * SignedCovariance.signedJetCost m * B ^ (2 * m + 2) := by
   have hhi : g x ≤ w * B := by
     simpa only [norm_iteratedFDeriv_zero, Real.norm_eq_abs, abs_of_pos hpos] using hgj 0
-      (Nat.zero_le m)
+        (Nat.zero_le m)
   have hsingleton : ∀ y ∈ ({x} : Set D), 0 < g y := by
     intro y hy
     simpa only [Set.mem_singleton_iff.mp hy] using hpos
@@ -332,14 +333,16 @@ theorem local_input_envelope (hw : ∀ n x, x ∈ s.domain → 0 < w n x)
     have hh := hgj n i x hx hi j hj
     simp only [majorant, Real.rpow_zero, mul_one] at hh
     exact hh.trans ((mul_le_mul_of_nonneg_right
-      (hm Cg hCg (by dsimp [C]; linarith [(inv_pos.mpr hc).le]) pg (by dsimp [p]; omega)) (hw n x
-        hx).le).trans_eq (by ring))
+      (hm Cg hCg (by
+          dsimp [C]; linarith [(inv_pos.mpr hc).le]) pg (by
+              dsimp [p]; omega)) (hw n x hx).le).trans_eq (by ring))
   · intro j hj
     have hh := hrj n i x hx hi j hj
     simp only [majorant, Real.rpow_zero, mul_one] at hh
     exact hh.trans ((mul_le_mul_of_nonneg_right
-      (hm Cr hCr (by dsimp [C]; linarith [(inv_pos.mpr hc).le]) pr (by dsimp [p]; omega)) (hw n x
-        hx).le).trans_eq (by ring))
+      (hm Cr hCr (by
+          dsimp [C]; linarith [(inv_pos.mpr hc).le]) pr (by
+              dsimp [p]; omega)) (hw n x hx).le).trans_eq (by ring))
 
 theorem local_signed_quotient_zero (hw : ∀ n x, x ∈ s.domain → 0 < w n x)
     (hg : LocalJets s w 0 K g) (hr : LocalJets s w 0 K r)
@@ -393,8 +396,11 @@ end LocalQuotient
 
 /-! ## Cramer's actual solve, uniformly on the native cells -/
 
+/-- Mat2: an abbreviation for `SignedWaveUpdate.Mat2`. -/
 abbrev Mat2 := SignedWaveUpdate.Mat2
+/-- Vec2: an abbreviation for `SignedWaveUpdate.Vec2`. -/
 abbrev Vec2 := SignedWaveUpdate.Vec2
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
 
 /-- Only primitive matrix/target jets and zeroth-order margins occur here.
@@ -404,8 +410,11 @@ structure NativeCovariance (s : StripData D) (K : ℕ → I → Set D)
   matrix_jets : ∀ a b, LocalJets s (fun _ _ => 1) 0 K (fun n i x => H i n x a b)
   target_jets : ∀ a, LocalJets s (fun _ x => s.zeta x) 0 K (fun n i x => T i n x a)
   zeta_pos : ∀ x ∈ s.domain, 0 < s.zeta x
+  /-- Determinant gap of `NativeCovariance`, of type `ℝ`. -/
   determinantGap : ℝ
+  /-- Entry bound of `NativeCovariance`, of type `ℝ`. -/
   entryBound : ℝ
+  /-- Primary lower of `NativeCovariance`, of type `ℝ`. -/
   primaryLower : ℝ
   gap_pos : 0 < determinantGap
   entry_one : 1 ≤ entryBound
@@ -447,17 +456,17 @@ theorem weights_jets {R : I → ℕ → D → Vec2} {w : ℕ → D → ℝ} {β 
   have h1 : ∀ (_ : ℕ) (x : D), x ∈ s.domain → 0 ≤ (1 : ℝ) := fun _ _ _ => zero_le_one
   have hr : LocalJets s (fun _ _ => 1) 0 K (fun n _ (_ : D) => Real.sqrt (s.slow n)) :=
     LocalJets.of_memClass (CurlClassBounds.polynomialJets_unweighted
-      (PrimaryPulseBounds.sqrt_slow_polynomial s))
+        (PrimaryPulseBounds.sqrt_slow_polynomial s))
   have hN (a b : Fin 2) := local_coeff_mul hr (h.matrix_jets a b) h1
   have hD : LocalJets s (fun _ _ => 1) 0 K
       (fun n i x => (PrimaryPulseBounds.normalizedMatrix (Real.sqrt (s.slow n)) (H i n x)).det) :=
-        by
+          by
     simpa only [Matrix.det_fin_two, PrimaryPulseBounds.normalizedMatrix] using
       local_sub (local_coeff_mul (hN 0 0) (hN 1 1) h1)
         (local_coeff_mul (hN 0 1) (hN 1 0) h1) h1
   have hupper : ∀ n i x, x ∈ s.domain → x ∈ K n i →
       |(PrimaryPulseBounds.normalizedMatrix (Real.sqrt (s.slow n)) (H i n x)).det| ≤ 2 *
-        h.entryBound ^ 2 := by
+          h.entryBound ^ 2 := by
     intro n i x hx hi
     simp only [Matrix.det_fin_two, PrimaryPulseBounds.normalizedMatrix]
     apply (abs_sub _ _).trans
@@ -471,7 +480,7 @@ theorem weights_jets {R : I → ℕ → D → Vec2} {w : ℕ → D → ℝ} {β 
   have hscale := local_coeff_mul (local_coeff_mul hr hr h1) hinv h1
   have hprod (a b k : Fin 2) := local_coeff_mul (h.matrix_jets a b) (hR k) hw
   have hnum : LocalJets s w β K (fun n i x => SmoothCovariance.cramerNumerator (H i n x) (R i n x)
-    j) := by
+      j) := by
     fin_cases j
     · have hh := local_sub (hprod 1 1 0) (hprod 0 1 1) hw
       simp only [SmoothCovariance.cramerNumerator, mul_comm] at hh ⊢
@@ -605,7 +614,7 @@ theorem local_projectedPressure {N Ndot u : ℕ → I → D → Space}
   intro n i x
   simp only [ParticularWaveBounds.projectedPressure, _root_.smul_apply,
     Complex.ofRealCLM_apply, smul_eq_mul, Complex.real_smul, div_eq_mul_inv, mul_comm, mul_one,
-      Complex.ofReal_inv]
+        Complex.ofReal_inv]
 
 end Pressure
 
@@ -724,7 +733,7 @@ theorem uniform_smul [Countable L] [Nonempty L] {r : L → ℕ → I → D → �
   exact (local_pull hr (UniformPrimaryWeights.enumeration L)).smul
     (local_pull hf (UniformPrimaryWeights.enumeration L))
     (fun k => hw (UniformPrimaryWeights.enumeration L k).2 (UniformPrimaryWeights.enumeration L
-      k).1)
+        k).1)
 
 end UniformLabels
 
@@ -736,8 +745,11 @@ structure UniformNativeCovariance {L : Type} (s : StripData D)
   matrix_jets : ∀ a b, UniformLocalJets s (fun _ _ _ => 1) 0 K (fun l n i x => H l i n x a b)
   target_jets : ∀ a, UniformLocalJets s (fun _ _ x => s.zeta x) 0 K (fun l n i x => T l i n x a)
   zeta_pos : ∀ x ∈ s.domain, 0 < s.zeta x
+  /-- Determinant gap of `UniformNativeCovariance`, of type `ℝ`. -/
   determinantGap : ℝ
+  /-- Entry bound of `UniformNativeCovariance`, of type `ℝ`. -/
   entryBound : ℝ
+  /-- Primary lower of `UniformNativeCovariance`, of type `ℝ`. -/
   primaryLower : ℝ
   gap_pos : 0 < determinantGap
   entry_one : 1 ≤ entryBound
@@ -754,6 +766,8 @@ namespace UniformNativeCovariance
 variable {L : Type} {s : StripData D} {K : L → ℕ → I → Set D}
   {H : L → I → ℕ → D → Mat2} {T : L → I → ℕ → D → Vec2}
 
+/-- Pull, bundling `matrix_jets`, `target_jets`, `zeta_pos`, `determinantGap` and the required
+compatibility proofs. -/
 noncomputable def pull (h : UniformNativeCovariance s K H T) (e : ℕ → ℕ × L) :
     NativeCovariance (UniformPrimaryWeights.reindexedStrip s e)
       (fun k => K (e k).2 (e k).1) (fun i k => H (e k).2 i (e k).1)

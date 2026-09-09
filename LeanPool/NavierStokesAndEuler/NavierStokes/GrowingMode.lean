@@ -6,13 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TangentODE
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianEnvelope
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import LeanPool.NavierStokesAndEuler.NavierStokes.TangentODE
+import Mathlib.Analysis.ODE.ExistUnique
 
 /-!
 # The actual growing mode stays in a narrow cone
@@ -21,11 +18,15 @@ The invariant region is proved using a quadratic boundary function, without
 dividing by the growing coordinate or assuming its positivity along the solution.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.GrowingMode
 
 open Set Filter
 open scoped Topology
 
+/-- State: an abbreviation for `EuclideanSpace ℝ (Fin 2)`. -/
 abbrev State := EuclideanSpace ℝ (Fin 2)
 
 /-- The actual two-mode coefficient, including four independent error entries. -/

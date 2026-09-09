@@ -6,14 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyNonlinearEstimate
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyData
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionEquation
+import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionSplit
+import LeanPool.NavierStokesAndEuler.Euler.GevreyNonlinearEstimate
+import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
+import LeanPool.NavierStokesAndEuler.Euler.GevreyRestriction
+import LeanPool.NavierStokesAndEuler.Euler.GevreyUniformConstants
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Actual raw-source, elliptic-pressure, and time-source bounds at a smaller radius. -/
 
 @[expose] public section
 
-/-! Actual raw-source, elliptic-pressure, and time-source bounds at a smaller radius. -/
 
 noncomputable section
 
@@ -43,33 +49,33 @@ theorem sourceBound_nonneg {B0 B1 A0 A2 residual E DE : ℝ}
 
 /-- The actual transport estimate uses the sum of genuine derivative
 norms, rather than a derivative bound on a hypothetical solution. -/
-theorem weightedNorm_transport {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N+6 ≤ s)
+theorem weightedNorm_transport {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s)
     (r : ℝ) (hr : 0 < r) (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
-    (u v : SobolevSpace period (s+1)) :
+    (u v : SobolevSpace period (s + 1)) :
     weightedNorm period 6 N r (transportBilinear period hs L hL u v) ≤
-      productConstant period 3*weightedNorm period 6 N r u*
+      productConstant period 3*weightedNorm period 6 N r u *
         ∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period s i v) := by
   rw [transportBilinear_apply]
   apply (weightedNorm_sum_le period 6 N hN r hr univ _).trans
   calc
-    _ ≤ ∑ i : Fin 4, productConstant period 3*
-        weightedNorm period 6 N r (truncateOperator period s u)*
+    _ ≤ ∑ i : Fin 4, productConstant period 3 *
+        weightedNorm period 6 N r (truncateOperator period s u) *
         weightedNorm period 6 N r (derivativeOperator period s i v) :=
       sum_le_sum fun i _ => weightedNorm_product period hs N hN r hr (L i) (hL i) _ _
     _ = _ := by rw [weightedNorm_truncate period 6 N hN, ← mul_sum]
 
-variable {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-  {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+variable {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+  {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
   {P : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
 
 /-- All inputs on the right are the actual prescribed coefficient and
 background budgets, and norms of the given error and its derivatives. -/
 theorem rawSource_smallerRadius_bound (S : SpatialBudget period hq D P R)
-    (N : ℕ) (hNP : N ≤ P) (hN : N+6 ≤ q+1) (t : Icc (0 : ℝ) T)
+    (N : ℕ) (hNP : N ≤ P) (hN : N + 6 ≤ q + 1) (t : Icc (0 : ℝ) T)
     (r : ℝ) (hr : 0 < r) (hrR : r ≤ R t) (E DE : ℝ)
-    (e : SobolevSpace period ((q+1)+1))
+    (e : SobolevSpace period ((q + 1) + 1))
     (he : weightedNorm period 6 N r e ≤ E)
-    (hde : (∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period (q+1) i e)) ≤ DE) :
+    (hde : (∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period (q + 1) i e)) ≤ DE) :
     weightedNorm period 6 N r (D.rawSource period hq t e) ≤
       sourceBound period S.B0 S.B1 S.A0 S.A2 S.residual E DE := by
   have hP0 := productConstant_nonneg period 3
@@ -96,7 +102,7 @@ theorem rawSource_smallerRadius_bound (S : SpatialBudget period hq D P R)
       (weightedNorm_mono_cutoff period 6 hNP (R t) (S.radius_pos t) _)).trans (S.residual_bound t)
   let L := velocityComponents D.κ D.direction
   have hL : ∀ i, ‖L i‖ ≤ 1 := velocityComponents_norm D.κ D.direction D.scale_bound
-    D.direction_bound
+      D.direction_bound
   have hzE : weightedNorm period 6 N r (D.approximation t+e) ≤ S.B0+E :=
     (weightedNorm_add_le period 6 N (by omega) r hr _ _).trans (add_le_add hz he)
   have htransport := weightedNorm_transport period hq N hN r hr L hL (D.approximation t+e) e
@@ -124,11 +130,11 @@ theorem rawSource_smallerRadius_bound (S : SpatialBudget period hq D P R)
 /-- The actual elliptic inverse acts at the smaller radius using the same
 proved coefficient budget. -/
 theorem pressure_smallerRadius_bound (S : SpatialBudget period hq D P R)
-    (N : ℕ) (hNP : N ≤ P) (hN : N+6 ≤ q+1) (t : Icc (0 : ℝ) T)
+    (N : ℕ) (hNP : N ≤ P) (hN : N + 6 ≤ q + 1) (t : Icc (0 : ℝ) T)
     (r : ℝ) (hr : 0 < r) (hrR : r ≤ R t) (E DE : ℝ)
-    (e : SobolevSpace period ((q+1)+1))
+    (e : SobolevSpace period ((q + 1) + 1))
     (he : weightedNorm period 6 N r e ≤ E)
-    (hde : (∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period (q+1) i e)) ≤ DE) :
+    (hde : (∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period (q + 1) i e)) ≤ DE) :
     weightedNorm period 6 N r (D.pressure period hq t e) ≤
       2*S.M*sourceBound period S.B0 S.B1 S.A0 S.A2 S.residual E DE := by
   have hM : 0 ≤ S.M := zero_le_one.trans S.M_one_le
@@ -159,11 +165,11 @@ theorem metric_smallerRadius_bound (S : SpatialBudget period hq D P R)
 /-- The actual projected time source is bounded by the raw source and its
 constructed signed pressure, with no time-derivative hypothesis. -/
 theorem timeSource_smallerRadius_bound (S : SpatialBudget period hq D P R)
-    (N : ℕ) (hNP : N ≤ P) (hN : N+6 ≤ q+1) (t : Icc (0 : ℝ) T)
+    (N : ℕ) (hNP : N ≤ P) (hN : N + 6 ≤ q + 1) (t : Icc (0 : ℝ) T)
     (r : ℝ) (hr : 0 < r) (hrR : r ≤ R t) (E DE : ℝ)
-    (e : SobolevSpace period ((q+1)+1))
+    (e : SobolevSpace period ((q + 1) + 1))
     (he : weightedNorm period 6 N r e ≤ E)
-    (hde : (∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period (q+1) i e)) ≤ DE) :
+    (hde : (∑ i : Fin 4, weightedNorm period 6 N r (derivativeOperator period (q + 1) i e)) ≤ DE) :
     weightedNorm period 6 N r ((D.coefficients period hq).apply t e) ≤
       (1+2*S.M*(448*S.B+1))*sourceBound period S.B0 S.B1 S.A0 S.A2 S.residual E DE := by
   have hraw := rawSource_smallerRadius_bound period S N hNP hN t r hr hrR E DE e he hde

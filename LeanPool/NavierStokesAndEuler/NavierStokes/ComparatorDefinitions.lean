@@ -15,7 +15,6 @@ project.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
@@ -32,8 +31,6 @@ public import Mathlib.LinearAlgebra.Trace
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
-@[expose] public section
-
 /-!
 # Independent definitions for the Navier–Stokes Comparator submission
 
@@ -45,6 +42,9 @@ Comparator checks these definitions against the independent reference at runtime
 Source:
 https://github.com/google-deepmind/formal-conjectures/blob/8bf45ed70d48b2b2a501de9c00b26bfa38c573ee/FormalConjectures/Millenium/NavierStokes.lean
 -/
+
+@[expose] public section
+
 
 open ContDiff Set InnerProductSpace MeasureTheory
 open scoped Laplacian

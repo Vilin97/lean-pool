@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothLimit
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldPhysicalSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2ScalingContinuity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2ScalingContinuity
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! A series of genuine smooth spatial L² fields that is absolutely
 summable at every finite Sobolev order has one smooth L² sum. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +26,7 @@ open Set Filter Finset MeasureTheory EulerSmoothLimit EulerLpTranslation
   EulerSmoothFieldSobolevTime EulerMeanSmoothRepresentative
 open scoped Topology ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instSmoothL2Series1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 theorem tensorNorm_eq_derivativeSum (A : SmoothL2Field Space) (s : ℕ) :
     tensorNorm s A=derivativeSum s A.field := by
@@ -46,6 +48,8 @@ theorem zeroField_value : (zeroField : SmoothL2Field Space).toLp=0 := by
   apply norm_eq_zero.mp
   rw [← norm_jetLp_zero,zeroField_jet,norm_zero]
 
+/-- Partial sum as an element of `ℕ → SmoothL2Field Space | 0 => zeroField | n+1 => addField
+(partialSum A n) (A n)`. -/
 def partialSum (A : ℕ → SmoothL2Field Space) : ℕ → SmoothL2Field Space
   | 0 => zeroField
   | n+1 => addField (partialSum A n) (A n)
@@ -71,8 +75,9 @@ theorem partialSum_value (A : ℕ → SmoothL2Field Space) (n : ℕ) :
 theorem partialSum_norm (A : ℕ → SmoothL2Field Space) (n q : ℕ) :
     tensorNorm q (partialSum A n) ≤ ∑ i ∈ range n, tensorNorm q (A i) := by
   induction n with
-  | zero => simp only
-    [partialSum,tensorNorm,zeroField_jet,norm_zero,sum_const_zero,sum_range_zero,le_refl]
+  | zero =>
+      simp only [partialSum, tensorNorm, zeroField_jet, norm_zero, sum_const_zero, sum_range_zero,
+          le_refl]
   | succ n ih =>
     exact (tensorNorm_add_le _ _ q).trans
       (by simpa only [sum_range_succ] using add_le_add ih (le_refl (tensorNorm q (A n))))
@@ -93,7 +98,7 @@ theorem partialSum_value_cauchy : CauchySeq (fun n => (partialSum A n).toLp) := 
   have hs : Summable (fun n => ‖(A n).toLp‖) := by simpa only [tensorNorm_zero] using hA 0
   simpa only [partialSum_value] using hs.of_norm.hasSum.tendsto_sum_nat.cauchySeq
 
-private theorem partialSum_path_cauchy :
+theorem partialSum_path_cauchy :
     CauchySeq (fun n => fieldPath (fun _ : Icc (0 : ℝ) 0 => partialSum A n)
       (fun _ => continuous_const)) := by
   let C : EulerMeanSolenoidal.L2 →L[ℝ] C(Icc (0 : ℝ) 0,EulerMeanSolenoidal.L2) :=
@@ -103,12 +108,14 @@ private theorem partialSum_path_cauchy :
       (partialSum_value_cauchy A hA).map C.uniformContinuous
   exact hc
 
+/-- Limit data, constructed using `smoothLimitData`. -/
 def limitData : SmoothLimitData (fun (n : ℕ) (_ : Icc (0 : ℝ) 0) => partialSum A n)
     (fun _ _ => continuous_const) :=
   smoothLimitData (by norm_num) _ _
     (fun q => ⟨∑' i, tensorNorm q (A i),fun n _ => partialSum_uniform_bound A hA n q⟩)
     (partialSum_path_cauchy A hA)
 
+/-- Sum field, given by `(limitData A hA).field ⟨0,le_rfl,le_rfl⟩`. -/
 def sumField : SmoothL2Field Space := (limitData A hA).field ⟨0,le_rfl,le_rfl⟩
 
 theorem sumField_jet_tendsto (q : ℕ) :
@@ -130,7 +137,7 @@ theorem sumField_Hm_tendsto (q : ℕ) :
 theorem sumField_derivativeSum_tendsto (q : ℕ) :
     Tendsto (fun n => derivativeSum q ((partialSum A n).field-(sumField A hA).field))
       atTop (𝓝 0) := by
-  have he (n : ℕ) : derivativeSum q ((partialSum A n).field-(sumField A hA).field)=
+  have he (n : ℕ) : derivativeSum q ((partialSum A n).field-(sumField A hA).field) =
       ∑ j ∈ range (q+1), ‖(partialSum A n).jetLp j-(sumField A hA).jetLp j‖ := by
     change derivativeSum q (subField (partialSum A n) (sumField A hA)).field= _
     rw [← tensorNorm_eq_derivativeSum]

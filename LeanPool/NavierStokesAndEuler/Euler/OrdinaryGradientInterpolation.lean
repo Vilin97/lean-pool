@@ -6,15 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldAlgebra
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The sharp middle-derivative interpolation needed by H³ Euler
 energy.  Everything is an actual smooth L² field.  Cubic testing and
 noncompact integration by parts prove the L⁴ inequality without a
 support or interpolation hypothesis. -/
+
+@[expose] public section
+
 
 noncomputable section
 

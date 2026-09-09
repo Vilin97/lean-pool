@@ -6,16 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalSignedRequest
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalRankDefect
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryResidualClass
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryMaterialDefect
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualTZ
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryTargetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AllBandBaseJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseRadialJets
+import LeanPool.NavierStokesAndEuler.NavierStokes.AllBandBaseJets
 
 /-!
 # The correction context of the actual slow base
@@ -25,6 +22,9 @@ converts to the `(R,(Z,T))` order used by the physical base charts. Every
 field below uses one fixed final profile, coefficient family, and schedule.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.BaseContextAssembly
@@ -32,18 +32,25 @@ namespace NavierStokes.BaseContextAssembly
 open Set Function Filter WeightedClasses
 open scoped ContDiff Topology BigOperators EuclideanSpace
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
+/-- Common index, given by `ChartScales.nativeIndex h n`. -/
 noncomputable def commonIndex (h : ℝ) (n : ℕ) : ℕ := ChartScales.nativeIndex h n
 
+/-- Slow scale, given by `max 1 (ChartScales.S n)`. -/
 noncomputable def slowScale (n : ℕ) : ℝ := max 1 (ChartScales.S n)
 
 theorem one_le_slowScale (n : ℕ) : 1 ≤ slowScale n := le_max_left _ _
 
+/-- Reconstruction, bundling `exponent`, `inner`, `outer`, `inner_lt_outer` and the required
+compatibility proofs. -/
 noncomputable def reconstruction (h a b : ℝ) (hab : a < b) : CorrectionState.ReconstructionData
-  where
+    where
   exponent := ChartScales.radialExponent h
   inner := a
   outer := b
@@ -52,6 +59,7 @@ noncomputable def reconstruction (h a b : ℝ) (hab : a < b) : CorrectionState.R
     ChartScales.Q n ^ (ChartScales.radialExponent h / 2)
   radialDirection := TorusInverse.vector .radial
 
+/-- Operators, constructed using `CorrectionState.graphOperators`. -/
 noncomputable def operators (h a b : ℝ) (hab : a < b) : MeanIncrementBounds.Operators Point :=
   CorrectionState.graphOperators (reconstruction h a b hab) (ChartScales.epsilon h)
     (fun n => ChartScales.Tg ^ commonIndex h n * ChartScales.Q n ^ (1 + h))
@@ -85,6 +93,7 @@ theorem slowCoordinates_norm_le : ‖slowCoordinates‖ ≤ 1 := by
   simp only [slowCoordinates_apply, one_mul, Prod.norm_def]
   exact max_le_max le_rfl ((max_comm _ _).le.trans (le_max_left _ _))
 
+/-- Physical point, given by `BaseChartJets.bandPoint h (ChartScales.Q n) (slowCoordinates x)`. -/
 noncomputable def physicalPoint (h : ℝ) (n : ℕ) (x : Point) : ProblemStatement.SpaceTime :=
   BaseChartJets.bandPoint h (ChartScales.Q n) (slowCoordinates x)
 
@@ -161,6 +170,7 @@ theorem radialCoefficient_uniform (h : ℝ) (hh : 0 ≤ h) :
       (Real.rpow_le_one (ChartScales.timeCoefficient_pos h n).le ht ChartScales.rho_pos.le)).trans
         (le_mul_of_one_le_left (Real.rpow_nonneg (ChartScales.epsilon_pos h n).le _) hC)
 
+/-- Moving strip, constructed using `LocalSignedRequest.movingStripData`. -/
 noncomputable def movingStrip {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowRegion (2 * h))
     (a b cL cR : ℝ) (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR) : StripData Point :=
   LocalSignedRequest.movingStripData U a b cL cR ha hcL hcR
@@ -214,7 +224,7 @@ theorem operator_bounds {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowReg
     fun _ hx => movingStrip_radial_bounds hh U a b cL cR ha hcL hcR hx
   refine ⟨rfl, ?_, ?_, ?_, ?_, by norm_num [ChartScales.kappa], ?_⟩
   · change UnweightedClass s 0 (fun _ x => RadialPullback.radialJacobian
-    (ChartScales.radialExponent h) x.1)
+      (ChartScales.radialExponent h) x.1)
     apply positive_radial_unweighted hmin hr
     intro x hx
     exact (contDiffAt_const.mul (contDiffAt_id.rpow_const_of_ne hx.ne')).contDiffWithinAt
@@ -233,7 +243,8 @@ theorem operator_bounds {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowReg
     unfold WeightedRadialPrimitive.zeta
     exact (mul_le_mul (WeightedRadialPrimitive.edge_le_one hcL.le _)
       (WeightedRadialPrimitive.edge_le_one hcR.le _) (FlatCutoff.edge_nonneg _ _)
-        zero_le_one).trans_eq (by simp)
+          zero_le_one).trans_eq (by
+          simp)
 
 end OperatorBounds
 
@@ -241,10 +252,11 @@ section NativeGeometry
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Native strip, constructed using `movingStrip`. -/
 noncomputable def nativeStrip (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : StripData Point
-  :=
+    :=
   movingStrip F.data.h_pos.le U (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius
-    W)
+      W)
     (FinalSlowBase.edgeExponent W / 4) 1 (PrimaryTargetBounds.leftRadius_pos W)
     (div_pos (FinalSlowBase.edgeExponent_pos W) (by norm_num)) zero_lt_one
 
@@ -273,7 +285,7 @@ theorem nativeStrip_time (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
 theorem nativeStrip_active (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     {x : Point} (hx : x ∈ (nativeStrip W U).domain) :
     (BaseChartJets.normalizedCoordinates F.data.h (slowCoordinates x)).2 ∈ FinalSlowBase.annulus W
-      := by
+        := by
   have hT := nativeStrip_time W U hx
   have hr := ((nativeStrip_mem W U x).mp hx).2
   have hpos := PrimaryTargetBounds.profileRadius_pos (F := F) (p := slowCoordinates x)
@@ -306,16 +318,19 @@ noncomputable def insertSlow : Slow →L[ℝ] Point where
   map_add' _ _ := by ext <;> simp
   map_smul' _ _ := by ext <;> simp
   cont := continuous_fst.prodMk ((continuous_snd.snd.prodMk continuous_snd.fst).prodMk
-    continuous_const)
+      continuous_const)
 
-@[simp] theorem slowCoordinates_insert (p : Slow) : slowCoordinates (insertSlow p) = p := rfl
+theorem slowCoordinates_insert (p : Slow) : slowCoordinates (insertSlow p) = p := rfl
 
+/-- Slow carrier, given by `insertSlow ⁻¹' (nativeStrip W U).domain`. -/
 noncomputable def slowCarrier (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : Set Slow :=
   insertSlow ⁻¹' (nativeStrip W U).domain
 
 theorem slowCarrier_open (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     IsOpen (slowCarrier W U) := (nativeStrip W U).isOpen_domain.preimage insertSlow.continuous
 
+/-- Phase domain, given by `BaseChartJets.oneDomain ι (fun _ => slowCarrier W U) (fun _ =>
+slowCarrier_open W U)`. -/
 noncomputable def phaseDomain (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     (ι : Type*) : PhaseJetBounds.Domain ι Slow :=
   BaseChartJets.oneDomain ι (fun _ => slowCarrier W U) (fun _ => slowCarrier_open W U)
@@ -326,19 +341,22 @@ theorem slowCoordinates_maps (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) 
   apply (nativeStrip_mem W U _).mpr
   exact (nativeStrip_mem W U x).mp hx
 
+/-- Geometry radius, given by `Real.sqrt U.qlo * PrimaryTargetBounds.leftRadius W`. -/
 noncomputable def geometryRadius (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : ℝ :=
   Real.sqrt U.qlo * PrimaryTargetBounds.leftRadius W
 
+/-- Geometry upper, given by `max 1 U.qhi + 1`. -/
 noncomputable def geometryUpper (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : ℝ :=
   max 1 U.qhi + 1
 
+/-- Geometry bound, constructed using `max`. -/
 noncomputable def geometryBound (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : ℝ :=
   max 1 (max (Real.sqrt (max 1 U.qhi) * PrimaryTargetBounds.rightRadius W)
     (max ((max 1 U.qhi) ^ CoordinateAlgebra.D F.data.h) (max 1 U.qhi)))
 
 theorem geometryRadius_pos (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     0 < geometryRadius W U := mul_pos (Real.sqrt_pos.mpr U.qlo_pos)
-      (PrimaryTargetBounds.leftRadius_pos W)
+        (PrimaryTargetBounds.leftRadius_pos W)
 
 theorem geometryUpper_pos (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     0 < geometryUpper U := by dsimp [geometryUpper]; linarith [le_max_left (1 : ℝ) U.qhi]
@@ -374,11 +392,11 @@ theorem native_geometry (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (ι :
     have hd : (1 - 2 * F.data.h) / 2 = CoordinateAlgebra.D F.data.h := by
       unfold CoordinateAlgebra.D; ring
     rw [hd, abs_div, abs_of_pos (Real.rpow_pos_of_pos hqp _), div_lt_one (Real.rpow_pos_of_pos hqp
-      _)] at heta
+        _)] at heta
     have hz : |p.2.1| ≤ (max 1 U.qhi) ^ CoordinateAlgebra.D F.data.h :=
       heta.le.trans (Real.rpow_le_rpow hqp.le hqM hD)
-    have hspec := SimilarityCoordinates.coordinateQ_spec (show 0 < 2*F.data.h by linarith
-      [F.data.h_pos])
+    have hspec := SimilarityCoordinates.coordinateQ_spec (show 0 < 2*F.data.h by
+        linarith [F.data.h_pos])
       (show 2*F.data.h < 1 by linarith [F.data.h_lt_half]) (p := (p.2.2,p.2.1)) ht
     have htq : p.2.2 ≤ SimilarityHomogeneity.chartQ F.data.h p := by
       have hn := mul_nonneg (sq_nonneg p.2.1) (Real.rpow_nonneg hspec.1.le (2*F.data.h))
@@ -394,8 +412,9 @@ theorem native_geometry (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (ι :
     exact (max_le_max hR (max_le_max hz (htq.trans hqM))).trans (le_max_right _ _)
   · intro i p hp
     have hq := hqm hp
-    exact ⟨by linarith [U.qlo_pos, hq.1], by dsimp [geometryUpper]; linarith [hq.2, le_max_right (1
-      : ℝ) U.qhi]⟩
+    exact ⟨by
+        linarith [U.qlo_pos, hq.1], by
+            dsimp [geometryUpper]; linarith [hq.2, le_max_right (1 : ℝ) U.qhi]⟩
   · intro i p hp
     exact (nativeStrip_active W U hp).1
 
@@ -407,7 +426,7 @@ theorem unweighted_polynomial_pullback {E : Type*} [NormedAddCommGroup E] [Norme
     (hmap : ∀ n, MapsTo slowCoordinates s.domain (D.carrier n)) :
     UnweightedClass s 0 (fun n x => f n (slowCoordinates x)) := by
   refine ⟨fun _ _ _ => zero_le_one, fun n => (hf.smooth n).comp slowCoordinates.contDiff.contDiffOn
-    (hmap n), ?_⟩
+      (hmap n), ?_⟩
   intro m
   obtain ⟨C, hC, hb⟩ := BaseChartJets.polynomial_unit_bound hf m
   refine ⟨C, zero_le_one.trans hC, 0, fun n x hx j hj => ?_⟩
@@ -422,12 +441,12 @@ theorem unweighted_polynomial_pullback {E : Type*} [NormedAddCommGroup E] [Norme
 theorem envelope_pullback {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (s : StripData Point) {D : PhaseJetBounds.Domain ℕ Slow} {f : ℕ → Slow → E}
     {w : ℕ → ℝ} (hf : PrimaryPulseBounds.EnvelopeJets (BaseChartJets.unitScale D) (fun n _ => w n)
-      f)
+        f)
     (hmap : ∀ n, MapsTo slowCoordinates s.domain (D.carrier n)) {alpha : ℝ}
     (hw : ∀ n, w n = s.epsilon n ^ alpha) :
     UnweightedClass s alpha (fun n x => f n (slowCoordinates x)) := by
   refine ⟨fun _ _ _ => zero_le_one, fun n => (hf.smooth n).comp slowCoordinates.contDiff.contDiffOn
-    (hmap n), ?_⟩
+      (hmap n), ?_⟩
   intro m
   obtain ⟨C, hC, hb⟩ := BaseChartJets.envelope_unit_bound hf m
   refine ⟨C, zero_le_one.trans hC, 0, fun n x hx j hj => ?_⟩
@@ -446,23 +465,29 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (H : NominalConeAssembly.Certificate W) {ld : ModulatedProfileAssembly.LoopData W}
   (v : ModulatedProfileAssembly.Witness ld) (upper : ℝ) (B : ℕ)
 
+/-- Radial base, given by `ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
+FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 0`. -/
 noncomputable def radialBase (n : ℕ) (x : Point) : ℝ :=
   ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
     FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 0
 
+/-- Frequency base, constructed using `BaseChartJets.frequency`. -/
 noncomputable def frequencyBase (n : ℕ) (x : Point) : ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) (slowCoordinates x)
 
+/-- Axial base, constructed using `BaseChartJets.axial`. -/
 noncomputable def axialBase (n : ℕ) (x : Point) : ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) (slowCoordinates x)
 
+/-- Base, bundling `radial`, `angular`, `axial`. -/
 noncomputable def base : MeanIncrementBounds.Triple Point where
   radial := radialBase H v upper B
   angular n x := x.1 * frequencyBase H v upper B n x
   axial := axialBase H v upper B
 
+/-- Raw stress as an element of `ℝ × ℝ`. -/
 noncomputable def rawStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   let p := AxisymmetricFields.profilePoint (physicalPoint F.data.h n x).1
     (physicalPoint F.data.h n x).2
@@ -485,6 +510,7 @@ noncomputable def virtualStress (n : ℕ) (x : Point) : ℝ × ℝ :=
     virtualStress H v upper B n x = 0 := by
   simp only [virtualStress, ite_eq_right (not_lt.mpr hR)]
 
+/-- Context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
 noncomputable def context (a b : ℝ) (hab : a < b) : CorrectionState.Context Point where
   operators := operators F.data.h a b hab
   base := base H v upper B
@@ -502,9 +528,9 @@ theorem angularBase_physical (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (hR : 0 < 
       FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 1 := by
   have he := BaseChartJets.frequency_eq_normalized_velocity
     (FinalSlowBase.scales_strictMono H v upper B) F.data.h_pos F.data.h_lt_half (ChartScales.Q_pos
-      n)
+        n)
     (FinalSlowBase.coefficients_smooth H v) (C := W.axis.normalization) (p := slowCoordinates x) hT
-      hR
+        hR
   change x.1 * BaseChartJets.frequency _ _ _ _ _ _ = _
   rw [he]
   change x.1 * (_ / x.1) = _
@@ -519,7 +545,7 @@ theorem physicalComponent_smoothAt (n : ℕ) (i : Fin 3) {x : Point} (hT : 0 < x
       (show physicalPoint F.data.h n x ∈ BaseResidual.past from
         ⟨physicalPoint_time F.data.h n hT, mem_univ _⟩))
   exact contDiffAt_const.mul ((EuclideanSpace.proj i : ProblemStatement.Space →L[ℝ]
-    ℝ).contDiff.contDiffAt.comp x
+      ℝ).contDiff.contDiffAt.comp x
     (hu.comp x (physicalPoint_smooth F.data.h n).contDiffAt))
 
 theorem base_smooth (U : Set Plane) (hT : ∀ p ∈ U, 0 < p.1) :
@@ -579,17 +605,17 @@ theorem rawStress_smooth (U : Set Plane) (hT : ∀ p ∈ U, 0 < p.1) (n : ℕ) :
   intro x hx
   have ht : (P x).1 < 1 := physicalPoint_time F.data.h n (hT x.2.1 hx)
   have htheta := SlowBorelBase.physicalProfile_smoothAt (FinalSlowBase.scales_strictMono H v upper
-    B)
+      B)
     F.data.h_pos F.data.h_lt_half (SlowBorelBase.bundleComponent_smooth
       (FinalSlowBase.coefficients_smooth H v) W.axis.normalization 3) (-CoordinateAlgebra.A
-        F.data.h - 1 / 2) ht
+          F.data.h - 1 / 2) ht
   have haxial := SlowBorelBase.physicalProfile_smoothAt (FinalSlowBase.scales_strictMono H v upper
-    B)
+      B)
     F.data.h_pos F.data.h_lt_half (SlowBorelBase.bundleComponent_smooth
       (FinalSlowBase.coefficients_smooth H v) W.axis.normalization 4) (-CoordinateAlgebra.A
-        F.data.h - 1 / 2) ht
+          F.data.h - 1 / 2) ht
   exact ((contDiffAt_const (c := (ChartScales.Q n ^ (2 * CoordinateAlgebra.A F.data.h) : ℝ))).smul
-    ((htheta.comp x hP.contDiffAt).prodMk
+      ((htheta.comp x hP.contDiffAt).prodMk
     (haxial.comp x hP.contDiffAt))).contDiffWithinAt
 
 theorem rawStress_periodic (U : Set Plane) (n : ℕ) :
@@ -609,13 +635,13 @@ theorem rawStress_normalized (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
     (p := slowCoordinates x) hT
   have he := FinalSlowBase.physical_stress_eq_normalized H v upper B
     (p := AxisymmetricFields.profilePoint (physicalPoint F.data.h n x).1 (physicalPoint F.data.h n
-      x).2)
+        x).2)
     (physicalPoint_time F.data.h n hT)
   have hc := BaseChartJets.bandPoint_chart F.data.h_pos F.data.h_lt_half (ChartScales.Q_pos n)
     (p := slowCoordinates x) hT
   change SlowBorelBase.physicalChart F.data.h
     (AxisymmetricFields.profilePoint (physicalPoint F.data.h n x).1 (physicalPoint F.data.h n x).2)
-      = _ at hc
+        = _ at hc
   rw [hc] at he
   change ChartScales.Q n ^ (2 * CoordinateAlgebra.A F.data.h) • _ = _
   rw [he, smul_smul]
@@ -624,7 +650,7 @@ theorem rawStress_normalized (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
   rw [Real.mul_rpow (ChartScales.Q_pos n).le hq.le, ← mul_assoc,
     ← Real.rpow_add (ChartScales.Q_pos n)]
   have hex : 2 * CoordinateAlgebra.A F.data.h + (-CoordinateAlgebra.A F.data.h - 1 / 2) = F.data.h
-    := by
+      := by
     unfold CoordinateAlgebra.A
     ring
   rw [hex]
@@ -722,14 +748,15 @@ theorem virtualStress_support (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
 
 theorem virtualStress_movingSupport (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (n : ℕ) :
     LocalSignedRequest.MovingSupport (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (2 * F.data.h) U.carrier (fun x => (virtualStress H v upper B n x).1) ∧
     LocalSignedRequest.MovingSupport (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (2 * F.data.h) U.carrier (fun x => (virtualStress H v upper B n x).2) := by
   constructor <;> intro x hx hn <;> apply virtualStress_support H v upper B U n hx <;>
     intro he <;> simp only [he, Prod.fst_zero, Prod.snd_zero, ne_eq, not_true_eq_false] at hn
 
+/-- Leading virtual stress, with branches according to `0 < x.1`. -/
 noncomputable def leadingVirtualStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   if 0 < x.1 then
     (ChartScales.epsilon F.data.h n *
@@ -745,7 +772,7 @@ theorem leadingVirtualStress_eq (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (hR : 0
         (BaseChartJets.normalizedCoordinates F.data.h (slowCoordinates x)).1 ^
           (-CoordinateAlgebra.A F.data.h - 1/2)) •
       FinalSlowBase.leadingStress v (BaseChartJets.normalizedCoordinates F.data.h (slowCoordinates
-        x)).2 := by
+          x)).2 := by
   rw [leadingVirtualStress, ite_eq_left hR]
   congr 1
   apply FinalSlowBase.leading_stress_eq H v
@@ -755,6 +782,8 @@ theorem leadingVirtualStress_eq (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (hR : 0
   · exact (BaseChartJets.normalizedCoordinates_eta F.data.h_pos F.data.h_lt_half
       (p := slowCoordinates x) hT).le
 
+/-- Wave coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
+required compatibility proofs. -/
 noncomputable def waveCoefficients (phase : ℕ → Point × ℝ → ℝ)
     (amplitude : ℕ → Point × ℝ → HarmonicCalculus.ComplexVector)
     (pressure : ℕ → Point × ℝ → ℂ) (frequency : ℕ → ℝ) :
@@ -775,25 +804,29 @@ theorem waveCoefficients_match (U : LocalSignedRequest.SlowRegion (2 * F.data.h)
     (pressure : ℕ → Point × ℝ → ℂ) (frequency : ℕ → ℝ) :
     PrimaryResidualClass.Matches (movingStrip F.data.h_pos.le U a b cL cR ha hcL hcR)
       (context H v upper B a b hab) (waveCoefficients H v upper B phase amplitude pressure
-        frequency) := by
+          frequency) := by
   refine ⟨rfl, rfl, ?_⟩
   intro n
   funext x i
   fin_cases i <;> rfl
 
+/-- Radial slow, constructed using `BaseRadialJets.radial`. -/
 noncomputable def radialSlow (n : ℕ) (p : Slow) : ℝ :=
   BaseRadialJets.radial (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) p
 
+/-- Frequency slow, constructed using `BaseChartJets.frequency`. -/
 noncomputable def frequencySlow (n : ℕ) : Slow → ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
+/-- Axial slow, given by `BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
+(FinalSlowBase.coefficients H v) (ChartScales.Q n)`. -/
 noncomputable def axialSlow (n : ℕ) : Slow → ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
-@[simp] theorem radialSlow_pullback (n : ℕ) (x : Point) :
+theorem radialSlow_pullback (n : ℕ) (x : Point) :
     radialSlow H v upper B n (slowCoordinates x) = radialBase H v upper B n x := rfl
 
 theorem radialBase_stream (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
@@ -811,7 +844,7 @@ theorem radialSlow_smoothAt (n : ℕ) {p : Slow} (hp : 0 < p.2.2) :
 /-- The slot clock can vary with the native construction. Its slow and
 angular coordinates stay literal, so no phase estimate enters the binding. -/
 noncomputable def nativeCoordinates (clock : ℕ → Point → ℝ) (n : ℕ) (x : Point × ℝ) :
-  PhaseCalculus.Slot :=
+    PhaseCalculus.Slot :=
   (slowCoordinates x.1, (x.2, clock n x.1))
 
 theorem primaryCoefficients_match
@@ -827,7 +860,7 @@ theorem primaryCoefficients_match
       (context H v upper B (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)
         (PrimaryTargetBounds.radii_ordered W))
       (PrimaryMaterialDefect.coefficients P (radialSlow H v upper B) chi amplitude pressure
-        frequency) := by
+          frequency) := by
   refine ⟨rfl, ?_, ?_⟩
   · funext n x
     change (chi n x).1.1 = x.1.1
@@ -867,6 +900,8 @@ theorem radialSlow_productClass (U : LocalSignedRequest.SlowRegion (2 * F.data.h
   change radialSlow H v upper B n (chi n x).1 = radialBase H v upper B n x.1
   rw [hchi, radialSlow_pullback]
 
+/-- Native context, given by `context H v upper B (PrimaryTargetBounds.leftRadius W)
+(PrimaryTargetBounds.rightRadius W) (PrimaryTargetBounds.radii_ordered W)`. -/
 noncomputable def nativeContext : CorrectionState.Context Point :=
   context H v upper B (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)
     (PrimaryTargetBounds.radii_ordered W)
@@ -916,10 +951,10 @@ theorem native_stress_properties (U : LocalSignedRequest.SlowRegion (2 * F.data.
     PhysicalMeanDomain.PeriodicOn U.carrier ((nativeContext H v upper B).virtualTheta n) ∧
     PhysicalMeanDomain.PeriodicOn U.carrier ((nativeContext H v upper B).virtualAxial n) ∧
     LocalSignedRequest.MovingSupport (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (2 * F.data.h) U.carrier ((nativeContext H v upper B).virtualTheta n) ∧
     LocalSignedRequest.MovingSupport (PrimaryTargetBounds.leftRadius W)
-      (PrimaryTargetBounds.rightRadius W)
+        (PrimaryTargetBounds.rightRadius W)
       (2 * F.data.h) U.carrier ((nativeContext H v upper B).virtualAxial n) :=
   ⟨virtualStress_smooth H v upper B U.carrier U.time_pos n,
     (virtualStress_periodic H v upper B U.carrier n).1,
@@ -929,9 +964,11 @@ theorem native_stress_properties (U : LocalSignedRequest.SlowRegion (2 * F.data.
 
 end ActualFields
 
+/-- Constructed context, given by `nativeContext FinalSlowBase.actualProfile.certificate
+FinalSlowBase.actualProfile.modulation upper B`. -/
 noncomputable def constructedContext (upper : ℝ) (B : ℕ) : CorrectionState.Context Point :=
   nativeContext FinalSlowBase.actualProfile.certificate FinalSlowBase.actualProfile.modulation
-    upper B
+      upper B
 
 theorem constructed_context_bounds (upper : ℝ) (B : ℕ)
     (U : LocalSignedRequest.SlowRegion (2 * FinalSlowBase.actualProfile.outgoing.data.h)) :

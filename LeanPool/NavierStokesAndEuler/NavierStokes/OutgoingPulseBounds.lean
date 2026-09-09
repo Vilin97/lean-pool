@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingSchedule
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # Quantitative bounds for the constructed outgoing pulse
@@ -19,6 +17,9 @@ All profiles and moments in this file are those of `OutgoingSchedule` and
 `LocalizedMomentRepair`. In particular the correction bumps are not an
 additional choice. Their log-coordinate translates are identified below.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -180,11 +181,13 @@ theorem prefixJ_bounds (c : Parameters) :
   constructor
   · have hP := c.P_pos
     exact add_nonneg (by positivity) hpos
-  · dsimp [K] at hup
+  · dsimp [K]
+      at hup
     nlinarith
 
 /-! ## Decay along the explicitly timed shaped wait -/
 
+/-- Beta, given by `c.exponents i + 1`. -/
 noncomputable def beta (c : Parameters) (i : Fin 2) : ℝ := c.exponents i + 1
 
 theorem beta_bounds (c : Parameters) (i : Fin 2) :
@@ -196,6 +199,7 @@ theorem beta_small_bounds (c : Parameters) (hc : c.lam ≤ 1 / 120) (i : Fin 2) 
     2 / 5 ≤ beta c i ∧ 29 ≤ 60 * beta c i := by
   fin_cases i <;> norm_num [beta, Parameters.exponents] <;> constructor <;> linarith
 
+/-- Hold amplitude, given by `radialAmplitude c.P c.dropLength c.lam c.holdStart`. -/
 noncomputable def holdAmplitude (c : Parameters) : ℝ :=
   radialAmplitude c.P c.dropLength c.lam c.holdStart
 
@@ -208,10 +212,12 @@ theorem pulseAmplitude_split (c : Parameters) :
     (show c.dropLength + 2 ≤ c.holdStart from le_rfl) c.pulseStart_ge_hold
   simpa [pulseAmplitude, holdAmplitude, Parameters.pulseStart] using h
 
+/-- Hold scale, with branches according to `i = 0`. -/
 noncomputable def holdScale (c : Parameters) (i : Fin 2) : ℝ :=
   if i = 0 then Real.exp c.holdStart * holdAmplitude c
   else Real.sqrt 2 * Real.exp (3 * c.holdStart / 2) * holdAmplitude c ^ 2
 
+/-- Scale floor, with branches according to `i = 0`. -/
 noncomputable def scaleFloor (P m : ℝ) (i : Fin 2) : ℝ :=
   if i = 0 then P else
     Real.sqrt 2 * P ^ 2 * Real.exp (-(Real.exp m + 12) / 2)
@@ -250,7 +256,7 @@ theorem holdScale_lower (c : Parameters) (i : Fin 2) :
           dsimp [Parameters.holdStart, Parameters.dropLength]
           ring
         rw [← hex]
-        ring_nf ; norm_num
+        ring_nf; norm_num
       _ ≤ _ := hs
 
 theorem momentScale_split (c : Parameters) (i : Fin 2) :
@@ -309,12 +315,14 @@ theorem pulseAmplitude_small (c : Parameters)
     nlinarith
   have h := mul_le_mul hhold hdec (Real.exp_pos _).le
     (mul_nonneg c.P_pos.le (Real.exp_pos _).le)
-  convert! h using 1 ; dsimp [Parameters.holdStart, Parameters.dropLength] ; congr 2 ; ring_nf
+  convert! h using 1; dsimp [Parameters.holdStart, Parameters.dropLength]; congr 2; ring_nf
 
+/-- Prefix numerator bound, with branches according to `i = 0`. -/
 noncomputable def prefixNumeratorBound (P m : ℝ) (i : Fin 2) : ℝ :=
   if i = 0 then 4 + 4 * Real.exp m * Real.exp (Real.exp m) else
     (5 / 2) * Real.sqrt 2 * P + 4 * Real.sqrt 2 * P * Real.exp m * Real.exp (3 * Real.exp m)
 
+/-- Prefix bound, given by `prefixNumeratorBound P m i / scaleFloor P m i`. -/
 noncomputable def prefixBound (P m : ℝ) (i : Fin 2) : ℝ :=
   prefixNumeratorBound P m i / scaleFloor P m i
 
@@ -366,6 +374,7 @@ theorem prefixCoefficient_small (c : Parameters)
 /-! The mass average is divided by the actual angular profile, including its
 parameter shape. These bounds therefore include the shape's first derivative. -/
 
+/-- Parameter polynomial, given by `eta * (1 + eta ^ 2)`. -/
 noncomputable def parameterPolynomial (eta : ℝ) : ℝ := eta * (1 + eta ^ 2)
 
 theorem parameterPolynomial_bound {eta : ℝ} (heta : |eta| ≤ 1) :
@@ -379,7 +388,7 @@ theorem parameterPolynomial_bound {eta : ℝ} (heta : |eta| ≤ 1) :
 theorem parameterPolynomial_hasDerivAt (eta : ℝ) :
     HasDerivAt parameterPolynomial (1 + 3 * eta ^ 2) eta := by
   convert! (hasDerivAt_id eta).mul ((hasDerivAt_const eta (1 : ℝ)).add
-    ((hasDerivAt_id eta).pow 2)) using 1 ; dsimp [parameterPolynomial] ; ring
+    ((hasDerivAt_id eta).pow 2)) using 1; dsimp [parameterPolynomial]; ring
 
 theorem parameterPolynomial_derivative_bound {eta : ℝ} (heta : |eta| ≤ 1) :
     |deriv parameterPolynomial eta| ≤ 4 := by
@@ -416,10 +425,14 @@ theorem normalized_mass_prefix_small (c : Parameters)
 
 /-! ## The actual bump is one fixed template in log coordinates -/
 
+/-- Template lower, given by `Real.exp (-(3 / 20 : ℝ))`. -/
 noncomputable def templateLower : ℝ := Real.exp (-(3 / 20 : ℝ))
+/-- Template upper, given by `Real.exp (3 / 20 : ℝ)`. -/
 noncomputable def templateUpper : ℝ := Real.exp (3 / 20 : ℝ)
+/-- Radial template, given by `LocalizedMomentRepair.bump templateLower templateUpper`. -/
 noncomputable def radialTemplate : ℝ → ℝ :=
   LocalizedMomentRepair.bump templateLower templateUpper
+/-- Log template, given by `radialTemplate (Real.exp z)`. -/
 noncomputable def logTemplate (z : ℝ) : ℝ := radialTemplate (Real.exp z)
 
 theorem templateLower_pos : 0 < templateLower := Real.exp_pos _
@@ -469,6 +482,7 @@ theorem bump_scale {k : ℝ} (hk : k ≠ 0) (l u x : ℝ) :
       congr 1 <;> ring
     _ = _ := mul_div_mul_left _ _ hk
 
+/-- Center, given by `c.pulseLength - if j = 0 then 3 else 1`. -/
 noncomputable def center (c : Parameters) (j : Fin 2) : ℝ :=
   c.pulseLength - if j = 0 then 3 else 1
 
@@ -499,8 +513,11 @@ theorem bump_log_translate (c : Parameters) (j : Fin 2) (y : ℝ) :
   rw [he, bump_scale (Real.exp_ne_zero _)]
   rfl
 
+/-- Template mass, given by `∫ x, radialTemplate x`. -/
 noncomputable def templateMass : ℝ := ∫ x, radialTemplate x
+/-- Row moment, given by `∫ x, x ^ a * radialTemplate x`. -/
 noncomputable def rowMoment (a : ℝ) : ℝ := ∫ x, x ^ a * radialTemplate x
+/-- Row floor, given by `Real.exp (-1) * templateMass`. -/
 noncomputable def rowFloor : ℝ := Real.exp (-1) * templateMass
 
 theorem templateMass_pos : 0 < templateMass := by
@@ -519,7 +536,7 @@ theorem rowMoment_integrable (a : ℝ) : Integrable (fun x => x ^ a * radialTemp
 theorem rowMoment_bounds {a : ℝ} (ha : -1 ≤ a) (ha' : a ≤ 0) :
     rowFloor ≤ rowMoment a ∧ rowMoment a ≤ Real.exp 1 * templateMass := by
   have hm : Integrable radialTemplate :=
-    radialTemplate_contDiff.continuous.integrable_of_hasCompactSupport
+      radialTemplate_contDiff.continuous.integrable_of_hasCompactSupport
     radialTemplate_hasCompactSupport
   have hp : ∀ x, radialTemplate x ≠ 0 → Real.exp (-1) ≤ x ^ a ∧ x ^ a ≤ Real.exp 1 := by
     intro x hx
@@ -579,7 +596,7 @@ theorem actual_matrix_entry (c : Parameters) (i j : Fin 2) :
   change (∫ t : ℝ, t ^ c.exponents i * LocalizedMomentRepair.bump (c.lower j) (c.upper j) t) = _
   rw [lower_scale, upper_scale,
     power_bump_integral_scale (c.exponents i) (Real.exp_pos _) templateLower_pos
-      templateLower_lt_upper]
+        templateLower_lt_upper]
   rw [Real.rpow_def_of_pos (Real.exp_pos _), Real.log_exp, ← Real.exp_add]
   dsimp [rowMoment, radialTemplate, beta]
   rw [mul_comm]
@@ -736,6 +753,7 @@ theorem normalized_inverse_norm_bound (c : Parameters) :
       c.lam • (fun i : Fin 2 => fun j : Fin 2 => (normalizedMatrix c)⁻¹ i j) := rfl
   rwa [he, norm_smul, Real.norm_eq_abs, abs_of_pos c.lam_pos] at hb
 
+/-- Normalized debt, given by `Real.exp (-(beta c i * center c 0)) * d i`. -/
 noncomputable def normalizedDebt (c : Parameters) (d : Fin 2 → ℝ) (i : Fin 2) : ℝ :=
   Real.exp (-(beta c i * center c 0)) * d i
 
@@ -780,6 +798,7 @@ theorem exists_mainPulse_bound : ∃ C : ℝ, 0 < C ∧ ∀ z, |mainPulse z| ≤
   have h := hb z
   simpa only [iteratedDeriv_zero] using h.trans (by linarith : C ≤ C + 1)
 
+/-- Main bound, given by `Classical.choose exists_mainPulse_bound`. -/
 noncomputable def mainBound : ℝ := Classical.choose exists_mainPulse_bound
 theorem mainBound_pos : 0 < mainBound := (Classical.choose_spec exists_mainPulse_bound).1
 theorem mainPulse_abs_le (z : ℝ) : |mainPulse z| ≤ mainBound :=
@@ -821,9 +840,9 @@ theorem center_gap_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (i : Fin 
   have he : beta c i * (center c 0 - 11 / c.lam) =
       (beta c i * (2 - 3 * c.lam)) / c.lam := by
     simp only [center, Parameters.pulseLength]
-    field_simp [c.lam_pos.ne'] ; ring_nf ; simp
+    field_simp [c.lam_pos.ne']; ring_nf; simp
   rw [he]
-  convert! hdiv using 1 ; ring
+  convert! hdiv using 1; ring
 
 theorem normalized_mainMoment_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (i : Fin 2) :
     |Real.exp (-(beta c i * center c 0)) * mainMoment c i| ≤
@@ -845,7 +864,7 @@ theorem normalized_mainMoment_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120
     (f := fun y => Real.exp (beta c i * (y - center c 0)) * mainPulse (c.lam * y))
     (C := mainBound * Real.exp (-(1 / (2 * c.lam)))) ?_
   · rw [Real.norm_eq_abs, sub_zero, abs_of_nonneg hlen] at h
-    convert! h using 1 ; ring
+    convert! h using 1; ring
   · intro y hy
     have hy' : y ≤ 11 / c.lam := (uIoc_of_le hlen ▸ hy).2
     have harg : beta c i * (y - center c 0) ≤ -(1 / (2 * c.lam)) := by
@@ -884,12 +903,16 @@ theorem normalized_prefixCoefficient_bound (c : Parameters) (hsmall : c.lam ≤ 
       mul_le_mul he (prefixCoefficient_le_bound c i) (abs_nonneg _) (Real.exp_pos _).le
     _ = _ := by ring
 
+/-- Affine debt, given by `-(q * prefixCoefficient c i + A * mainMoment c i)`. -/
 noncomputable def affineDebt (c : Parameters) (q A : ℝ) (i : Fin 2) : ℝ :=
   -(q * prefixCoefficient c i + A * mainMoment c i)
 
+/-- Affine coefficients, given by `LocalizedMomentRepair.coefficients c.exponents c.lower
+c.upper (affineDebt c q A)`. -/
 noncomputable def affineCoefficients (c : Parameters) (q A : ℝ) : Fin 2 → ℝ :=
   LocalizedMomentRepair.coefficients c.exponents c.lower c.upper (affineDebt c q A)
 
+/-- Debt bound, given by `prefixBound P m i + 11 * mainBound`. -/
 noncomputable def debtBound (P m : ℝ) (i : Fin 2) : ℝ :=
   prefixBound P m i + 11 * mainBound
 
@@ -956,6 +979,7 @@ theorem inverse_square_exp_absorption {lam : ℝ} (hlam : 0 < lam) :
     _ ≤ _ := hprod
     _ = _ := by rw [mul_assoc, ← Real.exp_add, hsum]
 
+/-- Coefficient bound, given by `64 * inverseBound * (debtBound P m 0 + debtBound P m 1)`. -/
 noncomputable def coefficientBound (P m : ℝ) : ℝ :=
   64 * inverseBound * (debtBound P m 0 + debtBound P m 1)
 
@@ -1043,6 +1067,8 @@ theorem pulse_coefficients_hasDerivAt (c : Parameters) {amp : ℝ → ℝ}
   rw [heq, affineCoefficients_decomposition c (1 + 3 * eta ^ 2) amp' j]
   exact ((parameterPolynomial_hasDerivAt eta).mul_const _).add (ha.mul_const _)
 
+/-- Affine profile, given by `∑ j : Fin 2, affineCoefficients c q A j * logTemplate (y - center
+c j)`. -/
 noncomputable def affineProfile (c : Parameters) (q A y : ℝ) : ℝ :=
   ∑ j : Fin 2, affineCoefficients c q A j * logTemplate (y - center c j)
 
@@ -1079,6 +1105,7 @@ theorem affineProfile_jet_formula (c : Parameters) (q A : ℝ) (k : ℕ) (y : �
   rw [heq, iteratedDeriv_comp_add_const]
   rfl
 
+/-- Template jet bound, given by `1 + Classical.choose (logTemplate_jet_bound k)`. -/
 noncomputable def templateJetBound (k : ℕ) : ℝ := 1 + Classical.choose (logTemplate_jet_bound k)
 
 theorem templateJetBound_pos (k : ℕ) : 0 < templateJetBound k := by
@@ -1087,11 +1114,12 @@ theorem templateJetBound_pos (k : ℕ) : 0 < templateJetBound k := by
   linarith
 
 theorem logTemplate_jet_le (k : ℕ) (y : ℝ) : |iteratedDeriv k logTemplate y| ≤ templateJetBound k
-  := by
+    := by
   have h := (Classical.choose_spec (logTemplate_jet_bound k)).2 y
   unfold templateJetBound
   linarith
 
+/-- Correction jet bound, given by `2 * coefficientBound P m * templateJetBound k`. -/
 noncomputable def correctionJetBound (P m : ℝ) (k : ℕ) : ℝ :=
   2 * coefficientBound P m * templateJetBound k
 
@@ -1121,7 +1149,7 @@ theorem affineProfile_jet_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
   calc
     _ ≤ |affineCoefficients c q A 0 * iteratedDeriv k logTemplate (y - center c 0)| +
         |affineCoefficients c q A 1 * iteratedDeriv k logTemplate (y - center c 1)| := abs_add_le _
-          _
+            _
     _ ≤ _ := add_le_add (hb 0) (hb 1)
     _ = _ := by unfold correctionJetBound; ring
 
@@ -1134,6 +1162,7 @@ theorem affineProfile_jet_decomposition (c : Parameters) (q A : ℝ) (k : ℕ) (
   rw [affineCoefficients_decomposition c q A 0, affineCoefficients_decomposition c q A 1]
   ring
 
+/-- Correction jet, given by `iteratedDeriv k (fun t => correction c amp eta (Real.exp t)) y`. -/
 noncomputable def correctionJet (c : Parameters) (amp : ℝ → ℝ) (k : ℕ) (eta y : ℝ) : ℝ :=
   iteratedDeriv k (fun t => correction c amp eta (Real.exp t)) y
 
@@ -1180,7 +1209,7 @@ theorem correctionJet_eta_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
   refine (affineProfile_jet_bound c hsmall _ _ k y).trans ?_
   have hq : |1 + 3 * eta ^ 2| ≤ 4 := by
     simpa only [(parameterPolynomial_hasDerivAt eta).deriv] using
-      parameterPolynomial_derivative_bound heta
+        parameterPolynomial_derivative_bound heta
   calc
     _ ≤ (correctionJetBound c.P c.m k * Real.exp (-(1 / (4 * c.lam)))) *
         (4 * (1 + |amp'|)) :=
@@ -1209,7 +1238,7 @@ theorem normalized_mass_prefix_derivative_small (c : Parameters)
   rw [(normalized_mass_prefix_hasDerivAt c amp eta).deriv, abs_mul]
   have hq : |1 + 3 * eta ^ 2| ≤ 4 := by
     simpa only [(parameterPolynomial_hasDerivAt eta).deriv] using
-      parameterPolynomial_derivative_bound heta
+        parameterPolynomial_derivative_bound heta
   have hb := mul_le_mul (prefixCoefficient_small c hwait hsmall 0) hq
     (abs_nonneg _) (mul_nonneg (prefixBound_pos c.P_pos c.m 0).le (pow_nonneg c.lam_pos.le _))
   nlinarith
@@ -1276,7 +1305,7 @@ theorem individual_correction_jet_eta_bound (c : Parameters) (hsmall : c.lam ≤
     (iteratedDeriv k logTemplate (y - center c j))).deriv, abs_mul]
   have hq : |1 + 3 * eta ^ 2| ≤ 4 := by
     simpa only [(parameterPolynomial_hasDerivAt eta).deriv] using
-      parameterPolynomial_derivative_bound heta
+        parameterPolynomial_derivative_bound heta
   have hc := affineCoefficients_exp_bound c hsmall (1 + 3 * eta ^ 2) amp' j
   have hp : 0 ≤ coefficientBound c.P c.m * Real.exp (-(1 / (4 * c.lam))) *
       (|1 + 3 * eta ^ 2| + |amp'|) := by
@@ -1301,10 +1330,10 @@ theorem paper_prefix_bounds (P m : ℝ) (hP : 0 < P) (hm : 0 < m) :
         ∀ (amp : ℝ → ℝ) (eta : ℝ), |eta| ≤ 1 →
           |massMoment c amp eta c.pulseStart /
             (Real.exp c.pulseStart * angular c.P c.dropLength c.lam (c.pulseStart, eta))| ≤ C * lam
-              ^ 29 ∧
+                ^ 29 ∧
           |deriv (fun t => massMoment c amp t c.pulseStart /
             (Real.exp c.pulseStart * angular c.P c.dropLength c.lam (c.pulseStart, t))) eta| ≤ C *
-              lam ^ 29 := by
+                lam ^ 29 := by
   let C := P * Real.exp (Real.exp m + 12) + 4 * prefixBound P m 0
   have hb := prefixBound_pos hP m 0
   have he : 0 < P * Real.exp (Real.exp m + 12) := mul_pos hP (Real.exp_pos _)

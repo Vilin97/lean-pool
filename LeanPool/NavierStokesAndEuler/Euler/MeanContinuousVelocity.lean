@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityPressure
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
 
-@[expose] public section
-
 /-!
 # Uniform-time spatial bounds for the actual mean velocity
 
@@ -18,6 +16,9 @@ The continuous velocity is reconstructed from its actual L² value and actual
 L² time derivative. Terminal-primitive uniqueness identifies this path with
 the physical velocity already constructed by the strong mean inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,9 +76,9 @@ theorem continuousVelocity_translation_gevrey (hTpos : 0 < T)
     (hBt : ContDiff ℝ ∞ (fun a : Space => timeTranslation T a s.velocityDerivative))
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D) (d : ℕ)
     (hBb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b s.velocityField) a‖ ≤
-      C*majorant R d n)
+        C*majorant R d n)
     (hBtb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b s.velocityDerivative)
-      a‖ ≤ D*majorant R d n)
+        a‖ ≤ D*majorant R d n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => pathTranslation T b s.continuousVelocity) a‖ ≤
       ((T⁻¹*Real.sqrt T)*C+(2*Real.sqrt T)*D)*majorant R d n :=
@@ -92,9 +93,9 @@ theorem physicalPath_translation_gevrey (hTpos : 0 < T)
     (hBt : ContDiff ℝ ∞ (fun a : Space => timeTranslation T a s.velocityDerivative))
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D) (d : ℕ)
     (hBb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b s.velocityField) a‖ ≤
-      C*majorant R d n)
+        C*majorant R d n)
     (hBtb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b s.velocityDerivative)
-      a‖ ≤ D*majorant R d n)
+        a‖ ≤ D*majorant R d n)
     (t : Icc (0 : ℝ) T) (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => translation b (s.physicalPath t)) a‖ ≤
       ((T⁻¹*Real.sqrt T)*C+(2*Real.sqrt T)*D)*majorant R d n := by
@@ -106,7 +107,7 @@ theorem physicalPath_translation_gevrey (hTpos : 0 < T)
   have heq : (fun b : Space => translation b (s.physicalPath t)) =
       fun b : Space => translation b (s.continuousVelocity t) :=
     funext (fun b => congrArg (translation b) (s.continuousVelocity_eq_physicalPath hTpos hF
-      t).symm)
+        t).symm)
   exact (congrArg (fun g : Space → L2 => ‖iteratedFDeriv ℝ n g a‖) heq).trans_le ht
 
 end EulerMeanVariationalInverse.StrongMeanEvolution

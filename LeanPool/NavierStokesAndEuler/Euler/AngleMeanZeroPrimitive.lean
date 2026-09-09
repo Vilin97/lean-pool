@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.Analysis.Calculus.MeanValue
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # The actual mean-zero periodic angular primitive
@@ -19,6 +19,9 @@ This is an explicit Bochner integral, valid also for a Hilbert-valued angle
 curve such as a time-L² pressure coefficient. Periodicity is proved from the
 zero integral of the forcing; subtracting the actual mean fixes the constant.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -98,7 +101,7 @@ theorem primitive_unique (P : ℝ) (hP : P ≠ 0) (f : ℝ → E) (hf : Continuo
     change (∫ θ in 0..P, g θ - primitive P f θ) = 0
     rw [intervalIntegral.integral_sub
       ((show Continuous g from (show Differentiable ℝ g from fun x => (hg
-        x).differentiableAt).continuous).intervalIntegrable _ _)
+          x).differentiableAt).continuous).intervalIntegrable _ _)
       ((primitive_continuous P f hf).intervalIntegrable _ _), hmean,
       primitive_mean_zero P hP f hf, sub_self]
   have hz : d 0 = 0 := by

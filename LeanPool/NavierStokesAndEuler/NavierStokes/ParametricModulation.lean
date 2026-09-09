@@ -8,10 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialModulation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TrueConeLoop
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # Joint periodic primitives and realization of the constructed true-cone loops
@@ -19,6 +19,9 @@ public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 The primitives in this file are actual normalized interval integrals. Their
 joint smoothness is derived through compact-interval parameter integration.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,9 +33,12 @@ open scoped Topology ContDiff
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P] [FiniteDimensional ℝ P]
 
+/-- Primitive family, given by `RadialModulation.periodicPrimitive (fun θ => q (z.1, θ)) z.2`. -/
 def primitiveFamily (q : P × ℝ → ℝ) (z : P × ℝ) : ℝ :=
   RadialModulation.periodicPrimitive (fun θ => q (z.1, θ)) z.2
 
+/-- Normalized primitive family, given by `RadialModulation.zeroMeanPrimitive (fun θ => q (z.1,
+θ)) z.2`. -/
 def normalizedPrimitiveFamily (q : P × ℝ → ℝ) (z : P × ℝ) : ℝ :=
   RadialModulation.zeroMeanPrimitive (fun θ => q (z.1, θ)) z.2
 
@@ -118,8 +124,10 @@ theorem normalizedPrimitiveFamily_zero
 
 /-- A cutoff which equals one around K and vanishes locally outside U. -/
 structure CompactCutoff (K U : Set P) where
+  /-- Value of `CompactCutoff`, of type `P → ℝ`. -/
   value : P → ℝ
   smooth : ContDiff ℝ ∞ value
+  /-- Neighborhood of `CompactCutoff`, of type `Set P`. -/
   neighborhood : Set P
   open_neighborhood : IsOpen neighborhood
   contains : K ⊆ neighborhood
@@ -188,9 +196,12 @@ theorem CompactCutoff.mul_contDiff
       rw [hw, zero_mul]
     exact contDiffAt_const.congr_of_eventuallyEq hzero
 
+/-- Centered source, given by `c z.1 * (f z - m z.1)`. -/
 def centeredSource (f : P × ℝ → ℝ) (m c : P → ℝ) (z : P × ℝ) : ℝ :=
   c z.1 * (f z - m z.1)
 
+/-- Extended primitive, given by `χ.value z.1 * normalizedPrimitiveFamily (centeredSource f m c)
+z`. -/
 def extendedPrimitive {K U : Set P} (χ : CompactCutoff K U)
     (f : P × ℝ → ℝ) (m c : P → ℝ) (z : P × ℝ) : ℝ :=
   χ.value z.1 * normalizedPrimitiveFamily (centeredSource f m c) z
@@ -308,7 +319,9 @@ theorem extendedPrimitive_zero
 /-- The only choice data are the already constructed true-cone loop parameters
 and an actual smooth compact-set cutoff. Primitives below are defined by integrals. -/
 structure TrueConeRealization (a m p₁ p₂ : P → ℝ) (K B : Set P) where
+  /-- Choices of `TrueConeRealization`, of type `TrueConeLoop.FamilyChoices a m p₁ p₂ K B`. -/
   choices : TrueConeLoop.FamilyChoices a m p₁ p₂ K B
+  /-- Cutoff of `TrueConeRealization`, of type `CompactCutoff K {p | 0 < a p}`. -/
   cutoff : CompactCutoff K {p | 0 < a p}
 
 theorem exists_trueConeRealization
@@ -329,6 +342,8 @@ namespace TrueConeRealization
 
 variable {a m p₁ p₂ : P → ℝ} {K B : Set P}
 
+/-- Angular loop, given by `TrueConeLoop.familyA a m p₂ r.choices.d r.choices.delta (ne_of_gt
+r.choices.d_pos) r.choices.delta_pos`. -/
 def angularLoop (r : TrueConeRealization a m p₁ p₂ K B) : P × ℝ → ℝ :=
   TrueConeLoop.familyA a m p₂ r.choices.d r.choices.delta
     (ne_of_gt r.choices.d_pos) r.choices.delta_pos
@@ -338,9 +353,12 @@ def signedAxialLoop (r : TrueConeRealization a m p₁ p₂ K B) : P × ℝ → �
   TrueConeLoop.familyC a m p₂ r.choices.d r.choices.delta
     (ne_of_gt r.choices.d_pos) r.choices.delta_pos
 
+/-- Angular primitive, given by `extendedPrimitive r.cutoff r.angularLoop a (fun _ => -1 / 2)`. -/
 def angularPrimitive (r : TrueConeRealization a m p₁ p₂ K B) : P × ℝ → ℝ :=
   extendedPrimitive r.cutoff r.angularLoop a (fun _ => -1 / 2)
 
+/-- Axial primitive, given by `extendedPrimitive r.cutoff r.signedAxialLoop (fun p => a p * m p)
+(fun p => -E p / 2)`. -/
 def axialPrimitive (r : TrueConeRealization a m p₁ p₂ K B) (E : P → ℝ) : P × ℝ → ℝ :=
   extendedPrimitive r.cutoff r.signedAxialLoop (fun p => a p * m p) (fun p => -E p / 2)
 
@@ -447,6 +465,7 @@ end TrueConeRealization
 
 section RadialProfiles
 
+/-- Radial parameter: an abbreviation for `ℝ × ℝ`. -/
 abbrev RadialParameter := ℝ × ℝ
 
 /-- Reassociation between slow-parameter/angle coordinates and the radial
@@ -461,11 +480,15 @@ theorem asRadialPrimitive_contDiff
 
 variable {a m p₁ p₂ : RadialParameter → ℝ} {K B : Set RadialParameter}
 
+/-- Realized E, given by `RadialModulation.modulatedE n (fun X η => E (X, η)) (asRadialPrimitive
+r.angularPrimitive) X η`. -/
 def realizedE (r : TrueConeRealization a m p₁ p₂ K B) (E : RadialParameter → ℝ)
     (n X η : ℝ) : ℝ :=
   RadialModulation.modulatedE n (fun X η => E (X, η))
     (asRadialPrimitive r.angularPrimitive) X η
 
+/-- Realized U, given by `RadialModulation.modulatedU n (fun X η => U (X, η)) (asRadialPrimitive
+(r.axialPrimitive E)) X η`. -/
 def realizedU (r : TrueConeRealization a m p₁ p₂ K B) (E U : RadialParameter → ℝ)
     (n X η : ℝ) : ℝ :=
   RadialModulation.modulatedU n (fun X η => U (X, η))
@@ -494,8 +517,8 @@ theorem realized_profiles_uniform_eta_jets
     (KX Kη : Set ℝ) (hKX : IsCompact KX) (hKη : IsCompact Kη) (k : ℕ) :
     ∃ CE CU : ℝ, 0 ≤ CE ∧ 0 ≤ CU ∧ ∀ n : ℝ, 1 ≤ n → ∀ X ∈ KX, ∀ η ∈ Kη,
       |iteratedDeriv k (realizedE r E n X) η - iteratedDeriv k (fun e => E (X, e)) η| ≤ CE / n ∧
-      |iteratedDeriv k (realizedU r E U n X) η - iteratedDeriv k (fun e => U (X, e)) η| ≤ CU / n :=
-        by
+      |iteratedDeriv k (realizedU r E U n X) η - iteratedDeriv k (fun e =>
+          U (X, e)) η| ≤ CU / n := by
   have hprim := r.primitives_smooth E ha hm hp₂ hE
   have hperiodA : ∀ X η, Function.Periodic
       (fun θ => asRadialPrimitive r.angularPrimitive (X, η, θ)) 1 :=
@@ -531,8 +554,8 @@ theorem theta_derivative_asRadialPrimitive
     HasDerivAt (fun s => Q ((X, η), s))
       (RadialModulation.partialTheta (asRadialPrimitive Q) (X, η, θ)) θ := by
   have hg := (hasDerivAt_const θ X).prodMk ((hasDerivAt_const θ η).prodMk (hasDerivAt_id θ))
-  exact (((asRadialPrimitive_contDiff Q hQ).differentiable (by simp) (X, η,
-    θ)).hasFDerivAt).comp_hasDerivAt θ hg
+  exact (((asRadialPrimitive_contDiff Q hQ).differentiable (by
+      simp) (X, η, θ)).hasFDerivAt).comp_hasDerivAt θ hg
 
 /-- The prescribed loop derivatives are established for the constructed
 primitives, including the sign change from `C = -b_L`. -/
@@ -609,8 +632,8 @@ theorem exists_modulated_trueCone_profiles
       (∀ k : ℕ, ∃ CE CU : ℝ, 0 ≤ CE ∧ 0 ≤ CU ∧
         ∀ n : ℝ, 1 ≤ n → ∀ X ∈ KX, ∀ η ∈ Kη,
           |iteratedDeriv k (realizedE r E n X) η - iteratedDeriv k (fun e => E (X, e)) η| ≤ CE / n ∧
-          |iteratedDeriv k (realizedU r E U n X) η - iteratedDeriv k (fun e => U (X, e)) η| ≤ CU /
-            n) ∧
+          |iteratedDeriv k (realizedU r E U n X) η - iteratedDeriv k (fun e =>
+              U (X, e)) η| ≤ CU / n) ∧
       (∃ N : Set RadialParameter, IsOpen N ∧ B ⊆ N ∧ ∀ n X η : ℝ, (X, η) ∈ N →
         realizedE r E n X η = E (X, η) ∧ realizedU r E U n X η = U (X, η)) := by
   obtain ⟨r⟩ := exists_trueConeRealization a m p₁ p₂ (KX ×ˢ Kη) B

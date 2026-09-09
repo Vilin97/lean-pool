@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateResidual
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderGradientEmbedding
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradient
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
 
 /-! A genuine compact scalar cylinder path supplies the actual lifted
 pressure-gradient Field and belongs to the closed lifted gradient space. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,13 +30,14 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ}
 
+/-- Raw gradient, given by `κ • pressureGradient p z + (pressureJet p z).2 angleDirection • m`. -/
 def rawGradient (κ : ℝ) (m : Space) (p : ScalarField) (z : Domain) : Space :=
   κ • pressureGradient p z + (pressureJet p z).2 angleDirection • m
 
 omit [Fact (0 < P)] in
 theorem rawGradient_cover (κ : ℝ) (m : Space) (p : ScalarField)
     (φ : LiftDomain P → ℝ) (t : ℝ)
-    (he : ∀ x θ, p (t,(x,θ)) = φ (x,(θ : AddCircle P))) (x : Space) (θ : ℝ) :
+    (he : ∀ x θ, p (t, (x, θ)) = φ (x, (θ : AddCircle P))) (x : Space) (θ : ℝ) :
     rawGradient κ m p (t,(x,θ)) = liftedGradient P κ m φ (x,(θ : AddCircle P)) := by
   have hd : fderiv ℝ (fun y : LiftTangent => p (t,y)) (x,θ) =
       fieldFDeriv P φ (x,(θ : AddCircle P)) := by
@@ -53,10 +57,12 @@ theorem rawGradient_cover (κ : ℝ) (m : Space) (p : ScalarField)
   rw [hi]
   ring
 
-variable (p : ScalarField) (q : C(Icc (0 : ℝ) T,CylinderL2 P ℝ))
+variable (p : ScalarField) (q : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
-  (he : ∀ (t : Icc (0 : ℝ) T) x θ, p (t,(x,θ)) = scalarPointField P q hq t (x,(θ : AddCircle P)))
+  (he : ∀ (t : Icc (0 : ℝ) T) x θ, p (t, (x, θ)) = scalarPointField P q hq t (x, (θ : AddCircle P)))
 
+/-- Angular gradient field as an element of `Field P T (fun z => (pressureJet p z).2
+angleDirection • m)`. -/
 def angularGradientField (m : Space) :
     Field P T (fun z => (pressureJet p z).2 angleDirection • m) :=
   (((scalarEmbeddingField p q hq he).derivative 0).map
@@ -68,12 +74,14 @@ def angularGradientField (m : Space) :
       simp only [pressureJet_angle,hd,comp_apply,project_embed,toSpanSingleton_apply,
         standardDirection_zero])
 
+/-- Lifted gradient field, given by `((scalarGradientField p q hq he).smul κ).add
+(angularGradientField P p q hq he m)`. -/
 def liftedGradientField (κ : ℝ) (m : Space) : Field P T (rawGradient κ m p) :=
   ((scalarGradientField p q hq he).smul κ).add (angularGradientField P p q hq he m)
 
 include he in
 theorem scalarPointField_compact (S : Set Space) (hS : IsCompact S)
-    (hz : ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ, p (t,(x,θ)) = 0)
+    (hz : ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ, p (t, (x, θ)) = 0)
     (t : Icc (0 : ℝ) T) : HasCompactSupport (scalarPointField P q hq t) := by
   apply HasCompactSupport.intro (hS.prod (isCompact_univ : IsCompact (univ : Set (AddCircle P))))
   intro z hzs
@@ -84,7 +92,7 @@ theorem scalarPointField_compact (S : Set Space) (hS : IsCompact S)
   exact hh.symm.trans (hz t z.1 hzS θ)
 
 theorem liftedGradientField_mem (κ : ℝ) (m : Space) (S : Set Space) (hS : IsCompact S)
-    (hz : ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ, p (t,(x,θ)) = 0)
+    (hz : ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ, p (t, (x, θ)) = 0)
     (t : Icc (0 : ℝ) T) :
     (liftedGradientField P p q hq he κ m).path t ∈ gradientSpace P κ m := by
   apply testGradient_mem P κ m
@@ -110,10 +118,12 @@ open scoped ContDiff
 variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
   (k : ℝ) (hk : k ≠ 0) (p : ScalarField)
-  (q : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ))
+  (q : C(Icc (0 : ℝ) D.T, CylinderL2 P ℝ))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
-  (he : ∀ (t : Icc (0 : ℝ) D.T) x θ, p (t,(x,θ)) = scalarPointField P q hq t (x,(θ : AddCircle P)))
+  (he : ∀ (t : Icc (0 : ℝ) D.T) x θ, p (t, (x, θ)) = scalarPointField P q hq t (x, (θ : AddCircle
+      P)))
 
+/-- Compact pressure field as an element of `Field P D.T (coordinatePressure D k p)`. -/
 def compactPressureField : Field P D.T (coordinatePressure D k p) :=
   ((liftedGradientField P p q hq he k⁻¹ D.m₀).smul (k^2)).congr (fun t x θ => by
     change k • pressureGradient p (t,(x,θ)) +
@@ -124,7 +134,7 @@ def compactPressureField : Field P D.T (coordinatePressure D k p) :=
     rw [show k^2*k⁻¹ = k by field_simp [hk]])
 
 theorem compactPressureField_mem (S : Set Space) (hS : IsCompact S)
-    (hz : ∀ (t : Icc (0 : ℝ) D.T) x, x ∉ S → ∀ θ, p (t,(x,θ)) = 0)
+    (hz : ∀ (t : Icc (0 : ℝ) D.T) x, x ∉ S → ∀ θ, p (t, (x, θ)) = 0)
     (t : Icc (0 : ℝ) D.T) :
     (compactPressureField D k hk p q hq he).path t ∈ gradientSpace P k⁻¹ D.m₀ :=
   (gradientSpace P k⁻¹ D.m₀).smul_mem (k^2)

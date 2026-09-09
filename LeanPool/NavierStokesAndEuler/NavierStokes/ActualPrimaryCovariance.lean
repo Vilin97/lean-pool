@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseStressClasses
 
-@[expose] public section
-
 /-!
 # Covariance of the fixed physical primary family
 
@@ -18,6 +16,9 @@ The selected primary phases, native matrices, masks, and physical labels are
 those of `CorrectionInitialization.ActualPrimary`.  The finite family is
 assembled before averaging.  The fixed starting threshold is retained.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,8 +28,12 @@ open Set Function Filter
 open scoped ContDiff Topology BigOperators
 open CorrectionInitialization.ActualPrimary PartitionedCovariance PrimaryFieldAssembly
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Plane: an abbreviation for `TorusInverse.Plane /-! ## Changing the common auxiliary cover
+does not change a diagonal average -/`. -/
 abbrev Plane := TorusInverse.Plane
 
 /-! ## Changing the common auxiliary cover does not change a diagonal average -/
@@ -73,7 +78,7 @@ theorem pair_diagonal_common {D h : ℝ} {vr vt : Plane}
     doubleAverage (fun Y theta =>
       slotVelocity P hdet outer epsilon T q x j ((CommonCoverSolve.coverPower k).symm Y) theta 0 *
       slotVelocity P hdet outer epsilon T q x j ((CommonCoverSolve.coverPower k).symm Y) theta
-        i.succ) =
+          i.succ) =
       (outer * amplitude epsilon (mask D U q x) P.matrix T j) ^ 2 * P.matrix i j := by
   simp only [slotVelocity_zero, slotVelocity_succ, PairData.radialWave,
     PairData.tangentWave, wave_common hk]
@@ -87,11 +92,11 @@ theorem pair_diagonal_common_continuous {D h : ℝ} {vr vt : Plane}
     (∀ Y, Continuous (fun theta =>
       slotVelocity P hdet outer epsilon T q x j ((CommonCoverSolve.coverPower k).symm Y) theta 0 *
       slotVelocity P hdet outer epsilon T q x j ((CommonCoverSolve.coverPower k).symm Y) theta
-        i.succ)) ∧
+          i.succ)) ∧
     Continuous (fun Y => SmoothLoop.angularMean (fun theta =>
       slotVelocity P hdet outer epsilon T q x j ((CommonCoverSolve.coverPower k).symm Y) theta 0 *
       slotVelocity P hdet outer epsilon T q x j ((CommonCoverSolve.coverPower k).symm Y) theta
-        i.succ)) := by
+          i.succ)) := by
   simp only [slotVelocity_zero, slotVelocity_succ, PairData.radialWave,
     PairData.tangentWave, wave_common hk]
   refine ⟨fun _ => (wave_continuous_theta _ _ _ _ _ _).mul (wave_continuous_theta _ _ _ _ _ _), ?_⟩
@@ -138,6 +143,7 @@ theorem physicalTangentMode_eq_slot (j : Fin 2) (L : Label B N0) (p : Slow)
 
 /-! ## The same physical point in each fixed label's native coordinates -/
 
+/-- Native point, given by `nativeSlow L (toAbsolute n x)`. -/
 noncomputable def nativePoint (n : ℕ) (x : Point) (L : Label B N0) : Slow :=
   nativeSlow L (toAbsolute n x)
 
@@ -152,7 +158,7 @@ theorem nativePoint_time (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (L : Label B N
 theorem nativePoint_radius (n : ℕ) {x : Point} (hR : 0 < x.1) (L : Label B N0) :
     0 < (nativePoint n x L).1 := by
   change 0 < Real.sqrt (ChartScales.Q n) * x.1 / Real.sqrt (ChartScales.Q (BaseChartJets.cellBand
-    L))
+      L))
   exact div_pos (mul_pos (Real.sqrt_pos.mpr (ChartScales.Q_pos n)) hR)
     (Real.sqrt_pos.mpr (ChartScales.Q_pos _))
 
@@ -196,7 +202,7 @@ theorem nativePoint_scale (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (L : Label B 
   rw [SimilarityHomogeneity.chartQ_transition outgoing.data.h_pos outgoing.data.h_lt_half
     (ChartScales.Q_pos n) (ChartScales.Q_pos _) hT]
   change _ = ChartScales.Q n * SimilarityHomogeneity.chartQ h (BaseContextAssembly.slowCoordinates
-    x)
+      x)
   field_simp [(ChartScales.Q_pos (BaseChartJets.cellBand L)).ne']
 
 theorem nativePoint_mask (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (L : Label B N0) :
@@ -220,7 +226,7 @@ theorem nativePoint_reference (n : ℕ) {x : Point}
     (hx : x ∈ (BaseContextAssembly.nativeStrip nominal standardRegion).domain) (L : Label B N0)
     (hm : spatialMask L (nativePoint n x L) ≠ 0) :
     nativePoint n x L ∈ PositiveRepresentatives.positivePart (PrimaryGeometryAssembly.referenceSet
-      nominal) := by
+        nominal) := by
   have hT := BaseContextAssembly.nativeStrip_time nominal standardRegion hx
   have hR := BaseContextAssembly.nativeStrip_radius nominal standardRegion hx
   have ha := (BaseContextAssembly.nativeStrip_active nominal standardRegion hx).1
@@ -229,12 +235,13 @@ theorem nativePoint_reference (n : ℕ) {x : Point}
     exact ⟨ha.1.le, ha.2.le⟩
   · exact hm
 
+/-- Unsigned labels as an element of `Finset (Label B N0)`. -/
 noncomputable def unsignedLabels (B N0 n : ℕ) : Finset (Label B N0) := by
   classical
   exact (CorrectionInitialization.CommonWindow.labels (CoordinateAlgebra.D h)
     (BaseContextAssembly.geometryBound nominal standardRegion) n).preimage
       (PrimaryGeometryAssembly.label nominal) (PrimaryGeometryAssembly.label_injective
-        nominal).injOn
+          nominal).injOn
 
 theorem activeLabels_product (B N0 n : ℕ) :
     activeLabels standardRegion B N0 n = (unsignedLabels B N0 n).product Finset.univ := rfl
@@ -246,7 +253,7 @@ theorem mem_unsignedLabels (n : ℕ) (L : Label B N0) :
 
 theorem active_cover_le (n : ℕ) {L : Label B N0} (hL : L ∈ unsignedLabels B N0 n) :
     CorrectionInitialization.CommonWindow.index h n ≤ ChartScales.nativeIndex h
-      (BaseChartJets.cellBand L) := by
+        (BaseChartJets.cellBand L) := by
   have hm := (mem_activeLabels standardRegion n L 0).mp ((mem_unsignedLabels n L).mp hL)
   obtain ⟨m, hm, hrest⟩ := Finset.mem_biUnion.mp hm
   obtain ⟨z, hz, he⟩ := Finset.mem_image.mp hrest
@@ -254,6 +261,7 @@ theorem active_cover_le (n : ℕ) {L : Label B N0} (hL : L ∈ unsignedLabels B 
   subst m
   exact CorrectionInitialization.CommonWindow.index_le hm
 
+/-- Signed label of, given by `signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2`. -/
 noncomputable def signedLabelOf (l : Label B N0 × Fin 2) : SlotColoring.Label :=
   signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
@@ -270,6 +278,7 @@ theorem signedLabelOf_injective : Function.Injective (signedLabelOf (B := B) (N0
   subst k
   rfl
 
+/-- View tangent, constructed using `physicalTangentMode`. -/
 noncomputable def viewTangent (n : ℕ) (x : Point) (l : Label B N0 × Fin 2)
     (Y : Plane) (theta : ℝ) : Fin 3 → ℝ :=
   physicalTangentMode l.2 l.1 (nativePoint n x l.1)
@@ -291,7 +300,7 @@ theorem viewTangent_cross_zero (n : ℕ) {x : Point}
   have hq : 0 < physicalScale n x := by
     exact mul_pos (ChartScales.Q_pos n)
       (standardRegion.chartQ_pos ((BaseContextAssembly.nativeStrip_mem nominal standardRegion x).mp
-        hx).1)
+          hx).1)
   have he := slots.wave_cross_zero l.1.val.property.1 m.1.val.property.1
     (fun hsame => hlm (signedLabelOf_injective hsame))
     (P.rawRadial_support vectors_det l.2) (Q.rawTangent_support vectors_det m.2 i)
@@ -316,7 +325,7 @@ theorem viewTangent_diagonal_continuous (n : ℕ) {x : Point}
     (hx : x ∈ (BaseContextAssembly.nativeStrip nominal standardRegion).domain)
     (l : Label B N0 × Fin 2) (hl : l ∈ activeLabels standardRegion B N0 n) (i : Fin 2) :
     (∀ Y, Continuous (fun theta => viewTangent n x l Y theta 0 * viewTangent n x l Y theta i.succ))
-      ∧
+        ∧
     Continuous (fun Y => SmoothLoop.angularMean
       (fun theta => viewTangent n x l Y theta 0 * viewTangent n x l Y theta i.succ)) := by
   have hT := BaseContextAssembly.nativeStrip_time nominal standardRegion hx
@@ -347,8 +356,8 @@ theorem viewTangent_pair_covariance (n : ℕ) {x : Point}
   by_cases hm : spatialMask L (nativePoint n x L) = 0
   · simp only [viewTangent, physicalTangentMode_zero_of_mask _ L _ hm, Pi.zero_apply,
       zero_mul, doubleAverage, SmoothLoop.angularMean, TorusAverages.squareAverage,
-      intervalIntegral.integral_zero, zero_div, Finset.sum_const_zero, hm, zero_pow (by decide : (2
-        : ℕ) ≠ 0), mul_zero]
+      intervalIntegral.integral_zero, zero_div, Finset.sum_const_zero, hm, zero_pow (by
+          decide : (2 : ℕ) ≠ 0), mul_zero]
   have hT := BaseContextAssembly.nativeStrip_time nominal standardRegion hx
   have hp := spatialMask_carrier L (nativePoint_time n hT L) hm
   have hK := nativePoint_reference n hx L hm
@@ -370,6 +379,8 @@ theorem viewTangent_pair_covariance (n : ℕ) {x : Point}
   simp_rw [he]
   exact physicalTangentMode_diagonal_covariance L (nativePoint n x L) hp hK hw i
 
+/-- View sum, defined pointwise by `∑ l ∈ activeLabels standardRegion B N0 n, viewTangent n x l
+Y theta i`. -/
 noncomputable def viewSum (B N0 n : ℕ) (x : Point) (Y : Plane) (theta : ℝ) : Fin 3 → ℝ :=
   fun i => ∑ l ∈ activeLabels standardRegion B N0 n, viewTangent n x l Y theta i
 
@@ -394,11 +405,14 @@ theorem viewSum_covariance (B N0 n : ℕ) {x : Point}
   intro L hL
   exact viewTangent_pair_covariance n hx L hL i
 
+/-- Physical leading, constructed using `physicalScale`. -/
 noncomputable def physicalLeading (n : ℕ) (x : Point) (i : Fin 2) : ℝ :=
   physicalScale n x ^ (-CoordinateAlgebra.A h - 1 / 2) *
     ProfileSpectralCone.stressVector modulation.profiles h
       (BaseChartJets.normalizedCoordinates h (BaseContextAssembly.slowCoordinates x)).2 i
 
+/-- Partition factor, given by `∑ L ∈ unsignedLabels B N0 n, spatialMask L (nativePoint n x L) ^
+2`. -/
 noncomputable def partitionFactor (B N0 n : ℕ) (x : Point) : ℝ :=
   ∑ L ∈ unsignedLabels B N0 n, spatialMask L (nativePoint n x L) ^ 2
 
@@ -430,7 +444,7 @@ theorem physicalScale_pos (n : ℕ) {x : Point}
     0 < physicalScale n x :=
   mul_pos (ChartScales.Q_pos n)
     (standardRegion.chartQ_pos ((BaseContextAssembly.nativeStrip_mem nominal standardRegion x).mp
-      hx).1)
+        hx).1)
 
 theorem physicalScale_le_two (n : ℕ) {x : Point}
     (hx : x ∈ (BaseContextAssembly.nativeStrip nominal standardRegion).domain) :
@@ -464,21 +478,23 @@ theorem physicalPosition_normalized (n : ℕ) {x : Point}
   have hq : SimilarityCoordinates.coordinateQ (2 * h) x.2.1 ≠ 0 :=
     (show 0 < SimilarityCoordinates.coordinateQ (2 * h) x.2.1 from
       standardRegion.chartQ_pos ((BaseContextAssembly.nativeStrip_mem nominal standardRegion x).mp
-        hx).1).ne'
+          hx).1).ne'
   simp only [physicalPosition, physicalScale, Matrix.cons_val_zero, mul_pow,
     Real.sq_sqrt (ChartScales.Q_pos n).le, BaseChartJets.normalizedCoordinates_eq,
-      SimilarityHomogeneity.chartX,
+        SimilarityHomogeneity.chartX,
     SimilarityCoordinates.coordinateX, SimilarityHomogeneity.chartQ,
     BaseContextAssembly.slowCoordinates_apply]
   field_simp [hQ, hq]
 
+/-- Relative label, given by `((PrimaryGeometryAssembly.label nominal L).1 - (choice B
+N0).prepared.N, (PrimaryGeometryAssembly.label nominal L).2)`. -/
 noncomputable def relativeLabel (B N0 : ℕ) (L : Label B N0) : UnsignedLabel :=
   ((PrimaryGeometryAssembly.label nominal L).1 - (choice B N0).prepared.N,
     (PrimaryGeometryAssembly.label nominal L).2)
 
 theorem relativeLabel_tail (B N0 : ℕ) (L : Label B N0) :
     tailLabel (choice B N0).prepared.N (relativeLabel B N0 L) = PrimaryGeometryAssembly.label
-      nominal L := by
+        nominal L := by
   exact Prod.ext (Nat.sub_add_cancel L.property) rfl
 
 theorem relativeLabel_injective (B N0 : ℕ) : Function.Injective (relativeLabel B N0) := by
@@ -561,14 +577,19 @@ theorem physicalScale_tail (B N0 : ℕ) {n : ℕ} (hn : (choice B N0).prepared.N
 
 /-! ## Covariance of the literal initialized tangent pieces -/
 
+/-- Tangent sum, defined pointwise by `∑ l ∈ activeLabels standardRegion B N0 n, (piece
+standardRegion l.2 l.1).tangentVelocity n z i`. -/
 noncomputable def tangentSum (B N0 : ℕ) : CorrectionState.Oscillation Point :=
   fun n z i => ∑ l ∈ activeLabels standardRegion B N0 n,
     (piece standardRegion l.2 l.1).tangentVelocity n z i
 
+/-- Tangent covariance, given by `CorrectionState.bilinearCovariance (tangentSum B N0)
+(tangentSum B N0) i j`. -/
 noncomputable def tangentCovariance (B N0 : ℕ) (i j : Fin 3) :
     CorrectionState.ScalarField Point :=
   CorrectionState.bilinearCovariance (tangentSum B N0) (tangentSum B N0) i j
 
+/-- Leading stress, with branches according to `i = 0`. -/
 noncomputable def leadingStress (i : Fin 2) (n : ℕ) (x : Point) : ℝ :=
   if i = 0 then (BaseContextAssembly.leadingVirtualStress certificate modulation n x).1
   else (BaseContextAssembly.leadingVirtualStress certificate modulation n x).2
@@ -595,7 +616,7 @@ theorem tangentSum_eq_viewSum (B N0 n : ℕ) {x : Point}
 theorem chart_physical_leading (n : ℕ) {x : Point}
     (hx : x ∈ (BaseContextAssembly.nativeStrip nominal standardRegion).domain) (i : Fin 2) :
     (ChartScales.Q n ^ CoordinateAlgebra.A h) ^ 2 * physicalLeading n x i = leadingStress i n x :=
-      by
+        by
   have hT := BaseContextAssembly.nativeStrip_time nominal standardRegion hx
   have hR := BaseContextAssembly.nativeStrip_radius nominal standardRegion hx
   have hq := standardRegion.chartQ_pos
@@ -617,7 +638,7 @@ theorem chart_physical_leading (n : ℕ) {x : Point}
   rw [← mul_assoc, hs, BaseContextAssembly.leadingVirtualStress_eq certificate modulation n hT hR]
   fin_cases i <;>
     simp [FinalSlowBase.leadingStress, LeadingStressWeights.stress,
-      ProfileSpectralCone.stressVector,
+        ProfileSpectralCone.stressVector,
       BaseChartJets.normalizedCoordinates_eq, SimilarityHomogeneity.chartQ,
       BaseContextAssembly.slowCoordinates_apply]
 
@@ -652,11 +673,12 @@ theorem mean_tangentCovariance_jets (B N0 : ℕ) {n : ℕ}
       iteratedFDeriv ℝ m (leadingStress i n) x := by
   apply (SolenoidalDiagonal.iteratedFDeriv_eventuallyEq
     (eventually_of_mem ((BaseContextAssembly.nativeStrip nominal
-      standardRegion).isOpen_domain.mem_nhds hx)
+        standardRegion).isOpen_domain.mem_nhds hx)
       (fun y hy => mean_tangentCovariance_eq_leading B N0 hn hy i)) m).self_of_nhds
 
 /-! ## The exact finite low-band defect -/
 
+/-- Dyadic tail, given by `∑ᶠ n : ℕ, SquaredPartition.dyadicMask ((n + N : ℕ) : ℤ) q ^ 2`. -/
 noncomputable def dyadicTail (N : ℕ) (q : ℝ) : ℝ :=
   ∑ᶠ n : ℕ, SquaredPartition.dyadicMask ((n + N : ℕ) : ℤ) q ^ 2
 
@@ -680,6 +702,8 @@ theorem mask_tail_eq_dyadicTail (D : ℝ) (N : ℕ) {q : ℝ} (hq : 0 < q)
   simp_rw [hrow]
   rfl
 
+/-- Missing weight, given by `∑ m ∈ Finset.Icc (-1 : ℤ) ((N : ℤ) - 1),
+SquaredPartition.dyadicMask m q ^ 2`. -/
 noncomputable def missingWeight (N : ℕ) (q : ℝ) : ℝ :=
   ∑ m ∈ Finset.Icc (-1 : ℤ) ((N : ℤ) - 1), SquaredPartition.dyadicMask m q ^ 2
 
@@ -688,7 +712,7 @@ theorem missingWeight_smooth (N : ℕ) : ContDiff ℝ ∞ (missingWeight N) :=
 
 theorem missingWeight_compact (N : ℕ) : HasCompactSupport (missingWeight N) := by
   have hall (s : Finset ℤ) : HasCompactSupport (fun q => ∑ m ∈ s, SquaredPartition.dyadicMask m q ^
-    2) := by
+      2) := by
     induction s using Finset.induction_on with
     | empty =>
       simp only [Finset.sum_empty]
@@ -762,8 +786,10 @@ theorem partitionFactor_eq_one_sub_missing (B N0 n : ℕ) {x : Point}
   rw [partitionFactor_eq_tail B N0 n hx,
     mask_tail_eq_dyadicTail _ _ (physicalScale_pos n hx)]
   linarith [missingWeight_add_tail (choice B N0).prepared.N (physicalScale_pos n hx)
-    (physicalScale_le_two n hx)]
+      (physicalScale_le_two n hx)]
 
+/-- Averaged defect, given by `StateMomentBalances.meanBar (tangentCovariance B N0 0 i.succ) -
+leadingStress i`. -/
 noncomputable def averagedDefect (B N0 : ℕ) (i : Fin 2) : CorrectionState.ScalarField Point :=
   StateMomentBalances.meanBar (tangentCovariance B N0 0 i.succ) - leadingStress i
 
@@ -811,7 +837,7 @@ theorem memClass_of_finite_bands {D E : Type*}
   · have hratio : s.epsilon n ^ (alpha - beta) ≤ K := by
       have he := Finset.single_le_sum
         (fun k (_hk : k ∈ Finset.range N) => (Real.rpow_pos_of_pos (s.epsilon_pos k) (alpha -
-          beta)).le)
+            beta)).le)
         (Finset.mem_range.mpr (lt_of_not_ge hn))
       exact he.trans (le_add_of_nonneg_left zero_le_one)
     have heps : s.epsilon n ^ alpha = s.epsilon n ^ (alpha - beta) * s.epsilon n ^ beta := by
@@ -831,7 +857,7 @@ theorem physicalScale_unweighted :
   have hq := (BaseStressClasses.coordinates_unweighted nominal standardRegion).map
     (ContinuousLinearMap.fst ℝ ℝ SlowBorelBase.Inner)
   have hband : BandBound (BaseContextAssembly.nativeStrip nominal standardRegion) 0 ChartScales.Q
-    := by
+      := by
     refine ⟨1, zero_le_one, 0, fun n => ?_⟩
     simpa only [Real.norm_of_nonneg (ChartScales.Q_pos n).le, Real.rpow_zero, one_mul,
       pow_zero, mul_one] using ChartScales.Q_le_one n
@@ -856,23 +882,23 @@ theorem missingWeight_unweighted (N : ℕ) :
 theorem leadingStress_meanClass (i : Fin 2) :
     MeanClass (BaseContextAssembly.nativeStrip nominal standardRegion) 1 (leadingStress i) := by
   have hc := BaseStressClasses.leadingVirtualStress_meanClass certificate modulation
-    profile.fullTrueCone standardRegion
+      profile.fullTrueCone standardRegion
   fin_cases i
   · have hm := hc.map (ContinuousLinearMap.fst ℝ ℝ ℝ)
-    simp [] at hm ⊢
+    simp only [ContinuousLinearMap.coe_fst', Fin.zero_eta, Fin.isValue] at hm ⊢
     exact hm
   · have hm := hc.map (ContinuousLinearMap.snd ℝ ℝ ℝ)
-    simp [] at hm ⊢
+    simp only [ContinuousLinearMap.coe_snd', Fin.mk_one, Fin.isValue] at hm ⊢
     exact hm
 
 theorem averagedDefect_meanClass_one (B N0 : ℕ) (i : Fin 2) :
     MeanClass (BaseContextAssembly.nativeStrip nominal standardRegion) 1 (averagedDefect B N0 i) :=
-      by
+        by
   have hc := (CurlClassBounds.class_neg (missingWeight_unweighted (choice B N0).prepared.N)).mul
     (leadingStress_meanClass i)
   have hm : MeanClass (BaseContextAssembly.nativeStrip nominal standardRegion) 1
       (fun n x => -missingWeight (choice B N0).prepared.N (physicalScale n x) * leadingStress i n
-        x) := by
+          x) := by
     simpa only [MeanClass, UnweightedClass, one_mul, zero_add] using hc
   exact CurlClassBounds.class_congr hm (fun n x hx => (averagedDefect_eq B N0 n hx i).symm)
 
@@ -881,7 +907,7 @@ class, with no new threshold or primary choice and no assumption on the
 assembled covariance. -/
 theorem averagedDefect_meanClass (B N0 : ℕ) (i : Fin 2) (beta : ℝ) :
     MeanClass (BaseContextAssembly.nativeStrip nominal standardRegion) beta (averagedDefect B N0 i)
-      :=
+        :=
   memClass_of_finite_bands (averagedDefect_meanClass_one B N0 i)
     ((choice B N0).prepared.N + 1)
     (fun _ hn _ hx => averagedDefect_zero_tail B N0 hn hx i)
@@ -945,7 +971,7 @@ theorem tangent_virtual_bar_meanClass (B N0 : ℕ) :
       ((commonContext B).virtualTheta n x -
         (BaseContextAssembly.leadingVirtualStress certificate modulation n x).1) =
       StateMomentBalances.meanBar (tangentCovariance B N0 0 1) n x - (commonContext B).virtualTheta
-        n x
+          n x
     ring
   · apply CurlClassBounds.class_congr (CurlClassBounds.class_sub
       (averagedDefect_meanClass B N0 1 2) hhigh.2)
@@ -956,7 +982,7 @@ theorem tangent_virtual_bar_meanClass (B N0 : ℕ) :
       ((commonContext B).virtualAxial n x -
         (BaseContextAssembly.leadingVirtualStress certificate modulation n x).2) =
       StateMomentBalances.meanBar (tangentCovariance B N0 0 2) n x - (commonContext B).virtualAxial
-        n x
+          n x
     ring
 
 /-! ## Actual closed support and separation on the common chart
@@ -1037,14 +1063,18 @@ theorem slotAmplitude_supported {D h : ℝ} {vr vt : Plane}
       exact hout (covered_support (P.rawTangent_support hdet j k) _ hn)
   simp only [slotAmplitude, hz, mul_zero, Complex.ofReal_zero, Pi.zero_apply]
 
+/-- Absolute auxiliary, given by `(CommonCoverSolve.coverPower
+(CorrectionInitialization.CommonWindow.index h n)).symm x.2.2`. -/
 noncomputable def absoluteAuxiliary (n : ℕ) (x : Point) : Plane :=
   (CommonCoverSolve.coverPower (CorrectionInitialization.CommonWindow.index h n)).symm x.2.2
 
 theorem absoluteAuxiliary_continuous (n : ℕ) : Continuous (absoluteAuxiliary n) :=
   (CommonCoverSolve.coverPower (CorrectionInitialization.CommonWindow.index h
-    n)).symm.continuous.comp
+      n)).symm.continuous.comp
     (continuous_snd.comp continuous_snd)
 
+/-- Physical window, given by `(SquaredPartition.logCoordinate (physicalScale n x),
+physicalPosition n x)`. -/
 noncomputable def physicalWindow (n : ℕ) (x : Point) : LabelSumBounds.WindowPoint :=
   (SquaredPartition.logCoordinate (physicalScale n x), physicalPosition n x)
 
@@ -1064,15 +1094,17 @@ theorem physicalScale_continuousAt (n : ℕ) {x : Point}
     ContinuousAt (physicalScale n) x :=
   ((physicalScale_unweighted.smooth n).contDiffAt
     ((BaseContextAssembly.nativeStrip nominal standardRegion).isOpen_domain.mem_nhds
-      hx)).continuousAt
+        hx)).continuousAt
 
 theorem physicalWindow_continuousOn (n : ℕ) :
     ContinuousOn (physicalWindow n) (BaseContextAssembly.nativeStrip nominal standardRegion).domain
-      := by
+        := by
   intro x hx
   exact (((((physicalScale_continuousAt n hx).log (physicalScale_pos n hx).ne').neg).div_const
     (Real.log 2)).prodMk (physicalPosition_continuous n).continuousAt).continuousWithinAt
 
+/-- Cut amplitude, given by `((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude
+n`. -/
 noncomputable def cutAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) :
     FullPoint → HarmonicCalculus.ComplexVector :=
   ((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude n
@@ -1124,7 +1156,8 @@ theorem cutAmplitude_support (j : Fin 2) (L : Label B N0) (n : ℕ) {x : Point}
     change mask (CoordinateAlgebra.D h) (PrimaryGeometryAssembly.label nominal L)
       (physicalScale n x) (physicalPosition n x) ≠ 0
     rwa [← nativePoint_mask n hT L]
-  · rw [commonAmplitude_eq_source j L _ hp, SourcePair.actualAmplitude_eq] at hc
+  · rw [commonAmplitude_eq_source j L _ hp, SourcePair.actualAmplitude_eq]
+      at hc
     exact slotAmplitude_supported _ vectors_det _ _ _ _ _ j hc
 
 theorem cutAmplitude_tsupport_physical (j : Fin 2) (L : Label B N0) (n : ℕ) {x : Point}
@@ -1136,16 +1169,16 @@ theorem cutAmplitude_tsupport_physical (j : Fin 2) (L : Label B N0) (n : ℕ) {x
         (SlotColoring.nativeIndex h (signedLabelOf (L, j)).1)
         (slotSet h slots.radius radialVector temporalVector (signedLabelOf (L, j))) := by
   let U : Set FullPoint := Prod.fst ⁻¹' (BaseContextAssembly.nativeStrip nominal
-    standardRegion).domain
+      standardRegion).domain
   have hU : IsOpen U := (BaseContextAssembly.nativeStrip nominal
-    standardRegion).isOpen_domain.preimage continuous_fst
+      standardRegion).isOpen_domain.preimage continuous_fst
   have hxU : (x, theta) ∈ U := hx
   constructor
   · exact PhysicalWaveSum.closed_property_on_tsupport hU hxU
       (((physicalScale_continuousAt n hx).prodMk (physicalPosition_continuous n).continuousAt).comp
         continuous_fst.continuousAt)
       (PhysicalWaveSum.labelRegion_closed _ _) (fun y hy hn => (cutAmplitude_support j L n hy y.2
-        hn).1) ht
+          hn).1) ht
   · exact PhysicalWaveSum.closed_property_on_tsupport hU hxU
       ((absoluteAuxiliary_continuous n).comp continuous_fst).continuousAt
       (liftedSupport_isClosed _ (orientedRectangle_isCompact _ _ _ _))
@@ -1155,7 +1188,7 @@ theorem cutAmplitude_tsupport (j : Fin 2) (L : Label B N0) (n : ℕ) {x : Point}
     (hx : x ∈ (BaseContextAssembly.nativeStrip nominal standardRegion).domain) (theta : ℝ)
     (ht : (x, theta) ∈ tsupport (cutAmplitude j L n)) :
     physicalWindow n x ∈ LabelSumBounds.closedWindow (CoordinateAlgebra.D h) (signedLabelOf (L, j))
-      ∧
+        ∧
       absoluteAuxiliary n x ∈ SlotGeometry.liftedSupport
         (SlotColoring.nativeIndex h (signedLabelOf (L, j)).1)
         (slotSet h slots.radius radialVector temporalVector (signedLabelOf (L, j))) := by
@@ -1216,9 +1249,9 @@ theorem exactAmplitude_tsupport_disjoint (n : ℕ) {l m : Label B N0 × Fin 2} (
         tsupport ((piece standardRegion m.2 m.1).exactCoefficients.amplitude n)) :=
   (cutAmplitude_tsupport_disjoint n hlm).mono
     (inter_subset_inter_right _ ((piece standardRegion l.2
-      l.1).exactAmplitude_tsupport_subset_tangent n))
+        l.1).exactAmplitude_tsupport_subset_tangent n))
     (inter_subset_inter_right _ ((piece standardRegion m.2
-      m.1).exactAmplitude_tsupport_subset_tangent n))
+        m.1).exactAmplitude_tsupport_subset_tangent n))
 
 theorem velocity_tsupport_disjoint (n : ℕ) {l m : Label B N0 × Fin 2} (hlm : l ≠ m) :
     Disjoint
@@ -1330,7 +1363,7 @@ theorem piece_velocity_inactive_germ (l : Label B N0 × Fin 2) (n : ℕ) {x : Po
     (hl : l ∉ activeLabels standardRegion B N0 n) :
     (piece standardRegion l.2 l.1).velocity n =ᶠ[𝓝 (x, theta)] fun _ => 0 := by
   have ht := notMem_tsupport_iff_eventuallyEq.mpr (cutAmplitude_inactive_fullFiber_germ l n hs
-    theta hl)
+      theta hl)
   apply notMem_tsupport_iff_eventuallyEq.mp
   exact fun hv => ht ((piece standardRegion l.2 l.1).velocity_tsupport_subset_tangent n hv)
 

@@ -7,8 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicH2
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-!
 # A proved interior bound for ordinary three-dimensional harmonic functions
@@ -18,6 +19,9 @@ Sobolev inequality. It is independent of the harmonic function. The argument
 uses two actual Caccioppoli estimates; no harmonic mean-value theorem or
 interior regularity estimate is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,6 +51,8 @@ theorem localized_norm_le (h : Space → ℝ) (hLp : MemLp h 2 volume) :
       _ = ‖h x‖ := one_mul _
   simpa only [lpNorm_norm hLp.aestronglyMeasurable] using H
 
+/-- Harmonic interior constant, given by `embeddingConstant 3 2 (by norm_num) * (1 + (2 *
+Real.pi) ^ (-2 : ℤ) * (3 * Real.sqrt interiorSecondEnergyConstant))`. -/
 def harmonicInteriorConstant : ℝ :=
   embeddingConstant 3 2 (by norm_num) *
     (1 + (2 * Real.pi) ^ (-2 : ℤ) * (3 * Real.sqrt interiorSecondEnergyConstant))
@@ -58,7 +64,7 @@ theorem harmonicInteriorConstant_nonneg : 0 ≤ harmonicInteriorConstant := by
 /-- A genuine L²-to-pointwise interior estimate on the unit ball in R³. -/
 theorem harmonic_pointwise_halfBall (h : Space → ℝ) (hh : ContDiff ℝ ∞ h)
     (hLp : MemLp h 2 volume) (hharmonic : ∀ x ∈ Metric.ball 0 (1 : ℝ), Δ h x = 0)
-    (x : Space) (hx : x ∈ Metric.closedBall 0 (1/2 : ℝ)) :
+    (x : Space) (hx : x ∈ Metric.closedBall 0 (1 / 2 : ℝ)) :
     |h x| ≤ harmonicInteriorConstant * lpNorm h 2 volume := by
   have hc : HasCompactSupport (innerCutoff * h) := inner_compact.mul_right (f' := h)
   have H := scalar_pointwise_le_H2 (innerCutoff * h) (inner_smooth.mul hh) hc x
@@ -76,7 +82,7 @@ theorem harmonic_pointwise_halfBall (h : Space → ℝ) (hh : ContDiff ℝ ∞ h
     _ ≤ embeddingConstant 3 2 (by norm_num) *
         (lpNorm (innerCutoff * h) 2 volume + (2 * Real.pi) ^ (-2 : ℤ) *
           ∑ i : Fin 3, lpNorm (partialDerivative (partialDerivative (innerCutoff * h) i) i) 2
-            volume) := H
+              volume) := H
     _ ≤ embeddingConstant 3 2 (by norm_num) *
         (lpNorm h 2 volume + (2 * Real.pi) ^ (-2 : ℤ) *
           (3 * (Real.sqrt interiorSecondEnergyConstant * lpNorm h 2 volume))) := by

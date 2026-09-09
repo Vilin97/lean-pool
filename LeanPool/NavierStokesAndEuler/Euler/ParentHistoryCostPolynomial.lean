@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryParentCost
 public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentLabelCoefficients
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryPolynomialCost
+import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryParentCost
 
 /-! One fixed polynomial controls the complete history sensitivity
 envelope for all parent label constants and reciprocal time bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,10 +24,12 @@ namespace EulerParentHistoryCost
 open EulerPacketParentLabelBounds EulerPacketParentMeanCoercivity
   EulerTransverseHistoryBounds EulerTransverseEndpointDifference EulerPolynomialCost
 
+/-- Label history envelope, constructed using `parentDifferenceEnvelope`. -/
 def labelHistoryEnvelope (K Ti : ℝ) : ℝ :=
   parentDifferenceEnvelope Ti (frameAmplitude K) (gradientAmplitude K)
     (27*(frameAmplitude K)^2*gradientAmplitude K) (coefficientRadius K)
 
+/-- Label history polynomial as an element of `Polynomial ℝ`. -/
 def labelHistoryPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let v := Polynomial.C embeddingCost*X^2
@@ -40,7 +44,7 @@ def labelHistoryPolynomial : Polynomial ℝ :=
   let y := v*R
   let z := h*R
   let s := r*(1+d^2*(2*r^2)*a)*(2*X*d)
-  let e := (1+3*d^2*(2*r^2)*a+2*d^4*(2*r^2)^2*a^2)*(y+x)+
+  let e := (1+3*d^2*(2*r^2)*a+2*d^4*(2*r^2)^2*a^2)*(y+x) +
     (d^3*(2*r^2)+d^5*(2*r^2)^2*a)*z
   let sd := r*(2*X*e+(y+x)*s)
   let g := (4*ci^2*f^2*v+2*ci*v)*x+2*ci*f*y
@@ -54,7 +58,9 @@ theorem labelHistoryPolynomial_eval (P : ℝ) :
     slopeDifferenceEnvelope,slopeEnvelope,generatorDifferenceEnvelope,endpointDifferenceCost,
     gramInverseEnvelope,transportEnvelope,frameAmplitude,gradientAmplitude]
 
+/-- Label history constant, given by `coefficientCost labelHistoryPolynomial`. -/
 def labelHistoryConstant : ℝ := coefficientCost labelHistoryPolynomial
+/-- Label history power, given by `labelHistoryPolynomial.natDegree`. -/
 def labelHistoryPower : ℕ := labelHistoryPolynomial.natDegree
 
 theorem labelHistoryConstant_pos : 0 < labelHistoryConstant := coefficientCost_pos _

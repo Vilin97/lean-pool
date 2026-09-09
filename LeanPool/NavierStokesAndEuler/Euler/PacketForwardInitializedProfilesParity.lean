@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalAdmissible
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketReflection
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParity
 
 /-! Reflection parity of every zero-history profile, derived from the
 literal terminal wave and the prescribed coefficient symmetries. -/
+
+@[expose] public section
+
 
 noncomputable section
 

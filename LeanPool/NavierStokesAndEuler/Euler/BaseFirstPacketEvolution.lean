@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketChoice
-public import LeanPool.NavierStokesAndEuler.Euler.BasePacketFrameValues
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStateGeometry
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentStateGeometry
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStateGeometry
 
 /-! The first constructed packet supplies the physical low bounds and
 the actual center expansion needed by the first normal stage. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +26,7 @@ open Set EulerSmoothLimit EulerTransverseFrameCoordinates
 
 variable {A : Parent} (S : SmoothState A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   (hSym : ∀ x, -x ∈ support ↔ x ∈ support)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ support) (α : ℝ)
@@ -37,10 +38,11 @@ private theorem forwardChild_center_error
       (forwardInitializedCorrectionData (A.meanData H) (A.transverseData m hm J support hSupport)
         rfl δ hδ ξ hs α (A.sourceAgreement m hm J support hSupport H) N hN k hk))
     (G : EulerPhysicalGraphFlowBounds.Data period A.T)
-    (hG : G.A=Q.liftedPacketCoefficient period
+    (hG : G.A =
+ Q.liftedPacketCoefficient period
       (forwardInitializedNormalizedField (A.meanData H) (A.transverseData m hm J support hSupport)
         rfl δ hδ ξ hs α N k))
-    (hgraph : ∀ t q, graphConstraint k m (G.A.field t q)=0)
+    (hgraph : ∀ t q, graphConstraint k m (G.A.field t q) = 0)
     (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
     (labels : LabelData (A.child G k m hgraph nextEll hnext hnext1))
     (C : Icc (0 : ℝ) A.T → Space →L[ℝ] Space) (error : ℝ)
@@ -49,11 +51,13 @@ private theorem forwardChild_center_error
         (forwardInitializedApproximationResidual (A.meanData H)
           (A.transverseData m hm J support hSupport) rfl δ hδ ξ hs α
           (A.sourceAgreement m hm J support hSupport H) N hN k hk)
-        k S.evolution.inverse t) 0-C t‖ ≤ error)
+        k S.evolution.inverse t) 0 -
+ C t‖ ≤ error)
     (t : Icc (0 : ℝ) A.T) :
     ‖fderiv ℝ (S.velocityIncrement
       (S.forwardChild H m hm J support hSupport hSym δ hδ ξ hs α N hN k hk
-        Q G hG hgraph nextEll hnext hnext1 labels) t) 0-C t‖ ≤ error := by
+        Q G hG hgraph nextEll hnext hnext1 labels) t) 0 -
+ C t‖ ≤ error := by
   exact S.packetChild_center_error m hm J support hSupport Q
     (forwardInitializedApproximationResidual (A.meanData H)
       (A.transverseData m hm J support hSupport) rfl δ hδ ξ hs α
@@ -96,13 +100,13 @@ theorem physical_bounds (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
     firstNormal firstNormal_unit firstFrame support compact F.Q res k (mul_inv_cancel₀ hk.pos.ne')
     δ hchild firstCoordinate hδ hδ1 hh
     (k^(-(1/4 : ℝ))) (k^(-(1/4 : ℝ))) initialCoefficientCost initialCoefficientCost
-      initialCoefficientCost
+        initialCoefficientCost
     F.errors (firstPacket_primary_size β hβ ell hell hell1 T hT hTB)
     (firstPacket_primary_flux β hβ ell hell hell1 T hT hTB) t x
     (packetBase_physical_strain β hβ ell hell hell1 T hT hTB t x)
     (packetBase_physical_force β hβ ell hell hell1 T hT hTB t x)
     (S.evolution.force_quadratic_upper_of_lowBounds (packetBaseLowBounds β hβ ell hell hell1 T hT
-      hTB) t x)
+        hTB) t x)
   dsimp only [S, M, D, res, firstPacketMeanData, firstPacketData] at h
   constructor
   · dsimp only [state, firstPacketState, SmoothState.forwardChild,
@@ -115,16 +119,16 @@ theorem physical_bounds (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
     with_reducible exact h.2.1
 
 theorem center_error (t : Icc (0 : ℝ) T) :
-    ‖fderiv ℝ ((packetBaseState β hβ ell hell hell1 T hT hTB).velocityIncrement F.state t) 0-
+    ‖fderiv ℝ ((packetBaseState β hβ ell hell hell1 T hT hTB).velocityIncrement F.state t) 0 -
       ((δ*hchild)*deriv (profile δ)
         (k*⟪firstNormal,(packetBaseState β hβ ell hell hell1 T hT hTB).evolution.inverse.normalized
-          t 0⟫_ℝ)) •
+            t 0⟫_ℝ)) •
         rankOne ℝ (canonicalVelocity (firstPacketData β hβ ell hell hell1 T hT hTB) firstCoordinate
-          t
+            t
           ((packetBaseState β hβ ell hell hell1 T hT hTB).evolution.inverse.normalized t 0))
           ((firstPacketData β hβ ell hell hell1 T hT hTB).normal.field t
             ((packetBaseState β hβ ell hell hell1 T hT hTB).evolution.inverse.normalized t 0))‖ ≤
-              k^(-(1/4 : ℝ)) := by
+                k^(-(1/4 : ℝ)) := by
   let S := packetBaseState β hβ ell hell hell1 T hT hTB
   let H := packetBaseLowBounds β hβ ell hell hell1 T hT hTB
   let D := firstPacketData β hβ ell hell hell1 T hT hTB

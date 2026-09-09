@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedUnitBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketAmplitude
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketBudget
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPaths
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketAmplitude
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedUnitBounds
 
 /-!
 The actual complete transverse inverse has one source-only radius budget.
 Its bounds are linear in the forcing amplitude and independent of grade.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,8 +37,9 @@ variable {P : ℝ} [Fact (0 < P)]
   (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1)
   (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
   (hforce : ∀ n, block directions q (fun a => pathTranslate P a
-    (normalize L.fullProfile L.fullProfile_pos (HistoryData.forcingPath G))) n 0 ≤ A*majorant L.R d
-      n)
+    (normalize L.fullProfile L.fullProfile_pos (HistoryData.forcingPath G))) n 0 ≤ A * majorant L.R
+        d
+        n)
 
 include hdir hA hforce
 

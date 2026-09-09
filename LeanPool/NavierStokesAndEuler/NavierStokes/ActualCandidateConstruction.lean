@@ -7,16 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CyclePhysicalPrefixes
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CycleStateCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialMeanEquation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualIterationLedger
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanPhysicalData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanStageData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
-
-@[expose] public section
 
 /-!
 # The same initialized correction sequence and its physical prefixes
@@ -25,6 +18,9 @@ Every state below comes from the actual initialized primary choice and the
 fixed actual cycle parameters. The finite labels, phase carriers, base error,
 and current pressure alias are retained through the literal recurrence.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,16 +33,23 @@ open scoped ContDiff Topology BigOperators
 
 universe u
 
+/-- Index: an abbreviation for `ActualInitialization.Index`. -/
 abbrev Index := ActualInitialization.Index
+/-- Point: an abbreviation for `CorrectionStep.CyclePoint`. -/
 abbrev Point := CorrectionStep.CyclePoint
+/-- Full: an abbreviation for `Point × ℝ`. -/
 abbrev Full := Point × ℝ
 
+/-- Parameters, given by `ActualCycleParameters.fixedParameters B N0`. -/
 noncomputable def parameters (B N0 : ℕ) : CycleParameters (Index B N0) :=
   ActualCycleParameters.fixedParameters B N0
 
+/-- Parameter sequence, defined pointwise by `parameters B N0`. -/
 noncomputable def parameterSequence (B N0 : ℕ) : ℕ → CycleParameters (Index B N0) :=
   fun _ => parameters B N0
 
+/-- Cycle, given by `CycleState.iterate (parameterSequence B N0) (commonContext B)
+(ActualInitialization.initialCycleState B N0)`. -/
 noncomputable def cycle (B N0 : ℕ) : ℕ → CycleState (Index B N0) :=
   CycleState.iterate (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0)
@@ -92,7 +95,7 @@ theorem cycle_representation (B N0 j : ℕ) :
       (cycle B N0 j).axisymmetricAlias :=
   CycleState.iterate_representation (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0)
-      (ActualInitialization.initialCycleState_represents B N0)
+        (ActualInitialization.initialCycleState_represents B N0)
     (cycle_signed_carrier B N0) j
 
 theorem cycle_coefficientBands (B N0 j : ℕ) :
@@ -123,7 +126,7 @@ theorem cycle_base_error (B N0 j : ℕ) :
 
 theorem cycle_reconstructed (B N0 j : ℕ) :
     (VariableGaugeMean.reconstructState commonGauge (commonContext B) (cycle B N0
-      j).state).pressure =
+        j).state).pressure =
       (cycle B N0 j).state.pressure := by
   cases j with
   | zero => exact congrArg State.pressure (ActualInitialization.initialState_reconstructed B N0)
@@ -131,10 +134,13 @@ theorem cycle_reconstructed (B N0 j : ℕ) :
       exact (parameters B N0).next_reconstructed (cycle B N0 j).coefficients
         (commonContext B) (cycle B N0 j).state
 
+/-- Initial temporal alias, constructed using `VariableGaugeMean.temporalAliasState`. -/
 noncomputable def initialTemporalAlias (B N0 : ℕ) : Oscillation Point :=
   VariableGaugeMean.temporalAliasState commonGauge h (CorrectionInitialization.CommonWindow.index h)
     (commonContext B) (ActualInitialization.primaryState B N0)
 
+/-- Temporal alias, given by `CycleStateCoherence.temporalAliasAt (parameterSequence B N0)
+(commonContext B) (ActualInitialization.initialCycleState B N0) j`. -/
 noncomputable def temporalAlias (B N0 j : ℕ) : Oscillation Point :=
   CycleStateCoherence.temporalAliasAt (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) j
@@ -145,7 +151,7 @@ theorem cycle_alias_error (B N0 J : ℕ) :
     (cycle B N0 J).state.errors.aliasError = initialTemporalAlias B N0 +
       (∑ j ∈ Finset.range J, temporalAlias B N0 j) +
         VariableGaugeMean.pressureAliasState commonGauge (commonContext B) (cycle B N0 J).state :=
-          by
+            by
   apply CycleStateCoherence.iterate_alias_separated (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) commonGauge (fun _ => rfl)
     (initialTemporalAlias B N0)
@@ -165,6 +171,7 @@ theorem firstBand_ge_choice (B N0 : ℕ) :
 theorem firstBand_ge (B N0 : ℕ) : N0 ≤ firstBand B N0 :=
   (ActualCycleParameters.bandFloor_ge B N0).trans (firstBand_ge_choice B N0)
 
+/-- Qbig, given by `ChartScales.Q (firstBand B N0)`. -/
 noncomputable def qbig (B N0 : ℕ) : ℝ := ChartScales.Q (firstBand B N0)
 
 theorem qbig_pos (B N0 : ℕ) : 0 < qbig B N0 := ChartScales.Q_pos _
@@ -199,6 +206,7 @@ theorem nativeScale_lt_qbig (B N0 n : ℕ) (hn : residualBand B N0 ≤ n)
       mul_le_mul_of_nonneg_right (ActualPrimaryCovariance.Q_antitone hn) (by norm_num)
     _ = qbig B N0 := by rw [mul_comm, twice_residual_scale]
 
+/-- Physical domain, given by `CutStageEstimates.physicalSublevel h (qbig B N0)`. -/
 noncomputable def physicalDomain (B N0 : ℕ) : Set SpaceTime :=
   CutStageEstimates.physicalSublevel h (qbig B N0)
 
@@ -215,16 +223,20 @@ theorem initial_invariant (B N0 : ℕ) :
 
 /-! ## One selected initialization -/
 
+/-- Selected budget, given by `0`. -/
 noncomputable def selectedBudget : ℕ := 0
 
+/-- Selected threshold, given by `ActualCarrierGeometry.startingThreshold 0`. -/
 noncomputable def selectedThreshold : ℕ := ActualCarrierGeometry.startingThreshold 0
 
 theorem selectedThreshold_geometry : ActualCarrierGeometry.geometricThreshold ≤ selectedThreshold :=
   ActualCarrierGeometry.geometricThreshold_le_startingThreshold 0
 
+/-- Selected cycle, given by `cycle selectedBudget selectedThreshold`. -/
 noncomputable def selectedCycle : ℕ → CycleState (Index selectedBudget selectedThreshold) :=
   cycle selectedBudget selectedThreshold
 
+/-- Selected qbig, given by `qbig selectedBudget selectedThreshold`. -/
 noncomputable def selectedQbig : ℝ := qbig selectedBudget selectedThreshold
 
 theorem selectedQbig_pos : 0 < selectedQbig := qbig_pos _ _
@@ -242,38 +254,49 @@ theorem selected_initial_meanHypotheses :
 
 /-! ## Exact finite physical prefixes in any valid polar chart -/
 
+/-- Graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
+(CorrectionInitialization.CommonWindow.index h n)`. -/
 noncomputable def graph (n : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
-    (CorrectionInitialization.CommonWindow.index h n)
+      (CorrectionInitialization.CommonWindow.index h n)
 
+/-- Base pressure, given by `ActualBaseResidual.basePressure certificate modulation upper B n`. -/
 noncomputable def basePressure (B n : ℕ) : Full → ℝ :=
   ActualBaseResidual.basePressure certificate modulation upper B n
 
+/-- Chart velocity, given by `CyclePhysicalPrefixes.velocity a i (graph n) n (commonContext B)
+(cycle B N0 j).state`. -/
 noncomputable def chartVelocity (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n j : ℕ) :
-  VelocityField :=
+    VelocityField :=
   CyclePhysicalPrefixes.velocity a i (graph n) n (commonContext B) (cycle B N0 j).state
 
+/-- Chart pressure, given by `CyclePhysicalPrefixes.pressure a i (graph n) n (basePressure B n)
+(cycle B N0 j).state`. -/
 noncomputable def chartPressure (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n j : ℕ) :
-  PressureField :=
+    PressureField :=
   CyclePhysicalPrefixes.pressure a i (graph n) n (basePressure B n) (cycle B N0 j).state
 
+/-- Chart velocity stages, constructed using `CyclePhysicalPrefixes.velocityStages`. -/
 noncomputable def chartVelocityStages (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
-  VelocityField :=
+    VelocityField :=
   CyclePhysicalPrefixes.velocityStages (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) a i (graph n) n
 
+/-- Chart pressure stages, constructed using `CyclePhysicalPrefixes.pressureStages`. -/
 noncomputable def chartPressureStages (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
-  PressureField :=
+    PressureField :=
   CyclePhysicalPrefixes.pressureStages (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) a i (graph n) n (basePressure B n)
 
+/-- Chart potential parts, constructed using `CyclePhysicalPrefixes.potentialParts`. -/
 noncomputable def chartPotentialParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
-  VelocityField :=
+    VelocityField :=
   CyclePhysicalPrefixes.potentialParts (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) a i (graph n) n
 
+/-- Chart direct stages, constructed using `CyclePhysicalPrefixes.directStages`. -/
 noncomputable def chartDirectStages (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
-  VelocityField :=
+    VelocityField :=
   CyclePhysicalPrefixes.directStages (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) a i (graph n) n
 
@@ -299,7 +322,7 @@ theorem chart_velocity_split (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n j
 chart on its open validity set. Finite summation and the genuine residual
 preserve precisely this local agreement. -/
 
-theorem uncutPrefix_eqOn {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+theorem uncutPrefix_eqOn {V : Type*} [NormedAddCommGroup V]
     {U : Set SpaceTime} {f g : ℕ → SpaceTime → V}
     (hf : ∀ j, EqOn (f j) (g j) U) (N : ℕ) :
     EqOn (DiagonalJetBounds.uncutPrefix f N) (DiagonalJetBounds.uncutPrefix g N) U := by
@@ -372,14 +395,19 @@ fixed validity strip. It is independent of the scalar being represented.
 Consequently sums and differences retain the original absolute mean and
 pressure; no new integration constant or choice enters a later stage. -/
 
+/-- Mean atlas, given by `ActualMeanPhysicalData.initialAtlas (firstBand B N0)`. -/
 noncomputable def meanAtlas (B N0 : ℕ) :=
   ActualMeanPhysicalData.initialAtlas (firstBand B N0)
 
+/-- Mean field, given by `(meanAtlas B N0).physical standardRegion.carrier degree f ∘
+PhysicalMeanJetBounds.physicalPoint h`. -/
 noncomputable def meanField (B N0 : ℕ) (degree : ℝ)
     (f : ActualMeanPhysicalData.Scalar) : PressureField :=
   (meanAtlas B N0).physical standardRegion.carrier degree f ∘
     PhysicalMeanJetBounds.physicalPoint h
 
+/-- Mean angular field, defined pointwise by `meanField B N0 degree f w •
+PhysicalMeanJetBounds.angularVector (PhysicalGraphBounds.radialProjection w)`. -/
 noncomputable def meanAngularField (B N0 : ℕ) (degree : ℝ)
     (f : ActualMeanPhysicalData.Scalar) : VelocityField :=
   fun w => meanField B N0 degree f w •
@@ -409,17 +437,24 @@ theorem meanAngularField_sub (B N0 : ℕ) (degree : ℝ) (f g : ActualMeanPhysic
   funext w
   simp only [meanAngularField, meanField_sub, Pi.sub_apply, sub_smul]
 
+/-- Angular native stages as an element of `ℕ → ActualMeanPhysicalData.Scalar`. -/
 noncomputable def angularNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalData.Scalar :=
   fun k => Nat.casesOn k (cycle B N0 0).state.mean.angular
     (fun j => (cycle B N0 (j + 1)).state.mean.angular - (cycle B N0 j).state.mean.angular)
 
+/-- Pressure native stages, defined pointwise by `Nat.casesOn k (cycle B N0 0).state.pressure
+(fun j => (cycle B N0 (j + 1)).state.pressure - (cycle B N0 j).state.pressure)`. -/
 noncomputable def pressureNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalData.Scalar :=
   fun k => Nat.casesOn k (cycle B N0 0).state.pressure
     (fun j => (cycle B N0 (j + 1)).state.pressure - (cycle B N0 j).state.pressure)
 
+/-- Angular mean stages, defined pointwise by `meanAngularField B N0 (CoordinateAlgebra.A h)
+(angularNativeStages B N0 j)`. -/
 noncomputable def angularMeanStages (B N0 : ℕ) : ℕ → VelocityField :=
   fun j => meanAngularField B N0 (CoordinateAlgebra.A h) (angularNativeStages B N0 j)
 
+/-- Pressure mean stages, defined pointwise by `meanField B N0 (2 * CoordinateAlgebra.A h)
+(pressureNativeStages B N0 j)`. -/
 noncomputable def pressureMeanStages (B N0 : ℕ) : ℕ → PressureField :=
   fun j => meanField B N0 (2 * CoordinateAlgebra.A h) (pressureNativeStages B N0 j)
 
@@ -436,7 +471,7 @@ theorem angularNativeStages_succ (B N0 j : ℕ) :
   change (_ + _) + _ - _ = _
   abel
 
-theorem uncutPrefix_succ {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+theorem uncutPrefix_succ {V : Type*} [NormedAddCommGroup V]
     (f : ℕ → SpaceTime → V) (N : ℕ) :
     DiagonalJetBounds.uncutPrefix f (N + 1) = DiagonalJetBounds.uncutPrefix f N + f N := by
   funext w
@@ -470,23 +505,28 @@ theorem pressureMeanStages_prefix (B N0 J : ℕ) :
       rw [meanField_sub]
       abel
 
+/-- Temporal native, constructed using `VariableGaugeMean.temporalPotential`. -/
 noncomputable def temporalNative (B N0 j : ℕ) : ActualMeanPhysicalData.Scalar :=
   VariableGaugeMean.temporalPotential (parameters B N0).gauge (parameters B N0).timeExponent
     (parameters B N0).commonIndex (commonContext B)
     ((parameters B N0).afterSigned (cycle B N0 j).coefficients
       (commonContext B) (cycle B N0 j).state)
 
+/-- Rank native, constructed using `VariableGaugeMean.rankPotential`. -/
 noncomputable def rankNative (B N0 j : ℕ) : ActualMeanPhysicalData.Scalar :=
   VariableGaugeMean.rankPotential (parameters B N0).gauge (parameters B N0).rank (commonContext B)
     ((parameters B N0).afterTemporal (cycle B N0 j).coefficients
       (commonContext B) (cycle B N0 j).state)
 
+/-- Stream native stages as an element of `ℕ → ActualMeanPhysicalData.Scalar`. -/
 noncomputable def streamNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalData.Scalar :=
   fun k => Nat.casesOn k
     (ActualMeanPhysicalData.initialTemporalScalar B N0 + ActualMeanPhysicalData.initialRankScalar B
-      N0)
+        N0)
     (fun j => temporalNative B N0 j + rankNative B N0 j)
 
+/-- Stream mean stages, defined pointwise by `meanAngularField B N0 (CoordinateAlgebra.A h - 1 /
+2) (streamNativeStages B N0 j)`. -/
 noncomputable def streamMeanStages (B N0 : ℕ) : ℕ → VelocityField :=
   fun j => meanAngularField B N0 (CoordinateAlgebra.A h - 1 / 2) (streamNativeStages B N0 j)
 
@@ -502,6 +542,8 @@ theorem pressureMeanStages_zero (B N0 : ℕ) :
     pressureMeanStages B N0 0 =
       (ActualMeanPhysicalData.initialPressureFamily B N0 (firstBand B N0)).field := rfl
 
+/-- Mean cycle input: an abbreviation for `ActualMeanPhysicalData.InitialCycleInput B N0
+(firstBand B N0) (parameterSequence B N0)`. -/
 abbrev MeanCycleInput (B N0 : ℕ) :=
   ActualMeanPhysicalData.InitialCycleInput B N0 (firstBand B N0) (parameterSequence B N0)
 
@@ -522,18 +564,20 @@ theorem pressureMeanStages_succ {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ)
     pressureMeanStages B N0 (j + 1) =
       ((ActualMeanPhysicalData.initialCycleData H).pressureIncrementFamily j).field := rfl
 
+/-- Chart mean pressure parts, constructed using `CyclePhysicalPrefixes.polarPressureMap`. -/
 noncomputable def chartMeanPressureParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n j : ℕ) : PressureField :=
   CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
     (fun x => pressureNativeStages B N0 j n x.1))
 
+/-- Chart stream parts as an element of `ℕ → VelocityField`. -/
 noncomputable def chartStreamParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n : ℕ) : ℕ → VelocityField :=
   fun k => Nat.casesOn k
     (CyclePhysicalPrefixes.polarVelocityMap a i (CyclePhysicalPrefixes.velocityMap (graph n)
       (CyclePhysicalPrefixes.meridionalComponents (cycle B N0 0).state.mean n)))
     (fun j => CyclePhysicalPrefixes.polarVelocityMap a i (CyclePhysicalPrefixes.velocityMap (graph
-      n)
+        n)
       (CyclePhysicalPrefixes.meridionalComponents
         ((parameters B N0).temporalIncrement (cycle B N0 j).coefficients
           (commonContext B) (cycle B N0 j).state) n +
@@ -611,35 +655,40 @@ theorem streamMeanStages_curl_on_chart {B N0 : ℕ} (H : MeanCycleInput B N0) (j
   | zero => exact ActualMeanPhysicalData.initialStream_curl B N0 (firstBand B N0) n hn ha i ht hu hw
   | succ j => exact ActualMeanPhysicalData.cycleStream_curl H j n hn ha i ht hu hw
 
+/-- Chart base velocity, constructed using `CyclePhysicalPrefixes.polarVelocityMap`. -/
 noncomputable def chartBaseVelocity (B : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : VelocityField
-  :=
+    :=
   CyclePhysicalPrefixes.polarVelocityMap a i (CyclePhysicalPrefixes.velocityMap (graph n)
     (PhysicalResidualBridge.baseComponents (commonContext B) n))
 
+/-- Chart base pressure, given by `CyclePhysicalPrefixes.polarPressureMap a i
+(CyclePhysicalPrefixes.pressureMap (graph n) (basePressure B n))`. -/
 noncomputable def chartBasePressure (B : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : PressureField
-  :=
+    :=
   CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
     (basePressure B n))
 
+/-- Chart wave parts as an element of `ℕ → VelocityField`. -/
 noncomputable def chartWaveParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n : ℕ) : ℕ → VelocityField :=
   fun k => Nat.casesOn k
     (CyclePhysicalPrefixes.polarVelocityMap a i (CyclePhysicalPrefixes.velocityMap (graph n)
       ((cycle B N0 0).state.oscillation n)))
     (fun j => CyclePhysicalPrefixes.polarVelocityMap a i (CyclePhysicalPrefixes.velocityMap (graph
-      n)
+        n)
       ((parameters B N0).particularVelocity (cycle B N0 j).coefficients
           (commonContext B) (cycle B N0 j).state n +
         (parameters B N0).signedVelocity (cycle B N0 j).coefficients
           (commonContext B) (cycle B N0 j).state n)))
 
+/-- Chart wave pressure parts as an element of `ℕ → PressureField`. -/
 noncomputable def chartWavePressureParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n : ℕ) : ℕ → PressureField :=
   fun k => Nat.casesOn k
     (CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
       ((cycle B N0 0).state.oscillatoryPressure n)))
     (fun j => CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph
-      n)
+        n)
       ((parameters B N0).particularPressure (cycle B N0 j).coefficients
           (commonContext B) (cycle B N0 j).state n +
         (parameters B N0).signedPressure (cycle B N0 j).coefficients
@@ -684,14 +733,14 @@ theorem chartPressureParts_zero (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (
   change CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
     (basePressure B n + (cycle B N0 0).state.totalPressureIncrement n)) =
     CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
-      (basePressure B n)) +
+        (basePressure B n)) +
     CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
       ((cycle B N0 0).state.oscillatoryPressure n)) +
     CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
       (fun x => (cycle B N0 0).state.pressure n x.1))
   have he : (cycle B N0 0).state.totalPressureIncrement n =
       (fun x => (cycle B N0 0).state.pressure n x.1) + (cycle B N0 0).state.oscillatoryPressure n
-        := rfl
+          := rfl
   rw [he]
   simp only [map_add]
   abel
@@ -732,7 +781,7 @@ theorem graph_cylinderPoint (n : ℕ) (z : SpaceTime) :
     rw [Real.sqrt_eq_rpow, ← Real.rpow_add hQ]
     norm_num
   have hd : ChartScales.Q n ^ CoordinateAlgebra.D h * ChartScales.Q n ^ (-CoordinateAlgebra.D h) =
-    1 := by
+      1 := by
     rw [← Real.rpow_add hQ]
     simp
   have ht : ChartScales.Q n * ChartScales.Q n ^ (-1 : ℝ) = 1 := by
@@ -758,8 +807,8 @@ theorem graph_cylinderPoint (n : ℕ) (z : SpaceTime) :
       change Real.sqrt (ChartScales.Q n) * (ChartScales.Q n ^ (-(1 / 2 : ℝ)) * z.2 0) = z.2 0
       rw [← mul_assoc, hs, one_mul]
     · simp [ActualBaseResidual.cylinderPoint, AxisymmetricResidual.pack,
-      ProblemStatement.coordinateVector, PhysicalResidualTZ.graphMapTZ,
-      PhysicalResidualBridge.ScaledGraph.map,
+        ProblemStatement.coordinateVector, PhysicalResidualTZ.graphMapTZ,
+            PhysicalResidualBridge.ScaledGraph.map,
         PhysicalResidualTZ.swapCylinder_apply]
     · simp only [ActualBaseResidual.cylinderPoint]
       simp only [AxisymmetricResidual.pack, ProblemStatement.coordinateVector,
@@ -789,10 +838,10 @@ theorem graph_mem_baseDomain (n : ℕ) {z : SpaceTime} (ht : z.1 < 1) (hr : 0 < 
 
 theorem base_velocity_on_cylinder (B n : ℕ) {z : SpaceTime} (ht : z.1 < 1) (hr : 0 < z.2 0) :
     CyclePhysicalPrefixes.velocityMap (graph n) (PhysicalResidualBridge.baseComponents
-      (commonContext B) n) z =
+        (commonContext B) n) z =
       CylindricalResidual.frame (-(z.2 1))
         (FinalSlowBase.velocity certificate modulation upper B (z.1, CylindricalResidual.chart
-          z.2)) := by
+            z.2)) := by
   have hb := ActualBaseResidual.velocityAtScale_eq_baseComponents certificate modulation upper B
     (CorrectionInitialization.CommonWindow.index h) n (graph_mem_baseDomain n ht hr)
   change ActualBaseResidual.velocityAtScale certificate modulation upper B (ChartScales.Q n)
@@ -817,7 +866,7 @@ theorem base_velocity_on_cylinder (B n : ℕ) {z : SpaceTime} (ht : z.1 < 1) (hr
 theorem base_pressure_on_cylinder (B n : ℕ) (z : SpaceTime) :
     CyclePhysicalPrefixes.pressureMap (graph n) (basePressure B n) z =
       FinalSlowBase.pressure certificate modulation upper B (z.1, CylindricalResidual.chart z.2) :=
-        by
+          by
   change (ChartScales.Q n ^ (-CoordinateAlgebra.A h)) ^ 2 *
     (ChartScales.Q n ^ (2 * CoordinateAlgebra.A h) *
       FinalSlowBase.pressure certificate modulation upper B
@@ -826,7 +875,7 @@ theorem base_pressure_on_cylinder (B n : ℕ) (z : SpaceTime) :
   rw [graph_physicalPoint, pow_two, ← mul_assoc, ← Real.rpow_add (ChartScales.Q_pos n),
     ← Real.rpow_add (ChartScales.Q_pos n)]
   have he : -CoordinateAlgebra.A h + -CoordinateAlgebra.A h + 2 * CoordinateAlgebra.A h = 0 := by
-    ring
+      ring
   rw [he, Real.rpow_zero, one_mul]
 
 theorem chartBaseVelocity_eq (B : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) (n : ℕ)
@@ -864,18 +913,24 @@ theorem basePotential_curl_on_chart (B : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarC
 
 /-! ## Constructed direct angular and mean-stream stage data -/
 
+/-- Direct data as an element of `ℕ → DirectAngularDiagonal.AngularData
+(LocalAngularDiagonal.localSlowDomain h (qbig B N0))`. -/
 noncomputable def directData {B N0 : ℕ} (H : MeanCycleInput B N0) :
     ℕ → DirectAngularDiagonal.AngularData (LocalAngularDiagonal.localSlowDomain h (qbig B N0)) :=
   fun k => Nat.casesOn k
     (ActualMeanStageData.initialAngularData B N0 (firstBand B N0) (qbig B N0) le_rfl)
     (fun j => ActualMeanStageData.cycleAngularData H j (qbig B N0) le_rfl)
 
+/-- Stream data as an element of `ℕ → DirectAngularDiagonal.AngularData
+(LocalAngularDiagonal.localSlowDomain h (qbig B N0))`. -/
 noncomputable def streamData {B N0 : ℕ} (H : MeanCycleInput B N0) :
     ℕ → DirectAngularDiagonal.AngularData (LocalAngularDiagonal.localSlowDomain h (qbig B N0)) :=
   fun k => Nat.casesOn k
     (ActualMeanStageData.initialStreamData B N0 (firstBand B N0) (qbig B N0) le_rfl)
     (fun j => ActualMeanStageData.cycleStreamData H j (qbig B N0) le_rfl)
 
+/-- Mean stream support, given by `MixedAxisPreservation.AngularSupport.ofAngularData
+(streamData H j) (fun _ hw => hw)`. -/
 noncomputable def meanStreamSupport {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ) :
     MixedAxisPreservation.AngularSupport (MixedAxisPreservation.localDomain h (qbig B N0)) :=
   MixedAxisPreservation.AngularSupport.ofAngularData (streamData H j) (fun _ hw => hw)
@@ -885,7 +940,7 @@ theorem directData_field {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ) :
   cases j with
   | zero =>
       exact (ActualMeanStageData.initialAngularData_field B N0 (firstBand B N0) (qbig B N0)
-        le_rfl).trans
+          le_rfl).trans
         (angularMeanStages_zero B N0).symm
   | succ j =>
       exact (ActualMeanStageData.cycleAngularData_field H j (qbig B N0) le_rfl).trans
@@ -896,7 +951,7 @@ theorem streamData_field {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ) :
   cases j with
   | zero =>
       exact (ActualMeanStageData.initialStreamData_field B N0 (firstBand B N0) (qbig B N0)
-        le_rfl).trans
+          le_rfl).trans
         (streamMeanStages_zero B N0).symm
   | succ j =>
       exact (ActualMeanStageData.cycleStreamData_field H j (qbig B N0) le_rfl).trans
@@ -909,7 +964,7 @@ theorem angularMeanStages_smooth {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ
     ContDiffOn ℝ ∞ (angularMeanStages B N0 j) (physicalDomain B N0) := by
   rw [← directData_field H j]
   exact LocalAngularDiagonal.rawSeries_smooth outgoing.data.h_pos outgoing.data.h_lt_half
-    (directData H) j
+      (directData H) j
 
 theorem streamMeanStages_smooth {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ) :
     ContDiffOn ℝ ∞ (streamMeanStages B N0 j) (physicalDomain B N0) := by
@@ -923,7 +978,7 @@ theorem angularMeanStages_shrinkingSupport {B N0 : ℕ} (H : MeanCycleInput B N0
   cases j with
   | zero =>
       have hh := (ActualMeanStageData.initial_shrinkingSupport B N0 (firstBand B N0) (qbig B N0)
-        le_rfl).1
+          le_rfl).1
       erw [ActualMeanStageData.initialAngularSupport_field] at hh
       simp only [angularMeanStages_zero]
       exact hh
@@ -939,7 +994,7 @@ theorem streamMeanStages_shrinkingSupport {B N0 : ℕ} (H : MeanCycleInput B N0)
   cases j with
   | zero =>
       have hh := (ActualMeanStageData.initial_shrinkingSupport B N0 (firstBand B N0) (qbig B N0)
-        le_rfl).2.2.2
+          le_rfl).2.2.2
       erw [ActualMeanStageData.initialStreamSupport_field] at hh
       simp only [streamMeanStages_zero]
       exact hh
@@ -974,19 +1029,21 @@ theorem pressureMeanStages_shrinkingSupport {B N0 : ℕ} (H : MeanCycleInput B N
 /-! The stage constructors retain the actual copy data. The wave producers
 supply these records; the mean field is fixed by the same cycle above. -/
 
+/-- Initial potential stage, bundling `waveCount`, `waves`, `streamCount`, `streams`. -/
 noncomputable def initialPotentialStage (B N0 : ℕ)
     (wave : MixedAxisPreservation.CopyPotential.{u} h) :
     MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h (qbig B N0))
-      where
+        where
   waveCount := 1
   waves _ := wave
   streamCount := 1
   streams _ := ActualMeanStageData.initialStreamSupport B N0 (firstBand B N0) (qbig B N0) le_rfl
 
+/-- Positive potential stage, bundling `waveCount`, `waves`, `streamCount`, `streams`. -/
 noncomputable def positivePotentialStage {B N0 : ℕ} (H : MeanCycleInput B N0)
     (j : ℕ) (particular signed : MixedAxisPreservation.CopyPotential.{u} h) :
     MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h (qbig B N0))
-      where
+        where
   waveCount := 2
   waves := ![particular, signed]
   streamCount := 1
@@ -999,7 +1056,8 @@ theorem initialPotentialStage_field (B N0 : ℕ)
   change (∑ _ : Fin 1, wave.field w) +
     (∑ _ : Fin 1, (ActualMeanStageData.initialStreamSupport B N0 (firstBand B N0)
       (qbig B N0) le_rfl).field w) = _
-  simp [streamMeanStages_zero]
+  simp only [Finset.univ_unique, Fin.default_eq_zero, Fin.isValue, Finset.sum_const,
+    Finset.card_singleton, one_smul, streamMeanStages_zero, Pi.add_apply, add_right_inj]
   erw [ActualMeanStageData.initialStreamSupport_field]
 
 theorem positivePotentialStage_field {B N0 : ℕ} (H : MeanCycleInput B N0)

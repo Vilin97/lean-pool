@@ -6,15 +6,25 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
-public import LeanPool.NavierStokesAndEuler.Euler.VolumeSobolevComposition
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
+import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
+import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Gevrey-two composition with the outer derivatives in actual L².
 Only the inner positive derivatives are bounded in sup norm.  The outer
 L² norm is transported by a measure-preserving map, so it is not replaced
 by a pointwise bound or by a volume of the ambient domain. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +39,7 @@ variable {E F : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Inner partition bound, given by `∏ i, B*R^(c.partSize i)*((c.partSize i).factorial : ℝ)^2`. -/
 def innerPartitionBound {n : ℕ} (B R : ℝ) (c : OrderedFinpartition n) : ℝ :=
   ∏ i, B*R^(c.partSize i)*((c.partSize i).factorial : ℝ)^2
 
@@ -41,7 +52,7 @@ theorem composition_partition_bound (f : E → E) (g : E → F)
     (n : ℕ) (x : E) (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g (f x))
     (B R : ℝ) (_hB : 0 ≤ B) (_hR : 0 ≤ R)
     (hfjet : ∀ j, 0 < j → j ≤ n →
-      ‖iteratedFDeriv ℝ j f x‖ ≤ B*R^j*(j.factorial : ℝ)^2) :
+      ‖iteratedFDeriv ℝ j f x‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2) :
     ‖iteratedFDeriv ℝ n (g ∘ f) x‖ ≤
       ∑ c : OrderedFinpartition n,
         innerPartitionBound B R c*‖iteratedFDeriv ℝ c.length g (f x)‖ := by
@@ -72,9 +83,9 @@ theorem composition_memLp_and_bound
     (A B R S : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S)
     (hgLp : ∀ j ≤ n, MemLp (iteratedFDeriv ℝ j g) 2 μ)
     (hgjet : ∀ j ≤ n,
-      (eLpNorm (iteratedFDeriv ℝ j g) 2 μ).toReal ≤ A*S^j*(j.factorial : ℝ)^2)
+      (eLpNorm (iteratedFDeriv ℝ j g) 2 μ).toReal ≤ A * S ^ j * (j.factorial : ℝ) ^ 2)
     (hfjet : ∀ j, 0 < j → j ≤ n → ∀ x,
-      ‖iteratedFDeriv ℝ j f x‖ ≤ B*R^j*(j.factorial : ℝ)^2) :
+      ‖iteratedFDeriv ℝ j f x‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2) :
     MemLp (iteratedFDeriv ℝ n (g ∘ f)) 2 μ ∧
       (eLpNorm (iteratedFDeriv ℝ n (g ∘ f)) 2 μ).toReal ≤
         A*(R*(B*S+2))^n*(n.factorial : ℝ)^2 := by
@@ -101,7 +112,7 @@ theorem composition_memLp_and_bound
     simp only [Finset.sum_apply]
   have hsumNorm := eLpNorm_sum_le
     (fun c (_ : c ∈ (Finset.univ : Finset (OrderedFinpartition n))) => (hHLp
-      c).aestronglyMeasurable)
+        c).aestronglyMeasurable)
     (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   have hLpNorm : eLpNorm (iteratedFDeriv ℝ n (g ∘ f)) 2 μ ≤
       ∑ c : OrderedFinpartition n, eLpNorm (H c) 2 μ := by
@@ -112,7 +123,7 @@ theorem composition_memLp_and_bound
     (ENNReal.sum_ne_top.mpr (fun c _ => (hHLp c).eLpNorm_ne_top)) hLpNorm
   rw [ENNReal.toReal_sum (fun c _ => (hHLp c).eLpNorm_ne_top)] at hreal
   have hHnorm (c : OrderedFinpartition n) :
-      (eLpNorm (H c) 2 μ).toReal = innerPartitionBound B R c*
+      (eLpNorm (H c) 2 μ).toReal = innerPartitionBound B R c *
         (eLpNorm (iteratedFDeriv ℝ c.length g) 2 μ).toReal := by
     have hfun : H c = innerPartitionBound B R c •
         ((fun y => ‖iteratedFDeriv ℝ c.length g y‖) ∘ f) := rfl
@@ -122,9 +133,9 @@ theorem composition_memLp_and_bound
       Real.norm_of_nonneg (innerPartitionBound_nonneg B R hB hR c)]
   simp_rw [hHnorm] at hreal
   calc
-    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c*
+    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c *
         (eLpNorm (iteratedFDeriv ℝ c.length g) 2 μ).toReal := hreal
-    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c*
+    _ ≤ ∑ c : OrderedFinpartition n, innerPartitionBound B R c *
         (A*S^c.length*(c.length.factorial : ℝ)^2) := by
       exact Finset.sum_le_sum fun c _ => mul_le_mul_of_nonneg_left
         (hgjet c.length c.length_le) (innerPartitionBound_nonneg B R hB hR c)

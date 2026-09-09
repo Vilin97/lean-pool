@@ -10,10 +10,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothPathTimeJets
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedPathFamily
 
-@[expose] public section
-
 /-! Constructing literal bounded smooth coefficient paths from an actual
 smooth path family and uniform bounds on its differentiated evolution. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +28,7 @@ open Set EulerSmoothPathTimeJets EulerBoundedPathFamily EulerVolterraConvolution
 variable {E V : Type}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-  (T : ℝ) (hT : 0 ≤ T) (f q : E → C(Icc (0 : ℝ) T,V))
+  (T : ℝ) (hT : 0 ≤ T) (f q : E → C(Icc (0 : ℝ) T, V))
   (hf : ContDiff ℝ ∞ f) (hq : ContDiff ℝ ∞ q)
   (hd : ∀ x (t : Icc (0 : ℝ) T),
     HasDerivWithinAt (extendPath T hT (f x)) (q x t) (Icc (0 : ℝ) T) t)
@@ -35,21 +36,34 @@ variable {E V : Type}
   (hC : ∀ n t x, ‖iteratedFDeriv ℝ n (fun y => f y t) x‖ ≤ C n)
   (hD : ∀ n t x, ‖iteratedFDeriv ℝ n (fun y => q y t) x‖ ≤ D n)
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldFromPaths1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldFromPaths2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldFromPaths3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldFromPaths4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
 omit [FiniteDimensional ℝ E] [FiniteDimensional ℝ V] in
 include hC in
-private theorem value_bound (t : Icc (0 : ℝ) T) (x : E) : ‖f x t‖ ≤ C 0 := by
+theorem value_bound (t : Icc (0 : ℝ) T) (x : E) : ‖f x t‖ ≤ C 0 := by
   simpa only [norm_iteratedFDeriv_zero] using hC 0 t x
 
 omit [FiniteDimensional ℝ E] [FiniteDimensional ℝ V] in
 include hT hD in
-private theorem derivativeBound_nonneg (n : ℕ) : 0 ≤ D n :=
+theorem derivativeBound_nonneg (n : ℕ) : 0 ≤ D n :=
   (norm_nonneg _).trans (hD n ⟨0,le_rfl,hT⟩ 0)
 
+/-- Of path family, bundling `field`, `smooth`, `change`, `jet` and the required compatibility
+proofs. -/
 def ofPathFamily : SmoothTimeField (Icc (0 : ℝ) T) E V where
   field := boundedPath T hT f q hf.continuous (C 0) (D 0)
     (value_bound T f C hC) (derivativeBound_nonneg T hT q D hD 0)

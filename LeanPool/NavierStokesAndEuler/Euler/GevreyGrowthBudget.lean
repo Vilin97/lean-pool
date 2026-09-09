@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyGrowthCoefficient
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Fixed continuous majorants for metric growth; no time continuity of arbitrary bound witnesses is
+required. -/
 
 @[expose] public section
 
-/-! Fixed continuous majorants for metric growth; no time continuity of arbitrary bound witnesses
-  is required. -/
 
 noncomputable section
 
@@ -33,8 +35,8 @@ theorem growthBase_budget (K : SmoothCoefficient period) (K' : LiftL2 period →
     (c D L : ℝ) (hD : ‖K'‖ ≤ D) (hL : (K.firstBound : ℝ) ≤ L) :
     growthBase period K K' c ≤ growthBudgetBase c D L := by
   have hsq : (K.firstBound : ℝ)^2 ≤ L^2 := by nlinarith [K.firstBound.coe_nonneg]
-  have hh := div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hsq (by norm_num : (0 : ℝ) ≤ 4))
-    (sq_nonneg c)
+  have hh := div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hsq (by
+      norm_num : (0 : ℝ) ≤ 4)) (sq_nonneg c)
   unfold growthBase growthBudgetBase heatEnergyConstant
   apply div_le_div_of_nonneg_right _ (mul_nonneg (by norm_num) (sq_nonneg c))
   calc
@@ -58,22 +60,22 @@ theorem viscousGrowth_budget (K : SmoothCoefficient period) (K' : LiftL2 period 
     (hν : ν ≤ 1) (hκ : |κ| ≤ 1) (hm : ‖m‖ ≤ 1)
     (hD : ‖K'‖ ≤ D) (hL : (K.firstBound : ℝ) ≤ L) :
     viscousGrowthCoefficient period K K' κ m c ν B ≤ growthBudgetBase c D L+growthBudgetSlope c L*B
-      :=
+        :=
   (viscousGrowth_uniform period K K' κ m c ν B hν).trans
     (add_le_add (growthBase_budget period K K' c D L hD hL)
       (mul_le_mul_of_nonneg_right (growthSlope_budget period K κ m c L hκ hm hL) B.coe_nonneg))
 
 /-- The metric PDE growth is bounded by a fixed affine function of the actual metric energy. -/
 theorem viscousGrowth_fixed_metric (K : SmoothCoefficient period) (K' : LiftL2 period →L[ℝ] LiftL2
-  period)
+    period)
     (κ : ℝ) (m : Vector3) (c ν D L B X : ℝ) (hc : 0 < c)
     (hν : ν ≤ 1) (hκ : |κ| ≤ 1) (hm : ‖m‖ ≤ 1)
     (hD : ‖K'‖ ≤ D) (hL : (K.firstBound : ℝ) ≤ L) (hB : 0 ≤ B) (hX : 0 ≤ X) :
     viscousGrowthCoefficient period K K' κ m c ν (metricVelocityBound period c B X) ≤
-      growthBudgetBase c D L+growthBudgetSlope c L*sobolevEmbeddingConstant period 6*B+
+      growthBudgetBase c D L+growthBudgetSlope c L*sobolevEmbeddingConstant period 6*B +
         (growthBudgetSlope c L*sobolevEmbeddingConstant period 6*metricAmplification c)*X := by
   have h := viscousGrowth_budget period K K' κ m c ν D L (metricVelocityBound period c B X) hν hκ
-    hm hD hL
+      hm hD hL
   rw [metricVelocityBound_coe period c B X hc hB hX] at h
   exact h.trans_eq (by ring)
 

@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GenericEndpointExtension
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalExtensions
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CutStageEstimates
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalStageBounds
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Off-plane endpoint extensions from actual raw jets
@@ -21,6 +18,9 @@ in a past half-ball into a genuine smooth extension.  The physical scale is
 then localized away from zero, so raw power-logarithmic jet bounds supply
 the required estimates without a recursive continuation assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,12 +32,14 @@ open scoped Topology ContDiff BigOperators
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   ENat.natCast_le_of_coe_top_le_withTop le_rfl n
 
+/-- Past ball, given by `Metric.ball (1, x) r ∩ SpacetimeEndpoint.openPast 1`. -/
 noncomputable def pastBall (x : Space) (r : ℝ) : Set SpaceTime :=
   Metric.ball (1, x) r ∩ SpacetimeEndpoint.openPast 1
 
 theorem pastBall_open (x : Space) (r : ℝ) : IsOpen (pastBall x r) :=
   isOpen_ball.inter (SpacetimeEndpoint.openPast_isOpen 1)
 
+/-- Local bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 noncomputable def localBump (x : Space) {r : ℝ} (hr : 0 < r) : ContDiffBump ((1 : ℝ), x) where
   rIn := r / 4
   rOut := r / 2
@@ -52,7 +54,7 @@ theorem localBump_support (x : Space) {r : ℝ} (hr : 0 < r) :
 theorem localBump_jet_bounded (x : Space) {r : ℝ} (hr : 0 < r) (m : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ w : SpaceTime, ‖iteratedFDeriv ℝ m (localBump x hr) w‖ ≤ C := by
   obtain ⟨C, hC⟩ := ((localBump x hr).hasCompactSupport.iteratedFDeriv (𝕜 := ℝ)
-    m).exists_bound_of_continuous
+      m).exists_bound_of_continuous
     ((localBump x hr).contDiff.continuous_iteratedFDeriv (nat_le_infty m))
   exact ⟨max C 0, le_max_right _ _, fun w => (hC w).trans (le_max_left _ _)⟩
 
@@ -60,6 +62,7 @@ section LocalExtension
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Localized, given by `localBump x hr w • f w`. -/
 noncomputable def localized (f : SpaceTime → V) (x : Space) {r : ℝ} (hr : 0 < r)
     (w : SpaceTime) : V := localBump x hr w • f w
 
@@ -79,7 +82,7 @@ theorem localized_smooth {f : SpaceTime → V} {x : Space} {r : ℝ} (hr : 0 < r
     exact (((localBump x hr).contDiff.contDiffAt).smul
       (hf.contDiffAt ((pastBall_open x r).mem_nhds hlocal))).contDiffWithinAt
   · exact ((contDiffAt_const : ContDiffAt ℝ ∞ (fun _ : SpaceTime => (0 : V))
-    w).congr_of_eventuallyEq
+      w).congr_of_eventuallyEq
       (localized_zero_germ f x hr hs)).contDiffWithinAt
 
 theorem localized_jets_bounded {f : SpaceTime → V} {x : Space} {r : ℝ} (hr : 0 < r)
@@ -114,7 +117,7 @@ theorem localized_jets_bounded {f : SpaceTime → V} {x : Space} {r : ℝ} (hr :
   · have hz : iteratedFDeriv ℝ m (localized f x hr) w = 0 := by
       simpa only [iteratedFDeriv_fun_zero, Pi.zero_apply] using
         (SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (localized_zero_germ f x hr hs)
-          m).self_of_nhds
+            m).self_of_nhds
     rw [hz, norm_zero]
     exact hK
 
@@ -227,7 +230,7 @@ theorem extension_of_powerLog_jets {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   intro m
   obtain ⟨C, p, e, hm⟩ := hb m
   obtain ⟨K, _, hK⟩ := powerLog_bounded (half_pos (EndpointCoordinates.endpointRoot_pos (2 * h)
-    hx)) C p e
+      hx)) C p e
   refine ⟨K, fun w hw => ?_⟩
   have hs := hscale w hw
   have hq1 : PhysicalWaveSum.physicalQ h w ≤ 1 := hs.1.2.le.trans hqbig
@@ -313,7 +316,7 @@ theorem extension_of_eqOn_sublevel {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   apply MixedDiagonalExtensions.extension_of_eventuallyEq _ eg
   filter_upwards [self_mem_nhdsWithin,
     (MixedDiagonalExtensions.physicalQ_tendsto_endpoint hh hh1 hx).eventually (gt_mem_nhds hqx)]
-      with w hw hq
+        with w hw hq
   exact he ⟨hw.1, hq⟩
 
 end Assembly
@@ -355,11 +358,11 @@ theorem initialIncrement_extension {h qbig : ℝ}
     (hqx : EndpointCoordinates.endpointRoot (2 * h) (x 2) < qbig) :
     Nonempty (JointResidualLimits.OneSidedExtension (initialIncrement W MT MR) x) := by
   apply extension_of_power_jets hh hh1 hqbig (initialIncrement_smooth W MT MR hh hh1 hqT hqR) _ hx
-    hqx
+      hqx
   intro m
   obtain ⟨C, _, hb⟩ := initialIncrement_bound W MT MR hh hh1 hqT hqR m
   exact ⟨C, -InitializedPhysicalBackground.seedPotentialLoss h W.alpha W.shift (min MT.alpha
-    MR.alpha) m, hb⟩
+      MR.alpha) m, hb⟩
 
 theorem initialPressureIncrement_extension {h qbig : ℝ}
     (W : PhysicalStageBounds.WaveData h D I K Unit)
@@ -369,7 +372,7 @@ theorem initialPressureIncrement_extension {h qbig : ℝ}
     (hqx : EndpointCoordinates.endpointRoot (2 * h) (x 2) < qbig) :
     Nonempty (JointResidualLimits.OneSidedExtension (initialPressureIncrement W M) x) := by
   apply extension_of_power_jets hh hh1 hqbig (initialPressureIncrement_smooth W M hh hh1 hq) _ hx
-    hqx
+      hqx
   intro m
   obtain ⟨C, _, hb⟩ := initialPressureIncrement_bound W M hh hh1 hq m
   exact ⟨C, -initialPressureLoss h W.alpha W.shift M.alpha m, hb⟩

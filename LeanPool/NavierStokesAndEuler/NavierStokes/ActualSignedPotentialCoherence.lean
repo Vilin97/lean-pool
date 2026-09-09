@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCoherence
 
-@[expose] public section
-
 /-!
 # Current-band signed vector potentials and pressure modes
 
@@ -17,6 +15,9 @@ The potential is formed from the literal current common signed coefficient,
 after its native cutoffs and copy sum.  Its scale follows from the actual
 normal, amplitude and carrier identities, before any physical curl is taken.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +28,9 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary GaugeStateC
 open ActualSignedCoherence
 open scoped Topology ContDiff
 
+/-- Point: an abbreviation for `ActualSignedCoherence.Point`. -/
 abbrev Point := ActualSignedCoherence.Point
+/-- Full point: an abbreviation for `ActualSignedCoherence.FullPoint`. -/
 abbrev FullPoint := ActualSignedCoherence.FullPoint
 
 variable {B N0 : ℕ}
@@ -56,7 +59,7 @@ theorem potential_eq_mode (l : SignedLabel B N0) (u : CorrectionState.State Poin
       (potentialCoefficient l u n) := rfl
 
 theorem potential_eq_curlPotential (l : SignedLabel B N0) (u : CorrectionState.State Point) (n : ℕ)
-  :
+    :
     potential l u n = (copies l u).common.curlPotential fullStrip
       (ActualSignedStageControls.directions B) n := rfl
 
@@ -79,7 +82,7 @@ theorem pressure_weight (n m : ℕ) :
   ring
 
 private theorem inverseCarrier_scale (K L b s c : ℝ)
-    (hK : K ≠ 0) (hb : b ≠ 0) (hs : s ≠ 0) (hKL : K*b = L) :
+    (hK : K ≠ 0) (hb : b ≠ 0) (hs : s ≠ 0) (hKL : K * b = L) :
     CurlClassBounds.inverseCarrier K * ((c / (b*s) : ℝ) : ℂ) =
       ((c/s : ℝ) : ℂ) * CurlClassBounds.inverseCarrier L := by
   rw [← hKL]
@@ -147,6 +150,8 @@ noncomputable def rescaledPotential (l : SignedLabel B N0) (u : CorrectionState.
     (n : ℕ) (x : FullPoint) : ComplexVector :=
   ChartScales.Q n ^ (-h) • potential l u n x
 
+/-- Rescaled pressure mode, given by `ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h)) •
+pressureMode l u n x`. -/
 noncomputable def rescaledPressureMode (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (x : FullPoint) : ℂ :=
   ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h)) • pressureMode l u n x
@@ -160,7 +165,7 @@ variable (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (commonContext B) u).pressure = u.pressure)
   (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
   (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-    (ActualInitialCoherence.overlap n m))
+      (ActualInitialCoherence.overlap n m))
     (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
 
 include H hfixed hi HS
@@ -176,29 +181,29 @@ theorem pressureMode_transport (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCo
   pressureMode_of_request l u n m k hi x (fullRequest_transport u H hfixed n m k hi HS x hx)
 
 theorem potential_transport_weight (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap n
-  m) :
+    m) :
     potential l u n x = PhysicalParticularWave.ratioPower (ChartScales.Q n) (ChartScales.Q m) h •
       potential l u m (chart n m k x) := by
   rw [← potential_weight]
   exact potential_transport l u H hfixed n m k hi HS x hx
 
 theorem pressureMode_transport_weight (x : FullPoint) (hx : x.1.2.1 ∈
-  ActualInitialCoherence.overlap n m) :
+    ActualInitialCoherence.overlap n m) :
     pressureMode l u n x = PhysicalParticularWave.pressureWeight h (ChartScales.Q n) (ChartScales.Q
-      m) •
+        m) •
       pressureMode l u m (chart n m k x) := by
   rw [← pressure_weight]
   exact pressureMode_transport l u H hfixed n m k hi HS x hx
 
 theorem rescaledPotential_transport (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap
-  n m) :
+    n m) :
     rescaledPotential l u n x = rescaledPotential l u m (chart n m k x) := by
   unfold rescaledPotential
   rw [potential_transport_weight l u H hfixed n m k hi HS x hx, smul_smul,
     mul_comm, PhysicalParticularWave.ratioPower_cancel (ChartScales.Q_pos n) (ChartScales.Q_pos m)]
 
 theorem rescaledPressureMode_transport (x : FullPoint) (hx : x.1.2.1 ∈
-  ActualInitialCoherence.overlap n m) :
+    ActualInitialCoherence.overlap n m) :
     rescaledPressureMode l u n x = rescaledPressureMode l u m (chart n m k x) := by
   unfold rescaledPressureMode
   rw [pressureMode_transport_weight l u H hfixed n m k hi HS x hx, smul_smul,
@@ -206,7 +211,7 @@ theorem rescaledPressureMode_transport (x : FullPoint) (hx : x.1.2.1 ∈
     PhysicalParticularWave.ratioPower_cancel (ChartScales.Q_pos n) (ChartScales.Q_pos m)]
 
 theorem potential_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap n
-  m) :
+    m) :
     potential l u n =ᶠ[𝓝 x] fun y => (bandVelocityScale h n m / bandScale n m) •
       potential l u m (chart n m k y) := by
   have hU : {y : FullPoint | y.1.2.1 ∈ ActualInitialCoherence.overlap n m} ∈ 𝓝 x :=
@@ -215,7 +220,7 @@ theorem potential_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitial
   exact potential_transport l u H hfixed n m k hi HS y hy
 
 theorem pressureMode_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈ ActualInitialCoherence.overlap
-  n m) :
+    n m) :
     pressureMode l u n =ᶠ[𝓝 x] fun y => (bandVelocityScale h n m * bandVelocityScale h n m) •
       pressureMode l u m (chart n m k y) := by
   have hU : {y : FullPoint | y.1.2.1 ∈ ActualInitialCoherence.overlap n m} ∈ 𝓝 x :=
@@ -224,7 +229,7 @@ theorem pressureMode_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈ ActualInit
   exact pressureMode_transport l u H hfixed n m k hi HS y hy
 
 theorem rescaledPotential_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈
-  ActualInitialCoherence.overlap n m) :
+    ActualInitialCoherence.overlap n m) :
     rescaledPotential l u n =ᶠ[𝓝 x] fun y => rescaledPotential l u m (chart n m k y) := by
   have hU : {y : FullPoint | y.1.2.1 ∈ ActualInitialCoherence.overlap n m} ∈ 𝓝 x :=
     ((ActualInitialCoherence.overlap_open n m).preimage continuous_fst.snd.fst).mem_nhds hx
@@ -232,7 +237,7 @@ theorem rescaledPotential_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈
   exact rescaledPotential_transport l u H hfixed n m k hi HS y hy
 
 theorem rescaledPressureMode_transport_germ (x : FullPoint) (hx : x.1.2.1 ∈
-  ActualInitialCoherence.overlap n m) :
+    ActualInitialCoherence.overlap n m) :
     rescaledPressureMode l u n =ᶠ[𝓝 x] fun y => rescaledPressureMode l u m (chart n m k y) := by
   have hU : {y : FullPoint | y.1.2.1 ∈ ActualInitialCoherence.overlap n m} ∈ 𝓝 x :=
     ((ActualInitialCoherence.overlap_open n m).preimage continuous_fst.snd.fst).mem_nhds hx
@@ -253,15 +258,15 @@ theorem chart_eq_of_absolute (n m k : ℕ)
 theorem rescaled_eq_of_absolute_of_index (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (x y : FullPoint) (hx : x.1.2.1 ∈ standardRegion.carrier) (hy : y.1.2.1 ∈
-      standardRegion.carrier)
+        standardRegion.carrier)
     (hxy : ActualPrimaryCoherence.absoluteChart n x = ActualPrimaryCoherence.absoluteChart m y) :
     rescaledPotential l u n x = rescaledPotential l u m y ∧
       rescaledPressureMode l u n x = rescaledPressureMode l u m y := by
@@ -282,12 +287,12 @@ input concerns the incoming state, on its actual full-fiber overlaps. -/
 theorem rescaled_eq_of_absolute (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (HS : ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
       PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-        (ActualInitialCoherence.overlap n m))
+          (ActualInitialCoherence.overlap n m))
         (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (n m : ℕ) (x y : FullPoint)
     (hx : x.1.2.1 ∈ standardRegion.carrier) (hy : y.1.2.1 ∈ standardRegion.carrier)
@@ -301,7 +306,7 @@ theorem rescaled_eq_of_absolute (l : SignedLabel B N0) (u : CorrectionState.Stat
   · have hi : CommonWindow.index h m + (CommonWindow.index h n - CommonWindow.index h m) =
         CommonWindow.index h n := Nat.add_sub_of_le hm
     have he := rescaled_eq_of_absolute_of_index l u H hfixed m n _ hi (HS m n _ hi) y x hy hx
-      hxy.symm
+        hxy.symm
     exact ⟨he.1.symm, he.2.symm⟩
 
 /-! ## The actual cylindrical graph, with the slow-coordinate swap explicit -/
@@ -313,7 +318,7 @@ noncomputable def nativePoint (n : ℕ) (z : ProblemStatement.SpaceTime) : FullP
 
 theorem nativePoint_absolute (n : ℕ) (z : ProblemStatement.SpaceTime) (hr : 0 < z.2 0) :
     ActualPrimaryCoherence.absoluteChart n (nativePoint n z) = ActualPrimaryCoherence.physicalLift
-      z :=
+        z :=
   ActualPrimaryCoherence.absoluteChart_physical n hr
 
 theorem chart_nativePoint (n m k : ℕ)
@@ -321,7 +326,7 @@ theorem chart_nativePoint (n m k : ℕ)
     (z : ProblemStatement.SpaceTime) (hr : 0 < z.2 0) :
     chart n m k (nativePoint n z) = nativePoint m z :=
   chart_eq_of_absolute n m k hi _ _ ((nativePoint_absolute n z hr).trans (nativePoint_absolute m z
-    hr).symm)
+      hr).symm)
 
 theorem nativePoint_smoothAt (n : ℕ) (z : ProblemStatement.SpaceTime) (hr : 0 < z.2 0) :
     ContDiffAt ℝ ∞ (nativePoint n) z :=
@@ -329,10 +334,12 @@ theorem nativePoint_smoothAt (n : ℕ) (z : ProblemStatement.SpaceTime) (hr : 0 
     ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).map_smoothAt
       (mul_pos (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) hr).ne')
 
+/-- Cylindrical potential, given by `rescaledPotential l u n (nativePoint n z)`. -/
 noncomputable def cylindricalPotential (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (z : ProblemStatement.SpaceTime) : ComplexVector :=
   rescaledPotential l u n (nativePoint n z)
 
+/-- Cylindrical pressure mode, given by `rescaledPressureMode l u n (nativePoint n z)`. -/
 noncomputable def cylindricalPressureMode (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (z : ProblemStatement.SpaceTime) : ℂ :=
   rescaledPressureMode l u n (nativePoint n z)
@@ -346,9 +353,9 @@ theorem physicalDomain_open (n : ℕ) : IsOpen (physicalDomain n) := by
   intro z hz
   have hr : {w : ProblemStatement.SpaceTime | 0 < w.2 0} ∈ 𝓝 z :=
     (isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous).mem_nhds
-      hz.1
+        hz.1
   have hs : {w : ProblemStatement.SpaceTime | (nativePoint n w).1.2.1 ∈ standardRegion.carrier} ∈ 𝓝
-    z :=
+      z :=
     (nativePoint_smoothAt n z hz.1).continuousAt.fst.snd.fst.preimage_mem_nhds
       (standardRegion.isOpen.mem_nhds hz.2)
   exact inter_mem hr hs
@@ -356,12 +363,12 @@ theorem physicalDomain_open (n : ℕ) : IsOpen (physicalDomain n) := by
 theorem cylindrical_values_eq_of_index (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (HS : PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (z : ProblemStatement.SpaceTime) (hn : z ∈ physicalDomain n) (hm : z ∈ physicalDomain m) :
     cylindricalPotential l u n z = cylindricalPotential l u m z ∧
@@ -372,15 +379,15 @@ theorem cylindrical_values_eq_of_index (l : SignedLabel B N0) (u : CorrectionSta
 theorem cylindrical_values_eq (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (HS : ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
       PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-        (ActualInitialCoherence.overlap n m))
+          (ActualInitialCoherence.overlap n m))
         (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (n m : ℕ) (z : ProblemStatement.SpaceTime) (hn : z ∈ physicalDomain n) (hm : z ∈ physicalDomain
-      m) :
+        m) :
     cylindricalPotential l u n z = cylindricalPotential l u m z ∧
       cylindricalPressureMode l u n z = cylindricalPressureMode l u m z :=
   rescaled_eq_of_absolute l u H hfixed HS n m _ _ hn.2 hm.2
@@ -389,15 +396,15 @@ theorem cylindrical_values_eq (l : SignedLabel B N0) (u : CorrectionState.State 
 theorem cylindrical_values_germ (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (HS : ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
       PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-        (ActualInitialCoherence.overlap n m))
+          (ActualInitialCoherence.overlap n m))
         (bandChartEquiv h n m k) (bandVelocityScale h n m) (bandScale n m) u u n m)
     (n m : ℕ) (z : ProblemStatement.SpaceTime) (hn : z ∈ physicalDomain n) (hm : z ∈ physicalDomain
-      m) :
+        m) :
     cylindricalPotential l u n =ᶠ[𝓝 z] cylindricalPotential l u m ∧
       cylindricalPressureMode l u n =ᶠ[𝓝 z] cylindricalPressureMode l u m := by
   have hN := (physicalDomain_open n).mem_nhds hn

@@ -6,12 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A uniform short-time bound for a nonnegative genuine energy with
 a quadratic differential upper bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,8 +33,8 @@ theorem quadratic_energy_bound (T C : ℝ) (hT : 0 ≤ T)
     (X X' : ℝ → ℝ) (hX : ContinuousOn X (Icc 0 T))
     (hpos : ∀ t ∈ Icc 0 T, 0 ≤ X t)
     (hd : ∀ t ∈ Icc 0 T, HasDerivWithinAt X (X' t) (Icc 0 T) t)
-    (hb : ∀ t ∈ Icc 0 T, X' t ≤ C*(1+X t)^2)
-    (hC : 0 ≤ C) (hsmall : C*T ≤ (1+X 0)⁻¹/2)
+    (hb : ∀ t ∈ Icc 0 T, X' t ≤ C * (1 + X t) ^ 2)
+    (hC : 0 ≤ C) (hsmall : C * T ≤ (1 + X 0)⁻¹ / 2)
     (t : ℝ) (ht : t ∈ Icc 0 T) : X t ≤ 2*X 0+1 := by
   have hz : (0 : ℝ) ∈ Icc 0 T := ⟨le_rfl,hT⟩
   have hp (r : ℝ) (hr : r ∈ Icc 0 T) : 0 < 1+X r := by linarith [hpos r hr]

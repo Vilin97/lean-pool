@@ -6,16 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialExcluded
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeExcludedBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualIterationLedger
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GlobalBaseError
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhaseJetBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeExcludedBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeRadialResidualBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # Residual estimates from the actual correction-cycle invariant
@@ -23,6 +21,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
 The primary family, common chart, weighted strip and carrier sets below are
 the actual selected objects. Finite harmonic bounds are read from `sourceBand`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,25 +34,32 @@ open LocalPhysicalCopyBounds PhysicalResidualJetBounds LabelSumBounds
 open PhysicalWaveSum PhysicalGraphBounds
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Cylinder: an abbreviation for `Point × ℝ`. -/
 abbrev Cylinder := Point × ℝ
+/-- Index: an abbreviation for `ActualInitialization.Index`. -/
 abbrev Index := ActualInitialization.Index
 
+/-- Label carrier, given by `ActualInitialExcluded.labelCarrier (l.2, l.1) n`. -/
 noncomputable def labelCarrier {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
   ActualInitialExcluded.labelCarrier (l.2, l.1) n
 
 theorem labelCarrier_closed {B N0 : ℕ} (l : Index B N0) (n : ℕ) : IsClosed (labelCarrier l n) :=
   ActualInitialExcluded.labelCarrier_closed (l.2, l.1) n
 
+/-- Invariant type used in actual cycle residual bounds. -/
 abbrev Invariant {B N0 : ℕ} (σ : ℝ) (x : CycleState (Index B N0)) :=
   CycleAnalyticInvariant ActualInitialization.geometry (ActualPrimary.commonContext B)
     ActualInitialization.tangentBlock ActualInitialization.envelope labelCarrier σ x
 
+/-- Source, constructed using `HarmonicResidual.residualBlock`. -/
 noncomputable def source {B N0 : ℕ} (x : CycleState (Index B N0)) (l : Index B N0) : HarmonicBlock
-  Point :=
+    Point :=
   HarmonicResidual.residualBlock (ActualPrimary.commonContext B) x.state
     (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)
 
+/-- Modes, given by `Finset.Icc (-(M : ℤ)) M`. -/
 noncomputable def modes (M : ℕ) : Finset ℤ := Finset.Icc (-(M : ℤ)) M
 
 theorem mem_modes {M : ℕ} {j : ℤ} (hj : j.natAbs ≤ M) : j ∈ modes M := by
@@ -77,7 +85,7 @@ theorem source_zero (l : Index B N0) (n : ℕ) (i : Fin 3) : (source x l).veloci
   HarmonicResidual.residualBlock_zero_mode _ _ _ _ _ _ _
 
 theorem source_carrier (l : Index B N0) : CorrectionStep.SameCarrier (source x l)
-  (ActualInitialization.primaryBlock l) :=
+    (ActualInitialization.primaryBlock l) :=
   ⟨(H.carrier l).frequency, (H.carrier l).phase, (H.carrier l).angular⟩
 
 theorem source_fullPhase (l : Index B N0) (j : ℤ) (n : ℕ) :
@@ -105,7 +113,7 @@ theorem actual_flatGeometry :
   let G := ActualInitialization.geometry
   exact ⟨G.leftWeight, G.rightWeight, _, _, PhysicalClassBounds.movingStrip_flatGeometry
     G.region G.patch.a_pos G.left_pos G.right_pos G.epsilon G.slow G.epsilon_pos G.epsilon_le_one
-      G.slow_ge_one⟩
+        G.slow_ge_one⟩
 
 theorem actual_slow_le : ∃ C : ℝ, 1 ≤ C ∧ ∃ p : ℕ,
     ∀ n, 4 ≤ n → ActualInitialization.geometry.strip.slow n ≤ C * ChartScales.S n ^ p := by
@@ -132,7 +140,7 @@ theorem mean_source {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     LocalSourceBounds ActualInitialization.geometry.strip ActualPrimary.h α
       (fun (_ : Unit) _ z => ActualInitialization.geometry.strip.zeta z) (fun (_ : Unit) => f) := by
   refine ⟨UniformPrimaryWeights.class_of_single hf, actual_flatGeometry, ?_, actual_epsilon,
-    actual_slow_le⟩
+      actual_slow_le⟩
   exact ⟨1, zero_lt_one, fun _ _ _ _ => by rw [Real.rpow_one]⟩
 
 theorem sqrt_source {ι E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -148,7 +156,7 @@ theorem native_on_strip {ι E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {α : ℝ} {w : ι → ℕ → Point → ℝ} {f : ι → ℕ → Point → E}
     (hf : LocalSourceBounds ActualInitialization.geometry.strip ActualPrimary.h α w f) :
     NativeBounds 4 ActualInitialization.geometry.strip.domain (ActualPrimary.h * α) (fun _ => 0) f
-      :=
+        :=
   NativeBounds.of_localSource le_rfl ActualInitialization.geometry.strip.isOpen_domain hf
     (fun l n _ => hf.uniform.smooth l n) (fun _ _ _ _ hz => Or.inl (subset_closure hz))
 
@@ -161,7 +169,7 @@ include H
 theorem source_localBounds (i : Fin 3) (j : ℤ) (hj : j ≠ 0) :
     LocalSourceBounds ActualInitialization.geometry.strip ActualPrimary.h (1/2 + σ)
       (fun l n z => Real.sqrt (ActualInitialization.geometry.strip.zeta z) *
-        ActualInitialization.envelope l n z)
+          ActualInitialization.envelope l n z)
       (fun l n z => (source x l).velocity n i j z) :=
   coefficient_source_of_uniformVelocity H.residual actual_flatGeometry actual_wave_weight
     actual_epsilon actual_slow_le i j hj
@@ -223,7 +231,7 @@ theorem meanGood_eq_reduced_sub (n : ℕ) {z : Point}
     rw [H.alias_eq_lift]
     funext n z i
     exact congrFun (congrFun (angularAverage_axisymmetric (fun n z => x.axisymmetricAlias n z i))
-      n) z
+        n) z
   rw [meanGoodResidual_at _ _ n z i
     (H.baseAngular n z (ActualInitialization.geometry.strip_subset hz) i)
     (H.representation.gaussian_angularContinuous n z i) (ha n z i), H.gaussianMean, ham]
@@ -258,9 +266,9 @@ theorem radial_mean_class :
   change x.state.radialResidual (ActualPrimary.commonContext B) n z - x.axisymmetricAlias n z 0 =
     (x.state.radialResidual (ActualPrimary.commonContext B) n z -
       VariableGaugeMean.pressureAliasState G.gauge (ActualPrimary.commonContext B) x.state n (z, 0)
-        0 +
+          0 +
       VariableGaugeMean.pressureAliasState G.gauge (ActualPrimary.commonContext B) x.state n (z, 0)
-        0) -
+          0) -
         x.axisymmetricAlias n z 0
   ring
 
@@ -275,7 +283,7 @@ theorem mean_component_class (i : Fin 3) :
 theorem mean_native :
     NativeBounds 4 ActualInitialization.geometry.strip.domain (ActualPrimary.h * (1 + σ))
       (fun _ => 0) (fun (_ : Unit) => x.state.meanGoodResidual (ActualPrimary.commonContext B)) :=
-        by
+          by
   apply NativeBounds.pi (by norm_num) ActualInitialization.geometry.strip.isOpen_domain
   intro i
   exact native_on_strip (mean_source (H.mean_component_class i))
@@ -297,11 +305,11 @@ theorem extraction_regular (n : ℕ)
   · intro i
     fin_cases i
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((ActualInitialization.base_bounds
-      B).radial.smooth n)
+        B).radial.smooth n)
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((ActualInitialization.base_bounds
-      B).angular.smooth n)
+        B).angular.smooth n)
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn ((ActualInitialization.base_bounds
-      B).axial.smooth n)
+        B).axial.smooth n)
   · intro i
     fin_cases i
     · exact Complex.ofRealCLM.contDiff.comp_contDiffOn
@@ -317,10 +325,10 @@ theorem extraction_regular (n : ℕ)
     · intro i
       exact (show HarmonicResidual.SmoothCoefficients G.strip.domain
         ((x.coefficients.blocks l).velocity n i) from fun j => (H.wave i j).smooth l
-          n).realCoefficients
+            n).realCoefficients
     · exact (show HarmonicResidual.SmoothCoefficients G.strip.domain
         ((x.coefficients.blocks l).pressure n) from fun j => (H.pressure j).smooth l
-          n).realCoefficients
+            n).realCoefficients
   · intro l hl i j
     exact (H.gaussianFlat 0 i j).smooth l n
   · intro l hl i
@@ -341,7 +349,7 @@ theorem fullResidual_decomposition {n : ℕ}
     LiftedMeanResidual.fullResidual (ActualPrimary.commonContext B) x.state n z i =
       (∑ l ∈ x.coefficients.labels n, (source x l).oscillation n z i) +
         x.state.meanGoodResidual (ActualPrimary.commonContext B) n z.1 i + x.state.errors.total n z
-          i := by
+            i := by
   change CorrectionStep.fullResidual (ActualPrimary.commonContext B) x.state n z i = _
   rw [H.representation.fullResidual_reconstructed_local
     ActualInitialization.geometry.strip.isOpen_domain hreg hz i]
@@ -380,7 +388,7 @@ theorem native_lift {E ι : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem normalizedBase_native (B : ℕ) (α : ℝ) :
     NativeBounds 4 (BaseContextAssembly.slowCarrier ActualPrimary.nominal
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
       (ActualPrimary.h * α) (fun _ => 0)
       (fun (_ : Unit) => ActualInitialExcluded.normalizedBase ActualPrimary.certificate
         ActualPrimary.modulation ActualPrimary.upper B) := by
@@ -445,7 +453,7 @@ theorem graphResidual_smooth {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ 
       (HarmonicCalculus.contDiffOn_along hU hz (hDz i))
   have hJ (b : E → Fin 3 → ℝ) (hb : ∀ i, ContDiffOn ℝ ∞ (fun z => b z i) U)
       (i : Fin 3) : ContDiffOn ℝ ∞ (fun z => LinearWaveResidual.realAngularGenerator (b z) i) U :=
-        by
+          by
     fin_cases i
     · exact (hb 1).neg
     · exact hb 0
@@ -485,15 +493,15 @@ theorem realization_native_smooth {h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : S
     (r.base_smooth n hn i).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hz => hz)
   have ha (i : Fin 3) : ContDiffOn ℝ ∞
       (fun z => PhysicalResidualBridge.incrementComponents (PhysicalResidualTZ.swapState s) n z i)
-        V :=
+          V :=
     (r.increment_smooth n hn i).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hz
-      => hz)
+        => hz)
   have hp : ContDiffOn ℝ ∞ ((PhysicalResidualTZ.swapState s).totalPressureIncrement n) V :=
     (r.pressure_smooth n hn).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hz =>
-      hz)
+        hz)
   have hp₀ : ContDiffOn ℝ ∞ (fun z => p₀ n (PhysicalResidualTZ.swapCylinder z)) V :=
     (r.base_pressure_smooth n hn).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _
-      hz => hz)
+        hz => hz)
   have hbase (z : Cylinder) (hz : z ∈ V) (i : Fin 3) :
       PhysicalResidualBridge.graphResidual G.epsilon PhysicalResidualBridge.ScaledGraph.radius
         G.radial PhysicalResidualBridge.ScaledGraph.angular G.axial G.temporal
@@ -509,7 +517,7 @@ theorem realization_native_smooth {h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : S
     exact r.base_equation n hn (PhysicalResidualTZ.swapCylinder z) hz i
   have hs : ContDiffOn ℝ ∞
       (LiftedMeanResidual.fullResidual (PhysicalResidualTZ.swapContext c)
-        (PhysicalResidualTZ.swapState s) n) V := by
+          (PhysicalResidualTZ.swapState s) n) V := by
     have hgraph := graphResidual_smooth (Vθ := PhysicalResidualBridge.ScaledGraph.angular)
       (Vz := G.axial) (Vt := G.temporal) hV G.epsilon contDiffOn_fst.fst hR
       (G.radial_smooth hR) contDiffOn_const contDiffOn_const contDiffOn_const
@@ -530,6 +538,7 @@ theorem realization_native_smooth {h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : S
 
 /-! ## The fixed exterior base and the full physical endpoint -/
 
+/-- Active as an element of `Set ProblemStatement.SpaceTime`. -/
 noncomputable def active : Set ProblemStatement.SpaceTime :=
   {w | (SlowBorelBase.cartesianChart ActualPrimary.h w).2.1 ∈
     Icc (NominalConeAssembly.activeLeft ActualPrimary.nominal)
@@ -567,17 +576,17 @@ theorem actual_upper_covers_exterior :
       (BaseExterior.nominalHeatSwitch ActualPrimary.nominal * Real.exp 3)) ≤ 2 * R
   exact max_le (houter.trans (by linarith))
     (max_le (((AssembledSlowBase.nominalOuterX_gt_radius ActualPrimary.nominal).le.trans
-      houter).trans
+        houter).trans
       (by linarith)) hlate)
 
 theorem base_residual_germ (B : ℕ) {w : ProblemStatement.SpaceTime}
     (hw : w ∈ preterminal) (hout : w ∉ active) :
     residual (FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-      ActualPrimary.upper B)
-      (FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
         ActualPrimary.upper B)
+      (FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
+          ActualPrimary.upper B)
       =ᶠ[𝓝 w] FinalSlowBase.error ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B := by
+          ActualPrimary.upper B := by
   have hs : FinalSlowBase.stressForce ActualPrimary.certificate ActualPrimary.modulation
       ActualPrimary.upper B =ᶠ[𝓝 w] fun _ => 0 := by
     by_cases hl : (SlowBorelBase.cartesianChart ActualPrimary.h w).2.1 <
@@ -593,22 +602,22 @@ theorem base_exterior_jetRate (B m : ℕ) (r : ℝ) :
     DiagonalResidual.JetRate (GlobalBaseError.originPast ⊓ 𝓟 activeᶜ)
       (physicalQ ActualPrimary.h)
       (residual (FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B)
+          ActualPrimary.upper B)
         (FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-          ActualPrimary.upper B)) m r := by
+            ActualPrimary.upper B)) m r := by
   have he := GlobalBaseError.error_joint_jetRate ActualPrimary.certificate ActualPrimary.modulation
     ActualPrimary.upper B actual_upper_covers_exterior m (max 0 r) (le_max_left _ _)
   have hsmall : ∀ᶠ w in GlobalBaseError.originPast,
       0 < physicalQ ActualPrimary.h w ∧ physicalQ ActualPrimary.h w ≤ 1 := by
     have hs := (GlobalBaseError.originPast_q_tendsto_zero ActualPrimary.outgoing.data.h_pos
-      ActualPrimary.outgoing.data.h_lt_half).eventually (eventually_le_nhds (by norm_num : (0 : ℝ)
-        < 1))
+      ActualPrimary.outgoing.data.h_lt_half).eventually (eventually_le_nhds (by
+          norm_num : (0 : ℝ) < 1))
     filter_upwards [GlobalBaseError.originPast_before, hs] with w hw hsw
     exact ⟨physicalQ_pos ActualPrimary.outgoing.data.h_pos ActualPrimary.outgoing.data.h_lt_half
-      hw, hsw⟩
+        hw, hsw⟩
   have he' : DiagonalResidual.JetRate GlobalBaseError.originPast (physicalQ ActualPrimary.h)
       (FinalSlowBase.error ActualPrimary.certificate ActualPrimary.modulation ActualPrimary.upper
-        B) m r :=
+          B) m r :=
     he.weaken hsmall (le_max_right _ _)
   obtain ⟨C, hC, hb⟩ := he'
   refine ⟨C, hC, ?_⟩
@@ -619,6 +628,8 @@ theorem base_exterior_jetRate (B m : ℕ) (r : ℝ) :
 
 /-! ## Actual carriers, phases, and bounded label sums -/
 
+/-- Gaussian modes, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def gaussianModes {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : Index B N0) : HarmonicBlock Point where
   velocity n i := HarmonicResidual.nonconstant (x.coefficients.gaussian l n i)
@@ -634,12 +645,12 @@ theorem coefficient_tsupport_carrier {B N0 : ℕ} {E : Type}
     (hs : z ∈ tsupport (fun y : Cylinder => a y.1)) : z.1 ∈ labelCarrier l n := by
   by_contra hn
   apply (notMem_tsupport_iff_eventuallyEq.mpr (show (fun y : Cylinder => a y.1) =ᶠ[𝓝 z] fun _ => 0
-    from ?_)) hs
+      from ?_)) hs
   have hU := (ActualInitialization.geometry.domain_open.inter (labelCarrier_closed l
-    n).isOpen_compl).preimage
+      n).isOpen_compl).preimage
     (continuous_fst : Continuous (Prod.fst : Cylinder → Point))
   filter_upwards [hU.mem_nhds (show z.1 ∈ ActualInitialization.geometry.domain ∩ (labelCarrier l
-    n)ᶜ from
+      n)ᶜ from
     ⟨ActualInitialization.geometry.strip_subset hz.1, hn⟩)] with y hy
   exact ha y.1 hy.1 hy.2
 
@@ -658,10 +669,10 @@ theorem oscillation_tsupport_carrier {B N0 : ℕ} {l : Index B N0} {n : ℕ}
   by_contra hn
   apply (notMem_tsupport_iff_eventuallyEq.mpr (show b.oscillation n =ᶠ[𝓝 z] fun _ => 0 from ?_)) hs
   have hU := (ActualInitialization.geometry.domain_open.inter (labelCarrier_closed l
-    n).isOpen_compl).preimage
+      n).isOpen_compl).preimage
     (continuous_fst : Continuous (Prod.fst : Cylinder → Point))
   filter_upwards [hU.mem_nhds (show z.1 ∈ ActualInitialization.geometry.domain ∩ (labelCarrier l
-    n)ᶜ from
+      n)ᶜ from
     ⟨ActualInitialization.geometry.strip_subset hz.1, hn⟩)] with y hy
   exact oscillation_eq_zero_of_coefficients b n y (hb y.1 hy.1 hy.2)
 
@@ -708,13 +719,13 @@ include H
 
 theorem source_coeff_zero_off (l : Index B N0) (n : ℕ) (z : Point)
     (hz : z ∈ ActualInitialization.geometry.domain) (hn : z ∉ labelCarrier l n) (i : Fin 3) (j : ℤ)
-      :
+        :
     (source x l).velocity n i j z = 0 :=
   congrFun (H.source_zero_germ l j n hz hn).eq_of_nhds i
 
 theorem wave_coeff_zero_off (l : Index B N0) (n : ℕ) (z : Point)
     (hz : z ∈ ActualInitialization.geometry.domain) (hn : z ∉ labelCarrier l n) (i : Fin 3) (j : ℤ)
-      :
+        :
     (x.coefficients.blocks l).velocity n i j z = 0 := by
   by_cases hj : j = 0
   · subst j
@@ -725,7 +736,7 @@ theorem wave_coeff_zero_off (l : Index B N0) (n : ℕ) (z : Point)
 
 theorem gaussian_coeff_zero_off (l : Index B N0) (n : ℕ) (z : Point)
     (hz : z ∈ ActualInitialization.geometry.domain) (hn : z ∉ labelCarrier l n) (i : Fin 3) (j : ℤ)
-      :
+        :
     (gaussianModes x l).velocity n i j z = 0 := by
   by_cases hj : j = 0
   · subst j
@@ -733,7 +744,7 @@ theorem gaussian_coeff_zero_off (l : Index B N0) (n : ℕ) (z : Point)
   · have he := ((H.inputSupport l).gaussian n i) j hj z hz hn
     rw [HarmonicResidual.realCoefficients_eq_self (H.realCoefficients.gaussian l n i)] at he
     simpa only [gaussianModes, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-      Finsupp.erase_ne hj] using he
+        Finsupp.erase_ne hj] using he
 
 theorem actual_disjoint (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (n : ℕ)
     {l k : Index B N0} (hlk : l ≠ k) :
@@ -761,19 +772,20 @@ theorem source_phase (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (i :
       (fun l => fullPhase (source x l) j) :=
   supportedPhaseBounds hN (source x) H.source_carrier
     (fun l n z => (source x l).velocity n i j z) (fun l n z hz hn => H.source_coeff_zero_off l n z
-      hz hn i j) j
+        hz hn i j) j
 
 theorem source_oscillation_native (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     NativeBounds 4 (HarmonicResidual.liftDomain ActualInitialization.geometry.strip.domain)
       (ActualPrimary.h * (1/2 + σ)) (fun m => (2 * ActualPrimary.h) * m)
       (fun l => (source x l).oscillation) :=
-  block_nativeBounds (by norm_num) (HarmonicResidual.liftDomain_open
-    ActualInitialization.geometry.strip.isOpen_domain)
-    (mul_nonneg (by norm_num) ActualPrimary.outgoing.data.h_pos.le) (source x) (modes
-      x.coefficients.residualBand)
+  block_nativeBounds (by
+      norm_num) (HarmonicResidual.liftDomain_open ActualInitialization.geometry.strip.isOpen_domain)
+    (mul_nonneg (by
+        norm_num) ActualPrimary.outgoing.data.h_pos.le) (source x) (modes
+            x.coefficients.residualBand)
     (fun l n _ i => H.source_support l n i)
     (fun i j _ => native_lift ActualInitialization.geometry.strip.isOpen_domain (H.source_native i
-      j))
+        j))
     (fun i j _ => H.source_phase hN i j)
 
 end Invariant
@@ -788,7 +800,7 @@ theorem block_window_sum {B N0 : ℕ} {gain : ℝ} {loss : ℕ → ℝ}
     NativeBounds 4 (HarmonicResidual.liftDomain ActualInitialization.geometry.strip.domain)
       gain loss (fun (_ : Unit) n z => ∑ l ∈ labels n, (b l).oscillation n z) := by
   apply hb.window_sum (HarmonicResidual.liftDomain_open
-    ActualInitialization.geometry.strip.isOpen_domain)
+      ActualInitialization.geometry.strip.isOpen_domain)
     labels (fun _ => ActualPrimaryCovariance.signedLabelOf)
     (fun _ _ => ActualPrimaryCovariance.signedLabelOf_injective.injOn)
     (fun _ _ l _ => l.1.val.property.1) (CoordinateAlgebra.D ActualPrimary.h)
@@ -811,11 +823,11 @@ theorem gaussian_modes_native (α : ℝ) (i : Fin 3) (j : ℤ) :
   by_cases hj : j = 0
   · subst j
     simpa only [gaussianModes, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-      Finsupp.erase_same, Pi.zero_apply] using
+        Finsupp.erase_same, Pi.zero_apply] using
       (NativeBounds.zero : NativeBounds 4 ActualInitialization.geometry.strip.domain
         (ActualPrimary.h * α) (fun _ => 0) (fun (_ : Index B N0) _ _ => (0 : ℂ)))
   · simpa only [gaussianModes, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
-    Finsupp.erase_ne hj] using H.gaussian_native α i j
+      Finsupp.erase_ne hj] using H.gaussian_native α i j
 
 theorem gaussian_carrier (l : Index B N0) :
     CorrectionStep.SameCarrier (gaussianModes x l) (ActualInitialization.primaryBlock l) :=
@@ -841,7 +853,7 @@ theorem gaussian_oscillation_native (hN : ActualCarrierGeometry.geometricThresho
     exact mem_modes (HarmonicResidual.band_nonconstant (H.bands.gaussian l n i) j hj)
   · intro i j hj
     exact native_lift ActualInitialization.geometry.strip.isOpen_domain (H.gaussian_modes_native α
-      i j)
+        i j)
   · intro i j hj
     exact H.gaussian_phase hN i j
 
@@ -849,11 +861,11 @@ theorem gaussian_oscillation_native (hN : ActualCarrierGeometry.geometricThresho
 the sum of those modes is its actual angular mean, which is zero. -/
 theorem gaussian_modes_sum (n : ℕ) (z : Cylinder) :
     (∑ l ∈ x.coefficients.labels n, (gaussianModes x l).oscillation n z) = x.state.errors.gaussian
-      n z := by
+        n z := by
   classical
   ext i
   have hzero : HarmonicResidual.realAngularMean (fun θ => x.state.errors.gaussian n (z.1, θ) i) = 0
-    :=
+      :=
     congrFun (congrFun (congrFun H.gaussianMean n) z.1) i
   have heq : (fun θ => x.state.errors.gaussian n (z.1, θ) i) =
       fun θ => ∑ l ∈ x.coefficients.labels n,
@@ -876,14 +888,14 @@ theorem gaussian_modes_sum (n : ℕ) (z : Cylinder) :
         apply Finset.sum_congr rfl
         intro l hl
         simpa only [HarmonicBlock.oscillation, gaussianModes, coefficientField, Complex.sub_re]
-          using congrArg Complex.re
+            using congrArg Complex.re
           (HarmonicResidual.field_nonconstant (x.coefficients.gaussian l n i)
             ((x.coefficients.blocks l).frequency n) ((x.coefficients.blocks l).phase n)
             ((x.coefficients.blocks l).angularFrequency n) z)
       _ = x.state.errors.gaussian n z i := by rw [hz, sub_zero, H.representation.gaussian]
   · intro l hl
     exact Complex.reCLM.continuous.comp (HarmonicFields.field_angular_continuous
-      (x.coefficients.gaussian l n i)
+        (x.coefficients.gaussian l n i)
       ((x.coefficients.blocks l).frequency n) ((x.coefficients.blocks l).phase n)
       ((x.coefficients.blocks l).angularFrequency n) z.1)
 
@@ -892,7 +904,7 @@ theorem source_sum_native (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
       (ActualPrimary.h * (1/2 + σ)) (fun m => (2 * ActualPrimary.h) * m)
       (fun (_ : Unit) n z => ∑ l ∈ x.coefficients.labels n, (source x l).oscillation n z) :=
   block_window_sum hN x.coefficients.labels (source x) H.source_coeff_zero_off
-    (H.source_oscillation_native hN)
+      (H.source_oscillation_native hN)
 
 theorem gaussian_field_native (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (α : ℝ) :
     NativeBounds 4 (HarmonicResidual.liftDomain ActualInitialization.geometry.strip.domain)
@@ -911,17 +923,17 @@ theorem native_residual (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     NativeBounds 4 (HarmonicResidual.liftDomain ActualInitialization.geometry.strip.domain)
       (ActualPrimary.h * (1/2 + σ)) (fun m => (2 * ActualPrimary.h) * m)
       (fun (_ : Unit) => LiftedMeanResidual.fullResidual (ActualPrimary.commonContext B) x.state)
-        := by
+          := by
   let U := HarmonicResidual.liftDomain ActualInitialization.geometry.strip.domain
   have hU : IsOpen U := HarmonicResidual.liftDomain_open
-    ActualInitialization.geometry.strip.isOpen_domain
+      ActualInitialization.geometry.strip.isOpen_domain
   have hβ (m : ℕ) : 0 ≤ (2 * ActualPrimary.h) * m := by
-    exact mul_nonneg (mul_nonneg (by norm_num) ActualPrimary.outgoing.data.h_pos.le)
-      (Nat.cast_nonneg _)
+    exact mul_nonneg (mul_nonneg (by
+        norm_num) ActualPrimary.outgoing.data.h_pos.le) (Nat.cast_nonneg _)
   have hm : NativeBounds 4 U (ActualPrimary.h * (1/2 + σ)) (fun m => (2 * ActualPrimary.h) * m)
       (fun (_ : Unit) n z => x.state.meanGoodResidual (ActualPrimary.commonContext B) n z.1) := by
     apply (native_lift ActualInitialization.geometry.strip.isOpen_domain H.mean_native).weaken (by
-      norm_num)
+        norm_num)
     intro m
     simp only [sub_zero]
     exact (sub_le_self _ (hβ m)).trans
@@ -935,9 +947,10 @@ theorem native_residual (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
       (fun (_ : Unit) => x.state.errors.aliasError) := by
     rw [H.alias_eq_lift]
     exact (native_lift ActualInitialization.geometry.strip.isOpen_domain (H.axis_native (1/2 +
-      σ))).weaken
-      (by norm_num) (fun m => by simpa only [sub_zero] using sub_le_self (ActualPrimary.h * (1/2 +
-        σ)) (hβ m))
+        σ))).weaken
+      (by
+          norm_num) (fun m => by
+              simpa only [sub_zero] using sub_le_self (ActualPrimary.h * (1/2 + σ)) (hβ m))
   have he := excluded_nativeBounds (by norm_num : 1 ≤ 4) hU x.state.errors hb
     (H.gaussian_field_native hN (1/2 + σ)) ha
   apply (((H.source_sum_native hN).add (by norm_num) hU hm).add (by norm_num) hU he).congr hU
@@ -961,7 +974,7 @@ theorem iterate_base_error {ι : Type} (p : ℕ → CycleParameters ι)
 
 theorem actual_iterate_base_error {B N0 : ℕ} (p : ℕ → CycleParameters (Index B N0)) (J : ℕ) :
     (CycleState.iterate p (ActualPrimary.commonContext B) (ActualInitialization.initialCycleState B
-      N0) J).state.errors.base =
+        N0) J).state.errors.base =
       ActualInitialization.baseError B :=
   (iterate_base_error p _ _ J).trans (ActualInitialization.initialState_error_components B N0).1
 
@@ -988,7 +1001,7 @@ theorem selected_residual_jet_bound {a b h gain β : ℝ} {N Δ : ℕ} {gap : �
     {p₀ : ℕ → Cylinder → ℝ} {u : VelocityField} {P : PressureField}
     (r : StateRealization h N gap U c s p₀ u P)
     (g : SelectedGeometry a b h N Δ gap U V S)
-    (hh : 0 < h) (hh1 : h < 1/2) (ha : 0 < a) (hN : 4 ≤ N)
+    (hh : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hN : 4 ≤ N)
     (hf : NativeBounds N V gain (fun m => β * m)
       (fun (_ : Unit) => LiftedMeanResidual.fullResidual c s)) (m : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ w, w ∈ preterminal → |w.1| ≤ 1 → physicalQ h w ≤ ChartScales.Q N →
@@ -1015,13 +1028,13 @@ theorem selected_residual_jet_bound {a b h gain β : ℝ} {N Δ : ℕ} {gap : �
     exact jet_bound_at_closure (hsmooth.contDiffAt (r.domain_open.mem_nhds hdom)) hcl k
       (fun z hz => hb () n hn z hz k hk)
   rw [iteratedFDeriv_eq_of_eventuallyEq ((r.chartIdentity ha).germ ha r.domain_open hn j hw hann hc
-    hdom) m]
+      hdom) m]
   have he := hCbound n (hN.trans hn) (gap n) (g.gap_le n hn) w hann ht (physicalQ h w) hq
     hlo' hhi.le j (LiftedMeanResidual.fullResidual c s n)
     (SmoothNear.of_open r.domain_open hsmooth hdom)
     (by simpa only [Real.rpow_natCast] using hbound)
   have hexp : gain - β * m - PhysicalMeanJetBounds.loss (residualDegree h) m = gain - physicalLoss
-    h β m := by
+      h β m := by
     unfold physicalLoss
     ring
   simpa only [hexp] using he
@@ -1031,7 +1044,7 @@ theorem selected_residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {gap : ℕ 
     {p₀ : ℕ → Cylinder → ℝ} {u u₀ : VelocityField} {P P₀ : PressureField}
     (r : StateRealization h N gap U c s p₀ u P)
     (g : SelectedGeometry a b h N Δ gap U V S)
-    (hh : 0 < h) (hh1 : h < 1/2) (ha : 0 < a) (hN : 4 ≤ N)
+    (hh : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hN : 4 ≤ N)
     (hf : NativeBounds N V gain (fun m => β * m)
       (fun (_ : Unit) => LiftedMeanResidual.fullResidual c s))
     (houtside : ∀ w, w ∈ preterminal → physicalQ h w < ChartScales.Q N → w ∉ S →
@@ -1048,7 +1061,7 @@ theorem selected_residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {gap : ℕ 
       (gt_mem_nhds (ChartScales.Q_pos N))
   refine ⟨B + C, add_nonneg hB hC, ?_⟩
   filter_upwards [hbase, hsmall, eventually_time_small (0 : Space),
-    GlobalBaseError.originPast_before]
+      GlobalBaseError.originPast_before]
     with w hbw hsw ht hw
   have hq := physicalQ_pos hh hh1 hw
   by_cases hs : w ∈ S
@@ -1061,12 +1074,16 @@ theorem selected_residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {gap : ℕ 
     exact (hbw hs).trans (mul_le_mul_of_nonneg_right
       (le_add_of_nonneg_right hC) (Real.rpow_pos_of_pos hq _).le)
 
+/-- Actual gap, given by `ChartScales.nativeIndex ActualPrimary.h n - CommonWindow.index
+ActualPrimary.h n`. -/
 noncomputable def actualGap (n : ℕ) : ℕ :=
   ChartScales.nativeIndex ActualPrimary.h n - CommonWindow.index ActualPrimary.h n
 
+/-- Actual band graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n)
+ActualPrimary.h (CommonWindow.index ActualPrimary.h n)`. -/
 noncomputable def actualBandGraph (n : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) ActualPrimary.h (CommonWindow.index
-    ActualPrimary.h n)
+      ActualPrimary.h n)
 
 theorem actualGap_le (n : ℕ) : actualGap n ≤ CommonWindow.gap ActualPrimary.h := by
   have hh := CommonWindow.native_le_index_add ActualPrimary.h ActualPrimary.outgoing.data.h_pos.le n
@@ -1075,18 +1092,20 @@ theorem actualGap_le (n : ℕ) : actualGap n ≤ CommonWindow.gap ActualPrimary.
 
 theorem actualGap_index (n : ℕ) :
     ChartScales.nativeIndex ActualPrimary.h n - actualGap n = CommonWindow.index ActualPrimary.h n
-      := by
+        := by
   have hh := CommonWindow.index_le_native ActualPrimary.h n
   unfold actualGap
   omega
 
 theorem actual_bandGraph (n : ℕ) : bandGraph ActualPrimary.h n (actualGap n) = actualBandGraph n :=
-  by
+    by
   simp only [bandGraph, actualGap_index, actualBandGraph]
 
+/-- Actual base pressure, given by `ActualBaseResidual.basePressure ActualPrimary.certificate
+ActualPrimary.modulation ActualPrimary.upper B n`. -/
 noncomputable def actualBasePressure (B n : ℕ) : Cylinder → ℝ :=
   ActualBaseResidual.basePressure ActualPrimary.certificate ActualPrimary.modulation
-    ActualPrimary.upper B n
+      ActualPrimary.upper B n
 
 /-- Only the actual physical realization remains external. Native regularity,
 the fixed base equation, and all size estimates are derived in this module. -/
@@ -1112,9 +1131,9 @@ structure PhysicalFields (B N : ℕ) (U : Set Cylinder) (s : State Point)
         (fun v => actualBasePressure B n v + s.totalPressureIncrement n v)
   exterior : ∀ w, w ∈ preterminal → physicalQ ActualPrimary.h w < ChartScales.Q N → w ∉ active →
     u w = FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-      ActualPrimary.upper B w ∧
+        ActualPrimary.upper B w ∧
     P w = FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-      ActualPrimary.upper B w
+        ActualPrimary.upper B w
 
 /-- Local exterior equality gives actual field germs inside the valid past
 sublevel; no global topological-support condition is used. -/
@@ -1123,9 +1142,9 @@ theorem PhysicalFields.exterior_germs {B N : ℕ} {U : Set Cylinder} {s : State 
     {w : SpaceTime} (hw : w ∈ preterminal)
     (hq : physicalQ ActualPrimary.h w < ChartScales.Q N) (hout : w ∉ active) :
     u =ᶠ[𝓝 w] FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-      ActualPrimary.upper B ∧
+        ActualPrimary.upper B ∧
     P =ᶠ[𝓝 w] FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-      ActualPrimary.upper B := by
+        ActualPrimary.upper B := by
   have ho : IsOpen {w : SpaceTime | w ∈ preterminal ∧ w ∉ active} := by
     exact BaseResidual.chartedDomain_isOpen ActualPrimary.outgoing.data.h_pos
       ActualPrimary.outgoing.data.h_lt_half
@@ -1135,12 +1154,12 @@ theorem PhysicalFields.exterior_germs {B N : ℕ} {U : Set Cylinder} {s : State 
   have hs : ∀ᶠ y in 𝓝 w, physicalQ ActualPrimary.h y < ChartScales.Q N :=
     (physicalQ_smoothAt ActualPrimary.outgoing.data.h_pos
       ActualPrimary.outgoing.data.h_lt_half hw).continuousAt.preimage_mem_nhds (isOpen_Iio.mem_nhds
-        hq)
+          hq)
   have he : ∀ᶠ y in 𝓝 w,
       u y = FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B y ∧
+          ActualPrimary.upper B y ∧
       P y = FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B y := by
+          ActualPrimary.upper B y := by
     filter_upwards [ho.mem_nhds ⟨hw, hout⟩, hs] with y hy hys
     exact d.exterior y hy.1 hys hy.2
   exact ⟨he.mono (fun _ h => h.1), he.mono (fun _ h => h.2)⟩
@@ -1182,17 +1201,17 @@ theorem stateRealization {N : ℕ} {U : Set Cylinder} {u : VelocityField} {P : P
     intro z hz
     exact ⟨hpos z hz, ActualInitialization.geometry.region.time_pos _ (hdom z hz)⟩
   refine ⟨hopen, fun z hz => (hpos z hz).ne', fun n _ => Nat.sub_le _ _, ?_, ?_, ?_, ?_, ?_, ?_,
-    ?_, ?_, ?_, ?_⟩
+      ?_, ?_, ?_, ?_⟩
   · intro n hn
     rw [actual_bandGraph]
     exact CommonBaseContext.operators_match_physical ActualPrimary.h (CommonWindow.index
-      ActualPrimary.h)
+        ActualPrimary.h)
       (PrimaryTargetBounds.leftRadius ActualPrimary.nominal) (PrimaryTargetBounds.rightRadius
-        ActualPrimary.nominal)
+          ActualPrimary.nominal)
       (PrimaryTargetBounds.radii_ordered ActualPrimary.nominal) n
   · intro n hn i
     exact (ActualBaseResidual.baseComponents_smooth ActualPrimary.certificate
-      ActualPrimary.modulation
+        ActualPrimary.modulation
       ActualPrimary.upper B (CommonWindow.index ActualPrimary.h) n i).mono hd
   · intro n hn i
     exact H.increment_smooth hdom n i
@@ -1228,9 +1247,12 @@ theorem actual_selectedGeometry (N : ℕ) :
   · intro n hn w hw hlo hhi hs j hj
     exact ActualPolarCoverage.selected_polar_closure j n (actualGap n) hw hs hlo hhi hj
 
+/-- Physical data: an abbreviation for `PhysicalFields B N ActualPolarCoverage.nativeDomain s u
+P`. -/
 abbrev PhysicalData (B N : ℕ) (s : State Point) (u : VelocityField) (P : PressureField) :=
   PhysicalFields B N ActualPolarCoverage.nativeDomain s u P
 
+/-- Fixed loss, given by `physicalLoss ActualPrimary.h (2 * ActualPrimary.h) m`. -/
 noncomputable def fixedLoss (m : ℕ) : ℝ := physicalLoss ActualPrimary.h (2 * ActualPrimary.h) m
 
 theorem fixedLoss_eq_ledger (m : ℕ) :
@@ -1269,11 +1291,11 @@ theorem initial_invariant (B N0 : ℕ) :
 theorem origin_positive_small : ∀ᶠ w in GlobalBaseError.originPast,
     0 < physicalQ ActualPrimary.h w ∧ physicalQ ActualPrimary.h w ≤ 1 := by
   have hs := (GlobalBaseError.originPast_q_tendsto_zero ActualPrimary.outgoing.data.h_pos
-    ActualPrimary.outgoing.data.h_lt_half).eventually (eventually_le_nhds (by norm_num : (0 : ℝ) <
-      1))
+    ActualPrimary.outgoing.data.h_lt_half).eventually (eventually_le_nhds (by
+        norm_num : (0 : ℝ) < 1))
   filter_upwards [GlobalBaseError.originPast_before, hs] with w hw hsw
   exact ⟨physicalQ_pos ActualPrimary.outgoing.data.h_pos ActualPrimary.outgoing.data.h_lt_half hw,
-    hsw⟩
+      hsw⟩
 
 /-- The finite-residual input of the mixed diagonal assembly. `J` is the
 number of completed correction cycles, including the actual initialized
@@ -1283,10 +1305,10 @@ theorem finite_residual_rates {B N0 N : ℕ}
     (p : ℕ → CycleParameters (Index B N0)) (u : ℕ → VelocityField) (P : ℕ → PressureField)
     (H : ∀ J, Invariant (ActualIterationLedger.sigma J)
       (CycleState.iterate p (ActualPrimary.commonContext B) (ActualInitialization.initialCycleState
-        B N0) J))
+          B N0) J))
     (d : ∀ J, PhysicalData B N
       (CycleState.iterate p (ActualPrimary.commonContext B) (ActualInitialization.initialCycleState
-        B N0) J).state
+          B N0) J).state
       (u J) (P J)) :
     ∀ J m, DiagonalResidual.JetRate GlobalBaseError.originPast (physicalQ ActualPrimary.h)
       (fun w => navierStokesResidual (u J) (P J) w.1 w.2) m

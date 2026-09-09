@@ -9,8 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGeneratorDifference
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1GeneratorBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointDifference
+import LeanPool.NavierStokesAndEuler.Euler.TransverseInitialInverse
 
 /-!
 Polynomial uniform-time bounds and neighboring-label estimates for the
@@ -18,6 +18,9 @@ actual primary history.  The terminal coordinate is the same at both labels.
 `historyVelocity_eq` identifies the bounded path here with the genuine
 coordinate velocity of the stationary endpoint solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,8 +48,11 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
   (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
+/-- Slope cost, given by `r * (1+d^2*(2*r^2)*a) * (affineCost T*d)`. -/
 def slopeCost (T d a r : ℝ) : ℝ := r * (1+d^2*(2*r^2)*a) * (affineCost T*d)
 
+/-- Slope difference cost, given by `r * (affineCost T * endpointDifferenceCost d (2*r^2) a δd
+δa + δd * slopeCost T d a r)`. -/
 def slopeDifferenceCost (T d a r δd δa : ℝ) : ℝ :=
   r * (affineCost T * endpointDifferenceCost d (2*r^2) a δd δa + δd * slopeCost T d a r)
 
@@ -105,14 +111,16 @@ theorem coordinateSlope_sub_norm_le (d a r : ℝ)
   have hprev := (le_opNorm (coordinateSlope T hT P P₁ G c hc hP hp K hK hG hsmall) ξ).trans
     (mul_le_mul_of_nonneg_right
       (coordinateSlope_norm_le T hT P P₁ G c hc hP hp K hK hG hsmall d a r hD' hA' hr')
-        (norm_nonneg ξ))
+          (norm_nonneg ξ))
   have hright := add_le_add hend (mul_le_mul_of_nonneg_left hprev hδd)
   exact hinv.trans ((mul_le_mul hr hright (by positivity) hr0).trans_eq
     (by unfold slopeDifferenceCost derivativeDistance; ring))
 
+/-- History cost, given by `q * traceCost T (2*c⁻¹*q*q₁) * slopeCost T d a r`. -/
 def historyCost (T c q q₁ d a r : ℝ) : ℝ :=
   q * traceCost T (2*c⁻¹*q*q₁) * slopeCost T d a r
 
+/-- History difference cost, constructed using `δq`. -/
 def historyDifferenceCost (T c q q₁ d a r δq δq₁ δH : ℝ) : ℝ :=
   δq * traceCost T (2*c⁻¹*q*q₁) * slopeCost T d a r +
     q * (2*(1+T)*generatorDifferenceCost c q q₁ δq δq₁*slopeCost T d a r +

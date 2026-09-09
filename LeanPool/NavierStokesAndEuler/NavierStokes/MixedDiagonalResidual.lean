@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedPeriodicAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalSchedule
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityApproach
 
 /-!
 # Residual estimates for the mixed diagonal sum
@@ -26,6 +23,9 @@ the correction construction.  The infinite-tail estimates and the resulting
 residual decay are proved here.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.MixedDiagonalResidual
@@ -33,6 +33,8 @@ namespace NavierStokes.MixedDiagonalResidual
 open ProblemStatement Set Filter DiagonalResidual ResidualStability
 open scoped Topology ContDiff BigOperators
 
+/-- Velocity, defined pointwise by `SolenoidalDiagonal.velocitySum a q A z +
+SolenoidalDiagonal.potentialSum a q B z`. -/
 def velocity (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A B : ℕ → VelocityField) :
     VelocityField :=
   fun z => SolenoidalDiagonal.velocitySum a q A z +
@@ -43,9 +45,12 @@ def uncutVelocity (A B : ℕ → VelocityField) (J : ℕ) : VelocityField :=
   fun z => SpatialCurl.spatialCurl (DiagonalJetBounds.uncutPrefix A (J + 1)) z +
     DiagonalJetBounds.uncutPrefix B (J + 1) z
 
+/-- Pressure, given by `SolenoidalDiagonal.potentialSum a q P`. -/
 def pressure (a : ℕ → ℝ) (q : SpaceTime → ℝ) (P : ℕ → PressureField) :
     PressureField := SolenoidalDiagonal.potentialSum a q P
 
+/-- Residual, defined pointwise by `navierStokesResidual (velocity a q A B) (pressure a q P) z.1
+z.2`. -/
 def residual (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (A B : ℕ → VelocityField) (P : ℕ → PressureField) : VelocityField :=
   fun z => navierStokesResidual (velocity a q A B) (pressure a q P) z.1 z.2

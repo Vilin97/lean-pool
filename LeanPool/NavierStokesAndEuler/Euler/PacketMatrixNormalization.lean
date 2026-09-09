@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketApproximationNormalization
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFrequencyBounds
 
 /-! Fixed smooth matrix coefficients preserve the finite packet's
 inverse-frequency normalization with an explicit, frequency-independent
 cost. This also applies to the actual inverse-frame time derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,11 +30,11 @@ variable {P T : ℝ} [Fact (0 < P)]
   (K : MatrixCoefficient T coef) {raw : VectorField} (G : Field P T raw)
 
 theorem normalized_approximation_bound (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath K.path) a‖ ≤ C*majorant Rc 0 n)
+    (hK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath K.path) a‖ ≤ C * majorant Rc 0 n)
     {R k B C₁ C₂ : ℝ}
-    (hG : G.WordBound 6 R (k⁻¹*C₁+(k⁻¹)^2*C₂+2*B*(k⁻¹*B)^3) 0)
+    (hG : G.WordBound 6 R (k⁻¹ * C₁ + (k⁻¹) ^ 2 * C₂ + 2 * B * (k⁻¹ * B) ^ 3) 0)
     (hR : 0 ≤ R) (hKR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hk : 4 ≤ k) (hB0 : 0 ≤ B) (hB : B ≤ k^(1/100 : ℝ))
+    (hk : 4 ≤ k) (hB0 : 0 ≤ B) (hB : B ≤ k ^ (1 / 100 : ℝ))
     (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) :
     ((K.multiply G).smul k).WordBound 6 R
       ((3*sobolevCoefficientAmplitude (Fin 4) 6 Rc C)*(C₁+C₂+1)) 0 := by

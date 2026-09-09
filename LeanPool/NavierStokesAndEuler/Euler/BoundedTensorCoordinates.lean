@@ -6,15 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousBoundedTensor
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
-
-@[expose] public section
 
 /-! Continuous bounded coordinate fields reconstruct the actual tensor
 field. This is a qualitative finite-dimensional construction; subsequent
 norm estimates can use the actual tensor equality without a coordinate
 reassembly constant. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,11 +28,24 @@ variable {K X E V ι : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (X →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (X →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedTensorCoordinates1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instBoundedTensorCoordinates2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (X →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedTensorCoordinates3 (n : ℕ) : NormedAddCommGroup (X →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (X →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedTensorCoordinates4 (n : ℕ) : NormedSpace ℝ (X →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
+/-- Coordinates, given by `ContinuousLinearMap.pi (fun w => (ContinuousLinearMap.id ℝ (E
+[×n]→L[ℝ] V)).flipMultilinear (fun i => b (w i)))`. -/
 def coordinates (b : Module.Basis ι ℝ E) (n : ℕ) :
     (E [×n]→L[ℝ] V) →L[ℝ] ((Fin n → ι) → V) :=
   ContinuousLinearMap.pi (fun w =>
@@ -47,6 +60,8 @@ theorem coordinates_injective (b : Module.Basis ι ℝ E) (n : ℕ) :
   intro w
   exact congrFun h w
 
+/-- Reassembly, given by `((coordinates (V := V) b
+n).toLinearMap.leftInverse).toContinuousLinearMap`. -/
 def reassembly (b : Module.Basis ι ℝ E) (n : ℕ) :
     ((Fin n → ι) → V) →L[ℝ] (E [×n]→L[ℝ] V) :=
   ((coordinates (V := V) b n).toLinearMap.leftInverse).toContinuousLinearMap
@@ -57,6 +72,7 @@ theorem reassembly_coordinates (b : Module.Basis ι ℝ E) (n : ℕ) (A : E [×n
   LinearMap.leftInverse_apply_of_inj
     (LinearMap.ker_eq_bot.mpr (coordinates_injective b n)) A
 
+/-- Tuple bounded as an element of `(j → (X →ᵇ V)) →L[ℝ] (X →ᵇ (j → V))`. -/
 def tupleBounded {j : Type*} [Fintype j] :
     (j → (X →ᵇ V)) →L[ℝ] (X →ᵇ (j → V)) := by
   classical
@@ -71,6 +87,7 @@ theorem tupleBounded_apply {j : Type*} [Fintype j]
   classical
   simp [tupleBounded]
 
+/-- Coordinate path, bundling `toFun`, `continuous_toFun`. -/
 def coordinatePath (b : Module.Basis ι ℝ E) (n : ℕ)
     (u : (Fin n → ι) → C(K, X →ᵇ V)) : C(K, X →ᵇ (E [×n]→L[ℝ] V)) where
   toFun t := (reassembly (V := V) b n).compLeftContinuousBounded X
@@ -104,6 +121,7 @@ variable {K E V ι : Type u} [TopologicalSpace K] [CompactSpace K] [Fintype ι]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
+/-- Of coordinate jets, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
 def ofCoordinateJets (b : Module.Basis ι ℝ E) (f : C(K, E →ᵇ V))
     (hf : ∀ t, ContDiff ℝ ∞ (f t : E → V))
     (u : (n : ℕ) → (Fin n → ι) → C(K, E →ᵇ V))

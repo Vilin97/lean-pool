@@ -7,11 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectedPulseAmplitude
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ReleaseMoments
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SchedulePressure
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
+import LeanPool.NavierStokesAndEuler.NavierStokes.ReleaseMoments
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # A single outgoing profile before the heat-tail edit
@@ -20,6 +19,9 @@ The profile stores one actual scheduled angular-reset witness. Its axial
 amplitude is the corrected energy root associated with that same witness.
 All histories and pressures below are integrals of these fields.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,55 +34,78 @@ namespace NavierStokes.OutgoingProfile
 
 /-- One reset, used by both the angular profile and the energy root. -/
 structure Profile where
+  /-- Data of `Profile`, of type `TailData`. -/
   data : TailData
+  /-- Coefficient bound of `Profile`, of type `ℝ`. -/
   coefficientBound : ℝ
+  /-- Reset of `Profile`, of type `ResetWitness data coefficientBound`. -/
   reset : ResetWitness data coefficientBound
 
 namespace Profile
 
+/-- Amp, given by `CorrectedPulseAmplitude.amplitude F.data F.reset.coefficients`. -/
 def amp (F : Profile) : ℝ → ℝ :=
   CorrectedPulseAmplitude.amplitude F.data F.reset.coefficients
 
+/-- Log E, given by `correctedAngular F.data F.reset.coefficients`. -/
 def logE (F : Profile) : ℝ × ℝ → ℝ :=
   correctedAngular F.data F.reset.coefficients
 
+/-- Log U, given by `axial F.data.core F.amp`. -/
 def logU (F : Profile) : ℝ × ℝ → ℝ := axial F.data.core F.amp
 
+/-- E, given by `F.logE (Real.log p.1, p.2)`. -/
 def E (F : Profile) (p : ℝ × ℝ) : ℝ := F.logE (Real.log p.1, p.2)
 
+/-- U, given by `F.logU (Real.log p.1, p.2)`. -/
 def U (F : Profile) (p : ℝ × ℝ) : ℝ := F.logU (Real.log p.1, p.2)
 
+/-- H, given by `Real.sqrt (2 * p.1) * F.E p`. -/
 def H (F : Profile) (p : ℝ × ℝ) : ℝ := Real.sqrt (2 * p.1) * F.E p
 
+/-- Power E, given by `powerConstant F.data * X ^ (-(1 / 2 + F.data.h))`. -/
 def powerE (F : Profile) (X : ℝ) : ℝ :=
   powerConstant F.data * X ^ (-(1 / 2 + F.data.h))
 
+/-- Power H, given by `Real.sqrt (2 * X) * F.powerE X`. -/
 def powerH (F : Profile) (X : ℝ) : ℝ := Real.sqrt (2 * X) * F.powerE X
 
+/-- Mass weight, given by `Real.exp y * F.logU (y, eta)`. -/
 def massWeight (F : Profile) (eta y : ℝ) : ℝ := Real.exp y * F.logU (y, eta)
 
+/-- Angular weight, given by `Real.sqrt 2 * Real.exp (3 * y / 2) * F.logE (y, eta) * F.logU (y,
+eta)`. -/
 def angularWeight (F : Profile) (eta y : ℝ) : ℝ :=
   Real.sqrt 2 * Real.exp (3 * y / 2) * F.logE (y, eta) * F.logU (y, eta)
 
+/-- M, given by `∫ u in Ioc 0 X, F.U (u, eta)`. -/
 def M (F : Profile) (eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, F.U (u, eta)
 
+/-- J, given by `∫ u in Ioc 0 X, F.H (u, eta) * F.U (u, eta)`. -/
 def J (F : Profile) (eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, F.H (u, eta) * F.U (u, eta)
 
+/-- Energy density, given by `F.U (X, eta) ^ 2 - F.E (X, eta) ^ 2 / 2`. -/
 def energyDensity (F : Profile) (eta X : ℝ) : ℝ :=
   F.U (X, eta) ^ 2 - F.E (X, eta) ^ 2 / 2
 
+/-- Total S, given by `∫ X in Ioi 0, F.energyDensity eta X`. -/
 def totalS (F : Profile) (eta : ℝ) : ℝ := ∫ X in Ioi 0, F.energyDensity eta X
 
+/-- Pressure weight, given by `F.logE (y, eta) ^ 2`. -/
 def pressureWeight (F : Profile) (eta y : ℝ) : ℝ := F.logE (y, eta) ^ 2
 
+/-- Log pi, given by `-(1 / 2 : ℝ) * ∫ y in Ioi p.1, F.pressureWeight p.2 y`. -/
 def logPi (F : Profile) (p : ℝ × ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y in Ioi p.1, F.pressureWeight p.2 y
 
+/-- Pi, given by `F.logPi (Real.log p.1, p.2)`. -/
 def Pi (F : Profile) (p : ℝ × ℝ) : ℝ := F.logPi (Real.log p.1, p.2)
 
+/-- Axis datum, given by `-(1 / 2 : ℝ) * ∫ y, F.pressureWeight eta y`. -/
 def axisDatum (F : Profile) (eta : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y, F.pressureWeight eta y
 
+/-- Pressure change, given by `F.pressureWeight eta y - finalAngular F.data (y, eta) ^ 2`. -/
 def pressureChange (F : Profile) (eta y : ℝ) : ℝ :=
   F.pressureWeight eta y - finalAngular F.data (y, eta) ^ 2
 
@@ -152,6 +177,7 @@ theorem U_after (F : Profile) (eta : ℝ) {X : ℝ}
 
 end Profile
 
+/-- Domain, given by `Ioi 0 ×ˢ univ`. -/
 def domain : Set (ℝ × ℝ) := Ioi 0 ×ˢ univ
 
 theorem logarithmic_coordinates_contDiffOn :
@@ -190,7 +216,7 @@ theorem pressureChange_integrable (F : Profile) (eta : ℝ) : Integrable (F.pres
 
 theorem pressureWeight_integrable (F : Profile) (eta : ℝ) : Integrable (F.pressureWeight eta) := by
   have h := (F.pressureChange_integrable eta).add (SchedulePressure.angular_square_integrable
-    F.data eta)
+      F.data eta)
   convert! h using 1
   funext y
   simp [pressureChange]
@@ -200,7 +226,7 @@ theorem pressureWeight_integral (F : Profile) (eta : ℝ) :
   have h := F.reset.pressure_neutral eta
   change (∫ y, F.pressureWeight eta y - finalAngular F.data (y, eta) ^ 2) = 0 at h
   rw [integral_sub (F.pressureWeight_integrable eta) (SchedulePressure.angular_square_integrable
-    F.data eta)] at h
+      F.data eta)] at h
   linarith
 
 theorem axisDatum_eq (F : Profile) : F.axisDatum = SchedulePressure.axisPressure F.data := by
@@ -306,7 +332,7 @@ theorem angularWeight_integral_Iic (F : Profile) (eta : ℝ) {y : ℝ} (hy : 0 �
   have he : (∫ t in (0 : ℝ)..y, F.angularWeight eta t) =
       ∫ t in (0 : ℝ)..y, Real.sqrt 2 * Real.exp (3 * t / 2) *
         angular F.data.core.P F.data.core.dropLength F.data.core.lam (t, eta) * F.logU (t, eta) :=
-          by
+            by
     apply intervalIntegral.integral_congr
     intro t _
     dsimp only [angularWeight]
@@ -318,13 +344,13 @@ theorem angularWeight_integral_Iic (F : Profile) (eta : ℝ) {y : ℝ} (hy : 0 �
 
 theorem massWeight_integrable (F : Profile) (eta : ℝ) : Integrable (F.massWeight eta) := by
   apply (F.massWeight_integral_Iic eta (SchedulePressure.endpoint_pos
-    F.data).le).1.integrable_of_forall_notMem_eq_zero
+      F.data).le).1.integrable_of_forall_notMem_eq_zero
   intro y hy
   simp [massWeight, F.logU_after eta (le_of_lt (not_le.mp hy))]
 
 theorem angularWeight_integrable (F : Profile) (eta : ℝ) : Integrable (F.angularWeight eta) := by
   apply (F.angularWeight_integral_Iic eta (SchedulePressure.endpoint_pos
-    F.data).le).1.integrable_of_forall_notMem_eq_zero
+      F.data).le).1.integrable_of_forall_notMem_eq_zero
   intro y hy
   simp [angularWeight, F.logU_after eta (le_of_lt (not_le.mp hy))]
 
@@ -338,7 +364,7 @@ theorem massWeight_integral_zero (F : Profile) (eta : ℝ) : (∫ y, F.massWeigh
 
 theorem angularWeight_integral_zero (F : Profile) (eta : ℝ) : (∫ y, F.angularWeight eta y) = 0 := by
   have h : (∫ y in Iic F.data.core.endpoint, F.angularWeight eta y) = ∫ y, F.angularWeight eta y :=
-    by
+      by
     apply setIntegral_eq_integral_of_forall_compl_eq_zero
     intro y hy
     simp [angularWeight, F.logU_after eta (le_of_lt (not_le.mp hy))]
@@ -387,7 +413,7 @@ theorem logPi_contDiff (F : Profile) : ContDiff ℝ ∞ F.logPi := by
   exact ((F.axisDatum_contDiff.comp contDiff_snd).add
     (contDiff_const.mul ((shape_contDiff.comp contDiff_snd).pow 2))).add
       (contDiff_const.mul (primitive_joint_contDiff (fun p => F.logE p ^ 2) (F.logE_contDiff.pow
-        2)))
+          2)))
 
 theorem Pi_contDiffOn (F : Profile) : ContDiffOn ℝ ∞ F.Pi domain :=
   F.logPi_contDiff.comp_contDiffOn logarithmic_coordinates_contDiffOn
@@ -477,19 +503,19 @@ theorem moments_after (F : Profile) (eta : ℝ) {X : ℝ} (hX : 0 < X)
 
 theorem energyDensity_eq (F : Profile) (eta : ℝ) :
     F.energyDensity eta = CorrectedPulseAmplitude.radialEnergyIntegrand F.data F.reset.coefficients
-      F.amp eta 1 := by
+        F.amp eta 1 := by
   funext X
   simp only [energyDensity, E, U, logE, logU, CorrectedPulseAmplitude.radialEnergyIntegrand,
-    div_one]
+      div_one]
 
 theorem energy_integrable (F : Profile) (eta : ℝ) : IntegrableOn (F.energyDensity eta) (Ioi 0) := by
   rw [F.energyDensity_eq]
   exact CorrectedPulseAmplitude.radialEnergy_integrable F.data F.reset.coefficients F.amp eta 1 (by
-    norm_num)
+      norm_num)
 
 theorem totalS_eq (F : Profile) (eta : ℝ) :
     F.totalS eta = CorrectedPulseAmplitude.totalEnergy F.data F.reset.coefficients (F.amp eta) eta
-      := by
+        := by
   unfold totalS
   rw [F.energyDensity_eq, CorrectedPulseAmplitude.radialEnergy_integral F.data F.reset.coefficients
     F.amp eta 1 (by norm_num), one_mul]
@@ -516,9 +542,9 @@ theorem Pi_tendsto_axis (F : Profile) (eta : ℝ) :
       h.continuousWithinAt.tendsto (s := Ioi (0 : ℝ))
   have he : (fun X => F.Pi (X, eta)) =ᶠ[𝓝[>] (0 : ℝ)]
       (fun X => F.axisDatum eta + (5 / 2) * F.data.core.P ^ 2 * shape eta ^ 2 * X ^ (1 / 5 : ℝ)) :=
-        by
-    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (by norm_num : (0
-      : ℝ) < 1))] with X hX hX'
+          by
+    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds (by
+        norm_num : (0 : ℝ) < 1))] with X hX hX'
     exact F.Pi_ideal eta hX hX'.le
   have ht : Tendsto
       (fun X => F.axisDatum eta + (5 / 2) * F.data.core.P ^ 2 * shape eta ^ 2 * X ^ (1 / 5 : ℝ))
@@ -540,12 +566,13 @@ theorem image_exp_Ioi (y : ℝ) : Real.exp '' Ioi y = Ioi (Real.exp y) := by
 
 namespace Profile
 
+/-- Canonical kernel, given by `F.E (X, eta) ^ 2 / X`. -/
 def canonicalKernel (F : Profile) (eta X : ℝ) : ℝ := F.E (X, eta) ^ 2 / X
 
 theorem canonicalKernel_comp_exp (F : Profile) (eta y : ℝ) :
     |Real.exp y| • F.canonicalKernel eta (Real.exp y) = F.pressureWeight eta y := by
   simp only [abs_of_pos (Real.exp_pos y), smul_eq_mul, canonicalKernel, E, Real.log_exp,
-    pressureWeight]
+      pressureWeight]
   field_simp
 
 theorem canonicalKernel_integrable (F : Profile) (eta : ℝ) :
@@ -611,7 +638,7 @@ structure Specification (F : Profile) (C : ℝ) : Prop where
   same_axis_datum : F.axisDatum = SchedulePressure.axisPressure F.data
   axis_limit : ∀ eta : ℝ, Tendsto (fun X => F.Pi (X, eta)) (𝓝[>] (0 : ℝ)) (𝓝 (F.axisDatum eta))
   analytic_axis_datum : AnalyticOnNhd ℂ (SchedulePressure.complexAxisPressure F.data)
-    PressureDatum.strip ∧
+      PressureDatum.strip ∧
     ∀ eta : ℝ, SchedulePressure.complexAxisPressure F.data (eta : ℂ) = (F.axisDatum eta : ℂ)
 
 /-- Assemble the actual fields from the same witness returned by the corrected

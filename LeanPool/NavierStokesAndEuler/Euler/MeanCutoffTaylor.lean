@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffDifferenceBound
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+
+/-! Uniform Taylor remainders for the actual smooth compact cutoffs. -/
 
 @[expose] public section
 
-/-! Uniform Taylor remainders for the actual smooth compact cutoffs. -/
 
 noncomputable section
 
@@ -21,10 +24,18 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerM
 open scoped ContDiff ENNReal
 
 -- Fix the canonical structures before forming the third nested operator space.
-private local instance : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCutoffTaylor1 : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] ℝ)` instance to shorten typeclass synthesis. -/
+local instance instMeanCutoffTaylor2 : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space →L[ℝ] ℝ)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanCutoffTaylor3 : NormedAddCommGroup (Space →L[ℝ] Space →L[ℝ] ℝ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space →L[ℝ] ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCutoffTaylor4 : NormedSpace ℝ (Space →L[ℝ] Space →L[ℝ] ℝ) := inferInstance
 
 /-- A global second derivative bound gives the quadratic Taylor remainder directly by mean value. -/
 theorem norm_linearization_remainder_le {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -65,6 +76,8 @@ theorem norm_differenceQuotient_remainder_le {E : Type*} [NormedAddCommGroup E] 
       rw [norm_smul, Real.norm_eq_abs]
       field_simp [abs_ne_zero.mpr hh]
 
+/-- Directional, given by `⟨fun x => fderiv ℝ χ.field x a, (χ.smooth.fderiv_right (m := ∞) (by
+simp)).clm_apply contDiff_const, χ.compact.fderiv_apply ℝ a⟩`. -/
 def Cutoff.directional (χ : Cutoff) (a : Space) : Cutoff :=
   ⟨fun x => fderiv ℝ χ.field x a,
     (χ.smooth.fderiv_right (m := ∞) (by simp)).clm_apply contDiff_const,
@@ -114,6 +127,7 @@ theorem cutoffBound_le_of_support (χ : Cutoff) (R M₀ M₁ : ℝ)
   exact mul_le_mul_of_nonneg_left (add_le_add h₀ h₁)
     (mul_nonneg (by norm_num) cutoffCurlConstant_pos.le)
 
+/-- Difference error, given by `(χ.differenceQuotient a h).sub (χ.directional a)`. -/
 def Cutoff.differenceError (χ : Cutoff) (a : Space) (h : ℝ) : Cutoff :=
   (χ.differenceQuotient a h).sub (χ.directional a)
 
@@ -138,7 +152,8 @@ theorem Cutoff.differenceError_fderiv (χ : Cutoff) (a : Space) (h : ℝ) (x : S
     ((χ.directional a).smooth.differentiable (by simp) x),
     differenceQuotient_fderiv, Cutoff.directional_fderiv]
 
-/-- The cutoff difference quotient converges in precisely the norm controlling the boundary operator. -/
+/-- The cutoff difference quotient converges in precisely the norm controlling the boundary
+operator. -/
 theorem cutoffBound_differenceError (χ : Cutoff) (R M₂ M₃ : ℝ)
     (hM₂ : 0 ≤ M₂) (hM₃ : 0 ≤ M₃)
     (hs : tsupport χ.field ⊆ Metric.closedBall (0 : Space) R)

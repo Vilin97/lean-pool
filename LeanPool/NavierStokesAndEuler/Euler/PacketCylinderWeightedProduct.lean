@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldWeight
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+
+/-! Products of actual normalized fields use only the pointwise ratio of their time profiles. -/
 
 @[expose] public section
 
-/-! Products of actual normalized fields use only the pointwise ratio of their time profiles. -/
 
 noncomputable section
 
@@ -20,17 +22,19 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerCylinderPathProduct EulerPacketProfileRecursion
 open scoped ContDiff
 
+/-- Product profile ratio, given by `⟨fun t => g t*h t/b t,(g.continuous.mul h.continuous).div
+b.continuous (fun t => (hb t).ne')⟩`. -/
 def productProfileRatio {K : Type*} [TopologicalSpace K]
-    (g h b : C(K,ℝ)) (hb : ∀ t, 0 < b t) : C(K,ℝ) :=
+    (g h b : C(K, ℝ)) (hb : ∀ t, 0 < b t) : C(K,ℝ) :=
   ⟨fun t => g t*h t/b t,(g.continuous.mul h.continuous).div b.continuous (fun t => (hb t).ne')⟩
 
 @[simp] theorem productProfileRatio_apply {K : Type*} [TopologicalSpace K]
-    (g h b : C(K,ℝ)) (hb : ∀ t, 0 < b t) (t : K) :
+    (g h b : C(K, ℝ)) (hb : ∀ t, 0 < b t) (t : K) :
     productProfileRatio g h b hb t = g t*h t/b t := rfl
 
 theorem productProfileRatio_abs_le {K : Type*} [TopologicalSpace K]
-    (g h b : C(K,ℝ)) (hg : ∀ t, 0 ≤ g t) (hh : ∀ t, 0 ≤ h t)
-    (hb : ∀ t, 0 < b t) (C : ℝ) (hC : ∀ t, g t*h t ≤ C*b t) (t : K) :
+    (g h b : C(K, ℝ)) (hg : ∀ t, 0 ≤ g t) (hh : ∀ t, 0 ≤ h t)
+    (hb : ∀ t, 0 < b t) (C : ℝ) (hC : ∀ t, g t * h t ≤ C * b t) (t : K) :
     |productProfileRatio g h b hb t| ≤ C := by
   rw [productProfileRatio_apply,abs_of_nonneg (div_nonneg (mul_nonneg (hg t) (hh t)) (hb t).le)]
   exact (div_le_iff₀ (hb t)).mpr (hC t)
@@ -39,7 +43,7 @@ namespace Field
 
 variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
   (G : Field P T raw) (H : Field P T raw') (hT : 0 ≤ T)
-  (g h b : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t) (hh : ∀ t, 0 < h t) (hb : ∀ t, 0 < b t)
+  (g h b : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) (hh : ∀ t, 0 < h t) (hb : ∀ t, 0 < b t)
 
 theorem normalized_bilinear_path (L : Space →L[ℝ] Space →L[ℝ] Space) :
     ((G.bilinear H L).normalized hT b hb).path =
@@ -84,7 +88,7 @@ theorem normalized_spatialTransport_path :
     fderiv ℝ (fun y : LiftTangent => (h (projIcc 0 T hT t))⁻¹ • raw' (t,y)) (x,θ)
       ((g (projIcc 0 T hT t))⁻¹ • raw (t,(x,θ)),0) =
         (b (projIcc 0 T hT t))⁻¹ • fderiv ℝ (fun y : LiftTangent => raw' (t,y)) (x,θ) (raw
-          (t,(x,θ)),0)
+            (t,(x,θ)),0)
   rw [hd,projIcc_of_mem hT t.property]
   have ha : ((g t)⁻¹ • raw (t,(x,θ)),(0 : ℝ)) = (g t)⁻¹ • (raw (t,(x,θ)),(0 : ℝ)) := by simp
   rw [ha]
@@ -102,7 +106,7 @@ theorem WordBound.normalized_bilinear {R A B : ℝ} {d e : ℕ}
     ((G.bilinear H L).normalized hT b hb).WordBound 6 R
       (C*(9*productBlockConstant P*‖L‖*A*B)) (d+e) := by
   have hbound := (hG.bilinear hH L hR hA hB).weighted hT (productProfileRatio g h b hb) C hC
-    hprofile
+      hprofile
   unfold WordBound at *
   rw [G.normalized_bilinear_path H hT g h b hg hh hb L]
   exact hbound
@@ -115,7 +119,7 @@ theorem WordBound.normalized_scalarProduct {R A B : ℝ} {d e : ℕ}
     ((G.scalarProduct H L hL).normalized hT b hb).WordBound 6 R
       (C*(3*productBlockConstant P*A*B)) (d+e) := by
   have hbound := (hG.scalarProduct hH L hL hR hA hB).weighted hT (productProfileRatio g h b hb) C
-    hC hprofile
+      hC hprofile
   unfold WordBound at *
   rw [G.normalized_scalarProduct_path H hT g h b hg hh hb L hL]
   exact hbound
@@ -128,7 +132,7 @@ theorem WordBound.normalized_spatialTransport {R A B : ℝ} {d e : ℕ}
     ((G.spatialTransport H).normalized hT b hb).WordBound 6 R
       (C*(9*productBlockConstant P*A*B)) (d+e+1) := by
   have hbound := (hG.spatialTransport hH hR hA hB).weighted hT (productProfileRatio g h b hb) C hC
-    hprofile
+      hprofile
   unfold WordBound at *
   rw [G.normalized_spatialTransport_path H hT g h b hg hh hb]
   exact hbound

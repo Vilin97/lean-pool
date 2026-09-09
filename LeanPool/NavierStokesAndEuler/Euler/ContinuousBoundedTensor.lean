@@ -6,15 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensor
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.Topology.ContinuousMap.Compact
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Transposing a tensor with continuous bounded path values gives an
 actual continuous path of bounded tensor fields. Finite coordinates prove
 continuity; the norm estimate uses the original multilinear map directly
 and therefore has constant one. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,12 +35,24 @@ variable {K X E V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (X →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (X →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousBoundedTensor1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousBoundedTensor2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (X →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousBoundedTensor3 (n : ℕ) : NormedAddCommGroup (X →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (X →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousBoundedTensor4 (n : ℕ) : NormedSpace ℝ (X →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
-private def coordinates (n : ℕ) :
+/-- Coordinates, given by `ContinuousLinearMap.pi (fun w => (ContinuousLinearMap.id ℝ (E
+[×n]→L[ℝ] V)).flipMultilinear (fun i => Module.finBasis ℝ E (w i)))`. -/
+def coordinates (n : ℕ) :
     (E [×n]→L[ℝ] V) →L[ℝ] ((Fin n → Fin (Module.finrank ℝ E)) → V) :=
   ContinuousLinearMap.pi (fun w =>
     (ContinuousLinearMap.id ℝ (E [×n]→L[ℝ] V)).flipMultilinear
@@ -48,7 +67,9 @@ private theorem coordinates_injective (n : ℕ) :
   intro w
   exact congrFun h w
 
-private def reassembly (n : ℕ) :
+/-- Reassembly, given by `((coordinates (E := E) (V := V)
+n).toLinearMap.leftInverse).toContinuousLinearMap`. -/
+def reassembly (n : ℕ) :
     ((Fin n → Fin (Module.finrank ℝ E)) → V) →L[ℝ] (E [×n]→L[ℝ] V) :=
   ((coordinates (E := E) (V := V) n).toLinearMap.leftInverse).toContinuousLinearMap
 
@@ -57,7 +78,8 @@ private theorem reassembly_coordinates (n : ℕ) (A : E [×n]→L[ℝ] V) :
   LinearMap.leftInverse_apply_of_inj
     (LinearMap.ker_eq_bot.mpr (coordinates_injective n)) A
 
-private def tupleBounded {ι : Type*} [Fintype ι] :
+/-- Tuple bounded as an element of `(ι → (X →ᵇ V)) →L[ℝ] (X →ᵇ (ι → V))`. -/
+def tupleBounded {ι : Type*} [Fintype ι] :
     (ι → (X →ᵇ V)) →L[ℝ] (X →ᵇ (ι → V)) := by
   classical
   exact ∑ i : ι,
@@ -71,6 +93,7 @@ private theorem tupleBounded_apply {ι : Type*} [Fintype ι]
   classical
   simp [tupleBounded]
 
+/-- Tensor path, bundling `toFun`, `continuous_toFun`. -/
 def tensorPath (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V)) :
     C(K, X →ᵇ (E [×n]→L[ℝ] V)) where
   toFun t := (reassembly (E := E) (V := V) n).compLeftContinuousBounded X
@@ -99,10 +122,22 @@ omit [CompactSpace K] in
   rw [tensorPath_eq]
   rfl
 
-private local instance (n : ℕ) : NormedAddCommGroup (C(K, X →ᵇ (E [×n]→L[ℝ] V))) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (C(K, X →ᵇ (E [×n]→L[ℝ] V))) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] C(K, X →ᵇ V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] C(K, X →ᵇ V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K, X →ᵇ (E [×n]→L[ℝ] V)))` instance to shorten
+typeclass synthesis. -/
+local instance instContinuousBoundedTensor5 (n : ℕ) : NormedAddCommGroup (C(K, X →ᵇ (E [×n]→L[ℝ]
+    V))) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K, X →ᵇ (E [×n]→L[ℝ] V)))` instance to shorten
+typeclass synthesis. -/
+local instance instContinuousBoundedTensor6 (n : ℕ) : NormedSpace ℝ (C(K, X →ᵇ (E [×n]→L[ℝ] V))) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] C(K, X →ᵇ V))` instance to shorten
+typeclass synthesis. -/
+local instance instContinuousBoundedTensor7 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] C(K, X →ᵇ V))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] C(K, X →ᵇ V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousBoundedTensor8 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] C(K, X →ᵇ V)) :=
+    inferInstance
 
 theorem tensorPath_norm_le (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V)) :
     ‖tensorPath n A‖ ≤ ‖A‖ := by
@@ -115,6 +150,7 @@ theorem tensorPath_norm_le (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V)) :
   rw [tensorPath_apply]
   exact (((A v t).norm_coe_le_norm x).trans ((A v).norm_coe_le_norm t)).trans (A.le_opNorm v)
 
+/-- Tensor path linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def tensorPathLinear (n : ℕ) :
     (E [×n]→L[ℝ] C(K, X →ᵇ V)) →ₗ[ℝ] C(K, X →ᵇ (E [×n]→L[ℝ] V)) where
   toFun := tensorPath n
@@ -137,6 +173,7 @@ def tensorPathLinear (n : ℕ) :
     simp only [tensorPath_apply, smul_apply, ContinuousMap.smul_apply,
       BoundedContinuousFunction.smul_apply, RingHom.id_apply]
 
+/-- Tensor path map, bundling `toLinearMap`, `cont`. -/
 def tensorPathMap (n : ℕ) :
     (E [×n]→L[ℝ] C(K, X →ᵇ V)) →L[ℝ] C(K, X →ᵇ (E [×n]→L[ℝ] V)) where
   toLinearMap := tensorPathLinear n

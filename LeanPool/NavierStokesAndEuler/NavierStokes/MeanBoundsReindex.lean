@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformHarmonicInteraction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.StateReindex
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 
 /-!
 # Exact transport of mean bounds and residual coefficient classes
@@ -19,6 +18,9 @@ from `StateReindex`.  Every derivative norm and every scalar majorant is
 unchanged.  In particular, uniform constants are chosen before the label
 both before and after reassociation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -216,7 +218,7 @@ theorem residualBlock_velocity_uniform_pull {ι : Type*} (e : D ≃ₗᵢ[ℝ] E
       (fun l n x => (HarmonicResidual.residualBlock (StateReindex.context e c)
         (StateReindex.state e u) (StateReindex.block e (b l))
         (StateReindex.blockCoefficients e (G l)) (StateReindex.blockCoefficients e (A l))).velocity
-          n i j x) := by
+            n i j x) := by
   simpa only [StateReindex.residualBlock_pull, StateReindex.strip] using
     UniformBlockBounds.block_velocity_reindex e i j hb
 

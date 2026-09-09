@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketExactEuler
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketExactEulerianField
 
 /-! The actual scalar pressure of the corrected source packet has the
 constructed continuous physical pressure force, at every time. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,10 +24,17 @@ open Set EulerSmoothLimit EulerLiftedGradientSpace EulerTransverseFrameCoordinat
   EulerPacketPhysicalTransform EulerLagrangian
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instParentPacketExactPressure1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instParentPacketExactPressure2 : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instParentPacketExactPressure3 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instParentPacketExactPressure4 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 variable (A : EulerParentPacketFrames.Parent)
 
@@ -55,7 +64,7 @@ theorem transformedForce_continuous
   exact hforce.add hterm
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
 
 
@@ -63,9 +72,10 @@ variable {P : ℝ} [Fact (0 < P)] {κ : ℝ} {hκ : |κ| ≤ 1}
   {Z R : FieldTower P A.T}
   (B : Budget P A.T_pos (correctionData (A.transverseData m hm J support hSupport) P κ hκ Z R))
   (residual : ApproximationResidual P A.T_pos (correctionData (A.transverseData m hm J support
-    hSupport) P κ hκ Z R))
+      hSupport) P κ hκ Z R))
 
 
+/-- Exact packet force, constructed using `force`. -/
 def exactPacketForce (k : ℝ) (Y force : Icc (0 : ℝ) A.T → Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   force t x + A.ell • (A.inverse.field t (A.ell⁻¹ • Y t x)).adjoint
@@ -74,16 +84,16 @@ def exactPacketForce (k : ℝ) (Y force : Icc (0 : ℝ) A.T → Space → Space)
 theorem exactPacketForce_continuous (k : ℝ) (Y force : Icc (0 : ℝ) A.T → Space → Space)
     (hY : Continuous (Function.uncurry Y)) (hforce : Continuous (Function.uncurry force)) :
     Continuous (Function.uncurry (A.exactPacketForce m hm J support hSupport B residual k Y force))
-      := by
+        := by
   exact A.transformedForce_continuous Y force
     ((exactPacketOfResidual P B residual).graphPressure k) hY hforce
     ((exactPacketOfResidual P B residual).graphPressure_joint_continuous k)
 
-variable (k : ℝ) (hk : k*κ=1) (Y : Icc (0 : ℝ) A.T → Space → Space)
-  (hXY : ∀ t x, A.position t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
+variable (k : ℝ) (hk : k * κ = 1) (Y : Icc (0 : ℝ) A.T → Space → Space)
+  (hXY : ∀ t x, A.position t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
   (p : ℝ × Space → ℝ) (force : Icc (0 : ℝ) A.T → Space → Space)
-  (hp : ∀ (t : Icc (0 : ℝ) A.T) x, DifferentiableAt ℝ (fun y => p (t,y)) x)
-  (hgradient : ∀ (t : Icc (0 : ℝ) A.T) x, gradient (fun y => p (t,y)) x=force t x)
+  (hp : ∀ (t : Icc (0 : ℝ) A.T) x, DifferentiableAt ℝ (fun y => p (t, y)) x)
+  (hgradient : ∀ (t : Icc (0 : ℝ) A.T) x, gradient (fun y => p (t, y)) x = force t x)
 
 include hk hXY hY hp hgradient in
 theorem normalizedExactPressure_gradient (t : Icc (0 : ℝ) A.T) (x : Space) :
@@ -92,13 +102,13 @@ theorem normalizedExactPressure_gradient (t : Icc (0 : ℝ) A.T) (x : Space) :
         (A.inverse.field t (A.packetInverse Y (t,x))).adjoint
           (((exactPacketOfResidual P B residual)).graphPressure k t (A.packetInverse Y (t,x))) := by
   have hs := exact_physicalPressure_smooth (A.transverseData m hm J support hSupport)
-    (exactPacketOfResidual P B residual)
+      (exactPacketOfResidual P B residual)
     (fun s y => A.packetPosition (s,y)) (fun s y => A.packetInverse Y (s,y))
     (fun s y => A.packetPosition_spatial s y)
     (fun s y => A.packetInverse_right Y hXY (s,y))
     (A.packetInverse_time_continuous Y hY) k hk (A.packetInverse Y) (fun _ _ => rfl) t
   have hg := exact_physicalPressure_gradient (A.transverseData m hm J support hSupport)
-    (exactPacketOfResidual P B residual)
+      (exactPacketOfResidual P B residual)
     (fun s y => A.packetPosition (s,y)) (fun s y => A.packetInverse Y (s,y))
     (fun s y => A.packetPosition_spatial s y)
     (fun s y => A.packetInverse_right Y hXY (s,y))
@@ -108,15 +118,15 @@ theorem normalizedExactPressure_gradient (t : Icc (0 : ℝ) A.T) (x : Space) :
   simp only [inv_inv] at hn
   change gradient (fun y => A.normalizedPressure p (t,y)) x =
     A.ell⁻¹ • gradient (fun y => p (t,y)) (A.ell • x) at hn
-  change gradient (fun y => A.normalizedPressure p (t,y)+
+  change gradient (fun y => A.normalizedPressure p (t,y) +
     physicalPressure (((exactPacketOfResidual P B residual)).rawGraphPotential k) (A.packetInverse
-      Y) (t,y)) x=_
+        Y) (t,y)) x=_
   erw [gradient_add _ _ x (A.normalizedPressure_differentiableAt p t x (hp t (A.ell • x)))
     (hs.differentiable (by simp) x),hn,hg,hgradient]
   change A.ell⁻¹ • force t (A.ell • x) + κ •
     (A.inverse.field t (A.packetInverse Y (t,x))).adjoint
       (((exactPacketOfResidual P B residual)).pressure.pointField t
-        (EulerGraphPressurePotential.cylinderGraph P k m (A.packetInverse Y (t,x)))) = _
+          (EulerGraphPressurePotential.cylinderGraph P k m (A.packetInverse Y (t,x)))) = _
   apply congrArg (fun z => A.ell⁻¹ • force t (A.ell • x) + z)
   exact ((A.inverse.field t (A.packetInverse Y (t,x))).adjoint.map_smul κ
     ((exactPacketOfResidual P B residual).pressure.pointField t
@@ -129,7 +139,7 @@ theorem exactPacketPressure_gradient (t : Icc (0 : ℝ) A.T) (x : Space) :
   have hg := EulerSpatialRescaling.pressure_gradient A.ell A.ell_pos.ne'
     (A.normalizedExactPressure m hm J support hSupport B residual k Y p) (t,x)
     (A.normalizedExactPressure_differentiableAt m hm J support hSupport B residual k hk Y hXY hY p
-      hp t
+        hp t
       (A.ell⁻¹ • x))
   change gradient (fun y => EulerSpatialRescaling.pressure A.ell
     (A.normalizedExactPressure m hm J support hSupport B residual k Y p) (t,y)) x=_

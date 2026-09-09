@@ -7,14 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedFlow
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryQuadraticControl
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerHigherEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTameEnergy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerHigherEnergy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryQuadraticControl
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Uniform energy bounds for the actual regularized flows. Symmetry
 and translation commutation transfer the exact energy production to
 the smoothed velocity, where the checked Euler cancellations apply. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,7 +27,7 @@ namespace EulerOrdinarySobolev
 
 open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerLpTranslation EulerLpTranslation.SmoothL2Field EulerMeanSolenoidal
-  EulerMeanClassical EulerVolterraConvolution Finset
+   EulerVolterraConvolution Finset
 open scoped ContDiff Topology
 
 namespace SmoothingOperator
@@ -30,7 +35,7 @@ namespace SmoothingOperator
 variable (S : SmoothingOperator)
 
 theorem rhs_pairing (A : SmoothL2Field Space) {n : ℕ} (w : Fin n → Fin 3) :
-    ⟪(wordField A w).toLp,(wordField (S.rhs A.toLp) w).toLp⟫_ℝ=
+    ⟪(wordField A w).toLp,(wordField (S.rhs A.toLp) w).toLp⟫_ℝ =
       ⟪(wordField (S.field A.toLp) w).toLp,
         (wordField (fieldNeg (advectionField (S.field A.toLp) (S.field A.toLp))) w).toLp⟫_ℝ := by
   simp only [rhs,wordField_neg,toLp_fieldNeg,inner_neg_right,field_word,← S.symmetric]
@@ -49,7 +54,7 @@ theorem rhs_energy (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m)
   have hb : B.toLp ∈ solenoidalSpace := by
     rw [field_toLp]
     exact S.solenoidal _
-  have hx : integerEnergyProduction m A (S.rhs A.toLp)=
+  have hx : integerEnergyProduction m A (S.rhs A.toLp) =
       integerEnergyProduction m B (eulerRhs B (fieldSub B B)) := by
     simp only [integerEnergyProduction,S.rhs_pairing,← he,B]
   rw [hx]
@@ -64,9 +69,12 @@ namespace RegularizedEvolution
 
 variable {S : SmoothingOperator} {T : ℝ} {hT : 0 ≤ T} (U : RegularizedEvolution S T hT)
 
+/-- Energy, given by `⟨fun t => wordEnergy m (U.velocity t),wordEnergy_continuous U.velocity
+U.velocity_continuous m⟩`. -/
 def energy (m : ℕ) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => wordEnergy m (U.velocity t),wordEnergy_continuous U.velocity U.velocity_continuous m⟩
 
+/-- Energy derivative, given by `integerEnergyProduction m (U.velocity t) (U.derivative t)`. -/
 def energyDerivative (m : ℕ) (t : Icc (0 : ℝ) T) : ℝ :=
   integerEnergyProduction m (U.velocity t) (U.derivative t)
 
@@ -95,7 +103,7 @@ theorem energy_quadratic (t : Icc (0 : ℝ) T) :
     nlinarith [mul_le_mul_of_nonneg_right hl hx]
   simpa only [mul_assoc] using mul_le_mul_of_nonneg_left hsq (tameEnergyConstant_nonneg 3)
 
-theorem short_energy (hsmall : tameEnergyConstant 3*T ≤ (1+U.energy 3 ⟨0,le_rfl,hT⟩)⁻¹/2)
+theorem short_energy (hsmall : tameEnergyConstant 3 * T ≤ (1 + U.energy 3 ⟨0, le_rfl, hT⟩)⁻¹ / 2)
     (t : Icc (0 : ℝ) T) : U.energy 3 t ≤ 2*U.energy 3 ⟨0,le_rfl,hT⟩+1 := by
   have hp (r : ℝ) (hr : r ∈ Icc 0 T) : projIcc 0 T hT r=⟨r,hr⟩ := projIcc_of_mem hT hr
   have h := quadratic_energy_bound T (tameEnergyConstant 3) hT
@@ -109,7 +117,7 @@ theorem short_energy (hsmall : tameEnergyConstant 3*T ≤ (1+U.energy 3 ⟨0,le_
 
 theorem energy_uniform (m : ℕ) (hm : 3 ≤ m) (M : ℝ)
     (hM : ∀ t, WordBound 3 M (U.velocity t)) (t : Icc (0 : ℝ) T) :
-    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (tameEnergyConstant m*M*T) := by
   have hd (r : ℝ) (hr : r ∈ Ico 0 T) :
       HasDerivWithinAt (extendPath T hT (U.energy m))
@@ -120,11 +128,11 @@ theorem energy_uniform (m : ℕ) (hm : 3 ≤ m) (M : ℝ)
     (fun r => U.energyDerivative m (projIcc 0 T hT r)) (tameEnergyConstant m*M) T
     ((U.energy m).continuous.comp continuous_projIcc).continuousOn hd
     (fun r _hr => U.energy_tame m hm M (projIcc 0 T hT r) (hM _)) t t.property
-  have hi : wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+  have hi : wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (tameEnergyConstant m*M*t) := by
     simpa only [extendPath,projIcc_of_mem hT t.property,
       projIcc_of_mem hT (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl,hT⟩),energy,ContinuousMap.coe_mk]
-        using he
+          using he
   apply hi.trans
   apply mul_le_mul_of_nonneg_left _ (wordEnergy_nonneg m _)
   apply Real.exp_le_exp.mpr
@@ -133,6 +141,7 @@ theorem energy_uniform (m : ℕ) (hm : 3 ≤ m) (M : ℝ)
 
 end RegularizedEvolution
 
+/-- Regularized time, given by `(2*(1+tameEnergyConstant 3)*(1+wordEnergy 3 A))⁻¹`. -/
 def regularizedTime (A : SmoothL2Field Space) : ℝ :=
   (2*(1+tameEnergyConstant 3)*(1+wordEnergy 3 A))⁻¹
 
@@ -142,14 +151,15 @@ theorem regularizedTime_pos (A : SmoothL2Field Space) : 0 < regularizedTime A :=
   unfold regularizedTime
   positivity
 
+/-- Regularized H3, given by `Real.sqrt (2*wordEnergy 3 A+1)`. -/
 def regularizedH3 (A : SmoothL2Field Space) : ℝ := Real.sqrt (2*wordEnergy 3 A+1)
 
 theorem regularized_h3 (A : SmoothL2Field Space) {S : SmoothingOperator}
     (U : RegularizedEvolution S (regularizedTime A) (regularizedTime_pos A).le)
-    (hinit : U.velocity ⟨0,le_rfl,(regularizedTime_pos A).le⟩=A)
+    (hinit : U.velocity ⟨0, le_rfl, (regularizedTime_pos A).le⟩ = A)
     (t : Icc (0 : ℝ) (regularizedTime A)) : WordBound 3 (regularizedH3 A) (U.velocity t) := by
   have he : U.energy 3 ⟨0,le_rfl,(regularizedTime_pos A).le⟩=wordEnergy 3 A := congrArg (wordEnergy
-    3) hinit
+      3) hinit
   have hc : 0 < 1+tameEnergyConstant 3 := by linarith [tameEnergyConstant_nonneg 3]
   have ha : 0 < 1+wordEnergy 3 A := by linarith [wordEnergy_nonneg 3 A]
   have hs : tameEnergyConstant 3*regularizedTime A ≤ (1+wordEnergy 3 A)⁻¹/2 := by
@@ -168,7 +178,7 @@ theorem regularized_all_order (A : SmoothL2Field Space) (q : ℕ) :
       U.velocity ⟨0,le_rfl,(regularizedTime_pos A).le⟩=A →
       ∀ t, tensorNorm q (U.velocity t) ≤ C := by
   let m := max 3 q
-  refine ⟨wordCount q*Real.sqrt (wordEnergy m A*
+  refine ⟨wordCount q*Real.sqrt (wordEnergy m A *
     Real.exp (tameEnergyConstant m*regularizedH3 A*regularizedTime A)),?_⟩
   intro S U hinit t
   have hu := U.energy_uniform m (le_max_left 3 q) (regularizedH3 A)

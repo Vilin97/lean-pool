@@ -7,19 +7,22 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyReconstruction
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointMultiplication
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+import LeanPool.NavierStokesAndEuler.Euler.QuadraticSourceLimit
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.SobolevPointMultiplication
+
+/-! Genuine pointwise time differentiation of the generically assembled correction. -/
 
 @[expose] public section
 
-/-! Genuine pointwise time differentiation of the generically assembled correction. -/
 
 noncomputable section
 
 namespace EulerCorrectionAssembly
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerAllOrderCorrectionData
+    EulerAllOrderCorrectionData
   EulerCorrectionOperators EulerVolterraConvolution EulerSobolevPointEvaluation
   EulerSobolevJointEvaluation EulerSobolevPointMultiplication EulerSobolevCoefficientPressure
   EulerQuadraticSourceLimit EulerInviscidSobolevEvolution
@@ -33,7 +36,8 @@ def FiniteFamily.pointRawSource (F : FiniteFamily period hT A)
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 6)
     (F.rawSourcePath period 6 le_rfl t))
 
-/-- The canonical actual time derivative, defined by bounded evaluation of the genuine continuous Sobolev source. -/
+/-- The canonical actual time derivative, defined by bounded evaluation of the genuine continuous
+Sobolev source. -/
 def FiniteFamily.pointTimeDerivative (F : FiniteFamily period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 6)
@@ -54,12 +58,13 @@ theorem FiniteFamily.pointTimeDerivative_eq_pressure (F : FiniteFamily period hT
   unfold FiniteFamily.pointTimeDerivative
   rw [EulerInviscidSobolevEvolution.CorrectionData.source_sobolev]
   simp only [map_sub, map_neg]
-  rw [pointEvaluation_coefficient period (by omega : 3 ≤ 6) ((A.atOrder period
-    6).metric.coefficient t)
+  rw [pointEvaluation_coefficient period (by
+      omega : 3 ≤ 6) ((A.atOrder period 6).metric.coefficient t)
     ((A.atOrder period 6).metric.jet t)]
   rfl
 
-/-- The canonical common field has its genuine pointwise first time derivative at every interior time. -/
+/-- The canonical common field has its genuine pointwise first time derivative at every interior
+time. -/
 theorem FiniteFamily.pointField_hasDerivAt (F : FiniteFamily period hT A)
     (x : LiftDomain period) (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => F.pointField period (projIcc 0 T hT.le r) x)
@@ -67,12 +72,13 @@ theorem FiniteFamily.pointField_hasDerivAt (F : FiniteFamily period hT A)
   have hd := sobolev_hasDerivAt period T hT.le
     ((A.atOrder period 6).coefficients period le_rfl) (F.solution 6 le_rfl)
     (F.equation 6 le_rfl) t ht
-  have he := (((pointEvaluation period x).comp (restrictOperator period (by omega : 3 ≤
-    6))).hasFDerivAt).comp_hasDerivAt t hd
+  have he := (((pointEvaluation period x).comp (restrictOperator period (by
+      omega : 3 ≤ 6))).hasFDerivAt).comp_hasDerivAt t hd
   simpa only [Function.comp_def, ContinuousLinearMap.comp_apply, restrictOperator_truncate,
     FiniteFamily.pointField, FiniteFamily.pointTimeDerivative, extendPath] using he
 
-/-- The actual pointwise correction equation uses the reconstructed signed pressure and literal matrix multiplication. -/
+/-- The actual pointwise correction equation uses the reconstructed signed pressure and literal
+matrix multiplication. -/
 theorem FiniteFamily.pointField_hasDerivAt_pressure (F : FiniteFamily period hT A)
     (x : LiftDomain period) (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => F.pointField period (projIcc 0 T hT.le r) x)

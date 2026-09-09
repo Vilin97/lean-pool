@@ -7,20 +7,25 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientCostMonotone
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCanonicalRadius
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentTransverseCosts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalDatumBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevTensorInverse
+public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
 
 /-! Polynomial formulas for the fixed-order inverse and for a common
 source-radius envelope. No target radius, forcing amplitude or grade
 occurs in the primitive envelope. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerParameterWordGevrey
 
 
+/-- Inverse polynomial as an element of `ℕ → Polynomial ℝ | 0 => I | n+1 => I+inversePolynomial
+I B n+2^n*B*(inversePolynomial I B n)^2`. -/
 def inversePolynomial (I B : Polynomial ℝ) : ℕ → Polynomial ℝ
   | 0 => I
   | n+1 => I+inversePolynomial I B n+2^n*B*(inversePolynomial I B n)^2
@@ -32,11 +37,13 @@ theorem inversePolynomial_eval (I B : Polynomial ℝ) (n : ℕ) (x : ℝ) :
   | succ n ih => simp only [inversePolynomial,sobolevInverseCost,Polynomial.eval_add,
       Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_ofNat,ih]
 
+/-- Inverse block polynomial, given by `1+inversePolynomial I (coefficientPolynomial q R C)
+q*(coefficientPolynomial q R C+D)`. -/
 def inverseBlockPolynomial (q : ℕ) (I R C D : Polynomial ℝ) : Polynomial ℝ :=
   1+inversePolynomial I (coefficientPolynomial q R C) q*(coefficientPolynomial q R C+D)
 
 theorem inverseBlockPolynomial_eval (q : ℕ) (I R C D : Polynomial ℝ) (x : ℝ) :
-    (inverseBlockPolynomial q I R C D).eval x=
+    (inverseBlockPolynomial q I R C D).eval x =
       inverseBlockCost (Fin 4) q (I.eval x) (R.eval x) (C.eval x) (D.eval x) := by
   simp only [inverseBlockPolynomial,Polynomial.eval_add,Polynomial.eval_mul,Polynomial.eval_one,
     inversePolynomial_eval,coefficientPolynomial_eval,inverseBlockCost]
@@ -67,57 +74,84 @@ namespace EulerPacketRadiusPolynomial
 
 open EulerParameterWordGevrey EulerPacketTerminalDatum EulerGevreyCutoff EulerPolynomialCost
 
+/-- Coeff: an abbreviation for `sobolevCoefficientAmplitude (Fin 4) 6 R C`. -/
 abbrev coeff (R C : ℝ) : ℝ := sobolevCoefficientAmplitude (Fin 4) 6 R C
+/-- Coeff poly: an abbreviation for `coefficientPolynomial 6 R C`. -/
 abbrev coeffPoly (R C : Polynomial ℝ) : Polynomial ℝ := coefficientPolynomial 6 R C
 
+/-- Inverse envelope, given by `2*(1+2*W^5+2*W^2)^2`. -/
 def inverseEnvelope (W : ℝ) : ℝ := 2*(1+2*W^5+2*W^2)^2
+/-- Form envelope, given by `36*W^2*(1+W)`. -/
 def formEnvelope (W : ℝ) : ℝ := 36*W^2*(1+W)
+/-- Endpoint envelope, given by `6*coeff W W*W`. -/
 def endpointEnvelope (W : ℝ) : ℝ := 6*coeff W W*W
 
+/-- Weak envelope, given by `inverseBlockCost (Fin 4) 6 (inverseEnvelope W) W (formEnvelope W)
+(3*coeff W (2*W)*endpointEnvelope W)`. -/
 def weakEnvelope (W : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) 6 (inverseEnvelope W) W (formEnvelope W)
     (3*coeff W (2*W)*endpointEnvelope W)
 
+/-- Strong envelope, given by `inverseBlockCost (Fin 4) 6 W W (3*W^2) (3*coeff W
+W*(endpointEnvelope W+6*coeff W W*(2*W+2)))`. -/
 def strongEnvelope (W : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) 6 W W (3*W^2)
     (3*coeff W W*(endpointEnvelope W+6*coeff W W*(2*W+2)))
 
+/-- Forward envelope, given by `let b := coeff (4*W) (1+36*W^4) 1+sobolevInverseCost 1 b
+6*(b+W*(2*W+2))`. -/
 def forwardEnvelope (W : ℝ) : ℝ :=
   let b := coeff (4*W) (1+36*W^4)
   1+sobolevInverseCost 1 b 6*(b+W*(2*W+2))
 
+/-- Jet envelope, given by `64+40*W^2`. -/
 def jetEnvelope (W : ℝ) : ℝ := 64+40*W^2
 
+/-- Required envelope, given by `W+16*jetEnvelope W+2*(weakEnvelope W+strongEnvelope W)*(16*W+1)
++ 2*forwardEnvelope W*(64*W+1)`. -/
 def requiredEnvelope (W : ℝ) : ℝ :=
-  W+16*jetEnvelope W+2*(weakEnvelope W+strongEnvelope W)*(16*W+1)+
+  W+16*jetEnvelope W+2*(weakEnvelope W+strongEnvelope W)*(16*W+1) +
     2*forwardEnvelope W*(64*W+1)
 
+/-- Physical envelope, given by `let a := coeff (4*W) W 3*a+3*a*(3*coeff (4*W) (18*W^3)+3*coeff
+(4*W) (3*W^2))`. -/
 def physicalEnvelope (W : ℝ) : ℝ :=
   let a := coeff (4*W) W
   3*a+3*a*(3*coeff (4*W) (18*W^3)+3*coeff (4*W) (3*W^2))
 
+/-- Common envelope, given by `6*coeff W W*(2*W+2)+6*coeff W W+physicalEnvelope W`. -/
 def commonEnvelope (W : ℝ) : ℝ :=
   6*coeff W W*(2*W+2)+6*coeff W W+physicalEnvelope W
 
+/-- Normal envelope, given by `coeff (5*W+1) (1+W+6*W^2+729*W^6)`. -/
 def normalEnvelope (W : ℝ) : ℝ := coeff (5*W+1) (1+W+6*W^2+729*W^6)
 
+/-- Pressure envelope, given by `3*coeff (4*W) (3*W^2)*(1+6*coeff (4*W) W*commonEnvelope W)`. -/
 def pressureEnvelope (W : ℝ) : ℝ :=
   3*coeff (4*W) (3*W^2)*(1+6*coeff (4*W) W*commonEnvelope W)
 
+/-- Grade envelope, given by `commonEnvelope W+135*(normalEnvelope W)^2*(period*commonEnvelope
+W) + 3*period*pressureEnvelope W`. -/
 def gradeEnvelope (W : ℝ) : ℝ :=
-  commonEnvelope W+135*(normalEnvelope W)^2*(period*commonEnvelope W)+
+  commonEnvelope W+135*(normalEnvelope W)^2*(period*commonEnvelope W) +
     3*period*pressureEnvelope W
 
+/-- Mean envelope, given by `let a := coeff W W 3*a*(W+2)+3*(a*(W+2)+a)+3*a*(W+3*a+6*a*(W+2))`. -/
 def meanEnvelope (W : ℝ) : ℝ :=
   let a := coeff W W
   3*a*(W+2)+3*(a*(W+2)+a)+3*a*(W+3*a+6*a*(W+2))
 
+/-- Terminal envelope, given by `coeff (jetEnvelope W) (300*(9/rawBump
+0)^3*W^2*terminalMass)*W`. -/
 def terminalEnvelope (W : ℝ) : ℝ :=
   coeff (jetEnvelope W) (300*(9/rawBump 0)^3*W^2*terminalMass)*W
 
+/-- Radius envelope, given by `18*W+2*requiredEnvelope W+meanEnvelope W+gradeEnvelope
+W*(1+terminalEnvelope W)`. -/
 def radiusEnvelope (W : ℝ) : ℝ :=
   18*W+2*requiredEnvelope W+meanEnvelope W+gradeEnvelope W*(1+terminalEnvelope W)
 
+/-- Radius polynomial as an element of `Polynomial ℝ`. -/
 def radiusPolynomial : Polynomial ℝ :=
   let X : Polynomial ℝ := Polynomial.X
   let a := coeffPoly X X
@@ -149,7 +183,9 @@ theorem radiusPolynomial_eval (W : ℝ) : radiusPolynomial.eval W=radiusEnvelope
   congr 3
   ring_nf
 
+/-- Radius constant, given by `coefficientCost radiusPolynomial`. -/
 def radiusConstant : ℝ := coefficientCost radiusPolynomial
+/-- Radius power, given by `radiusPolynomial.natDegree`. -/
 def radiusPower : ℕ := radiusPolynomial.natDegree
 
 theorem radiusConstant_pos : 0 < radiusConstant := coefficientCost_pos _

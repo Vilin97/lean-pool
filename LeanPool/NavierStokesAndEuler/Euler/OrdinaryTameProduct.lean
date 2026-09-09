@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordInterpolation
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Products
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! Tame products of genuine ordinary derivatives.  The low norm is
 H³ and the high norm has any integer order at least three.  The only
 interpolation input is the integration-by-parts theorem in
 `OrdinaryWordInterpolation`. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +26,8 @@ open MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
   EulerLpTranslation.SmoothL2Field EulerSmoothSobolev Finset
 open scoped ContDiff
 
+/-- Word point bound, given by `smoothEmbeddingConstant*(∑ j ∈ range 3, (3 : ℝ)^j*wordMaximum
+(k+j) A)`. -/
 def wordPointBound (A : SmoothL2Field Space) (k : ℕ) : ℝ :=
   smoothEmbeddingConstant*(∑ j ∈ range 3, (3 : ℝ)^j*wordMaximum (k+j) A)
 
@@ -33,14 +37,14 @@ theorem wordPointBound_nonneg (A : SmoothL2Field Space) (k : ℕ) : 0 ≤ wordPo
 
 theorem wordPointBound_product (A : SmoothL2Field Space) (m : ℕ) (M N : ℝ)
     (hM : WordBound 3 M A) (hN : WordBound m N A)
-    {a b : ℕ} (ha : a+2 ≤ m) (hb : b ≤ m) (hab : a+b ≤ m+1) :
+    {a b : ℕ} (ha : a + 2 ≤ m) (hb : b ≤ m) (hab : a + b ≤ m + 1) :
     wordPointBound A a*wordMaximum b A ≤ (13*smoothEmbeddingConstant)*M*N := by
   have hj (j : ℕ) (hjr : j ∈ range 3) :
       wordMaximum (a+j) A*wordMaximum b A ≤ M*N :=
     wordMaximum_product_le A m M N hM hN
       (by have := mem_range.mp hjr; omega) hb (by have := mem_range.mp hjr; omega)
   calc
-    _ = smoothEmbeddingConstant*
+    _ = smoothEmbeddingConstant *
         (∑ j ∈ range 3, (3 : ℝ)^j*(wordMaximum (a+j) A*wordMaximum b A)) := by
       simp only [wordPointBound,sum_mul,mul_assoc]
     _ ≤ smoothEmbeddingConstant*(∑ j ∈ range 3, (3 : ℝ)^j*(M*N)) :=
@@ -72,7 +76,7 @@ theorem coordinateProduct_word_right (A : SmoothL2Field Space) {k l : ℕ}
 
 theorem coordinateProduct_tame (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m) (M N : ℝ)
     (hM : WordBound 3 M A) (hN : WordBound m N A)
-    {k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (hkl : k+l ≤ m+1)
+    {k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (hkl : k + l ≤ m + 1)
     (w : Fin k → Fin 3) (v : Fin l → Fin 3) (i : Fin 3) :
     ‖(coordinateProduct i (wordField A w) (wordField A v)).toLp‖ ≤ h3ProductConstant*M*N := by
   by_cases h3 : m=3
@@ -92,7 +96,7 @@ theorem coordinateProduct_tame (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m
 
 theorem tame_outer_product (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m) (M N : ℝ)
     (hM : WordBound 3 M A) (hN : WordBound m N A)
-    {n k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (horder : n+k+l ≤ m+1)
+    {n k l : ℕ} (hk : 1 ≤ k) (hl : 1 ≤ l) (horder : n + k + l ≤ m + 1)
     (a : Fin n → Fin 3) (w : Fin k → Fin 3) (v : Fin l → Fin 3) (i : Fin 3) :
     ‖(wordField (coordinateProduct i (wordField A w) (wordField A v)) a).toLp‖ ≤
       (2 : ℝ)^n*h3ProductConstant*M*N := by

@@ -6,17 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Vandermonde
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Algebra.BigOperators.NatAntidiagonal
-public import Mathlib.Algebra.BigOperators.Intervals
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.NatAntidiagonal
+import Mathlib.Data.Nat.Choose.Vandermonde
+import Mathlib.Tactic.FieldSimp
 
 /-!
 # Concrete coefficient estimates for the natural-axis norm
@@ -26,6 +20,9 @@ finite coefficient convolutions with the Leibniz binomial factors. In particular
 the mixed derivative estimate is proved after the radial inverse; no boundedness
 of either differentiation operator on its own is assumed.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.AxisWeightEstimates
 
@@ -43,6 +40,7 @@ def weight (ε : ℝ) (n m : ℕ) : ℝ :=
 def coreWeight (ε : ℝ) (n m : ℕ) : ℝ :=
   (1 / 20 : ℝ) ^ n * (ε⁻¹) ^ m * (m.factorial : ℝ) * ((n + m).choose m : ℝ)
 
+/-- Square decay, given by `1 / ((n : ℝ) + 1) ^ 2`. -/
 def squareDecay (n : ℕ) : ℝ := 1 / ((n : ℝ) + 1) ^ 2
 
 theorem weight_eq_core_decay (ε : ℝ) (n m : ℕ) :
@@ -395,6 +393,7 @@ theorem jetProduct_bound {ε F G : ℝ} (hε : 0 < ε) (hF : 0 ≤ F) (hG : 0 �
       mul_le_mul_of_nonneg_left (productWeightSum_le hε n m) (mul_nonneg hF hG)
     _ = _ := by ring
 
+/-- Radial divisor, given by `((n : ℝ) + 1) * ((n : ℝ) + r)`. -/
 def radialDivisor (r n : ℕ) : ℝ := ((n : ℝ) + 1) * ((n : ℝ) + r)
 
 theorem radialDivisor_pos {r : ℕ} (hr : 1 ≤ r) (n : ℕ) : 0 < radialDivisor r n := by
@@ -410,6 +409,8 @@ theorem mixed_factors_le_divisor {r n i j : ℕ} (hr : 1 ≤ r) (hij : i + j = n
   unfold radialDivisor
   exact_mod_cast Nat.mul_le_mul hi hj
 
+/-- Shifted product weight sum, given by `∑ ij ∈ antidiagonal n, ∑ kl ∈ antidiagonal m,
+(m.choose kl.1 : ℝ) * weight ε (ij.1 + 1) kl.1 * weight ε ij.2 kl.2`. -/
 def shiftedProductWeightSum (ε : ℝ) (n m : ℕ) : ℝ :=
   ∑ ij ∈ antidiagonal n, ∑ kl ∈ antidiagonal m,
     (m.choose kl.1 : ℝ) * weight ε (ij.1 + 1) kl.1 * weight ε ij.2 kl.2
@@ -453,6 +454,7 @@ theorem mixed_weight_term_le {ε : ℝ} (hε : 0 < ε) {r n i j : ℕ}
       mul_le_mul_of_nonneg_left hfactor hnonneg
     _ = _ := mul_one _
 
+/-- Mixed weight sum, choosing the witness provided by `kl.1`. -/
 def mixedWeightSum (ε : ℝ) (r n m : ℕ) : ℝ :=
   ∑ ij ∈ antidiagonal n, ∑ kl ∈ antidiagonal m,
     (((m.choose kl.1 : ℝ) * ij.2) / radialDivisor r n) *

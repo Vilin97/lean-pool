@@ -6,14 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualBaseResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveStateRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RankStateCoherence
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCovariance
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.TemporalStateCoherence
 
 /-!
 # Coherence of the literal initialized state
@@ -21,6 +20,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.RankStateCoherence
 The state here uses the same active primary labels, physical base error,
 common gauge, and actual temporal/rank constructors as initialization.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ActualInitialCoherence
 
@@ -31,112 +33,127 @@ open scoped ContDiff Topology BigOperators
 open CorrectionState MeanIncrementBounds MeanStateRegularity PhysicalResidualNaturality
 
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
 
+/-- Pieces, defined pointwise by `CorrectionInitialization.ActualPrimary.piece
+CorrectionInitialization.ActualPrimary.standardRegion l.2 l.1`. -/
 noncomputable def pieces (B N0 : ℕ) :
     CorrectionInitialization.ActualPrimary.Label B N0 × Fin 2 →
-      CorrectionInitialization.PrimaryPiece (Point × ℝ) :=
+        CorrectionInitialization.PrimaryPiece (Point × ℝ) :=
   fun l => CorrectionInitialization.ActualPrimary.piece
-    CorrectionInitialization.ActualPrimary.standardRegion l.2 l.1
+      CorrectionInitialization.ActualPrimary.standardRegion l.2 l.1
 
+/-- Base error, constructed using `ActualBaseResidual.baseError`. -/
 noncomputable def baseError (B : ℕ) : Oscillation Point :=
   ActualBaseResidual.baseError CorrectionInitialization.ActualPrimary.certificate
-    CorrectionInitialization.ActualPrimary.modulation CorrectionInitialization.ActualPrimary.upper B
+      CorrectionInitialization.ActualPrimary.modulation
+          CorrectionInitialization.ActualPrimary.upper B
 
+/-- Seed, constructed using `CorrectionInitialization.bandSeed`. -/
 noncomputable def seed (B N0 : ℕ) : State Point :=
   CorrectionInitialization.bandSeed (CorrectionInitialization.ActualPrimary.activeLabels
-    CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
+      CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
+/-- Primary, constructed using `CorrectionInitialization.GaugeInitialization.primaryBands`. -/
 noncomputable def primary (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.primaryBands
-    CorrectionInitialization.ActualPrimary.commonGauge
-    (CorrectionInitialization.ActualPrimary.commonContext B)
+      CorrectionInitialization.ActualPrimary.commonGauge
+          (CorrectionInitialization.ActualPrimary.commonContext B)
     (CorrectionInitialization.ActualPrimary.activeLabels
-      CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
+        CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
+/-- Temporal, constructed using `CorrectionInitialization.GaugeInitialization.temporalBands`. -/
 noncomputable def temporal (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.temporalBands
-    CorrectionInitialization.ActualPrimary.commonGauge CorrectionInitialization.ActualPrimary.h
-    (CorrectionInitialization.CommonWindow.index CorrectionInitialization.ActualPrimary.h)
-    ((0,1),0) (CorrectionInitialization.ActualPrimary.commonContext B)
+      CorrectionInitialization.ActualPrimary.commonGauge CorrectionInitialization.ActualPrimary.h
+          (CorrectionInitialization.CommonWindow.index CorrectionInitialization.ActualPrimary.h)
+              ((0,1),0) (CorrectionInitialization.ActualPrimary.commonContext B)
     (CorrectionInitialization.ActualPrimary.activeLabels
-      CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
+        CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
+/-- Ranked, constructed using `CorrectionInitialization.GaugeInitialization.rankBands`. -/
 noncomputable def ranked (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.rankBands
-    CorrectionInitialization.ActualPrimary.commonGauge
-    CorrectionInitialization.ActualPrimary.rankData CorrectionInitialization.ActualPrimary.h
-    (CorrectionInitialization.CommonWindow.index CorrectionInitialization.ActualPrimary.h)
-    ((0,1),0) (CorrectionInitialization.ActualPrimary.commonContext B)
+      CorrectionInitialization.ActualPrimary.commonGauge
+          CorrectionInitialization.ActualPrimary.rankData CorrectionInitialization.ActualPrimary.h
+              (CorrectionInitialization.CommonWindow.index
+                  CorrectionInitialization.ActualPrimary.h) ((0,1),0)
+                      (CorrectionInitialization.ActualPrimary.commonContext B)
     (CorrectionInitialization.ActualPrimary.activeLabels
-      CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
+        CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
+/-- Initialized, constructed using
+`CorrectionInitialization.GaugeInitialization.initializedBands`. -/
 noncomputable def initialized (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.initializedBands
-    CorrectionInitialization.ActualPrimary.commonGauge
-    CorrectionInitialization.ActualPrimary.rankData CorrectionInitialization.ActualPrimary.h
-    (CorrectionInitialization.CommonWindow.index CorrectionInitialization.ActualPrimary.h)
-    ((0,1),0) (CorrectionInitialization.ActualPrimary.commonContext B)
+      CorrectionInitialization.ActualPrimary.commonGauge
+          CorrectionInitialization.ActualPrimary.rankData CorrectionInitialization.ActualPrimary.h
+              (CorrectionInitialization.CommonWindow.index
+                  CorrectionInitialization.ActualPrimary.h) ((0,1),0)
+                      (CorrectionInitialization.ActualPrimary.commonContext B)
     (CorrectionInitialization.ActualPrimary.activeLabels
-      CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
+        CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
 theorem commonGauge_eq_similarity :
     CorrectionInitialization.ActualPrimary.commonGauge = VariableGaugeMean.similarityGauge
-      CorrectionInitialization.ActualPrimary.h (ChartScales.radialExponent
-      CorrectionInitialization.ActualPrimary.h)
+        CorrectionInitialization.ActualPrimary.h (ChartScales.radialExponent
+            CorrectionInitialization.ActualPrimary.h)
       (PrimaryTargetBounds.leftRadius CorrectionInitialization.ActualPrimary.nominal)
-        (PrimaryTargetBounds.rightRadius CorrectionInitialization.ActualPrimary.nominal)
+          (PrimaryTargetBounds.rightRadius CorrectionInitialization.ActualPrimary.nominal)
       1 (PrimaryTargetBounds.radii_ordered CorrectionInitialization.ActualPrimary.nominal)
-        (CorrectionInitialization.CommonWindow.index CorrectionInitialization.ActualPrimary.h) := by
+          (CorrectionInitialization.CommonWindow.index CorrectionInitialization.ActualPrimary.h) :=
+              by
   simp only [CorrectionInitialization.ActualPrimary.commonGauge, VariableGaugeMean.similarityGauge,
-    CommonBaseContext.reconstruction,
+      CommonBaseContext.reconstruction,
     MeanChartCompatibility.radialFrequency, one_mul]
   rfl
 
 theorem slowCoordinates_band (n m k : ℕ) (x : Point) :
     BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
-      CorrectionInitialization.ActualPrimary.h n m k x) =
+        CorrectionInitialization.ActualPrimary.h n m k x) =
       SimilarityHomogeneity.chartTransition CorrectionInitialization.ActualPrimary.h (ChartScales.Q
-        n) (ChartScales.Q m) (BaseContextAssembly.slowCoordinates x) := rfl
+          n) (ChartScales.Q m) (BaseContextAssembly.slowCoordinates x) := rfl
 
 theorem physicalPoint_band (n m k : ℕ) (x : Point) :
     BaseContextAssembly.physicalPoint CorrectionInitialization.ActualPrimary.h m
-      (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) =
-      BaseContextAssembly.physicalPoint CorrectionInitialization.ActualPrimary.h n x := by
+        (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) =
+            BaseContextAssembly.physicalPoint CorrectionInitialization.ActualPrimary.h n x := by
   rw [← ActualBaseResidual.physicalPoint_zero_angle, ← ActualBaseResidual.physicalPoint_zero_angle,
     ActualBaseResidual.physicalPoint_bandChart]
 
 theorem normalizedCoordinates_band (n m k : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
     BaseChartJets.normalizedCoordinates CorrectionInitialization.ActualPrimary.h
-      (BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
-      CorrectionInitialization.ActualPrimary.h n m k x)) =
+        (BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
+            CorrectionInitialization.ActualPrimary.h n m k x)) =
       SlowBorelBase.scaleMap (ChartScales.Q n / ChartScales.Q m)
         (BaseChartJets.normalizedCoordinates CorrectionInitialization.ActualPrimary.h
-          (BaseContextAssembly.slowCoordinates x)) := by
+            (BaseContextAssembly.slowCoordinates x)) := by
   rw [slowCoordinates_band, BaseChartJets.normalizedCoordinates_eq,
-    BaseChartJets.normalizedCoordinates_eq,
+      BaseChartJets.normalizedCoordinates_eq,
     SimilarityHomogeneity.chartQ_transition
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half
+        CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
+            CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half
       (ChartScales.Q_pos n) (ChartScales.Q_pos m) hT,
     SimilarityHomogeneity.chartX_transition
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half
+        CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
+            CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half
       (ChartScales.Q_pos n) (ChartScales.Q_pos m) hT,
     SimilarityHomogeneity.chartEta_transition
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
-      CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half
+        CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
+            CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half
       (ChartScales.Q_pos n) (ChartScales.Q_pos m) hT]
   rfl
 
 theorem scaledCoordinates_band (n m k : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
     SlowBorelBase.scaleMap (ChartScales.Q m)
         (BaseChartJets.normalizedCoordinates CorrectionInitialization.ActualPrimary.h
-          (BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
-          CorrectionInitialization.ActualPrimary.h n m k x))) =
+            (BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
+                CorrectionInitialization.ActualPrimary.h n m k x))) =
       SlowBorelBase.scaleMap (ChartScales.Q n) (BaseChartJets.normalizedCoordinates
-        CorrectionInitialization.ActualPrimary.h (BaseContextAssembly.slowCoordinates x)) := by
+          CorrectionInitialization.ActualPrimary.h (BaseContextAssembly.slowCoordinates x)) := by
   rw [normalizedCoordinates_band n m k hT]
   apply Prod.ext
   · change ChartScales.Q m * ((ChartScales.Q n / ChartScales.Q m) * _) = ChartScales.Q n * _
@@ -146,72 +163,75 @@ theorem scaledCoordinates_band (n m k : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
 theorem axialFactor_band (n m k : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
     GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
         BaseChartJets.axialFactor CorrectionInitialization.ActualPrimary.h
-          (BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
-          CorrectionInitialization.ActualPrimary.h n m k x)) =
+            (BaseContextAssembly.slowCoordinates (GaugeStateCoherence.bandChartEquiv
+                CorrectionInitialization.ActualPrimary.h n m k x)) =
       BaseChartJets.axialFactor CorrectionInitialization.ActualPrimary.h
-        (BaseContextAssembly.slowCoordinates x) := by
+          (BaseContextAssembly.slowCoordinates x) := by
   have hr := div_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m)
   have hq := BaseChartJets.normalizedCoordinates_q_pos
-    CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
-    CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half (p :=
-    BaseContextAssembly.slowCoordinates x) hT
+      CorrectionInitialization.ActualPrimary.outgoing.data.h_pos
+          CorrectionInitialization.ActualPrimary.outgoing.data.h_lt_half (p :=
+              BaseContextAssembly.slowCoordinates x) hT
   simp only [BaseChartJets.axialFactor, normalizedCoordinates_band n m k hT,
-    SlowBorelBase.scaleMap_apply,
+      SlowBorelBase.scaleMap_apply,
     Real.mul_rpow hr.le hq.le, GaugeStateCoherence.bandVelocityScale]
   rw [← mul_assoc, ← Real.rpow_add hr, add_neg_cancel, Real.rpow_zero, one_mul]
 
 theorem context_radial_band (B n m k : ℕ) (x : Point) :
     (CorrectionInitialization.ActualPrimary.commonContext B).base.radial n x =
-      GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
+        GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
       (CorrectionInitialization.ActualPrimary.commonContext B).base.radial m
-        (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) := by
+          (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) :=
+              by
   change ChartScales.Q n ^ CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h * _ =
     GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
-      (ChartScales.Q m ^ CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h * _)
+        (ChartScales.Q m ^ CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h * _)
   rw [physicalPoint_band]
   rw [← mul_assoc, mul_comm (GaugeStateCoherence.bandVelocityScale
-    CorrectionInitialization.ActualPrimary.h n m)]
+      CorrectionInitialization.ActualPrimary.h n m)]
   simp only [GaugeStateCoherence.bandVelocityScale, ActualBaseResidual.band_power_product]
 
 theorem context_axial_band (B n m k : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
     (CorrectionInitialization.ActualPrimary.commonContext B).base.axial n x =
-      GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
+        GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
       (CorrectionInitialization.ActualPrimary.commonContext B).base.axial m
-        (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) := by
+          (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) :=
+              by
   change BaseChartJets.axial _ _ _ _ _ = GaugeStateCoherence.bandVelocityScale
-    CorrectionInitialization.ActualPrimary.h n m * BaseChartJets.axial _ _ _ _ _
+      CorrectionInitialization.ActualPrimary.h n m * BaseChartJets.axial _ _ _ _ _
   simp only [BaseChartJets.axial]
   rw [scaledCoordinates_band n m k hT, ← mul_assoc, axialFactor_band n m k hT]
 
 theorem context_angular_band (B n m k : ℕ) {x : Point} (hT : 0 < x.2.1.1) :
     (CorrectionInitialization.ActualPrimary.commonContext B).base.angular n x =
-      GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
+        GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
       (CorrectionInitialization.ActualPrimary.commonContext B).base.angular m
-        (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) := by
+          (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x) :=
+              by
   change x.1 * BaseChartJets.frequency _ _ _ _ _ _ = GaugeStateCoherence.bandVelocityScale
-    CorrectionInitialization.ActualPrimary.h n m *
+      CorrectionInitialization.ActualPrimary.h n m *
     ((GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x).1 *
-      BaseChartJets.frequency _ _ _ _ _ _)
+        BaseChartJets.frequency _ _ _ _ _ _)
   simp only [BaseChartJets.frequency, BaseChartJets.frequencyFactor]
   rw [scaledCoordinates_band n m k hT]
   by_cases hR : x.1 = 0
   · simp only [GaugeStateCoherence.bandChartEquiv_apply, hR, mul_zero, zero_mul,
-    BaseContextAssembly.slowCoordinates_apply, div_zero]
+      BaseContextAssembly.slowCoordinates_apply, div_zero]
   · have hR' : (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k
-    x).1 ≠ 0 :=
+      x).1 ≠ 0 :=
       mul_ne_zero (GaugeStateCoherence.bandScale_pos n m).ne' hR
     have hfactor := axialFactor_band n m k hT
     change x.1 * (_ / x.1 * _) = _ * ((GaugeStateCoherence.bandChartEquiv
-      CorrectionInitialization.ActualPrimary.h n m k x).1 *
+        CorrectionInitialization.ActualPrimary.h n m k x).1 *
       (_ / (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k x).1
-        * _))
+          * _))
     have cancel (R F A : ℝ) (hR : R ≠ 0) : R * (F / R * A) = F * A := by
       field_simp
     rw [cancel _ _ _ hR, cancel _ _ _ hR', ← mul_assoc, hfactor]
 
 theorem stressScale (n m : ℕ) :
     GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
-      GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
+        GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
       ChartScales.Q m ^ (2 * CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) =
         ChartScales.Q n ^ (2 * CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) := by
   unfold GaugeStateCoherence.bandVelocityScale
@@ -220,22 +240,23 @@ theorem stressScale (n m : ℕ) :
 
 theorem context_stress_band (B n m k : ℕ) (x : Point) :
     BaseContextAssembly.virtualStress CorrectionInitialization.ActualPrimary.certificate
-      CorrectionInitialization.ActualPrimary.modulation
-      CorrectionInitialization.ActualPrimary.upper B n x =
+        CorrectionInitialization.ActualPrimary.modulation
+            CorrectionInitialization.ActualPrimary.upper B n x =
       (GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m *
-        GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m) •
+          GaugeStateCoherence.bandVelocityScale CorrectionInitialization.ActualPrimary.h n m) •
         BaseContextAssembly.virtualStress CorrectionInitialization.ActualPrimary.certificate
-          CorrectionInitialization.ActualPrimary.modulation
-          CorrectionInitialization.ActualPrimary.upper B m (GaugeStateCoherence.bandChartEquiv
-          CorrectionInitialization.ActualPrimary.h n m k x) := by
+            CorrectionInitialization.ActualPrimary.modulation
+                CorrectionInitialization.ActualPrimary.upper B m
+                    (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n
+                        m k x) := by
   by_cases hR : 0 < x.1
   · have hR' : 0 < (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m
-    k x).1 := mul_pos (GaugeStateCoherence.bandScale_pos n m) hR
+      k x).1 := mul_pos (GaugeStateCoherence.bandScale_pos n m) hR
     rw [BaseContextAssembly.virtualStress_eq_raw _ _ _ _ _ hR,
-      BaseContextAssembly.virtualStress_eq_raw _ _ _ _ _ hR']
+        BaseContextAssembly.virtualStress_eq_raw _ _ _ _ _ hR']
     simp only [BaseContextAssembly.rawStress, physicalPoint_band, smul_smul, stressScale]
   · have hR' : (GaugeStateCoherence.bandChartEquiv CorrectionInitialization.ActualPrimary.h n m k
-    x).1 ≤ 0 :=
+      x).1 ≤ 0 :=
       mul_nonpos_of_nonneg_of_nonpos (GaugeStateCoherence.bandScale_pos n m).le (le_of_not_gt hR)
     rw [BaseContextAssembly.virtualStress_eq_zero _ _ _ _ _ (le_of_not_gt hR),
       BaseContextAssembly.virtualStress_eq_zero _ _ _ _ _ hR', smul_zero]
@@ -259,16 +280,16 @@ theorem frame_radial (B n : ℕ) (x : Point) :
         ((0 : Plane), commonGauge.radial.radialDirection) x := by
   change (1, ((0 : Plane), (0 : Plane))) +
       (commonGauge.radial.frequency n * RadialPullback.radialJacobian commonGauge.radial.exponent
-        x.1) •
+          x.1) •
         (0, ((0 : Plane), commonGauge.radial.radialDirection)) =
     (1, (RadialPullback.radialJacobian commonGauge.radial.exponent x.1 *
-      commonGauge.radial.frequency n) •
+        commonGauge.radial.frequency n) •
       ((0 : Plane), commonGauge.radial.radialDirection))
   simp only [Prod.smul_mk, smul_zero, Prod.mk_add_mk, add_zero, zero_add, mul_comm]
 
 theorem viscosity_scale (n m : ℕ) :
     ChartScales.epsilon h n * bandScale n m = bandVelocityScale h n m * ChartScales.epsilon h m :=
-      by
+        by
   rw [bandScale_eq_ratioPower, bandVelocityScale_eq_ratioPower]
   exact PhysicalResidualNaturality.weight_viscosity (ChartScales.Q_pos n) (ChartScales.Q_pos m) h
 
@@ -306,7 +327,7 @@ theorem context_frame_band (B : ℕ) {V : Set Plane} (htime : ∀ s ∈ V, 0 < s
     · simp [PressureStream.radialVector]
     · change ((bandSlowEquiv h n m).toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap k))
         (PressureStream.physicalSpeed commonGauge.radial.exponent (commonGauge.radial.frequency n)
-          x.1 •
+            x.1 •
           ((0 : Plane), commonGauge.radial.radialDirection)) =
         bandScale n m • (PressureStream.physicalSpeed commonGauge.radial.exponent
           (commonGauge.radial.frequency m) (bandScale n m * x.1) •
@@ -334,7 +355,7 @@ theorem context_frame_band (B : ℕ) {V : Set Plane} (htime : ∀ s ∈ V, 0 < s
     rw [map_sub, smul_sub, slowTime_vector]
     congr 1
     exact TemporalStateCoherence.common_fast_transport h
-      (CorrectionInitialization.CommonWindow.index h)
+        (CorrectionInitialization.CommonWindow.index h)
       _ _ (PrimaryTargetBounds.radii_ordered nominal) n m k hi
 
 theorem context_band (B : ℕ) {V : Set Plane} (htime : ∀ s ∈ V, 0 < s.1)
@@ -376,7 +397,7 @@ theorem temporal_primitive_of_seed (B N0 : ℕ)
 
 theorem rank_geometry_of_primitive (B : ℕ) (u : State Point)
     (H : PrimitiveData standardRegion commonGauge.radial.inner commonGauge.radial.outer
-      (commonContext B) u) :
+        (commonContext B) u) :
     LocalRankDefect.RankGeometry commonGauge rankData standardRegion.carrier (commonContext B) u :=
   rank_geometry standardRegion B u (MeanStageRegularity.debt_smooth H
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal))
@@ -400,14 +421,14 @@ theorem initialized_primitive_of_seed (B N0 : ℕ)
 
 theorem initialized_reconstructed (B N0 : ℕ) :
     VariableGaugeMean.reconstructState commonGauge (commonContext B) (initialized B N0) =
-      initialized B N0 := rfl
+        initialized B N0 := rfl
 
 theorem debtRegular_of_primitive (B : ℕ) (u : State Point)
     (H : PrimitiveData standardRegion commonGauge.radial.inner commonGauge.radial.outer
-      (commonContext B) u)
+        (commonContext B) u)
     (n : ℕ) : RankStateCoherence.DebtRegular standardRegion.carrier (commonContext B) u n := by
   have hr := H.source (PrimaryTargetBounds.leftRadius_pos nominal)
-    (PrimaryTargetBounds.radii_ordered nominal)
+      (PrimaryTargetBounds.radii_ordered nominal)
   have ht := (H.angular_flux (PrimaryTargetBounds.leftRadius_pos nominal)
     (PrimaryTargetBounds.radii_ordered nominal)).axial
   have hz := (H.axial_flux (PrimaryTargetBounds.leftRadius_pos nominal)
@@ -422,7 +443,7 @@ open CorrectionInitialization.ActualPrimary GaugeStateCoherence
 
 variable (B N0 n m k : ℕ)
     (hi : CorrectionInitialization.CommonWindow.index h n + k =
-      CorrectionInitialization.CommonWindow.index h m)
+        CorrectionInitialization.CommonWindow.index h m)
     {V : Set Plane} (hV : IsOpen V) (hsub : V ⊆ standardRegion.carrier)
     (hmap : MapsTo (bandSlowEquiv h n m) V standardRegion.carrier)
     (HP : PrimitiveData standardRegion commonGauge.radial.inner commonGauge.radial.outer
@@ -437,7 +458,7 @@ theorem primary_band_of_seed :
       (bandVelocityScale h n m) (bandScale n m) (primary B N0) (primary B N0) n m := by
   have ht : ∀ s ∈ V, 0 < s.1 := fun s hs => standardRegion.time_pos s (hsub hs)
   have hr := HP.source (PrimaryTargetBounds.leftRadius_pos nominal)
-    (PrimaryTargetBounds.radii_ordered nominal)
+      (PrimaryTargetBounds.radii_ordered nominal)
   exact reconstructState_on (bandScale_pos n m) (bandSlowEquiv h n m) k
     hV standardRegion.isOpen hmap commonGauge commonGauge (commonContext B) (commonContext B)
     (seed B N0) (seed B N0) n m (PrimaryTargetBounds.leftRadius_pos nominal)
@@ -450,7 +471,7 @@ theorem temporal_band_of_seed :
   have ht : ∀ s ∈ V, 0 < s.1 := fun s hs => standardRegion.time_pos s (hsub hs)
   have hP := primary_primitive_of_seed B N0 HP
   have hθ := hP.theta (PrimaryTargetBounds.leftRadius_pos nominal)
-    (PrimaryTargetBounds.radii_ordered nominal)
+      (PrimaryTargetBounds.radii_ordered nominal)
   have hz := hP.axial_reconstructed (PrimaryTargetBounds.leftRadius_pos nominal)
     (ChartScales.radialExponent_pos h outgoing.data.h_pos.le) commonGauge_length rfl
   have hpost := (temporal_primitive_of_seed B N0 HP).source
@@ -499,7 +520,7 @@ theorem initialized_band_of_seed :
     (ChartScales.radialExponent_pos h outgoing.data.h_pos.le) (commonGauge_on ht n m k hi)
     hR (context_band B ht n m k hi) (hpost.smooth m) (hpost.periodic m) (hpost.supported m)
   refine ⟨hR.mean, hR.pressure, hR.oscillation, hR.oscillatoryPressure, hR.baseError, hR.gaussian,
-    ?_⟩
+      ?_⟩
   intro x hx θ i
   change (ranked B N0).errors.aliasError n (x,θ) i +
     VariableGaugeMean.pressureAliasState commonGauge (commonContext B) (ranked B N0) n (x,θ) i =
@@ -566,7 +587,7 @@ theorem seed_smooth (B N0 : ℕ) :
   apply ContDiffOn.sum
   intro l hl
   exact (contDiffOn_pi.mp (ActualPrimaryCoherence.piece_velocity_smooth standardRegion l.2 l.1 n)
-    i).mono
+      i).mono
     (fun x hx => standardRegion.time_pos _ hx.1)
 
 theorem seed_support (B N0 : ℕ) :
@@ -603,11 +624,12 @@ theorem active_index_le {B N0 n : ℕ} {l : Label B N0 × Fin 2}
 
 end SeedRegularity
 
-theorem sum_eq_mul_sum_of_support {ι : Type} [DecidableEq ι]
+theorem sum_eq_mul_sum_of_support {ι : Type}
     (s t : Finset ι) (f g : ι → ℝ) (a : ℝ)
     (hf : ∀ i, i ∉ s → f i = 0) (hg : ∀ i, i ∉ t → g i = 0)
     (he : ∀ i, f i = a * g i) :
     ∑ i ∈ s, f i = a * ∑ i ∈ t, g i := by
+  classical
   have hs : ∑ i ∈ s, f i = ∑ i ∈ s ∪ t, f i :=
     Finset.sum_subset Finset.subset_union_left (fun i _ hi => hf i hi)
   have ht : ∑ i ∈ t, g i = ∑ i ∈ s ∪ t, g i :=
@@ -621,15 +643,20 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary GaugeStateC
 
 variable {B N0 : ℕ}
 
+/-- Phase, given by `(pieces B N0 l).coefficients.phase n (x, 0)`. -/
 noncomputable def phase (l : Label B N0 × Fin 2) (n : ℕ) (x : Point) : ℝ :=
   (pieces B N0 l).coefficients.phase n (x, 0)
 
+/-- Angular mode, given by `PrimaryGeometryAssembly.angularMode certificate modulation (choice B
+N0).prepared l.2 l.1`. -/
 noncomputable def angularMode (l : Label B N0 × Fin 2) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared l.2 l.1
 
+/-- Primary block, given by `(pieces B N0 l).harmonicBlock (phase l) (angularMode l)`. -/
 noncomputable def primaryBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
   (pieces B N0 l).harmonicBlock (phase l) (angularMode l)
 
+/-- Gaussian block, given by `(pieces B N0 l).excludedBlock (phase l) (angularMode l)`. -/
 noncomputable def gaussianBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
   (pieces B N0 l).excludedBlock (phase l) (angularMode l)
 
@@ -682,7 +709,7 @@ theorem block_phase_band (l : Label B N0 × Fin 2) (n m k : ℕ)
     (chartCoefficients l.2 l.1).frequency m * (chartCoefficients l.2 l.1).phase m
       (bandChartEquiv h n m k x, 0)
   rw [chartCoefficients_phase, chartCoefficients_phase, ActualPrimaryCoherence.toAbsolute_bandChart
-    n m k hi]
+      n m k hi]
 
 theorem blockFields_band (l : Label B N0 × Fin 2) (U : Set Point) (n m k : ℕ)
     (hi : CommonWindow.index h n + k = CommonWindow.index h m) :
@@ -693,7 +720,7 @@ theorem blockFields_band (l : Label B N0 × Fin 2) (U : Set Point) (n m k : ℕ)
   · intro x hx θ i
     rw [(primaryBlock_represents l).1]
     exact congrFun (ActualPrimaryCoherence.piece_velocity_band standardRegion l.2 l.1 n m k hi (x,
-      θ)) i
+        θ)) i
   · intro x hx θ
     rw [(primaryBlock_represents l).2]
     exact ActualPrimaryCoherence.piece_pressure_band standardRegion l.2 l.1 n m k hi (x, θ)
@@ -702,7 +729,7 @@ theorem blockFields_band (l : Label B N0 × Fin 2) (U : Set Point) (n m k : ℕ)
       _ * (gaussianBlock l).oscillation m (bandChartEquiv h n m k x, θ) i
     rw [gaussianBlock_represents]
     exact congrFun (ActualPrimaryCoherence.piece_excluded_band standardRegion l.2 l.1 n m k hi (x,
-      θ)) i
+        θ)) i
   · intro x hx θ i
     simp [HarmonicFields.field]
 
@@ -751,11 +778,11 @@ theorem seed_primitive (B N0 : ℕ) :
   · exact ⟨MovingField.zero, MovingField.zero, MovingField.zero⟩
   · intro i j
     exact MovingField.of_regular (seed_covariance_regular B N0 i j) (seed_covariance_periodic B N0
-      i j)
+        i j)
 
 theorem seed_band (B N0 n m k : ℕ)
     (hi : CorrectionInitialization.CommonWindow.index h n + k =
-      CorrectionInitialization.CommonWindow.index h m)
+        CorrectionInitialization.CommonWindow.index h m)
     {V : Set Plane} (hsub : V ⊆ standardRegion.carrier)
     (hmap : MapsTo (bandSlowEquiv h n m) V standardRegion.carrier) :
     StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv h n m k)
@@ -776,7 +803,7 @@ theorem seed_band (B N0 n m k : ℕ)
       exact congrFun (ActualPrimaryCovariance.piece_velocity_inactive l m (hmap hx) θ hl) i
     · intro l
       exact congrFun (ActualPrimaryCoherence.piece_velocity_band standardRegion l.2 l.1 n m k hi
-        (x, θ)) i
+          (x, θ)) i
   · intro x hx θ
     apply sum_eq_mul_sum_of_support
     · intro l hl
@@ -793,7 +820,7 @@ theorem seed_band (B N0 n m k : ℕ)
       exact congrFun (ActualPrimaryCovariance.piece_excluded_inactive l m (hmap hx) θ hl) i
     · intro l
       exact congrFun (ActualPrimaryCoherence.piece_excluded_band standardRegion l.2 l.1 n m k hi
-        (x, θ)) i
+          (x, θ)) i
   · intro x hx θ i
     simp [seed, CorrectionInitialization.bandSeed]
 
@@ -827,18 +854,18 @@ theorem initialized_primitive (B N0 : ℕ) :
 theorem initialized_aliases (B N0 : ℕ) :
     (initialized B N0).errors.aliasError =
       VariableGaugeMean.temporalAliasState commonGauge h
-        (CorrectionInitialization.CommonWindow.index h)
+          (CorrectionInitialization.CommonWindow.index h)
         (commonContext B) (primary B N0) +
       VariableGaugeMean.pressureAliasState commonGauge (commonContext B) (ranked B N0) :=
   (CorrectionInitialization.GaugeInitialization.initializedBands_error_components commonGauge
-    rankData
+      rankData
     h (CorrectionInitialization.CommonWindow.index h) ((0,1),0) (commonContext B)
     (activeLabels standardRegion B N0) (pieces B N0) (baseError B)).2.2
 
 /-- Full radial, angular, and free auxiliary fibers over every common chart region. -/
 theorem initialized_band (B N0 n m k : ℕ)
     (hi : CorrectionInitialization.CommonWindow.index h n + k =
-      CorrectionInitialization.CommonWindow.index h m)
+        CorrectionInitialization.CommonWindow.index h m)
     {V : Set Plane} (hV : IsOpen V) (hsub : V ⊆ standardRegion.carrier)
     (hmap : MapsTo (bandSlowEquiv h n m) V standardRegion.carrier) :
     StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv h n m k)
@@ -846,6 +873,8 @@ theorem initialized_band (B N0 n m k : ℕ)
   initialized_band_of_seed B N0 n m k hi hV hsub hmap (seed_primitive B N0)
     (seed_band B N0 n m k hi hsub hmap)
 
+/-- Overlap, given by `standardRegion.carrier ∩ (bandSlowEquiv h n m) ⁻¹'
+standardRegion.carrier`. -/
 noncomputable def overlap (n m : ℕ) : Set Plane :=
   standardRegion.carrier ∩ (bandSlowEquiv h n m) ⁻¹' standardRegion.carrier
 
@@ -854,14 +883,14 @@ theorem overlap_open (n m : ℕ) : IsOpen (overlap n m) :=
 
 theorem initialized_on_overlap (B N0 n m k : ℕ)
     (hi : CorrectionInitialization.CommonWindow.index h n + k =
-      CorrectionInitialization.CommonWindow.index h m) :
+        CorrectionInitialization.CommonWindow.index h m) :
     StateOn (PhysicalMeanDomain.slowDomain (overlap n m)) (bandChartEquiv h n m k)
       (bandVelocityScale h n m) (bandScale n m) (initialized B N0) (initialized B N0) n m :=
   initialized_band B N0 n m k hi (overlap_open n m) inter_subset_left (fun _ hx => hx.2)
 
 theorem initialized_alias_band (B N0 n m k : ℕ)
     (hi : CorrectionInitialization.CommonWindow.index h n + k =
-      CorrectionInitialization.CommonWindow.index h m)
+        CorrectionInitialization.CommonWindow.index h m)
     {x : Point} (hx : x.2.1 ∈ overlap n m) (θ : ℝ) (i : Fin 3) :
     (initialized B N0).errors.aliasError n (x, θ) i =
       (bandVelocityScale h n m * bandVelocityScale h n m * bandScale n m) *

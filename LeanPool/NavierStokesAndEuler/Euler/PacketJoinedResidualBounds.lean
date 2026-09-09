@@ -6,13 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedResidualFields
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileTailEstimates
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileTailEstimates
+
+/-! Exponential residual bounds for the actual recursively solved joined packet. -/
 
 @[expose] public section
 
-/-! Exponential residual bounds for the actual recursively solved joined packet. -/
 
 noncomputable section
 
@@ -40,14 +48,14 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (hprimaryBudget : ProfileBudget hprimary S L.R 1)
   (hprimaryMean : primary.mean = 0)
   (hprimaryTangent : ∀ (t : Icc (0 : ℝ) M.T) x θ,
-    inner ℝ (D.normalField (t,(x,θ))) (primary.high (t,(x,θ))) = 0)
+    inner ℝ (D.normalField (t, (x, θ))) (primary.high (t, (x, θ))) = 0)
 
 include NB W LM WM BC hRc hcost hα hgrowth hprimaryBudget hprimaryMean hprimaryTangent
 
 theorem joinedTailSum_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ))
-    (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ))
+    (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (((joinedSourceCoefficientData P M D τ hτ hτT B hTime).inverse.multiply
       (joinedTailSumField P M D hTime τ hτ hτT B primary hprimary N k⁻¹)).smul k).WordBound
         6 (4*L.R) (Real.exp (-(7/10)*X*Real.log k)) 0 := by
@@ -74,7 +82,7 @@ theorem joinedResidual_normalized_bound (A : VectorField) (π : ScalarField)
     (hπ : ∀ t : Icc (0 : ℝ) M.T, ContDiff ℝ ∞ (fun y : Space × ℝ => π (t,y)))
     (htan : ∀ (t : Icc (0 : ℝ) M.T) x θ, inner ℝ (D.normalField (t,(x,θ))) (A (t,(x,θ))) = 0)
     (hpEquation : ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) M.T) A (t,(x,θ)))+
+      linearPart (D.strain (t,(x,θ))) (slicedJet (Icc (0 : ℝ) M.T) A (t,(x,θ))) +
         fastPressure (D.normalField (t,(x,θ))) (pressureJet π (t,(x,θ)))=0)
     (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingEntranceCone
 
-@[expose] public section
-
 /-!
 # Actual shaped-hold errors with constants uniform in the small slope
 
@@ -17,6 +15,9 @@ The angular lag is solved exactly from its incoming value at `holdStart`.
 The two decaying modes are kept separate, so no inverse small-slope constant
 appears in the error estimate.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -79,14 +80,14 @@ theorem angularSource_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h)
     have hb := mul_le_mul hh1 hcoef (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1 / 100)
     nlinarith
   have hbase : 0 ≤ D h + d η * dropCoefficient c.m y ∧ D h + d η * dropCoefficient c.m y ≤ 9 / 2 :=
-    by
+      by
     have hb := mul_le_mul hd.2 hk.2 hk.1 (by norm_num : (0 : ℝ) ≤ 1)
     constructor <;> nlinarith [mul_nonneg hd.1 hk.1]
   have hthird : |(D h + d η * dropCoefficient c.m y) * η * shapeGradient η| ≤ 9 / 2 := by
-    rw [mul_assoc, abs_mul, abs_of_nonneg hbase.1, abs_of_nonneg (by nlinarith [sq_nonneg η] : 0 ≤
-      η * shapeGradient η)]
-    exact (mul_le_mul hbase.2 hJ.2 (by nlinarith [sq_nonneg η]) (by norm_num : (0 : ℝ) ≤ 9 /
-      2)).trans_eq (by ring)
+    rw [mul_assoc, abs_mul, abs_of_nonneg hbase.1, abs_of_nonneg (by
+        nlinarith [sq_nonneg η] : 0 ≤ η * shapeGradient η)]
+    exact (mul_le_mul hbase.2 hJ.2 (by
+        nlinarith [sq_nonneg η]) (by norm_num : (0 : ℝ) ≤ 9 / 2)).trans_eq (by ring)
   unfold angularSource
   have hs : |-slope c.dropLength c.lam y * transportW c h y η -
       h * (1 - 2 * dropCoefficient c.m y * η ^ 2) +
@@ -114,15 +115,20 @@ theorem angularLag_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h)
   have hr := (angularRate_bounds c t).1
   linarith
 
+/-- Equilibrium, given by `(c.lam - h + D h * η * shapeGradient η) / (1 - c.lam)`. -/
 noncomputable def equilibrium (c : Parameters) (h η : ℝ) : ℝ :=
   (c.lam - h + D h * η * shapeGradient η) / (1 - c.lam)
 
+/-- Hold coefficient, given by `L h η * averagedDrop c c.holdStart`. -/
 noncomputable def holdCoefficient (c : Parameters) (h η : ℝ) : ℝ :=
   L h η * averagedDrop c c.holdStart
 
+/-- Hold source, given by `c.lam - h + D h * η * shapeGradient η - c.lam * holdCoefficient c h η
+* Real.exp (-t)`. -/
 noncomputable def holdSource (c : Parameters) (h η t : ℝ) : ℝ :=
   c.lam - h + D h * η * shapeGradient η - c.lam * holdCoefficient c h η * Real.exp (-t)
 
+/-- Hold formula, constructed using `equilibrium`. -/
 noncomputable def holdFormula (c : Parameters) (h η t : ℝ) : ℝ :=
   equilibrium c h η +
     (angularLag c h η c.holdStart - equilibrium c h η - holdCoefficient c h η) *
@@ -175,7 +181,7 @@ theorem holdFormula_hasDerivAt (c : Parameters) (h η t : ℝ) :
   convert! hd' using 1
   unfold holdSource holdFormula equilibrium
   simp only [id_eq]
-  field_simp [(hold_rate_pos c).ne'] ; ring
+  field_simp [(hold_rate_pos c).ne']; ring
 
 /-- Exact integration of the shaped-hold equation, with no division by `λ`. -/
 theorem angularLag_hold_formula (c : Parameters) (h η : ℝ) {t : ℝ} (ht : 0 ≤ t) :
@@ -187,7 +193,7 @@ theorem angularLag_hold_formula (c : Parameters) (h η : ℝ) {t : ℝ} (ht : 0 
     (by simp : angularLag c h η (c.holdStart + 0) = angularLag c h η c.holdStart) (fun u hu => by
       have hu0 := (uIcc_of_le ht ▸ hu).1
       have hd := (angularLag_hasDerivAt c h η (c.holdStart + u)).comp u ((hasDerivAt_id
-        u).const_add c.holdStart)
+          u).const_add c.holdStart)
       simp only [Function.comp_def, mul_one, angularSource_hold c h η hu0,
         angularRate_hold c hu0] at hd
       exact hd)
@@ -239,16 +245,16 @@ theorem angularLag_hold_error (v : TailData) {η t : ℝ} (hh1 : v.h ≤ 1 / 100
   rw [angularLag_hold_formula v.core v.h η ht]
   have hf : holdFormula v.core v.h η t - equilibrium v.core v.h η =
       (angularLag v.core v.h η v.core.holdStart - equilibrium v.core v.h η - holdCoefficient v.core
-        v.h η) *
+          v.h η) *
         Real.exp (-(1 - v.core.lam) * t) + holdCoefficient v.core v.h η * Real.exp (-t) := by
     unfold holdFormula
     ring
   rw [hf]
   calc
     _ ≤ |(angularLag v.core v.h η v.core.holdStart - equilibrium v.core v.h η - holdCoefficient
-      v.core v.h η) *
+        v.core v.h η) *
         Real.exp (-(1 - v.core.lam) * t)| + |holdCoefficient v.core v.h η * Real.exp (-t)| :=
-          abs_add_le _ _
+            abs_add_le _ _
     _ ≤ 15 * Real.exp (-(1 - v.core.lam) * t) + 4 * Real.exp (-(1 - v.core.lam) * t) := by
       simp only [abs_mul, abs_of_pos (Real.exp_pos _)]
       exact add_le_add (mul_le_mul_of_nonneg_right hcoef (Real.exp_pos _).le)
@@ -263,6 +269,7 @@ theorem canonical_Qs_pulseStart_error {v : TailData} {K : ℝ}
   rw [canonical_Qs_before w ha v.core.pulseStart_pos.le le_rfl]
   exact angularLag_hold_error v hh1 hη (by linarith [v.core.wait_gt])
 
+/-- Wait for power, given by `-(n : ℝ) * Real.log c.lam / (1 - c.lam)`. -/
 noncomputable def waitForPower (c : Parameters) (n : ℕ) : ℝ :=
   -(n : ℝ) * Real.log c.lam / (1 - c.lam)
 
@@ -284,6 +291,7 @@ theorem canonical_Qs_pulseStart_power_error {v : TailData} {K : ℝ}
 
 /-! ## The positive shaped-hold floor -/
 
+/-- Hold floor, given by `min (coneFloor * Real.exp (-entranceTime m) / 4) (1 / 16)`. -/
 noncomputable def holdFloor (m : ℝ) : ℝ :=
   min (coneFloor * Real.exp (-entranceTime m) / 4) (1 / 16)
 
@@ -308,8 +316,8 @@ theorem holdSource_lower (v : TailData) {η t : ℝ} (hh1 : v.h ≤ 1 / 100)
   have hy : v.core.dropLength + 2 ≤ v.core.holdStart + t := by
     dsimp [Parameters.holdStart]
     linarith
-  have hW := transportW_second_ramp v.core v.h_pos.le hh1 (y := v.core.holdStart + t) (by linarith)
-    hη
+  have hW := transportW_second_ramp v.core v.h_pos.le hh1 (y := v.core.holdStart + t) (by
+      linarith) hη
   have hD : 49 / 100 ≤ D v.h := by unfold D; linarith
   have hJ := (eta_shapeGradient_bounds hη).1
   have hprod := mul_le_mul hD hJ (sq_nonneg η) (by linarith : 0 ≤ D v.h)
@@ -346,7 +354,7 @@ theorem angularLag_hold_lower (v : TailData) {η t : ℝ} (hh1 : v.h ≤ 1 / 100
     nlinarith
   have hsource : ∀ u ∈ Icc (0 : ℝ) t,
       (1 - v.core.lam) * (holdFloor v.core.m * (η ^ 2 + v.core.lam)) ≤ holdSource v.core v.h η u :=
-        by
+          by
     intro u hu
     have hs := holdSource_lower v hh1 hhlam hη hu.1
     have hbase : holdFloor v.core.m * (η ^ 2 + v.core.lam) ≤
@@ -362,7 +370,7 @@ theorem angularLag_hold_lower (v : TailData) {η t : ℝ} (hh1 : v.h ≤ 1 / 100
     ht hinit hsource
   rw [angularLag_hold_formula v.core v.h η ht, holdFormula_eq_linearLag]
   have hp : -OutgoingSchedule.primitive (fun _ : ℝ => 1 - v.core.lam) t = -(1 - v.core.lam) * t :=
-    by
+      by
     simp only [OutgoingSchedule.primitive, intervalIntegral.integral_const, sub_zero, smul_eq_mul]
     ring
   rw [hp] at hlo
@@ -378,15 +386,15 @@ theorem entrancePressure_contDiff (v : TailData) :
     ContDiff ℝ ∞ (fun p : ℝ × ℝ => entrancePressure v p.1 p.2) := by
   exact ((SchedulePressure.axisPressure_contDiff v).comp contDiff_snd).add
     (((shape_contDiff.comp contDiff_snd).pow 2).mul ((pressureClock_contDiff v.core).comp
-      contDiff_fst))
+        contDiff_fst))
 
 theorem pressureGradient_contDiff (v : TailData) :
     ContDiff ℝ ∞ (fun p : ℝ × ℝ => pressureGradient v p.1 p.2) := by
   exact ((contDiff_infty_iff_deriv.mp (SchedulePressure.axisPressure_contDiff v)).2.comp
-    contDiff_snd).sub
+      contDiff_snd).sub
     (((contDiff_const.mul (shapeGradient_contDiff.comp contDiff_snd)).mul
       ((shape_contDiff.comp contDiff_snd).pow 2)).mul ((pressureClock_contDiff v.core).comp
-        contDiff_fst))
+          contDiff_fst))
 
 theorem pressureAxialSource_contDiff (v : TailData) :
     ContDiff ℝ ∞ (fun p : ℝ × ℝ => pressureAxialSource v p.1 p.2) := by
@@ -452,10 +460,16 @@ theorem weighted_angular_square_hold (c : Parameters) (η : ℝ) {t : ℝ} (ht :
   norm_num
   ring
 
+/-- Initial energy lower, given by `P * Real.exp (-entranceTime m) / 2`. -/
 noncomputable def initialEnergyLower (P m : ℝ) : ℝ := P * Real.exp (-entranceTime m) / 2
+/-- Initial energy upper, given by `P * Real.exp (entranceTime m)`. -/
 noncomputable def initialEnergyUpper (P m : ℝ) : ℝ := P * Real.exp (entranceTime m)
+/-- Initial axial bound, given by `64 + (3 + 4 * pressureBound) * energyEnvelope P (entranceTime
+m)`. -/
 noncomputable def initialAxialBound (P m : ℝ) : ℝ :=
   64 + (3 + 4 * pressureBound) * energyEnvelope P (entranceTime m)
+/-- Axial wait constant, given by `initialAxialBound P m / initialEnergyLower P m +
+pressureSourceBound * initialEnergyUpper P m`. -/
 noncomputable def axialWaitConstant (P m : ℝ) : ℝ :=
   initialAxialBound P m / initialEnergyLower P m + pressureSourceBound * initialEnergyUpper P m
 
@@ -508,7 +522,7 @@ theorem weighted_pressure_source_bound (v : TailData) {η t : ℝ}
     (hh1 : v.h ≤ 1 / 100) (hη : |η| ≤ 1) (ht : 0 ≤ t) (htw : t ≤ v.core.wait) :
     |Real.exp t * pressureAxialSource v (v.core.holdStart + t) η| ≤
       pressureSourceBound * |η| * angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart,
-        η) ^ 2 := by
+          η) ^ 2 := by
   have hy : 0 ≤ v.core.holdStart + t := by linarith [v.core.holdStart_pos]
   have hend : v.core.holdStart + t ≤ v.core.endpoint := by
     dsimp [Parameters.endpoint, Parameters.pulseStart]
@@ -521,7 +535,8 @@ theorem weighted_pressure_source_bound (v : TailData) {η t : ℝ}
       mul_le_mul_of_nonneg_left hb (Real.exp_pos _).le
     _ = (pressureSourceBound * |η|) *
         (Real.exp t * angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t, η) ^ 2)
-          := by ring
+            := by
+            ring
     _ = _ * (angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart, η) ^ 2 *
         Real.exp (-2 * v.core.lam * t)) := by rw [weighted_angular_square_hold v.core η ht]
     _ ≤ _ := by
@@ -529,7 +544,7 @@ theorem weighted_pressure_source_bound (v : TailData) {η t : ℝ}
         Real.exp_le_one_iff.mpr (by nlinarith [mul_nonneg v.core.lam_pos.le ht])
       have hp := mul_le_mul_of_nonneg_left he
         (show 0 ≤ pressureSourceBound * |η| * angular v.core.P v.core.dropLength v.core.lam
-          (v.core.holdStart, η) ^ 2 by
+            (v.core.holdStart, η) ^ 2 by
           have := pressureSourceBound_pos
           positivity)
       nlinarith
@@ -539,7 +554,7 @@ theorem axialLag_hold_bound (v : TailData) {η t : ℝ}
     |axialLag v (v.core.holdStart + t) η| ≤ Real.exp (-t) *
       (initialAxialBound v.core.P v.core.m * |η| + t *
         (pressureSourceBound * |η| * angular v.core.P v.core.dropLength v.core.lam
-          (v.core.holdStart, η) ^ 2)) := by
+            (v.core.holdStart, η) ^ 2)) := by
   rw [axialLag_hold_history v η ht]
   apply historyAverage_abs_bound ht (axialLag_hold_start_bound v hh1 hη)
   intro u hu
@@ -550,7 +565,7 @@ theorem axialLag_hold_ratio_bound (v : TailData) {η t : ℝ}
     |axialLag v (v.core.holdStart + t) η /
       angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t, η)| ≤
       axialWaitConstant v.core.P v.core.m * |η| * (1 + t) * Real.exp (-(1 / 2 - v.core.lam) * t) :=
-        by
+          by
   let E₀ := angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart, η)
   have hE₀ : 0 < E₀ := angular_pos v.core.P_pos _ _ _
   have hE := angular_hold_start_bounds v.core hη
@@ -596,7 +611,7 @@ theorem canonical_Ns_hold_ratio_bound {v : TailData} {K : ℝ}
     |OutgoingHistories.Ns w Amp (v.core.holdStart + t, η) /
       OutgoingHistories.E w (v.core.holdStart + t, η)| ≤
       axialWaitConstant v.core.P v.core.m * |η| * (1 + t) * Real.exp (-(1 / 2 - v.core.lam) * t) :=
-        by
+          by
   have hpulse : v.core.holdStart + t ≤ v.core.pulseStart := by
     dsimp [Parameters.pulseStart]
     linarith
@@ -622,15 +637,15 @@ theorem linearLag_hasDerivAt_parameter {r : ℝ → ℝ} {b : ℝ × ℝ → ℝ
   change HasDerivAt (fun θ => ProfileHistories.primitive F (y, θ))
     (ProfileHistories.parameterPartial (ProfileHistories.primitive F) (y, η)) η at hi
   rw [ProfileHistories.parameterPartial_primitive OutgoingHistories.logDomain hF.contDiffOn
-    (mem_univ _)] at hi
+      (mem_univ _)] at hi
   have hFd (t : ℝ) : OutgoingHistories.dEta F (t, η) =
       Real.exp (OutgoingSchedule.primitive r t) * OutgoingHistories.dEta b (t, η) := by
     exact (OutgoingHistories.dEta_hasDerivAt hF (t, η)).unique
       ((OutgoingHistories.dEta_hasDerivAt hb (t, η)).const_mul (Real.exp
-        (OutgoingSchedule.primitive r t)))
+          (OutgoingSchedule.primitive r t)))
   have hI : ProfileHistories.primitive (ProfileHistories.parameterPartial F) (y, η) =
       ∫ t in (0 : ℝ)..y, Real.exp (OutgoingSchedule.primitive r t) * OutgoingHistories.dEta b (t,
-        η) := by
+          η) := by
     exact intervalIntegral.integral_congr (fun t _ => hFd t)
   rw [hI] at hi
   simpa only [linearLag, OutgoingSchedule.primitive, ProfileHistories.primitive, F] using
@@ -652,6 +667,7 @@ theorem shapeGradient_deriv_bound {η : ℝ} (hη : |η| ≤ 1) : |deriv shapeGr
   apply (div_le_iff₀ hd).mpr
   nlinarith [sq_nonneg η, sq_nonneg (η ^ 2)]
 
+/-- Angular source eta as an element of `ℝ`. -/
 noncomputable def angularSourceEta (c : Parameters) (h η y : ℝ) : ℝ :=
   -4 * h * slope c.dropLength c.lam y * η * averagedDrop c y +
     4 * h * dropCoefficient c.m y * η -
@@ -671,27 +687,27 @@ theorem angularSource_hasDerivAt_eta (c : Parameters) (h y η : ℝ) :
   have hJ := (shapeGradient_contDiff.differentiable (by simp) η).hasDerivAt
   have hmiddle := (((hasDerivAt_id η).fun_pow 2).const_mul (2 * dropCoefficient c.m y)).const_sub 1
   have hlast := ((((hd.mul_const (dropCoefficient c.m y)).const_add (D h)).fun_mul (hasDerivAt_id
-    η)).fun_mul hJ)
+      η)).fun_mul hJ)
   convert! (((hW.const_mul (-slope c.dropLength c.lam y)).fun_sub (hmiddle.const_mul h)).fun_add
-    hlast) using 1
+      hlast) using 1
   simp only [angularSourceEta, id_eq]
   ring
 
 theorem angularSource_joint_contDiff (c : Parameters) (h : ℝ) :
     ContDiff ℝ ∞ (fun p : ℝ × ℝ => angularSource c h p.2 p.1) := by
   have hk := (dropCoefficient_contDiff c.m_pos).comp (contDiff_fst : ContDiff ℝ ∞ (Prod.fst : ℝ × ℝ
-    → ℝ))
+      → ℝ))
   have hkbar := (averagedDrop_contDiff c).comp (contDiff_fst : ContDiff ℝ ∞ (Prod.fst : ℝ × ℝ → ℝ))
   have hL : ContDiff ℝ ∞ (fun p : ℝ × ℝ => L h p.2) := contDiff_const.sub (contDiff_const.mul
-    (contDiff_snd.pow 2))
+      (contDiff_snd.pow 2))
   have hd : ContDiff ℝ ∞ (fun p : ℝ × ℝ => d p.2) := contDiff_const.sub (contDiff_snd.pow 2)
   have hW : ContDiff ℝ ∞ (fun p : ℝ × ℝ => transportW c h p.1 p.2) :=
     contDiff_const.sub (hL.mul hkbar)
   exact ((((slope_contDiff c.dropLength c.lam).comp contDiff_fst).neg.mul hW).sub
     (contDiff_const.mul (contDiff_const.sub ((contDiff_const.mul hk).mul (contDiff_snd.pow
-      2))))).add
+        2))))).add
       ((((contDiff_const.add (hd.mul hk)).mul contDiff_snd).mul (shapeGradient_contDiff.comp
-        contDiff_snd)))
+          contDiff_snd)))
 
 theorem angularSourceEta_eq_dEta (c : Parameters) (h y η : ℝ) :
     OutgoingHistories.dEta (fun p => angularSource c h p.2 p.1) (y, η) = angularSourceEta c h η y :=
@@ -721,8 +737,8 @@ theorem angularSourceEta_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h
     constructor <;> linarith
   have hfirst : |-4 * h * slope c.dropLength c.lam y * η * averagedDrop c y| ≤ 16 := by
     calc
-      _ = 4 * |h| * |slope c.dropLength c.lam y| * |η| * |averagedDrop c y| := by simp only
-        [abs_mul]; norm_num
+      _ = 4 * |h| * |slope c.dropLength c.lam y| * |η| * |averagedDrop c y| := by
+          simp only [abs_mul]; norm_num
       _ ≤ 4 * 1 * 1 * 1 * 4 := by gcongr
       _ = _ := by norm_num
   have hsecond : |4 * h * dropCoefficient c.m y * η| ≤ 16 := by
@@ -732,8 +748,8 @@ theorem angularSourceEta_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h
       _ = _ := by norm_num
   have hthird : |2 * dropCoefficient c.m y * η ^ 2 * shapeGradient η| ≤ 16 := by
     calc
-      _ = 2 * |dropCoefficient c.m y| * η ^ 2 * |shapeGradient η| := by simp only [abs_mul,
-        abs_pow, sq_abs]; norm_num
+      _ = 2 * |dropCoefficient c.m y| * η ^ 2 * |shapeGradient η| := by
+          simp only [abs_mul, abs_pow, sq_abs]; norm_num
       _ ≤ 2 * 4 * 1 * 2 := by gcongr
       _ = _ := by norm_num
   have hjoint : |shapeGradient η + η * deriv shapeGradient η| ≤ 4 := by
@@ -742,7 +758,7 @@ theorem angularSourceEta_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h
       exact (mul_le_mul hη hJ' (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)).trans_eq (by ring)
     exact (abs_add_le _ _).trans (by linarith)
   have hfourth : |(D h + d η * dropCoefficient c.m y) * (shapeGradient η + η * deriv shapeGradient
-    η)| ≤ 20 := by
+      η)| ≤ 20 := by
     rw [abs_mul]
     exact (mul_le_mul hbase hjoint (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 5)).trans_eq (by ring)
   unfold angularSourceEta
@@ -751,10 +767,10 @@ theorem angularSourceEta_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h
         (D h + d η * dropCoefficient c.m y) * (shapeGradient η + η * deriv shapeGradient η)| ≤
       |-4 * h * slope c.dropLength c.lam y * η * averagedDrop c y| +
         |4 * h * dropCoefficient c.m y * η| + |2 * dropCoefficient c.m y * η ^ 2 * shapeGradient η|
-          +
+            +
           |(D h + d η * dropCoefficient c.m y) * (shapeGradient η + η * deriv shapeGradient η)| :=
     (abs_add_le _ _).trans (add_le_add_left ((abs_sub _ _).trans (add_le_add_left (abs_add_le _ _)
-      _)) _)
+        _)) _)
   linarith
 
 theorem idealAngularLag_hasDerivAt (c : Parameters) (h η : ℝ) :
@@ -769,9 +785,9 @@ theorem idealAngularLag_hasDerivAt (c : Parameters) (h η : ℝ) :
 theorem angularLag_hasDerivAt_eta (c : Parameters) (h η y : ℝ) :
     HasDerivAt (fun θ => angularLag c h θ y)
       (linearLag (angularRate c) (angularSourceEta c h η) (angularSourceEta c h η 0 / (8 / 5)) y) η
-        := by
+          := by
   have hd := linearLag_hasDerivAt_parameter (angularRate_contDiff c) (angularSource_joint_contDiff
-    c h)
+      c h)
     (idealAngularLag_hasDerivAt c h η) y
   simp_rw [angularSourceEta_eq_dEta] at hd
   exact hd
@@ -782,7 +798,7 @@ theorem angularLag_deriv_eta_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h
   rw [(angularLag_hasDerivAt_eta c h η y).deriv]
   have hc : Continuous (angularSourceEta c h η) := by
     have hcont : Continuous (fun t => OutgoingHistories.dEta (fun p => angularSource c h p.2 p.1)
-      (t, η)) :=
+        (t, η)) :=
       (OutgoingHistories.dEta_smooth (angularSource_joint_contDiff c h)).continuous.comp
       (continuous_id.prodMk continuous_const)
     exact hcont.congr (fun t => angularSourceEta_eq_dEta c h t η)
@@ -801,7 +817,7 @@ theorem equilibrium_hasDerivAt (c : Parameters) (h η : ℝ) :
       (D h * (shapeGradient η + η * deriv shapeGradient η) / (1 - c.lam)) η := by
   have hj := (shapeGradient_contDiff.differentiable (by simp) η).hasDerivAt
   convert! ((((hasDerivAt_id η).const_mul (D h)).mul hj).const_add (c.lam - h)).div_const (1 -
-    c.lam) using 1
+      c.lam) using 1
   simp only [id_eq]
   ring
 
@@ -853,7 +869,7 @@ theorem angularLag_hold_deriv_error (v : TailData) {η t : ℝ}
   have hc := holdCoefficient_deriv_bound v.core v.h_pos.le hh1 hη
   have hf : (fun θ => angularLag v.core v.h θ (v.core.holdStart + t) - equilibrium v.core v.h θ) =
       fun θ => (angularLag v.core v.h θ v.core.holdStart - equilibrium v.core v.h θ -
-        holdCoefficient v.core v.h θ) *
+          holdCoefficient v.core v.h θ) *
         Real.exp (-(1 - v.core.lam) * t) + holdCoefficient v.core v.h θ * Real.exp (-t) := by
     funext θ
     rw [angularLag_hold_formula v.core v.h θ ht]
@@ -875,7 +891,7 @@ theorem angularLag_hold_deriv_error (v : TailData) {η t : ℝ}
     Real.exp_le_exp.mpr (by nlinarith [mul_nonneg v.core.lam_pos.le ht])
   have htri := abs_add_le
     ((deriv (fun θ => angularLag v.core v.h θ v.core.holdStart) η - deriv (equilibrium v.core v.h)
-      η -
+        η -
       deriv (holdCoefficient v.core v.h) η) * Real.exp (-(1 - v.core.lam) * t))
     (deriv (holdCoefficient v.core v.h) η * Real.exp (-t))
   simp only [abs_mul, abs_of_pos (Real.exp_pos _)] at htri
@@ -885,16 +901,19 @@ theorem angularLag_hold_deriv_error (v : TailData) {η t : ℝ}
 
 /-! ## The axial parameter derivative at the beginning of the hold -/
 
+/-- Initial axial derivative as an element of `ℝ`. -/
 noncomputable def initialAxialDerivative (v : TailData) (η : ℝ) : ℝ :=
   (12 * v.h * η ^ 2 + 6 * η ^ 2 - 2) * averagedDropSquare v.core v.core.holdStart -
     (2 * v.h - 2 * η * shapeGradient η + d η * deriv shapeGradient η) * averagedEnergy v.core
-      v.core.holdStart η +
-      2 * (2 * v.h * η + d η * shapeGradient η) * shapeGradient η * averagedEnergy v.core
         v.core.holdStart η +
+      2 * (2 * v.h * η + d η * shapeGradient η) * shapeGradient η * averagedEnergy v.core
+          v.core.holdStart η +
         4 * A v.h * entrancePressure v v.core.holdStart η +
           (4 * A v.h + 2) * η * pressureGradient v v.core.holdStart η -
             d η * deriv (pressureGradient v v.core.holdStart) η
 
+/-- Initial axial derivative bound, given by `256 + (32 + 16 * pressureBound) * energyEnvelope P
+(entranceTime m)`. -/
 noncomputable def initialAxialDerivativeBound (P m : ℝ) : ℝ :=
   256 + (32 + 16 * pressureBound) * energyEnvelope P (entranceTime m)
 
@@ -922,14 +941,14 @@ theorem initialAxial_hasDerivAt (v : TailData) (η : ℝ) :
   have hcoef := ((hasDerivAt_id η).const_mul (2 * v.h)).fun_add (hd.fun_mul hj)
   have hg := ((((hasDerivAt_id η).fun_pow 3).const_mul (4 * v.h)).fun_sub
     ((hd.fun_mul (hasDerivAt_id η)).const_mul 2)).mul_const (averagedDropSquare v.core
-      v.core.holdStart)
-  have hgrad := ((pressureGradient_contDiff_eta v v.core.holdStart).differentiable (by simp)
-    η).hasDerivAt
+        v.core.holdStart)
+  have hgrad := ((pressureGradient_contDiff_eta v v.core.holdStart).differentiable (by
+      simp) η).hasDerivAt
   rw [hf]
   convert! (((hg.fun_sub (hcoef.fun_mul (averagedEnergy_hasDerivAt_eta v.core v.core.holdStart
-    η))).fun_add
+      η))).fun_add
     (((hasDerivAt_id η).const_mul (4 * A v.h)).fun_mul (entrancePressure_hasDerivAt_eta v
-      v.core.holdStart η))).fun_sub
+        v.core.holdStart η))).fun_sub
       (hd.fun_mul hgrad)) using 1
   · funext θ
     simp only [id_eq]
@@ -954,15 +973,15 @@ theorem initialAxialDerivative_bound (v : TailData) {η : ℝ}
   have hK := averagedDropSquare_bounds v.core htime
   have hEnv : 0 ≤ energyEnvelope v.core.P v.core.holdStart := by unfold energyEnvelope; positivity
   have hp0 : |entrancePressure v v.core.holdStart η| ≤ pressureBound * energyEnvelope v.core.P
-    v.core.holdStart :=
+      v.core.holdStart :=
     hP.1.trans (mul_le_mul_of_nonneg_left hE pressureBound_pos.le)
   have hp1 : |pressureGradient v v.core.holdStart η| ≤ pressureBound * energyEnvelope v.core.P
-    v.core.holdStart := by
+      v.core.holdStart := by
     have he := mul_le_mul_of_nonneg_left hE (mul_nonneg pressureBound_pos.le (abs_nonneg η))
     have hh := mul_le_mul_of_nonneg_left hη (mul_nonneg pressureBound_pos.le hEnv)
     nlinarith [hP.2.1]
   have hp2 : |deriv (pressureGradient v v.core.holdStart) η| ≤ pressureBound * energyEnvelope
-    v.core.P v.core.holdStart :=
+      v.core.P v.core.holdStart :=
     hP.2.2.trans (mul_le_mul_of_nonneg_left hE pressureBound_pos.le)
   have hsq := parameter_square_le_one hη
   have hd : 0 ≤ d η ∧ d η ≤ 1 := by unfold d; constructor <;> nlinarith [sq_nonneg η]
@@ -972,8 +991,8 @@ theorem initialAxialDerivative_bound (v : TailData) {η : ℝ}
   have hC : |2 * v.h * η + d η * shapeGradient η| ≤ 3 :=
     (pressure_coefficient_bound v.h_pos.le hh1 hη).trans (by linarith)
   have hCp : |2 * v.h - 2 * η * shapeGradient η + d η * deriv shapeGradient η| ≤ 10 := by
-    have hfirst : |2 * v.h| ≤ 2 := by rw [abs_of_nonneg (by linarith [v.h_pos] : 0 ≤ 2 * v.h)];
-      linarith
+    have hfirst : |2 * v.h| ≤ 2 := by
+        rw [abs_of_nonneg (by linarith [v.h_pos] : 0 ≤ 2 * v.h)]; linarith
     have hsecond : |2 * η * shapeGradient η| ≤ 4 := by
       calc
         _ = 2 * |η| * |shapeGradient η| := by simp only [abs_mul]; norm_num
@@ -983,11 +1002,11 @@ theorem initialAxialDerivative_bound (v : TailData) {η : ℝ}
       rw [abs_mul, abs_of_nonneg hd.1]
       exact (mul_le_mul hd.2 hJ' (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)).trans_eq (by ring)
     have htri := (abs_add_le (2 * v.h - 2 * η * shapeGradient η) (d η * deriv shapeGradient
-      η)).trans
+        η)).trans
       (add_le_add_left (abs_sub _ _) _)
     linarith
   have hg : |(12 * v.h * η ^ 2 + 6 * η ^ 2 - 2) * averagedDropSquare v.core v.core.holdStart| ≤ 256
-    := by
+      := by
     have hc : |12 * v.h * η ^ 2 + 6 * η ^ 2 - 2| ≤ 16 := by
       have hh := mul_le_mul hh1 hsq (sq_nonneg η) (by norm_num : (0 : ℝ) ≤ 1 / 100)
       have hh0 := mul_nonneg v.h_pos.le (sq_nonneg η)
@@ -997,17 +1016,17 @@ theorem initialAxialDerivative_bound (v : TailData) {η : ℝ}
     exact (mul_le_mul hc hK.2 hK.1 (by norm_num : (0 : ℝ) ≤ 16)).trans_eq (by norm_num)
   have h1 : |(2 * v.h - 2 * η * shapeGradient η + d η * deriv shapeGradient η) *
       averagedEnergy v.core v.core.holdStart η| ≤ 10 * energyEnvelope v.core.P v.core.holdStart :=
-        by
+          by
     rw [abs_mul, abs_of_nonneg hbar0]
     exact mul_le_mul hCp hbar hbar0 (by norm_num)
   have h2 : |2 * (2 * v.h * η + d η * shapeGradient η) * shapeGradient η *
       averagedEnergy v.core v.core.holdStart η| ≤ 12 * energyEnvelope v.core.P v.core.holdStart :=
-        by
+          by
     rw [abs_mul, abs_of_nonneg hbar0]
     have hc : |2 * (2 * v.h * η + d η * shapeGradient η) * shapeGradient η| ≤ 12 := by
       calc
-        _ = 2 * |2 * v.h * η + d η * shapeGradient η| * |shapeGradient η| := by simp only
-          [abs_mul]; norm_num
+        _ = 2 * |2 * v.h * η + d η * shapeGradient η| * |shapeGradient η| := by
+            simp only [abs_mul]; norm_num
         _ ≤ 2 * 3 * 2 := by gcongr
         _ = _ := by norm_num
     exact mul_le_mul hc hbar hbar0 (by norm_num)
@@ -1031,15 +1050,15 @@ theorem initialAxialDerivative_bound (v : TailData) {η : ℝ}
   have hsum : |initialAxialDerivative v η| ≤
       |(12 * v.h * η ^ 2 + 6 * η ^ 2 - 2) * averagedDropSquare v.core v.core.holdStart| +
         |(2 * v.h - 2 * η * shapeGradient η + d η * deriv shapeGradient η) * averagedEnergy v.core
-          v.core.holdStart η| +
-          |2 * (2 * v.h * η + d η * shapeGradient η) * shapeGradient η * averagedEnergy v.core
             v.core.holdStart η| +
+          |2 * (2 * v.h * η + d η * shapeGradient η) * shapeGradient η * averagedEnergy v.core
+              v.core.holdStart η| +
             |4 * A v.h * entrancePressure v v.core.holdStart η| +
               |(4 * A v.h + 2) * η * pressureGradient v v.core.holdStart η| +
                 |d η * deriv (pressureGradient v v.core.holdStart) η| := by
     exact (abs_sub _ _).trans (add_le_add_left ((abs_add_le _ _).trans (add_le_add_left
       ((abs_add_le _ _).trans (add_le_add_left ((abs_add_le _ _).trans (add_le_add_left (abs_sub _
-        _) _)) _)) _)) _)
+          _) _)) _)) _)) _)
   unfold initialAxialDerivativeBound
   rw [← holdStart_eq_entranceTime v.core]
   nlinarith [mul_nonneg pressureBound_pos.le hEnv]
@@ -1077,7 +1096,7 @@ theorem axialLag_hold_hasDerivAt_eta (v : TailData) (η : ℝ) {t : ℝ} (ht : 0
   rw [hg] at hd
   have hf : (fun θ => axialLag v (v.core.holdStart + t) θ) =
       fun θ => linearLag (fun _ => (1 : ℝ)) (fun u => b (u, θ)) (axialLag v v.core.holdStart θ) t
-        := by
+          := by
     funext θ
     exact axialLag_hold_history v θ ht
   rw [hf]
@@ -1088,7 +1107,7 @@ theorem axialLag_hold_deriv_bound (v : TailData) {η t : ℝ}
     |deriv (fun θ => axialLag v (v.core.holdStart + t) θ) η| ≤ Real.exp (-t) *
       (initialAxialDerivativeBound v.core.P v.core.m + t *
         (pressureSourceBound * angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart, η)
-          ^ 2)) := by
+            ^ 2)) := by
   rw [(axialLag_hold_hasDerivAt_eta v η ht).deriv]
   apply historyAverage_abs_bound ht (initialAxialDerivative_bound v hh1 hη)
   intro u hu
@@ -1119,7 +1138,7 @@ theorem normalize_hold_bound (c : Parameters) {η t A z : ℝ} (hη : |η| ≤ 1
     nlinarith
   have hinside : A + t * (pressureSourceBound * E₀ ^ 2) ≤
       (A / initialEnergyLower c.P c.m + pressureSourceBound * initialEnergyUpper c.P c.m) * (1 + t)
-        * E₀ := by
+          * E₀ := by
     have hm := mul_le_mul_of_nonneg_left hsecond ht
     have hc1 := div_nonneg hA hEmin.le
     have hc2 := mul_pos hC (initialEnergyUpper_pos c.P_pos c.m)
@@ -1137,13 +1156,17 @@ theorem normalize_hold_bound (c : Parameters) {η t A z : ℝ} (hη : |η| ≤ 1
   calc
     _ ≤ Real.exp (-t) *
         ((A / initialEnergyLower c.P c.m + pressureSourceBound * initialEnergyUpper c.P c.m) * (1 +
-          t) * E₀) := hm
+            t) * E₀) := hm
     _ = _ := by rw [← hex]; ring
 
+/-- Axial derivative wait constant, given by `initialAxialDerivativeBound P m /
+initialEnergyLower P m + pressureSourceBound * initialEnergyUpper P m`. -/
 noncomputable def axialDerivativeWaitConstant (P m : ℝ) : ℝ :=
   initialAxialDerivativeBound P m / initialEnergyLower P m + pressureSourceBound *
-    initialEnergyUpper P m
+      initialEnergyUpper P m
 
+/-- Axial ratio derivative wait constant, given by `axialDerivativeWaitConstant P m + 2 *
+axialWaitConstant P m`. -/
 noncomputable def axialRatioDerivativeWaitConstant (P m : ℝ) : ℝ :=
   axialDerivativeWaitConstant P m + 2 * axialWaitConstant P m
 
@@ -1162,7 +1185,7 @@ theorem axialLag_hold_deriv_ratio_bound (v : TailData) {η t : ℝ}
     |deriv (fun θ => axialLag v (v.core.holdStart + t) θ) η /
       angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t, η)| ≤
       axialDerivativeWaitConstant v.core.P v.core.m * (1 + t) * Real.exp (-(1 / 2 - v.core.lam) *
-        t) :=
+          t) :=
   normalize_hold_bound v.core hη ht (initialAxialDerivativeBound_pos _ _).le
     (axialLag_hold_deriv_bound v hh1 hη ht htw)
 
@@ -1175,23 +1198,23 @@ theorem normalizedAxial_hasDerivAt (v : TailData) (η : ℝ) {t : ℝ} (ht : 0 �
             angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t, η))) η := by
   have hN := (axialLag_hold_hasDerivAt_eta v η ht).differentiableAt.hasDerivAt
   have hE : HasDerivAt (fun θ => angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart +
-    t, θ))
+      t, θ))
       (-shapeGradient η * angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t, η))
-        η := by
+          η := by
     convert! (OutgoingEntranceCone.shape_hasDerivAt η).const_mul
       (radialAmplitude v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t)) using 1
     simp only [angular]
     ring
   have hpos := angular_pos v.core.P_pos v.core.dropLength v.core.lam (v.core.holdStart + t, η)
   convert! hN.div hE hpos.ne' using 1
-  field_simp [hpos.ne'] ; ring
+  field_simp [hpos.ne']; ring
 
 theorem axialLag_hold_ratio_deriv_bound (v : TailData) {η t : ℝ}
     (hh1 : v.h ≤ 1 / 100) (hη : |η| ≤ 1) (ht : 0 ≤ t) (htw : t ≤ v.core.wait) :
     |deriv (fun θ => axialLag v (v.core.holdStart + t) θ /
       angular v.core.P v.core.dropLength v.core.lam (v.core.holdStart + t, θ)) η| ≤
       axialRatioDerivativeWaitConstant v.core.P v.core.m * (1 + t) * Real.exp (-(1 / 2 -
-        v.core.lam) * t) := by
+          v.core.lam) * t) := by
   rw [(normalizedAxial_hasDerivAt v η ht).deriv]
   have hD := axialLag_hold_deriv_ratio_bound v hh1 hη ht htw
   have hN := axialLag_hold_ratio_bound v hh1 hη ht htw
@@ -1219,7 +1242,7 @@ theorem canonical_Ns_hold_ratio_deriv_bound {v : TailData} {K : ℝ}
     |deriv (fun θ => OutgoingHistories.Ns w Amp (v.core.holdStart + t, θ) /
       OutgoingHistories.E w (v.core.holdStart + t, θ)) η| ≤
       axialRatioDerivativeWaitConstant v.core.P v.core.m * (1 + t) * Real.exp (-(1 / 2 -
-        v.core.lam) * t) := by
+          v.core.lam) * t) := by
   have hpulse : v.core.holdStart + t ≤ v.core.pulseStart := by
     dsimp [Parameters.pulseStart]
     linarith
@@ -1264,27 +1287,29 @@ theorem canonical_Qs_hold_error {v : TailData} {K : ℝ}
 theorem canonical_Qs_hold_deriv_error {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) {Amp : ℝ → ℝ} (ha : ContDiff ℝ ∞ Amp)
     {η t : ℝ} (hh1 : v.h ≤ 1 / 100) (hη : |η| ≤ 1) (ht : 0 ≤ t) (htw : t ≤ v.core.wait) :
-    |deriv (fun θ => OutgoingHistories.Qs w Amp (v.core.holdStart + t, θ) - equilibrium v.core v.h
-      θ) η| ≤
+    |deriv (fun θ =>
+        OutgoingHistories.Qs w Amp (v.core.holdStart + t, θ) - equilibrium v.core v.h θ) η| ≤
       206 * Real.exp (-(1 - v.core.lam) * t) := by
   have hpulse : v.core.holdStart + t ≤ v.core.pulseStart := by
     dsimp [Parameters.pulseStart]
     linarith
   have hf : (fun θ => OutgoingHistories.Qs w Amp (v.core.holdStart + t, θ) - equilibrium v.core v.h
-    θ) =
+      θ) =
       fun θ => angularLag v.core v.h θ (v.core.holdStart + t) - equilibrium v.core v.h θ := by
     funext θ
     rw [canonical_Qs_before w ha (by linarith [v.core.holdStart_pos]) hpulse]
   rw [hf]
   exact angularLag_hold_deriv_error v hh1 hη ht
 
+/-- Hold constant, given by `206 + axialWaitConstant P m + axialRatioDerivativeWaitConstant P
+m`. -/
 noncomputable def holdConstant (P m : ℝ) : ℝ :=
   206 + axialWaitConstant P m + axialRatioDerivativeWaitConstant P m
 
 theorem holdConstant_bounds {P : ℝ} (hP : 0 < P) (m : ℝ) :
     0 < holdConstant P m ∧ 206 ≤ holdConstant P m ∧
       axialWaitConstant P m ≤ holdConstant P m ∧ axialRatioDerivativeWaitConstant P m ≤
-        holdConstant P m := by
+          holdConstant P m := by
   have h1 := axialWaitConstant_pos hP m
   have h2 := axialRatioDerivativeWaitConstant_pos hP m
   unfold holdConstant
@@ -1305,11 +1330,11 @@ theorem canonical_hold_estimates {v : TailData} {K : ℝ}
         OutgoingHistories.Qs w Amp (v.core.holdStart + t, η) ∧
       |OutgoingHistories.Qs w Amp (v.core.holdStart + t, η) - equilibrium v.core v.h η| ≤
         holdConstant v.core.P v.core.m * (1 + t) * Real.exp (-(1 - v.core.lam) * t) ∧
-      |deriv (fun θ => OutgoingHistories.Qs w Amp (v.core.holdStart + t, θ) - equilibrium v.core
-        v.h θ) η| ≤
+      |deriv (fun θ =>
+          OutgoingHistories.Qs w Amp (v.core.holdStart + t, θ) - equilibrium v.core v.h θ) η| ≤
         holdConstant v.core.P v.core.m * (1 + t) * Real.exp (-(1 - v.core.lam) * t) ∧
       |OutgoingHistories.Ns w Amp (v.core.holdStart + t, η) / OutgoingHistories.E w
-        (v.core.holdStart + t, η)| ≤
+          (v.core.holdStart + t, η)| ≤
         holdConstant v.core.P v.core.m * |η| * (1 + t) * Real.exp (-(1 / 2 - v.core.lam) * t) ∧
       |deriv (fun θ => OutgoingHistories.Ns w Amp (v.core.holdStart + t, θ) /
         OutgoingHistories.E w (v.core.holdStart + t, θ)) η| ≤
@@ -1333,8 +1358,8 @@ theorem canonical_Qs_pulseStart_deriv_power_error {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) {Amp : ℝ → ℝ} (ha : ContDiff ℝ ∞ Amp)
     (hh1 : v.h ≤ 1 / 100) {η : ℝ} (hη : |η| ≤ 1) (n : ℕ)
     (hwait : waitForPower v.core n ≤ v.core.wait) :
-    |deriv (fun θ => OutgoingHistories.Qs w Amp (v.core.pulseStart, θ) - equilibrium v.core v.h θ)
-      η| ≤
+    |deriv (fun θ =>
+        OutgoingHistories.Qs w Amp (v.core.pulseStart, θ) - equilibrium v.core v.h θ) η| ≤
       206 * v.core.lam ^ n := by
   have ht : 0 ≤ v.core.wait := by linarith [v.core.wait_gt]
   exact (canonical_Qs_hold_deriv_error w ha hh1 hη ht le_rfl).trans
@@ -1366,7 +1391,7 @@ theorem canonical_Ns_pulseStart_power_bounds {v : TailData} {K : ℝ}
     (hh1 : v.h ≤ 1 / 100) (hlam : v.core.lam ≤ 1 / 120)
     (hwait : -60 * Real.log v.core.lam ≤ v.core.wait) {η : ℝ} (hη : |η| ≤ 1) :
     |OutgoingHistories.Ns w Amp (v.core.pulseStart, η) / OutgoingHistories.E w (v.core.pulseStart,
-      η)| ≤
+        η)| ≤
         120 * axialWaitConstant v.core.P v.core.m * |η| * v.core.lam ^ 29 ∧
       |deriv (fun θ => OutgoingHistories.Ns w Amp (v.core.pulseStart, θ) /
         OutgoingHistories.E w (v.core.pulseStart, θ)) η| ≤

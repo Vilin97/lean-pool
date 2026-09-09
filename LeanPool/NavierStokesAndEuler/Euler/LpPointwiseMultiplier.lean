@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 
 /-! Bounded pointwise operator fields act on actual L² classes. Joint
 continuity of the coefficients, with a uniform bound, gives strong
 continuity even when uniform convergence of coefficients is unavailable. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,6 +38,7 @@ theorem apply_memLp (u : Lp E 2 μ) : MemLp (fun x => A x (u x)) 2 μ := by
   · exact Eventually.of_forall (fun x => ((A x).le_opNorm (u x)).trans
       (mul_le_mul_of_nonneg_right (hC x) (norm_nonneg (u x))))
 
+/-- Apply Lᵖ, given by `(apply_memLp μ A hA C hC u).toLp (fun x => A x (u x))`. -/
 def applyLp (u : Lp E 2 μ) : Lp F 2 μ :=
   (apply_memLp μ A hA C hC u).toLp (fun x => A x (u x))
 
@@ -50,6 +54,7 @@ theorem applyLp_norm_le (u : Lp E 2 μ) :
   exact ((A x).le_opNorm (u x)).trans
     (mul_le_mul_of_nonneg_right (hC x) (norm_nonneg (u x)))
 
+/-- Linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def linear : Lp E 2 μ →ₗ[ℝ] Lp F 2 μ where
   toFun := applyLp μ A hA C hC
   map_add' u v := by
@@ -68,6 +73,7 @@ def linear : Lp E 2 μ →ₗ[ℝ] Lp F 2 μ where
     simp only [Pi.smul_apply] at h3 h4
     rw [h1,h4,h3,h2,map_smul]
 
+/-- Operator, given by `(linear μ A hA C hC).mkContinuous C (applyLp_norm_le μ A hA C hC)`. -/
 def operator : Lp E 2 μ →L[ℝ] Lp F 2 μ :=
   (linear μ A hA C hC).mkContinuous C (applyLp_norm_le μ A hA C hC)
 
@@ -114,7 +120,7 @@ theorem operator_path_continuous (u : K → Lp E 2 μ) (hu : Continuous u) :
   apply tendsto_iff_norm_sub_tendsto_zero.mpr
   have h₁ : Tendsto (fun t => C*‖u t-u t₀‖) (𝓝 t₀) (𝓝 (0 : ℝ)) := by
     simpa only [sub_self,norm_zero,mul_zero] using ((hu.tendsto t₀).sub_const (u
-      t₀)).norm.const_mul C
+        t₀)).norm.const_mul C
   have h₂ : Tendsto (fun t => ‖operator μ (B t) (hB t) C (hBC t) (u t₀) -
       operator μ (B t₀) (hB t₀) C (hBC t₀) (u t₀)‖) (𝓝 t₀) (𝓝 (0 : ℝ)) := by
     simpa only [sub_self,norm_zero] using

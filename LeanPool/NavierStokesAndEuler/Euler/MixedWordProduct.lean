@@ -7,51 +7,56 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MixedH5Product
+import LeanPool.NavierStokesAndEuler.Euler.H6NonlinearProduct
+
+/-! Actual outer derivatives of mixed products, with a fixed total derivative budget. -/
 
 @[expose] public section
 
-/-! Actual outer derivatives of mixed products, with a fixed total derivative budget. -/
 
 noncomputable section
 
 namespace EulerMixedH5Product
 
 open MeasureTheory EulerSobolev EulerLiftedGradientSpace EulerMetricTransport
-  EulerTransportDerivatives
-  EulerCylinderSobolev EulerRealCylinder EulerVectorCylinder EulerGeneralCylinderAlgebra
-    EulerH6Nonlinear
+    EulerTransportDerivatives
+  EulerCylinderSobolev
+      EulerH6Nonlinear
 open scoped ContDiff ENNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Outer product differentiation preserves the total derivative budget and costs only the finite Leibniz factor. -/
-theorem mixed_outer_product_bound {n k l : ℕ} (hnkl : n+k+l ≤ 5)
+/-- Outer product differentiation preserves the total derivative budget and costs only the finite
+Leibniz factor. -/
+theorem mixed_outer_product_bound {n k l : ℕ} (hnkl : n + k + l ≤ 5)
     (a : Fin n → Fin 4) (w : Fin k → Fin 4) (v : Fin l → Fin 4)
     (f : LiftDomain period → ℝ) (g : LiftDomain period → Vector3)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL : ∀ j ≤ 5, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure
-      period))
+        period))
     (hgL : ∀ j ≤ 5, ∀ u : Fin j → Fin 4, MemLp (iteratedFieldDerivative period u g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (iteratedFieldDerivative period a
       (fun x => iteratedFieldDerivative period w f x • iteratedFieldDerivative period v g x)) 2
-        (liftMeasure period) ∧
+          (liftMeasure period) ∧
     (eLpNorm (iteratedFieldDerivative period a
       (fun x => iteratedFieldDerivative period w f x • iteratedFieldDerivative period v g x))
       2 (liftMeasure period)).toReal ≤ (2 : ℝ)^n * mixedConstant period * liftSobolevNorm period 5
-        f * liftSobolevNorm period 5 g := by
+          f * liftSobolevNorm period 5 g := by
   induction n generalizing k l with
-  | zero => simpa only [iteratedFieldDerivative_zero, pow_zero, one_mul] using mixed_product_bound
-    period (by omega : k+l ≤ 5) w v f g hf hg hfL hgL
+  | zero =>
+      simpa only [iteratedFieldDerivative_zero, pow_zero, one_mul] using mixed_product_bound period
+          (by
+      omega : k+l ≤ 5) w v f g hf hg hfL hgL
   | succ n ih =>
     let i := a (Fin.last n)
     let F := iteratedFieldDerivative period w f
     let G := iteratedFieldDerivative period v g
     have hF : ∀ x, ContDiff ℝ ∞ (localFieldLift period F x) := iteratedFieldDerivative_smooth
-      period w f hf
+        period w f hf
     have hG : ∀ x, ContDiff ℝ ∞ (localFieldLift period G x) := iteratedFieldDerivative_smooth
-      period v g hg
+        period v g hg
     have h1 := ih (by omega : n+(k+1)+l ≤ 5) (Fin.init a) (Fin.cons i w) v
     have h2 := ih (by omega : n+k+(l+1) ≤ 5) (Fin.init a) w (Fin.cons i v)
     have he : iteratedFieldDerivative period a (fun x => F x • G x) =

@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! The constructed raw forward field has the prescribed actual initial data. -/
 
 @[expose] public section
 
-/-! The constructed raw forward field has the prescribed actual initial data. -/
 
 noncomputable section
 
@@ -23,7 +25,7 @@ open scoped ContDiff
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-theorem pointField_zero_of_value_zero (p : C(K,LiftL2 P))
+theorem pointField_zero_of_value_zero (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
     (t : K) (ht : p t = 0) (x : LiftDomain P) : pointField P p hp t x = 0 := by
   have hrep := pointField_ae P p hp t

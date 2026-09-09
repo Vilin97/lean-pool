@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialInvariance
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
+import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
+
+/-! The three actual, strictly known pieces of a recursive velocity jet. -/
 
 @[expose] public section
 
-/-! The three actual, strictly known pieces of a recursive velocity jet. -/
 
 noncomputable section
 
@@ -33,6 +34,7 @@ instance : Fintype KnownPiece where
 
 namespace KnownPiece
 
+/-- Active as an element of `Prop`. -/
 def active (k : KnownPiece) (p i : ℕ) : Prop :=
   match k with
   | .high => 1 ≤ i ∧ i < p
@@ -42,11 +44,13 @@ def active (k : KnownPiece) (p i : ℕ) : Prop :=
 instance (k : KnownPiece) (p i : ℕ) : Decidable (k.active p i) := by
   cases k <;> unfold active <;> infer_instance
 
+/-- Profile index as an element of `ℕ`. -/
 def profileIndex (k : KnownPiece) (i : ℕ) : ℕ :=
   match k with
   | .high | .mean => i
   | .corrector => i-1
 
+/-- Raw, with branches according to `k.active p i`. -/
 def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField :=
   if k.active p i then
     match k with
@@ -55,6 +59,7 @@ def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField
     | .corrector => (a (i-1)).corrector
   else 0
 
+/-- Jet, given by `slicedJet O.interval (k.raw p a i) z`. -/
 def jet (k : KnownPiece) (O : Operators) (p : ℕ) (a : ℕ → Profile)
     (z : Domain) (i : ℕ) : VectorJet :=
   slicedJet O.interval (k.raw p a i) z
@@ -110,13 +115,14 @@ def PrefixFields.piece (F : PrefixFields P T p a) (k : KnownPiece) (i : ℕ) :
       exact (F.corrector (i-1) hp).congr (fun _ _ _ => by simp only [KnownPiece.raw, hi, ite_true])
   · exact (Field.zero P T).congr (fun _ _ _ => by simp only [KnownPiece.raw, hi, ite_false])
 
+/-- Piece jet, given by `SpatialJetField.ofField O.interval (F.piece k i)`. -/
 def PrefixFields.pieceJet (F : PrefixFields P T p a) (O : Operators) (k : KnownPiece) (i : ℕ) :
     SpatialJetField P T (fun z => k.jet O p a z i) :=
   SpatialJetField.ofField O.interval (F.piece k i)
 
 theorem KnownPiece.high_tangent
     (h : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (i : ℕ) (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     inner ℝ (O.normal (t,(x,θ))) ((KnownPiece.high.jet O p a (t,(x,θ)) i).1) = 0 := by
   by_cases hi : KnownPiece.high.active p i
@@ -125,7 +131,7 @@ theorem KnownPiece.high_tangent
 
 theorem KnownPiece.mean_angle
     (h : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (i : ℕ) (t : Icc (0 : ℝ) T) (x : Space) (θ : ℝ) :
     KnownPiece.mean.raw p a i (t,(x,θ)) = KnownPiece.mean.raw p a i (t,(x,0)) := by
   by_cases hi : KnownPiece.mean.active p i
@@ -134,7 +140,7 @@ theorem KnownPiece.mean_angle
 
 theorem PrefixFields.meanPiece_angleIndependent (F : PrefixFields P T p a)
     (h : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) T) x θ,
-      (a i).mean (t,(x,θ)) = (a i).mean (t,(x,0)))
+      (a i).mean (t, (x, θ)) = (a i).mean (t, (x, 0)))
     (i : ℕ) (t : Icc (0 : ℝ) T) (x : Space) :
     AngleIndependentJet (fun θ => KnownPiece.mean.jet O p a (t,(x,θ)) i) :=
   (F.piece .mean i).slicedJet_angleIndependent O.interval (KnownPiece.mean_angle h i) t x

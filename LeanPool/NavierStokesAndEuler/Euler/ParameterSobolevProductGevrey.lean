@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-!
 # Multiplication preserves the radius of genuine fixed-Sobolev word blocks
@@ -17,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 Only coefficient blocks are compared with the coefficient radius. The input
 field's ordered word sum passes directly through the Leibniz estimate.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,8 +35,8 @@ theorem block_clm_apply_gevrey (directions : ι → P) (q : ℕ)
     (A : P → E →L[ℝ] F) (f : P → E)
     (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f)
     (Rc R C D : ℝ) (hRc : 0 ≤ Rc) (hRcR : Rc ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
-    (hcoeff : ∀ n x, coefficientBlock directions q A n x ≤ C*majorant Rc 0 n)
-    (d : ℕ) (hfield : ∀ n x, block directions q f n x ≤ D*majorant R d n)
+    (hcoeff : ∀ n x, coefficientBlock directions q A n x ≤ C * majorant Rc 0 n)
+    (d : ℕ) (hfield : ∀ n x, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => A y (f y)) n x ≤ (3*C*D)*majorant R d n := by
   have hR : 0 ≤ R := hRc.trans hRcR
@@ -49,12 +51,12 @@ theorem block_clm_apply_gevrey (directions : ι → P) (q : ℕ)
     (fun k => coefficientBlock directions q A k x)
     (fun k => block directions q f k x) hc hf' n
   exact (block_clm_apply_le directions q A f hA hf n x).trans
-    ((le_abs_self _).trans (by simpa only [Nat.zero_add, EulerJetProductBounds.leibnizConvolution]
-      using hp))
+    ((le_abs_self _).trans (by
+        simpa only [Nat.zero_add, EulerJetProductBounds.leibnizConvolution] using hp))
 
 theorem block_linear_gevrey (directions : ι → P) (q : ℕ)
     (L : E →L[ℝ] F) (f : P → E) (hf : ContDiff ℝ ∞ f)
-    (R C : ℝ) (d : ℕ) (hb : ∀ n x, block directions q f n x ≤ C*majorant R d n)
+    (R C : ℝ) (d : ℕ) (hb : ∀ n x, block directions q f n x ≤ C * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => L (f y)) n x ≤ (‖L‖*C)*majorant R d n :=
   (block_comp_clm_le directions q L f hf n x).trans
@@ -63,8 +65,8 @@ theorem block_linear_gevrey (directions : ι → P) (q : ℕ)
 theorem block_add_gevrey (directions : ι → P) (q : ℕ)
     (f g : P → E) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (R C D : ℝ) (d : ℕ)
-    (hb : ∀ n x, block directions q f n x ≤ C*majorant R d n)
-    (hc : ∀ n x, block directions q g n x ≤ D*majorant R d n)
+    (hb : ∀ n x, block directions q f n x ≤ C * majorant R d n)
+    (hc : ∀ n x, block directions q g n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (f+g) n x ≤ (C+D)*majorant R d n :=
   (block_add_le directions q f g hf hg n x).trans

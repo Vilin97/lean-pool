@@ -9,10 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Genuine smooth L² sums, scalar products, and ordinary advection. -/
 
 @[expose] public section
 
-/-! Genuine smooth L² sums, scalar products, and ordinary advection. -/
 
 noncomputable section
 
@@ -25,6 +27,8 @@ open scoped ContDiff
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Sum field, bundling `field`, `smooth`, `integrable`, `have` and the required compatibility
+proofs. -/
 def sumField {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V) : SmoothL2Field V where
   field x := ∑ i ∈ I, (A i).field x
   smooth := ContDiff.sum (fun i _ => (A i).smooth)
@@ -58,11 +62,13 @@ theorem wordField_sum {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V)
   rw [iteratedFDeriv_fun_sum_apply (fun i _ => (A i).smooth.contDiffAt.of_le (by simp))]
   simp only [_root_.sum_apply]
 
+/-- Field neg, given by `mapField (-(ContinuousLinearMap.id ℝ V)) A`. -/
 def fieldNeg (A : SmoothL2Field V) : SmoothL2Field V := mapField (-(ContinuousLinearMap.id ℝ V)) A
 
 @[simp] theorem fieldNeg_field (A : SmoothL2Field V) (x : Space) :
     (fieldNeg A).field x = -A.field x := rfl
 
+/-- Field sub, given by `addField A (fieldNeg B)`. -/
 def fieldSub (A B : SmoothL2Field V) : SmoothL2Field V := addField A (fieldNeg B)
 
 @[simp] theorem fieldSub_field (A B : SmoothL2Field V) (x : Space) :
@@ -77,6 +83,7 @@ theorem toLp_fieldNeg (A : SmoothL2Field V) : (fieldNeg A).toLp = -A.toLp := by
 theorem toLp_fieldSub (A B : SmoothL2Field V) : (fieldSub A B).toLp = A.toLp-B.toLp := by
   rw [fieldSub,toLp_addField,toLp_fieldNeg,sub_eq_add_neg]
 
+/-- Scalar product, constructed using `product`. -/
 def scalarProduct (A : SmoothL2Field ℝ) (B : SmoothL2Field V) : SmoothL2Field V :=
   product (SmoothCoefficientPath.map (lsmul ℝ ℝ : ℝ →L[ℝ] V →L[ℝ] V)
     (coefficientPath (fun _ : Unit => A) (fun _ => continuous_const))) () B
@@ -88,13 +95,14 @@ def scalarProduct (A : SmoothL2Field ℝ) (B : SmoothL2Field V) : SmoothL2Field 
 theorem scalarProduct_directional (A : SmoothL2Field ℝ) (B : SmoothL2Field V) (v : Space) :
     (scalarProduct A B).directionalField v =
       addField (scalarProduct (A.directionalField v) B) (scalarProduct A (B.directionalField v)) :=
-        by
+          by
   apply field_ext
   funext x
   rw [directionalField_field]
   have he : (scalarProduct A B).field=fun x => A.field x • B.field x := funext (scalarProduct_field
-    A B)
-  rw [he,addField_field,scalarProduct_field,scalarProduct_field,directionalField_field,directionalField_field]
+      A B)
+  rw [he, addField_field, scalarProduct_field, scalarProduct_field, directionalField_field,
+      directionalField_field]
   have hd := (A.smooth.differentiable (by simp) x).hasFDerivAt.smul
     (B.smooth.differentiable (by simp) x).hasFDerivAt
   have hv := congrArg (fun L : Space →L[ℝ] V => L v) hd.fderiv
@@ -118,8 +126,9 @@ theorem scalarProduct_norm_right (A : SmoothL2Field ℝ) (B : SmoothL2Field V)
   rw [hp,scalarProduct_field,ha,norm_smul,mul_comm]
   exact mul_le_mul_of_nonneg_right (hM x) (norm_nonneg _)
 
+/-- Coordinate product, given by `scalarProduct (mapField (EuclideanSpace.proj i) A) B`. -/
 def coordinateProduct (i : Fin 3) (A : SmoothL2Field Space) (B : SmoothL2Field V) : SmoothL2Field V
-  :=
+    :=
   scalarProduct (mapField (EuclideanSpace.proj i) A) B
 
 @[simp] theorem coordinateProduct_field (i : Fin 3) (A : SmoothL2Field Space)
@@ -128,6 +137,8 @@ def coordinateProduct (i : Fin 3) (A : SmoothL2Field Space) (B : SmoothL2Field V
   rw [coordinateProduct,scalarProduct_field,mapField_field]
   rfl
 
+/-- Advection field, given by `sumField univ (fun i : Fin 3 => coordinateProduct i A
+(B.directionalField (axis i)))`. -/
 def advectionField (A : SmoothL2Field Space) (B : SmoothL2Field V) : SmoothL2Field V :=
   sumField univ (fun i : Fin 3 => coordinateProduct i A (B.directionalField (axis i)))
 

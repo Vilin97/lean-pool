@@ -7,11 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisContraction
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisEvaluationAlgebra
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AxisEvaluationAlgebra
 
 /-!
 # From the coefficient fixed point to actual natural-axis profiles
@@ -21,13 +17,20 @@ fixed input data must still be supplied as members of the coefficient space;
 their construction from the outgoing schedule is a separate obligation.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.NaturalAxisBridge
 
-private local instance (I : AxisCoefficientSpace.Window) (ε : ℝ) :
+/-- Cache the standard `NormedAddCommGroup (AxisCoefficientSpace.AxisSpace I ε)` instance to
+shorten typeclass synthesis. -/
+local instance instNaturalAxisBridge1 (I : AxisCoefficientSpace.Window) (ε : ℝ) :
     NormedAddCommGroup (AxisCoefficientSpace.AxisSpace I ε) := inferInstance
-private local instance (I : AxisCoefficientSpace.Window) (ε : ℝ) :
+/-- Cache the standard `NormedSpace ℝ (AxisCoefficientSpace.AxisSpace I ε)` instance to shorten
+typeclass synthesis. -/
+local instance instNaturalAxisBridge2 (I : AxisCoefficientSpace.Window) (ε : ℝ) :
     NormedSpace ℝ (AxisCoefficientSpace.AxisSpace I ε) := inferInstance
 
 open Set Filter
@@ -229,17 +232,29 @@ theorem radialEvaluation_mixed (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 /-- Fixed parameter functions appearing in the scaled natural equations. -/
 structure ParameterData where
+  /-- A of `ParameterData`, of type `ℝ`. -/
   A : ℝ
+  /-- Domain data of `ParameterData`, of type `ℝ`. -/
   D : ℝ
+  /-- Step-size parameter of `ParameterData`, of type `ℝ`. -/
   h : ℝ
+  /-- Chi of `ParameterData`, of type `ℝ → ℝ`. -/
   chi : ℝ → ℝ
+  /-- D of `ParameterData`, of type `ℝ → ℝ`. -/
   d : ℝ → ℝ
+  /-- Inverse L of `ParameterData`, of type `ℝ → ℝ`. -/
   inverseL : ℝ → ℝ
+  /-- U star of `ParameterData`, of type `ℝ → ℝ`. -/
   uStar : ℝ → ℝ
+  /-- U star eta of `ParameterData`, of type `ℝ → ℝ`. -/
   uStarEta : ℝ → ℝ
+  /-- W star of `ParameterData`, of type `ℝ → ℝ`. -/
   wStar : ℝ → ℝ
+  /-- H star of `ParameterData`, of type `ℝ → ℝ`. -/
   hStar : ℝ → ℝ
+  /-- Kappa of `ParameterData`, of type `ℝ → ℝ`. -/
   kappa : ℝ → ℝ
+  /-- Z star of `ParameterData`, of type `ℝ → ℝ`. -/
   zStar : ℝ → ℝ
 
 /-- The actual parameter function represented by the zeroth radial coefficient. -/
@@ -288,6 +303,7 @@ def pressureSource (I : Window) {ε : ℝ} (hε : 0 < ε)
   AxisOperators.product I hε (AxisOperators.product I hε a a)
     (AxisOperators.product I hε Φ Φ)
 
+/-- Pressure coefficient, given by `AxisOperators.primitive I hε (pressureSource I hε a Φ)`. -/
 def pressureCoefficient (I : Window) {ε : ℝ} (hε : 0 < ε)
     (a Φ : AxisSpace I ε) : AxisSpace I ε :=
   AxisOperators.primitive I hε (pressureSource I hε a Φ)
@@ -300,6 +316,7 @@ def reconstructedU (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : �
 def reconstructedW (d : ParameterData) (t : ℝ) (B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.wStar p.2 - t * ((2 * d.D * p.2) * B p + d.d p.2 * partialEta B p)
 
+/-- Reconstructed H, given by `d.hStar p.2 + t * d.d p.2 * u p`. -/
 def reconstructedH (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.hStar p.2 + t * d.d p.2 * u p
 

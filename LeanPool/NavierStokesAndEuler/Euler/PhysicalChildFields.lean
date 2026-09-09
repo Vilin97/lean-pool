@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleFieldBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowSupBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowBounds
 
 /-! Applying the child composition estimate to the actual physical
 graph flow. The input fields are the concrete displacement, velocity and
 acceleration constructed from the periodic corrected packet. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,12 +26,12 @@ open Set MeasureTheory EulerSmoothLimit EulerLiftedGradientSpace EulerLpTranslat
 open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P T)
-  (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+  (k : ℝ) (m : Vector3) (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
   (ell : ℝ) (hell : 0 < ell)
   (D V W : Icc (0 : ℝ) T → SmoothL2Field Space)
   (K : ℝ) (hK : 1 ≤ K)
   (hD : ∀ t, HasLabelBound K (D t)) (hV : ∀ t, HasLabelBound K (V t)) (hW : ∀ t, HasLabelBound K (W
-    t))
+      t))
   (M R : ℝ) (hM : 1 ≤ M) (hR : 1 ≤ R)
   (hd : ∀ t, (G.displacementField k m ell hell t).HasJetBound M R)
   (hv : ∀ t, (G.velocityField k m ell hell t).HasJetBound M R)
@@ -46,6 +47,8 @@ theorem inner_eq_forward (t : Icc (0 : ℝ) T) :
   rw [G.displacementField_eq k m hgraph,displacement_eq]
   abel
 
+/-- Data, bundling `parentDisplacement`, `parentVelocity`, `parentAcceleration`, `K` and the
+required compatibility proofs. -/
 def data (t : Icc (0 : ℝ) T) : EulerChildParticleFieldBounds.Data where
   parentDisplacement := D t
   parentVelocity := V t
@@ -70,7 +73,7 @@ def data (t : Icc (0 : ℝ) T) : EulerChildParticleFieldBounds.Data where
   volume_preserving := by
     rw [inner_eq_forward G k m hgraph ell hell t]
     exact physical_forward_measurePreserving k m T G.time_nonneg G.A hgraph G.divergence ell
-      hell.ne' t
+        hell.ne' t
 
 include hgraph hK hD hV hW hM hR hd hv hw hds hvs in
 theorem data_inner (t : Icc (0 : ℝ) T) :
@@ -79,10 +82,13 @@ theorem data_inner (t : Icc (0 : ℝ) T) :
   inner_eq_forward G k m hgraph ell hell t
 
 omit G k m hgraph ell hell D V W K hK hD hV hW M R hM hR hd hv hw hds hvs in
+/-- Child amplitude, given by
+`K+M+9*((embeddingCost*K)*K)*M+9*(((embeddingCost*K)*K)*(4*K))*M^2`. -/
 def childAmplitude (K M : ℝ) : ℝ :=
   K+M+9*((embeddingCost*K)*K)*M+9*(((embeddingCost*K)*K)*(4*K))*M^2
 
 omit G k m hgraph ell hell D V W K hK hD hV hW M R hM hR hd hv hw hds hvs in
+/-- Child radius, given by `(1+R)*((1+M)*(16*K)+2)+R`. -/
 def childRadius (K M R : ℝ) : ℝ := (1+R)*((1+M)*(16*K)+2)+R
 
 include hgraph hK hD hV hW hM hR hd hv hw hds hvs in
@@ -102,8 +108,8 @@ theorem fields_label_bound (J : ℝ)
     (t : Icc (0 : ℝ) T) :
     let E := data G k m hgraph ell hell D V W K hK hD hV hW M R hM hR hd hv hw hds hvs t
     HasLabelBound J E.childDisplacement ∧ HasLabelBound J E.childVelocity ∧ HasLabelBound J
-      E.childAcceleration :=
+        E.childAcceleration :=
   (data G k m hgraph ell hell D V W K hK hD hV hW M R hM hR hd hv hw hds hvs t).child_label_bounds
-    J ha hr
+      J ha hr
 
 end EulerPhysicalChildFields

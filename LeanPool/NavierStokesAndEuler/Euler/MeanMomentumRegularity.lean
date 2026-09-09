@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanDisplacementRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseMomentumRegularity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 
 /-!
 # Genuine mean momentum regularity from the variational solve
@@ -19,6 +18,9 @@ mean test space. The two original boundary terms then vanish, and the weak
 identity constructs an AC representative of `Pσ F* η_t`. This is a regularity
 conclusion, not an assumed momentum equation or an assumed second derivative.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -64,9 +66,9 @@ theorem meanMomentum_weak
     (H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
     (u : meanDerivatives T hT FInv) (f : TimeLp T L2)
     (hu : ∀ w : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ+
+      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv w⟫_ℝ)
     (v : TimeLp T solenoidalSpace) (hv : initialTrace T hT v = 0) :
@@ -89,9 +91,9 @@ theorem meanMomentum_ac (hTpos : 0 < T)
     (H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
     (u : meanDerivatives T hT FInv) (f : TimeLp T L2)
     (hu : ∀ w : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ+
+      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv w⟫_ℝ) :
     ∃ p : ℝ → solenoidalSpace,
@@ -126,7 +128,7 @@ theorem meanSolver_momentum_ac (hTpos : 0 < T)
       (momentum T hT (solenoidalFrame T F) u : ℝ → solenoidalSpace) =ᵐ[timeMeasure T] p ∧
       ∀ᵐ t ∂timeMeasure T,
         HasDerivAt p (momentumForcing T hT (solenoidalFrame T F) (solenoidalFrame T F') H u f t) t
-          :=
+            :=
   meanMomentum_ac T hT FInv F F' hTpos hF hInv H M0 A L
     (meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f) f
     (meanSolver_weak T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f)

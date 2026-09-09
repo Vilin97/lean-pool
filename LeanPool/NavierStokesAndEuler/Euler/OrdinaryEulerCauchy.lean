@@ -8,11 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLimit
 
-@[expose] public section
-
 /-! The packet-sequence form of ordinary Euler compactness: a common
 H³ bound, uniform initial Sobolev bounds, and initial L² Cauchy data
 produce an actual smooth Euler limit on the same positive interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -59,7 +60,7 @@ theorem gradient_le_h3 (U : Evolution T hT) (M : ℝ)
 
 theorem cauchyPath_of_initial (V : ℕ → Evolution T hT) (M : ℝ)
     (hM : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M)
-    (hinit : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) :
+    (hinit : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) :
     CauchySeq (fun k => fieldPath (V k).velocity (V k).velocity_continuous) := by
   let K := (9*smoothEmbeddingConstant)*M
   have hM0 : 0 ≤ M := (tensorNorm_nonneg 3 ((V 0).velocity ⟨0,le_rfl,hT⟩)).trans (hM 0 _)
@@ -79,7 +80,7 @@ theorem cauchyPath_of_initial (V : ℕ → Evolution T hT) (M : ℝ)
 
 theorem all_order_bounds_of_h3 (V : ℕ → Evolution T hT) (M : ℝ)
     (hM : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M)
-    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R) :
+    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R) :
     ∀ q, ∃ C : ℝ, ∀ k t, tensorNorm q ((V k).velocity t) ≤ C := by
   intro q
   by_cases hq : 3 ≤ q
@@ -104,17 +105,19 @@ end Evolution
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Limit evolution of H3, given by `limitEvolution V hpos (Evolution.all_order_bounds_of_h3 V M
+hM hinit) (Evolution.cauchyPath_of_initial V M hM hcauchy)`. -/
 def limitEvolutionOfH3 (V : ℕ → Evolution T hT) (hpos : 0 < T) (M : ℝ)
     (hM : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M)
-    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R)
-    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) : Evolution T hT :=
+    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R)
+    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) : Evolution T hT :=
   limitEvolution V hpos (Evolution.all_order_bounds_of_h3 V M hM hinit)
     (Evolution.cauchyPath_of_initial V M hM hcauchy)
 
 theorem limitEvolutionOfH3_convergence (V : ℕ → Evolution T hT) (hpos : 0 < T) (M : ℝ)
     (hM : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M)
-    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R)
-    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) (q : ℕ) :
+    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R)
+    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) (q : ℕ) :
     Tendsto (fun k => jetPath (V k).velocity (V k).velocity_continuous q) atTop
       (𝓝 (jetPath (limitEvolutionOfH3 V hpos M hM hinit hcauchy).velocity
         (limitEvolutionOfH3 V hpos M hM hinit hcauchy).velocity_continuous q)) :=
@@ -123,9 +126,9 @@ theorem limitEvolutionOfH3_convergence (V : ℕ → Evolution T hT) (hpos : 0 < 
 
 theorem limitEvolutionOfH3_initial (V : ℕ → Evolution T hT) (hpos : 0 < T) (M : ℝ)
     (hM : ∀ k t, tensorNorm 3 ((V k).velocity t) ≤ M)
-    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0,le_rfl,hT⟩) ≤ R)
-    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp)) (u0 : L2)
-    (hu0 : Tendsto (fun k => ((V k).velocity ⟨0,le_rfl,hT⟩).toLp) atTop (𝓝 u0)) :
+    (hinit : ∀ q, ∃ R : ℝ, ∀ k, tensorNorm q ((V k).velocity ⟨0, le_rfl, hT⟩) ≤ R)
+    (hcauchy : CauchySeq (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp)) (u0 : L2)
+    (hu0 : Tendsto (fun k => ((V k).velocity ⟨0, le_rfl, hT⟩).toLp) atTop (𝓝 u0)) :
     ((limitEvolutionOfH3 V hpos M hM hinit hcauchy).velocity ⟨0,le_rfl,hT⟩).toLp=u0 :=
   limitEvolution_initial V hpos (Evolution.all_order_bounds_of_h3 V M hM hinit)
     (Evolution.cauchyPath_of_initial V M hM hcauchy) u0 hu0

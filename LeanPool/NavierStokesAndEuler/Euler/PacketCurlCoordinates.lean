@@ -6,12 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
+import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Coordinate realization of the actual slow curl and its bounded coefficients. -/
 
 @[expose] public section
 
-/-! Coordinate realization of the actual slow curl and its bounded coefficients. -/
 
 noncomputable section
 
@@ -21,8 +27,12 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerLiftedGradi
   EulerMeanBoundary EulerPacketCrossProduct EulerCylinderSobolev EulerMeanCoefficients
 open scoped BoundedContinuousFunction ContDiff
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCurlCoordinates1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCurlCoordinates2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 /-- The coefficient of one genuine spatial derivative in the slow curl. -/
 def curlCoefficient (i : Fin 3) : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space) :=
@@ -75,16 +85,24 @@ theorem curlMatrix_coordinates (D : LiftTangent →L[ℝ] Space) (G : Space →L
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCurlCoordinates3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCurlCoordinates4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
+/-- Curl coefficient path, given by `((curlCoefficient i).compLeftContinuousBounded
+Space).compLeftContinuous ℝ K`. -/
 def curlCoefficientPath (i : Fin 3) :
     C(K,Space →ᵇ Space →L[ℝ] Space) →L[ℝ] C(K,Space →ᵇ Space →L[ℝ] Space) :=
   ((curlCoefficient i).compLeftContinuousBounded Space).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem curlCoefficientPath_apply (i : Fin 3)
-    (G : C(K,Space →ᵇ Space →L[ℝ] Space)) (t : K) (y : Space) :
+    (G : C(K, Space →ᵇ Space →L[ℝ] Space)) (t : K) (y : Space) :
     curlCoefficientPath i G t y = curlCoefficient i (G t y) := rfl
 
 theorem curlCoefficientPath_norm (i : Fin 3) : ‖curlCoefficientPath (K := K) i‖ ≤ 1 := by
@@ -101,7 +119,7 @@ theorem curlCoefficientPath_norm (i : Fin 3) : ‖curlCoefficientPath (K := K) i
 
 omit [CompactSpace K] in
 theorem curlCoefficientPath_translation (i : Fin 3)
-    (G : C(K,Space →ᵇ Space →L[ℝ] Space)) (a : Space) :
+    (G : C(K, Space →ᵇ Space →L[ℝ] Space)) (a : Space) :
     translateCoefficientPath (curlCoefficientPath i G) a =
       curlCoefficientPath i (translateCoefficientPath G a) := by
   apply ContinuousMap.ext
@@ -110,7 +128,7 @@ theorem curlCoefficientPath_translation (i : Fin 3)
   intro y
   rfl
 
-theorem curlCoefficientPath_orbit (i : Fin 3) (G : C(K,Space →ᵇ Space →L[ℝ] Space))
+theorem curlCoefficientPath_orbit (i : Fin 3) (G : C(K, Space →ᵇ Space →L[ℝ] Space))
     (hG : ContDiff ℝ ∞ (translateCoefficientPath G)) :
     ContDiff ℝ ∞ (translateCoefficientPath (curlCoefficientPath i G)) := by
   have he : translateCoefficientPath (curlCoefficientPath i G) =
@@ -119,7 +137,7 @@ theorem curlCoefficientPath_orbit (i : Fin 3) (G : C(K,Space →ᵇ Space →L[�
   rw [he]
   exact (curlCoefficientPath i).contDiff.comp hG
 
-theorem curlCoefficientPath_bound (i : Fin 3) (G : C(K,Space →ᵇ Space →L[ℝ] Space))
+theorem curlCoefficientPath_bound (i : Fin 3) (G : C(K, Space →ᵇ Space →L[ℝ] Space))
     (hG : ContDiff ℝ ∞ (translateCoefficientPath G)) (n : ℕ) (C : ℝ)
     (hb : ∀ a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (curlCoefficientPath i G)) a‖ ≤ C := by

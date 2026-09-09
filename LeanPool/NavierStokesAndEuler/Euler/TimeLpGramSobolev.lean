@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevTensorInverse
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramInverse
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
 
 /-!
 # The genuine Bochner Gram inverse in fixed Sobolev word blocks
@@ -17,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevTensorInverse
 The coefficient family alone pays a fixed Sobolev cost. The actual right
 side and solution are measured in the identical ordered-word blocks.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,14 +41,14 @@ radius, uniformly in the input grade and external derivative order. -/
 theorem gramSolution_block_gevrey (directions : ι → P)
     (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ) (T : ℝ) (hT : 0 ≤ T)
     (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
     (hQ : ContDiff ℝ ∞ Q)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C*majorant Rc 0 n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C * majorant Rc 0 n)
     (f : P → TimeLp T U) (hf : ContDiff ℝ ∞ f)
     (D R : ℝ) (hD : 0 ≤ D)
-    (hR : 2*gramBlockCost ι q c Rc C D*(sobolevCoefficientRadius ι Rc+1) ≤ R)
-    (d : ℕ) (hbf : ∀ n x, block directions q f n x ≤ D*majorant R d n)
+    (hR : 2 * gramBlockCost ι q c Rc C D * (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+    (d : ℕ) (hbf : ∀ n x, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => gramSolver T hT (Q y) c hc (hLower y) (f y)) n x ≤
       majorant R (d+1) n :=

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedLaplacian
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedLaplacian
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 /-!
 # The compactly weighted difference-energy identity on R³
@@ -20,6 +22,9 @@ The cutoff alone has compact support. Both velocities and both pressures may
 be arbitrary smooth fields on the time slab. Every integral below is an
 ordinary Lebesgue volume integral on Euclidean three-space.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

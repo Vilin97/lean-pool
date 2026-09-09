@@ -7,16 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentInitializedUniformCosts
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardUniformCosts
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketParameterCaps
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLowConstants
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketParameterEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketNeighborPolynomial
 
 /-! The actual normal-stage source size is controlled by one fixed
 envelope. This includes the chosen terminal coordinate and canonical
 boundary coefficient, with the polynomial first shear retained. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +28,10 @@ open Real EulerPacketLowConstants EulerParentPacketParameterCaps
   EulerPacketUniformFrequencyScales EulerPacketUniformSource EulerPacketSourceFrequency
   EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence EulerPacketSourceParameterScales
 
+/-- Terminal cap, given by `1+terminalConstant gradientConstant hessianConstant`. -/
 def terminalCap : ℝ := 1+terminalConstant gradientConstant hessianConstant
+/-- Source constant, given by `EulerPacketParameterEnvelope.boundConstant C (boundaryConstant
+gradientConstant) terminalCap`. -/
 def sourceConstant (C : ℝ) : ℝ :=
   EulerPacketParameterEnvelope.boundConstant C (boundaryConstant gradientConstant) terminalCap
 
@@ -39,8 +44,10 @@ theorem sourceConstant_pos (C : ℝ) : 0 < sourceConstant C :=
   EulerPacketParameterEnvelope.constant_pos C (boundaryConstant gradientConstant) terminalCap
     (boundaryConstant_pos gradientConstant gradient_nonneg).le (zero_le_one.trans terminalCap_one)
 
+/-- Envelope, given by `parameterEnvelope J (sourceConstant C) 320 20 1000 X n`. -/
 def envelope (J : ℕ) (C X : ℝ) (n : ℕ) : ℝ := parameterEnvelope J (sourceConstant C) 320 20 1000 X n
 
+/-- Frequency spec, constructed using `frequencyCostSpec`. -/
 def frequencySpec (C : ℝ) : CostSpec :=
   frequencyCostSpec (1+frequencyConstant) (sourceConstant C) 320
     (by have h := frequencyConstant_pos; linarith) (sourceConstant_pos C)
@@ -84,7 +91,7 @@ open Set Real EulerSmoothLimit EulerTransverseFrameCoordinates EulerTransversePa
 
 variable {A : Parent} (L : LabelData A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hsupport : IsCompact support)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
   (P : ParentFrame (A.transverseData m hm R support hsupport) τ)
@@ -92,24 +99,24 @@ variable {A : Parent} (L : LabelData A) (H : LowBounds A)
 
 theorem normalParameterSize_bound (J D : ℕ) (hJ : 2 ≤ J) (C X : ℝ) (hC : 1 ≤ C) (hX : 1 ≤ X)
     (n : ℕ) (Ti TiTotal : ℝ)
-    (hbaseH : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7))
-    (hbaseK : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4))
-    (hK : L.K ≤ previousFrequency J D X n^80)
-    (hTi : Ti ≤ 12/baseHorizon J X) (hTiTotal : TiTotal ≤ 12/baseHorizon J X)
-    (hBc : H.Bc ≤ gradientConstant*X^1000+2)
-    (hL : H.L=EulerMeanHarmonic.boundaryLocalizationC1*H.Bc+1)
-    (hM : G.CM=gradientConstant) (hH : G.CH=hessianConstant)
+    (hbaseH : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7))
+    (hbaseK : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4))
+    (hK : L.K ≤ previousFrequency J D X n ^ 80)
+    (hTi : Ti ≤ 12 / baseHorizon J X) (hTiTotal : TiTotal ≤ 12 / baseHorizon J X)
+    (hBc : H.Bc ≤ gradientConstant * X ^ 1000 + 2)
+    (hL : H.L = EulerMeanHarmonic.boundaryLocalizationC1 * H.Bc + 1)
+    (hM : G.CM = gradientConstant) (hH : G.CH = hessianConstant)
     (hΘ : P.horizon ≤ sourceTheta J C (scaleSequence J X) n)
-    (hδ : G.δ=spike J X n) (hh : G.hchild=shear J X n)
-    (hshear : P.shear=previousShear J X n) :
+    (hδ : G.δ = spike J X n) (hh : G.hchild = shear J X n)
+    (hshear : P.shear = previousShear J X n) :
     L.geometryParameterSize H m hm R support hsupport τ hτ hτT P G Ti TiTotal G.terminal ≤
       envelope J C X n := by
   have hprev : 1 ≤ P.shear := hshear.symm ▸ previousShear_one J (by omega) X hX n
   have hterm := L.selected_terminal_bound m hm R support hsupport G hprev
   rw [hM,hH] at hterm
   have hterm' : ‖G.terminal‖ ≤ terminalCap*L.K^4 := hterm.trans
-    (mul_le_mul_of_nonneg_right (by unfold terminalCap; linarith) (pow_nonneg (zero_le_one.trans
-      L.K_one) _))
+    (mul_le_mul_of_nonneg_right (by
+        unfold terminalCap; linarith) (pow_nonneg (zero_le_one.trans L.K_one) _))
   have hboundary := boundary_parameter_bound gradientConstant H.Bc H.L X hX hBc hL
   have hEi : P.epsilon⁻¹ ≤ 2*previousShear J X n := by
     rw [← hshear]

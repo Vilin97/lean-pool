@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularDynamics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanPotentialRealization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularCycleData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CartesianCopySource
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 
 /-!
 # Physical fields of the actual current-band particular solve
@@ -22,6 +19,9 @@ The copy solve in this file is evaluated at the current band.  The choice
 of a polar angle depends only on the Cartesian point and is independent
 of the band.  No regularity of a fixed-reference continuation is used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +32,9 @@ open CorrectionState CorrectionStep CorrectionInitialization
 open scoped Topology ContDiff BigOperators
 
 
+/-- Label: an abbreviation for `ActualParticularStageControls.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualParticularStageControls.Label B N0
+/-- Native: an abbreviation for `PhysicalParticularWave.WaveSpace`. -/
 abbrev Native := PhysicalParticularWave.WaveSpace
 
 variable {B N0 : ℕ}
@@ -60,6 +62,8 @@ noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
     (ParticularParameters.nativeStrip ActualParticularStageControls.associatedStrip)
     (ActualParticularStageControls.directions (B := B)) n
 
+/-- Native pressure, given by `mode ((copyData x l j).background.frequency n) ((copyData x l
+j).background.phase n) ((copyData x l j).common.pressure n)`. -/
 noncomputable def nativePressure (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ℂ :=
   mode ((copyData x l j).background.frequency n)
@@ -73,6 +77,8 @@ noncomputable def angle (w : SpaceTime) : ℝ :=
       (PhysicalGraphBounds.radialProjection w))
     (PhysicalGraphBounds.radialProjection w)).2
 
+/-- Cylinder point, given by `(w.1, AxisymmetricResidual.pack (PolarCharts.radius
+(PhysicalGraphBounds.radialProjection w)) (angle w) (w.2 2))`. -/
 noncomputable def cylinderPoint (w : SpaceTime) : SpaceTime :=
   (w.1, AxisymmetricResidual.pack
     (PolarCharts.radius (PhysicalGraphBounds.radialProjection w)) (angle w) (w.2 2))
@@ -83,6 +89,7 @@ noncomputable def nativePoint (n : ℕ) (w : SpaceTime) : Native :=
     (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)
     (cylinderPoint w)
 
+/-- Cylindrical potential as an element of `ComplexVector`. -/
 noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (z : SpaceTime) : ComplexVector :=
   (ChartScales.Q n) ^ (-CorrectionInitialization.ActualPrimary.h) •
@@ -90,6 +97,7 @@ noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label 
       (PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
         (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)
 
+/-- Cylindrical pressure as an element of `ℝ`. -/
 noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (z : SpaceTime) : ℝ :=
   (ChartScales.Q n) ^ (-2 * CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) *
@@ -104,6 +112,7 @@ noncomputable def localPotentialMode (x : CycleState (Label B N0)) (l : Label B 
     (CartesianCopySource.rotationMap (PhysicalGraphBounds.radialProjection w)
       (cylindricalPotential x l j n (cylinderPoint w)))
 
+/-- Local pressure mode, given by `cylindricalPressure x l j n (cylinderPoint w)`. -/
 noncomputable def localPressureMode (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (w : SpaceTime) : ℝ :=
   cylindricalPressure x l j n (cylinderPoint w)
@@ -114,6 +123,8 @@ noncomputable def localPotential (x : CycleState (Label B N0)) (n : ℕ) : Veloc
     ∑ j ∈ ParticularWaveAssembly.modes x.coefficients.residualBand,
       localPotentialMode x l j n w
 
+/-- Local pressure, defined pointwise by `∑ l ∈ x.coefficients.labels n, ∑ j ∈
+ParticularWaveAssembly.modes x.coefficients.residualBand, localPressureMode x l j n w`. -/
 noncomputable def localPressure (x : CycleState (Label B N0)) (n : ℕ) : PressureField :=
   fun w => ∑ l ∈ x.coefficients.labels n,
     ∑ j ∈ ParticularWaveAssembly.modes x.coefficients.residualBand,
@@ -354,6 +365,8 @@ theorem localPressureMode_germ_chart (x : CycleState (Label B N0)) (l : Label B 
 
 /-! ## Native smoothness and its exact physical transport -/
 
+/-- Native domain, given by `ActualWaveRegularity.nativeDomain
+ActualWaveRegularity.particularChart CorrectionInitialization.ActualPrimary.standardRegion`. -/
 noncomputable def nativeDomain : Set Native :=
   ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
     CorrectionInitialization.ActualPrimary.standardRegion
@@ -405,7 +418,7 @@ theorem nativePotential_contDiffOn (x : CycleState (Label B N0)) (l : Label B N0
       intro hi
       exact (not_lt_of_ge (ActualWaveRegularityData.radius_nonpos hm hr))
         ((PrimaryTargetBounds.leftRadius_pos
-          CorrectionInitialization.ActualPrimary.nominal).trans_le hi.1)
+            CorrectionInitialization.ActualPrimary.nominal).trans_le hi.1)
     filter_upwards [ActualWaveRegularityData.particular_zero_germ _ hzero n hm ho] with y hy
     rw [nativePotential_eq]
     ext i
@@ -437,7 +450,7 @@ theorem nativeMap_contDiffAt (n : ℕ) {z : SpaceTime} (hr : 0 < z.2 0) :
       (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)) z := by
   apply PhysicalParticularWave.waveEquiv.contDiff.contDiffAt.comp
   exact (PhysicalResidualBridge.commonGraph (ChartScales.Q n)
-    CorrectionInitialization.ActualPrimary.h
+      CorrectionInitialization.ActualPrimary.h
     (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)).map_smoothAt
       (mul_pos (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) hr).ne'
 
@@ -502,9 +515,9 @@ theorem native_smooth_of_current_source (x : CycleState (Label B N0))
     {α : ℝ} (j : ℤ) (hj : j ≠ 0)
     (H : LabelSumBounds.UniformWaveClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
-        ActualParticularStageControls.slowStrip))
+          ActualParticularStageControls.slowStrip))
       ActualParticularStageControls.nativeEnvelope α (ActualParticularStageControls.currentSource x
-        j))
+          j))
     (l : Label B N0) (hz : RawBoundaryZero x l j) (n : ℕ) :
     ContDiffOn ℝ ∞ (nativePotential x l j n) nativeDomain ∧
       ContDiffOn ℝ ∞ (fun z => (nativePressure x l j n z).re) nativeDomain := by
@@ -531,7 +544,7 @@ theorem nativeMap_polar_mem_iff (n : ℕ) (a : ℝ) (i : PolarCharts.Index) (w :
       (PhysicalCurlCovariance.polarCoordinates a i w) ∈ nativeDomain ↔
     nativePoint n w ∈ nativeDomain := by
   change ((PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h (ChartScales.Q
-    n)
+      n)
       (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)
       (PhysicalCurlCovariance.polarCoordinates a i w)).1.1.2 ∈
       CorrectionInitialization.ActualPrimary.standardRegion.carrier ∧ True) ↔
@@ -547,9 +560,9 @@ theorem localModes_contDiffAt_of_current_source (x : CycleState (Label B N0))
     {α : ℝ} (j : ℤ) (hj : j ≠ 0)
     (H : LabelSumBounds.UniformWaveClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
-        ActualParticularStageControls.slowStrip))
+          ActualParticularStageControls.slowStrip))
       ActualParticularStageControls.nativeEnvelope α (ActualParticularStageControls.currentSource x
-        j))
+          j))
     (l : Label B N0) (hz : RawBoundaryZero x l j) (n : ℕ)
     {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : w ∈ ActualMeanPotentialRealization.cartesianDomain a i)
@@ -607,11 +620,11 @@ theorem localModes_contDiffAt_of_invariant
     (hm : nativePoint n w ∈ nativeDomain) :
     ContDiffAt ℝ ∞ (localPotentialMode (ActualCycleParameters.particularState x) (l.2,l.1) j n) w ∧
     ContDiffAt ℝ ∞ (localPressureMode (ActualCycleParameters.particularState x) (l.2,l.1) j n) w :=
-      by
+        by
   have hh := native_smooth_of_invariant H hN l j hj n
   have hm' := (nativeMap_polar_mem_iff n a i w).mpr hm
   have hf := ActualParticularDynamics.carrier_frequency
-    (ActualParticularCycleData.preservesCarriers H)
+      (ActualParticularCycleData.preservesCarriers H)
     (l.2,l.1)
   exact ⟨localPotentialMode_contDiffAt_of_native _ _ j hf n ha i hw
       (hh.1.contDiffAt (nativeDomain_open.mem_nhds hm')),
@@ -636,6 +649,7 @@ theorem localFields_contDiffAt_of_invariant
 
 /-! ## The complete corrected coefficient is the actual native curl -/
 
+/-- Native velocity, constructed using `vectorMode`. -/
 noncomputable def nativeVelocity (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ComplexVector :=
   vectorMode ((copyData x l j).background.frequency n) ((copyData x l j).background.phase n)
@@ -648,7 +662,7 @@ theorem nativeStrip_mem {z : Native} (hz : z ∈ nativeDomain)
       Ioo (PrimaryTargetBounds.leftRadius CorrectionInitialization.ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius CorrectionInitialization.ActualPrimary.nominal)) :
     z ∈ (ParticularParameters.nativeStrip ActualParticularStageControls.associatedStrip).domain :=
-      by
+        by
   change ActualWaveRegularity.particularChart.symm z ∈ ActualSignedStageControls.fullStrip.domain
   rw [ActualWaveRegularityData.strip_domain_eq]
   exact ⟨hz,hr⟩
@@ -660,12 +674,12 @@ theorem common_tangent_on_strip (x : CycleState (Label B N0))
     {α : ℝ} (j : ℤ) (hj : j ≠ 0)
     (H : LabelSumBounds.UniformWaveClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
-        ActualParticularStageControls.slowStrip))
+          ActualParticularStageControls.slowStrip))
       ActualParticularStageControls.nativeEnvelope α (ActualParticularStageControls.currentSource x
-        j))
+          j))
     (l : Label B N0) (n : ℕ) {z : Native}
     (hz : z ∈ (ParticularParameters.nativeStrip
-      ActualParticularStageControls.associatedStrip).domain) :
+        ActualParticularStageControls.associatedStrip).domain) :
     normalDot ((copyData x l j).background.normal
         (ParticularParameters.nativeStrip ActualParticularStageControls.associatedStrip)
         (ActualParticularStageControls.directions (B := B)) n z)
@@ -763,10 +777,10 @@ theorem nativePotential_curl_of_invariant
     exact ActualParticularDynamics.frequency_ne hx (l.2,l.1) j hj n
   exact ClosedNativeWaveIdentities.cylindricalCurl_vectorPotential_of_differentiable _ _ _ _ hfreq
     ((hphi.contDiffAt (ActualWaveRegularityData.particularPositive_open.mem_nhds
-      hz)).differentiableAt
+        hz)).differentiableAt
       (by simp))
     (fun i => (contDiffAt_pi.mp (hnormal.contDiffAt (nativeDomain_open.mem_nhds hz.1))
-      i).differentiableAt
+        i).differentiableAt
       (by simp))
     (native_normal_ne hx (l.2,l.1) j n hz) ht
 
@@ -811,7 +825,7 @@ theorem localPotentialMode_forward_germ (x : CycleState (Label B N0)) (l : Label
   have hw : (z.1, CylindricalResidual.chart z.2) ∈
       ActualMeanPotentialRealization.cartesianDomain a i := by
     simpa [ActualMeanPotentialRealization.cartesianDomain,
-      PhysicalGraphBounds.radialProjection_apply,
+        PhysicalGraphBounds.radialProjection_apply,
       CylindricalResidual.chart, PolarCharts.polar] using hz.2.2
   have hfwd : ContDiff ℝ ∞ (fun w : SpaceTime => (w.1, CylindricalResidual.chart w.2)) :=
     contDiff_fst.prodMk (CylindricalResidual.contDiff_chart.comp contDiff_snd)
@@ -831,7 +845,7 @@ theorem localPotentialMode_curl_transport (x : CycleState (Label B N0)) (l : Lab
     (k : Fin 3) :
     CylindricalResidual.frame (-(z.2 1))
       (SpatialCurl.spatialCurl (localPotentialMode x l j n) (z.1, CylindricalResidual.chart z.2)) k
-        =
+          =
     (ChartScales.Q n) ^ (-CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) *
       (CurlClassBounds.cylindricalCurl ((copyData x l j).background.radius n)
         ((ActualParticularStageControls.directions (B := B)).radialField n)
@@ -841,15 +855,15 @@ theorem localPotentialMode_curl_transport (x : CycleState (Label B N0)) (l : Lab
         (nativePotential x l j n)
         (PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
           (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)
-            k).re := by
+              k).re := by
   let G := PhysicalResidualBridge.commonGraph (ChartScales.Q n)
-    CorrectionInitialization.ActualPrimary.h
+      CorrectionInitialization.ActualPrimary.h
     (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)
   have hl : 0 < G.radialScale := Real.rpow_pos_of_pos (ChartScales.Q_pos n) _
   have hw : (z.1, CylindricalResidual.chart z.2) ∈
       ActualMeanPotentialRealization.cartesianDomain a i := by
     simpa [ActualMeanPotentialRealization.cartesianDomain,
-      PhysicalGraphBounds.radialProjection_apply,
+        PhysicalGraphBounds.radialProjection_apply,
       CylindricalResidual.chart, PolarCharts.polar] using hz.2.2
   have hP' : ContDiffAt ℝ ∞ (nativePotential x l j n)
       (PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
@@ -882,7 +896,7 @@ theorem localPotentialMode_curl_transport (x : CycleState (Label B N0)) (l : Lab
 theorem nativeMap_mem_positive (n : ℕ) {z : SpaceTime} (hr : 0 < z.2 0)
     (hz : PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
       (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z ∈
-        nativeDomain) :
+          nativeDomain) :
     PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
       (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z ∈
         ActualWaveRegularityData.particularPositive := by
@@ -900,7 +914,7 @@ theorem localPotentialMode_curl_of_invariant
     (hz : z ∈ PhysicalCurlCovariance.validCylindrical a i)
     (hm : PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
       (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z ∈
-        nativeDomain)
+          nativeDomain)
     (k : Fin 3) :
     CylindricalResidual.frame (-(z.2 1))
       (SpatialCurl.spatialCurl
@@ -910,10 +924,10 @@ theorem localPotentialMode_curl_of_invariant
       (nativeVelocity (ActualCycleParameters.particularState x) (l.2,l.1) j n
         (PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
           (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)
-            k).re := by
+              k).re := by
   have hh := localPotentialMode_curl_transport (ActualCycleParameters.particularState x) (l.2,l.1) j
     (ActualParticularDynamics.carrier_frequency (ActualParticularCycleData.preservesCarriers H)
-      (l.2,l.1))
+        (l.2,l.1))
     n ha i hz ((native_smooth_of_invariant H hN l j hj n).1.contDiffAt
       (nativeDomain_open.mem_nhds hm)) k
   rw [nativePotential_curl_of_invariant H hN l j hj n (nativeMap_mem_positive n hz.1 hm)] at hh

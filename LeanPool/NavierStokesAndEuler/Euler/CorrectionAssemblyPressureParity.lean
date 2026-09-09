@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyParity
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyReconstruction
 
+/-! Pointwise parity and canonical normalization of the assembled actual pressure. -/
+
 @[expose] public section
 
-/-! Pointwise parity and canonical normalization of the assembled actual pressure. -/
 
 noncomputable section
 

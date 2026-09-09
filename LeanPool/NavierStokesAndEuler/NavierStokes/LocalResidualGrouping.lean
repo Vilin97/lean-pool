@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidualGrouping
 
-@[expose] public section
-
 /-!
 # Actual harmonic residual grouping on a valid open chart
 
@@ -18,6 +16,9 @@ chart. At a point in that chart, a nonzero left wave forces the right wave to
 have a zero germ, so all cross-label transport terms vanish. The resulting
 grouping retains the independent axisymmetric alias in the actual mean mode.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

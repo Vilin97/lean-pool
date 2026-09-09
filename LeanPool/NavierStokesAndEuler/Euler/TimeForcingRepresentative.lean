@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual representatives of linear source, transport, and pressure combinations in Bochner time
+spaces. -/
 
 @[expose] public section
 
-/-! Actual representatives of linear source, transport, and pressure combinations in Bochner time
-  spaces. -/
 
 noncomputable section
 
@@ -23,13 +25,14 @@ variable {E V W H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [NormedAddCommGroup W] [NormedSpace ℝ W]
   [NormedAddCommGroup H] [NormedSpace ℝ H]
 
-/-- A genuine sum of fixed spatial and time-dependent operator actions has its literal pointwise representative. -/
+/-- A genuine sum of fixed spatial and time-dependent operator actions has its literal pointwise
+representative. -/
 theorem timeLinearForcing_ae (T : ℝ) (hT : 0 ≤ T) (D : E →L[ℝ] H) (B : V →L[ℝ] W)
     (A : C(Icc (0 : ℝ) T, W →L[ℝ] H)) (G : C(Icc (0 : ℝ) T, H →L[ℝ] H))
     (U : TimeLp T V) (F P : TimeLp T E) :
     (((D.compLpL 2 (timeMeasure T) F + timeMultiplier T hT A (B.compLpL 2 (timeMeasure T) U) +
       timeMultiplier T hT G (D.compLpL 2 (timeMeasure T) P)) : TimeLp T H) : ℝ → H) =ᵐ[timeMeasure
-        T]
+          T]
       fun t => D (F t) + A (projIcc 0 T hT t) (B (U t)) + G (projIcc 0 T hT t) (D (P t)) := by
   let DF := D.compLpL 2 (timeMeasure T) F
   let BU := B.compLpL 2 (timeMeasure T) U

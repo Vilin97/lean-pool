@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionForcing
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevNonlinearCompatibility
+
+/-! Exact spatial differentiation of the actual nonlinear correction equation. -/
 
 @[expose] public section
 
-/-! Exact spatial differentiation of the actual nonlinear correction equation. -/
 
 noncomputable section
 
@@ -25,19 +25,23 @@ open EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
 
 variable (period : ℝ) [Fact (0 < period)]
 
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace period q)` instance to shorten
+typeclass synthesis. -/
 local instance diffEqGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace period q)` instance to shorten typeclass
+synthesis. -/
 local instance diffEqSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual continuous linear map taking one external and one base derivative word. -/
-def energyWordOperator {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (I : ExternalWord N) (a : BaseWord q) :
+def energyWordOperator {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (I : ExternalWord N) (a : BaseWord q) :
     SobolevSpace period s →L[ℝ] LiftL2 period :=
   ((valueOperator period 0).comp
     (wordAtLevel period (s := q) 0 a.1.val a.2 (by have := a.1.isLt; omega))).comp
     (wordAtLevel period (s := s) q I.1.val I.2 (by have := I.1.isLt; omega))
 
 /-- This continuous operator is exactly the genuine jet word in the metric energy. -/
-theorem energyWordOperator_apply {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (I : ExternalWord N) (a :
-  BaseWord q)
+theorem energyWordOperator_apply {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (I : ExternalWord N) (a :
+    BaseWord q)
     (u : SobolevSpace period s) :
     energyWordOperator period q N hN I a u = energyValues period q N hN u I a := by
   change value period (wordAtLevel period 0 a.1.val a.2 (by have := a.1.isLt; omega)
@@ -45,28 +49,28 @@ theorem energyWordOperator_apply {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (I : Ext
   rw [wordAtLevel_value]
   exact EulerPressureJetIdentities.SpatialJet.word_unique
     (toJet period (wordAtLevel period q I.1.val I.2 (by have := I.1.isLt; omega) u))
-    (EulerH6Pressure.SpatialJet.derivativeJet (q := q) (toJet period u) I.2 (by have := I.1.isLt;
-      omega))
+    (EulerH6Pressure.SpatialJet.derivativeJet (q := q) (toJet period u) I.2 (by
+        have := I.1.isLt; omega))
     (wordAtLevel_value period q I.1.val I.2 (by have := I.1.isLt; omega) u)
     (by have := a.1.isLt; omega) (by have := a.1.isLt; omega) a.2
 
 /-- Genuine energy words are linear in the differentiated field. -/
-theorem energyValues_add {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (u v : SobolevSpace period s) :
+theorem energyValues_add {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (u v : SobolevSpace period s) :
     energyValues period q N hN (u+v) = energyValues period q N hN u + energyValues period q N hN v
-      := by
+        := by
   funext I a
   simp only [← energyWordOperator_apply, map_add, Pi.add_apply]
 
 /-- Genuine energy words commute with subtraction. -/
-theorem energyValues_sub {s : ℕ} (q N : ℕ) (hN : N+q ≤ s) (u v : SobolevSpace period s) :
+theorem energyValues_sub {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (u v : SobolevSpace period s) :
     energyValues period q N hN (u-v) = energyValues period q N hN u - energyValues period q N hN v
-      := by
+        := by
   funext I a
   simp only [← energyWordOperator_apply, map_sub, Pi.sub_apply]
 
 /-- The literal undifferentiated transport acting on the final external/base derivative. -/
-def topTransport {s : ℕ} (N : ℕ) (hN : N+6 ≤ s)
-    (L : Fin 4 → Vector3 →L[ℝ] ℝ) (u v : SobolevSpace period (s+1)) :
+def topTransport {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s)
+    (L : Fin 4 → Vector3 →L[ℝ] ℝ) (u v : SobolevSpace period (s + 1)) :
     ExternalWord N → BaseWord 6 → LiftL2 period := fun I a =>
   transportL2Bilinear period (by norm_num : 3 ≤ 7) L
     (restrictOperator period (by omega : 7 ≤ s+1) u)
@@ -74,17 +78,17 @@ def topTransport {s : ℕ} (N : ℕ) (hN : N+6 ≤ s)
       (wordAtLevel period 7 I.1.val I.2 (by have := I.1.isLt; omega) v))
 
 /-- External and base transport commutators telescope to the exact differentiated transport. -/
-theorem transport_telescope {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N+6 ≤ s)
+theorem transport_telescope {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
-    (u v : SobolevSpace period (s+1)) :
+    (u v : SobolevSpace period (s + 1)) :
     externalTransportForcing period hs N hN L hL u v + baseTransportForcing period N hN L hL u v =
       energyValues period 6 N hN (transportBilinear period hs L hL u v) - topTransport period N hN
-        L u v := by
+          L u v := by
   funext I a
   let D := (valueOperator period 0).comp
     (wordAtLevel period 0 a.1.val a.2 (by have := a.1.isLt; omega : a.1.val+0 ≤ 6))
-  let X := wordAtLevel period 6 I.1.val I.2 (by have := I.1.isLt; omega) (transportBilinear period
-    hs L hL u v)
+  let X := wordAtLevel period 6 I.1.val I.2 (by
+      have := I.1.isLt; omega) (transportBilinear period hs L hL u v)
   let Y := transportBilinear period (by norm_num : 6 ≤ 6) L hL
     (restrictOperator period (by omega : 7 ≤ s+1) u)
     (wordAtLevel period 7 I.1.val I.2 (by have := I.1.isLt; omega) v)
@@ -93,8 +97,8 @@ theorem transport_telescope {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N+6 ≤ s)
       D (externalCommutator period hs I.1.val I.2 (by have := I.1.isLt; omega) L hL u v) := by
     symm
     exact wordAtLevel_value period 0 a.1.val a.2 (by have := a.1.isLt; omega) _
-  have hext : externalCommutator period hs I.1.val I.2 (by have := I.1.isLt; omega) L hL u v = X-Y
-    :=
+  have hext : externalCommutator period hs I.1.val I.2 (by
+      have := I.1.isLt; omega) L hL u v = X-Y :=
     externalCommutator_apply period hs I.1.val I.2 (by have := I.1.isLt; omega) L hL u v
   have he' : externalTransportForcing period hs N hN L hL u v I a = D X-D Y :=
     he.trans ((congrArg D hext).trans (map_sub D X Y))
@@ -119,19 +123,20 @@ theorem coefficient_word {s n : ℕ} {A : SmoothCoefficient period}
     (toJet period (coefficientSobolevOperator period K p)).word w =
       (EulerSpatialSobolevInverse.SpatialJet.multiply K (toJet period p)).word w :=
   EulerPressureJetIdentities.SpatialJet.word_unique _ _ (coefficientSobolevOperator_value period K
-    p) hn hn w
+      p) hn hn w
 
-/-- The external pressure commutator is the actual difference of two Sobolev coefficient products. -/
+/-- The external pressure commutator is the actual difference of two Sobolev coefficient products.
+-/
 theorem externalPressure_as_difference {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (K0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
-    (N : ℕ) (hN : N+6 ≤ s) (p : SobolevSpace period s) (I : ExternalWord N) (a : BaseWord 6) :
+    (N : ℕ) (hN : N + 6 ≤ s) (p : SobolevSpace period s) (I : ExternalWord N) (a : BaseWord 6) :
     externalPressureForcing period K N hN p I a =
       value period (wordAtLevel period 0 a.1.val a.2 (by have := a.1.isLt; omega)
-        (wordAtLevel period 6 I.1.val I.2 (by have := I.1.isLt; omega) (coefficientSobolevOperator
-          period K p) -
-          coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by have :=
-            I.1.isLt; omega) p))) := by
+        (wordAtLevel period 6 I.1.val I.2 (by
+            have := I.1.isLt; omega) (coefficientSobolevOperator period K p) -
+          coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by
+              have := I.1.isLt; omega) p))) := by
   rw [wordAtLevel_value]
   apply EulerPressureJetIdentities.SpatialJet.word_unique _ _ _ (by have := a.1.isLt; omega)
     (by have := a.1.isLt; omega) a.2
@@ -139,26 +144,27 @@ theorem externalPressure_as_difference {s : ℕ} {A : SmoothCoefficient period}
   rw [map_sub]
   change _ = value period (wordAtLevel period 6 I.1.val I.2 (by have := I.1.isLt; omega)
     (coefficientSobolevOperator period K p)) - value period
-      (coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by have := I.1.isLt;
-        omega) p))
+      (coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by
+          have := I.1.isLt; omega) p))
   apply congrArg₂ (fun x y : LiftL2 period => x-y)
   · symm
     exact (wordAtLevel_value period 6 I.1.val I.2 (by have := I.1.isLt; omega)
-      (coefficientSobolevOperator period K p)).trans (coefficient_word period K p (by have :=
-        I.1.isLt; omega) I.2)
+      (coefficientSobolevOperator period K p)).trans (coefficient_word period K p (by
+          have := I.1.isLt; omega) I.2)
   · symm
     exact (coefficientSobolevOperator_value period K0
       (wordAtLevel period 6 I.1.val I.2 (by have := I.1.isLt; omega) p)).trans
       (congrArg A.operator (wordAtLevel_value period 6 I.1.val I.2 (by have := I.1.isLt; omega) p))
 
-/-- The base pressure commutator is the actual differentiated product minus its top coefficient action. -/
+/-- The base pressure commutator is the actual differentiated product minus its top coefficient
+action. -/
 theorem basePressure_as_difference {s : ℕ} {A : SmoothCoefficient period}
     (K0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
-    (N : ℕ) (hN : N+6 ≤ s) (p : SobolevSpace period s) (I : ExternalWord N) (a : BaseWord 6) :
+    (N : ℕ) (hN : N + 6 ≤ s) (p : SobolevSpace period s) (I : ExternalWord N) (a : BaseWord 6) :
     basePressureForcing period K0 N hN p I a =
       value period (wordAtLevel period 0 a.1.val a.2 (by have := a.1.isLt; omega)
-        (coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by have :=
-          I.1.isLt; omega) p))) -
+        (coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by
+            have := I.1.isLt; omega) p))) -
           A.operator (energyValues period 6 N hN p I a) := by
   rw [wordAtLevel_value]
   apply congrArg (fun z => z - A.operator (energyValues period 6 N hN p I a))
@@ -166,42 +172,44 @@ theorem basePressure_as_difference {s : ℕ} {A : SmoothCoefficient period}
     (by have := a.1.isLt; omega) a.2
   rw [coefficientSobolevOperator_value, wordAtLevel_value]
 
-/-- External and base coefficient commutators telescope to the exact differentiated pressure term. -/
+/-- External and base coefficient commutators telescope to the exact differentiated pressure term.
+-/
 theorem pressure_telescope {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (K0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
-    (N : ℕ) (hN : N+6 ≤ s) (p : SobolevSpace period s) :
+    (N : ℕ) (hN : N + 6 ≤ s) (p : SobolevSpace period s) :
     externalPressureForcing period K N hN p + basePressureForcing period K0 N hN p =
       energyValues period 6 N hN (coefficientSobolevOperator period K p) -
         (fun I a => A.operator (energyValues period 6 N hN p I a)) := by
   funext I a
   change externalPressureForcing period K N hN p I a + basePressureForcing period K0 N hN p I a =
     energyValues period 6 N hN (coefficientSobolevOperator period K p) I a - A.operator
-      (energyValues period 6 N hN p I a)
+        (energyValues period 6 N hN p I a)
   rw [externalPressure_as_difference period K K0 N hN p I a,
     basePressure_as_difference period K0 N hN p I a]
   rw [← energyWordOperator_apply period 6 N hN I a (coefficientSobolevOperator period K p)]
   let D := (valueOperator period 0).comp
     (wordAtLevel period 0 a.1.val a.2 (by have := a.1.isLt; omega : a.1.val+0 ≤ 6))
-  let X := wordAtLevel period 6 I.1.val I.2 (by have := I.1.isLt; omega)
-    (coefficientSobolevOperator period K p)
-  let Y := coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by have :=
-    I.1.isLt; omega) p)
+  let X := wordAtLevel period 6 I.1.val I.2 (by
+      have := I.1.isLt; omega) (coefficientSobolevOperator period K p)
+  let Y := coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by
+      have := I.1.isLt; omega) p)
   let Z := A.operator (energyValues period 6 N hN p I a)
   change D (X-Y) + (D Y-Z) = D X-Z
   rw [map_sub]
   abel
 
-/-- The seven bounded forcing terms are exactly the remainder in the differentiated actual correction equation. -/
+/-- The seven bounded forcing terms are exactly the remainder in the differentiated actual
+correction equation. -/
 theorem correction_differentiated_identity {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (K0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
-    (N : ℕ) (hN : N+6 ≤ s) (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
-    (u v : SobolevSpace period (s+1)) (f p0 p1 : SobolevSpace period s) :
+    (N : ℕ) (hN : N + 6 ≤ s) (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
+    (u v : SobolevSpace period (s + 1)) (f p0 p1 : SobolevSpace period s) :
     energyValues period 6 N hN (transportBilinear period hs L hL u v + f -
       coefficientSobolevOperator period K p0 - coefficientSobolevOperator period K p1) =
       topTransport period N hN L u v - (fun I a => A.operator (energyValues period 6 N hN (p0+p1) I
-        a)) -
+          a)) -
         correctionForcing period hs K K0 N hN L hL u v f p0 p1 := by
   have ht := transport_telescope period hs N hN L hL u v
   have hp0 := pressure_telescope period K K0 N hN p0

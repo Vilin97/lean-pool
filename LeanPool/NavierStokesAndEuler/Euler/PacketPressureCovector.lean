@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureWitness
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
 public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveCancellation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
+import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
 
 /-! The genuine physical pressure gradient has a finite covector
 expansion. The angular factor k shifts only the high-pressure series. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,16 +28,20 @@ open Set Finset InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketGraphHessian EulerGraphPullback
 open scoped ContDiff
 
+/-- Angular pressure, defined pointwise by `(pressureJet p z).2 angleDirection • m`. -/
 def angularPressure (m : Space) (p : ScalarField) : VectorField :=
   fun z => (pressureJet p z).2 angleDirection • m
 
+/-- Covector, given by `pressureGradient p + k • angularPressure m p`. -/
 def covector (k : ℝ) (m : Space) (p : ScalarField) : VectorField :=
   pressureGradient p + k • angularPressure m p
 
+/-- Covector grades, constructed using `assemble`. -/
 def covectorGrades (N : ℕ) (m : Space) (a : ℕ → Profile) : ℕ → VectorField :=
   assemble N (fun i => pressureGradient (a i).meanPressure+angularPressure m (a i).highPressure)
     (fun i => pressureGradient (a i).highPressure)
 
+/-- Gradient linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def gradientLinear : ScalarJet →ₗ[ℝ] Space where
   toFun J := (toDual ℝ Space).symm (J.2.comp spatialInjection)
   map_add' J K := by simp [add_comp]
@@ -49,10 +57,10 @@ theorem fieldSum_assemble {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   simpa only [fieldSum,evaluate,Finset.sum_apply,Pi.smul_apply,Pi.add_apply] using h
 
 theorem pressureJet_finite (N : ℕ) (κ : ℝ) (a : ℕ → Profile) (z : Domain)
-    (hm : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).meanPressure (z.1,y)) z.2)
-    (hh : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).highPressure (z.1,y)) z.2) :
+    (hm : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).meanPressure (z.1, y)) z.2)
+    (hh : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).highPressure (z.1, y)) z.2) :
     pressureJet (fieldSum (N+1) κ (assembledPressure N a)) z =
-      evaluate N κ (fun i => pressureJet (a i).meanPressure z)+
+      evaluate N κ (fun i => pressureJet (a i).meanPressure z) +
         κ • evaluate N κ (fun i => pressureJet (a i).highPressure z) := by
   have hdiff : ∀ i ≤ N+1,
       DifferentiableAt ℝ (fun y => assembledPressure N a i (z.1,y)) z.2 :=
@@ -66,9 +74,9 @@ theorem pressureJet_finite (N : ℕ) (κ : ℝ) (a : ℕ → Profile) (z : Domai
 
 theorem covector_finite (N : ℕ) (κ : ℝ) (hκ : κ ≠ 0) (m : Space)
     (a : ℕ → Profile) (z : Domain)
-    (hm : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).meanPressure (z.1,y)) z.2)
-    (hh : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).highPressure (z.1,y)) z.2)
-    (hangle : ∀ i ≤ N, (pressureJet (a i).meanPressure z).2 angleDirection=0) :
+    (hm : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).meanPressure (z.1, y)) z.2)
+    (hh : ∀ i ≤ N, DifferentiableAt ℝ (fun y => (a i).highPressure (z.1, y)) z.2)
+    (hangle : ∀ i ≤ N, (pressureJet (a i).meanPressure z).2 angleDirection = 0) :
     covector κ⁻¹ m (fieldSum (N+1) κ (assembledPressure N a)) z =
       fieldSum (N+1) κ (covectorGrades N m a) z := by
   have hz : fastPressure m (evaluate N κ (fun i => pressureJet (a i).meanPressure z))=0 := by
@@ -78,22 +86,22 @@ theorem covector_finite (N : ℕ) (κ : ℝ) (hκ : κ ≠ 0) (m : Space)
     intro i hi
     simp only [fastPressure,LinearMap.coe_mk,AddHom.coe_mk,hangle i
       (by have := mem_range.mp hi; omega),zero_smul,smul_zero]
-  change gradientLinear (pressureJet (fieldSum (N+1) κ (assembledPressure N a)) z)+
+  change gradientLinear (pressureJet (fieldSum (N+1) κ (assembledPressure N a)) z) +
     κ⁻¹ • fastPressure m (pressureJet (fieldSum (N+1) κ (assembledPressure N a)) z)=_
   rw [pressureJet_finite N κ a z hm hh,map_add,map_smul,map_add,map_smul,hz,zero_add,
     smul_smul,inv_mul_cancel₀ hκ,one_smul]
   rw [covectorGrades,fieldSum_assemble]
   simp only [map_evaluate,fieldSum,evaluate_add,Pi.add_apply]
-  change evaluate N κ (fun i => pressureGradient (a i).meanPressure z)+
-      κ • evaluate N κ (fun i => pressureGradient (a i).highPressure z)+
-      evaluate N κ (fun i => angularPressure m (a i).highPressure z)=
-    (evaluate N κ (fun i => pressureGradient (a i).meanPressure z)+
-      evaluate N κ (fun i => angularPressure m (a i).highPressure z))+
+  change evaluate N κ (fun i => pressureGradient (a i).meanPressure z) +
+      κ • evaluate N κ (fun i => pressureGradient (a i).highPressure z) +
+      evaluate N κ (fun i => angularPressure m (a i).highPressure z) =
+    (evaluate N κ (fun i => pressureGradient (a i).meanPressure z) +
+      evaluate N κ (fun i => angularPressure m (a i).highPressure z)) +
       κ • evaluate N κ (fun i => pressureGradient (a i).highPressure z)
   abel
 
 theorem gradient_graph_covector (k : ℝ) (m : Space) (p : ScalarField) (t : ℝ) (x : Space)
-    (hp : DifferentiableAt ℝ (fun z => p (t,z)) (graphMap k m x)) :
+    (hp : DifferentiableAt ℝ (fun z => p (t, z)) (graphMap k m x)) :
     gradient (fun y => p (t,(y,k*⟪m,y⟫_ℝ))) x = covector k m p (t,(x,k*⟪m,x⟫_ℝ)) := by
   have h := gradient_graph k m x hp
   simpa only [covector,angularPressure,Pi.add_apply,Pi.smul_apply,
@@ -103,7 +111,7 @@ theorem gradient_graph_covector (k : ℝ) (m : Space) (p : ScalarField) (t : ℝ
 theorem gradient_physical_covector (k : ℝ) (m : Space) (p : ScalarField) (t : ℝ)
     (Y : Space → Space) (J : Space →L[ℝ] Space) (x : Space)
     (hY : HasFDerivAt Y J x)
-    (hp : DifferentiableAt ℝ (fun z => p (t,z)) (graphMap k m (Y x))) :
+    (hp : DifferentiableAt ℝ (fun z => p (t, z)) (graphMap k m (Y x))) :
     gradient (fun y => p (t,(Y y,k*⟪m,Y y⟫_ℝ))) x =
       J.adjoint (covector k m p (t,(Y x,k*⟪m,Y x⟫_ℝ))) := by
   have hg : DifferentiableAt ℝ (fun y => p (t,(y,k*⟪m,y⟫_ℝ))) (Y x) :=

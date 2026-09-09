@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.MeasureTheory.Integral.Prod
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Kinetic action bounds for flow escape
@@ -21,6 +21,9 @@ They expose the flow and energy hypotheses needed to exclude arrival from
 spatial infinity. In particular, no global bound on the pointwise velocity
 or its derivatives is used in the escape estimate.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

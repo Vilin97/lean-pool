@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
 
+/-! Exact repeated restriction of coherent prescribed coefficient and field data. -/
+
 @[expose] public section
 
-/-! Exact repeated restriction of coherent prescribed coefficient and field data. -/
 
 noncomputable section
 
@@ -20,7 +21,8 @@ open Set EulerCorrectionLowerData EulerCylinderSobolevSpace
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Two genuine lower-data operations return precisely the prescribed lower-order data, including the approximation and residual paths. -/
+/-- Two genuine lower-data operations return precisely the prescribed lower-order data, including
+the approximation and residual paths. -/
 theorem Data.lower_twice {T : ℝ} (A : Data period T) (q : ℕ) :
     lowerData period
       (lowerData period (A.atOrder period ((q+1)+1)) (A.metric.jet (q+1)) (A.linear.jet (q+1))

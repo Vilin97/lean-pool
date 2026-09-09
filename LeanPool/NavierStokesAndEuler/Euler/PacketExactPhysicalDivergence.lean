@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalMomentum
-public import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedJointDifferentiability
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
+import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
 
 /-! The actual exact packet remains incompressible after the genuine
 unit-Jacobian parent-flow coordinate change. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,20 +36,20 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (S : ExactLiftedPacket P D.T_pos (correctionData D P κ hκ Z R) B)
 
 theorem exact_source_divergence
-    (k : ℝ) (hk : k*κ=1)
+    (k : ℝ) (hk : k * κ = 1)
     (F : ℝ × Space → Space →L[ℝ] Space) (X Y : ℝ × Space → Space)
     (t : Icc (0 : ℝ) D.T) (x : Space)
-    (hmatch : ∀ y, F (t,y) = D.F.field t y)
-    (hX : ContDiffAt ℝ 2 (fun y => X (t,y)) x)
-    (hspace : ∀ y, fderiv ℝ (fun a => X (t,a)) y = F (t,y))
-    (hdet : ∀ y, (EulerPacketPiola.operatorMatrix (F (t,y))).det = 1)
-    (hleft : ∀ y, Y (t,X (t,y)) = y)
-    (hY : DifferentiableAt ℝ (fun y => Y (t,y)) (X (t,x))) :
+    (hmatch : ∀ y, F (t, y) = D.F.field t y)
+    (hX : ContDiffAt ℝ 2 (fun y => X (t, y)) x)
+    (hspace : ∀ y, fderiv ℝ (fun a => X (t, a)) y = F (t, y))
+    (hdet : ∀ y, (EulerPacketPiola.operatorMatrix (F (t, y))).det = 1)
+    (hleft : ∀ y, Y (t, X (t, y)) = y)
+    (hY : DifferentiableAt ℝ (fun y => Y (t, y)) (X (t, x))) :
     divergence (fun y => physicalVelocity κ k D.m₀ F S.rawVelocity Y (t,y)) (X (t,x)) = 0 := by
   let g : Space → Space := fun y => S.velocity.pointField t (cylinderGraph P k D.m₀ y)
   have hg : ContDiff ℝ ∞ g := by
     have h := (coverField_contDiff P (S.velocity.pointField t) (S.velocity.pointField_smooth
-      t)).comp
+        t)).comp
       (graphMap k D.m₀).contDiff
     simpa only [g,Function.comp_def,graphMap_apply,cylinderGraph] using h
   have hdg : divergence g x = 0 := by

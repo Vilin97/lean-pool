@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPotentialCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedOutputBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCommonDynamics
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalPrefixFields
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCommonDynamics
 
 /-!
 # The curl of the actual current signed potential
@@ -20,6 +18,9 @@ The native equation is proved from the actual signed tangency and cutoff
 construction.  The weighted amplitude bound supplies its smooth extension
 across the radial edges.  All physical statements use the current band.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,7 +31,9 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open ActualSignedCoherence ActualSignedPotentialCoherence
 open scoped Topology ContDiff BigOperators
 
+/-- Point: an abbreviation for `ActualSignedCoherence.Point`. -/
 abbrev Point := ActualSignedCoherence.Point
+/-- Full point: an abbreviation for `ActualSignedCoherence.FullPoint`. -/
 abbrev FullPoint := ActualSignedCoherence.FullPoint
 
 variable {B N0 : ℕ}
@@ -47,9 +50,9 @@ theorem amplitudeBound_of_mean (l : SignedLabel B N0) (u : CorrectionState.State
     (α : ℝ)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge (commonContext
-      B) u = u)
+        B) u = u)
     (hθ : MeanClass ActualInitialization.geometry.strip α (u.thetaResidual (commonContext B)))
     (hz : MeanClass ActualInitialization.geometry.strip α (u.axialResidual (commonContext B))) :
     AmplitudeBound l u (α - 1 / 2) :=
@@ -74,7 +77,7 @@ theorem common_tangent (l : SignedLabel B N0) (u : CorrectionState.State Point)
       rw [((copies l u).common_amplitude_germ (ActualSignedStageControls.cells l)
         (ActualSignedStageControls.cutoff_support l) n hk).self_of_nhds]
       rcases ActualSignedOutputBounds.phaseCell_or_localized_zero (request B u) l n k hs with hc |
-        hz
+          hz
       · change normalDot _ (ActualSignedStageControls.cutoff l k n x •
           ((copies l u).raw k).amplitude n x) = 0
         rw [LocalizedCurlRealization.normalDot_real_smul]
@@ -203,7 +206,7 @@ theorem native_curl_real (l : SignedLabel B N0) (u : CorrectionState.State Point
   have he := congrFun (congrFun (congrFun
     (ActualWaveRegularityData.signedAngles l ActualPrimaryBounds.strip
       ActualInitialization.geometry.patch ActualInitialization.geometry.coord (commonContext B)
-        u).block_eq_mode
+          u).block_eq_mode
         n) x) j
   exact he.symm
 
@@ -257,7 +260,7 @@ theorem currentPotential_curl_forward (l : SignedLabel B N0)
     rw [hr] at ht
     rw [show ChartScales.Q n ^ (-h) * G.radialScale = G.velocityScale from
       PhysicalCurlCovariance.commonGraph_curlScale (ChartScales.Q_pos n) h (CommonWindow.index h
-        n)] at ht
+          n)] at ht
     simp only [CyclePhysicalPrefixes.velocityMap, LinearMap.coe_mk, AddHom.coe_mk,
       PhysicalResidualTZ.velocityTZ, PhysicalResidualBridge.ScaledGraph.velocity_apply] at ht ⊢
     exact ht
@@ -327,7 +330,7 @@ theorem potential_periodic (l : SignedLabel B N0) (u : CorrectionState.State Poi
   have he := PhysicalCurlCovariance.vectorPotential_fullTurn
     (Vθ := fun _ => (ActualSignedStageControls.directions B).angular)
     (Vz := (ActualSignedStageControls.directions B).axialField ActualSignedStageControls.fullStrip
-      n)
+        n)
     ((ActualSignedStageControls.parameters l).angularFrequency n)
     (H.radius n) (H.radial n) (by intro x t; rfl)
     (by intro x t; rfl) (H.phase n) ha (H.frequency_slope n) (x, θ)
@@ -407,6 +410,8 @@ theorem pressureMode_eq_exact (l : SignedLabel B N0) (u : CorrectionState.State 
   have he := (ActualSignedCommonDynamics.exact_represents (request B u) H.request l).2
   exact (congrFun (congrFun he n) x).symm
 
+/-- Current pressure, defined pointwise by `(cylindricalPressureMode l u n
+(PhysicalCurlCovariance.polarCoordinates a i z)).re`. -/
 noncomputable def currentPressure (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (a : ℝ) (i : PolarCharts.Index) : PressureField :=
   fun z => (cylindricalPressureMode l u n (PhysicalCurlCovariance.polarCoordinates a i z)).re

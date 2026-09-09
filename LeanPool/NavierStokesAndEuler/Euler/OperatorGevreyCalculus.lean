@@ -6,10 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Factorial bounds for genuine operator-valued derivatives
@@ -18,6 +21,9 @@ These estimates use actual iterated Fréchet derivatives and bounded linear or
 bilinear maps. They transfer coefficient bounds to the time multipliers,
 transported variational forms, and right sides of the constructed inverses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -8,10 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MovingFrameODE
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
-public import Mathlib.Algebra.Order.Floor.Ring
-public import Mathlib.Analysis.Calculus.MeanValue
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Quantitative estimates for the actual pulse normal
@@ -21,13 +20,19 @@ estimates below start from representative data and local base derivative bounds,
 rather than assuming that the normal is close to its reference value.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.PhaseEstimates
 
 open Set Filter
 open scoped Topology InnerProductSpace
 
+/-- Plane: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev Plane := MovingFrameODE.Plane
+/-- Space: an abbreviation for `MovingFrameODE.Space`. -/
 abbrev Space := MovingFrameODE.Space
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 /-- Rounding in the punctured integer lattice.  The zero floor is replaced by
@@ -50,6 +55,7 @@ theorem nonzeroRound_error (x : ℝ) : |(nonzeroRound x : ℝ) - x| ≤ 1 := by
     exact abs_le.mpr ⟨by linarith, by linarith⟩
   · exact abs_le.mpr ⟨by linarith, by linarith⟩
 
+/-- Rounded frequency, given by `(nonzeroRound (k * target) : ℝ) / k`. -/
 noncomputable def roundedFrequency (k target : ℝ) : ℝ := (nonzeroRound (k * target) : ℝ) / k
 
 theorem roundedFrequency_integer {k : ℝ} (hk : k ≠ 0) (target : ℝ) :
@@ -117,6 +123,7 @@ theorem representative_frequency_bound (B sigma u L : ℝ) (K g : Plane)
   rw [sub_add_cancel, representative_tilt, norm_smul, Real.norm_eq_abs, hK, mul_one] at h
   linarith only [h]
 
+/-- Signed slot, given by `sigma * (u / 2 + u * v / L)`. -/
 noncomputable def signedSlot (sigma u L v : ℝ) : ℝ := sigma * (u / 2 + u * v / L)
 
 /-- The cancellation producing the intended radial slope is exact for the
@@ -208,7 +215,7 @@ theorem angular_frequency_error {p target R R0 M rounding diameter : ℝ}
       _ = _ := by ring
   have heq : p / R - target / R0 =
       (p - target) * (1 / R) + (target * (1 / R) * (1 / R0)) * (R0 - R) := by
-    field_simp ; ring
+    field_simp; ring
   rw [heq]
   calc
     _ ≤ |(p - target) * (1 / R)| + |(target * (1 / R) * (1 / R0)) * (R0 - R)| := abs_add_le _ _
@@ -236,9 +243,12 @@ theorem axial_frequency_bound {p target pz a b M rounding : ℝ}
       (mul_le_mul hpz hb (abs_nonneg _) hM0)
     _ = _ := by ring
 
+/-- Explicit normal, given by `!₂[x0 - v * (p * FR + pz * GR), p / R, pz - ε * v * (p * FZ + pz
+* GZ)]`. -/
 noncomputable def explicitNormal (ε p pz x0 R v FR GR FZ GZ : ℝ) : Space :=
   !₂[x0 - v * (p * FR + pz * GR), p / R, pz - ε * v * (p * FZ + pz * GZ)]
 
+/-- Reference normal, given by `MovingFrameODE.pack (B * signedSlot sigma u L v) (B • K)`. -/
 noncomputable def referenceNormal (B sigma u L v : ℝ) (K : Plane) : Space :=
   MovingFrameODE.pack (B * signedSlot sigma u L v) (B • K)
 
@@ -349,7 +359,9 @@ theorem phaseNormal_eq_explicit (ε p pz x0 : ℝ) (F G : Slow → ℝ)
         (PhaseCalculus.slowZ F q.1) (PhaseCalculus.slowZ G q.1) :=
   PhaseCalculus.phaseNormal_formula ε p pz x0 F G q hε hF hG
 
+/-- Phase error, given by `1 / S + S * ε ^ 2 + S / k + ε * S`. -/
 noncomputable def phaseError (S ε k : ℝ) : ℝ := 1 / S + S * ε ^ 2 + S / k + ε * S
+/-- Phase constant, given by `8 * M ^ 3 + 2 * M ^ 4`. -/
 noncomputable def phaseConstant (M : ℝ) : ℝ := 8 * M ^ 3 + 2 * M ^ 4
 
 theorem inverse_cube_bounds {S : ℝ} (hS : 1 ≤ S) :
@@ -405,7 +417,7 @@ theorem assembled_error_scaled {M S ε k v tilt : ℝ}
   have hbase : |v| * (2 * M * (M * (1 / S ^ 3 + ε ^ 2))) ≤ 2 * M ^ 3 * phaseError S ε k := by
     calc
       _ ≤ (M * S) * (2 * M * (M * (1 / S ^ 3 + ε ^ 2))) := mul_le_mul_of_nonneg_right hv (by
-        positivity)
+          positivity)
       _ = 2 * M ^ 3 * (S * (1 / S ^ 3) + S * ε ^ 2) := by ring
       _ ≤ 2 * M ^ 3 * (1 / S + S * ε ^ 2) :=
         mul_le_mul_of_nonneg_left (add_le_add_left hcubes.2 _) (by positivity)
@@ -448,6 +460,7 @@ theorem phaseError_le_four_div {S ε k : ℝ} (hS : 0 < S)
   rw [show 4 / S = 4 * (1 / S) by ring]
   linarith only [h1, h2, h3]
 
+/-- Normal velocity, given by `!₂[-(p * FR + pz * GR), 0, -ε * (p * FZ + pz * GZ)]`. -/
 noncomputable def normalVelocity (ε p pz FR GR FZ GZ : ℝ) : Space :=
   !₂[-(p * FR + pz * GR), 0, -ε * (p * FZ + pz * GZ)]
 
@@ -499,7 +512,7 @@ theorem velocity_error_scaled {M S ε k : ℝ}
   have h3 : ε * S ≤ phaseError S ε k := by
     unfold phaseError
     linarith only [one_div_nonneg.mpr hS0.le, mul_nonneg hS0.le (sq_nonneg ε), div_nonneg hS0.le
-      hk.le]
+        hk.le]
   have ha : M ^ 3 / S ≤ M ^ 3 * phaseError S ε k := by
     simpa only [mul_one_div] using mul_le_mul_of_nonneg_left h0 (pow_nonneg hM0 3)
   have hb : M * (1 / k) ≤ M * phaseError S ε k :=
@@ -607,7 +620,7 @@ theorem radialSlope_close {n : Space} {K : Plane} {B s δ : ℝ}
   have heq : MovingFrameODE.radialSlope n - s =
       ((n 0 - B * s) + s * (B - MovingFrameODE.normalScale n)) / MovingFrameODE.normalScale n := by
     unfold MovingFrameODE.radialSlope
-    field_simp ; ring
+    field_simp; ring
   rw [heq, abs_div, abs_of_pos hβ]
   have hnum : |(n 0 - B * s) + s * (B - MovingFrameODE.normalScale n)| ≤ δ + |s| * δ := by
     calc
@@ -636,7 +649,7 @@ theorem normalDirection_close {n : Space} {K : Plane} {B s δ : ℝ}
     unfold MovingFrameODE.normalDirection
     ext i
     simp only [PiLp.add_apply, PiLp.sub_apply, PiLp.smul_apply, smul_eq_mul]
-    field_simp ; ring
+    field_simp; ring
   rw [heq]
   have hn := norm_add_le ((MovingFrameODE.normalScale n)⁻¹ • (MovingFrameODE.tail n - B • K))
     (((B - MovingFrameODE.normalScale n) / MovingFrameODE.normalScale n) • K)
@@ -670,16 +683,24 @@ theorem transverseDirection_close {n : Space} {K : Plane} {B s δ : ℝ}
   rw [← map_sub, quarterTurn_norm]
   exact normalDirection_close hB hK hδ hclose
 
+/-- Scale derivative, given by `⟪MovingFrameODE.tail n, MovingFrameODE.tail n'⟫_ℝ /
+MovingFrameODE.normalScale n`. -/
 noncomputable def scaleDerivative (n n' : Space) : ℝ :=
   ⟪MovingFrameODE.tail n, MovingFrameODE.tail n'⟫_ℝ / MovingFrameODE.normalScale n
 
+/-- Slope derivative, given by `(n' 0 - MovingFrameODE.radialSlope n * scaleDerivative n n') /
+MovingFrameODE.normalScale n`. -/
 noncomputable def slopeDerivative (n n' : Space) : ℝ :=
   (n' 0 - MovingFrameODE.radialSlope n * scaleDerivative n n') / MovingFrameODE.normalScale n
 
+/-- Direction derivative, given by `(MovingFrameODE.normalScale n)⁻¹ • (MovingFrameODE.tail n' -
+scaleDerivative n n' • MovingFrameODE.normalDirection n)`. -/
 noncomputable def directionDerivative (n n' : Space) : Plane :=
   (MovingFrameODE.normalScale n)⁻¹ •
     (MovingFrameODE.tail n' - scaleDerivative n n' • MovingFrameODE.normalDirection n)
 
+/-- Angular velocity, given by `⟪MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection n),
+directionDerivative n n'⟫_ℝ`. -/
 noncomputable def angularVelocity (n n' : Space) : ℝ :=
   ⟪MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection n), directionDerivative n n'⟫_ℝ
 
@@ -710,7 +731,7 @@ theorem hasDerivAt_radialSlope {n : ℝ → Space} {n' : Space} {v : ℝ}
 theorem hasDerivAt_normalDirection {n : ℝ → Space} {n' : Space} {v : ℝ}
     (hn : HasDerivAt n n' v) (hne : MovingFrameODE.tail (n v) ≠ 0) :
     HasDerivAt (fun s => MovingFrameODE.normalDirection (n s)) (directionDerivative (n v) n') v :=
-      by
+        by
   have hβ := MovingFrameODE.normalScale_pos hne
   have ht : HasDerivAt (fun s => MovingFrameODE.tail (n s)) (MovingFrameODE.tail n') v :=
     MovingFrameODE.tailCLM.hasFDerivAt.comp_hasDerivAt v hn
@@ -718,14 +739,14 @@ theorem hasDerivAt_normalDirection {n : ℝ → Space} {n' : Space} {v : ℝ}
   unfold directionDerivative MovingFrameODE.normalDirection
   ext i
   simp only [PiLp.add_apply, PiLp.sub_apply, PiLp.smul_apply, smul_eq_mul]
-  field_simp [hβ.ne'] ; ring
+  field_simp [hβ.ne']; ring
 
 /-- The angular speed is computed from the actual normal derivative. -/
 theorem hasDerivAt_actual_frame {n : ℝ → Space} {n' : Space} {v : ℝ}
     (hn : HasDerivAt n n' v) (hne : MovingFrameODE.tail (n v) ≠ 0) :
     HasDerivAt (fun s => MovingFrameODE.normalDirection (n s))
       (angularVelocity (n v) n' • MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection (n
-        v))) v ∧
+          v))) v ∧
     HasDerivAt (fun s => MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection (n s)))
       (-angularVelocity (n v) n' • MovingFrameODE.normalDirection (n v)) v := by
   have ht : HasDerivAt (fun s => MovingFrameODE.tail (n s)) (MovingFrameODE.tail n') v :=
@@ -738,7 +759,7 @@ theorem hasDerivAt_actual_frame {n : ℝ → Space} {n' : Space} {v : ℝ}
   have hrot := MovingFrameODE.unit_curve_rotation hd hunit
   have hk : HasDerivAt (fun s => MovingFrameODE.normalDirection (n s))
       (angularVelocity (n v) n' • MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection (n
-        v))) v :=
+          v))) v :=
     hrot ▸ hd
   exact ⟨hk, MovingFrameODE.hasDerivAt_quarterTurn_of_rotation hk⟩
 
@@ -752,7 +773,7 @@ theorem scaleDerivative_bound {n n' : Space} (hne : MovingFrameODE.tail n ≠ 0)
       div_le_div_of_nonneg_right (abs_real_inner_le_norm _ _) hβ.le
     _ = ‖MovingFrameODE.tail n'‖ := by
       change (MovingFrameODE.normalScale n * ‖MovingFrameODE.tail n'‖) / MovingFrameODE.normalScale
-        n = _
+          n = _
       exact mul_div_cancel_left₀ _ hβ.ne'
     _ ≤ ‖n'‖ := tail_norm_le n'
 
@@ -768,7 +789,7 @@ theorem slopeDerivative_bound {n n' : Space} {B η : ℝ}
   rw [abs_div, abs_of_pos hβ]
   calc
     _ ≤ (|n' 0| + |MovingFrameODE.radialSlope n * scaleDerivative n n'|) /
-      MovingFrameODE.normalScale n :=
+        MovingFrameODE.normalScale n :=
       div_le_div_of_nonneg_right (abs_sub _ _) hβ.le
     _ ≤ (η + |MovingFrameODE.radialSlope n| * η) / MovingFrameODE.normalScale n := by
       rw [abs_mul]
@@ -787,16 +808,16 @@ theorem directionDerivative_bound {n n' : Space} {B η : ℝ}
   have hb : |scaleDerivative n n'| ≤ η := (scaleDerivative_bound hne).trans hn'
   have ht : ‖MovingFrameODE.tail n'‖ ≤ η := (tail_norm_le n').trans hn'
   have hs : ‖MovingFrameODE.tail n' - scaleDerivative n n' • MovingFrameODE.normalDirection n‖ ≤ 2
-    * η := by
+      * η := by
     have h := norm_sub_le (MovingFrameODE.tail n') (scaleDerivative n n' •
-      MovingFrameODE.normalDirection n)
+        MovingFrameODE.normalDirection n)
     rw [norm_smul, Real.norm_eq_abs, MovingFrameODE.normalDirection_unit hne, mul_one] at h
     linarith only [h, hb, ht]
   unfold directionDerivative
   rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hβ)]
   calc
     _ ≤ (MovingFrameODE.normalScale n)⁻¹ * (2 * η) := mul_le_mul_of_nonneg_left hs (inv_nonneg.mpr
-      hβ.le)
+        hβ.le)
     _ = 2 * η / MovingFrameODE.normalScale n := by ring
     _ ≤ 2 * η / (B / 2) := div_le_div_of_nonneg_left (by positivity) (half_pos hB) hlow
     _ = _ := by ring
@@ -862,6 +883,7 @@ theorem radius_difference_le {q q0 : Slow} {diameter : ℝ} (hd : ‖q - q0‖ �
     |q.1 - q0.1| ≤ diameter := by
   simpa only [Prod.fst_sub, Real.norm_eq_abs] using (norm_fst_le (q - q0)).trans hd
 
+/-- Shear vector, given by `!₂[q.1 * PhaseCalculus.slowR F q, PhaseCalculus.slowR G q]`. -/
 noncomputable def shearVector (F G : Slow → ℝ) (q : Slow) : Plane :=
   !₂[q.1 * PhaseCalculus.slowR F q, PhaseCalculus.slowR G q]
 
@@ -915,7 +937,7 @@ theorem actual_phase_estimates
     (hL : 1 / |L| ≤ M / S) (hv : |v| ≤ M * S)
     (hRi : |1 / q.1| ≤ M) (hR0i : |1 / q0.1| ≤ M) :
     ‖PhaseCalculus.phaseNormal ε (roundedFrequency k target) pz (sigma * B * u / 2) F G (q, (θ, v))
-      -
+        -
       referenceNormal B sigma u L v K‖ ≤ phaseConstant M * phaseError S ε k ∧
     ‖PhaseCalculus.normalSlotDerivative ε (roundedFrequency k target) pz F G q‖ ≤
       phaseConstant M * phaseError S ε k := by
@@ -975,7 +997,7 @@ theorem actual_phase_geometry
       2 * (1 + |signedSlot sigma u L v|) * δ / B ∧
     ‖MovingFrameODE.normalDirection (N v) - K‖ ≤ 4 * δ / B ∧
     ‖MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection (N v)) - MovingFrameODE.quarterTurn
-      K‖ ≤
+        K‖ ≤
       4 * δ / B ∧
     |slopeDerivative (N v) n'| ≤ 2 * (1 + |MovingFrameODE.radialSlope (N v)|) * δ / B ∧
     |angularVelocity (N v) n'| ≤ 4 * δ / B := by
@@ -1067,7 +1089,7 @@ theorem eventually_band_conditions (h : ℝ) (hh : 0 < h) :
   have h2 := ChartScales.eventually_slow_power_epsilon_lt h hh 2 2 1 (by norm_num) (by norm_num)
   have h1 := ChartScales.eventually_slow_power_epsilon_lt h hh 2 1 1 (by norm_num) (by norm_num)
   have hk := (tendsto_order.1 (ChartScales.slow_power_div_carrier_tendsto_zero h hh 2)).2 1 (by
-    norm_num)
+      norm_num)
   filter_upwards [hS, h2, hk, h1] with n hn hn2 hnk hn1
   refine ⟨hn, ?_, ?_, ?_⟩
   · simpa only [Real.rpow_two] using hn2.le
@@ -1086,7 +1108,7 @@ derived normal error.  This is a cutoff conclusion, not an assumed comparison. -
 theorem eventually_error_small (h : ℝ) (hh : 0 < h) {C B : ℝ} (hC : 0 ≤ C) (hB : 0 < B) :
     ∀ᶠ n : ℕ in atTop,
       C * phaseError (ChartScales.S n) (ChartScales.epsilon h n) (ChartScales.carrier h n) ≤ B / 2
-        := by
+          := by
   have hS := chart_S_tendsto_atTop.eventually (eventually_ge_atTop (max 1 (8 * C / B)))
   filter_upwards [hS, eventually_phaseError_le h hh] with n hn he
   have hS1 : 1 ≤ ChartScales.S n := (le_max_left _ _).trans hn

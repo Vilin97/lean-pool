@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurl
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialPath
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+
+/-! Spatial support is preserved by the actual angular primitive, mixed derivative, and slow curl
+paths. -/
 
 @[expose] public section
 
-/-! Spatial support is preserved by the actual angular primitive, mixed derivative, and slow curl
-  paths. -/
 
 noncomputable section
 
@@ -27,10 +28,17 @@ open scoped ContDiff Topology BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] (S : Set Space) (hS : MeasurableSet S)
 
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup (Supported P Space S hS) := inferInstance
-private local instance : NormedSpace ℝ (Supported P Space S hS) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderLocalSupport1 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderLocalSupport2 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Supported P Space S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderLocalSupport3 : NormedAddCommGroup (Supported P Space S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Supported P Space S hS)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderLocalSupport4 : NormedSpace ℝ (Supported P Space S hS) := inferInstance
 
 /-- Pure angular integration does not move the spatial support. -/
 theorem primitive_supported (u : LiftL2 P) (hu : u ∈ Supported P Space S hS) :
@@ -69,7 +77,7 @@ theorem fieldFDeriv_zero_outside (hSc : IsClosed S) (f : LiftDomain P → Space)
   simpa only [fieldFDeriv, fderiv_const_apply] using he.fderiv_eq (𝕜 := ℝ)
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (p : C(K,LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 include hp in
 theorem pointField_zero_outside (hSc : IsClosed S)
@@ -90,14 +98,14 @@ theorem derivativePath_supported (hSc : IsClosed S)
     fieldFDeriv_zero_outside P S hSc (pointField P p hp t)
       (pointField_zero_outside P S hS p hp hSc hs t) x hnot, zero_apply]
 
-theorem potentialPath_supported (B : C(K,Space →ᵇ Space →L[ℝ] Space))
+theorem potentialPath_supported (B : C(K, Space →ᵇ Space →L[ℝ] Space))
     (hs : ∀ t, p t ∈ Supported P Space S hS) (t : K) :
     potentialPath P B p t ∈ Supported P Space S hS :=
   EulerLpOperatorField.full_mem (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS)
     (fieldLift P (B t)) ⟨primitive P (p t), primitive_supported P S hS (p t) (hs t)⟩
 
 include hp in
-theorem slowCurlPath_supported (G : C(K,Space →ᵇ Space →L[ℝ] Space)) (hSc : IsClosed S)
+theorem slowCurlPath_supported (G : C(K, Space →ᵇ Space →L[ℝ] Space)) (hSc : IsClosed S)
     (hs : ∀ t, p t ∈ Supported P Space S hS) (t : K) :
     EulerCylinderSlowCurl.path P G p t ∈ Supported P Space S hS := by
   change (∑ i : Fin 3, EulerCylinderSlowCurl.term P G p i) t ∈ Supported P Space S hS
@@ -105,7 +113,7 @@ theorem slowCurlPath_supported (G : C(K,Space →ᵇ Space →L[ℝ] Space)) (hS
   apply (Supported P Space S hS).sum_mem
   intro i _
   exact EulerLpOperatorField.full_mem (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S
-    hS)
+      hS)
     (fieldLift P (EulerPacketPiola.curlCoefficientPath i G t))
     ⟨derivativePath P p i.succ t, derivativePath_supported P S hS p hp hSc hs i.succ t⟩
 

@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketBudget
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCoefficientBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
+
+/-! Source-only coefficient budgets for the joined pressure, potential and corrector. -/
 
 @[expose] public section
 
-/-! Source-only coefficient budgets for the joined pressure, potential and corrector. -/
 
 noncomputable section
 
@@ -26,8 +28,11 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Original inverse-deformation and strain jets, with one fixed inverse radius. -/
 structure NormalBudget (D : Data U) (q : ℕ) (R : ℝ) where
+  /-- Rc of `NormalBudget`, of type `ℝ`. -/
   Rc : ℝ
+  /-- Bound coefficient of `NormalBudget`, of type `ℝ`. -/
   C : ℝ
+  /-- Ri of `NormalBudget`, of type `ℝ`. -/
   Ri : ℝ
   Rc_nonneg : 0 ≤ Rc
   C_nonneg : 0 ≤ C
@@ -44,12 +49,16 @@ variable {D : Data U} {q : ℕ} {R : ℝ} (N : NormalBudget D q R)
 
 theorem Ri_nonneg : 0 ≤ N.Ri :=
   (inverseRadius_bounds D.normalLower N.C N.Rc N.Ri D.normalLower_pos N.Rc_nonneg
-    N.inverse_radius).1
+      N.inverse_radius).1
 
+/-- Coefficient radius, given by `correctorCoefficientRadius N.Rc N.Ri`. -/
 def coefficientRadius : ℝ := correctorCoefficientRadius N.Rc N.Ri
+/-- Coefficient amplitude, given by `correctorCoefficientAmplitude N.C N.Ri`. -/
 def coefficientAmplitude : ℝ := correctorCoefficientAmplitude N.C N.Ri
+/-- Block amplitude, given by `sobolevCoefficientAmplitude (Fin 4) q N.coefficientRadius
+N.coefficientAmplitude`. -/
 def blockAmplitude : ℝ := sobolevCoefficientAmplitude (Fin 4) q N.coefficientRadius
-  N.coefficientAmplitude
+    N.coefficientAmplitude
 
 theorem coefficient_bounds :
     0 ≤ N.coefficientRadius ∧ 0 ≤ N.coefficientAmplitude ∧
@@ -100,10 +109,10 @@ theorem derivativeCost_nonneg : 0 ≤ L.derivativeCost := by
   have h0 := sobolevCoefficientAmplitude_nonneg (ι := ι) q L.Rc L.C₀ L.Rc_nonneg L.C₀_nonneg
   have h1 := sobolevCoefficientAmplitude_nonneg (ι := ι) q L.Rc L.C₁ L.Rc_nonneg L.C₁_nonneg
   have ht := EulerFixedEvolutionSobolev.traceCost_nonneg τ hτ.le
-  have hb0 := sobolevCoefficientAmplitude_nonneg (ι := ι) q (4*L.Ri) L.C₀ (by positivity)
-    L.C₀_nonneg
-  have hb1 := sobolevCoefficientAmplitude_nonneg (ι := ι) q (4*L.Ri) L.C₁ (by positivity)
-    L.C₁_nonneg
+  have hb0 := sobolevCoefficientAmplitude_nonneg (ι := ι) q (4*L.Ri) L.C₀ (by
+      positivity) L.C₀_nonneg
+  have hb1 := sobolevCoefficientAmplitude_nonneg (ι := ι) q (4*L.Ri) L.C₁ (by
+      positivity) L.C₁_nonneg
   have hC₀ := L.C₀_nonneg
   have hC₁ := L.C₁_nonneg
   have hbb := sobolevCoefficientAmplitude_nonneg (ι := ι) q (4*L.Ri) (18*L.Ri*L.C₀*L.C₁)
@@ -113,14 +122,15 @@ theorem derivativeCost_nonneg : 0 ≤ L.derivativeCost := by
   unfold derivativeCost physicalCost coordinateCost
   positivity
 
+/-- Common cost, given by `L.velocityCost+L.derivativeCost`. -/
 def commonCost : ℝ := L.velocityCost+L.derivativeCost
 
 theorem commonCost_nonneg : 0 ≤ L.commonCost := add_nonneg L.velocityCost_nonneg
-  L.derivativeCost_nonneg
+    L.derivativeCost_nonneg
 theorem velocityCost_le_common : L.velocityCost ≤ L.commonCost := le_add_of_nonneg_right
-  L.derivativeCost_nonneg
+    L.derivativeCost_nonneg
 theorem derivativeCost_le_common : L.derivativeCost ≤ L.commonCost := le_add_of_nonneg_left
-  L.velocityCost_nonneg
+    L.velocityCost_nonneg
 
 end Budget
 end EulerTransversePacketJoin

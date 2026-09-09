@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.QuadraticHeatLocal
-public import LeanPool.NavierStokesAndEuler.Euler.DivergenceFreeHeat
+import LeanPool.NavierStokesAndEuler.Euler.DivergenceFreeHeat
+
+/-! The local quadratic heat construction preserves the actual lifted divergence constraint. -/
 
 @[expose] public section
 
-/-! The local quadratic heat construction preserves the actual lifted divergence constraint. -/
 
 noncomputable section
 
@@ -22,16 +23,21 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace period q)` instance to shorten
+typeclass synthesis. -/
 local instance constraintSobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace period q)` instance to shorten typeclass
+synthesis. -/
 local instance constraintSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
-/-- A local solution driven by the actual divergence-free projected source has zero lifted divergence at every time. -/
+/-- A local solution driven by the actual divergence-free projected source has zero lifted
+divergence at every time. -/
 theorem exists_local_quadratic_divergenceFree (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ) (hS : 0 < S)
-    (κ : ℝ) (m : Vector3) (u₀ : SobolevSpace period (q+1))
+    (κ : ℝ) (m : Vector3) (u₀ : SobolevSpace period (q + 1))
     (hu₀ : gradientProjection period κ m (value period u₀) = 0)
-    (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q+1)) (SobolevSpace period q))
+    (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q + 1)) (SobolevSpace period q))
     (hC : ∀ t u, gradientProjection period κ m (value period (C.apply t u)) = 0) :
     ∃ (T : ℝ) (hT : 0 < T) (hTS : T ≤ S),
       ∃ u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)),

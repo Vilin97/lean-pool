@@ -7,18 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.HeatHessianEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+import Mathlib.Algebra.Order.Star.Real
+
+/-! A genuine H² bound by H¹ and the cylinder Laplacian, used in strong maximal-regularity limits.
+-/
 
 @[expose] public section
 
-/-! A genuine H² bound by H¹ and the cylinder Laplacian, used in strong maximal-regularity limits.
-  -/
 
 noncomputable section
 
 namespace EulerSobolevEllipticBound
 
 open EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerSobolevHeatGenerator
-  EulerHeatGradientEnergy
+    EulerHeatGradientEnergy
 
 variable (period : ℝ) [Fact (0 < period)]
 

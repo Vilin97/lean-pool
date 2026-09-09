@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
+public import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The constructed Hilbert operator for the transverse displacement form
@@ -20,6 +21,9 @@ This file constructs, rather than assumes, the inverse of the actual operator
 `I - J* H J`.  Its coercivity follows from the potential upper bound and the
 primitive estimate.  No inverse, solution, or weak equation is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

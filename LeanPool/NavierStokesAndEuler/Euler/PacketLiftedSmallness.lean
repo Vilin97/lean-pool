@@ -6,13 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionRapidDecay
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
+import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionRapidDecay
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The literal correction target and a fixed inverse-frequency packet
 amplitude give the small lifted velocity required by the finite flow
 bootstrap. All source constants remain fixed as frequency increases. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,6 +27,7 @@ namespace EulerPacketSourceFrequency
 open Real Filter EulerPacketCorrectionScalar
 open scoped Topology
 
+/-- Lifted amplitude, given by `C/k + E*delta (expansion k)`. -/
 def liftedAmplitude (C E k : ℝ) : ℝ := C/k + E*delta (expansion k)
 
 theorem fixed_div_eventually_le_inverse_half (C : ℝ) :

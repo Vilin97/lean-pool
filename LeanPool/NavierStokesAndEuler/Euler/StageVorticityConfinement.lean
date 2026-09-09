@@ -6,16 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.StageDisplacementBound
 public import LeanPool.NavierStokesAndEuler.Euler.StageDisplacementConfinement
-public import LeanPool.NavierStokesAndEuler.Euler.StageInitialSupport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCurlTransport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCurlTransport
+import LeanPool.NavierStokesAndEuler.Euler.StageDisplacementBound
+import LeanPool.NavierStokesAndEuler.Euler.StageInitialSupport
 
 /-! Every selected finite packet has vorticity supported in one fixed ball
 throughout its horizon. Initial support, the actual vorticity transport law,
 and the summable particle-map displacement bound supply the three ingredients. -/
+
+@[expose] public section
+
 
 noncomputable section
 

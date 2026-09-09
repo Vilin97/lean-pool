@@ -7,15 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionLp
+import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
+import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionLp
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingDerivatives
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingDerivatives
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Quantitative calculus for concrete smooth L² fields, with the outer
 factor in L² and the inner coordinate change preserving volume. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +32,7 @@ open scoped ContDiff
 variable {E V W : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [NormedAddCommGroup W] [NormedSpace ℝ W]
 
+/-- Has sup bound, given by `∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*R^n*(n.factorial : ℝ)^2`. -/
 def HasSupBound (f : E → V) (C R : ℝ) : Prop :=
   ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*R^n*(n.factorial : ℝ)^2
 
@@ -49,7 +55,7 @@ theorem HasSupBound.derivative {f : E → V} {C R : ℝ}
 theorem HasSupBound.comp {f : E → E} {g : E → V} {C B R S : ℝ}
     (hg : HasSupBound g C S) (hf : ContDiff ℝ ∞ f) (hgsm : ContDiff ℝ ∞ g)
     (hC : 0 ≤ C) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S)
-    (hfb : ∀ n, 0 < n → ∀ x, ‖iteratedFDeriv ℝ n f x‖ ≤ B*R^n*(n.factorial : ℝ)^2) :
+    (hfb : ∀ n, 0 < n → ∀ x, ‖iteratedFDeriv ℝ n f x‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2) :
     HasSupBound (g ∘ f) C (R*(B*S+2)) :=
   EulerGevreyComposition.norm_iteratedFDeriv_comp_gevrey f g hf hgsm C B R S hC hB hR hS hg hfb
 
@@ -92,7 +98,7 @@ variable {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 variable (f : Space → Space) (hf : ContDiff ℝ ∞ f) (hmp : MeasurePreserving f volume volume)
   (B R : ℝ) (hB : 0 ≤ B) (hR : 0 ≤ R)
-  (hfb : ∀ n, 0 < n → ∀ x, ‖iteratedFDeriv ℝ n f x‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+  (hfb : ∀ n, 0 < n → ∀ x, ‖iteratedFDeriv ℝ n f x‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
   (A : SmoothL2Field V) (C S : ℝ) (hC : 0 ≤ C) (hS : 0 ≤ S) (ha : A.HasJetBound C S)
 
 include hf hmp hB hR hfb hC hS ha in
@@ -105,6 +111,7 @@ theorem compose_memLp_and_bound (n : ℕ) :
     C B R S hC hB hR hS (fun j _ => A.integrable j)
     (fun j _ => by simpa only [← norm_jetLp] using ha j) (fun j hj _ => hfb j hj)
 
+/-- Compose field, bundling `field`, `smooth`, `integrable`. -/
 def composeField : SmoothL2Field V where
   field := A.field ∘ f
   smooth := A.smooth.comp hf
@@ -117,6 +124,7 @@ theorem composeField_bound :
   exact (compose_memLp_and_bound f hf hmp B R hB hR hfb A C S hC hS ha n).2
 
 omit f hf hmp B R hB hR hfb A C S hC hS ha in
+/-- Product field, bundling `field`, `smooth`, `integrable`. -/
 def productField (g : Space → V →L[ℝ] W) (hg : ContDiff ℝ ∞ g) (A : SmoothL2Field V)
     (B C R : ℝ) (hB : 0 ≤ B) (hC : 0 ≤ C) (hR : 0 ≤ R)
     (hgb : HasSupBound g B R) (hab : A.HasJetBound C R) : SmoothL2Field W where

@@ -7,25 +7,34 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleSequence
-
-@[expose] public section
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Uniform frequency separation for polynomial source sizes. These
 costs can be placed in the same finite list as the geometric and pressure
 costs, so the starting stage is chosen only once. -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerPacketUniformFrequencyScales
 
-open Real Filter EulerScale EulerPacketSourceScaleBounds
+open Real Filter EulerPacketSourceScaleBounds
   EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence
 open scoped Topology
 
+/-- Parameter envelope, given by `C*((J+n : ℕ) : ℝ)^p*(scaleSequence J X n)^q * exp
+(c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3))`. -/
 def parameterEnvelope (J : ℕ) (C c : ℝ) (p q : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
-  C*((J+n : ℕ) : ℝ)^p*(scaleSequence J X n)^q*
+  C*((J+n : ℕ) : ℝ)^p*(scaleSequence J X n)^q *
     exp (c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3))
 
+/-- Frequency cost spec, bundling `d`, `B`, `N`, `a` and the required compatibility proofs. -/
 def frequencyCostSpec (A C c : ℝ) (hA : 0 < A) (hC : 0 < C)
     (p q N : ℕ) (θ : ℝ) (hθ : 0 < θ) : CostSpec where
   d := 1
@@ -46,7 +55,7 @@ def frequencyCostSpec (A C c : ℝ) (hA : 0 < A) (hC : 0 < C)
 
 theorem frequencyCost_eq (J : ℕ) (A C c : ℝ) (hA : 0 < A) (hC : 0 < C)
     (p q N : ℕ) (θ : ℝ) (hθ : 0 < θ) (X : ℝ) (n : ℕ) :
-    (frequencyCostSpec A C c hA hC p q N θ hθ).cost J (scaleSequence J X) n=
+    (frequencyCostSpec A C c hA hC p q N θ hθ).cost J (scaleSequence J X) n =
       A*(parameterEnvelope J C c p q X n)^N/(frequency J X n)^θ := by
   simp only [frequencyCostSpec,CostSpec.cost,monomialCost,parameterEnvelope,
     frequency,mul_pow,← pow_mul,← exp_mul,div_eq_mul_inv,← exp_neg,← exp_nat_mul]

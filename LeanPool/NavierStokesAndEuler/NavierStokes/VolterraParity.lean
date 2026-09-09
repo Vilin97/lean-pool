@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NilpotentVolterra
-public import Mathlib.Topology.Piecewise
-public import Mathlib.Topology.Order.OrderClosed
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Slope
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Symmetric extension and parity for the actual Volterra solution
@@ -19,6 +18,9 @@ The negative half is obtained by reflecting the differential equation.
 The integral identity is proved for the glued function at and across the
 axis; parity will follow from uniqueness, not from the definition of glue.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,8 +31,11 @@ open scoped Topology
 open VolterraAnalyticBounds
 open NilpotentVolterra (equationRHS)
 
+/-- Parity sign, with branches according to `i.val < 4`. -/
 noncomputable def paritySign (i : Fin 6) : ℂ := if i.val < 4 then 1 else -1
 
+/-- Parity vector, given by `ContinuousLinearMap.pi (fun i => paritySign i •
+ContinuousLinearMap.proj i)`. -/
 noncomputable def parityVec : Vec →L[ℂ] Vec :=
   ContinuousLinearMap.pi (fun i => paritySign i • ContinuousLinearMap.proj i)
 
@@ -44,23 +49,32 @@ noncomputable def parityVec : Vec →L[ℂ] Vec :=
   funext i
   simp only [parityVec_apply, ← mul_assoc, paritySign_mul_self, one_mul]
 
+/-- Coefficient parity on, given by `∀ r ∈ S, ∀ z ∈ U, ∀ i j, A (-r) z i j = -(paritySign i *
+paritySign j) * A r z i j`. -/
 def CoefficientParityOn (S : Set ℝ) (U : Set ℂ) (A : Coeff) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, ∀ i j,
     A (-r) z i j = -(paritySign i * paritySign j) * A r z i j
 
+/-- Forcing parity on, given by `∀ r ∈ S, ∀ z ∈ U, ∀ i, f (-r) z i = -(paritySign i) * f r z i`. -/
 def ForcingParityOn (S : Set ℝ) (U : Set ℂ) (f : Field) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, ∀ i, f (-r) z i = -(paritySign i) * f r z i
 
+/-- Coefficient parity, given by `∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r
+z i j`. -/
 def CoefficientParity (A : Coeff) : Prop :=
   ∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r z i j
 
+/-- Forcing parity, given by `∀ r z i, f (-r) z i = -(paritySign i) * f r z i`. -/
 def ForcingParity (f : Field) : Prop :=
   ∀ r z i, f (-r) z i = -(paritySign i) * f r z i
 
+/-- Reflect field, defined pointwise by `W (-r) z`. -/
 noncomputable def reflectField (W : Field) : Field := fun r z => W (-r) z
 
+/-- Reflect coefficient, defined pointwise by `-A (-r) z`. -/
 noncomputable def reflectCoeff (A : Coeff) : Coeff := fun r z => -A (-r) z
 
+/-- Reflected forcing, defined pointwise by `-f (-r) z`. -/
 noncomputable def reflectedForcing (f : Field) : Field := fun r z => -f (-r) z
 
 @[simp] theorem reflectField_twice (W : Field) : reflectField (reflectField W) = W := by
@@ -121,6 +135,7 @@ theorem negativeHalf_equation {R : ℝ} {U : Set ℂ} {A₀ A₁ : Coeff} {f W :
   have hh := h.reflect r ⟨neg_nonneg.mpr hr.2, by linarith [hr.1]⟩ z hz
   simpa using hh
 
+/-- Glue, defined pointwise by `if 0 ≤ r then Wp r z else Wm (-r) z`. -/
 noncomputable def glue (Wp Wm : Field) : Field :=
   fun r z => if 0 ≤ r then Wp r z else Wm (-r) z
 
@@ -203,7 +218,7 @@ theorem glue_jointly_continuous {R : ℝ} {U : Set ℂ} {Wp Wm : Field}
     intro p h
     have hh : 0 ≤ p.1 := by
       simpa only [(isClosed_le continuous_const continuous_fst).closure_eq, Set.mem_ofPred_eq]
-        using h.2
+          using h.2
     exact ⟨⟨hh, h.1.1.2⟩, h.1.2⟩
   · apply hm.comp (continuous_fst.neg.prodMk continuous_snd).continuousOn
     intro p h
@@ -222,23 +237,31 @@ structure IsSymmetricIntegralSolution (R : ℝ) (U : Set ℂ)
   integral_equation : IntegralEquationOn (Icc (-R) R) U A₀ A₁ f W
   axis_zero : ∀ z ∈ U, W 0 z = 0
 
+/-- Symmetric path: an abbreviation for `C(Icc (-R) R, E)`. -/
 abbrev SymmetricPath (R : ℝ) (E : Type*) [TopologicalSpace E] := C(Icc (-R) R, E)
+/-- Symmetric coefficient path: an abbreviation for `SymmetricPath R (Vec →L[ℂ] Vec)`. -/
 abbrev SymmetricCoefficientPath (R : ℝ) := SymmetricPath R (Vec →L[ℂ] Vec)
 
+/-- Positive embedding, given by `⟨fun x => ⟨x.1, ⟨(neg_nonpos.mpr hR).trans x.2.1, x.2.2⟩⟩,
+continuous_subtype_val.subtype_mk _⟩`. -/
 noncomputable def positiveEmbedding {R : ℝ} (hR : 0 ≤ R) :
     C(Icc (0 : ℝ) R, Icc (-R) R) :=
   ⟨fun x => ⟨x.1, ⟨(neg_nonpos.mpr hR).trans x.2.1, x.2.2⟩⟩,
     continuous_subtype_val.subtype_mk _⟩
 
+/-- Negative embedding, given by `⟨fun x => ⟨-x.1, ⟨neg_le_neg x.2.2, (neg_nonpos.mpr
+x.2.1).trans hR⟩⟩, continuous_subtype_val.neg.subtype_mk _⟩`. -/
 noncomputable def negativeEmbedding {R : ℝ} (hR : 0 ≤ R) :
     C(Icc (0 : ℝ) R, Icc (-R) R) :=
   ⟨fun x => ⟨-x.1, ⟨neg_le_neg x.2.2, (neg_nonpos.mpr x.2.1).trans hR⟩⟩,
     continuous_subtype_val.neg.subtype_mk _⟩
 
+/-- Side embedding, with branches according to `b`. -/
 noncomputable def sideEmbedding {R : ℝ} (hR : 0 ≤ R) (b : Bool) :
     C(Icc (0 : ℝ) R, Icc (-R) R) :=
   if b then negativeEmbedding hR else positiveEmbedding hR
 
+/-- Side restriction, constructed using `LinearMap.mkContinuous`. -/
 noncomputable def sideRestriction {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R) (b : Bool) :
     SymmetricPath R E →L[ℂ] C(Icc (0 : ℝ) R, E) :=
@@ -253,11 +276,13 @@ noncomputable def sideRestriction {R : ℝ} {E : Type*}
     intro x
     exact f.norm_coe_le_norm _)
 
+/-- Signed restriction, given by `(if b then (-1 : ℂ) else 1) • sideRestriction hR b`. -/
 noncomputable def signedRestriction {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R) (b : Bool) :
     SymmetricPath R E →L[ℂ] C(Icc (0 : ℝ) R, E) :=
   (if b then (-1 : ℂ) else 1) • sideRestriction hR b
 
+/-- Side data, defined pointwise by `signedRestriction hR b (F z)`. -/
 noncomputable def sideData {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R) (b : Bool)
     (F : ℂ → SymmetricPath R E) : ℂ → C(Icc (0 : ℝ) R, E) :=
@@ -281,10 +306,13 @@ theorem sideData_holomorphic {R : ℝ} {E : Type*}
     DifferentiableOn ℂ (sideData hR b F) U := by
   exact (signedRestriction (E := E) hR b).differentiable.comp_differentiableOn hF
 
+/-- Symmetric raw field, defined pointwise by `F z (projIcc (-R) R (by linarith) r)`. -/
 noncomputable def symmetricRawField {R : ℝ} (hR : 0 ≤ R)
     (F : ℂ → SymmetricPath R Vec) : Field :=
   fun r z => F z (projIcc (-R) R (by linarith) r)
 
+/-- Symmetric raw coefficient, defined pointwise by `LinearMap.toMatrix' (A z (projIcc (-R) R
+(by linarith) r)).toLinearMap`. -/
 noncomputable def symmetricRawCoefficient {R : ℝ} (hR : 0 ≤ R)
     (A : ℂ → SymmetricCoefficientPath R) : Coeff :=
   fun r z => LinearMap.toMatrix' (A z (projIcc (-R) R (by linarith) r)).toLinearMap
@@ -379,6 +407,7 @@ theorem positive_equation_change_data {R : ℝ} {U : Set ℂ}
   have htr := NilpotentVolterra.scaled_radius_mem hr ht
   simp only [equationRHS, matrixAction, h₀ _ htr _ hz, h₁ _ htr _ hz, hf _ htr _ hz]
 
+/-- Side solution, constructed using `NilpotentVolterra.liftedField`. -/
 noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
     (A₀ A₁ : ℂ → SymmetricCoefficientPath R) (f : ℂ → SymmetricPath R Vec) : Field :=
   NilpotentVolterra.liftedField hR (sideData hR b A₀) (sideData hR b A₁) (sideData hR b f)
@@ -484,6 +513,7 @@ theorem reflected_forcing_parity {S : Set ℝ} {U : Set ℂ} {f : Field}
   rw [hf r hr z hz i]
   ring
 
+/-- Parity path, given by `ContinuousLinearMap.compLeftContinuous ℂ (Icc (0 : ℝ) R) parityVec`. -/
 noncomputable def parityPath (R : ℝ) :
     NilpotentVolterra.Path R →L[ℂ] NilpotentVolterra.Path R :=
   ContinuousLinearMap.compLeftContinuous ℂ (Icc (0 : ℝ) R) parityVec

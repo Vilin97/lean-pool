@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfilesRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryRegularity
 
-@[expose] public section
-
 /-!
 # Actual homogeneous primary and recursively solved profiles
 
@@ -18,6 +16,9 @@ The initial transverse datum and coefficient data determine every profile.
 Admissibility at all later grades follows from the genuine nonlinear paths,
 the source mean inverse and the source transverse inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,21 +35,24 @@ variable {P : ℝ} [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (hhigh : O.highSolve = EulerTransversePacketProvider.highSolve P D I)
   (hcorrector : O.curlCorrector = D.curlCorrector P)
 
+/-- Constructed profile witness, constructed using `profileWitness`. -/
 def constructedProfileWitness (p : ℕ) :
     ProfileRegularity P M.T M.T_pos.le D.support (profiles O (homogeneousPrimary D Iprimary O) p) :=
   profileWitness M D hT I C hmean hhigh hcorrector (homogeneousPrimary D Iprimary O)
     ((homogeneousPrimaryRegularity D Iprimary O hcorrector).changeTime hT.symm M.T_pos.le) p
 
-def constructed_meanForcing (p : ℕ) (hp : 2 ≤ p) :
+/-- Constructed mean forcing, constructed using `profilesMeanForcing`. -/
+def constructedMeanForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerMeanPacketProvider.Forcing M
       (meanForce O p (profiles O (homogeneousPrimary D Iprimary O))) :=
-  profiles_meanForcing M D hT I C hmean hhigh hcorrector (homogeneousPrimary D Iprimary O)
+  profilesMeanForcing M D hT I C hmean hhigh hcorrector (homogeneousPrimary D Iprimary O)
     ((homogeneousPrimaryRegularity D Iprimary O hcorrector).changeTime hT.symm M.T_pos.le) p hp
 
-def constructed_highForcing (p : ℕ) (hp : 2 ≤ p) :
+/-- Constructed high forcing, constructed using `profilesHighForcing`. -/
+def constructedHighForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerTransversePacketProvider.Forcing P D
       (highForce O p (profiles O (homogeneousPrimary D Iprimary O))) :=
-  profiles_highForcing M D hT I C hmean hhigh hcorrector (homogeneousPrimary D Iprimary O)
+  profilesHighForcing M D hT I C hmean hhigh hcorrector (homogeneousPrimary D Iprimary O)
     ((homogeneousPrimaryRegularity D Iprimary O hcorrector).changeTime hT.symm M.T_pos.le) p hp
 
 end EulerPacketCylinderField

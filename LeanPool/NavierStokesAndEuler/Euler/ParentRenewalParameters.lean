@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentStateGeometry
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryGuards
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryAssembly
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryData
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryAssembly
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryGuards
 
 /-! Quantitative parameters at a genuine geometric target. The matching
 certificate below is proved for the actual state renewal constructors in
 `ParentTargetRenewal`; it records equality of the physical matrix and the
 two physical vectors, rather than postulating their scalar estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,9 +28,12 @@ open Set InnerProductSpace EulerSmoothLimit
 
 variable {ι : Type*} (G : PhysicalGeometryData ι)
 
-def couplingError : ℝ := G.y^4+G.σ^2*G.y^2+8*G.σ*G.y^3+
+/-- Coupling error, given by `G.y^4+G.σ^2*G.y^2+8*G.σ*G.y^3 +
+30000000*neighborStabilityConstant*G.error*G.Θ^40`. -/
+def couplingError : ℝ := G.y^4+G.σ^2*G.y^2+8*G.σ*G.y^3 +
   30000000*neighborStabilityConstant*G.error*G.Θ^40
 
+/-- Tilt error, given by `1500*G.σ+30000000*neighborStabilityConstant*G.error*G.Θ^40`. -/
 def tiltError : ℝ := 1500*G.σ+30000000*neighborStabilityConstant*G.error*G.Θ^40
 
 /-- A lower bound for the magnitude of the leading compressive term. -/
@@ -55,7 +61,7 @@ theorem nextTilt_error : |(G.y⁻¹)^2*G.nextTilt-1| ≤ G.tiltError := by
   obtain ⟨F,F1,Z,Z1,J⟩ := G.exists_geometry
   exact J.next_frame.2
 
-theorem nextTilt_pos (herror : G.tiltError ≤ 1/2) : 0 < G.nextTilt := by
+theorem nextTilt_pos (herror : G.tiltError ≤ 1 / 2) : 0 < G.nextTilt := by
   have h := (abs_le.mp G.nextTilt_error).1
   have hn : 0 < (G.y⁻¹)^2 := sq_pos_of_pos (inv_pos.mpr G.y_pos)
   by_contra hneg
@@ -163,11 +169,11 @@ theorem normalized_velocity_eq : unit (P.v G.targetTime)=unit (G.w G.center G.ta
 /-- The actual next source matrix has the prescribed target shear and
 the original packet's center error. -/
 theorem target_remainder (hδ : 0 < G.δ) (hT : G.targetTime ≤ D.T) :
-    ‖D.M.field (D.clamp G.targetTime) 0-G.M G.center G.targetTime-
+    ‖D.M.field (D.clamp G.targetTime) 0-G.M G.center G.targetTime -
       G.hchild • rankOne ℝ (unit (G.w G.center G.targetTime))
         (unit (G.r G.center G.targetTime))‖ ≤ P.error := by
   have h := P.remainder_bound G.targetTime ⟨le_rfl,hT⟩
-  change ‖D.M.field (D.clamp G.targetTime) 0-P.B G.targetTime-
+  change ‖D.M.field (D.clamp G.targetTime) 0-P.B G.targetTime -
     P.shear • rankOne ℝ (unit (P.v G.targetTime)) (unit (P.m G.targetTime))‖ ≤ P.error at h
   rw [J.matrix_eq,J.ray_eq,J.velocity_eq,J.shear_eq hδ] at h
   exact h
@@ -191,24 +197,24 @@ theorem coupling_absolute_error : |P.a-G.a| ≤ G.a*G.couplingError := by
   rw [abs_le]
   constructor <;> nlinarith only [J.coupling_interval.1,J.coupling_interval.2]
 
-theorem sigma_sq (herror : G.tiltError ≤ 1/2) : P.sigma^2=G.nextTilt := by
+theorem sigma_sq (herror : G.tiltError ≤ 1 / 2) : P.sigma^2=G.nextTilt := by
   rw [J.sigma_eq,Real.sq_sqrt (G.nextTilt_pos herror).le]
 
-theorem sigma_pos (herror : G.tiltError ≤ 1/2) : 0 < P.sigma := by
+theorem sigma_pos (herror : G.tiltError ≤ 1 / 2) : 0 < P.sigma := by
   rw [J.sigma_eq]
   exact Real.sqrt_pos.mpr (G.nextTilt_pos herror)
 
-theorem tilt_error (herror : G.tiltError ≤ 1/2) :
+theorem tilt_error (herror : G.tiltError ≤ 1 / 2) :
     |(G.y⁻¹)^2*P.sigma^2-1| ≤ G.tiltError := by
   rw [J.sigma_sq herror]
   exact G.nextTilt_error
 
-theorem tilt_interval (herror : G.tiltError ≤ 1/2) :
+theorem tilt_interval (herror : G.tiltError ≤ 1 / 2) :
     1/2 ≤ (G.y⁻¹)^2*P.sigma^2 ∧ (G.y⁻¹)^2*P.sigma^2 ≤ 3/2 := by
   have h := abs_le.mp (J.tilt_error herror)
   constructor <;> linarith only [h.1,h.2,herror]
 
-theorem sigma_small (herror : G.tiltError ≤ 1/2) (hy : G.y ≤ 1/8) : P.sigma ≤ 1/4 := by
+theorem sigma_small (herror : G.tiltError ≤ 1 / 2) (hy : G.y ≤ 1 / 8) : P.sigma ≤ 1/4 := by
   have hi : 8 ≤ G.y⁻¹ := by
     rw [← one_div]
     apply (le_div_iff₀ G.y_pos).mpr
@@ -219,7 +225,7 @@ theorem sigma_small (herror : G.tiltError ≤ 1/2) (hy : G.y ≤ 1/8) : P.sigma 
   nlinarith only [hm,hu,sq_nonneg (P.sigma-1/4)]
 
 theorem background_compression_eq :
-    ⟪P.B G.targetTime (unit (P.m G.targetTime)),unit (P.m G.targetTime)⟫_ℝ=
+    ⟪P.B G.targetTime (unit (P.m G.targetTime)),unit (P.m G.targetTime)⟫_ℝ =
       G.nextCompression := by
   rw [J.matrix_eq,J.ray_eq]
   exact real_inner_comm _ _
@@ -233,7 +239,7 @@ theorem activation_normal_le (ht : 0 < G.targetTime) (hT : G.targetTime < D.T) :
   exact h.trans (add_le_add G.nextCompression_le le_rfl)
 
 theorem activation_compression (ht : 0 < G.targetTime) (hT : G.targetTime < D.T)
-    (hmargin : 3*(G.G+G.d)+P.error < G.compressionScale) :
+    (hmargin : 3 * (G.G + G.d) + P.error < G.compressionScale) :
     ⟪D.M.field ⟨G.targetTime,ht.le,hT.le⟩ 0 (unit (P.m G.targetTime)),
       unit (P.m G.targetTime)⟫_ℝ < 0 := by
   have h := J.activation_normal_le ht hT

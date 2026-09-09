@@ -6,98 +6,18 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketSourceScales
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+
+/-!
+# Packet Source Time
+-/
 
 @[expose] public section
 
@@ -180,7 +100,7 @@ theorem source_time_ratio_summable
     unfold sourceTimeRatio
     have hid : -x n / (2 * ((J + n : ℕ) : ℝ) ^ 5) + x n / (2 * ((J - 1 + n : ℕ) : ℝ) ^ 7) =
       -(1 / 2) * (x n / ((J + n : ℕ) : ℝ) ^ 5) + (1 / 2) * (x n / ((J - 1 + n : ℕ) : ℝ) ^ 7) := by
-        ring
+          ring
     rw [hid] at hh' ⊢
     convert! hh' using 1
     ring
@@ -217,8 +137,8 @@ theorem source_extra_time_bound
     ring
   have hp : (((J + n : ℕ) : ℝ) + 1) ^ 2 ≤ 4 * ((J + n : ℕ) : ℝ) ^ 2 := by nlinarith only [hj]
   have hW : 0 ≤ sourceNextTimeWidth J x n := by unfold sourceNextTimeWidth; positivity
-  have hh := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hroot (by norm_num : (0 : ℝ) ≤
-    2)) hW
+  have hh := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hroot (by
+      norm_num : (0 : ℝ) ≤ 2)) hW
   have hp' := mul_le_mul_of_nonneg_right hp
     (by positivity : 0 ≤ 12 * ((J + n : ℕ) : ℝ) ^ 4 * (x n) ^ 2 *
       exp (x n / (2 * ((J - 1 + n : ℕ) : ℝ) ^ 7)) * exp (-x n / (2 * ((J + n : ℕ) : ℝ) ^ 5)))
@@ -294,8 +214,8 @@ theorem source_good_interval_cost_summable
   · intro n; positivity
   · intro n
     have hp : (1 : ℝ) ≤ (J - 1 + n : ℕ) := by exact_mod_cast (show 1 ≤ J - 1 + n by omega)
-    have hpj : ((J - 1 + n : ℕ) : ℝ) ≤ ((J + n : ℕ) : ℝ) := by exact_mod_cast (show J - 1 + n ≤ J +
-      n by omega)
+    have hpj : ((J - 1 + n : ℕ) : ℝ) ≤ ((J + n : ℕ) : ℝ) := by
+        exact_mod_cast (show J - 1 + n ≤ J + n by omega)
     have hd₁ := div_le_div_of_nonneg_left (le_trans zero_le_one (hx1 n))
       (by positivity : 0 < ((J - 1 + n : ℕ) : ℝ) ^ 5) (pow_le_pow_left₀ (by linarith) hpj 5)
     have hd₂ := div_le_div_of_nonneg_left (le_trans zero_le_one (hx1 n))

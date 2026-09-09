@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 
-@[expose] public section
-
 /-!
 # The actual signed carrier profiles on their Prepared regions
 
@@ -18,6 +16,9 @@ one-mesh mask support lies strictly inside the open two-mesh domain at
 positive time.  This proves the physical closure-coverage condition without
 extending the profile functions across a native domain boundary.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,11 +29,17 @@ open CorrectionInitialization PhysicalWaveSum
 open scoped ContDiff Topology
 
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Native label: an abbreviation for `ActualSignedPhysicalData.NativeLabel
+(ActualSignedExterior.labels B N0)`. -/
 abbrev NativeLabel (B N0 : ℕ) :=
   ActualSignedPhysicalData.NativeLabel (ActualSignedExterior.labels B N0)
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
+/-- Lift point: an abbreviation for `PhysicalGraphBounds.LiftPoint`. -/
 abbrev LiftPoint := PhysicalGraphBounds.LiftPoint
 
 variable {B N0 : ℕ}
@@ -58,12 +65,15 @@ theorem region_active (L : NativeLabel B N0) :
   classical
   simp only [region, dite_eq_left L.mem]
 
+/-- Profile pair as an element of `ℝ × ℝ`. -/
 noncomputable def profilePair (B : ℕ) (n : ℕ) (p : Slow) : ℝ × ℝ :=
   (PrimaryGeometryAssembly.frequency ActualPrimary.certificate ActualPrimary.modulation
       ActualPrimary.upper B n p,
     PrimaryGeometryAssembly.axial ActualPrimary.certificate ActualPrimary.modulation
       ActualPrimary.upper B n p)
 
+/-- Profile domain, given by `PhysicalCopyBounds.copyBandDomain (fun (_ : Frequency) L => region
+B N0 L) (fun _ L => region_open B N0 L)`. -/
 noncomputable def profileDomain (B N0 : ℕ) : Domain (Frequency × BandLabel) Slow :=
   PhysicalCopyBounds.copyBandDomain (fun (_ : Frequency) L => region B N0 L)
     (fun _ L => region_open B N0 L)
@@ -88,7 +98,7 @@ theorem profile_jets : PolynomialJets (profileDomain B N0)
     · intro p hp
       have hempty : p ∈ (∅ : Set Slow) := by
         simpa only [profileDomain, PhysicalCopyBounds.copyBandDomain, region, dite_eq_right hI]
-          using hp
+            using hp
       exact hempty.elim
   · intro N
     obtain ⟨C,hC,m,hm⟩ := hfg.bound N
@@ -100,16 +110,18 @@ theorem profile_jets : PolynomialJets (profileDomain B N0)
       change BaseChartJets.cellBand (ActualSignedExterior.actualLabel L).1 = I.2.val.1 at hb
       have hp' : p ∈ (PrimaryGeometryAssembly.domain ActualPrimary.nominal
           (ActualPrimary.choice B N0).prepared.N).carrier (ActualSignedExterior.actualLabel L).1 :=
-            by
+              by
         simpa only [profileDomain, PhysicalCopyBounds.copyBandDomain, region, dite_eq_left hI,
           ActualSignedPhysicalBinding.domain, ActualParticularStageControls.reindexDomain, L] using
-            hp
+              hp
       have hbound := hm (ActualSignedExterior.actualLabel L).1 j hj p hp'
       simpa only [profileDomain, PhysicalCopyBounds.copyBandDomain, profilePair,
         PrimaryGeometryAssembly.domain, PrimaryGeometryAssembly.cellDomain, hb] using hbound
     · simp only [profileDomain, PhysicalCopyBounds.copyBandDomain, region, dite_eq_right hI] at hp
       exact hp.elim
 
+/-- Lifted slow, given by `(PolarCharts.radius (PhysicalGraphBounds.liftXY x),
+PhysicalGraphBounds.liftZT x)`. -/
 noncomputable def liftedSlow (x : LiftPoint) : Slow :=
   (PolarCharts.radius (PhysicalGraphBounds.liftXY x), PhysicalGraphBounds.liftZT x)
 
@@ -134,7 +146,7 @@ theorem singleton_profiles (L : NativeLabel B N0) (K : BandLabel) (k : Frequency
   by_cases he : K = (L : BandLabel)
   · subst K
     have hm : (L : BandLabel) ∈ ((ActualSignedExterior.family s).singleton L).active :=
-      Set.mem_singleton _
+        Set.mem_singleton _
     simp only [ite_true, ActualSignedPhysicalData.extendedCarrier, dite_eq_left hm]
     have hb := ActualSignedExterior.actualLabel_reference L
     change BaseChartJets.cellBand (ActualSignedExterior.actualLabel L).1 = L.val.1 at hb
@@ -162,7 +174,7 @@ theorem singleton_jets (L : NativeLabel B N0) :
         (ActualSignedPhysicalData.extendedCarrier (h := ActualPrimary.h)
           ((ActualSignedExterior.family s).singleton L) I.2 I.1).G p)) =
       (fun (I : Frequency × BandLabel) p => if I.2 = (L : BandLabel) then profilePair B I.2.val.1 p
-        else 0) := by
+          else 0) := by
     funext I p
     exact singleton_profiles s L I.2 I.1 p
   rw [he]
@@ -193,16 +205,16 @@ theorem core_in_mask_support (L : NativeLabel B N0) :
       liftedSlow ⁻¹' tsupport (PrimaryRepresentatives.nativeMask
         (BaseChartJets.cellBand (ActualSignedExterior.actualLabel L).1)
         (PrimaryGeometryAssembly.label ActualPrimary.nominal (ActualSignedExterior.actualLabel
-          L).1).2) := by
+            L).1).2) := by
   rintro x ⟨hL,hm,_⟩
   exact ActualPrimary.spatialMask_native_support (ActualSignedExterior.actualLabel L).1 (liftedSlow
-    x) hm
+      x) hm
 
 theorem closure_covers (L : NativeLabel B N0) (K : BandLabel) (w : ProblemStatement.SpaceTime)
     (hw : w ∈ preterminal)
     (hc : PhysicalGraphBounds.physicalLift ActualPrimary.h K.val.1 w ∈
       closure (ActualSignedPhysicalData.primitiveCore ((ActualSignedExterior.family s).singleton L)
-        K)) :
+          K)) :
     ActualSignedPhysicalData.nativeSlow (PhysicalMeanJetBounds.graph ActualPrimary.h K.val.1 0 w) ∈
       region B N0 K := by
   classical
@@ -251,7 +263,7 @@ theorem potential_profiles_jets (i : Fin 3) :
     exact he.symm
   · have hempty : p ∈ (∅ : Set Slow) := by
       simpa only [profileDomain, PhysicalCopyBounds.copyBandDomain, region, dite_eq_right hI] using
-        hp
+          hp
     exact hempty.elim
 
 theorem pressure_profiles_jets :
@@ -274,7 +286,7 @@ theorem pressure_profiles_jets :
     exact he.symm
   · have hempty : p ∈ (∅ : Set Slow) := by
       simpa only [profileDomain, PhysicalCopyBounds.copyBandDomain, region, dite_eq_right hI] using
-        hp
+          hp
     exact hempty.elim
 
 end NavierStokes.ActualSignedNativeProfiles

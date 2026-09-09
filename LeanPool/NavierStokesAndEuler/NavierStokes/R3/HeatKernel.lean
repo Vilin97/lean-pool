@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-
-@[expose] public section
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # The three dimensional heat kernel
@@ -17,6 +17,9 @@ The definitions in this file are the ordinary Gaussian heat kernel and its
 coordinate Hessian.  The latter is proved to agree with the spatial derivatives
 used in the comparison argument.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -58,7 +61,7 @@ theorem hasFDerivAt_heatKernel {s : ℝ} (hs : 0 < s) (z : Space) :
     innerSL_apply_apply, smul_eq_mul]
   unfold heatKernel
   field_simp
-  ; ring
+  ring
 
 theorem partial_heatKernel {s : ℝ} (hs : 0 < s) (i : Fin 3) (z : Space) :
     partialD i (heatKernel s) z = -(z i / (2 * s)) * heatKernel s z := by
@@ -98,18 +101,18 @@ theorem heatKernelSecond_eq_partial {s : ℝ} (hs : 0 < s)
   rw [hfirst]
   unfold partialD NavierStokes.PeriodicIntegration.spatialPartial
   change heatKernelSecond s i j z = fderiv ℝ ((fun x : Space => -(x j / (2 * s))) * heatKernel s) z
-    (NavierStokes.ProblemStatement.coordinateVector i)
+      (NavierStokes.ProblemStatement.coordinateVector i)
   rw [(hg.mul (hasFDerivAt_heatKernel hs z)).fderiv]
   by_cases hij : i = j
   · subst i
     simp [heatKernelSecond, NavierStokes.ProblemStatement.coordinateVector,
-      EuclideanSpace.inner_single_right]
-    ; field_simp
-    ; ring
+        EuclideanSpace.inner_single_right]
+    field_simp
+    ring
   · simp [heatKernelSecond, hij,
       NavierStokes.ProblemStatement.coordinateVector, EuclideanSpace.inner_single_right]
-    ; field_simp
-    ; ring
+    field_simp
+    ring
 
 /-- A radial envelope for every component of the Gaussian Hessian. -/
 theorem norm_heatKernelSecond_le {s : ℝ} (hs : 0 < s)

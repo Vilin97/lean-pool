@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
+
+/-! Genuine one-derivative L² smoothing lifts to the complete cylinder Sobolev scale. -/
 
 @[expose] public section
 
-/-! Genuine one-derivative L² smoothing lifts to the complete cylinder Sobolev scale. -/
 
 noncomputable section
 
@@ -25,7 +28,7 @@ variable (period : ℝ) [Fact (0 < period)]
 variable (A : LiftL2 period →L[ℝ] LiftL2 period) (C : ℝ)
 variable (hD : ∀ i : Fin 4, ∀ f : LiftL2 period, ∃ g : LiftL2 period,
   HasDerivAt (fun t => translation period (translationPath period (standardDirection i) t) (A f)) g
-    0 ∧
+      0 ∧
     ‖g‖ ≤ C * ‖f‖)
 
 /-- The uniquely determined strong derivative of a genuinely smoothing L² operator. -/
@@ -101,7 +104,7 @@ theorem smoothingDerivative_translation
 def gainJet {q : ℕ} {f : LiftL2 period}
     (hA : ∀ a f, A (translation period a f) = translation period a (A f))
     (J : SpatialJet period standardDirection q f) : SpatialJet period standardDirection (q + 1) (A
-      f) :=
+        f) :=
   .succ (fun i => smoothingDerivativeOperator period A C hD i f)
     (fun i => EulerPressureJetIdentities.SpatialJet.map
       (smoothingDerivativeOperator period A C hD i)
@@ -127,14 +130,14 @@ theorem gain_bound {q : ℕ} (hC : 0 ≤ C)
     (u : SobolevSpace period q) : ‖gain period A C hD hA u‖ ≤ max ‖A‖ C * ‖u‖ := by
   change ‖(gain period A C hD hA u).val‖ ≤ _
   apply (pi_norm_le_iff_of_nonneg (mul_nonneg (le_max_of_le_left (norm_nonneg A)) (norm_nonneg
-    u))).mpr
+      u))).mpr
   rintro ⟨⟨n, hn⟩, w⟩
   cases n with
   | zero =>
     change ‖(gainJet period A C hD hA (toJet period u)).word w‖ ≤ _
     rw [SpatialJet.word_zero]
     exact (A.le_opNorm _).trans ((mul_le_mul_of_nonneg_left (value_norm_le period u) (norm_nonneg
-      A)).trans
+        A)).trans
       (mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg u)))
   | succ n =>
     change ‖(gainJet period A C hD hA (toJet period u)).word w‖ ≤ _

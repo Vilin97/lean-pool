@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
-public import Mathlib.Analysis.Calculus.MeanValue
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-! Pullback of a bounded field by identity plus a bounded displacement.
 Uniform spatial Lipschitz control proves continuity in the genuine sup norm. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +25,7 @@ namespace EulerBoundedFieldPullback
 
 variable {E V : Type*} [NormedAddCommGroup E] [NormedAddCommGroup V]
 
+/-- Pullback, constructed using `BoundedContinuousFunction.ofNormedAddCommGroup`. -/
 def pullback (A : E →ᵇ V) (d : E →ᵇ E) : E →ᵇ V :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fun x => A (x+d x))
     (A.continuous.comp (continuous_id.add d.continuous)) ‖A‖
@@ -54,7 +57,7 @@ theorem pullback_sub_norm (A B : E →ᵇ V) (d e : E →ᵇ E)
 
 variable {K : Type*} [TopologicalSpace K]
 
-theorem continuous_pullback (A : C(K,E →ᵇ V)) (d : C(K,E →ᵇ E))
+theorem continuous_pullback (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
     (L : ℝ≥0) (hL : ∀ t, LipschitzWith L (A t)) :
     Continuous (fun t => pullback (A t) (d t)) := by
   apply continuous_iff_continuousAt.mpr
@@ -70,11 +73,12 @@ theorem continuous_pullback (A : C(K,E →ᵇ V)) (d : C(K,E →ᵇ E))
     simpa only [sub_self, norm_zero, mul_zero, add_zero] using hc.tendsto t
   exact hzero
 
-def pathPullback (A : C(K,E →ᵇ V)) (d : C(K,E →ᵇ E))
+/-- Path pullback, given by `⟨fun t => pullback (A t) (d t), continuous_pullback A d L hL⟩`. -/
+def pathPullback (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
     (L : ℝ≥0) (hL : ∀ t, LipschitzWith L (A t)) : C(K,E →ᵇ V) :=
   ⟨fun t => pullback (A t) (d t), continuous_pullback A d L hL⟩
 
-@[simp] theorem pathPullback_apply (A : C(K,E →ᵇ V)) (d : C(K,E →ᵇ E))
+@[simp] theorem pathPullback_apply (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
     (L : ℝ≥0) (hL : ∀ t, LipschitzWith L (A t)) (t : K) (x : E) :
     pathPullback A d L hL t x = A t (x+d t x) := rfl
 
@@ -88,10 +92,20 @@ variable {K E V : Type u} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldPullback1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldPullback2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldPullback3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldPullback4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
 
 theorem jet_lipschitz (A : SmoothTimeField K E V) (n : ℕ) (t : K) :
     LipschitzWith ‖A.jet (n+1)‖₊ (A.jet n t) := by

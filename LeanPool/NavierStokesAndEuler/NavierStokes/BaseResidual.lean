@@ -7,16 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBorelBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCore
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricModulation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowResidualMatching
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRadialExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActiveAnnulusWeight
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisTailRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowFirstOrderEdge
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.BlowupImplication
+import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCore
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricModulation
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-!
 # Residual and axis values of the asymptotically summed slow base
@@ -24,6 +24,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowFirstOrderEdge
 The series used here is the actual locally finite series in `SlowBorelBase`.
 The radial streams are summed before taking their Cartesian curl.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -222,6 +225,8 @@ section CartesianMonomials
 
 open ProblemStatement
 
+/-- Cartesian monomial, given by `SimilarityProfile.pullback h b f
+(AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def cartesianMonomial (h b : ℝ) (f : Inner → ℝ) (z : SpaceTime) : ℝ :=
   SimilarityProfile.pullback h b f (AxisymmetricFields.profilePoint z.1 z.2)
 
@@ -358,6 +363,7 @@ open ProblemStatement DiagonalResidual
 /-- The filter carries only geometric information: bounded physical
 coordinates, a fixed inner radial window, and scale tending to zero. -/
 structure PhysicalApproach (l : Filter SpaceTime) (h lo hi : ℝ) where
+  /-- Carrier of `PhysicalApproach`, of type `Set SpaceTime`. -/
   carrier : Set SpaceTime
   compact : IsCompact carrier
   in_carrier : ∀ᶠ z in l, z ∈ carrier
@@ -554,16 +560,21 @@ section PotentialRates
 
 open ProblemStatement DiagonalResidual
 
+/-- Past, given by `Iio 1 ×ˢ univ`. -/
 noncomputable def past : Set SpaceTime := Iio 1 ×ˢ univ
+/-- Profile past, given by `Iio 1 ×ˢ univ`. -/
 noncomputable def profilePast : Set Chart := Iio 1 ×ˢ univ
 
 theorem past_isOpen : IsOpen past := isOpen_Iio.prod isOpen_univ
 theorem profilePast_isOpen : IsOpen profilePast := isOpen_Iio.prod isOpen_univ
 
+/-- Potential from scalars, given by `(-(1 / 2 : ℝ) * z.2 1 * H z) • coordinateVector 0 + ((1 /
+2 : ℝ) * z.2 0 * H z) • coordinateVector 1 + K z • coordinateVector 2`. -/
 noncomputable def potentialFromScalars (H K : SpaceTime → ℝ) (z : SpaceTime) : Space :=
   (-(1 / 2 : ℝ) * z.2 1 * H z) • coordinateVector 0 +
     ((1 / 2 : ℝ) * z.2 0 * H z) • coordinateVector 1 + K z • coordinateVector 2
 
+/-- Basis injection, given by `(ContinuousLinearMap.id ℝ ℝ).smulRight (coordinateVector i)`. -/
 noncomputable def basisInjection (i : Fin 3) : ℝ →L[ℝ] Space :=
   (ContinuousLinearMap.id ℝ ℝ).smulRight (coordinateVector i)
 
@@ -618,21 +629,32 @@ theorem potentialFromScalars_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
     (((hc0.contDiffOn.mul hH).smul contDiffOn_const).add
       ((hc1.contDiffOn.mul hH).smul contDiffOn_const)) (hK.smul contDiffOn_const)
 
+/-- Prefix stream, given by `physicalUncutPrefix h (-CoordinateAlgebra.A h) (bundleComponent C d
+0) J`. -/
 noncomputable def prefixStream (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (-CoordinateAlgebra.A h) (bundleComponent C d 0) J
 
+/-- Prefix swirl, given by `physicalUncutPrefix h (1 / 2 - CoordinateAlgebra.A h)
+(bundleComponent C d 1) J`. -/
 noncomputable def prefixSwirl (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (1 / 2 - CoordinateAlgebra.A h) (bundleComponent C d 1) J
 
+/-- Prefix potential, given by `AxisymmetricFields.potential (prefixStream J h C d) (prefixSwirl
+J h C d)`. -/
 noncomputable def prefixPotential (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (prefixStream J h C d) (prefixSwirl J h C d)
 
+/-- Summed potential, given by `AxisymmetricFields.potential (streamFactor a h C d)
+(swirlPotential a h C d)`. -/
 noncomputable def summedPotential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (streamFactor a h C d) (swirlPotential a h C d)
 
+/-- Prefix velocity, given by `SpatialCurl.spatialCurl (prefixPotential J h C d)`. -/
 noncomputable def prefixVelocity (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   SpatialCurl.spatialCurl (prefixPotential J h C d)
 
+/-- Prefix pressure, given by `cartesianUncutPrefix h (-2 * CoordinateAlgebra.A h)
+(bundleComponent C d 2) J`. -/
 noncomputable def prefixPressure (J : ℕ) (h C : ℝ) (d : Coefficients) : PressureField :=
   cartesianUncutPrefix h (-2 * CoordinateAlgebra.A h) (bundleComponent C d 2) J
 
@@ -659,7 +681,7 @@ theorem summedPotential_smooth {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
   rw [summedPotential, potential_eq_scalars]
   exact potentialFromScalars_smooth
     (cartesianProfile_smooth (b := -CoordinateAlgebra.A h) ha hh hh1 (bundleComponent_smooth hd C
-      0))
+        0))
     (cartesianProfile_smooth (b := 1 / 2 - CoordinateAlgebra.A h) ha hh hh1
       (bundleComponent_smooth hd C 1))
 
@@ -669,7 +691,7 @@ theorem prefixPotential_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   rw [prefixPotential, potential_eq_scalars]
   exact potentialFromScalars_smooth
     (cartesianUncutPrefix_smooth (b := -CoordinateAlgebra.A h) hh hh1 (bundleComponent_smooth hd C
-      0) J)
+        0) J)
     (cartesianUncutPrefix_smooth (b := 1 / 2 - CoordinateAlgebra.A h) hh hh1
       (bundleComponent_smooth hd C 1) J)
 
@@ -692,7 +714,7 @@ theorem potential_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo h
   have hHs := (cartesianProfile_smooth (b := -CoordinateAlgebra.A h) ha.strictMono hh hh1
     (bundleComponent_smooth hd C 0)).sub
     (cartesianUncutPrefix_smooth (b := -CoordinateAlgebra.A h) hh hh1 (bundleComponent_smooth hd C
-      0) J)
+        0) J)
   have hKs := (cartesianProfile_smooth (b := 1 / 2 - CoordinateAlgebra.A h) ha.strictMono hh hh1
     (bundleComponent_smooth hd C 1)).sub
     (cartesianUncutPrefix_smooth (b := 1 / 2 - CoordinateAlgebra.A h) hh hh1
@@ -831,7 +853,7 @@ theorem prefixPotential_growth {l : Filter SpaceTime} {h C lo hi : ℝ}
   have hr := potentialFromScalars_rate past_isOpen hp (hq.mono (fun _ hz => hz.1))
     A.compact A.in_carrier
     (cartesianUncutPrefix_smooth (b := -CoordinateAlgebra.A h) hh hh1 (bundleComponent_smooth hd C
-      0) J)
+        0) J)
     (cartesianUncutPrefix_smooth (b := 1 / 2 - CoordinateAlgebra.A h) hh hh1
       (bundleComponent_smooth hd C 1) J) hrH (finiteRate_weaken hrK hq (by linarith))
   simp only [prefixPotential, potential_eq_scalars] at hr ⊢
@@ -853,9 +875,12 @@ section ProfileDerivatives
 
 open ProblemStatement DiagonalResidual
 
+/-- Profile derivative, given by `fderiv ℝ F p v`. -/
 noncomputable def profileDerivative (v : Chart) (F : Chart → ℝ) (p : Chart) : ℝ :=
   fderiv ℝ F p v
 
+/-- Cartesian derivative, given by `profileDerivative v F (AxisymmetricFields.profilePoint z.1
+z.2)`. -/
 noncomputable def cartesianDerivative (v : Chart) (F : Chart → ℝ) (z : SpaceTime) : ℝ :=
   profileDerivative v F (AxisymmetricFields.profilePoint z.1 z.2)
 
@@ -948,6 +973,7 @@ section AnnularFactors
 
 open ProblemStatement DiagonalResidual
 
+/-- Annular past, given by `{z | z.1 < 1 ∧ 0 < AxisymmetricFields.radialEnergy z.2}`. -/
 noncomputable def annularPast : Set SpaceTime :=
   {z | z.1 < 1 ∧ 0 < AxisymmetricFields.radialEnergy z.2}
 
@@ -985,6 +1011,7 @@ theorem monomial_finiteRate_on {l : Filter SpaceTime} {h lo hi : ℝ}
     exact hb z hz ht hqz.2 hX (physicalChart_inner_mem hh hh1 ht hX)
   exact hr.weaken hq (sub_le_sub_left (by exact_mod_cast hm) b)
 
+/-- Radial power, given by `(2 * AxisymmetricFields.radialEnergy z.2) ^ c`. -/
 noncomputable def radialPower (c : ℝ) (z : SpaceTime) : ℝ :=
   (2 * AxisymmetricFields.radialEnergy z.2) ^ c
 
@@ -1038,13 +1065,18 @@ open ProblemStatement DiagonalResidual
 noncomputable def stressForce (theta axial : Chart → ℝ) (z : SpaceTime) : Space :=
   SlowResidualMatching.tangentialStressForce theta axial z.1 z.2
 
+/-- Lift profile, given by `F (AxisymmetricFields.profilePoint z.1 z.2)`. -/
 noncomputable def liftProfile (F : Chart → ℝ) (z : SpaceTime) : ℝ :=
   F (AxisymmetricFields.profilePoint z.1 z.2)
 
+/-- Stress angular scalar, given by `-2 * (cartesianDerivative (0, (1, 0)) theta z + 2 *
+radialPower (-1) z * liftProfile theta z)`. -/
 noncomputable def stressAngularScalar (theta : Chart → ℝ) (z : SpaceTime) : ℝ :=
   -2 * (cartesianDerivative (0, (1, 0)) theta z +
     2 * radialPower (-1) z * liftProfile theta z)
 
+/-- Stress axial scalar, given by `-(radialPower (1 / 2) z * cartesianDerivative (0, (1, 0))
+axial z + radialPower (-(1 / 2)) z * liftProfile axial z)`. -/
 noncomputable def stressAxialScalar (axial : Chart → ℝ) (z : SpaceTime) : ℝ :=
   -(radialPower (1 / 2) z * cartesianDerivative (0, (1, 0)) axial z +
     radialPower (-(1 / 2)) z * liftProfile axial z)
@@ -1069,7 +1101,7 @@ theorem stressForce_eq_scalars (theta axial : Chart → ℝ) {z : SpaceTime}
   ext i
   fin_cases i <;>
     simp only [stressForce, SlowResidualMatching.tangentialStressForce,
-      LeadingStress.radialDivergence,
+        LeadingStress.radialDivergence,
       stressAngularScalar, stressAxialScalar, potentialFromScalars, hp, hn, hm,
       cartesianDerivative, profileDerivative, liftProfile, SimilarityProfile.partialS,
       AxisymmetricResidual.pack, AxisymmetricFields.profilePoint, coordinateVector,
@@ -1185,15 +1217,23 @@ section StressPrefix
 
 open ProblemStatement DiagonalResidual
 
+/-- Prefix stress theta, given by `physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2)
+(bundleComponent C d 3) J`. -/
 noncomputable def prefixStressTheta (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2) (bundleComponent C d 3) J
 
+/-- Prefix stress axial, given by `physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2)
+(bundleComponent C d 4) J`. -/
 noncomputable def prefixStressAxial (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2) (bundleComponent C d 4) J
 
+/-- Base stress force, given by `stressForce (baseStressTheta a h C d) (baseStressAxial a h C
+d)`. -/
 noncomputable def baseStressForce (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   stressForce (baseStressTheta a h C d) (baseStressAxial a h C d)
 
+/-- Prefix stress force, given by `stressForce (prefixStressTheta J h C d) (prefixStressAxial J
+h C d)`. -/
 noncomputable def prefixStressForce (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   stressForce (prefixStressTheta J h C d) (prefixStressAxial J h C d)
 
@@ -1267,6 +1307,7 @@ section FiniteTailRates
 
 open ProblemStatement DiagonalResidual SlowExpansionResidual SlowResidualMatching
 
+/-- Charted domain, given by `{z | z.1 < 1 ∧ (cartesianChart h z).2 ∈ U}`. -/
 noncomputable def chartedDomain (h : ℝ) (U : Set Inner) : Set SpaceTime :=
   {z | z.1 < 1 ∧ (cartesianChart h z).2 ∈ U}
 
@@ -1315,9 +1356,11 @@ theorem finset_monomial_rate {l : Filter SpaceTime} {h lo hi : ℝ}
   rw [he] at hr
   exact hr.weaken hq (sub_le_sub_left (by exact_mod_cast hm) bmin)
 
+/-- Radial vector, given by `z.2 0 • coordinateVector 0 + z.2 1 • coordinateVector 1`. -/
 noncomputable def radialVector (z : SpaceTime) : Space :=
   z.2 0 • coordinateVector 0 + z.2 1 • coordinateVector 1
 
+/-- Angular vector, given by `-z.2 1 • coordinateVector 0 + z.2 0 • coordinateVector 1`. -/
 noncomputable def angularVector (z : SpaceTime) : Space :=
   -z.2 1 • coordinateVector 0 + z.2 0 • coordinateVector 1
 
@@ -1329,6 +1372,8 @@ theorem angularVector_smooth : ContDiff ℝ ∞ angularVector :=
   ((((AxisymmetricFields.projection 1).contDiff.comp contDiff_snd).neg).smul contDiff_const).add
     (((AxisymmetricFields.projection 0).contDiff.comp contDiff_snd).smul contDiff_const)
 
+/-- Assemble components, given by `R z • radialVector z + A z • angularVector z + Z z •
+coordinateVector 2`. -/
 noncomputable def assembleComponents (R A Z : SpaceTime → ℝ) (z : SpaceTime) : Space :=
   R z • radialVector z + A z • angularVector z + Z z • coordinateVector 2
 
@@ -1358,10 +1403,14 @@ theorem assembleComponents_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
       ((hR.smul radialVector_smooth.contDiffOn).add (hA.smul angularVector_smooth.contDiffOn))
       (hZ.smul contDiffOn_const)
 
+/-- Transport tail field, given by `transportTail N (cartesianChart h z).1 h e α v u f
+(cartesianChart h z).2`. -/
 noncomputable def transportTailField (N : ℕ) (h e α : ℝ)
     (v u f : ℕ → Inner → ℝ) (z : SpaceTime) : ℝ :=
   transportTail N (cartesianChart h z).1 h e α v u f (cartesianChart h z).2
 
+/-- Radial tail field, given by `pressureTail N (cartesianChart h z).1 h C f (cartesianChart h
+z).2 / (2 * AxisymmetricFields.radialEnergy z.2)`. -/
 noncomputable def radialTailField (N : ℕ) (h C : ℝ) (f : SlowProfiles) (z : SpaceTime) : ℝ :=
   pressureTail N (cartesianChart h z).1 h C f (cartesianChart h z).2 /
     (2 * AxisymmetricFields.radialEnergy z.2)
@@ -1372,7 +1421,7 @@ theorem transportTailField_eq (N : ℕ) (h e α : ℝ) (v u f : ℕ → Inner �
         cartesianMonomial h (transportPower N h e i) (transportTerm N h e α v u f i) z) := by
   funext z
   exact transportTail_eq_finite_monomials N (cartesianChart h z).1 h e α v u f (cartesianChart h
-    z).2
+      z).2
 
 theorem transportTailField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {O : Set Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ) (v u f : ℕ → Inner → ℝ)
@@ -1407,6 +1456,8 @@ section TruncationRate
 
 open ProblemStatement DiagonalResidual SlowExpansionResidual SlowResidualMatching
 
+/-- Radial tail expression, given by `∑ i ∈ pressureIndices N, cartesianMonomial h
+(pressurePower N h i - 1) (fun w => pressureTerm N h C f i w / (2 * w.1)) z`. -/
 noncomputable def radialTailExpression (N : ℕ) (h C : ℝ) (f : SlowProfiles) (z : SpaceTime) : ℝ :=
   ∑ i ∈ pressureIndices N, cartesianMonomial h (pressurePower N h i - 1)
     (fun w => pressureTerm N h C f i w / (2 * w.1)) z
@@ -1499,6 +1550,8 @@ section NonlinearAssembly
 
 open ProblemStatement DiagonalResidual ResidualStability SlowExpansionResidual
 
+/-- Base residual, given by `navierStokesResidual (baseVelocity a h C d) (basePressure a h C d)
+z.1 z.2 - baseStressForce a h C d z`. -/
 noncomputable def baseResidual (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) (z : SpaceTime) : Space :=
   navierStokesResidual (baseVelocity a h C d) (basePressure a h C d) z.1 z.2 -
     baseStressForce a h C d z
@@ -1697,6 +1750,7 @@ theorem innerLift_blown_le {f : Inner → V} (hf : ContDiff ℝ ∞ f)
   simp only [Finset.prod_const, Finset.card_fin]
   exact mul_le_of_le_one_right (norm_nonneg _) (pow_le_one₀ (norm_nonneg _) hL)
 
+/-- Positive scale, given by `{y | 0 < y.1}`. -/
 noncomputable def positiveScale : Set Chart := {y | 0 < y.1}
 
 theorem positiveScale_isOpen : IsOpen positiveScale := isOpen_lt continuous_const continuous_fst
@@ -1737,6 +1791,7 @@ theorem slowSum_zero_leading_finite_bound {a : ℕ → ℕ} {h : ℝ}
   exact (hAb m q hq hq1 w hw).trans
     (mul_le_mul_of_nonneg_right hAm (Real.rpow_nonneg hq.le _))
 
+/-- First cutoff, given by `powerStage (a 1) (2 * h) (fun _ => 1)`. -/
 noncomputable def firstCutoff (a : ℕ → ℕ) (h : ℝ) : Chart → ℝ :=
   powerStage (a 1) (2 * h) (fun _ => 1)
 
@@ -1861,7 +1916,7 @@ theorem weighted_slowSum_bound {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h)
         (mul_le_mul_of_nonneg_left hN1 (mul_nonneg hC1.le (hz w hw))))
   have hGbound : ‖blownJet m G (q, w)‖ ≤ ‖L‖ * 2 ^ m * (Cz * zeta w * D) * (Cg * q ^ (2 * h)) := by
     apply blown_product_bound (hzs.comp contDiff_snd).contDiffOn (slowSum_smoothOn ha.strictMono hg
-      h) hq w m
+        h) hq w m
     · intro k hk
       exact (innerLift_blown_le hzs q w k).trans ((hzb w hw k hk).trans
         (mul_le_mul_of_nonneg_left hNz (mul_nonneg hCz.le (hz w hw))))
@@ -1905,6 +1960,7 @@ noncomputable def stressPair (d : Coefficients) (j : ℕ) (w : Inner) : Inner :=
 theorem stressPair_smooth {d : Coefficients} (hd : SmoothCoefficients d) (j : ℕ) :
     ContDiff ℝ ∞ (stressPair d j) := (hd.stressTheta j).prodMk (hd.stressAxial j)
 
+/-- Higher stress quotient, with branches according to `j ≤ 1`. -/
 noncomputable def higherStressQuotient (d : Coefficients) (zeta : Inner → ℝ)
     (j : ℕ) (w : Inner) : Inner :=
   if j ≤ 1 then 0 else (zeta w)⁻¹ • stressPair d j w
@@ -1947,6 +2003,7 @@ theorem weightedBundle_quotient_scales {a : ℕ → ℕ} {h C : ℝ} {d : Coeffi
   exact ha.map (weightedBundle_smooth hd hq C) (ContinuousLinearMap.snd ℝ Bundle Inner)
     (ContinuousLinearMap.norm_snd_le _ _ _)
 
+/-- Normalized tensor, given by `slowSum a h (stressPair d)`. -/
 noncomputable def normalizedTensor (a : ℕ → ℕ) (h : ℝ) (d : Coefficients) : Chart → Inner :=
   slowSum a h (stressPair d)
 
@@ -2012,8 +2069,11 @@ section ConcreteWeight
 
 open ActiveAnnulusWeight
 
+/-- Log weight profile, given by `weight c a b w.2`. -/
 noncomputable def logWeightProfile (c a b : ℝ) (w : Inner) : ℝ := weight c a b w.2
 
+/-- Weight left factor, bundling `coefficient`, `order`, `width`, `width_pos` and the required
+compatibility proofs. -/
 noncomputable def weightLeftFactor {a b c : ℝ} (hab : a < b) (_hc : 0 < c) (K : Set ℝ) :
     EdgeFactor K c (leftChart a (logWeightProfile c a b)) where
   coefficient := fun w => FlatCutoff.edge 4 (b - a - w.2)
@@ -2035,6 +2095,8 @@ noncomputable def weightLeftFactor {a b c : ℝ} (hab : a < b) (_hc : 0 < c) (K 
     simp only [leftChart, logWeightProfile, weight, pow_zero, div_one, smul_eq_mul]
     rw [show a + x - a = x by ring, show b - (a + x) = b - a - x by ring]
 
+/-- Weight right factor, bundling `coefficient`, `order`, `width`, `width_pos` and the required
+compatibility proofs. -/
 noncomputable def weightRightFactor {a b c : ℝ} (hab : a < b) (hc : 0 < c) (K : Set ℝ) :
     EdgeFactor K 4 (rightChart b (logWeightProfile c a b)) where
   coefficient := fun w => FlatCutoff.edge c (b - a - w.2)
@@ -2056,15 +2118,19 @@ noncomputable def weightRightFactor {a b c : ℝ} (hab : a < b) (hc : 0 < c) (K 
     rw [show b - x - a = b - a - x by ring, show b - (b - x) = x by ring]
     ring
 
+/-- Swap inner, bundling `toLinearEquiv`, `norm_map`. -/
 noncomputable def swapInner : Inner ≃ₗᵢ[ℝ] Inner where
   toLinearEquiv := LinearEquiv.prodComm ℝ ℝ ℝ
   norm_map' := by intro w; exact max_comm _ _
 
+/-- Active window, given by `Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1`. -/
 noncomputable def activeWindow (a b : ℝ) : Set Inner :=
   Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1
 
+/-- Active zeta, given by `radialWeight c a b w.1`. -/
 noncomputable def activeZeta (c a b : ℝ) (w : Inner) : ℝ := radialWeight c a b w.1
 
+/-- Active delta, given by `edgeDistance a b (Real.log w.1)`. -/
 noncomputable def activeDelta (a b : ℝ) (w : Inner) : ℝ := edgeDistance a b (Real.log w.1)
 
 theorem activeZeta_smooth {c : ℝ} (hc : 0 < c) (a b : ℝ) :
@@ -2092,7 +2158,6 @@ theorem activeZeta_edgeJets {a b c : ℝ} (hab : a < b) (hc : 0 < c) :
     filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hX)] with y hy
     simp [activeZeta, radialWeight, hy, radialPullback, logChart, logWeightProfile,
       swapInner]
-    rfl
   rw [(SolenoidalDiagonal.iteratedFDeriv_eventuallyEq he m).self_of_nhds,
     swapInner.norm_iteratedFDeriv_comp_right]
   have hbound := hb w.2 hw.2 w.1 hw.1
@@ -2159,7 +2224,7 @@ theorem stressForce_zero_core {h r : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     have had : SimilarityProfile.partialS axial p = 0 := by
       simp [SimilarityProfile.partialS, haxial0.fderiv_eq]
     simp only [stressForce, SlowResidualMatching.tangentialStressForce,
-      LeadingStress.radialDivergence]
+        LeadingStress.radialDivergence]
     change AxisymmetricResidual.pack
       (_ * (Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS theta p + 2 * theta p / _))
       (_ * (Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS theta p + 2 * theta p / _))
@@ -2227,7 +2292,7 @@ theorem baseStressForce_smooth_past {a : ℕ → ℕ} (ha : StrictMono a) {h r C
       change AxisymmetricFields.radialEnergy z.2 / _ < r
       simpa only [hs0, zero_div] using hr
     exact (contDiffAt_const.congr_of_eventuallyEq (baseStressForce_core_germ hh hh1 a hc hz.1
-      hx)).contDiffWithinAt
+        hx)).contDiffWithinAt
 
 theorem prefixStressForce_smooth_past {h r C : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (hr : 0 < r) {d : Coefficients} (hd : SmoothCoefficients d) (hc : StressZeroCore d r) (J : ℕ) :
@@ -2241,7 +2306,7 @@ theorem prefixStressForce_smooth_past {h r C : ℝ} (hh : 0 < h) (hh1 : h < 1 / 
       change AxisymmetricFields.radialEnergy z.2 / _ < r
       simpa only [hs0, zero_div] using hr
     exact (contDiffAt_const.congr_of_eventuallyEq (prefixStressForce_core_germ hh hh1 J hc hz.1
-      hx)).contDiffWithinAt
+        hx)).contDiffWithinAt
 
 end AxisStress
 
@@ -2310,7 +2375,7 @@ theorem stress_prefix_rate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C hi
 
 /-- Equality of continuous physical fields away from the symmetry axis
 extends across it. The proof uses an explicit Cartesian perturbation. -/
-theorem eqOn_of_off_axis {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
+theorem eqOn_of_off_axis {V : Type} [NormedAddCommGroup V]
     {U : Set SpaceTime} (hU : IsOpen U) {F G : SpaceTime → V}
     (hF : ContinuousOn F U) (hG : ContinuousOn G U)
     (he : ∀ z ∈ U, 0 < AxisymmetricFields.radialEnergy z.2 → F z = G z) : EqOn F G U := by
@@ -2329,7 +2394,7 @@ theorem eqOn_of_off_axis {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     nlinarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
   let gamma : ℝ → SpaceTime := fun t => (z.1, z.2 + t • coordinateVector 0)
   have hgamma : Continuous gamma := continuous_const.prodMk (continuous_const.add
-    (continuous_id.smul continuous_const))
+      (continuous_id.smul continuous_const))
   have hg0 : gamma 0 = z := by simp [gamma]
   have hlim : Tendsto gamma (𝓝[>] 0) (𝓝 z) := by
     simpa only [← hg0] using (hgamma.tendsto 0).mono_left nhdsWithin_le_nhds
@@ -2358,11 +2423,14 @@ noncomputable def regularTransportField (N : ℕ) (h e α : ℝ)
   ∑ i ∈ transportIndices N,
     cartesianMonomial h (transportPower N h e i) (regularTransportTerm N h e α beta u f i) z
 
+/-- Regular radial field, given by `∑ i ∈ pressureIndices N, cartesianMonomial h (pressurePower
+N h i - 1) (regularPressureTerm N h C phi u beta i) z`. -/
 noncomputable def regularRadialField (N : ℕ) (h C : ℝ)
     (phi u beta : ℕ → Inner → ℝ) (z : SpaceTime) : ℝ :=
   ∑ i ∈ pressureIndices N,
     cartesianMonomial h (pressurePower N h i - 1) (regularPressureTerm N h C phi u beta i) z
 
+/-- Regular truncation, constructed using `assembleComponents`. -/
 noncomputable def regularTruncation (N : ℕ) (h C : ℝ)
     (phi u beta : ℕ → Inner → ℝ) : SpaceTime → Space :=
   assembleComponents (regularRadialField N h C phi u beta)
@@ -2431,10 +2499,10 @@ theorem regularTruncation_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (fun _ hi => radial_power_lower hh.le N hi) M
   have hF := finset_monomial_rate hh hh1 A hO hKO (transportIndices N)
     (regularTransportTerm N h (angularExponent h) 1 beta u phi) (transportPower N h
-      (angularExponent h))
+        (angularExponent h))
     (2 * (N : ℝ) * h - 2)
     (fun _ hi => regularTransportTerm_smoothOn hO N h (angularExponent h) 1 beta u phi hb hu hp hL
-      hi)
+        hi)
     (fun _ hi => angular_power_lower hh.le N hi) M
   have hZ := finset_monomial_rate hh hh1 A hO hKO (transportIndices N)
     (regularTransportTerm N h (axialExponent h) 0 beta u u) (transportPower N h (axialExponent h))
@@ -2460,7 +2528,7 @@ theorem regularTransportField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   congr 1
   exact (transportTerm_eq_regular_on_nonnegative hO N h e α hv hu hf hz.2
     (LeadingStress.inner_X_pos (p := AxisymmetricFields.profilePoint z.1 z.2) hh hh1 hz.1 hs)
-      hi).symm
+        hi).symm
 
 theorem regularRadialField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
@@ -2479,7 +2547,7 @@ theorem regularRadialField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   congr 1
   exact (pressureTerm_eq_regular_on_nonnegative hO N h C hv hu hp hb hL hz.2
     (LeadingStress.inner_X_pos (p := AxisymmetricFields.profilePoint z.1 z.2) hh hh1 hz.1 hs)
-      hi).symm
+        hi).symm
 
 theorem regularTruncation_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
@@ -2590,8 +2658,8 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
     nlinarith
   have hstress : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseStressForce a h C d z - prefixStressForce J h C d z) m n := by
-    apply (finiteRate_at (stress_prefix_rate_axis hh hh1 A hr hd hc ha J m (by omega))
-      le_rfl).weaken hq
+    apply (finiteRate_at (stress_prefix_rate_axis hh hh1 A hr hd hc ha J m (by
+        omega)) le_rfl).weaken hq
     dsimp [b] at hgain
     nlinarith
   let EJ : SpaceTime → Space := fun z =>
@@ -2705,6 +2773,7 @@ theorem compact_weighted_jet_bound {V : Type} [NormedAddCommGroup V] [NormedSpac
   exact ((div_le_iff₀ (hp w hw)).mp he).trans
     (mul_le_mul_of_nonneg_right (by linarith [le_max_left B 0]) (hp w hw).le)
 
+/-- Outer window, given by `Ico cut (Real.exp right) ×ˢ Icc (-1) 1`. -/
 noncomputable def outerWindow (cut right : ℝ) : Set Inner :=
   Ico cut (Real.exp right) ×ˢ Icc (-1) 1
 
@@ -2761,6 +2830,7 @@ theorem terminal_delta_eq {left y0 : ℝ} {w : Inner} (hw : 0 < w.1) :
   simp [SlowFirstOrderEdge.edgeDistance, activeDelta, edgeDistance,
     Real.log_div hw.ne' (Real.exp_ne_zero left), Real.log_exp]
 
+/-- Stress slot injection, given by `(ContinuousLinearMap.id ℝ ℝ).prod 0`. -/
 noncomputable def stressSlotInjection : ℝ →L[ℝ] Inner :=
   (ContinuousLinearMap.id ℝ ℝ).prod 0
 
@@ -2785,7 +2855,7 @@ theorem firstOrder_pair_outer_edgeJets (C : ℝ) (d : OutgoingTail.TailData)
   have hj := ResidualStability.norm_jet_linear_map stressSlotInjection hO hs hX m
   rw [(SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (he w hwW) m).self_of_nhds]
   change ‖iteratedFDeriv ℝ m (fun v => stressSlotInjection (SlowFirstOrderEdge.stressX C d y0 v))
-    w‖ ≤ _
+      w‖ ≤ _
   have hz : 0 ≤ activeZeta c left (y0 + 3) w := by
     exact (radialWeight_pos ⟨(Real.exp_lt_exp.mpr hl).trans_le hwW.1.1, hwW.1.2⟩).le
   have hd : 0 ≤ (activeDelta left (y0 + 3) w)⁻¹ ^ N := by
@@ -2794,14 +2864,14 @@ theorem firstOrder_pair_outer_edgeJets (C : ℝ) (d : OutgoingTail.TailData)
   calc
     _ ≤ ‖stressSlotInjection‖ * ‖iteratedFDeriv ℝ m (SlowFirstOrderEdge.stressX C d y0) w‖ := hj
     _ ≤ ‖stressSlotInjection‖ * (B * activeZeta c left (y0 + 3) w * (activeDelta left (y0 + 3) w)⁻¹
-      ^ N) :=
+        ^ N) :=
       mul_le_mul_of_nonneg_left hb (norm_nonneg _)
     _ ≤ (‖stressSlotInjection‖ + 1) * (B * activeZeta c left (y0 + 3) w * (activeDelta left (y0 +
-      3) w)⁻¹ ^ N) :=
+        3) w)⁻¹ ^ N) :=
       mul_le_mul_of_nonneg_right (by linarith) (mul_nonneg (mul_nonneg hB.le hz) hd)
     _ = _ := by ring
 
- /-- A common scale sequence with the full weighted tensor estimate,
+/-- A common scale sequence with the full weighted tensor estimate,
 constructed from support, smoothness, and the actual first-order primitive.
 No tensor estimate or summation-tail estimate is assumed. -/
 theorem exists_weighted_base_scales_from_primitives {h : ℝ} (hh : 0 < h) (C : ℝ)

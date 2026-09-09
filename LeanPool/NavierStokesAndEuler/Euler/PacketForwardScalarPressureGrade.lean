@@ -6,15 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimaryBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardForcedBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimary
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGradient
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
+import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 
 /-! Scalar pressure and angular pressure-gradient grade bounds for the actual
 zero-history solve. Forced grades have zero initial data; the primary keeps
 the literal compact initial-data amplitude. All bounds retain the same radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,11 +35,14 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {raw : VectorField}
 
+/-- Scalar field, given by `scalarEmbeddingField (G.scalar I) (G.pressurePath I)
+(G.pressurePath_orbit I) (G.scalar_eq_pointField I)`. -/
 def scalarField (G : Forcing P D raw) (I : InitialData P D) :
     Field P D.T (fun z => scalarEmbed (G.scalar I z)) :=
   scalarEmbeddingField (G.scalar I) (G.pressurePath I)
     (G.pressurePath_orbit I) (G.scalar_eq_pointField I)
 
+/-- Angular field, constructed using `EulerPacketPressure.angularGradientField`. -/
 def angularField (G : Forcing P D raw) (I : InitialData P D) :
     Field P D.T (fun z => (EulerPacketPointJets.pressureJet (G.scalar I) z).2
       EulerPacketPointJets.angleDirection • D.m₀) :=
@@ -48,11 +56,11 @@ variable (L : Budget D (Fin 4) 6)
 
 theorem scalar_grade_bound_pred (C : ℝ) (W : GradeGuards (P := P) L N C)
     (G : Forcing P D raw) (I : InitialData P D)
-    (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d+3 ≤ e)
+    (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d + 3 ≤ e)
     (hforce : ∀ n, block standardDirection 6 (fun a => pathTranslate P a
-      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c*C)*majorant L.R d n)
+      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c * C) * majorant L.R d n)
     (hinitial : ∀ n, block standardDirection 6
-      (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c*C)*majorant L.R d n) :
+      (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c * C) * majorant L.R d n) :
     ((scalarField G I).normalized D.T_pos.le (c • L.g)
       (smul_profile_pos L.g L.positive c hc)).WordBound 6 L.R 1 (e-1) := by
   have hb : ((scalarField G I).normalized D.T_pos.le L.g L.positive).WordBound
@@ -69,11 +77,11 @@ theorem scalar_grade_bound_pred (C : ℝ) (W : GradeGuards (P := P) L N C)
 
 theorem angular_grade_bound (C : ℝ) (W : GradeGuards (P := P) L N C)
     (G : Forcing P D raw) (I : InitialData P D)
-    (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d+3 ≤ e)
+    (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d + 3 ≤ e)
     (hforce : ∀ n, block standardDirection 6 (fun a => pathTranslate P a
-      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c*C)*majorant L.R d n)
+      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c * C) * majorant L.R d n)
     (hinitial : ∀ n, block standardDirection 6
-      (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c*C)*majorant L.R d n) :
+      (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c * C) * majorant L.R d n) :
     ((angularField G I).normalized D.T_pos.le (c • L.g)
       (smul_profile_pos L.g L.positive c hc)).WordBound 6 L.R 1 e := by
   have hh := angularGradientField_normalized_bound _ _ _ _ D.T_pos.le
@@ -85,11 +93,11 @@ theorem angular_grade_bound (C : ℝ) (W : GradeGuards (P := P) L N C)
 
 theorem scalar_grade_bound (C : ℝ) (W : GradeGuards (P := P) L N C)
     (G : Forcing P D raw) (I : InitialData P D)
-    (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d+3 ≤ e)
+    (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d + 3 ≤ e)
     (hforce : ∀ n, block standardDirection 6 (fun a => pathTranslate P a
-      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c*C)*majorant L.R d n)
+      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c * C) * majorant L.R d n)
     (hinitial : ∀ n, block standardDirection 6
-      (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c*C)*majorant L.R d n) :
+      (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c * C) * majorant L.R d n) :
     ((scalarField G I).normalized D.T_pos.le (c • L.g)
       (smul_profile_pos L.g L.positive c hc)).WordBound 6 L.R 1 e :=
   (L.scalar_grade_bound_pred N C W G I c hc d e hroom hforce hinitial).mono_shift
@@ -123,7 +131,7 @@ theorem primary_scalar_and_angular_grade_bound
     (C : ℝ) (W : GradeGuards (P := P) L N C) (Y : InitialData P D)
     (α : ℝ) (hα : 0 < α)
     (hYb : ∀ n, block standardDirection 6
-      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α*C)*majorant L.R 0 n) :
+      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n) :
     ((scalarField (EulerPacketForwardPrimary.forcing D) Y).normalized D.T_pos.le (α • L.g)
       (smul_profile_pos L.g L.positive α hα)).WordBound 6 L.R 1 (highShift 1) ∧
     ((angularField (EulerPacketForwardPrimary.forcing D) Y).normalized D.T_pos.le (α • L.g)

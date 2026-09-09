@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedField
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
 
 /-!
 # The literal corrector of the joined high solution
@@ -19,13 +19,16 @@ C and C_t. The returned Field is for the literal raw curlCorrector used by
 the recursion, including at the history/forward junction.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketJoin
 
 open Set ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace EulerMeanCoefficients
   EulerLpCylinderTranslation EulerLpCylinderPaths EulerCylinderSmoothOrbit
-    EulerSourcePotentialCoefficient
+      EulerSourcePotentialCoefficient
   EulerPacketProfileRecursion EulerVolterraConvolution EulerMetricTransport
   EulerTransversePacketProvider EulerPacketCylinderField
 open scoped ContDiff BoundedContinuousFunction
@@ -35,23 +38,26 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) {raw : VectorField} (G : Forcing P D raw)
 
+/-- Potential path, given by `EulerCylinderPotential.potentialPath P D.potentialCoefficientPath
+(velocityPath τ hτ hτT B G)`. -/
 def potentialPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialPath P D.potentialCoefficientPath (velocityPath τ hτ hτT B G)
 
+/-- Potential time path, constructed using `EulerCylinderPotential.potentialDerivative`. -/
 def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialDerivative P D.T D.potentialCoefficientPath D.potentialDerivative
     (velocityPath τ hτ hτT B G) (derivativePath τ hτ hτT B G)
 
 theorem potentialPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (potentialPath τ hτ hτT B
-  G)) :=
+    G)) :=
   EulerCylinderPotential.potentialPath_orbit P D.potentialCoefficientPath
-    D.potentialCoefficientPath_orbit
+      D.potentialCoefficientPath_orbit
     (velocityPath τ hτ hτT B G) (velocityPath_orbit τ hτ hτT B G)
 
 theorem potentialTimePath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (potentialTimePath τ hτ
-  hτT B G)) :=
+    hτT B G)) :=
   EulerCylinderPotential.potentialDerivative_orbit P D.T D.potentialCoefficientPath
-    D.potentialDerivative
+      D.potentialDerivative
     D.potentialCoefficientPath_orbit D.potentialDerivative_orbit
     (velocityPath τ hτ hτT B G) (derivativePath τ hτ hτT B G)
     (velocityPath_orbit τ hτ hτT B G) (derivativePath_orbit τ hτ hτT B G)
@@ -61,23 +67,26 @@ theorem potentialPath_time (t : Icc (0 : ℝ) D.T) :
       (potentialTimePath τ hτ hτT B G t) (Icc (0 : ℝ) D.T) t :=
   EulerCylinderPotential.potentialPath_hasDerivWithinAt P D.T D.T_pos.le
     D.potentialCoefficientPath D.potentialDerivative (velocityPath τ hτ hτT B G) (derivativePath τ
-      hτ hτT B G)
+        hτ hτT B G)
     D.potentialCoefficientPath_time (velocityPath_time τ hτ hτT B G) t
 
+/-- Corrector path, given by `EulerCylinderSlowCurl.path P D.FInv.field (potentialPath τ hτ hτT
+B G)`. -/
 def correctorPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.path P D.FInv.field (potentialPath τ hτ hτT B G)
 
+/-- Corrector time path, constructed using `EulerCylinderSlowCurl.derivative`. -/
 def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.derivative P D.T D.FInv.field D.inverseDerivative
     (potentialPath τ hτ hτT B G) (potentialTimePath τ hτ hτT B G)
 
 theorem correctorPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (correctorPath τ hτ hτT B
-  G)) :=
+    G)) :=
   EulerCylinderSlowCurl.path_orbit P D.FInv.field D.FInv.translation_contDiff
     (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G)
 
 theorem correctorTimePath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (correctorTimePath τ hτ
-  hτT B G)) :=
+    hτT B G)) :=
   EulerCylinderSlowCurl.derivative_orbit P D.T D.FInv.field D.inverseDerivative
     D.FInv.translation_contDiff D.inverseDerivative_orbit
     (potentialPath τ hτ hτT B G) (potentialTimePath τ hτ hτT B G)
@@ -91,10 +100,14 @@ theorem correctorPath_time (t : Icc (0 : ℝ) D.T) :
     (potentialPath_orbit τ hτ hτT B G) (potentialTimePath_orbit τ hτ hτT B G)
     D.inverse_hasDerivWithinAt (potentialPath_time τ hτ hτT B G) t
 
+/-- Corrector, defined pointwise by `pointField P (correctorPath τ hτ hτT B G)
+(correctorPath_orbit τ hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def corrector : VectorField := fun z =>
   pointField P (correctorPath τ hτ hτT B G) (correctorPath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
+/-- Corrector derivative, defined pointwise by `pointField P (correctorTimePath τ hτ hτT B G)
+(correctorTimePath_orbit τ hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
 def correctorDerivative : VectorField := fun z =>
   pointField P (correctorTimePath τ hτ hτT B G) (correctorTimePath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
@@ -107,10 +120,10 @@ theorem velocityPath_raw_mean_zero (t : Icc (0 : ℝ) D.T) (x : Space) :
 theorem rawPotential_eq (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     D.rawPotential P (vector τ hτ hτT B G) (t,(x,θ)) =
       pointField P (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G) t (x,(θ :
-        AddCircle P)) := by
+          AddCircle P)) := by
   have he : (fun s : ℝ => vector τ hτ hτT B G (t,(x,s))) = fun s : ℝ =>
       pointField P (velocityPath τ hτ hτT B G) (velocityPath_orbit τ hτ hτT B G) t (x,(s :
-        AddCircle P)) :=
+          AddCircle P)) :=
     funext (fun s => (vectorField τ hτ hτT B G).raw_eq t x s)
   rw [Data.rawPotential,Data.clamp_coe,he]
   exact (EulerCylinderPotential.potentialField_source_formula P D.potentialCoefficientPath
@@ -123,11 +136,11 @@ theorem corrector_formula (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       EulerMeanBoundary.curlMatrix
         ((EulerLiftedWeakDerivative.fieldFDeriv P
           (pointField P (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G) t) (x,(θ :
-            AddCircle P))).comp
+              AddCircle P))).comp
           ((ContinuousLinearMap.inl ℝ Space ℝ).comp (D.FInv.field t x))) := by
   change EulerCylinderSlowCurl.field P D.FInv.field D.FInv.translation_contDiff
     (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G) (D.clamp t) (x,(θ : AddCircle
-      P)) = _
+        P)) = _
   rw [Data.clamp_coe]
   exact EulerCylinderSlowCurl.field_formula P D.FInv.field D.FInv.translation_contDiff
     (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G) t (x,(θ : AddCircle P))
@@ -136,16 +149,18 @@ theorem curlCorrector_eq (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     D.curlCorrector P (vector τ hτ hτT B G) (t,(x,θ)) = corrector τ hτ hτT B G (t,(x,θ)) := by
   have he : (fun y : LiftTangent => D.rawPotential P (vector τ hτ hτT B G) (t,y)) =
       fun y : LiftTangent => pointField P (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ
-        hτT B G)
+          hτT B G)
         t (y.1,(y.2 : AddCircle P)) := funext (fun y => rawPotential_eq τ hτ hτT B G t y.1 y.2)
   rw [Data.curlCorrector,Data.clamp_coe,he,coverField_fderiv,corrector_formula τ hτ hτT B G t x θ]
 
+/-- Corrector field, bundling `path`, `orbit`, `raw_eq`. -/
 def correctorField : Field P D.T (D.curlCorrector P (vector τ hτ hτT B G)) where
   path := correctorPath τ hτ hτT B G
   orbit := correctorPath_orbit τ hτ hτT B G
-  raw_eq t x θ := (curlCorrector_eq τ hτ hτT B G t x θ).trans (by simp only
-    [corrector,Data.clamp_coe])
+  raw_eq t x θ := (curlCorrector_eq τ hτ hτT B G t x θ).trans (by
+      simp only [corrector,Data.clamp_coe])
 
+/-- Corrector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
 def correctorDerivativeField : Field P D.T (correctorDerivative τ hτ hτT B G) where
   path := correctorTimePath τ hτ hτT B G
   orbit := correctorTimePath_orbit τ hτ hτT B G

@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
+
+/-! The literal corrector preserves joint odd parity under the actual even inverse deformation. -/
 
 @[expose] public section
 
-/-! The literal corrector preserves joint odd parity under the actual even inverse deformation. -/
 
 noncomputable section
 
@@ -47,10 +49,10 @@ theorem rawPotential_smooth (hA : ContDiff ℝ ∞ (fun y : LiftTangent => A (t,
     (D.normal.smooth (D.clamp t)) hn hA
 
 variable (hInv : ∀ x, D.FInv.field (D.clamp t) (-x) = D.FInv.field (D.clamp t) x)
-  (hA : ContDiff ℝ ∞ (fun y : LiftTangent => A (t,y)))
-  (hper : ∀ x, Function.Periodic (fun θ => A (t,(x,θ))) P)
-  (hmean : ∀ x, (∫ θ in (0 : ℝ)..P, A (t,(x,θ))) = 0)
-  (hodd : ∀ x θ, A (t,(-x,-θ)) = -A (t,(x,θ)))
+  (hA : ContDiff ℝ ∞ (fun y : LiftTangent => A (t, y)))
+  (hper : ∀ x, Function.Periodic (fun θ => A (t, (x, θ))) P)
+  (hmean : ∀ x, (∫ θ in (0 : ℝ)..P, A (t, (x, θ))) = 0)
+  (hodd : ∀ x θ, A (t, (-x, -θ)) = -A (t, (x, θ)))
 
 include hInv hA hper hmean hodd in
 theorem rawPotential_even (x : Space) (θ : ℝ) :
@@ -87,7 +89,7 @@ variable {P : ℝ} [Fact (0 < P)]
 
 theorem corrector_odd (t : Icc (0 : ℝ) D.T)
     (hInv : ∀ x, D.FInv.field t (-x) = D.FInv.field t x)
-    (hA : ∀ x θ, G.vector I (t,(-x,-θ)) = -G.vector I (t,(x,θ))) (x : Space) (θ : ℝ) :
+    (hA : ∀ x θ, G.vector I (t, (-x, -θ)) = -G.vector I (t, (x, θ))) (x : Space) (θ : ℝ) :
     G.corrector I (t,(-x,-θ)) = -G.corrector I (t,(x,θ)) := by
   rw [← G.curlCorrector_eq I t (-x) (-θ), ← G.curlCorrector_eq I t x θ]
   apply D.curlCorrector_odd P (G.vector I) t

@@ -6,11 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordGevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Smoothness and exact concatenation of genuine directional word derivatives. -/
 
 @[expose] public section
 
-/-! Smoothness and exact concatenation of genuine directional word derivatives. -/
 
 noncomputable section
 
@@ -39,7 +47,7 @@ theorem wordDerivative_contDiff (directions : ι → P) (f : P → E)
     exact ih _ (directional_contDiff directions f hf (w (Fin.last n))) (Fin.init w)
 
 /-- The sum over all words can be decomposed for any scalar expression on words. -/
-theorem sum_words_snoc [Fintype ι] (n : ℕ) (a : (Fin (n+1) → ι) → ℝ) :
+theorem sum_words_snoc [Fintype ι] (n : ℕ) (a : (Fin (n + 1) → ι) → ℝ) :
     (∑ w, a w) = ∑ i, ∑ w : Fin n → ι, a (Fin.snoc w i) := by
   calc
     _ = ∑ z : ι × (Fin n → ι), a (Fin.snoc z.2 z.1) :=

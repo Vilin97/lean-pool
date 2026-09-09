@@ -8,11 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatGenerator
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
-public import Mathlib.Analysis.Calculus.ParametricIntegral
+import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
+
+/-! Differentiation of the actual heat Duhamel integral in L² from finite Sobolev forcing. -/
 
 @[expose] public section
 
-/-! Differentiation of the actual heat Duhamel integral in L² from finite Sobolev forcing. -/
 
 noncomputable section
 
@@ -37,8 +38,8 @@ theorem heatFlow_joint_continuous (q : ℕ) (ν : ℝ) :
 /-- The chosen real-time extension is exactly the identity at nonpositive times. -/
 theorem heatFlow_nonpositive {q : ℕ} (ν : ℝ) (hν : 0 < ν) (t : ℝ) (ht : t ≤ 0)
     (u : SobolevSpace period q) : heatFlow period q ν t u = u := by
-  rw [heatFlow, Real.toNNReal_of_nonpos (mul_nonpos_of_nonneg_of_nonpos (by positivity) ht),
-    heatOperator_zero]
+  rw [heatFlow, Real.toNNReal_of_nonpos (mul_nonpos_of_nonneg_of_nonpos (by
+      positivity) ht), heatOperator_zero]
 
 /-- At negative times the actual clamped heat orbit has zero L² derivative. -/
 theorem heatFlow_value_hasDerivAt_negative {q : ℕ} (ν : ℝ) (hν : 0 < ν)
@@ -48,7 +49,8 @@ theorem heatFlow_value_hasDerivAt_negative {q : ℕ} (ν : ℝ) (hν : 0 < ν)
   filter_upwards [Iio_mem_nhds ht] with s hs
   rw [heatFlow_nonpositive period ν hν s hs.le]
 
-/-- The full fixed-interval heat integrand is continuous, with the source path extended by clamping. -/
+/-- The full fixed-interval heat integrand is continuous, with the source path extended by clamping.
+-/
 theorem shiftedHeat_continuous {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t : ℝ) :
     Continuous (fun s : ℝ => heatFlow period q ν (t - s) (extendPath T hT f s)) := by
@@ -68,7 +70,8 @@ def fullDuhamel {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t : ℝ) : SobolevSpace period q :=
   ∫ s in (0 : ℝ)..T, heatFlow period q ν (t - s) (extendPath T hT f s)
 
-/-- The underlying L² full integral is the genuine Bochner integral of the underlying heat fields. -/
+/-- The underlying L² full integral is the genuine Bochner integral of the underlying heat fields.
+-/
 theorem fullDuhamel_value {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t : ℝ) :
     value period (fullDuhamel period ν T hT f t) =
@@ -76,11 +79,12 @@ theorem fullDuhamel_value {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
   change (valueOperator period q) (∫ s in (0 : ℝ)..T,
     heatFlow period q ν (t - s) (extendPath T hT f s)) = _
   rw [← (valueOperator period q).intervalIntegral_comp_comm ((shiftedHeat_continuous period ν T hT
-    f t).intervalIntegrable 0 T),
+      f t).intervalIntegrable 0 T),
     intervalIntegral.integral_of_le hT]
   rfl
 
-/-- The actual parameter derivative of the full heat integrand away from its measure-zero diagonal. -/
+/-- The actual parameter derivative of the full heat integrand away from its measure-zero diagonal.
+-/
 def derivativeIntegrand {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t s : ℝ) : LiftL2 period :=
   (Iic t).indicator (fun s => ν • laplacianEvaluation period q hq
@@ -90,14 +94,15 @@ def derivativeIntegrand {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ) (hT : 0 ≤ T)
 theorem derivativeIntegrand_measurable {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t : ℝ) :
     AEStronglyMeasurable (derivativeIntegrand period hq ν T hT f t) (volume.restrict (Ioc 0 T)) :=
-      by
+        by
   have hc : Continuous (fun s => ν • laplacianEvaluation period q hq
       (heatFlow period q ν (t - s) (extendPath T hT f s))) :=
     ((laplacianEvaluation period q hq).continuous.comp (shiftedHeat_continuous period ν T hT f
-      t)).const_smul ν
+        t)).const_smul ν
   exact hc.aestronglyMeasurable.indicator measurableSet_Iic
 
-/-- The full integrand is uniformly Lipschitz in time in L², using two genuine source derivatives. -/
+/-- The full integrand is uniformly Lipschitz in time in L², using two genuine source derivatives.
+-/
 theorem shiftedHeat_value_lipschitz {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 < ν)
     (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (r : ℝ) :
     LipschitzWith (Real.nnabs (4 * ν * ‖f‖))
@@ -108,10 +113,11 @@ theorem shiftedHeat_value_lipschitz {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0
   have h := heatFlow_value_norm_sub_le period hq ν hν (extendPath T hT f r) (s - r) (t - r)
   rw [show (s - r) - (t - r) = s - t by ring] at h
   exact h.trans (mul_le_mul_of_nonneg_right
-    (mul_le_mul_of_nonneg_left (extendPath_norm_le T hT f r) (by positivity : 0 ≤ 4 * ν))
-      (abs_nonneg _))
+    (mul_le_mul_of_nonneg_left (extendPath_norm_le T hT f r) (by
+        positivity : 0 ≤ 4 * ν)) (abs_nonneg _))
 
-/-- The actual off-diagonal parameter derivative is the positive-time heat Laplacian and zero before the source time. -/
+/-- The actual off-diagonal parameter derivative is the positive-time heat Laplacian and zero before
+the source time. -/
 theorem shiftedHeat_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 < ν)
     (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, SobolevSpace period q))
     (t s : ℝ) (hst : s ≠ t) :
@@ -119,17 +125,18 @@ theorem shiftedHeat_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 
       (derivativeIntegrand period hq ν T hT f t s) t := by
   rcases lt_or_gt_of_ne hst with hst | hts
   · have hd := (heatFlow_value_hasDerivAt period hq ν hν (extendPath T hT f s) (t - s) (sub_pos.mpr
-    hst)).scomp t
+      hst)).scomp t
       ((hasDerivAt_id t).sub_const s)
     simpa only [derivativeIntegrand, indicator, mem_Iic, hst.le, ite_true, one_smul,
-      Function.comp_def, id_eq] using hd
+        Function.comp_def, id_eq] using hd
   · have hd := (heatFlow_value_hasDerivAt_negative period ν hν (extendPath T hT f s) (t - s)
-    (sub_neg.mpr hts)).scomp t
+      (sub_neg.mpr hts)).scomp t
       ((hasDerivAt_id t).sub_const s)
     simpa only [derivativeIntegrand, indicator, mem_Iic, not_le.mpr hts, ite_false, smul_zero,
-      Function.comp_def, id_eq] using hd
+        Function.comp_def, id_eq] using hd
 
-/-- Differentiation under the actual Bochner integral gives the L² derivative of the fixed-interval heat convolution. -/
+/-- Differentiation under the actual Bochner integral gives the L² derivative of the fixed-interval
+heat convolution. -/
 theorem fullDuhamel_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 < ν)
     (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t : ℝ) :
     HasDerivAt (fun r => value period (fullDuhamel period ν T hT f r))
@@ -138,13 +145,13 @@ theorem fullDuhamel_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 
       (fun s => value period (heatFlow period q ν (r - s) (extendPath T hT f s)))
       (volume.restrict (Ioc 0 T)) :=
     ((valueOperator period q).continuous.comp (shiftedHeat_continuous period ν T hT f
-      r)).aestronglyMeasurable
+        r)).aestronglyMeasurable
   have hint : Integrable (fun s => value period (heatFlow period q ν (t - s) (extendPath T hT f s)))
       (volume.restrict (Ioc 0 T)) := by
     apply Integrable.of_bound (hmeas t) ‖f‖
     exact Filter.Eventually.of_forall fun s =>
       (value_norm_le period _).trans ((heatOperator_bound period _ _).trans (extendPath_norm_le T
-        hT f s))
+          hT f s))
   have hdiff : ∀ᵐ s : ℝ ∂volume.restrict (Ioc 0 T),
       HasDerivAt (fun r => value period (heatFlow period q ν (r - s) (extendPath T hT f s)))
         (derivativeIntegrand period hq ν T hT f t s) t := by
@@ -152,15 +159,15 @@ theorem fullDuhamel_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 
       compl_mem_ae_iff.mpr (measure_singleton _)
     exact hne.mono fun s hs => shiftedHeat_value_hasDerivAt period hq ν hν T hT f t s hs
   have h := (hasDerivAt_integral_of_dominated_loc_of_lip (s := univ) (bound := fun _ : ℝ => 4 * ν *
-    ‖f‖)
+      ‖f‖)
     (μ := volume.restrict (Ioc 0 T)) Filter.univ_mem (Filter.Eventually.of_forall hmeas) hint
     (derivativeIntegrand_measurable period hq ν T hT f t)
     (Filter.Eventually.of_forall fun s => (shiftedHeat_value_lipschitz period hq ν hν T hT f
-      s).lipschitzOnWith)
+        s).lipschitzOnWith)
     (integrable_const _) hdiff).2
   have he : (fun r => value period (fullDuhamel period ν T hT f r)) =
       fun r => ∫ s in Ioc 0 T, value period (heatFlow period q ν (r - s) (extendPath T hT f s)) :=
-        by
+          by
     funext r
     exact fullDuhamel_value period ν T hT f r
   rw [he]

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+/-! Finite sums preserve genuine fixed-Sobolev external-word estimates. -/
 
 @[expose] public section
 
-/-! Finite sums preserve genuine fixed-Sobolev external-word estimates. -/
 
 noncomputable section
 

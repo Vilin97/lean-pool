@@ -6,10 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # The forced initial value problem from a homogeneous evolution
@@ -19,6 +20,9 @@ homogeneous fundamental evolution is the input; the forced path is an actual
 Bochner integral. Its differential equation, initial trace, uniqueness, and
 weighted bounds are proved, rather than included in the evolution data.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,12 +34,14 @@ open scoped Topology Interval
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
-variable (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,E →L[ℝ] E))
+variable (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- A homogeneous fundamental evolution, with its actual inverse. This data
 contains no forced solution or estimate for one. -/
 structure Evolution where
+  /-- Forward of `Evolution`, of type `C(Icc (0 : ℝ) T,E →L[ℝ] E)`. -/
   forward : C(Icc (0 : ℝ) T,E →L[ℝ] E)
+  /-- Backward of `Evolution`, of type `C(Icc (0 : ℝ) T,E →L[ℝ] E)`. -/
   backward : C(Icc (0 : ℝ) T,E →L[ℝ] E)
   forward_backward : ∀ t, (forward t).comp (backward t) = ContinuousLinearMap.id ℝ E
   backward_forward : ∀ t, (backward t).comp (forward t) = ContinuousLinearMap.id ℝ E
@@ -66,7 +72,7 @@ theorem backward_derivative (t : Icc (0 : ℝ) T) :
   have hi := hasFDerivAt_ringInverse (𝕜 := ℝ) (U.unit t)
   change HasFDerivAt Ring.inverse
     (-ContinuousLinearMap.mulLeftRight ℝ (E →L[ℝ] E) (U.backward t) (U.backward t)) (U.forward t)
-      at hi
+        at hi
   have hf := U.derivative t
   have hv : extendPath T hT U.forward t = U.forward t := by
     simp only [extendPath, projIcc_of_mem hT t.property]
@@ -89,37 +95,37 @@ def propagator (t s : Icc (0 : ℝ) T) : E →L[ℝ] E :=
 omit [CompleteSpace E] in
 /-- A propagator starts at the identity. -/
 @[simp] theorem propagator_self (t : Icc (0 : ℝ) T) : U.propagator t t = ContinuousLinearMap.id ℝ E
-  :=
+    :=
   U.forward_backward t
 
 /-- The forcing pulled back by the inverse homogeneous evolution. -/
-def transformedForcing (f : C(Icc (0 : ℝ) T,E)) : ℝ → E :=
+def transformedForcing (f : C(Icc (0 : ℝ) T, E)) : ℝ → E :=
   fun s => extendPath T hT U.backward s (extendPath T hT f s)
 
 omit [CompleteSpace E] in
 /-- The pulled-back forcing is genuinely continuous. -/
-theorem transformedForcing_continuous (f : C(Icc (0 : ℝ) T,E)) :
+theorem transformedForcing_continuous (f : C(Icc (0 : ℝ) T, E)) :
     Continuous (U.transformedForcing f) :=
   (extendPath_continuous T hT U.backward).clm_apply (extendPath_continuous T hT f)
 
 /-- Duhamel's formula, as an actual interval integral. -/
-def solutionReal (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) : ℝ → E :=
+def solutionReal (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : ℝ → E :=
   fun t => extendPath T hT U.forward t
     (U.backward ⟨0,le_rfl,hT⟩ a₀ + ∫ s in (0 : ℝ)..t, U.transformedForcing f s)
 
 /-- The constructed forced path is continuous. -/
-theorem solutionReal_continuous (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem solutionReal_continuous (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     Continuous (U.solutionReal f a₀) := by
   exact (extendPath_continuous T hT U.forward).clm_apply
     (continuous_const.add (intervalIntegral.differentiable_integral_of_continuous
       (U.transformedForcing_continuous f)).continuous)
 
 /-- The actual continuous forced solution on the time interval. -/
-def solution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
+def solution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
   ⟨fun t => U.solutionReal f a₀ t, (U.solutionReal_continuous f a₀).comp continuous_subtype_val⟩
 
 /-- Duhamel's formula attains the prescribed initial data. -/
-@[simp] theorem solution_initial (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+@[simp] theorem solution_initial (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     U.solution f a₀ ⟨0,le_rfl,hT⟩ = a₀ := by
   change extendPath T hT U.forward 0
     (U.backward ⟨0,le_rfl,hT⟩ a₀ + ∫ s in (0 : ℝ)..0, U.transformedForcing f s) = a₀
@@ -128,7 +134,7 @@ def solution (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
   exact congrArg (fun A : E →L[ℝ] E => A a₀) (U.forward_backward ⟨0,le_rfl,hT⟩)
 
 /-- The actual constructed path solves the inhomogeneous differential equation. -/
-theorem solution_derivative (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (t : Icc (0 : ℝ) T) :
+theorem solution_derivative (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (U.solutionReal f a₀)
       (B t (U.solution f a₀ t) + f t) (Icc (0 : ℝ) T) t := by
   have hcont := U.transformedForcing_continuous f
@@ -150,7 +156,7 @@ theorem solution_derivative (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (t : Icc (0 : 
     (congrArg (fun A : E →L[ℝ] E => A (f t)) (U.forward_backward t)).symm
 
 /-- The same solution has the literal two-time Duhamel formula. -/
-theorem solution_duhamel (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (t : Icc (0 : ℝ) T) :
+theorem solution_duhamel (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) (t : Icc (0 : ℝ) T) :
     U.solution f a₀ t = U.propagator t ⟨0,le_rfl,hT⟩ a₀ +
       ∫ s in (0 : ℝ)..(t : ℝ), U.forward t (U.transformedForcing f s) := by
   change extendPath T hT U.forward t
@@ -163,7 +169,7 @@ theorem solution_duhamel (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (t : Icc (0 : ℝ
 
 /-- Any differentiable path with the same forcing and initial data equals the
 actual integral construction. No uniqueness assertion is assumed of the data. -/
-theorem solution_unique (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (a : ℝ → E)
+theorem solution_unique (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) (a : ℝ → E)
     (ha : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt a (B t (a t) + f t) (Icc (0 : ℝ) T) t)
     (h₀ : a 0 = a₀) (t : Icc (0 : ℝ) T) : a t = U.solution f a₀ t := by
@@ -188,7 +194,7 @@ theorem solution_unique (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (a : ℝ → E)
     rw [h₀, U.solution_initial, sub_self, map_zero]
   have hqt : U.backward t (a t - U.solution f a₀ t) = 0 := by
     simpa only [q, w, extendPath, projIcc_of_mem hT t.property, solution, ContinuousMap.coe_mk]
-      using hconst.trans hq₀
+        using hconst.trans hq₀
   have hr := congrArg (U.forward t) hqt
   change ((U.forward t).comp (U.backward t)) (a t - U.solution f a₀ t) = U.forward t 0 at hr
   rw [U.forward_backward, id_apply, map_zero, sub_eq_zero] at hr
@@ -196,9 +202,9 @@ theorem solution_unique (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) (a : ℝ → E)
 
 /-- A relative homogeneous propagator bound yields the forced bound with the
 same profile. No exponential in the coefficient norm is introduced. -/
-theorem solution_profile_bound (f : C(Icc (0 : ℝ) T,E)) (a₀ : E)
+theorem solution_profile_bound (f : C(Icc (0 : ℝ) T, E)) (a₀ : E)
     (g : Icc (0 : ℝ) T → ℝ) (hg : ∀ t, 0 < g t)
-    (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C D : ℝ) (hC : 0 ≤ C)
+    (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C D : ℝ) (hC : 0 ≤ C)
     (hU : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ‖U.propagator t s‖ ≤ C*g t/g s)
     (hf : ∀ s, ‖f s‖ ≤ D*g s) (t : Icc (0 : ℝ) T) :
     ‖U.solution f a₀ t‖ ≤ C*g t*(‖a₀‖ + (t : ℝ)*D) := by

@@ -7,17 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerParity
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerLabelData
-public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerParity
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerState
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketParity
+import LeanPool.NavierStokesAndEuler.Euler.BaseEulerParity
+import LeanPool.NavierStokesAndEuler.Euler.StaticEulerParity
+import LeanPool.NavierStokesAndEuler.Euler.StaticEulerRegularity
 
 /-! The locally constructed ordinary Euler solution supplies a concrete
 first parent, its label budget and its genuine particle inverse. All
 constants and the positive common horizon depend only on the input
 Gevrey envelope, not on the particular initial datum. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +32,8 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Base time, given by `EulerBaseEulerParent.horizon (amplitude P C R hC hR)
+(outputVelocitySize P C R) (outputRadius R)`. -/
 def baseTime (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : ℝ :=
   EulerBaseEulerParent.horizon (amplitude P C R hC hR)
     (outputVelocitySize P C R) (outputRadius R)
@@ -42,10 +47,12 @@ theorem baseTime_le (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     baseTime P C R hC hR ≤ amplitude P C R hC hR :=
   EulerBaseEulerParent.horizon_le _ _ _
 
+/-- Base inclusion, given by `initialInclusion _ _ (baseTime_le P C R hC hR)`. -/
 def baseInclusion (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     C(Icc (0 : ℝ) (baseTime P C R hC hR), Icc (0 : ℝ) (amplitude P C R hC hR)) :=
   initialInclusion _ _ (baseTime_le P C R hC hR)
 
+/-- Base label constant as an element of `ℝ`. -/
 def baseLabelConstant (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : ℝ :=
   let T := baseTime P C R hC hR
   let B := outputVelocitySize P C R
@@ -54,21 +61,22 @@ def baseLabelConstant (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : ℝ :=
   let V := flowRadius B S T S
   let M := C₁+3*(B*S)*B
   let A := flowRadius B S T (4*S+S+S)
-  1+sobolevCoefficientAmplitude (Fin 3) 6 V (T*B)+
-    sobolevCoefficientAmplitude (Fin 3) 6 V B+
-    sobolevCoefficientAmplitude (Fin 3) 6 A M+
+  1+sobolevCoefficientAmplitude (Fin 3) 6 V (T*B) +
+    sobolevCoefficientAmplitude (Fin 3) 6 V B +
+    sobolevCoefficientAmplitude (Fin 3) 6 A M +
     sobolevCoefficientRadius (Fin 3) V+sobolevCoefficientRadius (Fin 3) A
 
 variable (u : SmoothL2Field Space) (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
-  (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
+  (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
 
+/-- Base input, constructed using `EulerBaseEulerParent.ofInterval`. -/
 def baseInput : EulerBaseEulerParent.Input :=
   EulerBaseEulerParent.ofInterval (amplitude P C R hC hR) (amplitude_pos P C R hC hR)
     (velocityCoefficient P u C R hC hR hu hdiv)
     (derivativeCoefficient P u C R hC hR hu hdiv)
     (coefficient_time P u C R hC hR hu hdiv)
     (fun t x => by
-      have he : ((velocityCoefficient P u C R hC hR hu hdiv).field t : Space → Space)=
+      have he : ((velocityCoefficient P u C R hC hR hu hdiv).field t : Space → Space) =
           fun y => localVelocity P u C R hC hR hu hdiv (t,y) :=
         funext (velocityCoefficient_apply P u C R hC hR hu hdiv t)
       rw [he]
@@ -78,10 +86,12 @@ def baseInput : EulerBaseEulerParent.Input :=
     (velocityCoefficient_bound P u C R hC hR hu hdiv)
 
 theorem baseInput_field (t : Icc (0 : ℝ) (baseTime P C R hC hR)) (x : Space) :
-    (baseInput P u C R hC hR hu hdiv).field.field t x=
+    (baseInput P u C R hC hR hu hdiv).field.field t x =
       localVelocity P u C R hC hR hu hdiv (t,x) :=
   velocityCoefficient_apply P u C R hC hR hu hdiv (baseInclusion P C R hC hR t) x
 
+/-- Base L² data, bundling `velocity`, `derivative`, `velocity_match`, `derivative_match` and
+the required compatibility proofs. -/
 def baseL2Data : EulerBaseEulerParent.L2Data (baseInput P u C R hC hR hu hdiv) where
   velocity t := localField P u C R hC hR hu hdiv (baseInclusion P C R hC hR t)
   derivative t := localDerivativeField P u C R hC hR hu hdiv (baseInclusion P C R hC hR t)
@@ -104,8 +114,10 @@ def baseL2Data : EulerBaseEulerParent.L2Data (baseInput P u C R hC hR hu hdiv) w
 
 variable (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
 
+/-- Base parent, given by `(baseInput P u C R hC hR hu hdiv).parent ell hell hell1`. -/
 def baseParent : Parent := (baseInput P u C R hC hR hu hdiv).parent ell hell hell1
 
+/-- Base label data, given by `(baseL2Data P u C R hC hR hu hdiv).labelData ell hell hell1`. -/
 def baseLabelData : LabelData (baseParent P u C R hC hR hu hdiv ell hell hell1) :=
   (baseL2Data P u C R hC hR hu hdiv).labelData ell hell hell1
 
@@ -116,16 +128,19 @@ include u hu hdiv ell hell hell1 in
 theorem baseLabelConstant_one : 1 ≤ baseLabelConstant P C R hC hR :=
   (baseLabelData P u C R hC hR hu hdiv ell hell hell1).K_one
 
+/-- Base inverse, given by `(baseInput P u C R hC hR hu hdiv).particleInverse ell hell hell1`. -/
 def baseInverse : ParticleInverse (baseParent P u C R hC hR hu hdiv ell hell hell1) :=
   (baseInput P u C R hC hR hu hdiv).particleInverse ell hell hell1
 
 theorem baseParent_velocity_match (t : Icc (0 : ℝ) (baseTime P C R hC hR)) (x : Space) :
-    (baseParent P u C R hC hR hu hdiv ell hell hell1).velocity.field t x=
+    (baseParent P u C R hC hR hu hdiv ell hell hell1).velocity.field t x =
       localVelocity P u C R hC hR hu hdiv
         (t,(baseParent P u C R hC hR hu hdiv ell hell hell1).position t x) := by
   have h := (baseInput P u C R hC hR hu hdiv).parent_velocity ell hell hell1 t x
   exact h.trans (baseInput_field P u C R hC hR hu hdiv t _)
 
+/-- Base evolution, bundling `inverse`, `velocity`, `pressure`, `force` and the required
+compatibility proofs. -/
 def baseEvolution : Evolution (baseParent P u C R hC hR hu hdiv ell hell hell1) where
   inverse := baseInverse P u C R hC hR hu hdiv ell hell hell1
   velocity := localVelocity P u C R hC hR hu hdiv
@@ -158,7 +173,7 @@ theorem baseParent_initial_velocity (x : Space) :
   erw [hz,localVelocity_initial] at h
   exact h
 
-theorem baseOddData (hodd : ∀ x, u.field (-x)= -u.field x) :
+theorem baseOddData (hodd : ∀ x, u.field (-x) = -u.field x) :
     OddData (baseParent P u C R hC hR hu hdiv ell hell hell1) := by
   apply (baseInput P u C R hC hR hu hdiv).oddData _ ell hell hell1
   intro t x

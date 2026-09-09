@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PartitionedCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurlClassBounds
-
-@[expose] public section
 
 /-!
 # All-jet bounds for actual nonlinear wave interactions
@@ -19,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.CurlClassBounds
 Only stripped coefficients are placed in the weighted classes. The carrier is
 retained in the exact differential identities and is removed before estimating.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.WaveInteractionBounds
 
@@ -128,9 +128,13 @@ theorem bandBound_const (s : StripData D) (c : ℝ) : BandBound s 0 (fun _ => c)
 
 /-- Actual geometric coefficient fields, rather than assumed derivative closure. -/
 structure Geometry (s : StripData D) (κ : ℝ) where
+  /-- Radius of `Geometry`, of type `ℕ → D → ℝ`. -/
   radius : ℕ → D → ℝ
+  /-- Radial of `Geometry`, of type `ℕ → D → D`. -/
   radial : ℕ → D → D
+  /-- Angular of `Geometry`, of type `ℕ → D → D`. -/
   angular : ℕ → D → D
+  /-- Axial of `Geometry`, of type `ℕ → D → D`. -/
   axial : ℕ → D → D
   radius_pos : ∀ n x, x ∈ s.domain → 0 < radius n x
   radial_class : UnweightedClass s (-κ) radial
@@ -155,11 +159,15 @@ theorem axial_vector_class (s : StripData D) (v : D) :
   unfold UnweightedClass
   simpa only [zero_add, Real.rpow_one] using (unweighted_const s v).band_smul (bandBound_rpow s 1)
 
+/-- Family: an abbreviation for `ℕ → D → ComplexVector`. -/
 abbrev Family (D : Type*) := ℕ → D → ComplexVector
 
+/-- Wave vector, given by `∀ i, WaveClass s P α (fun n x => a n x i)`. -/
 def WaveVector (s : StripData D) (P : ℕ → D → ℝ) (α : ℝ) (a : Family D) : Prop :=
   ∀ i, WaveClass s P α (fun n x => a n x i)
 
+/-- Mean vector, given by `MeanClass s (μ + 1) (fun n x => a n x 0) ∧ MeanClass s μ (fun n x =>
+a n x 1) ∧ MeanClass s μ (fun n x => a n x 2)`. -/
 def MeanVector (s : StripData D) (μ : ℝ) (a : Family D) : Prop :=
   MeanClass s (μ + 1) (fun n x => a n x 0) ∧
     MeanClass s μ (fun n x => a n x 1) ∧ MeanClass s μ (fun n x => a n x 2)
@@ -171,9 +179,12 @@ theorem meanVector_component {s : StripData D} {μ : ℝ} {a : Family D}
   · exact ha.2.1
   · exact ha.2.2
 
+/-- Angular independent, given by `∀ n i x, x ∈ s.domain → along (G.angular n) (fun y => a n y
+i) x = 0`. -/
 def AngularIndependent {s : StripData D} {κ : ℝ} (G : Geometry s κ) (a : Family D) : Prop :=
   ∀ n i x, x ∈ s.domain → along (G.angular n) (fun y => a n y i) x = 0
 
+/-- Stripped transport as an element of `Family D`. -/
 noncomputable def strippedTransport {s : StripData D} {κ : ℝ}
     (G : Geometry s κ) (a b : Family D) : Family D := fun n x i =>
   a n x 0 * along (G.radial n) (fun y => b n y i) x +
@@ -342,7 +353,7 @@ theorem transport_mode_right (R : D → ℝ) (Vr Vθ Vz : D → D) (κ : ℝ)
           carrier κ Φ x := along_mode V κ hΦ (hb j)
   simp only [LinearWaveResidual.transport, hd]
   fin_cases i <;> simp [angularGenerator, vectorMode, mode, normalDot, phaseNormal, div_eq_mul_inv]
-    <;> ring
+      <;> ring
 
 /-- The exact phase-sum coefficient of the actual bilinear differential operator. -/
 theorem transport_modes (R : D → ℝ) (Vr Vθ Vz : D → D) (κ κ' : ℝ)
@@ -375,6 +386,7 @@ theorem phaseFactor_class {s : StripData D} {w : ℕ → D → ℝ} {α β : ℝ
   simp only [phaseFactor, Complex.real_smul]
   ring
 
+/-- Wave mean coefficient as an element of `Family D`. -/
 noncomputable def waveMeanCoefficient {s : StripData D} {κ : ℝ} (G : Geometry s κ)
     (Φ : ℕ → D → ℝ) (ν : ℕ → ℝ) (m a : Family D) : Family D := fun n x i =>
   strippedTransport G m a n x i + strippedTransport G a m n x i +
@@ -403,7 +415,7 @@ theorem wave_mean_bound {s : StripData D} {P : ℕ → D → ℝ} {α μ κ : �
   have hphase' : WaveClass s P (α + μ - 1 / 2) (fun n x =>
       phaseFactor (ν n) * normalDot
       (phaseNormal (G.radius n) (G.radial n) (G.angular n) (G.axial n) (Φ n) x) (m n x) * a n x i)
-        := by
+          := by
     convert! hphase using 1
     ring
   exact (hma.add ham).add hphase'
@@ -441,6 +453,7 @@ theorem switched_longitudinal (R : D → ℝ) (Vr Vθ Vz : D → D) (ν ξ : ℝ
     longitudinal_identity R Vr Vθ Vz ν hΦ ha haθ hdiv]
   rfl
 
+/-- Same coefficient as an element of `Family D`. -/
 noncomputable def sameCoefficient {s : StripData D} {κ : ℝ} (G : Geometry s κ)
     (Φ : ℕ → D → ℝ) (ξ : ℕ → ℝ) (a b : Family D) : Family D := fun n x i =>
   strippedTransport G a b n x i + phaseFactor (ξ n) * normalDot
@@ -481,19 +494,19 @@ theorem same_label_raw_bound {s : StripData D} {P : ℕ → D → ℝ} {α β κ
   have hprod' : MemClass s (fun n x => (Real.sqrt (s.zeta x) * P n x) *
       (Real.sqrt (s.zeta x) * P n x)) (α + β - κ) (fun n x =>
       ((ξ n / ν n) • (-strippedDivergence (G.radius n) (G.radial n) (G.axial n) (a n) x)) * b n x
-        i) := by
+          i) := by
     convert! hprod using 1
     ring
   have hp : MemClass s (fun n x => (Real.sqrt (s.zeta x) * P n x) *
       (Real.sqrt (s.zeta x) * P n x)) (α + β - κ) (fun n x =>
       phaseFactor (ξ n) * normalDot
       (phaseNormal (G.radius n) (G.radial n) (G.angular n) (G.axial n) (Φ n) x) (a n x) * b n x i)
-        := by
+          := by
     apply class_congr hprod'
     intro n x hx
     have hp := ((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)
     have hd j := (((ha j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-      simp)
+        simp)
     dsimp only
     rw [switched_longitudinal _ _ _ _ (ν n) (ξ n) (hν n) hp hd (haθ n 1 x hx) (hdiv n x hx)]
   exact (strippedTransport_class G hκ ha hb i).add hp
@@ -584,6 +597,7 @@ theorem harmonic_stage_neg {j : ℤ} {M : ℝ} (stage : ℕ)
     (hj : |(j : ℝ)| ≤ 2 ^ stage * M) : |((-j : ℤ) : ℝ)| ≤ 2 ^ stage * M := by
   simpa only [Int.cast_neg, abs_neg] using hj
 
+/-- Conjugate family, defined pointwise by `star (a n x i)`. -/
 noncomputable def conjugateFamily (a : Family D) : Family D := fun n x i => star (a n x i)
 
 theorem conjugate_wave {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ} {a : Family D}
@@ -593,7 +607,7 @@ theorem conjugate_wave {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ} {a :
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem carrier_neg (ν : ℝ) (Φ : D → ℝ) (x : D) : carrier (-ν) Φ x = star (carrier ν Φ x) := by
   change Complex.exp (phaseFactor (-ν) * (Φ x : ℂ)) = (starRingEnd ℂ) (Complex.exp (phaseFactor ν *
-    (Φ x : ℂ)))
+      (Φ x : ℂ)))
   rw [← Complex.exp_conj]
   congr 1
   simp only [phaseFactor, map_mul, Complex.conj_ofReal, Complex.conj_I, Complex.ofReal_neg]
@@ -748,7 +762,7 @@ theorem slot_complex_product_zero {d h : ℝ} {vr vt : PartitionedCovariance.Pla
       PartitionedCovariance.covered (SlotColoring.nativeIndex h L.1) f Y : ℝ) : ℂ) *
       ((PartitionedCovariance.physicalMask d M q x *
       PartitionedCovariance.covered (SlotColoring.nativeIndex h M.1) g Y : ℝ) : ℂ)) * (a * b) := by
-        ring
+          ring
     _ = 0 := by rw [hc, zero_mul]
 
 /-- The actual physical partition masks and covered native slot profiles,
@@ -833,10 +847,10 @@ theorem real_modes_identity {s : StripData D} {P : ℕ → D → ℝ} {β κ : �
           carrier (ν n - ξ n) (Φ n) x).re) / 2 := by
   have hp := ((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)
   have hbd j := (((hb j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-    simp)
+      simp)
   have hbc := conjugate_wave hb
   have hbcd j := (((hbc j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-    simp)
+      simp)
   have hmode j : DifferentiableAt ℝ (fun y => vectorMode (ξ n) (Φ n) (b n) y j) x :=
     ((contDiffOn_mode (ξ n) (hΦ n) ((hb j).smooth n)).contDiffAt
       (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)
@@ -1020,7 +1034,7 @@ theorem curl_transport_every_class {s : StripData D} {P : ℕ → D → ℝ} {γ
       (G.radius n) (G.radial n) (G.angular n) (G.axial n)
       (CurlClassBounds.cylindricalCurl (G.radius n) (G.radial n) (G.angular n) (G.axial n) (a n))
       (CurlClassBounds.cylindricalCurl (G.radius n) (G.radial n) (G.angular n) (G.axial n) (b n)))
-        := by
+          := by
   intro i
   apply class_congr (MemClass.zero
     (fun n x hx => mul_nonneg (Real.sqrt_nonneg (s.zeta x)) (hP n x hx)))
@@ -1080,6 +1094,8 @@ theorem cartesian_transport_components {u v : Space → Space} {q : Space}
     CylindricalResidual.frame_inverse]
   exact (realTransport_coordinates _ (CylindricalResidual.differentiableAt_components hv) i).symm
 
+/-- Fixed geometry, bundling `radius`, `radial`, `angular`, `axial` and the required
+compatibility proofs. -/
 noncomputable def fixedGeometry {s : StripData D} {κ : ℝ}
     (R : D → ℝ) (Vr Vθ Vz : ℕ → D → D)
     (hR : ∀ x ∈ s.domain, 0 < R x)
@@ -1116,7 +1132,7 @@ theorem realized_seed_pair_bound {s : StripData D} {P : ℕ → D → ℝ} {α �
     (ht : ∀ n x, x ∈ s.domain → normalDot (phaseNormal R (Vr n) (Vθ n) (Vz n) (Φ n) x) (a₀ n x) = 0)
     (haθ : ∀ n i x, x ∈ s.domain → along (Vθ n)
       (fun y => CurlClassBounds.realizedCoefficient (ν n) R (Vr n) (Vθ n) (Vz n) (Φ n) (a₀ n) y i)
-        x = 0)
+          x = 0)
     (hζ : ∀ x ∈ s.domain, s.zeta x ≤ 1)
     (hP0 : ∀ n x, x ∈ s.domain → 0 ≤ P n x)
     (hP1 : ∀ n x, x ∈ s.domain → P n x ≤ 1) :
@@ -1124,7 +1140,7 @@ theorem realized_seed_pair_bound {s : StripData D} {P : ℕ → D → ℝ} {α �
       (sameCoefficient (fixedGeometry R Vr Vθ Vz hR hr hz hinv) Φ ξ
         (fun n => CurlClassBounds.realizedCoefficient (ν n) R (Vr n) (Vθ n) (Vz n) (Φ n) (a₀ n))
         (fun n => CurlClassBounds.realizedCoefficient (ξ n) R (Vr n) (Vθ n) (Vz n) (Φ n) (b₀ n)))
-          := by
+            := by
   have ha := CurlClassBounds.realizedCoefficient_waveClass hN ha₀ hδ hlower hupper
     hκ hκhalf hr hθ hz hinv hνinv
   have hb := CurlClassBounds.realizedCoefficient_waveClass hN hb₀ hδ hlower hupper
@@ -1203,7 +1219,7 @@ theorem same_label_curl_interaction {s : StripData D} {P : ℕ → D → ℝ} {�
   exact same_label_identity G Φ ν ξ a b hbθ n hx
     (((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
     (fun j => (((hb j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-      simp)) i
+        simp)) i
 
 end
 

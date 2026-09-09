@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInitialLimit
 
-@[expose] public section
-
 /-! The full smooth initial datum retains the common support of its
 finite initial base and its actual summable packet increments. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,10 +50,10 @@ theorem initialDataLimit_compact
     (initialDataLimit_support P hq hB hbase)
 
 theorem initialDataLimit_support_of_physical
-    (hbase : tsupport (fun x => (P 1).state.evolution.velocity (0,x)) ⊆ Metric.closedBall 0 2) :
+    (hbase : tsupport (fun x => (P 1).state.evolution.velocity (0, x)) ⊆ Metric.closedBall 0 2) :
     tsupport (initialDataLimit P hq hB).field ⊆ Metric.closedBall 0 2 := by
   apply initialDataLimit_support P hq hB
-  have he : (initialBase P).field=(fun x => (P 1).state.evolution.velocity (0,x)) :=
+  have he : (initialBase P).field=(fun x => (P 1).state.evolution.velocity (0, x)) :=
     funext (fun x => ((P 1).state.regularity.velocity_match (P 1).parent.zeroTime x).symm)
   rwa [he]
 

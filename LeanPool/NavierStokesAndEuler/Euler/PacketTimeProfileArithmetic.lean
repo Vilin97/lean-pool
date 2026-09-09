@@ -6,15 +6,26 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedProduct
-
-@[expose] public section
+public import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Exact time-profile bookkeeping for the high, mean, and previous-corrector terms. -/
 
+@[expose] public section
+
+
 namespace EulerPacketTimeProfile
 
+/-- Mean scale, given by `H^(2*p-2)`. -/
 def meanScale (H : ℝ) (p : ℕ) : ℝ := H^(2*p-2)
+/-- High scale, given by `γ*meanScale H p`. -/
 def highScale (γ H : ℝ) (p : ℕ) : ℝ := γ*meanScale H p
 
 theorem meanScale_pos (H : ℝ) (hH : 0 < H) (p : ℕ) : 0 < meanScale H p := pow_pos hH _
@@ -30,14 +41,14 @@ theorem highScale_mono (γ H : ℝ) (hγ : 0 ≤ γ) (hH : 1 ≤ H) {i j : ℕ} 
   mul_le_mul_of_nonneg_left (meanScale_mono H hH hij) hγ
 
 theorem meanScale_slow_identity (H : ℝ) (i j p : ℕ)
-    (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p) :
+    (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p) :
     meanScale H i*meanScale H j*H^2 = meanScale H p := by
   simp only [meanScale,← pow_add]
   congr 1
   omega
 
 theorem slow_mean_mean (H : ℝ) (hH : 1 ≤ H) (i j p : ℕ)
-    (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p) :
+    (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p) :
     meanScale H i*meanScale H j ≤ meanScale H p := by
   have hH0 : 0 ≤ H := le_trans zero_le_one hH
   have hs : (1 : ℝ) ≤ H^2 := by nlinarith
@@ -47,7 +58,7 @@ theorem slow_mean_mean (H : ℝ) (hH : 1 ≤ H) (i j p : ℕ)
     _ = _ := meanScale_slow_identity H i j p hi hj hp
 
 theorem slow_high_high_mean (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p) :
+    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p) :
     highScale γ H i*highScale γ H j ≤ meanScale H p := by
   have hH0 : 0 ≤ H := le_trans zero_le_one hH
   calc
@@ -59,7 +70,7 @@ theorem slow_high_high_mean (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH 
     _ = _ := meanScale_slow_identity H i j p hi hj hp
 
 theorem slow_high_high_high (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p) :
+    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p) :
     highScale γ H i*highScale γ H j ≤ highScale γ H p := by
   have hH0 : 0 ≤ H := le_trans zero_le_one hH
   have hh : H ≤ H^2 := by nlinarith
@@ -72,13 +83,13 @@ theorem slow_high_high_high (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH 
     _ = _ := congrArg (γ * ·) (meanScale_slow_identity H i j p hi hj hp)
 
 theorem slow_mean_high_high (γ H : ℝ) (hγ : 0 ≤ γ) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p) :
+    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p) :
     meanScale H i*highScale γ H j ≤ highScale γ H p := by
   have h := mul_le_mul_of_nonneg_left (slow_mean_mean H hH i j p hi hj hp) hγ
   simpa only [highScale,mul_left_comm] using h
 
 theorem slow_mean_high_mean (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p) :
+    (i j p : ℕ) (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p) :
     meanScale H i*highScale γ H j ≤ meanScale H p := by
   have hH0 : 0 ≤ H := le_trans zero_le_one hH
   have hh : γ ≤ H^2 := by nlinarith
@@ -90,7 +101,7 @@ theorem slow_mean_high_mean (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH 
     _ = _ := meanScale_slow_identity H i j p hi hj hp
 
 theorem fast_mean_high (γ H : ℝ) (i j p : ℕ)
-    (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i+j=p+1) :
+    (hi : 1 ≤ i) (hj : 1 ≤ j) (hp : i + j = p + 1) :
     meanScale H i*highScale γ H j = highScale γ H p := by
   unfold highScale meanScale
   rw [mul_left_comm,← pow_add]
@@ -99,23 +110,23 @@ theorem fast_mean_high (γ H : ℝ) (i j p : ℕ)
   omega
 
 theorem fast_corrector_high_mean (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 2 ≤ i) (hj : 1 ≤ j) (hp : i+j=p+1) :
+    (i j p : ℕ) (hi : 2 ≤ i) (hj : 1 ≤ j) (hp : i + j = p + 1) :
     highScale γ H (i-1)*highScale γ H j ≤ meanScale H p :=
   slow_high_high_mean γ H hγ hγH hH (i-1) j p (by omega) hj (by omega)
 
 theorem fast_corrector_high_high (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 2 ≤ i) (hj : 1 ≤ j) (hp : i+j=p+1) :
+    (i j p : ℕ) (hi : 2 ≤ i) (hj : 1 ≤ j) (hp : i + j = p + 1) :
     highScale γ H (i-1)*highScale γ H j ≤ highScale γ H p :=
   slow_high_high_high γ H hγ hγH hH (i-1) j p (by omega) hj (by omega)
 
 theorem fast_corrector_corrector_mean (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 2 ≤ i) (hj : 2 ≤ j) (hp : i+j=p+1) :
+    (i j p : ℕ) (hi : 2 ≤ i) (hj : 2 ≤ j) (hp : i + j = p + 1) :
     highScale γ H (i-1)*highScale γ H (j-1) ≤ meanScale H p :=
   (slow_high_high_mean γ H hγ hγH hH (i-1) (j-1) (p-1) (by omega) (by omega) (by omega)).trans
     (meanScale_mono H hH (Nat.sub_le p 1))
 
 theorem fast_corrector_corrector_high (γ H : ℝ) (hγ : 0 ≤ γ) (hγH : γ ≤ H) (hH : 1 ≤ H)
-    (i j p : ℕ) (hi : 2 ≤ i) (hj : 2 ≤ j) (hp : i+j=p+1) :
+    (i j p : ℕ) (hi : 2 ≤ i) (hj : 2 ≤ j) (hp : i + j = p + 1) :
     highScale γ H (i-1)*highScale γ H (j-1) ≤ highScale γ H p :=
   (slow_high_high_high γ H hγ hγH hH (i-1) (j-1) (p-1) (by omega) (by omega) (by omega)).trans
     (highScale_mono γ H hγ hH (Nat.sub_le p 1))

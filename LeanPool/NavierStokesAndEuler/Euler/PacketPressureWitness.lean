@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGradient
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAssembly
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
+import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
 
 /-! Actual scalar pressures whose lifted gradients are smooth L² fields.
 The witnesses below are closed under the literal finite packet assembly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,8 +47,8 @@ theorem rawGradient_zero (κ : ℝ) (m : Space) : rawGradient κ m 0 = 0 := by
   simp [rawGradient,pressureGradient,pressureJet_zero]
 
 theorem rawGradient_add (κ : ℝ) (m : Space) (p q : ScalarField) (z : Domain)
-    (hp : DifferentiableAt ℝ (fun y => p (z.1,y)) z.2)
-    (hq : DifferentiableAt ℝ (fun y => q (z.1,y)) z.2) :
+    (hp : DifferentiableAt ℝ (fun y => p (z.1, y)) z.2)
+    (hq : DifferentiableAt ℝ (fun y => q (z.1, y)) z.2) :
     rawGradient κ m (p+q) z = rawGradient κ m p z + rawGradient κ m q z := by
   ext i
   change rawGradient κ m (p+q) z i = rawGradient κ m p z i + rawGradient κ m q z i
@@ -55,7 +57,7 @@ theorem rawGradient_add (κ : ℝ) (m : Space) (p q : ScalarField) (z : Domain)
   ring
 
 theorem rawGradient_smul (κ : ℝ) (m : Space) (c : ℝ) (p : ScalarField) (z : Domain)
-    (hp : DifferentiableAt ℝ (fun y => p (z.1,y)) z.2) :
+    (hp : DifferentiableAt ℝ (fun y => p (z.1, y)) z.2) :
     rawGradient κ m (c • p) z = c • rawGradient κ m p z := by
   ext i
   change rawGradient κ m (c • p) z i = c * rawGradient κ m p z i
@@ -65,7 +67,7 @@ theorem rawGradient_smul (κ : ℝ) (m : Space) (c : ℝ) (p : ScalarField) (z :
 
 theorem rawGradient_sum {ι : Type*} (κ : ℝ) (m : Space) (s : Finset ι)
     (p : ι → ScalarField) (z : Domain)
-    (hp : ∀ i ∈ s, DifferentiableAt ℝ (fun y => p i (z.1,y)) z.2) :
+    (hp : ∀ i ∈ s, DifferentiableAt ℝ (fun y => p i (z.1, y)) z.2) :
     rawGradient κ m (∑ i ∈ s, p i) z = ∑ i ∈ s, rawGradient κ m (p i) z := by
   classical
   ext j
@@ -75,8 +77,10 @@ theorem rawGradient_sum {ι : Type*} (κ : ℝ) (m : Space) (s : Finset ι)
     ∑ i ∈ s, (κ*_+_*m j)
   rw [Finset.mul_sum,Finset.sum_mul,← Finset.sum_add_distrib]
 
+/-- Gradient witness data, collecting `smooth`, `field`, `gradient_mem`. -/
 structure GradientWitness (P T κ : ℝ) [Fact (0 < P)] (m : Space) (p : ScalarField) where
   smooth : ∀ t : Icc (0 : ℝ) T, ContDiff ℝ ∞ (fun y => p (t,y))
+  /-- Underlying field of `GradientWitness`, of type `Field P T (rawGradient κ m p)`. -/
   field : Field P T (rawGradient κ m p)
   gradient_mem : ∀ t : Icc (0 : ℝ) T, field.path t ∈ gradientSpace P κ m
 
@@ -84,16 +88,20 @@ namespace GradientWitness
 
 variable {P T κ : ℝ} [Fact (0 < P)] {m : Space} {p q : ScalarField}
 
+/-- Congr, given by `h ▸ G`. -/
 def congr (G : GradientWitness P T κ m p) (h : p = q) : GradientWitness P T κ m q := h ▸ G
 
+/-- Change time, given by `h ▸ G`. -/
 def changeTime {T' : ℝ} (G : GradientWitness P T κ m p) (h : T = T') :
     GradientWitness P T' κ m p := h ▸ G
 
+/-- Zero, bundling `smooth`, `field`, `gradient_mem`. -/
 def zero (P T κ : ℝ) [Fact (0 < P)] (m : Space) : GradientWitness P T κ m 0 where
   smooth _ := contDiff_const
   field := (Field.zero P T).congr (fun _ _ _ => congrFun (rawGradient_zero κ m) _)
   gradient_mem _ := (gradientSpace P κ m).zero_mem
 
+/-- Add, bundling `smooth`, `field`, `gradient_mem`. -/
 def add (G : GradientWitness P T κ m p) (H : GradientWitness P T κ m q) :
     GradientWitness P T κ m (p+q) where
   smooth t := (G.smooth t).add (H.smooth t)
@@ -102,12 +110,15 @@ def add (G : GradientWitness P T κ m p) (H : GradientWitness P T κ m q) :
       ((G.smooth t).differentiable (by simp) _) ((H.smooth t).differentiable (by simp) _))
   gradient_mem t := (gradientSpace P κ m).add_mem (G.gradient_mem t) (H.gradient_mem t)
 
+/-- Smul, bundling `smooth`, `field`, `gradient_mem`. -/
 def smul (G : GradientWitness P T κ m p) (c : ℝ) : GradientWitness P T κ m (c • p) where
   smooth t := (G.smooth t).const_smul c
   field := (G.field.smul c).congr (fun t x θ =>
     rawGradient_smul κ m c p (t,(x,θ)) ((G.smooth t).differentiable (by simp) _))
   gradient_mem t := (gradientSpace P κ m).smul_mem c (G.gradient_mem t)
 
+/-- Finset sum, bundling `smooth`, `simpa`, `field`, `gradient_mem` and the required
+compatibility proofs. -/
 def finsetSum {ι : Type*} (s : Finset ι) (p : ι → ScalarField)
     (G : ∀ i, GradientWitness P T κ m (p i)) :
     GradientWitness P T κ m (∑ i ∈ s, p i) where
@@ -124,6 +135,7 @@ def finsetSum {ι : Type*} (s : Finset ι) (p : ι → ScalarField)
       map_sum (ContinuousMap.evalCLM ℝ t) _ s]
     exact (gradientSpace P κ m).sum_mem (fun i _ => (G i).gradient_mem t)
 
+/-- Truncate family as an element of `GradientWitness P T κ m (truncate N p n)`. -/
 def truncateFamily (N : ℕ) (p : ℕ → ScalarField)
     (G : ∀ i, i ≤ N → GradientWitness P T κ m (p i)) (n : ℕ) :
     GradientWitness P T κ m (truncate N p n) := by
@@ -131,6 +143,7 @@ def truncateFamily (N : ℕ) (p : ℕ → ScalarField)
   · exact (G n hn).congr (truncate_of_le N n p hn).symm
   · exact (zero P T κ m).congr (truncate_of_gt N n p (by omega)).symm
 
+/-- Assemble family used in packet pressure witness. -/
 def assembleFamily (N : ℕ) (p q : ℕ → ScalarField)
     (G : ∀ i, i ≤ N → GradientWitness P T κ m (p i))
     (H : ∀ i, i ≤ N → GradientWitness P T κ m (q i)) :
@@ -138,6 +151,7 @@ def assembleFamily (N : ℕ) (p q : ℕ → ScalarField)
   | 0 => (truncateFamily N p G 0).congr (by simp only [assemble,shiftUp,add_zero])
   | n+1 => (truncateFamily N p G (n+1)).add (truncateFamily N q H n)
 
+/-- Evaluate family as an element of `GradientWitness P T κ m (fieldSum N r p)`. -/
 def evaluateFamily (N : ℕ) (r : ℝ) (p : ℕ → ScalarField)
     (G : ∀ i, GradientWitness P T κ m (p i)) :
     GradientWitness P T κ m (fieldSum N r p) :=
@@ -145,7 +159,8 @@ def evaluateFamily (N : ℕ) (r : ℝ) (p : ℕ → ScalarField)
     funext z
     simp only [fieldSum,evaluate,Finset.sum_apply,Pi.smul_apply])
 
-def compact (p : ScalarField) (q : C(Icc (0 : ℝ) T,CylinderL2 P ℝ))
+/-- Compact, bundling `smooth`, `field`, `gradient_mem`. -/
+def compact (p : ScalarField) (q : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
     (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
     (he : ∀ (t : Icc (0 : ℝ) T) x θ,
       p (t,(x,θ)) = scalarPointField P q hq t (x,(θ : AddCircle P)))
@@ -169,6 +184,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
   (k : ℝ) (hk : k ≠ 0) {p : ScalarField}
 
+/-- Pressure field as an element of `Field P D.T (coordinatePressure D k p)`. -/
 def pressureField (G : GradientWitness P D.T k⁻¹ D.m₀ p) :
     Field P D.T (coordinatePressure D k p) :=
   (G.field.smul (k^2)).congr (fun t x θ => by

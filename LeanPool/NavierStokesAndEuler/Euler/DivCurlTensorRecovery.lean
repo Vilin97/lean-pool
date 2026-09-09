@@ -6,18 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.DivCurlRecovery
 public import LeanPool.NavierStokesAndEuler.Euler.LpFiniteTensorReconstruction
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
-public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
-public import LeanPool.NavierStokesAndEuler.Euler.TensorCoordinateEnergyBound
-public import LeanPool.NavierStokesAndEuler.Euler.LpBochnerRealization
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.DivCurlRecovery
+import LeanPool.NavierStokesAndEuler.Euler.LpBochnerRealization
+import LeanPool.NavierStokesAndEuler.Euler.TensorCoordinateEnergyBound
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
 /-! Recover the actual all-order L² Fréchet tensors from scalar coordinate
 derivatives. The derivative hypotheses used here are consequences of compact
 vorticity, ordinary smoothness, and finite velocity energy. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -86,7 +91,7 @@ theorem iteratedFDeriv_memLp_of_curl_compact (u : Space → Space)
 
 /-- The derivative class used by the development follows from ordinary
 smoothness, finite energy, solenoidality, and compact vorticity. -/
-def smoothL2Field_of_curl_compact (u : Space → Space)
+def smoothL2FieldOfCurlCompact (u : Space → Space)
     (hu : ContDiff ℝ ∞ u) (hL2 : MemLp u 2 volume)
     (hdiv : ∀ x, divergence u x = 0) (hc : HasCompactSupport (vectorCurl u)) :
     SmoothL2Field Space where

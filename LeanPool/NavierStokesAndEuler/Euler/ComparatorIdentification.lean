@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ComparatorEvolutionIdentification
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
 
-@[expose] public section
-
 /-! Local recovery and ordinary uniqueness identify the canonical maximal
 velocity with every global Comparator solution. -/
+
+@[expose] public section
+
 
 noncomputable section
 

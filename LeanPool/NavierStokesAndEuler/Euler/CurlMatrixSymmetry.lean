@@ -7,7 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
-public import Mathlib.Analysis.InnerProductSpace.Symmetric
+
+/-!
+# Curl Matrix Symmetry
+-/
 
 @[expose] public section
 
@@ -46,7 +49,7 @@ theorem curlMatrix_eq_zero_iff_isSymmetric (A : Space →L[ℝ] Space) :
     simp only [map_sum, map_smul, sum_inner, inner_sum, real_inner_smul_left,
       inner_smul_right, EuclideanSpace.basisFun_apply, EuclideanSpace.inner_single_left,
       EuclideanSpace.inner_single_right, map_one, one_mul, PiLp.smul_apply, smul_eq_mul,
-        starRingEnd_apply, star_trivial]
+          starRingEnd_apply, star_trivial]
     apply Finset.sum_congr rfl
     intro i _
     congr 1

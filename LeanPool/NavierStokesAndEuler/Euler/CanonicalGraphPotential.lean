@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GraphPressurePotential
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
+/-! Radial reconstruction of a canonically normalized scalar potential. -/
 
 @[expose] public section
 
-/-! Radial reconstruction of a canonically normalized scalar potential. -/
 
 noncomputable section
 
@@ -28,7 +32,8 @@ def radialPotential (V : Vector3 → Vector3) (x : Vector3) : ℝ :=
 theorem radialPotential_zero (V : Vector3 → Vector3) : radialPotential V 0 = 0 := by
   simp [radialPotential]
 
-/-- The fundamental theorem of calculus identifies the radial integral with a normalized genuine potential. -/
+/-- The fundamental theorem of calculus identifies the radial integral with a normalized genuine
+potential. -/
 theorem radialPotential_eq_sub (V : Vector3 → Vector3) (hV : Continuous V)
     (q : Vector3 → ℝ) (hq : ContDiff ℝ ∞ q) (hgrad : ∀ x, gradient q x = V x)
     (x : Vector3) : radialPotential V x = q x - q 0 := by

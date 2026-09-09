@@ -7,13 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketNestedHorizons
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleActual
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Reciprocal history times fit the literal previous-frequency budget.
 Only the first geometric step needs coupling and tilt bounds. All later
 step lengths are nonnegative independently of any future frame invariant. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -50,7 +58,7 @@ theorem frequency_monotone (J : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 0 ≤ X) :
     _ = (j^2*scaleSequence J X n)*j^2 := by ring
 
 theorem initial_frequency_le_first (J D : ℕ) (hJ : 3 ≤ J) (X : ℝ) (hX : 0 ≤ X)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) :
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) :
     X^D ≤ frequency J X 0 := by
   let j : ℝ := (J-1 : ℕ)
   have hj2 : (2 : ℝ) ≤ j := by
@@ -69,7 +77,7 @@ theorem initial_frequency_le_first (J D : ℕ) (hJ : 3 ≤ J) (X : ℝ) (hX : 0 
   exact exp_le_exp.mpr (div_le_div_of_nonneg_left hX (sq_pos_of_pos hJ0) hsq)
 
 theorem initial_frequency_le_previous (J D : ℕ) (hJ : 3 ≤ J) (X : ℝ) (hX : 0 ≤ X)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     X^D ≤ previousFrequency J D X n := by
   cases n with
   | zero => exact le_rfl
@@ -78,7 +86,7 @@ theorem initial_frequency_le_previous (J D : ℕ) (hJ : 3 ≤ J) (X : ℝ) (hX :
       (frequency_monotone J (by omega) X hX (Nat.zero_le n))
 
 theorem previousFrequency_one_le (J D : ℕ) (hJ : 3 ≤ J) (X : ℝ) (hX : 1 ≤ X)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     1 ≤ previousFrequency J D X n :=
   (one_le_pow₀ hX).trans
     (initial_frequency_le_previous J D hJ X (zero_le_one.trans hX) hbase n)
@@ -97,14 +105,14 @@ theorem base_inverse_le_initial_frequency (J D : ℕ) (hJ : 1 ≤ J) (hD : 2000 
 
 theorem base_inverse_le_previous_frequency (J D : ℕ) (hJ : 3 ≤ J) (hD : 2000 ≤ D)
     (X : ℝ) (hX : 2 ≤ X)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     12/baseHorizon J X ≤ previousFrequency J D X n :=
   (base_inverse_le_initial_frequency J D (by omega) hD X hX).trans
     (initial_frequency_le_previous J D hJ X (by linarith only [hX]) hbase n)
 
 theorem base_inverse_le_previous_frequency_pow80 (J D : ℕ) (hJ : 3 ≤ J) (hD : 2000 ≤ D)
     (X : ℝ) (hX : 2 ≤ X)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     12/baseHorizon J X ≤ previousFrequency J D X n^80 := by
   have hk := previousFrequency_one_le J D hJ X (by linarith only [hX]) hbase n
   exact (base_inverse_le_previous_frequency J D hJ hD X hX hbase n).trans (by
@@ -115,8 +123,8 @@ theorem stepLength_nonneg (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 ≤ X)
   div_nonneg (hX.trans (sequence_initial_le J hJ X hX (n+1))) (sqrt_nonneg _)
 
 theorem activation_lower_of_initial (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
-    (a β : ℕ → ℝ) (ha : 1/2 ≤ a 0) (ha₂ : a 0 ≤ 2)
-    (hβ : 1/2 ≤ β 0*X^2) (hβ₂ : β 0*X^2 ≤ 2) {n : ℕ} (hn : 1 ≤ n) :
+    (a β : ℕ → ℝ) (ha : 1 / 2 ≤ a 0) (ha₂ : a 0 ≤ 2)
+    (hβ : 1 / 2 ≤ β 0 * X ^ 2) (hβ₂ : β 0 * X ^ 2 ≤ 2) {n : ℕ} (hn : 1 ≤ n) :
     baseHorizon J X/12 ≤ activationTime J X a β n := by
   have hxnext : 0 ≤ scaleSequence J X 1 :=
     hX.le.trans (sequence_initial_le J hJ X hX.le 1)
@@ -132,8 +140,8 @@ theorem activation_lower_of_initial (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 <
   linarith only [hfirst,hsum]
 
 theorem reciprocal_activation_le_base (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 < X)
-    (a β : ℕ → ℝ) (ha : 1/2 ≤ a 0) (ha₂ : a 0 ≤ 2)
-    (hβ : 1/2 ≤ β 0*X^2) (hβ₂ : β 0*X^2 ≤ 2) {n : ℕ} (hn : 1 ≤ n) :
+    (a β : ℕ → ℝ) (ha : 1 / 2 ≤ a 0) (ha₂ : a 0 ≤ 2)
+    (hβ : 1 / 2 ≤ β 0 * X ^ 2) (hβ₂ : β 0 * X ^ 2 ≤ 2) {n : ℕ} (hn : 1 ≤ n) :
     (activationTime J X a β n)⁻¹ ≤ 12/baseHorizon J X := by
   have hb := baseHorizon_pos J hJ hX
   have hs := activation_lower_of_initial J hJ X hX a β ha ha₂ hβ hβ₂ hn
@@ -142,8 +150,8 @@ theorem reciprocal_activation_le_base (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0
 
 theorem actual_reciprocal_activation (J D : ℕ) (hJ : 3 ≤ J) (hD : 2000 ≤ D)
     (C c X δ : ℝ) (hX : 2 ≤ X) (hb : ActualBounds J D C c X δ)
-    (a β : ℕ → ℝ) (ha : 1/2 ≤ a 0) (ha₂ : a 0 ≤ 2)
-    (hβ : 1/2 ≤ β 0*X^2) (hβ₂ : β 0*X^2 ≤ 2) {n : ℕ} (hn : 1 ≤ n) :
+    (a β : ℕ → ℝ) (ha : 1 / 2 ≤ a 0) (ha₂ : a 0 ≤ 2)
+    (hβ : 1 / 2 ≤ β 0 * X ^ 2) (hβ₂ : β 0 * X ^ 2 ≤ 2) {n : ℕ} (hn : 1 ≤ n) :
     (activationTime J X a β n)⁻¹ ≤ 12/baseHorizon J X ∧
       12/baseHorizon J X ≤ previousFrequency J D X n^80 :=
   ⟨reciprocal_activation_le_base J (by omega) X (by linarith only [hX])

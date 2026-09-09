@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalBinding
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
+import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
 
 /-!
 # Localization of the actual signed inputs at positive native time
@@ -20,6 +18,9 @@ native time is an explicit premise; no support assertion is made for the
 totalized formulas outside that domain.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PositiveTimeSignedLocalization
@@ -27,7 +28,9 @@ namespace NavierStokes.PositiveTimeSignedLocalization
 open Set Function
 open CorrectionInitialization CorrectionInitialization.ActualPrimary
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
 abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Native: an abbreviation for `ActualSignedPhysicalData.Native`. -/
 abbrev Native := ActualSignedPhysicalData.Native
 
 variable {B N0 : ℕ}

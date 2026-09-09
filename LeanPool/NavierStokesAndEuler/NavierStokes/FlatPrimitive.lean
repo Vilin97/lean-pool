@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.Calculus.LHopital
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.LHopital
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Actual primitives of exponential-flat edges
@@ -24,6 +22,9 @@ quotient by an exponentially small factor. The statements below keep those
 obligations separate.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Filter Topology Set MeasureTheory Polynomial
@@ -32,9 +33,11 @@ open NavierStokes.FlatCutoff
 
 namespace NavierStokes.FlatPrimitive
 
+/-- Integrand, given by `(edge c x / x ^ j) * b x`. -/
 def integrand (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
   (edge c x / x ^ j) * b x
 
+/-- Primitive, given by `∫ u in (0 : ℝ)..x, integrand c j b u`. -/
 def primitive (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ u in (0 : ℝ)..x, integrand c j b u
 
@@ -98,8 +101,8 @@ theorem iteratedDeriv_zero_on_nonpos {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
     intro x hx
     rw [iteratedDeriv_succ]
     apply (uniqueDiffOn_Iic x x (mem_Iic.mpr le_rfl)).eq_deriv (Iic x)
-      ((hf.differentiable_iteratedDeriv m (by exact_mod_cast ENat.natCast_lt_top m)
-        x).hasDerivAt.hasDerivWithinAt)
+      ((hf.differentiable_iteratedDeriv m (by
+          exact_mod_cast ENat.natCast_lt_top m) x).hasDerivAt.hasDerivWithinAt)
     exact (hasDerivWithinAt_const x (Iic x) (0 : ℝ)).congr_of_mem
       (fun y hy => ih y (hy.trans hx)) (mem_Iic.mpr le_rfl)
 

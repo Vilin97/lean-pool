@@ -6,10 +6,15 @@ Authors: OpenAI
 
 module
 
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordGevrey
-public import Mathlib.Analysis.Calculus.FDeriv.Bilinear
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Actual directional word calculus without changing radius
@@ -18,6 +23,9 @@ The word derivative and word sum are the existing ordered evaluations of
 the genuine iterated Fréchet derivative. Fixed bounded maps commute with
 every word and act boundedly on the same sum, without a dimension factor.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,16 +63,16 @@ theorem wordDerivative_add (directions : ι → P) (f g : P → E)
     wordDerivative directions (f+g) w x =
       wordDerivative directions f w x+wordDerivative directions g w x :=
   congrArg (fun D : P [×n]→L[ℝ] E => D (fun j => directions (w j)))
-    (iteratedFDeriv_add_apply (x := x) (hf.contDiffAt.of_le (by simp)) (hg.contDiffAt.of_le (by
-      simp)))
+    (iteratedFDeriv_add_apply (x := x) (hf.contDiffAt.of_le (by
+        simp)) (hg.contDiffAt.of_le (by simp)))
 
 theorem wordDerivative_sub (directions : ι → P) (f g : P → E)
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) {n : ℕ} (w : Fin n → ι) (x : P) :
     wordDerivative directions (f-g) w x =
       wordDerivative directions f w x-wordDerivative directions g w x :=
   congrArg (fun D : P [×n]→L[ℝ] E => D (fun j => directions (w j)))
-    (iteratedFDeriv_sub_apply (x := x) (hf.contDiffAt.of_le (by simp)) (hg.contDiffAt.of_le (by
-      simp)))
+    (iteratedFDeriv_sub_apply (x := x) (hf.contDiffAt.of_le (by
+        simp)) (hg.contDiffAt.of_le (by simp)))
 
 /-- Removing the last word letter differentiates the function in that direction first. -/
 theorem wordDerivative_snoc (directions : ι → P) (f : P → E) (hf : ContDiff ℝ ∞ f)

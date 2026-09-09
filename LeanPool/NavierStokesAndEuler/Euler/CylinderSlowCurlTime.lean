@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlBounds
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurl
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlBounds
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
+
+/-! Actual within-time differentiation and bounds for the constructed slow-curl path. -/
 
 @[expose] public section
 
-/-! Actual within-time differentiation and bounds for the constructed slow-curl path. -/
 
 noncomputable section
 
@@ -24,13 +27,14 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
 open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] (T : ℝ) (hT : 0 ≤ T)
-  (G G₁ : C(Icc (0 : ℝ) T,Space →ᵇ Space →L[ℝ] Space))
+  (G G₁ : C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
   (hG : ContDiff ℝ ∞ (translateCoefficientPath G))
   (hG₁ : ContDiff ℝ ∞ (translateCoefficientPath G₁))
-  (p f : C(Icc (0 : ℝ) T,LiftL2 P))
+  (p f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
 
+/-- Derivative, given by `path P G₁ p + path P G f`. -/
 def derivative : C(Icc (0 : ℝ) T,LiftL2 P) := path P G₁ p + path P G f
 
 include hG hG₁ hp hf in
@@ -39,10 +43,20 @@ theorem derivative_orbit :
   simp only [derivative, map_add]
   exact (path_orbit P G₁ hG₁ p hp).add (path_orbit P G hG f hf)
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlTime1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlTime2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlTime3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSlowCurlTime4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 variable
   (hGt : ∀ t ∈ Icc (0 : ℝ) T, ∀ y : Space,
@@ -82,15 +96,15 @@ include hG hG₁ hp hf in
 theorem derivative_block_bound (q : ℕ) (Rc C R D : ℝ)
     (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C*majorant Rc 0 n)
-    (hbG₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G₁) a‖ ≤ C*majorant Rc 0 n)
+    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C * majorant Rc 0 n)
+    (hbG₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G₁) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ)
     (hbp : ∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P a p) n 0 ≤
       D*majorant R d n)
     (hbf : ∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P a f) n 0 ≤
       D*majorant R d n) (n : ℕ) :
     block standardDirection q (fun a : LiftTangent => pathTranslate P a (derivative P T G G₁ p f))
-      n 0 ≤
+        n 0 ≤
       (18*sobolevCoefficientAmplitude (Fin 4) q Rc C*D)*majorant R (d+1) n := by
   have he : (fun a : LiftTangent => pathTranslate P a (derivative P T G G₁ p f)) =
       (fun a : LiftTangent => pathTranslate P a (path P G₁ p)) +

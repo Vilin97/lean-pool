@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderViscousEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-! Removal of square-root regularization in actual finite metric-energy integral inequalities. -/
 
 @[expose] public section
 
-/-! Removal of square-root regularization in actual finite metric-energy integral inequalities. -/
 
 noncomputable section
 
@@ -36,7 +40,8 @@ theorem regularized_root_tendsto (q : ℝ) :
       (tendsto_const_nhds.add (cutoffScale_tendsto.pow 2))
   exact (continuous_sqrt.tendsto q).comp hq
 
-/-- At fixed finite cutoff, an integrable energy inequality survives removal of the root regularization. -/
+/-- At fixed finite cutoff, an integrable energy inequality survives removal of the root
+regularization. -/
 theorem root_integral_limit (Q A F : ℝ → ℝ) (s t : ℝ) (hst : s ≤ t)
     (hQ : ContinuousOn Q (Icc s t)) (hQ0 : ∀ u ∈ Icc s t, 0 ≤ Q u)
     (hA : IntegrableOn A (Icc s t)) (hF : IntegrableOn F (Icc s t))
@@ -52,7 +57,7 @@ theorem root_integral_limit (Q A F : ℝ → ℝ) (s t : ℝ) (hst : s ≤ t)
   have hAQn : Integrable (fun u => A u * √(Q u)) μ := hAQ.mono_set Ioc_subset_Icc_self
   have hmeas (n : ℕ) : AEStronglyMeasurable (fn n) μ :=
     (((hA.mul_continuousOn ((hQ.add continuousOn_const).sqrt) isCompact_Icc).add hF).mono_set
-      Ioc_subset_Icc_self).aestronglyMeasurable
+        Ioc_subset_Icc_self).aestronglyMeasurable
   have hbound (n : ℕ) : ∀ᵐ u ∂μ,
       ‖fn n u‖ ≤ ‖A u * √(Q u)‖ + ‖A u‖ + ‖F u‖ := by
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with u hu
@@ -80,7 +85,8 @@ theorem root_integral_limit (Q A F : ℝ → ℝ) (s t : ℝ) (hst : s ≤ t)
   exact le_of_tendsto_of_tendsto' ((regularized_root_tendsto (Q t)).sub
     (regularized_root_tendsto (Q s))) hii (fun n => hineq (cutoffScale n) (cutoffScale_pos n))
 
-/-- The unregularized finite-family energy obeys an integral inequality even when the norm vanishes. -/
+/-- The unregularized finite-family energy obeys an integral inequality even when the norm vanishes.
+-/
 theorem family_energy_integral_bound {ι H : Type*} [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (K : ℝ → H →L[ℝ] H) (e : ι → ℝ → H)
@@ -103,7 +109,7 @@ theorem family_energy_integral_bound {ι H : Type*} [Fintype ι]
     familyMetricNorm (K t) (fun i => e i t) - familyMetricNorm (K s) (fun i => e i s) ≤
       ∫ u in s..t, (((‖K' u‖ + 2 * B u + 2 * ν * C u) / (2 * c ^ 2)) *
         familyMetricNorm (K u) (fun i => e i u) + (‖K u‖ / c) * familyNorm (fun i => forcing i u))
-          := by
+            := by
   let Q := fun u => familyEnergy (K u) (fun i => e i u)
   let A := fun u => (‖K' u‖ + 2 * B u + 2 * ν * C u) / (2 * c ^ 2)
   let F := fun u => (‖K u‖ / c) * familyNorm (fun i => forcing i u)

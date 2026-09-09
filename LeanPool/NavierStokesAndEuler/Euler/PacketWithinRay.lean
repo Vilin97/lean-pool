@@ -6,32 +6,35 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketWithinStage
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketRay
+import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Ray control for the genuine within-interval packet equations. -/
 
 @[expose] public section
 
-/-! Ray control for the genuine within-interval packet equations. -/
 
 noncomputable section
 
 
 namespace EulerPacketMovingFrame
 
-open Set EulerPacketRay EulerPacketPerturbation EulerClosedIntervalDerivativeExtension
+open Set EulerPacketRay EulerClosedIntervalDerivativeExtension
 
 theorem ray_closeness_within
     {β Θ T e : ℝ} {A : ℝ → Fin 3 → Fin 3 → ℝ} {P Q N : ℝ → ℝ}
     (hβ : 0 ≤ β) (hβupper : β ≤ 1) (hΘ : 1 ≤ Θ) (hT0 : 0 < T) (hT : T ≤ Θ)
-    (he : 0 ≤ e) (hsmall : 400*e*Θ^5 ≤ 1)
+    (he : 0 ≤ e) (hsmall : 400 * e * Θ ^ 5 ≤ 1)
     (hAc : ∀ i j, ContinuousOn (fun t => A t i j) (Icc 0 T))
     (hP : ∀ t ∈ Icc 0 T, HasDerivWithinAt P
-      (A t 0 0*P t+A t 0 1*Q t+A t 0 2*N t) (Icc 0 T) t)
+      (A t 0 0 * P t + A t 0 1 * Q t + A t 0 2 * N t) (Icc 0 T) t)
     (hQ : ∀ t ∈ Icc 0 T, HasDerivWithinAt Q
-      (A t 1 0*P t+A t 1 1*Q t+A t 1 2*N t) (Icc 0 T) t)
+      (A t 1 0 * P t + A t 1 1 * Q t + A t 1 2 * N t) (Icc 0 T) t)
     (hN : ∀ t ∈ Icc 0 T, HasDerivWithinAt N
-      (A t 2 0*P t+A t 2 1*Q t+A t 2 2*N t) (Icc 0 T) t)
-    (hclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j-idealRayEntry β i j| ≤ e)
-    (hinitial : norm3 (P 0) (Q 0) (N 0-1) ≤ e) :
+      (A t 2 0 * P t + A t 2 1 * Q t + A t 2 2 * N t) (Icc 0 T) t)
+    (hclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealRayEntry β i j| ≤ e)
+    (hinitial : norm3 (P 0) (Q 0) (N 0 - 1) ≤ e) :
     ∀ t ∈ Icc 0 T,
       norm3 (P t-β*t^2) (Q t+2*β*t) (N t-1) ≤ 200*e*Θ^5 ∧ 1/2 ≤ N t := by
   obtain ⟨P', hPeq, hP'⟩ := exists_extension hT0 hP

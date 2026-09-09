@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryDerivative
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Genuine all-order derivatives of the cutoff operators, with a fixed support-volume factor. -/
 
 @[expose] public section
 
-/-! Genuine all-order derivatives of the cutoff operators, with a fixed support-volume factor. -/
 
 noncomputable section
 
@@ -41,7 +45,7 @@ theorem cutoffOperation_iteratedFDeriv_succ (L : Cutoff → E)
     (hsmul : ∀ χ c, L (χ.scale c) = c • L χ)
     (hsub : ∀ χ ψ, L (χ.sub ψ) = L χ - L ψ)
     (hbound : ∀ χ, ‖L χ‖ ≤ cutoffBound χ)
-    (χ : Cutoff) (a : Space) (n : ℕ) (m : Fin (n+1) → Space) :
+    (χ : Cutoff) (a : Space) (n : ℕ) (m : Fin (n + 1) → Space) :
     iteratedFDeriv ℝ (n+1) (fun b : Space => L (χ.translate b)) a m =
       iteratedFDeriv ℝ n
         (fun b : Space => L ((χ.directional (m (Fin.last n))).translate b)) a (Fin.init m) := by
@@ -68,7 +72,7 @@ theorem cutoffOperation_iteratedFDeriv_bound (L : Cutoff → E)
     (n : ℕ) (χ : Cutoff) (R M₀ M₁ : ℝ) (hM₀ : 0 ≤ M₀) (hM₁ : 0 ≤ M₁)
     (hs : tsupport χ.field ⊆ Metric.closedBall (0 : Space) R)
     (h₀ : ∀ x, ‖iteratedFDeriv ℝ n χ.field x‖ ≤ M₀)
-    (h₁ : ∀ x, ‖iteratedFDeriv ℝ (n+1) χ.field x‖ ≤ M₁) (a : Space) :
+    (h₁ : ∀ x, ‖iteratedFDeriv ℝ (n + 1) χ.field x‖ ≤ M₁) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => L (χ.translate b)) a‖ ≤
       3 * cutoffCurlConstant *
         (M₀ + M₁ * (volume (Metric.closedBall (0 : Space) R)).toReal ^ (1/3 : ℝ)) := by
@@ -102,7 +106,7 @@ theorem cutoffOperation_iteratedFDeriv_bound (L : Cutoff → E)
             ∏ i, ‖(Fin.init m) i‖ :=
           (iteratedFDeriv ℝ n
             (fun b : Space => L ((χ.directional (m (Fin.last n))).translate b)) a).le_opNorm
-              (Fin.init m)
+                (Fin.init m)
       _ ≤ (3 * cutoffCurlConstant *
           (‖m (Fin.last n)‖ * M₀ + ‖m (Fin.last n)‖ * M₁ *
             (volume (Metric.closedBall (0 : Space) R)).toReal ^ (1/3 : ℝ))) *
@@ -118,7 +122,7 @@ theorem cutoffCurl_iteratedFDeriv_bound (n : ℕ) (χ : Cutoff) (R M₀ M₁ : �
     (hM₀ : 0 ≤ M₀) (hM₁ : 0 ≤ M₁)
     (hs : tsupport χ.field ⊆ Metric.closedBall (0 : Space) R)
     (h₀ : ∀ x, ‖iteratedFDeriv ℝ n χ.field x‖ ≤ M₀)
-    (h₁ : ∀ x, ‖iteratedFDeriv ℝ (n+1) χ.field x‖ ≤ M₁) (a : Space) :
+    (h₁ : ∀ x, ‖iteratedFDeriv ℝ (n + 1) χ.field x‖ ≤ M₁) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => cutoffCurl (χ.translate b)) a‖ ≤
       3 * cutoffCurlConstant *
         (M₀ + M₁ * (volume (Metric.closedBall (0 : Space) R)).toReal ^ (1/3 : ℝ)) :=
@@ -129,12 +133,12 @@ theorem weakPotential_iteratedFDeriv_bound (n : ℕ) (χ : Cutoff) (R M₀ M₁ 
     (hM₀ : 0 ≤ M₀) (hM₁ : 0 ≤ M₁)
     (hs : tsupport χ.field ⊆ Metric.closedBall (0 : Space) R)
     (h₀ : ∀ x, ‖iteratedFDeriv ℝ n χ.field x‖ ≤ M₀)
-    (h₁ : ∀ x, ‖iteratedFDeriv ℝ (n+1) χ.field x‖ ≤ M₁) (a : Space) :
+    (h₁ : ∀ x, ‖iteratedFDeriv ℝ (n + 1) χ.field x‖ ≤ M₁) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => weakPotential (χ.translate b)) a‖ ≤
       3 * cutoffCurlConstant *
         (M₀ + M₁ * (volume (Metric.closedBall (0 : Space) R)).toReal ^ (1/3 : ℝ)) :=
   cutoffOperation_iteratedFDeriv_bound weakPotential weakPotential_add weakPotential_scale
-    weakPotential_sub
+      weakPotential_sub
     weakPotential_operatorNorm_le n χ R M₀ M₁ hM₀ hM₁ hs h₀ h₁ a
 
 end EulerMeanBoundary

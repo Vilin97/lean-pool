@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BasePacketSetup
-public import LeanPool.NavierStokesAndEuler.Euler.ParentStateGeometry
-public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerLowBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryFrame
+import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSign
+import LeanPool.NavierStokesAndEuler.Euler.ParentEulerLowBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParentEulerParity
 
 /-! Exact initial frame parameters for the first normal stage: its
 coupling is one, tilt is beta, and shear is the prescribed first shear. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +27,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerParentPacke
   EulerPacketCrossProduct EulerPacketSourceGeometry EulerVolterraConvolution
 
 theorem first_basis_cross : cross firstNormal (EuclideanSpace.single 1 1)=EuclideanSpace.single 2 1
-  := by
+    := by
   ext i
   fin_cases i <;> simp [cross,firstNormal,cross_apply]
 
@@ -67,28 +70,29 @@ theorem packetBase_sourceNormal_initial :
   calc
     _ = (A.transverseData firstNormal firstNormal_unit firstFrame support compact).normal.field
         A.zeroTime 0 := (A.source_normal_eq firstNormal firstNormal_unit firstFrame support compact
-          A.zeroTime).symm
+            A.zeroTime).symm
     _ = _ := source_normal_initial firstNormal firstNormal_unit firstFrame support compact 0
 
 theorem packetBase_sourceVelocity_initial :
     (packetBaseParent β hβ ell hell hell1 T hT hTB).sourceVelocity
       firstNormal firstNormal_unit firstFrame support compact firstCoordinate
-        0=EuclideanSpace.single 1 1 := by
+          0=EuclideanSpace.single 1 1 := by
   change EulerPacketForwardFactorization.uncutVelocity
     ((packetBaseParent β hβ ell hell hell1 T hT hTB).transverseData
       firstNormal firstNormal_unit firstFrame support compact) firstCoordinate 0 0=_
   rw [EulerPacketForwardFactorization.uncutVelocity_initial]
   exact (source_frame_initial (G := packetBaseParent β hβ ell hell hell1 T hT hTB)
     firstNormal firstNormal_unit firstFrame support compact firstCoordinate 0).trans
-      firstCoordinate_map
+        firstCoordinate_map
 
 theorem first_frame_parameters {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     {D : EulerTransversePacketProvider.Data U} (P : ParentFrame D 0) (hchild : ℝ)
-    (hB : P.B 0=(packetBaseParent β hβ ell hell hell1 T hT hTB).centerStrain 0)
-    (hm : P.m 0=(packetBaseParent β hβ ell hell hell1 T hT hTB).sourceNormal firstNormal 0)
-    (hv : P.v 0=(packetBaseParent β hβ ell hell hell1 T hT hTB).sourceVelocity
+    (hB : P.B 0 = (packetBaseParent β hβ ell hell hell1 T hT hTB).centerStrain 0)
+    (hm : P.m 0 = (packetBaseParent β hβ ell hell hell1 T hT hTB).sourceNormal firstNormal 0)
+    (hv : P.v 0 =
+ (packetBaseParent β hβ ell hell hell1 T hT hTB).sourceVelocity
       firstNormal firstNormal_unit firstFrame support compact firstCoordinate 0)
-    (hc : P.c=hchild) : P.a=1 ∧ P.sigma=Real.sqrt β ∧ P.shear=hchild := by
+    (hc : P.c = hchild) : P.a=1 ∧ P.sigma=Real.sqrt β ∧ P.shear=hchild := by
   have hB' := hB.trans (packetBase_centerStrain_initial β hβ ell hell hell1 T hT hTB)
   have hm' := hm.trans (packetBase_sourceNormal_initial β hβ ell hell hell1 T hT hTB)
   have hv' := hv.trans (packetBase_sourceVelocity_initial β hβ ell hell hell1 T hT hTB)

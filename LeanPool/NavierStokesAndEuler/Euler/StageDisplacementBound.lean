@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Order
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-
-@[expose] public section
+public import Mathlib.Analysis.Normed.Group.Defs
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Confinement by summable changes of particle labels
@@ -25,6 +24,9 @@ The horizon predicate permits the time intervals to shrink with the stage.
 The hypotheses below are explicit: this file does not yet assert their
 instantiation for the packet choices made by the development.
 -/
+
+@[expose] public section
+
 
 namespace Euler.ComparatorBridge
 

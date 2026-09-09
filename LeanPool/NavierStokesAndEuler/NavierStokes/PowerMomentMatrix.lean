@@ -6,19 +6,12 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
-public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-public import Mathlib.MeasureTheory.Integral.Average
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
-public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Calculus.LocalExtr.Rolle
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.MeasureTheory.Integral.Average
 
 /-!
 # Generalized-power evaluation matrices
@@ -27,6 +20,9 @@ Rolle induction proves uniqueness of an exponential sum at as many ordered
 nodes as there are distinct real exponents. Taking logarithms gives the
 generalized-power evaluation-matrix part of manuscript Lemma 3.6.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

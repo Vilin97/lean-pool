@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedAdvection
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldWeight
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedAdvection
+
+/-! A single coefficient cost bounds every elementary nonlinear packet term. -/
 
 @[expose] public section
 
-/-! A single coefficient cost bounds every elementary nonlinear packet term. -/
 
 noncomputable section
 
@@ -23,8 +25,12 @@ open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] {O : Operators}
 
+/-- Coefficient budget data, collecting `Rc`, `amplitude`, `Rc_nonneg`, `amplitude_nonneg`,
+`inverse_bound`, `strain_bound` and their compatibility conditions. -/
 structure CoefficientBudget (C : CoefficientData P T O) where
+  /-- Rc of `CoefficientBudget`, of type `ℝ`. -/
   Rc : ℝ
+  /-- Amplitude of `CoefficientBudget`, of type `ℝ`. -/
   amplitude : ℝ
   Rc_nonneg : 0 ≤ Rc
   amplitude_nonneg : 0 ≤ amplitude
@@ -39,10 +45,15 @@ namespace CoefficientBudget
 
 variable {C : CoefficientData P T O} (B : CoefficientBudget C)
 
+/-- Multiplier cost, given by `3*sobolevCoefficientAmplitude (Fin 4) 6 B.Rc B.amplitude`. -/
 def multiplierCost : ℝ := 3*sobolevCoefficientAmplitude (Fin 4) 6 B.Rc B.amplitude
+/-- Slow cost, given by `9*productBlockConstant P*B.multiplierCost`. -/
 def slowCost : ℝ := 9*productBlockConstant P*B.multiplierCost
+/-- Fast cost, given by `3*productBlockConstant P*B.multiplierCost`. -/
 def fastCost : ℝ := 3*productBlockConstant P*B.multiplierCost
+/-- Linear cost, given by `1+B.multiplierCost`. -/
 def linearCost : ℝ := 1+B.multiplierCost
+/-- Term cost, given by `2*(1+B.multiplierCost+B.slowCost)`. -/
 def termCost : ℝ := 2*(1+B.multiplierCost+B.slowCost)
 
 omit [Fact (0 < P)] in
@@ -96,14 +107,14 @@ theorem twice_multiplierCost_le : 2*B.multiplierCost ≤ B.termCost := by
   linarith
 
 variable {J K : Domain → VectorJet} (G : SpatialJetField P T J) (H : SpatialJetField P T K)
-  (hT : 0 ≤ T) (g h b : C(Icc (0 : ℝ) T,ℝ))
+  (hT : 0 ≤ T) (g h b : C(Icc (0 : ℝ) T, ℝ))
   (hg : ∀ t, 0 < g t) (hh : ∀ t, 0 < h t) (hb : ∀ t, 0 < b t)
 
 theorem slow_bound {R : ℝ} {d e : ℕ}
     (hG : (G.field.normalized hT g hg).WordBound 6 R 1 d)
     (hH : (H.field.normalized hT h hh).WordBound 6 R 1 e)
     (hR : 0 ≤ R) (hRc : sobolevCoefficientRadius (Fin 4) B.Rc ≤ R)
-    (hp : ∀ t, g t*h t ≤ b t) :
+    (hp : ∀ t, g t * h t ≤ b t) :
     ((SpatialJetField.slowAdvection C.inverse G H).normalized hT b hb).WordBound 6 R
       B.slowCost (d+e+1) := by
   have hbound := G.slowAdvection_normalized_bound H hT g h b hg hh hb C.inverse hG hH
@@ -117,7 +128,7 @@ theorem fast_bound {R : ℝ} {d e : ℕ}
     (hG : (G.field.normalized hT g hg).WordBound 6 R 1 d)
     (hH : (H.field.normalized hT h hh).WordBound 6 R 1 e)
     (hR : 0 ≤ R) (hRc : sobolevCoefficientRadius (Fin 4) B.Rc ≤ R)
-    (hp : ∀ t, g t*h t ≤ b t) :
+    (hp : ∀ t, g t * h t ≤ b t) :
     ((SpatialJetField.fastAdvection C.normal G H).normalized hT b hb).WordBound 6 R
       B.fastCost (d+e+1) := by
   have hbound := G.fastAdvection_normalized_bound H hT g h b hg hh hb C.normal hG hH

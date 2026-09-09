@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalParticularWave
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicSourceSupport
 
-@[expose] public section
-
 /-!
 # Naturality of the actual lifted residual coefficients
 
@@ -19,6 +17,9 @@ Equality only on the physical graph is deliberately insufficient.  The source
 is always the literal `HarmonicResidual.residualBlock`, including its real
 projection and its Gaussian and alias subtractions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -108,7 +109,7 @@ theorem boundConstant {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
   by_cases hj : j = 0
   · subst j
     simpa only [constantCoefficient, AddMonoidAlgebra.coeff_single, Finsupp.single_eq_same] using h
-      x hx
+        x hx
   · simp [constantCoefficient, hj]
 
 theorem convolution_sum {A : Type} (c d : Coefficients A) (S : Finset ℤ)
@@ -152,7 +153,7 @@ theorem angular {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
 theorem realCoefficients {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
     {c : Coefficients D} {d : Coefficients E} (hc : CoefficientsOn U e a c d) :
     CoefficientsOn U e a (HarmonicResidual.realCoefficients c) (HarmonicResidual.realCoefficients
-      d) := by
+        d) := by
   intro j x hx
   simp only [HarmonicResidual.realCoefficients_apply, hc j x hx, hc (-j) x hx,
     Complex.real_smul, map_mul, Complex.conj_ofReal]
@@ -166,7 +167,7 @@ theorem nonconstant {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
   · subst j
     simp [HarmonicResidual.nonconstant]
   · simpa only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_ne hj]
-    using hc j x hx
+      using hc j x hx
 
 /-- Carrier compatibility is an equality before restriction to the graph. -/
 theorem differentiate {U : Set D} (hU : IsOpen U) {e : D ≃L[ℝ] E}
@@ -254,7 +255,7 @@ theorem inverseRadiusSq (H : FrameOn U e c l g r) (hl : l ≠ 0) :
 theorem scalarLaplacian (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
     {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ} (kp : ℤ)
     {f : Coefficients D} {q : Coefficients E} (hf : CoefficientsOn U e a f q)
-    (hp : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U) :
+    (hp : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U) :
     CoefficientsOn U e (a*(l*l))
       (HarmonicResidual.scalarLaplacian g k Phi kp f)
       (HarmonicResidual.scalarLaplacian r kr Psi kp q) := by
@@ -282,7 +283,7 @@ theorem vectorLaplacian (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
     {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ} (kp : ℤ)
     {f : HarmonicResidual.VectorCoefficients D} {q : HarmonicResidual.VectorCoefficients E}
     (hf : ∀ i, CoefficientsOn U e a (f i) (q i))
-    (hp : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U) :
+    (hp : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U) :
     ∀ i, CoefficientsOn U e (a*(l*l))
       (HarmonicResidual.vectorLaplacian g k Phi kp f i)
       (HarmonicResidual.vectorLaplacian r kr Psi kp q i) := by
@@ -302,7 +303,7 @@ theorem transport (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
     {f v : HarmonicResidual.VectorCoefficients D} {q w : HarmonicResidual.VectorCoefficients E}
     (hf : ∀ i, CoefficientsOn U e a (f i) (q i))
     (hv : ∀ i, CoefficientsOn U e b (v i) (w i))
-    (hp : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U) :
+    (hp : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U) :
     ∀ i, CoefficientsOn U e (a*b*l)
       (HarmonicResidual.transport g k Phi kp f v i)
       (HarmonicResidual.transport r kr Psi kp q w i) := by
@@ -318,7 +319,7 @@ theorem transport (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
 theorem gradient (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
     {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ} (kp : ℤ)
     {f : Coefficients D} {q : Coefficients E} (hf : CoefficientsOn U e a f q)
-    (hp : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U) :
+    (hp : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U) :
     ∀ i, CoefficientsOn U e (a*l)
       (HarmonicResidual.gradient g k Phi kp f i)
       (HarmonicResidual.gradient r kr Psi kp q i) := by
@@ -335,8 +336,8 @@ theorem linearResidual (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
     {p : Coefficients D} {pr : Coefficients E}
     (hB : ∀ i, CoefficientsOn U e c (B i) (Br i))
     (hf : ∀ i, CoefficientsOn U e c (f i) (q i))
-    (hp : CoefficientsOn U e (c*c) p pr)
-    (hphase : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U) :
+    (hp : CoefficientsOn U e (c * c) p pr)
+    (hphase : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U) :
     ∀ i, CoefficientsOn U e (c*c*l)
       (HarmonicResidual.linearResidual g k Phi kp B f p i)
       (HarmonicResidual.linearResidual r kr Psi kp Br q pr i) := by
@@ -368,8 +369,8 @@ theorem nonlinearResidual (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 
     {p : Coefficients D} {pr : Coefficients E}
     (hB : ∀ i, CoefficientsOn U e c (B i) (Br i))
     (hf : ∀ i, CoefficientsOn U e c (f i) (q i))
-    (hp : CoefficientsOn U e (c*c) p pr)
-    (hphase : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U) :
+    (hp : CoefficientsOn U e (c * c) p pr)
+    (hphase : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U) :
     ∀ i, CoefficientsOn U e (c*c*l)
       (HarmonicResidual.nonlinearResidual g k Phi kp B f p i)
       (HarmonicResidual.nonlinearResidual r kr Psi kp Br q pr i) := by
@@ -386,9 +387,9 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] [NormedAddCommGroup E] [NormedSp
 integer angular carrier and the complete slow carrier agree. -/
 theorem coefficient_of_field {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ}
     {kp : ℤ} (hkp : kp ≠ 0) (f : Coefficients D) (q : Coefficients E)
-    (x : D) (y : E) (hphase : k*Phi x = kr*Psi y)
-    (hfield : ∀ theta, field f k Phi kp (x,theta) =
-      a • field q kr Psi kp (y,theta)) (j : ℤ) : f j x = a • q j y := by
+    (x : D) (y : E) (hphase : k * Phi x = kr * Psi y)
+    (hfield : ∀ theta, field f k Phi kp (x, theta) =
+      a • field q kr Psi kp (y, theta)) (j : ℤ) : f j x = a • q j y := by
   rw [← HarmonicResidual.extract_field f k Phi hkp j x,
     ← HarmonicResidual.extract_field q kr Psi hkp j y]
   unfold HarmonicResidual.extract
@@ -405,18 +406,18 @@ theorem coefficient_of_field {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ}
 theorem CoefficientsOn.of_fields {U : Set D} {e : D ≃L[ℝ] E}
     {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ} {kp : ℤ} (hkp : kp ≠ 0)
     {f : Coefficients D} {q : Coefficients E}
-    (hp : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U)
-    (hf : ∀ x ∈ U, ∀ theta, field f k Phi kp (x,theta) =
-      a • field q kr Psi kp (e x,theta)) : CoefficientsOn U e a f q := by
+    (hp : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U)
+    (hf : ∀ x ∈ U, ∀ theta, field f k Phi kp (x, theta) =
+      a • field q kr Psi kp (e x, theta)) : CoefficientsOn U e a f q := by
   intro j x hx
   exact coefficient_of_field hkp f q x (e x) (hp hx) (hf x hx) j
 
 theorem CoefficientsOn.of_real_fields {U : Set D} {e : D ≃L[ℝ] E}
     {a k kr : ℝ} {Phi : D → ℝ} {Psi : E → ℝ} {kp : ℤ} (hkp : kp ≠ 0)
     {f : Coefficients D} {q : Coefficients E}
-    (hp : EqOn (fun x => k*Phi x) (fun x => kr*Psi (e x)) U)
-    (hf : ∀ x ∈ U, ∀ theta, (field f k Phi kp (x,theta)).re =
-      a * (field q kr Psi kp (e x,theta)).re) :
+    (hp : EqOn (fun x => k * Phi x) (fun x => kr * Psi (e x)) U)
+    (hf : ∀ x ∈ U, ∀ theta, (field f k Phi kp (x, theta)).re =
+      a * (field q kr Psi kp (e x, theta)).re) :
     CoefficientsOn U e a (HarmonicResidual.realCoefficients f)
       (HarmonicResidual.realCoefficients q) := by
   apply CoefficientsOn.of_fields hkp hp
@@ -551,7 +552,7 @@ theorem residualSource_naturality {U : Set D} (hU : IsOpen U) {e : D ≃L[ℝ] E
     {n nr : ℕ}
     (hg : FrameOn U e c l (HarmonicResidual.contextFrame C n) (HarmonicResidual.contextFrame Cr nr))
     (hB : ∀ x ∈ U, HarmonicResidual.contextBase C n x = c • HarmonicResidual.contextBase Cr nr (e
-      x))
+        x))
     (hM : ∀ x ∈ U, HarmonicResidual.stateMean s n x = c • HarmonicResidual.stateMean sr nr (e x))
     (H : BlockFieldsOn U e c l b br G A Gr Ar n nr)
     (j : ℤ) {x : D} (hx : x ∈ U) :
@@ -564,7 +565,9 @@ theorem residualSource_naturality {U : Set D} (hU : IsOpen U) {e : D ≃L[ℝ] E
 
 open PhysicalParticularWave CommonCoverSolve
 
+/-- Lift: an abbreviation for `PhysicalResidualBridge.Lift`. -/
 abbrev Lift := PhysicalResidualBridge.Lift
+/-- Associated: an abbreviation for `PhysicalParticularWave.Parameter × TorusInverse.Plane`. -/
 abbrev Associated := PhysicalParticularWave.Parameter × TorusInverse.Plane
 
 /-- The invertible real-lift map underlying the integer torus cover. -/
@@ -572,7 +575,7 @@ noncomputable def chartEquiv (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) : Lift ≃L[ℝ] Lift :=
   (scalarEquiv ℝ (ratioPower Q Qr (1/2)) (ratioPower_pos hQ hQr _).ne').prodCongr
     (((scalarEquiv ℝ (ratioPower Q Qr (CoordinateAlgebra.D h)) (ratioPower_pos hQ hQr
-      _).ne').prodCongr
+        _).ne').prodCongr
       (scalarEquiv ℝ (ratioPower Q Qr 1) (ratioPower_pos hQ hQr _).ne')).prodCongr (coverPower gap))
 
 @[simp] theorem chartEquiv_apply (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
@@ -641,6 +644,8 @@ noncomputable def associatedToLift : Associated ≃ₗᵢ[ℝ] Lift :=
 @[simp] theorem associatedToLift_apply (x : Associated) :
     associatedToLift x = (x.1.1, ((x.1.2.2,x.1.2.1),x.2)) := rfl
 
+/-- Associated chart, given by `(associatedToLift.toContinuousLinearEquiv.trans (chartEquiv h hQ
+hQr gap)).trans associatedToLift.symm.toContinuousLinearEquiv`. -/
 noncomputable def associatedChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) : Associated ≃L[ℝ] Associated :=
   (associatedToLift.toContinuousLinearEquiv.trans (chartEquiv h hQ hQr gap)).trans
@@ -650,6 +655,7 @@ noncomputable def associatedChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 <
     (gap : ℕ) (x : Associated) :
     associatedChart h hQ hQr gap x = (parameterChange h Q Qr x.1, coverPower gap x.2) := rfl
 
+/-- Associated frame, given by `StateReindex.frame associatedToLift (commonFrame h Q i)`. -/
 noncomputable def associatedFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Associated :=
   StateReindex.frame associatedToLift (commonFrame h Q i)
 
@@ -727,6 +733,7 @@ theorem BandCoherence.source_on
 /-- Primitive support assumptions, allowing arbitrary zero-mode aliases. -/
 structure PositiveSupport (b : CorrectionState.HarmonicBlock Associated)
     (G A : HarmonicResidual.BlockCoefficients Associated) (n : ℕ) where
+  /-- Support set of `PositiveSupport`, of type `Set Associated`. -/
   supportSet : Set Associated
   closed : IsClosed supportSet
   positive : supportSet ⊆ positiveLift
@@ -794,6 +801,7 @@ theorem BandCoherence.residualBandPressure_eq
 
 /-! ## A lift-coherence invariant preserved by actual state addition -/
 
+/-- Scalar on, given by `∀ x ∈ U, f x = a * g (e x)`. -/
 def ScalarOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ) (f : D → ℝ) (g : E → ℝ) : Prop :=
   ∀ x ∈ U, f x = a * g (e x)
 
@@ -842,6 +850,7 @@ theorem along {U : Set D} (hU : IsOpen U) {e : D ≃L[ℝ] E} {a b : ℝ}
 
 end ScalarOn
 
+/-- Triple on data, collecting `radial`, `angular`, `axial`. -/
 structure TripleOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ)
     (f : MeanIncrementBounds.Triple D) (g : MeanIncrementBounds.Triple E) (n nr : ℕ) : Prop where
   radial : ScalarOn U e a (f.radial n) (g.radial nr)
@@ -966,7 +975,7 @@ theorem scalarInvRadius (hl : l ≠ 0) :
   intro x hx
   have he := H.inverseRadius hl 0 x hx
   simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, Finsupp.single_eq_same,
-    Complex.real_smul,
+      Complex.real_smul,
     ← Complex.ofReal_mul, Complex.ofReal_inj] at he
   exact he
 
@@ -1010,32 +1019,32 @@ variable {U : Set D} {e : D ≃L[ℝ] E} {c : ℝ} {n nr : ℕ}
 
 theorem thetaRadial (hb : TripleOn U e c b br n nr) (hm : TripleOn U e c m mr n nr) :
     ScalarOn U e (c*c) (MeanIncrementBounds.thetaRadial b m n) (MeanIncrementBounds.thetaRadial br
-      mr nr) :=
+        mr nr) :=
   ((hb.radial.mul hm.angular).add (hm.radial.mul hb.angular)).add (hm.radial.mul hm.angular)
 
 theorem thetaAxial (hb : TripleOn U e c b br n nr) (hm : TripleOn U e c m mr n nr) :
     ScalarOn U e (c*c) (MeanIncrementBounds.thetaAxial b m n) (MeanIncrementBounds.thetaAxial br mr
-      nr) :=
+        nr) :=
   ((hb.axial.mul hm.angular).add (hb.angular.mul hm.axial)).add (hm.axial.mul hm.angular)
 
 theorem axialRadial (hb : TripleOn U e c b br n nr) (hm : TripleOn U e c m mr n nr) :
     ScalarOn U e (c*c) (MeanIncrementBounds.axialRadial b m n) (MeanIncrementBounds.axialRadial br
-      mr nr) :=
+        mr nr) :=
   ((hb.radial.mul hm.axial).add (hm.radial.mul hb.axial)).add (hm.radial.mul hm.axial)
 
 theorem axialAxial (hb : TripleOn U e c b br n nr) (hm : TripleOn U e c m mr n nr) :
     ScalarOn U e (c*c) (MeanIncrementBounds.axialAxial b m n) (MeanIncrementBounds.axialAxial br mr
-      nr) :=
+        nr) :=
   ((hb.axial.mul hm.axial).smul 2).add (hm.axial.mul hm.axial)
 
 theorem radialRadial (hb : TripleOn U e c b br n nr) (hm : TripleOn U e c m mr n nr) :
     ScalarOn U e (c*c) (MeanIncrementBounds.radialRadial b m n) (MeanIncrementBounds.radialRadial
-      br mr nr) :=
+        br mr nr) :=
   ((hb.radial.mul hm.radial).smul 2).add (hm.radial.mul hm.radial)
 
 theorem radialAngular (hb : TripleOn U e c b br n nr) (hm : TripleOn U e c m mr n nr) :
     ScalarOn U e (c*c) (MeanIncrementBounds.radialAngular b m n) (MeanIncrementBounds.radialAngular
-      br mr nr) :=
+        br mr nr) :=
   ((hb.angular.mul hm.angular).smul 2).add (hm.angular.mul hm.angular)
 
 theorem complexValue (H : TripleOn U e c b br n nr) (x : D) (hx : x ∈ U) :
@@ -1139,7 +1148,7 @@ end StateOn
 
 theorem angularAverage_on {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
     {f : CorrectionState.OscillatoryScalar D} {g : CorrectionState.OscillatoryScalar E} {n nr : ℕ}
-    (hf : ∀ x ∈ U, ∀ theta, f n (x,theta) = a * g nr (e x,theta)) :
+    (hf : ∀ x ∈ U, ∀ theta, f n (x, theta) = a * g nr (e x, theta)) :
     ScalarOn U e a (CorrectionState.angularAverage f n) (CorrectionState.angularAverage g nr) := by
   intro x hx
   unfold CorrectionState.angularAverage
@@ -1177,7 +1186,7 @@ theorem StateOn.meanGoodResidual {U : Set D} {e : D ≃L[ℝ] E} {c l : ℝ}
     (H : StateOn U e c l s r n nr) (G : ContextOn U e c l C Cr n nr)
     (hU : IsOpen U) (hl : l ≠ 0) (i : Fin 3) :
     ScalarOn U e (c*c*l) (fun x => s.meanGoodResidual C n x i) (fun x => r.meanGoodResidual Cr nr x
-      i) :=
+        i) :=
   (H.meanResidual G hU hl i).sub (H.meanExcluded i)
 
 /-! ## Literal reference views of one state -/

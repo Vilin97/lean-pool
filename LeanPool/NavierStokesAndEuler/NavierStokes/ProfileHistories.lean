@@ -8,14 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StressAlgebra
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Genuine smooth profile histories
@@ -26,6 +23,9 @@ integral and the fundamental theorem of calculus, rather than supplied as
 independent history data.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ProfileHistories
@@ -33,12 +33,15 @@ namespace NavierStokes.ProfileHistories
 open Set MeasureTheory Filter Metric
 open scoped Topology ContDiff
 
+/-- Point: an abbreviation for `ℝ × ℝ`. -/
 abbrev Point := ℝ × ℝ
+/-- Field: an abbreviation for `Point → ℝ`. -/
 abbrev Field := Point → ℝ
 
 /-- An open profile domain containing every radial segment from the axis to
 one of its points. Open rectangles centered radially at zero are examples. -/
 structure RadialDomain where
+  /-- Carrier of `RadialDomain`, of type `Set Point`. -/
   carrier : Set Point
   isOpen : IsOpen carrier
   scale_mem : ∀ p ∈ carrier, ∀ t ∈ Icc (0 : ℝ) 1, (t * p.1, p.2) ∈ carrier
@@ -57,7 +60,9 @@ def RadialDomain.rectangle (R a b : ℝ) : RadialDomain where
       exact mul_le_of_le_one_left (abs_nonneg _) ht.2
     exact abs_lt.mp (hmul.trans_lt hX)
 
+/-- Radial partial, given by `fderiv ℝ F p (1, 0)`. -/
 def radialPartial (F : Field) (p : Point) : ℝ := fderiv ℝ F p (1, 0)
+/-- Parameter partial, given by `fderiv ℝ F p (0, 1)`. -/
 def parameterPartial (F : Field) (p : Point) : ℝ := fderiv ℝ F p (0, 1)
 
 theorem radialPartial_hasDerivAt (D : RadialDomain) {F : Field}
@@ -252,7 +257,7 @@ theorem compact_parameter_integral_parameterPartial {s : Set Point} {G : Point �
   have hi : IntervalIntegrable (fun t => fderiv ℝ (fun q => G q t) p) volume 0 1 :=
     ((compact_parameter_fderiv_continuous hG).comp
       (continuous_const.prodMk continuous_id).continuousOn (fun _ ht => ⟨hp,
-        ht⟩)).intervalIntegrable_of_Icc zero_le_one
+          ht⟩)).intervalIntegrable_of_Icc zero_le_one
   unfold parameterPartial
   rw [(compact_parameter_integral_hasFDerivAt hs hG hp).fderiv]
   exact ContinuousLinearMap.intervalIntegral_apply hi (0, 1)
@@ -312,10 +317,13 @@ theorem average_eq_quotient (F : Field) {p : Point} (hX : p.1 ≠ 0) :
 /-- Smooth profiles and an arbitrary smooth axial pressure normalization.
 Only local smoothness at the relevant parameter values is required. -/
 structure Profiles (D : RadialDomain) where
+  /-- F of `Profiles`, of type `Field`. -/
   f : Field
+  /-- U of `Profiles`, of type `Field`. -/
   U : Field
   f_smooth : ContDiffOn ℝ ∞ f D.carrier
   U_smooth : ContDiffOn ℝ ∞ U D.carrier
+  /-- Pressure0 of `Profiles`, of type `ℝ → ℝ`. -/
   pressure0 : ℝ → ℝ
   pressure0_smooth : ∀ p ∈ D.carrier, ContDiffAt ℝ ∞ pressure0 p.2
 
@@ -325,17 +333,30 @@ open StressAlgebra
 
 variable {D : RadialDomain} (P : Profiles D)
 
+/-- H, defined pointwise by `2 * p.1 * P.f p`. -/
 def H : Field := fun p => 2 * p.1 * P.f p
+/-- E, defined pointwise by `Real.sqrt (2 * p.1) * P.f p`. -/
 def E : Field := fun p => Real.sqrt (2 * p.1) * P.f p
+/-- Eη, defined pointwise by `Real.sqrt (2 * p.1) * parameterPartial P.f p`. -/
 def Eη : Field := fun p => Real.sqrt (2 * p.1) * parameterPartial P.f p
+/-- Transport density, defined pointwise by `P.U p * P.H p`. -/
 def transportDensity : Field := fun p => P.U p * P.H p
+/-- Energy density, defined pointwise by `P.U p ^ 2 - p.1 * P.f p ^ 2`. -/
 def energyDensity : Field := fun p => P.U p ^ 2 - p.1 * P.f p ^ 2
+/-- M, given by `primitive P.U`. -/
 def M : Field := primitive P.U
+/-- I, given by `primitive P.H`. -/
 def I : Field := primitive P.H
+/-- J, given by `primitive P.transportDensity`. -/
 def J : Field := primitive P.transportDensity
+/-- S, given by `primitive P.energyDensity`. -/
 def S : Field := primitive P.energyDensity
+/-- Ubar, given by `average P.U`. -/
 def Ubar : Field := average P.U
+/-- Pressure, defined pointwise by `P.pressure0 p.2 + primitive (fun q => P.f q ^ 2) p`. -/
 def pressure : Field := fun p => P.pressure0 p.2 + primitive (fun q => P.f q ^ 2) p
+/-- W, defined pointwise by `1 - 2 * axialExponent h * p.2 * P.Ubar p - coordinateFactor p.2 *
+average (parameterPartial P.U) p`. -/
 def W (h : ℝ) : Field := fun p =>
   1 - 2 * axialExponent h * p.2 * P.Ubar p -
     coordinateFactor p.2 * average (parameterPartial P.U) p
@@ -562,10 +583,13 @@ noncomputable def axialData (h : ℝ) (p : Point) (hp : p ∈ D.carrier) (hX : 0
   S_zero := primitive_at_axis P.energyDensity p.2
   Sη_zero := parameterPartial_primitive_at_axis D P.energyDensity_smooth (axis_mem hp)
 
+/-- Angular source, defined pointwise by `StressAlgebra.angularSource h p.2 p.1 (P.W h p) (P.U
+p) (P.H p) (radialPartial P.H p) (parameterPartial P.H p)`. -/
 def angularSource (h : ℝ) : Field := fun p =>
   StressAlgebra.angularSource h p.2 p.1 (P.W h p) (P.U p) (P.H p)
     (radialPartial P.H p) (parameterPartial P.H p)
 
+/-- Axial source as an element of `Field`. -/
 def axialSource (h : ℝ) : Field := fun p =>
   StressAlgebra.axialSource h p.2 p.1 (P.W h p) (P.U p)
     (radialPartial P.U p) (parameterPartial P.U p) (P.pressure p)
@@ -614,7 +638,7 @@ theorem axialLag_integrated (h : ℝ) {p : Point} (hp : p ∈ D.carrier) (hX : 0
       axialExponent h * (P.M p - p.2 * parameterPartial P.M p) / p.1 +
         (4 * h * p.2 * P.S p - coordinateFactor p.2 * parameterPartial P.S p) / p.1 +
           4 * velocityExponent h * p.2 * P.pressure p - coordinateFactor p.2 * parameterPartial
-            P.pressure p := by
+              P.pressure p := by
   exact axial_integrated_lag (P.axialData h p hp hX.le) hX.ne'
     (radial_slice_intervalIntegrable D (P.axialSource_smooth h) hp)
 
@@ -656,7 +680,7 @@ theorem angularLag_equation (h : ℝ) {p : Point} (hp : p ∈ D.carrier)
         P.angularSource h p / P.H p := by
   rw [(P.angularLag_hasDerivAt h hp hX hH).deriv]
   unfold angularLag
-  field_simp ; ring
+  field_simp; ring
 
 /-- The axial differential equation (6), with the actual primitive-defined N_s. -/
 theorem axialLag_equation (h : ℝ) {p : Point} (hp : p ∈ D.carrier) (hX : p.1 ≠ 0) :
@@ -664,7 +688,7 @@ theorem axialLag_equation (h : ℝ) {p : Point} (hp : p ∈ D.carrier) (hX : p.1
       P.axialSource h p := by
   rw [(P.axialLag_hasDerivAt h hp hX).deriv]
   unfold axialLag
-  field_simp ; ring
+  field_simp; ring
 
 theorem H_ne_zero {p : Point} (hX : p.1 ≠ 0) (hf : P.f p ≠ 0) : P.H p ≠ 0 :=
   mul_ne_zero (mul_ne_zero (by norm_num) hX) hf

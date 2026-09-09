@@ -6,17 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.H6PressureConstants
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
+public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedPressure
+import LeanPool.NavierStokesAndEuler.Euler.H6PressureInverse
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Nat.Choose.Cast
+
+/-! The actual pressure inverse in unshifted Gevrey-weighted fixed Sobolev blocks. -/
 
 @[expose] public section
 
-/-! The actual pressure inverse in unshifted Gevrey-weighted fixed Sobolev blocks. -/
 
 noncomputable section
 
 namespace EulerWeightedPressure
 
-open Finset EulerPacketWeights EulerWeightedConvolution EulerGevrey
+open Finset EulerPacketWeights EulerGevrey
 
 /-- The ordinary Gevrey product weight gains the reciprocal binomial coefficient. -/
 theorem unshifted_weight_kernel (ρ Rc : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc)
@@ -36,7 +42,8 @@ theorem unshifted_weight_kernel (ρ Rc : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc)
   exact div_le_self (mul_nonneg (pow_nonneg (mul_nonneg hρ.le hRc) l)
     (mul_nonneg (weight_pos hρ j).le hZ)) hc
 
-/-- Positive-order coefficient terms are absorbed in the unshifted Gevrey sum with a constant independent of the cutoff. -/
+/-- Positive-order coefficient terms are absorbed in the unshifted Gevrey sum with a constant
+independent of the cutoff. -/
 theorem unshifted_weighted_inverse (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc)
     (hM : 1 ≤ M) (hsmall : 4 * M * (ρ * Rc) ≤ 1)
     (N : ℕ) (A F Z : ℕ → ℝ) (_hF : ∀ n, 0 ≤ F n) (hZ : ∀ n, 0 ≤ Z n)
@@ -96,7 +103,7 @@ end EulerWeightedPressure
 namespace EulerH6Pressure
 
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerSpatialSobolevInverse
-  EulerJetProductBounds EulerPressureJetIdentities EulerPressureSpatialRegularity
+  EulerJetProductBounds  EulerPressureSpatialRegularity
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)] {directions : Fin 4 → LiftTangent}

@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionSourceRestriction
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticSourceLimit
-public import LeanPool.NavierStokesAndEuler.Euler.ViscosityDefect
-public import LeanPool.NavierStokesAndEuler.Euler.ViscosityCauchy
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionSourceRestriction
+import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
+
+/-! The actual viscous derivative expressed using the identical lower-order nonlinear source. -/
 
 @[expose] public section
 
-/-! The actual viscous derivative expressed using the identical lower-order nonlinear source. -/
 
 noncomputable section
 
@@ -21,33 +21,34 @@ namespace EulerCorrectionLimitDerivative
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerSobolevCoefficientPressure
-    EulerCorrectionLowerData
-  EulerCorrectionSourceRestriction EulerQuadraticSource EulerQuadraticSourceLimit
-  EulerViscosityDefect EulerViscosityCauchy EulerVolterraConvolution EulerMildEquationBridge
-    EulerSobolevHeatGenerator
+      EulerCorrectionLowerData
+  EulerCorrectionSourceRestriction EulerQuadraticSource
+    EulerVolterraConvolution EulerMildEquationBridge
+      EulerSobolevHeatGenerator
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The inherited normed group on each actual Sobolev value space. -/
 local instance limitDerivativeGroup (s : ℕ) : NormedAddCommGroup (SobolevSpace period s) :=
-  inferInstance
+    inferInstance
 
 /-- The inherited real normed space on each actual Sobolev value space. -/
 local instance limitDerivativeSpace (s : ℕ) : NormedSpace ℝ (SobolevSpace period s) := inferInstance
 
-/-- The actual derivative of a high-order mild correction equals viscosity plus the literal lower-order nonlinear source. -/
+/-- The actual derivative of a high-order mild correction equals viscosity plus the literal
+lower-order nonlinear source. -/
 theorem lower_mild_value_derivative {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T)
-    (D : CorrectionData period (q+1) (Icc (0 : ℝ) T))
+    (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (KG : ∀ t, CoefficientJet period standardDirection q (D.metric.coefficient t))
     (KL : ∀ t, CoefficientJet period standardDirection q (D.linear.coefficient t))
     (KQ : ∀ i t, CoefficientJet period standardDirection q ((D.quadratic i).coefficient t))
     (hG : Continuous (fun t => coefficientSobolevOperator period (KG t)))
     (hL : Continuous (fun t => coefficientSobolevOperator period (KL t)))
     (hQ : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ i t)))
-    (ν : ℝ) (hν : 0 < ν) (u : C(Icc (0 : ℝ) T,SobolevSpace period ((q+1)+1)))
+    (ν : ℝ) (hν : 0 < ν) (u : C(Icc (0 : ℝ) T, SobolevSpace period ((q + 1) + 1)))
     (hsol : ∀ t, u t = quadraticDuhamel period ν hν hT le_rfl
-      (D.coefficients period (by omega : 6 ≤ q+1)) 0 u t)
+      (D.coefficients period (by omega : 6 ≤ q + 1)) 0 u t)
     (r : ℝ) (hr : r ∈ Ioo 0 T) :
     HasDerivAt (fun x => value period (extendPath T hT u x))
       (ν • laplacianEvaluation period ((q+1)+1) (by omega) (u ⟨r,hr.1.le,hr.2.le⟩) +
@@ -58,7 +59,7 @@ theorem lower_mild_value_derivative {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 �
     (D.coefficients period (by omega : 6 ≤ q+1)).apply
     (D.coefficients period (by omega : 6 ≤ q+1)).continuous u hsol r hr
   have hs := congrArg (value period (q := q)) (truncate_source period hq D KG KL KQ hG hL hQ τ (u
-    τ))
+      τ))
   rw [value_truncateOperator] at hs
   apply hx.congr_deriv
   exact congrArg (fun v => ν • laplacianEvaluation period ((q+1)+1) (by omega) (u τ)+v) hs

@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceEquations
-public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveResidual
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveResidual
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 
 /-!
 # The actual constructed source packet has only the uncancelled residual tail
@@ -18,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveResidual
 All profile regularity, tangency, and defining equations in the generic
 algebraic expansion are discharged by the actual recursive source solves.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,7 +43,7 @@ theorem source_residual_tail (A : SourceCoefficientAgreement M D)
         (fieldSum (N+1) κ (assembledPressure N (sourceProfiles P M D I Iprimary))) (t,(x,θ)) =
       ∑ n ∈ Ico (N+1) (2*N+3), κ^n •
         recursiveGrade (sourceOperators P M D I) N (sourceProfiles P M D I Iprimary) (t,(x,θ)) n :=
-          by
+            by
   apply recursive_residual_tail (sourceOperators P M D I)
     ((homogeneousForcing (P := P) D).vector Iprimary)
     ((homogeneousForcing (P := P) D).scalar Iprimary) N hN κ hκ (t,(x,θ))

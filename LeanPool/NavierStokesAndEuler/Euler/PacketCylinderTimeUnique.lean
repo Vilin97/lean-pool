@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
+
+/-! Genuine time-derivative witnesses are unique, including at both endpoints. -/
 
 @[expose] public section
 
-/-! Genuine time-derivative witnesses are unique, including at both endpoints. -/
 
 namespace EulerPacketCylinderField.TimeDerivative
 

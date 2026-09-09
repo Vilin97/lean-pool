@@ -9,12 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryCoercivity
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVariationalInverse
 
-@[expose] public section
-
 /-!
 The mean inverse with the source's actual nonlocal boundary operator.
 The boundary lower bound is proved from the spatial hypotheses (5), not an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +26,7 @@ open MeasureTheory Set InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal
   EulerMeanVariationalInverse EulerTransverseVariationalInverse
 open scoped NNReal
 
+/-- Effective negative bound, given by `Be + boundaryLocalizationC2 * Bc * r^3`. -/
 def effectiveNegativeBound (Be Bc r : ℝ) : ℝ :=
   Be + boundaryLocalizationC2 * Bc * r^3
 
@@ -36,7 +38,7 @@ theorem effectiveNegativeBound_nonneg (Be Bc r : ℝ)
   positivity
 
 theorem source_smallness (T K Be Bc r : ℝ)
-    (hsmall : K*(T^2/2) + Be*T + boundaryLocalizationC2*Bc*r^3*T ≤ 1/2) :
+    (hsmall : K * (T ^ 2 / 2) + Be * T + boundaryLocalizationC2 * Bc * r ^ 3 * T ≤ 1 / 2) :
     K*(T^2/2) + effectiveNegativeBound Be Bc r * T ≤ 1/2 := by
   calc
     _ = K*(T^2/2) + Be*T + boundaryLocalizationC2*Bc*r^3*T := by
@@ -48,13 +50,13 @@ variable (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
   (M : Space → Space →L[ℝ] Space) (hM : AEStronglyMeasurable M volume)
   (C : ℝ≥0) (hC : ∀ x, ‖M x‖ ≤ C)
   (Be Bc L r : ℝ) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc)
-  (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1/4)
-  (hext : ∀ x, r ≤ ‖ℓ • x‖ → ∀ v : Space, -Be * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
-  (hcore : ∀ x, ‖ℓ • x‖ < r → ∀ v : Space, -Bc * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
+  (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4)
+  (hext : ∀ x, r ≤ ‖ℓ • x‖ → ∀ v : Space, -Be * ‖v‖ ^ 2 ≤ ⟪M x v, v⟫_ℝ)
+  (hcore : ∀ x, ‖ℓ • x‖ < r → ∀ v : Space, -Bc * ‖v‖ ^ 2 ≤ ⟪M x v, v⟫_ℝ)
   (FInv H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (K : ℝ) (hK : 0 ≤ K)
   (hF0 : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
-  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K*‖z‖^2)
-  (hsmall : K*(T^2/2) + Be*T + boundaryLocalizationC2*Bc*r^3*T ≤ 1/2)
+  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) + Be * T + boundaryLocalizationC2 * Bc * r ^ 3 * T ≤ 1 / 2)
 
 /-- This is the actual Lax–Milgram mean inverse, with spatial coercivity discharged. -/
 def sourceMeanSolver : TimeLp T L2 →L[ℝ] meanDerivatives T hT FInv :=

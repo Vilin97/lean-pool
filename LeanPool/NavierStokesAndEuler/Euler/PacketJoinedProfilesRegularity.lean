@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderRecursiveAdmissibility
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepRegularity
+
+/-! All-grade admissibility for the actual history/forward packet recursion. -/
 
 @[expose] public section
 
-/-! All-grade admissibility for the actual history/forward packet recursion. -/
 
 noncomputable section
 
@@ -48,12 +52,16 @@ theorem joined_profiles_regular (p : ℕ) :
     rw [profiles_step O primary p hp]
     exact ⟨ProfileRegularity.joinedStep M D hT τ hτ hτT B C hmean hhigh hcorrector hp G⟩
 
+/-- Joined profile witness, given by `Classical.choice (joined_profiles_regular M D hT τ hτ hτT
+B C hmean hhigh hcorrector primary hprimary p)`. -/
 def joinedProfileWitness (p : ℕ) :
     ProfileRegularity P M.T M.T_pos.le D.support (profiles O primary p) :=
   Classical.choice (joined_profiles_regular M D hT τ hτ hτT B C hmean hhigh hcorrector primary
-    hprimary p)
+      hprimary p)
 
-def joined_profiles_meanForcing (p : ℕ) (hp : 2 ≤ p) :
+/-- Joined profiles mean forcing as an element of `EulerMeanPacketProvider.Forcing M (meanForce
+O p (profiles O primary))`. -/
+def joinedProfilesMeanForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerMeanPacketProvider.Forcing M (meanForce O p (profiles O primary)) := by
   let G : ∀ i, i < p → ProfileRegularity P M.T M.T_pos.le D.support (profiles O primary i) :=
     fun i _ => joinedProfileWitness M D hT τ hτ hτT B C hmean hhigh hcorrector primary hprimary i
@@ -61,7 +69,9 @@ def joined_profiles_meanForcing (p : ℕ) (hp : 2 ≤ p) :
   let W := G (p-1) (by omega)
   exact F.meanForcing M C (by omega) W.correctorDerivative W.corrector_time W.pressure
 
-def joined_profiles_highForcing (p : ℕ) (hp : 2 ≤ p) :
+/-- Joined profiles high forcing as an element of `EulerTransversePacketProvider.Forcing P D
+(highForce O p (profiles O primary))`. -/
+def joinedProfilesHighForcing (p : ℕ) (hp : 2 ≤ p) :
     EulerTransversePacketProvider.Forcing P D (highForce O p (profiles O primary)) := by
   let G : ∀ i, i < p → ProfileRegularity P M.T M.T_pos.le D.support (profiles O primary i) :=
     fun i _ => joinedProfileWitness M D hT τ hτ hτT B C hmean hhigh hcorrector primary hprimary i

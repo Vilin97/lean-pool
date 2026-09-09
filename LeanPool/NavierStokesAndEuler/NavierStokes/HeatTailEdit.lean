@@ -8,10 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialHeatProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingTail
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-
-@[expose] public section
 
 /-!
 # The actual terminal heat edit and its integral debts
@@ -22,6 +18,9 @@ the actual improper integrals, then applied to the constructed outgoing
 tail.  No debt bound is an input to the final outgoing-tail theorems.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter MeasureTheory
@@ -29,22 +28,29 @@ open scoped Topology ContDiff
 
 namespace NavierStokes.HeatTailEdit
 
+/-- Exponent, given by `1 / 2 + h`. -/
 noncomputable def exponent (h : ℝ) : ℝ := 1 / 2 + h
 
+/-- Heat constant, given by `2 * ν * h * (1 + h)`. -/
 noncomputable def heatConstant (h ν : ℝ) : ℝ := 2 * ν * h * (1 + h)
 
+/-- Switch, given by `OutgoingSchedule.sigma (Real.log (X / K) / (3 / 10))`. -/
 noncomputable def switch (K X : ℝ) : ℝ :=
   OutgoingSchedule.sigma (Real.log (X / K) / (3 / 10))
 
+/-- Multiplier, given by `1 + switch K X * (RadialHeatProfile.profile (1 + h) (2 * ν / X) - 1)`. -/
 noncomputable def multiplier (h ν K X : ℝ) : ℝ :=
   1 + switch K X * (RadialHeatProfile.profile (1 + h) (2 * ν / X) - 1)
 
+/-- Edit, given by `E X * multiplier h ν K X`. -/
 noncomputable def edit (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
   E X * multiplier h ν K X
 
+/-- Change, given by `edit E h ν K X - E X`. -/
 noncomputable def change (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
   edit E h ν K X - E X
 
+/-- Square change, given by `edit E h ν K X ^ 2 - E X ^ 2`. -/
 noncomputable def squareChange (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
   edit E h ν K X ^ 2 - E X ^ 2
 
@@ -158,6 +164,7 @@ theorem squareChange_bound {E : ℝ → ℝ} {h ν K X : ℝ} (hh : 0 < h) (hν 
 
 /-! ## One exact weighted power integral -/
 
+/-- Weighted kernel, given by `X ^ q * (X / K) ^ p / X`. -/
 noncomputable def weightedKernel (K p q X : ℝ) : ℝ :=
   X ^ q * (X / K) ^ p / X
 
@@ -190,7 +197,7 @@ theorem integral_weightedKernel {K p q : ℝ} (hK : 0 < K) (hpq : p + q < 0) :
       have hk : K ^ p ≠ 0 := (Real.rpow_pos_of_pos hK p).ne'
       have hd : p + q ≠ 0 := hpq.ne
       have hd' : -p - q ≠ 0 := by linarith
-      field_simp [hk, hd, hd'] ; ring
+      field_simp [hk, hd, hd']; ring
 
 theorem weighted_integral_bound {K p q B : ℝ} {g : ℝ → ℝ} (hK : 0 < K)
     (hpq : p + q < 0) (hg : ContinuousOn g (Ioi K))
@@ -204,7 +211,7 @@ theorem weighted_integral_bound {K p q B : ℝ} {g : ℝ → ℝ} (hK : 0 < K)
     intro X hX
     rw [Real.norm_eq_abs, abs_mul, abs_of_pos (Real.rpow_pos_of_pos (hK.trans hX) q)]
     have h := mul_le_mul_of_nonneg_left (hb X hX) (Real.rpow_nonneg (hK.trans hX).le q)
-    convert! h using 1 ; unfold weightedKernel ; ring
+    convert! h using 1; unfold weightedKernel; ring
   have hi : IntegrableOn (fun X => X ^ q * g X) (Ioi K) :=
     hw.mono' (hc.aestronglyMeasurable measurableSet_Ioi)
       (by filter_upwards [ae_restrict_mem measurableSet_Ioi] with X hX; exact hbound X hX)
@@ -216,6 +223,7 @@ theorem weighted_integral_bound {K p q B : ℝ} {g : ℝ → ℝ} (hK : 0 < K)
 
 /-! ## Quantitative debts for a prescribed bounded terminal shape -/
 
+/-- Power tail, given by `e * (X / K) ^ (-exponent h) * f (Real.log (X / K))`. -/
 noncomputable def powerTail (h e K : ℝ) (f : ℝ → ℝ) (X : ℝ) : ℝ :=
   e * (X / K) ^ (-exponent h) * f (Real.log (X / K))
 
@@ -304,12 +312,15 @@ theorem powerTail_weighted_squareChange {h ν K e M q : ℝ} (hh : 0 < h) (hν :
           (hK.trans hX).le
       _ = _ := by ring
 
+/-- Pressure debt, given by `∫ X in Ioi K, squareChange E h ν K X / X`. -/
 noncomputable def pressureDebt (E : ℝ → ℝ) (h ν K : ℝ) : ℝ :=
   ∫ X in Ioi K, squareChange E h ν K X / X
 
+/-- Energy debt, given by `∫ X in Ioi K, squareChange E h ν K X`. -/
 noncomputable def energyDebt (E : ℝ → ℝ) (h ν K : ℝ) : ℝ :=
   ∫ X in Ioi K, squareChange E h ν K X
 
+/-- Angular debt, given by `∫ X in Ioi K, Real.sqrt (2 * X) * change E h ν K X`. -/
 noncomputable def angularDebt (E : ℝ → ℝ) (h ν K : ℝ) : ℝ :=
   ∫ X in Ioi K, Real.sqrt (2 * X) * change E h ν K X
 
@@ -337,8 +348,8 @@ theorem powerTail_pressure {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
   constructor
   · simpa only [Real.rpow_neg_one, div_eq_mul_inv, mul_comm] using hi
   · rw [pressureDebt_eq]
-    convert! hb using 1 ;
-      simp only [Real.rpow_neg_one, sub_neg_eq_add, div_eq_mul_inv, mul_inv_rev] ; ring
+    convert! hb using 1;
+      simp only [Real.rpow_neg_one, sub_neg_eq_add, div_eq_mul_inv, mul_inv_rev]; ring
 
 theorem powerTail_energy {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
     (hK : 0 < K) (he : 0 ≤ e) (hM : 0 ≤ M) {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
@@ -380,17 +391,21 @@ theorem powerTail_angular {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
 
 open OutgoingTail
 
+/-- Switch start, given by `tailStart d + 1 / 5`. -/
 noncomputable def switchStart (d : TailData) : ℝ := tailStart d + 1 / 5
 
 /-- This carrier amplitude is fixed by the schedule, independently of `K`. -/
 noncomputable def outgoingAmplitude (d : TailData) : ℝ :=
   powerConstant d * Real.exp (-exponent d.h * switchStart d)
 
+/-- Outgoing shape, given by `tailShape d (t + 1 / 5)`. -/
 noncomputable def outgoingShape (d : TailData) (t : ℝ) : ℝ := tailShape d (t + 1 / 5)
 
+/-- Outgoing profile, given by `finalAngular d (switchStart d + Real.log (X / K), eta)`. -/
 noncomputable def outgoingProfile (d : TailData) (K eta X : ℝ) : ℝ :=
   finalAngular d (switchStart d + Real.log (X / K), eta)
 
+/-- Outgoing edit, given by `edit (outgoingProfile d K eta) d.h ν K X`. -/
 noncomputable def outgoingEdit (d : TailData) (ν K eta X : ℝ) : ℝ :=
   edit (outgoingProfile d K eta) d.h ν K X
 

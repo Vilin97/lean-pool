@@ -7,15 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointData
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletEquation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletMean
+import LeanPool.NavierStokesAndEuler.Euler.TransverseNormalResidual
 
 /-!
-The literal homogeneous physical equation for the constructed nonzero-
+The literal homogeneous physical equation for the constructed nonzero -
 terminal cylinder history. Pointwise tangency and the normal residual are
 deduced from the actual frame range; there is no single L² normal vector.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -80,12 +82,12 @@ theorem endpointDerivative_ae (t : Icc (0 : ℝ) T) :
 theorem endpoint_physical_balance_ae
     (M : Icc (0 : ℝ) T → Space → E →L[ℝ] E) (m : Icc (0 : ℝ) T → Space → E)
     (hm : ∀ t x, m t x ≠ 0)
-    (hTangent : ∀ t x v, ⟪m t x,D.Q t x v⟫_ℝ = 0)
-    (hRange : ∀ t x η, ⟪m t x,η⟫_ℝ = 0 → ∃ v, D.Q t x v = η)
+    (hTangent : ∀ t x v, ⟪m t x, D.Q t x v⟫_ℝ = 0)
+    (hRange : ∀ t x η, ⟪m t x, η⟫_ℝ = 0 → ∃ v, D.Q t x v = η)
     (hFlow : ∀ t x, D.Q₁ t x = (M t x).comp (D.Q t x))
     (t : Icc (0 : ℝ) T) :
     ∀ᵐ x ∂liftMeasure P,
-      D.endpointDerivative P Y t x+M t x.1 (D.endpointVelocity P Y t x)+
+      D.endpointDerivative P Y t x+M t x.1 (D.endpointVelocity P Y t x) +
         (-(2*⟪m t x.1,M t x.1 (D.endpointVelocity P Y t x)⟫_ℝ)/‖m t x.1‖^2) • m t x.1 = 0 := by
   filter_upwards [D.endpoint_coordinate_equation_ae P Y t,D.endpointVelocity_ae P Y t,
     D.endpointDerivative_ae P Y t] with x he hv hd

@@ -7,13 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialPullback
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 /-!
 # Four genuine polar charts with uniform finite-jet bounds
@@ -23,6 +19,9 @@ inverse on neighborhoods of four compact sectors. Their global extensions
 are not asserted to be a global choice of angle.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PolarCharts
@@ -30,7 +29,9 @@ namespace NavierStokes.PolarCharts
 open Set Filter Function
 open scoped ContDiff Topology BigOperators
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
+/-- Index: an abbreviation for `Fin 4`. -/
 abbrev Index := Fin 4
 
 private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -40,9 +41,11 @@ private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 noncomputable def rotate (j : Index) (p : Plane) : Plane :=
   ![(p.1, p.2), (p.2, -p.1), (-p.1, -p.2), (-p.2, p.1)] j
 
+/-- Unrotate, given by `![(p.1, p.2), (-p.2, p.1), (-p.1, -p.2), (p.2, -p.1)] j`. -/
 noncomputable def unrotate (j : Index) (p : Plane) : Plane :=
   ![(p.1, p.2), (-p.2, p.1), (-p.1, -p.2), (p.2, -p.1)] j
 
+/-- Offset, given by `![0, Real.pi / 2, Real.pi, Real.pi + Real.pi / 2] j`. -/
 noncomputable def offset (j : Index) : ℝ :=
   ![0, Real.pi / 2, Real.pi, Real.pi + Real.pi / 2] j
 
@@ -70,6 +73,7 @@ theorem rotate_sum_sq (j : Index) (p : Plane) :
     (rotate j p).1 ^ 2 + (rotate j p).2 ^ 2 = p.1 ^ 2 + p.2 ^ 2 := by
   fin_cases j <;> simp [rotate] <;> ring
 
+/-- Radius, given by `Real.sqrt (p.1 ^ 2 + p.2 ^ 2)`. -/
 noncomputable def radius (p : Plane) : ℝ := Real.sqrt (p.1 ^ 2 + p.2 ^ 2)
 
 theorem radius_nonneg (p : Plane) : 0 ≤ radius p := Real.sqrt_nonneg _
@@ -129,6 +133,7 @@ theorem polar_add_offset (j : Index) (r θ : ℝ) :
   fin_cases j <;> ext <;>
     simp [polar, offset, unrotate, Real.cos_add, Real.sin_add]
 
+/-- Base chart, given by `(radius p, Real.arctan (p.2 / p.1))`. -/
 noncomputable def baseChart (p : Plane) : Plane :=
   (radius p, Real.arctan (p.2 / p.1))
 
@@ -189,6 +194,7 @@ noncomputable def annulus (a b : ℝ) : Set Plane :=
 noncomputable def sector (a b : ℝ) (j : Index) : Set Plane :=
   Metric.closedBall 0 b ∩ {p | a / 2 ≤ (rotate j p).1}
 
+/-- Chart domain, given by `{p | a / 4 < (rotate j p).1}`. -/
 noncomputable def chartDomain (a : ℝ) (j : Index) : Set Plane :=
   {p | a / 4 < (rotate j p).1}
 
@@ -248,8 +254,8 @@ theorem extendedBase_contDiff {a : ℝ} (ha : 0 < a) : ContDiff ℝ ∞ (extende
   have hx : ContDiff ℝ ∞ (fun p : Plane => RadialPullback.positiveRadius (a / 8) p.1) :=
     (RadialPullback.positiveRadius_contDiff _).comp contDiff_fst
   exact (hr.sqrt (fun p => (RadialPullback.positiveRadius_pos (by positivity) _).ne')).prodMk
-    ((contDiff_snd.div hx (fun p => (RadialPullback.positiveRadius_pos (by positivity)
-      _).ne')).arctan)
+    ((contDiff_snd.div hx (fun p => (RadialPullback.positiveRadius_pos (by
+        positivity) _).ne')).arctan)
 
 theorem extendedBase_eq {a : ℝ} (ha : 0 < a) {p : Plane} (hp : a / 4 < p.1) :
     extendedBase a p = baseChart p := by
@@ -354,6 +360,7 @@ theorem chart_comp_linear_finiteJets {a : ℝ} (ha : 0 < a) (b : ℝ) (m : ℕ) 
 
 end Scaling
 
+/-- Scale plane, given by `Q ^ (-(1 / 2 : ℝ)) • ContinuousLinearMap.id ℝ Plane`. -/
 noncomputable def scalePlane (Q : ℝ) : Plane →L[ℝ] Plane :=
   Q ^ (-(1 / 2 : ℝ)) • ContinuousLinearMap.id ℝ Plane
 

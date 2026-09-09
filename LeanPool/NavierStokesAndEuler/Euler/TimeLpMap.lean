@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Exact bounded-map compatibility for the actual continuous-path to Bochner L² inclusion. -/
 
 @[expose] public section
 
-/-! Exact bounded-map compatibility for the actual continuous-path to Bochner L² inclusion. -/
 
 noncomputable section
 
@@ -45,11 +48,12 @@ theorem limit_restriction_eq (T : ℝ) (hT : 0 ≤ T) (A : E →L[ℝ] F)
       fun n => pathLp T hT (A.compLeftContinuous ℝ (Icc (0 : ℝ) T) (f n)) :=
     funext (fun n => pathLp_map T hT A (f n))
   change Filter.Tendsto (fun n => A.compLpL 2 (timeMeasure T) (pathLp T hT (f n))) Filter.atTop _
-    at hA
+      at hA
   rw [he] at hA
   exact tendsto_nhds_unique hA hB
 
-/-- The limiting restriction equality identifies genuine pointwise fields almost everywhere in time. -/
+/-- The limiting restriction equality identifies genuine pointwise fields almost everywhere in time.
+-/
 theorem limit_restriction_ae (T : ℝ) (hT : 0 ≤ T) (A : E →L[ℝ] F)
     (f : ℕ → C(Icc (0 : ℝ) T, E)) (g : C(Icc (0 : ℝ) T, F)) (U : TimeLp T E)
     (hf : Filter.Tendsto (fun n => pathLp T hT (f n)) Filter.atTop (𝓝 U))

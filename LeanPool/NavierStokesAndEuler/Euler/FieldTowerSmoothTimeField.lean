@@ -7,18 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderBoundedCover
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverTensor
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedTensorCoordinates
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPointwiseGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
-public import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivativeWithin
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverTensor
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPointwiseGevrey
+import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivativeWithin
 
 /-! An actual coherent Sobolev tower gives a smooth bounded coefficient
 on the real cylinder cover, including all spatial jets in the continuous
 uniform time norm. The construction uses its genuine derivative words;
 no translation-orbit hypothesis is added. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +34,8 @@ open Set MeasureTheory ContinuousLinearMap EulerLiftedGradientSpace EulerSmoothL
   EulerSobolevGevreyOperators EulerVolterraConvolution
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Cover basis, given by `(EuclideanSpace.basisFun (Fin 4) ℝ).toBasis.map
+coordinateLinearEquiv`. -/
 def coverBasis : Module.Basis (Fin 4) ℝ LiftTangent :=
   (EuclideanSpace.basisFun (Fin 4) ℝ).toBasis.map coordinateLinearEquiv
 
@@ -41,21 +46,40 @@ def coverBasis : Module.Basis (Fin 4) ℝ LiftTangent :=
 
 variable {P T : ℝ} [Fact (0 < P)] (A : EulerAllOrderCorrectionData.FieldTower P T)
 
-private local instance (q : ℕ) : NormedAddCommGroup (SobolevSpace P q) := inferInstance
-private local instance (q : ℕ) : NormedSpace ℝ (SobolevSpace P q) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace P q)` instance to shorten typeclass
+synthesis. -/
+local instance instFieldTowerSmoothTimeField1 (q : ℕ) : NormedAddCommGroup (SobolevSpace P q) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace P q)` instance to shorten typeclass
+synthesis. -/
+local instance instFieldTowerSmoothTimeField2 (q : ℕ) : NormedSpace ℝ (SobolevSpace P q) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instFieldTowerSmoothTimeField3 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instFieldTowerSmoothTimeField4 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instFieldTowerSmoothTimeField5 (n : ℕ) : NormedAddCommGroup
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))` instance
+to shorten typeclass synthesis. -/
+local instance instFieldTowerSmoothTimeField6 (n : ℕ) : NormedSpace ℝ
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
 
+/-- Bounded cover, given by `coverPathMap P (A.realization 3)`. -/
 def boundedCover : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
   coverPathMap P (A.realization 3)
 
 @[simp] theorem boundedCover_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     A.boundedCover t x = A.pointField t (coveringMap P x) := rfl
 
+/-- Bounded word, given by `coverPathMap P ((wordAtLevel P 3 n w (le_refl
+(n+3))).compLeftContinuous ℝ (Icc (0 : ℝ) T) (A.realization (n+3)))`. -/
 def boundedWord (n : ℕ) (w : Fin n → Fin 4) : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
   coverPathMap P ((wordAtLevel P 3 n w (le_refl (n+3))).compLeftContinuous ℝ (Icc (0 : ℝ) T)
     (A.realization (n+3)))
@@ -76,6 +100,7 @@ theorem boundedWord_tensor (n : ℕ) (w : Fin n → Fin 4)
   simp only [coverBasis_apply]
   rfl
 
+/-- To smooth time field, constructed using `SmoothTimeField.ofCoordinateJets`. -/
 def toSmoothTimeField : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Space :=
   SmoothTimeField.ofCoordinateJets coverBasis A.boundedCover
     (fun t => coverField_contDiff P (A.pointField t) (A.pointField_smooth t))

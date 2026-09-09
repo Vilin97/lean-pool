@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerState
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHessianSymmetry
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHessianSymmetry
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The scalar pressure of a finite packet evolution is spatially smooth
 because its actual gradient is smooth. Its curvature operator is therefore
 symmetric, as required by the particle-map vorticity transport argument. -/
+
+@[expose] public section
+
 
 noncomputable section
 

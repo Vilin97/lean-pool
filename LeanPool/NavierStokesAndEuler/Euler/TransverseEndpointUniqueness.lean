@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
 
-@[expose] public section
-
 /-!
 Uniqueness and trial independence for the actual nonzero-terminal transverse
 inverse.  Equal terminal traces and actual tangency place differences in the
 existing zero-endpoint Hilbert space; the proved energy coercivity then
 identifies all constructions of the same weak solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

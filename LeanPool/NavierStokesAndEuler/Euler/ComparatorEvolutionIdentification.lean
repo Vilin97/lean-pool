@@ -6,12 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorTimeShift
 public import LeanPool.NavierStokesAndEuler.Euler.EvolutionTimeShift
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
-public import Mathlib.Topology.Order.IntermediateValue
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorTimeShift
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
 
 /-!
 # Identification after local regularity recovery
@@ -21,6 +20,9 @@ Comparator solution with compact initial vorticity into an ordinary smooth
 Euler evolution. Restarting that conversion at times of agreement, ordinary
 Euler uniqueness and continuity identify the entire maximal interval.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

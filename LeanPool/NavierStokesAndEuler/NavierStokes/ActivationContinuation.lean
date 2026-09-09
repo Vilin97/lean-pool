@@ -9,9 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ReferenceBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TransitionRamp
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 
 /-!
 # The relaxed continuation after the initial activation
@@ -19,6 +17,9 @@ public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 The comparison formulas use actual stock coordinates. The scalar barrier
 uses the differential equation of the primitive-defined angular lag.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,16 +31,22 @@ namespace NavierStokes.ActivationContinuation
 open ProfileHistories
 
 
+/-- Shear size, given by `a * (1 + (b / a) ^ 2)`. -/
 noncomputable def shearSize (a b : ℝ) : ℝ := a * (1 + (b / a) ^ 2)
+/-- Projection, given by `p + q * (b / a)`. -/
 noncomputable def projection (p q a b : ℝ) : ℝ := p + q * (b / a)
+/-- Transverse, given by `q - p * (b / a)`. -/
 noncomputable def transverse (p q a b : ℝ) : ℝ := q - p * (b / a)
 
+/-- Relaxed data, collecting `first_positive`, `projection_positive`, `cone`. -/
 structure Relaxed (a b p q : ℝ) : Prop where
   first_positive : 0 < a
   projection_positive : 2 < projection p q a b
   cone : shearSize a b < ConeAlgebra.coneBound (projection p q a b) (transverse p q a b)
 
+/-- Projection constant, given by `1 + 2 * M + M ^ 2`. -/
 noncomputable def projectionConstant (M : ℝ) : ℝ := 1 + 2 * M + M ^ 2
+/-- Speed constant, given by `M * (1 + 4 * M ^ 2)`. -/
 noncomputable def speedConstant (M : ℝ) : ℝ := M * (1 + 4 * M ^ 2)
 
 theorem projectionConstant_pos {M : ℝ} (hM : 0 ≤ M) : 0 < projectionConstant M := by
@@ -73,8 +80,8 @@ theorem projection_comparison {A B p q θ R M ε : ℝ} (hM : 0 ≤ M)
   calc
     _ ≤ |p - A| + |q - B| * |θ| * |B / A| * |R| +
         |θ| * |B| * |B / A| * |R - 1| := by
-      exact ((abs_add_le _ _).trans (add_le_add_left (abs_add_le _ _) _)).trans_eq (by simp only
-        [abs_mul])
+      exact ((abs_add_le _ _).trans (add_le_add_left (abs_add_le _ _) _)).trans_eq (by
+          simp only [abs_mul])
     _ ≤ ε + ε * 1 * M * 2 + 1 * M * M * ε := by
       rw [abs_of_nonneg hθ.1]
       gcongr <;> first | exact hθ.1 | exact hθ.2
@@ -152,9 +159,13 @@ section Physical
 
 variable {D : RadialDomain} (P : Profiles D)
 
+/-- Shear A, given by `-2 * p.1 * radialPartial P.f p / P.f p`. -/
 noncomputable def shearA (p : Point) : ℝ := -2 * p.1 * radialPartial P.f p / P.f p
+/-- Shear B, given by `-2 * p.1 * radialPartial P.U p / P.E p`. -/
 noncomputable def shearB (p : Point) : ℝ := -2 * p.1 * radialPartial P.U p / P.E p
 
+/-- Is relaxed, given by `Relaxed (shearA P p) (shearB P p) (ReferenceBounds.p1 P h p)
+(ReferenceBounds.p2 P h p)`. -/
 noncomputable def IsRelaxed (h : ℝ) (p : Point) : Prop :=
   Relaxed (shearA P p) (shearB P p) (ReferenceBounds.p1 P h p) (ReferenceBounds.p2 P h p)
 
@@ -174,6 +185,7 @@ end Physical
 
 /-! ## An exact barrier for the final constant-slope hold -/
 
+/-- Weighted gap, given by `Real.exp ((3 / 5 : ℝ) * Real.log X) * (g X - b)`. -/
 noncomputable def weightedGap (g : ℝ → ℝ) (b X : ℝ) : ℝ :=
   Real.exp ((3 / 5 : ℝ) * Real.log X) * (g X - b)
 
@@ -184,7 +196,7 @@ theorem weightedGap_hasDerivAt {g : ℝ → ℝ} {g' X : ℝ} (hX : 0 < X)
         (X * g' + (3 / 5) * g X - (3 / 5) * b)) X := by
   have hd := (((Real.hasDerivAt_log hX.ne').const_mul (3 / 5 : ℝ)).exp).mul (hg.sub_const b)
   convert! hd using 1
-  field_simp ; ring
+  field_simp; ring
 
 theorem scalar_hold_barrier {g : ℝ → ℝ} {a X b : ℝ} (ha : 0 < a) (haX : a ≤ X)
     (hg : ∀ t ∈ Icc a X, DifferentiableAt ℝ g t)
@@ -238,14 +250,19 @@ theorem actual_hold_barrier {D : RadialDomain} (P : Profiles D) {h η a X : ℝ}
 
 open NaturalAxisCoefficients
 
+/-- Hold vector, given by `![1, v 1, v 2, v 3, v 4]`. -/
 noncomputable def holdVector (v : Fin 5 → ℝ) : Fin 5 → ℝ :=
   ![1, v 1, v 2, v 3, v 4]
 
+/-- Hold remainder, given by `ReferenceBounds.qRemainder h j σ (1, η) 1 (holdVector v) t (-2 /
+5)`. -/
 noncomputable def holdRemainder (h j σ η : ℝ) (v : Fin 5 → ℝ) (t : ℝ) : ℝ :=
   ReferenceBounds.qRemainder h j σ (1, η) 1 (holdVector v) t (-2 / 5)
 
+/-- Hold parameter: an abbreviation for `Icc (-1 : ℝ) 1 × ReferenceBounds.BoundedJets B`. -/
 abbrev HoldParameter (B : ℝ) := Icc (-1 : ℝ) 1 × ReferenceBounds.BoundedJets B
 
+/-- Hold model, given by `holdRemainder h j σ p.1.val p.2.val t`. -/
 noncomputable def holdModel (h j σ B : ℝ) (p : HoldParameter B) (t : ℝ) : ℝ :=
   holdRemainder h j σ p.1.val p.2.val t
 
@@ -318,7 +335,7 @@ theorem holdModel_uniform_lower {h j σ : ℝ} (hsmall : NaturalAxisData.SmallPa
       (NaturalAxisData.chi_bounds h j hσ p.1.val).1) (3 / 2 : ℝ) (by
         intro p hz
         have hchi := (mul_eq_zero.mp hz).resolve_left (NaturalAxisData.L_pos hsmall
-          p.1.property).ne'
+            p.1.property).ne'
         rw [holdModel_chi_zero h j B hσ p hchi]
         linarith [hold_axis_source_lower hsmall p.1.property])
   obtain ⟨τ, hτ, hpert⟩ := NaturalEntrance.compact_small_perturbation _
@@ -345,7 +362,7 @@ theorem hold_source_identity {D : RadialDomain} (P : Profiles D) (h j σ : ℝ)
     unfold ReferenceBounds.logSlope at hl
     linarith
   have hv : holdVector (ReferenceBounds.qJets P j σ h Λ 1 p) = ReferenceBounds.qJets P j σ h Λ 1 p
-    := by
+      := by
     ext i
     fin_cases i <;> rfl
   unfold holdRemainder
@@ -392,16 +409,22 @@ theorem compact_vector_perturbation {K E F : Type*} [MetricSpace K] [CompactSpac
     simpa only [Prod.dist_eq, dist_self, dist_zero_right, max_eq_right (norm_nonneg e)] using heδ
   simpa only [dist_eq_norm] using hb (p, e) hp (p, 0) hp0 hd
 
+/-- Stock jet: an abbreviation for `Fin 12 → ℝ`. -/
 abbrev StockJet := Fin 12 → ℝ
 
+/-- Stock jet as an element of `StockJet`. -/
 noncomputable def stockJet {D : RadialDomain} (P : Profiles D) (p : Point) : StockJet :=
   ![P.f p, P.U p, P.M p, parameterPartial P.M p, P.I p, parameterPartial P.I p,
     P.J p, parameterPartial P.J p, P.S p, parameterPartial P.S p,
     P.pressure p, parameterPartial P.pressure p]
 
+/-- Stock one map, given by `ActivationStocks.stockOne h p.1 p.2 (z 0) (z 2) (z 3) (z 4) (z 5)
+(z 6) (z 7)`. -/
 noncomputable def stockOneMap (h : ℝ) (p : Point) (z : StockJet) : ℝ :=
   ActivationStocks.stockOne h p.1 p.2 (z 0) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7)
 
+/-- Stock two map, given by `ActivationStocks.stockTwo h p.1 p.2 (z 0) (z 1) (z 2) (z 3) (z 8)
+(z 9) (z 10) (z 11)`. -/
 noncomputable def stockTwoMap (h : ℝ) (p : Point) (z : StockJet) : ℝ :=
   ActivationStocks.stockTwo h p.1 p.2 (z 0) (z 1) (z 2) (z 3) (z 8) (z 9) (z 10) (z 11)
 
@@ -418,11 +441,14 @@ theorem stockJet_coordinates {D : RadialDomain} (P : Profiles D) (h : ℝ)
     unfold ReferenceBounds.p2 ReferenceBounds.ns
     ring
 
+/-- Stock ball: an abbreviation for `Metric.closedBall (0 : StockJet) B instance (B : ℝ) :
+CompactSpace (StockBall B) := isCompact_iff_compactSpace.mp (isCompact_closedBall _ _)`. -/
 abbrev StockBall (B : ℝ) := Metric.closedBall (0 : StockJet) B
 
 instance (B : ℝ) : CompactSpace (StockBall B) :=
   isCompact_iff_compactSpace.mp (isCompact_closedBall _ _)
 
+/-- Clipped stock map as an element of `Fin 3 → ℝ`. -/
 noncomputable def clippedStockMap (h μ : ℝ) (p : Point) (z e : StockJet) : Fin 3 → ℝ :=
   let w := z + e
   let f := max μ (w 0)
@@ -458,8 +484,9 @@ theorem clippedStockMap_continuous {h j μ B : ℝ}
         ((q.1.2.val + q.2) 5) ((q.1.2.val + q.2) 6) ((q.1.2.val + q.2) 7))
     unfold ActivationStocks.stockOne ActivationStocks.massFlux ActivationStocks.angularRemainder
     unfold NaturalAxisData.L NaturalAxisData.D NaturalAxisData.d
-    fun_prop (disch := first | exact hl | exact fun q => mul_ne_zero (mul_ne_zero (by norm_num) (hx
-      q)) (hf q))
+    fun_prop (disch := first
+      | exact hl
+      | exact fun q => mul_ne_zero (mul_ne_zero (by norm_num) (hx q)) (hf q))
   · change Continuous (fun q : (S × StockBall B) × StockJet =>
       ActivationStocks.stockTwo h q.1.1.val.1 q.1.1.val.2 (max μ ((q.1.2.val + q.2) 0))
         ((q.1.2.val + q.2) 1) ((q.1.2.val + q.2) 2) ((q.1.2.val + q.2) 3)
@@ -468,7 +495,7 @@ theorem clippedStockMap_continuous {h j μ B : ℝ}
     unfold NaturalAxisData.L NaturalAxisData.D NaturalAxisData.d NaturalAxisData.A
     fun_prop (disch := exact fun q => mul_ne_zero (mul_ne_zero (hl q) (hs q)) (hf q))
   · change Continuous (fun q : (S × StockBall B) × StockJet => q.1.2.val 0 / max μ ((q.1.2.val +
-    q.2) 0))
+      q.2) 0))
     fun_prop (disch := exact hf)
 
 /-- Uniform stock continuity on a bounded set of actual profile/history
@@ -504,21 +531,24 @@ theorem uniform_stock_transfer {h j μ B ε : ℝ}
       Pi.sub_apply, Matrix.cons_val_zero, Real.norm_eq_abs, stockOneMap] using hcoord 0
   · simpa only [clippedStockMap, heq, hzero, max_eq_right hw0.le, max_eq_right hzμ,
       Pi.sub_apply, Matrix.cons_val_one, Matrix.cons_val_zero, Real.norm_eq_abs, stockTwoMap] using
-        hcoord 1
+          hcoord 1
   · have hzn : z 0 ≠ 0 := (hμ.trans_le hzμ).ne'
     simpa only [clippedStockMap, heq, hzero, max_eq_right hw0.le, max_eq_right hzμ,
       Pi.sub_apply, Matrix.cons_val, Matrix.cons_val_zero, Real.norm_eq_abs, div_self hzn] using
-        hcoord 2
+          hcoord 2
 
 /-! ## The five history rows follow from actual first parameter jets -/
 
 open StressActivation
 
+/-- Field jet: an abbreviation for `Fin 4 → ℝ`. -/
 abbrev FieldJet := Fin 4 → ℝ
 
+/-- Field jet, given by `![P.f p, P.U p, parameterPartial P.f p, parameterPartial P.U p]`. -/
 noncomputable def fieldJet {D : RadialDomain} (P : Profiles D) (p : Point) : FieldJet :=
   ![P.f p, P.U p, parameterPartial P.f p, parameterPartial P.U p]
 
+/-- Density jet as an element of `Fin 10 → ℝ`. -/
 noncomputable def densityJet (X : ℝ) (z : FieldJet) : Fin 10 → ℝ :=
   ![z 1, z 3, 2 * X * z 0, 2 * X * z 2,
     z 1 * (2 * X * z 0), z 3 * (2 * X * z 0) + z 1 * (2 * X * z 2),
@@ -530,9 +560,11 @@ theorem densityJet_continuous : Continuous (fun p : ℝ × FieldJet => densityJe
   repeat' apply Continuous.matrixVecCons
   all_goals fun_prop
 
+/-- Value index, given by `HistoryRow.rec (motive := fun _ => Fin 10) 0 2 4 6 8 r`. -/
 noncomputable def valueIndex (r : HistoryRow) : Fin 10 :=
   HistoryRow.rec (motive := fun _ => Fin 10) 0 2 4 6 8 r
 
+/-- Derivative index, given by `HistoryRow.rec (motive := fun _ => Fin 10) 1 3 5 7 9 r`. -/
 noncomputable def derivativeIndex (r : HistoryRow) : Fin 10 :=
   HistoryRow.rec (motive := fun _ => Fin 10) 1 3 5 7 9 r
 
@@ -543,7 +575,7 @@ theorem densityJet_value {D : RadialDomain} (P : Profiles D) (r : HistoryRow) (p
 theorem densityJet_derivative {D : RadialDomain} (P : Profiles D) (r : HistoryRow)
     {p : Point} (hp : p ∈ D.carrier) :
     densityJet p.1 (fieldJet P p) (derivativeIndex r) = parameterPartial (profileDensity P r) p :=
-      by
+        by
   cases r with
   | mass => rfl
   | angular => exact (P.parameterPartial_H hp).symm
@@ -600,8 +632,10 @@ theorem profileHistory_parameter_difference {D E : RadialDomain} (P : Profiles D
   exact (intervalIntegral.integral_sub
     (radial_slice_intervalIntegrable D (parameterPartial_smooth D (profileDensity_smooth P r)) hp)
     (radial_slice_intervalIntegrable E (parameterPartial_smooth E (profileDensity_smooth Q r))
-      hq)).symm
+        hq)).symm
 
+/-- Field ball: an abbreviation for `Metric.closedBall (0 : FieldJet) B instance (B : ℝ) :
+CompactSpace (FieldBall B) := isCompact_iff_compactSpace.mp (isCompact_closedBall _ _)`. -/
 abbrev FieldBall (B : ℝ) := Metric.closedBall (0 : FieldJet) B
 
 instance (B : ℝ) : CompactSpace (FieldBall B) :=
@@ -663,7 +697,7 @@ theorem field_to_stockJet_transfer (B : ℝ) {ε : ℝ} (hε : 0 < ε) :
       intro t ht
       have hh := (norm_le_pi_norm
         (densityJet t (fieldJet P (t, p.2)) - densityJet t (fieldJet Q (t, p.2))) (valueIndex
-          r)).trans_lt (hd t ht)
+            r)).trans_lt (hd t ht)
       simpa only [Real.norm_eq_abs, Pi.sub_apply, densityJet_value P r (t, p.2),
         densityJet_value Q r (t, p.2)] using hh.le
     · rw [profileHistory_parameter_difference P Q h0 r hp hq]
@@ -673,7 +707,7 @@ theorem field_to_stockJet_transfer (B : ℝ) {ε : ℝ} (hε : 0 < ε) :
       have htq := E.segment_mem hq (uIcc_of_le hX.1 ▸ ht)
       have hh := (norm_le_pi_norm
         (densityJet t (fieldJet P (t, p.2)) - densityJet t (fieldJet Q (t, p.2))) (derivativeIndex
-          r)).trans_lt (hd t ht)
+            r)).trans_lt (hd t ht)
       simpa only [Real.norm_eq_abs, Pi.sub_apply, densityJet_derivative P r htp,
         densityJet_derivative Q r htq] using hh.le
   have hfield : ‖fieldJet P p - fieldJet Q p‖ < ε := by
@@ -698,12 +732,12 @@ theorem field_to_stockJet_transfer (B : ℝ) {ε : ℝ} (hε : 0 < ε) :
 theorem uniform_density_bound (B : ℝ) :
     ∃ K ≥ 0, ∀ X ∈ Icc (0 : ℝ) 110, ∀ z : FieldJet, ‖z‖ ≤ B → ‖densityJet X z‖ ≤ K := by
   obtain ⟨K, hK⟩ := (isCompact_Icc.prod (isCompact_closedBall (0 : FieldJet)
-    B)).exists_bound_of_continuousOn
+      B)).exists_bound_of_continuousOn
     densityJet_continuous.continuousOn
   refine ⟨max K 0, le_max_right _ _, ?_⟩
   intro X hX z hz
-  exact (hK (X, z) ⟨hX, by simpa only [Metric.mem_closedBall, dist_zero_right] using hz⟩).trans
-    (le_max_left _ _)
+  exact (hK (X, z) ⟨hX, by
+      simpa only [Metric.mem_closedBall, dist_zero_right] using hz⟩).trans (le_max_left _ _)
 
 theorem integral_bounded_length {f : ℝ → ℝ} {X K : ℝ} (hX : X ∈ Icc (0 : ℝ) 110)
     (hK : 0 ≤ K) (hf : ∀ t ∈ Icc (0 : ℝ) X, |f t| ≤ K) :
@@ -740,14 +774,14 @@ theorem stockJet_uniform_bound {B B0 : ℝ} (hB : 0 ≤ B) (hB0 : 0 ≤ B0) :
       apply integral_bounded_length hX hK0
       intro t ht
       have hh := (norm_le_pi_norm (densityJet t (fieldJet P (t, p.2))) (valueIndex r)).trans (hd t
-        ht)
+          ht)
       simpa only [Real.norm_eq_abs, densityJet_value P r (t, p.2)] using hh
     have he : |primitive (parameterPartial (profileDensity P r)) p| ≤ 110 * K0 := by
       apply integral_bounded_length hX hK0
       intro t ht
       have htp := D.segment_mem hp (uIcc_of_le hX.1 ▸ ht)
       have hh := (norm_le_pi_norm (densityJet t (fieldJet P (t, p.2))) (derivativeIndex r)).trans
-        (hd t ht)
+          (hd t ht)
       simpa only [Real.norm_eq_abs, densityJet_derivative P r htp] using hh
     constructor
     · rw [profileHistory_eq_initial_add_primitive]
@@ -796,7 +830,7 @@ theorem uniform_stock_bound {h j μ B : ℝ} (hsmall : NaturalAxisData.SmallPara
     linarith [le_abs_self M]
   · have he : |stockTwoMap h p z| ≤ M := by
       simpa only [clippedStockMap, add_zero, max_eq_right hf, Matrix.cons_val_one,
-        Matrix.cons_val_zero,
+          Matrix.cons_val_zero,
         stockTwoMap, Real.norm_eq_abs] using hh1
     linarith [le_abs_self M]
 
@@ -809,7 +843,7 @@ theorem reference_first_lower {h j σ Λ C δ : ℝ} {P0 : ℝ → ℝ}
     (hb : ReferenceBounds.ReferenceBoundsOnHold E.profile hΛ hδ hδT hP0)
     {p : Point} (hp : p ∈ ReferenceBounds.holdRegion) (hX : 0 < p.1) :
     (6 / 5 : ℝ) * p.1 ≤ ReferenceBounds.p1 (ReferenceBounds.referenceProfiles E.profile hΛ hδ hδT
-      hP0) h p := by
+        hP0) h p := by
   let P := ReferenceBounds.referenceProfiles E.profile hΛ hδ hδT hP0
   let N := ReferencePath.Input.ofNatural hΛ E.profile.family
   have hL := NaturalAxisData.L_pos hsmall hp.2
@@ -826,12 +860,13 @@ theorem reference_first_lower {h j σ Λ C δ : ℝ} {P0 : ℝ → ℝ}
     (ReferenceBounds.reference_mem E.profile hΛ hp.1.1 hp.2) hX h hL
     (by norm_num : (0 : ℝ) ≤ 12 / 5)
     (fun t ht => N.refF_pos δ (ReferenceBounds.reference_mem E.profile hΛ (p := (t, p.2)) ht.1
-      hp.2) ht.1)
+        hp.2) ht.1)
     (ReferenceBounds.reference_antitone E hΛ hδ hδT hP0 hX.le hp.2) hsource
   apply le_trans _ hlow
   apply (le_div_iff₀ (mul_pos (by norm_num) hL)).mpr
   nlinarith
 
+/-- Exp jet, given by `(Real.exp p.1, Real.exp p.1 * p.2)`. -/
 noncomputable def expJet (p : ℝ × ℝ) : ℝ × ℝ := (Real.exp p.1, Real.exp p.1 * p.2)
 
 theorem expJet_continuous : Continuous expJet := by unfold expJet; fun_prop
@@ -841,7 +876,7 @@ theorem expJet_uniform (B : ℝ) {ε : ℝ} (hε : 0 < ε) :
   let : CompactSpace (Metric.closedBall (0 : ℝ × ℝ) B) :=
     isCompact_iff_compactSpace.mp (isCompact_closedBall _ _)
   have hc : Continuous (fun q : Metric.closedBall (0 : ℝ × ℝ) B × (ℝ × ℝ) => expJet (q.1.val +
-    q.2)) :=
+      q.2)) :=
     expJet_continuous.comp ((continuous_subtype_val.comp continuous_fst).add continuous_snd)
   obtain ⟨τ, hτ, hb⟩ := compact_vector_perturbation _ hc hε
   refine ⟨τ, hτ, ?_⟩
@@ -867,8 +902,8 @@ theorem comparison_tolerances {M : ℝ} (hM : 0 ≤ M) :
   refine ⟨ε, κstar, lt_min zero_lt_one (one_div_pos.mpr (mul_pos (by norm_num) hp)),
     min_le_left _ _, hk, ?_, ?_, ?_, ?_⟩
   · nlinarith [mul_nonneg hk.le hv, mul_nonneg hk.le hM]
-  · have hh := (le_div_iff₀ (mul_pos (by norm_num : (0 : ℝ) < 8) hp)).mp (min_le_right 1 (1 / (8 *
-    projectionConstant M)))
+  · have hh := (le_div_iff₀ (mul_pos (by
+      norm_num : (0 : ℝ) < 8) hp)).mp (min_le_right 1 (1 / (8 * projectionConstant M)))
     dsimp [ε]
     nlinarith
   · nlinarith [mul_nonneg hk.le hM]
@@ -937,21 +972,23 @@ theorem endpoint_field_continuous :
     (ReferenceJetBounds.endpoint_mem N hη))).continuousAt.comp
       (continuousAt_const.prodMk continuousAt_id)).continuousWithinAt
 
+/-- Endpoint log jet, given by `(Real.log (N.f (N.endpoint, η)), parameterPartial N.f
+(N.endpoint, η) / N.f (N.endpoint, η))`. -/
 noncomputable def endpointLogJet (η : ℝ) : ℝ × ℝ :=
   (Real.log (N.f (N.endpoint, η)), parameterPartial N.f (N.endpoint, η) / N.f (N.endpoint, η))
 
 theorem endpointLogJet_bound : ∃ B0 ≥ 0, ∀ η ∈ Icc (-1 : ℝ) 1, ‖endpointLogJet N η‖ ≤ B0 := by
   have hpart : ContDiffOn ℝ ∞ (parameterPartial N.f) (NaturalProfile.domain N.scale) :=
-    (N.f_smooth.fderiv_of_isOpen (NaturalProfile.domain_isOpen N.scale) (by simp)).clm_apply
-      contDiffOn_const
+    (N.f_smooth.fderiv_of_isOpen (NaturalProfile.domain_isOpen N.scale) (by
+        simp)).clm_apply contDiffOn_const
   have hc : ContinuousOn (endpointLogJet N) (Icc (-1 : ℝ) 1) := by
     intro η hη
     have hm := ReferenceJetBounds.endpoint_mem N hη
     have hf := (N.f_smooth.contDiffAt ((NaturalProfile.domain_isOpen N.scale).mem_nhds
-      hm)).continuousAt.comp
+        hm)).continuousAt.comp
       (continuousAt_const.prodMk continuousAt_id)
     have hg := (hpart.contDiffAt ((NaturalProfile.domain_isOpen N.scale).mem_nhds
-      hm)).continuousAt.comp
+        hm)).continuousAt.comp
       (continuousAt_const.prodMk continuousAt_id)
     have hn := (N.endpoint_f_pos (original_interval_interior hη)).ne'
     exact ((hf.log hn).prodMk (hg.div hf hn)).continuousWithinAt
@@ -1103,12 +1140,15 @@ theorem nearby_source_jets {D E : RadialDomain} (P : Profiles D) (Q : Profiles E
 /-- A radius interval starting at the natural entrance. -/
 noncomputable def continuationRegion (X0 : ℝ) : Set Point := Icc X0 110 ×ˢ Icc (-1 : ℝ) 1
 
+/-- Stock control data, collecting `first_positive`, `first_bound`, `second_bound`,
+`ratio_bound`. -/
 structure StockControl {D : RadialDomain} (P : Profiles D) (h M : ℝ) (S : Set Point) : Prop where
   first_positive : ∀ p ∈ S, 0 < ReferenceBounds.p1 P h p
   first_bound : ∀ p ∈ S, ReferenceBounds.p1 P h p ≤ M
   second_bound : ∀ p ∈ S, |ReferenceBounds.p2 P h p| ≤ M
   ratio_bound : ∀ p ∈ S, |ReferenceBounds.p2 P h p / ReferenceBounds.p1 P h p| ≤ M
 
+/-- Stock close data, collecting `first`, `second`, `ratio`. -/
 structure StockClose {D E : RadialDomain} (P : Profiles D) (Q : Profiles E)
     (h ε : ℝ) (p : Point) : Prop where
   first : |ReferenceBounds.p1 P h p - ReferenceBounds.p1 Q h p| < ε
@@ -1117,10 +1157,15 @@ structure StockClose {D E : RadialDomain} (P : Profiles D) (Q : Profiles E)
 
 /-- All constants in this record are selected before the REF cutoff. -/
 structure ComparisonScales where
+  /-- Bound of `ComparisonScales`, of type `ℝ`. -/
   bound : ℝ
+  /-- Error of `ComparisonScales`, of type `ℝ`. -/
   error : ℝ
+  /-- Damping of `ComparisonScales`, of type `ℝ`. -/
   damping : ℝ
+  /-- Field tolerance of `ComparisonScales`, of type `ℝ`. -/
   fieldTolerance : ℝ
+  /-- Reference radius of `ComparisonScales`, of type `ℝ`. -/
   referenceRadius : ℝ
   bound_pos : 0 < bound
   error_pos : 0 < error
@@ -1197,8 +1242,8 @@ theorem prepare_stock_comparison {h j σ Λ C B K : ℝ} {P0 : ℝ → ℝ}
         ⟨⟨(hSX p hp).le, hp.1.2⟩, hp.2⟩ (hSX p hp))
   have hbnd (p : Point) (hp : p ∈ S) :
       |ReferenceBounds.p1 Q h p| ≤ M0 ∧ |ReferenceBounds.p2 Q h p| ≤ M0 := by
-    have hh := hstock p hp (stockJet Q p) (hqstate p hp) (by change μ ≤ Q.f p; linarith [hqfloor p
-      hp])
+    have hh := hstock p hp (stockJet Q p) (hqstate p hp) (by
+        change μ ≤ Q.f p; linarith [hqfloor p hp])
     rwa [(hqcoords p hp).1, (hqcoords p hp).2] at hh
   refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_⟩
   · intro p hp
@@ -1211,7 +1256,10 @@ theorem prepare_stock_comparison {h j σ Λ C B K : ℝ} {P0 : ℝ → ℝ}
     have hpos := hα.trans_le (hlow p hp)
     calc
       _ = |ReferenceBounds.p2 Q h p| / ReferenceBounds.p1 Q h p := by rw [abs_div, abs_of_pos hpos]
-      _ ≤ M0 / α := by gcongr; exact (hbnd p hp).2; exact hlow p hp
+      _ ≤ M0 / α := by
+        gcongr
+        · exact (hbnd p hp).2
+        · exact hlow p hp
       _ ≤ M := hratioM
   · intro D P hp0eq p hp hpD hclose
     have hpQ := ReferenceBounds.reference_mem E.profile hΛ (hSX p hp).le hp.2
@@ -1364,12 +1412,12 @@ theorem physical_fieldJet_before {p : Point}
     have hd := parameterPartial_hasDerivAt (Input.ofNatural hΛ F).radialDomain P.f_smooth hp
     rw [hf] at hd
     exact hd.unique (parameterPartial_hasDerivAt (Input.ofNatural hΛ F).radialDomain
-      R.profiles.f_smooth hp)
+        R.profiles.f_smooth hp)
   have huη : parameterPartial P.U p = parameterPartial R.profiles.U p := by
     have hd := parameterPartial_hasDerivAt (Input.ofNatural hΛ F).radialDomain P.U_smooth hp
     rw [hu] at hd
     exact hd.unique (parameterPartial_hasDerivAt (Input.ofNatural hΛ F).radialDomain
-      R.profiles.U_smooth hp)
+        R.profiles.U_smooth hp)
   change fieldJet P p = fieldJet R.profiles p
   unfold fieldJet
   rw [show P.f p = R.profiles.f p from congrFun hf p.2,
@@ -1501,14 +1549,21 @@ theorem physical_control_mono {J K : Set ℝ} (R : TransitionRamp.StockReference
 
 /-! ## Parameters and actual profiles of one common continuation -/
 
+/-- Ramp parameters data, collecting `refTime`, `actTime`, `kappa`, `widthU`, `widthA`,
+`refTime_pos` and their compatibility conditions. -/
 structure RampParameters {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : AnalyticInputs h j σ P0} (F : NaturalProfile.ProfileFamily d Λ C)
     (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallParameters h j)
     (hP0 : ContDiff ℝ ∞ P0) where
+  /-- Ref time of `RampParameters`, of type `ℝ`. -/
   refTime : ℝ
+  /-- Act time of `RampParameters`, of type `ℝ`. -/
   actTime : ℝ
+  /-- Kappa of `RampParameters`, of type `ℝ`. -/
   kappa : ℝ
+  /-- Width U of `RampParameters`, of type `ℝ`. -/
   widthU : ℝ
+  /-- Width A of `RampParameters`, of type `ℝ`. -/
   widthA : ℝ
   refTime_pos : 0 < refTime
   refTime_bound : 2 * refTime < ReferencePath.rampLimit
@@ -1531,15 +1586,21 @@ variable {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {hΛ : 0 < Λ} {hsmall : NaturalAxisData.SmallParameters h j}
     {hP0 : ContDiff ℝ ∞ P0} (r : RampParameters F hΛ hsmall hP0)
 
+/-- Reference, given by `TransitionRamp.ofNatural F hΛ hsmall r.refTime_pos r.refTime_bound
+hP0`. -/
 noncomputable def reference : TransitionRamp.StockReference ReferencePath.parameterInterval :=
   TransitionRamp.ofNatural F hΛ hsmall r.refTime_pos r.refTime_bound hP0
 
+/-- Profiles, constructed using `TransitionRamp.physicalProfiles`. -/
 noncomputable def profiles : Profiles (ReferencePath.Input.ofNatural hΛ F).radialDomain :=
   TransitionRamp.physicalProfiles F hΛ hsmall r.refTime_pos r.refTime_bound hP0
     (κ := r.kappa) r.actTime_pos r.before_big r.widthU_pos r.widthA_pos
 
+/-- Start radius, given by `radius r.reference.radius0 r.actTime`. -/
 noncomputable def startRadius : ℝ := radius r.reference.radius0 r.actTime
+/-- Hold time, given by `r.reference.bigTime + r.widthU + r.widthA`. -/
 noncomputable def holdTime : ℝ := r.reference.bigTime + r.widthU + r.widthA
+/-- Hold radius, given by `radius r.reference.radius0 r.holdTime`. -/
 noncomputable def holdRadius : ℝ := radius r.reference.radius0 r.holdTime
 
 theorem radius0_eq : r.reference.radius0 = 4 / Λ := rfl
@@ -1572,12 +1633,12 @@ theorem radius0_lt_start : r.reference.radius0 < r.startRadius := by
   nlinarith [r.reference.radius0_pos]
 
 theorem hundred_lt_hold : (100 : ℝ) < r.holdRadius := by
-  have he : r.reference.bigTime < r.holdTime := by dsimp [holdTime]; linarith [r.widthU_pos,
-    r.widthA_pos]
+  have he : r.reference.bigTime < r.holdTime := by
+      dsimp [holdTime]; linarith [r.widthU_pos, r.widthA_pos]
   have hm := mul_lt_mul_of_pos_left (Real.exp_lt_exp.mpr he) r.reference.radius0_pos
   have hx : r.reference.radius0 * Real.exp r.reference.bigTime = 100 := by
-    rw [TransitionRamp.StockReference.bigTime, Real.exp_log (div_pos (by norm_num)
-      r.reference.radius0_pos)]
+    rw [TransitionRamp.StockReference.bigTime, Real.exp_log (div_pos (by
+        norm_num) r.reference.radius0_pos)]
     field_simp [r.reference.radius0_pos.ne']
   rwa [hx] at hm
 
@@ -1585,8 +1646,8 @@ theorem hold_lt_final : r.holdRadius < (110 : ℝ) := by
   have hfit : r.holdTime < r.reference.finalTime := r.finish_before
   have hm := mul_lt_mul_of_pos_left (Real.exp_lt_exp.mpr hfit) r.reference.radius0_pos
   have hx : r.reference.radius0 * Real.exp r.reference.finalTime = 110 := by
-    rw [TransitionRamp.StockReference.finalTime, Real.exp_log (div_pos (by norm_num)
-      r.reference.radius0_pos)]
+    rw [TransitionRamp.StockReference.finalTime, Real.exp_log (div_pos (by
+        norm_num) r.reference.radius0_pos)]
     field_simp [r.reference.radius0_pos.ne']
   rwa [hx] at hm
 
@@ -1606,10 +1667,10 @@ theorem logTime_hold {X : ℝ} (hx : r.holdRadius ≤ X) : r.holdTime ≤ r.refe
 theorem physical_shears {p : Point} (hη : p.2 ∈ Icc (-1 : ℝ) 1) (hx : r.startRadius ≤ p.1) :
     shearA r.profiles p =
       (1 - TransitionRamp.step (r.reference.bigTime + r.widthU) r.widthA (r.reference.logTime p.1))
-        *
+          *
         r.kappa * ReferenceBounds.p1 r.reference.profiles h p +
       (4 / 5 : ℝ) * TransitionRamp.step (r.reference.bigTime + r.widthU) r.widthA
-        (r.reference.logTime p.1) ∧
+          (r.reference.logTime p.1) ∧
     shearB r.profiles p = r.kappa * (1 - TransitionRamp.step r.reference.bigTime r.widthU
       (r.reference.logTime p.1)) * ReferenceBounds.p2 r.reference.profiles h p *
         (r.reference.profiles.f p / r.profiles.f p) :=
@@ -1622,7 +1683,7 @@ theorem final_shears {p : Point} (hη : p.2 ∈ Icc (-1 : ℝ) 1) (hx : r.holdRa
   have hy := r.logTime_hold hx
   have hh := r.physical_shears hη (r.start_le_hold.trans hx)
   have hA : TransitionRamp.step (r.reference.bigTime + r.widthU) r.widthA (r.reference.logTime p.1)
-    = 1 :=
+      = 1 :=
     TransitionRamp.step_one r.widthA_pos hy
   have hU : TransitionRamp.step r.reference.bigTime r.widthU (r.reference.logTime p.1) = 1 :=
     TransitionRamp.step_one r.widthU_pos (by dsimp [holdTime] at hy; linarith [r.widthA_pos])
@@ -1669,9 +1730,9 @@ structure ComparableRamp {h j σ Λ C B K : ℝ} {P0 : ℝ → ℝ}
     {hP0 : ContDiff ℝ ∞ P0} (r : RampParameters E.profile.family hΛ hsmall hP0)
     (c : ComparisonScales) : Prop where
   reference_bounds : ReferenceBounds.ReferenceBoundsOnHold E.profile hΛ r.refTime_pos
-    r.refTime_bound hP0
+      r.refTime_bound hP0
   reference_jets : ReferenceJetBounds.JetBounds h j σ Λ C B K r.reference.profiles.f
-    r.reference.profiles.U
+      r.reference.profiles.U
   damping_le : r.kappa ≤ c.damping
   stock_bounds : StockControl r.reference.profiles h c.bound (continuationRegion (4 / Λ))
   stock_close : ∀ p ∈ continuationRegion (4 / Λ), p.1 ≤ r.holdRadius →
@@ -1881,7 +1942,7 @@ theorem comparable_relaxed_before_hold {h j σ Λ C B K : ℝ} {P0 : ℝ → ℝ
   have hclose := hc.stock_close p hp hend
   have hrefcone : (9 / 4 : ℝ) < ReferenceBounds.p1 r.reference.profiles h p +
       ReferenceBounds.p2 r.reference.profiles h p ^ 2 / ReferenceBounds.p1 r.reference.profiles h p
-        :=
+          :=
     hc.reference_bounds.cone_margin p hpH hp.1.1
   have hlarge : r.reference.bigTime ≤ r.reference.logTime p.1 →
       3 ≤ ReferenceBounds.p1 r.reference.profiles h p := by
@@ -1936,7 +1997,7 @@ theorem comparable_final_first {h j σ Λ C B K X η : ℝ} {P0 : ℝ → ℝ}
     (NaturalAxisData.L_pos hsmall hη) (NaturalEntrance.L_le_one hsmall η)
     (fun t ht => r.profiles_mem hη (r.holdRadius_pos.le.trans ht.1))
     (fun t ht => r.profiles_positive (original_interval_interior hη) (r.holdRadius_pos.le.trans
-      ht.1))
+        ht.1))
     (fun t ht => r.final_logSlope hη ht.1) ?_ hinit
   intro t ht
   have hp : (t, η) ∈ ReferenceBounds.holdRegion :=
@@ -1968,10 +2029,14 @@ theorem comparable_relaxed {h j σ Λ C B K : ℝ} {P0 : ℝ → ℝ}
 
 /-! ## The complete ordered existence statement -/
 
+/-- Continuation witness data, collecting `parameters`, `initial_activation`, `relaxed`,
+`final_first`, `final_source`, `physical_control` and their compatibility conditions. -/
 structure ContinuationWitness {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : AnalyticInputs h j σ P0} (E : NaturalEntrance.EntranceProfile d Λ C)
     (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallParameters h j)
     (hP0 : ContDiff ℝ ∞ P0) (N : ℕ) (ε : ℝ) where
+  /-- Parameters of `ContinuationWitness`, of type `RampParameters E.profile.family hΛ hsmall
+  hP0`. -/
   parameters : RampParameters E.profile.family hΛ hsmall hP0
   initial_activation : InitialActivationBound parameters
   relaxed : ∀ p : Point, p.2 ∈ Icc (-1 : ℝ) 1 →
@@ -2031,9 +2096,12 @@ variable {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {hΛ : 0 < Λ} {hsmall : NaturalAxisData.SmallParameters h j}
     {hP0 : ContDiff ℝ ∞ P0} (r : RampParameters F hΛ hsmall hP0)
 
+/-- Endpoint axial, given by `r.reference.endpointU r.actTime r.kappa r.widthU`. -/
 noncomputable def endpointAxial : ℝ → ℝ :=
   r.reference.endpointU r.actTime r.kappa r.widthU
 
+/-- Endpoint logarithm, given by `r.reference.endpointLog r.actTime r.kappa r.widthU r.widthA
+C`. -/
 noncomputable def endpointLogarithm : ℝ → ℝ :=
   r.reference.endpointLog r.actTime r.kappa r.widthU r.widthA C
 
@@ -2059,9 +2127,9 @@ theorem terminal_fields (hC : 0 < C) {p : Point} (hη : p.2 ∈ ReferencePath.pa
     r.profiles.f p = C⁻¹ * Real.exp (Real.log (p.1 / 110) / 10 + r.endpointLogarithm p.2) /
         Real.sqrt (2 * p.1) ∧ r.profiles.U p = r.endpointAxial p.2 := by
   have hR : r.reference.radius0 < 110 := (r.reference.radius0_lt_100 r.bigTime_pos).trans (by
-    norm_num)
+      norm_num)
   have hfit : r.reference.bigTime + r.widthU + r.widthA ≤ r.reference.finalTime :=
-    r.finish_before.le
+      r.finish_before.le
   refine ⟨r.reference.physicalF_held ReferencePath.parameterInterval_open r.widthA_pos
     hfit hR hC hX hη, ?_⟩
   exact r.reference.physicalU_held ReferencePath.parameterInterval_open r.widthU_pos
@@ -2071,7 +2139,7 @@ theorem endpointLogarithm_eq_actual (hC : 0 < C) {η : ℝ}
     (hη : η ∈ ReferencePath.parameterInterval) :
     r.endpointLogarithm η = Real.log (C * r.profiles.E (110, η)) := by
   have hR : r.reference.radius0 < 110 := (r.reference.radius0_lt_100 r.bigTime_pos).trans (by
-    norm_num)
+      norm_num)
   exact r.reference.endpointLog_eq_actual ReferencePath.parameterInterval_open r.widthA_pos
     r.finish_before.le hR hC hη
 

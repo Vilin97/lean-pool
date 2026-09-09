@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentCoefficientPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitiveBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitivePolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitiveBounds
 
 /-! Composing the actual coefficient envelope with the parent label
 polynomial gives a single fixed polynomial in the parent size K. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,13 +25,17 @@ open EulerParentCoefficientPolynomial EulerPacketCorrectionPrimitive EulerPolyno
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Parent envelope, given by `1+leafEnvelope K+primitiveEnvelope P (leafEnvelope K)`. -/
 def parentEnvelope (K : ℝ) : ℝ :=
   1+leafEnvelope K+primitiveEnvelope P (leafEnvelope K)
 
+/-- Parent polynomial, given by `1+leafPolynomial+(primitivePolynomial P).comp leafPolynomial`. -/
 def parentPolynomial : Polynomial ℝ :=
   1+leafPolynomial+(primitivePolynomial P).comp leafPolynomial
 
+/-- Parent constant, given by `coefficientCost (parentPolynomial P)`. -/
 def parentConstant : ℝ := coefficientCost (parentPolynomial P)
+/-- Parent power, given by `(parentPolynomial P).natDegree`. -/
 def parentPower : ℕ := (parentPolynomial P).natDegree
 
 theorem parentConstant_pos : 0 < parentConstant P := coefficientCost_pos _

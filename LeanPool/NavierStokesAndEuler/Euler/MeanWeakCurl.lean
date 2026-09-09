@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
-public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 
 /-! The ordinary closed L² gradient space has zero distributional curl.
 For smooth representatives this gives actual pointwise symmetry of the derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,11 +29,11 @@ theorem scalar_test_ibp (f ψ : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     (∫ x, partialDerivative f i x * ψ x) = -∫ x, f x * partialDerivative ψ i x := by
   have hi₁ : Integrable (fun x => partialDerivative f i x * ψ x) :=
     ((contDiff_partialDerivative f hf i).continuous.mul
-      hψ.continuous).integrable_of_hasCompactSupport
+        hψ.continuous).integrable_of_hasCompactSupport
       hc.mul_left
   have hi₂ : Integrable (fun x => f x * partialDerivative ψ i x) :=
     (hf.continuous.mul (contDiff_partialDerivative ψ hψ
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
       (hc.fderiv_apply ℝ (EuclideanSpace.single i 1)).mul_left
   have hi₀ : Integrable (fun x => f x * ψ x) :=
     (hf.continuous.mul hψ.continuous).integrable_of_hasCompactSupport hc.mul_left
@@ -42,6 +45,8 @@ theorem scalar_test_ibp (f ψ : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     -∫ x, partialDerivative f i x * ψ x at h
   linarith
 
+/-- Skew test, given by `partialDerivative ψ j x • EuclideanSpace.single i 1 - partialDerivative
+ψ i x • EuclideanSpace.single j 1`. -/
 def skewTest (i j : Fin 3) (ψ : Space → ℝ) (x : Space) : Space :=
   partialDerivative ψ j x • EuclideanSpace.single i 1 -
     partialDerivative ψ i x • EuclideanSpace.single j 1
@@ -85,6 +90,8 @@ theorem gradient_skewTest_integral (i j : Fin 3) (φ ψ : Space → ℝ)
   simp_rw [partialDerivative_comm ψ (hψ.of_le (by simp)) j i]
   exact sub_self _
 
+/-- Skew test Lᵖ, given by `((skewTest_smooth i j ψ hψ).continuous.memLp_of_hasCompactSupport
+(skewTest_compact i j ψ hc)).toLp (skewTest i j ψ)`. -/
 def skewTestLp (i j : Fin 3) (ψ : Space → ℝ) (hψ : ContDiff ℝ ∞ ψ)
     (hc : HasCompactSupport ψ) : L2 :=
   ((skewTest_smooth i j ψ hψ).continuous.memLp_of_hasCompactSupport
@@ -141,11 +148,11 @@ theorem gradientSpace_classical_curl_zero (p : L2) (hp : p ∈ gradientSpace)
         rw [hy]
       have hIa : Integrable (fun y => gi y * partialDerivative ψ j y) :=
         (hgi.continuous.mul (contDiff_partialDerivative ψ hψ
-          j).continuous).integrable_of_hasCompactSupport
+            j).continuous).integrable_of_hasCompactSupport
           (hc.fderiv_apply ℝ (EuclideanSpace.single j 1)).mul_left
       have hIb : Integrable (fun y => gj y * partialDerivative ψ i y) :=
         (hgj.continuous.mul (contDiff_partialDerivative ψ hψ
-          i).continuous).integrable_of_hasCompactSupport
+            i).continuous).integrable_of_hasCompactSupport
           (hc.fderiv_apply ℝ (EuclideanSpace.single i 1)).mul_left
       have hJa : Integrable (fun y => partialDerivative gi j y * ψ y) :=
         (hqa.continuous.mul hψ.continuous).integrable_of_hasCompactSupport hc.mul_left

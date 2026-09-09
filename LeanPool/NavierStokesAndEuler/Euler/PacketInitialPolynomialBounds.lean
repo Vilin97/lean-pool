@@ -6,20 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformInitialBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialCostPolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedInitial
+import LeanPool.NavierStokesAndEuler.Euler.PacketUniformInitialBounds
 
 /-! Fixed-order source polynomial bounds for the literal initial increments.
 These use the same finite frequency guard as the constructed exact packet. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPacketUniformSource
 
 theorem initial_frequency_guard (X k : ℝ) (hX : 1 ≤ X)
-    (h : frequencyConstant*X^frequencyPower ≤ EulerPacketSourceFrequency.smallPower k) :
-    EulerPacketInitializedCost.uniformConstant*
+    (h : frequencyConstant * X ^ frequencyPower ≤ EulerPacketSourceFrequency.smallPower k) :
+    EulerPacketInitializedCost.uniformConstant *
       (profileEnvelope X)^EulerPacketInitializedCost.uniformPower ≤
         EulerPacketSourceFrequency.smallPower k := by
   have hW := (profileEnvelope_bounds X hX).1
@@ -37,7 +40,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
@@ -47,9 +50,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (X : ℝ) (hX : 1 ≤ X)
   (hW : EulerPacketRadiusPolynomial.RadiusPrimitives LM L NB
     (joinedCoefficientBudget period M D hTime τ hτ hτT B NB) δ ξ (profileEnvelope X))
-  (hprofile : ∀ t, α*L.fullProfile t ≤ profileEnvelope X)
+  (hprofile : ∀ t, α * L.fullProfile t ≤ profileEnvelope X)
   (k : ℝ) (hk : 4 ≤ k)
-  (hfrequency : frequencyConstant*X^frequencyPower ≤ smallPower k)
+  (hfrequency : frequencyConstant * X ^ frequencyPower ≤ smallPower k)
 
 include hδ1 hα L NB LM hX hW hprofile hk hfrequency
 

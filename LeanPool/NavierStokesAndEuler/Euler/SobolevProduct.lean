@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevProductApproximation
 
+/-! Actual pointwise multiplication on the complete cylinder Sobolev spaces Hq, q≥6. -/
+
 @[expose] public section
 
-/-! Actual pointwise multiplication on the complete cylinder Sobolev spaces Hq, q≥6. -/
 
 noncomputable section
 
@@ -30,15 +31,15 @@ theorem productApprox_value_tendsto {q : ℕ} (hq : 6 ≤ q)
   let U := fun n => restrictOperator period (by omega : q ≤ q+3) (smoothApprox period q n u)
   have hU : Filter.Tendsto U Filter.atTop (𝓝 u) := smoothApprox_tendsto period u
   have hV : Filter.Tendsto (fun n => value period (sobolevMollifier period q n v)) Filter.atTop (𝓝
-    (value period v)) :=
+      (value period v)) :=
     (valueOperator period q).continuous.tendsto v |>.comp (sobolevMollifier_tendsto period v)
-  have h := (scalarProductBilinear period (by omega : 3 ≤ q) L).continuous₂.tendsto (u, value
-    period v) |>.comp (hU.prodMk_nhds hV)
+  have h := (scalarProductBilinear period (by
+      omega : 3 ≤ q) L).continuous₂.tendsto (u, value period v) |>.comp (hU.prodMk_nhds hV)
   apply h.congr'
   apply Filter.Eventually.of_forall
   intro n
-  change scalarProduct period (by omega : 3 ≤ q) L (U n) (value period (sobolevMollifier period q n
-    v)) =
+  change scalarProduct period (by
+      omega : 3 ≤ q) L (U n) (value period (sobolevMollifier period q n v)) =
     value period (productApprox period q n L u v)
   rw [productApprox, productHighLow_value]
   exact scalarProduct_of_value_eq period (by omega : 3 ≤ q) (le_refl 3) L _ _ rfl _
@@ -54,7 +55,7 @@ theorem exists_sobolev_product {q : ℕ} (hq : 6 ≤ q)
   · exact tendsto_nhds_unique ((valueOperator period q).continuous.tendsto p |>.comp hp)
       (productApprox_value_tendsto period hq L u v)
   · exact le_of_tendsto hp.norm (Filter.Eventually.of_forall (fun n => productApprox_bound period
-    hq n L hL u v))
+      hq n L hL u v))
 
 /-- The genuine product in the complete Sobolev space, uniquely determined by its L² value. -/
 def productHq {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
@@ -63,8 +64,8 @@ def productHq {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖
 
 @[simp] theorem productHq_value {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u v : SobolevSpace period q) :
-    value period (productHq period hq L hL u v) = scalarProduct period (by omega : 3 ≤ q) L u
-      (value period v) :=
+    value period (productHq period hq L hL u v) = scalarProduct period (by
+        omega : 3 ≤ q) L u (value period v) :=
   (Classical.choose_spec (exists_sobolev_product period hq L hL u v)).1
 
 /-- The algebra bound for the genuine Sobolev product. -/
@@ -77,7 +78,7 @@ theorem productHq_norm {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL 
 theorem productHq_ae {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u v : SobolevSpace period q) :
     (value period (productHq period hq L hL u v) : LiftDomain period → Vector3) =ᵐ[liftMeasure
-      period]
+        period]
       (fun x => L (value period u x) • value period v x) := by
   rw [productHq_value]
   exact scalarProduct_ae period (by omega : 3 ≤ q) L u (value period v)
@@ -85,10 +86,10 @@ theorem productHq_ae {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : 
 theorem productHq_add_left {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u w v : SobolevSpace period q) :
     productHq period hq L hL (u+w) v = productHq period hq L hL u v + productHq period hq L hL w v
-      := by
+        := by
   apply value_injective period
   change value period (productHq period hq L hL (u+w) v) = value period (productHq period hq L hL u
-    v) + value period (productHq period hq L hL w v)
+      v) + value period (productHq period hq L hL w v)
   simp only [productHq_value, scalarProduct_add_left]
 
 theorem productHq_smul_left {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
@@ -96,16 +97,16 @@ theorem productHq_smul_left {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ)
     productHq period hq L hL (r • u) v = r • productHq period hq L hL u v := by
   apply value_injective period
   change value period (productHq period hq L hL (r • u) v) = r • value period (productHq period hq
-    L hL u v)
+      L hL u v)
   simp only [productHq_value, scalarProduct_smul_left]
 
 theorem productHq_add_right {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u v w : SobolevSpace period q) :
     productHq period hq L hL u (v+w) = productHq period hq L hL u v + productHq period hq L hL u w
-      := by
+        := by
   apply value_injective period
   change value period (productHq period hq L hL u (v+w)) = value period (productHq period hq L hL u
-    v) + value period (productHq period hq L hL u w)
+      v) + value period (productHq period hq L hL u w)
   simp only [productHq_value]
   exact scalarProduct_add_right period (by omega : 3 ≤ q) L u (value period v) (value period w)
 
@@ -114,7 +115,7 @@ theorem productHq_smul_right {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ
     productHq period hq L hL u (r • v) = r • productHq period hq L hL u v := by
   apply value_injective period
   change value period (productHq period hq L hL u (r • v)) = r • value period (productHq period hq
-    L hL u v)
+      L hL u v)
   simp only [productHq_value]
   exact scalarProduct_smul_right period (by omega : 3 ≤ q) L u r (value period v)
 
@@ -129,9 +130,9 @@ def productHqRight {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : �
 
 theorem productHqRight_norm {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u : SobolevSpace period q) : ‖productHqRight period hq L hL u‖ ≤ sobolevProductConstant period
-      q * ‖u‖ :=
+        q * ‖u‖ :=
   ContinuousLinearMap.opNorm_le_bound _ (mul_nonneg (sobolevProductConstant_nonneg period q)
-    (norm_nonneg u))
+      (norm_nonneg u))
     (productHq_norm period hq L hL u)
 
 /-- The actual complete Sobolev algebra multiplication is a continuous bilinear map. -/

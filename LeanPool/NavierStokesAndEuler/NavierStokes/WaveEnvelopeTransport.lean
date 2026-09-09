@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianTailFlat
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverClass
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Source envelopes along an entire common-cover slot path
@@ -18,6 +17,9 @@ The common-cover envelope is an actual sum over native copies. Injectivity
 of the padded native rectangle identifies the one copy met by a slot path.
 The source itself is not assumed periodic on the native torus.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +35,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 /-- The full padded integration rectangle, including both time endpoints. -/
 noncomputable def rectangle (r L : ℝ) : Set Plane := Icc (-r) r ×ˢ Icc 0 L
 
+/-- Native region, given by `(fun z => g.center + g.basis z) '' rectangle r L`. -/
 noncomputable def nativeRegion (g : Geometry) (r L : ℝ) : Set Plane :=
   (fun z => g.center + g.basis z) '' rectangle r L
 
@@ -153,10 +156,10 @@ theorem reference_envelope_path_gaussian {g : Geometry} {r L lam u : ℝ}
     {s : ℝ} (hs : s ∈ Icc 0 L) :
     Real.exp (-(u * GaussianEnvelope.referenceMaxSlope lam u) * (s - L / 2) ^ 2 / (2 * L)) ≤
       copyEnvelope g r L (GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L /
-        2))
+          2))
         (g.path k Y s) ∧
       copyEnvelope g r L (GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L /
-        2))
+          2))
         (g.path k Y s) ≤
       Real.exp (-(u * GaussianEnvelope.referenceMinSlope lam u) * (s - L / 2) ^ 2 / (2 * L)) := by
   rw [reference_envelope_on_path hsep lam u k Y hξ hs]
@@ -212,6 +215,7 @@ open WeightedClasses
 variable {P V : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Copy cell, given by `{z | g.coordinates k z.2 ∈ rectangle r L}`. -/
 noncomputable def copyCell (g : Geometry) (r L : ℝ) (k : Frequency) : Set (P × Plane) :=
   {z | g.coordinates k z.2 ∈ rectangle r L}
 
@@ -551,7 +555,7 @@ theorem waveClass_forcingAlong_bound
       _ = _ := by rw [pow_add]; ring
   have hb := clm_apply_jet_bound_on hU hBs hfs hx N (by positivity)
     (show 0 ≤ C * s.growth n z.1 ^ p * (s.epsilon n ^ α * Real.sqrt (s.zeta z.1)) * W n v by
-      positivity)
+        positivity)
     hBbound (fun i hi => hsource n k z hz hξ v hv i hi) j hj
   change ‖iteratedFDeriv ℝ j ((d n).forcingAlong g k) (z, v)‖ ≤ _ at hb
   apply hb.trans_eq
@@ -578,6 +582,7 @@ theorem native_source_path (h : ℝ) (n gap : ℕ) (center : Plane) (k : Frequen
             PhysicalGraphBounds.timeDirection)) := by
   exact congrArg (fun Y => (z.1, Y)) (native_band_path h n gap center k z.2 v)
 
+omit [NormedSpace ℝ P] in
 /-- The constructed zero-entry solve vanishes where the grouped source has
 no transverse support, using its values along every integration time. -/
 theorem anchoredSolve_zero_of_grouped_transverse_support

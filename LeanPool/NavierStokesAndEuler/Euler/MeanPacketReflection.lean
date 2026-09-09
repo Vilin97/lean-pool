@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketConstraints
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedReflection
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryReflection
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorReflection
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcing
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceFixedInverse
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryReflection
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedReflection
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.MeanSourceSpatialRegularity
 
 /-!
 # Actual reflection symmetry of the mean packet solve
@@ -19,6 +21,9 @@ Even source matrices and an odd forcing commute through the complete mean
 form, including its localized initial boundary operator. The odd coordinate
 velocity follows from uniqueness of the constructed inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,7 +68,7 @@ def coordinateSolver : TimeLp D.T L2 →L[ℝ] TimeLp D.T solenoidalSpace :=
 
 theorem coordinateSolver_reflection (hD : EvenData D) (f : TimeLp D.T L2) :
     timeSolenoidalReflection D.T (D.coordinateSolver f) = D.coordinateSolver (timeReflection D.T f)
-      := by
+        := by
   exact coerciveSolution_reflection D.T D.T_pos.le D.opF D.opF₁ D.opH
     (multiplier D.M0.field) (boundaryOperator (scaledCutoff D.ℓ D.ℓ_pos)) D.L
     (fun t => multiplier_reflection_of_even (D.F.field t) (hD.frame t))
@@ -90,7 +95,7 @@ theorem velocityLp_eq_coordinateSolver : G.solution.velocityLp = D.coordinateSol
     D.r_nonneg D.r_le_quarter D.exterior_lower D.core_lower D.opInv_left D.opF_time D.opInv_right
     D.K D.K_nonneg D.opInv_initial D.curvature_upper D.small G.lp G.solution
 
-variable (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t,(-x,0)) = -raw (t,(x,0)))
+variable (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t, (-x, 0)) = -raw (t, (x, 0)))
 
 include hodd in
 theorem path_reflection (t : Icc (0 : ℝ) D.T) : reflection (G.path t) = -(G.path t) := by
@@ -130,7 +135,7 @@ theorem coordinate_velocity_reflection (hD : EvenData D) (t : Icc (0 : ℝ) D.T)
     filter_upwards [timeSolenoidalReflection_ae D.T G.solution.velocityLp,
       G.solution.velocity_ae, Lp.coeFn_neg G.solution.velocityLp] with r h₁ h₂ h₃
     have he := congrArg (fun z : TimeLp D.T solenoidalSpace => z r) (G.velocityLp_reflection hodd
-      hD)
+        hD)
     exact (congrArg solenoidalReflection h₂).symm.trans
       (h₁.symm.trans (he.trans (h₃.trans (congrArg Neg.neg h₂))))
   have hc : ContinuousOn G.solution.velocity (Icc (0 : ℝ) D.T) := by

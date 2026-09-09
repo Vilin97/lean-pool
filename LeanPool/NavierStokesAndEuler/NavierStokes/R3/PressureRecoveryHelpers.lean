@@ -6,12 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureTemporalIdentity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ConservativeDifference
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureTemporalIdentity
 
 /-!
 # Compact tests used in pressure recovery
@@ -20,6 +19,9 @@ Real compact smooth tests are embedded in the actual complex Schwartz space.
 The differential operators commute with this embedding. The pressure identities
 below continue to pair the physical pressure only with compact spatial tests.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

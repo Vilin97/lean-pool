@@ -6,15 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
-public import LeanPool.NavierStokesAndEuler.Euler.NonnegativeLogConvex
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
+import LeanPool.NavierStokesAndEuler.Euler.NonnegativeLogConvex
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! Genuine L² interpolation of ordinary derivative words. Integration
 by parts gives log-convexity of the largest norm at each order. This
 yields endpoint product estimates without a change of Sobolev order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +27,8 @@ open MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerLpTranslation EulerLpTranslation.SmoothL2Field Finset
 open scoped ContDiff
 
+/-- Word maximum, given by `(univ : Finset (Fin n → Fin 3)).sup' univ_nonempty (fun w =>
+‖(wordField A w).toLp‖)`. -/
 def wordMaximum (n : ℕ) (A : SmoothL2Field Space) : ℝ :=
   (univ : Finset (Fin n → Fin 3)).sup' univ_nonempty (fun w => ‖(wordField A w).toLp‖)
 
@@ -61,7 +66,7 @@ theorem wordMaximum_logconvex (A : SmoothL2Field Space) (n : ℕ) :
 
 theorem wordMaximum_product_le (A : SmoothL2Field Space) (m : ℕ) (M N : ℝ)
     (hM : WordBound 3 M A) (hN : WordBound m N A)
-    {a b : ℕ} (ha : a ≤ m) (hb : b ≤ m) (hab : a+b ≤ m+3) :
+    {a b : ℕ} (ha : a ≤ m) (hb : b ≤ m) (hab : a + b ≤ m + 3) :
     wordMaximum a A*wordMaximum b A ≤ M*N := by
   have hm := wordBound_nonneg hM
   by_cases has : a ≤ 3
@@ -95,7 +100,7 @@ theorem wordMaximum_wordField (A : SmoothL2Field Space) {k : ℕ} (w : Fin k →
   | zero => simp only [wordField_zero,Nat.add_zero,le_refl]
   | succ k ih =>
     have he : wordField A w=wordField (A.directionalField (axis (w (Fin.last k)))) (Fin.init w) :=
-      by
+        by
       simpa only [Fin.snoc_init_self] using wordField_snoc A (Fin.init w) (w (Fin.last k))
     rw [he]
     exact (ih _ _).trans (wordMaximum_directional A (n+k) (w (Fin.last k)))
@@ -116,7 +121,7 @@ theorem wordField_jet_maximum (A : SmoothL2Field Space) {k : ℕ} (w : Fin k →
 
 theorem wordField_pointwise_maximum (A : SmoothL2Field Space) {k : ℕ}
     (w : Fin k → Fin 3) (x : Space) :
-    ‖(wordField A w).field x‖ ≤ EulerSmoothSobolev.smoothEmbeddingConstant*
+    ‖(wordField A w).field x‖ ≤ EulerSmoothSobolev.smoothEmbeddingConstant *
       (∑ j ∈ range 3, (3 : ℝ)^j*wordMaximum (k+j) A) :=
   (real_pointwise_H2 (wordField A w) x).trans (mul_le_mul_of_nonneg_left
     (sum_le_sum (fun j _ => wordField_jet_maximum A w j))

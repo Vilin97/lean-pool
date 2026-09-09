@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPaths
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+
+/-! Exact scalar homogeneity of the actual compact terminal-data primary. -/
 
 @[expose] public section
 
-/-! Exact scalar homogeneity of the actual compact terminal-data primary. -/
 
 noncomputable section
 
@@ -22,6 +23,7 @@ open EulerLpCylinderTranslation EulerCylinderAngleAverage
 variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] {D : Data U}
 
+/-- Smul, bundling `value`, `orbit`, `mean_zero`. -/
 def smul (Y : InitialData P D) (a : ℝ) : InitialData P D where
   value := a • Y.value
   orbit := by simpa only [Submodule.coe_smul_of_tower,map_smul] using Y.orbit.const_smul a
@@ -78,7 +80,7 @@ theorem futureVelocity_eq_smul : futureVelocity τ hτ hτT B Z = a • futureVe
   exact (includePath P D.support D.support_measurable).map_smul a _
 
 theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B Z = a • futureDerivative τ hτ hτT B
-  Y := by
+    Y := by
   unfold futureDerivative
   rw [(zeroForcing (D.tail τ hτ.le hτT)).derivativePath_eq_smul
     (zeroForcing (D.tail τ hτ.le hτT))

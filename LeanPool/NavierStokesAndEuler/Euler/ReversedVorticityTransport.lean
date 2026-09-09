@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
-public import Mathlib.Analysis.Calculus.Deriv.Shift
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
 
 /-! Nonzero vorticity cannot disappear on an existing reverse-time particle
 trajectory of a Comparator solution. -/
+
+@[expose] public section
+
 
 noncomputable section
 

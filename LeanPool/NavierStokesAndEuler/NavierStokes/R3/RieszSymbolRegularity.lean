@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 
-@[expose] public section
-
 /-!
 # Bounded Riesz symbols and smooth Riesz transforms of test functions
 
@@ -17,6 +15,9 @@ The multiplier is defined at the origin by the ordinary totalized real quotient.
 Its bound by one gives integrability of every polynomial moment of a multiplied
 Schwartz transform, hence smoothness and boundedness of its inverse Fourier integral.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFullShear
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSliceRepresentatives
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
 
 /-! The amplitude in the literal terminal datum gives exactly the
 amplitude multiplying the physical primary wave. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -79,7 +80,7 @@ packet, where the amplitude is inserted in its terminal datum. -/
 theorem scaled_terminal_physical_gradient (a k : ℝ) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     fderiv ℝ (fun x => k⁻¹ • vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs)
       (t,(Y x,k*⟪D.m₀,Y x⟫_ℝ))) (X 0) =
       (a/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0) := by

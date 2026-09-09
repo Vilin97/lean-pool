@@ -6,16 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderForwardSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderTimeBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBounds
 
 /-!
 Source-only budgets for the genuine forward transverse problem starting at
 time zero.  The same fixed radius controls unit forcing and unit initial
 coordinates; there is no history interval or terminal variational problem.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,23 +35,36 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
-private local instance : NormedRing (U →L[ℝ] U) := inferInstance
-private local instance : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketForwardBudget1 : NormedRing (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedRing (Space →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketForwardBudget2 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
 
+/-- Budget data, collecting `g`, `positive`, `initial_one`, `neighborhood`,
+`neighborhood_measurable`, `neighborhood_open` and their compatibility conditions. -/
 structure Budget (D : Data U) (ι : Type*) [Fintype ι] (q : ℕ) where
+  /-- G of `Budget`, of type `C(Icc (0 : ℝ) D.T,ℝ)`. -/
   g : C(Icc (0 : ℝ) D.T,ℝ)
   positive : ∀ t, 0 < g t
   initial_one : g ⟨0,le_rfl,D.T_pos.le⟩ = 1
+  /-- Neighborhood of `Budget`, of type `Set Space`. -/
   neighborhood : Set Space
   neighborhood_measurable : MeasurableSet neighborhood
   neighborhood_open : IsOpen neighborhood
   support_subset : D.support ⊆ neighborhood
   neighborhood_halfball : ∀ x ∈ neighborhood, ‖x‖ ≤ (1/2 : ℝ)
+  /-- Rc of `Budget`, of type `ℝ`. -/
   Rc : ℝ
+  /-- C₀ of `Budget`, of type `ℝ`. -/
   C₀ : ℝ
+  /-- First-derivative bound coefficient of `Budget`, of type `ℝ`. -/
   C₁ : ℝ
+  /-- Bound coefficient of `Budget`, of type `ℝ`. -/
   C : ℝ
+  /-- Ri of `Budget`, of type `ℝ`. -/
   Ri : ℝ
+  /-- Radius parameter of `Budget`, of type `ℝ`. -/
   R : ℝ
   Rc_nonneg : 0 ≤ Rc
   C₀_nonneg : 0 ≤ C₀
@@ -67,20 +84,24 @@ structure Budget (D : Data U) (ι : Type*) [Fintype ι] (q : ℕ) where
   propagator : ∀ t s : Icc (0 : ℝ) D.T, s ≤ t → ∀ x : Space, ‖x‖ ≤ (1/2 : ℝ) →
     ‖((fundamentalPath D.T D.T_pos.le
         (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos
-          D.frame_lower)).forward t x).comp
+            D.frame_lower)).forward t x).comp
       ((fundamentalPath D.T D.T_pos.le
         (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos
-          D.frame_lower)).backward s x)‖ ≤
+            D.frame_lower)).backward s x)‖ ≤
       C*g t/g s
 
 namespace Budget
 
 variable {D : Data U} {ι : Type*} [Fintype ι] {q : ℕ} (L : Budget D ι q)
 
+/-- Velocity cost, given by `3*sobolevCoefficientAmplitude ι q L.Rc L.C₀`. -/
 def velocityCost : ℝ := 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
+/-- Derivative cost, given by `physicalCost ι q L.Ri L.C₀ L.C₁ 1 1`. -/
 def derivativeCost : ℝ := physicalCost ι q L.Ri L.C₀ L.C₁ 1 1
+/-- Common cost, given by `L.velocityCost+L.derivativeCost`. -/
 def commonCost : ℝ := L.velocityCost+L.derivativeCost
 
+/-- Enlarge radius as an element of `Budget D ι q`. -/
 def enlargeRadius (R' : ℝ) (hR : L.R ≤ R') : Budget D ι q :=
   { L with
     R := R'
@@ -108,29 +129,29 @@ theorem derivativeCost_nonneg : 0 ≤ L.derivativeCost := by
   positivity
 
 theorem commonCost_nonneg : 0 ≤ L.commonCost := add_nonneg L.velocityCost_nonneg
-  L.derivativeCost_nonneg
+    L.derivativeCost_nonneg
 theorem velocityCost_le_common : L.velocityCost ≤ L.commonCost := le_add_of_nonneg_right
-  L.derivativeCost_nonneg
+    L.derivativeCost_nonneg
 theorem derivativeCost_le_common : L.derivativeCost ≤ L.commonCost := le_add_of_nonneg_left
-  L.velocityCost_nonneg
+    L.velocityCost_nonneg
 
 variable {P : ℝ} [Fact (0 < P)] {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
   (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1) (d : ℕ)
   (hforce : ∀ n, block directions q (fun a => pathTranslate P a
     (normalize L.g L.positive (includePath P D.support D.support_measurable G.path))) n 0 ≤
-      majorant L.R d n)
+        majorant L.R d n)
   (hinitial : ∀ n, block directions q (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤
-    majorant L.R d n)
+      majorant L.R d n)
 
 include hdir hforce hinitial
 
 theorem velocity_unit_bound (n : ℕ) :
     block directions q (fun a => pathTranslate P a
       (normalize L.g L.positive (G.fullVelocityPath I))) n 0 ≤ L.velocityCost*majorant L.R (d+1) n
-        :=
+          :=
   G.source_velocity_normalized_bound I L.g L.positive directions hdir q
     L.neighborhood L.neighborhood_measurable L.neighborhood_open L.support_subset
-      L.neighborhood_halfball
+        L.neighborhood_halfball
     L.initial_one L.C 1 1 L.Rc L.C₀ L.C₁ L.Ri L.R L.C_nonneg zero_le_one zero_le_one
     L.Rc_nonneg L.C₀_nonneg L.C₁_nonneg L.forward_inverse L.frame_bound L.frameDerivative_bound
     L.forcing_radius L.forward_radius L.propagator d
@@ -140,10 +161,10 @@ theorem velocity_unit_bound (n : ℕ) :
 theorem derivative_unit_bound (n : ℕ) :
     block directions q (fun a => pathTranslate P a
       (normalize L.g L.positive (G.fullDerivativePath I))) n 0 ≤ L.derivativeCost*majorant L.R
-        (d+1) n :=
+          (d+1) n :=
   G.source_derivative_normalized_bound I L.g L.positive directions hdir q
     L.neighborhood L.neighborhood_measurable L.neighborhood_open L.support_subset
-      L.neighborhood_halfball
+        L.neighborhood_halfball
     L.initial_one L.C 1 1 L.Rc L.C₀ L.C₁ L.Ri L.R L.C_nonneg zero_le_one zero_le_one
     L.Rc_nonneg L.C₀_nonneg L.C₁_nonneg L.forward_inverse L.frame_bound L.frameDerivative_bound
     L.forcing_radius L.forward_radius L.propagator d

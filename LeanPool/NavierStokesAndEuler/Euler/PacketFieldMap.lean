@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldProducts
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
 
 /-! Exact bounded-map naturality of every genuine Sobolev coordinate of
 an actual packet field. -/
+
+@[expose] public section
+
 
 noncomputable section
 

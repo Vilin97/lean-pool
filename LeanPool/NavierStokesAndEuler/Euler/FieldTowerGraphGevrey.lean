@@ -6,18 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerJetLp
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPhysicalContinuity
-public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldPrecomp
-public import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerSmoothTimeField
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerJetLp
+import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 
 /-! A genuine coherent cylinder tower with a weighted bound yields actual
 ordinary three-dimensional smooth L² slices and bounded coefficient paths.
 The zero-angle restriction costs one fixed radius enlargement, independent
 of the derivative order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,31 +34,68 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {P T : ℝ} [Fact (0 < P)] (A : FieldTower P T)
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
-private local instance : NormedAddCommGroup LiftTangent := inferInstance
-private local instance : NormedSpace ℝ LiftTangent := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))
-  := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T, LiftTangent →ᵇ (LiftTangent
-  [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T, Space →ᵇ (Space [×n]→L[ℝ]
-  Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey2 : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup LiftTangent` instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey3 : NormedAddCommGroup LiftTangent := inferInstance
+/-- Cache the standard `NormedSpace ℝ LiftTangent` instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey4 : NormedSpace ℝ LiftTangent := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey5 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey6 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey7 (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ] Space))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))` instance
+to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey8 (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ] Space)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, LiftTangent →ᵇ (LiftTangent
+[×n]→L[ℝ] Space))` instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey9 (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T, LiftTangent
+    →ᵇ (LiftTangent
+    [×n]→L[ℝ] Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey10 (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instFieldTowerGraphGevrey11 (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to
+shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey12 (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ]
+    Space)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey13 (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ]
+    Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, Space →ᵇ (Space [×n]→L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instFieldTowerGraphGevrey14 (n : ℕ) : NormedAddCommGroup C(Icc (0 : ℝ) T, Space →ᵇ
+    (Space [×n]→L[ℝ]
+    Space)) := inferInstance
 
+/-- Zero graph field, bundling `field`, `smooth`, `integrable`. -/
 def zeroGraphField (t : Icc (0 : ℝ) T) : SmoothL2Field Space where
   field := A.physicalPointField 1 0 t
   smooth := A.physicalPointField_smooth 1 0 t
   integrable n := A.physicalTensor_memLp 1 0 n t
 
+/-- Zero graph coefficient, given by `A.toSmoothTimeField.precompLinear (ContinuousLinearMap.inl
+ℝ Space ℝ)`. -/
 def zeroGraphCoefficient : SmoothTimeField (Icc (0 : ℝ) T) Space Space :=
   A.toSmoothTimeField.precompLinear (ContinuousLinearMap.inl ℝ Space ℝ)
 
@@ -79,11 +120,11 @@ theorem zeroGraphField_jetLp_continuous (n : ℕ) :
   exact (A.physicalTensorPath 1 0 n).continuous
 
 variable (ρ C : ℝ) (hρ : 0 < ρ) (hC : 0 ≤ C)
-  (hb : ∀ n (t : Icc (0 : ℝ) T), weightedNorm P 6 n ρ (A.realization (n+6) t) ≤ C)
+  (hb : ∀ n (t : Icc (0 : ℝ) T), weightedNorm P 6 n ρ (A.realization (n + 6) t) ≤ C)
 
 include hρ hC hb in
 theorem zeroGraphCoefficient_bound (n : ℕ) :
-    ‖A.zeroGraphCoefficient.jet n‖ ≤ (sobolevEmbeddingConstant P 3*C)*
+    ‖A.zeroGraphCoefficient.jet n‖ ≤ (sobolevEmbeddingConstant P 3*C) *
       (‖coordinateEquiv.symm.toContinuousLinearMap‖*ρ⁻¹)^n*(n.factorial : ℝ)^2 := by
   have h := A.toSmoothTimeField.precompLinear_jet_norm_le
     (ContinuousLinearMap.inl ℝ Space ℝ) n
@@ -103,7 +144,7 @@ theorem zeroGraphField_bound (t : Icc (0 : ℝ) T) :
     funext x
     rw [zeroGraphField_apply]
     change A.pointField t (coveringMap P (x,0)) = A.pointField t (coveringMap P (x,1*inner ℝ (0 :
-      Space) x))
+        Space) x))
     rw [inner_zero_left,mul_zero]
   apply (SmoothL2Field.hasJetBound_iff _ _ _).mpr
   intro n

@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCrossProduct
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 Differentiating the actual normalized ray and primary velocity.  The rates
 are derived from the physical ODEs; no normalized-frame equation is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +29,7 @@ open InnerProductSpace ContinuousLinearMap
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
+/-- Unit, given by `‖x‖⁻¹ • x`. -/
 def unit (x : E) : E := ‖x‖⁻¹ • x
 
 theorem unit_norm {x : E} (hx : x ≠ 0) : ‖unit x‖ = 1 := by
@@ -36,7 +40,7 @@ theorem unit_inner_self {x : E} (hx : x ≠ 0) : ⟪unit x, unit x⟫_ℝ = 1 :=
   rw [real_inner_self_eq_norm_sq, unit_norm hx]
   norm_num
 
-theorem unit_inner_zero {x y : E} (hxy : ⟪x,y⟫_ℝ = 0) : ⟪unit x, unit y⟫_ℝ = 0 := by
+theorem unit_inner_zero {x y : E} (hxy : ⟪x, y⟫_ℝ = 0) : ⟪unit x, unit y⟫_ℝ = 0 := by
   simp only [unit, real_inner_smul_left, real_inner_smul_right, hxy, mul_zero]
 
 theorem norm_hasDerivAt {f : ℝ → E} {f' : E} {t : ℝ}
@@ -91,8 +95,10 @@ theorem unit_hasDerivWithinAt {f : ℝ → E} {f' : E} {t : ℝ} {S : Set ℝ}
 
 variable [CompleteSpace E]
 
+/-- Ray rate, given by `-B.adjoint p + ⟪p,B p⟫_ℝ • p`. -/
 def rayRate (B : E →L[ℝ] E) (p : E) : E := -B.adjoint p + ⟪p,B p⟫_ℝ • p
 
+/-- Velocity rate, given by `-B q + (2*⟪p,B q⟫_ℝ) • p + ⟪q,B q⟫_ℝ • q`. -/
 def velocityRate (B : E →L[ℝ] E) (p q : E) : E :=
   -B q + (2*⟪p,B q⟫_ℝ) • p + ⟪q,B q⟫_ℝ • q
 
@@ -109,8 +115,8 @@ theorem normalized_ray_hasDerivAt (B : E →L[ℝ] E) {m : ℝ → E} {t : ℝ}
 
 omit [CompleteSpace E] in
 theorem normalized_velocity_hasDerivAt (B : E →L[ℝ] E) {m v : ℝ → E} {t : ℝ}
-    (hv : HasDerivAt v (-B (v t) + (2*⟪m t,B (v t)⟫_ℝ / ‖m t‖^2) • m t) t)
-    (hv0 : v t ≠ 0) (hmv : ⟪m t,v t⟫_ℝ = 0) :
+    (hv : HasDerivAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) t)
+    (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) :
     HasDerivAt (fun s => unit (v s)) (velocityRate B (unit (m t)) (unit (v t))) t := by
   have h := unit_hasDerivAt hv hv0
   have hvm : ⟪v t,m t⟫_ℝ = 0 := (real_inner_comm _ _).trans hmv
@@ -135,8 +141,8 @@ theorem normalized_ray_hasDerivWithinAt (B : E →L[ℝ] E) {m : ℝ → E} {t :
 omit [CompleteSpace E] in
 theorem normalized_velocity_hasDerivWithinAt (B : E →L[ℝ] E)
     {m v : ℝ → E} {t : ℝ} {S : Set ℝ}
-    (hv : HasDerivWithinAt v (-B (v t) + (2*⟪m t,B (v t)⟫_ℝ / ‖m t‖^2) • m t) S t)
-    (hv0 : v t ≠ 0) (hmv : ⟪m t,v t⟫_ℝ = 0) :
+    (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
+    (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) :
     HasDerivWithinAt (fun s => unit (v s)) (velocityRate B (unit (m t)) (unit (v t))) S t := by
   have h := unit_hasDerivWithinAt hv hv0
   have hvm : ⟪v t,m t⟫_ℝ = 0 := (real_inner_comm _ _).trans hmv

@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+
+/-! Classical lifted divergence zero implies membership in the actual closed L² constraint space. -/
 
 @[expose] public section
 
-/-! Classical lifted divergence zero implies membership in the actual closed L² constraint space. -/
 
 noncomputable section
 

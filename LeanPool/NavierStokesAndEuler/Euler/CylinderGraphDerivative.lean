@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphAffine
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphAffine
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-! A genuine cylinder L² time derivative, together with its genuine angular
 derivative, remains a genuine spatial L² derivative on every fixed phase graph. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,16 +32,16 @@ theorem graph_hasDerivWithinAt
     (hf : ∀ r x, ContDiff ℝ ∞ (localFieldLift P (f r) x))
     (hu : ∀ r, (u r : LiftDomain P → Vector3) =ᵐ[liftMeasure P] f r)
     (hv : ∀ r, (v r : LiftDomain P → Vector3) =ᵐ[liftMeasure P]
-      fieldDerivative P (0,1) (f r))
+      fieldDerivative P (0, 1) (f r))
     (θ : Vector3 → AddCircle P) (hθ : Continuous θ)
     (w : ℝ → Lp Vector3 2 (volume : Measure Vector3))
-    (hw : ∀ r, (w r : Vector3 → Vector3) =ᵐ[volume] fun x => f r (x,θ x))
+    (hw : ∀ r, (w r : Vector3 → Vector3) =ᵐ[volume] fun x => f r (x, θ x))
     (g : LiftDomain P → Vector3) (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift P g x))
     (u' v' : LiftL2 P)
     (hu' : (u' : LiftDomain P → Vector3) =ᵐ[liftMeasure P] g)
-    (hv' : (v' : LiftDomain P → Vector3) =ᵐ[liftMeasure P] fieldDerivative P (0,1) g)
+    (hv' : (v' : LiftDomain P → Vector3) =ᵐ[liftMeasure P] fieldDerivative P (0, 1) g)
     (w' : Lp Vector3 2 (volume : Measure Vector3))
-    (hw' : (w' : Vector3 → Vector3) =ᵐ[volume] fun x => g (x,θ x))
+    (hw' : (w' : Vector3 → Vector3) =ᵐ[volume] fun x => g (x, θ x))
     (s : Set ℝ) (t : ℝ)
     (hdu : HasDerivWithinAt u u' s t) (hdv : HasDerivWithinAt v v' s t) :
     HasDerivWithinAt w w' s t := by
@@ -46,12 +50,32 @@ theorem graph_hasDerivWithinAt
     simpa only [slope_def_module,Matrix.cons_val_zero,Matrix.cons_val_one,
       Matrix.cons_val_two,Matrix.vecHead,Matrix.vecTail,Function.comp_def,
       Matrix.cons_val_succ] using graph_affine_norm_sq_le P ![f t,f r,g]
-      (by intro i x; fin_cases i; exact hf t x; exact hf r x; exact hg x)
+      (by
+        intro i x
+        fin_cases i
+        · exact hf t x
+        · exact hf r x
+        · exact hg x)
       ![u t,u r,u'] ![v t,v r,v']
-      (by intro i; fin_cases i; exact hu t; exact hu r; exact hu')
-      (by intro i; fin_cases i; exact hv t; exact hv r; exact hv') θ hθ
+      (by
+        intro i
+        fin_cases i
+        · exact hu t
+        · exact hu r
+        · exact hu')
+      (by
+        intro i
+        fin_cases i
+        · exact hv t
+        · exact hv r
+        · exact hv') θ hθ
       ![w t,w r,w']
-      (by intro i; fin_cases i; exact hw t; exact hw r; exact hw') (r-t)⁻¹
+      (by
+        intro i
+        fin_cases i
+        · exact hw t
+        · exact hw r
+        · exact hw') (r-t)⁻¹
   have huLim := (hasDerivWithinAt_iff_tendsto_slope.mp hdu).sub_const u'
   have hvLim := (hasDerivWithinAt_iff_tendsto_slope.mp hdv).sub_const v'
   have hlim : Tendsto (fun r => (2/P)*‖slope u t r-u'‖^2+(2*P)*‖slope v t r-v'‖^2)

@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
+import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
 
 /-!
 # Actual momentum regularity of the transverse variational inverse
@@ -21,6 +19,9 @@ proved time-H¹ product rule. The weak equation then forces `Q* η_t` to have an
 absolutely continuous representative. No momentum equation or second derivative
 of the solved displacement is included in the assumptions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

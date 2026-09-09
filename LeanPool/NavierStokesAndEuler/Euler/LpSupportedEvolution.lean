@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedMultiplier
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamel
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 # Lifting the localized homogeneous propagator to actual spatial L²
@@ -21,6 +20,9 @@ operator paths satisfy the homogeneous differential equation and inverse
 identities. Their propagator norm uses only the pointwise bound on that set,
 so the source's `C g(t)/g(s)` estimate is preserved exactly.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,32 +38,57 @@ variable {α V : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace �
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   (S : Set α) (hS : MeasurableSet S)
 
-private local instance : NormedRing (V →L[ℝ] V) := inferInstance
-private local instance : NormedRing (Field (α := α) (V := V)) := inferInstance
-private local instance : NormedAddCommGroup (Field (α := α) (V := V)) := inferInstance
-private local instance : NormedSpace ℝ (Field (α := α) (V := V)) := inferInstance
-private local instance : NormedAddCommGroup (Lp V 2 μ) := inferInstance
-private local instance : InnerProductSpace ℝ (Lp V 2 μ) := inferInstance
-private local instance : NormedAddCommGroup (supportedSpace (V := V) μ S hS) := inferInstance
-private local instance : InnerProductSpace ℝ (supportedSpace (V := V) μ S hS) := inferInstance
-private local instance : NormedSpace ℝ (supportedSpace (V := V) μ S hS) := inferInstance
-private local instance : NormedAddCommGroup (supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V
-  := V) μ S hS) := inferInstance
-private local instance : NormedSpace ℝ (supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V :=
-  V) μ S hS) := inferInstance
+/-- Cache the standard `NormedRing (V →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedEvolution1 : NormedRing (V →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedRing (Field (α := α) (V := V))` instance to shorten typeclass
+synthesis. -/
+local instance instLpSupportedEvolution2 : NormedRing (Field (α := α) (V := V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Field (α := α) (V := V))` instance to shorten
+typeclass synthesis. -/
+local instance instLpSupportedEvolution3 : NormedAddCommGroup (Field (α := α) (V := V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Field (α := α) (V := V))` instance to shorten typeclass
+synthesis. -/
+local instance instLpSupportedEvolution4 : NormedSpace ℝ (Field (α := α) (V := V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Lp V 2 μ)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedEvolution5 : NormedAddCommGroup (Lp V 2 μ) := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (Lp V 2 μ)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedEvolution6 : InnerProductSpace ℝ (Lp V 2 μ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (supportedSpace (V := V) μ S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpSupportedEvolution7 : NormedAddCommGroup (supportedSpace (V := V) μ S hS) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (supportedSpace (V := V) μ S hS)` instance to
+shorten typeclass synthesis. -/
+local instance instLpSupportedEvolution8 : InnerProductSpace ℝ (supportedSpace (V := V) μ S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (supportedSpace (V := V) μ S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpSupportedEvolution9 : NormedSpace ℝ (supportedSpace (V := V) μ S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace
+(V := V) μ S hS)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedEvolution10 : NormedAddCommGroup (supportedSpace (V := V) μ S hS
+    →L[ℝ] supportedSpace (V
+    := V) μ S hS) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V :=
+V) μ S hS)` instance to shorten typeclass synthesis. -/
+local instance instLpSupportedEvolution11 : NormedSpace ℝ (supportedSpace (V := V) μ S hS →L[ℝ]
+    supportedSpace (V :=
+    V) μ S hS) := inferInstance
 
 /-- The actual supported-space operator associated with a continuous field path. -/
-def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T,Field (α := α) (V := V))) :
+def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V))) :
     C(Icc (0 : ℝ) T,supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V := V) μ S hS) :=
   ⟨fun t => operator μ S hS (A t), (operatorMap μ S hS).continuous.comp A.continuous⟩
 
 omit [CompleteSpace V] in
-@[simp] theorem operatorPath_apply (T : ℝ) (A : C(Icc (0 : ℝ) T,Field (α := α) (V := V)))
+@[simp] theorem operatorPath_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
     (t : Icc (0 : ℝ) T) : operatorPath μ S hS T A t = operator μ S hS (A t) := rfl
 
 /-- Actual pointwise time derivatives lift to supported-L² operator derivatives. -/
 theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
-    (A A' : C(Icc (0 : ℝ) T,Field (α := α) (V := V)))
+    (A A' : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
     (hpoint : ∀ t ∈ Icc (0 : ℝ) T, ∀ x : α,
       HasDerivWithinAt (fun s => extendPath (Y := Field (α := α) (V := V)) T hT A s x)
         (extendPath (Y := Field (α := α) (V := V)) T hT A' t x) (Icc (0 : ℝ) T) t)
@@ -85,13 +112,13 @@ theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
   rwa [projIcc_of_mem hT t.property] at hd
 
 variable (T : ℝ) (hT : 0 ≤ T)
-  (B Φ Ψ : C(Icc (0 : ℝ) T,Field (α := α) (V := V)))
+  (B Φ Ψ : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
   (hRight : ∀ t x, x ∈ S → (Φ t x).comp (Ψ t x) = ContinuousLinearMap.id ℝ V)
   (hLeft : ∀ t x, x ∈ S → (Ψ t x).comp (Φ t x) = ContinuousLinearMap.id ℝ V)
   (hΦ : ∀ t ∈ Icc (0 : ℝ) T, ∀ x : α,
     HasDerivWithinAt (fun s => extendPath (Y := Field (α := α) (V := V)) T hT Φ s x)
       ((extendPath (Y := Field (α := α) (V := V)) T hT B t x).comp (extendPath (Y := Field (α := α)
-        (V := V)) T hT Φ t x)) (Icc (0 : ℝ) T) t)
+          (V := V)) T hT Φ t x)) (Icc (0 : ℝ) T) t)
 
 /-- The actual pointwise homogeneous fields give a homogeneous evolution on
 the genuine supported spatial L² space. -/
@@ -139,9 +166,9 @@ theorem liftEvolution_propagator_norm (g : Icc (0 : ℝ) T → ℝ) (hg : ∀ t,
 
 /-- The actual forced supported-L² path has the source's polynomial profile bound. -/
 theorem liftedSolution_profile_bound
-    (f : C(Icc (0 : ℝ) T,supportedSpace (V := V) μ S hS))
+    (f : C(Icc (0 : ℝ) T, supportedSpace (V := V) μ S hS))
     (a₀ : supportedSpace (V := V) μ S hS)
-    (g : Icc (0 : ℝ) T → ℝ) (hg : ∀ t, 0 < g t) (hg₀ : g ⟨0,le_rfl,hT⟩ = 1)
+    (g : Icc (0 : ℝ) T → ℝ) (hg : ∀ t, 0 < g t) (hg₀ : g ⟨0, le_rfl, hT⟩ = 1)
     (C D : ℝ) (hC : 0 ≤ C)
     (hprop : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ∀ x ∈ S,
       ‖(Φ t x).comp (Ψ s x)‖ ≤ C*g t/g s)
@@ -153,12 +180,12 @@ theorem liftedSolution_profile_bound
 
 /-- This profile-bounded path solves the actual supported-L² differential equation. -/
 theorem liftedSolution_hasDerivWithinAt
-    (f : C(Icc (0 : ℝ) T,supportedSpace (V := V) μ S hS))
+    (f : C(Icc (0 : ℝ) T, supportedSpace (V := V) μ S hS))
     (a₀ : supportedSpace (V := V) μ S hS) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt
       (extendPath T hT ((liftEvolution μ S hS T hT B Φ Ψ hRight hLeft hΦ).solution f a₀))
       (operator μ S hS (B t) ((liftEvolution μ S hS T hT B Φ Ψ hRight hLeft hΦ).solution f a₀ t) +
-        f t)
+          f t)
       (Icc (0 : ℝ) T) t := by
   let U := liftEvolution μ S hS T hT B Φ Ψ hRight hLeft hΦ
   have hd := U.solution_derivative f a₀ t

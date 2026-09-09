@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfilesParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldParityAlgebra
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfilesParity
 
 /-! The literal initialized packet and its exact residual tail are odd
 as actual cylinder L² paths, before and after coordinate normalization. -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussian
+import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+
+/-! The same Gaussian average as a continuous dilation of a fixed kernel. -/
 
 @[expose] public section
 
-/-! The same Gaussian average as a continuous dilation of a fixed kernel. -/
 
 noncomputable section
 
@@ -69,7 +73,7 @@ theorem scaledAverage_eq {t : ℝ} (ht : 0 < t) (f : Space → V) (x : Space) :
   exact (smul_right_injective V (inv_ne_zero (pow_ne_zero 3 hc.ne'))).eq_iff.mp h
 
 theorem scaledAverage_zero [CompleteSpace V] (f : Space → V) (x : Space) : scaledAverage 0 f x = f
-  x := by
+    x := by
   simp only [scaledAverage, Real.sqrt_zero, zero_smul, add_zero, integral_smul_const,
     integral_kernel (by norm_num : (0:ℝ) < 1), one_smul]
 
@@ -80,7 +84,7 @@ theorem scaledAverage_continuous (f : Space → V) (hf : Continuous f)
   · intro t
     exact ((kernel_smooth 1).continuous.smul
       (hf.comp (show Continuous (fun y : Space => x+Real.sqrt t • y) by
-        fun_prop))).aestronglyMeasurable
+          fun_prop))).aestronglyMeasurable
   · intro t
     exact Eventually.of_forall (fun y => by
       rw [norm_smul, Real.norm_of_nonneg (kernel_nonneg (by norm_num) y)]

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
 
-@[expose] public section
-
 /-!
 # Grouping the actual residual with an independent axisymmetric alias
 
@@ -20,6 +18,9 @@ leaves the nonconstant residual unchanged.  The needed angular integrability
 is derived from the represented finite harmonic fields, with no regularity
 or support assumption on the independent alias.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -122,11 +123,11 @@ structure Representation {ι : Type*} (labels : ℕ → Finset ι)
   gaussian : ∀ n x i, s.errors.gaussian n x i =
     ∑ l ∈ labels n,
       ((HarmonicResidual.ofBlock (blocks l) (gaussianCoeffs l) (aliasCoeffs l) n).gaussianField x
-        i).re
+          i).re
   aliasError : ∀ n x i, s.errors.aliasError n x i =
     (∑ l ∈ labels n,
       ((HarmonicResidual.ofBlock (blocks l) (gaussianCoeffs l) (aliasCoeffs l) n).aliasField x
-        i).re) +
+          i).re) +
       axis n x.1 i
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -232,7 +233,7 @@ theorem stateGoodWaveResidual_grouped {ι : Type*} {U : Set D} (hU : IsOpen U)
     HarmonicResidual.stateGoodWaveResidual c s n x i =
       ∑ l ∈ labels n,
         (HarmonicResidual.residualBlock c s (blocks l) (gaussian l) (aliasCoeffs l)).oscillation n
-          x i := by
+            x i := by
   have hr := extractionRegular_erase h axis
   have hc := represented_goodResidual_angular_continuous hU hrep.erase hr hx.1 i
   have he := stateGoodWaveResidual_addAxisymmetricAlias c (eraseAxisymmetricAlias s axis)
@@ -281,7 +282,7 @@ theorem stateFullResidual_reconstructed {ι : Type*} {U : Set D} (hU : IsOpen U)
     HarmonicResidual.stateFullResidual c s n x i =
       (∑ l ∈ labels n,
         (HarmonicResidual.residualBlock c s (blocks l) (gaussian l) (aliasCoeffs l)).oscillation n
-          x i) +
+            x i) +
       (HarmonicResidual.stateMeanCoefficientValue labels blocks gaussian aliasCoeffs
         c s n x.1 i - axis n x.1 i) + s.errors.total n x i := by
   have he := stateGoodWaveResidual_grouped hU hrep h hx i

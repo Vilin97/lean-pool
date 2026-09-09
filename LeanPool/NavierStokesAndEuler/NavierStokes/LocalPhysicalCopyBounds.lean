@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCopyBounds
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Physical copy bounds from local native smoothness
@@ -19,6 +19,9 @@ patches.  A smooth bump produces a globally smooth function with the exact same
 germ at one evaluation point.  The physical carrier bound measures only jets at
 that point, so no bound on the extension away from it is needed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -105,9 +108,11 @@ theorem jet_bound_at_closure {f : E → F} {U : Set E} {x : E} {B : ℝ}
 
 end SmoothExtensions
 
+/-- Replace profiles, given by `{ c with F := F, G := G }`. -/
 noncomputable def replaceProfiles (c : CarrierData)
     (F G : PhysicalGraphBounds.Slow → ℝ) : CarrierData := { c with F := F, G := G }
 
+/-- Slot slow as an element of `PhysicalGraphBounds.Slow`. -/
 noncomputable def slotSlow (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ)
     (w : SpaceTime) : PhysicalGraphBounds.Slow :=
   (PhysicalGraphBounds.slotMap (PolarCharts.chart a c.chart)
@@ -182,12 +187,12 @@ theorem common_carrier_physical_bound_local {h a b Z r0 P B eBase : ℝ}
     hh hh1 ha hZ hr0 hP hB heBase Δ m g eAmp A H hA hH
   refine ⟨C, hC, ?_⟩
   intro n hn d hd w hann ht hz q hq hlo hhi c amp j hp hpz hpx hslot haNear hFNear hGNear hj hab
-    hFb hGb
+      hFb hGb
   obtain ⟨amp', ha', hea⟩ := haNear.exists_global_germ
   obtain ⟨F, hF', heF⟩ := hFNear.exists_global_germ
   obtain ⟨G, hG', heG⟩ := hGNear.exists_global_germ
   have haxis := PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-    hann)
+      hann)
   rw [iteratedFDeriv_eq_of_eventuallyEq (commonWave_germ ha h n d r0 c j haxis hea heF heG) m]
   apply hb n hn d hd w hann ht hz q hq hlo hhi (replaceProfiles c F G) amp' j
     hp hpz hpx hslot ha' hF' hG' hj
@@ -326,7 +331,7 @@ theorem SupportData.term_smoothAt (hr : SupportData f a b h r0 Z Δ)
       (f.carrier k I.1) (f.amplitude k I) I.2.val mode hmode
       (fun y hy => (hr.geometry_support k I y hy).1) chart hchart
     have haxis := PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-      hgeo.1)
+        hgeo.1)
     have hp := hs.profiles k I w hw ht chart hchart
     have hlocal := commonWave_smoothAt_local ha h I.1.val.1 (f.gap I.1) r0
       ((f.carrier k I.1).withChart chart) I.2.val haxis (hs.amplitude k I w hw ht) hp.1 hp.2
@@ -376,7 +381,7 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
       obtain ⟨mode, hmode⟩ := hr.angular_integer k I.1
       let chart := chooseChart a (PhysicalGraphBounds.scaledRadial I.1.val.1 w)
       have hchart : PhysicalGraphBounds.scaledRadial I.1.val.1 w ∈ PolarCharts.chartDomain a chart
-        :=
+          :=
         chooseChart_valid ha hgeo.1
       have he := globalWave_eventually_common (r0 := r0) ha I.1.val.1 (f.gap I.1)
         (f.carrier k I.1) (f.amplitude k I) I.2.val mode hmode
@@ -413,14 +418,18 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
 support fields concern input amplitudes and their native phase evaluation,
 not the smoothness or derivatives of a final physical output. -/
 structure PatchData (f : CopyFamily H K) (a h r0 : ℝ) where
+  /-- Amplitude domain of `PatchData`, of type `K → WaveIndex H → Set LiftPoint`. -/
   amplitudeDomain : K → WaveIndex H → Set LiftPoint
+  /-- Amplitude core of `PatchData`, of type `K → WaveIndex H → Set LiftPoint`. -/
   amplitudeCore : K → WaveIndex H → Set LiftPoint
   amplitudeOpen : ∀ k I, IsOpen (amplitudeDomain k I)
   amplitudeClosed : ∀ k I, IsClosed (amplitudeCore k I)
   amplitudeSubset : ∀ k I, amplitudeCore k I ⊆ amplitudeDomain k I
   amplitudeSmooth : ∀ k I, ContDiffOn ℝ ∞ (f.amplitude k I) (amplitudeDomain k I)
   amplitudeSupport : ∀ k I, support (f.amplitude k I) ⊆ amplitudeCore k I
+  /-- Slow domain of `PatchData`, of type `K → BandLabel → Set PhysicalGraphBounds.Slow`. -/
   slowDomain : K → BandLabel → Set PhysicalGraphBounds.Slow
+  /-- Slow core of `PatchData`, of type `K → BandLabel → Set PhysicalGraphBounds.Slow`. -/
   slowCore : K → BandLabel → Set PhysicalGraphBounds.Slow
   slowOpen : ∀ k L, IsOpen (slowDomain k L)
   slowClosed : ∀ k L, IsClosed (slowCore k L)
@@ -458,12 +467,12 @@ theorem PatchData.smoothData (hp : PatchData f a h r0)
   · intro k I w hw hts chart hchart
     have hgeo := hr.tsupport_geometry I k hts
     have haxis := PhysicalGraphBounds.scaledRadial_ne_zero (PhysicalGraphBounds.annulus_axisFree ha
-      hgeo.1)
+        hgeo.1)
     let U : Set SpaceTime := preterminal ∩ (PhysicalGraphBounds.scaledRadial I.1.val.1) ⁻¹'
       PolarCharts.chartDomain a chart
     have hU : IsOpen U := preterminal_open.inter
       ((PolarCharts.chartDomain_open a chart).preimage (PhysicalGraphBounds.scaledRadial
-        I.1.val.1).continuous)
+          I.1.val.1).continuous)
     have hwU : w ∈ U := ⟨hw, hchart⟩
     have hx : slotSlow ((f.carrier k I.1).withChart chart) a h I.1.val.1 r0 w ∈ hp.slowCore k I.1 :=
       closed_property_on_tsupport hU hwU
@@ -596,8 +605,11 @@ theorem composition_jet_bound_on {X : Type*} [NormedAddCommGroup X] [NormedSpace
 physical points may lie in its closure, including a moving radial edge. -/
 structure CommonChart (f : CopyFamily H K) (hc : SupportCells f)
     (a b h r0 σ : ℝ) (source : ι → ℕ → D → ℂ) where
+  /-- Source index of `CommonChart`, of type `K → WaveIndex H → ι`. -/
   sourceIndex : K → WaveIndex H → ι
+  /-- Map of `CommonChart`, of type `K → WaveIndex H → LiftPoint → D`. -/
   map : K → WaveIndex H → LiftPoint → D
+  /-- Domain of `CommonChart`, of type `K → WaveIndex H → Set LiftPoint`. -/
   domain : K → WaveIndex H → Set LiftPoint
   open_domain : ∀ k I, IsOpen (domain k I)
   smooth : ∀ k I, ContDiffOn ℝ ∞ (map k I) (domain k I)
@@ -626,12 +638,12 @@ theorem commonChart_amplitude_bound {s : StripData D} {α σ : ℝ}
   obtain ⟨B, hB, q, hq⟩ := hchart.positive_jets m
   refine ⟨(m.factorial : ℝ) * A * B ^ m, by positivity, p + q * m, ?_⟩
   intro k I x hx j hj
-  have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by have := I.1.property;
-    omega)
+  have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by
+      have := I.1.property; omega)
   have hQ := ChartScales.Q_pos I.1.val.1
   have hS0 : 0 ≤ ChartScales.S I.1.val.1 := zero_le_one.trans hS
   have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p := by
-    positivity
+      positivity
   have hB0 : 1 ≤ B * ChartScales.S I.1.val.1 ^ q :=
     one_le_mul_of_one_le_of_one_le hB (one_le_pow₀ hS)
   have hjb := composition_jet_bound_on (hchart.open_domain k I) s.isOpen_domain
@@ -708,7 +720,7 @@ theorem physical_sum_jet_bound_of_weighted {s : StripData D} {α σ P : ℝ}
       ‖iteratedFDeriv ℝ m (f.sum a h r0) z‖ ≤
         C * physicalQ h z ^ (h * α - PhysicalClassBounds.physicalLoss h σ m) := by
   obtain ⟨A, hA, B, hB, p, q, hclass⟩ := localStrippedClass_of_weighted hsource hchart hmap hb hs
-    hp m
+      hp m
   obtain ⟨C, hC, hbound⟩ := physical_sum_jet_bound (K := K)
     (b := b) hh hh1 ha hZ hr0 hP hB (Nat.cast_nonneg q) H Δ m
       (h * α + σ) p A hA
@@ -801,7 +813,7 @@ theorem vectorSum_jet_bound {f : Fin 3 → CopyFamily H K}
       (preterminal_open.mem_nhds hw)).of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl m)
   unfold PhysicalCopyBounds.vectorSum
   rw [iteratedFDeriv_finset_sum_at (f := fun i y => realCoordinate i ((f i).sum a h r0 y))
-    Finset.univ
+      Finset.univ
     (fun i _ => (realCoordinate i).contDiff.contDiffAt.comp w (hlocal i))]
   calc
     _ ≤ ∑ i : Fin 3, ‖iteratedFDeriv ℝ m (fun y => realCoordinate i ((f i).sum a h r0 y)) w‖ :=

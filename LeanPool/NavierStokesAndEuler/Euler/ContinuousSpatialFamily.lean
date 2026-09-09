@@ -6,10 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathComposition
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.Topology.ContinuousMap.Compact
+import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Actual spatial derivatives in the uniform norm on continuous paths
@@ -19,6 +21,9 @@ continuous paths, with uniform bounds, is smooth in the uniform path norm.
 The proof uses a quadratic Taylor remainder and loses no derivative-bound
 constant. No uniform-path differentiability is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,46 +39,65 @@ section Bundling
 variable {K : Type u} [TopologicalSpace K] [CompactSpace K]
   {V : Type v} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup C(K,V) := inferInstance
-private local instance : NormedSpace ℝ C(K,V) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] C(K,V)) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] C(K,V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily1 : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousSpatialFamily2 : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousSpatialFamily3 : NormedAddCommGroup C(K,V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousSpatialFamily4 : NormedSpace ℝ C(K,V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily5 : NormedAddCommGroup C(K,Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily6 : NormedSpace ℝ C(K,Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] C(K,V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily7 : NormedAddCommGroup (Space →L[ℝ] C(K,V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] C(K,V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily8 : NormedSpace ℝ (Space →L[ℝ] C(K,V)) := inferInstance
 
-def direction (D : C(K,Space →L[ℝ] V)) (a : Space) : C(K,V) :=
+/-- Direction, given by `⟨fun t => D t a, D.continuous.clm_apply continuous_const⟩`. -/
+def direction (D : C(K, Space →L[ℝ] V)) (a : Space) : C(K,V) :=
   ⟨fun t => D t a, D.continuous.clm_apply continuous_const⟩
 
-theorem direction_norm_le (D : C(K,Space →L[ℝ] V)) (a : Space) :
+theorem direction_norm_le (D : C(K, Space →L[ℝ] V)) (a : Space) :
     ‖direction D a‖ ≤ ‖D‖*‖a‖ := by
   apply (ContinuousMap.norm_le _ (mul_nonneg (norm_nonneg D) (norm_nonneg a))).2
   intro t
   exact ((D t).le_opNorm a).trans
     (mul_le_mul_of_nonneg_right (D.norm_coe_le_norm t) (norm_nonneg a))
 
-def derivativeLinear (D : C(K,Space →L[ℝ] V)) : Space →ₗ[ℝ] C(K,V) where
+/-- Derivative linear, bundling `toFun`, `map_add`, `map_smul`. -/
+def derivativeLinear (D : C(K, Space →L[ℝ] V)) : Space →ₗ[ℝ] C(K,V) where
   toFun := direction D
   map_add' a b := by ext t; exact (D t).map_add a b
   map_smul' c a := by ext t; exact (D t).map_smul c a
 
-def derivativeMap (D : C(K,Space →L[ℝ] V)) : Space →L[ℝ] C(K,V) where
+/-- Derivative map, bundling `toLinearMap`, `cont`. -/
+def derivativeMap (D : C(K, Space →L[ℝ] V)) : Space →L[ℝ] C(K,V) where
   toLinearMap := derivativeLinear D
   cont := AddMonoidHomClass.continuous_of_bound (derivativeLinear D) ‖D‖
     (direction_norm_le D)
 
-@[simp] theorem derivativeMap_apply (D : C(K,Space →L[ℝ] V)) (a : Space) (t : K) :
+@[simp] theorem derivativeMap_apply (D : C(K, Space →L[ℝ] V)) (a : Space) (t : K) :
     derivativeMap D a t = D t a := rfl
 
-theorem derivativeMap_norm_le (D : C(K,Space →L[ℝ] V)) : ‖derivativeMap D‖ ≤ ‖D‖ :=
+theorem derivativeMap_norm_le (D : C(K, Space →L[ℝ] V)) : ‖derivativeMap D‖ ≤ ‖D‖ :=
   (derivativeMap D).opNorm_le_bound (norm_nonneg D) (direction_norm_le D)
 
+/-- Derivative bundling linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def derivativeBundlingLinear : C(K,Space →L[ℝ] V) →ₗ[ℝ] (Space →L[ℝ] C(K,V)) where
   toFun := derivativeMap
   map_add' D E := by ext a t; rfl
   map_smul' c D := by ext a t; rfl
 
+/-- Derivative bundling, bundling `toLinearMap`, `cont`. -/
 def derivativeBundling : C(K,Space →L[ℝ] V) →L[ℝ] (Space →L[ℝ] C(K,V)) where
   toLinearMap := derivativeBundlingLinear
   cont := AddMonoidHomClass.continuous_of_bound (derivativeBundlingLinear (K := K) (V := V)) 1
@@ -93,10 +117,13 @@ end Bundling
 The `jet_eq` field identifies every supplied jet with the ordinary derivative. -/
 structure SpatialFamily (K : Type u) [TopologicalSpace K] [CompactSpace K]
     (V : Type v) [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Underlying field of `SpatialFamily`, of type `Space → C(K,V)`. -/
   field : Space → C(K,V)
   smooth : ∀ t, ContDiff ℝ ∞ (fun a => field a t)
+  /-- Jet of `SpatialFamily`, of type `(n : ℕ) → Space → C(K,Space [×n]→L[ℝ] V)`. -/
   jet : (n : ℕ) → Space → C(K,Space [×n]→L[ℝ] V)
   jet_eq : ∀ n a t, jet n a t = iteratedFDeriv ℝ n (fun b => field b t) a
+  /-- Bound of `SpatialFamily`, of type `ℕ → ℝ`. -/
   bound : ℕ → ℝ
   bound_nonneg : ∀ n, 0 ≤ bound n
   bounded : ∀ n a t, ‖iteratedFDeriv ℝ n (fun b => field b t) a‖ ≤ bound n
@@ -106,18 +133,35 @@ namespace SpatialFamily
 variable {K : Type u} [TopologicalSpace K] [CompactSpace K]
   {V : Type v} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup C(K,V) := inferInstance
-private local instance : NormedSpace ℝ C(K,V) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] C(K,V)) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] C(K,V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily9 : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousSpatialFamily10 : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousSpatialFamily11 : NormedAddCommGroup C(K,V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,V)` instance to shorten typeclass synthesis. -/
+local instance instContinuousSpatialFamily12 : NormedSpace ℝ C(K,V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily13 : NormedAddCommGroup C(K,Space →L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily14 : NormedSpace ℝ C(K,Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] C(K,V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily15 : NormedAddCommGroup (Space →L[ℝ] C(K,V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] C(K,V))` instance to shorten typeclass
+synthesis. -/
+local instance instContinuousSpatialFamily16 : NormedSpace ℝ (Space →L[ℝ] C(K,V)) := inferInstance
 
+/-- Derivative field, given by `(continuousMultilinearCurryFin1 ℝ Space
+V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous ℝ K (A.jet 1 a)`. -/
 def derivativeField (A : SpatialFamily K V) (a : Space) : C(K,Space →L[ℝ] V) :=
   (continuousMultilinearCurryFin1 ℝ Space
-    V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous ℝ K
+      V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous ℝ K
     (A.jet 1 a)
 
 theorem derivativeField_eq (A : SpatialFamily K V) (a : Space) (t : K) :
@@ -129,10 +173,11 @@ theorem derivativeField_eq (A : SpatialFamily K V) (a : Space) (t : K) :
   rw [continuousMultilinearCurryFin1_apply, iteratedFDeriv_one_apply]
   simp
 
+/-- Derivative jet as an element of `C(K,Space [×n]→L[ℝ] (Space →L[ℝ] V))`. -/
 def derivativeJet (A : SpatialFamily K V) (n : ℕ) (a : Space) :
     C(K,Space [×n]→L[ℝ] (Space →L[ℝ] V)) :=
   (continuousMultilinearCurryRightEquiv' ℝ n Space
-    V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous ℝ K
+      V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous ℝ K
     (A.jet (n+1) a)
 
 theorem derivativeJet_eq (A : SpatialFamily K V) (n : ℕ) (a : Space) (t : K) :
@@ -141,6 +186,8 @@ theorem derivativeJet_eq (A : SpatialFamily K V) (n : ℕ) (a : Space) (t : K) :
   rw [A.jet_eq, iteratedFDeriv_succ_eq_comp_right]
   exact (continuousMultilinearCurryRightEquiv' ℝ n Space V).apply_symm_apply _
 
+/-- Derivative, bundling `field`, `smooth`, `have`, `funext` and the required compatibility
+proofs. -/
 def derivative (A : SpatialFamily K V) : SpatialFamily K (Space →L[ℝ] V) where
   field := A.derivativeField
   smooth t := by

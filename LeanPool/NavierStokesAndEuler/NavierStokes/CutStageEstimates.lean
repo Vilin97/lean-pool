@@ -9,8 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCoordinateBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Physical jet estimates for the actual diagonal cutoff stages
@@ -20,6 +19,9 @@ are estimated before choosing the diagonal scales.  All estimates concern
 ordinary Fréchet derivatives on an open smooth domain; the estimate carrier
 itself need not be open.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -382,11 +384,12 @@ section FiniteFamilies
 variable {ι : Type*} [Fintype ι] {W : ι → Type*}
   [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
 
+omit [Fintype ι] in
 /-- A single doubling schedule for a finite heterogeneous family, such as
 Cartesian stream potentials, direct angular fields, and scalar pressures.
 The cutoff is applied directly to every component; no extra derivative is
 introduced for components that are already velocity fields. -/
-theorem exists_finite_diagonal_cut_bounds {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
+theorem exists_finite_diagonal_cut_bounds [Finite ι] {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
     {q : E → ℝ} (hq : ContDiffOn ℝ ∞ q U) (hpos : ∀ x ∈ S, 0 < q x)
     (Bq : ℕ → ℝ)
     (hBq : ∀ k x, x ∈ S → q x ≤ 1 →
@@ -400,6 +403,8 @@ theorem exists_finite_diagonal_cut_bounds {U S : Set E} (hU : IsOpen U) (hSU : S
       Tendsto (fun j => (a j : ℝ)) atTop atTop ∧
       ∀ i, DiagonalJetBounds.CutStageBounds (fun j => (a j : ℝ)) q (A i)
         (fun j => g j / 2) (cutLoss L) S := by
+  classical
+  let := Fintype.ofFinite ι
   classical
   choose K hK hb using fun i =>
     exists_cut_stage_constants hU hSU hq hpos Bq hBq (hA i) g L (C i) (p i) (hraw i)
@@ -613,9 +618,10 @@ theorem exists_physical_diagonal_cut_bounds {h : ℝ} (hh : 0 < h) (hh1 : h < 1 
 variable {ι : Type*} [Fintype ι] {W : ι → Type*}
   [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
 
+omit [Fintype ι] in
 /-- The same actual implicit coordinate and one unchanged schedule for all
 finite stream, direct-field, and pressure components. -/
-theorem exists_physical_finite_diagonal_cut_bounds {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
+theorem exists_physical_finite_diagonal_cut_bounds [Finite ι] {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {S : Set SpaceTime} (hS : S ⊆ PhysicalWaveSum.preterminal)
     {A : ∀ i, ℕ → SpaceTime → W i}
     (hA : ∀ i j, 1 ≤ j → ContDiffOn ℝ ∞ (A i j) PhysicalWaveSum.preterminal)
@@ -627,17 +633,20 @@ theorem exists_physical_finite_diagonal_cut_bounds {h : ℝ} (hh : 0 < h) (hh1 :
       Tendsto (fun j => (a j : ℝ)) atTop atTop ∧
       ∀ i, DiagonalJetBounds.CutStageBounds (fun j => (a j : ℝ))
         (PhysicalWaveSum.physicalQ h) (A i) (fun j => g j / 2) (cutLoss L) S := by
+  classical
+  let := Fintype.ofFinite ι
   choose B hB hb using physicalQ_jet_bound hh hh1
   exact exists_finite_diagonal_cut_bounds PhysicalWaveSum.preterminal_open hS
     (fun w hw => (PhysicalWaveSum.physicalQ_smoothAt hh hh1 hw).contDiffWithinAt)
     (fun w hw => PhysicalWaveSum.physicalQ_pos hh hh1 (hS hw)) B
     (fun k w hw hq1 => hb k w (hS hw) hq1) hA g L C p hraw hg lower
 
+omit [Fintype ι] in
 /-- The common case supplied by physical-copy estimates: the uncut bounds
 have no logarithmic factor and their constants are existential.  The same
 constructed sequence controls all positive components and gives smooth
 actual sums on the entire preterminal spacetime domain. -/
-theorem exists_physical_positive_sums_of_power {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
+theorem exists_physical_positive_sums_of_power [Finite ι] {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {S : Set SpaceTime} (hS : S ⊆ PhysicalWaveSum.preterminal)
     {A : ∀ i, ℕ → SpaceTime → W i}
     (hA : ∀ i j, 1 ≤ j → ContDiffOn ℝ ∞ (A i j) PhysicalWaveSum.preterminal)
@@ -656,6 +665,8 @@ theorem exists_physical_positive_sums_of_power {h : ℝ} (hh : 0 < h) (hh1 : h <
         ContDiffOn ℝ ∞
           (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ))
             (PhysicalWaveSum.physicalQ h) (positiveStages (A i))) PhysicalWaveSum.preterminal := by
+  classical
+  let := Fintype.ofFinite ι
   have hex : ∀ i j m, ∃ C : ℝ, 1 ≤ j → ∀ w ∈ S,
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m (A i j) w‖ ≤
@@ -688,11 +699,12 @@ theorem physicalSublevel_open {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (qbig : �
     fun w hw => (PhysicalWaveSum.physicalQ_smoothAt hh hh1 hw).contDiffWithinAt
   exact hc.continuousOn.isOpen_inter_preimage PhysicalWaveSum.preterminal_open isOpen_Iio
 
+omit [Fintype ι] in
 /-- Local raw stages suffice.  The initial scale is chosen so every support
 lies strictly inside `q < qbig`; the same actual cut products then extend
 smoothly by zero to all preterminal points.  This is the support extension
 used in the manuscript before diagonal summation. -/
-theorem exists_physical_local_diagonal_cut_bounds {h qbig : ℝ}
+theorem exists_physical_local_diagonal_cut_bounds [Finite ι] {h qbig : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (hqbig : 0 < qbig)
     {S : Set SpaceTime} (hS : S ⊆ PhysicalWaveSum.preterminal)
     {A : ∀ i, ℕ → SpaceTime → W i}
@@ -711,6 +723,8 @@ theorem exists_physical_local_diagonal_cut_bounds {h qbig : ℝ}
         ContDiffOn ℝ ∞
           (SolenoidalDiagonal.potentialSum (fun j => (a j : ℝ))
             (PhysicalWaveSum.physicalQ h) (positiveStages (A i))) PhysicalWaveSum.preterminal := by
+  classical
+  let := Fintype.ofFinite ι
   have hq : ContDiffOn ℝ ∞ (PhysicalWaveSum.physicalQ h) PhysicalWaveSum.preterminal :=
     fun w hw => (PhysicalWaveSum.physicalQ_smoothAt hh hh1 hw).contDiffWithinAt
   have hU := physicalSublevel_open hh hh1 qbig
@@ -764,7 +778,7 @@ theorem exists_physical_local_diagonal_cut_bounds {h qbig : ℝ}
       (PhysicalWaveSum.physicalQ_pos hh hh1 hw) (positiveStages (A i))
     exact (DiagonalJetBounds.tsum_jet_identity hloc
       (fun j => (hstage j).contDiffAt (PhysicalWaveSum.preterminal_open.mem_nhds
-        hw))).1.contDiffWithinAt
+          hw))).1.contDiffWithinAt
 
 end PhysicalCoordinate
 

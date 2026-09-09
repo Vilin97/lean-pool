@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryPerturbedEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizationError
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryPerturbedEnergy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The true smooth regularized Euler flows are Cauchy in continuous
 L² on the common energy-controlled interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +26,8 @@ open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothL
   EulerSmoothSobolev EulerVolterraConvolution Finset
 open scoped ContDiff Topology
 
+/-- Regularized comparison cost, given by `regularizationCost M*Real.sqrt (Real.exp
+((2*((360*smoothEmbeddingConstant)*M)+1)*T))`. -/
 def regularizedComparisonCost (T M : ℝ) : ℝ :=
   regularizationCost M*Real.sqrt (Real.exp ((2*((360*smoothEmbeddingConstant)*M)+1)*T))
 
@@ -34,7 +39,7 @@ theorem regularized_l2_comparison {T : ℝ} {hT : 0 ≤ T} {j k : ℕ}
     (V : RegularizedEvolution (regularizer k) T hT)
     (M : ℝ) (hU : ∀ t, WordBound 4 M (U.velocity t))
     (hV : ∀ t, WordBound 4 M (V.velocity t))
-    (hinit : (V.velocity ⟨0,le_rfl,hT⟩).toLp=(U.velocity ⟨0,le_rfl,hT⟩).toLp) :
+    (hinit : (V.velocity ⟨0, le_rfl, hT⟩).toLp = (U.velocity ⟨0, le_rfl, hT⟩).toLp) :
     ‖fieldPath V.velocity V.velocity_continuous-fieldPath U.velocity U.velocity_continuous‖ ≤
       (regularizerError j+regularizerError k)*regularizedComparisonCost T M := by
   let G := (360*smoothEmbeddingConstant)*M
@@ -51,7 +56,7 @@ theorem regularized_l2_comparison {T : ℝ} {hT : 0 ≤ T} {j k : ℕ}
   have hc : ContinuousOn X (Icc 0 T) := by
     exact ((((fieldPath V.velocity V.velocity_continuous).continuous.sub
       (fieldPath U.velocity U.velocity_continuous).continuous).comp continuous_projIcc).norm.pow
-        2).continuousOn
+          2).continuousOn
   have hx0 : X 0=0 := by
     simp only [X,projIcc_of_mem hT (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl,hT⟩),
       hinit,sub_self,norm_zero,zero_pow (by decide : 2 ≠ 0)]
@@ -83,10 +88,10 @@ theorem regularized_l2_comparison {T : ℝ} {hT : 0 ≤ T} {j k : ℕ}
 theorem regularized_cauchy {T : ℝ} {hT : 0 ≤ T}
     (U : ∀ n, RegularizedEvolution (regularizer n) T hT)
     (M : ℝ) (hM : ∀ n t, WordBound 4 M ((U n).velocity t))
-    (hinit : ∀ j k, ((U k).velocity ⟨0,le_rfl,hT⟩).toLp=((U j).velocity ⟨0,le_rfl,hT⟩).toLp) :
+    (hinit : ∀ j k, ((U k).velocity ⟨0, le_rfl, hT⟩).toLp = ((U j).velocity ⟨0, le_rfl, hT⟩).toLp) :
     CauchySeq (fun n => fieldPath (U n).velocity (U n).velocity_continuous) := by
   have he : Tendsto (fun n => regularizerError n*regularizedComparisonCost T M) atTop (𝓝 (0 : ℝ))
-    := by
+      := by
     simpa only [zero_mul] using regularizerError_tendsto.mul_const (regularizedComparisonCost T M)
   apply Metric.cauchySeq_iff.mpr
   intro ε hε

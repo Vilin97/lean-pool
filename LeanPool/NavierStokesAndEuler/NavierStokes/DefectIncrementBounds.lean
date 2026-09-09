@@ -7,11 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanMomentBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanIncrementBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanRankUpdate
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
-
-@[expose] public section
 
 /-!
 # Actual defect changes under the slow rank update
@@ -20,6 +16,9 @@ The pressure, angular flux, and axial flux defects are actual torus/radial
 moments.  Their linear changes are precisely the last three rows of (35).
 The remaining terms include the complete radial-source remainder of (32).
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.DefectIncrementBounds
 
@@ -31,9 +30,12 @@ open WeightedClasses MeanIncrementBounds
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Point: an abbreviation for `PressureStream.Lift P`. -/
 abbrev Point (P : Type) := PressureStream.Lift P
+/-- Scalar field: an abbreviation for `MeanIncrementBounds.Field D`. -/
 abbrev ScalarField (D : Type) := MeanIncrementBounds.Field D
 
+/-- Positive domain, given by `{x | 0 < x.1}`. -/
 noncomputable def positiveDomain : Set (Point P) := {x | 0 < x.1}
 
 omit [NormedSpace ℝ P] in
@@ -116,6 +118,7 @@ theorem smoothOn (hf : Shell a b f) (U : Set (Point P)) : SmoothOn U f :=
 
 end Shell
 
+/-- Shell triple data, collecting `radial`, `angular`, `axial`. -/
 structure ShellTriple (a b : ℝ) (m : Triple (Point P)) : Prop where
   radial : Shell a b m.radial
   angular : Shell a b m.angular
@@ -221,6 +224,7 @@ end FluxSupport
 
 /-! ## The actual three moments and their linearity -/
 
+/-- Bar moment, given by `CorrectionState.radialMoment k f`. -/
 noncomputable def barMoment (k : ℕ) (f : ScalarField (Point P)) : ScalarField P :=
   CorrectionState.radialMoment k f
 
@@ -297,7 +301,7 @@ theorem barMoment_mem
       (WeightedRadialPrimitive.logStripData a b cL cR ha hcL hcR ε S hε hεone hS) α f)
     (k : ℕ) :
     UnweightedClass (MeanMomentBounds.slowStripData (D := P) ε S hε hεone hS) α (barMoment k f) :=
-      by
+        by
   have h := MeanMomentBounds.meanClass_radialMoment ha hab hcL hcR ε S hε hεone hS
     hf.smooth hf.supported hclass k
   have he : barMoment k f = fun n =>
@@ -309,15 +313,19 @@ theorem barMoment_mem
 
 /-! ## Literal changes, linear rows, and explicit nonlinear remainders -/
 
+/-- Theta leading, given by `base.axial * h.angular + base.angular * h.axial`. -/
 noncomputable def thetaLeading (base h : Triple (Point P)) : ScalarField (Point P) :=
   base.axial * h.angular + base.angular * h.axial
 
+/-- Axial leading, given by `(2 : ℝ) • (base.axial * h.axial)`. -/
 noncomputable def axialLeading (base h : Triple (Point P)) : ScalarField (Point P) :=
   (2 : ℝ) • (base.axial * h.axial)
 
+/-- Theta quadratic, given by `m.axial * h.angular + h.axial * m.angular + h.axial * h.angular`. -/
 noncomputable def thetaQuadratic (m h : Triple (Point P)) : ScalarField (Point P) :=
   m.axial * h.angular + h.axial * m.angular + h.axial * h.angular
 
+/-- Axial quadratic, given by `(2 : ℝ) • (m.axial * h.axial) + h.axial * h.axial`. -/
 noncomputable def axialQuadratic (m h : Triple (Point P)) : ScalarField (Point P) :=
   (2 : ℝ) • (m.axial * h.axial) + h.axial * h.axial
 
@@ -327,28 +335,36 @@ noncomputable def actualRadialError (o : Operators (Point P)) (base m h : Triple
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ScalarField (Point P) :=
   gr o base (updated m h) W - gr o base m W - leadingRadial o base h
 
+/-- Pressure defect, given by `barMoment 0 (gr o base m W)`. -/
 noncomputable def pressureDefect (o : Operators (Point P)) (base m : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ScalarField P := barMoment 0 (gr o base m W)
 
+/-- Theta defect, given by `barMoment 2 (thetaAxial base m + W 2 1)`. -/
 noncomputable def thetaDefect (base m : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ScalarField P :=
   barMoment 2 (thetaAxial base m + W 2 1)
 
+/-- Axial defect, given by `barMoment 1 (axialAxial base m + W 2 2) - (1 / 2 : ℝ) • barMoment 2
+(gr o base m W)`. -/
 noncomputable def axialDefect (o : Operators (Point P)) (base m : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ScalarField P :=
   barMoment 1 (axialAxial base m + W 2 2) - (1 / 2 : ℝ) • barMoment 2 (gr o base m W)
 
+/-- Defects, defined pointwise by `![pressureDefect o base m W n p, thetaDefect base m W n p,
+axialDefect o base m W n p]`. -/
 noncomputable def defects (o : Operators (Point P)) (base m : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ℕ → P → Fin 3 → ℝ :=
   fun n p => ![pressureDefect o base m W n p, thetaDefect base m W n p,
     axialDefect o base m W n p]
 
+/-- Linear rows as an element of `ℕ → P → Fin 3 → ℝ`. -/
 noncomputable def linearRows (o : Operators (Point P)) (base h : Triple (Point P)) :
     ℕ → P → Fin 3 → ℝ := fun n p =>
   ![barMoment 0 (leadingRadial o base h) n p,
     barMoment 2 (thetaLeading base h) n p,
     barMoment 1 (axialLeading base h) n p - (1 / 2) * barMoment 2 (leadingRadial o base h) n p]
 
+/-- Remainders as an element of `ℕ → P → Fin 3 → ℝ`. -/
 noncomputable def remainders (o : Operators (Point P)) (base m h : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ℕ → P → Fin 3 → ℝ := fun n p =>
   ![barMoment 0 (actualRadialError o base m h W) n p,
@@ -586,9 +602,11 @@ end IntegratedBounds
 
 /-! ## Identification with the five solved rows and both exact masses -/
 
+/-- Slow slice, given by `f n (r, (p, 0))`. -/
 noncomputable def slowSlice (f : ScalarField (Point P)) (n : ℕ) (p : P) (r : ℝ) : ℝ :=
   f n (r, (p, 0))
 
+/-- Is slow, given by `∀ n r p Y, f n (r, (p, Y)) = slowSlice f n p r`. -/
 noncomputable def IsSlow (f : ScalarField (Point P)) : Prop :=
   ∀ n r p Y, f n (r, (p, Y)) = slowSlice f n p r
 
@@ -695,7 +713,7 @@ theorem linearRows_eq_neg_of_fiveRows {a b : ℝ} (ha : 0 < a)
       _ = ∫ r, r ^ (1 : ℕ) * slowSlice (axialLeading base h) n p r -
           (1 / 2) * (r ^ (2 : ℕ) * slowSlice (leadingRadial o base h) n p r) := by
         rw [integral_sub (hzs.sliceIntegrable 1 n p) ((hrs.sliceIntegrable 2 n p).const_mul (1 /
-          2)),
+            2)),
           integral_const_mul]
       _ = ∫ r, 2 * r * slowSlice base.axial n p r * slowSlice h.axial n p r -
           r * slowSlice base.angular n p r * slowSlice h.angular n p r := by
@@ -715,7 +733,7 @@ theorem defects_eq_stateDebt (c : CorrectionState.Context (Point P))
     defects c.operators c.base u.mean u.covariance = CorrectionState.debt c u := rfl
 
 theorem rankStage_covariance (p : CorrectionState.ReconstructionData) (r : CorrectionState.RankData
-  P)
+    P)
     (axial : P × PressureStream.Plane) (c : CorrectionState.Context (Point P))
     (u : CorrectionState.State (Point P)) :
     (CorrectionState.rankStage p r axial c u).covariance = u.covariance := by

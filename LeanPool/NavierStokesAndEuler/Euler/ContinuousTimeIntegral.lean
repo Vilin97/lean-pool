@@ -6,9 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Bounded operators on continuous time paths
@@ -17,6 +19,9 @@ The multiplier and initial integral are actual continuous linear maps. The
 primitive has the prescribed derivative, including the one-sided endpoint
 statements, and the uniform bound is exactly the interval length.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,13 +36,13 @@ variable {K E F : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Pointwise multiplication by an operator-valued continuous path. -/
-def multiplierLinear (A : C(K,E →L[ℝ] F)) : C(K,E) →ₗ[ℝ] C(K,F) where
+def multiplierLinear (A : C(K, E →L[ℝ] F)) : C(K,E) →ₗ[ℝ] C(K,F) where
   toFun f := ⟨fun t => A t (f t), A.continuous.clm_apply f.continuous⟩
   map_add' f g := by ext t; exact map_add (A t) (f t) (g t)
   map_smul' r f := by ext t; exact map_smul (A t) r (f t)
 
 /-- The multiplier has the literal coefficient bound. -/
-theorem multiplierLinear_bound (A : C(K,E →L[ℝ] F)) (f : C(K,E)) :
+theorem multiplierLinear_bound (A : C(K, E →L[ℝ] F)) (f : C(K, E)) :
     ‖multiplierLinear A f‖ ≤ ‖A‖ * ‖f‖ := by
   apply (ContinuousMap.norm_le _ (mul_nonneg (norm_nonneg A) (norm_nonneg f))).2
   intro t
@@ -45,14 +50,14 @@ theorem multiplierLinear_bound (A : C(K,E →L[ℝ] F)) (f : C(K,E)) :
     (mul_le_mul (A.norm_coe_le_norm t) (f.norm_coe_le_norm t) (norm_nonneg _) (norm_nonneg A))
 
 /-- The genuine bounded multiplier on continuous time paths. -/
-def multiplier (A : C(K,E →L[ℝ] F)) : C(K,E) →L[ℝ] C(K,F) :=
+def multiplier (A : C(K, E →L[ℝ] F)) : C(K,E) →L[ℝ] C(K,F) :=
   (multiplierLinear A).mkContinuous ‖A‖ (multiplierLinear_bound A)
 
-@[simp] theorem multiplier_apply (A : C(K,E →L[ℝ] F)) (f : C(K,E)) (t : K) :
+@[simp] theorem multiplier_apply (A : C(K, E →L[ℝ] F)) (f : C(K, E)) (t : K) :
     multiplier A f t = A t (f t) := rfl
 
 /-- No derivative-dependent loss enters continuous path multiplication. -/
-theorem multiplier_norm (A : C(K,E →L[ℝ] F)) : ‖multiplier A‖ ≤ ‖A‖ :=
+theorem multiplier_norm (A : C(K, E →L[ℝ] F)) : ‖multiplier A‖ ≤ ‖A‖ :=
   (multiplierLinear A).mkContinuous_norm_le (norm_nonneg A) (multiplierLinear_bound A)
 
 section Primitive
@@ -60,11 +65,11 @@ section Primitive
 variable [CompleteSpace E] (T : ℝ) (hT : 0 ≤ T)
 
 /-- The literal zero-initial-time integral. -/
-def realIntegral (f : C(Icc (0 : ℝ) T,E)) : ℝ → E :=
+def realIntegral (f : C(Icc (0 : ℝ) T, E)) : ℝ → E :=
   fun t => ∫ s in (0 : ℝ)..t, extendPath T hT f s
 
 /-- The integral has the actual classical derivative. -/
-theorem realIntegral_hasDerivAt (f : C(Icc (0 : ℝ) T,E)) (t : ℝ) :
+theorem realIntegral_hasDerivAt (f : C(Icc (0 : ℝ) T, E)) (t : ℝ) :
     HasDerivAt (realIntegral T hT f) (extendPath T hT f t) t := by
   have hc := extendPath_continuous T hT f
   exact intervalIntegral.integral_hasDerivAt_right (hc.intervalIntegrable 0 t)
@@ -84,7 +89,7 @@ def integralLinear : C(Icc (0 : ℝ) T,E) →ₗ[ℝ] C(Icc (0 : ℝ) T,E) where
     exact intervalIntegral.integral_smul r (extendPath T hT f)
 
 /-- The uniform norm of the primitive is bounded by time length times the input norm. -/
-theorem integralLinear_bound (f : C(Icc (0 : ℝ) T,E)) :
+theorem integralLinear_bound (f : C(Icc (0 : ℝ) T, E)) :
     ‖integralLinear T hT f‖ ≤ T*‖f‖ := by
   apply (ContinuousMap.norm_le _ (mul_nonneg hT (norm_nonneg f))).2
   intro t
@@ -98,7 +103,7 @@ theorem integralLinear_bound (f : C(Icc (0 : ℝ) T,E)) :
 def integral : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   (integralLinear T hT).mkContinuous T (integralLinear_bound T hT)
 
-@[simp] theorem integral_apply (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) T) :
+@[simp] theorem integral_apply (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     integral T hT f t = realIntegral T hT f t := rfl
 
 /-- The exact operator bound for the initial primitive. -/
@@ -107,12 +112,12 @@ theorem integral_norm : ‖integral (E := E) T hT‖ ≤ T := by
   intro f
   exact integralLinear_bound T hT f
 
-@[simp] theorem integral_initial (f : C(Icc (0 : ℝ) T,E)) :
+theorem integral_initial (f : C(Icc (0 : ℝ) T, E)) :
     integral T hT f ⟨0,le_rfl,hT⟩ = 0 := by
   exact intervalIntegral.integral_same
 
 /-- The primitive has the prescribed within-interval derivative at every time. -/
-theorem integral_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) T) :
+theorem integral_hasDerivWithinAt (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (integral T hT f)) (f t) (Icc (0 : ℝ) T) t := by
   have hd : HasDerivWithinAt (realIntegral T hT f) (f t) (Icc (0 : ℝ) T) t := by
     simpa only [extendPath, projIcc_of_mem hT t.property] using
@@ -122,7 +127,7 @@ theorem integral_hasDerivWithinAt (f : C(Icc (0 : ℝ) T,E)) (t : Icc (0 : ℝ) 
   simp only [extendPath, projIcc_of_mem hT hs, integral_apply]
 
 /-- A path with this derivative is its initial value plus the actual integral. -/
-theorem eq_initial_add_integral (f : C(Icc (0 : ℝ) T,E)) (a : ℝ → E)
+theorem eq_initial_add_integral (f : C(Icc (0 : ℝ) T, E)) (a : ℝ → E)
     (ha : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt a (f t) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) : a t = a 0 + integral T hT f t := by
   have hd : ∀ s ∈ Icc (0 : ℝ) T,

@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderLinearTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+
+/-! The literal advection fields obey the same fixed coefficient costs before the final tail split.
+-/
 
 @[expose] public section
 
-/-! The literal advection fields obey the same fixed coefficient costs before the final tail split.
-  -/
 
 noncomputable section
 
@@ -30,12 +33,12 @@ theorem slow_unnormalized_bound {R A B : ℝ} {d e : ℕ}
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R) :
     (SpatialJetField.slowAdvection C.inverse G H).WordBound 6 R (BC.slowCost*A*B) (d+e+1) := by
   have hm := hG.multiply C.inverse BC.Rc BC.amplitude BC.Rc_nonneg BC.amplitude_nonneg hA hRc
-    BC.inverse_bound
+      BC.inverse_bound
   have ham : 0 ≤ 3*sobolevCoefficientAmplitude (Fin 4) 6 BC.Rc BC.amplitude*A :=
     mul_nonneg BC.multiplierCost_nonneg hA
   have hs := (hm.spatialTransport hH hR ham hB).of_path_eq
     (SpatialJetField.slowAdvection C.inverse G H) rfl
-  have he : 9*EulerCylinderPathProduct.productBlockConstant P*
+  have he : 9*EulerCylinderPathProduct.productBlockConstant P *
       (3*sobolevCoefficientAmplitude (Fin 4) 6 BC.Rc BC.amplitude*A)*B = BC.slowCost*A*B := by
     unfold slowCost multiplierCost
     ring
@@ -47,14 +50,14 @@ theorem fast_unnormalized_bound {R A B : ℝ} {d e : ℕ}
     (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ R) :
     (SpatialJetField.fastAdvection C.normal G H).WordBound 6 R (BC.fastCost*A*B) (d+e+1) := by
   have hm := hG.multiply C.normal.normalMatrix BC.Rc BC.amplitude BC.Rc_nonneg BC.amplitude_nonneg
-    hA hRc
+      hA hRc
     (C.normal.normalMatrix_bound BC.Rc BC.amplitude BC.normal_bound)
   have hd := hH.derivative 0
   have ham : 0 ≤ 3*sobolevCoefficientAmplitude (Fin 4) 6 BC.Rc BC.amplitude*A :=
     mul_nonneg BC.multiplierCost_nonneg hA
   have hs := (hm.scalarProduct hd scalarProject (le_of_eq scalarProject_norm) hR ham hB).of_path_eq
     (SpatialJetField.fastAdvection C.normal G H) rfl
-  have he : 3*EulerCylinderPathProduct.productBlockConstant P*
+  have he : 3*EulerCylinderPathProduct.productBlockConstant P *
       (3*sobolevCoefficientAmplitude (Fin 4) 6 BC.Rc BC.amplitude*A)*B = BC.fastCost*A*B := by
     unfold fastCost multiplierCost
     ring

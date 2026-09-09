@@ -8,9 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RenormalizedHeatMoment
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ExtendedHeatDebts
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-
-@[expose] public section
 
 /-!
 # Actual history limits on the pure heat tail
@@ -19,6 +16,9 @@ All tail integrals below are actual improper integrals. Their differentiated
 kernels have explicit integrable power majorants. The physical histories use
 the same outgoing profile and the same compensation witness throughout.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,9 +31,11 @@ namespace NavierStokes.HeatTailHistoryLimits
 
 /-! ## Differentiated heat corrections and their actual tail integrals -/
 
+/-- Tail kernel, given by `u ^ (-k) * ExtendedHeatDebts.editJet square h 1 n ν u`. -/
 noncomputable def tailKernel (square : Bool) (h k : ℝ) (n : ℕ) (ν u : ℝ) : ℝ :=
   u ^ (-k) * ExtendedHeatDebts.editJet square h 1 n ν u
 
+/-- Tail jet, given by `∫ u in Ioi X, tailKernel square h k n ν u`. -/
 noncomputable def tailJet (square : Bool) (h k : ℝ) (n : ℕ) (X ν : ℝ) : ℝ :=
   ∫ u in Ioi X, tailKernel square h k n ν u
 
@@ -145,11 +147,12 @@ theorem mul_tailJet_tendsto_zero {h k : ℝ} (hh : 0 < h) (hk : 1 < k)
     calc
       _ ≤ X * ((ExtendedHeatDebts.editBound square h |ν| n / k) * X ^ (-k)) :=
         mul_le_mul_of_nonneg_left (tailJet_bound hh (zero_lt_one.trans hk) hX le_rfl square n)
-          hXp.le
+            hXp.le
       _ = _ := by rw [mul_left_comm, mul_decay_power hXp]
   · simpa only [mul_zero] using (tendsto_rpow_neg_atTop (sub_pos.mpr hk)).const_mul
       (ExtendedHeatDebts.editBound square h |ν| n / k)
 
+/-- Eta tail, given by `tailJet square h k 0 X (ParametricHeatTail.diffusion η)`. -/
 noncomputable def etaTail (square : Bool) (h k X η : ℝ) : ℝ :=
   tailJet square h k 0 X (ParametricHeatTail.diffusion η)
 
@@ -166,8 +169,9 @@ theorem etaTail_bound {h k X η : ℝ} (hh : 0 < h) (hk : 0 < k) (hX : 1 ≤ X)
     (hη : η ∈ Icc (-1 : ℝ) 1) (square : Bool) :
     |etaTail square h k X η| ≤ (ExtendedHeatDebts.editBound square h 1 0 / k) * X ^ (-k) := by
   exact tailJet_bound hh hk hX
-    (by rw [abs_of_nonneg (ParametricHeatTail.diffusion_mem hη).1]; exact
-      (ParametricHeatTail.diffusion_mem hη).2)
+    (by
+        rw [abs_of_nonneg (ParametricHeatTail.diffusion_mem hη).1]; exact
+            (ParametricHeatTail.diffusion_mem hη).2)
     square 0
 
 theorem etaTail_derivative_bound {h k X η : ℝ} (hh : 0 < h) (hk : 0 < k) (hX : 1 ≤ X)
@@ -180,8 +184,9 @@ theorem etaTail_derivative_bound {h k X η : ℝ} (hh : 0 < h) (hk : 0 < k) (hX 
     norm_num
     exact (abs_le.mpr hη).trans_eq (by ring)
   have hb := tailJet_bound (L := 1) hh hk hX
-    (by rw [abs_of_nonneg (ParametricHeatTail.diffusion_mem hη).1]; exact
-      (ParametricHeatTail.diffusion_mem hη).2)
+    (by
+        rw [abs_of_nonneg (ParametricHeatTail.diffusion_mem hη).1]; exact
+            (ParametricHeatTail.diffusion_mem hη).2)
     square 1
   nlinarith [abs_nonneg (tailJet square h k 1 X (ParametricHeatTail.diffusion η))]
 
@@ -192,7 +197,7 @@ theorem etaTail_tendsto_zero {h k : ℝ} (hh : 0 < h) (hk : 0 < k) (square : Boo
 theorem etaTail_derivative_tendsto_zero {h k : ℝ} (hh : 0 < h) (hk : 0 < k)
     (square : Bool) (η : ℝ) : Tendsto (fun X => deriv (etaTail square h k X) η) atTop (𝓝 0) := by
   have ht := (tailJet_tendsto_zero hh hk square 1 (ParametricHeatTail.diffusion η)).mul_const (-2 *
-    η)
+      η)
   apply (show Tendsto (fun X => tailJet square h k 1 X (ParametricHeatTail.diffusion η) * (-2 * η))
     atTop (𝓝 0) by simpa only [zero_mul] using ht).congr'
   filter_upwards [eventually_ge_atTop (1 : ℝ)] with X hX
@@ -204,11 +209,11 @@ theorem mul_etaTail_tendsto_zero {h k : ℝ} (hh : 0 < h) (hk : 1 < k) (square :
 
 theorem mul_etaTail_derivative_tendsto_zero {h k : ℝ} (hh : 0 < h) (hk : 1 < k)
     (square : Bool) (η : ℝ) : Tendsto (fun X => X * deriv (etaTail square h k X) η) atTop (𝓝 0) :=
-      by
+        by
   have ht := (mul_tailJet_tendsto_zero hh hk square 1 (ParametricHeatTail.diffusion η)).mul_const
-    (-2 * η)
+      (-2 * η)
   apply (show Tendsto (fun X => (X * tailJet square h k 1 X (ParametricHeatTail.diffusion η)) * (-2
-    * η))
+      * η))
     atTop (𝓝 0) by simpa only [zero_mul] using ht).congr'
   filter_upwards [eventually_ge_atTop (1 : ℝ)] with X hX
   rw [(etaTail_hasDerivAt hh (zero_lt_one.trans hk) hX square η).deriv]
@@ -216,12 +221,15 @@ theorem mul_etaTail_derivative_tendsto_zero {h k : ℝ} (hh : 0 < h) (hk : 1 < k
 
 /-! ## Exact exterior formulas for the supplied outgoing profile -/
 
+/-- Amplitude, given by `RenormalizedHeatMoment.outgoingPowerAmplitude F XR`. -/
 noncomputable def amplitude (F : Profile) (XR : ℝ) : ℝ :=
   RenormalizedHeatMoment.outgoingPowerAmplitude F XR
 
+/-- Angular amplitude, given by `Real.sqrt 2 * amplitude F XR`. -/
 noncomputable def angularAmplitude (F : Profile) (XR : ℝ) : ℝ :=
   Real.sqrt 2 * amplitude F XR
 
+/-- Tail start, given by `max (RenormalizedHeatMoment.heatThreshold F XR) (Real.exp 1)`. -/
 noncomputable def tailStart (F : Profile) (XR : ℝ) : ℝ :=
   max (RenormalizedHeatMoment.heatThreshold F XR) (Real.exp 1)
 
@@ -242,6 +250,7 @@ theorem helper_switch_one {X : ℝ} (hX : Real.exp 1 ≤ X) : HeatTailEdit.switc
   simp only [Real.log_exp, div_one] at *
   linarith
 
+/-- Heat factor, given by `HeatProfileExtension.physicalProfile (1 + h) X η`. -/
 noncomputable def heatFactor (h η X : ℝ) : ℝ :=
   HeatProfileExtension.physicalProfile (1 + h) X η
 
@@ -252,7 +261,7 @@ theorem heatFactor_eq_profile (h : ℝ) {η X : ℝ} (hη : η ∈ Icc (-1 : ℝ
 
 theorem correction_eq_factor (h : ℝ) (η : ℝ) {X : ℝ} (hX : Real.exp 1 ≤ X) :
     ExtendedHeatDebts.editJet false h 1 0 (ParametricHeatTail.diffusion η) X = heatFactor h η X - 1
-      := by
+        := by
   simp only [ExtendedHeatDebts.editJet, Bool.false_eq_true, ite_false,
     ExtendedHeatDebts.correctionJet_zero, ExtendedHeatDebts.correction,
     helper_switch_one hX, one_mul]
@@ -260,7 +269,7 @@ theorem correction_eq_factor (h : ℝ) (η : ℝ) {X : ℝ} (hX : Real.exp 1 ≤
 
 theorem squareCorrection_eq_factor (h : ℝ) (η : ℝ) {X : ℝ} (hX : Real.exp 1 ≤ X) :
     ExtendedHeatDebts.editJet true h 1 0 (ParametricHeatTail.diffusion η) X = heatFactor h η X ^ 2
-      - 1 := by
+        - 1 := by
   simp only [ExtendedHeatDebts.editJet, ite_true,
     ExtendedHeatDebts.squareCorrectionJet_zero, ExtendedHeatDebts.multiplier,
     ExtendedHeatDebts.correction, helper_switch_one hX, one_mul, add_sub_cancel]
@@ -312,7 +321,7 @@ theorem heated_difference_eq_kernel (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c :
     {η X : ℝ} (hη : η ∈ Icc (-1 : ℝ) 1) (hX : tailStart F XR ≤ X) :
     HeatedOutgoing.H F XR c (X,η) - OutgoingDilation.powerH F XR X =
       angularAmplitude F XR * tailKernel false F.data.h F.data.h 0 (ParametricHeatTail.diffusion η)
-        X := by
+          X := by
   rw [heated_H_eq F hXR c hη hX,
     powerH_eq F hXR (zero_lt_one.trans_le ((tailStart_ge_one F XR).trans hX)),
     tailKernel, correction_eq_factor _ _ ((le_max_right _ _).trans hX)]
@@ -341,17 +350,20 @@ theorem canonicalKernel_eq_kernel (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c : �
     ring
   calc
     _ = amplitude F XR ^ 2 * (X ^ (-(1 + 2 * F.data.h)) / X) * heatFactor F.data.h η X ^ 2 := by
-      ring
+        ring
     _ = _ := by rw [hp]; ring
 
 /-! ## The constants are fixed by the same compensation witness -/
 
+/-- Angular history, given by `∫ u in Ioc 0 X, HeatedOutgoing.H F XR c (u,η)`. -/
 noncomputable def angularHistory (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (η X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, HeatedOutgoing.H F XR c (u,η)
 
+/-- Energy history, given by `∫ u in Ioc 0 X, HeatedOutgoing.energyDensity F XR c η u`. -/
 noncomputable def energyHistory (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (η X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, HeatedOutgoing.energyDensity F XR c η u
 
+/-- Power history, given by `∫ u in Ioc 0 X, OutgoingDilation.powerH F XR u`. -/
 noncomputable def powerHistory (F : Profile) (XR X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, OutgoingDilation.powerH F XR u
 
@@ -378,10 +390,10 @@ theorem angularHistory_eq_power_sub_future {F : Profile} {XR C : ℝ}
     (hη : η ∈ HeatedOutgoing.parameterDomain) (hX : 0 < X) :
     angularHistory F XR w.coefficients η X = powerHistory F XR X -
       ∫ u in Ioi X, HeatedOutgoing.H F XR w.coefficients (u,η) - OutgoingDilation.powerH F XR u :=
-        by
+          by
   have hi := angularHistory_integrable w hη hX
   have hr := (w.renormalized_integrable η hη).mono_set (show Ioc (0 : ℝ) X ⊆ Ioi 0 from fun _ h =>
-    h.1)
+      h.1)
   have hp : IntegrableOn (OutgoingDilation.powerH F XR) (Ioc 0 X) := by
     apply IntegrableOn.congr_fun (hi.sub hr) _ measurableSet_Ioc
     intro u hu
@@ -414,6 +426,7 @@ theorem energyHistory_eq_square_future {F : Profile} {XR C B : ℝ}
   unfold energyHistory
   linarith
 
+/-- Power tail, given by `X ^ (-(k - 1)) / (k - 1)`. -/
 noncomputable def powerTail (k X : ℝ) : ℝ := X ^ (-(k - 1)) / (k - 1)
 
 theorem powerTail_eq_integral {k X : ℝ} (hk : 1 < k) (hX : 0 < X) :
@@ -426,9 +439,9 @@ theorem angularHistory_formula {F : Profile} {XR C : ℝ} (w : CompensationWitne
     angularHistory F XR w.coefficients η X = powerHistory F XR X -
       angularAmplitude F XR * etaTail false F.data.h F.data.h X η := by
   rw [angularHistory_eq_power_sub_future w hη (zero_lt_one.trans_le ((tailStart_ge_one F XR).trans
-    hX))]
+      hX))]
   have he : (∫ u in Ioi X, HeatedOutgoing.H F XR w.coefficients (u,η) - OutgoingDilation.powerH F
-    XR u) =
+      XR u) =
       angularAmplitude F XR * etaTail false F.data.h F.data.h X η := by
     rw [etaTail, tailJet, ← integral_const_mul]
     apply setIntegral_congr_fun measurableSet_Ioi
@@ -500,7 +513,7 @@ theorem angularHistory_hasDerivAt {F : Profile} {XR C : ℝ} (w : CompensationWi
   have ht := (etaTail_hasDerivAt F.data.h_pos F.data.h_pos
     ((tailStart_ge_one F XR).trans hX) false η).differentiableAt.hasDerivAt
   have hd := ((ht.const_mul (angularAmplitude F XR)).const_sub (powerHistory F XR
-    X)).congr_of_eventuallyEq
+      X)).congr_of_eventuallyEq
     (parameter_germ hη (fun t ht => angularHistory_formula w ht hX))
   simpa only [neg_mul] using hd
 
@@ -513,7 +526,7 @@ theorem energyHistory_hasDerivAt {F : Profile} {XR C B : ℝ}
   have ht := (etaTail_hasDerivAt hh (by linarith : 0 < 1 + 2 * F.data.h)
     ((tailStart_ge_one F XR).trans hX) true η).differentiableAt.hasDerivAt
   exact ((ht.const_add (powerTail (1 + 2 * F.data.h) X)).const_mul (amplitude F XR ^ 2 /
-    2)).congr_of_eventuallyEq
+      2)).congr_of_eventuallyEq
     (parameter_germ hη (fun t ht => energyHistory_formula hF w ht hX))
 
 theorem pressure_hasDerivAt (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c : ℝ → Coeff)
@@ -524,7 +537,7 @@ theorem pressure_hasDerivAt (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c : ℝ →
   have ht := (etaTail_hasDerivAt hh (by linarith : 0 < 2 + 2 * F.data.h)
     ((tailStart_ge_one F XR).trans hX) true η).differentiableAt.hasDerivAt
   exact ((ht.const_add (powerTail (2 + 2 * F.data.h) X)).const_mul (-(amplitude F XR ^ 2 /
-    2))).congr_of_eventuallyEq
+      2))).congr_of_eventuallyEq
     (parameter_germ hη (fun t ht => pressure_formula F hXR c ht hX))
 
 theorem powerTail_tendsto_zero {k : ℝ} (hk : 1 < k) :
@@ -545,9 +558,9 @@ theorem mul_powerTail_tendsto_zero {k : ℝ} (hk : 2 < k) :
 theorem angularHistory_sub_power_tendsto_zero {F : Profile} {XR C : ℝ}
     (w : CompensationWitness F XR C) {η : ℝ} (hη : η ∈ HeatedOutgoing.parameterDomain) :
     Tendsto (fun X => angularHistory F XR w.coefficients η X - powerHistory F XR X) atTop (𝓝 0) :=
-      by
+        by
   have ht := (etaTail_tendsto_zero F.data.h_pos F.data.h_pos false η).const_mul (-angularAmplitude
-    F XR)
+      F XR)
   apply (show Tendsto (fun X => -angularAmplitude F XR * etaTail false F.data.h F.data.h X η)
     atTop (𝓝 0) by simpa only [mul_zero] using ht).congr'
   filter_upwards [eventually_ge_atTop (tailStart F XR)] with X hX
@@ -558,9 +571,9 @@ theorem angularHistory_eta_tendsto_zero {F : Profile} {XR C : ℝ}
     (w : CompensationWitness F XR C) {η : ℝ} (hη : η ∈ Ioo (-1 : ℝ) 1) :
     Tendsto (fun X => deriv (fun t => angularHistory F XR w.coefficients t X) η) atTop (𝓝 0) := by
   have ht := (etaTail_derivative_tendsto_zero F.data.h_pos F.data.h_pos false η).const_mul
-    (-angularAmplitude F XR)
+      (-angularAmplitude F XR)
   apply (show Tendsto (fun X => -angularAmplitude F XR * deriv (etaTail false F.data.h F.data.h X)
-    η)
+      η)
     atTop (𝓝 0) by simpa only [mul_zero] using ht).congr'
   filter_upwards [eventually_ge_atTop (tailStart F XR)] with X hX
   exact (angularHistory_hasDerivAt w hη hX).deriv.symm
@@ -571,8 +584,8 @@ theorem energyHistory_tendsto_zero {F : Profile} {XR C B : ℝ}
     Tendsto (fun X => energyHistory F XR w.coefficients η X) atTop (𝓝 0) := by
   have hh := F.data.h_pos
   have ht := ((powerTail_tendsto_zero (by linarith : 1 < 1 + 2 * F.data.h)).add
-    (etaTail_tendsto_zero hh (by linarith : 0 < 1 + 2 * F.data.h) true η)).const_mul (amplitude F
-      XR ^ 2 / 2)
+    (etaTail_tendsto_zero hh (by
+        linarith : 0 < 1 + 2 * F.data.h) true η)).const_mul (amplitude F XR ^ 2 / 2)
   apply (show Tendsto (fun X => (amplitude F XR ^ 2 / 2) *
     (powerTail (1 + 2 * F.data.h) X + etaTail true F.data.h (1 + 2 * F.data.h) X η))
     atTop (𝓝 0) by simpa only [add_zero, mul_zero] using ht).congr'
@@ -584,11 +597,11 @@ theorem energyHistory_eta_tendsto_zero {F : Profile} {XR C B : ℝ}
     {η : ℝ} (hη : η ∈ Ioo (-1 : ℝ) 1) :
     Tendsto (fun X => deriv (fun t => energyHistory F XR w.coefficients t X) η) atTop (𝓝 0) := by
   have hh := F.data.h_pos
-  have ht := (etaTail_derivative_tendsto_zero hh (by linarith : 0 < 1 + 2 * F.data.h) true
-    η).const_mul (amplitude F XR ^ 2 / 2)
+  have ht := (etaTail_derivative_tendsto_zero hh (by
+      linarith : 0 < 1 + 2 * F.data.h) true η).const_mul (amplitude F XR ^ 2 / 2)
   apply (show Tendsto (fun X => (amplitude F XR ^ 2 / 2) *
-    deriv (etaTail true F.data.h (1 + 2 * F.data.h) X) η) atTop (𝓝 0) by simpa only [mul_zero]
-      using ht).congr'
+    deriv (etaTail true F.data.h (1 + 2 * F.data.h) X) η) atTop (𝓝 0) by
+        simpa only [mul_zero] using ht).congr'
   filter_upwards [eventually_ge_atTop (tailStart F XR)] with X hX
   exact (energyHistory_hasDerivAt hF w hη hX).deriv.symm
 
@@ -597,8 +610,8 @@ theorem mul_pressure_tendsto_zero (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c : �
     Tendsto (fun X => X * HeatedOutgoing.Pi F XR c (X,η)) atTop (𝓝 0) := by
   have hh := F.data.h_pos
   have ht := ((mul_powerTail_tendsto_zero (by linarith : 2 < 2 + 2 * F.data.h)).add
-    (mul_etaTail_tendsto_zero hh (by linarith : 1 < 2 + 2 * F.data.h) true η)).const_mul
-      (-(amplitude F XR ^ 2 / 2))
+    (mul_etaTail_tendsto_zero hh (by
+        linarith : 1 < 2 + 2 * F.data.h) true η)).const_mul (-(amplitude F XR ^ 2 / 2))
   apply (show Tendsto (fun X => -(amplitude F XR ^ 2 / 2) *
     (X * powerTail (2 + 2 * F.data.h) X + X * etaTail true F.data.h (2 + 2 * F.data.h) X η))
     atTop (𝓝 0) by simpa only [add_zero, mul_zero] using ht).congr'
@@ -610,8 +623,8 @@ theorem mul_pressure_eta_tendsto_zero (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c
     {η : ℝ} (hη : η ∈ Ioo (-1 : ℝ) 1) :
     Tendsto (fun X => X * deriv (fun t => HeatedOutgoing.Pi F XR c (X,t)) η) atTop (𝓝 0) := by
   have hh := F.data.h_pos
-  have ht := (mul_etaTail_derivative_tendsto_zero hh (by linarith : 1 < 2 + 2 * F.data.h) true
-    η).const_mul (-(amplitude F XR ^ 2 / 2))
+  have ht := (mul_etaTail_derivative_tendsto_zero hh (by
+      linarith : 1 < 2 + 2 * F.data.h) true η).const_mul (-(amplitude F XR ^ 2 / 2))
   apply (show Tendsto (fun X => -(amplitude F XR ^ 2 / 2) *
     (X * deriv (etaTail true F.data.h (2 + 2 * F.data.h) X) η))
     atTop (𝓝 0) by simpa only [mul_zero] using ht).congr'
@@ -621,8 +634,11 @@ theorem mul_pressure_eta_tendsto_zero (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c
 
 /-! ## The actual angular field and its radial derivative at infinity -/
 
+/-- Heat H, given by `D * X ^ (-h) * heatFactor h η X`. -/
 noncomputable def heatH (h D η X : ℝ) : ℝ := D * X ^ (-h) * heatFactor h η X
 
+/-- Factor slope, given by `-h * heatFactor h η X - (2 * (1 - η ^ 2) / X) * deriv
+(HeatProfileExtension.extension (1 + h)) (2 * (1 - η ^ 2) / X)`. -/
 noncomputable def factorSlope (h η X : ℝ) : ℝ :=
   -h * heatFactor h η X - (2 * (1 - η ^ 2) / X) *
     deriv (HeatProfileExtension.extension (1 + h)) (2 * (1 - η ^ 2) / X)
@@ -633,7 +649,7 @@ theorem heatFactor_tendsto_one {h : ℝ} (hh : 0 < h) (η : ℝ) :
   have hz : Tendsto (fun X : ℝ => 2 * (1 - η ^ 2) / X) atTop (𝓝 0) :=
     tendsto_const_nhds.div_atTop tendsto_id
   have ht := ((HeatProfileExtension.extension_contDiff ha).continuous.continuousAt (x :=
-    0)).tendsto.comp hz
+      0)).tendsto.comp hz
   unfold heatFactor HeatProfileExtension.physicalProfile HeatProfileExtension.scaledProfile
   simpa only [Function.comp_def, HeatProfileExtension.extension_zero ha] using ht
 
@@ -673,9 +689,9 @@ theorem heatH_hasDerivAt {h X : ℝ} (hh : 0 < h) (D η : ℝ) (hX : 0 < X) :
     HeatProfileExtension.extension (1 + h) (2 * (1 - η ^ 2) / x)) _ X
   convert! (hp.const_mul D).fun_mul hf using 1
   dsimp only [factorSlope, heatFactor, HeatProfileExtension.physicalProfile,
-    HeatProfileExtension.scaledProfile]
+      HeatProfileExtension.scaledProfile]
   rw [Real.rpow_sub_one hX.ne']
-  field_simp [hX.ne'] ; ring
+  field_simp [hX.ne']; ring
 
 theorem heatH_weighted_deriv {h X : ℝ} (hh : 0 < h) (D η : ℝ) (hX : 0 < X) :
     X * deriv (heatH h D η) X = D * X ^ (-h) * factorSlope h η X := by
@@ -752,12 +768,12 @@ theorem actual_history_limits {F : Profile} {XR C B : ℝ}
     Tendsto (fun X => deriv (fun t => angularHistory F XR w.coefficients t X) η) atTop (𝓝 0) ∧
     Tendsto (fun X => HeatedOutgoing.H F XR w.coefficients (X,η)) atTop (𝓝 0) ∧
     Tendsto (fun X => X * deriv (fun u => HeatedOutgoing.H F XR w.coefficients (u,η)) X) atTop (𝓝
-      0) ∧
+        0) ∧
     Tendsto (fun X => energyHistory F XR w.coefficients η X) atTop (𝓝 0) ∧
     Tendsto (fun X => deriv (fun t => energyHistory F XR w.coefficients t X) η) atTop (𝓝 0) ∧
     Tendsto (fun X => X * HeatedOutgoing.Pi F XR w.coefficients (X,η)) atTop (𝓝 0) ∧
     Tendsto (fun X => X * deriv (fun t => HeatedOutgoing.Pi F XR w.coefficients (X,t)) η) atTop (𝓝
-      0) ∧
+        0) ∧
     Tendsto (fun X => X * (HeatedOutgoing.H F XR w.coefficients (X,η) -
       OutgoingDilation.powerH F XR X)) atTop (𝓝 0) := by
   have hb : η ∈ HeatedOutgoing.parameterDomain := ⟨hη.1.le, hη.2.le⟩

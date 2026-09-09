@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleAssembly
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierTransport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularMeanGain
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCyclePeriodicity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularDynamics
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularGaussian
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCoreSupport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleAssembly
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularGaussian
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanBoundsReindex
 
 /-!
 # Particular-wave data for the actual correction cycle
@@ -21,6 +22,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularGaussia
 The record below names the particular half of the cycle's analytic data.
 Its producer uses the literal fixed-parameter solve and incoming invariant.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,17 +34,25 @@ open Set Function Filter WeightedClasses CorrectionState CorrectionStep Correcti
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
+/-- Parameters: an abbreviation for `ActualCycleParameters.fixedParameters B N0`. -/
 noncomputable abbrev parameters (B N0 : ℕ) := ActualCycleParameters.fixedParameters B N0
 
+/-- Block: an abbreviation for `(parameters B N0).particularBlock x.coefficients
+(ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev block {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (parameters B N0).particularBlock x.coefficients (ActualPrimary.commonContext B) x.state
 
+/-- Gaussian block: an abbreviation for `(parameters B N0).particularGaussianBlock
+x.coefficients (ActualPrimary.commonContext B) x.state`. -/
 noncomputable abbrev gaussianBlock {B N0 : ℕ} (x : CycleState (Index B N0)) :=
   (parameters B N0).particularGaussianBlock x.coefficients (ActualPrimary.commonContext B) x.state
 
+/-- Invariant type used in actual particular cycle data. -/
 abbrev Invariant {B N0 : ℕ} (σ : ℝ) (x : CycleState (Index B N0)) : Prop :=
   CycleAnalyticInvariant ActualInitialization.geometry (ActualPrimary.commonContext B)
     ActualInitialization.tangentBlock ActualInitialization.envelope
@@ -56,10 +68,10 @@ structure Data {B N0 : ℕ} (x : CycleState (Index B N0)) (σ : ℝ) : Prop wher
   coefficients : ∀ l n i, HarmonicResidual.SmoothCoefficients ActualInitialization.geometry.domain
     ((block x l).velocity n i)
   pressureCoefficients : ∀ l n, HarmonicResidual.SmoothCoefficients
-    ActualInitialization.geometry.domain
+      ActualInitialization.geometry.domain
     ((block x l).pressure n)
   gaussianCoefficients : ∀ l n i, HarmonicResidual.SmoothCoefficients
-    ActualInitialization.geometry.domain
+      ActualInitialization.geometry.domain
     ((gaussianBlock x l).velocity n i)
   solenoidal : ∀ l, HarmonicWaveInteraction.ModeSolenoidal ActualInitialization.strip
     (ActualPrimary.commonContext B) (block x l)
@@ -111,6 +123,7 @@ section NativeData
 
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
 
+/-- Native data used in actual particular cycle data. -/
 noncomputable def nativeData (x : CycleState (Index B N0)) (l : Index B N0) (j : ℤ) :=
   (ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData
     (StateReindex.context cycleAssoc.symm (ActualPrimary.commonContext B))
@@ -148,12 +161,12 @@ theorem native_source_pull (l : Index B N0) (j : ℤ) (n : ℕ) :
         (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)
         j n (ActualCarrierTransport.associatedPoint z.1.1 z.2) :=
   ActualParticularStageControls.currentSource_pull (ActualCycleParameters.particularState x)
-    (l.2,l.1) j n
+      (l.2,l.1) j n
 
 theorem native_source_smooth (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ) :
     ContDiffOn ℝ ∞ ((nativeData x l j).source n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) := by
+          ActualPrimary.standardRegion) := by
   rw [native_source_pull]
   apply (ActualCycleCoherence.source_smooth H ActualCoreSupport.refinedCarrier_closed
     (fun l n _ hz hc => ActualCycleCoherence.core_radius_pos l n hz hc) l j n).comp
@@ -167,7 +180,7 @@ theorem native_source_smooth (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n 
 theorem native_source_exterior (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ)
     {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (hr : ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z) ∉
       Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
@@ -184,18 +197,18 @@ theorem native_inactive (H : Invariant σ x) (hN : ActualCarrierGeometry.geometr
     (l : Index B N0) (n : ℕ) (hn : ¬ActualWaveRegularityData.Ordered l n) (j : ℤ)
     {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion) :
+        ActualPrimary.standardRegion) :
     (nativeData x l j).common.amplitude n =ᶠ[𝓝 z] fun _ => 0 := by
   exact (ActualCycleAssembly.refined_particular_zero_germs hN l (ActualPrimary.commonContext B)
     x.state (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients
-      l)
+        l)
     (H.inputSupport l) j ActualWaveRegularityData.particularFullStrip n hz.1
       (fun hc => hn (ActualCycleCoherence.core_ordered l n hz.1 hc))).1
 
 theorem native_source_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ)
     {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (hr : ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z) ∉
       Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
@@ -207,16 +220,16 @@ theorem native_source_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (
 theorem native_raw_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ)
     (k : TorusInverse.Frequency) {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (hr : ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z) ∉
       Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
     (nativeData x l j).amplitude n k z = 0 := by
   change ParticularWaveBounds.complexCopyVelocity
     (ParticularWaveAssembly.angleTangent ((ActualParticularStageControls.canonicalParameters
-      (l.2,l.1)).tangent j n))
+        (l.2,l.1)).tangent j n))
     ((nativeData x l j).source n) ((ActualParticularStageControls.canonicalParameters
-      (l.2,l.1)).geometry n)
+        (l.2,l.1)).geometry n)
     ((ActualParticularStageControls.canonicalParameters (l.2,l.1)).length_pos n).le k z = 0
   apply ParticularWaveBounds.complexCopyVelocity_zero_of_path
   intro v _hv
@@ -225,7 +238,7 @@ theorem native_raw_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n :
 theorem native_pressure_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ)
     (k : TorusInverse.Frequency) {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (hr : ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z) ∉
       Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
@@ -259,7 +272,7 @@ theorem native_pressure_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ)
 theorem native_common_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ)
     {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (hr : ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z) ∉
       Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
@@ -273,12 +286,12 @@ theorem native_common_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (
 theorem native_gaussian_boundary (H : Invariant σ x) (l : Index B N0) (j : ℤ) (n : ℕ)
     {z : ActualParticularStageControls.Native}
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (hr : ActualWaveRegularityData.radius (ActualWaveRegularity.particularChart.symm z) ∉
       Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
     (nativeData x l j).globalGaussian (ActualParticularStageControls.canonicalParameters
-      (l.2,l.1)).directions n z = 0 := by
+        (l.2,l.1)).directions n z = 0 := by
   simp only [PeriodizedWaveBounds.CopyData.globalGaussian, PeriodizedWaveBounds.CopyData.globalTail,
     PeriodizedWaveBounds.copySum, PeriodizedWaveBounds.CopyData.localTail,
     native_raw_boundary H l j n _ hz hr, native_source_boundary H l j n hz hr,
@@ -311,7 +324,7 @@ theorem native_residual (H : Invariant σ x) :
 theorem native_source_class (H : Invariant σ x) (j : ℤ) (hj : j ≠ 0) :
     LabelSumBounds.UniformWaveClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
-        ActualParticularStageControls.slowStrip))
+          ActualParticularStageControls.slowStrip))
       ActualParticularStageControls.nativeEnvelope (1/2+σ)
       (ActualParticularStageControls.currentSource (ActualCycleParameters.particularState x) j) :=
   ActualParticularStageControls.current_source_class _ (native_residual H) j hj
@@ -332,7 +345,7 @@ theorem native_raw_class (H : Invariant σ x) (hN : ActualCarrierGeometry.geomet
     (fun n z _ => mul_le_of_le_one_right (Real.sqrt_nonneg _) (native_envelope_le_one l n z))
 
 theorem native_pressure_class (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤
-  N0)
+    N0)
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) :
     MemClass ActualWaveRegularityData.particularFullStrip
       (fun _ z => Real.sqrt (ActualWaveRegularityData.particularFullStrip.zeta z))
@@ -344,12 +357,12 @@ theorem native_pressure_class (H : Invariant σ x) (hN : ActualCarrierGeometry.g
     (fun n z _ => mul_le_of_le_one_right (Real.sqrt_nonneg _) (native_envelope_le_one l n z))
 
 theorem native_gaussian_class (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤
-  N0)
+    N0)
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) (β : ℝ) :
     MemClass ActualWaveRegularityData.particularFullStrip
       (fun _ z => Real.sqrt (ActualWaveRegularityData.particularFullStrip.zeta z)) β
       ((nativeData x l j).globalGaussian (ActualParticularStageControls.canonicalParameters
-        (l.2,l.1)).directions) := by
+          (l.2,l.1)).directions) := by
   have hg := (ActualParticularGaussian.globalGaussian_all_gains _
     (fun l => ActualCycleParameters.current_frequency x (l.2,l.1) (H.carrier (l.2,l.1)))
     (native_inputSupport H) hN j hj (native_source_class H j hj) β).each (l.2,l.1)
@@ -359,36 +372,36 @@ theorem native_raw_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geome
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((nativeData x l j).common.amplitude n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) :=
+          ActualPrimary.standardRegion) :=
   (ActualWaveRegularityData.particular_full_regular_of_class (native_raw_class H hN l j hj)
     (fun n _ hz hr => (native_common_boundary H l j n hz hr).1) n).1
 
 theorem native_pressure_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤
-  N0)
+    N0)
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((nativeData x l j).common.pressure n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) :=
+          ActualPrimary.standardRegion) :=
   (ActualWaveRegularityData.particular_full_regular_of_class (native_pressure_class H hN l j hj)
     (fun n _ hz hr => (native_common_boundary H l j n hz hr).2) n).1
 
 theorem native_gaussian_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤
-  N0)
+    N0)
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((nativeData x l j).globalGaussian
       (ActualParticularStageControls.canonicalParameters (l.2,l.1)).directions n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) :=
+          ActualPrimary.standardRegion) :=
   (ActualWaveRegularityData.particular_full_regular_of_class (native_gaussian_class H hN l j hj 0)
     (fun n _ hz hr => native_gaussian_boundary H l j n hz hr) n).1
 
 theorem native_corrected_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold
-  ≤ N0)
+    ≤ N0)
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) :
     ContDiffOn ℝ ∞ (((nativeData x l j).commonCorrected ActualWaveRegularityData.particularFullStrip
       (ActualParticularStageControls.canonicalParameters (l.2,l.1)).directions).amplitude n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) :=
+          ActualPrimary.standardRegion) :=
   ActualWaveRegularityData.particular_corrected_smooth (l.2,l.1) _ _ _ _ _ j
     (native_phase H l j) (native_raw_class H hN l j hj)
     (fun n _ hz hr => (native_common_boundary H l j n hz hr).1) n
@@ -398,24 +411,25 @@ theorem source_inactive (H : Invariant σ x) (l : Index B N0) (n : ℕ)
     (hz : z ∈ ActualInitialization.geometry.domain) :
     ParticularWaveAssembly.residualSource (ActualPrimary.commonContext B) x.state
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) j
-        n z = 0 :=
+          n z = 0 :=
   (HarmonicSourceSupport.residualSource_zero_germ_on (ActualPrimary.commonContext B) x.state
     (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)
     ActualInitialization.geometry.domain_open (ActualCoreSupport.refinedCarrier_closed l)
     (H.inputSupport l) j n hz (fun hc => hn (ActualCycleCoherence.core_ordered l n hz
-      hc))).self_of_nhds
+        hc))).self_of_nhds
 
 theorem native_source_periodic (H : Invariant σ x) (T : ActualCyclePeriodicity.Periodic x)
     (l : Index B N0) (j : ℤ) (n : ℕ) (z : ActualParticularStageControls.Native)
     (hz : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion) :
+        ActualPrimary.standardRegion) :
     CommonCoverSolve.PeriodicAt ((nativeData x l j).source n) z.1 :=
   ActualCyclePeriodicity.copies_source_periodic H T
     (fun l n hn j _ hz => source_inactive H l n hn j hz) l j n z hz
 
+/-- Native mode, constructed using `ActualWaveRegularity.modeOscillation`. -/
 noncomputable def nativeMode (x : CycleState (Index B N0)) (l : Index B N0) (j : ℤ) :=
   ActualWaveRegularity.modeOscillation (nativeData x l j)
-    ActualWaveRegularityData.particularFullStrip
+      ActualWaveRegularityData.particularFullStrip
     (ActualParticularStageControls.canonicalParameters (l.2,l.1)).directions
     ActualWaveRegularity.particularChart
 
@@ -465,14 +479,14 @@ theorem field_regular (H : Invariant σ x) (T : ActualCyclePeriodicity.Periodic 
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     WaveStateRegularity.AngularSmooth ActualInitialization.geometry.domain
       ((parameters B N0).particularVelocity x.coefficients (ActualPrimary.commonContext B) x.state)
-        ∧
+          ∧
     OscillationPeriodic ActualPrimary.standardRegion.carrier
       ((parameters B N0).particularVelocity x.coefficients (ActualPrimary.commonContext B) x.state)
-        ∧
+          ∧
     WaveStateRegularity.WaveSupport ActualPrimary.standardRegion
       ActualInitialization.patch.a ActualInitialization.patch.b
       ((parameters B N0).particularVelocity x.coefficients (ActualPrimary.commonContext B) x.state)
-        :=
+          :=
   ⟨ActualWaveRegularity.finite_smooth _ _ (fun l => (block_regular H T hN l).1),
     ActualWaveRegularity.finite_periodic _ _ (fun l => (block_regular H T hN l).2.1),
     ActualWaveRegularity.finite_support _ _ (fun l => (block_regular H T hN l).2.2)⟩
@@ -508,7 +522,7 @@ theorem assembled_velocity_smooth {U : Set D} (N : ℕ) (k : ℕ → ℝ)
   intro m
   change ContDiffOn ℝ ∞ (fun x =>
     (∑ j ∈ ParticularWaveAssembly.modes N, ErrorHarmonics.conjugatePair j (fun y => v j n y i)) m
-      x) U
+        x) U
   have he : (fun x => (∑ j ∈ ParticularWaveAssembly.modes N,
       ErrorHarmonics.conjugatePair j (fun y => v j n y i)) m x) =
       (fun x => ∑ j ∈ ParticularWaveAssembly.modes N,
@@ -547,6 +561,7 @@ section Outputs
 
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
 
+/-- Associated domain, given by `ActualCarrierTransport.parameterDomain ×ˢ Set.univ`. -/
 noncomputable def associatedDomain : Set (CycleSlow × TorusInverse.Plane) :=
   ActualCarrierTransport.parameterDomain ×ˢ Set.univ
 
@@ -557,16 +572,16 @@ theorem native_slice_smooth {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E
     ContDiffOn ℝ ∞ (fun z => f (ParticularWaveAssembly.angleShuffle (z,0))) associatedDomain := by
   apply hf.comp
     (ParticularWaveAssembly.angleShuffle.contDiff.comp (contDiff_id.prodMk
-      contDiff_const)).contDiffOn
+        contDiff_const)).contDiffOn
   intro z hz
   exact ⟨hz.1, mem_univ _⟩
 
 theorem coefficients_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     (l : Index B N0) (n : ℕ) (i : Fin 3) :
     HarmonicResidual.SmoothCoefficients ActualInitialization.geometry.domain ((block x l).velocity
-      n i) := by
+        n i) := by
   let a := ActualParticularStageControls.assembly (ActualCycleParameters.particularState x)
-    (l.2,l.1)
+      (l.2,l.1)
   let p := ActualParticularStageControls.canonicalParameters (l.2,l.1)
   have hh : HarmonicResidual.SmoothCoefficients associatedDomain
       ((p.updateBlock ActualParticularStageControls.associatedStrip a.context a.state a.carrierBlock
@@ -581,9 +596,9 @@ theorem coefficients_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geo
 theorem pressure_coefficients_smooth (H : Invariant σ x)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (l : Index B N0) (n : ℕ) :
     HarmonicResidual.SmoothCoefficients ActualInitialization.geometry.domain ((block x l).pressure
-      n) := by
+        n) := by
   let a := ActualParticularStageControls.assembly (ActualCycleParameters.particularState x)
-    (l.2,l.1)
+      (l.2,l.1)
   let p := ActualParticularStageControls.canonicalParameters (l.2,l.1)
   have hh : HarmonicResidual.SmoothCoefficients associatedDomain
       ((p.updateBlock ActualParticularStageControls.associatedStrip a.context a.state a.carrierBlock
@@ -600,7 +615,7 @@ theorem gaussian_coefficients_smooth (H : Invariant σ x)
     HarmonicResidual.SmoothCoefficients ActualInitialization.geometry.domain
       ((gaussianBlock x l).velocity n i) := by
   let a := ActualParticularStageControls.assembly (ActualCycleParameters.particularState x)
-    (l.2,l.1)
+      (l.2,l.1)
   let p := ActualParticularStageControls.canonicalParameters (l.2,l.1)
   have hh : HarmonicResidual.SmoothCoefficients associatedDomain
       ((p.gaussianBlock a.context a.state a.carrierBlock a.gaussianInput a.aliasInput
@@ -620,6 +635,8 @@ theorem block_eq_output (H : Invariant σ x) (l : Index B N0) :
     (ActualCycleParameters.current_frequency x l (H.carrier l))]
   rfl
 
+/-- Good block, given by `ActualParticularStageControls.outputGood
+(ActualCycleParameters.particularState x) x.coefficients.residualBand (l.2,l.1)`. -/
 noncomputable def goodBlock (x : CycleState (Index B N0)) (l : Index B N0) :=
   ActualParticularStageControls.outputGood (ActualCycleParameters.particularState x)
     x.coefficients.residualBand (l.2,l.1)
@@ -634,9 +651,9 @@ theorem amplitude_bounds (H : Invariant σ x) (hN : ActualCarrierGeometry.geomet
   have ht : LabelSumBounds.UniformWaveClass ActualInitialization.strip ActualInitialization.envelope
       (1/2+σ) (fun l n z => (ActualParticularStageControls.outputBlock
         (ActualCycleParameters.particularState x) x.coefficients.residualBand (l.2,l.1)).velocity n
-          i j z) := by
+            i j z) := by
     simp only [LabelSumBounds.UniformWaveClass,
-      ActualParticularStageControls.meanEnvelope_eq_primary] at hh ⊢
+        ActualParticularStageControls.meanEnvelope_eq_primary] at hh ⊢
     exact hh
   apply ht.congr
   intro l n z _
@@ -653,9 +670,9 @@ theorem pressure_bounds (H : Invariant σ x) (hN : ActualCarrierGeometry.geometr
   have ht : LabelSumBounds.UniformWaveClass ActualInitialization.strip ActualInitialization.envelope
       (1+σ) (fun l n z => (ActualParticularStageControls.outputBlock
         (ActualCycleParameters.particularState x) x.coefficients.residualBand (l.2,l.1)).pressure n
-          j z) := by
+            j z) := by
     simp only [LabelSumBounds.UniformWaveClass,
-      ActualParticularStageControls.meanEnvelope_eq_primary, he] at hh ⊢
+        ActualParticularStageControls.meanEnvelope_eq_primary, he] at hh ⊢
     exact hh
   apply ht.congr
   intro l n z _
@@ -670,7 +687,7 @@ theorem good_bounds (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricTh
     (fun l : Index B N0 => (l.2,l.1))
   have he : (1/2:ℝ)+σ+1/2 = 1+σ := by ring
   simp only [LabelSumBounds.UniformWaveClass,
-    ActualParticularStageControls.meanEnvelope_eq_primary, he] at hh ⊢
+      ActualParticularStageControls.meanEnvelope_eq_primary, he] at hh ⊢
   exact hh
 
 theorem gaussian_bounds (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
@@ -752,9 +769,9 @@ theorem linear_bounds (H : Invariant σ x) (hN : ActualCarrierGeometry.geometric
           (x.coefficients.aliasCoefficients l)).velocity n i j z +
         (HarmonicWaveInteraction.linearGoodBlock (ActualPrimary.commonContext B)
           (x.coefficients.blocks l) (block x l) (gaussianBlock x l).velocity).velocity n i j z) :=
-            by
+              by
   apply linearGoodBlock_cancel_uniform (ActualPrimary.commonContext B) x.coefficients.blocks (block
-    x)
+      x)
     (fun l => HarmonicResidual.residualBlock (ActualPrimary.commonContext B) x.state
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l))
     (goodBlock x) (fun l => (gaussianBlock x l).velocity)
@@ -854,7 +871,7 @@ end PressureAssembly
 /-- Every field is derived for the literal particular construction from
 the incoming analytic invariant and its separately tracked periods. -/
 theorem actual_data (H : Invariant σ x) (T : ActualCyclePeriodicity.Periodic x)
-    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (_hσ : 1/5 ≤ σ) : Data x σ where
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (_hσ : 1 / 5 ≤ σ) : Data x σ where
   amplitude := amplitude_bounds H hN
   pressure := pressure_bounds H hN
   coefficients := coefficients_smooth H hN
@@ -869,7 +886,7 @@ theorem actual_data (H : Invariant σ x) (T : ActualCyclePeriodicity.Periodic x)
   linear := linear_bounds H hN
 
 theorem actual_inputs (H : Invariant σ x) (T : ActualCyclePeriodicity.Periodic x)
-    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (hσ : 1/5 ≤ σ) :
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (hσ : 1 / 5 ≤ σ) :
     ActualParticularMeanGain.Inputs x σ :=
   (actual_data H T hN hσ).inputs H hN
 

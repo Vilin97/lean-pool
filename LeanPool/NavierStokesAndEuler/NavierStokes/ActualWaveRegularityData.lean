@@ -9,9 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSupportPreservation
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSupportPreservation
 
 /-!
 # Concrete qualitative data for the actual correction waves
@@ -22,6 +20,9 @@ at most the native index. The inactive bands are handled using actual zero
 germs; no periodicity of an unused unmasked phase is imposed on those bands.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualWaveRegularityData
@@ -31,21 +32,28 @@ open CorrectionInitialization CommonCoverSolve TorusInverse
 open scoped Topology ContDiff BigOperators
 
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Full point: an abbreviation for `Point × ℝ`. -/
 abbrev FullPoint := Point × ℝ
+/-- Index: an abbreviation for `ActualSignedStageControls.SignedLabel B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualSignedStageControls.SignedLabel B N0
 
 variable {B N0 : ℕ}
 
+/-- Ordered, given by `CommonWindow.index ActualPrimary.h n ≤ ChartScales.nativeIndex
+ActualPrimary.h (BaseChartJets.cellBand l.1)`. -/
 noncomputable def Ordered (l : Index B N0) (n : ℕ) : Prop :=
   CommonWindow.index ActualPrimary.h n ≤
     ChartScales.nativeIndex ActualPrimary.h (BaseChartJets.cellBand l.1)
 
+/-- Deck index, given by `coverIndex ((ActualPrimary.chartGeometry n l.2 l.1).gap) m`. -/
 noncomputable def deckIndex (l : Index B N0) (n : ℕ) (m : Frequency) : Frequency :=
   coverIndex ((ActualPrimary.chartGeometry n l.2 l.1).gap) m
 
+/-- Deck permutation, given by `Equiv.addRight (deckIndex l n m)`. -/
 noncomputable def deckPermutation (l : Index B N0) (n : ℕ) (m : Frequency) : Frequency ≃ Frequency
-  :=
+    :=
   Equiv.addRight (deckIndex l n m)
 
 theorem nativePoint_ordered (l : Index B N0) (n : ℕ) (hn : Ordered l n)
@@ -120,7 +128,7 @@ theorem clock_deck (l : Index B N0) (n : ℕ) (hn : Ordered l n) (Y : Plane) (m 
     PeriodicPhaseAssembly.periodicClock (ActualPrimary.geometry l.2 l.1)
       (ActualPrimary.clockWindow l.1).cutoff
       ((coverPower (CommonWindow.index ActualPrimary.h n)).symm (Y + TorusAverages.latticePoint m))
-        =
+          =
     PeriodicPhaseAssembly.periodicClock (ActualPrimary.geometry l.2 l.1)
       (ActualPrimary.clockWindow l.1).cutoff
       ((coverPower (CommonWindow.index ActualPrimary.h n)).symm Y) := by
@@ -155,6 +163,8 @@ theorem radial_deck (l : Index B N0) (n : ℕ) (m : Frequency) :
     _ + _ • (RadialPullback.radialJacobian _ x.1.1 • _)
   rw [add_zero]
 
+/-- Signed angles, bundling `slope`, `radius`, `radial`, `phase` and the required compatibility
+proofs. -/
 noncomputable def signedAngles (l : Index B N0) (s : StripData Point)
     (P : SignedStressPrimitive.Patch) (coord : ℝ) (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) :
@@ -289,7 +299,7 @@ theorem signed_zero_germs_of_not_ordered (l : Index B N0) (s : StripData Point)
       (ActualSignedStageControls.parameters l).directions).amplitude n =ᶠ[𝓝 x] fun _ => 0) ∧
     (a.common.pressure n =ᶠ[𝓝 x] fun _ => 0) ∧
     (a.globalGaussian (ActualSignedStageControls.parameters l).directions n =ᶠ[𝓝 x] fun _ => 0) :=
-      by
+        by
   dsimp only
   apply LabelSupportPreservation.common_zero_germs_of_native _ (ActualSignedStageControls.cells l)
     (ActualSignedStageControls.cutoff_support l) _ _
@@ -319,7 +329,7 @@ theorem signed_block_periodic (l : Index B N0) (s : StripData Point)
   by_cases hn : Ordered l n
   · have hp := ActualWaveRegularity.common_velocity_translation
       ((ActualSignedStageControls.parameters l).copyData s (LocalSignedRequest.fullRequest s P
-        coord c u))
+          coord c u))
       (HarmonicWaveInteraction.productStrip s) (ActualSignedStageControls.parameters l).directions
       (ActualWaveRegularity.fullDomain_open ActualPrimary.standardRegion) n
       (fun z _ => radius_deck l n k z (mem_univ _))
@@ -349,6 +359,7 @@ theorem signed_block_periodic (l : Index B N0) (s : StripData Point)
 
 /-! ## The actual full-domain phase patches -/
 
+/-- Signed phase patch as an element of `Set FullPoint`. -/
 noncomputable def signedPhasePatch (l : Index B N0) (n : ℕ) (k : Frequency) : Set FullPoint :=
   {x | (ActualSignedStageControls.nativePoint l n k x).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal
@@ -385,7 +396,7 @@ theorem mask_zero_germ_outside_carrier (l : Index B N0) (n : ℕ) (k : Frequency
     (ActualSignedStageControls.nativePoint_smooth l n k).continuous.fst.continuousAt
   filter_upwards [hz] with y hy
   change PrimaryRepresentatives.nativeMask _ _ (ActualSignedStageControls.nativePoint l n k y).1 =
-    0 at hy
+      0 at hy
   change ActualPrimary.spatialMask l.1 (ActualSignedStageControls.nativePoint l n k y).1 = 0
   rw [ActualPrimary.spatialMask_eq, hy, mul_zero]
 
@@ -404,7 +415,7 @@ theorem signed_patch_cover (l : Index B N0) (s : StripData Point)
     · exact Or.inl ⟨hc, ht⟩
     · right
       apply (((ActualSignedStageControls.parameters l).copyData s request).localized_zero_germs
-        ?_).1
+          ?_).1
       apply ActualSignedStageControls.cutoff_zero_germ_outside_time l n k
       intro htime
       exact ht ⟨by linarith [htime.1], by linarith [htime.2]⟩
@@ -427,7 +438,7 @@ theorem signed_phase_smooth (l : Index B N0) (n : ℕ) (k : Frequency) :
     ContDiffOn ℝ ∞ ((ActualSignedStageControls.parameters l).base.phase n)
       (ActualWaveRegularity.fullDomain ActualPrimary.standardRegion ∩ signedPhasePatch l n k) :=
   (ActualPrimaryDynamics.phase_smooth l.2 l.1 n).mono (fun _ hx => signedPhasePatch_positive l n k
-    hx)
+      hx)
 
 theorem signed_geometry (l : Index B N0) (n : ℕ) (k : Frequency) :
     CurlClassBounds.CylindricalGeometry
@@ -497,6 +508,7 @@ theorem target_zero_outside {p : PhaseCalculus.Slow}
       ActualPrimary.outgoing.data.h_lt_half ht).le) hn
   simp only [PrimaryTargetBounds.actualTarget, hz, smul_zero]
 
+/-- Radius, given by `x.1.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.1.2.1`. -/
 noncomputable def radius (x : FullPoint) : ℝ :=
   x.1.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.1.2.1
 
@@ -542,7 +554,7 @@ theorem strip_subset_fullDomain : ActualSignedStageControls.fullStrip.domain ⊆
     ActualWaveRegularity.fullDomain ActualPrimary.standardRegion := by
   intro x hx
   exact ⟨((BaseContextAssembly.nativeStrip_mem ActualPrimary.nominal ActualPrimary.standardRegion
-    x.1).mp hx).1,
+      x.1).mp hx).1,
     mem_univ _⟩
 
 theorem mask_zero_germ_outside_band (l : Index B N0) (n : ℕ) (k : Frequency)
@@ -565,7 +577,7 @@ theorem mask_zero_germ_outside_band (l : Index B N0) (n : ℕ) (k : Frequency)
     by_contra hm
     have hm' : SimilarityHomogeneity.chartQ ActualPrimary.h
         (ActualSignedStageControls.nativePoint l n k y).1 ∈ support SquaredPartition.dyadicProfile
-          := hm
+            := hm
     rw [SquaredPartition.dyadicProfile_support] at hm'
     exact hy ⟨hm'.1.le, hm'.2.le⟩
   change ActualPrimary.spatialMask l.1 (ActualSignedStageControls.nativePoint l n k y).1 = 0
@@ -591,7 +603,7 @@ theorem signed_phaseCell_or_zero (l : Index B N0) (n : ℕ) (k : Frequency)
     rw [ActualPrimary.nativeSlow_toAbsolute_eq_slowChange] at hq'
     have hbase : 0 < x.1.2.1.1 ∧
         SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) x.1.2.1 ∈ Ioo (1 / 2 : ℝ) 2 :=
-          hfull.1
+            hfull.1
     have hn := near_of_native_band l n (p := BaseContextAssembly.slowCoordinates x.1)
       hbase.1 hbase.2 hq'
     by_cases hc : (ActualSignedStageControls.nativePoint l n k x).1 ∈
@@ -621,7 +633,7 @@ theorem strip_domain_eq : ActualSignedStageControls.fullStrip.domain =
   ext x
   rw [show x ∈ ActualSignedStageControls.fullStrip.domain ↔
       x.1 ∈ (BaseContextAssembly.nativeStrip ActualPrimary.nominal
-        ActualPrimary.standardRegion).domain from Iff.rfl,
+          ActualPrimary.standardRegion).domain from Iff.rfl,
     BaseContextAssembly.nativeStrip_mem]
   have hr : PrimaryTargetBounds.profileRadius ActualPrimary.h
       (BaseContextAssembly.slowCoordinates x.1) = radius x := by
@@ -679,7 +691,7 @@ theorem full_regular_of_class {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ
       mul_nonneg (mul_nonneg hC (Real.rpow_pos_of_pos
         (ActualSignedStageControls.fullStrip.epsilon_pos n) α).le)
         (pow_nonneg (zero_le_one.trans (ActualSignedStageControls.fullStrip.one_le_slow n)) p), p,
-          ?_⟩
+            ?_⟩
     intro x hx
     have hh := hbound n x (by rwa [strip_domain_eq]) m le_rfl
     simp only [majorant, strip_growth, strip_zeta, mul_pow] at hh
@@ -711,6 +723,8 @@ theorem full_regular_of_envelope_class {E : Type} [NormedAddCommGroup E] [Normed
 
 /-! ## Whole-domain regularity of the literal signed fields -/
 
+/-- Signed copies, given by `(ActualSignedStageControls.parameters l).copyData
+ActualPrimaryBounds.strip request`. -/
 noncomputable def signedCopies (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) :
     PeriodizedWaveBounds.CopyData FullPoint Frequency :=
@@ -726,14 +740,14 @@ theorem signed_common_raw_zero_outside (l : Index B N0)
   have hz := fun k => signed_raw_zero_outside l ActualPrimaryBounds.strip request n k hx hout
   constructor
   · change (∑' k, ((ActualSignedStageControls.parameters l).copyData ActualPrimaryBounds.strip
-    request).cutoff n k x •
+      request).cutoff n k x •
       ((ActualSignedStageControls.parameters l).copyData ActualPrimaryBounds.strip
-        request).amplitude n k x) = 0
+          request).amplitude n k x) = 0
     simp only [fun k => (hz k).1, smul_zero, tsum_zero]
   · change (∑' k, (((ActualSignedStageControls.parameters l).copyData ActualPrimaryBounds.strip
-    request).cutoff n k x : ℂ) *
+      request).cutoff n k x : ℂ) *
       ((ActualSignedStageControls.parameters l).copyData ActualPrimaryBounds.strip
-        request).pressure n k x) = 0
+          request).pressure n k x) = 0
     simp only [fun k => (hz k).2, mul_zero, tsum_zero]
 
 theorem signed_common_raw_zero_germ (l : Index B N0)
@@ -801,9 +815,11 @@ theorem signed_pressure_full_regular (l : Index B N0)
   full_regular_of_envelope_class l hp
     (fun n _ hx ho => (signed_common_raw_zero_outside l request n hx ho).2) n
 
+/-- Positive domain, given by `ActualWaveRegularity.fullDomain ActualPrimary.standardRegion ∩
+ActualPrimaryCoherence.positiveRadialChart`. -/
 noncomputable def positiveDomain : Set FullPoint :=
   ActualWaveRegularity.fullDomain ActualPrimary.standardRegion ∩
-    ActualPrimaryCoherence.positiveRadialChart
+      ActualPrimaryCoherence.positiveRadialChart
 
 theorem positiveDomain_open : IsOpen positiveDomain :=
   (ActualWaveRegularity.fullDomain_open ActualPrimary.standardRegion).inter
@@ -821,20 +837,23 @@ theorem smooth_of_positive_or_zero {E : Type} [NormedAddCommGroup E] [NormedSpac
       ⟨hx, hr, ActualPrimary.standardRegion.time_pos _ hx.1⟩)
   · exact contDiffAt_const.congr_of_eventuallyEq (hz x hx (le_of_not_gt hr))
 
+/-- Signed normal, constructed using `CurlClassBounds.coefficient`. -/
 noncomputable def signedNormal (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) (n : ℕ) : FullPoint →
-      HarmonicCalculus.ComplexVector :=
+        HarmonicCalculus.ComplexVector :=
   CurlClassBounds.coefficient ((ActualSignedStageControls.parameters l).base.radius n)
     ((ActualSignedStageControls.parameters l).directions.radialField n)
     (fun _ => (ActualSignedStageControls.parameters l).directions.angular)
     ((ActualSignedStageControls.parameters l).directions.axialField
-      ActualSignedStageControls.fullStrip n)
+        ActualSignedStageControls.fullStrip n)
     ((ActualSignedStageControls.parameters l).base.phase n) ((signedCopies l
-      request).common.amplitude n)
+        request).common.amplitude n)
 
+/-- Signed corrected, given by `(signedCopies l request).commonCorrected
+ActualSignedStageControls.fullStrip (ActualSignedStageControls.parameters l).directions`. -/
 noncomputable def signedCorrected (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) : LinearWaveBounds.WaveCoefficients FullPoint
-      :=
+        :=
   (signedCopies l request).commonCorrected ActualSignedStageControls.fullStrip
     (ActualSignedStageControls.parameters l).directions
 
@@ -844,7 +863,7 @@ theorem positive_geometry (l : Index B N0) (n : ℕ) :
       ((ActualSignedStageControls.parameters l).directions.radialField n)
       (fun _ => (ActualSignedStageControls.parameters l).directions.angular)
       ((ActualSignedStageControls.parameters l).directions.axialField
-        ActualSignedStageControls.fullStrip n) :=
+          ActualSignedStageControls.fullStrip n) :=
   LocalizedCurlRealization.geometry_restrict
     (ActualPrimaryCoherence.piece_geometry ActualPrimary.standardRegion B n)
     positiveDomain_open inter_subset_right
@@ -861,7 +880,7 @@ theorem signed_normal_zero_germ (l : Index B N0)
     signedNormal l request n =ᶠ[𝓝 x] fun _ => 0 := by
   filter_upwards [(signed_common_raw_zero_germ l request n hx hout).1] with y hy
   simp only [signedNormal, CurlClassBounds.coefficient, hy,
-    PeriodizedWaveBounds.normalCoefficient_zero]
+      PeriodizedWaveBounds.normalCoefficient_zero]
 
 theorem signed_corrected_zero_germ (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) (n : ℕ)
@@ -876,7 +895,7 @@ theorem signed_corrected_zero_germ (l : Index B N0)
     ((ActualSignedStageControls.parameters l).directions.radialField n)
     (fun _ => (ActualSignedStageControls.parameters l).directions.angular)
     ((ActualSignedStageControls.parameters l).directions.axialField
-      ActualSignedStageControls.fullStrip n)
+        ActualSignedStageControls.fullStrip n)
     ((ActualSignedStageControls.parameters l).base.phase n)
   simp only [PeriodizedWaveBounds.realizedCoefficient_zero] at hh ⊢
   exact hh
@@ -893,7 +912,7 @@ theorem signed_normal_smooth (l : Index B N0)
       (CurlClassBounds.phaseNormal_contDiffOn (positive_geometry l n) (positive_phase l n))
       ((signed_raw_full_regular l request ha n).1.mono inter_subset_left)
       (fun _ hx => ActualPrimaryCoherence.piece_normal_ne ActualPrimary.standardRegion l.2 l.1 n
-        hx.2)
+          hx.2)
   · intro x hx hr
     apply signed_normal_zero_germ l request n hx
     intro hi
@@ -914,15 +933,16 @@ theorem signed_corrected_smooth (l : Index B N0)
       ((signed_normal_smooth l request ha n).mono inter_subset_left)
     exact ((signed_raw_full_regular l request ha n).1.mono inter_subset_left).add
       ((hc.const_smul Complex.I).const_smul (1 / (ActualSignedStageControls.parameters
-        l).base.frequency n))
+          l).base.frequency n))
   · intro x hx hr
     apply signed_corrected_zero_germ l request n hx
     intro hi
     exact (not_lt_of_ge (radius_nonpos hx hr))
       ((PrimaryTargetBounds.leftRadius_pos ActualPrimary.nominal).trans_le hi.1)
 
+/-- Signed field as an element of `CorrectionState.Oscillation Point`. -/
 noncomputable def signedField (l : Index B N0) (a : ℕ → FullPoint → HarmonicCalculus.ComplexVector)
-  :
+    :
     CorrectionState.Oscillation Point := fun n x i =>
   (vectorMode ((ActualSignedStageControls.parameters l).base.frequency n)
     ((ActualSignedStageControls.parameters l).base.phase n) (a n) x i).re
@@ -938,7 +958,7 @@ theorem signedField_smooth (l : Index B N0) (a : ℕ → FullPoint → HarmonicC
   · exact Complex.reCLM.contDiff.comp_contDiffOn
       (HarmonicCalculus.contDiffOn_mode _ (positive_phase l n)
         ((ContinuousLinearMap.proj i : HarmonicCalculus.ComplexVector →L[ℝ]
-          ℂ).contDiff.comp_contDiffOn
+            ℂ).contDiff.comp_contDiffOn
           ((ha n).mono inter_subset_left)))
   · intro x hx hr
     filter_upwards [hz n x hx hr] with y hy
@@ -973,7 +993,7 @@ theorem signed_exact_smooth (l : Index B N0) (P : SignedStressPrimitive.Patch) (
       (fun n x => Real.sqrt (ActualSignedStageControls.fullStrip.zeta x) *
         ActualSignedStageControls.envelope l n x) α
       (signedCopies l (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c
-        u)).common.amplitude) :
+          u)).common.amplitude) :
     WaveStateRegularity.AngularSmooth
       (PhysicalMeanDomain.slowDomain ActualPrimary.standardRegion.carrier)
       ((ActualSignedStageControls.parameters l).exactBlock ActualPrimaryBounds.strip
@@ -1003,7 +1023,7 @@ theorem signed_gaussian_zero_outside (l : Index B N0)
     (hout : radius x ∉ Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
       (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
     (signedCopies l request).globalGaussian (ActualSignedStageControls.parameters l).directions n x
-      = 0 := by
+        = 0 := by
   have hz := fun k => (signed_raw_zero_outside l ActualPrimaryBounds.strip request n k hx hout).1
   simp only [PeriodizedWaveBounds.CopyData.globalGaussian, PeriodizedWaveBounds.CopyData.globalTail,
     PeriodizedWaveBounds.copySum, PeriodizedWaveBounds.CopyData.localTail, signedCopies,
@@ -1017,14 +1037,14 @@ theorem signed_gaussian_full_regular (l : Index B N0)
       ((signedCopies l request).globalGaussian (ActualSignedStageControls.parameters l).directions))
     (n : ℕ) :
     ContDiffOn ℝ ∞ ((signedCopies l request).globalGaussian (ActualSignedStageControls.parameters
-      l).directions n)
+        l).directions n)
       (ActualWaveRegularity.fullDomain ActualPrimary.standardRegion) ∧
       ∀ m x, x ∈ ActualWaveRegularity.fullDomain ActualPrimary.standardRegion →
         (radius x = PrimaryTargetBounds.leftRadius ActualPrimary.nominal ∨
           radius x = PrimaryTargetBounds.rightRadius ActualPrimary.nominal) →
         iteratedFDeriv ℝ m
           ((signedCopies l request).globalGaussian (ActualSignedStageControls.parameters
-            l).directions n) x = 0 :=
+              l).directions n) x = 0 :=
   full_regular_of_class hg (fun n _ hx ho => signed_gaussian_zero_outside l request n hx ho) n
 
 theorem signed_tangent_eq_field (l : Index B N0) (P : SignedStressPrimitive.Patch) (coord : ℝ)
@@ -1032,11 +1052,11 @@ theorem signed_tangent_eq_field (l : Index B N0) (P : SignedStressPrimitive.Patc
     ((ActualSignedStageControls.parameters l).tangentBlock ActualPrimaryBounds.strip
       (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c u)).oscillation =
     signedField l (signedCopies l (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord
-      c u)).common.amplitude := by
+        c u)).common.amplitude := by
   let h := signedAngles l ActualPrimaryBounds.strip P coord c u
   have ha (n : ℕ) := (signedCopies l
     (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c
-      u)).common_amplitude_invariant
+        u)).common_amplitude_invariant
       ((0 : Point), 1) (fun n i => h.cutoff i n) h.raw_invariant n
   funext n x i
   rw [CorrectionStep.PeriodizedSignedParameters.tangentBlock, SignedWaveUpdate.blockOfCoefficients,
@@ -1068,7 +1088,7 @@ theorem signed_tangent_smooth (l : Index B N0) (P : SignedStressPrimitive.Patch)
       (fun n x => Real.sqrt (ActualSignedStageControls.fullStrip.zeta x) *
         ActualSignedStageControls.envelope l n x) α
       (signedCopies l (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c
-        u)).common.amplitude) :
+          u)).common.amplitude) :
     WaveStateRegularity.AngularSmooth
       (PhysicalMeanDomain.slowDomain ActualPrimary.standardRegion.carrier)
       ((ActualSignedStageControls.parameters l).tangentBlock ActualPrimaryBounds.strip
@@ -1092,13 +1112,13 @@ theorem signed_common_raw_zero_germ_of_not_ordered (l : Index B N0)
     {x : FullPoint} (hx : x ∈ ActualWaveRegularity.fullDomain ActualPrimary.standardRegion) :
     (signedCopies l request).common.amplitude n =ᶠ[𝓝 x] fun _ => 0 := by
   filter_upwards [(ActualWaveRegularity.fullDomain_open ActualPrimary.standardRegion).mem_nhds hx]
-    with y hy
+      with y hy
   have hz (k : Frequency) := ((ActualSignedStageControls.parameters l).raw_zero_of_mask
     (s := ActualPrimaryBounds.strip) request n k y (mask_zero_of_not_ordered l n hn k hy)).1
   change (∑' k, ((ActualSignedStageControls.parameters l).copyData ActualPrimaryBounds.strip
-    request).cutoff n k y •
+      request).cutoff n k y •
     ((ActualSignedStageControls.parameters l).copyData ActualPrimaryBounds.strip request).amplitude
-      n k y) = 0
+        n k y) = 0
   simp only [hz, smul_zero, tsum_zero]
 
 theorem signed_tangent_periodic (l : Index B N0) (P : SignedStressPrimitive.Patch) (coord : ℝ)
@@ -1122,7 +1142,7 @@ theorem signed_tangent_periodic (l : Index B N0) (P : SignedStressPrimitive.Patc
       (deckPermutation l n k)
       (fun i y _ => cutoff_deck l n hn i k y)
       (fun i y _ => signed_request_amplitude_deck l ActualPrimaryBounds.strip P coord c u n hn i k
-        y)
+          y)
       x hx
     have hp := phase_deck l n hn k x (mem_univ _)
     funext i
@@ -1151,13 +1171,13 @@ theorem signed_exact_coefficients_smooth (l : Index B N0)
         ActualSignedStageControls.envelope l n x) α (signedCopies l request).common.amplitude)
     (n : ℕ) (i : Fin 3) :
     HarmonicResidual.SmoothCoefficients (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       (((ActualSignedStageControls.parameters l).exactBlock ActualPrimaryBounds.strip
-        request).velocity n i) := by
+          request).velocity n i) := by
   apply smooth_conjugatePair
   exact ((contDiffOn_pi.mp (signed_corrected_smooth l request ha n)) i).comp
     (HarmonicWaveInteraction.inclusion (D := Point)).contDiff.contDiffOn (fun _ hx => ⟨hx, mem_univ
-      _⟩)
+        _⟩)
 
 theorem signed_tangent_coefficients_smooth (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) {α : ℝ}
@@ -1166,13 +1186,13 @@ theorem signed_tangent_coefficients_smooth (l : Index B N0)
         ActualSignedStageControls.envelope l n x) α (signedCopies l request).common.amplitude)
     (n : ℕ) (i : Fin 3) :
     HarmonicResidual.SmoothCoefficients (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       (((ActualSignedStageControls.parameters l).tangentBlock ActualPrimaryBounds.strip
-        request).velocity n i) := by
+          request).velocity n i) := by
   apply smooth_conjugatePair
   exact ((contDiffOn_pi.mp (signed_raw_full_regular l request ha n).1) i).comp
     (HarmonicWaveInteraction.inclusion (D := Point)).contDiff.contDiffOn (fun _ hx => ⟨hx, mem_univ
-      _⟩)
+        _⟩)
 
 theorem signed_pressure_coefficients_smooth (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) {α : ℝ}
@@ -1181,13 +1201,13 @@ theorem signed_pressure_coefficients_smooth (l : Index B N0)
         ActualSignedStageControls.envelope l n x) α (signedCopies l request).common.pressure)
     (n : ℕ) :
     HarmonicResidual.SmoothCoefficients (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       (((ActualSignedStageControls.parameters l).exactBlock ActualPrimaryBounds.strip
-        request).pressure n) := by
+          request).pressure n) := by
   apply smooth_conjugatePair
   exact (signed_pressure_full_regular l request hp n).1.comp
     (HarmonicWaveInteraction.inclusion (D := Point)).contDiff.contDiffOn (fun _ hx => ⟨hx, mem_univ
-      _⟩)
+        _⟩)
 
 theorem signed_gaussian_coefficients_smooth (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) {α : ℝ}
@@ -1196,14 +1216,15 @@ theorem signed_gaussian_coefficients_smooth (l : Index B N0)
       ((signedCopies l request).globalGaussian (ActualSignedStageControls.parameters l).directions))
     (n : ℕ) (i : Fin 3) :
     HarmonicResidual.SmoothCoefficients (PhysicalMeanDomain.slowDomain
-      ActualPrimary.standardRegion.carrier)
+        ActualPrimary.standardRegion.carrier)
       (((ActualSignedStageControls.parameters l).gaussianBlock ActualPrimaryBounds.strip
-        request).velocity n i) := by
+          request).velocity n i) := by
   apply smooth_conjugatePair
   exact ((contDiffOn_pi.mp (signed_gaussian_full_regular l request hg n).1) i).comp
     (HarmonicWaveInteraction.inclusion (D := Point)).contDiff.contDiffOn (fun _ hx => ⟨hx, mem_univ
-      _⟩)
+        _⟩)
 
+/-- Zero angle, given by `(ContinuousLinearMap.fst ℝ Point ℝ).prod 0`. -/
 noncomputable def zeroAngle : FullPoint →L[ℝ] FullPoint :=
   (ContinuousLinearMap.fst ℝ Point ℝ).prod 0
 
@@ -1217,18 +1238,18 @@ theorem signed_pressure_smooth (l : Index B N0) (P : SignedStressPrimitive.Patch
       (fun n x => Real.sqrt (ActualSignedStageControls.fullStrip.zeta x) *
         ActualSignedStageControls.envelope l n x) α
       (signedCopies l (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c
-        u)).common.pressure)
+          u)).common.pressure)
     (n : ℕ) : ContDiffOn ℝ ∞
       (((ActualSignedStageControls.parameters l).exactBlock ActualPrimaryBounds.strip
         (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c u)).oscillatoryPressure
-          n)
+            n)
       (ActualWaveRegularity.fullDomain ActualPrimary.standardRegion) := by
   let h := signedAngles l ActualPrimaryBounds.strip P coord c u
   let a := signedCopies l (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c u)
   have he (x : FullPoint) : ((ActualSignedStageControls.parameters l).exactBlock
-    ActualPrimaryBounds.strip
+      ActualPrimaryBounds.strip
       (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c u)).oscillatoryPressure n
-        x =
+          x =
       (HarmonicCalculus.mode ((ActualSignedStageControls.parameters l).base.frequency n)
         ((ActualSignedStageControls.parameters l).base.phase n)
         (fun y => a.common.pressure n (zeroAngle y)) x).re := by
@@ -1263,7 +1284,7 @@ theorem signed_pressure_smooth (l : Index B N0) (P : SignedStressPrimitive.Patch
   · intro x hx hr
     have hz := ((signed_common_zero_germ_nonpositive l
       (LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P coord c u) n (zeroAngle_mem hx)
-        hr).2).comp_tendsto
+          hr).2).comp_tendsto
       zeroAngle.continuous.continuousAt
     filter_upwards [hz] with y hy
     change a.common.pressure n (zeroAngle y) = 0 at hy
@@ -1272,6 +1293,8 @@ theorem signed_pressure_smooth (l : Index B N0) (P : SignedStressPrimitive.Patch
 
 /-! ## The same edge continuation in the particular solver's coordinates -/
 
+/-- Particular full strip, given by `ParticularWaveBounds.reindexStrip
+ActualWaveRegularity.particularChart.symm ActualSignedStageControls.fullStrip`. -/
 noncomputable def particularFullStrip : StripData ActualWaveRegularity.ParticularSpace :=
   ParticularWaveBounds.reindexStrip ActualWaveRegularity.particularChart.symm
     ActualSignedStageControls.fullStrip
@@ -1319,13 +1342,13 @@ theorem particular_full_regular_of_class {E : Type} [NormedAddCommGroup E] [Norm
     (n : ℕ) :
     ContDiffOn ℝ ∞ (f n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) ∧
+          ActualPrimary.standardRegion) ∧
       ∀ m z, z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
           ActualPrimary.standardRegion →
         (radius (ActualWaveRegularity.particularChart.symm z) = PrimaryTargetBounds.leftRadius
-          ActualPrimary.nominal ∨
+            ActualPrimary.nominal ∨
          radius (ActualWaveRegularity.particularChart.symm z) = PrimaryTargetBounds.rightRadius
-           ActualPrimary.nominal) →
+             ActualPrimary.nominal) →
         iteratedFDeriv ℝ m (f n) z = 0 := by
   have hs := full_regular_of_class (particular_pull_class hf)
     (fun m x hx ho => hz m (ActualWaveRegularity.particularChart x)
@@ -1348,6 +1371,8 @@ theorem particular_full_regular_of_class {E : Type} [NormedAddCommGroup E] [Norm
 block. Its equality with the selected primary phase is a carrier invariant,
 not a smoothness assumption on an output. -/
 
+/-- Particular copies, given by `(ActualParticularStageControls.canonicalParameters l).copyData
+c u b G A j`. -/
 noncomputable def particularCopies (l : ActualParticularStageControls.Label B N0)
     (c : CorrectionState.Context (CorrectionStep.CycleSlow × Plane))
     (u : CorrectionState.State (CorrectionStep.CycleSlow × Plane))
@@ -1355,6 +1380,8 @@ noncomputable def particularCopies (l : ActualParticularStageControls.Label B N0
     (G A : HarmonicResidual.BlockCoefficients (CorrectionStep.CycleSlow × Plane)) (j : ℤ) :=
   (ActualParticularStageControls.canonicalParameters l).copyData c u b G A j
 
+/-- Particular positive, given by `ActualWaveRegularity.particularChart.symm ⁻¹'
+positiveDomain`. -/
 noncomputable def particularPositive : Set ActualWaveRegularity.ParticularSpace :=
   ActualWaveRegularity.particularChart.symm ⁻¹' positiveDomain
 
@@ -1382,18 +1409,18 @@ theorem particular_native_normal (l : ActualParticularStageControls.Label B N0) 
   simp only [ActualParticularStageControls.background, ActualParticularStageControls.directions,
     ActualSignedStageControls.parameters, LinearWaveBounds.WaveCoefficients.normal,
     ParticularWaveBounds.reindexCoefficients, ParticularWaveBounds.reindex_radialField,
-      nativeToFull_eq] at he ⊢
+        nativeToFull_eq] at he ⊢
   exact he
 
 theorem particular_geometry_smooth (l : ActualParticularStageControls.Label B N0) (n : ℕ) :
     ContDiffOn ℝ ∞ ((ActualParticularStageControls.background l).radius n) particularPositive ∧
     (∀ z ∈ particularPositive, (ActualParticularStageControls.background l).radius n z ≠ 0) ∧
     ContDiffOn ℝ ∞ ((ActualParticularStageControls.directions (B := B)).radialField n)
-      particularPositive ∧
+        particularPositive ∧
     ContDiffOn ℝ ∞ (fun _ : ActualWaveRegularity.ParticularSpace =>
       (ActualParticularStageControls.directions (B := B)).angular) particularPositive ∧
     ContDiffOn ℝ ∞ ((ActualParticularStageControls.directions (B := B)).axialField
-      particularFullStrip n)
+        particularFullStrip n)
       particularPositive := by
   let e := ActualParticularStageControls.nativeToFull
   have hmap : MapsTo e particularPositive positiveDomain := fun _ hz => hz
@@ -1402,7 +1429,7 @@ theorem particular_geometry_smooth (l : ActualParticularStageControls.Label B N0
     contDiffOn_const, ?_⟩
   · have hs := e.symm.contDiff.comp_contDiffOn (G.radial_smooth.comp e.contDiff.contDiffOn hmap)
     simp only [ActualParticularStageControls.directions, ParticularWaveBounds.reindex_radialField,
-      Function.comp_def, e] at hs ⊢
+        Function.comp_def, e] at hs ⊢
     exact hs
   · have hs := e.symm.contDiff.comp_contDiffOn (G.axial_smooth.comp e.contDiff.contDiffOn hmap)
     simp only [ActualParticularStageControls.directions, Function.comp_def, e] at hs ⊢
@@ -1417,13 +1444,13 @@ theorem particular_zero_germ {E : Type} [NormedAddCommGroup E]
           (PrimaryTargetBounds.rightRadius ActualPrimary.nominal) → f n z = 0)
     (n : ℕ) {z : ActualWaveRegularity.ParticularSpace}
     (hm : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (ho : radius (ActualWaveRegularity.particularChart.symm z) ∉
       Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
     f n =ᶠ[𝓝 z] fun _ => 0 := by
   have hΩ := ActualWaveRegularity.nativeDomain_open ActualWaveRegularity.particularChart
-    ActualPrimary.standardRegion
+      ActualPrimary.standardRegion
   have hc := ((radius_smooth.comp ActualWaveRegularity.particularChart.symm.contDiff.contDiffOn
     (fun _ hx => hx)).contDiffAt (hΩ.mem_nhds hm)).continuousAt
   filter_upwards [hΩ.mem_nhds hm, hc (isClosed_Icc.isOpen_compl.mem_nhds ho)] with y hy hout
@@ -1460,12 +1487,13 @@ variable (l : ActualParticularStageControls.Label B N0)
   (b : CorrectionState.HarmonicBlock (CorrectionStep.CycleSlow × Plane))
   (G A : HarmonicResidual.BlockCoefficients (CorrectionStep.CycleSlow × Plane)) (j : ℤ)
 
+/-- Particular normal, constructed using `CurlClassBounds.coefficient`. -/
 noncomputable def particularNormal (n : ℕ) : ActualWaveRegularity.ParticularSpace → ComplexVector :=
   CurlClassBounds.coefficient ((particularCopies l c u b G A j).background.radius n)
     ((ActualParticularStageControls.canonicalParameters l).directions.radialField n)
     (fun _ => (ActualParticularStageControls.canonicalParameters l).directions.angular)
     ((ActualParticularStageControls.canonicalParameters l).directions.axialField
-      particularFullStrip n)
+        particularFullStrip n)
     ((particularCopies l c u b G A j).background.phase n)
     ((particularCopies l c u b G A j).common.amplitude n)
 
@@ -1486,7 +1514,7 @@ include hphase ha hz in
 theorem particular_normal_smooth (n : ℕ) :
     ContDiffOn ℝ ∞ (particularNormal l c u b G A j n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) := by
+          ActualPrimary.standardRegion) := by
   have he (z) (hm : z ∈ particularPositive) :
       (particularCopies l c u b G A j).background.normal particularFullStrip
         (ActualParticularStageControls.canonicalParameters l).directions n z =
@@ -1520,20 +1548,20 @@ theorem particular_normal_smooth (n : ℕ) :
 include hz in
 theorem particular_corrected_zero_germ (n : ℕ) {z : ActualWaveRegularity.ParticularSpace}
     (hm : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (ho : radius (ActualWaveRegularity.particularChart.symm z) ∉
       Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) :
     ((particularCopies l c u b G A j).commonCorrected particularFullStrip
       (ActualParticularStageControls.canonicalParameters l).directions).amplitude n =ᶠ[𝓝 z] fun _
-        => 0 := by
+          => 0 := by
   have hh := ParticularWaveAssembly.realizedCoefficient_germ (particular_zero_germ _ hz n hm ho)
     ((particularCopies l c u b G A j).background.frequency n)
     ((particularCopies l c u b G A j).background.radius n)
     ((ActualParticularStageControls.canonicalParameters l).directions.radialField n)
     (fun _ => (ActualParticularStageControls.canonicalParameters l).directions.angular)
     ((ActualParticularStageControls.canonicalParameters l).directions.axialField
-      particularFullStrip n)
+        particularFullStrip n)
     ((particularCopies l c u b G A j).background.phase n)
   simp only [PeriodizedWaveBounds.realizedCoefficient_zero] at hh ⊢
   exact hh
@@ -1544,7 +1572,7 @@ theorem particular_corrected_smooth (n : ℕ) :
       (((particularCopies l c u b G A j).commonCorrected particularFullStrip
         (ActualParticularStageControls.canonicalParameters l).directions).amplitude n)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) := by
+          ActualPrimary.standardRegion) := by
   apply particular_smooth_of_positive_or_zero
   · have hgeom := particular_geometry_smooth l n
     have hc := CurlClassBounds.cylindricalCurl_contDiffOn particularPositive_open
@@ -1552,7 +1580,7 @@ theorem particular_corrected_smooth (n : ℕ) :
       ((particular_normal_smooth l c u b G A j hphase ha hz n).mono (fun _ hx => hx.1))
     exact ((particular_full_regular_of_class ha hz n).1.mono (fun _ hx => hx.1)).add
       ((hc.const_smul Complex.I).const_smul (1 / (particularCopies l c u b G A
-        j).background.frequency n))
+          j).background.frequency n))
   · intro z hm hr
     apply particular_corrected_zero_germ l c u b G A j hz n hm
     intro hi
@@ -1564,7 +1592,7 @@ theorem particular_phase_smooth (n : ℕ) :
     ContDiffOn ℝ ∞ ((particularCopies l c u b G A j).background.phase n) particularPositive := by
   rw [hphase]
   exact (positive_phase (l.2,l.1) n).comp
-    ActualWaveRegularity.particularChart.symm.contDiff.contDiffOn
+      ActualWaveRegularity.particularChart.symm.contDiff.contDiffOn
     (fun _ hx => hx)
 
 include hphase ha hz in
@@ -1573,7 +1601,7 @@ theorem particular_mode_smooth :
       (PhysicalMeanDomain.slowDomain ActualPrimary.standardRegion.carrier)
       (ActualWaveRegularity.modeOscillation (particularCopies l c u b G A j) particularFullStrip
         (ActualParticularStageControls.canonicalParameters l).directions
-          ActualWaveRegularity.particularChart) := by
+            ActualWaveRegularity.particularChart) := by
   intro n i
   have hs : ContDiffOn ℝ ∞ (fun z => (vectorMode
       ((particularCopies l c u b G A j).background.frequency n)
@@ -1581,7 +1609,7 @@ theorem particular_mode_smooth :
       (((particularCopies l c u b G A j).commonCorrected particularFullStrip
         (ActualParticularStageControls.canonicalParameters l).directions).amplitude n) z i).re)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) := by
+          ActualPrimary.standardRegion) := by
     apply particular_smooth_of_positive_or_zero
     · exact Complex.reCLM.contDiff.comp_contDiffOn
         (HarmonicCalculus.contDiffOn_mode _ (particular_phase_smooth l c u b G A j hphase n)
@@ -1608,13 +1636,13 @@ theorem particular_mode_support :
       (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)
       (ActualWaveRegularity.modeOscillation (particularCopies l c u b G A j) particularFullStrip
         (ActualParticularStageControls.canonicalParameters l).directions
-          ActualWaveRegularity.particularChart) := by
+            ActualWaveRegularity.particularChart) := by
   intro n θ i x hx hn
   by_contra hout
   have hq := VariableGaugeMean.qLength_pos ActualPrimary.standardRegion.coord_pos
     ActualPrimary.standardRegion.coord_lt_one (ActualPrimary.standardRegion.time_pos _ hx)
   have hr : radius (ActualWaveRegularity.particularChart.symm (ActualWaveRegularity.particularChart
-    (x, θ))) ∉
+      (x, θ))) ∉
       Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal) := by
     rw [LinearIsometryEquiv.symm_apply_apply]
@@ -1623,7 +1651,7 @@ theorem particular_mode_support :
       by simpa only [mul_comm] using (div_le_iff₀ hq).mp h.2⟩
   have hm : ActualWaveRegularity.particularChart (x,θ) ∈
       ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion := by
+          ActualPrimary.standardRegion := by
     simpa only [ActualWaveRegularity.nativeDomain, mem_preimage,
       LinearIsometryEquiv.symm_apply_apply] using (show (x,θ) ∈
         ActualWaveRegularity.fullDomain ActualPrimary.standardRegion from ⟨hx, mem_univ _⟩)
@@ -1647,14 +1675,14 @@ theorem particular_mode_pressure_smooth {β : ℝ}
       ((particularCopies l c u b G A j).background.frequency n)
       ((particularCopies l c u b G A j).background.phase n)
       ((particularCopies l c u b G A j).common.pressure n) (ActualWaveRegularity.particularChart
-        x)).re)
+          x)).re)
       (ActualWaveRegularity.fullDomain ActualPrimary.standardRegion) := by
   have hs : ContDiffOn ℝ ∞ (fun z => (HarmonicCalculus.mode
       ((particularCopies l c u b G A j).background.frequency n)
       ((particularCopies l c u b G A j).background.phase n)
       ((particularCopies l c u b G A j).common.pressure n) z).re)
       (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion) := by
+          ActualPrimary.standardRegion) := by
     apply particular_smooth_of_positive_or_zero
     · exact Complex.reCLM.contDiff.comp_contDiffOn
         (HarmonicCalculus.contDiffOn_mode _ (particular_phase_smooth l c u b G A j hphase n)
@@ -1686,18 +1714,18 @@ theorem particular_mode_periodic
       CommonCoverSolve.PeriodicAt ((particularCopies l c u b G A j).source n) z.1)
     (hzero : ∀ n, ¬Ordered (l.2,l.1) n → ∀ z,
       z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion →
+          ActualPrimary.standardRegion →
       (particularCopies l c u b G A j).common.amplitude n =ᶠ[𝓝 z] fun _ => 0) :
     CorrectionStep.OscillationPeriodic ActualPrimary.standardRegion.carrier
       (ActualWaveRegularity.modeOscillation (particularCopies l c u b G A j) particularFullStrip
         (ActualParticularStageControls.canonicalParameters l).directions
-          ActualWaveRegularity.particularChart) := by
+            ActualWaveRegularity.particularChart) := by
   intro n R t ht θ Y m
   let x : FullPoint := ((R,(t,Y)),θ)
   let z := ActualWaveRegularity.particularChart x
   have hx : x ∈ ActualWaveRegularity.fullDomain ActualPrimary.standardRegion := ⟨ht, mem_univ _⟩
   have hz0 : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-    ActualPrimary.standardRegion := by
+      ActualPrimary.standardRegion := by
     simpa only [z, ActualWaveRegularity.nativeDomain, mem_preimage,
       LinearIsometryEquiv.symm_apply_apply] using hx
   have he : ActualWaveRegularity.particularChart ((R,(t,Y + ((m.1:ℝ),(m.2:ℝ)))),θ) =
@@ -1708,7 +1736,7 @@ theorem particular_mode_periodic
   by_cases hn : Ordered (l.2,l.1) n
   · have hR : ActualWaveRegularity.TranslationOn
         (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-          ActualPrimary.standardRegion)
+            ActualPrimary.standardRegion)
         (ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m))
         ((particularCopies l c u b G A j).background.radius n) := by
       intro v _
@@ -1716,21 +1744,21 @@ theorem particular_mode_periodic
       exact add_zero _
     have hr : ActualWaveRegularity.TranslationOn
         (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-          ActualPrimary.standardRegion)
+            ActualPrimary.standardRegion)
         (ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m))
         ((ActualParticularStageControls.canonicalParameters l).directions.radialField n) := by
       intro v _
       have hh := congrArg ActualWaveRegularity.particularChart
         (radial_deck (l.2,l.1) n m (ActualWaveRegularity.particularChart.symm v) (mem_univ _))
       simp only [ActualParticularStageControls.canonicalParameters,
-        ActualParticularStageControls.directions,
+          ActualParticularStageControls.directions,
         ParticularWaveBounds.reindex_radialField, ParticularWaveBounds.reindexVector,
         nativeToFull_eq, map_add, LinearIsometryEquiv.symm_symm,
         LinearIsometryEquiv.symm_apply_apply] at hh ⊢
       exact hh
     have hp : ActualWaveRegularity.TranslationOn
         (ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-          ActualPrimary.standardRegion)
+            ActualPrimary.standardRegion)
         (ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m))
         ((particularCopies l c u b G A j).background.phase n) := by
       intro v _
@@ -1743,16 +1771,16 @@ theorem particular_mode_periodic
     have ha0 := ActualWaveRegularity.common_amplitude_translation
       (particularCopies l c u b G A j) n
       (Equiv.addRight (coverIndex ((ActualParticularStageControls.canonicalParameters l).geometry
-        n).gap m))
+          n).gap m))
       (Ω := ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion)
+          ActualPrimary.standardRegion)
       (z := ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m))
       (fun k v _ => by
         rw [particular_deck_point]
         change (ActualParticularStageControls.canonicalParameters l).cutoff n
           (((ActualParticularStageControls.canonicalParameters l).geometry n).coordinates
             (k + coverIndex ((ActualParticularStageControls.canonicalParameters l).geometry n).gap
-              m)
+                m)
             (v.2 + TorusAverages.latticePoint m)) = _
         rw [Geometry.coordinates_deck]
         rfl)
@@ -1760,7 +1788,7 @@ theorem particular_mode_periodic
         rw [particular_deck_point]
         exact ParticularWaveBounds.complexCopyVelocity_deck
           (ParticularWaveAssembly.angleTangent ((ActualParticularStageControls.canonicalParameters
-            l).tangent j n))
+              l).tangent j n))
           ((particularCopies l c u b G A j).source n)
           ((ActualParticularStageControls.canonicalParameters l).geometry n)
           ((ActualParticularStageControls.canonicalParameters l).length_pos n).le
@@ -1768,7 +1796,7 @@ theorem particular_mode_periodic
     have hv := ActualWaveRegularity.common_velocity_translation (particularCopies l c u b G A j)
       particularFullStrip (ActualParticularStageControls.canonicalParameters l).directions
       (ActualWaveRegularity.nativeDomain_open ActualWaveRegularity.particularChart
-        ActualPrimary.standardRegion)
+          ActualPrimary.standardRegion)
       n hR hr hp ha0 z hz0
     funext i
     change (vectorMode _ _ _ (ActualWaveRegularity.particularChart
@@ -1777,7 +1805,7 @@ theorem particular_mode_periodic
     rfl
   · have hz1 : z + ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m) ∈
         ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-          ActualPrimary.standardRegion := by
+            ActualPrimary.standardRegion := by
       rw [← he]
       simpa only [ActualWaveRegularity.nativeDomain, mem_preimage,
         LinearIsometryEquiv.symm_apply_apply] using
@@ -1793,7 +1821,7 @@ theorem particular_mode_periodic
         ((ActualParticularStageControls.canonicalParameters l).directions.radialField n)
         (fun _ => (ActualParticularStageControls.canonicalParameters l).directions.angular)
         ((ActualParticularStageControls.canonicalParameters l).directions.axialField
-          particularFullStrip n)
+            particularFullStrip n)
         ((particularCopies l c u b G A j).background.phase n)
       have he := hh.eq_of_nhds
       simp only [PeriodizedWaveBounds.realizedCoefficient_zero] at he
@@ -1860,7 +1888,7 @@ theorem particular_zero_on_radial_faces {E : Type} [NormedAddCommGroup E]
           (PrimaryTargetBounds.rightRadius ActualPrimary.nominal) → f z = 0)
     {z : ActualWaveRegularity.ParticularSpace}
     (hm : z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     (ho : radius (ActualWaveRegularity.particularChart.symm z) ∉
       Ioo (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
         (PrimaryTargetBounds.rightRadius ActualPrimary.nominal)) : f z = 0 := by
@@ -1929,24 +1957,24 @@ theorem signed_pressure_deck (l : Index B N0) (s : StripData Point)
   have hN := ActualWaveRegularity.phaseNormal_translation isOpen_univ
     (radius_deck l n m) (radial_deck l n m)
     (ActualWaveRegularity.TranslationOn.const (ActualSignedStageControls.parameters
-      l).directions.angular)
+        l).directions.angular)
     (ActualWaveRegularity.TranslationOn.const
       ((HarmonicWaveInteraction.productStrip s).epsilon n • (ActualSignedStageControls.parameters
-        l).directions.axial))
+          l).directions.axial))
     (phase_deck l n hn m) x (mem_univ _)
   change (ActualSignedStageControls.parameters l).base.normal (HarmonicWaveInteraction.productStrip
-    s)
+      s)
       (ActualSignedStageControls.parameters l).directions n (x + ActualWaveRegularity.deckShift m) =
     (ActualSignedStageControls.parameters l).base.normal (HarmonicWaveInteraction.productStrip s)
       (ActualSignedStageControls.parameters l).directions n x at hN
   simp only [CorrectionStep.PeriodizedSignedParameters.copyData,
-    CorrectionStep.PeriodizedSignedParameters.native,
+      CorrectionStep.PeriodizedSignedParameters.native,
     CorrectionStep.SignedParameters.coefficients, SignedWaveUpdate.coefficients,
     SignedWaveUpdate.homogeneousCoefficients, ParticularWaveBounds.projectedPressure]
   rw [hN]
   simp only [ActualSignedStageControls.parameters, SignedWaveUpdate.signedVector,
     SignedWaveUpdate.signedScalar, ActualSignedStageControls.matrix,
-      ActualSignedStageControls.target,
+        ActualSignedStageControls.target,
     ActualSignedStageControls.mask, ActualSignedStageControls.fundamental,
     ActualSignedStageControls.normalMotion, ActualSignedStageControls.action,
     nativePoint_deck l n hn, hrequest]
@@ -1961,7 +1989,7 @@ theorem signed_coefficient_translations (l : Index B N0) (P : SignedStressPrimit
     ActualWaveRegularity.TranslationOn Ω (ActualWaveRegularity.deckShift m) (a.common.amplitude n) ∧
     ActualWaveRegularity.TranslationOn Ω (ActualWaveRegularity.deckShift m)
       ((a.commonCorrected ActualSignedStageControls.fullStrip (ActualSignedStageControls.parameters
-        l).directions).amplitude n) ∧
+          l).directions).amplitude n) ∧
     ActualWaveRegularity.TranslationOn Ω (ActualWaveRegularity.deckShift m) (a.common.pressure n) ∧
     ActualWaveRegularity.TranslationOn Ω (ActualWaveRegularity.deckShift m)
       (a.globalGaussian (ActualSignedStageControls.parameters l).directions n) := by
@@ -1993,19 +2021,19 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
     (b : CorrectionState.HarmonicBlock (CorrectionStep.CycleSlow × Plane))
     (G A : HarmonicResidual.BlockCoefficients (CorrectionStep.CycleSlow × Plane)) (j : ℤ)
     (hphase : (particularCopies l c u b G A j).background.phase =
-      (ActualParticularStageControls.background l).phase)
-    (n : ℕ) (hn : Ordered (l.2,l.1) n) (m : Frequency)
+        (ActualParticularStageControls.background l).phase)
+    (n : ℕ) (hn : Ordered (l.2, l.1) n) (m : Frequency)
     (hsource : ∀ z, z ∈ ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
         ActualPrimary.standardRegion → CommonCoverSolve.PeriodicAt ((particularCopies l c u b G A
-          j).source n) z.1) :
+            j).source n) z.1) :
     let a := particularCopies l c u b G A j
     let Ω := ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion
+        ActualPrimary.standardRegion
     let v := ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m)
     ActualWaveRegularity.TranslationOn Ω v (a.common.amplitude n) ∧
     ActualWaveRegularity.TranslationOn Ω v
       ((a.commonCorrected particularFullStrip (ActualParticularStageControls.canonicalParameters
-        l).directions).amplitude n) ∧
+          l).directions).amplitude n) ∧
     ActualWaveRegularity.TranslationOn Ω v (a.common.pressure n) ∧
     ActualWaveRegularity.TranslationOn Ω v
       (a.globalGaussian (ActualParticularStageControls.canonicalParameters l).directions n) := by
@@ -2013,7 +2041,7 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
   let a := particularCopies l c u b G A j
   let p := ActualParticularStageControls.canonicalParameters l
   let Ω := ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
-    ActualPrimary.standardRegion
+      ActualPrimary.standardRegion
   let v := ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift m)
   let e := Equiv.addRight (coverIndex (p.geometry n).gap m)
   have hcut k z (_hz : z ∈ Ω) : a.cutoff n (e k) (z+v) = a.cutoff n k z := by
@@ -2025,14 +2053,14 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
   have hamp k z (hz : z ∈ Ω) : a.amplitude n (e k) (z+v) = a.amplitude n k z := by
     rw [show z+v = (z.1,z.2+TorusAverages.latticePoint m) from particular_deck_point z m]
     exact ParticularWaveBounds.complexCopyVelocity_deck (ParticularWaveAssembly.angleTangent
-      (p.tangent j n))
+        (p.tangent j n))
       (a.source n) (p.geometry n) (p.length_pos n).le k m z.1 (hsource z hz) z.2
   have hpress k z (hz : z ∈ Ω) : a.pressure n (e k) (z+v) = a.pressure n k z := by
     rw [show z+v = (z.1,z.2+TorusAverages.latticePoint m) from particular_deck_point z m]
     exact ParticularWaveBounds.complexCopyPressure_deck (ParticularWaveAssembly.angleTangent
-      (p.tangent j n))
+        (p.tangent j n))
       (a.source n) (p.geometry n) (p.length_pos n).le k m (a.background.frequency n) z.1 (hsource z
-        hz) z.2
+          hz) z.2
   have hR : ActualWaveRegularity.TranslationOn Ω v (a.background.radius n) := by
     intro z _
     change z.1.1.1 + 0 = z.1.1.1
@@ -2042,7 +2070,7 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
     have hh := congrArg ActualWaveRegularity.particularChart
       (radial_deck (l.2,l.1) n m (ActualWaveRegularity.particularChart.symm z) (mem_univ _))
     simp only [p, v, ActualParticularStageControls.canonicalParameters,
-      ActualParticularStageControls.directions,
+        ActualParticularStageControls.directions,
       ParticularWaveBounds.reindex_radialField, ParticularWaveBounds.reindexVector,
       nativeToFull_eq, map_add, LinearIsometryEquiv.symm_symm,
       LinearIsometryEquiv.symm_apply_apply] at hh ⊢
@@ -2060,11 +2088,11 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
   have hraw := ActualWaveRegularity.common_amplitude_translation a n e hcut hamp
   refine ⟨hraw, ActualWaveRegularity.commonCorrected_translation a particularFullStrip p.directions
     (ActualWaveRegularity.nativeDomain_open ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     n hR hrad hΦ hraw, common_pressure_translation a n e hcut hpress, ?_⟩
   apply common_gaussian_translation a p.directions
     (ActualWaveRegularity.nativeDomain_open ActualWaveRegularity.particularChart
-      ActualPrimary.standardRegion)
+        ActualPrimary.standardRegion)
     n e hcut hamp
   intro z hz
   rw [show z+v = (z.1,z.2+TorusAverages.latticePoint m) from particular_deck_point z m]

@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOrdinaryLift
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+
+/-! Genuine smooth ordinary-space representatives reconstructed from smooth L² translation orbits.
+-/
 
 @[expose] public section
 
-/-! Genuine smooth ordinary-space representatives reconstructed from smooth L² translation orbits.
-  -/
 
 noncomputable section
 
@@ -24,12 +28,14 @@ open MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerMeanOrdinaryLift
   EulerPressureSpatialRegularity
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanSmoothRepresentative1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 /-- Smoothness is required only of the actual ordinary L² translation orbit. -/
 abbrev SmoothOrbit (u : EulerMeanSolenoidal.L2) : Prop :=
   ContDiff ℝ ∞ (fun a : Space => EulerMeanSolenoidal.translation a u)
 
+/-- Orbit derivative, given by `fderiv ℝ (fun a : Space => EulerMeanSolenoidal.translation a u)
+0 v`. -/
 def orbitDerivative (u : EulerMeanSolenoidal.L2) (v : Space) : EulerMeanSolenoidal.L2 :=
   fderiv ℝ (fun a : Space => EulerMeanSolenoidal.translation a u) 0 v
 
@@ -55,15 +61,16 @@ theorem orbitDerivative_smooth (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u)
 
 theorem orbitDerivative_hasDerivAt (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (v : Space) :
     HasDerivAt (fun t : ℝ => EulerMeanSolenoidal.translation (t • v) u) (orbitDerivative u v) 0 :=
-      by
+        by
   have H := (hu.differentiable (by simp) (0 : Space)).hasFDerivAt
   have ht : HasDerivAt (fun t : ℝ => t • v) v 0 := by
     simpa only [id_eq, one_smul] using (hasDerivAt_id (0 : ℝ)).smul_const v
   simpa only [Function.comp_def, orbitDerivative] using H.comp_hasDerivAt_of_eq (0 : ℝ) ht (by simp)
 
-/-- The cylinder jet uses the actual spatial derivative, with zero angular derivative automatically. -/
+/-- The cylinder jet uses the actual spatial derivative, with zero angular derivative automatically.
+-/
 theorem ordinaryLift_hasDerivAt (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (a : LiftTangent)
-  :
+    :
     HasDerivAt
       (fun t : ℝ => EulerLiftedGradientSpace.translation 1 (translationPath 1 a t) (ordinaryLift u))
       (ordinaryLift (orbitDerivative u a.1)) 0 := by
@@ -71,7 +78,7 @@ theorem ordinaryLift_hasDerivAt (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u
     (orbitDerivative_hasDerivAt u hu a.1)
   have heq :
       (fun t : ℝ => EulerLiftedGradientSpace.translation 1 (translationPath 1 a t) (ordinaryLift
-        u)) =
+          u)) =
       fun t : ℝ => ordinaryLift (EulerMeanSolenoidal.translation (t • a.1) u) := by
     funext t
     exact ordinaryLift_translation (translationPath 1 a t) u

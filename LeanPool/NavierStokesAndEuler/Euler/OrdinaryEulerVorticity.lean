@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
 
-@[expose] public section
-
 /-! Genuine ordinary vorticity fields, their continuous supremum norms,
 and actual time integrals. These are literal curls of the velocity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +25,7 @@ open Set Filter MeasureTheory EulerSmoothLimit EulerLpTranslation
   EulerVolterraConvolution EulerContinuousTimeIntegral
 open scoped ContDiff Topology
 
+/-- Vorticity field, given by `mapField curlOperator A.derivative`. -/
 def vorticityField (A : SmoothL2Field Space) : SmoothL2Field Space :=
   mapField curlOperator A.derivative
 
@@ -37,6 +39,7 @@ theorem vorticityField_continuous {K : Type*} [TopologicalSpace K]
   continuous_jetLp_mapField curlOperator (fun t => (A t).derivative)
     (continuous_jetLp_derivative A hA) n
 
+/-- Vorticity norm, given by `‖finiteField (vorticityField A)‖`. -/
 def vorticityNorm (A : SmoothL2Field Space) : ℝ := ‖finiteField (vorticityField A)‖
 
 theorem vorticityNorm_nonneg (A : SmoothL2Field Space) : 0 ≤ vorticityNorm A := norm_nonneg _
@@ -56,6 +59,8 @@ namespace Evolution
 
 variable {T : ℝ} {hT : 0 ≤ T} (U : Evolution T hT)
 
+/-- Vorticity norm path, given by `⟨fun t => vorticityNorm (U.velocity
+t),vorticityNorm_continuous U.velocity U.velocity_continuous⟩`. -/
 def vorticityNormPath : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => vorticityNorm (U.velocity t),vorticityNorm_continuous U.velocity U.velocity_continuous⟩
 
@@ -70,6 +75,7 @@ theorem pointwise_vorticity_le (t : Icc (0 : ℝ) T) (x : Space) :
     ‖vectorCurl (U.velocity t).field x‖ ≤ U.vorticityNormPath t :=
   (U.vorticityNormPath_le_iff t _).mp le_rfl x
 
+/-- Vorticity integral, given by `realIntegral T hT U.vorticityNormPath t`. -/
 def vorticityIntegral (t : Icc (0 : ℝ) T) : ℝ := realIntegral T hT U.vorticityNormPath t
 
 theorem vorticityIntegral_nonneg (t : Icc (0 : ℝ) T) : 0 ≤ U.vorticityIntegral t :=
@@ -83,7 +89,7 @@ theorem vorticityIntegral_continuous : Continuous U.vorticityIntegral :=
   (show Continuous (realIntegral T hT U.vorticityNormPath) from
     (show Differentiable ℝ (realIntegral T hT U.vorticityNormPath) from
       fun t => (realIntegral_hasDerivAt T hT U.vorticityNormPath
-        t).differentiableAt).continuous).comp
+          t).differentiableAt).continuous).comp
         continuous_subtype_val
 
 theorem vorticityIntegral_mono (s t : Icc (0 : ℝ) T) (hst : (s : ℝ) ≤ t) :

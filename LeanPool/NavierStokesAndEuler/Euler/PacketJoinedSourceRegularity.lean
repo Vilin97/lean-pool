@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceEquations
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceEquations
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
+
+/-! Classical spatial slices and true within-time derivatives of the joined recursive family. -/
 
 @[expose] public section
 
-/-! Classical spatial slices and true within-time derivatives of the joined recursive family. -/
 
 noncomputable section
 

@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalNormBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalNormBounds
+
+/-! Polynomial conversion between physical tangent vectors and the two-state system. -/
 
 @[expose] public section
 
-/-! Polynomial conversion between physical tangent vectors and the two-state system. -/
 
 noncomputable section
 
@@ -22,7 +24,7 @@ open EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay InnerProductSp
 theorem scaled_pair_le_physical_norm (m v w : ℝ → Space) {t₀ a ε τ : ℝ}
     (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) :
     |scaledVelocity m v w t₀ a ε τ 0|+|scaledVelocity m v w t₀ a ε τ 1| ≤
       (2/ε)*‖w (physicalTime t₀ a ε τ)‖ := by
   have hU := frame_coordinate_abs_le_norm (unit (m (physicalTime t₀ a ε τ)))
@@ -49,13 +51,13 @@ theorem physical_velocity_le_scaled_state (m v r w : ℝ → Space)
     {s₀ t₀ a ε τ Θ ρ P₀ Q₀ : ℝ}
     (hs₀ : s₀ ≠ 0) (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hm : m (physicalTime t₀ a ε τ) ≠ 0) (hv : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hrw : ⟪r (physicalTime t₀ a ε τ),w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
-    (hΘ : 1 ≤ Θ) (hρ0 : 0 ≤ ρ) (hρ : ρ ≤ 1/2)
-    (hP₀ : |P₀| ≤ Θ^2) (hQ₀ : |Q₀| ≤ 2*Θ^2)
-    (hP : |scaledRay m v r s₀ t₀ a ε τ 0-P₀| ≤ ρ)
-    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1-Q₀| ≤ ρ)
-    (hN : |scaledRay m v r s₀ t₀ a ε τ 2-1| ≤ ρ) :
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε τ), w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hΘ : 1 ≤ Θ) (hρ0 : 0 ≤ ρ) (hρ : ρ ≤ 1 / 2)
+    (hP₀ : |P₀| ≤ Θ ^ 2) (hQ₀ : |Q₀| ≤ 2 * Θ ^ 2)
+    (hP : |scaledRay m v r s₀ t₀ a ε τ 0 - P₀| ≤ ρ)
+    (hQ : |scaledRay m v r s₀ t₀ a ε τ 1 - Q₀| ≤ ρ)
+    (hN : |scaledRay m v r s₀ t₀ a ε τ 2 - 1| ≤ ρ) :
     ‖w (physicalTime t₀ a ε τ)‖ ≤
       7*Θ^2*(|scaledVelocity m v w t₀ a ε τ 0|+|scaledVelocity m v w t₀ a ε τ 1|) := by
   let R := scaledRay m v r s₀ t₀ a ε τ

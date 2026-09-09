@@ -7,15 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageRestriction
-public import LeanPool.NavierStokesAndEuler.Euler.ParentNeighborThreshold
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryGuards
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardGeometryGuards
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentStageDirection
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
 
 /-! The actual next packet geometry is constructed from the current
 finite stage. Source normals, history bounds and the neighboring-label
 guards are derived from its state and the one fixed scale choice. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,7 +30,7 @@ theorem pressure_smooth {A : Parent} (E : Evolution A) (t : Icc (0 : ℝ) A.T) :
     ContDiff ℝ ∞ (fun x => E.pressure (t,x)) := by
   apply contDiff_infty_iff_fderiv.mpr
   refine ⟨fun x => E.pressure_differentiable t x, ?_⟩
-  have he : fderiv ℝ (fun x => E.pressure (t,x))=
+  have he : fderiv ℝ (fun x => E.pressure (t,x)) =
       (toDual ℝ Space).toContinuousLinearMap ∘ E.force t := by
     funext x
     change fderiv ℝ (fun y => E.pressure (t,y)) x=(toDual ℝ Space) (E.force t x)
@@ -45,8 +46,9 @@ namespace EulerPacketSourceGeometry.ParentFrame
 open EulerTransversePacketProvider
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  {D : Data U} {s t : ℝ} (P : ParentFrame D s) (h : s=t)
+  {D : Data U} {s t : ℝ} (P : ParentFrame D s) (h : s = t)
 
+/-- Change activation, given by `h ▸ P`. -/
 def changeActivation : ParentFrame D t := h ▸ P
 
 @[simp] theorem changeActivation_a : (P.changeActivation h).a=P.a := by cases h; rfl
@@ -54,8 +56,8 @@ def changeActivation : ParentFrame D t := h ▸ P
 @[simp] theorem changeActivation_shear : (P.changeActivation h).shear=P.shear := by cases h; rfl
 @[simp] theorem changeActivation_G : (P.changeActivation h).G=P.G := by cases h; rfl
 @[simp] theorem changeActivation_error : (P.changeActivation h).error=P.error := by cases h; rfl
-@[simp] theorem changeActivation_horizon : (P.changeActivation h).horizon=P.horizon := by cases h;
-  rfl
+@[simp] theorem changeActivation_horizon : (P.changeActivation h).horizon=P.horizon := by
+    cases h; rfl
 @[simp] theorem changeActivation_B : (P.changeActivation h).B=P.B := by cases h; rfl
 @[simp] theorem changeActivation_m : (P.changeActivation h).m=P.m := by cases h; rfl
 @[simp] theorem changeActivation_v : (P.changeActivation h).v=P.v := by cases h; rfl
@@ -96,7 +98,7 @@ open Set Real InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerParent
   EulerPacketSourceGeometry EulerTransversePacketProvider EulerTransverseFrameCoordinates
   EulerPacketInductionScales EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence
   EulerPacketSourceScaleActual EulerPacketBaseGuardScales EulerPacketLowConstants
-  EulerPacketNormalizedPrimary EulerParentNeighborThreshold EulerParentHistoryFrequency
+  EulerPacketNormalizedPrimary
   EulerPacketSupport EulerTimeIntervalRestriction
 
 section General
@@ -110,18 +112,26 @@ theorem history_layer (hn : n ≠ 0) : 1 ≤ previousShear S.J S.X n*P.time := b
         (S.previousShear_double_base hn))
   exact (div_le_iff₀ (P.time_pos hn)).mp (by simpa only [one_div] using hi)
 
+/-- Joined normal, given by `P.restrictedFrame.activationNormal (P.time_pos hn)
+P.time_lt_nextHorizon`. -/
 def joinedNormal (hn : n ≠ 0) : Space :=
   P.restrictedFrame.activationNormal (P.time_pos hn) P.time_lt_nextHorizon
 
 theorem joinedNormal_unit (hn : n ≠ 0) : ‖P.joinedNormal hn‖=1 :=
   P.restrictedFrame.activationNormal_unit (P.time_pos hn) P.time_lt_nextHorizon
 
+/-- Joined data, given by `P.restrictedFrame.activationData (P.time_pos hn)
+P.time_lt_nextHorizon`. -/
 def joinedData (hn : n ≠ 0) : Data (referencePlane (P.joinedNormal hn)) :=
   P.restrictedFrame.activationData (P.time_pos hn) P.time_lt_nextHorizon
 
+/-- Joined frame, given by `P.restrictedFrame.activationFrame (P.time_pos hn)
+P.time_lt_nextHorizon`. -/
 def joinedFrame (hn : n ≠ 0) : ParentFrame (P.joinedData hn) P.time :=
   P.restrictedFrame.activationFrame (P.time_pos hn) P.time_lt_nextHorizon
 
+/-- Joined history, given by `P.restrictedFrame.activationHistory (P.time_pos hn)
+P.time_lt_nextHorizon P.restrictedLow`. -/
 def joinedHistory (hn : n ≠ 0) :
     HistoryData ((P.joinedData hn).initial P.time (P.time_pos hn) P.time_lt_nextHorizon.le) :=
   P.restrictedFrame.activationHistory (P.time_pos hn) P.time_lt_nextHorizon P.restrictedLow
@@ -176,16 +186,20 @@ section ForwardData
 
 variable {c B : ℝ} {S : Scales c B} (P : Stage S 0)
 
+/-- Zero frame, given by `P.restrictedFrame.changeActivation (P.time_zero rfl)`. -/
 def zeroFrame : ParentFrame (frameData P.restrictedParent) 0 :=
   P.restrictedFrame.changeActivation (P.time_zero rfl)
 
+/-- Forward normal, given by `P.zeroFrame.crossDirection`. -/
 def forwardNormal : Space := P.zeroFrame.crossDirection
 
 theorem forwardNormal_unit : ‖P.forwardNormal‖=1 :=
   P.zeroFrame.crossDirection_unit P.restrictedParent.T_pos.le
 
+/-- Forward data, given by `P.zeroFrame.forwardData`. -/
 def forwardData : Data (referencePlane P.forwardNormal) := P.zeroFrame.forwardData
 
+/-- Forward frame, given by `P.zeroFrame.forwardFrame`. -/
 def forwardFrame : ParentFrame P.forwardData 0 := P.zeroFrame.forwardFrame
 
 @[simp] theorem forwardFrame_a : P.forwardFrame.a=P.frame.a :=

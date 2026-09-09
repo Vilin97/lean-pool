@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleResidualBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TailGaugePotential
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCurlCovariance
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
 
 /-!
 # Exterior identities for the actual finite physical prefixes
@@ -21,6 +17,9 @@ pressure stages on the genuine past exterior sublevel. Openness turns their
 pointwise identities into the germs needed by the spatial curl. No global
 support condition or final velocity identity is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -66,13 +65,13 @@ slow-base stage zero. -/
 structure ExteriorStages (B Nr : ℕ) (A D : ℕ → VelocityField) (P : ℕ → PressureField) : Prop where
   potential_zero : EqOn (A 0)
     (TailGaugePotential.finalPotential ActualPrimary.certificate ActualPrimary.modulation
-      ActualPrimary.upper B)
+        ActualPrimary.upper B)
     (exteriorDomain Nr)
   potential_succ : ∀ k, EqOn (A (k + 1)) 0 (exteriorDomain Nr)
   direct_zero : ∀ k, EqOn (D k) 0 (exteriorDomain Nr)
   pressure_zero : EqOn (P 0)
     (FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation ActualPrimary.upper
-      B)
+        B)
     (exteriorDomain Nr)
   pressure_succ : ∀ k, EqOn (P (k + 1)) 0 (exteriorDomain Nr)
 
@@ -115,7 +114,7 @@ include H
 theorem potential_prefix_eqOn (J : ℕ) :
     EqOn (DiagonalJetBounds.uncutPrefix A (J + 1))
       (TailGaugePotential.finalPotential ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B)
+          ActualPrimary.upper B)
       (exteriorDomain Nr) :=
   uncutPrefix_eqOn_first H.potential_zero H.potential_succ J
 
@@ -126,14 +125,14 @@ theorem direct_prefix_eqOn (N : ℕ) :
 theorem pressure_prefix_eqOn (J : ℕ) :
     EqOn (DiagonalJetBounds.uncutPrefix P (J + 1))
       (FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B)
+          ActualPrimary.upper B)
       (exteriorDomain Nr) :=
   uncutPrefix_eqOn_first H.pressure_zero H.pressure_succ J
 
 theorem potential_prefix_germ (J : ℕ) {w : SpaceTime} (hw : w ∈ exteriorDomain Nr) :
     DiagonalJetBounds.uncutPrefix A (J + 1) =ᶠ[𝓝 w]
       TailGaugePotential.finalPotential ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B :=
+          ActualPrimary.upper B :=
   eqOn_exterior_germ (H.potential_prefix_eqOn J) hw
 
 /-- The spatial curl sees the actual potential germ, so the finite velocity
@@ -142,7 +141,7 @@ the totalized raw stages. -/
 theorem velocity_prefix_eqOn (J : ℕ) :
     EqOn (MixedDiagonalResidual.uncutVelocity A D J)
       (FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-        ActualPrimary.upper B)
+          ActualPrimary.upper B)
       (exteriorDomain Nr) := by
   intro w hw
   change SpatialCurl.spatialCurl (DiagonalJetBounds.uncutPrefix A (J + 1)) w +
@@ -159,20 +158,20 @@ theorem prefix_exterior (J : ℕ) {w : SpaceTime} (ht : w ∈ preterminal)
     (hq : physicalQ ActualPrimary.h w < ChartScales.Q Nr) (hout : w ∉ ActualPolarCoverage.active) :
     MixedDiagonalResidual.uncutVelocity A D J w =
         FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-          ActualPrimary.upper B w ∧
+            ActualPrimary.upper B w ∧
       DiagonalJetBounds.uncutPrefix P (J + 1) w =
         FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-          ActualPrimary.upper B w := by
+            ActualPrimary.upper B w := by
   have hw := mem_exteriorDomain.mpr ⟨ht, hq, hout⟩
   exact ⟨H.velocity_prefix_eqOn J hw, H.pressure_prefix_eqOn J hw⟩
 
 theorem prefix_germs (J : ℕ) {w : SpaceTime} (hw : w ∈ exteriorDomain Nr) :
     MixedDiagonalResidual.uncutVelocity A D J =ᶠ[𝓝 w]
         FinalSlowBase.velocity ActualPrimary.certificate ActualPrimary.modulation
-          ActualPrimary.upper B ∧
+            ActualPrimary.upper B ∧
       DiagonalJetBounds.uncutPrefix P (J + 1) =ᶠ[𝓝 w]
         FinalSlowBase.pressure ActualPrimary.certificate ActualPrimary.modulation
-          ActualPrimary.upper B :=
+            ActualPrimary.upper B :=
   ⟨eqOn_exterior_germ (H.velocity_prefix_eqOn J) hw,
     eqOn_exterior_germ (H.pressure_prefix_eqOn J) hw⟩
 

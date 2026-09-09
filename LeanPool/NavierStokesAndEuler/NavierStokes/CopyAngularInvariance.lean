@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CopySolveCompatibility
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicFields
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverSolve
+import LeanPool.NavierStokesAndEuler.NavierStokes.CopySolveCompatibility
 
 /-!
 # Angular invariance of constructed stripped copy and curl coefficients
@@ -19,6 +18,9 @@ Only primitive translation identities are assumed. The actual copy solve,
 its pressure, and the stripped cylindrical curl inherit those identities.
 The oscillatory carrier retains its separate angular character.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,9 +32,11 @@ open CommonCoverSolve TorusInverse
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Invariant, given by `∀ (x : D) (t : ℝ), f (x + t • θ) = f x`. -/
 noncomputable def Invariant (θ : D) {E : Type} (f : D → E) : Prop :=
   ∀ (x : D) (t : ℝ), f (x + t • θ) = f x
 
+/-- Affine phase, given by `∀ (x : D) (t : ℝ), Φ (x + t • θ) = Φ x + m * t`. -/
 noncomputable def AffinePhase (θ : D) (m : ℝ) (Φ : D → ℝ) : Prop :=
   ∀ (x : D) (t : ℝ), Φ (x + t • θ) = Φ x + m * t
 
@@ -208,6 +212,7 @@ variable {P H : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
   {a b : ℝ}
 
+/-- Tangent invariant data, collecting `normal`, `normalDot`, `action`, `damping`, `source`. -/
 structure TangentInvariant (θ : P) (d : TangentData P H) : Prop where
   normal : Invariant (θ, (0 : Plane)) d.normal
   normalDot : Invariant (θ, (0 : Plane)) d.normalDot
@@ -228,12 +233,13 @@ theorem TangentInvariant.forcingMap {θ : P} {d : TangentData P H} (h : TangentI
   simp only [TangentData.linearData, h.normal x t]
 
 theorem TangentInvariant.copySolve_invariant {θ : P} {d : TangentData P H} (h : TangentInvariant θ
-  d)
+    d)
     (g : Geometry) (hab : a ≤ b) (j : Frequency) :
     Invariant (θ, (0 : Plane)) (d.linearData.copySolve g hab j) :=
   NavierStokes.CopyAngularInvariance.copySolve_invariant d.linearData g hab θ
     h.coefficient h.forcingMap h.source j
 
+/-- Copy native point, given by `(x.1, g.coordinates j x.2)`. -/
 noncomputable def copyNativePoint (g : Geometry) (j : Frequency) (x : P × Plane) : P × Plane :=
   (x.1, g.coordinates j x.2)
 
@@ -254,6 +260,7 @@ noncomputable def copyPressureReal (d : TangentData P H) (g : Geometry) (hab : a
     (d.normalDot (copyNativePoint g j x)) (d.linearData.copySolve g hab j x)
     (d.action (copyNativePoint g j x) (d.linearData.copySolve g hab j x)) (d.source x)
 
+/-- Copy pressure, given by `Complex.I * (copyPressureReal d g hab j x : ℂ) / (K : ℂ)`. -/
 noncomputable def copyPressure (d : TangentData P H) (g : Geometry) (hab : a ≤ b)
     (j : Frequency) (K : ℝ) (x : P × Plane) : ℂ :=
   Complex.I * (copyPressureReal d g hab j x : ℂ) / (K : ℂ)
@@ -285,6 +292,8 @@ theorem nativeCutoff_invariant (θ : P) (g : Geometry) (κ : Plane → ℝ) (j :
     simp
   exact hY.map (fun Y => κ (g.coordinates j Y))
 
+/-- Common pressure, given by `∑' j : Frequency, (κ (g.coordinates j x.2) : ℂ) * copyPressure d
+g hab j K x`. -/
 noncomputable def commonPressure (d : TangentData P H) (g : Geometry) (hab : a ≤ b)
     (κ : Plane → ℝ) (K : ℝ) (x : P × Plane) : ℂ :=
   ∑' j : Frequency, (κ (g.coordinates j x.2) : ℂ) * copyPressure d g hab j K x
@@ -416,7 +425,7 @@ theorem mode_eq_field_along {P : Type} {f : D → ℂ}
     (k : ℝ) (j kp : ℤ) (hkp : (kp : ℝ) = k * m) (p : P) (t : ℝ) :
     HarmonicCalculus.mode ((j : ℝ) * k) Φ f (σ p + t • θ) =
       HarmonicFields.field (AddMonoidAlgebra.single j (fun p => f (σ p))) k (fun p => Φ (σ p)) kp
-        (p, t) := by
+          (p, t) := by
   simp only [HarmonicCalculus.mode, HarmonicCalculus.carrier, HarmonicCalculus.phaseFactor,
     HarmonicFields.field, HarmonicFields.evaluate_single, HarmonicFields.character]
   rw [hf (σ p) t, hΦ (σ p) t]
@@ -429,7 +438,7 @@ theorem vectorMode_eq_field_along_component {P : Type} {a : D → HarmonicCalcul
     (k : ℝ) (j kp : ℤ) (hkp : (kp : ℝ) = k * m) (p : P) (t : ℝ) (i : Fin 3) :
     HarmonicCalculus.vectorMode ((j : ℝ) * k) Φ a (σ p + t • θ) i =
       HarmonicFields.field (AddMonoidAlgebra.single j (fun p => a (σ p) i)) k (fun p => Φ (σ p)) kp
-        (p, t) :=
+          (p, t) :=
   mode_eq_field_along (ha.component i) hΦ σ k j kp hkp p t
 
 end HarmonicPhase
@@ -454,7 +463,7 @@ theorem mode_eq_field_single {f : P × ℝ → ℂ} {Φ : P × ℝ → ℝ} {m :
     (k : ℝ) (j kp : ℤ) (hkp : (kp : ℝ) = k * m) (p : P) (t : ℝ) :
     HarmonicCalculus.mode ((j : ℝ) * k) Φ f (p, t) =
       HarmonicFields.field (AddMonoidAlgebra.single j (fun p => f (p, 0))) k (fun p => Φ (p, 0)) kp
-        (p, t) := by
+          (p, t) := by
   simp only [HarmonicCalculus.mode, HarmonicCalculus.carrier, HarmonicCalculus.phaseFactor,
     HarmonicFields.field, HarmonicFields.evaluate_single, HarmonicFields.character]
   rw [invariant_eq_zeroSlice hf p t, affinePhase_eq_zeroSlice hΦ p t]
@@ -498,8 +507,8 @@ theorem exactConditions_of_invariants
     obtain ⟨m, hm⟩ := hΦ n
     refine ⟨m, ?_⟩
     intro x hx
-    exact hm.directional_eq (((hΦs n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
-      (by simp))
+    exact hm.directional_eq (((hΦs n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
+        simp))
   · intro n x _
     exact (hp n).along_zero x
 

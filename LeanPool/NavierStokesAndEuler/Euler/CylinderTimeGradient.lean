@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeWords
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeWords
+
+/-! Time regularity of the full genuine covering derivative, reconstructed from its four directions.
+-/
 
 @[expose] public section
 
-/-! Time regularity of the full genuine covering derivative, reconstructed from its four
-  directions. -/
 
 noncomputable section
 
@@ -22,9 +25,13 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
   EulerLpCylinderTranslation EulerVolterraConvolution EulerLiftedWeakDerivative
 open scoped ContDiff
 
+/-- Tangent coordinate, given by `(EuclideanSpace.proj i).comp
+coordinateEquiv.symm.toContinuousLinearMap`. -/
 def tangentCoordinate (i : Fin 4) : LiftTangent →L[ℝ] ℝ :=
   (EuclideanSpace.proj i).comp coordinateEquiv.symm.toContinuousLinearMap
 
+/-- From coordinates, given by `∑ i : Fin 4, (ContinuousLinearMap.smulRightL ℝ LiftTangent Space
+(tangentCoordinate i)).comp (ContinuousLinearMap.proj i)`. -/
 def fromCoordinates : (Fin 4 → Space) →L[ℝ] (LiftTangent →L[ℝ] Space) :=
   ∑ i : Fin 4, (ContinuousLinearMap.smulRightL ℝ LiftTangent Space (tangentCoordinate i)).comp
     (ContinuousLinearMap.proj i)
@@ -40,7 +47,7 @@ theorem tangent_sum_coordinates (v : LiftTangent) :
     ext i
     simp [Pi.single_apply, mul_ite]
   change (∑ i : Fin 4, (coordinateEquiv.symm v i) • coordinateEquiv (EuclideanSpace.single i (1 :
-    ℝ))) = v
+      ℝ))) = v
   simp_rw [← map_smul]
   rw [← map_sum, he, ContinuousLinearEquiv.apply_symm_apply]
 
@@ -57,7 +64,7 @@ theorem fromCoordinates_eq (D : LiftTangent →L[ℝ] Space) :
 variable (P : ℝ) [Fact (0 < P)]
 
 theorem pointField_fderiv_joint_continuous {K : Type*} [TopologicalSpace K] [CompactSpace K]
-    (p : C(K,LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
+    (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
     Continuous (fun z : K × LiftDomain P => fieldFDeriv P (pointField P p hp z.1) z.2) := by
   have hc : Continuous (fun z : K × LiftDomain P =>
       fun i : Fin 4 => fieldFDeriv P (pointField P p hp z.1) z.2 (standardDirection i)) := by
@@ -66,20 +73,21 @@ theorem pointField_fderiv_joint_continuous {K : Type*} [TopologicalSpace K] [Com
     exact pointField_word_joint_continuous P p hp 1 (fun _ => i)
   simpa only [Function.comp_def, fromCoordinates_eq] using fromCoordinates.continuous.comp hc
 
-variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T,LiftL2 P))
+variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
 
 include hd in
-/-- Differentiating the full covering derivative in time gives the covering derivative of the true RHS. -/
+/-- Differentiating the full covering derivative in time gives the covering derivative of the true
+RHS. -/
 theorem pointField_fderiv_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
     HasDerivWithinAt
       (fun r => fieldFDeriv P (pointField P p hp (projIcc 0 T hT r)) x)
       (fieldFDeriv P (pointField P f hf t) x) (Icc (0 : ℝ) T) t := by
   have hD : HasDerivWithinAt
       (fun r => fun i : Fin 4 => fieldFDeriv P (pointField P p hp (projIcc 0 T hT r)) x
-        (standardDirection i))
+          (standardDirection i))
       (fun i : Fin 4 => fieldFDeriv P (pointField P f hf t) x (standardDirection i))
       (Icc (0 : ℝ) T) t := by
     apply hasDerivWithinAt_pi.mpr

@@ -6,11 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicEnergy
+import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Canonical Laplacian and the quantitative local harmonic energy bound. -/
 
 @[expose] public section
 
-/-! Canonical Laplacian and the quantitative local harmonic energy bound. -/
 
 noncomputable section
 
@@ -86,10 +93,10 @@ theorem caccioppoli_bound (η h : Space → ℝ)
     ((contDiff_gradient (hη.mul hh)).continuous.norm.pow 2).integrable_of_hasCompactSupport hcA
   have hC : Integrable (fun x => h x ^ 2 * ‖gradient η x‖ ^ 2) :=
     ((hh.continuous.pow 2).mul ((contDiff_gradient hη).continuous.norm.pow
-      2)).integrable_of_hasCompactSupport hcC
+        2)).integrable_of_hasCompactSupport hcC
   have hD : Integrable (fun x => η x ^ 2 * ‖gradient h x‖ ^ 2) :=
     ((hη.continuous.pow 2).mul ((contDiff_gradient hh).continuous.norm.pow
-      2)).integrable_of_hasCompactSupport hcD
+        2)).integrable_of_hasCompactSupport hcD
   have hpoint (x : Space) : η x ^ 2 * ‖gradient h x‖ ^ 2 ≤
       2 * ‖gradient (η * h) x‖ ^ 2 + 2 * (h x ^ 2 * ‖gradient η x‖ ^ 2) := by
     have heq : η x • gradient h x = gradient (η * h) x - h x • gradient η x := by

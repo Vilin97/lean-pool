@@ -6,12 +6,11 @@ Authors: OpenAI
 
 module
 
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpLinearity
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
 public import Mathlib.MeasureTheory.Function.AbsolutelyContinuous
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
 # The terminal primitive of a genuine Bochner L² time field
@@ -20,6 +19,9 @@ The derivative is the input equivalence class.  Integration of its zero extensio
 constructs the continuous representative, its zero terminal trace, and its
 almost-everywhere derivative.  No primitive or evolution solution is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -106,7 +108,7 @@ def primitivePath (T : ℝ) (u : TimeLp T E) : C(Icc (0 : ℝ) T, E) :=
 /-- Cauchy--Schwarz for a square-integrable scalar function on an interval. -/
 theorem integral_sq_le_length_mul (g : ℝ → ℝ) {a b : ℝ} (hab : a ≤ b)
     (hg : IntervalIntegrable g volume a b)
-    (hg2 : IntervalIntegrable (fun t => (g t)^2) volume a b) :
+    (hg2 : IntervalIntegrable (fun t => (g t) ^ 2) volume a b) :
     (∫ t in a..b, g t)^2 ≤ (b-a)*(∫ t in a..b, (g t)^2) := by
   rcases hab.eq_or_lt with rfl | hab
   · simp
@@ -128,7 +130,7 @@ theorem integral_sq_le_length_mul (g : ℝ → ℝ) {a b : ℝ} (hab : a ≤ b)
 /-- Bochner Cauchy--Schwarz, requiring actual square integrability rather than continuity. -/
 theorem norm_integral_sq_le_length_mul (f : ℝ → E) {a b : ℝ} (hab : a ≤ b)
     (hf : IntervalIntegrable f volume a b)
-    (hf2 : IntervalIntegrable (fun t => ‖f t‖^2) volume a b) :
+    (hf2 : IntervalIntegrable (fun t => ‖f t‖ ^ 2) volume a b) :
     ‖∫ t in a..b, f t‖^2 ≤ (b-a)*(∫ t in a..b, ‖f t‖^2) := by
   have hn := intervalIntegral.norm_integral_le_integral_norm (μ := volume) (f := f) hab
   exact (pow_le_pow_left₀ (norm_nonneg _) hn 2).trans
@@ -181,7 +183,7 @@ theorem realPrimitive_absolutelyContinuous (T : ℝ) (u : TimeLp T E) :
   let g : ℝ → ℝ := fun t => ∫ r in T..t, ‖zeroExtension T u r‖
   have hg : AbsolutelyContinuousOnInterval g 0 T :=
     (zeroExtension_integrable T
-      u).norm.intervalIntegrable.absolutelyContinuousOnInterval_intervalIntegral
+        u).norm.intervalIntegrable.absolutelyContinuousOnInterval_intervalIntegral
       right_mem_uIcc
   have hd (s t : ℝ) : dist (realPrimitive T u s) (realPrimitive T u t) ≤ dist (g s) (g t) := by
     calc
@@ -255,7 +257,7 @@ def terminalPrimitive (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] C(Icc (0 :
     (t : Icc (0 : ℝ) T) : terminalPrimitive T hT u t = realPrimitive T u t := rfl
 
 /-- The bounded primitive has exactly zero terminal trace. -/
-@[simp] theorem terminalPrimitive_terminal (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
+theorem terminalPrimitive_terminal (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
     terminalPrimitive T hT u ⟨T, hT, le_rfl⟩ = 0 := realPrimitive_terminal T u
 
 /-- The sharp pointwise squared trace estimate for the bounded primitive. -/
@@ -307,7 +309,8 @@ theorem initialTrace_norm_sq_le (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
   change ‖terminalPrimitive T hT u ⟨0, le_rfl, hT⟩‖^2 ≤ T*‖u‖^2
   simpa only [sub_zero] using terminalPrimitive_apply_norm_sq_le T hT u ⟨0, le_rfl, hT⟩
 
-/-- The operator norm of terminal integration is bounded by the square root of the interval length. -/
+/-- The operator norm of terminal integration is bounded by the square root of the interval length.
+-/
 theorem terminalPrimitive_norm_le (T : ℝ) (hT : 0 ≤ T) :
     ‖terminalPrimitive (E := E) T hT‖ ≤ Real.sqrt T :=
   ContinuousLinearMap.opNorm_le_bound _ (Real.sqrt_nonneg _) (primitivePath_norm_le T hT)
@@ -331,12 +334,12 @@ theorem realPrimitive_poincare (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
   have hi := intervalIntegral.integral_mono_on (μ := volume) hT
     (((realPrimitive_continuous T u).norm.pow 2).intervalIntegrable 0 T)
     (((continuous_const.sub continuous_id).mul continuous_const).intervalIntegrable (a := 0) (b :=
-      T))
+        T))
     (fun t ht => realPrimitive_norm_sq_le T u t ht)
   have he : (∫ t in 0..T, (T-t)*‖u‖^2) = T^2/2*‖u‖^2 := by
     have hic : IntervalIntegrable (fun _ : ℝ => T) volume 0 T := intervalIntegrable_const
     have hid : IntervalIntegrable (fun t : ℝ => t) volume 0 T := continuous_id.intervalIntegrable 0
-      T
+        T
     rw [intervalIntegral.integral_mul_const,
       intervalIntegral.integral_sub hic hid,
       intervalIntegral.integral_const, integral_id]

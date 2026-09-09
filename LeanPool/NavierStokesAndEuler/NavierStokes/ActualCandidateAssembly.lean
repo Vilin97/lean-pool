@@ -7,22 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCandidateConstruction
-public import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalStageBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GermCandidateAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualValidBandWaves
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanExterior
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalPrefixFields
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualStageEstimates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GluedStageEstimates
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedWaveData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentSignedCurl
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalCoherence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GermEndpointInputs
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualEndpointInputs
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularAssembly
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentWaveSupport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanExterior
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.GermEndpointInputs
 
 /-!
 # Literal physical data for the actual candidate
@@ -31,6 +23,9 @@ The initial fields use the same primary choice and the same initialized
 mean state as `ActualCandidateConstruction`.  Their support, smoothness,
 and axis germs are derived from those constructors.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -43,15 +38,21 @@ open scoped Topology ContDiff BigOperators
 
 /-! ## The finite initialization, without the base fields -/
 
+/-- Initial potential, given by `InitialPhysicalData.potential B N0 +
+ActualCandidateConstruction.streamMeanStages B N0 0`. -/
 noncomputable def initialPotential (B N0 : ℕ) : VelocityField :=
   InitialPhysicalData.potential B N0 + ActualCandidateConstruction.streamMeanStages B N0 0
 
+/-- Initial pressure, given by `InitialPhysicalData.pressure B N0 +
+ActualCandidateConstruction.pressureMeanStages B N0 0`. -/
 noncomputable def initialPressure (B N0 : ℕ) : PressureField :=
   InitialPhysicalData.pressure B N0 + ActualCandidateConstruction.pressureMeanStages B N0 0
 
+/-- Initial direct, given by `ActualCandidateConstruction.angularMeanStages B N0 0`. -/
 noncomputable def initialDirect (B N0 : ℕ) : VelocityField :=
   ActualCandidateConstruction.angularMeanStages B N0 0
 
+/-- Initial direct data, constructed using `ActualMeanStageData.initialAngularData`. -/
 noncomputable def initialDirectData (B N0 : ℕ) :
     DirectAngularDiagonal.AngularData
       (LocalAngularDiagonal.localSlowDomain h (ActualCandidateConstruction.qbig B N0)) :=
@@ -62,7 +63,7 @@ theorem initialDirectData_field (B N0 : ℕ) :
     DirectAngularDiagonal.angularField (initialDirectData B N0).scalar = initialDirect B N0 := by
   exact (ActualMeanStageData.initialAngularData_field B N0
     (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.qbig B N0)
-      le_rfl).trans
+        le_rfl).trans
       (ActualCandidateConstruction.angularMeanStages_zero B N0).symm
 
 theorem initialPotential_eq_stage (B N0 : ℕ) :
@@ -70,7 +71,7 @@ theorem initialPotential_eq_stage (B N0 : ℕ) :
       (ActualCandidateConstruction.initialPotentialStage B N0
         (InitialPhysicalData.copyPotential B N0)).field := by
   rw [ActualCandidateConstruction.initialPotentialStage_field,
-    InitialPhysicalData.copyPotential_field]
+      InitialPhysicalData.copyPotential_field]
   rfl
 
 theorem initialPotential_eq_increment (B N0 : ℕ) :
@@ -78,10 +79,10 @@ theorem initialPotential_eq_increment (B N0 : ℕ) :
       (InitialPhysicalData.potentialWaveData B N0)
       (ActualPhysicalStageBounds.actualInitialTemporalInput B N0
         (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.firstBand_four B
-          N0))
+            N0))
       (ActualPhysicalStageBounds.actualInitialRankInput B N0
         (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.firstBand_four B
-          N0)) := by
+            N0)) := by
   rw [initialPotential, ActualCandidateConstruction.streamMeanStages_zero,
     ActualMeanPhysicalData.initialStream_angularField]
   funext w
@@ -97,7 +98,7 @@ theorem initialPressure_eq_increment (B N0 : ℕ) :
       (InitialPhysicalData.pressureWaveData B N0)
       (ActualPhysicalStageBounds.actualInitialPressureInput B N0
         (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.firstBand_four B
-          N0)) := by
+            N0)) := by
   rw [initialPressure, ActualCandidateConstruction.pressureMeanStages_zero]
   rfl
 
@@ -128,7 +129,7 @@ theorem initialPotential_support (B N0 : ℕ) :
     (R := ActualInitialization.geometry.patch.b) (by exact le_rfl)
   have hm := (ActualMeanStageData.initial_shrinkingSupport B N0
     (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.qbig B N0)
-      le_rfl).2.2.2
+        le_rfl).2.2.2
   erw [ActualMeanStageData.initialStreamSupport_field] at hm
   rw [initialPotential, ActualCandidateConstruction.streamMeanStages_zero]
   exact PhysicalStageSupport.support_add hw hm
@@ -163,7 +164,7 @@ theorem initialPotential_axisZeroOn (B N0 : ℕ) :
       (initialPotential B N0) := by
   rw [initialPotential_eq_stage]
   exact GermCandidateAssembly.potentialStage_axisZeroOn outgoing.data.h_pos outgoing.data.h_lt_half
-    _
+      _
 
 /-! ## Exact exterior coordinates -/
 
@@ -218,9 +219,13 @@ theorem initialPressure_exterior (B N0 : ℕ) {w : SpaceTime}
 
 /-! ## The literal zeroth potential and pressure retain the base -/
 
+/-- Zeroth potential, given by `TailGaugePotential.finalPotential certificate modulation upper B
++ initialPotential B N0`. -/
 noncomputable def zerothPotential (B N0 : ℕ) : VelocityField :=
   TailGaugePotential.finalPotential certificate modulation upper B + initialPotential B N0
 
+/-- Zeroth pressure, given by `FinalSlowBase.pressure certificate modulation upper B +
+initialPressure B N0`. -/
 noncomputable def zerothPressure (B N0 : ℕ) : PressureField :=
   FinalSlowBase.pressure certificate modulation upper B + initialPressure B N0
 
@@ -229,10 +234,10 @@ theorem zerothPotential_eq_initialPotential (B N0 : ℕ) :
       (InitialPhysicalData.potentialWaveData B N0)
       (ActualPhysicalStageBounds.actualInitialTemporalInput B N0
         (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.firstBand_four B
-          N0))
+            N0))
       (ActualPhysicalStageBounds.actualInitialRankInput B N0
         (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.firstBand_four B
-          N0)) := by
+            N0)) := by
   rw [zerothPotential, initialPotential_eq_increment]
   rfl
 
@@ -240,7 +245,7 @@ theorem zerothPotential_smooth (B N0 : ℕ) :
     ContDiffOn ℝ ∞ (zerothPotential B N0) (ActualCandidateConstruction.physicalDomain B N0) := by
   rw [zerothPotential_eq_initialPotential]
   exact ActualPhysicalStageBounds.initialPotential_smooth certificate modulation upper B _ _ _
-    le_rfl le_rfl
+      le_rfl le_rfl
 
 theorem zerothPressure_smooth (B N0 : ℕ) :
     ContDiffOn ℝ ∞ (zerothPressure B N0) (ActualCandidateConstruction.physicalDomain B N0) :=
@@ -254,10 +259,13 @@ formulas are the actual current solves, with the initializer's label order
 converted by `ActualCycleParameters.particularState` inside the producer.
 -/
 
+/-- Particular potential, given by `ActualValidBandWaves.potential
+(ActualCandidateConstruction.cycle B N0 j) (ActualCandidateConstruction.firstBand B N0)`. -/
 noncomputable def particularPotential (B N0 j : ℕ) : VelocityField :=
   ActualValidBandWaves.potential (ActualCandidateConstruction.cycle B N0 j)
     (ActualCandidateConstruction.firstBand B N0)
 
+/-- Particular pressure, constructed using `ActualValidBandWaves.pressure`. -/
 noncomputable def particularPressure (B N0 j : ℕ) : PressureField :=
   ActualValidBandWaves.pressure (ActualCandidateConstruction.cycle B N0 j)
     (ActualCandidateConstruction.firstBand B N0)
@@ -345,7 +353,7 @@ theorem initialPressure_on_cylinder (B N0 n d : ℕ) {z : SpaceTime}
   rw [he, pow_two, ← mul_assoc, ← Real.rpow_add (ChartScales.Q_pos n),
     ← Real.rpow_add (ChartScales.Q_pos n)]
   have he : -CoordinateAlgebra.A h + -CoordinateAlgebra.A h + 2 * CoordinateAlgebra.A h = 0 := by
-    ring
+      ring
   rw [he, Real.rpow_zero, one_mul]
 
 theorem initialWavePotential_on_chart (B N0 n : ℕ)
@@ -491,15 +499,16 @@ theorem stream_axisZeroOn {B N0 : ℕ} (M : ActualCandidateConstruction.MeanCycl
       (ActualCandidateConstruction.streamMeanStages B N0 j) := by
   rw [← ActualCandidateConstruction.meanStreamSupport_field M j]
   exact GermCandidateAssembly.angularSupport_axisZeroOn outgoing.data.h_pos outgoing.data.h_lt_half
-    _
+      _
 
 /-! ## The actual native run supplies every mean and signed request -/
 
+/-- Run data, bundling `invariant`, `step`, `particular`. -/
 noncomputable def runData (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     ActualStageEstimates.RunData B N0 where
   invariant := ActualCyclePreservation.state_invariant B N0 hN
-  step := ActualCyclePreservation.state_stepData B N0 hN
+  step := ActualCyclePreservation.stateStepData B N0 hN
   particular := ActualCyclePreservation.state_particularInputs B N0 hN
 
 theorem meanCycleInput (B N0 : ℕ)
@@ -520,6 +529,7 @@ theorem postParticularResult (B N0 : ℕ)
     (ActualCyclePreservation.state_particularInputs B N0 hN j)
     (ActualIterationLedger.sigma_admissible j)
 
+/-- Signed potential, constructed using `ActualSignedExterior.cyclePotential`. -/
 noncomputable def signedPotential (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) : VelocityField :=
   ActualSignedExterior.cyclePotential (ActualCandidateConstruction.cycle B N0 j)
@@ -527,6 +537,7 @@ noncomputable def signedPotential (B N0 : ℕ)
     (ActualSignedPhysicalBinding.afterParticular_pressure (ActualCandidateConstruction.cycle B N0 j)
       (postParticularResult B N0 hN j).primitive)
 
+/-- Signed pressure, constructed using `ActualSignedExterior.cyclePressure`. -/
 noncomputable def signedPressure (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) : PressureField :=
   ActualSignedExterior.cyclePressure (ActualCandidateConstruction.cycle B N0 j)
@@ -534,31 +545,41 @@ noncomputable def signedPressure (B N0 : ℕ)
     (ActualSignedPhysicalBinding.afterParticular_pressure (ActualCandidateConstruction.cycle B N0 j)
       (postParticularResult B N0 hN j).primitive)
 
+/-- Positive potential, given by `particularPotential B N0 j + signedPotential B N0 hN j +
+ActualCandidateConstruction.streamMeanStages B N0 (j + 1)`. -/
 noncomputable def positivePotential (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) : VelocityField :=
   particularPotential B N0 j + signedPotential B N0 hN j +
     ActualCandidateConstruction.streamMeanStages B N0 (j + 1)
 
+/-- Positive pressure, given by `particularPressure B N0 j + signedPressure B N0 hN j +
+ActualCandidateConstruction.pressureMeanStages B N0 (j + 1)`. -/
 noncomputable def positivePressure (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) : PressureField :=
   particularPressure B N0 j + signedPressure B N0 hN j +
     ActualCandidateConstruction.pressureMeanStages B N0 (j + 1)
 
+/-- Direct data, given by `ActualCandidateConstruction.directData (meanCycleInput B N0 hN)`. -/
 noncomputable def directData (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     ℕ → DirectAngularDiagonal.AngularData
       (LocalAngularDiagonal.localSlowDomain h (ActualCandidateConstruction.qbig B N0)) :=
   ActualCandidateConstruction.directData (meanCycleInput B N0 hN)
 
+/-- Potential stages, given by `GermCandidateAssembly.potentialStages certificate modulation
+upper B (initialPotential B N0) (positivePotential B N0 hN)`. -/
 noncomputable def potentialStages (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) : ℕ → VelocityField :=
   GermCandidateAssembly.potentialStages certificate modulation upper B
     (initialPotential B N0) (positivePotential B N0 hN)
 
+/-- Direct stages, given by `LocalAngularDiagonal.rawSeries (directData B N0 hN)`. -/
 noncomputable def directStages (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) : ℕ → VelocityField :=
   LocalAngularDiagonal.rawSeries (directData B N0 hN)
 
+/-- Pressure stages, given by `MixedCandidateAssembly.pressureStages certificate modulation
+upper B (initialPressure B N0) (positivePressure B N0 hN)`. -/
 noncomputable def pressureStages (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) : ℕ → PressureField :=
   MixedCandidateAssembly.pressureStages certificate modulation upper B
@@ -595,7 +616,7 @@ theorem particular_smooth (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
     ContDiffOn ℝ ∞ (particularPotential B N0 j) (ActualCandidateConstruction.physicalDomain B N0) ∧
       ContDiffOn ℝ ∞ (particularPressure B N0 j) (ActualCandidateConstruction.physicalDomain B N0)
-        :=
+          :=
   ActualValidBandWaves.fields_smooth
     (ActualCyclePreservation.state_invariant B N0 hN j)
     (ActualCyclePreservation.state_coherent B N0 hN j) hN
@@ -640,11 +661,11 @@ theorem signed_zero_germs (B N0 : ℕ)
       (signedPressure B N0 hN j =ᶠ[𝓝 w] fun _ => 0) :=
   ActualSignedExterior.cycle_zero_germs _ _ _ ht he
 
-theorem support_of_exterior_zero {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+theorem support_of_exterior_zero {V : Type*} [NormedAddCommGroup V]
     {f : SpaceTime → V} {qbig : ℝ}
     (hz : ∀ w, w ∈ PhysicalWaveSum.preterminal → w ∉ ActualPolarCoverage.active → f w = 0) :
     MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-      qbig f := by
+        qbig f := by
   intro w ht _ hn
   have ha : w ∈ ActualPolarCoverage.active := by
     by_contra hna
@@ -693,7 +714,7 @@ theorem positivePressure_support (B N0 : ℕ)
   PhysicalStageSupport.support_add
     (PhysicalStageSupport.support_add (particular_support B N0 hN j).2 (signed_support B N0 hN j).2)
     (ActualCandidateConstruction.pressureMeanStages_shrinkingSupport (meanCycleInput B N0 hN) (j +
-      1))
+        1))
 
 theorem directStages_support (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
@@ -729,7 +750,7 @@ theorem exteriorStages (B N0 : ℕ)
       (potentialStages B N0 hN) (directStages B N0 hN) (pressureStages B N0 hN) := by
   have hsub {w : SpaceTime}
       (hw : w ∈ ActualExteriorPrefix.exteriorDomain (ActualCandidateConstruction.residualBand B
-        N0)) :
+          N0)) :
       w ∈ ActualCandidateConstruction.physicalDomain B N0 :=
     ⟨hw.1.1, hw.2.2.trans_le (ActualPrimaryCovariance.Q_antitone
       (ActualCandidateConstruction.firstBand_le_residualBand B N0))⟩
@@ -819,22 +840,22 @@ theorem representations_of_signed_eqOn (B N0 : ℕ)
     rw [potentialStages_succ]
     change particularPotential B N0 j w + (W.potential j).vector w +
         ((ActualMeanPhysicalData.initialCycleData (meanCycleInput B N0 hN)).temporalFamily
-          j).angularField w +
+            j).angularField w +
         ((ActualMeanPhysicalData.initialCycleData (meanCycleInput B N0 hN)).rankFamily
-          j).angularField w = _
+            j).angularField w = _
     erw [hA j hw, positivePotential,
       ActualCandidateConstruction.streamMeanStages_succ (meanCycleInput B N0 hN),
       ActualMeanPhysicalData.CycleData.stream_angularField]
     simp only [Pi.add_apply, add_assoc]
   · intro j w _
     rw [directStages_eq, ActualCandidateConstruction.angularMeanStages_succ (meanCycleInput B N0
-      hN)]
+        hN)]
     rfl
   · intro j w hw
     rw [pressureStages_succ]
     change particularPressure B N0 j w + (W.pressure j).pressure w +
         ((ActualMeanPhysicalData.initialCycleData (meanCycleInput B N0 hN)).pressureIncrementFamily
-          j).field w = _
+            j).field w = _
     rw [hP j hw, positivePressure,
       ActualCandidateConstruction.pressureMeanStages_succ (meanCycleInput B N0 hN)]
     rfl
@@ -963,7 +984,7 @@ theorem zerothPotential_on_chart (B N0 : ℕ)
     InitializedPhysicalBackground.spatialCurl_add_on hU hwave hmean hw.1
   calc
     _ = SpatialCurl.spatialCurl (TailGaugePotential.finalPotential certificate modulation upper B)
-      w +
+        w +
         SpatialCurl.spatialCurl (initialPotential B N0) w :=
       InitializedPhysicalBackground.spatialCurl_add_on hU hb (initialPotential_smooth B N0) hw.1
     _ = ActualCandidateConstruction.chartBaseVelocity B a i n w +
@@ -1008,7 +1029,7 @@ theorem signedPotential_on_chart (B N0 : ℕ)
   ActualSignedPhysicalCoherence.cyclePotential_curl (ActualCandidateConstruction.cycle B N0 j)
     (postParticularResult B N0 hN j).primitive
     (ActualSignedPhysicalBinding.afterParticular_pressure _ (postParticularResult B N0 hN
-      j).primitive)
+        j).primitive)
     (congrArg (fun u : CorrectionState.State ActualSignedCoherence.Point => u.pressure)
       (postParticularResult B N0 hN j).reconstructed)
     (postParticular_coherent B N0 hN j) (ActualCyclePreservation.state_coherent B N0 hN j).labels
@@ -1028,11 +1049,11 @@ theorem signedPressure_on_chart (B N0 : ℕ)
   ActualSignedPhysicalCoherence.cyclePressure_eq (ActualCandidateConstruction.cycle B N0 j)
     (postParticularResult B N0 hN j).primitive
     (ActualSignedPhysicalBinding.afterParticular_pressure _ (postParticularResult B N0 hN
-      j).primitive)
+        j).primitive)
     (congrArg (fun u : CorrectionState.State ActualSignedCoherence.Point => u.pressure)
       (postParticularResult B N0 hN j).reconstructed)
     (postParticular_coherent B N0 hN j) (ActualCyclePreservation.state_coherent B N0 hN j).labels n
-      ha i
+        ha i
 
 theorem positivePotential_curl (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
@@ -1093,7 +1114,7 @@ theorem positivePressure_on_chart (B N0 : ℕ)
 theorem stageRealizations (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     ActualPhysicalPrefixFields.StageRealizations B N0 (ActualCandidateConstruction.residualBand B
-      N0)
+        N0)
       (ActualCandidateConstruction.parameterSequence B N0) (ActualCandidateConstruction.qbig B N0)
       (potentialStages B N0 hN) (directStages B N0 hN) (pressureStages B N0 hN) := by
   refine ⟨?_, ?_, ?_⟩
@@ -1122,6 +1143,7 @@ theorem physicalData (B N0 : ℕ)
     (stages_smooth B N0 hN).1 (stages_smooth B N0 hN).2.1 (stages_smooth B N0 hN).2.2
     (ActualCandidateConstruction.cycle_representation B N0)
 
+/-- Estimates, constructed using `GluedStageEstimates.actualStageEstimates`. -/
 noncomputable def estimates (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :
     MixedCandidateAssembly.StageEstimates h (ActualCandidateConstruction.qbig B N0)
@@ -1176,7 +1198,7 @@ def Witness (B N0 : ℕ) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) 
         (TimeLocalization.activatedPressure (SpatialLocalization.periodicPressure PSum)) forcing ∧
       Tendsto (fun t => PeriodicSobolev.derivativeH3Norm (fun x =>
         TimeLocalization.activatedVelocity (MixedPeriodicAssembly.periodicVelocity ASum BSum) (t,
-          x)))
+            x)))
         (𝓝[<] (1 : ℝ)) atTop ∧
       (∀ m : ℕ, ∀ K : ℝ, 0 ≤ K → ∃ C : ℝ, 0 < C ∧
         ∀ t : ℝ, 0 ≤ t → ∀ x : Space, ∀ directions : Fin m → Fin 4, ∀ j : Fin 3,
@@ -1192,26 +1214,29 @@ theorem witness (B N0 : ℕ) (hN : ActualCarrierGeometry.geometricThreshold ≤ 
     (ActualCandidateConstruction.qbig_pos B N0) (initialPotential B N0) (positivePotential B N0 hN)
     (directData B N0 hN) (initialPressure B N0) (positivePressure B N0 hN) (estimates B N0 hN)
     (initialPotential_support B N0) (positivePotential_support B N0 hN) (directStages_support B N0
-      hN)
+        hN)
     (initialPressure_support B N0) (positivePressure_support B N0 hN)
     (endpoints B N0 hN).potential (endpoints B N0 hN).direct (endpoints B N0 hN).pressure
     (initialPotential_axisZeroOn B N0) (positivePotential_axisZeroOn B N0 hN)
 
 /-! One closed choice fixes all three raw sequences together. -/
 
+/-- Selected potential stages, constructed using `potentialStages`. -/
 noncomputable def selectedPotentialStages : ℕ → VelocityField :=
   potentialStages ActualCandidateConstruction.selectedBudget
-    ActualCandidateConstruction.selectedThreshold
+      ActualCandidateConstruction.selectedThreshold
     ActualCandidateConstruction.selectedThreshold_geometry
 
+/-- Selected direct stages, constructed using `directStages`. -/
 noncomputable def selectedDirectStages : ℕ → VelocityField :=
   directStages ActualCandidateConstruction.selectedBudget
-    ActualCandidateConstruction.selectedThreshold
+      ActualCandidateConstruction.selectedThreshold
     ActualCandidateConstruction.selectedThreshold_geometry
 
+/-- Selected pressure stages, constructed using `pressureStages`. -/
 noncomputable def selectedPressureStages : ℕ → PressureField :=
   pressureStages ActualCandidateConstruction.selectedBudget
-    ActualCandidateConstruction.selectedThreshold
+      ActualCandidateConstruction.selectedThreshold
     ActualCandidateConstruction.selectedThreshold_geometry
 
 theorem selected_witness :

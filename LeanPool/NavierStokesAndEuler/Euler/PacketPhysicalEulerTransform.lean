@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Tactic.Measurability.Init
 
 /-! Actual differentiation through the oscillating phase graph and a parent
 flow. These identities convert the normalized lifted equation into the
 ordinary Euler momentum residual of the physical perturbation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,12 +27,14 @@ open Set InnerProductSpace ContinuousLinearMap EulerGraphPullback EulerLagrangia
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
+/-- Space time graph, given by `(fst ℝ ℝ E).prod ((graphMap k m).comp (snd ℝ ℝ E))`. -/
 def spaceTimeGraph (k : ℝ) (m : E) : (ℝ × E) →L[ℝ] (ℝ × (E × ℝ)) :=
   (fst ℝ ℝ E).prod ((graphMap k m).comp (snd ℝ ℝ E))
 
 theorem spaceTimeGraph_apply (k : ℝ) (m : E) (q : ℝ × E) :
     spaceTimeGraph k m q = (q.1,(q.2,k*⟪m,q.2⟫_ℝ)) := rfl
 
+/-- Graph velocity, given by `κ • F q (z (spaceTimeGraph k m q))`. -/
 def graphVelocity (κ k : ℝ) (m : E) (F : ℝ × E → E →L[ℝ] E)
     (z : ℝ × (E × ℝ) → E) (q : ℝ × E) : E :=
   κ • F q (z (spaceTimeGraph k m q))
@@ -53,7 +60,7 @@ theorem graphVelocity_fderiv (κ k : ℝ) (m : E)
 
 /-- The normalized equation is exactly the ordinary Lagrangian perturbation
 equation after evaluation on the phase graph, with its actual derivatives. -/
-theorem graph_residual_identity (κ k : ℝ) (hκ : k*κ=1) (m : E)
+theorem graph_residual_identity (κ k : ℝ) (hκ : k * κ = 1) (m : E)
     (F : ℝ × E → E →L[ℝ] E) (z : ℝ × (E × ℝ) → E) (q : ℝ × E)
     (DF : (ℝ × E) →L[ℝ] (E →L[ℝ] E)) (Dz : (ℝ × (E × ℝ)) →L[ℝ] E)
     (hF : HasFDerivAt F DF q) (hz : HasFDerivAt z Dz (spaceTimeGraph k m q))
@@ -89,15 +96,15 @@ theorem euler_residual_of_pullback
     (u w : ℝ × E → E) (p q : ℝ × E → ℝ)
     (X G : ℝ × E → E) (Q : ℝ × E → ℝ) (t : ℝ) (x : E)
     (A : E ≃L[ℝ] E) (Du Dw DG : (ℝ × E) →L[ℝ] E)
-    (hXtime : HasDerivAt (fun s => X (s,x)) (u (t,X (t,x))) t)
-    (hXspace : HasFDerivAt (fun y => X (t,y)) A.toContinuousLinearMap x)
-    (hu : HasFDerivAt u Du (t,X (t,x))) (hw : HasFDerivAt w Dw (t,X (t,x)))
-    (hG : HasFDerivAt G DG (t,x))
-    (hp : DifferentiableAt ℝ (fun y => p (t,y)) (X (t,x)))
-    (hq : DifferentiableAt ℝ (fun y => q (t,y)) (X (t,x)))
-    (hwX : ∀ s y, w (s,X (s,y)) = G (s,y))
-    (hqX : ∀ y, q (t,X (t,y)) = Q (t,y))
-    (hparent : momentumResidual u p (t,X (t,x)) = 0) :
+    (hXtime : HasDerivAt (fun s => X (s, x)) (u (t, X (t, x))) t)
+    (hXspace : HasFDerivAt (fun y => X (t, y)) A.toContinuousLinearMap x)
+    (hu : HasFDerivAt u Du (t, X (t, x))) (hw : HasFDerivAt w Dw (t, X (t, x)))
+    (hG : HasFDerivAt G DG (t, x))
+    (hp : DifferentiableAt ℝ (fun y => p (t, y)) (X (t, x)))
+    (hq : DifferentiableAt ℝ (fun y => q (t, y)) (X (t, x)))
+    (hwX : ∀ s y, w (s, X (s, y)) = G (s, y))
+    (hqX : ∀ y, q (t, X (t, y)) = Q (t, y))
+    (hparent : momentumResidual u p (t, X (t, x)) = 0) :
     momentumResidual (fun y => u y+w y) (fun y => p y+q y) (t,X (t,x)) =
       DG (1,0) + Du (0,G (t,x)) + DG (0,A.symm (G (t,x))) +
         A.symm.toContinuousLinearMap.adjoint (gradient (fun y => Q (t,y)) x) := by
@@ -122,12 +129,15 @@ theorem euler_residual_of_pullback
   rw [euler_perturbation_along_flow u w p q (fun s => X (s,x)) t Du Dw (DG (1,0))
     hXtime hu hw htime hp hq hparent,hwX t x,hadv,hpress]
 
+/-- Inverse coordinates, given by `(q.1,Y q)`. -/
 def inverseCoordinates (Y : ℝ × E → E) (q : ℝ × E) : ℝ × E := (q.1,Y q)
 
+/-- Physical velocity, defined pointwise by `graphVelocity κ k m F z (inverseCoordinates Y q)`. -/
 def physicalVelocity (κ k : ℝ) (m : E) (F : ℝ × E → E →L[ℝ] E)
     (z : ℝ × (E × ℝ) → E) (Y : ℝ × E → E) : ℝ × E → E :=
   fun q => graphVelocity κ k m F z (inverseCoordinates Y q)
 
+/-- Physical pressure, defined pointwise by `Q (inverseCoordinates Y q)`. -/
 def physicalPressure (Q : ℝ × E → ℝ) (Y : ℝ × E → E) : ℝ × E → ℝ :=
   fun q => Q (inverseCoordinates Y q)
 
@@ -135,28 +145,28 @@ def physicalPressure (Q : ℝ × E → ℝ) (Y : ℝ × E → E) : ℝ × E → 
 normalized lifted equation, rather than a physical PDE hypothesis, forces
 its Euler momentum residual to vanish. -/
 theorem physical_euler_momentum
-    (κ k : ℝ) (hκ : k*κ=1) (m : E)
+    (κ k : ℝ) (hκ : k * κ = 1) (m : E)
     (F : ℝ × E → E →L[ℝ] E) (z : ℝ × (E × ℝ) → E)
     (u : ℝ × E → E) (p Q : ℝ × E → ℝ) (X Y : ℝ × E → E)
     (t : ℝ) (x : E) (A : E ≃L[ℝ] E)
     (DF : (ℝ × E) →L[ℝ] (E →L[ℝ] E)) (Dz : (ℝ × (E × ℝ)) →L[ℝ] E)
     (Du : (ℝ × E) →L[ℝ] E) (P : E)
-    (hleft : ∀ s y, Y (s,X (s,y)) = y)
-    (hY : DifferentiableAt ℝ (inverseCoordinates Y) (t,X (t,x)))
-    (hXtime : HasDerivAt (fun s => X (s,x)) (u (t,X (t,x))) t)
-    (hXspace : HasFDerivAt (fun y => X (t,y)) A.toContinuousLinearMap x)
-    (hF : HasFDerivAt F DF (t,x)) (hz : HasFDerivAt z Dz (spaceTimeGraph k m (t,x)))
-    (hA : F (t,x) = A.toContinuousLinearMap)
-    (hu : HasFDerivAt u Du (t,X (t,x)))
-    (hp : DifferentiableAt ℝ (fun y => p (t,y)) (X (t,x)))
-    (hQ : DifferentiableAt ℝ (fun y => Q (t,y)) x)
-    (hstrain : ∀ v, Du (0,v) = DF (1,0) (A.symm v))
-    (hQgradient : gradient (fun y => Q (t,y)) x = κ • P)
-    (hparent : momentumResidual u p (t,X (t,x)) = 0)
-    (hlift : Dz (1,(0,0)) +
-      (2 : ℝ) • A.symm (DF (1,0) (z (spaceTimeGraph k m (t,x)))) +
-      Dz (0,(κ • z (spaceTimeGraph k m (t,x)),⟪m,z (spaceTimeGraph k m (t,x))⟫_ℝ)) +
-      κ • A.symm (DF (0,z (spaceTimeGraph k m (t,x))) (z (spaceTimeGraph k m (t,x)))) +
+    (hleft : ∀ s y, Y (s, X (s, y)) = y)
+    (hY : DifferentiableAt ℝ (inverseCoordinates Y) (t, X (t, x)))
+    (hXtime : HasDerivAt (fun s => X (s, x)) (u (t, X (t, x))) t)
+    (hXspace : HasFDerivAt (fun y => X (t, y)) A.toContinuousLinearMap x)
+    (hF : HasFDerivAt F DF (t, x)) (hz : HasFDerivAt z Dz (spaceTimeGraph k m (t, x)))
+    (hA : F (t, x) = A.toContinuousLinearMap)
+    (hu : HasFDerivAt u Du (t, X (t, x)))
+    (hp : DifferentiableAt ℝ (fun y => p (t, y)) (X (t, x)))
+    (hQ : DifferentiableAt ℝ (fun y => Q (t, y)) x)
+    (hstrain : ∀ v, Du (0, v) = DF (1, 0) (A.symm v))
+    (hQgradient : gradient (fun y => Q (t, y)) x = κ • P)
+    (hparent : momentumResidual u p (t, X (t, x)) = 0)
+    (hlift : Dz (1, (0, 0)) +
+      (2 : ℝ) • A.symm (DF (1, 0) (z (spaceTimeGraph k m (t, x)))) +
+      Dz (0, (κ • z (spaceTimeGraph k m (t, x)), ⟪m, z (spaceTimeGraph k m (t, x))⟫_ℝ)) +
+      κ • A.symm (DF (0, z (spaceTimeGraph k m (t, x))) (z (spaceTimeGraph k m (t, x)))) +
       A.symm (A.symm.toContinuousLinearMap.adjoint P) = 0) :
     momentumResidual (fun q => u q+physicalVelocity κ k m F z Y q)
       (fun q => p q+physicalPressure Q Y q) (t,X (t,x)) = 0 := by

@@ -6,9 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketSourceTime
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 Pointwise bounds for the literal scale expressions in (37)--(39).  They
@@ -16,13 +18,18 @@ exhibit a finite list of exponential costs to which the existing uniform
 scale-choice theorem applies.  The estimates here contain no field data.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
 namespace EulerPacketSourceScaleBounds
 
-open Real EulerScale EulerPacketScaleGeometry EulerPacketSourceScales EulerPacketSourceTime
+open Real EulerPacketSourceScales EulerPacketSourceTime
 
+/-- Monomial cost, given by `C * ((J + n : ℕ) : ℝ)^p * (x n)^q * exp (-b * (x n / ((J + n : ℕ) :
+ℝ)^a) + c * (x n / ((J - d + n : ℕ) : ℝ)^B))`. -/
 def monomialCost (J d B : ℕ) (a b c C : ℝ) (p q : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   C * ((J + n : ℕ) : ℝ)^p * (x n)^q *
     exp (-b * (x n / ((J + n : ℕ) : ℝ)^a) +
@@ -99,12 +106,12 @@ theorem sourceCoefficientError_bound (J : ℕ) (hJ : 3 ≤ J) (C c : ℝ)
   have hs16 := mul_le_mul_of_nonneg_left hs (by norm_num : (0:ℝ) ≤ 16)
   have hsm := theta_weighted_monomial_bound J 2 9 7 (1/2) 2 128 C 0 0 (A+1) x n hJ1 hC
     (by norm_num) hx
-  have hshear : 16*(sourceEpsilon J x n*sourceTheta J C x n*sourceOlderGradient J x n^2)*
+  have hshear : 16*(sourceEpsilon J x n*sourceTheta J C x n*sourceOlderGradient J x n^2) *
       sourceTheta J C x n^A ≤
       monomialCost J 2 9 7 (1/2) 2 (128*(2*C)^(A+1)) (2*(A+1)) (2*(A+1)) x n := by
     apply le_trans _ (by simpa only [Nat.zero_add] using hsm)
     convert! hs16 using 1 <;> simp only [monomialCost, rpow_ofNat, pow_zero, mul_one, pow_succ] <;>
-      ring
+        ring
   have hp := mul_le_mul_of_nonneg_right
     (sourcePriorError_bound J hJ x n (hxp n)) (pow_nonneg hθ A)
   have hp16 := mul_le_mul_of_nonneg_left hp (by norm_num : (0:ℝ) ≤ 16)
@@ -114,7 +121,7 @@ theorem sourceCoefficientError_bound (J : ℕ) (hJ : 3 ≤ J) (C c : ℝ)
       monomialCost J 0 5 4 (1/4) 0 (16*(2*C)^A) (2*A) (2*A) x n := by
     apply le_trans _ (by simpa only [Nat.zero_add] using hpm)
     simpa only [monomialCost, rpow_ofNat, zero_mul, add_zero, pow_zero, mul_one, mul_assoc] using
-      hp16
+        hp16
   have hn := mul_le_mul_of_nonneg_right
     (sourceNeighborError_bound J hJ c hc x n (hxp n)) (pow_nonneg hθ A)
   have hn16 := mul_le_mul_of_nonneg_left hn (by norm_num : (0:ℝ) ≤ 16)
@@ -132,7 +139,7 @@ theorem sourceCoefficientError_bound (J : ℕ) (hJ : 3 ≤ J) (C c : ℝ)
 theorem sourceExtraTime_bound (J : ℕ) (hJ : 1 ≤ J) (C : ℝ) (hC : 1 ≤ C)
     (A : ℕ) (x : ℕ → ℝ) (hx : ∀ n, 1 ≤ x n) (n : ℕ)
     (a : ℝ) (ha : 0 ≤ a) (ha₂ : a ≤ 2) :
-    2*sqrt (a*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J x n*
+    2*sqrt (a*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J x n *
       sourceTheta J C x n^A ≤
       monomialCost J 1 7 5 (1/2) (1/2) (48*(2*C)^A) (6+2*A) (2+2*A) x n := by
   have hθ : 0 ≤ sourceTheta J C x n := le_trans zero_le_one (sourceTheta_bounds hJ hC hx n).1
@@ -166,7 +173,7 @@ theorem sourceParentSquareRatio_eq (J : ℕ) (x : ℕ → ℝ) (n : ℕ) :
   ring
 
 theorem sourceGoodCost_bound (J : ℕ) (hJ : 3 ≤ J) (x : ℕ → ℝ) (n : ℕ) (hx : 0 ≤ x n) :
-    exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5)*
+    exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5) *
       exp (x n/((J-1+n : ℕ) : ℝ)^7) ≤ monomialCost J 1 5 3 1 2 1 0 0 x n := by
   have hp : (1 : ℝ) ≤ (J-1+n : ℕ) := by exact_mod_cast (show 1 ≤ J-1+n by omega)
   have hpj : ((J-1+n : ℕ) : ℝ) ≤ (J+n : ℕ) := by exact_mod_cast (show J-1+n ≤ J+n by omega)

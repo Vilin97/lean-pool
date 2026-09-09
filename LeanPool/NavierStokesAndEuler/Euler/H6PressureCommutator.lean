@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
 
+/-! Positive external-order commutators in actual fixed-order Sobolev blocks. -/
+
 @[expose] public section
 
-/-! Positive external-order commutators in actual fixed-order Sobolev blocks. -/
 
 noncomputable section
 
@@ -24,7 +25,7 @@ variable (period : ℝ) [Fact (0 < period)] {directions : Fin 4 → LiftTangent}
 
 /-- The zero field has a genuine strong Sobolev jet at every finite order. -/
 def zeroJet : (q : ℕ) → EulerSpatialSobolevInverse.SpatialJet period directions q (0 : LiftL2
-  period)
+    period)
   | 0 => .zero 0
   | q + 1 => .succ (fun _ => 0) (fun _ => zeroJet q) (fun _ => by
       simpa only [map_zero] using hasDerivAt_const (0 : ℝ) (0 : LiftL2 period))
@@ -61,13 +62,13 @@ def commutatorBlock {s : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
 theorem commutatorBlock_zero {s q : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f) : commutatorBlock K J q 0 = 0
-      := by
+        := by
   simp [commutatorBlock]
 
 theorem commutatorBlock_nonneg {s q n : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f) : 0 ≤ commutatorBlock K J q n
-      :=
+        :=
   Finset.sum_nonneg (fun _ _ => sobolevSize_nonneg _ _)
 
 /-- Truncation preserves every valid external commutator as an actual L² field. -/
@@ -92,7 +93,7 @@ theorem commutatorBlock_succ_le {s q n : ℕ} {A : SmoothCoefficient period} {f 
       | .succ _ lowerA _, .succ _ lowerF _ =>
           ∑ i, (commutatorBlock K.truncate (lowerF i) q n +
             blockNorm period (EulerSpatialSobolevInverse.SpatialJet.multiply (lowerA i) J.truncate)
-              q n) := by
+                q n) := by
   cases K with
   | succ dA lowerA hA =>
     cases J with
@@ -121,7 +122,7 @@ theorem commutatorBlock_succ_le {s q n : ℕ} {A : SmoothCoefficient period} {f 
       exact sobolevSize_add_le
         (commutatorJet K.truncate (lowerF i) w h)
         (SpatialJet.derivativeJet (EulerSpatialSobolevInverse.SpatialJet.multiply (lowerA i)
-          J.truncate) w h)
+            J.truncate) w h)
 
 /-- The complete external commutator estimate has only positive coefficient derivative orders. -/
 theorem commutatorBlock_bound {s q n : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
@@ -144,24 +145,24 @@ theorem commutatorBlock_bound {s q n : ℕ} {A : SmoothCoefficient period} {f : 
           have ht : ∀ i,
               commutatorBlock K.truncate (lowerF i) q n +
                 blockNorm period (EulerSpatialSobolevInverse.SpatialJet.multiply (lowerA i)
-                  J.truncate) q n ≤
+                    J.truncate) q n ≤
               commutatorConvolution (coefficientBlock period K q) (blockNorm period (lowerF i) q) n
-                +
+                  +
                 leibnizConvolution (coefficientBlock period (lowerA i) q) (blockNorm period J q) n
-                  := by
+                    := by
             intro i
             have hleft := ih K.truncate (lowerF i) (by omega : n + q ≤ s)
             have hright := multiply_blockNorm_bound (lowerA i) J.truncate (by omega : n + q ≤ s)
             have heqL : commutatorConvolution (coefficientBlock period K.truncate q)
                 (blockNorm period (lowerF i) q) n =
                 commutatorConvolution (coefficientBlock period K q) (blockNorm period (lowerF i) q)
-                  n :=
+                    n :=
               commutatorConvolution_congr _ _ _ _ n
                 (fun l hl => coefficientBlock_truncate K (by omega)) (fun _ _ => rfl)
             have heqR : leibnizConvolution (coefficientBlock period (lowerA i) q)
                 (blockNorm period J.truncate q) n =
                 leibnizConvolution (coefficientBlock period (lowerA i) q) (blockNorm period J q) n
-                  :=
+                    :=
               leibnizConvolution_congr _ _ _ _ n
                 (fun _ _ => rfl) (fun l hl => blockNorm_truncate J (by omega))
             rw [heqL] at hleft
@@ -170,21 +171,21 @@ theorem commutatorBlock_bound {s q n : ℕ} {A : SmoothCoefficient period} {f : 
           calc
             _ ≤ ∑ i, (commutatorBlock K.truncate (lowerF i) q n +
                 blockNorm period (EulerSpatialSobolevInverse.SpatialJet.multiply (lowerA i)
-                  J.truncate) q n) :=
+                    J.truncate) q n) :=
               commutatorBlock_succ_le K J (by omega)
             _ ≤ ∑ i, (commutatorConvolution (coefficientBlock period K q)
                   (blockNorm period (lowerF i) q) n +
                 leibnizConvolution (coefficientBlock period (lowerA i) q) (blockNorm period J q) n)
-                  :=
+                    :=
               Finset.sum_le_sum (fun i _ => ht i)
             _ = commutatorConvolution (coefficientBlock period K q)
                   (fun l => ∑ i, blockNorm period (lowerF i) q l) n +
                 leibnizConvolution (fun l => ∑ i, coefficientBlock period (lowerA i) q l)
                   (blockNorm period J q) n := by
               rw [Finset.sum_add_distrib, sum_commutatorConvolution_right,
-                sum_leibnizConvolution_left]
+                  sum_leibnizConvolution_left]
             _ = commutatorConvolution (coefficientBlock period K q) (blockNorm period J q) (n + 1)
-              := by
+                := by
               rw [commutatorConvolution_succ]
               congr 2
               · funext l; exact (blockNorm_succ J q l).symm

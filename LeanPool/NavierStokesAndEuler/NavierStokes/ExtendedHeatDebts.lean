@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatProfileExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricTerminalCompensation
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # Literal heat debts on an open physical parameter domain
@@ -19,6 +19,9 @@ three debts remain the actual improper integrals of the edited outgoing
 profile. All differentiated kernels and their integrable majorants are
 derived from that extension.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,6 +41,8 @@ section IntegralChain
 
 variable {α : Type*} [MeasurableSpace α] {μ : Measure α} {J : ℕ → ℝ → α → ℝ}
 
+/-- Chain dominated, given by `∀ n L, 0 < L → ∃ b : α → ℝ, Integrable b μ ∧ ∀ᵐ t ∂μ, ∀ ν : ℝ,
+|ν| ≤ L → ‖J n ν t‖ ≤ b t`. -/
 noncomputable def ChainDominated (J : ℕ → ℝ → α → ℝ) (μ : Measure α) : Prop :=
   ∀ n L, 0 < L → ∃ b : α → ℝ, Integrable b μ ∧
     ∀ᵐ t ∂μ, ∀ ν : ℝ, |ν| ≤ L → ‖J n ν t‖ ≤ b t
@@ -89,21 +94,28 @@ end IntegralChain
 
 /-! ## The actual extended edit and all its diffusion derivatives -/
 
+/-- Correction, given by `switch K X * (HeatProfileExtension.scaledProfile (1 + h) X ν - 1)`. -/
 noncomputable def correction (h K ν X : ℝ) : ℝ :=
   switch K X * (HeatProfileExtension.scaledProfile (1 + h) X ν - 1)
 
+/-- Multiplier, given by `1 + correction h K ν X`. -/
 noncomputable def multiplier (h ν K X : ℝ) : ℝ := 1 + correction h K ν X
 
+/-- Edit, given by `E X * multiplier h ν K X`. -/
 noncomputable def edit (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := E X * multiplier h ν K X
 
+/-- Change, given by `edit E h ν K X - E X`. -/
 noncomputable def change (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := edit E h ν K X - E X
 
+/-- Square change, given by `edit E h ν K X ^ 2 - E X ^ 2`. -/
 noncomputable def squareChange (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
   edit E h ν K X ^ 2 - E X ^ 2
 
+/-- Correction jet, given by `iteratedDeriv n (fun u => correction h K u X) ν`. -/
 noncomputable def correctionJet (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
   iteratedDeriv n (fun u => correction h K u X) ν
 
+/-- Correction bound, with branches according to `n = 0`. -/
 noncomputable def correctionBound (h L : ℝ) (n : ℕ) : ℝ :=
   if n = 0 then 2 * HeatProfileExtension.derivativeBound (1 + h) 1 * L
   else 2 ^ n * HeatProfileExtension.derivativeBound (1 + h) n
@@ -209,10 +221,14 @@ theorem correctionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
           exact hsw.2
         _ = correctionBound h L (n + 1) / X := by rw [correctionBound_succ]; ring
 
+/-- Square correction jet, given by `2 * correctionJet h K n ν X + jetProduct (fun i =>
+correctionJet h K i ν X) (fun i => correctionJet h K i ν X) n`. -/
 noncomputable def squareCorrectionJet (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
   2 * correctionJet h K n ν X +
     jetProduct (fun i => correctionJet h K i ν X) (fun i => correctionJet h K i ν X) n
 
+/-- Square correction bound, given by `2 * correctionBound h L n + jetProduct (correctionBound h
+L) (correctionBound h L) n`. -/
 noncomputable def squareCorrectionBound (h L : ℝ) (n : ℕ) : ℝ :=
   2 * correctionBound h L n + jetProduct (correctionBound h L) (correctionBound h L) n
 
@@ -257,9 +273,11 @@ theorem squareCorrectionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
           (fun i => correctionJet_bound hh hX hν i) (fun i => correctionJet_bound hh hX hν i) n)
     _ = _ := by unfold squareCorrectionBound; ring
 
+/-- Edit jet, with branches according to `square`. -/
 noncomputable def editJet (square : Bool) (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
   if square then squareCorrectionJet h K n ν X else correctionJet h K n ν X
 
+/-- Edit bound, with branches according to `square`. -/
 noncomputable def editBound (square : Bool) (h L : ℝ) (n : ℕ) : ℝ :=
   if square then squareCorrectionBound h L n else correctionBound h L n
 
@@ -290,9 +308,11 @@ theorem editJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
 
 /-! ## Literal weighted improper integrals -/
 
+/-- Weighted jet, given by `X ^ q * W X * editJet square h K n ν X`. -/
 noncomputable def weightedJet (W : ℝ → ℝ) (square : Bool) (h K q : ℝ)
     (n : ℕ) (ν X : ℝ) : ℝ := X ^ q * W X * editJet square h K n ν X
 
+/-- Weighted debt jet, given by `∫ X in Ioi K, weightedJet W square h K q n ν X`. -/
 noncomputable def weightedDebtJet (W : ℝ → ℝ) (square : Bool) (h K q : ℝ)
     (n : ℕ) (ν : ℝ) : ℝ := ∫ X in Ioi K, weightedJet W square h K q n ν X
 
@@ -395,9 +415,12 @@ end Weighted
 
 /-! ## Specialization to the actual outgoing profile -/
 
+/-- Nu debt jet, given by `weightedDebtJet (tailWeight d K square) square d.h K q n ν`. -/
 noncomputable def nuDebtJet (d : TailData) (K : ℝ) (square : Bool) (q : ℝ)
     (n : ℕ) (ν : ℝ) : ℝ := weightedDebtJet (tailWeight d K square) square d.h K q n ν
 
+/-- Nu constant, given by `tailSize d square * editBound square d.h L n / (-tailDecay d square -
+q)`. -/
 noncomputable def nuConstant (d : TailData) (L : ℝ) (square : Bool) (q : ℝ) (n : ℕ) : ℝ :=
   tailSize d square * editBound square d.h L n / (-tailDecay d square - q)
 
@@ -443,12 +466,18 @@ theorem nuDebtJet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
 noncomputable def physicalEdit (d : TailData) (K η X : ℝ) : ℝ :=
   edit (outgoingProfile d K η) d.h (diffusion η) K X
 
+/-- Physical pressure, given by `∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h
+(diffusion η) K X / X`. -/
 noncomputable def physicalPressure (d : TailData) (K η : ℝ) : ℝ :=
   ∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h (diffusion η) K X / X
 
+/-- Physical energy, given by `∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h (diffusion
+η) K X`. -/
 noncomputable def physicalEnergy (d : TailData) (K η : ℝ) : ℝ :=
   ∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h (diffusion η) K X
 
+/-- Physical angular, given by `∫ X in Ioi K, Real.sqrt (2 * X) * change (outgoingProfile d K η)
+d.h (diffusion η) K X`. -/
 noncomputable def physicalAngular (d : TailData) (K η : ℝ) : ℝ :=
   ∫ X in Ioi K, Real.sqrt (2 * X) * change (outgoingProfile d K η) d.h (diffusion η) K X
 
@@ -591,6 +620,7 @@ theorem nuDebt_joint_contDiffOn (d : TailData) (square : Bool) {q : ℝ}
   have hout := hp.mul ((nuDebt_contDiff d (K := 1) le_rfl square hq).comp_contDiffOn hr)
   exact hout.congr (fun p hp => nuDebt_scale d hp.1 square q p.2)
 
+/-- Eta debt, given by `nuDebtJet d K square q 0 (diffusion η)`. -/
 noncomputable def etaDebt (d : TailData) (K : ℝ) (square : Bool) (q η : ℝ) : ℝ :=
   nuDebtJet d K square q 0 (diffusion η)
 
@@ -628,11 +658,12 @@ theorem physicalAngular_joint_contDiffOn (d : TailData) :
     ContDiffOn ℝ ∞ (fun p : ℝ × ℝ => physicalAngular d p.1 p.2)
       (Ioi 0 ×ˢ (univ : Set ℝ)) :=
   (contDiffOn_const.mul (etaDebt_joint_contDiffOn d false (ParametricHeatTail.angular_decay
-    d))).congr
+      d))).congr
     (fun p hp => physicalAngular_eq d hp.1 p.2)
 
 /-! ## Uniform estimates on a fixed enlarged physical band -/
 
+/-- Enlarged band, given by `Icc (-(3 / 2 : ℝ)) (3 / 2)`. -/
 noncomputable def enlargedBand : Set ℝ := Icc (-(3 / 2 : ℝ)) (3 / 2)
 
 theorem physicalBand_subset_enlargedBand : Icc (-1 : ℝ) 1 ⊆ enlargedBand := by
@@ -665,6 +696,8 @@ theorem enlargedBand_diffusion_derivative_bound {η : ℝ} (hη : η ∈ enlarge
     simp only [norm_zero]
     positivity
 
+/-- Eta constant, given by `(n.factorial : ℝ) * (∑ i ∈ Finset.range (n + 1), nuConstant d 3
+square q i) * 3 ^ n`. -/
 noncomputable def etaConstant (d : TailData) (square : Bool) (q : ℝ) (n : ℕ) : ℝ :=
   (n.factorial : ℝ) * (∑ i ∈ Finset.range (n + 1), nuConstant d 3 square q i) * 3 ^ n
 
@@ -738,7 +771,7 @@ theorem physicalAngular_jet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K)
   rw [show physicalAngular d K = (fun η => Real.sqrt 2 * etaDebt d K false (1 / 2) η) from
     funext (physicalAngular_eq d (lt_of_lt_of_le zero_lt_one hK))]
   rw [iteratedDeriv_const_mul _ ((etaDebt_contDiff d hK false (ParametricHeatTail.angular_decay
-    d)).of_le
+      d)).of_le
     (ENat.natCast_le_of_coe_top_le_withTop le_rfl n)).contDiffAt,
     abs_mul, abs_of_nonneg (Real.sqrt_nonneg 2)]
   have hb' := mul_le_mul_of_nonneg_left
@@ -791,9 +824,12 @@ theorem exists_physical_debt_C1_bounds (d : TailData) :
   · exact mul_le_mul_of_nonneg_right (by linarith) (Real.sqrt_nonneg K)
   · exact mul_le_mul_of_nonneg_right (by linarith) (Real.sqrt_nonneg K)
 
+/-- Physical debt, given by `![physicalPressure d K η, physicalEnergy d K η, physicalAngular d K
+η]`. -/
 noncomputable def physicalDebt (d : TailData) (K η : ℝ) : TerminalCompensation.Coeff :=
   ![physicalPressure d K η, physicalEnergy d K η, physicalAngular d K η]
 
+/-- Normalized debt, given by `TerminalCompensation.scaledDebt K (physicalDebt d K η)`. -/
 noncomputable def normalizedDebt (d : TailData) (K η : ℝ) : TerminalCompensation.Coeff :=
   TerminalCompensation.scaledDebt K (physicalDebt d K η)
 
@@ -935,6 +971,8 @@ theorem actualIntegrand_joint_contDiffOn (d : TailData) {K : ℝ} (hK : 1 ≤ K)
   exact hn.comp ((diffusion_contDiff.comp_contDiffOn contDiffOn_fst).prodMk contDiffOn_snd)
     (fun p hp => ⟨mem_univ _, hp.2⟩)
 
+/-- Eta integrand jet, given by `iteratedDeriv n (fun θ => weightedJet (tailWeight d K square)
+square d.h K q 0 (diffusion θ) X) η`. -/
 noncomputable def etaIntegrandJet (d : TailData) (K : ℝ) (square : Bool) (q : ℝ)
     (n : ℕ) (η X : ℝ) : ℝ :=
   iteratedDeriv n (fun θ => weightedJet (tailWeight d K square) square d.h K q 0 (diffusion θ) X) η
@@ -943,7 +981,7 @@ theorem etaIntegrandJet_measurable (d : TailData) {K : ℝ} (hK : 1 ≤ K)
     (square : Bool) (q : ℝ) (n : ℕ) (η : ℝ) :
     AEStronglyMeasurable (etaIntegrandJet d K square q n η) (volume.restrict (Ioi K)) := by
   have hc := (partial_iteratedDeriv_contDiffOn (actualIntegrand_joint_contDiffOn d hK square q)
-    n).continuousOn
+      n).continuousOn
   have hi : ContinuousOn (fun X : ℝ => (η, X)) (Ioi K) :=
     (continuous_const.prodMk continuous_id).continuousOn
   have hcx := hc.comp hi (fun X (hX : X ∈ Ioi K) =>
@@ -1083,7 +1121,7 @@ theorem physical_debts_integrable (d : TailData) {K : ℝ} (hK : 1 ≤ K) (η : 
     filter_upwards [ae_restrict_mem measurableSet_Ioi] with X hX
     exact (energy_integrand_eq d hKp hX η).symm
   · apply ((etaIntegrandJet_integrable d hK false (ParametricHeatTail.angular_decay d) 0
-    η).const_mul
+      η).const_mul
       (Real.sqrt 2)).congr
     filter_upwards [ae_restrict_mem measurableSet_Ioi] with X hX
     exact (angular_integrand_eq d hKp hX η).symm
@@ -1129,16 +1167,16 @@ theorem physicalAngular_derivative_integral (d : TailData) {K : ℝ} (hK : 1 ≤
   rw [show physicalAngular d K = (fun θ => Real.sqrt 2 * etaDebt d K false (1 / 2) θ) from
       funext (physicalAngular_eq d hKp),
     iteratedDeriv_const_mul _ ((etaDebt_contDiff d hK false (ParametricHeatTail.angular_decay
-      d)).of_le
+        d)).of_le
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl n)).contDiffAt,
     etaDebt_derivative_integral d hK false (ParametricHeatTail.angular_decay d), ←
-      integral_const_mul]
+        integral_const_mul]
   apply setIntegral_congr_fun measurableSet_Ioi
   intro X hX
   dsimp only
   rw [show (fun θ => Real.sqrt (2 * X) * change (outgoingProfile d K θ) d.h (diffusion θ) K X) =
     (fun θ => Real.sqrt 2 * weightedJet (tailWeight d K false) false d.h K (1 / 2) 0 (diffusion θ)
-      X) from
+        X) from
       funext (angular_integrand_eq d hKp hX)]
   have hc := (weightedJet_zero_contDiff d.h_pos (tailWeight d K false) K (1 / 2) X false).comp
     diffusion_contDiff
@@ -1172,8 +1210,8 @@ theorem physicalBand_subset_openNeighborhood :
 theorem normalizedDebt_derivWithin (d : TailData) {K η : ℝ} (hK : 1 ≤ K)
     (hη : η ∈ enlargedBand) :
     derivWithin (normalizedDebt d K) enlargedBand η = deriv (normalizedDebt d K) η :=
-  (((normalizedDebt_contDiff d hK).differentiable (by simp)
-    η).hasDerivAt.hasDerivWithinAt).derivWithin
+  (((normalizedDebt_contDiff d hK).differentiable (by
+      simp) η).hasDerivAt.hasDerivWithinAt).derivWithin
     (enlargedBand_uniqueDiffOn η hη)
 
 /-- Direct input to the existing compact-parameter compensation solver. The

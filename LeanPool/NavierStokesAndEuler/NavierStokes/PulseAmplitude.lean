@@ -6,17 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingSchedule
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingTail
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TailEnergyBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingPulseBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialSchedule
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.MeasureTheory.Function.Jacobian
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Actual pulse energy and its scalar amplitude
@@ -25,6 +18,9 @@ The pulse constant is the integral of the constructed smooth pulse from
 `OutgoingSchedule`, rather than an abstract coefficient satisfying assumed
 bounds. All energy coefficients below refer to the actual outgoing profiles.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,7 +45,7 @@ theorem pulseRamp_lower {z : ℝ} (hz : 1 / 50 ≤ z) : z - 1 / 50 ≤ pulseRamp
   have hc : Continuous (fun t : ℝ => sigma (50 * t)) :=
     sigma_contDiff.continuous.comp (continuous_const.mul continuous_id)
   have hi := intervalIntegral.integral_mono_interval (μ := volume) (f := fun t : ℝ => sigma (50 *
-    t))
+      t))
     (by norm_num : (0 : ℝ) ≤ 1 / 50) hz le_rfl
     (Eventually.of_forall (fun _ => sigma_nonneg _)) (hc.intervalIntegrable 0 z)
   have he : (∫ t in (1 / 50 : ℝ)..z, sigma (50 * t)) = z - 1 / 50 := by
@@ -77,11 +73,14 @@ theorem mainPulse_lower {z : ℝ} (hz : 1 / 50 ≤ z) (hz' : z ≤ 10) :
     z - 1 / 50 ≤ mainPulse z := by
   simpa [mainPulse, sigma_zero (by linarith : z - 10 ≤ 0)] using pulseRamp_lower hz
 
+/-- Pulse constant, given by `∫ z in (0 : ℝ)..13, Real.exp (-2 * z) * mainPulse z ^ 2`. -/
 def pulseConstant : ℝ := ∫ z in (0 : ℝ)..13, Real.exp (-2 * z) * mainPulse z ^ 2
 
 theorem energyWeight_continuous : Continuous (fun z : ℝ => Real.exp (-2 * z)) :=
   Real.continuous_exp.comp (continuous_const.mul continuous_id)
 
+/-- Weighted square primitive, given by `-Real.exp (-2 * z) * ((z - a) ^ 2 / 2 + (z - a) / 2 + 1
+/ 4)`. -/
 def weightedSquarePrimitive (a z : ℝ) : ℝ :=
   -Real.exp (-2 * z) * ((z - a) ^ 2 / 2 + (z - a) / 2 + 1 / 4)
 
@@ -90,7 +89,7 @@ theorem weightedSquarePrimitive_hasDerivAt (a z : ℝ) :
   have ht := (hasDerivAt_id z).sub_const a
   have he := ((hasDerivAt_id z).const_mul (-2)).exp.fun_neg
   convert! he.fun_mul (((ht.fun_pow 2).div_const 2 |>.fun_add (ht.div_const 2)).add_const (1 / 4))
-    using 1
+      using 1
   simp only [id_eq]
   ring
 
@@ -154,16 +153,22 @@ theorem pulseConstant_bounds : 1 / 5 < pulseConstant ∧ pulseConstant ≤ 1 / 4
 
 /-! ## The actual affine correction and the actual pulse quadratic -/
 
+/-- Eta polynomial, given by `eta * (1 + eta ^ 2)`. -/
 def etaPolynomial (eta : ℝ) : ℝ := eta * (1 + eta ^ 2)
 
+/-- Prefix repair, given by `LocalizedMomentRepair.repair c.exponents c.lower c.upper (fun i =>
+-prefixCoefficient c i) (Real.exp y)`. -/
 def prefixRepair (c : Parameters) (y : ℝ) : ℝ :=
   LocalizedMomentRepair.repair c.exponents c.lower c.upper
     (fun i => -prefixCoefficient c i) (Real.exp y)
 
+/-- Amplitude repair, given by `LocalizedMomentRepair.repair c.exponents c.lower c.upper (fun i
+=> -mainMoment c i) (Real.exp y)`. -/
 def amplitudeRepair (c : Parameters) (y : ℝ) : ℝ :=
   LocalizedMomentRepair.repair c.exponents c.lower c.upper
     (fun i => -mainMoment c i) (Real.exp y)
 
+/-- Amplitude shape, given by `mainPulse (c.lam * y) + amplitudeRepair c y`. -/
 def amplitudeShape (c : Parameters) (y : ℝ) : ℝ :=
   mainPulse (c.lam * y) + amplitudeRepair c y
 
@@ -225,6 +230,7 @@ theorem mainPulse_mul_prefixRepair (c : Parameters) (y : ℝ) :
   rw [← prefixRepair_eq_correction] at he
   nlinarith
 
+/-- Pulse weight, given by `Real.exp (-2 * c.lam * y)`. -/
 def pulseWeight (c : Parameters) (y : ℝ) : ℝ := Real.exp (-2 * c.lam * y)
 
 theorem pulseWeight_continuous (c : Parameters) : Continuous (pulseWeight c) :=
@@ -235,15 +241,23 @@ theorem pulse_rescale_integral (c : Parameters) (f : ℝ → ℝ) :
   simpa only [smul_eq_mul, mul_zero, Parameters.pulseLength, mul_div_cancel₀ _ c.lam_pos.ne'] using
     intervalIntegral.smul_integral_comp_mul_left f c.lam (a := 0) (b := c.pulseLength)
 
+/-- Quadratic coefficient, given by `c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y *
+amplitudeShape c y ^ 2`. -/
 def quadraticCoefficient (c : Parameters) : ℝ :=
   c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y * amplitudeShape c y ^ 2
 
+/-- Linear coefficient, given by `2 * c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y *
+amplitudeShape c y * prefixRepair c y`. -/
 def linearCoefficient (c : Parameters) : ℝ :=
   2 * c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y * amplitudeShape c y * prefixRepair c y
 
+/-- Constant correction, given by `c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y *
+prefixRepair c y ^ 2`. -/
 def constantCorrection (c : Parameters) : ℝ :=
   c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y * prefixRepair c y ^ 2
 
+/-- Scaled pulse energy, given by `c.lam * ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y *
+(pulseRatio c (fun _ => A) (y, eta) ^ 2 - 1 / 2)`. -/
 def scaledPulseEnergy (c : Parameters) (A eta : ℝ) : ℝ :=
   c.lam * ∫ y in (0 : ℝ)..c.pulseLength,
     pulseWeight c y * (pulseRatio c (fun _ => A) (y, eta) ^ 2 - 1 / 2)
@@ -331,9 +345,11 @@ theorem scaledPulseEnergy_eq (c : Parameters) (A eta : ℝ) :
 
 /-! ## Exact prefix coefficients and uniform bounds -/
 
+/-- Core energy weight, given by `Real.exp y * radialAmplitude c.P c.dropLength c.lam y ^ 2`. -/
 def coreEnergyWeight (c : Parameters) (y : ℝ) : ℝ :=
   Real.exp y * radialAmplitude c.P c.dropLength c.lam y ^ 2
 
+/-- Normalization, given by `Real.exp c.pulseStart * pulseAmplitude c ^ 2`. -/
 def normalization (c : Parameters) : ℝ := Real.exp c.pulseStart * pulseAmplitude c ^ 2
 
 theorem normalization_pos (c : Parameters) : 0 < normalization c :=
@@ -348,7 +364,7 @@ theorem coreEnergyWeight_contDiff (c : Parameters) : ContDiff ℝ ∞ (coreEnerg
 theorem coreEnergyWeight_hasDerivAt (c : Parameters) (y : ℝ) :
     HasDerivAt (coreEnergyWeight c) (2 * slope c.dropLength c.lam y * coreEnergyWeight c y) y := by
   convert! (Real.hasDerivAt_exp y).fun_mul ((radialAmplitude_hasDerivAt c.P c.dropLength c.lam
-    y).fun_pow 2)
+      y).fun_pow 2)
     using 1
   simp only [coreEnergyWeight]
   ring
@@ -388,12 +404,18 @@ theorem initial_weight_bound (c : Parameters) :
   have h := prefix_weight_bound c (y := 0) le_rfl c.pulseStart_pos.le
   simpa [coreEnergyWeight, radialAmplitude, logAmplitude, primitive] using h
 
+/-- Prefix axial energy, given by `16 + ∫ y in (0 : ℝ)..c.pulseStart, Real.exp y *
+dropCoefficient c.m y ^ 2`. -/
 def prefixAxialEnergy (c : Parameters) : ℝ :=
   16 + ∫ y in (0 : ℝ)..c.pulseStart, Real.exp y * dropCoefficient c.m y ^ 2
 
+/-- Prefix angular energy, given by `(5 / 12) * c.P ^ 2 + ∫ y in (0 : ℝ)..c.pulseStart,
+coreEnergyWeight c y / 2`. -/
 def prefixAngularEnergy (c : Parameters) : ℝ :=
   (5 / 12) * c.P ^ 2 + ∫ y in (0 : ℝ)..c.pulseStart, coreEnergyWeight c y / 2
 
+/-- Prefix energy, given by `prefixAxialEnergy c * eta ^ 2 - prefixAngularEnergy c * shape eta ^
+2`. -/
 def prefixEnergy (c : Parameters) (eta : ℝ) : ℝ :=
   prefixAxialEnergy c * eta ^ 2 - prefixAngularEnergy c * shape eta ^ 2
 
@@ -445,13 +467,18 @@ theorem prefixAxialEnergy_bound (c : Parameters) :
 
 /-! ## The complete outgoing energy is an actual improper integral -/
 
+/-- Energy integrand, given by `Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 -
+OutgoingTail.finalAngular d (y, eta) ^ 2 / 2)`. -/
 def energyIntegrand (d : OutgoingTail.TailData) (A eta y : ℝ) : ℝ :=
   Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 -
     OutgoingTail.finalAngular d (y, eta) ^ 2 / 2)
 
+/-- Total energy, given by `∫ y, energyIntegrand d A eta y`. -/
 def totalEnergy (d : OutgoingTail.TailData) (A eta : ℝ) : ℝ :=
   ∫ y, energyIntegrand d A eta y
 
+/-- Tail energy, given by `∫ y in Ioi d.core.endpoint, Real.exp y * OutgoingTail.finalAngular d
+(y, eta) ^ 2`. -/
 def tailEnergy (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
   ∫ y in Ioi d.core.endpoint, Real.exp y * OutgoingTail.finalAngular d (y, eta) ^ 2
 
@@ -544,7 +571,7 @@ theorem energyIntegrand_integral_prefix (d : OutgoingTail.TailData) (A eta : ℝ
           ((continuous_const.fun_mul (Real.continuous_exp.fun_mul
             ((dropCoefficient_contDiff d.core.m_pos).continuous.fun_pow 2))).intervalIntegrable _ _)
           ((continuous_const.fun_mul ((coreEnergyWeight_contDiff d.core).continuous.div_const
-            2)).intervalIntegrable _ _),
+              2)).intervalIntegrable _ _),
           intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul]
   have hs := intervalIntegral.integral_Iic_sub_Iic
     (energyIntegrand_integrable_ideal d A eta)
@@ -592,7 +619,7 @@ theorem energyIntegrand_integral_pulse (d : OutgoingTail.TailData) (A eta : ℝ)
           (fun t => pulseWeight d.core t * (pulseRatio d.core (fun _ => A) (t, eta) ^ 2 - 1 / 2))]
       simp only [Parameters.endpoint, sub_self, add_sub_cancel_left]
       unfold scaledPulseEnergy
-      field_simp [d.core.lam_pos.ne'] ; ring_nf
+      field_simp [d.core.lam_pos.ne']; ring_nf
 
 theorem energyIntegrand_late (d : OutgoingTail.TailData) (A eta : ℝ) {y : ℝ}
     (hy : d.core.endpoint ≤ y) :
@@ -609,13 +636,13 @@ theorem totalEnergy_eq_of_integrable (d : OutgoingTail.TailData) (A eta : ℝ)
         tailEnergy d eta / 2 := by
   have hlate : IntegrableOn (energyIntegrand d A eta) (Ioi d.core.endpoint) := by
     refine IntegrableOn.congr_fun (s := Ioi d.core.endpoint) (htail.neg.div_const 2) ?_
-      measurableSet_Ioi
+        measurableSet_Ioi
     intro y hy
     exact (energyIntegrand_late d A eta hy.le).symm
   have hI : (∫ y in Ioi d.core.endpoint, energyIntegrand d A eta y) = -tailEnergy d eta / 2 := by
     calc
       _ = ∫ y in Ioi d.core.endpoint, -(Real.exp y * OutgoingTail.finalAngular d (y, eta) ^ 2) / 2
-        := by
+          := by
         apply setIntegral_congr_fun measurableSet_Ioi
         intro y hy
         exact energyIntegrand_late d A eta hy.le
@@ -641,16 +668,24 @@ theorem totalEnergy_eq (d : OutgoingTail.TailData) (A eta : ℝ) :
         tailEnergy d eta / 2 :=
   totalEnergy_eq_of_integrable d A eta (TailEnergyBounds.energyDensity_integrable_postPulse d eta)
 
+/-- Normalized prefix axial, given by `c.lam * prefixAxialEnergy c / normalization c`. -/
 def normalizedPrefixAxial (c : Parameters) : ℝ := c.lam * prefixAxialEnergy c / normalization c
+/-- Normalized prefix angular, given by `c.lam * prefixAngularEnergy c / normalization c`. -/
 def normalizedPrefixAngular (c : Parameters) : ℝ := c.lam * prefixAngularEnergy c / normalization c
+/-- Normalized tail, given by `d.core.lam * tailEnergy d eta / (2 * normalization d.core * shape
+eta ^ 2)`. -/
 def normalizedTail (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
   d.core.lam * tailEnergy d eta / (2 * normalization d.core * shape eta ^ 2)
 
+/-- Linear term, given by `linearCoefficient c * etaPolynomial eta`. -/
 def linearTerm (c : Parameters) (eta : ℝ) : ℝ := linearCoefficient c * etaPolynomial eta
+/-- Constant term as an element of `ℝ`. -/
 def constantTerm (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
   (constantCorrection d.core + normalizedPrefixAxial d.core) * etaPolynomial eta ^ 2 -
     RadialSchedule.pulseEnergyDebt - normalizedPrefixAngular d.core - normalizedTail d eta
 
+/-- Energy polynomial, given by `quadraticCoefficient d.core * A ^ 2 + linearTerm d.core eta * A
++ constantTerm d eta`. -/
 def energyPolynomial (d : OutgoingTail.TailData) (A eta : ℝ) : ℝ :=
   quadraticCoefficient d.core * A ^ 2 + linearTerm d.core eta * A + constantTerm d eta
 
@@ -672,7 +707,7 @@ theorem totalEnergy_normalized (d : OutgoingTail.TailData) (A eta : ℝ) :
     _ = scaledPulseEnergy d.core A eta +
         d.core.lam * prefixEnergy d.core eta / (normalization d.core * shape eta ^ 2) -
         d.core.lam * tailEnergy d eta / (2 * normalization d.core * shape eta ^ 2) := by
-      field_simp [hN, hf, d.core.lam_pos.ne'] ; ring
+      field_simp [hN, hf, d.core.lam_pos.ne']; ring
     _ = _ := by
       rw [hpre, scaledPulseEnergy_eq]
       unfold energyPolynomial linearTerm constantTerm normalizedTail
@@ -722,6 +757,8 @@ theorem negativeClamp_le (x : ℝ) : negativeClamp x ≤ -(1 / 10) := by
 theorem negativeClamp_neg (x : ℝ) : negativeClamp x < 0 :=
   lt_of_le_of_lt (negativeClamp_le x) (by norm_num)
 
+/-- Discriminant, given by `linearTerm d.core eta ^ 2 - 4 * quadraticCoefficient d.core *
+negativeClamp (constantTerm d eta)`. -/
 def discriminant (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
   linearTerm d.core eta ^ 2 -
     4 * quadraticCoefficient d.core * negativeClamp (constantTerm d eta)
@@ -787,6 +824,7 @@ theorem amplitude_totalEnergy_zero (d : OutgoingTail.TailData) (eta : ℝ)
 
 /-! ## Actual coefficient estimates for the paper's wait duration -/
 
+/-- Logarithmic rate, given by `lam * (1 + Real.log (1 / lam))`. -/
 def logarithmicRate (lam : ℝ) : ℝ := lam * (1 + Real.log (1 / lam))
 
 theorem log_inverse_nonneg (c : Parameters) : 0 ≤ Real.log (1 / c.lam) := by
@@ -841,6 +879,8 @@ theorem normalizedPrefix_bound_raw (c : Parameters) :
   unfold normalizedPrefixAxial normalizedPrefixAngular
   convert! hsum using 1 <;> ring
 
+/-- Prefix bound constant, given by `Real.exp ((Real.exp m + 12) / 5 + 120) * (16 * Real.exp
+(Real.exp m) / P ^ 2 + 5 / 12 + (Real.exp m + 12) / 2 + 30)`. -/
 def prefixBoundConstant (P m : ℝ) : ℝ :=
   Real.exp ((Real.exp m + 12) / 5 + 120) *
     (16 * Real.exp (Real.exp m) / P ^ 2 + 5 / 12 + (Real.exp m + 12) / 2 + 30)
@@ -1060,6 +1100,8 @@ theorem exp_inverse_bound {lam : ℝ} (hlam : 0 < lam) :
   have hm := mul_le_mul hlin hu (Real.exp_pos _).le (by positivity : 0 ≤ 4 * lam)
   nlinarith
 
+/-- Correction energy constant, given by `104 * OutgoingPulseBounds.correctionJetBound P m 0 ^
+2`. -/
 def correctionEnergyConstant (P m : ℝ) : ℝ :=
   104 * OutgoingPulseBounds.correctionJetBound P m 0 ^ 2
 
@@ -1081,7 +1123,7 @@ theorem correctionEnergy_bounds (c : Parameters) (hsmall : c.lam ≤ 1 / 120) :
   have h1 : ∀ y, |amplitudeRepair c y| ≤ M := fun y => (repairBasis_bound c hsmall y).2
   have hb0 := weighted_square_bound c (prefixRepair c) (prefixRepair_contDiff c).continuous M hM h0
   have hb1 := weighted_square_bound c (amplitudeRepair c) (amplitudeRepair_contDiff c).continuous M
-    hM h1
+      hM h1
   have hcross := weighted_product_bound c (amplitudeRepair c) (prefixRepair c) M hM h1 h0
   have hlin : linearCoefficient c = 2 * (c.lam *
       ∫ y in (0 : ℝ)..c.pulseLength, pulseWeight c y * amplitudeRepair c y * prefixRepair c y) := by
@@ -1111,6 +1153,8 @@ theorem correctionEnergy_bounds (c : Parameters) (hsmall : c.lam ≤ 1 / 120) :
   exact (mul_le_mul_of_nonneg_left hcross (by norm_num : (0 : ℝ) ≤ 2)).trans
     (by nlinarith [hlarge])
 
+/-- Error constant, given by `1 + prefixBoundConstant P m + correctionEnergyConstant P m + 2 *
+OutgoingTail.flattenLength + 4 * TailEnergyBounds.tailConstant`. -/
 def errorConstant (P m : ℝ) : ℝ :=
   1 + prefixBoundConstant P m + correctionEnergyConstant P m +
     2 * OutgoingTail.flattenLength + 4 * TailEnergyBounds.tailConstant
@@ -1136,6 +1180,7 @@ theorem errorConstant_ge {P : ℝ} (hP : 0 < P) (m : ℝ) :
   · linarith
   constructor <;> linarith
 
+/-- Error scale, given by `errorConstant c.P c.m * logarithmicRate c.lam`. -/
 def errorScale (c : Parameters) : ℝ := errorConstant c.P c.m * logarithmicRate c.lam
 
 theorem errorScale_pos (c : Parameters) : 0 < errorScale c :=
@@ -1183,10 +1228,10 @@ theorem numerical_coefficient_bounds (d : OutgoingTail.TailData) (eta e : ℝ)
     have hb := abs_le.mp hq.1
     nlinarith [sq_nonneg (etaPolynomial eta)]
   have hprod0 : 0 ≤ (constantCorrection d.core + normalizedPrefixAxial d.core) * etaPolynomial eta
-    ^ 2 :=
+      ^ 2 :=
     mul_nonneg (add_nonneg h.correction_nonneg h.prefix_axial_nonneg) (sq_nonneg _)
   have hprod : (constantCorrection d.core + normalizedPrefixAxial d.core) * etaPolynomial eta ^ 2 ≤
-    8 * e := by
+      8 * e := by
     have hm := mul_le_mul (add_le_add h.correction_error h.prefix_axial_error) hq2
       (sq_nonneg (etaPolynomial eta)) (by linarith [h.scale_nonneg])
     nlinarith
@@ -1284,7 +1329,7 @@ theorem amplitude_derivative_bound_of_error (d : OutgoingTail.TailData) (eta e :
   obtain ⟨hr, hr', _⟩ := amplitude_spec_of_error_bound d eta e heta h he
   obtain ⟨hdb, hdc⟩ := coefficient_derivative_bounds d eta e heta h hT
   have hden : 1 / 3 ≤ 2 * quadraticCoefficient d.core * amplitude d eta + linearTerm d.core eta :=
-    by
+      by
     have hm := mul_le_mul_of_nonneg_right ha (amplitude_pos d eta).le
     have hbl := (abs_le.mp hb).1
     nlinarith
@@ -1292,7 +1337,7 @@ theorem amplitude_derivative_bound_of_error (d : OutgoingTail.TailData) (eta e :
   have heq : (2 * quadraticCoefficient d.core * amplitude d eta + linearTerm d.core eta) *
       deriv (amplitude d) eta =
         -(deriv (linearTerm d.core) eta * amplitude d eta + deriv (constantTerm d) eta) := by
-          linarith
+            linarith
   have hbound : (2 * quadraticCoefficient d.core * amplitude d eta + linearTerm d.core eta) *
       |deriv (amplitude d) eta| ≤
         |deriv (linearTerm d.core) eta| * amplitude d eta + |deriv (constantTerm d) eta| := by
@@ -1304,7 +1349,7 @@ theorem amplitude_derivative_bound_of_error (d : OutgoingTail.TailData) (eta e :
       _ = |deriv (linearTerm d.core) eta * amplitude d eta + deriv (constantTerm d) eta| := by
         rw [heq, abs_neg]
       _ ≤ |deriv (linearTerm d.core) eta * amplitude d eta| + |deriv (constantTerm d) eta| :=
-        abs_add_le _ _
+          abs_add_le _ _
       _ = _ := by rw [abs_mul, abs_of_pos (amplitude_pos d eta)]
   have hupper := mul_le_mul hdb hr'.le (amplitude_pos d eta).le
     (by linarith [h.scale_nonneg] : 0 ≤ 4 * e)
@@ -1439,12 +1484,14 @@ theorem energyIntegrand_integrable (d : OutgoingTail.TailData) (A eta : ℝ) :
   have htail := TailEnergyBounds.energyDensity_integrable_postPulse d eta
   have hr : IntegrableOn (energyIntegrand d A eta) (Ioi d.core.endpoint) := by
     refine IntegrableOn.congr_fun (s := Ioi d.core.endpoint) (htail.neg.div_const 2) ?_
-      measurableSet_Ioi
+        measurableSet_Ioi
     intro y hy
     exact (energyIntegrand_late d A eta hy.le).symm
   have h := (energyIntegrand_integrable_Iic d A eta (coreEndpoint_pos d.core).le).union hr
   simpa only [Iic_union_Ioi, integrableOn_univ] using h
 
+/-- Radial energy integrand, given by `axial d.core amp (Real.log (X / XR), eta) ^ 2 -
+OutgoingTail.finalAngular d (Real.log (X / XR), eta) ^ 2 / 2`. -/
 def radialEnergyIntegrand (d : OutgoingTail.TailData) (amp : ℝ → ℝ) (eta XR X : ℝ) : ℝ :=
   axial d.core amp (Real.log (X / XR), eta) ^ 2 -
     OutgoingTail.finalAngular d (Real.log (X / XR), eta) ^ 2 / 2

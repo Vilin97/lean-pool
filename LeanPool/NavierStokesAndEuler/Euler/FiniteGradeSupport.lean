@@ -7,10 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAlgebra
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Degree bounds and the exact shift caused by a fast derivative. -/
 
 @[expose] public section
 
-/-! Degree bounds and the exact shift caused by a fast derivative. -/
 
 noncomputable section
 
@@ -29,7 +38,7 @@ omit [Module ℝ V] in
     truncate M u n = 0 := ite_eq_right (not_le.mpr hn)
 
 theorem evaluate_extend (M N : ℕ) (hMN : M ≤ N) (κ : ℝ) (u : ℕ → V)
-    (hu : ∀ n, M < n → u n=0) : evaluate N κ u = evaluate M κ u := by
+    (hu : ∀ n, M < n → u n = 0) : evaluate N κ u = evaluate M κ u := by
   have hz : ∑ n ∈ Ico (M+1) (N+1), κ^n • u n = 0 := by
     apply sum_eq_zero
     intro n hn
@@ -49,6 +58,7 @@ theorem evaluate_truncate_extend (M N : ℕ) (hMN : M ≤ N) (κ : ℝ) (u : ℕ
   (evaluate_extend M N hMN κ (truncate M u) (fun n hn => truncate_of_gt M n u hn)).trans
     (evaluate_truncate M κ u)
 
+/-- Shift down, given by `truncate M u (n+1)`. -/
 def shiftDown (M : ℕ) (u : ℕ → V) (n : ℕ) : V := truncate M u (n+1)
 
 omit [Module ℝ V] in
@@ -56,7 +66,7 @@ theorem shiftDown_above (M n : ℕ) (u : ℕ → V) (hn : M ≤ n) : shiftDown M
   truncate_of_gt M (n+1) u (by omega)
 
 theorem inverse_evaluate_shiftDown (M : ℕ) (κ : ℝ) (hκ : κ ≠ 0)
-    (u : ℕ → V) (hu : u 0=0) :
+    (u : ℕ → V) (hu : u 0 = 0) :
     κ⁻¹ • evaluate M κ u = evaluate M κ (shiftDown M u) := by
   rw [inverse_evaluate M κ hκ u hu, evaluate, sum_range_succ]
   rw [shiftDown_above M M u le_rfl, smul_zero, add_zero]

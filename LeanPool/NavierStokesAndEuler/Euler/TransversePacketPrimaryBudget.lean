@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketBudget
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointBudget
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryBounds
 
 /-!
 Additional source-only radius guards for the primary endpoint history.
@@ -18,15 +18,18 @@ bounds. These extra guards use only the unit terminal-data cost, never the
 terminal amplitude or a recursive derivative shift.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketPrimary
 
 open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerTransversePacketProvider
   EulerTimeIntervalRestriction EulerGevrey EulerParameterWordGevrey EulerTransverseFixedSobolev
-  EulerTimeLpGramSobolev EulerTimeLpAccelerationSobolev EulerFixedEvolutionSobolev
+  EulerTimeLpGramSobolev  EulerFixedEvolutionSobolev
   EulerCylinderDirichlet.Coefficients EulerSourceCylinderForwardSobolev
-    EulerSourceCylinderTimeBounds
+      EulerSourceCylinderTimeBounds
   EulerLinearDuhamel
 open scoped ContDiff
 
@@ -35,18 +38,20 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   {B : HistoryData (D.initial τ hτ hτT.le)} {ι : Type*} [Fintype ι] {q : ℕ}
   (L : EulerTransversePacketJoin.Budget D τ hτ hτT B ι q)
 
+/-- Budget data, collecting `history_weak`, `history_strong`, `history_uniform`,
+`forward_radius`. -/
 structure Budget where
   history_weak :
     2*blockCost ι q τ L.Rc L.C₀ L.C₁ L.CH (D.initial τ hτ hτT.le).frameLower
       (endpointForcingCost ι q τ L.Rc L.C₁)*(sobolevCoefficientRadius ι L.Rc+1) ≤ L.R
   history_strong :
     2*gramBlockCost ι q (D.initial τ hτ hτT.le).frameLower L.Rc L.C₀
-      (accelerationBlockAmplitude ι q L.Rc L.C₀ L.C₁ (endpointForcingCost ι q τ L.Rc L.C₁) 1)*
+      (accelerationBlockAmplitude ι q L.Rc L.C₀ L.C₁ (endpointForcingCost ι q τ L.Rc L.C₁) 1) *
         (sobolevCoefficientRadius ι L.Rc+1) ≤ L.R
   history_uniform :
     2*gramBlockCost ι q (D.initial τ hτ hτT.le).frameLower L.Rc L.C₀
       (accelerationBlockAmplitude ι q L.Rc L.C₀ L.C₁
-        (endpointForcingCost ι q τ L.Rc L.C₁) (traceCost τ))*
+        (endpointForcingCost ι q τ L.Rc L.C₁) (traceCost τ)) *
           (sobolevCoefficientRadius ι L.Rc+1) ≤ L.R
   forward_radius :
     2*forwardSobolevCost ι q (D.T-τ) L.C (τ⁻¹+traceCost τ)
@@ -57,6 +62,7 @@ namespace Budget
 
 variable {L} (H : Budget L)
 
+/-- Endpoint budget, bundling `Rc`, `C₀`, `C₁`, `CH` and the required compatibility proofs. -/
 def endpointBudget : EndpointBudget B.coefficients ι q where
   Rc := L.Rc
   C₀ := L.C₀
@@ -76,7 +82,7 @@ def endpointBudget : EndpointBudget B.coefficients ι q where
     ((D.initial τ hτ hτT.le).frame_spatial_bound n _
       (fun t x => L.frame_bound n (initialInclusion D.T τ hτT.le t) x)) a
   frameDerivative_bound n a := (D.initial τ hτ
-    hτT.le).frameDerivative.norm_iteratedFDeriv_translation_le n _
+      hτT.le).frameDerivative.norm_iteratedFDeriv_translation_le n _
     (mul_nonneg L.C₁_nonneg (majorant_nonneg L.Rc L.Rc_nonneg 0 n))
     ((D.initial τ hτ hτT.le).frameDerivative_spatial_bound n _
       (fun t x => L.frameDerivative_bound n (initialInclusion D.T τ hτT.le t) x)) a
@@ -86,14 +92,18 @@ def endpointBudget : EndpointBudget B.coefficients ι q where
   strong_radius := H.history_strong
   uniform_radius := H.history_uniform
 
+/-- Velocity cost, given by `H.endpointBudget.velocityCost + 3*sobolevCoefficientAmplitude ι q
+L.Rc L.C₀`. -/
 def velocityCost : ℝ := H.endpointBudget.velocityCost + 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
 
+/-- Derivative cost, given by `H.endpointBudget.derivativeCost + physicalCost ι q L.Ri L.C₀ L.C₁
+0 1`. -/
 def derivativeCost : ℝ := H.endpointBudget.derivativeCost + physicalCost ι q L.Ri L.C₀ L.C₁ 0 1
 
 theorem velocityCost_nonneg : 0 ≤ H.velocityCost := by
   have hC := sobolevCoefficientAmplitude_nonneg (ι := ι) q L.Rc L.C₀ L.Rc_nonneg L.C₀_nonneg
   have hA := H.endpointBudget.coordinateCost_nonneg
-  change 0 ≤ 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀*H.endpointBudget.coordinateCost+
+  change 0 ≤ 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀*H.endpointBudget.coordinateCost +
     3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
   positivity
 

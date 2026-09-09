@@ -6,16 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointStrong
-public import LeanPool.NavierStokesAndEuler.Euler.FrameEndpointUniqueness
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
+import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointStrong
+import LeanPool.NavierStokesAndEuler.Euler.FrameEndpointUniqueness
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
 
 /-!
 The constructed affine-terminal inverse as a classical coordinate path,
 and its uniqueness among actual twice differentiable coordinate paths.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,17 +34,20 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T)
-  (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
-  (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
+  (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
+  (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
-  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v,v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
+/-- Displacement, given by `(initialPrimitive T hT).comp (coordinateSlope T hT Q Q₁ H c hc hQ hd
+K hK hH hsmall)`. -/
 def displacement : U →L[ℝ] C(Icc (0 : ℝ) T,U) :=
   (initialPrimitive T hT).comp (coordinateSlope T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
+/-- Acceleration as an element of `U →L[ℝ] C(Icc (0 : ℝ) T,U)`. -/
 def acceleration : U →L[ℝ] C(Icc (0 : ℝ) T,U) :=
   (EulerContinuousTimeIntegral.multiplier (generator T Q Q₁ c hc hQ)).comp
     (continuousCoordinateVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
@@ -62,7 +67,7 @@ theorem displacement_terminal (hTpos : 0 < T) (Y : U) :
   change T • (T⁻¹ • Y)-(0-initialTrace T hT (r : TimeLp T U)) = Y
   rw [hr,sub_self,sub_zero,smul_smul,mul_inv_cancel₀ hTpos.ne',one_smul]
 
-variable (Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (hTpos : 0 < T)
+variable (Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (hTpos : 0 < T)
   (hd₁ : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT Q₁) (Q₂ t) (Icc (0 : ℝ) T) t)
   (hframe : ∀ t, Q₂ t = -((H t).comp (Q t)))
@@ -72,7 +77,7 @@ theorem velocity_ae (Y : U) :
     (coordinateSlope T hT Q Q₁ H c hc hQ hd K hK hH hsmall Y : ℝ → U) =ᵐ[timeMeasure T]
       extendPath T hT (continuousCoordinateVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall Y) := by
   have ha := EulerFixedEndpointStrong.coordinateSlope_ae T hT Q Q₁ H c hc hQ hd K hK hH hsmall
-    hTpos Y
+      hTpos Y
   filter_upwards [ha,ae_restrict_mem measurableSet_Icc] with t ht hm
   rw [ht]
   change _ = continuousCoordinateVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall Y (projIcc 0 T hT t)
@@ -114,7 +119,7 @@ theorem projected_equation (Y : U) (t : Icc (0 : ℝ) T) :
   rw [map_smul,gram_inverse_apply,map_smul]
 
 include Q₂ hTpos hd₁ hframe in
-theorem unique (Y : U) (z v a : C(Icc (0 : ℝ) T,U))
+theorem unique (Y : U) (z v a : C(Icc (0 : ℝ) T, U))
     (hz : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT z) (v t) (Icc (0 : ℝ) T) t)
     (hv : ∀ t : Icc (0 : ℝ) T,

@@ -10,11 +10,12 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryControlledGrowth
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketForwardInput
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentPhysicalBudgets
 
-@[expose] public section
-
 /-! The first normal stage supplies its forward packet budget from the
 actual amplification geometry. The large parent shear needs no short-time
 assumption of the form CM*T≤1/2. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,8 +24,9 @@ namespace EulerPacketSourceGeometry.ForwardGuards
 open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketSourcePropagator
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  {D : Data U} {P : ParentFrame D 0} (G : ForwardGuards P) (hball : (1/2 : ℝ) ≤ G.radius)
+  {D : Data U} {P : ParentFrame D 0} (G : ForwardGuards P) (hball : (1 / 2 : ℝ) ≤ G.radius)
 
+/-- Source growth profile, given by `(G.halfBall_controlledGrowth hball).choose`. -/
 def sourceGrowthProfile : C(Icc (0 : ℝ) D.T,ℝ) := (G.halfBall_controlledGrowth hball).choose
 
 theorem sourceGrowthProfile_positive (t : Icc (0 : ℝ) D.T) : 0 < G.sourceGrowthProfile hball t :=
@@ -49,8 +51,8 @@ theorem primaryAmplitude_bound : G.primaryAmplitude hball ≤ 8*Real.exp 6*G.δ*
 omit [CompleteSpace U] in
 include G in
 theorem growth_constant_pos : 0 < 560*P.horizon^10/P.epsilon := by
-  exact div_pos (mul_pos (by norm_num) (pow_pos (zero_lt_one.trans_le G.horizon_lower) 10))
-    G.epsilon_pos
+  exact div_pos (mul_pos (by
+      norm_num) (pow_pos (zero_lt_one.trans_le G.horizon_lower) 10)) G.epsilon_pos
 
 end EulerPacketSourceGeometry.ForwardGuards
 
@@ -61,13 +63,14 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketSourceGeometr
 
 variable {A : Parent} (L : LabelData A) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   (P : ParentFrame (A.transverseData m hm J support hSupport) 0)
-  (G : ForwardGuards P) (hball : (1/2 : ℝ) ≤ G.radius)
+  (G : ForwardGuards P) (hball : (1 / 2 : ℝ) ≤ G.radius)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
+/-- Geometry forward raw, constructed using `EulerPacketParentPhysicalBudgets.forwardBudget`. -/
 def geometryForwardRaw :
     EulerTransversePacketForward.Budget (A.transverseData m hm J support hSupport) (Fin 4) 6 :=
   EulerPacketParentPhysicalBudgets.forwardBudget (A.transverseData m hm J support hSupport) 6
@@ -75,9 +78,11 @@ def geometryForwardRaw :
     A.ell_pos.le A.ell_le_one (zero_le_one.trans L.K_one) G.growth_constant_pos.le
     L.displacement_bound L.velocity_bound L.frame_match L.first_match A.frame_det
     (G.sourceGrowthProfile hball) (G.sourceGrowthProfile_positive hball)
-      (G.sourceGrowthProfile_initial hball)
+        (G.sourceGrowthProfile_initial hball)
     Ω hΩ hΩo hsub hΩball (G.sourceGrowthProfile_propagator hball)
 
+/-- Geometry forward inputs as an element of `ForwardInputs (A.meanData H) (A.transverseData m
+hm J support hSupport)`. -/
 def geometryForwardInputs (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti) :
     ForwardInputs (A.meanData H) (A.transverseData m hm J support hSupport) := by
   let V := L.geometryForwardRaw m hm J support hSupport P G hball Ω hΩ hΩo hsub hΩball

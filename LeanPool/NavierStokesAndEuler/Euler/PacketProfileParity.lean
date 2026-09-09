@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderForcingParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
+
+/-! Joint parity carried by the actual profile fields and their true time derivatives. -/
 
 @[expose] public section
 
-/-! Joint parity carried by the actual profile fields and their true time derivatives. -/
 
 noncomputable section
 
@@ -19,6 +22,8 @@ namespace EulerPacketCylinderField
 
 open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
 
+/-- Profile parity data, collecting `high`, `mean`, `corrector`, `pressure`, `highPressure`,
+`meanPressure`. -/
 structure ProfileParity (T : ℝ) (a : Profile) : Prop where
   high : JointOdd T a.high
   mean : JointOdd T a.mean
@@ -57,13 +62,13 @@ variable {P T : ℝ} [Fact (0 < P)] {S : Set Space} {a : Profile}
 
 include H
 
-theorem highDerivative_odd : JointOdd T G.high_t :=
+theorem highDerivative_odd : JointOdd T G.highT :=
   G.high.timeDerivative_odd G.highDerivative hT G.high_time H.high
 
-theorem meanDerivative_odd : JointOdd T G.mean_t :=
+theorem meanDerivative_odd : JointOdd T G.meanT :=
   G.mean.timeDerivative_odd G.meanDerivative hT G.mean_time H.mean
 
-theorem correctorDerivative_odd : JointOdd T G.corrector_t :=
+theorem correctorDerivative_odd : JointOdd T G.correctorT :=
   G.corrector.timeDerivative_odd G.correctorDerivative hT G.corrector_time H.corrector
 
 end ProfileParity

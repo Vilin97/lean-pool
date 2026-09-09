@@ -6,18 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.H6PressureInverse
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
+public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
+import LeanPool.NavierStokesAndEuler.Euler.H6PressureInverse
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Explicit polynomial dependence of the fixed-order inverse on coefficient bounds. -/
 
 @[expose] public section
 
-/-! Explicit polynomial dependence of the fixed-order inverse on coefficient bounds. -/
 
 noncomputable section
 
 namespace EulerH6Pressure
 
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerSpatialSobolevInverse
-  EulerJetProductBounds EulerPressureJetIdentities EulerPressureSpatialRegularity
+  EulerJetProductBounds  EulerPressureSpatialRegularity
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)] {directions : Fin 4 → LiftTangent}
@@ -52,7 +56,7 @@ theorem coefficient_child_levels {s : ℕ} {A : SmoothCoefficient period}
     (dA : Fin 4 → SmoothCoefficient period)
     (lower : ∀ i, EulerSpatialSobolevInverse.CoefficientJet period directions s (dA i))
     (hd : ∀ i x, (dA i).coefficient x = EulerTransportDerivatives.fieldDerivative period
-      (directions i) A.coefficient x)
+        (directions i) A.coefficient x)
     (L : ℝ)
     (h : ∀ r ≤ s + 1, boundLevel period (.succ dA lower hd) r ≤ L) (i : Fin 4) :
     ∀ r ≤ s, boundLevel period (lower i) r ≤ L := by
@@ -70,8 +74,8 @@ theorem productConstant_polynomial {q : ℕ} {A : SmoothCoefficient period}
   induction q generalizing A with
   | zero =>
     cases K
-    simpa [EulerSpatialSobolevInverse.CoefficientJet.productConstant, boundLevel] using hcoeff 0
-      (by omega)
+    simpa [EulerSpatialSobolevInverse.CoefficientJet.productConstant, boundLevel] using hcoeff 0 (by
+        omega)
   | succ q ih =>
     cases K with
     | succ dA lower hd =>
@@ -181,7 +185,7 @@ theorem pressureConstant_polynomial {q : ℕ} {A : SmoothCoefficient period}
 /-- The shifted Hq pressure estimate with an explicit polynomial coefficient constant.
 All assumptions concern the actual coefficient, its derivative bounds, and coercivity. -/
 theorem pressure_shifted_Hq_polynomial_bound {s q : ℕ} {A : SmoothCoefficient period} {f : LiftL2
-  period}
+    period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)

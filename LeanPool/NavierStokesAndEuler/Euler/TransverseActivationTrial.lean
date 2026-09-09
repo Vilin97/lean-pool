@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MovingNormalProjection
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalProjectionTrial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
 
 /-!
 The explicit activation trial and its endpoint-energy bound.  The trial uses
@@ -17,6 +16,9 @@ the actual moving normal, not a deformation-frame condition number.  A layer
 of width `1/h` gives `‖Λ‖ ≤ (4 + 64 CM² + 2 CH) h` under the source's low
 history bounds.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,34 +34,47 @@ variable {E U : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
-private local instance : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
-private local instance : AddCommGroup (E →L[ℝ] E) :=
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial1 : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial2 : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `AddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial3 : AddCommGroup (E →L[ℝ] E) :=
   (inferInstance : NormedAddCommGroup (E →L[ℝ] E)).toAddCommGroup
-private local instance : Module ℝ (E →L[ℝ] E) :=
+/-- Cache the standard `Module ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial4 : Module ℝ (E →L[ℝ] E) :=
   (inferInstance : NormedSpace ℝ (E →L[ℝ] E)).toModule
-private local instance : TopologicalSpace (E →L[ℝ] E) :=
+/-- Cache the standard `TopologicalSpace (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial5 : TopologicalSpace (E →L[ℝ] E) :=
   (inferInstance : PseudoMetricSpace (E →L[ℝ] E)).toUniformSpace.toTopologicalSpace
-private local instance : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
-private local instance : AddCommGroup (U →L[ℝ] E) :=
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial6 : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial7 : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `AddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial8 : AddCommGroup (U →L[ℝ] E) :=
   (inferInstance : NormedAddCommGroup (U →L[ℝ] E)).toAddCommGroup
-private local instance : Module ℝ (U →L[ℝ] E) :=
+/-- Cache the standard `Module ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial9 : Module ℝ (U →L[ℝ] E) :=
   (inferInstance : NormedSpace ℝ (U →L[ℝ] E)).toModule
-private local instance : TopologicalSpace (U →L[ℝ] E) :=
+/-- Cache the standard `TopologicalSpace (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTransverseActivationTrial10 : TopologicalSpace (U →L[ℝ] E) :=
   (inferInstance : PseudoMetricSpace (U →L[ℝ] E)).toUniformSpace.toTopologicalSpace
 
 variable (T : ℝ) (hT : 0 ≤ T) (m m₁ : C(Icc (0 : ℝ) T, E))
   (hne : ∀ t, m t ≠ 0) (R : U →L[ℝ] E)
 
+/-- Projection path, given by `⟨fun t => (normalProjection (m t)).comp R,
+(normalProjection_continuous m.continuous hne).clm_comp continuous_const⟩`. -/
 def projectionPath : C(Icc (0 : ℝ) T, U →L[ℝ] E) :=
   ⟨fun t => (normalProjection (m t)).comp R,
     (normalProjection_continuous m.continuous hne).clm_comp continuous_const⟩
 
+/-- Projection derivative path as an element of `C(Icc (0 : ℝ) T, U →L[ℝ] E)`. -/
 def projectionDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] E) :=
   ⟨fun t => (normalProjectionDerivative (m t) (m₁ t)).comp R,
     (normalProjectionDerivative_continuous m.continuous m₁.continuous hne).clm_comp
-      continuous_const⟩
+        continuous_const⟩
 
 variable (hd : ∀ t : Icc (0 : ℝ) T,
   HasDerivWithinAt (extendPath T hT m) (m₁ t) (Icc (0 : ℝ) T) t)
@@ -174,8 +189,8 @@ theorem activation_endpoint_norm
       (mul_le_mul_of_nonneg_right hHnorm (sq_nonneg _)))
   change ‖u‖ ^ 2 - ⟪timeMultiplier T hT H η, η⟫_ℝ ≤ _
   calc
-    ‖u‖ ^ 2 - ⟪timeMultiplier T hT H η, η⟫_ℝ ≤ ‖u‖ ^ 2 + CH * h ^ 2 * ‖η‖ ^ 2 := by linarith only
-      [hp]
+    ‖u‖ ^ 2 - ⟪timeMultiplier T hT H η, η⟫_ℝ ≤ ‖u‖ ^ 2 + CH * h ^ 2 * ‖η‖ ^ 2 := by
+        linarith only [hp]
     _ ≤ (4 * h + 4 * (4 * (CM * h)) ^ 2 / h) * ‖Y‖ ^ 2 +
         CH * h ^ 2 * ((2 / h) * ‖Y‖ ^ 2) :=
       add_le_add hD (mul_le_mul_of_nonneg_left hη (by positivity))

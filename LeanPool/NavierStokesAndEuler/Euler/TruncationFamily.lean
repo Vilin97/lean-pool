@@ -7,13 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-
-@[expose] public section
 
 /-! Concrete data required of compact solenoidal velocity truncations.
 The actual radial-potential construction supplies this record separately. -/
+
+@[expose] public section
+
 noncomputable section
 
 open Set MeasureTheory EulerSmoothLimit
@@ -24,7 +23,10 @@ namespace Euler.ComparatorBridge
 /-- A family of smooth bounded truncations on a fixed unit time interval,
 with uniform kinetic energy and agreement inside the prescribed radius. -/
 structure FiniteEnergyTruncationFamily (v : Space → ℝ → Space) where
+  /-- Coefficient of `FiniteEnergyTruncationFamily`, of type `ℝ → SmoothTimeField (Icc (0 : ℝ)
+  1) Space Space`. -/
   coefficient : ℝ → SmoothTimeField (Icc (0 : ℝ) 1) Space Space
+  /-- Energy of `FiniteEnergyTruncationFamily`, of type `ℝ`. -/
   energy : ℝ
   divergence : ∀ R, 0 < R → ∀ t x,
     EulerSmoothLimit.divergence ((coefficient R).field t : Space → Space) x = 0

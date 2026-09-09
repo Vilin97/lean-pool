@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMap
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderAnglePrimitive
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-!
 # The genuine scalar angular primitive on cylinder L²
@@ -19,20 +19,26 @@ constructed vector primitive to scalar pressure. Its mixed-translation
 commutation and fixed-Hq external-word bound have no radius loss.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerCylinderScalarPrimitive
 
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
-  EulerLiftedGradientSpace
+    EulerLiftedGradientSpace
   EulerLpCylinderTranslation EulerCylinderConstantMap EulerParameterWordGevrey
 open scoped ContDiff
 
+/-- Unit vector, given by `EuclideanSpace.single 0 1`. -/
 def unitVector : Space := EuclideanSpace.single 0 1
 
 theorem unitVector_norm : ‖unitVector‖ = 1 := by simp [unitVector]
 
+/-- Scalar embed, given by `toSpanSingleton ℝ unitVector`. -/
 def scalarEmbed : ℝ →L[ℝ] Space := toSpanSingleton ℝ unitVector
+/-- Scalar project, given by `innerSL ℝ unitVector`. -/
 def scalarProject : Space →L[ℝ] ℝ := innerSL ℝ unitVector
 
 theorem scalarEmbed_norm : ‖scalarEmbed‖ = 1 := by
@@ -47,10 +53,12 @@ theorem scalarProject_norm : ‖scalarProject‖ = 1 := by
 
 variable (period : ℝ) [Fact (0 < period)]
 
+/-- Embed, given by `EulerCylinderConstantMap.map period scalarEmbed`. -/
 def embed : CylinderL2 period ℝ →L[ℝ] LiftL2 period := EulerCylinderConstantMap.map period
-  scalarEmbed
+    scalarEmbed
+/-- Project, given by `EulerCylinderConstantMap.map period scalarProject`. -/
 def project : LiftL2 period →L[ℝ] CylinderL2 period ℝ := EulerCylinderConstantMap.map period
-  scalarProject
+    scalarProject
 
 theorem embed_norm : ‖embed period‖ ≤ 1 :=
   (map_norm period scalarEmbed).trans_eq scalarEmbed_norm
@@ -58,6 +66,8 @@ theorem embed_norm : ‖embed period‖ ≤ 1 :=
 theorem project_norm : ‖project period‖ ≤ 1 :=
   (map_norm period scalarProject).trans_eq scalarProject_norm
 
+/-- Primitive, given by `(project period).comp ((EulerCylinderAnglePrimitive.primitive
+period).comp (embed period))`. -/
 def primitive : CylinderL2 period ℝ →L[ℝ] CylinderL2 period ℝ :=
   (project period).comp ((EulerCylinderAnglePrimitive.primitive period).comp (embed period))
 
@@ -66,18 +76,18 @@ theorem primitive_norm : ‖primitive period‖ ≤ period := by
   apply opNorm_le_bound _ hP.le
   intro u
   change ‖project period (EulerCylinderAnglePrimitive.primitive period (embed period u))‖ ≤
-    period*‖u‖
+      period*‖u‖
   calc
     _ ≤ ‖EulerCylinderAnglePrimitive.primitive period (embed period u)‖ :=
       ((project period).le_opNorm _).trans (by
         simpa only [one_mul] using mul_le_mul_of_nonneg_right (project_norm period) (norm_nonneg _))
     _ ≤ period*‖embed period u‖ := ((EulerCylinderAnglePrimitive.primitive period).le_opNorm
-      _).trans
+        _).trans
       (mul_le_mul_of_nonneg_right (EulerCylinderAnglePrimitive.primitive_norm period) (norm_nonneg
-        _))
+          _))
     _ ≤ period*‖u‖ := mul_le_mul_of_nonneg_left (((embed period).le_opNorm u).trans (by
       simpa only [one_mul] using mul_le_mul_of_nonneg_right (embed_norm period) (norm_nonneg u)))
-        hP.le
+          hP.le
 
 /-- All mixed translations commute with the actual scalar primitive. -/
 theorem primitive_translation (a : LiftTangent) (u : CylinderL2 period ℝ) :
@@ -89,7 +99,7 @@ theorem primitive_translation (a : LiftTangent) (u : CylinderL2 period ℝ) :
   have hv : EulerCylinderAnglePrimitive.primitive period
       (translate period a (EulerCylinderConstantMap.map period scalarEmbed u)) =
       translate period a (EulerCylinderAnglePrimitive.primitive period
-        (EulerCylinderConstantMap.map period scalarEmbed u)) :=
+          (EulerCylinderConstantMap.map period scalarEmbed u)) :=
     EulerCylinderAnglePrimitive.primitive_translation period (coveringMap period a)
       (EulerCylinderConstantMap.map period scalarEmbed u)
   rw [hv,map_translation]
@@ -97,11 +107,23 @@ theorem primitive_translation (a : LiftTangent) (u : CylinderL2 period ℝ) :
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (CylinderL2 period ℝ) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 period ℝ) := inferInstance
-private local instance : NormedAddCommGroup C(K,CylinderL2 period ℝ) := inferInstance
-private local instance : NormedSpace ℝ C(K,CylinderL2 period ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 period ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderScalarPrimitive1 : NormedAddCommGroup (CylinderL2 period ℝ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 period ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderScalarPrimitive2 : NormedSpace ℝ (CylinderL2 period ℝ) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,CylinderL2 period ℝ)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderScalarPrimitive3 : NormedAddCommGroup C(K,CylinderL2 period ℝ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,CylinderL2 period ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderScalarPrimitive4 : NormedSpace ℝ C(K,CylinderL2 period ℝ) :=
+    inferInstance
 
+/-- Path primitive, given by `(primitive period).compLeftContinuous ℝ K`. -/
 def pathPrimitive : C(K,CylinderL2 period ℝ) →L[ℝ] C(K,CylinderL2 period ℝ) :=
   (primitive period).compLeftContinuous ℝ K
 
@@ -116,14 +138,14 @@ theorem pathPrimitive_norm : ‖pathPrimitive (K := K) period‖ ≤ period := b
       (mul_le_mul_of_nonneg_left (u.norm_coe_le_norm t) hP.le))
 
 omit [CompactSpace K] in
-theorem pathPrimitive_translation (a : LiftTangent) (u : C(K,CylinderL2 period ℝ)) :
+theorem pathPrimitive_translation (a : LiftTangent) (u : C(K, CylinderL2 period ℝ)) :
     pathPrimitive period (pathTranslate period a u) = pathTranslate period a (pathPrimitive period
-      u) := by
+        u) := by
   apply ContinuousMap.ext
   intro t
   exact primitive_translation period a (u t)
 
-theorem pathPrimitive_orbit_contDiff (u : C(K,CylinderL2 period ℝ))
+theorem pathPrimitive_orbit_contDiff (u : C(K, CylinderL2 period ℝ))
     (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (pathPrimitive period u)) := by
   have he : (fun a : LiftTangent => pathTranslate period a (pathPrimitive period u)) =
@@ -133,11 +155,11 @@ theorem pathPrimitive_orbit_contDiff (u : C(K,CylinderL2 period ℝ))
   exact (pathPrimitive period).contDiff.comp hu
 
 theorem pathPrimitive_block_le {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
-    (u : C(K,CylinderL2 period ℝ)) (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period
-      a u))
+    (u : C(K, CylinderL2 period ℝ)) (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period
+        a u))
     (n : ℕ) (a : LiftTangent) :
     block directions q (fun b : LiftTangent => pathTranslate period b (pathPrimitive period u)) n a
-      ≤
+        ≤
       period*block directions q (fun b : LiftTangent => pathTranslate period b u) n a := by
   have he : (fun b : LiftTangent => pathTranslate period b (pathPrimitive period u)) =
       (fun b => pathPrimitive period (pathTranslate period b u)) :=

@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothSobolev
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! The scalar R³ H² estimate used for harmonic interior control. -/
 
 @[expose] public section
 
-/-! The scalar R³ H² estimate used for harmonic interior control. -/
 
 noncomputable section
 
@@ -74,14 +78,14 @@ theorem scalar_pointwise_le_H2 (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     rw [heq]
     exact complex_eLpNorm_toReal _
       (contDiff_partialDerivative _ (contDiff_partialDerivative f hf i)
-        i).continuous.aestronglyMeasurable
+          i).continuous.aestronglyMeasurable
   have h := pointwise_le_L2_second_derivatives F x
   rw [hnorm, hF] at h
   simp_rw [hnormDer] at h
   simpa only [Complex.norm_real, Real.norm_eq_abs] using h
 
 theorem lpNorm_sq_eq_integral_norm_sq {V : Type*} [NormedAddCommGroup V]
-    [InnerProductSpace ℝ V] [CompleteSpace V] (f : Space → V)
+    [InnerProductSpace ℝ V] (f : Space → V)
     (hf : MemLp f 2 volume) : (lpNorm f 2 volume) ^ 2 = ∫ x, ‖f x‖ ^ 2 := by
   have hn : ‖hf.toLp f‖ = lpNorm f 2 volume := by
     rw [Lp.norm_toLp, toReal_eLpNorm hf.aestronglyMeasurable]

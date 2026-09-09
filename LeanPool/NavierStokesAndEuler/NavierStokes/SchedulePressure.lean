@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingTail
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TailEnergyBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PressureDatum
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalProfile
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.TailEnergyBounds
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # The pressure datum of the constructed outgoing angular schedule
@@ -19,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalProfile
 This module instantiates the abstract pressure integral with `finalAngular`.
 The pressure-neutral angular-moment correction remains a separate operation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -239,6 +240,8 @@ theorem axisPressure_radius_independent (d : TailData) (X_R η : ℝ) :
   simp only [sub_eq_add_neg]
   rw [integral_add_right_eq_self (fun y => finalAngular d (y, η) ^ 2) (-Real.log X_R)]
 
+/-- Complex axis pressure, given by `PressureDatum.complexPressure (clockWeight d)
+(shapeExponent d)`. -/
 noncomputable def complexAxisPressure (d : TailData) : ℂ → ℂ :=
   PressureDatum.complexPressure (clockWeight d) (shapeExponent d)
 

@@ -8,10 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarPrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarClassical
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveMap
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSmoothOrbit
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveMap
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
 
 /-!
 # The actual scalar L² primitive represents the classical pressure integral
@@ -21,13 +20,16 @@ proved vector H3 evaluation theorem to this embedding identifies the actual
 scalar L² primitive with the literal normalized periodic integral.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerCylinderScalarPrimitive
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerLpCylinderTranslation EulerCylinderConstantMap EulerCylinderSmoothOrbit
-    EulerCylinderSobolevSpace
+      EulerCylinderSobolevSpace
 open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
@@ -63,7 +65,7 @@ theorem primitive_ae_classical (u : CylinderL2 P ℝ)
     rw [scalarEmbed.intervalIntegral_comp_comm (hcont.intervalIntegrable 0 P),hmean,map_zero]
   have hqE (y : Space) (θ : ℝ) : scalarEmbed (q (y,(θ : AddCircle P))) =
       EulerAngleMeanZeroPrimitive.primitive P (fun s => scalarEmbed (f (y,(s : AddCircle P)))) θ :=
-        by
+          by
     rw [hq]
     exact EulerAngleMeanZeroPrimitive.primitive_map scalarEmbed P _
       (hf.comp (continuous_const.prodMk (AddCircle.continuous_mk' P))) θ

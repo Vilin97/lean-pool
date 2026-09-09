@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
+
+/-! The actual scalar average-zero condition gives literal pointwise zero angular mean. -/
 
 @[expose] public section
 
-/-! The actual scalar average-zero condition gives literal pointwise zero angular mean. -/
 
 noncomputable section
 
@@ -19,7 +21,7 @@ namespace EulerCylinderScalarPrimitive
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerLpCylinderTranslation EulerCylinderConstantMap EulerCylinderSmoothOrbit
-    EulerCylinderSobolevSpace
+      EulerCylinderSobolevSpace
   EulerCylinderAngleAverage
 open scoped ContDiff
 

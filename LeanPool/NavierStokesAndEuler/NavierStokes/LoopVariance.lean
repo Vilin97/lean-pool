@@ -7,13 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothLoop
-public import Mathlib.Probability.Moments.MGFAnalytic
-public import Mathlib.Analysis.Analytic.IsolatedZeros
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Probability.Moments.IntegrableExpMul
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.Probability.Moments.MGFAnalytic
 
 /-!
 # The actual exponential tilt variance
@@ -23,6 +21,9 @@ All moments below are Lebesgue integrals of the actual cosine exponential
 family, not postulated properties of an abstract variance map.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.LoopVariance
 
 noncomputable section
@@ -31,6 +32,7 @@ open MeasureTheory ProbabilityTheory Set
 open SmoothLoop
 open scoped Interval ContDiff Topology
 
+/-- Angle measure, given by `volume.restrict (Ioc 0 (2 * Real.pi))`. -/
 def angleMeasure : Measure ℝ := volume.restrict (Ioc 0 (2 * Real.pi))
 
 theorem integrable_exp_cos (s : ℝ) :
@@ -94,6 +96,8 @@ theorem normalizer_hasDerivAt (s : ℝ) : HasDerivAt expNormalizer (moment 1 s) 
   rw [heq]
   exact moment_hasDerivAt 0 s
 
+/-- Weighted square, given by `angularMean (fun θ => (Real.cos θ - c) ^ 2 * Real.exp (s *
+Real.cos θ))`. -/
 def weightedSquare (s c : ℝ) : ℝ :=
   angularMean (fun θ => (Real.cos θ - c) ^ 2 * Real.exp (s * Real.cos θ))
 
@@ -129,11 +133,12 @@ theorem weightedSquare_expansion (s c : ℝ) :
         c ^ 2 * Real.exp (s * Real.cos θ)) := by funext θ; ring
   unfold weightedSquare
   rw [heq, angularMean_add _ _ (h₂.fun_sub (continuous_const.fun_mul h₁)) (continuous_const.fun_mul
-    he),
+      he),
     angularMean_sub _ _ h₂ (continuous_const.fun_mul h₁), angularMean_const_mul,
     angularMean_const_mul, moment_eq_angularMean, moment_eq_angularMean, moment_eq_angularMean]
   simp only [pow_one, pow_zero, one_mul]
 
+/-- Log slope, given by `moment 1 s / moment 0 s`. -/
 def logSlope (s : ℝ) : ℝ := moment 1 s / moment 0 s
 
 theorem moment_determinant_pos (s : ℝ) :
@@ -151,7 +156,7 @@ theorem logSlope_hasDerivAt (s : ℝ) :
     HasDerivAt logSlope
       ((moment 2 s * moment 0 s - moment 1 s ^ 2) / moment 0 s ^ 2) s := by
   convert! (moment_hasDerivAt 1 s).div (moment_hasDerivAt 0 s) (ne_of_gt (moment_zero_pos s)) using
-    1
+      1
   ring
 
 theorem logSlope_strictMono : StrictMono logSlope := by
@@ -299,8 +304,8 @@ theorem quadraticFactor_zero : quadraticFactor 0 = 1 / 2 := by
 theorem quadraticFactor_identity (s : ℝ) : baseVariance s = s ^ 2 * quadraticFactor s := by
   have h₁ := sub_smul_dslope baseVariance (0 : ℝ) s
   have h₂ := sub_smul_dslope (dslope baseVariance 0) (0 : ℝ) s
-  simp only [sub_zero, smul_eq_mul, baseVariance_zero, dslope_same, baseVariance_deriv_zero] at h₁
-    h₂
+  simp only [sub_zero, smul_eq_mul, baseVariance_zero, dslope_same, baseVariance_deriv_zero]
+      at h₁ h₂
   change baseVariance s = s ^ 2 * dslope (dslope baseVariance 0) 0 s
   nlinarith [congrArg (fun z : ℝ => s * z) h₂]
 
@@ -371,6 +376,7 @@ theorem normalizer_centered (s : ℝ) :
   unfold expNormalizer angularMean
   rw [hi]
 
+/-- Gaussian mass, given by `∫ x : ℝ, Real.exp (-(2 / Real.pi ^ 2) * x ^ 2)`. -/
 def gaussianMass : ℝ := ∫ x : ℝ, Real.exp (-(2 / Real.pi ^ 2) * x ^ 2)
 
 theorem gaussianCoefficient_pos : (0 : ℝ) < 2 / Real.pi ^ 2 :=
@@ -465,6 +471,7 @@ theorem normalizer_double_square_lower (t : ℝ) (ht : 1 ≤ t) :
   simp only [smul_eq_mul]
   ring
 
+/-- Growth constant, given by `2 * (2 * Real.pi) * Real.exp (-1) / gaussianMass ^ 2`. -/
 def growthConstant : ℝ := 2 * (2 * Real.pi) * Real.exp (-1) / gaussianMass ^ 2
 
 theorem growthConstant_pos : 0 < growthConstant := by
@@ -562,10 +569,13 @@ theorem signedRoot_surjective : Function.Surjective signedRoot := by
     signedRoot_contDiff.continuous.continuousOn hmem
   exact ⟨x, hx⟩
 
+/-- Root homeomorph, given by `(StrictMono.orderIsoOfSurjective signedRoot signedRoot_strictMono
+signedRoot_surjective).toHomeomorph`. -/
 def rootHomeomorph : ℝ ≃ₜ ℝ :=
   (StrictMono.orderIsoOfSurjective signedRoot signedRoot_strictMono
-    signedRoot_surjective).toHomeomorph
+      signedRoot_surjective).toHomeomorph
 
+/-- Inverse root, given by `rootHomeomorph.symm`. -/
 def inverseRoot : ℝ → ℝ := rootHomeomorph.symm
 
 theorem inverseRoot_right (s : ℝ) : signedRoot (inverseRoot s) = s :=
@@ -625,8 +635,10 @@ theorem inverseSlope_analyticAt (s : ℝ) : AnalyticAt ℝ inverseSlope s := by
 theorem inverseSlope_contDiff : ContDiff ℝ ω inverseSlope :=
   contDiff_iff_contDiffAt.mpr (fun s => (inverseSlope_analyticAt s).contDiffAt)
 
+/-- Scaled root, given by `d * μ * Real.sqrt (quadraticFactor (μ * p))`. -/
 def scaledRoot (d p μ : ℝ) : ℝ := d * μ * Real.sqrt (quadraticFactor (μ * p))
 
+/-- Solve scale, given by `(r / d) * inverseSlope (p * (r / d))`. -/
 def solveScale (d p r : ℝ) : ℝ := (r / d) * inverseSlope (p * (r / d))
 
 theorem solveScale_mul (d p r : ℝ) : solveScale d p r * p = inverseRoot (p * (r / d)) := by
@@ -775,8 +787,10 @@ theorem dslope_zero_analyticAt (f : ℝ → ℝ) (hf : ∀ s, AnalyticAt ℝ f s
     filter_upwards [eventually_ne_nhds hs] with t ht
     rw [dslope_of_ne f ht, slope_def_field, sub_zero]
 
+/-- Exp divided, given by `dslope Real.exp 0`. -/
 def expDivided : ℝ → ℝ := dslope Real.exp 0
 
+/-- Normalizer divided, given by `dslope expNormalizer 0`. -/
 def normalizerDivided : ℝ → ℝ := dslope expNormalizer 0
 
 theorem expDivided_contDiff : ContDiff ℝ ω expDivided :=
@@ -793,6 +807,8 @@ theorem expDivided_zero : expDivided 0 = 1 := by
 theorem normalizerDivided_zero : normalizerDivided 0 = 0 := by
   rw [normalizerDivided, dslope_same, (normalizer_hasDerivAt 0).deriv, moment_one_at_zero]
 
+/-- Regularized density slope, given by `(Real.cos θ * expDivided (s * Real.cos θ) -
+normalizerDivided s) / expNormalizer s`. -/
 def regularizedDensitySlope (s θ : ℝ) : ℝ :=
   (Real.cos θ * expDivided (s * Real.cos θ) - normalizerDivided s) / expNormalizer s
 
@@ -853,6 +869,7 @@ theorem extendedExpTilt_smooth_family {E : Type*} [NormedAddCommGroup E] [Normed
   have hcomp := hreg.comp hargs
   exact hm.add ((hd.mul hμ).mul hcomp)
 
+/-- Solved tilt, given by `extendedExpTilt m d (solveScale d p r) p θ`. -/
 def solvedTilt (m d p r θ : ℝ) : ℝ := extendedExpTilt m d (solveScale d p r) p θ
 
 theorem solvedTilt_periodic (m d p r : ℝ) : Function.Periodic (solvedTilt m d p r) (2 * Real.pi) :=

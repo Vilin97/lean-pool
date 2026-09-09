@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidual
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-!
 # Local Cartesian residual formulas for axisymmetric profiles
@@ -17,6 +17,9 @@ Only regularity at the evaluated profile point is required. The second
 derivative formulas use equality of germs of first derivatives, so they do
 not impose any condition on an unrelated profile point such as the axis.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -93,7 +96,8 @@ theorem direction_coord_mul {g : Space → ℝ} {x : Space}
   unfold direction
   change (fderiv ℝ (fun y => projection i y * g y) x) (coordinateVector j) = _
   rw [fderiv_fun_mul (projection i).differentiableAt hg]
-  simp
+  simp only [AxisymmetricFields.projection_apply, ContinuousLinearMap.fderiv, add_apply, smul_apply,
+    smul_eq_mul]
   ring
 
 theorem second_direction_coord_mul {g : Space → ℝ} {x : Space}
@@ -113,7 +117,9 @@ theorem second_direction_coord_mul {g : Space → ℝ} {x : Space}
   rw [fderiv_fun_add (hd.const_mul ((coordinateVector j) i))
     ((projection i).differentiableAt.fun_mul hdg)]
   rw [fderiv_const_mul hd, fderiv_fun_mul (projection i).differentiableAt hdg]
-  simp [direction]
+  simp only [AxisymmetricFields.projection_apply, direction, ContinuousLinearMap.fderiv, add_apply,
+      smul_apply,
+    smul_eq_mul]
   ring
 
 theorem scalarLaplacian_coord_mul {g : Space → ℝ} {x : Space}
@@ -122,7 +128,10 @@ theorem scalarLaplacian_coord_mul {g : Space → ℝ} {x : Space}
       x i * scalarLaplacian g x + 2 * direction g i x := by
   unfold scalarLaplacian
   simp_rw [second_direction_coord_mul hg]
-  fin_cases i <;> simp [Fin.sum_univ_three, coordinateVector] <;> ring
+  fin_cases i <;> simp only [coordinateVector, Fin.zero_eta, Fin.isValue, PiLp.single_apply,
+      mul_ite, mul_one, mul_zero,
+                    ite_mul, zero_mul, Fin.sum_univ_three, ↓reduceIte, zero_ne_one, zero_add,
+                        Fin.reduceEq, Fin.mk_one, Fin.reduceFinMk, one_ne_zero] <;> ring
 
 theorem vectorLaplacian_pack {a b c : Space → ℝ} {x : Space}
     (ha : ContDiffAt ℝ 2 a x) (hb : ContDiffAt ℝ 2 b x) (hc : ContDiffAt ℝ 2 c x) :
@@ -150,7 +159,7 @@ theorem vectorLaplacian_pack {a b c : Space → ℝ} {x : Space}
       (coordinateVector i)
   unfold vectorLaplacian
   simp_rw [hterm]
-  simp only [scalarLaplacian, direction, pack, Finset.sum_add_distrib, ← Finset.sum_smul]
+  simp only [pack, direction, Finset.sum_add_distrib, ← Finset.sum_smul, scalarLaplacian]
 
 theorem contDiffAt_lift {G : Profile} {t : ℝ} {x : Space} {n : WithTop ℕ∞}
     (hG : ContDiffAt ℝ n G (profilePoint t x)) : ContDiffAt ℝ n (lift G t) x :=
@@ -170,31 +179,37 @@ theorem direction_lift_zero {G : Profile} {t : ℝ} {x : Space}
     direction (lift G t) 0 x = x 0 * lift (partialS G) t x := by
   unfold direction
   rw [fderiv_lift_apply hG]
-  simp [coordinateVector, lift]
+  simp only [Fin.isValue, coordinateVector, PiLp.single_eq_same, mul_one, ne_eq, one_ne_zero,
+      not_false_eq_true,
+    PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, zero_mul, lift]
 
 theorem direction_lift_one {G : Profile} {t : ℝ} {x : Space}
     (hG : DifferentiableAt ℝ G (profilePoint t x)) :
     direction (lift G t) 1 x = x 1 * lift (partialS G) t x := by
   unfold direction
   rw [fderiv_lift_apply hG]
-  simp [coordinateVector, lift]
+  simp only [Fin.isValue, coordinateVector, ne_eq, zero_ne_one, not_false_eq_true,
+      PiLp.single_eq_of_ne,
+    mul_zero, PiLp.single_eq_same, mul_one, zero_add, Fin.reduceEq, zero_mul, add_zero, lift]
 
 theorem direction_lift_two {G : Profile} {t : ℝ} {x : Space}
     (hG : DifferentiableAt ℝ G (profilePoint t x)) :
     direction (lift G t) 2 x = lift (partialZ G) t x := by
   unfold direction
   rw [fderiv_lift_apply hG]
-  simp [coordinateVector, lift]
+  simp only [Fin.isValue, coordinateVector, ne_eq, Fin.reduceEq, not_false_eq_true,
+      PiLp.single_eq_of_ne,
+    mul_zero, add_zero, zero_mul, PiLp.single_eq_same, one_mul, zero_add, lift]
 
 theorem scalarLaplacian_lift {G : Profile} {t : ℝ} {x : Space}
     (hG : ContDiffAt ℝ 2 G (profilePoint t x)) :
     scalarLaplacian (lift G t) x = laplaceScalar G (profilePoint t x) := by
   have hs : DifferentiableAt ℝ (partialS G) (profilePoint t x) :=
-    (((hG.fderiv_right (m := 1) (by norm_num)).clm_apply contDiffAt_const).differentiableAt (by
-      norm_num))
+    (((hG.fderiv_right (m := 1) (by
+        norm_num)).clm_apply contDiffAt_const).differentiableAt (by norm_num))
   have hz : DifferentiableAt ℝ (partialZ G) (profilePoint t x) :=
-    (((hG.fderiv_right (m := 1) (by norm_num)).clm_apply contDiffAt_const).differentiableAt (by
-      norm_num))
+    (((hG.fderiv_right (m := 1) (by
+        norm_num)).clm_apply contDiffAt_const).differentiableAt (by norm_num))
   have hls : DifferentiableAt ℝ (lift (partialS G) t) x :=
     (hasFDerivAt_profile_composition (partialS G) t x hs).differentiableAt
   have hnear : ∀ᶠ y in 𝓝 x, ContDiffAt ℝ 2 G (profilePoint t y) :=
@@ -215,7 +230,9 @@ theorem scalarLaplacian_lift {G : Profile} {t : ℝ} {x : Space}
   rw [Fin.sum_univ_three, direction_congr he0 0, direction_congr he1 1, direction_congr he2 2]
   rw [direction_coord_mul hls, direction_coord_mul hls]
   rw [direction_lift_zero hs, direction_lift_one hs, direction_lift_two hz]
-  simp [coordinateVector, lift, laplaceScalar, profilePoint, radialEnergy]
+  simp only [Fin.isValue, coordinateVector, PiLp.single_eq_same, lift, profilePoint, radialEnergy,
+      one_mul,
+    laplaceScalar, add_left_inj]
   ring
 
 theorem scalarLaplacian_weighted_zero {G : Profile} {t : ℝ} {x : Space}
@@ -263,9 +280,16 @@ theorem advection_velocity {B F U : Profile} {t : ℝ} {x : Space}
   rw [(hasFDerivAt_velocity hB hF hU).fderiv]
   simp only [velocityJacobian, packDerivative_apply]
   ext i
-  fin_cases i <;> simp [profileDerivative_apply, velocity, componentX, componentY, lift,
-    advectionRadial, advectionAngular, advectionAxial, profilePoint, radialEnergy,
-    pack, coordinateVector] <;> ring
+  fin_cases i <;> simp only [pack, Fin.isValue, lift, profilePoint, radialEnergy, neg_add_rev,
+      velocity, componentX,
+                    coordinateVector, componentY, add_apply, neg_apply, smul_apply,
+                        AxisymmetricFields.projection_apply, PiLp.add_apply,
+                    PiLp.smul_apply, ne_eq, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne,
+                        smul_eq_mul, mul_zero,
+                    PiLp.single_eq_same, mul_one, zero_add, Fin.reduceEq, add_zero,
+                        profileDerivative_apply, zero_ne_one, sub_apply,
+                    Fin.zero_eta, advectionRadial, advectionAngular, advectionAxial, neg_mul] <;>
+                        ring
 
 theorem divergence_velocity {B F U : Profile} {t : ℝ} {x : Space}
     (hB : DifferentiableAt ℝ B (profilePoint t x))
@@ -276,8 +300,15 @@ theorem divergence_velocity {B F U : Profile} {t : ℝ} {x : Space}
         2 * radialEnergy x * partialS B (profilePoint t x) := by
   unfold spatialDivergence spatialDerivative
   rw [(hasFDerivAt_velocity hB hF hU).fderiv, Fin.sum_univ_three]
-  simp [velocityJacobian, packDerivative_apply, profileDerivative_apply,
-    coordinateVector, profilePoint, radialEnergy, lift]
+  simp only [velocityJacobian, Fin.isValue, lift, profilePoint, radialEnergy, neg_add_rev,
+      coordinateVector,
+    packDerivative_apply, add_apply, neg_apply, smul_apply, AxisymmetricFields.projection_apply,
+        ne_eq, one_ne_zero,
+    not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, neg_zero,
+        profileDerivative_apply,
+    PiLp.single_eq_same, mul_one, add_zero, Fin.reduceEq, zero_mul, zero_add, sub_apply, pack_zero,
+        zero_ne_one,
+    pack_one, one_mul, pack_two]
   ring
 
 /-- The physical vector Laplacian is local in all three profiles. In
@@ -313,7 +344,11 @@ theorem spatialLaplacian_velocity {B F U : Profile} {t : ℝ} {x : Space}
   rw [scalarLaplacian_weighted_zero hB, scalarLaplacian_weighted_one hF,
     scalarLaplacian_weighted_zero hF, scalarLaplacian_weighted_one hB, scalarLaplacian_lift hU]
   ext i
-  fin_cases i <;> simp [pack, coordinateVector] <;> ring
+  fin_cases i <;> simp only [pack, Fin.isValue, neg_add_rev, coordinateVector, Fin.zero_eta,
+      PiLp.add_apply, PiLp.smul_apply,
+                    PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+                        not_false_eq_true, PiLp.single_eq_of_ne, mul_zero,
+                    add_zero, Fin.reduceEq, neg_mul] <;> ring
 
 theorem pressureGradient_pressure {P : Profile} {t : ℝ} {x : Space}
     (hP : DifferentiableAt ℝ P (profilePoint t x)) :
@@ -323,7 +358,10 @@ theorem pressureGradient_pressure {P : Profile} {t : ℝ} {x : Space}
   change (∑ i : Fin 3, fderiv ℝ (lift P t) x (coordinateVector i) • coordinateVector i) = _
   simp_rw [fderiv_lift_apply hP]
   rw [Fin.sum_univ_three]
-  simp [pack, coordinateVector]
+  simp only [Fin.isValue, coordinateVector, PiLp.single_eq_same, mul_one, ne_eq, one_ne_zero,
+      not_false_eq_true,
+    PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, zero_mul, zero_ne_one, zero_add,
+        one_mul, pack]
 
 /-- Joint profile differentiability provides the time derivative at the
 point, with no hypothesis about any other point of the spatial slice. -/
@@ -350,9 +388,14 @@ theorem temporalDerivative_velocity {B F U : Profile} {t : ℝ} {x : Space}
   change (fderiv ℝ (fun s => pack (-(x 0 * lift B s x + x 1 * lift F s x))
     (x 0 * lift F s x - x 1 * lift B s x) (lift U s x)) t) 1 = _
   rw [hv.fderiv]
-  simp
+  simp only [Fin.isValue, neg_add_rev, packDerivative_apply, add_apply, neg_apply, smul_apply,
+    timeProfileDerivative_one, smul_eq_mul, sub_apply, neg_mul]
   ext i
-  fin_cases i <;> simp [pack, coordinateVector] <;> ring
+  fin_cases i <;> simp only [pack, Fin.isValue, coordinateVector, Fin.zero_eta, PiLp.add_apply,
+      PiLp.smul_apply,
+                    PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+                        not_false_eq_true, PiLp.single_eq_of_ne, mul_zero,
+                    add_zero, Fin.reduceEq] <;> ring
 
 /-- The exact physical residual at viscosity one, from regularity only at
 the evaluated joint profile point. No `SliceC2` or `SliceDifferentiable`
@@ -376,8 +419,12 @@ theorem navierStokesResidual_velocity {B F U P : Profile} {t : ℝ} {x : Space}
   rw [temporalDerivative_velocity hb hf hu, advection_velocity hb hf hu,
     spatialLaplacian_velocity hB hF hU, pressureGradient_pressure hP]
   ext i
-  fin_cases i <;> simp [pack, coordinateVector,
-    residualRadial, residualAngular, residualAxial] <;> ring
+  fin_cases i <;> simp only [pack, Fin.isValue, neg_mul, coordinateVector, Fin.zero_eta,
+      PiLp.add_apply, PiLp.sub_apply,
+                    PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+                        not_false_eq_true,
+                    PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, residualRadial,
+                        residualAngular, residualAxial] <;> ring
 
 /-- The three local coefficient equations imply the actual Cartesian PDE. -/
 theorem navierStokesResidual_eq_zero {B F U P : Profile} {t : ℝ} {x : Space}
@@ -390,6 +437,6 @@ theorem navierStokesResidual_eq_zero {B F U P : Profile} {t : ℝ} {x : Space}
     (hz : residualAxial B U P (profilePoint t x) = 0) :
     navierStokesResidual (velocity B F U) (pressure P) t x = 0 := by
   rw [navierStokesResidual_velocity hB hF hU hP]
-  simp [hr, ha, hz, pack]
+  simp only [pack, Fin.isValue, hr, mul_zero, ha, add_zero, zero_smul, sub_self, hz]
 
 end NavierStokes.LocalAxisymmetricResidual

@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderCompactTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 True mixed L² derivative bounds for compact smooth cylinder data. One
@@ -17,6 +17,9 @@ fixed compact support set supplies the L² mass factor at every order.
 The conversion to fixed-Hq word sums is performed once on the initial
 datum, before any same-radius inverse estimate is applied.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +34,8 @@ universe u
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Support mass, given by `‖(indicatorConstLp 2 hK.isClosed.measurableSet hK.measure_ne_top (1
+: ℝ) : Lp ℝ 2 (liftMeasure P))‖`. -/
 def supportMass (K : Set (LiftDomain P)) (hK : IsCompact K) : ℝ :=
   ‖(indicatorConstLp 2 hK.isClosed.measurableSet hK.measure_ne_top (1 : ℝ) :
     Lp ℝ 2 (liftMeasure P))‖
@@ -41,7 +46,7 @@ variable {P} {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 omit [Fact (0 < P)] in
 theorem derivative_support (A : CompactField P V) : tsupport A.derivative.field ⊆ tsupport A.field
-  := by
+    := by
   apply closure_minimal _ (isClosed_tsupport A.field)
   intro x hx
   by_contra hn
@@ -66,7 +71,7 @@ private theorem norm_iteratedFDeriv_translation_aux (n : ℕ) :
       (C : ℝ) (_hb : ∀ x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C)
       (a : LiftTangent),
       ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate P b A.toLp) a‖ ≤ C*supportMass P K hK
-        := by
+          := by
   induction n with
   | zero =>
     intro V _ _ A K hK hs C hb a
@@ -89,7 +94,7 @@ private theorem norm_iteratedFDeriv_translation_aux (n : ℕ) :
         exact hb x) a
     exact hl.trans ((mul_le_mul_of_nonneg_right
       (derivativeBundling_norm_le_one (P := LiftTangent) (V := V) (liftMeasure P)) (norm_nonneg
-        _)).trans
+          _)).trans
         (by simpa only [one_mul] using hi))
 
 theorem norm_iteratedFDeriv_translation_le (A : CompactField P V)
@@ -101,7 +106,7 @@ theorem norm_iteratedFDeriv_translation_le (A : CompactField P V)
 
 theorem translation_gevrey (A : CompactField P V)
     (K : Set (LiftDomain P)) (hK : IsCompact K) (hs : tsupport A.field ⊆ K)
-    (R C : ℝ) (hb : ∀ n x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C*majorant R 0 n)
+    (R C : ℝ) (hb : ∀ n x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C * majorant R 0 n)
     (n : ℕ) (a : LiftTangent) :
     ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate P b A.toLp) a‖ ≤
       (C*supportMass P K hK)*majorant R 0 n :=
@@ -111,10 +116,10 @@ theorem translation_block_bound {ι : Type*} [Fintype ι]
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (A : CompactField P V) (K : Set (LiftDomain P)) (hK : IsCompact K) (hs : tsupport A.field ⊆ K)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C*majorant R 0 n)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C * majorant R 0 n)
     (n : ℕ) (a : LiftTangent) :
     block directions q (fun b : LiftTangent => translate P b A.toLp) n a ≤
-      sobolevCoefficientAmplitude ι q R (C*supportMass P K hK)*
+      sobolevCoefficientAmplitude ι q R (C*supportMass P K hK) *
         majorant (sobolevCoefficientRadius ι R) 0 n := by
   have hm : 0 ≤ supportMass P K hK := norm_nonneg _
   have hi := coefficientBlock_of_tensor_bound directions hd q
@@ -124,7 +129,7 @@ theorem translation_block_bound {ι : Type*} [Fintype ι]
   have hl : block directions q (fun b : LiftTangent => translate P b A.toLp) n a ≤
       coefficientBlock directions q (fun b : LiftTangent => translate P b A.toLp) n a := by
     exact (one_mul _).symm.trans_le (mul_le_mul_of_nonneg_right hpow (block_nonneg directions q _ n
-      a))
+        a))
   exact hl.trans hi
 
 end CompactField

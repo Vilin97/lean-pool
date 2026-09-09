@@ -10,9 +10,10 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
 
+/-! Literal packet operators and coefficient witnesses from the given analytic source data. -/
+
 @[expose] public section
 
-/-! Literal packet operators and coefficient witnesses from the given analytic source data. -/
 
 noncomputable section
 
@@ -20,9 +21,11 @@ namespace EulerPacketCylinderField
 
 open Set EulerSmoothLimit EulerMeanCoefficients EulerPacketPointJets EulerPacketProfileRecursion
 
+/-- Change time, given by `h ▸ G`. -/
 def MatrixCoefficient.changeTime {T T' : ℝ} {raw : Domain → Space →L[ℝ] Space}
     (G : MatrixCoefficient T raw) (h : T = T') : MatrixCoefficient T' raw := h ▸ G
 
+/-- Change time, given by `h ▸ G`. -/
 def VectorCoefficient.changeTime {T T' : ℝ} {raw : VectorField}
     (G : VectorCoefficient T raw) (h : T = T') : VectorCoefficient T' raw := h ▸ G
 
@@ -54,13 +57,15 @@ def sourceCoefficientData (hT : M.T = D.T) : CoefficientData P M.T (sourceOperat
     path := D.M.field
     orbit := D.M.translation_contDiff
     raw_eq := fun t _ _ => by
-      simp only [EulerTransversePacketProvider.Data.strain,EulerTransversePacketProvider.Data.clamp_coe]
+      simp only [EulerTransversePacketProvider.Data.strain,
+          EulerTransversePacketProvider.Data.clamp_coe]
   }).changeTime hT.symm
   normal := (show VectorCoefficient D.T D.normalField from {
     path := D.normal.field
     orbit := D.normal.translation_contDiff
     raw_eq := fun t _ _ => by
-      simp only [EulerTransversePacketProvider.Data.normalField,EulerTransversePacketProvider.Data.clamp_coe]
+      simp only [EulerTransversePacketProvider.Data.normalField,
+          EulerTransversePacketProvider.Data.clamp_coe]
   }).changeTime hT.symm
 
 end EulerPacketCylinderField

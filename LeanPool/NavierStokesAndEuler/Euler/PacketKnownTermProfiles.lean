@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermScales
+public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownDecomposition
+public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceScales
+
+/-! The time-profile inequalities for every surviving term of the mean and high forces. -/
 
 @[expose] public section
 
-/-! The time-profile inequalities for every surviving term of the mean and high forces. -/
 
 namespace EulerPacketCylinderField.KnownTerm
 
@@ -18,7 +20,8 @@ open EulerPacketTimeProfile
 
 variable {K : Type*} [TopologicalSpace K]
 
-def ProfileFits (k : KnownTerm) (S : Scales K) (p i j : ℕ) (b : C(K,ℝ)) : Prop :=
+/-- Profile fits as an element of `Prop`. -/
+def ProfileFits (k : KnownTerm) (S : Scales K) (p i j : ℕ) (b : C(K, ℝ)) : Prop :=
   match k with
   | .previousLinear | .previousPressure => ∀ t, S.high (p-1) t ≤ b t
   | .slow l r => i+j=p → l.active p i → r.active p j →
@@ -29,8 +32,8 @@ def ProfileFits (k : KnownTerm) (S : Scales K) (p i j : ℕ) (b : C(K,ℝ)) : Pr
       ∀ t, KnownPiece.mean.profile S i t*KnownPiece.corrector.profile S j t ≤ b t
   | .fastCorrectorHigh => i+j=p+1 → KnownPiece.corrector.active p i → KnownPiece.high.active p j →
       ∀ t, KnownPiece.corrector.profile S i t*KnownPiece.high.profile S j t ≤ b t
-  | .fastCorrectorCorrector => i+j=p+1 → KnownPiece.corrector.active p i →
-    KnownPiece.corrector.active p j →
+  | .fastCorrectorCorrector =>
+      i+j=p+1 → KnownPiece.corrector.active p i → KnownPiece.corrector.active p j →
       ∀ t, KnownPiece.corrector.profile S i t*KnownPiece.corrector.profile S j t ≤ b t
 
 theorem mean_profile_fits (k : KnownTerm) (S : Scales K) (p i j : ℕ)

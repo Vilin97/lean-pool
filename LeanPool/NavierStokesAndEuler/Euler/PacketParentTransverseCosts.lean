@@ -7,15 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanCoercivity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderForwardSobolev
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Polynomial source envelopes for all transverse inverse radius guards.
 The input inverse bound is derived from determinant-one deformation data;
 no inverse solver norm or forcing-dependent constant appears in the final
 radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,32 +26,39 @@ namespace EulerPacketParentTransverseCosts
 
 open EulerParameterWordGevrey EulerTransverseGevreyInverse
   EulerTransverseCoefficientGevrey EulerTransverseFixedSobolev
-  EulerTimeLpGramSobolev EulerTimeLpAccelerationSobolev EulerFixedEvolutionSobolev
+  EulerTimeLpGramSobolev  EulerFixedEvolutionSobolev
   EulerSourceCylinderForwardSobolev EulerLinearDuhamel EulerPacketParentMeanCoercivity
 
+/-- Curvature amplitude, given by `27*C^2*C₂`. -/
 def curvatureAmplitude (C C₂ : ℝ) : ℝ := 27*C^2*C₂
 
+/-- History cost, constructed using `inverseBlockCost`. -/
 def historyCost (q : ℕ) (T R C C₁ C₂ : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) q (inverseEnvelope C C₁) R
     (formCost T C C₁ (curvatureAmplitude C C₂))
     (forcingBlockAmplitude (Fin 4) q T R C C₁ 1)
 
+/-- Acceleration cost, given by `inverseBlockCost (Fin 4) q (gramInverseEnvelope C) R (3*C^2)
+(accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)`. -/
 def accelerationCost (q : ℕ) (R C C₁ V : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) q (gramInverseEnvelope C) R (3*C^2)
     (accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)
 
+/-- Inverse radius, given by `2*(1+gramInverseEnvelope C*(3*C^2+2))*(R+1)`. -/
 def inverseRadius (R C : ℝ) : ℝ :=
   2*(1+gramInverseEnvelope C*(3*C^2+2))*(R+1)
 
+/-- Forward cost, constructed using `forwardSobolevCost`. -/
 def forwardCost (q : ℕ) (S Ti R C C₁ Cp : ℝ) : ℝ :=
   forwardSobolevCost (Fin 4) q S Cp (Ti+2)
     (EulerSourceCylinderForwardSobolev.forcingCost (Fin 4) q (inverseRadius R C) C)
     (18*inverseRadius R C*C*C₁) (4*inverseRadius R C)
 
+/-- Radius as an element of `ℝ`. -/
 def radius (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ) : ℝ :=
-  1+2*(historyCost q T R C C₁ C₂+accelerationCost q R C C₁ 1+
-    accelerationCost q R C C₁ (Ti+2))*(sobolevCoefficientRadius (Fin 4) R+1)+
-    sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C)+
+  1+2*(historyCost q T R C C₁ C₂+accelerationCost q R C C₁ 1 +
+    accelerationCost q R C C₁ (Ti+2))*(sobolevCoefficientRadius (Fin 4) R+1) +
+    sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C) +
     2*forwardCost q S Ti R C C₁ Cp*(sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C)+1)
 
 theorem inverseCost_le (T C C₁ c : ℝ) (hT : 0 ≤ T) (hT1 : T ≤ 1)
@@ -60,7 +70,7 @@ theorem inverseCost_le (T C C₁ c : ℝ) (hT : 0 ≤ T) (hT1 : T ≤ 1)
   have ht : transportCeiling T C C₁ c ≤ transportEnvelope C C₁ := by
     unfold transportCeiling transportEnvelope
     calc
-      _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)*1+
+      _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)*1 +
         gramInverseEnvelope C*C) := by gcongr
       _ = _ := by ring
   exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ ht0 ht 2) (by norm_num)
@@ -95,14 +105,14 @@ theorem forwardCost_nonneg (q : ℕ) (S Ti R C C₁ Cp : ℝ)
     0 ≤ forwardCost q S Ti R C C₁ Cp := by
   have hi := inverseRadius_nonneg R C hR
   have ha : 0 ≤ forwardSobolevAmplitude (Fin 4) q S Cp (18*inverseRadius R C*C*C₁) (4*inverseRadius
-    R C) := by
+      R C) := by
     apply sobolevCoefficientAmplitude_nonneg _ _ _ (by positivity)
     unfold frozenAmplitude; positivity
   have hs := sobolevInverseCost_nonneg 1 _ zero_le_one ha q
   have hf : 0 ≤ EulerSourceCylinderForwardSobolev.forcingCost (Fin 4) q (inverseRadius R C) C := by
     unfold EulerSourceCylinderForwardSobolev.forcingCost
-    exact mul_nonneg (by norm_num) (sobolevCoefficientAmplitude_nonneg _ _ _ (by positivity) (by
-      positivity))
+    exact mul_nonneg (by
+        norm_num) (sobolevCoefficientAmplitude_nonneg _ _ _ (by positivity) (by positivity))
   unfold forwardCost forwardSobolevCost
   positivity
 
@@ -147,13 +157,13 @@ theorem traceCost_le (T Ti : ℝ) (hT : 0 < T) (hT1 : T ≤ 1) (hi : T⁻¹ ≤ 
 
 theorem forwardCost_bound (q : ℕ) (S Ti R C C₁ Cp V : ℝ)
     (hS : 0 ≤ S) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hCp : 0 ≤ Cp)
-    (hV : V ≤ Ti+2) :
+    (hV : V ≤ Ti + 2) :
     forwardSobolevCost (Fin 4) q S Cp V
       (EulerSourceCylinderForwardSobolev.forcingCost (Fin 4) q (inverseRadius R C) C)
       (18*inverseRadius R C*C*C₁) (4*inverseRadius R C) ≤ forwardCost q S Ti R C C₁ Cp := by
   have hi := inverseRadius_nonneg R C hR
   have ha : 0 ≤ forwardSobolevAmplitude (Fin 4) q S Cp (18*inverseRadius R C*C*C₁) (4*inverseRadius
-    R C) := by
+      R C) := by
     apply sobolevCoefficientAmplitude_nonneg _ _ _ (by positivity)
     unfold frozenAmplitude; positivity
   have hs := sobolevInverseCost_nonneg 1 _ zero_le_one ha q
@@ -164,14 +174,14 @@ theorem radius_guards (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ)
     (hT : 0 ≤ T) (hS : 0 ≤ S) (hTi : 0 ≤ Ti) (hR : 0 ≤ R)
     (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) (hCp : 0 ≤ Cp) :
     2*historyCost q T R C C₁ C₂*(sobolevCoefficientRadius (Fin 4) R+1) ≤ radius q T S Ti R C C₁ C₂
-      Cp ∧
+        Cp ∧
     2*accelerationCost q R C C₁ 1*(sobolevCoefficientRadius (Fin 4) R+1) ≤ radius q T S Ti R C C₁
-      C₂ Cp ∧
+        C₂ Cp ∧
     2*accelerationCost q R C C₁ (Ti+2)*(sobolevCoefficientRadius (Fin 4) R+1) ≤ radius q T S Ti R C
-      C₁ C₂ Cp ∧
+        C₁ C₂ Cp ∧
     sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C) ≤ radius q T S Ti R C C₁ C₂ Cp ∧
     2*forwardCost q S Ti R C C₁ Cp*(sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C)+1) ≤
-      radius q T S Ti R C C₁ C₂ Cp := by
+        radius q T S Ti R C C₁ C₂ Cp := by
   have hw := historyCost_nonneg q T R C C₁ C₂ hT hR hC hC₁ hC₂
   have hg := accelerationCost_nonneg q R C C₁ 1 hR hC hC₁ zero_le_one
   have hc := accelerationCost_nonneg q R C C₁ (Ti+2) hR hC hC₁ (by positivity)

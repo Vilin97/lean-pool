@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStateRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.RankStateBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.RankStateBounds
 
 /-!
 # The radial residual of the actual moving pressure gauge
@@ -20,6 +18,9 @@ mean class follows on the same moving strip, retaining the vanishing edge
 weight and all ordinary slow derivatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.GaugeRadialResidualBounds
@@ -28,8 +29,11 @@ open Set Function Filter
 open scoped ContDiff Topology
 open WeightedClasses CorrectionState LocalSignedRequest
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
+/-- Scalar: an abbreviation for `MeanIncrementBounds.Field Point`. -/
 abbrev Scalar := MeanIncrementBounds.Field Point
 
 /-- Only the primitive coefficients of the actual radial derivative are
@@ -50,13 +54,13 @@ variable {U : Set Plane} {g : VariableGaugeMean.GaugeData Plane}
 theorem graphOperators (U : Set Plane) (g : VariableGaugeMean.GaugeData Plane)
     (epsilon fast : ℕ → ℝ) (axial slowTime : Plane × Plane) (temporal : Plane) :
     RadialMatch U g (CorrectionState.graphOperators g.radial epsilon fast axial slowTime temporal)
-      :=
+        :=
   ⟨rfl, fun _ _ => rfl, rfl, rfl⟩
 
 theorem nativeOperators (U : Set Plane) (g : VariableGaugeMean.GaugeData Plane)
     (epsilon fast : ℕ → ℝ) (axial slowTime temporal : Plane) :
     RadialMatch U g (StateMomentBalances.nativeOperators g.radial epsilon fast axial slowTime
-      temporal) :=
+        temporal) :=
   graphOperators U g epsilon fast (axial, 0) (slowTime, 0) temporal
 
 /-- The primitive matches give the genuine derivative identity for every

@@ -6,13 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryParity
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrectorSupport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrector
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
+
+/-! Joint parity of the complete constructed high inverse, pressure and actual corrector. -/
 
 @[expose] public section
 
-/-! Joint parity of the complete constructed high inverse, pressure and actual corrector. -/
 
 noncomputable section
 
@@ -31,7 +38,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
   (hH : ∀ t x, B.H.field t (-x) = B.H.field t x)
-  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(-x,-θ)) = -raw (t,(x,θ)))
+  (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
 
 include hF hM hH hraw
 
@@ -45,7 +52,7 @@ theorem forwardInitial_reflection_neg :
 
 include hSym
 
-theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T - τ)) :
     reflection P (futureVelocity τ hτ hτT B G t) = -futureVelocity τ hτ hτT B G t :=
   (G.tail τ hτ.le hτT).velocityPath_reflection_neg (forwardInitial τ hτ hτT B G) hSym
     (fun s x => hF (tailInclusion D.T τ hτ.le s) x)
@@ -107,6 +114,6 @@ theorem correctorDerivative_odd (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       -correctorDerivative τ hτ hτT B G (t,(x,θ)) :=
   (correctorField τ hτ hτT B G).timeDerivative_odd (correctorDerivativeField τ hτ hτT B G)
     D.T_pos (correctorField_time τ hτ hτT B G) (curlCorrector_odd τ hτ hτT B G hSym hF hM hH hraw)
-      t x θ
+        t x θ
 
 end EulerTransversePacketJoin

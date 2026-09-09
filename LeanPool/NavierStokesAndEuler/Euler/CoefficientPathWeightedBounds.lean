@@ -6,17 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathBounds
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevGevreyOperators
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathSmooth
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathBounds
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
 
 /-!
 Cutoff-independent weighted estimates for the actual coefficient jets.
 The positive-order coefficient normalization is paid once by a fixed
 coefficient radius, independent of the solution amplitude and grade.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +32,8 @@ open Set Finset ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
   EulerPacketTailBound EulerOperatorGevreyCalculus
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Normalized coefficient radius, given by `max 1 (sobolevCoefficientAmplitude (Fin 4) q Rc C)
+* sobolevCoefficientRadius (Fin 4) Rc`. -/
 def normalizedCoefficientRadius (q : ℕ) (Rc C : ℝ) : ℝ :=
   max 1 (sobolevCoefficientAmplitude (Fin 4) q Rc C) * sobolevCoefficientRadius (Fin 4) Rc
 
@@ -38,7 +44,7 @@ theorem normalizedCoefficientRadius_nonneg (q : ℕ) (Rc C : ℝ) (hRc : 0 ≤ R
 theorem amplitude_majorant_le_normalized (q : ℕ) (Rc C : ℝ) (hRc : 0 ≤ Rc)
     (n : ℕ) (hn : 1 ≤ n) :
     sobolevCoefficientAmplitude (Fin 4) q Rc C * majorant (sobolevCoefficientRadius (Fin 4) Rc) 0 n
-      ≤
+        ≤
       majorant (normalizedCoefficientRadius q Rc C) 0 n := by
   have hp : sobolevCoefficientAmplitude (Fin 4) q Rc C ≤
       (max 1 (sobolevCoefficientAmplitude (Fin 4) q Rc C))^n :=
@@ -53,11 +59,11 @@ theorem amplitude_majorant_le_normalized (q : ℕ) (Rc C : ℝ) (hRc : 0 ≤ Rc)
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (P : ℝ) [Fact (0 < P)]
-  (A : C(K,Space →ᵇ Space →L[ℝ] Space))
+  (A : C(K, Space →ᵇ Space →L[ℝ] Space))
   (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
 
 theorem coefficientJet_block_normalized (s q : ℕ) (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) x‖ ≤ C*majorant Rc 0 n)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) x‖ ≤ C * majorant Rc 0 n)
     (R : ℝ) (hR : normalizedCoefficientRadius q Rc C ≤ R)
     (n : ℕ) (hn : 1 ≤ n) (t : K) :
     EulerH6Pressure.coefficientBlock P (coefficientJet P A hA s t) q n ≤
@@ -73,15 +79,15 @@ private theorem weight_majorant_zero (ρ R : ℝ) (n : ℕ) :
   field_simp [factorial_cast_ne_zero n]
 
 theorem coefficientJet_weighted_bound (s q N : ℕ) (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) x‖ ≤ C*majorant Rc 0 n)
-    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ*sobolevCoefficientRadius (Fin 4) Rc ≤ 1/2) (t : K) :
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) x‖ ≤ C * majorant Rc 0 n)
+    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ * sobolevCoefficientRadius (Fin 4) Rc ≤ 1 / 2) (t : K) :
     weightedCoefficient P (coefficientJet P A hA s t) q N ρ ≤
       2*sobolevCoefficientAmplitude (Fin 4) q Rc C := by
   have hB := sobolevCoefficientAmplitude_nonneg (ι := Fin 4) q Rc C hRc hC
   calc
     _ ≤ ∑ n ∈ range (N+1), weight ρ n *
         (sobolevCoefficientAmplitude (Fin 4) q Rc C * majorant (sobolevCoefficientRadius (Fin 4)
-          Rc) 0 n) := by
+            Rc) 0 n) := by
       apply sum_le_sum
       intro n _
       exact mul_le_mul_of_nonneg_left (coefficientJet_block_bound P A hA s q Rc C hRc hC hb n t)
@@ -95,7 +101,7 @@ theorem coefficientJet_weighted_bound (s q N : ℕ) (Rc C : ℝ) (hRc : 0 ≤ Rc
       ring
     _ ≤ _ := (mul_le_mul_of_nonneg_left
       (sum_geometric_le_two _ (mul_nonneg hρ.le (sobolevCoefficientRadius_nonneg Rc hRc)) hsmall
-        (N+1))
+          (N+1))
       hB).trans_eq (mul_comm _ _)
 
 end EulerCoefficientPath

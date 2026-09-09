@@ -6,15 +6,24 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedResidualBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedApproximationBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteCoarseBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedResidualFields
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceSolenoidal
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryFields
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedApproximationBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedResidualBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
 
 /-! The literal terminal wave yields the actual finite packet, its small normal
 drift, and its exponentially small residual.  Primary bounds and the primary
 equation are supplied by the construction itself. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,16 +35,18 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Initialized packet field, constructed using `joinedPacketPullbackField`. -/
 def initializedPacketField (N : ℕ) (κ : ℝ) :=
   joinedPacketPullbackField period M D hTime τ hτ hτT B
     (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
     (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs)) N κ
 
+/-- Initialized residual field, constructed using `joinedResidualField`. -/
 def initializedResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) (hκ : κ ≠ 0) :=
   joinedResidualField period M D hTime τ hτ hτT B
@@ -59,16 +70,16 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem initializedPacket_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     ((initializedPacketField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹).smul k).WordBound
-      6 (4*L.R) (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 1+
+      6 (4*L.R) (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 1 +
         fixedVelocityGradeCost L.R S.H0 2+1)) 0 :=
   joinedPacket_normalized_bound period M D hTime τ hτ hτT B L NB W LM WM BC hRc hcost S α hα hgrowth
     (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
@@ -78,7 +89,7 @@ theorem initializedPacket_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (h
       (initialData D δ hδ (α • ξ) hs)) N hN k hk hbase
 
 theorem initializedPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (((initializedPacketField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹).smul k).map
       (normalComponentMap D.m₀)).WordBound 6 (4*L.R)
         (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 2+2)/k) 0 :=
@@ -91,14 +102,14 @@ theorem initializedPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 
 
 theorem initializedResidual_normalized_bound (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ)) (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ)) (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (((joinedSourceCoefficientData period M D τ hτ hτT B hTime).inverse.multiply
       (initializedResidualField M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k⁻¹
         (inv_ne_zero (by linarith)))).smul k).WordBound
           6 (4*L.R) (Real.exp (-(7/10)*X*Real.log k)) 0 :=
   joinedResidual_normalized_bound period M D hTime τ hτ hτT B L NB W LM WM BC hRc hcost S α hα
-    hgrowth
+      hgrowth
     (EulerTransversePacketPrimary.vector τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
     (EulerTransversePacketPrimary.scalar τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
     (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs))

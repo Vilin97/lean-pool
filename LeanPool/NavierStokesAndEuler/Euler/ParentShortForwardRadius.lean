@@ -11,10 +11,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardRadiusPolynomial
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketForwardInput
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
 
-@[expose] public section
-
 /-! The genuine short-time forward factory obeys the same source
 polynomial, using its proved constant profile and physical propagator cost 2. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,13 +28,13 @@ open Set EulerSmoothLimit EulerGevrey EulerMeanHarmonic EulerPacketParentLabelBo
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {A : Parent} (L : LabelData A) (H : LowBounds A)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S)
   (CM : ℝ) (hCM : 0 ≤ CM)
-  (hM : ∀ t x, ‖x‖ ≤ (1/2 : ℝ) → ‖A.strain.field t x‖ ≤ CM)
-  (hshort : CM*A.T ≤ 1/2)
+  (hM : ∀ t x, ‖x‖ ≤ (1 / 2 : ℝ) → ‖A.strain.field t x‖ ≤ CM)
+  (hshort : CM * A.T ≤ 1 / 2)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
   (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti)
 
 local notation "J" => L.forwardInputs H m hm R S hS CM hCM hM Ω hΩ hΩo hsub hΩball hshort Ti hT1 hTi
@@ -41,6 +42,8 @@ local notation "BC" => forwardCoefficientBudget period (A.meanData H) (A.transve
   rfl (ForwardInputs.normal J)
 local notation "Cp" => (2 : ℝ)
 
+/-- Short forward canonical radius, given by `EulerPacketForwardRadius.canonicalRadius
+(J).linear (J).mean (J).normal BC δ ξ`. -/
 def shortForwardCanonicalRadius (δ : ℝ) (ξ : U) : ℝ :=
   EulerPacketForwardRadius.canonicalRadius (J).linear (J).mean (J).normal BC δ ξ
 
@@ -48,7 +51,7 @@ theorem shortForward_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
     (hKX : L.K ≤ X) (hTiX : Ti ≤ X) (hCpX : Cp ≤ X)
     (hLX : H.L ≤ X) (hδX : δ⁻¹ ≤ X) (hξX : ‖ξ‖ ≤ X) :
     EulerPacketForwardRadius.RadiusPrimitives (J).linear (J).mean (J).normal BC δ ξ (sourceEnvelope
-      X) := by
+        X) := by
   let W := inputEnvelope X
   let V := sourceRadiusEnvelope W
   have hK0 := zero_le_one.trans L.K_one
@@ -69,10 +72,10 @@ theorem shortForward_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
     exact mul_le_of_le_one_left (coefficientRadius_nonneg L.K) A.ell_le_one
   have hIs : EulerPacketParentTransverseCosts.inverseRadius L.scaledRadius (frameAmplitude L.K) ≤
       EulerPacketParentTransverseCosts.inverseRadius (coefficientRadius L.K) (frameAmplitude L.K)
-        := by
+          := by
     have hF := frameAmplitude_nonneg L.K
     unfold EulerPacketParentTransverseCosts.inverseRadius
-      EulerPacketParentMeanCoercivity.gramInverseEnvelope
+        EulerPacketParentMeanCoercivity.gramInverseEnvelope
     gcongr
   have hFW : 6*(frameAmplitude L.K)^3 ≤ W := by
     convert hPW using 1; unfold EulerPacketParentPhysicalBudgets.physicalCost; ring
@@ -124,7 +127,7 @@ theorem shortForward_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
 theorem shortForward_radius_primitive_polynomial (δ : ℝ) (hδ : 0 < δ) (ξ : U) :
     let X := parameterSize L.K 0 Ti 2 H.L δ ‖ξ‖
     EulerPacketForwardRadius.RadiusPrimitives (J).linear (J).mean (J).normal BC δ ξ (sourceEnvelope
-      X) ∧
+        X) ∧
       sourceEnvelope X ≤ sourceConstant*X^sourcePower := by
   have hL0 : 0 ≤ H.L := (mul_nonneg boundaryLocalizationC1_nonneg H.Bc_nonneg).trans H.L_lower
   obtain ⟨h1,hK,_,hIT,hC,hB,hD,hN⟩ := parameterSize_bounds L.K 0 Ti 2 H.L δ ‖ξ‖

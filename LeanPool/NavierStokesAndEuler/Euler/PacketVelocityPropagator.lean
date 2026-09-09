@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborStability
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBridge
+import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketPerturbation
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Relative propagator estimates on arbitrary subintervals for actual velocity states. -/
 
 @[expose] public section
 
-/-! Relative propagator estimates on arbitrary subintervals for actual velocity states. -/
 
 noncomputable section
 
@@ -21,21 +25,21 @@ open Set EulerPacketBridge EulerPacketPerturbation EulerClosedIntervalDerivative
 
 theorem velocity_propagator_bound
     {σ Θ s t δ : ℝ} {F F₁ G G₁ U U₁ V V₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
     (hs : 0 ≤ s) (hst : s ≤ t) (ht : t ≤ Θ) (hδ : 0 ≤ δ)
-    (hsmall : 20*Θ^8*δ*(t-s) ≤ 1/2)
+    (hsmall : 20 * Θ ^ 8 * δ * (t - s) ≤ 1 / 2)
     (hF : ∀ x, 0 ≤ x → HasDerivAt F (F₁ x) x)
     (hG : ∀ x, 0 ≤ x → HasDerivAt G (G₁ x) x)
-    (hfluxF : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*F₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*F x) x)
-    (hfluxG : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*G₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*G x) x)
+    (hfluxF : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * F₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * F x) x)
+    (hfluxG : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * G₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * G x) x)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hU : ∀ x ∈ Icc s t, HasDerivAt U (U₁ x) x)
     (hV : ∀ x ∈ Icc s t, HasDerivAt V (V₁ x) x)
     (hU₁c : ContinuousOn U₁ (Icc s t)) (hV₁c : ContinuousOn V₁ (Icc s t))
     (herror : ∀ x ∈ Icc s t,
-      |U₁ x-idealVelocityFirst (σ^2) x (U x) (V x)|+|V₁ x+U x| ≤ δ*(|U x|+|V x|)) :
+      |U₁ x - idealVelocityFirst (σ ^ 2) x (U x) (V x)| + |V₁ x + U x| ≤ δ * (|U x| + |V x|)) :
     |U t|+|V t| ≤ 40*Θ^8*(F t/F s)*(|U s|+|V s|) := by
   let f : ℝ → ℝ := fun x => V₁ x+U x
   let g : ℝ → ℝ := fun x => -U₁ x+idealVelocityFirst (σ^2) x (U x) (V x)
@@ -64,20 +68,21 @@ theorem velocity_propagator_bound
 
 theorem velocity_propagator_bound_within
     {σ Θ T e : ℝ} {F F₁ G G₁ U U₁ V V₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ)
-    (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40*e*Θ^21 ≤ 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
+    (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ 21 ≤ 1)
     (hF : ∀ x, 0 ≤ x → HasDerivAt F (F₁ x) x)
     (hG : ∀ x, 0 ≤ x → HasDerivAt G (G₁ x) x)
-    (hfluxF : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*F₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*F x) x)
-    (hfluxG : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*G₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*G x) x)
+    (hfluxF : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * F₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * F x) x)
+    (hfluxG : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * G₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * G x) x)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hU : ∀ x ∈ Icc 0 T, HasDerivWithinAt U (U₁ x) (Icc 0 T) x)
     (hV : ∀ x ∈ Icc 0 T, HasDerivWithinAt V (V₁ x) (Icc 0 T) x)
     (hU₁c : ContinuousOn U₁ (Icc 0 T)) (hV₁c : ContinuousOn V₁ (Icc 0 T))
     (herror : ∀ x ∈ Icc 0 T,
-      |U₁ x-idealVelocityFirst (σ^2) x (U x) (V x)|+|V₁ x+U x| ≤ (e*Θ^12)*(|U x|+|V x|)) :
+      |U₁ x - idealVelocityFirst (σ ^ 2) x (U x) (V x)| + |V₁ x + U x| ≤ (e * Θ ^ 12) * (|U x| + |V
+          x|)) :
     ∀ s t, 0 ≤ s → s ≤ t → t ≤ T →
       |U t|+|V t| ≤ 40*Θ^8*(F t/F s)*(|U s|+|V s|) := by
   obtain ⟨U', hUeq, hU'⟩ := exists_extension hT0 hU

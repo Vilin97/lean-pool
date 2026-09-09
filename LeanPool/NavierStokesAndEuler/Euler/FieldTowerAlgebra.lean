@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
 
-@[expose] public section
-
 /-! Actual algebra of coherent all-order fields, including multiplication
 by the genuine coefficient towers of the source deformation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +23,7 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderSobolevSpace
 
 variable {P T : ℝ} [Fact (0 < P)] (A B : EulerAllOrderCorrectionData.FieldTower P T)
 
+/-- Add, bundling `field`, `realization`, `value_eq`. -/
 def add : EulerAllOrderCorrectionData.FieldTower P T where
   field := A.field+B.field
   realization q := A.realization q+B.realization q
@@ -30,6 +32,7 @@ def add : EulerAllOrderCorrectionData.FieldTower P T where
     rw [A.value_eq,B.value_eq]
     rfl
 
+/-- Smul, bundling `field`, `realization`, `value_eq`. -/
 def smul (c : ℝ) : EulerAllOrderCorrectionData.FieldTower P T where
   field := c • A.field
   realization q := c • A.realization q
@@ -54,6 +57,7 @@ theorem smul_pointField (c : ℝ) (t : Icc (0 : ℝ) T) :
   filter_upwards [Lp.coeFn_smul c (A.field t),A.pointField_ae t] with x hs ha
   exact hs.trans (congrArg (c • ·) ha)
 
+/-- Multiply, bundling `field`, `realization`, `value_eq`. -/
 def multiply (C : CoefficientTower P T) : EulerAllOrderCorrectionData.FieldTower P T where
   field := (valueOperator P 0).compLeftContinuous ℝ (Icc (0 : ℝ) T)
     ⟨fun t => coefficientSobolevOperator P (C.jet 0 t) (A.realization 0 t),
@@ -61,7 +65,7 @@ def multiply (C : CoefficientTower P T) : EulerAllOrderCorrectionData.FieldTower
   realization q := ⟨fun t => coefficientSobolevOperator P (C.jet q t) (A.realization q t),
     (C.continuous q).clm_apply (A.realization q).continuous⟩
   value_eq q t := by
-    change value P (coefficientSobolevOperator P (C.jet q t) (A.realization q t))=
+    change value P (coefficientSobolevOperator P (C.jet q t) (A.realization q t)) =
       value P (coefficientSobolevOperator P (C.jet 0 t) (A.realization 0 t))
     rw [coefficientSobolevOperator_value,coefficientSobolevOperator_value,A.value_eq,A.value_eq]
 

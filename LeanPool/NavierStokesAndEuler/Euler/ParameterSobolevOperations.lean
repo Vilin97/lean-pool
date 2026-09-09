@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevProductGevrey
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+/-! Same-radius operations on literal fixed-base ordered derivative blocks. -/
 
 @[expose] public section
 
-/-! Same-radius operations on literal fixed-base ordered derivative blocks. -/
 
 noncomputable section
 
@@ -37,7 +41,7 @@ theorem block_smul_le (directions : ι → P) (q : ℕ)
 
 theorem block_smul_gevrey (directions : ι → P) (q : ℕ)
     (a : ℝ) (f : P → E) (hf : ContDiff ℝ ∞ f)
-    (R C : ℝ) (d : ℕ) (hb : ∀ n x, block directions q f n x ≤ C*majorant R d n)
+    (R C : ℝ) (d : ℕ) (hb : ∀ n x, block directions q f n x ≤ C * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => a • f y) n x ≤ (|a| *C)*majorant R d n :=
   (block_smul_le directions q a f hf n x).trans
@@ -46,8 +50,8 @@ theorem block_smul_gevrey (directions : ι → P) (q : ℕ)
 theorem block_sub_gevrey (directions : ι → P) (q : ℕ)
     (f g : P → E) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (R C D : ℝ) (d : ℕ)
-    (hb : ∀ n x, block directions q f n x ≤ C*majorant R d n)
-    (hc : ∀ n x, block directions q g n x ≤ D*majorant R d n)
+    (hb : ∀ n x, block directions q f n x ≤ C * majorant R d n)
+    (hc : ∀ n x, block directions q g n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (f-g) n x ≤ (C+D)*majorant R d n :=
   (block_sub_le directions q f g hf hg n x).trans
@@ -62,11 +66,11 @@ theorem block_acceleration_forcing_gevrey (directions : ι → P) (q : ℕ)
     (hf : ContDiff ℝ ∞ f) (hv : ContDiff ℝ ∞ v)
     (Rc R CA CB Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : Rc ≤ R)
     (hCA : 0 ≤ CA) (hCB : 0 ≤ CB) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hbA : ∀ n x, coefficientBlock directions q A n x ≤ CA*majorant Rc 0 n)
-    (hbB : ∀ n x, coefficientBlock directions q B n x ≤ CB*majorant Rc 0 n)
+    (hbA : ∀ n x, coefficientBlock directions q A n x ≤ CA * majorant Rc 0 n)
+    (hbB : ∀ n x, coefficientBlock directions q B n x ≤ CB * majorant Rc 0 n)
     (d : ℕ)
-    (hbf : ∀ n x, block directions q f n x ≤ Cf*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ Cv*majorant R d n)
+    (hbf : ∀ n x, block directions q f n x ≤ Cf * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => A y (f y-(2 : ℝ) • B y (v y))) n x ≤
       (3*CA*(Cf+6*CB*Cv))*majorant R d n := by

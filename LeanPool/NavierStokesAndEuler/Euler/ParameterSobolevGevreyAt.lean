@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevGevrey
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # The fixed-Sobolev inverse estimate needs bounds only at its base point
@@ -17,6 +17,9 @@ In particular a frozen Duhamel equation has identity as its base operator.
 The actual equation and smoothness hold as functions; every quantitative
 hypothesis, including invertibility, is needed only at the evaluation point.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,12 +37,13 @@ theorem block_inverse_gevrey_at (directions : ι → P) (q : ℕ)
     (heq : ∀ y, A y (u y) = f y)
     (x : P) (inverse : E →L[ℝ] E) (hleft : ∀ v, inverse (A x v) = v)
     (I B C D M Rc R : ℝ) (_hC : 0 ≤ C) (_hD : 0 ≤ D)
-    (hM : 1 ≤ M) (hMC : sobolevInverseCost I B q*C ≤ M)
-    (hMD : sobolevInverseCost I B q*D ≤ M)
-    (hRc : 0 ≤ Rc) (hR : 2*M*(Rc+1) ≤ R)
+    (hM : 1 ≤ M) (hMC : sobolevInverseCost I B q * C ≤ M)
+    (hMD : sobolevInverseCost I B q * D ≤ M)
+    (hRc : 0 ≤ Rc) (hR : 2 * M * (Rc + 1) ≤ R)
     (hinv : ‖inverse‖ ≤ I) (hbase : baseSize directions q A x ≤ B)
-    (hcoeff : ∀ j, coefficientBlock directions q A (j+1) x ≤ C*(Rc^(j+1)*((j+1).factorial : ℝ)^2))
-    (d : ℕ) (hforce : ∀ n, block directions q f n x ≤ D*majorant R d n)
+    (hcoeff : ∀ j, coefficientBlock directions q A (j + 1) x ≤ C * (Rc ^ (j + 1) * ((j +
+        1).factorial : ℝ) ^ 2))
+    (d : ℕ) (hforce : ∀ n, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) : block directions q u n x ≤ majorant R (d+1) n := by
   have hR0 : 0 ≤ R := by nlinarith
   have hI : 0 ≤ I := (norm_nonneg inverse).trans hinv
@@ -48,12 +52,12 @@ theorem block_inverse_gevrey_at (directions : ι → P) (q : ℕ)
   apply triangular_inverse_majorant M Rc R hM hRc hR d
     (fun k => majorant R d k) (fun k => block directions q u k x) (fun _ => le_rfl) _ n
   intro k
-  let S : ℝ := ∑ j ∈ range k, (k.choose (j+1) : ℝ)*Rc^(j+1)*
+  let S : ℝ := ∑ j ∈ range k, (k.choose (j+1) : ℝ)*Rc^(j+1) *
     ((j+1).factorial : ℝ)^2*block directions q u (k-(j+1)) x
   have hS : 0 ≤ S := sum_nonneg (fun j _ => mul_nonneg
     (mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg hRc _)) (sq_nonneg _))
     (block_nonneg directions q u _ x))
-  have hsum : (∑ j ∈ range k, (k.choose (j+1) : ℝ)*coefficientBlock directions q A (j+1) x*
+  have hsum : (∑ j ∈ range k, (k.choose (j+1) : ℝ)*coefficientBlock directions q A (j+1) x *
       block directions q u (k-(j+1)) x) ≤ C*S := by
     dsimp only [S]
     rw [mul_sum]

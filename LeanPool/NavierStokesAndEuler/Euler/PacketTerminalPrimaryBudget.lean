@@ -8,10 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryFields
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTimeChange
+
+/-! The literal compact terminal wave initializes the mean-time packet budget. -/
 
 @[expose] public section
 
-/-! The literal compact terminal wave initializes the mean-time packet budget. -/
 
 noncomputable section
 
@@ -22,7 +25,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (L : EulerTransversePacketJoin.Budget D τ hτ hτT B (Fin 4) 6)
   (H : EulerTransversePacketPrimary.Budget L)
@@ -31,12 +34,12 @@ variable (M : EulerMeanPacketProvider.Data)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
   (hR : wordRadius (Fin 4) δ ≤ L.R)
   (W : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
 
 include hδ1 hα hR W
 
 theorem joinedTerminalPrimary_budget (S : Scales (Icc (0 : ℝ) M.T))
-    (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile) :
+    (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile) :
     ProfileBudget (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B
       (initialData D δ hδ (α • ξ) hs)) S L.R 1 := by
   have hg : (S.changeTime hTime).growth=α • L.fullProfile :=
@@ -45,6 +48,6 @@ theorem joinedTerminalPrimary_budget (S : Scales (Icc (0 : ℝ) M.T))
     (joinedSourceOperators period M D τ hτ hτT B) rfl (S.changeTime hTime) hg
   have hM := hD.changeTime hTime.symm M.T_pos.le
   simpa only [Scales.changeTime_roundtrip, joinedTerminalPrimaryWitness, joinedTerminalPrimary]
-    using hM
+      using hM
 
 end EulerPacketTerminalDatum

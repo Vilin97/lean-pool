@@ -7,12 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
-public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-public import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+
+/-! Integration by parts for the literal whole-space Gaussian average. -/
 
 @[expose] public section
 
-/-! Integration by parts for the literal whole-space Gaussian average. -/
 
 noncomputable section
 
@@ -48,7 +48,7 @@ theorem integration_by_parts (k : Space → ℝ) (hk : Differentiable ℝ k)
     (∫ y : Space, k y • fderiv ℝ f (x+y) a) =
       -(∫ y : Space, fderiv ℝ k y a • f (x+y)) := by
   have hfc : Continuous (fun y : Space => f (x+y)) := hf.continuous.comp (continuous_const.add
-    continuous_id)
+      continuous_id)
   have hfd : Continuous (fun y : Space => fderiv ℝ f (x+y) a) :=
     ((hf.fderiv_right (m := ∞) (by simp)).continuous.comp
       (continuous_const.add continuous_id)).clm_apply continuous_const
@@ -114,7 +114,7 @@ theorem average_second_identity {t : ℝ} (ht : 0 < t)
   have hi : Integrable (fun y : Space => fderiv ℝ (firstKernel t a) y b) := by
     simpa only [firstKernel_fderiv] using secondKernel_integrable ht a b
   have h := integration_by_parts (firstKernel t a) ((firstKernel_smooth t a).differentiable (by
-    simp))
+      simp))
     (firstKernel_integrable ht a) b hi f hf C₀ C₁ h₀ h₁ x
   simp only [firstKernel_fderiv] at h
   rw [h, neg_neg]

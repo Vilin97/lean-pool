@@ -7,12 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
 
 /-!
 # A concrete smooth exponential-flat edge
@@ -25,6 +19,9 @@ smoothness, vanishing derivatives, and smooth inverse-power quotients.
 These facts concern this scalar edge function, not the manuscript's stress
 factorization, PDE estimates, or asserted smooth force extension.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

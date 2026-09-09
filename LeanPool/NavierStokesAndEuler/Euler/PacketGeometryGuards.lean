@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketShearMotion
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameQuantitative
+import LeanPool.NavierStokesAndEuler.Euler.PacketShearMotion
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Consequences of the literal numerical guards for a physical geometry stage. -/
 
 @[expose] public section
 
-/-! Consequences of the literal numerical guards for a physical geometry stage. -/
 
 noncomputable section
 
@@ -24,8 +27,8 @@ variable {α : Type*} (D : PhysicalGeometryData α)
 
 theorem a_pos : 0 < D.a := by linarith only [D.a_lower]
 theorem Theta_pos : 0 < D.Θ := by linarith only [D.Theta_lower]
-theorem error_nonneg : 0 ≤ D.error := by unfold error; positivity [D.epsilon_pos, D.Theta_pos,
-  D.d_nonneg]
+theorem error_nonneg : 0 ≤ D.error := by
+    unfold error; positivity [D.epsilon_pos, D.Theta_pos, D.d_nonneg]
 
 theorem target_from_sigma : 1/D.σ ≤ D.target := by
   have hy : 1 ≤ D.y⁻¹ := by
@@ -91,8 +94,8 @@ theorem ray_error_small : 800*D.error*D.Θ^5 ≤ 1/2 := by
   nlinarith only [hp, hs]
 
 theorem relative_error_small : neighborStabilityConstant*D.error*D.Θ^29 ≤ 1/2 := by
-  have hK : 0 ≤ neighborStabilityConstant := (by norm_num : (0:ℝ) ≤ 1000000000).trans
-    neighborStabilityConstant_ge
+  have hK : 0 ≤ neighborStabilityConstant := (by
+      norm_num : (0:ℝ) ≤ 1000000000).trans neighborStabilityConstant_ge
   have hp := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ D.Theta_lower (by decide : 29 ≤ 40))
     (mul_nonneg hK D.error_nonneg)
   have hs := D.small
@@ -111,8 +114,8 @@ theorem scalar_error_small : 4*exp 6*(400000000*D.error*D.Θ^29) ≤ 1 := by
   nlinarith only [hp, hs, hr]
 
 theorem propagator_small : 8000000*D.error*D.Θ^21 ≤ 1 := by
-  have hp := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ D.Theta_lower (by decide : 21 ≤ 40))
-    D.error_nonneg
+  have hp := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ D.Theta_lower (by
+      decide : 21 ≤ 40)) D.error_nonneg
   have hk : 0 ≤ neighborStabilityConstant-8 := by linarith only [neighborStabilityConstant_ge]
   have hmul := mul_nonneg hk (mul_nonneg D.error_nonneg (pow_nonneg D.Theta_pos.le 40))
   have hs := D.small
@@ -120,7 +123,7 @@ theorem propagator_small : 8000000*D.error*D.Θ^21 ≤ 1 := by
   nlinarith only [hp, hmul, hs]
 
 theorem action_error (ξ : α) {τ : ℝ} (hτ : τ ∈ Icc 0 D.H) :
-    ∀ i j, |scaledAction (D.M ξ (D.time τ)) D.m D.v D.a D.ε (D.time τ) i j-
+    ∀ i j, |scaledAction (D.M ξ (D.time τ)) D.m D.v D.a D.ε (D.time τ) i j -
       idealVelocityEntry (D.σ^2) i j| ≤ 3*D.error := by
   have h := physical_matrix_errors D.a_lower D.epsilon_pos D.Theta_lower D.G_lower D.d_nonneg
     D.error_le_one D.time_maps D.B_derivative D.old_ray_equation D.old_velocity_equation

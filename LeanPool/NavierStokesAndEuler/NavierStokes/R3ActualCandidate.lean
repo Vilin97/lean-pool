@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3CompactCandidate
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCandidateAssembly
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCandidateAssembly
 
 /-!
 # The project's actual sums give a compact whole-space candidate
@@ -18,6 +16,9 @@ This is an extraction from `selected_witness`, which retains the original
 potential, direct field, and pressure sums. It does not invoke whole-space
 uniqueness or claim the comparator's nonexistence conclusion.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

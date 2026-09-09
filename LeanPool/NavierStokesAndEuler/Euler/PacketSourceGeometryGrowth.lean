@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometrySourceGrowth
 
-@[expose] public section
-
 /-! The actual constructed geometric stage supplies the physical H3
 profile on the forward part of the source interval.  The same scalar
 solution also retains the amplification and amplitude conclusions. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -88,7 +89,7 @@ theorem exists_physicalGrowth :
   obtain ⟨F,F₁,Z,Z₁,J,hpos,hzero,hg⟩ := A.exists_geometry_and_growth Ω h0 hΩ
   exact ⟨growthProfile (D.tail τ hτ.le hτT) (A.geometryData Ω h0 hΩ) J,hpos,hzero,hg⟩
 
-theorem halfBall_physicalGrowth (hball : (1/2 : ℝ) ≤ A.radius) :
+theorem halfBall_physicalGrowth (hball : (1 / 2 : ℝ) ≤ A.radius) :
     ∃ g : C(Icc (0 : ℝ) (D.T-τ),ℝ),
       (∀ t, 0 < g t) ∧ g ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩=1 ∧
         PhysicalGrowth (D.tail τ hτ.le hτT) {x | ‖x‖ ≤ (1/2 : ℝ)} g

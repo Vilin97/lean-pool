@@ -6,14 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.NumberTheory.Real.Irrational
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Diophantine bounds for the manuscript's graph directions
@@ -25,12 +20,17 @@ integer by its conjugate, proves that the resulting integer is nonzero using
 irrationality of `sqrt 2`, and bounds the conjugate explicitly.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.DiophantineGraph
 
+/-- Quadratic form, given by `(p : ℝ) + Real.sqrt 2 * (q : ℝ)`. -/
 def quadraticForm (p q : ℤ) : ℝ := (p : ℝ) + Real.sqrt 2 * (q : ℝ)
 
+/-- Integer norm, given by `p ^ 2 - 2 * q ^ 2`. -/
 def integerNorm (p q : ℤ) : ℤ := p ^ 2 - 2 * q ^ 2
 
 theorem sqrt_two_square : (Real.sqrt 2) ^ 2 = (2 : ℝ) :=
@@ -73,12 +73,16 @@ theorem conjugate_product_lower (p q : ℤ) (hpq : p ≠ 0 ∨ q ≠ 0) :
   rw [← conjugate_product, abs_mul] at hr
   exact hr
 
+/-- Radial symbol, given by `quadraticForm (m + n) (-n)`. -/
 def radialSymbol (m n : ℤ) : ℝ := quadraticForm (m + n) (-n)
 
+/-- Time symbol, given by `quadraticForm (n - m) m`. -/
 def timeSymbol (m n : ℤ) : ℝ := quadraticForm (n - m) m
 
+/-- Radial conjugate, given by `quadraticForm (m + n) n`. -/
 def radialConjugate (m n : ℤ) : ℝ := quadraticForm (m + n) n
 
+/-- Time conjugate, given by `quadraticForm (n - m) (-m)`. -/
 def timeConjugate (m n : ℤ) : ℝ := quadraticForm (n - m) (-m)
 
 theorem radialSymbol_formula (m n : ℤ) :
@@ -120,6 +124,7 @@ theorem time_product_lower (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
     · exact Or.inr hm
   exact conjugate_product_lower (n - m) m hpq
 
+/-- Frequency L1, given by `|(m : ℝ)| + |(n : ℝ)|`. -/
 def frequencyL1 (m n : ℤ) : ℝ := |(m : ℝ)| + |(n : ℝ)|
 
 /-- This is the usual Euclidean length of the integer frequency. -/

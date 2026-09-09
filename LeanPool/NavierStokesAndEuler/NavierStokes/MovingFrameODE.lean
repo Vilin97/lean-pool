@@ -10,13 +10,10 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.TangentProjection
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GrowingMode
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ViscousPropagator
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Positivity
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # The actual moving tangent frame
@@ -27,16 +24,25 @@ coordinates.  Normal motion, rotation, viscosity and projected forcing are all
 retained in the exact equation.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.MovingFrameODE
 
 open scoped InnerProductSpace ContDiff
 
+/-- Plane: an abbreviation for `EuclideanSpace ℝ (Fin 2)`. -/
 abbrev Plane := EuclideanSpace ℝ (Fin 2)
+/-- Space: an abbreviation for `EuclideanSpace ℝ (Fin 3)`. -/
 abbrev Space := EuclideanSpace ℝ (Fin 3)
+/-- Frame: an abbreviation for `OrthonormalBasis (Fin 2) ℝ Plane`. -/
 abbrev Frame := OrthonormalBasis (Fin 2) ℝ Plane
 
+/-- Pack, given by `!₂[r, w 0, w 1]`. -/
 noncomputable def pack (r : ℝ) (w : Plane) : Space := !₂[r, w 0, w 1]
+/-- Tail, given by `!₂[w 1, w 2]`. -/
 noncomputable def tail (w : Space) : Plane := !₂[w 1, w 2]
+/-- Unit theta, given by `!₂[1, 0]`. -/
 noncomputable def unitTheta : Plane := !₂[1, 0]
 
 @[simp] theorem pack_zero (r : ℝ) (w : Plane) : pack r w 0 = r := rfl
@@ -74,13 +80,13 @@ theorem inner_pack_left (a : ℝ) (u : Plane) (v : Space) :
 @[simp] theorem frame_inner (B : Frame) (i j : Fin 2) :
     ⟪B i, B j⟫_ℝ = if i = j then 1 else 0 := (orthonormal_iff_ite.mp B.orthonormal) i j
 
-@[simp] theorem frame_inner00 (B : Frame) : ⟪B 0, B 0⟫_ℝ = 1 := by
+theorem frame_inner00 (B : Frame) : ⟪B 0, B 0⟫_ℝ = 1 := by
   simp only [frame_inner, ite_true]
-@[simp] theorem frame_inner11 (B : Frame) : ⟪B 1, B 1⟫_ℝ = 1 := by
+theorem frame_inner11 (B : Frame) : ⟪B 1, B 1⟫_ℝ = 1 := by
   simp only [frame_inner, ite_true]
-@[simp] theorem frame_inner01 (B : Frame) : ⟪B 0, B 1⟫_ℝ = 0 := by
+theorem frame_inner01 (B : Frame) : ⟪B 0, B 1⟫_ℝ = 0 := by
   exact B.inner_eq_zero (by decide)
-@[simp] theorem frame_inner10 (B : Frame) : ⟪B 1, B 0⟫_ℝ = 0 := by
+theorem frame_inner10 (B : Frame) : ⟪B 1, B 0⟫_ℝ = 0 := by
   exact B.inner_eq_zero (by decide)
 
 theorem frame_expand (B : Frame) (w : Plane) :
@@ -98,15 +104,20 @@ theorem frame_ext (B : Frame) {u v : Space} (hr : u 0 = v 0)
   · exact congrArg (fun w : Plane => w 0) ht
   · exact congrArg (fun w : Plane => w 1) ht
 
+/-- Normal, given by `pack (β * ρ) (β • B 0)`. -/
 noncomputable def normal (β ρ : ℝ) (B : Frame) : Space :=
   pack (β * ρ) (β • B 0)
 
+/-- Tangent, given by `pack x ((-ρ * x) • B 0 + y • B 1)`. -/
 noncomputable def tangent (ρ : ℝ) (B : Frame) (x y : ℝ) : Space :=
   pack x ((-ρ * x) • B 0 + y • B 1)
 
+/-- Normal motion, given by `pack (β' * ρ + β * ρ') (β' • B 0 + (β * rot) • B 1)`. -/
 noncomputable def normalMotion (β β' ρ ρ' rot : ℝ) (B : Frame) : Space :=
   pack (β' * ρ + β * ρ') (β' • B 0 + (β * rot) • B 1)
 
+/-- Tangent motion, given by `pack x' (-(ρ' * x + ρ * x' + rot * y) • B 0 + (y' - ρ * rot * x) •
+B 1)`. -/
 noncomputable def tangentMotion (ρ ρ' rot : ℝ) (B : Frame)
     (x y x' y' : ℝ) : Space :=
   pack x' (-(ρ' * x + ρ * x' + rot * y) • B 0 +
@@ -149,7 +160,7 @@ theorem normal_tangentMotion (β ρ ρ' rot : ℝ) (B : Frame) (x y x' y' : ℝ)
       -β * (ρ' * x + rot * y) := by
   simp only [normal, tangentMotion, inner_pack, inner_add_right,
     real_inner_smul_left, inner_smul_right, frame_inner00, frame_inner01, mul_one, mul_zero,
-      add_zero]
+        add_zero]
   ring
 
 theorem normal_inner (β ρ : ℝ) (B : Frame) (v : Space) :
@@ -167,14 +178,19 @@ theorem normal_baseAction (β ρ F : ℝ) (B : Frame) (g : Plane) (x y : ℝ) :
 
 /-- Coefficients before subtracting the scalar viscous damping. -/
 noncomputable def coeff11 (ρ ρ' gK : ℝ) : ℝ := ρ * (gK - ρ') / (1 + ρ ^ 2)
+/-- Coeff12, given by `(2 * F * Nθ - ρ * rot) / (1 + ρ ^ 2)`. -/
 noncomputable def coeff12 (F Nθ ρ rot : ℝ) : ℝ := (2 * F * Nθ - ρ * rot) / (1 + ρ ^ 2)
+/-- Coeff21, given by `-(2 * F * Nθ + gN) + ρ * rot`. -/
 noncomputable def coeff21 (F Nθ gN ρ rot : ℝ) : ℝ := -(2 * F * Nθ + gN) + ρ * rot
 
+/-- Rhs X, given by `(coeff11 ρ ρ' ⟪B 0, g⟫_ℝ - d) * x + coeff12 F ((B 1) 0) ρ rot * y - (f 0 -
+ρ * ⟪B 0, tail f⟫_ℝ) / (1 + ρ ^ 2)`. -/
 noncomputable def rhsX (F d ρ ρ' rot : ℝ) (B : Frame) (g : Plane)
     (f : Space) (x y : ℝ) : ℝ :=
   (coeff11 ρ ρ' ⟪B 0, g⟫_ℝ - d) * x + coeff12 F ((B 1) 0) ρ rot * y -
     (f 0 - ρ * ⟪B 0, tail f⟫_ℝ) / (1 + ρ ^ 2)
 
+/-- Rhs Y, given by `coeff21 F ((B 1) 0) ⟪B 1, g⟫_ℝ ρ rot * x - d * y - ⟪B 1, tail f⟫_ℝ`. -/
 noncomputable def rhsY (F d ρ rot : ℝ) (B : Frame) (g : Plane)
     (f : Space) (x y : ℝ) : ℝ :=
   coeff21 F ((B 1) 0) ⟪B 1, g⟫_ℝ ρ rot * x - d * y - ⟪B 1, tail f⟫_ℝ
@@ -189,7 +205,7 @@ theorem projectedRhs_radial {β : ℝ} (hβ : β ≠ 0)
     normal_self, normalMotion_tangent, normal_baseAction, normal_inner]
   simp only [normal, tangent, baseAction, rhsX, coeff11, coeff12, pack_zero, tail_pack,
     PiLp.add_apply, PiLp.sub_apply, PiLp.neg_apply, PiLp.smul_apply, smul_eq_mul]
-  field_simp ; ring
+  field_simp; ring
 
 theorem projectedRhs_N (β β' ρ ρ' rot F d : ℝ) (B : Frame) (g : Plane)
     (f : Space) (x y : ℝ) :
@@ -253,6 +269,7 @@ theorem tangentMotion_eq_projectedRhs_iff {β : ℝ} (hβ : β ≠ 0)
   · rintro ⟨rfl, rfl⟩
     rfl
 
+/-- Pack continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def packCLM : (ℝ × Plane) →L[ℝ] Space :=
   LinearMap.toContinuousLinearMap {
     toFun := fun p => pack p.1 p.2
@@ -265,6 +282,8 @@ noncomputable def packCLM : (ℝ × Plane) →L[ℝ] Space :=
       ext i
       fin_cases i <;> simp [pack] }
 
+/-- Tail continuous linear map, given by `LinearMap.toContinuousLinearMap { toFun := tail
+map_add' := tail_add map_smul' := tail_smul }`. -/
 noncomputable def tailCLM : Space →L[ℝ] Plane :=
   LinearMap.toContinuousLinearMap {
     toFun := tail
@@ -365,9 +384,10 @@ theorem unit_pair_orthonormal (K : Plane) (hK : ‖K‖ = 1) :
     rw [quarterTurn_inner, real_inner_self_eq_norm_sq, hK]
     norm_num
 
+/-- Frame of unit as an element of `Frame`. -/
 noncomputable def frameOfUnit (K : Plane) (hK : ‖K‖ = 1) : Frame :=
-  (basisOfOrthonormalOfCardEqFinrank (unit_pair_orthonormal K hK) (by simp
-    [Plane])).toOrthonormalBasis
+  (basisOfOrthonormalOfCardEqFinrank (unit_pair_orthonormal K hK) (by
+      simp [Plane])).toOrthonormalBasis
     (by simpa using unit_pair_orthonormal K hK)
 
 @[simp] theorem frameOfUnit_zero (K : Plane) (hK : ‖K‖ = 1) : frameOfUnit K hK 0 = K := by
@@ -377,8 +397,11 @@ noncomputable def frameOfUnit (K : Plane) (hK : ‖K‖ = 1) : Frame :=
     frameOfUnit K hK 1 = quarterTurn K := by
   simp [frameOfUnit]
 
+/-- Normal scale, given by `‖tail n‖`. -/
 noncomputable def normalScale (n : Space) : ℝ := ‖tail n‖
+/-- Radial slope, given by `n 0 / normalScale n`. -/
 noncomputable def radialSlope (n : Space) : ℝ := n 0 / normalScale n
+/-- Normal direction, given by `(normalScale n)⁻¹ • tail n`. -/
 noncomputable def normalDirection (n : Space) : Plane := (normalScale n)⁻¹ • tail n
 
 theorem normalScale_pos {n : Space} (hn : tail n ≠ 0) : 0 < normalScale n :=
@@ -388,6 +411,7 @@ theorem normalDirection_unit {n : Space} (hn : tail n ≠ 0) : ‖normalDirectio
   simp only [normalDirection, normalScale, norm_smul, norm_inv, norm_norm]
   exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hn)
 
+/-- Normal frame, given by `frameOfUnit (normalDirection n) (normalDirection_unit hn)`. -/
 noncomputable def normalFrame (n : Space) (hn : tail n ≠ 0) : Frame :=
   frameOfUnit (normalDirection n) (normalDirection_unit hn)
 
@@ -519,7 +543,7 @@ theorem reciprocal_quadratic_difference (r s : ℝ) :
   have hs : 1 + s ^ 2 ≠ 0 := by positivity
   have heq : 1 / (1 + r ^ 2) - 1 / (1 + s ^ 2) =
       (s - r) * (s + r) / ((1 + r ^ 2) * (1 + s ^ 2)) := by
-    field_simp ; ring
+    field_simp; ring
   rw [heq]
   calc
     |(s - r) * (s + r) / ((1 + r ^ 2) * (1 + s ^ 2))| ≤ |(s - r) * (s + r)| :=
@@ -591,14 +615,14 @@ theorem scalar_coefficients_close
       _ = _ := mul_one _
   constructor
   · calc
-      |coeff11 ρ ρ' gK| ≤ |ρ * (gK - ρ')| := abs_div_le_of_one_le _ _ (by nlinarith only [sq_nonneg
-        ρ])
+      |coeff11 ρ ρ' gK| ≤ |ρ * (gK - ρ')| := abs_div_le_of_one_le _ _ (by
+          nlinarith only [sq_nonneg ρ])
       _ = |ρ| * |gK - ρ'| := abs_mul _ _
       _ ≤ M * (η + η) := mul_le_mul hρ ((abs_sub _ _).trans (add_le_add hgK hρ'))
         (abs_nonneg _) hM0
       _ ≤ 16 * M ^ 2 * η := by
-        have h := mul_le_mul_of_nonneg_right (show 2 * M ≤ 16 * M ^ 2 by nlinarith only [hM,
-          sq_nonneg (M - 1)]) hη
+        have h := mul_le_mul_of_nonneg_right (show 2 * M ≤ 16 * M ^ 2 by
+            nlinarith only [hM, sq_nonneg (M - 1)]) hη
         nlinarith only [h]
   constructor
   · have hρden : 1 + ρ ^ 2 ≠ 0 := by positivity
@@ -607,7 +631,7 @@ theorem scalar_coefficients_close
         (2 * F * N - ρ * rot - 2 * F0 * N0) / (1 + ρ ^ 2) +
         (2 * F0 * N0) * (1 / (1 + ρ ^ 2) - 1 / (1 + s ^ 2)) := by
       unfold coeff12
-      field_simp ; ring
+      field_simp; ring
     rw [heq]
     calc
       _ ≤ |(2 * F * N - ρ * rot - 2 * F0 * N0) / (1 + ρ ^ 2)| +
@@ -631,8 +655,8 @@ theorem scalar_coefficients_close
           simpa only [abs_neg] using abs_sub (-(2 * F * N - 2 * F0 * N0)) (gN - g0)) _
       _ ≤ (2 * (1 + M) * η + η) + M * η := add_le_add (add_le_add htwoprod hgN) hrotation
       _ ≤ 16 * M ^ 2 * η := by
-        have h := mul_le_mul_of_nonneg_right (show 3 + 3 * M ≤ 16 * M ^ 2 by nlinarith only [hM,
-          sq_nonneg (M - 1)]) hη
+        have h := mul_le_mul_of_nonneg_right (show 3 + 3 * M ≤ 16 * M ^ 2 by
+            nlinarith only [hM, sq_nonneg (M - 1)]) hη
         nlinarith only [h]
 
 theorem inner_perturbation_le {K K0 g g0 : Plane} {M η : ℝ}
@@ -690,9 +714,13 @@ theorem frame_coefficients_close {B B0 : Frame} {g g0 : Plane}
 
 /-! ## The moving eigenbasis, including its derivative -/
 
+/-- Modal11, given by `(a + h * b + c / h - rate) / 2`. -/
 noncomputable def modal11 (a b c h rate : ℝ) : ℝ := (a + h * b + c / h - rate) / 2
+/-- Modal12, given by `(a - h * b + c / h + rate) / 2`. -/
 noncomputable def modal12 (a b c h rate : ℝ) : ℝ := (a - h * b + c / h + rate) / 2
+/-- Modal21, given by `(a + h * b - c / h + rate) / 2`. -/
 noncomputable def modal21 (a b c h rate : ℝ) : ℝ := (a + h * b - c / h + rate) / 2
+/-- Modal22, given by `(a - h * b - c / h - rate) / 2`. -/
 noncomputable def modal22 (a b c h rate : ℝ) : ℝ := (a - h * b - c / h - rate) / 2
 
 /-- Exact change to `x = p + q`, `y = h (p - q)`, with `h' = rate * h`.
@@ -712,25 +740,26 @@ theorem modal_equations_iff {h : ℝ} (hh : h ≠ 0)
     constructor
     · calc
         p' = ((p' + q') + ((rate * h * (p - q) + h * (p' - q')) / h -
-            rate * (p - q))) / 2 := by field_simp ; ring
+            rate * (p - q))) / 2 := by field_simp; ring
         _ = _ := by
           rw [hx, hy]
           unfold modal11 modal12
-          field_simp ; ring
+          field_simp; ring
     · calc
         q' = ((p' + q') - ((rate * h * (p - q) + h * (p' - q')) / h -
-            rate * (p - q))) / 2 := by field_simp ; ring
+            rate * (p - q))) / 2 := by field_simp; ring
         _ = _ := by
           rw [hx, hy]
           unfold modal21 modal22
-          field_simp ; ring
+          field_simp; ring
   · rintro ⟨rfl, rfl⟩
     constructor
     · unfold modal11 modal12 modal21 modal22
-      field_simp ; ring
+      field_simp; ring
     · unfold modal11 modal12 modal21 modal22
-      field_simp ; ring
+      field_simp; ring
 
+/-- Pair continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def pairCLM : (ℝ × ℝ) →L[ℝ] Plane :=
   LinearMap.toContinuousLinearMap {
     toFun := fun z => !₂[z.1, z.2]
@@ -791,11 +820,11 @@ theorem modal_errors_le {a b c h rate H δ κ : ℝ}
   have hneg (x A : ℝ) (h : |x| ≤ A) : |-x| ≤ A := by simpa only [abs_neg] using h
   refine ⟨?_, ?_, ?_, ?_⟩
   · simpa only [modal11, sub_eq_add_neg, hsum] using abs_four_sum_div_two_le ha hhb hch (hneg _ _
-    hrate)
+      hrate)
   · simpa only [modal12, sub_eq_add_neg, hsum] using abs_four_sum_div_two_le ha (hneg _ _ hhb) hch
-    hrate
+      hrate
   · simpa only [modal21, sub_eq_add_neg, hsum] using abs_four_sum_div_two_le ha hhb (hneg _ _ hch)
-    hrate
+      hrate
   · simpa only [modal22, sub_eq_add_neg, hsum] using
       abs_four_sum_div_two_le ha (hneg _ _ hhb) (hneg _ _ hch) (hneg _ _ hrate)
 

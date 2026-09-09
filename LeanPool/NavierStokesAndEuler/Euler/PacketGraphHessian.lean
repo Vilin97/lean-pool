@@ -6,14 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-! Differentiating an actual oscillatory scalar pressure through the
 inverse flow. The principal Hessian is the angular second derivative
 times the square of the transported normal. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,9 +30,11 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerGraphPullba
   EulerLiftedGradientSpace
 open scoped ContDiff
 
+/-- Spatial gradient, given by `(toDual ℝ Space).symm ((fderiv ℝ q z).comp (inl ℝ Space ℝ))`. -/
 def spatialGradient (q : LiftTangent → ℝ) (z : LiftTangent) : Space :=
   (toDual ℝ Space).symm ((fderiv ℝ q z).comp (inl ℝ Space ℝ))
 
+/-- Angular derivative, given by `fderiv ℝ q z (0,1)`. -/
 def angularDerivative (q : LiftTangent → ℝ) (z : LiftTangent) : ℝ :=
   fderiv ℝ q z (0,1)
 
@@ -60,7 +69,7 @@ theorem graph_decomposition (k : ℝ) (m v : Space) :
 theorem gradient_graph {q : LiftTangent → ℝ} (k : ℝ) (m x : Space)
     (hq : DifferentiableAt ℝ q (graphMap k m x)) :
     gradient (fun y => q (graphMap k m y)) x =
-      spatialGradient q (graphMap k m x)+
+      spatialGradient q (graphMap k m x) +
         (k*angularDerivative q (graphMap k m x)) • m := by
   apply ext_inner_right ℝ
   intro v
@@ -76,7 +85,7 @@ theorem gradient_physical {q : LiftTangent → ℝ} (k : ℝ) (m : Space)
     (Y : Space → Space) (J : Space →L[ℝ] Space) (x : Space)
     (hY : HasFDerivAt Y J x) (hq : DifferentiableAt ℝ q (graphMap k m (Y x))) :
     gradient (fun y => k⁻¹^2 * q (graphMap k m (Y y))) x =
-      k⁻¹^2 • J.adjoint (spatialGradient q (graphMap k m (Y x)))+
+      k⁻¹^2 • J.adjoint (spatialGradient q (graphMap k m (Y x))) +
         (k⁻¹^2*k*angularDerivative q (graphMap k m (Y x))) • J.adjoint m := by
   have hg := hq.hasFDerivAt.comp (Y x) (graphMap k m).hasFDerivAt
   have hc := (hg.comp x hY).const_smul (k⁻¹^2)
@@ -90,13 +99,16 @@ theorem gradient_physical {q : LiftTangent → ℝ} (k : ℝ) (m : Space)
     graph_decomposition,map_add,map_smul,smul_eq_mul,angularDerivative]
   ring
 
+/-- Transported normal, given by `(J x).adjoint m`. -/
 def transportedNormal (m : Space) (J : Space → Space →L[ℝ] Space) (x : Space) : Space :=
   (J x).adjoint m
 
+/-- Slow force, given by `(J x).adjoint (spatialGradient q (graphMap k m (Y x)))`. -/
 def slowForce (q : LiftTangent → ℝ) (k : ℝ) (m : Space)
     (Y : Space → Space) (J : Space → Space →L[ℝ] Space) (x : Space) : Space :=
   (J x).adjoint (spatialGradient q (graphMap k m (Y x)))
 
+/-- Lower hessian as an element of `Space →L[ℝ] Space`. -/
 def lowerHessian (q : LiftTangent → ℝ) (k : ℝ) (m : Space)
     (Y : Space → Space) (J : Space → Space →L[ℝ] Space) (x : Space) : Space →L[ℝ] Space :=
   k⁻¹^2 • fderiv ℝ (slowForce q k m Y J) x +

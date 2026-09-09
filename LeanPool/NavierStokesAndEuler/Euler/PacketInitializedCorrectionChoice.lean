@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedAllOrderBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadius
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedCoefficientBudgets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadius
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedCoefficientBudgets
 
 /-! The original source budgets produce actual correction budgets for all
 sufficiently large frequencies. Primary estimates, coefficient estimates,
 radius guards and frequency guards are conclusions of the construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +30,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
@@ -38,7 +40,7 @@ variable (M : EulerMeanPacketProvider.Data)
   (Cagree : SourceCoefficientAgreement M D)
   (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
   (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
-  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
 include hδ1 hα L NB LM hΞ hF hdet
 

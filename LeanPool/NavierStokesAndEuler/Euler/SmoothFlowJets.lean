@@ -7,9 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothBanachFlow
-public import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensorIntegral
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensor
+import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensorIntegral
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Actual time identities for all spatial jets of the constructed flow
@@ -19,6 +20,9 @@ The bounded time integral commutes with it at every order. Reassembling
 the tensor paths therefore gives genuine within-time derivatives of all
 jets, without assuming differentiability of an ODE solution family.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,12 +36,15 @@ open Set EulerContinuousTimeIntegral EulerVolterraConvolution EulerFinitePathTen
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
+/-- Velocity family, given by `A.superposition (pathFamily T hT A x)`. -/
 def velocityFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
   A.superposition (pathFamily T hT A x)
 
 theorem velocityFamily_contDiff : ContDiff ℝ ∞ (velocityFamily T hT A) :=
   A.superposition_contDiff.comp (pathFamily_contDiff T hT A)
 
+/-- Displacement family, given by `pathFamily T hT A x - (ContinuousLinearMap.const ℝ (Icc (0 :
+ℝ) T)) x`. -/
 def displacementFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
   pathFamily T hT A x - (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) x
 
@@ -52,12 +59,17 @@ theorem displacementFamily_integral (x : E) :
   exact sub_eq_iff_eq_add.mpr (by
     simpa only [add_comm] using pathFamily_integral T hT A x)
 
+/-- Jet path, given by `tensorPathMap n (iteratedFDeriv ℝ n (pathFamily T hT A) x)`. -/
 def jetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
   tensorPathMap n (iteratedFDeriv ℝ n (pathFamily T hT A) x)
 
+/-- Velocity jet path, given by `tensorPathMap n (iteratedFDeriv ℝ n (velocityFamily T hT A)
+x)`. -/
 def velocityJetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
   tensorPathMap n (iteratedFDeriv ℝ n (velocityFamily T hT A) x)
 
+/-- Displacement jet path, given by `tensorPathMap n (iteratedFDeriv ℝ n (displacementFamily T
+hT A) x)`. -/
 def displacementJetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
   tensorPathMap n (iteratedFDeriv ℝ n (displacementFamily T hT A) x)
 

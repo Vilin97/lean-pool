@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHistory
-public import LeanPool.NavierStokesAndEuler.Euler.LinearFundamentalPath
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryField
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHistory
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
 
 /-! The actual primary retains its angular profile on the entire joined
 interval. This follows from uniqueness for its genuine homogeneous linear
 ODE, whose coefficients are independent of the angle. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,11 +30,14 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerSpatialCutoffs EulerLinearDuhamel
 open scoped ContDiff BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instPacketPrimaryFactorization1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instPacketPrimaryFactorization2 : NormedSpace ℝ Space := inferInstance
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
+/-- Physical generator, bundling `toFun`, `continuous_toFun`, `have`, `have`. -/
 def physicalGenerator (D : Data U) (x : Space) : C(Icc (0 : ℝ) D.T,Space →L[ℝ] Space) where
   toFun t := -(D.M.field t x)+(2/‖D.normal.field t x‖^2) •
     ((rankOne ℝ (D.normal.field t x) (D.normal.field t x)).comp (D.M.field t x))
@@ -48,7 +55,7 @@ def physicalGenerator (D : Data U) (x : Space) : C(Icc (0 : ℝ) D.T,Space →L[
         ((((rankOne ℝ).continuous.comp hm).clm_apply hm).clm_comp hM))
 
 theorem physicalGenerator_apply (D : Data U) (x : Space) (t : Icc (0 : ℝ) D.T) (v : Space) :
-    physicalGenerator D x t v = -D.M.field t x v+
+    physicalGenerator D x t v = -D.M.field t x v +
       (2*⟪D.normal.field t x,D.M.field t x v⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x := by
   simp only [physicalGenerator,ContinuousMap.coe_mk,add_apply,neg_apply,smul_apply,comp_apply,
     rankOne_apply,smul_smul]
@@ -64,8 +71,8 @@ theorem vector_homogeneous_time {P : ℝ} [Fact (0 < P)] (Y : InitialData P D)
     HasDerivWithinAt (fun s => vector τ hτ hτT B Y (s,(x,θ)))
       (physicalGenerator D x t (vector τ hτ hτT B Y (t,(x,θ)))) (Icc (0 : ℝ) D.T) t := by
   have h := vector_hasDerivWithinAt τ hτ hτT B Y t x θ
-  have hb : vectorDerivative τ hτ hτT B Y (t,(x,θ))+
-    D.M.field t x (vector τ hτ hτT B Y (t,(x,θ)))+
+  have hb : vectorDerivative τ hτ hτT B Y (t,(x,θ)) +
+    D.M.field t x (vector τ hτ hτT B Y (t,(x,θ))) +
     (-(2*⟪D.normal.field t x,D.M.field t x (vector τ hτ hτT B Y (t,(x,θ)))⟫_ℝ)/
       ‖D.normal.field t x‖^2) • D.normal.field t x=0 := by
     simpa only [vectorDerivative,vector,normalResidual,Data.clamp_coe] using
@@ -73,7 +80,7 @@ theorem vector_homogeneous_time {P : ℝ} [Fact (0 < P)] (Y : InitialData P D)
   have he : vectorDerivative τ hτ hτT B Y (t,(x,θ)) =
       physicalGenerator D x t (vector τ hτ hτT B Y (t,(x,θ))) := by
     rw [physicalGenerator_apply]
-    have hh : vectorDerivative τ hτ hτT B Y (t,(x,θ))+
+    have hh : vectorDerivative τ hτ hτT B Y (t,(x,θ)) +
         D.M.field t x (vector τ hτ hτT B Y (t,(x,θ))) =
         (2*⟪D.normal.field t x,D.M.field t x (vector τ hτ hτT B Y (t,(x,θ)))⟫_ℝ/
           ‖D.normal.field t x‖^2) • D.normal.field t x :=
@@ -82,7 +89,7 @@ theorem vector_homogeneous_time {P : ℝ} [Fact (0 < P)] (Y : InitialData P D)
   rwa [he] at h
 
 private theorem homogeneous_unique (T : ℝ) (hT : 0 ≤ T)
-    (G : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) (f g : ℝ → Space)
+    (G : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) (f g : ℝ → Space)
     (hf : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt f (G t (f t)) (Icc (0 : ℝ) T) t)
     (hg : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt g (G t (g t)) (Icc (0 : ℝ) T) t)
     (h0 : f 0=g 0) (t : Icc (0 : ℝ) T) : f t=g t := by
@@ -90,8 +97,8 @@ private theorem homogeneous_unique (T : ℝ) (hT : 0 ≤ T)
   have he (a : ℝ → Space) (ha : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt a (G t (a t)) (Icc (0 : ℝ) T) t) :
       a t=E.solution 0 (a 0) t :=
-    E.solution_unique 0 (a 0) a (fun s => by simpa only [ContinuousMap.zero_apply,add_zero] using
-      ha s) rfl t
+    E.solution_unique 0 (a 0) a (fun s => by
+        simpa only [ContinuousMap.zero_apply,add_zero] using ha s) rfl t
   rw [he f hf,he g hg,h0]
 
 theorem angular_proportional (δ : ℝ) (hδ : 0 < δ) (ξ : U)
@@ -117,6 +124,7 @@ theorem angular_proportional (δ : ℝ) (hδ : 0 < δ) (ξ : U)
     congr 1
     ring
 
+/-- Reference value, given by `profile δ (Real.pi/2)`. -/
 def referenceValue (δ : ℝ) : ℝ := profile δ (Real.pi/2)
 
 theorem referenceValue_pos (δ : ℝ) (hδ : 0 < δ) : 0 < referenceValue δ := by
@@ -176,6 +184,7 @@ theorem envelopedVelocity_independent_profile (δ δ' : ℝ) (hδ : 0 < δ) (hδ
   exact (envelopedVelocity_history τ hτ hτT B δ hδ ξ hs ⟨0,le_rfl,hτ.le⟩ x).trans
     (envelopedVelocity_history τ hτ hτT B δ' hδ' ξ hs ⟨0,le_rfl,hτ.le⟩ x).symm
 
+/-- Canonical velocity, given by `envelopedVelocity τ hτ hτT B 1 zero_lt_one ξ hs t x`. -/
 def canonicalVelocity (ξ : U) (hs : tsupport innerCutoff ⊆ D.support)
     (t : ℝ) (x : Space) : Space :=
   envelopedVelocity τ hτ hτT B 1 zero_lt_one ξ hs t x

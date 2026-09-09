@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevEmbedding
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierUniform
+
+/-! Actual continuous representatives and point evaluation as bounded linear maps on cylinder H3. -/
 
 @[expose] public section
 
-/-! Actual continuous representatives and point evaluation as bounded linear maps on cylinder H3. -/
 
 noncomputable section
 
@@ -29,20 +31,20 @@ def representative (u : SobolevSpace period 3) : LiftDomain period → Vector3 :
 
 /-- The chosen representative is actually continuous. -/
 theorem representative_continuous (u : SobolevSpace period 3) : Continuous (representative period
-  u) :=
+    u) :=
   (Classical.choose_spec (exists_continuous_representative period (value period u) (toJet period
-    u))).1
+      u))).1
 
 /-- The chosen representative agrees almost everywhere with the actual L² field. -/
 theorem representative_ae (u : SobolevSpace period 3) :
     (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] representative period u :=
   (Classical.choose_spec (exists_continuous_representative period (value period u) (toJet period
-    u))).2
+      u))).2
 
 /-- Continuous representatives of the same actual L² field agree pointwise. -/
 theorem representative_eq (u : SobolevSpace period 3) (g : LiftDomain period → Vector3)
     (hg : Continuous g) (hrep : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure
-      period] g) :
+        period] g) :
     representative period u = g :=
   MeasureTheory.Measure.eq_of_ae_eq ((representative_ae period u).symm.trans hrep)
     (representative_continuous period u) hg
@@ -51,7 +53,7 @@ theorem representative_eq (u : SobolevSpace period 3) (g : LiftDomain period →
 theorem representative_bound (u : SobolevSpace period 3) (x : LiftDomain period) :
     ‖representative period u x‖ ≤ sobolevEmbeddingConstant period 3*‖u‖ := by
   have hb : ∀ᵐ y ∂liftMeasure period, ‖representative period u y‖ ≤ sobolevEmbeddingConstant period
-    3*‖u‖ := by
+      3*‖u‖ := by
     filter_upwards [value_ae_bound period (le_refl 3) u,representative_ae period u] with y hy he
     rwa [← he]
   have hc : IsClosed {y | ‖representative period u y‖ ≤ sobolevEmbeddingConstant period 3*‖u‖} :=
@@ -63,13 +65,14 @@ theorem representative_bound (u : SobolevSpace period 3) (x : LiftDomain period)
 theorem representative_add (u v : SobolevSpace period 3) :
     representative period (u+v) = fun x => representative period u x+representative period v x := by
   apply representative_eq period (u+v) _ ((representative_continuous period u).add
-    (representative_continuous period v))
+      (representative_continuous period v))
   filter_upwards [Lp.coeFn_add (value period u) (value period v),representative_ae period
-    u,representative_ae period v] with x ha hu hv
+      u,representative_ae period v] with x ha hu hv
   change (value period u+value period v) x = _
   simpa only [Pi.add_apply,hu,hv] using ha
 
-/-- Scalar multiplication of actual H3 fields gives pointwise scalar multiplication of their continuous representatives. -/
+/-- Scalar multiplication of actual H3 fields gives pointwise scalar multiplication of their
+continuous representatives. -/
 theorem representative_smul (c : ℝ) (u : SobolevSpace period 3) :
     representative period (c • u) = fun x => c • representative period u x := by
   apply representative_eq period (c • u) _ ((representative_continuous period u).const_smul c)

@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerJetLp
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerJetLp
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
 
 /-! Actual cylinder L² tensor bounds from the finite packet's ordered-word
 budgets. The single coordinate conversion affects only the input radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -9,10 +9,9 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricEvenDescent
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveAxisSystem
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactSmoothFamily
+import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Actual positive-order axis solutions
@@ -21,6 +20,9 @@ This module connects the sparse six-component Volterra construction to the
 explicit positive-order system, and to smooth profiles in the squared radius.
 All existence assertions are obtained from the actual convergent series.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,11 +33,17 @@ open scoped Topology ContDiff
 open VolterraAnalyticBounds VolterraParity VolterraRegularity
 open NilpotentVolterra (equationRHS weightedMean regularPrimitive)
 
-local instance : NormedAddCommGroup (Matrix (Fin 6) (Fin 6) ℂ) :=
+/-- Cache the standard `NormedAddCommGroup (Matrix (Fin 6) (Fin 6) ℂ)` instance to shorten
+typeclass synthesis. -/
+local instance instPositiveAxisExistence1 : NormedAddCommGroup (Matrix (Fin 6) (Fin 6) ℂ) :=
   inferInstanceAs (NormedAddCommGroup (Fin 6 → Fin 6 → ℂ))
-local instance : NormedSpace ℝ (Matrix (Fin 6) (Fin 6) ℂ) :=
+/-- Cache the standard `NormedSpace ℝ (Matrix (Fin 6) (Fin 6) ℂ)` instance to shorten typeclass
+synthesis. -/
+local instance instPositiveAxisExistence2 : NormedSpace ℝ (Matrix (Fin 6) (Fin 6) ℂ) :=
   inferInstanceAs (NormedSpace ℝ (Fin 6 → Fin 6 → ℂ))
-local instance : NormedSpace ℂ (Matrix (Fin 6) (Fin 6) ℂ) :=
+/-- Cache the standard `NormedSpace ℂ (Matrix (Fin 6) (Fin 6) ℂ)` instance to shorten typeclass
+synthesis. -/
+local instance instPositiveAxisExistence3 : NormedSpace ℂ (Matrix (Fin 6) (Fin 6) ℂ) :=
   inferInstanceAs (NormedSpace ℂ (Fin 6 → Fin 6 → ℂ))
 
 section DifferentialEquation
@@ -433,12 +441,14 @@ end ExplicitInputs
 
 section SquaredRadius
 
+/-- Real parameter domain, given by `{eta | (eta : ℂ) ∈ U}`. -/
 noncomputable def realParameterDomain (U : Set ℂ) : Set ℝ :=
   {eta | (eta : ℂ) ∈ U}
 
 theorem realParameterDomain_isOpen {U : Set ℂ} (hU : IsOpen U) :
     IsOpen (realParameterDomain U) := hU.preimage Complex.continuous_ofReal
 
+/-- Real radial component, given by `(W p.2 (p.1 : ℂ) i).re`. -/
 noncomputable def realRadialComponent (W : Field) (i : Fin 6) (p : ℝ × ℝ) : ℝ :=
   (W p.2 (p.1 : ℂ) i).re
 
@@ -504,12 +514,16 @@ section RealSystem
 
 open PositiveAxisSystem
 
+/-- Real coefficient data: an abbreviation for `Fin 11 → ℝ × ℝ → ℝ`. -/
 abbrev RealCoefficientData := Fin 11 → ℝ × ℝ → ℝ
+/-- Real field: an abbreviation for `ℝ → ℝ → Fin 6 → ℝ`. -/
 abbrev RealField := ℝ → ℝ → Fin 6 → ℝ
 
+/-- Real base, given by `⟨⟨G 0 p, G 1 p, 0, G 2 p⟩, ⟨G 3 p, G 4 p, 0, G 5 p⟩, G 6 p⟩`. -/
 noncomputable def realBase (G : RealCoefficientData) (p : ℝ × ℝ) : BaseJet ℝ :=
   ⟨⟨G 0 p, G 1 p, 0, G 2 p⟩, ⟨G 3 p, G 4 p, 0, G 5 p⟩, G 6 p⟩
 
+/-- Real source, given by `⟨G 7 p, G 8 p, G 9 p, G 10 p⟩`. -/
 noncomputable def realSource (G : RealCoefficientData) (p : ℝ × ℝ) : SourceJet ℝ :=
   ⟨G 7 p, G 8 p, G 9 p, G 10 p⟩
 
@@ -620,14 +634,14 @@ theorem xProfile_vector_eq {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
   have hfour : 2 * r * SimilarityProfile.partialX (xProfile W 0) (r ^ 2, eta) =
       realTrace W r eta 4 := by
     have hd := hasDerivAt_squareProfile
-      ((xProfile_contDiffAt hR hU hW hparity 0 (by norm_num) hr hr0 heta).differentiableAt (by
-        simp))
+      ((xProfile_contDiffAt hR hU hW hparity 0 (by
+          norm_num) hr hr0 heta).differentiableAt (by simp))
     exact hd.deriv.symm.trans ((hrecovery 0 (by norm_num)).deriv_eq.trans hfirst.1)
   have hfive : 2 * r * SimilarityProfile.partialX (xProfile W 1) (r ^ 2, eta) =
       realTrace W r eta 5 := by
     have hd := hasDerivAt_squareProfile
-      ((xProfile_contDiffAt hR hU hW hparity 1 (by norm_num) hr hr0 heta).differentiableAt (by
-        simp))
+      ((xProfile_contDiffAt hR hU hW hparity 1 (by
+          norm_num) hr hr0 heta).differentiableAt (by simp))
     exact hd.deriv.symm.trans ((hrecovery 1 (by norm_num)).deriv_eq.trans hfirst.2)
   funext i
   fin_cases i
@@ -702,6 +716,8 @@ noncomputable def lowerHistoryData (h : ℝ) (n : ℕ) (phi u beta : ℕ → Inn
       (actualLowerSource h n phi u beta omegaQuotient w).pressureProduct,
       (actualLowerSource h n phi u beta omegaQuotient w).omegaQuotient] i
 
+/-- New beta, defined pointwise by `betaValue h (slowPower h n) w.2 (actualJet u w) (actualJet k
+w)`. -/
 noncomputable def newBeta (h : ℝ) (n : ℕ) (u k : InnerProfile) : InnerProfile :=
   fun w => betaValue h (slowPower h n) w.2 (actualJet u w) (actualJet k w)
 
@@ -800,6 +816,7 @@ def SidePathSolution {R : ℝ} (hR : 0 ≤ R) (U : Set ℂ) (A₀ A₁ : Coeff) 
     (NilpotentVolterra.rhsPath (sideData hR b (matrixPath R A₀))
       (sideData hR b (matrixPath R A₁)) (sideData hR b (forcingPath R f)) (V b) z)
 
+/-- Candidate lift, constructed using `glue`. -/
 noncomputable def candidateLift {R : ℝ} (hR : 0 ≤ R) (A₀ A₁ : Coeff) (f : Field)
     (V : Bool → ℂ → NilpotentVolterra.Path R) : Field :=
   glue

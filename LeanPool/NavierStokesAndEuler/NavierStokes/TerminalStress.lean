@@ -6,13 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialHeatProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingTail
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidual
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAxisymmetricResidual
 
 /-!
 # Terminal heat tails and backward stress
@@ -21,6 +20,9 @@ All derivatives and integrals are actual analytic operations. The backward
 stress is defined independently of the separate global moment condition that
 identifies it with an axis-based stress primitive.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,11 +40,14 @@ theorem contDiffAt_deriv {f : ℝ → ℝ} {r : ℝ} {m n : WithTop ℕ∞}
 noncomputable def viscousResidual (K f : ℝ → ℝ) (r : ℝ) : ℝ :=
   -K r * (deriv (deriv f) r + deriv f r / r) - 2 * deriv K r * deriv f r
 
+/-- Boundary, given by `r ^ 2 * K r * deriv f r`. -/
 noncomputable def boundary (K f : ℝ → ℝ) (r : ℝ) : ℝ := r ^ 2 * K r * deriv f r
 
+/-- Correction, given by `(r * K r - r ^ 2 * deriv K r) * deriv f r`. -/
 noncomputable def correction (K f : ℝ → ℝ) (r : ℝ) : ℝ :=
   (r * K r - r ^ 2 * deriv K r) * deriv f r
 
+/-- Backward stress, given by `(∫ u in Ioi r, u ^ 2 * R u) / r ^ 2`. -/
 noncomputable def backwardStress (R : ℝ → ℝ) (r : ℝ) : ℝ :=
   (∫ u in Ioi r, u ^ 2 * R u) / r ^ 2
 
@@ -55,7 +60,7 @@ theorem boundary_hasDerivAt {K f : ℝ → ℝ} {r : ℝ} (hr : r ≠ 0)
   apply hd.congr_deriv
   simp only [id_eq, Nat.cast_ofNat, Nat.reduceSub, pow_one, mul_one]
   unfold correction viscousResidual
-  field_simp ; ring
+  field_simp; ring
 
 /-- The exact backward integration-by-parts identity. Integrability and the
 vanishing boundary at infinity are explicit local-tail hypotheses. -/
@@ -89,7 +94,7 @@ theorem backwardStress_formula {K f T : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
   simp_rw [mul_add]
   rw [integral_add ht hv, integral_viscousResidual hr hK hf hv hc hboundary]
   unfold boundary
-  field_simp ; ring
+  field_simp; ring
 
 theorem correction_nonneg {K f : ℝ → ℝ} {r : ℝ} (hr : 0 ≤ r)
     (hK : 0 ≤ K r) (hKr : deriv K r ≤ 0) (hfr : 0 ≤ deriv f r) :
@@ -230,11 +235,15 @@ theorem heat_times_factor_residual (C : ℝ) {a t r : ℝ} (ha : 1 < a)
   unfold viscousResidual
   ring
 
+/-- Physical point: an abbreviation for `SimilarityProfile.PhysicalPoint`. -/
 abbrev PhysicalPoint := SimilarityProfile.PhysicalPoint
+/-- Physical profile: an abbreviation for `SimilarityProfile.PhysicalProfile`. -/
 abbrev PhysicalProfile := SimilarityProfile.PhysicalProfile
 
+/-- Radius point, given by `(t, (r ^ 2 / 2, z))`. -/
 noncomputable def radiusPoint (t r z : ℝ) : PhysicalPoint := (t, (r ^ 2 / 2, z))
 
+/-- Radial slice, given by `G (radiusPoint t r z)`. -/
 noncomputable def radialSlice (G : PhysicalProfile) (t z : ℝ) (r : ℝ) : ℝ :=
   G (radiusPoint t r z)
 
@@ -272,8 +281,8 @@ theorem radialSlice_second {G : PhysicalProfile} {t r z : ℝ}
     exact (radialSlice_hasDerivAt (hu.differentiableAt (by norm_num))).deriv
   have hg1 := (partialS_contDiffAt hG (m := 1) (by norm_num)).differentiableAt (by norm_num)
   have hd := (hasDerivAt_id r).mul (radialSlice_hasDerivAt hg1)
-  exact ((hd.congr_of_eventuallyEq he).deriv).trans (by simp only [id_eq, one_mul, radialSlice];
-    ring)
+  exact ((hd.congr_of_eventuallyEq he).deriv).trans (by
+      simp only [id_eq, one_mul, radialSlice]; ring)
 
 /-- The actual cylindrical angular radial Laplacian of `r F`. -/
 theorem angular_radial_operator {F : PhysicalProfile} {t r z : ℝ} (hr : r ≠ 0)
@@ -295,7 +304,7 @@ theorem angular_radial_operator {F : PhysicalProfile} {t r z : ℝ} (hr : r ≠ 
   simp only [deriv_id'', deriv_const, zero_mul]
   unfold radiusPoint
   dsimp only
-  field_simp [hr] ; ring
+  field_simp [hr]; ring
 
 /-- The terminal flattening factor is an actual function of logarithmic `X`. -/
 noncomputable def flattening (h : ℝ) (f : ℝ → ℝ) (p : PhysicalPoint) : ℝ :=
@@ -414,7 +423,7 @@ theorem swirlCoefficient_amplitude (C h : ℝ) (f : ℝ → ℝ) (t z : ℝ) {r 
   have hsqrt : Real.sqrt (2 * (r ^ 2 / 2)) = r := by
     rw [show 2 * (r ^ 2 / 2) = r ^ 2 by ring, Real.sqrt_sq hr.le]
   unfold swirlCoefficient physicalHeat radiusPoint heatAmplitude RadialHeatProfile.radialProfile
-    radialSlice
+      radialSlice
   dsimp only
   rw [hsqrt]
   simp only [radiusPoint]
@@ -435,6 +444,7 @@ theorem regular_leading_residual {F : PhysicalProfile} {t r z : ℝ} (hr : r ≠
   rw [htime, angular_radial_operator hr hF]
   ring
 
+/-- Leading residual, constructed using `heatAmplitude`. -/
 noncomputable def leadingResidual (C h : ℝ) (f : ℝ → ℝ) (t r z : ℝ) : ℝ :=
   heatAmplitude C (1 + h) t r *
     (deriv f (Real.log (SimilarityProfile.X h (radiusPoint t r z))) /
@@ -447,9 +457,9 @@ theorem swirlCoefficient_leading_residual (C : ℝ) {h t r z : ℝ}
     (hf : ContDiffAt ℝ 2 f (Real.log (SimilarityProfile.X h (radiusPoint t r z)))) :
     r * (partialT (swirlCoefficient C h f) (radiusPoint t r z) -
       2 * (radiusPoint t r z).2.1 * partialS (partialS (swirlCoefficient C h f)) (radiusPoint t r
-        z) -
+          z) -
         4 * partialS (swirlCoefficient C h f) (radiusPoint t r z)) = leadingResidual C h f t r z :=
-          by
+            by
   have hF := swirlCoefficient_contDiffAt C hh hh1 (p := radiusPoint t r z) ht
     (by dsimp [radiusPoint]; positivity) hf
   rw [regular_leading_residual hr.ne' hF]
@@ -500,6 +510,8 @@ theorem canonicalPressure_partialS {F : PhysicalProfile} {p : PhysicalPoint} {a 
       ((hasDerivAt_id p.2.1).prodMk (hasDerivAt_const p.2.1 p.2.2)))
   exact hp'.unique hd
 
+/-- Residual coefficient, given by `partialT F p - 2 * p.2.1 * partialS (partialS F) p - 4 *
+partialS F p - partialZ (partialZ F) p`. -/
 noncomputable def residualCoefficient (F : PhysicalProfile) (p : PhysicalPoint) : ℝ :=
   partialT F p - 2 * p.2.1 * partialS (partialS F) p - 4 * partialS F p - partialZ (partialZ F) p
 
@@ -509,17 +521,17 @@ theorem pureSwirl_navierStokesResidual {F P : PhysicalProfile} {t : ℝ} {x : Pr
     (hP : DifferentiableAt ℝ P (AxisymmetricFields.profilePoint t x)) :
     ProblemStatement.navierStokesResidual
       (AxisymmetricResidual.velocity (fun _ => 0) F (fun _ => 0)) (AxisymmetricResidual.pressure P)
-        t x =
+          t x =
       AxisymmetricResidual.pack
         (x 0 * (partialS P (AxisymmetricFields.profilePoint t x) - F
-          (AxisymmetricFields.profilePoint t x) ^ 2) -
+            (AxisymmetricFields.profilePoint t x) ^ 2) -
           x 1 * residualCoefficient F (AxisymmetricFields.profilePoint t x))
         (x 1 * (partialS P (AxisymmetricFields.profilePoint t x) - F
-          (AxisymmetricFields.profilePoint t x) ^ 2) +
+            (AxisymmetricFields.profilePoint t x) ^ 2) +
           x 0 * residualCoefficient F (AxisymmetricFields.profilePoint t x))
         (partialZ P (AxisymmetricFields.profilePoint t x)) := by
   rw [LocalAxisymmetricResidual.navierStokesResidual_velocity contDiffAt_const hF contDiffAt_const
-    hP]
+      hP]
   have hS : AxisymmetricFields.partialS = partialS := rfl
   have hZop : AxisymmetricFields.partialZ = partialZ := rfl
   have hT : AxisymmetricResidual.partialT = partialT := rfl
@@ -529,13 +541,13 @@ theorem pureSwirl_navierStokesResidual {F P : PhysicalProfile} {t : ℝ} {x : Pr
   have hR : AxisymmetricResidual.residualRadial (fun _ => 0) F (fun _ => 0) P
       (AxisymmetricFields.profilePoint t x) =
       partialS P (AxisymmetricFields.profilePoint t x) - F (AxisymmetricFields.profilePoint t x) ^
-        2 := by
+          2 := by
     simp [AxisymmetricResidual.residualRadial, AxisymmetricResidual.advectionRadial,
       AxisymmetricResidual.laplaceWeighted, hS, hZop, hT, h0S, h0Z, h0T]
     ring
   have hA : AxisymmetricResidual.residualAngular (fun _ => 0) F (fun _ => 0)
       (AxisymmetricFields.profilePoint t x) = -residualCoefficient F
-        (AxisymmetricFields.profilePoint t x) := by
+          (AxisymmetricFields.profilePoint t x) := by
     simp only [AxisymmetricResidual.residualAngular, AxisymmetricResidual.advectionAngular,
       AxisymmetricResidual.laplaceWeighted, hS, hZop, hT, residualCoefficient]
     ring
@@ -553,9 +565,13 @@ theorem pureSwirl_navierStokesResidual {F P : PhysicalProfile} {t : ℝ} {x : Pr
 noncomputable def axialViscosity (C h : ℝ) (f : ℝ → ℝ) (p : PhysicalPoint) : ℝ :=
   Real.sqrt (2 * p.2.1) * partialZ (partialZ (swirlCoefficient C h f)) p
 
+/-- Terminal velocity, given by `AxisymmetricResidual.velocity (fun _ => 0) (swirlCoefficient C
+h f) (fun _ => 0)`. -/
 noncomputable def terminalVelocity (C h : ℝ) (f : ℝ → ℝ) : ProblemStatement.VelocityField :=
   AxisymmetricResidual.velocity (fun _ => 0) (swirlCoefficient C h f) (fun _ => 0)
 
+/-- Terminal pressure, given by `AxisymmetricResidual.pressure (canonicalPressure
+(swirlCoefficient C h f))`. -/
 noncomputable def terminalPressure (C h : ℝ) (f : ℝ → ℝ) : ProblemStatement.PressureField :=
   AxisymmetricResidual.pressure (canonicalPressure (swirlCoefficient C h f))
 
@@ -589,20 +605,20 @@ theorem terminal_navierStokesResidual (C : ℝ) {h t : ℝ} {x : ProblemStatemen
           (leadingResidual C h f t (Real.sqrt (2 * AxisymmetricFields.radialEnergy x)) (x 2) -
             axialViscosity C h f (AxisymmetricFields.profilePoint t x)))
         (partialZ (canonicalPressure (swirlCoefficient C h f)) (AxisymmetricFields.profilePoint t
-          x)) := by
+            x)) := by
   have hF : ContDiffAt ℝ 2 (swirlCoefficient C h f) (AxisymmetricFields.profilePoint t x) :=
     swirlCoefficient_contDiffAt C (p := AxisymmetricFields.profilePoint t x) (f := f) hh hh1 ht hs
-      hf
+        hf
   have hpS : partialS (canonicalPressure (swirlCoefficient C h f)) (AxisymmetricFields.profilePoint
-    t x) =
+      t x) =
       swirlCoefficient C h f (AxisymmetricFields.profilePoint t x) ^ 2 :=
     canonicalPressure_partialS (F := swirlCoefficient C h f) (p := AxisymmetricFields.profilePoint
-      t x) ha hi hc hP
+        t x) ha hi hc hP
   have hr : 0 < Real.sqrt (2 * AxisymmetricFields.radialEnergy x) := Real.sqrt_pos.2 (by positivity)
   have hpoint := radiusPoint_profilePoint (t := t) hs.le
   have hf' : ContDiffAt ℝ 2 f
       (Real.log (SimilarityProfile.X h (radiusPoint t (Real.sqrt (2 *
-        AxisymmetricFields.radialEnergy x)) (x 2)))) := by
+          AxisymmetricFields.radialEnergy x)) (x 2)))) := by
     rw [hpoint]
     exact hf
   have hlead := swirlCoefficient_leading_residual C (h := h) (t := t)
@@ -638,8 +654,9 @@ theorem backwardStress_divergence {R : ℝ → ℝ} {a r : ℝ} (hr : r ≠ 0) (
   rw [show deriv (backwardStress R) r = _ from hT.deriv]
   unfold backwardStress
   simp only [Nat.cast_ofNat, Nat.reduceSub, pow_one, mul_one, id_eq]
-  field_simp ; ring
+  field_simp; ring
 
+/-- Forward stress, given by `-(∫ u in (0 : ℝ)..r, u ^ 2 * R u) / r ^ 2`. -/
 noncomputable def forwardStress (R : ℝ → ℝ) (r : ℝ) : ℝ :=
   -(∫ u in (0 : ℝ)..r, u ^ 2 * R u) / r ^ 2
 
@@ -649,16 +666,20 @@ theorem forward_eq_backward_iff {R : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
     (hi : IntegrableOn (fun u => u ^ 2 * R u) (Ioi 0)) :
     forwardStress R r = backwardStress R r ↔ (∫ u in Ioi (0 : ℝ), u ^ 2 * R u) = 0 := by
   have he := MeasureTheory.setIntegral_sdiff (measurableSet_Ioi : MeasurableSet (Ioi r)) hi
-    (Ioi_subset_Ioi hr.le)
+      (Ioi_subset_Ioi hr.le)
   rw [Set.Ioi_sdiff_Ioi] at he
   unfold forwardStress backwardStress
   rw [intervalIntegral.integral_of_le hr.le]
   rw [div_left_inj' (pow_ne_zero 2 hr.ne')]
   constructor <;> intro h <;> linarith
 
+/-- Time denominator, given by `SimilarityProfile.q h (t, (0, z)) * CoordinateAlgebra.L h
+(SimilarityProfile.eta h (t, (0, z)))`. -/
 noncomputable def timeDenominator (h t z : ℝ) : ℝ :=
   SimilarityProfile.q h (t, (0, z)) * CoordinateAlgebra.L h (SimilarityProfile.eta h (t, (0, z)))
 
+/-- Time residual, given by `heatAmplitude C (1 + h) t r * deriv f (Real.log
+(SimilarityProfile.X h (radiusPoint t r z))) / timeDenominator h t z`. -/
 noncomputable def timeResidual (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
   heatAmplitude C (1 + h) t r * deriv f (Real.log (SimilarityProfile.X h (radiusPoint t r z))) /
     timeDenominator h t z
@@ -735,6 +756,7 @@ theorem timeResidual_lower_comparison {C h t r u R z : ℝ}
   rw [(flattening_radial_hasDerivAt hh hh1 ht hu hf).deriv]
   exact div_nonneg (mul_nonneg (by norm_num) hfpos) hu.le
 
+/-- Terminal stress, given by `backwardStress (fun u => leadingResidual C h f t u z) r`. -/
 noncomputable def terminalStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
   backwardStress (fun u => leadingResidual C h f t u z) r
 
@@ -843,7 +865,7 @@ theorem logX_radial_tendsto {h t z : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (ht : t
   have hd := Tendsto.atTop_div_const hq
     (Tendsto.atTop_div_const (show (0 : ℝ) < 2 by norm_num) hp)
   simpa only [SimilarityProfile.X, SimilarityProfile.q, radiusPoint, Function.comp_def] using
-    Real.tendsto_log_atTop.comp hd
+      Real.tendsto_log_atTop.comp hd
 
 theorem radial_flattening_plateau {h t z c : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (ht : t < 1)
     {f : ℝ → ℝ} (hf : f =ᶠ[atTop] fun _ => c) :
@@ -855,11 +877,11 @@ theorem outgoing_boundary_tendsto_zero (d : OutgoingTail.TailData) (C y₀ : ℝ
     {t z : ℝ} (ht : t < 1) :
     Tendsto (boundary (heatAmplitude C (1 + d.h) t)
       (radialSlice (flattening d.h (fun y => OutgoingTail.tailShape d (y - y₀))) t z)) atTop (𝓝 0)
-        := by
+          := by
   apply boundary_tendsto_zero_of_plateau
-  apply radial_flattening_plateau d.h_pos d.h_lt_half ht
-  filter_upwards [eventually_ge_atTop (y₀ + 3)] with y hy
-  exact OutgoingTail.tailShape_late d (by linarith)
+  · apply radial_flattening_plateau d.h_pos d.h_lt_half ht
+    · filter_upwards [eventually_ge_atTop (y₀ + 3)] with y hy
+      exact OutgoingTail.tailShape_late d (by linarith)
 
 /-! ## The actual terminal taper and its Gaussian edge -/
 
@@ -867,11 +889,12 @@ theorem edge_half (δ : ℝ) : FlatCutoff.edge 1 (δ / 2) = FlatCutoff.edge 4 δ
   by_cases hδ : 0 < δ
   · rw [FlatCutoff.edge_of_pos 1 (by positivity), FlatCutoff.edge_of_pos 4 hδ]
     congr 1
-    field_simp ; ring
+    field_simp; ring
   · rw [FlatCutoff.edge_of_nonpos 1 (div_nonpos_of_nonpos_of_nonneg (le_of_not_gt hδ) (by
-    norm_num)),
+      norm_num)),
       FlatCutoff.edge_of_nonpos 4 (le_of_not_gt hδ)]
 
+/-- Taper denominator, given by `FlatCutoff.edge 1 (1 - δ / 2) + FlatCutoff.edge 4 δ`. -/
 noncomputable def taperDenominator (δ : ℝ) : ℝ :=
   FlatCutoff.edge 1 (1 - δ / 2) + FlatCutoff.edge 4 δ
 
@@ -885,6 +908,7 @@ theorem taperDenominator_contDiff : ContDiff ℝ ∞ taperDenominator :=
     (contDiff_const.sub (contDiff_id.div_const 2))).add
       (FlatCutoff.edge_contDiff (by norm_num : (0 : ℝ) < 4))
 
+/-- Taper factor, given by `(taperDenominator δ)⁻¹`. -/
 noncomputable def taperFactor (δ : ℝ) : ℝ := (taperDenominator δ)⁻¹
 
 theorem taperFactor_contDiff : ContDiff ℝ ∞ taperFactor :=
@@ -906,6 +930,7 @@ theorem tailShape_deficit (d : OutgoingTail.TailData) (δ : ℝ) :
   unfold taperDenominator
   ring_nf
 
+/-- Taper slope factor, given by `d.rho * (8 * taperFactor δ + δ ^ 3 * deriv taperFactor δ)`. -/
 noncomputable def taperSlopeFactor (d : OutgoingTail.TailData) (δ : ℝ) : ℝ :=
   d.rho * (8 * taperFactor δ + δ ^ 3 * deriv taperFactor δ)
 
@@ -951,6 +976,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
 noncomputable def edgeStress (c : ℝ) (b a : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
   (FlatCutoff.edge c y.2 / y.2 ^ 3) * b y + ParametricFlatFactor.primitive c 3 a y
 
+/-- Normalized edge stress, given by `b y + y.2 ^ 3 * ParametricFlatFactor.factor c 3 a y`. -/
 noncomputable def normalizedEdgeStress (c : ℝ) (b a : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
   b y + y.2 ^ 3 * ParametricFlatFactor.factor c 3 a y
 
@@ -978,7 +1004,7 @@ theorem normalizedEdgeStress_eventually_pos {c : ℝ} (hc : 0 < c) {b a : E × �
     rw [normalizedEdgeStress_zero]
     exact hbp
   exact (normalizedEdgeStress_contDiff hc hb ha).continuous.continuousAt.eventually (Ioi_mem_nhds
-    hp)
+      hp)
 
 end ParametricEdge
 

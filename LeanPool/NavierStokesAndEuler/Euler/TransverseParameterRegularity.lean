@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSpaceInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Actual all-order parameter regularity of the transverse inverse
@@ -21,6 +19,9 @@ paths and their true Bochner multipliers. Its coercive inverse is the previously
 constructed transverse solution. Smoothness of every finite order follows from
 coefficient smoothness; no regularity of a pre-existing inverse is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -78,12 +79,12 @@ theorem contDiff_fixedFrameOperator (hQ : ContDiff ℝ n Q) (hQ₁ : ContDiff �
     (E := TimeLp T E)).contDiff.comp hD).clm_comp (hA.clm_comp hD)
 
 variable (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ x t v, c * ‖v‖^2 ≤ ‖Q x t v‖^2)
+  (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
   (hd : ∀ x (t : Icc (0 : ℝ) T),
     HasDerivWithinAt (extendPath T hT (Q x)) (Q₁ x t) (Icc (0 : ℝ) T) t)
   (K : ℝ) (hK : 0 ≤ K)
-  (hPotential : ∀ x t v, ⟪H x t v, v⟫_ℝ ≤ K * ‖v‖^2)
-  (hsmall : K * (T^2/2) ≤ 1/2)
+  (hPotential : ∀ x t v, ⟪H x t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- The actual fixed-space forcing-to-solution operator has every prescribed
 order of coefficient regularity, including smoothness. -/
@@ -109,7 +110,7 @@ theorem contDiff_fixedFrameSolution (hQ : ContDiff ℝ n Q) (hQ₁ : ContDiff �
       fixedFrameSolver T hT (Q x) (Q₁ x) (H x) c hc (hLower x) (hd x)
         K hK (hPotential x) hsmall (f x)) :=
   (contDiff_fixedFrameSolver T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall hQ hQ₁ hH).clm_apply
-    hf
+      hf
 
 include hd in
 /-- The coordinates of the original physical transverse solve inherit the

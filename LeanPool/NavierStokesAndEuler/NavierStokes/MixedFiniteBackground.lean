@@ -6,10 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalParticularWave
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalResidual
 
 /-!
 # Finite background bounds from the raw increments
@@ -19,6 +16,9 @@ initialized stage is therefore kept explicit. Together with the raw
 increment bounds it controls every finite prefix with one derivative-loss
 function, independent of the number of correction stages.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -126,6 +126,7 @@ theorem mixed_background {l : Filter SpaceTime} {q : SpaceTime → ℝ}
       (by simp)).contDiffWithinAt
   exact hc.add hb hU hlU hsCurl hsB
 
+/-- Stage velocity, defined pointwise by `SpatialCurl.spatialCurl (A j) x + B j x`. -/
 noncomputable def stageVelocity (A B : ℕ → VelocityField) (j : ℕ) : VelocityField :=
   fun x => SpatialCurl.spatialCurl (A j) x + B j x
 

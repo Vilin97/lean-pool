@@ -6,45 +6,55 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The two literal initial-increment majorants are summable on the
 source scale sequence. The mean retains its full inverse-frequency square. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPacketInitialScale
 
-open Real EulerScale EulerPacketSourceScales EulerPacketSourceScaleChoice
+open Real EulerPacketSourceScales EulerPacketSourceScaleChoice
   EulerPacketSourceScaleSequence EulerPacketUniformFrequencyScales
   EulerPacketSourceParameterScales
 
+/-- High majorant, given by `(supportScale J X n)⁻¹^m*(frequency J X n)^m *
+(K*(parameterEnvelope J C c p q X n)^N)*exp (-scaleSequence J X n/8)`. -/
 def highMajorant (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
-  (supportScale J X n)⁻¹^m*(frequency J X n)^m*
+  (supportScale J X n)⁻¹^m*(frequency J X n)^m *
     (K*(parameterEnvelope J C c p q X n)^N)*exp (-scaleSequence J X n/8)
 
+/-- Mean majorant, given by `(supportScale J X n)⁻¹^m/(frequency J X n)^2 *
+(K*(parameterEnvelope J C c p q X n)^N)`. -/
 def meanMajorant (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
-  (supportScale J X n)⁻¹^m/(frequency J X n)^2*
+  (supportScale J X n)⁻¹^m/(frequency J X n)^2 *
     (K*(parameterEnvelope J C c p q X n)^N)
 
 theorem high_expansion (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) :
-    highMajorant J C c K p q N m X n=
-      (K*C^N)*((J+n : ℕ) : ℝ)^(p*N)*(scaleSequence J X n)^(q*N)*
-        exp (-(scaleSequence J X n/8)+
-          (m : ℝ)*(scaleSequence J X n/((J+n : ℕ) : ℝ)^2)+
-          (m : ℝ)*(scaleSequence J X n/((J+n : ℕ) : ℝ)^(7/2 : ℝ))+
+    highMajorant J C c K p q N m X n =
+      (K*C^N)*((J+n : ℕ) : ℝ)^(p*N)*(scaleSequence J X n)^(q*N) *
+        exp (-(scaleSequence J X n/8) +
+          (m : ℝ)*(scaleSequence J X n/((J+n : ℕ) : ℝ)^2) +
+          (m : ℝ)*(scaleSequence J X n/((J+n : ℕ) : ℝ)^(7/2 : ℝ)) +
           (N : ℝ)*(c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3))) := by
   simp only [highMajorant,parameterEnvelope,supportScale,frequency,mul_pow,
     ← pow_mul,exp_add,exp_nat_mul,neg_div,exp_neg,inv_inv]
   ring
 
 theorem mean_expansion (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) :
-    meanMajorant J C c K p q N m X n=
-      (K*C^N)*((J+n : ℕ) : ℝ)^(p*N)*(scaleSequence J X n)^(q*N)*
-        exp (-2*(scaleSequence J X n/((J+n : ℕ) : ℝ)^2)+
-          (m : ℝ)*(scaleSequence J X n/((J+n : ℕ) : ℝ)^(7/2 : ℝ))+
+    meanMajorant J C c K p q N m X n =
+      (K*C^N)*((J+n : ℕ) : ℝ)^(p*N)*(scaleSequence J X n)^(q*N) *
+        exp (-2*(scaleSequence J X n/((J+n : ℕ) : ℝ)^2) +
+          (m : ℝ)*(scaleSequence J X n/((J+n : ℕ) : ℝ)^(7/2 : ℝ)) +
           (N : ℝ)*(c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3))) := by
   have he (x : ℝ) : exp (-2*x)=((exp x)^2)⁻¹ := by
     rw [show -2*x=-(2*x) by ring,exp_neg,show (2 : ℝ)*x=(2 : ℕ)*x by norm_num,

@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProduct
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMap
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+
+/-! Literal bounded bilinear nonlinearities preserve smooth continuous cylinder L² paths. -/
 
 @[expose] public section
 
-/-! Literal bounded bilinear nonlinearities preserve smooth continuous cylinder L² paths. -/
 
 noncomputable section
 
@@ -22,6 +24,7 @@ open Set MeasureTheory ContinuousLinearMap Finset EulerSmoothLimit EulerLiftedGr
   EulerCylinderConstantMap EulerMetricTransport
 open scoped ContDiff
 
+/-- Component, given by `EuclideanSpace.proj i`. -/
 def component (i : Fin 3) : Space →L[ℝ] ℝ := EuclideanSpace.proj i
 
 theorem component_norm (i : Fin 3) : ‖component i‖ ≤ 1 := by
@@ -30,6 +33,7 @@ theorem component_norm (i : Fin 3) : ‖component i‖ ≤ 1 := by
   change ‖u i‖ ≤ (1 : ℝ)*‖u‖
   simpa only [one_mul] using PiLp.norm_apply_le u i
 
+/-- Basis vector, given by `EuclideanSpace.single i 1`. -/
 def basisVector (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 theorem sum_components (u : Space) : (∑ i : Fin 3, component i u • basisVector i) = u := by
@@ -42,10 +46,12 @@ theorem bilinear_components (B : Space →L[ℝ] Space →L[ℝ] Space) (u v : S
   simpa only [map_sum, _root_.sum_apply, map_smul, smul_apply] using h
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (B : Space →L[ℝ] Space →L[ℝ] Space) (p q : C(K,LiftL2 P))
+  (B : Space →L[ℝ] Space →L[ℝ] Space) (p q : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
 
+/-- Bilinear term, given by `pathMap P (B (basisVector i)) (scalarProductPath P (component i)
+(component_norm i) p q hp hq)`. -/
 def bilinearTerm (i : Fin 3) : C(K,LiftL2 P) :=
   pathMap P (B (basisVector i))
     (scalarProductPath P (component i) (component_norm i) p q hp hq)
@@ -60,7 +66,7 @@ def bilinearProductPath : C(K,LiftL2 P) := ∑ i : Fin 3, bilinearTerm P B p q h
 
 theorem bilinearProductPath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (bilinearProductPath P B p q hp hq)) :=
-      by
+        by
   simp only [bilinearProductPath, map_sum]
   exact ContDiff.sum (fun i _ => bilinearTerm_orbit P B p q hp hq i)
 

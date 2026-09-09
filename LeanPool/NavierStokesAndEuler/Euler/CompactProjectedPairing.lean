@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
 
-@[expose] public section
-
 /-!
 # Pairing the projected Euler right-hand side
 
@@ -18,6 +16,9 @@ Euler right-hand side. For a smooth divergence-free test field, this gives
 the ordinary spatial integral against advection. Compactly supported smooth
 tests automatically satisfy the required `L²` assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

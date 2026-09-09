@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRemainder
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedExactLifted
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 
 /-! The exact corrected packet has the same primary shear, with the
 literal finite-tail and correction derivatives as its only errors. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +27,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
   EulerTransversePacketProvider EulerPacketCylinderField EulerPacketProfileRecursion
   EulerPacketPointJets EulerPacketTimeProfile EulerParameterWordGevrey
   EulerPacketCoarseMajorant EulerCylinderPhysicalTensor EulerCylinderSobolevSpace
-  EulerPacketPrimaryShear EulerPacketPrimaryFactorization EulerTransversePacketPrimary
+   EulerPacketPrimaryFactorization EulerTransversePacketPrimary
   EulerLiftedGradientSpace EulerGraphPressurePotential EulerAllOrderDriftCorrection
   EulerPacketCoordinates EulerPacketCorrectionCoefficients EulerPacketPhysicalGevrey
 open scoped ContDiff
@@ -38,11 +41,12 @@ variable (M : EulerMeanPacketProvider.Data)
   (Q : Budget period D.T_pos
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk))
 
+/-- Initialized exact physical velocity as an element of `Space`. -/
 def initializedExactPhysicalVelocity (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space) : Space
-  :=
+    :=
   k⁻¹ • D.F.field t (Y x)
     ((initializedExactPacket M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk
-      Q).velocity.pointField
+        Q).velocity.pointField
       t (cylinderGraph period k D.m₀ (Y x)))
 
 /-- The approximation is exactly the finite physical velocity after
@@ -54,19 +58,19 @@ theorem initializedExactPhysicalVelocity_eq (t : Icc (0 : ℝ) D.T) (Y : Space �
       k⁻¹ • D.F.field t (Y x) (Q.pointField period t (cylinderGraph period k D.m₀ (Y x))) := by
   have hk0 : k ≠ 0 := by linarith
   have ha : (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k
-    hk).approximation =
+      hk).approximation =
       (coordinateField D (initializedVelocityField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹)
-        k).toFieldTower :=
+          k).toFieldTower :=
     initializedNormalizedField_tower_eq M D hTime τ hτ hτT B δ hδ ξ hs α N k
   change k⁻¹ • D.F.field t (Y x)
     ((exactPacketOfResidual period Q
       (initializedApproximationResidual M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k
-        hk)).velocity.pointField
+          hk)).velocity.pointField
         t (cylinderGraph period k D.m₀ (Y x))) = _
   rw [exactPacketOfResidual_velocity_pointField,ha,map_add,smul_add]
   congr 1
   have he := (coordinateField D (initializedVelocityField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹)
-    k).toFieldTower_pointField_raw
+      k).toFieldTower_pointField_raw
     t (Y x) (k*inner ℝ D.m₀ (Y x))
   rw [show cylinderGraph period k D.m₀ (Y x) =
       (Y x,((k*inner ℝ D.m₀ (Y x) : ℝ) : AddCircle period)) from rfl,he]
@@ -107,17 +111,17 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem initializedExactPhysicalVelocity_gradient_error
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (X Y : Space → Space)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
-    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y)=y) :
+    (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     ‖fderiv ℝ (initializedExactPhysicalVelocity M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk Q t Y) (X 0) -
       (α/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0)‖ ≤

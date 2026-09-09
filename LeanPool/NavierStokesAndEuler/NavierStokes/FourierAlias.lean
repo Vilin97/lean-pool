@@ -7,13 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothFourierData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricTorusInverse
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
-public import LeanPool.NavierStokesAndEuler.NavierStokes.Flatness
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Exact radial aliases and Fourier suppression
@@ -21,6 +17,9 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 The compactification defect is retained as an actual function. Its averaging
 and integration-by-parts identities concern genuine Bochner integrals.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +30,7 @@ namespace NavierStokes.FourierAlias
 
 open TorusInverse
 
+/-- State: an abbreviation for `ℝ × Plane`. -/
 abbrev State := ℝ × Plane
 
 section Averages
@@ -45,6 +45,7 @@ noncomputable def TorusPeriodic (f : Plane → F) : Prop :=
 noncomputable def torusMean (f : Plane → F) : F :=
   ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)
 
+/-- Slice mean, given by `torusMean (fun Y => f (U, Y))`. -/
 noncomputable def sliceMean (f : State → F) (U : ℝ) : F := torusMean (fun Y => f (U, Y))
 
 /-- The exact defect in `D Ic = f - cutoffAlias`. -/
@@ -258,7 +259,7 @@ theorem periodic_finiteJet_bound {f : State → F} (hf : ContDiff ℝ ∞ f)
   have hK : IsCompact K := isCompact_Icc.prod (isCompact_Icc.prod isCompact_Icc)
   have hc : Continuous (fun z : State => ∑ j ∈ Finset.range (m + 1), ‖iteratedFDeriv ℝ j f z‖) :=
     continuous_finsetSum _ (fun j _ => (TransportPrimitive.iteratedFDeriv_contDiff hf
-      j).continuous.norm)
+        j).continuous.norm)
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hc.continuousOn
   refine ⟨max C 0, le_max_right _ _, ?_⟩
   intro j hj U hU Y
@@ -514,7 +515,7 @@ theorem fourierSourceJet_eq_parameterJet (d : Direction) {f : State → ℂ}
   | zero => rfl
   | succ p ih =>
     have heq : fourierSourceJet d f (p + 1) = parameterPartial (inverse d (fourierSourceJet d f p))
-      :=
+        :=
       RadialAlias.sourceJet_succ (inverse d) f p
     rw [heq, ih, parameterJet_succ, iterateInverse_succ,
       parameterJet_inverse d (iterateInverse_smooth d hf hp p) (iterateInverse_periodic d hp p)]
@@ -542,7 +543,7 @@ theorem fourierSourceJet_properties (d : Direction) {a b : ℝ} {f : State → �
   | zero => exact ⟨hf, hp, hm, hs⟩
   | succ p ih =>
     have heq : fourierSourceJet d f (p + 1) = parameterPartial (inverse d (fourierSourceJet d f p))
-      :=
+        :=
       RadialAlias.sourceJet_succ (inverse d) f p
     rw [heq]
     have hi := inverse_smooth d ih.1 ih.2.1

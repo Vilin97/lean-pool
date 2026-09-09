@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Actual time derivatives of uniformly continuous bounded fields
@@ -18,6 +18,9 @@ Pointwise derivatives identify a derivative in the bounded-field norm when
 both the field and prescribed derivative are continuous in that norm. The
 proof uses the Bochner fundamental theorem of calculus and bounded evaluation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +31,7 @@ open scoped BoundedContinuousFunction
 
 variable {X W : Type*} [TopologicalSpace X] [NormedAddCommGroup W] [NormedSpace ℝ W]
   [CompleteSpace W]
-variable (T : ℝ) (hT : 0 ≤ T) (A A' : C(Icc (0 : ℝ) T,X →ᵇ W))
+variable (T : ℝ) (hT : 0 ≤ T) (A A' : C(Icc (0 : ℝ) T, X →ᵇ W))
 
 /-- Pointwise derivatives imply the exact integral identity in the bounded-field space. -/
 theorem integral_eq_sub
@@ -47,7 +50,7 @@ theorem integral_eq_sub
     (∫ s in (0 : ℝ)..t, extendPath T hT A' s) x =
         ∫ s in (0 : ℝ)..t, extendPath T hT A' s x := by
       exact (ev.intervalIntegral_comp_comm ((extendPath_continuous T hT A').intervalIntegrable 0
-        t)).symm
+          t)).symm
     _ = extendPath T hT A t x - extendPath T hT A 0 x := by
       apply intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le ht.1 hcA.continuousOn
         ?_ (hcA'.intervalIntegrable 0 t)

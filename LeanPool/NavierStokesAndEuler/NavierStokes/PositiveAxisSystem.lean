@@ -6,18 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowDivergence
-public import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraAnalyticBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraParity
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Analytic.Constructions
-public import Mathlib.Analysis.Complex.RealDeriv
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.LinearCombination
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Complex.RealDeriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Explicit positive-order axis matrices
@@ -27,6 +22,9 @@ their two endpoint terms and their strictly lower-order source. No matrix
 identity or existence of a transformed system is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set
@@ -34,41 +32,65 @@ open scoped BigOperators ContDiff
 
 namespace NavierStokes.PositiveAxisSystem
 
+/-- Jet data, collecting `value`, `radial`, `radial2`, `parameter`. -/
 structure Jet (K : Type*) where
+  /-- Value of `Jet`, of type `K`. -/
   value : K
+  /-- Radial of `Jet`, of type `K`. -/
   radial : K
+  /-- Radial2 of `Jet`, of type `K`. -/
   radial2 : K
+  /-- Parameter of `Jet`, of type `K`. -/
   parameter : K
 
+/-- Base jet data, collecting `phi`, `axial`, `beta`. -/
 structure BaseJet (K : Type*) where
+  /-- Phi of `BaseJet`, of type `Jet K`. -/
   phi : Jet K
+  /-- Axial of `BaseJet`, of type `Jet K`. -/
   axial : Jet K
+  /-- Beta of `BaseJet`, of type `K`. -/
   beta : K
 
 /-- The first two entries are the lower-order convective sums minus the
 known preceding axial diffusion. The last two give the lower pressure
 convolution and the smooth quotient `Ω_(n-1)/X`. -/
 structure SourceJet (K : Type*) where
+  /-- Angular of `SourceJet`, of type `K`. -/
   angular : K
+  /-- Axial of `SourceJet`, of type `K`. -/
   axial : K
+  /-- Pressure product of `SourceJet`, of type `K`. -/
   pressureProduct : K
+  /-- Omega quotient of `SourceJet`, of type `K`. -/
   omegaQuotient : K
 
 section Algebra
 
 variable {K : Type*} [Field K] [CharZero K]
 
+/-- A, given by `1 / 2 + h`. -/
 noncomputable def a (h : K) : K := 1 / 2 + h
+/-- D scale, given by `1 / 2 - h`. -/
 noncomputable def dScale (h : K) : K := 1 / 2 - h
+/-- Edge, given by `1 - eta ^ 2`. -/
 noncomputable def edge (eta : K) : K := 1 - eta ^ 2
+/-- Ell, given by `1 - 2 * h * eta ^ 2`. -/
 noncomputable def ell (h eta : K) : K := 1 - 2 * h * eta ^ 2
+/-- Angular power, given by `-a h - 1 / 2`. -/
 noncomputable def angularPower (h : K) : K := -a h - 1 / 2
+/-- Axial power, given by `-a h`. -/
 noncomputable def axialPower (h : K) : K := -a h
+/-- Inverse square, given by `(C ^ 2)⁻¹`. -/
 noncomputable def inverseSquare (C : K) : K := (C ^ 2)⁻¹
 
+/-- Time value, given by `(-power * j.value + dScale h * eta * j.parameter + X * j.radial) / ell
+h eta`. -/
 noncomputable def timeValue (h power eta X : K) (j : Jet K) : K :=
   (-power * j.value + dScale h * eta * j.parameter + X * j.radial) / ell h eta
 
+/-- Axial value, given by `(2 * eta * power * j.value + edge eta * j.parameter - 2 * eta * X *
+j.radial) / ell h eta`. -/
 noncomputable def axialValue (h power eta X : K) (j : Jet K) : K :=
   (2 * eta * power * j.value + edge eta * j.parameter - 2 * eta * X * j.radial) / ell h eta
 
@@ -77,12 +99,16 @@ noncomputable def betaValue (h lam eta : K) (u k : Jet K) : K :=
   (2 * eta * (a h - lam) * u.value - 2 * eta * (dScale h + lam) * k.value -
     edge eta * (u.parameter + k.parameter)) / ell h eta
 
+/-- Pressure source, given by `inverseSquare C * s.pressureProduct - s.omegaQuotient / 2`. -/
 noncomputable def pressureSource (C : K) (s : SourceJet K) : K :=
   inverseSquare C * s.pressureProduct - s.omegaQuotient / 2
 
+/-- Pressure value, given by `2 * inverseSquare C * b.phi.value * phi.value + pressureSource C
+s`. -/
 noncomputable def pressureValue (C : K) (b : BaseJet K) (s : SourceJet K) (phi : Jet K) : K :=
   2 * inverseSquare C * b.phi.value * phi.value + pressureSource C s
 
+/-- Angular RHS, constructed using `timeValue`. -/
 noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
     (phi u k : Jet K) : K :=
   timeValue h (angularPower h + lam) eta X phi +
@@ -91,6 +117,7 @@ noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
   b.axial.value * axialValue h (angularPower h + lam) eta X phi +
   u.value * axialValue h (angularPower h) eta X b.phi + s.angular
 
+/-- Axial RHS, constructed using `timeValue`. -/
 noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
     (_phi u k p : Jet K) : K :=
   timeValue h (axialPower h + lam) eta X u + b.beta * X * u.radial +
@@ -108,11 +135,15 @@ def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
   2 * (X * phi.radial2 + 2 * phi.radial) = angularRHS h lam eta X b s phi u k ∧
   2 * (X * u.radial2 + u.radial) = axialRHS h lam eta X b s phi u k p
 
+/-- Diagonal, given by `![0, 0, 2, 0, 3, 1]`. -/
 noncomputable def diagonal : Fin 6 → K := ![0, 0, 2, 0, 3, 1]
 
+/-- Jet vector, given by `![phi.value, u.value, k.value, p.value, 2 * r * phi.radial, 2 * r *
+u.radial]`. -/
 noncomputable def jetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
   ![phi.value, u.value, k.value, p.value, 2 * r * phi.radial, 2 * r * u.radial]
 
+/-- Radial jet vector as an element of `Fin 6 → K`. -/
 noncomputable def radialJetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
   ![2 * r * phi.radial, 2 * r * u.radial, 2 * r * k.radial, 2 * r * p.radial,
     2 * phi.radial + 4 * r ^ 2 * phi.radial2,
@@ -122,6 +153,7 @@ noncomputable def radialJetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
 noncomputable def parameterJetVector (phi u k p : Jet K) (q₄ q₅ : K) : Fin 6 → K :=
   ![phi.parameter, u.parameter, k.parameter, p.parameter, q₄, q₅]
 
+/-- A0 as an element of `Matrix (Fin 6) (Fin 6) K`. -/
 noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
   let M := 1 - 2 * eta * b.axial.value
   let R := M / ell h eta + b.beta
@@ -142,6 +174,7 @@ noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6
        -4 * eta * (dScale h + lam) * Gu / ell h eta,
        4 * eta * (-2 * a h + lam) / ell h eta, 0, r * R]
 
+/-- A1 as an element of `Matrix (Fin 6) (Fin 6) K`. -/
 noncomputable def A1 (h r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
   let H := dScale h * eta + edge eta * b.axial.value
   let Gphi := r ^ 2 * b.phi.radial + b.phi.value
@@ -155,14 +188,19 @@ noncomputable def A1 (h r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
      0, 2 * (H - edge eta * Gu) / ell h eta,
        -2 * edge eta * Gu / ell h eta, 2 * edge eta / ell h eta, 0, 0]
 
+/-- Forcing, given by `![0, 0, 0, 2 * r * pressureSource C s, 2 * s.angular, 2 * s.axial - 4 *
+eta * r ^ 2 * pressureSource C s / ell h eta]`. -/
 noncomputable def forcing (h C r eta : K) (s : SourceJet K) : Fin 6 → K :=
   ![0, 0, 0, 2 * r * pressureSource C s, 2 * s.angular,
     2 * s.axial - 4 * eta * r ^ 2 * pressureSource C s / ell h eta]
 
+/-- Matrix RHS, given by `(A0 h lam C r eta b).mulVec w + (A1 h r eta b).mulVec v + forcing h C
+r eta s`. -/
 noncomputable def matrixRHS (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
     (w v : Fin 6 → K) : Fin 6 → K :=
   (A0 h lam C r eta b).mulVec w + (A1 h r eta b).mulVec v + forcing h C r eta s
 
+/-- Jet system as an element of `Prop`. -/
 def JetSystem (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
     (phi u k p : Jet K) (q₄ q₅ : K) : Prop :=
   (fun i => radialJetVector r phi u k p i + diagonal i / r * jetVector r phi u k p i) =
@@ -232,7 +270,11 @@ theorem jetSystem_iff_expanded {h lam C r eta : K} (hr : r ≠ 0)
     have h3 := congrFun hh 3
     have h4 := congrFun hh 4
     have h5 := congrFun hh 5
-    simp [radialJetVector, diagonal, jetVector] at h2 h3 h4 h5
+    simp only [radialJetVector, Fin.isValue, Matrix.cons_val, diagonal, jetVector,
+        Nat.succ_eq_add_one,
+      Nat.reduceAdd, neg_mul, zero_div, zero_mul, add_zero, mul_eq_mul_left_iff, mul_eq_zero,
+          OfNat.ofNat_ne_zero,
+      false_or, one_div] at h2 h3 h4 h5
     have hk := (average_row_iff hr _ _ _).mp h2
     have hp : p.radial = pressureValue C b s phi := by
       exact h3.resolve_right hr
@@ -240,7 +282,7 @@ theorem jetSystem_iff_expanded {h lam C r eta : K} (hr : r ≠ 0)
       (angularRHS h lam eta (r ^ 2) b s phi u k) 3).mp h4
     have hu := (second_row_iff hr u.radial u.radial2
       (axialRHS h lam eta (r ^ 2) b s phi u k {p with radial := pressureValue C b s phi}) 1).mp (by
-        simpa only [one_div] using h5)
+          simpa only [one_div] using h5)
     have hpjet : {p with radial := pressureValue C b s phi} = p := by
       cases p
       simp_all
@@ -279,7 +321,7 @@ noncomputable def lowerConvolution (n : ℕ) (F : ℕ → ℕ → K) : K :=
   ∑ i ∈ Finset.range (n - 1), F (i + 1) (n - (i + 1))
 
 omit [CharZero K] in
- theorem convolution_split {n : ℕ} (hn : 0 < n) (F : ℕ → ℕ → K) :
+theorem convolution_split {n : ℕ} (hn : 0 < n) (F : ℕ → ℕ → K) :
     convolution n F = F 0 n + F n 0 + lowerConvolution n F := by
   obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hn)
   unfold convolution lowerConvolution
@@ -303,11 +345,15 @@ theorem lowerConvolution_congr {n : ℕ} {F G : ℕ → ℕ → K}
   have hidx := lower_indices hi
   exact h _ hidx.2.1 _ hidx.2.2.2
 
+/-- Angular convection, given by `beta i * (X * (phi j).radial + (phi j).value) + (u i).value *
+axialValue h (angularPower h + slowPower h j) eta X (phi j)`. -/
 noncomputable def angularConvection (h eta X : K) (phi u : ℕ → Jet K)
     (beta : ℕ → K) (i j : ℕ) : K :=
   beta i * (X * (phi j).radial + (phi j).value) +
     (u i).value * axialValue h (angularPower h + slowPower h j) eta X (phi j)
 
+/-- Axial convection, given by `beta i * X * (u j).radial + (u i).value * axialValue h
+(axialPower h + slowPower h j) eta X (u j)`. -/
 noncomputable def axialConvection (h eta X : K) (u : ℕ → Jet K)
     (beta : ℕ → K) (i j : ℕ) : K :=
   beta i * X * (u j).radial +
@@ -324,6 +370,7 @@ noncomputable def lowerSource (h eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
   pressureProduct := lowerConvolution n (fun i j => (phi i).value * (phi j).value)
   omegaQuotient := omegaQuotient
 
+/-- Base at order zero, given by `⟨phi 0, u 0, beta 0⟩`. -/
 noncomputable def baseAtOrderZero (phi u : ℕ → Jet K) (beta : ℕ → K) : BaseJet K :=
   ⟨phi 0, u 0, beta 0⟩
 
@@ -350,7 +397,7 @@ theorem angularRHS_eq_convolution (h eta X : K) {n : ℕ} (hn : 0 < n)
     (hbeta : beta n = betaValue h (slowPower h n) eta (u n) k) :
     angularRHS h (slowPower h n) eta X (baseAtOrderZero phi u beta)
       (lowerSource h eta X n phi u beta previousAngularDiffusion previousAxialDiffusion
-        omegaQuotient)
+          omegaQuotient)
       (phi n) (u n) k =
     timeValue h (angularPower h + slowPower h n) eta X (phi n) +
       convolution n (angularConvection h eta X phi u beta) - previousAngularDiffusion := by
@@ -366,7 +413,7 @@ theorem axialRHS_eq_convolution (h eta X : K) {n : ℕ} (hn : 0 < n)
     (hbeta : beta n = betaValue h (slowPower h n) eta (u n) k) :
     axialRHS h (slowPower h n) eta X (baseAtOrderZero phi u beta)
       (lowerSource h eta X n phi u beta previousAngularDiffusion previousAxialDiffusion
-        omegaQuotient)
+          omegaQuotient)
       (phi n) (u n) k p =
     timeValue h (axialPower h + slowPower h n) eta X (u n) +
       convolution n (axialConvection h eta X u beta) +
@@ -381,10 +428,10 @@ theorem pressureValue_eq_convolution (h C eta X : K) {n : ℕ} (hn : 0 < n)
     (previousAngularDiffusion previousAxialDiffusion omegaQuotient : K) :
     pressureValue C (baseAtOrderZero phi u beta)
       (lowerSource h eta X n phi u beta previousAngularDiffusion previousAxialDiffusion
-        omegaQuotient)
+          omegaQuotient)
       (phi n) =
     inverseSquare C * convolution n (fun i j => (phi i).value * (phi j).value) - omegaQuotient / 2
-      := by
+        := by
   rw [convolution_split hn]
   simp only [pressureValue, pressureSource, baseAtOrderZero, lowerSource]
   ring
@@ -413,7 +460,7 @@ theorem expanded_iff_positiveOrder (h C eta X : K) {n : ℕ} (hn : 0 < n)
     (hbeta : beta n = betaValue h (slowPower h n) eta (u n) k) :
     ExpandedEquations h (slowPower h n) C eta X (baseAtOrderZero phi u beta)
       (lowerSource h eta X n phi u beta previousAngularDiffusion previousAxialDiffusion
-        omegaQuotient)
+          omegaQuotient)
       (phi n) (u n) k p ↔
     PositiveOrderEquations h C eta X n phi u beta k p
       previousAngularDiffusion previousAxialDiffusion omegaQuotient := by
@@ -428,7 +475,7 @@ theorem jetSystem_iff_positiveOrder (h C r eta : K) (hr : r ≠ 0) {n : ℕ} (hn
     (hbeta : beta n = betaValue h (slowPower h n) eta (u n) k) :
     JetSystem h (slowPower h n) C r eta (baseAtOrderZero phi u beta)
       (lowerSource h eta (r ^ 2) n phi u beta previousAngularDiffusion previousAxialDiffusion
-        omegaQuotient)
+          omegaQuotient)
       (phi n) (u n) k p q₄ q₅ ↔
     PositiveOrderEquations h C eta (r ^ 2) n phi u beta k p
       previousAngularDiffusion previousAxialDiffusion omegaQuotient :=
@@ -482,6 +529,8 @@ theorem hasDerivAt_squareProfile_radial {f : InnerProfile} {r eta : ℝ}
   simp only [id_eq]
   ring
 
+/-- Profile vector, given by `jetVector r (actualJet phi (r ^ 2, eta)) (actualJet u (r ^ 2,
+eta)) (actualJet k (r ^ 2, eta)) (actualJet p (r ^ 2, eta))`. -/
 noncomputable def profileVector (phi u k p : InnerProfile) (r eta : ℝ) : Fin 6 → ℝ :=
   jetVector r (actualJet phi (r ^ 2, eta)) (actualJet u (r ^ 2, eta))
     (actualJet k (r ^ 2, eta)) (actualJet p (r ^ 2, eta))
@@ -592,9 +641,9 @@ theorem actualLowerSource_congr (h : ℝ) {n : ℕ}
     intro i hi j hj
     simp only [axialConvection, hu i hi, hu j hj, hbeta i hi]
   have hc : lowerConvolution n (fun i j => (actualJet (phi i) w).value * (actualJet (phi j)
-    w).value) =
+      w).value) =
       lowerConvolution n (fun i j => (actualJet (phi' i) w).value * (actualJet (phi' j) w).value)
-        := by
+          := by
     apply lowerConvolution_congr
     intro i hi j hj
     rw [hphi i hi, hphi j hj]
@@ -752,19 +801,25 @@ Regularity is required of these actual finite jets, not inferred from
 separate smoothness of a lower-order profile. -/
 abbrev CoefficientData := Fin 11 → ℝ × ℂ → ℂ
 
+/-- Coefficient base, given by `⟨⟨F 0 (X, z), F 1 (X, z), 0, F 2 (X, z)⟩, ⟨F 3 (X, z), F 4 (X,
+z), 0, F 5 (X, z)⟩, F 6 (X, z)⟩`. -/
 noncomputable def coefficientBase (F : CoefficientData) (X : ℝ) (z : ℂ) : BaseJet ℂ :=
   ⟨⟨F 0 (X, z), F 1 (X, z), 0, F 2 (X, z)⟩,
     ⟨F 3 (X, z), F 4 (X, z), 0, F 5 (X, z)⟩, F 6 (X, z)⟩
 
+/-- Coefficient source, given by `⟨F 7 (X, z), F 8 (X, z), F 9 (X, z), F 10 (X, z)⟩`. -/
 noncomputable def coefficientSource (F : CoefficientData) (X : ℝ) (z : ℂ) : SourceJet ℂ :=
   ⟨F 7 (X, z), F 8 (X, z), F 9 (X, z), F 10 (X, z)⟩
 
+/-- Coefficient0, defined pointwise by `A0 h lam C (r : ℂ) z (coefficientBase F (r ^ 2) z)`. -/
 noncomputable def coefficient0 (h lam C : ℂ) (F : CoefficientData) : Coeff :=
   fun r z => A0 h lam C (r : ℂ) z (coefficientBase F (r ^ 2) z)
 
+/-- Coefficient1, defined pointwise by `A1 h (r : ℂ) z (coefficientBase F (r ^ 2) z)`. -/
 noncomputable def coefficient1 (h : ℂ) (F : CoefficientData) : Coeff :=
   fun r z => A1 h (r : ℂ) z (coefficientBase F (r ^ 2) z)
 
+/-- Source field, defined pointwise by `forcing h C (r : ℂ) z (coefficientSource F (r ^ 2) z)`. -/
 noncomputable def sourceField (h C : ℂ) (F : CoefficientData) : Field :=
   fun r z => forcing h C (r : ℂ) z (coefficientSource F (r ^ 2) z)
 
@@ -777,13 +832,13 @@ theorem diagonal_eq_exponent (i : Fin 6) :
     (diagonal i : ℂ) = (exponent i : ℂ) := by
   fin_cases i <;> norm_num [diagonal, exponent]
 
- theorem coefficient0_parity (h lam C : ℂ) (F : CoefficientData) :
+theorem coefficient0_parity (h lam C : ℂ) (F : CoefficientData) :
     CoefficientParity (coefficient0 h lam C F) := by
   intro r z i j
   simp only [coefficient0, neg_sq, Complex.ofReal_neg]
   fin_cases i <;> fin_cases j <;> simp [A0, paritySign, axialValue]
 
- theorem coefficient1_parity (h : ℂ) (F : CoefficientData) :
+theorem coefficient1_parity (h : ℂ) (F : CoefficientData) :
     CoefficientParity (coefficient1 h F) := by
   intro r z i j
   simp only [coefficient1, neg_sq, Complex.ofReal_neg]
@@ -800,7 +855,7 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
     ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w :=
   (hF i).comp w ((contDiffAt_fst.pow 2).prodMk contDiffAt_snd)
 
- theorem coefficient0_contDiffAt_of_pullback {n : WithTop ℕ∞} {h lam C : ℂ} {F : CoefficientData}
+theorem coefficient0_contDiffAt_of_pullback {n : WithTop ℕ∞} {h lam C : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i j : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => coefficient0 h lam C F v.1 v.2 i j) w := by
@@ -811,8 +866,10 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
   fin_cases i <;> fin_cases j <;>
-    simp [coefficient0, A0, coefficientBase, axialValue, ell, edge,
-      Matrix.cons_val_zero, Matrix.cons_val_one, div_eq_mul_inv] <;>
+    simp only [coefficient0, A0, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
+        edge, neg_mul, neg_add_rev, Fin.zero_eta, Matrix.of_apply, Matrix.cons_val',
+            Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one,
+                Fin.reduceFinMk, Matrix.cons_val] <;>
     (repeat' first
       | exact contDiffAt_const
       | exact hdata _
@@ -824,7 +881,7 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
       | apply ContDiffAt.mul
       | apply ContDiffAt.neg)
 
- theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : CoefficientData}
+theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i j : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => coefficient1 h F v.1 v.2 i j) w := by
@@ -835,8 +892,10 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
   fin_cases i <;> fin_cases j <;>
-    simp [coefficient1, A1, coefficientBase, ell, edge,
-      Matrix.cons_val_zero, Matrix.cons_val_one, div_eq_mul_inv] <;>
+    simp only [coefficient1, A1, edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
+        Fin.zero_eta, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
+            Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+                Matrix.cons_val] <;>
     (repeat' first
       | exact contDiffAt_const
       | exact hdata _
@@ -848,7 +907,7 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
       | apply ContDiffAt.mul
       | apply ContDiffAt.neg)
 
- theorem sourceField_contDiffAt_of_pullback {n : WithTop ℕ∞} {h C : ℂ} {F : CoefficientData}
+theorem sourceField_contDiffAt_of_pullback {n : WithTop ℕ∞} {h C : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => sourceField h C F v.1 v.2 i) w := by
@@ -859,8 +918,9 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
   fin_cases i <;>
-    simp [sourceField, forcing, coefficientSource, pressureSource, ell,
-      Matrix.cons_val_zero, Matrix.cons_val_one, div_eq_mul_inv] <;>
+    simp only [sourceField, forcing, pressureSource, coefficientSource, Fin.isValue,
+        div_eq_mul_inv, ell, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
+            Fin.reduceFinMk, Matrix.cons_val] <;>
     (repeat' first
       | exact contDiffAt_const
       | exact hdata _
@@ -871,15 +931,17 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
       | apply ContDiffAt.sub
       | apply ContDiffAt.mul)
 
- theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
+theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i j : Fin 6) :
     AnalyticAt ℂ (fun v => coefficient0 h lam C F r v i j) z := by
   change 1 - 2 * h * z ^ 2 ≠ 0 at hL
   have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
     (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
   fin_cases i <;> fin_cases j <;>
-    simp [coefficient0, A0, coefficientBase, axialValue, ell, edge,
-      Matrix.cons_val_zero, Matrix.cons_val_one, div_eq_mul_inv] <;>
+    simp only [coefficient0, A0, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
+        edge, neg_mul, neg_add_rev, Fin.zero_eta, Matrix.of_apply, Matrix.cons_val',
+            Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one,
+                Fin.reduceFinMk, Matrix.cons_val] <;>
     (repeat' first
       | exact analyticAt_const
       | exact hF _
@@ -890,15 +952,17 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
       | apply AnalyticAt.fun_mul
       | apply AnalyticAt.fun_neg)
 
- theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
+theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i j : Fin 6) :
     AnalyticAt ℂ (fun v => coefficient1 h F r v i j) z := by
   change 1 - 2 * h * z ^ 2 ≠ 0 at hL
   have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
     (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
   fin_cases i <;> fin_cases j <;>
-    simp [coefficient1, A1, coefficientBase, ell, edge,
-      Matrix.cons_val_zero, Matrix.cons_val_one, div_eq_mul_inv] <;>
+    simp only [coefficient1, A1, edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
+        Fin.zero_eta, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
+            Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+                Matrix.cons_val] <;>
     (repeat' first
       | exact analyticAt_const
       | exact hF _
@@ -909,15 +973,16 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
       | apply AnalyticAt.fun_mul
       | apply AnalyticAt.fun_neg)
 
- theorem sourceField_analyticAt {h C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
+theorem sourceField_analyticAt {h C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i : Fin 6) :
     AnalyticAt ℂ (fun v => sourceField h C F r v i) z := by
   change 1 - 2 * h * z ^ 2 ≠ 0 at hL
   have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
     (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
   fin_cases i <;>
-    simp [sourceField, forcing, coefficientSource, pressureSource, ell,
-      Matrix.cons_val_zero, Matrix.cons_val_one, div_eq_mul_inv] <;>
+    simp only [sourceField, forcing, pressureSource, coefficientSource, Fin.isValue,
+        div_eq_mul_inv, ell, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
+            Fin.reduceFinMk, Matrix.cons_val] <;>
     (repeat' first
       | exact analyticAt_const
       | exact hF _
@@ -1004,12 +1069,15 @@ section RealOutput
 
 open VolterraAnalyticBounds
 
+/-- Complex jet, given by `⟨j.value, j.radial, j.radial2, j.parameter⟩`. -/
 noncomputable def complexJet (j : Jet ℝ) : Jet ℂ :=
   ⟨j.value, j.radial, j.radial2, j.parameter⟩
 
+/-- Complex base, given by `⟨complexJet b.phi, complexJet b.axial, b.beta⟩`. -/
 noncomputable def complexBase (b : BaseJet ℝ) : BaseJet ℂ :=
   ⟨complexJet b.phi, complexJet b.axial, b.beta⟩
 
+/-- Complex source, given by `⟨s.angular, s.axial, s.pressureProduct, s.omegaQuotient⟩`. -/
 noncomputable def complexSource (s : SourceJet ℝ) : SourceJet ℂ :=
   ⟨s.angular, s.axial, s.pressureProduct, s.omegaQuotient⟩
 
@@ -1054,6 +1122,7 @@ theorem matrixRHS_realPart (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJe
   simp only [matrixRHS, A0_ofReal, A1_ofReal, forcing_ofReal, Pi.add_apply, Complex.add_re]
   simp [Matrix.mulVec, dotProduct, Matrix.map, Complex.mul_re]
 
+/-- Real trace, given by `(W r (eta : ℂ) i).re`. -/
 noncomputable def realTrace (W : Field) (r eta : ℝ) (i : Fin 6) : ℝ :=
   (W r (eta : ℂ) i).re
 

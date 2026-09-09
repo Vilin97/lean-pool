@@ -8,8 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryODE
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Topology.Algebra.Module.PerfectSpace
 
 /-!
 # Uniform slow jets of the actual phase geometry
@@ -18,6 +19,9 @@ The index type below carries the band, representative, and rounded frequency.
 It is not a differentiation variable.  All derivatives are actual Fréchet
 derivatives in the slow variables (and, when present, the slot variable).
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +32,9 @@ open scoped Topology ContDiff InnerProductSpace
 
 /-- A family of open chart domains, with a slow scale at least one. -/
 structure Domain (ι E : Type*) [NormedAddCommGroup E] where
+  /-- Scale of `Domain`, of type `ι → ℝ`. -/
   scale : ι → ℝ
+  /-- Carrier of `Domain`, of type `ι → Set E`. -/
   carrier : ι → Set E
   isOpen : ∀ i, IsOpen (carrier i)
   one_le_scale : ∀ i, 1 ≤ scale i
@@ -373,18 +379,23 @@ theorem PolynomialJets.inv {f : ι → E → ℝ} (hf : PolynomialJets D f)
   apply hf.compact_comp (isClosed_singleton.isOpen_compl)
     (contDiffOn_id.inv (fun _ h => h)) hK hKU
   intro i x hx
-  exact ⟨by simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hupper i x
-    hx,
+  exact ⟨by
+      simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hupper i x hx,
     hlower i x hx⟩
 
 end Algebra
 
+/-- Plane: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev Plane := MovingFrameODE.Plane
+/-- Space: an abbreviation for `MovingFrameODE.Space`. -/
 abbrev Space := MovingFrameODE.Space
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
+/-- Regular normals, given by `{n | MovingFrameODE.tail n ≠ 0}`. -/
 def regularNormals : Set Space := {n | MovingFrameODE.tail n ≠ 0}
 
+/-- Normal range, given by `Metric.closedBall 0 M ∩ {n | b ≤ ‖MovingFrameODE.tail n‖}`. -/
 def normalRange (b M : ℝ) : Set Space :=
   Metric.closedBall 0 M ∩ {n | b ≤ ‖MovingFrameODE.tail n‖}
 
@@ -415,7 +426,7 @@ structure NormalGeometryJets (D : Domain ι E) (n nDot : ι → E → Space) : P
   invDenom : PolynomialJets D (fun i x => (1 + MovingFrameODE.radialSlope (n i x) ^ 2)⁻¹)
   K : PolynomialJets D (fun i x => MovingFrameODE.normalDirection (n i x))
   N : PolynomialJets D (fun i x => MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection (n i
-    x)))
+      x)))
   betaDot : PolynomialJets D (fun i x => PhaseEstimates.scaleDerivative (n i x) (nDot i x))
   rhoDot : PolynomialJets D (fun i x => PhaseEstimates.slopeDerivative (n i x) (nDot i x))
   directionDot : PolynomialJets D (fun i x => PhaseEstimates.directionDerivative (n i x) (nDot i x))
@@ -455,9 +466,9 @@ theorem normalGeometry_jets (hn : PolynomialJets D n) (hd : PolynomialJets D nDo
     (normalRange_regular hb) hmap
   have pn := pk.clm MovingFrameODE.quarterTurn
   have pt : PolynomialJets D (fun i x => MovingFrameODE.tail (n i x)) := hn.clm
-    MovingFrameODE.tailCLM
+      MovingFrameODE.tailCLM
   have ptd : PolynomialJets D (fun i x => MovingFrameODE.tail (nDot i x)) := hd.clm
-    MovingFrameODE.tailCLM
+      MovingFrameODE.tailCLM
   have prd := hd.clm (PiLp.proj 2 (fun _ : Fin 3 => ℝ) 0)
   have psd : PolynomialJets D (fun i x => PhaseEstimates.scaleDerivative (n i x) (nDot i x)) := by
     simpa only [PhaseEstimates.scaleDerivative, div_eq_mul_inv]
@@ -466,7 +477,7 @@ theorem normalGeometry_jets (hn : PolynomialJets D n) (hd : PolynomialJets D nDo
     simpa only [PhaseEstimates.slopeDerivative, PiLp.proj_apply, div_eq_mul_inv]
       using (prd.sub (prho.mul psd)).mul pinv
   have pkd : PolynomialJets D (fun i x => PhaseEstimates.directionDerivative (n i x) (nDot i x)) :=
-    by
+      by
     simpa only [PhaseEstimates.directionDerivative]
       using pinv.smul (ptd.sub (psd.smul pk))
   exact ⟨pscale, pinv, prho, pdenom, pk, pn, psd, prhod, pkd, pn.inner pkd⟩
@@ -490,6 +501,7 @@ theorem polynomialJets_of_uniform {E F : Type*}
   obtain ⟨C, hC, hc⟩ := hbound N
   exact ⟨C, hC, 0, by simpa only [pow_zero, mul_one] using hc⟩
 
+/-- Slot, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def Domain.slot (D : Domain ι Slow) (V : ι → Set ℝ) (hV : ∀ i, IsOpen (V i)) :
     Domain ι (Slow × ℝ) where
   scale := D.scale
@@ -545,21 +557,33 @@ theorem normalVelocity_polynomial {E : Type*} [NormedAddCommGroup E] [NormedSpac
 /-- Discrete label data.  In particular, `p` is held fixed when a jet is taken;
 it may be the nonzero rounded frequency from `PhaseEstimates`. -/
 structure PhaseFamily (ι : Type*) where
+  /-- Epsilon of `PhaseFamily`, of type `ι → ℝ`. -/
   epsilon : ι → ℝ
+  /-- P of `PhaseFamily`, of type `ι → ℝ`. -/
   p : ι → ℝ
+  /-- Pz of `PhaseFamily`, of type `ι → ℝ`. -/
   pz : ι → ℝ
+  /-- X0 of `PhaseFamily`, of type `ι → ℝ`. -/
   x0 : ι → ℝ
+  /-- Theta of `PhaseFamily`, of type `ι → ℝ`. -/
   theta : ι → ℝ
+  /-- F of `PhaseFamily`, of type `ι → Slow → ℝ`. -/
   F : ι → Slow → ℝ
+  /-- Geometric data of `PhaseFamily`, of type `ι → Slow → ℝ`. -/
   G : ι → Slow → ℝ
 
+/-- Normal, given by `PhaseCalculus.phaseNormal (a.epsilon i) (a.p i) (a.pz i) (a.x0 i) (a.F i)
+(a.G i) (z.1, (a.theta i, z.2))`. -/
 noncomputable def PhaseFamily.normal (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Space :=
   PhaseCalculus.phaseNormal (a.epsilon i) (a.p i) (a.pz i) (a.x0 i) (a.F i) (a.G i)
     (z.1, (a.theta i, z.2))
 
+/-- Velocity, given by `PhaseCalculus.normalSlotDerivative (a.epsilon i) (a.p i) (a.pz i) (a.F
+i) (a.G i) z.1`. -/
 noncomputable def PhaseFamily.velocity (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Space :=
   PhaseCalculus.normalSlotDerivative (a.epsilon i) (a.p i) (a.pz i) (a.F i) (a.G i) z.1
 
+/-- Shear, given by `PhaseEstimates.shearVector (a.F i) (a.G i) z.1`. -/
 noncomputable def PhaseFamily.shear (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Plane :=
   PhaseEstimates.shearVector (a.F i) (a.G i) z.1
 
@@ -718,7 +742,7 @@ theorem FrameJets.forcing {d : ι → PrimaryODE.FrameData Q} (h : FrameJets D d
     {f : ι → Q × ℝ → Space} (hf : PolynomialJets D f) :
     PolynomialJets D (fun i => (d i).forcing (f i)) := by
   have ht : PolynomialJets D (fun i x => MovingFrameODE.tail (f i x)) := hf.clm
-    MovingFrameODE.tailCLM
+      MovingFrameODE.tailCLM
   have hr := hf.clm (PiLp.proj 2 (fun _ : Fin 3 => ℝ) 0)
   have hx : PolynomialJets D (fun i => (d i).forceX (f i)) := by
     unfold PrimaryODE.FrameData.forceX

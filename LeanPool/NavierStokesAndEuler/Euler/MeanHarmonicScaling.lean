@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicSmallBall
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicInterior
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Scaling the actual Laplacian and harmonic interior estimates on R³. -/
 
 @[expose] public section
 
-/-! Scaling the actual Laplacian and harmonic interior estimates on R³. -/
 
 noncomputable section
 
@@ -27,6 +29,7 @@ theorem laplacian_comp_const_smul (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
   rw [iteratedFDeriv_comp_const_smul a (hf.of_le (by simp))]
   simp only [smul_apply, smul_eq_mul, Finset.mul_sum]
 
+/-- Half scale, defined pointwise by `f ((1/2 : ℝ) • x)`. -/
 def halfScale (f : Space → ℝ) : Space → ℝ := fun x => f ((1/2 : ℝ) • x)
 
 theorem halfScale_smooth (f : Space → ℝ) (hf : ContDiff ℝ ∞ f) :
@@ -49,7 +52,7 @@ theorem halfScale_energy (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
   norm_num [Space, smul_eq_mul]
 
 theorem halfScale_harmonic (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
-    (hharmonic : ∀ x ∈ Metric.ball 0 (1/2 : ℝ), Δ f x = 0) :
+    (hharmonic : ∀ x ∈ Metric.ball 0 (1 / 2 : ℝ), Δ f x = 0) :
     ∀ x ∈ Metric.ball 0 (1 : ℝ), Δ (halfScale f) x = 0 := by
   intro x hx
   change Δ (fun y => f ((1/2 : ℝ) • y)) x = 0
@@ -60,6 +63,7 @@ theorem halfScale_harmonic (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     linarith
   rw [hharmonic _ hx', mul_zero]
 
+/-- Harmonic quarter ball constant, given by `8 * harmonicInteriorConstant ^ 2`. -/
 def harmonicQuarterBallConstant : ℝ := 8 * harmonicInteriorConstant ^ 2
 
 theorem harmonicQuarterBallConstant_nonneg : 0 ≤ harmonicQuarterBallConstant := by
@@ -68,8 +72,8 @@ theorem harmonicQuarterBallConstant_nonneg : 0 ≤ harmonicQuarterBallConstant :
 
 /-- A squared pointwise bound with room for a compact mollifier near the boundary. -/
 theorem harmonic_pointwise_quarterBall_sq (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
-    (hLp : MemLp f 2 volume) (hharmonic : ∀ x ∈ Metric.ball 0 (1/2 : ℝ), Δ f x = 0)
-    (x : Space) (hx : x ∈ Metric.closedBall 0 (1/4 : ℝ)) :
+    (hLp : MemLp f 2 volume) (hharmonic : ∀ x ∈ Metric.ball 0 (1 / 2 : ℝ), Δ f x = 0)
+    (x : Space) (hx : x ∈ Metric.closedBall 0 (1 / 4 : ℝ)) :
     f x ^ 2 ≤ harmonicQuarterBallConstant * lpNorm f 2 volume ^ 2 := by
   have hx' : (2 : ℝ) • x ∈ Metric.closedBall (0 : Space) (1/2 : ℝ) := by
     simp only [Metric.mem_closedBall, dist_zero_right] at hx ⊢

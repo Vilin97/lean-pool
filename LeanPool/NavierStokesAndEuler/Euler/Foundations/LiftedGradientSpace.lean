@@ -6,102 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.InverseRegularity
-
-@[expose] public section
-
-noncomputable section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 
 /-!
 An actual L² realization of the lifted pressure-gradient space on R³ × (R / period Z).
@@ -111,6 +19,9 @@ The angular measure here has total mass `period`; renormalizing it changes only 
 fixed scalar in the L² norm and not the gradient subspace or projection.
 -/
 
+@[expose] public section
+
+noncomputable section
 
 namespace EulerLiftedGradientSpace
 
@@ -297,24 +208,28 @@ theorem testGradientLp_ae (κ : ℝ) (m : Vector3) (φ : LiftDomain period → �
 theorem testGradientLp_mem_generators (κ : ℝ) (m : Vector3) (φ : LiftDomain period → ℝ)
     (hφ : HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞ (localLift period φ x)) :
     testGradientLp period κ m φ hφ ∈ ({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-      (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-      period] EulerLiftedGradientSpace.liftedGradient period κ m φ}) :=
+        EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+            (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+                =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                    EulerLiftedGradientSpace.liftedGradient period κ m φ}) :=
   ⟨φ, hφ, testGradientLp_ae period κ m φ hφ⟩
 
 /-- Closure of the span of genuine smooth test gradients in the concrete L² space. -/
 def gradientSpace (κ : ℝ) (m : Vector3) : Submodule ℝ (LiftL2 period) :=
   (Submodule.span ℝ (({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-    EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-    (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-    period] EulerLiftedGradientSpace.liftedGradient period κ m φ}))).topologicalClosure
+      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+          (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+              =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                  EulerLiftedGradientSpace.liftedGradient period κ m φ}))).topologicalClosure
 
 theorem gradientSpace_closed (κ : ℝ) (m : Vector3) :
     IsClosed (gradientSpace period κ m : Set (LiftL2 period)) :=
   (Submodule.span ℝ (({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-    EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-    (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-    period] EulerLiftedGradientSpace.liftedGradient period κ m φ}))).isClosed_topologicalClosure
+      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+          (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+              =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                  EulerLiftedGradientSpace.liftedGradient period κ m
+                      φ}))).isClosed_topologicalClosure
 
 instance gradientSpace_complete (κ : ℝ) (m : Vector3) :
     CompleteSpace (gradientSpace period κ m) :=
@@ -335,25 +250,29 @@ theorem gradientProjection_apply_norm_le (κ : ℝ) (m : Vector3) (f : LiftL2 pe
 
 theorem testGradient_mem (κ : ℝ) (m : Vector3) {g : LiftL2 period}
     (hg : g ∈ ({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-      (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-      period] EulerLiftedGradientSpace.liftedGradient period κ m φ})) : g ∈ gradientSpace period κ
-      m :=
+        EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+            (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+                =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                    EulerLiftedGradientSpace.liftedGradient period κ m φ})) : g ∈ gradientSpace
+                        period κ m :=
   (Submodule.span ℝ (({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-    EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-    (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-    period] EulerLiftedGradientSpace.liftedGradient period κ m φ}))).le_topologicalClosure
+      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+          (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+              =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                  EulerLiftedGradientSpace.liftedGradient period κ m φ}))).le_topologicalClosure
     (Submodule.subset_span hg)
 
 theorem gradientGenerators_translated (κ : ℝ) (m : Vector3) (a : LiftDomain period)
     {g : LiftL2 period} (hg : g ∈ ({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-      (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-      period] EulerLiftedGradientSpace.liftedGradient period κ m φ})) :
+        EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+            (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+                =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                    EulerLiftedGradientSpace.liftedGradient period κ m φ})) :
     translation period a g ∈ ({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-      (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-      period] EulerLiftedGradientSpace.liftedGradient period κ m φ}) := by
+        EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+            (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+                =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                    EulerLiftedGradientSpace.liftedGradient period κ m φ}) := by
   obtain ⟨φ, hφ, hgφ⟩ := hg
   refine ⟨translatedTest period a φ, smoothCompactTest_translated period a φ hφ, ?_⟩
   filter_upwards [translation_ae period a g,
@@ -365,9 +284,10 @@ theorem gradientSpace_translation_mem (κ : ℝ) (m : Vector3) (a : LiftDomain p
     translation period a g ∈ gradientSpace period κ m := by
   let τ := (translation period a).toContinuousLinearMap
   have hspan : Submodule.span ℝ (({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-    EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-    (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-    period] EulerLiftedGradientSpace.liftedGradient period κ m φ})) ≤
+      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+          (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+              =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                  EulerLiftedGradientSpace.liftedGradient period κ m φ})) ≤
       (gradientSpace period κ m).comap τ.toLinearMap := by
     apply Submodule.span_le.2
     intro f hf
@@ -394,7 +314,7 @@ theorem gradientProjection_translation (κ : ℝ) (m : Vector3) (a : LiftDomain 
       gradientProjection period κ m (translation period a f) := by
   have hmap := gradientSpace_map_translation period κ m a
   let : ((gradientSpace period κ m).map (translation period a).toLinearMap).HasOrthogonalProjection
-    := by
+      := by
     rw [hmap]
     infer_instance
   simpa only [gradientProjection, hmap] using
@@ -411,10 +331,11 @@ theorem pressure_pairing_zero (κ : ℝ) (m : Vector3) {p e : LiftL2 period}
 
 theorem testGradient_pairing_zero (κ : ℝ) (m : Vector3) {g e : LiftL2 period}
     (hg : g ∈ ({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
-      EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
-      (EulerLiftedGradientSpace.localLift period φ x)) ∧ g =ᵐ[EulerLiftedGradientSpace.liftMeasure
-      period] EulerLiftedGradientSpace.liftedGradient period κ m φ})) (he : e ∈ divergenceFreeSpace
-      period κ m) :
+        EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
+            (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
+                =ᵐ[EulerLiftedGradientSpace.liftMeasure period]
+                    EulerLiftedGradientSpace.liftedGradient period κ m φ})) (he : e ∈
+                        divergenceFreeSpace period κ m) :
     ⟪g, e⟫_ℝ = 0 :=
   pressure_pairing_zero period κ m (testGradient_mem period κ m hg) he
 

@@ -7,19 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionPartitions
-public import Mathlib.Analysis.Calculus.IteratedDeriv.FaaDiBruno
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.Calculus.Deriv.Polynomial
-public import Mathlib.Analysis.Calculus.ContDiff.Polynomial
-public import Mathlib.Algebra.Polynomial.Eval.Degree
-public import Mathlib.Algebra.Order.Field.GeomSum
-
-@[expose] public section
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Polynomial
+import Mathlib.Analysis.Calculus.IteratedDeriv.FaaDiBruno
+import Mathlib.Tactic.Measurability.Init
 
 /-! Finite polynomial majorants for factorial-square Taylor coefficients.
 The polynomials below are auxiliary nonnegative scalar polynomials.  Their
 composition is the exact scalar Faà di Bruno sum, not an assumed majorant
 for a flow or for a solution of a differential equation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -107,7 +108,8 @@ theorem comp_coefficient (p q : ℝ[X]) (hp : p.coeff 0 = 0) (n : ℕ) :
   have hp0 : p.eval 0 = 0 := by rw [← Polynomial.coeff_zero_eq_eval_zero, hp]
   have hc := iteratedDeriv_comp_eq_sum_orderedFinpartition
     ((polynomial_contDiff q).contDiffAt (x := p.eval 0))
-    ((polynomial_contDiff p).contDiffAt (x := 0)) (i := n) (by simp)
+    ((polynomial_contDiff p).contDiffAt (x := 0)) (i := n) (ENat.natCast_le_of_coe_top_le_withTop
+        le_rfl _)
   have he : (fun y => (q.comp p).eval y) =
       (fun y => q.eval y) ∘ (fun y => p.eval y) := by
     funext y
@@ -135,6 +137,7 @@ theorem jetPolynomial_eval (N : ℕ) (a : ℕ → ℝ) (x : ℝ) :
     (jetPolynomial N a).eval x = ∑ j ∈ Finset.Icc 1 N, a j*x^j := by
   simp only [jetPolynomial, Polynomial.eval_finsetSum, Polynomial.eval_monomial]
 
+/-- Nonnegative coefficients, given by `∀ n, 0 ≤ p.coeff n`. -/
 def NonnegativeCoefficients (p : ℝ[X]) : Prop := ∀ n, 0 ≤ p.coeff n
 
 theorem jetPolynomial_nonnegative (N : ℕ) (a : ℕ → ℝ)

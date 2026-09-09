@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelWeighted
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # A frozen bounded-operator equation for the actual forward solve
@@ -20,6 +21,9 @@ can use the identity inverse; it never requires a norm for a profile-weighted
 raw time primitive.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerLinearDuhamel
@@ -30,27 +34,46 @@ open scoped ContDiff
 
 variable {P E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T,E →L[ℝ] E))
+  (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T, E →L[ℝ] E))
   (U : ∀ x, Evolution T hT (B x))
-  (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+  (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
-private local instance : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E)) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelFrozenOperator1 : NormedAddCommGroup (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelFrozenOperator2 : NormedSpace ℝ (E →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelFrozenOperator3 : NormedAddCommGroup C(Icc (0 : ℝ) T,E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelFrozenOperator4 : NormedSpace ℝ C(Icc (0 : ℝ) T,E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E)` instance to shorten
+typeclass synthesis. -/
+local instance instLinearDuhamelFrozenOperator5 : NormedAddCommGroup C(Icc (0 : ℝ) T,E →L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instLinearDuhamelFrozenOperator6 : NormedSpace ℝ C(Icc (0 : ℝ) T,E →L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))`
+instance to shorten typeclass synthesis. -/
+local instance instLinearDuhamelFrozenOperator7 : NormedAddCommGroup (C(Icc (0 : ℝ) T,E) →L[ℝ]
+    C(Icc (0 : ℝ) T,E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))` instance to
+shorten typeclass synthesis. -/
+local instance instLinearDuhamelFrozenOperator8 : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0
+    : ℝ) T,E)) :=
+    inferInstance
 
 /-- The exact frozen coefficient, using the actual weighted Green operator. -/
 def frozenOperator (x y : P) : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   ContinuousLinearMap.id ℝ _ - ((U x).weightedForcing g hg).comp (multiplier (B y)-multiplier (B x))
 
 /-- The exact transformed data under the fixed homogeneous and Green operators. -/
-def frozenForcing (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E) (x y : P) : C(Icc (0 : ℝ) T,E) :=
+def frozenForcing (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → E) (x y : P) : C(Icc (0 : ℝ) T,E) :=
   (U x).weightedInitial g hg (a₀ y)+(U x).weightedForcing g hg (f y)
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
@@ -61,7 +84,7 @@ theorem frozenOperator_self (x : P) :
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 /-- The actual normalized Duhamel solution satisfies this bounded-operator equation. -/
-theorem frozenOperator_equation (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E) (x y : P) :
+theorem frozenOperator_equation (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → E) (x y : P) :
     frozenOperator T hT B U g hg x y ((U y).weightedSolution g hg (f y) (a₀ y)) =
       frozenForcing T hT B U g hg f a₀ x y := by
   have hd : multiplier (B y-B x) = multiplier (B y)-multiplier (B x) := by
@@ -69,7 +92,7 @@ theorem frozenOperator_equation (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E
     rfl
   have h := (U x).weighted_frozen_solution g hg (U y) (f y) (a₀ y)
   rw [hd, map_add] at h
-  change (U y).weightedSolution g hg (f y) (a₀ y)-
+  change (U y).weightedSolution g hg (f y) (a₀ y) -
       (U x).weightedForcing g hg ((multiplier (B y)-multiplier (B x))
         ((U y).weightedSolution g hg (f y) (a₀ y))) = _
   exact sub_eq_iff_eq_add.mpr (by simpa only [frozenForcing, add_assoc] using h)
@@ -80,7 +103,7 @@ theorem frozenOperator_contDiff (hB : ContDiff ℝ ∞ B) (x : P) :
   contDiff_const.sub (contDiff_const.clm_comp ((contDiff_multiplier B hB).sub contDiff_const))
 
 /-- The transformed data retain the actual parameter smoothness of the original data. -/
-theorem frozenForcing_contDiff (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E)
+theorem frozenForcing_contDiff (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → E)
     (hf : ContDiff ℝ ∞ f) (ha₀ : ContDiff ℝ ∞ a₀) (x : P) :
     ContDiff ℝ ∞ (frozenForcing T hT B U g hg f a₀ x) :=
   (((U x).weightedInitial g hg).contDiff.comp ha₀).add

@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphTimeFields
-public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleJacobian
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ChildParticleTime
+import LeanPool.NavierStokesAndEuler.Euler.ChildParticleJacobian
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
 
 /-! Initial identity and determinant one for the actual child coefficient
 map. These invariants pass directly to the next parent coefficient data. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,15 +28,16 @@ variable {P T : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P T)
 
 theorem physicalDisplacementCoefficient_zero (x : Vector3) :
     (G.physicalDisplacementCoefficient k m ell).field ⟨0,le_rfl,G.time_nonneg⟩ x=0 := by
-  rw [physicalDisplacementCoefficient,physicalCoefficient_apply,G.coverDisplacementCoefficient_apply]
+  rw [physicalDisplacementCoefficient, physicalCoefficient_apply,
+      G.coverDisplacementCoefficient_apply]
   simp only [(flowData T G.time_nonneg G.A).forward_zero,sub_self,Prod.fst_zero,smul_zero]
 
 theorem physicalDisplacementCoefficient_det_one
-    (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0) (hell : 0 < ell)
+    (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0) (hell : 0 < ell)
     (t : Icc (0 : ℝ) T) (x : Vector3) :
     (ContinuousLinearMap.id ℝ Vector3 +
       fderiv ℝ ((G.physicalDisplacementCoefficient k m ell).field t : Vector3 → Vector3) x).det=1
-        := by
+          := by
   let C := G.physicalDisplacementCoefficient k m ell
   have he : (fun y => y+C.field t y) =
       (flowData T G.time_nonneg (physicalCoefficient k m T G.A ell)).forward t := by
@@ -53,22 +57,22 @@ theorem physicalDisplacementCoefficient_det_one
 
 theorem childDisplacementCoefficient_zero
     (PD : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3)
-    (hPD : ∀ x, PD.field ⟨0,le_rfl,G.time_nonneg⟩ x=0) (x : Vector3) :
+    (hPD : ∀ x, PD.field ⟨0, le_rfl, G.time_nonneg⟩ x = 0) (x : Vector3) :
     (EulerChildParticleTime.displacement PD (G.physicalDisplacementCoefficient k m ell)).field
       ⟨0,le_rfl,G.time_nonneg⟩ x=0 := by
   rw [EulerChildParticleTime.displacement_apply,G.physicalDisplacementCoefficient_zero,
     add_zero,hPD]
 
 theorem childDisplacementCoefficient_det_one
-    (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0) (hell : 0 < ell)
+    (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0) (hell : 0 < ell)
     (PD : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3)
     (hPD : ∀ t x, (ContinuousLinearMap.id ℝ Vector3 +
-      fderiv ℝ (PD.field t : Vector3 → Vector3) x).det=1)
+      fderiv ℝ (PD.field t : Vector3 → Vector3) x).det = 1)
     (t : Icc (0 : ℝ) T) (x : Vector3) :
     (ContinuousLinearMap.id ℝ Vector3 +
       fderiv ℝ
         ((EulerChildParticleTime.displacement PD (G.physicalDisplacementCoefficient k m ell)).field
-          t :
+            t :
           Vector3 → Vector3) x).det=1 :=
   EulerChildParticleTime.displacement_det_one PD (G.physicalDisplacementCoefficient k m ell) t
     (hPD t) (G.physicalDisplacementCoefficient_det_one k m ell hgraph hell t) x

@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteCoarseBounds
 
+/-! Fixed source costs for the normalized packet and its smaller transport drift. -/
+
 @[expose] public section
 
-/-! Fixed source costs for the normalized packet and its smaller transport drift. -/
 
 noncomputable section
 
@@ -18,11 +19,14 @@ namespace EulerPacketCorrectionConstants
 
 open EulerPacketCylinderField
 
+/-- Velocity, given by `C*(fixedVelocityGradeCost R H 1+fixedVelocityGradeCost R H 2+1)`. -/
 def velocity (R H C : ℝ) : ℝ :=
   C*(fixedVelocityGradeCost R H 1+fixedVelocityGradeCost R H 2+1)
 
+/-- Normal, given by `C*(fixedVelocityGradeCost R H 2+2)`. -/
 def normal (R H C : ℝ) : ℝ := C*(fixedVelocityGradeCost R H 2+2)
 
+/-- Drift, given by `2*(3*velocity R H C+normal R H C)`. -/
 def drift (R H C : ℝ) : ℝ := 2*(3*velocity R H C+normal R H C)
 
 theorem velocity_nonneg (R H C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) :

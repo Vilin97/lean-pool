@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerCauchy
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerCauchy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! A common short interval for an Euler family with Cauchy initial H3
 data. A fixed tail member supplies the reference solution; the actual
 stability theorem supplies the uniform H3 bound needed by the limit. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -68,7 +70,7 @@ theorem short_uniform_h3 (V : ℕ → Evolution T hT) (hpos : 0 < T)
       (U.restrictTime_referenceWordBound L hL.le hLT) (by norm_num) hi hsmall t).trans hsmall
   have hu : tensorNorm 3 (R.velocity t) ≤ 40*U.referenceSize :=
     tensorNorm_three_le _ _ (wordBound_mono (U.restrictTime_referenceWordBound L hL.le hLT t) (by
-      omega))
+        omega))
   exact (tensorNorm_le_sub_add (W.velocity t) (R.velocity t) 3).trans (add_le_add hd hu)
 
 end Evolution

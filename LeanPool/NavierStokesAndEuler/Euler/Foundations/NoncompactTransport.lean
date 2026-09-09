@@ -6,110 +6,20 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.RingTheory.Finiteness.Prod
+
+/-! Expanding spatial cutoffs and transport cancellation for noncompact fields on the cylinder. -/
 
 @[expose] public section
 
 noncomputable section
 
-/-! Expanding spatial cutoffs and transport cancellation for noncompact fields on the cylinder. -/
-
-
 namespace EulerNoncompactTransport
 
 open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerMetricTransport
-  EulerTransportDerivatives EulerLiftedWeakDerivative
+
 open scoped ContDiff ENNReal NNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -139,7 +49,7 @@ theorem cutoffScale_le_one (n : ℕ) : cutoffScale n ≤ 1 := by
 omit [Fact (0 < period)] in
 theorem cutoffScale_tendsto : Filter.Tendsto cutoffScale Filter.atTop (𝓝 0) := by
   exact tendsto_inv_atTop_zero.comp (Filter.tendsto_atTop_add_const_right Filter.atTop (1 : ℝ)
-    tendsto_natCast_atTop_atTop)
+      tendsto_natCast_atTop_atTop)
 
 omit [Fact (0 < period)] in
 theorem spatialCutoff_bounds (n : ℕ) (x : LiftDomain period) :
@@ -196,7 +106,7 @@ theorem spatialCutoff_derivative_bound : ∃ M : ℝ, 0 < M ∧ ∀ n x v,
   obtain ⟨M, hM, hbound⟩ :=
     ((spatialBump.hasCompactSupport.fderiv ℝ).isCompact_range
       ((spatialBump.contDiff : ContDiff ℝ ∞ spatialBump).continuous_fderiv (by
-        simp))).isBounded.exists_pos_norm_le
+          simp))).isBounded.exists_pos_norm_le
   refine ⟨M, hM, fun n x v => ?_⟩
   rw [spatialCutoff_fderiv]
   calc
@@ -225,10 +135,10 @@ theorem cutoff_product_transport (κ : ℝ) (m : Vector3) (n : ℕ)
     ⟪liftedGradient period κ m (fun y => spatialCutoff period n y * φ y) x, v⟫_ℝ =
       spatialCutoff period n x * fderiv ℝ (localLift period φ x) 0 (transportDirection κ m v) +
       φ x * fderiv ℝ (localLift period (spatialCutoff period n) x) 0 (transportDirection κ m v) :=
-        by
+          by
   rw [liftedGradient_eq_vectorOfLinear, vectorOfLinear_inner]
   have hc := ((spatialCutoff_smooth period n x).differentiable (by
-    simp)).differentiableAt.hasFDerivAt
+      simp)).differentiableAt.hasFDerivAt
     (x := 0)
   have hf := ((hφ x).differentiable (by simp)).differentiableAt.hasFDerivAt (x := 0)
   have h := congrArg (fun L : LiftTangent →L[ℝ] ℝ => L (transportDirection κ m v))
@@ -347,7 +257,7 @@ theorem metricEnergy_integrable (K : LiftDomain period → Vector3 →L[ℝ] Vec
     Integrable (metricEnergy period K e) (liftMeasure period) := by
   apply (he.norm.integrable_sq.const_mul ((1 / 2 : ℝ) * C)).mono'
   · exact aestronglyMeasurable_const.mul ((aestronglyMeasurable_apply period hK
-    he.aestronglyMeasurable).inner
+      he.aestronglyMeasurable).inner
       he.aestronglyMeasurable)
   apply Filter.Eventually.of_forall
   intro x
@@ -427,7 +337,7 @@ theorem metricCorrection_integrable (κ : ℝ) (m : Vector3)
   · exact aestronglyMeasurable_const.mul
       ((aestronglyMeasurable_apply period
         (aestronglyMeasurable_apply period hDK (transportDirection_aestronglyMeasurable period κ m
-          z))
+            z))
           he.aestronglyMeasurable).inner he.aestronglyMeasurable)
   filter_upwards [hz] with x hx
   exact metricCorrection_pointwise_bound period K e D B x _ (hD x) hx

@@ -7,11 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalParticularWave
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CartesianCopySource
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEnvelopeTransport
-
-@[expose] public section
 
 /-!
 # Uniform jets of the actual current physical chart
@@ -22,6 +17,9 @@ positive jets of the chart map.  Native coefficients need smoothness only
 on a neighborhood of the evaluation point.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.CurrentPhysicalChartJets
@@ -29,9 +27,13 @@ namespace NavierStokes.CurrentPhysicalChartJets
 open Set Function Filter
 open scoped Topology ContDiff
 
+/-- Lift point: an abbreviation for `PhysicalWaveSum.LiftPoint`. -/
 abbrev LiftPoint := PhysicalWaveSum.LiftPoint
+/-- Plane: an abbreviation for `PhysicalGraphBounds.Plane`. -/
 abbrev Plane := PhysicalGraphBounds.Plane
+/-- Native: an abbreviation for `PhysicalParticularWave.WaveSpace`. -/
 abbrev Native := PhysicalParticularWave.WaveSpace
+/-- Complex vector: an abbreviation for `HarmonicCalculus.ComplexVector`. -/
 abbrev ComplexVector := HarmonicCalculus.ComplexVector
 
 /-- The actual polar lift followed by the solver's fixed coordinate order. -/
@@ -43,6 +45,8 @@ noncomputable def polarPart : Plane →L[ℝ] Native :=
   (((ContinuousLinearMap.fst ℝ ℝ ℝ).prod (0 : Plane →L[ℝ] Plane)).prod
     (ContinuousLinearMap.snd ℝ ℝ ℝ)).prod (0 : Plane →L[ℝ] Plane)
 
+/-- Reverse plane, given by `(ContinuousLinearMap.snd ℝ ℝ ℝ).prod (ContinuousLinearMap.fst ℝ ℝ
+ℝ)`. -/
 noncomputable def reversePlane : Plane →L[ℝ] Plane :=
   (ContinuousLinearMap.snd ℝ ℝ ℝ).prod (ContinuousLinearMap.fst ℝ ℝ ℝ)
 
@@ -195,6 +199,7 @@ theorem chart_smul_germ {a c : ℝ} (ha : 0 < a) (hc : 0 < c) (j : PolarCharts.I
 
 /-! ## The actual Cartesian rotation -/
 
+/-- Rotation, given by `CartesianCopySource.rotationMap (PhysicalGraphBounds.liftXY x)`. -/
 noncomputable def rotation (x : LiftPoint) : ComplexVector →L[ℝ] ComplexVector :=
   CartesianCopySource.rotationMap (PhysicalGraphBounds.liftXY x)
 

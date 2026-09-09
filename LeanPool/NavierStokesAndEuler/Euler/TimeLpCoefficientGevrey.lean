@@ -7,9 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Quantitative parameter derivatives of time multipliers
@@ -18,6 +19,9 @@ The Bochner multiplier is a linear contraction of the uniform coefficient
 path. These are bounds on genuine parameter derivatives of that operator,
 including the H¹ moving-frame transport used in the variational inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,15 +40,23 @@ variable {P E F : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 variable (T : ℝ) (hT : 0 ≤ T)
 
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, E →L[ℝ] F)` instance to shorten
+typeclass synthesis. -/
 local instance coefficientPathGroup : NormedAddCommGroup C(Icc (0 : ℝ) T, E →L[ℝ] F) :=
   inferInstance
 
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
 local instance coefficientPathSpace : NormedSpace ℝ C(Icc (0 : ℝ) T, E →L[ℝ] F) :=
   inferInstance
 
+/-- Cache the standard `NormedAddCommGroup (TimeLp T E →L[ℝ] TimeLp T F)` instance to shorten
+typeclass synthesis. -/
 local instance timeOperatorGroup : NormedAddCommGroup (TimeLp T E →L[ℝ] TimeLp T F) :=
   inferInstance
 
+/-- Cache the standard `NormedSpace ℝ (TimeLp T E →L[ℝ] TimeLp T F)` instance to shorten
+typeclass synthesis. -/
 local instance timeOperatorSpace : NormedSpace ℝ (TimeLp T E →L[ℝ] TimeLp T F) :=
   inferInstance
 

@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerState
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalLowBounds
 
-@[expose] public section
-
 /-! Low-order source guards can be carried from one actual physical
 Euler state to the next. The only update costs are the initial velocity
 gradient error and the proved upper pressure bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,7 +30,7 @@ theorem quadratic_lower_of_norm (M : Matrix) (e : ℝ) (he : ‖M‖ ≤ e) (z :
   linarith only [h]
 
 theorem quadratic_lower_of_difference (M N : Matrix) (C e : ℝ)
-    (hC : ∀ z, -C*‖z‖^2 ≤ ⟪M z,z⟫_ℝ) (he : ‖N-M‖ ≤ e) (z : Space) :
+    (hC : ∀ z, -C * ‖z‖ ^ 2 ≤ ⟪M z, z⟫_ℝ) (he : ‖N - M‖ ≤ e) (z : Space) :
     -(C+e)*‖z‖^2 ≤ ⟪N z,z⟫_ℝ := by
   have h := quadratic_lower_of_norm (N-M) e he z
   simp only [sub_apply,inner_sub_left] at h
@@ -68,9 +69,10 @@ theorem initial_gradient_lower_core (H : LowBounds A) (x : Space)
   rw [E.initialStrain_eq] at h
   simpa only [smul_smul,mul_inv_cancel₀ A.ell_pos.ne',one_smul] using h
 
+/-- Low bounds from physical, constructed using `A.lowBoundsOfPhysical`. -/
 def lowBoundsFromPhysical (Be Bc L r K : ℝ)
-    (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hL : boundaryLocalizationC1*Bc ≤ L)
-    (hr : 0 ≤ r) (hrq : r ≤ 1/4) (hK : 0 ≤ K)
+    (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hL : boundaryLocalizationC1 * Bc ≤ L)
+    (hr : 0 ≤ r) (hrq : r ≤ 1 / 4) (hK : 0 ≤ K)
     (hexterior : ∀ x, r ≤ ‖x‖ → ∀ z : Space,
       -Be*‖z‖^2 ≤ ⟪fderiv ℝ (fun y => E.velocity (0,y)) x z,z⟫_ℝ)
     (hcore : ∀ x, ‖x‖ < r → ∀ z : Space,
@@ -84,13 +86,14 @@ def lowBoundsFromPhysical (Be Bc L r K : ℝ)
     E.velocity_match E.acceleration_match Be Bc L r K hBe hBc hL hr hrq hK
     hexterior hcore hpressure hsmall
 
+/-- Update low bounds, constructed using `F.lowBoundsFromPhysical`. -/
 def updateLowBounds {N : Parent} (F : Evolution N) (H : LowBounds A)
     (e K : ℝ) (he : 0 ≤ e) (hK : 0 ≤ K)
-    (herror : ∀ x, ‖fderiv ℝ (fun y => F.velocity (0,y)) x-
-      fderiv ℝ (fun y => E.velocity (0,y)) x‖ ≤ e)
-    (hpressure : ∀ t x z, ⟪fderiv ℝ (F.force t) x z,z⟫_ℝ ≤ K*‖z‖^2)
-    (hsmall : K*(N.T^2/2)+(H.Be+e)*N.T+
-      boundaryLocalizationC2*(H.Bc+e)*H.r^3*N.T ≤ 1/2) : LowBounds N :=
+    (herror : ∀ x, ‖fderiv ℝ (fun y => F.velocity (0, y)) x -
+      fderiv ℝ (fun y => E.velocity (0, y)) x‖ ≤ e)
+    (hpressure : ∀ t x z, ⟪fderiv ℝ (F.force t) x z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
+    (hsmall : K * (N.T ^ 2 / 2) + (H.Be + e) * N.T +
+      boundaryLocalizationC2 * (H.Bc + e) * H.r ^ 3 * N.T ≤ 1 / 2) : LowBounds N :=
   F.lowBoundsFromPhysical (H.Be+e) (H.Bc+e)
     (boundaryLocalizationC1*(H.Bc+e)+1) H.r K
     (add_nonneg H.Be_nonneg he) (add_nonneg H.Bc_nonneg he)

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointData
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseSourceCoefficientPath
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
+
+/-! Evaluation of the actual cylinder coefficients at a spatial label. -/
 
 @[expose] public section
 
-/-! Evaluation of the actual cylinder coefficients at a spatial label. -/
 
 noncomputable section
 
@@ -26,9 +28,13 @@ variable {T : ℝ} {U E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (D : Coefficients T U E)
 
+/-- Label frame, given by `pathEvaluation x D.Q`. -/
 def labelFrame (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q
+/-- Label frame derivative, given by `pathEvaluation x D.Q₁`. -/
 def labelFrameDerivative (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q₁
+/-- Label frame second, given by `pathEvaluation x D.Q₂`. -/
 def labelFrameSecond (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q₂
+/-- Label hessian, given by `pathEvaluation x D.H`. -/
 def labelHessian (x : Space) : C(Icc (0 : ℝ) T,E →L[ℝ] E) := pathEvaluation x D.H
 
 omit [CompleteSpace U] [CompleteSpace E] in
@@ -50,7 +56,7 @@ theorem labelFrame_second_derivative (x : Space) (t : Icc (0 : ℝ) T) :
   change HasDerivWithinAt (fun s => D.Q₁ (projIcc 0 T D.time_pos.le s) x)
     (D.Q₂ t x) (Icc (0 : ℝ) T) t
   simpa only [extendPath,projIcc_of_mem D.time_pos.le t.property] using D.second_derivative t
-    t.property x
+      t.property x
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem labelFrame_equation (x : Space) (t : Icc (0 : ℝ) T) :
@@ -70,6 +76,7 @@ def labelCoordinate (x : Space) : U →L[ℝ] C(Icc (0 : ℝ) T,U) :=
     (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)
     D.potential D.potential_nonneg (D.labelHessian_upper x) D.small
 
+/-- Label velocity, constructed using `historyVelocity`. -/
 def labelVelocity (x : Space) : U →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   historyVelocity T D.time_pos.le (D.labelFrame x) (D.labelFrameDerivative x)
     (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)

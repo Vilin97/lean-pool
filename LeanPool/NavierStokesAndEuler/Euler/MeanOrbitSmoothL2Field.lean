@@ -8,10 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpFiniteTensorReconstruction
 public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalWordBounds
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
 
 /-!
 # Literal smooth L² fields from the actual solved translation orbit
@@ -21,6 +20,9 @@ L². Their L² classes are reconstructed from the finitely many genuine strong
 coordinate derivatives. A smooth orbit of a continuous-time path supplies
 continuity of every tensor jet in time.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -75,10 +77,10 @@ theorem orbitTensorLp_continuous {K : Type*} [TopologicalSpace K]
 
 /-- Every literal tensor jet of the reconstructed path is continuous in L². -/
 theorem smoothL2Field_path_jet_continuous (T : ℝ)
-    (p : C(Icc (0 : ℝ) T,L2))
+    (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) (n : ℕ) :
     Continuous (fun t => (smoothL2Field (p t) (pathTranslation_evaluation_contDiff T p hp t)).jetLp
-      n) := by
+        n) := by
   simp only [smoothL2Field_jetLp]
   apply orbitTensorLp_continuous
   intro w

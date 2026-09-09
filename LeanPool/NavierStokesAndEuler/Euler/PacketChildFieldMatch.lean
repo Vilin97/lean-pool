@@ -6,18 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalLowBounds
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketExactPressure
 public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryLowBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketExactShearError
 public import LeanPool.NavierStokesAndEuler.Euler.PacketExactPressureError
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketExactEuler
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketJoinedInput
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketExactEulerianField
 
 /-! Literal rescaling and field identities for a child packet.  The
 physical velocity gradient and scalar-pressure Hessian retain the
 normalized packet's size: neither receives a negative power of ell. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,9 +28,11 @@ namespace EulerPacketPhysicalLowBounds
 open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerLagrangian
 
 
+/-- Add velocity, given by `u x+ell • w (ell⁻¹ • x)`. -/
 def addVelocity (ell : ℝ) (u w : Space → Space) (x : Space) : Space :=
   u x+ell • w (ell⁻¹ • x)
 
+/-- Add pressure, given by `p x+ell^2*q (ell⁻¹ • x)`. -/
 def addPressure (ell : ℝ) (p q : Space → ℝ) (x : Space) : ℝ :=
   p x+ell^2*q (ell⁻¹ • x)
 
@@ -77,7 +81,7 @@ open scoped ContDiff
 
 variable (A : Parent)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   {P : ℝ} [Fact (0 < P)] {κ : ℝ} {hκ : |κ| ≤ 1} {Z R : FieldTower P A.T}
   (B : Budget P A.T_pos (correctionData (A.transverseData m hm J support hSupport) P κ hκ Z R))
@@ -86,11 +90,14 @@ variable (A : Parent)
   (k : ℝ) (I : ParticleInverse A)
 
 
+/-- Normalized packet velocity, constructed using `κ`. -/
 def normalizedPacketVelocity (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   κ • A.frame.field t (I.normalized t x)
     ((exactPacketOfResidual P B residual).velocity.pointField t
       (cylinderGraph P k m (I.normalized t x)))
 
+/-- Normalized packet pressure, given by `(exactPacketOfResidual P B residual).graphPotential k
+t ∘ I.normalized t`. -/
 def normalizedPacketPressure (t : Icc (0 : ℝ) A.T) : Space → ℝ :=
   (exactPacketOfResidual P B residual).graphPotential k t ∘ I.normalized t
 
@@ -105,7 +112,7 @@ theorem normalizedPacketVelocity_smooth (t : Icc (0 : ℝ) A.T) :
     (exactPacketOfResidual P B residual).velocity.pointField_smooth t).comp hi
 
 
-theorem normalizedPacketPressure_smooth (hk : k*κ=1) (t : Icc (0 : ℝ) A.T) :
+theorem normalizedPacketPressure_smooth (hk : k * κ = 1) (t : Icc (0 : ℝ) A.T) :
     ContDiff ℝ ∞ (A.normalizedPacketPressure m hm J support hSupport B residual k I t) := by
   exact ((exactPacketOfResidual P B residual).graphPotential_smooth k hk t).comp
     (continuousInverse_contDiff (A.transverseData m hm J support hSupport)
@@ -125,7 +132,7 @@ theorem exactPacketVelocity_eq_addVelocity (u : ℝ × Space → Space)
   change u (t,x)+A.ell • physicalVelocity κ k m A.packetFrame
     (exactPacketOfResidual P B residual).rawVelocity (A.packetInverse I.field) (t,A.ell⁻¹ • x) =
       u (t,x)+A.ell • A.normalizedPacketVelocity m hm J support hSupport B residual k I t (A.ell⁻¹
-        • x)
+          • x)
   apply congrArg (fun z => u (t,x)+A.ell • z)
   exact exact_physicalVelocity_eq (A.transverseData m hm J support hSupport)
     (exactPacketOfResidual P B residual) k A.packetFrame (A.packetInverse I.field)
@@ -137,9 +144,9 @@ theorem exactPacketPressure_eq_addPressure (p : ℝ × Space → ℝ)
     A.exactPacketPressure m hm J support hSupport B residual k I.field p (t,x) =
       addPressure A.ell (fun y => p (t,y))
         (A.normalizedPacketPressure m hm J support hSupport B residual k I t) x := by
-  change A.ell^2*(A.normalizedPressure p (t,A.ell⁻¹ • x)+
+  change A.ell^2*(A.normalizedPressure p (t,A.ell⁻¹ • x) +
     physicalPressure ((exactPacketOfResidual P B residual).rawGraphPotential k) (A.packetInverse
-      I.field)
+        I.field)
       (t,A.ell⁻¹ • x)) = _
   simp only [A.normalizedPressure_apply,smul_smul,mul_inv_cancel₀ A.ell_pos.ne',one_smul,
     physicalPressure,inverseCoordinates,ExactLiftedPacket.rawGraphPotential,
@@ -150,30 +157,30 @@ theorem exactPacketPressure_eq_addPressure (p : ℝ × Space → ℝ)
 
 theorem exactPacketVelocity_fderiv (u : ℝ × Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space)
-    (hu : DifferentiableAt ℝ (fun y => u (t,y)) x) :
+    (hu : DifferentiableAt ℝ (fun y => u (t, y)) x) :
     fderiv ℝ (fun y => A.exactPacketVelocity m hm J support hSupport B residual k I.field u (t,y))
-      x =
-      fderiv ℝ (fun y => u (t,y)) x+
+        x =
+      fderiv ℝ (fun y => u (t,y)) x +
       fderiv ℝ (A.normalizedPacketVelocity m hm J support hSupport B residual k I t) (A.ell⁻¹ • x)
-        := by
+          := by
   rw [show (fun y => A.exactPacketVelocity m hm J support hSupport B residual k I.field u (t,y)) =
     addVelocity A.ell (fun y => u (t,y))
       (A.normalizedPacketVelocity m hm J support hSupport B residual k I t) from
         funext (A.exactPacketVelocity_eq_addVelocity m hm J support hSupport B residual k I u t)]
   exact addVelocity_fderiv A.ell A.ell_pos.ne' _ _ x hu
-    ((A.normalizedPacketVelocity_smooth m hm J support hSupport B residual k I t).differentiable
-      (by simp) _)
+    ((A.normalizedPacketVelocity_smooth m hm J support hSupport B residual k I t).differentiable (by
+        simp) _)
 
 
-theorem exactPacketPressure_hessian (hk : k*κ=1) (p : ℝ × Space → ℝ)
+theorem exactPacketPressure_hessian (hk : k * κ = 1) (p : ℝ × Space → ℝ)
     (t : Icc (0 : ℝ) A.T) (x : Space)
-    (hp : Differentiable ℝ (fun y => p (t,y)))
-    (hp1 : DifferentiableAt ℝ (gradient (fun y => p (t,y))) x) :
+    (hp : Differentiable ℝ (fun y => p (t, y)))
+    (hp1 : DifferentiableAt ℝ (gradient (fun y => p (t, y))) x) :
     fderiv ℝ (gradient (fun y => A.exactPacketPressure m hm J support hSupport B residual k I.field
-      p (t,y))) x =
-      fderiv ℝ (gradient (fun y => p (t,y))) x+
+        p (t,y))) x =
+      fderiv ℝ (gradient (fun y => p (t,y))) x +
       fderiv ℝ (gradient (A.normalizedPacketPressure m hm J support hSupport B residual k I t))
-        (A.ell⁻¹ • x) := by
+          (A.ell⁻¹ • x) := by
   rw [show (fun y => A.exactPacketPressure m hm J support hSupport B residual k I.field p (t,y)) =
     addPressure A.ell (fun y => p (t,y))
       (A.normalizedPacketPressure m hm J support hSupport B residual k I t) from
@@ -193,7 +200,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransverseFrameCoordinates
 
 variable (A : Parent) (H : LowBounds A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ support) (α : ℝ)
@@ -207,7 +214,7 @@ variable (A : Parent) (H : LowBounds A)
 theorem normalizedPacketVelocity_initialized (t : Icc (0 : ℝ) A.T) :
     A.normalizedPacketVelocity m hm J support hSupport Q
       (initializedApproximationResidual (A.meanData H) (A.transverseData m hm J support hSupport)
-        rfl
+          rfl
         τ hτ hτT (A.historyOn H m hm J support hSupport τ hτ hτT) δ hδ ξ hs α
         (A.sourceAgreement m hm J support hSupport H) N hN k hk) k I t =
     initializedExactPhysicalVelocity (A.meanData H) (A.transverseData m hm J support hSupport) rfl
@@ -217,7 +224,7 @@ theorem normalizedPacketVelocity_initialized (t : Icc (0 : ℝ) A.T) :
 theorem normalizedPacketPressure_initialized (t : Icc (0 : ℝ) A.T) :
     A.normalizedPacketPressure m hm J support hSupport Q
       (initializedApproximationResidual (A.meanData H) (A.transverseData m hm J support hSupport)
-        rfl
+          rfl
         τ hτ hτT (A.historyOn H m hm J support hSupport τ hτ hτT) δ hδ ξ hs α
         (A.sourceAgreement m hm J support hSupport H) N hN k hk) k I t =
     initializedExactPhysicalPressure (A.meanData H) (A.transverseData m hm J support hSupport) rfl

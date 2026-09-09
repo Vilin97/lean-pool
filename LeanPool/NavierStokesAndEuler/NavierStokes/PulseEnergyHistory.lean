@@ -9,14 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingHistories
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PulseLag
 
-@[expose] public section
-
 /-!
 # Actual outgoing energy histories during the pulse
 
 The history and its parameter derivative retain the actual incoming prefix.
 Bounds come from their source integrals and the explicit pulse energy weight.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.PulseEnergyHistory
 
@@ -28,6 +29,7 @@ open OutgoingSchedule OutgoingTail UniformAngularReset OutgoingHistories
 
 variable {d : TailData} {K : ℝ}
 
+/-- Pulse normalization, given by `PulseAmplitude.normalization c * shape eta ^ 2`. -/
 noncomputable def pulseNormalization (c : Parameters) (eta : ℝ) : ℝ :=
   PulseAmplitude.normalization c * shape eta ^ 2
 
@@ -239,11 +241,11 @@ theorem initial_history_bounds (w : ResetWitness d K) {amp : ℝ → ℝ}
     (hwait : d.core.wait = 60 * Real.log (1 / d.core.lam)) {eta : ℝ} (heta : |eta| ≤ 1) :
     |S w amp (d.core.pulseStart, eta)| ≤
         pulseNormalization d.core eta * (16 * PulseAmplitude.prefixBoundConstant d.core.P d.core.m)
-          /
+            /
           d.core.lam ∧
       |dEta (S w amp) (d.core.pulseStart, eta)| ≤
         pulseNormalization d.core eta * (16 * PulseAmplitude.prefixBoundConstant d.core.P d.core.m)
-          /
+            /
           d.core.lam := by
   let A := PulseAmplitude.prefixAxialEnergy d.core
   let G := PulseAmplitude.prefixAngularEnergy d.core

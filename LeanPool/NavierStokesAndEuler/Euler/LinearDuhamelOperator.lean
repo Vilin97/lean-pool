@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamel
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The actual bounded solution and Volterra inverse
@@ -20,6 +19,9 @@ unweighted inverse is used only for qualitative parameter regularity; source
 quantitative estimates use the original relative propagator bound directly.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
@@ -29,7 +31,7 @@ open Set ContinuousLinearMap EulerVolterraConvolution EulerContinuousTimeIntegra
 open scoped Topology
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-variable {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
+variable {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
 
 namespace Evolution
 
@@ -45,16 +47,16 @@ def initialOperator : E →L[ℝ] C(Icc (0 : ℝ) T,E) :=
     (U.backward ⟨0,le_rfl,hT⟩))
 
 /-- The bounded forcing operator is exactly the Duhamel construction. -/
-theorem forcingOperator_eq (f : C(Icc (0 : ℝ) T,E)) :
+theorem forcingOperator_eq (f : C(Icc (0 : ℝ) T, E)) :
     U.forcingOperator f = U.solution f 0 := by
   ext t
   simp only [forcingOperator, comp_apply, multiplier_apply,
-    EulerContinuousTimeIntegral.integral_apply, realIntegral,
+      EulerContinuousTimeIntegral.integral_apply, realIntegral,
     solution, ContinuousMap.coe_mk, solutionReal, transformedForcing, extendPath, map_zero,
     zero_add, projIcc_of_mem hT t.property]
 
 /-- Splitting the actual forced solution into its two bounded data maps. -/
-theorem solution_eq_operators (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem solution_eq_operators (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     U.solution f a₀ = U.initialOperator a₀ + U.forcingOperator f := by
   ext t
   change extendPath T hT U.forward t
@@ -64,9 +66,9 @@ theorem solution_eq_operators (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
   rfl
 
 /-- The original relative propagator bound controls the actual forcing map. -/
-theorem forcingOperator_profile_bound (f : C(Icc (0 : ℝ) T,E))
+theorem forcingOperator_profile_bound (f : C(Icc (0 : ℝ) T, E))
     (g : Icc (0 : ℝ) T → ℝ) (hg : ∀ t, 0 < g t)
-    (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C D : ℝ) (hC : 0 ≤ C)
+    (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C D : ℝ) (hC : 0 ≤ C)
     (hU : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ‖U.propagator t s‖ ≤ C*g t/g s)
     (hf : ∀ s, ‖f s‖ ≤ D*g s) (t : Icc (0 : ℝ) T) :
     ‖U.forcingOperator f t‖ ≤ C*g t*(t : ℝ)*D := by
@@ -77,7 +79,7 @@ theorem forcingOperator_profile_bound (f : C(Icc (0 : ℝ) T,E))
 omit [CompleteSpace E] in
 /-- The homogeneous initial-data map has the same profile and propagator constant. -/
 theorem initialOperator_profile_bound (a₀ : E)
-    (g : Icc (0 : ℝ) T → ℝ) (hg₀ : g ⟨0,le_rfl,hT⟩ = 1) (C : ℝ)
+    (g : Icc (0 : ℝ) T → ℝ) (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C : ℝ)
     (hU : ∀ t s : Icc (0 : ℝ) T, s ≤ t → ‖U.propagator t s‖ ≤ C*g t/g s)
     (t : Icc (0 : ℝ) T) : ‖U.initialOperator a₀ t‖ ≤ C*g t*‖a₀‖ := by
   change ‖U.propagator t ⟨0,le_rfl,hT⟩ a₀‖ ≤ _
@@ -85,7 +87,7 @@ theorem initialOperator_profile_bound (a₀ : E)
     (by simpa only [hg₀, div_one] using hU t ⟨0,le_rfl,hT⟩ t.property.1) (norm_nonneg a₀))
 
 /-- The forced path satisfies the actual integral equation. -/
-theorem solution_integral (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem solution_integral (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     U.solution f a₀ = (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) a₀ +
       integral T hT (multiplier B (U.solution f a₀) + f) := by
   ext t
@@ -102,7 +104,7 @@ theorem solution_integral (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
 end Evolution
 
 /-- The ordinary continuous-path Volterra operator. -/
-def volterraOperator (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T,E →L[ℝ] E)) :
+def volterraOperator (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, E →L[ℝ] E)) :
     C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   ContinuousLinearMap.id ℝ _ - (integral T hT).comp (multiplier B)
 
@@ -115,7 +117,7 @@ def volterraInverse : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   ContinuousLinearMap.id ℝ _ + U.forcingOperator.comp (multiplier B)
 
 /-- The Volterra operator followed by the constructed inverse is the identity. -/
-theorem volterra_operator_inverse (h : C(Icc (0 : ℝ) T,E)) :
+theorem volterra_operator_inverse (h : C(Icc (0 : ℝ) T, E)) :
     volterraOperator T hT B (U.volterraInverse h) = h := by
   let w := U.solution (multiplier B h) 0
   have hw : w = integral T hT (multiplier B w + multiplier B h) := by
@@ -155,7 +157,7 @@ theorem volterraOperator_injective : Function.Injective (volterraOperator T hT B
   exact sub_eq_zero.mp (hker (u-v) hz)
 
 /-- The constructed inverse is also a left inverse. -/
-theorem volterra_inverse_operator (h : C(Icc (0 : ℝ) T,E)) :
+theorem volterra_inverse_operator (h : C(Icc (0 : ℝ) T, E)) :
     U.volterraInverse (volterraOperator T hT B h) = h := by
   apply U.volterraOperator_injective
   exact U.volterra_operator_inverse _

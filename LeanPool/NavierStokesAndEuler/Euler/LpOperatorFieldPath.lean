@@ -7,9 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpOperatorField
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.FDeriv.Linear
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Actual rectangular L² frame paths and their time derivatives
@@ -20,6 +25,9 @@ therefore give genuine operator paths and derivatives. Frame lower bounds,
 quadratic upper bounds and pointwise composition identities pass to these
 actual L² operators without a support-margin constant.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,17 +42,38 @@ variable {α E F : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace
   [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F]
 
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (supportedSpace (V := E) μ S hS) := inferInstance
-private local instance : NormedSpace ℝ (supportedSpace (V := E) μ S hS) := inferInstance
-private local instance : NormedAddCommGroup (supportedSpace (V := F) μ S hS) := inferInstance
-private local instance : NormedSpace ℝ (supportedSpace (V := F) μ S hS) := inferInstance
-private local instance : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorFieldPath1 : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorFieldPath2 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instLpOperatorFieldPath3 : NormedAddCommGroup (α →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorFieldPath4 : NormedSpace ℝ (α →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (supportedSpace (V := E) μ S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpOperatorFieldPath5 : NormedAddCommGroup (supportedSpace (V := E) μ S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (supportedSpace (V := E) μ S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpOperatorFieldPath6 : NormedSpace ℝ (supportedSpace (V := E) μ S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (supportedSpace (V := F) μ S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpOperatorFieldPath7 : NormedAddCommGroup (supportedSpace (V := F) μ S hS) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (supportedSpace (V := F) μ S hS)` instance to shorten
+typeclass synthesis. -/
+local instance instLpOperatorFieldPath8 : NormedSpace ℝ (supportedSpace (V := F) μ S hS) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (supportedSpace (V := E) μ S hS →L[ℝ] supportedSpace
+(V := F) μ S hS)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorFieldPath9 : NormedAddCommGroup
     (supportedSpace (V := E) μ S hS →L[ℝ] supportedSpace (V := F) μ S hS) := inferInstance
-private local instance : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (supportedSpace (V := E) μ S hS →L[ℝ] supportedSpace (V :=
+F) μ S hS)` instance to shorten typeclass synthesis. -/
+local instance instLpOperatorFieldPath10 : NormedSpace ℝ
     (supportedSpace (V := E) μ S hS →L[ℝ] supportedSpace (V := F) μ S hS) := inferInstance
 
 /-- Linearity in the actual rectangular coefficient field. -/
@@ -83,7 +112,7 @@ def supportedMap : (α →ᵇ E →L[ℝ] F) →L[ℝ]
       supported_norm μ S hS A ‖A‖ (norm_nonneg _) (fun x _ => A.norm_coe_le_norm x))
 
 @[simp] theorem supportedMap_apply (A : α →ᵇ E →L[ℝ] F) : supportedMap μ S hS A = supported μ S hS
-  A := rfl
+    A := rfl
 
 theorem supportedMap_norm : ‖supportedMap (E := E) (F := F) μ S hS‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -99,7 +128,7 @@ def supportedPathMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
   (supportedMap (E := E) (F := F) μ S hS).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem supportedPathMap_apply (A : C(K,α →ᵇ E →L[ℝ] F)) (t : K) :
+@[simp] theorem supportedPathMap_apply (A : C(K, α →ᵇ E →L[ℝ] F)) (t : K) :
     supportedPathMap μ S hS A t = supported μ S hS (A t) := rfl
 
 theorem supportedPathMap_norm : ‖supportedPathMap (K := K) (E := E) (F := F) μ S hS‖ ≤ 1 := by
@@ -109,13 +138,13 @@ theorem supportedPathMap_norm : ‖supportedPathMap (K := K) (E := E) (F := F) �
   apply (ContinuousMap.norm_le _ (norm_nonneg A)).2
   intro t
   exact (supported_norm μ S hS (A t) ‖A t‖ (norm_nonneg _) (fun x _ => (A t).norm_coe_le_norm
-    x)).trans
+      x)).trans
     (A.norm_coe_le_norm t)
 
 omit [CompactSpace K] in
 /-- Every-time pointwise lower frame bounds hold on the real L² frame path. -/
-theorem supportedPath_lower (A : C(K,α →ᵇ E →L[ℝ] F)) (c : ℝ) (hc : 0 ≤ c)
-    (hA : ∀ t x, x ∈ S → ∀ v, c*‖v‖^2 ≤ ‖A t x v‖^2)
+theorem supportedPath_lower (A : C(K, α →ᵇ E →L[ℝ] F)) (c : ℝ) (hc : 0 ≤ c)
+    (hA : ∀ t x, x ∈ S → ∀ v, c * ‖v‖ ^ 2 ≤ ‖A t x v‖ ^ 2)
     (t : K) (u : supportedSpace (V := E) μ S hS) :
     c*‖u‖^2 ≤ ‖supportedPathMap μ S hS A t u‖^2 :=
   supported_norm_sq_lower μ S hS (A t) c hc (hA t) u
@@ -123,7 +152,7 @@ theorem supportedPath_lower (A : C(K,α →ᵇ E →L[ℝ] F)) (c : ℝ) (hc : 0
 section Derivative
 
 variable [CompleteSpace F]
-  (T : ℝ) (hT : 0 ≤ T) (A A' : C(Icc (0 : ℝ) T,α →ᵇ E →L[ℝ] F))
+  (T : ℝ) (hT : 0 ≤ T) (A A' : C(Icc (0 : ℝ) T, α →ᵇ E →L[ℝ] F))
 
 /-- Literal pointwise coefficient time derivatives give the genuine within-time
 operator derivative; no global time extension is assumed. -/
@@ -152,7 +181,7 @@ end Derivative
 
 /-- A localized Hessian upper bound passes to its genuine supported L² operator. -/
 theorem supported_quadratic_upper (A : α →ᵇ E →L[ℝ] E) (C : ℝ)
-    (hA : ∀ x ∈ S, ∀ v, ⟪A x v,v⟫_ℝ ≤ C*‖v‖^2) (u : supportedSpace (V := E) μ S hS) :
+    (hA : ∀ x ∈ S, ∀ v, ⟪A x v, v⟫_ℝ ≤ C * ‖v‖ ^ 2) (u : supportedSpace (V := E) μ S hS) :
     ⟪supported μ S hS A u,u⟫_ℝ ≤ C*‖u‖^2 := by
   change ⟪full μ A (u : Lp E 2 μ),(u : Lp E 2 μ)⟫_ℝ ≤ C*‖(u : Lp E 2 μ)‖^2
   rw [← real_inner_self_eq_norm_sq,L2.inner_def,L2.inner_def,← integral_const_mul]
@@ -163,7 +192,7 @@ theorem supported_quadratic_upper (A : α →ᵇ E →L[ℝ] E) (C : ℝ)
   rw [hx,real_inner_self_eq_norm_sq]
   by_cases hs : x ∈ S
   · exact hA x hs _
-  · simp only [hu hs,map_zero,inner_zero_left,norm_zero,zero_pow (by decide : 2 ≠
-    0),mul_zero,le_refl]
+  · simp only [hu hs,map_zero,inner_zero_left,norm_zero,zero_pow (by
+      decide : 2 ≠ 0),mul_zero,le_refl]
 
 end EulerLpOperatorField

@@ -10,11 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.AnalyticCoefficientBoun
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AnalyticPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalAxisData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalAxisBridge
-public import Mathlib.Topology.MetricSpace.Thickening
-public import Mathlib.Analysis.Normed.Module.Convex
-public import Mathlib.Tactic.FunProp
-
-@[expose] public section
 
 /-!
 # The actual fixed coefficients of the natural-axis problem
@@ -24,6 +19,9 @@ complex neighborhood is chosen by compactness and nonvanishing of the two
 actual denominators. Every fixed field is then embedded in the same complete
 space of compatible coefficient functions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,22 +40,33 @@ theorem original_interval_interior :
   dsimp [window]
   constructor <;> linarith [hx.1, hx.2]
 
+/-- Complex D, given by `1 - z ^ 2`. -/
 def complexD (z : ℂ) : ℂ := 1 - z ^ 2
+/-- Complex L, given by `1 - 2 * (h : ℂ) * z ^ 2`. -/
 def complexL (h : ℝ) (z : ℂ) : ℂ := 1 - 2 * (h : ℂ) * z ^ 2
+/-- Complex U, given by `4 * z + (j : ℂ)`. -/
 def complexU (j : ℝ) (z : ℂ) : ℂ := 4 * z + (j : ℂ)
+/-- Complex H, given by `(NaturalAxisData.D h : ℂ) * z + complexD z * complexU j z`. -/
 def complexH (h j : ℝ) (z : ℂ) : ℂ :=
   (NaturalAxisData.D h : ℂ) * z + complexD z * complexU j z
+/-- Complex W, given by `1 - 4 * complexD z - 2 * (NaturalAxisData.D h : ℂ) * z * complexU j z`. -/
 def complexW (h j : ℝ) (z : ℂ) : ℂ :=
   1 - 4 * complexD z - 2 * (NaturalAxisData.D h : ℂ) * z * complexU j z
+/-- Denominator, given by `complexH h j z ^ 2 + (σ : ℂ) ^ 2`. -/
 def denominator (h j σ : ℝ) (z : ℂ) : ℂ := complexH h j z ^ 2 + (σ : ℂ) ^ 2
+/-- Complex Z as an element of `ℂ`. -/
 def complexZ (h j : ℝ) (P : ℂ → ℂ) (z : ℂ) : ℂ :=
   -(NaturalAxisData.A h : ℂ) * (1 - 2 * z * complexU j z) * complexU j z -
     complexH h j z * 4 - complexD z * deriv P z +
     4 * (NaturalAxisData.A h : ℂ) * z * P z
+/-- Complex chi, given by `complexH h j z ^ 2 / denominator h j σ z`. -/
 def complexChi (h j σ : ℝ) (z : ℂ) : ℂ :=
   complexH h j z ^ 2 / denominator h j σ z
+/-- Complex gradient, given by `-complexL h z * complexH h j z / denominator h j σ z`. -/
 def complexGradient (h j σ : ℝ) (z : ℂ) : ℂ :=
   -complexL h z * complexH h j z / denominator h j σ z
+/-- Real gradient, given by `-NaturalAxisData.L h x * NaturalAxisData.H h j x /
+(NaturalAxisData.H h j x ^ 2 + σ ^ 2)`. -/
 def realGradient (h j σ x : ℝ) : ℝ :=
   -NaturalAxisData.L h x * NaturalAxisData.H h j x /
     (NaturalAxisData.H h j x ^ 2 + σ ^ 2)
@@ -123,6 +132,7 @@ theorem complexGradient_analytic (h j σ : ℝ) :
   dsimp [complexGradient, denominator, complexH, complexD, complexU, complexL]
   fun_prop (disch := assumption)
 
+/-- Field data for natural axis coefficients. -/
 inductive Field
   | one | eta | d | inverseL | uStar | uStarEta | wStar | hStar | zStar | chi | gradient
   deriving DecidableEq
@@ -131,6 +141,7 @@ instance : Fintype Field :=
   ⟨{.one, .eta, .d, .inverseL, .uStar, .uStarEta, .wStar, .hStar, .zStar, .chi, .gradient},
     by intro x; cases x <;> simp⟩
 
+/-- Complex field used in natural axis coefficients. -/
 def complexField (h j σ : ℝ) (P : ℂ → ℂ) : Field → ℂ → ℂ
   | .one => fun _ => 1
   | .eta => fun z => z
@@ -144,6 +155,7 @@ def complexField (h j σ : ℝ) (P : ℂ → ℂ) : Field → ℂ → ℂ
   | .chi => complexChi h j σ
   | .gradient => complexGradient h j σ
 
+/-- Real field used in natural axis coefficients. -/
 def realField (h j σ : ℝ) (P : ℝ → ℝ) : Field → ℝ → ℝ
   | .one => fun _ => 1
   | .eta => fun x => x
@@ -238,11 +250,12 @@ theorem exists_convex_common_neighborhood {h j σ : ℝ}
   exact closedBall_subset_cthickening (mem_image_of_mem Complex.ofReal hx) (δ / 2)
 
 /-- Compactness and finiteness give one common value bound for all inputs. -/
-theorem finite_family_bound {ι : Type*} [Fintype ι]
+theorem finite_family_bound {ι : Type*} [Finite ι]
     {K : Set ℂ} (hK : IsCompact K) (f : ι → ℂ → ℂ)
     (hf : ∀ i, ContinuousOn (f i) K) :
     ∃ B : ℝ, 0 < B ∧ ∀ i z, z ∈ K → ‖f i z‖ ≤ B := by
   classical
+  let := Fintype.ofFinite ι
   choose b hb using fun i => hK.exists_bound_of_continuousOn (hf i)
   let B : ℝ := 1 + ∑ i, |b i|
   have hsum : 0 ≤ ∑ i, |b i| := Finset.sum_nonneg (fun _ _ => abs_nonneg _)
@@ -307,9 +320,12 @@ theorem boundedAxisElement_coefficient {I : Window} {ε ρ B : ℝ} {f : ℂ →
 /-- A finite family of actual degree-zero fields, all using the same
 positive parameter radius and the same finite norm bound. -/
 structure CoefficientFamily (h j σ : ℝ) (P : ℝ → ℝ) where
+  /-- Epsilon of `CoefficientFamily`, of type `ℝ`. -/
   epsilon : ℝ
   epsilon_pos : 0 < epsilon
+  /-- Elements of `CoefficientFamily`, of type `Field → AxisSpace window epsilon`. -/
   elements : Field → AxisSpace window epsilon
+  /-- Bound of `CoefficientFamily`, of type `ℝ`. -/
   bound : ℝ
   bound_nonneg : 0 ≤ bound
   norm_le : ∀ k, ‖elements k‖ ≤ bound
@@ -375,6 +391,7 @@ theorem exists_coefficientFamily_with_convex_domain {h j σ : ℝ}
   exact ⟨v, ρ, hv ▸ half_lt_self hρ, U, K, hUopen, hUconv, hUzero, hK,
     hcover, hKU, hUreg⟩
 
+/-- Axis data, bundling `A`, `D`, `h`, `one` and the required compatibility proofs. -/
 def CoefficientFamily.axisData {h j σ : ℝ} {P : ℝ → ℝ}
     (v : CoefficientFamily h j σ P) : AxisContraction.AxisData (AxisSpace window v.epsilon) where
   A := NaturalAxisData.A h
@@ -455,6 +472,7 @@ theorem ideal_prefix_fixed_coefficients {h j : ℝ}
 def axisPhase (h j σ : ℝ) : ℂ → ℂ :=
   AnalyticPrimitive.primitive (complexGradient h j σ)
 
+/-- Real phase, given by `x * ∫ t in (0 : ℝ)..1, realGradient h j σ (t * x)`. -/
 def realPhase (h j σ x : ℝ) : ℝ :=
   x * ∫ t in (0 : ℝ)..1, realGradient h j σ (t * x)
 
@@ -470,9 +488,12 @@ def realPhase (h j σ x : ℝ) : ℝ :=
 common compact neighborhood. No primitive or coefficient record is assumed
 by the existence theorem below. -/
 structure AnalyticInputs (h j σ : ℝ) (P : ℝ → ℝ) where
+  /-- Coefficients of `AnalyticInputs`, of type `CoefficientFamily h j σ P`. -/
   coefficients : CoefficientFamily h j σ P
+  /-- Radius of `AnalyticInputs`, of type `ℝ`. -/
   radius : ℝ
   radius_gap : coefficients.epsilon < radius
+  /-- Compact set of `AnalyticInputs`, of type `Set ℂ`. -/
   compactSet : Set ℂ
   isCompact : IsCompact compactSet
   covers : ∀ x ∈ window.interval, closedBall (x : ℂ) radius ⊆ compactSet
@@ -515,6 +536,7 @@ theorem AnalyticInputs.realPhase_hasDerivAt {h j σ : ℝ} {P : ℝ → ℝ}
   simpa only [axisPhase_ofReal, complexGradient_ofReal, Complex.ofReal_re] using
     (d.phase_derivative (x : ℂ) (d.real_mem_compact hx)).real_of_complex
 
+/-- Real amplitude, given by `Real.exp (Λ * realPhase h j σ x) / C`. -/
 def realAmplitude (h j σ Λ C x : ℝ) : ℝ := Real.exp (Λ * realPhase h j σ x) / C
 
 theorem AnalyticInputs.realAmplitude_hasDerivAt {h j σ : ℝ} {P : ℝ → ℝ}
@@ -539,10 +561,13 @@ theorem AnalyticInputs.realAmplitude_logDerivative {h j σ : ℝ} {P : ℝ → �
   rw [(d.realAmplitude_hasDerivAt Λ C hx).deriv]
   exact mul_div_cancel_right₀ _ (realAmplitude_pos h j σ Λ hC x).ne'
 
+/-- Normalization threshold, given by `Real.exp (Λ * realPartSup (axisPhase h j σ)
+d.compactSet)`. -/
 def AnalyticInputs.normalizationThreshold {h j σ : ℝ} {P : ℝ → ℝ}
     (d : AnalyticInputs h j σ P) (Λ : ℝ) : ℝ :=
   Real.exp (Λ * realPartSup (axisPhase h j σ) d.compactSet)
 
+/-- Amplitude bound, given by `radiusLoss (d.coefficients.epsilon / d.radius)`. -/
 def AnalyticInputs.amplitudeBound {h j σ : ℝ} {P : ℝ → ℝ}
     (d : AnalyticInputs h j σ P) : ℝ :=
   radiusLoss (d.coefficients.epsilon / d.radius)

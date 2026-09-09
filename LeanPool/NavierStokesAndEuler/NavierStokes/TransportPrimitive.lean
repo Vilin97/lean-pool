@@ -7,13 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialAlias
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
 public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Actual shifted transport primitives
@@ -23,6 +21,9 @@ Bochner integrals. Compact radial support is used to justify local fixed finite
 integration intervals, so ordinary derivatives pass under the integral without
 differentiating the translation parameter.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -80,7 +81,7 @@ theorem parameterIntegral_hasFDerivAt {g : H × ℝ → G} (hg : ContDiff ℝ �
     (parameterDerivative_contDiff hg).continuous x a b
   apply intervalIntegral.hasFDerivAt_integral_of_dominated_of_fderiv_le
     (F' := fun y u => parameterDerivative g (y, u)) (bound := fun _ => C) (Metric.ball_mem_nhds _
-      hε)
+        hε)
   · exact Eventually.of_forall fun y =>
       (hg.continuous.comp (continuous_const.prodMk continuous_id)).aestronglyMeasurable
   · exact (hg.continuous.comp (continuous_const.prodMk continuous_id)).intervalIntegrable a b
@@ -273,7 +274,7 @@ theorem parameterDerivative_shifted {f : ℝ × E → F} (hf : ContDiff ℝ ∞ 
       ((hasFDerivAt_id z).add_const (u, (M * u) • v))
 
 /-- The entire Fréchet derivative commutes with the fixed-u past integral. -/
-theorem pastIntegral_hasFDerivAt [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem pastIntegral_hasFDerivAt {a b M : ℝ} {v : E}
     {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (z : ℝ × E) :
     HasFDerivAt (pastIntegral M v f) (pastIntegral M v (fderiv ℝ f) z) z := by
@@ -284,7 +285,7 @@ theorem pastIntegral_hasFDerivAt [CompleteSpace F] {a b M : ℝ} {v : E}
     (radialSupport_fderiv hs) z (by linarith : z.1 + (a - z.1 - 1) < a)] at h
   exact h.congr_of_eventuallyEq (pastIntegral_eventually_eq_interval hf.continuous hs z)
 
-theorem totalIntegral_hasFDerivAt [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem totalIntegral_hasFDerivAt {a b M : ℝ} {v : E}
     {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (z : ℝ × E) :
     HasFDerivAt (totalIntegral M v f) (totalIntegral M v (fderiv ℝ f) z) z := by
@@ -310,7 +311,7 @@ theorem fixedDeriv_supported {a b : ℝ} {f : ℝ × E → F}
     RadialAlias.RadiallySupported a b (fixedDeriv w f) :=
   RadialAlias.radialSupport_fderiv_apply hs w
 
-theorem fixedDeriv_pastIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem fixedDeriv_pastIntegral {a b M : ℝ} {v : E}
     {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (w z : ℝ × E) :
     fixedDeriv w (pastIntegral M v f) z = pastIntegral M v (fixedDeriv w f) z := by
@@ -319,7 +320,7 @@ theorem fixedDeriv_pastIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
     ((shifted_integrable (M := M) (v := v) (hf.fderiv_right (m := ∞) (by simp)).continuous
       (radialSupport_fderiv hs) z).integrableOn) w
 
-theorem fixedDeriv_totalIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem fixedDeriv_totalIntegral {a b M : ℝ} {v : E}
     {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (w z : ℝ × E) :
     fixedDeriv w (totalIntegral M v f) z = totalIntegral M v (fixedDeriv w f) z := by
@@ -377,7 +378,7 @@ theorem transport_eq_partials (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ ×
   simp only [fixedDeriv, hv, map_add, map_smul]
 
 /-- The cutoff product rule retains the actual ordinary radial derivative. -/
-theorem fixedDeriv_compactIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem fixedDeriv_compactIntegral {a b M : ℝ} {v : E}
     {f : ℝ × E → F} {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
     (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (w z : ℝ × E) :
@@ -415,7 +416,7 @@ theorem transport_compactIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
     transport_pastIntegral hf hs, transport_totalIntegral hf hs]
   simp
 
-theorem auxiliaryDeriv_compactIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem auxiliaryDeriv_compactIntegral {a b M : ℝ} {v : E}
     {f : ℝ × E → F} {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
     (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (w : E) (z : ℝ × E) :
@@ -672,7 +673,7 @@ theorem iteratedFDeriv_contDiff {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (
   hf.iteratedFDeriv_right (by exact_mod_cast (le_top : (⊤ : ℕ∞) + (n : ℕ∞) ≤ ⊤))
 
 /-- Every order of the actual multilinear Fréchet derivative commutes with I. -/
-theorem iteratedFDeriv_pastIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem iteratedFDeriv_pastIntegral {a b M : ℝ} {v : E}
     {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (n : ℕ) (z : ℝ × E) :
     iteratedFDeriv ℝ n (pastIntegral M v f) z = pastIntegral M v (iteratedFDeriv ℝ n f) z := by
@@ -697,7 +698,7 @@ theorem iteratedFDeriv_pastIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
       (fun u : ℝ => fderiv ℝ (iteratedFDeriv ℝ n f) (shift M v z u))).symm
 
 /-- Every order of the actual multilinear Fréchet derivative commutes with J. -/
-theorem iteratedFDeriv_totalIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
+theorem iteratedFDeriv_totalIntegral {a b M : ℝ} {v : E}
     {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (hs : RadialAlias.RadiallySupported a b f)
     (n : ℕ) (z : ℝ × E) :
     iteratedFDeriv ℝ n (totalIntegral M v f) z = totalIntegral M v (iteratedFDeriv ℝ n f) z := by
@@ -719,7 +720,7 @@ theorem iteratedFDeriv_totalIntegral [CompleteSpace F] {a b M : ℝ} {v : E}
       (F := ContinuousMultilinearMap ℝ (fun _ : Fin (n + 1) => ℝ × E) F) (𝕜 := ℝ) (μ := volume)
       (fun u : ℝ => fderiv ℝ (iteratedFDeriv ℝ n f) (shift M v z u))).symm
 
-theorem iteratedFDeriv_pastIntegral_norm_le [CompleteSpace F] {a b M C : ℝ} {v : E}
+theorem iteratedFDeriv_pastIntegral_norm_le {a b M C : ℝ} {v : E}
     {f : ℝ × E → F} (hab : a ≤ b) (hf : ContDiff ℝ ∞ f)
     (hs : RadialAlias.RadiallySupported a b f) (n : ℕ)
     (hbound : ∀ s ∈ Icc a b, ∀ Y : E, ‖iteratedFDeriv ℝ n f (s, Y)‖ ≤ C) (z : ℝ × E) :
@@ -728,7 +729,7 @@ theorem iteratedFDeriv_pastIntegral_norm_le [CompleteSpace F] {a b M C : ℝ} {v
   exact pastIntegral_norm_le hab (iteratedFDeriv_contDiff hf n).continuous
     (iteratedFDeriv_supported hs n) hbound z
 
-theorem iteratedFDeriv_totalIntegral_norm_le [CompleteSpace F] {a b M C : ℝ} {v : E}
+theorem iteratedFDeriv_totalIntegral_norm_le {a b M C : ℝ} {v : E}
     {f : ℝ × E → F} (hab : a ≤ b) (hf : ContDiff ℝ ∞ f)
     (hs : RadialAlias.RadiallySupported a b f) (n : ℕ)
     (hbound : ∀ s ∈ Icc a b, ∀ Y : E, ‖iteratedFDeriv ℝ n f (s, Y)‖ ≤ C) (z : ℝ × E) :

@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedField
-public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureWeight
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradientWeight
-public import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradientWeight
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureWeight
 
 /-!
 # The joined pressure is the actual global normal-residual primitive
@@ -22,13 +20,16 @@ pressure equals one global bounded cylinder operator applied to the actual
 forcing and velocity. This gives its estimates without any further solve.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketJoin
 
 open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoefficients
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths
-    EulerLpCylinderRectangular
+      EulerLpCylinderRectangular
   EulerPacketProfileRecursion EulerTransversePacketProvider EulerTimeIntervalRestriction
   EulerSourceNormalCoefficient EulerSourceNormalResidualBounds EulerCylinderScalarPrimitive
   EulerContinuousTimeWeight EulerParameterWordGevrey EulerGevrey EulerTimeLpGramGevrey
@@ -89,7 +90,7 @@ theorem pressurePath_eq_source : pressurePath τ hτ hτT B G =
       change D.M.field (tailInclusion D.T τ hτ.le tf) = _
       rw [he]
     have hf : (HistoryData.forcingPath (G.tail τ hτ.le hτT)) tf = (HistoryData.forcingPath G) t :=
-      by
+        by
       change (HistoryData.forcingPath G) (tailInclusion D.T τ hτ.le tf) = _
       rw [he]
     rw [pressurePath_right τ hτ hτT B G tr]
@@ -104,7 +105,7 @@ theorem pressurePath_eq_source : pressurePath τ hτ hτT B G =
     rw [hN,hM,hf,velocityPath_right τ hτ hτT B G tr]
 
 theorem pressurePath_normalized_eq_source
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t) :
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t) :
     normalize g hg (pressurePath τ hτ hτT B G) =
       sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
         (normalize g hg (HistoryData.forcingPath G))
@@ -115,19 +116,19 @@ theorem pressurePath_normalized_eq_source
 
 /-- Literal pressure bound from the actual normalized forcing and velocity. -/
 theorem source_pressure_bound
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
     {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (Rc Cm CM Ri R Af Av : ℝ) (hRc : 0 ≤ Rc) (hCm : 0 ≤ Cm) (hCM : 0 ≤ CM)
-    (hAf : 0 ≤ Af) (hAv : 0 ≤ Av) (hRi : 2*gramCost D.normalLower Cm 1*(Rc+1) ≤ Ri)
-    (hR : sobolevCoefficientRadius ι (4*Ri) ≤ R)
-    (hm : ∀ n t x, ‖iteratedFDeriv ℝ n (D.normal.field t : Space → Space) x‖ ≤ Cm*majorant Rc 0 n)
-    (hM : ∀ n t x, ‖iteratedFDeriv ℝ n (D.M.field t : Space → Space →L[ℝ] Space) x‖ ≤ CM*majorant
-      Rc 0 n)
+    (hAf : 0 ≤ Af) (hAv : 0 ≤ Av) (hRi : 2 * gramCost D.normalLower Cm 1 * (Rc + 1) ≤ Ri)
+    (hR : sobolevCoefficientRadius ι (4 * Ri) ≤ R)
+    (hm : ∀ n t x, ‖iteratedFDeriv ℝ n (D.normal.field t : Space → Space) x‖ ≤ Cm * majorant Rc 0 n)
+    (hM : ∀ n t x, ‖iteratedFDeriv ℝ n (D.M.field t : Space → Space →L[ℝ] Space) x‖ ≤ CM * majorant
+        Rc 0 n)
     (d : ℕ)
     (hf : ∀ n, block directions q (fun a => pathTranslate P a
-      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ Af*majorant R d n)
+      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ Af * majorant R d n)
     (hv : ∀ n, block directions q (fun a => pathTranslate P a
-      (normalize g hg (velocityPath τ hτ hτT B G))) n 0 ≤ Av*majorant R d n) (n : ℕ) :
+      (normalize g hg (velocityPath τ hτ hτT B G))) n 0 ≤ Av * majorant R d n) (n : ℕ) :
     block directions q (fun a => pathTranslate P a
       (normalize g hg (pressurePath τ hτ hτT B G))) n 0 ≤
         (P*pressureCost ι q Ri Cm CM Af Av)*majorant R d n := by
@@ -139,10 +140,10 @@ theorem source_pressure_bound
     Rc Cm CM Ri R Af Av hRc hCm hCM hAf hAv hRi hR hm hM d hf hv n
 
 theorem scalarGradientField_normalized_bound
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
     (q : ℕ) (R A : ℝ) (d : ℕ)
     (hb : ∀ n, block standardDirection q (fun a => pathTranslate P a
-      (normalize g hg (pressurePath τ hτ hτT B G))) n 0 ≤ A*majorant R d n) (n : ℕ) :
+      (normalize g hg (pressurePath τ hτ hτT B G))) n 0 ≤ A * majorant R d n) (n : ℕ) :
     block standardDirection q (fun a => pathTranslate P a
       (normalize g hg (scalarGradientField τ hτ hτT B G).path)) n 0 ≤
         (3*A)*majorant R (d+1) n :=

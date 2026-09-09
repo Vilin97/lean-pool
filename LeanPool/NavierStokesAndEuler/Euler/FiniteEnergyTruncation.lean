@@ -6,13 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
 public import LeanPool.NavierStokesAndEuler.Euler.CompactParameterIntegral
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
-public import LeanPool.NavierStokesAndEuler.Euler.RadialPotentialL2
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+import LeanPool.NavierStokesAndEuler.Euler.RadialPotentialL2
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Divergence-free truncation by a radial vector potential
@@ -22,6 +22,9 @@ produces a vector potential. Cutting off that potential and taking its curl
 gives compact smooth divergence-free velocities that agree with `u` on any
 prescribed ball. This construction does not assume Sobolev regularity of `u`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -406,9 +409,11 @@ theorem exists_derivative_position_bound (χ : Space → ℝ) (hχ : ContDiff �
     simpa only [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _))] using hC x
   exact ⟨C, by simpa using hb 0, hb⟩
 
+/-- Unit truncation bump, given by `⟨1, 2, by norm_num, by norm_num⟩`. -/
 def unitTruncationBump : ContDiffBump (0 : Space) :=
   ⟨1, 2, by norm_num, by norm_num⟩
 
+/-- Truncation cutoff, given by `scaledCutoff unitTruncationBump R`. -/
 def truncationCutoff (R : ℝ) : Space → ℝ := scaledCutoff unitTruncationBump R
 
 theorem truncationCutoff_smooth (R : ℝ) : ContDiff ℝ ∞ (truncationCutoff R) :=
@@ -476,10 +481,10 @@ theorem finiteEnergyTruncation_eq
     finiteEnergyTruncation u R x = u x :=
   potentialTruncation_eq u hu hdiv _ x (truncationCutoff_eventually_one R hR x hx)
 
-private theorem unitTruncationBump_derivative_bound :
+theorem unitTruncationBump_derivative_bound :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x, ‖fderiv ℝ (unitTruncationBump : Space → ℝ) x‖ * ‖x‖ ≤ C :=
   exists_derivative_position_bound _ unitTruncationBump.contDiff
-    unitTruncationBump.hasCompactSupport
+      unitTruncationBump.hasCompactSupport
 
 /-- A fixed finite constant independent of the velocity and cutoff radius. -/
 def truncationEnergyConstant : ℝ := 2 + 1152 * unitTruncationBump_derivative_bound.choose ^ 2

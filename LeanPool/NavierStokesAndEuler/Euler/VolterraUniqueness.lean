@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Uniqueness, initial traces, and genuine positive time budgets for the Volterra construction. -/
 
 @[expose] public section
 
-/-! Uniqueness, initial traces, and genuine positive time budgets for the Volterra construction. -/
 
 noncomputable section
 
@@ -77,7 +80,7 @@ theorem parabolic_mass_continuous (ν : ℝ) :
 
 /-- The actual parabolic kernel has a strictly positive interval satisfying both Picard budgets. -/
 theorem exists_positive_time_budget (ν M L margin Tmax : ℝ) (hmargin : 0 < margin) (hTmax : 0 <
-  Tmax) :
+    Tmax) :
     ∃ T : ℝ, 0 < T ∧ T ≤ Tmax ∧
       (T + 2 * parabolicConstant ν * Real.sqrt T) * M < margin ∧
       (T + 2 * parabolicConstant ν * Real.sqrt T) * L < 1 := by

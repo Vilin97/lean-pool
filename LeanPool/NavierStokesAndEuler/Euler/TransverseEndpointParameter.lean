@@ -7,9 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedEndpoint
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseParameterRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.InitialH1OperatorProduct
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientMap
+import LeanPool.NavierStokesAndEuler.Euler.TransverseParameterRegularity
 
 /-!
 Actual parameter regularity of the nonzero-terminal transverse inverse.
@@ -17,6 +18,9 @@ The initial-zero energy and fixed-coordinate correction depend smoothly on
 the coefficient paths.  An explicit affine coordinate trial implements the
 same terminal coordinate at neighboring labels.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

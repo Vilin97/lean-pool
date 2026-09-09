@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisEvaluation
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.RealDeriv
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Holomorphic parameter extension of the evaluated axis space
@@ -18,6 +16,9 @@ public import Mathlib.Analysis.Complex.RealDeriv
 The extension is the convergent vertical Taylor series of the genuine compatible
 parameter jets. Its Cauchy--Riemann identity follows by termwise differentiation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -171,9 +172,11 @@ theorem complexLinearForm_tsum {u v : ℕ → ℂ} (hu : Summable u) (hv : Summa
 noncomputable def verticalTerm (c : ℕ → ℝ → ℝ) (m : ℕ) (z : ℂ) : ℂ :=
   (c m z.re : ℂ) * ((z.im : ℂ) * Complex.I) ^ m
 
+/-- Vertical X, given by `((m : ℂ) + 1) * verticalTerm (fun n => c (n + 1)) m z`. -/
 noncomputable def verticalX (c : ℕ → ℝ → ℝ) (m : ℕ) (z : ℂ) : ℂ :=
   ((m : ℂ) + 1) * verticalTerm (fun n => c (n + 1)) m z
 
+/-- Vertical Y, with branches according to `m = 0`. -/
 noncomputable def verticalY (c : ℕ → ℝ → ℝ) (m : ℕ) (z : ℂ) : ℂ :=
   if m = 0 then 0 else Complex.I * verticalX c (m - 1) z
 
@@ -337,7 +340,7 @@ theorem verticalExtension_analytic (I : Window) {c : ℕ → ℝ → ℝ} {C a :
   apply DifferentiableOn.analyticOnNhd _ (parameterStrip_isOpen I a)
   intro z hz
   exact (verticalExtension_hasDerivAt I hC ha hderiv hbound
-    hz).differentiableAt.differentiableWithinAt
+      hz).differentiableAt.differentiableWithinAt
 
 theorem verticalExtension_bound {c : ℕ → ℝ → ℝ} {C a : ℝ}
     (hC : 0 ≤ C) (ha : 0 < a) {z : ℂ} (hz : |z.im| ≤ a / 2)
@@ -352,6 +355,7 @@ theorem verticalExtension_bound {c : ℕ → ℝ → ℝ} {C a : ℝ}
 noncomputable def normalizedJet (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k : ℕ) (Y : ℝ)
     (m : ℕ) (x : ℝ) : ℝ := mixedSeries I ε A k m (Y, x) / (m.factorial : ℝ)
 
+/-- Jet constant, given by `geometricMoment (R / 20 / s) k / (1 - s)`. -/
 noncomputable def jetConstant (R s : ℝ) (k : ℕ) : ℝ :=
   geometricMoment (R / 20 / s) k / (1 - s)
 

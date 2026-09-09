@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Genuine linear restriction of smooth coefficient fields, including
 the exact spatial tensors and preservation of actual time derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,24 +29,46 @@ variable {K E F V : Type u} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (F [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (F [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (F →ᵇ (F [×n]→L[ℝ] V)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (F →ᵇ (F [×n]→L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldPrecomp1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldPrecomp2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (F [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldPrecomp3 (n : ℕ) : NormedAddCommGroup (F [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (F [×n]→L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instSmoothTimeFieldPrecomp4 (n : ℕ) : NormedSpace ℝ (F [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldPrecomp5 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldPrecomp6 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (F →ᵇ (F [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldPrecomp7 (n : ℕ) : NormedAddCommGroup (F →ᵇ (F [×n]→L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (F →ᵇ (F [×n]→L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothTimeFieldPrecomp8 (n : ℕ) : NormedSpace ℝ (F →ᵇ (F [×n]→L[ℝ] V)) :=
+    inferInstance
 
+/-- Precomp linear, bundling `field`, `smooth`, `jet`, `jet_eq` and the required compatibility
+proofs. -/
 def precompLinear (A : SmoothTimeField K E V) (L : F →L[ℝ] E) :
     SmoothTimeField K F V where
   field := (BoundedContinuousFunction.compContinuousCLM V ℝ ⟨L,L.continuous⟩).compLeftContinuous ℝ
-    K A.field
+      K A.field
   smooth t := (A.smooth t).comp_continuousLinearMap
   jet n := ((BoundedContinuousFunction.compContinuousCLM (F [×n]→L[ℝ] V) ℝ
-    ⟨L,L.continuous⟩).compLeftContinuous ℝ K)
+      ⟨L,L.continuous⟩).compLeftContinuous ℝ K)
     (mapPath (ContinuousMultilinearMap.compContinuousLinearMapL (F := V) (fun _ : Fin n => L))
-      (A.jet n))
+        (A.jet n))
   jet_eq n t x := by
     change (A.jet n t (L x)).compContinuousLinearMap (fun _ : Fin n => L) =
       iteratedFDeriv ℝ n ((A.field t : E → V) ∘ L) x
@@ -58,7 +81,7 @@ def precompLinear (A : SmoothTimeField K E V) (L : F →L[ℝ] E) :
 @[simp] theorem precompLinear_jet_apply (A : SmoothTimeField K E V) (L : F →L[ℝ] E)
     (n : ℕ) (t : K) (x : F) :
     (A.precompLinear L).jet n t x = (A.jet n t (L x)).compContinuousLinearMap (fun _ : Fin n => L)
-      := rfl
+        := rfl
 
 theorem precompLinear_jet_norm_le (A : SmoothTimeField K E V) (L : F →L[ℝ] E) (n : ℕ) :
     ‖(A.precompLinear L).jet n‖ ≤ ‖A.jet n‖ * ‖L‖^n := by

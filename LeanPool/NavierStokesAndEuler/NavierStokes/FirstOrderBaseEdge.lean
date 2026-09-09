@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GlobalStressSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowFirstOrderEdge
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalHistoryBridge
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedProfileAssembly
-
-@[expose] public section
 
 /-!
 # The first stress coefficient on the terminal collar
@@ -21,6 +18,9 @@ The first coefficient is the canonical primitive of the actual repaired
 residual.  The order-zero moment retained below is essential: exterior
 agreement of velocities alone does not fix the constant of integration.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,13 +49,13 @@ theorem conservative_moments_at {S : Set ℝ} {h C R : ℝ} (s : Scheme S h C)
     SlowStressSupport.moment R 1 (axialHistory s n) eta = 0 ∧
     SlowStressSupport.moment R 2 (angularHistory s n) eta = 0 ∧
     SlowStressSupport.moment R 2 (SlowStressSupport.conv n (axialHistory s) (angularHistory s)) eta
-      = 0 ∧
+        = 0 ∧
     SlowStressSupport.moment R 1
       (fun w => SlowStressSupport.conv n (axialHistory s) (axialHistory s) w + pressureField s n w)
-        eta = 0 := by
+          eta = 0 := by
   have hf : SlowStressSupport.exterior s.B S
       (fun w => SlowStressSupport.conv n (axialHistory s) (axialHistory s) w + pressureField s n w)
-        := by
+          := by
     intro z hz r hr
     dsimp only
     rw [SlowStressSupport.exterior_conv_left (fun j _ => axialHistory_exterior s j) z hz r hr,
@@ -74,9 +74,9 @@ theorem first_angular_balance {S : Set ℝ} {h C R : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial)
     (hR : s.B ≤ R) {eta : ℝ} (heta : eta ∈ S) :
     SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) 1) (R,
-      eta) =
+        eta) =
       SlowStressSupport.moment R 2 (SlowStressSupport.axialOp2 h (SlowStressSupport.orderExponent h
-        0) (angularHistory s 0)) eta / R ^ 2 := by
+          0) (angularHistory s 0)) eta / R ^ 2 := by
   have hRp : 0 < R := s.B_pos.trans_le hR
   have hb := SlowStressSupport.angular_integral_balance s.domain.isOpen
     (fun j _ => fluxHistory_smooth s j) (fun j _ => axialHistory_smooth s j)
@@ -86,11 +86,11 @@ theorem first_angular_balance {S : Set ℝ} {h C R : ℝ} (s : Scheme S h C)
     (fun _ he => (conservative_moments_at s (by decide : 0 < 1) hR he).2.1)
     (fun _ he => (conservative_moments_at s (by decide : 0 < 1) hR he).2.2.1)
     (exterior_mono (SlowStressSupport.exterior_conv_left (fun j _ => axialHistory_exterior s j))
-      hR) heta
+        hR) heta
   have he : ProfileHistories.primitive (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) 1)
-    (R, eta) =
+      (R, eta) =
       SlowStressSupport.moment R 0 (SlowStressSupport.angularDensity h 1 (fluxHistory s)
-        (axialHistory s) (angularHistory s)) eta := by
+          (axialHistory s) (angularHistory s)) eta := by
     apply intervalIntegral.integral_congr
     intro r _
     simp only [pow_zero, one_mul]
@@ -104,10 +104,10 @@ theorem first_axial_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial)
     (hmass : ∀ eta ∈ S, SlowStressSupport.moment s.B 1 (axialHistory s 0) eta = 0) :
     SlowStressSupport.exterior s.B S (SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h
-      (asSlowProfiles s) 1)) := by
+        (asSlowProfiles s) 1)) := by
   have hmoment : ∀ eta ∈ S,
       SlowStressSupport.moment s.B 0 (SlowStressSupport.axialDensity h 1 (fluxHistory s)
-        (axialHistory s) (pressureField s 1)) eta = 0 := by
+          (axialHistory s) (pressureField s 1)) eta = 0 := by
     intro eta heta
     apply SlowStressSupport.axial_integral_zero s.domain.isOpen
       (fun j _ => fluxHistory_smooth s j) (fun j _ => axialHistory_smooth s j)
@@ -119,7 +119,7 @@ theorem first_axial_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     · exact fun _ he => (conservative_moments_zero s (by decide : 0 < 1) he).2.2.2
     · intro z hz
       rw [SlowStressSupport.exterior_conv_left (fun j _ => axialHistory_exterior s j) z hz s.B
-        le_rfl,
+          le_rfl,
         pressureField_exterior s (by decide : 0 < 1) z hz s.B le_rfl, zero_add]
     · exact axialHistory_exterior s 0
     · exact hmass
@@ -134,13 +134,13 @@ theorem first_axial_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
       (SlowStressSupport.exterior_axialOp2 s.domain.isOpen (axialHistory_smooth s 0)
         (axialHistory_exterior s 0) h _ s.domain.denominator)
   have hd : SlowStressSupport.exterior s.B S (SlowResidualMatching.zDensity h (asSlowProfiles s) 1)
-    := by
+      := by
     intro eta heta R hR
     rw [zDensity_eq s hbase (by decide : 0 < 1) ⟨mem_univ R, heta⟩]
     exact hsrc eta heta R hR
   have hm : ∀ eta ∈ S,
       SlowStressSupport.moment s.B 0 (SlowResidualMatching.zDensity h (asSlowProfiles s) 1) eta = 0
-        := by
+          := by
     intro eta heta
     rw [← hmoment eta heta]
     apply intervalIntegral.integral_congr
@@ -174,7 +174,7 @@ theorem physical_angular_germ (F : OutgoingProfile.Profile) {XR cost L : ℝ}
   have heta := TerminalHistoryBridge.eta_mem_interior F.data.h_pos F.data.h_lt_half hqt
   change L < SimilarityProfile.X F.data.h q at hqL
   have he := TerminalHistoryBridge.physicalAngular_eq_terminal F w.radius_pos w.coefficients hqt
-    hqs hqf.le
+      hqs hqf.le
   change SimilarityProfile.q F.data.h q ^ (-CoordinateAlgebra.A F.data.h) *
       E (SimilarityProfile.X F.data.h q, SimilarityProfile.eta F.data.h q) = _
   rw [hmatch _ heta _ hqL.le]
@@ -195,7 +195,7 @@ theorem actual_viscosity_eq_terminal (F : OutgoingProfile.Profile) {XR cost L : 
       -SlowFirstOrderEdge.radialSource (TerminalHistoryBridge.normalization F XR)
         F.data (TerminalHistoryBridge.shift F XR) eta R := by
   obtain ⟨ht, hq, he⟩ := RenormalizedHeatMoment.normalized_coordinates F.data.h_pos
-    F.data.h_lt_half heta
+      F.data.h_lt_half heta
   let p : SimilarityProfile.PhysicalPoint := (eta ^ 2, (R ^ 2 / 2, eta))
   have hqp : SimilarityProfile.q F.data.h p = 1 := hq
   have hep : SimilarityProfile.eta F.data.h p = eta := he
@@ -214,9 +214,9 @@ theorem actual_viscosity_eq_terminal (F : OutgoingProfile.Profile) {XR cost L : 
     exact hz
   have hd := hu.deriv.deriv_eq
   have hv := SlowResidualMatching.normalized_axial_viscosity F.data.h_pos F.data.h_lt_half hG hGE
-    heta hR
+      heta hR
   have hf := SlowFirstOrderEdge.physicalSource_radial_scaled (TerminalHistoryBridge.normalization F
-    XR)
+      XR)
     F.data (TerminalHistoryBridge.shift F XR) (t := eta ^ 2) (z := eta) ht hR
   have hscale : SlowFirstOrderEdge.physicalScale F.data (eta ^ 2) eta = 1 := hq
   have heta' : SlowFirstOrderEdge.physicalEta F.data (eta ^ 2) eta = eta := he
@@ -240,26 +240,26 @@ theorem actual_viscosity_total_zero (F : OutgoingProfile.Profile) {XR cost L : �
     (hreset : ∀ eta ∈ Ioo (-1 : ℝ) 1,
       (∫ X in Ioi (0 : ℝ), Real.sqrt (2 * X) * E (X, eta) - OutgoingDilation.powerH F XR X) =
       ∫ X in Ioi (0 : ℝ), HeatedOutgoing.H F XR w.coefficients (X, eta) - OutgoingDilation.powerH F
-        XR X)
+          XR X)
     {eta : ℝ} (heta : eta ∈ Ioo (-1 : ℝ) 1) :
     IntegrableOn (fun R => R ^ 2 *
       SlowStressSupport.axialOp2 F.data.h (SlowStressSupport.orderExponent F.data.h 0) G (R, eta))
-        (Ioi 0) ∧
+          (Ioi 0) ∧
     (∫ R in Ioi (0 : ℝ), R ^ 2 *
       SlowStressSupport.axialOp2 F.data.h (SlowStressSupport.orderExponent F.data.h 0) G (R, eta))
-        = 0 := by
+          = 0 := by
   obtain ⟨ht, _, _⟩ := RenormalizedHeatMoment.normalized_coordinates F.data.h_pos F.data.h_lt_half
-    heta
+      heta
   have hz := RenormalizedHeatMoment.heated_nominal_axial_viscosity F w F.data.h_lt_half ht L
     hG hGE hmatch hreset eta
   have he : EqOn (fun R => R ^ 2 * deriv (deriv (RenormalizedHeatMoment.uTheta F.data.h E (eta ^ 2)
-    R)) eta)
+      R)) eta)
       (fun R => R ^ 2 * SlowStressSupport.axialOp2 F.data.h
         (SlowStressSupport.orderExponent F.data.h 0) G (R, eta)) (Ioi 0) := by
     intro R hR
     dsimp only
     rw [SlowResidualMatching.normalized_axial_viscosity F.data.h_pos F.data.h_lt_half hG hGE heta
-      hR]
+        hR]
     simp [SlowStressSupport.orderExponent, SlowExpansionResidual.slowOrder,
       PositiveAxisSystem.a, CoordinateAlgebra.A]
   exact ⟨hz.1.congr_fun he measurableSet_Ioi,
@@ -289,12 +289,12 @@ theorem first_angular_eq_backward (F : OutgoingProfile.Profile) {XR cost L C : �
     (hreset : ∀ eta ∈ Ioo (-1 : ℝ) 1,
       (∫ X in Ioi (0 : ℝ), Real.sqrt (2 * X) * E (X, eta) - OutgoingDilation.powerH F XR X) =
       ∫ X in Ioi (0 : ℝ), HeatedOutgoing.H F XR w.coefficients (X, eta) - OutgoingDilation.powerH F
-        XR X)
+          XR X)
     {R eta : ℝ} (hR : s.B ≤ R) (heta : eta ∈ Ioo (-1 : ℝ) 1)
     (hL : L < R ^ 2 / 2)
     (hfull : 1 / 2 < Real.log ((R ^ 2 / 2) / OutgoingDilation.switchRadius F XR) + 1 / 5) :
     SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity F.data.h C (asSlowProfiles s) 1)
-      (R, eta) =
+        (R, eta) =
       SlowFirstOrderEdge.radialStress (TerminalHistoryBridge.normalization F XR)
         F.data (TerminalHistoryBridge.shift F XR) eta R := by
   have hRp : 0 < R := s.B_pos.trans_le hR
@@ -334,9 +334,9 @@ theorem coefficients_stress_eq_window {S : Set ℝ} {h C rho inner : ℝ} {U : S
     (Z0 : ZeroOrderSolved s inner) (hI : Icc (-1 : ℝ) 1 ⊆ S) (n : ℕ)
     {p : ℝ × ℝ} (hX : 0 ≤ p.1) (heta : |p.2| ≤ (commonWindow s hI).inner) :
     (coefficients L B0 Z0 hI).stressTheta n p = SlowResidualMatching.thetaStress h C
-      (asSlowProfiles s) n p ∧
+        (asSlowProfiles s) n p ∧
     (coefficients L B0 Z0 hI).stressAxial n p = SlowResidualMatching.zStress h (asSlowProfiles s) n
-      p := by
+        p := by
   constructor
   · change extendCoreZero _ _ _ p = _
     rw [extendCoreZero_eq _ L.inner_pos _ (fun _ he _ hr => thetaEven_zero L B0 Z0 n hr he) hX heta]
@@ -352,7 +352,7 @@ theorem coefficients_stress_germ {S : Set ℝ} {h C rho inner : ℝ} {U : Set �
     (Z0 : ZeroOrderSolved s inner) (hI : Icc (-1 : ℝ) 1 ⊆ S) (n : ℕ)
     {p : ℝ × ℝ} (hX : 0 < p.1) (heta : |p.2| ≤ 1) :
     (fun q => ((coefficients L B0 Z0 hI).stressTheta n q, (coefficients L B0 Z0 hI).stressAxial n
-      q)) =ᶠ[𝓝 p]
+        q)) =ᶠ[𝓝 p]
       (fun q => (SlowResidualMatching.thetaStress h C (asSlowProfiles s) n q,
         SlowResidualMatching.zStress h (asSlowProfiles s) n q)) := by
   have he : |p.2| < (commonWindow s hI).inner := heta.trans_lt (commonWindow s hI).one_lt_inner
@@ -371,7 +371,7 @@ theorem nominal_angular_zero_eq {R eta : ℝ} (hR : 0 < R) (heta : eta ∈ nomin
     (nominalParameters_domain W) W.axis.normalization_pos.ne' (eta := eta) hR.le
   change angularField W.axis.normalization
       (baseFields (nominalDomain W) W.axis.normalization W.profiles (nominalParameters_domain
-        W)).phi (R, eta) = _
+          W)).phi (R, eta) = _
   exact hh.trans (W.E_eq_sqrt_f (p := (R ^ 2 / 2, eta)) (by positivity)).symm
 
 theorem nominal_axial_mass_zero {eta : ℝ} (heta : eta ∈ nominalParameters W) :
@@ -386,7 +386,7 @@ theorem nominal_axial_mass_zero {eta : ℝ} (heta : eta ∈ nominalParameters W)
   rw [he]
   change PositiveOrderMoments.massHistory
     (baseFields (nominalDomain W) W.axis.normalization W.profiles (nominalParameters_domain
-      W)).axial
+        W)).axial
       (nominalOuterRadius W, eta) = 0
   rw [baseFields_mass _ _ _ _ (nominalOuterRadius_pos W).le heta]
   exact nominal_mass_exterior W (nominalParameters_domain W) eta heta
@@ -466,13 +466,16 @@ theorem iteratedFDeriv_eq_closed_parameter {V : Type*} [NormedAddCommGroup V] [N
   apply hj.closure (hc f hf) (hc g hg)
   simpa only [closure_Ioo (by norm_num : (-1 : ℝ) ≠ 1)] using heta
 
+/-- Terminal amplitude, given by `TerminalHistoryBridge.normalization F W.controls.radius`. -/
 noncomputable def terminalAmplitude {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) :
-  ℝ :=
+    ℝ :=
   TerminalHistoryBridge.normalization F W.controls.radius
 
+/-- Terminal shift, given by `TerminalHistoryBridge.shift F W.controls.radius`. -/
 noncomputable def terminalShift {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : ℝ :=
   TerminalHistoryBridge.shift F W.controls.radius
 
+/-- Terminal inner, given by `Real.exp (terminalShift W + 1)`. -/
 noncomputable def terminalInner {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : ℝ :=
   Real.exp (terminalShift W + 1)
 
@@ -535,7 +538,7 @@ theorem edgeJets_of_interior_equality {F : OutgoingProfile.Profile} (W : Nominal
   rw [iteratedFDeriv_eq_closed_parameter (terminalInner_pos W).le
     (fun _ _ => hf.contDiffAt)
     (fun q hq => ((SlowFirstOrderEdge.stressX_contDiffOn (terminalAmplitude W) F.data
-      (terminalShift W)).contDiffAt
+        (terminalShift W)).contDiffAt
       ((isOpen_lt continuous_const continuous_fst).mem_nhds hq)).prodMk contDiffAt_const)
     he m hpi hp.2]
   exact hb p hp
@@ -584,7 +587,7 @@ theorem moment_axialOp2_congr {S : Set ℝ} (hS : IsOpen S) {f g : SlowStressSup
     have he := hfg z hz
     simp only [SlowStressSupport.axialOp, SlowStressSupport.de, SlowStressSupport.dr,
       ProfileHistories.parameterPartial, ProfileHistories.radialPartial, he.fderiv_eq,
-        he.self_of_nhds]
+          he.self_of_nhds]
   · exact heta
 
 theorem angular_moment_of_baseFields {S : Set ℝ} {h C : ℝ} {D : ProfileHistories.RadialDomain}
@@ -599,7 +602,7 @@ theorem angular_moment_of_baseFields {S : Set ℝ} {h C : ℝ} {D : ProfileHisto
     apply intervalIntegral.integral_congr
     intro r _
     change r ^ 2 * (r / C * (C * P.f (r ^ 2 / 2, eta))) = r * (2 * (r ^ 2 / 2) * P.f (r ^ 2 / 2,
-      eta))
+        eta))
     field_simp
   rw [he]
   apply massHistory_of_composition H P.H hR
@@ -670,10 +673,10 @@ theorem modified_angular_moment_eq
   rw [scheme_angular_moment_zero _ heta, scheme_angular_moment_zero _ (M.subset heta)]
   change SlowStressSupport.moment R 2
       (angularField W.axis.normalization (baseFields (modifiedDomain W Q M) W.axis.normalization Q
-        M.halfPlane).phi) eta =
+          M.halfPlane).phi) eta =
     SlowStressSupport.moment R 2
       (angularField W.axis.normalization (baseFields (nominalDomain W) W.axis.normalization
-        W.profiles
+          W.profiles
         (nominalParameters_domain W)).phi) eta
   rw [angular_moment_of_baseFields _ _ _ W.axis.normalization_pos.ne' hRp heta,
     angular_moment_of_baseFields _ _ _ W.axis.normalization_pos.ne' hRp (M.subset heta)]
@@ -745,11 +748,11 @@ theorem modified_first_theta_eq_nominal
 
 theorem modified_axial_mass_zero {eta : ℝ} (heta : eta ∈ S) :
     SlowStressSupport.moment (modifiedScheme W Q M).B 1 (axialHistory (modifiedScheme W Q M) 0) eta
-      = 0 := by
+        = 0 := by
   have he : SlowStressSupport.moment (modifiedScheme W Q M).B 1 (axialHistory (modifiedScheme W Q
-    M) 0) eta =
+      M) 0) eta =
       PositiveOrderMoments.massHistory (modifiedScheme W Q M).base.axial ((modifiedScheme W Q M).B,
-        eta) := by
+          eta) := by
     apply intervalIntegral.integral_congr
     intro R _
     dsimp only
@@ -806,15 +809,15 @@ theorem first_axial_balance {S : Set ℝ} {h C R : ℝ} (s : Scheme S h C)
     SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h (asSlowProfiles s) 1) (R, eta) =
       SlowStressSupport.moment R 1
         (SlowStressSupport.axialOp2 h (SlowStressSupport.orderExponent h 0) (axialHistory s 0)) eta
-          / R := by
+            / R := by
   have hRp := s.B_pos.trans_le hR
   have haxis : ∀ eta ∈ S, SlowStressSupport.conv 1 (fluxHistory s) (axialHistory s) (0, eta) = 0 :=
-    by
+      by
     intro z hz
     simp only [SlowStressSupport.conv, fluxHistory_axis s _ hz, zero_mul, Finset.sum_const_zero]
   have hflux : ∀ eta ∈ S,
       SlowStressSupport.conv 1 (axialHistory s) (axialHistory s) (R, eta) + pressureField s 1 (R,
-        eta) = 0 := by
+          eta) = 0 := by
     intro z hz
     rw [SlowStressSupport.exterior_conv_left (fun j _ => axialHistory_exterior s j) z hz R hR,
       pressureField_exterior s (by decide : 0 < 1) z hz R hR, zero_add]
@@ -826,10 +829,10 @@ theorem first_axial_balance {S : Set ℝ} {h C R : ℝ} (s : Scheme S h C)
     (fun _ he => (conservative_moments_at s (by decide : 0 < 1) hR he).1)
     (fun _ he => (conservative_moments_at s (by decide : 0 < 1) hR he).2.2.2) hflux heta
   have he : ProfileHistories.primitive (SlowResidualMatching.zDensity h (asSlowProfiles s) 1) (R,
-    eta) =
+      eta) =
       SlowStressSupport.moment R 0
         (SlowStressSupport.axialDensity h 1 (fluxHistory s) (axialHistory s) (pressureField s 1))
-          eta := by
+            eta := by
     apply intervalIntegral.integral_congr
     intro r _
     simp only [pow_zero, one_mul]
@@ -867,12 +870,12 @@ theorem first_stresses_eq_of_leading {S : Set ℝ} {h C C' R eta : ℝ}
     (hu : EqOn (axialHistory s 0) (axialHistory t 0) ((univ : Set ℝ) ×ˢ S))
     (hRs : s.B ≤ R) (hRt : t.B ≤ R) (heta : eta ∈ S) :
     SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) 1) (R,
-      eta) =
+        eta) =
       SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity h C' (asSlowProfiles t) 1) (R,
-        eta) ∧
+          eta) ∧
     SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h (asSlowProfiles s) 1) (R, eta) =
       SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h (asSlowProfiles t) 1) (R, eta) :=
-        by
+          by
   constructor
   · rw [first_angular_balance s hs hRs heta, first_angular_balance t ht hRt heta,
       moment_axialOp2_eq_of_eqOn s.domain.isOpen (angularHistory_smooth s 0)
@@ -930,7 +933,7 @@ end Aligned
 /-- Every ambient derivative tensor of the actual pair agrees with the
 terminal factor on the closed physical parameter interval. -/
 theorem first_pair_jets_of_interior_equality {F : OutgoingProfile.Profile} (W :
-  NominalProfile.Witness F)
+    NominalProfile.Witness F)
     {f : (ℝ × ℝ) → ℝ × ℝ} (hf : ContDiff ℝ ∞ f)
     (he : EqOn f
       (fun p => (SlowFirstOrderEdge.stressX (terminalAmplitude W) F.data (terminalShift W) p, 0))
@@ -938,12 +941,12 @@ theorem first_pair_jets_of_interior_equality {F : OutgoingProfile.Profile} (W :
     (m : ℕ) {p : ℝ × ℝ} (hp : terminalInner W < p.1) (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
     iteratedFDeriv ℝ m f p = iteratedFDeriv ℝ m
       (fun q => (SlowFirstOrderEdge.stressX (terminalAmplitude W) F.data (terminalShift W) q, 0)) p
-        :=
+          :=
   iteratedFDeriv_eq_closed_parameter (terminalInner_pos W).le (fun _ _ => hf.contDiffAt)
     (fun _ hq => ((SlowFirstOrderEdge.stressX_contDiffOn (terminalAmplitude W) F.data
-      (terminalShift W)).contDiffAt
+        (terminalShift W)).contDiffAt
       ((isOpen_lt continuous_const continuous_fst).mem_nhds hq)).prodMk contDiffAt_const) he m hp
-        heta
+          heta
 
 theorem first_pair_zero_right {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     {f : (ℝ × ℝ) → ℝ × ℝ} (hf : ContDiff ℝ ∞ f)
@@ -975,7 +978,7 @@ theorem physical_first_pair {F : OutgoingProfile.Profile} (W : NominalProfile.Wi
         (-CoordinateAlgebra.A F.data.h - 1 / 2 + 2 * F.data.h) •
         f (SimilarityProfile.inner F.data.h (TerminalStress.radiusPoint t r z)) =
       (SlowFirstOrderEdge.physicalStress (terminalAmplitude W) F.data (terminalShift W) t z r, 0)
-        := by
+          := by
   have heta := TerminalHistoryBridge.eta_mem_interior F.data.h_pos F.data.h_lt_half
     (p := TerminalStress.radiusPoint t r z) ht
   rw [he (show SimilarityProfile.inner F.data.h (TerminalStress.radiusPoint t r z) ∈
@@ -990,7 +993,7 @@ theorem nominal_first_jets {F : OutgoingProfile.Profile} (W : NominalProfile.Wit
     iteratedFDeriv ℝ m (BaseResidual.stressPair (nominalCoefficients W) 1) p =
       iteratedFDeriv ℝ m
         (fun q => (SlowFirstOrderEdge.stressX (terminalAmplitude W) F.data (terminalShift W) q, 0))
-          p := by
+            p := by
   have hs := nominalCoefficients_smooth W
   exact first_pair_jets_of_interior_equality W ((hs.stressTheta 1).prodMk (hs.stressAxial 1))
     (nominal_first_pair_eq W) m hp heta

@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldGramGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldGramInverse
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
+import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldGramGevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # The actual source forward generator in uniform space-time coefficient norm
@@ -21,80 +23,119 @@ coefficient (Q*Q)⁻¹Q*. Spatial translation covariance and coefficient estimat
 are proved for these actual fields.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerBoundedFieldForwardGenerator
 
 open Set ContinuousLinearMap EulerBoundedFieldCalculus EulerBoundedFieldGramInverse
   EulerTransverseGramInverse EulerOperatorGevreyCalculus EulerGevrey EulerTimeLpGramGevrey
-  EulerTransverseForwardCoefficientGevrey EulerSmoothLimit EulerMeanCoefficients
+  EulerTransverseForwardCoefficientGevrey
 open scoped BoundedContinuousFunction ContDiff
 
 variable {α K U E : Type*} [TopologicalSpace α] [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-private local instance : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (E →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] U) := inferInstance
-private local instance : NormedAddCommGroup (U →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] U) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ U →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ E →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ E →L[ℝ] U) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ U →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ U →L[ℝ] U) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] U)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] U)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] U)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] U)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator1 : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator2 : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator3 : NormedAddCommGroup (E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator4 : NormedSpace ℝ (E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator5 : NormedAddCommGroup (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator6 : NormedSpace ℝ (U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ U →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator7 : NormedAddCommGroup (α →ᵇ U →L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator8 : NormedSpace ℝ (α →ᵇ U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ E →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator9 : NormedAddCommGroup (α →ᵇ E →L[ℝ] U) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ E →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator10 : NormedSpace ℝ (α →ᵇ E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ U →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator11 : NormedAddCommGroup (α →ᵇ U →L[ℝ] U) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ U →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldForwardGenerator12 : NormedSpace ℝ (α →ᵇ U →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator13 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator14 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] U))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator15 : NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] U)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] U))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator16 : NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] U)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] U))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator17 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] U)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] U))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldForwardGenerator18 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] U)) :=
+    inferInstance
 
 /-- The actual projected-forcing coefficient field. -/
-def leftInversePath (c : ℝ) (hc : 0 < c) (Q : C(K,α →ᵇ U →L[ℝ] E))
-    (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q t x v‖^2) : C(K,α →ᵇ E →L[ℝ] U) :=
+def leftInversePath (c : ℝ) (hc : 0 < c) (Q : C(K, α →ᵇ U →L[ℝ] E))
+    (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) : C(K,α →ᵇ E →L[ℝ] U) :=
   pathCompositionMap (inversePath c hc Q hQ) (pathAdjointMap Q)
 
 /-- The actual ordinary coefficient in source equation (12). -/
-def generatorPath (c : ℝ) (hc : 0 < c) (Q Q₁ : C(K,α →ᵇ U →L[ℝ] E))
-    (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q t x v‖^2) : C(K,α →ᵇ U →L[ℝ] U) :=
+def generatorPath (c : ℝ) (hc : 0 < c) (Q Q₁ : C(K, α →ᵇ U →L[ℝ] E))
+    (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) : C(K,α →ᵇ U →L[ℝ] U) :=
   (-2 : ℝ) • pathCompositionMap (leftInversePath c hc Q hQ) Q₁
 
-@[simp] theorem leftInversePath_apply (c : ℝ) (hc : 0 < c) (Q : C(K,α →ᵇ U →L[ℝ] E))
-    (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q t x v‖^2) (t : K) (x : α) :
+@[simp] theorem leftInversePath_apply (c : ℝ) (hc : 0 < c) (Q : C(K, α →ᵇ U →L[ℝ] E))
+    (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) (t : K) (x : α) :
     leftInversePath c hc Q hQ t x = (gramInverse (Q t x) c hc (hQ t x)).comp (Q t x).adjoint := rfl
 
-@[simp] theorem generatorPath_apply (c : ℝ) (hc : 0 < c) (Q Q₁ : C(K,α →ᵇ U →L[ℝ] E))
-    (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q t x v‖^2) (t : K) (x : α) :
+@[simp] theorem generatorPath_apply (c : ℝ) (hc : 0 < c) (Q Q₁ : C(K, α →ᵇ U →L[ℝ] E))
+    (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) (t : K) (x : α) :
     generatorPath c hc Q Q₁ hQ t x =
       (-2 : ℝ) • (gramInverse (Q t x) c hc (hQ t x)).comp ((Q t x).adjoint.comp (Q₁ t x)) := rfl
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Genuine parameter regularity of the actual projected-forcing coefficient. -/
-theorem leftInversePath_contDiff (c : ℝ) (hc : 0 < c) (Q : P → C(K,α →ᵇ U →L[ℝ] E))
-    (hQ : ∀ y t x v, c*‖v‖^2 ≤ ‖Q y t x v‖^2) {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) :
+theorem leftInversePath_contDiff (c : ℝ) (hc : 0 < c) (Q : P → C(K, α →ᵇ U →L[ℝ] E))
+    (hQ : ∀ y t x v, c * ‖v‖ ^ 2 ≤ ‖Q y t x v‖ ^ 2) {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) :
     ContDiff ℝ n (fun y => leftInversePath c hc (Q y) (hQ y)) :=
   pathComposition_contDiff _ _ (inversePath_contDiff c hc Q hQ hQr) ((pathAdjointMap (α := α) (K :=
-    K) (U := U) (E := E)).contDiff.comp hQr)
+      K) (U := U) (E := E)).contDiff.comp hQr)
 
 /-- Genuine parameter regularity of the actual source generator. -/
-theorem generatorPath_contDiff (c : ℝ) (hc : 0 < c) (Q Q₁ : P → C(K,α →ᵇ U →L[ℝ] E))
-    (hQ : ∀ y t x v, c*‖v‖^2 ≤ ‖Q y t x v‖^2) {n : ℕ∞ω}
+theorem generatorPath_contDiff (c : ℝ) (hc : 0 < c) (Q Q₁ : P → C(K, α →ᵇ U →L[ℝ] E))
+    (hQ : ∀ y t x v, c * ‖v‖ ^ 2 ≤ ‖Q y t x v‖ ^ 2) {n : ℕ∞ω}
     (hQr : ContDiff ℝ n Q) (hQ₁r : ContDiff ℝ n Q₁) :
     ContDiff ℝ n (fun y => generatorPath c hc (Q y) (Q₁ y) (hQ y)) :=
   (pathComposition_contDiff _ Q₁ (leftInversePath_contDiff c hc Q hQ hQr) hQ₁r).const_smul (-2 : ℝ)
 
-variable (Q Q₁ : P → C(K,α →ᵇ U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ y t x v, c*‖v‖^2 ≤ ‖Q y t x v‖^2)
+variable (Q Q₁ : P → C(K, α →ᵇ U →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ y t x v, c * ‖v‖ ^ 2 ≤ ‖Q y t x v‖ ^ 2)
   (hQr : ContDiff ℝ ∞ Q) (hQ₁r : ContDiff ℝ ∞ Q₁)
   (Rc C₀ C₁ Ri : ℝ) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
-  (hRi : 2*gramCost c C₀ 1*(Rc+1) ≤ Ri)
-  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-  (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+  (hRi : 2 * gramCost c C₀ 1 * (Rc + 1) ≤ Ri)
+  (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+  (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
 
 include hQr hRc hC₀ hRi hbQ in
 /-- The projected-forcing coefficient has a polynomial shift-zero amplitude. -/
@@ -110,9 +151,9 @@ theorem leftInversePath_bound (n : ℕ) (x : P) :
   exact pathComposition_bound (fun y => inversePath c hc (Q y) (hQ y))
     (fun y => pathAdjointMap (Q y)) (inversePath_contDiff c hc Q hQ hQr)
     ((pathAdjointMap (α := α) (K := K) (U := U) (E := E)).contDiff.comp hQr) (4*Ri) Ri C₀ hrad hi
-      hC₀ 0 0
+        hC₀ 0 0
     (EulerBoundedFieldGramInverse.inversePath_coefficient_bound Q c hc hQ hQr Rc C₀ hRc hC₀ hbQ Ri
-      hi hRi)
+        hi hRi)
     hbAdj n x
 
 include hQr hQ₁r hRc hC₀ hC₁ hRi hbQ hbQ₁ in

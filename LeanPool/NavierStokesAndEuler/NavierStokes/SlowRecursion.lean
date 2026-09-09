@@ -9,8 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveAxisExistence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisSourceRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BoundaryAxisJets
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Local slow-order recursion from actual lower profiles
@@ -20,6 +20,9 @@ holomorphic parameter dependence. No preconstructed all-order jet family
 is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SlowRecursion
@@ -27,6 +30,7 @@ namespace NavierStokes.SlowRecursion
 open Set Filter
 open scoped Topology ContDiff
 
+/-- Raw: an abbreviation for `ℝ × ℂ → ℂ`. -/
 abbrev Raw := ℝ × ℂ → ℂ
 
 /-- The induction class for actual scalar radial profiles. -/
@@ -44,7 +48,7 @@ theorem Regular.const (R : ℝ) (U : Set ℂ) (c : ℝ) :
 theorem Regular.add {R : ℝ} {U : Set ℂ} {F G : Raw}
     (hF : Regular R U F) (hG : Regular R U G) : Regular R U (F + G) := by
   refine ⟨hF.smooth.add hG.smooth, fun r hr => (hF.holomorphic r hr).add (hG.holomorphic r hr), ?_,
-    ?_⟩
+      ?_⟩
   · intro z hz r hr
     change F (-r, z) + G (-r, z) = F (r, z) + G (r, z)
     rw [hF.even z hz r hr, hG.even z hz r hr]
@@ -55,7 +59,7 @@ theorem Regular.add {R : ℝ} {U : Set ℂ} {F G : Raw}
 theorem Regular.mul {R : ℝ} {U : Set ℂ} {F G : Raw}
     (hF : Regular R U F) (hG : Regular R U G) : Regular R U (F * G) := by
   refine ⟨hF.smooth.mul hG.smooth, fun r hr => (hF.holomorphic r hr).mul (hG.holomorphic r hr), ?_,
-    ?_⟩
+      ?_⟩
   · intro z hz r hr
     change F (-r, z) * G (-r, z) = F (r, z) * G (r, z)
     rw [hF.even z hz r hr, hG.even z hz r hr]
@@ -73,6 +77,8 @@ noncomputable def regularAlgebra (R : ℝ) (U : Set ℂ) : Subalgebra ℝ Raw wh
   mul_mem' := Regular.mul
   algebraMap_mem' := fun r => Regular.const R U r
 
+/-- Axis function: an abbreviation for `↥(regularAlgebra R U) instance {R : ℝ} {U : Set ℂ} :
+CoeFun (AxisFunction R U) (fun _ => Raw) := ⟨fun F => F.1⟩`. -/
 abbrev AxisFunction (R : ℝ) (U : Set ℂ) : Type := ↥(regularAlgebra R U)
 
 instance {R : ℝ} {U : Set ℂ} : CoeFun (AxisFunction R U) (fun _ => Raw) := ⟨fun F => F.1⟩
@@ -92,6 +98,7 @@ theorem AxisFunction.real {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
     {r : ℝ} (hr : r ∈ Ioo (-R) R) {eta : ℝ} (heta : (eta : ℂ) ∈ U) :
     (F (r, (eta : ℂ))).im = 0 := F.2.real r hr eta heta
 
+/-- Real constant, given by `algebraMap ℝ (AxisFunction R U) c`. -/
 noncomputable def realConstant (R : ℝ) (U : Set ℂ) (c : ℝ) : AxisFunction R U :=
   algebraMap ℝ (AxisFunction R U) c
 
@@ -111,6 +118,7 @@ noncomputable def realConstant (R : ℝ) (U : Set ℂ) (c : ℝ) : AxisFunction 
 @[simp] theorem one_apply {R : ℝ} {U : Set ℂ} (p : ℝ × ℂ) :
     (1 : AxisFunction R U) p = 1 := rfl
 
+/-- Squared radius as an element of `AxisFunction R U`. -/
 noncomputable def squaredRadius (R : ℝ) (U : Set ℂ) : AxisFunction R U :=
   ⟨fun p : ℝ × ℂ => ((p.1 ^ 2 : ℝ) : ℂ), {
     smooth := Complex.ofRealCLM.contDiff.comp_contDiffOn (contDiffOn_fst.pow 2)
@@ -118,6 +126,7 @@ noncomputable def squaredRadius (R : ℝ) (U : Set ℂ) : AxisFunction R U :=
     even := fun _ _ _ _ => by simp only [neg_sq]
     real := fun _ _ _ _ => Complex.ofReal_im _ }⟩
 
+/-- Parameter as an element of `AxisFunction R U`. -/
 noncomputable def parameter (R : ℝ) (U : Set ℂ) : AxisFunction R U :=
   ⟨Prod.snd, {
     smooth := contDiffOn_snd
@@ -129,6 +138,7 @@ theorem interval_mono {R S : ℝ} (hSR : S ≤ R) : Ioo (-S) S ⊆ Ioo (-R) R :=
   intro r hr
   exact ⟨lt_of_le_of_lt (neg_le_neg hSR) hr.1, lt_of_lt_of_le hr.2 hSR⟩
 
+/-- Restrict as an element of `AxisFunction S U`. -/
 noncomputable def restrict {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
     (F : AxisFunction R U) : AxisFunction S U :=
   ⟨F, {
@@ -140,6 +150,7 @@ noncomputable def restrict {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
 @[simp] theorem restrict_apply {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
     (F : AxisFunction R U) (p : ℝ × ℂ) : restrict hSR F p = F p := rfl
 
+/-- Inverse as an element of `AxisFunction R U`. -/
 noncomputable def inverse {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
     (hF : ∀ p ∈ Ioo (-R) R ×ˢ U, F p ≠ 0) : AxisFunction R U :=
   ⟨fun p => (F p)⁻¹, {
@@ -157,7 +168,7 @@ theorem im_iteratedDeriv_zero {S : Set ℝ} (hS : IsOpen S) {f : ℝ → ℂ}
   have hm : (iteratedDeriv n f x).im = iteratedDeriv n (fun t => (f t).im) x := by
     simp only [iteratedFDerivWithin_of_isOpen n hS hx,
       ContinuousLinearMap.compContinuousMultilinearMap_coe, Complex.imCLM_apply, Function.comp_def]
-        at hv
+          at hv
     exact hv
   have he : (fun t => (f t).im) =ᶠ[𝓝 x] (fun _ => (0 : ℝ)) := by
     filter_upwards [hS.mem_nhds hx] with t ht
@@ -206,6 +217,7 @@ theorem radialJet_one_real {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
       _ = 0 := by simp
   rw [hz, smul_zero]
 
+/-- Radial derivative as an element of `AxisFunction R U`. -/
 noncomputable def radialDerivative {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
     (F : AxisFunction R U) : AxisFunction R U :=
   ⟨fun p => BoundaryAxisJets.radialJet F 1 p.1 p.2, {
@@ -229,6 +241,7 @@ theorem parameterDerivative_real {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
   rw [he.deriv_eq, deriv_const] at hi
   exact hi.symm
 
+/-- Parameter derivative as an element of `AxisFunction R U`. -/
 noncomputable def parameterDerivative {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
     (F : AxisFunction R U) : AxisFunction R U :=
   ⟨BoundaryAxisJets.complexPartial F, {
@@ -259,6 +272,7 @@ theorem realSymmetrization_real (F : Raw) (r eta : ℝ) :
     realSymmetrization F (r, (eta : ℂ)) = ((F (r, (eta : ℂ))).re : ℂ) := by
   apply Complex.ext <;> simp [realSymmetrization]
 
+/-- Symmetrize as an element of `AxisFunction R U`. -/
 noncomputable def symmetrize {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
     (hconj : ∀ z ∈ U, starRingEnd ℂ z ∈ U) (F : Raw)
     (hs : ContDiffOn ℝ ∞ F (Ioo (-R) R ×ˢ U))
@@ -271,7 +285,7 @@ noncomputable def symmetrize {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
       apply Complex.conjCLE.toContinuousLinearMap.contDiff.comp_contDiffOn
       apply hs.comp
         (contDiff_fst.prodMk (Complex.conjCLE.toContinuousLinearMap.contDiff.comp
-          contDiff_snd)).contDiffOn
+            contDiff_snd)).contDiffOn
       exact fun p hp => ⟨hp.1, hconj p.2 hp.2⟩
     holomorphic := by
       intro r hr
@@ -289,9 +303,11 @@ noncomputable def symmetrize {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
       rw [realSymmetrization_real]
       rfl }⟩
 
+/-- Profile, given by `(F (Real.sqrt p.1, (p.2 : ℂ))).re`. -/
 noncomputable def profile {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
     (p : ℝ × ℝ) : ℝ := (F (Real.sqrt p.1, (p.2 : ℂ))).re
 
+/-- Complex profile, given by `F (Real.sqrt p.1, p.2)`. -/
 noncomputable def complexProfile {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
     (p : ℝ × ℂ) : ℂ := F (Real.sqrt p.1, p.2)
 
@@ -348,10 +364,10 @@ theorem radialDerivative_value {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen
       (SimilarityProfile.partialX (profile F) (X, eta) : ℂ) := by
   have hb := BoundaryAxisJets.axisJet_eq_ordinary_full hR hU F.2.smooth F.2.even 1 hX heta
   have hd := ((profile_contDiffAt hR hU F hX heta).differentiableAt (by
-    simp)).hasFDerivAt.comp_hasDerivAt X
+      simp)).hasFDerivAt.comp_hasDerivAt X
     ((hasDerivAt_id X).prodMk (hasDerivAt_const X eta))
   change HasDerivAt (fun Y => profile F (Y, eta)) (SimilarityProfile.partialX (profile F) (X, eta))
-    X at hd
+      X at hd
   have he : (fun Y => F (Real.sqrt Y, (eta : ℂ))) =ᶠ[𝓝 X]
       (fun Y => (profile F (Y, eta) : ℂ)) := by
     filter_upwards [isOpen_Ioo.mem_nhds hX] with Y hY
@@ -392,7 +408,7 @@ theorem profile_radialDerivative_germ {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU :
     profile (radialDerivative hR hU F) =ᶠ[𝓝 (X, eta)] SimilarityProfile.partialX (profile F) := by
   filter_upwards [(isOpen_Ioo.prod (PositiveAxisExistence.realParameterDomain_isOpen hU)).mem_nhds
     (show (X, eta) ∈ Ioo (0 : ℝ) (R ^ 2) ×ˢ PositiveAxisExistence.realParameterDomain U from ⟨hX,
-      heta⟩)] with p hp
+        heta⟩)] with p hp
   exact profile_radialDerivative hR hU F hp.1 hp.2
 
 theorem profile_parameterDerivative_germ {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
@@ -401,7 +417,7 @@ theorem profile_parameterDerivative_germ {R : ℝ} (hR : 0 < R) {U : Set ℂ} (h
     profile (parameterDerivative hU F) =ᶠ[𝓝 (X, eta)] SimilarityProfile.partialEta (profile F) := by
   filter_upwards [(isOpen_Ioo.prod (PositiveAxisExistence.realParameterDomain_isOpen hU)).mem_nhds
     (show (X, eta) ∈ Ioo (0 : ℝ) (R ^ 2) ×ˢ PositiveAxisExistence.realParameterDomain U from ⟨hX,
-      heta⟩)] with p hp
+        heta⟩)] with p hp
   exact profile_parameterDerivative hR hU F hp.1 hp.2
 
 theorem radialDerivative_twice_value {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
@@ -424,6 +440,7 @@ structure Domain (R : ℝ) (U : Set ℂ) (h : ℝ) : Prop where
 theorem Domain.restrict {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (hS : 0 < S) : Domain S U h := ⟨hS, c.open_set, c.conjugate, c.denominator⟩
 
+/-- Denominator function, given by `1 - realConstant R U (2 * h) * parameter R U ^ 2`. -/
 noncomputable def denominatorFunction (R : ℝ) (U : Set ℂ) (h : ℝ) : AxisFunction R U :=
   1 - realConstant R U (2 * h) * parameter R U ^ 2
 
@@ -431,19 +448,23 @@ theorem denominatorFunction_apply (R : ℝ) (U : Set ℂ) (h : ℝ) (p : ℝ × 
     denominatorFunction R U h p = PositiveAxisSystem.ell (h : ℂ) p.2 := by
   simp [denominatorFunction, parameter, realConstant, PositiveAxisSystem.ell]
 
+/-- Inverse denominator, given by `inverse (denominatorFunction R U h) (fun p hp => by rw
+[denominatorFunction_apply] exact c.denominator p.2 hp.2)`. -/
 noncomputable def inverseDenominator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h) :
     AxisFunction R U :=
   inverse (denominatorFunction R U h) (fun p hp => by
     rw [denominatorFunction_apply]
     exact c.denominator p.2 hp.2)
 
+/-- Time operator as an element of `AxisFunction R U`. -/
 noncomputable def timeOperator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (b : ℝ) (F : AxisFunction R U) : AxisFunction R U :=
   (-realConstant R U b * F + realConstant R U (1 / 2 - h) * parameter R U *
     parameterDerivative c.open_set F + squaredRadius R U * radialDerivative c.positive c.open_set
-      F) *
+        F) *
     inverseDenominator c
 
+/-- Axial operator as an element of `AxisFunction R U`. -/
 noncomputable def axialOperator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (b : ℝ) (F : AxisFunction R U) : AxisFunction R U :=
   (realConstant R U 2 * parameter R U * realConstant R U b * F +
@@ -515,9 +536,9 @@ theorem axialOperator_germ {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (heta : (eta : ℂ) ∈ U) :
     profile (axialOperator c b F) =ᶠ[𝓝 (X, eta)] SimilarityProfile.Z h b (profile F) := by
   filter_upwards [(isOpen_Ioo.prod (PositiveAxisExistence.realParameterDomain_isOpen
-    c.open_set)).mem_nhds
+      c.open_set)).mem_nhds
     (show (X, eta) ∈ Ioo (0 : ℝ) (R ^ 2) ×ˢ PositiveAxisExistence.realParameterDomain U from ⟨hX,
-      heta⟩)] with p hp
+        heta⟩)] with p hp
   exact congrArg Complex.re (axialOperator_value c b F hp.1 hp.2)
 
 theorem axialOperator_twice_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
@@ -536,6 +557,7 @@ theorem axialOperator_twice_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain 
   | empty => simp
   | @insert a s ha ih => simp only [Finset.sum_insert ha, complexProfile_add, ih]
 
+/-- Prior diffusion, with branches according to `n = 0`. -/
 noncomputable def priorDiffusion {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (b : ℝ) (F : ℕ → AxisFunction R U) (n : ℕ) : AxisFunction R U :=
   if n = 0 then 0 else
@@ -552,6 +574,7 @@ theorem priorDiffusion_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h
   · simp only [priorDiffusion, PositiveAxisSystem.precedingDiffusion, ite_eq_right hn]
     exact axialOperator_twice_value c _ _ _ hX heta
 
+/-- Shifted beta diffusion used in slow recursion. -/
 noncomputable def shiftedBetaDiffusion {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (F : ℕ → AxisFunction R U) : ℕ → AxisFunction R U
   | 0 => 0
@@ -567,6 +590,7 @@ theorem shiftedBetaDiffusion_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain
   | zero => rfl
   | succ k => exact axialOperator_twice_value c _ _ _ hX heta
 
+/-- Radial source, constructed using `timeOperator`. -/
 noncomputable def radialSource {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (u beta : ℕ → AxisFunction R U) (k : ℕ) : AxisFunction R U :=
   timeOperator c (AxisSourceRegularity.slowOrder h k - 1) (beta k) +
@@ -601,6 +625,8 @@ theorem radialSource_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     rw [(profile_radialDerivative_germ c.positive c.open_set (beta k) hX heta).fderiv_eq]
     rfl
 
+/-- Previous radial source as an element of `ℕ → AxisFunction R U | 0 => 0 | k + 1 =>
+radialSource c u beta k`. -/
 noncomputable def previousRadialSource {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (u beta : ℕ → AxisFunction R U) : ℕ → AxisFunction R U
   | 0 => 0
@@ -616,25 +642,28 @@ theorem previousRadialSource_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain
   | zero => rfl
   | succ k => exact radialSource_value c u beta k hX heta
 
+/-- Angular source as an element of `AxisFunction R U`. -/
 noncomputable def angularSource {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (phi u beta : ℕ → AxisFunction R U) (n : ℕ) : AxisFunction R U :=
   (∑ i ∈ Finset.range (n - 1),
     (beta (i + 1) * (squaredRadius R U * radialDerivative c.positive c.open_set (phi (n - (i + 1)))
-      +
+        +
       phi (n - (i + 1))) + u (i + 1) *
       axialOperator c (PositiveAxisSystem.angularPower h + PositiveAxisSystem.slowPower h (n - (i +
-        1)))
+          1)))
         (phi (n - (i + 1))))) - priorDiffusion c (PositiveAxisSystem.angularPower h) phi n
 
+/-- Axial source as an element of `AxisFunction R U`. -/
 noncomputable def axialSource {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (u beta : ℕ → AxisFunction R U) (n : ℕ) : AxisFunction R U :=
   (∑ i ∈ Finset.range (n - 1),
     (beta (i + 1) * squaredRadius R U * radialDerivative c.positive c.open_set (u (n - (i + 1))) +
       u (i + 1) * axialOperator c
         (PositiveAxisSystem.axialPower h + PositiveAxisSystem.slowPower h (n - (i + 1))) (u (n - (i
-          + 1))))) -
+            + 1))))) -
     priorDiffusion c (PositiveAxisSystem.axialPower h) u n
 
+/-- Pressure product, given by `∑ i ∈ Finset.range (n - 1), phi (i + 1) * phi (n - (i + 1))`. -/
 noncomputable def pressureProduct {R : ℝ} {U : Set ℂ} (phi : ℕ → AxisFunction R U)
     (n : ℕ) : AxisFunction R U :=
   ∑ i ∈ Finset.range (n - 1), phi (i + 1) * phi (n - (i + 1))
@@ -648,6 +677,7 @@ noncomputable def sourceFunctions {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain 
     angularSource c phi u beta n, axialSource c u beta n, pressureProduct phi n,
     previousRadialSource c u beta n]
 
+/-- Source data, defined pointwise by `complexProfile (sourceFunctions c phi u beta n i)`. -/
 noncomputable def sourceData {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (phi u beta : ℕ → AxisFunction R U) (n : ℕ) : PositiveAxisSystem.CoefficientData :=
   fun i => complexProfile (sourceFunctions c phi u beta n i)
@@ -661,10 +691,10 @@ theorem sourceData_regular {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     have hs' : ContDiffOn ℝ ∞ (fun p : ℝ × ℂ => sourceData c phi u beta n i (p.1 ^ 2, p.2))
         (Ioo (-R) R ×ˢ U) := hs.congr (fun p hp => complexProfile_square _ hp.1 hp.2)
     simpa only [VolterraRegularity.radialDomain, Real.ball_eq_Ioo, sub_self, zero_sub, zero_add]
-      using hs'
+        using hs'
   · intro r hr i
-    have hr' : r ∈ Ioo (-R) R := by simpa [VolterraRegularity.radialDomain, Real.ball_eq_Ioo] using
-      hr
+    have hr' : r ∈ Ioo (-R) R := by
+        simpa [VolterraRegularity.radialDomain, Real.ball_eq_Ioo] using hr
     exact ((sourceFunctions c phi u beta n i).2.holomorphic r hr').congr
       (fun z hz => complexProfile_square _ hr' hz)
 
@@ -672,7 +702,7 @@ theorem sourceData_real {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (phi u beta : ℕ → AxisFunction R U) (n : ℕ) :
     PositiveAxisExistence.RealCompatible R U (sourceData c phi u beta n)
       (PositiveAxisExistence.lowerHistoryData h n (fun j => profile (phi j)) (fun j => profile (u
-        j))
+          j))
         (fun j => profile (beta j)) (AxisSourceRegularity.previousOmegaDivX h
           (fun j => profile (u j)) (fun j => profile (beta j)) n)) := by
   intro X hX eta heta i
@@ -698,7 +728,7 @@ theorem sourceData_real {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
       complexProfile_squaredRadius R U hX.1.le, hd,
       axialOperator_value c _ _ hX heta, priorDiffusion_value c _ _ _ hX heta,
       Complex.ofReal_sub, Complex.ofReal_sum, Complex.ofReal_add, Complex.ofReal_mul,
-        PositiveAxisSystem.actualJet]
+          PositiveAxisSystem.actualJet]
     simp only [hv]
     rfl
   · change complexProfile (axialSource c u beta n) (X, (eta : ℂ)) =
@@ -711,7 +741,7 @@ theorem sourceData_real {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
       complexProfile_squaredRadius R U hX.1.le, hd,
       axialOperator_value c _ _ hX heta, priorDiffusion_value c _ _ _ hX heta,
       Complex.ofReal_sub, Complex.ofReal_sum, Complex.ofReal_add, Complex.ofReal_mul,
-        PositiveAxisSystem.actualJet]
+          PositiveAxisSystem.actualJet]
     simp only [hv]
     rfl
   · change complexProfile (pressureProduct phi n) (X, (eta : ℂ)) =
@@ -719,12 +749,13 @@ theorem sourceData_real {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
         (fun j => profile (beta j)) (AxisSourceRegularity.previousOmegaDivX h
           (fun j => profile (u j)) (fun j => profile (beta j)) n) (X, eta)).pressureProduct : ℂ)
     simp only [pressureProduct, PositiveAxisSystem.actualLowerSource,
-      PositiveAxisSystem.lowerSource,
+        PositiveAxisSystem.lowerSource,
       PositiveAxisSystem.lowerConvolution, complexProfile_sum, complexProfile_mul,
       Complex.ofReal_sum, Complex.ofReal_mul, PositiveAxisSystem.actualJet]
     simp only [hv]
   · exact previousRadialSource_value c u beta n hX heta
 
+/-- Beta operator as an element of `AxisFunction R U`. -/
 noncomputable def betaOperator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (n : ℕ) (u k : AxisFunction R U) : AxisFunction R U :=
   (realConstant R U 2 * parameter R U *
@@ -732,7 +763,7 @@ noncomputable def betaOperator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U
     realConstant R U 2 * parameter R U *
       realConstant R U (PositiveAxisSystem.dScale h + PositiveAxisSystem.slowPower h n) * k -
     (1 - parameter R U ^ 2) * (parameterDerivative c.open_set u + parameterDerivative c.open_set
-      k)) *
+        k)) *
     inverseDenominator c
 
 theorem betaOperator_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
@@ -750,14 +781,17 @@ theorem betaOperator_value {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
   simp only [complexProfile_real c.positive _ ⟨hX.1.le, hX.2⟩ heta]
   rw [div_eq_mul_inv]
 
+/-- Coefficient: an abbreviation for `Fin 5 → AxisFunction R U`. -/
 abbrev Coefficient (R : ℝ) (U : Set ℂ) := Fin 5 → AxisFunction R U
 
+/-- Step raw, constructed using `PositiveAxisExistence.positiveSolution`. -/
 noncomputable def stepRaw {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (hS : 0 < S) (C : ℝ) (n : ℕ) (F : ℕ → Coefficient R U) : VolterraAnalyticBounds.Field :=
   PositiveAxisExistence.positiveSolution hS.le (h : ℂ)
     ((PositiveAxisSystem.slowPower h n : ℝ) : ℂ) (C : ℂ)
     (sourceData c (fun j => F j 0) (fun j => F j 1) (fun j => F j 4) n)
 
+/-- Step component as an element of `AxisFunction S U`. -/
 noncomputable def stepComponent {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
     (hS : 0 < S) (hSR : S < R) (C : ℝ) (n : ℕ) (F : ℕ → Coefficient R U)
     (i : Fin 6) (hi : i.val < 4) : AxisFunction S U := by
@@ -783,7 +817,7 @@ theorem stepComponent_profile {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R 
     (hS : 0 < S) (hSR : S < R) (C : ℝ) (n : ℕ) (F : ℕ → Coefficient R U)
     (i : Fin 6) (hi : i.val < 4) :
     profile (stepComponent c hS hSR C n F i hi) = PositiveAxisExistence.xProfile (stepRaw c hS C n
-      F) i := by
+        F) i := by
   funext p
   change (realSymmetrization (fun q => stepRaw c hS C n F q.1 q.2 i)
     (Real.sqrt p.1, (p.2 : ℂ))).re = _
@@ -798,7 +832,7 @@ theorem stepComponent_axis_zero {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain 
     ((PositiveAxisSystem.slowPower h n : ℝ) : ℂ) (C : ℂ)
     (sourceData_regular c (fun j => F j 0) (fun j => F j 1) (fun j => F j 4) n)
   change (stepRaw c hS C n F 0 z i + starRingEnd ℂ (stepRaw c hS C n F 0 (starRingEnd ℂ z) i)) / 2
-    = 0
+      = 0
   have hz₁ : stepRaw c hS C n F 0 z i = 0 := congrFun (hw.axis_zero z hz) i
   have hz₂ : stepRaw c hS C n F 0 (starRingEnd ℂ z) i = 0 :=
     congrFun (hw.axis_zero _ (c.conjugate z hz)) i
@@ -825,7 +859,7 @@ theorem sourceData_real_smaller {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain 
     (hS : 0 < S) (hSR : S ≤ R) (phi u beta : ℕ → AxisFunction R U) (n : ℕ) :
     PositiveAxisExistence.RealCompatible S U (sourceData c phi u beta n)
       (PositiveAxisExistence.lowerHistoryData h n (fun j => profile (phi j)) (fun j => profile (u
-        j))
+          j))
         (fun j => profile (beta j)) (AxisSourceRegularity.previousOmegaDivX h
           (fun j => profile (u j)) (fun j => profile (beta j)) n)) := by
   intro X hX eta heta i
@@ -848,7 +882,7 @@ theorem step_expanded {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
         (fun j => PositiveAxisSystem.actualJet (profile (F j 1)) (X, eta))
         (fun j => profile (F j 4) (X, eta)))
       (PositiveAxisSystem.actualLowerSource h n (fun j => profile (F j 0)) (fun j => profile (F j
-        1))
+          1))
         (fun j => profile (F j 4)) (AxisSourceRegularity.previousOmegaDivX h
           (fun j => profile (F j 1)) (fun j => profile (F j 4)) n) (X, eta))
       (PositiveAxisSystem.actualJet (profile (step c hS hSR C n F 0)) (X, eta))
@@ -861,20 +895,20 @@ theorem step_expanded {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
   have hrX : r ^ 2 = X := Real.sq_sqrt hX.1.le
   have hd := sourceData_regular c (fun j => F j 0) (fun j => F j 1) (fun j => F j 4) n
   have hreal := sourceData_real_smaller c hS hSR.le (fun j => F j 0) (fun j => F j 1) (fun j => F j
-    4) n
+      4) n
   have he := PositiveAxisExistence.positiveSolution_profiles_system hS hSR c.open_set
     h (PositiveAxisSystem.slowPower h n) C hd hreal hr hr0 heta
   have h0 : profile (step c hS hSR C n F 0) = PositiveAxisExistence.xProfile (stepRaw c hS C n F) 0
-    :=
+      :=
     step_profile c hS hSR C n F 0
   have h1 : profile (step c hS hSR C n F 1) = PositiveAxisExistence.xProfile (stepRaw c hS C n F) 1
-    :=
+      :=
     step_profile c hS hSR C n F 1
   have h2 : profile (step c hS hSR C n F 2) = PositiveAxisExistence.xProfile (stepRaw c hS C n F) 2
-    :=
+      :=
     step_profile c hS hSR C n F 2
   have h3 : profile (step c hS hSR C n F 3) = PositiveAxisExistence.xProfile (stepRaw c hS C n F) 3
-    :=
+      :=
     step_profile c hS hSR C n F 3
   have hsm (i : Fin 5) : ContDiffAt ℝ ∞ (profile (step c hS hSR C n F i)) (r ^ 2, eta) := by
     rw [hrX]
@@ -882,10 +916,10 @@ theorem step_expanded {R S : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U h)
   let G := PositiveAxisExistence.lowerHistoryData h n (fun j => profile (F j 0))
     (fun j => profile (F j 1)) (fun j => profile (F j 4))
     (AxisSourceRegularity.previousOmegaDivX h (fun j => profile (F j 1)) (fun j => profile (F j 4))
-      n)
+        n)
   have he' : PositiveAxisSystem.ProfileSystem h (PositiveAxisSystem.slowPower h n) C r eta
       (PositiveAxisExistence.realBase G (r ^ 2, eta)) (PositiveAxisExistence.realSource G (r ^ 2,
-        eta))
+          eta))
       (profile (step c hS hSR C n F 0)) (profile (step c hS hSR C n F 1))
       (profile (step c hS hSR C n F 2)) (profile (step c hS hSR C n F 3)) := by
     rw [h0, h1, h2, h3]
@@ -909,7 +943,7 @@ theorem betaOperator_axis_zero {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R U
     exact he.deriv_eq.trans (deriv_const z 0)
   change (2 * z * _ * u (0, z) - 2 * z * _ * k (0, z) -
     (1 - z ^ 2) * (parameterDerivative c.open_set u (0, z) + parameterDerivative c.open_set k (0,
-      z))) * _ = 0
+        z))) * _ = 0
   rw [hu z hz, hk z hz, hd u hu, hd k hk]
   ring
 
@@ -939,7 +973,7 @@ theorem radius_pos {core buffer : ℝ} (hcore : 0 < core) (hbuffer : 0 < buffer)
     0 < radius core buffer n := lt_trans hcore (core_lt_radius hbuffer n)
 
 theorem radius_antitone {core buffer : ℝ} (hbuffer : 0 ≤ buffer) : Antitone (radius core buffer) :=
-  by
+    by
   intro m n hmn
   unfold radius
   apply add_le_add_right
@@ -972,11 +1006,12 @@ theorem lowerHistory_apply {core buffer : ℝ} {U : Set ℂ} (hbuffer : 0 < buff
     lowerHistory hbuffer n previous j i p = previous j hj i p := by
   simp only [lowerHistory, dite_eq_left hj, restrict_apply]
 
+/-- Recursion step used in slow recursion. -/
 noncomputable def recursionStep {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)
     (C : ℝ) (base : Coefficient (radius core buffer 0) U) :
     (n : ℕ) → ((j : ℕ) → j < n → Coefficient (radius core buffer j) U) → Coefficient (radius core
-      buffer n) U
+        buffer n) U
   | 0, _ => base
   | n + 1, previous => step (radiusDomain c hcore hbuffer n)
       (radius_pos hcore hbuffer (n + 1)) (radius_succ_lt hbuffer n) C (n + 1)
@@ -1020,7 +1055,7 @@ theorem sequence_profile {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)
     (C : ℝ) (base : Coefficient (radius core buffer 0) U) (n : ℕ) (i : Fin 5) :
     profile (sequence c hcore hbuffer C base n i) = profile (hierarchy c hcore hbuffer C base n i)
-      := rfl
+        := rfl
 
 theorem sequence_zero {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)
@@ -1048,11 +1083,11 @@ theorem previousOmega_congr (h : ℝ) {n : ℕ}
     have hs : (∑ ij ∈ Finset.antidiagonal k,
         (beta ij.1 w * (beta ij.2 w / 2 + w.1 * SimilarityProfile.partialX (beta ij.2) w) +
           u ij.1 w * SimilarityProfile.Z h (AxisSourceRegularity.slowOrder h ij.2 - 1) (beta ij.2)
-            w)) =
+              w)) =
         ∑ ij ∈ Finset.antidiagonal k,
         (beta' ij.1 w * (beta' ij.2 w / 2 + w.1 * SimilarityProfile.partialX (beta' ij.2) w) +
           u' ij.1 w * SimilarityProfile.Z h (AxisSourceRegularity.slowOrder h ij.2 - 1) (beta'
-            ij.2) w) := by
+              ij.2) w) := by
       apply Finset.sum_congr rfl
       intro ij hij
       have hij' := Finset.mem_antidiagonal.mp hij
@@ -1103,7 +1138,7 @@ theorem sequence_expanded {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
         (fun j => PositiveAxisSystem.actualJet (profile (A j 1)) (X, eta))
         (fun j => profile (A j 4) (X, eta)))
       (PositiveAxisSystem.actualLowerSource h n (fun j => profile (A j 0)) (fun j => profile (A j
-        1))
+          1))
         (fun j => profile (A j 4)) (AxisSourceRegularity.previousOmegaDivX h
           (fun j => profile (A j 1)) (fun j => profile (A j 4)) n) (X, eta))
       (PositiveAxisSystem.actualJet (profile (A n 0)) (X, eta))
@@ -1118,7 +1153,7 @@ theorem sequence_expanded {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
   have hO := previousOmega_congr h (fun j hj => hH j hj 1) (fun j hj => hH j hj 4)
   have hS := PositiveAxisSystem.actualLowerSource_congr h
     (AxisSourceRegularity.previousOmegaDivX h (fun j => profile (A j 1)) (fun j => profile (A j 4))
-      (m + 1))
+        (m + 1))
     (fun j hj => hH j hj 0) (fun j hj => hH j hj 1) (fun j hj => hH j hj 4) (X, eta)
   have hB : PositiveAxisSystem.baseAtOrderZero
       (fun j => PositiveAxisSystem.actualJet (profile (H j 0)) (X, eta))
@@ -1149,11 +1184,11 @@ theorem sequence_positive_order {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
       (PositiveAxisSystem.actualJet (profile (A n 2)) (X, eta))
       (PositiveAxisSystem.actualJet (profile (A n 3)) (X, eta))
       (PositiveAxisSystem.precedingDiffusion h (PositiveAxisSystem.angularPower h) (fun j =>
-        profile (A j 0)) n (X, eta))
+          profile (A j 0)) n (X, eta))
       (PositiveAxisSystem.precedingDiffusion h (PositiveAxisSystem.axialPower h) (fun j => profile
-        (A j 1)) n (X, eta))
+          (A j 1)) n (X, eta))
       (AxisSourceRegularity.previousOmegaDivX h (fun j => profile (A j 1)) (fun j => profile (A j
-        4)) n (X, eta)) := by
+          4)) n (X, eta)) := by
   apply (PositiveAxisSystem.expanded_iff_positiveOrder h C eta X hn _ _ _ _ _ _ _ _
     (sequence_beta c hcore hbuffer C base hn hX heta)).mp
   exact sequence_expanded c hcore hbuffer C base hn hX heta
@@ -1205,7 +1240,7 @@ theorem average_from_equation {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen 
       (fun Y hY => ⟨⟨hY.1, lt_of_le_of_lt hY.2 hX.2⟩, heta⟩)
   have hd (F : AxisFunction R U) (Y : ℝ) (hY : Y ∈ Ioo (0 : ℝ) X) :
       HasDerivAt (fun Z => profile F (Z, eta)) (SimilarityProfile.partialX (profile F) (Y, eta)) Y
-        := by
+          := by
     exact ((profile_contDiffAt hR hU F ⟨hY.1, lt_trans hY.2 hX.2⟩ heta).differentiableAt
       (by simp)).hasFDerivAt.comp_hasDerivAt Y ((hasDerivAt_id Y).prodMk (hasDerivAt_const Y eta))
   have hi : IntervalIntegrable (fun Y => profile u (Y, eta)) MeasureTheory.volume 0 X := by
@@ -1223,7 +1258,7 @@ theorem average_from_equation {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen 
       ∫ Y in (0 : ℝ)..X, profile u (Y, eta) := by
     change X • (∫ t in (0 : ℝ)..1, profile u (t * X, eta)) = _
     rw [intervalIntegral.smul_integral_comp_mul_right (f := fun Y => profile u (Y, eta)), zero_mul,
-      one_mul]
+        one_mul]
   rw [he] at hmean
   simp only [id_eq, zero_mul, sub_zero] at hmean
   exact (mul_left_cancel₀ hX.1.ne' hmean)
@@ -1276,7 +1311,7 @@ theorem sequence_mixed_pullback_smooth {core buffer : ℝ} {U : Set ℂ} {h : �
     (C : ℝ) (base : Coefficient (radius core buffer 0) U) (n : ℕ) (i : Fin 5) (k m : ℕ) :
     ContDiffOn ℝ ∞
       (fun p : ℝ × ℂ => BoundaryAxisJets.mixedAxisJet (sequence c hcore hbuffer C base n i) k m
-        (p.1 ^ 2, p.2))
+          (p.1 ^ 2, p.2))
       (Ioo (-core) core ×ˢ U) :=
   BoundaryAxisJets.mixedAxisJet_pullback_contDiffOn_full hcore c.open_set
     (sequence c hcore hbuffer C base n i).2.smooth
@@ -1289,7 +1324,7 @@ theorem sequence_mixed_pullback_holomorphic {core buffer : ℝ} {U : Set ℂ} {h
     {r : ℝ} (hr : r ∈ Ioo (-core) core) :
     DifferentiableOn ℂ
       (fun z => BoundaryAxisJets.mixedAxisJet (sequence c hcore hbuffer C base n i) k m (r ^ 2, z))
-        U :=
+          U :=
   BoundaryAxisJets.mixedAxisJet_pullback_holomorphic_full hcore c.open_set
     (sequence c hcore hbuffer C base n i).2.smooth
     (sequence c hcore hbuffer C base n i).2.holomorphic
@@ -1305,16 +1340,17 @@ def OrderEquations {R : ℝ} {U : Set ℂ} (h C : ℝ) (A : ℕ → Coefficient 
     (PositiveAxisSystem.actualJet (profile (A n 2)) w)
     (PositiveAxisSystem.actualJet (profile (A n 3)) w)
     (PositiveAxisSystem.precedingDiffusion h (PositiveAxisSystem.angularPower h) (fun j => profile
-      (A j 0)) n w)
+        (A j 0)) n w)
     (PositiveAxisSystem.precedingDiffusion h (PositiveAxisSystem.axialPower h) (fun j => profile (A
-      j 1)) n w)
+        j 1)) n w)
     (AxisSourceRegularity.previousOmegaDivX h (fun j => profile (A j 1)) (fun j => profile (A j 4))
-      n w)
+        n w)
 
 /-- A local slow hierarchy is the output, not a hypothesis on the data.
 Its underlying type supplies genuine compatible smooth coefficient functions. -/
 structure LocalHierarchy (R : ℝ) (U : Set ℂ) (h C : ℝ)
     (base : Fin 5 → SimilarityProfile.InnerProfile) where
+  /-- Coefficients of `LocalHierarchy`, of type `ℕ → Coefficient R U`. -/
   coefficients : ℕ → Coefficient R U
   starts : ∀ i, profile (coefficients 0 i) = base i
   zero_axis : ∀ n, 0 < n → ∀ i : Fin 5, ∀ z ∈ U, coefficients n i (0, z) = 0

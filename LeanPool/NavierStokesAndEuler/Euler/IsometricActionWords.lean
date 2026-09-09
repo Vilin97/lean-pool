@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Exact word-norm invariance along a genuine isometric orbit
@@ -20,6 +20,9 @@ independent of the translation parameter, with constant one and no radius
 change. This applies equally to spatial L² and its time-function spaces.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerIsometricAction
@@ -29,9 +32,10 @@ open scoped ContDiff
 
 variable {X E ι : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
-  (τ : X → E →ₗᵢ[ℝ] E) (hadd : ∀ a b u, τ a (τ b u) = τ (a+b) u)
+  (τ : X → E →ₗᵢ[ℝ] E) (hadd : ∀ a b u, τ a (τ b u) = τ (a + b) u)
   (hzero : ∀ u, τ 0 u = u)
 
+/-- Derivative at zero, given by `fderiv ℝ (fun a => τ a u) 0 v`. -/
 def derivativeAtZero (u : E) (v : X) : E := fderiv ℝ (fun a => τ a u) 0 v
 
 include hadd in
@@ -50,6 +54,7 @@ theorem derivativeAtZero_smooth (u : E) (hu : ContDiff ℝ ∞ (fun a => τ a u)
   rw [he]
   exact (hu.fderiv_right (m := ∞) (by simp)).clm_apply contDiff_const
 
+/-- Word at zero, given by `wordDerivative directions (fun a => τ a u) w 0`. -/
 def wordAtZero (directions : ι → X) (u : E) {n : ℕ} (w : Fin n → ι) : E :=
   wordDerivative directions (fun a => τ a u) w 0
 
@@ -78,9 +83,9 @@ theorem wordAtZero_translation (directions : ι → X) (u : E) (hu : ContDiff �
   | succ n ih =>
     have hw : wordAtZero τ directions u w =
         wordAtZero τ directions (derivativeAtZero τ u (directions (w (Fin.last n)))) (Fin.init w)
-          := by
+            := by
       simpa only [Fin.snoc_init_self] using wordAtZero_snoc τ hadd directions u hu (Fin.init w) (w
-        (Fin.last n))
+          (Fin.last n))
     rw [hw,ih _ (derivativeAtZero_smooth τ hadd u hu _) (Fin.init w)]
     have he : directional directions (fun b => τ b u) (w (Fin.last n)) =
         fun b => τ b (derivativeAtZero τ u (directions (w (Fin.last n)))) :=

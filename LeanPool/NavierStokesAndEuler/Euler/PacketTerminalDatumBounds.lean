@@ -8,9 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalDatum
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderCompactBounds
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.GevreyFunctions
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-!
 Actual mixed L² and fixed-Hq bounds for χ₁(y) fδ(θ) ξT.  All constants
@@ -18,6 +20,9 @@ are explicit: the only support factor is the fixed L² mass of the cutoff
 support cylinder.  The one-time conversion from tensor jets to words
 precedes the fixed-radius linear solves.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,8 +34,10 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
   EulerParameterWordGevrey EulerOperatorGevreyCalculus
 open scoped ContDiff
 
+/-- Jet radius, given by `64 + 40 * (δ^2)⁻¹`. -/
 def jetRadius (δ : ℝ) : ℝ := 64 + 40 * (δ^2)⁻¹
 
+/-- Scalar jet cost, given by `3 * (9 / rawBump 0)^3 * (100 * (δ^2)⁻¹)`. -/
 def scalarJetCost (δ : ℝ) : ℝ := 3 * (9 / rawBump 0)^3 * (100 * (δ^2)⁻¹)
 
 theorem jetRadius_nonneg (δ : ℝ) : 0 ≤ jetRadius δ := by
@@ -52,7 +59,7 @@ private theorem cutoffLift_bound (y : Space) (n : ℕ) (a : LiftTangent) :
   rw [L.iteratedFDeriv_comp_right hf a (by simp)]
   rw [iteratedFDeriv_comp_add_left]
   have hn := (iteratedFDeriv ℝ n (fun z : Space => innerCutoff (y+z)) (L
-    a)).norm_compContinuousLinearMap_le
+      a)).norm_compContinuousLinearMap_le
     (fun _ => L)
   simp only [Finset.prod_const,Finset.card_univ,Fintype.card_fin,iteratedFDeriv_comp_add_left] at hn
   have hp : ‖L‖^n ≤ 1 := by
@@ -102,6 +109,7 @@ theorem field_jet_bound {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
   exact hn.trans ((mul_le_mul_of_nonneg_left (scalarField_jet_bound δ hδ hδ1 n x a)
     (norm_nonneg L)).trans_eq (by simp only [L,norm_toSpanSingleton]; ring))
 
+/-- Terminal mass, given by `supportMass period supportSet supportSet_compact`. -/
 def terminalMass : ℝ := supportMass period supportSet supportSet_compact
 
 theorem terminalMass_nonneg : 0 ≤ terminalMass := norm_nonneg _
@@ -113,9 +121,12 @@ theorem terminal_jet_bound {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U
   (compactField δ hδ ξ).translation_gevrey supportSet supportSet_compact (field_support δ ξ)
     (jetRadius δ) (scalarJetCost δ * ‖ξ‖) (fun k x => field_jet_bound δ hδ hδ1 ξ k x 0) n a
 
+/-- Word radius, given by `sobolevCoefficientRadius ι (jetRadius δ)`. -/
 def wordRadius (ι : Type*) [Fintype ι] (δ : ℝ) : ℝ :=
   sobolevCoefficientRadius ι (jetRadius δ)
 
+/-- Word cost, given by `sobolevCoefficientAmplitude ι q (jetRadius δ) (scalarJetCost δ *
+terminalMass)`. -/
 def wordCost (ι : Type*) [Fintype ι] (q : ℕ) (δ : ℝ) : ℝ :=
   sobolevCoefficientAmplitude ι q (jetRadius δ) (scalarJetCost δ * terminalMass)
 

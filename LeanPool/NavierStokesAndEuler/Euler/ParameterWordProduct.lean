@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.JetProductBounds
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Genuine word-sum product estimates
@@ -17,6 +17,9 @@ The binomial convolution is proved directly for the sum over ordered
 directional words. The forcing and solution word sums stay unchanged;
 there is no dimension factor or enlargement of their radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +38,7 @@ variable {P E F G ι : Type*}
 theorem directional_bilinear (directions : ι → P) (B : E →L[ℝ] F →L[ℝ] G)
     (f : P → E) (g : P → F) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) (i : ι) :
     directional directions (fun x => B (f x) (g x)) i =
-      (fun x => B (f x) (directional directions g i x))+
+      (fun x => B (f x) (directional directions g i x)) +
       (fun x => B (directional directions f i x) (g x)) := by
   funext x
   dsimp only [directional]
@@ -71,7 +74,7 @@ theorem wordSum_bilinear_le (directions : ι → P) (B : E →L[ℝ] F →L[ℝ]
       Nat.choose_zero_right, Nat.cast_one, one_mul, Nat.sub_zero]
     exact ((B (f x)).le_opNorm (g x)).trans
       ((mul_le_mul_of_nonneg_right (B.le_opNorm (f x)) (norm_nonneg (g x))).trans_eq (mul_assoc _ _
-        _))
+          _))
   | succ n ih =>
     have hp : ContDiff ℝ ∞ (fun y => B (f y) (g y)) := (B.contDiff.comp hf).clm_apply hg
     rw [wordSum_succ directions _ hp n x]
@@ -86,7 +89,7 @@ theorem wordSum_bilinear_le (directions : ι → P) (B : E →L[ℝ] F →L[ℝ]
         ((B.contDiff.comp hf).clm_apply (directional_contDiff directions g hg i))
         ((B.contDiff.comp (directional_contDiff directions f hf i)).clm_apply hg) n x).trans
       exact (add_le_add (ih f (directional directions g i) hf (directional_contDiff directions g hg
-        i))
+          i))
         (ih (directional directions f i) g (directional_contDiff directions f hf i) hg)).trans_eq
           (mul_add _ _ _).symm
     apply (sum_le_sum (fun i _ => ht i)).trans_eq
@@ -111,6 +114,6 @@ theorem wordSum_clm_apply_le (directions : ι → P) (A : P → E →L[ℝ] F)
   exact h.trans ((mul_le_mul_of_nonneg_right hB
     (sum_nonneg (fun k _ => mul_nonneg (mul_nonneg (Nat.cast_nonneg _)
       (wordSum_nonneg directions A k x)) (wordSum_nonneg directions f (n-k) x)))).trans_eq (one_mul
-        _))
+          _))
 
 end EulerParameterWordGevrey

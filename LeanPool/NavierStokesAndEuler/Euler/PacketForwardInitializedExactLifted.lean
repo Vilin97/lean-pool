@@ -8,13 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedExactLifted
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedResidualEquation
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionChoice
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionParity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionParity
 
 /-! Source budgets and the actual zero-history initialized residual construct exact
 corrected lifted packets at every sufficiently large frequency. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +31,8 @@ variable (M : EulerMeanPacketProvider.Data)
   (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized exact packet, given by `exactPacketOfResidual period Q
+(forwardInitializedApproximationResidual M D hTime δ hδ ξ hs α Cagree N hN k hk)`. -/
 def forwardInitializedExactPacket (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
     (Q : Budget period D.T_pos
@@ -67,7 +70,7 @@ theorem forwardInitialized_exact_lifted_packets_eventually
     (Cagree : SourceCoefficientAgreement M D)
     (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
     (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
-    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1) :
+    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1) :
     ∃ ρ0 C : ℝ, 0 < ρ0 ∧ 0 < C ∧ ∀ᶠ k : ℝ in atTop,
       ∃ (hk : 4 ≤ k) (hn : 1 ≤ truncation k)
         (Q : Budget period D.T_pos
@@ -75,7 +78,7 @@ theorem forwardInitialized_exact_lifted_packets_eventually
         Q.delta=delta (expansion k) ∧ Q.initialRadius=ρ0 ∧ Q.growthCoefficient=C ∧
           Nonempty (ExactLiftedPacket period D.T_pos
             (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree (truncation k) hn k hk)
-              Q) := by
+                Q) := by
   obtain ⟨ρ0,C,hρ,hC,he⟩ := forwardInitialized_correction_budgets_eventually M D hTime
     δ hδ hδ1 ξ hs α hα L NB LM Cagree Ξ hΞ hF hdet
   refine ⟨ρ0,C,hρ,hC,?_⟩

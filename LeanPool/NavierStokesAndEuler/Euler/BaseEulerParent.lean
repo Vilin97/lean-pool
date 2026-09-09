@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowDeformation
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldRestriction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowVolume
 
 /-! The genuine ordinary flow of a smooth divergence-free velocity gives
 the first parent particle data. Its horizon can be shortened by an explicit
 positive amount before applying the uniform flow-jet estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,20 +25,38 @@ open Set MeasureTheory EulerSmoothLimit EulerSmoothBanachFlow
   EulerParentPacketFrames EulerVolterraConvolution EulerTimeIntervalRestriction
 open scoped ContDiff BoundedContinuousFunction
 
-private local instance (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instBaseEulerParent1 (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instBaseEulerParent2 (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to
+shorten typeclass synthesis. -/
+local instance instBaseEulerParent3 (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space))
+    :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instBaseEulerParent4 (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
+    inferInstance
 
+/-- Input data, collecting `T`, `T_pos`, `field`, `derivative`, `time_derivative`, `divergence`
+and their compatibility conditions. -/
 structure Input where
+  /-- Time horizon of `Input`, of type `ℝ`. -/
   T : ℝ
   T_pos : 0 < T
+  /-- Underlying field of `Input`, of type `SmoothTimeField (Icc (0 : ℝ) T) Space Space`. -/
   field : SmoothTimeField (Icc (0 : ℝ) T) Space Space
+  /-- Derivative field of `Input`, of type `SmoothTimeField (Icc (0 : ℝ) T) Space Space`. -/
   derivative : SmoothTimeField (Icc (0 : ℝ) T) Space Space
   time_derivative : SmoothTimeField.TimeDerivative T T_pos.le field derivative
   divergence : ∀ t x, EulerSmoothLimit.divergence (field.field t) x=0
+  /-- Bound parameter of `Input`, of type `ℝ`. -/
   B : ℝ
+  /-- Radius parameter of `Input`, of type `ℝ`. -/
   R : ℝ
   B_nonneg : 0 ≤ B
   R_pos : 0 < R
@@ -48,15 +67,20 @@ namespace Input
 
 variable (I : Input)
 
+/-- Displacement, given by `displacementCoefficient I.T I.T_pos.le I.field I.B I.R I.B_nonneg
+I.R_pos I.small I.bound`. -/
 def displacement : SmoothTimeField (Icc (0 : ℝ) I.T) Space Space :=
   displacementCoefficient I.T I.T_pos.le I.field I.B I.R I.B_nonneg I.R_pos I.small I.bound
 
+/-- Velocity, given by `I.field.compDisplacement I.displacement`. -/
 def velocity : SmoothTimeField (Icc (0 : ℝ) I.T) Space Space :=
   I.field.compDisplacement I.displacement
 
+/-- Acceleration, given by `accelerationCoefficient I.T I.T_pos.le I.field I.B I.R I.B_nonneg
+I.R_pos I.small I.bound I.derivative`. -/
 def acceleration : SmoothTimeField (Icc (0 : ℝ) I.T) Space Space :=
   accelerationCoefficient I.T I.T_pos.le I.field I.B I.R I.B_nonneg I.R_pos I.small I.bound
-    I.derivative
+      I.derivative
 
 @[simp] theorem displacement_apply (t : Icc (0 : ℝ) I.T) (x : Space) :
     I.displacement.field t x=(flowData I.T I.T_pos.le I.field).forward t x-x := rfl
@@ -65,7 +89,7 @@ def acceleration : SmoothTimeField (Icc (0 : ℝ) I.T) Space Space :=
     I.velocity.field t x=velocityFamily I.T I.T_pos.le I.field x t := by
   change I.field.field t (x+I.displacement.field t x)=_
   rw [I.displacement_apply]
-  have he : x+((flowData I.T I.T_pos.le I.field).forward t x-x)=
+  have he : x+((flowData I.T I.T_pos.le I.field).forward t x-x) =
       (flowData I.T I.T_pos.le I.field).forward t x := by abel
   rw [he]
   rfl
@@ -78,7 +102,7 @@ def acceleration : SmoothTimeField (Icc (0 : ℝ) I.T) Space Space :=
 theorem displacement_time : SmoothTimeField.TimeDerivative I.T I.T_pos.le
     I.displacement I.velocity := by
   intro t x
-  have he : (fun s => I.displacement.realField I.T I.T_pos.le s x)=
+  have he : (fun s => I.displacement.realField I.T I.T_pos.le s x) =
       extendPath I.T I.T_pos.le (displacementFamily I.T I.T_pos.le I.field x) := rfl
   rw [he,I.velocity_apply]
   exact displacementFamily_time_derivative I.T I.T_pos.le I.field x t
@@ -86,7 +110,7 @@ theorem displacement_time : SmoothTimeField.TimeDerivative I.T I.T_pos.le
 theorem velocity_time : SmoothTimeField.TimeDerivative I.T I.T_pos.le
     I.velocity I.acceleration := by
   intro t x
-  have he : (fun s => I.velocity.realField I.T I.T_pos.le s x)=
+  have he : (fun s => I.velocity.realField I.T I.T_pos.le s x) =
       extendPath I.T I.T_pos.le (velocityFamily I.T I.T_pos.le I.field x) := by
     funext s
     exact I.velocity_apply (projIcc 0 I.T I.T_pos.le s) x
@@ -104,6 +128,7 @@ theorem displacement_det (t : Icc (0 : ℝ) I.T) (x : Space) :
   rw [deformationCoefficient_apply]
   exact forward_det_one I.T I.T_pos.le I.field I.divergence t x
 
+/-- Parent, bundling `T`, `T_pos`, `ell`, `ell_pos` and the required compatibility proofs. -/
 def parent (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1) : Parent where
   T := I.T
   T_pos := I.T_pos
@@ -127,6 +152,8 @@ theorem parent_position (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   rw [I.displacement_apply]
   abel
 
+/-- Particle inverse, bundling `field`, `left_inverse`, `right_inverse`, `continuous` and the
+required compatibility proofs. -/
 def particleInverse (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1) :
     ParticleInverse (I.parent ell hell hell1) where
   field t x := (flowData I.T I.T_pos.le I.field).backward t x
@@ -143,13 +170,14 @@ def particleInverse (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1) :
 
 theorem parent_velocity (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (t : Icc (0 : ℝ) I.T) (x : Space) :
-    (I.parent ell hell hell1).velocity.field t x=
+    (I.parent ell hell hell1).velocity.field t x =
       I.field.field t ((I.parent ell hell hell1).position t x) := by
   rw [I.parent_position]
   exact I.velocity_apply t x
 
 end Input
 
+/-- Horizon, given by `min T (1/(8*(1+B*R)))`. -/
 def horizon (T B R : ℝ) : ℝ := min T (1/(8*(1+B*R)))
 
 theorem horizon_pos (T B R : ℝ) (hT : 0 < T) (hB : 0 ≤ B) (hR : 0 ≤ R) :
@@ -168,12 +196,14 @@ theorem horizon_small (T B R : ℝ) (hT : 0 < T) (hB : 0 ≤ B) (hR : 0 ≤ R) :
   change horizon T B R*(8*(1+B*R)) ≤ 1 at he
   nlinarith
 
+/-- Of interval, bundling `T`, `T_pos`, `field`, `derivative` and the required compatibility
+proofs. -/
 def ofInterval (T : ℝ) (hT : 0 < T)
     (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) Space Space)
     (htime : SmoothTimeField.TimeDerivative T hT.le A A₁)
-    (hdiv : ∀ t x, EulerSmoothLimit.divergence (A.field t) x=0)
+    (hdiv : ∀ t x, EulerSmoothLimit.divergence (A.field t) x = 0)
     (B R : ℝ) (hB : 0 ≤ B) (hR : 0 < R)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2) : Input where
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2) : Input where
   T := horizon T B R
   T_pos := horizon_pos T B R hT hB hR.le
   field := A.compTime (initialInclusion T (horizon T B R) (horizon_le T B R))

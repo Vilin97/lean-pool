@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitivePolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetricBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetricBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetricBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 
 /-! The polynomial primitive envelope applies to the constructed correction
 coefficients, using only the original deformation and inverse-deformation jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +30,7 @@ open scoped BoundedContinuousFunction
 theorem correction_envelopes (c R C0 C1 CI X : ℝ)
     (hc : 0 < c) (hR : 0 ≤ R) (hC0 : 0 ≤ C0) (hC1 : 0 ≤ C1) (hCI : 0 ≤ CI)
     (hRX : R ≤ X) (hC0X : C0 ≤ X) (hC1X : C1 ≤ X) (hCIX : CI ≤ X)
-    (hci : c⁻¹ ≤ (1+X)^2) :
+    (hci : c⁻¹ ≤ (1 + X) ^ 2) :
     correctionCoefficientRadius R CI ≤ radiusEnvelope X ∧
     correctionPressureEnvelope c R CI ≤ pressureEnvelope X ∧
     correctionMetricEnvelope R CI ≤ metricEnvelope X ∧
@@ -86,6 +89,8 @@ theorem correction_envelopes (c R C0 C1 CI X : ℝ)
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
 
+/-- Correction bounds data, collecting `inverse`, `metric`, `first`, `time`, `radius`,
+`pressure` and their compatibility conditions. -/
 structure CorrectionBounds (Kc : CorrectionCoefficientBudget D P) (X : ℝ) : Prop where
   inverse : D.inverseBound ≤ X
   metric : inverseMetricBound D ≤ X
@@ -101,15 +106,18 @@ theorem CorrectionBounds.mono {Kc : CorrectionCoefficientBudget D P} {X Y : ℝ}
     (h : CorrectionBounds D P Kc X) (hXY : X ≤ Y) : CorrectionBounds D P Kc Y :=
   ⟨h.inverse.trans hXY,h.metric.trans hXY,h.first.trans hXY,h.time.trans hXY,
     h.radius.trans hXY,h.pressure.trans hXY,h.base.trans hXY,h.linear.trans hXY,h.quadratic.trans
-      hXY⟩
+        hXY⟩
 
 variable (R C0 C1 CI : ℝ) (hR : 0 ≤ R) (hC0 : 0 ≤ C0) (hC1 : 0 ≤ C1) (hCI : 0 ≤ CI)
-  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C0*majorant R 0
-    n)
-  (hF1 : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C1*majorant R
-    0 n)
-  (hFI : ∀ n t x, ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤ CI*majorant
-    R 0 n)
+  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C0 * majorant R
+      0
+      n)
+  (hF1 : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C1 * majorant
+      R
+      0 n)
+  (hFI : ∀ n t x, ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤ CI *
+      majorant
+      R 0 n)
 
 include hR hC0 hC1 hCI hF hF1 hFI
 

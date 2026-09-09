@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateJets
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
-public import Mathlib.Tactic.Module
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedResidual
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
 
 /-! Exact coordinate normalization of the actual packet residual.  The
 linear, metric, and derivative-free quadratic coefficients are precisely
 those constructed in `PacketSourceCorrectionCoefficients`. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,21 +28,29 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerCylinderPathProduct
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instPacketCoordinateResidual1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instPacketCoordinateResidual2 : NormedSpace ℝ Space := inferInstance
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : Data U)
 
+/-- Transport, given by `fderiv ℝ (fun y => Z (z.1,y)) z.2 (κ • Z z,⟪D.m₀,Z z⟫_ℝ)`. -/
 def transport (κ : ℝ) (Z : VectorField) (z : Domain) : Space :=
   fderiv ℝ (fun y => Z (z.1,y)) z.2 (κ • Z z,⟪D.m₀,Z z⟫_ℝ)
 
+/-- Algebraic, given by `∑ i : Fin 3, (Z z) i • rawQuadratic D κ i z (Z z)`. -/
 def algebraic (κ : ℝ) (Z : VectorField) (z : Domain) : Space :=
   ∑ i : Fin 3, (Z z) i • rawQuadratic D κ i z (Z z)
 
+/-- Coordinate pressure, given by `k • pressureGradient p z + k^2 • ((pressureJet p z).2
+angleDirection • D.m₀)`. -/
 def coordinatePressure (k : ℝ) (p : ScalarField) (z : Domain) : Space :=
   k • pressureGradient p z + k^2 • ((pressureJet p z).2 angleDirection • D.m₀)
 
+/-- Lifted pressure, given by `κ • pressureGradient p z + (pressureJet p z).2 angleDirection •
+D.m₀`. -/
 def liftedPressure (κ : ℝ) (p : ScalarField) (z : Domain) : Space :=
   κ • pressureGradient p z + (pressureJet p z).2 angleDirection • D.m₀
 
@@ -85,7 +95,7 @@ theorem normalized_pressure (k : ℝ) (p : ScalarField) (z : Domain) :
   module
 
 theorem coordinatePressure_eq_lifted (k : ℝ) (hk : k ≠ 0) (p : ScalarField)
-    (z : Domain) (hp : DifferentiableAt ℝ (fun y => p (z.1,y)) z.2) :
+    (z : Domain) (hp : DifferentiableAt ℝ (fun y => p (z.1, y)) z.2) :
     coordinatePressure D k p z = liftedPressure D k⁻¹ (k^2 • p) z := by
   have hd : fderiv ℝ (fun y => (k^2 • p) (z.1,y)) z.2 =
       k^2 • fderiv ℝ (fun y => p (z.1,y)) z.2 := by

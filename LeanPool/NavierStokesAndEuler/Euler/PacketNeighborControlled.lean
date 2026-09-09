@@ -6,10 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborStability
-public import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBridge
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
+import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborStability
+import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocitySystem
+import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 The normalized physical equations retain the actual neighboring initial
@@ -18,35 +21,38 @@ the third ray coordinate and all denominator bounds follow from the ray
 equation.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
 namespace EulerPacketMovingFrame
 
 open Set Real EulerPacketRay EulerPacketBridge EulerPacketGrowth
-  EulerPacketPerturbation EulerPacketFrameStability EulerPacketExistence
+   EulerPacketFrameStability EulerPacketExistence
 
 theorem ray_controlled_velocity_error_within
     {β Θ T e ε : ℝ} {R A C : ℝ → Fin 3 → Fin 3 → ℝ} {P Q N : ℝ → ℝ}
     (hβ : 0 ≤ β) (hβupper : β ≤ 1) (hΘ : 1 ≤ Θ) (hT0 : 0 < T) (hT : T ≤ Θ)
-    (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e) (hsmall : 10000*e*Θ^5 ≤ 1)
+    (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e) (hsmall : 10000 * e * Θ ^ 5 ≤ 1)
     (hRc : ∀ i j, ContinuousOn (fun t => R t i j) (Icc 0 T))
     (hP : ∀ t ∈ Icc 0 T, HasDerivWithinAt P
-      (R t 0 0*P t+R t 0 1*Q t+R t 0 2*N t) (Icc 0 T) t)
+      (R t 0 0 * P t + R t 0 1 * Q t + R t 0 2 * N t) (Icc 0 T) t)
     (hQ : ∀ t ∈ Icc 0 T, HasDerivWithinAt Q
-      (R t 1 0*P t+R t 1 1*Q t+R t 1 2*N t) (Icc 0 T) t)
+      (R t 1 0 * P t + R t 1 1 * Q t + R t 1 2 * N t) (Icc 0 T) t)
     (hN : ∀ t ∈ Icc 0 T, HasDerivWithinAt N
-      (R t 2 0*P t+R t 2 1*Q t+R t 2 2*N t) (Icc 0 T) t)
-    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j-idealRayEntry β i j| ≤ 4*e)
-    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j-idealVelocityEntry β i j| ≤ 3*e)
+      (R t 2 0 * P t + R t 2 1 * Q t + R t 2 2 * N t) (Icc 0 T) t)
+    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry β i j| ≤ 4 * e)
+    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry β i j| ≤ 3 * e)
     (hCclose : ∀ t ∈ Icc 0 T, ∀ j,
-      |C t 0 j-idealUnprojectedEntry 0 j| ≤ 5*e ∧
-      |C t 1 j-idealUnprojectedEntry 1 j| ≤ 5*e)
-    (hinitial : norm3 (P 0) (Q 0) (N 0-1) ≤ e) :
+      |C t 0 j - idealUnprojectedEntry 0 j| ≤ 5 * e ∧
+      |C t 1 j - idealUnprojectedEntry 1 j| ≤ 5 * e)
+    (hinitial : norm3 (P 0) (Q 0) (N 0 - 1) ≤ e) :
     ∀ t ∈ Icc 0 T,
       (norm3 (P t-β*t^2) (Q t+2*β*t) (N t-1) ≤ 800*e*Θ^5 ∧ 1/2 ≤ N t) ∧
       ∀ U V : ℝ,
-        |velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) U V-idealVelocityFirst β t U V|+
+        |velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) U V-idealVelocityFirst β t U V| +
           |velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) U V+U| ≤
             200000*e*Θ^12*(|U|+|V|) := by
   have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
@@ -87,39 +93,39 @@ theorem ray_controlled_velocity_error_within
 theorem controlled_neighbor_relative_error_within
     {σ Θ T e ε lam : ℝ} {F F₁ G G₁ Z Z₁ U V P Q N : ℝ → ℝ}
     {R A C : ℝ → Fin 3 → Fin 3 → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
     (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e)
-    (hlam : 0 ≤ lam) (hsmall : 8000000*e*Θ^21 ≤ 1)
+    (hlam : 0 ≤ lam) (hsmall : 8000000 * e * Θ ^ 21 ≤ 1)
     (hF : ∀ t, 0 ≤ t → HasDerivAt F (F₁ t) t)
     (hG : ∀ t, 0 ≤ t → HasDerivAt G (G₁ t) t)
-    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*F₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*F t) t)
-    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*G₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*G t) t)
+    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
+    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * G₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * G t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hRc : ∀ i j, ContinuousOn (fun t => R t i j) (Icc 0 T))
     (hAc : ∀ i j, ContinuousOn (fun t => A t i j) (Icc 0 T))
     (hCc : ∀ i j, ContinuousOn (fun t => C t i j) (Icc 0 T))
     (hP : ∀ t ∈ Icc 0 T, HasDerivWithinAt P
-      (R t 0 0*P t+R t 0 1*Q t+R t 0 2*N t) (Icc 0 T) t)
+      (R t 0 0 * P t + R t 0 1 * Q t + R t 0 2 * N t) (Icc 0 T) t)
     (hQ : ∀ t ∈ Icc 0 T, HasDerivWithinAt Q
-      (R t 1 0*P t+R t 1 1*Q t+R t 1 2*N t) (Icc 0 T) t)
+      (R t 1 0 * P t + R t 1 1 * Q t + R t 1 2 * N t) (Icc 0 T) t)
     (hN : ∀ t ∈ Icc 0 T, HasDerivWithinAt N
-      (R t 2 0*P t+R t 2 1*Q t+R t 2 2*N t) (Icc 0 T) t)
+      (R t 2 0 * P t + R t 2 1 * Q t + R t 2 2 * N t) (Icc 0 T) t)
     (hU : ∀ t ∈ Icc 0 T, HasDerivWithinAt U
       (velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivWithinAt V
       (velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
-    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j-idealRayEntry (σ^2) i j| ≤ 4*e)
-    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j-idealVelocityEntry (σ^2) i j| ≤ 3*e)
+    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry (σ ^ 2) i j| ≤ 4 * e)
+    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e)
     (hCclose : ∀ t ∈ Icc 0 T, ∀ j,
-      |C t 0 j-idealUnprojectedEntry 0 j| ≤ 5*e ∧
-      |C t 1 j-idealUnprojectedEntry 1 j| ≤ 5*e)
+      |C t 0 j - idealUnprojectedEntry 0 j| ≤ 5 * e ∧
+      |C t 1 j - idealUnprojectedEntry 1 j| ≤ 5 * e)
     (hZ : ∀ t ∈ Icc 0 T, HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
-    (hrayInitial : norm3 (P 0) (Q 0) (N 0-1) ≤ e)
-    (hvelocityInitial : |V 0-1|+|U 0+lam| ≤ e)
+    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
+    (hrayInitial : norm3 (P 0) (Q 0) (N 0 - 1) ≤ e)
+    (hvelocityInitial : |V 0 - 1| + |U 0 + lam| ≤ e)
     (hZ0 : Z 0 = 1) (hZ₁0 : Z₁ 0 = lam) :
     ∀ t ∈ Icc 0 T,
       |V t-Z t|+|U t+Z₁ t| ≤ 400000000*e*Θ^29*(1+lam)*F t := by
@@ -158,10 +164,11 @@ theorem controlled_neighbor_relative_error_within
     (by rw [hF₁0]) t ht.1).le
   have hh := herror t ht
   rw [hZ0, hZ₁0] at hh
-  have hb := neighbor_initial_error_bound hΘ (show 0 ≤ 200000*e by positivity) hlam hFp
-    hvelocityInitial hh
+  have hb := neighbor_initial_error_bound hΘ (show 0 ≤ 200000*e by
+      positivity) hlam hFp hvelocityInitial hh
   exact hb.trans (mul_le_mul_of_nonneg_right hcoef hFp)
 
+/-- Neighbor stability constant, given by `1000000000*exp 6`. -/
 def neighborStabilityConstant : ℝ := 1000000000*exp 6
 
 theorem neighborStabilityConstant_ge : 1000000000 ≤ neighborStabilityConstant := by
@@ -171,29 +178,29 @@ theorem neighborStabilityConstant_ge : 1000000000 ≤ neighborStabilityConstant 
 
 theorem controlled_neighbor_stage_references_within
     {σ Θ T e ε lam : ℝ} {U V P Q N : ℝ → ℝ} {R A C : ℝ → Fin 3 → Fin 3 → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
     (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e)
-    (hlam : 0 ≤ lam) (hsmall : 1000000*neighborStabilityConstant*e*Θ^40 ≤ 1)
+    (hlam : 0 ≤ lam) (hsmall : 1000000 * neighborStabilityConstant * e * Θ ^ 40 ≤ 1)
     (hRc : ∀ i j, ContinuousOn (fun t => R t i j) (Icc 0 T))
     (hAc : ∀ i j, ContinuousOn (fun t => A t i j) (Icc 0 T))
     (hCc : ∀ i j, ContinuousOn (fun t => C t i j) (Icc 0 T))
     (hP : ∀ t ∈ Icc 0 T, HasDerivWithinAt P
-      (R t 0 0*P t+R t 0 1*Q t+R t 0 2*N t) (Icc 0 T) t)
+      (R t 0 0 * P t + R t 0 1 * Q t + R t 0 2 * N t) (Icc 0 T) t)
     (hQ : ∀ t ∈ Icc 0 T, HasDerivWithinAt Q
-      (R t 1 0*P t+R t 1 1*Q t+R t 1 2*N t) (Icc 0 T) t)
+      (R t 1 0 * P t + R t 1 1 * Q t + R t 1 2 * N t) (Icc 0 T) t)
     (hN : ∀ t ∈ Icc 0 T, HasDerivWithinAt N
-      (R t 2 0*P t+R t 2 1*Q t+R t 2 2*N t) (Icc 0 T) t)
+      (R t 2 0 * P t + R t 2 1 * Q t + R t 2 2 * N t) (Icc 0 T) t)
     (hU : ∀ t ∈ Icc 0 T, HasDerivWithinAt U
       (velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivWithinAt V
       (velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
-    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j-idealRayEntry (σ^2) i j| ≤ 4*e)
-    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j-idealVelocityEntry (σ^2) i j| ≤ 3*e)
+    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry (σ ^ 2) i j| ≤ 4 * e)
+    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e)
     (hCclose : ∀ t ∈ Icc 0 T, ∀ j,
-      |C t 0 j-idealUnprojectedEntry 0 j| ≤ 5*e ∧
-      |C t 1 j-idealUnprojectedEntry 1 j| ≤ 5*e)
-    (hrayInitial : norm3 (P 0) (Q 0) (N 0-1) ≤ e)
-    (hvelocityInitial : |V 0-1|+|U 0+lam| ≤ e) :
+      |C t 0 j - idealUnprojectedEntry 0 j| ≤ 5 * e ∧
+      |C t 1 j - idealUnprojectedEntry 1 j| ≤ 5 * e)
+    (hrayInitial : norm3 (P 0) (Q 0) (N 0 - 1) ≤ e)
+    (hvelocityInitial : |V 0 - 1| + |U 0 + lam| ≤ e) :
     ∃ F F₁ Z Z₁ : ℝ → ℝ,
       F 0 = 1 ∧ F₁ 0 = 0 ∧ Z 0 = 1 ∧ Z₁ 0 = lam ∧
       (∀ t, HasDerivAt F (F₁ t) t) ∧ (∀ t, HasDerivAt Z (Z₁ t) t) ∧
@@ -236,10 +243,12 @@ theorem controlled_neighbor_stage_references_within
     (fun t _ => hF t) (fun t _ => hZ t) (fun t _ => hfluxF t) (fun t _ => hfluxZ t)
     hF0 hF₁0 hZ0 hZ₁0 herror'
   refine ⟨hc.1, ?_, ?_⟩
-  · dsimp [δ] at hc
+  · dsimp [δ]
+      at hc
     unfold neighborStabilityConstant
     nlinarith only [hc.2.1, mul_nonneg (mul_nonneg (exp_pos (6:ℝ)).le he) (pow_nonneg hΘ0 29)]
-  · dsimp [δ] at hc
+  · dsimp [δ]
+      at hc
     unfold neighborStabilityConstant
     nlinarith only [hc.2.2, mul_nonneg (mul_nonneg (exp_pos (6:ℝ)).le he) (pow_nonneg hΘ0 29)]
 

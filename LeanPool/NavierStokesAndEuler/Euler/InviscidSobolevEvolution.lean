@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticSourceLimit
 public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionEquation
+import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivative
+import LeanPool.NavierStokesAndEuler.Euler.QuadraticSourceLimit
+
+/-! Actual finite-order Sobolev time regularity of the inviscid cylinder correction. -/
 
 @[expose] public section
 
-/-! Actual finite-order Sobolev time regularity of the inviscid cylinder correction. -/
 
 noncomputable section
 
@@ -27,17 +28,18 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The inherited Sobolev group structure used for the stronger time equation. -/
 local instance evolutionSobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 /-- The inherited real Sobolev module used for the stronger time equation. -/
 local instance evolutionSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
-/-- A genuine continuous quadratic Sobolev source upgrades the actual L² evolution to an Hq time derivative of the truncated H(q+1) path. -/
+/-- A genuine continuous quadratic Sobolev source upgrades the actual L² evolution to an Hq time
+derivative of the truncated H(q+1) path. -/
 theorem sobolev_hasDerivAt {q : ℕ} (T : ℝ) (hT : 0 ≤ T)
-    (A : Coefficients (Icc (0 : ℝ) T) (SobolevSpace period (q+1)) (SobolevSpace period q))
-    (e : C(Icc (0 : ℝ) T,SobolevSpace period (q+1)))
+    (A : Coefficients (Icc (0 : ℝ) T) (SobolevSpace period (q + 1)) (SobolevSpace period q))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hd : ∀ t (ht : t ∈ Ioo 0 T), HasDerivAt (fun r => value period (extendPath T hT e r))
-      (value period (A.apply ⟨t,ht.1.le,ht.2.le⟩ (e ⟨t,ht.1.le,ht.2.le⟩))) t)
+      (value period (A.apply ⟨t, ht.1.le, ht.2.le⟩ (e ⟨t, ht.1.le, ht.2.le⟩))) t)
     (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => truncateOperator period q (extendPath T hT e r))
       (A.apply ⟨t,ht.1.le,ht.2.le⟩ (e ⟨t,ht.1.le,ht.2.le⟩)) t := by
@@ -56,9 +58,10 @@ theorem sobolev_hasDerivAt {q : ℕ} (T : ℝ) (hT : 0 ≤ T)
     (A.apply (projIcc 0 T hT t) (e (projIcc 0 T hT t))) t at h
   simpa only [projIcc_of_mem hT ⟨ht.1.le,ht.2.le⟩] using h
 
-/-- The actual projected Sobolev source equals the literal non-pressure source and signed coercive pressure already before passing to L². -/
+/-- The actual projected Sobolev source equals the literal non-pressure source and signed coercive
+pressure already before passing to L². -/
 theorem CorrectionData.source_sobolev {q : ℕ} {T : Type*} [TopologicalSpace T]
-    (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T) (e : SobolevSpace period (q+1)) :
+    (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T) (e : SobolevSpace period (q + 1)) :
     (D.coefficients period hq).apply t e = -D.rawSource period hq t e -
       coefficientSobolevOperator period (D.metric.jet t) (D.pressure period hq t e) := by
   apply value_injective period
@@ -68,13 +71,15 @@ theorem CorrectionData.source_sobolev {q : ℕ} {T : Type*} [TopologicalSpace T]
   rw [coefficientSobolevOperator_value]
   exact D.source_value period hq t e
 
-/-- The actual correction equation has its literal signed-pressure time derivative in Hq whenever its continuous H(q+1) path satisfies the constructed L² equation. -/
+/-- The actual correction equation has its literal signed-pressure time derivative in Hq whenever
+its continuous H(q+1) path satisfies the constructed L² equation. -/
 theorem correction_sobolev_hasDerivAt {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period q (Icc (0 : ℝ) T))
-    (e : C(Icc (0 : ℝ) T,SobolevSpace period (q+1)))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hd : ∀ t (ht : t ∈ Ioo 0 T), HasDerivAt (fun r => value period (extendPath T hT e r))
-      (value period ((D.coefficients period hq).apply ⟨t,ht.1.le,ht.2.le⟩ (e ⟨t,ht.1.le,ht.2.le⟩)))
-        t)
+      (value period ((D.coefficients period hq).apply ⟨t, ht.1.le, ht.2.le⟩ (e ⟨t, ht.1.le,
+          ht.2.le⟩)))
+          t)
     (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => truncateOperator period q (extendPath T hT e r))
       (-D.rawSource period hq ⟨t,ht.1.le,ht.2.le⟩ (e ⟨t,ht.1.le,ht.2.le⟩) -

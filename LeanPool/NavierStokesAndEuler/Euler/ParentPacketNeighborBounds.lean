@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketScaledBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationLipschitz
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryLipschitz
 
 /-! The actual source coefficient differences retain a factor ell.
 The stationary history sensitivity is linear in these differences, so
 its computed Lipschitz constant retains that factor as well. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,10 +27,19 @@ open scoped BoundedContinuousFunction
 variable {J V : Type} [TopologicalSpace J] [CompactSpace J]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instParentPacketNeighborBounds1 : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instParentPacketNeighborBounds2 : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instParentPacketNeighborBounds3 : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instParentPacketNeighborBounds4 : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
 
 theorem derivative_norm_le_of_bound (A : SmoothCoefficientPath J V) (C : ℝ) (hC : 0 ≤ C)
     (hb : ∀ t x, ‖iteratedFDeriv ℝ 1 (A.field t : Space → V) x‖ ≤ C) :
@@ -53,13 +64,18 @@ open scoped BoundedContinuousFunction
 
 variable {G : Parent} (L : LabelData G)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m) (S : Set Space) (hS : IsCompact S)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m) (S : Set Space) (hS : IsCompact S)
 
+/-- Frame difference cost, given by `frameAmplitude L.K*coefficientRadius L.K`. -/
 def frameDifferenceCost : ℝ := frameAmplitude L.K*coefficientRadius L.K
+/-- First difference cost, given by `gradientAmplitude L.K*coefficientRadius L.K`. -/
 def firstDifferenceCost : ℝ := gradientAmplitude L.K*coefficientRadius L.K
+/-- Normal difference cost, given by `9*(frameAmplitude L.K)^2*coefficientRadius L.K`. -/
 def normalDifferenceCost : ℝ := 9*(frameAmplitude L.K)^2*coefficientRadius L.K
+/-- Strain difference cost, given by `27*(frameAmplitude L.K)^2*gradientAmplitude
+L.K*coefficientRadius L.K`. -/
 def strainDifferenceCost : ℝ := 27*(frameAmplitude L.K)^2*gradientAmplitude L.K*coefficientRadius
-  L.K
+    L.K
 
 theorem scaled_first_majorant (A : ℝ) :
     A*majorant L.scaledRadius 0 1=(A*coefficientRadius L.K)*G.ell := by
@@ -71,8 +87,8 @@ theorem source_frame_derivative_norm :
   have h0 := frameAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by unfold frameDifferenceCost;
-    positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
+      unfold frameDifferenceCost; positivity)
   intro t x
   have h := coefficient_derivative_bound m R G.frame.toSmoothCoefficientPath 1
     (frameAmplitude L.K*majorant L.scaledRadius 0 1) (L.frame_scaled_bound 1) t x
@@ -81,12 +97,12 @@ theorem source_frame_derivative_norm :
 
 theorem source_first_derivative_norm :
     ‖(G.transverseData m hm R S hS).frameDerivative.derivative.field‖ ≤ L.firstDifferenceCost*G.ell
-      := by
+        := by
   have h0 := gradientAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by unfold firstDifferenceCost;
-    positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
+      unfold firstDifferenceCost; positivity)
   intro t x
   have h := coefficient_derivative_bound m R G.first.toSmoothCoefficientPath 1
     (gradientAmplitude L.K*majorant L.scaledRadius 0 1) (L.first_scaled_bound 1) t x
@@ -97,8 +113,8 @@ theorem source_normal_derivative_norm :
     ‖(G.transverseData m hm R S hS).normal.derivative.field‖ ≤ L.normalDifferenceCost*G.ell := by
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by unfold normalDifferenceCost;
-    positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
+      unfold normalDifferenceCost; positivity)
   intro t x
   have h := normalCoefficient_derivative_bound m G.inverse.toSmoothCoefficientPath hm 1
     ((9*(frameAmplitude L.K)^2)*majorant L.scaledRadius 0 1) (L.inverse_scaled_bound 1) t x
@@ -110,8 +126,8 @@ theorem source_strain_derivative_norm :
   have h0 := gradientAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by unfold strainDifferenceCost;
-    positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
+      unfold strainDifferenceCost; positivity)
   intro t x
   have h := L.strain_scaled_bound 1 t x
   rw [L.scaled_first_majorant] at h
@@ -122,8 +138,8 @@ theorem source_curvature_derivative_norm (H : LowBounds G) :
   have h0 := gradientAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by unfold strainDifferenceCost;
-    positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
+      unfold strainDifferenceCost; positivity)
   intro t x
   have h := L.curvature_scaled_bound 1 t x
   rw [L.scaled_first_majorant] at h
@@ -131,13 +147,14 @@ theorem source_curvature_derivative_norm (H : LowBounds G) :
 
 variable [CompleteSpace U]
 
+/-- History difference scale cost as an element of `ℝ`. -/
 def historyDifferenceScaleCost (H : LowBounds G) : ℝ :=
   let D := G.transverseData m hm R S hS
   let B := G.historyData m hm R S hS H
   historyDifferenceCost G.T D.frameLower ‖D.frame.field‖ ‖D.frameDerivative.field‖
     (G.T*‖D.frameDerivative.field‖+‖D.frame.field‖) (1+G.T^2*‖B.H.field‖)
     (historyTransportCost (D := D)) L.frameDifferenceCost L.firstDifferenceCost
-      L.strainDifferenceCost
+        L.strainDifferenceCost
 
 omit [CompleteSpace U] in
 theorem source_history_derivative_scale (H : LowBounds G) :

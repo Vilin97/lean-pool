@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalProfile
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationContinuation
-
-@[expose] public section
 
 /-!
 # Quantitative bounds for the actual five-row matching debt
@@ -19,6 +16,9 @@ estimated separately.  All parameter derivatives below are actual derivatives
 of the constructed fields and their moment integrals.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -26,8 +26,11 @@ open scoped Topology ContDiff BigOperators
 
 namespace NavierStokes.MatchingDebtBounds
 
+/-- Point: an abbreviation for `ℝ × ℝ`. -/
 abbrev Point := ℝ × ℝ
+/-- Field: an abbreviation for `Point → ℝ`. -/
 abbrev Field := Point → ℝ
+/-- Debt: an abbreviation for `FiveProfileMoments.Debt`. -/
 abbrev Debt := FiveProfileMoments.Debt
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -40,6 +43,7 @@ retractions allow the global smooth integral estimates to be used without
 assuming a global extension as additional data.
 -/
 
+/-- Parameter clamp, given by `eta * (1 - OutgoingSchedule.sigma (20 * (eta ^ 2 - 1) - 1))`. -/
 noncomputable def parameterClamp (eta : ℝ) : ℝ :=
   eta * (1 - OutgoingSchedule.sigma (20 * (eta ^ 2 - 1) - 1))
 
@@ -75,6 +79,7 @@ theorem parameterClamp_eventuallyEq {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1)
   filter_upwards [hn] with x hx
   exact parameterClamp_eq hx.le
 
+/-- Radial clamp, given by `X * OutgoingSchedule.sigma (scale * X + 2)`. -/
 noncomputable def radialClamp (scale X : ℝ) : ℝ :=
   X * OutgoingSchedule.sigma (scale * X + 2)
 
@@ -102,6 +107,7 @@ theorem radialClamp_mem {scale : ℝ} (hscale : 0 < scale) (X : ℝ) :
       dsimp [radialClamp]
       nlinarith
 
+/-- Strip, given by `{p | -20 < scale * p.1 ∧ p.2 ∈ ReferencePath.parameterInterval}`. -/
 noncomputable def strip (scale : ℝ) : Set Point :=
   {p | -20 < scale * p.1 ∧ p.2 ∈ ReferencePath.parameterInterval}
 
@@ -109,8 +115,10 @@ theorem strip_open (scale : ℝ) : IsOpen (strip scale) :=
   (isOpen_lt continuous_const (continuous_const.mul continuous_fst)).inter
     (ReferencePath.parameterInterval_open.preimage continuous_snd)
 
+/-- Extend parameter, given by `g (parameterClamp eta)`. -/
 noncomputable def extendParameter (g : ℝ → ℝ) (eta : ℝ) : ℝ := g (parameterClamp eta)
 
+/-- Extend field, given by `f (radialClamp scale p.1, parameterClamp p.2)`. -/
 noncomputable def extendField (scale : ℝ) (f : Field) (p : Point) : ℝ :=
   f (radialClamp scale p.1, parameterClamp p.2)
 
@@ -120,7 +128,7 @@ theorem extendParameter_smooth {g : ℝ → ℝ}
   apply contDiff_iff_contDiffAt.mpr
   intro eta
   exact (hg.contDiffAt (ReferencePath.parameterInterval_open.mem_nhds (parameterClamp_mem
-    eta))).comp
+      eta))).comp
     eta parameterClamp_smooth.contDiffAt
 
 theorem extendField_smooth {scale : ℝ} (hscale : 0 < scale) {f : Field}
@@ -144,6 +152,7 @@ theorem extendField_slice_eventuallyEq {scale X eta : ℝ} (hscale : 0 < scale)
 
 /-! ## The actual five-row vector and its jets -/
 
+/-- Reset vector as an element of `Debt`. -/
 noncomputable def resetVector (R r b : ℝ) (u f : Field) (Gi A : ℝ → ℝ)
     (eta : ℝ) : Debt :=
   ![ShapeTransition.resetDebtM u Gi r b eta,
@@ -236,15 +245,15 @@ theorem resetVector_congr {R r b eta : ℝ} (hr : 0 ≤ r)
     intro x hx
     simp only [he x (by simpa only [uIcc_of_le hr] using hx)]
   have hrm : ShapeTransition.restoreDebtM Gi₁ r b eta = ShapeTransition.restoreDebtM Gi₂ r b eta :=
-    by
+      by
     simp only [ShapeTransition.restoreDebtM, ShapeTransition.restoreDefect,
-      ShapeTransition.restore, hG]
+        ShapeTransition.restore, hG]
   have hrj : ShapeTransition.restoreDebtJ Gi₁ A r b eta = ShapeTransition.restoreDebtJ Gi₂ A r b
-    eta := by
+      eta := by
     simp only [ShapeTransition.restoreDebtJ, ShapeTransition.restoreDensityJ,
       ShapeTransition.restoreDefect, ShapeTransition.restore, hG]
   have hrs : ShapeTransition.restoreDebtS Gi₁ r b eta = ShapeTransition.restoreDebtS Gi₂ r b eta :=
-    by
+      by
     simp only [ShapeTransition.restoreDebtS, ShapeTransition.restoreDensityS,
       ShapeTransition.restoreDefect, ShapeTransition.restore, hG]
   simp only [resetVector, ShapeTransition.resetDebtM, ShapeTransition.resetDebtI,
@@ -256,13 +265,16 @@ section ActualFields
 variable {F : OutgoingProfile.Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A)
 
+/-- Extended U, given by `ShapeTransition.scaledFamily c.radius (extendField A.scale c.seedU)`. -/
 noncomputable def extendedU : Field :=
   ShapeTransition.scaledFamily c.radius (extendField A.scale c.seedU)
 
+/-- Extended F, constructed using `ShapeTransition.scaledFamily`. -/
 noncomputable def extendedF : Field :=
   ShapeTransition.scaledFamily c.radius (ShapeTransition.shapeField NominalProfile.Xi c.shapeTime
     (extendParameter c.initialShape) (extendField A.scale c.seedF))
 
+/-- Extended debt, constructed using `resetVector`. -/
 noncomputable def extendedDebt : ℝ → Debt :=
   resetVector c.radius c.separation NominalProfile.matchFraction (extendedU c) (extendedF c)
     (extendParameter c.initialAxial) (NominalProfile.idealAmplitude F)
@@ -274,7 +286,7 @@ theorem extendedF_smooth : ContDiff ℝ ∞ (extendedF c) :=
   ShapeTransition.scaledFamily_contDiff c.radius
     (ShapeTransition.shapeField_contDiff NominalProfile.Xi_pos c.shapeTime_pos
       (extendParameter_smooth c.initialShape_smooth) (extendField_smooth A.scale_pos
-        c.seedF_smooth))
+          c.seedF_smooth))
 
 theorem extendedDebt_smooth (hsep : c.separation ≤ Real.exp (-8)) :
     ContDiff ℝ ∞ (extendedDebt c) :=
@@ -291,7 +303,7 @@ theorem extendedDebt_eventuallyEq {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1) :
   · intro x hx
     simp only [extendedU, ShapeTransition.scaledFamily, extendField,
       NominalProfile.Controls.rawU, radialClamp_eq A.scale_pos (mul_nonneg c.radius_pos.le hx.1),
-        he, id_eq]
+          he, id_eq]
   · intro x hx
     simp only [extendedF, ShapeTransition.scaledFamily, ShapeTransition.shapeField,
       extendField, extendParameter, NominalProfile.Controls.rawF, NominalProfile.Controls.shapedF,
@@ -317,7 +329,7 @@ structure SeedJets (N : ℕ) (B K BJ : ℝ) : Prop where
     |iteratedDeriv n c.initialShape eta| ≤ BJ
 
 theorem radius_mul_separation : c.radius * c.separation = NominalProfile.Xi * Real.exp c.shapeTime
-  :=
+    :=
   ShapeTransition.resetRadius_mul_separation _ _ _ _
     (mul_pos A.normalization_pos F.data.core.P_pos).ne'
 
@@ -326,7 +338,7 @@ theorem extendedU_jets {N : ℕ} {B K BJ : ℝ} (hj : SeedJets c N B K BJ)
     |iteratedDeriv n (fun e => extendedU c (x, e)) eta| ≤ B := by
   change |iteratedDeriv n (fun e => extendField A.scale c.seedU (c.radius * x, e)) eta| ≤ B
   rw [(extendField_slice_eventuallyEq A.scale_pos (mul_nonneg c.radius_pos.le hx) hη
-    c.seedU).iteratedDeriv_eq n]
+      c.seedU).iteratedDeriv_eq n]
   exact hj.axial _ (mul_nonneg c.radius_pos.le hx) eta hη n hn
 
 theorem extendedF_jets {N : ℕ} {B K BJ : ℝ} (hj : SeedJets c N B K BJ)
@@ -401,6 +413,8 @@ end ActualFields
 
 /-! ## A finite-order budget, with separate vanishing and drift terms -/
 
+/-- Vanishing sum, given by `∑ n ∈ Finset.range (N + 1), |ShapeTransition.vanishingDebtBound n B
+K L BG KA (ShapeTransition.separation T C P) C|`. -/
 noncomputable def vanishingSum (N : ℕ) (B K L BG KA T P C : ℝ) : ℝ :=
   ∑ n ∈ Finset.range (N + 1),
     |ShapeTransition.vanishingDebtBound n B K L BG KA (ShapeTransition.separation T C P) C|
@@ -415,7 +429,7 @@ theorem vanishing_le_sum {N n : ℕ} (hn : n ≤ N) (B K L BG KA T P C : ℝ) :
   apply (le_abs_self _).trans
   exact Finset.single_le_sum
     (f := fun n => |ShapeTransition.vanishingDebtBound n B K L BG KA (ShapeTransition.separation T
-      C P) C|)
+        C P) C|)
     (fun _ _ => abs_nonneg _)
     (Finset.mem_range.mpr (Nat.lt_succ_of_le hn))
 
@@ -426,6 +440,7 @@ theorem vanishingSum_tendsto (N : ℕ) (B K L BG KA T : ℝ) {P : ℝ} (hP : P �
   unfold vanishingSum
   simpa only [abs_zero, Finset.sum_const_zero] using h
 
+/-- Drift factor, given by `1 + 2 * (2 ^ N * KA) + 2 ^ N * (1 + 2 * BG)`. -/
 noncomputable def driftFactor (N : ℕ) (BG KA : ℝ) : ℝ :=
   1 + 2 * (2 ^ N * KA) + 2 ^ N * (1 + 2 * BG)
 
@@ -442,7 +457,7 @@ theorem restoration_le_linear {N n : ℕ} (hn : n ≤ N) {BG KA delta : ℝ}
 theorem compact_scalar_jets {g : ℝ → ℝ} (hg : ContDiff ℝ ∞ g) (N : ℕ) :
     ∃ B : ℝ, 1 ≤ B ∧ ∀ eta ∈ Icc (-1 : ℝ) 1, ∀ n ≤ N, |iteratedDeriv n g eta| ≤ B := by
   obtain ⟨B, hB, hb⟩ := FiveProfileMoments.compact_global_jet_bound (Icc (-1 : ℝ) 1) isCompact_Icc
-    hg N
+      hg N
   refine ⟨max B 1, le_max_right _ _, ?_⟩
   intro eta hη n hn
   have h := hb n hn eta hη
@@ -452,13 +467,17 @@ theorem compact_scalar_jets {g : ℝ → ℝ} (hg : ContDiff ℝ ∞ g) (N : ℕ
 /-- These constants depend only on the already fixed outgoing witness and
 the requested finite order.  In particular they precede `j`, `Λ`, and `C`. -/
 structure FixedBounds (F : OutgoingProfile.Profile) (N : ℕ) where
+  /-- Normalizer of `FixedBounds`, of type `ℝ`. -/
   normalizer : ℝ
   normalizer_pos : 0 < normalizer
   normalize : ∀ d : ℝ → Debt, ContDiff ℝ ∞ d → ∀ D : ℝ, 0 ≤ D →
     JetBounds.FiniteJetBound N d (Icc (-1 : ℝ) 1) D →
     JetBounds.FiniteJetBound N (NominalProfile.normalizedDebt F d) (Icc (-1 : ℝ) 1) (normalizer * D)
+  /-- Axial of `FixedBounds`, of type `ℝ`. -/
   axial : ℝ
+  /-- Angular of `FixedBounds`, of type `ℝ`. -/
   angular : ℝ
+  /-- Logarithm of `FixedBounds`, of type `ℝ`. -/
   logarithm : ℝ
   axial_one : 1 ≤ axial
   angular_one : 1 ≤ angular
@@ -480,9 +499,11 @@ theorem fixedBounds_exists (F : OutgoingProfile.Profile) (N : ℕ) : Nonempty (F
   obtain ⟨BJ, hBJ, hJ⟩ := compact_scalar_jets ShapeTransition.logShape_contDiff N
   exact ⟨⟨K, hK, hnorm, BG, KA, BJ, hBG, hKA, hBJ, hG, hA, hJ⟩⟩
 
+/-- Fixed bounds, given by `Classical.choice (fixedBounds_exists F N)`. -/
 noncomputable def fixedBounds (F : OutgoingProfile.Profile) (N : ℕ) : FixedBounds F N :=
   Classical.choice (fixedBounds_exists F N)
 
+/-- Prefix budget, constructed using `vanishingSum`. -/
 noncomputable def prefixBudget {F : OutgoingProfile.Profile} {N : ℕ} (q : FixedBounds F N)
     (B K BJ T C : ℝ) : ℝ :=
   vanishingSum N B (ShapeTransition.shapeJetConstant N NominalProfile.Xi T BJ K)
@@ -506,10 +527,10 @@ theorem normalized_actual_debt_bound {F : OutgoingProfile.Profile} {A : NominalP
       (q.normalizer * (prefixBudget q B K BJ c.shapeTime A.normalization +
         delta * driftFactor N q.axial q.angular)) := by
   let D := prefixBudget q B K BJ c.shapeTime A.normalization + delta * driftFactor N q.axial
-    q.angular
+      q.angular
   have hD : 0 ≤ D := add_nonneg (prefixBudget_nonneg q _ _ _ _ _)
     (mul_nonneg hd (driftFactor_pos N (zero_le_one.trans q.axial_one) (zero_le_one.trans
-      q.angular_one)).le)
+        q.angular_one)).le)
   have hraw : JetBounds.FiniteJetBound N (fun e => -extendedDebt c e) (Icc (-1 : ℝ) 1) D := by
     intro n hn eta hη
     rw [norm_iteratedFDeriv_eq_norm_iteratedDeriv, iteratedDeriv_fun_neg, norm_neg,
@@ -520,7 +541,7 @@ theorem normalized_actual_debt_bound {F : OutgoingProfile.Profile} {A : NominalP
       q.axial_jets q.angular_jets hdef hn hη).trans
     exact add_le_add (vanishing_le_sum hn _ _ _ _ _ _ _ _)
       (restoration_le_linear hn (zero_le_one.trans q.axial_one) (zero_le_one.trans q.angular_one)
-        hd hd1)
+          hd hd1)
   have hnorm := q.normalize (fun e => -extendedDebt c e) (extendedDebt_smooth c hsep).neg D hD hraw
   intro n hn eta hη
   have he : NominalProfile.normalizedDebt F c.debt =ᶠ[𝓝 eta]
@@ -531,6 +552,8 @@ theorem normalized_actual_debt_bound {F : OutgoingProfile.Profile} {A : NominalP
     ← norm_iteratedFDeriv_eq_norm_iteratedDeriv]
   exact hnorm n hn eta hη
 
+/-- Small control, given by `c.reference.SmallLogControl (Icc (-1 : ℝ) 1) N eps c.activationTime
+c.kappa c.axialWidth c.angularWidth`. -/
 noncomputable def SmallControl {F : OutgoingProfile.Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (N : ℕ) (eps : ℝ) : Prop :=
   c.reference.SmallLogControl (Icc (-1 : ℝ) 1) N eps
@@ -555,11 +578,13 @@ theorem actual_endpoint_drift {F : OutgoingProfile.Profile} {A : NominalProfile.
     {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1) {n : ℕ} (hn : n ≤ N) :
     |iteratedDeriv n (fun e => c.initialAxial e - 4 * e) eta| ≤
       ReferenceJetBounds.jetConstant A.preparation.inputs.coefficients 0 n / A.scale + eps + |A.j|
-        :=
+          :=
   TransitionRamp.endpointU_four_eta_jet_bound A.preparation.inputs A.scale_pos A.small
     F.axisDatum_contDiff A.natural.profile c.referenceWidth_pos c.referenceWidth_small
     c.reference_before_big.le hc hn hη
 
+/-- Drift budget, given by `min 1 (rho / (4 * (q.normalizer * driftFactor N q.axial
+q.angular)))`. -/
 noncomputable def driftBudget {F : OutgoingProfile.Profile} {N : ℕ}
     (q : FixedBounds F N) (rho : ℝ) : ℝ :=
   min 1 (rho / (4 * (q.normalizer * driftFactor N q.axial q.angular)))
@@ -582,7 +607,7 @@ theorem driftBudget_weighted {F : OutgoingProfile.Profile} {N : ℕ}
   nlinarith
 
 theorem normalized_debt_small_of_budgets {F : OutgoingProfile.Profile} {A :
-  NominalProfile.AxisStage F}
+    NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) {N : ℕ} (q : FixedBounds F N) {B K BJ rho : ℝ}
     (hj : SeedJets c N B K BJ) (hB : 0 ≤ B) (hK : 0 ≤ K) (hBJ : 1 ≤ BJ)
     (hqJ : q.logarithm ≤ BJ) (hrho : 0 < rho)
@@ -601,6 +626,7 @@ theorem normalized_debt_small_of_budgets {F : OutgoingProfile.Profile} {A :
   intro n hn eta hη
   exact (hb n hn eta hη).trans_lt (by nlinarith)
 
+/-- Matching bounds data, collecting `separation`, `normalized_jets`, `shape_slope`. -/
 structure MatchingBounds {F : OutgoingProfile.Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (N : ℕ) (rho : ℝ) : Prop where
   separation : c.separation < Real.exp (-8)
@@ -622,7 +648,7 @@ theorem MatchingBounds.smallDebt {F : OutgoingProfile.Profile} {A : NominalProfi
 
 theorem MatchingBounds.of_heq {F : OutgoingProfile.Profile}
     {A B : NominalProfile.AxisStage F} {c : NominalProfile.Controls A} {d : NominalProfile.Controls
-      B}
+        B}
     {N : ℕ} {rho : ℝ} (hb : MatchingBounds c N rho) (hA : B = A) (hc : HEq d c) :
     MatchingBounds d N rho := by
   cases hA
@@ -631,7 +657,7 @@ theorem MatchingBounds.of_heq {F : OutgoingProfile.Profile}
 
 theorem shapeTime_eq_of_heq {F : OutgoingProfile.Profile}
     {A B : NominalProfile.AxisStage F} {c : NominalProfile.Controls A} {d : NominalProfile.Controls
-      B}
+        B}
     (hA : B = A) (hc : HEq d c) : d.shapeTime = c.shapeTime := by
   cases hA
   cases hc
@@ -689,7 +715,7 @@ theorem exists_ordered_matching_threshold (F : OutgoingProfile.Profile) (N : ℕ
           ∀ C : ℝ, ∀ hClarge : NaturalEntrance.entranceNormalization prep.inputs Λ prep.delta ≤ C,
           C0 ≤ C → ∀ E : NaturalEntrance.EntranceProfile prep.inputs Λ C,
           ∀ c : NominalProfile.Controls (NominalProfile.AxisStage.ofEntrance hj prep Λ C hΛlarge
-            hClarge E),
+              hClarge E),
           c.shapeTime = T → SmallControl c N eps → MatchingBounds c N rho := by
   let q := fixedBounds F N
   let delta := driftBudget q rho
@@ -739,7 +765,7 @@ theorem exists_ordered_matching_threshold (F : OutgoingProfile.Profile) (N : ℕ
   have hCpos : 0 < C := zero_lt_one.trans_le hC1
   have hlarge := hmin C ((le_max_right _ _).trans hC0)
   have hfields := hseed C hCpos E.profile c.referenceWidth c.referenceWidth_pos
-    c.referenceWidth_small
+      c.referenceWidth_small
     c.activationTime c.kappa c.axialWidth c.angularWidth c.before_big c.axialWidth_pos
     c.angularWidth_pos (hc.mono heps1)
   have hsj : SeedJets c N B K BJ := by
@@ -817,7 +843,7 @@ theorem exists_ordered_matching_continuation (F : OutgoingProfile.Profile) (N : 
   intro C hC0
   have hCm : Cmatch ≤ C := (le_max_left _ _).trans hC0
   have hClarge : NaturalEntrance.entranceNormalization prep.inputs Λ prep.delta ≤ C := hCnorm.trans
-    hCm
+      hCm
   obtain ⟨E, hE⟩ := hcontinueC C ((le_max_right _ _).trans hC0)
   refine ⟨hΛlarge, hClarge, E, ?_⟩
   intro J epsilon hepsilon

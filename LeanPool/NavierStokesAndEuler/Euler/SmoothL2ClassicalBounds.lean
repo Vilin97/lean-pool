@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The classical label Sobolev norm also bounds the actual L² tensor
 jets, so a parent satisfying (21) supplies every outer L² input needed
 by the volume-preserving composition estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,13 +32,13 @@ theorem norm_jetLp_le_wordSum (A : SmoothL2Field Space) (n : ℕ) :
     representative_unique A.toLp A.translation_contDiff A.field A.smooth.continuous A.toLp_ae
   have ha (w : Fin n → Fin 3) :
       (ordinaryWord direction A.toLp w : Space → Space) =ᵐ[volume] wordDerivative direction A.field
-        w := by
+          w := by
     simpa only [he] using ordinaryWord_ae direction A.toLp A.translation_contDiff w
   have hm (w : Fin n → Fin 3) : MemLp (wordDerivative direction A.field w) 2 volume :=
     (Lp.memLp (ordinaryWord direction A.toLp w)).ae_eq (ha w)
   let H : (Fin n → Fin 3) → Space → ℝ := fun w x => ‖wordDerivative direction A.field w x‖
   have hn (w : Fin n → Fin 3) : (eLpNorm (H w) 2 volume).toReal = ‖ordinaryWord direction A.toLp w‖
-    := by
+      := by
     rw [show H w = fun x => ‖wordDerivative direction A.field w x‖ from rfl,eLpNorm_norm]
     rw [← eLpNorm_congr_ae (ha w),Lp.norm_def]
   have hb := (finite_domination volume (univ : Finset (Fin n → Fin 3)) (iteratedFDeriv ℝ n A.field)

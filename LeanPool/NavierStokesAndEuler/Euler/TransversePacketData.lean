@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseBoundedGeometry
 
-@[expose] public section
-
 /-!
 # Source deformation data for the concrete transverse packet provider
 
@@ -17,6 +15,9 @@ Only the prescribed deformation, its inverse, and their actual time identity
 are inputs. The transverse frame, normal, both coercivity constants, and all
 geometry needed by the forward solve are derived below.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,17 +27,27 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoeffic
   EulerTransverseFrameCoordinates EulerTransverseBoundedFrame EulerVolterraConvolution
 open scoped BoundedContinuousFunction ContDiff
 
+/-- Data, collecting `T`, `T_pos`, `support`, `support_compact`, `m₀`, `m₀_unit` and their
+compatibility conditions. -/
 structure Data (U : Type*) [NormedAddCommGroup U] [InnerProductSpace ℝ U] where
+  /-- Time horizon of `Data`, of type `ℝ`. -/
   T : ℝ
   T_pos : 0 < T
+  /-- Support set of `Data`, of type `Set Space`. -/
   support : Set Space
   support_compact : IsCompact support
+  /-- M₀ of `Data`, of type `Space`. -/
   m₀ : Space
   m₀_unit : ‖m₀‖ = 1
+  /-- Radius parameter of `Data`, of type `U ≃ₗᵢ[ℝ] referencePlane m₀`. -/
   R : U ≃ₗᵢ[ℝ] referencePlane m₀
+  /-- F of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   F : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- F₁ of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   F₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- F inv of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   FInv : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
+  /-- M of `Data`, of type `SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)`. -/
   M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)
   inverse_left : ∀ t x v, FInv.field t x (F.field t x v) = v
   inverse_right : ∀ t x v, F.field t x (FInv.field t x v) = v
@@ -52,13 +63,20 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data 
 theorem support_measurable : MeasurableSet D.support :=
   D.support_compact.isClosed.measurableSet
 
+/-- Frame: an abbreviation for `coefficient D.m₀ D.R D.F`. -/
 abbrev frame := coefficient D.m₀ D.R D.F
+/-- Frame derivative: an abbreviation for `coefficient D.m₀ D.R D.F₁`. -/
 abbrev frameDerivative := coefficient D.m₀ D.R D.F₁
+/-- Normal: an abbreviation for `normalCoefficient D.m₀ D.FInv`. -/
 abbrev normal := normalCoefficient D.m₀ D.FInv
 
+/-- Inverse bound, given by `1+‖D.FInv.field‖`. -/
 def inverseBound : ℝ := 1+‖D.FInv.field‖
+/-- Frame bound, given by `1+‖D.F.field‖`. -/
 def frameBound : ℝ := 1+‖D.F.field‖
+/-- Frame lower, given by `D.inverseBound⁻¹^2`. -/
 def frameLower : ℝ := D.inverseBound⁻¹^2
+/-- Normal lower, given by `D.frameBound⁻¹^2`. -/
 def normalLower : ℝ := D.frameBound⁻¹^2
 
 theorem inverseBound_pos : 0 < D.inverseBound := by
@@ -102,7 +120,7 @@ theorem frame_tangent (t : Icc (0 : ℝ) D.T) (x : Space) (v : U) :
   coefficient_tangent D.m₀ D.R D.F D.FInv D.inverse_left t x v
 
 theorem frame_range (t : Icc (0 : ℝ) D.T) (x η : Space)
-    (hη : ⟪D.normal.field t x,η⟫_ℝ = 0) : ∃ v, D.frame.field t x v = η :=
+    (hη : ⟪D.normal.field t x, η⟫_ℝ = 0) : ∃ v, D.frame.field t x v = η :=
   coefficient_range D.m₀ D.R D.F D.FInv D.inverse_right t x η hη
 
 theorem frame_strain (t : Icc (0 : ℝ) D.T) (x : Space) :

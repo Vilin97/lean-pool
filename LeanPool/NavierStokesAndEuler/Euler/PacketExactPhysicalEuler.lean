@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalDivergence
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
+import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalDivergence
+import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalMomentum
 
 /-! The actual parent velocity plus the constructed exact packet satisfies
 both classical Euler equations in physical coordinates. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,10 +35,10 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 theorem exact_source_velocity_differentiableAt
     (k : ℝ) (F : ℝ × Space → Space →L[ℝ] Space) (X Y : ℝ × Space → Space)
     (t : ℝ) (ht : t ∈ Ioo 0 D.T) (x : Space)
-    (hleft : Y (t,X (t,x)) = x)
-    (hY : DifferentiableAt ℝ (inverseCoordinates Y) (t,X (t,x)))
-    (hX : ContDiffAt ℝ 2 X (t,x))
-    (hframe : F =ᶠ[𝓝 (t,x)] fun r => (fderiv ℝ X r).comp (inr ℝ ℝ Space)) :
+    (hleft : Y (t, X (t, x)) = x)
+    (hY : DifferentiableAt ℝ (inverseCoordinates Y) (t, X (t, x)))
+    (hX : ContDiffAt ℝ 2 X (t, x))
+    (hframe : F =ᶠ[𝓝 (t, x)] fun r => (fderiv ℝ X r).comp (inr ℝ ℝ Space)) :
     DifferentiableAt ℝ (physicalVelocity κ k D.m₀ F S.rawVelocity Y) (t,X (t,x)) := by
   have hDF : DifferentiableAt ℝ (fun r => (fderiv ℝ X r).comp (inr ℝ ℝ Space)) (t,x) :=
     ((hX.fderiv_right (m := 1) le_rfl).differentiableAt one_ne_zero).clm_comp
@@ -55,7 +59,7 @@ theorem exact_source_velocity_differentiableAt
 /-- The classical momentum and incompressibility equations for the actual
 new velocity, using the constructed normalized scalar pressure. -/
 theorem exact_source_euler
-    (k : ℝ) (hk : k*κ=1)
+    (k : ℝ) (hk : k * κ = 1)
     (F : ℝ × Space → Space →L[ℝ] Space)
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ) (X Y : ℝ × Space → Space)
     (hmatch : ∀ s : Icc (0 : ℝ) D.T, ∀ y, F (s,y) = D.F.field s y)

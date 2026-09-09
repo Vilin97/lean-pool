@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.DriftMetricForcing
 public import LeanPool.NavierStokesAndEuler.Euler.DriftEnergyMajorants
+import LeanPool.NavierStokesAndEuler.Euler.DriftMetricForcing
+
+/-! The actual time-dependent correction forcing obeys the sharp drift majorant. -/
 
 @[expose] public section
 
-/-! The actual time-dependent correction forcing obeys the sharp drift majorant. -/
 
 noncomputable section
 
@@ -32,14 +33,14 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual correction array is controlled by the continuous drift majorant,
 independently of its auxiliary higher-Sobolev representative. -/
-theorem correctionArray_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+theorem correctionArray_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
     {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
-    (S : Budget period hq D N R) (hN : N+6 ≤ q+1)
+    (S : Budget period hq D N R) (hN : N + 6 ≤ q + 1)
     {hT : 0 ≤ T} (K : MetricBudget period T hT D)
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
-    (V : SobolevSpace period ((q+1)+1)) (τ : Icc (0 : ℝ) T)
-    (hV : truncateOperator period (q+1) V = e τ) :
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
+    (V : SobolevSpace period ((q + 1) + 1)) (τ : Icc (0 : ℝ) T)
+    (hV : truncateOperator period (q + 1) V = e τ) :
     weightedForcingSum (R τ) (fun I : ExternalWord N => I.1.val)
       (correctionArray period hq D (baseMetricJet period hq D) N hN e V τ) ≤
         forcingMajorant period S hN K e τ := by
@@ -67,14 +68,14 @@ theorem correctionArray_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
     forcingMajorant, energyPath_apply, lossPath_apply] using h
 
 /-- The full Bochner forcing inherits the drift bound from the actual spatial fields. -/
-theorem weightedCorrectionForcing_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+theorem weightedCorrectionForcing_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
     {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
-    (S : Budget period hq D N R) (hN : N+6 ≤ q+1)
+    (S : Budget period hq D N R) (hN : N + 6 ≤ q + 1)
     {hT : 0 ≤ T} (K : MetricBudget period T hT D)
     (hG : Continuous (fun t => (D.metric.coefficient t).operator))
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
-    (U : TimeLp T (SobolevSpace period (2+q)))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
+    (U : TimeLp T (SobolevSpace period (2 + q)))
     (hU : Filter.Tendsto (fun n => pathLp T hT (maximalApproximation period q T n e))
       Filter.atTop (𝓝 U)) :
     (weightedCorrectionForcing period hq T hT D hG N hN R e U : ℝ → ℝ) ≤ᵐ[timeMeasure T]

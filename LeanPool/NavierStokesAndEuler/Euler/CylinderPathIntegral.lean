@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
 
+/-! Initial time integration commutes with the genuine mixed cylinder action. -/
+
 @[expose] public section
 
-/-! Initial time integration commutes with the genuine mixed cylinder action. -/
 
 noncomputable section
 
@@ -25,13 +26,13 @@ variable (P : ℝ) [Fact (0 < P)] {V : Type*}
   [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V]
   (T : ℝ) (hT : 0 ≤ T)
 
-theorem integral_translate (p : C(Icc (0 : ℝ) T,CylinderL2 P V)) (a : LiftTangent) :
+theorem integral_translate (p : C(Icc (0 : ℝ) T, CylinderL2 P V)) (a : LiftTangent) :
     integral T hT (pathTranslate P a p) = pathTranslate P a (integral T hT p) := by
   apply ContinuousMap.ext
   intro t
   exact (translate P a).intervalIntegral_comp_comm (extendPath T hT p)
 
-theorem integral_orbit_contDiff (p : C(Icc (0 : ℝ) T,CylinderL2 P V))
+theorem integral_orbit_contDiff (p : C(Icc (0 : ℝ) T, CylinderL2 P V))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (integral T hT p)) := by
   have hh := (integral (E := CylinderL2 P V) T hT).contDiff.comp hp
@@ -40,7 +41,7 @@ theorem integral_orbit_contDiff (p : C(Icc (0 : ℝ) T,CylinderL2 P V))
   exact (integral_translate P T hT p a).symm
 
 theorem orbit_contDiff_of_derivative
-    (p q : C(Icc (0 : ℝ) T,CylinderL2 P V))
+    (p q : C(Icc (0 : ℝ) T, CylinderL2 P V))
     (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)

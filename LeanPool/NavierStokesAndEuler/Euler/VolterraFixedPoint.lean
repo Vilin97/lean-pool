@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
-public import Mathlib.Topology.MetricSpace.Contracting
+import Mathlib.Topology.MetricSpace.Contracting
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Banach's theorem applied to the actual singular Volterra integral on continuous paths. -/
 
 @[expose] public section
 
-/-! Banach's theorem applied to the actual singular Volterra integral on continuous paths. -/
 
 noncomputable section
 
@@ -78,7 +80,7 @@ theorem pathNonlinearity_sub_bound (F : Icc (0 : ℝ) T → X → Y)
   apply (ContinuousMap.norm_le _ (mul_nonneg hL (norm_nonneg _))).mpr
   intro t
   exact (hFL t (u t) (v t) ((u.norm_coe_le_norm t).trans hu) ((v.norm_coe_le_norm t).trans
-    hv)).trans
+      hv)).trans
     (mul_le_mul_of_nonneg_left ((u - v).norm_coe_le_norm t) hL)
 
 /-- The actual nonlinear Volterra map, including the prescribed free evolution. -/
@@ -102,7 +104,8 @@ theorem picard_bound (a : C(Icc (0 : ℝ) T, X)) (F : Icc (0 : ℝ) T → X → 
   linarith
 
 include hK hk hk0 hbound in
-/-- The actual Picard map has contraction coefficient equal to kernel mass times nonlinear Lipschitz constant. -/
+/-- The actual Picard map has contraction coefficient equal to kernel mass times nonlinear Lipschitz
+constant. -/
 theorem picard_sub_bound (a : C(Icc (0 : ℝ) T, X)) (F : Icc (0 : ℝ) T → X → Y)
     (hF : Continuous (fun p : Icc (0 : ℝ) T × X => F p.1 p.2))
     (R L : ℝ) (hL : 0 ≤ L)
@@ -116,7 +119,8 @@ theorem picard_sub_bound (a : C(Icc (0 : ℝ) T, X)) (F : Icc (0 : ℝ) T → X 
       (kernelMass_nonneg T k hk0)).trans_eq (mul_assoc _ _ _).symm)
 
 include hK hk hk0 hbound in
-/-- An actual continuous mild solution exists by contraction of the explicitly defined Volterra integral. -/
+/-- An actual continuous mild solution exists by contraction of the explicitly defined Volterra
+integral. -/
 theorem exists_mild_solution [CompleteSpace X]
     (a : C(Icc (0 : ℝ) T, X)) (F : Icc (0 : ℝ) T → X → Y)
     (hF : Continuous (fun p : Icc (0 : ℝ) T × X => F p.1 p.2))
@@ -143,8 +147,8 @@ theorem exists_mild_solution [CompleteSpace X]
     exact picard_sub_bound T hT K k hK hk hk0 hbound a F hF R L hL hFL u.val v.val
       (by simpa only [B, mem_closedBall, dist_zero_right] using u.property)
       (by simpa only [B, mem_closedBall, dist_zero_right] using v.property)
-  have hzero : (0 : C(Icc (0 : ℝ) T, X)) ∈ B := by simpa only [B, mem_closedBall, dist_self] using
-    hR
+  have hzero : (0 : C(Icc (0 : ℝ) T, X)) ∈ B := by
+      simpa only [B, mem_closedBall, dist_self] using hR
   obtain ⟨u, hu, hfix, _, _⟩ := ContractingWith.exists_fixedPoint'
     isClosed_closedBall.isComplete hmap hc hzero (edist_ne_top 0 (P 0))
   refine ⟨u, by simpa only [B, mem_closedBall, dist_zero_right] using hu, ?_⟩

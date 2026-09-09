@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientProducts
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTameEnergy
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientProducts
 
 /-! Sharp H³ transport energy with the actual L-infinity norm of the
 velocity gradient.  The pressure and undifferentiated transport cancel
 before the cubic-test interpolation estimate is used. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +25,7 @@ open MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 
 theorem gradientSup_advection_outer (A : SmoothL2Field Space) (K N : ℝ)
     (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hN : WordBound 3 N A)
-    {n k l : ℕ} (hk : 1 ≤ k) (horder : n+k+l ≤ 3)
+    {n k l : ℕ} (hk : 1 ≤ k) (horder : n + k + l ≤ 3)
     (a : Fin n → Fin 3) (w : Fin k → Fin 3) (v : Fin l → Fin 3) :
     ‖(wordField (advectionField (wordField A w) (wordField A v)) a).toLp‖ ≤
       27*(2 : ℝ)^n*K*N := by
@@ -40,17 +41,17 @@ theorem gradientSup_advection_outer (A : SmoothL2Field Space) (K N : ℝ)
 
 theorem gradient_transportCommutator_word (A : SmoothL2Field Space) (K N : ℝ)
     (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hN : WordBound 3 N A)
-    {n l : ℕ} (horder : n+l ≤ 3) (a : Fin n → Fin 3) (v : Fin l → Fin 3) :
+    {n l : ℕ} (horder : n + l ≤ 3) (a : Fin n → Fin 3) (v : Fin l → Fin 3) :
     ‖(transportCommutator A (wordField A v) a).toLp‖ ≤
       27*((2 : ℝ)^n-1)*K*N := by
   induction n generalizing l with
-  | zero => simp only
-    [transportCommutator_zero,norm_zero,pow_zero,sub_self,mul_zero,zero_mul,le_refl]
+  | zero =>
+      simp only [transportCommutator_zero,norm_zero,pow_zero,sub_self,mul_zero,zero_mul,le_refl]
   | succ n ih =>
     have he : transportCommutator A (wordField A v) a =
         addField
           (wordField (advectionField (A.directionalField (axis (a (Fin.last n)))) (wordField A v))
-            (Fin.init a))
+              (Fin.init a))
           (transportCommutator A (wordField A (Fin.cons (a (Fin.last n)) v)) (Fin.init a)) := by
       simpa only [Fin.snoc_init_self,wordField_cons] using
         transportCommutator_snoc A (wordField A v) (Fin.init a) (a (Fin.last n))
@@ -69,6 +70,7 @@ theorem gradient_transportCommutator (A : SmoothL2Field Space) (K N : ℝ)
   simpa only [wordField_zero] using gradient_transportCommutator_word A K N hK hN
     (by simpa only [Nat.add_zero] using hn) w Fin.elim0
 
+/-- Gradient energy constant, given by `54*(∑ n ∈ range 4, (6 : ℝ)^n)`. -/
 def gradientEnergyConstant : ℝ := 54*(∑ n ∈ range 4, (6 : ℝ)^n)
 
 theorem gradientEnergyConstant_nonneg : 0 ≤ gradientEnergyConstant := by
@@ -78,7 +80,7 @@ theorem gradientEnergyConstant_eq : gradientEnergyConstant=13986 := by
   norm_num [gradientEnergyConstant,sum_range_succ]
 
 theorem eulerRhs_word_gradient (A P : SmoothL2Field Space) (K : ℝ)
-    (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hdiv : ∀ x, divergence A.field x=0)
+    (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hdiv : ∀ x, divergence A.field x = 0)
     (hA : A.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace)
     {n : ℕ} (hn : n ≤ 3) (w : Fin n → Fin 3) :
     ⟪(wordField A w).toLp,(wordField (eulerRhs A P) w).toLp⟫_ℝ ≤
@@ -102,7 +104,7 @@ theorem eulerRhs_word_gradient (A P : SmoothL2Field Space) (K : ℝ)
     _ = 27*(2 : ℝ)^n*K*wordEnergy 3 A := by rw [← hx]; ring
 
 theorem h3_energy_gradient (A P : SmoothL2Field Space) (K : ℝ)
-    (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hdiv : ∀ x, divergence A.field x=0)
+    (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K) (hdiv : ∀ x, divergence A.field x = 0)
     (hA : A.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace) :
     integerEnergyProduction 3 A (eulerRhs A P) ≤
       gradientEnergyConstant*K*wordEnergy 3 A := by

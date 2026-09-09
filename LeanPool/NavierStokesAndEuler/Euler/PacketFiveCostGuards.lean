@@ -8,11 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostPolynomial
 
-@[expose] public section
-
 /-! Uniform, explicit frequency guards for the actual packet correction.
 A single polynomial source bound suffices simultaneously for all five
 requirements. No eventual threshold is hidden in this statement. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -68,7 +69,7 @@ theorem five_costs_bound :
     C ≤ costConstant P*X^(costPower P) ∧
     12*growth D P Kc R H C*D.T ≤ costConstant P*X^(costPower P) ∧
     8*growth D P Kc R H C*D.T*drift R H C/initialRadius R Kc.M Kc.Rc ≤ costConstant P*X^(costPower
-      P) ∧
+        P) ∧
     8*growth D P Kc R H C*D.T/initialRadius R Kc.M Kc.Rc ≤ costConstant P*X^(costPower P) := by
   have hX0 : 0 ≤ X := zero_le_one.trans hX
   have hT0 : 0 ≤ D.T := D.T_pos.le
@@ -102,14 +103,14 @@ theorem five_costs_bound :
 /-- The literal source frequency assumptions follow from one explicit
 polynomial comparison; the threshold does not depend on a chosen parent. -/
 theorem frequency_guards (k : ℝ)
-    (hbudget : costConstant P*X^(costPower P) ≤ EulerPacketSourceFrequency.smallPower k) :
+    (hbudget : costConstant P * X ^ (costPower P) ≤ EulerPacketSourceFrequency.smallPower k) :
     tailPolynomialConstant R H CT ≤ EulerPacketSourceFrequency.smallPower k ∧
     C ≤ EulerPacketSourceFrequency.smallPower k ∧
     12*growth D P Kc R H C*D.T ≤ EulerPacketSourceFrequency.smallPower k ∧
     8*growth D P Kc R H C*D.T*drift R H C/initialRadius R Kc.M Kc.Rc ≤
-      EulerPacketSourceFrequency.smallPower k ∧
+        EulerPacketSourceFrequency.smallPower k ∧
     8*growth D P Kc R H C*D.T/initialRadius R Kc.M Kc.Rc ≤ EulerPacketSourceFrequency.smallPower k
-      := by
+        := by
   obtain ⟨h₁,h₂,h₃,h₄,h₅⟩ := five_costs_bound P D Kc R H C CT X hX hR hH hC
     hRX hHX hCX hCTX hi hm hf ht hB hM hA0 hA2 hRc hT
   exact ⟨h₁.trans hbudget,h₂.trans hbudget,h₃.trans hbudget,h₄.trans hbudget,h₅.trans hbudget⟩

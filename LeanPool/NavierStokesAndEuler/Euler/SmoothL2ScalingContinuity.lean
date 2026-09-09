@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Physical spatial dilation preserves continuity of every actual L²
 jet. The proof uses its explicit bounded action on differences. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +26,7 @@ open scoped ContDiff Topology
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Sub field, bundling `field`, `smooth`, `integrable`. -/
 def subField (A B : SmoothL2Field V) : SmoothL2Field V where
   field := A.field-B.field
   smooth := A.smooth.sub B.smooth

@@ -7,10 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketLocalHistory
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryPressure
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
-
-@[expose] public section
 
 /-!
 # The history trace matches the actual forward transverse solve
@@ -20,13 +16,16 @@ physical velocities therefore agree at the source time τ, with the same
 deformation frame on the two intervals.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketJoin
 
 open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerTimeIntervalRestriction
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths
-    EulerLpCylinderRectangular
+      EulerLpCylinderRectangular
   EulerCylinderSmoothOrbit EulerPacketProfileRecursion EulerCylinderAngleAverage
   EulerTransversePacketProvider
 open scoped ContDiff BoundedContinuousFunction
@@ -36,23 +35,31 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) {raw : VectorField} (G : Forcing P D raw)
 
+/-- Past velocity, given by `B.velocityPath (G.initial τ hτ hτT.le)`. -/
 def pastVelocity : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   B.velocityPath (G.initial τ hτ hτT.le)
 
+/-- Future velocity, given by `includePath P D.support D.support_measurable ((G.tail τ hτ.le
+hτT).velocityPath (forwardInitial τ hτ hτT B G))`. -/
 def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((G.tail τ hτ.le hτT).velocityPath (forwardInitial τ hτ hτT B G))
 
+/-- Past derivative, given by `B.derivativePath (G.initial τ hτ hτT.le)`. -/
 def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   B.derivativePath (G.initial τ hτ hτT.le)
 
+/-- Future derivative, given by `includePath P D.support D.support_measurable ((G.tail τ hτ.le
+hτT).derivativePath (forwardInitial τ hτ hτT B G))`. -/
 def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((G.tail τ hτ.le hτT).derivativePath (forwardInitial τ hτ hτT B G))
 
+/-- Past pressure, given by `B.pressurePath (G.initial τ hτ hτT.le)`. -/
 def pastPressure : C(Icc (0 : ℝ) τ,CylinderL2 P ℝ) :=
   B.pressurePath (G.initial τ hτ hτT.le)
 
+/-- Future pressure, given by `(G.tail τ hτ.le hτT).pressurePath (forwardInitial τ hτ hτT B G)`. -/
 def futurePressure : C(Icc (0 : ℝ) (D.T-τ),CylinderL2 P ℝ) :=
   (G.tail τ hτ.le hτT).pressurePath (forwardInitial τ hτ hτT B G)
 

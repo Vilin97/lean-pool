@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Integral.Prod
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 A jointly measurable field which represents an actual Bochner L² family belongs
 to the product L² space, with exactly the same norm.  This realizes nested
 space/angle or time/space estimates without changing any derivative constants.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

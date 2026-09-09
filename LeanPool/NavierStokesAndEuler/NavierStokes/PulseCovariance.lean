@@ -6,14 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianEnvelope
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 /-!
 # Concentration of actual pulse covariance columns
@@ -23,6 +18,9 @@ bounds on the fundamental component and an actual compactly supported cutoff
 give mass of order `r` and first centered moment of order `r^2`.  Division by
 the mass then gives a direction error of order `1/r`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,9 +45,11 @@ private theorem normalize_direction_product (r ε K C m : ℝ) (hr : r ≠ 0) :
     ε * m + (K / r ^ 2) * (C * r * m) = (ε + K * C / r) * m := by
   field_simp
 
+/-- Gaussian, given by `Real.exp (-b * ((v - m) / r) ^ 2)`. -/
 noncomputable def gaussian (b m r v : ℝ) : ℝ :=
   Real.exp (-b * ((v - m) / r) ^ 2)
 
+/-- First gaussian moment, given by `∫ v : ℝ, |v| * Real.exp (-b * v ^ 2)`. -/
 noncomputable def firstGaussianMoment (b : ℝ) : ℝ :=
   ∫ v : ℝ, |v| * Real.exp (-b * v ^ 2)
 
@@ -128,10 +128,13 @@ theorem integral_first_gaussian_scaled (b m r : ℝ) (hr : 0 < r) :
   simp only [firstGaussianMoment]
   ring
 
+/-- Weight, given by `ψ v ^ 2 * x v ^ 2`. -/
 noncomputable def weight (ψ x : ℝ → ℝ) (v : ℝ) : ℝ := ψ v ^ 2 * x v ^ 2
 
+/-- Mass, given by `∫ v : ℝ, weight ψ x v`. -/
 noncomputable def mass (ψ x : ℝ → ℝ) : ℝ := ∫ v : ℝ, weight ψ x v
 
+/-- Centered moment, given by `∫ v : ℝ, |v - m| * weight ψ x v`. -/
 noncomputable def centeredMoment (ψ x : ℝ → ℝ) (m : ℝ) : ℝ :=
   ∫ v : ℝ, |v - m| * weight ψ x v
 
@@ -230,7 +233,7 @@ theorem moment_integrable :
   apply ((integrable_first_gaussian_scaled (b := 2 * b) (by linarith [h.decay_pos]) h.radius_pos
     (r ^ 2 / 2)).const_mul (A ^ 2)).mono'
       (((continuous_id.fun_sub continuous_const).abs.fun_mul
-        h.weight_continuous).aestronglyMeasurable)
+          h.weight_continuous).aestronglyMeasurable)
   filter_upwards [] with v
   rw [Real.norm_eq_abs, abs_of_nonneg
     (mul_nonneg (abs_nonneg _) (weight_nonneg v))]
@@ -239,8 +242,8 @@ theorem moment_integrable :
 
 theorem mass_upper : mass ψ x ≤ A ^ 2 * Real.sqrt (Real.pi / (2 * b)) * r := by
   have hi := integral_mono h.weight_integrable
-    ((integrable_gaussian (b := 2 * b) (by linarith [h.decay_pos]) h.radius_pos (r ^ 2 /
-      2)).const_mul
+    ((integrable_gaussian (b := 2 * b) (by
+        linarith [h.decay_pos]) h.radius_pos (r ^ 2 / 2)).const_mul
       (A ^ 2)) h.weight_gaussian_upper
   rw [integral_const_mul, integral_gaussian_scaled _ _ _ h.radius_pos] at hi
   exact hi.trans_eq (by ring)
@@ -294,6 +297,7 @@ theorem core_weight_lower {v : ℝ}
     _ ≤ x v ^ 2 := pow_le_pow_left₀
       (mul_pos h.lower_pos (gaussian_pos _ _ _ _)).le hx 2
 
+/-- Lower mass constant, given by `a ^ 2 * Real.exp (-B / 18) / 3`. -/
 noncomputable def lowerMassConstant (a B : ℝ) : ℝ := a ^ 2 * Real.exp (-B / 18) / 3
 
 theorem lowerMassConstant_pos : 0 < lowerMassConstant a B := by
@@ -344,7 +348,7 @@ theorem weight_direction_integrable {q : ℝ → ℝ}
   apply (integrableOn_iff_integrable_of_support_subset hs).mp
   exact (h.weight_continuous.continuousOn.mul hq).integrableOn_Icc
 
-/-- The positive scalar prefactor has precisely the required reciprocal-square-
+/-- The positive scalar prefactor has precisely the required reciprocal-square -
 root size when the column coefficient has reciprocal-slot-length size. -/
 theorem scalar_size_bounds {ci clo chi : ℝ} (hclo : 0 < clo) (hchi : 0 < chi)
     (hci_lower : clo / r ^ 2 ≤ ci) (hci_upper : ci ≤ chi / r ^ 2) :
@@ -370,9 +374,12 @@ theorem scalar_size_bounds {ci clo chi : ℝ} (hclo : 0 < clo) (hchi : 0 < chi)
 
 end PulseBounds
 
+/-- Averaged direction, given by `(∫ v : ℝ, weight ψ x v * q v) / mass ψ x`. -/
 noncomputable def averagedDirection (ψ x q : ℝ → ℝ) : ℝ :=
   (∫ v : ℝ, weight ψ x v * q v) / mass ψ x
 
+/-- Concentration constant, given by `A ^ 2 * firstGaussianMoment (2 * b) /
+PulseBounds.lowerMassConstant a B`. -/
 noncomputable def concentrationConstant (a A b B : ℝ) : ℝ :=
   A ^ 2 * firstGaussianMoment (2 * b) / PulseBounds.lowerMassConstant a B
 
@@ -470,9 +477,12 @@ theorem averagedDirection_error_order {q : ℝ → ℝ}
 
 end PulseBounds
 
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
 
+/-- Radius profile, given by `Real.sqrt (1 + s ^ 2)`. -/
 noncomputable def radiusProfile (s : ℝ) : ℝ := Real.sqrt (1 + s ^ 2)
 
 theorem radiusProfile_pos (s : ℝ) : 0 < radiusProfile s := by
@@ -524,6 +534,7 @@ theorem modelDirection_lipschitz (c₀ s t : ℝ) (i : Fin 2) :
     rw [he]
     nlinarith [mul_nonneg (abs_nonneg c₀) (abs_nonneg (s - t))]
 
+/-- Affine slope, given by `s₀ + slope * (v - r ^ 2 / 2) / r ^ 2`. -/
 noncomputable def affineSlope (s₀ slope r v : ℝ) : ℝ :=
   s₀ + slope * (v - r ^ 2 / 2) / r ^ 2
 
@@ -553,9 +564,11 @@ theorem modelDirection_affine_drift (c₀ s₀ slope r v : ℝ) (i : Fin 2) :
   rw [affineSlope_distance] at hi
   exact hi.trans_eq (by ring)
 
+/-- Actual column, defined pointwise by `ci * ∫ v : ℝ, ψ v ^ 2 * x v * t v i`. -/
 noncomputable def actualColumn (ci : ℝ) (ψ x : ℝ → ℝ) (t : ℝ → Vec2) : Vec2 :=
   fun i => ci * ∫ v : ℝ, ψ v ^ 2 * x v * t v i
 
+/-- Normalized column, defined pointwise by `averagedDirection ψ x (fun v => t v i / x v)`. -/
 noncomputable def normalizedColumn (ψ x : ℝ → ℝ) (t : ℝ → Vec2) : Vec2 :=
   fun i => averagedDirection ψ x (fun v => t v i / x v)
 
@@ -647,8 +660,11 @@ end PulseBounds
 /-- A single actual pulse.  Every estimate in this record is pointwise;
 neither its covariance integral nor its average direction is assumed. -/
 structure TangentPulse (r a A b B c₀ s₀ slope E : ℝ) where
+  /-- Cutoff of `TangentPulse`, of type `ℝ → ℝ`. -/
   cutoff : ℝ → ℝ
+  /-- Component of `TangentPulse`, of type `ℝ → ℝ`. -/
   component : ℝ → ℝ
+  /-- Tangent of `TangentPulse`, of type `ℝ → Vec2`. -/
   tangent : ℝ → Vec2
   bounds : PulseBounds r a A b B cutoff component
   tangent_continuous : ∀ i, ContinuousOn (fun v => tangent v i) (Icc 0 (r ^ 2))
@@ -656,8 +672,10 @@ structure TangentPulse (r a A b B c₀ s₀ slope E : ℝ) where
     |tangent v i / component v - modelDirection c₀ (affineSlope s₀ slope r v) i| ≤
       E / r ^ 2
 
+/-- Signed slopes, given by `![u, -u]`. -/
 noncomputable def signedSlopes (u : ℝ) : Vec2 := ![u, -u]
 
+/-- Signed model, defined pointwise by `modelDirection c₀ (signedSlopes u j) i`. -/
 noncomputable def signedModel (c₀ u : ℝ) : Mat2 :=
   fun i j => modelDirection c₀ (signedSlopes u j) i
 
@@ -686,17 +704,24 @@ theorem signedModel_continuousOn {X : Type*} [TopologicalSpace X] {K : Set X}
   · simpa [signedModel, modelDirection, signedSlopes] using hu.fun_neg
   · simpa [signedModel, modelDirection, signedSlopes] using hu
 
+/-- Signed pulse pair: an abbreviation for `(j : Fin 2) → TangentPulse r a A b B c₀
+(signedSlopes u j) (signedSlopes u j) E`. -/
 abbrev SignedPulsePair (r a A b B c₀ u E : ℝ) :=
   (j : Fin 2) → TangentPulse r a A b B c₀ (signedSlopes u j) (signedSlopes u j) E
 
+/-- Actual matrix, defined pointwise by `actualColumn (ci j) (pulses j).cutoff (pulses
+j).component (pulses j).tangent i`. -/
 noncomputable def actualMatrix {r a A b B c₀ u E : ℝ}
     (pulses : SignedPulsePair r a A b B c₀ u E) (ci : Vec2) : Mat2 :=
   fun i j => actualColumn (ci j) (pulses j).cutoff (pulses j).component (pulses j).tangent i
 
+/-- Normalized matrix, defined pointwise by `normalizedColumn (pulses j).cutoff (pulses
+j).component (pulses j).tangent i`. -/
 noncomputable def normalizedMatrix {r a A b B c₀ u E : ℝ}
     (pulses : SignedPulsePair r a A b B c₀ u E) : Mat2 :=
   fun i j => normalizedColumn (pulses j).cutoff (pulses j).component (pulses j).tangent i
 
+/-- Column scales, defined pointwise by `ci j * mass (pulses j).cutoff (pulses j).component`. -/
 noncomputable def columnScales {r a A b B c₀ u E : ℝ}
     (pulses : SignedPulsePair r a A b B c₀ u E) (ci : Vec2) : Vec2 :=
   fun j => ci j * mass (pulses j).cutoff (pulses j).component
@@ -707,7 +732,7 @@ theorem signedSlopes_abs (u : ℝ) (j : Fin 2) : |signedSlopes u j| = |u| := by
 theorem actualMatrix_factorization {r a A b B c₀ u E : ℝ}
     (pulses : SignedPulsePair r a A b B c₀ u E) (ci : Vec2) :
     actualMatrix pulses ci = FlatCovariance.columns (normalizedMatrix pulses) (columnScales pulses
-      ci) := by
+        ci) := by
   ext i j
   exact congrFun ((pulses j).bounds.actualColumn_factorization (ci j) (pulses j).tangent) i
 
@@ -748,10 +773,12 @@ theorem actualMatrix_positive_of_normalized {r a A b B c₀ u E : ℝ}
 
 /- This is the same entrywise norm used by SmoothCovariance's compact
 perturbation theorem. -/
-local instance : NormedAddCommGroup Mat2 :=
+/-- Cache the standard `NormedAddCommGroup Mat2` instance to shorten typeclass synthesis. -/
+local instance instPulseCovariance1 : NormedAddCommGroup Mat2 :=
   inferInstanceAs (NormedAddCommGroup (Fin 2 → Fin 2 → ℝ))
 
-local instance : NormedSpace ℝ Mat2 :=
+/-- Cache the standard `NormedSpace ℝ Mat2` instance to shorten typeclass synthesis. -/
+local instance instPulseCovariance2 : NormedSpace ℝ Mat2 :=
   inferInstanceAs (NormedSpace ℝ (Fin 2 → Fin 2 → ℝ))
 
 /-- A uniform slot threshold for the actual signed pulse pair over a compact
@@ -823,9 +850,9 @@ theorem compact_actual_positive_inverse_of_scalar_cone
       ∀ ci : Vec2, (∀ j, 0 < ci j) →
         (actualMatrix pulses ci).det ≠ 0 ∧
         (∀ i, 0 < SmoothCovariance.weights (actualMatrix pulses ci) (Covariance.target (m p) (t p))
-          i) ∧
+            i) ∧
         (∀ i, 0 < SmoothCovariance.amplitudes (actualMatrix pulses ci) (Covariance.target (m p) (t
-          p)) i) := by
+            p)) i) := by
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hc₀
   obtain ⟨U, hU⟩ := hK.exists_bound_of_continuousOn hu
   have htarget : ∀ i, ContinuousOn (fun p => Covariance.target (m p) (t p) i) K := by

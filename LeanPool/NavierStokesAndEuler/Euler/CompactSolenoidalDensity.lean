@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicScaling
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDecomposition
+import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicScaling
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Compact smooth solenoidal tests determine ordinary L² solenoidal fields
@@ -16,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanWeakHarmonicScaling
 The curl-curl identity reduces the orthogonal complement of compact smooth
 curls inside the solenoidal space to globally weakly harmonic L² fields.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

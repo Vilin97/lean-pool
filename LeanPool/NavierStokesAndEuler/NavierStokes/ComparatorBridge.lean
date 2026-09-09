@@ -8,8 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorDefinitions
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.TangentCone.Prod
+import Mathlib.Analysis.InnerProductSpace.Trace
 
 /-!
 # Coordinate and viscosity bridge to the periodic Clay statement
@@ -19,6 +20,9 @@ comparator's operators, and normalizes any positive viscosity to one. It uses
 only the independent comparator definitions; no reference theorem is imported.
 The application to the constructed candidate is in `ComparatorTheorem`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

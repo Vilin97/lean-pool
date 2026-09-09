@@ -10,14 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramPath
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FieldProduct
 
-@[expose] public section
-
 /-!
 Actual moving-frame coordinates for initial-zero H¹ paths with arbitrary
 terminal value.  The coordinate derivative is constructed in Bochner L².
 The physical reconstruction and its differentiated identity follow from the
 coefficient left inverse, the H¹ product rule and uniqueness of derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +27,7 @@ namespace EulerTransverseInitialCoordinates
 
 open MeasureTheory Set InnerProductSpace ContinuousLinearMap
   EulerTimeLp EulerTerminalTimePrimitive EulerInitialTimePrimitive
-  EulerVolterraConvolution EulerTimeH1OperatorProduct EulerTimeH1FieldProduct
+  EulerVolterraConvolution  EulerTimeH1FieldProduct
   EulerTransverseGramInverse EulerTransverseGramPath
 open scoped Topology
 
@@ -38,12 +39,17 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^ 2)
 
+/-- Initial coordinates, given by `extendPath T hT (frameLeftInversePath T Q c hc hQ) t
+(initialRealPrimitive T u t)`. -/
 def initialCoordinates (u : TimeLp T E) (t : ℝ) : U :=
   extendPath T hT (frameLeftInversePath T Q c hc hQ) t (initialRealPrimitive T u t)
 
+/-- Initial coordinate field, given by `timeMultiplier T hT (frameLeftInversePath T Q c hc hQ)
+(initialPrimitiveTimeLp T hT u)`. -/
 def initialCoordinateField (u : TimeLp T E) : TimeLp T U :=
   timeMultiplier T hT (frameLeftInversePath T Q c hc hQ) (initialPrimitiveTimeLp T hT u)
 
+/-- Initial coordinate derivative, constructed using `fieldProductDerivative`. -/
 def initialCoordinateDerivative (u : TimeLp T E) : TimeLp T U :=
   fieldProductDerivative T hT (frameLeftInversePath T Q c hc hQ)
     (frameLeftInverseDerivativePath T Q Q₁ c hc hQ) (initialPrimitiveTimeLp T hT u) u

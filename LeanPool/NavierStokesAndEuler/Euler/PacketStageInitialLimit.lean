@@ -7,15 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleShift
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSmoothLimit
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStageContradiction
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleShift
+import LeanPool.NavierStokesAndEuler.Euler.PacketStageContradiction
 
 /-! The literal initial increments of an actual stage family have one
 smooth L² limit in every Sobolev order. The finite exceptional prefix
 is retained in the initial velocity of stage one. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +32,8 @@ open scoped Topology
 variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B} (P : ∀ n, Stage S n)
   (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
 
+/-- Initial tail input as an element of `EulerPacketInitial.Input (referencePlane ((P
+(1+i)).joinedNormal (by omega)))`. -/
 def initialTailInput (i : ℕ) :
     EulerPacketInitial.Input (referencePlane ((P (1+i)).joinedNormal (by omega))) :=
   (P (1+i)).joinedInput (by omega) hq hB
@@ -60,8 +63,10 @@ theorem initialTail_frequency (i : ℕ) : (A i).frequencyGuard (frequency J X i)
   rw [frequency_shift]
   exact (P (1+i)).joinedInput_frequency (by omega) hq hB
 
+/-- Initial base, given by `(P 1).state.regularity.velocity (P 1).parent.zeroTime`. -/
 def initialBase : SmoothL2Field Space := (P 1).state.regularity.velocity (P 1).parent.zeroTime
 
+/-- Initial data limit, constructed using `EulerPacketInitial.fullInitialLimit`. -/
 def initialDataLimit : SmoothL2Field Space :=
   EulerPacketInitial.fullInitialLimit A J (by have h := S.stage_large; omega)
     (sourceConstant 4) 320 (sourceConstant_pos 4) (by norm_num) 20 1000 X (S.sequence_one 1)
@@ -69,15 +74,15 @@ def initialDataLimit : SmoothL2Field Space :=
     (initialTail_four (S := S)) (initialTail_frequency P hq hB) (initialBase P)
 
 variable (hstep : ∀ n (hn : n ≠ 0),
-  (fun x => (P (n+1)).state.evolution.velocity (0,x)) =
-    (fun x => (P n).state.evolution.velocity (0,x))+
-      (((P n).joinedInput hn hq hB).high (frequency S.J S.X n)+
+  (fun x => (P (n + 1)).state.evolution.velocity (0, x)) =
+    (fun x => (P n).state.evolution.velocity (0, x)) +
+      (((P n).joinedInput hn hq hB).high (frequency S.J S.X n) +
         ((P n).joinedInput hn hq hB).mean (frequency S.J S.X n)))
 
 include hstep
 
 theorem initial_velocity_partial (N : ℕ) :
-    (fun x => (P (1+N)).state.evolution.velocity (0,x)) =
+    (fun x => (P (1+N)).state.evolution.velocity (0, x)) =
       (initialBase P).field+EulerPacketInitial.initialPartial A J X N := by
   induction N with
   | zero =>
@@ -108,7 +113,7 @@ theorem initialDataLimit_Hm (s : ℕ) :
       ((fun x => (P (n+1)).state.evolution.velocity (0,x))-(initialDataLimit P hq hB).field)) =
       (fun n => derivativeSum s
         ((fun x => (P (1+n)).state.evolution.velocity (0,x))-(initialDataLimit P hq hB).field)) :=
-          by
+            by
     funext n
     rw [Nat.add_comm n 1]
   rw [heq]
@@ -117,7 +122,7 @@ theorem initialDataLimit_Hm (s : ℕ) :
 theorem initialDataLimit_no_euler :
     ¬ ∃ U : EulerOrdinarySobolev.Evolution (baseHorizon S.J S.X)
         (baseHorizon_pos S.J S.j_one S.x_pos).le,
-      (U.velocity ⟨0,le_rfl,(baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field=
+      (U.velocity ⟨0,le_rfl,(baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field =
         (initialDataLimit P hq hB).field :=
   no_euler_evolution_of_initial_H3 P (initialDataLimit P hq hB).field
     (initialDataLimit_Hm P hq hB hstep 3)

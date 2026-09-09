@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+public import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Strong Bochner energy passage on every genuine subinterval of the original time interval. -/
 
 @[expose] public section
 
-/-! Strong Bochner energy passage on every genuine subinterval of the original time interval. -/
 
 noncomputable section
 
@@ -56,7 +60,7 @@ theorem subinterval_path_inner (T : ℝ) (hT : 0 ≤ T) (s t : ℝ)
   rw [he]
   have hsub : Icc s t ⊆ Icc (0 : ℝ) T := fun _ hr => ⟨h0s.trans hr.1, hr.2.trans htT⟩
   change (∫ r, extendPath T hT a r * extendPath T hT b r ∂(volume.restrict (Icc 0 T)).restrict (Icc
-    s t)) = _
+      s t)) = _
   rw [Measure.restrict_restrict_of_subset hsub, integral_Icc_eq_integral_Ioc,
     ← intervalIntegral.integral_of_le hst]
 
@@ -81,7 +85,8 @@ theorem subinterval_forcing_tendsto (T s t : ℝ) (c : TimeLp T ℝ)
       (𝓝 ⟪subintervalWeight T s t c, f⟫_ℝ) := Filter.Tendsto.inner tendsto_const_nhds hF
   simpa only [subinterval_inner_eq] using h
 
-/-- Actual integral energy bounds pass to limits on each subinterval, with the radius term retaining its sign. -/
+/-- Actual integral energy bounds pass to limits on each subinterval, with the radius term retaining
+its sign. -/
 theorem integral_energy_subinterval_limit (T : ℝ) (hT : 0 ≤ T) (s t : ℝ)
     (h0s : 0 ≤ s) (hst : s ≤ t) (htT : t ≤ T)
     (a b : C(Icc (0 : ℝ) T, ℝ)) (c : TimeLp T ℝ)
@@ -98,9 +103,9 @@ theorem integral_energy_subinterval_limit (T : ℝ) (hT : 0 ≤ T) (s t : ℝ)
       (∫ r in s..t, extendPath T hT b r * extendPath T hT y r) +
       ∫ r in Icc s t, c r * f r ∂timeMeasure T := by
   have ht := (continuous_eval_const (⟨t, h0s.trans hst, htT⟩ : Icc (0 : ℝ)
-    T)).continuousAt.tendsto.comp hX
+      T)).continuousAt.tendsto.comp hX
   have hs := (continuous_eval_const (⟨s, h0s, hst.trans htT⟩ : Icc (0 : ℝ)
-    T)).continuousAt.tendsto.comp hX
+      T)).continuousAt.tendsto.comp hX
   exact le_of_tendsto_of_tendsto' (ht.sub hs)
     (((subinterval_path_tendsto T hT s t h0s hst htT a X x hX).add
       (subinterval_path_tendsto T hT s t h0s hst htT b Y y hY)).add

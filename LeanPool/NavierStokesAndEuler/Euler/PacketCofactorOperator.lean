@@ -8,37 +8,54 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
 
 /-! A determinant-one three-dimensional matrix has a quadratic inverse.
 This realizes the cofactor as an actual bounded bilinear map; its estimates
 therefore require no derivatives or norm bounds for a separately given inverse. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPacketCofactor
 
 open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerPacketPiola
-  EulerPacketCrossProduct EulerOperatorGevreyCalculus EulerGevrey
+  EulerPacketCrossProduct
 open scoped ContDiff
 
+/-- End space: an abbreviation for `Space →L[ℝ] Space`. -/
 abbrev EndSpace := Space →L[ℝ] Space
 
-private local instance : NormedAddCommGroup EndSpace := inferInstance
-private local instance : NormedSpace ℝ EndSpace := inferInstance
-private local instance : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace) := inferInstance
-private local instance : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace) := inferInstance
-private local instance : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace) :=
-  inferInstance
-private local instance : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup EndSpace` instance to shorten typeclass synthesis. -/
+local instance instPacketCofactorOperator1 : NormedAddCommGroup EndSpace := inferInstance
+/-- Cache the standard `NormedSpace ℝ EndSpace` instance to shorten typeclass synthesis. -/
+local instance instPacketCofactorOperator2 : NormedSpace ℝ EndSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (EndSpace →L[ℝ] EndSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCofactorOperator3 : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (EndSpace →L[ℝ] EndSpace)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCofactorOperator4 : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace)` instance to
+shorten typeclass synthesis. -/
+local instance instPacketCofactorOperator5 : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace →L[ℝ]
+    EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace)` instance to
+shorten typeclass synthesis. -/
+local instance instPacketCofactorOperator6 : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace)
+    := inferInstance
 
+/-- Basis, given by `EuclideanSpace.single i 1`. -/
 def basis (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 @[simp] theorem basis_norm (i : Fin 3) : ‖basis i‖ = 1 := by
   simp [basis]
 
+/-- Row linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def rowLinear (i : Fin 3) : Space →ₗ[ℝ] EndSpace where
   toFun a := (innerSL ℝ a).smulRight (basis i)
   map_add' a b := by
@@ -59,6 +76,8 @@ theorem rowLinear_norm (i : Fin 3) (a : Space) : ‖rowLinear i a‖ ≤ ‖a‖
   rw [norm_smul,basis_norm,mul_one,Real.norm_eq_abs]
   exact abs_real_inner_le_norm a v
 
+/-- Row operator, given by `(rowLinear i).mkContinuous 1 (fun a => by simpa only [one_mul] using
+rowLinear_norm i a)`. -/
 def rowOperator (i : Fin 3) : Space →L[ℝ] EndSpace :=
   (rowLinear i).mkContinuous 1 (fun a => by simpa only [one_mul] using rowLinear_norm i a)
 
@@ -68,11 +87,14 @@ def rowOperator (i : Fin 3) : Space →L[ℝ] EndSpace :=
 theorem rowOperator_norm (i : Fin 3) (a : Space) : ‖rowOperator i a‖ ≤ ‖a‖ :=
   rowLinear_norm i a
 
+/-- Cofactor value, constructed using `rowOperator`. -/
 def cofactorValue (A B : EndSpace) : EndSpace :=
-  rowOperator 0 (crossOperator (A (basis 1)) (B (basis 2)))+
-  rowOperator 1 (crossOperator (A (basis 2)) (B (basis 0)))+
+  rowOperator 0 (crossOperator (A (basis 1)) (B (basis 2))) +
+  rowOperator 1 (crossOperator (A (basis 2)) (B (basis 0))) +
   rowOperator 2 (crossOperator (A (basis 0)) (B (basis 1)))
 
+/-- Cofactor linear, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
+compatibility proofs. -/
 def cofactorLinear : EndSpace →ₗ[ℝ] EndSpace →ₗ[ℝ] EndSpace where
   toFun A :=
     { toFun := cofactorValue A
@@ -109,15 +131,17 @@ theorem cofactorValue_norm (A B : EndSpace) : ‖cofactorValue A B‖ ≤ 3*‖A
         ‖rowOperator 2 (crossOperator (A (basis 0)) (B (basis 1)))‖ := norm_add₃_le
     _ ≤ 3*‖A‖*‖B‖ := by nlinarith [h 0 1 2,h 1 2 0,h 2 0 1]
 
+/-- Cofactor bilinear, given by `cofactorLinear.mkContinuous₂ 3 cofactorValue_norm`. -/
 def cofactorBilinear : EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace :=
   cofactorLinear.mkContinuous₂ 3 cofactorValue_norm
 
 @[simp] theorem cofactorBilinear_apply (A B : EndSpace) : cofactorBilinear A B = cofactorValue A B
-  := rfl
+    := rfl
 
 theorem cofactorBilinear_norm : ‖cofactorBilinear‖ ≤ 3 :=
   cofactorLinear.mkContinuous₂_norm_le (by norm_num) cofactorValue_norm
 
+/-- Adjugate, given by `cofactorBilinear A A`. -/
 def adjugate (A : EndSpace) : EndSpace := cofactorBilinear A A
 
 theorem adjugate_norm (A : EndSpace) : ‖adjugate A‖ ≤ 3*‖A‖^2 := by

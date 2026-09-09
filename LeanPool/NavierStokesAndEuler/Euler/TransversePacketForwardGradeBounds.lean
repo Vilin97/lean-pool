@@ -8,12 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardFullBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardNorms
 
 /-! Fixed source costs close the direct-forward packet grade bounds.  The
 profile's positive scalar factor cancels exactly; one spare shift pays the
 fixed operator costs, with no change of external radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -64,11 +67,11 @@ structure GradeGuards (C : ℝ) : Prop where
 
 variable (C : ℝ) (W : GradeGuards (P := P) L N C)
   {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
-  (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d+3 ≤ e)
+  (c : ℝ) (hc : 0 < c) (d e : ℕ) (hroom : d + 3 ≤ e)
   (hforce : ∀ n, block standardDirection 6 (fun a => pathTranslate P a
-    (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c*C)*majorant L.R d n)
+    (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (c * C) * majorant L.R d n)
   (hinitial : ∀ n, block standardDirection 6
-    (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c*C)*majorant L.R d n)
+    (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ (c * C) * majorant L.R d n)
 
 include W hc hroom hforce hinitial
 
@@ -95,18 +98,20 @@ theorem grade_fields :
   have ht : ((G.vectorDerivativeField I).normalized D.T_pos.le L.g L.positive).WordBound
       6 L.R ((L.commonCost*C)*c) (d+1) := by
     intro n
-    simpa only [Field.normalized_path,Forcing.vectorDerivativeField,mul_assoc,mul_left_comm,mul_comm] using
+    simpa only [Field.normalized_path, Forcing.vectorDerivativeField, mul_assoc, mul_left_comm,
+        mul_comm] using
       L.derivative_common_bound G I standardDirection hd (c*C) ha d hforce hinitial n
   have hC : ((G.curlCorrectorField I).normalized D.T_pos.le L.g L.positive).WordBound
       6 L.R ((L.correctorAmplitude (P := P) N*C)*c) (d+2) := by
     intro n
     simpa only [Field.normalized_path,Forcing.curlCorrectorField,mul_assoc,mul_left_comm,mul_comm]
-      using
+        using
       L.corrector_bound N G I (c*C) ha d hforce hinitial n
   have hCt : ((G.correctorDerivativeField I).normalized D.T_pos.le L.g L.positive).WordBound
       6 L.R ((L.correctorTimeAmplitude (P := P) N*C)*c) (d+2) := by
     intro n
-    simpa only [Field.normalized_path,Forcing.correctorDerivativeField,mul_assoc,mul_left_comm,mul_comm] using
+    simpa only [Field.normalized_path, Forcing.correctorDerivativeField, mul_assoc, mul_left_comm,
+        mul_comm] using
       L.corrector_time_bound N G I (c*C) ha d hforce hinitial n
   have hπ : ((G.scalarGradientField I).normalized D.T_pos.le L.g L.positive).WordBound
       6 L.R ((3*L.pressureAmplitude (P := P) N*C)*c) (d+2) := by
@@ -122,10 +127,11 @@ theorem grade_fields :
       L.radius_one (mul_nonneg (L.correctorAmplitude_nonneg N) W.data_nonneg) W.corrector (by omega)
   · exact (hCt.scale_profile D.T_pos.le L.g L.positive c hc).absorb_amplitude_to
       L.radius_one (mul_nonneg (L.correctorTimeAmplitude_nonneg N) W.data_nonneg) W.correctorTime
-        (by omega)
+          (by
+          omega)
   · exact (hπ.scale_profile D.T_pos.le L.g L.positive c hc).absorb_amplitude_to
-      L.radius_one (mul_nonneg (mul_nonneg (by norm_num) (L.pressureAmplitude_nonneg N))
-        W.data_nonneg)
+      L.radius_one (mul_nonneg (mul_nonneg (by
+          norm_num) (L.pressureAmplitude_nonneg N)) W.data_nonneg)
       W.pressureGradient (by omega)
 
 end EulerTransversePacketForward.Budget

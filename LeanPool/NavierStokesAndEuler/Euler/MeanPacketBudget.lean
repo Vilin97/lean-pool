@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCylinderWordBounds
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketPathEnvelope
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketPressureForcing
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketSobolevData
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketPathEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketPressureForcing
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 Source-only budgets for the actual mean solver on the cylinder.  The radius
@@ -20,6 +22,9 @@ and inverse guards are fixed before the forcing amplitude, shift, or grade.
 The output fields are the genuine velocity, time derivative, and gradient
 of the normalized scalar pressure constructed by the source solver.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,6 +42,7 @@ structure Budget (D : Data) (q : ℕ) (R : ℝ) extends SobolevData D (Fin 4) q 
   forcing_one : 1 ≤ Cf
   forcing_time : sqrt D.T ≤ Cf
 
+/-- Frame coefficient, bundling `path`, `orbit`, `raw_eq`. -/
 def Data.frameCoefficient (D : Data) : MatrixCoefficient D.T
     (fun z => D.F.field (D.clamp z.1) z.2.1) where
   path := D.F.field
@@ -48,13 +54,14 @@ namespace Forcing
 variable {D : Data} {raw : VectorField} (G : Forcing D raw)
   (P : ℝ) [Fact (0 < P)]
 
+/-- Pressure force cylinder field, given by `G.pressureForceForcing.toCylinderField P`. -/
 def pressureForceCylinderField : EulerPacketCylinderField.Field P D.T G.pressureForce :=
   G.pressureForceForcing.toCylinderField P
 
 /-- This witness represents the literal spatial gradient encoded by the
 packet pressure jet, not merely the projected physical pressure force. -/
 def pressureGradientCylinderField : EulerPacketCylinderField.Field P D.T (pressureGradient
-  G.scalar) :=
+    G.scalar) :=
   (D.frameCoefficient.adjoint.multiply (G.pressureForceCylinderField P)).congr (by
     intro t x θ
     change pressureGradient G.scalar (t,(x,θ)) =
@@ -83,11 +90,16 @@ namespace Budget
 
 variable {D : Data} {q : ℕ} {R : ℝ} (B : Budget D q R)
 
+/-- Velocity cost, given by `B.toSobolevData.velocityAmplitude`. -/
 def velocityCost : ℝ := B.toSobolevData.velocityAmplitude
+/-- Derivative cost, given by `B.toSobolevData.derivativeAmplitude`. -/
 def derivativeCost : ℝ := B.toSobolevData.derivativeAmplitude
+/-- Pressure force cost, given by `B.toSobolevData.pressureAmplitude`. -/
 def pressureForceCost : ℝ := B.toSobolevData.pressureAmplitude
+/-- Pressure gradient cost, given by `3*sobolevCoefficientAmplitude (Fin 4) q B.Rc
+B.CF*B.pressureForceCost`. -/
 def pressureGradientCost : ℝ := 3*sobolevCoefficientAmplitude (Fin 4) q B.Rc
-  B.CF*B.pressureForceCost
+    B.CF*B.pressureForceCost
 
 theorem coefficient_radius_nonneg : 0 ≤ B.Rc :=
   (by norm_num : (0:ℝ) ≤ 1024).trans B.radius_lower
@@ -184,11 +196,11 @@ fixed source budget applies at every grade and every derivative shift. -/
 theorem grade_profile_bounds (P : ℝ) [Fact (0 < P)] {raw : VectorField}
     (G : Forcing D raw) (F : EulerPacketCylinderField.Field P D.T raw)
     (p d : ℕ) (A H₀ : ℝ) (hA : 0 ≤ A) (hH₀ : 0 ≤ H₀)
-    (hF : F.WordBound q R (A*H₀^(2*p-2)) d) :
+    (hF : F.WordBound q R (A * H₀ ^ (2 * p - 2)) d) :
     (G.vectorCylinderField P).WordBound q R ((A*B.velocityCost)*H₀^(2*p-2)) (d+3) ∧
     (G.vectorDerivativeCylinderField P).WordBound q R ((A*B.derivativeCost)*H₀^(2*p-2)) (d+3) ∧
     (G.pressureGradientCylinderField P).WordBound q R ((A*B.pressureGradientCost)*H₀^(2*p-2)) (d+3)
-      := by
+        := by
   have hh := B.three_shift_bounds P G F d (A*H₀^(2*p-2)) (mul_nonneg hA (pow_nonneg hH₀ _)) hF
   simpa only [mul_assoc, mul_left_comm, mul_comm] using hh
 

@@ -6,14 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
 
 /-! The angular derivative of the actual recursive high pressure retains
 the unit grade budget. This is derived from the same source solve used by
 the velocity recursion. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -43,7 +51,7 @@ theorem angularPressure_step_exists
     (hG : ∀ i (hi : i < p), 1 ≤ i → ProfileBudget (G i hi) S L.R i)
     (hc₀ : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
     (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (c : ℝ) (hc : 0 < c)
     (hprofile : timeProfileChange (S.high p) hTime = c • L.fullProfile) :
     ∃ Q : Field P M.T (fun z => (pressureJet (step O p a).highPressure z).2 angleDirection • D.m₀),
@@ -93,13 +101,13 @@ theorem angularPressure_step_exists
     hTime.symm M.T_pos.le (S.high p) (S.high_pos p) hback
   have hHighSolve : O.highSolve (highForce O p a) =
       (EulerTransversePacketJoin.vector τ hτ hτT B GH,EulerTransversePacketJoin.scalar τ hτ hτT B
-        GH) := by
+          GH) := by
     rw [hhigh]
     exact EulerTransversePacketJoin.highSolve_eq τ hτ hτT B GH
   have hscalar : (step O p a).highPressure = EulerTransversePacketJoin.scalar τ hτ hτT B GH :=
     congrArg Prod.snd hHighSolve
   let Q : Field P M.T (fun z => (pressureJet (step O p a).highPressure z).2 angleDirection • D.m₀)
-    :=
+      :=
     ((EulerTransversePacketJoin.angularField τ hτ hτT B GH).changeTime hTime.symm).congr
       (fun _ _ _ => by rw [hscalar])
   exact ⟨Q,hbound.of_path_eq _ rfl⟩

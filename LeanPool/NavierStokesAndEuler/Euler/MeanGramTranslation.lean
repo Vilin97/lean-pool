@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramInverse
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongCoordinates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEquation
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedTranslation
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
+import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
 
 /-!
 # Translation covariance of the actual mean acceleration
@@ -21,17 +22,34 @@ is the spatial orbit of the original acceleration. The final identification
 uses the already proved strong equation of the actual variational solution.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open EulerMeanSolenoidal EulerTimeLp
 
 -- Reuse the nested Hilbert-space instances throughout both namespaces.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanGramTranslation1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanGramTranslation2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanGramTranslation3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanGramTranslation4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanGramTranslation5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanGramTranslation6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) :=
+    inferInstance
 
 namespace EulerMeanGramTranslation
 
@@ -45,7 +63,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- The actual spatially translated frame retains its original lower bound. -/
 theorem translatedFrame_lower (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (c : ℝ)
-    (hF : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
+    (hF : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
     (a : Space) (t : Icc (0 : ℝ) T) (v : solenoidalSpace) :
     c*‖v‖^2 ≤ ‖solenoidalFrame T (translatePath T a F) t v‖^2 := by
   have h := hF t (solenoidalTranslation (-a) v)
@@ -85,7 +103,7 @@ theorem gramOperator_translate (a : Space)
 or of the unknown solution is assumed. -/
 theorem gramSolver_translate (a : Space)
     (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (c : ℝ) (hc : 0 < c)
-    (hF : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
+    (hF : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
     (g : TimeLp T solenoidalSpace) :
     gramSolver T hT (solenoidalFrame T (translatePath T a F)) c hc
         (translatedFrame_lower T F c hF a) (timeSolenoidalTranslation T a g) =
@@ -98,7 +116,7 @@ theorem gramSolver_translate (a : Space)
     c hc (gramOperator_coercive T hT (solenoidalFrame T (translatePath T a F)) c
       (translatedFrame_lower T F c hF a)) (timeSolenoidalTranslation T a g)
   have hr := (gramOperator_translate T hT a F (gramSolver T hT (solenoidalFrame T F) c hc hF
-    g)).trans
+      g)).trans
     (congrArg (timeSolenoidalTranslation T a)
       (operator_inverse_apply (gramOperator T hT (solenoidalFrame T F)) c hc
         (gramOperator_coercive T hT (solenoidalFrame T F) c hF) g))
@@ -106,7 +124,7 @@ theorem gramSolver_translate (a : Space)
 
 /-- The genuine fixed-coordinate acceleration recovered from velocity and forcing. -/
 def meanAcceleration (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
-    (c : ℝ) (hc : 0 < c) (hF : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hF : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
     (v : TimeLp T solenoidalSpace) (f : TimeLp T L2) : TimeLp T solenoidalSpace :=
   gramSolver T hT (solenoidalFrame T F) c hc hF
     ((timeMultiplier T hT (solenoidalFrame T F)).adjoint
@@ -115,11 +133,11 @@ def meanAcceleration (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
 /-- The translated acceleration is obtained by the actual translated coefficients. -/
 theorem meanAcceleration_translate (a : Space)
     (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
-    (c : ℝ) (hc : 0 < c) (hF : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
+    (c : ℝ) (hc : 0 < c) (hF : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
     (v : TimeLp T solenoidalSpace) (f : TimeLp T L2) :
     meanAcceleration T hT (translatePath T a F) (translatePath T a F₁) c hc
         (translatedFrame_lower T F c hF a) (timeSolenoidalTranslation T a v) (timeTranslation T a
-          f) =
+            f) =
       timeSolenoidalTranslation T a (meanAcceleration T hT F F₁ c hc hF v f) := by
   have hr := congrArg (fun z : TimeLp T L2 => timeTranslation T a f-(2 : ℝ) • z)
     (frameMultiplier_translate T hT a F₁ v)
@@ -154,7 +172,7 @@ variable {T : ℝ} {hT : 0 ≤ T}
 /-- The acceleration already constructed from the strong weak-solution theorem
 is exactly the coercive Gram solve used for the spatial estimates. -/
 theorem acceleration_eq_meanAcceleration (c : ℝ) (hc : 0 < c)
-    (hF : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2) :
+    (hF : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2) :
     s.acceleration = meanAcceleration T hT F F₁ c hc hF s.velocityLp f := by
   have heq : ∀ᵐ t ∂timeMeasure T,
       gram (extendPath T hT (solenoidalFrame T F) t) (s.acceleration t) =

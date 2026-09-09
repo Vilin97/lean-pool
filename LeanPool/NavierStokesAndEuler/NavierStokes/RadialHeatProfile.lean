@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-public import Mathlib.Analysis.Calculus.FDeriv.Extend
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # The radial heat continuation profile
@@ -20,6 +16,9 @@ The profile is defined by the actual gamma-normalized improper integral in
 Lemma 4.4. Its derivative kernels have gamma-integrable bounds on the whole
 closed half-line of nonnegative profile arguments.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,6 +31,7 @@ namespace NavierStokes.RadialHeatProfile
 def kernel (a : ℝ) (n : ℕ) (z v : ℝ) : ℝ :=
   Real.exp (-v) * v ^ (a + (n : ℝ) - 1) * (1 + z * v) ^ (1 - a - (n : ℝ))
 
+/-- Moment, given by `∫ v in Ioi (0 : ℝ), kernel a n z v`. -/
 def moment (a : ℝ) (n : ℕ) (z : ℝ) : ℝ :=
   ∫ v in Ioi (0 : ℝ), kernel a n z v
 
@@ -213,6 +213,7 @@ noncomputable def derivativeCoeff (a : ℝ) : ℕ → ℝ
   | 0 => 1
   | n + 1 => derivativeCoeff a n * (1 - a - (n : ℝ))
 
+/-- Profile jet, given by `(Real.Gamma a)⁻¹ * derivativeCoeff a n * moment a n z`. -/
 def profileJet (a : ℝ) (n : ℕ) (z : ℝ) : ℝ :=
   (Real.Gamma a)⁻¹ * derivativeCoeff a n * moment a n z
 
@@ -259,6 +260,7 @@ theorem iteratedDeriv_profile {a z : ℝ} (ha : 1 < a) (n : ℕ) (hz : 0 < z) :
 
 /-! ## The vanishing boundary term and the actual ODE -/
 
+/-- Boundary term, given by `Real.exp (-v) * v ^ a * (1 + z * v) ^ (-a)`. -/
 def boundaryTerm (a z v : ℝ) : ℝ :=
   Real.exp (-v) * v ^ a * (1 + z * v) ^ (-a)
 
@@ -462,7 +464,7 @@ theorem profile_first_derivative_bound {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
   have he : |(Real.Gamma a)⁻¹ * (1 - a)| * Real.Gamma (a + 1) = a * (a - 1) := by
     rw [Real.Gamma_add_one (zero_lt_one.trans ha).ne', abs_mul,
       abs_of_pos (inv_pos.mpr hg), abs_of_neg (sub_neg.mpr ha)]
-    field_simp ; ring
+    field_simp; ring
   exact h.trans_eq he
 
 /-- An explicit version of `H(z) - 1 = O_h(z)`, with `C_h = h(1+h)`. -/
@@ -489,11 +491,14 @@ def spatialExponent (a : ℝ) : ℝ := 1 / 2 - a
 def spatialProfile (a τ s : ℝ) : ℝ :=
   s ^ spatialExponent a * profile a (2 * τ / s)
 
+/-- Spatial first, given by `s ^ (spatialExponent a - 1) * (spatialExponent a * profile a (2 * τ
+/ s) - (2 * τ / s) * profileJet a 1 (2 * τ / s))`. -/
 def spatialFirst (a τ s : ℝ) : ℝ :=
   s ^ (spatialExponent a - 1) *
     (spatialExponent a * profile a (2 * τ / s) -
       (2 * τ / s) * profileJet a 1 (2 * τ / s))
 
+/-- Spatial second, constructed using `s`. -/
 def spatialSecond (a τ s : ℝ) : ℝ :=
   s ^ (spatialExponent a - 2) *
     (spatialExponent a * (spatialExponent a - 1) * profile a (2 * τ / s) -
@@ -522,7 +527,7 @@ theorem spatialProfile_hasDerivAt_s {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (
   convert! hd using 1
   dsimp only [spatialFirst]
   rw [Real.rpow_sub_one hs.ne']
-  field_simp ; ring
+  field_simp; ring
 
 theorem spatialFirst_hasDerivAt_s {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0 < s) :
     HasDerivAt (spatialFirst a τ) (spatialSecond a τ s) s := by
@@ -536,7 +541,7 @@ theorem spatialFirst_hasDerivAt_s {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs
   dsimp only [spatialSecond]
   rw [show spatialExponent a - 2 = (spatialExponent a - 1) - 1 by ring,
     Real.rpow_sub_one hs.ne', Real.rpow_sub_one hs.ne']
-  field_simp ; ring
+  field_simp; ring
 
 theorem spatialProfile_hasDerivAt_time {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0 < s) :
     HasDerivAt (fun τ => spatialProfile a τ s)
@@ -575,7 +580,7 @@ theorem spatial_heat_identity {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0
           (2 * a * (2 * τ / s)) * profileJet a 1 (2 * τ / s) +
           a * (a - 1) * profile a (2 * τ / s)) := by
     dsimp only [spatialExponent]
-    field_simp ; ring
+    field_simp; ring
   rw [hres]
   have hsum : (2 * τ / s) ^ 2 * profileJet a 2 (2 * τ / s) +
       (2 * a * (2 * τ / s)) * profileJet a 1 (2 * τ / s) +
@@ -587,8 +592,11 @@ theorem spatial_heat_identity {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0
 /-- The radial velocity profile in physical radius and backward time. -/
 def radialProfile (a τ r : ℝ) : ℝ := spatialProfile a τ (r ^ 2 / 2)
 
+/-- Radial first, given by `spatialFirst a τ (r ^ 2 / 2) * r`. -/
 def radialFirst (a τ r : ℝ) : ℝ := spatialFirst a τ (r ^ 2 / 2) * r
 
+/-- Radial second, given by `spatialSecond a τ (r ^ 2 / 2) * r ^ 2 + spatialFirst a τ (r ^ 2 /
+2)`. -/
 def radialSecond (a τ r : ℝ) : ℝ :=
   spatialSecond a τ (r ^ 2 / 2) * r ^ 2 + spatialFirst a τ (r ^ 2 / 2)
 
@@ -639,7 +647,7 @@ theorem radial_heat_equation {a τ r : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hr : 0 
     radialProfile_first_derivative ha hτ hr, radialProfile_second_derivative ha hτ hr]
   rw [spatial_heat_identity ha hτ (show 0 < r ^ 2 / 2 by positivity)]
   dsimp only [radialSecond, radialFirst, radialProfile]
-  field_simp ; ring
+  field_simp; ring
 
 /-- With `τ = 1 - t`, the sign is the forward heat sign in the manuscript. -/
 theorem forward_radial_heat_equation {a t r : ℝ} (ha : 1 < a) (ht : t < 1) (hr : 0 < r) :

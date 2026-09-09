@@ -6,17 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketEndpointPointwise
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryField
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSliceRepresentatives
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSliceRepresentatives
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketEndpointPointwise
 
 /-!
 The actual joined primary, restricted to its history interval, is the
 literal compact periodic wave times the finite-dimensional endpoint history.
 In particular its angular derivative at zero has the manuscript's δ⁻¹ factor.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

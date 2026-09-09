@@ -6,9 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongAlgebra
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Recovering the transverse normal residual
@@ -17,6 +16,9 @@ A residual annihilated by the adjoint of a frame spanning `m⊥` is exactly its
 normal component. Applying this elementary Hilbert-space fact to the proved
 projected coordinate equation gives the pressure coefficient in equation (11).
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

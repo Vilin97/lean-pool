@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
-public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeBundling
+public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
+import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Differentiating an actual L²-valued family by dominated ordinary derivatives. -/
 
 @[expose] public section
 
-/-! Differentiating an actual L²-valued family by dominated ordinary derivatives. -/
 
 noncomputable section
 
@@ -26,12 +30,13 @@ variable {X P V : Type*} [MeasurableSpace X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   (μ : Measure X)
 
-/-- A pointwise derivative and a square-integrable increment bound give a genuine L² Fréchet derivative. -/
+/-- A pointwise derivative and a square-integrable increment bound give a genuine L² Fréchet
+derivative. -/
 theorem hasFDerivAt_of_dominated (U : P → Lp V 2 μ) (F : P → X → V)
     (hU : ∀ a, U a =ᵐ[μ] F a) (D : Lp (P →L[ℝ] V) 2 μ)
     (hpoint : ∀ᵐ x ∂μ, HasFDerivAt (fun a => F a x) (D x) 0)
     (M : X → ℝ) (hM : MemLp M 2 μ) (hM0 : ∀ᵐ x ∂μ, 0 ≤ M x)
-    (hbound : ∀ᶠ a in 𝓝 (0 : P), ∀ᵐ x ∂μ, ‖F a x-F 0 x‖ ≤ M x*‖a‖) :
+    (hbound : ∀ᶠ a in 𝓝 (0 : P), ∀ᵐ x ∂μ, ‖F a x - F 0 x‖ ≤ M x * ‖a‖) :
     HasFDerivAt U (derivativeMap μ D) 0 := by
   let R : P → Lp V 2 μ := fun a => ‖a‖⁻¹ • (U a-U 0-derivativeMap μ D a)
   let r : P → X → V := fun a x => ‖a‖⁻¹ • (F a x-F 0 x-D x a)

@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientSpatial
 
+/-! All-order parameter regularity of actual bounded smooth coefficient translations. -/
+
 @[expose] public section
 
-/-! All-order parameter regularity of actual bounded smooth coefficient translations. -/
 
 noncomputable section
 
@@ -27,6 +28,7 @@ theorem fieldDerivativeMap_norm_le (DA : Space →ᵇ (Space →L[ℝ] V)) :
     ‖fieldDerivativeMap DA‖ ≤ ‖DA‖ :=
   (fieldDerivativeMap DA).opNorm_le_bound (norm_nonneg DA) (fieldDirection_norm_le DA)
 
+/-- Derivative bundling linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def derivativeBundlingLinear : (Space →ᵇ (Space →L[ℝ] V)) →ₗ[ℝ]
     (Space →L[ℝ] (Space →ᵇ V)) where
   toFun := fieldDerivativeMap
@@ -56,12 +58,14 @@ def derivativeBundling : (Space →ᵇ (Space →L[ℝ] V)) →L[ℝ]
 
 /-- A concrete smooth coefficient with globally bounded actual derivatives of every order. -/
 structure BoundedSmoothField (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  /-- Underlying field of `BoundedSmoothField`, of type `Space →ᵇ V`. -/
   field : Space →ᵇ V
   smooth : ContDiff ℝ ∞ (field : Space → V)
   bounded : ∀ n : ℕ, ∃ C : ℝ, ∀ x, ‖iteratedFDeriv ℝ n (field : Space → V) x‖ ≤ C
 
 namespace BoundedSmoothField
 
+/-- Derivative, bundling `field`, `smooth`, `bounded`. -/
 def derivative (A : BoundedSmoothField V) : BoundedSmoothField (Space →L[ℝ] V) where
   field := boundedDerivative A.field A.smooth (Classical.choose (A.bounded 1)) (fun x => by
     rw [← norm_iteratedFDeriv_one]
@@ -102,7 +106,8 @@ private theorem translation_contDiff_nat_aux (n : ℕ) :
     rw [A.translation_fderiv]
     exact (derivativeBundling (V := V)).contDiff.comp (ih (Space →L[ℝ] V) A.derivative)
 
-/-- Every spatial translation of an actual globally bounded smooth coefficient depends smoothly on its parameter. -/
+/-- Every spatial translation of an actual globally bounded smooth coefficient depends smoothly on
+its parameter. -/
 theorem translation_contDiff (A : BoundedSmoothField V) : ContDiff ℝ ∞ (translated A.field) :=
   contDiff_infty.mpr (fun n => translation_contDiff_nat_aux n V A)
 

@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowTimeGevrey
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Frequency arithmetic for the genuine graph-flow estimates. Fixed
 source constants affect only the frequency threshold. The power losses
 can be made arbitrarily small, independently of any truncation order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,6 +23,7 @@ namespace EulerPacketGraphFlowFrequency
 
 open Filter Real EulerSmoothFlowGevrey
 
+/-- Input exponent, given by `min (ε/6) (1/4)`. -/
 def inputExponent (ε : ℝ) : ℝ := min (ε/6) (1/4)
 
 theorem inputExponent_pos (ε : ℝ) (hε : 0 < ε) : 0 < inputExponent ε := by
@@ -36,7 +39,7 @@ theorem six_inputExponent_le (ε : ℝ) : 6*inputExponent ε ≤ ε := by
 
 private theorem flow_radius_polynomial (B R T w : ℝ)
     (hB : 0 ≤ B) (hR : 0 ≤ R) (hT : 0 ≤ T) (hw : 71 ≤ w)
-    (hRw : R ≤ w) (hTw : T ≤ w) (hsmall : B*w ≤ 1) :
+    (hRw : R ≤ w) (hTw : T ≤ w) (hsmall : B * w ≤ 1) :
     1+flowRadius B R T R ≤ w^3 ∧ 1+flowRadius B R T (6*R) ≤ w^3 := by
   have hw0 : 0 ≤ w := by linarith
   have hBT : B*T ≤ 1 := (mul_le_mul_of_nonneg_left hTw hB).trans hsmall
@@ -45,8 +48,8 @@ private theorem flow_radius_polynomial (B R T w : ℝ)
     have h := mul_le_mul_of_nonneg_right (show 1+B*T ≤ 2 by linarith) (by positivity : 0 ≤ 6*R)
     nlinarith
   have hlarge : flowRadius B R T (6*R) ≤ 70*w^2 := by
-    have h := mul_le_mul hleft hright (by positivity : 0 ≤ (1+B*T)*(6*R)+2) (by positivity : 0 ≤
-      5*w)
+    have h := mul_le_mul hleft hright (by
+        positivity : 0 ≤ (1+B*T)*(6*R)+2) (by positivity : 0 ≤ 5*w)
     simpa only [flowRadius] using h.trans_eq (by ring)
   have hsmallR : flowRadius B R T R ≤ flowRadius B R T (6*R) := by
     unfold flowRadius
@@ -63,7 +66,7 @@ private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
     (_hK : 0 ≤ K) (hB : 0 ≤ B) (hR : 0 ≤ R) (hT : 0 ≤ T) (hC1 : 0 ≤ C1)
     (hk : 1 ≤ k) (hell : 0 < ell) (hw : 71 ≤ w)
     (hKw : K ≤ w) (hRw : R ≤ w) (hTw : T ≤ w) (hCw : C1 ≤ w)
-    (hsmall : B*w ≤ 1) :
+    (hsmall : B * w ≤ 1) :
     K*(T*B)*(1+flowRadius B R T R) ≤ B*w^5 ∧
     K*B*(1+flowRadius B R T R) ≤ B*w^5 ∧
     K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ w^6 ∧
@@ -109,12 +112,12 @@ private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
   exact ⟨hd,hvb,hab,hradius _ hVr hv,hradius _ hAr ha⟩
 
 theorem physical_bounds_of_power (ε η K k B R T C1 ell : ℝ)
-    (hη : 0 < η) (_hηq : η ≤ 1/4) (hηε : 6*η ≤ ε)
+    (hη : 0 < η) (_hηq : η ≤ 1 / 4) (hηε : 6 * η ≤ ε)
     (hK : 0 ≤ K) (hB : 0 ≤ B) (hR : 0 ≤ R) (hT : 0 ≤ T) (hC1 : 0 ≤ C1)
     (hk : 1 ≤ k) (hell : 0 < ell)
-    (hw : 71 ≤ k^η) (hKw : K ≤ k^η) (hRw : R ≤ k^η)
-    (hTw : T ≤ k^η) (hCw : C1 ≤ k^η)
-    (hroot : 2 ≤ k^(1/2-η)) (hsmall : B ≤ 2*k^(-(1/2 : ℝ))) :
+    (hw : 71 ≤ k ^ η) (hKw : K ≤ k ^ η) (hRw : R ≤ k ^ η)
+    (hTw : T ≤ k ^ η) (hCw : C1 ≤ k ^ η)
+    (hroot : 2 ≤ k ^ (1 / 2 - η)) (hsmall : B ≤ 2 * k ^ (-(1 / 2 : ℝ))) :
     K*(T*B)*(1+flowRadius B R T R) ≤ k^(-(1/2 : ℝ)+ε) ∧
     K*B*(1+flowRadius B R T R) ≤ k^(-(1/2 : ℝ)+ε) ∧
     K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ k^ε ∧

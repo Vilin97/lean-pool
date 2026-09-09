@@ -6,15 +6,15 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
 public import Mathlib.Analysis.Calculus.Deriv.Basic
-public import Mathlib.Analysis.Asymptotics.Lemmas
-
-@[expose] public section
+import Mathlib.Analysis.Asymptotics.Lemmas
 
 /-! Joint differentiation through uniformly bounded evaluation operators.
 Strong continuity on the derivative vector suffices; operator-norm continuity
 or differentiability of the whole family of evaluation maps is unnecessary. -/
+
+@[expose] public section
+
 
 noncomputable section
 

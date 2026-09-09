@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
-public import Mathlib.Algebra.BigOperators.NatAntidiagonal
-public import Mathlib.Analysis.Calculus.FDeriv.Analytic
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Radial divisibility and regular slow-order sources
@@ -19,6 +17,9 @@ This module removes the apparent `1/X` singularities in the radial source
 of equation (22), using the actual differential operators from SimilarityProfile.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AxisSourceRegularity
@@ -26,6 +27,7 @@ namespace NavierStokes.AxisSourceRegularity
 open SimilarityProfile Set Filter
 open scoped BigOperators Topology ContDiff
 
+/-- Axis factor, given by `w.1 * v w`. -/
 noncomputable def axisFactor (v : InnerProfile) (w : InnerPoint) : ℝ := w.1 * v w
 
 theorem partialX_axisFactor {v : InnerProfile} {w : InnerPoint}
@@ -78,6 +80,7 @@ theorem partialXX_axisFactor {v : InnerProfile} {w : InnerPoint}
   simp [partialX]
   ring
 
+/-- Z2, given by `Z h (b - D h) (Z h b v)`. -/
 noncomputable def Z2 (h b : ℝ) (v : InnerProfile) : InnerProfile :=
   Z h (b - D h) (Z h b v)
 
@@ -105,12 +108,17 @@ theorem radial_advection_axisFactor {vi vj : InnerProfile} {w : InnerPoint}
   · field_simp [hX]
     ring
 
+/-- Slow order, given by `2 * (k : ℝ) * h`. -/
 noncomputable def slowOrder (h : ℝ) (k : ℕ) : ℝ := 2 * (k : ℝ) * h
 
+/-- Shifted axial as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 => Z2 h
+(slowOrder h k) (V k)`. -/
 noncomputable def shiftedAxial (h : ℝ) (V : ℕ → InnerProfile) : ℕ → InnerProfile
   | 0 => fun _ => 0
   | k + 1 => Z2 h (slowOrder h k) (V k)
 
+/-- Shifted axial factor as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 => Z2 h
+(slowOrder h k - 1) (v k)`. -/
 noncomputable def shiftedAxialFactor (h : ℝ) (v : ℕ → InnerProfile) : ℕ → InnerProfile
   | 0 => fun _ => 0
   | k + 1 => Z2 h (slowOrder h k - 1) (v k)
@@ -145,7 +153,7 @@ theorem omega_axisFactor (h : ℝ) (U v : ℕ → InnerProfile) (k : ℕ) (w : I
     omega h U (fun j => axisFactor (v j)) k w = w.1 * omegaDivX h U v k w := by
   have hpair : ∀ ij ∈ Finset.antidiagonal k,
       axisFactor (v ij.1) w * (partialX (axisFactor (v ij.2)) w - axisFactor (v ij.2) w / (2 *
-        w.1)) +
+          w.1)) +
         U ij.1 w * Z h (slowOrder h ij.2) (axisFactor (v ij.2)) w =
       w.1 * (v ij.1 w * (v ij.2 w / 2 + w.1 * partialX (v ij.2) w) +
         U ij.1 w * Z h (slowOrder h ij.2 - 1) (v ij.2) w) := by
@@ -280,15 +288,25 @@ theorem omegaDivX_analytic (h : ℝ) (U v : ℕ → InnerProfile) (k : ℕ) (w :
 
 /-! ## Explicit finite jets and parameter-analytic source formulas -/
 
+/-- Jet2 data, collecting `value`, `dx`, `de`, `dxx`, `dxe`, `dex` and their compatibility
+conditions. -/
 structure Jet2 (K : Type*) where
+  /-- Value of `Jet2`, of type `K`. -/
   value : K
+  /-- Dx of `Jet2`, of type `K`. -/
   dx : K
+  /-- De of `Jet2`, of type `K`. -/
   de : K
+  /-- Dxx of `Jet2`, of type `K`. -/
   dxx : K
+  /-- Dxe of `Jet2`, of type `K`. -/
   dxe : K
+  /-- Dex of `Jet2`, of type `K`. -/
   dex : K
+  /-- Dee of `Jet2`, of type `K`. -/
   dee : K
 
+/-- Profile jet, bundling `value`, `dx`, `de`, `dxx` and the required compatibility proofs. -/
 noncomputable def profileJet (v : InnerProfile) (w : InnerPoint) : Jet2 ℝ where
   value := v w
   dx := partialX v w
@@ -298,31 +316,44 @@ noncomputable def profileJet (v : InnerProfile) (w : InnerPoint) : Jet2 ℝ wher
   dex := partialX (partialEta v) w
   dee := partialEta (partialEta v) w
 
+/-- Jet L, given by `1 - 2 * h * e ^ 2`. -/
 noncomputable def jetL {K : Type*} [Field K] (h e : K) : K := 1 - 2 * h * e ^ 2
 
+/-- Jet T, given by `(-b * j.value + (1 / 2 - h) * e * j.de + X * j.dx) / jetL h e`. -/
 noncomputable def jetT {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
   (-b * j.value + (1 / 2 - h) * e * j.de + X * j.dx) / jetL h e
 
+/-- Jet Z numerator, given by `2 * e * b * j.value + (1 - e ^ 2) * j.de - 2 * e * X * j.dx`. -/
 noncomputable def jetZNumerator {K : Type*} [Field K] (b X e : K) (j : Jet2 K) : K :=
   2 * e * b * j.value + (1 - e ^ 2) * j.de - 2 * e * X * j.dx
 
+/-- Jet Z numerator X, given by `2 * e * b * j.dx + (1 - e ^ 2) * j.dex - 2 * e * (j.dx + X *
+j.dxx)`. -/
 noncomputable def jetZNumeratorX {K : Type*} [Field K] (b X e : K) (j : Jet2 K) : K :=
   2 * e * b * j.dx + (1 - e ^ 2) * j.dex - 2 * e * (j.dx + X * j.dxx)
 
+/-- Jet Z numerator E, given by `2 * b * j.value + 2 * e * b * j.de - 2 * e * j.de + (1 - e ^ 2)
+* j.dee - 2 * X * j.dx - 2 * e * X * j.dxe`. -/
 noncomputable def jetZNumeratorE {K : Type*} [Field K] (b X e : K) (j : Jet2 K) : K :=
   2 * b * j.value + 2 * e * b * j.de - 2 * e * j.de +
     (1 - e ^ 2) * j.dee - 2 * X * j.dx - 2 * e * X * j.dxe
 
+/-- Jet Z, given by `jetZNumerator b X e j / jetL h e`. -/
 noncomputable def jetZ {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
   jetZNumerator b X e j / jetL h e
 
+/-- Jet ZX, given by `jetZNumeratorX b X e j / jetL h e`. -/
 noncomputable def jetZX {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
   jetZNumeratorX b X e j / jetL h e
 
+/-- Jet ZE, given by `(jetZNumeratorE b X e j * jetL h e + 4 * h * e * jetZNumerator b X e j) /
+jetL h e ^ 2`. -/
 noncomputable def jetZE {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
   (jetZNumeratorE b X e j * jetL h e + 4 * h * e * jetZNumerator b X e j) /
     jetL h e ^ 2
 
+/-- Jet Z2, given by `(2 * e * (b - (1 / 2 - h)) * jetZ h b X e j + (1 - e ^ 2) * jetZE h b X e
+j - 2 * e * X * jetZX h b X e j) / jetL h e`. -/
 noncomputable def jetZ2 {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
   (2 * e * (b - (1 / 2 - h)) * jetZ h b X e j +
     (1 - e ^ 2) * jetZE h b X e j - 2 * e * X * jetZX h b X e j) / jetL h e
@@ -338,10 +369,10 @@ theorem Z_partials_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
     partialX (Z h b v) w = jetZX h b w.1 w.2 (profileJet v w) ∧
       partialEta (Z h b v) w = jetZE h b w.1 w.2 (profileJet v w) := by
   have hvd := (hv.differentiableAt (by norm_num)).hasFDerivAt
-  have hxd := ((partialX_smoothAt hv (m := 1) (by norm_num)).differentiableAt (by
-    norm_num)).hasFDerivAt
-  have hed := ((partialEta_smoothAt hv (m := 1) (by norm_num)).differentiableAt (by
-    norm_num)).hasFDerivAt
+  have hxd := ((partialX_smoothAt hv (m := 1) (by
+      norm_num)).differentiableAt (by norm_num)).hasFDerivAt
+  have hed := ((partialEta_smoothAt hv (m := 1) (by
+      norm_num)).differentiableAt (by norm_num)).hasFDerivAt
   have hx : HasFDerivAt (fun y : InnerPoint => y.1) (ContinuousLinearMap.fst ℝ ℝ ℝ) w :=
     hasFDerivAt_fst
   have he : HasFDerivAt (fun y : InnerPoint => y.2) (ContinuousLinearMap.snd ℝ ℝ ℝ) w :=
@@ -360,12 +391,12 @@ theorem Z_partials_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
   · change (fderiv ℝ (Z h b v) w) (1, 0) = _
     rw [hz.fderiv]
     simp [jetZX, jetZNumeratorX, jetL, profileJet, partialX, partialEta, smul_eq_mul]
-    field_simp [hL₁] ; ring
+    field_simp [hL₁]; ring
   · change (fderiv ℝ (Z h b v) w) (0, 1) = _
     rw [hz.fderiv]
     simp [jetZE, jetZNumeratorE, jetZNumerator, jetL, profileJet, partialX, partialEta,
       smul_eq_mul]
-    field_simp [hL₁] ; ring
+    field_simp [hL₁]; ring
 
 theorem Z2_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
     (hv : ContDiffAt ℝ 2 v w) (hL : L h w.2 ≠ 0) :
@@ -376,6 +407,8 @@ theorem Z2_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
   rw [hx, he, Z_eq_jet]
   rfl
 
+/-- Jet shifted as an element of `ℕ → K | 0 => 0 | k + 1 => jetZ2 h (2 * (k : K) * h - 1) X e (v
+k)`. -/
 noncomputable def jetShifted {K : Type*} [Field K] (h X e : K) (v : ℕ → Jet2 K) : ℕ → K
   | 0 => 0
   | k + 1 => jetZ2 h (2 * (k : K) * h - 1) X e (v k)
@@ -493,6 +526,7 @@ theorem jetOmegaDivX_analytic (h X : ℂ) (U : ℕ → ℂ → ℂ)
     ((analyticAt_const.mul (hv k le_rfl).dx).add
       (analyticAt_const.mul (hv k le_rfl).dxx))).sub hp
 
+/-- Complexify jet, bundling `value`, `dx`, `de`, `dxx` and the required compatibility proofs. -/
 noncomputable def complexifyJet (j : Jet2 ℝ) : Jet2 ℂ where
   value := j.value
   dx := j.dx
@@ -517,6 +551,7 @@ theorem omegaDivX_complex_formula (h : ℝ) (U v : ℕ → InnerProfile) (k : �
         (fun j => complexifyJet (profileJet (v j) w)) k := by
   rw [omegaDivX_eq_jet h U v k w hv hL, jetOmegaDivX_ofReal]
 
+/-- Lower pairs, given by `(Finset.antidiagonal n).filter (fun ij => 0 < ij.1 ∧ 0 < ij.2)`. -/
 noncomputable def lowerPairs (n : ℕ) : Finset (ℕ × ℕ) :=
   (Finset.antidiagonal n).filter (fun ij => 0 < ij.1 ∧ 0 < ij.2)
 
@@ -525,9 +560,12 @@ theorem lowerPairs_lt {n i j : ℕ} (hij : (i, j) ∈ lowerPairs n) : i < n ∧ 
   have he := Finset.mem_antidiagonal.mp ha
   omega
 
+/-- Lower convolution, given by `∑ ij ∈ lowerPairs n, a ij.1 w * b ij.2 w`. -/
 noncomputable def lowerConvolution (a b : ℕ → InnerProfile) (n : ℕ) (w : InnerPoint) : ℝ :=
   ∑ ij ∈ lowerPairs n, a ij.1 w * b ij.2 w
 
+/-- Previous omega div X as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 =>
+omegaDivX h U v k`. -/
 noncomputable def previousOmegaDivX (h : ℝ) (U v : ℕ → InnerProfile) : ℕ → InnerProfile
   | 0 => fun _ => 0
   | k + 1 => omegaDivX h U v k
@@ -597,6 +635,7 @@ theorem lowerPressureSource_eq_quotient (h C : ℝ) (φ U v : ℕ → InnerProfi
   rw [omega_quotient_eq h U v k w hv hL hX]
   rfl
 
+/-- Jet previous omega as an element of `ℕ → K | 0 => 0 | k + 1 => jetOmegaDivX h X e U v k`. -/
 noncomputable def jetPreviousOmega {K : Type*} [Field K] (h X e : K)
     (U : ℕ → K) (v : ℕ → Jet2 K) : ℕ → K
   | 0 => 0
@@ -672,6 +711,8 @@ theorem transport_axisFactor (σ : ℝ) (v f : InnerProfile) (w : InnerPoint)
   unfold axisFactor
   field_simp [hX]
 
+/-- Shifted profile axial as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 => Z2 h
+(b + slowOrder h k) (f k)`. -/
 noncomputable def shiftedProfileAxial (h b : ℝ) (f : ℕ → InnerProfile) : ℕ → InnerProfile
   | 0 => fun _ => 0
   | k + 1 => Z2 h (b + slowOrder h k) (f k)
@@ -736,11 +777,14 @@ theorem lowerTransportSource_analytic (h b σ : ℝ) (v U f : ℕ → InnerProfi
     | succ k => exact Z2_analytic h _ (hf k (Nat.lt_succ_self k)) hL
   exact hs.sub hp
 
+/-- Jet shifted profile axial as an element of `ℕ → K | 0 => 0 | k + 1 => jetZ2 h (b + 2 * (k :
+K) * h) X e (f k)`. -/
 noncomputable def jetShiftedProfileAxial {K : Type*} [Field K] (h b X e : K)
     (f : ℕ → Jet2 K) : ℕ → K
   | 0 => 0
   | k + 1 => jetZ2 h (b + 2 * (k : K) * h) X e (f k)
 
+/-- Jet lower transport source as an element of `K`. -/
 noncomputable def jetLowerTransportSource {K : Type*} [Field K] (h b σ X e : K)
     (v U : ℕ → K) (f : ℕ → Jet2 K) (n : ℕ) : K :=
   (∑ ij ∈ lowerPairs n,

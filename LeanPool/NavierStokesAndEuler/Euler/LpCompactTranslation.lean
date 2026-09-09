@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
+public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
 public import LeanPool.NavierStokesAndEuler.Euler.LpTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedDerivative
-public import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
+import LeanPool.NavierStokesAndEuler.Euler.LpDominatedDerivative
+import Mathlib.Analysis.Calculus.MeanValue
+
+/-! The genuine L² derivative of translations of compact smooth ordinary-space fields. -/
 
 @[expose] public section
 
-/-! The genuine L² derivative of translations of compact smooth ordinary-space fields. -/
 
 noncomputable section
 
@@ -24,9 +28,12 @@ open scoped ContDiff Topology
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Compact field, given by `(hf.continuous.memLp_of_hasCompactSupport hc).toLp f`. -/
 def compactField (f : Space → V) (hc : HasCompactSupport f) (hf : ContDiff ℝ ∞ f) : L2Space V :=
   (hf.continuous.memLp_of_hasCompactSupport hc).toLp f
 
+/-- Compact derivative, given by `((hf.fderiv_right (m := ∞) (by
+simp)).continuous.memLp_of_hasCompactSupport (hc.fderiv ℝ)).toLp (fderiv ℝ f)`. -/
 def compactDerivative (f : Space → V) (hc : HasCompactSupport f) (hf : ContDiff ℝ ∞ f) :
     L2Space (Space →L[ℝ] V) :=
   ((hf.fderiv_right (m := ∞) (by simp)).continuous.memLp_of_hasCompactSupport
@@ -76,7 +83,8 @@ theorem compact_increment_bound (f : Space → V) (hc : HasCompactSupport f)
       simp only [image_eq_zero_of_notMem_tsupport hxa, image_eq_zero_of_notMem_tsupport hxf,
         sub_zero, norm_zero, Set.indicator_of_notMem hx, zero_mul, le_refl]
 
-/-- Ordinary Fréchet differentiation and L² translation differentiation agree on compact smooth fields. -/
+/-- Ordinary Fréchet differentiation and L² translation differentiation agree on compact smooth
+fields. -/
 theorem compactField_hasFDerivAt (f : Space → V) (hc : HasCompactSupport f)
     (hf : ContDiff ℝ ∞ f) :
     HasFDerivAt (fun a : Space => translation a (compactField f hc hf))

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseBoundedFrame
 
-@[expose] public section
-
 /-!
 # Source geometry for the bounded frame and normal
 
@@ -17,6 +15,9 @@ The literal fields Q=F R⊥ and m=F⁻ᵀm₀ satisfy the tangency, range, strai
 and quantitative normal lower bounds used by the actual transverse solver.
 Only the original deformation and its genuine pointwise inverse are inputs.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -73,7 +74,7 @@ theorem coefficient_tangent
 
 theorem coefficient_range
     (hInv : ∀ t x v, F.field t x (FInv.field t x v) = v)
-    (t : K) (x η : Space) (hη : ⟪(normalCoefficient m₀ FInv).field t x,η⟫_ℝ = 0) :
+    (t : K) (x η : Space) (hη : ⟪(normalCoefficient m₀ FInv).field t x, η⟫_ℝ = 0) :
     ∃ v, (coefficient m₀ R F).field t x v = η := by
   have hmem : FInv.field t x η ∈ referencePlane m₀ := by
     rw [Submodule.mem_orthogonal_singleton_iff_inner_right]

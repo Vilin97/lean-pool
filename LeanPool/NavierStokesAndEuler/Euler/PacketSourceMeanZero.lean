@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceProfiles
+
+/-! Exact angular mean and raw corrector identities for the constructed source profiles. -/
 
 @[expose] public section
 
-/-! Exact angular mean and raw corrector identities for the constructed source profiles. -/
 
 noncomputable section
 
@@ -38,10 +39,10 @@ theorem source_high_mean_zero (p : ℕ) (t : ℝ) (x : Space) :
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_highForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceHighForcing P M D hT I Iprimary p hp⟩
   have he : sourceProfiles P M D I Iprimary p =
       EulerPacketProfileRecursion.step (sourceOperators P M D I) p (sourceProfiles P M D I
-        Iprimary) :=
+          Iprimary) :=
     profiles_step _ _ p hp
   rw [he]
   change (∫ θ in (0 : ℝ)..P, (EulerTransversePacketProvider.highSolve P D I

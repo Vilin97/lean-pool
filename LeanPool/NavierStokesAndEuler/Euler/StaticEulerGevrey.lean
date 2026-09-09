@@ -6,17 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerWeightedBounds
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerGraphGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeAmplitudeBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerSolution
+public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerTime
+import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeAmplitudeBounds
 
 /-! Uniform source-only Gevrey bounds for the actual local Euler solution
 and its genuine time derivative. The same spatial radius works for sup
 and ordinary L² norms. All constants depend only on P,C,R, not on the
 particular solenoidal datum realizing the input bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,16 +29,32 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
   EulerCylinderCoordinates EulerCylinderSobolevSpace EulerPacketCylinderField
 open scoped ContDiff BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
-  inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instStaticEulerGevrey1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instStaticEulerGevrey2 : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instStaticEulerGevrey3 (n : ℕ) : NormedAddCommGroup (Space [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space [×n]→L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instStaticEulerGevrey4 (n : ℕ) : NormedSpace ℝ (Space [×n]→L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to
+shorten typeclass synthesis. -/
+local instance instStaticEulerGevrey5 (n : ℕ) : NormedAddCommGroup (Space →ᵇ (Space [×n]→L[ℝ]
+    Space)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space))` instance to shorten
+typeclass synthesis. -/
+local instance instStaticEulerGevrey6 (n : ℕ) : NormedSpace ℝ (Space →ᵇ (Space [×n]→L[ℝ] Space)) :=
+    inferInstance
 
+/-- Cover radius, given by `‖coordinateEquiv.symm.toContinuousLinearMap‖*(retainedRadius R)⁻¹`. -/
 def coverRadius (R : ℝ) : ℝ := ‖coordinateEquiv.symm.toContinuousLinearMap‖*(retainedRadius R)⁻¹
 
+/-- Output radius, given by `1+4*coverRadius R`. -/
 def outputRadius (R : ℝ) : ℝ := 1+4*coverRadius R
 
 theorem coverRadius_nonneg (R : ℝ) (hR : 0 ≤ R) : 0 ≤ coverRadius R :=
@@ -49,12 +67,16 @@ theorem outputRadius_pos (R : ℝ) (hR : 0 ≤ R) : 0 < outputRadius R := by
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Graph cost, given by `1+sobolevEmbeddingConstant P 3+Real.sqrt (2/P+2*P)*(1+coverRadius R)`. -/
 def graphCost (R : ℝ) : ℝ :=
   1+sobolevEmbeddingConstant P 3+Real.sqrt (2/P+2*P)*(1+coverRadius R)
 
+/-- Output velocity size, given by `graphCost P R*(2*mixedAmplitude P C R+baseErrorFactor)`. -/
 def outputVelocitySize (C R : ℝ) : ℝ :=
   graphCost P R*(2*mixedAmplitude P C R+baseErrorFactor)
 
+/-- Output derivative size, given by `(amplitude P C R hC hR)⁻¹*graphCost P R*staticTimeCost P
+R`. -/
 def outputDerivativeSize (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) : ℝ :=
   (amplitude P C R hC hR)⁻¹*graphCost P R*staticTimeCost P R
 
@@ -67,8 +89,8 @@ theorem graphCost_nonneg (R : ℝ) (hR : 0 ≤ R) : 0 ≤ graphCost P R := by
 theorem outputVelocitySize_nonneg (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     0 ≤ outputVelocitySize P C R :=
   mul_nonneg (graphCost_nonneg P R hR)
-    (add_nonneg (mul_nonneg (by norm_num) (mixedAmplitude_nonneg P C R hC hR))
-      baseErrorFactor_nonneg)
+    (add_nonneg (mul_nonneg (by
+        norm_num) (mixedAmplitude_nonneg P C R hC hR)) baseErrorFactor_nonneg)
 
 theorem outputDerivativeSize_nonneg (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     0 ≤ outputDerivativeSize P C R hC hR := by
@@ -95,25 +117,27 @@ private theorem jet_mono {a b r s : ℝ} (hb : 0 ≤ b) (hr : 0 ≤ r)
     (mul_le_mul hab (pow_le_pow_left₀ hr hrs n) (pow_nonneg hr n) hb) (sq_nonneg _)
 
 variable (u : SmoothL2Field Space) (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
-  (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
+  (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
 
 theorem unitVelocityCoefficient_graph (t : Icc (0 : ℝ) 1) (x : Space) :
     (unitVelocityCoefficient P u C R hC hR hu hdiv).field t x =
       (exactPacket P u C R hC hR hu hdiv).velocity.zeroGraphCoefficient.field t x := by
-  rw [unitVelocityCoefficient_apply,FieldTower.zeroGraphCoefficient_apply,FieldTower.zeroGraphField_apply]
+  rw [unitVelocityCoefficient_apply, FieldTower.zeroGraphCoefficient_apply,
+      FieldTower.zeroGraphField_apply]
   simp only [EulerConstantEuler.velocity,ExactLiftedPacket.rawVelocity,FieldTower.rawField,
     projIcc_of_mem zero_le_one t.property]
 
 theorem unitDerivativeCoefficient_graph (t : Icc (0 : ℝ) 1) (x : Space) :
     (unitDerivativeCoefficient P u C R hC hR hu hdiv).field t x =
       ((correctionBudget P u C R hC hR hu hdiv).timeDerivativeTower P).zeroGraphCoefficient.field t
-        x := by
+          x := by
   change ((Field.zero P 1).smul (amplitude P C R hC hR)).toSmoothTimeField.field t (x,0)+_=_
   rw [Field.toSmoothTimeField_apply]
   change amplitude P C R hC hR • (0 : Space)+_=_
   rw [smul_zero,zero_add]
   rfl
 
+/-- Local derivative field, constructed using `SmoothL2Field.mapField`. -/
 def localDerivativeField (t : Icc (0 : ℝ) (amplitude P C R hC hR)) : SmoothL2Field Space :=
   SmoothL2Field.mapField (((amplitude P C R hC hR)⁻¹)^2 • ContinuousLinearMap.id ℝ Space)
     (((correctionBudget P u C R hC hR hu hdiv).timeDerivativeTower P).zeroGraphField
@@ -141,7 +165,7 @@ theorem velocityCoefficient_bound (n : ℕ) :
     (retainedRadius R) (amplitude P C R hC hR*(2*mixedAmplitude P C R+baseErrorFactor))
     (retainedRadius_pos R hR) (mul_nonneg he hV) (exact_weighted P u C R hC hR hu hdiv) n
   rw [← SmoothTimeField.jet_eq_of_field_eq _ _ (unitVelocityCoefficient_graph P u C R hC hR hu
-    hdiv) n] at hunit
+      hdiv) n] at hunit
   have h := (EulerTimeRescaling.coefficient_jet_norm (amplitude P C R hC hR)
     (amplitude_pos P C R hC hR) (unitVelocityCoefficient P u C R hC hR hu hdiv) n).trans
     (mul_le_mul_of_nonneg_left hunit (inv_nonneg.mpr he))
@@ -149,14 +173,15 @@ theorem velocityCoefficient_bound (n : ℕ) :
     inv_mul_cancel₀ (amplitude_pos P C R hC hR).ne'
   apply h.trans
   calc
-    _ = (sobolevEmbeddingConstant P 3*(2*mixedAmplitude P C R+baseErrorFactor))*
+    _ = (sobolevEmbeddingConstant P 3*(2*mixedAmplitude P C R+baseErrorFactor)) *
         (coverRadius R)^n*(n.factorial : ℝ)^2 := by
       unfold coverRadius
       calc
-        _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR)*
-          ((sobolevEmbeddingConstant P 3*(2*mixedAmplitude P C R+baseErrorFactor))*
+        _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR) *
+          ((sobolevEmbeddingConstant P 3*(2*mixedAmplitude P C R+baseErrorFactor)) *
             (‖coordinateEquiv.symm.toContinuousLinearMap‖*(retainedRadius R)⁻¹)^n*(n.factorial :
-              ℝ)^2) := by ring
+                ℝ)^2) := by
+                ring
         _ = _ := by rw [hi,one_mul]
     _ ≤ _ := jet_mono (outputVelocitySize_nonneg P C R hC hR) (coverRadius_nonneg R hR)
       (mul_le_mul_of_nonneg_right (graphCost_embedding P R hR) hV)
@@ -168,11 +193,11 @@ theorem derivativeCoefficient_bound (n : ℕ) :
   have he := (amplitude_pos P C R hC hR).le
   have hT := staticTimeCost_nonneg P R hR
   have hunit := ((correctionBudget P u C R hC hR hu hdiv).timeDerivativeTower
-    P).zeroGraphCoefficient_bound
+      P).zeroGraphCoefficient_bound
     (retainedRadius R) (amplitude P C R hC hR*staticTimeCost P R)
     (retainedRadius_pos R hR) (mul_nonneg he hT) (time_weighted P u C R hC hR hu hdiv) n
   rw [← SmoothTimeField.jet_eq_of_field_eq _ _ (unitDerivativeCoefficient_graph P u C R hC hR hu
-    hdiv) n] at hunit
+      hdiv) n] at hunit
   have h := (EulerTimeRescaling.derivativeCoefficient_jet_norm (amplitude P C R hC hR)
     (amplitude_pos P C R hC hR) (unitDerivativeCoefficient P u C R hC hR hu hdiv) n).trans
     (mul_le_mul_of_nonneg_left hunit (sq_nonneg _))
@@ -180,14 +205,15 @@ theorem derivativeCoefficient_bound (n : ℕ) :
     inv_mul_cancel₀ (amplitude_pos P C R hC hR).ne'
   apply h.trans
   calc
-    _ = ((amplitude P C R hC hR)⁻¹*sobolevEmbeddingConstant P 3*staticTimeCost P R)*
+    _ = ((amplitude P C R hC hR)⁻¹*sobolevEmbeddingConstant P 3*staticTimeCost P R) *
         (coverRadius R)^n*(n.factorial : ℝ)^2 := by
       unfold coverRadius
       calc
-        _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR)*
-          (((amplitude P C R hC hR)⁻¹*sobolevEmbeddingConstant P 3*staticTimeCost P R)*
+        _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR) *
+          (((amplitude P C R hC hR)⁻¹*sobolevEmbeddingConstant P 3*staticTimeCost P R) *
             (‖coordinateEquiv.symm.toContinuousLinearMap‖*(retainedRadius R)⁻¹)^n*(n.factorial :
-              ℝ)^2) := by ring
+                ℝ)^2) := by
+                ring
         _ = _ := by rw [hi,one_mul]
     _ ≤ _ := jet_mono (outputDerivativeSize_nonneg P C R hC hR) (coverRadius_nonneg R hR)
       (mul_le_mul_of_nonneg_right
@@ -196,7 +222,7 @@ theorem derivativeCoefficient_bound (n : ℕ) :
 
 theorem localField_bound (t : Icc (0 : ℝ) (amplitude P C R hC hR)) :
     (localField P u C R hC hR hu hdiv t).HasJetBound (outputVelocitySize P C R) (outputRadius R) :=
-      by
+        by
   have hV : 0 ≤ 2*mixedAmplitude P C R+baseErrorFactor :=
     add_nonneg (mul_nonneg (by norm_num) (mixedAmplitude_nonneg P C R hC hR)) baseErrorFactor_nonneg
   have he := (amplitude_pos P C R hC hR).le
@@ -208,17 +234,17 @@ theorem localField_bound (t : Icc (0 : ℝ) (amplitude P C R hC hR)) :
     (inv_nonneg.mpr he) _ _ _ hunit
   have hi : (amplitude P C R hC hR)⁻¹*amplitude P C R hC hR=1 :=
     inv_mul_cancel₀ (amplitude_pos P C R hC hR).ne'
-  have ha : (amplitude P C R hC hR)⁻¹*
+  have ha : (amplitude P C R hC hR)⁻¹ *
       (Real.sqrt (2/P+2*P)*(amplitude P C R hC hR*(2*mixedAmplitude P C
-        R+baseErrorFactor))*(1+coverRadius R)) =
+          R+baseErrorFactor))*(1+coverRadius R)) =
       (Real.sqrt (2/P+2*P)*(1+coverRadius R))*(2*mixedAmplitude P C R+baseErrorFactor) := by
     calc
-      _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR)*
+      _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR) *
         ((Real.sqrt (2/P+2*P)*(1+coverRadius R))*(2*mixedAmplitude P C R+baseErrorFactor)) := by
-          ring
+            ring
       _ = _ := by rw [hi,one_mul]
   change (localField P u C R hC hR hu hdiv t).HasJetBound
-    ((amplitude P C R hC hR)⁻¹*(Real.sqrt (2/P+2*P)*
+    ((amplitude P C R hC hR)⁻¹*(Real.sqrt (2/P+2*P) *
       (amplitude P C R hC hR*(2*mixedAmplitude P C R+baseErrorFactor))*(1+coverRadius R)))
     (4*coverRadius R) at h
   rw [ha] at h
@@ -233,7 +259,7 @@ theorem localDerivativeField_bound (t : Icc (0 : ℝ) (amplitude P C R hC hR)) :
   have he := (amplitude_pos P C R hC hR).le
   have hT := staticTimeCost_nonneg P R hR
   have hunit := ((correctionBudget P u C R hC hR hu hdiv).timeDerivativeTower
-    P).zeroGraphField_bound
+      P).zeroGraphField_bound
     (retainedRadius R) (amplitude P C R hC hR*staticTimeCost P R)
     (retainedRadius_pos R hR) (mul_nonneg he hT) (time_weighted P u C R hC hR hu hdiv)
     (EulerTimeRescaling.timeMap (amplitude P C R hC hR) (amplitude_pos P C R hC hR) t)
@@ -241,16 +267,16 @@ theorem localDerivativeField_bound (t : Icc (0 : ℝ) (amplitude P C R hC hR)) :
     (sq_nonneg _) _ _ _ hunit
   have hi : (amplitude P C R hC hR)⁻¹*amplitude P C R hC hR=1 :=
     inv_mul_cancel₀ (amplitude_pos P C R hC hR).ne'
-  have ha : ((amplitude P C R hC hR)⁻¹)^2*
+  have ha : ((amplitude P C R hC hR)⁻¹)^2 *
       (Real.sqrt (2/P+2*P)*(amplitude P C R hC hR*staticTimeCost P R)*(1+coverRadius R)) =
       (amplitude P C R hC hR)⁻¹*(Real.sqrt (2/P+2*P)*(1+coverRadius R))*staticTimeCost P R := by
     calc
-      _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR)*
-        ((amplitude P C R hC hR)⁻¹*(Real.sqrt (2/P+2*P)*(1+coverRadius R))*staticTimeCost P R) :=
-          by ring
+      _ = ((amplitude P C R hC hR)⁻¹*amplitude P C R hC hR) *
+        ((amplitude P C R hC hR)⁻¹*(Real.sqrt (2/P+2*P)*(1+coverRadius R))*staticTimeCost P R) := by
+            ring
       _ = _ := by rw [hi,one_mul]
   change (localDerivativeField P u C R hC hR hu hdiv t).HasJetBound
-    (((amplitude P C R hC hR)⁻¹)^2*(Real.sqrt (2/P+2*P)*
+    (((amplitude P C R hC hR)⁻¹)^2*(Real.sqrt (2/P+2*P) *
       (amplitude P C R hC hR*staticTimeCost P R)*(1+coverRadius R)))
     (4*coverRadius R) at h
   rw [ha] at h

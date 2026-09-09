@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteSumBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteSumBounds
+
+/-! Removing the literal leading coefficient before bounding the packet remainder. -/
 
 @[expose] public section
 
-/-! Removing the literal leading coefficient before bounding the packet remainder. -/
 
 noncomputable section
 
@@ -20,6 +24,7 @@ open Set Finset EulerPacketPointJets EulerPacketProfileRecursion EulerFiniteGrad
 
 variable {P T : ℝ} [Fact (0 < P)]
 
+/-- Evaluate remainder as an element of `Field P T (fieldSum M κ f-κ • f 1)`. -/
 def evaluateRemainder (M : ℕ) (hM : 1 ≤ M) (κ : ℝ) (f : ℕ → VectorField)
     (G : ∀ i, Field P T (f i)) : Field P T (fieldSum M κ f-κ • f 1) := by
   let W := Field.finsetSum ((range (M+1)).erase 1) (fun i => κ^i • f i) (fun i => (G i).smul (κ^i))
@@ -34,11 +39,11 @@ def evaluateRemainder (M : ℕ) (hM : 1 ≤ M) (κ : ℝ) (f : ℕ → VectorFie
   exact (eq_sub_iff_add_eq.mpr he).symm
 
 theorem wordBound_evaluateRemainder (N : ℕ) (hN : 1 ≤ N) (κ B C₂ : ℝ)
-    (hκ : 0 ≤ κ) (hB : 0 ≤ B) (hsmall : κ*B ≤ 1/2)
+    (hκ : 0 ≤ κ) (hB : 0 ≤ B) (hsmall : κ * B ≤ 1 / 2)
     (f : ℕ → VectorField) (G : ∀ i, Field P T (f i)) (q : ℕ) (R : ℝ) (hR : 0 ≤ R)
-    (hzero : ∀ (t : Icc (0 : ℝ) T) x θ, f 0 (t,(x,θ))=0)
+    (hzero : ∀ (t : Icc (0 : ℝ) T) x θ, f 0 (t, (x, θ)) = 0)
     (htwo : (G 2).WordBound q R C₂ 0)
-    (htail : ∀ n, 3 ≤ n → n ≤ N+1 → (G n).WordBound q R (B^(n+1)) 0) :
+    (htail : ∀ n, 3 ≤ n → n ≤ N + 1 → (G n).WordBound q R (B ^ (n + 1)) 0) :
     (evaluateRemainder (N+1) (by omega) κ f G).WordBound q R (κ^2*C₂+2*B*(κ*B)^3) 0 := by
   have hG : ∀ i ∈ (range (N+1+1)).erase 1,
       (G i).WordBound q R (lowHighEnvelope B 0 C₂ i) 0 := by

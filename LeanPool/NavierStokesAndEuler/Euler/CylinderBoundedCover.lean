@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevWordBounds
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOrbit
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
 
 /-! The real periodic lift of a genuine cylinder H3 field is bounded and
 continuous. This construction uses the cylinder norm, never an L² norm on
 the full real covering space. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,11 +27,21 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)]
 
-private local instance : NormedAddCommGroup (SobolevSpace P 3) := inferInstance
-private local instance : NormedSpace ℝ (SobolevSpace P 3) := inferInstance
-private local instance : NormedAddCommGroup (LiftTangent →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ (LiftTangent →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (SobolevSpace P 3)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover1 : NormedAddCommGroup (SobolevSpace P 3) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (SobolevSpace P 3)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover2 : NormedSpace ℝ (SobolevSpace P 3) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover3 : NormedAddCommGroup (LiftTangent →ᵇ Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover4 : NormedSpace ℝ (LiftTangent →ᵇ Space) := inferInstance
 
+/-- Cover, constructed using `BoundedContinuousFunction.ofNormedAddCommGroup`. -/
 def cover (u : SobolevSpace P 3) : LiftTangent →ᵇ Space :=
   BoundedContinuousFunction.ofNormedAddCommGroup
     (fun x => EulerSobolevPointEvaluation.pointEvaluation P (coveringMap P x) u)
@@ -49,6 +60,7 @@ theorem cover_norm_le (u : SobolevSpace P 3) :
   intro x
   exact EulerSobolevPointEvaluation.representative_bound P u (coveringMap P x)
 
+/-- Cover linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def coverLinear : SobolevSpace P 3 →ₗ[ℝ] (LiftTangent →ᵇ Space) where
   toFun := cover P
   map_add' u v := by
@@ -60,6 +72,7 @@ def coverLinear : SobolevSpace P 3 →ₗ[ℝ] (LiftTangent →ᵇ Space) where
     intro x
     exact (EulerSobolevPointEvaluation.pointEvaluation P (coveringMap P x)).map_smul c u
 
+/-- Cover map, bundling `toLinearMap`, `cont`. -/
 def coverMap : SobolevSpace P 3 →L[ℝ] (LiftTangent →ᵇ Space) where
   toLinearMap := coverLinear P
   cont := AddMonoidHomClass.continuous_of_bound (coverLinear P)
@@ -71,11 +84,22 @@ theorem coverMap_norm_le : ‖coverMap P‖ ≤ sobolevEmbeddingConstant P 3 := 
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup C(K, SobolevSpace P 3) := inferInstance
-private local instance : NormedSpace ℝ C(K, SobolevSpace P 3) := inferInstance
-private local instance : NormedAddCommGroup C(K, LiftTangent →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ C(K, LiftTangent →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K, SobolevSpace P 3)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover5 : NormedAddCommGroup C(K, SobolevSpace P 3) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K, SobolevSpace P 3)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover6 : NormedSpace ℝ C(K, SobolevSpace P 3) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K, LiftTangent →ᵇ Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderBoundedCover7 : NormedAddCommGroup C(K, LiftTangent →ᵇ Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K, LiftTangent →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderBoundedCover8 : NormedSpace ℝ C(K, LiftTangent →ᵇ Space) := inferInstance
 
+/-- Cover path map, given by `(coverMap P).compLeftContinuous ℝ K`. -/
 def coverPathMap : C(K, SobolevSpace P 3) →L[ℝ] C(K, LiftTangent →ᵇ Space) :=
   (coverMap P).compLeftContinuous ℝ K
 
@@ -89,6 +113,7 @@ theorem coverPathMap_norm_le :
   exact (cover_norm_le P (p t)).trans
     (mul_le_mul_of_nonneg_left (p.norm_coe_le_norm t) (sobolevEmbeddingConstant_nonneg P 3))
 
+/-- Cover path, given by `coverPathMap P (sobolevPath P 3 p hp)`. -/
 def coverPath (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
     C(K, LiftTangent →ᵇ Space) := coverPathMap P (sobolevPath P 3 p hp)
@@ -98,6 +123,7 @@ def coverPath (p : C(K, LiftL2 P))
     (t : K) (x : LiftTangent) :
     coverPath P p hp t x = pointField P p hp t (coveringMap P x) := rfl
 
+/-- Cover orbit, given by `coverPathMap P (sobolevOrbit P 3 p hp a)`. -/
 def coverOrbit (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
     (a : LiftTangent) : C(K, LiftTangent →ᵇ Space) :=

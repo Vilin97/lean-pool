@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-public import Mathlib.MeasureTheory.Measure.OpenPos
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+
+/-! # Pointwise recovery from compact temporal tests -/
 
 @[expose] public section
 
-/-! # Pointwise recovery from compact temporal tests -/
 
 
 noncomputable section

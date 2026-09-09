@@ -6,13 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CrossBasedMeanComposition
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleExcluded
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CycleMeanEquation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCrossDefectClass
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.CrossBasedMeanComposition
+import LeanPool.NavierStokesAndEuler.NavierStokes.CycleMeanEquation
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
+import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCrossDefectClass
 
 /-!
 # Analytic preservation for the literal correction cycle
@@ -21,6 +19,9 @@ The wave inputs below are estimates and local identities for the two actual
 constructed increments.  The full residual, mean, debt, covariance, and
 stored-error conclusions are derived for `CycleState.step`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,6 +33,7 @@ open VariableGaugeMean LocalSignedRequest
 open scoped ContDiff Topology BigOperators
 
 
+/-- Point: an abbreviation for `CorrectionStep.CyclePoint`. -/
 abbrev Point := CorrectionStep.CyclePoint
 
 /-- Outputs of the two native constructions, on their literal current
@@ -98,7 +100,7 @@ structure WaveData {ι : Type} (G : SignedMeanGain.Geometry)
   particularLinear : ∀ i j, j ≠ 0 → LabelSumBounds.UniformWaveClass (p).strip P (1+σ-3*κ)
     (fun l n z =>
       (HarmonicResidual.residualBlock c u ((v).blocks l) ((v).gaussian l) ((v).aliasCoefficients
-        l)).velocity n i j z +
+          l)).velocity n i j z +
       (HarmonicWaveInteraction.linearGoodBlock c ((v).blocks l) ((p).particularBlock v c u l)
         ((p).particularGaussianBlock v c u l).velocity).velocity n i j z)
   signedLinear : UniformHarmonicInteraction.UniformVelocity (p).strip P (1+σ-4*κ)
@@ -116,7 +118,7 @@ include W
 
 /-- The signed exact coefficient is its tangent coefficient plus the
 literal curl difference. -/
-theorem signed (hκ : κ ≤ 1/2) : ∀ i j,
+theorem signed (hκ : κ ≤ 1 / 2) : ∀ i j,
     LabelSumBounds.UniformWaveClass (p).strip P (1/2+σ-κ)
       (fun l n z => ((p).signedBlock v c u l).velocity n i j z) := by
   intro i j
@@ -124,7 +126,7 @@ theorem signed (hκ : κ ≤ 1/2) : ∀ i j,
   intro l n z hz
   change ((p).signedTangent v c u l).velocity n i j z +
       (((p).signedBlock v c u l).velocity n i j z - ((p).signedTangent v c u l).velocity n i j z) =
-        _
+          _
   ring
 
 theorem particular_zero_germ (hS : ∀ l n, IsClosed (S l n))
@@ -164,6 +166,7 @@ used in the invariant, including the entire radial and free-torus fiber. -/
 structure StaticData (G : SignedMeanGain.Geometry) (h : ℝ) (index : ℕ → ℕ)
     (axial : PressureStream.Plane × PressureStream.Plane) (r : RankData PressureStream.Plane)
     (c : Context Point) (κ : ℝ) where
+  /-- Alias data of `StaticData`, of type `ActualCycleExcluded.SimilarityData`. -/
   aliasData : ActualCycleExcluded.SimilarityData
   coord : G.coord = 2 * aliasData.h
   region : HEq G.region aliasData.region
@@ -181,10 +184,12 @@ structure StaticData (G : SignedMeanGain.Geometry) (h : ℝ) (index : ℕ → �
   fast : ∀ n, c.operators.fastCoefficient n = ChartScales.Tg ^ index n * ChartScales.Q n ^ (1+h)
   angular_slow : LocalRankDefect.IsSlowOn G.region.carrier c.base.angular
   axial_slow : LocalRankDefect.IsSlowOn G.region.carrier c.base.axial
+  /-- Rank exponent of `StaticData`, of type `ℝ`. -/
   rankExponent : ℝ
+  /-- Rank coefficient of `StaticData`, of type `ℝ`. -/
   rankCoefficient : ℝ
   rankParameters : RankStateBounds.NormalizedParameters G.coord rankExponent rankCoefficient r
-    G.region.carrier
+      G.region.carrier
   rankCoefficient_ne : rankCoefficient ≠ 0
   rank_left : G.patch.a < r.inner
   rank_right : r.outer < G.patch.b
@@ -272,22 +277,61 @@ local notation "p" => CycleParameters.ofGeometry G h index axial particular sign
 local notation "v" => x.coefficients
 local notation "u" => x.state
 
+private theorem meanStepData
+    (H : CycleAnalyticInvariant G c primary P S σ x)
+    (W : WaveData G p v c u P S σ κ)
+    (hPrimitive : MeanStateRegularity.PrimitiveData G.region G.gauge.radial.inner
+      G.gauge.radial.outer c u)
+    (hXPg : ∀ i j, GaugeMomentBalances.MovingField G.region G.gauge.radial.inner
+      G.gauge.radial.outer (SignedMeanGain.covarianceIncrement (u).oscillation
+        ((p).particularVelocity v c u) i j))
+    (hXSg : ∀ i j, GaugeMomentBalances.MovingField G.region G.gauge.radial.inner
+      G.gauge.radial.outer (SignedMeanGain.covarianceIncrement ((p).afterParticular v c
+          u).oscillation
+        ((p).signedVelocity v c u) i j))
+    (hg : LocalRankDefect.RankGeometry G.gauge r G.region.carrier c u)
+    (hgraph : ∃ slowTime : PressureStream.Plane × PressureStream.Plane,
+      ∃ temporal : PressureStream.Plane,
+        c.operators = graphOperators G.gauge.radial c.operators.epsilon c.operators.fastCoefficient
+          axial slowTime temporal) : CycleMeanEquation.StepData G.region p v c u := {
+    inner_pos := G.inner_pos
+    exponent_pos := G.exponent_pos
+    length := G.length_eq
+    domain := fun z hz => ⟨G.strip_radius_pos hz, G.strip_subset hz⟩
+    primitive := hPrimitive
+    particular_covariance := hXPg
+    signed_covariance := hXSg
+    rank := hg
+    operators := hgraph
+    particular_regular := fun l => {
+      phase := H.phase l
+      velocity := fun n i j => (W.particularSmooth l n i j).mono G.strip_subset
+      pressure := fun n j => (W.particularPressureSmooth l n j).mono G.strip_subset }
+    signed_regular := fun l => {
+      phase := by simp only [(W.carrier l).phase]; exact H.phase l
+      velocity := fun n i j => (W.signedSmooth l n i j).mono G.strip_subset
+      pressure := fun n j => (W.signedPressureSmooth l n j).mono G.strip_subset }
+    particular_solenoidal := W.particularSolenoidal
+    signed_solenoidal := W.signedSolenoidal
+    angular := H.angular
+    signed_carrier := W.carrier }
+
 /-- Assemble the invariant after the quantitative mean calculation.
 The public preservation theorem below derives those mean inputs from
 the same finite waves and measured cross defects. -/
 private theorem assemble
     (H : CycleAnalyticInvariant G c primary P S σ x)
     (W : WaveData G p v c u P S σ κ)
-    (hσ : 1/5 ≤ σ) (hκsmall : κ ≤ 1/100000)
+    (hσ : 1 / 5 ≤ σ) (hκsmall : κ ≤ 1 / 100000)
     (ho : OperatorBounds G.strip c.operators κ) (hb : BaseBounds G.strip c.base)
     (hR : ∀ z ∈ G.strip.domain, 0 < c.operators.radius z)
     (hS : ∀ l n, IsClosed (S l n)) {C : ℕ → ι → Set Point}
     (hSC : ∀ l n, S l n ⊆ C n l)
     (hNormal : ∀ i, LocalizedWaveBounds.LocalUnweighted G.strip C 0
       (fun n l z => HarmonicMeanInteraction.slowNormal c ho hR ((v).blocks l).phase n z i))
-    (hFreq : LocalizedWaveBounds.LocalUnweighted G.strip C (-(1/2))
+    (hFreq : LocalizedWaveBounds.LocalUnweighted G.strip C (-(1 / 2))
       (fun n l _ => ((v).blocks l).frequency n))
-    (hAng : LocalizedWaveBounds.LocalUnweighted G.strip C (-(1/2))
+    (hAng : LocalizedWaveBounds.LocalUnweighted G.strip C (-(1 / 2))
       (fun n l _ => (((v).blocks l).angularFrequency n : ℝ)))
     (hP0 : ∀ l n z, z ∈ G.strip.domain → 0 ≤ P l n z)
     (hP1 : ∀ l n z, z ∈ G.strip.domain → P l n z ≤ 1)
@@ -298,19 +342,19 @@ private theorem assemble
       ∃ temporal : PressureStream.Plane,
         c.operators = graphOperators G.gauge.radial c.operators.epsilon c.operators.fastCoefficient
           axial slowTime temporal)
-    (hCovP : SignedMeanGain.TensorClass G.strip (1+σ)
+    (hCovP : SignedMeanGain.TensorClass G.strip (1 + σ)
       (SignedMeanGain.covarianceIncrement (u).oscillation ((p).particularVelocity v c u)))
-    (hCovS : SignedMeanGain.TensorClass G.strip (1+σ-κ)
+    (hCovS : SignedMeanGain.TensorClass G.strip (1 + σ - κ)
       (SignedMeanGain.covarianceIncrement ((p).afterParticular v c u).oscillation
-        ((p).signedVelocity v c u)))
-    (hTemporal : IncrementBounds G.strip (1+σ-2*κ) ((p).temporalIncrement v c u))
-    (hRank : IncrementBounds G.strip (1+σ-2*κ) ((p).rankIncrement v c u))
+          ((p).signedVelocity v c u)))
+    (hTemporal : IncrementBounds G.strip (1 + σ - 2 * κ) ((p).temporalIncrement v c u))
+    (hRank : IncrementBounds G.strip (1 + σ - 2 * κ) ((p).rankIncrement v c u))
     (hCumulative : CorrectionState.CumulativeBounds G.strip ((p).next v c u))
-    (hDebt : DefectBounds G.slowStrip (σ+1/10) c ((p).next v c u))
-    (hTheta : MeanClass G.strip (1+(σ+1/10)) (((p).next v c u).thetaResidual c))
-    (hAxial : MeanClass G.strip (1+(σ+1/10))
+    (hDebt : DefectBounds G.slowStrip (σ + 1 / 10) c ((p).next v c u))
+    (hTheta : MeanClass G.strip (1 + (σ + 1 / 10)) (((p).next v c u).thetaResidual c))
+    (hAxial : MeanClass G.strip (1 + (σ + 1 / 10))
       (((p).next v c u).axialResidual c - fun n z =>
-        temporalAliasState G.gauge h index c ((p).afterSigned v c u) n (z,0) 2))
+        temporalAliasState G.gauge h index c ((p).afterSigned v c u) n (z, 0) 2))
     (hAxis : ∀ β, MeanClass G.strip β ((p).nextAxisymmetricAlias v c u x.axisymmetricAlias)) :
     CycleAnalyticInvariant G c primary P S (σ+1/10) (CycleState.step p c x) := by
   have hsigned := W.signed (show κ ≤ 1/2 by linarith)
@@ -348,7 +392,7 @@ private theorem assemble
     simpa only [G.inner_eq, G.outer_eq] using hXP
   have hXSg : ∀ i j, GaugeMomentBalances.MovingField G.region G.gauge.radial.inner
       G.gauge.radial.outer (SignedMeanGain.covarianceIncrement ((p).afterParticular v c
-        u).oscillation
+          u).oscillation
         ((p).signedVelocity v c u) i j) := by
     simpa only [G.inner_eq, G.outer_eq] using hXS
   have hpr := (p).next_primitive v c u G.region G.inner_pos G.exponent_pos G.length_eq
@@ -357,28 +401,8 @@ private theorem assemble
     hPrimitive hXPg hXSg hg hrlength
     (by change G.gauge.radial.inner ≤ r.inner; rw [G.inner_eq]; exact hrleft)
     (by change r.outer ≤ G.gauge.radial.outer; rw [G.outer_eq]; exact hrright) H.masses
-  have hStep : CycleMeanEquation.StepData G.region p v c u := {
-    inner_pos := G.inner_pos
-    exponent_pos := G.exponent_pos
-    length := G.length_eq
-    domain := fun z hz => ⟨G.strip_radius_pos hz, G.strip_subset hz⟩
-    primitive := hPrimitive
-    particular_covariance := hXPg
-    signed_covariance := hXSg
-    rank := hg
-    operators := hgraph
-    particular_regular := fun l => {
-      phase := H.phase l
-      velocity := fun n i j => (W.particularSmooth l n i j).mono G.strip_subset
-      pressure := fun n j => (W.particularPressureSmooth l n j).mono G.strip_subset }
-    signed_regular := fun l => {
-      phase := by simp only [(W.carrier l).phase]; exact H.phase l
-      velocity := fun n i j => (W.signedSmooth l n i j).mono G.strip_subset
-      pressure := fun n j => (W.signedPressureSmooth l n j).mono G.strip_subset }
-    particular_solenoidal := W.particularSolenoidal
-    signed_solenoidal := W.signedSolenoidal
-    angular := H.angular
-    signed_carrier := W.carrier }
+  have hStep := meanStepData G h index axial particular signed r c x primary P S H W
+    hPrimitive hXPg hXSg hg hgraph
   have hAlias := H.representation.alias_eq_lift H.aliasCoefficients
   have hAliasContinuous : AngularContinuous (u).errors.aliasError := by
     rw [hAlias]
@@ -389,7 +413,7 @@ private theorem assemble
     rw [hAlias]
     funext n z i
     exact congrFun (congrFun (angularAverage_axisymmetric (fun n z => x.axisymmetricAlias n z i))
-      n) z
+        n) z
   have hGaussianMeans (i : Fin 3) : MeanClass G.strip (1+(σ+1/10))
       (fun n z => angularMeanVector (u).errors.gaussian n z i) := by
     rw [H.gaussianMean]
@@ -437,7 +461,7 @@ private theorem assemble
     reconstructed := hpr.2
     masses := hmass
     oscillationSmooth := (p).next_oscillation_smooth v c u H.oscillationSmooth W.particularField
-      W.signedField
+        W.signedField
     oscillatoryPressureSmooth := ?_
     oscillationPeriodic := (p).next_oscillation_periodic v c u H.oscillationPeriodic
       W.particularPeriodic W.signedPeriodic
@@ -458,7 +482,7 @@ private theorem assemble
     change ContDiffOn ℝ ∞ (((p).next v c u).oscillatoryPressure n) _
     rw [(p).next_oscillatoryPressure]
     exact ((H.oscillatoryPressureSmooth n).add (W.particularPressureField n)).add
-      (W.signedPressureField n)
+        (W.signedPressureField n)
   · exact ((p).next_gaussian_angularMean v c u H.angular W.carrier
       H.representation.gaussian_angularContinuous).trans H.gaussianMean
   · intro n z hz i
@@ -486,12 +510,14 @@ local notation "u" => x.state
 their fixed geometric assembly.  The only leading-covariance identity is
 on a fixed tail; the finite head is retained by the proof. -/
 structure StepData (D : StaticData G h index axial r c κ)
-    (H : CycleAnalyticInvariant G c primary P S σ x) (hσ : 1/5 ≤ σ) where
+    (H : CycleAnalyticInvariant G c primary P S σ x) (hσ : 1 / 5 ≤ σ) where
   waves : WaveData G p v c u P S σ κ
+  /-- Primary band of `StepData`, of type `ℕ`. -/
   primaryBand : ℕ
   primary_band : ∀ l, (primary l).BandLimited primaryBand
   envelope_nonneg : ∀ l n z, z ∈ G.strip.domain → 0 ≤ P l n z
   envelope_le_one : ∀ l n z, z ∈ G.strip.domain → P l n z ≤ 1
+  /-- Cells of `StepData`, of type `ℕ → ι → Set Point`. -/
   cells : ℕ → ι → Set Point
   carrier_closed : ∀ l n, IsClosed (S l n)
   carrier_cells : ∀ l n, S l n ⊆ cells n l
@@ -502,6 +528,7 @@ structure StepData (D : StaticData G h index axial r c κ)
     (fun n l _ => ((v).blocks l).frequency n)
   angular : LocalizedWaveBounds.LocalUnweighted G.strip cells (-(1/2))
     (fun n l _ => (((v).blocks l).angularFrequency n : ℝ))
+  /-- Assembly supplied by `StepData`. -/
   assembly : SignedMeanGain.Assembly
     ((p).signedFamily v c u primary P hσ primaryBand primary_band H.bands H.carrier waves.carrier
       H.wave H.difference waves.particular waves.tangent waves.curl
@@ -510,12 +537,13 @@ structure StepData (D : StaticData G h index axial r c κ)
   old_support : LabelSumBounds.SupportedOscillations assembly.slots assembly.label assembly.window
     assembly.auxiliary G.strip.domain (fun l => ((v).blocks l).oscillation)
   particular_support : LabelSumBounds.SupportedOscillations assembly.slots assembly.label
-    assembly.window
+      assembly.window
     assembly.auxiliary G.strip.domain (fun l => ((p).particularBlock v c u l).oscillation)
   primary_smooth : WaveStateRegularity.AngularSmooth G.domain (SignedMeanGain.primaryField _
-    assembly)
+      assembly)
   primary_periodic : OscillationPeriodic G.region.carrier (SignedMeanGain.primaryField _ assembly)
   rank_geometry : LocalRankDefect.RankGeometry G.gauge r G.region.carrier c u
+  /-- Tail start of `StepData`, of type `ℕ`. -/
   tailStart : ℕ
   cross_tail : ∀ n, tailStart ≤ n → ∀ z ∈ G.strip.domain, ∀ i : Fin 2,
     StateMomentBalances.meanBar (SignedMeanGain.crossTensor _ assembly 0 i.succ) n z =
@@ -540,20 +568,20 @@ finite-head cross defects, temporal/rank reconstruction, and all error
 bookkeeping derived in the proof. -/
 theorem step (D : StaticData G h index axial r c κ)
     (H : CycleAnalyticInvariant G c primary P S σ x)
-    (hσ : 1/5 ≤ σ) (hκsmall : κ ≤ 1/100000)
+    (hσ : 1 / 5 ≤ σ) (hκsmall : κ ≤ 1 / 100000)
     (d : StepData G h index axial particular signed r c x primary P S D H hσ) :
     StepResult G h index axial particular signed r c x primary P S (σ := σ) (κ := κ) := by
   let W := d.waves
   let F := (p).signedFamily v c u primary P hσ d.primaryBand d.primary_band H.bands H.carrier
     W.carrier H.wave H.difference W.particular W.tangent W.curl d.envelope_nonneg d.envelope_le_one
-      H.angular
+        H.angular
   let a : SignedMeanGain.Assembly F := d.assembly
   have halabels : a.labels = (v).labels := d.labels
   have hκ : 0 ≤ κ := D.operators.kappa_nonneg
   have hfixed : (reconstructState G.gauge c u).pressure = (u).pressure :=
     congrArg (fun z : State Point => z.pressure) H.reconstructed
   have hrep₀ : (u).oscillation = LabelSumBounds.fieldSum a.labels (fun l => ((v).blocks
-    l).oscillation) := by
+      l).oscillation) := by
     rw [halabels]
     funext n z i
     exact H.representation.velocity n z i
@@ -583,23 +611,23 @@ theorem step (D : StaticData G h index axial r c κ)
     rwa [SignedMeanGain.incrementTensor, ← hrep₁, hw₂] at hh
   obtain ⟨hXP, hXS⟩ := W.covariance_moving H.oscillationSmooth H.oscillationPeriodic
   have hXSFamily : ∀ i j, SignedMeanGain.MovingField G (SignedMeanGain.incrementTensor F a i j) :=
-    by
+      by
     intro i j
     rw [SignedMeanGain.incrementTensor, ← hrep₁, hw₂]
     exact hXS i j
   have hTangent : WaveStateRegularity.AngularSmooth G.domain (SignedMeanGain.tangentField F a) := by
     simpa only [SignedMeanGain.tangentField, F, CycleParameters.signedFamily, halabels] using
-      W.tangentField
+        W.tangentField
   have hTangentPer : OscillationPeriodic G.region.carrier (SignedMeanGain.tangentField F a) := by
     simpa only [SignedMeanGain.tangentField, F, CycleParameters.signedFamily, halabels] using
-      W.tangentPeriodic
+        W.tangentPeriodic
   have hTangentSupport : WaveStateRegularity.WaveSupport G.region G.patch.a G.patch.b
       (SignedMeanGain.tangentField F a) := by
     simpa only [SignedMeanGain.tangentField, F, CycleParameters.signedFamily, halabels] using
-      W.tangentRadialSupport
+        W.tangentRadialSupport
   have hCross : ∀ i j, SignedMeanGain.MovingField G (SignedMeanGain.crossTensor F a i j) :=
     symmetricCovariance_moving G.region d.primary_smooth hTangent hTangentSupport
-      d.primary_periodic hTangentPer
+        d.primary_periodic hTangentPer
   obtain ⟨hθ, hz⟩ := H.raw_mean_bounds
   obtain ⟨_, _, hθ₁, hz₁, _, _⟩ := waveStage_mean_gain G c u ((p).particularVelocity v c u)
     ((p).particularPressure v c u) ((p).particularGaussian v c u) hσ hκ hκsmall H.primitives
@@ -617,7 +645,7 @@ theorem step (D : StaticData G h index axial r c κ)
   have HT := MeanStageRegularity.temporalStage_primitive H₂g G.inner_pos G.exponent_pos G.length_eq
     rfl h index axial
   have HG := MeanStageRegularity.rankGeometry_for_state HT G.inner_pos
-    G.gauge.radial.inner_lt_outer d.rank_geometry
+      G.gauge.radial.inner_lt_outer d.rank_geometry
   have hMean := CrossBasedMeanComposition.CycleParameters.mean_gain_from_waves_of_cross_defects
     G h index axial particular signed r v c u primary P hσ d.primaryBand d.primary_band H.bands
     H.carrier W.carrier H.wave H.difference W.particular W.tangent W.curl
@@ -630,17 +658,17 @@ theorem step (D : StaticData G h index axial r c κ)
     D.angular_slow D.axial_slow HG D.rankParameters D.rankCoefficient_ne D.rank_left D.rank_right
   obtain ⟨hSθ, hSz, _, hT, hRank, hPressure, hCumulative, hDebt, hTheta, hAxial⟩ := hMean
   have HAlias : MeanStateRegularity.PrimitiveData D.aliasData.region D.aliasData.inner
-    D.aliasData.outer c u := by
+      D.aliasData.outer c u := by
     simpa only [D.inner, D.outer] using primitive_region_transport D.coord D.region H.primitives
   have hXPAlias : ∀ i j, GaugeMomentBalances.MovingField D.aliasData.region D.aliasData.inner
-    D.aliasData.outer
+      D.aliasData.outer
       (SignedMeanGain.covarianceIncrement (u).oscillation ((p).particularVelocity v c u) i j) := by
     intro i j
     simpa only [D.inner, D.outer] using moving_region_transport D.coord D.region (hXP i j)
   have hXSAlias : ∀ i j, GaugeMomentBalances.MovingField D.aliasData.region D.aliasData.inner
-    D.aliasData.outer
+      D.aliasData.outer
       (SignedMeanGain.covarianceIncrement ((p).afterParticular v c u).oscillation
-        ((p).signedVelocity v c u) i j) := by
+          ((p).signedVelocity v c u) i j) := by
     intro i j
     simpa only [D.inner, D.outer] using moving_region_transport D.coord D.region (hXS i j)
   have hRankAlias : LocalRankDefect.RankGeometry G.gauge r D.aliasData.region.carrier c u := by
@@ -663,7 +691,7 @@ theorem step (D : StaticData G h index axial r c κ)
 /-- Projection of the complete step estimate to the stored invariant. -/
 theorem step_preserves (D : StaticData G h index axial r c κ)
     (H : CycleAnalyticInvariant G c primary P S σ x)
-    (hσ : 1/5 ≤ σ) (hκsmall : κ ≤ 1/100000)
+    (hσ : 1 / 5 ≤ σ) (hκsmall : κ ≤ 1 / 100000)
     (d : StepData G h index axial particular signed r c x primary P S D H hσ) :
     CycleAnalyticInvariant G c primary P S (σ+1/10) (CycleState.step p c x) :=
   (step G h index axial particular signed r c x primary P S D H hσ hκsmall d).invariant
@@ -687,8 +715,8 @@ local notation "state" => CycleState.iterate (fun _ => p) c seed
 and comparison primary.  The supplied data construct each actual wave;
 they do not assume preservation of the invariant. -/
 theorem iterate_invariant (D : StaticData G h index axial r c κ)
-    (σ : ℕ → ℝ) (hσ : ∀ n, 1/5 ≤ σ n) (hσstep : ∀ n, σ (n+1) = σ n + 1/10)
-    (hκsmall : κ ≤ 1/100000)
+    (σ : ℕ → ℝ) (hσ : ∀ n, 1 / 5 ≤ σ n) (hσstep : ∀ n, σ (n + 1) = σ n + 1 / 10)
+    (hκsmall : κ ≤ 1 / 100000)
     (hseed : CycleAnalyticInvariant G c primary P S (σ 0) seed)
     (data : ∀ n (H : CycleAnalyticInvariant G c primary P S (σ n) (state n)),
       StepData G h index axial particular signed r c (state n) primary P S D H (hσ n)) :
@@ -704,8 +732,8 @@ theorem iterate_invariant (D : StaticData G h index axial r c κ)
 /-- The same induction also retains the actual increment estimates for
 each positive physical stage. -/
 theorem iterate_results (D : StaticData G h index axial r c κ)
-    (σ : ℕ → ℝ) (hσ : ∀ n, 1/5 ≤ σ n) (hσstep : ∀ n, σ (n+1) = σ n + 1/10)
-    (hκsmall : κ ≤ 1/100000)
+    (σ : ℕ → ℝ) (hσ : ∀ n, 1 / 5 ≤ σ n) (hσstep : ∀ n, σ (n + 1) = σ n + 1 / 10)
+    (hκsmall : κ ≤ 1 / 100000)
     (hseed : CycleAnalyticInvariant G c primary P S (σ 0) seed)
     (data : ∀ n (H : CycleAnalyticInvariant G c primary P S (σ n) (state n)),
       StepData G h index axial particular signed r c (state n) primary P S D H (hσ n)) :

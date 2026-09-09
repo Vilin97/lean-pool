@@ -7,14 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.EdgeWeightJets
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalEdgeFactor
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Topology.Separation.Hausdorff
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.EdgeWeightJets
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # One flat weight on the active annulus
@@ -23,6 +19,9 @@ The logarithmic edge distances carry their actual exponential coefficients.
 The global estimates are obtained from smooth edge factors and compactness.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActiveAnnulusWeight
@@ -30,10 +29,13 @@ namespace NavierStokes.ActiveAnnulusWeight
 open Set Filter Metric
 open scoped Topology ContDiff
 
+/-- Weight, given by `FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-y)`. -/
 noncomputable def weight (c a b y : ℝ) : ℝ := FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-y)
 
+/-- Edge distance, given by `min 1 (min (y-a) (b-y))`. -/
 noncomputable def edgeDistance (a b y : ℝ) : ℝ := min 1 (min (y-a) (b-y))
 
+/-- Radial weight, with branches according to `0 < X`. -/
 noncomputable def radialWeight (c a b X : ℝ) : ℝ := if 0 < X then weight c a b (Real.log X) else 0
 
 theorem edge_le_one {c : ℝ} (hc : 0 ≤ c) (x : ℝ) : FlatCutoff.edge c x ≤ 1 := by
@@ -87,7 +89,7 @@ theorem edgeDistance_le_right (a b y : ℝ) : edgeDistance a b y ≤ b-y :=
   (min_le_right _ _).trans (min_le_right _ _)
 
 theorem iteratedDeriv_zero_function (n : ℕ) : iteratedDeriv n (fun _ : ℝ => (0 : ℝ)) = fun _ => 0
-  := by
+    := by
   induction n with
   | zero => rfl
   | succ n ih => simp only [iteratedDeriv_succ,ih,deriv_const']
@@ -123,14 +125,14 @@ theorem weight_flat_right {c : ℝ} (hc : 0 < c) (a b : ℝ) (n : ℕ) :
   flat_right_of_zero (weight_smooth hc a b) (fun _ hx => weight_zero_right c a hx.le) n
 
 theorem radialWeight_zero_left (c b : ℝ) {a X : ℝ} (hX : X ≤ Real.exp a) : radialWeight c a b X = 0
-  := by
+    := by
   by_cases hx : 0 < X
   · rw [radialWeight,ite_eq_left hx]
     exact weight_zero_left c b ((Real.log_le_iff_le_exp hx).2 hX)
   · exact ite_eq_right hx
 
 theorem radialWeight_zero_right (c a : ℝ) {b X : ℝ} (hX : Real.exp b ≤ X) : radialWeight c a b X =
-  0 := by
+    0 := by
   have hx : 0 < X := (Real.exp_pos b).trans_le hX
   rw [radialWeight,ite_eq_left hx]
   exact weight_zero_right c a ((Real.le_log_iff_exp_le hx).2 hX)
@@ -165,7 +167,7 @@ theorem radialWeight_flat_right {c : ℝ} (hc : 0 < c) (a b : ℝ) (n : ℕ) :
   flat_right_of_zero (radialWeight_smooth hc a b) (fun _ hx => radialWeight_zero_right c a hx.le) n
 
 theorem weight_lower_middle {c a b d y : ℝ} (hc : 0 ≤ c) (hd : 0 < d)
-    (hy : y ∈ Icc (a+d) (b-d)) :
+    (hy : y ∈ Icc (a + d) (b - d)) :
     FlatCutoff.edge c d * FlatCutoff.edge 4 d ≤ weight c a b y := by
   apply mul_le_mul
   · exact edge_mono_pos hc hd (by linarith [hy.1])
@@ -173,7 +175,7 @@ theorem weight_lower_middle {c a b d y : ℝ} (hc : 0 ≤ c) (hd : 0 < d)
   · exact FlatCutoff.edge_nonneg _ _
   · exact FlatCutoff.edge_nonneg _ _
 
-theorem weight_compare_left {c a b d y : ℝ} (hd : 0 < b-a-d) (hy : y ≤ a+d) :
+theorem weight_compare_left {c a b d y : ℝ} (hd : 0 < b - a - d) (hy : y ≤ a + d) :
     FlatCutoff.edge c (y-a) ≤ weight c a b y / FlatCutoff.edge 4 (b-a-d) := by
   apply (le_div_iff₀ (FlatCutoff.edge_pos 4 hd)).2
   change FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-a-d) ≤
@@ -181,7 +183,7 @@ theorem weight_compare_left {c a b d y : ℝ} (hd : 0 < b-a-d) (hy : y ≤ a+d) 
   exact mul_le_mul_of_nonneg_left
     (edge_mono_pos (c := 4) (by norm_num) hd (by linarith)) (FlatCutoff.edge_nonneg _ _)
 
-theorem weight_compare_right {c a b d y : ℝ} (hc : 0 ≤ c) (hd : 0 < b-a-d) (hy : b-d ≤ y) :
+theorem weight_compare_right {c a b d y : ℝ} (hc : 0 ≤ c) (hd : 0 < b - a - d) (hy : b - d ≤ y) :
     FlatCutoff.edge 4 (b-y) ≤ weight c a b y / FlatCutoff.edge c (b-a-d) := by
   apply (le_div_iff₀ (FlatCutoff.edge_pos c hd)).2
   rw [mul_comm]
@@ -203,7 +205,7 @@ theorem distance_power_le_right {a b y : ℝ} (hy : y ∈ Ioo a b) {n N : ℕ} (
     _ ≤ _ := pow_le_pow_left₀ (edgeDistance_pos hy).le (edgeDistance_le_right _ _ _) n
 
 theorem left_bound_to_weight {c a b d y C : ℝ} (hC : 0 ≤ C)
-    (hd : 0 < b-a-d) (hy : y ∈ Ioo a b) (hyl : y ≤ a+d)
+    (hd : 0 < b - a - d) (hy : y ∈ Ioo a b) (hyl : y ≤ a + d)
     {n N : ℕ} (hn : n ≤ N) :
     C * FlatCutoff.edge c (y-a) / (y-a)^n ≤
       (C / FlatCutoff.edge 4 (b-a-d)) * weight c a b y / edgeDistance a b y ^ N := by
@@ -218,7 +220,7 @@ theorem left_bound_to_weight {c a b d y C : ℝ} (hC : 0 ≤ C)
         _ = _ := by ring) (pow_nonneg (edgeDistance_pos hy).le _)
 
 theorem right_bound_to_weight {c a b d y C : ℝ} (hc : 0 ≤ c) (hC : 0 ≤ C)
-    (hd : 0 < b-a-d) (hy : y ∈ Ioo a b) (hyr : b-d ≤ y)
+    (hd : 0 < b - a - d) (hy : y ∈ Ioo a b) (hyr : b - d ≤ y)
     {n N : ℕ} (hn : n ≤ N) :
     C * FlatCutoff.edge 4 (b-y) / (b-y)^n ≤
       (C / FlatCutoff.edge c (b-a-d)) * weight c a b y / edgeDistance a b y ^ N := by
@@ -233,7 +235,7 @@ theorem right_bound_to_weight {c a b d y C : ℝ} (hc : 0 ≤ c) (hC : 0 ≤ C)
         _ = _ := by ring) (pow_nonneg (edgeDistance_pos hy).le _)
 
 theorem interior_bound_to_weight {c a b d y C : ℝ} (hc : 0 ≤ c) (hC : 0 ≤ C)
-    (hd : 0 < d) (hy : y ∈ Ioo a b) (hym : y ∈ Icc (a+d) (b-d)) (N : ℕ) :
+    (hd : 0 < d) (hy : y ∈ Ioo a b) (hym : y ∈ Icc (a + d) (b - d)) (N : ℕ) :
     C ≤ (C / (FlatCutoff.edge c d * FlatCutoff.edge 4 d)) *
       weight c a b y / edgeDistance a b y ^ N := by
   have he : 0 < FlatCutoff.edge c d * FlatCutoff.edge 4 d :=
@@ -258,10 +260,14 @@ variable {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- An actual local edge identity and a smooth coefficient. No weighted
 derivative bound is included in these data. -/
 structure EdgeFactor (K : Set E) (c : ℝ) (T : E × ℝ → V) where
+  /-- Coefficient of `EdgeFactor`, of type `E × ℝ → V`. -/
   coefficient : E × ℝ → V
+  /-- Order of `EdgeFactor`, of type `ℕ`. -/
   order : ℕ
+  /-- Width of `EdgeFactor`, of type `ℝ`. -/
   width : ℝ
   width_pos : 0 < width
+  /-- Domain of `EdgeFactor`, of type `Set (E × ℝ)`. -/
   domain : Set (E × ℝ)
   domain_open : IsOpen domain
   boundary_mem : K ×ˢ ({0} : Set ℝ) ⊆ domain
@@ -290,7 +296,7 @@ noncomputable def EdgeFactor.transfer {K : Set E} {c : ℝ} {T S : E × ℝ → 
 omit [NormedSpace ℝ E] [NormedSpace ℝ V] in
 theorem compact_nonzero_collar {K : Set E} (hK : IsCompact K) {B : E × ℝ → V}
     {O : Set (E × ℝ)} (hO : IsOpen O) (hB : ContinuousOn B O)
-    (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O) (hne : ∀ p ∈ K, B (p,0) ≠ 0) :
+    (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O) (hne : ∀ p ∈ K, B (p, 0) ≠ 0) :
     ∃ d c : ℝ, 0 < d ∧ 0 < c ∧ K ×ˢ Icc (0 : ℝ) d ⊆ O ∧
       ∀ p ∈ K, ∀ x ∈ Icc (0 : ℝ) d, c ≤ ‖B (p,x)‖ := by
   have hnorm : ContinuousOn (fun p => ‖B (p,0)‖) K :=
@@ -351,9 +357,13 @@ theorem EdgeFactor.collar {K : Set E} (hK : IsCompact K) {c : ℝ} {T : E × ℝ
         mul_le_mul_of_nonneg_left hdiv (norm_nonneg _)
       _ = _ := mul_comm _ _
 
+/-- Left chart, given by `T (q.1,a+q.2)`. -/
 noncomputable def leftChart (a : ℝ) (T : E × ℝ → V) (q : E × ℝ) : V := T (q.1,a+q.2)
+/-- Right chart, given by `T (q.1,b-q.2)`. -/
 noncomputable def rightChart (b : ℝ) (T : E × ℝ → V) (q : E × ℝ) : V := T (q.1,b-q.2)
 
+/-- Radial reflection, given by `{ (LinearEquiv.refl ℝ E).prodCongr (LinearEquiv.neg ℝ) with
+norm_map' := by intro q; simp [Prod.norm_def] }`. -/
 noncomputable def radialReflection : (E × ℝ) ≃ₗᵢ[ℝ] (E × ℝ) :=
   { (LinearEquiv.refl ℝ E).prodCongr (LinearEquiv.neg ℝ) with
     norm_map' := by intro q; simp [Prod.norm_def] }
@@ -437,7 +447,7 @@ positive lower constant for the explicit product weight. -/
 theorem exists_global_lower_bound {K : Set E} (hK : IsCompact K)
     {a b c : ℝ} (hab : a < b) (hc : 0 < c) {T : E × ℝ → V}
     (hT : ContinuousOn T (K ×ˢ Icc a b))
-    (hinterior : ∀ p ∈ K, ∀ y ∈ Ioo a b, T (p,y) ≠ 0)
+    (hinterior : ∀ p ∈ K, ∀ y ∈ Ioo a b, T (p, y) ≠ 0)
     (FL : EdgeFactor K c (leftChart a T)) (FR : EdgeFactor K 4 (rightChart b T)) :
     ∃ m : ℝ, 0 < m ∧ ∀ p ∈ K, ∀ y ∈ Ioo a b, m * weight c a b y ≤ ‖T (p,y)‖ := by
   obtain ⟨dl,ml,hdl,hdlwidth,hdl1,hml,hdldom,hl⟩ := FL.collar hK
@@ -472,8 +482,8 @@ theorem exists_global_lower_bound {K : Set E} (hK : IsCompact K)
       rw [he] at hh
       exact ((mul_le_mul_of_nonneg_left (weight_le_right hc.le a b y) hm.le).trans
         (mul_le_mul_of_nonneg_right hmr' (FlatCutoff.edge_nonneg 4 (b-y)))).trans hh
-    · have hyM : y ∈ Icc (a+d) (b-d) := by constructor <;> linarith [lt_of_not_ge
-      hleft,lt_of_not_ge hright]
+    · have hyM : y ∈ Icc (a+d) (b-d) := by
+        constructor <;> linarith [lt_of_not_ge hleft,lt_of_not_ge hright]
       exact (mul_le_of_le_one_right hm.le (weight_le_one hc.le a b y)).trans
         (hmm'.trans (hmb (p,y) ⟨hp,hyM⟩))
 
@@ -557,7 +567,7 @@ theorem global_weighted_bounds {K : Set E} (hK : IsCompact K)
     (hKd : UniqueDiffOn ℝ K) {a b c : ℝ} (hab : a < b) (hc : 0 < c)
     {T : E × ℝ → V} {O : Set (E × ℝ)} (hO : IsOpen O)
     (hT : ContDiffOn ℝ ∞ T O) (hKO : K ×ˢ Icc a b ⊆ O)
-    (hinterior : ∀ p ∈ K, ∀ y ∈ Ioo a b, T (p,y) ≠ 0)
+    (hinterior : ∀ p ∈ K, ∀ y ∈ Ioo a b, T (p, y) ≠ 0)
     (FL : EdgeFactor K c (leftChart a T)) (FR : EdgeFactor K 4 (rightChart b T)) :
     (∃ m : ℝ, 0 < m ∧ ∀ p ∈ K, ∀ y ∈ Ioo a b, m * weight c a b y ≤ ‖T (p,y)‖) ∧
     ∀ n : ℕ, ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, ∀ i ≤ n, ∀ p ∈ K,
@@ -573,7 +583,9 @@ section RadialChart
 variable {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Log chart, given by `(q.1,Real.log q.2)`. -/
 noncomputable def logChart (q : E × ℝ) : E × ℝ := (q.1,Real.log q.2)
+/-- Radial pullback, given by `T (logChart q)`. -/
 noncomputable def radialPullback (T : E × ℝ → V) (q : E × ℝ) : V := T (logChart q)
 
 theorem logChart_smooth : ContDiffOn ℝ ∞ (logChart (E := E))
@@ -646,7 +658,7 @@ theorem exists_radial_derivative_bound {K : Set E} (hK : IsCompact K)
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℝ V] in
 theorem radial_lower_bound {K : Set E} {a b c m : ℝ} {T : E × ℝ → V}
-    (hlower : ∀ p ∈ K, ∀ y ∈ Ioo a b, m * weight c a b y ≤ ‖T (p,y)‖)
+    (hlower : ∀ p ∈ K, ∀ y ∈ Ioo a b, m * weight c a b y ≤ ‖T (p, y)‖)
     {p : E} (hp : p ∈ K) {X : ℝ} (hX : X ∈ Ioo (Real.exp a) (Real.exp b)) :
     m * radialWeight c a b X ≤ ‖radialPullback T (p,X)‖ := by
   have hXp : 0 < X := (Real.exp_pos a).trans hX.1
@@ -669,7 +681,7 @@ theorem weightedBounds_of_edge_factors {K : Set E} (hK : IsCompact K)
     (hKd : UniqueDiffOn ℝ K) {a b c : ℝ} (hab : a < b) (hc : 0 < c)
     {T : E × ℝ → V} {O : Set (E × ℝ)} (hO : IsOpen O)
     (hT : ContDiffOn ℝ ∞ T O) (hKO : K ×ˢ Icc a b ⊆ O)
-    (hinterior : ∀ p ∈ K, ∀ y ∈ Ioo a b, T (p,y) ≠ 0)
+    (hinterior : ∀ p ∈ K, ∀ y ∈ Ioo a b, T (p, y) ≠ 0)
     (FL : EdgeFactor K c (leftChart a T)) (FR : EdgeFactor K 4 (rightChart b T)) :
     WeightedBounds K c a b T :=
   ⟨exists_global_lower_bound hK hab hc (hT.continuousOn.mono hKO) hinterior FL FR,
@@ -682,8 +694,10 @@ section Directions
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Tilt, given by `v.2 / v.1`. -/
 noncomputable def tilt (v : ℝ × ℝ) : ℝ := v.2 / v.1
 
+/-- Unit of tilt, given by `((Real.sqrt (1+t^2))⁻¹,t / Real.sqrt (1+t^2))`. -/
 noncomputable def unitOfTilt (t : ℝ) : ℝ × ℝ :=
   ((Real.sqrt (1+t^2))⁻¹,t / Real.sqrt (1+t^2))
 
@@ -727,7 +741,7 @@ theorem positive_domain_open {O : Set (E × ℝ)} (hO : IsOpen O) {g : E × ℝ 
 omit [NormedSpace ℝ E] in
 theorem compact_positive_collar {K : Set E} (hK : IsCompact K)
     {O : Set (E × ℝ)} (hO : IsOpen O) {g : E × ℝ → ℝ} (hg : ContinuousOn g O)
-    (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O) (hpos : ∀ p ∈ K, 0 < g (p,0)) :
+    (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O) (hpos : ∀ p ∈ K, 0 < g (p, 0)) :
     ∃ d ε : ℝ, 0 < d ∧ 0 < ε ∧ K ×ˢ Icc (0 : ℝ) d ⊆ O ∧
       ∀ p ∈ K, ∀ x ∈ Icc (0 : ℝ) d, ε ≤ g (p,x) := by
   let W := {q | q ∈ O ∧ 0 < g q}
@@ -749,7 +763,7 @@ theorem compact_positive_collar {K : Set E} (hK : IsCompact K)
 for the stress, even where the stress itself vanishes at the edge. -/
 theorem EdgeFactor.direction_collar {K : Set E} (hK : IsCompact K) {c : ℝ}
     {T : E × ℝ → ℝ × ℝ} (F : EdgeFactor K c T)
-    (hfirst : ∀ p ∈ K, 0 < (F.coefficient (p,0)).1) :
+    (hfirst : ∀ p ∈ K, 0 < (F.coefficient (p, 0)).1) :
     ∃ d : ℝ, ∃ W : Set (E × ℝ), 0 < d ∧ d < F.width ∧ IsOpen W ∧
       K ×ˢ Icc (0 : ℝ) d ⊆ W ∧
       ContDiffOn ℝ ∞ (fun q => direction (F.coefficient q)) W ∧
@@ -775,7 +789,9 @@ theorem EdgeFactor.direction_collar {K : Set E} (hK : IsCompact K) {c : ℝ}
     rw [F.identity p hp x hx (hxd.trans_lt hdw),Prod.smul_fst,smul_eq_mul]
     exact mul_pos (div_pos (FlatCutoff.edge_pos _ hx) (pow_pos hx _)) (hpos p hp x ⟨hx.le,hxd⟩)
 
+/-- Direction projection, given by `1+s*t`. -/
 noncomputable def directionProjection (s t : ℝ) : ℝ := 1+s*t
+/-- Direction gap, given by `2*(directionProjection s t)^2 - (v-2)*(t-s)^2`. -/
 noncomputable def directionGap (v s t : ℝ) : ℝ := 2*(directionProjection s t)^2 - (v-2)*(t-s)^2
 
 theorem aligned_direction_margin (v s : ℝ) :
@@ -792,7 +808,7 @@ strict cone margin on one uniform collar by continuity and compactness. -/
 theorem aligned_direction_collar {K : Set E} (hK : IsCompact K)
     {O : Set (E × ℝ)} (hO : IsOpen O) (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O)
     {v s t : E × ℝ → ℝ} (hv : ContinuousOn v O) (hs : ContinuousOn s O)
-    (ht : ContinuousOn t O) (halign : ∀ p ∈ K, t (p,0) = s (p,0)) :
+    (ht : ContinuousOn t O) (halign : ∀ p ∈ K, t (p, 0) = s (p, 0)) :
     ∃ d ε : ℝ, 0 < d ∧ 0 < ε ∧ K ×ˢ Icc (0 : ℝ) d ⊆ O ∧
       ∀ p ∈ K, ∀ x ∈ Icc (0 : ℝ) d,
         ε ≤ directionProjection (s (p,x)) (t (p,x)) ∧
@@ -819,10 +835,10 @@ theorem aligned_direction_collar {K : Set E} (hK : IsCompact K)
 cone margin when the genuine edge factor is aligned with the limiting shear. -/
 theorem EdgeFactor.aligned_collar {K : Set E} (hK : IsCompact K) {c : ℝ}
     {T : E × ℝ → ℝ × ℝ} (F : EdgeFactor K c T)
-    (hfirst : ∀ p ∈ K, 0 < (F.coefficient (p,0)).1)
+    (hfirst : ∀ p ∈ K, 0 < (F.coefficient (p, 0)).1)
     {O : Set (E × ℝ)} (hO : IsOpen O) (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O)
     {v s : E × ℝ → ℝ} (hv : ContinuousOn v O) (hs : ContinuousOn s O)
-    (halign : ∀ p ∈ K, tilt (F.coefficient (p,0)) = s (p,0)) :
+    (halign : ∀ p ∈ K, tilt (F.coefficient (p, 0)) = s (p, 0)) :
     ∃ d ε : ℝ, ∃ W : Set (E × ℝ), 0 < d ∧ d < F.width ∧ 0 < ε ∧ IsOpen W ∧
       K ×ˢ Icc (0 : ℝ) d ⊆ W ∧
       ContDiffOn ℝ ∞ (fun q => direction (F.coefficient q)) W ∧
@@ -892,7 +908,7 @@ theorem HasStrictDirectionCollar.true_of_speed {K : Set E} (hK : IsCompact K)
     {T B : E × ℝ → ℝ × ℝ} {v s : E × ℝ → ℝ} {width : ℝ}
     (hdir : HasStrictDirectionCollar K T B v s width)
     {O : Set (E × ℝ)} (hO : IsOpen O) (hK0 : K ×ˢ ({0} : Set ℝ) ⊆ O)
-    (hv : ContinuousOn v O) (hvs : ∀ p ∈ K, 2 < v (p,0)) :
+    (hv : ContinuousOn v O) (hvs : ∀ p ∈ K, 2 < v (p, 0)) :
     HasTrueDirectionCollar K T B v s width := by
   refine ⟨hdir,?_⟩
   obtain ⟨d1,e1,W,hd1,hdw,he1,hW,hKW,hsm,hbd,hactual⟩ := hdir
@@ -944,7 +960,7 @@ theorem actual_shear_domain {T : ℝ} (hT : 0 < T) (κ : ℝ)
     {X0 : ℝ} (hX0 : 0 < X0) {J K : Set ℝ} (hJ : IsOpen J) (hKJ : K ⊆ J)
     {L U : Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
-    (hA0 : ∀ η ∈ K, 0 < referenceP1 L (0,η)) :
+    (hA0 : ∀ η ∈ K, 0 < referenceP1 L (0, η)) :
     ∃ O : Set (ℝ × ℝ), IsOpen O ∧ K ×ˢ ({0} : Set ℝ) ⊆ O ∧
       ContDiffOn ℝ ∞ (fun q : ℝ × ℝ => shearSize T κ X0 L U (q.2,q.1)) O ∧
       ContDiffOn ℝ ∞ (fun q : ℝ × ℝ => shearSlope T κ X0 L U (q.2,q.1)) O := by
@@ -996,7 +1012,7 @@ noncomputable def activationEdgeFactor {J K : Set ℝ} (hJ : IsOpen J) (hKJ : K 
     {T κ d : ℝ} (hT : 0 < T) (hκ : κ < 1) (hd : 0 < d)
     {D : ActivationBounds.ScaledPoint → ℝ × ℝ}
     (hD : ContDiffOn ℝ ∞ D (ActivationBounds.scaledDomain J))
-    (hD0 : ∀ η ∈ K, D ((κ,T),(0,η)) ≠ 0) {S : ℝ × ℝ → ℝ × ℝ}
+    (hD0 : ∀ η ∈ K, D ((κ, T), (0, η)) ≠ 0) {S : ℝ × ℝ → ℝ × ℝ}
     (hfactor : ∀ u η : ℝ, T*u ∈ Icc (0 : ℝ) d → η ∈ K →
       S (T*u,η) = (activation 1 κ u * (D ((κ,T),(u,η))).1,
         activation 1 κ u * (D ((κ,T),(u,η))).2)) :
@@ -1023,14 +1039,14 @@ noncomputable def activationEdgeFactor {J K : Set ℝ} (hJ : IsOpen J) (hKJ : K 
     rw [ha,activation_flat_form hT] at hf
     rw [hf]
     ext <;> simp only
-      [activationCoefficient,pow_zero,div_one,Prod.smul_fst,Prod.smul_snd,smul_eq_mul]
+        [activationCoefficient,pow_zero,div_one,Prod.smul_fst,Prod.smul_snd,smul_eq_mul]
       <;> ring
 
 theorem exists_natural_activation_factor {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalEntrance.EntranceProfile d Λ C)
     (hP0 : ContDiff ℝ ∞ P0) (hsmall : NaturalAxisData.SmallParameters h j)
-    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2*δ < ReferencePath.rampLimit)
+    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < ReferencePath.rampLimit)
     {T κ : ℝ} (hT : 0 < T) (hκ : κ < 1) :
     let N := ReferencePath.Input.ofNatural hΛ F.profile.family
     let L := FromReference.refLog N δ
@@ -1055,7 +1071,7 @@ theorem exists_natural_activation_factor_aligned {h j σ Λ C : ℝ} {P0 : ℝ �
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalEntrance.EntranceProfile d Λ C)
     (hP0 : ContDiff ℝ ∞ P0) (hsmall : NaturalAxisData.SmallParameters h j)
-    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2*δ < ReferencePath.rampLimit)
+    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < ReferencePath.rampLimit)
     {T κ : ℝ} (hT : 0 < T) (hκ : κ < 1) :
     let N := ReferencePath.Input.ofNatural hΛ F.profile.family
     let L := FromReference.refLog N δ
@@ -1083,7 +1099,7 @@ theorem exists_natural_activation_factor_aligned {h j σ Λ C : ℝ} {P0 : ℝ �
         (logHistory N.endpoint I (referenceAngular L) U) (y,η) = referenceP1 L (y,η) ∧
       ActivationStocks.logViewTwo h N.endpoint (referenceAngular L) U
         (logHistory N.endpoint I (referenceAngular L) U) (y,η) = referenceP2 N.endpoint L U (y,η)
-          := by
+            := by
     intro y hy η hη
     exact natural_reference_log_match hΛ F.profile.family hP0 hsmall hδ hδlim hy.2 hη
   obtain ⟨D,hD,hedge,hfactor⟩ := exists_actual_stress_direction h N.endpoint_pos I
@@ -1120,7 +1136,7 @@ theorem natural_activation_strict_direction {h j σ Λ C : ℝ} {P0 : ℝ → �
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalEntrance.EntranceProfile d Λ C)
     (hP0 : ContDiff ℝ ∞ P0) (hsmall : NaturalAxisData.SmallParameters h j)
-    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2*δ < ReferencePath.rampLimit)
+    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < ReferencePath.rampLimit)
     {T κ : ℝ} (hT : 0 < T) (hκ : κ < 1) :
     let N := ReferencePath.Input.ofNatural hΛ F.profile.family
     let L := FromReference.refLog N δ
@@ -1139,7 +1155,7 @@ theorem natural_activation_strict_direction {h j σ Λ C : ℝ} {P0 : ℝ → �
   have hKJ : Icc (-1 : ℝ) 1 ⊆ ReferencePath.parameterInterval :=
     NaturalAxisCoefficients.original_interval_interior
   obtain ⟨G,hGfirst,hGalign⟩ := exists_natural_activation_factor_aligned hΛ F hP0 hsmall hδ hδlim
-    hT hκ
+      hT hκ
   obtain ⟨τ,α,M,hτ,_,hα,_,hb⟩ := natural_reference_bounds hΛ F hδ hδlim
   have hA0 : ∀ η ∈ Icc (-1 : ℝ) 1, 0 < referenceP1 L (0,η) := by
     intro η hη
@@ -1159,7 +1175,7 @@ theorem natural_activation_true_direction {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalEntrance.EntranceProfile d Λ C)
     (hP0 : ContDiff ℝ ∞ P0) (hsmall : NaturalAxisData.SmallParameters h j)
-    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2*δ < ReferencePath.rampLimit)
+    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < ReferencePath.rampLimit)
     {T κ : ℝ} (hT : 0 < T) (hκ : κ < 1) :
     let N := ReferencePath.Input.ofNatural hΛ F.profile.family
     let L := FromReference.refLog N δ
@@ -1252,13 +1268,13 @@ theorem actual_edge_join {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalEntrance.EntranceProfile d Λ C)
     (hP0 : ContDiff ℝ ∞ P0) (hsmall : NaturalAxisData.SmallParameters h j)
-    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2*δ < ReferencePath.rampLimit)
+    {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < ReferencePath.rampLimit)
     {T κ : ℝ} (hT : 0 < T) (hκ : κ < 1)
     {Ct : ℝ} (hCt : 0 < Ct) (dt : TailData) (y0 : ℝ)
     {a b : ℝ} (hab : a < b) {S : ℝ × ℝ → ℝ × ℝ} {O : Set (ℝ × ℝ)}
     (hO : IsOpen O) (hS : ContDiffOn ℝ ∞ S O)
     (hSO : Icc (-1 : ℝ) 1 ×ˢ Icc a b ⊆ O)
-    (hinterior : ∀ η ∈ Icc (-1 : ℝ) 1, ∀ y ∈ Ioo a b, S (η,y) ≠ 0)
+    (hinterior : ∀ η ∈ Icc (-1 : ℝ) 1, ∀ y ∈ Ioo a b, S (η, y) ≠ 0)
     {wL wR : ℝ} (hwL : 0 < wL) (hwR : 0 < wR) :
     let N := ReferencePath.Input.ofNatural hΛ F.profile.family
     let L := FromReference.refLog N δ

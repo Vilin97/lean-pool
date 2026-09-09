@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCorrectorMeanZero
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCorrectorMeanZero
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
+
+/-! Zero angular mean of the actual transverse potential, corrector, and time derivatives. -/
 
 @[expose] public section
 
-/-! Zero angular mean of the actual transverse potential, corrector, and time derivatives. -/
 
 noncomputable section
 
@@ -43,9 +46,9 @@ theorem potentialPath_average_zero : pathAverage P (G.potentialPath I) = 0 :=
 theorem potentialTimePath_average_zero : pathAverage P (G.potentialTimePath I) = 0 := by
   rw [potentialTimePath, EulerCylinderPotential.potentialDerivative, map_add,
     potentialPath_mean_zero P (G.fullVelocityPath I) D.potentialDerivative
-      (G.fullVelocityPath_average_zero I),
+        (G.fullVelocityPath_average_zero I),
     potentialPath_mean_zero P (G.fullDerivativePath I) D.potentialCoefficientPath
-      (G.fullDerivativePath_average_zero I),
+        (G.fullDerivativePath_average_zero I),
     add_zero]
 
 theorem correctorPath_average_zero : pathAverage P (G.correctorPath I) = 0 :=

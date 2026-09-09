@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpLinearity
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Actual finite families of continuous and Bochner time fields, with exact norm-topology
+compatibility. -/
 
 @[expose] public section
 
-/-! Actual finite families of continuous and Bochner time fields, with exact norm-topology
-  compatibility. -/
 
 noncomputable section
 
@@ -42,12 +44,14 @@ theorem familyPath_tendsto (T : ℝ) (u : ℕ → I → C(Icc (0 : ℝ) T, E))
     Filter.Tendsto (fun n => familyPath T (u n)) Filter.atTop (𝓝 (familyPath T v)) :=
   (familyPath_continuous T).continuousAt.tendsto.comp (tendsto_pi_nhds.mpr hu)
 
-/-- A finite family of actual Bochner fields, constructed by the genuine bounded coordinate injections. -/
+/-- A finite family of actual Bochner fields, constructed by the genuine bounded coordinate
+injections. -/
 def familyTime (T : ℝ) (u : I → TimeLp T E) : TimeLp T (I → E) := by
   classical
   exact ∑ i, (ContinuousLinearMap.single ℝ (fun _ : I => E) i).compLpL 2 (timeMeasure T) (u i)
 
-/-- The Bochner finite-family construction has exactly the componentwise representative almost everywhere. -/
+/-- The Bochner finite-family construction has exactly the componentwise representative almost
+everywhere. -/
 theorem familyTime_ae (T : ℝ) (u : I → TimeLp T E) :
     (familyTime T u : ℝ → I → E) =ᵐ[timeMeasure T] fun t i => u i t := by
   classical
@@ -60,14 +64,15 @@ theorem familyTime_ae (T : ℝ) (u : I → TimeLp T E) :
     _ = ∑ i : I, Pi.single i (u i t) := Finset.sum_congr rfl (fun i _ => hh i)
     _ = _ := Finset.univ_sum_single _
 
-/-- Strong convergence of each actual component gives strong convergence of the full finite Bochner family. -/
+/-- Strong convergence of each actual component gives strong convergence of the full finite Bochner
+family. -/
 theorem familyTime_tendsto (T : ℝ) (u : ℕ → I → TimeLp T E) (v : I → TimeLp T E)
     (hu : ∀ i, Filter.Tendsto (fun n => u n i) Filter.atTop (𝓝 (v i))) :
     Filter.Tendsto (fun n => familyTime T (u n)) Filter.atTop (𝓝 (familyTime T v)) := by
   classical
   exact tendsto_finsetSum Finset.univ (fun i _ =>
     ((ContinuousLinearMap.single ℝ (fun _ : I => E) i).compLpL 2 (timeMeasure
-      T)).continuous.continuousAt.tendsto.comp (hu i))
+        T)).continuous.continuousAt.tendsto.comp (hu i))
 
 /-- Bundling continuous paths and passing to genuine Bochner classes commute exactly. -/
 theorem familyTime_pathLp (T : ℝ) (hT : 0 ≤ T) (u : I → C(Icc (0 : ℝ) T, E)) :

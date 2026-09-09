@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.JetProductBounds
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
+import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteSum
+
+/-! External derivative blocks with a fixed Sobolev index. -/
 
 @[expose] public section
 
-/-! External derivative blocks with a fixed Sobolev index. -/
 
 noncomputable section
 
@@ -29,7 +32,7 @@ variable {period}
 
 /-- Retain any prescribed lower order of an actual strong derivative jet. -/
 def restrict {s : ℕ} {f : LiftL2 period} (J : EulerSpatialSobolevInverse.SpatialJet period
-  directions s f)
+    directions s f)
     (q : ℕ) (hq : q ≤ s) : EulerSpatialSobolevInverse.SpatialJet period directions q f :=
   match q, J, hq with
   | 0, _, _ => .zero f
@@ -77,7 +80,7 @@ theorem sobolevSize_eq {q : ℕ} {f : LiftL2 period}
     sobolevSize period (directions := directions) q f = J.sobolevNorm := by
   unfold sobolevSize
   rw [dite_eq_left (show Nonempty (EulerSpatialSobolevInverse.SpatialJet period directions q f)
-    from ⟨J⟩)]
+      from ⟨J⟩)]
   exact SpatialJet.norm_unique _ J rfl
 
 /-- The external order-n block with a fixed base Sobolev index q. -/
@@ -96,7 +99,7 @@ namespace CoefficientJet
 
 /-- Retain the prescribed base order of an actual coefficient derivative tree. -/
 def restrict {s : ℕ} {A : SmoothCoefficient period} (K : EulerSpatialSobolevInverse.CoefficientJet
-  period directions s A)
+    period directions s A)
     (q : ℕ) (hq : q ≤ s) : EulerSpatialSobolevInverse.CoefficientJet period directions q A :=
   match q, K, hq with
   | 0, _, _ => .zero A
@@ -134,7 +137,7 @@ theorem sobolevSize_add_le {q : ℕ} {f g : LiftL2 period}
     (K : EulerSpatialSobolevInverse.SpatialJet period directions q g) :
     sobolevSize period (directions := directions) q (f + g) ≤
       sobolevSize period (directions := directions) q f + sobolevSize period (directions :=
-        directions) q g := by
+          directions) q g := by
   rw [sobolevSize_eq period (J.add K), sobolevSize_eq period J, sobolevSize_eq period K]
   exact J.add_norm_le K
 
@@ -143,13 +146,13 @@ theorem sobolevSize_sub_le {q : ℕ} {f g : LiftL2 period}
     (K : EulerSpatialSobolevInverse.SpatialJet period directions q g) :
     sobolevSize period (directions := directions) q (f - g) ≤
       sobolevSize period (directions := directions) q f + sobolevSize period (directions :=
-        directions) q g := by
+          directions) q g := by
   rw [sobolevSize_eq period (J.sub K), sobolevSize_eq period J, sobolevSize_eq period K]
   exact J.sub_norm_le K
 
 theorem blockNorm_nonneg {s q n : ℕ} {f : LiftL2 period}
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f) : 0 ≤ blockNorm period J q n
-      :=
+        :=
   Finset.sum_nonneg (fun _ _ => levelNorm_nonneg J)
 
 omit [Fact (0 < period)] in
@@ -193,10 +196,10 @@ theorem coefficientBlock_succ {s : ℕ} {A : SmoothCoefficient period}
     (dA : Fin 4 → SmoothCoefficient period)
     (lower : ∀ i, EulerSpatialSobolevInverse.CoefficientJet period directions s (dA i))
     (hd : ∀ i x, (dA i).coefficient x = EulerTransportDerivatives.fieldDerivative period
-      (directions i) A.coefficient x)
+        (directions i) A.coefficient x)
     (q n : ℕ) :
     coefficientBlock period (EulerSpatialSobolevInverse.CoefficientJet.succ (A := A) dA lower hd) q
-      (n + 1) = ∑ i, coefficientBlock period (lower i) q n := by
+        (n + 1) = ∑ i, coefficientBlock period (lower i) q n := by
   unfold coefficientBlock
   have hi (r : ℕ) : n + 1 + r = (n + r) + 1 := by omega
   simp_rw [hi, boundLevel]
@@ -277,7 +280,7 @@ theorem triangle_sum_le_product (q : ℕ) (A B : ℕ → ℝ)
     _ = ∑ p ∈ (Finset.range (q + 1)).sigma (fun r => Finset.range (r + 1)),
         A p.2 * B (p.1 - p.2) := Finset.sum_sigma' _ _ _
     _ ≤ ∑ p ∈ (Finset.range (q + 1)) ×ˢ (Finset.range (q + 1)), A p.1 * B p.2 :=
-      Finset.sum_le_sum_of_injOn e hi himg (fun _ _ => le_rfl)
+      NavierStokesAndEuler.sum_le_sum_of_injOn e hi himg (fun _ _ => le_rfl)
         (fun p _ _ => mul_nonneg (hA p.1) (hB p.2))
     _ = _ := by rw [Finset.sum_product, ← Finset.sum_mul_sum]
 
@@ -323,9 +326,9 @@ theorem multiply_base_block_bound {s q : ℕ} {A : SmoothCoefficient period} {f 
   simp only [Nat.zero_add]
   calc
     _ ≤ ∑ r ∈ Finset.range (q + 1), leibnizConvolution (boundLevel period K) (levelNorm period J) r
-      :=
-      Finset.sum_le_sum (fun r hr => multiply_levelNorm_le K J (by have := Finset.mem_range.mp hr;
-        omega))
+        :=
+      Finset.sum_le_sum (fun r hr => multiply_levelNorm_le K J (by
+          have := Finset.mem_range.mp hr; omega))
     _ ≤ _ := base_convolution_bound q (boundLevel period K) (levelNorm period J)
       (fun _ => boundLevel_nonneg K) (fun _ => levelNorm_nonneg J)
 
@@ -350,24 +353,24 @@ theorem multiply_blockNorm_bound {s q n : ℕ} {A : SmoothCoefficient period} {f
           let J := EulerSpatialSobolevInverse.SpatialJet.succ (f := f) df lowerF hF
           have ht : ∀ i,
               blockNorm period ((EulerSpatialSobolevInverse.SpatialJet.multiply K.truncate (lowerF
-                i)).add
+                  i)).add
                 (EulerSpatialSobolevInverse.SpatialJet.multiply (lowerA i) J.truncate)) q n ≤
               leibnizConvolution (coefficientBlock period K q) (blockNorm period (lowerF i) q) n +
                 leibnizConvolution (coefficientBlock period (lowerA i) q) (blockNorm period J q) n
-                  := by
+                    := by
             intro i
             have hleft := ih K.truncate (lowerF i) (by omega : n + q ≤ s)
             have hright := ih (lowerA i) J.truncate (by omega : n + q ≤ s)
             have heqL : leibnizConvolution (coefficientBlock period K.truncate q)
                 (blockNorm period (lowerF i) q) n =
                 leibnizConvolution (coefficientBlock period K q) (blockNorm period (lowerF i) q) n
-                  :=
+                    :=
               leibnizConvolution_congr _ _ _ _ n
                 (fun l hl => coefficientBlock_truncate K (by omega)) (fun _ _ => rfl)
             have heqR : leibnizConvolution (coefficientBlock period (lowerA i) q)
                 (blockNorm period J.truncate q) n =
                 leibnizConvolution (coefficientBlock period (lowerA i) q) (blockNorm period J q) n
-                  :=
+                    :=
               leibnizConvolution_congr _ _ _ _ n
                 (fun _ _ => rfl) (fun l hl => blockNorm_truncate J (by omega))
             rw [heqL] at hleft
@@ -376,9 +379,9 @@ theorem multiply_blockNorm_bound {s q n : ℕ} {A : SmoothCoefficient period} {f
           rw [EulerSpatialSobolevInverse.SpatialJet.multiply, blockNorm_succ]
           calc
             _ ≤ ∑ i, (leibnizConvolution (coefficientBlock period K q) (blockNorm period (lowerF i)
-              q) n +
+                q) n +
                 leibnizConvolution (coefficientBlock period (lowerA i) q) (blockNorm period J q) n)
-                  :=
+                    :=
               Finset.sum_le_sum (fun i _ => ht i)
             _ = leibnizConvolution (coefficientBlock period K q)
                   (fun l => ∑ i, blockNorm period (lowerF i) q l) n +
@@ -386,7 +389,7 @@ theorem multiply_blockNorm_bound {s q n : ℕ} {A : SmoothCoefficient period} {f
                   (blockNorm period J q) n := by
               rw [Finset.sum_add_distrib, sum_leibnizConvolution_right, sum_leibnizConvolution_left]
             _ = leibnizConvolution (coefficientBlock period K q) (blockNorm period J q) (n + 1) :=
-              by
+                by
               rw [leibnizConvolution_succ]
               congr 2
               · funext l; exact (blockNorm_succ J q l).symm

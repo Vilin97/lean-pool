@@ -6,16 +6,22 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderJets
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothPhysicalGraphFlow
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderAccelerationComposition
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderAccelerationComposition
+import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderComposition
+import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderGevrey
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Operator.Prod
 
 /-! The actual physical graph flow has smooth square-integrable
 displacement, velocity and acceleration, with explicit Gevrey bounds.
 Every input estimate is on the original lifted velocity or its genuine
 time derivative; no regularity of the output flow is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,25 +33,41 @@ open Set MeasureTheory ContinuousLinearMap EulerLiftedGradientSpace EulerCylinde
   EulerCylinderGraphGevrey
 open scoped ContDiff BoundedContinuousFunction
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ]
-  LiftTangent)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))
-  := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instPhysicalGraphFlowBounds1 (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ
+    (LiftTangent [×n]→L[ℝ]
+    LiftTangent)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instPhysicalGraphFlowBounds2 (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent
+    [×n]→L[ℝ] LiftTangent))
+    := inferInstance
 
+/-- Data, collecting `time_nonneg`, `A`, `A₁`, `time_derivative`, `periodic`, `periodic_time`
+and their compatibility conditions. -/
 structure Data (P T : ℝ) [Fact (0 < P)] where
   time_nonneg : 0 ≤ T
+  /-- A of `Data`, of type `SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent`. -/
   A : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent
+  /-- A₁ of `Data`, of type `SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent`. -/
   A₁ : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent
   time_derivative : SmoothTimeField.TimeDerivative T time_nonneg A A₁
   periodic : ∀ (c : AddSubgroup.zmultiples P) t z, A.field t (z.1,(c : ℝ)+z.2)=A.field t z
   periodic_time : ∀ (c : AddSubgroup.zmultiples P) t z, A₁.field t (z.1,(c : ℝ)+z.2)=A₁.field t z
   divergence : ∀ t z,
     LinearMap.trace ℝ LiftTangent (fderiv ℝ (A.field t : LiftTangent → LiftTangent) z).toLinearMap=0
+  /-- Bound parameter of `Data`, of type `ℝ`. -/
   B : ℝ
+  /-- Radius parameter of `Data`, of type `ℝ`. -/
   R : ℝ
+  /-- Bound coefficient of `Data`, of type `ℝ`. -/
   C : ℝ
+  /-- Parameter `S` of `Data`, of type `ℝ`. -/
   S : ℝ
+  /-- First-derivative bound coefficient of `Data`, of type `ℝ`. -/
   C₁ : ℝ
+  /-- Parameter `S₁` of `Data`, of type `ℝ`. -/
   S₁ : ℝ
   B_nonneg : 0 ≤ B
   R_pos : 0 < R
@@ -59,21 +81,24 @@ structure Data (P T : ℝ) [Fact (0 < P)] where
     MemLp (fun q => jetSeries P (A.field t : LiftTangent → LiftTangent) q n) 2 (liftMeasure P)
   lp_bound : ∀ t n,
     (eLpNorm (fun q => jetSeries P (A.field t : LiftTangent → LiftTangent) q n) 2 (liftMeasure
-      P)).toReal ≤
+        P)).toReal ≤
       C*S^n*(n.factorial : ℝ)^2
   integrable_time : ∀ t n,
     MemLp (fun q => jetSeries P (A₁.field t : LiftTangent → LiftTangent) q n) 2 (liftMeasure P)
   lp_bound_time : ∀ t n,
     (eLpNorm (fun q => jetSeries P (A₁.field t : LiftTangent → LiftTangent) q n) 2 (liftMeasure
-      P)).toReal ≤
+        P)).toReal ≤
       C₁*S₁^n*(n.factorial : ℝ)^2
 
 namespace Data
 
 variable {P T : ℝ} [Fact (0 < P)] (G : Data P T)
 
+/-- Velocity radius, given by `flowRadius G.B G.R T G.S`. -/
 def velocityRadius : ℝ := flowRadius G.B G.R T G.S
+/-- Acceleration radius, given by `flowRadius G.B G.R T (4*G.R+G.S+G.S₁)`. -/
 def accelerationRadius : ℝ := flowRadius G.B G.R T (4*G.R+G.S+G.S₁)
+/-- Acceleration amplitude, given by `G.C₁+3*G.B*G.R*G.C`. -/
 def accelerationAmplitude : ℝ := G.C₁+3*G.B*G.R*G.C
 
 theorem velocityRadius_nonneg : 0 ≤ G.velocityRadius := by
@@ -115,7 +140,7 @@ theorem displacement_cylinder_bound (t : Icc (0 : ℝ) T) (n : ℕ) :
       (pow_nonneg G.velocityRadius_nonneg n)) (sq_nonneg _)
 
 theorem velocity_periodic (t : Icc (0 : ℝ) T) (c : AddSubgroup.zmultiples P) (z : LiftTangent) :
-    materialVelocity T G.time_nonneg G.A t (z.1,(c : ℝ)+z.2)=
+    materialVelocity T G.time_nonneg G.A t (z.1,(c : ℝ)+z.2) =
       materialVelocity T G.time_nonneg G.A t z :=
   comp_deck P (G.A.field t : LiftTangent → LiftTangent) (fun d y => G.periodic d t y)
     ((flowData T G.time_nonneg G.A).forward t)
@@ -136,7 +161,7 @@ theorem velocity_cylinder_bound (t : Icc (0 : ℝ) T) (n : ℕ) :
     (fun j _ => G.integrable t j) (fun j _ => G.lp_bound t j) t
 
 theorem acceleration_periodic (t : Icc (0 : ℝ) T) (c : AddSubgroup.zmultiples P) (z : LiftTangent) :
-    materialAcceleration T G.time_nonneg G.A G.A₁ t (z.1,(c : ℝ)+z.2)=
+    materialAcceleration T G.time_nonneg G.A G.A₁ t (z.1,(c : ℝ)+z.2) =
       materialAcceleration T G.time_nonneg G.A G.A₁ t z :=
   comp_deck P (accelerationField T G.A G.A₁ t)
     (EulerSmoothCylinderFlow.accelerationField_deck P T G.A G.A₁ G.periodic G.periodic_time t)
@@ -153,12 +178,13 @@ theorem acceleration_cylinder_bound (t : Icc (0 : ℝ) T) (n : ℕ) :
       2 (liftMeasure P) ∧
       (eLpNorm (fun q => jetSeries P (materialAcceleration T G.time_nonneg G.A G.A₁ t) q n)
         2 (liftMeasure P)).toReal ≤ G.accelerationAmplitude*G.accelerationRadius^n*(n.factorial :
-          ℝ)^2 :=
+            ℝ)^2 :=
   EulerSmoothCylinderFlow.materialAccelerationJet_memLp_and_bound P T G.time_nonneg G.A G.A₁
     G.periodic G.periodic_time G.divergence G.B G.R G.C G.S G.C₁ G.S₁
     G.B_nonneg G.R_pos G.C_nonneg G.S_nonneg G.C₁_nonneg G.S₁_nonneg
     G.small G.sup_bound G.integrable G.lp_bound G.integrable_time G.lp_bound_time n t
 
+/-- Displacement field, constructed using `physicalField`. -/
 def displacementField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) :
     SmoothL2Field Vector3 :=
   physicalField P (displacement T G.time_nonneg G.A t)
@@ -166,32 +192,34 @@ def displacementField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : 
     (displacement_contDiff T G.time_nonneg G.A t) k m (T*G.C) G.velocityRadius
     (mul_nonneg G.time_nonneg G.C_nonneg) G.velocityRadius_nonneg
     (fun n => (G.displacement_cylinder_bound t n).1) (fun n => (G.displacement_cylinder_bound t
-      n).2)
+        n).2)
     ell hell (fst ℝ Vector3 ℝ)
 
+/-- Velocity field, constructed using `physicalField`. -/
 def velocityField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) :
     SmoothL2Field Vector3 :=
   physicalField P (materialVelocity T G.time_nonneg G.A t) (G.velocity_periodic t)
-    (G.velocity_smooth t)
+      (G.velocity_smooth t)
     k m G.C G.velocityRadius G.C_nonneg G.velocityRadius_nonneg
     (fun n => (G.velocity_cylinder_bound t n).1) (fun n => (G.velocity_cylinder_bound t n).2)
     ell hell (fst ℝ Vector3 ℝ)
 
+/-- Acceleration field L², constructed using `physicalField`. -/
 def accelerationFieldL2 (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) :
     SmoothL2Field Vector3 :=
   physicalField P (materialAcceleration T G.time_nonneg G.A G.A₁ t)
     (G.acceleration_periodic t) (G.acceleration_smooth t) k m G.accelerationAmplitude
-      G.accelerationRadius
+        G.accelerationRadius
     G.accelerationAmplitude_nonneg G.accelerationRadius_nonneg
     (fun n => (G.acceleration_cylinder_bound t n).1) (fun n => (G.acceleration_cylinder_bound t
-      n).2)
+        n).2)
     ell hell (fst ℝ Vector3 ℝ)
 
 theorem displacementField_bound (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (t : Icc (0 : ℝ) T) :
     (G.displacementField k m ell hell t).HasJetBound
       (Real.sqrt (2/P+2*P)*(T*G.C)*(1+G.velocityRadius)) (ell⁻¹*(4*G.velocityRadius*graphFactor k
-        m)) :=
+          m)) :=
   physicalField_bound P _ _ _ k m (T*G.C) G.velocityRadius
     (mul_nonneg G.time_nonneg G.C_nonneg) G.velocityRadius_nonneg _ _ ell hell hell1
     (fst ℝ Vector3 ℝ) (norm_fst_le ..)
@@ -213,7 +241,7 @@ theorem accelerationField_bound (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < 
     (fst ℝ Vector3 ℝ) (norm_fst_le ..)
 
 variable (k : ℝ) (m : Vector3)
-  (hgraph : ∀ t z, graphConstraint k m (G.A.field t z)=0)
+  (hgraph : ∀ t z, graphConstraint k m (G.A.field t z) = 0)
 
 include hgraph in
 theorem displacementField_eq (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) (x : Vector3) :

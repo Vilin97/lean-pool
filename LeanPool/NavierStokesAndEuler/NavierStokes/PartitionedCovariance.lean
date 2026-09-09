@@ -8,11 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SquaredPartition
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TorusAverages
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricODE
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseEstimates
-
-@[expose] public section
 
 /-!
 # Leading covariance of actual partitioned, separated slot fields
@@ -22,6 +19,9 @@ The off-diagonal label products vanish by the constructed rational slots, not
 by an independence assumption about their angular frequencies.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PartitionedCovariance
@@ -29,10 +29,14 @@ namespace NavierStokes.PartitionedCovariance
 open Set Function Filter MeasureTheory Matrix
 open scoped BigOperators Topology ContDiff
 
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
 
+/-- Cutoff, given by `SquaredPartition.gridMask r 0`. -/
 noncomputable def cutoff (r : ℝ) : ℝ → ℝ := SquaredPartition.gridMask r 0
 
 theorem cutoff_continuous (r : ℝ) : Continuous (cutoff r) :=
@@ -59,6 +63,7 @@ theorem cutoff_sq_integral_pos {r : ℝ} (hr : 0 < r) : 0 < ∫ ξ : ℝ, cutoff
   rw [hs]
   exact isOpen_Ioo.measure_pos volume (nonempty_Ioo.mpr (by linarith))
 
+/-- Native prefactor, given by `(|vr.1 * vt.2 - vr.2 * vt.1| / 2) * ∫ ξ : ℝ, cutoff r ξ ^ 2`. -/
 noncomputable def nativePrefactor (vr vt : Plane) (r : ℝ) : ℝ :=
   (|vr.1 * vt.2 - vr.2 * vt.1| / 2) * ∫ ξ : ℝ, cutoff r ξ ^ 2
 
@@ -70,35 +75,47 @@ theorem nativePrefactor_pos {vr vt : Plane} {r : ℝ}
 /-- The actual scalar radial and two tangent pulse components. All analytic
 hypotheses concern these functions, not their covariance integrals. -/
 structure Pulse where
+  /-- Ψ of `Pulse`, of type `ℝ → ℝ`. -/
   ψ : ℝ → ℝ
+  /-- X of `Pulse`, of type `ℝ → ℝ`. -/
   x : ℝ → ℝ
+  /-- T of `Pulse`, of type `ℝ → Vec2`. -/
   t : ℝ → Vec2
   ψ_continuous : Continuous ψ
   x_continuous : Continuous x
   t_continuous : Continuous t
   ψ_compact : HasCompactSupport ψ
 
+/-- Column, given by `PulseCovariance.actualColumn ci P.ψ P.x P.t`. -/
 noncomputable def Pulse.column (P : Pulse) (ci : ℝ) : Vec2 :=
   PulseCovariance.actualColumn ci P.ψ P.x P.t
 
+/-- Radial profile, given by `cutoff r z.1 * P.ψ z.2 * P.x z.2`. -/
 noncomputable def Pulse.radialProfile (P : Pulse) (r : ℝ) (z : Plane) : ℝ :=
   cutoff r z.1 * P.ψ z.2 * P.x z.2
 
+/-- Tangent profile, given by `cutoff r z.1 * P.ψ z.2 * P.t z.2 i`. -/
 noncomputable def Pulse.tangentProfile (P : Pulse) (r : ℝ) (i : Fin 2) (z : Plane) : ℝ :=
   cutoff r z.1 * P.ψ z.2 * P.t z.2 i
 
+/-- Native pulse, given by `TorusAverages.nativeField (TorusAverages.slotChart vr vt hdet)
+center (TorusAverages.transverseStretch ci r f)`. -/
 noncomputable def nativePulse (vr vt center : Plane) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (ci r : ℝ) (f : Plane → ℝ) : Plane → ℝ :=
   TorusAverages.nativeField (TorusAverages.slotChart vr vt hdet) center
     (TorusAverages.transverseStretch ci r f)
 
+/-- Covered, given by `TorusAverages.periodize f (TorusAverages.covering^[n] Y)`. -/
 noncomputable def covered (n : ℕ) (f : Plane → ℝ) (Y : Plane) : ℝ :=
   TorusAverages.periodize f (TorusAverages.covering^[n] Y)
 
+/-- Wave, given by `amplitude * covered n f Y * Real.cos ((mode : ℝ) * θ + phase Y)`. -/
 noncomputable def wave (amplitude : ℝ) (n : ℕ) (f : Plane → ℝ) (mode : ℤ)
     (phase : Plane → ℝ) (Y : Plane) (θ : ℝ) : ℝ :=
   amplitude * covered n f Y * Real.cos ((mode : ℝ) * θ + phase Y)
 
+/-- Double average, given by `TorusAverages.squareAverage (fun Y => SmoothLoop.angularMean (f
+Y))`. -/
 noncomputable def doubleAverage (f : Plane → ℝ → ℝ) : ℝ :=
   TorusAverages.squareAverage (fun Y => SmoothLoop.angularMean (f Y))
 
@@ -222,16 +239,20 @@ theorem covered_support {f : Plane → ℝ} {S : Set Plane} (hf : support f ⊆ 
   rw [cover_power_eq_iterate]
   exact torusEq_lattice_add k _
 
+/-- Slot center, given by `SlotGeometry.center (Fintype.card SlotColoring.Palette)
+(SlotColoring.nativeGap h) (SlotColoring.color L)`. -/
 noncomputable def slotCenter (h : ℝ) (L : SlotColoring.Label) : Plane :=
   SlotGeometry.center (Fintype.card SlotColoring.Palette) (SlotColoring.nativeGap h)
     (SlotColoring.color L)
 
+/-- Slot set, given by `SlotGeometry.orientedRectangle (slotCenter h L) vr vt (2 * r)`. -/
 noncomputable def slotSet (h r : ℝ) (vr vt : Plane) (L : SlotColoring.Label) : Set Plane :=
   SlotGeometry.orientedRectangle (slotCenter h L) vr vt (2 * r)
 
 /-- All separation and quotient-injectivity fields below are constructed by
 `exists_slotSystem` from the explicit rational centers. -/
 structure SlotSystem (D h : ℝ) (vr vt : Plane) where
+  /-- Radius of `SlotSystem`, of type `ℝ`. -/
   radius : ℝ
   radius_pos : 0 < radius
   injective : ∀ L, InjOn TorusAverages.quotientPoint (slotSet h radius vr vt L)
@@ -301,8 +322,10 @@ theorem native_cutoff_support (vr vt center : Plane)
       rw [← hw]
       abel
 
+/-- Physical mask, given by `SquaredPartition.dyadicMask (L.1 : ℤ) q *
+SquaredPartition.physicalSlowMask D L.1 L.2.1 x`. -/
 noncomputable def physicalMask (D : ℝ) (L : SlotColoring.Label) (q : ℝ) (x : SlotColoring.Position)
-  : ℝ :=
+    : ℝ :=
   SquaredPartition.dyadicMask (L.1 : ℤ) q * SquaredPartition.physicalSlowMask D L.1 L.2.1 x
 
 theorem masks_force_adjacency {D q : ℝ} {x : SlotColoring.Position} {L M : SlotColoring.Label}
@@ -352,6 +375,8 @@ theorem SlotSystem.cross_product_zero {D h : ℝ} {vr vt : Plane} (sys : SlotSys
 
 /-! ## Actual pulse columns and the positive inverse solve -/
 
+/-- Tangent extension, given by `ParametricODE.extend (sq_nonneg r) ⟨fun v => P.tangent v,
+continuous_pi fun i => (P.tangent_continuous i).domRestrict⟩`. -/
 noncomputable def tangentExtension {r a A b B c₀ s₀ slope E : ℝ}
     (P : PulseCovariance.TangentPulse r a A b B c₀ s₀ slope E) : ℝ → Vec2 :=
   ParametricODE.extend (sq_nonneg r)
@@ -366,6 +391,8 @@ theorem tangentExtension_eq {r a A b B c₀ s₀ slope E : ℝ}
     tangentExtension P v = P.tangent v :=
   ParametricODE.extend_coe (sq_nonneg r) _ ⟨v, hv⟩
 
+/-- Of tangent pulse, bundling `ψ`, `x`, `t`, `ψ_continuous` and the required compatibility
+proofs. -/
 noncomputable def ofTangentPulse {r a A b B c₀ s₀ slope E : ℝ}
     (P : PulseCovariance.TangentPulse r a A b B c₀ s₀ slope E) : Pulse where
   ψ := P.cutoff
@@ -411,6 +438,7 @@ theorem ofTangentPulse_fits {r a A b B c₀ s₀ slope E ci r0 : ℝ}
   have he : 2 * r0 / ci = r ^ 2 := by rw [← hfit]; field_simp
   rwa [he]
 
+/-- Pair matrix, defined pointwise by `nativePrefactor vr vt r * (P j).column (ci j) i`. -/
 noncomputable def pairMatrix (vr vt : Plane) (r : ℝ) (ci : Vec2) (P : Fin 2 → Pulse) : Mat2 :=
   fun i j => nativePrefactor vr vt r * (P j).column (ci j) i
 
@@ -437,6 +465,7 @@ theorem pairMatrix_strictCone_of_actual {r a A b B c₀ u E r0 : ℝ}
     (fun j => mul_pos (nativePrefactor_pos hdet hr0) (hci j)) T
     hcone.det_ne_zero hcone.weights_pos).2.1
 
+/-- Amplitude, given by `Real.sqrt ε * SmoothCovariance.amplitudes H T j * mask`. -/
 noncomputable def amplitude (ε mask : ℝ) (H : Mat2) (T : Vec2) (j : Fin 2) : ℝ :=
   Real.sqrt ε * SmoothCovariance.amplitudes H T j * mask
 
@@ -540,9 +569,9 @@ theorem nativePulse_continuous (vr vt center : Plane)
 theorem nativePulse_compact (vr vt center : Plane)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) {ci r : ℝ} (hci : ci ≠ 0)
     {f : Plane → ℝ} (hf : HasCompactSupport f) : HasCompactSupport (nativePulse vr vt center hdet
-      ci r f) :=
+        ci r f) :=
   TorusAverages.nativeField_hasCompactSupport _ _
-    (TorusAverages.transverseStretch_hasCompactSupport ci r hci hf)
+      (TorusAverages.transverseStretch_hasCompactSupport ci r hci hf)
 
 theorem covered_continuous {f : Plane → ℝ} (hf : Continuous f) (hc : HasCompactSupport f) (n : ℕ) :
     Continuous (covered n f) :=
@@ -551,7 +580,7 @@ theorem covered_continuous {f : Plane → ℝ} (hf : Continuous f) (hc : HasComp
 theorem wave_continuous_theta (a : ℝ) (n : ℕ) (f : Plane → ℝ) (mode : ℤ)
     (phase : Plane → ℝ) (Y : Plane) : Continuous (wave a n f mode phase Y) :=
   continuous_const.mul (Real.continuous_cos.comp ((continuous_const.mul continuous_id).add
-    continuous_const))
+      continuous_const))
 
 theorem angularMean_wave_product (a : ℝ) (n : ℕ) (f g : Plane → ℝ) (mode : ℤ)
     (hmode : mode ≠ 0) (phase : Plane → ℝ) (Y : Plane) :
@@ -591,8 +620,10 @@ theorem SlotSystem.wave_cross_zero {D h : ℝ} {vr vt : Plane} (sys : SlotSystem
           (physicalMask D M q x * covered (SlotColoring.nativeIndex h M.1) g Y)) := by ring
     _ = 0 := by rw [hz, mul_zero]
 
+/-- Unsigned label: an abbreviation for `ℕ × SlotColoring.Grid`. -/
 abbrev UnsignedLabel := ℕ × SlotColoring.Grid
 
+/-- Signed label, given by `(U.1, U.2, if j = 0 then false else true)`. -/
 noncomputable def signedLabel (U : UnsignedLabel) (j : Fin 2) : SlotColoring.Label :=
   (U.1, U.2, if j = 0 then false else true)
 
@@ -600,33 +631,45 @@ theorem signedLabel_injective (U : UnsignedLabel) : Function.Injective (signedLa
   intro i j hij
   fin_cases i <;> fin_cases j <;> simp_all [signedLabel]
 
+/-- Mask, given by `physicalMask D (signedLabel U 0) q x`. -/
 noncomputable def mask (D : ℝ) (U : UnsignedLabel) (q : ℝ) (x : SlotColoring.Position) : ℝ :=
   physicalMask D (signedLabel U 0) q x
 
 theorem physicalMask_signedLabel (D : ℝ) (U : UnsignedLabel) (j : Fin 2) (q : ℝ)
     (x : SlotColoring.Position) : physicalMask D (signedLabel U j) q x = mask D U q x := rfl
 
+/-- Pair data, collecting `pulses`, `ci`, `ci_pos`, `fits`, `modes`, `modes_ne` and their
+compatibility conditions. -/
 structure PairData {D h : ℝ} {vr vt : Plane} (sys : SlotSystem D h vr vt) (U : UnsignedLabel) where
+  /-- Pulses of `PairData`, of type `Fin 2 → Pulse`. -/
   pulses : Fin 2 → Pulse
+  /-- Ci of `PairData`, of type `Vec2`. -/
   ci : Vec2
   ci_pos : ∀ j, 0 < ci j
   fits : ∀ j, support (pulses j).ψ ⊆ Icc 0 (2 * sys.radius / ci j)
+  /-- Modes of `PairData`, of type `Fin 2 → ℤ`. -/
   modes : Fin 2 → ℤ
   modes_ne : ∀ j, modes j ≠ 0
+  /-- Phases of `PairData`, of type `Fin 2 → Plane → ℝ`. -/
   phases : Fin 2 → Plane → ℝ
 
+/-- Matrix, given by `pairMatrix vr vt sys.radius P.ci P.pulses`. -/
 noncomputable def PairData.matrix {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {U :
-  UnsignedLabel}
+    UnsignedLabel}
     (P : PairData sys U) : Mat2 := pairMatrix vr vt sys.radius P.ci P.pulses
 
+/-- Raw radial, given by `nativePulse vr vt (slotCenter h (signedLabel U j)) hdet (P.ci j)
+sys.radius ((P.pulses j).radialProfile sys.radius)`. -/
 noncomputable def PairData.rawRadial {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {U :
-  UnsignedLabel}
+    UnsignedLabel}
     (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) : Plane → ℝ :=
   nativePulse vr vt (slotCenter h (signedLabel U j)) hdet (P.ci j) sys.radius
     ((P.pulses j).radialProfile sys.radius)
 
+/-- Raw tangent, given by `nativePulse vr vt (slotCenter h (signedLabel U j)) hdet (P.ci j)
+sys.radius ((P.pulses j).tangentProfile sys.radius i)`. -/
 noncomputable def PairData.rawTangent {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {U :
-  UnsignedLabel}
+    UnsignedLabel}
     (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j i : Fin 2) : Plane → ℝ :=
   nativePulse vr vt (slotCenter h (signedLabel U j)) hdet (P.ci j) sys.radius
     ((P.pulses j).tangentProfile sys.radius i)
@@ -657,13 +700,13 @@ theorem PairData.rawRadial_compact {D h : ℝ} {vr vt : Plane} {sys : SlotSystem
     {U : UnsignedLabel} (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) :
     HasCompactSupport (P.rawRadial hdet j) :=
   nativePulse_compact vr vt _ hdet (P.ci_pos j).ne' ((P.pulses j).radialProfile_compact
-    sys.radius_pos)
+      sys.radius_pos)
 
 theorem PairData.rawTangent_compact {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
     {U : UnsignedLabel} (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j i : Fin 2) :
     HasCompactSupport (P.rawTangent hdet j i) :=
   nativePulse_compact vr vt _ hdet (P.ci_pos j).ne' ((P.pulses j).tangentProfile_compact
-    sys.radius_pos i)
+      sys.radius_pos i)
 
 /-- A finite family with the actual physical masks and actual slot supports.
 All cross terms vanish pointwise, regardless of repeated angular modes. -/
@@ -711,15 +754,17 @@ theorem SlotSystem.finite_wave_covariance {ι : Type*} {D h : ℝ} {vr vt : Plan
     exact angularMean_wave_product_continuous _ _ (hfc a ha) (hfs a ha) (hgc a ha) (hgs a ha)
       (mode a) (hmode a ha) (phase a)
 
+/-- Radial wave, constructed using `wave`. -/
 noncomputable def PairData.radialWave {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {U :
-  UnsignedLabel}
+    UnsignedLabel}
     (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position) (j : Fin 2) : Plane → ℝ → ℝ :=
   wave (outer * amplitude ε (mask D U q x) P.matrix T j)
     (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j)
 
+/-- Tangent wave, constructed using `wave`. -/
 noncomputable def PairData.tangentWave {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {U :
-  UnsignedLabel}
+    UnsignedLabel}
     (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position) (j i : Fin 2) : Plane → ℝ → ℝ :=
   wave (outer * amplitude ε (mask D U q x) P.matrix T j)
@@ -771,8 +816,9 @@ theorem mask_locallyFinite (D : ℝ) :
   funext U
   ext z
   simp only [mem_support, mask, physicalMask, signedLabel, mul_ne_zero_iff, mem_inter_iff,
-    mem_preimage]
+      mem_preimage]
 
+/-- Tail label, given by `(U.1 + N, U.2)`. -/
 noncomputable def tailLabel (N : ℕ) (U : UnsignedLabel) : UnsignedLabel := (U.1 + N, U.2)
 
 theorem tailLabel_injective (N : ℕ) : Function.Injective (tailLabel N) := by
@@ -806,6 +852,7 @@ theorem physical_mask_tail_sum_sq (D : ℝ) (N : ℕ) {q : ℝ} (hq : 0 < q)
   simp_rw [hrow]
   exact SquaredPartition.dyadicMask_tail_sum_sq N hq hqN
 
+/-- Velocity exponent, given by `1 / 2 + h`. -/
 noncomputable def velocityExponent (h : ℝ) : ℝ := 1 / 2 + h
 
 /-- The exact scalar change from chart covariance to physical covariance.
@@ -830,10 +877,12 @@ theorem physical_viscosity_scale {Q : ℝ} (hQ : 0 < Q) (h : ℝ) :
   congr 2
   ring
 
+/-- Constructed slot system, given by `Classical.choice (exists_slotSystem D h hh vr vt)`. -/
 noncomputable def constructedSlotSystem (D h : ℝ) (hh : 0 ≤ h) (vr vt : Plane) : SlotSystem D h vr
-  vt :=
+    vt :=
   Classical.choice (exists_slotSystem D h hh vr vt)
 
+/-- Signed tail label, given by `signedLabel (tailLabel N a.1) a.2`. -/
 noncomputable def signedTailLabel (N : ℕ) (a : UnsignedLabel × Fin 2) : SlotColoring.Label :=
   signedLabel (tailLabel N a.1) a.2
 
@@ -879,7 +928,7 @@ theorem finite_pair_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSystem D h
     (fun a => (P a.1).modes a.2) (fun a _ => (P a.1).modes_ne a.2)
     (fun a => (P a.1).phases a.2)
     (fun a => outer a.1 * Real.sqrt (ε a.1) * SmoothCovariance.amplitudes (P a.1).matrix (T a.1)
-      a.2)
+        a.2)
     hq x
   have hdiag : doubleAverage (fun Y θ =>
       (∑ a ∈ s, (P a.1).radialWave hdet (outer a.1) (ε a.1) (T a.1) q x a.2 Y θ) *
@@ -896,17 +945,21 @@ theorem finite_pair_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSystem D h
   intro U hU
   exact (P U).diagonal_pair_reconstruct hdet (outer U) (ε U) (hε U hU) (hcone U hU) q x i
 
+/-- Assembled radial, given by `∑ᶠ a : UnsignedLabel × Fin 2, (P a.1).radialWave hdet (outer
+a.1) (ε a.1) (T a.1) q x a.2 Y θ`. -/
 noncomputable def assembledRadial {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (T : UnsignedLabel → Vec2) (q : ℝ) (x : SlotColoring.Position) (Y : Plane) (θ : ℝ) : ℝ :=
   ∑ᶠ a : UnsignedLabel × Fin 2, (P a.1).radialWave hdet (outer a.1) (ε a.1) (T a.1) q x a.2 Y θ
 
+/-- Assembled tangent, given by `∑ᶠ a : UnsignedLabel × Fin 2, (P a.1).tangentWave hdet (outer
+a.1) (ε a.1) (T a.1) q x a.2 i Y θ`. -/
 noncomputable def assembledTangent {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (T : UnsignedLabel → Vec2) (q : ℝ) (x : SlotColoring.Position) (i : Fin 2) (Y : Plane) (θ : ℝ)
-      : ℝ :=
+        : ℝ :=
   ∑ᶠ a : UnsignedLabel × Fin 2, (P a.1).tangentWave hdet (outer a.1) (ε a.1) (T a.1) q x a.2 i Y θ
 
 /-- At a fixed positive physical point the same finite active set works for
@@ -956,12 +1009,15 @@ theorem assembled_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSystem D h v
   by_contra hn
   exact hU (by simp [hzero U hn])
 
+/-- Physical outer, given by `ChartScales.Q (U.1 + N) ^ (-velocityExponent h)`. -/
 noncomputable def physicalOuter (h : ℝ) (N : ℕ) (U : UnsignedLabel) : ℝ :=
   ChartScales.Q (U.1 + N) ^ (-velocityExponent h)
 
+/-- Physical viscosity, given by `ChartScales.epsilon h (U.1 + N)`. -/
 noncomputable def physicalViscosity (h : ℝ) (N : ℕ) (U : UnsignedLabel) : ℝ :=
   ChartScales.epsilon h (U.1 + N)
 
+/-- Chart target, given by `(ChartScales.Q (U.1 + N) / q) ^ (velocityExponent h + 1 / 2) • T0`. -/
 noncomputable def chartTarget (h q : ℝ) (N : ℕ) (T0 : Vec2) (U : UnsignedLabel) : Vec2 :=
   (ChartScales.Q (U.1 + N) / q) ^ (velocityExponent h + 1 / 2) • T0
 
@@ -977,9 +1033,9 @@ theorem physical_primary_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSyste
       SmoothCovariance.StrictCone (P U).matrix (chartTarget h q N T0 U)) (i : Fin 2) :
     doubleAverage (fun Y θ =>
       assembledRadial P hdet (physicalOuter h N) (physicalViscosity h N) (chartTarget h q N T0) q x
-        Y θ *
+          Y θ *
       assembledTangent P hdet (physicalOuter h N) (physicalViscosity h N) (chartTarget h q N T0) q
-        x i Y θ) =
+          x i Y θ) =
       q ^ (-velocityExponent h - 1 / 2) * T0 i := by
   rw [assembled_covariance sys hdet N hN P (physicalOuter h N) (physicalViscosity h N)
     (chartTarget h q N T0) hq x (fun U _ => (ChartScales.epsilon_pos h (U.1 + N)).le) hcone i]
@@ -1003,12 +1059,14 @@ theorem physical_primary_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSyste
 
 /-! ## Instantiation by the actual pulse and rounding interfaces -/
 
+/-- Of signed pulses, bundling `pulses`, `ci`, `ci_pos`, `fits` and the required compatibility
+proofs. -/
 noncomputable def PairData.ofSignedPulses {D h : ℝ} {vr vt : Plane} (sys : SlotSystem D h vr vt)
     (U : UnsignedLabel) {r a A b B c₀ u E : ℝ}
     (pulses : PulseCovariance.SignedPulsePair r a A b B c₀ u E)
     (ci : Vec2) (hci : ∀ j, 0 < ci j) (hfit : ∀ j, ci j * r ^ 2 = 2 * sys.radius)
     (modes : Fin 2 → ℤ) (hmodes : ∀ j, modes j ≠ 0) (phases : Fin 2 → Plane → ℝ) : PairData sys U
-      where
+        where
   pulses := fun j => ofTangentPulse (pulses j)
   ci := ci
   ci_pos := hci
@@ -1033,7 +1091,7 @@ theorem compact_actual_pair_strictCone
       ∀ ci : Vec2, (∀ j, 0 < ci j) →
         SmoothCovariance.StrictCone
           (pairMatrix vr vt r0 ci (fun j => ofTangentPulse (pulses j))) (Covariance.target (m p) (t
-            p)) := by
+              p)) := by
   obtain ⟨R, hR, hpositive⟩ := PulseCovariance.compact_actual_positive_inverse_of_scalar_cone
     hK hc₀ hu hm ht hc₀neg hupos hcone hE
   refine ⟨R, hR, ?_⟩
@@ -1043,6 +1101,8 @@ theorem compact_actual_pair_strictCone
   exact (hpositive p hp r hr pulses (fun j => nativePrefactor vr vt r0 * ci j)
     (fun j => mul_pos (nativePrefactor_pos hdet hr0) (hci j))).2.1
 
+/-- Rounded phase remainder, given by `k * ((pz / ε) * s.2.1 + x0 * s.1 - v Y *
+(PhaseEstimates.roundedFrequency k target * F s + pz * G s))`. -/
 noncomputable def roundedPhaseRemainder (k ε target pz x0 : ℝ) (F G : PhaseCalculus.Slow → ℝ)
     (s : PhaseCalculus.Slow) (v : Plane → ℝ) (Y : Plane) : ℝ :=
   k * ((pz / ε) * s.2.1 + x0 * s.1 -

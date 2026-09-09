@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathOrbit
 
-@[expose] public section
-
 /-! Literal composition, scaling and spatial differentiation of the
 actual matrix-coefficient witnesses. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,20 +23,33 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerBounded
   EulerPacketPointJets
 open scoped ContDiff BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketMatrixCoefficientAlgebra1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketMatrixCoefficientAlgebra2 : NormedSpace ℝ (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketMatrixCoefficientAlgebra3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketMatrixCoefficientAlgebra4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 variable {T : ℝ} {a b : Domain → Space →L[ℝ] Space}
 
+/-- Comp, bundling `path`, `orbit`, `fun`, `B` and the required compatibility proofs. -/
 def comp (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
     MatrixCoefficient T (fun z => (a z).comp (b z)) where
   path := pathCompositionMap A.path B.path
   orbit := by
     have he : translateCoefficientPath (pathCompositionMap A.path B.path) =
         fun v => pathCompositionMap (translateCoefficientPath A.path v) (translateCoefficientPath
-          B.path v) := by
+            B.path v) := by
       funext v
       apply ContinuousMap.ext
       intro t
@@ -46,6 +60,7 @@ def comp (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
     exact pathComposition_contDiff _ _ A.orbit B.orbit
   raw_eq t x θ := by rw [A.raw_eq,B.raw_eq]; rfl
 
+/-- Add, bundling `path`, `orbit`, `raw_eq`. -/
 def add (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
     MatrixCoefficient T (a+b) where
   path := A.path+B.path
@@ -59,6 +74,7 @@ def add (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
     rfl
   raw_eq t x θ := by change a (t,(x,θ))+b (t,(x,θ)) = _; rw [A.raw_eq,B.raw_eq]; rfl
 
+/-- Smul, bundling `path`, `orbit`, `raw_eq`. -/
 def smul (A : MatrixCoefficient T a) (c : ℝ) : MatrixCoefficient T (c • a) where
   path := c • A.path
   orbit := by
@@ -71,6 +87,8 @@ def smul (A : MatrixCoefficient T a) (c : ℝ) : MatrixCoefficient T (c • a) w
     rfl
   raw_eq t x θ := by change c • a (t,(x,θ)) = _; rw [A.raw_eq]; rfl
 
+/-- Spatial derivative, bundling `path`, `orbit`, `raw_eq`, `have` and the required
+compatibility proofs. -/
 def spatialDerivative (A : MatrixCoefficient T a) (v : Space) :
     MatrixCoefficient T (fun z => fderiv ℝ (fun x => a (z.1,(x,z.2.2))) z.2.1 v) where
   path := orbitDerivativePath A.path v

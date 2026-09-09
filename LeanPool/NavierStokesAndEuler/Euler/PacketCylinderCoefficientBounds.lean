@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAdvection
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Norm-one coefficient constructions used by the actual slow and fast packet terms. -/
 
 @[expose] public section
 
-/-! Norm-one coefficient constructions used by the actual slow and fast packet terms. -/
 
 noncomputable section
 
@@ -59,18 +61,19 @@ namespace VectorCoefficient
 
 variable {T : ℝ} {raw : VectorField} (N : VectorCoefficient T raw)
 
+/-- Normal matrix, bundling `path`, `orbit`, `raw_eq`. -/
 def normalMatrix : MatrixCoefficient T (fun z => normalComponentMap (raw z)) where
   path := normalComponentPath N.path
   orbit := normalComponentPath_orbit N.path N.orbit
   raw_eq t x θ := by rw [N.raw_eq]; rfl
 
 theorem normalMatrix_bound (Rc C : ℝ)
-    (hN : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath N.path) a‖ ≤ C*majorant Rc 0 n)
+    (hN : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath N.path) a‖ ≤ C * majorant Rc 0 n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath N.normalMatrix.path) a‖ ≤ C*majorant Rc 0 n := by
   have he : translateCoefficientPath N.normalMatrix.path =
       (mapCoefficientPath (K := Icc (0 : ℝ) T) normalComponentMap) ∘ translateCoefficientPath
-        N.path := by
+          N.path := by
     funext b
     apply ContinuousMap.ext
     intro t
@@ -89,7 +92,7 @@ namespace MatrixCoefficient
 variable {T : ℝ} {raw : Domain → Space →L[ℝ] Space} (K : MatrixCoefficient T raw)
 
 theorem adjoint_bound (Rc C : ℝ)
-    (hK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath K.path) a‖ ≤ C*majorant Rc 0 n)
+    (hK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath K.path) a‖ ≤ C * majorant Rc 0 n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath K.adjoint.path) a‖ ≤ C*majorant Rc 0 n := by
   let A : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space) :=

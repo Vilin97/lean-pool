@@ -6,12 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryFields
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
+
+/-! Uniform recursive packet bounds with the literal primary initialization discharged. -/
 
 @[expose] public section
 
-/-! Uniform recursive packet bounds with the literal primary initialization discharged. -/
 
 noncomputable section
 
@@ -19,21 +26,24 @@ namespace EulerPacketTerminalDatum
 
 open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
   EulerPacketCylinderField EulerPacketProfileRecursion EulerPacketTimeProfile
-    EulerParameterWordGevrey
+      EulerParameterWordGevrey
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Initialized profiles, given by `joinedSourceProfiles period M D τ hτ hτT B
+(joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))`. -/
 def initializedProfiles : ℕ → Profile :=
   joinedSourceProfiles period M D τ hτ hτT B
     (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
 
+/-- Initialized profile witness, constructed using `joinedSourceProfileWitness`. -/
 def initializedProfileWitness (p : ℕ) :
     ProfileRegularity period M.T M.T_pos.le D.support (initializedProfiles M D τ hτ hτT B δ hδ ξ hs
-      α p) :=
+        α p) :=
   joinedSourceProfileWitness period M D hTime τ hτ hτT B
     (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
     (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs)) p
@@ -49,9 +59,9 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
@@ -62,6 +72,6 @@ theorem initialized_profile_budgets (p : ℕ) (hp : 1 ≤ p) :
     (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
     (joinedTerminalPrimary_budget M D hTime τ hτ hτT B L H NB δ hδ hδ1 ξ hs α hα hR WP S hgrowth)
     rfl (joinedTerminalPrimary_tangent period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
-      p hp
+        p hp
 
 end EulerPacketTerminalDatum

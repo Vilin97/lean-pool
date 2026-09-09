@@ -7,14 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothingOperator
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertQuadraticFlow
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.HilbertQuadraticFlow
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTransportCancellation
 
 /-! A genuine global L² solution of the symmetric regularized Euler
 equation. The vector field is a bounded bilinear map and its actual
 L² energy vanishes by noncompact transport cancellation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,8 +40,8 @@ theorem advection_add_right (A B C : SmoothL2Field Space) :
   funext x
   have he : (addField B C).field=B.field+C.field := rfl
   simp only [advectionField_field,addField_field,he,
-    fderiv_add (B.smooth.differentiable (by simp) x) (C.smooth.differentiable (by simp)
-      x),add_apply]
+    fderiv_add (B.smooth.differentiable (by
+        simp) x) (C.smooth.differentiable (by simp) x),add_apply]
 
 theorem advection_smul_left (c : ℝ) (A B : SmoothL2Field Space) :
     advectionField (scaleField c A) B=scaleField c (advectionField A B) := by
@@ -54,6 +58,8 @@ namespace SmoothingOperator
 
 variable (S : SmoothingOperator)
 
+/-- Advection linear, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
+compatibility proofs. -/
 def advectionLinear : L2 →ₗ[ℝ] L2 →ₗ[ℝ] L2 where
   toFun u :=
     { toFun v := (advectionField (S.field u) (S.field v)).toLp
@@ -73,6 +79,7 @@ def advectionLinear : L2 →ₗ[ℝ] L2 →ₗ[ℝ] L2 where
       c • (advectionField (S.field u) (S.field v)).toLp
     rw [S.field_smul,advection_smul_left,scaleField_toLp]
 
+/-- Advection cost, given by `S.pointwiseCost*‖S.jetMap 1‖`. -/
 def advectionCost : ℝ := S.pointwiseCost*‖S.jetMap 1‖
 
 theorem advectionLinear_bound (u v : L2) :
@@ -85,12 +92,15 @@ theorem advectionLinear_bound (u v : L2) :
   dsimp [advectionCost]
   ring
 
+/-- Advection, given by `S.advectionLinear.mkContinuous₂ S.advectionCost
+S.advectionLinear_bound`. -/
 def advection : L2 →L[ℝ] L2 →L[ℝ] L2 :=
   S.advectionLinear.mkContinuous₂ S.advectionCost S.advectionLinear_bound
 
 @[simp] theorem advection_apply (u v : L2) :
     S.advection u v=(advectionField (S.field u) (S.field v)).toLp := rfl
 
+/-- Quadratic, given by `(ContinuousLinearMap.compL ℝ L2 L2 L2 (-S.op)).comp S.advection`. -/
 def quadratic : L2 →L[ℝ] L2 →L[ℝ] L2 :=
   (ContinuousLinearMap.compL ℝ L2 L2 L2 (-S.op)).comp S.advection
 

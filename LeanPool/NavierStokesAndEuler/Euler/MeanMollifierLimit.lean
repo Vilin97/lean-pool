@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanScalarMollification
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicScaling
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+
+/-! A fixed shrinking compact mollifier and distributional scalar harmonicity. -/
 
 @[expose] public section
 
-/-! A fixed shrinking compact mollifier and distributional scalar harmonicity. -/
 
 noncomputable section
 
@@ -25,6 +28,8 @@ def ScalarWeakHarmonicOn (U : Set Space) (f : Space → ℝ) : Prop :=
   ∀ φ : Space → ℝ, HasCompactSupport φ → ContDiff ℝ ∞ φ → tsupport φ ⊆ U →
     (∫ x, f x * Δ φ x) = 0
 
+/-- Interior mollifier, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut` and the required
+compatibility proofs. -/
 def interiorMollifier (n : ℕ) : ContDiffBump (0 : Space) where
   rIn := (1/16 : ℝ) * cutoffScale n
   rOut := (1/8 : ℝ) * cutoffScale n

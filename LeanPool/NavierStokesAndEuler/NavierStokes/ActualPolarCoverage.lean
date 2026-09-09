@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 
-@[expose] public section
-
 /-!
 # Actual polar graph coverage of the nominal active annulus
 
@@ -20,6 +18,9 @@ open domain allows every positive radius and retains the actual slow region;
 the smaller weighted strip is reached through its closure at radial endpoints.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualPolarCoverage
@@ -28,20 +29,27 @@ open Set Function Filter ProblemStatement CorrectionInitialization
 open PhysicalWaveSum PhysicalGraphBounds PhysicalMeanJetBounds
 open scoped Topology
 
+/-- Point: an abbreviation for `PhysicalMeanJetBounds.Point`. -/
 abbrev Point := PhysicalMeanJetBounds.Point
+/-- Cylinder: an abbreviation for `PhysicalResidualJetBounds.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualJetBounds.Cylinder
 
+/-- Active as an element of `Set SpaceTime`. -/
 noncomputable def active : Set SpaceTime :=
   {w | (SlowBorelBase.cartesianChart ActualPrimary.h w).2.1 ∈
     Icc (NominalConeAssembly.activeLeft ActualPrimary.nominal)
       (NominalConeAssembly.activeRight ActualPrimary.nominal)}
 
+/-- Inner, given by `PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4`. -/
 noncomputable def inner : ℝ :=
   PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4
 
+/-- Outer, given by `2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal`. -/
 noncomputable def outer : ℝ :=
   2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal
 
+/-- Native domain, given by `HarmonicResidual.liftDomain (ActualInitialization.geometry.domain ∩
+{x : Point | 0 < x.1})`. -/
 noncomputable def nativeDomain : Set Cylinder :=
   HarmonicResidual.liftDomain
     (ActualInitialization.geometry.domain ∩ {x : Point | 0 < x.1})

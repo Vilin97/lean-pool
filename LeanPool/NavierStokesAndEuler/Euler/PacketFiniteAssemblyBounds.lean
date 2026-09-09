@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
+
+/-! Uniform estimates for finite coefficient assembly, including zero and terminal grades. -/
 
 @[expose] public section
 
-/-! Uniform estimates for finite coefficient assembly, including zero and terminal grades. -/
 
 noncomputable section
 
@@ -35,8 +37,8 @@ theorem wordBound_truncateFamily (M : ℕ) (f : ℕ → VectorField)
 theorem wordBound_assembleFamily (M : ℕ) (f c : ℕ → VectorField)
     (G : ∀ i, i ≤ M → Field P T (f i)) (H : ∀ i, i ≤ M → Field P T (c i))
     (R A : ℝ) (hR : 1 ≤ R) (hA : 1 ≤ A)
-    (hG : ∀ i (hi : i ≤ M), (G i hi).WordBound 6 R (2*A^(2*i)) (highShift i))
-    (hH : ∀ i (hi : i ≤ M), (H i hi).WordBound 6 R (A^(2*i)) (highShift i)) (n : ℕ) :
+    (hG : ∀ i (hi : i ≤ M), (G i hi).WordBound 6 R (2 * A ^ (2 * i)) (highShift i))
+    (hH : ∀ i (hi : i ≤ M), (H i hi).WordBound 6 R (A ^ (2 * i)) (highShift i)) (n : ℕ) :
     (assembleFamily M f c G H n).WordBound 6 R (3*A^(2*n)) (highShift n) := by
   have hA0 : 0 ≤ A := zero_le_one.trans hA
   have hg := wordBound_truncateFamily M f G 6 R (fun i => 2*A^(2*i)) highShift

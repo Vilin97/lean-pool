@@ -7,16 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.Analysis.Calculus.Deriv.Support
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
 
 /-!
 # Constructed smooth cutoffs for the diagonal sum and time switch
@@ -27,6 +17,9 @@ no analyticity assertion is made. The scaled cutoff and time switch are explicit
 functions obtained from that bump. No convergence or PDE claim is encoded here.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function
@@ -34,12 +27,14 @@ open scoped Topology ContDiff
 
 namespace NavierStokes.SmoothCutoffs
 
+/-- Cutoff bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 def cutoffBump : ContDiffBump (0 : ℝ) where
   rIn := 1 / 2
   rOut := 1
   rIn_pos := by norm_num
   rIn_lt_rOut := by norm_num
 
+/-- Cutoff, given by `cutoffBump`. -/
 def cutoff : ℝ → ℝ := cutoffBump
 
 theorem cutoff_contDiff : ContDiff ℝ ∞ cutoff := cutoffBump.contDiff
@@ -141,6 +136,7 @@ theorem cutoff_iteratedDeriv_bounded (n : ℕ) :
     simpa only [Real.norm_eq_abs] using hC x
   exact hx.trans (le_max_left _ _)
 
+/-- Scaled cutoff, defined pointwise by `cutoff (a * q)`. -/
 def scaledCutoff (a : ℝ) : ℝ → ℝ := fun q => cutoff (a * q)
 
 theorem scaledCutoff_contDiff (a : ℝ) : ContDiff ℝ ∞ (scaledCutoff a) :=

@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WholeSpaceComparisonClosure
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFlux
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactComparisonBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactComparisonBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFlux
 
 /-!
 # Whole-space finite-energy comparison
@@ -22,6 +21,9 @@ for the competing pressure or velocity. The pressure flux estimate is derived
 from the actual equation by the imported pressure recovery and commutator
 theorems.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -71,7 +73,7 @@ theorem classical_uniqueness_on_Icc {T : ℝ} (hT : 0 < T)
     H M U G₀ hM0 hU0 hG₀ hM hU hTensor
   obtain ⟨G, hG0, hG⟩ := CompactComparisonBounds.exists_gradient_bound hT hu hK hsupp
   obtain ⟨R₀, _hR₀, hvanish⟩ := CompactComparisonBounds.exists_radius_weight_derivative_zero hK
-    hsupp
+      hsupp
   apply WholeSpaceComparisonClosure.eq_of_pressure_flux_bound
     hT.le hM0 hG0 hCP hu hv hp hq
     (fun t ht => (hM t ht).1) (fun t ht => (hM t ht).2) hG hdu hdv hNS hzero hvanish

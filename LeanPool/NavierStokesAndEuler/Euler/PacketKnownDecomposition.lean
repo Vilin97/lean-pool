@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieces
 
-@[expose] public section
-
 /-!
 Exact finite A/B/C decomposition of the known force.  The only fast products
 retained are BA, BC, CA and CC.  This is raw algebra on the actual sliced jets.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,7 +45,7 @@ theorem sum_knownTerm {E : Type*} [AddCommMonoid E] (f : KnownTerm → E) :
     ∑ k, f k = f .previousLinear + f .previousPressure +
       (∑ l : KnownPiece, ∑ r : KnownPiece, f (.slow l r)) +
       f .fastMeanHigh + f .fastMeanCorrector + f .fastCorrectorHigh + f .fastCorrectorCorrector :=
-        by
+          by
   have hu : (univ : Finset KnownTerm) =
       {.previousLinear, .previousPressure, .slow .high .high, .slow .high .mean,
        .slow .high .corrector, .slow .mean .high, .slow .mean .mean, .slow .mean .corrector,
@@ -55,6 +56,7 @@ theorem sum_knownTerm {E : Type*} [AddCommMonoid E] (f : KnownTerm → E) :
 
 namespace KnownTerm
 
+/-- Raw as an element of `VectorField`. -/
 def raw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile)
     (i j : ℕ) : VectorField := fun z =>
   match k with
@@ -66,16 +68,16 @@ def raw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile)
       slowAdvection (O.inverseFrame z) (l.jet O p a z i) (r.jet O p a z j) else 0
   | .fastMeanHigh => if i+j=p+1 then
       fastAdvection (O.normal z) (KnownPiece.mean.jet O p a z i) (KnownPiece.high.jet O p a z j)
-        else 0
+          else 0
   | .fastMeanCorrector => if i+j=p+1 then
       fastAdvection (O.normal z) (KnownPiece.mean.jet O p a z i) (KnownPiece.corrector.jet O p a z
-        j) else 0
+          j) else 0
   | .fastCorrectorHigh => if i+j=p+1 then
       fastAdvection (O.normal z) (KnownPiece.corrector.jet O p a z i) (KnownPiece.high.jet O p a z
-        j) else 0
+          j) else 0
   | .fastCorrectorCorrector => if i+j=p+1 then
       fastAdvection (O.normal z) (KnownPiece.corrector.jet O p a z i) (KnownPiece.corrector.jet O p
-        a z j) else 0
+          a z j) else 0
 
 /-- These two families have zero angular mean by periodicity. -/
 def zeroMean (k : KnownTerm) : Bool :=
@@ -91,8 +93,11 @@ def meanOnly (k : KnownTerm) : Bool :=
 
 end KnownTerm
 
+/-- Known term index: an abbreviation for `KnownTerm × (ℕ × ℕ)`. -/
 abbrev KnownTermIndex := KnownTerm × (ℕ × ℕ)
 
+/-- Known term indices, given by `Finset.univ.product ((Finset.range (p+2)).product
+(Finset.range (p+2)))`. -/
 def knownTermIndices (p : ℕ) : Finset KnownTermIndex :=
   Finset.univ.product ((Finset.range (p+2)).product (Finset.range (p+2)))
 

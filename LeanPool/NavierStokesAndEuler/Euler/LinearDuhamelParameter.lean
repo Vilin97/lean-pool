@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelOperator
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Genuine parameter regularity of the forced initial value problem
@@ -21,6 +20,9 @@ fixed continuous-path Banach space. Operator inversion therefore proves its
 parameter smoothness from coefficient and data smoothness alone.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
@@ -30,7 +32,7 @@ open Set ContinuousLinearMap EulerContinuousTimeIntegral EulerContinuousPathCalc
 open scoped ContDiff
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-variable {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T,E →L[ℝ] E)}
+variable {T : ℝ} {hT : 0 ≤ T} {B : C(Icc (0 : ℝ) T, E →L[ℝ] E)}
 
 namespace Evolution
 
@@ -46,7 +48,7 @@ theorem volterraInverse_eq_mapInverse : U.volterraInverse = (volterraOperator T 
     _ = _ := rfl
 
 /-- The actual forced solution is obtained by this genuine Volterra inverse. -/
-theorem solution_eq_volterraInverse (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
+theorem solution_eq_volterraInverse (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     U.solution f a₀ = U.volterraInverse
       ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) a₀ + integral T hT f) := by
   have he : volterraOperator T hT B (U.solution f a₀) =
@@ -67,7 +69,7 @@ theorem solution_eq_volterraInverse (f : C(Icc (0 : ℝ) T,E)) (a₀ : E) :
 end Evolution
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
-variable (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T,E →L[ℝ] E))
+variable (T : ℝ) (hT : 0 ≤ T) (B : P → C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- Smooth coefficients give a genuinely smooth Volterra operator family. -/
 theorem volterraOperator_contDiff {n : ℕ∞ω} (hB : ContDiff ℝ n B) :
@@ -92,7 +94,7 @@ theorem volterraInverse_contDiff (U : ∀ x, Evolution T hT (B x)) {n : ℕ∞ω
 /-- The integral construction is genuinely smooth in parameters whenever the
 coefficient, initial data and forcing are smooth in their actual Banach norms. -/
 theorem solution_contDiff (U : ∀ x, Evolution T hT (B x))
-    (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → E) {n : ℕ∞ω}
+    (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → E) {n : ℕ∞ω}
     (hB : ContDiff ℝ n B) (hf : ContDiff ℝ n f) (ha₀ : ContDiff ℝ n a₀) :
     ContDiff ℝ n (fun x => (U x).solution (f x) (a₀ x)) := by
   have he : (fun x => (U x).solution (f x) (a₀ x)) = fun x => (U x).volterraInverse

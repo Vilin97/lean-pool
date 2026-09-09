@@ -7,12 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatGenerator
-public import Mathlib.Analysis.SpecificLimits.Basic
+
+/-! The actual viscous term vanishes uniformly for a uniformly Sobolev-bounded approximation family.
+-/
 
 @[expose] public section
 
-/-! The actual viscous term vanishes uniformly for a uniformly Sobolev-bounded approximation
-  family. -/
 
 noncomputable section
 
@@ -44,12 +44,12 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The literal viscosity times the spatial Laplacian, as a continuous L² time path. -/
 def viscousDefect {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ)
-    (e : C(Icc (0 : ℝ) T,SobolevSpace period q)) : C(Icc (0 : ℝ) T,LiftL2 period) :=
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period q)) : C(Icc (0 : ℝ) T,LiftL2 period) :=
   ν • (laplacianEvaluation period q hq).compLeftContinuous ℝ (Icc (0 : ℝ) T) e
 
 /-- The actual viscous PDE term is uniformly bounded by the complete Sobolev path norm. -/
 theorem viscousDefect_bound {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ)
-    (e : C(Icc (0 : ℝ) T,SobolevSpace period q)) :
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
     ‖viscousDefect period hq ν T e‖ ≤ 4 * |ν| * ‖e‖ := by
   apply (ContinuousMap.norm_le _ (by positivity : 0 ≤ 4 * |ν| * ‖e‖)).mpr
   intro t
@@ -57,16 +57,18 @@ theorem viscousDefect_bound {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ)
   rw [norm_smul,Real.norm_eq_abs]
   calc
     _ ≤ |ν| * (4*‖e t‖) := mul_le_mul_of_nonneg_left (laplacianEvaluation_bound period hq (e t))
-      (abs_nonneg ν)
+        (abs_nonneg ν)
     _ ≤ |ν| * (4*‖e‖) := mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left (e.norm_coe_le_norm
-      t) (by norm_num)) (abs_nonneg ν)
+        t) (by
+        norm_num)) (abs_nonneg ν)
     _ = _ := by ring
 
-/-- Every uniformly bounded genuine Sobolev approximation family has a uniformly vanishing viscous PDE defect. -/
+/-- Every uniformly bounded genuine Sobolev approximation family has a uniformly vanishing viscous
+PDE defect. -/
 theorem viscousDefect_tendsto_zero {q : ℕ} (hq : 2 ≤ q) (T M : ℝ)
-    (e : ℕ → C(Icc (0 : ℝ) T,SobolevSpace period q)) (he : ∀ n, ‖e n‖ ≤ M) :
+    (e : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period q)) (he : ∀ n, ‖e n‖ ≤ M) :
     Filter.Tendsto (fun n => viscousDefect period hq (viscositySequence n) T (e n)) Filter.atTop (𝓝
-      0) := by
+        0) := by
   apply tendsto_zero_iff_norm_tendsto_zero.mpr
   apply squeeze_zero (fun _ => norm_nonneg _) (fun n => ?_)
     (show Filter.Tendsto (fun n => 4*viscositySequence n*M) Filter.atTop (𝓝 0) from by

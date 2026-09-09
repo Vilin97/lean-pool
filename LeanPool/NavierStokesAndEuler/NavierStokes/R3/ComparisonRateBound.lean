@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonYoung
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonYoung
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # A uniform rate bound from the localized energy estimate
@@ -18,6 +18,9 @@ constants. They are absorbed into a single coefficient before applying the
 uniform Young estimate. The resulting error decays as `1 / R`, and no sign
 condition on the energy coefficient or energy value is used.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

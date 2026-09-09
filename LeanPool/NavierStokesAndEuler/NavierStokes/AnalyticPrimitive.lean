@@ -6,15 +6,11 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.RealDeriv
-public import Mathlib.Analysis.Convex.Basic
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-
-@[expose] public section
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # An actual holomorphic primitive on a convex open set
@@ -24,6 +20,9 @@ differentiating under a uniformly dominated integral on a compact local product,
 then applying the real fundamental theorem of calculus along the segment.
 No disk containing the entire domain and no assumed primitive are required.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

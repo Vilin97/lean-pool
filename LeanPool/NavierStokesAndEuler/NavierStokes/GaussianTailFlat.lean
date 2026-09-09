@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaussianEnvelope
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalGraphBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # The actual Gaussian slot-cutoff errors
@@ -21,6 +18,9 @@ The profile is a constructed smooth bump, with the plateau and support radii
 from Section 8.2.  No error field is set to zero: local vanishing on the plateau,
 the Gaussian bound off that plateau, and higher Leibniz estimates are used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,6 +39,7 @@ noncomputable def profileBump : ContDiffBump (1 / 2 : ℝ) where
   rIn_pos := by norm_num
   rIn_lt_rOut := by norm_num
 
+/-- Profile, given by `profileBump`. -/
 noncomputable def profile : ℝ → ℝ := profileBump
 
 theorem profile_contDiff : ContDiff ℝ ∞ profile := profileBump.contDiff
@@ -95,6 +96,7 @@ theorem profile_jet_bounded (m : ℕ) :
   rw [norm_iteratedFDeriv_eq_norm_iteratedDeriv]
   exact (hC v).trans (le_max_left _ _)
 
+/-- Slot cutoff, given by `profile (v / L)`. -/
 noncomputable def slotCutoff (L : ℝ) (v : ℝ) : ℝ := profile (v / L)
 
 theorem slotCutoff_contDiff (L : ℝ) : ContDiff ℝ ∞ (slotCutoff L) :=
@@ -440,7 +442,7 @@ theorem cutoffError_mem_wave {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ
     (hL : BandBound s 0 (fun n => (L n)⁻¹)) :
     WaveClass s P α (fun n => cutoffError (L n) (fun x => b n + A n x) (u n) (f n)) := by
   have hd := (affine_profile_memClass s profileDeriv_contDiff profileDeriv_jet_bounded A b
-    hA).band_smul hL
+      hA).band_smul hL
   have ho := affine_profile_memClass s omittedProfile_contDiff omittedProfile_jet_bounded A b hA
   have hdu := hd.smul hu
   have hof := ho.smul hf
@@ -455,11 +457,15 @@ theorem cutoffError_mem_wave {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ
 /-- A slow weight controlled by the actual two-sided exponential-flat edge.
 The comparison permits additional cutoffs of size at most one. -/
 structure FlatEdges (s : StripData D) where
+  /-- Left decay of `FlatEdges`, of type `ℝ`. -/
   leftDecay : ℝ
+  /-- Right decay of `FlatEdges`, of type `ℝ`. -/
   rightDecay : ℝ
   left_pos : 0 < leftDecay
   right_pos : 0 < rightDecay
+  /-- Width of `FlatEdges`, of type `ℝ`. -/
   width : ℝ
+  /-- Position of `FlatEdges`, of type `D → ℝ`. -/
   position : D → ℝ
   position_mem : ∀ x ∈ s.domain, position x ∈ Ioo 0 width
   delta_eq : ∀ x ∈ s.domain, s.delta x = WeightedRadialPrimitive.delta width (position x)
@@ -479,34 +485,44 @@ theorem FlatEdges.uniform_weight {s : StripData D} (e : FlatEdges s) (k : ℕ) :
 /-- Only the actual scale identity and a polynomial slow-scale upper bound
 are used. The exponent may be any real number. -/
 structure BandScaleControl (s : StripData D) where
+  /-- Power of `BandScaleControl`, of type `ℝ`. -/
   power : ℝ
   epsilon_eq : ∀ n, s.epsilon n = ChartScales.Q n ^ power
+  /-- Bound constant of `BandScaleControl`, of type `ℝ`. -/
   boundConstant : ℝ
   constant_one_le : 1 ≤ boundConstant
+  /-- Degree of `BandScaleControl`, of type `ℕ`. -/
   degree : ℕ
   slow_le : ∀ n, s.slow n ≤ boundConstant * (1 + ChartScales.S n) ^ degree
 
 /-- Native slot data before restriction to the physical graph.  The cutoff
 coordinate is affine, and no spatial derivatives of a band index occur. -/
 structure SlotFamily (s : StripData D) where
+  /-- Length of `SlotFamily`, of type `ℕ → ℝ`. -/
   length : ℕ → ℝ
   length_pos : ∀ n, 0 < length n
+  /-- Linear of `SlotFamily`, of type `ℕ → D →L[ℝ] ℝ`. -/
   linear : ℕ → D →L[ℝ] ℝ
+  /-- Offset of `SlotFamily`, of type `ℕ → ℝ`. -/
   offset : ℕ → ℝ
   linear_bound : ∃ K : ℝ, 1 ≤ K ∧ ∃ p : ℕ, ∀ n, ‖linear n‖ ≤ K * s.slow n ^ p
   inverse_length_bound : BandBound s 0 (fun n => (length n)⁻¹)
-  length_scale : ℝ
-  length_scale_pos : 0 < length_scale
-  length_lower : ∀ n, length_scale * ChartScales.S n ≤ length n
+  /-- Length scale of `SlotFamily`, of type `ℝ`. -/
+  lengthScale : ℝ
+  length_scale_pos : 0 < lengthScale
+  length_lower : ∀ n, lengthScale * ChartScales.S n ≤ length n
 
 namespace SlotFamily
 
+/-- Coordinate, given by `g.offset n + g.linear n x`. -/
 noncomputable def coordinate {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
   g.offset n + g.linear n x
 
+/-- Cutoff, given by `profile (g.coordinate n x)`. -/
 noncomputable def cutoff {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
   profile (g.coordinate n x)
 
+/-- Error, given by `cutoffError (g.length n) (g.coordinate n) (u n) (f n)`. -/
 noncomputable def error {s : StripData D} (g : SlotFamily s) (u f : ℕ → D → E)
     (n : ℕ) : D → E := cutoffError (g.length n) (g.coordinate n) (u n) (f n)
 
@@ -556,12 +572,12 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
     (m : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∃ d : ℕ, ∀ n x, x ∈ s.domain → ∀ j ≤ m,
       ‖iteratedFDeriv ℝ j (g.error u f n) x‖ ≤
         C * (1 + ChartScales.S n) ^ d *
-          Real.exp (-(c * g.length_scale / 50) * ChartScales.S n) := by
+          Real.exp (-(c * g.lengthScale / 50) * ChartScales.S n) := by
   obtain ⟨A, hA, p, hb⟩ := (g.error_mem_wave hu hf).bounds m
   obtain ⟨B, hB, hweight⟩ := edges.uniform_weight p
   have hscale := g.length_scale_pos
   have hconstant := scales.constant_one_le
-  have hdec : 0 < c * g.length_scale / 25 := by positivity
+  have hdec : 0 < c * g.lengthScale / 25 := by positivity
   obtain ⟨C, hC, hgauss⟩ := fixed_power_gaussian_bound hdec (scales.power * α)
   refine ⟨A * B * scales.boundConstant ^ p * C, by positivity, scales.degree * p, ?_⟩
   intro n x hx j hj
@@ -578,7 +594,7 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
     have hh := pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 1 / 5) htail 2
     norm_num [sq_abs] at hh ⊢
     exact hh
-  have hPg : P n x ≤ Real.exp (-(c * g.length_scale / 25) * ChartScales.S n) := by
+  have hPg : P n x ≤ Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
     apply (hP n x hx).trans
     apply (Real.exp_le_exp.2 ?_).trans (gaussian_length_comparison hc.le (g.length_lower n))
     nlinarith [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (g.length_pos n).le)]
@@ -590,7 +606,7 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
   have hmajor : majorant s (fun n x => Real.sqrt (s.zeta x) * P n x) α A p n x ≤
       (A * B * scales.boundConstant ^ p) * ChartScales.Q n ^ (scales.power * α) *
         ((1 + ChartScales.S n) ^ (scales.degree * p) *
-          Real.exp (-(c * g.length_scale / 25) * ChartScales.S n)) := by
+          Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n)) := by
     rw [majorant, StripData.growth, mul_pow, scales.epsilon_eq,
       ← Real.rpow_mul hQ.le]
     calc
@@ -598,15 +614,15 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
           (Real.sqrt (s.zeta x) * max 1 (s.delta x)⁻¹ ^ p) * P n x := by ring
       _ ≤ (A * ChartScales.Q n ^ (scales.power * α) * s.slow n ^ p) *
           (Real.sqrt (s.zeta x) * max 1 (s.delta x)⁻¹ ^ p) *
-            Real.exp (-(c * g.length_scale / 25) * ChartScales.S n) :=
+            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) :=
         mul_le_mul_of_nonneg_left hPg (by positivity)
       _ ≤ (A * ChartScales.Q n ^ (scales.power * α) * s.slow n ^ p) * B *
-            Real.exp (-(c * g.length_scale / 25) * ChartScales.S n) := by
+            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
         gcongr
         exact hweight x hx
       _ ≤ (A * ChartScales.Q n ^ (scales.power * α) *
           (scales.boundConstant ^ p * (1 + ChartScales.S n) ^ (scales.degree * p))) * B *
-            Real.exp (-(c * g.length_scale / 25) * ChartScales.S n) := by
+            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
         gcongr
       _ = _ := by ring
   calc
@@ -614,13 +630,13 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
     _ ≤ _ := hmajor
     _ = (A * B * scales.boundConstant ^ p) * (1 + ChartScales.S n) ^ (scales.degree * p) *
         (ChartScales.Q n ^ (scales.power * α) *
-          Real.exp (-(c * g.length_scale / 25) * ChartScales.S n)) := by ring
+          Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n)) := by ring
     _ ≤ (A * B * scales.boundConstant ^ p) * (1 + ChartScales.S n) ^ (scales.degree * p) *
-        (C * Real.exp (-((c * g.length_scale / 25) / 2) * ChartScales.S n)) := by
+        (C * Real.exp (-((c * g.lengthScale / 25) / 2) * ChartScales.S n)) := by
       have hS : 0 ≤ ChartScales.S n := sq_nonneg _
       exact mul_le_mul_of_nonneg_left (hgauss n) (by positivity)
     _ = _ := by
-      rw [show c * g.length_scale / 25 / 2 = c * g.length_scale / 50 by ring]
+      rw [show c * g.lengthScale / 25 / 2 = c * g.lengthScale / 50 by ring]
       ring
 
 /-- Every prescribed dyadic power is gained, for all actual stripped jets. -/
@@ -634,13 +650,13 @@ theorem error_stripped_bound {s : StripData D} (g : SlotFamily s)
       ‖iteratedFDeriv ℝ j (g.error u f n) x‖ ≤ C * ChartScales.Q n ^ N := by
   obtain ⟨A, hA, d, ha⟩ := g.error_gaussian_bound edges scales hu hf hc hP m
   have hscale := g.length_scale_pos
-  obtain ⟨B, hB, hb⟩ := gaussian_beats_Q_power (by positivity : 0 < c * g.length_scale / 50) d N
+  obtain ⟨B, hB, hb⟩ := gaussian_beats_Q_power (by positivity : 0 < c * g.lengthScale / 50) d N
   refine ⟨A * B, by positivity, fun n x hx j hj => ?_⟩
   calc
     _ ≤ A * (1 + ChartScales.S n) ^ d *
-        Real.exp (-(c * g.length_scale / 50) * ChartScales.S n) := ha n x hx j hj
+        Real.exp (-(c * g.lengthScale / 50) * ChartScales.S n) := ha n x hx j hj
     _ = A * ((1 + ChartScales.S n) ^ d *
-        Real.exp (-(c * g.length_scale / 50) * ChartScales.S n)) := by ring
+        Real.exp (-(c * g.lengthScale / 50) * ChartScales.S n)) := by ring
     _ ≤ A * (B * ChartScales.Q n ^ N) := mul_le_mul_of_nonneg_left (hb n) hA
     _ = _ := by ring
 
@@ -708,7 +724,7 @@ noncomputable def actualSlotFamily (s : StripData D) (r0 h : ℝ)
     offset := fun n => (r0 - center n) / (2 * r0)
     linear_bound := ?_
     inverse_length_bound := ?_
-    length_scale := κ
+    lengthScale := κ
     length_scale_pos := hκ.1
     length_lower := ?_
   }
@@ -941,10 +957,12 @@ end SlotFamily
 
 namespace SlotFamily
 
+/-- Derivative error, given by `((g.length n)⁻¹ * deriv profile (g.coordinate n x)) • u n x`. -/
 noncomputable def derivativeError {s : StripData D} (g : SlotFamily s)
     (u : ℕ → D → E) (n : ℕ) (x : D) : E :=
   ((g.length n)⁻¹ * deriv profile (g.coordinate n x)) • u n x
 
+/-- Omitted source, given by `(1 - profile (g.coordinate n x)) • f n x`. -/
 noncomputable def omittedSource {s : StripData D} (g : SlotFamily s)
     (f : ℕ → D → E) (n : ℕ) (x : D) : E :=
   (1 - profile (g.coordinate n x)) • f n x
@@ -993,10 +1011,12 @@ theorem derivativeError_jet_near_ends {s : StripData D} (g : SlotFamily s)
   have hb := g.derivativeError_jet_support u n j hx
   change 1 / 5 ≤ |g.coordinate n x - 1 / 2| ∧ |g.coordinate n x - 1 / 2| ≤ 1 / 3 at hb
   rcases le_total (g.coordinate n x) (1 / 2) with h | h
-  · rw [abs_of_nonpos (by linarith)] at hb
+  · rw [abs_of_nonpos (by linarith)]
+      at hb
     left
     constructor <;> linarith [hb.1, hb.2]
-  · rw [abs_of_nonneg (by linarith)] at hb
+  · rw [abs_of_nonneg (by linarith)]
+      at hb
     right
     constructor <;> linarith [hb.1, hb.2]
 
@@ -1024,7 +1044,7 @@ theorem derivativeError_gaussian_bound {s : StripData D} (g : SlotFamily s)
     (m : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∃ d : ℕ, ∀ n x, x ∈ s.domain → ∀ j ≤ m,
       ‖iteratedFDeriv ℝ j (g.derivativeError u n) x‖ ≤
         C * (1 + ChartScales.S n) ^ d *
-          Real.exp (-(c * g.length_scale / 50) * ChartScales.S n) := by
+          Real.exp (-(c * g.lengthScale / 50) * ChartScales.S n) := by
   have hz : WaveClass s P α (fun _ _ => (0 : E)) := MemClass.zero hu.weight_nonneg
   have he : g.error u (fun _ _ => (0 : E)) = g.derivativeError u := by
     funext n x
@@ -1041,7 +1061,7 @@ theorem omittedSource_gaussian_bound {s : StripData D} (g : SlotFamily s)
     (m : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∃ d : ℕ, ∀ n x, x ∈ s.domain → ∀ j ≤ m,
       ‖iteratedFDeriv ℝ j (g.omittedSource f n) x‖ ≤
         C * (1 + ChartScales.S n) ^ d *
-          Real.exp (-(c * g.length_scale / 50) * ChartScales.S n) := by
+          Real.exp (-(c * g.lengthScale / 50) * ChartScales.S n) := by
   have hz : WaveClass s P α (fun _ _ => (0 : E)) := MemClass.zero hf.weight_nonneg
   have he : g.error (fun _ _ => (0 : E)) f = g.omittedSource f := by
     funext n x

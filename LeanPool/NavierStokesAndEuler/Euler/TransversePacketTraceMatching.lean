@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketMatching
 
+/-! The actual time derivative and normalized pressure also match at the history/forward junction.
+-/
+
 @[expose] public section
 
-/-! The actual time derivative and normalized pressure also match at the history/forward junction.
-  -/
 
 noncomputable section
 
@@ -20,7 +21,7 @@ namespace EulerTransversePacketJoin
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoefficients
   EulerTimeIntervalRestriction EulerLiftedGradientSpace EulerLpCylinderTranslation
   EulerLpCylinderPaths EulerLpCylinderRectangular EulerCylinderScalarPrimitive
-    EulerSourceNormalCoefficient
+      EulerSourceNormalCoefficient
   EulerPacketProfileRecursion EulerTransversePacketProvider
 open scoped ContDiff BoundedContinuousFunction
 
@@ -74,17 +75,17 @@ theorem derivative_match : pastDerivative τ hτ hτT B G ⟨τ,hτ.le,le_rfl⟩
     Gf.path I.value (fun t x => Df.M.field t x) (fun t x => Df.normal.field t x)
     (HistoryData.normal_ne_zero (D := Df)) Df.frame_tangent Df.frame_range Df.frame_strain tf
   change ∀ᵐ x ∂liftMeasure P,
-    pastDerivative τ hτ hτT B G th x+Dh.M.field th x.1 (pastVelocity τ hτ hτT B G th x)+
-      ((⟪Dh.normal.field th x.1,(Gh.path th : CylinderL2 P Space) x⟫_ℝ-
+    pastDerivative τ hτ hτT B G th x+Dh.M.field th x.1 (pastVelocity τ hτ hτT B G th x) +
+      ((⟪Dh.normal.field th x.1,(Gh.path th : CylinderL2 P Space) x⟫_ℝ -
         2*⟪Dh.normal.field th x.1,Dh.M.field th x.1 (pastVelocity τ hτ hτT B G th x)⟫_ℝ)/
         ‖Dh.normal.field th x.1‖^2) • Dh.normal.field th x.1 = (Gh.path th : CylinderL2 P Space) x
-          at hh
+            at hh
   change ∀ᵐ x ∂liftMeasure P,
-    futureDerivative τ hτ hτT B G tf x+Df.M.field tf x.1 (futureVelocity τ hτ hτT B G tf x)+
-      ((⟪Df.normal.field tf x.1,(Gf.path tf : CylinderL2 P Space) x⟫_ℝ-
+    futureDerivative τ hτ hτT B G tf x+Df.M.field tf x.1 (futureVelocity τ hτ hτT B G tf x) +
+      ((⟪Df.normal.field tf x.1,(Gf.path tf : CylinderL2 P Space) x⟫_ℝ -
         2*⟪Df.normal.field tf x.1,Df.M.field tf x.1 (futureVelocity τ hτ hτT B G tf x)⟫_ℝ)/
         ‖Df.normal.field tf x.1‖^2) • Df.normal.field tf x.1 = (Gf.path tf : CylinderL2 P Space) x
-          at hf
+            at hf
   rw [hM,hm,hforce,hv] at hh
   apply Lp.ext
   filter_upwards [hh,hf] with x hx hy

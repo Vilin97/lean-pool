@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGlobalShear
 public import LeanPool.NavierStokesAndEuler.Euler.PacketExactShearError
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGlobalShear
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
 
 /-! The actual finite and exact packets have the source shear at every
 physical point. The slow primary derivative and finite tail contribute
 only a fixed source constant divided by the frequency. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +32,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
   EulerPeriodicProfile EulerGevrey
 open scoped ContDiff
 
+/-- Initialized global shear cost as an element of `ℝ`. -/
 def initializedGlobalShearCost (R H0 C : ℝ) : ℝ :=
   ‖coordinateEquiv.symm.toContinuousLinearMap‖*
       (sobolevEmbeddingConstant period 3*fixedVelocityGradeCost R H0 1*(4*R))*C +
@@ -48,9 +53,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
@@ -67,11 +72,11 @@ theorem initializedPrimary_global_bound :
     nlinarith [sq_nonneg S.H0]
   have hc := (hb.mono_amplitude (zero_le_one.trans L.radius_bounds.1) ha).fixed_velocity_grade
     (n := 1) (zero_le_one.trans L.radius_bounds.1) S.H0_pos.le
-  exact (hc.changeTime hTime).of_raw_eq _
+  exact (hc.changeTime hTime).ofRawEq _
     (fun _ _ _ => by rw [initializedProfiles_one_high])
 
 theorem initializedVelocity_global_gradient_error (N : ℕ) (hN : 1 ≤ N)
-    (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space)
     (hY : HasFDerivAt Y (D.FInv.field t (Y x)) x) :
     ‖fderiv ℝ (fun y => initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
@@ -97,7 +102,7 @@ theorem initializedVelocity_global_gradient_error (N : ℕ) (hN : 1 ≤ N)
     calc
       _ ≤ (|initializedRemainderDerivativeCost L.R S.H0|/k)*‖D.FInv.field t (Y x)‖ :=
         mul_le_mul_of_nonneg_right (div_le_div_of_nonneg_right (le_abs_self _) hk0.le) (norm_nonneg
-          _)
+            _)
       _ ≤ (|initializedRemainderDerivativeCost L.R S.H0|/k)*NB.C :=
         mul_le_mul_of_nonneg_left hinv (by positivity)
       _ = _ := by ring
@@ -107,10 +112,10 @@ theorem initializedVelocity_global_gradient_error (N : ℕ) (hN : 1 ≤ N)
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x := by
     simpa only [Function.comp_def,Pi.smul_apply] using hp.comp x hY.differentiableAt
   have hr := ((initializedPrimaryRemainderField M D hTime τ hτ hτT B δ hδ ξ hs α N hN
-    k⁻¹).raw_graph_contDiff
+      k⁻¹).raw_graph_contDiff
     t k D.m₀).differentiable (by simp) (Y x)
   have hrd : DifferentiableAt ℝ (fun y => initializedPrimaryRemainder M D τ hτ hτT B δ hδ ξ hs α N
-    k⁻¹
+      k⁻¹
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x := by
     simpa only [Function.comp_def] using hr.comp x hY.differentiableAt
   have he : (fun y => initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
@@ -133,7 +138,7 @@ theorem initializedExactPhysicalVelocity_global_gradient_error
     (Cagree : SourceCoefficientAgreement M D) (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
     (Q : Budget period D.T_pos
       (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk))
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space)
     (hY : HasFDerivAt Y (D.FInv.field t (Y x)) x) :
     ‖fderiv ℝ (initializedExactPhysicalVelocity M D hTime τ hτ hτT B δ hδ ξ hs α

@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TimeLocalization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeEndpoint
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # Extending activated physical fields to the whole open past
@@ -22,6 +20,9 @@ The actual residual is smooth and periodic on the whole open past and retains
 the original residual's terminal germ and all of its terminal derivative data.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter
@@ -31,6 +32,7 @@ namespace NavierStokes.PastExtension
 
 open ProblemStatement TimeLocalization ResidualRegularity SmoothCutoffs
 
+/-- Past domain: an abbreviation for `SpacetimeEndpoint.openPast 1`. -/
 abbrev pastDomain : Set SpaceTime := SpacetimeEndpoint.openPast 1
 
 section Generic

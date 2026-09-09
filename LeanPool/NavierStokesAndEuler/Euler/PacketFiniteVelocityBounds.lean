@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
+
+/-! Uniform bounds on the actual finite velocity jets, including the terminal corrector. -/
 
 @[expose] public section
 
-/-! Uniform bounds on the actual finite velocity jets, including the terminal corrector. -/
 
 noncomputable section
 
@@ -38,7 +40,7 @@ include B
 theorem piece_unnormalized (hR : 1 ≤ R) (k : KnownPiece) (i : ℕ) (hi : 1 ≤ i) :
     (F.piece k i).WordBound 6 R (S.H0^(2*i)) (highShift i) := by
   have h := (B.piece (zero_le_one.trans hR) k i).remove_profile hT (k.profile S i) (k.profile_pos S
-    i)
+      i)
     (S.H0^(2*i)) (pow_nonneg S.H0_pos.le _) (k.profile_le_coarse S i hi)
   have h' : (F.piece k i).WordBound 6 R (S.H0^(2*i)) (k.shift i) := by simpa only [mul_one] using h
   exact h'.mono_shift hR (pow_nonneg S.H0_pos.le _) (k.shift_le_high i)
@@ -64,7 +66,7 @@ theorem knownJet_bound (O : Operators) (hp : 2 ≤ p) (hR : 1 ≤ R)
     have hs := (hhi.add hme).add hco
     have he : S.H0^(2*i)+S.H0^(2*i)+S.H0^(2*i) = 3*S.H0^(2*i) := by ring
     rw [he] at hs
-    apply hs.of_raw_eq J.field
+    apply hs.ofRawEq J.field
     intro t x θ
     exact (J.value_eq t x θ).symm.trans
       (congrArg Prod.fst (knownJets_eq_pieces O p hp a hc hb (t,(x,θ)) i))

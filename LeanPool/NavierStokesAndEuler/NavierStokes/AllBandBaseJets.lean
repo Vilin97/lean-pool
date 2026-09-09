@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseRadialJets
 
-@[expose] public section
-
 /-!
 # Base-field jet bounds on every dyadic band
 
@@ -19,6 +17,9 @@ extends the normalized bounds to every positive physical scale and removes
 the auxiliary restriction `Q * qhi ≤ 1` from the chart estimates.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AllBandBaseJets
@@ -26,6 +27,7 @@ namespace NavierStokes.AllBandBaseJets
 open Set Filter Function BaseChartJets PhaseJetBounds PrimaryPulseBounds
 open scoped ContDiff Topology BigOperators
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 section Cutoff
@@ -164,7 +166,7 @@ theorem normalized_error_envelope {ι : Type*} {h qlo qhi lo hi : ℝ}
       _ ≤ (B * Q i ^ (2 * h) * qhi ^ (2 * h)) * K ^ j :=
         mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_left hr (mul_nonneg hB.le (Real.rpow_nonneg (hQ i).le _))) (by
-            positivity)
+              positivity)
       _ = _ := by ring
 
 /-- The actual swirl and axial errors on the fixed normalized chart. -/
@@ -205,7 +207,7 @@ theorem actual_estimates {ι : Type*} {D : Domain ι Slow}
   have he := actual_error_envelopes hh hqlo hqhi hlo hd ha Q hQ
   have hc := normalizedCoordinates_polynomial hh hh1 hqlo H
   have hmap (i : ι) (p : Slow) (hp : p ∈ (unitScale D).carrier i) : normalizedCoordinates h p ∈
-    innerRegion qlo qhi lo hi := by
+      innerRegion qlo qhi lo hi := by
     have heta := abs_lt.mp (normalizedCoordinates_eta hh hh1 (H.time i p hp))
     exact ⟨H.q_range i p hp, H.x_range i p hp, heta⟩
   have hev := he.1.comp hc (fun _ => rfl) hmap
@@ -217,13 +219,13 @@ theorem actual_estimates {ι : Type*} {D : Domain ι Slow}
     apply (hev.polynomial_smul hf.1).congr
     intro i p _
     simp only [frequency, leadingFrequency, swirlError, Function.comp_apply, smul_eq_mul, mul_sub,
-      SlowBorelBase.scaleMap_apply]
+        SlowBorelBase.scaleMap_apply]
   have hG : EnvelopeJets (unitScale D) (fun i _ => Q i ^ (2 * h))
       (fun i p => axial a h d (Q i) p - leadingAxial h d p) := by
     apply (heg.polynomial_smul hf.2).congr
     intro i p _
     simp only [axial, leadingAxial, axialError, Function.comp_apply, smul_eq_mul, mul_sub,
-      SlowBorelBase.scaleMap_apply]
+        SlowBorelBase.scaleMap_apply]
   have hw i p (_hp : p ∈ (unitScale D).carrier i) : Q i ^ (2 * h) ≤ 1 :=
     Real.rpow_le_one (hQ i).le (hQ1 i) (by linarith)
   refine ⟨hF, hG, h0.1, h0.2, ?_, ?_⟩

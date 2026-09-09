@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationFrame
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationRay
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryUncut
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseActivationSelection
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationFrame
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialGeometry
 
 /-! Actual center initial data for the geometric propagation theorem.
 The selected terminal coordinate drives the same stationary history and
 homogeneous continuation used in the constructed packet. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,16 +34,16 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (B : HistoryData (D.initial τ hτ hτT.le))
 
 theorem exists_activated_primary
-    (m v : ℝ → Space) (hm : m τ ≠ 0) (hv : v τ ≠ 0) (hmv : ⟪m τ,v τ⟫_ℝ=0)
-    (hchoice : D.m₀=activationDirection (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
+    (m v : ℝ → Space) (hm : m τ ≠ 0) (hv : v τ ≠ 0) (hmv : ⟪m τ, v τ⟫_ℝ = 0)
+    (hchoice : D.m₀ = activationDirection (D.deformationEquiv ⟨τ, hτ.le, hτT.le⟩ 0)
       (cross (unit (m τ)) (unit (v τ))))
     (hHs : ∀ t, (B.H.field t 0).IsSymmetric)
-    (h CM CH ζ a ε : ℝ) (hh : 0 < h) (hLayer : 1 ≤ h*τ)
+    (h CM CH ζ a ε : ℝ) (hh : 0 < h) (hLayer : 1 ≤ h * τ)
     (hCM : 0 ≤ CM) (hCH : 0 ≤ CH) (hζ : 0 ≤ ζ) (hε : 0 < ε)
     (hM : ∀ t : Icc (0 : ℝ) τ, ‖(D.initial τ hτ hτT.le).M.field t 0‖ ≤ CM*h)
     (hHnorm : ‖B.coefficients.labelHessian 0‖ ≤ CH*h^2)
     (hζsmall : 16*(activationConstant CM CH+1)*ζ ≤ 1)
-    (hB : ‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-
+    (hB : ‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 -
       h • rankOne ℝ (unit (v τ)) (unit (m τ))‖ ≤ ζ*h)
     (hBpp : ⟪D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 (unit (m τ)),unit (m τ)⟫_ℝ < 0) :
     let s₀ := activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)

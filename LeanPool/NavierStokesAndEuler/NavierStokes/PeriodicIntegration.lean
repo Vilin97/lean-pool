@@ -7,13 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.MeasureTheory.Integral.DivergenceTheorem
-public import Mathlib.MeasureTheory.Measure.OpenPos
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-
-@[expose] public section
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 
 /-!
 # Integration of periodic fields on the unit cube
@@ -22,6 +21,9 @@ The integral is product Lebesgue measure in the usual three coordinates, pulled
 back along the standard continuous linear equivalence to Euclidean space.
 Integration by parts is derived from Mathlib's proved box divergence theorem.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,24 +34,31 @@ namespace NavierStokes.PeriodicIntegration
 
 open ProblemStatement
 
+/-- Coords: an abbreviation for `Fin 3 → ℝ`. -/
 abbrev Coords := Fin 3 → ℝ
 
+/-- To space, given by `(EuclideanSpace.equiv (Fin 3) ℝ).symm`. -/
 def toSpace : Coords ≃L[ℝ] Space := (EuclideanSpace.equiv (Fin 3) ℝ).symm
 
+/-- Cube, given by `Icc 0 1`. -/
 def cube : Set Coords := Icc 0 1
 
+/-- Cube measure, constructed using `volume.restrict`. -/
 def cubeMeasure : Measure Coords := volume.restrict cube
 
 instance : IsFiniteMeasure cubeMeasure := by
   change IsFiniteMeasure (volume.restrict (Icc (0 : Coords) 1))
   exact isFiniteMeasure_restrict.mpr isCompact_Icc.measure_lt_top.ne
 
+/-- Cube integral, given by `∫ y, f (toSpace y) ∂cubeMeasure`. -/
 def cubeIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : Space → E) : E := ∫ y, f (toSpace y) ∂cubeMeasure
 
+/-- Unit periods, given by `∀ x i, f (x + coordinateVector i) = f x`. -/
 def UnitPeriods {E : Type*} (f : Space → E) : Prop :=
   ∀ x i, f (x + coordinateVector i) = f x
 
+/-- Spatial partial, given by `fderiv ℝ f x (coordinateVector i)`. -/
 def spatialPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (i : Fin 3) (f : Space → E) (x : Space) : E :=
   fderiv ℝ f x (coordinateVector i)
@@ -63,7 +72,7 @@ theorem continuous_partial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E
     {f : Space → E} (hf : ContDiff ℝ 1 f) (i : Fin 3) : Continuous (spatialPartial i f) :=
   (hf.continuous_fderiv (by norm_num)).clm_apply continuous_const
 
-theorem integrable_cube {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem integrable_cube {E : Type*} [NormedAddCommGroup E]
     {f : Space → E} (hf : Continuous f) : Integrable (fun y => f (toSpace y)) cubeMeasure :=
   (hf.comp toSpace.continuous).integrableOn_Icc
 
@@ -184,8 +193,8 @@ theorem partial_mul {f g : Space → ℝ} (hf : ContDiff ℝ 1 f)
     (hg : ContDiff ℝ 1 g) (i : Fin 3) (x : Space) :
     spatialPartial i (fun y => f y * g y) x =
       f x * spatialPartial i g x + g x * spatialPartial i f x := by
-  simp only [spatialPartial, fderiv_fun_mul (hf.differentiable (by norm_num) x) (hg.differentiable
-    (by norm_num) x),
+  simp only [spatialPartial, fderiv_fun_mul (hf.differentiable (by
+      norm_num) x) (hg.differentiable (by norm_num) x),
     _root_.add_apply, _root_.smul_apply, smul_eq_mul]
 
 /-- Integration by parts for actual coordinate partial derivatives on the unit torus. -/
@@ -223,7 +232,7 @@ theorem eq_zero_on_cube_of_nonneg_of_integral_eq_zero {f : Space → ℝ}
     continuousOn_const cube_subset_closure_interior
 
 theorem eq_zero_on_cube_of_integral_norm_sq_eq_zero
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {u : Space → E}
+    {E : Type*} [NormedAddCommGroup E] {u : Space → E}
     (hu : Continuous u) (hz : cubeIntegral (fun x => ‖u x‖ ^ 2) = 0) :
     ∀ y ∈ cube, u (toSpace y) = 0 := by
   have h := eq_zero_on_cube_of_nonneg_of_integral_eq_zero (hu.norm.pow 2)
@@ -310,7 +319,7 @@ theorem hasDerivAt_cubeIntegral_of_hasDerivAt
     exact hC (s, y) ⟨Metric.ball_subset_closedBall hs, hy⟩
   · exact integrable_const C
   · exact Eventually.of_forall fun y s hs => hd s (hεI (Metric.ball_subset_closedBall hs)) (toSpace
-    y)
+      y)
 
 /-- Differentiation under the cube integral for a jointly `C¹` field on an open
 time domain. The integrated quantity is its actual time-slice derivative. -/

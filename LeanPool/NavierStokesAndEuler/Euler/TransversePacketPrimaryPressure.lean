@@ -7,15 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryField
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarParity
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarParity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryEquation
 
 /-! The primary pressure is the actual mean-zero angular primitive of the
 normal residual.  Its field satisfies the homogeneous packet equation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,7 +28,7 @@ namespace EulerTransversePacketPrimary
 
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoefficients
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerLpCylinderPaths
-    EulerLpCylinderRectangular
+      EulerLpCylinderRectangular
   EulerCylinderSmoothOrbit EulerCylinderAngleAverage EulerMetricTransport EulerCylinderLocalSupport
   EulerSourceNormalResidualBounds EulerSourceNormalCoefficient EulerPacketProfileRecursion
   EulerCylinderScalarPrimitive EulerTransversePacketProvider EulerPacketCylinderField
@@ -35,17 +40,20 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D)
 
+/-- Normal residual as an element of `ℝ`. -/
 def normalResidual (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) : ℝ :=
   -(2*⟪D.normal.field t x.1,D.M.field t x.1
     (pointField P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y) t x)⟫_ℝ)/
       ‖D.normal.field t x.1‖^2
 
+/-- Residual path, given by `sourceResidual P D.M D.normal D.normalLower D.normalLower_pos
+D.normal_lower 0 (velocityPath τ hτ hτT B Y)`. -/
 def residualPath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourceResidual P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y)
 
 theorem residualPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (residualPath τ hτ hτT B Y))
-  :=
+    :=
   sourceResidual_contDiff P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y) (by simpa only [map_zero] using (contDiff_const :
       ContDiff ℝ ∞ (fun _ : LiftTangent => (0 : C(Icc (0 : ℝ) D.T,LiftL2 P)))))
@@ -127,6 +135,7 @@ theorem normalResidual_mean_zero (t : Icc (0 : ℝ) D.T) (y : Space) :
     (normalResidual τ hτ hτT B Y t) (normalResidual_continuous τ hτ hτT B Y t)
     (residualPath_ae τ hτ hτT B Y t) (residualPath_average_zero τ hτ hτT B Y t) y
 
+/-- Pressure field, constructed using `classicalPrimitive`. -/
 def pressureField (t : Icc (0 : ℝ) D.T) : LiftDomain P → ℝ :=
   classicalPrimitive P (normalResidual τ hτ hτT B Y t) (normalResidual_continuous τ hτ hτT B Y t)
     (normalResidual_mean_zero τ hτ hτT B Y t)
@@ -134,7 +143,7 @@ def pressureField (t : Icc (0 : ℝ) D.T) : LiftDomain P → ℝ :=
 theorem pressureField_ae (t : Icc (0 : ℝ) D.T) :
     pressurePath τ hτ hτT B Y t =ᵐ[liftMeasure P] pressureField τ hτ hτT B Y t :=
   primitive_ae_constructed P (residualPath τ hτ hτT B Y t) (residualPath_slice_smooth τ hτ hτT B Y
-    t)
+      t)
     (normalResidual τ hτ hτT B Y t) (normalResidual_continuous τ hτ hτT B Y t)
     (residualPath_ae τ hτ hτT B Y t) (normalResidual_mean_zero τ hτ hτT B Y t)
 
@@ -147,7 +156,7 @@ theorem pressureField_eq_scalarPointField (t : Icc (0 : ℝ) D.T) :
       scalarPointField P (pressurePath τ hτ hτT B Y) (pressurePath_orbit τ hτ hτT B Y) t :=
   (scalarPointField_eq P (pressurePath τ hτ hτT B Y) (pressurePath_orbit τ hτ hτT B Y) t
     (pressureField τ hτ hτT B Y t) (smoothField_continuous P _ (pressureField_smooth τ hτ hτT B Y
-      t))
+        t))
     (pressureField_ae τ hτ hτT B Y t)).symm
 
 theorem scalar_eq_pressureField (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
@@ -177,7 +186,7 @@ theorem scalar_zero_outside (t : ℝ) (x : Space) (hx : x ∉ D.support) (θ : �
     (D.clamp t) (x,(θ : AddCircle P)) = 0
   rw [← pressureField_eq_scalarPointField]
   exact classicalPrimitive_zero P _ _ _ x (normalResidual_zero_outside τ hτ hτT B Y (D.clamp t) x
-    hx) _
+      hx) _
 
 theorem scalarGradient_zero_outside (t : ℝ) (x : Space) (hx : x ∉ D.support) (θ : ℝ) :
     pressureGradient (scalar τ hτ hτT B Y) (t,(x,θ)) = 0 :=
@@ -185,14 +194,14 @@ theorem scalarGradient_zero_outside (t : ℝ) (x : Space) (hx : x ∉ D.support)
     (scalar_zero_outside τ hτ hτT B Y t) x hx θ
 
 theorem field_balance (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
-    pointField P (derivativePath τ hτ hτT B Y) (derivativePath_orbit τ hτ hτT B Y) t x+
+    pointField P (derivativePath τ hτ hτT B Y) (derivativePath_orbit τ hτ hτT B Y) t x +
       D.M.field t x.1 (pointField P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y) t
-        x)+
+          x) +
       normalResidual τ hτ hτT B Y t x • D.normal.field t x.1 = 0 := by
   have hae : (fun y : LiftDomain P =>
-      pointField P (derivativePath τ hτ hτT B Y) (derivativePath_orbit τ hτ hτT B Y) t y+
+      pointField P (derivativePath τ hτ hτT B Y) (derivativePath_orbit τ hτ hτT B Y) t y +
       D.M.field t y.1 (pointField P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y) t
-        y)+
+          y) +
       normalResidual τ hτ hτT B Y t y • D.normal.field t y.1) =ᵐ[liftMeasure P] (fun _ => 0) := by
     filter_upwards [balance_ae τ hτ hτT B Y t,
       pointField_ae P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y) t,
@@ -212,8 +221,8 @@ theorem field_balance (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
     ((normalResidual_continuous τ hτ hτT B Y t).smul hm)) continuous_const) x
 
 theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    vectorDerivative τ hτ hτT B Y (t,(x,θ))+
-      D.strain (t,(x,θ)) (vector τ hτ hτT B Y (t,(x,θ)))+
+    vectorDerivative τ hτ hτT B Y (t,(x,θ)) +
+      D.strain (t,(x,θ)) (vector τ hτ hτT B Y (t,(x,θ))) +
       deriv (fun s => scalar τ hτ hτT B Y (t,(x,s))) θ • D.normalField (t,(x,θ)) = 0 := by
   have hp : (fun s => scalar τ hτ hτT B Y (t,(x,s))) =
       fun s : ℝ => pressureField τ hτ hτT B Y t (x,(s : AddCircle P)) :=
@@ -224,9 +233,9 @@ theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 theorem jet_equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     linearPart (D.strain (t,(x,θ)))
-        (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B Y) (t,(x,θ)))+
+        (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B Y) (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ))) (pressureJet (scalar τ hτ hτT B Y) (t,(x,θ))) = 0 := by
-  change (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B Y) (t,(x,θ))).2 timeDirection+
+  change (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B Y) (t,(x,θ))).2 timeDirection +
     D.strain (t,(x,θ)) (vector τ hτ hτT B Y (t,(x,θ)))+_ = _
   rw [(vectorField τ hτ hτT B Y).slicedJet_temporal D.T_pos (vectorDerivativeField τ hτ hτT B Y)
     (vectorField_time τ hτ hτT B Y),fastPressure_pressureJet _ (scalar τ hτ hτT B Y) t x θ

@@ -6,11 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
+
+/-! The scalar comparison lemma with genuine one-sided endpoint derivatives. -/
 
 @[expose] public section
 
-/-! The scalar comparison lemma with genuine one-sided endpoint derivatives. -/
 
 noncomputable section
 
@@ -20,10 +28,10 @@ open Set Real
 
 theorem quadratic_stability_within (X X' : ℝ → ℝ) (C ε T : ℝ)
     (hC : 0 < C) (hε : 0 < ε) (_hT : 0 ≤ T)
-    (hsmall : 2*ε*exp (3*C*T) ≤ 1/2)
+    (hsmall : 2 * ε * exp (3 * C * T) ≤ 1 / 2)
     (hcont : ContinuousOn X (Icc 0 T)) (hinit : X 0 ≤ ε)
     (hder : ∀ t ∈ Ico 0 T, HasDerivWithinAt X (X' t) (Icc 0 T) t)
-    (hineq : ∀ t ∈ Ico 0 T, X' t ≤ C*(X t+(X t)^2)) :
+    (hineq : ∀ t ∈ Ico 0 T, X' t ≤ C * (X t + (X t) ^ 2)) :
     ∀ t ∈ Icc 0 T, X t ≤ 2*ε*exp (3*C*T) := by
   let F : ℝ → ℝ := fun t => 2*ε*exp (3*C*t)
   have hF (t : ℝ) : HasDerivAt F (3*C*F t) t := by

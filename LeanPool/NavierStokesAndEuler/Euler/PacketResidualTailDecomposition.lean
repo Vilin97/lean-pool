@@ -8,12 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveCancellation
 
-@[expose] public section
-
 /-!
 Exact residual-tail grades. Fast pressure is absent beyond degree N, and
 only degree N+1 retains the linear terminal corrector and slow pressure.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,7 +38,7 @@ open EulerFiniteGrades
 variable {V Q W : Type*} [AddCommGroup V] [Module ℝ V]
   [AddCommGroup Q] [Module ℝ Q] [AddCommGroup W] [Module ℝ W]
 
-theorem coefficient_assembled_tail (N n : ℕ) (hn : N+1 ≤ n)
+theorem coefficient_assembled_tail (N n : ℕ) (hn : N + 1 ≤ n)
     (L : V →ₗ[ℝ] W) (G H : Q →ₗ[ℝ] W) (B C : V →ₗ[ℝ] V →ₗ[ℝ] W)
     (u c : ℕ → V) (q π : ℕ → Q) :
     coefficient (N+1) L G H B C (assemble N u c) (assemble N q π) n =
@@ -70,7 +71,7 @@ open EulerSmoothLimit EulerPacketPointJets EulerFiniteGrades EulerPacketResidual
 
 /-- The existing known-jet constructor is exactly the complete finite velocity family. -/
 theorem assembledJets_eq_known (O : Operators) (N : ℕ) (a : ℕ → Profile)
-    (ha : a 0=0) (z : Domain) :
+    (ha : a 0 = 0) (z : Domain) :
     assembledJets O N a z = knownJets O (N+1) a z := by
   funext i
   by_cases hi : i ≤ N
@@ -84,11 +85,11 @@ theorem assembledJets_eq_known (O : Operators) (N : ℕ) (a : ℕ → Profile)
     rw [hz]
     simp only [knownJets,history,show ¬ i < N+1 by omega,ite_false,he]
 
-theorem recursiveGrade_tail (O : Operators) (N n : ℕ) (hn : N+1 ≤ n)
-    (a : ℕ → Profile) (ha : a 0=0) (z : Domain) :
+theorem recursiveGrade_tail (O : Operators) (N n : ℕ) (hn : N + 1 ≤ n)
+    (a : ℕ → Profile) (ha : a 0 = 0) (z : Domain) :
     recursiveGrade O N a z n =
       (if n=N+1 then
-        linearPart (O.strain z) (slicedJet O.interval (a N).corrector z)+
+        linearPart (O.strain z) (slicedJet O.interval (a N).corrector z) +
         slowPressure (O.inverseFrame z) (pressureJet (a N).highPressure z) else 0) +
       nonlinearGrade (N+1) n (O.inverseFrame z) (O.normal z) (knownJets O (N+1) a z) := by
   have h := coefficient_assembled_tail N n hn
@@ -100,12 +101,12 @@ theorem recursiveGrade_tail (O : Operators) (N n : ℕ) (hn : N+1 ≤ n)
   change recursiveGrade O N a z n = _ at h
   rw [h]
   change (if n=N+1 then
-      linearPart (O.strain z) (slicedJet O.interval (a N).corrector z)+
+      linearPart (O.strain z) (slicedJet O.interval (a N).corrector z) +
       slowPressure (O.inverseFrame z) (pressureJet (a N).highPressure z) else 0) +
     convolution (N+1) (slowAdvection (O.inverseFrame z)) (assembledJets O N a z) (assembledJets O N
-      a z) n +
+        a z) n +
     convolution (N+1) (fastAdvection (O.normal z)) (assembledJets O N a z) (assembledJets O N a z)
-      (n+1) = _
+        (n+1) = _
   rw [assembledJets_eq_known O N a ha z]
   simp only [nonlinearGrade,add_assoc]
 

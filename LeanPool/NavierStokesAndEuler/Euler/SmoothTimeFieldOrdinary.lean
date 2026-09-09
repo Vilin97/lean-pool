@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
 
-@[expose] public section
-
 /-! The ordinary three-dimensional coefficient interface is a literal
 restriction of the generic smooth time-field interface. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +23,7 @@ open EulerSmoothLimit EulerMeanCoefficients
 variable {K V : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- To smooth coefficient path, given by `⟨A.field,A.smooth,A.jet,A.jet_eq⟩`. -/
 def toSmoothCoefficientPath (A : SmoothTimeField K Space V) : SmoothCoefficientPath K V :=
   ⟨A.field,A.smooth,A.jet,A.jet_eq⟩
 

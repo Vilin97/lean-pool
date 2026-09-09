@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseSourceFrame
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Actual source coefficient paths for the transverse inverse
@@ -21,6 +23,9 @@ reference plane is a linear contraction. The pointwise source derivative
 bounds therefore imply exactly the time-path coefficient bounds required by
 the constructed transverse inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -38,8 +43,12 @@ section Evaluation
 variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instTransverseSourceCoefficientPath1 : NormedAddCommGroup (Space →ᵇ V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instTransverseSourceCoefficientPath2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
 
 /-- Actual spatial evaluation, performed uniformly along the time path. -/
 def pathEvaluation (x : Space) : C(K,Space →ᵇ V) →L[ℝ] C(K,V) :=
@@ -77,13 +86,13 @@ theorem pointPath_derivative_bound (A : SmoothCoefficientPath K V)
   have h := (pathEvaluation (K := K) (V := V) 0).norm_iteratedFDeriv_comp_left
     (A.translation_contDiff.contDiffAt (x := x)) (n := n) (by simp)
   exact h.trans ((mul_le_mul_of_nonneg_right (pathEvaluation_norm (K := K) (V := V) 0)
-    (norm_nonneg _)).trans (by simpa only [one_mul] using A.norm_iteratedFDeriv_translation_le n C
-      hC hb x))
+    (norm_nonneg _)).trans (by
+        simpa only [one_mul] using A.norm_iteratedFDeriv_translation_le n C hC hb x))
 
 /-- Every prescribed factorial coefficient bound survives the time-path construction. -/
 theorem pointPath_gevrey (A : SmoothCoefficientPath K V)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (d : ℕ)
-    (hb : ∀ n t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C*majorant Rc d n)
+    (hb : ∀ n t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C * majorant Rc d n)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (pointPath A) x‖ ≤ C*majorant Rc d n :=
   pointPath_derivative_bound A n _ (mul_nonneg hC (majorant_nonneg Rc hRc d n)) (hb n) x
@@ -111,7 +120,7 @@ theorem pointPath_pullback_derivative_bound (L : P →L[ℝ] Space) (hL : ‖L�
 theorem pointPath_pullback_gevrey (L : P →L[ℝ] Space) (hL : ‖L‖ ≤ 1)
     (A : SmoothCoefficientPath K V)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (d : ℕ)
-    (hb : ∀ n t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C*majorant Rc d n)
+    (hb : ∀ n t x, ‖iteratedFDeriv ℝ n (A.field t : Space → V) x‖ ≤ C * majorant Rc d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => pointPath A (L y)) x‖ ≤ C*majorant Rc d n :=
   pointPath_pullback_derivative_bound L hL A n _
@@ -123,13 +132,29 @@ section Frame
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
-private local instance : NormedAddCommGroup (U →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] Space) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,U →L[ℝ] Space) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,U →L[ℝ] Space) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,Space →L[ℝ] Space) :=
-  inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransverseSourceCoefficientPath3 : NormedAddCommGroup (U →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] Space)` instance to shorten typeclass synthesis. -/
+local instance instTransverseSourceCoefficientPath4 : NormedSpace ℝ (U →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,U →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransverseSourceCoefficientPath5 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,U
+    →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,U →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransverseSourceCoefficientPath6 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,U →L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,Space →L[ℝ] Space)` instance to
+shorten typeclass synthesis. -/
+local instance instTransverseSourceCoefficientPath7 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ)
+    T,Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransverseSourceCoefficientPath8 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,Space
+    →L[ℝ] Space) := inferInstance
 
 variable (m₀ : Space) (Rperp : U ≃ₗᵢ[ℝ] referencePlane m₀)
 
@@ -150,7 +175,7 @@ def framePathMap (T : ℝ) : C(Icc (0 : ℝ) T,Space →L[ℝ] Space) →L[ℝ]
   (referenceRestriction m₀ Rperp).compLeftContinuous ℝ (Icc (0 : ℝ) T)
 
 /-- This restriction is exactly the source frame path `F Rperp`. -/
-theorem framePathMap_apply (T : ℝ) (A : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) :
+theorem framePathMap_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) :
     framePathMap m₀ Rperp T A = framePath m₀ Rperp T A := rfl
 
 /-- Orthogonal reference restriction does not enlarge the coefficient path norm. -/
@@ -178,7 +203,7 @@ theorem sourceFrame_gevrey (T : ℝ)
     (A : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (d : ℕ)
     (hb : ∀ n t x, ‖iteratedFDeriv ℝ n (A.field t : Space → Space →L[ℝ] Space) x‖ ≤
-      C*majorant Rc d n) (n : ℕ) (x : Space) :
+      C * majorant Rc d n) (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (fun y => framePath m₀ Rperp T (pointPath A y)) x‖ ≤ C*majorant Rc d n := by
   exact contraction_bound (framePathMap m₀ Rperp T) (framePathMap_norm m₀ Rperp T)
     (pointPath A) (pointPath_contDiff A) Rc C hRc hC d (pointPath_gevrey A Rc C hRc hC d hb) n x
@@ -196,7 +221,7 @@ theorem sourceFrame_pullback_gevrey (T : ℝ) (L : P →L[ℝ] Space) (hL : ‖L
     (A : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (d : ℕ)
     (hb : ∀ n t x, ‖iteratedFDeriv ℝ n (A.field t : Space → Space →L[ℝ] Space) x‖ ≤
-      C*majorant Rc d n) (n : ℕ) (x : P) :
+      C * majorant Rc d n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => framePath m₀ Rperp T (pointPath A (L y))) x‖ ≤
       C*majorant Rc d n := by
   exact contraction_bound (framePathMap m₀ Rperp T) (framePathMap_norm m₀ Rperp T)

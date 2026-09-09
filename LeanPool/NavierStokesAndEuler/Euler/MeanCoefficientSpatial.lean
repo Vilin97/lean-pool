@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientMultipliers
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
+import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Spatial translations and their genuine uniform-norm derivatives for matrix coefficients. -/
 
 @[expose] public section
 
-/-! Spatial translations and their genuine uniform-norm derivatives for matrix coefficients. -/
 
 noncomputable section
 
@@ -25,6 +28,7 @@ section BoundedFields
 
 variable {V : Type*} [NormedAddCommGroup V]
 
+/-- Translated, given by `A.compContinuous ⟨fun x => x+a, continuous_id.add continuous_const⟩`. -/
 def translated (A : Space →ᵇ V) (a : Space) : Space →ᵇ V :=
   A.compContinuous ⟨fun x => x+a, continuous_id.add continuous_const⟩
 
@@ -45,12 +49,15 @@ theorem translated_norm_le (A : Space →ᵇ V) (a : Space) : ‖translated A a�
 
 variable [NormedSpace ℝ V]
 
+/-- Bounded derivative, given by `BoundedContinuousFunction.ofNormedAddCommGroup (fderiv ℝ (A :
+Space → V)) (hA.fderiv_right (m := ∞) (by simp)).continuous C hC`. -/
 def boundedDerivative (A : Space →ᵇ V) (hA : ContDiff ℝ ∞ (A : Space → V))
     (C : ℝ) (hC : ∀ x, ‖fderiv ℝ (A : Space → V) x‖ ≤ C) :
     Space →ᵇ (Space →L[ℝ] V) :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fderiv ℝ (A : Space → V))
     (hA.fderiv_right (m := ∞) (by simp)).continuous C hC
 
+/-- Field direction, constructed using `BoundedContinuousFunction.ofNormedAddCommGroup`. -/
 def fieldDirection (DA : Space →ᵇ (Space →L[ℝ] V)) (a : Space) : Space →ᵇ V :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fun x => DA x a)
     (DA.continuous.clm_apply continuous_const) (‖DA‖ * ‖a‖)
@@ -67,11 +74,13 @@ theorem fieldDirection_norm_le (DA : Space →ᵇ (Space →L[ℝ] V)) (a : Spac
     (fun x => (DA x).le_opNorm a |>.trans
       (mul_le_mul_of_nonneg_right (DA.norm_coe_le_norm x) (norm_nonneg a)))
 
+/-- Field derivative linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def fieldDerivativeLinear (DA : Space →ᵇ (Space →L[ℝ] V)) : Space →ₗ[ℝ] (Space →ᵇ V) where
   toFun := fieldDirection DA
   map_add' a b := by ext x; exact (DA x).map_add a b
   map_smul' c a := by ext x; exact (DA x).map_smul c a
 
+/-- Field derivative map, bundling `toLinearMap`, `cont`. -/
 def fieldDerivativeMap (DA : Space →ᵇ (Space →L[ℝ] V)) : Space →L[ℝ] (Space →ᵇ V) where
   toLinearMap := fieldDerivativeLinear DA
   cont := AddMonoidHomClass.continuous_of_bound (fieldDerivativeLinear DA) ‖DA‖
@@ -96,7 +105,8 @@ theorem translated_taylor_bound (A : Space →ᵇ V) (DA : Space →ᵇ (Space �
   have he : x+a+(b-a) = x+b := by abel
   rwa [he] at h
 
-/-- Bounded actual second derivatives yield the true Fréchet derivative of translation in sup norm. -/
+/-- Bounded actual second derivatives yield the true Fréchet derivative of translation in sup norm.
+-/
 theorem translated_hasFDerivAt (A : Space →ᵇ V) (DA : Space →ᵇ (Space →L[ℝ] V))
     (hA : ContDiff ℝ ∞ (A : Space → V))
     (hDA : ∀ x, DA x = fderiv ℝ (A : Space → V) x)

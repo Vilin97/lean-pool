@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 
-@[expose] public section
-
 /-!
 # A polynomially weighted Fourier embedding
 
 The weight is constructed by coordinate multiplication on Schwartz space.
 Consequently the resulting Fourier expressions belong to ordinary `L²`.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -108,7 +109,7 @@ theorem integrable_fourierHNormSq_four (ψ : ComplexTest) :
       ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2) volume := by
   simpa only [norm_weightedSchwartz_apply_sq] using
     ((weightedSchwartz (FourierTransform.fourierCLE ℂ ComplexTest ψ)).memLp 2
-      volume).integrable_norm_pow
+        volume).integrable_norm_pow
       (by norm_num : (2 : ℕ) ≠ 0)
 
 theorem fourierHNormSq_three_integrand_le_four (ψ : ComplexTest) (ξ : Space) :

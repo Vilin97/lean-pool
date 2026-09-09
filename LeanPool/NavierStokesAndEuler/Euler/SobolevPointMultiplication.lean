@@ -10,10 +10,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevCoefficientPressure
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 
+/-! Pointwise evaluation of actual smooth coefficient multiplication in finite cylinder Sobolev
+spaces. -/
+
 @[expose] public section
 
-/-! Pointwise evaluation of actual smooth coefficient multiplication in finite cylinder Sobolev
-  spaces. -/
 
 noncomputable section
 
@@ -25,7 +26,8 @@ open MeasureTheory EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylin
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Bounded evaluation of a genuine Sobolev coefficient product equals the literal pointwise matrix product. -/
+/-- Bounded evaluation of a genuine Sobolev coefficient product equals the literal pointwise matrix
+product. -/
 theorem pointEvaluation_coefficient {q : ℕ} (hq : 3 ≤ q) (G : SmoothCoefficient period)
     (K : CoefficientJet period standardDirection q G) (u : SobolevSpace period q)
     (x : LiftDomain period) :

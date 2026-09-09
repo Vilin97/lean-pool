@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussian
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+
+/-! Actual first and second Gaussian kernels and their integrable bounds. -/
 
 @[expose] public section
 
-/-! Actual first and second Gaussian kernels and their integrable bounds. -/
 
 noncomputable section
 
@@ -20,12 +23,15 @@ namespace EulerWholeSpaceGaussian
 open MeasureTheory InnerProductSpace EulerSmoothLimit Filter
 open scoped ContDiff ENNReal RealInnerProductSpace
 
+/-- Wide kernel, given by `normalization t * Real.exp (-(2*t)⁻¹*‖x‖^2)`. -/
 def wideKernel (t : ℝ) (x : Space) : ℝ :=
   normalization t * Real.exp (-(2*t)⁻¹*‖x‖^2)
 
+/-- First kernel, given by `(-2*t⁻¹*⟪x,a⟫_ℝ) * kernel t x`. -/
 def firstKernel (t : ℝ) (a x : Space) : ℝ :=
   (-2*t⁻¹*⟪x,a⟫_ℝ) * kernel t x
 
+/-- Second kernel, given by `(4*t⁻¹^2*⟪x,a⟫_ℝ*⟪x,b⟫_ℝ - 2*t⁻¹*⟪a,b⟫_ℝ) * kernel t x`. -/
 def secondKernel (t : ℝ) (a b x : Space) : ℝ :=
   (4*t⁻¹^2*⟪x,a⟫_ℝ*⟪x,b⟫_ℝ - 2*t⁻¹*⟪a,b⟫_ℝ) * kernel t x
 

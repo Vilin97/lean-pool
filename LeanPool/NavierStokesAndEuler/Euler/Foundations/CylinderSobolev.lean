@@ -6,104 +6,19 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderCoordinates
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevProducts
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Actual derivative-word Sobolev norms on R³ × T and compact localizations. -/
 
 @[expose] public section
 
 noncomputable section
-
-/-! Actual derivative-word Sobolev norms on R³ × T and compact localizations. -/
 
 namespace EulerCylinderSobolev
 
@@ -146,7 +61,7 @@ noncomputable def iteratedFieldDerivative : {n : ℕ} → (Fin n → Fin 4) →
 @[simp] theorem iteratedFieldDerivative_zero (w : Fin 0 → Fin 4) (f : LiftDomain period → F) :
     iteratedFieldDerivative period w f = f := rfl
 
-@[simp] theorem iteratedFieldDerivative_succ {n : ℕ} (w : Fin (n+1) → Fin 4)
+@[simp] theorem iteratedFieldDerivative_succ {n : ℕ} (w : Fin (n + 1) → Fin 4)
     (f : LiftDomain period → F) :
     iteratedFieldDerivative period w f = fieldDerivative period (standardDirection (w 0))
       (iteratedFieldDerivative period (Fin.tail w) f) := rfl
@@ -167,7 +82,7 @@ theorem iteratedFieldDerivative_smooth {n : ℕ} (w : Fin n → Fin 4)
 
 /-- The actual field lifted to Euclidean coordinates centered at a cylinder point. -/
 noncomputable def euclideanLift (f : LiftDomain period → F) (x : LiftDomain period) : Domain 4 → F
-  :=
+    :=
   localFieldLift period f x ∘ coordinateEquiv
 
 theorem euclideanLift_smooth (f : LiftDomain period → F)
@@ -296,8 +211,8 @@ theorem totalMagnitude_memLp (s : ℕ) (f : LiftDomain period → F)
     (hf : ∀ n ≤ s, ∀ w : Fin n → Fin 4,
       MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure period)) :
     MemLp (totalMagnitude period s f) 2 (liftMeasure period) :=
-  memLp_finsetSum _ (fun n hn => wordMagnitude_memLp period n f (hf n (by simpa using
-    Finset.mem_range.1 hn)))
+  memLp_finsetSum _ (fun n hn => wordMagnitude_memLp period n f (hf n (by
+      simpa using Finset.mem_range.1 hn)))
 
 theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
     (hf : ∀ n ≤ s, ∀ w : Fin n → Fin 4,
@@ -311,8 +226,8 @@ theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
       ∑ n ∈ Finset.range (s+1), eLpNorm (wordMagnitude period n f) 2 (liftMeasure period) := by
     rw [he]
     exact eLpNorm_sum_le (fun n hn =>
-      (wordMagnitude_memLp period n f (hf n (by simpa using Finset.mem_range.1 hn))).1) (by
-        norm_num)
+      (wordMagnitude_memLp period n f (hf n (by
+          simpa using Finset.mem_range.1 hn))).1) (by norm_num)
   have hB : (∑ n ∈ Finset.range (s+1), eLpNorm (wordMagnitude period n f) 2 (liftMeasure period)) ≤
       ∑ n ∈ Finset.range (s+1), ∑ w : Fin n → Fin 4,
         eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period) := by
@@ -320,7 +235,7 @@ theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
       (hf n (by simpa using Finset.mem_range.1 hn)))
   have hfin (n : ℕ) (hn : n ∈ Finset.range (s+1)) :
       (∑ w : Fin n → Fin 4, eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period)) ≠
-        ⊤ :=
+          ⊤ :=
     ENNReal.sum_ne_top.2 (fun w _ => (hf n (by simpa using Finset.mem_range.1 hn) w).eLpNorm_ne_top)
   have hreal := ENNReal.toReal_mono (ENNReal.sum_ne_top.2 hfin) (hA.trans hB)
   rw [Lp.norm_toLp]
@@ -335,7 +250,8 @@ end Translations
 
 variable [Fact (0 < period)]
 
-/-- A fixed compact smooth localizer, supported in the chart neighborhood and equal to one at zero. -/
+/-- A fixed compact smooth localizer, supported in the chart neighborhood and equal to one at zero.
+-/
 noncomputable def localBump : ContDiffBump (0 : Domain 4) where
   rIn := period
   rOut := 2 * period
@@ -349,7 +265,7 @@ theorem localBump_zero : localBump period 0 = 1 :=
     (by simpa [localBump] using (show 0 ≤ period from (Fact.out : 0 < period).le))
 
 theorem localBump_support : tsupport (localBump period) ⊆ ({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 *
-  period}) := by
+    period}) := by
   rw [(localBump period).tsupport_eq]
   intro z hz
   have hnorm : ‖z‖ ≤ 2 * period := by simpa [localBump] using hz
@@ -486,7 +402,8 @@ theorem cylinderEmbeddingConstant_nonneg : 0 ≤ cylinderEmbeddingConstant perio
   have hc : 0 ≤ embeddingConstant 4 3 (by norm_num) := norm_nonneg _
   positivity
 
-/-- Genuine H³ to L∞ embedding on R³ × T for arbitrary smooth fields with square-integrable derivatives. -/
+/-- Genuine H³ to L∞ embedding on R³ × T for arbitrary smooth fields with square-integrable
+derivatives. -/
 theorem cylinder_pointwise_le_H3 (f : LiftDomain period → ℂ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hfL2 : ∀ j ≤ 3, ∀ w : Fin j → Fin 4,
@@ -503,7 +420,7 @@ theorem cylinder_pointwise_le_H3 (f : LiftDomain period → ℂ)
   have hthird : (∑ i : Fin 4,
       ‖(directional 4 3 (EuclideanSpace.single i 1) (localized period f hf x)).toLp 2‖) ≤
         4 * ((bumpCoefficient period 3 : ℝ) * (6 : ℝ) ^ (1/2 : ℝ) * liftSobolevNorm period 3 f) :=
-          by
+            by
     simpa using Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin 4))) =>
       localized_directional_L2_le period 3 i f hf hfL2 x)
   have hA := pointwise_le_L2_third_derivatives (localized period f hf x) 0
@@ -511,8 +428,8 @@ theorem cylinder_pointwise_le_H3 (f : LiftDomain period → ℂ)
   have hB := add_le_add hbase' (mul_le_mul_of_nonneg_left hthird
     (zpow_nonneg (by positivity : (0 : ℝ) ≤ 2 * Real.pi) (-3 : ℤ)))
   have hC := mul_le_mul_of_nonneg_left hB
-    (mul_nonneg (show 0 ≤ embeddingConstant 4 3 (by norm_num) from norm_nonneg _) (by norm_num : (0
-      : ℝ) ≤ 25))
+    (mul_nonneg (show 0 ≤ embeddingConstant 4 3 (by
+        norm_num) from norm_nonneg _) (by norm_num : (0 : ℝ) ≤ 25))
   refine hA.trans (hC.trans_eq ?_)
   unfold cylinderEmbeddingConstant
   ring
@@ -539,7 +456,7 @@ theorem word_L2_le_liftSobolevNorm {s n : ℕ} (hn : n ≤ s) (w : Fin n → Fin
       liftSobolevNorm period s f := by
   have hA : (eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period)).toReal ≤
       ∑ v : Fin n → Fin 4, (eLpNorm (iteratedFieldDerivative period v f) 2 (liftMeasure
-        period)).toReal :=
+          period)).toReal :=
     Finset.single_le_sum (f := fun v : Fin n → Fin 4 =>
       (eLpNorm (iteratedFieldDerivative period v f) 2 (liftMeasure period)).toReal)
       (fun _ _ => ENNReal.toReal_nonneg) (Finset.mem_univ w)
@@ -553,7 +470,7 @@ theorem word_L2_le_liftSobolevNorm {s n : ℕ} (hn : n ≤ s) (w : Fin n → Fin
       (Finset.mem_range.2 (by omega))
   exact hA.trans hB
 
-theorem word_memLp {s m n : ℕ} (h : m+n ≤ s) (v : Fin n → Fin 4) (w : Fin m → Fin 4)
+theorem word_memLp {s m n : ℕ} (h : m + n ≤ s) (v : Fin n → Fin 4) (w : Fin m → Fin 4)
     (f : LiftDomain period → F)
     (hfL2 : ∀ j ≤ s, ∀ u : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period u f) 2 (liftMeasure period)) :

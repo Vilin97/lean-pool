@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! A genuinely smooth bounded-coefficient translation orbit supplies
 actual bounded spatial derivatives, continuously over the time parameter. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,10 +25,16 @@ open scoped ContDiff BoundedContinuousFunction
 variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
-private local instance : NormedAddCommGroup C(K, Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ C(K, Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathOrbit1 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instCoefficientPathOrbit2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K, Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathOrbit3 : NormedAddCommGroup C(K, Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K, Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instCoefficientPathOrbit4 : NormedSpace ℝ C(K, Space →ᵇ V) := inferInstance
 
 theorem coefficientOrbit_smooth (A : C(K, Space →ᵇ V))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A)) (t : K) :

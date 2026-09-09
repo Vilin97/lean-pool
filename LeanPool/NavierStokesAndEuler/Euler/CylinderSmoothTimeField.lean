@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderBoundedCover
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousBoundedTensor
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldJoint
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
 
 /-! Actual smooth bounded real-cover coefficients obtained from a smooth
 mixed translation orbit in cylinder L². Every spatial tensor jet is a
 continuous path in the uniform norm. No integrability on the real cover is
 asserted or used. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,13 +31,24 @@ variable (P : ℝ) [Fact (0 < P)] {K : Type} [TopologicalSpace K] [CompactSpace 
   (p : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSmoothTimeField1 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ]
+    Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderSmoothTimeField2 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderSmoothTimeField3 (n : ℕ) : NormedAddCommGroup
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space))` instance
+to shorten typeclass synthesis. -/
+local instance instCylinderSmoothTimeField4 (n : ℕ) : NormedSpace ℝ
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
 
+/-- Cover jet, given by `tensorPathMap n (iteratedFDeriv ℝ n (coverOrbit P p hp) 0)`. -/
 def coverJet (n : ℕ) : C(K, LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) :=
   tensorPathMap n (iteratedFDeriv ℝ n (coverOrbit P p hp) 0)
 
@@ -58,6 +70,7 @@ theorem coverPath_smooth (t : K) :
     simpa only [zero_add] using coverOrbit_apply P p hp a t 0
   exact he ▸ hc
 
+/-- Of path, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
 def ofPath : SmoothTimeField K LiftTangent Space where
   field := coverPath P p hp
   smooth := coverPath_smooth P p hp

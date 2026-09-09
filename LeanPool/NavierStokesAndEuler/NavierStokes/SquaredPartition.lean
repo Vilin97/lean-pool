@@ -8,14 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-public import Mathlib.Topology.Algebra.Support
-public import Mathlib.Algebra.BigOperators.Finprod
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Concrete squared partitions on the line and on slow-coordinate grids
@@ -24,6 +17,9 @@ Integer translates of one compactly supported smooth bump are normalized by
 the square root of their locally finite sum of squares. Every object below is
 constructed; no partition-of-unity or derivative-bound hypothesis is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -58,6 +54,7 @@ def bump : ContDiffBump (0 : ℝ) where
   rIn_pos := by norm_num
   rIn_lt_rOut := by norm_num
 
+/-- Translated bump, given by `bump (x - k)`. -/
 def translatedBump (k : ℤ) (x : ℝ) : ℝ := bump (x - k)
 
 theorem translatedBump_nonneg (k : ℤ) (x : ℝ) : 0 ≤ translatedBump k x := bump.nonneg
@@ -103,6 +100,7 @@ theorem squaredBump_locallyFinite :
   intro h
   exact hx (by simp [h])
 
+/-- Denominator squared, given by `∑ᶠ k : ℤ, translatedBump k x ^ 2`. -/
 def denominatorSquared (x : ℝ) : ℝ := ∑ᶠ k : ℤ, translatedBump k x ^ 2
 
 theorem denominatorSquared_pos (x : ℝ) : 0 < denominatorSquared x := by
@@ -119,6 +117,7 @@ theorem denominatorSquared_smooth : ContDiff ℝ ∞ denominatorSquared :=
   contDiff_finsum_of_locallyFinite (fun k => (translatedBump_smooth k).pow 2)
     squaredBump_locallyFinite
 
+/-- Line mask, given by `translatedBump k x / Real.sqrt (denominatorSquared x)`. -/
 def lineMask (k : ℤ) (x : ℝ) : ℝ :=
   translatedBump k x / Real.sqrt (denominatorSquared x)
 
@@ -181,6 +180,7 @@ theorem lineMask_eq_translate (k : ℤ) (x : ℝ) :
     lineMask k x = lineMask 0 (x - k) := by
   simp only [lineMask, translatedBump, Int.cast_zero, sub_zero, denominatorSquared_sub_int]
 
+/-- Grid mask, given by `lineMask k (x / δ)`. -/
 def gridMask (δ : ℝ) (k : ℤ) (x : ℝ) : ℝ := lineMask k (x / δ)
 
 theorem gridMask_nonneg (δ : ℝ) (k : ℤ) (x : ℝ) : 0 ≤ gridMask δ k x :=
@@ -219,7 +219,7 @@ theorem gridMask_locallyFinite (δ : ℝ) :
 
 /-- A finite product of locally finite families is locally finite, with the
 whole tuple as index. -/
-theorem locallyFinite_iInter {ι κ X : Type*} [Fintype ι] [TopologicalSpace X]
+theorem locallyFinite_iInter {ι κ X : Type*} [Finite ι] [TopologicalSpace X]
     {U : ι → κ → Set X} (h : ∀ i, LocallyFinite (U i)) :
     LocallyFinite fun k : ι → κ => ⋂ i, U i (k i) := by
   classical
@@ -229,6 +229,7 @@ theorem locallyFinite_iInter {ι κ X : Type*} [Fintype ι] [TopologicalSpace X]
   rintro k ⟨y, hy, hyV⟩ i
   exact ⟨y, mem_iInter.mp hy i, mem_iInter.mp hyV i⟩
 
+/-- Product mask, given by `∏ j, gridMask δ (k j) (x j)`. -/
 def productMask {d : ℕ} (δ : ℝ) (k : Fin d → ℤ) (x : Fin d → ℝ) : ℝ :=
   ∏ j, gridMask δ (k j) (x j)
 
@@ -340,7 +341,7 @@ theorem gridMask_all_jet_bounds (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ (δ : ℝ), 0 < δ → ∀ (k : ℤ) (x : ℝ),
       ‖iteratedFDeriv ℝ m (gridMask δ k) x‖ ≤ C / δ ^ m := by
   obtain ⟨C, hC, hbound⟩ := exists_uniform_jet_bound (lineMask_smooth 0) (lineMask_compactSupport
-    0) m
+      0) m
   refine ⟨C, hC, fun δ hδ k x => ?_⟩
   have heq : gridMask δ k = fun y => lineMask 0 (δ⁻¹ • y - (k : ℝ)) := by
     funext y
@@ -371,6 +372,7 @@ theorem productMask_all_jet_bounds (d m : ℕ) :
   simpa [abs_inv, abs_of_pos hδ, div_eq_mul_inv] using
     rescale_jet_bound (productMask_smooth 1 0) hbound δ⁻¹ (fun j => (k j : ℝ)) x
 
+/-- Log coordinate, given by `-Real.log q / Real.log 2`. -/
 def logCoordinate (q : ℝ) : ℝ := -Real.log q / Real.log 2
 
 theorem logCoordinate_window {q : ℝ} (hq : 0 < q) :
@@ -440,6 +442,7 @@ theorem dyadicProfile_compactSupport : HasCompactSupport dyadicProfile := by
   rw [HasCompactSupport, dyadicProfile_tsupport]
   exact isCompact_Icc
 
+/-- Integer Q, given by `(2 : ℝ) ^ (-(n : ℝ))`. -/
 def integerQ (n : ℤ) : ℝ := (2 : ℝ) ^ (-(n : ℝ))
 
 theorem integerQ_pos (n : ℤ) : 0 < integerQ n := Real.rpow_pos_of_pos (by norm_num) _
@@ -450,6 +453,7 @@ theorem log_integerQ (n : ℤ) : Real.log (integerQ n) = -(n : ℝ) * Real.log 2
 theorem integerQ_nat (n : ℕ) : integerQ (n : ℤ) = ChartScales.Q n := by
   simp [integerQ, ChartScales.Q, SlotColoring.dyadicQ]
 
+/-- Dyadic mask, given by `dyadicProfile (q / integerQ n)`. -/
 def dyadicMask (n : ℤ) (q : ℝ) : ℝ := dyadicProfile (q / integerQ n)
 
 theorem dyadicMask_nonneg (n : ℤ) (q : ℝ) : 0 ≤ dyadicMask n q := dyadicProfile_nonneg _
@@ -462,7 +466,7 @@ theorem dyadicMask_eq_line (n : ℤ) {q : ℝ} (hq : 0 < q) :
   have hcoord : logCoordinate (q / integerQ n) = logCoordinate q - (n : ℝ) := by
     unfold logCoordinate
     rw [Real.log_div hq.ne' (integerQ_pos n).ne', log_integerQ]
-    field_simp [ne_of_gt (Real.log_pos (by norm_num : (1 : ℝ) < 2))] ; ring
+    field_simp [ne_of_gt (Real.log_pos (by norm_num : (1 : ℝ) < 2))]; ring
   unfold dyadicMask dyadicProfile
   rw [ite_eq_left (div_pos hq (integerQ_pos n)), hcoord, ← lineMask_eq_translate]
 
@@ -507,7 +511,7 @@ theorem dyadicMask_all_jet_bounds (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ (n : ℤ) (q : ℝ),
       ‖iteratedFDeriv ℝ m (dyadicMask n) q‖ ≤ C / integerQ n ^ m := by
   obtain ⟨C, hC, hbound⟩ := exists_uniform_jet_bound dyadicProfile_smooth
-    dyadicProfile_compactSupport m
+      dyadicProfile_compactSupport m
   refine ⟨C, hC, fun n q => ?_⟩
   have heq : dyadicMask n = fun y => dyadicProfile ((integerQ n)⁻¹ • y - 0) := by
     funext y
@@ -572,6 +576,7 @@ theorem dyadicMask_tail_sum_sq (N : ℕ) {q : ℝ} (hq : 0 < q) (hqN : q ≤ Cha
   rw [heq]
   exact dyadicMask_nat_sum_sq hq' hq1'
 
+/-- Native spacing, given by `(ChartScales.S n ^ 3)⁻¹`. -/
 def nativeSpacing (n : ℕ) : ℝ := (ChartScales.S n ^ 3)⁻¹
 
 theorem nativeSpacing_pos {n : ℕ} (hn : 1 ≤ n) : 0 < nativeSpacing n :=
@@ -626,6 +631,7 @@ theorem slowCoordinates_smooth (D : ℝ) (n : ℕ) : ContDiff ℝ ∞ (slowCoord
   intro j
   exact (contDiff_apply ℝ ℝ j).div_const _
 
+/-- Physical slow mask, given by `slowMask n k (slowCoordinates D n x)`. -/
 def physicalSlowMask (D : ℝ) (n : ℕ) (k : SlotColoring.Grid) (x : SlotColoring.Position) : ℝ :=
   slowMask n k (slowCoordinates D n x)
 
@@ -693,8 +699,9 @@ theorem physicalSlowMask_jet_tsupport_subset_physicalBox (D : ℝ) {n : ℕ} (hn
     tsupport (iteratedFDeriv ℝ m (physicalSlowMask D n k)) ⊆
       SlotColoring.physicalBox D (n, k, sign) :=
   (tsupport_iteratedFDeriv_subset m).trans (physicalSlowMask_tsupport_subset_physicalBox D hn k
-    sign)
+      sign)
 
+/-- Label mask, given by `dyadicMask (n : ℤ) p.1 * slowMask n k p.2`. -/
 def labelMask (n : ℕ) (k : SlotColoring.Grid) (p : ℝ × SlotColoring.Position) : ℝ :=
   dyadicMask (n : ℤ) p.1 * slowMask n k p.2
 
@@ -784,7 +791,7 @@ theorem labelMask_tail_sum_sq (N : ℕ) {p : ℝ × SlotColoring.Position}
     (hq : 0 < p.1) (hqN : p.1 ≤ ChartScales.Q N) :
     (∑ᶠ n : ℕ, ∑ᶠ k : SlotColoring.Grid, labelMask (n + N) k p ^ 2) = 1 := by
   have hs (n : ℕ) : (∑ᶠ k : SlotColoring.Grid, labelMask n k p ^ 2) = dyadicMask (n : ℤ) p.1 ^ 2 :=
-    by
+      by
     have hfinite : (support (fun k : SlotColoring.Grid => slowMask n k p.2 ^ 2)).Finite := by
       apply ((productMask_locallyFinite (nativeSpacing n)).point_finite p.2).subset
       intro k hk hz

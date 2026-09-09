@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierGeometry
 
-@[expose] public section
-
 /-!
 # The actual broad carrier in the canonical particular coordinates
 
 Only the selected geometry and its closed source support occur here.  No
 property of a solved particular or signed field is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,31 +28,42 @@ open CommonCoverSolve
 open scoped Topology ContDiff
 
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Parameter: an abbreviation for `CorrectionStep.CycleSlow`. -/
 abbrev Parameter := CorrectionStep.CycleSlow
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Index: an abbreviation for `ActualPrimary.Label B N0 × Fin 2`. -/
 abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 
 variable {B N0 : ℕ}
 
+/-- Domain, given by `PhysicalMeanDomain.slowDomain standardRegion.carrier`. -/
 noncomputable def domain : Set Point :=
   PhysicalMeanDomain.slowDomain standardRegion.carrier
 
+/-- Label carrier, given by `ActualInitialExcluded.labelCarrier (l.2,l.1) n`. -/
 noncomputable def labelCarrier (l : Index B N0) (n : ℕ) : Set Point :=
   ActualInitialExcluded.labelCarrier (l.2,l.1) n
 
+/-- Associated point, given by `CorrectionStep.cycleAssoc.symm (p, Y)`. -/
 noncomputable def associatedPoint (p : Parameter) (Y : Plane) : Point :=
   CorrectionStep.cycleAssoc.symm (p, Y)
 
+/-- Parameter domain, given by `{p | p.2 ∈ standardRegion.carrier}`. -/
 noncomputable def parameterDomain : Set Parameter :=
   {p | p.2 ∈ standardRegion.carrier}
 
-@[simp] theorem associatedPoint_mem_domain (p : Parameter) (Y : Plane) :
+theorem associatedPoint_mem_domain (p : Parameter) (Y : Plane) :
     associatedPoint p Y ∈ domain ↔ p ∈ parameterDomain := Iff.rfl
 
+/-- Ordered, given by `CommonWindow.index h n ≤ ChartScales.nativeIndex h
+(BaseChartJets.cellBand l.1)`. -/
 noncomputable def Ordered (l : Index B N0) (n : ℕ) : Prop :=
   CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand l.1)
 
+/-- Slow map, given by `nativeSlow l.1 (toAbsolute n (associatedPoint p 0))`. -/
 noncomputable def slowMap (l : Index B N0) (n : ℕ) (p : Parameter) : PhaseCalculus.Slow :=
   nativeSlow l.1 (toAbsolute n (associatedPoint p 0))
 
@@ -62,6 +74,8 @@ theorem slowMap_continuous (l : Index B N0) (n : ℕ) : Continuous (slowMap l n)
   (nativeSlow_smooth l.1).continuous.comp ((toAbsolute_smooth n).continuous.comp
     (CorrectionStep.cycleAssoc.symm.continuous.comp (continuous_id.prodMk continuous_const)))
 
+/-- Slow core, given by `slowMap l n ⁻¹' ActualGaussianCoverage.actualSlowCore certificate
+modulation (choice B N0).prepared l.1`. -/
 noncomputable def slowCore (l : Index B N0) (n : ℕ) : Set Parameter :=
   slowMap l n ⁻¹' ActualGaussianCoverage.actualSlowCore certificate modulation
     (choice B N0).prepared l.1
@@ -70,12 +84,15 @@ theorem slowCore_closed (l : Index B N0) (n : ℕ) : IsClosed (slowCore l n) :=
   (ActualGaussianCoverage.actualSlowCore_closed certificate modulation
     (choice B N0).prepared l.1).preimage (slowMap_continuous l n)
 
+/-- Reference length, given by `(phases B N0 l.2).L l.1`. -/
 noncomputable def referenceLength (l : Index B N0) : ℝ :=
   (phases B N0 l.2).L l.1
 
 theorem referenceLength_pos (l : Index B N0) : 0 < referenceLength l :=
   (phases B N0 l.2).L_pos l.1
 
+/-- Clock, given by `PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q
+(BaseChartJets.cellBand l.1))`. -/
 noncomputable def clock (l : Index B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight h (ChartScales.Q n)
     (ChartScales.Q (BaseChartJets.cellBand l.1))
@@ -83,15 +100,23 @@ noncomputable def clock (l : Index B N0) (n : ℕ) : ℝ :=
 theorem clock_pos (l : Index B N0) (n : ℕ) : 0 < clock l n :=
   PhysicalParticularWave.ratioPower_pos (ChartScales.Q_pos n) (ChartScales.Q_pos _) _
 
+/-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
+nominal l.1) l.2`. -/
 noncomputable def spatialLabel (l : Index B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
+/-- Reference geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det
+(spatialLabel l) 0`. -/
 noncomputable def referenceGeometry (l : Index B N0) : Geometry :=
   ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0
 
+/-- Gap, given by `ChartScales.nativeIndex h (BaseChartJets.cellBand l.1) - CommonWindow.index h
+n`. -/
 noncomputable def gap (l : Index B N0) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h (BaseChartJets.cellBand l.1) - CommonWindow.index h n
 
+/-- Geometry, given by `CopySolveCompatibility.transportGeometry (referenceGeometry l) (gap l n)
+0 (clock l n) (clock_pos l n).ne'`. -/
 noncomputable def geometry (l : Index B N0) (n : ℕ) : Geometry :=
   CopySolveCompatibility.transportGeometry (referenceGeometry l) (gap l n) 0
     (clock l n) (clock_pos l n).ne'
@@ -104,6 +129,8 @@ theorem reference_refine (l : Index B N0) (n : ℕ) :
     chartGeometry, ActualPrimary.geometry, spatialLabel, gap]
   rfl
 
+/-- Source region, given by `ActualGaussianCoverage.sourceRegion (slowCore l n) (geometry l n)
+slots.radius (referenceLength l) (clock l n)`. -/
 noncomputable def sourceRegion (l : Index B N0) (n : ℕ) : Set (Parameter × Plane) :=
   ActualGaussianCoverage.sourceRegion (slowCore l n) (geometry l n)
     slots.radius (referenceLength l) (clock l n)
@@ -189,7 +216,7 @@ theorem mem_sourceRegion (l : Index B N0) (n : ℕ) (p : Parameter) (Y : Plane) 
           ActualGaussianCoverage.sourceCell slots.radius (referenceLength l) (clock l n) := by
   simp only [sourceRegion, ActualGaussianCoverage.sourceRegion, mem_inter_iff, mem_preimage,
     HarmonicSourceSupport.nativeUnion, mem_iUnion, PeriodizedWaveBounds.nativeCell,
-      Set.mem_ofPred_eq]
+        Set.mem_ofPred_eq]
 
 /-- Under the actual index ordering, the broad primary carrier is exactly
 the source region of the canonical particular geometry. -/
@@ -226,6 +253,8 @@ theorem activeSlowCore_closed (l : Index B N0) (n : ℕ) : IsClosed (activeSlowC
   · exact slowCore_closed l n
   · exact isClosed_empty
 
+/-- Canonical source region, given by `ActualGaussianCoverage.sourceRegion (activeSlowCore l n)
+(geometry l n) slots.radius (referenceLength l) (clock l n)`. -/
 noncomputable def canonicalSourceRegion (l : Index B N0) (n : ℕ) : Set (Parameter × Plane) :=
   ActualGaussianCoverage.sourceRegion (activeSlowCore l n) (geometry l n)
     slots.radius (referenceLength l) (clock l n)
@@ -248,6 +277,7 @@ theorem labelCarrier_iff_canonicalSourceRegion
     simp only [hnot, canonicalSourceRegion, ActualGaussianCoverage.sourceRegion,
       activeSlowCore, ite_eq_right hn, mem_inter_iff, mem_preimage, mem_empty_iff_false, false_and]
 
+/-- Cutoff as an element of `Plane → ℝ`. -/
 noncomputable def cutoff (l : Index B N0) (n : ℕ) : Plane → ℝ :=
   (fun z => (clockWindow l.1).cutoff z *
     GaussianTailFlat.slotCutoff (referenceLength l) z.2) ∘

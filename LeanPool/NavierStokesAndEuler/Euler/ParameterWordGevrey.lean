@@ -6,9 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Actual ordered parameter derivatives and their factorial word sums
@@ -18,6 +23,9 @@ derivative. Evaluation on an ordered family of directions gives the mixed
 word derivative. Summing all words changes the radius by one fixed alphabet
 factor, independent of the derivative order and factorial shift.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -51,14 +59,14 @@ theorem wordSum_le (directions : ι → P) (hd : ∀ i, ‖directions i‖ ≤ 1
     (f : P → E) (n : ℕ) (x : P) :
     wordSum directions f n x ≤ (Fintype.card ι : ℝ)^n * ‖iteratedFDeriv ℝ n f x‖ := by
   have h := sum_le_sum (fun (w : Fin n → ι) (_ : w ∈ univ) => wordDerivative_norm directions hd f w
-    x)
+      x)
   simpa only [wordSum, sum_const, card_univ, Fintype.card_fun, Fintype.card_fin,
     nsmul_eq_mul, Nat.cast_pow] using h
 
 /-- The actual word sum has a factorial bound with one dimension-dependent radius enlargement. -/
 theorem wordSum_gevrey (directions : ι → P) (hd : ∀ i, ‖directions i‖ ≤ 1)
     (f : P → E) (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (d : ℕ)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*majorant R d n)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C * majorant R d n)
     (n : ℕ) (x : P) :
     wordSum directions f n x ≤
       C * majorant (max 1 (Fintype.card ι : ℝ) * R) d n := by

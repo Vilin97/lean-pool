@@ -6,15 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.Analysis.InnerProductSpace.Continuous
 public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Function.ContinuousMapDense
-public import Mathlib.Tactic
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+import Mathlib.MeasureTheory.Function.ContinuousMapDense
 
 /-!
 # Weak time continuity in `L²`
@@ -26,6 +20,9 @@ bound and density of compactly supported continuous functions extend this
 to all `L²` test fields. No spatial derivative integrability or energy
 conservation assumption is used here.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

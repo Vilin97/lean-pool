@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Wave bounds from primitive jets on native support cells
@@ -17,6 +16,9 @@ The background phase and its material defect are controlled only where
 the native coefficient can be nonzero.  No extension of these controls to
 the whole fast lift is required.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,10 +44,13 @@ structure LocalClass (s : StripData D) (K : ℕ → I → Set D)
     ∀ n i x, x ∈ s.domain → x ∈ K n i → ∀ j ≤ m,
       ‖iteratedFDeriv ℝ j (f n i) x‖ ≤ majorant s (fun n x => w n i x) α C p n x
 
+/-- Local wave: an abbreviation for `LocalClass s K (fun n i x => Real.sqrt (s.zeta x) * P n i
+x) α f`. -/
 abbrev LocalWave (s : StripData D) (K : ℕ → I → Set D)
     (P : ℕ → I → D → ℝ) (α : ℝ) (f : ℕ → I → D → E) : Prop :=
   LocalClass s K (fun n i x => Real.sqrt (s.zeta x) * P n i x) α f
 
+/-- Local unweighted: an abbreviation for `LocalClass s K (fun _ _ _ => 1) α f`. -/
 abbrev LocalUnweighted (s : StripData D) (K : ℕ → I → Set D)
     (α : ℝ) (f : ℕ → I → D → E) : Prop := LocalClass s K (fun _ _ _ => 1) α f
 
@@ -198,7 +203,7 @@ theorem add (hf : LocalClass s K w α f) (hg : LocalClass s K w α g) :
     _ ≤ majorant s (fun n x => w n i x) α A (p + q) n x +
         majorant s (fun n x => w n i x) α B (p + q) n x :=
       add_le_add (majorant_mono_degree s _ α hA (Nat.le_add_right _ _) n x (hf.weight_nonneg n i x
-        hx))
+          hx))
         (majorant_mono_degree s _ α hB (Nat.le_add_left _ _) n x (hf.weight_nonneg n i x hx))
     _ = _ := by unfold majorant; ring
 
@@ -248,7 +253,8 @@ theorem bilinear {u : ℕ → I → D → F} (hf : LocalClass s K w α f)
         (fun k hk => ha n i x hx hi k hk) (fun k hk => hb n i x hx hi k hk)
     _ = (‖L‖ * (2 : ℝ) ^ m) *
         (majorant s (fun n x => w n i x) α A p n x * majorant s (fun n x => v n i x) β B q n x) :=
-          by ring
+            by
+            ring
     _ = _ := by rw [majorant_mul]; unfold majorant; ring
 
 theorem smul {r : ℕ → I → D → ℝ} (hr : LocalClass s K v β r)
@@ -340,15 +346,19 @@ section Derivatives
 variable {s : StripData D} {K : ℕ → I → Set D} {w : ℕ → I → D → ℝ}
   {α κ : ℝ}
 
+/-- Dr, defined pointwise by `along (d.radialField n) (f n i)`. -/
 noncomputable def Dr (d : GraphDirections D) (f : ℕ → I → D → E) : ℕ → I → D → E :=
   fun n i => along (d.radialField n) (f n i)
 
+/-- Dz, defined pointwise by `along (d.axialField s n) (f n i)`. -/
 noncomputable def Dz (d : GraphDirections D) (s : StripData D) (f : ℕ → I → D → E) :
     ℕ → I → D → E := fun n i => along (d.axialField s n) (f n i)
 
+/-- Dt, defined pointwise by `along (fun _ => d.slow) (f n i)`. -/
 noncomputable def Dt (d : GraphDirections D) (f : ℕ → I → D → E) : ℕ → I → D → E :=
   fun n i => along (fun _ => d.slow) (f n i)
 
+/-- Dfast, defined pointwise by `along (d.fastField n) (f n i)`. -/
 noncomputable def Dfast (d : GraphDirections D) (f : ℕ → I → D → E) : ℕ → I → D → E :=
   fun n i => along (d.fastField n) (f n i)
 
@@ -460,26 +470,39 @@ theorem inv {f : ℕ → I → D → ℝ} (hf : LocalUnweighted s K 0 f)
   apply hf.compact_comp isClosed_singleton.isOpen_compl
     (contDiffOn_id.inv (fun _ h => h)) hCset hCU
   intro n i x hx hi
-  exact ⟨by simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hupper n i
-    x hx hi,
+  exact ⟨by
+      simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hupper n i x hx
+          hi,
     hlower n i x hx hi⟩
 
 end LocalClass
 
 /-! ## The same wave algebra with a uniform extra index -/
 
+/-- Wave family data, collecting `radius`, `radialBase`, `frequencyBase`, `axialBase`, `phase`,
+`amplitude` and their compatibility conditions. -/
 structure WaveFamily (D I : Type*) where
+  /-- Radius of `WaveFamily`, of type `ℕ → I → D → ℝ`. -/
   radius : ℕ → I → D → ℝ
+  /-- Radial base of `WaveFamily`, of type `ℕ → I → D → ℝ`. -/
   radialBase : ℕ → I → D → ℝ
+  /-- Frequency base of `WaveFamily`, of type `ℕ → I → D → ℝ`. -/
   frequencyBase : ℕ → I → D → ℝ
+  /-- Axial base of `WaveFamily`, of type `ℕ → I → D → ℝ`. -/
   axialBase : ℕ → I → D → ℝ
+  /-- Phase of `WaveFamily`, of type `ℕ → I → D → ℝ`. -/
   phase : ℕ → I → D → ℝ
+  /-- Amplitude of `WaveFamily`, of type `ℕ → I → D → ComplexVector`. -/
   amplitude : ℕ → I → D → ComplexVector
+  /-- Pressure field of `WaveFamily`, of type `ℕ → I → D → ℂ`. -/
   pressure : ℕ → I → D → ℂ
+  /-- Frequency of `WaveFamily`, of type `ℕ → I → ℝ`. -/
   frequency : ℕ → I → ℝ
 
 namespace WaveFamily
 
+/-- Coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the required
+compatibility proofs. -/
 noncomputable def coefficients (a : WaveFamily D I) (i : I) : WaveCoefficients D where
   radius n := a.radius n i
   radialBase n := a.radialBase n i
@@ -490,6 +513,8 @@ noncomputable def coefficients (a : WaveFamily D I) (i : I) : WaveCoefficients D
   pressure n := a.pressure n i
   frequency n := a.frequency n i
 
+/-- Of coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
+required compatibility proofs. -/
 noncomputable def ofCoefficients (a : I → WaveCoefficients D) : WaveFamily D I where
   radius n i := (a i).radius n
   radialBase n i := (a i).radialBase n
@@ -500,31 +525,42 @@ noncomputable def ofCoefficients (a : I → WaveCoefficients D) : WaveFamily D I
   pressure n i := (a i).pressure n
   frequency n i := (a i).frequency n
 
+/-- Normal, defined pointwise by `(a.coefficients i).normal s d n`. -/
 noncomputable def normal (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ProblemStatement.Space := fun n i => (a.coefficients i).normal s d n
 
+/-- Defect, defined pointwise by `(a.coefficients i).defect s d n`. -/
 noncomputable def defect (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ℝ := fun n i => (a.coefficients i).defect s d n
 
+/-- Remainder, defined pointwise by `(a.coefficients i).remainder s d n`. -/
 noncomputable def remainder (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ComplexVector := fun n i => (a.coefficients i).remainder s d n
 
+/-- Principal velocity, defined pointwise by `(a.coefficients i).principalVelocity s d (fun n =>
+f n i) n`. -/
 noncomputable def principalVelocity (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D)
     (f : ℕ → I → D → ComplexVector) : ℕ → I → D → ComplexVector :=
   fun n i => (a.coefficients i).principalVelocity s d (fun n => f n i) n
 
+/-- Curl correction, defined pointwise by `(a.coefficients i).curlCorrection s d n`. -/
 noncomputable def curlCorrection (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ComplexVector := fun n i => (a.coefficients i).curlCorrection s d n
 
+/-- Add amplitude, given by `{ a with amplitude := fun n i x => a.amplitude n i x + f n i x }`. -/
 noncomputable def addAmplitude (a : WaveFamily D I) (f : ℕ → I → D → ComplexVector) : WaveFamily D
-  I :=
+    I :=
   { a with amplitude := fun n i x => a.amplitude n i x + f n i x }
 
+/-- With cutoff, given by `{ a with amplitude := fun n i x => ψ n i x • a.amplitude n i x
+pressure := fun n i x => (ψ n i x : ℂ) * a.pressure n i x }`. -/
 noncomputable def withCutoff (a : WaveFamily D I) (ψ : ℕ → I → D → ℝ) : WaveFamily D I :=
   { a with
     amplitude := fun n i x => ψ n i x • a.amplitude n i x
     pressure := fun n i x => (ψ n i x : ℂ) * a.pressure n i x }
 
+/-- Retained good, defined pointwise by `a.principalVelocity s d (a.curlCorrection s d) n i x +
+(a.addAmplitude (a.curlCorrection s d)).remainder s d n i x`. -/
 noncomputable def retainedGood (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ComplexVector := fun n i x =>
   a.principalVelocity s d (a.curlCorrection s d) n i x +
@@ -570,7 +606,7 @@ theorem outputs_zero_germs {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Containment of the two closed input supports is enough to supply
 the local-estimate/zero-germ alternative; no output support is assumed. -/
-theorem input_germ_cover_of_tsupport {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+theorem input_germ_cover_of_tsupport {D : Type} [NormedAddCommGroup D]
     (a : WaveFamily D I) {C : ℕ → I → Set D}
     (ha : ∀ n i, tsupport (a.amplitude n i) ⊆ C n i)
     (hp : ∀ n i, tsupport (a.pressure n i) ⊆ C n i) (n : ℕ) (i : I) (x : D) :
@@ -659,7 +695,7 @@ theorem slowTransport_mem (h : InputBounds s K P α κ d a) (j : Fin 3) :
 theorem phaseDefect_mem (h : InputBounds s K P α κ d a) (j : Fin 3) :
     LocalWave s K P (α + 1 / 2 - 3 * κ) (fun n i x =>
       phaseFactor (a.frequency n i) * Complex.ofReal (a.defect s d n i x) * a.amplitude n i x j) :=
-        by
+          by
   have hh := frequency_mul (real_mul_complex h.defect (h.amplitude j)) h.frequency_scale
   have hh' := hh.mono_exponent
     (show α + 1 / 2 - 3 * κ ≤ (1 + α) - 1 / 2 by linarith [h.loss_nonneg])
@@ -677,7 +713,7 @@ theorem baseDerivativeRemainder_mem (h : InputBounds s K P α κ d a) (j : Fin 3
   have h1 := (real_mul_complex hbinv (h.amplitude 1)).mono_exponent
     (show α + 1 / 2 - 3 * κ ≤ (1 + 0) + α by linarith [h.loss_nonneg])
   have hz (k : Fin 3) := (complex_mul_real (h.amplitude 2) (Dz_mem d (h.base_components
-    k))).mono_exponent
+      k))).mono_exponent
     (show α + 1 / 2 - 3 * κ ≤ α + (0 + 1) by linarith [h.loss_nonneg])
   fin_cases j
   · simpa [LinearWaveResidual.baseDerivativeRemainder, Dr, Dz] using h0.add (hz 0)
@@ -691,13 +727,15 @@ theorem pressureGradient_mem (h : InputBounds s K P α κ d a) (j : Fin 3) :
   fin_cases j
   · have hh := (Dr_mem d h.pressure h.radial_profile h.radial_scale h.loss_nonneg).mono_exponent
       (show α + 1 / 2 - 3 * κ ≤ (α + 1 / 2) - κ by linarith [h.loss_nonneg])
-    simp [LinearWaveResidual.strippedPressureGradient] at hh ⊢
+    simp only [LinearWaveResidual.strippedPressureGradient, one_div, Fin.zero_eta, Fin.isValue]
+        at hh ⊢
     exact hh
   · simpa [LinearWaveResidual.strippedPressureGradient] using
       (LocalClass.zero (α := α + 1 / 2 - 3 * κ) (E := ℂ) (h.amplitude 0).weight_nonneg)
   · have hh := (Dz_mem d h.pressure).mono_exponent
       (show α + 1 / 2 - 3 * κ ≤ (α + 1 / 2) + 1 by linarith [h.loss_nonneg])
-    simp [LinearWaveResidual.strippedPressureGradient] at hh ⊢
+    simp only [LinearWaveResidual.strippedPressureGradient, one_div, Fin.reduceFinMk, Fin.isValue]
+        at hh ⊢
     exact hh
 
 theorem viscousRemainder_mem (h : InputBounds s K P α κ d a) (j : Fin 3) :
@@ -732,7 +770,7 @@ theorem viscousRemainder_mem (h : InputBounds s K P α κ d a) (j : Fin 3) :
   have hdiv := frequency_mul (real_mul_complex ((hNr'.add hNi').add hNz') hAi) h.frequency_scale
   have htheta := constant_complex_mul
     (frequency_mul (real_mul_complex (unweighted_mul (h.normal_component 1) h.inverse_radius) (hJ
-      j))
+        j))
       h.frequency_scale) 2
   have hDrr' := hDrr.mono_exponent
     (show α - 1 / 2 - 3 * κ ≤ (α - κ) - κ by linarith [h.loss_nonneg])
@@ -792,7 +830,7 @@ theorem shear_mem (h : InputBounds s K P α κ d a) {β : ℝ}
   have htheta : LocalUnweighted s K 0 (fun n i x =>
       2 * a.frequencyBase n i x + a.radius n i x * Dr d a.frequencyBase n i x) := by
     have hprod : LocalUnweighted s K 0 (fun n i x => a.radius n i x * Dr d a.frequencyBase n i x)
-      := by
+        := by
       simpa only [zero_add] using unweighted_mul h.radius hFr
     exact (constant_real_mul h.frequency_base 2).add hprod
   fin_cases j
@@ -818,12 +856,12 @@ theorem principalVelocity_components (h : InputBounds s K P α κ d a) {β : ℝ
   rw [he] at hd
   have hds : LocalWave s K P β (fun n i x =>
       Complex.ofReal (s.epsilon n * (a.frequency n i) ^ 2 * ‖a.normal s d n i x‖ ^ 2) * f n i x j)
-        := by
+          := by
     simpa only [smul_smul, Complex.real_smul, Complex.ofReal_mul, pow_two, mul_assoc] using hd
   simpa only [WaveFamily.principalVelocity, WaveFamily.coefficients,
-    WaveCoefficients.principalVelocity,
+      WaveCoefficients.principalVelocity,
     LinearWaveResidual.principal, Dfast, WaveFamily.normal, WaveCoefficients.normal, mul_zero,
-      add_zero]
+        add_zero]
     using (hfast.add hK).add hds
 
 theorem principalVelocity_class (h : InputBounds s K P α κ d a) {β : ℝ}
@@ -889,7 +927,7 @@ theorem curlCorrection_class (h : InputBounds s K P α κ d a) {b M : ℝ} (hb :
   have hDθ (j : Fin 3) : LocalWave s K P (α - κ) (fun n i x =>
       (a.radius n i x)⁻¹ • along (fun _ => d.angular) (fun y => c n i y j) x) := by
     exact (unweighted_smul h.inverse_radius ((hc.map (ContinuousLinearMap.proj j)).directional
-      d.angular)).mono_exponent
+        d.angular)).mono_exponent
       (by linarith [h.loss_nonneg])
   have hconn (j : Fin 3) : LocalWave s K P (α - κ) (fun n i x => (a.radius n i x)⁻¹ • c n i x j) :=
     (unweighted_smul h.inverse_radius (hc.map (ContinuousLinearMap.proj j))).mono_exponent
@@ -913,7 +951,7 @@ theorem curlCorrection_class (h : InputBounds s K P α κ d a) {b M : ℝ} (hb :
   have hfinal := unweighted_smul hfreq hi
   have he : (1 / 2 : ℝ) + (α - κ) = α + 1 / 2 - κ := by ring
   simp only [he, _root_.smul_apply, ContinuousLinearMap.id_apply, c, WaveFamily.coefficients,
-    WaveFamily.normal, WaveCoefficients.normal]
+      WaveFamily.normal, WaveCoefficients.normal]
     at hfinal ⊢
   exact hfinal
 
@@ -1004,8 +1042,10 @@ section CommonCopies
 variable {D I : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   (a : PeriodizedWaveBounds.CopyData D I)
 
+/-- Native family, given by `WaveFamily.ofCoefficients a.localized`. -/
 noncomputable def nativeFamily : WaveFamily D I := WaveFamily.ofCoefficients a.localized
 
+/-- Raw family, given by `WaveFamily.ofCoefficients a.raw`. -/
 noncomputable def rawFamily : WaveFamily D I := WaveFamily.ofCoefficients a.raw
 
 theorem common_curl_germ (K : PeriodizedWaveBounds.Cells D I)
@@ -1138,6 +1178,7 @@ section UniformCopies
 variable {D I : Type} {L : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
   (a : L → PeriodizedWaveBounds.CopyData D I)
 
+/-- Joint native family, given by `WaveFamily.ofCoefficients (fun j => (a j.1).localized j.2)`. -/
 noncomputable def jointNativeFamily : WaveFamily D (L × I) :=
   WaveFamily.ofCoefficients (fun j => (a j.1).localized j.2)
 
@@ -1313,7 +1354,7 @@ structure ExactOn (a : WaveCoefficients D) (s : StripData D) (d : GraphDirection
   base_angular : ∀ x ∈ U, ∀ j,
     along (fun _ => d.angular) (fun y =>
       LinearWaveResidual.base (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase n) y
-        j) x = 0
+          j) x = 0
   amplitude_angular : ∀ j, EqOn
     (along (fun _ => d.angular) (fun y => a.amplitude n y j)) (fun _ => 0) U
   phase_angular : ∃ p : ℝ, EqOn (along (fun _ => d.angular) (a.phase n)) (fun _ => p) U
@@ -1342,14 +1383,14 @@ theorem principal_add_at (a : WaveCoefficients D) (s : StripData D) (d : GraphDi
       a.principal s d n x + a.principalVelocity s d f n x := by
   ext j
   change LinearWaveResidual.principal _ _ _ _ _ _ _ _ _ _ (fun y => a.amplitude n y + f n y) _ x j
-    = _
+      = _
   unfold LinearWaveResidual.principal
   rw [show along (d.fastField n) (fun y => (a.amplitude n y + f n y) j) x =
       along (d.fastField n) (fun y => a.amplitude n y j) x +
         along (d.fastField n) (fun y => f n y j) x from along_add _ (ha j) (hf j)]
   fin_cases j <;>
     simp [WaveCoefficients.principal, WaveCoefficients.principalVelocity,
-      LinearWaveResidual.principal,
+        LinearWaveResidual.principal,
       WaveCoefficients.addAmplitude, LinearWaveResidual.shear, Pi.add_apply] <;> ring
 
 theorem principal_cutoff_at (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
@@ -1386,7 +1427,7 @@ theorem corrected_coefficient_eq_good_add_excluded_at
     ((a.withCutoff ψ).addAmplitude f).principal s d n x +
         ((a.withCutoff ψ).addAmplitude f).remainder s d n x + source n x =
       a.goodCoefficient s d ψ f n x + LinearWaveBounds.excludedSlotError d ψ a.amplitude source n x
-        := by
+          := by
   have hp := principal_add_at (a.withCutoff ψ) s d f n x
     (fun j => hψ.smul (ha j)) hf
   have hc := principal_cutoff_at a s d ψ source n x ha hψ

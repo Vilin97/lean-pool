@@ -7,12 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverDescent
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
+public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Descended cover tensors are the actual local spatial derivatives on
 the cylinder. Their composition is the literal finite Taylor composition
 used by the cylinder L² estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,7 +29,7 @@ open scoped ContDiff
 variable (P : ℝ) [Fact (0 < P)]
   {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   (f : LiftTangent → W)
-  (hperiod : ∀ (c : AddSubgroup.zmultiples P) z, f (z.1,(c : ℝ)+z.2)=f z)
+  (hperiod : ∀ (c : AddSubgroup.zmultiples P) z, f (z.1, (c : ℝ) + z.2) = f z)
 
 include hperiod in
 omit [Fact (0 < P)] in
@@ -38,6 +43,7 @@ theorem iteratedFDeriv_deck (n : ℕ) (c : AddSubgroup.zmultiples P) (z : LiftTa
     rw [shift,hperiod]
   rw [← shift,← iteratedFDeriv_comp_add_right n a z,he]
 
+/-- Jet series, defined pointwise by `descend P (iteratedFDeriv ℝ n f) q`. -/
 def jetSeries (q : LiftDomain P) : FormalMultilinearSeries ℝ LiftTangent W :=
   fun n => descend P (iteratedFDeriv ℝ n f) q
 
@@ -73,7 +79,7 @@ theorem jetSeries_eq_local (q : LiftDomain P) (n : ℕ) :
 
 theorem jetSeries_joint_continuous {K : Type*} [TopologicalSpace K]
     (F : K → LiftTangent → W)
-    (hF : ∀ t (c : AddSubgroup.zmultiples P) z, F t (z.1,(c : ℝ)+z.2)=F t z)
+    (hF : ∀ t (c : AddSubgroup.zmultiples P) z, F t (z.1, (c : ℝ) + z.2) = F t z)
     (n : ℕ)
     (hJ : Continuous (fun z : K × LiftTangent => iteratedFDeriv ℝ n (F z.1) z.2)) :
     Continuous (fun z : K × LiftDomain P => jetSeries P (F z.1) z.2 n) :=
@@ -103,7 +109,7 @@ include hperiod in
 omit [Fact (0 < P)] [NormedAddCommGroup W] [NormedSpace ℝ W] in
 theorem comp_deck (Φ : LiftTangent → LiftTangent)
     (hΦ : ∀ (c : AddSubgroup.zmultiples P) z,
-      Φ (z.1,(c : ℝ)+z.2)=((Φ z).1,(c : ℝ)+(Φ z).2))
+      Φ (z.1, (c : ℝ) + z.2) = ((Φ z).1, (c : ℝ) + (Φ z).2))
     (c : AddSubgroup.zmultiples P) (z : LiftTangent) :
     (f ∘ Φ) (z.1,(c : ℝ)+z.2)=(f ∘ Φ) z := by
   simp only [Function.comp_def,hΦ,hperiod]
@@ -111,7 +117,7 @@ theorem comp_deck (Φ : LiftTangent → LiftTangent)
 include hperiod in
 theorem local_jet_comp (Φ : LiftTangent → LiftTangent)
     (hdeck : ∀ (c : AddSubgroup.zmultiples P) z,
-      Φ (z.1,(c : ℝ)+z.2)=((Φ z).1,(c : ℝ)+(Φ z).2))
+      Φ (z.1, (c : ℝ) + z.2) = ((Φ z).1, (c : ℝ) + (Φ z).2))
     (hf : ContDiff ℝ ∞ f) (hΦ : ContDiff ℝ ∞ Φ) (q : LiftDomain P) (n : ℕ) :
     iteratedFDeriv ℝ n (localFieldLift P (descend P f ∘ descendMap P Φ) q) 0 =
       (jetSeries P f (descendMap P Φ q)).taylorComp (jetSeries P Φ q) n := by

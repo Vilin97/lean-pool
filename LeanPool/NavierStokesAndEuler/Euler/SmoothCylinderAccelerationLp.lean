@@ -6,14 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothCylinderComposition
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDescentJets
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowTimeGevrey
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.LinearAlgebra.Multilinear.FiniteDimensional
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! The actual material acceleration has cylinder L² bounds with the
 small source amplitudes retained. The product term uses one bounded
 derivative coefficient and one L² velocity factor. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,13 +30,24 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderCoverDescent
   EulerSmoothBanachFlow EulerSmoothFlowGevrey EulerGevrey EulerOperatorGevreyCalculus
 open scoped ContDiff BoundedContinuousFunction ENNReal
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ]
-  LiftTangent)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))
-  := inferInstance
-private local instance (n : ℕ) : MeasurableSpace (LiftTangent [×n]→L[ℝ] LiftTangent) := borel _
-private local instance (n : ℕ) : BorelSpace (LiftTangent [×n]→L[ℝ] LiftTangent) := ⟨rfl⟩
-private local instance (n : ℕ) : FiniteDimensional ℝ (LiftTangent [×n]→L[ℝ] LiftTangent) := by
+/-- Cache the standard `NormedAddCommGroup (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instSmoothCylinderAccelerationLp1 (n : ℕ) : NormedAddCommGroup (LiftTangent →ᵇ
+    (LiftTangent [×n]→L[ℝ]
+    LiftTangent)) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] LiftTangent))`
+instance to shorten typeclass synthesis. -/
+local instance instSmoothCylinderAccelerationLp2 (n : ℕ) : NormedSpace ℝ (LiftTangent →ᵇ
+    (LiftTangent [×n]→L[ℝ] LiftTangent))
+    := inferInstance
+/-- The `MeasurableSpace (LiftTangent [×n]→L[ℝ] LiftTangent)` structure used in smooth cylinder
+acceleration lᵖ. -/
+local instance instSmoothCylinderAccelerationLp3 (n : ℕ) : MeasurableSpace (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := borel _
+local instance instSmoothCylinderAccelerationLp4 (n : ℕ) : BorelSpace (LiftTangent [×n]→L[ℝ]
+    LiftTangent) := ⟨rfl⟩
+local instance instSmoothCylinderAccelerationLp5 (n : ℕ) : FiniteDimensional ℝ (LiftTangent
+    [×n]→L[ℝ] LiftTangent) := by
   let J : (LiftTangent [×n]→L[ℝ] LiftTangent) →ₗ[ℝ]
       MultilinearMap ℝ (fun _ : Fin n => LiftTangent) LiftTangent :=
     ContinuousMultilinearMap.toMultilinearMapLinear
@@ -38,22 +56,23 @@ private local instance (n : ℕ) : FiniteDimensional ℝ (LiftTangent [×n]→L[
 variable (P T : ℝ) [Fact (0 < P)]
   (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
 
+/-- Acceleration Lᵖ radius, given by `4*R+S+S₁`. -/
 def accelerationLpRadius (R S S₁ : ℝ) : ℝ := 4*R+S+S₁
 
 theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
     (hB : 0 ≤ B) (hR : 0 ≤ R) (hC : 0 ≤ C) (hS : 0 ≤ S)
     (hC₁ : 0 ≤ C₁) (hS₁ : 0 ≤ S₁)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (hLp : ∀ (t : Icc (0 : ℝ) T) j,
       MemLp (fun q => jetSeries P (A.field t : LiftTangent → LiftTangent) q j) 2 (liftMeasure P))
     (hNorm : ∀ (t : Icc (0 : ℝ) T) j,
       (eLpNorm (fun q => jetSeries P (A.field t : LiftTangent → LiftTangent) q j)
-        2 (liftMeasure P)).toReal ≤ C*S^j*(j.factorial : ℝ)^2)
+        2 (liftMeasure P)).toReal ≤ C * S ^ j * (j.factorial : ℝ) ^ 2)
     (hLp₁ : ∀ (t : Icc (0 : ℝ) T) j,
       MemLp (fun q => jetSeries P (A₁.field t : LiftTangent → LiftTangent) q j) 2 (liftMeasure P))
     (hNorm₁ : ∀ (t : Icc (0 : ℝ) T) j,
       (eLpNorm (fun q => jetSeries P (A₁.field t : LiftTangent → LiftTangent) q j)
-        2 (liftMeasure P)).toReal ≤ C₁*S₁^j*(j.factorial : ℝ)^2)
+        2 (liftMeasure P)).toReal ≤ C₁ * S₁ ^ j * (j.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) T) :
     MemLp (fun q => jetSeries P (accelerationField T A A₁ t) q n) 2 (liftMeasure P) ∧
       (eLpNorm (fun q => jetSeries P (accelerationField T A A₁ t) q n)
@@ -65,7 +84,7 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
   have hSU : S ≤ U := by dsimp [U,accelerationLpRadius]; linarith
   have hS₁U : S₁ ≤ U := by dsimp [U,accelerationLpRadius]; linarith
   let f : LiftTangent → LiftTangent →L[ℝ] LiftTangent := fderiv ℝ (A.field t : LiftTangent →
-    LiftTangent)
+      LiftTangent)
   let g : LiftTangent → LiftTangent := A.field t
   have hf : ContDiff ℝ ∞ f := (A.smooth t).fderiv_right (m := ∞) (by simp)
   have hg : ContDiff ℝ ∞ g := A.smooth t
@@ -114,7 +133,7 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
   have hmacc : AEStronglyMeasurable
       (fun q => jetSeries P (accelerationField T A A₁ t) q n) (liftMeasure P) :=
     (((accelerationField_contDiff T A A₁ t).continuous_iteratedFDeriv (m := n) (by
-      simp)).measurable.comp
+        simp)).measurable.comp
       (sectionPoint_measurable P)).aestronglyMeasurable
   have hdom (q : LiftDomain P) : ‖jetSeries P (accelerationField T A A₁ t) q n‖ ≤
       ∑ i : Fin 2, H i q := by
@@ -126,9 +145,9 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
   refine ⟨hacc,?_⟩
   have hreal' : (eLpNorm (fun q => jetSeries P (accelerationField T A A₁ t) q n)
       2 (liftMeasure P)).toReal ≤ (eLpNorm v 2 (liftMeasure P)).toReal+(eLpNorm w 2 (liftMeasure
-        P)).toReal := by
+          P)).toReal := by
     simpa only [Fin.sum_univ_two,H,ite_true,Fin.isValue,one_ne_zero,ite_false,eLpNorm_norm] using
-      hreal
+        hreal
   have hn₁ : (eLpNorm v 2 (liftMeasure P)).toReal ≤ C₁*majorant U 0 n := by
     apply (hNorm₁ t n).trans
     simpa only [majorant,Nat.add_zero,mul_assoc] using
@@ -137,14 +156,14 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
     simp only [majorant,Nat.add_zero]; dsimp [U]; ring))
 
 variable (hA : ∀ (c : AddSubgroup.zmultiples P) (t : Icc (0 : ℝ) T) z,
-    A.field t (z.1,(c : ℝ)+z.2)=A.field t z)
+    A.field t (z.1, (c : ℝ) + z.2) = A.field t z)
   (hA₁ : ∀ (c : AddSubgroup.zmultiples P) (t : Icc (0 : ℝ) T) z,
-    A₁.field t (z.1,(c : ℝ)+z.2)=A₁.field t z)
+    A₁.field t (z.1, (c : ℝ) + z.2) = A₁.field t z)
 
 include hA hA₁ in
 omit [Fact (0 < P)] in
 theorem accelerationField_deck (t : Icc (0 : ℝ) T) (c : AddSubgroup.zmultiples P) (z : LiftTangent)
-  :
+    :
     accelerationField T A A₁ t (z.1,(c : ℝ)+z.2)=accelerationField T A A₁ t z := by
   have hd : fderiv ℝ (A.field t : LiftTangent → LiftTangent) (z.1,(c : ℝ)+z.2) =
       fderiv ℝ (A.field t : LiftTangent → LiftTangent) z := by

@@ -10,11 +10,12 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketSourceData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationSourceData
 
-@[expose] public section
-
 /-! Changing the source normal and reference plane leaves the older
 physical frame and its scalar parameters unchanged. The source strain
 and time interval are the actual fields of the same parent. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,12 +25,13 @@ open Set EulerSmoothLimit EulerParentPacketFrames EulerTransversePacketProvider
   EulerTransverseFrameCoordinates
 
 variable {A : Parent} {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  {m : Space} {hm : ‖m‖=1} {R : U ≃ₗᵢ[ℝ] referencePlane m}
+  {m : Space} {hm : ‖m‖ = 1} {R : U ≃ₗᵢ[ℝ] referencePlane m}
   {S : Set Space} {hS : IsCompact S} {τ : ℝ}
   (P : ParentFrame (A.transverseData m hm R S hS) τ)
   {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-  (m' : Space) (hm' : ‖m'‖=1) (R' : V ≃ₗᵢ[ℝ] referencePlane m')
+  (m' : Space) (hm' : ‖m'‖ = 1) (R' : V ≃ₗᵢ[ℝ] referencePlane m')
 
+/-- Reframe, bundling `B`, `B₁`, `m`, `v` and the required compatibility proofs. -/
 def reframe : ParentFrame (A.transverseData m' hm' R' S hS) τ where
   B := P.B
   B₁ := P.B₁
@@ -76,17 +78,17 @@ namespace EulerParentPacketFrames.Parent
 open Set EulerSmoothLimit EulerTransversePacketProvider EulerTransverseFrameCoordinates
 
 variable (A : Parent) {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S)
   {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-  (m' : Space) (hm' : ‖m'‖=1) (R' : V ≃ₗᵢ[ℝ] referencePlane m')
+  (m' : Space) (hm' : ‖m'‖ = 1) (R' : V ≃ₗᵢ[ℝ] referencePlane m')
 
 theorem transverse_deformation_reframe (t : Icc (0 : ℝ) A.T) (x : Space) :
-    (A.transverseData m' hm' R' S hS).deformationEquiv t x=
+    (A.transverseData m' hm' R' S hS).deformationEquiv t x =
       (A.transverseData m hm R S hS).deformationEquiv t x := rfl
 
 theorem transverse_reframe :
-    (A.transverseData m hm R S hS).reframe m' hm'=
+    (A.transverseData m hm R S hS).reframe m' hm' =
       A.transverseData m' hm' (LinearIsometryEquiv.refl ℝ (referencePlane m')) S hS := rfl
 
 end EulerParentPacketFrames.Parent

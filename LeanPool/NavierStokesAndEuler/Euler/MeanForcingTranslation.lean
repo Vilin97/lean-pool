@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFamilyJets
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFamily
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFamilyJets
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+
+/-! Actual spatial derivatives of the forcing supply the time-space translation hypotheses. -/
 
 @[expose] public section
 
-/-! Actual spatial derivatives of the forcing supply the time-space translation hypotheses. -/
 
 noncomputable section
 
@@ -30,10 +33,12 @@ theorem orbitJet_memLp (T : ℝ) (A : ℝ → SmoothL2Field V)
     MemLp (fun t => iteratedFDeriv ℝ n (fun b : Space => translation b (A t).toLp) a)
       2 (timeMeasure T) := by
   have h := ((hA n).continuousLinearMap_comp (translation (V := Space [×n]→L[ℝ] V)
-    a).toContinuousLinearMap).continuousLinearMap_comp
+      a).toContinuousLinearMap).continuousLinearMap_comp
     (multilinearBundling (P := Space) (V := V) volume n)
   exact h.ae_eq (Eventually.of_forall (fun t => (A t).iteratedFDeriv_translation_eq n a |>.symm))
 
+/-- Forcing family, bundling `field`, `smooth`, `jet`, `jet_ae` and the required compatibility
+proofs. -/
 def forcingFamily (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T)) :
     SmoothFamily (timeMeasure T) Space (L2Space V) where
@@ -60,18 +65,20 @@ theorem forcingFamily_value_eq (T : ℝ) (A : ℝ → SmoothL2Field V)
   rw [hv, ht, he]
   rfl
 
-/-- Smooth forcing slices with actual square-integrable spatial jets have a smooth Bochner translation orbit. -/
+/-- Smooth forcing slices with actual square-integrable spatial jets have a smooth Bochner
+translation orbit. -/
 theorem forcing_translation_contDiff (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T))
     (f : TimeLp T (L2Space V)) (hf : f =ᵐ[timeMeasure T] fun t => (A t).toLp) :
     ContDiff ℝ ∞ (fun a : Space => timeLiftIsometry T (translation a) f) := by
   have he : (fun a : Space => timeLiftIsometry T (translation a) f) = (forcingFamily T A hA).value
-    :=
+      :=
     funext (fun a => (forcingFamily_value_eq T A hA f hf a).symm)
   rw [he]
   exact (forcingFamily T A hA).contDiff_value
 
-/-- The true time-space derivative norm is bounded by the original ordinary spatial jet norm, without extra factors. -/
+/-- The true time-space derivative norm is bounded by the original ordinary spatial jet norm,
+without extra factors. -/
 theorem forcing_translation_jet_bound (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T))
     (f : TimeLp T (L2Space V)) (hf : f =ᵐ[timeMeasure T] fun t => (A t).toLp)
@@ -79,7 +86,7 @@ theorem forcing_translation_jet_bound (T : ℝ) (A : ℝ → SmoothL2Field V)
     ‖iteratedFDeriv ℝ n (fun b : Space => timeLiftIsometry T (translation b) f) a‖ ≤
       ‖(hA n).toLp (fun t => (A t).jetLp n)‖ := by
   have he : (fun b : Space => timeLiftIsometry T (translation b) f) = (forcingFamily T A hA).value
-    :=
+      :=
     funext (fun b => (forcingFamily_value_eq T A hA f hf b).symm)
   have h := (forcingFamily T A hA).norm_iteratedFDeriv_value_le n a
   have hn : ‖(forcingFamily T A hA).bound n‖ = ‖(hA n).toLp (fun t => (A t).jetLp n)‖ := by

@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTameProduct
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Energy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Commutator
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Energy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTameProduct
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTransportCancellation
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
 /-! Integer-order Euler transport energy with a genuine H³ coefficient.
 The pressure and top transport term cancel. All remaining products
 are controlled by the proved L² interpolation of derivative words. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +30,7 @@ open scoped ContDiff
 
 theorem tame_advection_outer (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m) (M N : ℝ)
     (hM : WordBound 3 M A) (hN : WordBound m N A)
-    {n k l : ℕ} (hk : 1 ≤ k) (horder : n+k+l ≤ m)
+    {n k l : ℕ} (hk : 1 ≤ k) (horder : n + k + l ≤ m)
     (a : Fin n → Fin 3) (w : Fin k → Fin 3) (v : Fin l → Fin 3) :
     ‖(wordField (advectionField (wordField A w) (wordField A v)) a).toLp‖ ≤
       3*(2 : ℝ)^n*h3ProductConstant*M*N := by
@@ -41,17 +46,17 @@ theorem tame_advection_outer (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m) 
 
 theorem tame_transportCommutator_word (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m)
     (M N : ℝ) (hM : WordBound 3 M A) (hN : WordBound m N A)
-    {n l : ℕ} (horder : n+l ≤ m) (a : Fin n → Fin 3) (v : Fin l → Fin 3) :
+    {n l : ℕ} (horder : n + l ≤ m) (a : Fin n → Fin 3) (v : Fin l → Fin 3) :
     ‖(transportCommutator A (wordField A v) a).toLp‖ ≤
       3*((2 : ℝ)^n-1)*h3ProductConstant*M*N := by
   induction n generalizing l with
-  | zero => simp only
-    [transportCommutator_zero,norm_zero,pow_zero,sub_self,mul_zero,zero_mul,le_refl]
+  | zero =>
+      simp only [transportCommutator_zero,norm_zero,pow_zero,sub_self,mul_zero,zero_mul,le_refl]
   | succ n ih =>
     have he : transportCommutator A (wordField A v) a =
         addField
           (wordField (advectionField (A.directionalField (axis (a (Fin.last n)))) (wordField A v))
-            (Fin.init a))
+              (Fin.init a))
           (transportCommutator A (wordField A (Fin.cons (a (Fin.last n)) v)) (Fin.init a)) := by
       simpa only [Fin.snoc_init_self,wordField_cons] using
         transportCommutator_snoc A (wordField A v) (Fin.init a) (a (Fin.last n))
@@ -71,6 +76,7 @@ theorem tame_transportCommutator (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤
   simpa only [wordField_zero] using tame_transportCommutator_word A m hm M N hM hN
     (by simpa only [Nat.add_zero] using hn) w Fin.elim0
 
+/-- Euler rhs, given by `fieldNeg (addField (advectionField A A) P)`. -/
 def eulerRhs (A P : SmoothL2Field Space) : SmoothL2Field Space :=
   fieldNeg (addField (advectionField A A) P)
 
@@ -80,7 +86,7 @@ theorem eulerRhs_field (A P : SmoothL2Field Space) (x : Space) :
   abel
 
 theorem eulerRhs_pairing (A P : SmoothL2Field Space)
-    (hdiv : ∀ x, divergence A.field x=0)
+    (hdiv : ∀ x, divergence A.field x = 0)
     (hA : A.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace)
     {n : ℕ} (w : Fin n → Fin 3) :
     ⟪(wordField A w).toLp,(wordField (eulerRhs A P) w).toLp⟫_ℝ =
@@ -95,6 +101,7 @@ theorem eulerRhs_pairing (A P : SmoothL2Field Space)
   simp only [eulerRhs,wordField_neg,wordField_add,toLp_fieldNeg,toLp_addField,
     inner_neg_right,inner_add_right,ht,hp,add_zero]
 
+/-- Tame energy constant, given by `6*h3ProductConstant*(∑ n ∈ range (m+1), (6 : ℝ)^n)`. -/
 def tameEnergyConstant (m : ℕ) : ℝ :=
   6*h3ProductConstant*(∑ n ∈ range (m+1), (6 : ℝ)^n)
 
@@ -102,12 +109,14 @@ theorem tameEnergyConstant_nonneg (m : ℕ) : 0 ≤ tameEnergyConstant m :=
   mul_nonneg (mul_nonneg (by norm_num) h3ProductConstant_nonneg)
     (sum_nonneg (fun _ _ => by positivity))
 
+/-- Integer energy production, given by `2*(∑ n ∈ range (m+1), ∑ w : Fin n → Fin 3, ⟪(wordField
+A w).toLp,(wordField Q w).toLp⟫_ℝ)`. -/
 def integerEnergyProduction (m : ℕ) (A Q : SmoothL2Field Space) : ℝ :=
   2*(∑ n ∈ range (m+1), ∑ w : Fin n → Fin 3,
     ⟪(wordField A w).toLp,(wordField Q w).toLp⟫_ℝ)
 
 theorem eulerRhs_word_tame (A P : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m)
-    (M : ℝ) (hM : WordBound 3 M A) (hdiv : ∀ x, divergence A.field x=0)
+    (M : ℝ) (hM : WordBound 3 M A) (hdiv : ∀ x, divergence A.field x = 0)
     (hA : A.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace)
     {n : ℕ} (hn : n ≤ m) (w : Fin n → Fin 3) :
     ⟪(wordField A w).toLp,(wordField (eulerRhs A P) w).toLp⟫_ℝ ≤
@@ -133,7 +142,7 @@ theorem eulerRhs_word_tame (A P : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m)
     _ = 3*(2 : ℝ)^n*h3ProductConstant*M*wordEnergy m A := by rw [← hx]; ring
 
 theorem integer_energy_tame (A P : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤ m)
-    (M : ℝ) (hM : WordBound 3 M A) (hdiv : ∀ x, divergence A.field x=0)
+    (M : ℝ) (hM : WordBound 3 M A) (hdiv : ∀ x, divergence A.field x = 0)
     (hA : A.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace) :
     integerEnergyProduction m A (eulerRhs A P) ≤ tameEnergyConstant m*M*wordEnergy m A := by
   have hs : (∑ n ∈ range (m+1), ∑ w : Fin n → Fin 3,

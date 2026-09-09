@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CompactParameterIntegral
 public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.CompactParameterIntegral
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+/-! The actual angular primitive is jointly smooth in spatial labels and angle. -/
 
 @[expose] public section
 
-/-! The actual angular primitive is jointly smooth in spatial labels and angle. -/
 
 noncomputable section
 

@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Uniform comparison of ideal primary sizes before target.  This follows
 from the actual scalar equation's prefix and weighted monotonicity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +27,7 @@ namespace EulerPacketMovingFrame
 
 open Set EulerPacketGrowth
 
+/-- Ideal primary size, given by `Real.sqrt (1+(σ^2*t^2)^2)*Z t`. -/
 def idealPrimarySize (σ : ℝ) (Z : ℝ → ℝ) (t : ℝ) : ℝ :=
   Real.sqrt (1+(σ^2*t^2)^2)*Z t
 
@@ -34,10 +40,10 @@ theorem quadratic_weight_sqrt {p : ℝ} (hp : 0 ≤ p) :
     linarith only [h1, hp']
 
 theorem equation30_polynomial_size_monotone {σ : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) :
     MonotoneOn (fun t => (1+σ^2*t^2)*Z t) (Ici 0) := by
   have hpos := equation30_global_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0
@@ -81,15 +87,15 @@ theorem equation30_polynomial_size_monotone {σ : ℝ} {Z Z₁ : ℝ → ℝ}
 /-- The ideal physical primary size is bounded by twice its later size,
 uniformly in the initial nonnegative scalar slope. -/
 theorem equation30_ideal_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) (hs : 0 ≤ s) (hst : s ≤ t) :
     idealPrimarySize σ Z s ≤ 2*idealPrimarySize σ Z t := by
   have hpos := equation30_global_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0
   have hmono := equation30_polynomial_size_monotone hσ hσsmall hZ hfluxZ hZ0 hZ₁0 hs (hs.trans hst)
-    hst
+      hst
   have hws := (quadratic_weight_sqrt (show 0 ≤ σ^2*s^2 by positivity)).1
   have hwt := (quadratic_weight_sqrt (show 0 ≤ σ^2*t^2 by positivity)).2
   have h1 := mul_le_mul_of_nonneg_right hws (hpos s hs).le

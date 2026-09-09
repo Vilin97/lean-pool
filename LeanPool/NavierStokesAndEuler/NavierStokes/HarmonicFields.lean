@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanResidual
-public import Mathlib.Algebra.MonoidAlgebra.Support
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Finite integer-harmonic fields
@@ -21,6 +18,9 @@ literal exponential sum, multiplication is convolution, and angular means
 are actual interval integrals over a period of length `2*pi`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -28,17 +28,21 @@ open scoped BigOperators Topology ContDiff ComplexConjugate Pointwise
 
 namespace NavierStokes.HarmonicFields
 
+/-- Coefficients: an abbreviation for `AddMonoidAlgebra (α → ℂ) ℤ`. -/
 abbrev Coefficients (α : Type*) := AddMonoidAlgebra (α → ℂ) ℤ
 
 /-- Coefficient access for the wrapped group algebra. -/
 instance {α : Type*} : CoeFun (Coefficients α) (fun _ => ℤ → α → ℂ) :=
   ⟨fun c => c.coeff⟩
 
+/-- Support: an abbreviation for `c.coeff.support`. -/
 abbrev Coefficients.support {α : Type*} (c : Coefficients α) : Finset ℤ := c.coeff.support
 
+/-- Sum: an abbreviation for `c.coeff.sum f`. -/
 abbrev Coefficients.sum {α M : Type*} [AddCommMonoid M] (c : Coefficients α)
     (f : ℤ → (α → ℂ) → M) : M := c.coeff.sum f
 
+/-- Character, given by `Complex.exp ((j : ℂ) * (φ : ℂ) * Complex.I)`. -/
 noncomputable def character (j : ℤ) (φ : ℝ) : ℂ :=
   Complex.exp ((j : ℂ) * (φ : ℂ) * Complex.I)
 
@@ -74,15 +78,19 @@ theorem character_neg (j : ℤ) (φ : ℝ) : character (-j) φ = conj (character
 theorem character_continuous (j : ℤ) : Continuous (character j) := by
   exact ((continuous_const.mul Complex.continuous_ofReal).mul continuous_const).cexp
 
+/-- Character hom, bundling `toFun`, `map_one`, `map_mul`. -/
 noncomputable def characterHom (φ : ℝ) : Multiplicative ℤ →* ℂ where
   toFun j := character (Multiplicative.toAdd j) φ
   map_one' := character_zero φ
   map_mul' i j := character_add (Multiplicative.toAdd i) (Multiplicative.toAdd j) φ
 
+/-- Evaluate hom, given by `AddMonoidAlgebra.liftNCRingHom (Pi.evalRingHom (fun _ : α => ℂ) x)
+(characterHom φ) (fun _ _ => Commute.all _ _)`. -/
 noncomputable def evaluateHom {α : Type*} (x : α) (φ : ℝ) : Coefficients α →+* ℂ :=
   AddMonoidAlgebra.liftNCRingHom (Pi.evalRingHom (fun _ : α => ℂ) x) (characterHom φ)
     (fun _ _ => Commute.all _ _)
 
+/-- Evaluate, given by `c.sum (fun j a => a x * character j φ)`. -/
 noncomputable def evaluate {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) : ℂ :=
   c.sum (fun j a => a x * character j φ)
 
@@ -133,6 +141,7 @@ theorem field_angular_continuous {α : Type*} (c : Coefficients α) (k : ℝ)
   simp only [field_expansion]
   exact continuous_finsetSum _ (fun j _ => continuous_const.fun_mul (character_continuous _))
 
+/-- Period, given by `2 * Real.pi`. -/
 noncomputable def period : ℝ := 2 * Real.pi
 
 theorem period_pos : 0 < period := mul_pos (by norm_num) Real.pi_pos
@@ -210,6 +219,7 @@ theorem angularMean_field {α : Type*} (c : Coefficients α) (k : ℝ) (Φ : α 
   · have hc : c 0 = 0 := Finsupp.notMem_support_iff.mp h0
     simp [h0, hc]
 
+/-- Coefficient mass, given by `∑ j ∈ c.support, ‖c j x‖`. -/
 noncomputable def coefficientMass {α : Type*} (c : Coefficients α) (x : α) : ℝ :=
   ∑ j ∈ c.support, ‖c j x‖
 
@@ -259,6 +269,7 @@ theorem angularMean_product {α : Type*} (c d : Coefficients α) (k : ℝ) (Φ :
   rw [heq, angularMean_field (c * d) k Φ hkp x, convolution_apply]
   simp only [zero_sub]
 
+/-- Conjugate reverse, constructed using `AddMonoidAlgebra.ofCoeff`. -/
 noncomputable def conjugateReverse {α : Type*} (c : Coefficients α) : Coefficients α :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.equivMapDomain (Equiv.neg ℤ)
     (Finsupp.mapRange (fun a : α → ℂ => fun x => conj (a x)) (by ext x; simp) c.coeff)
@@ -273,6 +284,7 @@ theorem evaluate_conjugateReverse {α : Type*} (c : Coefficients α) (x : α) (�
   rw [Finsupp.sum_equivMapDomain, Finsupp.sum_mapRange_index (fun _ => by simp)]
   simp only [Equiv.neg_apply, Finsupp.sum, map_sum, map_mul, character_neg]
 
+/-- Conjugate symmetric, given by `∀ j x, c (-j) x = conj (c j x)`. -/
 def ConjugateSymmetric {α : Type*} (c : Coefficients α) : Prop :=
   ∀ j x, c (-j) x = conj (c j x)
 
@@ -305,7 +317,7 @@ theorem angularMean_coefficient_covariance {α : Type*} (c : Coefficients α)
   exact Finset.sum_congr rfl (fun j _ => congrArg (c j x * ·) (hd j x))
 
 theorem chart_trace (c : Coefficients ProblemStatement.SpaceTime) (Ψ : ProblemStatement.SpaceTime →
-  ℝ)
+    ℝ)
     (kp : ℤ) (hc : ∀ j ∈ c.support, MeanResidual.AngularInvariant (c j))
     (hΨ : ∀ q θ, Ψ (MeanResidual.angularShift q θ) = Ψ q + (kp : ℝ) * θ)
     (q : ProblemStatement.SpaceTime) (θ : ℝ) :
@@ -340,6 +352,7 @@ theorem meanResidual_product_covariance
     rw [chart_trace c Ψ kp hc hΨ, chart_trace d Ψ kp hd hΨ]
   rw [he, angularMean_coefficient_covariance c hconj 1 Ψ hkp q]
 
+/-- Band limited, given by `∀ j ∈ c.support, j.natAbs ≤ N`. -/
 def BandLimited {α : Type*} (c : Coefficients α) (N : ℕ) : Prop :=
   ∀ j ∈ c.support, j.natAbs ≤ N
 
@@ -368,6 +381,7 @@ theorem band_single_zero {α : Type*} (a : α → ℂ) :
   have hj0 : j = 0 := Finset.mem_singleton.mp (Finsupp.support_single_subset hj)
   simp [hj0]
 
+/-- Constant coefficient, given by `AddMonoidAlgebra.single 0 a`. -/
 noncomputable def constantCoefficient {α : Type*} (a : α → ℂ) : Coefficients α :=
   AddMonoidAlgebra.single 0 a
 
@@ -388,6 +402,8 @@ theorem band_quadraticStep {α : Type*} (A B C : α → ℂ) {c : Coefficients �
   exact ((band_constantCoefficient A).mono (Nat.zero_le _) |>.add
     (hB.mono (Nat.le_add_right _ _))).add hC
 
+/-- Quadratic iterate as an element of `ℕ → Coefficients α | 0 => c | n + 1 => quadraticStep (A
+n) (B n) (C n) (quadraticIterate A B C c n)`. -/
 noncomputable def quadraticIterate {α : Type*} (A B C : ℕ → α → ℂ) (c : Coefficients α) :
     ℕ → Coefficients α
   | 0 => c
@@ -418,6 +434,8 @@ theorem field_quadraticStep {α : Type*} (A B C : α → ℂ) (c : Coefficients 
   simp only [quadraticStep, field, evaluate_add, evaluate_mul, constantCoefficient, evaluate_single,
     character_zero, mul_one, pow_two]
 
+/-- Quadratic envelope as an element of `ℕ → ℝ | 0 => coefficientMass c x | n + 1 => ‖A n x‖ +
+‖B n x‖ * quadraticEnvelope A B C c x n + ‖C n x‖ * quadraticEnvelope A B C c x n ^ 2`. -/
 noncomputable def quadraticEnvelope {α : Type*} (A B C : ℕ → α → ℂ)
     (c : Coefficients α) (x : α) : ℕ → ℝ
   | 0 => coefficientMass c x
@@ -446,6 +464,7 @@ section Derivatives
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Wave, given by `c.sum (fun j a => HarmonicCalculus.mode (k * (j : ℝ)) Φ a x)`. -/
 noncomputable def wave (c : Coefficients E) (k : ℝ) (Φ : E → ℝ) (x : E) : ℂ :=
   c.sum (fun j a => HarmonicCalculus.mode (k * (j : ℝ)) Φ a x)
 
@@ -468,6 +487,9 @@ theorem wave_eq_evaluate (c : Coefficients E) (k : ℝ) (Φ : E → ℝ) (x : E)
   simp only [HarmonicCalculus.phaseFactor, Complex.ofReal_mul, Complex.ofReal_intCast]
   ring
 
+/-- Derivative coefficient, given by `HarmonicCalculus.along V a x +
+HarmonicCalculus.phaseFactor (k * (j : ℝ)) * Complex.ofReal (HarmonicCalculus.along V Φ x) *
+a x`. -/
 noncomputable def derivativeCoefficient (V : E → E) (k : ℝ) (Φ : E → ℝ)
     (j : ℤ) (a : E → ℂ) (x : E) : ℂ :=
   HarmonicCalculus.along V a x + HarmonicCalculus.phaseFactor (k * (j : ℝ)) *
@@ -478,10 +500,11 @@ theorem derivativeCoefficient_zero (V : E → E) (k : ℝ) (Φ : E → ℝ) (j :
   funext x
   simp [derivativeCoefficient, HarmonicCalculus.along]
 
+/-- Differentiate, constructed using `AddMonoidAlgebra.ofCoeff`. -/
 noncomputable def differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ)
     (c : Coefficients E) : Coefficients E :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.onFinset c.support (fun j => derivativeCoefficient V k Φ j (c
-    j)) (by
+      j)) (by
     intro j hj
     by_contra hnot
     apply hj
@@ -576,11 +599,15 @@ theorem differentiate_contDiffOn {U : Set E} (hU : IsOpen U)
   intro j hj
   exact derivativeCoefficient_contDiffOn hU hV hΦ (hc j (support_differentiate V k Φ c hj)) k j
 
+/-- Iterated coefficients as an element of `ℕ → Coefficients E | 0 => c | n + 1 => differentiate
+V k Φ (iteratedCoefficients V k Φ c n)`. -/
 noncomputable def iteratedCoefficients (V : E → E) (k : ℝ) (Φ : E → ℝ) (c : Coefficients E) :
     ℕ → Coefficients E
   | 0 => c
   | n + 1 => differentiate V k Φ (iteratedCoefficients V k Φ c n)
 
+/-- Iterated along as an element of `ℕ → (E → ℂ) → E → ℂ | 0, f => f | n + 1, f =>
+HarmonicCalculus.along V (iteratedAlong V n f)`. -/
 noncomputable def iteratedAlong (V : E → E) : ℕ → (E → ℂ) → E → ℂ
   | 0, f => f
   | n + 1, f => HarmonicCalculus.along V (iteratedAlong V n f)
@@ -635,10 +662,11 @@ theorem character_hasDerivAt (j : ℤ) (θ : ℝ) :
   dsimp [c]
   ring
 
+/-- Angular differentiate, constructed using `AddMonoidAlgebra.ofCoeff`. -/
 noncomputable def angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients α) :
     Coefficients α :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.onFinset c.support (fun j x => (((j * kp : ℤ) : ℂ) *
-    Complex.I) * c j x) (by
+      Complex.I) * c j x) (by
     intro j hj
     by_contra hn
     apply hj

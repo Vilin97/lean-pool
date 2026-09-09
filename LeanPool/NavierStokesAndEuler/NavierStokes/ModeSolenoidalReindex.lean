@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StateReindex
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
 
-@[expose] public section
-
 /-!
 # Actual harmonic divergence under a change of product association
 
@@ -19,6 +17,9 @@ isometry. Its genuine cylindrical divergence is preserved, including the
 transported radial and axial directions. No new divergence premise is
 needed for the associated particular-solver coordinates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -88,10 +89,10 @@ theorem singleMode_divergence_pull (e : D ≃ₗᵢ[ℝ] E)
   rw [StateReindex.contextFrame_pull, singleMode_pull]
   change cylindricalDivergence (fun q => c.operators.radius (e q.1))
     (HarmonicResidual.liftDirection (StateReindex.vector e (HarmonicResidual.contextFrame c
-      n).radial))
+        n).radial))
     HarmonicResidual.angularDirection
     (HarmonicResidual.liftDirection (StateReindex.vector e (HarmonicResidual.contextFrame c
-      n).axial))
+        n).axial))
     (fun q => HarmonicWaveInteraction.singleMode b j n (StateReindex.cylinder e q)) p = _
   rw [liftDirection_pull, liftDirection_pull, ← angularDirection_pull e]
   exact cylindricalDivergence_pull (StateReindex.cylinder e)

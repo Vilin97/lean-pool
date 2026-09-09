@@ -8,16 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlotGeometry
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Data.Fintype.Pi
-public import Mathlib.Data.Fintype.Card
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.LinearAlgebra.Matrix.Notation
-public import Mathlib.Algebra.Order.Floor.Ring
-public import Mathlib.Algebra.Order.Floor.Semiring
-public import Mathlib.Order.Interval.Finset.Nat
-public import Mathlib.Analysis.Real.Sqrt
-
-@[expose] public section
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Physical grid labels, bounded degree, and an explicit finite coloring
@@ -29,6 +20,9 @@ Closed boxes of two mesh widths include the fixed small enlargement of the
 one-mesh supports in the manuscript.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SlotColoring
@@ -36,12 +30,17 @@ namespace NavierStokes.SlotColoring
 open Set
 open scoped BigOperators
 
+/-- Grid: an abbreviation for `Fin 3 → ℤ`. -/
 abbrev Grid := Fin 3 → ℤ
+/-- Position: an abbreviation for `Fin 3 → ℝ`. -/
 abbrev Position := Fin 3 → ℝ
+/-- Label: an abbreviation for `ℕ × (Grid × Bool)`. -/
 abbrev Label := ℕ × (Grid × Bool)
 
+/-- Dyadic Q, given by `(2 : ℝ) ^ (-(n : ℝ))`. -/
 def dyadicQ (n : ℕ) : ℝ := (2 : ℝ) ^ (-(n : ℝ))
 
+/-- Spacing, given by `(2 : ℝ) ^ (-(n : ℝ) * a) / (n : ℝ) ^ 6`. -/
 def spacing (a : ℝ) (n : ℕ) : ℝ := (2 : ℝ) ^ (-(n : ℝ) * a) / (n : ℝ) ^ 6
 
 theorem spacing_eq_scaled_mesh (a : ℝ) (n : ℕ) :
@@ -98,8 +97,11 @@ theorem spacing_ratio_le (a A : ℝ) {n m : ℕ}
   exact mul_le_mul hpow (Real.rpow_le_rpow_of_exponent_le (by norm_num) hexp)
     (Real.rpow_nonneg (by norm_num) _) (by positivity)
 
+/-- Axis exponent, given by `![1 / 2, D, 1]`. -/
 def axisExponent (D : ℝ) : Fin 3 → ℝ := ![1 / 2, D, 1]
+/-- Width, given by `spacing (axisExponent D j) n`. -/
 def width (D : ℝ) (j : Fin 3) (n : ℕ) : ℝ := spacing (axisExponent D j) n
+/-- Ratio bound, given by `(5 : ℝ) ^ 6 * (2 : ℝ) ^ (4 * (1 + |D|))`. -/
 def ratioBound (D : ℝ) : ℝ := (5 : ℝ) ^ 6 * (2 : ℝ) ^ (4 * (1 + |D|))
 
 theorem width_pos (D : ℝ) (j : Fin 3) {n : ℕ} (hn : 1 ≤ n) : 0 < width D j n :=
@@ -119,6 +121,8 @@ theorem width_ratio_le (D : ℝ) (j : Fin 3) {n m : ℕ}
     rw [abs_one]
     linarith [abs_nonneg D]
 
+/-- Physical box, given by `{x | ∀ j, |x j - width D j L.1 * (L.2.1 j : ℝ)| ≤ 2 * width D j
+L.1}`. -/
 def physicalBox (D : ℝ) (L : Label) : Set Position :=
   {x | ∀ j, |x j - width D j L.1 * (L.2.1 j : ℝ)| ≤ 2 * width D j L.1}
 
@@ -150,6 +154,7 @@ theorem same_level_grid_gap (D : ℝ) (L M : Label) (hn : 1 ≤ L.1)
     nlinarith [width_pos D j hn]
   exact_mod_cast hr
 
+/-- Int color as an element of `Fin 5`. -/
 def intColor (z : ℤ) : Fin 5 :=
   ⟨(z % 5).toNat, by
     have h0 := Int.emod_nonneg z (by norm_num : (5 : ℤ) ≠ 0)
@@ -165,8 +170,11 @@ theorem intColor_eq_of_close {z w : ℤ} (hc : intColor z = intColor w)
   have hdiff := abs_le.mp hd
   omega
 
+/-- Palette: an abbreviation for `Fin 9 × ((Fin 3 → Fin 5) × Bool)`. -/
 abbrev Palette := Fin 9 × ((Fin 3 → Fin 5) × Bool)
 
+/-- Color data, given by `(⟨L.1 % 9, Nat.mod_lt _ (by norm_num)⟩, (fun j => intColor (L.2.1 j),
+L.2.2))`. -/
 def colorData (L : Label) : Palette :=
   (⟨L.1 % 9, Nat.mod_lt _ (by norm_num)⟩, (fun j => intColor (L.2.1 j), L.2.2))
 
@@ -190,6 +198,7 @@ theorem colorData_proper (D : ℝ) {L M : Label} (h : Adj D L M) : colorData L �
   have hs : L.2.2 = M.2.2 := congrArg (fun c : Palette => c.2.2) hc
   exact h.distinct (Prod.ext hl (Prod.ext hg hs))
 
+/-- Color, given by `(Fintype.equivFin Palette) (colorData L)`. -/
 def color (L : Label) : Fin (Fintype.card Palette) := (Fintype.equivFin Palette) (colorData L)
 
 theorem color_proper (D : ℝ) {L M : Label} (h : Adj D L M) : color L ≠ color M := by
@@ -222,18 +231,25 @@ theorem index_near_floor (c A : ℝ) (j : ℤ) (K : ℕ)
   have hreal : |(j : ℝ) - (⌊c⌋ : ℝ)| ≤ (K : ℝ) := by linarith
   exact_mod_cast hreal
 
+/-- Index radius, given by `⌈2 * (ratioBound D + 1) + 1⌉₊`. -/
 def indexRadius (D : ℝ) : ℕ := ⌈2 * (ratioBound D + 1) + 1⌉₊
 
+/-- Index center, given by `⌊width D j L.1 / width D j m * (L.2.1 j : ℝ)⌋`. -/
 def indexCenter (D : ℝ) (L : Label) (m : ℕ) (j : Fin 3) : ℤ :=
   ⌊width D j L.1 / width D j m * (L.2.1 j : ℝ)⌋
 
+/-- Candidate grids, given by `Fintype.piFinset (fun j => Finset.Icc (indexCenter D L m j -
+(indexRadius D : ℤ)) (indexCenter D L m j + (indexRadius D : ℤ)))`. -/
 def candidateGrids (D : ℝ) (L : Label) (m : ℕ) : Finset Grid :=
   Fintype.piFinset (fun j => Finset.Icc (indexCenter D L m j - (indexRadius D : ℤ))
     (indexCenter D L m j + (indexRadius D : ℤ)))
 
+/-- Candidates at level, given by `((candidateGrids D L m).product (Finset.univ : Finset
+Bool)).image (fun gs => (m, gs))`. -/
 def candidatesAtLevel (D : ℝ) (L : Label) (m : ℕ) : Finset Label :=
   ((candidateGrids D L m).product (Finset.univ : Finset Bool)).image (fun gs => (m, gs))
 
+/-- Candidates, given by `(Finset.Icc (L.1 - 4) (L.1 + 4)).biUnion (candidatesAtLevel D L)`. -/
 def candidates (D : ℝ) (L : Label) : Finset Label :=
   (Finset.Icc (L.1 - 4) (L.1 + 4)).biUnion (candidatesAtLevel D L)
 
@@ -283,6 +299,7 @@ theorem candidatesAtLevel_card_le (D : ℝ) (L : Label) (m : ℕ) :
       simpa only [candidateGrids_card, Finset.card_univ, Fintype.card_bool] using
         Finset.card_product (candidateGrids D L m) (Finset.univ : Finset Bool)
 
+/-- Degree bound, given by `18 * (2 * indexRadius D + 1) ^ 3`. -/
 def degreeBound (D : ℝ) : ℕ := 18 * (2 * indexRadius D + 1) ^ 3
 
 theorem candidates_card_le (D : ℝ) (L : Label) :
@@ -329,6 +346,7 @@ theorem log_coverGrowth_pos : 0 < Real.log coverGrowth := by
 def nativeArgument (h : ℝ) (n : ℕ) : ℝ :=
   Real.log (dyadicQ n ^ (-1 - h) / (n : ℝ) ^ 2) / Real.log coverGrowth
 
+/-- Native index, given by `⌊nativeArgument h n⌋₊`. -/
 def nativeIndex (h : ℝ) (n : ℕ) : ℕ := ⌊nativeArgument h n⌋₊
 
 theorem nativeArgument_expanded (h : ℝ) {n : ℕ} (hn : 1 ≤ n) :
@@ -344,9 +362,12 @@ theorem nativeArgument_expanded (h : ℝ) {n : ℕ} (hn : 1 ≤ n) :
   norm_num
   ring
 
+/-- Native gap budget, given by `(4 * (1 + h) * Real.log 2 + 2 * Real.log 5) / Real.log
+coverGrowth`. -/
 def nativeGapBudget (h : ℝ) : ℝ :=
   (4 * (1 + h) * Real.log 2 + 2 * Real.log 5) / Real.log coverGrowth
 
+/-- Native gap, given by `⌈nativeGapBudget h⌉₊ + 1`. -/
 def nativeGap (h : ℝ) : ℕ := ⌈nativeGapBudget h⌉₊ + 1
 
 theorem log_level_gap {n m : ℕ} (hn : 1 ≤ n) (hm : 1 ≤ m)

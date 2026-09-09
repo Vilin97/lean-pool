@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePressureAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
 
+/-! The finite zero-history pressure and its actual lifted gradient. -/
+
 @[expose] public section
 
-/-! The finite zero-history pressure and its actual lifted gradient. -/
 
 noncomputable section
 
@@ -26,14 +27,20 @@ variable (M : EulerMeanPacketProvider.Data)
   (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized pressure, given by `fieldSum (N+1) κ (assembledPressure N
+(forwardInitializedProfiles M D δ hδ ξ hs α))`. -/
 def forwardInitializedPressure (N : ℕ) (κ : ℝ) : ScalarField :=
   fieldSum (N+1) κ (assembledPressure N (forwardInitializedProfiles M D δ hδ ξ hs α))
 
+/-- Forward initialized pressure witness, given by `sourcePressureWitness period M D hTime
+(InitialData.zero period D) (initialData D δ hδ (α • ξ) hs) κ D.m₀ N κ`. -/
 def forwardInitializedPressureWitness (N : ℕ) (κ : ℝ) :
     GradientWitness period M.T κ D.m₀ (forwardInitializedPressure M D δ hδ ξ hs α N κ) :=
   sourcePressureWitness period M D hTime (InitialData.zero period D)
     (initialData D δ hδ (α • ξ) hs) κ D.m₀ N κ
 
+/-- Forward initialized coordinate pressure field, given by `pressureField D k hk
+((forwardInitializedPressureWitness M D hTime δ hδ ξ hs α N k⁻¹).changeTime hTime)`. -/
 def forwardInitializedCoordinatePressureField (N : ℕ) (k : ℝ) (hk : k ≠ 0) :
     Field period D.T (coordinatePressure D k
       (forwardInitializedPressure M D δ hδ ξ hs α N k⁻¹)) :=

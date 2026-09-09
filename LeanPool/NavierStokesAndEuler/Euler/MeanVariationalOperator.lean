@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalOperator
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The mean displacement form with its initial boundary operator
@@ -17,6 +17,9 @@ The operator is constructed as `I - J* H J + R* C R`, where `J` is the
 actual displacement primitive and `R` its initial trace.  The boundary lower
 bound is required only on the trace image, as in the source's solenoidal space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -46,11 +49,11 @@ theorem meanOperator_inner (J : V →L[ℝ] W) (R : V →L[ℝ] X)
 variable (J : V →L[ℝ] W) (R : V →L[ℝ] X)
   (H : W →L[ℝ] W) (C : X →L[ℝ] X)
   (P Q K B : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B)
-  (hJ : ∀ u, ‖J u‖^2 ≤ P*‖u‖^2)
-  (hR : ∀ u, ‖R u‖^2 ≤ Q*‖u‖^2)
-  (hH : ∀ w, ⟪H w, w⟫_ℝ ≤ K*‖w‖^2)
-  (hC : ∀ u, -B*‖R u‖^2 ≤ ⟪C (R u), R u⟫_ℝ)
-  (hsmall : K*P+B*Q ≤ 1/2)
+  (hJ : ∀ u, ‖J u‖ ^ 2 ≤ P * ‖u‖ ^ 2)
+  (hR : ∀ u, ‖R u‖ ^ 2 ≤ Q * ‖u‖ ^ 2)
+  (hH : ∀ w, ⟪H w, w⟫_ℝ ≤ K * ‖w‖ ^ 2)
+  (hC : ∀ u, -B * ‖R u‖ ^ 2 ≤ ⟪C (R u), R u⟫_ℝ)
+  (hsmall : K * P + B * Q ≤ 1 / 2)
 
 include hK hB hJ hR hH hC hsmall in
 /-- The source's two time estimates and coefficient bounds prove coercivity. -/
@@ -80,7 +83,7 @@ theorem meanSolver_weak (f : W) (v : V) :
 
 /-- Uniqueness holds in the same actual Hilbert displacement space. -/
 theorem meanSolver_unique (f : W) (u : V)
-    (hu : ∀ v, ⟪u, v⟫_ℝ-⟪H (J u), J v⟫_ℝ+⟪C (R u), R v⟫_ℝ = -⟪f, J v⟫_ℝ) :
+    (hu : ∀ v, ⟪u, v⟫_ℝ - ⟪H (J u), J v⟫_ℝ + ⟪C (R u), R v⟫_ℝ = -⟪f, J v⟫_ℝ) :
     u = meanSolver J R H C P Q K B hK hB hJ hR hH hC hsmall f := by
   apply (coerciveEquiv (meanOperator J R H C) (1/2) (by norm_num)
     (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall)).injective

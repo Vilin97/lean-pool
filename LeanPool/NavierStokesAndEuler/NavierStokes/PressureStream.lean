@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FourierAlias
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RadialPullback
 public import Mathlib.Analysis.Calculus.BumpFunction.Normed
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Pressure and divergence reconstruction with the exact compactification error
@@ -22,6 +20,9 @@ The radial primitives are the actual transport integrals. Slow parameters are
 retained separately from the two auxiliary torus coordinates. The pressure
 correction uses a constructed smooth bump of integral one.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +33,9 @@ namespace NavierStokes.PressureStream
 
 open TransportPrimitive
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
+/-- Lift: an abbreviation for `ℝ × (S × Plane)`. -/
 abbrev Lift (S : Type) := ℝ × (S × Plane)
 
 /-- A concrete bump strictly inside the radial interval. -/
@@ -73,6 +76,7 @@ section Average
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Torus inner, given by `∫ x in (0 : ℝ)..1, f (p.1.1, (p.1.2, (x, p.2)))`. -/
 noncomputable def torusInner (f : Lift S → ℝ) (p : (ℝ × S) × ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..1, f (p.1.1, (p.1.2, (x, p.2)))
 
@@ -128,6 +132,7 @@ theorem torusAverage_sub_slow {f : Lift S → ℝ} (hf : ContDiff ℝ ∞ f)
   rw [intervalIntegral.integral_sub hy intervalIntegrable_const]
   simp
 
+/-- Pressure mass, given by `∫ r, torusAverage f (r, s)`. -/
 noncomputable def pressureMass (f : Lift S → ℝ) (s : S) : ℝ :=
   ∫ r, torusAverage f (r, s)
 
@@ -161,6 +166,7 @@ theorem pressureMass_contDiff {a b : ℝ} {f : Lift S → ℝ}
   exact parameterIntegral_contDiff
     ((torusAverage_contDiff hf).comp (contDiff_snd.prodMk contDiff_fst)) a b
 
+/-- Pressure source, given by `f p - rho a b hab p.1 * pressureMass f p.2.1`. -/
 noncomputable def pressureSource (a b : ℝ) (hab : a < b) (f : Lift S → ℝ)
     (p : Lift S) : ℝ := f p - rho a b hab p.1 * pressureMass f p.2.1
 
@@ -203,6 +209,7 @@ section Graph
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Radial vector, given by `(1, k p.1 • v)`. -/
 noncomputable def radialVector (k : ℝ → ℝ) (v : E) (p : ℝ × E) : ℝ × E :=
   (1, k p.1 • v)
 
@@ -253,6 +260,7 @@ theorem graphDr_graphDz_comm {f : ℝ × E → ℝ} {k : ℝ → ℝ} (v w : E)
     fderiv_fun_const, map_zero, zero_add]
   simpa using (hf.isSymmSndFDerivAt (by norm_num)).eq (radialVector k v p) (0, w)
 
+/-- Divide radius, given by `f p / p.1`. -/
 noncomputable def divideRadius (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ := f p / p.1
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
@@ -315,14 +323,17 @@ theorem graphDr_divideRadius {f : ℝ × E → ℝ} (k : ℝ → ℝ) (v : E) {p
   unfold divideRadius
   simp only [_root_.add_apply,
     _root_.smul_apply, ContinuousLinearMap.coe_fst', smul_eq_mul, radialVector]
-  field_simp ; ring
+  field_simp; ring
 
+/-- Stream beta, defined pointwise by `-graphDz w Ψ p`. -/
 noncomputable def streamBeta (w : E) (Ψ : ℝ × E → ℝ) : ℝ × E → ℝ :=
   fun p => -graphDz w Ψ p
 
+/-- Stream gamma, defined pointwise by `graphDr k v Ψ p + divideRadius Ψ p`. -/
 noncomputable def streamGamma (k : ℝ → ℝ) (v : E) (Ψ : ℝ × E → ℝ) : ℝ × E → ℝ :=
   fun p => graphDr k v Ψ p + divideRadius Ψ p
 
+/-- Graph divergence, given by `graphDr k v β p + β p / p.1 + graphDz w γ p`. -/
 noncomputable def graphDivergence (k : ℝ → ℝ) (v w : E)
     (β γ : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
   graphDr k v β p + β p / p.1 + graphDz w γ p
@@ -374,6 +385,7 @@ theorem graphDr_contDiff_of_support {a b : ℝ} (ha : 0 < a)
   · exact (hf.fderiv_right (by simp)).contDiffAt.clm_apply
       (contDiffAt_const.prodMk (((hk p.1 hp).comp p contDiffAt_fst).smul contDiffAt_const))
 
+/-- Physical speed, given by `RadialPullback.radialJacobian d r * M`. -/
 noncomputable def physicalSpeed (d M r : ℝ) : ℝ := RadialPullback.radialJacobian d r * M
 
 theorem physicalSpeed_smooth (d M : ℝ) {r : ℝ} (hr : r ≠ 0) :
@@ -394,6 +406,8 @@ noncomputable def meanPressure (d a b M : ℝ) (hab : a < b) (v : Plane)
     (f : Lift S → ℝ) : Lift S → ℝ :=
   RadialPullback.physicalCompact d a b M (0, v) (pressureSource a b hab f)
 
+/-- Pressure alias, given by `RadialPullback.physicalAlias d a b M (0, v) (pressureSource a b
+hab f)`. -/
 noncomputable def pressureAlias (d a b M : ℝ) (hab : a < b) (v : Plane)
     (f : Lift S → ℝ) : Lift S → ℝ :=
   RadialPullback.physicalAlias d a b M (0, v) (pressureSource a b hab f)
@@ -430,6 +444,7 @@ section Stream
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Weighted source, given by `p.1 * γd p`. -/
 noncomputable def weightedSource (γd : ℝ × E → ℝ) (p : ℝ × E) : ℝ := p.1 * γd p
 
 theorem weightedSource_contDiff {γd : ℝ × E → ℝ} (hγ : ContDiff ℝ ∞ γd) :
@@ -518,6 +533,8 @@ section BarIdentities
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Torus periodic lift, given by `∀ r : ℝ, ∀ s : S, FourierAlias.TorusPeriodic (fun Y => f (r,
+(s, Y)))`. -/
 noncomputable def TorusPeriodicLift (f : Lift S → ℝ) : Prop :=
   ∀ r : ℝ, ∀ s : S, FourierAlias.TorusPeriodic (fun Y => f (r, (s, Y)))
 
@@ -662,7 +679,7 @@ theorem torusAverage_physicalCompact {d a b M : ℝ}
   change FourierAlias.torusMean (fun Y => RadialPullback.physicalCompact d a b M ((0 : S), v) f
     (p.1, (p.2, Y))) = _
   rw [heq, FourierAlias.torusMean_sub hA (continuous_const.fun_smul hB),
-    FourierAlias.torusMean_smul]
+      FourierAlias.torusMean_smul]
   change FourierAlias.torusMean A - C * FourierAlias.torusMean B = _
   rw [torusMean_shifted_integral hr hf.continuous hp hφ v p.2,
     torusMean_shifted_integral hab.le hf.continuous hp hφ v p.2,
@@ -682,14 +699,14 @@ theorem torusAverage_physicalCompact_of_mass_zero {d a b M : ℝ}
     have hzero : torusAverage (RadialPullback.physicalCompact d a b M ((0 : S), v) f) p = 0 :=
       torusAverage_zero_of_forall fun Y =>
         radial_zero_of_lt (RadialPullback.physicalCompact_supported ha hab hd hf hs M ((0 : S), v))
-          hlt
+            hlt
     rw [hzero]
     symm
     have hi : EqOn (fun r => torusAverage f (r, p.2)) (fun _ => 0) (uIcc a p.1) := by
       intro r hr'
       rw [uIcc_of_ge hlt.le] at hr'
       exact radial_zero_of_le (torusAverage_contDiff hf).continuous (torusAverage_supported hs)
-        hr'.2
+          hr'.2
     rw [intervalIntegral.integral_congr hi, intervalIntegral.integral_zero]
 
 theorem meanPressure_bar_eq_integral {d a b M : ℝ}
@@ -782,7 +799,7 @@ theorem streamGamma_eq_desired_sub_alias_global {d a b M : ℝ}
     rw [radial_zero_of_lt (streamGamma_supported hΨs (physicalSpeed d M) v) hpa,
       radial_zero_of_lt hs hpa,
       radial_zero_of_lt (RadialPullback.physicalAlias_supported ha hab hd M v (weightedSource γd))
-        hpa]
+          hpa]
     simp
 
 /-- The total physical radial integral, written in normalized transport coordinates. -/

@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceUniformEnvelope
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ParentInitializedRadiusPolynomial
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryProfileEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceUniformEnvelope
 
 /-! The actual chosen primary amplitude has exponential initial decay.
 Its prefactor is a fixed polynomial in the same source parameters. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,9 +25,13 @@ namespace EulerPacketInitialAmplitude
 
 open EulerPolynomialCost EulerParentInitializedRadius
 
+/-- Envelope, given by `4*X^2*(1+sourceEnvelope X)`. -/
 def envelope (X : ℝ) : ℝ := 4*X^2*(1+sourceEnvelope X)
+/-- Polynomial, given by `4*Polynomial.X^2*(1+sourcePolynomial)`. -/
 def polynomial : Polynomial ℝ := 4*Polynomial.X^2*(1+sourcePolynomial)
+/-- Bound constant, given by `coefficientCost polynomial`. -/
 def boundConstant : ℝ := coefficientCost polynomial
+/-- Degree, given by `polynomial.natDegree`. -/
 def degree : ℕ := polynomial.natDegree
 
 theorem constant_pos : 0 < boundConstant := coefficientCost_pos _
@@ -52,12 +61,12 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketInitialAmplit
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)} (J : Guards hτ hτT P H)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (L : EulerTransversePacketJoin.Budget D τ hτ hτT H (Fin 4) 6)
 
 theorem primaryAmplitude_polynomial (X x : ℝ) (hX : 1 ≤ X)
     (hH : P.horizon ≤ X) (hh : J.hchild ≤ X) (hδ : J.δ ≤ 1)
-    (hC : L.C₀ ≤ sourceEnvelope X) (hσ : P.sigma*x ≤ 2) :
+    (hC : L.C₀ ≤ sourceEnvelope X) (hσ : P.sigma * x ≤ 2) :
     J.primaryAmplitude hball ≤ boundConstant*X^degree*Real.exp (-x/8) := by
   have hF : ∀ t y, ‖D.F.field t y‖ ≤ L.C₀ := by
     intro t y
@@ -100,10 +109,10 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketInitialAmplit
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} {P : ParentFrame D 0} (J : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
 
 theorem primaryAmplitude_polynomial (X x : ℝ) (hX : 1 ≤ X)
-    (hH : P.horizon ≤ X) (hh : J.hchild ≤ X) (hδ : J.δ ≤ 1) (hσ : P.sigma*x ≤ 2) :
+    (hH : P.horizon ≤ X) (hh : J.hchild ≤ X) (hδ : J.δ ≤ 1) (hσ : P.sigma * x ≤ 2) :
     J.primaryAmplitude hball ≤ boundConstant*X^degree*Real.exp (-x/8) := by
   have hS := zero_le_one.trans (sourceEnvelope_one X hX)
   have hX0 := zero_le_one.trans hX

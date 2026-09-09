@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerState
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothEulerEvolution
 
-@[expose] public section
-
 /-! The actual physical velocity and pressure force in every Sobolev
 order. Strong time evolution follows from their classical Euler equation
 and continuous L² jets, including both endpoint derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,8 +23,12 @@ namespace EulerParentPacketFrames
 open Set EulerSmoothLimit EulerLpTranslation EulerSmoothFieldSobolevTime
   EulerSmoothEulerEvolution EulerVolterraConvolution EulerTimeIntervalRestriction
 
+/-- Sobolev data, collecting `velocity`, `force`, `velocity_match`, `force_match`,
+`velocity_continuous`, `force_continuous`. -/
 structure SobolevData {A : Parent} (E : Evolution A) where
+  /-- Velocity field of `SobolevData`, of type `Icc (0 : ℝ) A.T → SmoothL2Field Space`. -/
   velocity : Icc (0 : ℝ) A.T → SmoothL2Field Space
+  /-- Force of `SobolevData`, of type `Icc (0 : ℝ) A.T → SmoothL2Field Space`. -/
   force : Icc (0 : ℝ) A.T → SmoothL2Field Space
   velocity_match : ∀ (t : Icc (0 : ℝ) A.T) x, E.velocity (t,x)=(velocity t).field x
   force_match : ∀ (t : Icc (0 : ℝ) A.T) x, E.force t x=(force t).field x
@@ -45,6 +50,8 @@ theorem strong_euler (q : ℕ) (t : Icc (0 : ℝ) A.T) :
     (fun s x => (E.pressure_gradient s x).trans (S.force_match s x))
     E.velocity_differentiable E.momentum_zero q t
 
+/-- Restrict time, bundling `velocity`, `force`, `velocity_match`, `force_match` and the
+required compatibility proofs. -/
 def restrictTime (T : ℝ) (hT : 0 < T) (hTA : T ≤ A.T) :
     SobolevData (E.restrictTime T hT hTA) where
   velocity t := S.velocity (initialInclusion A.T T hTA t)

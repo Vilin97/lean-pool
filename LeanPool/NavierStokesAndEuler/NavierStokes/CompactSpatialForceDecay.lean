@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorBridge
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-!
 # Space-time decay from compact spatial and future time support
@@ -17,6 +16,9 @@ Unlike the periodic force bound, these estimates use one compact subset of
 Euclidean space. They bound the full one-sided space-time derivative tensors,
 including time zero, and allow every real decay exponent.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

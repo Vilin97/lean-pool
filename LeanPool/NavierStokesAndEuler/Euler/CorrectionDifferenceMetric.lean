@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifferencePDE
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevDifferenceEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityConstants
+import LeanPool.NavierStokesAndEuler.Euler.SobolevDifferenceEnergy
+import LeanPool.NavierStokesAndEuler.Euler.SquaredMetricStability
+import Mathlib.Algebra.Order.Star.Real
+
+/-! The actual nonlinear viscosity-difference PDE implies a fixed squared metric energy inequality.
+-/
 
 @[expose] public section
 
-/-! The actual nonlinear viscosity-difference PDE implies a fixed squared metric energy inequality.
-  -/
 
 noncomputable section
 
@@ -20,7 +24,7 @@ namespace EulerCorrectionDifferenceMetric
 
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerLiftedPressure
   EulerSpatialSobolevInverse EulerCylinderSobolevSpace EulerCorrectionOperators
-    EulerCorrectionDifference
+      EulerCorrectionDifference
   EulerCorrectionDifferencePDE EulerCorrectionStabilityConstants EulerSobolevTransport
   EulerSobolevMetricTransport EulerSobolevHeatGenerator EulerMetricHeatEnergy EulerSobolevL2Product
   EulerSquaredMetricStability EulerSobolevDifferenceEnergy
@@ -30,38 +34,39 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The existing Sobolev normed-group instance for the literal metric difference equation. -/
 local instance metricSobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 /-- The existing real Sobolev module instance for the literal metric difference equation. -/
 local instance metricSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
-/-- The actual correction-difference PDE gives the quantitative squared L² metric bound, with no assumed energy inequality. -/
+/-- The actual correction-difference PDE gives the quantitative squared L² metric bound, with no
+assumed energy inequality. -/
 theorem difference_metric_deriv_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
     (D : CorrectionData period q T) (hq : 6 ≤ q) (τ : T)
-    (u v : SobolevSpace period (q+1)) (A : SmoothCoefficient period)
+    (u v : SobolevSpace period (q + 1)) (A : SmoothCoefficient period)
     (K : ℝ → LiftL2 period →L[ℝ] LiftL2 period) (e : ℝ → LiftL2 period)
     (t ν μ c Kb Kx Kt A0 A2 Z R : ℝ) (K' : LiftL2 period →L[ℝ] LiftL2 period)
     (hc : 0 < c) (hν : 0 ≤ ν) (hν1 : ν ≤ 1)
-    (hKv : K t=A.operator) (hev : e t=value period (u-v))
+    (hKv : K t = A.operator) (hev : e t = value period (u - v))
     (hK : HasDerivAt K K' t) (he : HasDerivAt e (differenceRhs period D hq ν μ τ u v) t)
     (hKb : ‖A.operator‖ ≤ Kb) (hKx : (A.firstBound : ℝ) ≤ Kx) (hKt : ‖K'‖ ≤ Kt)
     (hA0 : ((D.linear.coefficient τ).bound : ℝ) ≤ A0)
     (hA2 : (∑ i : Fin 3, (((D.quadratic i).coefficient τ).bound : ℝ)) ≤ A2)
     (hZ : ‖D.approximation τ‖ ≤ Z) (hu : ‖u‖ ≤ R) (hv : ‖v‖ ≤ R)
-    (hsym : ∀ x a b, ⟪A.coefficient x a,b⟫_ℝ=⟪a,A.coefficient x b⟫_ℝ)
-    (hpos : ∀ x a, c^2*‖a‖^2 ≤ ⟪A.coefficient x a,a⟫_ℝ)
-    (hinv : ∀ x a, A.coefficient x ((D.metric.coefficient τ).coefficient x a)=a)
+    (hsym : ∀ x a b, ⟪A.coefficient x a, b⟫_ℝ = ⟪a, A.coefficient x b⟫_ℝ)
+    (hpos : ∀ x a, c ^ 2 * ‖a‖ ^ 2 ≤ ⟪A.coefficient x a, a⟫_ℝ)
+    (hinv : ∀ x a, A.coefficient x ((D.metric.coefficient τ).coefficient x a) = a)
     (hz : value period (D.approximation τ) ∈ divergenceFreeSpace period D.κ D.direction)
     (hud : value period u ∈ divergenceFreeSpace period D.κ D.direction)
     (hvd : value period v ∈ divergenceFreeSpace period D.κ D.direction) :
     deriv (fun s => ⟪K s (e s),e s⟫_ℝ) t ≤
-      growthConstant c Kb Kx Kt (velocityBound period q Z R) (lowerConstant period q A0 A2 Z R)*
+      growthConstant c Kb Kx Kt (velocityBound period q Z R) (lowerConstant period q A0 A2 Z R) *
         ⟪K t (e t),e t⟫_ℝ+defectConstant Kb R*|ν-μ|^2 := by
   let d := u-v
   let top := value period (transportBilinear period hq (velocityComponents D.κ D.direction)
     (velocityComponents_norm D.κ D.direction D.scale_bound D.direction_bound) (D.approximation τ+u)
-      d)
+        d)
   let p := value period (D.pressure period hq τ u)-value period (D.pressure period hq τ v)
-  let F := -value period (differenceRemainder period D hq τ u v)+
+  let F := -value period (differenceRemainder period D hq τ u v) +
     (ν-μ) • laplacianEvaluation period (q+1) (by omega) v
   let L := lowerConstant period q A0 A2 Z R
   let V := velocityBound period q Z R
@@ -69,7 +74,7 @@ theorem difference_metric_deriv_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
   have hz0 := (norm_nonneg (D.approximation τ)).trans hZ
   have ha00 := (D.linear.coefficient τ).bound.coe_nonneg.trans hA0
   have ha20 := (Finset.sum_nonneg (fun i _ => ((D.quadratic i).coefficient
-    τ).bound.coe_nonneg)).trans hA2
+      τ).bound.coe_nonneg)).trans hA2
   have hL : 0 ≤ L := lowerConstant_nonneg period q A0 A2 Z R ha00 ha20 hz0 hr0
   have hV : 0 ≤ V := velocityBound_nonneg period q Z R hz0 hr0
   have hkx0 := A.firstBound.coe_nonneg.trans hKx
@@ -87,7 +92,7 @@ theorem difference_metric_deriv_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
   have hp : ⟪K t (e t),(D.metric.coefficient τ).operator p⟫_ℝ=0 := by
     rw [hKv,hev]
     exact metric_pressure_cancellation period D.κ D.direction A.coefficient (D.metric.coefficient
-      τ).coefficient
+        τ).coefficient
       A.measurable (D.metric.coefficient τ).measurable A.bound (D.metric.coefficient τ).bound
       A.norm_bound (D.metric.coefficient τ).norm_bound hsym hinv hdiv hpgrad
   have ht : |⟪K t (e t),top⟫_ℝ| ≤ (Kx*V)*‖e t‖^2 := by
@@ -109,7 +114,7 @@ theorem difference_metric_deriv_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
   have hcoer : c^2*‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ := by
     rw [hKv]
     exact coefficientOperator_coercive A.coefficient A.measurable A.bound A.norm_bound (c^2) hpos
-      (e t)
+        (e t)
   have hsymL : ∀ a b, ⟪K t a,b⟫_ℝ=⟪a,K t b⟫_ℝ := by
     rw [hKv]
     exact coefficientOperator_inner_swap A.coefficient A.measurable A.bound A.norm_bound hsym

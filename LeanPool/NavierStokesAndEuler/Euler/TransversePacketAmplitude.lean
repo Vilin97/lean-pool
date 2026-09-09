@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-public import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
+import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
+
+/-! Restoring arbitrary forcing amplitudes by actual scalar homogeneity. -/
 
 @[expose] public section
 
-/-! Restoring arbitrary forcing amplitudes by actual scalar homogeneity. -/
 
 noncomputable section
 
@@ -30,20 +32,20 @@ variable {P : ℝ} [Fact (0 < P)]
 /-- A genuine homogeneous operator's unit-amplitude bound extends to every
 nonnegative amplitude without changing its radius or its derivative shifts. -/
 theorem amplitude_bound
-    (S : ∀ {r : VectorField}, Forcing P D r → C(Icc (0 : ℝ) D.T,LiftL2 P))
+    (S : ∀ {r : VectorField}, Forcing P D r → C(Icc (0 : ℝ) D.T, LiftL2 P))
     (hs : ∀ {r} (G : Forcing P D r), ContDiff ℝ ∞ (fun a => pathTranslate P a (S G)))
     (hm : ∀ {r r'} (G : Forcing P D r) (H : Forcing P D r') (a : ℝ),
       H.path = a • G.path → S H = a • S G)
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
     (directions : ι → LiftTangent) (q : ℕ) (R C : ℝ) (d e : ℕ)
     (hunit : ∀ {r} (G : Forcing P D r),
       (∀ n, block directions q (fun a => pathTranslate P a
         (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ majorant R d n) →
-      ∀ n, block directions q (fun a => pathTranslate P a (normalize g hg (S G))) n 0 ≤ C*majorant
-        R e n)
+      ∀ n, block directions q (fun a => pathTranslate P a (normalize g hg (S G))) n 0 ≤ C * majorant
+          R e n)
     {r : VectorField} (G : Forcing P D r) (A : ℝ) (hA : 0 ≤ A)
     (hb : ∀ n, block directions q (fun a => pathTranslate P a
-      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ A*majorant R d n)
+      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ A * majorant R d n)
     (n : ℕ) :
     block directions q (fun a => pathTranslate P a (normalize g hg (S G))) n 0 ≤
       (C*A)*majorant R e n := by

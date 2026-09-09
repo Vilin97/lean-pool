@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryMixed
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
 
+/-! The actual translation action on homogeneous gradients and localized Newtonian operators. -/
+
 @[expose] public section
 
-/-! The actual translation action on homogeneous gradients and localized Newtonian operators. -/
 
 noncomputable section
 
@@ -21,13 +22,16 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerVectorCalculus
   EulerMeanSolenoidal EulerMeanCutoffCurl EulerMeanGradientTest
 open scoped ContDiff
 
+/-- L2 translation equiv, constructed using `LinearIsometryEquiv.ofSurjective`. -/
 def l2TranslationEquiv (a : Space) : L2 ≃ₗᵢ[ℝ] L2 :=
   LinearIsometryEquiv.ofSurjective (translation a) (fun u =>
     ⟨translation (-a) u, by rw [translation_add, add_neg_cancel, translation_zero]⟩)
 
 theorem l2TranslationEquiv_apply (a : Space) (u : L2) : l2TranslationEquiv a u = translation a u :=
-  rfl
+    rfl
 
+/-- Gradient translation, given by `LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 =>
+l2TranslationEquiv a)`. -/
 def gradientTranslation (a : Space) : GradientTensor ≃ₗᵢ[ℝ] GradientTensor :=
   LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 => l2TranslationEquiv a)
 
@@ -43,6 +47,7 @@ theorem gradientTranslation_zero (G : GradientTensor) : gradientTranslation 0 G 
   ext i : 1
   exact translation_zero (G i)
 
+/-- Translated test as an element of `Test`. -/
 def translatedTest (a : Space) (f : Test) : Test :=
   ⟨fun x => (f : Space → Space) (x+a), f.smooth.comp (contDiff_id.add contDiff_const),
     f.compact.comp_homeomorph (Homeomorph.addRight a)⟩
@@ -72,6 +77,7 @@ theorem gradientTranslation_homogeneous (a : Space) (u : homogeneousSpace) :
     exact EulerMeanGradientTest.testGradient.range.le_topologicalClosure
       (LinearMap.mem_range_self _ _)
 
+/-- Homogeneous translation, bundling `toFun`, `map_add`, `map_smul`, `norm_map`. -/
 def homogeneousTranslation (a : Space) : homogeneousSpace →ₗᵢ[ℝ] homogeneousSpace where
   toFun u := ⟨gradientTranslation a (u : GradientTensor), gradientTranslation_homogeneous a u⟩
   map_add' u v := by apply Subtype.ext; exact map_add (gradientTranslation a) _ _
@@ -80,7 +86,7 @@ def homogeneousTranslation (a : Space) : homogeneousSpace →ₗᵢ[ℝ] homogen
 
 theorem homogeneousTranslation_coe (a : Space) (u : homogeneousSpace) :
     (homogeneousTranslation a u : GradientTensor) = gradientTranslation a (u : GradientTensor) :=
-      rfl
+        rfl
 
 theorem homogeneousTranslation_add (a b : Space) (u : homogeneousSpace) :
     homogeneousTranslation a (homogeneousTranslation b u) = homogeneousTranslation (a+b) u := by
@@ -93,7 +99,7 @@ theorem homogeneousTranslation_zero (u : homogeneousSpace) : homogeneousTranslat
 
 theorem homogeneousTranslation_test (a : Space) (f : Test) :
     homogeneousTranslation a (homogeneousGradient f) = homogeneousGradient (translatedTest a f) :=
-      by
+        by
   apply Subtype.ext
   exact (testGradient_translated a f).symm
 
@@ -135,7 +141,7 @@ theorem cutoffCurl_translation (a : Space) (χ : Cutoff) (u : homogeneousSpace) 
 /-- The actual weak inverse respects spatial translation of its cutoff and forcing. -/
 theorem weakPotential_translation (a : Space) (χ : Cutoff) (z : L2) :
     homogeneousTranslation a (weakPotential χ z) = weakPotential (χ.translate a) (translation a z)
-      := by
+        := by
   apply ext_inner_right ℝ
   intro v
   calc
@@ -147,7 +153,7 @@ theorem weakPotential_translation (a : Space) (χ : Cutoff) (z : L2) :
       ((translation a).inner_map_map _ _).symm
     _ = ⟪translation a z, cutoffCurl (χ.translate a) v⟫_ℝ := by
       rw [cutoffCurl_translation, homogeneousTranslation_add, add_neg_cancel,
-        homogeneousTranslation_zero]
+          homogeneousTranslation_zero]
     _ = _ := (ContinuousLinearMap.adjoint_inner_left (cutoffCurl (χ.translate a)) v _).symm
 
 theorem mixedBoundaryOperator_translation (a : Space) (χ ψ : Cutoff) (z : L2) :
@@ -166,7 +172,7 @@ theorem mixedBoundaryOperator_translationCommutator (a : Space) (χ ψ : Cutoff)
     translationCommutator a (mixedBoundaryOperator χ ψ) =
       (mixedBoundaryOperator ((χ.translate a).sub χ) (ψ.translate a) +
         mixedBoundaryOperator χ ((ψ.translate a).sub ψ)).comp (translation a).toContinuousLinearMap
-          := by
+            := by
   apply ContinuousLinearMap.ext
   intro z
   change translation a (mixedBoundaryOperator χ ψ z) - mixedBoundaryOperator χ ψ (translation a z) =
@@ -185,7 +191,7 @@ theorem mixedBoundaryOperator_translationCommutator_norm_le (a : Space) (χ ψ :
       (mul_nonneg (cutoffBound_nonneg _) (cutoffBound_nonneg _)))
   intro z
   change ‖translation a (mixedBoundaryOperator χ ψ z) - mixedBoundaryOperator χ ψ (translation a
-    z)‖ ≤ _
+      z)‖ ≤ _
   rw [mixedBoundaryOperator_translation]
   change ‖(mixedBoundaryOperator (χ.translate a) (ψ.translate a) -
     mixedBoundaryOperator χ ψ) (translation a z)‖ ≤ _
@@ -193,11 +199,11 @@ theorem mixedBoundaryOperator_translationCommutator_norm_le (a : Space) (χ ψ :
     _ ≤ ‖mixedBoundaryOperator (χ.translate a) (ψ.translate a) -
         mixedBoundaryOperator χ ψ‖ * ‖translation a z‖ :=
       (mixedBoundaryOperator (χ.translate a) (ψ.translate a) - mixedBoundaryOperator χ ψ).le_opNorm
-        _
+          _
     _ ≤ _ := by
       rw [(translation a).norm_map]
       exact mul_le_mul_of_nonneg_right
         (mixedBoundaryOperator_difference_norm_le (χ.translate a) χ (ψ.translate a) ψ) (norm_nonneg
-          z)
+            z)
 
 end EulerMeanBoundary

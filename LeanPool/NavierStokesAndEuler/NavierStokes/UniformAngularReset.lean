@@ -8,13 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AngularMomentReset
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingTail
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
+import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothMomentRepair
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Uniform applicability of the angular reset
@@ -24,6 +22,9 @@ The outgoing uniform wait damps the angular-history discrepancy and its
 parameter derivatives before this nonlinear repair is applied.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter MeasureTheory
@@ -32,6 +33,7 @@ open NavierStokes.AngularMomentReset
 
 namespace NavierStokes.UniformAngularReset
 
+/-- Lambda range, given by `Icc 0 (1 / 10)`. -/
 def lambdaRange : Set ℝ := Icc 0 (1 / 10)
 
 theorem linearMatrix_det_ne_zero_nonneg (lam : ℝ) (hlam : 0 ≤ lam) :
@@ -60,18 +62,20 @@ theorem continuous_quadraticMoment (j : Fin 2) : Continuous (fun lam => quadrati
   apply continuousOn_integral_of_compact_support
     (k := Icc (2 * (j.val : ℝ) - 3 / 20) (2 * (j.val : ℝ) + 3 / 20)) isCompact_Icc
   · exact ((Real.continuous_exp.comp ((continuous_const.sub (continuous_const.mul
-    continuous_fst)).mul
+      continuous_fst)).mul
       continuous_snd)).mul (((bump_contDiff j).continuous.comp continuous_snd).pow 2)).continuousOn
   · intro lam y _ hy
     have hz : bump j y = 0 := Classical.byContradiction (fun hn => hy (bump_support j hn))
     simp [hz]
 
+/-- Linear continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 def linearCLM (lam : ℝ) : Coeff →L[ℝ] Coeff :=
   LinearMap.toContinuousLinearMap
     { toFun := (linearMatrix lam).mulVec
       map_add' := Matrix.mulVec_add _
       map_smul' := fun r c => Matrix.mulVec_smul _ r c }
 
+/-- Linear equiv nonneg, constructed using `LinearEquiv.toContinuousLinearEquiv`. -/
 def linearEquivNonneg (lam : ℝ) (hlam : 0 ≤ lam) : Coeff ≃L[ℝ] Coeff :=
   LinearEquiv.toContinuousLinearEquiv
     { toFun := (linearMatrix lam).mulVec
@@ -101,16 +105,18 @@ theorem continuous_linearCLM : Continuous linearCLM := by
       dsimp [linearMatrix, angularSlope, pressureSlope]
     · exact continuous_moment.comp (continuous_const.sub continuous_id)
     · exact (Real.continuous_exp.comp (continuous_const.mul (continuous_const.sub
-      continuous_id))).mul
+        continuous_id))).mul
         (continuous_moment.comp (continuous_const.sub continuous_id))
     · exact continuous_const.mul
         (continuous_moment.comp (continuous_const.sub (continuous_const.mul continuous_id)))
     · exact continuous_const.mul
         ((Real.continuous_exp.comp (continuous_const.mul (continuous_const.sub
-          (continuous_const.mul continuous_id)))).mul
+            (continuous_const.mul continuous_id)))).mul
           (continuous_moment.comp (continuous_const.sub (continuous_const.mul continuous_id))))
   exact L.continuous_of_finiteDimensional.comp hM
 
+/-- Quadratic coefficients bilin, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the
+required compatibility proofs. -/
 def quadraticCoefficientsBilin (q : Coeff) : Coeff →ₗ[ℝ] Coeff →ₗ[ℝ] Coeff where
   toFun c :=
     { toFun := fun d => ![0, q 0 * c 0 * d 0 + q 1 * c 1 * d 1]
@@ -131,6 +137,7 @@ def quadraticCoefficientsBilin (q : Coeff) : Coeff →ₗ[ℝ] Coeff →ₗ[ℝ]
     fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul]
     ring
 
+/-- Quadratic coefficient map, bundling `toFun`, `map_add`, `map_smul`. -/
 def quadraticCoefficientMap : Coeff →ₗ[ℝ] (Coeff →L[ℝ] Coeff →L[ℝ] Coeff) where
   toFun q := LinearMap.toContinuousLinearMap
     ((LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Coeff) (F' := Coeff)).toLinearMap.comp
@@ -157,7 +164,7 @@ theorem continuous_quadraticCLM : Continuous quadraticCLM := by
     LinearMap.continuous_of_finiteDimensional (𝕜 := ℝ) (E := Coeff)
       (F' := Coeff →L[ℝ] Coeff →L[ℝ] Coeff) quadraticCoefficientMap
   have heq : quadraticCLM = fun lam => quadraticCoefficientMap (fun j => quadraticMoment lam j) :=
-    rfl
+      rfl
   rw [heq]
   exact hL.comp (continuous_pi continuous_quadraticMoment)
 
@@ -184,9 +191,11 @@ section SmoothUniformInverse
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Quadratic map, given by `B c + A c c`. -/
 def quadraticMap (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E :=
   B c + A c c
 
+/-- Tangent, given by `B.toContinuousLinearMap + A c + A.flip c`. -/
 def tangent (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E →L[ℝ] E :=
   B.toContinuousLinearMap + A c + A.flip c
 
@@ -452,6 +461,7 @@ open NavierStokes.OutgoingSchedule NavierStokes.OutgoingTail
 def baseWeight (d : TailData) (y : ℝ) : ℝ :=
   Real.exp (3 * y / 2) * radialAmplitude d.core.P d.core.dropLength d.core.lam y
 
+/-- Base history, given by `(5 / 8) * d.core.P + OutgoingSchedule.primitive (baseWeight d) y`. -/
 def baseHistory (d : TailData) (y : ℝ) : ℝ :=
   (5 / 8) * d.core.P + OutgoingSchedule.primitive (baseWeight d) y
 
@@ -517,6 +527,7 @@ theorem baseHistory_le (d : TailData) {y : ℝ} (hy : 0 ≤ y) :
   dsimp [f] at h hzero
   linarith
 
+/-- Flatten shape, constructed using `Real.exp`. -/
 def flattenShape (d : TailData) (y eta : ℝ) : ℝ :=
   Real.exp ((sigma ((y - d.core.endpoint) / flattenLength) - 1) * logShape eta -
     sigma ((y - d.core.endpoint) / flattenLength) * Real.log 2)
@@ -545,9 +556,12 @@ theorem flattenShape_le_one (d : TailData) (y eta : ℝ) : flattenShape d y eta 
     (Real.log_nonneg (by norm_num : (1 : ℝ) ≤ 2))
   linarith
 
+/-- Flat weight, given by `Real.exp (3 * y / 2) * flattened d (y, eta)`. -/
 def flatWeight (d : TailData) (eta y : ℝ) : ℝ :=
   Real.exp (3 * y / 2) * flattened d (y, eta)
 
+/-- Flat history, given by `(5 / 8) * d.core.P * shape eta + OutgoingSchedule.primitive
+(flatWeight d eta) y`. -/
 def flatHistory (d : TailData) (eta y : ℝ) : ℝ :=
   (5 / 8) * d.core.P * shape eta + OutgoingSchedule.primitive (flatWeight d eta) y
 
@@ -579,7 +593,7 @@ theorem flatHistory_bounds (d : TailData) (eta : ℝ) {y : ℝ} (hy : 0 ≤ y) :
         nlinarith [sq_nonneg eta]
       exact mul_le_of_le_one_right (mul_nonneg (by norm_num) d.core.P_pos.le) hs
     · exact intervalIntegral.integral_mono hy ((flatWeight_contDiff d
-      eta).continuous.intervalIntegrable 0 y)
+        eta).continuous.intervalIntegrable 0 y)
         ((baseWeight_contDiff d).continuous.intervalIntegrable 0 y) (flatWeight_le_base d eta)
 
 theorem compact_integral_contDiff (F : ℝ → ℝ → ℝ) (a b : ℝ) (hab : a ≤ b)
@@ -606,6 +620,8 @@ theorem flatHistory_contDiff (d : TailData) {y : ℝ} (hy : 0 ≤ y) :
   (contDiff_const.mul shape_contDiff).add
     (compact_integral_contDiff (flatWeight d) 0 y hy (flatWeight_joint_contDiff d))
 
+/-- Eta rate, given by `(sigma ((y - d.core.endpoint) / flattenLength) - 1) * (2 * eta / (1 +
+eta ^ 2))`. -/
 def etaRate (d : TailData) (eta y : ℝ) : ℝ :=
   (sigma ((y - d.core.endpoint) / flattenLength) - 1) * (2 * eta / (1 + eta ^ 2))
 
@@ -615,8 +631,8 @@ theorem logShape_hasDerivAt (eta : ℝ) :
   simp []
 
 theorem logShape_deriv_bound (eta : ℝ) : |2 * eta / (1 + eta ^ 2)| ≤ 1 := by
-  rw [abs_div, abs_mul, abs_of_pos (by positivity : 0 < (2 : ℝ)), abs_of_pos (by positivity : 0 < 1
-    + eta ^ 2)]
+  rw [abs_div, abs_mul, abs_of_pos (by
+      positivity : 0 < (2 : ℝ)), abs_of_pos (by positivity : 0 < 1 + eta ^ 2)]
   apply (div_le_one (by positivity : 0 < 1 + eta ^ 2)).mpr
   nlinarith [sq_nonneg (|eta| - 1), sq_abs eta]
 
@@ -694,14 +710,14 @@ theorem flatHistory_deriv_bound (d : TailData) (eta : ℝ) {y : ℝ} (hy : 0 ≤
     rw [abs_mul, abs_of_nonneg (mul_nonneg (by norm_num) d.core.P_pos.le), abs_mul,
       abs_of_pos (shape_pos eta), abs_neg]
     have hprod := mul_le_mul (shape_le_one eta) (logShape_deriv_bound eta) (abs_nonneg _)
-      zero_le_one
+        zero_le_one
     simpa using mul_le_mul_of_nonneg_left hprod (mul_nonneg (by norm_num) d.core.P_pos.le)
   have hint : |∫ t in (0 : ℝ)..y, flatWeight d eta t * etaRate d eta t| ≤
       ∫ t in (0 : ℝ)..y, baseWeight d t := by
     apply (intervalIntegral.abs_integral_le_integral_abs hy).trans
     apply intervalIntegral.integral_mono hy
       ((((flatWeight_contDiff d eta).continuous.mul (etaRate_continuous d
-        eta)).abs).intervalIntegrable 0 y)
+          eta)).abs).intervalIntegrable 0 y)
       ((baseWeight_contDiff d).continuous.intervalIntegrable 0 y)
     exact flatWeight_eta_bound d eta
   exact (abs_add_le _ _).trans (add_le_add hpre hint)
@@ -745,7 +761,7 @@ theorem flatHistory_increment (d : TailData) (eta : ℝ) {y : ℝ} (hy : d.flatt
     rw [flatWeight_uniform d eta htF]
     convert! (baseWeight_hasDerivAt d t).div_const (2 * (1 - d.core.lam)) using 1
     rw [slope_hold d.core.dropLength_pos.le htH]
-    field_simp ; ring
+    field_simp; ring
   have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv
     ((flatWeight_contDiff d eta).continuous.intervalIntegrable d.flattenEnd y)
   have hadd := intervalIntegral.integral_add_adjacent_intervals (μ := volume)
@@ -755,6 +771,7 @@ theorem flatHistory_increment (d : TailData) (eta : ℝ) {y : ℝ} (hy : d.flatt
   rw [← hadd, hi]
   ring
 
+/-- Flat ratio, given by `flatHistory d eta d.flattenEnd / (baseWeight d d.flattenEnd / 2)`. -/
 def flatRatio (d : TailData) (eta : ℝ) : ℝ :=
   flatHistory d eta d.flattenEnd / (baseWeight d d.flattenEnd / 2)
 
@@ -778,16 +795,17 @@ theorem flatRatio_deriv_bound (d : TailData) (eta : ℝ) :
     |deriv (flatRatio d) eta| ≤ 2 / (1 - d.core.lam) := by
   have hW : 0 < baseWeight d d.flattenEnd := baseWeight_pos d _
   change |deriv (fun eta => flatHistory d eta d.flattenEnd / (baseWeight d d.flattenEnd / 2)) eta|
-    ≤ _
+      ≤ _
   rw [deriv_div_const, abs_div, abs_of_pos (by positivity : 0 < baseWeight d d.flattenEnd / 2)]
   calc
     _ ≤ baseHistory d d.flattenEnd / (baseWeight d d.flattenEnd / 2) :=
       div_le_div_of_nonneg_right (flatHistory_deriv_bound d eta (flattenEnd_pos d).le) (by
-        positivity)
+          positivity)
     _ ≤ (baseWeight d d.flattenEnd / (1 - d.core.lam)) / (baseWeight d d.flattenEnd / 2) :=
       div_le_div_of_nonneg_right (baseHistory_le d (flattenEnd_pos d).le) (by positivity)
     _ = _ := by field_simp [hW.ne', show 1 - d.core.lam ≠ 0 by linarith [d.core.lam_lt]]
 
+/-- Decay factor, given by `Real.exp (-(1 - d.core.lam) * (d.uniformWait - 3))`. -/
 def decayFactor (d : TailData) : ℝ :=
   Real.exp (-(1 - d.core.lam) * (d.uniformWait - 3))
 
@@ -832,7 +850,7 @@ theorem decayFactor_le (d : TailData) (hlam : d.core.lam ≤ 1 / 15) :
   have he : decayFactor d = Real.exp (3 * (1 - d.core.lam)) *
       d.core.lam ^ (30 * (1 - d.core.lam)) := by
     rw [decayFactor, TailData.uniformWait, hlog, Real.rpow_def_of_pos d.core.lam_pos, ←
-      Real.exp_add]
+        Real.exp_add]
     congr 1
     ring
   rw [he]
@@ -907,7 +925,7 @@ theorem normalizedDebt_eq_actual (d : TailData) (eta : ℝ) :
   rw [hconst, hcenter]
   unfold normalizedDebt flatRatio decayFactor
   rw [show -(1 - d.core.lam) * (d.uniformWait - 3) = -((1 - d.core.lam) * (d.uniformWait - 3)) by
-    ring,
+      ring,
     Real.exp_neg]
   field_simp [(baseWeight_pos d d.flattenEnd).ne', Real.exp_ne_zero,
     show 1 - d.core.lam ≠ 0 by linarith [d.core.lam_lt]]
@@ -942,14 +960,15 @@ theorem actual_debt_tends_to_zero (ε : ℝ) (hε : 0 < ε) :
 /-- A reset for the actual scheduled debt, including the uniform first angular
 jet estimate needed for later profile estimates. -/
 structure ResetWitness (d : TailData) (K : ℝ) where
+  /-- Coefficients of `ResetWitness`, of type `ℝ → Coeff`. -/
   coefficients : ℝ → Coeff
   smooth : ContDiff ℝ ∞ coefficients
   angular : ∀ eta,
     (∫ u, Real.exp (angularSlope d.core.lam * u) * relative (coefficients eta) u) = normalizedDebt
-      d eta
+        d eta
   pressure : ∀ eta,
     (∫ u, Real.exp (pressureSlope d.core.lam * u) * ((1 + relative (coefficients eta) u) ^ 2 - 1))
-      = 0
+        = 0
   coefficient_bound : ∀ eta, ‖coefficients eta‖ ≤ K * d.core.lam ^ (28 : ℕ)
   eta_derivative_bound : ∀ eta, ‖deriv coefficients eta‖ ≤ K * d.core.lam ^ (28 : ℕ)
   small_jets : ∀ eta u,
@@ -1022,8 +1041,11 @@ theorem exists_scheduled_reset :
     · exact (hv.1.trans (hb.trans hδsmall)).trans (by linarith [d.core.lam_lt])
     · exact hv.2.trans (hb.trans hδsmall)
 
+/-- Correction center, given by `d.releaseStart - 3`. -/
 def correctionCenter (d : TailData) : ℝ := d.releaseStart - 3
 
+/-- Reference amplitude, given by `(radialAmplitude d.core.P d.core.dropLength d.core.lam
+d.flattenEnd / 2) * Real.exp ((1 / 2 + d.core.lam) * d.flattenEnd)`. -/
 def referenceAmplitude (d : TailData) : ℝ :=
   (radialAmplitude d.core.P d.core.dropLength d.core.lam d.flattenEnd / 2) *
     Real.exp ((1 / 2 + d.core.lam) * d.flattenEnd)
@@ -1037,7 +1059,7 @@ theorem reference_matches (d : TailData) {y : ℝ} (hy : d.flattenEnd ≤ y) :
     baseE d.core.lam (referenceAmplitude d) y =
       radialAmplitude d.core.P d.core.dropLength d.core.lam y / 2 := by
   have hh : d.core.holdStart ≤ d.flattenEnd := (coreEndpoint_ge_hold d).trans (flattenEnd_gt_core
-    d).le
+      d).le
   have h := radialAmplitude_hold (P := d.core.P) (lam := d.core.lam)
     d.core.dropLength_pos.le hh hy
   rw [h]
@@ -1154,7 +1176,7 @@ theorem logSlope_le (eta : ℝ) {y : ℝ} (hy : y ∈ Ioo (d.releaseStart - 4) d
 
 theorem pressure_neutral (eta : ℝ) :
     (∫ y, (correctedAngular d w.coefficients (y, eta)) ^ 2 - (finalAngular d (y, eta)) ^ 2) = 0 :=
-      by
+        by
   simp_rw [corrected_pressure_reference]
   rw [pressure_integral_formula, w.pressure eta, mul_zero]
 
@@ -1191,6 +1213,8 @@ theorem integral_edit_window (d : TailData) (f : ℝ → ℝ)
   apply hy
   exact ⟨(flattenEnd_pos d).trans ((last_four_after_flatten d).trans hw.1), hw.2.le⟩
 
+/-- Corrected history, given by `(5 / 8) * d.core.P * shape eta + ∫ t in (0 :
+ℝ)..d.releaseStart, Real.exp (3 * t / 2) * correctedAngular d c (t, eta)`. -/
 def correctedHistory (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   (5 / 8) * d.core.P * shape eta +
     ∫ t in (0 : ℝ)..d.releaseStart, Real.exp (3 * t / 2) * correctedAngular d c (t, eta)
@@ -1210,18 +1234,18 @@ theorem exact_endpoint (eta : ℝ) : correctedHistory d w.coefficients eta =
       volume 0 d.releaseStart :=
     (((Real.continuous_exp.comp ((continuous_const.mul continuous_id).div_const 2))).mul
       ((finalAngular_contDiff d).continuous.comp (continuous_id.prodMk
-        continuous_const))).intervalIntegrable _ _
+          continuous_const))).intervalIntegrable _ _
   have hchange :
       (∫ y in (0 : ℝ)..d.releaseStart, Real.exp (3 * y / 2) * correctedAngular d w.coefficients (y,
-        eta)) -
+          eta)) -
       (∫ y in (0 : ℝ)..d.releaseStart, Real.exp (3 * y / 2) * finalAngular d (y, eta)) =
         (baseWeight d (correctionCenter d) / 2) * normalizedDebt d eta := by
     rw [← intervalIntegral.integral_sub hm ho]
     have hf : (fun y => Real.exp (3 * y / 2) * correctedAngular d w.coefficients (y, eta) -
         Real.exp (3 * y / 2) * finalAngular d (y, eta)) =
         (fun y => Real.exp (3 * y / 2) *
-          (correctedAngular d w.coefficients (y, eta) - finalAngular d (y, eta))) := by funext y;
-            ring
+          (correctedAngular d w.coefficients (y, eta) - finalAngular d (y, eta))) := by
+              funext y; ring
     rw [hf, integral_edit_window d _ (fun y hy => by
       rw [correctedAngular_unchanged d w.coefficients eta hy, sub_self, mul_zero])]
     exact w.angular_change eta
@@ -1248,7 +1272,7 @@ theorem pressure_interval_neutral (eta : ℝ) :
   have ho : IntervalIntegrable (fun y => (finalAngular d (y, eta)) ^ 2)
       volume 0 d.releaseStart :=
     (((finalAngular_contDiff d).continuous.comp (continuous_id.prodMk continuous_const)).pow
-      2).intervalIntegrable _ _
+        2).intervalIntegrable _ _
   apply sub_eq_zero.mp
   rw [← intervalIntegral.integral_sub hm ho,
     integral_edit_window d _ (fun y hy => by
@@ -1352,9 +1376,9 @@ variable {d : TailData} {K : ℝ} (w : ResetWitness d K)
 theorem correctedHistory_eq_integral (eta : ℝ) :
     correctedHistory d w.coefficients eta =
       ∫ t in Iic d.releaseStart, Real.exp (3 * t / 2) * correctedAngular d w.coefficients (t, eta)
-        := by
+          := by
   have hc : Continuous (fun t => Real.exp (3 * t / 2) * correctedAngular d w.coefficients (t, eta))
-    :=
+      :=
     (Real.continuous_exp.comp ((continuous_const.mul continuous_id).div_const 2)).mul
       ((correctedAngular_contDiff d w.coefficients w.smooth).continuous.comp
         (continuous_id.prodMk continuous_const))
@@ -1379,14 +1403,15 @@ theorem physical_integral_endpoint (eta : ℝ) :
   have hf : (fun t => Real.exp t * Real.sqrt (2 * Real.exp t) *
       correctedAngular d w.coefficients (t, eta)) =
       (fun t => Real.sqrt 2 * (Real.exp (3 * t / 2) * correctedAngular d w.coefficients (t, eta)))
-        := by
+          := by
     funext t
     rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2), AngularMomentReset.sqrt_exp_half]
     have he : Real.exp t * Real.exp (t / 2) = Real.exp (3 * t / 2) := by
       rw [← Real.exp_add]; congr 1; ring
     calc
       _ = Real.sqrt 2 * ((Real.exp t * Real.exp (t / 2)) * correctedAngular d w.coefficients (t,
-        eta)) := by ring
+          eta)) := by
+          ring
       _ = _ := by rw [he]
   rw [hf, integral_const_mul, ← w.correctedHistory_eq_integral eta]
   exact w.physical_endpoint eta

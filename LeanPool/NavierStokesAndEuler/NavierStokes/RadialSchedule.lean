@@ -6,16 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Scalar identities for the outgoing radial schedule
@@ -28,20 +21,29 @@ These finite-dimensional calculations do not establish existence of the full
 smooth schedule, estimates on the correction bumps, or the stress-cone bounds.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open MeasureTheory
 
 namespace NavierStokes.RadialSchedule
 
+/-- Axial exponent, given by `1 / 2 - h`. -/
 def axialExponent (h : ℝ) : ℝ := 1 / 2 - h
 
+/-- Axial shape, given by `1 - η ^ 2`. -/
 def axialShape (η : ℝ) : ℝ := 1 - η ^ 2
 
+/-- Coordinate factor, given by `1 - 2 * h * η ^ 2`. -/
 def coordinateFactor (h η : ℝ) : ℝ := 1 - 2 * h * η ^ 2
 
+/-- Ideal axial velocity, given by `4 * η`. -/
 def idealAxialVelocity (η : ℝ) : ℝ := 4 * η
 
+/-- Ideal transport, given by `1 - 2 * axialExponent h * η * idealAxialVelocity η - axialShape η
+* 4`. -/
 def idealTransport (h η : ℝ) : ℝ :=
   1 - 2 * axialExponent h * η * idealAxialVelocity η - axialShape η * 4
 
@@ -55,6 +57,7 @@ theorem log_shape_hasDerivAt (η : ℝ) :
   convert! hd.neg using 1
   simp [logShapeDerivative]
 
+/-- Ideal source as an element of `ℝ`. -/
 def idealSource (h η : ℝ) : ℝ :=
   -(3 / 5) * idealTransport h η - h * (1 - 2 * η * idealAxialVelocity η) -
     (axialExponent h * η + axialShape η * idealAxialVelocity η) *
@@ -102,11 +105,14 @@ theorem ideal_lag_equation (h η : ℝ) :
   unfold idealLag
   ring
 
+/-- Radius profile, given by `X₀ * Real.exp y`. -/
 def radiusProfile (X₀ y : ℝ) : ℝ := X₀ * Real.exp y
 
+/-- Angular velocity profile, given by `e₀ * Real.exp (-(1 / 2 + lam) * y)`. -/
 def angularVelocityProfile (e₀ lam y : ℝ) : ℝ :=
   e₀ * Real.exp (-(1 / 2 + lam) * y)
 
+/-- Angular momentum profile, given by `H₀ * Real.exp (-lam * y)`. -/
 def angularMomentumProfile (H₀ lam y : ℝ) : ℝ :=
   H₀ * Real.exp (-lam * y)
 
@@ -184,6 +190,7 @@ theorem pulse_negative_energy_integral :
   norm_num
   ring
 
+/-- Pulse energy debt, given by `(1 - Real.exp (-26)) / 4`. -/
 def pulseEnergyDebt : ℝ := (1 - Real.exp (-26)) / 4
 
 theorem pulse_energy_debt_bounds :

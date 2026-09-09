@@ -7,15 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatPrimitive
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatKernelBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.MeasureTheory.Integral.ExpDecay
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.FlatKernelBounds
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.MeasureTheory.Integral.ExpDecay
 
 /-!
 # The transformed integral for a terminal flat primitive
@@ -25,6 +20,9 @@ Natural powers of the square root encode the real power `(j - 3) / 2`
 without truncating subtraction in the natural numbers.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Filter Topology Set MeasureTheory
@@ -33,14 +31,19 @@ open NavierStokes.FlatCutoff NavierStokes.FlatPrimitive
 
 namespace NavierStokes.FlatPrimitiveFactor
 
+/-- Denominator, given by `Real.sqrt (1 + x ^ 2 * t)`. -/
 def denominator (x t : ℝ) : ℝ := Real.sqrt (1 + x ^ 2 * t)
 
+/-- Coordinate, given by `x / denominator x t`. -/
 def coordinate (x t : ℝ) : ℝ := x / denominator x t
 
+/-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator x t ^ j / denominator x t ^
+3) * b (coordinate x t)`. -/
 def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (denominator x t ^ j / denominator x t ^ 3) * b (coordinate x t)
 
+/-- Factor, given by `∫ t in Ioi (0 : ℝ), kernel c j b x t`. -/
 def factor (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ t in Ioi (0 : ℝ), kernel c j b x t
 
@@ -80,7 +83,7 @@ theorem coordinate_hasDerivAt (x : ℝ) {t : ℝ} (ht : 0 ≤ t) :
     ha.sqrt (denominator_inner_pos x ht).ne'
   have hu := (hasDerivAt_const t x).div hd (denominator_pos x ht).ne'
   convert! hu using 1
-  field_simp ; ring
+  field_simp; ring
 
 theorem coordinate_mem_Ioo {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
     coordinate x t ∈ Ioo 0 x := by
@@ -88,8 +91,8 @@ theorem coordinate_mem_Ioo {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
     have := mul_pos (sq_pos_of_pos hx) ht
     linarith
   have hd : 1 < denominator x t := by
-    simpa only [denominator, Real.sqrt_one] using Real.sqrt_lt_sqrt (by norm_num : (0 : ℝ) ≤ 1)
-      hinner
+    simpa only [denominator, Real.sqrt_one] using Real.sqrt_lt_sqrt (by
+        norm_num : (0 : ℝ) ≤ 1) hinner
   constructor
   · exact coordinate_pos hx ht.le
   · apply (div_lt_iff₀ (denominator_pos x ht.le)).mpr
@@ -119,7 +122,7 @@ theorem coordinate_image {x : ℝ} (hx : 0 < x) : coordinate x '' Ioi 0 = Ioo 0 
     refine ⟨t, ht, ?_⟩
     have ha : 1 + x ^ 2 * t = (x / u) ^ 2 := by
       dsimp [t]
-      field_simp [hx.ne', hu.1.ne'] ; ring
+      field_simp [hx.ne', hu.1.ne']; ring
     have hd : denominator x t = x / u := by
       rw [denominator, ha, Real.sqrt_sq (div_nonneg hx.le hu.1.le)]
     rw [coordinate, hd]
@@ -134,7 +137,7 @@ theorem edge_coordinate (c : ℝ) {x t : ℝ} (hx : 0 < x) (ht : 0 ≤ t) :
       dsimp [coordinate]
       field_simp
     _ = (-c / x ^ 2) * (1 + x ^ 2 * t) := by rw [denominator_sq x ht]
-    _ = -c / x ^ 2 + -c * t := by field_simp ; ring
+    _ = -c / x ^ 2 + -c * t := by field_simp; ring
 
 theorem transformed_integrand (c : ℝ) (j : ℕ) (b : ℝ → ℝ)
     {x t : ℝ} (hx : 0 < x) (ht : 0 ≤ t) :
@@ -260,7 +263,7 @@ theorem kernel_locallyDominated {c : ℝ} (hc : 0 < c) (j : ℕ) {b : ℝ → �
       simpa only [sub_add_cancel] using abs_add_le (y - x) x
     linarith
   simpa only [Real.norm_eq_abs, kernel, FlatKernelBounds.kernel, coordinate, denominator,
-    FlatKernelBounds.coordinate, FlatKernelBounds.denominator] using hbound y t hyR ht.le
+      FlatKernelBounds.coordinate, FlatKernelBounds.denominator] using hbound y t hyR ht.le
 
 /-- The concrete transformed integral is smooth on all of `ℝ`, including
 across the endpoint of the original primitive. -/

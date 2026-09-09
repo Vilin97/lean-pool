@@ -6,12 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Local boundedness, continuity, and differentiation derived from an exact operator resolvent
+identity. -/
 
 @[expose] public section
 
-/-! Local boundedness, continuity, and differentiation derived from an exact operator resolvent
-  identity. -/
 
 noncomputable section
 
@@ -21,7 +29,8 @@ open scoped Topology
 
 variable {R : Type*} [NormedRing R]
 
-/-- An exact resolvent identity gives a local inverse bound without assuming a uniform inverse estimate. -/
+/-- An exact resolvent identity gives a local inverse bound without assuming a uniform inverse
+estimate. -/
 theorem local_norm_bound (P Q M N : R) (hres : Q - P = Q * ((M - N) * P))
     (hsmall : ‖M - N‖ * ‖P‖ ≤ 1 / 2) : ‖Q‖ ≤ 2 * ‖P‖ := by
   have hresnorm : ‖Q - P‖ ≤ ‖Q‖ * (‖M - N‖ * ‖P‖) := by
@@ -35,7 +44,8 @@ theorem local_norm_bound (P Q M N : R) (hres : Q - P = Q * ((M - N) * P))
       _ ≤ _ := norm_add_le _ _
   linarith
 
-/-- The exact resolvent identity yields a local Lipschitz estimate using only the reference inverse norm. -/
+/-- The exact resolvent identity yields a local Lipschitz estimate using only the reference inverse
+norm. -/
 theorem local_difference_bound (P Q M N : R) (hres : Q - P = Q * ((M - N) * P))
     (hsmall : ‖M - N‖ * ‖P‖ ≤ 1 / 2) :
     ‖Q - P‖ ≤ (2 * ‖P‖ ^ 2) * ‖M - N‖ := by
@@ -48,7 +58,8 @@ theorem local_difference_bound (P Q M N : R) (hres : Q - P = Q * ((M - N) * P))
       mul_le_mul_of_nonneg_right hQ (mul_nonneg (norm_nonneg _) (norm_nonneg P))
     _ = _ := by ring
 
-/-- Continuity of the coefficient operator implies continuity of actual resolvents, with no separate inverse-continuity assumption. -/
+/-- Continuity of the coefficient operator implies continuity of actual resolvents, with no separate
+inverse-continuity assumption. -/
 theorem continuousAt_of_resolvent {α : Type*} [TopologicalSpace α] (P M : α → R)
     (hres : ∀ s t, P s - P t = P s * ((M t - M s) * P t)) (t : α)
     (hM : ContinuousAt M t) : ContinuousAt P t := by
@@ -67,7 +78,8 @@ theorem continuousAt_of_resolvent {α : Type*} [TopologicalSpace α] (P M : α �
 
 variable [NormedAlgebra ℝ R]
 
-/-- Differentiating the actual resolvent identity gives the inverse derivative, after continuity has been proved from the same identity. -/
+/-- Differentiating the actual resolvent identity gives the inverse derivative, after continuity has
+been proved from the same identity. -/
 theorem hasDerivAt_of_resolvent (P M : ℝ → R)
     (hres : ∀ s t, P s - P t = P s * ((M t - M s) * P t))
     (t : ℝ) (M' : R) (hM : HasDerivAt M M' t) :
@@ -77,7 +89,7 @@ theorem hasDerivAt_of_resolvent (P M : ℝ → R)
     have h : Filter.Tendsto (fun r => P (t + r)) (𝓝 (0 : ℝ)) (𝓝 (P t)) := by
       have hadd : Filter.Tendsto (fun r : ℝ => t + r) (𝓝 (0 : ℝ)) (𝓝 t) := by
         simpa only [add_zero, id_eq] using (tendsto_const_nhds.add (Filter.tendsto_id :
-          Filter.Tendsto id (𝓝 (0 : ℝ)) (𝓝 0)))
+            Filter.Tendsto id (𝓝 (0 : ℝ)) (𝓝 0)))
       exact hP.tendsto.comp hadd
     exact h.mono_left nhdsWithin_le_nhds
   have hneg : Filter.Tendsto (fun r : ℝ => r⁻¹ • (M t - M (t + r))) (𝓝[≠] 0) (𝓝 (-M')) := by

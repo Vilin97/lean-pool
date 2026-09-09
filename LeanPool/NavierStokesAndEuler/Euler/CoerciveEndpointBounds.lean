@@ -6,15 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 Quantitative operator algebra for the actual fixed-space endpoint solve.
 The input called `R` below is an inverse operator; the transverse specialization
 constructs it by coercivity and discharges all of its norm bounds.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -44,6 +47,7 @@ theorem norm_comp_sub_le (A B : F →L[ℝ] G) (C D : W →L[ℝ] F) :
 def correctionOperator (D : S →L[ℝ] E) (R : S →L[ℝ] S) (A : E →L[ℝ] E) : E →L[ℝ] E :=
   D.comp (R.comp (D.adjoint.comp A))
 
+/-- Endpoint operator, given by `L - (correctionOperator D R A).comp L`. -/
 def endpointOperator (D : S →L[ℝ] E) (R : S →L[ℝ] S) (A : E →L[ℝ] E)
     (L : V →L[ℝ] E) : V →L[ℝ] E := L - (correctionOperator D R A).comp L
 
@@ -142,7 +146,7 @@ def formOperator (D : S →L[ℝ] E) (A : E →L[ℝ] E) : S →L[ℝ] S :=
 theorem formOperator_sub_norm_le
     (D D' : S →L[ℝ] E) (A A' : E →L[ℝ] E) (d a δd δa : ℝ)
     (hd : ‖D‖ ≤ d) (hd' : ‖D'‖ ≤ d) (ha : ‖A‖ ≤ a) (ha' : ‖A'‖ ≤ a)
-    (hδd : ‖D-D'‖ ≤ δd) (hδa : ‖A-A'‖ ≤ δa) :
+    (hδd : ‖D - D'‖ ≤ δd) (hδa : ‖A - A'‖ ≤ δa) :
     ‖formOperator D A - formOperator D' A'‖ ≤ 2 * d * a * δd + d ^ 2 * δa := by
   have had : ‖D.adjoint-D'.adjoint‖ ≤ δd := by
     rw [← map_sub, LinearIsometryEquiv.norm_map]

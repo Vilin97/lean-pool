@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
-public import Mathlib.MeasureTheory.Function.Jacobian
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Actual angular history through the release and terminal tail
@@ -21,6 +18,9 @@ actual integral with each constructed lag solution. The terminal identity
 then gives the vanishing renormalized angular moment.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter MeasureTheory
@@ -30,12 +30,15 @@ open NavierStokes.AngularMomentReset NavierStokes.UniformAngularReset
 
 namespace NavierStokes.ReleaseMoments
 
+/-- Corrected weight, given by `Real.exp (3 * y / 2) * correctedAngular d c (y, eta)`. -/
 noncomputable def correctedWeight (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   Real.exp (3 * y / 2) * correctedAngular d c (y, eta)
 
+/-- History, given by `(5 / 8) * d.core.P * shape eta + primitive (correctedWeight d c eta) y`. -/
 noncomputable def history (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   (5 / 8) * d.core.P * shape eta + primitive (correctedWeight d c eta) y
 
+/-- Release weight, given by `Real.exp (3 * y / 2) * finalAngular d (y, 0)`. -/
 noncomputable def releaseWeight (d : TailData) (y : ℝ) : ℝ :=
   Real.exp (3 * y / 2) * finalAngular d (y, 0)
 
@@ -84,7 +87,7 @@ theorem history_contDiff_y (eta : ℝ) : ContDiff ℝ ∞ (history d w.coefficie
 theorem history_hasDerivAt (eta y : ℝ) :
     HasDerivAt (history d w.coefficients eta) (correctedWeight d w.coefficients eta y) y :=
   (primitive_hasDerivAt (correctedWeight_contDiff d w.coefficients w.smooth eta).continuous
-    y).const_add _
+      y).const_add _
 
 theorem history_integrable (eta : ℝ) {y : ℝ} (hy : 0 ≤ y) :
     IntegrableOn (correctedWeight d w.coefficients eta) (Iic y) :=
@@ -100,7 +103,7 @@ theorem history_eq_integral (eta : ℝ) {y : ℝ} (hy : 0 ≤ y) :
 
 theorem history_at_release (eta : ℝ) :
     history d w.coefficients eta d.releaseStart = releaseWeight d d.releaseStart / (1 - d.core.lam)
-      := by
+        := by
   change correctedHistory d w.coefficients eta = _
   rw [w.exact_endpoint eta]
   unfold releaseWeight baseWeight
@@ -149,6 +152,7 @@ theorem releaseWeight_hasDerivAt (d : TailData) {y : ℝ} (hy : d.releaseStart �
   dsimp [releaseWeight]
   ring
 
+/-- Moment candidate, given by `(1 + q y) * releaseWeight d y / (1 - d.h)`. -/
 noncomputable def momentCandidate (d : TailData) (q : ℝ → ℝ) (y : ℝ) : ℝ :=
   (1 + q y) * releaseWeight d y / (1 - d.h)
 
@@ -160,7 +164,7 @@ theorem momentCandidate_hasDerivAt (d : TailData) (q : ℝ → ℝ) {y : ℝ}
     HasDerivAt (momentCandidate d q) (releaseWeight d y) y := by
   have hp := ((hq.const_add 1).mul (releaseWeight_hasDerivAt d hy)).div_const (1 - d.h)
   convert! hp using 1
-  field_simp [d.one_sub_h_pos.ne'] ; ring
+  field_simp [d.one_sub_h_pos.ne']; ring
 
 namespace ResetWitness
 
@@ -232,7 +236,7 @@ theorem history_release (eta : ℝ) {y : ℝ}
     dsimp only
     rw [sub_self, releaseLag_initial]
     unfold initialLag
-    field_simp [d.one_sub_h_pos.ne', show 1 - d.core.lam ≠ 0 by linarith [d.core.lam_lt]] ; ring
+    field_simp [d.one_sub_h_pos.ne', show 1 - d.core.lam ≠ 0 by linarith [d.core.lam_lt]]; ring
 
 theorem history_hold (eta : ℝ) {y : ℝ}
     (hy : d.releaseStart + d.rampEnd ≤ y) (hy' : y ≤ tailStart d) :
@@ -294,11 +298,12 @@ theorem history_eventual_power (eta : ℝ) {y : ℝ} (hy : tailEnd d ≤ y) :
     history d w.coefficients eta y = releaseWeight d y / (1 - d.h) := by
   have ht : tailStart d ≤ y := by dsimp [tailEnd] at hy; linarith
   rw [history_tail w eta ht]
-  simp [momentCandidate, tailLag_zero_late d (by dsimp [tailEnd] at hy; linarith : 3 ≤ y -
-    tailStart d)]
+  simp [momentCandidate, tailLag_zero_late d (by
+      dsimp [tailEnd] at hy; linarith : 3 ≤ y - tailStart d)]
 
 end ResetWitness
 
+/-- Normalized lag, given by `(1 - d.h) * history d c eta y / releaseWeight d y - 1`. -/
 noncomputable def normalizedLag (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   (1 - d.h) * history d c eta y / releaseWeight d y - 1
 
@@ -309,12 +314,12 @@ variable {d : TailData} {K : ℝ} (w : UniformAngularReset.ResetWitness d K)
 theorem normalizedLag_hasDerivAt (eta : ℝ) {y : ℝ} (hy : d.releaseStart ≤ y) :
     HasDerivAt (normalizedLag d w.coefficients eta)
       (-profileSlope d y - d.h - (1 + profileSlope d y) * normalizedLag d w.coefficients eta y) y
-        := by
+          := by
   have hp := (((history_hasDerivAt_release w eta hy).const_mul (1 - d.h)).div
     (releaseWeight_hasDerivAt d hy) (releaseWeight_pos d y).ne').sub_const 1
   convert! hp using 1
   unfold normalizedLag
-  field_simp [(releaseWeight_pos d y).ne'] ; ring
+  field_simp [(releaseWeight_pos d y).ne']; ring
 
 theorem normalizedLag_eq_of_history (eta : ℝ) (q : ℝ → ℝ) (y : ℝ)
     (heq : history d w.coefficients eta y = momentCandidate d q y) :
@@ -322,7 +327,7 @@ theorem normalizedLag_eq_of_history (eta : ℝ) (q : ℝ → ℝ) (y : ℝ)
   unfold normalizedLag
   rw [heq]
   unfold momentCandidate
-  field_simp [(releaseWeight_pos d y).ne', d.one_sub_h_pos.ne'] ; ring
+  field_simp [(releaseWeight_pos d y).ne', d.one_sub_h_pos.ne']; ring
 
 theorem normalizedLag_release (eta : ℝ) {y : ℝ}
     (hy : d.releaseStart ≤ y) (hy' : y ≤ d.releaseStart + d.rampEnd) :
@@ -351,6 +356,7 @@ theorem normalizedLag_eventual_zero (eta : ℝ) {y : ℝ} (hy : tailEnd d ≤ y)
 
 end ResetWitness
 
+/-- Power weight, given by `powerConstant d * Real.exp ((1 - d.h) * y)`. -/
 noncomputable def powerWeight (d : TailData) (y : ℝ) : ℝ :=
   powerConstant d * Real.exp ((1 - d.h) * y)
 
@@ -409,21 +415,23 @@ theorem renormalized_log_integrable (eta : ℝ) :
 theorem renormalized_log_integral (eta : ℝ) :
     (∫ y, correctedWeight d w.coefficients eta y - powerWeight d y) = 0 := by
   have hrestrict : (∫ y in Iic (tailEnd d), correctedWeight d w.coefficients eta y - powerWeight d
-    y) =
+      y) =
       ∫ y, correctedWeight d w.coefficients eta y - powerWeight d y := by
     apply setIntegral_eq_integral_of_forall_compl_eq_zero
     intro y hy
     rw [correctedWeight_eq_power d w.coefficients eta (le_of_lt (not_le.mp hy)), sub_self]
   rw [← hrestrict, integral_sub (history_integrable w eta (tailEnd_pos d).le)
-    (powerWeight_integrable d _),
+      (powerWeight_integrable d _),
     ← history_eq_integral w eta (tailEnd_pos d).le, history_eventual_power w eta le_rfl,
     releaseWeight_eq_power d le_rfl, powerWeight_integral, sub_self]
 
 end ResetWitness
 
+/-- Radial H, given by `Real.sqrt (2 * X) * correctedAngular d c (Real.log X, eta)`. -/
 noncomputable def radialH (d : TailData) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   Real.sqrt (2 * X) * correctedAngular d c (Real.log X, eta)
 
+/-- Radial power H, given by `Real.sqrt (2 * X) * (powerConstant d * X ^ (-(1 / 2 + d.h)))`. -/
 noncomputable def radialPowerH (d : TailData) (X : ℝ) : ℝ :=
   Real.sqrt (2 * X) * (powerConstant d * X ^ (-(1 / 2 + d.h)))
 
@@ -508,7 +516,7 @@ theorem radial_history_contDiff_eta {X : ℝ} (hX : 0 < X)
 theorem radial_history_eventual (eta : ℝ) {X : ℝ} (hX : 0 < X)
     (hfar : tailEnd d ≤ Real.log X) :
     (∫ u in Ioc 0 X, radialH d w.coefficients eta u) = X * radialH d w.coefficients eta X / (1 -
-      d.h) := by
+        d.h) := by
   have hy0 : 0 ≤ Real.log X := (tailEnd_pos d).le.trans hfar
   have hyR : d.releaseStart ≤ Real.log X := by
     have ht := tailStart_gt_release d

@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostGuards
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionPrimitivePolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostPolynomial
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedCoefficientBudgets
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
 
 /-! A fixed polynomial bounds all five costs for the literal canonical
 initialized packet radius. No arbitrary radius witness is used. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,21 +27,26 @@ open EulerPacketTerminalDatum EulerPacketProfileRecursion EulerPacketCylinderFie
   EulerPacketCorrectionCoefficients EulerPacketCorrectionConstants EulerPacketCorrectionScalar
   EulerPacketCoarseMajorant EulerPolynomialCost
 
-def envelope (W : ℝ) : ℝ := 1+W+EulerPacketRadiusPolynomial.radiusEnvelope W+
+/-- Envelope, given by `1+W+EulerPacketRadiusPolynomial.radiusEnvelope W +
+EulerPacketCorrectionPrimitive.primitiveEnvelope period W`. -/
+def envelope (W : ℝ) : ℝ := 1+W+EulerPacketRadiusPolynomial.radiusEnvelope W +
   EulerPacketCorrectionPrimitive.primitiveEnvelope period W
 
+/-- Polynomial, constructed using `Polynomial.C`. -/
 def polynomial : Polynomial ℝ :=
-  Polynomial.C (EulerPacketFiveCost.costConstant period)*
-    (1+Polynomial.X+EulerPacketRadiusPolynomial.radiusPolynomial+
+  Polynomial.C (EulerPacketFiveCost.costConstant period) *
+    (1+Polynomial.X+EulerPacketRadiusPolynomial.radiusPolynomial +
       EulerPacketCorrectionPrimitive.primitivePolynomial period)^(EulerPacketFiveCost.costPower
-        period)
+          period)
 
+/-- Uniform constant, given by `coefficientCost polynomial`. -/
 def uniformConstant : ℝ := coefficientCost polynomial
+/-- Uniform power, given by `polynomial.natDegree`. -/
 def uniformPower : ℕ := polynomial.natDegree
 
 theorem uniformConstant_pos : 0 < uniformConstant := coefficientCost_pos _
 
-theorem polynomial_eval (W : ℝ) : polynomial.eval W=
+theorem polynomial_eval (W : ℝ) : polynomial.eval W =
     EulerPacketFiveCost.costConstant period*(envelope W)^EulerPacketFiveCost.costPower period := by
   unfold polynomial envelope
   simp only [Polynomial.eval_mul,Polynomial.eval_C,Polynomial.eval_pow,

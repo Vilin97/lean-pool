@@ -7,10 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalTime
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
 
 /-!
 # Actual continuous coordinate-velocity spatial orbits
@@ -19,6 +18,9 @@ The coordinate velocity is reconstructed from its genuine L² value and
 acceleration. Consequently its uniform-time spatial derivatives have the
 same fixed H¹ trace bound as the physical velocity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,7 +36,7 @@ def coordinatePathTranslation (T : ℝ) (a : Space) :
   (solenoidalTranslation a).toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)
 
 @[simp] theorem coordinatePathTranslation_apply (T : ℝ) (a : Space)
-    (p : C(Icc (0 : ℝ) T,solenoidalSpace)) (t : Icc (0 : ℝ) T) :
+    (p : C(Icc (0 : ℝ) T, solenoidalSpace)) (t : Icc (0 : ℝ) T) :
     coordinatePathTranslation T a p t = solenoidalTranslation a (p t) := rfl
 
 theorem reconstruction_translation (T : ℝ) (hT : 0 ≤ T) (a : Space)
@@ -69,10 +71,10 @@ theorem coordinateVelocityPath_orbit_eq (hTpos : 0 < T) :
     (fun a : Space => coordinatePathTranslation T a s.coordinateVelocityPath) =
       fun a : Space => reconstruction T hT
         (timeSolenoidalTranslation T a s.velocityLp, timeSolenoidalTranslation T a s.acceleration)
-          := by
+            := by
   funext a
   exact (congrArg (coordinatePathTranslation T a) (s.coordinateVelocityPath_eq_reconstruction
-    hTpos)).trans
+      hTpos)).trans
     (reconstruction_translation T hT a s.velocityLp s.acceleration)
 
 /-- Uniform-time coordinate orbit regularity comes from the actual H¹ data. -/
@@ -91,12 +93,12 @@ theorem coordinateVelocityPath_translation_gevrey (hTpos : 0 < T)
     (ha : ContDiff ℝ ∞ (fun a : Space => timeSolenoidalTranslation T a s.acceleration))
     (R Cv Ca : ℝ) (hR : 0 ≤ R) (hCv : 0 ≤ Cv) (hCa : 0 ≤ Ca) (d : ℕ)
     (hvb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b s.velocityLp)
-      a‖ ≤ Cv*majorant R d n)
+        a‖ ≤ Cv*majorant R d n)
     (hab : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b
-      s.acceleration) a‖ ≤ Ca*majorant R d n)
+        s.acceleration) a‖ ≤ Ca*majorant R d n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => coordinatePathTranslation T b s.coordinateVelocityPath)
-      a‖ ≤
+        a‖ ≤
       ((T⁻¹*Real.sqrt T)*Cv+(2*Real.sqrt T)*Ca)*majorant R d n :=
   (congrArg (fun g : Space → C(Icc (0 : ℝ) T,solenoidalSpace) => ‖iteratedFDeriv ℝ n g a‖)
     (s.coordinateVelocityPath_orbit_eq hTpos)).trans_le

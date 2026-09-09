@@ -7,10 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 /-!
 # Conservative difference equations tested on compactly supported functions
@@ -19,6 +19,9 @@ All integrals use Euclidean Lebesgue measure. Compact support is required only
 of the test function; the velocities and pressures need no support or decay
 assumptions for the identities in this module.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -181,7 +184,7 @@ theorem integral_scalarLaplacian_mul {f ψ : Space → ℝ}
       Integrable (fun x => f x * spatialPartial i (spatialPartial i ψ) x) :=
     (hf.continuous.mul
       (spatial_partial_contDiff (spatial_partial_contDiff hψ i)
-        i).continuous).integrable_of_hasCompactSupport
+          i).continuous).integrable_of_hasCompactSupport
       (CompactEnergy.compact_partial (CompactEnergy.compact_partial hcψ i) i).mul_left
   simp only [scalarLaplacian, Finset.sum_mul, Finset.mul_sum]
   rw [integral_finsetSum _ (fun i _ => hil i),
@@ -357,7 +360,7 @@ theorem integral_divergence_free_test {w : Space → Space} {ψ : Space → ℝ}
   have hi (i : Fin 3) : Integrable (fun x => ψ x * spatialPartial i w x i) :=
     (hψ.continuous.mul
       (component_contDiff (spatial_partial_contDiff hw i)
-        i).continuous).integrable_of_hasCompactSupport
+          i).continuous).integrable_of_hasCompactSupport
       hcψ.mul_right
   have hparts (i : Fin 3) : (∫ x, w x i * spatialPartial i ψ x) =
       -(∫ x, ψ x * spatialPartial i w x i) := by
@@ -391,7 +394,7 @@ theorem component_test_hasDerivAt {a b t : ℝ} {w : VelocityField} {ψ : Space 
     have htime : HasDerivAt (fun s => w (s, x)) (temporalDerivative w t x) t :=
       (time_differentiable_at_interior hw ht x).hasDerivAt
     exact ((EuclideanSpace.proj k : Space →L[ℝ] ℝ).hasFDerivAt.comp_hasDerivAt t htime).mul_const
-      (ψ x)
+        (ψ x)
 
 /-- The time derivative has zero distributional divergence. This follows by
 differentiating a compact pairing that is identically zero on the time interval. -/
@@ -478,7 +481,7 @@ theorem weak_pressure_poisson {a b t : ℝ} {u v : VelocityField}
       (spatial_partial_contDiff hψ k) (CompactEnergy.compact_partial hcψ k) k
   rw [integral_gradient_pairing (f := fun y => (p - q) (t, y))
       ((spatial_smooth hp (Ioo_subset_Icc_self ht)).sub (spatial_smooth hq (Ioo_subset_Icc_self
-        ht)))
+          ht)))
       hψ hcψ, Finset.sum_add_distrib, Finset.sum_sub_distrib, hL, hT] at hsum
   linarith
 

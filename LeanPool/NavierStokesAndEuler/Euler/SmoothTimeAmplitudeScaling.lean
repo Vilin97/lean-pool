@@ -9,12 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldLinear
 public import LeanPool.NavierStokesAndEuler.Euler.EulerTimeRescaling
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Actual smooth coefficient paths and their true time derivatives under
 the Euler amplitude/time scaling. The time interval is shortened by the
 same positive amplitude used to normalize the initial velocity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,10 +29,13 @@ open scoped ContDiff BoundedContinuousFunction
 variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Coefficient, given by `(A.compTime (timeMap ε hε)).map (ε⁻¹ • ContinuousLinearMap.id ℝ V)`. -/
 def coefficient (ε : ℝ) (hε : 0 < ε) (A : SmoothTimeField (Icc (0 : ℝ) 1) E V) :
     SmoothTimeField (Icc (0 : ℝ) ε) E V :=
   (A.compTime (timeMap ε hε)).map (ε⁻¹ • ContinuousLinearMap.id ℝ V)
 
+/-- Derivative coefficient, given by `(A.compTime (timeMap ε hε)).map ((ε⁻¹)^2 •
+ContinuousLinearMap.id ℝ V)`. -/
 def derivativeCoefficient (ε : ℝ) (hε : 0 < ε) (A : SmoothTimeField (Icc (0 : ℝ) 1) E V) :
     SmoothTimeField (Icc (0 : ℝ) ε) E V :=
   (A.compTime (timeMap ε hε)).map ((ε⁻¹)^2 • ContinuousLinearMap.id ℝ V)
@@ -38,7 +44,7 @@ theorem coefficient_time (ε : ℝ) (hε : 0 < ε)
     (A A₁ : SmoothTimeField (Icc (0 : ℝ) 1) E V)
     (h : SmoothTimeField.TimeDerivative 1 zero_le_one A A₁) :
     SmoothTimeField.TimeDerivative ε hε.le (coefficient ε hε A) (derivativeCoefficient ε hε A₁) :=
-      by
+        by
   intro t x
   have hmap : MapsTo (fun s : ℝ => s/ε) (Icc (0 : ℝ) ε) (Icc (0 : ℝ) 1) := by
     intro s hs

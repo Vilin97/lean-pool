@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerC1Limsup
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerBKM
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerClassicalClass
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerNontriviality
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.EulerC1Breakdown
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryMaximalVorticityIntegral
+import LeanPool.NavierStokesAndEuler.Euler.EulerC1Limsup
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerBKM
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerNontriviality
 
 /-!
 The final statement for the concrete packet construction. The initial
@@ -26,6 +27,9 @@ derivative in every spatial Sobolev order for every shorter restriction. The nor
 specification theorems below identify the quantities in the statement
 with the pointwise suprema of the actual velocity, derivative, and curl.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -81,10 +85,13 @@ open Set Filter MeasureTheory EulerSmoothLimit EulerLpTranslation
   EulerLpTranslation.SmoothL2Field EulerOrdinarySobolev EulerMeanCutoffCurl
 open scoped ContDiff ENNReal Topology
 
+/-- Maximal vorticity norm, given by `lifespan.maximalVorticityNorm t`. -/
 def maximalVorticityNorm (t : MaximalTime) : ℝ := lifespan.maximalVorticityNorm t
 
+/-- Maximal vorticity density, given by `lifespan.maximalVorticityDensity r`. -/
 def maximalVorticityDensity (r : ℝ) : ℝ := lifespan.maximalVorticityDensity r
 
+/-- Maximal vorticity integral, given by `lifespan.maximalVorticityIntegral t`. -/
 def maximalVorticityIntegral (t : MaximalTime) : ℝ := lifespan.maximalVorticityIntegral t
 
 theorem maximalVorticityNorm_spec (t : MaximalTime) (K : ℝ) :

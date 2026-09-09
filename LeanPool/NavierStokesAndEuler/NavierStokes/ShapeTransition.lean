@@ -7,13 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingSchedule
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricFlatFactor
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # The explicit shape transition and its reset-prefix debts
@@ -23,6 +19,9 @@ Input field bounds are pointwise bounds, not assumptions on the five row debts.
 All constants in the estimates may be chosen before the final large `C`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter MeasureTheory Function
@@ -30,6 +29,7 @@ open scoped Topology ContDiff BigOperators
 
 namespace NavierStokes.ShapeTransition
 
+/-- Log shape, given by `Real.log (OutgoingSchedule.shape eta)`. -/
 noncomputable def logShape (eta : ℝ) : ℝ := Real.log (OutgoingSchedule.shape eta)
 
 theorem logShape_contDiff : ContDiff ℝ ∞ logShape :=
@@ -38,19 +38,25 @@ theorem logShape_contDiff : ContDiff ℝ ∞ logShape :=
 theorem exp_logShape (eta : ℝ) : Real.exp (logShape eta) = OutgoingSchedule.shape eta :=
   Real.exp_log (OutgoingSchedule.shape_pos eta)
 
+/-- Blend, given by `(1 - OutgoingSchedule.sigma (p.1 / T)) * li p.2 + OutgoingSchedule.sigma
+(p.1 / T) * logShape p.2`. -/
 noncomputable def blend (T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (1 - OutgoingSchedule.sigma (p.1 / T)) * li p.2 +
     OutgoingSchedule.sigma (p.1 / T) * logShape p.2
 
+/-- Log profile, given by `-Real.log C + p.1 / 10 + blend T li p`. -/
 noncomputable def logProfile (C T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -Real.log C + p.1 / 10 + blend T li p
 
+/-- Amplitude, given by `Real.exp (p.1 / 10 + blend T li p)`. -/
 noncomputable def amplitude (T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.exp (p.1 / 10 + blend T li p)
 
+/-- Angular, given by `Real.exp (logProfile C T li p)`. -/
 noncomputable def angular (C T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.exp (logProfile C T li p)
 
+/-- Axial, given by `Gi p.2`. -/
 noncomputable def axial (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ := Gi p.2
 
 theorem blend_contDiff (T : ℝ) {li : ℝ → ℝ} (hli : ContDiff ℝ ∞ li) :
@@ -159,6 +165,8 @@ theorem sigma_deriv_bounded :
   exact (show |deriv OutgoingSchedule.sigma x| ≤ K from
     hK x ⟨le_of_not_gt hx, le_of_not_gt hx'⟩).trans (le_max_left _ _)
 
+/-- Logarithmic slope, given by `3 / 5 + deriv OutgoingSchedule.sigma (p.1 / T) / T * (logShape
+p.2 - li p.2)`. -/
 noncomputable def logarithmicSlope (T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   3 / 5 + deriv OutgoingSchedule.sigma (p.1 / T) / T * (logShape p.2 - li p.2)
 
@@ -167,13 +175,13 @@ theorem logProfile_hasDerivAt (C T : ℝ) (li : ℝ → ℝ) (y eta : ℝ) :
       (logarithmicSlope T li (y, eta) - 1 / 2) y := by
   have hs : HasDerivAt OutgoingSchedule.sigma (deriv OutgoingSchedule.sigma (y / T))
       (y / T) := (OutgoingSchedule.sigma_contDiff.differentiable (by
-        simp)).differentiableAt.hasDerivAt
+          simp)).differentiableAt.hasDerivAt
   have hc : HasDerivAt (fun s => OutgoingSchedule.sigma (s / T))
       (deriv OutgoingSchedule.sigma (y / T) / T) y := by
-    convert! hs.comp y ((hasDerivAt_id y).div_const T) using 1 ; simp [div_eq_mul_inv]
+    convert! hs.comp y ((hasDerivAt_id y).div_const T) using 1; simp [div_eq_mul_inv]
   have h := ((hasDerivAt_const y (-Real.log C)).add ((hasDerivAt_id y).div_const 10)).add
     ((((hasDerivAt_const y 1).sub hc).mul_const (li eta)).add (hc.mul_const (logShape eta)))
-  convert! h using 1 ; dsimp [logProfile, blend, logarithmicSlope] ; ring
+  convert! h using 1; dsimp [logProfile, blend, logarithmicSlope]; ring
 
 theorem logarithmicSlope_eq (C T : ℝ) (li : ℝ → ℝ) (y eta : ℝ) :
     logarithmicSlope T li (y, eta) =
@@ -251,7 +259,7 @@ theorem blend_iteratedDeriv (T y : ℝ) {li : ℝ → ℝ} (hli : ContDiff ℝ �
     (fun e => OutgoingSchedule.sigma (y / T) * logShape e)) eta = _
   rw [iteratedDeriv_add
     ((contDiff_const.mul hli).of_le (WithTop.coe_le_coe.mpr (show (n : ℕ∞) ≤ ⊤ from
-      le_top))).contDiffAt
+        le_top))).contDiffAt
     ((contDiff_const.mul logShape_contDiff).of_le
       (WithTop.coe_le_coe.mpr (show (n : ℕ∞) ≤ ⊤ from le_top))).contDiffAt,
     iteratedDeriv_const_mul _ (hli.of_le
@@ -333,12 +341,16 @@ theorem angular_jet_bound {C T y B : ℝ} (hC : 0 < C)
 
 /-! ## The reset clock and exact ideal matching -/
 
+/-- Reset radius, given by `Xi * (C * P) ^ 10`. -/
 noncomputable def resetRadius (Xi C P : ℝ) : ℝ := Xi * (C * P) ^ 10
 
+/-- Separation, given by `Real.exp T / (C * P) ^ 10`. -/
 noncomputable def separation (T C P : ℝ) : ℝ := Real.exp T / (C * P) ^ 10
 
+/-- Reset clock, given by `y - 10 * Real.log (C * P)`. -/
 noncomputable def resetClock (C P y : ℝ) : ℝ := y - 10 * Real.log (C * P)
 
+/-- Ideal angular, given by `P * OutgoingSchedule.shape p.2 * Real.exp (p.1 / 10)`. -/
 noncomputable def idealAngular (P : ℝ) (p : ℝ × ℝ) : ℝ :=
   P * OutgoingSchedule.shape p.2 * Real.exp (p.1 / 10)
 
@@ -378,6 +390,8 @@ theorem separation_eventually_before (T : ℝ) {P : ℝ} (hP : 0 < P) (clock : �
 
 /-! ## Actual restoration on reset-clock times `-8` to `-7` -/
 
+/-- Restore, given by `(1 - OutgoingSchedule.sigma (p.1 + 8)) * Gi p.2 + OutgoingSchedule.sigma
+(p.1 + 8) * (4 * p.2)`. -/
 noncomputable def restore (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (1 - OutgoingSchedule.sigma (p.1 + 8)) * Gi p.2 +
     OutgoingSchedule.sigma (p.1 + 8) * (4 * p.2)
@@ -548,7 +562,7 @@ theorem shapeField_jet_bound {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
         mul_le_mul hs hb (abs_nonneg _) (by positivity)
       _ ≤ _ := by
         have hkC : 0 ≤ K / C := div_nonneg hK hC.le
-        convert! le_add_of_nonneg_left hkC using 1 ; ring
+        convert! le_add_of_nonneg_left hkC using 1; ring
 
 /-! ## Actual compact integrals and their parameter jets -/
 
@@ -575,13 +589,13 @@ theorem integral_iteratedDeriv {F : ℝ × ℝ → ℝ} (hF : ContDiff ℝ ∞ F
       (fun x => iteratedDeriv k (fun q => F (x, q)) e) (volume.restrict (Ioc (0 : ℝ) r)) := by
     intro k e
     exact ((partial_jet_continuous hF k).comp (continuous_id.prodMk
-      continuous_const)).aestronglyMeasurable
+        continuous_const)).aestronglyMeasurable
   have hdom : SmoothParameterIntegral.LocallyDominatedDeriv (fun e x => F (x, e))
       (volume.restrict (Ioc (0 : ℝ) r)) := by
     intro k e
     obtain ⟨B, hB⟩ := ((isCompact_Icc : IsCompact (Icc (0 : ℝ) r)).prod
       (isCompact_closedBall e 1)).exists_bound_of_continuousOn (partial_jet_continuous hF
-        k).continuousOn
+          k).continuousOn
     refine ⟨1, zero_lt_one, fun _ => B, integrable_const B, ?_⟩
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with x hx
     intro q hq
@@ -624,21 +638,27 @@ theorem product_jet_bound {f g : ℝ → ℝ} (hf : ContDiff ℝ ∞ f) (hg : Co
 
 /-! ## The five actual scaled history rows -/
 
+/-- Scaled E, given by `Real.sqrt (2 * R * p.1) * f p`. -/
 noncomputable def scaledE (R : ℝ) (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.sqrt (2 * R * p.1) * f p
 
+/-- Row M, given by `∫ x in (0 : ℝ)..r, u (x, eta)`. -/
 noncomputable def rowM (u : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, u (x, eta)
 
+/-- Row I, given by `∫ x in (0 : ℝ)..r, Real.sqrt (2 * x) * scaledE R f (x, eta)`. -/
 noncomputable def rowI (R : ℝ) (f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, Real.sqrt (2 * x) * scaledE R f (x, eta)
 
+/-- Row J, given by `∫ x in (0 : ℝ)..r, u (x, eta) * Real.sqrt (2 * x) * scaledE R f (x, eta)`. -/
 noncomputable def rowJ (R : ℝ) (u f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, u (x, eta) * Real.sqrt (2 * x) * scaledE R f (x, eta)
 
+/-- Row S, given by `∫ x in (0 : ℝ)..r, u (x, eta) ^ 2 - scaledE R f (x, eta) ^ 2 / 2`. -/
 noncomputable def rowS (R : ℝ) (u f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, u (x, eta) ^ 2 - scaledE R f (x, eta) ^ 2 / 2
 
+/-- Row P, given by `∫ x in (0 : ℝ)..r, scaledE R f (x, eta) ^ 2 / (2 * x)`. -/
 noncomputable def rowP (R : ℝ) (f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, scaledE R f (x, eta) ^ 2 / (2 * x)
 
@@ -735,7 +755,7 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
       (F := fun p : ℝ × ℝ => (2 * Real.sqrt R * p.1) * f p)
       (((contDiff_const.mul contDiff_const).mul contDiff_fst).mul hf) hr n eta
       (B := (2 * Real.sqrt R * r) * (K / C)) ?_
-    · convert! hi using 1 ; ring
+    · convert! hi using 1; ring
     · intro x hx
       have hx0 : 0 ≤ x := hx.1.le
       dsimp only
@@ -751,7 +771,7 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
       (F := fun p : ℝ × ℝ => (2 * Real.sqrt R * p.1) * (u p * f p))
       (((contDiff_const.mul contDiff_const).mul contDiff_fst).mul (hu.mul hf)) hr n eta
       (B := (2 * Real.sqrt R * r) * (2 ^ n * B * (K / C))) ?_
-    · convert! hi using 1 ; ring
+    · convert! hi using 1; ring
     · intro x hx
       have hx0 : 0 ≤ x := hx.1.le
       dsimp only
@@ -763,7 +783,7 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
         u (x, e) ^ 2 - (R * x) * f (x, e) ^ 2 := funext (rowS_normalized hR hr u f)
     rw [he]
     apply integral_jet_bound ((hu.pow 2).sub ((contDiff_const.mul contDiff_fst).mul (hf.pow 2))) hr
-      n eta
+        n eta
     intro x hx
     have hsub := iteratedDeriv_sub (x := eta) (((hus x).pow 2).of_le (nat_le_infty n)).contDiffAt
       (((contDiff_const : ContDiff ℝ ∞ (fun _ : ℝ => R * x)).mul
@@ -785,9 +805,12 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
 
 /-! The following coefficient contains only fixed upstream data. -/
 
+/-- Prefix coefficient, given by `B + 2 * (L + 1) * K + 2 * (L + 1) * (2 ^ n * B * K) + 2 ^ n *
+(B ^ 2 + L * K ^ 2)`. -/
 noncomputable def prefixCoefficient (n : ℕ) (B K L : ℝ) : ℝ :=
   B + 2 * (L + 1) * K + 2 * (L + 1) * (2 ^ n * B * K) + 2 ^ n * (B ^ 2 + L * K ^ 2)
 
+/-- Prefix jet size as an element of `ℝ`. -/
 noncomputable def prefixJetSize (n : ℕ) (R r : ℝ) (u f : ℝ × ℝ → ℝ) (eta : ℝ) : ℝ :=
   |iteratedDeriv n (rowM u r) eta| + |iteratedDeriv n (rowI R f r) eta| +
     |iteratedDeriv n (rowJ R u f r) eta| + |iteratedDeriv n (rowS R u f r) eta| +
@@ -876,12 +899,15 @@ theorem eventually_small_prefix (n : ℕ) {B K Xi T P : ℝ} (hB : 0 ≤ B) (hK 
 
 /-! ## The ideal prefix has small rows too -/
 
+/-- Ideal weight I, given by `∫ x in (0 : ℝ)..r, Real.sqrt (2 * x) * x ^ (1 / 10 : ℝ)`. -/
 noncomputable def idealWeightI (r : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, Real.sqrt (2 * x) * x ^ (1 / 10 : ℝ)
 
+/-- Ideal weight S, given by `∫ x in (0 : ℝ)..r, x ^ (1 / 5 : ℝ) / 2`. -/
 noncomputable def idealWeightS (r : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, x ^ (1 / 5 : ℝ) / 2
 
+/-- Ideal weight P, given by `∫ x in (0 : ℝ)..r, x ^ (1 / 5 : ℝ) / (2 * x)`. -/
 noncomputable def idealWeightP (r : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, x ^ (1 / 5 : ℝ) / (2 * x)
 
@@ -926,20 +952,25 @@ theorem idealWeightP_eq {r : ℝ} (hr : 0 ≤ r) :
         Real.rpow_sub hx'.1, Real.rpow_one]
       ring
     _ = _ := by
-      rw [intervalIntegral.integral_const_mul, integral_rpow (Or.inl (by norm_num : (-1 : ℝ) < -4 /
-        5))]
+      rw [intervalIntegral.integral_const_mul, integral_rpow (Or.inl (by
+          norm_num : (-1 : ℝ) < -4 / 5))]
       norm_num
       ring
 
+/-- Ideal M, given by `r * G eta`. -/
 noncomputable def idealM (G : ℝ → ℝ) (r eta : ℝ) : ℝ := r * G eta
 
+/-- Ideal I, given by `idealWeightI r * A eta`. -/
 noncomputable def idealI (A : ℝ → ℝ) (r eta : ℝ) : ℝ := idealWeightI r * A eta
 
+/-- Ideal J, given by `idealWeightI r * (G eta * A eta)`. -/
 noncomputable def idealJ (G A : ℝ → ℝ) (r eta : ℝ) : ℝ := idealWeightI r * (G eta * A eta)
 
+/-- Ideal S, given by `r * G eta ^ 2 - idealWeightS r * A eta ^ 2`. -/
 noncomputable def idealS (G A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
   r * G eta ^ 2 - idealWeightS r * A eta ^ 2
 
+/-- Ideal P, given by `idealWeightP r * A eta ^ 2`. -/
 noncomputable def idealP (A : ℝ → ℝ) (r eta : ℝ) : ℝ := idealWeightP r * A eta ^ 2
 
 theorem ideal_power_square {x : ℝ} (hx : 0 ≤ x) :
@@ -964,8 +995,8 @@ theorem ideal_rows_are_integrals {r : ℝ} (hr : 0 ≤ r) (G A : ℝ → ℝ) (e
     intro x _
     ring
   · have hpow : IntervalIntegrable (fun x : ℝ => x ^ (1 / 5 : ℝ) / 2 * A eta ^ 2) volume 0 r :=
-      ((intervalIntegral.intervalIntegrable_rpow' (by norm_num : (-1 : ℝ) < 1 / 5)).div_const
-        2).mul_const _
+      ((intervalIntegral.intervalIntegrable_rpow' (by
+          norm_num : (-1 : ℝ) < 1 / 5)).div_const 2).mul_const _
     have he : (∫ x in (0 : ℝ)..r, G eta ^ 2 - (A eta * x ^ (1 / 10 : ℝ)) ^ 2 / 2) =
         ∫ x in (0 : ℝ)..r, G eta ^ 2 - (x ^ (1 / 5 : ℝ) / 2) * A eta ^ 2 := by
       apply intervalIntegral.integral_congr
@@ -985,11 +1016,14 @@ theorem ideal_rows_are_integrals {r : ℝ} (hr : 0 ≤ r) (G A : ℝ → ℝ) (e
     rw [mul_pow, ideal_power_square hx0]
     ring
 
+/-- Ideal prefix jet size as an element of `ℝ`. -/
 noncomputable def idealPrefixJetSize (n : ℕ) (r : ℝ) (G A : ℝ → ℝ) (eta : ℝ) : ℝ :=
   |iteratedDeriv n (idealM G r) eta| + |iteratedDeriv n (idealI A r) eta| +
     |iteratedDeriv n (idealJ G A r) eta| + |iteratedDeriv n (idealS G A r) eta| +
     |iteratedDeriv n (idealP A r) eta|
 
+/-- Ideal prefix coefficient, given by `B + 2 * K + 2 * (2 ^ n * B * K) + 2 ^ n * B ^ 2 + (2 ^ n
+* K ^ 2) / 2`. -/
 noncomputable def idealPrefixCoefficient (n : ℕ) (B K : ℝ) : ℝ :=
   B + 2 * K + 2 * (2 ^ n * B * K) + 2 ^ n * B ^ 2 + (2 ^ n * K ^ 2) / 2
 
@@ -1014,12 +1048,12 @@ theorem idealPrefixJetSize_bound {r B K : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1)
     change |iteratedDeriv n (fun e => idealWeightI r * A e) eta| ≤ _
     rw [iteratedDeriv_const_mul _ (hA.of_le (nat_le_infty n)).contDiffAt, abs_mul]
     convert! mul_le_mul (idealWeightI_bound hr hr1) (hAb n le_rfl)
-      (abs_nonneg _) (by positivity) using 1 ; ring
+      (abs_nonneg _) (by positivity) using 1; ring
   have hj : |iteratedDeriv n (idealJ G A r) eta| ≤ 2 * (2 ^ n * B * K) * r := by
     change |iteratedDeriv n (fun e => idealWeightI r * (G e * A e)) eta| ≤ _
     rw [iteratedDeriv_const_mul _ ((hG.mul hA).of_le (nat_le_infty n)).contDiffAt, abs_mul]
-    convert! mul_le_mul (idealWeightI_bound hr hr1) hGA (abs_nonneg _) (by positivity) using 1 ;
-      ring
+    convert! mul_le_mul (idealWeightI_bound hr hr1) hGA (abs_nonneg _) (by
+        positivity) using 1; ring
   have hs : |iteratedDeriv n (idealS G A r) eta| ≤
       (2 ^ n * B ^ 2 + (2 ^ n * K ^ 2) / 2) * r := by
     change |iteratedDeriv n ((fun e => r * G e ^ 2) - (fun e => idealWeightS r * A e ^ 2)) eta| ≤ _
@@ -1038,7 +1072,7 @@ theorem idealPrefixJetSize_bound {r B K : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1)
     rw [iteratedDeriv_const_mul _ ((hA.pow 2).of_le (nat_le_infty n)).contDiffAt,
       abs_mul, idealWeightP_eq hr, abs_of_nonneg (by positivity)]
     convert! mul_le_mul_of_nonneg_left hAA
-      (show 0 ≤ (5 / 2 : ℝ) * r ^ (1 / 5 : ℝ) by positivity) using 1 ; ring
+      (show 0 ≤ (5 / 2 : ℝ) * r ^ (1 / 5 : ℝ) by positivity) using 1; ring
   dsimp [idealPrefixJetSize, idealPrefixCoefficient]
   nlinarith
 
@@ -1071,7 +1105,7 @@ theorem smooth_parameter_interval {a b : ℝ} (hab : a ≤ b) {F : ℝ × ℝ �
     intro k e
     have hc : ContinuousOn (fun x => iteratedDeriv k (fun q => F (x, q)) e) (Icc a b) :=
       (hj k).comp (continuous_id.prodMk continuous_const).continuousOn (fun x hx => ⟨hx, mem_univ
-        _⟩)
+          _⟩)
     exact (hc.mono Ioc_subset_Icc_self).aestronglyMeasurable measurableSet_Ioc
   have hd : SmoothParameterIntegral.LocallyDominatedDeriv (fun e x => F (x, e))
       (volume.restrict (Ioc a b)) := by
@@ -1100,12 +1134,17 @@ theorem integral_jet_bound_on {a b B : ℝ} (hab : a ≤ b) {F : ℝ × ℝ → 
       (f := fun x => iteratedDeriv n (fun e => F (x, e)) eta)
       (fun x hx => hB x ((uIoc_of_le hab) ▸ hx))
 
+/-- Restore defect, given by `restore Gi (Real.log p.1, p.2) - 4 * p.2`. -/
 noncomputable def restoreDefect (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   restore Gi (Real.log p.1, p.2) - 4 * p.2
 
+/-- Restore density J, given by `(Real.sqrt (2 * p.1) * p.1 ^ (1 / 10 : ℝ)) * (restoreDefect Gi
+p * A p.2)`. -/
 noncomputable def restoreDensityJ (Gi A : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (Real.sqrt (2 * p.1) * p.1 ^ (1 / 10 : ℝ)) * (restoreDefect Gi p * A p.2)
 
+/-- Restore density S, given by `restoreDefect Gi p * (restore Gi (Real.log p.1, p.2) + 4 *
+p.2)`. -/
 noncomputable def restoreDensityS (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   restoreDefect Gi p * (restore Gi (Real.log p.1, p.2) + 4 * p.2)
 
@@ -1135,17 +1174,21 @@ theorem restore_local_smooth {Gi A : ℝ → ℝ} (hGi : ContDiff ℝ ∞ Gi) (h
   refine ⟨hd, ?_, hd.mul (hr.add hg)⟩
   exact (((contDiffAt_const.mul contDiffAt_fst).sqrt (by positivity : (2 : ℝ) * x ≠ 0)).mul
     (contDiffAt_fst.rpow_const_of_ne hx.ne')).mul (hd.mul (hA.contDiffAt.comp (x, eta)
-      contDiffAt_snd))
+        contDiffAt_snd))
 
+/-- Restore debt M, given by `∫ x in a..b, restoreDefect Gi (x, eta)`. -/
 noncomputable def restoreDebtM (Gi : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   ∫ x in a..b, restoreDefect Gi (x, eta)
 
+/-- Restore debt J, given by `∫ x in a..b, restoreDensityJ Gi A (x, eta)`. -/
 noncomputable def restoreDebtJ (Gi A : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   ∫ x in a..b, restoreDensityJ Gi A (x, eta)
 
+/-- Restore debt S, given by `∫ x in a..b, restoreDensityS Gi (x, eta)`. -/
 noncomputable def restoreDebtS (Gi : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   ∫ x in a..b, restoreDensityS Gi (x, eta)
 
+/-- Restore jet size as an element of `ℝ`. -/
 noncomputable def restoreJetSize (n : ℕ) (Gi A : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   |iteratedDeriv n (restoreDebtM Gi a b) eta| +
     |iteratedDeriv n (restoreDebtJ Gi A a b) eta| +
@@ -1194,7 +1237,7 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
   have hj : |iteratedDeriv n (restoreDebtJ Gi A a b) eta| ≤
       (2 * (2 ^ n * delta * K)) * (b - a) := by
     apply integral_jet_bound_on hab (fun x hx e => (restore_local_smooth hGi hA (ha.trans_le hx.1)
-      e).2.1)
+        e).2.1)
       n eta
     intro x hx
     have hx0 : 0 ≤ x := (ha.trans hx.1).le
@@ -1208,13 +1251,13 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
     change |iteratedDeriv n (fun e => (Real.sqrt (2 * x) * x ^ (1 / 10 : ℝ)) *
       (restoreDefect Gi (x, e) * A e)) eta| ≤ _
     rw [iteratedDeriv_const_mul _ (((hdSmooth x).mul hA).of_le (nat_le_infty n)).contDiffAt,
-      abs_mul]
+        abs_mul]
     exact mul_le_mul hw (product_jet_bound (hdSmooth x) hA n eta hd hK (hdb x) habound)
       (abs_nonneg _) (by norm_num)
   have hs : |iteratedDeriv n (restoreDebtS Gi a b) eta| ≤
       (2 ^ n * delta * (delta + 2 * B)) * (b - a) := by
     apply integral_jet_bound_on hab (fun x hx e => (restore_local_smooth hGi hA (ha.trans_le hx.1)
-      e).2.2)
+        e).2.2)
       n eta
     intro x hx
     exact product_jet_bound (hdSmooth x) (hpSmooth x) n eta hd (by positivity) (hdb x) (hpb x)
@@ -1274,24 +1317,33 @@ theorem abs_jet_sub_le {F G : ℝ → ℝ} (hF : ContDiff ℝ ∞ F) (hG : ContD
       |iteratedDeriv n F eta| + |iteratedDeriv n G eta| := by
   change |iteratedDeriv n (F - G) eta| ≤ _
   rw [iteratedDeriv_sub (hF.of_le (nat_le_infty n)).contDiffAt (hG.of_le (nat_le_infty
-    n)).contDiffAt]
+      n)).contDiffAt]
   exact abs_sub _ _
 
+/-- Reset debt M, given by `rowM u r eta - idealM (fun e => 4 * e) r eta + restoreDebtM Gi r b
+eta`. -/
 noncomputable def resetDebtM (u : ℝ × ℝ → ℝ) (Gi : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
   rowM u r eta - idealM (fun e => 4 * e) r eta + restoreDebtM Gi r b eta
 
+/-- Reset debt I, given by `rowI R f r eta - idealI A r eta`. -/
 noncomputable def resetDebtI (R : ℝ) (f : ℝ × ℝ → ℝ) (A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
   rowI R f r eta - idealI A r eta
 
+/-- Reset debt J, given by `rowJ R u f r eta - idealJ (fun e => 4 * e) A r eta + restoreDebtJ Gi
+A r b eta`. -/
 noncomputable def resetDebtJ (R : ℝ) (u f : ℝ × ℝ → ℝ) (Gi A : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
   rowJ R u f r eta - idealJ (fun e => 4 * e) A r eta + restoreDebtJ Gi A r b eta
 
+/-- Reset debt S, given by `rowS R u f r eta - idealS (fun e => 4 * e) A r eta + restoreDebtS Gi
+r b eta`. -/
 noncomputable def resetDebtS (R : ℝ) (u f : ℝ × ℝ → ℝ) (Gi A : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
   rowS R u f r eta - idealS (fun e => 4 * e) A r eta + restoreDebtS Gi r b eta
 
+/-- Reset debt P, given by `rowP R f r eta - idealP A r eta`. -/
 noncomputable def resetDebtP (R : ℝ) (f : ℝ × ℝ → ℝ) (A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
   rowP R f r eta - idealP A r eta
 
+/-- Reset debt jet size as an element of `ℝ`. -/
 noncomputable def resetDebtJetSize (n : ℕ) (R r b : ℝ) (u f : ℝ × ℝ → ℝ)
     (Gi A : ℝ → ℝ) (eta : ℝ) : ℝ :=
   |iteratedDeriv n (resetDebtM u Gi r b) eta| +
@@ -1310,13 +1362,13 @@ theorem resetDebtJetSize_le_parts {R r b : ℝ} (hR : 0 ≤ R) (hr : 0 < r) (hrb
   obtain ⟨hiM, hiI, hiJ, hiS, hiP⟩ := ideal_rows_contDiff r hg4 hA
   have hrM : ContDiff ℝ ∞ (restoreDebtM Gi r b) :=
     (smooth_parameter_interval hrb (fun x hx e => (restore_local_smooth hGi hA (hr.trans_le hx.1)
-      e).1)).1
+        e).1)).1
   have hrJ : ContDiff ℝ ∞ (restoreDebtJ Gi A r b) :=
     (smooth_parameter_interval hrb (fun x hx e => (restore_local_smooth hGi hA (hr.trans_le hx.1)
-      e).2.1)).1
+        e).2.1)).1
   have hrS : ContDiff ℝ ∞ (restoreDebtS Gi r b) :=
     (smooth_parameter_interval hrb (fun x hx e => (restore_local_smooth hGi hA (hr.trans_le hx.1)
-      e).2.2)).1
+        e).2.2)).1
   have hm := abs_jet_sub_add_le huM hiM hrM n eta
   have hi := abs_jet_sub_le huI hiI n eta
   have hj := abs_jet_sub_add_le huJ hiJ hrJ n eta
@@ -1330,10 +1382,12 @@ theorem resetDebtJetSize_le_parts {R r b : ℝ} (hR : 0 ≤ R) (hr : 0 < r) (hrb
   dsimp [resetDebtJetSize, prefixJetSize, idealPrefixJetSize, restoreJetSize]
   linarith only [hm, hi, hj, hs, hp]
 
+/-- Vanishing debt bound as an element of `ℝ`. -/
 noncomputable def vanishingDebtBound (n : ℕ) (B K L BG KA r C : ℝ) : ℝ :=
   (prefixCoefficient n B K L + idealPrefixCoefficient n BG KA) * r +
     (2 ^ n * L * K ^ 2) / C ^ 2 + (5 / 2) * (2 ^ n * KA ^ 2) * r ^ (1 / 5 : ℝ)
 
+/-- Restoration bound, given by `delta * (1 + 2 * (2 ^ n * KA) + 2 ^ n * (delta + 2 * BG))`. -/
 noncomputable def restorationBound (n : ℕ) (BG KA delta : ℝ) : ℝ :=
   delta * (1 + 2 * (2 ^ n * KA) + 2 ^ n * (delta + 2 * BG))
 
@@ -1356,8 +1410,8 @@ theorem resetDebtJetSize_bound {R r b L B K C BG KA delta : ℝ}
   have hs := restoreJetSize_bound hr hrb hb hBG hKA hd hGi hA n eta hgb habound hdef
   have ht := resetDebtJetSize_le_parts hR hr hrb hu hf hGi hA n eta
   apply ht.trans
-  convert! add_le_add (add_le_add hp hi) hs using 1 ;
-    dsimp [vanishingDebtBound, restorationBound] ; ring
+  convert! add_le_add (add_le_add hp hi) hs using 1;
+    dsimp [vanishingDebtBound, restorationBound]; ring
 
 theorem vanishingDebtBound_tendsto (n : ℕ) (B K L BG KA T : ℝ) {P : ℝ} (hP : P ≠ 0) :
     Tendsto (fun C : ℝ => vanishingDebtBound n B K L BG KA (separation T C P) C)
@@ -1380,6 +1434,8 @@ theorem eventually_vanishingDebtBound_lt (n : ℕ) (B K L BG KA T : ℝ)
 
 /-! ## Direct adapter from axis and entry jets to the constructed prefix -/
 
+/-- Shape jet constant, given by `K + (n.factorial * Real.exp (T / 10 + B) * B ^ n) / Real.sqrt
+(2 * Xi)`. -/
 noncomputable def shapeJetConstant (n : ℕ) (Xi T B K : ℝ) : ℝ :=
   K + (n.factorial * Real.exp (T / 10 + B) * B ^ n) / Real.sqrt (2 * Xi)
 
@@ -1402,7 +1458,7 @@ theorem shapeField_jets_uniform {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
   intro k hk
   have hb := shapeField_jet_bound hXi hC hT hX hXL hli hB hK k eta
     (fun hx => hAxis hx k hk) hHold (fun i hi => hl i (hi.trans hk)) (fun i hi => hf i (hi.trans
-      hk))
+        hk))
   apply hb.trans
   unfold shapeJetConstant
   apply div_le_div_of_nonneg_right _ hC.le
@@ -1413,6 +1469,7 @@ theorem shapeField_jets_uniform {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
     (pow_le_pow_right₀ hB hk) (pow_nonneg (zero_le_one.trans hB) _)
     (mul_nonneg (Nat.cast_nonneg _) (Real.exp_pos _).le)
 
+/-- Scaled family, given by `F (R * p.1, p.2)`. -/
 noncomputable def scaledFamily (R : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := F (R * p.1, p.2)
 
 theorem scaledFamily_contDiff (R : ℝ) {F : ℝ × ℝ → ℝ} (hF : ContDiff ℝ ∞ F) :

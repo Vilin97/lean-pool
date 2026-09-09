@@ -6,17 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ViscosityCauchy
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+
+/-! Genuine norm, trace, and divergence constraints persist under actual uniform Sobolev limits. -/
 
 @[expose] public section
 
-/-! Genuine norm, trace, and divergence constraints persist under actual uniform Sobolev limits. -/
 
 noncomputable section
 
 namespace EulerSobolevPathLimits
 
-open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerViscosityCauchy
+open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -29,7 +30,7 @@ local instance pathLimitSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q
 
 /-- Actual Sobolev restriction is contractive for the uniform time-path norm. -/
 theorem restrict_path_norm {s q : ℕ} (hq : q ≤ s) (T : ℝ)
-    (u : C(Icc (0 : ℝ) T,SobolevSpace period s)) :
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period s)) :
     ‖(restrictOperator period hq).compLeftContinuous ℝ (Icc (0 : ℝ) T) u‖ ≤ ‖u‖ := by
   apply (ContinuousMap.norm_le _ (norm_nonneg u)).mpr
   intro t
@@ -37,7 +38,7 @@ theorem restrict_path_norm {s q : ℕ} (hq : q ≤ s) (T : ℝ)
 
 /-- Uniform state bounds persist at the actual strong Sobolev limit. -/
 theorem limit_norm_bound {q : ℕ} (T R : ℝ)
-    (u : ℕ → C(Icc (0 : ℝ) T,SobolevSpace period q)) (v : C(Icc (0 : ℝ) T,SobolevSpace period q))
+    (u : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period q)) (v : C(Icc (0 : ℝ) T, SobolevSpace period q))
     (h : Filter.Tendsto u Filter.atTop (𝓝 v)) (hu : ∀ n, ‖u n‖ ≤ R) : ‖v‖ ≤ R := by
   have hh : Filter.Tendsto (fun n => ‖u n‖) Filter.atTop (𝓝 ‖v‖) :=
     (continuous_norm.tendsto v).comp h
@@ -45,7 +46,7 @@ theorem limit_norm_bound {q : ℕ} (T R : ℝ)
 
 /-- A fixed zero trace is preserved by actual uniform Sobolev convergence. -/
 theorem limit_zero_trace {q : ℕ} (T : ℝ) (t : Icc (0 : ℝ) T)
-    (u : ℕ → C(Icc (0 : ℝ) T,SobolevSpace period q)) (v : C(Icc (0 : ℝ) T,SobolevSpace period q))
+    (u : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period q)) (v : C(Icc (0 : ℝ) T, SobolevSpace period q))
     (h : Filter.Tendsto u Filter.atTop (𝓝 v)) (hu : ∀ n, u n t = 0) : v t = 0 := by
   have hv := ((ContinuousMap.evalCLM ℝ t).continuous.tendsto v).comp h
   have hz : Filter.Tendsto (fun n => u n t) Filter.atTop (𝓝 (0 : SobolevSpace period q)) :=
@@ -54,7 +55,7 @@ theorem limit_zero_trace {q : ℕ} (T : ℝ) (t : Icc (0 : ℝ) T)
 
 /-- The genuine lifted divergence constraint is closed under actual uniform Sobolev convergence. -/
 theorem limit_divergenceFree {q : ℕ} (T : ℝ) (κ : ℝ) (m : Vector3)
-    (u : ℕ → C(Icc (0 : ℝ) T,SobolevSpace period q)) (v : C(Icc (0 : ℝ) T,SobolevSpace period q))
+    (u : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period q)) (v : C(Icc (0 : ℝ) T, SobolevSpace period q))
     (h : Filter.Tendsto u Filter.atTop (𝓝 v))
     (hu : ∀ n t, value period (u n t) ∈ divergenceFreeSpace period κ m) (t : Icc (0 : ℝ) T) :
     value period (v t) ∈ divergenceFreeSpace period κ m := by

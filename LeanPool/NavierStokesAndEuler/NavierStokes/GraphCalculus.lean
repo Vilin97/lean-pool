@@ -6,12 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # Exact differential calculus on the auxiliary graph
@@ -22,11 +20,16 @@ candidate manuscript. The radial formulas below are stated away from `r = 0`.
 All differential operators use Mathlib's actual Fréchet derivatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.GraphCalculus
 
+/-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
+/-- Lift: an abbreviation for `Plane × Plane`. -/
 abbrev Lift := Plane × Plane
 
 /-- The radial coefficient in the exact graph derivative. -/
@@ -36,27 +39,34 @@ def radialSpeed (d r : ℝ) : ℝ := d * r ^ (d - 1)
 def graph (d : ℝ) (vr vt : Plane) (q : Plane) : Lift :=
   (q, q.1 ^ d • vr + q.2 • vt)
 
+/-- Pullback, defined pointwise by `F (graph d vr vt q)`. -/
 def pullback (d : ℝ) (vr vt : Plane) (F : Lift → ℝ) : Plane → ℝ :=
   fun q => F (graph d vr vt q)
 
+/-- Radial vector, given by `((1, 0), radialSpeed d p.1.1 • vr)`. -/
 def radialVector (d : ℝ) (vr : Plane) (p : Lift) : Lift :=
   ((1, 0), radialSpeed d p.1.1 • vr)
 
+/-- Time vector, given by `((0, 1), vt)`. -/
 def timeVector (vt : Plane) : Lift := ((0, 1), vt)
 
 /-- Differentiation along a vector field, defined by the genuine derivative. -/
 def along (V : Lift → Lift) (F : Lift → ℝ) (p : Lift) : ℝ :=
   fderiv ℝ F p (V p)
 
+/-- Radial op, given by `along (radialVector d vr) F`. -/
 def radialOp (d : ℝ) (vr : Plane) (F : Lift → ℝ) : Lift → ℝ :=
   along (radialVector d vr) F
 
+/-- Time op, given by `along (fun _ => timeVector vt) F`. -/
 def timeOp (vt : Plane) (F : Lift → ℝ) : Lift → ℝ :=
   along (fun _ => timeVector vt) F
 
+/-- Partial R, given by `deriv (fun r => u (r, q.2)) q.1`. -/
 def partialR (u : Plane → ℝ) (q : Plane) : ℝ :=
   deriv (fun r => u (r, q.2)) q.1
 
+/-- Partial T, given by `deriv (fun t => u (q.1, t)) q.2`. -/
 def partialT (u : Plane → ℝ) (q : Plane) : ℝ :=
   deriv (fun t => u (q.1, t)) q.2
 

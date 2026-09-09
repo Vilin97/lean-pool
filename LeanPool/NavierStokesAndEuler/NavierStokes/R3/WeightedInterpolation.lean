@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-
-@[expose] public section
 
 /-!
 # Interpolation for the comparison cutoff weights
@@ -19,6 +16,9 @@ These estimates interpolate the unweighted `L²` norm of a vector field with the
 measurability and finite endpoint norms. In fact, the interpolation identities
 only require a nonnegative weight; an upper bound of one is unnecessary.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -86,7 +86,7 @@ theorem memLp_and_lpNorm_le_rpow_mul
     (hab : 1 / r.toReal = 1 / (p.toReal / a) + 1 / (q.toReal / b))
     (hh : ∀ᵐ x ∂volume, ‖h x‖ ≤ ‖f x‖ ^ a * ‖g x‖ ^ b) :
     MemLp h r volume ∧ comparisonLpNorm r h ≤ comparisonLpNorm p f ^ a * comparisonLpNorm q g ^ b
-      := by
+        := by
   have hbound := eLpNorm_le_rpow_mul hf.1 hg.1 hp hq hr ha hb hra hab hh
   have hfinite : eLpNorm f p volume ^ a * eLpNorm g q volume ^ b < ∞ :=
     ENNReal.mul_lt_top

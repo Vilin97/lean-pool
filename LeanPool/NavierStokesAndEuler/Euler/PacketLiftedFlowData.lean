@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalGraphFlowBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedTimeBounds
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! A fixed actual correction and the derived approximation bounds
 construct physical graph-flow data. No new solution or inverse is an input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,13 +26,15 @@ open Set MeasureTheory EulerAllOrderCorrectionData EulerLiftedGradientSpace Eule
   EulerPhysicalGraphFlowBounds EulerCylinderCoverDescent
 open scoped ContDiff
 
+/-- Physical input radius, given by `max (liftedInputRadius R ρ) (liftedInputRadius Rt ρ)`. -/
 def physicalInputRadius (R Rt ρ : ℝ) : ℝ :=
   max (liftedInputRadius R ρ) (liftedInputRadius Rt ρ)
 
+/-- Physical input size, given by `liftedInputConstant P*((C0+Cn)/k+2*Ev)`. -/
 def physicalInputSize (P k C0 Cn Ev : ℝ) [Fact (0 < P)] : ℝ :=
   liftedInputConstant P*((C0+Cn)/k+2*Ev)
 
-private theorem envelope_radius_mono {C R S : ℝ} (hC : 0 ≤ C) (hR : 0 ≤ R)
+theorem envelope_radius_mono {C R S : ℝ} (hC : 0 ≤ C) (hR : 0 ≤ R)
     (hRS : R ≤ S) (n : ℕ) :
     C*R^n*(n.factorial : ℝ)^2 ≤ C*S^n*(n.factorial : ℝ)^2 :=
   mul_le_mul_of_nonneg_right
@@ -39,6 +43,7 @@ private theorem envelope_radius_mono {C R S : ℝ} (hC : 0 ≤ C) (hR : 0 ≤ R)
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {hT : 0 < T} {A : EulerAllOrderCorrectionData.Data P T}
   (B : Budget P hT A) {raw raw_t : VectorField}
 
+/-- Physical flow data as an element of `EulerPhysicalGraphFlowBounds.Data P T`. -/
 def Budget.physicalFlowData (G : Field P T raw) (H : Field P T raw_t)
     (hGfield : A.approximation = G.toFieldTower) (htime : TimeDerivative hT.le G H)
     (k R Rt ρ C0 Cn Ch Ev Et : ℝ)
@@ -46,13 +51,13 @@ def Budget.physicalFlowData (G : Field P T raw) (H : Field P T raw_t)
     (hR : 0 ≤ R) (hRt : 0 ≤ Rt) (hρ : 0 < ρ)
     (hC0 : 0 ≤ C0) (hCn : 0 ≤ Cn) (hCh : 0 ≤ Ch) (hEv : 0 ≤ Ev) (hEt : 0 ≤ Et)
     (hG : G.WordBound 6 R C0 0)
-    (hN : (G.map (normalComponentMap A.direction)).WordBound 6 R (Cn/k) 0)
+    (hN : (G.map (normalComponentMap A.direction)).WordBound 6 R (Cn / k) 0)
     (hH : H.WordBound 6 Rt Ch 0)
     (hE : ∀ n (t : Icc (0 : ℝ) T), weightedNorm P 6 n ρ
-      ((B.fieldTower P).realization (n+6) t) ≤ Ev)
+      ((B.fieldTower P).realization (n + 6) t) ≤ Ev)
     (hEtower : ∀ n (t : Icc (0 : ℝ) T), weightedNorm P 6 n ρ
-      ((B.timeDerivativeTower P).realization (n+6) t) ≤ Et)
-    (hsmall : physicalInputSize P k C0 Cn Ev * physicalInputRadius R Rt ρ * T ≤ 1/8) :
+      ((B.timeDerivativeTower P).realization (n + 6) t) ≤ Et)
+    (hsmall : physicalInputSize P k C0 Cn Ev * physicalInputRadius R Rt ρ * T ≤ 1 / 8) :
     EulerPhysicalGraphFlowBounds.Data P T := by
   have hrv := (liftedInputRadius_pos R ρ hR hρ)
   have hrt := (liftedInputRadius_pos Rt ρ hRt hρ)

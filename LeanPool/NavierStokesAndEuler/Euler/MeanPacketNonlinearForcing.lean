@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcingProduct
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
 
-@[expose] public section
-
 /-!
 # Nonlinear closure of actual admissible mean forcing
 
@@ -19,6 +17,9 @@ factor. Consequently finite-dimensional bilinear products preserve the
 literal spatial L² jets and their time continuity without an extra product
 regularity assumption.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,7 +34,7 @@ variable {D : Data} {raw raw' : VectorField}
 
 /-- Admissibility depends only on the raw field on the actual time interval. -/
 def congr (G : Forcing D raw)
-    (heq : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw' (t,(x,θ)) = raw (t,(x,θ))) : Forcing D raw' where
+    (heq : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw' (t, (x, θ)) = raw (t, (x, θ))) : Forcing D raw' where
   slices := G.slices
   jets_continuous := G.jets_continuous
   path := G.path

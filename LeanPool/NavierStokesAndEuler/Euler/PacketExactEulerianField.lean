@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketExactPhysicalEuler
-public import LeanPool.NavierStokesAndEuler.Euler.PacketEulerianRegularity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 
 /-! Literal agreement between the exact physical Euler fields and their
 constructed smooth L² representatives, including the scalar pressure. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,7 +22,7 @@ namespace EulerPacketPhysicalTransform
 
 open Set EulerSmoothLimit EulerAllOrderCorrectionData EulerAllOrderDriftCorrection
   EulerPacketCorrectionCoefficients EulerGraphPressurePotential EulerLiftedGradientSpace
-  EulerPacketInverseFlowGevrey EulerPacketPhysicalField
+  EulerPacketInverseFlowGevrey
 open scoped ContDiff
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
@@ -31,7 +33,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 theorem exact_physicalVelocity_eq (k : ℝ)
     (F : ℝ × Space → Space →L[ℝ] Space) (Y : ℝ × Space → Space)
-    (hF : ∀ (t : Icc (0 : ℝ) D.T) x, F (t,x)=D.F.field t x)
+    (hF : ∀ (t : Icc (0 : ℝ) D.T) x, F (t, x) = D.F.field t x)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     physicalVelocity κ k D.m₀ F S.rawVelocity Y (t,x) =
       κ • D.F.field t (Y (t,x))
@@ -46,9 +48,9 @@ variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hY : Continuous (Function.uncurry Y))
 
 include hX hXY hY in
-theorem exact_physicalPressure_gradient (k : ℝ) (hk : k*κ=1)
+theorem exact_physicalPressure_gradient (k : ℝ) (hk : k * κ = 1)
     (Yraw : ℝ × Space → Space)
-    (hYraw : ∀ (t : Icc (0 : ℝ) D.T) x, Yraw (t,x)=Y t x)
+    (hYraw : ∀ (t : Icc (0 : ℝ) D.T) x, Yraw (t, x) = Y t x)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     gradient (fun y => physicalPressure (S.rawGraphPotential k) Yraw (t,y)) x =
       κ • (D.FInv.field t (Y t x)).adjoint
@@ -65,9 +67,9 @@ theorem exact_physicalPressure_gradient (k : ℝ) (hk : k*κ=1)
   rfl
 
 include hX hXY hY in
-theorem exact_physicalPressure_smooth (k : ℝ) (hk : k*κ=1)
+theorem exact_physicalPressure_smooth (k : ℝ) (hk : k * κ = 1)
     (Yraw : ℝ × Space → Space)
-    (hYraw : ∀ (t : Icc (0 : ℝ) D.T) x, Yraw (t,x)=Y t x)
+    (hYraw : ∀ (t : Icc (0 : ℝ) D.T) x, Yraw (t, x) = Y t x)
     (t : Icc (0 : ℝ) D.T) :
     ContDiff ℝ ∞ (fun y => physicalPressure (S.rawGraphPotential k) Yraw (t,y)) := by
   have he : (fun y => physicalPressure (S.rawGraphPotential k) Yraw (t,y)) =

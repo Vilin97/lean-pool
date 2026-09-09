@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionStep
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeExcludedBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStageRegularity
 
 /-!
 # Every-power bounds for the literal cycle's axisymmetric alias
@@ -19,6 +18,9 @@ covering index, and fast operator. Their bounds are derived from primitive
 state regularity and ordinary cumulative/covariance estimates.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCycleExcluded
@@ -27,35 +29,50 @@ open Set Function Filter WeightedClasses MeanIncrementBounds CorrectionState
 open CorrectionStep VariableGaugeMean LocalSignedRequest MeanStateRegularity
 open scoped ContDiff Topology BigOperators
 
+/-- Point: an abbreviation for `MeanStateRegularity.Point`. -/
 abbrev Point := MeanStateRegularity.Point
 
 /-- Fixed numerical and geometric data for the actual similarity estimates. -/
 structure SimilarityData where
+  /-- Step-size parameter of `SimilarityData`, of type `ℝ`. -/
   h : ℝ
   h_pos : 0 < h
+  /-- Inner of `SimilarityData`, of type `ℝ`. -/
   inner : ℝ
+  /-- Outer of `SimilarityData`, of type `ℝ`. -/
   outer : ℝ
   inner_pos : 0 < inner
   inner_lt_outer : inner < outer
+  /-- Left weight of `SimilarityData`, of type `ℝ`. -/
   leftWeight : ℝ
+  /-- Right weight of `SimilarityData`, of type `ℝ`. -/
   rightWeight : ℝ
   left_pos : 0 < leftWeight
   right_pos : 0 < rightWeight
+  /-- Base scale of `SimilarityData`, of type `ℝ`. -/
   baseScale : ℝ
   baseScale_ne : baseScale ≠ 0
+  /-- Region of `SimilarityData`, of type `SlowRegion (2 * h)`. -/
   region : SlowRegion (2 * h)
+  /-- Index of `SimilarityData`, of type `ℕ → ℕ`. -/
   index : ℕ → ℕ
+  /-- Gap of `SimilarityData`, of type `ℕ`. -/
   gap : ℕ
   index_lower : ∀ n, ChartScales.nativeIndex h n ≤ index n + gap
   index_upper : ∀ n, index n ≤ ChartScales.nativeIndex h n + gap
+  /-- Slow of `SimilarityData`, of type `ℕ → ℝ`. -/
   slow : ℕ → ℝ
   slow_one : ∀ n, 1 ≤ slow n
   slow_scale : ∀ n, ChartScales.S n ≤ slow n
 
+/-- Strip, given by `GaugeExcludedBounds.actualStrip (b := d.outer) d.region d.inner_pos
+d.left_pos d.right_pos d.h_pos d.slow d.slow_one`. -/
 noncomputable def SimilarityData.strip (d : SimilarityData) : StripData Point :=
   GaugeExcludedBounds.actualStrip (b := d.outer) d.region d.inner_pos d.left_pos d.right_pos
     d.h_pos d.slow d.slow_one
 
+/-- Gauge, given by `GaugeExcludedBounds.actualGauge d.h d.inner d.outer d.baseScale
+d.inner_lt_outer d.index`. -/
 noncomputable def SimilarityData.gauge (d : SimilarityData) : GaugeData TorusInverse.Plane :=
   GaugeExcludedBounds.actualGauge d.h d.inner d.outer d.baseScale d.inner_lt_outer d.index
 
@@ -140,7 +157,7 @@ theorem afterRank_covariance_mem {s : StripData Point} {γ : ℝ}
 theorem nextAxisymmetricAlias_eq (axis : AxisymmetricAlias) :
     p.nextAxisymmetricAlias v c u axis = axis +
       (fun n x => temporalAliasState p.gauge p.timeExponent p.commonIndex c (p.afterSigned v c u) n
-        (x, 0)) +
+          (x, 0)) +
       ((fun n x => pressureAliasState p.gauge c (p.afterRank v c u) n (x, 0)) -
         (fun n x => pressureAliasState p.gauge c u n (x, 0))) := rfl
 
@@ -198,11 +215,11 @@ theorem nextAxisymmetricAlias_all_powers {κ α γ : ℝ}
   have HP : PrimitiveData d.region p.gauge.radial.inner p.gauge.radial.outer c u := by
     simpa only [hi, ho'] using H
   have hXP₁ : ∀ i j, GaugeMomentBalances.MovingField d.region p.gauge.radial.inner
-    p.gauge.radial.outer
+      p.gauge.radial.outer
       (SignedMeanGain.covarianceIncrement u.oscillation (p.particularVelocity v c u) i j) := by
     simpa only [hi, ho'] using hX₁
   have hXP₂ : ∀ i j, GaugeMomentBalances.MovingField d.region p.gauge.radial.inner
-    p.gauge.radial.outer
+      p.gauge.radial.outer
       (SignedMeanGain.covarianceIncrement (p.afterParticular v c u).oscillation
         (p.signedVelocity v c u) i j) := by
     simpa only [hi, ho'] using hX₂

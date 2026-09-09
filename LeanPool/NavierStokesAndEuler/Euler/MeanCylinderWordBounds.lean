@@ -8,17 +8,19 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketCylinderFields
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSpatialMeanPath
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordRestriction
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderActionWords
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderActionWords
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordRestriction
 
 /-!
 Exact parameter restriction transfers the ordinary mean estimates to the
 four-letter cylinder word alphabet.  The zero angular direction is retained,
 so neither the external radius nor the fixed Sobolev order changes.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +32,7 @@ open Set Real MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerMeanSoleno
   EulerParameterWordGevrey EulerGevrey EulerPacketCylinderField EulerPacketProfileRecursion
 open scoped ContDiff
 
+/-- Spatial direction, given by `(standardDirection i).1`. -/
 def spatialDirection (i : Fin 4) : Space := (standardDirection i).1
 
 theorem spatialDirection_norm (i : Fin 4) : ‖spatialDirection i‖ ≤ 1 := by
@@ -37,10 +40,20 @@ theorem spatialDirection_norm (i : Fin 4) : ‖spatialDirection i‖ ≤ 1 := by
 
 variable (P T : ℝ) [Fact (0 < P)]
 
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,L2) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,L2) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCylinderWordBounds1 : NormedAddCommGroup C(Icc (0 : ℝ) T,L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCylinderWordBounds2 : NormedSpace ℝ C(Icc (0 : ℝ) T,L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanCylinderWordBounds3 : NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCylinderWordBounds4 : NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P) :=
+    inferInstance
 
 theorem spatialEmbeddingPath_norm : ‖spatialEmbeddingPath P T‖ ≤ sqrt P := by
   apply opNorm_le_bound _ (sqrt_nonneg P)
@@ -50,13 +63,13 @@ theorem spatialEmbeddingPath_norm : ‖spatialEmbeddingPath P T‖ ≤ sqrt P :=
   exact ((embedding (V := Space) P).le_of_opNorm_le (embedding_norm P) (p t)).trans
     (mul_le_mul_of_nonneg_left (p.norm_coe_le_norm t) (sqrt_nonneg P))
 
-theorem pathMean_spatialEmbeddingPath (p : C(Icc (0 : ℝ) T,L2)) :
+theorem pathMean_spatialEmbeddingPath (p : C(Icc (0 : ℝ) T, L2)) :
     pathMean P (spatialEmbeddingPath P T p) = p := by
   apply ContinuousMap.ext
   intro t
   exact mean_embedding P (p t)
 
-theorem spatialEmbeddingPath_block_le (p : C(Icc (0 : ℝ) T,L2))
+theorem spatialEmbeddingPath_block_le (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (q n : ℕ) (a : LiftTangent) :
     block standardDirection q
@@ -76,7 +89,7 @@ theorem spatialEmbeddingPath_block_le (p : C(Icc (0 : ℝ) T,L2))
   exact hh.trans (mul_le_mul_of_nonneg_right (spatialEmbeddingPath_norm P T)
     (block_nonneg spatialDirection q f n a.1))
 
-theorem ordinaryPath_block_le (p : C(Icc (0 : ℝ) T,L2))
+theorem ordinaryPath_block_le (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (q n : ℕ) (a : Space) :
     block spatialDirection q (fun b : Space => pathTranslation T b p) n a ≤
@@ -91,16 +104,16 @@ theorem ordinaryPath_block_le (p : C(Icc (0 : ℝ) T,L2))
     rw [spatialEmbeddingPath_translation, pathMean_spatialEmbeddingPath]
     rfl
   have hh := pathMean_block_bound P standardDirection q g (spatialEmbeddingPath_orbit P T p hp) n
-    (a,0)
+      (a,0)
   rw [he, block_comp_right standardDirection fstMap q f hp] at hh
   exact hh
 
-theorem ordinaryPath_majorant (p : C(Icc (0 : ℝ) T,L2))
+theorem ordinaryPath_majorant (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (q : ℕ) (R A : ℝ) (d : ℕ)
     (hb : ∀ n, block standardDirection q
       (fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)) n 0 ≤ A*majorant R d
-        n)
+          n)
     (n : ℕ) (a : Space) :
     block spatialDirection q (fun b : Space => pathTranslation T b p) n a ≤
       ((P⁻¹*sqrt P)*A)*majorant R d n := by
@@ -110,7 +123,7 @@ theorem ordinaryPath_majorant (p : C(Icc (0 : ℝ) T,L2))
   exact hh.trans ((mul_le_mul_of_nonneg_left (hb n)
     (mul_nonneg (inv_nonneg.mpr (le_of_lt (Fact.out : 0 < P))) (sqrt_nonneg P))).trans_eq (by ring))
 
-theorem spatialEmbeddingPath_majorant (p : C(Icc (0 : ℝ) T,L2))
+theorem spatialEmbeddingPath_majorant (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (q : ℕ) (R A : ℝ) (d : ℕ)
     (hb : ∀ n a, block spatialDirection q (fun b : Space => pathTranslation T b p) n a ≤

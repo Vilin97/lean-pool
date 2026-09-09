@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointStrong
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1WeakPairing
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedClassical
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointParameter
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1WeakPairing
 
 /-!
 # The affine endpoint correction as an actual forced Dirichlet solve
@@ -19,6 +17,9 @@ For the affine coordinate lift `t Y / T`, the Jacobi identity cancels the
 potential term. Its variational correction is exactly the already
 constructed zero-endpoint inverse applied to `2 Q₁(t) (Y/T)`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,23 +30,25 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace
   EulerVolterraConvolution EulerTimeH1OperatorProduct EulerTimeH1FrameTransport
   EulerTransverseEndpointEnergy EulerTransverseFixedEndpoint
   EulerTransverseFixedSpaceInverse EulerTransverseEndpointParameter
-  EulerTransverseEndpointCoordinates EulerContinuousTimeIntegral
+   EulerContinuousTimeIntegral
   EulerTimeH1WeakPairing
 
 variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T)
-  (Q Q₁ Q₂ : C(Icc (0 : ℝ) T,U →L[ℝ] E))
-  (H : C(Icc (0 : ℝ) T,E →L[ℝ] E))
+  (Q Q₁ Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
+  (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 omit [CompleteSpace U] [CompleteSpace E] in
+/-- Affine velocity as an element of `C(Icc (0 : ℝ) T,E)`. -/
 def affineVelocity (Y : U) : C(Icc (0 : ℝ) T,E) :=
   ⟨fun t => Q₁ t ((t : ℝ) • (T⁻¹ • Y))+Q t (T⁻¹ • Y),
     (Q₁.continuous.clm_apply (continuous_subtype_val.smul continuous_const)).add
       (Q.continuous.clm_apply continuous_const)⟩
 
 omit [CompleteSpace U] [CompleteSpace E] in
+/-- Affine acceleration as an element of `C(Icc (0 : ℝ) T,E)`. -/
 def affineAcceleration (Y : U) : C(Icc (0 : ℝ) T,E) :=
   ⟨fun t => Q₂ t ((t : ℝ) • (T⁻¹ • Y))+(2 : ℝ) • Q₁ t (T⁻¹ • Y),
     (Q₂.continuous.clm_apply (continuous_subtype_val.smul continuous_const)).add
@@ -86,10 +89,10 @@ theorem affineVelocity_hasDerivWithinAt (Y : U) (t : Icc (0 : ℝ) T) :
   have hlin : HasDerivWithinAt (fun s : ℝ => s • (T⁻¹ • Y)) (T⁻¹ • Y)
       (Icc (0 : ℝ) T) t := by
     simpa only [id_eq,one_smul] using ((hasDerivAt_id (t : ℝ)).smul_const (T⁻¹ •
-      Y)).hasDerivWithinAt
+        Y)).hasDerivWithinAt
   have h := ((hd₁ t).clm_apply hlin).add
     ((hd t).clm_apply (hasDerivWithinAt_const (t : ℝ) (Icc (0 : ℝ) T) (T⁻¹ • Y)))
-  have he : Q₂ t ((t : ℝ) • (T⁻¹ • Y))+extendPath T hT Q₁ t (T⁻¹ • Y)+
+  have he : Q₂ t ((t : ℝ) • (T⁻¹ • Y))+extendPath T hT Q₁ t (T⁻¹ • Y) +
       (Q₁ t (T⁻¹ • Y)+extendPath T hT Q t 0) = affineAcceleration T Q₁ Q₂ Y t := by
     simp only [extendPath,projIcc_of_mem hT t.property,map_zero,add_zero]
     change Q₂ t ((t : ℝ) • (T⁻¹ • Y))+Q₁ t (T⁻¹ • Y)+Q₁ t (T⁻¹ • Y) =
@@ -102,7 +105,7 @@ theorem affineVelocity_hasDerivWithinAt (Y : U) (t : Icc (0 : ℝ) T) :
 
 include hd hframe in
 theorem affineAcceleration_add_potential (Y : U) :
-    pathLp T hT (affineAcceleration T Q₁ Q₂ Y)+
+    pathLp T hT (affineAcceleration T Q₁ Q₂ Y) +
       timeMultiplier T hT H (initialPrimitiveTimeLp T hT (affineTrial T hT Q Q₁ Y)) =
         pathLp T hT (affineForcing T Q₁ Y) := by
   apply Lp.ext
@@ -117,7 +120,7 @@ theorem affineAcceleration_add_potential (Y : U) :
   change initialRealPrimitive T (affineTrial T hT Q Q₁ Y) t = Q ⟨t,hm⟩ ((t/T) • Y) at hp
   rw [ha,Pi.add_apply,hq,hH,hi,hf,hp]
   simp only [extendPath,projIcc_of_mem hT hm]
-  change Q₂ ⟨t,hm⟩ (t • (T⁻¹ • Y))+(2 : ℝ) • Q₁ ⟨t,hm⟩ (T⁻¹ • Y)+
+  change Q₂ ⟨t,hm⟩ (t • (T⁻¹ • Y))+(2 : ℝ) • Q₁ ⟨t,hm⟩ (T⁻¹ • Y) +
     H ⟨t,hm⟩ (Q ⟨t,hm⟩ ((t/T) • Y)) = (2 : ℝ) • Q₁ ⟨t,hm⟩ (T⁻¹ • Y)
   rw [hframe]
   simp only [neg_apply,comp_apply,div_eq_mul_inv,smul_smul]
@@ -144,9 +147,9 @@ theorem affine_energy_pairing (Y : U) (v : zeroTraceDerivatives (U := U) T hT) :
     primitiveTimeLp T hT (fixedFrameDerivative T hT Q Q₁ v)⟫_ℝ
   linarith only [he]
 
-variable (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c*‖v‖^2 ≤ ‖Q t v‖^2)
-  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v,v⟫_ℝ ≤ K*‖v‖^2)
-  (hsmall : K*(T^2/2) ≤ 1/2)
+variable (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
+  (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t v, ⟪H t v, v⟫_ℝ ≤ K * ‖v‖ ^ 2)
+  (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 include hd₁ hframe in
 /-- The stationary affine correction is exactly the forced inverse applied

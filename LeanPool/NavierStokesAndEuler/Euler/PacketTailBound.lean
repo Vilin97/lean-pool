@@ -6,11 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMomentumExpansion
+public import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Bounds for the surviving grades of the actual finite packet residual. -/
 
 @[expose] public section
 
-/-! Bounds for the surviving grades of the actual finite packet residual. -/
 
 noncomputable section
 
@@ -18,7 +25,7 @@ namespace EulerPacketTailBound
 
 open Finset
 
-theorem sum_geometric_le_two (q : ℝ) (hq : 0 ≤ q) (hqhalf : q ≤ 1/2) (N : ℕ) :
+theorem sum_geometric_le_two (q : ℝ) (hq : 0 ≤ q) (hqhalf : q ≤ 1 / 2) (N : ℕ) :
     (∑ i ∈ range N, q^i) ≤ 2 := by
   induction N with
   | zero => simp
@@ -29,7 +36,7 @@ theorem sum_geometric_le_two (q : ℝ) (hq : 0 ≤ q) (hqhalf : q ≤ 1/2) (N : 
       have h := mul_le_mul_of_nonneg_right ih hq
       linarith
 
-theorem sum_geometric_Ico_le (q : ℝ) (hq : 0 ≤ q) (hqhalf : q ≤ 1/2) (a b : ℕ) :
+theorem sum_geometric_Ico_le (q : ℝ) (hq : 0 ≤ q) (hqhalf : q ≤ 1 / 2) (a b : ℕ) :
     (∑ i ∈ Ico a b, q^i) ≤ 2*q^a := by
   rw [sum_Ico_eq_sum_range]
   simp only [pow_add]
@@ -41,8 +48,8 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 theorem finite_tail_norm_le (κ B : ℝ) (hκ : 0 ≤ κ) (hB : 0 ≤ B)
-    (hsmall : κ*B ≤ 1/2) (N : ℕ) (c : ℕ → E)
-    (hc : ∀ n ∈ Ico (N+1) (2*N+3), ‖c n‖ ≤ B^(n+1)) :
+    (hsmall : κ * B ≤ 1 / 2) (N : ℕ) (c : ℕ → E)
+    (hc : ∀ n ∈ Ico (N + 1) (2 * N + 3), ‖c n‖ ≤ B ^ (n + 1)) :
     ‖∑ n ∈ Ico (N+1) (2*N+3), κ^n • c n‖ ≤ 2*B*(κ*B)^(N+1) := by
   calc
     _ ≤ ∑ n ∈ Ico (N+1) (2*N+3), ‖κ^n • c n‖ := norm_sum_le _ _
@@ -62,8 +69,8 @@ theorem finite_tail_norm_le (κ B : ℝ) (hκ : 0 ≤ κ) (hB : 0 ≤ B)
 
 /-- Includes the source's final k times inverse-frame normalization. -/
 theorem normalized_tail_norm_le (k B C : ℝ) (hk : 0 ≤ k) (hB : 0 ≤ B)
-    (hsmall : B/k ≤ 1/2) (L : E →L[ℝ] F) (hL : ‖L‖ ≤ C) (N : ℕ) (c : ℕ → E)
-    (hc : ∀ n ∈ Ico (N+1) (2*N+3), ‖c n‖ ≤ B^(n+1)) :
+    (hsmall : B / k ≤ 1 / 2) (L : E →L[ℝ] F) (hL : ‖L‖ ≤ C) (N : ℕ) (c : ℕ → E)
+    (hc : ∀ n ∈ Ico (N + 1) (2 * N + 3), ‖c n‖ ≤ B ^ (n + 1)) :
     ‖k • L (∑ n ∈ Ico (N+1) (2*N+3), (k⁻¹)^n • c n)‖ ≤
       2*C*k*B*(B/k)^(N+1) := by
   have hC : 0 ≤ C := (norm_nonneg L).trans hL

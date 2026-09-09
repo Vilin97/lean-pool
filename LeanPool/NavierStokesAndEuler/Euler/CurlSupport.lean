@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
 
 /-! The curl of a differentiable field has support inside the support of that
 field. This elementary locality fact does not assume spatial norm bounds. -/
+
+@[expose] public section
+
 
 namespace EulerMeanCutoffCurl
 

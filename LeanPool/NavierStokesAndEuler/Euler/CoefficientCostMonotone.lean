@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientJetPressureBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Joint monotonicity and genuine polynomial formulas for fixed-order
 coefficient and pressure constants. These give uniform parent-scale bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,6 +40,8 @@ theorem sobolevCoefficientAmplitude_mono_all {ι : Type*} [Fintype ι]
   · exact sum_nonneg (fun k _ => mul_nonneg (pow_nonneg hr k) (sq_nonneg _))
   · positivity
 
+/-- Coefficient polynomial, given by `(2 : Polynomial ℝ)^q*C*∑ k ∈ range (q+1),
+(16*R)^k*Polynomial.C ((k.factorial : ℝ)^2)`. -/
 def coefficientPolynomial (q : ℕ) (R C : Polynomial ℝ) : Polynomial ℝ :=
   (2 : Polynomial ℝ)^q*C*∑ k ∈ range (q+1), (16*R)^k*Polynomial.C ((k.factorial : ℝ)^2)
 
@@ -46,7 +49,8 @@ theorem coefficientPolynomial_eval (q : ℕ) (R C : Polynomial ℝ) (x : ℝ) :
     (coefficientPolynomial q R C).eval x =
       sobolevCoefficientAmplitude (Fin 4) q (R.eval x) (C.eval x) := by
   simp only [coefficientPolynomial,Polynomial.eval_mul,Polynomial.eval_pow,Polynomial.eval_ofNat,
-    Polynomial.eval_finsetSum,Polynomial.eval_C,sobolevCoefficientAmplitude,sobolevCoefficientRadius,
+    Polynomial.eval_finsetSum, Polynomial.eval_C, sobolevCoefficientAmplitude,
+        sobolevCoefficientRadius,
     Fintype.card_fin,Nat.cast_ofNat,max_eq_right (by norm_num : (1 : ℝ) ≤ 4)]
   congr 2
   funext k
@@ -77,10 +81,14 @@ theorem pressureCost_mono {c d B C : ℝ} (hc : 0 < c) (hd : 0 < d) (hB : 0 ≤ 
       simp only [pressureCost]
       gcongr
 
+/-- Product polynomial as an element of `ℕ → Polynomial ℝ | 0 => B | q+1 =>
+B+8*productPolynomial B q`. -/
 def productPolynomial (B : Polynomial ℝ) : ℕ → Polynomial ℝ
   | 0 => B
   | q+1 => B+8*productPolynomial B q
 
+/-- Pressure polynomial as an element of `ℕ → Polynomial ℝ | 0 => i | q+1 =>
+i+4*(pressurePolynomial i B q*(1+productPolynomial B q*pressurePolynomial i B q))`. -/
 def pressurePolynomial (i B : Polynomial ℝ) : ℕ → Polynomial ℝ
   | 0 => i
   | q+1 => i+4*(pressurePolynomial i B q*(1+productPolynomial B q*pressurePolynomial i B q))
@@ -97,6 +105,7 @@ theorem pressurePolynomial_eval (i B : Polynomial ℝ) (q : ℕ) (x : ℝ) :
   induction q with
   | zero => simp only [pressurePolynomial,pressureCost,inv_inv]
   | succ q ih => simp only [pressurePolynomial,pressureCost,Polynomial.eval_add,
-      Polynomial.eval_mul,Polynomial.eval_ofNat,Polynomial.eval_one,ih,productPolynomial_eval,inv_inv]
+      Polynomial.eval_mul, Polynomial.eval_ofNat, Polynomial.eval_one, ih, productPolynomial_eval,
+          inv_inv]
 
 end EulerCoefficientJetPressureBounds

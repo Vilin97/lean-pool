@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+/-! Actual normal pressure residuals preserve the fixed-Sobolev mixed-word radius. -/
 
 @[expose] public section
 
-/-! Actual normal pressure residuals preserve the fixed-Sobolev mixed-word radius. -/
 
 noncomputable section
 
@@ -24,8 +29,8 @@ open scoped BoundedContinuousFunction ContDiff
 variable (period : ℝ) [Fact (0 < period)]
   {K E ι : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Fintype ι]
-  (N : C(K,Space →ᵇ E →L[ℝ] ℝ)) (M : C(K,Space →ᵇ E →L[ℝ] E))
-  (f v : C(K,CylinderL2 period E))
+  (N : C(K, Space →ᵇ E →L[ℝ] ℝ)) (M : C(K, Space →ᵇ E →L[ℝ] E))
+  (f v : C(K, CylinderL2 period E))
 
 /-- The actual scalar coefficient of the normal residual, as a cylinder L² path. -/
 def normalResidualPath : C(K,CylinderL2 period ℝ) :=
@@ -37,7 +42,7 @@ theorem normalResidualPath_contDiff
     (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f))
     (hv : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a v)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (normalResidualPath period N M f
-      v)) := by
+        v)) := by
   apply product_orbit_contDiff period N hN
   simpa only [map_sub,map_smul] using
     hf.sub ((product_orbit_contDiff period M hM v hv).const_smul (2 : ℝ))
@@ -55,13 +60,13 @@ theorem normalResidualPath_block_bound
     (hbM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath M) a‖ ≤ CM*majorant Rc 0 n)
     (d : ℕ)
     (hbf : ∀ n, block directions q (fun a : LiftTangent => pathTranslate period a f) n 0 ≤
-      Df*majorant R d n)
+        Df*majorant R d n)
     (hbv : ∀ n, block directions q (fun a : LiftTangent => pathTranslate period a v) n 0 ≤
-      Dv*majorant R d n)
+        Dv*majorant R d n)
     (n : ℕ) :
     block directions q (fun a : LiftTangent => pathTranslate period a (normalResidualPath period N
-      M f v)) n 0 ≤
-      (3*sobolevCoefficientAmplitude ι q Rc CN*(Df+6*sobolevCoefficientAmplitude ι q Rc CM*Dv))*
+        M f v)) n 0 ≤
+      (3*sobolevCoefficientAmplitude ι q Rc CN*(Df+6*sobolevCoefficientAmplitude ι q Rc CM*Dv)) *
         majorant R d n := by
   let w := fullMultiplierMap period M v
   have hw : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a w) :=
@@ -72,7 +77,7 @@ theorem normalResidualPath_block_bound
   have hres : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (f - (2 : ℝ) • w)) := by
     simpa only [map_sub,map_smul] using hf.sub (hw.const_smul (2 : ℝ))
   have hresb (j : ℕ) : block directions q (fun a : LiftTangent => pathTranslate period a (f - (2 :
-    ℝ) • w)) j 0 ≤
+      ℝ) • w)) j 0 ≤
       (Df+6*sobolevCoefficientAmplitude ι q Rc CM*Dv)*majorant R d j := by
     have he : (fun a : LiftTangent => pathTranslate period a (f - (2 : ℝ) • w)) =
         (fun a => pathTranslate period a f - (2 : ℝ) • pathTranslate period a w) := by
@@ -80,12 +85,12 @@ theorem normalResidualPath_block_bound
       simp only [map_sub,map_smul]
     rw [he]
     have hs := block_smul_le directions q (2 : ℝ) (fun a : LiftTangent => pathTranslate period a w)
-      hw j 0
+        hw j 0
     norm_num only [abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)] at hs
     exact (block_sub_le directions q (fun a : LiftTangent => pathTranslate period a f)
       (fun a : LiftTangent => (2 : ℝ) • pathTranslate period a w) hf (hw.const_smul 2) j 0).trans
-      ((add_le_add (hbf j) (hs.trans (mul_le_mul_of_nonneg_left (hwb j) (by norm_num)))).trans_eq
-        (by ring))
+      ((add_le_add (hbf j) (hs.trans (mul_le_mul_of_nonneg_left (hwb j) (by
+          norm_num)))).trans_eq (by ring))
   exact product_orbit_block_bound period N hN directions hd q (f - (2 : ℝ) • w) hres
     Rc CN R (Df+6*sobolevCoefficientAmplitude ι q Rc CM*Dv) hRc hCN
     (add_nonneg hDf (mul_nonneg (mul_nonneg (by norm_num)

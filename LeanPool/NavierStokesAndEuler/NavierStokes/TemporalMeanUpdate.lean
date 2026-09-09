@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricTorusInverse
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothFamilyTorusInverse
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PressureStream
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TorusAverages
 public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformFourierAlias
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
 /-!
 # The exact temporal mean update
@@ -22,6 +19,9 @@ The native-to-absolute inverse identity is derived from the actual covering
 map, Fourier coefficients, and uniqueness for the zero-mean periodic
 directional equation. Band factors remain explicit.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,7 +34,9 @@ open scoped Topology ContDiff BigOperators Interval
 private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   le_of_lt (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top n))
 
+/-- Partial Y, given by `fderiv ℝ f z (0, 1)`. -/
 noncomputable def partialY (f : Plane → ℂ) (z : Plane) : ℂ := fderiv ℝ f z (0, 1)
+/-- Time derivative, given by `fderiv ℝ f z (vector .temporal)`. -/
 noncomputable def timeDerivative (f : Plane → ℂ) (z : Plane) : ℂ :=
   fderiv ℝ f z (vector .temporal)
 
@@ -123,7 +125,7 @@ theorem coefficient_timeDerivative {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
     SmoothFourierData.coefficient (timeDerivative f) k =
       (omega * (symbol .temporal k : ℂ)) * SmoothFourierData.coefficient f k := by
   have heq : timeDerivative f = fun z => ((vector .temporal).1 : ℂ) * SmoothFourierData.partialX f
-    z +
+      z +
       ((vector .temporal).2 : ℂ) * partialY f z := funext (timeDerivative_eq_partials f)
   rw [heq, coefficient_add (contDiff_const.mul (SmoothFourierData.partialX_smooth hf))
     (contDiff_const.mul (partialY_smooth hf)), coefficient_const_mul, coefficient_const_mul,
@@ -145,7 +147,7 @@ theorem timeDerivative_unique {f g : Plane → ℂ} (hf : ContDiff ℝ ∞ f) (h
     by_cases hk : k = 0
     · subst k
       simpa only [SmoothFourierData.coefficient_zero_eq_integral, TorusAverages.squareAverage]
-        using hm
+          using hm
     · have he := congrArg (fun q => SmoothFourierData.coefficient q k) hD
       rw [coefficient_timeDerivative hf hpf, coefficient_timeDerivative hg hpg] at he
       exact mul_left_cancel₀ (mul_ne_zero omega_ne_zero
@@ -162,6 +164,8 @@ noncomputable def coverLinear : Plane →L[ℝ] Plane :=
 theorem coverLinear_apply (z : Plane) : coverLinear z = TorusAverages.covering z := by
   simp [coverLinear, TorusAverages.covering]
 
+/-- Cover map as an element of `ℕ → Plane →L[ℝ] Plane | 0 => ContinuousLinearMap.id ℝ Plane | n
++ 1 => coverLinear.comp (coverMap n)`. -/
 noncomputable def coverMap : ℕ → Plane →L[ℝ] Plane
   | 0 => ContinuousLinearMap.id ℝ Plane
   | n + 1 => coverLinear.comp (coverMap n)
@@ -224,6 +228,7 @@ theorem timeDerivative_coverMap {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) (n
   rw [coverMap_temporal, map_smul]
   rfl
 
+/-- Absolute inverse, given by `directionalInverse .temporal (SmoothFourierData.coefficient f)`. -/
 noncomputable def absoluteInverse (f : Plane → ℂ) : Plane → ℂ :=
   directionalInverse .temporal (SmoothFourierData.coefficient f)
 
@@ -238,7 +243,7 @@ theorem absoluteInverse_periodic (f : Plane → ℂ) :
 
 theorem absoluteInverse_zeroMean {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
     (hp : SmoothFourierData.UnitPeriodic f) : TorusAverages.squareAverage (absoluteInverse f) = 0
-      := by
+        := by
   have ha := SmoothFourierData.rapid_coefficient hf hp
   let g : C(Torus, ℂ) := ⟨torusSeries (inverseCoeff .temporal (SmoothFourierData.coefficient f)),
     continuous_torusSeries (ha.inverseCoeff .temporal)⟩
@@ -274,8 +279,8 @@ theorem absoluteInverse_coverMap {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
       (periodic_coverMap hip n z k))
   · rw [absoluteInverse_solves hfc hpc hmc]
     funext z
-    have hs := (((hi.comp (coverMap n).contDiff).differentiable (by simp))
-      z).hasFDerivAt.fun_const_smul
+    have hs := (((hi.comp (coverMap n).contDiff).differentiable (by
+        simp)) z).hasFDerivAt.fun_const_smul
       ((ChartScales.Tg ^ n)⁻¹)
     simp only [Function.comp_def] at hs
     symm
@@ -380,7 +385,7 @@ theorem centered_smooth {f : PressureStream.Lift S → ℝ} (hf : ContDiff ℝ �
 theorem centered_zeroMean {f : PressureStream.Lift S → ℝ} (hf : ContDiff ℝ ∞ f)
     (p : ℝ × S) : PressureStream.torusAverage (centered f) p = 0 := by
   change PressureStream.torusAverage (fun z => f z - PressureStream.torusAverage f (z.1, z.2.1)) p
-    = 0
+      = 0
   rw [PressureStream.torusAverage_sub_slow hf, sub_self]
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
@@ -441,7 +446,7 @@ theorem sourceToFamily_smooth {f : PressureStream.Lift S → ℝ} (hf : ContDiff
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem sourceToFamily_periodic {f : PressureStream.Lift S → ℝ}
     (hp : PressureStream.TorusPeriodicLift f) : SmoothFamilyTorusInverse.Periodic (sourceToFamily
-      f) := by
+        f) := by
   intro p Y k
   exact congrArg Complex.ofReal (hp p.1 p.2 Y k)
 
@@ -501,7 +506,7 @@ theorem temporalInverse_zeroMean {f : PressureStream.Lift S → ℝ} (hf : ContD
   change TorusAverages.squareAverage
     (fun Y => (SmoothFamilyTorusInverse.inverse .temporal (sourceToFamily f) (p, Y)).re) = 0
   have hs : ContDiff ℝ ∞ (fun Y => SmoothFamilyTorusInverse.inverse .temporal (sourceToFamily f)
-    (p, Y)) :=
+      (p, Y)) :=
     SmoothFamilyTorusInverse.slice_smooth hi p
   rw [squareAverage_re hs]
   exact (congrArg Complex.re hm).trans rfl
@@ -518,7 +523,7 @@ theorem temporalInverse_solves {f : PressureStream.Lift S → ℝ} (hf : ContDif
     rw [sourceToFamily_mean, hm p, Complex.ofReal_zero]
   let q : (ℝ × S) × Plane := ((z.1, z.2.1), z.2.2)
   let L := (LinearIsometryEquiv.prodAssoc ℝ ℝ S
-    Plane).symm.toContinuousLinearEquiv.toContinuousLinearMap
+      Plane).symm.toContinuousLinearEquiv.toContinuousLinearMap
   have hi := SmoothFamilyTorusInverse.inverse_smooth .temporal hfs hps
   have hD := (Complex.reCLM.hasFDerivAt.comp q
     (((hi.differentiable (by simp)) q).hasFDerivAt)).comp z L.hasFDerivAt
@@ -622,7 +627,7 @@ omit [FiniteDimensional ℝ S] in
 theorem fastDerivative_sub (h : ℝ) (n : ℕ) {f g : PressureStream.Lift S → ℝ}
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) (z : PressureStream.Lift S) :
     fastDerivative h n (fun p => f p - g p) z = fastDerivative h n f z - fastDerivative h n g z :=
-      by
+        by
   simp only [fastDerivative, PressureStream.graphDz,
     fderiv_fun_sub ((hf.differentiable (by simp)) z) ((hg.differentiable (by simp)) z),
     _root_.sub_apply, mul_sub]
@@ -633,6 +638,7 @@ section NativePullback
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
+/-- Pullback cover, given by `f (z.1, (z.2.1, coverMap i z.2.2))`. -/
 noncomputable def pullbackCover (i : ℕ) (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ := f (z.1, (z.2.1, coverMap i z.2.2))
 
@@ -644,7 +650,7 @@ theorem pullbackCover_smooth (i : ℕ) {f : PressureStream.Lift S → ℝ} (hf :
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem pullbackCover_periodic (i : ℕ) {f : PressureStream.Lift S → ℝ}
     (hp : PressureStream.TorusPeriodicLift f) : PressureStream.TorusPeriodicLift (pullbackCover i
-      f) := by
+        f) := by
   intro r s Y k
   change f (r, (s, coverMap i (Y + ((k.1 : ℝ), (k.2 : ℝ))))) = f (r, (s, coverMap i Y))
   rw [map_add, coverMap_lattice]
@@ -691,15 +697,20 @@ section AxialReconstruction
 
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S]
 
+/-- Axial potential, given by `PressureStream.streamPotential d a b M ((0 : S), v)
+(desiredIncrement h n f)`. -/
 noncomputable def axialPotential (d a b M : ℝ) (v : Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.streamPotential d a b M ((0 : S), v) (desiredIncrement h n f)
 
+/-- Axial update, given by `PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 :
+S), v) (axialPotential d a b M v h n f)`. -/
 noncomputable def axialUpdate (d a b M : ℝ) (v : Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 : S), v)
     (axialPotential d a b M v h n f)
 
+/-- Radial update, given by `PressureStream.streamBeta w (axialPotential d a b M v h n f)`. -/
 noncomputable def radialUpdate (d a b M : ℝ) (v : Plane) (w : S × Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.streamBeta w (axialPotential d a b M v h n f)
@@ -797,7 +808,7 @@ theorem axialUpdate_eq_desired_sub_alias {d a b M : ℝ}
     {f : PressureStream.Lift S → ℝ} (hf : ContDiff ℝ ∞ f)
     (hp : PressureStream.TorusPeriodicLift f) (hs : RadialAlias.RadiallySupported a b f) :
     axialUpdate d a b M v h n f = fun z => desiredIncrement h n f z - axialAlias d a b M v h n f z
-      := by
+        := by
   funext z
   exact PressureStream.streamGamma_eq_desired_sub_alias_global ha hab hd (0, v)
     (desiredIncrement_smooth h n hf hp) (desiredIncrement_supported h n hs) z
@@ -871,7 +882,7 @@ theorem meanClass_radialMultiply (a b : ℝ) {φ : ℝ → ℝ} (hφ : ContDiff 
   intro m
   obtain ⟨C, hC, p, hbound⟩ := hclass.bounds m
   obtain ⟨K, hK, hmul⟩ := RadialPullback.radial_multiplier_finiteJets_uniform (E := E) (V := V) a b
-    hφ m
+      hφ m
   refine ⟨K * C, mul_nonneg hK hC, p, ?_⟩
   intro n z hz j hj
   have hA := WeightedClasses.majorant_nonneg s (fun _ z => s.zeta z) α hC p n z
@@ -945,7 +956,7 @@ theorem meanClass_streamBeta {a b d cL cR : ℝ}
     WeightedClasses.MeanClass
       (WeightedRadialPrimitive.logStripData a b cL cR ha hcL hcR ε R hε hεone hR) α
       (fun n => PressureStream.streamBeta w (PressureStream.streamPotential d a b (M n) (v n) (g
-        n))) := by
+          n))) := by
   have hi := meanClass_streamPotential ha hab hd hcL hcR ε R hε hεone hR α M v g hg hs hclass
   have hD := (hi.directional (0, w)).map (-ContinuousLinearMap.id ℝ ℝ)
   unfold WeightedClasses.MeanClass PressureStream.streamBeta PressureStream.graphDz
@@ -958,6 +969,8 @@ section AliasPullback
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Alias factor, given by `RadialPullback.radialJacobian d (RadialPullback.positiveRadius (a /
+4) r) / RadialPullback.positiveRadius (a / 4) r`. -/
 noncomputable def aliasFactor (d a r : ℝ) : ℝ :=
   RadialPullback.radialJacobian d (RadialPullback.positiveRadius (a / 4) r) /
     RadialPullback.positiveRadius (a / 4) r
@@ -974,20 +987,20 @@ theorem dividedAlias_eq_pullback {d a b M : ℝ} (ha : 0 < a) (hab : a < b) (hd 
     PressureStream.divideRadius (RadialPullback.physicalAlias d a b M v g) =
       fun z => aliasFactor d a z.1 * UniformFourierAlias.exactAlias
         (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) M v (RadialPullback.normalizeSource d a
-          g)
+            g)
           (RadialPullback.liftChart (RadialPullback.powerChart d a) z) := by
   funext z
   by_cases hr : a ≤ z.1
   · dsimp [PressureStream.divideRadius, RadialPullback.physicalAlias,
-    UniformFourierAlias.exactAlias,
+      UniformFourierAlias.exactAlias,
       RadialPullback.liftChart, aliasFactor]
     rw [RadialPullback.positiveRadius_eq_self (show 0 < a / 4 by positivity) (by linarith)]
     ring
   · have hχ := RadialPullback.deriv_interiorCutoff_zero_left
       (Real.rpow_lt_rpow ha.le hab hd) (RadialPullback.powerChart_lt_left ha hd (lt_of_not_ge
-        hr)).le
+          hr)).le
     simp only [PressureStream.divideRadius, RadialPullback.physicalAlias,
-      UniformFourierAlias.exactAlias,
+        UniformFourierAlias.exactAlias,
       RadialPullback.liftChart, hχ, mul_zero, zero_smul, zero_div]
 
 /-- A uniform full-jet estimate for the actual physical alias follows from
@@ -1002,7 +1015,7 @@ theorem dividedAlias_finiteJets_transfer {d a b : ℝ} (ha : 0 < a) (hab : a < b
           (RadialPullback.normalizeSource d a g)) z‖ ≤ C) →
       ∀ j ≤ m, ∀ z : ℝ × E,
         ‖iteratedFDeriv ℝ j (PressureStream.divideRadius (RadialPullback.physicalAlias d a b M v
-          g)) z‖ ≤
+            g)) z‖ ≤
           K * C := by
   obtain ⟨KP, hKP, hcomp⟩ := RadialPullback.radial_comp_finiteJets_uniform (E := E) (V := ℝ)
     a b (RadialPullback.powerChart_contDiff ha d) m
@@ -1015,7 +1028,7 @@ theorem dividedAlias_finiteJets_transfer {d a b : ℝ} (ha : 0 < a) (hab : a < b
   have hAs : ContDiff ℝ ∞ A := UniformFourierAlias.exactAlias_smooth
     (TransportPrimitive.interiorCutoff_contDiff (a ^ d) (b ^ d))
     (RadialPullback.normalizeSource_contDiff ha hd hg) (RadialPullback.normalizeSource_supported ha
-      hab hd hs)
+        hab hd hs)
   by_cases hz : z.1 ∈ Icc a b
   · rw [dividedAlias_eq_pullback ha hab hd v g]
     change ‖iteratedFDeriv ℝ j (fun y => aliasFactor d a y.1 •
@@ -1031,7 +1044,7 @@ theorem dividedAlias_finiteJets_transfer {d a b : ℝ} (ha : 0 < a) (hab : a < b
       by_contra hn
       exact hz (TransportPrimitive.iteratedFDeriv_supported
         (PressureStream.divideRadius_supported (RadialPullback.physicalAlias_supported ha hab hd M
-          v g)) j hn)
+            v g)) j hn)
     rw [hz0, norm_zero]
     exact mul_nonneg (mul_nonneg hKM hKP) hC
 
@@ -1137,7 +1150,7 @@ theorem meanClass_scaledRadialUpdate {a b d cL cR h : ℝ}
       (WeightedRadialPrimitive.logStripData a b cL cR ha hcL hcR ε R hε hεone hR) (α + 1)
       (fun n => radialUpdate d a b (M n) (v n) (ε n • w) h n (f n)) := by
   let st := WeightedRadialPrimitive.logStripData (E := S × Plane) a b cL cR ha hcL hcR ε R hε hεone
-    hR
+      hR
   have hb : WeightedClasses.BandBound st 1 ε := by
     have h := WeightedClasses.bandBound_rpow st 1
     simp only [Real.rpow_one] at h
@@ -1201,9 +1214,9 @@ theorem dividedAlias_superflat {a b d cL cR h α : ℝ}
       (ChartScales.epsilon h) UniformFourierAlias.bandSlow (ChartScales.epsilon_pos h)
       (ChartScales.epsilon_le_one h hh.le) UniformFourierAlias.one_le_bandSlow hg hgc
   have hGc : ∀ n, ContDiff ℝ ∞ (G n) := fun n => RadialPullback.normalizeSource_contDiff ha hd (hgc
-    n)
+      n)
   have hGp : ∀ n, UniformFourierAlias.SourcePeriodic (G n) := fun n => normalizeSource_periodic d a
-    (hgp n)
+      (hgp n)
   have hGm : ∀ n p, UniformFourierAlias.sourceMean (G n) p = 0 := by
     intro n p
     change PressureStream.torusAverage (RadialPullback.normalizeSource d a (g n)) p = 0
@@ -1255,7 +1268,7 @@ theorem axialAlias_superflat {a b d cL cR h α : ℝ}
   have hwm : ∀ n p, PressureStream.torusAverage (PressureStream.weightedSource (g n)) p = 0 := by
     intro n p
     rw [PressureStream.torusAverage_weightedSource, desiredIncrement_zeroMean h n (hfc n) (hp n),
-      mul_zero]
+        mul_zero]
   exact dividedAlias_superflat ha hab hd hcL hcR hh hw
     (fun n => PressureStream.weightedSource_contDiff (hgc n))
     (fun n => PressureStream.weightedSource_periodic (hgp n)) hwm
@@ -1337,7 +1350,7 @@ uniformly in the source, band, and direction. -/
 theorem dividedAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d) :
     ∃ c e : ℝ, a < c ∧ c < e ∧ e < b ∧ ∀ (M : ℝ) (v : E) (g : ℝ × E → ℝ),
       RadialAlias.RadiallySupported c e (PressureStream.divideRadius (RadialPullback.physicalAlias
-        d a b M v g)) := by
+          d a b M v g)) := by
   have hb : 0 < b := ha.trans hab
   have haU : 0 < a ^ d := Real.rpow_pos_of_pos ha d
   have habU : a ^ d < b ^ d := Real.rpow_lt_rpow ha.le hab hd
@@ -1361,7 +1374,7 @@ theorem dividedAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (
   have hePow : e ^ d = eU := Real.rpow_inv_rpow heU.le hd.ne'
   have hleft (r : ℝ) (hr : r < c) :
       deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) (RadialPullback.powerChart d a r) =
-        0 := by
+          0 := by
     apply interiorCutoff_deriv_zero_left habU
     change RadialPullback.powerChart d a r < cU
     by_cases hra : a ≤ r
@@ -1370,7 +1383,7 @@ theorem dividedAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (
     · exact (RadialPullback.powerChart_lt_left ha hd (lt_of_not_ge hra)).trans hacU
   have hright (r : ℝ) (hr : e < r) :
       deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) (RadialPullback.powerChart d a r) =
-        0 := by
+          0 := by
     apply interiorCutoff_deriv_zero_right habU
     change eU < RadialPullback.powerChart d a r
     rw [RadialPullback.powerChart_eq ha (by linarith) d, ← hePow]
@@ -1427,7 +1440,7 @@ theorem meanClass_of_interior_bounds {a b c e cL cR α : ℝ}
       _ = _ := rfl
   · have hzero : iteratedFDeriv ℝ j (f n) z = 0 :=
       Classical.byContradiction (fun hn => hzi (TransportPrimitive.iteratedFDeriv_supported (hs n)
-        j hn))
+          j hn))
     rw [hzero, norm_zero]
     exact WeightedClasses.majorant_nonneg st (fun _ z => st.zeta z) α
       (div_nonneg hC hη.le) p n z (st.zeta_nonneg z hz)
@@ -1458,9 +1471,9 @@ theorem dividedAlias_global_bounds {a b d cL cR α : ℝ}
   let G := fun n => RadialPullback.normalizeSource d a (g n)
   have hG := UniformFourierAlias.meanClass_normalizeSource ha hab hd hcL hcR ε R hε hεone hR hg hgc
   have hGc : ∀ n, ContDiff ℝ ∞ (G n) := fun n => RadialPullback.normalizeSource_contDiff ha hd (hgc
-    n)
+      n)
   have hGp : ∀ n, UniformFourierAlias.SourcePeriodic (G n) := fun n => normalizeSource_periodic d a
-    (hgp n)
+      (hgp n)
   have hGm : ∀ n p, UniformFourierAlias.sourceMean (G n) p = 0 := by
     intro n p
     change PressureStream.torusAverage (RadialPullback.normalizeSource d a (g n)) p = 0
@@ -1484,7 +1497,7 @@ theorem dividedAlias_global_bounds {a b d cL cR α : ℝ}
     (pow_nonneg (zero_le_one.trans (hR n)) _)
   have hAb : ∀ i ≤ m, ∀ y : PressureStream.Lift S,
       ‖iteratedFDeriv ℝ i (UniformFourierAlias.exactAlias χ (M n) ((0 : S), vector .radial) (G n))
-        y‖ ≤ KA * B := by
+          y‖ ≤ KA * B := by
     intro i hi y
     have he := hbA (G n) (hGc n) (hGp n) (hGm n) (hGs n) B hB
       (fun k hk x _ => hsource n k (by simpa using hk) x (Set.mem_univ x)) (M n) (hM n) i hi y
@@ -1530,7 +1543,7 @@ theorem meanClass_axialAlias {a b d cL cR h α : ℝ}
       (WeightedRadialPrimitive.logStripData a b cL cR ha hcL hcR ε R hε hεone hR) α
       (fun n => axialAlias d a b (M n) (vector .radial) h n (f n)) := by
   let st := WeightedRadialPrimitive.logStripData (E := S × Plane) a b cL cR ha hcL hcR ε R hε hεone
-    hR
+      hR
   let g := fun n => desiredIncrement h n (f n)
   have hg : WeightedClasses.MeanClass st α g :=
     meanClass_desiredIncrement ha hcL hcR hh ε R hε hεone hR hscale hf hfc hp
@@ -1545,7 +1558,7 @@ theorem meanClass_axialAlias {a b d cL cR h α : ℝ}
   have hwm : ∀ n p, PressureStream.torusAverage (PressureStream.weightedSource (g n)) p = 0 := by
     intro n p
     rw [PressureStream.torusAverage_weightedSource, desiredIncrement_zeroMean h n (hfc n) (hp n),
-      mul_zero]
+        mul_zero]
   exact meanClass_dividedAlias ha hab hd hcL hcR ε R hε hεone hR M hM hw
     (fun n => PressureStream.weightedSource_contDiff (hgc n))
     (fun n => PressureStream.weightedSource_periodic (hgp n)) hwm
@@ -1570,7 +1583,7 @@ theorem meanClass_axialUpdate {a b d cL cR h α : ℝ}
   have hout := hi.add (hA.map (-ContinuousLinearMap.id ℝ ℝ))
   have heq : (fun n => axialUpdate d a b (M n) (vector .radial) h n (f n)) =
       fun n z => desiredIncrement h n (f n) z + -axialAlias d a b (M n) (vector .radial) h n (f n)
-        z := by
+          z := by
     funext n z
     simpa only [sub_eq_add_neg] using congrFun
       (axialUpdate_eq_desired_sub_alias ha hab hd (vector .radial) h n (hfc n) (hp n) (hs n)) z

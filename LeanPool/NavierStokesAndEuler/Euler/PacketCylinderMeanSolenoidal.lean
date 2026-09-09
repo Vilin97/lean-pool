@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCylinderSolenoidal
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceEquations
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
+import LeanPool.NavierStokesAndEuler.Euler.CylinderClassicalSolenoidal
+import LeanPool.NavierStokesAndEuler.Euler.MeanCylinderSolenoidal
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketContract
+
+/-! The actual inverse-frame mean profiles satisfy the closed lifted divergence constraint. -/
 
 @[expose] public section
 
-/-! The actual inverse-frame mean profiles satisfy the closed lifted divergence constraint. -/
 
 noncomputable section
 
@@ -26,7 +28,7 @@ open scoped ContDiff
 theorem Field.mem_divergenceFree_of_angleIndependent {P T : ℝ} [Fact (0 < P)]
     {raw : VectorField} (G : Field P T raw) (κ : ℝ) (m : Space)
     (t : Icc (0 : ℝ) T)
-    (ha : ∀ x θ, raw (t,(x,θ)) = raw (t,(x,0)))
+    (ha : ∀ x θ, raw (t, (x, θ)) = raw (t, (x, 0)))
     (hd : ∀ x, divergence (fun y : Space => raw (t,(y,0))) x = 0) :
     G.path t ∈ divergenceFreeSpace P κ m := by
   let f : Space → Space := fun y => raw (t,(y,0))
@@ -47,6 +49,8 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (D : EulerTransversePacketProvider.Data U) (hT : M.T = D.T)
   (I Iprimary : EulerTransversePacketProvider.InitialData P D)
 
+/-- Source mean pullback field, given by `(sourceCoefficientData P M D I hT).inverse.multiply
+(sourceProfileWitness P M D hT I Iprimary p).mean`. -/
 def sourceMeanPullbackField (p : ℕ) :
     Field P M.T (fun z => (sourceOperators P M D I).inverseFrame z
       ((sourceProfiles P M D I Iprimary p).mean z)) :=
@@ -70,17 +74,17 @@ theorem sourceMeanPullback_divergence (A : SourceCoefficientAgreement M D)
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=
-    ⟨source_meanForcing P M D hT I Iprimary p hp⟩
+    ⟨sourceMeanForcing P M D hT I Iprimary p hp⟩
   have he : sourceProfiles P M D I Iprimary p =
       EulerPacketProfileRecursion.step (sourceOperators P M D I) p (sourceProfiles P M D I
-        Iprimary) :=
+          Iprimary) :=
     profiles_step _ _ p hp
   have hf : (fun y : Space => (sourceOperators P M D I).inverseFrame (t,(y,0))
       ((sourceProfiles P M D I Iprimary p).mean (t,(y,0)))) =
       fun y => M.inverseFrame (t,(y,0))
         ((EulerMeanPacketProvider.meanSolve M
           (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))).1 (t,(y,0)))
-            := by
+              := by
     funext y
     rw [sourceInverse_eq_mean P M D I A t y 0,he]
     rfl

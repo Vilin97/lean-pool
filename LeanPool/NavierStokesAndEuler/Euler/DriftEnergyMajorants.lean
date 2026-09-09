@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyScalar
 public import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBudget
 public import LeanPool.NavierStokesAndEuler.Euler.DriftEnergyConstants
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpSubintervalBound
+
+/-! Continuous energy majorants that retain the actual small transport drift. -/
 
 @[expose] public section
 
-/-! Continuous energy majorants that retain the actual small transport drift. -/
 
 noncomputable section
 
@@ -27,12 +29,12 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The sharp polynomial is evaluated on the actual continuous metric energy paths. -/
-def forcingMajorant {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+def forcingMajorant {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
     {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
-    (S : Budget period hq D N R) (hN : N+6 ≤ q+1)
+    (S : Budget period hq D N R) (hN : N + 6 ≤ q + 1)
     {hT : 0 ≤ T} (K : MetricBudget period T hT D)
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1))) : C(Icc (0 : ℝ) T, ℝ) := by
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, ℝ) := by
   let X := energyPath period N hN T R (K.operatorPath period) e
   let Y := lossPath period N hN T R (K.operatorPath period) e
   refine ⟨fun t => EulerDriftEnergyConstants.forcingPolynomial period
@@ -44,27 +46,28 @@ def forcingMajorant {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
   fun_prop
 
 /-- The genuine scalar majorant retains full velocity only in terms with no derivative loss. -/
-def correctionRhs {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+def correctionRhs {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
     {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
-    (S : Budget period hq D N R) (hN : N+6 ≤ q+1)
+    (S : Budget period hq D N R) (hN : N + 6 ≤ q + 1)
     {hT : 0 ≤ T} (K : MetricBudget period T hT D)
     (Rdot : C(Icc (0 : ℝ) T, ℝ))
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1))) : C(Icc (0 : ℝ) T, ℝ) :=
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, ℝ) :=
   scalarEnergyRhs T (growthPath period S.full hN K e)
     (radiusLossPath R Rdot S.full.radius_pos) (ContinuousMap.const _ (K.multiplier period))
     (energyPath period N hN T R (K.operatorPath period) e)
     (lossPath period N hN T R (K.operatorPath period) e)
     (forcingMajorant period S hN K e)
 
-/-- The source's radius-loss factor uses the drift envelope, with the unchanged full-data growth constant. -/
-theorem correctionRhs_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+/-- The source's radius-loss factor uses the drift envelope, with the unchanged full-data growth
+constant. -/
+theorem correctionRhs_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
     {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
-    (S : Budget period hq D N R) (hN : N+6 ≤ q+1)
+    (S : Budget period hq D N R) (hN : N + 6 ≤ q + 1)
     {hT : 0 ≤ T} (K : MetricBudget period T hT D)
     (Rdot : C(Icc (0 : ℝ) T, ℝ))
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1))) (t : Icc (0 : ℝ) T) :
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (t : Icc (0 : ℝ) T) :
     let X := energyPath period N hN T R (K.operatorPath period) e t
     let Y := lossPath period N hN T R (K.operatorPath period) e t
     let C := combinedConstant period S.full K

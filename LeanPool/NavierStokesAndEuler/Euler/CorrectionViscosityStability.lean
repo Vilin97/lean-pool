@@ -7,11 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityBudget
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifferenceMetric
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
+import LeanPool.NavierStokesAndEuler.Euler.SquaredMetricStability
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Genuine finite-interval Lipschitz comparison of actual correction solutions at different
+viscosities. -/
 
 @[expose] public section
 
-/-! Genuine finite-interval Lipschitz comparison of actual correction solutions at different
-  viscosities. -/
 
 noncomputable section
 
@@ -20,7 +25,7 @@ namespace EulerCorrectionViscosityStability
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerLiftedPressure
   EulerCylinderSobolevSpace EulerCorrectionOperators EulerQuadraticSource EulerVolterraConvolution
   EulerSobolevHeat EulerCorrectionDifferencePDE EulerCorrectionDifferenceMetric
-    EulerCorrectionStabilityConstants
+      EulerCorrectionStabilityConstants
   EulerCorrectionStabilityBudget EulerSquaredMetricStability EulerMetricEnergyEvolution
 open scoped Topology
 
@@ -28,18 +33,19 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The existing Sobolev normed-group instance for the actual viscosity comparison. -/
 local instance comparisonSobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 /-- The existing real Sobolev module instance for the actual viscosity comparison. -/
 local instance comparisonSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
-  inferInstance
+    inferInstance
 
-/-- Two actual zero-initial correction mild solutions obey a pointwise L² Lipschitz estimate in viscosity.
+/-- Two actual zero-initial correction mild solutions obey a pointwise L² Lipschitz estimate in
+viscosity.
 The differential energy inequality is derived from their literal equations and the actual spatial
-  cancellations. -/
+cancellations. -/
 theorem correction_viscosity_pointwise {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period q (Icc (0 : ℝ) T)) (B : StabilityBudget period hT D)
     (ν μ : ℝ) (hν : 0 < ν) (hμ : 0 < μ) (hν1 : ν ≤ 1)
-    (u v : C(Icc (0 : ℝ) T,SobolevSpace period (q+1))) (R : ℝ)
+    (u v : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (R : ℝ)
     (huR : ‖u‖ ≤ R) (hvR : ‖v‖ ≤ R)
     (hu : ∀ t, u t = quadraticDuhamel period ν hν hT le_rfl (D.coefficients period hq) 0 u t)
     (hv : ∀ t, v t = quadraticDuhamel period μ hμ hT le_rfl (D.coefficients period hq) 0 v t)
@@ -53,7 +59,7 @@ theorem correction_viscosity_pointwise {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 
   have hR : 0 ≤ R := (norm_nonneg u).trans huR
   have hKc : Continuous K := B.continuous.comp continuous_projIcc
   have hec : Continuous e := ((valueOperator period (q+1)).continuous.comp (extendPath_continuous T
-    hT u)).sub
+      hT u)).sub
     ((valueOperator period (q+1)).continuous.comp (extendPath_continuous T hT v))
   have hEc : Continuous E := (hKc.clm_apply hec).inner (𝕜 := ℝ) hec
   have hKv (t : Icc (0 : ℝ) T) : K t.val=(B.metric t).operator := by
@@ -88,7 +94,7 @@ theorem correction_viscosity_pointwise {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 
       exact B.time_le _
     exact difference_metric_deriv_bound period D hq τ (u τ) (v τ) (B.metric τ) K e t ν μ
       B.c B.bound B.first B.time B.linear B.quadratic ‖D.approximation‖ R (extendPath T hT
-        B.derivative t)
+          B.derivative t)
       B.c_pos hν.le hν1 (hKv τ) (hev τ) (B.hasDeriv t ht) hd (B.bound_le τ) (B.first_le τ) htime
       (B.linear_le τ) (B.quadratic_le τ) (D.approximation.norm_coe_le_norm τ)
       ((u.norm_coe_le_norm τ).trans huR) ((v.norm_coe_le_norm τ).trans hvR)

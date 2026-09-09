@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
-public import Mathlib.Topology.Algebra.Module.ClosedSubmodule
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
+
+/-! A complete cylinder Sobolev space constructed from closed graphs of actual L² derivatives. -/
 
 @[expose] public section
 
-/-! A complete cylinder Sobolev space constructed from closed graphs of actual L² derivatives. -/
 
 noncomputable section
 
@@ -42,7 +45,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The closed graph of the actual strong translation derivative. -/
 def closedDerivativeGraph (a : LiftTangent) : ClosedSubmodule ℝ (LiftL2 period × LiftL2 period)
-  where
+    where
   toSubmodule := translationDerivativeGraph period a
   isClosed' := translationDerivativeGraph_closed period a
 
@@ -67,7 +70,8 @@ instance sobolevNormedAddCommGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace 
 instance sobolevNormedSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
   inferInstanceAs (NormedSpace ℝ (sobolevSubspace period q).toSubmodule)
 
-/-- Completeness follows from closedness of the derivative graphs in a finite product of L² spaces. -/
+/-- Completeness follows from closedness of the derivative graphs in a finite product of L² spaces.
+-/
 theorem sobolev_complete (q : ℕ) : CompleteSpace (SobolevSpace period q) := inferInstance
 
 /-- The underlying L² field of a Sobolev derivative array. -/
@@ -113,7 +117,7 @@ theorem word_has_jet {q : ℕ} (u : SobolevSpace period q) (r n : ℕ)
 
 /-- A genuine full-depth strong derivative jet reconstructed from a Sobolev array. -/
 def toJet {q : ℕ} (u : SobolevSpace period q) : SpatialJet period standardDirection q (value period
-  u) :=
+    u) :=
   Classical.choice (word_has_jet period u q 0 (by omega) Fin.elim0)
 
 /-- Any genuine jet with the correct underlying field agrees with every array coordinate. -/
@@ -138,7 +142,7 @@ theorem toJet_word {q n : ℕ} (u : SobolevSpace period q) (hn : n ≤ q) (w : F
 
 /-- A Sobolev array is uniquely determined by its underlying L² field. -/
 theorem value_injective {q : ℕ} : Function.Injective (value period : SobolevSpace period q → LiftL2
-  period) := by
+    period) := by
   intro u v huv
   apply Subtype.ext
   funext w

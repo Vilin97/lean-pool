@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerKineticEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerKineticEnergy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryVariableGronwall
 
 /-! The scalar part of the vorticity continuation argument. A genuine
 logarithmic gradient estimate bounds the gradient integral using only
 the time integral of its continuous vorticity coefficient. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,12 +24,15 @@ namespace EulerOrdinarySobolev
 open Set Real EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
   EulerVolterraConvolution EulerContinuousTimeIntegral
 
+/-- Log energy base, given by `exp 1+wordCount 3*sqrt (wordEnergy 3 A)`. -/
 def logEnergyBase (A : SmoothL2Field Space) : ℝ :=
   exp 1+wordCount 3*sqrt (wordEnergy 3 A)
 
 theorem logEnergyBase_pos (A : SmoothL2Field Space) : 0 < logEnergyBase A :=
   add_pos_of_pos_of_nonneg (exp_pos 1) (mul_nonneg (wordCount_nonneg 3) (sqrt_nonneg _))
 
+/-- Logarithmic gronwall constant, given by `C*(1+‖A.toLp‖+logEnergyBase
+A+gradientEnergyConstant)`. -/
 def logarithmicGronwallConstant (C : ℝ) (A : SmoothL2Field Space) : ℝ :=
   C*(1+‖A.toLp‖+logEnergyBase A+gradientEnergyConstant)
 
@@ -54,12 +60,12 @@ theorem logarithmic_h3_bound (t : Icc (0 : ℝ) T) :
       wordCount 3*sqrt (wordEnergy 3 (U.velocity t)) ≤
           wordCount 3*sqrt (wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩)*exp a) :=
         mul_le_mul_of_nonneg_left (sqrt_le_sqrt (U.h3_energy_gradientIntegral t)) (wordCount_nonneg
-          3)
+            3)
       _ = wordCount 3*(sqrt (wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩))*sqrt (exp a)) := by
         rw [sqrt_mul hE0]
       _ ≤ wordCount 3*(sqrt (wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩))*exp a) :=
         mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hs (sqrt_nonneg _)) (wordCount_nonneg
-          3)
+            3)
       _ = _ := by ring
   have hexpone : exp 1 ≤ exp 1*exp a := by
     simpa only [mul_one] using mul_le_mul_of_nonneg_left hexp (exp_pos 1).le
@@ -78,15 +84,15 @@ theorem logarithmic_h3_bound (t : Icc (0 : ℝ) T) :
       have h := log_le_sub_one_of_pos (logEnergyBase_pos (U.velocity ⟨0,le_rfl,hT⟩))
       linarith
 
-variable (C : ℝ) (hC : 0 ≤ C) (W : C(Icc (0 : ℝ) T,ℝ))
+variable (C : ℝ) (hC : 0 ≤ C) (W : C(Icc (0 : ℝ) T, ℝ))
   (hW : ∀ t, 0 ≤ W t)
   (hlog : ∀ t, U.gradientNormPath t ≤
-    C*(1+‖(U.velocity t).toLp‖+W t*log (exp 1+tensorNorm 3 (U.velocity t))))
+    C * (1 + ‖(U.velocity t).toLp‖ + W t * log (exp 1 + tensorNorm 3 (U.velocity t))))
 
 include hC hW hlog
 
 theorem gradient_logarithmic_envelope (t : Icc (0 : ℝ) T) :
-    U.gradientNormPath t ≤ logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩)*
+    U.gradientNormPath t ≤ logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩) *
       (1+W t)*(1+U.gradientIntegral t) := by
   let b := 1+‖(U.velocity ⟨0,le_rfl,hT⟩).toLp‖
   let e := logEnergyBase (U.velocity ⟨0,le_rfl,hT⟩)
@@ -107,7 +113,7 @@ theorem gradient_logarithmic_envelope (t : Icc (0 : ℝ) T) :
       _ ≤ d+d*U.gradientIntegral t := add_le_add hed (mul_le_mul_of_nonneg_right hkd hg)
       _ = _ := by dsimp [z]; ring
   have hfirst : U.gradientNormPath t ≤ C*(b+W t*(e+gradientEnergyConstant*U.gradientIntegral t)) :=
-    by
+      by
     have h := hlog t
     rw [U.velocity_norm_conserved t] at h
     exact h.trans (mul_le_mul_of_nonneg_left
@@ -121,7 +127,7 @@ theorem gradient_logarithmic_envelope (t : Icc (0 : ℝ) T) :
 
 theorem gradientIntegral_logarithmic_bound (t : Icc (0 : ℝ) T) :
     1+U.gradientIntegral t ≤
-      exp (logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩)*
+      exp (logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩) *
         ((t : ℝ)+realIntegral T hT W t)) := by
   let K : C(Icc (0 : ℝ) T,ℝ) := ⟨fun s => 1+W s,continuous_const.add W.continuous⟩
   let X := fun r => 1+realIntegral T hT U.gradientNormPath r
@@ -136,7 +142,7 @@ theorem gradientIntegral_logarithmic_bound (t : Icc (0 : ℝ) T) :
       X' r ≤ logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩)*extendPath T hT K r*X r := by
     have h := U.gradient_logarithmic_envelope C hC W hW hlog ⟨r,hr.1,hr.2.le⟩
     change U.gradientNormPath (projIcc 0 T hT r) ≤
-      logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩)*
+      logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩) *
         (1+W (projIcc 0 T hT r))*(1+realIntegral T hT U.gradientNormPath r)
     simpa only [gradientIntegral,projIcc_of_mem hT (show r ∈ Icc 0 T from ⟨hr.1,hr.2.le⟩)] using h
   have h := variable_linear_stability T hT X X'
@@ -154,7 +160,7 @@ theorem gradientIntegral_logarithmic_bound (t : Icc (0 : ℝ) T) :
 theorem gradientIntegral_logarithmic_uniform (Tmax G : ℝ) (hTmax : T ≤ Tmax)
     (hG : ∀ t : Icc (0 : ℝ) T, realIntegral T hT W t ≤ G) (t : Icc (0 : ℝ) T) :
     U.gradientIntegral t ≤ exp (logarithmicGronwallConstant C (U.velocity ⟨0,le_rfl,hT⟩)*(Tmax+G))
-      := by
+        := by
   have hb := U.gradientIntegral_logarithmic_bound C hC W hW hlog t
   have he := exp_le_exp.mpr (mul_le_mul_of_nonneg_left
     (add_le_add (t.property.2.trans hTmax) (hG t))

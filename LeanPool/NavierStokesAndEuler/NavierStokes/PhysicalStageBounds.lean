@@ -7,10 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalSchedule
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TailGaugePotential
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CutStageEstimates
 
 /-!
 # Raw physical stage estimates from native wave and mean data
@@ -19,6 +17,9 @@ The data below describe the actual copy families and coherent native mean
 fields. Physical derivative estimates are consequences of their native
 classes, support and chart identities. No `RawStageBounds` is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -59,28 +60,44 @@ variable (h : ℝ) (D : Type) [NormedAddCommGroup D] [NormedSpace ℝ D]
 regularity is confined to the valid native patches. The number of
 harmonics and the cover gap may vary between stages. -/
 structure WaveData where
+  /-- Lower radius of `WaveData`, of type `ℝ`. -/
   lowerRadius : ℝ
+  /-- Upper radius of `WaveData`, of type `ℝ`. -/
   upperRadius : ℝ
+  /-- Native width of `WaveData`, of type `ℝ`. -/
   nativeWidth : ℝ
+  /-- Slow bound of `WaveData`, of type `ℝ`. -/
   slowBound : ℝ
+  /-- Frequency bound of `WaveData`, of type `ℝ`. -/
   frequencyBound : ℝ
+  /-- Alpha of `WaveData`, of type `ℝ`. -/
   alpha : ℝ
+  /-- Shift of `WaveData`, of type `ℝ`. -/
   shift : ℝ
+  /-- Harmonics of `WaveData`, of type `ℕ`. -/
   harmonics : ℕ
+  /-- Gap bound of `WaveData`, of type `ℕ`. -/
   gapBound : ℕ
   lower_pos : 0 < lowerRadius
   width_nonneg : 0 ≤ nativeWidth
   slow_nonneg : 0 ≤ slowBound
   frequency_one_le : 1 ≤ frequencyBound
+  /-- Strip of `WaveData`, of type `WeightedClasses.StripData D`. -/
   strip : WeightedClasses.StripData D
+  /-- Weight of `WaveData`, of type `I → ℕ → D → ℝ`. -/
   weight : I → ℕ → D → ℝ
+  /-- Source of `WaveData`, of type `I → ℕ → D → ℂ`. -/
   source : I → ℕ → D → ℂ
   source_bounds : LocalPhysicalCopyBounds.LocalSourceBounds strip h alpha weight source
+  /-- Copies of `WaveData`, of type `J → PhysicalCopyBounds.CopyFamily harmonics K`. -/
   copies : J → PhysicalCopyBounds.CopyFamily harmonics K
+  /-- Cells of `WaveData`, of type `∀ i, PhysicalCopyBounds.SupportCells (copies i)`. -/
   cells : ∀ i, PhysicalCopyBounds.SupportCells (copies i)
+  /-- Chart supplied by `WaveData`. -/
   chart : ∀ i, LocalPhysicalCopyBounds.CommonChart (copies i) (cells i)
     lowerRadius upperRadius h nativeWidth shift source
   chart_maps : ∀ i k L, MapsTo ((chart i).map k L) ((chart i).domain k L) strip.domain
+  /-- Carrier supplied by `WaveData`. -/
   carrier : ∀ i, PhysicalCopyBounds.CarrierBounds (copies i) (cells i)
     lowerRadius upperRadius h nativeWidth
   support : ∀ i, LocalPhysicalCopyBounds.SupportData (copies i)
@@ -92,6 +109,7 @@ structure WaveData where
 
 variable {h D I K J}
 
+/-- Scalar, given by `(W.copies i).sum W.lowerRadius h W.nativeWidth`. -/
 noncomputable def WaveData.scalar (W : WaveData h D I K J) (i : J) : SpaceTime → ℂ :=
   (W.copies i).sum W.lowerRadius h W.nativeWidth
 
@@ -114,6 +132,7 @@ theorem WaveData.scalar_bound (W : WaveData h D I K J)
     hh hh1 W.lower_pos W.slow_nonneg W.width_nonneg W.frequency_one_le (W.frequencies i) m
   exact ⟨C, hC, fun w hw hq => hb w hw (abs_time_le_one hh hh1 hw hq)⟩
 
+/-- Vector, given by `PhysicalCopyBounds.vectorSum W.copies W.lowerRadius h W.nativeWidth`. -/
 noncomputable def WaveData.vector (W : WaveData h D I K (Fin 3)) : VelocityField :=
   PhysicalCopyBounds.vectorSum W.copies W.lowerRadius h W.nativeWidth
 
@@ -134,6 +153,7 @@ theorem WaveData.vector_bound (W : WaveData h D I K (Fin 3))
     hh hh1 W.lower_pos W.slow_nonneg W.width_nonneg W.frequency_one_le W.frequencies m
   exact ⟨C, hC, fun w hw hq => hb w hw (abs_time_le_one hh hh1 hw hq)⟩
 
+/-- Pressure, defined pointwise by `(W.scalar () w).re`. -/
 noncomputable def WaveData.pressure (W : WaveData h D I K Unit) : PressureField :=
   fun w => (W.scalar () w).re
 
@@ -162,13 +182,22 @@ end Waves
 /-- Actual coherent mean fields with native local-band classes. The
 construction keeps a single physical field represented by all valid bands. -/
 structure MeanData (h degree : ℝ) where
+  /-- First band of `MeanData`, of type `ℕ`. -/
   firstBand : ℕ
+  /-- Gap bound of `MeanData`, of type `ℕ`. -/
   gapBound : ℕ
+  /-- Region of `MeanData`, of type `Set PhysicalGraphBounds.Plane`. -/
   region : Set PhysicalGraphBounds.Plane
+  /-- Lower radius of `MeanData`, of type `ℝ`. -/
   lowerRadius : ℝ
+  /-- Upper radius of `MeanData`, of type `ℝ`. -/
   upperRadius : ℝ
+  /-- Alpha of `MeanData`, of type `ℝ`. -/
   alpha : ℝ
+  /-- Slow of `MeanData`, of type `ℕ → ℝ`. -/
   slow : ℕ → ℝ
+  /-- Family of `MeanData`, of type `PhysicalMeanJetBounds.CoherentFamily h degree firstBand
+  gapBound region ℝ`. -/
   family : PhysicalMeanJetBounds.CoherentFamily h degree firstBand gapBound region ℝ
   band_four : 4 ≤ firstBand
   lower_pos : 0 < lowerRadius
@@ -177,11 +206,11 @@ structure MeanData (h degree : ℝ) where
   region_covers : PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 4) 4 ⊆ region
   smooth : ∀ n ≥ firstBand, ContDiffOn ℝ ∞ (family.native n) (PhysicalMeanDomain.slowDomain region)
   support : PhysicalMeanJetBounds.NativeSupport h lowerRadius upperRadius firstBand region
-    family.native
+      family.native
   slow_nonneg : ∀ n ≥ firstBand, 0 ≤ slow n
   slow_growth : ∃ C : ℝ, 1 ≤ C ∧ ∃ p : ℕ, ∀ n ≥ firstBand, slow n ≤ C * ChartScales.S n ^ p
   native_class : PhysicalMeanDomain.LocalBandJets region (ChartScales.epsilon h) slow alpha
-    family.native
+      family.native
 
 theorem MeanData.nativeJets {h degree : ℝ} (M : MeanData h degree) :
     PhysicalMeanJetBounds.NativeJets M.firstBand M.region (h * M.alpha) M.family.native := by
@@ -211,7 +240,7 @@ theorem MeanData.field_bound {h degree qbig : ℝ} (M : MeanData h degree)
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m M.family.field w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (h * M.alpha - PhysicalMeanJetBounds.loss degree m) :=
-          by
+            by
   obtain ⟨C, hC, hb⟩ := M.family.field_jet_bound hh hh1 M.lower_pos M.radii_lt M.band_four
     M.region_open M.region_covers M.smooth M.support M.nativeJets m
   exact ⟨C, hC, fun w hw hq1 => hb w hw.1 (abs_time_le_one hh hh1 hw.1 hq1) (hw.2.le.trans hq)⟩
@@ -222,7 +251,7 @@ theorem MeanData.angular_bound {h degree qbig : ℝ} (M : MeanData h degree)
       PhysicalWaveSum.physicalQ h w ≤ 1 →
       ‖iteratedFDeriv ℝ m M.family.angularField w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (h * M.alpha - PhysicalMeanJetBounds.loss degree m) :=
-          by
+            by
   obtain ⟨C, hC, hb⟩ := M.family.angularField_jet_bound hh hh1 M.lower_pos M.radii_lt M.band_four
     M.region_open M.region_covers M.smooth M.support M.nativeJets m
   exact ⟨C, hC, fun w hw hq1 => hb w hw.1 (abs_time_le_one hh hh1 hw.1 hq1) (hw.2.le.trans hq)⟩
@@ -297,10 +326,12 @@ section Assembly
 
 variable {h : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
+/-- Potential increment, defined pointwise by `W.vector w + M.family.angularField w`. -/
 noncomputable def potentialIncrement (W : WaveData h D I K (Fin 3))
     (M : MeanData h (CoordinateAlgebra.A h - 1 / 2)) : VelocityField :=
   fun w => W.vector w + M.family.angularField w
 
+/-- Pressure increment, defined pointwise by `W.pressure w + M.family.field w`. -/
 noncomputable def pressureIncrement (W : WaveData h D I K Unit)
     (M : MeanData h (2 * CoordinateAlgebra.A h)) : PressureField :=
   fun w => W.pressure w + M.family.field w
@@ -311,9 +342,12 @@ noncomputable def potentialLoss (h waveOffset meanOffset : ℝ) (m : ℕ) : ℝ 
   max (PhysicalGraphBounds.waveLoss h m + waveOffset)
     (PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h - 1 / 2) m + meanOffset)
 
+/-- Direct loss, given by `PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h) m + meanOffset`. -/
 noncomputable def directLoss (h meanOffset : ℝ) (m : ℕ) : ℝ :=
   PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h) m + meanOffset
 
+/-- Pressure loss, given by `max (PhysicalGraphBounds.waveLoss h m + waveOffset)
+(PhysicalMeanJetBounds.loss (2 * CoordinateAlgebra.A h) m + meanOffset)`. -/
 noncomputable def pressureLoss (h waveOffset meanOffset : ℝ) (m : ℕ) : ℝ :=
   max (PhysicalGraphBounds.waveLoss h m + waveOffset)
     (PhysicalMeanJetBounds.loss (2 * CoordinateAlgebra.A h) m + meanOffset)
@@ -409,14 +443,17 @@ section Sequences
 
 variable {h qbig : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
+/-- Potential stages, given by `addBaseAtZero base (fun j => potentialIncrement (W j) (M j))`. -/
 noncomputable def potentialStages (base : VelocityField)
     (W : ℕ → WaveData h D I K (Fin 3))
     (M : ℕ → MeanData h (CoordinateAlgebra.A h - 1 / 2)) : ℕ → VelocityField :=
   addBaseAtZero base (fun j => potentialIncrement (W j) (M j))
 
+/-- Direct stages, defined pointwise by `(M j).family.angularField`. -/
 noncomputable def directStages (M : ℕ → MeanData h (CoordinateAlgebra.A h)) : ℕ → VelocityField :=
   fun j => (M j).family.angularField
 
+/-- Pressure stages, given by `addBaseAtZero base (fun j => pressureIncrement (W j) (M j))`. -/
 noncomputable def pressureStages (base : PressureField)
     (W : ℕ → WaveData h D I K Unit)
     (M : ℕ → MeanData h (2 * CoordinateAlgebra.A h)) : ℕ → PressureField :=
@@ -438,7 +475,7 @@ theorem potentialStages_smooth (base : VelocityField)
     (hbase : ContDiffOn ℝ ∞ base (CutStageEstimates.physicalSublevel h qbig))
     (hq : ∀ j, qbig ≤ ChartScales.Q (M j).firstBand) :
     ∀ j, ContDiffOn ℝ ∞ (potentialStages base W M j) (CutStageEstimates.physicalSublevel h qbig) :=
-      by
+        by
   intro j
   have hs := potentialIncrement_smooth (W j) (M j) hh hh1 (hq j)
   by_cases hj : j = 0
@@ -453,7 +490,7 @@ theorem pressureStages_smooth (base : PressureField)
     (hbase : ContDiffOn ℝ ∞ base (CutStageEstimates.physicalSublevel h qbig))
     (hq : ∀ j, qbig ≤ ChartScales.Q (M j).firstBand) :
     ∀ j, ContDiffOn ℝ ∞ (pressureStages base W M j) (CutStageEstimates.physicalSublevel h qbig) :=
-      by
+        by
   intro j
   have hs := pressureIncrement_smooth (W j) (M j) hh hh1 (hq j)
   by_cases hj : j = 0
@@ -631,7 +668,7 @@ theorem actual_potential_base_smooth (upper : ℝ) (bandFloor : ℕ) (qbig : ℝ
     ContDiffOn ℝ ∞ (TailGaugePotential.finalPotential H v upper bandFloor)
       (CutStageEstimates.physicalSublevel F.data.h qbig) :=
   (TailGaugePotential.finalPotential_smooth H v upper bandFloor).mono (fun _ hw => ⟨hw.1, mem_univ
-    _⟩)
+      _⟩)
 
 theorem actual_pressure_base_smooth (upper : ℝ) (bandFloor : ℕ) (qbig : ℝ) :
     ContDiffOn ℝ ∞ (FinalSlowBase.pressure H v upper bandFloor)

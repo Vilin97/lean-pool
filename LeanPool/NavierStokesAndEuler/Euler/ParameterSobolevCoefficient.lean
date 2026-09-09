@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
 
 /-!
 # Absorbing a fixed Sobolev coefficient order once
@@ -18,6 +16,9 @@ The actual coefficient blocks are finite sums of ordinary coefficient jets.
 Their alphabet count and fixed base derivative order enlarge only the
 coefficient radius, once. No forcing or solution radius is changed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -69,13 +70,13 @@ bound after a single coefficient-radius enlargement. -/
 theorem coefficientBlock_of_tensor_bound (directions : ι → P)
     (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ) (A : P → E) (hA : ContDiff ℝ ∞ A)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hAb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C*majorant Rc 0 n) (n : ℕ) (x : P) :
+    (hAb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant Rc 0 n) (n : ℕ) (x : P) :
     coefficientBlock directions q A n x ≤
       sobolevCoefficientAmplitude ι q Rc C*majorant (sobolevCoefficientRadius ι Rc) 0 n := by
   let r₀ : ℝ := max 1 (Fintype.card ι : ℝ)*Rc
   have hr₀ : 0 ≤ r₀ := mul_nonneg (le_trans zero_le_one (le_max_left _ _)) hRc
   have hk (k : ℕ) : wordSum directions A (n+k) x ≤
-      C*(sobolevCoefficientRadius ι Rc^k*(k.factorial : ℝ)^2)*
+      C*(sobolevCoefficientRadius ι Rc^k*(k.factorial : ℝ)^2) *
         majorant (sobolevCoefficientRadius ι Rc) 0 n := by
     have hword := wordSum_gevrey directions hd A Rc C hRc hC 0 hAb (n+k) x
     have hword' : wordSum directions A (n+k) x ≤ C*majorant r₀ k n := by
@@ -89,7 +90,7 @@ theorem coefficientBlock_of_tensor_bound (directions : ι → P)
   rw [block_eq_sum_levels directions q A hA n x]
   calc
     _ ≤ (2 : ℝ)^q*∑ k ∈ range (q+1),
-        C*(sobolevCoefficientRadius ι Rc^k*(k.factorial : ℝ)^2)*
+        C*(sobolevCoefficientRadius ι Rc^k*(k.factorial : ℝ)^2) *
           majorant (sobolevCoefficientRadius ι Rc) 0 n :=
       mul_le_mul_of_nonneg_left (sum_le_sum (fun k _ => hk k)) (by positivity)
     _ = _ := by
@@ -107,11 +108,11 @@ theorem baseSize_le_coefficientBlock_zero (directions : ι → P) (q : ℕ) (A :
 theorem baseSize_of_tensor_bound (directions : ι → P)
     (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ) (A : P → E) (hA : ContDiff ℝ ∞ A)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
-    (hAb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C*majorant Rc 0 n) (x : P) :
+    (hAb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant Rc 0 n) (x : P) :
     baseSize directions q A x ≤ sobolevCoefficientAmplitude ι q Rc C := by
   have h := (baseSize_le_coefficientBlock_zero directions q A x).trans
     (coefficientBlock_of_tensor_bound directions hd q A hA Rc C hRc hC hAb 0 x)
   simpa only [majorant, Nat.zero_add, pow_zero, Nat.factorial_zero, Nat.cast_one, one_pow, mul_one]
-    using h
+      using h
 
 end EulerParameterWordGevrey

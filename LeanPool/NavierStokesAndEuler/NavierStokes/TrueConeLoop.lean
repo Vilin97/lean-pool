@@ -7,12 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LoopVariance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
 public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Algebra.Field.Periodic
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Construction of the true-cone loop
@@ -20,6 +19,9 @@ public import Mathlib.Algebra.Field.Periodic
 This file assembles the actual exponential moment inverse, a smooth speed
 correction, compact uniform cone margins, and the smooth phase change.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.TrueConeLoop
 
@@ -29,10 +31,14 @@ open Set Filter MeasureTheory
 open SmoothLoop LoopMoments LoopVariance ConeAlgebra
 open scoped ContDiff Topology Interval
 
+/-- Low speed, given by `2 + δ / 8`. -/
 def lowSpeed (δ : ℝ) : ℝ := 2 + δ / 8
+/-- High speed, given by `2 + δ / 4`. -/
 def highSpeed (δ : ℝ) : ℝ := 2 + δ / 4
+/-- Target speed, given by `2 + δ / 2`. -/
 def targetSpeed (δ : ℝ) : ℝ := 2 + δ / 2
 
+/-- Speed cutoff, given by `1 - Real.smoothTransition ((v - lowSpeed δ) / (δ / 8))`. -/
 def speedCutoff (δ v : ℝ) : ℝ :=
   1 - Real.smoothTransition ((v - lowSpeed δ) / (δ / 8))
 
@@ -58,8 +64,11 @@ theorem speedCutoff_zero (δ v : ℝ) (hδ : 0 < δ) (hv : highSpeed δ ≤ v) :
     linarith
   simp only [speedCutoff, Real.smoothTransition.one_of_one_le harg, sub_self]
 
+/-- Correction root, given by `speedCutoff δ v * Real.sqrt (targetSpeed δ - v)`. -/
 def correctionRoot (δ v : ℝ) : ℝ := speedCutoff δ v * Real.sqrt (targetSpeed δ - v)
+/-- Correction, given by `correctionRoot δ v ^ 2`. -/
 def correction (δ v : ℝ) : ℝ := correctionRoot δ v ^ 2
+/-- Corrected speed, given by `v + correction δ v`. -/
 def correctedSpeed (δ v : ℝ) : ℝ := v + correction δ v
 
 theorem correctionRoot_zero (δ v : ℝ) (hδ : 0 < δ) (hv : highSpeed δ ≤ v) :
@@ -134,6 +143,7 @@ theorem correctedSpeed_le_target_of_active (δ v : ℝ) (hδ : 0 < δ)
   dsimp [correctedSpeed]
   linarith
 
+/-- Variance root, given by `correctionRoot δ v / Real.sqrt a`. -/
 def varianceRoot (a δ v : ℝ) : ℝ := correctionRoot δ v / Real.sqrt a
 
 theorem varianceRoot_nonneg (a δ v : ℝ) : 0 ≤ varianceRoot a δ v :=
@@ -203,9 +213,13 @@ theorem uniform_tilt_cone_margin {X : Type*} [TopologicalSpace X]
   rw [heq]
   linarith
 
+/-- Nominal speed, given by `a * (1 + m ^ 2)`. -/
 def nominalSpeed (a m : ℝ) : ℝ := a * (1 + m ^ 2)
+/-- Seed rho, given by `correction δ (nominalSpeed a m)`. -/
 def seedRho (a m δ : ℝ) : ℝ := correction δ (nominalSpeed a m)
+/-- Seed speed, given by `correctedSpeed δ (nominalSpeed a m)`. -/
 def seedSpeed (a m δ : ℝ) : ℝ := correctedSpeed δ (nominalSpeed a m)
+/-- Seed tilt, given by `solvedTilt m d p (varianceRoot a δ (nominalSpeed a m)) θ`. -/
 def seedTilt (a m d p δ θ : ℝ) : ℝ :=
   solvedTilt m d p (varianceRoot a δ (nominalSpeed a m)) θ
 
@@ -272,18 +286,24 @@ theorem seed_cone (a m p₁ p₂ d δ R : ℝ) (ha : 0 < a) (hd : 0 < d)
         (p₂ - p₁ * seedTilt a m d p₂ δ θ) at hu
       linarith
 
+/-- Seed density, constructed using `densityOfTilt`. -/
 def seedDensity (a m d p δ : ℝ) (ha : 0 < a) (hd : d ≠ 0) (hδ : 0 < δ) : CircleDensity :=
   densityOfTilt (seedTilt a m d p δ) a m (seedRho a m δ) (seedSpeed a m δ) ha
     (lt_trans (by norm_num) (seedSpeed_gt_two a m δ hδ))
     (seedTilt_contDiff a m d p δ) (seedTilt_periodic a m d p δ)
     (seedTilt_mean a m d p δ) (seedTilt_variance a m d p δ ha hd) rfl
 
+/-- Constructed A, given by `rephase (seedDensity a m d p δ ha hd hδ) (fun θ => loopA (seedSpeed
+a m δ) (seedTilt a m d p δ θ))`. -/
 def constructedA (a m d p δ : ℝ) (ha : 0 < a) (hd : d ≠ 0) (hδ : 0 < δ) : ℝ → ℝ :=
   rephase (seedDensity a m d p δ ha hd hδ) (fun θ => loopA (seedSpeed a m δ) (seedTilt a m d p δ θ))
 
+/-- Constructed C, given by `rephase (seedDensity a m d p δ ha hd hδ) (fun θ => loopC (seedSpeed
+a m δ) (seedTilt a m d p δ θ))`. -/
 def constructedC (a m d p δ : ℝ) (ha : 0 < a) (hd : d ≠ 0) (hδ : 0 < δ) : ℝ → ℝ :=
   rephase (seedDensity a m d p δ ha hd hδ) (fun θ => loopC (seedSpeed a m δ) (seedTilt a m d p δ θ))
 
+/-- In true cone, constructed using `0`. -/
 def InTrueCone (p₁ p₂ A C : ℝ) : Prop :=
   0 < A ∧ 2 < A * (1 + (C / A) ^ 2) ∧ 2 < p₁ + p₂ * (C / A) ∧
     A * (1 + (C / A) ^ 2) < coneBound (p₁ + p₂ * (C / A)) (p₂ - p₁ * (C / A))
@@ -351,7 +371,7 @@ theorem constructed_periodic (a m d p δ : ℝ) (ha : 0 < a) (hd : d ≠ 0) (hδ
     Function.Periodic (constructedA a m d p δ ha hd hδ) 1 ∧
       Function.Periodic (constructedC a m d p δ ha hd hδ) 1 := by
   have h := periodic_loop_shears (seedTilt a m d p δ) (seedSpeed a m δ) (seedTilt_periodic a m d p
-    δ)
+      δ)
   exact ⟨rephase_periodic _ _ h.1, rephase_periodic _ _ h.2⟩
 
 theorem constructed_means (a m d p δ : ℝ) (ha : 0 < a) (hd : d ≠ 0) (hδ : 0 < δ) :
@@ -447,11 +467,18 @@ theorem exists_trueCone_loop (a m p₁ p₂ : ℝ) (ha : 0 < a)
   exact ⟨A, C, hs.1, hs.2, hp.1, hp.2, hm.1, hm.2,
     constructed_trueCone a m p₁ p₂ d δ R ha hd hδ hδ₁ le_rfl hmargin hrelaxed hUδ⟩
 
+/-- Family choices data, collecting `aMin`, `d`, `radius`, `maxAmplitude`, `delta`, `aMin_pos`
+and their compatibility conditions. -/
 structure FamilyChoices {X : Type*} (a m p₁ p₂ : X → ℝ) (K B : Set X) where
+  /-- A min of `FamilyChoices`, of type `ℝ`. -/
   aMin : ℝ
+  /-- D of `FamilyChoices`, of type `ℝ`. -/
   d : ℝ
+  /-- Radius of `FamilyChoices`, of type `ℝ`. -/
   radius : ℝ
+  /-- Max amplitude of `FamilyChoices`, of type `ℝ`. -/
   maxAmplitude : ℝ
+  /-- Delta of `FamilyChoices`, of type `ℝ`. -/
   delta : ℝ
   aMin_pos : 0 < aMin
   d_pos : 0 < d
@@ -518,7 +545,7 @@ theorem FamilyChoices.amplitude_bound {X : Type*} {a m p₁ p₂ : X → ℝ} {K
     (c : FamilyChoices a m p₁ p₂ K B) {x : X} (hx : x ∈ K) :
     0 ≤ solveScale c.d (p₂ x) (varianceRoot (a x) c.delta (nominalSpeed (a x) (m x))) ∧
       solveScale c.d (p₂ x) (varianceRoot (a x) c.delta (nominalSpeed (a x) (m x))) <
-        c.maxAmplitude := by
+          c.maxAmplitude := by
   let r := varianceRoot (a x) c.delta (nominalSpeed (a x) (m x))
   have hr := c.root_bound hx
   have hμ := solveScale_nonneg c.d (p₂ x) r c.d_pos hr.1
@@ -571,6 +598,8 @@ theorem seedTilt_family_contDiffOn (a m p : E → ℝ) (d δ : ℝ)
   exact (solvedTilt_fixed_joint_contDiff d hd).comp_contDiffOn
     ((hmf.prodMk hpf).prodMk (hroot.prodMk contDiff_snd.contDiffOn))
 
+/-- Constant density, bundling `rate`, `smooth`, `positive`, `periodic` and the required
+compatibility proofs. -/
 def constantDensity : CircleDensity where
   rate _ := 1 / (2 * Real.pi)
   smooth := contDiff_const
@@ -581,6 +610,8 @@ def constantDensity : CircleDensity where
     simp only [sub_zero, smul_eq_mul]
     field_simp [Real.pi_ne_zero]
 
+/-- Family density, defined pointwise by `if hx : 0 < a x then seedDensity (a x) (m x) d (p x) δ
+hx hd hδ else constantDensity`. -/
 def familyDensity (a m p : E → ℝ) (d δ : ℝ) (hd : d ≠ 0) (hδ : 0 < δ) : E → CircleDensity :=
   fun x => if hx : 0 < a x then seedDensity (a x) (m x) d (p x) δ hx hd hδ else constantDensity
 
@@ -609,7 +640,7 @@ theorem familyDensity_rate_contDiffOn (a m p : E → ℝ) (d δ : ℝ)
     (seedSpeed_family_contDiff a m δ ha hm hδ).comp contDiff_fst
   have hrat : ContDiffOn ℝ ∞ (fun z : E × ℝ =>
       phaseDensity (a z.1) (seedSpeed (a z.1) (m z.1) δ) (seedTilt (a z.1) (m z.1) d (p z.1) δ z.2)
-        /
+          /
         (2 * Real.pi)) ({x | 0 < a x} ×ˢ (univ : Set ℝ)) := by
     exact (((ha.comp contDiff_fst).contDiffOn.mul (contDiffOn_const.add (ht.pow 2))).div
       hv.contDiffOn (fun z _ => ne_of_gt (lt_trans (by norm_num)
@@ -618,9 +649,13 @@ theorem familyDensity_rate_contDiffOn (a m p : E → ℝ) (d δ : ℝ)
   intro z hz
   exact familyDensity_rate_eq a m p d δ hd hδ z.1 hz.1 z.2
 
+/-- Unphased A, given by `loopA (seedSpeed (a z.1) (m z.1) δ) (seedTilt (a z.1) (m z.1) d (p
+z.1) δ z.2)`. -/
 def unphasedA (a m p : E → ℝ) (d δ : ℝ) (z : E × ℝ) : ℝ :=
   loopA (seedSpeed (a z.1) (m z.1) δ) (seedTilt (a z.1) (m z.1) d (p z.1) δ z.2)
 
+/-- Unphased C, given by `loopC (seedSpeed (a z.1) (m z.1) δ) (seedTilt (a z.1) (m z.1) d (p
+z.1) δ z.2)`. -/
 def unphasedC (a m p : E → ℝ) (d δ : ℝ) (z : E × ℝ) : ℝ :=
   loopC (seedSpeed (a z.1) (m z.1) δ) (seedTilt (a z.1) (m z.1) d (p z.1) δ z.2)
 
@@ -641,10 +676,14 @@ theorem unphased_contDiffOn (a m p : E → ℝ) (d δ : ℝ)
     fun z _ => ne_of_gt (one_add_sq_pos _)
   exact ⟨hv.div hden hnz, (hv.mul ht).div hden hnz⟩
 
+/-- Family A, given by `rephase (familyDensity a m p d δ hd hδ z.1) (fun θ => unphasedA a m p d
+δ (z.1, θ)) z.2`. -/
 def familyA (a m p : E → ℝ) (d δ : ℝ) (hd : d ≠ 0) (hδ : 0 < δ) (z : E × ℝ) : ℝ :=
   rephase (familyDensity a m p d δ hd hδ z.1)
     (fun θ => unphasedA a m p d δ (z.1, θ)) z.2
 
+/-- Family C, given by `rephase (familyDensity a m p d δ hd hδ z.1) (fun θ => unphasedC a m p d
+δ (z.1, θ)) z.2`. -/
 def familyC (a m p : E → ℝ) (d δ : ℝ) (hd : d ≠ 0) (hδ : 0 < δ) (z : E × ℝ) : ℝ :=
   rephase (familyDensity a m p d δ hd hδ z.1)
     (fun θ => unphasedC a m p d δ (z.1, θ)) z.2
@@ -674,12 +713,12 @@ theorem family_pointwise_properties (a m p₁ p₂ : E → ℝ) {K B : Set E}
       coneBound (p₁ x + p₂ x * m x) (p₂ x - p₁ x * m x)) :
     ∀ x ∈ K,
       Function.Periodic (fun φ => familyA a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ))
-        1 ∧
+          1 ∧
       Function.Periodic (fun φ => familyC a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ))
-        1 ∧
+          1 ∧
       (∫ φ in (0 : ℝ)..1, familyA a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ)) = a x ∧
       (∫ φ in (0 : ℝ)..1, familyC a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ)) = a x *
-        m x ∧
+          m x ∧
       ∀ φ, InTrueCone (p₁ x) (p₂ x)
         (familyA a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ))
         (familyC a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ)) := by
@@ -714,7 +753,7 @@ theorem family_nominal_neighborhood (a m p₁ p₂ : E → ℝ) {K B : Set E}
         familyC a m p₂ c.d c.delta (ne_of_gt c.d_pos) c.delta_pos (x, φ) = a x * m x := by
   let N : Set E := {x | 0 < a x} ∩ {x | highSpeed c.delta < nominalSpeed (a x) (m x)}
   have hnom : Continuous (fun x => nominalSpeed (a x) (m x)) := ha.mul (continuous_const.add
-    (hm.pow 2))
+      (hm.pow 2))
   have hN : IsOpen N := (isOpen_lt continuous_const ha).inter (isOpen_lt continuous_const hnom)
   have hBN : B ⊆ N := by
     intro x hx

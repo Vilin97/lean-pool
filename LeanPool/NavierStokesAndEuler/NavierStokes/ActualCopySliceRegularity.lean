@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCoreSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierGeometry
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.NormalScaling
 
 /-!
 # Continuity on the actual finite tangent-copy intervals
@@ -19,6 +17,9 @@ The projected operator is built from the selected frame's normal, normal
 motion, base action, and damping. Only the native slow point and finite
 clock interval enter its regularity; the transverse coordinate is free.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,9 +31,13 @@ open CorrectionInitialization
 open scoped ContDiff Topology InnerProductSpace
 
 
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Parameter: an abbreviation for `PhysicalParticularWave.Parameter`. -/
 abbrev Parameter := PhysicalParticularWave.Parameter
+/-- Label: an abbreviation for `ActualParticularStageControls.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualParticularStageControls.Label B N0
 
 theorem negativeProjection_continuousOn {X : Type*} [TopologicalSpace X]
@@ -59,7 +64,7 @@ theorem frame_slices (F : PhaseConstruction D) (i : ι) (j : ℤ)
         (PrimaryCopyBridge.baseOperator ((F.frame i).F (p, s)) ((F.frame i).shear (p, s)))
         ((F.frame i).damping j (p, s))) ∧
     Continuous (fun s : Icc (0 : ℝ) (F.L i) => negativeTangentProjection ((F.frame i).normal (p,
-      s))) := by
+        s))) := by
   have hd := (ActualParticularControl.selected_frame_jets F).smoothOn i
   have hmap : MapsTo (fun s : ℝ => (p, s)) (Icc 0 (F.L i)) ((D.slot F.V F.openV).carrier i) :=
     fun s hs => ⟨hp, F.interval i hs⟩
@@ -88,14 +93,14 @@ variable {P Q : Type}
 theorem transported_coefficient (t : TangentData P Space) (φ : Q → P)
     (gap : ℕ) (rate amplitude normal : ℝ) (hn : normal ≠ 0) (q : Q) (Y : Plane) :
     (ScaledTangentTransport.transportTangent t φ gap 0 rate amplitude
-      normal).linearData.coefficient (q, Y) =
+        normal).linearData.coefficient (q, Y) =
       rate • t.linearData.coefficient (φ q, CopySolveCompatibility.nativeTimeMap 0 rate Y) :=
   NormalScaling.projectedOperator_rescale _ _ _ rate _ hn
 
 theorem transported_forcingMap (t : TangentData P Space) (φ : Q → P)
     (gap : ℕ) (rate amplitude normal : ℝ) (hn : normal ≠ 0) (q : Q) (Y : Plane) :
     (ScaledTangentTransport.transportTangent t φ gap 0 rate amplitude normal).linearData.forcingMap
-      (q, Y) =
+        (q, Y) =
       t.linearData.forcingMap (φ q, CopySolveCompatibility.nativeTimeMap 0 rate Y) :=
   NormalScaling.negativeTangentProjection_smul _ hn
 
@@ -106,10 +111,10 @@ theorem transported_slices (t : TangentData P Space) (φ : Q → P)
     (hB : Continuous (fun s : Icc (0 : ℝ) L => t.linearData.forcingMap (φ q, (xi, s)))) :
     Continuous (fun s : Icc (0 : ℝ) (L / rate) =>
       (ScaledTangentTransport.transportTangent t φ gap 0 rate amplitude
-        normal).linearData.coefficient (q, (xi, s))) ∧
+          normal).linearData.coefficient (q, (xi, s))) ∧
     Continuous (fun s : Icc (0 : ℝ) (L / rate) =>
       (ScaledTangentTransport.transportTangent t φ gap 0 rate amplitude
-        normal).linearData.forcingMap (q, (xi, s))) := by
+          normal).linearData.forcingMap (q, (xi, s))) := by
   let clock : Icc (0 : ℝ) (L / rate) → Icc (0 : ℝ) L := fun s =>
     ⟨rate * s, mul_nonneg hrate.le s.property.1,
       by simpa only [mul_comm] using (le_div_iff₀ hrate).mp s.property.2⟩
@@ -136,7 +141,7 @@ variable {B N0 : ℕ}
 theorem reference_slices (l : Label B N0) (j : ℤ) (p : Parameter)
     (hp : ActualSignedGeometry.swapParameter p ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (xi : ℝ) :
     Continuous (fun s : Icc (0 : ℝ) (reference l).length =>
       ((reference l).tangent j).linearData.coefficient (p, (xi, s))) ∧
@@ -161,7 +166,7 @@ theorem canonical_slices (l : Label B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) (p 
       (PhysicalParticularWave.parameterChange ActualPrimary.h (ChartScales.Q n)
         (ChartScales.Q (reference l).band) p) ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (xi : ℝ) :
     Continuous (fun s : Icc (0 : ℝ) ((canonicalParameters l).length n) =>
       ((canonicalParameters l).tangent j n).linearData.coefficient (p, (xi, s))) ∧
@@ -174,13 +179,13 @@ theorem canonical_slices (l : Label B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) (p 
 
 theorem actual_slices (x : CorrectionStep.CycleState (Label B N0)) (l : Label B N0)
     (hfrequency : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (j : ℤ) (hj : j ≠ 0) (n : ℕ) (p : Parameter)
     (hp : ActualSignedGeometry.swapParameter
       (PhysicalParticularWave.parameterChange ActualPrimary.h (ChartScales.Q n)
         (ChartScales.Q (reference l).band) p) ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (xi : ℝ) :
     Continuous (fun s : Icc (0 : ℝ) ((parameters x l).length n) =>
       ((parameters x l).tangent j n).linearData.coefficient (p, (xi, s))) ∧
@@ -191,17 +196,17 @@ theorem actual_slices (x : CorrectionStep.CycleState (Label B N0)) (l : Label B 
 
 theorem actual_copy_slices (x : CorrectionStep.CycleState (Label B N0)) (l : Label B N0)
     (hfrequency : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (j : ℤ) (hj : j ≠ 0) (n : ℕ) (p : Parameter)
     (hp : ActualSignedGeometry.swapParameter
       (PhysicalParticularWave.parameterChange ActualPrimary.h (ChartScales.Q n)
         (ChartScales.Q (reference l).band) p) ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2)
+          N0).prepared.N).carrier l.2)
     (Y : Plane) (k : TorusInverse.Frequency) :
     Continuous (fun s : Icc (0 : ℝ) ((parameters x l).length n) =>
       ((parameters x l).tangent j n).linearData.coefficientAlong ((parameters x l).geometry n) k
-        ((p, Y), s)) ∧
+          ((p, Y), s)) ∧
     Continuous (fun s : Icc (0 : ℝ) ((parameters x l).length n) =>
       ((parameters x l).tangent j n).linearData.forcingMap
         (p, ((((parameters x l).geometry n).coordinates k Y).1, s))) :=
@@ -232,7 +237,7 @@ theorem native_cell_of_refinedCarrier (l : Label B N0) (n : ℕ) (p : Parameter)
       (PhysicalParticularWave.parameterChange ActualPrimary.h (ChartScales.Q n)
         (ChartScales.Q (reference l).band) p) ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
-        N0).prepared.N).carrier l.2 := by
+          N0).prepared.N).carrier l.2 := by
   rw [native_parameter_eq l n p Y]
   exact ActualCarrierGeometry.labelCarrier_in_cell l n hT
     (ActualCoreSupport.refinedCarrier_subset_broad (l.2, l.1) n hY)
@@ -240,15 +245,15 @@ theorem native_cell_of_refinedCarrier (l : Label B N0) (n : ℕ) (p : Parameter)
 /-- A nonempty refined source fiber supplies the native phase-cell
 hypothesis. All copies and every transverse coordinate are then covered. -/
 theorem actual_copy_slices_of_refinedFiber (x : CorrectionStep.CycleState (Label B N0)) (l : Label
-  B N0)
+    B N0)
     (hfrequency : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (j : ℤ) (hj : j ≠ 0) (n : ℕ) (p : Parameter) (hT : 0 < p.2.1)
     (hs : ∃ Z : Plane, (p.1, (p.2, Z)) ∈ ActualCoreSupport.refinedCarrier (l.2, l.1) n)
     (Y : Plane) (k : TorusInverse.Frequency) :
     Continuous (fun s : Icc (0 : ℝ) ((parameters x l).length n) =>
       ((parameters x l).tangent j n).linearData.coefficientAlong ((parameters x l).geometry n) k
-        ((p, Y), s)) ∧
+          ((p, Y), s)) ∧
     Continuous (fun s : Icc (0 : ℝ) ((parameters x l).length n) =>
       ((parameters x l).tangent j n).linearData.forcingMap
         (p, ((((parameters x l).geometry n).coordinates k Y).1, s))) := by

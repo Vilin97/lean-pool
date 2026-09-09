@@ -6,9 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalPhysicalCopyBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCopyBounds
 
 /-!
 # Positive lift-time localization of actual copy amplitudes
@@ -18,6 +16,9 @@ common lift has positive time exactly before terminal time, so all physical
 copy fields and their ambient jets agree there with the original fields.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PositiveTimeCopyFamily
@@ -26,8 +27,10 @@ open Set Function Filter ProblemStatement PhysicalCopyBounds
 open PhysicalWaveSum (WaveIndex commonLift preterminal)
 open scoped Topology ContDiff BigOperators
 
+/-- Lift point: an abbreviation for `PhysicalGraphBounds.LiftPoint`. -/
 abbrev LiftPoint := PhysicalGraphBounds.LiftPoint
 
+/-- Lift past, given by `{x | 0 < x.1.1}`. -/
 def liftPast : Set LiftPoint := {x | 0 < x.1.1}
 
 theorem liftPast_open : IsOpen liftPast :=
@@ -198,7 +201,7 @@ theorem vectorSum_eq {w : SpaceTime} (hw : w ∈ preterminal) :
 theorem vectorSum_zero {w : SpaceTime} (hw : w ∉ preterminal) :
     PhysicalCopyBounds.vectorSum (fun i => gate (f i)) a h r0 w = 0 := by
   simp only [PhysicalCopyBounds.vectorSum, sum_zero (f _) a h r0 hw, map_zero,
-    Finset.sum_const_zero]
+      Finset.sum_const_zero]
 
 theorem vectorSum_germ {w : SpaceTime} (hw : w ∈ preterminal) :
     PhysicalCopyBounds.vectorSum (fun i => gate (f i)) a h r0 =ᶠ[𝓝 w]

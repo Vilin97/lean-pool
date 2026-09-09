@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+
+/-! Bounded point evaluation and joint continuity of reconstructed ordinary-space fields. -/
 
 @[expose] public section
 
-/-! Bounded point evaluation and joint continuity of reconstructed ordinary-space fields. -/
 
 noncomputable section
 
@@ -20,7 +23,7 @@ open MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerMeanOrdinaryLift
   EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerSobolevPointEvaluation
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanSpatialEvaluation1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 theorem ordinaryLift_representative_ae (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) :
     (ordinaryLift u : LiftDomain 1 → Space) =ᵐ[liftMeasure 1]
@@ -37,7 +40,8 @@ theorem pointEvaluation_ordinary (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit 
   rw [ordinarySobolev_value]
   exact ordinaryLift_representative_ae u hu
 
-/-- Point values are controlled by finitely many actual L² derivatives, uniformly in the spatial point. -/
+/-- Point values are controlled by finitely many actual L² derivatives, uniformly in the spatial
+point. -/
 theorem representative_bound (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (x : Space) :
     ‖representative u hu x‖ ≤ sobolevEmbeddingConstant 1 3 *
       ∑ n ∈ Finset.range 4,
@@ -49,7 +53,8 @@ theorem representative_bound (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (
   exact H.trans (mul_le_mul_of_nonneg_left (ordinarySobolev_norm_le 3 u hu)
     (sobolevEmbeddingConstant_nonneg 1 3))
 
-/-- A family with continuous genuine L² derivatives through order three has jointly continuous values. -/
+/-- A family with continuous genuine L² derivatives through order three has jointly continuous
+values. -/
 theorem representative_joint_continuous {T : Type*} [TopologicalSpace T]
     (u : T → EulerMeanSolenoidal.L2) (hu : ∀ t, SmoothOrbit (u t))
     (hjet : ∀ n ≤ 3, Continuous

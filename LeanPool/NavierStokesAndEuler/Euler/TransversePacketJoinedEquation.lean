@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedField
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
+
+/-! The complete constructed transverse path satisfies the literal packet equation on the whole
+closed interval. -/
 
 @[expose] public section
 
-/-! The complete constructed transverse path satisfies the literal packet equation on the whole
-  closed interval. -/
 
 noncomputable section
 
@@ -36,10 +38,10 @@ theorem scalar_smooth (t : ℝ) : ContDiff ℝ ∞ (fun y : Space × ℝ => scal
 /-- The complete actual high field and normalized pressure satisfy (11),
 including at the history/forward junction. -/
 theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    vectorDerivative τ hτ hτT B G (t,(x,θ))+
-      D.strain (t,(x,θ)) (vector τ hτ hτT B G (t,(x,θ)))+
+    vectorDerivative τ hτ hτT B G (t,(x,θ)) +
+      D.strain (t,(x,θ)) (vector τ hτ hτT B G (t,(x,θ))) +
       deriv (fun s => scalar τ hτ hτT B G (t,(x,s))) θ • D.normalField (t,(x,θ)) = raw (t,(x,θ)) :=
-        by
+          by
   by_cases ht : (t : ℝ) ≤ τ
   · let th : Icc (0 : ℝ) τ := ⟨t,t.property.1,ht⟩
     have hs : (fun s => scalar τ hτ hτT B G (t,(x,s))) =
@@ -82,10 +84,10 @@ theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 /-- The literal sliced-jet equation consumed by the packet grade recursion. -/
 theorem jet_equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     linearPart (D.strain (t,(x,θ)))
-        (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B G) (t,(x,θ)))+
+        (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B G) (t,(x,θ))) +
       fastPressure (D.normalField (t,(x,θ))) (pressureJet (scalar τ hτ hτT B G) (t,(x,θ))) = raw
-        (t,(x,θ)) := by
-  change (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B G) (t,(x,θ))).2 timeDirection+
+          (t,(x,θ)) := by
+  change (slicedJet (Icc (0 : ℝ) D.T) (vector τ hτ hτT B G) (t,(x,θ))).2 timeDirection +
     D.strain (t,(x,θ)) (vector τ hτ hτT B G (t,(x,θ)))+_ = _
   rw [(vectorField τ hτ hτT B G).slicedJet_temporal D.T_pos (vectorDerivativeField τ hτ hτT B G)
     (vectorField_time τ hτ hτT B G),fastPressure_pressureJet _ (scalar τ hτ hτT B G) t x θ

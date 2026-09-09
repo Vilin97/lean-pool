@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordProduct
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
-public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.JetProductBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
+import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordProduct
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Fixed Sobolev blocks of genuine external parameter words
@@ -19,6 +20,9 @@ The fixed base order is kept inside each actual external word. Product
 bounds place its finite cost on coefficient blocks, preserving the input
 and output external radius and factorial shift.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -60,7 +64,7 @@ theorem baseSize_zero (directions : ι → P) (f : P → E) (x : P) :
 theorem baseSize_succ (directions : ι → P) (q : ℕ) (f : P → E)
     (hf : ContDiff ℝ ∞ f) (x : P) :
     baseSize directions (q+1) f x = ‖f x‖+∑ i, baseSize directions q (directional directions f i) x
-      := by
+        := by
   unfold baseSize
   rw [sum_range_succ']
   simp only [wordSum_zero, wordSum_succ directions f hf]
@@ -103,7 +107,7 @@ theorem block_zero (directions : ι → P) (q : ℕ) (f : P → E) (x : P) :
   have he (w : Fin 0 → ι) : wordDerivative directions f w = f :=
     funext (wordDerivative_zero directions f w)
   simp only [block, he, sum_const, card_univ, Fintype.card_fun, Fintype.card_fin, pow_zero,
-    one_smul]
+      one_smul]
 
 theorem block_succ (directions : ι → P) (q : ℕ) (f : P → E) (hf : ContDiff ℝ ∞ f)
     (n : ℕ) (x : P) :
@@ -158,11 +162,11 @@ theorem block_clm_apply_le (directions : ι → P) (q : ℕ)
           leibnizConvolution (fun k => coefficientBlock directions q A k x)
             (fun k => block directions q (directional directions f i) k x) n +
           leibnizConvolution (fun k => coefficientBlock directions q (directional directions A i) k
-            x)
+              x)
             (fun k => block directions q f k x) n := by
       have he := directional_bilinear directions B A f hA hf i
       change directional directions (fun y => A y (f y)) i =
-        (fun y => A y (directional directions f i y))+
+        (fun y => A y (directional directions f i y)) +
         (fun y => directional directions A i y (f y)) at he
       rw [he]
       exact (block_add_le directions q _ _ (hA.clm_apply (directional_contDiff directions f hf i))

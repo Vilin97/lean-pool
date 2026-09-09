@@ -6,12 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
-public import Mathlib.Topology.Piecewise
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.Normed.Order.Lattice
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Genuine first-order evolution paths glue through a matching interior trace. -/
 
 @[expose] public section
 
-/-! Genuine first-order evolution paths glue through a matching interior trace. -/
 
 noncomputable section
 
@@ -22,6 +29,7 @@ open scoped Topology
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Glue, with branches according to `t ≤ τ`. -/
 def glue (τ : ℝ) (f g : ℝ → E) (t : ℝ) : E := if t ≤ τ then f t else g t
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
@@ -29,7 +37,7 @@ theorem glue_left (τ : ℝ) (f g : ℝ → E) (t : ℝ) (ht : t ≤ τ) : glue 
   simp only [glue, ht, ite_true]
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
-theorem glue_right (τ : ℝ) (f g : ℝ → E) (hmatch : f τ=g τ) (t : ℝ) (ht : τ ≤ t) :
+theorem glue_right (τ : ℝ) (f g : ℝ → E) (hmatch : f τ = g τ) (t : ℝ) (ht : τ ≤ t) :
     glue τ f g t=g t := by
   rcases ht.eq_or_lt with h | h
   · subst t
@@ -37,7 +45,7 @@ theorem glue_right (τ : ℝ) (f g : ℝ → E) (hmatch : f τ=g τ) (t : ℝ) (
   · simp only [glue, not_le.mpr h, ite_false]
 
 omit [NormedSpace ℝ E] in
-theorem glue_continuous (τ : ℝ) (f g : ℝ → E) (hmatch : f τ=g τ)
+theorem glue_continuous (τ : ℝ) (f g : ℝ → E) (hmatch : f τ = g τ)
     (hf : Continuous f) (hg : Continuous g) : Continuous (glue τ f g) := by
   apply Continuous.if_le hf hg continuous_id continuous_const
   intro t ht
@@ -47,7 +55,7 @@ theorem glue_continuous (τ : ℝ) (f g : ℝ → E) (hmatch : f τ=g τ)
 
 /-- Matching the value and derivative gives the genuine derivative even at the joining time. -/
 theorem glue_hasDerivWithinAt (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
-    (f g f' g' : ℝ → E) (hmatch : f τ=g τ) (hmatch' : f' τ=g' τ)
+    (f g f' g' : ℝ → E) (hmatch : f τ = g τ) (hmatch' : f' τ = g' τ)
     (hf : ∀ t ∈ Icc 0 τ, HasDerivWithinAt f (f' t) (Icc 0 τ) t)
     (hg : ∀ t ∈ Icc τ S, HasDerivWithinAt g (g' t) (Icc τ S) t)
     (t : ℝ) (ht : t ∈ Icc 0 S) :
@@ -95,7 +103,7 @@ theorem glue_hasDerivWithinAt (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
 
 /-- For the same first-order equation the derivative matching follows from value matching. -/
 theorem glue_evolution (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
-    (f g : ℝ → E) (rhs : ℝ → E → E) (hmatch : f τ=g τ)
+    (f g : ℝ → E) (rhs : ℝ → E → E) (hmatch : f τ = g τ)
     (hf : ∀ t ∈ Icc 0 τ, HasDerivWithinAt f (rhs t (f t)) (Icc 0 τ) t)
     (hg : ∀ t ∈ Icc τ S, HasDerivWithinAt g (rhs t (g t)) (Icc τ S) t)
     (t : ℝ) (ht : t ∈ Icc 0 S) :
@@ -109,8 +117,8 @@ theorem glue_evolution (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
 omit [NormedSpace ℝ E] in
 /-- Joining the intervals does not change a shared pointwise time-profile bound. -/
 theorem glue_weighted_bound (S τ : ℝ) (f g : ℝ → E) (γ : ℝ → ℝ) (C : ℝ)
-    (hf : ∀ t ∈ Icc 0 τ, ‖f t‖ ≤ C*γ t)
-    (hg : ∀ t ∈ Icc τ S, ‖g t‖ ≤ C*γ t)
+    (hf : ∀ t ∈ Icc 0 τ, ‖f t‖ ≤ C * γ t)
+    (hg : ∀ t ∈ Icc τ S, ‖g t‖ ≤ C * γ t)
     (t : ℝ) (ht : t ∈ Icc 0 S) : ‖glue τ f g t‖ ≤ C*γ t := by
   by_cases h : t ≤ τ
   · rw [glue_left τ f g t h]

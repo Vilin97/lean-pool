@@ -6,15 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
-public import LeanPool.NavierStokesAndEuler.Euler.CurlTimeDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.CurlTransportAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.VorticityTransport
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+import LeanPool.NavierStokesAndEuler.Euler.CurlTimeDerivative
+import LeanPool.NavierStokesAndEuler.Euler.CurlTransportAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.VorticityTransport
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The ordinary vorticity equation of a Comparator solution follows from
 its scalar-pressure, unforced Euler equation. -/
+
+@[expose] public section
+
 
 noncomputable section
 

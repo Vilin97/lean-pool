@@ -7,12 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAxisymmetricResidual
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAxisymmetricResidual
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Radial flux coordinates for the actual axisymmetric residual
@@ -23,6 +20,9 @@ All quotient derivatives in this file are genuine Fréchet derivatives,
 and their hypotheses are local at a point with positive `s`.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.RadialFluxResidual
 
 noncomputable section
@@ -30,6 +30,7 @@ noncomputable section
 open ProblemStatement AxisymmetricFields AxisymmetricResidual Filter
 open scoped BigOperators ContDiff Topology
 
+/-- Radial B, defined pointwise by `-V p / (2 * p.2.1)`. -/
 noncomputable def radialB (V : Profile) : Profile :=
   fun p => -V p / (2 * p.2.1)
 
@@ -58,7 +59,7 @@ theorem fderiv_radialB_apply {V : Profile} {p : ProfilePoint}
     ring
   rw [he, hb.fderiv]
   simp only [_root_.smul_apply, _root_.add_apply, sProjection_apply, smul_eq_mul]
-  field_simp [hs] ; ring
+  field_simp [hs]; ring
 
 theorem differentiableAt_radialB {V : Profile} {p : ProfilePoint}
     (hV : DifferentiableAt ℝ V p) (hs : p.2.1 ≠ 0) :
@@ -131,7 +132,7 @@ theorem partialS_partialS_radialB {V : Profile} {p : ProfilePoint}
   rw [partialS_radialB hds hs, partialS_radialB hdb hs]
   simp only [radialB]
   rw [partialS_radialB_explicit hd hs]
-  field_simp [hs] ; ring
+  field_simp [hs]; ring
 
 theorem partialZ_partialZ_radialB {V : Profile} {p : ProfilePoint}
     (hV : ContDiffAt ℝ 2 V p) (hs : p.2.1 ≠ 0) :
@@ -154,7 +155,7 @@ theorem laplaceWeighted_radialB {V : Profile} {p : ProfilePoint}
   rw [partialS_partialS_radialB hV hs, partialS_radialB_explicit hd hs,
     partialZ_partialZ_radialB hV hs]
   unfold radialB
-  field_simp [hs] ; ring
+  field_simp [hs]; ring
 
 theorem divergence_coefficient {V : Profile} (U : Profile) {p : ProfilePoint}
     (hV : DifferentiableAt ℝ V p) (hs : p.2.1 ≠ 0) :
@@ -162,7 +163,7 @@ theorem divergence_coefficient {V : Profile} (U : Profile) {p : ProfilePoint}
       partialS V p + partialZ U p := by
   rw [partialS_radialB_explicit hV hs]
   unfold radialB
-  field_simp [hs] ; ring
+  field_simp [hs]; ring
 
 private theorem hasFDerivAt_velocity_at {B F U : Profile} {t : ℝ} {x : Space}
     (hB : DifferentiableAt ℝ B (profilePoint t x))
@@ -216,6 +217,7 @@ theorem radial_flux_velocity (V F U : Profile) (t : ℝ) (x : Space)
       change -2 * radialEnergy x * (-V (profilePoint t x) / (2 * radialEnergy x)) = _
       field_simp [ne_of_gt hs]
 
+/-- Flux residual, constructed using `partialT`. -/
 noncomputable def fluxResidual (V F U P : Profile) (p : ProfilePoint) : ℝ :=
   partialT V p + V p * (partialS V p - V p / (2 * p.2.1)) + U p * partialZ V p -
     2 * p.2.1 * partialS (partialS V) p - partialZ (partialZ V) p +
@@ -233,7 +235,7 @@ theorem residualRadial_radialB {V : Profile} (F U P : Profile) {p : ProfilePoint
   rw [partialT_radialB hd hne, partialS_radialB_explicit hd hne,
     partialZ_radialB hd hne, laplaceWeighted_radialB hV hne]
   unfold fluxResidual radialB
-  field_simp [hne] ; ring
+  field_simp [hne]; ring
 
 /-- The actual physical radial residual multiplied by `r`, expressed
 without introducing a square root or a radial unit vector. All regularity

@@ -8,8 +8,9 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketBudget
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedPaths
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryBounds
 
 /-!
 # Unit-amplitude bounds for the complete actual transverse inverse
@@ -19,6 +20,9 @@ joined physical velocity and genuine time derivative. The input and output
 use the same fixed mixed-word Sobolev order and the same external radius.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTransversePacketJoin.Budget
@@ -26,7 +30,7 @@ namespace EulerTransversePacketJoin.Budget
 open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerTransversePacketProvider
   EulerLiftedGradientSpace EulerGevrey EulerParameterWordGevrey EulerFixedEvolutionSobolev
   EulerLpCylinderTranslation EulerLpCylinderPaths EulerContinuousTimeWeight
-    EulerTimeIntervalRestriction
+      EulerTimeIntervalRestriction
   EulerElapsedTimePathGluing EulerPacketProfileRecursion
 open scoped ContDiff BoundedContinuousFunction
 
@@ -58,7 +62,7 @@ theorem history_forcing_bound (n : ℕ) :
 theorem forward_forcing_bound (n : ℕ) :
     block directions q (fun a => pathTranslate P a
       (normalize L.g L.positive (HistoryData.forcingPath (G.tail τ hτ.le hτT)))) n 0 ≤ majorant L.R
-        d n := by
+          d n := by
   have he : (normalize L.fullProfile L.fullProfile_pos (HistoryData.forcingPath G)).comp
       (tailInclusion D.T τ hτ.le) =
         normalize L.g L.positive (HistoryData.forcingPath (G.tail τ hτ.le hτT)) :=
@@ -96,7 +100,7 @@ theorem past_velocity_bound (n : ℕ) :
 
 theorem past_derivative_bound (n : ℕ) :
     block directions q (fun a => pathTranslate P a (pastDerivative τ hτ hτT B G)) n 0 ≤
-      (3*sobolevCoefficientAmplitude ι q L.Rc L.C₁*traceCost τ+
+      (3*sobolevCoefficientAmplitude ι q L.Rc L.C₁*traceCost τ +
         3*sobolevCoefficientAmplitude ι q L.Rc L.C₀)*majorant L.R (d+3) n := by
   exact B.source_derivative_bound (G.initial τ hτ hτT.le) directions hdir q
     L.Rc L.C₀ L.C₁ L.CH 1 L.R L.Rc_nonneg L.C₀_nonneg L.C₁_nonneg L.CH_nonneg zero_le_one

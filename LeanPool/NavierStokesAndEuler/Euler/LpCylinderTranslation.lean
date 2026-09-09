@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedTranslation
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-
-@[expose] public section
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 
 /-!
 # Actual mixed spatial/angular translations on the cylinder
@@ -19,6 +17,9 @@ L²(R³×AddCircle) is the genuine measure-preserving translation, for arbitrary
 Hilbert-valued fields. A spatial support condition is preserved under the
 same qualitative margin as before; angular translation costs no margin.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +31,7 @@ open scoped Topology BoundedContinuousFunction
 
 variable (period : ℝ) [Fact (0 < period)]
 
+/-- Cylinder L²: an abbreviation for `Lp V 2 (liftMeasure period)`. -/
 abbrev CylinderL2 (V : Type*) [NormedAddCommGroup V] := Lp V 2 (liftMeasure period)
 
 section Translation
@@ -49,7 +51,7 @@ theorem translate_ae (a : LiftTangent) (u : CylinderL2 period V) :
   apply Lp.ext
   filter_upwards [translate_ae period 0 u] with x hx
   simpa only [coveringMap, Prod.fst_zero, Prod.snd_zero, AddCircle.coe_zero, Prod.mk_zero_zero,
-    add_zero] using hx
+      add_zero] using hx
 
 omit [Fact (0 < period)] in
 theorem coveringMap_add (a b : LiftTangent) :
@@ -83,7 +85,7 @@ def pathTranslate (a : LiftTangent) : C(K,CylinderL2 period V) →L[ℝ] C(K,Cyl
   (translate period a).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem pathTranslate_apply (a : LiftTangent) (u : C(K,CylinderL2 period V)) (t : K) :
+@[simp] theorem pathTranslate_apply (a : LiftTangent) (u : C(K, CylinderL2 period V)) (t : K) :
     pathTranslate period a u t = translate period a (u t) := rfl
 
 theorem pathTranslate_norm (a : LiftTangent) : ‖pathTranslate (K := K) (V := V) period a‖ ≤ 1 := by
@@ -126,7 +128,7 @@ def fieldPathLift : C(K,Space →ᵇ W) →L[ℝ] C(K,LiftDomain period →ᵇ W
   (fieldLift period).compLeftContinuous ℝ K
 
 omit [CompactSpace K] [Fact (0 < period)] in
-@[simp] theorem fieldPathLift_apply (A : C(K,Space →ᵇ W)) (t : K) (x : LiftDomain period) :
+@[simp] theorem fieldPathLift_apply (A : C(K, Space →ᵇ W)) (t : K) (x : LiftDomain period) :
     fieldPathLift period A t x = A t x.1 := rfl
 
 omit [Fact (0 < period)] in
@@ -155,13 +157,13 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 /-- The mixed translated field lies in the spatially enlarged supporting set. -/
 theorem translate_mem (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ :
-  MeasurableSet Ω)
+    MeasurableSet Ω)
     (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω)
     (u : supportedSpace (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable
-      period S hS)) :
+        period S hS)) :
     translate period a (u : CylinderL2 period V) ∈
       supportedSpace (liftMeasure period) (spatialSet period Ω) (spatialSet_measurable period Ω hΩ)
-        := by
+          := by
   apply (mem_supportedSpace_ae _ _ _ _).2
   have hu := (mem_supportedSpace_ae _ _ _ (u : CylinderL2 period V)).1 u.property
   filter_upwards [translate_ae period a (u : CylinderL2 period V),
@@ -176,14 +178,14 @@ theorem translate_mem (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S
 def intoLarger (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
     (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω) :
     supportedSpace (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable
-      period S hS) →ₗᵢ[ℝ]
+        period S hS) →ₗᵢ[ℝ]
       supportedSpace (V := V) (liftMeasure period) (spatialSet period Ω) (spatialSet_measurable
-        period Ω hΩ) where
+          period Ω hΩ) where
   toLinearMap := ((translate (V := V) period a).toLinearMap.comp
     (supportedSpace (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-      hS)).subtype).codRestrict
+        hS)).subtype).codRestrict
       (supportedSpace (liftMeasure period) (spatialSet period Ω) (spatialSet_measurable period Ω
-        hΩ))
+          hΩ))
       (translate_mem period a S Ω hS hΩ hsub)
   norm_map' := fun u => (translate period a).norm_map (u : CylinderL2 period V)
 
@@ -191,9 +193,9 @@ end Supported
 
 /-- Angular displacement costs no support margin; the spatial margin is purely qualitative. -/
 theorem compact_support_mixed_margin (S Ω : Set Space) (hS : IsCompact S) (hΩ : IsOpen Ω) (hsub : S
-  ⊆ Ω) :
+    ⊆ Ω) :
     ∃ δ : ℝ, 0 < δ ∧ ∀ a : LiftTangent, ‖a‖ < δ → EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω
-      := by
+        := by
   obtain ⟨δ,hδ,hm⟩ := EulerLpSupportedTranslation.compact_support_translation_margin S Ω hS hΩ hsub
   exact ⟨δ,hδ,fun a ha => hm a.1 ((norm_fst_le a).trans_lt ha)⟩
 

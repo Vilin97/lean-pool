@@ -7,11 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorOperator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Polynomial Gevrey bounds for the actual inverse, strain and curvature
 recovered from a determinant-one deformation and its first two time jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,13 +26,26 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerPacketPiola
   EulerOperatorGevreyCalculus EulerGevrey
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup EndSpace := inferInstance
-private local instance : NormedSpace ℝ EndSpace := inferInstance
-private local instance : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace) := inferInstance
-private local instance : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace) := inferInstance
-private local instance : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace) :=
-  inferInstance
-private local instance : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup EndSpace` instance to shorten typeclass synthesis. -/
+local instance instPacketCofactorGevrey1 : NormedAddCommGroup EndSpace := inferInstance
+/-- Cache the standard `NormedSpace ℝ EndSpace` instance to shorten typeclass synthesis. -/
+local instance instPacketCofactorGevrey2 : NormedSpace ℝ EndSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (EndSpace →L[ℝ] EndSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCofactorGevrey3 : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (EndSpace →L[ℝ] EndSpace)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCofactorGevrey4 : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace)` instance to
+shorten typeclass synthesis. -/
+local instance instPacketCofactorGevrey5 : NormedAddCommGroup (EndSpace →L[ℝ] EndSpace →L[ℝ]
+    EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace)` instance to
+shorten typeclass synthesis. -/
+local instance instPacketCofactorGevrey6 : NormedSpace ℝ (EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace)
+    := inferInstance
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
@@ -37,17 +55,17 @@ theorem adjugate_contDiff (F : P → EndSpace) (hF : ContDiff ℝ ∞ F) :
 
 theorem adjugate_bound (F : P → EndSpace) (hF : ContDiff ℝ ∞ F)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C*majorant R 0 n) (n : ℕ) (x : P) :
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C * majorant R 0 n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => adjugate (F y)) x‖ ≤ (9*C^2)*majorant R 0 n := by
   have hp := sequence_product_majorant R C C hR hC hC 0 0
     (fun k => ‖iteratedFDeriv ℝ k F x‖) (fun k => ‖iteratedFDeriv ℝ k F x‖)
     (fun k => by simpa only [abs_norm] using hFb k x)
     (fun k => by simpa only [abs_norm] using hFb k x) n
-  have hs : (∑ i ∈ Finset.range (n+1), (n.choose i : ℝ)*
+  have hs : (∑ i ∈ Finset.range (n+1), (n.choose i : ℝ) *
       ‖iteratedFDeriv ℝ i F x‖*‖iteratedFDeriv ℝ (n-i) F x‖) ≤
       (3*C*C)*majorant R 0 n := (le_abs_self _).trans (by simpa only [zero_add] using hp)
   calc
-    _ ≤ ‖cofactorBilinear‖*(∑ i ∈ Finset.range (n+1), (n.choose i : ℝ)*
+    _ ≤ ‖cofactorBilinear‖*(∑ i ∈ Finset.range (n+1), (n.choose i : ℝ) *
         ‖iteratedFDeriv ℝ i F x‖*‖iteratedFDeriv ℝ (n-i) F x‖) :=
       cofactorBilinear.norm_iteratedFDeriv_le_of_bilinear hF hF x (by simp)
     _ ≤ ‖cofactorBilinear‖*((3*C*C)*majorant R 0 n) :=
@@ -69,7 +87,7 @@ theorem inverse_bound (F I : P → EndSpace) (hF : ContDiff ℝ ∞ F)
     (hdet : ∀ x, (operatorMatrix (F x)).det = 1)
     (hI : ∀ x v, I x (F x v) = v)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C*majorant R 0 n) (n : ℕ) (x : P) :
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C * majorant R 0 n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n I x‖ ≤ (9*C^2)*majorant R 0 n := by
   have he : I = fun x => adjugate (F x) :=
     funext (fun x => inverse_eq_adjugate (F x) (I x) (hdet x) (hI x))
@@ -107,8 +125,8 @@ theorem strain_bound (F F₁ M : P → EndSpace)
     (hdet : ∀ x, (operatorMatrix (F x)).det = 1)
     (h₁ : ∀ x v, F₁ x v = M x (F x v))
     (R C C₁ : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C*majorant R 0 n)
-    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ C₁*majorant R 0 n)
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C * majorant R 0 n)
+    (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ C₁ * majorant R 0 n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n M x‖ ≤ (27*C^2*C₁)*majorant R 0 n := by
   rw [recovered_strain_eq F F₁ M hdet h₁]
@@ -122,8 +140,8 @@ theorem curvature_bound (F F₂ H : P → EndSpace)
     (hdet : ∀ x, (operatorMatrix (F x)).det = 1)
     (h₂ : ∀ x v, F₂ x v = -(H x (F x v)))
     (R C C₂ : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₂ : 0 ≤ C₂)
-    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C*majorant R 0 n)
-    (hF₂b : ∀ n x, ‖iteratedFDeriv ℝ n F₂ x‖ ≤ C₂*majorant R 0 n)
+    (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C * majorant R 0 n)
+    (hF₂b : ∀ n x, ‖iteratedFDeriv ℝ n F₂ x‖ ≤ C₂ * majorant R 0 n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n H x‖ ≤ (27*C^2*C₂)*majorant R 0 n := by
   rw [recovered_curvature_eq F F₂ H hdet h₂]

@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryLogarithmicGradient
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryBKMReduction
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryMaximalVorticityIntegral
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryBKMReduction
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryLogarithmicGradient
 
 /-! The ordinary Euler vorticity blowup criterion, with the whole-space
 logarithmic estimate proved and instantiated. No spatial estimate or
 unboundedness assumption remains in these conclusions. -/
+
+@[expose] public section
+
 
 noncomputable section
 

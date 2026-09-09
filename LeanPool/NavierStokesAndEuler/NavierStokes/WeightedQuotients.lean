@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatZeroExtension
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-
-@[expose] public section
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Square roots and signed quotients from weighted derivative bounds
@@ -22,6 +19,9 @@ The estimates use genuine Fréchet derivatives. A normalization used in a
 pointwise estimate is constant in the differentiation variable: no regularity
 of the quotient by a variable flat weight is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +33,7 @@ namespace NavierStokes.WeightedQuotients
 theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   WithTop.coe_le_coe.mpr le_top
 
+/-- Rpow coefficient as an element of `ℕ → ℝ | 0 => 1 | n + 1 => rpowCoeff p n * (p - (n : ℝ))`. -/
 noncomputable def rpowCoeff (p : ℝ) : ℕ → ℝ
   | 0 => 1
   | n + 1 => rpowCoeff p n * (p - (n : ℝ))
@@ -54,6 +55,7 @@ theorem iteratedDeriv_rpow (p : ℝ) (n : ℕ) {t : ℝ} (ht : 0 < t) :
       rw [show p - (n : ℝ) - 1 = p - ((n : ℝ) + 1) by ring]
       ring
 
+/-- Coeff bound, given by `(∑ k ∈ Finset.range (n + 1), |rpowCoeff p k|) + 1`. -/
 def coeffBound (p : ℝ) (n : ℕ) : ℝ :=
   (∑ k ∈ Finset.range (n + 1), |rpowCoeff p k|) + 1
 
@@ -187,7 +189,7 @@ theorem normalized_bounds {g : E → ℝ} {s : Set E} {w B : ℝ} (hw : 0 < w) (
     have hm := (div_le_iff₀ hBpos).mp hlo
     have h := mul_le_mul_of_nonneg_left hm (inv_pos.mpr hw).le
     simpa only [normalizeAt, mul_left_comm, mul_comm, inv_mul_cancel₀ hw.ne', mul_inv_cancel₀
-      hw.ne',
+        hw.ne',
       mul_assoc, one_mul] using h
 
 theorem normalized_contDiffOn {g : E → ℝ} {s : Set E} (hg : ContDiffOn ℝ ∞ g s) (w : ℝ) :
@@ -239,6 +241,7 @@ theorem sqrt_jet_bound {g : E → ℝ} {s : Set E} (hs : IsOpen s)
     (half_power_bound hB (normalized_pos hw hpos hx) hu) hi hjet
   simpa only [← Real.sqrt_eq_rpow] using h
 
+/-- Order bound, given by `∑ k ∈ Finset.range (n + 1), k.factorial * coeffBound p k`. -/
 def orderBound (p : ℝ) (n : ℕ) : ℝ :=
   ∑ k ∈ Finset.range (n + 1), k.factorial * coeffBound p k
 
@@ -266,6 +269,7 @@ theorem rpow_comp_jets_bound {f : E → ℝ} {s : Set E} (hs : IsOpen s)
     (pow_le_pow_right₀ hB (by omega)) (pow_nonneg (zero_le_one.trans hB) _)
     (orderBound_nonneg p n)
 
+/-- Choose sum, given by `∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ)`. -/
 def chooseSum (n : ℕ) : ℝ := ∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ)
 
 theorem chooseSum_nonneg (n : ℕ) : 0 ≤ chooseSum n := by
@@ -573,6 +577,7 @@ section GaussianEdge
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Edge strip: an abbreviation for `U ×ˢ Ioo 0 1`. -/
 abbrev edgeStrip (U : Set E) : Set (E × ℝ) := U ×ˢ Ioo 0 1
 
 /-- All full derivative tensors satisfy an exponential weight times fixed
@@ -730,8 +735,8 @@ theorem zeroExtension_sqrt_sq {U : Set E} {g : E × ℝ → ℝ}
   by_cases hδ : 0 < p.2
   · simp only [FlatZeroExtension.zeroExtension_of_pos _ hδ]
     exact Real.sq_sqrt (hpos p ⟨hp, hδ⟩).le
-  · simp only [FlatZeroExtension.zeroExtension_of_nonpos _ (le_of_not_gt hδ), zero_pow (by decide :
-    2 ≠ 0)]
+  · simp only [FlatZeroExtension.zeroExtension_of_nonpos _ (le_of_not_gt hδ), zero_pow (by
+      decide : 2 ≠ 0)]
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
 theorem zeroExtension_signed_identity {U : Set E} {g r : E × ℝ → ℝ}

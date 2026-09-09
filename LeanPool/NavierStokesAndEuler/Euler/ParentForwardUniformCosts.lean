@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceUniformEnvelope
-public import LeanPool.NavierStokesAndEuler.Euler.ParentForwardRadiusPolynomial
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
+import LeanPool.NavierStokesAndEuler.Euler.ParentForwardRadiusPolynomial
 
 /-! The actual first-normal-stage geometry supplies the same polynomial
 source guard for its direct-forward packet. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,19 +26,21 @@ open Set EulerSmoothLimit EulerTransversePacketProvider EulerPacketSourceGeometr
 
 variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {G : Parent} (L : LabelData G) (H : LowBounds G)
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
   (S : Set Space) (hS : IsCompact S)
   (P : ParentFrame (G.transverseData m hm R S hS) 0) (J : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ J.radius)
+  (hball : (1 / 2 : ℝ) ≤ J.radius)
   (Ti : ℝ) (hT1 : G.T ≤ 1) (hTi : G.T⁻¹ ≤ Ti)
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+  (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
 local notation "A" => L.geometryForwardInputs H m hm R S hS P J hball
   Ω hΩ hΩo hsub hΩball Ti hT1 hTi
 local notation "BC" => forwardCoefficientBudget period (G.meanData H)
   (G.transverseData m hm R S hS) rfl (ForwardInputs.normal A)
 
+/-- Geometry forward parameter size, given by `parameterSize L.K 0 Ti
+(560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild`. -/
 def geometryForwardParameterSize (ξ : U) : ℝ :=
   parameterSize L.K 0 Ti (560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild
 
@@ -45,7 +49,7 @@ theorem geometryForward_uniform_primitives (ξ : U) (hδ : 0 < J.δ) (hδ1 : J.�
     EulerPacketForwardRadius.RadiusPrimitives (A).linear (A).mean (A).normal BC J.δ ξ
       (profileEnvelope X) ∧
     (∀ t, J.primaryAmplitude hball*(A).linear.g t ≤ profileEnvelope X) ∧
-    EulerPacketInitializedOutputCost.uniformConstant*
+    EulerPacketInitializedOutputCost.uniformConstant *
       (profileEnvelope X)^EulerPacketInitializedOutputCost.uniformPower ≤
       frequencyConstant*X^frequencyPower := by
   let X := L.geometryForwardParameterSize H m hm R S hS P J Ti ξ

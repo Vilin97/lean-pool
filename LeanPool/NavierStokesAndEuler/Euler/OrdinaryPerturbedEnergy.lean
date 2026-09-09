@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizationError
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryHelmholtzField
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Actual L² stability of projected Euler with a small additive
 defect. The reference gradient is the only solution coefficient. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -57,8 +60,8 @@ theorem projected_difference_energy (A B : SmoothL2Field Space)
 theorem perturbed_difference_energy (A B : SmoothL2Field Space)
     (hA : A.toLp ∈ solenoidalSpace) (hB : B.toLp ∈ solenoidalSpace)
     (RA RB : L2) (K ea eb : ℝ) (hK : ∀ x, ‖fderiv ℝ A.field x‖ ≤ K)
-    (ha : ‖RA-(projectedRhs A).toLp‖ ≤ ea)
-    (hb : ‖RB-(projectedRhs B).toLp‖ ≤ eb) :
+    (ha : ‖RA - (projectedRhs A).toLp‖ ≤ ea)
+    (hb : ‖RB - (projectedRhs B).toLp‖ ≤ eb) :
     2*⟪B.toLp-A.toLp,RB-RA⟫_ℝ ≤ (2*K+1)*‖B.toLp-A.toLp‖^2+(ea+eb)^2 := by
   let W := B.toLp-A.toLp
   let e := (RB-(projectedRhs B).toLp)-(RA-(projectedRhs A).toLp)
@@ -71,13 +74,13 @@ theorem perturbed_difference_energy (A B : SmoothL2Field Space)
       (real_inner_le_norm _ _).trans (mul_le_mul_of_nonneg_left hn (norm_nonneg W))
     nlinarith [sq_nonneg (‖W‖-(ea+eb))]
   rw [he,inner_add_right,mul_add]
-  exact (add_le_add (projected_difference_energy A B hA hB K hK) hpair).trans_eq (by dsimp [W];
-    ring)
+  exact (add_le_add (projected_difference_energy A B hA hB K hK) hpair).trans_eq (by
+      dsimp [W]; ring)
 
 theorem forced_linear_zero_bound (T C E : ℝ) (hC : 1 ≤ C)
-    (X X' : ℝ → ℝ) (hX : ContinuousOn X (Icc 0 T)) (hX0 : X 0=0)
+    (X X' : ℝ → ℝ) (hX : ContinuousOn X (Icc 0 T)) (hX0 : X 0 = 0)
     (hd : ∀ t ∈ Icc 0 T, HasDerivWithinAt X (X' t) (Icc 0 T) t)
-    (hb : ∀ t ∈ Icc 0 T, X' t ≤ C*X t+E^2)
+    (hb : ∀ t ∈ Icc 0 T, X' t ≤ C * X t + E ^ 2)
     (t : ℝ) (ht : t ∈ Icc 0 T) : X t ≤ E^2*Real.exp (C*T) := by
   have hh := linear_stability_within (fun r => X r+E^2) X' C T
     (hX.add continuousOn_const)

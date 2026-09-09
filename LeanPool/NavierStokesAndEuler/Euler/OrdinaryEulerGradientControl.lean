@@ -7,15 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientEnergy
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryVariableGronwall
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerHigherEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryVariableGronwall
 
 /-! Actual gradient-supremum control of Euler Sobolev norms.  The
 gradient norm is a constructed continuous path, its time integral
 controls H³, and the checked H³-tame estimate then propagates every
 higher order on the same time interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +30,7 @@ open Set MeasureTheory EulerSmoothLimit EulerLpTranslation
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
+/-- Gradient norm path as an element of `C(Icc (0 : ℝ) T,ℝ)`. -/
 def gradientNormPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => ‖finiteField (U.velocity t).derivative‖,
     (continuous_finiteField (fun t => (U.velocity t).derivative)
@@ -48,6 +52,7 @@ theorem pointwise_gradient_le (U : Evolution T hT) (t : Icc (0 : ℝ) T) (x : Sp
     ‖fderiv ℝ (U.velocity t).field x‖ ≤ U.gradientNormPath t :=
   (U.gradientNormPath_le_iff t _).mp le_rfl x
 
+/-- Gradient integral, given by `realIntegral T hT U.gradientNormPath t`. -/
 def gradientIntegral (U : Evolution T hT) (t : Icc (0 : ℝ) T) : ℝ :=
   realIntegral T hT U.gradientNormPath t
 
@@ -76,7 +81,7 @@ theorem integerEnergyDerivative_gradient (U : Evolution T hT) (K : ℝ)
     (U.velocity t).toLp_ae
 
 theorem h3_energy_gradientIntegral (U : Evolution T hT) (t : Icc (0 : ℝ) T) :
-    wordEnergy 3 (U.velocity t) ≤ wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy 3 (U.velocity t) ≤ wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (gradientEnergyConstant*U.gradientIntegral t) := by
   have hd (r : ℝ) (hr : r ∈ Ico 0 T) :
       HasDerivWithinAt (extendPath T hT (U.integerEnergyPath 3))
@@ -85,7 +90,7 @@ theorem h3_energy_gradientIntegral (U : Evolution T hT) (t : Icc (0 : ℝ) T) :
     simpa only [projIcc_of_mem hT (show r ∈ Icc 0 T from ⟨hr.1,hr.2.le⟩)] using h
   have hb (r : ℝ) (_hr : r ∈ Ico 0 T) :
       U.integerEnergyDerivative 3 (projIcc 0 T hT r) ≤
-        gradientEnergyConstant*extendPath T hT U.gradientNormPath r*
+        gradientEnergyConstant*extendPath T hT U.gradientNormPath r *
           extendPath T hT (U.integerEnergyPath 3) r :=
     U.integerEnergyDerivative_gradient _ _ (U.pointwise_gradient_le _)
   have h := variable_linear_stability T hT
@@ -99,7 +104,7 @@ theorem h3_energy_gradientIntegral (U : Evolution T hT) (t : Icc (0 : ℝ) T) :
 
 theorem h3_energy_gradient_bound (U : Evolution T hT) (K : ℝ)
     (hK : ∀ t x, ‖fderiv ℝ (U.velocity t).field x‖ ≤ K) (t : Icc (0 : ℝ) T) :
-    wordEnergy 3 (U.velocity t) ≤ wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy 3 (U.velocity t) ≤ wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (gradientEnergyConstant*K*(t : ℝ)) := by
   apply (U.h3_energy_gradientIntegral t).trans
   apply mul_le_mul_of_nonneg_left _ (wordEnergy_nonneg _ _)
@@ -107,6 +112,8 @@ theorem h3_energy_gradient_bound (U : Evolution T hT) (K : ℝ)
   exact (mul_le_mul_of_nonneg_left (U.gradientIntegral_le_const K hK t)
     gradientEnergyConstant_nonneg).trans_eq (by ring)
 
+/-- Gradient H3 bound, given by `Real.sqrt (wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩)*Real.exp
+(gradientEnergyConstant*G))`. -/
 def gradientH3Bound (U : Evolution T hT) (G : ℝ) : ℝ :=
   Real.sqrt (wordEnergy 3 (U.velocity ⟨0,le_rfl,hT⟩)*Real.exp (gradientEnergyConstant*G))
 
@@ -128,22 +135,22 @@ theorem h3_tensorNorm_of_gradientIntegral (U : Evolution T hT) (G : ℝ)
 
 theorem higher_energy_of_gradientIntegral (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (G : ℝ) (hG : ∀ t, U.gradientIntegral t ≤ G) (t : Icc (0 : ℝ) T) :
-    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    wordEnergy m (U.velocity t) ≤ wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
       Real.exp (tameEnergyConstant m*U.gradientH3Bound G*T) :=
   U.integer_energy_uniform m hm _ (U.wordBound_of_gradientIntegral G hG) t
 
 theorem higher_tensorNorm_of_gradientIntegral (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (G : ℝ) (hG : ∀ t, U.gradientIntegral t ≤ G) (t : Icc (0 : ℝ) T) :
-    tensorNorm m (U.velocity t) ≤ wordCount m*
-      Real.sqrt (wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    tensorNorm m (U.velocity t) ≤ wordCount m *
+      Real.sqrt (wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
         Real.exp (tameEnergyConstant m*U.gradientH3Bound G*T)) :=
   U.tensorNorm_uniform m hm _ (U.wordBound_of_gradientIntegral G hG) t
 
 theorem higher_tensorNorm_of_gradientBound (U : Evolution T hT) (m : ℕ) (hm : 3 ≤ m)
     (K : ℝ) (hK : ∀ t x, ‖fderiv ℝ (U.velocity t).field x‖ ≤ K)
     (t : Icc (0 : ℝ) T) :
-    tensorNorm m (U.velocity t) ≤ wordCount m*
-      Real.sqrt (wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩)*
+    tensorNorm m (U.velocity t) ≤ wordCount m *
+      Real.sqrt (wordEnergy m (U.velocity ⟨0,le_rfl,hT⟩) *
         Real.exp (tameEnergyConstant m*U.gradientH3Bound (K*T)*T)) := by
   have hK0 : 0 ≤ K := (norm_nonneg (fderiv ℝ (U.velocity t).field 0)).trans (hK t 0)
   exact U.higher_tensorNorm_of_gradientIntegral m hm (K*T)

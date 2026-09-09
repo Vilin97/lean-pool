@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 /-!
 Actual spatial reflection on ordinary R³ L².  Reflection preserves the
@@ -16,6 +16,9 @@ closed gradient and solenoidal spaces and commutes with the genuine Helmholtz
 projection.  The scalar test is reflected with a minus sign so its gradient
 has the same pullback as an ordinary vector field.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +31,8 @@ theorem measurePreserving_reflection :
     MeasurePreserving (fun x : Space => -x) (volume : Measure Space) volume :=
   Measure.measurePreserving_neg volume
 
+/-- Reflection, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => -x)
+measurePreserving_reflection`. -/
 def reflection : L2 →ₗᵢ[ℝ] L2 :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => -x) measurePreserving_reflection
 

@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSeedPeriodicity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveCoefficientPeriodicity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSeedPeriodicity
 
 /-!
 # Auxiliary periodicity of the actual correction coefficients
@@ -21,6 +17,9 @@ coefficient.  This module tracks the individual velocity, pressure and
 Gaussian coefficients on precisely the bands whose common cover is ordered.
 The differential residual preserves these periods on its open slow domain.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +31,10 @@ open ActualWaveRegularity
 open scoped Topology ContDiff BigOperators ComplexConjugate
 
 
+/-- Point: an abbreviation for `ActualInitialization.Point`. -/
 abbrev Point := ActualInitialization.Point
+/-- Index: an abbreviation for `ActualInitialization.Index /-! Translation calculus for finite
+harmonic coefficients. -/`. -/
 abbrev Index := ActualInitialization.Index
 
 /-! Translation calculus for finite harmonic coefficients. -/
@@ -41,6 +43,7 @@ section TranslationCalculus
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Coefficients translation, given by `∀ j, TranslationOn U v (a j)`. -/
 def CoefficientsTranslation (U : Set D) (v : D) (a : HarmonicFields.Coefficients D) : Prop :=
   ∀ j, TranslationOn U v (a j)
 
@@ -138,6 +141,7 @@ theorem field (ha : CoefficientsTranslation U v a) {Φ : D → ℝ}
 
 end CoefficientsTranslation
 
+/-- Frame translation data, collecting `radius`, `radial`, `axial`, `time`. -/
 structure FrameTranslation (U : Set D) (v : D) (g : Frame D) : Prop where
   radius : TranslationOn U v g.radius
   radial : TranslationOn U v g.radial
@@ -238,7 +242,7 @@ theorem residualSource_translation {U : Set D} {v : D} (hU : IsOpen U)
     (hA : ∀ i, CoefficientsTranslation U v (A n i)) (j : ℤ) :
     TranslationOn U v (ParticularWaveAssembly.residualSource c u b G A j n) := by
   have hBM : ∀ i, CoefficientsTranslation U v (constantVector (contextBase c n + stateMean u n) i)
-    :=
+      :=
     fun i => CoefficientsTranslation.boundConstant ((hB.component i).map₂ (hM.component i) (· + ·))
   have hr := hg.nonlinearResidual hU hΦ (b.frequency n) (b.angularFrequency n)
     hBM (fun i => (hv i).realProjection) hp.realProjection
@@ -250,6 +254,7 @@ end TranslationCalculus
 
 /-! The separately carried periodicity invariant. -/
 
+/-- Point deck, given by `(0, (0, TorusAverages.latticePoint k))`. -/
 noncomputable def pointDeck (k : TorusInverse.Frequency) : Point :=
   (0, (0, TorusAverages.latticePoint k))
 
@@ -257,6 +262,7 @@ theorem add_pointDeck (z : Point) (k : TorusInverse.Frequency) :
     z + pointDeck k = (z.1, (z.2.1, z.2.2 + TorusAverages.latticePoint k)) := by
   simp only [pointDeck, Prod.add_def, add_zero]
 
+/-- Periodic data, collecting `velocity`, `pressure`, `gaussian`. -/
 structure Periodic {B N0 : ℕ} (x : CycleState (Index B N0)) : Prop where
   velocity : ∀ l n, ActualWaveRegularityData.Ordered l n → ∀ k i,
     CoefficientsTranslation ActualInitialization.geometry.domain (pointDeck k)
@@ -331,7 +337,7 @@ theorem context_base_translation (B n : ℕ) (k : TorusInverse.Frequency) :
   simp only [contextBase, ActualPrimary.commonContext, CommonBaseContext.context,
     BaseContextAssembly.nativeContext, BaseContextAssembly.context, BaseContextAssembly.base,
     BaseContextAssembly.radialBase, BaseContextAssembly.frequencyBase,
-      BaseContextAssembly.axialBase,
+        BaseContextAssembly.axialBase,
     BaseContextAssembly.physicalPoint, BaseContextAssembly.slowCoordinates_apply,
     pointDeck, Prod.add_def, add_zero]
 
@@ -376,7 +382,7 @@ theorem fields_ordered (h : Periodic x) (l : Index B N0) (n : ℕ)
       (fun z => (x.coefficients.blocks l).oscillatoryPressure n (z, θ)) ∧
     TranslationOn ActualInitialization.geometry.domain (pointDeck k)
       (fun z => coefficientField (x.coefficients.blocks l) (x.coefficients.gaussian l) n (z, θ)) :=
-        by
+          by
   have hΦ := state_phase_translation H l n hn k
   refine ⟨?_, ?_, ?_⟩
   · intro z hz
@@ -428,6 +434,7 @@ end CurrentSource
 
 /-! The literal source, with the associator used by the particular solver. -/
 
+/-- Copies, constructed using `ActualWaveRegularityData.particularCopies`. -/
 noncomputable def copies {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : Index B N0) (j : ℤ) :=
   ActualWaveRegularityData.particularCopies (l.2, l.1)

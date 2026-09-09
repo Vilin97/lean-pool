@@ -7,17 +7,20 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
+
+/-! Exact identification of the source's base-Sobolev word sum and root metric energy. -/
 
 @[expose] public section
 
-/-! Exact identification of the source's base-Sobolev word sum and root metric energy. -/
 
 noncomputable section
 
 namespace EulerBaseWordMetric
 
 open EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerCylinderSobolev
-  EulerFiniteMetricEnergy
+    EulerFiniteMetricEnergy
 open InnerProductSpace
 
 /-- A base Sobolev word of any length at most s. -/
@@ -45,7 +48,7 @@ theorem card_baseWord (s : ℕ) : Fintype.card (BaseWord s) = ∑ n ∈ Finset.r
 /-- The source's root-of-sum metric energy for all base Sobolev words. -/
 def baseWordMetricNorm {s : ℕ} {f : LiftL2 period} (K : LiftL2 period →L[ℝ] LiftL2 period)
     (J : SpatialJet period standardDirection s f) : ℝ := familyMetricNorm K (baseWordValues period
-      J)
+        J)
 
 /-- The Sobolev sum is controlled by its metric root with a fixed base-word cardinality constant. -/
 theorem sobolevNorm_le_baseWordMetric {s : ℕ} {f : LiftL2 period}
@@ -53,7 +56,7 @@ theorem sobolevNorm_le_baseWordMetric {s : ℕ} {f : LiftL2 period}
     (c : ℝ) (hc : 0 < c)
     (hK : ∀ u, c ^ 2 * ‖u‖ ^ 2 ≤ ⟪K u, u⟫_ℝ) :
     J.sobolevNorm ≤ (Real.sqrt (Fintype.card (BaseWord s) : ℝ) / c) * baseWordMetricNorm period K J
-      := by
+        := by
   rw [← sum_baseWordValues_norm period J]
   have hsum := sum_norm_le_card_sqrt_familyNorm (baseWordValues period J)
   have hmet := familyMetricNorm_lower K (baseWordValues period J) c hc.le hK

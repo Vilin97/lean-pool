@@ -6,10 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedPressure
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 
 /-!
 # The ordinary three-dimensional solenoidal space for the mean inverse
@@ -21,6 +22,9 @@ below acts on this space, rather than on the lifted cylinder used by the
 oscillatory correction construction.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanSolenoidal
@@ -29,6 +33,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerCoerciveProjection
   EulerLiftedPressure
 open scoped ContDiff ENNReal NNReal
 
+/-- L²: an abbreviation for `MeasureTheory.Lp Space 2 (volume : Measure Space)`. -/
 abbrev L2 := MeasureTheory.Lp Space 2 (volume : Measure Space)
 
 theorem contDiff_gradient {φ : Space → ℝ} (hφ : ContDiff ℝ ∞ φ) :
@@ -45,6 +50,7 @@ theorem gradient_memLp {φ : Space → ℝ}
     MemLp (gradient φ) 2 (volume : Measure Space) :=
   (contDiff_gradient hs).continuous.memLp_of_hasCompactSupport (compactSupport_gradient hc)
 
+/-- Test gradient, given by `(gradient_memLp hc hs).toLp (gradient φ)`. -/
 def testGradient (φ : Space → ℝ) (hc : HasCompactSupport φ)
     (hs : ContDiff ℝ ∞ φ) : L2 :=
   (gradient_memLp hc hs).toLp (gradient φ)
@@ -53,10 +59,13 @@ theorem testGradient_ae (φ : Space → ℝ) (hc : HasCompactSupport φ)
     (hs : ContDiff ℝ ∞ φ) : testGradient φ hc hs =ᵐ[volume] gradient φ :=
   (gradient_memLp hc hs).coeFn_toLp
 
+/-- Gradient generators, given by `{g | ∃ φ : Space → ℝ, HasCompactSupport φ ∧ ContDiff ℝ ∞ φ ∧
+g =ᵐ[volume] gradient φ}`. -/
 def gradientGenerators : Set L2 :=
   {g | ∃ φ : Space → ℝ, HasCompactSupport φ ∧ ContDiff ℝ ∞ φ ∧
     g =ᵐ[volume] gradient φ}
 
+/-- Gradient space, given by `(Submodule.span ℝ gradientGenerators).topologicalClosure`. -/
 def gradientSpace : Submodule ℝ L2 :=
   (Submodule.span ℝ gradientGenerators).topologicalClosure
 
@@ -65,6 +74,8 @@ theorem gradientSpace_closed : IsClosed (gradientSpace : Set L2) :=
 
 instance : CompleteSpace gradientSpace := gradientSpace_closed.completeSpace_coe
 
+/-- Solenoidal space, given by `gradientSpace.orthogonal instance : CompleteSpace
+solenoidalSpace := gradientSpace.isClosed_orthogonal.completeSpace_coe`. -/
 def solenoidalSpace : Submodule ℝ L2 := gradientSpace.orthogonal
 
 instance : CompleteSpace solenoidalSpace :=
@@ -111,6 +122,7 @@ theorem mem_solenoidal_iff (u : L2) : u ∈ solenoidalSpace ↔
     rw [real_inner_comm]
     exact hclosure hg
 
+/-- Solenoidal projection, given by `solenoidalSpace.starProjection`. -/
 def solenoidalProjection : L2 →L[ℝ] L2 := solenoidalSpace.starProjection
 
 theorem solenoidalProjection_mem (u : L2) :
@@ -153,11 +165,11 @@ theorem gradient_test_integration_by_parts (u : Space → Space)
     (EuclideanSpace.proj i : Space →L[ℝ] ℝ).contDiff.comp hu
   have hi₁ (i : Fin 3) : Integrable (fun x => partialDerivative φ i x * ui i x) :=
     ((contDiff_partialDerivative φ hs i).continuous.mul (hui
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
         ((hc.fderiv_apply (𝕜 := ℝ) (EuclideanSpace.single i 1)).mul_right)
   have hi₂ (i : Fin 3) : Integrable (fun x => φ x * partialDerivative (ui i) i x) :=
     (hs.continuous.mul (contDiff_partialDerivative _ (hui i)
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
       hc.mul_right
   have hibp (i : Fin 3) : (∫ x, partialDerivative φ i x * ui i x) =
       -∫ x, φ x * partialDerivative (ui i) i x := by

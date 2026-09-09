@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1FieldProduct
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanDisplacementRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEquation
 
 /-!
 # The actual mean velocity and pressure-gradient residual
@@ -18,6 +16,9 @@ From a genuine strong mean evolution, construct B=F z_t in Bochner L², its
 actual time derivative, and the residual f-B_t-MB. Its F-adjoint transform is
 in the ordinary L² gradient space by the proved strong projected equation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -81,7 +82,7 @@ theorem pressureResidual_ae :
     timeMultiplier_ae T hT (solenoidalFrame T F₁) s.velocityLp, s.velocity_ae]
     with t hs₂ hs₁ hsmul ha hv hvrep
   simp only [Pi.sub_apply, Pi.smul_apply] at hs₂ hs₁ hsmul
-  change (f-timeMultiplier T hT (solenoidalFrame T F) s.acceleration-
+  change (f-timeMultiplier T hT (solenoidalFrame T F) s.acceleration -
     (2 : ℝ) • timeMultiplier T hT (solenoidalFrame T F₁) s.velocityLp) t = _
   have hv' := hv.trans (congrArg
     (fun w : solenoidalSpace => F₁ (projIcc 0 T hT t) (w : L2)) hvrep)
@@ -98,7 +99,7 @@ theorem pressureResidual_gradient_ae :
   apply (solenoidalProjection_eq_zero_iff _).1
   have hb : f t - extendPath T hT F t (s.acceleration t : L2) -
       (2 : ℝ) • extendPath T hT F₁ t (s.velocity t : L2) =
-      (f t - (2 : ℝ) • extendPath T hT F₁ t (s.velocity t : L2))-
+      (f t - (2 : ℝ) • extendPath T hT F₁ t (s.velocity t : L2)) -
         extendPath T hT F t (s.acceleration t : L2) := by abel
   have hh := congrArg (fun x : L2 => solenoidalProjection ((F (projIcc 0 T hT t)).adjoint x))
     (hp.trans hb)

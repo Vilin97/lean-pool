@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.ParentLagrangianEuler
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentParticleInverse
+import LeanPool.NavierStokesAndEuler.Euler.ParentParticleRegularity
 
 /-! The physical Euler evolution carried by a particle parent. Its
 acceleration law and the smoothness of its closed spatial slices are
 consequences of the actual flow identities, rather than extra premises. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,10 +23,16 @@ namespace EulerParentPacketFrames
 open Set EulerSmoothLimit EulerLagrangian EulerTimeIntervalRestriction
 open scoped ContDiff
 
+/-- Evolution data, collecting `inverse`, `velocity`, `pressure`, `force`, `force_continuous`,
+`velocity_match` and their compatibility conditions. -/
 structure Evolution (A : Parent) where
+  /-- Inverse of `Evolution`, of type `ParticleInverse A`. -/
   inverse : ParticleInverse A
+  /-- Velocity field of `Evolution`, of type `ℝ × Space → Space`. -/
   velocity : ℝ × Space → Space
+  /-- Pressure field of `Evolution`, of type `ℝ × Space → ℝ`. -/
   pressure : ℝ × Space → ℝ
+  /-- Force of `Evolution`, of type `Icc (0 : ℝ) A.T → Space → Space`. -/
   force : Icc (0 : ℝ) A.T → Space → Space
   force_continuous : Continuous (Function.uncurry force)
   velocity_match : ∀ t x, A.velocity.field t x=velocity (t,A.position t x)
@@ -68,7 +75,7 @@ theorem force_smooth (t : Icc (0 : ℝ) A.T) : ContDiff ℝ ∞ (E.force t) := b
   exact ((A.acceleration.smooth t).comp (E.inverse.smooth t)).neg
 
 theorem strain_eq (t : Icc (0 : ℝ) A.T) (x : Space) :
-    A.strain.field t x=
+    A.strain.field t x =
       fderiv ℝ (fun y => E.velocity (t,y)) (A.position t (A.ell • x)) :=
   A.strain_physical (fun s y => E.velocity (s,y))
     (fun s y => ((E.velocity_smooth s).differentiable (by simp)).differentiableAt)
@@ -80,6 +87,8 @@ theorem curvature_eq (t : Icc (0 : ℝ) A.T) (x : Space) :
     (fun s y => ((E.force_smooth s).differentiable (by simp)).differentiableAt)
     E.acceleration_match t x
 
+/-- Restrict time, bundling `inverse`, `velocity`, `pressure`, `force` and the required
+compatibility proofs. -/
 def restrictTime (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) :
     Evolution (A.restrictTime S hS hST) where
   inverse := E.inverse.restrictTime S hS hST

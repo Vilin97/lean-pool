@@ -6,14 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowExpansionResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowRecursion
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStress
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowStressSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBorelBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.RenormalizedHeatMoment
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBorelBase
 
 /-!
 # Finite slow residuals and their radial stress primitives
@@ -25,6 +22,9 @@ The finite profiles and all derivatives below are the actual functions from
 The stress operator is the two tangential radial operators in (24). It is
 not identified with the divergence of an unspecified symmetric tensor.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -271,6 +271,8 @@ theorem slowOrder_mono {h : ℝ} (hh : 0 ≤ h) : Monotone (slowOrder h) := by
   unfold slowOrder
   exact mul_le_mul_of_nonneg_right (by exact_mod_cast (Nat.mul_le_mul_left 2 hij)) hh
 
+/-- Pair tail size, given by `∑ ij ∈ (pairs N).filter (fun ij => N < ij.1 + ij.2), |K ij.1
+ij.2|`. -/
 noncomputable def pairTailSize (N : ℕ) (K : ℕ → ℕ → ℝ) : ℝ :=
   ∑ ij ∈ (pairs N).filter (fun ij => N < ij.1 + ij.2), |K ij.1 ij.2|
 
@@ -296,11 +298,14 @@ theorem pairTail_bound {q h : ℝ} (hq : 0 < q) (hq1 : q ≤ 1) (hh : 0 ≤ h)
       exact add_le_add_right (slowOrder_mono hh (Finset.mem_filter.mp hij).2) b
     _ = _ := (Finset.sum_mul _ _ _).symm
 
+/-- Transport kernel, constructed using `transportPair`. -/
 noncomputable def transportKernel (h e α : ℝ) (v u f : ℕ → InnerProfile)
     (w : InnerPoint) : ℕ → ℕ → ℝ :=
   transportPair w.1 α (fun j => v j w) (fun j => u j w) (fun j => f j w)
     (fun j => partialX (f j) w) (fun j => Z h (e + slowOrder h j) (f j) w)
 
+/-- Transport tail size, given by `pairTailSize N (transportKernel h e α v u f w) + |Z2 h (e +
+slowOrder h N) (f N) w|`. -/
 noncomputable def transportTailSize (N : ℕ) (h e α : ℝ)
     (v u f : ℕ → InnerProfile) (w : InnerPoint) : ℝ :=
   pairTailSize N (transportKernel h e α v u f w) +
@@ -326,6 +331,7 @@ theorem transportTail_bound {q h : ℝ} (hq : 0 < q) (hq1 : q ≤ 1) (hh : 0 ≤
   dsimp only [transportTailSize]
   nlinarith
 
+/-- Pressure tail size, constructed using `transportTailSize`. -/
 noncomputable def pressureTailSize (N : ℕ) (h C : ℝ) (f : SlowProfiles)
     (w : InnerPoint) : ℝ :=
   transportTailSize N h 0 (-1 / 2) f.flux f.axial f.flux w +
@@ -364,11 +370,14 @@ theorem pressureTail_bound {q h : ℝ} (hq : 0 < q) (hq1 : q ≤ 1) (hh : 0 ≤ 
 /-- The change from cylindrical radius R to the regular variable X. -/
 noncomputable def radiusPoint (w : InnerPoint) : InnerPoint := (w.1 ^ 2 / 2, w.2)
 
+/-- From radius, given by `F (Real.sqrt (2 * w.1), w.2)`. -/
 noncomputable def fromRadius (F : InnerProfile) (w : InnerPoint) : ℝ :=
   F (Real.sqrt (2 * w.1), w.2)
 
+/-- To radius, given by `f (radiusPoint w)`. -/
 noncomputable def toRadius (f : InnerProfile) (w : InnerPoint) : ℝ := f (radiusPoint w)
 
+/-- Swirl radius, given by `w.1 / C * toRadius f w`. -/
 noncomputable def swirlRadius (C : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
   w.1 / C * toRadius f w
 
@@ -431,9 +440,11 @@ noncomputable def thetaDensity (h C : ℝ) (f : SlowProfiles) (n : ℕ) (w : Inn
 noncomputable def zDensity (h : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
   w.1 * axialCoefficient h f n (radiusPoint w)
 
+/-- Theta stress, given by `fromRadius (SlowStressSupport.stress 2 (thetaDensity h C f n))`. -/
 noncomputable def thetaStress (h C : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   fromRadius (SlowStressSupport.stress 2 (thetaDensity h C f n))
 
+/-- Z stress, given by `fromRadius (SlowStressSupport.stress 1 (zDensity h f n))`. -/
 noncomputable def zStress (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   fromRadius (SlowStressSupport.stress 1 (zDensity h f n))
 
@@ -498,9 +509,11 @@ theorem zStress_identity {S : Set ℝ} (hS : IsOpen S) (h : ℝ)
   field_simp [hr.ne']
   linear_combination hi
 
+/-- Physical theta stress, given by `finiteProfile N h (angularExponent h) (thetaStress h C f)`. -/
 noncomputable def physicalThetaStress (N : ℕ) (h C : ℝ) (f : SlowProfiles) : PhysicalProfile :=
   finiteProfile N h (angularExponent h) (thetaStress h C f)
 
+/-- Physical Z stress, given by `finiteProfile N h (angularExponent h) (zStress h f)`. -/
 noncomputable def physicalZStress (N : ℕ) (h : ℝ) (f : SlowProfiles) : PhysicalProfile :=
   finiteProfile N h (angularExponent h) (zStress h f)
 
@@ -604,7 +617,7 @@ theorem navierStokesResidual_eq_stress_add_tails {S : Set ℝ} (hS : IsOpen S)
     (hphi : ∀ n ≤ N, ContDiffAt ℝ 2 (f.phi n) (SimilarityProfile.inner h (profilePoint t x)))
     (hu : ∀ n ≤ N, ContDiffAt ℝ 2 (f.axial n) (SimilarityProfile.inner h (profilePoint t x)))
     (hp : ∀ n ≤ N, DifferentiableAt ℝ (f.pressure n) (SimilarityProfile.inner h (profilePoint t
-      x))) :
+        x))) :
     ProblemStatement.navierStokesResidual (slowVelocity N h C f) (slowPressureField N h f) t x =
       tangentialStressForce (physicalThetaStress N h C f) (physicalZStress N h f) t x +
         retainedRadialForce N h C f t x + truncationResidual N h C f t x := by
@@ -637,7 +650,7 @@ theorem navierStokesResidual_eq_stress_add_truncation {S : Set ℝ} (hS : IsOpen
     (hu : ∀ n ≤ N, ContDiffAt ℝ 2 (f.axial n) (SimilarityProfile.inner h (profilePoint t x)))
     (hp : ∀ n ≤ N, DifferentiableAt ℝ (f.pressure n) (SimilarityProfile.inner h (profilePoint t x)))
     (hpressure : ∀ n ≤ N, pressureCoefficient h C f n (SimilarityProfile.inner h (profilePoint t
-      x)) = 0) :
+        x)) = 0) :
     ProblemStatement.navierStokesResidual (slowVelocity N h C f) (slowPressureField N h f) t x =
       tangentialStressForce (physicalThetaStress N h C f) (physicalZStress N h f) t x +
         truncationResidual N h C f t x := by
@@ -752,7 +765,7 @@ theorem timeOp_swirlRadius (h b C : ℝ) {f : InnerProfile} {w : InnerPoint}
       w.1 / C * T h (b - 1 / 2) f (radiusPoint w) := by
   unfold SlowStressSupport.timeOp
   change (-b * swirlRadius C f w + PositiveAxisSystem.dScale h * w.2 * partialEta (swirlRadius C f)
-    w +
+      w +
     w.1 / 2 * partialX (swirlRadius C f) w) / _ = _
   rw [partialX_swirlRadius C hf, partialEta_swirlRadius C hf]
   simp only [T, CoordinateAlgebra.timeCoeff, swirlRadius, toRadius, radiusPoint,
@@ -765,7 +778,7 @@ theorem axialOp_swirlRadius (h b C : ℝ) {f : InnerProfile} {w : InnerPoint}
       w.1 / C * Z h (b - 1 / 2) f (radiusPoint w) := by
   unfold SlowStressSupport.axialOp
   change (2 * w.2 * b * swirlRadius C f w + PositiveAxisSystem.edge w.2 * partialEta (swirlRadius C
-    f) w -
+      f) w -
     w.2 * w.1 * partialX (swirlRadius C f) w) / _ = _
   rw [partialX_swirlRadius C hf, partialEta_swirlRadius C hf]
   simp only [Z, CoordinateAlgebra.axialCoeff, swirlRadius, toRadius, radiusPoint,
@@ -831,7 +844,7 @@ theorem partialXX_swirlRadius (C : ℝ) {f : InnerProfile} {w : InnerPoint}
       (((show DifferentiableAt ℝ (fun y : InnerPoint => y.1) w from
           differentiableAt_fst).fun_pow 2).mul_const C⁻¹ |>.fun_mul (toRadius_differentiableAt hfx))
   have hd := ((LeadingStress.partialX_hasDerivAt (toRadius_differentiableAt hf')).div_const
-    C).fun_add
+      C).fun_add
     ((((hasDerivAt_id w.1).fun_pow 2).div_const C).fun_mul
       (LeadingStress.partialX_hasDerivAt (toRadius_differentiableAt hfx)))
   have hv := (LeadingStress.partialX_hasDerivAt hG).unique hd
@@ -847,13 +860,19 @@ theorem partialXX_swirlRadius (C : ℝ) {f : InnerProfile} {w : InnerPoint}
 the last axial-viscosity coefficient. -/
 abbrev TailIndex := Option (ℕ × ℕ)
 
+/-- Transport indices, given by `insert none (((pairs N).filter (fun ij => N < ij.1 +
+ij.2)).image some)`. -/
 noncomputable def transportIndices (N : ℕ) : Finset TailIndex :=
   insert none (((pairs N).filter (fun ij => N < ij.1 + ij.2)).image some)
 
+/-- Transport power as an element of `TailIndex → ℝ | none => e - 1 + slowOrder h (N + 1) | some
+ij => e - 1 + slowOrder h (ij.1 + ij.2)`. -/
 noncomputable def transportPower (N : ℕ) (h e : ℝ) : TailIndex → ℝ
   | none => e - 1 + slowOrder h (N + 1)
   | some ij => e - 1 + slowOrder h (ij.1 + ij.2)
 
+/-- Transport term as an element of `TailIndex → InnerProfile | none => fun w => -Z2 h (e +
+slowOrder h N) (f N) w | some ij => fun w => transportKernel h e α v u f w ij.1 ij.2`. -/
 noncomputable def transportTerm (N : ℕ) (h e α : ℝ)
     (v u f : ℕ → InnerProfile) : TailIndex → InnerProfile
   | none => fun w => -Z2 h (e + slowOrder h N) (f N) w
@@ -955,16 +974,21 @@ theorem transportCoefficient_smoothAt (h e α m : ℝ)
       exact AxisSourceRegularity.Z2_smooth h (e + slowOrder h n) (hf n (Nat.le_succ n)) hL
   exact (hlin.add hc).sub hp
 
+/-- Pressure index: an abbreviation for `Sum TailIndex TailIndex`. -/
 abbrev PressureIndex := Sum TailIndex TailIndex
 
+/-- Pressure indices, given by `((transportIndices N).image Sum.inl) ∪ ((transportIndices
+N).image Sum.inr)`. -/
 noncomputable def pressureIndices (N : ℕ) : Finset PressureIndex :=
   ((transportIndices N).image Sum.inl) ∪ ((transportIndices N).image Sum.inr)
 
+/-- Pressure power used in slow residual matching. -/
 noncomputable def pressurePower (N : ℕ) (h : ℝ) : PressureIndex → ℝ
   | Sum.inl i => transportPower N h 0 i
   | Sum.inr none => pressureExponent h + slowOrder h (N + 1)
   | Sum.inr (some ij) => pressureExponent h + slowOrder h (ij.1 + ij.2)
 
+/-- Pressure term used in slow residual matching. -/
 noncomputable def pressureTerm (N : ℕ) (h C : ℝ) (f : SlowProfiles) : PressureIndex → InnerProfile
   | Sum.inl i => transportTerm N h 0 (-(1 / 2)) f.flux f.axial f.flux i
   | Sum.inr none => omegaCoefficient h f N
@@ -1152,7 +1176,7 @@ theorem transportTail_inner_jet_bound {O K : Set InnerPoint} (hO : IsOpen O)
   refine ⟨C, hC, fun q hq hq1 w hw => ?_⟩
   have he : transportTail N q h e α v u f =
       fun y => ∑ i ∈ transportIndices N, q ^ transportPower N h e i * transportTerm N h e α v u f i
-        y :=
+          y :=
     funext (transportTail_eq_finite_monomials N q h e α v u f)
   rw [he]
   exact hb q hq hq1 w hw
@@ -1198,19 +1222,19 @@ theorem angular_radius_pair (h C : ℝ) (hC : C ≠ 0) (f : SlowProfiles) (i j :
         toRadius (f.flux i) w * swirlRadius C (f.phi j) w +
         w.1 ^ 2 * toRadius (f.axial i) w *
           SlowStressSupport.axialOp h (SlowStressSupport.orderExponent h j) (swirlRadius C (f.phi
-            j)) w =
+              j)) w =
       w.1 ^ 3 / C * transportKernel h (angularExponent h) 1 f.flux f.axial f.phi
         (radiusPoint w) i j := by
   rw [partialX_swirlRadius C hf, axialOp_swirlRadius h _ C hf, orderExponent_sub_half]
   simp only [toRadius, swirlRadius, transportKernel, transportPair, one_mul, radiusPoint]
-  field_simp [hC, hR] ; ring
+  field_simp [hC, hR]; ring
 
 theorem axial_radius_pair (h : ℝ) (f : SlowProfiles) (i j : ℕ)
     {w : InnerPoint} (hf : DifferentiableAt ℝ (f.axial j) (radiusPoint w)) :
     toRadius (f.flux i) w * partialX (toRadius (f.axial j)) w +
         w.1 * toRadius (f.axial i) w *
           SlowStressSupport.axialOp h (SlowStressSupport.orderExponent h j) (toRadius (f.axial j))
-            w =
+              w =
       w.1 * transportKernel h (axialExponent h) 0 f.flux f.axial f.axial
         (radiusPoint w) i j := by
   rw [partialX_toRadius hf, axialOp_toRadius h _ hf, orderExponent_eq_axial]
@@ -1372,7 +1396,7 @@ theorem zDensity_eq_axialDensity {S : Set ℝ} (hS : IsOpen S)
       exact partialX_toRadius_zero (((hu j hj).contDiffAt (x := (0, w.2))
         ((isOpen_univ.prod hS).mem_nhds ⟨mem_univ _, hw.2⟩)).differentiableAt (by simp))
     simp only [zDensity, hR, zero_mul, SlowStressSupport.axialWeighted, add_zero, zero_add,
-      sub_zero, hdz n le_rfl]
+        sub_zero, hdz n le_rfl]
     symm
     apply Finset.sum_eq_zero
     intro j hj
@@ -1413,7 +1437,7 @@ theorem inner_smoothAt_of_radial {S : Set ℝ} (hS : IsOpen S) {F E : InnerProfi
     {w : InnerPoint} (hX : 0 < w.1) (heta : w.2 ∈ S) : ContDiffAt ℝ ∞ E w := by
   have hs := fromRadius_smoothAt hX ((hF.contDiffAt
     ((isOpen_univ.prod hS).mem_nhds (show (Real.sqrt (2 * w.1), w.2) ∈ SlowStressSupport.region S
-      from
+        from
       ⟨mem_univ _, heta⟩))))
   apply hs.congr_of_eventuallyEq
   filter_upwards [(isOpen_Ioi.prod hS).mem_nhds ⟨hX, heta⟩] with y hy
@@ -1465,7 +1489,8 @@ theorem deriv_deriv_pullback_z {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   rw [he.deriv_eq]
   have hd := (SimilarityProfile.hasDerivAt_pullback_z hh hh1 hp
     ((SimilarityProfile.Z_smoothAt (b := b) hf (SimilarityProfile.L_pos hh hh1
-      hp).ne').differentiableAt (by norm_num))
+        hp).ne').differentiableAt (by
+        norm_num))
     (b := b - CoordinateAlgebra.D h)).deriv
   rw [show b - CoordinateAlgebra.D h - CoordinateAlgebra.D h =
     b - 2 * CoordinateAlgebra.D h by ring] at hd

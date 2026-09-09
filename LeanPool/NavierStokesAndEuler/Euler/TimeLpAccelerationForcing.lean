@@ -6,10 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # The actual forcing in the projected acceleration equation
@@ -18,6 +24,9 @@ Both the mean and transverse strong equations use `Q* (f - 2 Q₁ v)`.
 This module gives its genuine parameter regularity and factorial estimate,
 with the explicit amplitude needed by the actual Gram inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -59,10 +68,10 @@ theorem forcing_bound (T : ℝ) (hT : 0 ≤ T)
     (hf : ContDiff ℝ ∞ f) (hv : ContDiff ℝ ∞ v)
     (R C₀ C₁ F V : ℝ) (hR : 0 ≤ R) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
     (hF : 0 ≤ F) (hV : 0 ≤ V) (d : ℕ)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant R 0 n)
-    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant R 0 n)
-    (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ F*majorant R d n)
-    (hbv : ∀ n x, ‖iteratedFDeriv ℝ n v x‖ ≤ V*majorant R d n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant R 0 n)
+    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant R 0 n)
+    (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ F * majorant R d n)
+    (hbv : ∀ n x, ‖iteratedFDeriv ℝ n v x‖ ≤ V * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (forcing T hT Q Q₁ f v) x‖ ≤
       (3*C₀*(F+6*C₁*V))*majorant R d n := by
@@ -83,7 +92,7 @@ theorem forcing_bound (T : ℝ) (hT : 0 ≤ T)
     R F (6*C₁*V) d hbf hb2w
   have hAdj : ContDiff ℝ ∞ (fun y => (timeMultiplier T hT (Q y)).adjoint) :=
     (realAdjoint (U := TimeLp T U) (E := TimeLp T E)).contDiff.comp (contDiff_timeMultiplier T hT Q
-      hQ)
+        hQ)
   have h := clm_apply_bound
     (fun y => (timeMultiplier T hT (Q y)).adjoint) r hAdj hr R C₀ (F+6*C₁*V)
     hR hC₀ (by positivity) 0 d

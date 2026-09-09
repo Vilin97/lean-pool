@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryPressureCosts
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 
 /-! The pressure and initial-gradient costs allow one common scale choice
 with any finite collection of the other source costs. Their finite partial
 sums control the actual low-bound increments. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +24,7 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceScaleBounds
   EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence EulerPacketGeometryLowBounds
 open scoped Topology
 
+/-- Good cost spec, bundling `d`, `B`, `N`, `a` and the required compatibility proofs. -/
 def goodCostSpec (CM : ℝ) (hCM : 0 ≤ CM) : CostSpec where
   d := 1
   B := 5
@@ -64,10 +67,11 @@ theorem finite_sum_le {f : ℕ → ℝ} {a : ℝ} (hf : SmallSeries f a) (N : �
 
 theorem upper_increment_series {J : ℕ} {Cθ CM CMn CHn c : ℝ} {x : ℕ → ℝ}
     {increment error : ℕ → ℝ} {a b e : ℝ}
-    (hg : SmallSeries (fun n => 2*CM*goodRatio*goodCost J x n) a)
+    (hg : SmallSeries (fun n => 2 * CM * goodRatio * goodCost J x n) a)
     (hb : SmallSeries (badCost J Cθ CM CMn CHn c x) b) (he : SmallSeries error e)
     (h0 : ∀ n, 0 ≤ increment n)
-    (h : ∀ n, increment n ≤ 2*CM*goodRatio*goodCost J x n+badCost J Cθ CM CMn CHn c x n+error n) :
+    (h : ∀ n, increment n ≤ 2 * CM * goodRatio * goodCost J x n + badCost J Cθ CM CMn CHn c x n +
+        error n) :
     SmallSeries increment (a+b+e) :=
   (add_series (add_series hg hb) he).mono h0 h
 
@@ -75,12 +79,12 @@ theorem initial_increment_series {J : ℕ} {Cθ CM CMn CHn c : ℝ} {x : ℕ →
     {increment error : ℕ → ℝ} {b e : ℝ}
     (hb : SmallSeries (badCost J Cθ CM CMn CHn c x) b) (he : SmallSeries error e)
     (h0 : ∀ n, 0 ≤ increment n)
-    (h : ∀ n, increment n ≤ badCost J Cθ CM CMn CHn c x n+error n) :
+    (h : ∀ n, increment n ≤ badCost J Cθ CM CMn CHn c x n + error n) :
     SmallSeries increment (b+e) := (add_series hb he).mono h0 h
 
 /-- The added pressure costs share the stage index and base scale with
 any finite list of the existing source costs. -/
-theorem uniform_choice {ι : Type*} [Fintype ι] (s : ι → CostSpec)
+theorem uniform_choice {ι : Type*} [Finite ι] (s : ι → CostSpec)
     (Cθ CM CMn CHn c : ℝ) (hθ : 0 ≤ Cθ) (hM : 0 ≤ CM) (hMn : 0 ≤ CMn) (hHn : 0 ≤ CHn) :
     ∃ J : ℕ, 3 ≤ J ∧ ∀ η : ℝ, 0 < η → ∃ X₀ : ℝ, 8 ≤ X₀ ∧
       ∀ x : ℕ → ℝ, X₀ ≤ x 0 → (∀ n, x (n+1)=((J+n : ℕ) : ℝ)^2*x n) →
@@ -115,7 +119,7 @@ theorem uniform_choice {ι : Type*} [Fintype ι] (s : ι → CostSpec)
 
 /-- The same choice covers the literal initial polynomial frequency and
 shear and every subsequent recursively constructed scale. -/
-theorem literal_uniform_choice {ι : Type*} [Fintype ι] (s : ι → CostSpec) (D : ℕ)
+theorem literal_uniform_choice {ι : Type*} [Finite ι] (s : ι → CostSpec) (D : ℕ)
     (Cθ CM CMn CHn c : ℝ) (hθ : 0 ≤ Cθ) (hM : 0 ≤ CM) (hMn : 0 ≤ CMn) (hHn : 0 ≤ CHn) :
     ∃ J : ℕ, 3 ≤ J ∧ ∀ η : ℝ, 0 < η → ∃ X₀ : ℝ, 8 ≤ X₀ ∧ ∀ X : ℝ, X₀ ≤ X →
       X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7) ∧ X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4) ∧

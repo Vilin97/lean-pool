@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlTime
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlBounds
+
+/-! Exact time-profile normalization of the actual slow curl and its time derivative. -/
 
 @[expose] public section
 
-/-! Exact time-profile normalization of the actual slow curl and its time derivative. -/
 
 noncomputable section
 
@@ -28,13 +31,18 @@ section General
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderSlowCurlWeight1 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderSlowCurlWeight2 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderSlowCurlWeight3 : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderSlowCurlWeight4 : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
 
-variable (g : C(K,ℝ)) (G : C(K,Space →ᵇ Space →L[ℝ] Space))
-  (p : C(K,LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+variable (g : C(K, ℝ)) (G : C(K, Space →ᵇ Space →L[ℝ] Space))
+  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 include hp in
 theorem term_weight (i : Fin 3) : term P G (weight g p) i = weight g (term P G p i) := by
@@ -58,7 +66,7 @@ theorem normalized_path_block_bound (hg : ∀ t, 0 < g t)
     (hG : ContDiff ℝ ∞ (translateCoefficientPath G))
     (q : ℕ) (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C*majorant Rc 0 n)
+    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ) (hbp : ∀ n, block standardDirection q
       (fun a : LiftTangent => pathTranslate P a (normalize g hg p)) n 0 ≤ D*majorant R d n)
     (n : ℕ) :
@@ -74,9 +82,9 @@ end General
 section Time
 
 variable (P : ℝ) [Fact (0 < P)] (T : ℝ)
-  (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
-  (G G₁ : C(Icc (0 : ℝ) T,Space →ᵇ Space →L[ℝ] Space))
-  (p f : C(Icc (0 : ℝ) T,LiftL2 P))
+  (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+  (G G₁ : C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
+  (p f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
 
@@ -95,8 +103,8 @@ theorem normalized_derivative_block_bound
     (hG₁ : ContDiff ℝ ∞ (translateCoefficientPath G₁))
     (q : ℕ) (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C*majorant Rc 0 n)
-    (hbG₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G₁) a‖ ≤ C*majorant Rc 0 n)
+    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C * majorant Rc 0 n)
+    (hbG₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G₁) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ)
     (hbp : ∀ n, block standardDirection q
       (fun a : LiftTangent => pathTranslate P a (normalize g hg p)) n 0 ≤ D*majorant R d n)

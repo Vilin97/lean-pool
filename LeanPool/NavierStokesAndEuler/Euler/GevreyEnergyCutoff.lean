@@ -6,19 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyEnergyLimit
-public import LeanPool.NavierStokesAndEuler.Euler.EnergyWordCoordinates
+public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricEstimate
+import LeanPool.NavierStokesAndEuler.Euler.EnergyWordCoordinates
+import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteSum
+
+/-! Monotonicity of the actual finite Gevrey metric energy in the external cutoff. -/
 
 @[expose] public section
 
-/-! Monotonicity of the actual finite Gevrey metric energy in the external cutoff. -/
 
 noncomputable section
 
 namespace EulerGevreyEnergyCutoff
 
 open Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerGevreyMetricComparison
-  EulerGevreyMetricEstimate EulerGevreyEnergyLimit EulerEnergyWordCoordinates
+  EulerGevreyMetricEstimate  EulerEnergyWordCoordinates
   EulerWeightedCylinderEnergy EulerFiniteMetricEnergy EulerPacketWeights EulerBaseWordMetric
 
 /-- The literal inclusion of external words into a larger cutoff. -/
@@ -43,7 +45,7 @@ theorem externalWordInclusion_injective {N M : ℕ} (hNM : N ≤ M) :
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The retained energy coordinates are identical in a larger cutoff. -/
-theorem energyValues_inclusion {s N M q : ℕ} (hNM : N ≤ M) (hM : M+q ≤ s)
+theorem energyValues_inclusion {s N M q : ℕ} (hNM : N ≤ M) (hM : M + q ≤ s)
     (u : SobolevSpace period s) (I : ExternalWord N) :
     energyValues period q M hM u (externalWordInclusion hNM I) =
       energyValues period q N (by omega) u I := by
@@ -52,11 +54,11 @@ theorem energyValues_inclusion {s N M q : ℕ} (hNM : N ≤ M) (hM : M+q ≤ s)
   rfl
 
 /-- The literal finite Gevrey metric energy increases with its external derivative cutoff. -/
-theorem energyNorm_cutoff_mono {s N M : ℕ} (hNM : N ≤ M) (hM : M+6 ≤ s)
+theorem energyNorm_cutoff_mono {s N M : ℕ} (hNM : N ≤ M) (hM : M + 6 ≤ s)
     (ρ : ℝ) (hρ : 0 < ρ) (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) :
     energyNorm period N (by omega) ρ K u ≤ energyNorm period M hM ρ K u := by
   unfold energyNorm weightedMetricSum
-  apply Finset.sum_le_sum_of_injOn (externalWordInclusion hNM)
+  apply NavierStokesAndEuler.sum_le_sum_of_injOn (externalWordInclusion hNM)
     (externalWordInclusion_injective hNM).injOn (Finset.subset_univ _)
   · intro I _
     rw [energyValues_inclusion]

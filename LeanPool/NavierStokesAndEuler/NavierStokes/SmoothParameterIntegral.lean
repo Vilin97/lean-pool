@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ParametricIntegral
 public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # Smooth parameter integrals with local integrable majorants
@@ -21,6 +18,9 @@ the integrand. Their successive derivative relation is proved using dominated
 differentiation and the currying identity for `iteratedFDeriv`; it is not an
 assumption on a separately supplied family of jets.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

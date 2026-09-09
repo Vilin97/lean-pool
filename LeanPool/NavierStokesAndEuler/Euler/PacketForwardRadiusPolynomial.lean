@@ -9,12 +9,16 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRadiusPolynomial
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCommonRadius
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentForwardBudget
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
+import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
+import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
 
 /-! The direct-forward source radius and its literal common-radius
 enlargement obey the same fixed polynomial envelope as the joined branch.
 The homogeneous growth constant is arbitrary and remains an input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,7 +52,7 @@ theorem source_radius_le (T R C C1 Cp W : ℝ) (hW : 1 ≤ W)
     unfold EulerSourceCylinderForwardSobolev.forcingCost
     positivity
   have hforward : EulerPacketParentTransverseCosts.forwardCost 6 T 0 R C C1 Cp ≤ forwardEnvelope V
-    := by
+      := by
     apply forward_scalar_le T Cp (0+2) _ (18*Ri*C*C1) (4*Ri) V
       hT0 hT1 hCp0 (by norm_num) hpf0 (by positivity) (by positivity) hV0
       (hCp.trans hWV) ((by linarith : 0+2 ≤ W+2).trans hb.2.1) hpf
@@ -84,7 +88,7 @@ theorem common_le (W : ℝ) (hW : 0 ≤ W) (hR : L.Rc ≤ W)
   have hp := physicalCost_le L.Ri L.C₀ L.C₁ 1 1 W (inverse_nonneg L)
     L.C₀_nonneg L.C₁_nonneg zero_le_one zero_le_one hW hI hC hC1 le_rfl le_rfl
   unfold EulerTransversePacketForward.Budget.commonCost
-    EulerTransversePacketForward.Budget.velocityCost
+      EulerTransversePacketForward.Budget.velocityCost
     EulerTransversePacketForward.Budget.derivativeCost
   calc
     _ ≤ 3*coeff W W+physicalEnvelope W := add_le_add (by gcongr) hp
@@ -95,7 +99,7 @@ theorem common_le (W : ℝ) (hW : 0 ≤ W) (hR : L.Rc ≤ W)
 theorem grade_sum_le (N : EulerTransversePacketJoin.NormalBudget D 6 L.R)
     (W : ℝ) (hW : 0 ≤ W) (hNR : N.Rc ≤ W) (hNC : N.C ≤ W) (hNI : N.Ri ≤ W)
     (hcommon : L.commonCost ≤ commonEnvelope W) :
-    L.commonCost+L.correctorAmplitude (P := period) N+L.correctorTimeAmplitude (P := period) N+
+    L.commonCost+L.correctorAmplitude (P := period) N+L.correctorTimeAmplitude (P := period) N +
       3*L.pressureAmplitude (P := period) N ≤ gradeEnvelope W := by
   have hn := normal_block_le N W hW hNR hNC hNI
   have hp := pressureCost_le N.Ri N.C 1 L.commonCost W N.Ri_nonneg N.C_nonneg zero_le_one
@@ -109,9 +113,9 @@ theorem grade_sum_le (N : EulerTransversePacketJoin.NormalBudget D 6 L.R)
     EulerTransversePacketForward.Budget.correctorTimeAmplitude
     EulerTransversePacketForward.Budget.pressureAmplitude
   calc
-    _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W)+
+    _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W) +
         108*(normalEnvelope W)^2*(period*commonEnvelope W)+3*(period*pressureEnvelope W) := by
-          gcongr
+            gcongr
     _ = _ := by unfold gradeEnvelope; ring
 
 variable {M : EulerMeanPacketProvider.Data} {Rm Tc : ℝ} {O : Operators}
@@ -120,10 +124,14 @@ variable {M : EulerMeanPacketProvider.Data} {Rm Tc : ℝ} {O : Operators}
   (N : EulerTransversePacketJoin.NormalBudget D 6 L.R) (BC : CoefficientBudget C)
   (δ : ℝ) (ξ : U)
 
+/-- Canonical radius, given by `EulerPacketForwardCommonRadius.commonRadius LM L N BC (wordCost
+(Fin 4) 6 δ*‖ξ‖) (wordRadius (Fin 4) δ)`. -/
 def canonicalRadius : ℝ :=
   EulerPacketForwardCommonRadius.commonRadius LM L N BC
     (wordCost (Fin 4) 6 δ*‖ξ‖) (wordRadius (Fin 4) δ)
 
+/-- Radius primitives data, collecting `one`, `total_time`, `mean_time`, `mean_inverse_time`,
+`original_forward`, `original_mean` and their compatibility conditions. -/
 structure RadiusPrimitives (W : ℝ) : Prop where
   one : 1 ≤ W
   total_time : D.T ≤ 1
@@ -164,12 +172,12 @@ theorem canonicalRadius_le_envelope (W : ℝ) (hδ : 0 < δ)
   have h2 := L.correctorTimeAmplitude_nonneg (P := period) N
   have h3 := L.pressureAmplitude_nonneg (P := period) N
   have hb0 : L.commonCost ≤ gradeEnvelope W := by linarith only [hg,h1,h2,h3]
-  have hb1 : L.correctorAmplitude (P := period) N ≤ gradeEnvelope W := by linarith only
-    [hg,h0,h2,h3]
-  have hb2 : L.correctorTimeAmplitude (P := period) N ≤ gradeEnvelope W := by linarith only
-    [hg,h0,h1,h3]
-  have hb3 : 3*L.pressureAmplitude (P := period) N ≤ gradeEnvelope W := by linarith only
-    [hg,h0,h1,h2]
+  have hb1 : L.correctorAmplitude (P := period) N ≤ gradeEnvelope W := by
+      linarith only [hg,h0,h2,h3]
+  have hb2 : L.correctorTimeAmplitude (P := period) N ≤ gradeEnvelope W := by
+      linarith only [hg,h0,h1,h3]
+  have hb3 : 3*L.pressureAmplitude (P := period) N ≤ gradeEnvelope W := by
+      linarith only [hg,h0,h1,h2]
   have hgrade (c t : ℝ) (hc0 : 0 ≤ c) (hct : c ≤ t) :
       L.gradeRadius (P := period) N c ≤ W+gradeEnvelope W*t := by
     have ht0 := hc0.trans hct
@@ -200,7 +208,7 @@ theorem canonicalRadius_le_envelope (W : ℝ) (hδ : 0 < δ)
   have hb : 16*BC.Rc ≤ 16*W := by gcongr; exact H.coefficient_radius
   unfold radiusEnvelope
   nlinarith only
-    [H.original_mean,H.original_forward,H.coefficient_cost,hb,hm,hg1,hgT,hextra,hreq,hjW]
+      [H.original_mean,H.original_forward,H.coefficient_cost,hb,hm,hg1,hgT,hextra,hreq,hjW]
 
 theorem canonicalRadius_power (W : ℝ) (hδ : 0 < δ)
     (H : RadiusPrimitives L LM N BC δ ξ W) :

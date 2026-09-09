@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStateRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FiniteHeadClass
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.FiniteHeadClass
 
 /-!
 # Weighted bounds for the literal signed cross-covariance defect
@@ -19,6 +17,9 @@ The requested moving stress preserves the residual class.  Their difference
 is retained on every band; only the supplied tail identity makes it vanish.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SignedCrossDefectClass
@@ -26,6 +27,7 @@ namespace NavierStokes.SignedCrossDefectClass
 open Set WeightedClasses MeanIncrementBounds CorrectionState SignedMeanGain LabelSumBounds
 open scoped ContDiff BigOperators
 
+/-- Point: an abbreviation for `SignedMeanGain.Point`. -/
 abbrev Point := SignedMeanGain.Point
 
 section Family
@@ -158,14 +160,14 @@ theorem residual_defects_all_exponents (G : Geometry) (c : Context Point) (u : S
     ∀ γ : ℝ,
       MeanClass G.strip γ
         (StateMomentBalances.meanBar (crossTensor f a 0 1) - physicalSigma G 2 (u.thetaResidual c))
-          ∧
+            ∧
       MeanClass G.strip γ
         (StateMomentBalances.meanBar (crossTensor f a 0 2) - physicalSigma G 1 (u.axialResidual c))
-          := by
+            := by
   obtain ⟨hbaseθ, hbasez⟩ := residual_defects_mem G c u f a hS hθreg hzreg hθ hz
   have hzeroθ : ∀ n, N ≤ n → ∀ x ∈ G.strip.domain,
       (StateMomentBalances.meanBar (crossTensor f a 0 1) - physicalSigma G 2 (u.thetaResidual c)) n
-        x = 0 := by
+          x = 0 := by
     intro n hn x hx
     have he := htail n hn x hx 0
     change StateMomentBalances.meanBar (crossTensor f a 0 1) n x =
@@ -173,7 +175,7 @@ theorem residual_defects_all_exponents (G : Geometry) (c : Context Point) (u : S
     exact sub_eq_zero.mpr he
   have hzeroz : ∀ n, N ≤ n → ∀ x ∈ G.strip.domain,
       (StateMomentBalances.meanBar (crossTensor f a 0 2) - physicalSigma G 1 (u.axialResidual c)) n
-        x = 0 := by
+          x = 0 := by
     intro n hn x hx
     have he := htail n hn x hx 1
     change StateMomentBalances.meanBar (crossTensor f a 0 2) n x =
@@ -200,12 +202,12 @@ theorem residual_defects_all_exponents_of_primitive
     ∀ γ : ℝ,
       MeanClass G.strip γ
         (StateMomentBalances.meanBar (crossTensor f a 0 1) - physicalSigma G 2 (u.thetaResidual c))
-          ∧
+            ∧
       MeanClass G.strip γ
         (StateMomentBalances.meanBar (crossTensor f a 0 2) - physicalSigma G 1 (u.axialResidual c))
-          := by
+            := by
   have Hg : MeanStateRegularity.PrimitiveData G.region G.gauge.radial.inner G.gauge.radial.outer c
-    u := by
+      u := by
     simpa only [G.inner_eq, G.outer_eq] using H
   have hθreg : MovingField G (u.thetaResidual c) := H.theta G.patch.a_pos G.patch.a_lt_b
   have hzreg : MovingField G (u.axialResidual c) := by

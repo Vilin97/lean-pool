@@ -6,14 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedPhysicalFieldsChoice
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCorrectionPotential
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftCorrection
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrequencyBounds
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftGraph
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerPointwiseGevrey
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalPressureGevrey
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Actual weighted correction and pressure norms bound the physical
 velocity gradient and the Hessian of the constructed scalar potential
 for that same correction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +36,8 @@ open scoped ContDiff
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
 
+/-- Weighted physical gradient cost, given by `((1+9*CF)*physicalFixedCost D R CF ρ⁻¹
+1)*(sobolevEmbeddingConstant P 3*Cw)`. -/
 def weightedPhysicalGradientCost (R CF ρ Cw : ℝ) : ℝ :=
   ((1+9*CF)*physicalFixedCost D R CF ρ⁻¹ 1)*(sobolevEmbeddingConstant P 3*Cw)
 
@@ -43,20 +52,20 @@ theorem weightedPhysicalGradientCost_nonneg (R CF ρ Cw : ℝ)
 variable {A : Data P D.T} (Q : Budget P D.T_pos A)
   (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-  (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
-  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+  (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
+  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
   (R CF : ℝ) (hR : 0 ≤ R) (hCF : 0 ≤ CF)
   (hFb : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ CF*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ CF * majorant R 0 n)
 
 include hX hXY hY hdet hR hCF hFb in
 theorem Budget.physical_gradient_hessian_of_weighted (k ρ Cw d : ℝ)
-    (hk : 1 ≤ k) (hκ : A.κ=k⁻¹) (hm : A.direction=D.m₀)
+    (hk : 1 ≤ k) (hκ : A.κ = k⁻¹) (hm : A.direction = D.m₀)
     (hρ : 0 < ρ) (hCw : 0 ≤ Cw) (hd : 0 ≤ d)
     (he : ∀ n (t : Icc (0 : ℝ) D.T), weightedNorm P 6 n ρ
-      ((Q.fieldTower P).realization (n+6) t) ≤ Cw*d)
+      ((Q.fieldTower P).realization (n + 6) t) ≤ Cw * d)
     (hp : ∀ n (t : Icc (0 : ℝ) D.T), weightedNorm P 6 n ρ
-      ((Q.pressureTower P).realization (n+6) t) ≤ Cw*d)
+      ((Q.pressureTower P).realization (n + 6) t) ≤ Cw * d)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖fderiv ℝ (fun y => k⁻¹ • D.F.field t (Y t y)
       (Q.pointField P t (cylinderGraph P k D.m₀ (Y t y)))) x‖ ≤

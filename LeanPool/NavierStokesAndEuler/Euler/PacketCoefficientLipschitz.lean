@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseSourceCoefficientPath
-public import Mathlib.Analysis.Calculus.MeanValue
+
+/-! Uniform label difference estimates from genuine coefficient derivatives. -/
 
 @[expose] public section
 
-/-! Uniform label difference estimates from genuine coefficient derivatives. -/
 
 noncomputable section
 
@@ -24,17 +24,41 @@ section Coefficients
 
 variable {T : ℝ} {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance : NormedAddCommGroup (Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ V) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,Space →ᵇ V) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,Space →ᵇ V) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,Space →ᵇ (Space →L[ℝ] V)) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,Space →ᵇ (Space →L[ℝ] V)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCoefficientLipschitz1 : NormedAddCommGroup (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ V)` instance to shorten typeclass synthesis. -/
+local instance instPacketCoefficientLipschitz2 : NormedSpace ℝ (Space →ᵇ V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,Space →ᵇ V)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCoefficientLipschitz3 : NormedAddCommGroup C(Icc (0 : ℝ) T,Space →ᵇ V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,Space →ᵇ V)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCoefficientLipschitz4 : NormedSpace ℝ C(Icc (0 : ℝ) T,Space →ᵇ V) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCoefficientLipschitz5 : NormedAddCommGroup (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] V)` instance to shorten typeclass synthesis. -/
+local instance instPacketCoefficientLipschitz6 : NormedSpace ℝ (Space →L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V))` instance to shorten
+typeclass synthesis. -/
+local instance instPacketCoefficientLipschitz7 : NormedAddCommGroup (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V))` instance to shorten typeclass
+synthesis. -/
+local instance instPacketCoefficientLipschitz8 : NormedSpace ℝ (Space →ᵇ (Space →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,Space →ᵇ (Space →L[ℝ] V))` instance
+to shorten typeclass synthesis. -/
+local instance instPacketCoefficientLipschitz9 : NormedAddCommGroup C(Icc (0 : ℝ) T,Space →ᵇ (Space
+    →L[ℝ] V)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,Space →ᵇ (Space →L[ℝ] V))` instance to
+shorten typeclass synthesis. -/
+local instance instPacketCoefficientLipschitz10 : NormedSpace ℝ C(Icc (0 : ℝ) T,Space →ᵇ (Space
+    →L[ℝ] V)) := inferInstance
 
 theorem coefficient_label_norm (A : SmoothCoefficientPath (Icc (0 : ℝ) T) V) (x : Space) :
     ‖pathEvaluation x A.field‖ ≤ ‖A.field‖ := by

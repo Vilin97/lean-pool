@@ -8,14 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureGradient
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceResidual
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
-
-@[expose] public section
 
 /-! The literal initialized finite packet has a genuine pressure-gradient
 Field in the closed lifted gradient space.  Both the mean and oscillatory
 pieces come from the actual source inverses. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +28,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D)
 
+/-- Pressure gradient witness, constructed using `GradientWitness.compact`. -/
 def pressureGradientWitness (κ : ℝ) (m : Space) :
     GradientWitness P D.T κ m (scalar τ hτ hτT B Y) :=
   GradientWitness.compact (scalar τ hτ hτT B Y)
@@ -47,6 +48,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) {raw : VectorField} (G : Forcing P D raw)
 
+/-- Pressure gradient witness, constructed using `GradientWitness.compact`. -/
 def pressureGradientWitness (κ : ℝ) (m : Space) :
     GradientWitness P D.T κ m (scalar τ hτ hτT B G) :=
   GradientWitness.compact (scalar τ hτ hτT B G)
@@ -68,13 +70,15 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
   (κ : ℝ) (m : Space)
 
-def joinedSource_highPressureWitness_step (p : ℕ) (hp : 2 ≤ p) :
+/-- Joined source high pressure witness step as an element of `GradientWitness P M.T κ m
+(joinedSourceProfiles P M D τ hτ hτT B primary p).highPressure`. -/
+def joinedSourceHighPressureWitnessStep (p : ℕ) (hp : 2 ≤ p) :
     GradientWitness P M.T κ m
       (joinedSourceProfiles P M D τ hτ hτT B primary p).highPressure := by
   let h : Nonempty (EulerTransversePacketProvider.Forcing P D
       (highForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_highForcing P M D hTime τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceHighForcing P M D hTime τ hτ hτT B primary hprimary p hp⟩
   have he : joinedSourceProfiles P M D τ hτ hτT B primary p =
       step (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary) := profiles_step _ _ p hp
@@ -85,13 +89,15 @@ def joinedSource_highPressureWitness_step (p : ℕ) (hp : 2 ≤ p) :
   exact (EulerTransversePacketJoin.pressureGradientWitness τ hτ hτT B
     (Classical.choice h) κ m).changeTime hTime.symm
 
-def joinedSource_meanPressureWitness_step (p : ℕ) (hp : 2 ≤ p) :
+/-- Joined source mean pressure witness step as an element of `GradientWitness P M.T κ m
+(joinedSourceProfiles P M D τ hτ hτT B primary p).meanPressure`. -/
+def joinedSourceMeanPressureWitnessStep (p : ℕ) (hp : 2 ≤ p) :
     GradientWitness P M.T κ m
       (joinedSourceProfiles P M D τ hτ hτT B primary p).meanPressure := by
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
-    ⟨joinedSource_meanForcing P M D hTime τ hτ hτT B primary hprimary p hp⟩
+    ⟨joinedSourceMeanForcing P M D hTime τ hτ hτT B primary hprimary p hp⟩
   have he : joinedSourceProfiles P M D τ hτ hτT B primary p =
       step (joinedSourceOperators P M D τ hτ hτT B) p
         (joinedSourceProfiles P M D τ hτ hτT B primary) := profiles_step _ _ p hp
@@ -100,7 +106,9 @@ def joinedSource_meanPressureWitness_step (p : ℕ) (hp : 2 ≤ p) :
   rw [EulerMeanPacketProvider.meanSolve_of_admissible M _ h]
   exact (Classical.choice h).pressureGradientWitness P κ m
 
-def joinedSource_highPressureWitness
+/-- Joined source high pressure witness as an element of `GradientWitness P M.T κ m
+(joinedSourceProfiles P M D τ hτ hτT B primary p).highPressure`. -/
+def joinedSourceHighPressureWitness
     (hπ : GradientWitness P M.T κ m primary.highPressure) (p : ℕ) :
     GradientWitness P M.T κ m
       (joinedSourceProfiles P M D τ hτ hτT B primary p).highPressure := by
@@ -111,10 +119,12 @@ def joinedSource_highPressureWitness
   by_cases hp1 : p = 1
   · subst p
     simpa only [joinedSourceProfiles,profiles_one] using hπ
-  exact joinedSource_highPressureWitness_step P M D hTime τ hτ hτT B
+  exact joinedSourceHighPressureWitnessStep P M D hTime τ hτ hτT B
     primary hprimary κ m p (by omega)
 
-def joinedSource_meanPressureWitness
+/-- Joined source mean pressure witness as an element of `GradientWitness P M.T κ m
+(joinedSourceProfiles P M D τ hτ hτT B primary p).meanPressure`. -/
+def joinedSourceMeanPressureWitness
     (hq : GradientWitness P M.T κ m primary.meanPressure) (p : ℕ) :
     GradientWitness P M.T κ m
       (joinedSourceProfiles P M D τ hτ hτT B primary p).meanPressure := by
@@ -125,18 +135,19 @@ def joinedSource_meanPressureWitness
   by_cases hp1 : p = 1
   · subst p
     simpa only [joinedSourceProfiles,profiles_one] using hq
-  exact joinedSource_meanPressureWitness_step P M D hTime τ hτ hτT B
+  exact joinedSourceMeanPressureWitnessStep P M D hTime τ hτ hτT B
     primary hprimary κ m p (by omega)
 
+/-- Joined pressure witness, constructed using `GradientWitness.evaluateFamily`. -/
 def joinedPressureWitness
     (hq : GradientWitness P M.T κ m primary.meanPressure)
     (hπ : GradientWitness P M.T κ m primary.highPressure) (N : ℕ) (r : ℝ) :
     GradientWitness P M.T κ m (fieldSum (N+1) r (assembledPressure N
       (joinedSourceProfiles P M D τ hτ hτT B primary))) :=
   GradientWitness.evaluateFamily (N+1) r _ (GradientWitness.assembleFamily N _ _
-    (fun i _ => joinedSource_meanPressureWitness P M D hTime τ hτ hτT B
+    (fun i _ => joinedSourceMeanPressureWitness P M D hTime τ hτ hτT B
       primary hprimary κ m hq i)
-    (fun i _ => joinedSource_highPressureWitness P M D hTime τ hτ hτT B
+    (fun i _ => joinedSourceHighPressureWitness P M D hTime τ hτ hτT B
       primary hprimary κ m hπ i))
 
 end EulerPacketCylinderField
@@ -153,6 +164,8 @@ variable (M : EulerMeanPacketProvider.Data)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Initialized pressure, given by `fieldSum (N+1) κ (assembledPressure N (initializedProfiles M
+D τ hτ hτT B δ hδ ξ hs α))`. -/
 def initializedPressure (N : ℕ) (κ : ℝ) : ScalarField :=
   fieldSum (N+1) κ (assembledPressure N (initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 

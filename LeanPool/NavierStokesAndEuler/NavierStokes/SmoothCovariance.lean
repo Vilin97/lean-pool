@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.Covariance
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Topology.MetricSpace.Thickening
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Smooth positive covariance solves
@@ -27,6 +24,9 @@ integrated columns. No assertion concerns extension through a zero-amplitude
 edge, where the strict cone hypotheses fail.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SmoothCovariance
@@ -34,16 +34,22 @@ namespace NavierStokes.SmoothCovariance
 open Matrix Set
 open scoped ContDiff Topology
 
+/-- Mat2: an abbreviation for `Matrix (Fin 2) (Fin 2) ℝ`. -/
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+/-- Vec2: an abbreviation for `Fin 2 → ℝ /- The entrywise sup norm makes all metric assertions
+below unambiguous. -/`. -/
 abbrev Vec2 := Fin 2 → ℝ
 
 /- The entrywise sup norm makes all metric assertions below unambiguous. -/
-local instance : NormedAddCommGroup Mat2 :=
+/-- Cache the standard `NormedAddCommGroup Mat2` instance to shorten typeclass synthesis. -/
+local instance instSmoothCovariance1 : NormedAddCommGroup Mat2 :=
   inferInstanceAs (NormedAddCommGroup (Fin 2 → Fin 2 → ℝ))
 
-local instance : NormedSpace ℝ Mat2 :=
+/-- Cache the standard `NormedSpace ℝ Mat2` instance to shorten typeclass synthesis. -/
+local instance instSmoothCovariance2 : NormedSpace ℝ Mat2 :=
   inferInstanceAs (NormedSpace ℝ (Fin 2 → Fin 2 → ℝ))
 
+/-- Datum: an abbreviation for `Mat2 × Vec2`. -/
 abbrev Datum := Mat2 × Vec2
 
 /-- Oriented areas obtained by replacing each column by the target. -/
@@ -60,6 +66,7 @@ def StrictCone (H : Mat2) (T : Vec2) : Prop :=
   0 < cramerNumerator H T 0 * H.det ∧
   0 < cramerNumerator H T 1 * H.det
 
+/-- Amplitudes, defined pointwise by `Real.sqrt (weights H T i)`. -/
 def amplitudes (H : Mat2) (T : Vec2) : Vec2 :=
   fun i => Real.sqrt (weights H T i)
 
@@ -149,9 +156,9 @@ theorem contDiffOn_numerator
     ContDiffOn ℝ ∞ (fun x => cramerNumerator (H x) (T x) i) s := by
   fin_cases i
   · simpa [Pi.mul_apply, Pi.sub_apply, cramerNumerator] using ((hT 0).mul (hH 1 1)).sub ((hH 0
-    1).mul (hT 1))
+      1).mul (hT 1))
   · simpa [Pi.mul_apply, Pi.sub_apply, cramerNumerator] using ((hH 0 0).mul (hT 1)).sub ((hT 0).mul
-    (hH 1 0))
+      (hH 1 0))
 
 /-- Smoothness requires a nonvanishing determinant, independently of positivity. -/
 theorem contDiffOn_weights
@@ -245,9 +252,9 @@ theorem continuousOn_numerator
     ContinuousOn (fun x => cramerNumerator (H x) (T x) i) K := by
   fin_cases i
   · simpa [Pi.mul_apply, Pi.sub_apply, cramerNumerator] using ((hT 0).fun_mul (hH 1 1)).fun_sub
-    ((hH 0 1).fun_mul (hT 1))
+      ((hH 0 1).fun_mul (hT 1))
   · simpa [Pi.mul_apply, Pi.sub_apply, cramerNumerator] using ((hH 0 0).fun_mul (hT 1)).fun_sub
-    ((hT 0).fun_mul (hH 1 0))
+      ((hT 0).fun_mul (hH 1 0))
 
 theorem continuousOn_weights
     (hH : ∀ i j, ContinuousOn (fun x => H x i j) K)

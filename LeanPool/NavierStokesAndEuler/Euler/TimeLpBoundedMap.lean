@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Spatial bounded maps on genuine Bochner time spaces
@@ -17,6 +17,9 @@ A bounded spatial map acts on each time slice. The lift commutes with actual
 terminal integration and initial trace. These identities let spatial
 translations and their difference quotients act on a fixed time Hilbert space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientMultipliers
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 Pointwise time differentiation of actual matrix fields yields differentiation
@@ -17,19 +16,29 @@ of their L² multiplication operators. The bridge is proved by evaluating the
 Bochner fundamental theorem of calculus, not by assuming operator derivatives.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanCoefficients
 
 open MeasureTheory InnerProductSpace Set EulerSmoothLimit EulerMeanSolenoidal
-  EulerVolterraConvolution
+    EulerVolterraConvolution
 open scoped BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup Field := inferInstance
-private local instance : NormedSpace ℝ Field := inferInstance
-private local instance : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientTime1 : NormedAddCommGroup Field := inferInstance
+/-- Cache the standard `NormedSpace ℝ Field` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientTime2 : NormedSpace ℝ Field := inferInstance
+/-- Cache the standard `NormedAddCommGroup (L2 →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanCoefficientTime3 : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (L2 →L[ℝ] L2)` instance to shorten typeclass synthesis. -/
+local instance instMeanCoefficientTime4 : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
 
+/-- Operator path, given by `⟨fun t => multiplierMap (A t), multiplierMap.continuous.comp
+A.continuous⟩`. -/
 def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) :
     C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) :=
   ⟨fun t => multiplierMap (A t), multiplierMap.continuous.comp A.continuous⟩
@@ -70,7 +79,7 @@ theorem field_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
         (extendPath (Y := Field) T hT A' t x) (Icc (0 : ℝ) T) t)
     (t : ℝ) (ht : t ∈ Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath (Y := Field) T hT A) (extendPath (Y := Field) T hT A' t) (Icc (0 :
-      ℝ) T) t := by
+        ℝ) T) t := by
   have hc := extendPath_continuous (Y := Field) T hT A'
   have hd := intervalIntegral.integral_hasDerivAt_right (hc.intervalIntegrable 0 t)
     hc.aestronglyMeasurable.stronglyMeasurableAtFilter hc.continuousAt
@@ -79,7 +88,8 @@ theorem field_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
   rw [field_integral_eq_sub T hT A A' hpoint s hs]
   abel
 
-/-- The operator-valued derivative used by the mean solver follows from the matrix-field derivative. -/
+/-- The operator-valued derivative used by the mean solver follows from the matrix-field derivative.
+-/
 theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
     (A A' : C(Icc (0 : ℝ) T, Field))
     (hpoint : ∀ t ∈ Icc (0 : ℝ) T, ∀ x : Space,
@@ -109,7 +119,7 @@ theorem operatorPath_inverse (T : ℝ) (A B : C(Icc (0 : ℝ) T, Field))
   exact multiplier_inverse (A t) (B t) (hAB t) u
 
 theorem operatorPath_quadratic_upper (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) (K : ℝ)
-    (hA : ∀ t x v, ⟪A t x v, v⟫_ℝ ≤ K * ‖v‖^2) :
+    (hA : ∀ t x v, ⟪A t x v, v⟫_ℝ ≤ K * ‖v‖ ^ 2) :
     ∀ t (u : L2), ⟪operatorPath T A t u, u⟫_ℝ ≤ K * ‖u‖^2 := by
   intro t u
   exact multiplier_quadratic_upper (A t) K (hA t) u

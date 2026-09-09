@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedFrameTransport
 public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveTransport
 
-@[expose] public section
-
 /-!
 # The actual mean variational inverse on a fixed Hilbert space
 
@@ -19,6 +17,9 @@ contains the original kinetic, potential, and nonlocal initial-trace terms. Its
 coercive inverse is constructed and identified with the original mean solve,
 so coefficient comparisons can use a common domain without assuming an inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,18 +32,34 @@ open Set InnerProductSpace ContinuousLinearMap EulerTimeLp EulerTerminalTimePrim
   EulerCoerciveProjection EulerTransverseVariationalInverse
 
 -- Cache the nested Hilbert-space instances used throughout the operator identities.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSpaceInverse1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSpaceInverse2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSpaceInverse3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanFixedSpaceInverse4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedSpaceInverse5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace)
+    := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanFixedSpaceInverse6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
 private theorem coercive_forcing_inner {V W : Type*}
     [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
     [NormedAddCommGroup W] [InnerProductSpace ℝ W] [CompleteSpace W]
     (O : V →L[ℝ] V) (J : V →L[ℝ] W) (c : ℝ) (hc : 0 < c)
-    (hO : ∀ v, c*‖v‖^2 ≤ ⟪O v,v⟫_ℝ) (f : W) (v : V) :
+    (hO : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪O v, v⟫_ℝ) (f : W) (v : V) :
     ⟪O (coerciveInverse O c hc hO (-J.adjoint f)), v⟫_ℝ = -⟪f,J v⟫_ℝ := by
   rw [operator_inverse_apply, inner_neg_left, adjoint_inner_left]
 
@@ -50,8 +67,8 @@ private theorem coercive_forcing_unique {V W : Type*}
     [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
     [NormedAddCommGroup W] [InnerProductSpace ℝ W] [CompleteSpace W]
     (O : V →L[ℝ] V) (J : V →L[ℝ] W) (c : ℝ) (hc : 0 < c)
-    (hO : ∀ v, c*‖v‖^2 ≤ ⟪O v,v⟫_ℝ) (f : W) (u : V)
-    (hu : ∀ v, ⟪O u,v⟫_ℝ = -⟪f,J v⟫_ℝ) :
+    (hO : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪O v, v⟫_ℝ) (f : W) (u : V)
+    (hu : ∀ v, ⟪O u, v⟫_ℝ = -⟪f, J v⟫_ℝ) :
     u = coerciveInverse O c hc hO (-J.adjoint f) := by
   apply (coerciveEquiv O c hc hO).injective
   simp only [coerciveEquiv_apply]
@@ -82,13 +99,13 @@ def fixedMeanOperator : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSp
 /-- The transported operator has precisely the original mean bilinear form. -/
 theorem fixedMeanOperator_inner (u v : TimeLp T solenoidalSpace) :
     ⟪fixedMeanOperator T hT F F₁ H M0 A L u, v⟫_ℝ =
-      ⟪fixedMeanDerivative T hT F F₁ u, fixedMeanDerivative T hT F F₁ v⟫_ℝ-
+      ⟪fixedMeanDerivative T hT F F₁ u, fixedMeanDerivative T hT F F₁ v⟫_ℝ -
       ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ u),
-        fixedMeanPrimitive T hT F F₁ v⟫_ℝ+
+        fixedMeanPrimitive T hT F F₁ v⟫_ℝ +
       ⟪(M0+L • A) (fixedMeanTrace T hT F F₁ u), fixedMeanTrace T hT F F₁ v⟫_ℝ := by
   exact (transportedOperator_inner (fixedMeanDerivative T hT F F₁)
     (meanOperator (primitiveTimeLp T hT) (initialTrace T hT) (timeMultiplier T hT H) (M0+L • A)) u
-      v).trans
+        v).trans
       (meanOperator_inner (primitiveTimeLp T hT) (initialTrace T hT)
         (timeMultiplier T hT H) (M0+L • A)
         (fixedMeanDerivative T hT F F₁ u) (fixedMeanDerivative T hT F F₁ v))
@@ -109,10 +126,10 @@ theorem fixedMeanCoercivity_pos : 0 < fixedMeanCoercivity T F F₁ FInv := by
 
 variable (K B : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B)
   (hFInv₀ : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
-  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K*‖z‖^2)
+  (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
   (hboundary : ∀ z : L2, z ∈ solenoidalSpace →
-    -B*‖z‖^2 ≤ ⟪M0 z, z⟫_ℝ+L*⟪A z, z⟫_ℝ)
-  (hsmall : K*(T^2/2)+B*T ≤ 1/2)
+    -B * ‖z‖ ^ 2 ≤ ⟪M0 z, z⟫_ℝ + L * ⟪A z, z⟫_ℝ)
+  (hsmall : K * (T ^ 2 / 2) + B * T ≤ 1 / 2)
 
 include hInv hF K B hK hB hFInv₀ hH hboundary hsmall in
 /-- The source smallness and actual transport bounds prove fixed-space coercivity. -/
@@ -127,8 +144,8 @@ theorem fixedMeanOperator_coercive (v : TimeLp T solenoidalSpace) :
   have hp := hbase.trans_eq (meanOperator_inner (meanPrimitive T hT FInv)
     (meanTrace T hT FInv) (timeMultiplier T hT H) (M0+L • A) u u)
   change (1/2 : ℝ)*‖fixedMeanDerivative T hT F F₁ v‖^2 ≤
-    ⟪fixedMeanDerivative T hT F F₁ v, fixedMeanDerivative T hT F F₁ v⟫_ℝ-
-      ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ v), fixedMeanPrimitive T hT F F₁ v⟫_ℝ+
+    ⟪fixedMeanDerivative T hT F F₁ v, fixedMeanDerivative T hT F F₁ v⟫_ℝ -
+      ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ v), fixedMeanPrimitive T hT F F₁ v⟫_ℝ +
       ⟪(M0+L • A) (fixedMeanTrace T hT F F₁ v), fixedMeanTrace T hT F F₁ v⟫_ℝ at hp
   have hlow := meanForward_norm_sq_lower T hT FInv F F₁ hInv hF v
   calc
@@ -146,7 +163,7 @@ def fixedMeanInverse : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpa
   coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) (fixedMeanCoercivity T F F₁ FInv)
     (fixedMeanCoercivity_pos T hT F F₁ FInv)
     (fixedMeanOperator_coercive T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary
-      hsmall)
+        hsmall)
 
 /-- The actual forcing-to-coordinate-derivative map on the fixed space. -/
 def fixedMeanSolver : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
@@ -160,29 +177,29 @@ theorem fixedMeanInverse_norm :
   coerciveInverse_norm_le (fixedMeanOperator T hT F F₁ H M0 A L) (fixedMeanCoercivity T F F₁ FInv)
     (fixedMeanCoercivity_pos T hT F F₁ FInv)
     (fixedMeanOperator_coercive T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary
-      hsmall)
+        hsmall)
 
 /-- The constructed fixed-space solution satisfies the full original form. -/
 theorem fixedMeanSolver_weak (f : TimeLp T L2) (v : TimeLp T solenoidalSpace) :
     let u := fixedMeanSolver T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary hsmall f
-    ⟪fixedMeanDerivative T hT F F₁ u, fixedMeanDerivative T hT F F₁ v⟫_ℝ-
-      ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ u), fixedMeanPrimitive T hT F F₁ v⟫_ℝ+
+    ⟪fixedMeanDerivative T hT F F₁ u, fixedMeanDerivative T hT F F₁ v⟫_ℝ -
+      ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ u), fixedMeanPrimitive T hT F F₁ v⟫_ℝ +
       ⟪(M0+L • A) (fixedMeanTrace T hT F F₁ u), fixedMeanTrace T hT F F₁ v⟫_ℝ =
       -⟪f, fixedMeanPrimitive T hT F F₁ v⟫_ℝ := by
   exact (fixedMeanOperator_inner T hT F F₁ H M0 A L
     (fixedMeanSolver T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary hsmall f)
-      v).symm.trans
+        v).symm.trans
     (coercive_forcing_inner (fixedMeanOperator T hT F F₁ H M0 A L)
       (fixedMeanPrimitive T hT F F₁) (fixedMeanCoercivity T F F₁ FInv)
       (fixedMeanCoercivity_pos T hT F F₁ FInv)
       (fixedMeanOperator_coercive T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary
-        hsmall) f v)
+          hsmall) f v)
 
 /-- Uniqueness is on the same fixed Hilbert space. -/
 theorem fixedMeanSolver_unique (f : TimeLp T L2) (u : TimeLp T solenoidalSpace)
     (hu : ∀ v : TimeLp T solenoidalSpace,
-      ⟪fixedMeanDerivative T hT F F₁ u, fixedMeanDerivative T hT F F₁ v⟫_ℝ-
-        ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ u), fixedMeanPrimitive T hT F F₁ v⟫_ℝ+
+      ⟪fixedMeanDerivative T hT F F₁ u, fixedMeanDerivative T hT F F₁ v⟫_ℝ -
+        ⟪timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ u), fixedMeanPrimitive T hT F F₁ v⟫_ℝ +
         ⟪(M0+L • A) (fixedMeanTrace T hT F F₁ u), fixedMeanTrace T hT F F₁ v⟫_ℝ =
         -⟪f, fixedMeanPrimitive T hT F F₁ v⟫_ℝ) :
     u = fixedMeanSolver T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary hsmall f := by
@@ -190,7 +207,7 @@ theorem fixedMeanSolver_unique (f : TimeLp T L2) (u : TimeLp T solenoidalSpace)
     (fixedMeanPrimitive T hT F F₁) (fixedMeanCoercivity T F F₁ FInv)
     (fixedMeanCoercivity_pos T hT F F₁ FInv)
     (fixedMeanOperator_coercive T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary
-      hsmall) f u
+        hsmall) f u
     (fun v => (fixedMeanOperator_inner T hT F F₁ H M0 A L u v).trans (hu v))
 
 /-- The fixed inverse is precisely the coordinate transport of the original actual solve. -/
@@ -199,30 +216,30 @@ theorem fixedMeanSolver_eq_mean
     fixedMeanSolver T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary hsmall f =
       meanBackward T hT FInv F F₁ hInv
         (EulerMeanVariationalInverse.meanSolver T hT FInv H M0 A L K B hK hB hFInv₀ hH hboundary
-          hsmall f) := by
+            hsmall f) := by
   symm
   apply fixedMeanSolver_unique T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary hsmall
   intro v
   let u := EulerMeanVariationalInverse.meanSolver T hT FInv H M0 A L K B hK hB hFInv₀ hH hboundary
-    hsmall f
+      hsmall f
   have h := EulerMeanVariationalInverse.meanSolver_weak T hT FInv H M0 A L K B hK hB hFInv₀ hH
-    hboundary hsmall f
+      hboundary hsmall f
     (meanTestMap T hT FInv F F₁ hF hInv v)
   have hu := congrArg (fun w : meanDerivatives T hT FInv => (w : TimeLp T L2))
     (meanForward_backward T hT FInv F F₁ hInv hF hRight u)
-  change fixedMeanDerivative T hT F F₁ (meanBackward T hT FInv F F₁ hInv u) = (u : TimeLp T L2) at
-    hu
+  change fixedMeanDerivative T hT F F₁ (meanBackward T hT FInv F F₁ hInv u) = (u : TimeLp T L2)
+      at hu
   change ⟪fixedMeanDerivative T hT F F₁ (meanBackward T hT FInv F F₁ hInv u),
-      fixedMeanDerivative T hT F F₁ v⟫_ℝ-
+      fixedMeanDerivative T hT F F₁ v⟫_ℝ -
     ⟪timeMultiplier T hT H (primitiveTimeLp T hT
       (fixedMeanDerivative T hT F F₁ (meanBackward T hT FInv F F₁ hInv u))), fixedMeanPrimitive T
-        hT F F₁ v⟫_ℝ+
+          hT F F₁ v⟫_ℝ +
     ⟪(M0+L • A) (initialTrace T hT
       (fixedMeanDerivative T hT F F₁ (meanBackward T hT FInv F F₁ hInv u))), fixedMeanTrace T hT F
-        F₁ v⟫_ℝ = _
+          F₁ v⟫_ℝ = _
   have heq := congrArg (fun w : TimeLp T L2 =>
-    ⟪w, fixedMeanDerivative T hT F F₁ v⟫_ℝ-
-      ⟪timeMultiplier T hT H (primitiveTimeLp T hT w), fixedMeanPrimitive T hT F F₁ v⟫_ℝ+
+    ⟪w, fixedMeanDerivative T hT F F₁ v⟫_ℝ -
+      ⟪timeMultiplier T hT H (primitiveTimeLp T hT w), fixedMeanPrimitive T hT F F₁ v⟫_ℝ +
       ⟪(M0+L • A) (initialTrace T hT w), fixedMeanTrace T hT F F₁ v⟫_ℝ) hu
   apply heq.trans
   simpa only [u, fixedMeanDerivative, fixedMeanPrimitive, fixedMeanTrace, meanPrimitive,

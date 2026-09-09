@@ -6,15 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothApproximation
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
-public import Mathlib.MeasureTheory.Function.LpSpace.Complete
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothApproximation
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! The ordinary three-dimensional H¹ product estimate. The homogeneous
 L⁶ inequality is extended from compact fields by genuine cutoff limits;
 the L⁴ bound and product estimate therefore require no support hypothesis. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -43,8 +45,8 @@ theorem eLpNorm_six_le (f : Space → V) (hf : ContDiff ℝ ∞ f)
   have hc : Tendsto
       (fun n => (sobolevConstant : ℝ≥0∞)*ENNReal.ofReal ‖cutoffDerivativeLp f hf n‖)
       atTop (𝓝 ((sobolevConstant : ℝ≥0∞)*ENNReal.ofReal ‖hD.toLp (fderiv ℝ f)‖)) :=
-    (ENNReal.continuous_const_mul (by simp : (sobolevConstant : ℝ≥0∞) ≠
-      ⊤)).continuousAt.tendsto.comp ht
+    (ENNReal.continuous_const_mul (by
+        simp : (sobolevConstant : ℝ≥0∞) ≠ ⊤)).continuousAt.tendsto.comp ht
   calc
     _ ≤ atTop.liminf (fun n => eLpNorm (cutoffField f n) 6 volume) :=
       Lp.eLpNorm_lim_le_liminf_eLpNorm
@@ -184,7 +186,7 @@ theorem smooth_product_h1 (f : Space → ℝ) (g : Space → V)
     (hfD : MemLp (fderiv ℝ f) 2 volume) (hgD : MemLp (fderiv ℝ g) 2 volume) :
     MemLp (fun x => f x • g x) 2 volume ∧
       lpNorm (fun x => f x • g x) 2 volume ≤
-        4*(lpNorm f 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ f) 2 volume)*
+        4*(lpNorm f 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ f) 2 volume) *
           (lpNorm g 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ g) 2 volume) := by
   let : ENNReal.HolderTriple 4 4 2 := ⟨by
     apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
@@ -198,7 +200,7 @@ theorem smooth_product_h1 (f : Space → ℝ) (g : Space → V)
       intro x
       exact (norm_smul (f x) (g x)).le
     _ ≤ lpNorm f 4 volume*lpNorm g 4 volume := lpNorm_norm_mul_le h4f.1 h4g.1
-    _ ≤ (2*(lpNorm f 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ f) 2 volume))*
+    _ ≤ (2*(lpNorm f 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ f) 2 volume)) *
         (2*(lpNorm g 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ g) 2 volume)) :=
       mul_le_mul h4f.2 h4g.2 lpNorm_nonneg
         (mul_nonneg (by norm_num) (add_nonneg lpNorm_nonneg

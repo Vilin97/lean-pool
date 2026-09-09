@@ -7,13 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedEquation
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
 
 /-! The regularized L² flow has genuine smooth spatial representatives,
 continuous jets of every order, and its true time derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,13 +22,14 @@ namespace EulerOrdinarySobolev
 
 open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerLpTranslation EulerLpTranslation.SmoothL2Field EulerMeanSolenoidal
-  EulerMeanClassical EulerVolterraConvolution EulerContinuousTimeIntegral Finset
+   EulerVolterraConvolution EulerContinuousTimeIntegral Finset
 open scoped ContDiff Topology
 
 namespace SmoothingOperator
 
 variable (S : SmoothingOperator)
 
+/-- Rhs, given by `fieldNeg (S.field (advectionField (S.field u) (S.field u)).toLp)`. -/
 def rhs (u : L2) : SmoothL2Field Space :=
   fieldNeg (S.field (advectionField (S.field u) (S.field u)).toLp)
 
@@ -42,7 +44,10 @@ theorem rhs_continuous {K : Type*} [TopologicalSpace K] (u : K → L2)
 
 end SmoothingOperator
 
+/-- Regularized evolution data, collecting `velocity`, `velocity_continuous`, `solenoidal`,
+`time_law`. -/
 structure RegularizedEvolution (S : SmoothingOperator) (T : ℝ) (hT : 0 ≤ T) where
+  /-- Velocity field of `RegularizedEvolution`, of type `Icc (0 : ℝ) T → SmoothL2Field Space`. -/
   velocity : Icc (0 : ℝ) T → SmoothL2Field Space
   velocity_continuous : ∀ n, Continuous (fun t => (velocity t).jetLp n)
   solenoidal : ∀ t, (velocity t).toLp ∈ solenoidalSpace
@@ -54,6 +59,7 @@ namespace RegularizedEvolution
 
 variable {S : SmoothingOperator} {T : ℝ} {hT : 0 ≤ T} (U : RegularizedEvolution S T hT)
 
+/-- Derivative, given by `S.rhs (U.velocity t).toLp`. -/
 def derivative (t : Icc (0 : ℝ) T) : SmoothL2Field Space := S.rhs (U.velocity t).toLp
 
 theorem derivative_continuous (n : ℕ) : Continuous (fun t => (U.derivative t).jetLp n) :=
@@ -86,7 +92,7 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
     ∃ U : RegularizedEvolution S T hT, U.velocity ⟨0,le_rfl,hT⟩=A := by
   obtain ⟨u,hu0,hu,_huNorm⟩ := S.exists_global A.toLp
   have huc : Continuous u := (show Differentiable ℝ u from fun t => (hu
-    t).differentiableAt).continuous
+      t).differentiableAt).continuous
   let a : C(Icc (0 : ℝ) T,L2) :=
     ⟨fun t => S.advection (u t) (u t),
       (S.advection.continuous.comp (huc.comp continuous_subtype_val)).clm_apply
@@ -100,7 +106,7 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
       (fun s => by
         change HasDerivWithinAt u (-S.op (S.advection (u s) (u s))) _ _
         exact (hu (s : ℝ)).hasDerivWithinAt) t
-    have hi : integral T hT ((-S.op).compLeftContinuous ℝ (Icc (0 : ℝ) T) a) t=
+    have hi : integral T hT ((-S.op).compLeftContinuous ℝ (Icc (0 : ℝ) T) a) t =
         S.op (z t) := by
       change (∫ r in (0 : ℝ)..(t : ℝ), (-S.op) (extendPath T hT a r))=S.op (z t)
       rw [(-S.op).intervalIntegral_comp_comm

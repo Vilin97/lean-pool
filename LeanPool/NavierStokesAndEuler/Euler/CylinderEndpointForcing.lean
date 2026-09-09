@@ -9,14 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointData
 public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointForcing
 
-@[expose] public section
-
 /-!
 The actual cylinder endpoint inverse is affine data minus the genuine
 zero-endpoint inverse of its explicit forcing. These identities transfer
 the already proved support, translation and same-radius estimates to the
 nonzero-terminal construction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,22 +46,22 @@ theorem endpointForcing_apply (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
 /-- Equality of the genuinely constructed corrections, not a new solution assumption. -/
 theorem endpointCorrection_eq_forced (Y : CylinderL2 P U) :
     D.endpointCorrection P Y = D.coordinateSolver P (pathLp T D.time_pos.le (D.endpointForcing P
-      Y)) :=
+        Y)) :=
   correction_eq_forced T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.frameSecond P)
     (D.hessian P) (D.frame_derivative P) (D.frame_second_derivative P) (D.frame_equation P)
     D.lower D.lower_pos (D.frame_lower P) D.potential D.potential_nonneg
     (D.hessian_upper P) D.small Y
 
 theorem endpointSlope_eq_const_sub (Y : CylinderL2 P U) :
-    D.endpointSlope P Y = constantFieldOperator T D.time_pos.le (T⁻¹ • Y)-
+    D.endpointSlope P Y = constantFieldOperator T D.time_pos.le (T⁻¹ • Y) -
       D.velocityLp P (pathLp T D.time_pos.le (D.endpointForcing P Y)) := by
-  change constantFieldOperator T D.time_pos.le (T⁻¹ • Y)-
+  change constantFieldOperator T D.time_pos.le (T⁻¹ • Y) -
     (D.endpointCorrection P Y : TimeLp T (CylinderL2 P U)) = _
   rw [D.endpointCorrection_eq_forced P Y]
   rfl
 
 theorem endpointDisplacement_eq_affine_sub (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
-    D.endpointDisplacement P Y t = (t : ℝ) • (T⁻¹ • Y)-
+    D.endpointDisplacement P Y t = (t : ℝ) • (T⁻¹ • Y) -
       D.displacementPath P (pathLp T D.time_pos.le (D.endpointForcing P Y)) t := by
   have hz : initialTrace T D.time_pos.le
       (D.velocityLp P (pathLp T D.time_pos.le (D.endpointForcing P Y))) = 0 :=
@@ -74,12 +75,12 @@ theorem endpointDisplacement_eq_affine_sub (Y : CylinderL2 P U) (t : Icc (0 : �
 /-- Equality in continuous time follows from the true displacement
 derivative, including the endpoint derivatives. -/
 theorem endpointCoordinate_eq_const_sub (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
-    D.endpointCoordinate P Y t = T⁻¹ • Y-
+    D.endpointCoordinate P Y t = T⁻¹ • Y -
       D.velocityPath P (pathLp T D.time_pos.le (D.endpointForcing P Y)) t := by
   have hc : HasDerivWithinAt (fun s : ℝ => s • (T⁻¹ • Y)) (T⁻¹ • Y)
       (Icc (0 : ℝ) T) t := by
     simpa only [id_eq,one_smul] using ((hasDerivAt_id (t : ℝ)).smul_const (T⁻¹ •
-      Y)).hasDerivWithinAt
+        Y)).hasDerivWithinAt
   have hh := hc.sub (D.displacement_hasDerivWithinAt P (D.endpointForcing P Y) t)
   have he : HasDerivWithinAt (extendPath T D.time_pos.le (D.endpointDisplacement P Y))
       (T⁻¹ • Y-D.velocityPath P (pathLp T D.time_pos.le (D.endpointForcing P Y)) t)
@@ -93,7 +94,7 @@ theorem endpointCoordinate_eq_const_sub (Y : CylinderL2 P U) (t : Icc (0 : ℝ) 
       (he.derivWithin ((uniqueDiffOn_Icc D.time_pos) _ t.property))
 
 theorem endpointCoordinate_eq_forced (Y : CylinderL2 P U) :
-    D.endpointCoordinate P Y = ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y)-
+    D.endpointCoordinate P Y = ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y) -
       D.velocityPath P (pathLp T D.time_pos.le (D.endpointForcing P Y)) := by
   apply ContinuousMap.ext
   intro t
@@ -117,7 +118,7 @@ theorem endpointAcceleration_eq_forced (Y : CylinderL2 P U) :
 
 theorem endpointVelocity_eq_forced (Y : CylinderL2 P U) :
     D.endpointVelocity P Y =
-      multiplier (D.frame P) (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y))-
+      multiplier (D.frame P) (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y)) -
         D.physicalVelocity P (D.endpointForcing P Y) := by
   apply ContinuousMap.ext
   intro t
@@ -128,14 +129,14 @@ theorem endpointVelocity_eq_forced (Y : CylinderL2 P U) :
 
 theorem endpointDerivative_eq_forced (Y : CylinderL2 P U) :
     D.endpointDerivative P Y =
-      multiplier (D.frameDerivative P) (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y))-
+      multiplier (D.frameDerivative P) (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y)) -
         D.physicalDerivative P (D.endpointForcing P Y) := by
   apply ContinuousMap.ext
   intro t
   change D.frameDerivative P t (D.endpointCoordinate P Y t)+D.frame P t (D.endpointAcceleration P Y
-    t) =
+      t) =
     D.frameDerivative P t (T⁻¹ • Y)-(D.frameDerivative P t
-      (D.velocityPath P (pathLp T D.time_pos.le (D.endpointForcing P Y)) t)+
+      (D.velocityPath P (pathLp T D.time_pos.le (D.endpointForcing P Y)) t) +
         D.frame P t (D.accelerationPath P (D.endpointForcing P Y) t))
   rw [D.endpointCoordinate_eq_const_sub P Y t,D.endpointAcceleration_eq_forced P Y,
     ContinuousMap.neg_apply,map_sub,map_neg]

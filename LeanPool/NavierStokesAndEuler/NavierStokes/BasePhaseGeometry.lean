@@ -6,13 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhaseEstimates
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryCovarianceBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryRepresentatives
-
-@[expose] public section
 
 /-!
 # Base estimates imply the actual pulse geometry
@@ -22,6 +17,9 @@ Normal, damping, and moving-basis errors are conclusions. The dyadic cutoff
 is chosen after all fixed constants and before the band or slow point.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.BasePhaseGeometry
@@ -29,8 +27,11 @@ namespace NavierStokes.BasePhaseGeometry
 open Set Filter
 open scoped Topology ContDiff InnerProductSpace
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Plane: an abbreviation for `MovingFrameODE.Plane`. -/
 abbrev Plane := MovingFrameODE.Plane
+/-- Space: an abbreviation for `MovingFrameODE.Space`. -/
 abbrev Space := MovingFrameODE.Space
 
 /-- The normalized base error `Q^(2h)` is exactly the squared native small
@@ -41,9 +42,11 @@ theorem epsilon_squared (h : ℝ) (n : ℕ) :
   simpa only [ChartScales.epsilon, Nat.cast_ofNat, mul_comm] using
     Real.rpow_mul_natCast (ChartScales.Q_pos n).le h 2
 
+/-- Damping denominator, given by `(1 + u ^ 2) * Real.sqrt (1 + u ^ 2)`. -/
 noncomputable def dampingDenominator (u : ℝ) : ℝ :=
   (1 + u ^ 2) * Real.sqrt (1 + u ^ 2)
 
+/-- Reference scale, given by `Real.sqrt (lam / (viscosity * dampingDenominator u))`. -/
 noncomputable def referenceScale (lam viscosity u : ℝ) : ℝ :=
   Real.sqrt (lam / (viscosity * dampingDenominator u))
 
@@ -191,7 +194,7 @@ theorem frame_errors_of_normal_close
     let rot := PhaseEstimates.angularVelocity n nDot
     |MovingFrameODE.coeff11 r rd ⟪R 0, g⟫_ℝ| ≤ 16 * G ^ 2 * (1 + G) * E ∧
     |MovingFrameODE.coeff12 F (R 1 0) r rot - 2 * F0 * (MovingFrameODE.quarterTurn K) 0 / (1 + s ^
-      2)| ≤
+        2)| ≤
       16 * G ^ 2 * (1 + G) * E ∧
     |MovingFrameODE.coeff21 F (R 1 0) ⟪R 1, g⟫_ℝ r rot -
         (-(2 * F0 * (MovingFrameODE.quarterTurn K) 0 + ⟪MovingFrameODE.quarterTurn K, g0⟫_ℝ))| ≤
@@ -211,7 +214,7 @@ theorem frame_errors_of_normal_close
   have h0 : PrimaryODE.localFrame n 0 = MovingFrameODE.normalDirection n := by
     rw [PrimaryODE.localFrame_eq hne, MovingFrameODE.normalFrame_zero]
   have h1 : PrimaryODE.localFrame n 1 = MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection
-    n) := by
+      n) := by
     rw [PrimaryODE.localFrame_eq hne, MovingFrameODE.normalFrame_one]
   have hKerr : ‖PrimaryODE.localFrame n 0 - K‖ ≤ E := by
     rw [h0]
@@ -298,6 +301,7 @@ theorem damping_error_of_normal_close
     _ ≤ 4 * (δ * (M * (2 * A + 5))) := mul_le_mul hν4 hsq (abs_nonneg _) (by norm_num)
     _ = _ := by ring
 
+/-- Normal constant, given by `8 * PhaseEstimates.phaseConstant (2 * M)`. -/
 noncomputable def normalConstant (M : ℝ) : ℝ :=
   8 * PhaseEstimates.phaseConstant (2 * M)
 
@@ -411,8 +415,8 @@ theorem reference_profile_rate_bound {u L v A M S : ℝ}
     (hs : |PulseGrowth.slotMagnitude u L v| ≤ A)
     (huL : |u / L| ≤ M / S) :
     |PrimaryODE.referenceProfileRate u L v| ≤ A * M / S := by
-  have hden : 1 ≤ 1 + PulseGrowth.slotMagnitude u L v ^ 2 := by nlinarith [sq_nonneg
-    (PulseGrowth.slotMagnitude u L v)]
+  have hden : 1 ≤ 1 + PulseGrowth.slotMagnitude u L v ^ 2 := by
+      nlinarith [sq_nonneg (PulseGrowth.slotMagnitude u L v)]
   have hdenpos : 0 < 1 + PulseGrowth.slotMagnitude u L v ^ 2 := by positivity
   rw [PrimaryODE.referenceProfileRate, abs_div, abs_mul, abs_of_pos hdenpos]
   calc
@@ -421,6 +425,7 @@ theorem reference_profile_rate_bound {u L v A M S : ℝ}
     _ ≤ A * (M / S) := mul_le_mul hs huL (abs_nonneg _) hA
     _ = _ := by ring
 
+/-- Frequency bound, given by `M + M * (M + M ^ 4) + (M + M ^ 4) + M ^ 2 + 4`. -/
 noncomputable def frequencyBound (M : ℝ) : ℝ := M + M * (M + M ^ 4) + (M + M ^ 4) + M ^ 2 + 4
 
 theorem frequencyBound_bounds {M : ℝ} (hM : 1 ≤ M) :
@@ -438,6 +443,7 @@ theorem frequencyBound_bounds {M : ℝ} (hM : 1 ≤ M) :
   · nlinarith [sq_nonneg M]
   constructor <;> nlinarith [sq_nonneg M]
 
+/-- Normal lower, given by `Real.sqrt ((1 / M) / (4 * dampingDenominator u))`. -/
 noncomputable def normalLower (M u : ℝ) : ℝ :=
   Real.sqrt ((1 / M) / (4 * dampingDenominator u))
 
@@ -446,20 +452,26 @@ theorem normalLower_pos {M u : ℝ} (hM : 1 ≤ M) : 0 < normalLower M u := by
   exact div_pos (one_div_pos.mpr (zero_lt_one.trans_le hM))
     (mul_pos (by norm_num) (dampingDenominator_pos u))
 
+/-- Phase constant, given by `normalConstant (frequencyBound M)`. -/
 noncomputable def phaseConstant (M : ℝ) : ℝ := normalConstant (frequencyBound M)
 
 theorem phaseConstant_pos {M : ℝ} (hM : 1 ≤ M) : 0 < phaseConstant M :=
   normalConstant_pos (hM.trans (frequencyBound_bounds hM).1)
 
+/-- Coordinate constant, given by `16 * (M + 2 + 2 * (3 * M)) ^ 2 * (1 + (M + 2 + 2 * (3 * M)))
+* (16 * M ^ 2 + 8 * (1 + 3 * M) * phaseConstant M / normalLower M u)`. -/
 noncomputable def coordinateConstant (M u : ℝ) : ℝ :=
   16 * (M + 2 + 2 * (3 * M)) ^ 2 * (1 + (M + 2 + 2 * (3 * M))) *
     (16 * M ^ 2 + 8 * (1 + 3 * M) * phaseConstant M / normalLower M u)
 
+/-- Eigen bound, given by `M * (2 + 3 * M)`. -/
 noncomputable def eigenBound (M : ℝ) : ℝ := M * (2 + 3 * M)
 
+/-- Modal constant, given by `(1 + 2 * eigenBound M) * coordinateConstant M u + 3 * M ^ 3`. -/
 noncomputable def modalConstant (M u : ℝ) : ℝ :=
   (1 + 2 * eigenBound M) * coordinateConstant M u + 3 * M ^ 3
 
+/-- Damping constant, given by `4 * M * (6 * M + 5) * phaseConstant M`. -/
 noncomputable def dampingConstant (M : ℝ) : ℝ :=
   4 * M * (6 * M + 5) * phaseConstant M
 
@@ -536,18 +548,30 @@ mesh; the equality and distance fields are the interface to that proof.
 All phase quantities below are constructed from this record. -/
 structure FamilyData {ι : Type*} (D : PhaseJetBounds.Domain ι Slow)
     (h r0 u M : ℝ) where
+  /-- Band of `FamilyData`, of type `ι → ℕ`. -/
   band : ι → ℕ
   scale_eq : ∀ i, D.scale i = ChartScales.S (band i)
+  /-- F of `FamilyData`, of type `ι → Slow → ℝ`. -/
   F : ι → Slow → ℝ
+  /-- Geometric data of `FamilyData`, of type `ι → Slow → ℝ`. -/
   G : ι → Slow → ℝ
+  /-- F0 of `FamilyData`, of type `ι → Slow → ℝ`. -/
   F0 : ι → Slow → ℝ
+  /-- G0 of `FamilyData`, of type `ι → Slow → ℝ`. -/
   G0 : ι → Slow → ℝ
+  /-- U of `FamilyData`, of type `ι → Set Slow`. -/
   U : ι → Set Slow
+  /-- Q0 of `FamilyData`, of type `ι → Slow`. -/
   q0 : ι → Slow
+  /-- K of `FamilyData`, of type `ι → Plane`. -/
   K : ι → Plane
+  /-- Lam of `FamilyData`, of type `ι → ℝ`. -/
   lam : ι → ℝ
+  /-- C0 of `FamilyData`, of type `ι → ℝ`. -/
   c0 : ι → ℝ
+  /-- Sigma of `FamilyData`, of type `ι → ℝ`. -/
   sigma : ι → ℝ
+  /-- Theta of `FamilyData`, of type `ι → ℝ`. -/
   theta : ι → ℝ
   base : ∀ i, PhaseEstimates.LocalBaseBounds (F i) (G i) (F0 i) (G0 i) (U i) M
     (ChartScales.epsilon h (band i))
@@ -576,14 +600,21 @@ namespace FamilyData
 variable {ι : Type*} {D : PhaseJetBounds.Domain ι Slow} {h r0 u M : ℝ}
 variable (a : FamilyData D h r0 u M)
 
+/-- Length, given by `ChartScales.slotLength r0 h (a.band i)`. -/
 noncomputable def length (i : ι) : ℝ := ChartScales.slotLength r0 h (a.band i)
+/-- Viscosity, given by `ChartScales.epsilon h (a.band i) * (ChartScales.carrier h (a.band i) :
+ℝ) ^ 2`. -/
 noncomputable def viscosity (i : ι) : ℝ :=
   ChartScales.epsilon h (a.band i) * (ChartScales.carrier h (a.band i) : ℝ) ^ 2
+/-- B, given by `referenceScale (a.lam i) (a.viscosity i) u`. -/
 noncomputable def B (i : ι) : ℝ := referenceScale (a.lam i) (a.viscosity i) u
+/-- Frequency, constructed using `PhaseEstimates.representativeFrequency`. -/
 noncomputable def frequency (i : ι) : Plane :=
   PhaseEstimates.representativeFrequency (a.B i) (a.sigma i) u (a.length i) (a.K i)
     (PhaseEstimates.shearVector (a.F0 i) (a.G0 i) (a.q0 i))
+/-- Target, given by `(a.q0 i).1 * a.frequency i 0`. -/
 noncomputable def target (i : ι) : ℝ := (a.q0 i).1 * a.frequency i 0
+/-- Phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
 noncomputable def phase : PhaseJetBounds.PhaseFamily ι where
   epsilon i := ChartScales.epsilon h (a.band i)
   p i := PhaseEstimates.roundedFrequency (ChartScales.carrier h (a.band i)) (a.target i)
@@ -592,9 +623,12 @@ noncomputable def phase : PhaseJetBounds.PhaseFamily ι where
   theta := a.theta
   F := a.F
   G := a.G
+/-- Frame, given by `a.phase.frameData a.lam a.c0 (fun _ => u) a.length a.viscosity i`. -/
 noncomputable def frame (i : ι) : PrimaryODE.FrameData Slow :=
   a.phase.frameData a.lam a.c0 (fun _ => u) a.length a.viscosity i
+/-- Slot, given by `Ioo (-(a.length i)) (2 * a.length i)`. -/
 noncomputable def slot (i : ι) : Set ℝ := Ioo (-(a.length i)) (2 * a.length i)
+/-- Slope, given by `PhaseEstimates.signedSlot (a.sigma i) u (a.length i) z.2`. -/
 noncomputable def slope (i : ι) (z : Slow × ℝ) : ℝ :=
   PhaseEstimates.signedSlot (a.sigma i) u (a.length i) z.2
 
@@ -690,7 +724,7 @@ theorem magnitude_bound (hr : 0 < r0) (hu : 0 ≤ u) (huM : u ≤ M)
 theorem slope_bound (hr : 0 < r0) (hu : 0 ≤ u) (huM : u ≤ M)
     {i : ι} {q : Slow} {v : ℝ} (hv : v ∈ a.slot i) : |a.slope i (q, v)| ≤ 3 * M := by
   simpa only [slope, PhaseEstimates.signedSlot, PulseGrowth.slotMagnitude, abs_mul, a.sign i,
-    one_mul] using
+      one_mul] using
     a.magnitude_bound hr hu huM hv
 
 theorem frequency_identity (hM : 1 ≤ M) (i : ι) :
@@ -893,7 +927,7 @@ theorem damping_error (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     {v : ℝ} (hv : v ∈ a.slot i) :
     |(a.frame i).viscosity (q, v) -
       ViscousPropagator.referenceViscosity (a.lam i) u (a.length i) v| ≤ dampingConstant M /
-        D.scale i := by
+          D.scale i := by
   have hvb := ChartScales.carrier_viscosity_bounds h hh (a.band i)
   have hν : 0 < a.viscosity i := zero_lt_one.trans_le hvb.1
   have he := (a.phase_estimates hh hr hM (by simpa only [abs_of_pos hu] using huM)
@@ -942,8 +976,8 @@ theorem kinematics (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
   · intro v hv
     exact (a.normal_nonzero hh hr hM hu hL hslot i hn hq (a.interval_subset_slot hr i hv)).2
   · intro v _
-    exact mul_ne_zero (a.ratio_ne hM i) (by positivity : Real.sqrt (1 + PulseGrowth.slotMagnitude u
-      (a.length i) v ^ 2) ≠ 0)
+    exact mul_ne_zero (a.ratio_ne hM i) (by
+        positivity : Real.sqrt (1 + PulseGrowth.slotMagnitude u (a.length i) v ^ 2) ≠ 0)
   · intro v _
     exact PrimaryODE.hasDerivAt_referenceProfile (a.c0 i) u (a.length i) v
 
@@ -956,7 +990,7 @@ theorem coefficientControl (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
   eigenvalue _ _ := rfl
   errors _ hv := a.modal_errors hh hr hM hu huM hL hslot i hn hq (a.interval_subset_slot hr i hv)
   viscosity _ hv := a.damping_error hh hr hM hu huM hL hslot i hn hq (a.interval_subset_slot hr i
-    hv)
+      hv)
 
 /-- The actual modal energy bound holds with the same constants for every
 nonzero harmonic.  The damping discrepancy is not multiplied by `j²`. -/
@@ -981,7 +1015,9 @@ theorem energy_bound (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
   · linarith [(abs_le.mp hd).1]
   · exact a.modal_errors hh hr hM hu huM hL hslot i hn hq hv
 
+/-- Output bound, given by `frequencyBound M + 3 * M + M ^ 2 + 4`. -/
 noncomputable def outputBound (M : ℝ) : ℝ := frequencyBound M + 3 * M + M ^ 2 + 4
+/-- Output lower, given by `min (normalLower M u / 2) (1 / M)`. -/
 noncomputable def outputLower (M u : ℝ) : ℝ := min (normalLower M u / 2) (1 / M)
 
 theorem outputBound_bounds (hM : 1 ≤ M) :
@@ -1046,13 +1082,13 @@ noncomputable def construction (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     slope_bound := fun _ _ hz => (a.slope_bound hr hu.le huM hz.2).trans hb.2.1
     error_small := fun i _ _ => a.phase_error_small hh hM i (hlarge i)
     normal_close := fun i _ hz => (a.phase_estimates hh hr hM huabs hL hslot i (hlarge i) hz.1
-      hz.2).1
+        hz.2).1
     lam_pos := a.lambda_pos hM
     u_pos := fun _ => hu
     L_pos := a.length_pos hr
     interval := a.interval_subset_slot hr
     viscosity_nonneg := fun i => zero_le_one.trans (ChartScales.carrier_viscosity_bounds h hh
-      (a.band i)).1
+        (a.band i)).1
     damping_error := ?_
     modal_errors := fun i q hq v hv =>
       a.modal_errors hh hr hM hu huM hL hslot i (hlarge i) hq (a.interval_subset_slot hr i hv) }
@@ -1074,7 +1110,7 @@ noncomputable def construction (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     exact ⟨(by linarith [(a.B_bounds hh hM i).1]), (a.B_bounds hh hM i).2.trans hb.2.2.2.2⟩
   · intro i q hq v hv
     have hd := a.damping_error hh hr hM hu huM hL hslot i (hlarge i) hq (a.interval_subset_slot hr
-      i hv)
+        i hv)
     change ViscousPropagator.referenceViscosity (a.lam i) u (a.length i) v -
       dampingConstant M / D.scale i ≤ (a.frame i).viscosity (q, v)
     linarith [(abs_le.mp hd).1]
@@ -1147,9 +1183,9 @@ theorem ordered_constants {K : Set Slow} (hK : IsCompact K)
   refine ⟨M, hM, (le_max_left _ _).trans (le_max_right _ _),
     (le_max_left _ _).trans ((le_max_right _ _).trans (le_max_right _ _)),
     (le_max_left _ _).trans ((le_max_right _ _).trans ((le_max_right _ _).trans (le_max_right _
-      _))),
+        _))),
     (le_max_right _ _).trans ((le_max_right _ _).trans ((le_max_right _ _).trans (le_max_right _
-      _))),
+        _))),
     fun q hq => (hp q hq).mono h0, ?_⟩
   exact exists_large_band h M u T hh hM N0
 
@@ -1213,7 +1249,7 @@ noncomputable def family {ι : Type*} (D : PhaseJetBounds.Domain ι Slow)
     U := fun _ => U
     q0 := fun i => representative K (label i)
     K := fun i => transverseDirection (PhaseEstimates.shearVector F0 G0 (representative K (label
-      i)))
+        i)))
     lam := fun i => lambda0 (F0 (representative K (label i)))
       (PhaseEstimates.shearVector F0 G0 (representative K (label i)))
     c0 := fun i => c0 (F0 (representative K (label i)))

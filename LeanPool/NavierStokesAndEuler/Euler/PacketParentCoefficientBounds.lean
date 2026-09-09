@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorOperator
+import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorGevrey
 
 /-! The actual parent deformation supplies inverse and strain bounds with
 polynomial constants.  Determinant one removes any inverse-derivative input. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,12 +26,26 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup EndSpace := inferInstance
-private local instance : NormedSpace ℝ EndSpace := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ EndSpace) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ EndSpace) := inferInstance
-private local instance : NormedAddCommGroup C(K,Space →ᵇ EndSpace) := inferInstance
-private local instance : NormedSpace ℝ C(K,Space →ᵇ EndSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup EndSpace` instance to shorten typeclass synthesis. -/
+local instance instPacketParentCoefficientBounds1 : NormedAddCommGroup EndSpace := inferInstance
+/-- Cache the standard `NormedSpace ℝ EndSpace` instance to shorten typeclass synthesis. -/
+local instance instPacketParentCoefficientBounds2 : NormedSpace ℝ EndSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ EndSpace)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentCoefficientBounds3 : NormedAddCommGroup (Space →ᵇ EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ EndSpace)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentCoefficientBounds4 : NormedSpace ℝ (Space →ᵇ EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,Space →ᵇ EndSpace)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentCoefficientBounds5 : NormedAddCommGroup C(K,Space →ᵇ EndSpace) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,Space →ᵇ EndSpace)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketParentCoefficientBounds6 : NormedSpace ℝ C(K,Space →ᵇ EndSpace) :=
+    inferInstance
 
 theorem coefficientPath_norm_le (F : SmoothCoefficientPath K EndSpace)
     (C : ℝ) (hC : 0 ≤ C) (hF : ∀ t x, ‖F.field t x‖ ≤ C) : ‖F.field‖ ≤ C :=
@@ -38,7 +53,7 @@ theorem coefficientPath_norm_le (F : SmoothCoefficientPath K EndSpace)
 
 theorem coefficientPath_norm_le_of_gevrey (F : SmoothCoefficientPath K EndSpace)
     (R C : ℝ) (hC : 0 ≤ C)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n) :
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n) :
     ‖F.field‖ ≤ C := by
   apply coefficientPath_norm_le F C hC
   intro t x
@@ -46,7 +61,7 @@ theorem coefficientPath_norm_le_of_gevrey (F : SmoothCoefficientPath K EndSpace)
     Nat.cast_one,pow_zero,mul_one,one_pow] using hF 0 t x
 
 theorem coefficientInverse_norm_le (F : SmoothCoefficientPath K EndSpace)
-    (I : C(K,Space →ᵇ EndSpace))
+    (I : C(K, Space →ᵇ EndSpace))
     (hdet : ∀ t x, (operatorMatrix (F.field t x)).det = 1)
     (hI : ∀ t x v, I t x (F.field t x v) = v)
     (C : ℝ) (_hC : 0 ≤ C) (hF : ∀ t x, ‖F.field t x‖ ≤ C) :
@@ -60,11 +75,11 @@ theorem coefficientInverse_norm_le (F : SmoothCoefficientPath K EndSpace)
     (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (norm_nonneg _) (hF t x) 2) (by norm_num))
 
 theorem coefficientInverse_bound (F : SmoothCoefficientPath K EndSpace)
-    (I : C(K,Space →ᵇ EndSpace))
+    (I : C(K, Space →ᵇ EndSpace))
     (hdet : ∀ t x, (operatorMatrix (F.field t x)).det = 1)
     (hI : ∀ t x v, I t x (F.field t x v) = v)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
     (n : ℕ) (t : K) (x : Space) :
     ‖iteratedFDeriv ℝ n (I t : Space → EndSpace) x‖ ≤ (9*C^2)*majorant R 0 n :=
   inverse_bound (F.field t) (I t) (F.smooth t) (hdet t) (hI t)
@@ -74,8 +89,8 @@ theorem coefficientStrain_bound (F F₁ M : SmoothCoefficientPath K EndSpace)
     (hdet : ∀ t x, (operatorMatrix (F.field t x)).det = 1)
     (h₁ : ∀ t x v, F₁.field t x v = M.field t x (F.field t x v))
     (R C C₁ : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (F₁.field t : Space → EndSpace) x‖ ≤ C₁*majorant R 0 n)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+    (hF₁ : ∀ n t x, ‖iteratedFDeriv ℝ n (F₁.field t : Space → EndSpace) x‖ ≤ C₁ * majorant R 0 n)
     (n : ℕ) (t : K) (x : Space) :
     ‖iteratedFDeriv ℝ n (M.field t : Space → EndSpace) x‖ ≤ (27*C^2*C₁)*majorant R 0 n :=
   strain_bound (F.field t) (F₁.field t) (M.field t) (F.smooth t) (F₁.smooth t)
@@ -85,8 +100,8 @@ theorem coefficientCurvature_bound (F F₂ H : SmoothCoefficientPath K EndSpace)
     (hdet : ∀ t x, (operatorMatrix (F.field t x)).det = 1)
     (h₂ : ∀ t x v, F₂.field t x v = -(H.field t x (F.field t x v)))
     (R C C₂ : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₂ : 0 ≤ C₂)
-    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C*majorant R 0 n)
-    (hF₂ : ∀ n t x, ‖iteratedFDeriv ℝ n (F₂.field t : Space → EndSpace) x‖ ≤ C₂*majorant R 0 n)
+    (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (F.field t : Space → EndSpace) x‖ ≤ C * majorant R 0 n)
+    (hF₂ : ∀ n t x, ‖iteratedFDeriv ℝ n (F₂.field t : Space → EndSpace) x‖ ≤ C₂ * majorant R 0 n)
     (n : ℕ) (t : K) (x : Space) :
     ‖iteratedFDeriv ℝ n (H.field t : Space → EndSpace) x‖ ≤ (27*C^2*C₂)*majorant R 0 n :=
   curvature_bound (F.field t) (F₂.field t) (H.field t) (F.smooth t) (F₂.smooth t)

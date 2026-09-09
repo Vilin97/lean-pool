@@ -6,13 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerGraphDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerTimeRestriction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerGraph
+public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerGraphDerivative
+import LeanPool.NavierStokesAndEuler.Euler.FieldTowerTimeRestriction
 
 /-! Canonical graph restrictions need no additional representative or
 regularity assumptions beyond the actual all-order tower. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +29,8 @@ variable {P T : ℝ} [Fact (0 < P)]
   (A : EulerAllOrderCorrectionData.FieldTower P T)
   (θ : Vector3 → AddCircle P) (hθ : Continuous θ)
 
+/-- Canonical graph word path, given by `A.graphWordPath A.pointField A.pointField_smooth
+A.pointField_ae θ hθ n w`. -/
 def canonicalGraphWordPath (n : ℕ) (w : Fin n → Fin 4) :
     C(Icc (0 : ℝ) T,Lp Vector3 2 (volume : Measure Vector3)) :=
   A.graphWordPath A.pointField A.pointField_smooth A.pointField_ae θ hθ n w
@@ -42,7 +47,7 @@ theorem canonicalGraphWordPath_norm_sq_le (n : ℕ) (w : Fin n → Fin 4)
   A.graphWordPath_norm_sq_le A.pointField A.pointField_smooth A.pointField_ae θ hθ n w t
 
 theorem canonicalGraphWordPath_norm_sq_le_high (n : ℕ) (w : Fin n → Fin 4)
-    (q : ℕ) (hq : n+1 ≤ q) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : n + 1 ≤ q) (t : Icc (0 : ℝ) T) :
     ‖A.canonicalGraphWordPath θ hθ n w t‖^2 ≤
       (2/P+2*P)*‖A.realization q t‖^2 := by
   have hn := restrictOperator_bound P hq (A.realization q t)
@@ -52,10 +57,10 @@ theorem canonicalGraphWordPath_norm_sq_le_high (n : ℕ) (w : Fin n → Fin 4)
     (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (norm_nonneg _) hn 2) (by positivity))
 
 theorem canonicalGraphWordPath_hasDerivAt (B : EulerAllOrderCorrectionData.FieldTower P T)
-    (hT : 0 ≤ T) (n : ℕ) (w : Fin n → Fin 4) (q : ℕ) (hq : n+1 ≤ q)
+    (hT : 0 ≤ T) (n : ℕ) (w : Fin n → Fin 4) (q : ℕ) (hq : n + 1 ≤ q)
     (t : ℝ) (ht : t ∈ Ioo 0 T)
     (hd : HasDerivAt (extendPath T hT (A.realization q))
-      (B.realization q ⟨t,ht.1.le,ht.2.le⟩) t) :
+      (B.realization q ⟨t, ht.1.le, ht.2.le⟩) t) :
     HasDerivAt (extendPath T hT (A.canonicalGraphWordPath θ hθ n w))
       (B.canonicalGraphWordPath θ hθ n w ⟨t,ht.1.le,ht.2.le⟩) t :=
   A.graphWordPath_hasDerivAt B A.pointField B.pointField A.pointField_smooth B.pointField_smooth

@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerGevrey
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! A single factorial budget for every base datum with |β|≤1.
 In particular this covers β=x₀⁻² with x₀≥1, independently of the
 eventual frequency and iteration scales. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,6 +23,7 @@ namespace EulerBaseDatum
 open Set EulerSmoothLimit EulerGevrey EulerLpTranslation EulerPacketPiola
   EulerPacketParentLabelBounds EulerMeanClassicalWordBounds EulerParameterWordGevrey
 
+/-- Uniform amplitude, given by `1+‖curlOperator‖*(3*(3*cutoffAmplitude*(24*2))*256)`. -/
 def uniformAmplitude : ℝ := 1+‖curlOperator‖*(3*(3*cutoffAmplitude*(24*2))*256)
 
 theorem uniformAmplitude_pos : 0 < uniformAmplitude := by
@@ -43,6 +46,7 @@ theorem velocity_uniform_sup (β : ℝ) (hβ : |β| ≤ 1) :
   (velocity_sup_bound (linear β)).mono (velocityAmplitude_nonneg _) (by norm_num)
     (velocityAmplitude_le_uniform β hβ) le_rfl
 
+/-- Uniform L² amplitude, given by `uniformAmplitude*volumeFactor`. -/
 def uniformL2Amplitude : ℝ := uniformAmplitude*volumeFactor
 
 theorem uniformL2Amplitude_nonneg : 0 ≤ uniformL2Amplitude :=
@@ -54,8 +58,10 @@ theorem field_uniform_jet (β : ℝ) (hβ : |β| ≤ 1) :
     (mul_nonneg (velocityAmplitude_nonneg _) volumeFactor_nonneg) (by norm_num)
     (mul_le_mul_of_nonneg_right (velocityAmplitude_le_uniform β hβ) volumeFactor_nonneg) le_rfl
 
+/-- Uniform label bound, given by `1+sobolevCoefficientAmplitude (Fin 3) 6 1024
+uniformL2Amplitude + sobolevCoefficientRadius (Fin 3) 1024`. -/
 def uniformLabelBound : ℝ :=
-  1+sobolevCoefficientAmplitude (Fin 3) 6 1024 uniformL2Amplitude+
+  1+sobolevCoefficientAmplitude (Fin 3) 6 1024 uniformL2Amplitude +
     sobolevCoefficientRadius (Fin 3) 1024
 
 theorem uniformLabelBound_one : 1 ≤ uniformLabelBound := by
@@ -80,7 +86,7 @@ theorem field_uniform_label (β : ℝ) (hβ : |β| ≤ 1) :
 theorem field_uniform_Hq (β : ℝ) (hβ : |β| ≤ 1) (q n : ℕ) :
     classicalBlockSize direction q (field (linear β)).toLp
       (field (linear β)).translation_contDiff n ≤
-        sobolevCoefficientAmplitude (Fin 3) q 1024 uniformL2Amplitude*
+        sobolevCoefficientAmplitude (Fin 3) q 1024 uniformL2Amplitude *
           (sobolevCoefficientRadius (Fin 3) 1024)^n*(n.factorial : ℝ)^2 :=
   SmoothL2Field.classicalBlockSize_of_jet_bound direction (by intro i; simp [direction]) q
     (field (linear β)) uniformL2Amplitude 1024 uniformL2Amplitude_nonneg (by norm_num)

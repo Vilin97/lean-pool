@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # The actual mean inverse on translated coefficient families
@@ -19,6 +18,9 @@ coercivity constant. Its solution for translated forcing is exactly the
 spatial translation of the original solution. Thus regularity of known
 coefficient families yields genuine spatial regularity of the solved field.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,17 +33,33 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 -- Reuse the nested Hilbert-space instances in the inverse and adjoint identities.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedInverse1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedInverse2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedInverse3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedInverse4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanTranslatedInverse5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace)
+    := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanTranslatedInverse6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L c : ℝ)
   (hc : 0 < c)
-  (hcoercive : ∀ v, c*‖v‖^2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v,v⟫_ℝ)
+  (hcoercive : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v, v⟫_ℝ)
 
 /-- The genuine inverse of the translated fixed mean operator. -/
 def translatedMeanInverse (a : Space) : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
@@ -57,13 +75,13 @@ def translatedMeanSolver (a : Space) : TimeLp T L2 →L[ℝ] TimeLp T solenoidal
 theorem translatedMeanInverse_covariance (a : Space) (g : TimeLp T solenoidalSpace) :
     translatedMeanInverse T hT F F₁ H M0 A L c hc hcoercive a (timeSolenoidalTranslation T a g) =
       timeSolenoidalTranslation T a (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc
-        hcoercive g) := by
+          hcoercive g) := by
   apply (coerciveEquiv (translatedMeanOperator T hT a F F₁ H M0 A L) c hc
     (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive)).injective
   simp only [coerciveEquiv_apply]
   have hl := operator_inverse_apply (translatedMeanOperator T hT a F F₁ H M0 A L) c hc
     (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive) (timeSolenoidalTranslation T
-      a g)
+        a g)
   have hr := (fixedMeanOperator_translate T hT a F F₁ H M0 A L
     (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive g)).trans
     (congrArg (timeSolenoidalTranslation T a)
@@ -107,9 +125,9 @@ theorem solution_translation_contDiff (f : TimeLp T L2) {n : ℕ∞ω}
     (fun a : Space => translatedMeanOperator T hT a F F₁ H M0 A L) (fun _ => c) (fun _ => hc)
     (fun a => translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive)
     (fun a : Space => -(translatedMeanPrimitive T hT a F F₁).adjoint (timeTranslation T a f)) hO
-      hforce
+        hforce
   have heq : (fun a : Space => translatedMeanSolver T hT F F₁ H M0 A L c hc hcoercive a
-    (timeTranslation T a f)) =
+      (timeTranslation T a f)) =
       (fun a : Space => timeSolenoidalTranslation T a
         (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
           (-(fixedMeanPrimitive T hT F F₁).adjoint f))) :=

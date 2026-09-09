@@ -6,10 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseParameterRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSpaceInverse
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.TransverseParameterRegularity
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Factorial coefficient estimates for the actual transverse form
@@ -18,6 +20,9 @@ The coefficient constants below are polynomial in the frame bounds and the
 interval length. They control genuine Fréchet derivatives of the concrete
 fixed-space operator and forcing, without a packaged jet or recurrence input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -122,7 +127,7 @@ theorem dirichletOperator_bound (T : ℝ) (hT : 0 ≤ T)
   exact sub_bound (fun _ : P => ContinuousLinearMap.id ℝ (TimeLp T E))
     (fun y => J.adjoint.comp ((timeMultiplier T hT (H y)).comp J))
     contDiff_const (contDiff_const.clm_comp ((contDiff_timeMultiplier T hT H hH).clm_comp
-      contDiff_const))
+        contDiff_const))
     R 1 (T^2*CH) 0 (const_bound _ R 1 hR norm_id_le) hpotential n x
 
 /-- Factorial control of the concrete fixed-space operator follows from the prescribed paths. -/

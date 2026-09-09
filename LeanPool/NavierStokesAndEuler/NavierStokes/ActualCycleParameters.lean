@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularStageControls
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleGeometry
-
-@[expose] public section
 
 /-!
 # Literal cycle parameters on the initialized labels
@@ -27,6 +24,9 @@ It does not assume or assert the analytic preservation of a correction
 cycle.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualCycleParameters
@@ -36,6 +36,8 @@ open scoped BigOperators
 
 /-! ## Exact transport of the stored coefficient family -/
 
+/-- Reindex coefficients, bundling `labels`, `blocks`, `gaussian`, `aliasCoefficients` and the
+required compatibility proofs. -/
 noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
     (v : CycleCoefficients ι) : CycleCoefficients κ where
   labels n := (v.labels n).map e.symm.toEmbedding
@@ -44,12 +46,15 @@ noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
   aliasCoefficients l := v.aliasCoefficients (e l)
   residualBand := v.residualBand
 
+/-- Reindex state, bundling `state`, `coefficients`, `axisymmetricAlias`. -/
 noncomputable def reindexState {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι) : CycleState κ where
   state := x.state
   coefficients := reindexCoefficients e x.coefficients
   axisymmetricAlias := x.axisymmetricAlias
 
+/-- Reindex parameters, bundling `gauge`, `strip`, `patch`, `coordinate` and the required
+compatibility proofs. -/
 noncomputable def reindexParameters {ι κ : Type} (e : κ ≃ ι)
     (p : CycleParameters ι) : CycleParameters κ where
   gauge := p.gauge
@@ -131,9 +136,12 @@ theorem reindexState_bands {ι κ : Type} (e : κ ≃ ι)
 
 /-! ## The two label orders describe the same primary choice -/
 
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
+/-- Particular index: an abbreviation for `ActualParticularStageControls.Label B N0`. -/
 abbrev ParticularIndex (B N0 : ℕ) := ActualParticularStageControls.Label B N0
 
+/-- Swap, given by `Equiv.prodComm _ _`. -/
 noncomputable def swap (B N0 : ℕ) : Index B N0 ≃ ParticularIndex B N0 :=
   Equiv.prodComm _ _
 
@@ -142,26 +150,27 @@ noncomputable def swap (B N0 : ℕ) : Index B N0 ≃ ParticularIndex B N0 :=
 @[simp] theorem swap_symm_apply {B N0 : ℕ} (l : ParticularIndex B N0) :
     (swap B N0).symm l = (l.2, l.1) := rfl
 
+/-- Particular state, given by `reindexState (swap B N0).symm x`. -/
 noncomputable def particularState {B N0 : ℕ} (x : CycleState (Index B N0)) :
     CycleState (ParticularIndex B N0) := reindexState (swap B N0).symm x
 
 @[simp] theorem particularState_state {B N0 : ℕ} (x : CycleState (Index B N0)) :
     (particularState x).state = x.state := rfl
 
-@[simp] theorem particularState_blocks {B N0 : ℕ} (x : CycleState (Index B N0))
+theorem particularState_blocks {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : Index B N0) :
     (particularState x).coefficients.blocks (swap B N0 l) = x.coefficients.blocks l := rfl
 
-@[simp] theorem particularState_gaussian {B N0 : ℕ} (x : CycleState (Index B N0))
+theorem particularState_gaussian {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : Index B N0) :
     (particularState x).coefficients.gaussian (swap B N0 l) = x.coefficients.gaussian l := rfl
 
-@[simp] theorem particularState_alias {B N0 : ℕ} (x : CycleState (Index B N0))
+theorem particularState_alias {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : Index B N0) :
     (particularState x).coefficients.aliasCoefficients (swap B N0 l) =
       x.coefficients.aliasCoefficients l := rfl
 
-@[simp] theorem particularState_mem {B N0 : ℕ} (x : CycleState (Index B N0))
+theorem particularState_mem {B N0 : ℕ} (x : CycleState (Index B N0))
     (n : ℕ) (l : Index B N0) :
     swap B N0 l ∈ (particularState x).coefficients.labels n ↔ l ∈ x.coefficients.labels n := by
   simpa only [particularState, reindexState, Equiv.symm_apply_apply] using
@@ -173,6 +182,7 @@ theorem particularState_roundtrip {B N0 : ℕ} (x : CycleState (Index B N0)) :
 
 /-! ## The actual four-stage parameter constructor -/
 
+/-- Parameters, constructed using `CycleParameters.ofGeometry`. -/
 noncomputable def parameters {B N0 : ℕ} (x : CycleState (Index B N0)) :
     CycleParameters (Index B N0) :=
   CycleParameters.ofGeometry ActualInitialization.geometry ActualPrimary.h
@@ -245,6 +255,7 @@ theorem parameters_compatible {B N0 : ℕ} (x : CycleState (Index B N0)) :
 choice and does not change with the current correction state. -/
 noncomputable def bandFloor (B N0 : ℕ) : ℕ := (ActualPrimary.choice B N0).prepared.N
 
+/-- Source band, given by `BaseChartJets.cellBand l.1`. -/
 noncomputable def sourceBand {B N0 : ℕ} (l : Index B N0) : ℕ := BaseChartJets.cellBand l.1
 
 theorem bandFloor_ge (B N0 : ℕ) : N0 ≤ bandFloor B N0 := ActualPrimary.threshold B N0
@@ -316,7 +327,7 @@ theorem particular_source {B N0 : ℕ} (x : CycleState (Index B N0))
       (StateReindex.block cycleAssoc.symm (x.coefficients.blocks l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.gaussian l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.aliasCoefficients l))
-        j).source =
+          j).source =
     ParticularWaveAssembly.sourceFamily
       (StateReindex.context cycleAssoc.symm (ActualPrimary.commonContext B))
       (StateReindex.state cycleAssoc.symm x.state)
@@ -329,7 +340,7 @@ theorem signed_request {B N0 : ℕ} (x : CycleState (Index B N0)) :
       LocalSignedRequest.fullRequest ActualInitialization.strip ActualInitialization.patch
         (2 * ActualPrimary.h) (ActualPrimary.commonContext B)
         ((parameters x).afterParticular x.coefficients (ActualPrimary.commonContext B) x.state) :=
-          rfl
+            rfl
 
 /-! ## The signed update uses the initialized primary carrier -/
 
@@ -424,6 +435,7 @@ theorem initial_signed_carrier (B N0 : ℕ) (l : Index B N0) :
 
 /-! ## The same fixed primitives at every valid state -/
 
+/-- Fixed parameters, constructed using `CycleParameters.ofGeometry`. -/
 noncomputable def fixedParameters (B N0 : ℕ) : CycleParameters (Index B N0) :=
   CycleParameters.ofGeometry ActualInitialization.geometry ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) ActualInitialization.axial
@@ -524,7 +536,7 @@ theorem invariant_fixedParameters_signed_carrier {B N0 : ℕ} {x : CycleState (I
       ActualInitialization.tangentBlock P labelCarrier sigma x) (l : Index B N0) :
     SameCarrier (x.coefficients.blocks l)
       ((fixedParameters B N0).signedBlock x.coefficients (ActualPrimary.commonContext B) x.state l)
-        :=
+          :=
   fixedParameters_signed_carrier x _ l (H.carrier l)
 
 end NavierStokes.ActualCycleParameters

@@ -6,11 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevTransport
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+
+/-! Exact coefficient functionals for the lifted Euler transport vector (κz,m·z). -/
 
 @[expose] public section
 
-/-! Exact coefficient functionals for the lifted Euler transport vector (κz,m·z). -/
 
 noncomputable section
 
@@ -19,7 +20,8 @@ namespace EulerSobolevTransport
 open InnerProductSpace EulerLiftedGradientSpace EulerMetricTransport EulerVectorCylinder
   EulerCylinderSobolev EulerTransportDerivatives
 
-/-- Coordinate functionals of the actual lifted transport vector, with the angle coordinate first. -/
+/-- Coordinate functionals of the actual lifted transport vector, with the angle coordinate first.
+-/
 def velocityComponents (κ : ℝ) (m : Vector3) : Fin 4 → Vector3 →L[ℝ] ℝ :=
   Fin.cons (innerSL ℝ m) (fun i : Fin 3 => κ • coordinate 3 i)
 
@@ -30,8 +32,8 @@ theorem velocityComponents_norm (κ : ℝ) (m : Vector3) (hκ : |κ| ≤ 1) (hm 
   refine Fin.cases ?_ (fun j => ?_) i
   · simpa only [velocityComponents, Fin.cons_zero, innerSL_apply_norm] using hm
   · simp only [velocityComponents, Fin.cons_succ, norm_smul, Real.norm_eq_abs]
-    exact (mul_le_mul hκ (coordinate_norm_le 3 j) (norm_nonneg _) (by norm_num)).trans_eq (one_mul
-      1)
+    exact (mul_le_mul hκ (coordinate_norm_le 3 j) (norm_nonneg _) (by
+        norm_num)).trans_eq (one_mul 1)
 
 /-- These functionals recover exactly the four-dimensional transport direction. -/
 theorem velocityComponents_direction (κ : ℝ) (m z : Vector3) :
@@ -44,22 +46,22 @@ theorem velocityComponents_direction (κ : ℝ) (m z : Vector3) :
       (EuclideanSpace.basisFun (Fin 3) ℝ).sum_repr z
   apply Prod.ext
   · change (⟪m,z⟫_ℝ • standardDirection 0 + ∑ i : Fin 3, (κ * z i) • standardDirection i.succ).1 =
-    κ • z
+      κ • z
     simp only [standardDirection_zero, standardDirection_succ, Prod.fst_add, Prod.fst_sum]
     change ⟪m,z⟫_ℝ • (0 : Vector3) + (∑ i : Fin 3, (κ*z i) • EuclideanSpace.single i 1) = κ • z
     rw [smul_zero, zero_add]
     calc
       (∑ i : Fin 3, (κ*z i) • EuclideanSpace.single i 1) = κ • ∑ i : Fin 3, z i •
-        EuclideanSpace.single i 1 := by
+          EuclideanSpace.single i 1 := by
         rw [Finset.smul_sum]
         apply Finset.sum_congr rfl
         intro i _
         exact mul_smul κ (z i) _
       _ = κ • z := by rw [hz]
   · change (⟪m,z⟫_ℝ • standardDirection 0 + ∑ i : Fin 3, (κ * z i) • standardDirection i.succ).2 =
-    ⟪m,z⟫_ℝ
+      ⟪m,z⟫_ℝ
     rw [Prod.snd_add, Prod.snd_sum]
     simp only [standardDirection_zero, standardDirection_succ, Prod.smul_snd, smul_eq_mul, mul_one,
-      mul_zero, Finset.sum_const_zero, add_zero]
+        mul_zero, Finset.sum_const_zero, add_zero]
 
 end EulerSobolevTransport

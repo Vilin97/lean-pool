@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanLocalL2Energy
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Integrating the source's different lower bounds inside and outside the core. -/
 
 @[expose] public section
 
-/-! Integrating the source's different lower bounds inside and outside the core. -/
 
 noncomputable section
 

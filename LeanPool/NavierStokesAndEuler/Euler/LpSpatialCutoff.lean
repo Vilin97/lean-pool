@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCompactTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+
+/-! Expanding ordinary-space cutoffs and their actual first derivative controls. -/
 
 @[expose] public section
 
-/-! Expanding ordinary-space cutoffs and their actual first derivative controls. -/
 
 noncomputable section
 
@@ -20,6 +21,7 @@ namespace EulerLpTranslation
 open MeasureTheory EulerSmoothLimit EulerNoncompactTransport Filter
 open scoped ContDiff Topology
 
+/-- Cutoff, given by `spatialBump (cutoffScale n • x)`. -/
 def cutoff (n : ℕ) (x : Space) : ℝ := spatialBump (cutoffScale n • x)
 
 theorem cutoff_smooth (n : ℕ) : ContDiff ℝ ∞ (cutoff n) :=
@@ -59,7 +61,7 @@ theorem cutoff_derivative_bound : ∃ M : ℝ, 0 ≤ M ∧
         ‖cutoffScale n • ContinuousLinearMap.id ℝ Space‖ := ContinuousLinearMap.opNorm_comp_le _ _
     _ = ‖fderiv ℝ (spatialBump : Space → ℝ) (cutoffScale n • x)‖ * cutoffScale n := by
       rw [norm_smul, Real.norm_eq_abs, abs_of_pos (cutoffScale_pos n), ContinuousLinearMap.norm_id,
-        mul_one]
+          mul_one]
     _ ≤ M * cutoffScale n := mul_le_mul_of_nonneg_right (hM _) (cutoffScale_pos n).le
 
 theorem cutoff_derivative_tendsto (x : Space) :
@@ -70,6 +72,7 @@ theorem cutoff_derivative_tendsto (x : Space) :
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Cutoff field, given by `cutoff n x • f x`. -/
 def cutoffField (f : Space → V) (n : ℕ) (x : Space) : V := cutoff n x • f x
 
 theorem cutoffField_smooth (f : Space → V) (hf : ContDiff ℝ ∞ f) (n : ℕ) :
@@ -92,7 +95,7 @@ theorem cutoffField_fderiv_tendsto (f : Space → V) (hf : ContDiff ℝ ∞ f) (
   have hright : Tendsto (fun n => (fderiv ℝ (cutoff n) x).smulRight (f x)) atTop (𝓝 0) := by
     have hc : Continuous (fun L : Space →L[ℝ] ℝ => L.smulRight (f x)) := by fun_prop
     simpa only [ContinuousLinearMap.zero_smulRight, Function.comp_def] using
-      hc.continuousAt.tendsto.comp
+        hc.continuousAt.tendsto.comp
       (cutoff_derivative_tendsto x)
   simp_rw [cutoffField_fderiv f hf]
   simpa only [one_smul, add_zero] using ((cutoff_tendsto x).smul_const (fderiv ℝ f x)).add hright

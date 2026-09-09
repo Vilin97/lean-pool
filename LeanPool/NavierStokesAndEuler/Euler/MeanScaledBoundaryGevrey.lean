@@ -8,11 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.MeanScaledCutoff
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+
+/-! The source boundary operator has uniform Gevrey bounds under physical cutoff rescaling. -/
 
 @[expose] public section
 
-/-! The source boundary operator has uniform Gevrey bounds under physical cutoff rescaling. -/
 
 noncomputable section
 
@@ -22,6 +26,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerM
   EulerMeanCutoffCurl EulerGevrey
 open scoped ContDiff
 
+/-- Cutoff unit ball factor, given by `(Real.pi * 4 / 3) ^ (1/3 : ℝ)`. -/
 def cutoffUnitBallFactor : ℝ := (Real.pi * 4 / 3) ^ (1/3 : ℝ)
 
 theorem cutoffUnitBallFactor_nonneg : 0 ≤ cutoffUnitBallFactor := by
@@ -35,13 +40,15 @@ theorem closedBall_volume_oneThird (R : ℝ) (hR : 0 ≤ R) :
     Real.mul_rpow (pow_nonneg hR 3) (by positivity), ← Real.rpow_natCast_mul hR]
   norm_num [cutoffUnitBallFactor]
 
+/-- Scaled cutoff gevrey size, given by `(9 * (1 + 3 / EulerGevreyCutoff.bumpMass)^2)^3`. -/
 def scaledCutoffGevreySize : ℝ := (9 * (1 + 3 / EulerGevreyCutoff.bumpMass)^2)^3
 
 theorem scaledCutoffGevreySize_nonneg : 0 ≤ scaledCutoffGevreySize := by
   unfold scaledCutoffGevreySize
   positivity
 
-/-- The exact scaling factor is retained, so the L³ derivative term will cancel the support radius. -/
+/-- The exact scaling factor is retained, so the L³ derivative term will cancel the support radius.
+-/
 theorem scaledCutoff_scaledRadiusGevrey (ℓ : ℝ) (hℓ : 0 < ℓ) (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (scaledCutoff ℓ hℓ).field x‖ ≤
       scaledCutoffGevreySize * majorant (256*ℓ) 0 n := by
@@ -114,6 +121,7 @@ theorem scaledWeakPotential_gevrey (ℓ : ℝ) (hℓ : 0 < ℓ) (hℓ1 : ℓ ≤
   exact H.trans (mul_le_mul_of_nonneg_left (scaled_majorant_le ℓ hℓ.le hℓ1 n)
     scaledCutoffOperatorAmplitude_nonneg)
 
+/-- Scaled boundary operator amplitude, given by `3 * scaledCutoffOperatorAmplitude^2`. -/
 def scaledBoundaryOperatorAmplitude : ℝ := 3 * scaledCutoffOperatorAmplitude^2
 
 theorem scaledBoundaryOperatorAmplitude_nonneg : 0 ≤ scaledBoundaryOperatorAmplitude := by
@@ -140,6 +148,6 @@ theorem scaledBoundaryOperator_gevrey (ℓ : ℝ) (hℓ : 0 < ℓ) (hℓ1 : ℓ 
     (mul_nonneg (mul_nonneg (by norm_num) scaledCutoffOperatorAmplitude_nonneg)
       scaledCutoffOperatorAmplitude_nonneg))
   simpa only [mixedBoundaryOperator_diagonal, scaledBoundaryOperatorAmplitude, pow_two, mul_assoc]
-    using Hb
+      using Hb
 
 end EulerMeanBoundary

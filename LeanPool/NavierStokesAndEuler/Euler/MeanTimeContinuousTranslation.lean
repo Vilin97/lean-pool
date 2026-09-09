@@ -7,9 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ReconstructionNaturality
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Spatial translations of continuous ordinary-L² time paths
@@ -20,6 +21,9 @@ spatial orbit regularity, and evaluation at each time loses no derivative
 or additional constant.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanTimeContinuousTranslation
@@ -28,8 +32,14 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal EulerMeanTimeT
   EulerTimeLp EulerTimeH1Reconstruction EulerOperatorGevreyCalculus EulerGevrey
 open scoped ContDiff
 
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTimeContinuousTranslation1 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTimeContinuousTranslation2 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2) :=
+    inferInstance
 
 /-- Ordinary spatial translation of every time value of a continuous L² path. -/
 def pathTranslation (T : ℝ) (a : Space) :
@@ -71,9 +81,9 @@ theorem reconstruction_translation_gevrey (T : ℝ) (hT : 0 < T)
     (hq : ContDiff ℝ ∞ (fun a : Space => timeTranslation T a q))
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D) (d : ℕ)
     (hbp : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b p) a‖ ≤ C*majorant R d
-      n)
+        n)
     (hbq : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b q) a‖ ≤ D*majorant R d
-      n)
+        n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space =>
       pathTranslation T b (reconstruction T hT.le (p,q))) a‖ ≤

@@ -6,10 +6,7 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseExterior
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ConstructedSlowBase
-
-@[expose] public section
 
 /-!
 # Exact exterior of the repaired modulated slow base
@@ -22,6 +19,9 @@ The scheme interface records the actual extended coefficient formulas.  It
 allows any seed cutoff with the same order-zero profile and outer radius,
 including the entrance-aligned scheme.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.ModulatedExterior
 
@@ -278,7 +278,7 @@ theorem realized_pressure_pure_heat (henergy : RestoredSquaredSwirl W Q (S := S)
   have hpq := modified_pressure_after W Q M henergy hx (M.contains he)
   change Q.pressure (inner F.data.h p) = W.Pi (inner F.data.h p) at hpq
   have hsame : leadingPressure F.data.h d p = leadingPressure F.data.h (nominalCoefficients W) p :=
-    by
+      by
     unfold leadingPressure pullback
     rw [hc, hn, hpq]
   exact hsame.trans (nominal_pressure_pure_heat W hp)
@@ -334,7 +334,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- This finite anchor is derived from the actual solved modulation. -/
 theorem actual_squared_swirl_restored : RestoredSquaredSwirl W v.profiles (S := v.slowParameters)
-  := by
+    := by
   intro eta heta
   apply squared_swirl_anchor_of_rows v.profiles W.profiles v.pressure0
   apply v.restored eta heta.1
@@ -354,11 +354,11 @@ theorem actual_exterior_coefficients :
 increasing cutoff schedule.  The pressure anchor is discharged internally. -/
 theorem actual_base_eq_heat {a : ℕ → ℕ} (ha : StrictMono a) :
     EqOn (baseVelocity a F.data.h W.axis.normalization (ConstructedSlowBase.Modulated.coefficients
-      v))
+        v))
       (heatVelocity (nominalHeatNormalization W) F.data.h)
       (cartesianExterior F.data.h (nominalExteriorRadius W)) ∧
     EqOn (basePressure a F.data.h W.axis.normalization (ConstructedSlowBase.Modulated.coefficients
-      v))
+        v))
       (heatPressureField (nominalHeatNormalization W) F.data.h)
       (cartesianExterior F.data.h (nominalExteriorRadius W)) :=
   realized_base_eq_heat W v.profiles v.finiteModification (actual_realizes v) rfl rfl
@@ -427,7 +427,7 @@ theorem exists_terminal_exterior_neighborhood {h R : ℝ}
       SimilarityCoordinates.forwardScalar (2 * h) (z.2 2) b) := by
     exact continuous_const.sub
       ((((AxisymmetricFields.projection 2).continuous.comp continuous_snd).pow 2).mul
-        continuous_const)
+          continuous_const)
   have hU : IsOpen U :=
     (isOpen_lt continuous_const
       ((AxisymmetricFields.contDiff_radialEnergy (n := ∞)).continuous.comp continuous_snd)).inter
@@ -459,6 +459,7 @@ value is supplied at the terminal time. -/
 noncomputable def completedVelocity (C h : ℝ) (u : VelocityField) : VelocityField :=
   fun z => if z.1 < 1 then u z else heatVelocity C h z
 
+/-- Completed pressure, defined pointwise by `if z.1 < 1 then p z else heatPressureField C h z`. -/
 noncomputable def completedPressure (C h : ℝ) (p : PressureField) : PressureField :=
   fun z => if z.1 < 1 then p z else heatPressureField C h z
 
@@ -538,10 +539,10 @@ theorem actual_terminal_extension {F : OutgoingProfile.Profile} {W : NominalProf
         (heatPressureField (nominalHeatNormalization W) F.data.h) U ∧
       ContDiffOn ℝ ∞ (completedVelocity (nominalHeatNormalization W) F.data.h
         (ConstructedSlowBase.Modulated.velocity v c hc upper B)) (U ∩ (Iic 1 ×ˢ (univ : Set
-          Space))) ∧
+            Space))) ∧
       ContDiffOn ℝ ∞ (completedPressure (nominalHeatNormalization W) F.data.h
         (ConstructedSlowBase.Modulated.pressure v c hc upper B)) (U ∩ (Iic 1 ×ˢ (univ : Set
-          Space))) := by
+            Space))) := by
   have he := actual_fields_eq_heat v c hc upper B
   exact completed_fields_smooth_near_terminal F.data.h_pos F.data.h_lt_half
     (nominalExteriorRadius_pos W).le he.1 he.2 hx hs

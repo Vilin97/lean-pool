@@ -9,15 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerCorrection
 public import LeanPool.NavierStokesAndEuler.Euler.ConstantEulerGraph
 public import LeanPool.NavierStokesAndEuler.Euler.EulerTimeRescaling
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 
 /-! A positive-time classical Euler solution constructed from a genuine
 solenoidal Gevrey datum. The initial velocity is the original datum, not
 its small multiple. All spatial derivative tensors remain continuous L²
 paths after the actual Euler time/amplitude rescaling. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,16 +29,21 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
 open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] (u : SmoothL2Field Space) (C R : ℝ)
-  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
+  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
 
+/-- Local velocity, given by `EulerTimeRescaling.velocity (amplitude P C R hC hR)
+(EulerConstantEuler.velocity (exactPacket P u C R hC hR hu hdiv))`. -/
 def localVelocity : ℝ × Space → Space :=
   EulerTimeRescaling.velocity (amplitude P C R hC hR)
     (EulerConstantEuler.velocity (exactPacket P u C R hC hR hu hdiv))
 
+/-- Local pressure, given by `EulerTimeRescaling.pressure (amplitude P C R hC hR)
+(EulerConstantEuler.pressure (exactPacket P u C R hC hR hu hdiv))`. -/
 def localPressure : ℝ × Space → ℝ :=
   EulerTimeRescaling.pressure (amplitude P C R hC hR)
     (EulerConstantEuler.pressure (exactPacket P u C R hC hR hu hdiv))
 
+/-- Local force as an element of `Space`. -/
 def localForce (q : ℝ × Space) : Space :=
   ((amplitude P C R hC hR)⁻¹)^2 •
     EulerConstantEuler.force (exactPacket P u C R hC hR hu hdiv)
@@ -54,7 +59,7 @@ theorem unit_initial (x : Space) :
     ((EulerStaticCylinder.field P 1 u).smul (amplitude P C R hC hR)).toFieldTower.pointField
       ⟨0,le_rfl,by norm_num⟩ (x,0) at hh
   have hr := ((EulerStaticCylinder.field P 1 u).smul (amplitude P C R hC
-    hR)).toFieldTower_pointField_raw
+      hR)).toFieldTower_pointField_raw
     ⟨0,le_rfl,by norm_num⟩ x 0
   change _ = amplitude P C R hC hR • u.field x at hr
   have h0 : (0 : ℝ) ∈ Icc (0 : ℝ) 1 := ⟨le_rfl,by norm_num⟩
@@ -62,7 +67,7 @@ theorem unit_initial (x : Space) :
     projIcc_of_mem zero_le_one h0,coveringMap,AddCircle.coe_zero] using hh.trans hr
 
 theorem localVelocity_initial (x : Space) : localVelocity P u C R hC hR hu hdiv (0,x)=u.field x :=
-  by
+    by
   change (amplitude P C R hC hR)⁻¹ •
     EulerConstantEuler.velocity (exactPacket P u C R hC hR hu hdiv)
       (EulerTimeRescaling.coordinates (amplitude P C R hC hR) (0,x)) = _
@@ -76,9 +81,9 @@ theorem localMomentum (t : ℝ) (ht : t ∈ Ioo (0 : ℝ) (amplitude P C R hC hR
     (amplitude_pos P C R hC hR) t ht
   exact EulerTimeRescaling.momentumResidual_zero (amplitude P C R hC hR) _ _ (t,x)
     (EulerConstantEuler.velocity_hasFDerivAt (exactPacket P u C R hC hR hu hdiv) _ hs
-      x).differentiableAt
+        x).differentiableAt
     ((EulerConstantEuler.pressure_smooth (exactPacket P u C R hC hR hu hdiv) _).differentiable (by
-      simp) x)
+        simp) x)
     (EulerConstantEuler.momentum (exactPacket P u C R hC hR hu hdiv) _ hs x)
 
 theorem localVelocity_differentiableAt (t : ℝ)
@@ -88,7 +93,7 @@ theorem localVelocity_differentiableAt (t : ℝ)
     (amplitude_pos P C R hC hR) t ht
   exact (EulerTimeRescaling.velocity_hasFDerivAt (amplitude P C R hC hR) _ (t,x)
     (EulerConstantEuler.velocity_hasFDerivAt (exactPacket P u C R hC hR hu hdiv) _ hs
-      x).differentiableAt).differentiableAt
+        x).differentiableAt).differentiableAt
 
 theorem localVelocity_divergence (t : ℝ) (x : Space) :
     divergence (fun y => localVelocity P u C R hC hR hu hdiv (t,y)) x=0 := by
@@ -96,7 +101,7 @@ theorem localVelocity_divergence (t : ℝ) (x : Space) :
   have hd := EulerTimeRescaling.spatial_derivative (amplitude P C R hC hR)
     (EulerConstantEuler.velocity (exactPacket P u C R hC hR hu hdiv)) t x
     ((EulerConstantEuler.velocity_smooth (exactPacket P u C R hC hR hu hdiv) _).differentiable (by
-      simp) x)
+        simp) x)
   change (∑ i : Fin 3, (fderiv ℝ (fun y => EulerTimeRescaling.velocity (amplitude P C R hC hR)
     (EulerConstantEuler.velocity (exactPacket P u C R hC hR hu hdiv)) (t,y)) x
       (EuclideanSpace.single i 1)) i)=0
@@ -135,7 +140,7 @@ theorem localPressure_gradient (t : ℝ) (x : Space) :
   have h := EulerTimeRescaling.pressure_gradient (amplitude P C R hC hR)
     (EulerConstantEuler.pressure (exactPacket P u C R hC hR hu hdiv)) (t,x)
     ((EulerConstantEuler.pressure_smooth (exactPacket P u C R hC hR hu hdiv) _).differentiable (by
-      simp) x)
+        simp) x)
   erw [EulerConstantEuler.pressure_gradient] at h
   exact h
 
@@ -150,6 +155,7 @@ theorem localPressure_zero (t : ℝ) : localPressure P u C R hC hR hu hdiv (t,0)
     EulerConstantEuler.pressure (exactPacket P u C R hC hR hu hdiv) (_,0)=0
   erw [EulerConstantEuler.pressure_zero,mul_zero]
 
+/-- Local field, constructed using `SmoothL2Field.mapField`. -/
 def localField (t : Icc (0 : ℝ) (amplitude P C R hC hR)) : SmoothL2Field Space :=
   SmoothL2Field.mapField ((amplitude P C R hC hR)⁻¹ • ContinuousLinearMap.id ℝ Space)
     (EulerConstantEuler.field (exactPacket P u C R hC hR hu hdiv)

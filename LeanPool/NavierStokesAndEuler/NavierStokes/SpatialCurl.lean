@@ -7,12 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FinCases
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-!
 # The physical Euclidean curl
@@ -21,6 +16,9 @@ All derivatives in this file are genuine Fréchet derivatives on the Euclidean
 space used in `ProblemStatement`. In particular, mixed-partial symmetry is
 proved from C² regularity, rather than assumed for formal derivative symbols.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

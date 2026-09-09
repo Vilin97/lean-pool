@@ -6,104 +6,16 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CompactSmoothJet
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Sobolev embedding for general smooth fields on R³, without Schwartz assumptions. -/
 
 @[expose] public section
 
 noncomputable section
-
-/-! Sobolev embedding for general smooth fields on R³, without Schwartz assumptions. -/
 
 namespace EulerSmoothSobolev
 
@@ -193,8 +105,8 @@ theorem sobolevNorm_two_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, F)) :
       simp_rw [← mul_assoc, hp, one_mul]
       rw [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
-    nlinarith [mul_le_mul_of_nonneg_right (le_of_eq (show besselWeight d 2 ξ = 1 + ∑ i, ‖ξ i‖ ^ 2
-      by norm_num [besselWeight, EuclideanSpace.norm_sq_eq])) (norm_nonneg (𝓕 f ξ))]
+    nlinarith [mul_le_mul_of_nonneg_right (le_of_eq (show besselWeight d 2 ξ = 1 + ∑ i, ‖ξ i‖ ^ 2 by
+        norm_num [besselWeight, EuclideanSpace.norm_sq_eq])) (norm_nonneg (𝓕 f ξ))]
   have h := normLp_le_sum d (weightedFourier d 2 f) g 1
     (by norm_num) hpoint
   have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +
@@ -232,8 +144,8 @@ theorem tensorSobolevNorm_nonneg (s : ℕ) (f : Domain 3 → F) : 0 ≤ tensorSo
 omit [CompleteSpace F] in
 theorem tensorSobolevNorm_mono {s t : ℕ} (hst : s ≤ t) (f : Domain 3 → F) :
     tensorSobolevNorm s f ≤ tensorSobolevNorm t f :=
-  Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono (by omega)) (fun _ _ _ =>
-    ENNReal.toReal_nonneg)
+  Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono (by
+      omega)) (fun _ _ _ => ENNReal.toReal_nonneg)
 
 /-- Sum of the pointwise norms of all derivatives through a fixed order. -/
 noncomputable def derivativeMagnitude (s : ℕ) (f : Domain 3 → F) (x : Domain 3) : ℝ :=
@@ -253,9 +165,9 @@ omit [CompleteSpace F] in
 theorem derivativeMagnitude_L2_le (s : ℕ) (f : Domain 3 → F)
     (hfL2 : ∀ j ≤ s, MemLp (iteratedFDeriv ℝ j f) 2 volume) :
     ‖(derivativeMagnitude_memLp s f hfL2).toLp (derivativeMagnitude s f)‖ ≤ tensorSobolevNorm s f
-      := by
+        := by
   have he : derivativeMagnitude s f = ∑ j ∈ Finset.range (s+1), fun x => ‖iteratedFDeriv ℝ j f x‖
-    := by
+      := by
     funext x
     simp [derivativeMagnitude]
   have hA : eLpNorm (derivativeMagnitude s f) 2 volume ≤
@@ -291,7 +203,7 @@ noncomputable def unitBumpCoefficient (n : ℕ) : NNReal :=
 
 /-- An actual smooth compact localization of an arbitrary smooth function about `x`. -/
 noncomputable def localize (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f) (x : Domain 3) : 𝓢(Domain 3, F)
-  :=
+    :=
   (unitBump.hasCompactSupport.smul_right (f' := fun z => f (x+z))).toSchwartzMap
     (unitBump.contDiff.smul (hf.comp (contDiff_const.add contDiff_id)))
 
@@ -322,13 +234,14 @@ theorem localize_tensor_bound (n : ℕ) (f : Domain 3 → F) (hf : ContDiff ℝ 
       (fun _ _ => norm_nonneg _) (Finset.mem_range.2 (by omega))
   calc
     _ ≤ ∑ j ∈ Finset.range (n+1), ((n.choose j : ℝ) * unitBumpBound j) * derivativeMagnitude n f
-      (x+z) := by
+        (x+z) := by
       apply Finset.sum_le_sum
       intro j hj
       exact mul_le_mul (mul_le_mul_of_nonneg_left (hb j) (Nat.cast_nonneg _)) (hd j hj)
         (norm_nonneg _) (mul_nonneg (Nat.cast_nonneg _) (unitBumpBound j).coe_nonneg)
-    _ = _ := by simp only [unitBumpCoefficient, NNReal.coe_sum, NNReal.coe_mul, NNReal.coe_natCast,
-      Finset.sum_mul]
+    _ = _ := by
+        simp only [unitBumpCoefficient, NNReal.coe_sum, NNReal.coe_mul, NNReal.coe_natCast,
+            Finset.sum_mul]
 
 omit [CompleteSpace F] in
 /-- Each localized pure derivative is controlled by the global physical Sobolev norm. -/
@@ -339,7 +252,7 @@ theorem localize_pureDerivative_L2_le (n : ℕ) (i : Fin 3) (f : Domain 3 → F)
   have hq := derivativeMagnitude_memLp n f hfL2
   have htrans := measurePreserving_add_left (volume : Measure (Domain 3)) x
   have hqt : MemLp (fun z => derivativeMagnitude n f (x+z)) 2 volume := hq.comp_measurePreserving
-    htrans
+      htrans
   have hb (z : Domain 3) :
       ‖pureDerivative 3 n (EuclideanSpace.single i 1) (localize f hf x) z‖ ≤
         (unitBumpCoefficient n : ℝ) * ‖derivativeMagnitude n f (x+z)‖ := by
@@ -357,12 +270,12 @@ theorem localize_pureDerivative_L2_le (n : ℕ) (i : Fin 3) (f : Domain 3 → F)
   have he : eLpNorm (fun z => derivativeMagnitude n f (x+z)) 2 volume =
       eLpNorm (derivativeMagnitude n f) 2 volume := by
     simpa only [Function.comp_def] using eLpNorm_comp_measurePreserving (p := (2 : ℝ≥0∞)) hq.1
-      htrans
+        htrans
   rw [he] at hB
   simp only [ENNReal.toReal_mul, ENNReal.coe_toReal] at hB
   rw [SchwartzMap.norm_toLp]
   have hC := mul_le_mul_of_nonneg_left (derivativeMagnitude_L2_le n f hfL2) (unitBumpCoefficient
-    n).coe_nonneg
+      n).coe_nonneg
   rw [Lp.norm_toLp] at hC
   exact hB.trans hC
 
@@ -386,10 +299,10 @@ theorem smooth_pointwise_le_H2 (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f)
     simp [pureDerivative]
   rw [he] at hzero
   have hzero' := hzero.trans (mul_le_mul_of_nonneg_left (tensorSobolevNorm_mono (show 0 ≤ 2 by
-    omega) f)
+      omega) f)
     (unitBumpCoefficient 0).coe_nonneg)
   have htwo : (∑ i : Fin 3, ‖(pureDerivative 3 2 (EuclideanSpace.single i 1) (localize f hf
-    x)).toLp 2‖) ≤
+      x)).toLp 2‖) ≤
       3 * ((unitBumpCoefficient 2 : ℝ) * tensorSobolevNorm 2 f) := by
     simpa using Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin 3))) =>
       localize_pureDerivative_L2_le 2 i f hf hfL2 x)
@@ -397,8 +310,8 @@ theorem smooth_pointwise_le_H2 (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f)
   rw [localize_zero] at hA
   have hB := add_le_add hzero' (mul_le_mul_of_nonneg_left htwo
     (zpow_nonneg (by positivity : (0 : ℝ) ≤ 2*Real.pi) (-2 : ℤ)))
-  have hC := mul_le_mul_of_nonneg_left hB (show 0 ≤ embeddingConstant 3 2 (by norm_num) from
-    norm_nonneg _)
+  have hC := mul_le_mul_of_nonneg_left hB (show 0 ≤ embeddingConstant 3 2 (by
+      norm_num) from norm_nonneg _)
   have harith (C A B p S : ℝ) : C * (A*S+p*(3*(B*S))) = (C*(A+p*3*B))*S := by ring
   exact hA.trans (hC.trans_eq (harith _ _ _ _ _))
 
@@ -421,7 +334,7 @@ theorem coordinateDerivative_tensor_bound (j : ℕ) (i : Fin 3) (f : Domain 3 �
     apply L.opNorm_le_bound (by norm_num)
     intro A
     simpa only [L, ContinuousLinearMap.apply_apply, PiLp.norm_single, norm_one, one_mul, mul_one]
-      using
+        using
       A.le_opNorm (EuclideanSpace.single i (1 : ℝ))
   have hA := L.norm_iteratedFDeriv_comp_left (x := x)
     (hf.fderiv_right (by simp : (∞ : ℕ∞ω) + 1 ≤ (∞ : ℕ∞ω))).contDiffAt
@@ -434,10 +347,10 @@ theorem coordinateDerivative_tensor_bound (j : ℕ) (i : Fin 3) (f : Domain 3 �
 
 omit [CompleteSpace F] in
 theorem coordinateDerivative_tensor_memLp {j : ℕ} (i : Fin 3) (f : Domain 3 → F)
-    (hf : ContDiff ℝ ∞ f) (hfL2 : MemLp (iteratedFDeriv ℝ (j+1) f) 2 volume) :
+    (hf : ContDiff ℝ ∞ f) (hfL2 : MemLp (iteratedFDeriv ℝ (j + 1) f) 2 volume) :
     MemLp (iteratedFDeriv ℝ j (coordinateDerivative i f)) 2 volume :=
   hfL2.of_le ((coordinateDerivative_smooth i f hf).continuous_iteratedFDeriv (by
-    simp)).aestronglyMeasurable
+      simp)).aestronglyMeasurable
     (Filter.Eventually.of_forall (coordinateDerivative_tensor_bound j i f hf))
 
 omit [CompleteSpace F] in
@@ -475,10 +388,11 @@ theorem linear_norm_le_coordinate_sum (A : Domain 3 →L[ℝ] F) :
     _ = ∑ i : Fin 3, ‖x i‖ * ‖A (EuclideanSpace.single i (1 : ℝ))‖ := by simp only [norm_smul]
     _ ≤ ∑ i : Fin 3, ‖x‖ * ‖A (EuclideanSpace.single i (1 : ℝ))‖ := by
       exact Finset.sum_le_sum (fun i _ => mul_le_mul_of_nonneg_right (PiLp.norm_apply_le x i)
-        (norm_nonneg _))
+          (norm_nonneg _))
     _ = _ := by rw [← Finset.mul_sum]; ring
 
-/-- The exact regularity needed in the limiting Euler contradiction: H³ controls the C¹ derivative. -/
+/-- The exact regularity needed in the limiting Euler contradiction: H³ controls the C¹ derivative.
+-/
 theorem smooth_fderiv_le_H3 (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f)
     (hfL2 : ∀ j ≤ 3, MemLp (iteratedFDeriv ℝ j f) 2 volume) (x : Domain 3) :
     ‖fderiv ℝ f x‖ ≤ (9 * smoothEmbeddingConstant) * tensorSobolevNorm 3 f := by
@@ -486,7 +400,7 @@ theorem smooth_fderiv_le_H3 (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f)
   have hB (i : Fin 3) : ‖coordinateDerivative i f x‖ ≤
       smoothEmbeddingConstant * (3 * tensorSobolevNorm 3 f) := by
     have hC := smooth_pointwise_le_H2 (coordinateDerivative i f) (coordinateDerivative_smooth i f
-      hf)
+        hf)
       (fun j hj => coordinateDerivative_tensor_memLp i f hf (hfL2 (j+1) (by omega))) x
     exact hC.trans (mul_le_mul_of_nonneg_left (coordinateDerivative_H2_le_H3 i f hf hfL2)
       smoothEmbeddingConstant_nonneg)

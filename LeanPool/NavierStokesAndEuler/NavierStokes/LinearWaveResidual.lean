@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CylindricalResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TangentProjection
-
-@[expose] public section
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Exact linear harmonic residual
@@ -20,6 +18,9 @@ field supplied to the linearization is arbitrary, so the formula also applies
 to a curl-corrected coefficient without replacing it by its tangent principal
 part. The angular direction is unscaled.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +32,7 @@ open scoped Topology ContDiff BigOperators
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Time direction, given by `Vf x - ε • Vs x`. -/
 noncomputable def timeDirection (ε : ℝ) (Vf Vs : E → E) (x : E) : E :=
   Vf x - ε • Vs x
 
@@ -49,6 +51,7 @@ theorem along_mul_real (V : E → E) {f g : E → ℝ} {x : E}
 noncomputable def base (R b F G : E → ℝ) (x : E) : Fin 3 → ℝ :=
   ![b x, R x * F x, G x]
 
+/-- Complex base, defined pointwise by `(base R b F G x i : ℂ)`. -/
 noncomputable def complexBase (R b F G : E → ℝ) (x : E) : ComplexVector :=
   fun i => (base R b F G x i : ℂ)
 
@@ -59,6 +62,7 @@ noncomputable def transport (R : E → ℝ) (Vr Vθ Vz : E → E)
     (u x 1 / (R x : ℂ)) * (along Vθ (fun y => v y i) x + angularGenerator (v x) i) +
     u x 2 * along Vz (fun y => v y i) x
 
+/-- Gradient, given by `![along Vr p x, (R x)⁻¹ • along Vθ p x, along Vz p x]`. -/
 noncomputable def gradient (R : E → ℝ) (Vr Vθ Vz : E → E)
     (p : E → ℂ) (x : E) : ComplexVector :=
   ![along Vr p x, (R x)⁻¹ • along Vθ p x, along Vz p x]
@@ -83,16 +87,21 @@ noncomputable def baseDerivativeRemainder (R b F G : E → ℝ) (Vr Vz : E → E
   (![a x 0 * Complex.ofReal (along Vr b x), (b x : ℂ) / (R x : ℂ) * a x 1, 0] i) +
     a x 2 * Complex.ofReal (along Vz (fun y => base R b F G y i) x)
 
+/-- Material phase defect, given by `along Vt Φ x + b x * along Vr Φ x + F x * along Vθ Φ x + G
+x * along Vz Φ x`. -/
 noncomputable def materialPhaseDefect (_R b F G : E → ℝ) (Vr Vθ Vz Vt : E → E)
     (Φ : E → ℝ) (x : E) : ℝ :=
   along Vt Φ x + b x * along Vr Φ x + F x * along Vθ Φ x + G x * along Vz Φ x
 
+/-- Slow transport, defined pointwise by `-(ε : ℂ) * along Vs (fun y => a y i) x + (b x : ℂ) *
+along Vr (fun y => a y i) x + (G x : ℂ) * along Vz (fun y => a y i) x`. -/
 noncomputable def slowTransport (ε : ℝ) (b G : E → ℝ) (Vs Vr Vz : E → E)
     (a : E → ComplexVector) (x : E) : ComplexVector := fun i =>
   -(ε : ℂ) * along Vs (fun y => a y i) x +
     (b x : ℂ) * along Vr (fun y => a y i) x +
     (G x : ℂ) * along Vz (fun y => a y i) x
 
+/-- Stripped pressure gradient, given by `![along Vr p x, 0, along Vz p x]`. -/
 noncomputable def strippedPressureGradient (Vr Vz : E → E) (p : E → ℂ)
     (x : E) : ComplexVector := ![along Vr p x, 0, along Vz p x]
 
@@ -112,12 +121,14 @@ noncomputable def viscousRemainder (R : E → ℝ) (Vr Vθ Vz : E → E) (κ : �
     2 * phaseFactor κ * Complex.ofReal (phaseNormal R Vr Vθ Vz Φ x 1 / R x) *
       angularGenerator (a x) i
 
+/-- Principal as an element of `ComplexVector`. -/
 noncomputable def principal (ε κ : ℝ) (R F G : E → ℝ) (Vr Vθ Vz Vf : E → E)
     (Φ : E → ℝ) (a : E → ComplexVector) (p : E → ℂ) (x : E) : ComplexVector := fun i =>
   along Vf (fun y => a y i) x + shear R F G Vr a x i +
     Complex.ofReal (ε * κ ^ 2 * ‖phaseNormal R Vr Vθ Vz Φ x‖ ^ 2) * a x i +
     phaseFactor κ * Complex.ofReal (phaseNormal R Vr Vθ Vz Φ x i) * p x
 
+/-- Remainder as an element of `ComplexVector`. -/
 noncomputable def remainder (ε κ : ℝ) (R b F G : E → ℝ) (Vr Vθ Vz Vf Vs : E → E)
     (Φ : E → ℝ) (a : E → ComplexVector) (p : E → ℂ) (x : E) : ComplexVector := fun i =>
   slowTransport ε b G Vs Vr Vz a x i +
@@ -273,7 +284,7 @@ theorem materialPhaseDefect_slot (ε p pz x₀ : ℝ) (b F G : PhaseCalculus.Slo
       PhaseCalculus.backwardMaterialOp ε b F G (PhaseCalculus.phase ε p pz x₀ F G) q := by
   unfold materialPhaseDefect PhaseCalculus.backwardMaterialOp PhaseCalculus.signedMaterialOp
   simp only [along, timeDirection, map_sub, map_smul, smul_eq_mul, PhaseCalculus.baseV]
-  field_simp [hR] ; ring
+  field_simp [hR]; ring
 
 /-- Explicit formula for the phase material defect, including the sign of
 the slow-time term. No estimate for this term is assumed. -/
@@ -323,6 +334,8 @@ noncomputable def projectionNumerator (Vf : E → E) (n : E → EuclideanSpace �
     (a Ka f : E → ComplexVector) (x : E) : ℂ :=
   normalDot (n x) (Ka x) - normalDot (along Vf n x) (a x) + normalDot (n x) (f x)
 
+/-- Projected pressure, given by `(Complex.I / (κ : ℂ)) * projectionNumerator Vf n a Ka f x /
+Complex.ofReal (‖n x‖ ^ 2)`. -/
 noncomputable def projectedPressure (κ : ℝ) (Vf : E → E)
     (n : E → EuclideanSpace ℝ (Fin 3)) (a Ka f : E → ComplexVector) (x : E) : ℂ :=
   (Complex.I / (κ : ℂ)) * projectionNumerator Vf n a Ka f x /
@@ -432,16 +445,20 @@ theorem cylindricalLaplacian_map (L : F₁ →L[ℝ] F₂) {U : Set E} (R : E �
 
 end LinearMaps
 
+/-- Real lift, defined pointwise by `(a x i : ℂ)`. -/
 noncomputable def realLift (a : E → Fin 3 → ℝ) (x : E) : ComplexVector := fun i => (a x i : ℂ)
 
+/-- Real angular generator, given by `![-a 1, a 0, 0]`. -/
 noncomputable def realAngularGenerator (a : Fin 3 → ℝ) : Fin 3 → ℝ := ![-a 1, a 0, 0]
 
+/-- Real transport as an element of `Fin 3 → ℝ`. -/
 noncomputable def realTransport (R : E → ℝ) (Vr Vθ Vz : E → E)
     (u v : E → Fin 3 → ℝ) (x : E) : Fin 3 → ℝ := fun i =>
   u x 0 * along Vr (fun y => v y i) x +
     (u x 1 / R x) * (along Vθ (fun y => v y i) x + realAngularGenerator (v x) i) +
     u x 2 * along Vz (fun y => v y i) x
 
+/-- Real frame laplacian as an element of `Fin 3 → ℝ`. -/
 noncomputable def realFrameLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
     (a : E → Fin 3 → ℝ) (x : E) : Fin 3 → ℝ := fun i =>
   cylindricalLaplacian R Vr Vθ Vz (fun y => a y i) x + ((R x) ^ 2)⁻¹ *
@@ -505,11 +522,13 @@ theorem realMap_linearResidual {U : Set E} (L : ℂ →L[ℝ] ℝ) (ε : ℝ) (R
 
 open ProblemStatement
 
+/-- Bilinear advection, constructed using `u`. -/
 noncomputable def bilinearAdvection (u v : Space → Space) (q : Space) : Space :=
   u q 0 • CylindricalResidual.dCoord 0 v q +
     (u q 1 / q 0) • (CylindricalResidual.dCoord 1 v q + CylindricalResidual.connection (v q)) +
     u q 2 • CylindricalResidual.dCoord 2 v q
 
+/-- Cylindrical linear residual, constructed using `temporalDerivative`. -/
 noncomputable def cylindricalLinearResidual (ε : ℝ) (B a : VelocityField) (p : PressureField)
     (t : ℝ) (q : Space) : Space :=
   temporalDerivative a t q + bilinearAdvection (fun y => B (t, y)) (fun y => a (t, y)) q +
@@ -529,7 +548,7 @@ theorem cartesianBilinearAdvection_components {u v : Space → Space} {q : Space
     fderiv ℝ v (CylindricalResidual.chart q) (u (CylindricalResidual.chart q)) =
       CylindricalResidual.frame (q 1)
         (bilinearAdvection (CylindricalResidual.components u) (CylindricalResidual.components v) q)
-          := by
+            := by
   have he := CylindricalResidual.cartesianDerivative_components hv hr
     (CylindricalResidual.components u q)
   have hu : CylindricalResidual.frame (q 1) (CylindricalResidual.components u q) =
@@ -551,7 +570,7 @@ theorem cartesianLinearResidual_cylindrical (ε : ℝ) {B a : VelocityField} {p 
       CylindricalResidual.frame (q 1)
         (cylindricalLinearResidual ε (CylindricalResidual.velocityComponents B)
           (CylindricalResidual.velocityComponents a) (CylindricalResidual.pressurePullback p) t q)
-            := by
+              := by
   have has : ContDiffAt ℝ 2 (fun y => a (t, y)) (CylindricalResidual.chart q) :=
     ha.comp _ (contDiffAt_const.prodMk contDiffAt_id)
   have had := has.differentiableAt (by norm_num)
@@ -569,9 +588,9 @@ theorem cartesianLinearResidual_cylindrical (ε : ℝ) {B a : VelocityField} {p 
   unfold cartesianLinearResidual
   change temporalDerivative a t (CylindricalResidual.chart q) +
     fderiv ℝ (fun y => a (t, y)) (CylindricalResidual.chart q) (B (t, CylindricalResidual.chart q))
-      +
+        +
     fderiv ℝ (fun y => B (t, y)) (CylindricalResidual.chart q) (a (t, CylindricalResidual.chart q))
-      +
+        +
     CylindricalResidual.euclideanGradient (fun y => p (t, y)) (CylindricalResidual.chart q) -
     ε • CylindricalResidual.euclideanLaplacian (fun y => a (t, y)) (CylindricalResidual.chart q) = _
   rw [ht, cartesianBilinearAdvection_components (u := fun y => B (t, y)) had (ne_of_gt hr),
@@ -582,11 +601,14 @@ theorem cartesianLinearResidual_cylindrical (ε : ℝ) {B a : VelocityField} {p 
     CylindricalResidual.velocityComponents, CylindricalResidual.pressurePullback]
   rfl
 
+/-- Space direction, given by `(0, coordinateVector i)`. -/
 noncomputable def spaceDirection (i : Fin 3) (_ : SpaceTime) : SpaceTime :=
   (0, coordinateVector i)
 
+/-- Physical time direction, given by `(1, 0)`. -/
 noncomputable def physicalTimeDirection (_ : SpaceTime) : SpaceTime := (1, 0)
 
+/-- Coordinate radius, given by `x.2 0`. -/
 noncomputable def coordinateRadius (x : SpaceTime) : ℝ := x.2 0
 
 section Slices

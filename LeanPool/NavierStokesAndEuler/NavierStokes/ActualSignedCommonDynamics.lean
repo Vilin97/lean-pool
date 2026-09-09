@@ -9,8 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedOutputBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ClosedNativeWaveIdentities
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
 
 /-!
 # Actual common signed-wave equations
@@ -18,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 The native closed-cell equations are joined through the literal common
 copy construction. The complement is handled by actual input zero germs.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,6 +34,7 @@ variable {B N0 : ℕ}
 
 theorem angular_direction (B : ℕ) : (directions B).angular = ((0 : Point), (1 : ℝ)) := rfl
 
+/-- Slope, given by `((parameters l).angularFrequency n : ℝ) / (parameters l).base.frequency n`. -/
 noncomputable def slope (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   ((parameters l).angularFrequency n : ℝ) / (parameters l).base.frequency n
 
@@ -73,8 +76,8 @@ theorem angularInputs (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     unfold slope parameters ActualPrimary.chartCoefficients
     ring
   phase_smooth := phase_smooth l
-  matrix n := by intro x t; simp only [angular_direction, ActualSignedStageControls.matrix,
-    nativePoint_angle]
+  matrix n := by
+      intro x t; simp only [angular_direction, ActualSignedStageControls.matrix, nativePoint_angle]
   primary_target n := by intro x t; simp only [angular_direction, target, nativePoint_angle]
   signed_target := hangle
   mask n := by intro x t; simp only [angular_direction, mask, nativePoint_angle]
@@ -99,7 +102,7 @@ theorem geometry (n : ℕ) :
   LocalizedCurlRealization.geometry_restrict
     (ActualPrimaryCoherence.piece_geometry ActualPrimaryBounds.region B n)
     fullStrip.isOpen_domain (ActualPrimaryCoherence.piece_domain_positive
-      ActualPrimaryBounds.region)
+        ActualPrimaryBounds.region)
 
 theorem geometryAt (n : ℕ) {x : FullPoint} (hx : x ∈ fullStrip.domain) :
     ClosedNativeWaveIdentities.GeometryAt (fun x : FullPoint => x.1.1)
@@ -146,9 +149,9 @@ theorem local_equation {β : ℝ} {request : ℕ → FullPoint → SignedWaveUpd
     {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x : FullPoint}
     (hx : x ∈ fullStrip.domain) (hc : x ∈ phaseCell l n k) :
     ((copies request l).corrected fullStrip (directions B) k).harmonicResidual fullStrip
-      (directions B) n x +
+        (directions B) n x +
       (fun j => (copies request l).source n x j * carrier ((parameters l).base.frequency n)
-        ((parameters l).base.phase n) x) =
+          ((parameters l).base.phase n) x) =
     (fun j => ((copies request l).localGood fullStrip (directions B) n k x j +
       (copies request l).localGaussian (directions B) n k x j) *
       carrier ((parameters l).base.frequency n) ((parameters l).base.phase n) x) :=
@@ -165,7 +168,7 @@ theorem common_equation {β : ℝ} {request : ℕ → FullPoint → SignedWaveUp
     (hfrozen : SignedWaveUpdate.FrozenAlong (directions B).fast request)
     (l : SignedLabel B N0) (n : ℕ) {x : FullPoint} (hx : x ∈ fullStrip.domain) :
     ((copies request l).commonCorrected fullStrip (directions B)).harmonicResidual fullStrip
-      (directions B) n x =
+        (directions B) n x =
       (fun j => ((copies request l).globalGood fullStrip (directions B) n x j +
         (copies request l).globalGaussian (directions B) n x j) *
         carrier ((parameters l).base.frequency n) ((parameters l).base.phase n) x) := by
@@ -190,7 +193,7 @@ theorem common_equation {β : ℝ} {request : ℕ → FullPoint → SignedWaveUp
         exact local_cancellation_of_zero_germs a _ _ hz.1 hz.2
           (a.localGaussian_zero_of_fields (directions B) hu (hzsource m y)) (hzsource m y)) n hx
   have hz : (fun j => a.source n x j * carrier (a.background.frequency n) (a.background.phase n) x)
-    = 0 := by
+      = 0 := by
     ext j
     exact zero_mul _
   simp only [hz, add_zero] at he
@@ -204,7 +207,7 @@ theorem common_curl_and_divergence {β : ℝ} {request : ℕ → FullPoint → S
     (CurlClassBounds.cylindricalCurl ((parameters l).base.radius n)
       ((directions B).radialField n) (fun _ => (directions B).angular)
       ((directions B).axialField fullStrip n) ((copies request l).common.curlPotential fullStrip
-        (directions B) n) x =
+          (directions B) n) x =
       vectorMode ((parameters l).base.frequency n) ((parameters l).base.phase n)
         (((copies request l).commonCorrected fullStrip (directions B)).amplitude n) x) ∧
     cylindricalDivergence ((parameters l).base.radius n) ((directions B).radialField n)
@@ -215,7 +218,7 @@ theorem common_curl_and_divergence {β : ℝ} {request : ℕ → FullPoint → S
       (CurlClassBounds.cylindricalCurl ((parameters l).base.radius m)
         ((directions B).radialField m) (fun _ => (directions B).angular)
         ((directions B).axialField fullStrip m) (((copies request l).localized k).curlPotential
-          fullStrip (directions B) m) y =
+            fullStrip (directions B) m) y =
         vectorMode ((parameters l).base.frequency m) ((parameters l).base.phase m)
           (((copies request l).corrected fullStrip (directions B) k).amplitude m) y) ∧
       cylindricalDivergence ((parameters l).base.radius m) ((directions B).radialField m)
@@ -228,9 +231,9 @@ theorem common_curl_and_divergence {β : ℝ} {request : ℕ → FullPoint → S
         ClosedNativeWaveIdentities.native_divergence_zero_at m k y (rawJets hR hy hc)
           (geometryAt (B := B) m hy) (frequency_ne l m) (raw_tangent_germ request hy hc)⟩
     · exact LocalizedCurlRealization.native_identities_of_zero_germ (copies request l) fullStrip
-      (directions B) hz.1
+        (directions B) hz.1
   exact ⟨(copies request l).common_realizes_curl (cells l) (cutoff_support l) fullStrip (directions
-    B)
+      B)
       (fun m k y hy _ => (hn m k y hy).1) n hx,
     (copies request l).common_divergence_zero (cells l) (cutoff_support l) fullStrip (directions B)
       (fun m k y hy _ => (hn m k y hy).2) n hx⟩
@@ -282,7 +285,7 @@ theorem gaussian_invariant (request : ℕ → FullPoint → SignedWaveUpdate.Vec
     (hangle : ∀ n, CopyAngularInvariance.Invariant ((0 : Point), 1) (request n))
     (l : SignedLabel B N0) (n : ℕ) :
     CopyAngularInvariance.Invariant ((0 : Point), 1) ((copies request l).globalGaussian (directions
-      B) n) :=
+        B) n) :=
   (copies request l).globalGaussian_invariant (directions B) _
     (fun n k => (angularInputs request hangle l k).cutoff n)
     (fun n k => (angularInputs request hangle l k).amplitude l.2 n)
@@ -300,9 +303,9 @@ theorem exact_represents (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
         (z.pressure n) x).re) :=
   SignedWaveUpdate.blockOfCoefficients_represents _ (parameters l).angularFrequency
     (fun n x θ => CopyAngularInvariance.invariant_eq_zeroSlice (corrected_invariant request hangle
-      l n) x θ)
+        l n) x θ)
     (fun n x θ => CopyAngularInvariance.invariant_eq_zeroSlice (common_pressure_invariant request
-      hangle l n) x θ)
+        hangle l n) x θ)
     (phase_split request hangle l)
 
 theorem good_represents (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
@@ -312,11 +315,12 @@ theorem good_represents (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
       ((copies request l).globalGood fullStrip (directions B) n x i *
         carrier ((parameters l).base.frequency n) ((parameters l).base.phase n) x).re := by
   let z : LinearWaveBounds.WaveCoefficients FullPoint :=
-    {(parameters l).base with amplitude := (copies request l).globalGood fullStrip (directions B),
+    {(parameters l).base with
+      amplitude := (copies request l).globalGood fullStrip (directions B)
       pressure := 0}
   exact (SignedWaveUpdate.blockOfCoefficients_represents z (parameters l).angularFrequency
     (fun n x θ => CopyAngularInvariance.invariant_eq_zeroSlice (good_invariant request hangle l n)
-      x θ)
+        x θ)
     (fun _ _ _ => rfl) (phase_split request hangle l)).1
 
 theorem gaussian_represents (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
@@ -326,26 +330,27 @@ theorem gaussian_represents (request : ℕ → FullPoint → SignedWaveUpdate.Ve
       ((copies request l).globalGaussian (directions B) n x i *
         carrier ((parameters l).base.frequency n) ((parameters l).base.phase n) x).re := by
   let z : LinearWaveBounds.WaveCoefficients FullPoint :=
-    {(parameters l).base with amplitude := (copies request l).globalGaussian (directions B),
+    {(parameters l).base with
+      amplitude := (copies request l).globalGaussian (directions B)
       pressure := 0}
   exact (SignedWaveUpdate.blockOfCoefficients_represents z (parameters l).angularFrequency
     (fun n x θ => CopyAngularInvariance.invariant_eq_zeroSlice (gaussian_invariant request hangle l
-      n) x θ)
+        n) x θ)
     (fun _ _ _ => rfl) (phase_split request hangle l)).1
 
 theorem frame_match (l : SignedLabel B N0) :
     WaveFrameMatch (ActualPrimary.commonContext B) fullStrip (directions B) (parameters l).base :=
-      by
+        by
   refine ⟨fun _ => rfl, fun _ => rfl, ?_, rfl, ?_, ?_,
     fun _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl⟩
   · intro n
     exact PrimaryResidualClass.directions_radial (ActualPrimary.commonContext B) n
   · intro n
     exact PrimaryResidualClass.directions_axial ActualPrimaryBounds.strip
-      (ActualPrimary.commonContext B) rfl n
+        (ActualPrimary.commonContext B) rfl n
   · intro n
     exact PrimaryResidualClass.directions_time ActualPrimaryBounds.strip
-      (ActualPrimary.commonContext B) rfl n
+        (ActualPrimary.commonContext B) rfl n
 
 theorem context_radial_smooth (B n : ℕ) :
     ContDiffOn ℝ ∞ (HarmonicResidual.contextFrame (ActualPrimary.commonContext B) n).radial
@@ -376,24 +381,24 @@ theorem context_linear_identity {β : ℝ} {request : ℕ → FullPoint → Sign
       (HarmonicResidual.liftDomain ActualPrimaryBounds.strip.domain) := by
     simpa only [hdom] using (CurlClassBounds.class_component (hb.corrected.each l) i).smooth n
   have hp : ContDiffOn ℝ ∞ (z.pressure n) (HarmonicResidual.liftDomain
-    ActualPrimaryBounds.strip.domain) := by
+      ActualPrimaryBounds.strip.domain) := by
     have hs := (hb.pressure.each l).smooth n
     simp only [hdom] at hs
     exact hs
   have hvrep : (HarmonicWaveInteraction.withCarrier a ((parameters l).exactBlock
-    ActualPrimaryBounds.strip request)).oscillation n =
+      ActualPrimaryBounds.strip request)).oscillation n =
       fun y i => (vectorMode (z.frequency n) (z.phase n) (z.amplitude n) y i).re := by
     rw [withCarrier_of_same hc]
     exact congrFun (exact_represents request hangle l).1 n
   have hprep : (HarmonicWaveInteraction.withCarrier a ((parameters l).exactBlock
-    ActualPrimaryBounds.strip request)).oscillatoryPressure n =
+      ActualPrimaryBounds.strip request)).oscillatoryPressure n =
       fun y => (mode (z.frequency n) (z.phase n) (z.pressure n) y).re := by
     rw [withCarrier_of_same hc]
     exact congrFun (exact_represents request hangle l).2 n
   rw [linearBlockField_eq_modeResidual ActualPrimaryBounds.strip.isOpen_domain
     (ActualPrimary.commonContext B) a ((parameters l).exactBlock ActualPrimaryBounds.strip request)
     fullStrip (directions B) z ((parameters l).frame_common ActualPrimaryBounds.strip request
-      (frame_match l))
+        (frame_match l))
     n (ActualInitialization.base_bounds B).smooth (ActualInitialization.radialDirection_smooth B n)
     (ActualInitialization.axialDirection_smooth B n) hphase hv hp hvrep hprep ⟨hx,trivial⟩]
   rw [good_represents request hangle l, gaussian_represents request hangle l]
@@ -411,7 +416,7 @@ theorem full_divergence_zero {β : ℝ} {request : ℕ → FullPoint → SignedW
       (radialDirection (ActualPrimary.commonContext B) n) angularDirection
       (axialDirection (ActualPrimary.commonContext B) n)
       (fun q i => (((parameters l).exactBlock ActualPrimaryBounds.strip request).oscillation n q i
-        : ℂ)) x = 0 := by
+          : ℂ)) x = 0 := by
   let z := (copies request l).commonCorrected fullStrip (directions B)
   have hb := ActualSignedOutputBounds.common_bounds hR
   have hdiff (i : Fin 3) : DifferentiableAt ℝ
@@ -486,7 +491,7 @@ theorem linearGood_bounds {β : ℝ} {request : ℕ → FullPoint → SignedWave
     (fun l => (parameters l).goodBlock ActualPrimaryBounds.strip request)
     (fun l => ((parameters l).gaussianBlock ActualPrimaryBounds.strip request).velocity)
     (context_radial_smooth B) (fun _ => contDiffOn_const) (ActualInitialization.base_bounds
-      B).smooth
+        B).smooth
     (fun l n i j => ((hb.2.1 i j).each l).smooth n)
     (fun l n j => ((hb.2.2.1 j).each l).smooth n)
     hphase hka (fun l n i => ErrorHarmonics.zeroBlock_symmetric _ _ _ _ n i)
@@ -515,7 +520,7 @@ theorem linearGood_bounds {β : ℝ} {request : ℕ → FullPoint → SignedWave
 theorem actual_request_jets (G : SignedMeanGain.Geometry) (hs : G.strip = ActualPrimaryBounds.strip)
     (u : State Point) (α : ℝ)
     (H : MeanStateRegularity.PrimitiveData G.region G.patch.a G.patch.b
-      (ActualPrimary.commonContext B) u)
+        (ActualPrimary.commonContext B) u)
     (hfixed : VariableGaugeMean.reconstructState G.gauge (ActualPrimary.commonContext B) u = u)
     (hθ : MeanClass G.strip α (u.thetaResidual (ActualPrimary.commonContext B)))
     (hz : MeanClass G.strip α (u.axialResidual (ActualPrimary.commonContext B))) :
@@ -531,10 +536,10 @@ theorem actual_request_jets (G : SignedMeanGain.Geometry) (hs : G.strip = Actual
 /-- The exact signed harmonic block from the current residual is
 solenoidal. No output divergence or global native-control record is used. -/
 theorem actual_modeSolenoidal (G : SignedMeanGain.Geometry) (hs : G.strip =
-  ActualPrimaryBounds.strip)
+    ActualPrimaryBounds.strip)
     (u : State Point) (α : ℝ)
     (H : MeanStateRegularity.PrimitiveData G.region G.patch.a G.patch.b
-      (ActualPrimary.commonContext B) u)
+        (ActualPrimary.commonContext B) u)
     (hfixed : VariableGaugeMean.reconstructState G.gauge (ActualPrimary.commonContext B) u = u)
     (hθ : MeanClass G.strip α (u.thetaResidual (ActualPrimary.commonContext B)))
     (hz : MeanClass G.strip α (u.axialResidual (ActualPrimary.commonContext B)))
@@ -542,19 +547,19 @@ theorem actual_modeSolenoidal (G : SignedMeanGain.Geometry) (hs : G.strip =
     HarmonicWaveInteraction.ModeSolenoidal ActualPrimaryBounds.strip (ActualPrimary.commonContext B)
       ((parameters l).exactBlock ActualPrimaryBounds.strip
         (LocalSignedRequest.fullRequest G.strip G.patch G.coord (ActualPrimary.commonContext B) u))
-          :=
+            :=
   modeSolenoidal (actual_request_jets G hs u α H hfixed hθ hz)
     (LocalSignedRequest.fullRequest_angle_frozen G.strip G.patch G.coord
-      (ActualPrimary.commonContext B) u) l
+        (ActualPrimary.commonContext B) u) l
 
 /-- The signed linear gain needed by the actual correction cycle.
 Only the incoming residual bounds, reconstruction, and carrier match
 are supplied. The Gaussian block is the literal computed one. -/
 theorem actual_linearGood_bounds (G : SignedMeanGain.Geometry) (hs : G.strip =
-  ActualPrimaryBounds.strip)
+    ActualPrimaryBounds.strip)
     (u : State Point) (α : ℝ)
     (H : MeanStateRegularity.PrimitiveData G.region G.patch.a G.patch.b
-      (ActualPrimary.commonContext B) u)
+        (ActualPrimary.commonContext B) u)
     (hfixed : VariableGaugeMean.reconstructState G.gauge (ActualPrimary.commonContext B) u = u)
     (hθ : MeanClass G.strip α (u.thetaResidual (ActualPrimary.commonContext B)))
     (hz : MeanClass G.strip α (u.axialResidual (ActualPrimary.commonContext B)))
@@ -566,13 +571,13 @@ theorem actual_linearGood_bounds (G : SignedMeanGain.Geometry) (hs : G.strip =
       (fun l => HarmonicWaveInteraction.linearGoodBlock (ActualPrimary.commonContext B) (a l)
         ((parameters l).exactBlock ActualPrimaryBounds.strip
           (LocalSignedRequest.fullRequest G.strip G.patch G.coord (ActualPrimary.commonContext B)
-            u))
+              u))
         ((parameters l).gaussianBlock ActualPrimaryBounds.strip
           (LocalSignedRequest.fullRequest G.strip G.patch G.coord (ActualPrimary.commonContext B)
-            u)).velocity) := by
+              u)).velocity) := by
   simpa only [sub_add_cancel] using linearGood_bounds (actual_request_jets G hs u α H hfixed hθ hz)
     (LocalSignedRequest.fullRequest_angle_frozen G.strip G.patch G.coord
-      (ActualPrimary.commonContext B) u)
+        (ActualPrimary.commonContext B) u)
     (request_frozen G.strip G.patch G.coord (ActualPrimary.commonContext B) u) a hc
 
 end NavierStokes.ActualSignedCommonDynamics

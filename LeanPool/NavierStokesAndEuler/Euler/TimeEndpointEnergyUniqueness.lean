@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeContinuousPrimitive
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1WeakPairing
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import LeanPool.NavierStokesAndEuler.Euler.TimeContinuousPrimitive
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1WeakPairing
+import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEnergy
 
 /-!
 Uniqueness for an actual twice differentiable zero-endpoint path follows
@@ -18,6 +18,9 @@ from the source short-time energy coercivity. The differential residual
 need only be orthogonal to the displacement, as for a constrained frame
 equation. No inverse or uniqueness assertion is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,10 +33,10 @@ open Set MeasureTheory InnerProductSpace EulerTimeLp EulerVolterraConvolution
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 theorem zero_of_energy_equation (T : ℝ) (hT : 0 ≤ T) (hTpos : 0 < T)
-    (H : C(Icc (0 : ℝ) T,E →L[ℝ] E)) (K : ℝ) (hK : 0 ≤ K)
-    (hH : ∀ t x, ⟪H t x,x⟫_ℝ ≤ K*‖x‖^2)
-    (hsmall : K*(T^2/2) ≤ 1/2)
-    (p u q : C(Icc (0 : ℝ) T,E))
+    (H : C(Icc (0 : ℝ) T, E →L[ℝ] E)) (K : ℝ) (hK : 0 ≤ K)
+    (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖ ^ 2)
+    (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
+    (p u q : C(Icc (0 : ℝ) T, E))
     (hp : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (u t) (Icc (0 : ℝ) T) t)
     (hu : ∀ t : Icc (0 : ℝ) T,

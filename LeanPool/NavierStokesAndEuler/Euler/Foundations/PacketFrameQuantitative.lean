@@ -6,98 +6,14 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameRenewal
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameRenewal
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Positivity.Finset
+
+/-!
+# Packet Frame Quantitative
+-/
 
 @[expose] public section
 
@@ -107,8 +23,8 @@ open Set
 
 namespace EulerPacketFrameQuantitative
 
-open Real EulerPacketGrowth EulerPacketRay EulerPacketBridge EulerPacketFrameStability
-  EulerPacketFrameRenewal
+open Real EulerPacketGrowth EulerPacketRay EulerPacketFrameStability
+    EulerPacketFrameRenewal
 
 /-- Comparison of the polynomial losses on a common time scale. -/
 theorem scaled_power_le
@@ -230,7 +146,7 @@ theorem frame_renewal_order40
     let E := velocityDirectionNormSq ε r w
     let J := velocityNumerator A P Q N r 1 w
     let S := frameCrossNumerator ε P Q N r w (rowAction A 0 r w) (rowAction A 1 r w) (rowAction A 2
-      r w)
+        r w)
     |J / (sqrt D * sqrt E) - 1| ≤
       y ^ 4 + σ ^ 2 * y ^ 2 + 8 * σ * y ^ 3 + 30000000 * K * e * Θ ^ 40 ∧
     |(y⁻¹) ^ 2 * S / (J * sqrt E) - 1| ≤ 1500 * σ + 30000000 * K * e * Θ ^ 40 := by
@@ -249,7 +165,7 @@ theorem frame_renewal_order40
   let E := velocityDirectionNormSq ε r w
   let J := velocityNumerator A P Q N r 1 w
   let S := frameCrossNumerator ε P Q N r w (rowAction A 0 r w) (rowAction A 1 r w) (rowAction A 2 r
-    w)
+      w)
   have hΘ0 : 0 ≤ Θ := by linarith
   have hσne : σ ≠ 0 := ne_of_gt hσ
   have hyinv0 : 0 ≤ y⁻¹ := inv_nonneg.mpr hy.le
@@ -291,7 +207,7 @@ theorem frame_renewal_order40
   have hr' : |r - r₀| ≤ 10 * η := by
     simpa only [r₀, t, neg_div, sub_neg_eq_add] using hr
   obtain ⟨hrabs, _, hwabs, _⟩ := third_ratio_error hΘ hρ hρsmall hη hηsmall hP₀abs hQ₀abs hP hQ' hN
-    hr₀ hr'
+      hr₀ hr'
   obtain ⟨_, hp, hq, hn, hw, hDlower, hDerror⟩ :=
     ray_geometric_bounds (ε := ε) (U := r) (V := 1) hΘ hρ hρsmall hP₀abs hQ₀abs hP hQ' hN
   have hDE : |D - (1 + (y⁻¹) ^ 4)| ≤ dD := by
@@ -311,8 +227,8 @@ theorem frame_renewal_order40
   let j := 147 * e * Θ ^ 4 + 2 * ρ
   have hj : 0 ≤ j := by dsimp [j]; positivity
   have hJraw : |J - ((P₀ + σ ^ 2) * 1 + Q₀ * r)| ≤ j * (|r| + |(1 : ℝ)|) := by
-    have hh := velocity_numerator_error hΘ hρ (by positivity : 0 ≤ 3 * e) hσabs hA hp hq hn hP hQ'
-      hN hw
+    have hh := velocity_numerator_error hΘ hρ (by
+        positivity : 0 ≤ 3 * e) hσabs hA hp hq hn hP hQ' hN hw
     dsimp [J, j, w, P₀]
     nlinarith only [hh]
   have hpressure := pressure_ratio_error hΘ hη hηsmall hj (by norm_num : (0 : ℝ) < 1)

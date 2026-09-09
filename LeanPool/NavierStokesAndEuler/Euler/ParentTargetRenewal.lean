@@ -8,13 +8,16 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalParameters
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentStateGeometry
+public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
 
 /-! The geometric target of the actual forward or joined primary is the
 activation time of the next parent frame. These factories are the checked
 `SmoothState` renewals with the source-selected amplitude and primary;
 all target matching is proved from their definitions. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,12 +28,12 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketSourceGeometry EulerSpatialCutoffs EulerPeriodicProfile
   EulerPacketMovingFrame EulerPacketNormalizedPrimary
 
-variable {A N : Parent} (S : SmoothState A) (T : SmoothState N) (hTime : N.T=A.T)
+variable {A N : Parent} (S : SmoothState A) (T : SmoothState N) (hTime : N.T = A.T)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (J : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hSupport : IsCompact support)
   {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-  (mNext : Space) (hmNext : ‖mNext‖=1) (JNext : V ≃ₗᵢ[ℝ] referencePlane mNext)
+  (mNext : Space) (hmNext : ‖mNext‖ = 1) (JNext : V ≃ₗᵢ[ℝ] referencePlane mNext)
   (supportNext : Set Space) (hSupportNext : IsCompact supportNext)
 
 local notation "D" => A.transverseData m hm J support hSupport
@@ -39,25 +42,25 @@ local notation "DNext" => N.transverseData mNext hmNext JNext supportNext hSuppo
 section Forward
 
 variable {P : ParentFrame (A.transverseData m hm J support hSupport) 0} (G : ForwardGuards P)
-  (hball : (1/2 : ℝ) ≤ G.radius)
+    (hball : (1 / 2 : ℝ) ≤ G.radius)
 
 local notation "Geo" => ForwardGuards.lowGeometry G hball
 local notation "tNext" => PhysicalGeometryData.targetTime (ForwardGuards.lowGeometry G hball)
 
 variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
-  (hMK : CM ≤ K) (hHK : CM^2+CH ≤ K^2)
+  (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
   (hM : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerStrain t‖ ≤ CM)
   (hH : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerCurvature t‖ ≤ CH)
   (hδ : 0 < G.δ) (k : ℝ)
   (hsource : ∀ t : Icc (0 : ℝ) A.T, (G.lowGeometry hball).targetTime ≤ (t : ℝ) →
-    ‖fderiv ℝ (S.velocityIncrement T t) 0-
-      (G.primaryAmplitude hball*deriv (profile G.δ)
-        (k*⟪m,S.evolution.inverse.normalized t 0⟫_ℝ)) •
+    ‖fderiv ℝ (S.velocityIncrement T t) 0 -
+      (G.primaryAmplitude hball * deriv (profile G.δ)
+        (k * ⟪m, S.evolution.inverse.normalized t 0⟫_ℝ)) •
         rankOne ℝ (EulerPacketForwardFactorization.canonicalVelocity
           (A.transverseData m hm J support hSupport) G.initialCoordinate t
-            (S.evolution.inverse.normalized t 0))
+              (S.evolution.inverse.normalized t 0))
           ((A.transverseData m hm J support hSupport).normal.field t
-            (S.evolution.inverse.normalized t 0))‖ ≤ error)
+              (S.evolution.inverse.normalized t 0))‖ ≤ error)
 
 /-- The next actual frame, using exactly the forward source primary and
 its target-normalized amplitude. -/
@@ -95,7 +98,7 @@ theorem forwardTargetRenewal_constants : (Q).G=K ∧ (Q).error=error := ⟨rfl,r
 
 include hTime hCM hK he hMK hHK hM hH hδ hsource in
 theorem forwardTargetRenewal_remainder (hT : tNext ≤ N.T) :
-    ‖(DNext).M.field ((DNext).clamp tNext) 0-(Geo).M (Geo).center tNext-
+    ‖(DNext).M.field ((DNext).clamp tNext) 0-(Geo).M (Geo).center tNext -
       G.hchild • rankOne ℝ (unit ((Geo).w (Geo).center tNext))
         (unit ((Geo).r (Geo).center tNext))‖ ≤ error := by
   have H := forwardTargetRenewal_matches S T hTime m hm J support hSupport
@@ -103,7 +106,7 @@ theorem forwardTargetRenewal_remainder (hT : tNext ≤ N.T) :
     hCM hK he hMK hHK hM hH hδ k hsource
   exact H.target_remainder hδ hT
 
-theorem forwardTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1/2) :
+theorem forwardTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1 / 2) :
     (Q).shear=G.hchild ∧ 0 < (Q).a ∧
     |(Q).a/P.a-1| ≤ (Geo).couplingError ∧
     0 < (Q).sigma ∧
@@ -117,7 +120,7 @@ theorem forwardTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1/2) :
 
 theorem forwardTargetRenewal_compression
     (ht : 0 < tNext) (hT : tNext < N.T)
-    (hmargin : 3*((Geo).G+(Geo).d)+error < (Geo).compressionScale) :
+    (hmargin : 3 * ((Geo).G + (Geo).d) + error < (Geo).compressionScale) :
     ⟪(DNext).M.field ⟨tNext,ht.le,hT.le⟩ 0 (unit ((Q).m tNext)),
       unit ((Q).m tNext)⟫_ℝ < 0 := by
   have H := forwardTargetRenewal_matches S T hTime m hm J support hSupport
@@ -141,25 +144,25 @@ section Joined
 variable (s : ℝ) (hs : 0 < s) (hsT : s < A.T)
   (H : HistoryData ((A.transverseData m hm J support hSupport).initial s hs hsT.le))
   {P : ParentFrame (A.transverseData m hm J support hSupport) s}
-  (G : Guards hs hsT P H) (hball : (1/2 : ℝ) ≤ G.radius)
+  (G : Guards hs hsT P H) (hball : (1 / 2 : ℝ) ≤ G.radius)
   (hcut : tsupport innerCutoff ⊆ support)
 
 local notation "Geo" => Guards.lowGeometry G hball
 local notation "tNext" => PhysicalGeometryData.targetTime (Guards.lowGeometry G hball)
 
 variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
-  (hMK : CM ≤ K) (hHK : CM^2+CH ≤ K^2)
+  (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
   (hM : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerStrain t‖ ≤ CM)
   (hH : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerCurvature t‖ ≤ CH)
   (hδ : 0 < G.δ) (k : ℝ)
   (hsource : ∀ t : Icc (0 : ℝ) A.T, (G.lowGeometry hball).targetTime ≤ (t : ℝ) →
-    ‖fderiv ℝ (S.velocityIncrement T t) 0-
-      (G.primaryAmplitude hball*deriv (profile G.δ)
-        (k*⟪m,S.evolution.inverse.normalized t 0⟫_ℝ)) •
+    ‖fderiv ℝ (S.velocityIncrement T t) 0 -
+      (G.primaryAmplitude hball * deriv (profile G.δ)
+        (k * ⟪m, S.evolution.inverse.normalized t 0⟫_ℝ)) •
         rankOne ℝ (EulerPacketPrimaryFactorization.canonicalVelocity
           s hs hsT H G.terminal hcut t (S.evolution.inverse.normalized t 0))
           ((A.transverseData m hm J support hSupport).normal.field t
-            (S.evolution.inverse.normalized t 0))‖ ≤ error)
+              (S.evolution.inverse.normalized t 0))‖ ≤ error)
 
 /-- The joined renewal retains the activation-selected endpoint and
 its actual stationary-history initial trace. -/
@@ -197,7 +200,7 @@ theorem joinedTargetRenewal_constants : (Q).G=K ∧ (Q).error=error := ⟨rfl,rf
 
 include hTime hCM hK he hMK hHK hM hH hδ hsource in
 theorem joinedTargetRenewal_remainder (hT : tNext ≤ N.T) :
-    ‖(DNext).M.field ((DNext).clamp tNext) 0-(Geo).M (Geo).center tNext-
+    ‖(DNext).M.field ((DNext).clamp tNext) 0-(Geo).M (Geo).center tNext -
       G.hchild • rankOne ℝ (unit ((Geo).w (Geo).center tNext))
         (unit ((Geo).r (Geo).center tNext))‖ ≤ error := by
   have E := joinedTargetRenewal_matches S T hTime m hm J support hSupport
@@ -205,7 +208,7 @@ theorem joinedTargetRenewal_remainder (hT : tNext ≤ N.T) :
     hCM hK he hMK hHK hM hH hδ k hsource
   exact E.target_remainder hδ hT
 
-theorem joinedTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1/2) :
+theorem joinedTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1 / 2) :
     (Q).shear=G.hchild ∧ 0 < (Q).a ∧
     |(Q).a/P.a-1| ≤ (Geo).couplingError ∧
     0 < (Q).sigma ∧
@@ -219,7 +222,7 @@ theorem joinedTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1/2) :
 
 theorem joinedTargetRenewal_compression
     (ht : 0 < tNext) (hT : tNext < N.T)
-    (hmargin : 3*((Geo).G+(Geo).d)+error < (Geo).compressionScale) :
+    (hmargin : 3 * ((Geo).G + (Geo).d) + error < (Geo).compressionScale) :
     ⟪(DNext).M.field ⟨tNext,ht.le,hT.le⟩ 0 (unit ((Q).m tNext)),
       unit ((Q).m tNext)⟫_ℝ < 0 := by
   have E := joinedTargetRenewal_matches S T hTime m hm J support hSupport

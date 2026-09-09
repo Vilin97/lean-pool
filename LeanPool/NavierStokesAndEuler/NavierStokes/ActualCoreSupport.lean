@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 
-@[expose] public section
-
 /-!
 # The actual initial support retains its radial and native dyadic cores
 
@@ -21,6 +19,9 @@ part.  No continuity of the totalized similarity coordinate at time zero is
 used.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function Filter
@@ -30,9 +31,12 @@ namespace NavierStokes.ActualCoreSupport
 
 open CorrectionInitialization
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
+/-- Radial ratio, given by `x.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.2.1`. -/
 noncomputable def radialRatio (x : Point) : ℝ :=
   x.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.2.1
 
@@ -42,12 +46,14 @@ noncomputable def nativeQ {B N0 : ℕ} (l : Index B N0) (n : ℕ) (x : Point) : 
   SimilarityHomogeneity.chartQ ActualPrimary.h
     (ActualPrimary.nativeSlow l.1 (ActualPrimary.toAbsolute n x))
 
+/-- Positive core as an element of `Set Point`. -/
 noncomputable def positiveCore {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
   {x | 0 < x.2.1.1 ∧ x ∈ ActualInitialization.labelCarrier l n ∧
     radialRatio x ∈ Icc (PrimaryTargetBounds.leftRadius ActualPrimary.nominal)
       (PrimaryTargetBounds.rightRadius ActualPrimary.nominal) ∧
     nativeQ l n x ∈ Icc (1 / 2 : ℝ) 2}
 
+/-- Refined carrier, given by `closure (positiveCore l n)`. -/
 noncomputable def refinedCarrier {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
   closure (positiveCore l n)
 
@@ -213,7 +219,7 @@ theorem cut_amplitude_mem_refined (l : Index B N0) (n : ℕ)
     have hrad := copy_radial_core l.2 l.1 n k hT hr
     exact mem_refinedCarrier_of_mem l n hT hb ⟨hrad.1.le, hrad.2.le⟩ ⟨hq.1.le, hq.2.le⟩
   · have hz := (ActualPrimaryDynamics.coefficient_zero_germs l.2 l.1 n (not_exists.mp
-    hc)).1.eq_of_nhds
+      hc)).1.eq_of_nhds
     exact (hx (by
       change ActualPrimary.chartCutoff l.2 l.1 n x •
         (ActualPrimary.chartCoefficients l.2 l.1).amplitude n x = 0
@@ -240,7 +246,7 @@ theorem cut_pressure_mem_refined (l : Index B N0) (n : ℕ)
     have hrad := copy_radial_core l.2 l.1 n k hT hr
     exact mem_refinedCarrier_of_mem l n hT hb ⟨hrad.1.le, hrad.2.le⟩ ⟨hq.1.le, hq.2.le⟩
   · have hz := (ActualPrimaryDynamics.coefficient_zero_germs l.2 l.1 n (not_exists.mp
-    hc)).2.eq_of_nhds
+      hc)).2.eq_of_nhds
     exact (hx (by
       change ActualPrimary.chartCutoff l.2 l.1 n x •
         (ActualPrimary.chartCoefficients l.2 l.1).pressure n x = 0

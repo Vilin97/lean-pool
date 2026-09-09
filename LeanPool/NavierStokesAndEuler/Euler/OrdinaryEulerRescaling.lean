@@ -7,13 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldScaling
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
 
 /-! The genuine time/amplitude symmetry of ordinary Euler, including
 restriction to a shorter closed time interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,21 +23,24 @@ open Set Filter MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTransl
   EulerLpTranslation.SmoothL2Field EulerMeanSolenoidal EulerVolterraConvolution
 open scoped Topology
 
-def scaleTimeMap (S T c : ℝ) (hc : 0 ≤ c) (hct : c*T ≤ S) :
+/-- Scale time map, bundling `toFun`, `continuous_toFun`. -/
+def scaleTimeMap (S T c : ℝ) (hc : 0 ≤ c) (hct : c * T ≤ S) :
     C(Icc (0 : ℝ) T,Icc (0 : ℝ) S) where
   toFun t := ⟨c*t,mul_nonneg hc t.property.1,
     (mul_le_mul_of_nonneg_left t.property.2 hc).trans hct⟩
   continuous_toFun := (continuous_subtype_val.const_mul c).subtype_mk _
 
-@[simp] theorem scaleTimeMap_val (S T c : ℝ) (hc : 0 ≤ c) (hct : c*T ≤ S)
+@[simp] theorem scaleTimeMap_val (S T c : ℝ) (hc : 0 ≤ c) (hct : c * T ≤ S)
     (t : Icc (0 : ℝ) T) : ((scaleTimeMap S T c hc hct t) : ℝ)=c*t := rfl
 
 namespace Evolution
 
 variable {S : ℝ} {hS : 0 ≤ S}
 
+/-- Rescale, bundling `velocity`, `pressureForce`, `velocity_continuous`, `pressure_continuous`
+and the required compatibility proofs. -/
 def rescale (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
-    (c : ℝ) (hc : 0 < c) (hct : c*T ≤ S) : Evolution T hT where
+    (c : ℝ) (hc : 0 < c) (hct : c * T ≤ S) : Evolution T hT where
   velocity t := scaleField c (U.velocity (scaleTimeMap S T c hc.le hct t))
   pressureForce t := scaleField (c*c) (U.pressureForce (scaleTimeMap S T c hc.le hct t))
   velocity_continuous n := scaleField_continuous c _
@@ -69,11 +72,11 @@ def rescale (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
         -fderiv ℝ (scaleField c (U.velocity (scaleTimeMap S T c hc.le hct
           ⟨t,ht.1.le,ht.2.le⟩))).field x
           ((scaleField c (U.velocity (scaleTimeMap S T c hc.le hct
-            ⟨t,ht.1.le,ht.2.le⟩))).field x)-
+            ⟨t,ht.1.le,ht.2.le⟩))).field x) -
           (scaleField (c*c) (U.pressureForce (scaleTimeMap S T c hc.le hct
             ⟨t,ht.1.le,ht.2.le⟩))).field x =
         c • (c • (-fderiv ℝ (U.velocity ⟨c*t,hcs.1.le,hcs.2.le⟩).field x
-          ((U.velocity ⟨c*t,hcs.1.le,hcs.2.le⟩).field x)-
+          ((U.velocity ⟨c*t,hcs.1.le,hcs.2.le⟩).field x) -
             (U.pressureForce ⟨c*t,hcs.1.le,hcs.2.le⟩).field x)) := by
       have heq : scaleTimeMap S T c hc.le hct ⟨t,ht.1.le,ht.2.le⟩ =
           ⟨c*t,hcs.1.le,hcs.2.le⟩ := rfl
@@ -84,12 +87,12 @@ def rescale (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
     exact hd.congr_of_eventuallyEq he
 
 @[simp] theorem rescale_velocity (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
-    (c : ℝ) (hc : 0 < c) (hct : c*T ≤ S) (t : Icc (0 : ℝ) T) :
+    (c : ℝ) (hc : 0 < c) (hct : c * T ≤ S) (t : Icc (0 : ℝ) T) :
     (U.rescale T hT c hc hct).velocity t =
       scaleField c (U.velocity (scaleTimeMap S T c hc.le hct t)) := rfl
 
 theorem rescale_initial (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
-    (c : ℝ) (hc : 0 < c) (hct : c*T ≤ S) :
+    (c : ℝ) (hc : 0 < c) (hct : c * T ≤ S) :
     (U.rescale T hT c hc hct).velocity ⟨0,le_rfl,hT⟩ =
       scaleField c (U.velocity ⟨0,le_rfl,hS⟩) := by
   rw [rescale_velocity]

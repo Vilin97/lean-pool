@@ -6,12 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Extend
-public import Mathlib.Analysis.Calculus.TangentCone.Prod
-public import Mathlib.Topology.UniformSpace.UniformApproximation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-!
 # Joint spacetime endpoint regularity from locally uniform derivative limits
@@ -22,6 +20,9 @@ uniform in the spatial variable in the tensor norm. Closed-side smoothness is
 proved from these data, rather than included as a hypothesis.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter
@@ -29,10 +30,14 @@ open scoped Topology ContDiff
 
 namespace NavierStokes.SpacetimeEndpoint
 
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
+/-- Open past, given by `Iio T ×ˢ univ`. -/
 def openPast (T : ℝ) : Set SpaceTime := Iio T ×ˢ univ
+/-- Closed past, given by `Iic T ×ˢ univ`. -/
 def closedPast (T : ℝ) : Set SpaceTime := Iic T ×ˢ univ
 
 theorem openPast_isOpen (T : ℝ) : IsOpen (openPast T) :=
@@ -320,7 +325,7 @@ theorem extendedJets_contDiffOn {T : ℝ}
       let A : (SpaceTime[×(n + 1)]→L[ℝ] V) →L[ℝ]
           (SpaceTime →L[ℝ] (SpaceTime[×n]→L[ℝ] V)) :=
         (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime)
-          V).toContinuousLinearEquiv.toContinuousLinearMap
+            V).toContinuousLinearEquiv.toContinuousLinearMap
       have hA : ContDiff ℝ (m : WithTop ℕ∞) A :=
         ContinuousLinearMap.contDiff (𝕜 := ℝ)
           (E := SpaceTime[×(n + 1)]→L[ℝ] V)

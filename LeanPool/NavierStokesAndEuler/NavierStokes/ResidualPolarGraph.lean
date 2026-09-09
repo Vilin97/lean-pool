@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalMeanJetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualTZ
 
-@[expose] public section
-
 /-!
 # Local polar inverse of the physical residual graph
 
@@ -19,6 +17,9 @@ polar chart of the scaled radial projection. The resulting cylindrical
 point maps back to the original Cartesian point and to the exact common
 graph used by the physical mean estimates.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -108,9 +109,9 @@ theorem chart_cylindricalPoint {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) (n
   ext i
   fin_cases i
   · simpa [CylindricalResidual.chart, cylindricalPoint, PolarCharts.polar] using congrArg Prod.fst
-    hp
+      hp
   · simpa [CylindricalResidual.chart, cylindricalPoint, PolarCharts.polar] using congrArg Prod.snd
-    hp
+      hp
   · simp [CylindricalResidual.chart, cylindricalPoint]
 
 /-- The time coordinate is unchanged by the actual spatial chart. -/
@@ -167,7 +168,7 @@ theorem eventually_chartDomain {a : ℝ} (j : PolarCharts.Index) (n : ℕ) {w : 
     (hw : PhysicalGraphBounds.scaledRadial n w ∈ PolarCharts.chartDomain a j) :
     ∀ᶠ z in 𝓝 w, PhysicalGraphBounds.scaledRadial n z ∈ PolarCharts.chartDomain a j :=
   ((PolarCharts.chartDomain_open a j).preimage (PhysicalGraphBounds.scaledRadial
-    n).continuous).mem_nhds hw
+      n).continuous).mem_nhds hw
 
 theorem spacetimeChart_cylindricalPoint_eventually {a : ℝ} (ha : 0 < a)
     (j : PolarCharts.Index) (n : ℕ) {w : SpaceTime}

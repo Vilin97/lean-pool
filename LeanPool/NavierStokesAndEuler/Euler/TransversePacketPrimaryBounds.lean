@@ -6,10 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryUnitBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialAmplitude
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryBudget
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPaths
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialAmplitude
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryUnitBounds
 
 /-!
 The actual primary A/g and A_t/g retain one fixed mixed Sobolev radius.
@@ -17,6 +18,9 @@ The constants and guards depend only on source coefficients, the history
 length and the genuine propagator bound. Arbitrary terminal amplitude is
 restored by the proved exact homogeneity of the constructed solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +39,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1)
   (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
   (hYb : ∀ n, block directions q (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤
-    A*majorant L.R d n)
+    A * majorant L.R d n)
 
 include hdir hA hYb
 

@@ -6,15 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationConstructed
 public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationLipschitz
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationScales
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationRay
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFrameCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborControlled
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalSize
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryUncut
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseActivationSelection
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationConstructed
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationInitial
 
 /-! Construction of geometric source data from the actual parent strain,
 normal and stationary primary.  Only the older homogeneous frame, parent
 center remainder, low source bounds and numerical guards are inputs. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,12 +40,19 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 strain's center remainder.  It contains no new ray, new velocity or
 amplification assertion. -/
 structure ParentFrame (D : Data U) (τ : ℝ) where
+  /-- Bound parameter of `ParentFrame`, of type `ℝ → Space →L[ℝ] Space`. -/
   B : ℝ → Space →L[ℝ] Space
+  /-- B₁ of `ParentFrame`, of type `ℝ → Space →L[ℝ] Space`. -/
   B₁ : ℝ → Space →L[ℝ] Space
+  /-- M of `ParentFrame`, of type `ℝ → Space`. -/
   m : ℝ → Space
+  /-- V of `ParentFrame`, of type `ℝ → Space`. -/
   v : ℝ → Space
+  /-- C of `ParentFrame`, of type `ℝ`. -/
   c : ℝ
+  /-- Geometric data of `ParentFrame`, of type `ℝ`. -/
   G : ℝ
+  /-- Error of `ParentFrame`, of type `ℝ`. -/
   error : ℝ
   G_lower : 1 ≤ G
   error_nonneg : 0 ≤ error
@@ -53,32 +67,42 @@ structure ParentFrame (D : Data U) (τ : ℝ) where
   B_bound : ∀ t ∈ Icc τ D.T, ‖B t‖ ≤ G
   B₁_bound : ∀ t ∈ Icc τ D.T, ‖B₁ t‖ ≤ G^2
   remainder_bound : ∀ t ∈ Icc τ D.T,
-    ‖D.M.field (D.clamp t) 0-B t-
+    ‖D.M.field (D.clamp t) 0-B t -
       primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))‖ ≤ error
 
 namespace ParentFrame
 
 variable (P : ParentFrame D τ)
 
+/-- A, given by `normalizedCoupling (P.B τ) (P.m τ) (P.v τ)`. -/
 def a : ℝ := normalizedCoupling (P.B τ) (P.m τ) (P.v τ)
+/-- Sigma, given by `Real.sqrt (normalizedTilt (P.B τ) (P.m τ) (P.v τ))`. -/
 def sigma : ℝ := Real.sqrt (normalizedTilt (P.B τ) (P.m τ) (P.v τ))
+/-- Shear, given by `primaryShear P.c P.m P.v τ`. -/
 def shear : ℝ := primaryShear P.c P.m P.v τ
+/-- Epsilon, given by `Real.sqrt (P.a/P.shear)`. -/
 def epsilon : ℝ := Real.sqrt (P.a/P.shear)
+/-- Horizon, given by `P.a*(D.T-τ)/P.epsilon`. -/
 def horizon : ℝ := P.a*(D.T-τ)/P.epsilon
+/-- Ray scale, given by `activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0) (cross (unit
+(P.m τ)) (unit (P.v τ)))`. -/
 def rayScale (hτ : 0 < τ) (hτT : τ < D.T) : ℝ :=
   activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
     (cross (unit (P.m τ)) (unit (P.v τ)))
+/-- Terminal bound, given by `8*(activationConstant CM CH+1)*D.inverseBound/P.shear`. -/
 def terminalBound (CM CH : ℝ) : ℝ :=
   8*(activationConstant CM CH+1)*D.inverseBound/P.shear
 
 variable [CompleteSpace U] (hτ : 0 < τ) (hτT : τ < D.T)
   (H : HistoryData (D.initial τ hτ hτT.le))
 
+/-- Neighbor cost as an element of `ℝ`. -/
 def neighborCost (CM CH : ℝ) : ℝ :=
   ‖D.M.derivative.field‖+
-    3*‖D.normal.derivative.field‖/(P.rayScale hτ hτT*P.epsilon)+
+    3*‖D.normal.derivative.field‖/(P.rayScale hτ hτT*P.epsilon) +
     2*historyLabelDifferenceCost H*P.terminalBound CM CH/P.epsilon
 
+/-- Total error, given by `P.error+P.neighborCost hτ hτT H CM CH*ρ`. -/
 def totalError (CM CH ρ : ℝ) : ℝ :=
   P.error+P.neighborCost hτ hτT H CM CH*ρ
 
@@ -90,12 +114,19 @@ variable [CompleteSpace U] (hτ : 0 < τ) (hτT : τ < D.T)
 /-- Source and scalar guards, all stated before the new primary is
 constructed.  The neighbor cost is the explicit coefficient expression. -/
 structure Guards where
+  /-- CM of `Guards`, of type `ℝ`. -/
   CM : ℝ
+  /-- CH of `Guards`, of type `ℝ`. -/
   CH : ℝ
+  /-- Ζ of `Guards`, of type `ℝ`. -/
   ζ : ℝ
+  /-- Radius of `Guards`, of type `ℝ`. -/
   radius : ℝ
+  /-- Y of `Guards`, of type `ℝ`. -/
   y : ℝ
+  /-- Δ of `Guards`, of type `ℝ`. -/
   δ : ℝ
+  /-- Hchild of `Guards`, of type `ℝ`. -/
   hchild : ℝ
   CM_nonneg : 0 ≤ CM
   CH_nonneg : 0 ≤ CH
@@ -113,7 +144,7 @@ structure Guards where
   target_le_horizon : y⁻¹/P.sigma ≤ P.horizon
   horizon_lower : 1 ≤ P.horizon
   short_extension : P.horizon-y⁻¹/P.sigma ≤ 1
-  small : 1000000*neighborStabilityConstant*
+  small : 1000000*neighborStabilityConstant *
     (16*(P.epsilon*P.horizon*(4*P.G)^2+P.totalError hτ hτT H CM CH radius))*P.horizon^40 ≤ 1
   compression_guard : 60*(P.G+P.totalError hτ hτT H CM CH radius)*(y⁻¹/P.sigma)*P.epsilon < P.a
   normal_choice : D.m₀=activationDirection (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
@@ -172,9 +203,9 @@ theorem activation_perturbation :
   have hclamp : D.clamp τ = ⟨τ,hτ.le,hτT.le⟩ := Data.clamp_coe D ⟨τ,hτ.le,hτT.le⟩
   rw [hclamp] at hr
   calc
-    _ = ‖P.B τ+(D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.B τ-
+    _ = ‖P.B τ+(D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.B τ -
       P.shear • rankOne ℝ (unit (P.v τ)) (unit (P.m τ)))‖ := by congr 1; module
-    _ ≤ ‖P.B τ‖+‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.B τ-
+    _ ≤ ‖P.B τ‖+‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.B τ -
       P.shear • rankOne ℝ (unit (P.v τ)) (unit (P.m τ))‖ := norm_add_le _ _
     _ ≤ P.G+P.error := add_le_add (P.B_bound τ ht) hr
     _ ≤ A.ζ*P.shear := A.activation_error
@@ -187,9 +218,9 @@ theorem selection :
         lam ≤ 8*(activationConstant A.CM A.CH+1)/P.epsilon ∧
         ‖ξ‖ ≤ P.terminalBound A.CM A.CH ∧
         scaledVelocity P.m P.v (fun s => uncutVelocity τ hτ hτT H ξ s 0) τ P.a P.epsilon 0 0 = -lam
-          ∧
+            ∧
         scaledVelocity P.m P.v (fun s => uncutVelocity τ hτ hτT H ξ s 0) τ P.a P.epsilon 0 1 = 1 :=
-          by
+            by
   exact exists_activated_primary τ hτ hτT H P.m P.v
     (P.ray_nonzero τ ⟨le_rfl,hτT.le⟩) (P.velocity_nonzero τ ⟨le_rfl,hτT.le⟩)
     (P.tangent τ ⟨le_rfl,hτT.le⟩) A.normal_choice A.history_symmetric
@@ -197,7 +228,9 @@ theorem selection :
     A.CM_nonneg A.CH_nonneg A.zeta_nonneg A.epsilon_pos A.history_strain
     A.history_hessian A.activation_small A.activation_perturbation A.activation_compression
 
+/-- Terminal, given by `A.selection.2.2.choose`. -/
 def terminal : U := A.selection.2.2.choose
+/-- Slope, given by `A.selection.2.2.choose_spec.choose`. -/
 def slope : ℝ := A.selection.2.2.choose_spec.choose
 
 theorem terminal_properties : A.terminal ≠ 0 ∧ 0 ≤ A.slope ∧

@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
 
 /-!
 # Heat multipliers for the double Riesz transform
@@ -19,6 +16,9 @@ The Fourier convention has a factor `2 * π` in the character.  Consequently the
 heat semigroup has multiplier `exp (-4 * π² * s * ‖ξ‖²)`.  Integrating its second
 spatial derivative over positive time recovers the double Riesz multiplier.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

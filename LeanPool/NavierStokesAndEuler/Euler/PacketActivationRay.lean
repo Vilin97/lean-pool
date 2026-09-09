@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialGeometry
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledRay
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialGeometry
 
 /-! The literal normalized covector choice for the next source normal.
 It has unit length and its inverse-transpose transport is exactly the
 prescribed old-frame cross direction, with a positive scale. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,16 +25,18 @@ namespace EulerPacketMovingFrame
 open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerPacketNormalizedPrimary
   EulerPacketCrossProduct EulerTransversePacketProvider
 
+/-- Activation direction, given by `unit (F.toContinuousLinearMap.adjoint n)`. -/
 def activationDirection (F : Space ≃L[ℝ] Space) (n : Space) : Space :=
   unit (F.toContinuousLinearMap.adjoint n)
 
+/-- Activation ray scale, given by `‖F.toContinuousLinearMap.adjoint n‖⁻¹`. -/
 def activationRayScale (F : Space ≃L[ℝ] Space) (n : Space) : ℝ :=
   ‖F.toContinuousLinearMap.adjoint n‖⁻¹
 
 theorem inverse_adjoint_forward_adjoint (F : Space ≃L[ℝ] Space) (n : Space) :
     F.symm.toContinuousLinearMap.adjoint (F.toContinuousLinearMap.adjoint n)=n := by
   have hi : F.toContinuousLinearMap.comp F.symm.toContinuousLinearMap=ContinuousLinearMap.id ℝ
-    Space := by
+      Space := by
     apply ContinuousLinearMap.ext
     intro v
     exact F.apply_symm_apply v
@@ -60,15 +65,15 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : Data U)
 
 theorem actual_normal_of_activation_choice (t : Icc (0 : ℝ) D.T) (x n : Space)
-    (hchoice : D.m₀=activationDirection (D.deformationEquiv t x) n) :
+    (hchoice : D.m₀ = activationDirection (D.deformationEquiv t x) n) :
     D.normal.field t x=activationRayScale (D.deformationEquiv t x) n • n := by
   change (D.FInv.field t x).adjoint D.m₀=_
   rw [hchoice]
   exact activationDirection_transport (D.deformationEquiv t x) n
 
 theorem actual_activation_scaled_ray (m v : ℝ → Space) (t₀ : Icc (0 : ℝ) D.T) (a ε : ℝ)
-    (hm : m t₀ ≠ 0) (hv : v t₀ ≠ 0) (hmv : ⟪m t₀,v t₀⟫_ℝ=0)
-    (hchoice : D.m₀=activationDirection (D.deformationEquiv t₀ 0)
+    (hm : m t₀ ≠ 0) (hv : v t₀ ≠ 0) (hmv : ⟪m t₀, v t₀⟫_ℝ = 0)
+    (hchoice : D.m₀ = activationDirection (D.deformationEquiv t₀ 0)
       (cross (unit (m t₀)) (unit (v t₀)))) :
     let s₀ := activationRayScale (D.deformationEquiv t₀ 0) (cross (unit (m t₀)) (unit (v t₀)))
     0 < s₀ ∧ scaledRay m v (fun s => D.normal.field (D.clamp s) 0) s₀ t₀ a ε 0 = ![0,0,1] := by

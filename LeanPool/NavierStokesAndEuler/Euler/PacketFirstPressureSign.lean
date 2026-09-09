@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketShortTimePhysicalGrowth
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardFactorization
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketShortTimePhysicalGrowth
+import LeanPool.NavierStokesAndEuler.Euler.ShortTimeLinearGrowth
 
 /-! Positivity of the first packet's actual pressure numerator on a short
 base interval. The normal and uncut velocity are the constructed source
 trajectories; their equations and the parent Riccati equation give the bound. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,12 +25,13 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerTransversePacketProvider EulerVolterraConvolution EulerPacketSourcePropagator
   EulerPacketForwardFactorization
 
+/-- First sign rate, given by `4*(3*CM^2+CH)`. -/
 def firstSignRate (CM CH : ℝ) : ℝ := 4*(3*CM^2+CH)
 
 private theorem numerator_derivative_bound (CM CH : ℝ) (hCM : 0 ≤ CM) (hCH : 0 ≤ CH)
     (m m₁ v v₁ : Space) (A A₁ : Space →L[ℝ] Space)
-    (hm : ‖m‖ ≤ 2) (hm₁ : ‖m₁‖ ≤ 2*CM) (hv : ‖v‖ ≤ 2) (hv₁ : ‖v₁‖ ≤ 2*CM)
-    (hA : ‖A‖ ≤ CM) (hA₁ : ‖A₁‖ ≤ CM^2+CH) :
+    (hm : ‖m‖ ≤ 2) (hm₁ : ‖m₁‖ ≤ 2 * CM) (hv : ‖v‖ ≤ 2) (hv₁ : ‖v₁‖ ≤ 2 * CM)
+    (hA : ‖A‖ ≤ CM) (hA₁ : ‖A₁‖ ≤ CM ^ 2 + CH) :
     ‖⟪m,A₁ v+A v₁⟫_ℝ+⟪m₁,A v⟫_ℝ‖ ≤ firstSignRate CM CH := by
   have hav : ‖A v‖ ≤ CM*2 :=
     (A.le_opNorm v).trans (mul_le_mul hA hv (norm_nonneg _) hCM)
@@ -57,12 +59,13 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (hH : ∀ t : Icc (0 : ℝ) D.T, ‖H t‖ ≤ CH)
   (hRiccati : ∀ t : Icc (0 : ℝ) D.T,
     HasDerivWithinAt (fun s => extendPath D.T D.T_pos.le D.M.field s x)
-      (-(D.M.field t x).comp (D.M.field t x)-H t) (Icc (0 : ℝ) D.T) t)
-  (hm0 : ‖D.normal.field ⟨0,le_rfl,D.T_pos.le⟩ x‖=1)
-  (hv0 : ‖D.frame.field ⟨0,le_rfl,D.T_pos.le⟩ x ξ‖=1)
-  (h0 : ⟪D.normal.field ⟨0,le_rfl,D.T_pos.le⟩ x,
-    D.M.field ⟨0,le_rfl,D.T_pos.le⟩ x (D.frame.field ⟨0,le_rfl,D.T_pos.le⟩ x ξ)⟫_ℝ=1)
-  (hshort : CM*D.T ≤ 1/2)
+      (-(D.M.field t x).comp (D.M.field t x) - H t) (Icc (0 : ℝ) D.T) t)
+  (hm0 : ‖D.normal.field ⟨0, le_rfl, D.T_pos.le⟩ x‖ = 1)
+  (hv0 : ‖D.frame.field ⟨0, le_rfl, D.T_pos.le⟩ x ξ‖ = 1)
+  (h0 : ⟪D.normal.field ⟨0, le_rfl, D.T_pos.le⟩ x,
+    D.M.field ⟨0, le_rfl, D.T_pos.le⟩ x (D.frame.field ⟨0, le_rfl, D.T_pos.le⟩ x ξ)⟫_ℝ =
+ 1)
+  (hshort : CM * D.T ≤ 1 / 2)
 
 include hCM hCH hM hH hRiccati hm0 hv0 h0 hshort
 
@@ -143,7 +146,7 @@ theorem uncut_numerator_variation (t : Icc (0 : ℝ) D.T) :
     a,m,A,v,extendPath,projIcc_of_mem D.T_pos.le t.property] using hh
 
 theorem uncut_numerator_pos
-    (hsmall : firstSignRate CM CH*D.T ≤ 1/2) (t : Icc (0 : ℝ) D.T) :
+    (hsmall : firstSignRate CM CH * D.T ≤ 1 / 2) (t : Icc (0 : ℝ) D.T) :
     1/2 ≤ ⟪D.normal.field t x,D.M.field t x (uncutVelocity D ξ t x)⟫_ℝ := by
   have h := uncut_numerator_variation D ξ x H CM CH hCM hCH hM hH hRiccati hm0 hv0 h0 hshort t
   have hrate : 0 ≤ firstSignRate CM CH := by unfold firstSignRate; positivity

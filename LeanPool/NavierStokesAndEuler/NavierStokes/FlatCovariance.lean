@@ -8,9 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCutoff
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCovariance
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-
-@[expose] public section
 
 /-!
 # Covariance amplitudes across an exponential-flat edge
@@ -25,6 +22,9 @@ The coefficient quotients are proved smooth from these formulas. Their
 smoothness across the singular matrix at the edge is not assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.FlatCovariance
@@ -37,12 +37,14 @@ open scoped ContDiff Topology
 /-- Multiplication of column `j` by its scalar factor `c j`. -/
 def columns (G : Mat2) (c : Vec2) : Mat2 := fun i j => c j * G i j
 
+/-- Scaled target, defined pointwise by `r * T i`. -/
 def scaledTarget (r : ℝ) (T : Vec2) : Vec2 := fun i => r * T i
 
 /-- The actual edge-degenerate covariance matrix. -/
 def edgeMatrix (κ : Vec2) (G : ℝ → Mat2) (x : ℝ) : Mat2 :=
   columns (G x) (fun j => edge (κ j) x)
 
+/-- Edge target, given by `scaledTarget (edge σ x) (T x)`. -/
 def edgeTarget (σ : ℝ) (T : ℝ → Vec2) (x : ℝ) : Vec2 :=
   scaledTarget (edge σ x) (T x)
 
@@ -51,6 +53,7 @@ def inverseCoefficients (σ : ℝ) (κ : Vec2) (G : ℝ → Mat2) (T : ℝ → V
     (x : ℝ) : Vec2 :=
   (edgeMatrix κ G x)⁻¹.mulVec (edgeTarget σ T x)
 
+/-- Primary amplitude, defined pointwise by `Real.sqrt (inverseCoefficients σ κ G T x i)`. -/
 def primaryAmplitude (σ : ℝ) (κ : Vec2) (G : ℝ → Mat2) (T : ℝ → Vec2)
     (x : ℝ) : Vec2 :=
   fun i => Real.sqrt (inverseCoefficients σ κ G T x i)
@@ -521,6 +524,8 @@ def parameterPrimary (σ : ℝ) (κ : Vec2) (d : E → ℝ)
     (G : E → Mat2) (T : E → Vec2) (z : E) : Vec2 :=
   primaryAmplitude σ κ (fun _ => G z) (fun _ => T z) (d z)
 
+/-- Parameter signed, given by `signedAmplitude σ τ κ (fun _ => G z) (fun _ => T z) (fun _ => R
+z) (d z)`. -/
 def parameterSigned (σ τ : ℝ) (κ : Vec2) (d : E → ℝ)
     (G : E → Mat2) (T R : E → Vec2) (z : E) : Vec2 :=
   signedAmplitude σ τ κ (fun _ => G z) (fun _ => T z) (fun _ => R z) (d z)

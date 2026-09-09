@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedPiola
 public import LeanPool.NavierStokesAndEuler.Euler.PacketAngularPotential
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-!
 The exact fast/slow splitting of the packet curl.  The angular term is the
@@ -17,6 +16,9 @@ ordinary cross product with `F⁻ᵀ m₀`; the angular primitive then produces 
 literal pair `A + κ C`.  Its weighted pullback is realized in the actual
 lifted divergence-free L² space.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,6 +57,8 @@ theorem curl_lifted_split (κ : ℝ) (m : Space) (L : LiftTangent →L[ℝ] Spac
     rw [hv, map_add, map_smul, map_smul]
   rw [he, curlMatrix_add, curlMatrix_smul, curlMatrix_rankOne]
 
+/-- Covering slow curl, given by `curlMatrix ((fderiv ℝ q z).comp ((ContinuousLinearMap.inl ℝ
+Space ℝ).comp G))`. -/
 def coveringSlowCurl (G : Space →L[ℝ] Space) (q : LiftTangent → Space)
     (z : LiftTangent) : Space :=
   curlMatrix ((fderiv ℝ q z).comp ((ContinuousLinearMap.inl ℝ Space ℝ).comp G))
@@ -102,6 +106,8 @@ theorem coveringPotential_pair_piola (P κ : ℝ) (m₀ : Space) (Ξ : Space →
 
 variable (period : ℝ)
 
+/-- Lifted slow curl, given by `curlMatrix ((fieldFDeriv period Q x).comp
+((ContinuousLinearMap.inl ℝ Space ℝ).comp (F x.1).symm.toContinuousLinearMap))`. -/
 def liftedSlowCurl (F : Space → Space ≃L[ℝ] Space) (Q : LiftDomain period → Space)
     (x : LiftDomain period) : Space :=
   curlMatrix ((fieldFDeriv period Q x).comp
@@ -153,6 +159,7 @@ theorem weighted_lifted_pair_piola (κ : ℝ) (m₀ : Space) (Ξ : Space → Spa
 
 variable [Fact (0 < period)]
 
+/-- Piola pair Lᵖ, given by `κ ^ p • piolaLiftedCurlLp period κ m₀ Ξ Q hΞ hc hQ`. -/
 def piolaPairLp (κ : ℝ) (m₀ : Space) (Ξ : Space → Space)
     (Q : LiftDomain period → Space) (hΞ : ContDiff ℝ ∞ Ξ)
     (hc : HasCompactSupport Q) (hQ : ∀ x, ContDiff ℝ ∞ (localFieldLift period Q x)) (p : ℕ) :

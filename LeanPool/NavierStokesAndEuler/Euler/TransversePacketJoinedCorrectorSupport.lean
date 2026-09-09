@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedCorrector
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCorrectorMeanZero
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageTime
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCorrectorMeanZero
+import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
+import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
+
+/-! Support and zero angular mean of the literal joined corrector and its actual time derivative. -/
 
 @[expose] public section
 
-/-! Support and zero angular mean of the literal joined corrector and its actual time derivative. -/
 
 noncomputable section
 
@@ -35,7 +39,7 @@ theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) :
   · exact B.derivativePath_mean_zero (G.initial τ hτ hτT.le)
   · intro s
     exact EulerSourceCylinderEquation.velocityDerivative_average_zero P D.support
-      D.support_measurable
+        D.support_measurable
       (D.T-τ) (sub_pos.mpr hτT).le
       (D.tail τ hτ.le hτT).frame (D.tail τ hτ.le hτT).frameDerivative
       (D.tail τ hτ.le hτT).frameLower (D.tail τ hτ.le hτT).frameLower_pos
@@ -55,7 +59,7 @@ theorem potentialTimePath_supported (t : Icc (0 : ℝ) D.T) :
       (velocityPath τ hτ hτT B G) D.potentialDerivative (velocityPath_supported τ hτ hτT B G) t
   · exact EulerCylinderLocalSupport.potentialPath_supported P D.support D.support_measurable
       (derivativePath τ hτ hτT B G) D.potentialCoefficientPath (derivativePath_supported τ hτ hτT B
-        G) t
+          G) t
 
 theorem correctorPath_supported (t : Icc (0 : ℝ) D.T) :
     correctorPath τ hτ hτT B G t ∈ Supported P Space D.support D.support_measurable :=
@@ -113,7 +117,7 @@ theorem curlCorrector_mean_zero (t : Icc (0 : ℝ) D.T) (x : Space) :
       fun θ => corrector τ hτ hτT B G (t,(x,θ)) := funext (curlCorrector_eq τ hτ hτT B G t x)
   rw [he]
   exact (pathAverage_eq_zero_iff P (correctorPath τ hτ hτT B G) (correctorPath_orbit τ hτ hτT B
-    G)).mp
+      G)).mp
     (correctorPath_average_zero τ hτ hτT B G) (D.clamp t) x
 
 end EulerTransversePacketJoin

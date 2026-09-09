@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeReflection
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedSpaceInverse
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanDisplacementRegularity
 
 /-!
 # Reflection covariance of the full mean variational inverse
@@ -19,29 +17,51 @@ trace, and nonlocal boundary form. Uniqueness of the actual coercive inverse
 then transports reflection without an assumed symmetry of a solution.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerMeanFixedReflection
 
 open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerMeanSolenoidal
   EulerTimeLp EulerTerminalTimePrimitive EulerMeanTimeReflection EulerVolterraConvolution
-  EulerMeanVariationalInverse EulerMeanFixedSpaceInverse EulerTimeH1OperatorProduct
+  EulerMeanVariationalInverse  EulerTimeH1OperatorProduct
   EulerCoerciveProjection
 
-private local instance : NormedAddCommGroup L2 := inferInstance
-private local instance : InnerProductSpace ℝ L2 := inferInstance
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup L2` instance to shorten typeclass synthesis. -/
+local instance instMeanOperatorReflection1 : NormedAddCommGroup L2 := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ L2` instance to shorten typeclass synthesis. -/
+local instance instMeanOperatorReflection2 : InnerProductSpace ℝ L2 := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanOperatorReflection3 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanOperatorReflection4 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanOperatorReflection5 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanOperatorReflection6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanOperatorReflection7 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace)
+    := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanOperatorReflection8 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
+/-- Reflection invariant, given by `∀ u, A (reflection u) = reflection (A u)`. -/
 def ReflectionInvariant (A : L2 →L[ℝ] L2) : Prop :=
   ∀ u, A (reflection u) = reflection (A u)
 
 theorem timeMultiplier_reflection (T : ℝ) (hT : 0 ≤ T)
-    (F : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)) (hF : ∀ t, ReflectionInvariant (F t))
+    (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (hF : ∀ t, ReflectionInvariant (F t))
     (u : TimeLp T L2) :
     timeMultiplier T hT F (timeReflection T u) = timeReflection T (timeMultiplier T hT F u) := by
   apply Lp.ext
@@ -52,7 +72,7 @@ theorem timeMultiplier_reflection (T : ℝ) (hT : 0 ≤ T)
     ((hF (projIcc 0 T hT t) (u t)).trans ((congrArg reflection h₄).symm.trans h₃.symm))
 
 theorem frameMultiplier_reflection (T : ℝ) (hT : 0 ≤ T)
-    (F : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)) (hF : ∀ t, ReflectionInvariant (F t))
+    (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (hF : ∀ t, ReflectionInvariant (F t))
     (u : TimeLp T solenoidalSpace) :
     timeMultiplier T hT (solenoidalFrame T F) (timeSolenoidalReflection T u) =
       timeReflection T (timeMultiplier T hT (solenoidalFrame T F) u) := by

@@ -6,13 +6,13 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-public import Mathlib.Topology.UniformSpace.HeineCantor
-
-@[expose] public section
+public import Mathlib.Topology.ContinuousMap.Bounded.Basic
 
 /-! Continuous families with a common compact spatial support give continuous paths in the
 space of bounded continuous functions, equipped with the uniform norm. -/
+
+@[expose] public section
+
 
 open Set Filter Topology
 open scoped BoundedContinuousFunction

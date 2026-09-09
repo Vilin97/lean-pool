@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionStability
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionBudget
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionStability
+import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionCompatibility
+
+/-! Constructed compatible inviscid corrections at every finite Sobolev order. -/
 
 @[expose] public section
 
-/-! Constructed compatible inviscid corrections at every finite Sobolev order. -/
 
 noncomputable section
 
@@ -42,12 +45,13 @@ theorem solution_divergence {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budg
 
 /-- Every retained cutoff of the constructed correction has the proved common energy bound. -/
 theorem solution_energy {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (P : ℕ) (hPN : P ≤ q-4) (hP : P+6 ≤ q+1) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (P : ℕ) (hPN : P ≤ q - 4) (hP : P + 6 ≤ q + 1) (t : Icc (0 : ℝ) T) :
     energyNorm period P hP (B.radius t) (B.metric.operatorPath period t)
       (solution period hT A B q hq t) ≤ B.delta/2 :=
   (Classical.choose_spec (finite_exists period hT A B q hq)).2.2.1 P hPN hP t
 
-/-- The constructed correction satisfies the actual nonlinear projected-pressure equation at every interior time. -/
+/-- The constructed correction satisfies the actual nonlinear projected-pressure equation at every
+interior time. -/
 theorem solution_hasDerivAt {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => value period (extendPath T hT.le (solution period hT A B q hq) r))
@@ -55,7 +59,8 @@ theorem solution_hasDerivAt {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budg
         ⟨t,ht.1.le,ht.2.le⟩ (solution period hT A B q hq ⟨t,ht.1.le,ht.2.le⟩))) t :=
   (Classical.choose_spec (finite_exists period hT A B q hq)).2.2.2 t ht
 
-/-- The separately constructed solutions are genuinely the same correction after restriction; uniqueness is proved from their actual equations. -/
+/-- The separately constructed solutions are genuinely the same correction after restriction;
+uniqueness is proved from their actual equations. -/
 theorem solution_compatible {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) :
     (truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T)

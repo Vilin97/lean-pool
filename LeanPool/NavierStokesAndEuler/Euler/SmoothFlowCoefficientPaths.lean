@@ -9,11 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldFromPaths
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowTimeGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJoint
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowGevrey
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The actual flow displacement and material velocity, with every spatial
 jet in the uniform continuous-time bounded-field space. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,13 +31,24 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensiona
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
   (B R : ℝ)
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowCoefficientPaths1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instSmoothFlowCoefficientPaths2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowCoefficientPaths3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E))
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowCoefficientPaths4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) :=
+    inferInstance
 
-variable (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-  (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+variable (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+  (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
 
 theorem displacementFamily_time_derivative (x : E) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (displacementFamily T hT A x))
@@ -61,6 +75,7 @@ theorem velocityFamily_jet_bound (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
       B*(flowRadius B R T R)^n*(n.factorial : ℝ)^2 :=
   materialVelocity_bound T hT A B R hB hR hsmall hb n t x
 
+/-- Displacement coefficient, constructed using `SmoothTimeField.ofPathFamily`. -/
 def displacementCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
   SmoothTimeField.ofPathFamily T hT
     (displacementFamily T hT A) (velocityFamily T hT A)
@@ -83,7 +98,7 @@ theorem displacementCoefficient_jet_norm (n : ℕ) :
 variable (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
   (htime : SmoothTimeField.TimeDerivative T hT A A₁)
   (B₁ R₁ : ℝ) (hB₁ : 0 ≤ B₁) (hR₁ : 0 ≤ R₁)
-  (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁*R₁^n*(n.factorial : ℝ)^2)
+  (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁ * R₁ ^ n * (n.factorial : ℝ) ^ 2)
 
 include hB hR hsmall hb hB₁ hR₁ hb₁ in
 theorem accelerationFamily_jet_bound (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
@@ -94,6 +109,7 @@ theorem accelerationFamily_jet_bound (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
   rw [he]
   exact materialAcceleration_bound T hT A A₁ B R B₁ R₁ hB hR hB₁ hR₁ hsmall hb hb₁ n t x
 
+/-- Velocity coefficient, constructed using `SmoothTimeField.ofPathFamily`. -/
 def velocityCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
   SmoothTimeField.ofPathFamily T hT
     (velocityFamily T hT A) (accelerationFamily T hT A A₁)

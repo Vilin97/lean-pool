@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
 
 /-! The leading pressure tensor of the actual joined primary.  Both angular
 derivatives below are derivatives of its constructed scalar pressure. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,6 +34,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support)
 
+/-- Coefficient, given by `-(2*a*⟪D.normal.field t x, D.M.field t x (canonicalVelocity τ hτ hτT
+B ξ hs t x)⟫_ℝ)/‖D.normal.field t x‖^2`. -/
 def coefficient (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) : ℝ :=
   -(2*a*⟪D.normal.field t x,
     D.M.field t x (canonicalVelocity τ hτ hτT B ξ hs t x)⟫_ℝ)/‖D.normal.field t x‖^2
@@ -79,10 +85,14 @@ theorem scalar_second_deriv_zero (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) :
       coefficient τ hτ hτT B ξ hs a t x / δ := by
   rw [scalar_second_deriv,profile_deriv_zero δ hδ,div_eq_mul_inv]
 
+/-- Physical pressure, given by `k⁻¹^2 * scalar τ hτ hτT B (initialData D δ hδ (a • ξ) hs) (t,(Y
+x,k*⟪D.m₀,Y x⟫_ℝ))`. -/
 def physicalPressure (a k : ℝ) (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space) : ℝ :=
   k⁻¹^2 * scalar τ hτ hτT B (initialData D δ hδ (a • ξ) hs)
     (t,(Y x,k*⟪D.m₀,Y x⟫_ℝ))
 
+/-- Hessian remainder, given by `lowerHessian (fun z => scalar τ hτ hτT B (initialData D δ hδ (a
+• ξ) hs) (t,z)) k D.m₀ Y (fun y => D.FInv.field t (Y y)) x`. -/
 def hessianRemainder (a k : ℝ) (t : Icc (0 : ℝ) D.T) (Y : Space → Space)
     (x : Space) : Space →L[ℝ] Space :=
   lowerHessian (fun z => scalar τ hτ hτT B (initialData D δ hδ (a • ξ) hs) (t,z))
@@ -111,7 +121,7 @@ theorem physicalPressure_hessian (a k : ℝ) (hk : k ≠ 0) (t : Icc (0 : ℝ) D
 theorem physicalPressure_hessian_of_inverse (a k : ℝ) (hk : k ≠ 0)
     (X Y : Icc (0 : ℝ) D.T → Space → Space)
     (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-    (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
+    (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     fderiv ℝ (gradient (physicalPressure τ hτ hτT B δ hδ ξ hs a k t (Y t))) x =
       (coefficient τ hτ hτT B ξ hs a t (Y t x) * deriv (profile δ) (k*⟪D.m₀,Y t x⟫_ℝ)) •

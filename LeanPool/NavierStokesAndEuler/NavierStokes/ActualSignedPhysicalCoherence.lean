@@ -6,17 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPotentialCoherence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalPrefixFields
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedReferenceGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCurrentSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalZeros
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedPhysicalSumCalculus
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentSignedCurl
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCurrentSupport
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalZeros
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedReferenceGeometry
+import LeanPool.NavierStokesAndEuler.NavierStokes.SignedPhysicalSumCalculus
 
 /-!
 # The canonical signed physical family and its current-band realization
@@ -26,6 +22,9 @@ are retained.  Native faces are treated by the literal zero mask before a
 current-band comparison is used.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedPhysicalCoherence
@@ -34,10 +33,15 @@ open Set Function Filter HarmonicCalculus PhysicalWaveSum PhysicalCopyBounds
 open CorrectionInitialization CorrectionInitialization.ActualPrimary
 open scoped Topology ContDiff BigOperators
 
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualSignedPhysicalBinding.Label B N0
+/-- Point: an abbreviation for `ActualSignedCoherence.Point`. -/
 abbrev Point := ActualSignedCoherence.Point
+/-- Full point: an abbreviation for `ActualSignedCoherence.FullPoint`. -/
 abbrev FullPoint := ActualSignedCoherence.FullPoint
+/-- Space time: an abbreviation for `ProblemStatement.SpaceTime`. -/
 abbrev SpaceTime := ProblemStatement.SpaceTime
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
 
 variable {B N0 : ℕ}
@@ -68,6 +72,8 @@ theorem finsum_finite_support (s : Finset α) (f : α → V)
 
 end FiniteSums
 
+/-- Physical index, given by `ActualSignedPhysicalData.positiveIndex
+(ActualSignedExterior.nativeLabel l)`. -/
 noncomputable def physicalIndex (l : Label B N0) : WaveIndex 1 :=
   ActualSignedPhysicalData.positiveIndex (ActualSignedExterior.nativeLabel l)
 
@@ -98,7 +104,7 @@ theorem potential_amplitude_zero_unless (i : Fin 3) (I : WaveIndex 1)
     outgoing.data.h_pos.le (f.singleton L) i) I.1).amplitude k I x = 0
   by_cases hI : I.1 ∈ f.active
   · rw [f.copyAt_active _ (⟨I.1.val, I.1.property, hI⟩ : ActualSignedPhysicalData.NativeLabel
-    f.active)]
+      f.active)]
     have hj : I.2.val ≠ 1 := hbad.resolve_left (not_not.mpr hI)
     simp [ActualSignedPhysicalData.potentialFamily, hj]
   · rw [f.copyAt_inactive _ hI]
@@ -112,7 +118,7 @@ theorem pressure_amplitude_zero_unless (I : WaveIndex 1)
     outgoing.data.h_pos.le (f.singleton L)) I.1).amplitude k I x = 0
   by_cases hI : I.1 ∈ f.active
   · rw [f.copyAt_active _ (⟨I.1.val, I.1.property, hI⟩ : ActualSignedPhysicalData.NativeLabel
-    f.active)]
+      f.active)]
     have hj : I.2.val ≠ 1 := hbad.resolve_left (not_not.mpr hI)
     simp [ActualSignedPhysicalData.pressureFamily, hj]
   · rw [f.copyAt_inactive _ hI]
@@ -224,7 +230,7 @@ theorem reference_cutoff_formula (k : Frequency) (x : FullPoint) :
         (ActualSignedPhysicalBinding.reference l) k x =
       ActualSignedPhysicalData.waveMask slots (ActualSignedPhysicalBinding.spatialLabel l)
         ((ActualSignedPhysicalData.geometry slots (ActualSignedPhysicalBinding.spatialLabel l)
-          0).coordinates
+            0).coordinates
           k x.1.2.2) := by
   simp only [ActualSignedPhysicalBinding.referenceCopies, ActualSignedPhysicalData.dynamicCopyData,
     ActualSignedPhysicalBinding.nativeViews_map]
@@ -296,13 +302,13 @@ theorem reference_raw_pressure (x : FullPoint) :
     (ActualPeriodizedSignedRealization.referenceScalar A R l.2 m x • _)) =
       ActualSignedPhysicalData.waveMask slots (ActualSignedPhysicalBinding.spatialLabel l)
         ((ActualSignedPhysicalData.geometry slots (ActualSignedPhysicalBinding.spatialLabel l)
-          0).coordinates
+            0).coordinates
           k x.1.2.2) • (_ : ℂ)
   by_cases hk : L.nativeMask m k x.1.2.2 = 0
   · have hk' : ActualSignedPhysicalData.nativeMask slots (ActualSignedPhysicalBinding.spatialLabel
-    l)
+      l)
         ((ActualSignedPhysicalData.geometry slots (ActualSignedPhysicalBinding.spatialLabel l)
-          0).coordinates
+            0).coordinates
           k x.1.2.2) = 0 := hk
     erw [ActualSignedPhysicalData.waveMask_eq_compact]
     simp only [hk, zero_smul, smul_zero, hk', zero_mul]
@@ -319,11 +325,11 @@ theorem reference_vectorMode (x : FullPoint) :
       ((ActualSignedPhysicalBinding.primary l).base.phase (ActualSignedPhysicalBinding.reference l))
       (fun y => CurlClassBounds.inverseCarrier
           ((ActualSignedPhysicalBinding.primary l).base.frequency
-            (ActualSignedPhysicalBinding.reference l)) •
+              (ActualSignedPhysicalBinding.reference l)) •
         CurlClassBounds.normalCoefficient
           ((ActualSignedPhysicalBinding.primary l).base.normal
             (ActualSignedPhysicalBinding.primary l).strip (ActualSignedPhysicalBinding.primary
-              l).directions
+                l).directions
             (ActualSignedPhysicalBinding.reference l) y)
           ((ActualPeriodizedSignedRealization.periodizedPrimary
             (ActualSignedPhysicalBinding.primary l) (ActualSignedPhysicalBinding.layout l)).raw
@@ -331,7 +337,7 @@ theorem reference_vectorMode (x : FullPoint) :
               (ActualSignedPhysicalBinding.reference l) y)) x =
       (ActualSignedPhysicalBinding.referenceCopies l P u H hp).common.curlPotential
         (ActualSignedPhysicalBinding.primary l).strip (ActualSignedPhysicalBinding.primary
-          l).directions
+            l).directions
         (ActualSignedPhysicalBinding.reference l) x := by
   let C := ActualSignedPhysicalBinding.referenceCopies l P u H hp
   let m := ActualSignedPhysicalBinding.reference l
@@ -342,7 +348,7 @@ theorem reference_vectorMode (x : FullPoint) :
   change _ = vectorMode (C.common.frequency m) (C.common.phase m)
     (fun y => CurlClassBounds.inverseCarrier (C.common.frequency m) •
       CurlClassBounds.normalCoefficient (C.common.normal (ActualSignedPhysicalBinding.primary
-        l).strip
+          l).strip
         (ActualSignedPhysicalBinding.primary l).directions m y) (C.common.amplitude m y)) x
   rw [hK, hPhi, ActualSignedPhysicalBinding.reference_common_normal]
   dsimp only [C, m]
@@ -350,7 +356,7 @@ theorem reference_vectorMode (x : FullPoint) :
 
 theorem reference_pressureMode (x : FullPoint) :
     mode ((ActualSignedPhysicalBinding.primary l).base.frequency
-      (ActualSignedPhysicalBinding.reference l))
+        (ActualSignedPhysicalBinding.reference l))
       ((ActualSignedPhysicalBinding.primary l).base.phase (ActualSignedPhysicalBinding.reference l))
       ((ActualPeriodizedSignedRealization.periodizedPrimary
         (ActualSignedPhysicalBinding.primary l) (ActualSignedPhysicalBinding.layout l)).rawPressure
@@ -365,13 +371,13 @@ theorem reference_pressureMode (x : FullPoint) :
   have hK : (ActualSignedPhysicalBinding.referenceCopies l P u H hp).common.frequency
       (ActualSignedPhysicalBinding.reference l) =
       (ActualSignedPhysicalBinding.primary l).base.frequency (ActualSignedPhysicalBinding.reference
-        l) :=
+          l) :=
     congrArg (fun c => c.frequency (ActualSignedPhysicalBinding.reference l))
       (ActualSignedPhysicalBinding.reference_background l P u H hp)
   have hPhi : (ActualSignedPhysicalBinding.referenceCopies l P u H hp).common.phase
       (ActualSignedPhysicalBinding.reference l) =
       (ActualSignedPhysicalBinding.primary l).base.phase (ActualSignedPhysicalBinding.reference l)
-        :=
+          :=
     congrArg (fun c => c.phase (ActualSignedPhysicalBinding.reference l))
       (ActualSignedPhysicalBinding.reference_background l P u H hp)
   unfold mode carrier
@@ -379,12 +385,15 @@ theorem reference_pressureMode (x : FullPoint) :
 
 end ReferenceAlgebra
 
+/-- Measured states, defined pointwise by `ActualSignedPhysicalBinding.nativeStateData l P u H
+hp`. -/
 noncomputable def measuredStates (P : SignedStressPrimitive.Patch) (u : CorrectionState.State Point)
     (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
     (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure) :
     ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData :=
   fun l => ActualSignedPhysicalBinding.nativeStateData l P u H hp
 
+/-- Singleton vector mode as an element of `ComplexVector`. -/
 noncomputable def singletonVectorMode
     (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
     (l : Label B N0) (x : FullPoint) : ComplexVector :=
@@ -393,6 +402,7 @@ noncomputable def singletonVectorMode
   vectorMode ((f.primary L).base.frequency L.val.1) ((f.primary L).base.phase L.val.1)
     (ActualSignedPhysicalData.referencePotentialCoefficient slots outgoing.data.h_pos.le f L) x
 
+/-- Singleton pressure mode as an element of `ℂ`. -/
 noncomputable def singletonPressureMode
     (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
     (l : Label B N0) (x : FullPoint) : ℂ :=
@@ -420,7 +430,7 @@ theorem singletonVectorMode_eq (x : FullPoint) :
   apply Eq.trans ?_ he
   funext i
   dsimp only [singletonVectorMode, vectorMode, mode,
-    ActualSignedPhysicalData.referencePotentialCoefficient]
+      ActualSignedPhysicalData.referencePotentialCoefficient]
   erw [DependentSignedPhysicalFamily.Family.singleton_referenceRequest,
     ActualSignedExterior.family_referenceRequest_nativeLabel]
   dsimp only [DependentSignedPhysicalFamily.Family.singleton]
@@ -439,7 +449,7 @@ theorem singletonPressureMode_eq (x : FullPoint) :
       ((ActualPeriodizedSignedRealization.periodizedPrimary (ActualSignedPhysicalBinding.primary l)
         (ActualSignedPhysicalBinding.layout l)).rawPressure
         (ActualSignedPhysicalBinding.nativeStateData l ActualInitialization.patch u H
-          hp).referenceRequest l.2
+            hp).referenceRequest l.2
         (ActualSignedPhysicalBinding.reference l)) x =
       ActualSignedPotentialCoherence.pressureMode l u (ActualSignedPhysicalBinding.reference l)
         (ActualSignedPhysicalBinding.toCommonCylinder l x) := by
@@ -459,12 +469,14 @@ theorem singletonPressureMode_eq (x : FullPoint) :
 
 end MeasuredModes
 
+/-- Canonical potential as an element of `ComplexVector`. -/
 noncomputable def canonicalPotential
     (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
     (l : Label B N0) (w : SpaceTime) : ComplexVector := fun i =>
   ((ActualSignedExterior.family s).potentialCopies slots outgoing.data.h_pos.le i).periodized
     ActualPolarCoverage.inner h slots.radius (physicalIndex l) w
 
+/-- Canonical pressure as an element of `ℂ`. -/
 noncomputable def canonicalPressure
     (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
     (l : Label B N0) (w : SpaceTime) : ℂ :=
@@ -488,7 +500,7 @@ theorem canonicalPotential_native (w : SpaceTime) (j : PolarCharts.Index)
       ActualSignedPhysicalData.rotateCoefficient
         (PhysicalGraphBounds.scaledRadial (ActualSignedPhysicalBinding.reference l) w)
         (ActualSignedPotentialCoherence.cylindricalPotential l u
-          (ActualSignedPhysicalBinding.reference l)
+            (ActualSignedPhysicalBinding.reference l)
           (PhysicalCurlCovariance.polarCoordinates
             (ActualSignedPhysicalGeometry.chartRadius ActualPolarCoverage.inner
               (ActualSignedPhysicalBinding.reference l)) j w)) := by
@@ -509,7 +521,7 @@ theorem canonicalPotential_native (w : SpaceTime) (j : PolarCharts.Index)
       ActualPolarCoverage.inner h slots.radius (ActualSignedPhysicalData.positiveIndex L) w = _
   rw [ActualSignedPhysicalData.potential_periodized_of_chart slots outgoing.data.h_pos.le
     (f.singleton (ActualSignedExterior.nativeLabel l)) G L i ActualPolarCoverage.inner_pos w hw j
-      hj]
+        hj]
   rw [← ActualSignedPhysicalData.rotateCoefficient_vectorMode,
     PhysicalGraphBounds.liftXY_physicalLift]
   change (ChartScales.Q (ActualSignedPhysicalBinding.reference l) ^ (-h) : ℝ) •
@@ -533,7 +545,7 @@ theorem canonicalPressure_native (w : SpaceTime) (j : PolarCharts.Index)
       PolarCharts.chartDomain ActualPolarCoverage.inner j) :
     canonicalPressure (measuredStates (N0 := N0) ActualInitialization.patch u H hp) l w =
       ActualSignedPotentialCoherence.cylindricalPressureMode l u
-        (ActualSignedPhysicalBinding.reference l)
+          (ActualSignedPhysicalBinding.reference l)
         (PhysicalCurlCovariance.polarCoordinates
           (ActualSignedPhysicalGeometry.chartRadius ActualPolarCoverage.inner
             (ActualSignedPhysicalBinding.reference l)) j w) := by
@@ -554,7 +566,7 @@ theorem canonicalPressure_native (w : SpaceTime) (j : PolarCharts.Index)
   rw [ActualSignedPhysicalData.pressure_periodized_of_chart slots outgoing.data.h_pos.le
     (f.singleton (ActualSignedExterior.nativeLabel l)) G L ActualPolarCoverage.inner_pos w hw j hj]
   change (ChartScales.Q (ActualSignedPhysicalBinding.reference l) ^ (-(2 * CoordinateAlgebra.A h))
-    : ℝ) •
+      : ℝ) •
     singletonPressureMode (measuredStates (N0 := N0) ActualInitialization.patch u H hp) l
       (ActualSignedPhysicalData.cylinderAt ActualPolarCoverage.inner j
         (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l) w)) = _
@@ -581,7 +593,7 @@ theorem canonical_current_zero
   rcases hbad with hout | hq
   · have houtz : (z.1, CylindricalResidual.chart z.2) ∉ ActualSignedExterior.active := by rwa [he]
     refine ⟨?_, ?_, ActualSignedPhysicalZeros.cylindricalPotential_zero_of_exterior l u n z hr hwz
-      houtz,
+        houtz,
       ActualSignedPhysicalZeros.cylindricalPressureMode_zero_of_exterior l u n z hr hwz houtz⟩
     · ext i
       change (∑' k : Frequency, ((ActualSignedExterior.family s).potentialCopies
@@ -595,7 +607,7 @@ theorem canonical_current_zero
   · have hqz : physicalQ h (z.1, CylindricalResidual.chart z.2) /
         ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉ Ioo (1 / 2 : ℝ) 2 := by rwa [he]
     refine ⟨?_, ?_, ActualSignedPhysicalZeros.cylindricalPotential_zero_of_nativeQ l u n z hr hwz
-      hqz,
+        hqz,
       ActualSignedPhysicalZeros.cylindricalPressureMode_zero_of_nativeQ l u n z hr hwz hqz⟩
     · ext i
       exact ActualSignedPhysicalZeros.canonical_potential_periodized_zero_of_nativeQ
@@ -628,7 +640,7 @@ variable (u : CorrectionState.State Point)
     (commonContext B) u).pressure = u.pressure)
   (HS : ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
     PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (GaugeStateCoherence.bandChartEquiv h n m k) (GaugeStateCoherence.bandVelocityScale h n m)
       (GaugeStateCoherence.bandScale n m) u u n m)
 
@@ -648,7 +660,7 @@ theorem canonical_current_values (l : Label B N0) (n : ℕ) {qbig a : ℝ}
     (l ∉ activeLabels standardRegion B N0 n →
       canonicalPotential (measuredStates (N0 := N0) ActualInitialization.patch u H hp) l w = 0 ∧
         canonicalPressure (measuredStates (N0 := N0) ActualInitialization.patch u H hp) l w = 0) :=
-          by
+            by
   by_cases hc : w ∈ ActualSignedExterior.active ∧
       physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∈ Ioo (1 / 2 : ℝ) 2
   · let m := ActualSignedPhysicalBinding.reference l
@@ -660,7 +672,7 @@ theorem canonical_current_values (l : Label B N0) (n : ℕ) {qbig a : ℝ}
       ActualSignedPhysicalGeometry.physical_chart_mem m j hj
     have hm : z ∈ ActualSignedPotentialCoherence.physicalDomain m :=
       ActualSignedPhysicalGeometry.scaledChart_mem_physicalDomain m ActualPolarCoverage.inner_pos j
-        hj
+          hj
         hw.1.1 hc.2
     have hn : z ∈ ActualSignedPotentialCoherence.physicalDomain n :=
       ActualSignedPhysicalGeometry.polarCoordinates_mem_physicalDomain n hb j hwb hw.1.1
@@ -678,7 +690,7 @@ theorem canonical_current_values (l : Label B N0) (n : ℕ) {qbig a : ℝ}
     rw [← he.2] at hpr
     have hangle : (PolarCharts.chart ActualPolarCoverage.inner j
         (PhysicalGraphBounds.scaledRadial m w)).2 = (PhysicalCurlCovariance.polarInput b j w).2 :=
-          by
+            by
       have hh := congrArg Prod.snd (ActualSignedPhysicalGeometry.physical_chart_scale m
         ActualPolarCoverage.inner_pos j hj)
       exact hh
@@ -691,7 +703,7 @@ theorem canonical_current_values (l : Label B N0) (n : ℕ) {qbig a : ℝ}
         hangle]
       rfl
     have hprr : (canonicalPressure (measuredStates (N0 := N0) ActualInitialization.patch u H hp) l
-      w).re =
+        w).re =
         CurrentSignedCurl.currentPressure l u n b j w := congrArg Complex.re hpr
     refine ⟨hvr.trans (CurrentSignedCurl.currentPotential_overlap l u n hb ha j i hwb hw.2.1),
       hprr.trans (CurrentSignedCurl.currentPressure_overlap l u n hb ha j i hwb hw.2.1), ?_⟩
@@ -702,7 +714,7 @@ theorem canonical_current_values (l : Label B N0) (n : ℕ) {qbig a : ℝ}
     exact ⟨hv, hpr⟩
   · have hbad : w ∉ ActualSignedExterior.active ∨
         physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉ Ioo (1 / 2 : ℝ) 2
-          :=
+            :=
       not_and_or.mp hc
     let z := PhysicalCurlCovariance.polarCoordinates a i w
     have hr : 0 < z.2 0 := (ActualMeanPotentialRealization.polarCoordinates_valid ha i hw.2.1).1
@@ -727,7 +739,7 @@ theorem measuredPotential_eq_sum (v : CorrectionStep.CycleCoefficients (Label B 
   simp_rw [potential_sum_labels]
   apply SignedPhysicalSumCalculus.realCoordinate_finsum_eq_sum
     (v.labels n) (fun l => canonicalPotential (measuredStates (N0 := N0) ActualInitialization.patch
-      u H hp) l w)
+        u H hp) l w)
   · intro l hn
     have hn' : l ∉ activeLabels standardRegion B N0 n := by simpa only [hlabels] using hn
     exact ((canonical_current_values u H hp hfixed HS l n ha i hw).2.2 hn').1
@@ -744,7 +756,7 @@ theorem measuredPressure_eq_sum (v : CorrectionStep.CycleCoefficients (Label B N
   rw [pressure_sum_labels]
   apply SignedPhysicalSumCalculus.real_finsum_eq_sum
     (v.labels n) (fun l => canonicalPressure (measuredStates (N0 := N0) ActualInitialization.patch
-      u H hp) l w)
+        u H hp) l w)
   · intro l hn
     have hn' : l ∉ activeLabels standardRegion B N0 n := by simpa only [hlabels] using hn
     exact ((canonical_current_values u H hp hfixed HS l n ha i hw).2.2 hn').2
@@ -756,7 +768,7 @@ theorem measuredPotential_germ (v : CorrectionStep.CycleCoefficients (Label B N0
     (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : w ∈ ActualPhysicalPrefixFields.cartesianChartDomain qbig n a i) :
     ActualSignedExterior.potential (measuredStates (N0 := N0) ActualInitialization.patch u H hp)
-      =ᶠ[𝓝 w]
+        =ᶠ[𝓝 w]
       fun z => ∑ l ∈ v.labels n, CurrentSignedCurl.currentPotential l u n a i z := by
   filter_upwards [(ActualPhysicalPrefixFields.cartesianChartDomain_open qbig n ha i).mem_nhds hw]
     with z hz
@@ -767,7 +779,7 @@ theorem measuredPressure_germ (v : CorrectionStep.CycleCoefficients (Label B N0)
     (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : w ∈ ActualPhysicalPrefixFields.cartesianChartDomain qbig n a i) :
     ActualSignedExterior.pressure (measuredStates (N0 := N0) ActualInitialization.patch u H hp)
-      =ᶠ[𝓝 w]
+        =ᶠ[𝓝 w]
       fun z => ∑ l ∈ v.labels n, CurrentSignedCurl.currentPressure l u n a i z := by
   filter_upwards [(ActualPhysicalPrefixFields.cartesianChartDomain_open qbig n ha i).mem_nhds hw]
     with z hz
@@ -783,7 +795,7 @@ theorem measuredPotential_curl (v : CorrectionStep.CycleCoefficients (Label B N0
         (CyclePhysicalPrefixes.velocityMap (ActualCycleResidualBounds.actualBandGraph n)
           (∑ l ∈ v.labels n, ((ActualSignedStageControls.parameters l).exactBlock
             ActualInitialization.geometry.strip (ActualSignedCoherence.request B u)).oscillation
-              n)))
+                n)))
       (ActualPhysicalPrefixFields.cartesianChartDomain qbig n a i) := by
   intro w hw
   exact (PhysicalCurlCovariance.spatialCurl_congr
@@ -794,12 +806,12 @@ theorem measuredPressure_eq (v : CorrectionStep.CycleCoefficients (Label B N0))
     (hlabels : v.labels = activeLabels standardRegion B N0) (n : ℕ)
     {qbig a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) :
     EqOn (ActualSignedExterior.pressure (measuredStates (N0 := N0) ActualInitialization.patch u H
-      hp))
+        hp))
       (CyclePhysicalPrefixes.polarPressureMap a i
         (CyclePhysicalPrefixes.pressureMap (ActualCycleResidualBounds.actualBandGraph n)
           (∑ l ∈ v.labels n, ((ActualSignedStageControls.parameters l).exactBlock
             ActualInitialization.geometry.strip (ActualSignedCoherence.request B
-              u)).oscillatoryPressure n)))
+                u)).oscillatoryPressure n)))
       (ActualPhysicalPrefixFields.cartesianChartDomain qbig n a i) := by
   intro w hw
   rw [measuredPressure_eq_sum u H hp hfixed HS v hlabels n ha i hw]
@@ -809,6 +821,8 @@ end CurrentRepresentation
 
 /-! ## The literal correction cycle's physical fields -/
 
+/-- Cycle input, given by `(ActualCycleParameters.fixedParameters B N0).afterParticular
+x.coefficients (commonContext B) x.state`. -/
 noncomputable def cycleInput (x : CorrectionStep.CycleState (Label B N0)) :
     CorrectionState.State Point :=
   (ActualCycleParameters.fixedParameters B N0).afterParticular
@@ -825,7 +839,7 @@ variable (x : CorrectionStep.CycleState (Label B N0))
     (commonContext B) (cycleInput x)).pressure = (cycleInput x).pressure)
   (HS : ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
     PhysicalResidualNaturality.StateOn (PhysicalMeanDomain.slowDomain
-      (ActualInitialCoherence.overlap n m))
+        (ActualInitialCoherence.overlap n m))
       (GaugeStateCoherence.bandChartEquiv h n m k) (GaugeStateCoherence.bandVelocityScale h n m)
       (GaugeStateCoherence.bandScale n m) (cycleInput x) (cycleInput x) n m)
   (hlabels : x.coefficients.labels = activeLabels standardRegion B N0)

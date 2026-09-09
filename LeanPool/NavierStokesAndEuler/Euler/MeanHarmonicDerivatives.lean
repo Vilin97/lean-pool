@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Harmonicity of actual coordinate derivatives on an open subset of R³. -/
 
 @[expose] public section
 
-/-! Harmonicity of actual coordinate derivatives on an open subset of R³. -/
 
 noncomputable section
 
@@ -58,6 +62,7 @@ theorem partialDerivative_harmonic_on (f : Space → ℝ) (hf : ContDiff ℝ ∞
   rw [heq.fderiv_eq]
   simp
 
+/-- Word derivative as an element of `word, f => partialDerivative (wordDerivative word f) i`. -/
 def wordDerivative : List (Fin 3) → (Space → ℝ) → Space → ℝ
   | [], f => f
   | i :: word, f => partialDerivative (wordDerivative word f) i

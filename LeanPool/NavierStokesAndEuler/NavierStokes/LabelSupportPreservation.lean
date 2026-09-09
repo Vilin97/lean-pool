@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualGaussianCoverage
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
-
-@[expose] public section
 
 /-!
 # Preservation of the actual closed carrier of a harmonic label
@@ -19,6 +16,9 @@ zero of the source is not used as a zero of its particular solution.
 The Gaussian clock cutoff supplies the temporal boundary of the carrier;
 the source supplies its slow and transverse boundaries.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -161,7 +161,7 @@ include hS hsupport
 theorem data_pressure_zero_germ (l : Label) (n : ℕ) (k : Frequency)
     {x : (P × ℝ) × Plane} (hx : x.1.1 ∈ s.domain)
     (htime : ((ScaledActualParticularControl.geometry reference gap clock l n).coordinates k x.2).2
-      ∈
+        ∈
       Ioo 0 (ScaledActualParticularControl.length F clock l n))
     (hpath : ∀ v ∈ Icc 0 (ScaledActualParticularControl.length F clock l n),
       (x.1.1, (ScaledActualParticularControl.geometry reference gap clock l n).path k x.2 v) ∉
@@ -178,7 +178,7 @@ though its raw cutoff is supported on a larger padded cell. -/
 theorem data_native_zero_alternative
     (hinj : ∀ l n, InjOn TorusAverages.quotientPoint
       ((fun z => (reference l n).center + (reference l n).basis z) ''
-        (referenceWindow (r l n) (F.L (l,n)) (hr l n) (F.L_pos (l,n))).outer))
+        (referenceWindow (r l n) (F.L (l, n)) (hr l n) (F.L_pos (l, n))).outer))
     (l : Label) (n : ℕ) (k : Frequency) {x : (P × ℝ) × Plane}
     (hx : x.1.1 ∈ s.domain)
     (hk : x ∈ nativeCell (ScaledActualParticularControl.geometry reference gap clock l n)
@@ -229,7 +229,7 @@ theorem data_native_zero_alternative
       exact hzero (fun _ _ hh => hp hh.1)
   · left
     exact (nativeCutoff_time_zero_germ (hr l n) (F.L_pos (l,n)) (clock.value_pos l n)
-      ht).comp_tendsto
+        ht).comp_tendsto
       ((g.coordinates_contDiff k).continuous.comp continuous_snd).continuousAt
 
 /-- All three literal particular output fields have zero germs off the
@@ -237,12 +237,12 @@ incoming label carrier. This is independent of every numerical jet bound. -/
 theorem particular_zero_germs
     (hinj : ∀ l n, InjOn TorusAverages.quotientPoint
       ((fun z => (reference l n).center + (reference l n).basis z) ''
-        (referenceWindow (r l n) (F.L (l,n)) (hr l n) (F.L_pos (l,n))).outer))
+        (referenceWindow (r l n) (F.L (l, n)) (hr l n) (F.L_pos (l, n))).outer))
     (outStrip : StripData ((P × ℝ) × Plane)) (d : GraphDirections ((P × ℝ) × Plane))
     (l : Label) (n : ℕ) {x : (P × ℝ) × Plane} (hx : x.1.1 ∈ s.domain)
     (hn : (x.1.1, x.2) ∉ sourceRegions F clock reference gap r S l n) :
     (((data F clock reference gap r hr base tangent ctx u b G A j l).commonCorrected outStrip
-      d).amplitude n
+        d).amplitude n
       =ᶠ[𝓝 x] fun _ => 0) ∧
     ((data F clock reference gap r hr base tangent ctx u b G A j l).common.pressure n
       =ᶠ[𝓝 x] fun _ => 0) ∧
@@ -291,25 +291,25 @@ variable (base : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
 
 theorem signed_raw_zero_of_mask (n : ℕ) (i : I) (x : D) (hm : mask i n x = 0) :
     (signedCopyData base s d matrix target request mask fundamental normalMotion action cutoff
-      column).amplitude n i x = 0 ∧
+        column).amplitude n i x = 0 ∧
     (signedCopyData base s d matrix target request mask fundamental normalMotion action cutoff
-      column).pressure n i x = 0 := by
+        column).pressure n i x = 0 := by
   simp [signedCopyData, SignedWaveUpdate.coefficients,
     SignedWaveUpdate.homogeneousCoefficients, SignedWaveUpdate.signedVector,
-      SignedWaveUpdate.signedScalar,
+        SignedWaveUpdate.signedScalar,
     hm, ParticularWaveBounds.projectedPressure, TangentProjection.pressureCoefficient]
 
 theorem signed_zero_germs_of_mask_germs (K : Cells D I)
     (hcutoff : ∀ n i, support (cutoff i n) ⊆ K.carrier n i)
     {n : ℕ} {x : D} (hm : ∀ i, mask i n =ᶠ[𝓝 x] fun _ => 0) :
     (((signedCopyData base s d matrix target request mask fundamental normalMotion action cutoff
-      column).commonCorrected s d).amplitude n
+        column).commonCorrected s d).amplitude n
       =ᶠ[𝓝 x] fun _ => 0) ∧
     ((signedCopyData base s d matrix target request mask fundamental normalMotion action cutoff
-      column).common.pressure n
+        column).common.pressure n
       =ᶠ[𝓝 x] fun _ => 0) ∧
     ((signedCopyData base s d matrix target request mask fundamental normalMotion action cutoff
-      column).globalGaussian d n
+        column).globalGaussian d n
       =ᶠ[𝓝 x] fun _ => 0) := by
   apply common_zero_germs_of_native _ K hcutoff s d (Filter.EventuallyEq.refl _ _)
   intro i _
@@ -317,10 +317,10 @@ theorem signed_zero_germs_of_mask_germs (K : Cells D I)
   constructor
   · filter_upwards [hm i] with y hy
     exact (signed_raw_zero_of_mask base s d matrix target request mask fundamental normalMotion
-      action cutoff column n i y hy).1
+        action cutoff column n i y hy).1
   · filter_upwards [hm i] with y hy
     exact (signed_raw_zero_of_mask base s d matrix target request mask fundamental normalMotion
-      action cutoff column n i y hy).2
+        action cutoff column n i y hy).2
 
 end Signed
 
@@ -366,7 +366,7 @@ theorem modeBlock_inputSupport {U : Set D} {K : ℕ → Set D}
     (hg : ∀ n x, x ∈ U → x ∉ K n → g n x = 0) :
     InputSupportOn U K (ParticularWaveAssembly.modeBlock j frequency phase angularFrequency v p)
       (ParticularWaveAssembly.modeBlock j frequency phase angularFrequency g (fun _ _ =>
-        0)).velocity
+          0)).velocity
       0 := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro n i
@@ -437,7 +437,7 @@ theorem inputSupport_sumBlock {ι : Type} {U : Set D} {K : ℕ → Set D}
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro n i
     exact real_supported_sum L (fun l => (blocks l).velocity n i) (fun l hl => (hs l hl).velocity n
-      i)
+        i)
   · intro n
     exact real_supported_sum L (fun l => (blocks l).pressure n) (fun l hl => (hs l hl).pressure n)
   · intro n i
@@ -453,9 +453,9 @@ theorem assembledBlock_inputSupport {U : Set D} {K : ℕ → Set D}
     (hp : ∀ j ∈ ParticularWaveAssembly.modes N, ∀ n x, x ∈ U → x ∉ K n → p j n x = 0)
     (hg : ∀ j ∈ ParticularWaveAssembly.modes N, ∀ n x, x ∈ U → x ∉ K n → g j n x = 0) :
     InputSupportOn U K (ParticularWaveAssembly.assembledBlock N frequency phase angularFrequency v
-      p)
+        p)
       (ParticularWaveAssembly.assembledBlock N frequency phase angularFrequency g (fun _ _ _ =>
-        0)).velocity
+          0)).velocity
       0 :=
   inputSupport_sumBlock _ _ _ _ _ _ (fun j hj =>
     modeBlock_inputSupport j frequency phase angularFrequency (hv j hj) (hp j hj) (hg j hj))
@@ -493,7 +493,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
     (sourceRegions F clock reference gap r S l) (b l) (G l) (A l))
   (hinj : ∀ l n, InjOn TorusAverages.quotientPoint
     ((fun z => (reference l n).center + (reference l n).basis z) ''
-      (referenceWindow (r l n) (F.L (l,n)) (hr l n) (F.L_pos (l,n))).outer))
+      (referenceWindow (r l n) (F.L (l, n)) (hr l n) (F.L_pos (l, n))).outer))
   (outStrip : StripData ((P × ℝ) × Plane)) (d : GraphDirections ((P × ℝ) × Plane))
 
 include hS hsupport hinj
@@ -502,13 +502,13 @@ include hS hsupport hinj
 has the same carrier as its incoming label. -/
 theorem particular_mode_inputSupport (j : ℤ) (l : Label) :
     HarmonicSourceSupport.InputSupportOn (s.domain ×ˢ univ) (sourceRegions F clock reference gap r
-      S l)
+        S l)
       (ParticularWaveAssembly.nativeModeBlock j (b l)
         ((data F clock reference gap r hr base tangent ctx u b G A j l).commonCorrected outStrip d))
       (ParticularWaveAssembly.nativeModeBlock j (b l)
         { base l with
           amplitude := (data F clock reference gap r hr base tangent ctx u b G A j
-            l).globalGaussian d
+              l).globalGaussian d
           pressure := fun _ _ => 0 }).velocity 0 := by
   apply modeBlock_inputSupport
   · intro n x hx hn
@@ -525,17 +525,17 @@ theorem particular_mode_inputSupport (j : ℤ) (l : Label) :
 label carrier, with no growth or derivative estimate as an input. -/
 theorem particular_assembled_inputSupport (N : ℕ) (l : Label) :
     HarmonicSourceSupport.InputSupportOn (s.domain ×ˢ univ) (sourceRegions F clock reference gap r
-      S l)
+        S l)
       (ErrorHarmonics.sumBlock (ParticularWaveAssembly.modes N)
         (b l).frequency (b l).phase (b l).angularFrequency (fun j =>
           ParticularWaveAssembly.nativeModeBlock j (b l)
             ((data F clock reference gap r hr base tangent ctx u b G A j l).commonCorrected
-              outStrip d)))
+                outStrip d)))
       (fun n i => ∑ j ∈ ParticularWaveAssembly.modes N,
         (ParticularWaveAssembly.nativeModeBlock j (b l)
           { base l with
             amplitude := (data F clock reference gap r hr base tangent ctx u b G A j
-              l).globalGaussian d
+                l).globalGaussian d
             pressure := fun _ _ => 0 }).velocity n i) 0 := by
   apply inputSupport_sumBlock
   intro j _
@@ -566,16 +566,16 @@ theorem signed_inputSupport (outer : Cells (D × ℝ) I)
     HarmonicSourceSupport.InputSupportOn U K
       (SignedWaveUpdate.blockOfCoefficients
         ((signedCopyData base s d matrix target request mask fundamental normalMotion action cutoff
-          column).commonCorrected s d)
+            column).commonCorrected s d)
         angularFrequency)
       (SignedWaveUpdate.coefficientBlock base.frequency (fun n x => base.phase n (x, 0))
-        angularFrequency
+          angularFrequency
         (fun n x => (signedCopyData base s d matrix target request mask fundamental normalMotion
-          action cutoff column).globalGaussian d n (x, 0))
+            action cutoff column).globalGaussian d n (x, 0))
         (fun _ _ => 0)).velocity 0 := by
   have hzero (n : ℕ) (x : D) (hx : x ∈ U) (hn : x ∉ K n) :=
     signed_zero_germs_of_mask_germs base s d matrix target request mask fundamental normalMotion
-      action cutoff column
+        action cutoff column
       outer hcutoff (n := n) (x := (x, 0)) (fun i =>
         zero_germ_of_local_support (hU.prod isOpen_univ) ((hK n).preimage continuous_fst)
           (hmask n i) ⟨hx, mem_univ _⟩ hn)

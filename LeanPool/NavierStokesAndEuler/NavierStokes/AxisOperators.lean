@@ -7,12 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisCoefficientSpace
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Actual bounded operators on the compatible natural-axis coefficient space
@@ -22,6 +18,9 @@ proves compatibility of the output jets, so its operators act on actual smooth
 coefficient functions in the complete space, not just unrelated arrays.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AxisOperators
@@ -30,8 +29,13 @@ open Finset Finset.Nat Set
 open AxisWeightEstimates AxisCoefficientSpace
 open scoped BigOperators Topology BoundedContinuousFunction
 
-private local instance (I : Window) (ε : ℝ) : NormedAddCommGroup (AxisSpace I ε) := inferInstance
-private local instance (I : Window) (ε : ℝ) : NormedSpace ℝ (AxisSpace I ε) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (AxisSpace I ε)` instance to shorten typeclass
+synthesis. -/
+local instance instAxisOperators1 (I : Window) (ε : ℝ) : NormedAddCommGroup (AxisSpace I ε) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (AxisSpace I ε)` instance to shorten typeclass synthesis. -/
+local instance instAxisOperators2 (I : Window) (ε : ℝ) : NormedSpace ℝ (AxisSpace I ε) :=
+    inferInstance
 
 /-- The finite Leibniz sum for one parameter derivative order. -/
 def leibnizSum (f g : ℕ → ℝ) (m : ℕ) : ℝ :=
@@ -132,7 +136,9 @@ theorem productFamily_bound (I : Window) {ε : ℝ} (hε : 0 < ε) (A B : AxisSp
 
 /-- Data for a genuine linear operation on compatible coefficient jets. -/
 structure BoundedLinearJetFamily (I : Window) (ε : ℝ) where
+  /-- Value of `BoundedLinearJetFamily`, of type `AxisSpace I ε → ℕ → ℕ → ℝ → ℝ`. -/
   value : AxisSpace I ε → ℕ → ℕ → ℝ → ℝ
+  /-- Bound constant of `BoundedLinearJetFamily`, of type `ℝ`. -/
   boundConstant : ℝ
   bound_nonneg : 0 ≤ boundConstant
   cont : ∀ A n m, ContinuousOn (value A n m) I.interval
@@ -143,6 +149,7 @@ structure BoundedLinearJetFamily (I : Window) (ε : ℝ) where
   bound : ∀ A n m x, x ∈ I.interval →
     |value A n m x| ≤ (boundConstant * ‖A‖) * weight ε n m
 
+/-- Linear value, constructed using `ofJetFamily`. -/
 def linearValue (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedLinearJetFamily I ε) (A : AxisSpace I ε) : AxisSpace I ε :=
   ofJetFamily I (weight ε) (weight_pos hε) (F.value A) (F.cont A) (F.deriv A)
@@ -162,6 +169,8 @@ theorem norm_linearValue_le (I : Window) {ε : ℝ} (hε : 0 < ε)
   unfold linearValue
   apply norm_ofJetFamily_le
 
+/-- Linear value map, bundling `toFun`, `map_add`, `apply`, `map_smul` and the required
+compatibility proofs. -/
 def linearValueMap (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedLinearJetFamily I ε) : AxisSpace I ε →ₗ[ℝ] AxisSpace I ε where
   toFun := linearValue I hε F
@@ -189,6 +198,8 @@ def linearValueMap (I : Window) {ε : ℝ} (hε : 0 < ε)
     rw [jet_linearValue I hε F (c • A) n 0 hx, jet_linearValue I hε F A n 0 hx]
     exact F.smul c A n 0 x
 
+/-- Linear lift, given by `(linearValueMap I hε F).mkContinuous F.boundConstant
+(norm_linearValue_le I hε F)`. -/
 def linearLift (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedLinearJetFamily I ε) : AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   (linearValueMap I hε F).mkContinuous F.boundConstant (norm_linearValue_le I hε F)
@@ -205,7 +216,10 @@ theorem norm_linearLift_le (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 /-- Data for a genuine bilinear operation, including its derivative compatibility. -/
 structure BoundedBilinearJetFamily (I : Window) (ε : ℝ) where
+  /-- Value of `BoundedBilinearJetFamily`, of type `AxisSpace I ε → AxisSpace I ε → ℕ → ℕ → ℝ →
+  ℝ`. -/
   value : AxisSpace I ε → AxisSpace I ε → ℕ → ℕ → ℝ → ℝ
+  /-- Bound constant of `BoundedBilinearJetFamily`, of type `ℝ`. -/
   boundConstant : ℝ
   bound_nonneg : 0 ≤ boundConstant
   cont : ∀ A B n m, ContinuousOn (value A B n m) I.interval
@@ -218,6 +232,7 @@ structure BoundedBilinearJetFamily (I : Window) (ε : ℝ) where
   bound : ∀ A B n m x, x ∈ I.interval →
     |value A B n m x| ≤ (boundConstant * ‖A‖ * ‖B‖) * weight ε n m
 
+/-- Bilinear value, constructed using `ofJetFamily`. -/
 def bilinearValue (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedBilinearJetFamily I ε) (A B : AxisSpace I ε) : AxisSpace I ε :=
   ofJetFamily I (weight ε) (weight_pos hε) (F.value A B) (F.cont A B) (F.deriv A B)
@@ -238,6 +253,7 @@ theorem norm_bilinearValue_le (I : Window) {ε : ℝ} (hε : 0 < ε)
   unfold bilinearValue
   apply norm_ofJetFamily_le
 
+/-- Bilinear value map, constructed using `LinearMap.mk₂`. -/
 def bilinearValueMap (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedBilinearJetFamily I ε) : AxisSpace I ε →ₗ[ℝ] AxisSpace I ε →ₗ[ℝ] AxisSpace I ε :=
   LinearMap.mk₂ ℝ (bilinearValue I hε F)
@@ -282,6 +298,8 @@ def bilinearValueMap (I : Window) {ε : ℝ} (hε : 0 < ε)
       rw [jet_bilinearValue I hε F A (c • B) n 0 hx, jet_bilinearValue I hε F A B n 0 hx]
       exact F.smul_right c A B n 0 x)
 
+/-- Bilinear lift, given by `(bilinearValueMap I hε F).mkContinuous₂ F.boundConstant
+(norm_bilinearValue_le I hε F)`. -/
 def bilinearLift (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedBilinearJetFamily I ε) :
     AxisSpace I ε →L[ℝ] AxisSpace I ε →L[ℝ] AxisSpace I ε :=
@@ -297,6 +315,8 @@ theorem norm_bilinearLift_le (I : Window) {ε : ℝ} (hε : 0 < ε)
     (F : BoundedBilinearJetFamily I ε) : ‖bilinearLift I hε F‖ ≤ F.boundConstant :=
   LinearMap.mkContinuous₂_norm_le _ F.bound_nonneg _
 
+/-- Product data, bundling `value`, `boundConstant`, `bound_nonneg`, `cont` and the required
+compatibility proofs. -/
 def productData (I : Window) {ε : ℝ} (hε : 0 < ε) : BoundedBilinearJetFamily I ε where
   value := productFamily I ε
   boundConstant := 64
@@ -319,7 +339,7 @@ def productData (I : Window) {ε : ℝ} (hε : 0 < ε) : BoundedBilinearJetFamil
   add_right := by
     intro A B C n m x
     simp only [productFamily, jetProduct, inputJet, Submodule.coe_add, jet_add, mul_add,
-      Finset.sum_add_distrib]
+        Finset.sum_add_distrib]
   smul_right := by
     intro c A B n m x
     simp only [productFamily, jetProduct, inputJet, Submodule.coe_smul, jet_smul,
@@ -367,7 +387,7 @@ def rowData (I : Window) {ε : ℝ} (hε : 0 < ε) (c : ℕ → ℝ) (source : �
   cont := by
     intro A n m
     exact continuousOn_const.mul (continuous_jet I (weight ε) A.1 (source n) (offset +
-      m)).continuousOn
+        m)).continuousOn
   deriv := by
     intro A n m x hx
     simpa only [Nat.add_assoc] using
@@ -389,14 +409,17 @@ def rowData (I : Window) {ε : ℝ} (hε : 0 < ε) (c : ℕ → ℝ) (source : �
       _ ≤ ‖A‖ * (K * weight ε n m) := mul_le_mul_of_nonneg_left (hweight n m) (norm_nonneg A)
       _ = _ := by ring
 
+/-- Primitive scale as an element of `ℕ → ℝ | 0 => 0 | n + 1 => 1 / ((n : ℝ) + 1)`. -/
 def primitiveScale : ℕ → ℝ
   | 0 => 0
   | n + 1 => 1 / ((n : ℝ) + 1)
 
+/-- Inverse scale as an element of `ℕ → ℝ | 0 => 0 | n + 1 => 1 / radialDivisor r n`. -/
 def inverseScale (r : ℕ) : ℕ → ℝ
   | 0 => 0
   | n + 1 => 1 / radialDivisor r n
 
+/-- Multiply Y scale as an element of `ℕ → ℝ | 0 => 0 | _ + 1 => 1`. -/
 def multiplyYScale : ℕ → ℝ
   | 0 => 0
   | _ + 1 => 1
@@ -408,7 +431,7 @@ theorem average_row_bound {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
     have hn : (0 : ℝ) ≤ n := by positivity
     linarith
   simpa only [one_div, div_eq_mul_inv, one_mul, mul_comm] using div_le_self (weight_pos hε n m).le
-    hden
+      hden
 
 theorem primitive_row_bound {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
     |primitiveScale n| * weight ε n.pred (0 + m) ≤ 80 * weight ε n m := by
@@ -445,7 +468,7 @@ theorem parameter_primitive_row_bound {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
       rw [primitiveScale, Nat.pred_succ, abs_of_pos (by positivity : 0 < 1 / ((n : ℝ) + 1))]
       have hdiv : weight ε n (m + 1) / ((n : ℝ) + 1) ≤ (80 / ε) * weight ε (n + 1) m := by
         apply (div_le_iff₀ (by positivity : 0 < (n : ℝ) + 1)).2
-        convert! weight_parameter_radial_shift hε n m using 1 ; ring
+        convert! weight_parameter_radial_shift hε n m using 1; ring
       simpa only [Nat.add_comm 1 m, one_div, div_eq_mul_inv, one_mul, mul_comm] using hdiv
 
 theorem multiplyY_row_bound {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
@@ -458,34 +481,49 @@ theorem multiplyY_row_bound {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
       simpa only [multiplyYScale, abs_one, one_mul, Nat.pred_succ, Nat.zero_add] using
         weight_radial_shift hε n m
 
+/-- Average data, given by `rowData I hε (fun n => 1 / ((n : ℝ) + 1)) id 0 1 (by norm_num)
+(average_row_bound hε)`. -/
 def averageData (I : Window) {ε : ℝ} (hε : 0 < ε) : BoundedLinearJetFamily I ε :=
   rowData I hε (fun n => 1 / ((n : ℝ) + 1)) id 0 1 (by norm_num) (average_row_bound hε)
 
+/-- Primitive data, given by `rowData I hε primitiveScale Nat.pred 0 80 (by norm_num)
+(primitive_row_bound hε)`. -/
 def primitiveData (I : Window) {ε : ℝ} (hε : 0 < ε) : BoundedLinearJetFamily I ε :=
   rowData I hε primitiveScale Nat.pred 0 80 (by norm_num) (primitive_row_bound hε)
 
+/-- Inverse data, given by `rowData I hε (inverseScale r) Nat.pred 0 80 (by norm_num)
+(inverse_row_bound hε hr)`. -/
 def inverseData (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     BoundedLinearJetFamily I ε :=
   rowData I hε (inverseScale r) Nat.pred 0 80 (by norm_num) (inverse_row_bound hε hr)
 
+/-- Parameter primitive data, given by `rowData I hε primitiveScale Nat.pred 1 (80 / ε) (by
+positivity) (parameter_primitive_row_bound hε)`. -/
 def parameterPrimitiveData (I : Window) {ε : ℝ} (hε : 0 < ε) : BoundedLinearJetFamily I ε :=
   rowData I hε primitiveScale Nat.pred 1 (80 / ε) (by positivity) (parameter_primitive_row_bound hε)
 
+/-- Multiply Y data, given by `rowData I hε multiplyYScale Nat.pred 0 80 (by norm_num)
+(multiplyY_row_bound hε)`. -/
 def multiplyYData (I : Window) {ε : ℝ} (hε : 0 < ε) : BoundedLinearJetFamily I ε :=
   rowData I hε multiplyYScale Nat.pred 0 80 (by norm_num) (multiplyY_row_bound hε)
 
+/-- Average, given by `linearLift I hε (averageData I hε)`. -/
 def average (I : Window) {ε : ℝ} (hε : 0 < ε) : AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   linearLift I hε (averageData I hε)
 
+/-- Primitive, given by `linearLift I hε (primitiveData I hε)`. -/
 def primitive (I : Window) {ε : ℝ} (hε : 0 < ε) : AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   linearLift I hε (primitiveData I hε)
 
+/-- Regular inverse, given by `linearLift I hε (inverseData I hε r hr)`. -/
 def regularInverse (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     AxisSpace I ε →L[ℝ] AxisSpace I ε := linearLift I hε (inverseData I hε r hr)
 
+/-- Parameter primitive, given by `linearLift I hε (parameterPrimitiveData I hε)`. -/
 def parameterPrimitive (I : Window) {ε : ℝ} (hε : 0 < ε) : AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   linearLift I hε (parameterPrimitiveData I hε)
 
+/-- Mul Y, given by `linearLift I hε (multiplyYData I hε)`. -/
 def mulY (I : Window) {ε : ℝ} (hε : 0 < ε) : AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   linearLift I hε (multiplyYData I hε)
 
@@ -634,6 +672,8 @@ theorem differentialFamily_bound (I : Window) {ε : ℝ} (hε : 0 < ε)
             (mul_nonneg (mul_nonneg (norm_nonneg A) (norm_nonneg B)) hC)
         _ = _ := by ring
 
+/-- Differential data, bundling `value`, `boundConstant`, `bound_nonneg`, `cont` and the
+required compatibility proofs. -/
 def differentialData (I : Window) {ε : ℝ} (hε : 0 < ε)
     (r p : ℕ) (hr : 1 ≤ r) (d b : ℕ → ℝ) (C : ℝ)
     (hd : ∀ j, 0 ≤ d j) (hb : ∀ i, 0 ≤ b i) (hC : 0 ≤ C)
@@ -663,7 +703,7 @@ def differentialData (I : Window) {ε : ℝ} (hε : 0 < ε)
   add_right := by
     intro A B E n m x
     cases n <;> simp only [differentialFamily, inputJet, Submodule.coe_add, jet_add, mul_add,
-      Finset.sum_add_distrib, zero_add]
+        Finset.sum_add_distrib, zero_add]
   smul_right := by
     intro c A B n m x
     cases n with
@@ -676,7 +716,7 @@ def differentialData (I : Window) {ε : ℝ} (hε : 0 < ε)
         intro kl hkl
         ring
   bound := fun A B n m x _ => differentialFamily_bound I hε r p hr d b C hd hb hC hshift hfactor A
-    B n m x
+      B n m x
 
 theorem radial_index_le_divisor {r : ℕ} (hr : 1 ≤ r) (n : ℕ) :
     (n : ℝ) + 1 ≤ radialDivisor r n := by
@@ -686,6 +726,7 @@ theorem radial_index_le_divisor {r : ℕ} (hr : 1 ≤ r) (n : ℕ) :
   simpa only [mul_one, radialDivisor] using
     mul_le_mul_of_nonneg_left h (show 0 ≤ (n : ℝ) + 1 by positivity)
 
+/-- Inverse mixed data, constructed using `differentialData`. -/
 def inverseMixedData (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     BoundedBilinearJetFamily I ε :=
   differentialData I hε r 1 hr (fun j => (j : ℝ)) (fun i => (i : ℝ) + 1) (80 / ε)
@@ -693,6 +734,7 @@ def inverseMixedData (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 �
     (fun i k => by simpa only [Nat.add_comm 1 k] using weight_parameter_radial_shift hε i k)
     (fun n i j hij => mixed_factors_le_divisor hr hij)
 
+/-- Inverse param product data, constructed using `differentialData`. -/
 def inverseParamProductData (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     BoundedBilinearJetFamily I ε :=
   differentialData I hε r 1 hr (fun _ => 1) (fun i => (i : ℝ) + 1) (80 / ε)
@@ -704,6 +746,7 @@ def inverseParamProductData (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr
         exact_mod_cast Nat.succ_le_succ (show i ≤ n by omega)
       simpa only [mul_one] using hi.trans (radial_index_le_divisor hr n))
 
+/-- Inverse dot product data, constructed using `differentialData`. -/
 def inverseDotProductData (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     BoundedBilinearJetFamily I ε :=
   differentialData I hε r 0 hr (fun j => (j : ℝ)) (fun _ => 1) 80
@@ -735,13 +778,13 @@ theorem norm_inverseMixed_le (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (h
     ‖inverseMixed I hε r hr‖ ≤ 5120 / ε := by
   have h := norm_bilinearLift_le I hε (inverseMixedData I hε r hr)
   change ‖inverseMixed I hε r hr‖ ≤ 64 * (80 / ε) at h
-  convert! h using 1 ; ring
+  convert! h using 1; ring
 
 theorem norm_inverseParamProduct_le (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     ‖inverseParamProduct I hε r hr‖ ≤ 5120 / ε := by
   have h := norm_bilinearLift_le I hε (inverseParamProductData I hε r hr)
   change ‖inverseParamProduct I hε r hr‖ ≤ 64 * (80 / ε) at h
-  convert! h using 1 ; ring
+  convert! h using 1; ring
 
 theorem norm_inverseDotProduct_le (I : Window) {ε : ℝ} (hε : 0 < ε) (r : ℕ) (hr : 1 ≤ r) :
     ‖inverseDotProduct I hε r hr‖ ≤ 5120 := by

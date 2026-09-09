@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTower
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Actual packet word bounds give the finite weighted Sobolev budgets
 used by the nonlinear correction, with no change to the spatial radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +31,7 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
   {G : Field P T raw} {q d : ℕ} {R A : ℝ}
 
 theorem WordBound.toFieldTower_weightedNorm_le (hG : G.WordBound q R A d)
-    (s N : ℕ) (hN : N+q ≤ s) (ρ : ℝ) (hρ : 0 < ρ) (t : Icc (0 : ℝ) T) :
+    (s N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (hρ : 0 < ρ) (t : Icc (0 : ℝ) T) :
     weightedNorm P q N ρ (G.toFieldTower.realization s t) ≤
       A*(∑ n ∈ range (N+1), weight ρ n*majorant R d n) := by
   calc
@@ -43,7 +48,7 @@ theorem WordBound.toFieldTower_weightedNorm_le (hG : G.WordBound q R A d)
       ring
 
 theorem WordBound.toFieldTower_weightedDerivativeNorm_le (hG : G.WordBound q R A d)
-    (s N : ℕ) (hN : N+q ≤ s) (ρ : ℝ) (hρ : 0 < ρ) (t : Icc (0 : ℝ) T) :
+    (s N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (hρ : 0 < ρ) (t : Icc (0 : ℝ) T) :
     (∑ i : Fin 4, weightedNorm P q N ρ
       (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) ≤
       A*(∑ n ∈ range (N+1), weight ρ n*majorant R (d+1) n) := by
@@ -93,7 +98,7 @@ private theorem half_square_sum_identity (N : ℕ) :
     push_cast
     ring
 
-theorem square_geometric_le_twelve (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2) (N : ℕ) :
+theorem square_geometric_le_twelve (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1 / 2) (N : ℕ) :
     (∑ n ∈ range N, r^n*((n+1 : ℕ) : ℝ)^2) ≤ 12 := by
   have hs : (∑ n ∈ range N, (1/2 : ℝ)^n*((n+1 : ℕ) : ℝ)^2) ≤ 12 := by
     have h := half_square_sum_identity N
@@ -105,8 +110,8 @@ theorem square_geometric_le_twelve (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2)
 /-- The unshifted all-order packet estimate yields a cutoff-independent
 background or residual budget, with the original word radius R. -/
 theorem WordBound.toFieldTower_weightedNorm_le_two (hG : G.WordBound q R A 0)
-    (hR : 0 ≤ R) (hA : 0 ≤ A) (s N : ℕ) (hN : N+q ≤ s)
-    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ*R ≤ 1/2) (t : Icc (0 : ℝ) T) :
+    (hR : 0 ≤ R) (hA : 0 ≤ A) (s N : ℕ) (hN : N + q ≤ s)
+    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ * R ≤ 1 / 2) (t : Icc (0 : ℝ) T) :
     weightedNorm P q N ρ (G.toFieldTower.realization s t) ≤ 2*A := by
   have h := hG.toFieldTower_weightedNorm_le s N hN ρ hρ t
   simp_rw [weight_majorant_zero] at h
@@ -116,8 +121,8 @@ theorem WordBound.toFieldTower_weightedNorm_le_two (hG : G.WordBound q R A 0)
 /-- All four actual derivative budgets together cost 12*A*R, independent
 of the cutoff and with no extra alphabet factor. -/
 theorem WordBound.toFieldTower_weightedDerivativeNorm_le_twelve (hG : G.WordBound q R A 0)
-    (hR : 0 ≤ R) (hA : 0 ≤ A) (s N : ℕ) (hN : N+q ≤ s)
-    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ*R ≤ 1/2) (t : Icc (0 : ℝ) T) :
+    (hR : 0 ≤ R) (hA : 0 ≤ A) (s N : ℕ) (hN : N + q ≤ s)
+    (ρ : ℝ) (hρ : 0 < ρ) (hsmall : ρ * R ≤ 1 / 2) (t : Icc (0 : ℝ) T) :
     (∑ i : Fin 4, weightedNorm P q N ρ
       (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) ≤ 12*A*R := by
   have h := hG.toFieldTower_weightedDerivativeNorm_le s N hN ρ hρ t
@@ -126,6 +131,6 @@ theorem WordBound.toFieldTower_weightedDerivativeNorm_le_twelve (hG : G.WordBoun
   exact h.trans ((mul_le_mul_of_nonneg_left
     (mul_le_mul_of_nonneg_left
       (square_geometric_le_twelve (ρ*R) (mul_nonneg hρ.le hR) hsmall (N+1)) hR) hA).trans_eq (by
-        ring))
+          ring))
 
 end EulerPacketCylinderField.Field

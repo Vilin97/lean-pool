@@ -6,14 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneJetExtensions
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualMeanStageData
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TailGaugePotential
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowBaseEndpoint
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualStageEstimates
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneJetExtensions
 
 /-!
 # Endpoint inputs for the actual raw candidate stages
@@ -22,6 +17,9 @@ Positive stages use their already proved raw estimates.  Stage zero uses
 the actual initial mean families and the existing extensions of the same
 base potential and pressure.  No output extension is an input below.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,6 +53,8 @@ noncomputable def initialPotentialModel (B N0 N : ℕ) (hN : 4 ≤ N)
     (ActualPhysicalStageBounds.actualInitialTemporalInput B N0 N hN)
     (ActualPhysicalStageBounds.actualInitialRankInput B N0 N hN)
 
+/-- Initial direct model, given by `(ActualMeanPhysicalData.initialAngularFamily B N0
+N).angularField`. -/
 noncomputable def initialDirectModel (B N0 N : ℕ) : VelocityField :=
   (ActualMeanPhysicalData.initialAngularFamily B N0 N).angularField
 
@@ -134,10 +134,10 @@ theorem endpointInputs_of_representations (B N0 N : ℕ) (hN : 4 ≤ N)
     {A V : ℕ → VelocityField} {P : ℕ → PressureField}
     (E : MixedCandidateAssembly.StageEstimates h qbig A V P)
     (hA : EqOn (A 0) (initialPotentialModel B N0 N hN WA) (CutStageEstimates.physicalSublevel h
-      qbig))
+        qbig))
     (hV : EqOn (V 0) (initialDirectModel B N0 N) (CutStageEstimates.physicalSublevel h qbig))
     (hP : EqOn (P 0) (initialPressureModel B N0 N hN WP) (CutStageEstimates.physicalSublevel h
-      qbig)) :
+        qbig)) :
     EndpointInputs h qbig A V P := by
   have hq1 := hq.trans (ChartScales.Q_le_one N)
   constructor
@@ -145,31 +145,31 @@ theorem endpointInputs_of_representations (B N0 N : ℕ) (hN : 4 ≤ N)
     cases j with
     | zero =>
         exact OffplaneJetExtensions.extension_of_eqOn_sublevel outgoing.data.h_pos
-          outgoing.data.h_lt_half
+            outgoing.data.h_lt_half
           hA hx hqx (initialPotentialModel_extension B N0 N hN WA hq hx hqx)
     | succ j =>
         exact OffplaneJetExtensions.rawStage_extension outgoing.data.h_pos outgoing.data.h_lt_half
-          hq1
+            hq1
           E.potential_bound (Nat.succ_le_succ (Nat.zero_le j)) (E.potential_smooth (j + 1)) hx hqx
   · intro x hx hqx j
     cases j with
     | zero =>
         exact OffplaneJetExtensions.extension_of_eqOn_sublevel outgoing.data.h_pos
-          outgoing.data.h_lt_half
+            outgoing.data.h_lt_half
           hV hx hqx (initialDirectModel_extension B N0 N hN hq hx hqx)
     | succ j =>
         exact OffplaneJetExtensions.rawStage_extension outgoing.data.h_pos outgoing.data.h_lt_half
-          hq1
+            hq1
           E.direct_bound (Nat.succ_le_succ (Nat.zero_le j)) (E.direct_smooth (j + 1)) hx hqx
   · intro x hx hqx j
     cases j with
     | zero =>
         exact OffplaneJetExtensions.extension_of_eqOn_sublevel outgoing.data.h_pos
-          outgoing.data.h_lt_half
+            outgoing.data.h_lt_half
           hP hx hqx (initialPressureModel_extension B N0 N hN WP hq hx hqx)
     | succ j =>
         exact OffplaneJetExtensions.rawStage_extension outgoing.data.h_pos outgoing.data.h_lt_half
-          hq1
+            hq1
           E.pressure_bound (Nat.succ_le_succ (Nat.zero_le j)) (E.pressure_smooth (j + 1)) hx hqx
 
 /-- Application to the literal raw families expected by
@@ -180,9 +180,9 @@ theorem actual_stage_endpoints (B N0 N : ℕ) (hN : 4 ≤ N)
     (WA : PhysicalStageBounds.WaveData h DA IA KA (Fin 3))
     (WP : PhysicalStageBounds.WaveData h DP IP KP Unit)
     (initial : MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h
-      qbig))
+        qbig))
     (stages : ℕ → MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h
-      qbig))
+        qbig))
     (direct : ℕ → DirectAngularDiagonal.AngularData (LocalAngularDiagonal.localSlowDomain h qbig))
     (pInitial : PressureField) (pStages : ℕ → PressureField)
     (E : MixedCandidateAssembly.StageEstimates h qbig
@@ -206,11 +206,11 @@ theorem actual_stage_endpoints (B N0 N : ℕ) (hN : 4 ≤ N)
     change TailGaugePotential.finalPotential certificate modulation upper B w + initial.field w = _
     rw [initialPotentialModel_eq]
     exact congrArg (fun z => TailGaugePotential.finalPotential certificate modulation upper B w +
-      z) (hInitial hw)
+        z) (hInitial hw)
   · intro w hw
     rw [MixedCandidateAssembly.pressureStages_zero, initialPressureModel_eq]
     exact congrArg (fun z => FinalSlowBase.pressure certificate modulation upper B w + z)
-      (hPressure hw)
+        (hPressure hw)
 
 /-- The chosen direct angular constructor supplies its stage-zero
 representation by its proved global field identity. -/
@@ -264,31 +264,31 @@ theorem endpointInputs_of_run
     cases j with
     | zero =>
         exact OffplaneJetExtensions.extension_of_eqOn_sublevel outgoing.data.h_pos
-          outgoing.data.h_lt_half
+            outgoing.data.h_lt_half
           e.potential_zero hx hqx (initialPotentialModel_extension B N0 N hN WA hq hx hqx)
     | succ j =>
         exact OffplaneJetExtensions.rawStage_extension outgoing.data.h_pos outgoing.data.h_lt_half
-          hq1
+            hq1
           ha (Nat.succ_le_succ (Nat.zero_le j)) (hsA (j + 1)) hx hqx
   · intro x hx hqx j
     cases j with
     | zero =>
         exact OffplaneJetExtensions.extension_of_eqOn_sublevel outgoing.data.h_pos
-          outgoing.data.h_lt_half
+            outgoing.data.h_lt_half
           e.direct_zero hx hqx (initialDirectModel_extension B N0 N hN hq hx hqx)
     | succ j =>
         exact OffplaneJetExtensions.rawStage_extension outgoing.data.h_pos outgoing.data.h_lt_half
-          hq1
+            hq1
           hv (Nat.succ_le_succ (Nat.zero_le j)) (hsV (j + 1)) hx hqx
   · intro x hx hqx j
     cases j with
     | zero =>
         exact OffplaneJetExtensions.extension_of_eqOn_sublevel outgoing.data.h_pos
-          outgoing.data.h_lt_half
+            outgoing.data.h_lt_half
           e.pressure_zero hx hqx (initialPressureModel_extension B N0 N hN WP hq hx hqx)
     | succ j =>
         exact OffplaneJetExtensions.rawStage_extension outgoing.data.h_pos outgoing.data.h_lt_half
-          hq1
+            hq1
           hp (Nat.succ_le_succ (Nat.zero_le j)) (hsP (j + 1)) hx hqx
 
 end ActualRun

@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCoherence
 
-@[expose] public section
-
 /-!
 # Full-fiber coherence of the actual signed Gaussian error
 
@@ -18,6 +16,9 @@ taken.  The source complement is retained, and the same copy index is
 used throughout.  The final field is the actual conjugate-pair Gaussian
 block, with its full angular variable.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -113,7 +114,7 @@ theorem gaussianBlock_formula
         HarmonicFields.character 1
           ((chartCoefficients l.2 l.1).frequency n * (chartCoefficients l.2 l.1).phase n (x,0) +
             (((ActualSignedStageControls.parameters l).angularFrequency n : ℤ) : ℝ) * theta)).re :=
-              by
+                by
   exact SignedWaveUpdate.coefficientBlock_velocity _ _ _ _ _ n (x,theta) i
 
 private theorem gaussianBlock_field_transport
@@ -123,9 +124,9 @@ private theorem gaussianBlock_field_transport
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
     (x : LocalSignedRequest.Point) (theta a : ℝ) (i : Fin 3)
     (hg : ((ActualSignedStageControls.parameters l).copyData s request).globalGaussian
-        (ActualSignedStageControls.directions B) n (x,0) =
+        (ActualSignedStageControls.directions B) n (x, 0) =
       a • ((ActualSignedStageControls.parameters l).copyData s request).globalGaussian
-        (ActualSignedStageControls.directions B) m (bandChartEquiv h n m k x,0)) :
+        (ActualSignedStageControls.directions B) m (bandChartEquiv h n m k x, 0)) :
     ((ActualSignedStageControls.parameters l).gaussianBlock s request).oscillation n (x,theta) i =
       a * ((ActualSignedStageControls.parameters l).gaussianBlock s request).oscillation
         m (bandChartEquiv h n m k x,theta) i := by
@@ -176,7 +177,7 @@ primitive identities. No covariance of a signed output is assumed. -/
 theorem gaussian_transport (l : SignedLabel B N0) (u : State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
@@ -195,7 +196,7 @@ image of the same overlap, with the reciprocal physical weight. -/
 theorem gaussian_transport_symm (l : SignedLabel B N0) (u : State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
@@ -207,7 +208,7 @@ theorem gaussian_transport_symm (l : SignedLabel B N0) (u : State Point)
     (copies l u).globalGaussian (ActualSignedStageControls.directions B) m x =
       (bandVelocityScale h m n * bandVelocityScale h m n * bandScale m n) •
         (copies l u).globalGaussian (ActualSignedStageControls.directions B) n ((chart n m k).symm
-          x) := by
+            x) := by
   have he := gaussian_transport l u H hfixed n m k hi HS ((chart n m k).symm x) hx
   have hw : bandVelocityScale h n m * bandVelocityScale h n m * bandScale n m ≠ 0 :=
     mul_ne_zero (mul_ne_zero (velocity_pos n m).ne' (velocity_pos n m).ne')
@@ -224,7 +225,7 @@ block, on all radial and free auxiliary fibers and at every angle. -/
 theorem gaussianBlock_transport (l : SignedLabel B N0) (u : State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)
@@ -247,7 +248,7 @@ Its domain is the exact image of the forward overlap. -/
 theorem gaussianBlock_transport_symm (l : SignedLabel B N0) (u : State Point)
     (H : MeanStateRegularity.PrimitiveData ActualInitialization.geometry.region
       ActualInitialization.geometry.patch.a ActualInitialization.geometry.patch.b (commonContext B)
-        u)
+          u)
     (hfixed : (VariableGaugeMean.reconstructState ActualInitialization.geometry.gauge
       (commonContext B) u).pressure = u.pressure)
     (n m k : ℕ) (hi : CommonWindow.index h n + k = CommonWindow.index h m)

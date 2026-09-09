@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedInverse
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedTranslation
+import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedInverse
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Genuine all-order spatial estimates for the translated mean inverse
@@ -20,6 +24,9 @@ solution is identified with the real spatial translation orbit before its
 iterated Fréchet derivatives are estimated. Coefficient and forcing amplitudes
 enter through explicit polynomials, independently of derivative order.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,12 +40,27 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoi
 open scoped ContDiff
 
 -- Reuse the nested Hilbert-space instances in the translated inverse estimates.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
-private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedGevrey1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedGevrey2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedGevrey3 (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanTranslatedGevrey4 (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanTranslatedGevrey5 (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) :=
+    inferInstance
+/-- Cache the standard `InnerProductSpace ℝ (TimeLp T solenoidalSpace)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanTranslatedGevrey6 (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace)
+    := inferInstance
 
 /-- The proved polynomial amplitude for the actual fixed mean operator. -/
 def operatorAmplitude (T CF CF₁ CH CM CA L : ℝ) : ℝ :=
@@ -58,7 +80,7 @@ theorem forcingAmplitude_nonneg (T CF CF₁ Cf : ℝ)
 variable (T : ℝ) (hT : 0 ≤ T)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L c : ℝ)
   (hc : 0 < c)
-  (hcoercive : ∀ v, c*‖v‖^2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v,v⟫_ℝ)
+  (hcoercive : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v, v⟫_ℝ)
 
 /-- Every actual spatial derivative of the solved mean field satisfies the
 factorial bound, with no assumed solution-jet recurrence. -/
@@ -77,17 +99,17 @@ theorem solution_translation_gevrey
     (hMD : c⁻¹*forcingAmplitude T CF CF₁ Cf ≤ M)
     (hR : 2*M*(Rc+1) ≤ R)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant Rc 0
-      n)
+        n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant Rc
-      0 n)
+        0 n)
     (hHb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b H) a‖ ≤ CH*majorant Rc 0
-      n)
+        n)
     (hMb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translateOperator b M0) a‖ ≤ CM*majorant Rc
-      0 n)
+        0 n)
     (hAb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translateOperator b A) a‖ ≤ CA*majorant Rc
-      0 n)
+        0 n)
     (d : ℕ) (hfb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b f) a‖ ≤
-      Cf*majorant R d n)
+        Cf*majorant R d n)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (fun a : Space => timeSolenoidalTranslation T a
       (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
@@ -95,23 +117,23 @@ theorem solution_translation_gevrey
   have hRcR : Rc ≤ R := by nlinarith
   have hR0 : 0 ≤ R := hRc.trans hRcR
   have hFbr (k a) : ‖iteratedFDeriv ℝ k (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant R 0
-    k :=
+      k :=
     (hFb k a).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 k) hCF)
   have hF₁br (k a) : ‖iteratedFDeriv ℝ k (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant
-    R 0 k :=
+      R 0 k :=
     (hF₁b k a).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 k) hCF₁)
   have hO : ContDiff ℝ ∞ (fun a : Space => translatedMeanOperator T hT a F F₁ H M0 A L) :=
     contDiff_fixedMeanOperator T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
       (fun a => translatePath T a H) (fun a => translateOperator a M0) (fun a => translateOperator
-        a A)
+          a A)
       L hF hF₁ hH hM0 hA
   have hJ : ContDiff ℝ ∞ (fun a : Space => translatedMeanPrimitive T hT a F F₁) :=
     contDiff_fixedMeanPrimitive T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
-      hF hF₁
+        hF hF₁
   have hG : ContDiff ℝ ∞ (fun a : Space =>
       -(translatedMeanPrimitive T hT a F F₁).adjoint (timeTranslation T a f)) :=
     (((realAdjoint (U := TimeLp T solenoidalSpace) (E := TimeLp T L2)).contDiff.comp hJ).clm_apply
-      hf).neg
+        hf).neg
   have hOb (j a) : ‖iteratedFDeriv ℝ (j+1)
       (fun b : Space => translatedMeanOperator T hT b F F₁ H M0 A L) a‖ ≤
       operatorAmplitude T CF CF₁ CH CM CA L*(Rc^(j+1)*((j+1).factorial : ℝ)^2) := by
@@ -134,12 +156,12 @@ theorem solution_translation_gevrey
     (forcingAmplitude_nonneg T CF CF₁ Cf hT hCF hCF₁ hCf) hM hMC hMD hRc hR (fun _ => le_rfl)
     hOb d hGb n x
   have heq : (fun a : Space => translatedMeanSolver T hT F F₁ H M0 A L c hc hcoercive a
-    (timeTranslation T a f)) =
+      (timeTranslation T a f)) =
       (fun a : Space => timeSolenoidalTranslation T a
         (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
           (-(fixedMeanPrimitive T hT F F₁).adjoint f))) :=
     funext (fun a => translatedMeanSolver_covariance T hT F F₁ H M0 A L c hc hcoercive a f)
   exact (congrArg (fun g : Space → TimeLp T solenoidalSpace => ‖iteratedFDeriv ℝ n g x‖)
-    heq.symm).trans_le hout
+      heq.symm).trans_le hout
 
 end EulerMeanTranslatedGevrey

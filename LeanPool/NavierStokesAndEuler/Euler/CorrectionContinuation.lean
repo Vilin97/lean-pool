@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedMildContinuation
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionTimeRestriction
+public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionLocal
+import LeanPool.NavierStokesAndEuler.Euler.BoundedMildContinuation
+import LeanPool.NavierStokesAndEuler.Euler.DivergenceFreeHeat
+
+/-! Actual divergence-free continuation of the concrete viscous correction equation. -/
 
 @[expose] public section
 
-/-! Actual divergence-free continuation of the concrete viscous correction equation. -/
 
 noncomputable section
 
@@ -23,11 +25,12 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Every actual partial zero-initial correction solution preserves the lifted divergence constraint. -/
+/-- Every actual partial zero-initial correction solution preserves the lifted divergence
+constraint. -/
 theorem correction_mild_divergenceFree {q : ℕ} (hq : 6 ≤ q) (ν : ℝ) (hν : 0 < ν)
     {T S : ℝ} (hT : 0 ≤ T) (hTS : T ≤ S)
     (D : CorrectionData period q (Icc (0 : ℝ) S))
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hsol : ∀ t, e t = quadraticDuhamel period ν hν hT hTS (D.coefficients period hq) 0 e t) :
     ∀ t, value period (e t) ∈ divergenceFreeSpace period D.κ D.direction := by
   let F := ((D.coefficients period hq).comp (timeInclusion hTS)).apply
@@ -38,12 +41,13 @@ theorem correction_mild_divergenceFree {q : ℕ} (hq : 6 ≤ q) (ν : ℝ) (hν 
   intro t
   exact (gradientEvaluation_zero_iff period D.κ D.direction (e t)).mp (hz t)
 
-/-- A genuine a-priori Sobolev bound continues the actual zero-initial viscous Euler correction across the prescribed interval. -/
+/-- A genuine a-priori Sobolev bound continues the actual zero-initial viscous Euler correction
+across the prescribed interval. -/
 theorem exists_global_correction_of_bound {q : ℕ} (hq : 6 ≤ q) (ν : ℝ) (hν : 0 < ν)
     (S : ℝ) (hS : 0 < S) (R : ℝ) (hR : 0 ≤ R)
     (D : CorrectionData period q (Icc (0 : ℝ) S))
     (hbound : ∀ (T : ℝ) (hT : 0 ≤ T) (hTS : T ≤ S)
-      (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1))),
+      (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))),
       (∀ t, e t = quadraticDuhamel period ν hν hT hTS (D.coefficients period hq) 0 e t) → ‖e‖ ≤ R) :
     ∃ e : C(Icc (0 : ℝ) S, SobolevSpace period (q+1)),
       ‖e‖ ≤ R ∧ e ⟨0,le_rfl,hS.le⟩ = 0 ∧

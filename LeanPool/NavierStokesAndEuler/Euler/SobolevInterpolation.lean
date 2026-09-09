@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
-public import Mathlib.Topology.UniformSpace.Pi
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+
+/-! Strong-derivative interpolation on the actual cylinder Sobolev spaces. -/
 
 @[expose] public section
 
-/-! Strong-derivative interpolation on the actual cylinder Sobolev spaces. -/
 
 noncomputable section
 
@@ -24,7 +26,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- One genuine derivative is controlled by its parent word and one available higher derivative. -/
-theorem word_square_le_parent {s n : ℕ} (h : n+2 ≤ s) (u : SobolevSpace period s)
+theorem word_square_le_parent {s n : ℕ} (h : n + 2 ≤ s) (u : SobolevSpace period s)
     (w : Fin n → Fin 4) (i : Fin 4) :
     ‖word period u (by omega : n+1 ≤ s) (Fin.cons i w)‖^2 ≤
       ‖word period u (by omega : n ≤ s) w‖*‖u‖ := by

@@ -7,9 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveAssembly
-
-@[expose] public section
 
 /-!
 # Local background bounds for the actual particular harmonics
@@ -18,6 +15,9 @@ The fixed harmonic changes the frequency.  Its phase is the same primary
 phase, including the free angular variable.  All primitive bounds are pulled
 from the actual primary inputs on the same closed support cells.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,6 +47,8 @@ theorem localClass_reindex (e : D ≃ₗᵢ[ℝ] E) {s : StripData E}
   rw [StateReindex.norm_iteratedFDeriv_pull]
   exact hb n i (e x) hx hi j hj
 
+/-- Reindex family, given by `WaveFamily.ofCoefficients (fun i =>
+ParticularWaveBounds.reindexCoefficients e (a.coefficients i))`. -/
 noncomputable def reindexFamily (e : D ≃ₗᵢ[ℝ] E) (a : WaveFamily E I) : WaveFamily D I :=
   WaveFamily.ofCoefficients (fun i => ParticularWaveBounds.reindexCoefficients e (a.coefficients i))
 
@@ -96,11 +98,11 @@ theorem inputBounds_reindex (e : D ≃ₗᵢ[ℝ] E) {s : StripData E}
     frequency_base := localClass_reindex e h.frequency_base
     axial_base := localClass_reindex e h.axial_base
     radial_base_aux := fun n i x hx hi => auxiliary_reindex e d.auxiliary (h.radial_base_aux n i (e
-      x) hx hi)
+        x) hx hi)
     frequency_base_aux := fun n i x hx hi => auxiliary_reindex e d.auxiliary (h.frequency_base_aux
-      n i (e x) hx hi)
+        n i (e x) hx hi)
     axial_base_aux := fun n i x hx hi => auxiliary_reindex e d.auxiliary (h.axial_base_aux n i (e
-      x) hx hi)
+        x) hx hi)
     normal := ?_
     defect := ?_
     amplitude := fun j => localClass_reindex e (h.amplitude j)
@@ -148,7 +150,7 @@ theorem inputBounds_zeroRescale {s : StripData D} {K : ℕ → I → Set D}
   normal := h.normal
   defect := h.defect
   amplitude := fun _ => LocalClass.zero (fun n i x hx => mul_nonneg (Real.sqrt_nonneg _) (hW n i x
-    hx))
+      hx))
   pressure := LocalClass.zero (fun n i x hx => mul_nonneg (Real.sqrt_nonneg _) (hW n i x hx))
 
 end Isometry
@@ -164,36 +166,51 @@ theorem coefficients_ext {D : Type} {a b : WaveCoefficients D}
 
 /-! ## The same primary choice in native/free-angle coordinates -/
 
+/-- Label: an abbreviation for `ActualPrimaryBounds.SignedLabel B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualPrimaryBounds.SignedLabel B N0
+/-- Copy index: an abbreviation for `ActualPrimaryBounds.CopyIndex B N0`. -/
 abbrev CopyIndex (B N0 : ℕ) := ActualPrimaryBounds.CopyIndex B N0
+/-- Parameter: an abbreviation for `CorrectionStep.CycleSlow`. -/
 abbrev Parameter := CorrectionStep.CycleSlow
+/-- Native: an abbreviation for `(Parameter × ℝ) × TorusInverse.Plane`. -/
 abbrev Native := (Parameter × ℝ) × TorusInverse.Plane
 
+/-- Native to full, given by `ParticularWaveAssembly.angleShuffle.symm.trans
+(StateReindex.cylinder cycleAssoc.symm)`. -/
 noncomputable def nativeToFull : Native ≃ₗᵢ[ℝ] ActualPrimary.FullPoint :=
   ParticularWaveAssembly.angleShuffle.symm.trans (StateReindex.cylinder cycleAssoc.symm)
 
+/-- Native strip, given by `ParticularWaveBounds.reindexStrip nativeToFull
+ActualPrimaryBounds.fullStrip`. -/
 noncomputable def nativeStrip : StripData Native :=
   ParticularWaveBounds.reindexStrip nativeToFull ActualPrimaryBounds.fullStrip
 
+/-- Cells, given by `nativeToFull ⁻¹' ActualPrimaryBounds.controlCell n i`. -/
 noncomputable def cells {B N0 : ℕ} (n : ℕ) (i : CopyIndex B N0) : Set Native :=
   nativeToFull ⁻¹' ActualPrimaryBounds.controlCell n i
 
+/-- Directions, given by `ParticularWaveBounds.reindexDirections nativeToFull
+(ActualPrimaryBounds.directions B)`. -/
 noncomputable def directions (B : ℕ) : GraphDirections Native :=
   ParticularWaveBounds.reindexDirections nativeToFull (ActualPrimaryBounds.directions B)
 
+/-- Primary block as an element of `HarmonicBlock CyclePoint`. -/
 noncomputable def primaryBlock {B N0 : ℕ} (l : Label B N0) : HarmonicBlock CyclePoint :=
   (ActualPrimary.piece ActualPrimary.standardRegion l.1 l.2).tangentBlock
     (fun n z => (ActualPrimary.chartCoefficients l.1 l.2).phase n (z, 0))
     (fun _ => PrimaryGeometryAssembly.angularMode ActualPrimary.certificate ActualPrimary.modulation
       (ActualPrimary.choice B N0).prepared l.1 l.2)
 
+/-- Carrier, constructed using `ParticularWaveAssembly.actualCarrier`. -/
 noncomputable def carrier {B N0 : ℕ} (b : Label B N0 → HarmonicBlock CyclePoint)
     (j : ℤ) (l : Label B N0) : WaveCoefficients Native :=
   ParticularWaveAssembly.actualCarrier
     (ParticularWaveBounds.reindexCoefficients nativeToFull (ActualPrimary.chartCoefficients l.1
-      l.2))
+        l.2))
     (StateReindex.block cycleAssoc.symm (b l)) j
 
+/-- Background family, given by `WaveFamily.ofCoefficients (fun i =>
+ParticularWaveBounds.zeroAmplitudes (carrier b j i.1))`. -/
 noncomputable def backgroundFamily {B N0 : ℕ}
     (b : Label B N0 → HarmonicBlock CyclePoint) (j : ℤ) : WaveFamily Native (CopyIndex B N0) :=
   WaveFamily.ofCoefficients (fun i => ParticularWaveBounds.zeroAmplitudes (carrier b j i.1))
@@ -291,7 +308,7 @@ theorem background_normal_range {B N0 : ℕ} (b : Label B N0 → HarmonicBlock C
     {n : ℕ} {i : CopyIndex B N0} {x : Native}
     (hx : x ∈ nativeStrip.domain) (hi : x ∈ cells n i) :
     ActualPrimaryBounds.normalFloor B N0 ≤ ‖(backgroundFamily b j).normal nativeStrip (directions
-      B) n i x‖ ∧
+        B) n i x‖ ∧
       ‖(backgroundFamily b j).normal nativeStrip (directions B) n i x‖ ≤
         ActualPrimaryBounds.normalCeiling B N0 := by
   rw [background_normal b hb j]

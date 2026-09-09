@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeDebtIncrement
 
-@[expose] public section
-
 /-!
 # Regularity of the actual mean equations on a moving annulus
 
@@ -19,6 +17,9 @@ actual nonlinear fluxes and differential residuals are consequences.
 Base coefficients need smoothness and periodicity only at positive radii.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.MeanStateRegularity
 
 noncomputable section
@@ -27,9 +28,13 @@ open Set Function Filter
 open scoped ContDiff Topology
 open MeanIncrementBounds CorrectionState LocalSignedRequest
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
+/-- Scalar: an abbreviation for `MeanIncrementBounds.Field Point`. -/
 abbrev Scalar := MeanIncrementBounds.Field Point
+/-- Tensor: an abbreviation for `Fin 3 → Fin 3 → Scalar`. -/
 abbrev Tensor := Fin 3 → Fin 3 → Scalar
 
 /-- Periodicity on the entire fast torus at each allowed slow point. -/
@@ -226,6 +231,7 @@ structure BaseData (U : Set Plane) (b : Triple Point) : Prop where
   angular_periodic : PositivePeriodic U b.angular
   axial_periodic : PositivePeriodic U b.axial
 
+/-- Periodic triple data, collecting `radial`, `angular`, `axial`. -/
 structure PeriodicTriple (U : Set Plane) (m : Triple Point) : Prop where
   radial : Periodic U m.radial
   angular : Periodic U m.angular
@@ -235,6 +241,7 @@ theorem BaseData.of_periodic {U : Set Plane} {b : Triple Point}
     (hb : SmoothTriple (LocalRankDefect.positiveDomain U) b) (hp : PeriodicTriple U b) :
     BaseData U b := ⟨hb, hp.radial.positive, hp.angular.positive, hp.axial.positive⟩
 
+/-- Moving triple data, collecting `radial`, `angular`, `axial`. -/
 structure MovingTriple {coord : ℝ} (U : SlowRegion coord) (a b : ℝ) (m : Triple Point) : Prop where
   radial : GaugeMomentBalances.MovingField U a b m.radial
   angular : GaugeMomentBalances.MovingField U a b m.angular
@@ -289,7 +296,7 @@ theorem axialAxial (hm : MovingTriple U a b m) (ha : 0 < a) (hab : a < b)
     GaugeMomentBalances.MovingField U a b (MeanIncrementBounds.axialAxial base m) :=
   MovingField.add
     (MovingField.smul (MovingField.coefficient_mul hm.axial ha hab hb.smooth.axial
-      hb.axial_periodic) 2)
+        hb.axial_periodic) 2)
     (MovingField.mul hm.axial hm.axial)
 
 theorem radialRadial (hm : MovingTriple U a b m) (ha : 0 < a) (hab : a < b)
@@ -297,7 +304,7 @@ theorem radialRadial (hm : MovingTriple U a b m) (ha : 0 < a) (hab : a < b)
     GaugeMomentBalances.MovingField U a b (MeanIncrementBounds.radialRadial base m) :=
   MovingField.add
     (MovingField.smul (MovingField.coefficient_mul hm.radial ha hab hb.smooth.radial
-      hb.radial_periodic) 2)
+        hb.radial_periodic) 2)
     (MovingField.mul hm.radial hm.radial)
 
 theorem radialAngular (hm : MovingTriple U a b m) (ha : 0 < a) (hab : a < b)
@@ -305,7 +312,7 @@ theorem radialAngular (hm : MovingTriple U a b m) (ha : 0 < a) (hab : a < b)
     GaugeMomentBalances.MovingField U a b (MeanIncrementBounds.radialAngular base m) :=
   MovingField.add
     (MovingField.smul (MovingField.coefficient_mul hm.angular ha hab hb.smooth.angular
-      hb.angular_periodic) 2)
+        hb.angular_periodic) 2)
     (MovingField.mul hm.angular hm.angular)
 
 theorem thetaResidual (hm : MovingTriple U a b m) (ha : 0 < a) (hab : a < b)
@@ -492,7 +499,7 @@ theorem localData_of_regular (G : SignedMeanGain.Geometry) (c : Context Point) (
     (hX : ∀ i j, GaugeDebtIncrement.Regular G.region G.patch.a G.patch.b
       (SignedMeanGain.covarianceIncrement u.oscillation w i j))
     (hXp : ∀ i j, Periodic G.region.carrier (SignedMeanGain.covarianceIncrement u.oscillation w i
-      j))
+        j))
     (hfixed : VariableGaugeMean.reconstructState G.gauge c u = u)
     (hmθ : ∀ n s, s ∈ G.region.carrier → radialMoment 2 u.mean.angular n s = 0)
     (hmz : ∀ n s, s ∈ G.region.carrier → radialMoment 1 u.mean.axial n s = 0) :

@@ -9,13 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateResidual
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionSourceData
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionResidualCancellation
-public import LeanPool.NavierStokesAndEuler.Euler.LiftedTransportComponents
-
-@[expose] public section
 
 /-! The actual coordinate residual identity in every finite Sobolev space.
 This discharges the approximation equation, using the source coefficients
 and the genuine packet Fields rather than an assumed residual equation. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,8 +30,10 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerVolterraConvolution EulerMetricTransport EulerLiftedWeakDerivative EulerLpCylinderTranslation
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup Space := inferInstance
-private local instance : NormedSpace ℝ Space := inferInstance
+/-- Cache the standard `NormedAddCommGroup Space` instance to shorten typeclass synthesis. -/
+local instance instPacketCoordinateSobolev1 : NormedAddCommGroup Space := inferInstance
+/-- Cache the standard `NormedSpace ℝ Space` instance to shorten typeclass synthesis. -/
+local instance instPacketCoordinateSobolev2 : NormedSpace ℝ Space := inferInstance
 
 variable {P : ℝ} [Fact (0 < P)]
 
@@ -69,6 +71,8 @@ private theorem transport_value_ae {T : ℝ} {z : VectorField}
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : Data U)
 
+/-- Normalized residual, given by `k • rawInverse D z (slicedMomentumResidual (Icc (0 : ℝ) D.T)
+k⁻¹ (rawInverse D z) (D.strain z) (D.normalField z) W p z)`. -/
 def normalizedResidual (k : ℝ) (W : VectorField) (p : ScalarField) (z : Domain) : Space :=
   k • rawInverse D z (slicedMomentumResidual (Icc (0 : ℝ) D.T) k⁻¹
     (rawInverse D z) (D.strain z) (D.normalField z) W p z)
@@ -198,7 +202,7 @@ theorem approximation_hasDerivAt (q : ℕ) (hq : 6 ≤ q) (t : ℝ) (ht : t ∈ 
         nonlinearity P ((coordinateData D k hκ G p R).atOrder P q) hq ⟨t,ht.1.le,ht.2.le⟩
           ((coordinateData D k hκ G p R).approximation.realization (q+1) ⟨t,ht.1.le,ht.2.le⟩) -
         coefficientSobolevOperator P ((coordinateData D k hκ G p R).metric.jet q
-          ⟨t,ht.1.le,ht.2.le⟩)
+            ⟨t,ht.1.le,ht.2.le⟩)
           (Pa.toFieldTower.realization q ⟨t,ht.1.le,ht.2.le⟩)) t :=
   (approximation_hasDerivWithinAt D k hk hκ G Gt hW p R Pa q hq
     ⟨t,ht.1.le,ht.2.le⟩).hasDerivAt (Icc_mem_nhds ht.1 ht.2)

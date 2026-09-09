@@ -6,14 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphRealization
 public import LeanPool.NavierStokesAndEuler.Euler.GraphPressurePotential
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
 
 /-! The actual physical graph field is smooth. Its ordinary spatial
 derivative tensors are bounded by cylinder derivative words, with an
 explicit polynomial frequency loss. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,13 +27,16 @@ open Set MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerMetricTra
   EulerGraphPressurePotential EulerSobolev
 open scoped ContDiff
 
+/-- Graph coordinates, given by `coordinateEquiv.symm.toContinuousLinearMap.comp (graphMap k
+m)`. -/
 def graphCoordinates (k : ℝ) (m : Vector3) : Vector3 →L[ℝ] Domain 4 :=
   coordinateEquiv.symm.toContinuousLinearMap.comp (graphMap k m)
 
-@[simp] theorem coordinateEquiv_graphCoordinates (k : ℝ) (m x : Vector3) :
+theorem coordinateEquiv_graphCoordinates (k : ℝ) (m x : Vector3) :
     coordinateEquiv (graphCoordinates k m x) = graphMap k m x :=
   coordinateEquiv.apply_symm_apply _
 
+/-- Frequency factor, given by `‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+|k| * ‖m‖)`. -/
 def frequencyFactor (k : ℝ) (m : Vector3) : ℝ :=
   ‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+|k| * ‖m‖)
 
@@ -57,6 +63,7 @@ theorem graphCoordinates_norm_le (k : ℝ) (m : Vector3) :
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Physical field, defined pointwise by `f (cylinderGraph P k m x)`. -/
 def physicalField (k : ℝ) (m : Vector3) (f : LiftDomain P → Vector3) : Vector3 → Vector3 :=
   fun x => f (cylinderGraph P k m x)
 
@@ -89,13 +96,13 @@ theorem physicalTensor_norm_le (k : ℝ) (m : Vector3) (f : LiftDomain P → Vec
   rw [physicalField_eq_euclidean,
     (graphCoordinates k m).iteratedFDeriv_comp_right (euclideanLift_smooth P f hf 0) x (by simp)]
   have hc := (iteratedFDeriv ℝ n (euclideanLift P f 0) (graphCoordinates k m
-    x)).norm_compContinuousLinearMap_le
+      x)).norm_compContinuousLinearMap_le
     (fun _ : Fin n => graphCoordinates k m)
   simp only [Finset.prod_const,Finset.card_univ,Fintype.card_fin] at hc
   calc
     _ ≤ ‖iteratedFDeriv ℝ n (euclideanLift P f 0) (graphCoordinates k m x)‖*
         ‖graphCoordinates k m‖^n := hc
-    _ ≤ (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w f (cylinderGraph P k m x)‖)*
+    _ ≤ (∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w f (cylinderGraph P k m x)‖) *
         frequencyFactor k m^n :=
       mul_le_mul ht (pow_le_pow_left₀ (norm_nonneg _) (graphCoordinates_norm_le k m) n)
         (by positivity) (Finset.sum_nonneg (fun _ _ => norm_nonneg _))

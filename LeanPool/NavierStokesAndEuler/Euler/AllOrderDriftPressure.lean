@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFinite
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressureParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyParity
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyReconstruction
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressureParity
 
 /-! Actual common pressure and a canonically normalized scalar graph pressure
 constructed from all-order drift-aware input budgets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -101,7 +104,8 @@ theorem Budget.graphPressure_has_potential (B : Budget period hT A)
       ∀ x, gradient q x = B.graphPressure period k t x :=
   (B.family period).graphPressure_has_potential period (B.comparisonData period) k hk t
 
-/-- The scalar graph pressure constructed by radial integration, with its additive gauge fixed at zero. -/
+/-- The scalar graph pressure constructed by radial integration, with its additive gauge fixed at
+zero. -/
 def Budget.normalizedGraphPotential (B : Budget period hT A) (k : ℝ)
     (t : Icc (0 : ℝ) T) (x : Vector3) : ℝ :=
   (B.family period).normalizedGraphPotential period k t x

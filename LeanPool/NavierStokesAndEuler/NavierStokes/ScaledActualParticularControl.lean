@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularControl
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedGeometry
 
-@[expose] public section
-
 /-!
 # Complete controls for the scaled actual particular inverse
 
@@ -18,6 +16,9 @@ The clock, normal, integration interval and native geometry are transported
 together.  The forcing is the current target residual, with no source
 naturality assumption and no supplied modal-control record.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,13 +29,16 @@ open CommonCoverSolve TorusInverse ParticularWaveBounds LabelSumBounds
 open ActualParticularControl
 open scoped Topology ContDiff InnerProductSpace BigOperators
 
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
 
 
 variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   {D : PhaseJetBounds.Domain (Label × ℕ) Slow}
 
+/-- Target domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def targetDomain (s : StripData P)
     (φ : (Label × ℕ) → Slow →L[ℝ] Slow) : PhaseJetBounds.Domain (Label × ℕ) Slow where
   scale i := s.slow i.2
@@ -42,14 +46,16 @@ noncomputable def targetDomain (s : StripData P)
   isOpen i := (D.isOpen i).preimage (φ i).continuous
   one_le_scale i := s.one_le_slow i.2
 
+/-- Interval, given by `(fun v => clock.value i.1 i.2*v) ⁻¹' F.V i`. -/
 noncomputable def interval (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale
-  Label)
+    Label)
     (i : Label × ℕ) : Set ℝ := (fun v => clock.value i.1 i.2*v) ⁻¹' F.V i
 
 theorem interval_open (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale Label)
     (i : Label × ℕ) : IsOpen (interval F clock i) :=
   (F.openV i).preimage (continuous_const.mul continuous_id)
 
+/-- Length, given by `F.L (l,n)/clock.value l n`. -/
 noncomputable def length (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale Label)
     (l : Label) (n : ℕ) : ℝ := F.L (l,n)/clock.value l n
 
@@ -64,26 +70,33 @@ theorem clock_mem (F : PhaseConstruction D) (clock : ActualSignedControl.Positiv
   simpa only [mul_comm] using (le_div_iff₀ (clock.value_pos l n)).mp hv.2
 
 theorem interval_contains (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale
-  Label)
+    Label)
     (i : Label × ℕ) : Icc 0 (length F clock i.1 i.2) ⊆ interval F clock i :=
   fun _ hv => F.interval i (clock_mem F clock hv)
 
+/-- Geometry, given by `CopySolveCompatibility.transportGeometry (reference l n) (gap l n) 0
+(clock.value l n) (clock.value_pos l n).ne'`. -/
 noncomputable def geometry (reference : Label → ℕ → Geometry) (gap : Label → ℕ → ℕ)
     (clock : ActualSignedControl.PositiveScale Label) (l : Label) (n : ℕ) : Geometry :=
   CopySolveCompatibility.transportGeometry (reference l n) (gap l n) 0 (clock.value l n)
     (clock.value_pos l n).ne'
 
+/-- Envelope, given by `referenceP (F.lam (l,n)) (F.u (l,n)) (F.L (l,n)) (clock.value l n*v)`. -/
 noncomputable def envelope (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale
-  Label)
+    Label)
     (l : Label) (n : ℕ) (v : ℝ) : ℝ :=
   referenceP (F.lam (l,n)) (F.u (l,n)) (F.L (l,n)) (clock.value l n*v)
 
+/-- Frame, given by `scaledSelectedFrame F φ (fun i => clock.value i.1 i.2) (fun i =>
+normal.value i.1 i.2) i`. -/
 noncomputable def frame (F : PhaseConstruction D)
     (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock normal : ActualSignedControl.PositiveScale Label) (i : Label × ℕ) :
     PrimaryODE.FrameData Slow :=
   scaledSelectedFrame F φ (fun i => clock.value i.1 i.2) (fun i => normal.value i.1 i.2) i
 
+/-- Neighborhood, given by `{x | x.1 ∈ s.domain ∧ φ (l,n) (χ x.1) ∈ D.carrier (l,n) ∧ ((g l
+n).coordinates k x.2).2 ∈ Ioo 0 (length F clock l n)}`. -/
 noncomputable def neighborhood (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] Slow) (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock : ActualSignedControl.PositiveScale Label) (g : Label → ℕ → Geometry)
@@ -91,6 +104,8 @@ noncomputable def neighborhood (s : StripData P) (F : PhaseConstruction D)
   {x | x.1 ∈ s.domain ∧ φ (l,n) (χ x.1) ∈ D.carrier (l,n) ∧
     ((g l n).coordinates k x.2).2 ∈ Ioo 0 (length F clock l n)}
 
+/-- Patch, given by `neighborhood s F χ φ clock g l n k ∩ {x | ((g l n).coordinates k x.2).1 ∈
+Icc (-(r l n)) (r l n)}`. -/
 noncomputable def patch (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] Slow) (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock : ActualSignedControl.PositiveScale Label) (g : Label → ℕ → Geometry)
@@ -106,7 +121,7 @@ theorem neighborhood_open (s : StripData P) (F : PhaseConstruction D)
   (s.isOpen_domain.preimage continuous_fst).inter
     (((D.isOpen (l,n)).preimage (((φ (l,n)).comp χ).continuous.comp continuous_fst)).inter
       (isOpen_Ioo.preimage (((g l n).coordinates_contDiff k).continuous.comp continuous_snd
-        |>.snd)))
+          |>.snd)))
 
 private theorem frame_smooth_mono {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
     {d : PrimaryODE.FrameData Q} {U V : Set (Q × ℝ)} (h : d.SmoothOn U) (hVU : V ⊆ U) :
@@ -122,7 +137,7 @@ theorem frame_jets (s : StripData P) (F : PhaseConstruction D)
     (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock normal : ActualSignedControl.PositiveScale Label)
     {A B : ℝ} (hA : 1 ≤ A) (hB : 1 ≤ B)
-    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B*s.slow i.2) :
+    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B * s.slow i.2) :
     FrameJets ((targetDomain (D := D) s φ).slot (interval F clock) (interval_open F clock))
       (frame F φ clock normal) := by
   let R := max clock.upper normal.upper
@@ -156,17 +171,18 @@ noncomputable def scaledControl
     (clock normal : ActualSignedControl.PositiveScale Label)
     (reference : Label → ℕ → Geometry) (gap : Label → ℕ → ℕ) (r : Label → ℕ → ℝ)
     {A B C : ℝ} {a : ℕ} (hA : 1 ≤ A) (hB : 1 ≤ B) (hC : 1 ≤ C)
-    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B*s.slow i.2)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (reference l n) (r l n) (F.L (l,n)))
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (geometry reference gap clock l n) ≤ C*s.slow
-      n^a)
+    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B * s.slow i.2)
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (reference l n) (r l n) (F.L (l, n)))
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (geometry reference gap clock l n) ≤ C *
+        s.slow
+        n ^ a)
     (j : ℤ) (hj : j ≠ 0) {α : ℝ} (f : Label → ℕ → P × Plane → ProblemStatement.Space)
     (hf : UniformWaveClass (CommonCoverClass.sourceStrip s)
       (groupedEnvelope (geometry reference gap clock) r (length F clock) (envelope F clock)) α f) :
     ParticularCopyBounds.UniformModalControl (CommonCoverClass.sourceStrip s) α
       (fun l n => nativeFrame (frame F φ clock normal (l,n)) χ)
       (fun l n => PrimaryCopyBridge.frameTangentData (nativeFrame (frame F φ clock normal (l,n)) χ)
-        j (f l n))
+          j (f l n))
       j (geometry reference gap clock) (length F clock) (envelope F clock)
       (patch s F χ φ clock (geometry reference gap clock) r) := by
   let g := geometry reference gap clock
@@ -181,7 +197,7 @@ noncomputable def scaledControl
   have hd := frame_jets s F φ clock normal hA hB hφ hscale
   have hcopy (l : Label) (n : ℕ) (k : Frequency) :
       (PrimaryCopyBridge.copyFrame (nativeFrame (frame F φ clock normal (l,n)) χ) (g l n)
-        k).SmoothOn
+          k).SmoothOn
         (neighborhood s F χ φ clock g l n k ×ˢ interval F clock (l,n)) := by
     change (PrimaryCopyBridge.reindex (frame F φ clock normal (l,n))
       (fun x : P × Plane => χ x.1)).SmoothOn _
@@ -195,7 +211,7 @@ noncomputable def scaledControl
     simpa only [abs_of_pos (F.L_pos (l,n))] using F.slot (l,n) (F.L (l,n))
       (F.interval (l,n) ⟨(F.L_pos (l,n)).le,le_rfl⟩)
   have hsepTarget (l : Label) (n : ℕ) : WaveEnvelopeTransport.Separated (g l n) (r l n) (length F
-    clock l n) :=
+      clock l n) :=
     separated_transport (hsep l n) (clock.value_pos l n) (gap l n)
   have herror : 0 ≤ F.E+4*F.C := by linarith [F.E_nonneg,F.C_nonneg]
   refine {
@@ -220,7 +236,7 @@ noncomputable def scaledControl
       (div_nonneg herror (zero_le_one.trans (D.one_le_scale (l,n))))
     boundConstant := K
     constant_ge_one := hK
-    coordinate_power := a
+    coordinatePower := a
     length_bound := ?_
     exponential_bound := ?_
     coordinate_bound := fun l n => (hgeometry l n).trans
@@ -253,7 +269,7 @@ noncomputable def scaledControl
         clock.lower_pos (clock.bounds l n).1
       _ ≤ (F.M*(B*s.slow n))/clock.lower := div_le_div_of_nonneg_right
         ((hlength l n).trans (mul_le_mul_of_nonneg_left (hscale (l,n)) (zero_le_one.trans
-          F.one_le_M)))
+            F.one_le_M)))
         clock.lower_pos.le
       _ = Lc*s.slow n := by dsimp [Lc]; ring
       _ ≤ K*s.slow n := mul_le_mul_of_nonneg_right hLK (zero_le_one.trans (s.one_le_slow n))
@@ -310,7 +326,7 @@ theorem angle_transport_withSource (d : PrimaryODE.FrameData Slow) (χ : P →L[
       (nativeFrame (transportedFrame d φ 0 rate normal) (χ.comp (ContinuousLinearMap.fst ℝ P ℝ)))
       j targetSource := by
   rw [← frameTangentData_transport (nativeFrame d χ) ψ referenceSource j gap 0 rate amplitude
-    normal,
+      normal,
     nativeFrame_transport d χ φ ψ hχ rate normal]
   rfl
 
@@ -324,6 +340,7 @@ omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
     (f : P × Plane → HarmonicCalculus.ComplexVector) :
     withSource t (fun x => imagPart (f x)) = imagData t f := rfl
 
+/-- Transported tangent, constructed using `ParticularWaveAssembly.angleTangent`. -/
 noncomputable def transportedTangent
     (F : PhaseConstruction D) (χ : P →L[ℝ] Slow) (ψ : (Label × ℕ) → P → P)
     (clock normal : ActualSignedControl.PositiveScale Label)
@@ -346,10 +363,11 @@ noncomputable def actualControl
     (referenceSource : Label → ℕ → P × Plane → ProblemStatement.Space)
     (gap : Label → ℕ → ℕ) (amplitude r : Label → ℕ → ℝ)
     {A B C : ℝ} {a : ℕ} (hA : 1 ≤ A) (hB : 1 ≤ B) (hC : 1 ≤ C)
-    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B*s.slow i.2)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (reference l n) (r l n) (F.L (l,n)))
-    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (geometry reference gap clock l n) ≤ C*s.slow
-      n^a)
+    (hφ : ∀ i, ‖φ i‖ ≤ A) (hscale : ∀ i, D.scale i ≤ B * s.slow i.2)
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (reference l n) (r l n) (F.L (l, n)))
+    (hgeometry : ∀ l n, CommonCoverClass.argumentCost (geometry reference gap clock l n) ≤ C *
+        s.slow
+        n ^ a)
     (c : CorrectionState.Context (P × Plane)) (u : CorrectionState.State (P × Plane))
     (b : Label → CorrectionState.HarmonicBlock (P × Plane))
     (G A0 : Label → HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) (hj : j ≠ 0)
@@ -360,9 +378,9 @@ noncomputable def actualControl
     (part : HarmonicCalculus.ComplexVector →L[ℝ] ProblemStatement.Space) :
     ParticularCopyBounds.UniformModalControl (CommonCoverClass.sourceStrip (angleStrip s)) α
       (fun l n => nativeFrame (frame F φ clock normal (l,n)) (χ.comp (ContinuousLinearMap.fst ℝ P
-        ℝ)))
+          ℝ)))
       (fun l n => withSource (transportedTangent F χ ψ clock normal referenceSource gap amplitude j
-        l n)
+          l n)
         (fun x => part (ParticularWaveAssembly.sourceFamily c u (b l) (G l) (A0 l) j n x)))
       j (geometry reference gap clock) (length F clock) (envelope F clock)
       (patch (angleStrip s) F (χ.comp (ContinuousLinearMap.fst ℝ P ℝ)) φ clock
@@ -388,7 +406,7 @@ theorem patch_envelope (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] Slow) (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock : ActualSignedControl.PositiveScale Label)
     (reference : Label → ℕ → Geometry) (gap : Label → ℕ → ℕ) (r : Label → ℕ → ℝ)
-    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (reference l n) (r l n) (F.L (l,n)))
+    (hsep : ∀ l n, WaveEnvelopeTransport.Separated (reference l n) (r l n) (F.L (l, n)))
     {l : Label} {n : ℕ} {k : Frequency} {x : P × Plane}
     (hx : x ∈ patch s F χ φ clock (geometry reference gap clock) r l n k) :
     groupedEnvelope (geometry reference gap clock) r (length F clock) (envelope F clock) l n x =
@@ -434,8 +452,9 @@ theorem norm_timeChart_le (rate : ℝ) (hrate : rate ≠ 0) :
     exact mul_le_mul (by linarith [abs_nonneg rate] : |rate| ≤ 1+|rate|)
       (norm_snd_le z) (norm_nonneg _) (by positivity)
 
+/-- Geometry factor, given by `1 + coveringBound budget * (2+clock.upper+clock.lower⁻¹)`. -/
 noncomputable def geometryFactor (clock : ActualSignedControl.PositiveScale Label) (budget : ℕ) : ℝ
-  :=
+    :=
   1 + coveringBound budget * (2+clock.upper+clock.lower⁻¹)
 
 theorem geometryFactor_one (clock : ActualSignedControl.PositiveScale Label) (budget : ℕ) :
@@ -451,12 +470,12 @@ theorem geometry_cost (clock : ActualSignedControl.PositiveScale Label)
     (g : Geometry) {l : Label} {n gap budget : ℕ} (hgap : gap ≤ budget) :
     CommonCoverClass.argumentCost
       (CopySolveCompatibility.transportGeometry g gap 0 (clock.value l n) (clock.value_pos l
-        n).ne') ≤
+          n).ne') ≤
       4*(geometryFactor clock budget)^2*(CommonCoverClass.argumentCost g)^2 := by
   let H := coveringBound budget
   let U := geometryFactor clock budget
   let G := CopySolveCompatibility.transportGeometry g gap 0 (clock.value l n) (clock.value_pos l
-    n).ne'
+      n).ne'
   have hH : 0 ≤ H := (coveringBound_pos budget).le
   have hU : 1 ≤ U := geometryFactor_one clock budget
   have hrate : |clock.value l n| ≤ clock.upper := by
@@ -493,7 +512,7 @@ theorem geometry_cost (clock : ActualSignedControl.PositiveScale Label)
     calc
       _ ≤ ‖((coverPower gap).symm : Plane →L[ℝ] Plane)‖ *
           ‖g.pointLinear.comp (TorusAverages.transverseChart (clock.value l n) (clock.value_pos l
-            n).ne' :
+              n).ne' :
             Plane →L[ℝ] Plane)‖ := ContinuousLinearMap.opNorm_comp_le _ _
       _ ≤ H*(‖g.pointLinear‖*(1+|clock.value l n|)) :=
         mul_le_mul (inverseCoveringNorm_le_bound hgap)
@@ -517,14 +536,15 @@ theorem geometry_cost (clock : ActualSignedControl.PositiveScale Label)
     nlinarith [mul_nonneg (sub_nonneg.mpr hU) (sub_nonneg.mpr hcost)]
   change 1+‖G.coordinateLinear‖+‖G.pointLinear‖*(1+‖G.coordinateLinear‖) ≤ _
   have hproduct := mul_le_mul hpx (add_le_add_right hcx 1)
-    (by positivity : 0 ≤ 1+‖G.coordinateLinear‖) (by positivity : 0 ≤
-      U*CommonCoverClass.argumentCost g)
+    (by
+        positivity : 0 ≤ 1+‖G.coordinateLinear‖) (by
+            positivity : 0 ≤ U*CommonCoverClass.argumentCost g)
   nlinarith [sq_nonneg (U*CommonCoverClass.argumentCost g-1)]
 
 theorem geometry_cost_uniform (s : StripData P) (clock : ActualSignedControl.PositiveScale Label)
     (reference : Label → ℕ → Geometry) (gap : Label → ℕ → ℕ) (budget : ℕ)
     {C : ℝ} {a : ℕ} (hgap : ∀ l n, gap l n ≤ budget)
-    (href : ∀ l n, CommonCoverClass.argumentCost (reference l n) ≤ C*s.slow n^a) :
+    (href : ∀ l n, CommonCoverClass.argumentCost (reference l n) ≤ C * s.slow n ^ a) :
     ∀ l n, CommonCoverClass.argumentCost (geometry reference gap clock l n) ≤
       (4*(geometryFactor clock budget)^2*C^2)*s.slow n^(2*a) := by
   intro l n
@@ -544,10 +564,14 @@ theorem geometry_cost_constant_one (clock : ActualSignedControl.PositiveScale La
 
 /-! ## The actual active-window parameter and frequency scales -/
 
+/-- Physical phi, given by `ActualSignedGeometry.slowChange h (ChartScales.Q (chart i.2))
+(ChartScales.Q (reference i.1 i.2))`. -/
 noncomputable def physicalPhi (h : ℝ) (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
     (i : Label × ℕ) : Slow →L[ℝ] Slow :=
   ActualSignedGeometry.slowChange h (ChartScales.Q (chart i.2)) (ChartScales.Q (reference i.1 i.2))
 
+/-- Physical psi, given by `PhysicalParticularWave.parameterChange h (ChartScales.Q (chart i.2))
+(ChartScales.Q (reference i.1 i.2))`. -/
 noncomputable def physicalPsi (h : ℝ) (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
     (i : Label × ℕ) : Slow → Slow :=
   PhysicalParticularWave.parameterChange h (ChartScales.Q (chart i.2))
@@ -559,13 +583,13 @@ theorem physical_commute (h : ℝ) (chart : ℕ → ℕ) (reference : Label → 
       physicalPhi h chart reference i (ActualSignedGeometry.swapParameter p) := rfl
 
 theorem physicalPhi_bound (h : ℝ) (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
-    (hnear : ∀ l n, chart n ≤ reference l n+4 ∧ reference l n ≤ chart n+4) (i : Label × ℕ) :
+    (hnear : ∀ l n, chart n ≤ reference l n + 4 ∧ reference l n ≤ chart n + 4) (i : Label × ℕ) :
     ‖physicalPhi h chart reference i‖ ≤ ActualSignedGeometry.slowChangeCost h :=
   ActualSignedGeometry.norm_slowChange_le h (hnear i.1 i.2).1 (hnear i.1 i.2).2
 
 theorem active_scale_bound (s : StripData P) (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
     (hchart : ∀ n, 1 ≤ chart n)
-    (hnear : ∀ l n, chart n ≤ reference l n+4 ∧ reference l n ≤ chart n+4)
+    (hnear : ∀ l n, chart n ≤ reference l n + 4 ∧ reference l n ≤ chart n + 4)
     (hs : ∀ n, ChartScales.S (chart n) ≤ s.slow n) (l : Label) (n : ℕ) :
     ChartScales.S (reference l n) ≤ 25*s.slow n :=
   (ActualSignedGeometry.S_window_le (hchart n) (hnear l n).2).trans
@@ -582,7 +606,7 @@ theorem normalWeight_harmonic (Q Qr K Kr : ℝ) (j : ℤ) (hj : j ≠ 0) :
 
 theorem normalScale_harmonic {h : ℝ} (hh : 0 ≤ h)
     (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
-    (hnear : ∀ l n, chart n ≤ reference l n+4 ∧ reference l n ≤ chart n+4)
+    (hnear : ∀ l n, chart n ≤ reference l n + 4 ∧ reference l n ≤ chart n + 4)
     (j : ℤ) (hj : j ≠ 0) (l : Label) (n : ℕ) :
     (ActualSignedGeometry.normalScale chart reference hnear hh).value l n =
       PhysicalParticularWave.normalWeight (ChartScales.Q (chart n)) (ChartScales.Q (reference l n))
@@ -595,14 +619,17 @@ section Slots
 
 variable {h dimension : ℝ} {vr vt : Plane}
   (sys : PartitionedCovariance.SlotSystem dimension h vr vt)
-  (hdet : vr.1*vt.2-vr.2*vt.1 ≠ 0)
+  (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
   (slot : Label → ℕ → SlotColoring.Label)
 
+/-- Slot reference, given by `ActualSignedGeometry.slotGeometry sys hdet (slot l n) 0`. -/
 noncomputable def slotReference (l : Label) (n : ℕ) : Geometry :=
   ActualSignedGeometry.slotGeometry sys hdet (slot l n) 0
 
+/-- Slot cost, given by `4*(geometryFactor clock budget)^2 *
+(25*CommonCoverClass.bandArgumentCost (TorusAverages.slotChart vr vt hdet) 0)^2`. -/
 noncomputable def slotCost (clock : ActualSignedControl.PositiveScale Label) (budget : ℕ) : ℝ :=
-  4*(geometryFactor clock budget)^2*
+  4*(geometryFactor clock budget)^2 *
     (25*CommonCoverClass.bandArgumentCost (TorusAverages.slotChart vr vt hdet) 0)^2
 
 theorem slotCost_one (clock : ActualSignedControl.PositiveScale Label) (budget : ℕ) :
@@ -614,19 +641,19 @@ theorem slotCost_one (clock : ActualSignedControl.PositiveScale Label) (budget :
 theorem slot_geometry_cost (s : StripData P) (hh : 0 ≤ h)
     (clock : ActualSignedControl.PositiveScale Label) (gap : Label → ℕ → ℕ) (budget : ℕ)
     (hgap : ∀ l n, gap l n ≤ budget) (hslot : ∀ l n, 4 ≤ (slot l n).1)
-    (hscale : ∀ l n, ChartScales.S (slot l n).1 ≤ 25*s.slow n) :
+    (hscale : ∀ l n, ChartScales.S (slot l n).1 ≤ 25 * s.slow n) :
     ∀ l n, CommonCoverClass.argumentCost
       (geometry (slotReference sys hdet slot) gap clock l n) ≤ slotCost hdet clock budget*s.slow
-        n^2 := by
+          n^2 := by
   have hr (l : Label) (n : ℕ) :
       CommonCoverClass.argumentCost (slotReference sys hdet slot l n) ≤
         (25*CommonCoverClass.bandArgumentCost (TorusAverages.slotChart vr vt hdet) 0)*s.slow n^1 :=
-          by
+            by
     refine (ActualSignedGeometry.slotGeometry_argumentCost sys hdet hh (hslot l n) (le_refl
-      0)).trans ?_
+        0)).trans ?_
     have hm := mul_le_mul_of_nonneg_left (hscale l n)
       (zero_le_one.trans (CommonCoverClass.bandArgumentCost_one_le (TorusAverages.slotChart vr vt
-        hdet) 0))
+          hdet) 0))
     convert! hm using 1
     ring
   simpa only [slotCost, Nat.mul_one] using geometry_cost_uniform s clock
@@ -639,7 +666,7 @@ active-window constructions; no energy or output-control premise remains. -/
 noncomputable def actualSlotControl
     (s : StripData Slow) (F : PhaseConstruction D) (hh : 0 ≤ h)
     (chart : ℕ → ℕ) (hchart : ∀ n, 1 ≤ chart n)
-    (hnear : ∀ l n, chart n ≤ (slot l n).1+4 ∧ (slot l n).1 ≤ chart n+4)
+    (hnear : ∀ l n, chart n ≤ (slot l n).1 + 4 ∧ (slot l n).1 ≤ chart n + 4)
     (hslot : ∀ l n, 4 ≤ (slot l n).1)
     (hs : ∀ n, ChartScales.S (chart n) ≤ s.slow n)
     (hscale : ∀ i, D.scale i = ChartScales.S (slot i.1 i.2).1)
@@ -667,7 +694,7 @@ noncomputable def actualSlotControl
     (ActualSignedGeometry.normalScale chart (fun l n => (slot l n).1) hnear hh)
     (slotReference sys hdet slot) referenceSource gap
     (fun l n => PhysicalParticularWave.velocityWeight h (ChartScales.Q (chart n)) (ChartScales.Q
-      (slot l n).1))
+        (slot l n).1))
     (fun _ _ => sys.radius)
     (ActualSignedGeometry.slowChangeCost_one h) (by norm_num : (1:ℝ) ≤ 25)
     (slotCost_one hdet _ budget)
@@ -682,11 +709,11 @@ noncomputable def actualSlotControl
 
 theorem actualSlot_tangent_eq
     (F : PhaseConstruction D) (hh : 0 ≤ h) (chart : ℕ → ℕ)
-    (hnear : ∀ l n, chart n ≤ (slot l n).1+4 ∧ (slot l n).1 ≤ chart n+4)
+    (hnear : ∀ l n, chart n ≤ (slot l n).1 + 4 ∧ (slot l n).1 ≤ chart n + 4)
     (referenceSource : Label → ℕ → Slow × Plane → ProblemStatement.Space)
     (gap : Label → ℕ → ℕ) (j : ℤ) (hj : j ≠ 0) (l : Label) (n : ℕ) :
     transportedTangent F
-      ActualSignedGeometry.swapParameter.toContinuousLinearEquiv.toContinuousLinearMap
+        ActualSignedGeometry.swapParameter.toContinuousLinearEquiv.toContinuousLinearMap
       (physicalPsi h chart (fun l n => (slot l n).1))
       (ActualSignedGeometry.clockScale chart (fun l n => (slot l n).1) hnear h)
       (ActualSignedGeometry.normalScale chart (fun l n => (slot l n).1) hnear hh)
@@ -699,11 +726,11 @@ theorem actualSlot_tangent_eq
           ActualSignedGeometry.swapParameter.toContinuousLinearEquiv.toContinuousLinearMap)
         j (referenceSource l n))
       (PhysicalParticularWave.parameterChange h (ChartScales.Q (chart n)) (ChartScales.Q (slot l
-        n).1))
+          n).1))
       (gap l n) 0
       (PhysicalParticularWave.clockWeight h (ChartScales.Q (chart n)) (ChartScales.Q (slot l n).1))
       (PhysicalParticularWave.velocityWeight h (ChartScales.Q (chart n)) (ChartScales.Q (slot l
-        n).1))
+          n).1))
       (PhysicalParticularWave.normalWeight (ChartScales.Q (chart n)) (ChartScales.Q (slot l n).1)
         ((j:ℝ)*(ChartScales.carrier h (chart n):ℝ))
         ((j:ℝ)*(ChartScales.carrier h (slot l n).1:ℝ)))) := by

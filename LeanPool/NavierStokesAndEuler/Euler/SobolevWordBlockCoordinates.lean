@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevWordBlocks
 
+/-! Exact derivative coordinates of genuine Sobolev word blocks. -/
+
 @[expose] public section
 
-/-! Exact derivative coordinates of genuine Sobolev word blocks. -/
 
 noncomputable section
 
@@ -20,8 +21,9 @@ open EulerLiftedGradientSpace EulerCylinderSobolevSpace
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Every derivative coordinate of a true word block is the corresponding concatenated original word. -/
-theorem wordBlock_word (q n : ℕ) (w : Fin n → Fin 4) (u : SobolevSpace period (q+n))
+/-- Every derivative coordinate of a true word block is the corresponding concatenated original
+word. -/
+theorem wordBlock_word (q n : ℕ) (w : Fin n → Fin 4) (u : SobolevSpace period (q + n))
     {m : ℕ} (hm : m ≤ q) (v : Fin m → Fin 4) :
     word period (wordBlock period q n w u) hm v =
       word period u (by omega : m+n ≤ q+n) (Fin.append v w) := by

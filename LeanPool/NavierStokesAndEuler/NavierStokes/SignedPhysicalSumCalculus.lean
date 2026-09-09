@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCurlCovariance
 
-@[expose] public section
-
 /-!
 # Finite-support sums in physical coordinates
 
@@ -18,6 +16,9 @@ These identities only use finite support and the literal real-coordinate maps.
 They let a physical wave assembly retain an unrestricted label `finsum` while
 identifying its value with the finite active-label sum.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

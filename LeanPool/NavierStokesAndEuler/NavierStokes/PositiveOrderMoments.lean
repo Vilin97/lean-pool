@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PositiveAxisSystem
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FiveRowRank
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Actual five-row repair at positive slow order
@@ -21,6 +18,9 @@ proves that all five actual moment increments are linear, including pressure
 with the known previous-order radial residual retained.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Function MeasureTheory
@@ -28,13 +28,18 @@ open scoped BigOperators ContDiff
 
 namespace NavierStokes.PositiveOrderMoments
 
+/-- Profile: an abbreviation for `ℝ → ℝ`. -/
 abbrev Profile := ℝ → ℝ
+/-- History: an abbreviation for `ℕ → Profile`. -/
 abbrev History := ℕ → Profile
+/-- Debt: an abbreviation for `Fin 5 → ℝ`. -/
 abbrev Debt := Fin 5 → ℝ
 
+/-- Cauchy, given by `PositiveAxisSystem.convolution n (fun i j => u i R * v j R)`. -/
 noncomputable def cauchy (n : ℕ) (u v : History) (R : ℝ) : ℝ :=
   PositiveAxisSystem.convolution n (fun i j => u i R * v j R)
 
+/-- Increment, given by `Function.update u n (fun R => u n R + du R)`. -/
 noncomputable def increment (u : History) (n : ℕ) (du : Profile) : History :=
   Function.update u n (fun R => u n R + du R)
 
@@ -89,11 +94,15 @@ noncomputable def rowDensity (n : ℕ) (u e : History) (omega : Profile) (R : �
     R ^ 2 * cauchy n u e R,
     R * cauchy n u u R - R ^ 2 / 2 * pressureGradient n e omega R]
 
+/-- Positive integral, given by `∫ R in Ioi (0 : ℝ), f R`. -/
 noncomputable def positiveIntegral (f : Profile) : ℝ := ∫ R in Ioi (0 : ℝ), f R
 
+/-- Moments, defined pointwise by `positiveIntegral (fun R => rowDensity n u e omega R i)`. -/
 noncomputable def moments (n : ℕ) (u e : History) (omega : Profile) : Debt :=
   fun i => positiveIntegral (fun R => rowDensity n u e omega R i)
 
+/-- Linear density, given by `![R * du R, R ^ 2 * de R, 2 * e₀ R * de R / R, R ^ 2 * (u₀ R * de
+R + du R * e₀ R), 2 * R * u₀ R * du R - R * e₀ R * de R]`. -/
 noncomputable def linearDensity (u₀ e₀ du de : Profile) (R : ℝ) : Debt :=
   ![R * du R, R ^ 2 * de R, 2 * e₀ R * de R / R,
     R ^ 2 * (u₀ R * de R + du R * e₀ R),
@@ -114,6 +123,8 @@ theorem rowDensity_increment {n : ℕ} (hn : 0 < n) (u e : History) (omega du de
   · field_simp
     ring
 
+/-- Weighted density, given by `![R * du R, R ^ 2 * de R, (2 * A) * (R ^ (-2 - 2 * lam) * de R),
+A * (R ^ (1 - 2 * lam) * du R), (-A) * (R ^ (-2 * lam) * de R)]`. -/
 noncomputable def weightedDensity (lam A : ℝ) (du de : Profile) (R : ℝ) : Debt :=
   ![R * du R, R ^ 2 * de R, (2 * A) * (R ^ (-2 - 2 * lam) * de R),
     A * (R ^ (1 - 2 * lam) * du R), (-A) * (R ^ (-2 * lam) * de R)]
@@ -127,7 +138,11 @@ theorem linearDensity_on_patch (lam A a b : ℝ) (ha : 0 < a)
   by_cases hR : R ∈ Ioo a b
   · have hp : 0 < R := ha.trans hR.1
     ext i
-    fin_cases i <;> simp [linearDensity, weightedDensity, hu R hR, he R hR]
+    fin_cases i <;> simp only [linearDensity, he R hR, hu R hR, zero_mul, zero_add, mul_zero,
+        zero_sub, Fin.zero_eta, Fin.isValue,
+                      Matrix.cons_val_zero, weightedDensity, neg_mul, Fin.mk_one,
+                          Matrix.cons_val_one,
+                      Fin.reduceFinMk, Matrix.cons_val, neg_inj]
     · rw [show 2 * FiveRowRank.background lam A R * de R / R =
         (2 * FiveRowRank.background lam A R / R) * de R by ring,
         FiveRowRank.pressure_weight lam A R hp]
@@ -155,10 +170,13 @@ noncomputable def axialDebt (A : ℝ) (d : Debt) : Fin 2 → ℝ := ![d 0, d 3 /
 noncomputable def angularDebt (A : ℝ) (d : Debt) : Fin 3 → ℝ :=
   ![d 1, d 2 / (2 * A), -(d 4) / A]
 
+/-- Repair U, given by `LocalizedMomentRepair.repair (FiveRowRank.axialPowers lam)
+(FiveRowRank.cellLower a b) (FiveRowRank.cellUpper a b) (axialDebt A d)`. -/
 noncomputable def repairU (lam A a b : ℝ) (d : Debt) : Profile :=
   LocalizedMomentRepair.repair (FiveRowRank.axialPowers lam)
     (FiveRowRank.cellLower a b) (FiveRowRank.cellUpper a b) (axialDebt A d)
 
+/-- Repair E, constructed using `LocalizedMomentRepair.repair`. -/
 noncomputable def repairE (lam A a b : ℝ) (d : Debt) : Profile :=
   LocalizedMomentRepair.repair (FiveRowRank.angularPowers lam)
     (FiveRowRank.cellLower a b) (FiveRowRank.cellUpper a b) (angularDebt A d)
@@ -202,7 +220,7 @@ theorem positiveIntegral_eq_integral {f : Profile} (hf : ∀ R ≤ 0, f R = 0) :
 theorem weighted_moments_exact (lam A a b : ℝ) (d : Debt) (hlam : 0 < lam)
     (hA : A ≠ 0) (ha : 0 < a) (hab : a < b) (i : Fin 5) :
     positiveIntegral (fun R => weightedDensity lam A (repairU lam A a b d) (repairE lam A a b d) R
-      i) = d i := by
+        i) = d i := by
   have hdu := subset_closure.trans (repairU_tsupport lam A a b d hab)
   have hde := subset_closure.trans (repairE_tsupport lam A a b d hab)
   rw [positiveIntegral_eq_integral (by
@@ -222,13 +240,16 @@ theorem weighted_moments_exact (lam A a b : ℝ) (d : Debt) (hlam : 0 < lam)
   · change (∫ R, (2 * A) * (R ^ (-2 - 2 * lam) * repairE lam A a b d R)) = d 2
     rw [integral_const_mul]
     have hm := he 1
-    simp [FiveRowRank.angularPowers, angularDebt] at hm
+    simp only [FiveRowRank.angularPowers, neg_mul, Fin.isValue, Matrix.cons_val_one,
+        Matrix.cons_val_zero,
+      angularDebt] at hm
     rw [hm]
     field_simp
   · change (∫ R, A * (R ^ (1 - 2 * lam) * repairU lam A a b d R)) = d 3
     rw [integral_const_mul]
     have hm := hu 1
-    simp [FiveRowRank.axialPowers, axialDebt] at hm
+    simp only [FiveRowRank.axialPowers, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_fin_one,
+      axialDebt] at hm
     rw [hm]
     field_simp
   · change (∫ R, (-A) * (R ^ (-2 * lam) * repairE lam A a b d R)) = d 4
@@ -251,7 +272,7 @@ theorem repairE_power_integrable (lam A a b p : ℝ) (d : Debt) (ha : 0 < a) (ha
 theorem weightedDensity_integrable (lam A a b : ℝ) (d : Debt) (ha : 0 < a) (hab : a < b)
     (i : Fin 5) :
     Integrable (fun R => weightedDensity lam A (repairU lam A a b d) (repairE lam A a b d) R i) :=
-      by
+        by
   fin_cases i
   · simpa [weightedDensity] using repairU_power_integrable lam A a b 1 d ha hab
   · simpa [weightedDensity] using repairE_power_integrable lam A a b 2 d ha hab
@@ -437,11 +458,15 @@ end SmoothParameters
 
 section PhysicalHistories
 
+/-- Joint profile: an abbreviation for `ℝ × ℝ → ℝ`. -/
 abbrev JointProfile := ℝ × ℝ → ℝ
+/-- Joint history: an abbreviation for `ℕ → JointProfile`. -/
 abbrev JointHistory := ℕ → JointProfile
 
+/-- Slice, defined pointwise by `f j (R, eta)`. -/
 noncomputable def slice (f : JointHistory) (eta : ℝ) : History := fun j R => f j (R, eta)
 
+/-- Joint increment, given by `Function.update u n (fun w => u n w + du w)`. -/
 noncomputable def jointIncrement (u : JointHistory) (n : ℕ) (du : JointProfile) : JointHistory :=
   Function.update u n (fun w => u n w + du w)
 
@@ -465,6 +490,7 @@ theorem jointIncrement_contDiffOn {S : Set (ℝ × ℝ)} {n : ℕ} {u : JointHis
     simpa only [jointIncrement, Function.update_self] using (hu n le_rfl).add hdu
   · simpa only [jointIncrement, Function.update_of_ne h] using hu j hj
 
+/-- Global domain, bundling `carrier`, `isOpen`, `scale_mem`. -/
 noncomputable def globalDomain : ProfileHistories.RadialDomain where
   carrier := univ
   isOpen := isOpen_univ
@@ -492,12 +518,14 @@ theorem positiveIntegral_eq_primitive {f : Profile} {B R : ℝ} (hB : 0 ≤ B) (
       exact ht.2 ⟨ht.1, le_of_not_gt h⟩
     exact hf t (hR.trans htR.le)
 
+/-- Joint pressure gradient, given by `pressureGradient n (slice e w.2) (fun R => omega (R,
+w.2)) w.1`. -/
 noncomputable def jointPressureGradient (n : ℕ) (e : JointHistory) (omega : JointProfile)
     (w : ℝ × ℝ) : ℝ := pressureGradient n (slice e w.2) (fun R => omega (R, w.2)) w.1
 
 /-- Pressure is recomputed from its actual radial gradient, with zero axis datum. -/
 noncomputable def pressureHistory (n : ℕ) (e : JointHistory) (omega : JointProfile) : JointProfile
-  :=
+    :=
   ProfileHistories.primitive (jointPressureGradient n e omega)
 
 theorem pressureHistory_axis (n : ℕ) (e : JointHistory) (omega : JointProfile) (eta : ℝ) :
@@ -530,11 +558,15 @@ theorem pressureHistory_exterior_of_moments {n : ℕ} {u e : JointHistory} {omeg
   intro eta
   exact congrFun (hm eta) 2
 
+/-- Weighted axial, given by `w.1 * u w`. -/
 noncomputable def weightedAxial (u : JointProfile) (w : ℝ × ℝ) : ℝ := w.1 * u w
 
+/-- Mass history, given by `ProfileHistories.primitive (weightedAxial u)`. -/
 noncomputable def massHistory (u : JointProfile) : JointProfile :=
   ProfileHistories.primitive (weightedAxial u)
 
+/-- Parameter mass history, given by `ProfileHistories.primitive
+(ProfileHistories.parameterPartial (weightedAxial u))`. -/
 noncomputable def parameterMassHistory (u : JointProfile) : JointProfile :=
   ProfileHistories.primitive (ProfileHistories.parameterPartial (weightedAxial u))
 
@@ -543,6 +575,7 @@ noncomputable def fluxHistory (h lam : ℝ) (u : JointProfile) (w : ℝ × ℝ) 
   (w.2 * w.1 ^ 2 * u w - 2 * w.2 * (PositiveAxisSystem.dScale h + lam) * massHistory u w -
     PositiveAxisSystem.edge w.2 * parameterMassHistory u w) / PositiveAxisSystem.ell h w.2
 
+/-- Radial Z as an element of `ℝ`. -/
 noncomputable def radialZ (h power : ℝ) (u : JointProfile) (w : ℝ × ℝ) : ℝ :=
   (2 * w.2 * power * u w + PositiveAxisSystem.edge w.2 * ProfileHistories.parameterPartial u w -
     w.2 * w.1 * ProfileHistories.radialPartial u w) / PositiveAxisSystem.ell h w.2
@@ -558,7 +591,7 @@ theorem weightedAxial_parameterPartial {u : JointProfile} (hu : ContDiff ℝ ∞
     ProfileHistories.parameterPartial (weightedAxial u) w =
       w.1 * ProfileHistories.parameterPartial u w := by
   have hd := (ProfileHistories.parameterPartial_hasDerivAt globalDomain hu.contDiffOn (mem_univ
-    w)).const_mul w.1
+      w)).const_mul w.1
   have he := ProfileHistories.parameterPartial_hasDerivAt globalDomain
     (weightedAxial_contDiff hu).contDiffOn (mem_univ w)
   exact he.unique hd
@@ -566,7 +599,7 @@ theorem weightedAxial_parameterPartial {u : JointProfile} (hu : ContDiff ℝ ∞
 theorem massHistory_parameterPartial {u : JointProfile} (hu : ContDiff ℝ ∞ u) (w : ℝ × ℝ) :
     ProfileHistories.parameterPartial (massHistory u) w = parameterMassHistory u w :=
   ProfileHistories.parameterPartial_primitive globalDomain (weightedAxial_contDiff hu).contDiffOn
-    (mem_univ w)
+      (mem_univ w)
 
 /-- Genuine radial differentiation of the integral formula gives incompressibility. -/
 theorem fluxHistory_hasDerivAt (h lam : ℝ) {u : JointProfile} (hu : ContDiff ℝ ∞ u)
@@ -736,7 +769,7 @@ theorem fluxHistory_hasDerivAt_on (h lam : ℝ) {S : Set ℝ} (hS : IsOpen S)
       (-w.1 * radialZ h (-PositiveAxisSystem.a h + lam) u w) w.1 := by
   have huw : ContDiffOn ℝ ∞ (weightedAxial u) (univ ×ˢ S) := contDiffOn_fst.mul hu
   have hdu := ProfileHistories.radialPartial_hasDerivAt (parameterDomain S hS) hu (p := w)
-    ⟨mem_univ _, hw⟩
+      ⟨mem_univ _, hw⟩
   have hdm := ProfileHistories.primitive_hasDerivAt (parameterDomain S hS)
     huw (p := w) ⟨mem_univ _, hw⟩
   have hdn := ProfileHistories.primitive_hasDerivAt (parameterDomain S hS)
@@ -790,6 +823,8 @@ theorem positiveIntegral_contDiffOn {S : Set ℝ} (hS : IsOpen S) {F : JointProf
   intro eta heta
   exact positiveIntegral_eq_primitive hB le_rfl (hs eta heta)
 
+/-- Joint row density, given by `rowDensity n (slice u w.2) (slice e w.2) (fun R => omega (R,
+w.2)) w.1`. -/
 noncomputable def jointRowDensity (n : ℕ) (u e : JointHistory) (omega : JointProfile)
     (w : ℝ × ℝ) : Debt := rowDensity n (slice u w.2) (slice e w.2) (fun R => omega (R, w.2)) w.1
 
@@ -856,7 +891,7 @@ theorem moments_contDiffOn {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
     {B : ℝ} (hB : 0 ≤ B)
     (hs : ∀ eta ∈ S, ∀ R, B ≤ R → jointRowDensity n u e omega (R, eta) = 0) :
     ContDiffOn ℝ ∞ (fun eta => moments n (slice u eta) (slice e eta) (fun R => omega (R, eta))) S
-      := by
+        := by
   apply contDiffOn_pi.mpr
   intro i
   exact positiveIntegral_contDiffOn hS (hd i) hB
@@ -872,7 +907,7 @@ theorem moments_contDiffOn_of_histories {S : Set ℝ} (hS : IsOpen S) {n : ℕ} 
     (hE : ∀ eta ∈ S, ∀ R, B ≤ R → ∀ j, 0 < j → j ≤ n → e j (R, eta) = 0)
     (hOmega : ∀ eta ∈ S, ∀ R, B ≤ R → omega (R, eta) = 0) :
     ContDiffOn ℝ ∞ (fun eta => moments n (slice u eta) (slice e eta) (fun R => omega (R, eta))) S
-      := by
+        := by
   apply moments_contDiffOn hS (jointRowDensity_contDiffOn hu he hq) hB
   intro eta heta R hR
   exact jointRowDensity_exterior hn u e omega (R, eta)
@@ -888,9 +923,9 @@ theorem exact_corrections_joint_contDiffOn (lam a b : ℝ) {S : Set ℝ} (hS : I
     (hs : ∀ eta ∈ S, ∀ R, B ≤ R → jointRowDensity n u e omega (R, eta) = 0) :
     ContDiffOn ℝ ∞ (fun z : ℝ × ℝ =>
       (repairU lam (A z.1) a b (-moments n (slice u z.1) (slice e z.1) (fun R => omega (R, z.1)))
-        z.2,
+          z.2,
        repairE lam (A z.1) a b (-moments n (slice u z.1) (slice e z.1) (fun R => omega (R, z.1)))
-         z.2))
+           z.2))
       (S ×ˢ univ) :=
   by
     have hm := moments_contDiffOn (S := S) (n := n) (u := u) (e := e)

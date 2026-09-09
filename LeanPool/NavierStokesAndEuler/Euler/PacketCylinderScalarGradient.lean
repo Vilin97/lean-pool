@@ -8,10 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarTime
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+
+/-! The literal spatial gradient of an actual scalar cylinder path is an actual vector path. -/
 
 @[expose] public section
 
-/-! The literal spatial gradient of an actual scalar cylinder path is an actual vector path. -/
 
 noncomputable section
 
@@ -23,6 +25,7 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace Finset EulerSmoothL
   EulerPacketPointJets EulerPacketProfileRecursion EulerCylinderSobolev
 open scoped ContDiff
 
+/-- Gradient component, given by `(toSpanSingleton ℝ (basisVector i)).comp scalarProject`. -/
 def gradientComponent (i : Fin 3) : Space →L[ℝ] Space :=
   (toSpanSingleton ℝ (basisVector i)).comp scalarProject
 
@@ -46,10 +49,10 @@ theorem gradient_eq_sum (D : LiftTangent →L[ℝ] ℝ) :
   exact sum_congr rfl (fun i _ => congrArg (fun r : ℝ => r • basisVector i) (hc i))
 
 variable {P T : ℝ} [Fact (0 < P)] (raw : ScalarField)
-  (p : C(Icc (0 : ℝ) T,CylinderL2 P ℝ))
+  (p : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (he : ∀ (t : Icc (0 : ℝ) T) x θ,
-    raw (t,(x,θ)) = scalarPointField P p hp t (x,(θ : AddCircle P)))
+    raw (t, (x, θ)) = scalarPointField P p hp t (x, (θ : AddCircle P)))
 
 /-- A norm-one scalar embedding retains the actual continuous L² path. -/
 def scalarEmbeddingField : Field P T (fun z => scalarEmbed (raw z)) :=
@@ -76,7 +79,7 @@ def scalarGradientField : Field P T (pressureGradient raw) :=
     (fun i z => gradientComponent i
       (fderiv ℝ (fun y => scalarEmbed (raw (z.1,y))) z.2 (standardDirection i.succ)))
     (fun i => ((scalarEmbeddingField raw p hp he).derivative i.succ).map (gradientComponent
-      i))).congr
+        i))).congr
     (fun t x θ => by
       have hd : fderiv ℝ (fun y => scalarEmbed (raw (t,y))) (x,θ) =
           scalarEmbed.comp (fderiv ℝ (fun y => raw (t,y)) (x,θ)) :=

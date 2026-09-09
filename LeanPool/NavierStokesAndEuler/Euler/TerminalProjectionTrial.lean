@@ -7,16 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalLayerRamp
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 An explicit terminal-layer H¹ trial obtained by multiplying a differentiable
 projection path by the smooth exponential ramp.  Both energy estimates concern
 the actual Bochner L² derivative and primitive.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,13 +35,18 @@ variable {E U : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup U] [NormedSpace ℝ U]
 
-private local instance : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
-private local instance : AddCommGroup (U →L[ℝ] E) :=
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTerminalProjectionTrial1 : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTerminalProjectionTrial2 : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `AddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTerminalProjectionTrial3 : AddCommGroup (U →L[ℝ] E) :=
   (inferInstance : NormedAddCommGroup (U →L[ℝ] E)).toAddCommGroup
-private local instance : Module ℝ (U →L[ℝ] E) :=
+/-- Cache the standard `Module ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTerminalProjectionTrial4 : Module ℝ (U →L[ℝ] E) :=
   (inferInstance : NormedSpace ℝ (U →L[ℝ] E)).toModule
-private local instance : TopologicalSpace (U →L[ℝ] E) :=
+/-- Cache the standard `TopologicalSpace (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instTerminalProjectionTrial5 : TopologicalSpace (U →L[ℝ] E) :=
   (inferInstance : PseudoMetricSpace (U →L[ℝ] E)).toUniformSpace.toTopologicalSpace
 
 variable (T : ℝ) (hT : 0 ≤ T) (L : ℝ)
@@ -64,15 +72,20 @@ omit [CompleteSpace E] in
     (A : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (Y : U) (t : Icc (0 : ℝ) T) :
     operatorEvaluation T A Y t = A t Y := rfl
 
+/-- Trial frame, given by `⟨fun t => ramp T L t • P t, ((ramp_continuous T L).comp
+continuous_subtype_val).smul P.continuous⟩`. -/
 def trialFrame : C(Icc (0 : ℝ) T, U →L[ℝ] E) :=
   ⟨fun t => ramp T L t • P t,
     ((ramp_continuous T L).comp continuous_subtype_val).smul P.continuous⟩
 
+/-- Trial frame derivative as an element of `C(Icc (0 : ℝ) T, U →L[ℝ] E)`. -/
 def trialFrameDerivative : C(Icc (0 : ℝ) T, U →L[ℝ] E) :=
   ⟨fun t => rampDerivative T L t • P t + ramp T L t • P₁ t,
     (((rampDerivative_continuous T L).comp continuous_subtype_val).smul P.continuous).add
       (((ramp_continuous T L).comp continuous_subtype_val).smul P₁.continuous)⟩
 
+/-- Trial derivative, given by `(pathLpOperator T hT).comp (operatorEvaluation T
+(trialFrameDerivative T L P P₁))`. -/
 def trialDerivative : U →L[ℝ] TimeLp T E :=
   (pathLpOperator T hT).comp (operatorEvaluation T (trialFrameDerivative T L P P₁))
 
@@ -186,10 +199,10 @@ theorem trialDerivative_norm_sq_le (hL : 0 < L) (hLT : 1 ≤ L * T)
   rw [pathLp_norm_sq]
   have hi := intervalIntegral.integral_mono_on (μ := volume) hT
     (((extendPath_continuous T hT (operatorEvaluation T (trialFrameDerivative T L P P₁)
-      Y)).norm.pow 2).intervalIntegrable 0 T)
+        Y)).norm.pow 2).intervalIntegrable 0 T)
     ((((((rampDerivative_continuous T L).pow 2).const_mul 2).add
       ((((ramp_continuous T L).pow 2).const_mul 2).mul_const (M ^ 2))).mul_const (‖Y‖ ^
-        2)).intervalIntegrable 0 T)
+          2)).intervalIntegrable 0 T)
     (fun s hs => by
       change ‖extendPath T hT (operatorEvaluation T (trialFrameDerivative T L P P₁) Y) s‖ ^ 2 ≤
         (2 * rampDerivative T L s ^ 2 + 2 * ramp T L s ^ 2 * M ^ 2) * ‖Y‖ ^ 2
@@ -226,7 +239,7 @@ theorem trialDisplacement_norm_sq_le (hL : 0 < L) (hLT : 1 ≤ L * T)
   have hv := ((ramp_continuous T L).pow 2).intervalIntegrable (μ := volume) 0 T
   have hi := intervalIntegral.integral_mono_on (μ := volume) hT
     (((extendPath_continuous T hT (operatorEvaluation T (trialFrame T L P) Y)).norm.pow
-      2).intervalIntegrable 0 T)
+        2).intervalIntegrable 0 T)
     (hv.mul_const (‖Y‖ ^ 2)) (fun s hs => by
       change ‖extendPath T hT (operatorEvaluation T (trialFrame T L P) Y) s‖ ^ 2 ≤
         ramp T L s ^ 2 * ‖Y‖ ^ 2

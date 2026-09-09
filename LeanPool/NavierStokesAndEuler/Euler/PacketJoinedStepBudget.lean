@@ -7,15 +7,21 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeUnique
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
+
+/-! One complete quantitative recursion step, using the actual mean and joined transverse solvers.
+-/
 
 @[expose] public section
 
-/-! One complete quantitative recursion step, using the actual mean and joined transverse solvers.
-  -/
 
 noncomputable section
 
@@ -46,7 +52,7 @@ theorem joinedStep
     (hG : ∀ i (hi : i < p), 1 ≤ i → ProfileBudget (G i hi) S L.R i)
     (hc₀ : (a 0).corrector = 0) (hB₁ : (a 1).mean = 0)
     (hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) M.T) x θ,
-      inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0)
+      inner ℝ (O.normal (t, (x, θ))) ((a i).high (t, (x, θ))) = 0)
     (c : ℝ) (hc : 0 < c)
     (hprofile : timeProfileChange (S.high p) hTime = c • L.fullProfile)
     (H : ProfileRegularity P M.T M.T_pos.le D.support (EulerPacketProfileRecursion.step O p a)) :
@@ -105,13 +111,13 @@ theorem joinedStep
     hTime.symm M.T_pos.le (S.high p) (S.high_pos p) hback
   have hHighSolve : O.highSolve (highForce O p a) =
       (EulerTransversePacketJoin.vector τ hτ hτT B GH,EulerTransversePacketJoin.scalar τ hτ hτT B
-        GH) := by
+          GH) := by
     rw [hhigh]
     exact EulerTransversePacketJoin.highSolve_eq τ hτ hτT B GH
   have hHighVal : (EulerPacketProfileRecursion.step O p a).high =
       EulerTransversePacketJoin.vector τ hτ hτT B GH := congrArg Prod.fst hHighSolve
   have hMeanVal : (EulerPacketProfileRecursion.step O p a).mean = GM.vector := congrArg Prod.fst
-    hMeanSolve
+      hMeanSolve
   have hCorrectorVal : (EulerPacketProfileRecursion.step O p a).corrector =
       D.curlCorrector P (EulerTransversePacketJoin.vector τ hτ hτT B GH) := by
     change O.curlCorrector (O.highSolve (highForce O p a)).1 = _
@@ -131,7 +137,7 @@ theorem joinedStep
       ((EulerTransversePacketJoin.vectorDerivativeField τ hτ hτT B GH).changeTime hTime.symm) :=
     (EulerTransversePacketJoin.vectorField τ hτ hτT B GH).changeTime_derivative
       (EulerTransversePacketJoin.vectorDerivativeField τ hτ hτT B GH) hTime.symm D.T_pos.le
-        M.T_pos.le
+          M.T_pos.le
       (EulerTransversePacketJoin.vectorField_time τ hτ hτT B GH)
   have hMeanTime : TimeDerivative M.T_pos.le meanBase (GM.vectorDerivativeCylinderField P) :=
     GM.vectorCylinderField_time P
@@ -139,7 +145,7 @@ theorem joinedStep
       ((EulerTransversePacketJoin.correctorDerivativeField τ hτ hτT B GH).changeTime hTime.symm) :=
     (EulerTransversePacketJoin.correctorField τ hτ hτT B GH).changeTime_derivative
       (EulerTransversePacketJoin.correctorDerivativeField τ hτ hτT B GH) hTime.symm D.T_pos.le
-        M.T_pos.le
+          M.T_pos.le
       (EulerTransversePacketJoin.correctorField_time τ hτ hτT B GH)
   exact {
     high := hv.normalized_of_raw_eq H.high M.T_pos.le (S.high p) (S.high_pos p)
@@ -149,12 +155,12 @@ theorem joinedStep
     mean := hmBounds.1.normalized_of_raw_eq H.mean M.T_pos.le (S.mean p) (S.mean_pos p)
       (fun t x θ => congrFun hMeanVal (t,(x,θ)))
     meanDerivative := hmBounds.2.1.normalized_of_raw_eq H.meanDerivative M.T_pos.le (S.mean p)
-      (S.mean_pos p)
+        (S.mean_pos p)
       (TimeDerivative.raw_eq (hT := M.T_pos) H.mean_time hMeanTime)
     corrector := hcv.normalized_of_raw_eq H.corrector M.T_pos.le (S.high p) (S.high_pos p)
       (fun t x θ => congrFun hCorrectorVal (t,(x,θ)))
     correctorDerivative := hct.normalized_of_raw_eq H.correctorDerivative M.T_pos.le (S.high p)
-      (S.high_pos p)
+        (S.high_pos p)
       (TimeDerivative.raw_eq (hT := M.T_pos) H.corrector_time hCorrectorTime)
     pressure := hpv.normalized_of_raw_eq H.pressure M.T_pos.le (S.high p) (S.high_pos p)
       (fun t x θ => congrFun hPressureVal (t,(x,θ)))

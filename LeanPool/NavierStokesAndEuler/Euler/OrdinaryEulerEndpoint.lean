@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRescaling
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientLimit
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRescaling
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientLimit
 
 /-! A genuine smooth endpoint under a finite gradient integral. Shorter
 Euler solutions are rescaled to a common interval; the already proved
 smooth limit supplies the endpoint, and uniqueness identifies it with
 every original partial solution. No analytic radius is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +28,7 @@ open Set Filter MeasureTheory EulerSmoothLimit EulerLpTranslation
   EulerLpTranslation.SmoothL2Field EulerMeanSolenoidal
 open scoped Topology
 
+/-- Endpoint scale, given by `1-1/((n : ℝ)+2)`. -/
 def endpointScale (n : ℕ) : ℝ := 1-1/((n : ℝ)+2)
 
 theorem endpointScale_pos (n : ℕ) : 0 < endpointScale n := by
@@ -48,7 +52,7 @@ theorem endpointScale_tendsto : Tendsto endpointScale atTop (𝓝 1) := by
 
 theorem exists_smooth_endpoint (T : ℝ) (hT : 0 < T) (A : SmoothL2Field Space) (G : ℝ)
     (hpartial : ∀ S (hS : 0 < S), S < T →
-      ∃ U : Evolution S hS.le, U.velocity ⟨0,le_rfl,hS.le⟩=A ∧
+      ∃ U : Evolution S hS.le, U.velocity ⟨0, le_rfl, hS.le⟩ = A ∧
         ∀ t, U.gradientIntegral t ≤ G) :
     ∃ U : Evolution T hT.le, U.velocity ⟨0,le_rfl,hT.le⟩=A := by
   have hsol (n : ℕ) :
@@ -84,9 +88,9 @@ theorem exists_smooth_endpoint (T : ℝ) (hT : 0 < T) (A : SmoothL2Field Space) 
 
 theorem endpoint_matches_partial {T : ℝ} {hT : 0 ≤ T}
     (W : Evolution T hT) (A : SmoothL2Field Space)
-    (hW : W.velocity ⟨0,le_rfl,hT⟩=A)
+    (hW : W.velocity ⟨0, le_rfl, hT⟩ = A)
     (S : ℝ) (hS : 0 < S) (hST : S ≤ T) (U : Evolution S hS.le)
-    (hU : U.velocity ⟨0,le_rfl,hS.le⟩=A) (t : Icc (0 : ℝ) S) :
+    (hU : U.velocity ⟨0, le_rfl, hS.le⟩ = A) (t : Icc (0 : ℝ) S) :
     W.velocity ⟨t,t.property.1,t.property.2.trans hST⟩=U.velocity t ∧
       W.pressureForce ⟨t,t.property.1,t.property.2.trans hST⟩=U.pressureForce t := by
   let R := W.restrictTime S hS.le hST
@@ -99,7 +103,7 @@ theorem endpoint_matches_partial {T : ℝ} {hT : 0 ≤ T}
 theorem exists_smooth_endpoint_extension (T : ℝ) (hT : 0 < T)
     (A : SmoothL2Field Space) (G : ℝ)
     (hpartial : ∀ S (hS : 0 < S), S < T →
-      ∃ U : Evolution S hS.le, U.velocity ⟨0,le_rfl,hS.le⟩=A ∧
+      ∃ U : Evolution S hS.le, U.velocity ⟨0, le_rfl, hS.le⟩ = A ∧
         ∀ t, U.gradientIntegral t ≤ G) :
     ∃ W : Evolution T hT.le, W.velocity ⟨0,le_rfl,hT.le⟩=A ∧
       ∀ S (hS : 0 < S) (hST : S ≤ T) (U : Evolution S hS.le),

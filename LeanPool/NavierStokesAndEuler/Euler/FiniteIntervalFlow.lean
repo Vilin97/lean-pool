@@ -7,13 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedFlowContinuity
-
-@[expose] public section
+public import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Construction of the flow and its continuous inverse from a genuine
 bounded continuous velocity on the prescribed finite time interval.
 Endpoint extension only defines the auxiliary velocity outside that
 interval; all stated ODE identities use the original velocity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +29,8 @@ namespace EulerBoundedLipschitzFlow
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Of time interval, bundling `velocity`, `continuous`, `lipschitzConstant`, `lipschitz` and
+the required compatibility proofs. -/
 def ofTimeInterval (T : ℝ) (hT : 0 ≤ T)
     (u : C(Icc (0 : ℝ) T, E →ᵇ E)) (K : ℝ≥0)
     (hLip : ∀ t, LipschitzWith K (u t)) : Data E where

@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+
+/-! A common-radius envelope for the literal compact terminal wave. -/
 
 @[expose] public section
 
-/-! A common-radius envelope for the literal compact terminal wave. -/
 
 noncomputable section
 

@@ -8,11 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
 public import LeanPool.NavierStokesAndEuler.Euler.BaseLiteralFirstPacket
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketFrame
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
 
 /-! The first stage of the actual induction is constructed from the
 literal compact base solution and the first same-Q packet choice. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +32,7 @@ attribute [local irreducible] initialParent
 
 variable {c B : ℝ} (S : Scales c B)
 
+/-- First stage as an element of `Stage S 0`. -/
 def firstStage : Stage S 0 := by
   let F := S.first.packet S.j_one
   let P := F.initialFrame firstNormal firstNormal_unit firstFrame support compact

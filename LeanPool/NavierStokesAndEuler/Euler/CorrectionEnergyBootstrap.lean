@@ -6,29 +6,34 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyScalar
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionMildEnergy
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyScalar
+import LeanPool.NavierStokesAndEuler.Euler.IntegralEnergyBootstrap
+import Mathlib.Algebra.Order.Star.Real
+
+/-! The actual nonlinear viscous correction closes its shrinking-radius Gevrey bootstrap from the
+constructed mild equation. -/
 
 @[expose] public section
 
-/-! The actual nonlinear viscous correction closes its shrinking-radius Gevrey bootstrap from the
-  constructed mild equation. -/
 
 noncomputable section
 
 namespace EulerCorrectionEnergyBootstrap
 
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerCylinderSobolev
+    EulerCylinderSobolev
   EulerSpatialSobolevInverse EulerCorrectionOperators EulerSobolevCoefficientPressure
-    EulerCorrectionLowerData
+      EulerCorrectionLowerData
   EulerCorrectionEnergyData EulerCorrectionEnergyMajorants EulerCorrectionMildEnergy
-    EulerCorrectionEnergyScalar
+      EulerCorrectionEnergyScalar
   EulerEnergyMetricPaths EulerGevreyMetricEstimate EulerTimeLp EulerVolterraConvolution
-    EulerSobolevHeat
+      EulerSobolevHeat
   EulerIntegralEnergyBootstrap
 open scoped Topology
 
-/-- Increasing the single scalar coefficient preserves the signed radius term in the genuine energy estimate. -/
+/-- Increasing the single scalar coefficient preserves the signed radius term in the genuine energy
+estimate. -/
 theorem raise_energy_constant (C0 C X Y r b R B : ℝ) (hC : C0 ≤ C)
     (hX : 0 ≤ X) (hY : 0 ≤ Y) (hr : 0 ≤ r) (hR : 0 ≤ R) (hB : 0 ≤ B) :
     C0*(X+X^2+r)+(b+C0*R*(B+X))*Y ≤ C*(X+X^2+r)+(b+C*R*(B+X))*Y := by
@@ -38,11 +43,12 @@ theorem raise_energy_constant (C0 C X Y r b R B : ℝ) (hC : C0 ≤ C)
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Every actual zero-initial nonlinear correction mild solution satisfies the closed Gevrey estimate.
+/-- Every actual zero-initial nonlinear correction mild solution satisfies the closed Gevrey
+estimate.
 The proof derives its full-order all-subinterval energy inequality, source bound, pressure
-  cancellation, and maximal regularity rather than assuming them. -/
+cancellation, and maximal regularity rather than assuming them. -/
 theorem correction_mild_bootstrap {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T)
-    (D : CorrectionData period (q+1) (Icc (0 : ℝ) T))
+    (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (KG : ∀ t, CoefficientJet period standardDirection q (D.metric.coefficient t))
     (KL : ∀ t, CoefficientJet period standardDirection q (D.linear.coefficient t))
     (KQ : ∀ i t, CoefficientJet period standardDirection q ((D.quadratic i).coefficient t))
@@ -50,25 +56,25 @@ theorem correction_mild_bootstrap {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤
     (hLq : Continuous (fun t => coefficientSobolevOperator period (KL t)))
     (hQq : ∀ i, Continuous (fun t => coefficientSobolevOperator period (KQ i t)))
     (hG : Continuous (fun t => (D.metric.coefficient t).operator))
-    (N : ℕ) (hN : N+6 ≤ q+1) (R Rdot : C(Icc (0 : ℝ) T, ℝ))
-    (S : SpatialBudget period (by omega : 6 ≤ q+1) D N R) (K : MetricBudget period T hT D)
+    (N : ℕ) (hN : N + 6 ≤ q + 1) (R Rdot : C(Icc (0 : ℝ) T, ℝ))
+    (S : SpatialBudget period (by omega : 6 ≤ q + 1) D N R) (K : MetricBudget period T hT D)
     (C Δ ρ0 : ℝ) (hC : combinedConstant period S K ≤ C) (hΔ : 0 < Δ) (hΔ1 : Δ ≤ 1) (hρ0 : 0 < ρ0)
-    (hdecay : 2*C*(S.B0+Δ)*T ≤ ρ0/2) (hscale : ρ0*S.Rc ≤ 1)
-    (hsmall : 2*S.residual*Real.exp (3*C*T) ≤ Δ/2)
-    (hR : ∀ t, R t = ρ0-2*C*(S.B0+Δ)*t.val)
-    (hRdot : ∀ t, Rdot t = -2*C*(S.B0+Δ))
+    (hdecay : 2 * C * (S.B0 + Δ) * T ≤ ρ0 / 2) (hscale : ρ0 * S.Rc ≤ 1)
+    (hsmall : 2 * S.residual * Real.exp (3 * C * T) ≤ Δ / 2)
+    (hR : ∀ t, R t = ρ0 - 2 * C * (S.B0 + Δ) * t.val)
+    (hRdot : ∀ t, Rdot t = -2 * C * (S.B0 + Δ))
     (ν : ℝ) (hν : 0 < ν) (hν1 : ν ≤ 1)
-    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hsol : ∀ t : Icc (0 : ℝ) T,
       e t = heatOperator period (q+1) (2*ν*t.val).toNNReal 0 +
         ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r
           (extendPath T hT (forcingPath period hq (lowerData period D KG KL KQ hGq hLq hQq) e)
-            (t.val-r)))
+              (t.val-r)))
     (hz : ∀ t, value period (D.approximation t) ∈ divergenceFreeSpace period D.κ D.direction)
     (he : ∀ t, value period (e t) ∈ divergenceFreeSpace period D.κ D.direction) :
     ∀ t : Icc (0 : ℝ) T,
       energyNorm period N hN (R t) (K.operatorPath period t) (e t) ≤ 2*S.residual*Real.exp
-        (3*C*t.val) ∧
+          (3*C*t.val) ∧
       energyNorm period N hN (R t) (K.operatorPath period t) (e t) ≤ Δ/2 := by
   let X := energyPath period N hN T R (K.operatorPath period) e
   let Y := lossPath period N hN T R (K.operatorPath period) e
@@ -95,8 +101,8 @@ theorem correction_mild_bootstrap {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤
     rw [projIcc_of_mem hT ht,projIcc_of_mem hT hs]
     exact h
   have hineq : ∀ t ∈ Ico (0 : ℝ) T,
-      extendPath T hT A t ≤ C*(extendPath T hT X t+(extendPath T hT X t)^2+S.residual)+
-        ((-2*C*(S.B0+Δ))/(ρ0-2*C*(S.B0+Δ)*t)+
+      extendPath T hT A t ≤ C*(extendPath T hT X t+(extendPath T hT X t)^2+S.residual) +
+        ((-2*C*(S.B0+Δ))/(ρ0-2*C*(S.B0+Δ)*t) +
           C*((ρ0-2*C*(S.B0+Δ)*t)⁻¹+S.Rc)*(S.B0+extendPath T hT X t))*extendPath T hT Y t := by
     intro t ht
     let τ : Icc (0 : ℝ) T := ⟨t,ht.1,ht.2.le⟩
@@ -106,17 +112,17 @@ theorem correction_mild_bootstrap {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤
       (loss_nonneg period S hN K e τ) S.residual_pos.le
       (add_nonneg (inv_nonneg.mpr (S.radius_pos τ).le) S.Rc_nonneg) S.B0_nonneg
     have hh := h.trans h'
-    change A (projIcc 0 T hT t) ≤ C*(X (projIcc 0 T hT t)+(X (projIcc 0 T hT t))^2+S.residual)+
-      ((-2*C*(S.B0+Δ))/(ρ0-2*C*(S.B0+Δ)*t)+C*((ρ0-2*C*(S.B0+Δ)*t)⁻¹+S.Rc)*
+    change A (projIcc 0 T hT t) ≤ C*(X (projIcc 0 T hT t)+(X (projIcc 0 T hT t))^2+S.residual) +
+      ((-2*C*(S.B0+Δ))/(ρ0-2*C*(S.B0+Δ)*t)+C*((ρ0-2*C*(S.B0+Δ)*t)⁻¹+S.Rc) *
         (S.B0+X (projIcc 0 T hT t)))*Y (projIcc 0 T hT t)
     rw [projIcc_of_mem hT ⟨ht.1,ht.2.le⟩]
     simpa only [hR τ,hRdot τ] using hh
   have hclosed := close_integral_energy_estimate (extendPath T hT X) (extendPath T hT A)
-    (extendPath T hT Y)
+      (extendPath T hT Y)
     C S.B0 Δ S.residual ρ0 T S.Rc hCp S.B0_nonneg hΔ hΔ1 S.residual_pos hρ0 hT S.Rc_nonneg hdecay
-      hscale hsmall
+        hscale hsmall
     (extendPath_continuous T hT X).continuousOn (extendPath_continuous T hT A).continuousOn hinit
-      hint
+        hint
     (fun t _ => loss_nonneg period S hN K e (projIcc 0 T hT t)) hineq
   intro t
   have h := hclosed t.val t.property

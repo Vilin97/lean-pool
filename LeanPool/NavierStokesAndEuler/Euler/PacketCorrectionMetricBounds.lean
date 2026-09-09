@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionMetricBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCoefficientGevrey
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceCoefficientGevrey
 
 /-! Quantitative bounds for the actual inverse metric and its first spatial
 and time derivatives, from the prescribed deformation jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,10 +28,12 @@ open scoped ContDiff BoundedContinuousFunction
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
   (R C0 C1 : ℝ) (hR : 0 ≤ R) (hC0 : 0 ≤ C0) (hC1 : 0 ≤ C1)
-  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C0*majorant R 0
-    n)
-  (hF1 : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C1*majorant R
-    0 n)
+  (hF : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ C0 * majorant R
+      0
+      n)
+  (hF1 : ∀ n t x, ‖iteratedFDeriv ℝ n (D.F₁.field t : Space → Space →L[ℝ] Space) x‖ ≤ C1 * majorant
+      R
+      0 n)
 
 include hR hC0 hF in
 theorem inverseMetricCoefficient_bound (n : ℕ) (a : Space) :

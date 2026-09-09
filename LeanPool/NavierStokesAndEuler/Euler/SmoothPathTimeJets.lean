@@ -6,13 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensorIntegral
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
+public import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensor
+import LeanPool.NavierStokesAndEuler.Euler.FinitePathTensorIntegral
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! An actual smooth family of time paths carries the differentiated time
 equation at every spatial order. This is proved by the bounded Bochner
 integral identity, rather than assumed commutation of derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,9 +32,10 @@ open Set EulerContinuousTimeIntegral EulerVolterraConvolution EulerFinitePathTen
 variable {E V : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-  (T : ℝ) (hT : 0 ≤ T) (f q : E → C(Icc (0 : ℝ) T,V))
+  (T : ℝ) (hT : 0 ≤ T) (f q : E → C(Icc (0 : ℝ) T, V))
   (hf : ContDiff ℝ ∞ f) (hq : ContDiff ℝ ∞ q)
 
+/-- Jet family, given by `tensorPathMap n (iteratedFDeriv ℝ n f x)`. -/
 def jetFamily (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] V) :=
   tensorPathMap n (iteratedFDeriv ℝ n f x)
 
@@ -73,7 +80,7 @@ theorem jetFamily_integral (n : ℕ) (x : E) :
   have hK := K.iteratedFDeriv_comp_left (x := x) hf.contDiffAt (by simp : (n : ℕ∞) ≤ ∞)
   have hJ := J.iteratedFDeriv_comp_left (x := x) hq.contDiffAt (by simp : (n : ℕ∞) ≤ ∞)
   have hjets := hD.trans (hs.trans (congrArg₂ (fun A B : E [×n]→L[ℝ] C(Icc (0 : ℝ) T,V) => A+B) hK
-    hJ))
+      hJ))
   have hp := congrArg (tensorPathMap n) hjets
   rw [map_add] at hp
   have hKi : tensorPathMap n (K.compContinuousMultilinearMap (iteratedFDeriv ℝ n f x)) =

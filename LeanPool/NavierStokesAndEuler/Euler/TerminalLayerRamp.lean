@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 An explicit smooth terminal-layer trial profile.  Its endpoint values are
@@ -18,15 +18,20 @@ and `2*L` when `L*T ≥ 1`.  These are the same energy bounds needed for the
 piecewise linear terminal ramp in the activation argument.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerTerminalLayerRamp
 
 open Set MeasureTheory
 
+/-- Ramp, given by `(Real.exp (L * (t - T)) - Real.exp (-L * T)) / (1 - Real.exp (-L * T))`. -/
 def ramp (T L t : ℝ) : ℝ :=
   (Real.exp (L * (t - T)) - Real.exp (-L * T)) / (1 - Real.exp (-L * T))
 
+/-- Ramp derivative, given by `L * Real.exp (L * (t - T)) / (1 - Real.exp (-L * T))`. -/
 def rampDerivative (T L t : ℝ) : ℝ :=
   L * Real.exp (L * (t - T)) / (1 - Real.exp (-L * T))
 
@@ -118,7 +123,7 @@ theorem exp_kernel_integral_le {T L : ℝ} (hL : 0 < L) :
       (((((hasDerivAt_id t).sub_const T).const_mul (2 * L)).exp).div_const (2 * L))
   have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hd t)
     ((Real.continuous_exp.comp (continuous_const.mul (continuous_id.sub
-      continuous_const))).intervalIntegrable 0 T)
+        continuous_const))).intervalIntegrable 0 T)
   calc
     (∫ t in 0..T, Real.exp (2 * L * (t - T))) =
         (1 - Real.exp (2 * L * (0 - T))) / (2 * L) := by

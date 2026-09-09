@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+
+/-! The literal time derivative of the Gaussian density and local domination. -/
 
 @[expose] public section
 
-/-! The literal time derivative of the Gaussian density and local domination. -/
 
 noncomputable section
 
@@ -20,6 +22,7 @@ namespace EulerWholeSpaceGaussian
 open MeasureTheory InnerProductSpace EulerSmoothLimit Filter Set
 open scoped ContDiff ENNReal RealInnerProductSpace Topology
 
+/-- Time kernel, given by `(t⁻¹^2*‖y‖^2-(3/2:ℝ)*t⁻¹)*kernel t y`. -/
 def timeKernel (t : ℝ) (y : Space) : ℝ :=
   (t⁻¹^2*‖y‖^2-(3/2:ℝ)*t⁻¹)*kernel t y
 
@@ -75,6 +78,7 @@ theorem timeKernel_integrable {t : ℝ} (ht : 0 < t) : Integrable (timeKernel t)
     (timeKernel_continuous t).aestronglyMeasurable
   exact Eventually.of_forall (timeKernel_bound ht)
 
+/-- Time envelope, given by `(15*t⁻¹*normalization (t/2))*Real.exp (-(4*t)⁻¹*‖y‖^2)`. -/
 def timeEnvelope (t : ℝ) (y : Space) : ℝ :=
   (15*t⁻¹*normalization (t/2))*Real.exp (-(4*t)⁻¹*‖y‖^2)
 
@@ -88,7 +92,7 @@ theorem normalization_antitone {s t : ℝ} (hs : 0 < s) (hst : s ≤ t) :
   · norm_num
 
 theorem timeKernel_local_bound {t : ℝ} (ht : 0 < t) (s : ℝ)
-    (hs : s ∈ Ioo (t/2) (2*t)) (y : Space) :
+    (hs : s ∈ Ioo (t / 2) (2 * t)) (y : Space) :
     ‖timeKernel s y‖ ≤ timeEnvelope t y := by
   have hhalf : 0 < t/2 := by positivity
   have hspos : 0 < s := hhalf.trans hs.1

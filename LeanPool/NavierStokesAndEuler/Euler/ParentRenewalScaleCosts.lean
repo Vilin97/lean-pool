@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalParameters
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonScaleChoice
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleActual
+import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
 
 /-! Fixed summable envelopes for actual geometric renewal. The analytic
 envelope uses the constant sequence a=2, so its summability does not assume
 bounds for the future, not-yet-constructed geometric couplings. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,11 +28,14 @@ open Set Real Filter EulerScale EulerPacketMovingFrame EulerPacketSourceScales
   EulerPacketSourceScaleGuards EulerPacketSourceScaleBounds EulerPacketPressureScale
 open scoped Topology
 
+/-- Maximum error, given by `geometryErrorCost J D C c X (fun _ => 2)`. -/
 def maximumError (J D : ℕ) (C c X : ℝ) : ℕ → ℝ :=
   geometryErrorCost J D C c X (fun _ => 2)
 
+/-- Error constant, given by `30000000*neighborStabilityConstant*CF^2`. -/
 def errorConstant (CF : ℝ) : ℝ := 30000000*neighborStabilityConstant*CF^2
 
+/-- Renewal cost, given by `3000/scaleSequence J X n+errorConstant CF*maximumError J D C c X n`. -/
 def renewalCost (J D : ℕ) (C c CF X : ℝ) (n : ℕ) : ℝ :=
   3000/scaleSequence J X n+errorConstant CF*maximumError J D C c X n
 
@@ -95,7 +102,7 @@ theorem renewal_series {J D : ℕ} (hJ : 2 ≤ J) {C c CF X δ : ℝ} (hX : 0 < 
 previously chosen cost specification remain unchanged. -/
 theorem renewal_series_small {J D : ℕ} (hJ : 2 ≤ J) {C c CF X δ η : ℝ}
     (hX : 0 < X) (hδ : 0 ≤ δ) (hη : 0 < η) (hb : ActualBounds J D C c X δ)
-    (hfloor : 12000/η ≤ X) (hsmall : 2*(1+errorConstant CF)*δ ≤ η) :
+    (hfloor : 12000 / η ≤ X) (hsmall : 2 * (1 + errorConstant CF) * δ ≤ η) :
     SmallSeries (renewalCost J D C c CF X) η := by
   have hf := (div_le_iff₀ hη).mp hfloor
   have hfirst : 6000/X ≤ η/2 := (div_le_iff₀ hX).mpr (by nlinarith only [hf])
@@ -106,10 +113,10 @@ theorem renewal_series_small {J D : ℕ} (hJ : 2 ≤ J) {C c CF X δ η : ℝ}
 theorem physical_error_le_maximum {ι : Type*} (G : PhysicalGeometryData ι)
     (J D : ℕ) (hJ : 1 ≤ J) (C c CF X a : ℝ) (hC : 1 ≤ C) (hCF : 1 ≤ CF)
     (hX : 1 ≤ X) (ha : a ≤ 2) (n : ℕ)
-    (heps : G.ε=epsilon J X a n)
+    (heps : G.ε = epsilon J X a n)
     (htheta : G.Θ ≤ sourceTheta J C (scaleSequence J X) n)
-    (hG : G.G ≤ CF*(1+olderShear J X n))
-    (hd : G.d ≤ priorError J D X n+neighborError J D X c n) :
+    (hG : G.G ≤ CF * (1 + olderShear J X n))
+    (hd : G.d ≤ priorError J D X n + neighborError J D X c n) :
     G.error*G.Θ^40 ≤ CF^2*maximumError J D C c X n := by
   have hXp : 0 < X := zero_lt_one.trans_le hX
   have hx := quadratic_growth_one_le J hJ (scaleSequence J X) hX (scaleSequence_succ J X)
@@ -121,10 +128,10 @@ theorem physical_error_le_maximum {ι : Type*} (G : PhysicalGeometryData ι)
     exact div_le_div_of_nonneg_right ha (previousShear_pos J hXp n).le
   have he0 : 0 ≤ epsilon J X 2 n := Real.sqrt_nonneg _
   have hmain : G.ε*G.Θ*(4*G.G)^2 ≤
-      CF^2*(epsilon J X 2 n*sourceTheta J C (scaleSequence J X) n*
+      CF^2*(epsilon J X 2 n*sourceTheta J C (scaleSequence J X) n *
         (4*(1+olderShear J X n))^2) := by
     calc
-      _ ≤ epsilon J X 2 n*sourceTheta J C (scaleSequence J X) n*
+      _ ≤ epsilon J X 2 n*sourceTheta J C (scaleSequence J X) n *
           (4*(CF*(1+olderShear J X n)))^2 :=
         mul_le_mul (mul_le_mul he htheta G.Theta_pos.le he0)
           (pow_le_pow_left₀ (by positivity [G.G_lower])
@@ -162,12 +169,12 @@ theorem coupling_polynomial_le {ι : Type*} (G : PhysicalGeometryData ι) :
 theorem actual_errors_le_cost {ι : Type*} (G : PhysicalGeometryData ι)
     (J D : ℕ) (hJ : 2 ≤ J) (C c CF X a : ℝ) (hC : 1 ≤ C) (hCF : 1 ≤ CF)
     (hX : 1 ≤ X) (ha : a ≤ 2) (n : ℕ)
-    (heps : G.ε=epsilon J X a n)
+    (heps : G.ε = epsilon J X a n)
     (htheta : G.Θ ≤ sourceTheta J C (scaleSequence J X) n)
-    (hG : G.G ≤ CF*(1+olderShear J X n))
-    (hd : G.d ≤ priorError J D X n+neighborError J D X c n)
-    (hy : G.y=(scaleSequence J X (n+1))⁻¹)
-    (hsigma : G.σ*scaleSequence J X n ≤ 2) :
+    (hG : G.G ≤ CF * (1 + olderShear J X n))
+    (hd : G.d ≤ priorError J D X n + neighborError J D X c n)
+    (hy : G.y = (scaleSequence J X (n + 1))⁻¹)
+    (hsigma : G.σ * scaleSequence J X n ≤ 2) :
     G.couplingError ≤ renewalCost J D C c CF X n ∧
       G.tiltError ≤ renewalCost J D C c CF X n := by
   have hXp : 0 < X := zero_lt_one.trans_le hX
@@ -250,7 +257,7 @@ theorem activation_ratio_le {J D : ℕ} (hJ : 1 ≤ J) {C c CF X δ : ℝ}
     (actualParentRatio_le J hJ X (zero_lt_one.trans_le hX) hb.initial_shear n)
     (by positivity : 0 ≤ 2*CF+1)
   rw [activationCost_eq]
-  have heq : (2*CF+1)*(previousShear J X n)^2/shear J X n=
+  have heq : (2*CF+1)*(previousShear J X n)^2/shear J X n =
       (2*CF+1)*((previousShear J X n)^2/shear J X n) := by ring
   rw [heq] at hd
   exact hd.trans hb'

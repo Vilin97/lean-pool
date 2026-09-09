@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketAngularPotential
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveParity
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveParity
+
+/-! Jointly odd transverse profiles give the actual jointly even vector potential. -/
 
 @[expose] public section
 
-/-! Jointly odd transverse profiles give the actual jointly even vector potential. -/
 
 noncomputable section
 
@@ -20,10 +21,10 @@ namespace EulerPacketAngularPotential
 open EulerSmoothLimit EulerPacketCrossProduct EulerAngleMeanZeroPrimitive MeasureTheory
 
 theorem potential_joint_even (P : ℝ) (hP : P ≠ 0) (m : Space → Space)
-    (A : Space → ℝ → Space) (hm : ∀ x, m (-x)=m x)
+    (A : Space → ℝ → Space) (hm : ∀ x, m (-x) = m x)
     (hA : ∀ x, Continuous (A x)) (hper : ∀ x, Function.Periodic (A x) P)
-    (hmean : ∀ x, ∫ θ in 0..P, A x θ=0)
-    (hodd : ∀ x θ, A (-x) (-θ)=-A x θ) (x : Space) (θ : ℝ) :
+    (hmean : ∀ x, ∫ θ in 0..P, A x θ = 0)
+    (hodd : ∀ x θ, A (-x) (-θ) = -A x θ) (x : Space) (θ : ℝ) :
     potential P (m (-x)) (A (-x)) (-θ)=potential P (m x) (A x) θ := by
   let f : ℝ → Space := fun s => potentialMultiplier (m x) (A x s)
   have hf : Continuous f := (potentialMultiplier (m x)).continuous.comp (hA x)

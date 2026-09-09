@@ -7,10 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCrossProduct
-public import Mathlib.LinearAlgebra.Matrix.Adjugate
-
-@[expose] public section
 
 /-!
 The finite-dimensional algebra in the curl Piola identity.  Antisymmetrizing
@@ -18,14 +14,19 @@ The finite-dimensional algebra in the curl Piola identity.  Antisymmetrizing
 determinant-one change of variables transforms curl by `F⁻¹`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerPacketPiola
 
 open EulerSmoothLimit EulerMeanBoundary Matrix InnerProductSpace
 
+/-- Mat3: an abbreviation for `Matrix (Fin 3) (Fin 3) ℝ`. -/
 abbrev Mat3 := Matrix (Fin 3) (Fin 3) ℝ
 
+/-- Matrix antisym, given by `![A 2 1 - A 1 2, A 0 2 - A 2 0, A 1 0 - A 0 1]`. -/
 def matrixAntisym (A : Mat3) : Fin 3 → ℝ :=
   ![A 2 1 - A 1 2, A 0 2 - A 2 0, A 1 0 - A 0 1]
 
@@ -39,6 +40,7 @@ theorem matrixAntisym_congruence (F A : Mat3) :
       Matrix.cons_val_two] <;>
     ring
 
+/-- Operator matrix, defined pointwise by `(A (EuclideanSpace.single j 1)) i`. -/
 def operatorMatrix (A : Space →L[ℝ] Space) : Mat3 :=
   fun i j => (A (EuclideanSpace.single j 1)) i
 
@@ -92,7 +94,7 @@ theorem adjugate_operatorMatrix (F : Space ≃L[ℝ] Space)
     (operatorMatrix F.toContinuousLinearMap).adjugate =
         (operatorMatrix F.toContinuousLinearMap).adjugate *
           (operatorMatrix F.toContinuousLinearMap * operatorMatrix F.symm.toContinuousLinearMap) :=
-            by
+              by
       rw [operatorMatrix_inverse, Matrix.mul_one]
     _ = ((operatorMatrix F.toContinuousLinearMap).adjugate *
           operatorMatrix F.toContinuousLinearMap) * operatorMatrix F.symm.toContinuousLinearMap :=

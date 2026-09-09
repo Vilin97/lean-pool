@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.BasePacketUniformCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
 
-@[expose] public section
-
 /-! The manuscript's literal first-packet scales have a fixed monomial
 frequency cost. The exponent and coefficient do not depend on J or X. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,13 +41,16 @@ theorem firstParameterSize_literal (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 �
   have hK := solutionLabelConstant_one
   have hone : (1 : ℝ) ≤ X^1010 := one_le_pow₀ hX
   have hc : 4+solutionLabelConstant ≤ (4+solutionLabelConstant)*X^1010 := by
-    simpa only [mul_one] using mul_le_mul_of_nonneg_left hone (by linarith : 0 ≤
-      4+solutionLabelConstant)
+    simpa only [mul_one] using mul_le_mul_of_nonneg_left hone (by
+        linarith : 0 ≤ 4+solutionLabelConstant)
   unfold firstParameterSize
   rw [hd]
   nlinarith only [hT.trans ht,hh,hc]
 
+/-- First frequency constant, given by
+`frequencyConstant*(7+solutionLabelConstant)^frequencyPower`. -/
 def firstFrequencyConstant : ℝ := frequencyConstant*(7+solutionLabelConstant)^frequencyPower
+/-- First frequency power, given by `1010*frequencyPower`. -/
 def firstFrequencyPower : ℕ := 1010*frequencyPower
 
 theorem firstFrequencyConstant_pos : 0 < firstFrequencyConstant := by
@@ -55,10 +59,10 @@ theorem firstFrequencyConstant_pos : 0 < firstFrequencyConstant := by
   exact mul_pos frequencyConstant_pos (pow_pos (by linarith) _)
 
 theorem first_frequency_cost_bound (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 ≤ X) :
-    EulerPacketInitializedOutputCost.uniformConstant*
+    EulerPacketInitializedOutputCost.uniformConstant *
       (profileEnvelope (firstParameterSize (baseHorizon J X) (X^(-1010 : ℝ)) (X^1000)))^
         EulerPacketInitializedOutputCost.uniformPower ≤
-          firstFrequencyConstant*X^firstFrequencyPower := by
+            firstFrequencyConstant*X^firstFrequencyPower := by
   have hXpos := zero_lt_one.trans_le hX
   have hp := (firstParameterSize_bounds (baseHorizon J X) (X^(-1010 : ℝ)) (X^1000)
     (baseHorizon_pos J hJ hXpos) (Real.rpow_pos_of_pos hXpos _) (pow_nonneg hXpos.le _)).1
@@ -75,9 +79,9 @@ theorem first_frequency_cost_bound (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 �
 /-- This remaining threshold depends only on the fixed base exponent,
 not on a parent or on a stage of the subsequent induction. -/
 theorem first_frequency_guard_eventually (J : ℕ) (hJ : 1 ≤ J) (D : ℕ)
-    (hD : (firstFrequencyPower : ℝ) < (D : ℝ)*(theta/100)) :
+    (hD : (firstFrequencyPower : ℝ) < (D : ℝ) * (theta / 100)) :
     ∀ᶠ X : ℝ in atTop,
-      EulerPacketInitializedOutputCost.uniformConstant*
+      EulerPacketInitializedOutputCost.uniformConstant *
         (profileEnvelope (firstParameterSize (baseHorizon J X) (X^(-1010 : ℝ)) (X^1000)))^
           EulerPacketInitializedOutputCost.uniformPower ≤ smallPower (X^D) := by
   have hgap : 0 < (D : ℝ)*(theta/100)-(firstFrequencyPower : ℝ) := sub_pos.mpr hD

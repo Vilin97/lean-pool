@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimary
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryUncut
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePropagator
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitialRepresentative
 
 /-! The actual zero-history primary is the compact angular profile times
 the genuine homogeneous physical propagator.  Its scalar pressure has the
 literal normal residual as its angular derivative. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -62,7 +66,7 @@ theorem vector_homogeneous_time (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       (physicalGenerator D x t (vector D Y (t,(x,θ)))) (Icc (0 : ℝ) D.T) t := by
   have hb := (forcing D).equation Y t x θ
   simp only [Data.strain,Data.normalField,Data.clamp_coe,Pi.zero_apply] at hb
-  change derivative D Y (t,(x,θ))+D.M.field t x (vector D Y (t,(x,θ)))+
+  change derivative D Y (t,(x,θ))+D.M.field t x (vector D Y (t,(x,θ))) +
     deriv (fun s => scalar D Y (t,(x,s))) θ • D.normal.field t x=0 at hb
   rw [(scalar_angle D Y t x θ).deriv] at hb
   simp only [neg_div,neg_smul] at hb
@@ -72,9 +76,11 @@ theorem vector_homogeneous_time (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 end General
 
+/-- Uncut velocity, given by `physical D ⟨0,le_rfl,D.T_pos.le⟩ x ξ t`. -/
 def uncutVelocity (ξ : U) (t : ℝ) (x : Space) : Space :=
   physical D ⟨0,le_rfl,D.T_pos.le⟩ x ξ t
 
+/-- Canonical velocity, given by `innerCutoff x • uncutVelocity D ξ t x`. -/
 def canonicalVelocity (ξ : U) (t : ℝ) (x : Space) : Space :=
   innerCutoff x • uncutVelocity D ξ t x
 
@@ -94,7 +100,7 @@ theorem uncutVelocity_tangent (ξ : U) (t : Icc (0 : ℝ) D.T) (x : Space) :
   physical_tangent D ⟨0,le_rfl,D.T_pos.le⟩ t x ξ
 
 private theorem homogeneous_unique (T : ℝ) (hT : 0 ≤ T)
-    (G : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) (f g : ℝ → Space)
+    (G : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) (f g : ℝ → Space)
     (hf : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt f (G t (f t)) (Icc (0 : ℝ) T) t)
     (hg : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt g (G t (g t)) (Icc (0 : ℝ) T) t)
     (h0 : f 0=g 0) (t : Icc (0 : ℝ) T) : f t=g t := by

@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentWaveSupport
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSumBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularPhysical
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ValidDyadicBandCover
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentWaveSupport
 
 /-!
 # Physical jet bounds for the actual current particular label sum
@@ -18,6 +17,9 @@ The closed label windows bound the number of contributing spatial labels.
 The two column choices are retained by the signed-label map and are already
 included in the 2250-color palette.  The finite harmonic sum remains explicit.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,10 +30,12 @@ open CorrectionState CorrectionStep CorrectionInitialization.ActualPrimary
 open scoped Topology ContDiff BigOperators
 
 
+/-- Label: an abbreviation for `ActualCurrentParticularPhysical.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualCurrentParticularPhysical.Label B N0
 
 variable {B N0 : ℕ}
 
+/-- Signed label, given by `ActualPrimaryCovariance.signedLabelOf (l.2, l.1)`. -/
 noncomputable def signedLabel (l : Label B N0) : SlotColoring.Label :=
   ActualPrimaryCovariance.signedLabelOf (l.2, l.1)
 
@@ -43,9 +47,12 @@ theorem signedLabel_injective : Injective (signedLabel (B := B) (N0 := N0)) := b
 theorem signedLabel_level (l : Label B N0) : 1 ≤ (signedLabel l).1 :=
   l.2.val.property.1
 
+/-- Window position, given by `![AnnularEndpoint.radius w, w.2 2, 1 - w.1]`. -/
 noncomputable def windowPosition (w : SpaceTime) : SlotColoring.Position :=
   ![AnnularEndpoint.radius w, w.2 2, 1 - w.1]
 
+/-- Window, given by `(SquaredPartition.logCoordinate (PhysicalWaveSum.physicalQ h w),
+windowPosition w)`. -/
 noncomputable def window (w : SpaceTime) : LabelSumBounds.WindowPoint :=
   (SquaredPartition.logCoordinate (PhysicalWaveSum.physicalQ h w), windowPosition w)
 
@@ -65,6 +72,7 @@ theorem window_continuousAt {w : SpaceTime} (ht : w ∈ PhysicalWaveSum.pretermi
   exact (((Real.continuousAt_log hq.ne').comp hc).neg.div_const _).prodMk
     windowPosition_continuous.continuousAt
 
+/-- Chart point, constructed using `ActualCarrierTransport.associatedPoint`. -/
 noncomputable def chartPoint (n : ℕ) (w : SpaceTime) : LocalSignedRequest.Point :=
   ActualCarrierTransport.associatedPoint
     (ActualCurrentParticularPhysical.nativePoint n w).1.1
@@ -117,7 +125,7 @@ theorem nativeMask_physicalBox (L : CorrectionInitialization.ActualPrimary.Label
   have hspacing := SquaredPartition.nativeSpacing_pos L.val.property.1
   have he : position L p i =
       ChartScales.Q (BaseChartJets.cellBand L) ^ SlotColoring.axisExponent (CoordinateAlgebra.D h)
-        i *
+          i *
         PrimaryRepresentatives.position p i := by
     fin_cases i <;> simp [position, PrimaryRepresentatives.position,
       SlotColoring.axisExponent, Real.sqrt_eq_rpow]
@@ -127,16 +135,16 @@ theorem nativeMask_physicalBox (L : CorrectionInitialization.ActualPrimary.Label
   rw [he]
   simp only [PrimaryRepresentatives.width_eq_scaled_spacing]
   rw [show ChartScales.Q (BaseChartJets.cellBand L) ^ SlotColoring.axisExponent
-    (CoordinateAlgebra.D h) i *
+      (CoordinateAlgebra.D h) i *
       PrimaryRepresentatives.position p i -
       (ChartScales.Q (BaseChartJets.cellBand L) ^ SlotColoring.axisExponent (CoordinateAlgebra.D h)
-        i *
+          i *
         SquaredPartition.nativeSpacing (BaseChartJets.cellBand L)) *
           (((PrimaryGeometryAssembly.label nominal L).2 i : ℤ) : ℝ) =
       ChartScales.Q (BaseChartJets.cellBand L) ^ SlotColoring.axisExponent (CoordinateAlgebra.D h)
-        i *
+          i *
         (PrimaryRepresentatives.position p i - SquaredPartition.nativeSpacing
-          (BaseChartJets.cellBand L) *
+            (BaseChartJets.cellBand L) *
           (((PrimaryGeometryAssembly.label nominal L).2 i : ℤ) : ℝ)) by ring]
   rw [abs_mul, abs_of_pos hscale]
   have hi := mul_le_mul_of_nonneg_left (hb i) hscale.le

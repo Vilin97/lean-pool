@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseInitialCoordinates
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointMomentum
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
 The actual Green identity for the constructed stationary transverse path.
@@ -17,6 +16,9 @@ Its endpoint energy is the terminal momentum paired with terminal coordinates.
 All time boundary terms are obtained from absolute continuity and the genuine
 H¹ coordinate reconstruction.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

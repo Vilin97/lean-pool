@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GeneralCylinderAlgebra
-public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.RealCylinder
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+/-! Actual real and scalar-vector cylinder multiplication at every fixed Sobolev order q≥6. -/
 
 @[expose] public section
 
-/-! Actual real and scalar-vector cylinder multiplication at every fixed Sobolev order q≥6. -/
 
 noncomputable section
 
@@ -28,17 +31,17 @@ theorem real_cylinder_Hq_algebra {q : ℕ} (hq : 6 ≤ q) (f g : LiftDomain peri
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j ≤ q, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j ≤ q, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w g) 2 (liftMeasure
-      period)) :
+        period)) :
     liftSobolevNorm period q (f * g) ≤
       algebraConstant period q * liftSobolevNorm period q f * liftSobolevNorm period q g := by
   have h := cylinder_Hq_algebra period hq (complexField period f) (complexField period g)
     (complexField_smooth period f hf) (complexField_smooth period g hg)
-    (fun j hj w => by rw [complexField_word period w f hf]; exact complexField_memLp period _ (hfL2
-      j hj w))
-    (fun j hj w => by rw [complexField_word period w g hg]; exact complexField_memLp period _ (hgL2
-      j hj w))
+    (fun j hj w => by
+        rw [complexField_word period w f hf]; exact complexField_memLp period _ (hfL2 j hj w))
+    (fun j hj w => by
+        rw [complexField_word period w g hg]; exact complexField_memLp period _ (hgL2 j hj w))
   have he : complexField period f * complexField period g = complexField period (f * g) := by
     ext x
     exact (Complex.ofReal_mul _ _).symm
@@ -52,16 +55,16 @@ theorem real_product_word_memLp {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (w : F
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j ≤ q, ∀ v : Fin j → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j ≤ q, ∀ v : Fin j → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (iteratedFieldDerivative period w (f * g)) 2 (liftMeasure period) := by
   have h := product_word_memLp period hq hn w (complexField period f) (complexField period g)
     (complexField_smooth period f hf) (complexField_smooth period g hg)
-    (fun j hj v => by rw [complexField_word period v f hf]; exact complexField_memLp period _ (hfL2
-      j hj v))
-    (fun j hj v => by rw [complexField_word period v g hg]; exact complexField_memLp period _ (hgL2
-      j hj v))
+    (fun j hj v => by
+        rw [complexField_word period v f hf]; exact complexField_memLp period _ (hfL2 j hj v))
+    (fun j hj v => by
+        rw [complexField_word period v g hg]; exact complexField_memLp period _ (hgL2 j hj v))
   have he : complexField period f * complexField period g = complexField period (f * g) := by
     ext x
     exact (Complex.ofReal_mul _ _).symm
@@ -78,9 +81,9 @@ theorem scalar_vector_product_word_memLp {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ 
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j ≤ q, ∀ v : Fin j → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j ≤ q, ∀ v : Fin j → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     MemLp (iteratedFieldDerivative period w (fun x => f x • g x)) 2 (liftMeasure period) := by
   apply MemLp.of_eval_piLp
   intro i
@@ -101,12 +104,12 @@ theorem cylinder_Hq_scalar_vector_product {q : ℕ} (hq : 6 ≤ q) (d : ℕ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j ≤ q, ∀ v : Fin j → Fin 4, MemLp (iteratedFieldDerivative period v f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j ≤ q, ∀ v : Fin j → Fin 4, MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure
-      period)) :
+        period)) :
     liftSobolevNorm period q (fun x => f x • g x) ≤
       ((d : ℝ) * algebraConstant period q) * liftSobolevNorm period q f * liftSobolevNorm period q
-        g := by
+          g := by
   have hs : ∀ x, ContDiff ℝ ∞ (localFieldLift period (fun x => f x • g x) x) :=
     fun x => (hf x).smul (hg x)
   have hcomp (i : Fin d) : ∀ j ≤ q, ∀ v : Fin j → Fin 4,

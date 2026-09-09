@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevTower
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryCauchyInterpolation
 
 /-! A Cauchy sequence of genuine smooth L² paths with uniform bounds at
 every Sobolev order has a single genuine smooth limit path. All its
 tensor jets are continuous in time and are the strong limits of the
 corresponding jets of the sequence. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,17 +27,20 @@ open Set Filter MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTransl
   EulerCylinderSobolevSpace
 open scoped ContDiff Topology
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instOrdinarySmoothLimit1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 variable {T : ℝ}
 
+/-- Jet path, given by `⟨fun t => (A t).jetLp n,hA n⟩`. -/
 def jetPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) (n : ℕ) :
     C(Icc (0 : ℝ) T,Lp (Space [×n]→L[ℝ] Space) 2 (volume : Measure Space)) :=
   ⟨fun t => (A t).jetLp n,hA n⟩
 
+/-- Smooth limit data, collecting `tower`, `value_convergence`, `sobolev_convergence`. -/
 structure SmoothLimitData (A : ℕ → Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ k n, Continuous (fun t => (A k t).jetLp n)) where
+  /-- Tower of `SmoothLimitData`, of type `SobolevTower T`. -/
   tower : SobolevTower T
   value_convergence : Tendsto (fun k => fieldPath (A k) (hA k)) atTop (𝓝 tower.field)
   sobolev_convergence : ∀ q,
@@ -48,13 +53,13 @@ theorem nonempty_smoothLimitData (hT : 0 ≤ T)
     (h0 : CauchySeq (fun k => fieldPath (A k) (hA k))) : Nonempty (SmoothLimitData A hA) := by
   obtain ⟨u,hu⟩ := cauchySeq_tendsto_of_complete h0
   choose v hv using exists_sobolevPath_limit hT A hA hb h0
-  have he (q : ℕ) : (valueOperator 1 q).compLeftContinuous ℝ (Icc (0 : ℝ) T) (v q)=
+  have he (q : ℕ) : (valueOperator 1 q).compLeftContinuous ℝ (Icc (0 : ℝ) T) (v q) =
       ordinaryLift.toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T) u := by
     let L := (valueOperator 1 q).compLeftContinuous ℝ (Icc (0 : ℝ) T)
     let R := ordinaryLift.toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)
     have hleft := (L.continuous.tendsto (v q)).comp (hv q)
     have hright := (R.continuous.tendsto u).comp hu
-    have heq : (fun k => L (sobolevPath (A k) (hA k) q))=
+    have heq : (fun k => L (sobolevPath (A k) (hA k) q)) =
         fun k => R (fieldPath (A k) (hA k)) := by
       funext k
       apply ContinuousMap.ext
@@ -69,6 +74,7 @@ theorem nonempty_smoothLimitData (hT : 0 ≤ T)
     value_eq := fun q t => congrArg (fun p : C(Icc (0 : ℝ) T,LiftL2 1) => p t) (he q) }
   exact ⟨⟨B,hu,hv⟩⟩
 
+/-- Smooth limit data, given by `Classical.choice (nonempty_smoothLimitData hT A hA hb h0)`. -/
 def smoothLimitData (hT : 0 ≤ T)
     (A : ℕ → Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ k n, Continuous (fun t => (A k t).jetLp n))
@@ -81,6 +87,7 @@ namespace SmoothLimitData
 variable {A : ℕ → Icc (0 : ℝ) T → SmoothL2Field Space}
   {hA : ∀ k n, Continuous (fun t => (A k t).jetLp n)} (L : SmoothLimitData A hA)
 
+/-- Field: an abbreviation for `L.tower.smoothField t`. -/
 abbrev field (t : Icc (0 : ℝ) T) : SmoothL2Field Space := L.tower.smoothField t
 
 theorem field_continuous (n : ℕ) : Continuous (fun t => (L.field t).jetLp n) :=

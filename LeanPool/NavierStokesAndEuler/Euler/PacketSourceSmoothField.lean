@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceVolumeSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 
 /-! The actual source-flow pullback is a smooth spatial L² field at
 every time. Its tensor paths also give a bounded smooth coefficient
 path, with continuity in the uniform norm at every spatial order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,10 +36,11 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (hXY : ∀ t, Function.RightInverse (Y t) (X t))
   (hYjoint : Continuous (Function.uncurry Y))
   (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-  (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det=1)
+  (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
   (hF : ∀ n t x,
-    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C*majorant R 0 n)
+    ‖iteratedFDeriv ℝ n (D.F.field t : Space → (Space →L[ℝ] Space)) x‖ ≤ C * majorant R 0 n)
 
+/-- Smooth field, bundling `field`, `smooth`, `integrable`. -/
 def smoothField (t : Icc (0 : ℝ) D.T) : SmoothL2Field Space where
   field x := Z.pointField t (cylinderGraph P k m (Y t x))
   smooth := (Z.physicalPointField_smooth k m t).comp
@@ -55,10 +58,11 @@ theorem smoothField_jetLp (n : ℕ) (t : Icc (0 : ℝ) D.T) :
 
 theorem smoothField_jetLp_continuous (n : ℕ) :
     Continuous (fun t => (smoothField D Z k m X Y hX hYX hXY hYjoint R C hR hC hdet hF t).jetLp n)
-      := by
+        := by
   simp only [smoothField_jetLp]
   exact (tensorPath D Z k m X Y hX hYX hXY hYjoint R C hR hC hdet hF n).continuous
 
+/-- Smooth coefficient path, constructed using `EulerMeanSobolevBoundedField.coefficientPath`. -/
 def smoothCoefficientPath : SmoothCoefficientPath (Icc (0 : ℝ) D.T) Space :=
   EulerMeanSobolevBoundedField.coefficientPath
     (smoothField D Z k m X Y hX hYX hXY hYjoint R C hR hC hdet hF)

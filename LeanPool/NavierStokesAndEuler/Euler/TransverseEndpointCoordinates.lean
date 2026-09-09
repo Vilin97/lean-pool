@@ -6,12 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseInitialInverse
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointDifference
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEquation
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointParameter
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointVelocity
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardInverse
+import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointEquation
+import LeanPool.NavierStokesAndEuler.Euler.TransverseInitialInverse
 
 /-!
 The coordinate derivative and its continuous history representative for the
@@ -20,6 +20,9 @@ explicit affine constant minus the same fixed-space variational correction.
 Equation (10), already proved for that solution, provides its genuine time
 derivative; the bounded H¹ reconstruction recovers the actual history path.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,7 +34,7 @@ open Set MeasureTheory ContinuousLinearMap InnerProductSpace
   EulerVolterraConvolution EulerTimeH1OperatorProduct EulerTimeH1FrameTransport
   EulerTransverseGramInverse EulerTransverseGramPath EulerTransverseInitialCoordinates
   EulerTransverseInitialInverse EulerTransverseEndpointEnergy EulerTransverseFixedEndpoint
-  EulerTransverseEndpointParameter EulerTransverseEndpointDifference
+  EulerTransverseEndpointParameter
   EulerTransverseEndpointMomentum EulerTransverseMomentumRegularity
   EulerTransverseEndpointVelocity EulerTransverseEndpointEquation
   EulerTransverseForwardInverse EulerTimeH1Reconstruction EulerContinuousTimeIntegral

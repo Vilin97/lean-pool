@@ -6,12 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.WeightedCylinderEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevMetricTransport
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedEnergy
+import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
+import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Exact signed Gevrey integral energy for actual finite-Sobolev viscous solutions. -/
 
 @[expose] public section
 
-/-! Exact signed Gevrey integral energy for actual finite-Sobolev viscous solutions. -/
 
 noncomputable section
 
@@ -19,7 +26,7 @@ namespace EulerWeightedSobolevEnergy
 
 open MeasureTheory Set Real InnerProductSpace EulerLiftedGradientSpace EulerLiftedPressure
   EulerSpatialSobolevInverse EulerCylinderSobolev EulerCylinderSobolevSpace
-    EulerMetricEnergyEvolution
+      EulerMetricEnergyEvolution
   EulerMetricHeatEnergy EulerFiniteMetricEnergy EulerCylinderViscousEnergy EulerWeightedRootLimit
   EulerPacketWeights EulerWeightedEnergy EulerWeightedCylinderEnergy EulerSobolevMetricTransport
   EulerSobolevViscousEnergy
@@ -29,7 +36,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The finite Gevrey-weighted integral energy inequality derived from the actual viscous PDE.
 The signed radius term is retained exactly, and no differentiability of the unregularized norm is
-  assumed. -/
+assumed. -/
 theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype β] {q : ℕ} (hq : 3 ≤ q)
     (order : α → ℕ) (ρ ρ' : ℝ → ℝ)
     (κ : ℝ) (m : Vector3) (K G : ℝ → SmoothCoefficient period)
@@ -52,8 +59,8 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
     (hz : ∀ u ∈ Ioo s t, value period (z u) ∈ divergenceFreeSpace period κ m)
     (hzB : ∀ u ∈ Ioo s t, ∀ᵐ x ∂liftMeasure period, ‖value period (z u) x‖ ≤ B u)
     (heq : ∀ i j u, u ∈ Ioo s t → e' i j u +
-      transportOperator period hq κ m (z u) (restrictOperator period (by norm_num : 1 ≤ 2) (e i j
-        u)) +
+      transportOperator period hq κ m (z u) (restrictOperator period (by
+          norm_num : 1 ≤ 2) (e i j u)) +
         (G u).operator (p i j u) = forcing i j u + ν • jetLaplacian period (toJet period (e i j u)))
     (hAint : ∀ i, IntegrableOn (fun u => weight (ρ u) (order i) *
         viscousGrowthCoefficient period (K u) (K' u) κ m c ν (B u) +
@@ -66,7 +73,7 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
         viscousGrowthCoefficient period (K u) (K' u) κ m c ν (B u) *
           weightedMetricSum (ρ u) order (K u).operator (fun i j => value period (e i j u)) +
         (ρ' u / ρ u) * weightedMetricLoss (ρ u) order (K u).operator (fun i j => value period (e i
-          j u)) +
+            j u)) +
         (((K u).bound : ℝ) / c) * weightedForcingSum (ρ u) order (fun i j => forcing i j u) := by
   let Q := fun i u => familyEnergy (K u).operator (fun j => value period (e i j u))
   let a := fun u => viscousGrowthCoefficient period (K u) (K' u) κ m c ν (B u)
@@ -92,11 +99,11 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
         2 * ⟪(K u).operator (value period (e i j u)), e' i j u⟫_ℝ)) u :=
       HasDerivAt.fun_sum (u := Finset.univ) (fun j _ =>
         metric_energy_hasDerivAt (fun v => (K v).operator) (fun v => value period (e i j v)) u (K'
-          u) (e' i j u)
+            u) (e' i j u)
           (hKt u hu) (het i j u hu) hsymL)
     have hq := hQ0 i u ⟨hu.1.le, hu.2.le⟩
-    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by nlinarith : Q i u + δ ^ 2 ≠
-      0)).differentiableAt
+    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by
+        nlinarith : Q i u + δ ^ 2 ≠ 0)).differentiableAt
   have hreg (i : α) (δ : ℝ) (hδ : 0 < δ) (u : ℝ) (hu : u ∈ Ioo s t) :
       deriv (fun v => √(Q i v + δ ^ 2)) u ≤ a u * √(Q i u + δ ^ 2) + F i u := by
     exact finite_sobolev_viscous_energy period hq κ m K (G u) (e i) u δ c ν (K' u)
@@ -104,7 +111,6 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
       hδ hc hν (hKt u hu) (fun j => het i j u hu)
       (hsym u hu) (hpos u ⟨hu.1.le, hu.2.le⟩) (hKG u hu) (fun j => hediv i j u hu)
       (fun j => hp i j u hu) (hz u hu) (B u) (hzB u hu) (fun j => heq i j u hu)
-
   have hi (i : α) : w i t * √(Q i t) - w i s * √(Q i s) ≤ ∫ u in s..t, Ψ i u := by
     apply weighted_root_integral_of_deriv_bound (Q i) a (F i) (w i) (w' i) s t
       hst (hQ i) (hQ0 i) ?_ ?_ ?_ (hregd i) (hreg i) (hAint i) (hFint i)
@@ -122,7 +128,7 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
   have halg (u : ℝ) : (∑ i, Ψ i u) =
       a u * weightedMetricSum (ρ u) order (K u).operator (fun i j => value period (e i j u)) +
       (ρ' u / ρ u) * weightedMetricLoss (ρ u) order (K u).operator (fun i j => value period (e i j
-        u)) +
+          u)) +
       (((K u).bound : ℝ) / c) * weightedForcingSum (ρ u) order (fun i j => forcing i j u) := by
     simp only [Ψ, A, w, w', F, Q, weightedMetricSum, weightedMetricLoss, weightedForcingSum,
       familyMetricNorm, add_mul, Finset.sum_add_distrib, Finset.mul_sum]

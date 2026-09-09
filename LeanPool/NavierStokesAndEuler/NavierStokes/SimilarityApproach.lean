@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalResidual
-
-@[expose] public section
+import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 
 /-!
 # The actual similarity scale at the singular point
@@ -18,6 +17,9 @@ The coordinate solves `q - z^2 q^a = tau`. Its positive branch tends to zero
 when `tau` and `z` tend to zero together. The value assigned outside the
 positive-time domain is never used in this assertion.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +30,7 @@ namespace NavierStokes.SimilarityApproach
 
 open SimilarityCoordinates
 
+/-- Upper scale, given by `2 * p.1 + (2 * p.2 ^ 2) ^ (1 - a)⁻¹`. -/
 noncomputable def upperScale (a : ℝ) (p : ℝ × ℝ) : ℝ :=
   2 * p.1 + (2 * p.2 ^ 2) ^ (1 - a)⁻¹
 

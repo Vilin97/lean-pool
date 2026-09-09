@@ -6,13 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicSmallBall
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.Analysis.Convolution
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! Actual compact mollification on R³ is smooth and contractive on scalar L². -/
 
 @[expose] public section
 
-/-! Actual compact mollification on R³ is smooth and contractive on scalar L². -/
 
 noncomputable section
 
@@ -21,6 +27,7 @@ namespace EulerMeanHarmonic
 open MeasureTheory InnerProductSpace EulerSmoothLimit
 open scoped ContDiff Convolution
 
+/-- Scalar mollification, given by `φ.normed volume ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f`. -/
 def scalarMollification (φ : ContDiffBump (0 : Space)) (f : Space → ℝ) : Space → ℝ :=
   φ.normed volume ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f
 

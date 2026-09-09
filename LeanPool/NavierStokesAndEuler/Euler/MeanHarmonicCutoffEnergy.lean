@@ -6,12 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
-public import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Quantitative cutoff energy estimates used in the three-dimensional interior bound. -/
 
 @[expose] public section
 
-/-! Quantitative cutoff energy estimates used in the three-dimensional interior bound. -/
 
 noncomputable section
 
@@ -35,7 +41,7 @@ theorem integrable_weighted_gradient_square (η h : Space → ℝ)
     (hcη.comp_left (g := fun s : ℝ => s ^ 2) (by simp)).mul_right
       (f' := fun x => ‖gradient h x‖ ^ 2)
   exact ((hη.pow 2).mul ((contDiff_gradient hh).continuous.norm.pow
-    2)).integrable_of_hasCompactSupport hc
+      2)).integrable_of_hasCompactSupport hc
 
 theorem integrable_square_gradient_cutoff (η h : Space → ℝ)
     (hcη : HasCompactSupport η) (hη : ContDiff ℝ ∞ η) (hh : Continuous h) :
@@ -44,7 +50,7 @@ theorem integrable_square_gradient_cutoff (η h : Space → ℝ)
     ((compactSupport_gradient hcη).comp_left (g := fun v : Space => ‖v‖ ^ 2) (by simp)).mul_left
       (f := fun x => h x ^ 2)
   exact ((hh.pow 2).mul ((contDiff_gradient hη).continuous.norm.pow
-    2)).integrable_of_hasCompactSupport hc
+      2)).integrable_of_hasCompactSupport hc
 
 theorem gradient_eq_zero_off_support (η : Space → ℝ) {x : Space}
     (hx : x ∉ tsupport η) : gradient η x = 0 := by

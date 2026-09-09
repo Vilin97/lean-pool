@@ -6,13 +6,7 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
 
 /-!
 # Exact moment algebra for the true-cone loop construction
@@ -26,6 +20,9 @@ and variance constraints, not an assumption that a desired loop exists.
 The final lemmas give explicit two-point distributions with prescribed variance.
 They establish finite moment feasibility, including a one-sided support bound.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.LoopMoments
 
@@ -208,17 +205,26 @@ theorem rephased_moments (s : Finset ι) (w t : ι → ℝ) (a b ρ v : ℝ)
 /-- A two-point probability law. This is a concrete finite object, without
 any hypothesis asserting the existence of the manuscript's smooth loop. -/
 structure TwoPoint where
+  /-- Left weight of `TwoPoint`, of type `ℝ`. -/
   leftWeight : ℝ
+  /-- Right weight of `TwoPoint`, of type `ℝ`. -/
   rightWeight : ℝ
+  /-- Left value of `TwoPoint`, of type `ℝ`. -/
   leftValue : ℝ
+  /-- Right value of `TwoPoint`, of type `ℝ`. -/
   rightValue : ℝ
 
+/-- Mean, given by `q.leftWeight * q.leftValue + q.rightWeight * q.rightValue`. -/
 def TwoPoint.mean (q : TwoPoint) : ℝ :=
   q.leftWeight * q.leftValue + q.rightWeight * q.rightValue
 
+/-- Centered second, given by `q.leftWeight * (q.leftValue - m) ^ 2 + q.rightWeight *
+(q.rightValue - m) ^ 2`. -/
 def TwoPoint.centeredSecond (q : TwoPoint) (m : ℝ) : ℝ :=
   q.leftWeight * (q.leftValue - m) ^ 2 + q.rightWeight * (q.rightValue - m) ^ 2
 
+/-- Is probability, given by `0 ≤ q.leftWeight ∧ 0 ≤ q.rightWeight ∧ q.leftWeight +
+q.rightWeight = 1`. -/
 def TwoPoint.IsProbability (q : TwoPoint) : Prop :=
   0 ≤ q.leftWeight ∧ 0 ≤ q.rightWeight ∧ q.leftWeight + q.rightWeight = 1
 

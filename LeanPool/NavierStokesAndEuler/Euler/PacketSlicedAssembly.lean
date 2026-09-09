@@ -8,10 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureJet
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAssembly
+import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeSupport
+import Mathlib.Analysis.Calculus.Deriv.Add
+
+/-! Finite packet assembly commutes with the genuine time-within/spatial jets. -/
 
 @[expose] public section
 
-/-! Finite packet assembly commutes with the genuine time-within/spatial jets. -/
 
 noncomputable section
 
@@ -21,6 +24,8 @@ open EulerFiniteGrades Set
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Slice differentiable, given by `DifferentiableWithinAt ℝ (fun t => f (t,z.2)) s z.1 ∧
+DifferentiableAt ℝ (fun y => f (z.1,y)) z.2`. -/
 def SliceDifferentiable (s : Set ℝ) (f : Domain → E) (z : Domain) : Prop :=
   DifferentiableWithinAt ℝ (fun t => f (t,z.2)) s z.1 ∧
     DifferentiableAt ℝ (fun y => f (z.1,y)) z.2
@@ -78,7 +83,7 @@ theorem slicedJet_shiftUp (s : Set ℝ) (N n : ℕ) (u : ℕ → Domain → E) (
 theorem slicedJet_assemble (s : Set ℝ) (N n : ℕ) (u c : ℕ → Domain → E) (z : Domain)
     (hu : ∀ i ≤ N, SliceDifferentiable s (u i) z)
     (hc : ∀ i ≤ N, SliceDifferentiable s (c i) z) :
-    slicedJet s (assemble N u c n) z=
+    slicedJet s (assemble N u c n) z =
       assemble N (fun i => slicedJet s (u i) z) (fun i => slicedJet s (c i) z) n := by
   change slicedJet s (truncate N u n+shiftUp N c n) z=_
   rw [slicedJet_add (sliceDifferentiable_truncate s N n u z hu)
@@ -95,8 +100,8 @@ theorem pressureJet_zero (z : Domain) : pressureJet (0 : Domain → ℝ) z=0 := 
   simp [pressureJet, joinDerivative]
 
 theorem pressureJet_add (f g : Domain → ℝ) (z : Domain)
-    (hf : DifferentiableAt ℝ (fun y => f (z.1,y)) z.2)
-    (hg : DifferentiableAt ℝ (fun y => g (z.1,y)) z.2) :
+    (hf : DifferentiableAt ℝ (fun y => f (z.1, y)) z.2)
+    (hg : DifferentiableAt ℝ (fun y => g (z.1, y)) z.2) :
     pressureJet (f+g) z=pressureJet f z+pressureJet g z := by
   simp only [pressureJet, Pi.add_apply, fderiv_fun_add hf hg]
   rw [show (0 : ℝ)=0+0 by simp, joinDerivative_add]
@@ -115,9 +120,9 @@ theorem pressureJet_shiftUp (N n : ℕ) (u : ℕ → Domain → ℝ) (z : Domain
   | succ n => exact pressureJet_truncate N n u z
 
 theorem pressureJet_assemble (N n : ℕ) (u c : ℕ → Domain → ℝ) (z : Domain)
-    (hu : ∀ i ≤ N, DifferentiableAt ℝ (fun y => u i (z.1,y)) z.2)
-    (hc : ∀ i ≤ N, DifferentiableAt ℝ (fun y => c i (z.1,y)) z.2) :
-    pressureJet (assemble N u c n) z=
+    (hu : ∀ i ≤ N, DifferentiableAt ℝ (fun y => u i (z.1, y)) z.2)
+    (hc : ∀ i ≤ N, DifferentiableAt ℝ (fun y => c i (z.1, y)) z.2) :
+    pressureJet (assemble N u c n) z =
       assemble N (fun i => pressureJet (u i) z) (fun i => pressureJet (c i) z) n := by
   have htr : DifferentiableAt ℝ (fun y => truncate N u n (z.1,y)) z.2 := by
     by_cases hn : n ≤ N
@@ -137,8 +142,8 @@ theorem pressureJet_assemble (N n : ℕ) (u c : ℕ → Domain → ℝ) (z : Dom
   rfl
 
 theorem spatialDifferentiable_assemble (N n : ℕ) (u c : ℕ → Domain → E) (z : Domain)
-    (hu : ∀ i ≤ N, DifferentiableAt ℝ (fun y => u i (z.1,y)) z.2)
-    (hc : ∀ i ≤ N, DifferentiableAt ℝ (fun y => c i (z.1,y)) z.2) :
+    (hu : ∀ i ≤ N, DifferentiableAt ℝ (fun y => u i (z.1, y)) z.2)
+    (hc : ∀ i ≤ N, DifferentiableAt ℝ (fun y => c i (z.1, y)) z.2) :
     DifferentiableAt ℝ (fun y => assemble N u c n (z.1,y)) z.2 := by
   have htr : DifferentiableAt ℝ (fun y => truncate N u n (z.1,y)) z.2 := by
     by_cases hn : n ≤ N

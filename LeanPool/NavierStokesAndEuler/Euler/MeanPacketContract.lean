@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketParity
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketConstraints
+import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
+
+/-! The proved raw-field contract of the concrete admissible mean solver. -/
 
 @[expose] public section
 
-/-! The proved raw-field contract of the concrete admissible mean solver. -/
 
 noncomputable section
 

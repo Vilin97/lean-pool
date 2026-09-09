@@ -6,18 +6,24 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalWordBounds
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevEmbedding
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Source (21) controls actual ordered physical-label derivatives in a fixed
 Sobolev norm.  This file converts those genuine L² blocks to uniform spatial
 coefficient bounds.  The embedding constant is independent of the external
 order; only the one derivative from displacement to deformation enlarges
 the coefficient radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,8 +35,10 @@ open Set MeasureTheory Finset ContinuousLinearMap EulerSmoothLimit
   EulerOperatorGevreyCalculus
 open scoped ContDiff
 
+/-- Direction, given by `EuclideanSpace.single i 1`. -/
 def direction (i : Fin 3) : Space := EuclideanSpace.single i 1
 
+/-- Embedding cost, given by `sobolevEmbeddingConstant 1 3`. -/
 def embeddingCost : ℝ := sobolevEmbeddingConstant 1 3
 
 theorem embeddingCost_nonneg : 0 ≤ embeddingCost :=
@@ -103,7 +111,7 @@ theorem gradient_gevrey (u : L2) (hu : SmoothOrbit u)
   have hs := majorant_one_le_radius_four R hR n
   change majorant R 0 (n+1) ≤ R*majorant (4*R) 0 n at hs
   exact h.trans ((mul_le_mul_of_nonneg_left hs (mul_nonneg embeddingCost_nonneg hA)).trans_eq (by
-    ring))
+      ring))
 
 /-- Label normalization by a contraction does not enlarge positive spatial
 derivatives.  This applies to the source scaling a=ℓ y. -/

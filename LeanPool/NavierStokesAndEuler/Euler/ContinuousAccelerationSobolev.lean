@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationForcing
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramAcceleration
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramSobolev
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationGevrey
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramSobolev
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
 
 /-!
 # Actual uniform-time acceleration in fixed Sobolev word blocks
@@ -18,6 +20,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
 The genuine continuous Gram solve incurs one factorial shift at the original
 radius. Time endpoint values are included in the continuous-path norm.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,17 +39,17 @@ variable {P U E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Fintype ι]
 
 theorem forcing_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
-    (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (f : P → C(Icc (0 : ℝ) T,E)) (v : P → C(Icc (0 : ℝ) T,U))
+    (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (f : P → C(Icc (0 : ℝ) T, E)) (v : P → C(Icc (0 : ℝ) T, U))
     (hQ : ContDiff ℝ ∞ Q) (hQ₁ : ContDiff ℝ ∞ Q₁)
     (hf : ContDiff ℝ ∞ f) (hv : ContDiff ℝ ∞ v)
     (Rc R C₀ C₁ Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (d : ℕ)
-    (hbf : ∀ n x, block directions q f n x ≤ Cf*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ Cv*majorant R d n)
+    (hbf : ∀ n x, block directions q f n x ≤ Cf * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (forcing Q Q₁ f v) n x ≤
       accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv*majorant R d n := by
@@ -60,20 +65,20 @@ theorem forcing_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i
 /-- The actual acceleration path has one more grade in the same fixed
 Sobolev order; there is no additional conversion of external words. -/
 theorem acceleration_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
-    (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T,U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t w, c*‖w‖^2 ≤ ‖Q x t w‖^2)
-    (v : P → C(Icc (0 : ℝ) T,U)) (f : P → C(Icc (0 : ℝ) T,E))
+    (T : ℝ) (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t w, c * ‖w‖ ^ 2 ≤ ‖Q x t w‖ ^ 2)
+    (v : P → C(Icc (0 : ℝ) T, U)) (f : P → C(Icc (0 : ℝ) T, E))
     (hQ : ContDiff ℝ ∞ Q) (hQ₁ : ContDiff ℝ ∞ Q₁)
     (hv : ContDiff ℝ ∞ v) (hf : ContDiff ℝ ∞ f)
     (Rc R C₀ C₁ Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hR : 2*gramBlockCost ι q c Rc C₀ (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv)*
-      (sobolevCoefficientRadius ι Rc+1) ≤ R)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+    (hR : 2 * gramBlockCost ι q c Rc C₀ (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv) *
+      (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (d : ℕ)
-    (hbf : ∀ n x, block directions q f n x ≤ Cf*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ Cv*majorant R d n)
+    (hbf : ∀ n x, block directions q f n x ≤ Cf * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q
       (fun y => accelerationPath T (Q y) (Q₁ y) c hc (hLower y) (v y) (f y)) n x ≤

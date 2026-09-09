@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
-public import Mathlib.Topology.Order.ProjIcc
+public import Mathlib.LinearAlgebra.AffineSpace.Slope
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.EnergyBootstrap
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-! Shrinking-radius Gevrey bootstrap from actual integral energy inequalities, including zero
+norms. -/
 
 @[expose] public section
 
-/-! Shrinking-radius Gevrey bootstrap from actual integral energy inequalities, including zero
-  norms. -/
 
 noncomputable section
 
@@ -52,7 +57,8 @@ theorem liminf_slope_le_of_integral (X A : ℝ → ℝ) (a b : ℝ) (hab : a ≤
     exact hcomp.trans_lt hys
   exact he.frequently
 
-/-- The source's nonlinear shrinking-radius bootstrap closes directly from the all-subinterval integral energy bound. -/
+/-- The source's nonlinear shrinking-radius bootstrap closes directly from the all-subinterval
+integral energy bound. -/
 theorem close_integral_energy_estimate
     (X A Y : ℝ → ℝ) (C B Δ r ρ₀ S R₀ : ℝ)
     (hC : 0 < C) (hB : 0 ≤ B) (hΔ : 0 < Δ) (hΔ1 : Δ ≤ 1)

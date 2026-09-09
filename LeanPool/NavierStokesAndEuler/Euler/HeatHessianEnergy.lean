@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HeatGradientEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevLaplacian
+import LeanPool.NavierStokesAndEuler.Euler.HeatGradientEnergy
+
+/-! Exact L² Hessian coercivity from actual commuting strong derivatives. -/
 
 @[expose] public section
 
-/-! Exact L² Hessian coercivity from actual commuting strong derivatives. -/
 
 noncomputable section
 
@@ -29,7 +31,7 @@ def hessianEnergy (u : SobolevSpace period 2) : ℝ :=
 /-- One row of the genuine Hessian energy is the corresponding gradient-Laplacian pairing. -/
 theorem hessian_row_identity (u : SobolevSpace period 3) (j : Fin 4) :
     (∑ i : Fin 4, ‖value period (derivativeOperator period 1 i (derivativeOperator period 2 j
-      u))‖^2) =
+        u))‖^2) =
       -⟪value period (derivativeOperator period 2 j u),
         value period (derivativeOperator period 0 j (laplacianOperator period 1 u))⟫_ℝ := by
   have h := gradient_pairing period (derivativeOperator period 2 j u)

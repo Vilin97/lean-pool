@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingSchedule
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.FlatPrimitive
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Constructed flattening, release, and terminal power tail
@@ -19,6 +19,9 @@ moment edit is deliberately a separate operation: its required release datum
 is used to initialize an explicitly solved scalar ODE, but is not asserted
 to be the unedited angular history.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -42,7 +45,7 @@ theorem sigma_derivative_nonneg (x : ℝ) : 0 ≤ deriv sigma x := by
   have hb : HasDerivAt (fun y : ℝ => FlatCutoff.edge 1 (1 - y))
       (-(2 * FlatCutoff.edge 1 (1 - x) / (1 - x) ^ 3)) x := by
     convert! (FlatPrimitive.edge_hasDerivAt (by norm_num : (0 : ℝ) < 1) (1 - x)).comp x
-      ((hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)) using 1 ; ring
+      ((hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)) using 1; ring
   have hq := ha.div (ha.fun_add hb) (sigma_denom_pos x).ne'
   change HasDerivAt sigma _ x at hq
   rw [hq.deriv]
@@ -80,6 +83,7 @@ theorem exists_sigma_derivative_bound :
     · rw [sigma_derivative_zero_right hx']
       exact (by norm_num : (0 : ℝ) ≤ 1).trans (le_max_right _ _)
 
+/-- Step bound, given by `Classical.choose exists_sigma_derivative_bound`. -/
 def stepBound : ℝ := Classical.choose exists_sigma_derivative_bound
 
 theorem stepBound_ge_one : 1 ≤ stepBound :=
@@ -88,6 +92,7 @@ theorem stepBound_ge_one : 1 ≤ stepBound :=
 theorem sigma_derivative_le (x : ℝ) : deriv sigma x ≤ stepBound :=
   (Classical.choose_spec exists_sigma_derivative_bound).2 x
 
+/-- Flatten length, given by `10 * (stepBound + 1) * Real.log 2 + 1`. -/
 def flattenLength : ℝ := 10 * (stepBound + 1) * Real.log 2 + 1
 
 theorem flattenLength_pos : 0 < flattenLength := by
@@ -95,6 +100,7 @@ theorem flattenLength_pos : 0 < flattenLength := by
   unfold flattenLength
   nlinarith [stepBound_ge_one]
 
+/-- Tail coefficient, given by `Real.exp (-5) / (16 * (stepBound + 1))`. -/
 def tailCoefficient : ℝ := Real.exp (-5) / (16 * (stepBound + 1))
 
 theorem tailCoefficient_pos : 0 < tailCoefficient := by
@@ -110,8 +116,11 @@ theorem tailCoefficient_lt_one : tailCoefficient < 1 := by
   have he : Real.exp (-5 : ℝ) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
   linarith [tailCoefficient_le]
 
+/-- Tail data, collecting `core`, `h`, `h_pos`, `h_small`. -/
 structure TailData where
+  /-- Core of `TailData`, of type `OutgoingSchedule.Parameters`. -/
   core : OutgoingSchedule.Parameters
+  /-- Step-size parameter of `TailData`, of type `ℝ`. -/
   h : ℝ
   h_pos : 0 < h
   h_small : 2 * h < core.lam
@@ -127,8 +136,11 @@ theorem h_lt_lam (d : TailData) : d.h < d.core.lam := by
 theorem one_sub_h_pos (d : TailData) : 0 < 1 - d.h := by
   linarith [d.h_lt_half]
 
+/-- Flatten end, given by `d.core.endpoint + flattenLength`. -/
 def flattenEnd (d : TailData) : ℝ := d.core.endpoint + flattenLength
+/-- Uniform wait, given by `30 * Real.log (1 / d.core.lam)`. -/
 def uniformWait (d : TailData) : ℝ := 30 * Real.log (1 / d.core.lam)
+/-- Release start, given by `d.flattenEnd + d.uniformWait`. -/
 def releaseStart (d : TailData) : ℝ := d.flattenEnd + d.uniformWait
 
 theorem uniformWait_pos (d : TailData) : 0 < d.uniformWait := by
@@ -138,8 +150,11 @@ theorem uniformWait_pos (d : TailData) : 0 < d.uniformWait := by
   apply (lt_div_iff₀ d.core.lam_pos).mpr
   linarith [d.core.lam_lt]
 
+/-- Long hold, given by `4 * Real.log (1 / d.h)`. -/
 def longHold (d : TailData) : ℝ := 4 * Real.log (1 / d.h)
+/-- Second ramp start, given by `1 + d.longHold`. -/
 def secondRampStart (d : TailData) : ℝ := 1 + d.longHold
+/-- Ramp end, given by `d.secondRampStart + 1`. -/
 def rampEnd (d : TailData) : ℝ := d.secondRampStart + 1
 
 theorem longHold_pos (d : TailData) : 0 < d.longHold := by
@@ -153,6 +168,7 @@ theorem rampEnd_pos (d : TailData) : 0 < d.rampEnd := by
   dsimp [rampEnd, secondRampStart]
   linarith [d.longHold_pos]
 
+/-- Rho, given by `tailCoefficient * d.h`. -/
 def rho (d : TailData) : ℝ := tailCoefficient * d.h
 
 theorem rho_pos (d : TailData) : 0 < d.rho := mul_pos tailCoefficient_pos d.h_pos
@@ -167,9 +183,11 @@ end TailData
 
 /-! ## The fixed terminal taper and its positive weighted debt -/
 
+/-- Tail shape, given by `1 - d.rho + d.rho * sigma ((t - 1) / 2)`. -/
 def tailShape (d : TailData) (t : ℝ) : ℝ :=
   1 - d.rho + d.rho * sigma ((t - 1) / 2)
 
+/-- Tail shape derivative, given by `(d.rho / 2) * deriv sigma ((t - 1) / 2)`. -/
 def tailShapeDeriv (d : TailData) (t : ℝ) : ℝ :=
   (d.rho / 2) * deriv sigma ((t - 1) / 2)
 
@@ -185,7 +203,7 @@ theorem tailShape_hasDerivAt (d : TailData) (t : ℝ) :
     HasDerivAt (tailShape d) (tailShapeDeriv d t) t := by
   have hs := (sigma_contDiff.differentiable (by simp) ((t - 1) / 2)).hasDerivAt
   have hm := (hs.comp t (((hasDerivAt_id t).sub_const 1).div_const 2)).const_mul d.rho
-  convert! hm.const_add (1 - d.rho) using 1 ; simp [tailShapeDeriv] ; ring
+  convert! hm.const_add (1 - d.rho) using 1; simp [tailShapeDeriv]; ring
 
 theorem tailShape_early (d : TailData) {t : ℝ} (ht : t ≤ 1) :
     tailShape d t = 1 - d.rho := by
@@ -212,12 +230,15 @@ theorem tailShapeDeriv_integral (d : TailData) :
     (∫ t in (0 : ℝ)..3, tailShapeDeriv d t) = d.rho := by
   have h := intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun t _ => tailShape_hasDerivAt d t) ((tailShapeDeriv_contDiff
-      d).continuous.intervalIntegrable 0 3)
+        d).continuous.intervalIntegrable 0 3)
   rw [tailShape_late d (by norm_num), tailShape_early d (by norm_num)] at h
   linarith
 
+/-- Tail log slope, given by `-d.h + tailShapeDeriv d t / tailShape d t`. -/
 def tailLogSlope (d : TailData) (t : ℝ) : ℝ := -d.h + tailShapeDeriv d t / tailShape d t
 
+/-- Tail debt, given by `(∫ t in (0 : ℝ)..3, Real.exp ((1 - d.h) * t) * tailShapeDeriv d t) / (1
+- d.rho)`. -/
 def tailDebt (d : TailData) : ℝ :=
   (∫ t in (0 : ℝ)..3, Real.exp ((1 - d.h) * t) * tailShapeDeriv d t) / (1 - d.rho)
 
@@ -231,19 +252,19 @@ theorem tailDebt_bounds (d : TailData) :
   have hlo := intervalIntegral.integral_mono_on (μ := volume) (a := 0) (b := 3)
     (by norm_num) ((tailShapeDeriv_contDiff d).continuous.intervalIntegrable 0 3)
     (hc.intervalIntegrable 0 3) (fun t ht => ?_)
-  have hhi := intervalIntegral.integral_mono_on (μ := volume) (a := 0) (b := 3)
-    (g := fun t => Real.exp 3 * tailShapeDeriv d t)
-    (by norm_num) (hc.intervalIntegrable 0 3)
-    ((continuous_const.mul (tailShapeDeriv_contDiff d).continuous).intervalIntegrable 0 3)
-    (fun t ht => ?_)
-  · rw [tailShapeDeriv_integral] at hlo
-    rw [intervalIntegral.integral_const_mul, tailShapeDeriv_integral] at hhi
-    exact ⟨(div_le_div_iff_of_pos_right hden).mpr hlo,
-      (div_le_div_iff_of_pos_right hden).mpr hhi⟩
-  · have he : Real.exp ((1 - d.h) * t) ≤ Real.exp 3 := by
-      apply Real.exp_le_exp.mpr
-      nlinarith [d.h_pos, ht.1, ht.2]
-    exact mul_le_mul_of_nonneg_right he (tailShapeDeriv_nonneg d t)
+  · have hhi := intervalIntegral.integral_mono_on (μ := volume) (a := 0) (b := 3)
+      (g := fun t => Real.exp 3 * tailShapeDeriv d t)
+      (by norm_num) (hc.intervalIntegrable 0 3)
+      ((continuous_const.mul (tailShapeDeriv_contDiff d).continuous).intervalIntegrable 0 3)
+      (fun t ht => ?_)
+    · rw [tailShapeDeriv_integral] at hlo
+      rw [intervalIntegral.integral_const_mul, tailShapeDeriv_integral] at hhi
+      exact ⟨(div_le_div_iff_of_pos_right hden).mpr hlo,
+        (div_le_div_iff_of_pos_right hden).mpr hhi⟩
+    · have he : Real.exp ((1 - d.h) * t) ≤ Real.exp 3 := by
+        apply Real.exp_le_exp.mpr
+        nlinarith [d.h_pos, ht.1, ht.2]
+      exact mul_le_mul_of_nonneg_right he (tailShapeDeriv_nonneg d t)
   · have he : 1 ≤ Real.exp ((1 - d.h) * t) :=
       Real.one_le_exp_iff.mpr (mul_nonneg d.one_sub_h_pos.le ht.1)
     nlinarith [mul_le_mul_of_nonneg_right he (tailShapeDeriv_nonneg d t)]
@@ -280,8 +301,8 @@ theorem tail_taper_log_derivative (d : TailData) (t : ℝ) :
     have he : Real.exp (-5 : ℝ) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
     nlinarith [mul_le_mul_of_nonneg_right he hS]
   have hder : tailShapeDeriv d t ≤ d.rho / 2 * stepBound :=
-    mul_le_mul_of_nonneg_left (sigma_derivative_le _) (by exact div_nonneg d.rho_pos.le (by
-      norm_num))
+    mul_le_mul_of_nonneg_left (sigma_derivative_le _) (by
+        exact div_nonneg d.rho_pos.le (by norm_num))
   have hrS : d.rho * stepBound ≤ d.h / 16 := by
     have h := mul_le_mul_of_nonneg_right hcoef d.h_pos.le
     unfold TailData.rho
@@ -296,6 +317,8 @@ theorem tail_taper_log_derivative (d : TailData) (t : ℝ) :
 
 /-! ## Actual release coefficient and the integrating-factor solution -/
 
+/-- Release slope, given by `-d.core.lam - (1 - d.core.lam) * sigma t + (1 - d.h) * sigma (t -
+d.secondRampStart)`. -/
 def releaseSlope (d : TailData) (t : ℝ) : ℝ :=
   -d.core.lam - (1 - d.core.lam) * sigma t +
     (1 - d.h) * sigma (t - d.secondRampStart)
@@ -343,8 +366,11 @@ theorem releaseSlope_bounds (d : TailData) (t : ℝ) :
   unfold releaseSlope
   constructor <;> nlinarith
 
+/-- Release rate, given by `1 + releaseSlope d t`. -/
 def releaseRate (d : TailData) (t : ℝ) : ℝ := 1 + releaseSlope d t
+/-- Release source, given by `-releaseSlope d t - d.h`. -/
 def releaseSource (d : TailData) (t : ℝ) : ℝ := -releaseSlope d t - d.h
+/-- Initial lag, given by `(d.core.lam - d.h) / (1 - d.core.lam)`. -/
 def initialLag (d : TailData) : ℝ := (d.core.lam - d.h) / (1 - d.core.lam)
 
 theorem initialLag_gt_h (d : TailData) : d.h < initialLag d := by
@@ -357,6 +383,8 @@ theorem releaseRate_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseRate d) :
 theorem releaseSource_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseSource d) :=
   (releaseSlope_contDiff d).neg.sub contDiff_const
 
+/-- Linear lag, given by `Real.exp (-primitive a t) * (q + primitive (fun v => Real.exp
+(primitive a v) * b v) t)`. -/
 def linearLag (a b : ℝ → ℝ) (q : ℝ) (t : ℝ) : ℝ :=
   Real.exp (-primitive a t) *
     (q + primitive (fun v => Real.exp (primitive a v) * b v) t)
@@ -383,6 +411,7 @@ theorem linearLag_hasDerivAt {a b : ℝ → ℝ} (ha : Continuous a) (hb : Conti
   dsimp [linearLag]
   nlinarith [congrArg (fun v : ℝ => v * b t) he]
 
+/-- Release lag, given by `linearLag (releaseRate d) (releaseSource d) (initialLag d)`. -/
 def releaseLag (d : TailData) : ℝ → ℝ :=
   linearLag (releaseRate d) (releaseSource d) (initialLag d)
 
@@ -459,6 +488,7 @@ theorem releaseLag_gt_tailDebt (d : TailData) : tailDebt d < releaseLag d d.ramp
   have h := mul_lt_mul_of_pos_left (initialLag_gt_h d) (Real.exp_pos (-2))
   exact (tailDebt_small d).trans (h.trans_le (releaseLag_lower d))
 
+/-- Decay hold, given by `Real.log (releaseLag d d.rampEnd / tailDebt d) / (1 - d.h)`. -/
 def decayHold (d : TailData) : ℝ :=
   Real.log (releaseLag d d.rampEnd / tailDebt d) / (1 - d.h)
 
@@ -479,14 +509,18 @@ theorem decayHold_hits_target (d : TailData) :
 
 /-! ## One globally smooth positive angular profile -/
 
+/-- Log shape, given by `Real.log (1 + eta ^ 2)`. -/
 def logShape (eta : ℝ) : ℝ := Real.log (1 + eta ^ 2)
 
 theorem logShape_contDiff : ContDiff ℝ ∞ logShape :=
   (contDiff_const.add (contDiff_id.pow 2)).log (fun eta => by positivity)
 
+/-- Flatten factor, given by `Real.exp (sigma ((p.1 - d.core.endpoint) / flattenLength) *
+(logShape p.2 - Real.log 2))`. -/
 def flattenFactor (d : TailData) (p : ℝ × ℝ) : ℝ :=
   Real.exp (sigma ((p.1 - d.core.endpoint) / flattenLength) * (logShape p.2 - Real.log 2))
 
+/-- Flattened, given by `angular d.core.P d.core.dropLength d.core.lam p * flattenFactor d p`. -/
 def flattened (d : TailData) (p : ℝ × ℝ) : ℝ :=
   angular d.core.P d.core.dropLength d.core.lam p * flattenFactor d p
 
@@ -523,6 +557,7 @@ theorem flattened_uniform (d : TailData) (eta : ℝ) {y : ℝ}
     Real.exp_sub, Real.exp_log hp, Real.exp_log (by norm_num : (0 : ℝ) < 2), shape]
   field_simp
 
+/-- Release adjustment, given by `primitive (fun t => releaseSlope d t + d.core.lam)`. -/
 def releaseAdjustment (d : TailData) : ℝ → ℝ :=
   primitive (fun t => releaseSlope d t + d.core.lam)
 
@@ -551,7 +586,9 @@ theorem releaseAdjustment_late (d : TailData) {a t : ℝ}
     rw [releaseSlope_late d (ha.trans (uIcc_of_le hat ▸ hv).1)]
     ring
 
+/-- Tail start, given by `d.releaseStart + d.rampEnd + decayHold d`. -/
 def tailStart (d : TailData) : ℝ := d.releaseStart + d.rampEnd + decayHold d
+/-- Tail end, given by `tailStart d + 3`. -/
 def tailEnd (d : TailData) : ℝ := tailStart d + 3
 
 theorem releaseStart_gt_flattenEnd (d : TailData) : d.flattenEnd < d.releaseStart := by
@@ -566,6 +603,8 @@ theorem tailStart_gt_release (d : TailData) : d.releaseStart < tailStart d := by
   dsimp [tailStart]
   linarith [d.rampEnd_pos, decayHold_pos d]
 
+/-- Final angular, given by `flattened d p * Real.exp (releaseAdjustment d (p.1 -
+d.releaseStart)) * (tailShape d (p.1 - tailStart d) / (1 - d.rho))`. -/
 def finalAngular (d : TailData) (p : ℝ × ℝ) : ℝ :=
   flattened d p * Real.exp (releaseAdjustment d (p.1 - d.releaseStart)) *
     (tailShape d (p.1 - tailStart d) / (1 - d.rho))
@@ -589,6 +628,8 @@ theorem finalAngular_before (d : TailData) (eta : ℝ) {y : ℝ}
   simp [finalAngular, flattened_before d eta hy, releaseAdjustment_early d hrel,
     tailShape_early d htail, hden]
 
+/-- Carrier, given by `(radialAmplitude d.core.P d.core.dropLength d.core.lam y / 2) * Real.exp
+(releaseAdjustment d (y - d.releaseStart))`. -/
 def carrier (d : TailData) (y : ℝ) : ℝ :=
   (radialAmplitude d.core.P d.core.dropLength d.core.lam y / 2) *
     Real.exp (releaseAdjustment d (y - d.releaseStart))
@@ -647,6 +688,8 @@ theorem carrier_late_scaling (d : TailData) {a y : ℝ}
         Real.exp ((d.core.lam - d.h) * ((y - d.releaseStart) - (a - d.releaseStart)))) := by ring
     _ = _ := by rw [he]
 
+/-- Power constant, given by `carrier d (tailStart d) * Real.exp ((1 / 2 + d.h) * tailStart d) /
+(1 - d.rho)`. -/
 def powerConstant (d : TailData) : ℝ :=
   carrier d (tailStart d) * Real.exp ((1 / 2 + d.h) * tailStart d) / (1 - d.rho)
 
@@ -695,12 +738,14 @@ theorem axial_product_unchanged (d : TailData) (amp : ℝ → ℝ) (eta y : ℝ)
 
 /-! ## The prescribed taper is an actual backward lag solution -/
 
+/-- Tail rate, given by `1 + tailLogSlope d t`. -/
 def tailRate (d : TailData) (t : ℝ) : ℝ := 1 + tailLogSlope d t
 
 theorem tailRate_contDiff (d : TailData) : ContDiff ℝ ∞ (tailRate d) :=
   contDiff_const.add (contDiff_const.add
     ((tailShapeDeriv_contDiff d).div (tailShape_contDiff d) (fun t => (tailShape_pos d t).ne')))
 
+/-- Weighted tail derivative, given by `Real.exp ((1 - d.h) * t) * tailShapeDeriv d t`. -/
 def weightedTailDerivative (d : TailData) (t : ℝ) : ℝ :=
   Real.exp ((1 - d.h) * t) * tailShapeDeriv d t
 
@@ -743,10 +788,13 @@ theorem tailDebt_source_formula (d : TailData) :
   have hden : 1 - d.rho ≠ 0 := by linarith [d.rho_lt_half]
   field_simp [hf, hden]
 
+/-- Tail numerator, given by `Real.exp (-(1 - d.h) * t) * (primitive (weightedTailDerivative d)
+3 - primitive (weightedTailDerivative d) t)`. -/
 def tailNumerator (d : TailData) (t : ℝ) : ℝ :=
   Real.exp (-(1 - d.h) * t) *
     (primitive (weightedTailDerivative d) 3 - primitive (weightedTailDerivative d) t)
 
+/-- Tail lag, given by `tailNumerator d t / tailShape d t`. -/
 def tailLag (d : TailData) (t : ℝ) : ℝ := tailNumerator d t / tailShape d t
 
 theorem tailNumerator_contDiff (d : TailData) : ContDiff ℝ ∞ (tailNumerator d) :=
@@ -764,7 +812,7 @@ theorem tailNumerator_hasDerivAt (d : TailData) (t : ℝ) :
       (primitive_hasDerivAt (weightedTailDerivative_contDiff d).continuous t))
   have he : Real.exp (-(1 - d.h) * t) * Real.exp ((1 - d.h) * t) = 1 := by
     rw [← Real.exp_add]
-    convert! Real.exp_zero using 1 ; ring_nf
+    convert! Real.exp_zero using 1; ring_nf
   convert! h using 1
   dsimp [tailNumerator, weightedTailDerivative]
   nlinarith [congrArg (fun x : ℝ => x * tailShapeDeriv d t) he]
@@ -777,7 +825,7 @@ theorem tailLag_hasDerivAt (d : TailData) (t : ℝ) :
   have hf := (tailShape_pos d t).ne'
   convert! h using 1
   dsimp [tailLag, tailRate, tailLogSlope]
-  field_simp [hf] ; ring
+  field_simp [hf]; ring
 
 theorem tailLag_equation (d : TailData) (t : ℝ) :
     deriv (tailLag d) t + (1 + tailLogSlope d t) * tailLag d t =
@@ -808,13 +856,14 @@ theorem tailLag_nonneg (d : TailData) {t : ℝ} (ht : t ≤ 3) : 0 ≤ tailLag d
   exact intervalIntegral.integral_nonneg ht
     (fun v _ => mul_nonneg (Real.exp_pos _).le (tailShapeDeriv_nonneg d v))
 
+/-- Hold lag, given by `releaseLag d d.rampEnd * Real.exp (-(1 - d.h) * t)`. -/
 def holdLag (d : TailData) (t : ℝ) : ℝ :=
   releaseLag d d.rampEnd * Real.exp (-(1 - d.h) * t)
 
 theorem holdLag_hasDerivAt (d : TailData) (t : ℝ) :
     HasDerivAt (holdLag d) (-(1 - d.h) * holdLag d t) t := by
   convert! (((hasDerivAt_id t).const_mul (-(1 - d.h))).exp).const_mul
-    (releaseLag d d.rampEnd) using 1 ; simp [holdLag] ; ring
+    (releaseLag d d.rampEnd) using 1; simp [holdLag]; ring
 
 theorem holdLag_equation (d : TailData) (t : ℝ) :
     deriv (holdLag d) t + (1 - d.h) * holdLag d t = 0 := by
@@ -851,6 +900,8 @@ theorem constructed_tail (d : TailData) :
 
 /-! ## The exact flattening slope and the unchanged axial histories -/
 
+/-- Flattening slope, given by `-d.core.lam + (deriv sigma ((y - d.core.endpoint) /
+flattenLength) / flattenLength) * (logShape eta - Real.log 2)`. -/
 def flatteningSlope (d : TailData) (y eta : ℝ) : ℝ :=
   -d.core.lam + (deriv sigma ((y - d.core.endpoint) / flattenLength) / flattenLength) *
     (logShape eta - Real.log 2)
@@ -893,7 +944,7 @@ theorem flattened_hasDerivAt (d : TailData) (eta : ℝ) {y : ℝ}
     HasDerivAt (fun t => flattened d (t, eta))
       (flattened d (y, eta) * (flatteningSlope d y eta - 1 / 2)) y := by
   have hbase := (radialAmplitude_hasDerivAt d.core.P d.core.dropLength d.core.lam y).mul_const
-    (shape eta)
+      (shape eta)
   have hs := (sigma_contDiff.differentiable (by simp)
     ((y - d.core.endpoint) / flattenLength)).hasDerivAt
   have hstep := hs.comp y (((hasDerivAt_id y).sub_const d.core.endpoint).div_const flattenLength)
@@ -913,6 +964,7 @@ theorem flattened_log_hasDerivAt (d : TailData) (eta : ℝ) {y : ℝ}
   convert! (flattened_hasDerivAt d eta hy).log hf using 1
   field_simp
 
+/-- Extended angular moment as an element of `ℝ`. -/
 def extendedAngularMoment (d : TailData) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
   (5 / 2) * Real.sqrt 2 * d.core.P * eta * shape eta +
     ∫ t in (0 : ℝ)..y,
@@ -954,9 +1006,11 @@ theorem carrier_hasDerivAt (d : TailData) {y : ℝ} (hy : d.releaseStart ≤ y) 
   rw [hs]
   ring
 
+/-- Profile slope, given by `releaseSlope d (y - d.releaseStart) + tailShapeDeriv d (y -
+tailStart d) / tailShape d (y - tailStart d)`. -/
 def profileSlope (d : TailData) (y : ℝ) : ℝ :=
   releaseSlope d (y - d.releaseStart) + tailShapeDeriv d (y - tailStart d) / tailShape d (y -
-    tailStart d)
+      tailStart d)
 
 theorem finalAngular_hasDerivAt_on_release (d : TailData) (eta : ℝ) {y : ℝ}
     (hy : d.releaseStart ≤ y) :
@@ -976,7 +1030,7 @@ theorem finalAngular_hasDerivAt_on_release (d : TailData) (eta : ℝ) {y : ℝ}
   dsimp [profileSlope]
   have hf := (tailShape_pos d (y - tailStart d)).ne'
   have hd : 1 - d.rho ≠ 0 := by linarith [d.rho_lt_half]
-  field_simp [hf, hd] ; ring
+  field_simp [hf, hd]; ring
 
 theorem finalAngular_log_hasDerivAt_on_release (d : TailData) (eta : ℝ) {y : ℝ}
     (hy : d.releaseStart ≤ y) :

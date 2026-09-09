@@ -6,19 +6,13 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.RealDeriv
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # The pressure datum from a nonnegative weighted schedule
@@ -26,6 +20,9 @@ public import Mathlib.Tactic.Ring
 The clock weights and bounded exponents are fixed input functions. Regularity
 of the pressure is deduced from the integral, not assumed as an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,6 +34,7 @@ open scoped Topology ContDiff
 /-- Real form of `(1 + η²)^(-2a)`. -/
 def kernel (a η : ℝ) : ℝ := Real.exp (-2 * a * Real.log (1 + η ^ 2))
 
+/-- Pressure, given by `-(1 / 2 : ℝ) * ∫ y, g y * kernel (a y) η`. -/
 def pressure (g a : ℝ → ℝ) (η : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y, g y * kernel (a y) η
 
@@ -123,9 +121,12 @@ theorem base_mem_slitPlane {z : ℂ} (hz : z ∈ strip) :
   simp only [Complex.add_re, Complex.one_re, pow_two, Complex.mul_re]
   nlinarith [sq_nonneg z.re, sq_nonneg (z.im - 1 / 2), sq_nonneg (z.im + 1 / 2)]
 
+/-- Complex kernel, given by `Complex.exp ((-2 * (a : ℂ)) * Complex.log (1 + z ^ 2))`. -/
 def complexKernel (a : ℝ) (z : ℂ) : ℂ :=
   Complex.exp ((-2 * (a : ℂ)) * Complex.log (1 + z ^ 2))
 
+/-- Complex kernel derivative, given by `complexKernel a z * ((-2 * (a : ℂ)) * ((1 + z ^ 2)⁻¹ *
+(2 * z)))`. -/
 def complexKernelDeriv (a : ℝ) (z : ℂ) : ℂ :=
   complexKernel a z * ((-2 * (a : ℂ)) * ((1 + z ^ 2)⁻¹ * (2 * z)))
 
@@ -183,6 +184,7 @@ theorem integrable_weighted_parameter {g a : ℝ → ℝ} {A : ℝ}
     exact mul_le_mul_of_nonneg_left (hM (a y) ⟨h.exponent_nonneg y, h.exponent_le y⟩)
       (h.nonneg y)
 
+/-- Complex pressure, given by `-(1 / 2 : ℂ) * ∫ y, (g y : ℂ) * complexKernel (a y) z`. -/
 def complexPressure (g a : ℝ → ℝ) (z : ℂ) : ℂ :=
   -(1 / 2 : ℂ) * ∫ y, (g y : ℂ) * complexKernel (a y) z
 
@@ -374,7 +376,7 @@ theorem deriv_pressure_neg {g a : ℝ → ℝ} {A : ℝ}
   exact mul_neg_of_neg_of_pos (div_neg_of_neg_of_pos (by linarith) (by positivity))
     (weighted_kernel_pos h hmass η)
 
-@[simp] theorem deriv_pressure_zero {g a : ℝ → ℝ} {A : ℝ}
+theorem deriv_pressure_zero {g a : ℝ → ℝ} {A : ℝ}
     (h : Admissible g a A) : deriv (pressure g a) 0 = 0 := by simp [deriv_pressure h]
 
 /-- An arbitrary measurable positive prefix contributes its exact constant-exponent mass. -/

@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCopyBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularWaveBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodizedWaveBounds
+public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformPrimaryWeights
+import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCopyBounds
 
 /-!
 # Joint native-copy bounds for the actual particular inverse
@@ -20,6 +19,9 @@ is its actual projected pressure coefficient.  No output jet estimate is
 assumed, and no assertion that separate copy classes have uniform constants
 is used.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,9 +41,11 @@ structure ModalControl (s : StripData (P × Plane)) (α : ℝ)
     (d : ℕ → PrimaryODE.FrameData (P × ℝ)) (t : ℕ → TangentData P ProblemStatement.Space)
     (harmonic : ℤ) (g : ℕ → Geometry) (L : ℕ → ℝ) (envelope : ℕ → ℝ → ℝ)
     (cells : ℕ → Frequency → Set (P × Plane)) where
+  /-- Neighborhood of `ModalControl`, of type `ℕ → Frequency → Set (P × Plane)`. -/
   neighborhood : ℕ → Frequency → Set (P × Plane)
   open_neighborhood : ∀ n k, IsOpen (neighborhood n k)
   contains : ∀ n k x, x ∈ s.domain → x ∈ cells n k → x ∈ neighborhood n k
+  /-- Interval of `ModalControl`, of type `ℕ → Set ℝ`. -/
   interval : ℕ → Set ℝ
   open_interval : ∀ n, IsOpen (interval n)
   length_pos : ∀ n, 0 < L n
@@ -49,39 +53,43 @@ structure ModalControl (s : StripData (P × Plane)) (α : ℝ)
   bridge : ∀ n k, PrimaryCopyBridge.Inputs (d n) (t n) harmonic (g n) k (neighborhood n k) 0 (L n)
   coefficient_smooth : ∀ n k, ContDiffOn ℝ ∞
     ((PrimaryCopyBridge.copyFrame (d n) (g n) k).coefficient harmonic) (neighborhood n k ×ˢ
-      interval n)
+        interval n)
   forcing_smooth : ∀ n k, ContDiffOn ℝ ∞
     ((PrimaryCopyBridge.copyFrame (d n) (g n) k).forcing
       (PrimaryCopyBridge.copySource (t n).source (g n) k)) (neighborhood n k ×ˢ interval n)
   columns_smooth : ∀ n k (i : Fin 2), ContDiffOn ℝ ∞
     (synthesisColumn (PrimaryCopyBridge.copyFrame (d n) (g n) k) i) (neighborhood n k ×ˢ interval n)
   current_slot : ∀ n k x, x ∈ neighborhood n k → ((g n).coordinates k x.2).2 ∈ Ioo 0 (L n)
+  /-- Rate of `ModalControl`, of type `ℕ → ℝ → ℝ`. -/
   rate : ℕ → ℝ → ℝ
   envelope_pos : ∀ n v, 0 < envelope n v
   envelope_deriv : ∀ n v, HasDerivAt (envelope n) (rate n v * envelope n v) v
+  /-- Error rate of `ModalControl`, of type `ℕ → ℝ`. -/
   errorRate : ℕ → ℝ
   errorRate_nonneg : ∀ n, 0 ≤ errorRate n
+  /-- Bound constant of `ModalControl`, of type `ℝ`. -/
   boundConstant : ℝ
   constant_ge_one : 1 ≤ boundConstant
-  coordinate_power : ℕ
+  /-- Coordinate power of `ModalControl`, of type `ℕ`. -/
+  coordinatePower : ℕ
   length_bound : ∀ n, L n ≤ boundConstant * s.slow n
   exponential_bound : ∀ n, Real.exp (errorRate n * L n) ≤ boundConstant
   coordinate_bound : ∀ n, CommonCoverClass.argumentCost (g n) ≤ boundConstant * s.slow n ^
-    coordinate_power
+      coordinatePower
   energy : ∀ n k x, x ∈ s.domain → x ∈ cells n k → ∀ v ∈ Icc 0 (L n), ∀ z : PrimaryODE.State,
     ⟪z, (PrimaryCopyBridge.copyFrame (d n) (g n) k).coefficient harmonic (x,v) z⟫_ℝ ≤
       (rate n v + errorRate n) * ‖z‖^2
   input_jets : ∀ N : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∃ m : ℕ,
     ∀ n k x, x ∈ s.domain → x ∈ cells n k → ∀ j ≤ N, ∀ v ∈ Icc 0 (L n),
       ‖iteratedFDeriv ℝ j ((PrimaryCopyBridge.copyFrame (d n) (g n) k).coefficient harmonic) (x,v)‖
-        ≤
+          ≤
         C * s.growth n x ^ m ∧
       ‖iteratedFDeriv ℝ j ((PrimaryCopyBridge.copyFrame (d n) (g n) k).forcing
         (PrimaryCopyBridge.copySource (t n).source (g n) k)) (x,v)‖ ≤
         (s.epsilon n ^ α * Real.sqrt (s.zeta x)) * C * s.growth n x ^ m * envelope n v ∧
       ∀ i : Fin 2, ‖iteratedFDeriv ℝ j
         (synthesisColumn (PrimaryCopyBridge.copyFrame (d n) (g n) k) i) (x,v)‖ ≤ C * s.growth n x ^
-          m
+            m
 
 namespace ModalControl
 
@@ -120,7 +128,7 @@ theorem localJets (hL : ∀ n, 0 < L n) (W : ℕ → P × Plane → ℝ)
   have hconst : 0 ≤ ambientJetConstant N := by unfold ambientJetConstant; positivity
   have hK₀ : 0 ≤ h.boundConstant := zero_le_one.trans h.constant_ge_one
   refine ⟨ambientJetConstant N * B ^ (N + 1) * K * h.boundConstant ^ N,
-    by positivity, (m + 2) * (N + 1) + m + h.coordinate_power * N, ?_⟩
+    by positivity, (m + 2) * (N + 1) + m + h.coordinatePower * N, ?_⟩
   intro n k p hp hcell j hj
   have hG := s.one_le_growth n p
   have hG0 := s.growth_nonneg n p
@@ -156,16 +164,16 @@ theorem localJets (hL : ∀ n, 0 < L n) (W : ℕ → P × Plane → ℝ)
     (h.current_slot n k p (h.contains n k p hp hcell)) (h.energy n k p hp hcell)
     m N hAj hfj hcj j hj
   have hcg : CommonCoverClass.argumentCost (g n) ≤ h.boundConstant * s.growth n p ^
-    h.coordinate_power :=
+      h.coordinatePower :=
     (h.coordinate_bound n).trans (mul_le_mul_of_nonneg_left
       (pow_le_pow_left₀ (zero_le_one.trans (s.one_le_slow n)) (s.slow_le_growth n p) _)
       (zero_le_one.trans h.constant_ge_one))
   have hcp : CommonCoverClass.argumentCost (g n) ^ j ≤
-      h.boundConstant ^ N * s.growth n p ^ (h.coordinate_power * N) := by
+      h.boundConstant ^ N * s.growth n p ^ (h.coordinatePower * N) := by
     calc
-      _ ≤ (h.boundConstant * s.growth n p ^ h.coordinate_power) ^ j := pow_le_pow_left₀
+      _ ≤ (h.boundConstant * s.growth n p ^ h.coordinatePower) ^ j := pow_le_pow_left₀
         (zero_le_one.trans (CommonCoverClass.one_le_argumentCost (g n))) hcg j
-      _ ≤ (h.boundConstant * s.growth n p ^ h.coordinate_power) ^ N := pow_le_pow_right₀
+      _ ≤ (h.boundConstant * s.growth n p ^ h.coordinatePower) ^ N := pow_le_pow_right₀
         (one_le_mul_of_one_le_of_one_le h.constant_ge_one (one_le_pow₀ hG)) hj
       _ = _ := by rw [mul_pow, pow_mul]
   apply hh.trans
@@ -174,15 +182,15 @@ theorem localJets (hL : ∀ n, 0 < L n) (W : ℕ → P × Plane → ℝ)
     _ ≤ ambientJetConstant N *
         ((s.epsilon n ^ α * Real.sqrt (s.zeta p)) * B ^ (N + 1) *
           s.growth n p ^ ((m + 2) * (N + 1)) * envelope n ((g n).coordinates k p.2).2) *
-        (K * s.growth n p ^ m) * (h.boundConstant ^ N * s.growth n p ^ (h.coordinate_power * N)) :=
-          by
+        (K * s.growth n p ^ m) * (h.boundConstant ^ N * s.growth n p ^ (h.coordinatePower * N)) :=
+            by
       apply mul_le_mul_of_nonneg_left hcp
       exact mul_nonneg (mul_nonneg hconst (by positivity)) (by positivity)
     _ ≤ ambientJetConstant N *
         ((s.epsilon n ^ α * Real.sqrt (s.zeta p)) * B ^ (N + 1) *
           s.growth n p ^ ((m + 2) * (N + 1)) * W n p) *
-        (K * s.growth n p ^ m) * (h.boundConstant ^ N * s.growth n p ^ (h.coordinate_power * N)) :=
-          by
+        (K * s.growth n p ^ m) * (h.boundConstant ^ N * s.growth n p ^ (h.coordinatePower * N)) :=
+            by
       gcongr
       exact hW n k p hp hcell
     _ = _ := by unfold majorant; simp only [pow_add]; ring
@@ -231,7 +239,7 @@ theorem forced_projectedPressure
     {b M : ℝ} (hb : 0 < b)
     (hl : ∀ n k x, x ∈ s.domain → x ∈ cells n k → b ≤ ‖normal n k x‖)
     (hh : ∀ n k x, x ∈ s.domain → x ∈ cells n k → ‖normal n k x‖ ≤ M)
-    {frequency : ℕ → ℝ} (hfrequency : BandBound s (1/2) (fun n => 1 / frequency n)) :
+    {frequency : ℕ → ℝ} (hfrequency : BandBound s (1 / 2) (fun n => 1 / frequency n)) :
     LocalJets s w (α+1/2) cells (fun n k => projectedPressure (frequency n)
       (normal n k) (normalDot n k) (velocity n k) (fun x => action n k x (velocity n k x))
       (forcing n k)) := by
@@ -276,7 +284,7 @@ theorem coefficients_jets
     {b M : ℝ} (hb : 0 < b)
     (hl : ∀ n k x, x ∈ s.domain → x ∈ cells n k → b ≤ ‖(t n).normal (nativePoint (g n) k x)‖)
     (hh : ∀ n k x, x ∈ s.domain → x ∈ cells n k → ‖(t n).normal (nativePoint (g n) k x)‖ ≤ M)
-    (hfrequency : BandBound s (1/2) (fun n => 1 / base.frequency n)) :
+    (hfrequency : BandBound s (1 / 2) (fun n => 1 / base.frequency n)) :
     LocalJets s (fun n x => Real.sqrt (s.zeta x) * W n x) α cells
       (fun n k => (complexCopyCoefficients base t source g (fun _ => k) L hL).amplitude n) ∧
     LocalJets s (fun n x => Real.sqrt (s.zeta x) * W n x) (α+1/2) cells
@@ -309,15 +317,15 @@ theorem coefficients_localized_jets
     {b M : ℝ} (hb : 0 < b)
     (hl : ∀ n k x, x ∈ s.domain → x ∈ cells n k → b ≤ ‖(t n).normal (nativePoint (g n) k x)‖)
     (hh : ∀ n k x, x ∈ s.domain → x ∈ cells n k → ‖(t n).normal (nativePoint (g n) k x)‖ ≤ M)
-    (hfrequency : BandBound s (1/2) (fun n => 1 / base.frequency n))
+    (hfrequency : BandBound s (1 / 2) (fun n => 1 / base.frequency n))
     (cutoff : Frequency → ℕ → P × Plane → ℝ)
     (hcutoff : LocalJets s (fun _ _ => 1) 0 cells (fun n k => cutoff k n)) :
     LocalJets s (fun n x => Real.sqrt (s.zeta x) * W n x) α cells
       (fun n k => ((complexCopyCoefficients base t source g (fun _ => k) L hL).withCutoff (cutoff
-        k)).amplitude n) ∧
+          k)).amplitude n) ∧
     LocalJets s (fun n x => Real.sqrt (s.zeta x) * W n x) (α+1/2) cells
       (fun n k => ((complexCopyCoefficients base t source g (fun _ => k) L hL).withCutoff (cutoff
-        k)).pressure n) := by
+          k)).pressure n) := by
   obtain ⟨ha, hp⟩ := coefficients_jets base t source g L hL envelope W d harmonic cells
     hr hi hW hcompare hN hNd hA hf hb hl hh hfrequency
   have hw n x hx := mul_nonneg (Real.sqrt_nonneg (s.zeta x)) (hW n x hx)
@@ -384,9 +392,11 @@ structure UniformModalControl (s : StripData (P × Plane)) (α : ℝ)
     (t : Label → ℕ → TangentData P ProblemStatement.Space)
     (harmonic : ℤ) (g : Label → ℕ → Geometry) (L : Label → ℕ → ℝ)
     (envelope : Label → ℕ → ℝ → ℝ) (cells : Label → ℕ → Frequency → Set (P × Plane)) where
+  /-- Neighborhood of `UniformModalControl`, of type `Label → ℕ → Frequency → Set (P × Plane)`. -/
   neighborhood : Label → ℕ → Frequency → Set (P × Plane)
   open_neighborhood : ∀ l n k, IsOpen (neighborhood l n k)
   contains : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → x ∈ neighborhood l n k
+  /-- Interval of `UniformModalControl`, of type `Label → ℕ → Set ℝ`. -/
   interval : Label → ℕ → Set ℝ
   open_interval : ∀ l n, IsOpen (interval l n)
   length_pos : ∀ l n, 0 < L l n
@@ -403,32 +413,36 @@ structure UniformModalControl (s : StripData (P × Plane)) (α : ℝ)
     (synthesisColumn (PrimaryCopyBridge.copyFrame (d l n) (g l n) k) i)
       (neighborhood l n k ×ˢ interval l n)
   current_slot : ∀ l n k x, x ∈ neighborhood l n k → ((g l n).coordinates k x.2).2 ∈ Ioo 0 (L l n)
+  /-- Rate of `UniformModalControl`, of type `Label → ℕ → ℝ → ℝ`. -/
   rate : Label → ℕ → ℝ → ℝ
   envelope_pos : ∀ l n v, 0 < envelope l n v
   envelope_deriv : ∀ l n v, HasDerivAt (envelope l n) (rate l n v * envelope l n v) v
+  /-- Error rate of `UniformModalControl`, of type `Label → ℕ → ℝ`. -/
   errorRate : Label → ℕ → ℝ
   errorRate_nonneg : ∀ l n, 0 ≤ errorRate l n
+  /-- Bound constant of `UniformModalControl`, of type `ℝ`. -/
   boundConstant : ℝ
   constant_ge_one : 1 ≤ boundConstant
-  coordinate_power : ℕ
+  /-- Coordinate power of `UniformModalControl`, of type `ℕ`. -/
+  coordinatePower : ℕ
   length_bound : ∀ l n, L l n ≤ boundConstant * s.slow n
   exponential_bound : ∀ l n, Real.exp (errorRate l n * L l n) ≤ boundConstant
   coordinate_bound : ∀ l n, CommonCoverClass.argumentCost (g l n) ≤ boundConstant * s.slow n ^
-    coordinate_power
+      coordinatePower
   energy : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → ∀ v ∈ Icc 0 (L l n), ∀ z : PrimaryODE.State,
     ⟪z, (PrimaryCopyBridge.copyFrame (d l n) (g l n) k).coefficient harmonic (x,v) z⟫_ℝ ≤
       (rate l n v + errorRate l n) * ‖z‖^2
   input_jets : ∀ N : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∃ m : ℕ,
     ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → ∀ j ≤ N, ∀ v ∈ Icc 0 (L l n),
       ‖iteratedFDeriv ℝ j ((PrimaryCopyBridge.copyFrame (d l n) (g l n) k).coefficient harmonic)
-        (x,v)‖ ≤
+          (x,v)‖ ≤
         C * s.growth n x ^ m ∧
       ‖iteratedFDeriv ℝ j ((PrimaryCopyBridge.copyFrame (d l n) (g l n) k).forcing
         (PrimaryCopyBridge.copySource (t l n).source (g l n) k)) (x,v)‖ ≤
         (s.epsilon n ^ α * Real.sqrt (s.zeta x)) * C * s.growth n x ^ m * envelope l n v ∧
       ∀ i : Fin 2, ‖iteratedFDeriv ℝ j
         (synthesisColumn (PrimaryCopyBridge.copyFrame (d l n) (g l n) k) i) (x,v)‖ ≤ C * s.growth n
-          x ^ m
+            x ^ m
 
 namespace UniformModalControl
 
@@ -438,6 +452,8 @@ variable {s : StripData (P × Plane)} {α : ℝ}
   {harmonic : ℤ} {g : Label → ℕ → Geometry} {L : Label → ℕ → ℝ}
   {envelope : Label → ℕ → ℝ → ℝ} {cells : Label → ℕ → Frequency → Set (P × Plane)}
 
+/-- Pull, bundling `neighborhood`, `open_neighborhood`, `contains`, `interval` and the required
+compatibility proofs. -/
 noncomputable def pull (h : UniformModalControl s α d t harmonic g L envelope cells)
     (e : ℕ → ℕ × Label) :
     ModalControl (UniformPrimaryWeights.reindexedStrip s e) α
@@ -463,7 +479,7 @@ noncomputable def pull (h : UniformModalControl s α d t harmonic g L envelope c
   errorRate_nonneg n := h.errorRate_nonneg (e n).2 (e n).1
   boundConstant := h.boundConstant
   constant_ge_one := h.constant_ge_one
-  coordinate_power := h.coordinate_power
+  coordinatePower := h.coordinatePower
   length_bound n := h.length_bound (e n).2 (e n).1
   exponential_bound n := h.exponential_bound (e n).2 (e n).1
   coordinate_bound n := h.coordinate_bound (e n).2 (e n).1
@@ -486,6 +502,8 @@ theorem localJets [Countable Label] [Nonempty Label]
 
 end UniformModalControl
 
+/-- Reindexed base, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
+required compatibility proofs. -/
 noncomputable def reindexedBase {D : Type*} (base : Label → LinearWaveBounds.WaveCoefficients D)
     (e : ℕ → ℕ × Label) : LinearWaveBounds.WaveCoefficients D where
   radius n := (base (e n).2).radius (e n).1
@@ -513,9 +531,9 @@ variable [Countable Label] [Nonempty Label]
 changing their envelopes or selecting separate output constants. -/
 theorem uniform_coefficients_jets
     (hr : UniformModalControl s α d (fun l n => realData (t l n) (source l n)) harmonic g L
-      envelope cells)
+        envelope cells)
     (hi : UniformModalControl s α d (fun l n => imagData (t l n) (source l n)) harmonic g L
-      envelope cells)
+        envelope cells)
     (hW : ∀ l n x, x ∈ s.domain → 0 ≤ W l n x)
     (hcompare : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k →
       envelope l n ((g l n).coordinates k x.2).2 ≤ W l n x)
@@ -526,20 +544,21 @@ theorem uniform_coefficients_jets
     (hA : UniformLocalJets s (fun _ _ _ => 1) 0 cells
       (fun l n k x => (t l n).action (nativePoint (g l n) k x)))
     (hf : UniformLocalJets s (fun l n x => Real.sqrt (s.zeta x) * W l n x) α cells (fun l n _ =>
-      source l n))
+        source l n))
     {b M : ℝ} (hb : 0 < b)
     (hl : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → b ≤ ‖(t l n).normal (nativePoint (g l n) k
-      x)‖)
+        x)‖)
     (hh : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → ‖(t l n).normal (nativePoint (g l n) k x)‖ ≤
-      M)
-    (hfrequency : UniformPrimaryWeights.UniformBandBound s (1/2) (fun l n => 1 / (base l).frequency
-      n)) :
+        M)
+    (hfrequency : UniformPrimaryWeights.UniformBandBound s (1 / 2) (fun l n => 1 / (base
+        l).frequency
+        n)) :
     UniformLocalJets s (fun l n x => Real.sqrt (s.zeta x) * W l n x) α cells
       (fun l n k => (complexCopyCoefficients (base l) (t l) (source l) (g l) (fun _ => k) (L l) (hL
-        l)).amplitude n) ∧
+          l)).amplitude n) ∧
     UniformLocalJets s (fun l n x => Real.sqrt (s.zeta x) * W l n x) (α+1/2) cells
       (fun l n k => (complexCopyCoefficients (base l) (t l) (source l) (g l) (fun _ => k) (L l) (hL
-        l)).pressure n) := by
+          l)).pressure n) := by
   let e := UniformPrimaryWeights.enumeration Label
   have he : Surjective e := UniformPrimaryWeights.enumeration_surjective Label
   have hboth := coefficients_jets (reindexedBase base e)
@@ -555,9 +574,9 @@ theorem uniform_coefficients_jets
 
 theorem uniform_coefficients_localized_jets
     (hr : UniformModalControl s α d (fun l n => realData (t l n) (source l n)) harmonic g L
-      envelope cells)
+        envelope cells)
     (hi : UniformModalControl s α d (fun l n => imagData (t l n) (source l n)) harmonic g L
-      envelope cells)
+        envelope cells)
     (hW : ∀ l n x, x ∈ s.domain → 0 ≤ W l n x)
     (hcompare : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k →
       envelope l n ((g l n).coordinates k x.2).2 ≤ W l n x)
@@ -568,14 +587,15 @@ theorem uniform_coefficients_localized_jets
     (hA : UniformLocalJets s (fun _ _ _ => 1) 0 cells
       (fun l n k x => (t l n).action (nativePoint (g l n) k x)))
     (hf : UniformLocalJets s (fun l n x => Real.sqrt (s.zeta x) * W l n x) α cells (fun l n _ =>
-      source l n))
+        source l n))
     {b M : ℝ} (hb : 0 < b)
     (hl : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → b ≤ ‖(t l n).normal (nativePoint (g l n) k
-      x)‖)
+        x)‖)
     (hh : ∀ l n k x, x ∈ s.domain → x ∈ cells l n k → ‖(t l n).normal (nativePoint (g l n) k x)‖ ≤
-      M)
-    (hfrequency : UniformPrimaryWeights.UniformBandBound s (1/2) (fun l n => 1 / (base l).frequency
-      n))
+        M)
+    (hfrequency : UniformPrimaryWeights.UniformBandBound s (1 / 2) (fun l n => 1 / (base
+        l).frequency
+        n))
     (cutoff : Label → Frequency → ℕ → P × Plane → ℝ)
     (hcutoff : UniformLocalJets s (fun _ _ _ => 1) 0 cells (fun l n k => cutoff l k n)) :
     UniformLocalJets s (fun l n x => Real.sqrt (s.zeta x) * W l n x) α cells
@@ -598,7 +618,7 @@ open HarmonicCalculus
 
 theorem jets_of_translate {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup V] [NormedSpace ℝ V] {f g : E → V} (a : E)
-    (he : ∀ y, f (y+a) = g y) (m : ℕ) (x : E) :
+    (he : ∀ y, f (y + a) = g y) (m : ℕ) (x : E) :
     iteratedFDeriv ℝ m f (x+a) = iteratedFDeriv ℝ m g x := by
   rw [← iteratedFDeriv_comp_add_right]
   exact congrArg (fun f => iteratedFDeriv ℝ m f x) (funext he)
@@ -620,7 +640,7 @@ theorem velocity_jets_deck (t : TangentData P ProblemStatement.Space)
 theorem pressure_jets_deck (t : TangentData P ProblemStatement.Space)
     (source : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (hperiodic : ∀ p, PeriodicAt source p) (frequency : ℝ) (k q : Frequency) (m : ℕ) (x : P ×
-      Plane) :
+        Plane) :
     iteratedFDeriv ℝ m (complexCopyPressure t source g hab (k+coverIndex g.gap q) frequency)
       (x + (0,TorusAverages.latticePoint q)) =
       iteratedFDeriv ℝ m (complexCopyPressure t source g hab k frequency) x :=
@@ -637,7 +657,7 @@ theorem velocity_jets_zero_copy (t : TangentData P ProblemStatement.Space)
     {a b : ℝ} (hab : a ≤ b) (hperiodic : ∀ p, PeriodicAt source p)
     (q : Frequency) (m : ℕ) (x : P × Plane) :
     iteratedFDeriv ℝ m (complexCopyVelocity t source g hab q) (x + (0,TorusAverages.latticePoint
-      q)) =
+        q)) =
       iteratedFDeriv ℝ m (complexCopyVelocity t source g hab 0) x := by
   simpa only [coverIndex, hgap, Function.iterate_zero, id_eq, zero_add] using
     velocity_jets_deck t source g hab hperiodic 0 q m x
@@ -645,7 +665,7 @@ theorem velocity_jets_zero_copy (t : TangentData P ProblemStatement.Space)
 theorem coefficient_jets_deck (d : PrimaryODE.FrameData (P × ℝ)) (g : Geometry)
     (harmonic : ℤ) (k q : Frequency) (m : ℕ) (x : (P × Plane) × ℝ) :
     iteratedFDeriv ℝ m ((PrimaryCopyBridge.copyFrame d g (k+coverIndex g.gap q)).coefficient
-      harmonic)
+        harmonic)
       (x + ((0,TorusAverages.latticePoint q),0)) =
       iteratedFDeriv ℝ m ((PrimaryCopyBridge.copyFrame d g k).coefficient harmonic) x := by
   apply jets_of_translate

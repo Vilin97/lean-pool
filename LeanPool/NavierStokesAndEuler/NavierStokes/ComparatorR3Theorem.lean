@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3FiniteEnergyComparison
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3ActualCandidate
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3CompactCandidate
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3ActualCandidate
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3FiniteEnergyComparison
 
 /-!
 # The constructed compact candidate implies option (C)
@@ -18,6 +17,9 @@ Zero initial data and the viscosity-rescaled compact force satisfy the exact
 decay conditions in the comparator. Whole-space finite-energy comparison
 excludes a global solution for every positive viscosity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

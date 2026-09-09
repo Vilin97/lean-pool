@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalNormBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
+import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalNormBounds
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 Actual target amplification and the resulting exponential gain for
 bounded history sizes and the packet amplitude chosen at target.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,10 +27,10 @@ namespace EulerPacketMovingFrame
 open Set Real EulerSmoothLimit EulerPacketGrowth InnerProductSpace
 
 theorem equation30_target_exp_le {σ T Θ : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hTtarget : 1/σ ≤ T) (hTΘ : T ≤ Θ)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hTtarget : 1 / σ ≤ T) (hTΘ : T ≤ Θ)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) :
     exp (1/(4*σ)) ≤ Θ*Z T := by
   have hTpos : 0 < T := lt_of_lt_of_le (by positivity : 0 < 1/σ) hTtarget
@@ -50,15 +54,15 @@ theorem equation30_target_exp_le {σ T Θ : ℝ} {Z Z₁ : ℝ → ℝ}
 
 theorem physical_target_exponential_lower (m v r w : ℝ → Space)
     {s₀ t₀ a ε σ T Θ : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hs₀ : 0 < s₀) (hε : ε ≠ 0) (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
-    (hTtarget : 1/σ ≤ T) (hTΘ : T ≤ Θ)
+    (hs₀ : 0 < s₀) (hε : ε ≠ 0) (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
+    (hTtarget : 1 / σ ≤ T) (hTΘ : T ≤ Θ)
     (hm : m (physicalTime t₀ a ε T) ≠ 0) (hv : v (physicalTime t₀ a ε T) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε T),v (physicalTime t₀ a ε T)⟫_ℝ = 0)
-    (hN : 1/2 ≤ scaledRay m v r s₀ t₀ a ε T 2)
-    (hV : |scaledVelocity m v w t₀ a ε T 1/Z T-1| ≤ 1/2)
+    (hmv : ⟪m (physicalTime t₀ a ε T), v (physicalTime t₀ a ε T)⟫_ℝ = 0)
+    (hN : 1 / 2 ≤ scaledRay m v r s₀ t₀ a ε T 2)
+    (hV : |scaledVelocity m v w t₀ a ε T 1 / Z T - 1| ≤ 1 / 2)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) :
     0 < ‖r (physicalTime t₀ a ε T)‖*‖w (physicalTime t₀ a ε T)‖ ∧
       s₀*exp (1/(4*σ)) ≤ 4*Θ*(‖r (physicalTime t₀ a ε T)‖*‖w (physicalTime t₀ a ε T)‖) := by
@@ -84,7 +88,7 @@ theorem physical_target_exponential_lower (m v r w : ℝ → Space)
 packet amplitude, gains the actual target's exponential factor. -/
 theorem ratio_bound_from_target_growth {s₀ Θ x target value bound : ℝ}
     (hs₀ : 0 < s₀) (hΘ : 0 < Θ) (hbound : 0 ≤ bound) (hvalue : value ≤ bound)
-    (hgrowth : s₀*exp x ≤ 4*Θ*target) :
+    (hgrowth : s₀ * exp x ≤ 4 * Θ * target) :
     0 < target ∧ value/target ≤ (4*Θ*bound/s₀)*exp (-x) := by
   have hleft : 0 < s₀*exp x := mul_pos hs₀ (exp_pos x)
   have htarget : 0 < target := by

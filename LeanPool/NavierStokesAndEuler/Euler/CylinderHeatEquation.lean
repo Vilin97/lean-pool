@@ -6,20 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.StrongOperatorDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.MetricHeatEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatGenerator
+public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatTotal
+import LeanPool.NavierStokesAndEuler.Euler.StrongOperatorDerivative
+
+/-! The genuine cylinder heat semigroup solves the Laplacian evolution equation. -/
 
 @[expose] public section
 
-/-! The genuine cylinder heat semigroup solves the Laplacian evolution equation. -/
 
 noncomputable section
 
 namespace EulerGaussianCylinderHeat
 
 open MeasureTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
-  EulerSpatialSobolevInverse
-  EulerCylinderSobolev EulerMetricHeatEnergy EulerStrongOperatorDerivative
+  EulerCylinderSobolev  EulerStrongOperatorDerivative
 open scoped ENNReal NNReal Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -49,7 +50,7 @@ theorem realLineHeat_smul (a : LiftTangent) (t c : ℝ) (f : LiftL2 period) :
 
 theorem realHeatList_add (directions : List LiftTangent) (t : ℝ) (f g : LiftL2 period) :
     realHeatList period directions t (f+g) = realHeatList period directions t f + realHeatList
-      period directions t g := by
+        period directions t g := by
   induction directions with
   | nil => rfl
   | cons a tail ih => simp only [realHeatList, ih, realLineHeat_add]
@@ -64,8 +65,8 @@ theorem realHeatList_smul (directions : List LiftTangent) (t c : ℝ) (f : LiftL
     realHeatList period directions t 0 = 0 := by
   induction directions with
   | nil => rfl
-  | cons a tail ih => simp only [realHeatList, ih, realLineHeat_eq_toNNReal, ←
-    lineHeatOperator_apply, map_zero]
+  | cons a tail ih =>
+      simp only [realHeatList, ih, realLineHeat_eq_toNNReal, ← lineHeatOperator_apply, map_zero]
 
 @[simp] theorem realHeatList_zero_time (directions : List LiftTangent) (f : LiftL2 period) :
     realHeatList period directions 0 f = f := by
@@ -98,7 +99,8 @@ theorem realHeatList_strongDerivative (directions : List LiftTangent) (a : LiftT
     simp only [realHeatList, realLineHeat_eq_toNNReal]
     exact lineHeat_strongDerivative period b a t.toNNReal _ _ ih
 
-/-- The finite directional heat product has the sum of its actual second derivatives as generator. -/
+/-- The finite directional heat product has the sum of its actual second derivatives as generator.
+-/
 theorem realHeatList_generator_pos {ι : Type*} (indices : List ι) (direction : ι → LiftTangent)
     (f : LiftL2 period) (df ddf : ι → LiftL2 period)
     (hD : ∀ i ∈ indices, HasDerivAt (lineOrbit period (direction i) f) (df i) 0)
@@ -107,24 +109,24 @@ theorem realHeatList_generator_pos {ι : Type*} (indices : List ι) (direction :
     HasDerivAt (fun s => realHeatList period (indices.map direction) s f)
       ((1/2 : ℝ) • realHeatList period (indices.map direction) t ((indices.map ddf).sum)) t := by
   induction indices with
-  | nil => simpa only [List.map_nil, List.sum_nil, realHeatList, smul_zero] using hasDerivAt_const
-    t f
+  | nil =>
+      simpa only [List.map_nil, List.sum_nil, realHeatList, smul_zero] using hasDerivAt_const t f
   | cons i tail ih =>
     have htailD := fun j hj => hD j (List.mem_cons_of_mem i hj)
     have htailDD := fun j hj => hDD j (List.mem_cons_of_mem i hj)
     have hinput := ih htailD htailDD
     have hfirst := realHeatList_strongDerivative period (tail.map direction) (direction i) t f (df
-      i)
+        i)
       (hD i (List.mem_cons_self ..))
     have hsecond := realHeatList_strongDerivative period (tail.map direction) (direction i) t (df
-      i) (ddf i)
+        i) (ddf i)
       (hDD i (List.mem_cons_self ..))
     have h := realLineHeat_varying_input period (direction i)
       (fun s => realHeatList period (tail.map direction) s f) t _ _ _ ht hinput hfirst hsecond
     have halg : realLineHeat period (direction i) t
           ((1/2 : ℝ) • realHeatList period (tail.map direction) t ((tail.map ddf).sum)) +
         (1/2 : ℝ) • realLineHeat period (direction i) t (realHeatList period (tail.map direction) t
-          (ddf i)) =
+            (ddf i)) =
         (1/2 : ℝ) • realHeatList period ((i::tail).map direction) t (((i::tail).map ddf).sum) := by
       rw [realLineHeat_smul, ← smul_add, ← realLineHeat_add, ← realHeatList_add]
       simp only [List.map_cons, List.sum_cons, realHeatList]
@@ -140,15 +142,15 @@ theorem realHeatList_generator_zero {ι : Type*} (indices : List ι) (direction 
     HasDerivWithinAt (fun s => realHeatList period (indices.map direction) s f)
       ((1/2 : ℝ) • (indices.map ddf).sum) (Set.Ici 0) 0 := by
   have hlim : Filter.Tendsto (fun s => (1/2 : ℝ) • realHeatList period (indices.map direction) s
-    ((indices.map ddf).sum))
+      ((indices.map ddf).sum))
       (𝓝[>] (0 : ℝ)) (𝓝 ((1/2 : ℝ) • (indices.map ddf).sum)) := by
     have hc : ContinuousAt (fun s => (1/2 : ℝ) • realHeatList period (indices.map direction) s
-      ((indices.map ddf).sum)) 0 :=
+        ((indices.map ddf).sum)) 0 :=
       ((realHeatList_continuous period _ _).const_smul (1/2 : ℝ)).continuousAt
     simpa only [realHeatList_zero_time] using (hc.continuousWithinAt (s := Set.Ioi 0)).tendsto
   apply hasDerivWithinAt_Ici_of_tendsto_deriv (s := Set.Ioi 0)
     (fun t ht => (realHeatList_generator_pos period indices direction f df ddf hD hDD
-      ht).differentiableAt.differentiableWithinAt)
+        ht).differentiableAt.differentiableWithinAt)
     (realHeatList_continuous period _ _).continuousAt.continuousWithinAt self_mem_nhdsWithin
   apply hlim.congr'
   filter_upwards [self_mem_nhdsWithin] with t ht

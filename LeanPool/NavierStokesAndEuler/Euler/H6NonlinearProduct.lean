@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.H6PressureConstants
-public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderAlgebra
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.JetProductBounds
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+/-! Fixed H⁶ algebra estimates at every external derivative order, for actual nonlinear fields. -/
 
 @[expose] public section
 
-/-! Fixed H⁶ algebra estimates at every external derivative order, for actual nonlinear fields. -/
 
 noncomputable section
 
@@ -138,11 +141,11 @@ theorem wordSobolevNorm_add_le (q n : ℕ) (f g : LiftDomain period → F)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w g) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period q n (f + g) ≤ wordSobolevNorm period q n f + wordSobolevNorm period q n
-      g := by
+        g := by
   unfold wordSobolevNorm
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_le_sum
@@ -162,7 +165,7 @@ theorem fieldDerivative_smul {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x)) :
     fieldDerivative period a (fun x => f x • g x) =
       (fun x => fieldDerivative period a f x • g x) + (fun x => f x • fieldDerivative period a g x)
-        := by
+          := by
   funext x
   have h := (((hf x).differentiable (by simp)) 0).hasFDerivAt.smul
     (((hg x).differentiable (by simp)) 0).hasFDerivAt
@@ -175,9 +178,9 @@ theorem product_all_memLp (q : ℕ) (f : LiftDomain period → ℝ) (g : LiftDom
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w g) 2 (liftMeasure
-      period)) :
+        period)) :
     ∀ j, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w (fun x => f x • g x)) 2 (liftMeasure period) := by
   intro j
@@ -188,8 +191,8 @@ theorem product_all_memLp (q : ℕ) (f : LiftDomain period → ℝ) (g : LiftDom
     intro i
     have h := real_product_word_memLp period (show 0 ≤ 6 by omega) w f (coordinate q i ∘ g)
       hf (postcomp_smooth period _ g hg) (fun r _ v => hfL2 r v)
-      (fun r _ v => postcomp_word_memLp period (show r ≤ r by omega) _ g hg (fun a _ z => hgL2 a z)
-        v)
+      (fun r _ v => postcomp_word_memLp period (show r ≤ r by
+          omega) _ g hg (fun a _ z => hgL2 a z) v)
     exact h
   | succ j ih =>
     intro w
@@ -216,9 +219,9 @@ theorem product_wordSobolevNorm_bound (q n : ℕ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hg : ∀ x, ContDiff ℝ ∞ (localFieldLift period g x))
     (hfL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure
-      period))
+        period))
     (hgL2 : ∀ j, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w g) 2 (liftMeasure
-      period)) :
+        period)) :
     wordSobolevNorm period 6 n (fun x => f x • g x) ≤
       productConstant period q * leibnizConvolution
         (fun l => wordSobolevNorm period 6 l f) (fun l => wordSobolevNorm period 6 l g) n := by
@@ -226,7 +229,7 @@ theorem product_wordSobolevNorm_bound (q n : ℕ)
   | zero =>
     simpa [leibnizConvolution, productConstant, mul_assoc] using
       cylinder_H6_scalar_vector_product period q f g hf hg (fun j _ w => hfL2 j w) (fun j _ w =>
-        hgL2 j w)
+          hgL2 j w)
   | succ n ih =>
     rw [wordSobolevNorm_succ]
     calc
@@ -237,7 +240,7 @@ theorem product_wordSobolevNorm_bound (q n : ℕ)
            leibnizConvolution
             (fun l => wordSobolevNorm period 6 l f)
             (fun l => wordSobolevNorm period 6 l (fieldDerivative period (standardDirection i) g))
-              n) := by
+                n) := by
         apply Finset.sum_le_sum
         intro i _
         rw [fieldDerivative_smul period _ f g hf hg]
@@ -253,7 +256,7 @@ theorem product_wordSobolevNorm_bound (q n : ℕ)
           (product_all_memLp period q _ g hdf hg hdfL2 hgL2)
           (product_all_memLp period q f _ hf hdg hfL2 hdgL2)).trans
           ((add_le_add (ih _ _ hdf hg hdfL2 hgL2) (ih _ _ hf hdg hfL2 hdgL2)).trans_eq (mul_add
-            ..).symm)
+              ..).symm)
       _ = _ := by
         rw [← Finset.mul_sum, Finset.sum_add_distrib,
           sum_leibnizConvolution_left, sum_leibnizConvolution_right]

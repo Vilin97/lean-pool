@@ -6,9 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeAliasDecay
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
+import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeAliasDecay
 
 /-!
 # Local mass preservation for the actual moving-gauge temporal update
@@ -16,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.GaugeAliasDecay
 All conclusions are restricted to the valid open slow region. The common
 torus index and the moving radial support are retained throughout.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +27,9 @@ open Set Filter Function MeasureTheory
 open scoped ContDiff Topology Interval BigOperators
 open VariableGaugeMean LocalSignedRequest CorrectionState
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
 
 /-- Equality of the moving and frozen stream realizations on one complete
@@ -72,7 +76,7 @@ theorem streamGamma_slice_continuous_on {coord a b d M : ℝ} (U : SlowRegion co
     (hs : SupportedGauge a b (qLength coord) U.carrier f)
     {s : Plane} (hsm : s ∈ U.carrier) (R : ℝ) :
     Continuous (fun Y => PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 :
-      Plane), v)
+        Plane), v)
       (streamPotential d a b M (qLength coord) v f) (R, (s, Y))) := by
   let F := PhysicalMeanDomain.freezeSlow s f
   have hF : ContDiff ℝ ∞ F := freezeSlow_contDiff U.isOpen hsm hf
@@ -114,7 +118,7 @@ theorem streamGamma_bar_eq_desired_on {coord a b d M : ℝ} (U : SlowRegion coor
         ((0 : Plane), v) (PressureStream.streamPotential d (qLength coord s * a)
           (qLength coord s * b) M ((0 : Plane), v) F)) (R, s) :=
       PressureStream.torusAverage_congr_slice (R, s) (streamGamma_frozen_on U ha hab hd v hf hs hsm
-        R)
+          R)
     _ = PressureStream.torusAverage F (R, s) :=
       PressureStream.streamGamma_bar_eq_desired (mul_pos hl ha)
         (mul_lt_mul_of_pos_left hab hl) hd v hF hFs hFp hFm (R, s)
@@ -176,17 +180,17 @@ theorem temporalIncrement_torusMean_on
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (n : ℕ) (R : ℝ) {s : Plane} (hs : s ∈ U.carrier) :
     PressureStream.torusAverage ((temporalIncrementState g h index axial c u).angular n) (R, s) = 0
-      ∧
+        ∧
       PressureStream.torusAverage ((temporalIncrementState g h index axial c u).axial n) (R, s) = 0
-        := by
+          := by
   constructor
   · exact GaugeAliasDecay.temporalAtIndex_zeroMean_on U h n (index n) (hθ n) (hpθ n) R hs
   · change PressureStream.torusAverage (PressureStream.streamGamma
       (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency n)) ((0 : Plane),
-        g.radial.radialDirection)
+          g.radial.radialDirection)
       (streamPotential g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
         (g.length n) g.radial.radialDirection
         (MeanChartCompatibility.temporalAtIndex h n (index n) (u.axialResidual c n)))) (R, s) = 0
@@ -196,14 +200,14 @@ theorem temporalIncrement_torusMean_on
     have hper : PhysicalMeanDomain.PeriodicOn U.carrier
         (MeanChartCompatibility.temporalAtIndex h n (index n) (u.axialResidual c n)) :=
       fun r t _ Y k => MeanChartCompatibility.temporalAtIndex_periodic h n (index n)
-        (u.axialResidual c n) r t Y k
+          (u.axialResidual c n) r t Y k
     have hm : (∫ r, r * PressureStream.torusAverage
         (MeanChartCompatibility.temporalAtIndex h n (index n) (u.axialResidual c n)) (r, s)) = 0 :=
-          by
+            by
       simp_rw [GaugeAliasDecay.temporalAtIndex_zeroMean_on U h n (index n) (hz n) (hpz n) _ hs,
         mul_zero, integral_zero]
     rw [streamGamma_bar_eq_desired_on U ha g.radial.inner_lt_outer hd g.radial.radialDirection hsm
-      hsp hper hs hm R]
+        hsp hper hs hm R]
     exact GaugeAliasDecay.temporalAtIndex_zeroMean_on U h n (index n) (hz n) (hpz n) R hs
 
 theorem temporalIncrement_slice_continuous_on
@@ -212,7 +216,7 @@ theorem temporalIncrement_slice_continuous_on
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (n : ℕ) (R : ℝ) {s : Plane} (hs : s ∈ U.carrier) :
     Continuous (fun Y => (temporalIncrementState g h index axial c u).angular n (R, (s, Y))) ∧
       Continuous (fun Y => (temporalIncrementState g h index axial c u).axial n (R, (s, Y))) := by
@@ -221,7 +225,7 @@ theorem temporalIncrement_slice_continuous_on
       (temporalAtIndex_contDiffOn h n (index n) U.isOpen (hθ n) (hpθ n)).continuousOn hs R
   · change Continuous (fun Y => PressureStream.streamGamma
       (PressureStream.physicalSpeed g.radial.exponent (g.radial.frequency n)) ((0 : Plane),
-        g.radial.radialDirection)
+          g.radial.radialDirection)
       (streamPotential g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
         (g.length n) g.radial.radialDirection
         (MeanChartCompatibility.temporalAtIndex h n (index n) (u.axialResidual c n))) (R, (s, Y)))
@@ -238,11 +242,11 @@ theorem temporalIncrement_radialMoments_zero_on
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (k n : ℕ) {s : Plane} (hs : s ∈ U.carrier) :
     CorrectionState.radialMoment k (temporalIncrementState g h index axial c u).angular n s = 0 ∧
       CorrectionState.radialMoment k (temporalIncrementState g h index axial c u).axial n s = 0 :=
-        by
+          by
   constructor
   · exact radialMoment_zero_of_torusAverage k _ n s (fun R =>
       (temporalIncrement_torusMean_on U g ha hd hell h index axial c u hθ hz hpθ hpz hsz n R hs).1)
@@ -259,25 +263,25 @@ theorem temporalStage_torusMean_on
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (n : ℕ) (R : ℝ) {s : Plane} (hs : s ∈ U.carrier) :
     PressureStream.torusAverage ((temporalStageState g h index axial c u).mean.angular n) (R, s) =
         PressureStream.torusAverage (u.mean.angular n) (R, s) ∧
       PressureStream.torusAverage ((temporalStageState g h index axial c u).mean.axial n) (R, s) =
         PressureStream.torusAverage (u.mean.axial n) (R, s) := by
   have hz0 := temporalIncrement_torusMean_on U g ha hd hell h index axial c u hθ hz hpθ hpz hsz n R
-    hs
+      hs
   have hcont := temporalIncrement_slice_continuous_on U g ha hd hell h index axial c u hθ hz hpθ
-    hpz hsz n R hs
+      hpz hsz n R hs
   constructor
   · change PressureStream.torusAverage (fun z => u.mean.angular n z +
       (temporalIncrementState g h index axial c u).angular n z) (R, s) = _
     rw [torusAverage_add_slice _ _ R s (continuous_torus_slice (hmθ n) hs R) hcont.1, hz0.1,
-      add_zero]
+        add_zero]
   · change PressureStream.torusAverage (fun z => u.mean.axial n z +
       (temporalIncrementState g h index axial c u).axial n z) (R, s) = _
     rw [torusAverage_add_slice _ _ R s (continuous_torus_slice (hmz n) hs R) hcont.2, hz0.2,
-      add_zero]
+        add_zero]
 
 /-- The literal reconstructed temporal state preserves both physical mean
 masses on the valid slow region. No statement is made outside that region. -/
@@ -289,7 +293,7 @@ theorem temporalStage_preserve_masses_on
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (n : ℕ) {s : Plane} (hs : s ∈ U.carrier) :
     CorrectionState.radialMoment 2 (temporalStageState g h index axial c u).mean.angular n s =
         CorrectionState.radialMoment 2 u.mean.angular n s ∧
@@ -311,7 +315,7 @@ theorem temporalStage_zeroMassesOn
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (hu : ZeroMassesOn U.carrier u) :
     ZeroMassesOn U.carrier (temporalStageState g h index axial c u) := by
   intro n s hs
@@ -327,7 +331,7 @@ theorem temporalStage_zeroMassesOn_of_global
     (hpθ : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.thetaResidual c n))
     (hpz : ∀ n, PhysicalMeanDomain.PeriodicOn U.carrier (u.axialResidual c n))
     (hsz : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier
-      (u.axialResidual c n))
+        (u.axialResidual c n))
     (hu : CorrectionState.ZeroMasses u) :
     ZeroMassesOn U.carrier (temporalStageState g h index axial c u) :=
   temporalStage_zeroMassesOn U g ha hd hell h index axial c u hmθ hmz hθ hz hpθ hpz hsz

@@ -7,15 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStageEstimates
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceLow
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceRenewal
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStageEstimates
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
+public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalScaleApplication
 
 /-! The time-zero normal step: the same selected correction supplies
 the next actual state, low source bounds and renewed geometric frame. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -37,9 +40,12 @@ local notation "k" => frequency S.J S.X 0
 local notation "hk" => S.normal_frequency 0
 local notation "ell" => supportScale S.J S.X 1
 
+/-- Forward choice: an abbreviation for `GeometryForwardChoice I P.restrictedState k hk ell
+(S.support_pos 1) (S.support_one 1)`. -/
 abbrev ForwardChoice := GeometryForwardChoice I P.restrictedState k hk ell (S.support_pos 1)
-  (S.support_one 1)
+    (S.support_one 1)
 
+/-- Choose forward, choosing the witness provided by `Forward`. -/
 def chooseForward : P.ForwardChoice hq hB := by
   have hsec := S.secondary_frequency 0 P.restrictedState.labels.K P.label_eq.le
   exact Classical.choice (exists_geometryForwardChoice I P.restrictedState k hk ell
@@ -48,23 +54,26 @@ def chooseForward : P.ForwardChoice hq hB := by
 
 local notation "F" => P.chooseForward hq hB
 
+/-- Forward parent, given by `(F).parent`. -/
 def forwardParent : Parent := (F).parent
 
+/-- Forward state, given by `GeometryForwardChoice.state I P.restrictedState k hk ell
+(S.support_pos 1) (S.support_one 1) F symmetric`. -/
 def forwardState : SmoothState (P.forwardParent hq hB) :=
   GeometryForwardChoice.state I P.restrictedState k hk ell (S.support_pos 1) (S.support_one 1) F
-    symmetric
+      symmetric
 
 theorem forward_smallness :
-    (P.restrictedLow.K+2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild*
-        ((G).δ*goodRatio+(G).earlyRatio)+k^(-(1/4 : ℝ)))*(P.nextHorizon^2/2)+
-      (P.restrictedLow.Be+((G).hchild*(G).earlyRatio+k^(-(1/4 : ℝ))))*P.nextHorizon+
-      boundaryLocalizationC2*(P.restrictedLow.Bc+((G).hchild*(G).earlyRatio+k^(-(1/4 : ℝ))))*
+    (P.restrictedLow.K+2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild *
+        ((G).δ*goodRatio+(G).earlyRatio)+k^(-(1/4 : ℝ)))*(P.nextHorizon^2/2) +
+      (P.restrictedLow.Be+((G).hchild*(G).earlyRatio+k^(-(1/4 : ℝ))))*P.nextHorizon +
+      boundaryLocalizationC2*(P.restrictedLow.Bc+((G).hchild*(G).earlyRatio+k^(-(1/4 : ℝ)))) *
         P.restrictedLow.r^3*P.nextHorizon ≤ 1/2 := by
   have he : 0 ≤ k^(-(1/4 : ℝ)) := rpow_nonneg (hk).pos.le _
   have h := P.next_localized P.nextHorizon
     ((G).hchild*(G).earlyRatio+k^(-(1/4 : ℝ)))
     (2*(gradientConstant*previousShear S.J S.X
-      0)*(G).hchild*((G).δ*goodRatio+(G).earlyRatio)+k^(-(1/4 : ℝ)))
+        0)*(G).hchild*((G).δ*goodRatio+(G).earlyRatio)+k^(-(1/4 : ℝ)))
     P.nextHorizon_pos.le P.nextHorizon_le_base
     (by positivity [(G).child_nonneg,(G).earlyRatio_nonneg])
     (by positivity [gradient_nonneg,S.previousShear_one 0,(G).child_nonneg,(G).delta_nonneg,
@@ -73,13 +82,16 @@ theorem forward_smallness :
   rw [P.restrictedLow_pressure,P.restrictedLow_exterior,P.restrictedLow_core,P.restrictedLow_radius]
   convert h using 1; ring
 
+/-- Forward low as an element of `LowBounds (P.forwardParent hq hB)`. -/
 def forwardLow : LowBounds (P.forwardParent hq hB) :=
   (F).lowBounds (gradientConstant*previousShear S.J S.X 0)
     (hessianConstant*previousShear S.J S.X 0*olderShear S.J S.X 0)
     P.restricted_gradient_bound P.restricted_hessian_bound (P.forward_smallness hq hB)
 
+/-- Forward renewal as an element of `ParentFrame (frameData (P.forwardParent hq hB))
+(P.forwardGeometry hq hB).targetTime`. -/
 def forwardRenewal : ParentFrame (frameData (P.forwardParent hq hB)) (P.forwardGeometry hq
-  hB).targetTime :=
+    hB).targetTime :=
   (F).renewal symmetric (gradientConstant*previousShear S.J S.X 0)
     (hessianConstant*previousShear S.J S.X 0*olderShear S.J S.X 0)
     (frameConstant*(1+previousShear S.J S.X 0))
@@ -100,9 +112,12 @@ theorem forwardRenewal_matches :
     P.restricted_gradient_bound P.restricted_hessian_bound
     firstNormal firstNormal_unit firstFrame support compact
 
+/-- Forward next frame, given by `(P.forwardRenewal hq hB).changeActivation
+(P.forwardGeometry_targetTime hq hB)`. -/
 def forwardNextFrame : ParentFrame (frameData (P.forwardParent hq hB)) P.nextTime :=
   (P.forwardRenewal hq hB).changeActivation (P.forwardGeometry_targetTime hq hB)
 
+/-- Forward next as an element of `Stage S 1`. -/
 def forwardNext : Stage S 1 := by
   have hbad : 2*gradientConstant*previousShear S.J S.X 0*shear S.J S.X 0*(G).earlyRatio ≤
       EulerPacketPressureScale.badCost S.J 4 gradientConstant gradientConstant hessianConstant 80
@@ -147,20 +162,20 @@ def forwardNext : Stage S 1 := by
     compression := ?_ }
   · intro t x
     exact ((F).physical_bounds symmetric _ _ P.restricted_gradient_bound P.restricted_hessian_bound
-      t x).1.trans
+        t x).1.trans
       habsorb.1
   · intro t x
     have h := ((F).physical_bounds symmetric _ _ P.restricted_gradient_bound
-      P.restricted_hessian_bound t x).2
+        P.restricted_hessian_bound t x).2
     apply h.trans
-    change hessianConstant*previousShear S.J S.X 0*olderShear S.J S.X 0+
-      2*(gradientConstant*previousShear S.J S.X 0)*shear S.J S.X 0*(goodRatio+(G).earlyRatio)+
+    change hessianConstant*previousShear S.J S.X 0*olderShear S.J S.X 0 +
+      2*(gradientConstant*previousShear S.J S.X 0)*shear S.J S.X 0*(goodRatio+(G).earlyRatio) +
         k^(-(1/4 : ℝ)) ≤ hessianConstant*shear S.J S.X 0*previousShear S.J S.X 0
     nlinarith only [habsorb.2]
   · exact (P.initial_step_bound _ (P.forward_initial_cost hq hB)).1
   · exact (P.initial_step_bound _ (P.forward_initial_cost hq hB)).2
   · have h := P.pressure_step_bound _ (P.forward_pressure_cost hq hB)
-    change P.low.K+2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild*
+    change P.low.K+2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild *
       ((G).δ*goodRatio+(G).earlyRatio)+k^(-(1/4 : ℝ)) ≤ _
     convert h using 1; ring
   · rw [forwardNextFrame,ParentFrame.changeActivation_shear]
@@ -182,7 +197,7 @@ def forwardNext : Stage S 1 := by
       (priorError S.J S.D S.X 1) (S.priorError_one 1)
     change ⟪((P.forwardRenewal hq hB).changeActivation _).B P.nextTime
         (unit (((P.forwardRenewal hq hB).changeActivation _).m P.nextTime)),
-      unit (((P.forwardRenewal hq hB).changeActivation _).m P.nextTime)⟫_ℝ+
+      unit (((P.forwardRenewal hq hB).changeActivation _).m P.nextTime)⟫_ℝ +
         priorError S.J S.D S.X 1 < 0
     rw [ParentFrame.changeActivation_B,ParentFrame.changeActivation_m]
     simpa only [← P.forwardGeometry_targetTime hq hB] using hc

@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyEnergyCutoff
+public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricEstimate
+import LeanPool.NavierStokesAndEuler.Euler.GevreyEnergyCutoff
+import LeanPool.NavierStokesAndEuler.Euler.GevreyEnergyLimit
+
+/-! Quantitative finite Gevrey bounds survive the actual strong time-path limit. -/
 
 @[expose] public section
 
-/-! Quantitative finite Gevrey bounds survive the actual strong time-path limit. -/
 
 noncomputable section
 
@@ -22,18 +25,19 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Every retained Gevrey cutoff of the actual strong path limit keeps the genuine uniform approximation bound. -/
-theorem energyNorm_path_limit_bound {p q N : ℕ} (hqp : q ≤ p) (hN : N+6 ≤ p) (T : ℝ)
+/-- Every retained Gevrey cutoff of the actual strong path limit keeps the genuine uniform
+approximation bound. -/
+theorem energyNorm_path_limit_bound {p q N : ℕ} (hqp : q ≤ p) (hN : N + 6 ≤ p) (T : ℝ)
     (ρ : Icc (0 : ℝ) T → ℝ) (hρ : ∀ t, 0 < ρ t)
     (K : Icc (0 : ℝ) T → LiftL2 period →L[ℝ] LiftL2 period)
-    (u : ℕ → C(Icc (0 : ℝ) T,SobolevSpace period p))
-    (e : C(Icc (0 : ℝ) T,SobolevSpace period q))
+    (u : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period p))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period q))
     (hconv : Filter.Tendsto (fun n => (restrictOperator period hqp).compLeftContinuous ℝ (Icc (0 :
-      ℝ) T) (u n))
+        ℝ) T) (u n))
       Filter.atTop (𝓝 e))
     (B : Icc (0 : ℝ) T → ℝ)
     (hb : ∀ n t, energyNorm period N hN (ρ t) (K t) (u n t) ≤ B t)
-    (P : ℕ) (hPN : P ≤ N) (hP : P+6 ≤ q) :
+    (P : ℕ) (hPN : P ≤ N) (hP : P + 6 ≤ q) :
     ∀ t, energyNorm period P hP (ρ t) (K t) (e t) ≤ B t := by
   intro t
   have ht := (ContinuousMap.evalCLM ℝ t).continuous.tendsto e |>.comp hconv

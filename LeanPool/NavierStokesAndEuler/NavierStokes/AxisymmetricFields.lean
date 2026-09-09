@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-!
 # Smooth axisymmetric fields in Cartesian coordinates
@@ -20,6 +17,9 @@ Profiles use coordinates `(t,s,z)`, where `s=(x₀²+x₁²)/2`. The velocity is
 actual Euclidean curl. No division by the radius is used, including at the axis.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.AxisymmetricFields
@@ -27,25 +27,34 @@ namespace NavierStokes.AxisymmetricFields
 open ProblemStatement Set Filter
 open scoped BigOperators ContDiff Topology
 
+/-- Profile point: an abbreviation for `ℝ × (ℝ × ℝ)`. -/
 abbrev ProfilePoint := ℝ × (ℝ × ℝ)
+/-- Profile: an abbreviation for `ProfilePoint → ℝ`. -/
 abbrev Profile := ProfilePoint → ℝ
 
+/-- Projection, given by `EuclideanSpace.proj i`. -/
 def projection (i : Fin 3) : Space →L[ℝ] ℝ := EuclideanSpace.proj i
 
 @[simp] theorem projection_apply (i : Fin 3) (x : Space) : projection i x = x i := rfl
 
+/-- Radial energy, given by `(x 0 ^ 2 + x 1 ^ 2) / 2`. -/
 def radialEnergy (x : Space) : ℝ := (x 0 ^ 2 + x 1 ^ 2) / 2
 
+/-- Profile point, given by `(t, (radialEnergy x, x 2))`. -/
 def profilePoint (t : ℝ) (x : Space) : ProfilePoint := (t, (radialEnergy x, x 2))
 
+/-- Partial S, given by `fderiv ℝ F p (0, (1, 0))`. -/
 def partialS (F : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ F p (0, (1, 0))
+/-- Partial Z, given by `fderiv ℝ F p (0, (0, 1))`. -/
 def partialZ (F : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ F p (0, (0, 1))
 
+/-- Potential as an element of `VelocityField`. -/
 def potential (H K : Profile) : VelocityField := fun w =>
   ((-(1 / 2) : ℝ) * (w.2 1 * H (profilePoint w.1 w.2))) • coordinateVector 0 +
   ((1 / 2 : ℝ) * (w.2 0 * H (profilePoint w.1 w.2))) • coordinateVector 1 +
   K (profilePoint w.1 w.2) • coordinateVector 2
 
+/-- Velocity, given by `SpatialCurl.spatialCurl (potential H K)`. -/
 def velocity (H K : Profile) : VelocityField := SpatialCurl.spatialCurl (potential H K)
 
 theorem radialEnergy_nonneg (x : Space) : 0 ≤ radialEnergy x := by
@@ -64,6 +73,7 @@ theorem contDiff_profilePoint_slice (t : ℝ) {n : WithTop ℕ∞} :
     ContDiff ℝ n (profilePoint t) :=
   contDiff_const.prodMk (contDiff_radialEnergy.prodMk (projection 2).contDiff)
 
+/-- Radial linear, given by `x 0 • projection 0 + x 1 • projection 1`. -/
 def radialLinear (x : Space) : Space →L[ℝ] ℝ :=
   x 0 • projection 0 + x 1 • projection 1
 
@@ -78,6 +88,8 @@ theorem hasFDerivAt_radialEnergy (x : Space) : HasFDerivAt radialEnergy (radialL
     simp [radialLinear]
     ring
 
+/-- Profile jacobian, given by `(0 : Space →L[ℝ] ℝ).prod ((radialLinear x).prod (projection
+2))`. -/
 def profileJacobian (x : Space) : Space →L[ℝ] ProfilePoint :=
   (0 : Space →L[ℝ] ℝ).prod ((radialLinear x).prod (projection 2))
 
@@ -90,6 +102,7 @@ theorem hasFDerivAt_profilePoint (t : ℝ) (x : Space) :
     profileJacobian x v = (0, (x 0 * v 0 + x 1 * v 1, v 2)) := by
   simp [profileJacobian, radialLinear]
 
+/-- Profile derivative, given by `(fderiv ℝ F (profilePoint t x)).comp (profileJacobian x)`. -/
 def profileDerivative (F : Profile) (t : ℝ) (x : Space) : Space →L[ℝ] ℝ :=
   (fderiv ℝ F (profilePoint t x)).comp (profileJacobian x)
 
@@ -111,6 +124,7 @@ theorem profileDerivative_apply (F : Profile) (t : ℝ) (x v : Space) :
   rw [hsplit, map_add, map_smul, map_smul]
   rfl
 
+/-- Potential jacobian as an element of `Space →L[ℝ] Space`. -/
 def potentialJacobian (H K : Profile) (t : ℝ) (x : Space) : Space →L[ℝ] Space :=
   ((-(1 / 2) : ℝ) •
     (x 1 • profileDerivative H t x + H (profilePoint t x) • projection 1)).smulRight
@@ -138,7 +152,15 @@ theorem velocity_zero (H K : Profile) (t : ℝ) (x : Space)
       -x 0 * partialZ H (profilePoint t x) / 2 + x 1 * partialS K (profilePoint t x) := by
   change (SpatialCurl.curlLinear (fderiv ℝ (fun y => potential H K (t, y)) x)) 0 = _
   rw [(hasFDerivAt_potential H K t x hH hK).fderiv, SpatialCurl.curlLinear_apply_zero]
-  simp [potentialJacobian, profileDerivative_apply, coordinateVector]
+  simp only [Fin.isValue, potentialJacobian, one_div, smul_add, neg_smul, coordinateVector,
+      add_apply,
+    ContinuousLinearMap.smulRight_apply, neg_apply, smul_apply, profileDerivative_apply, ne_eq,
+        zero_ne_one,
+    not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, PiLp.single_eq_same, mul_one, zero_add,
+        Fin.reduceEq, zero_mul,
+    add_zero, smul_eq_mul, projection_apply, PiLp.add_apply, PiLp.smul_apply, one_mul, neg_zero,
+        PiLp.neg_apply,
+    one_ne_zero, neg_mul]
   ring
 
 theorem velocity_one (H K : Profile) (t : ℝ) (x : Space)
@@ -148,7 +170,15 @@ theorem velocity_one (H K : Profile) (t : ℝ) (x : Space)
       -x 1 * partialZ H (profilePoint t x) / 2 - x 0 * partialS K (profilePoint t x) := by
   change (SpatialCurl.curlLinear (fderiv ℝ (fun y => potential H K (t, y)) x)) 1 = _
   rw [(hasFDerivAt_potential H K t x hH hK).fderiv, SpatialCurl.curlLinear_apply_one]
-  simp [potentialJacobian, profileDerivative_apply, coordinateVector]
+  simp only [Fin.isValue, potentialJacobian, one_div, smul_add, neg_smul, coordinateVector,
+      add_apply,
+    ContinuousLinearMap.smulRight_apply, neg_apply, smul_apply, profileDerivative_apply, ne_eq,
+        Fin.reduceEq,
+    not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, zero_mul, PiLp.single_eq_same,
+        one_mul, zero_add,
+    smul_eq_mul, projection_apply, neg_zero, PiLp.add_apply, PiLp.neg_apply, PiLp.smul_apply,
+        mul_one, zero_ne_one,
+    one_ne_zero, neg_mul, sub_left_inj]
   ring
 
 theorem velocity_two (H K : Profile) (t : ℝ) (x : Space)
@@ -158,7 +188,14 @@ theorem velocity_two (H K : Profile) (t : ℝ) (x : Space)
       H (profilePoint t x) + radialEnergy x * partialS H (profilePoint t x) := by
   change (SpatialCurl.curlLinear (fderiv ℝ (fun y => potential H K (t, y)) x)) 2 = _
   rw [(hasFDerivAt_potential H K t x hH hK).fderiv, SpatialCurl.curlLinear_apply_two]
-  simp [potentialJacobian, profileDerivative_apply, coordinateVector]
+  simp only [Fin.isValue, potentialJacobian, one_div, smul_add, neg_smul, coordinateVector,
+      add_apply,
+    ContinuousLinearMap.smulRight_apply, neg_apply, smul_apply, profileDerivative_apply,
+        PiLp.single_eq_same, mul_one,
+    ne_eq, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq,
+        zero_mul,
+    smul_eq_mul, projection_apply, neg_zero, PiLp.add_apply, PiLp.neg_apply, PiLp.smul_apply,
+        zero_add, zero_ne_one]
   unfold radialEnergy
   ring
 

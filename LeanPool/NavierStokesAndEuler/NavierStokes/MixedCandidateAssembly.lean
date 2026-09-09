@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedDiagonalExtensions
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAngularDiagonal
 
-@[expose] public section
-
 /-!
 # Candidate assembly from the actual finite-stage obligations
 
@@ -22,6 +20,9 @@ away extensions, divergence and blow-up are then derived for the same sums.
 This is a conditional consumer. It does not construct the complete
 correction iteration or supply the finite-stage estimates it requires.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,19 +42,29 @@ structure StageEstimates (h qbig : ℝ) (A B : ℕ → VelocityField)
   potential_smooth : ∀ j, ContDiffOn ℝ ∞ (A j) (CutStageEstimates.physicalSublevel h qbig)
   direct_smooth : ∀ j, ContDiffOn ℝ ∞ (B j) (CutStageEstimates.physicalSublevel h qbig)
   pressure_smooth : ∀ j, ContDiffOn ℝ ∞ (P j) (CutStageEstimates.physicalSublevel h qbig)
+  /-- Gain of `StageEstimates`, of type `ℕ → ℝ`. -/
   gain : ℕ → ℝ
   gain_zero : 0 ≤ gain 0
   gain_pos : ∀ j, 1 ≤ j → 0 < gain j
   gain_mono : Monotone gain
   gain_top : Tendsto gain atTop atTop
+  /-- Potential loss of `StageEstimates`, of type `ℕ → ℝ`. -/
   potentialLoss : ℕ → ℝ
+  /-- Direct loss of `StageEstimates`, of type `ℕ → ℝ`. -/
   directLoss : ℕ → ℝ
+  /-- Pressure loss of `StageEstimates`, of type `ℕ → ℝ`. -/
   pressureLoss : ℕ → ℝ
+  /-- Potential constant of `StageEstimates`, of type `ℕ → ℕ → ℝ`. -/
   potentialConstant : ℕ → ℕ → ℝ
+  /-- Direct constant of `StageEstimates`, of type `ℕ → ℕ → ℝ`. -/
   directConstant : ℕ → ℕ → ℝ
+  /-- Pressure constant of `StageEstimates`, of type `ℕ → ℕ → ℝ`. -/
   pressureConstant : ℕ → ℕ → ℝ
+  /-- Potential log of `StageEstimates`, of type `ℕ → ℕ → ℝ`. -/
   potentialLog : ℕ → ℕ → ℝ
+  /-- Direct log of `StageEstimates`, of type `ℕ → ℕ → ℝ`. -/
   directLog : ℕ → ℕ → ℝ
+  /-- Pressure log of `StageEstimates`, of type `ℕ → ℕ → ℝ`. -/
   pressureLog : ℕ → ℕ → ℝ
   potential_bound : CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h)
     A gain potentialLoss potentialConstant potentialLog
@@ -64,7 +75,9 @@ structure StageEstimates (h qbig : ℝ) (A B : ℕ → VelocityField)
   pressure_bound : CutStageEstimates.RawStageBounds (PhysicalWaveSum.physicalQ h)
     P gain pressureLoss pressureConstant pressureLog
     (PhysicalWaveSum.preterminal ∩ CutStageEstimates.physicalSublevel h qbig)
+  /-- Background loss of `StageEstimates`, of type `ℕ → ℝ`. -/
   backgroundLoss : ℕ → ℝ
+  /-- Residual loss of `StageEstimates`, of type `ℕ → ℝ`. -/
   residualLoss : ℕ → ℝ
   finite_background : ∀ J m,
     JetRate (𝓝[SpacetimeEndpoint.openPast 1] (1, (0 : Space))) (PhysicalWaveSum.physicalQ h)
@@ -85,7 +98,7 @@ theorem StageEstimates.exists_schedule {h qbig : ℝ}
       MixedDiagonalSchedule.ThreeSmoothSums a h A B P ∧
       JointResidualLimits.VanishingJointJets
         (MixedDiagonalResidual.residual (fun j => (a j : ℝ)) (PhysicalWaveSum.physicalQ h) A B P)
-          := by
+            := by
   have hS : ∀ᶠ z in 𝓝[SpacetimeEndpoint.openPast 1] (1, (0 : Space)),
       z ∈ PhysicalWaveSum.preterminal := by
     filter_upwards [self_mem_nhdsWithin] with z hz
@@ -151,7 +164,7 @@ theorem candidate_of_finite_stages (upper : ℝ) (bandFloor : ℕ)
       (pressureStages H v upper bandFloor pInitial pStages))
     (hInitial : MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig initial.field)
     (hStages : ∀ j, MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig (stages
-      j).field)
+        j).field)
     (hDirect : ∀ j, MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig
       (LocalAngularDiagonal.rawSeries D j))
     (hpInitial : MixedDiagonalExtensions.SublevelShrinkingSupport F.data.h C qbig pInitial)
@@ -182,12 +195,12 @@ theorem candidate_of_finite_stages (upper : ℝ) (bandFloor : ℕ)
     intro x hx hxz
     exact MixedDiagonalExtensions.initial_add_extension F.data.h_pos F.data.h_lt_half hqbig
       hInitial hx hxz (Classical.choice (TailGaugePotential.finalPotential_awayExtensions H v upper
-        bandFloor x hx))
+          bandFloor x hx))
   have hP0 : ∀ x : Space, x ≠ 0 → x 2 = 0 → Nonempty (OneSidedExtension (P 0) x) := by
     intro x hx hxz
     have h := MixedDiagonalExtensions.initial_add_extension F.data.h_pos F.data.h_lt_half hqbig
       hpInitial hx hxz (Classical.choice ((SlowBaseEndpoint.final_fields_awayExtensions H v upper
-        bandFloor).2 x hx))
+          bandFloor).2 x hx))
     simp only [P]
     exact h
   have hB0 : ∀ x : Space, x ≠ 0 → x 2 = 0 → Nonempty (OneSidedExtension (B 0) x) := by

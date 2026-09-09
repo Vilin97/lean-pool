@@ -6,20 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevWordBlocks
-public import LeanPool.NavierStokesAndEuler.Euler.DivergenceFreeHeat
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
+import LeanPool.NavierStokesAndEuler.Euler.DivergenceFreeHeat
+
+/-! The actual lifted gradient and divergence constraints persist under every available strong
+derivative word. -/
 
 @[expose] public section
 
-/-! The actual lifted gradient and divergence constraints persist under every available strong
-  derivative word. -/
 
 noncomputable section
 
 namespace EulerSobolevWordConstraints
 
-open EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerSobolevWordBlocks
-  EulerDivergenceFreeHeat
+open EulerLiftedGradientSpace EulerCylinderSobolevSpace
+    EulerDivergenceFreeHeat
 
 variable (period : ℝ) [Fact (0 < period)]
 
@@ -32,7 +33,7 @@ def sobolevGradientProjection (q : ℕ) (κ : ℝ) (m : Vector3) :
 /-- Its zeroth coordinate is exactly the original L² orthogonal projection. -/
 theorem sobolevGradientProjection_value {q : ℕ} (κ : ℝ) (m : Vector3) (u : SobolevSpace period q) :
     value period (sobolevGradientProjection period q κ m u) = gradientProjection period κ m (value
-      period u) := rfl
+        period u) := rfl
 
 /-- The actual Sobolev gradient projection acts on each genuine derivative coordinate. -/
 theorem sobolevGradientProjection_word {q n : ℕ} (hn : n ≤ q) (κ : ℝ) (m : Vector3)
@@ -40,7 +41,8 @@ theorem sobolevGradientProjection_word {q n : ℕ} (hn : n ≤ q) (κ : ℝ) (m 
     word period (sobolevGradientProjection period q κ m u) hn w =
       gradientProjection period κ m (word period u hn w) := rfl
 
-/-- A divergence-free Sobolev field has zero Sobolev gradient projection, including all derivatives. -/
+/-- A divergence-free Sobolev field has zero Sobolev gradient projection, including all derivatives.
+-/
 theorem sobolevGradientProjection_zero {q : ℕ} (κ : ℝ) (m : Vector3) (u : SobolevSpace period q)
     (hu : value period u ∈ divergenceFreeSpace period κ m) :
     sobolevGradientProjection period q κ m u = 0 := by
@@ -67,7 +69,8 @@ theorem sobolevGradientProjection_self {q : ℕ} (κ : ℝ) (m : Vector3) (u : S
   rw [sobolevGradientProjection_value]
   exact (gradientSpace period κ m).starProjection_eq_self_iff.mpr hu
 
-/-- Every actual derivative word of a lifted pressure gradient remains in the lifted gradient space. -/
+/-- Every actual derivative word of a lifted pressure gradient remains in the lifted gradient space.
+-/
 theorem word_gradient {q n : ℕ} (hn : n ≤ q) (κ : ℝ) (m : Vector3)
     (u : SobolevSpace period q) (hu : value period u ∈ gradientSpace period κ m)
     (w : Fin n → Fin 4) : word period u hn w ∈ gradientSpace period κ m := by

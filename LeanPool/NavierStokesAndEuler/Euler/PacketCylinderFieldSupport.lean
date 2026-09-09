@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductSupport
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderPaths
+import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
+
+/-! Support of a raw packet witness is exactly support of its actual L² path. -/
 
 @[expose] public section
 
-/-! Support of a raw packet witness is exactly support of its actual L² path. -/
 
 noncomputable section
 

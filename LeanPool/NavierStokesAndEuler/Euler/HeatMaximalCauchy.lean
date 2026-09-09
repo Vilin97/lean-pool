@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HeatMaximalEstimate
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticCauchy
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevLaplacian
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
+import LeanPool.NavierStokesAndEuler.Euler.HeatMaximalEstimate
+import LeanPool.NavierStokesAndEuler.Euler.QuadraticCauchy
+
+/-! Strong L²-time H² Cauchy convergence from genuine heat energy, avoiding weak compactness. -/
 
 @[expose] public section
 
-/-! Strong L²-time H² Cauchy convergence from genuine heat energy, avoiding weak compactness. -/
 
 noncomputable section
 
@@ -23,14 +27,16 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- A bounded linear observation preserves the difference form of the forced heat right hand side. -/
+/-- A bounded linear observation preserves the difference form of the forced heat right hand side.
+-/
 theorem linear_heat_rhs_sub {X Y Z : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] [NormedAddCommGroup Z] [NormedSpace ℝ Z]
     (L : Y →L[ℝ] Z) (A : X →L[ℝ] Y) (ν : ℝ) (u v : X) (f g : Y) :
     L (ν • A (u-v)+(f-g)) = L (ν • A u+f)-L (ν • A v+g) := by
   rw [map_sub A, smul_sub, sub_add_sub_comm, map_sub L]
 
-/-- The difference of two actual differentiated heat equations is the same linear equation with difference source. -/
+/-- The difference of two actual differentiated heat equations is the same linear equation with
+difference source. -/
 theorem first_derivative_difference (T : ℝ) (hT : 0 ≤ T) (ν : ℝ)
     (u v : C(Icc (0 : ℝ) T, SobolevSpace period 3))
     (f g : C(Icc (0 : ℝ) T, SobolevSpace period 1)) (t : ℝ) (i : Fin 4)
@@ -43,7 +49,7 @@ theorem first_derivative_difference (T : ℝ) (hT : 0 ≤ T) (ν : ℝ)
     HasDerivAt (fun s => value period (derivativeOperator period 2 i (extendPath T hT (u-v) s)))
       (value period (derivativeOperator period 0 i
         (ν • laplacianOperator period 1 (extendPath T hT (u-v) t) + extendPath T hT (f-g) t))) t :=
-          by
+            by
   have h := hu.fun_sub hv
   have he : (fun s => value period (derivativeOperator period 2 i (extendPath T hT (u-v) s))) =
       fun s => value period (derivativeOperator period 2 i (extendPath T hT u s)) -
@@ -95,7 +101,8 @@ theorem sourceTime_sub (T : ℝ) (hT : 0 ≤ T) (f g : C(Icc (0 : ℝ) T, Sobole
   let A := (valueOperator period 1).compLeftContinuous ℝ (Icc (0 : ℝ) T)
   exact (congrArg (pathLp T hT) (map_sub A f g)).trans (pathLp_sub T hT (A f) (A g))
 
-/-- The true linear heat equation controls actual H² time differences by lower path and source differences. -/
+/-- The true linear heat equation controls actual H² time differences by lower path and source
+differences. -/
 theorem heat_H2_difference_bound (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < ν)
     (u v : C(Icc (0 : ℝ) T, SobolevSpace period 3))
     (f g : C(Icc (0 : ℝ) T, SobolevSpace period 1))
@@ -103,7 +110,7 @@ theorem heat_H2_difference_bound (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < 
       HasDerivAt (fun s => value period (derivativeOperator period 2 i (extendPath T hT (u-v) s)))
         (value period (derivativeOperator period 0 i
           (ν • laplacianOperator period 1 (extendPath T hT (u-v) t) + extendPath T hT (f-g) t))) t)
-            :
+              :
     ‖higherTime period T hT u-higherTime period T hT v‖^2 ≤
       (T+4*ν⁻¹)*‖lowerPath period T u-lowerPath period T v‖^2 +
       (ν⁻¹)^2*‖sourceTime period T hT f-sourceTime period T hT g‖^2 := by
@@ -114,7 +121,8 @@ theorem heat_H2_difference_bound (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < 
     (higherTime_sub period T hT u v) (lowerPath_sub period T u v) (sourceTime_sub period T hT f g)
     (heat_time_H2_bound period T hT ν hν (u-v) (f-g) hd)
 
-/-- Actual regularized heat solutions which converge in H¹ and have Cauchy L² sources converge strongly in L² time with two full derivatives. -/
+/-- Actual regularized heat solutions which converge in H¹ and have Cauchy L² sources converge
+strongly in L² time with two full derivatives. -/
 theorem heat_H2_cauchy (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < ν)
     (u : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period 3))
     (f : ℕ → C(Icc (0 : ℝ) T, SobolevSpace period 1))

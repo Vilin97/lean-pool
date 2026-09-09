@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MetricPathConvergence
 public import LeanPool.NavierStokesAndEuler.Euler.WeightedForcingTime
-public import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
+
+/-! Genuine continuous energy paths and their weighted strong limits. -/
 
 @[expose] public section
 
-/-! Genuine continuous energy paths and their weighted strong limits. -/
 
 noncomputable section
 
@@ -21,7 +23,7 @@ namespace EulerSobolevEnergyPaths
 
 open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobolevSpace
   EulerMetricPathConvergence EulerWeightedForcingTime EulerTimeLpPairing EulerTimeLp
-  EulerVolterraConvolution EulerPacketWeights EulerWeightedCylinderEnergy EulerFiniteMetricEnergy
+  EulerVolterraConvolution EulerPacketWeights  EulerFiniteMetricEnergy
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -56,11 +58,12 @@ theorem forcing_integral_eq {A I : Type*} [Fintype A] [Fintype I]
     (T : ℝ) (hT : 0 ≤ T) (c : C(Icc (0 : ℝ) T, ℝ))
     (w : A → C(Icc (0 : ℝ) T, ℝ)) (F : A → C(Icc (0 : ℝ) T, I → LiftL2 period)) :
     (∫ t, pathLp T hT c t * weightedForcingTime T hT w (fun i => pathLp T hT (F i)) t ∂timeMeasure
-      T) =
+        T) =
       ∫ t in (0 : ℝ)..T, extendPath T hT c t * extendPath T hT (weightedForcingPath T w F) t := by
   rw [weightedForcingTime_pathLp, ← inner_eq_integral, path_inner_eq_integral]
 
-/-- Finite actual weighted metric energy passes through uniform field limits and strong L² forcing limits, preserving the signed radius-loss integral. -/
+/-- Finite actual weighted metric energy passes through uniform field limits and strong L² forcing
+limits, preserving the signed radius-loss integral. -/
 theorem weighted_energy_limit {A I : Type*} [Fintype A] [Fintype I]
     (T : ℝ) (hT : 0 ≤ T) (w loss : A → C(Icc (0 : ℝ) T, ℝ))
     (K : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
@@ -73,9 +76,9 @@ theorem weighted_energy_limit {A I : Type*} [Fintype A] [Fintype I]
     (henergy : ∀ n, weightedMetricPath T w K (E n) ⟨T, hT, le_rfl⟩ -
       weightedMetricPath T w K (E n) ⟨0, le_rfl, hT⟩ ≤
       (∫ t in (0 : ℝ)..T, extendPath T hT a t * extendPath T hT (weightedMetricPath T w K (E n)) t)
-        +
+          +
       (∫ t in (0 : ℝ)..T, extendPath T hT b t * extendPath T hT (weightedMetricPath T loss K (E n))
-        t) +
+          t) +
       ∫ t in (0 : ℝ)..T, extendPath T hT c t * extendPath T hT (weightedForcingPath T w (F n)) t) :
     weightedMetricPath T w K e ⟨T, hT, le_rfl⟩ - weightedMetricPath T w K e ⟨0, le_rfl, hT⟩ ≤
       (∫ t in (0 : ℝ)..T, extendPath T hT a t * extendPath T hT (weightedMetricPath T w K e) t) +

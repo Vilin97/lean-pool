@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Tactic.Linarith
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Indexed weighted classes of actual stripped derivatives
@@ -23,6 +21,9 @@ The statements hold on real normed spaces, in particular on the Euclidean
 strips used by the construction.  Radiality of the prescribed smooth weight
 is not needed for these closure results.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.WeightedClasses
 
@@ -39,19 +40,25 @@ variable {D E F G : Type*}
 /-- Geometry and positive indexed scales for a stripped coefficient family.
 `epsilon` may in particular be `Q n ^ h`. -/
 structure StripData (D : Type*) [NormedAddCommGroup D] [NormedSpace ℝ D] where
+  /-- Domain of `StripData`, of type `Set D`. -/
   domain : Set D
   isOpen_domain : IsOpen domain
+  /-- Epsilon of `StripData`, of type `ℕ → ℝ`. -/
   epsilon : ℕ → ℝ
   epsilon_pos : ∀ n, 0 < epsilon n
   epsilon_le_one : ∀ n, epsilon n ≤ 1
+  /-- Slow of `StripData`, of type `ℕ → ℝ`. -/
   slow : ℕ → ℝ
   one_le_slow : ∀ n, 1 ≤ slow n
+  /-- Delta of `StripData`, of type `D → ℝ`. -/
   delta : D → ℝ
   delta_pos : ∀ x ∈ domain, 0 < delta x
+  /-- Zeta of `StripData`, of type `D → ℝ`. -/
   zeta : D → ℝ
   zeta_smooth : ContDiffOn ℝ ∞ zeta domain
   zeta_nonneg : ∀ x ∈ domain, 0 ≤ zeta x
 
+/-- Euclidean strip data: an abbreviation for `StripData (EuclideanSpace ℝ (Fin d))`. -/
 abbrev EuclideanStripData (d : ℕ) := StripData (EuclideanSpace ℝ (Fin d))
 
 /-- A common polynomial degree in `S` and the inverse edge distance is enough:
@@ -85,6 +92,7 @@ theorem StripData.separate_powers_le_growth (s : StripData D) (p q n : ℕ) (x :
     (pow_le_pow_left₀ (zero_le_one.trans (s.one_le_slow n)) (s.slow_le_growth n x) p)
     (pow_le_pow_left₀ he0 he q) (pow_nonneg he0 q) (pow_nonneg (s.growth_nonneg n x) p)
 
+/-- Majorant, given by `C * s.epsilon n ^ α * s.growth n x ^ p * w n x`. -/
 def majorant (s : StripData D) (w : ℕ → D → ℝ) (α C : ℝ) (p n : ℕ) (x : D) : ℝ :=
   C * s.epsilon n ^ α * s.growth n x ^ p * w n x
 
@@ -122,13 +130,16 @@ structure MemClass (s : StripData D) (w : ℕ → D → ℝ) (α : ℝ)
     ∀ n x, x ∈ s.domain → ∀ j : ℕ, j ≤ m →
       ‖iteratedFDeriv ℝ j (f n) x‖ ≤ majorant s w α C p n x
 
+/-- Mean class: an abbreviation for `MemClass s (fun _ x => s.zeta x) α f`. -/
 abbrev MeanClass (s : StripData D) (α : ℝ) (f : ℕ → D → E) : Prop :=
   MemClass s (fun _ x => s.zeta x) α f
 
+/-- Wave class: an abbreviation for `MemClass s (fun n x => Real.sqrt (s.zeta x) * P n x) α f`. -/
 abbrev WaveClass (s : StripData D) (P : ℕ → D → ℝ) (α : ℝ)
     (f : ℕ → D → E) : Prop :=
   MemClass s (fun n x => Real.sqrt (s.zeta x) * P n x) α f
 
+/-- Unweighted class: an abbreviation for `MemClass s (fun _ _ => 1) α f`. -/
 abbrev UnweightedClass (s : StripData D) (α : ℝ) (f : ℕ → D → E) : Prop :=
   MemClass s (fun _ _ => 1) α f
 
@@ -497,6 +508,8 @@ theorem MemClass.graphDerivative {s : StripData D} {w : ℕ → D → ℝ}
     simpa only [sub_eq_add_neg] using hv.band_smul hM
   exact he.add hmv
 
+/-- Graph iterate as an element of `ℕ → ℕ → D → E | 0 => f | j + 1 => graphDerivative M a e v
+(graphIterate M a e v f j)`. -/
 noncomputable def graphIterate (M : ℕ → ℝ) (a : D → ℝ) (e v : D)
     (f : ℕ → D → E) : ℕ → ℕ → D → E
   | 0 => f

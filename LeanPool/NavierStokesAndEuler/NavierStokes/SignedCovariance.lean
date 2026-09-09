@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PartitionedCovariance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedQuotients
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
-
-@[expose] public section
 
 /-!
 # Signed covariance updates with the constructed primary waves
@@ -22,6 +19,9 @@ separated by the constructed padded slots.  A signed square is retained as
 a separate term; it is not included in the linear covariance identity.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.SignedCovariance
@@ -30,8 +30,11 @@ open Set Function Filter MeasureTheory Matrix
 open PartitionedCovariance
 open scoped BigOperators Topology ContDiff
 
+/-- Vec2: an abbreviation for `Fin 2 → ℝ`. -/
 abbrev Vec2 := Fin 2 → ℝ
+/-- Mat2: an abbreviation for `Matrix (Fin 2) (Fin 2) ℝ`. -/
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
 
 /-- The numerator is the actual inverse-matrix solve. -/
@@ -120,16 +123,16 @@ theorem PairData.bilinear_diagonal {D h : ℝ} {vr vt : Plane} {sys : SlotSystem
     doubleAverage (fun Y θ =>
       wave a (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j) Y θ *
       wave b (SlotColoring.nativeIndex h U.1) (P.rawTangent hdet j i) (P.modes j) (P.phases j) Y θ)
-        =
+          =
       a * b * P.matrix i j := by
   have heq : (fun Y θ =>
       wave a (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j) Y θ *
       wave b (SlotColoring.nativeIndex h U.1) (P.rawTangent hdet j i) (P.modes j) (P.phases j) Y θ)
-        =
+          =
       fun Y θ => (a * b) *
         (wave 1 (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j) Y θ *
         wave 1 (SlotColoring.nativeIndex h U.1) (P.rawTangent hdet j i) (P.modes j) (P.phases j) Y
-          θ) := by
+            θ) := by
     funext Y θ
     exact wave_product_rescale _ _ _ _ _ _ _ _ _
   rw [heq]
@@ -144,12 +147,15 @@ theorem PairData.bilinear_diagonal {D h : ℝ} {vr vt : Plane} {sys : SlotSystem
 
 /-! ## The same physical masks, slots, and phases for arbitrary coefficients -/
 
+/-- Radial with, given by `wave (outer * (Real.sqrt ε * a j * mask D U q x))
+(SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j)`. -/
 noncomputable def radialWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
     {U : UnsignedLabel} (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (a : Vec2) (q : ℝ) (x : SlotColoring.Position) (j : Fin 2) : Plane → ℝ → ℝ :=
   wave (outer * (Real.sqrt ε * a j * mask D U q x))
     (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j)
 
+/-- Tangent with, constructed using `wave`. -/
 noncomputable def tangentWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
     {U : UnsignedLabel} (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (a : Vec2) (q : ℝ) (x : SlotColoring.Position) (j i : Fin 2) : Plane → ℝ → ℝ :=
@@ -227,25 +233,29 @@ theorem finite_bilinear_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSystem
       ((P v.1).rawTangent_compact hdet v.2 i) ((P v.1).modes v.2)
       ((P v.1).modes_ne v.2) ((P v.1).phases v.2)
 
+/-- Assembled radial with, given by `∑ᶠ v : UnsignedLabel × Fin 2, radialWith (P v.1) hdet
+(outer v.1) (ε v.1) (a v.1) q x v.2 Y θ`. -/
 noncomputable def assembledRadialWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (a : UnsignedLabel → Vec2) (q : ℝ) (x : SlotColoring.Position) (Y : Plane) (θ : ℝ) : ℝ :=
   ∑ᶠ v : UnsignedLabel × Fin 2, radialWith (P v.1) hdet (outer v.1) (ε v.1) (a v.1) q x v.2 Y θ
 
+/-- Assembled tangent with, given by `∑ᶠ v : UnsignedLabel × Fin 2, tangentWith (P v.1) hdet
+(outer v.1) (ε v.1) (a v.1) q x v.2 i Y θ`. -/
 noncomputable def assembledTangentWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N :
-  ℕ}
+    ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (a : UnsignedLabel → Vec2) (q : ℝ) (x : SlotColoring.Position) (i : Fin 2) (Y : Plane) (θ : ℝ)
-      : ℝ :=
+        : ℝ :=
   ∑ᶠ v : UnsignedLabel × Fin 2, tangentWith (P v.1) hdet (outer v.1) (ε v.1) (a v.1) q x v.2 i Y θ
 
 theorem assembledRadialWith_finite {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (a : UnsignedLabel → Vec2) {q : ℝ} (hq : 0 < q) (x : SlotColoring.Position) (Y : Plane) (θ : ℝ)
-      :
+        :
     assembledRadialWith P hdet outer ε a q x Y θ =
       ∑ v ∈ (finite_active_masks D N hq x).toFinset.product (Finset.univ : Finset (Fin 2)),
         radialWith (P v.1) hdet (outer v.1) (ε v.1) (a v.1) q x v.2 Y θ := by
@@ -304,7 +314,7 @@ theorem assembled_bilinear_symmetry {D h : ℝ} {vr vt : Plane} (sys : SlotSyste
     {q : ℝ} (hq : 0 < q) (x : SlotColoring.Position) (i : Fin 2) (Y : Plane) (θ : ℝ) :
     assembledRadialWith P hdet outer ε a q x Y θ * assembledTangentWith P hdet outer ε b q x i Y θ =
       assembledRadialWith P hdet outer ε b q x Y θ * assembledTangentWith P hdet outer ε a q x i Y
-        θ := by
+          θ := by
   classical
   simp_rw [assembledRadialWith_finite P hdet outer ε _ hq x,
     assembledTangentWith_finite P hdet outer ε _ hq x i,
@@ -314,12 +324,16 @@ theorem assembled_bilinear_symmetry {D h : ℝ} {vr vt : Plane} (sys : SlotSyste
   unfold radialWith tangentWith wave
   ring
 
+/-- Signed radial, given by `assembledRadialWith P hdet outer ε (fun U => increment (P U).matrix
+(T U) (R U)) q x`. -/
 noncomputable def signedRadial {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
     (T R : UnsignedLabel → Vec2) (q : ℝ) (x : SlotColoring.Position) : Plane → ℝ → ℝ :=
   assembledRadialWith P hdet outer ε (fun U => increment (P U).matrix (T U) (R U)) q x
 
+/-- Signed tangent, given by `assembledTangentWith P hdet outer ε (fun U => increment (P
+U).matrix (T U) (R U)) q x i`. -/
 noncomputable def signedTangent {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
@@ -359,9 +373,9 @@ theorem assembled_cross_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSystem
         assembledTangentWith P hdet outer ε b q x i Y θ) := by
     funext Y θ
     change assembledRadialWith P hdet outer ε a q x Y θ * assembledTangentWith P hdet outer ε b q x
-      i Y θ +
+        i Y θ +
       assembledRadialWith P hdet outer ε b q x Y θ * assembledTangentWith P hdet outer ε a q x i Y
-        θ = _
+          θ = _
     rw [assembled_bilinear_symmetry sys hdet N hN P outer ε b a hq x i]
     ring
   rw [heq, doubleAverage_const_mul,
@@ -433,20 +447,20 @@ theorem physical_signed_cross_covariance {D h : ℝ} {vr vt : Plane} (sys : Slot
       SmoothCovariance.StrictCone (P U).matrix (chartTarget h q N T0 U)) (i : Fin 2) :
     doubleAverage (fun Y θ =>
       assembledRadial P hdet (physicalOuter h N) (physicalViscosity h N) (chartTarget h q N T0) q x
-        Y θ *
+          Y θ *
         signedTangent P hdet (physicalOuter h N) (physicalViscosity h N)
           (chartTarget h q N T0) (chartStress h N σ) q x i Y θ +
       signedRadial P hdet (physicalOuter h N) (physicalViscosity h N)
           (chartTarget h q N T0) (chartStress h N σ) q x Y θ *
         assembledTangent P hdet (physicalOuter h N) (physicalViscosity h N) (chartTarget h q N T0)
-          q x i Y θ) =
+            q x i Y θ) =
       σ i := by
   rw [assembled_cross_covariance sys hdet N hN P (physicalOuter h N) (physicalViscosity h N)
     (chartTarget h q N T0) (chartStress h N σ) hq x
     (fun U _ => (ChartScales.epsilon_pos h (U.1 + N)).le) hcone i]
   have heq (U : UnsignedLabel) : physicalOuter h N U ^ 2 * physicalViscosity h N U *
       mask D (tailLabel N U) q x ^ 2 * chartStress h N σ U i = mask D (tailLabel N U) q x ^ 2 * σ i
-        := by
+          := by
     calc
       _ = mask D (tailLabel N U) q x ^ 2 *
         (physicalOuter h N U ^ 2 * physicalViscosity h N U * chartStress h N σ U i) := by ring
@@ -532,9 +546,12 @@ theorem class_input_envelope {s : StripData E} {w g r : ℕ → E → ℝ}
         (hm Cr hCr (by dsimp [C]; linarith) pr (by dsimp [p]; omega)) (hw n x hx).le
       _ = _ := by ring
 
+/-- Signed jet cost, given by `WeightedQuotients.chooseSum j * WeightedQuotients.orderBound (-(1
+/ 2 : ℝ)) j / 2`. -/
 noncomputable def signedJetCost (j : ℕ) : ℝ :=
   WeightedQuotients.chooseSum j * WeightedQuotients.orderBound (-(1 / 2 : ℝ)) j / 2
 
+/-- Prefix jet cost, given by `1 + ∑ j ∈ Finset.range (m + 1), |signedJetCost j|`. -/
 noncomputable def prefixJetCost (m : ℕ) : ℝ :=
   1 + ∑ j ∈ Finset.range (m + 1), |signedJetCost j|
 
@@ -574,7 +591,7 @@ theorem signed_quotient_class_zero {s : StripData E} {w g r : ℕ → E → ℝ}
   obtain ⟨hB, hlo, hgj, hrj⟩ := henv n x hx
   have hb := WeightedQuotients.signed_jet_bound s.isOpen_domain (hg.smooth n) (hr.smooth n)
     (hp n) hx (hw n x hx) hB j hlo (fun k hk => hgj k (hk.trans hj)) (fun k hk => hrj k (hk.trans
-      hj))
+        hj))
   calc
     _ ≤ Real.sqrt (w n x) * signedJetCost j * (C * s.growth n x ^ p) ^ (2 * j + 2) := hb
     _ ≤ Real.sqrt (w n x) * prefixJetCost m * (C * s.growth n x ^ p) ^ (2 * m + 2) := by
@@ -690,7 +707,7 @@ theorem signed_square_class {s : StripData E} {H : ℕ → E → Mat2}
       H n x i j * (increment (H n x) (T n x) (R n x) j * increment (H n x) (T n x) (R n x) j)) := by
     have hc := increment_wave_class j hζ hcone (hY j) (hR j) (hlower j)
     have hsq := WeightedClasses.WaveClass.mul_mean hc hc (fun _ _ _ => zero_le_one) (fun _ _ _ =>
-      le_rfl)
+        le_rfl)
     simpa only [MeanClass, UnweightedClass, one_mul, zero_add] using (MemClass.mul (hH j) hsq)
   have hsum := MemClass.sum Finset.univ _ (fun n x hx => s.zeta_nonneg x hx) (fun j _ => ht j)
   simpa only [MeanClass, squareColumn, Matrix.mulVec, dotProduct, pow_two, two_mul] using hsum
@@ -866,7 +883,7 @@ theorem assembled_signed_square_bound {D h : ℝ} {vr vt : Plane} (sys : SlotSys
   rw [abs_mul, abs_of_nonneg (mul_nonneg (sq_nonneg _) (hε U hU))]
   exact mul_le_mul (hscale U hU)
     (squareColumn_abs_bound (P U).matrix (T U) (R U) (hcone U hU) i hl hd hK (hY U hU) (hR U hU)
-      (hH U hU i))
+        (hH U hU i))
     (abs_nonneg _) hΛ
 
 /-! ## Smooth edge extension of the actual inverse amplitudes -/
@@ -875,6 +892,8 @@ section Edge
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Extended increment, given by `FlatZeroExtension.zeroExtension (fun p => ((H p)⁻¹.mulVec (R
+p)) j / (2 * Real.sqrt (((H p)⁻¹.mulVec (T p)) j)))`. -/
 noncomputable def extendedIncrement (H : E × ℝ → Mat2) (T R : E × ℝ → Vec2)
     (j : Fin 2) : E × ℝ → ℝ :=
   FlatZeroExtension.zeroExtension (fun p => ((H p)⁻¹.mulVec (R p)) j /
@@ -916,7 +935,7 @@ theorem extendedIncrement_regular {U : Set E} (hU : IsOpen U) {c : ℝ} (hc : 0 
   have hRs := SmoothCovariance.contDiffOn_inverse_solution hH hR
     (fun p hp => (hcone p hp).det_ne_zero) j
   have he := WeightedQuotients.weighted_zero_extension hc hU hS hscale hp hYs hRs hlower hYjets
-    hRjets
+      hRjets
   refine ⟨he.2.1, ?_, fun m x hx => (he.2.2 m x hx).2⟩
   have hj := (WeightedQuotients.weighted_half_jets hU hS hp hYs hRs hlower hYjets hRjets).2
   intro m
@@ -925,6 +944,7 @@ theorem extendedIncrement_regular {U : Set E} (hU : IsOpen U) {c : ℝ} (hc : 0 
   change ‖iteratedFDeriv ℝ m (FlatZeroExtension.zeroExtension _) p‖ / _ ≤ _
   rw [WeightedQuotients.jet_congr (FlatZeroExtension.zeroExtension_germ_pos _ hp.2.1) m]
 
+/-- Masked extended increment, given by `mask D L (q p) (x p) * extendedIncrement H T R j p`. -/
 noncomputable def maskedExtendedIncrement (D : ℝ) (L : UnsignedLabel)
     (q : E × ℝ → ℝ) (x : E × ℝ → SlotColoring.Position)
     (H : E × ℝ → Mat2) (T R : E × ℝ → Vec2) (j : Fin 2) (p : E × ℝ) : ℝ :=

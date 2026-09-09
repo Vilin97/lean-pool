@@ -6,14 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepBudget
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTransport
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
+public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTransport
+
+/-! A single fixed radius bounds all recursively constructed joined-source profiles. -/
 
 @[expose] public section
 
-/-! A single fixed radius bounds all recursively constructed joined-source profiles. -/
 
 noncomputable section
 
@@ -40,7 +47,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (hprimaryBudget : ProfileBudget hprimary S L.R 1)
   (hprimaryMean : primary.mean = 0)
   (hprimaryTangent : ∀ (t : Icc (0 : ℝ) M.T) x θ,
-    inner ℝ (D.normalField (t,(x,θ))) (primary.high (t,(x,θ))) = 0)
+    inner ℝ (D.normalField (t, (x, θ))) (primary.high (t, (x, θ))) = 0)
 
 include N W LM WM BC hRc hcost hα hgrowth hprimaryBudget hprimaryMean hprimaryTangent
 
@@ -48,7 +55,7 @@ include N W LM WM BC hRc hcost hα hgrowth hprimaryBudget hprimaryMean hprimaryT
 later-grade forcing or solution estimate is assumed. -/
 theorem joinedSource_profile_budgets (p : ℕ) : 1 ≤ p →
     ProfileBudget (joinedSourceProfileWitness P M D hTime τ hτ hτT B primary hprimary p) S L.R p :=
-      by
+        by
   induction p using Nat.strong_induction_on with
   | h p ih =>
     intro hp
@@ -68,8 +75,8 @@ theorem joinedSource_profile_budgets (p : ℕ) : 1 ≤ p →
       profiles_step O primary p hp2
     let H := (joinedSourceProfileWitness P M D hTime τ hτ hτT B primary hprimary p).congr he
     have hc₀ : (a 0).corrector = 0 := by simp only [a,joinedSourceProfiles,profiles_zero]; rfl
-    have hB₁ : (a 1).mean = 0 := by simpa only [a,joinedSourceProfiles,profiles_one] using
-      hprimaryMean
+    have hB₁ : (a 1).mean = 0 := by
+        simpa only [a,joinedSourceProfiles,profiles_one] using hprimaryMean
     have hA : ∀ i, i < p → ∀ (t : Icc (0 : ℝ) M.T) x θ,
         inner ℝ (O.normal (t,(x,θ))) ((a i).high (t,(x,θ))) = 0 := by
       intro i _ t x θ

@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSumBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalSignedRequest
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Uniform weighted coefficients and physical wave sums
@@ -22,6 +19,9 @@ Global smoothness and support then extend the estimate across the boundary.
 The final passage uses genuine common-coordinate compositions and the
 physical carrier estimates of `PhysicalWaveSum`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -56,7 +56,7 @@ theorem edge_rpow {x : ℝ} (hx : 0 < x) (a c : ℝ) :
 
 theorem zeta_rpow {L x : ℝ} (hx : x ∈ Ioo 0 L) (cL cR c : ℝ) :
     WeightedRadialPrimitive.zeta cL cR L x ^ c = WeightedRadialPrimitive.zeta (c * cL) (c * cR) L x
-      := by
+        := by
   rw [WeightedRadialPrimitive.zeta, Real.mul_rpow (FlatCutoff.edge_nonneg _ _)
     (FlatCutoff.edge_nonneg _ _), edge_rpow hx.1,
     edge_rpow (sub_pos.mpr hx.2), WeightedRadialPrimitive.zeta]
@@ -67,14 +67,14 @@ theorem flat_edge_uniform {cL cR c : ℝ} (hcL : 0 < cL) (hcR : 0 < cR)
     (hc : 0 < c) (L : ℝ) (m : ℕ) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ x ∈ Ioo (0 : ℝ) L,
       (max 1 (WeightedRadialPrimitive.delta L x)⁻¹) ^ m * WeightedRadialPrimitive.zeta cL cR L x ^
-        c ≤ K := by
+          c ≤ K := by
   obtain ⟨K, hK, hb⟩ := WeightedRadialPrimitive.weight_uniform_bound (mul_pos hc hcL) (mul_pos hc
-    hcR) L m
+      hcR) L m
   refine ⟨K, hK, ?_⟩
   intro x hx
   have hd : 1 ≤ (WeightedRadialPrimitive.delta L x)⁻¹ :=
     (one_le_inv₀ (WeightedRadialPrimitive.delta_pos hx)).mpr (WeightedRadialPrimitive.delta_le_one
-      L x)
+        L x)
   rw [max_eq_right hd, zeta_rpow hx]
   simpa only [WeightedRadialPrimitive.weight, div_eq_mul_inv, inv_pow, mul_comm] using hb x hx
 
@@ -92,11 +92,11 @@ theorem logStrip_flatGeometry {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ
     (ε S : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1)
     (hS : ∀ n, 1 ≤ S n) :
     FlatGeometry (WeightedRadialPrimitive.logStripData (E := V) a b cL cR ha hcL hcR ε S hε hεone
-      hS)
+        hS)
       cL cR (WeightedRadialPrimitive.logLength a b) (fun x => WeightedRadialPrimitive.logPosition a
-        x.1) :=
+          x.1) :=
   ⟨hcL, hcR, fun _ hx => WeightedRadialPrimitive.logPosition_mem ha hx, fun _ _ => rfl, fun _ _ =>
-    rfl⟩
+      rfl⟩
 
 theorem movingStrip_flatGeometry {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord)
     {a b cL cR : ℝ} (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR)
@@ -105,7 +105,7 @@ theorem movingStrip_flatGeometry {coord : ℝ} (U : LocalSignedRequest.SlowRegio
     FlatGeometry (LocalSignedRequest.movingStripData U a b cL cR ha hcL hcR ε S hε hεone hS)
       cL cR (WeightedRadialPrimitive.logLength a b)
       (fun x => WeightedRadialPrimitive.logPosition a (LocalSignedRequest.profileMap coord x).1) :=
-        by
+          by
   refine ⟨hcL, hcR, ?_, fun _ _ => rfl, fun _ _ => rfl⟩
   intro x hx
   exact WeightedRadialPrimitive.logPosition_mem ha
@@ -334,8 +334,12 @@ the source formula and the coordinate map's jets, before any physical graph
 or carrier has been differentiated. -/
 structure CommonChart {H : ℕ} (F : PhysicalWaveSum.WaveFamily H)
     (a b h r0 σ : ℝ) (f : ι → ℕ → D → ℂ) where
+  /-- Source index of `CommonChart`, of type `PhysicalWaveSum.WaveIndex H → ι`. -/
   sourceIndex : PhysicalWaveSum.WaveIndex H → ι
+  /-- Map from a lifted point in each wave chart to the common physical domain. -/
   map : PhysicalWaveSum.WaveIndex H → PhysicalWaveSum.LiftPoint → D
+  /-- Domain of `CommonChart`, of type `PhysicalWaveSum.WaveIndex H → Set
+  PhysicalWaveSum.LiftPoint`. -/
   domain : PhysicalWaveSum.WaveIndex H → Set PhysicalWaveSum.LiftPoint
   open_domain : ∀ I, IsOpen (domain I)
   smooth : ∀ I, ContDiffOn ℝ ∞ (map I) (domain I)
@@ -364,12 +368,12 @@ theorem CommonChart.amplitude_bound {s : StripData D} {h α σ a b r0 : ℝ}
   obtain ⟨B, hB, q, hq⟩ := hc.positive_jets m
   refine ⟨(m.factorial : ℝ) * A * B ^ m, by positivity, p + q * m, ?_⟩
   intro I x hx j hj
-  have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by have := I.1.property;
-    omega)
+  have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by
+      have := I.1.property; omega)
   have hQ := ChartScales.Q_pos I.1.val.1
   have hS0 : 0 ≤ ChartScales.S I.1.val.1 := zero_le_one.trans hS
   have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p := by
-    positivity
+      positivity
   have hB0 : 1 ≤ B * ChartScales.S I.1.val.1 ^ q :=
     one_le_mul_of_one_le_of_one_le hB (one_le_pow₀ hS)
   have hjb := composition_jet_bound (hf.smooth (hc.sourceIndex I) I.1.val.1)
@@ -408,6 +412,8 @@ noncomputable def bandDomain {V : Type} [NormedAddCommGroup V]
 /-- Polynomial jets of the actual two base profiles entering the phase,
 on open slow-coordinate regions containing every relevant chart point. -/
 structure CarrierBounds {H : ℕ} (F : PhysicalWaveSum.WaveFamily H) (a b h r0 : ℝ) where
+  /-- Region of `CarrierBounds`, of type `PhysicalWaveSum.BandLabel → Set
+  PhysicalGraphBounds.Slow`. -/
   region : PhysicalWaveSum.BandLabel → Set PhysicalGraphBounds.Slow
   open_region : ∀ L, IsOpen (region L)
   jets : PhaseJetBounds.PolynomialJets (bandDomain region open_region)
@@ -621,8 +627,10 @@ theorem physical_vector_curl_jet_bound {s : StripData D} {h α σ a b r0 Z P : �
 
 /-! ### The actual Cartesian-to-cylindrical coefficient map -/
 
+/-- Cylindrical point: an abbreviation for `ℝ × ((ℝ × ℝ) × PhysicalGraphBounds.Plane)`. -/
 abbrev CylindricalPoint := ℝ × ((ℝ × ℝ) × PhysicalGraphBounds.Plane)
 
+/-- Cartesian radius, given by `Real.sqrt (y.1 ^ 2 + y.2 ^ 2)`. -/
 noncomputable def cartesianRadius (y : PhysicalGraphBounds.Plane) : ℝ :=
   Real.sqrt (y.1 ^ 2 + y.2 ^ 2)
 
@@ -654,9 +662,12 @@ theorem norm_slowFast_le : ‖slowFast‖ ≤ 1 := by
         ((le_max_right ‖x.1.1‖ ‖x.1.2‖).trans (le_max_left _ _)))))
     (le_max_right _ _)
 
+/-- Cylindrical map, given by `(cartesianRadius (PhysicalGraphBounds.liftXY x), slowFast x)`. -/
 noncomputable def cylindricalMap (x : PhysicalWaveSum.LiftPoint) : CylindricalPoint :=
   (cartesianRadius (PhysicalGraphBounds.liftXY x), slowFast x)
 
+/-- Cylindrical domain, given by `(fun x => ‖PhysicalGraphBounds.liftXY x‖) ⁻¹' Ioo (a / 2) (b +
+1)`. -/
 noncomputable def cylindricalDomain (a b : ℝ) : Set PhysicalWaveSum.LiftPoint :=
   (fun x => ‖PhysicalGraphBounds.liftXY x‖) ⁻¹' Ioo (a / 2) (b + 1)
 
@@ -707,7 +718,7 @@ theorem cylindricalMap_positiveJets {a b : ℝ} (ha : 0 < a) (m : ℕ) :
   exact max_le hrb ((PhysicalGraphBounds.norm_positive_jet_linear_le slowFast x hj).trans
     (norm_slowFast_le.trans hB))
 
-@[simp] theorem liftXY_commonLift (h : ℝ) (n d : ℕ) (z : ProblemStatement.SpaceTime) :
+theorem liftXY_commonLift (h : ℝ) (n d : ℕ) (z : ProblemStatement.SpaceTime) :
     PhysicalGraphBounds.liftXY (PhysicalWaveSum.commonLift h n d z) =
       PhysicalGraphBounds.scaledRadial n z := by
   change PhysicalGraphBounds.liftXY (PhysicalGraphBounds.physicalLift h n z) = _

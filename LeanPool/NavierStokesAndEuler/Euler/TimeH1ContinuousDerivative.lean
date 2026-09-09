@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
-public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
-public import Mathlib.Analysis.Calculus.ContDiff.Deriv
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Continuous derivatives upgrade genuine time-H¹ paths to classical paths
@@ -20,6 +19,9 @@ integration constructs a C¹ extension agreeing with the original AC path.
 Thus the time derivative holds at every interior time and within the closed
 interval at both endpoints.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleParameters
 
-@[expose] public section
-
 /-!
 # Deck translations of the actual wave-block coefficients
 
@@ -18,6 +16,9 @@ Native coefficient translations pass through the literal angular section,
 finite harmonic sum, conjugate pairing, and coordinate reindexing.  The
 particular source assumption is made on full native parameter fibers.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,14 +29,20 @@ open ActualWaveRegularity
 open scoped BigOperators Topology ContDiff
 
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
+/-- Full point: an abbreviation for `Point × ℝ`. -/
 abbrev FullPoint := Point × ℝ
+/-- Index: an abbreviation for `ActualInitialization.Index B N0`. -/
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
 
+/-- Point deck, given by `(0, (0, TorusAverages.latticePoint k))`. -/
 noncomputable def pointDeck (k : Frequency) : Point :=
   (0, (0, TorusAverages.latticePoint k))
 
+/-- Native section, given by `ActualWaveRegularity.particularChart (x, 0)`. -/
 noncomputable def nativeSection (x : Point) : ActualWaveRegularity.ParticularSpace :=
   ActualWaveRegularity.particularChart (x, 0)
 
@@ -79,7 +86,7 @@ theorem nativeSection_translation {E : Type} {k : Frequency}
       CorrectionInitialization.ActualPrimary.standardRegion)
       (ActualWaveRegularity.particularChart (ActualWaveRegularity.deckShift k)) f) :
     TranslationOn ActualInitialization.geometry.domain (pointDeck k) (fun x => f (nativeSection x))
-      := by
+        := by
   intro x hx
   change f (nativeSection (x + pointDeck k)) = f (nativeSection x)
   rw [nativeSection_deck]
@@ -106,7 +113,7 @@ theorem assembled_velocity_translation {E : Type} (e : D → E) (N : ℕ) (frequ
     (i : Fin 3) (m : ℤ) :
     TranslationOn Ω shift
       (fun x => (ParticularWaveAssembly.assembledBlock N frequency phase angular v p).velocity n i
-        m (e x)) := by
+          m (e x)) := by
   intro x hx
   simp only [ParticularWaveAssembly.assembledBlock, ErrorHarmonics.sumBlock,
     ParticularWaveAssembly.modeBlock]
@@ -126,7 +133,7 @@ theorem assembled_pressure_translation {E : Type} (e : D → E) (N : ℕ) (frequ
     (m : ℤ) :
     TranslationOn Ω shift
       (fun x => (ParticularWaveAssembly.assembledBlock N frequency phase angular v p).pressure n m
-        (e x)) := by
+          (e x)) := by
   intro x hx
   simp only [ParticularWaveAssembly.assembledBlock, ErrorHarmonics.sumBlock,
     ParticularWaveAssembly.modeBlock]
@@ -140,6 +147,8 @@ end FiniteAssembly
 
 variable {B N0 : ℕ}
 
+/-- Particular data, given by `ActualWaveRegularity.particularCopyData
+(ActualCycleParameters.fixedParameters B N0) v c u l j`. -/
 noncomputable def particularData (v : CycleCoefficients (Index B N0))
     (c : Context Point) (u : State Point) (l : Index B N0) (j : ℤ) :=
   ActualWaveRegularity.particularCopyData (ActualCycleParameters.fixedParameters B N0) v c u l j
@@ -189,7 +198,7 @@ theorem particular_coefficients (v : CycleCoefficients (Index B N0))
       (((ActualCycleParameters.fixedParameters B N0).particularBlock v c u l).pressure n m)) ∧
     (∀ i m, TranslationOn ActualInitialization.geometry.domain (pointDeck k)
       (((ActualCycleParameters.fixedParameters B N0).particularGaussianBlock v c u l).velocity n i
-        m)) := by
+          m)) := by
   have ht (j : ℤ) (hj : j ∈ ParticularWaveAssembly.modes v.residualBand) :=
     ActualWaveRegularityData.particular_coefficient_translations (l.2,l.1)
       (StateReindex.context cycleAssoc.symm c) (StateReindex.state cycleAssoc.symm u)
@@ -223,7 +232,7 @@ theorem signed_coefficients (v : CycleCoefficients (Index B N0))
       (((ActualCycleParameters.fixedParameters B N0).signedBlock v c u l).pressure n m)) ∧
     (∀ i m, TranslationOn ActualInitialization.geometry.domain (pointDeck k)
       (((ActualCycleParameters.fixedParameters B N0).signedGaussianBlock v c u l).velocity n i m))
-        := by
+          := by
   have ht := ActualWaveRegularityData.signed_coefficient_translations l
     ActualInitialization.geometry.patch ActualInitialization.geometry.coord c
     ((ActualCycleParameters.fixedParameters B N0).afterParticular v c u) n hn k

@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileEnvelope
 
-@[expose] public section
-
 /-! An actual canonical all-order correction from one polynomial frequency
 guard. This constructor does not appeal to an eventual threshold depending
 on a chosen parent or on an arbitrary radius witness. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +28,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
@@ -38,15 +39,16 @@ variable (M : EulerMeanPacketProvider.Data)
   (W : ℝ)
   (hW : EulerPacketRadiusPolynomial.RadiusPrimitives LM L NB
     (joinedCoefficientBudget period M D hTime τ hτ hτT B NB) δ ξ W)
-  (hprofile : ∀ t, α*L.fullProfile t ≤ W)
+  (hprofile : ∀ t, α * L.fullProfile t ≤ W)
   (k : ℝ) (hk : 4 ≤ k) (hX : 64 ≤ expansion k) (hlog : 1 ≤ Real.log k)
   (hfrequency :
-    EulerPacketInitializedCost.uniformConstant*W^EulerPacketInitializedCost.uniformPower ≤
+      EulerPacketInitializedCost.uniformConstant * W ^ EulerPacketInitializedCost.uniformPower ≤
     smallPower k)
   (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
-  (hF : ∀ t x, fderiv ℝ (Ξ t) x=D.F.field t x)
-  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+  (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
+  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
+/-- Initialized uniform budget used in packet initialized uniform budget. -/
 def initializedUniformBudget : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree
       (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
@@ -77,7 +79,7 @@ theorem initializedUniformBudget_delta :
 
 theorem initializedUniformBudget_initialRadius :
     (initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα L NB LM Cagree
-      W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).initialRadius=
+      W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).initialRadius =
       initialRadius
         (initializedRadius LM L NB (joinedCoefficientBudget period M D hTime τ hτ hτT B NB) δ ξ)
         (L.correctionCoefficients NB period).M (L.correctionCoefficients NB period).Rc := rfl

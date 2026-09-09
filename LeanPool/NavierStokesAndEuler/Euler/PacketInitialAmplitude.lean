@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-public import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHomogeneity
+
+/-! Unit-data estimates extend to arbitrary actual terminal amplitudes at the same radius. -/
 
 @[expose] public section
 
-/-! Unit-data estimates extend to arbitrary actual terminal amplitudes at the same radius. -/
 
 noncomputable section
 
@@ -28,19 +29,19 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {ι : Type*} [Fintype ι]
 
 theorem initial_amplitude_bound
-    (S : InitialData P D → C(Icc (0 : ℝ) D.T,CylinderL2 P V))
+    (S : InitialData P D → C(Icc (0 : ℝ) D.T, CylinderL2 P V))
     (hs : ∀ Y, ContDiff ℝ ∞ (fun a => pathTranslate P a (S Y)))
     (hm : ∀ Y Z (a : ℝ), Z.value = a • Y.value → S Z = a • S Y)
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
     (directions : ι → LiftTangent) (q : ℕ) (R C : ℝ) (d e : ℕ)
     (hunit : ∀ Y : InitialData P D,
       (∀ n, block directions q (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ majorant R
-        d n) →
+          d n) →
       ∀ n, block directions q (fun a => pathTranslate P a (normalize g hg (S Y))) n 0 ≤ C*majorant
-        R e n)
+          R e n)
     (Y : InitialData P D) (A : ℝ) (hA : 0 ≤ A)
     (hb : ∀ n, block directions q (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤
-      A*majorant R d n)
+        A*majorant R d n)
     (n : ℕ) :
     block directions q (fun a => pathTranslate P a (normalize g hg (S Y))) n 0 ≤
       (C*A)*majorant R e n := by

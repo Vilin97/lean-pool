@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
+import Mathlib.Analysis.Calculus.ContDiff.Basic
+
+/-! Scalar normalization preserves the external word radius and fixed Sobolev order. -/
 
 @[expose] public section
 
-/-! Scalar normalization preserves the external word radius and fixed Sobolev order. -/
 
 noncomputable section
 
@@ -33,7 +36,7 @@ variable {P E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 theorem block_normalize_bound (directions : ι → P) (q : ℕ)
     (f : P → E) (hf : ContDiff ℝ ∞ f) (A : ℝ) (hA : 0 < A)
     (R C : ℝ) (d n : ℕ) (x : P)
-    (hb : block directions q f n x ≤ A*(C*majorant R d n)) :
+    (hb : block directions q f n x ≤ A * (C * majorant R d n)) :
     block directions q (fun y => A⁻¹ • f y) n x ≤ C*majorant R d n := by
   have hs := block_smul_le directions q A⁻¹ f hf n x
   rw [abs_of_pos (inv_pos.mpr hA)] at hs
@@ -46,7 +49,7 @@ theorem block_normalize_bound (directions : ι → P) (q : ℕ)
 theorem block_restore_bound (directions : ι → P) (q : ℕ)
     (f g : P → E) (hf : ContDiff ℝ ∞ f) (A : ℝ) (hA : 0 ≤ A)
     (he : ∀ y, g y = A • f y) (R C : ℝ) (d n : ℕ) (x : P)
-    (hb : block directions q f n x ≤ C*majorant R d n) :
+    (hb : block directions q f n x ≤ C * majorant R d n) :
     block directions q g n x ≤ A*(C*majorant R d n) := by
   have heq : g = fun y => A • f y := funext he
   rw [heq]

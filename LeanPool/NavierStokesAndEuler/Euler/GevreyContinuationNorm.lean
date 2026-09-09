@@ -7,22 +7,25 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricEstimate
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Actual complete-Sobolev control from a positive-radius finite Gevrey bound, for parabolic
+continuation. -/
 
 @[expose] public section
 
-/-! Actual complete-Sobolev control from a positive-radius finite Gevrey bound, for parabolic
-  continuation. -/
 
 noncomputable section
 
 namespace EulerGevreyContinuationNorm
 
 open EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinderSobolev
-  EulerSpatialSobolevInverse
+    EulerSpatialSobolevInverse
   EulerJetProductBounds EulerH6Pressure EulerSobolevGevreyOperators EulerPacketWeights
-    EulerGevreyMetricEstimate
+      EulerGevreyMetricEstimate
 
-/-- At every retained derivative order, the Gevrey weight is bounded below by one positive fixed-cutoff weight. -/
+/-- At every retained derivative order, the Gevrey weight is bounded below by one positive
+fixed-cutoff weight. -/
 theorem weight_lower (ρ δ : ℝ) (hδ : 0 < δ) (hδρ : δ ≤ ρ) (hδ1 : δ ≤ 1)
     (n N : ℕ) (hn : n ≤ N) : weight δ N ≤ weight ρ n := by
   have hρ : 0 ≤ ρ := hδ.le.trans hδρ
@@ -43,8 +46,9 @@ theorem word_le_level {s : ℕ} (u : SobolevSpace period s) (w : SobolevWord s) 
   rw [toJet_word period u (by have := w.1.isLt; omega) w.2] at h
   exact h
 
-/-- Every derivative coordinate through the full energy order is contained in one retained external/base block. -/
-theorem level_le_block {s : ℕ} (u : SobolevSpace period s) (N m : ℕ) (hm : m ≤ N+6) :
+/-- Every derivative coordinate through the full energy order is contained in one retained
+external/base block. -/
+theorem level_le_block {s : ℕ} (u : SobolevSpace period s) (N m : ℕ) (hm : m ≤ N + 6) :
     levelNorm period (toJet period u) m ≤ blockNorm period (toJet period u) 6 (min m N) := by
   let n := min m N
   have hn : n ≤ m := Nat.min_le_left m N
@@ -56,8 +60,9 @@ theorem level_le_block {s : ℕ} (u : SobolevSpace period s) (N m : ℕ) (hm : m
   rw [he] at h
   exact h
 
-/-- A finite actual Gevrey bound controls the complete energy-order Sobolev norm on every positive-radius interval. -/
-theorem norm_le_weighted {s : ℕ} (N : ℕ) (hS : s ≤ N+6) (ρ δ : ℝ)
+/-- A finite actual Gevrey bound controls the complete energy-order Sobolev norm on every
+positive-radius interval. -/
+theorem norm_le_weighted {s : ℕ} (N : ℕ) (hS : s ≤ N + 6) (ρ δ : ℝ)
     (hδ : 0 < δ) (hδρ : δ ≤ ρ) (hδ1 : δ ≤ 1) (u : SobolevSpace period s) :
     ‖u‖ ≤ weightedNorm period 6 N ρ u / weight δ N := by
   have hρ : 0 < ρ := hδ.trans_le hδρ
@@ -71,25 +76,26 @@ theorem norm_le_weighted {s : ℕ} (N : ℕ) (hS : s ≤ N+6) (ρ δ : ℝ)
   have hc := (word_le_level period u w).trans (level_le_block period u N w.1.val hm)
   have hh := Finset.single_le_sum (s := Finset.range (N+1))
     (fun i _ => mul_nonneg (weight_pos hρ i).le (show 0 ≤ blockNorm period (toJet period u) 6 i
-      from blockNorm_nonneg _))
+        from blockNorm_nonneg _))
     (show n ∈ Finset.range (N+1) by exact Finset.mem_range.mpr (by omega))
   have hle : weight δ N*‖u.val w‖ ≤ weightedNorm period 6 N ρ u := by
     calc
       _ ≤ weight ρ n*‖u.val w‖ := mul_le_mul_of_nonneg_right (weight_lower ρ δ hδ hδρ hδ1 n N hn)
-        (norm_nonneg _)
+          (norm_nonneg _)
       _ ≤ weight ρ n*blockNorm period (toJet period u) 6 n := mul_le_mul_of_nonneg_left hc
-        (weight_pos hρ n).le
+          (weight_pos hρ n).le
       _ ≤ _ := hh
   exact (le_div_iff₀ hw).mpr (by simpa only [mul_comm] using hle)
 
-/-- A metric Gevrey bound gives the actual finite-Sobolev state bound needed by the uniform local restart theorem. -/
-theorem norm_le_metric {s : ℕ} (N : ℕ) (hN : N+6 ≤ s) (hS : s ≤ N+6) (ρ δ : ℝ)
+/-- A metric Gevrey bound gives the actual finite-Sobolev state bound needed by the uniform local
+restart theorem. -/
+theorem norm_le_metric {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (hS : s ≤ N + 6) (ρ δ : ℝ)
     (hδ : 0 < δ) (hδρ : δ ≤ ρ) (hδ1 : δ ≤ 1)
     (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) (c : ℝ) (hc : 0 < c)
-    (hK : ∀ v, c^2*‖v‖^2 ≤ inner ℝ (K v) v) :
+    (hK : ∀ v, c ^ 2 * ‖v‖ ^ 2 ≤ inner ℝ (K v) v) :
     ‖u‖ ≤ metricAmplification c*energyNorm period N hN ρ K u / weight δ N := by
   exact (norm_le_weighted period N hS ρ δ hδ hδρ hδ1 u).trans
     (div_le_div_of_nonneg_right (weightedNorm_le_energy period N hN ρ (hδ.trans_le hδρ) K u c hc
-      hK) (weight_pos hδ N).le)
+        hK) (weight_pos hδ N).le)
 
 end EulerGevreyContinuationNorm

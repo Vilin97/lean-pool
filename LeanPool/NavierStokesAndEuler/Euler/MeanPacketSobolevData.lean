@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketOrbitForcing
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceTimeSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSourcePressureSobolev
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedSobolevGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketForcing
+public import LeanPool.NavierStokesAndEuler.Euler.MeanScaledBoundaryGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceFixedInverse
+public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongContinuousGevrey
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramSobolev
+import LeanPool.NavierStokesAndEuler.Euler.MeanSourcePressureSobolev
+import LeanPool.NavierStokesAndEuler.Euler.MeanSourceTimeSobolev
 
 /-!
 # Fixed coefficient budgets for the actual mean packet inverse
@@ -19,6 +23,9 @@ These data contain only bounds on the prescribed coefficients and their
 fixed inverse costs. The external radius is chosen before the forcing grade
 or its scalar envelope, which is restored separately by homogeneity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,12 +39,19 @@ open scoped ContDiff
 
 /-- Fixed coefficient and inverse budgets, with no conclusion about a solution. -/
 structure SobolevData (D : Data) (ι : Type*) [Fintype ι] (q : ℕ) (R : ℝ) where
+  /-- Rc of `SobolevData`, of type `ℝ`. -/
   Rc : ℝ
+  /-- M of `SobolevData`, of type `ℝ`. -/
   M : ℝ
+  /-- CF of `SobolevData`, of type `ℝ`. -/
   CF : ℝ
+  /-- CF₁ of `SobolevData`, of type `ℝ`. -/
   CF₁ : ℝ
+  /-- CH of `SobolevData`, of type `ℝ`. -/
   CH : ℝ
+  /-- CM of `SobolevData`, of type `ℝ`. -/
   CM : ℝ
+  /-- Cf of `SobolevData`, of type `ℝ`. -/
   Cf : ℝ
   radius_lower : 1024 ≤ Rc
   inverse_cost_lower : 1 ≤ M
@@ -60,7 +74,7 @@ structure SobolevData (D : Data) (ι : Type*) [Fintype ι] (q : ℕ) (R : ℝ) w
       (accelerationBlockAmplitude ι q Rc CF CF₁ Cf 1)*(sobolevCoefficientRadius ι Rc+1) ≤ R
   continuous_acceleration_budget :
     2*gramBlockCost ι q D.frameLower Rc CF
-      (accelerationBlockAmplitude ι q Rc CF CF₁ Cf (coordinateTraceCost D.T))*
+      (accelerationBlockAmplitude ι q Rc CF CF₁ Cf (coordinateTraceCost D.T)) *
       (sobolevCoefficientRadius ι Rc+1) ≤ R
   frame_bound : ∀ n t x,
     ‖iteratedFDeriv ℝ n (D.F.field t : Space → Space →L[ℝ] Space) x‖ ≤ CF*majorant Rc 0 n
@@ -76,15 +90,21 @@ namespace SobolevData
 variable {D : Data} {ι : Type*} [Fintype ι] {q : ℕ} {R : ℝ}
   (E : SobolevData D ι q R)
 
+/-- Velocity amplitude, given by `3*sobolevCoefficientAmplitude ι q E.Rc
+E.CF*coordinateTraceCost D.T`. -/
 def velocityAmplitude : ℝ :=
   3*sobolevCoefficientAmplitude ι q E.Rc E.CF*coordinateTraceCost D.T
 
+/-- Derivative amplitude, given by `3*(sobolevCoefficientAmplitude ι q E.Rc
+E.CF₁*coordinateTraceCost D.T + sobolevCoefficientAmplitude ι q E.Rc E.CF)`. -/
 def derivativeAmplitude : ℝ :=
-  3*(sobolevCoefficientAmplitude ι q E.Rc E.CF₁*coordinateTraceCost D.T+
+  3*(sobolevCoefficientAmplitude ι q E.Rc E.CF₁*coordinateTraceCost D.T +
     sobolevCoefficientAmplitude ι q E.Rc E.CF)
 
+/-- Pressure amplitude, given by `E.Cf+3*sobolevCoefficientAmplitude ι q E.Rc E.CF +
+6*sobolevCoefficientAmplitude ι q E.Rc E.CF₁*coordinateTraceCost D.T`. -/
 def pressureAmplitude : ℝ :=
-  E.Cf+3*sobolevCoefficientAmplitude ι q E.Rc E.CF+
+  E.Cf+3*sobolevCoefficientAmplitude ι q E.Rc E.CF +
     6*sobolevCoefficientAmplitude ι q E.Rc E.CF₁*coordinateTraceCost D.T
 
 /-- The concrete source estimates at the fixed budgets above. -/

@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
+
+/-! A raw cylinder field determines its actual continuous L² path uniquely. -/
 
 @[expose] public section
 
-/-! A raw cylinder field determines its actual continuous L² path uniquely. -/
 
 noncomputable section
 
@@ -32,7 +34,7 @@ theorem path_eq_of_same_raw (G H : Field P T raw) : G.path = H.path := by
   exact hg.trans (he.trans hh.symm)
 
 theorem path_eq_of_raw_eq (G : Field P T raw) (H : Field P T raw')
-    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw' (t,(x,θ)) = raw (t,(x,θ))) :
+    (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw' (t, (x, θ)) = raw (t, (x, θ))) :
     G.path = H.path :=
   (G.congr he).path_eq_of_same_raw H
 

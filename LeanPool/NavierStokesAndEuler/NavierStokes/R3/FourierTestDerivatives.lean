@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
 
 /-!
 # Spatial derivatives of Fourier test functions
@@ -17,6 +16,9 @@ These operators use the same coordinate vectors and spatial partial derivatives
 as the equation.  Their Fourier identities include the `2π` normalization of
 Mathlib's Fourier transform.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -59,9 +61,13 @@ theorem fourier_partialCLM_apply (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
     (NavierStokes.ProblemStatement.coordinateVector i)) ξ = _
   rw [← Real.fourier_continuousLinearMap_apply hd,
     Real.fourier_fderiv ψ.integrable ψ.differentiable hd]
-  simp [VectorFourier.fourierSMulRight_apply, SchwartzMap.fourier_coe,
-    NavierStokes.ProblemStatement.coordinateVector,
-    smul_eq_mul, mul_assoc]
+  simp only [NavierStokes.ProblemStatement.coordinateVector, VectorFourier.fourierSMulRight_apply,
+      mul_assoc,
+    neg_apply, neg_smul, Complex.real_smul, smul_eq_mul, mul_neg, neg_mul, neg_neg,
+        FourierTransform.fourierCLE_apply,
+    SchwartzMap.fourier_coe, mul_eq_mul_left_iff, mul_eq_mul_right_iff, Complex.ofReal_inj,
+        Complex.I_ne_zero, or_false,
+    Complex.ofReal_eq_zero, Real.pi_ne_zero, OfNat.ofNat_ne_zero]
   left
   change inner ℝ ξ (EuclideanSpace.single i 1) = ξ i
   simpa using! (EuclideanSpace.inner_single_right i (1 : ℝ) ξ)

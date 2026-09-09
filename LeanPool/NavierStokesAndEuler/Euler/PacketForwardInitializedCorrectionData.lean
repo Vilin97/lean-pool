@@ -9,11 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionSourceData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionConstants
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
 
 /-! The initialized zero-history finite packet supplies the actual all-order data
 of the correction equation, with its derived word estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,19 +27,25 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized normalized field, given by `((forwardInitializedPacketField M D hTime δ
+hδ ξ hs α N k⁻¹).smul k).changeTime hTime`. -/
 def forwardInitializedNormalizedField (N : ℕ) (k : ℝ) :=
   ((forwardInitializedPacketField M D hTime δ hδ ξ hs α N k⁻¹).smul k).changeTime hTime
 
+/-- Forward initialized normalized residual field used in packet forward initialized correction
+data. -/
 def forwardInitializedNormalizedResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :=
   (((sourceCoefficientData period M D (InitialData.zero period D) hTime).inverse.multiply
     (forwardInitializedResidualField M D hTime δ hδ ξ hs α Cagree N hN k⁻¹
       (inv_ne_zero (by linarith)))).smul k).changeTime hTime
 
+/-- Forward initialized correction data, constructed using
+`EulerPacketCorrectionCoefficients.correctionDataOfFields`. -/
 def forwardInitializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     EulerAllOrderCorrectionData.Data period D.T :=
@@ -57,31 +65,31 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.g)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.g)
 
 include NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem forwardInitializedNormalizedField_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (forwardInitializedNormalizedField M D hTime δ hδ ξ hs α N k).WordBound
       6 (4*L.R) (velocity L.R S.H0 BC.multiplierCost) 0 :=
   (forwardInitializedPacket_normalized_bound M D hTime δ hδ ξ hs α L NB W LM WM BC
     hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase).changeTime hTime
 
 theorem forwardInitializedNormalizedField_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     ((forwardInitializedNormalizedField M D hTime δ hδ ξ hs α N k).map
       (normalComponentMap D.m₀)).WordBound 6 (4*L.R) (normal L.R S.H0 BC.multiplierCost/k) 0 := by
   have hh := (forwardInitializedPacket_normal_bound M D hTime δ hδ ξ hs α L NB W LM WM BC
     hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase).changeTime hTime
-  exact hh.of_raw_eq _ (fun _ _ _ => rfl)
+  exact hh.ofRawEq _ (fun _ _ _ => rfl)
 
 theorem forwardInitializedNormalizedResidualField_bound (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hcoef : BC.multiplierCost ≤ k^(1/100 : ℝ)) (hX : 6 ≤ X) (hNX : X-1 ≤ (N : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ)) (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (forwardInitializedNormalizedResidualField M D hTime δ hδ ξ hs α Cagree N hN k hk).WordBound
       6 (4*L.R) (Real.exp (-(7/10)*X*Real.log k)) 0 :=
   (forwardInitializedResidual_normalized_bound M D hTime δ hδ ξ hs α L NB W LM WM BC

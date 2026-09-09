@@ -8,12 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointLabels
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointRegularity
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointEquation
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderRetractRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathIntegral
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointClassical
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointEquation
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPathIntegral
+import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointClassical
 
 /-!
 The actual cylinder endpoint inverse agrees at every spatial/angular point
@@ -22,6 +21,9 @@ genuine coordinate representatives and their time derivatives, then uses
 the proved two-endpoint energy uniqueness theorem.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerCylinderDirichlet.Coefficients
@@ -29,7 +31,7 @@ namespace EulerCylinderDirichlet.Coefficients
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerSmoothLimit
   EulerLiftedGradientSpace EulerLpCylinderTranslation EulerVolterraConvolution
   EulerCylinderRetractRepresentative EulerTransverseGramInverse EulerMetricTransport
-    EulerMeanCoefficients
+      EulerMeanCoefficients
 open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U : Type*}
@@ -49,14 +51,20 @@ theorem endpointDisplacement_orbit_contDiff :
     (D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY)
     (D.endpointDisplacement_hasDerivWithinAt P Y) (D.endpointDisplacement_initial P Y)
 
+/-- Endpoint point displacement, given by `pointPath P J L (D.endpointDisplacement P Y)
+(D.endpointDisplacement_orbit_contDiff P hQ hQ₁ hH Y hY) x`. -/
 def endpointPointDisplacement (x : LiftDomain P) : C(Icc (0 : ℝ) T,U) :=
   pointPath P J L (D.endpointDisplacement P Y)
     (D.endpointDisplacement_orbit_contDiff P hQ hQ₁ hH Y hY) x
 
+/-- Endpoint point coordinate, given by `pointPath P J L (D.endpointCoordinate P Y)
+(D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY) x`. -/
 def endpointPointCoordinate (x : LiftDomain P) : C(Icc (0 : ℝ) T,U) :=
   pointPath P J L (D.endpointCoordinate P Y)
     (D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY) x
 
+/-- Endpoint point acceleration, given by `pointPath P J L (D.endpointAcceleration P Y)
+(D.endpointAcceleration_orbit_contDiff P hQ hQ₁ hH Y hY) x`. -/
 def endpointPointAcceleration (x : LiftDomain P) : C(Icc (0 : ℝ) T,U) :=
   pointPath P J L (D.endpointAcceleration P Y)
     (D.endpointAcceleration_orbit_contDiff P hQ hQ₁ hH Y hY) x
@@ -151,7 +159,7 @@ theorem endpointPointCoordinate_eq_label (f : LiftDomain P → U) (hf : Continuo
     D.lower D.lower_pos (D.labelFrame_lower x.1) (D.labelFrame_derivative x.1)
     D.potential D.potential_nonneg (D.labelHessian_upper x.1) D.small
     (D.labelFrameSecond x.1) D.time_pos (D.labelFrame_second_derivative x.1) (D.labelFrame_equation
-      x.1)
+        x.1)
     (f x) (D.endpointPointDisplacement P J L hQ hQ₁ hH Y hY x)
     (D.endpointPointCoordinate P J L hQ hQ₁ hH Y hY x)
     (D.endpointPointAcceleration P J L hQ hQ₁ hH Y hY x)

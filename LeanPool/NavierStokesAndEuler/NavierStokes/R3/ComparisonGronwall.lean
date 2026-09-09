@@ -6,12 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Scalar closure of the whole-space comparison estimate
@@ -21,6 +19,9 @@ interval. The integrating-factor argument below therefore uses continuity on
 the closed interval and the mean-value theorem on its interior. In particular,
 no energy inequality at a time endpoint is assumed.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

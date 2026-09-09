@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketNeighborPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketParameterEnvelope
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
+import LeanPool.NavierStokesAndEuler.Euler.ParentPacketScaledBounds
 
 /-! Actual selected terminal coordinates and the canonical boundary
 parameter have fixed polynomial caps. They are inputs to the uniform
 normal-stage source envelope. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,6 +23,7 @@ namespace EulerParentPacketParameterCaps
 
 open Real EulerPacketParentLabelBounds EulerTransverseActivationSelection EulerMeanHarmonic
 
+/-- Terminal constant, given by `8*(activationConstant CM CH+1)*(1+3*(1+embeddingCost)^2)`. -/
 def terminalConstant (CM CH : ℝ) : ℝ :=
   8*(activationConstant CM CH+1)*(1+3*(1+embeddingCost)^2)
 
@@ -29,6 +32,7 @@ theorem terminalConstant_nonneg (CM CH : ℝ) (hCH : 0 ≤ CH) :
   unfold terminalConstant activationConstant
   positivity
 
+/-- Boundary constant, given by `boundaryLocalizationC1*(CM+2)+1`. -/
 def boundaryConstant (CM : ℝ) : ℝ := boundaryLocalizationC1*(CM+2)+1
 
 theorem boundaryConstant_pos (CM : ℝ) (hCM : 0 ≤ CM) : 0 < boundaryConstant CM := by
@@ -36,7 +40,7 @@ theorem boundaryConstant_pos (CM : ℝ) (hCM : 0 ≤ CM) : 0 < boundaryConstant 
   positivity [boundaryLocalizationC1_nonneg]
 
 theorem boundary_parameter_bound (CM Bc L X : ℝ) (hX : 1 ≤ X)
-    (hBc : Bc ≤ CM*X^1000+2) (hL : L=boundaryLocalizationC1*Bc+1) :
+    (hBc : Bc ≤ CM * X ^ 1000 + 2) (hL : L = boundaryLocalizationC1 * Bc + 1) :
     L ≤ boundaryConstant CM*X^1000 := by
   have hp : 1 ≤ X^1000 := one_le_pow₀ hX
   have hb : Bc ≤ (CM+2)*X^1000 := by nlinarith only [hBc,hp]
@@ -55,7 +59,7 @@ open Set EulerSmoothLimit EulerTransverseFrameCoordinates EulerTransversePacketP
 
 variable {A : Parent} (L : LabelData A)
   {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (support : Set Space) (hsupport : IsCompact support)
   {τ : ℝ} {hτ : 0 < τ} {hτT : τ < A.T}
   {P : ParentFrame (A.transverseData m hm R support hsupport) τ}

@@ -9,12 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedPressureRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryPressureShear
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 
 /-! The actual finite pressure Hessian is its primary normal tensor plus
 a uniform inverse-frequency error. No derivative or remainder estimate
 is assumed for a solved field. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,10 +34,11 @@ open scoped ContDiff
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
+/-- Initialized pressure hessian cost, constructed using `fastHessianCost`. -/
 def initializedPressureHessianCost {D : Data U} {q : ℕ} {R₀ : ℝ}
     (NB : EulerTransversePacketJoin.NormalBudget D q R₀) (R H0 Rc C : ℝ) : ℝ :=
-  fastHessianCost (P := period) NB (4*R) (fixedVelocityGradeCost R H0 1)+
-    9*C*physicalFixedCost D Rc C (4*R) 1*sobolevEmbeddingConstant period 3*
+  fastHessianCost (P := period) NB (4*R) (fixedVelocityGradeCost R H0 1) +
+    9*C*physicalFixedCost D Rc C (4*R) 1*sobolevEmbeddingConstant period 3 *
       (fixedVelocityGradeCost R H0 2+2)
 
 variable (M : EulerMeanPacketProvider.Data) (D : Data U) (hTime : M.T = D.T)
@@ -70,18 +74,18 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
 theorem initializedPressure_hessian_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
     (X Y : Icc (0 : ℝ) D.T → Space → Space)
     (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-    (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
-    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+    (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
+    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖fderiv ℝ (gradient (fun y => initializedPressure M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
         (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ)))) x -
@@ -105,7 +109,7 @@ theorem initializedPressure_hessian_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk
   have hf := fastForce_hasFDerivAt a k hk0.ne' D.m₀ (Y t) J x (hYder t x) hJ
     (ha.differentiable (by simp) _)
   have hsecond : angularDerivative a (graphMap k D.m₀ (Y t x)) =
-      EulerPacketPrimaryPressure.coefficient τ hτ hτT B ξ hs α t (Y t x)*
+      EulerPacketPrimaryPressure.coefficient τ hτ hτT B ξ hs α t (Y t x) *
         deriv (profile δ) (k*⟪D.m₀,Y t x⟫_ℝ) :=
     initializedAngularPressure_second D τ hτ hτT B δ hδ ξ hs α t _
   have hn : transportedNormal D.m₀ J x = D.normal.field t (Y t x) := rfl

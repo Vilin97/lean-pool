@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
 
-@[expose] public section
-
 /-!
 # Source Hessian data construct the transverse history inverse
 
@@ -20,6 +18,9 @@ F_tt = -H F and upper Hessian bound. The full-cylinder Dirichlet inverse,
 its true time derivatives, and all endpoint conditions are constructed by
 the previously proved coercive solve. No solution is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,11 +35,13 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- The original Hessian law and upper bound, before the actual solve. -/
 structure HistoryData (D : Data U) where
+  /-- H of `HistoryData`, of type `SmoothCoefficientPath (Icc (0 : ℝ) D.T) (Space →L[ℝ] Space)`. -/
   H : SmoothCoefficientPath (Icc (0 : ℝ) D.T) (Space →L[ℝ] Space)
   jacobi : ∀ t ∈ Icc (0 : ℝ) D.T, ∀ x : Space,
     HasDerivWithinAt (fun s => extendPath D.T D.T_pos.le D.F₁.field s x)
       (-((extendPath D.T D.T_pos.le H.field t x).comp
         (extendPath D.T D.T_pos.le D.F.field t x))) (Icc (0 : ℝ) D.T) t
+  /-- Potential of `HistoryData`, of type `ℝ`. -/
   potential : ℝ
   potential_nonneg : 0 ≤ potential
   potential_bound : ∀ t x v, ⟪H.field t x v,v⟫_ℝ ≤ potential*‖v‖^2
@@ -48,14 +51,35 @@ namespace HistoryData
 
 variable {D : Data U} (B : HistoryData D)
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (U →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ U →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ U →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketHistoryData1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketHistoryData2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketHistoryData3 : NormedAddCommGroup (U →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] Space)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketHistoryData4 : NormedSpace ℝ (U →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketHistoryData5 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketHistoryData6 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ U →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketHistoryData7 : NormedAddCommGroup (Space →ᵇ U →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ U →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketHistoryData8 : NormedSpace ℝ (Space →ᵇ U →L[ℝ] Space) :=
+    inferInstance
 
 /-- The second frame derivative is the prescribed Hessian product. -/
 def frameSecond : C(Icc (0 : ℝ) D.T,Space →ᵇ U →L[ℝ] Space) :=

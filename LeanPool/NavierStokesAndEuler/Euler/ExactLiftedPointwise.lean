@@ -8,13 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedExactLifted
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointMultiplication
-public import LeanPool.NavierStokesAndEuler.Euler.LiftedTransportComponents
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.SobolevPointMultiplication
 
 /-! The exact Sobolev equation is the literal pointwise normalized equation
 for the canonical smooth representatives. No pointwise PDE is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,6 +40,7 @@ private theorem coefficient_value_ae (C : SmoothCoefficient P)
   filter_upwards [C.operator_ae (value P u),hu] with x hc hf
   exact hc.trans (congrArg (C.coefficient x) hf)
 
+/-- Point nonlinearity as an element of `Vector3`. -/
 def pointNonlinearity (A : Data P T) (Z : FieldTower P T)
     (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
   (A.linear.coefficient t).coefficient x (Z.pointField t x) +
@@ -114,6 +115,8 @@ namespace ExactLiftedPacket
 variable {P} {hT : 0 < T} {A : Data P T} {B : Budget P hT A}
   (S : ExactLiftedPacket P hT A B)
 
+/-- Point time derivative, given by `-pointNonlinearity P A S.velocity t x -
+(A.metric.coefficient t).coefficient x (S.pressure.pointField t x)`. -/
 def pointTimeDerivative (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
   -pointNonlinearity P A S.velocity t x -
     (A.metric.coefficient t).coefficient x (S.pressure.pointField t x)
@@ -122,8 +125,8 @@ def pointTimeDerivative (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
 theorem pointField_hasDerivAt (x : LiftDomain P) (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => S.velocity.pointField (projIcc 0 T hT.le r) x)
       (S.pointTimeDerivative ⟨t,ht.1.le,ht.2.le⟩ x) t := by
-  have h := ((pointEvaluation P x).comp (restrictOperator P (by omega : 3 ≤
-    6))).hasFDerivAt.comp_hasDerivAt t
+  have h := ((pointEvaluation P x).comp (restrictOperator P (by
+      omega : 3 ≤ 6))).hasFDerivAt.comp_hasDerivAt t
     (S.equation 6 le_rfl t ht)
   have hfun : (fun r => (pointEvaluation P x).comp (restrictOperator P (by omega : 3 ≤ 6))
       (extendPath T hT.le (S.velocity.realization 6) r)) =

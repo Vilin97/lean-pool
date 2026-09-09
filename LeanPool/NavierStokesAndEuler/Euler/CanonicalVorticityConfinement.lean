@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CanonicalPacketHorizons
-public import LeanPool.NavierStokesAndEuler.Euler.StageVorticityConfinement
-public import LeanPool.NavierStokesAndEuler.Euler.H3CurlConvergence
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteLifespan
+public import LeanPool.NavierStokesAndEuler.Euler.StageDisplacementConfinement
+import LeanPool.NavierStokesAndEuler.Euler.CanonicalPacketHorizons
+import LeanPool.NavierStokesAndEuler.Euler.H3CurlConvergence
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerRestriction
+import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
+import LeanPool.NavierStokesAndEuler.Euler.StageVorticityConfinement
 
 /-!
 # Uniformly compact vorticity of the canonical packet solution
@@ -21,6 +23,9 @@ therefore passes their common vorticity support to every shorter ordinary
 Euler evolution, and hence to the canonical maximal field itself.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerPacketInduction
@@ -29,6 +34,8 @@ open Set Filter EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2F
   EulerPhysicalL2Scaling EulerOrdinarySobolev EulerMeanCutoffCurl EulerSmoothL2Series
 open scoped Topology
 
+/-- Canonical vorticity ball, given by `Metric.closedBall 0 (2 + particleDisplacementCap
+constructionScales le_rfl le_rfl)`. -/
 def canonicalVorticityBall : Set Space :=
   Metric.closedBall 0 (2 + particleDisplacementCap constructionScales le_rfl le_rfl)
 

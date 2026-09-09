@@ -7,11 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.Topology.Algebra.Support
-
-@[expose] public section
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # A uniform spatial square-integral bound for compactly supported forces
@@ -20,6 +19,9 @@ Compact spacetime support gives one compact spatial set supporting all slices.
 Continuity of the parameterized integral then supplies a finite bound on the
 closed time interval `[0, 1]`.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

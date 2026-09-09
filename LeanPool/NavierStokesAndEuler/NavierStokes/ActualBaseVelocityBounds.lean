@@ -6,12 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AllBandBaseJets
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalClassBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedQuotients
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.FinalSlowBase
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
+import LeanPool.NavierStokesAndEuler.NavierStokes.AnnularEndpoint
 
 /-!
 # Fixed losses for the actual physical slow velocity
@@ -22,6 +19,9 @@ velocity is its actual leading angular field. In the far exterior it is the
 physical heat field. The final rate is on the full open-past endpoint filter.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function
@@ -31,6 +31,7 @@ namespace NavierStokes.ActualBaseVelocityBounds
 
 open ProblemStatement SlowBorelBase BaseResidual DiagonalResidual
 
+/-- Endpoint, given by `𝓝[SpacetimeEndpoint.openPast 1] (1, (0 : Space))`. -/
 noncomputable def endpoint : Filter SpaceTime :=
   𝓝[SpacetimeEndpoint.openPast 1] (1, (0 : Space))
 
@@ -53,6 +54,7 @@ theorem endpoint_q_small {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
   filter_upwards [endpoint_past, ht.eventually (gt_mem_nhds zero_lt_one)] with z hz hq
   exact ⟨PhysicalWaveSum.physicalQ_pos hh hh1 hz, hq.le⟩
 
+/-- Physical energy, given by `AxisymmetricFields.radialEnergy z.2`. -/
 noncomputable def physicalEnergy (z : SpaceTime) : ℝ :=
   AxisymmetricFields.radialEnergy z.2
 
@@ -66,7 +68,7 @@ theorem X_nonneg {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) {z : SpaceTime}
     (hz : z.1 < 1) : 0 ≤ (cartesianChart h z).2.1 := by
   rw [X_eq]
   exact div_nonneg (AxisymmetricFields.radialEnergy_nonneg _) (PhysicalWaveSum.physicalQ_pos hh hh1
-    hz).le
+      hz).le
 
 theorem rate_glue {D E : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -85,6 +87,8 @@ theorem rate_glue {D E : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
   · exact (hzb hs).trans (mul_le_mul_of_nonneg_right (le_add_of_nonneg_left hA)
       (Real.rpow_nonneg hz.le _))
 
+/-- Bounded approach, bundling `carrier`, `compact`, `in_carrier`, `past` and the required
+compatibility proofs. -/
 noncomputable def boundedApproach {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {l : Filter SpaceTime} (hl : l ≤ endpoint) (R : ℝ)
     (hR : ∀ᶠ z in l, (cartesianChart h z).2.1 ≤ R) : PhysicalApproach l h 0 R where
@@ -110,6 +114,7 @@ theorem negative_power_le {a q x p : ℝ} (ha : 0 < a) (hq : 0 < q) (hq1 : q ≤
     _ ≤ a ^ p * q ^ (-2 : ℝ) := mul_le_mul_of_nonneg_left
       (Real.rpow_le_rpow_of_exponent_ge hq hq1 hp.1) (Real.rpow_nonneg ha.le _)
 
+/-- Power loss, given by `2 * (2 * (m : ℝ) + 1)`. -/
 noncomputable def powerLoss (m : ℕ) : ℝ := 2 * (2 * (m : ℝ) + 1)
 
 theorem powerLoss_nonneg (m : ℕ) : 0 ≤ powerLoss m := by unfold powerLoss; positivity
@@ -131,7 +136,7 @@ theorem finiteRate_negative_power {D : Type} [NormedAddCommGroup D] [NormedSpace
   have hU : IsOpen {z | 0 < f z} := isOpen_lt continuous_const hf.continuous
   refine ⟨WeightedQuotients.orderBound p m * C ^ (2 * m + 1), by
     exact mul_nonneg (WeightedQuotients.orderBound_nonneg p m) (pow_nonneg (zero_le_one.trans hC)
-      _), ?_⟩
+        _), ?_⟩
   filter_upwards [hq, hlower, hd] with z hz hlo hdz
   have hfp : 0 < f z := (mul_pos ha hz.1).trans_le hlo
   have hqpow : 1 ≤ q z ^ (-2 : ℝ) := by
@@ -147,8 +152,8 @@ theorem finiteRate_negative_power {D : Type} [NormedAddCommGroup D] [NormedSpace
     exact h.trans (mul_le_mul_of_nonneg_right hiC (Real.rpow_nonneg hz.1.le _))
   have hjet : ∀ i ≤ m, ‖iteratedFDeriv ℝ i f z‖ ≤ C * q z ^ (-2 : ℝ) := by
     intro i hi
-    have hiD : ‖iteratedFDeriv ℝ i f z‖ ≤ D := by simpa only [Real.rpow_zero, mul_one] using hdz i
-      hi
+    have hiD : ‖iteratedFDeriv ℝ i f z‖ ≤ D := by
+        simpa only [Real.rpow_zero, mul_one] using hdz i hi
     exact hiD.trans (hDC.trans (le_mul_of_one_le_right (zero_le_one.trans hC) hqpow))
   intro i hi
   calc
@@ -206,16 +211,19 @@ theorem finiteRate_mul {l : Filter SpaceTime} {q f g : SpaceTime → ℝ}
     FiniteJetRate l q (fun z => f z * g z) m (r + s) := by
   exact finiteRate_bilinear hf hg hU hlU hq hsf hsg (ContinuousLinearMap.mul ℝ ℝ)
 
+/-- Positive radius, given by `{z | 0 < physicalEnergy z}`. -/
 noncomputable def positiveRadius : Set SpaceTime := {z | 0 < physicalEnergy z}
 
 theorem positiveRadius_isOpen : IsOpen positiveRadius :=
   isOpen_lt continuous_const physicalEnergy_smooth.continuous
 
+/-- Heat time, given by `2 * (1 - z.1)`. -/
 noncomputable def heatTime (z : SpaceTime) : ℝ := 2 * (1 - z.1)
 
 theorem heatTime_smooth : ContDiff ℝ ∞ heatTime :=
   contDiff_const.mul (contDiff_const.sub contDiff_fst)
 
+/-- Heat ratio, given by `heatTime z * physicalEnergy z ^ (-1 : ℝ)`. -/
 noncomputable def heatRatio (z : SpaceTime) : ℝ := heatTime z * physicalEnergy z ^ (-1 : ℝ)
 
 theorem energyPower_smooth (p : ℝ) :
@@ -225,6 +233,7 @@ theorem energyPower_smooth (p : ℝ) :
 theorem heatRatio_smooth : ContDiffOn ℝ ∞ heatRatio positiveRadius :=
   heatTime_smooth.contDiffOn.mul (energyPower_smooth (-1))
 
+/-- Heat model coefficient as an element of `ℝ`. -/
 noncomputable def heatModelCoefficient (C h : ℝ) (z : SpaceTime) : ℝ :=
   (C * (physicalEnergy z ^ RadialHeatProfile.spatialExponent (1 + h) *
     HeatProfileExtension.extension (1 + h) (heatRatio z))) *
@@ -241,6 +250,7 @@ theorem heatModelCoefficient_smooth (C : ℝ) {h : ℝ} (hh : 0 < h) :
     ((HeatProfileExtension.extension_contDiff (by linarith : 1 < 1 + h)).comp_contDiffOn
       heatRatio_smooth))).mul (doubleEnergyPower_smooth _)
 
+/-- Heat model velocity, given by `heatModelCoefficient C h z • angularVector z`. -/
 noncomputable def heatModelVelocity (C h : ℝ) (z : SpaceTime) : Space :=
   heatModelCoefficient C h z • angularVector z
 
@@ -282,6 +292,7 @@ theorem extension_uniform_jets {a : ℝ} (ha : 1 < a) (m : ℕ) :
     (Finset.single_le_sum (fun j _ => HeatProfileExtension.derivativeBound_nonneg a j)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hi)))
 
+/-- Heat loss, given by `powerLoss m * ((m : ℝ) + 2)`. -/
 noncomputable def heatLoss (m : ℕ) : ℝ := powerLoss m * ((m : ℝ) + 2)
 
 theorem heatLoss_eq (m : ℕ) : heatLoss m = (4 * (m : ℝ) + 2) * ((m : ℝ) + 2) := by
@@ -369,6 +380,8 @@ theorem monomial_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     exact hb z hz ht hqz.2 hX
   exact hr.weaken hq (sub_le_sub_left (by exact_mod_cast hii) b)
 
+/-- Leading velocity, given by `(C⁻¹ * cartesianMonomial h (-CoordinateAlgebra.A h - 1 / 2)
+(d.phi 0) z) • angularVector z`. -/
 noncomputable def leadingVelocity (h C : ℝ) (d : Coefficients) (z : SpaceTime) : Space :=
   (C⁻¹ * cartesianMonomial h (-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) z) • angularVector z
 
@@ -381,7 +394,7 @@ theorem leadingVelocity_eq (h C : ℝ) (d : Coefficients) (z : SpaceTime) :
     simp [leadingVelocity, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
       AxisymmetricResidual.componentY, AxisymmetricResidual.lift, AxisymmetricResidual.pack,
       BaseExterior.leadingAngular, cartesianMonomial, angularVector, coordinateVector, Fin.ext_iff]
-        <;> ring
+          <;> ring
 
 theorem leadingVelocity_rate {l : Filter SpaceTime} {h C lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
@@ -395,7 +408,7 @@ theorem leadingVelocity_rate {l : Filter SpaceTime} {h C lo hi : ℝ}
     (-CoordinateAlgebra.A h - 1 / 2) m) past_isOpen hp hs C⁻¹
   have he := finiteRate_bilinear hr
     (finiteRate_compact (q := PhysicalWaveSum.physicalQ h) angularVector_smooth A.compact
-      A.in_carrier m)
+        A.in_carrier m)
     past_isOpen hp ((A.positive_small hh hh1).mono (fun _ hz => hz.1))
     (contDiffOn_const.mul hs) angularVector_smooth.contDiffOn (ContinuousLinearMap.lsmul ℝ ℝ)
   simp only [add_zero] at he
@@ -444,10 +457,10 @@ theorem actual_exterior_coefficients :
       n hp.le (abs_le.mpr heta)
   · intro n hn p hp _
     exact (ModulatedExterior.realized_positive_exterior W v.profiles v.finiteModification hd ho hn
-      hp.le).1
+        hp.le).1
   · intro n hn p hp _
     exact (ModulatedExterior.realized_positive_exterior W v.profiles v.finiteModification hd ho hn
-      hp.le).2.2
+        hp.le).2.2
 
 theorem actual_leading_eq (upper : ℝ) (B : ℕ) :
     EqOn (FinalSlowBase.velocity H v upper B)
@@ -472,7 +485,7 @@ theorem actual_bounded_rate (upper : ℝ) (B : ℕ) {l : Filter SpaceTime}
   have ha := FinalSlowBase.scales_admissible H v upper B
   have hr := velocity_prefix_rate F.data.h_pos F.data.h_lt_half A hd ha m m (by omega)
   have hs := prefixVelocity_growth (C := W.axis.normalization) F.data.h_pos F.data.h_lt_half A hd m
-    m
+      m
   have hr' := finiteRate_weaken hr hq (show -CoordinateAlgebra.A F.data.h - 2 * ((m : ℝ) + 1) ≤
       F.data.h * ((m : ℝ) + 1) - CoordinateAlgebra.A F.data.h - 2 * ((m : ℝ) + 1) by
     have hm : 0 ≤ F.data.h * ((m : ℝ) + 1) := mul_nonneg F.data.h_pos.le (by positivity)
@@ -511,7 +524,7 @@ theorem actual_outer_rate (upper : ℝ) (B : ℕ) {l : Filter SpaceTime}
     JetRate l (PhysicalWaveSum.physicalQ F.data.h) (FinalSlowBase.velocity H v upper B)
       m (-heatLoss m) := by
   let S : Set SpaceTime := {z | (cartesianChart F.data.h z).2.1 ≤
-    BaseExterior.nominalExteriorRadius W}
+      BaseExterior.nominalExteriorRadius W}
   have hq := (endpoint_q_small F.data.h_pos F.data.h_lt_half).filter_mono hl
   apply rate_glue (S := S) (hq.mono (fun _ hz => hz.1))
   · have hl' : l ⊓ 𝓟 S ≤ endpoint := inf_le_left.trans hl
@@ -529,7 +542,7 @@ theorem actual_outer_rate (upper : ℝ) (B : ℕ) {l : Filter SpaceTime}
     have ha := finiteRate_congr_on hr
       (BaseExterior.cartesianExterior_isOpen F.data.h_pos F.data.h_lt_half _)
       ((endpoint_past.filter_mono hl').and hR) (FinalSlowBase.exterior_fields_eq_heat H v upper
-        B).1.symm
+          B).1.symm
     exact finiteRate_at ha le_rfl
 
 theorem outer_lt_box (upper : ℝ) :
@@ -549,7 +562,7 @@ theorem velocity_rate (upper : ℝ) (B m : ℕ) :
   · have hr := actual_bounded_rate H v upper B (show endpoint ⊓ 𝓟 S ≤ endpoint from inf_le_left)
       (show ∀ᶠ z in endpoint ⊓ 𝓟 S,
         (cartesianChart F.data.h z).2.1 ≤ FinalSlowBase.boxRadius W upper from restricted_mem
-          endpoint S) m
+            endpoint S) m
     exact (finiteRate_at hr le_rfl).weaken (hq.filter_mono inf_le_left)
       (heatLoss_controls_core F.data.h_lt_half m)
   · apply actual_outer_rate H v upper B inf_le_left _ m

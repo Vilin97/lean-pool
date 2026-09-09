@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedFrameTransport
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEquation
 
 /-!
 # Identification of the strong mean velocity with the fixed derivative variable
@@ -19,6 +17,9 @@ trace. Terminal-primitive uniqueness therefore identifies every strong
 realization with the same fixed-coordinate derivative field. Spatial estimates
 for the fixed inverse consequently apply to the constructed physical velocity.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -55,7 +56,7 @@ theorem productDerivative_velocityLp
     (solenoidalFrame T F₁) (solenoidalFrame_hasDerivWithinAt T hT F F₁ hF) s.velocityLp t
   have hlabel := (congrArg (F t) (s.label_eq t)).trans (hRight t (realPrimitive T u t))
   exact hp.trans ((congrArg (solenoidalFrame T F t) (s.terminalPrimitive_velocityLp t)).trans
-    hlabel)
+      hlabel)
 
 end EulerMeanVariationalInverse.StrongMeanEvolution
 

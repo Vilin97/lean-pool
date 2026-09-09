@@ -6,16 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStageGrowth
-public import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVaryingHorizon
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Series
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldPhysicalSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVaryingHorizon
+import LeanPool.NavierStokesAndEuler.Euler.PacketStageGrowth
+import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Series
 
 /-! Any actual family of packet stages with convergent H³ initial data
 excludes an ordinary Euler evolution on the base horizon. Each stage is
 compared only on its own genuine horizon. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,13 +33,13 @@ open scoped Topology
 
 variable {c B : ℝ} {S : Scales c B} (P : ∀ n, Stage S n) (u₀ : Space → Space)
   (hinit : Tendsto (fun n => derivativeSum 3
-    ((fun x => (P n).state.evolution.velocity (0,x))-u₀)) atTop (𝓝 0))
+    ((fun x => (P n).state.evolution.velocity (0, x)) - u₀)) atTop (𝓝 0))
 
 include P hinit
 
 theorem false_of_evolution
     (U : Evolution (baseHorizon S.J S.X) (baseHorizon_pos S.J S.j_one S.x_pos).le)
-    (hU₀ : (U.velocity ⟨0,le_rfl,(baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field=u₀) :
+    (hU₀ : (U.velocity ⟨0, le_rfl, (baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field = u₀) :
     False := by
   let durations : ℕ → ℝ := fun n => (P n).parent.T
   let hD : ∀ n, 0 ≤ durations n := fun n => (P n).parent.T_pos.le
@@ -48,7 +53,7 @@ theorem false_of_evolution
         ⟨0,le_rfl,hD n⟩).field = (fun x => (P n).state.evolution.velocity (0,x))-u₀ := by
     funext x
     rw [Evolution.difference,fieldSub_field]
-    change ((P n).state.regularity.velocity ⟨0,le_rfl,(P n).parent.T_pos.le⟩).field x-
+    change ((P n).state.regularity.velocity ⟨0,le_rfl,(P n).parent.T_pos.le⟩).field x -
         (U.velocity ⟨0,le_rfl,(baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field x = _
     rw [hU₀,← (P n).state.regularity.velocity_match ⟨0,le_rfl,(P n).parent.T_pos.le⟩ x]
     rfl

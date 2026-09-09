@@ -9,12 +9,16 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowAcceleration
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJacobian
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothPathJoint
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import LeanPool.NavierStokesAndEuler.Euler.SmoothImplicitLift
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Genuine joint time-space regularity of the constructed flow and its
 inverse. Interior C² uses only the actual first time derivative of the
 velocity coefficient, together with its existing smooth spatial jets. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,7 +67,7 @@ theorem forward_jointDerivative_contDiffAt_one
     (t : ℝ) (ht : t ∈ Ioo 0 T) (x : E) :
     ContDiffAt ℝ 1
       (Function.uncurry (jointDerivative T hT (pathFamily T hT A) (velocityFamily T hT A))) (t,x)
-        := by
+          := by
   have hq := joint_contDiffAt_one T hT (velocityFamily T hT A) (accelerationFamily T hT A A₁)
     (velocityFamily_contDiff T hT A) (accelerationFamily_contDiff T hT A A₁)
     (velocityFamily_time_derivative T hT A A₁ htime) t ht x
@@ -74,7 +78,7 @@ theorem forward_jointDerivative_contDiffAt_one
     (spatialDerivative_time T hT _ _ (pathFamily_contDiff T hT A)
       (velocityFamily_contDiff T hT A) (pathFamily_time_derivative T hT A)) t ht x
   have hs := (ContinuousLinearMap.toSpanSingletonLIE ℝ
-    E).toContinuousLinearEquiv.contDiff.contDiffAt.comp
+      E).toContinuousLinearEquiv.contDiff.contDiffAt.comp
     (t,x) hq
   let L : ((ℝ →L[ℝ] E) × (E →L[ℝ] E)) →L[ℝ] ((ℝ × E) →L[ℝ] E) :=
     (ContinuousLinearMap.coprodEquivL (𝕜 := ℝ) (E := ℝ) (F := E) (G := E) ℝ).toContinuousLinearMap
@@ -95,6 +99,7 @@ theorem forward_joint_contDiffAt_two
     exact forward_joint_hasFDerivAt T hT A p.1 hp p.2
 
 omit [FiniteDimensional ℝ E] in
+/-- Time lift equiv, constructed using `ContinuousLinearEquiv.equivOfInverse`. -/
 def timeLiftEquiv (J : E ≃L[ℝ] E) (v : E) : (ℝ × E) ≃L[ℝ] (ℝ × E) :=
   ContinuousLinearEquiv.equivOfInverse
     ((ContinuousLinearMap.fst ℝ ℝ E).prod
@@ -107,7 +112,9 @@ def timeLiftEquiv (J : E ≃L[ℝ] E) (v : E) : (ℝ × E) ≃L[ℝ] (ℝ × E) 
     (by intro p; ext <;> simp)
     (by intro p; ext <;> simp)
 
+/-- Lift forward, given by `(p.1, (flowData T hT A).forward p.1 p.2)`. -/
 def liftForward (p : ℝ × E) : ℝ × E := (p.1, (flowData T hT A).forward p.1 p.2)
+/-- Lift backward, given by `(p.1, (flowData T hT A).backward p.1 p.2)`. -/
 def liftBackward (p : ℝ × E) : ℝ × E := (p.1, (flowData T hT A).backward p.1 p.2)
 
 theorem liftForward_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (x : E) :

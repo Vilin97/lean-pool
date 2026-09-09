@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-! The leading angular pressure force gives its actual rank-one Hessian.
 Only first slow derivatives occur in the remainder. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,10 +23,12 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerGraphPullba
   EulerLiftedGradientSpace
 open scoped ContDiff
 
+/-- Fast force, given by `k⁻¹ • (a (graphMap k m (Y x)) • transportedNormal m J x)`. -/
 def fastForce (a : LiftTangent → ℝ) (k : ℝ) (m : Space) (Y : Space → Space)
     (J : Space → Space →L[ℝ] Space) (x : Space) : Space :=
   k⁻¹ • (a (graphMap k m (Y x)) • transportedNormal m J x)
 
+/-- Fast hessian remainder as an element of `Space →L[ℝ] Space`. -/
 def fastHessianRemainder (a : LiftTangent → ℝ) (k : ℝ) (m : Space) (Y : Space → Space)
     (J : Space → Space →L[ℝ] Space) (x : Space) : Space →L[ℝ] Space :=
   k⁻¹ • (a (graphMap k m (Y x)) • fderiv ℝ (transportedNormal m J) x +
@@ -38,7 +41,7 @@ theorem fastForce_hasFDerivAt (a : LiftTangent → ℝ) (k : ℝ) (hk : k ≠ 0)
     (ha : DifferentiableAt ℝ a (graphMap k m (Y x))) :
     HasFDerivAt (fastForce a k m Y J)
       (angularDerivative a (graphMap k m (Y x)) •
-        rankOne ℝ (transportedNormal m J x) (transportedNormal m J x)+
+        rankOne ℝ (transportedNormal m J x) (transportedNormal m J x) +
           fastHessianRemainder a k m Y J x) x := by
   have hgraph : HasFDerivAt (fun y => graphMap k m (Y y)) ((graphMap k m).comp (J x)) x :=
     (graphMap k m).hasFDerivAt.comp x hY
@@ -73,7 +76,7 @@ theorem fastHessianRemainder_norm_le (a : LiftTangent → ℝ) (k : ℝ) (m : Sp
   simpa only [norm_inl, mul_one] using
     opNorm_comp_le (fderiv ℝ a (graphMap k m (Y x))) (inl ℝ Space ℝ)
 
-theorem norm_fderiv_smul_unit (a : LiftTangent → ℝ) (m : Space) (hm : ‖m‖=1)
+theorem norm_fderiv_smul_unit (a : LiftTangent → ℝ) (m : Space) (hm : ‖m‖ = 1)
     (z : LiftTangent) (ha : DifferentiableAt ℝ a z) :
     ‖fderiv ℝ (fun y => a y • m) z‖ = ‖fderiv ℝ a z‖ := by
   rw [(ha.hasFDerivAt.smul_const m).fderiv,norm_smulRight_apply,hm,mul_one]

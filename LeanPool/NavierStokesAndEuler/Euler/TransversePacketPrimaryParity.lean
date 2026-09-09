@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPaths
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointParity
-public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
+import LeanPool.NavierStokesAndEuler.Euler.CylinderEndpointParity
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
+
+/-! Odd compact terminal data propagate through the genuine history and forward primary solve. -/
 
 @[expose] public section
 
-/-! Odd compact terminal data propagate through the genuine history and forward primary solve. -/
 
 noncomputable section
 
@@ -64,7 +67,7 @@ theorem pastDerivative_reflection_neg (t : Icc (0 : ℝ) τ) :
 
 include hSym
 
-theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T - τ)) :
     reflection P (futureVelocity τ hτ hτT B Y t) = -futureVelocity τ hτ hτT B Y t :=
   (zeroForcing (D.tail τ hτ.le hτT)).velocityPath_reflection_neg (forwardInitial τ hτ hτT B Y) hSym
     (fun s x => hF (tailInclusion D.T τ hτ.le s) x)
@@ -72,10 +75,10 @@ theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T-τ)) :
     (by intro s x θ; simp only [Pi.zero_apply,neg_zero])
     (forwardInitial_reflection_neg τ hτ hτT B Y hF hM hH hY) t
 
-theorem futureDerivative_reflection_neg (t : Icc (0 : ℝ) (D.T-τ)) :
+theorem futureDerivative_reflection_neg (t : Icc (0 : ℝ) (D.T - τ)) :
     reflection P (futureDerivative τ hτ hτT B Y t) = -futureDerivative τ hτ hτT B Y t :=
   (zeroForcing (D.tail τ hτ.le hτT)).derivativePath_reflection_neg (forwardInitial τ hτ hτT B Y)
-    hSym
+      hSym
     (fun s x => hF (tailInclusion D.T τ hτ.le s) x)
     (fun s x => hM (tailInclusion D.T τ hτ.le s) x)
     (by intro s x θ; simp only [Pi.zero_apply,neg_zero])

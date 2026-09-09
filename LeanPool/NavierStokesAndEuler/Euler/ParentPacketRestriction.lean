@@ -9,10 +9,11 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldRestriction
 
-@[expose] public section
-
 /-! Restricting the actual parent to a nested horizon preserves its
 flow identities, physical-label budget and the source low-order guards. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +26,8 @@ namespace Parent
 
 variable (G : Parent) (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
+/-- Restrict time, bundling `T`, `T_pos`, `ell`, `ell_pos` and the required compatibility
+proofs. -/
 def restrictTime : Parent where
   T := S
   T_pos := hS
@@ -53,7 +56,7 @@ theorem restrictTime_second (t : Icc (0 : ℝ) S) (x : Space) :
 
 theorem restrictTime_inverse (t : Icc (0 : ℝ) S) (x : Space) :
     (G.restrictTime S hS hST).inverse.field t x=G.inverse.field (initialInclusion G.T S hST t) x :=
-      by
+        by
   erw [inverse_apply]
 
 theorem restrictTime_strain (t : Icc (0 : ℝ) S) (x : Space) :
@@ -62,7 +65,7 @@ theorem restrictTime_strain (t : Icc (0 : ℝ) S) (x : Space) :
 
 theorem restrictTime_curvature (t : Icc (0 : ℝ) S) (x : Space) :
     (G.restrictTime S hS hST).curvature.field t x=G.curvature.field (initialInclusion G.T S hST t)
-      x := by
+        x := by
   erw [curvature_apply]
 
 theorem restrictTime_initialStrain (x : Space) :
@@ -75,6 +78,8 @@ namespace LabelData
 
 variable {G : Parent} (L : LabelData G) (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
+/-- Restrict time, bundling `K`, `K_one`, `displacement`, `velocity` and the required
+compatibility proofs. -/
 def restrictTime : LabelData (G.restrictTime S hS hST) where
   K := L.K
   K_one := L.K_one
@@ -94,6 +99,7 @@ namespace LowBounds
 
 variable {G : Parent} (H : LowBounds G) (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
+/-- Restrict time, bundling `Be`, `Bc`, `L`, `r` and the required compatibility proofs. -/
 def restrictTime : LowBounds (G.restrictTime S hS hST) where
   Be := H.Be
   Bc := H.Bc
@@ -119,8 +125,8 @@ def restrictTime : LowBounds (G.restrictTime S hS hST) where
     apply le_trans ?_ H.small
     change H.K*(S^2/2)+H.Be*S+boundaryLocalizationC2*H.Bc*H.r^3*S ≤ _
     have h1 := mul_le_mul_of_nonneg_left
-      (div_le_div_of_nonneg_right (pow_le_pow_left₀ hS.le hST 2) (by norm_num : (0 : ℝ) ≤ 2))
-        H.K_nonneg
+      (div_le_div_of_nonneg_right (pow_le_pow_left₀ hS.le hST 2) (by
+          norm_num : (0 : ℝ) ≤ 2)) H.K_nonneg
     have h2 := mul_le_mul_of_nonneg_left hST H.Be_nonneg
     have h3 := mul_le_mul_of_nonneg_left hST
       (mul_nonneg (mul_nonneg boundaryLocalizationC2_nonneg H.Bc_nonneg) (pow_nonneg H.r_nonneg 3))

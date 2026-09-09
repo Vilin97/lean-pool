@@ -6,104 +6,15 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Actual H⁶ multiplication on the three-dimensional cylinder. -/
 
 @[expose] public section
 
 noncomputable section
-
-/-! Actual H⁶ multiplication on the three-dimensional cylinder. -/
 
 namespace EulerCylinderAlgebra
 
@@ -136,8 +47,8 @@ theorem tensor_low_le_H6 {m : ℕ} (hm : m ≤ 3) (f : LiftDomain period → ℂ
     norm_num at h ⊢
     exact h
   have hC := mul_le_mul_of_nonneg_right hp (mul_nonneg
-    (cylinderEmbeddingConstant_nonneg period) (mul_nonneg (by norm_num : (0 : ℝ) ≤ 85)
-      (liftSobolevNorm_nonneg period 6 f)))
+    (cylinderEmbeddingConstant_nonneg period) (mul_nonneg (by
+        norm_num : (0 : ℝ) ≤ 85) (liftSobolevNorm_nonneg period 6 f)))
   have he (C A : ℝ) : 64 * (C * (85 * A)) = (64 * 85 * C) * A := by ring
   exact hA.trans (hB.trans (hC.trans_eq (he _ _)))
 
@@ -181,7 +92,7 @@ theorem product_tensor_term_le {n j : ℕ} (hn : n ≤ 6) (hj : j ≤ n)
       (tensor_le_totalMagnitude period (by omega : n-j ≤ 6) g hg x) (norm_nonneg _)
       (mul_nonneg (lowDerivativeConstant_nonneg period) (liftSobolevNorm_nonneg period 6 f))
     have hB : liftSobolevNorm period 6 f * totalMagnitude period 6 g x ≤ productEnvelope period f g
-      x := by
+        x := by
       exact le_add_of_nonneg_right (mul_nonneg (liftSobolevNorm_nonneg period 6 g)
         (totalMagnitude_nonneg period 6 f x))
     have hC := mul_le_mul_of_nonneg_left hB (lowDerivativeConstant_nonneg period)
@@ -191,7 +102,7 @@ theorem product_tensor_term_le {n j : ℕ} (hn : n ≤ 6) (hj : j ≤ n)
       (tensor_low_le_H6 period (by omega : n-j ≤ 3) g hg hgL2 x) (norm_nonneg _)
       (totalMagnitude_nonneg period 6 f x)
     have hB : liftSobolevNorm period 6 g * totalMagnitude period 6 f x ≤ productEnvelope period f g
-      x := by
+        x := by
       exact le_add_of_nonneg_left (mul_nonneg (liftSobolevNorm_nonneg period 6 f)
         (totalMagnitude_nonneg period 6 g x))
     have hC := mul_le_mul_of_nonneg_left hB (lowDerivativeConstant_nonneg period)
@@ -210,7 +121,7 @@ theorem product_word_pointwise_le {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
     ‖iteratedFieldDerivative period w (f*g) x‖ ≤
       64 * lowDerivativeConstant period * productEnvelope period f g x := by
   have he := euclideanLift_iteratedFieldDerivative period w (f*g) (product_smooth period f g hf hg)
-    x 0
+      x 0
   rw [euclideanLift_zero] at he
   rw [he]
   have hA := (iteratedFDeriv ℝ n (euclideanLift period (f*g) x) 0).le_opNorm
@@ -262,16 +173,16 @@ theorem productEnvelope_L2_le (f g : LiftDomain period → ℂ)
     liftSobolevNorm period 6 g • (totalMagnitude_memLp period 6 f hfL2).toLp _‖ ≤ _
   have hA := norm_add_le
     (liftSobolevNorm period 6 f • (totalMagnitude_memLp period 6 g hgL2).toLp (totalMagnitude
-      period 6 g))
+        period 6 g))
     (liftSobolevNorm period 6 g • (totalMagnitude_memLp period 6 f hfL2).toLp (totalMagnitude
-      period 6 f))
+        period 6 f))
   simp only [norm_smul, Real.norm_of_nonneg (liftSobolevNorm_nonneg period 6 f),
     Real.norm_of_nonneg (liftSobolevNorm_nonneg period 6 g)] at hA
   have hB := add_le_add
     (mul_le_mul_of_nonneg_left (totalMagnitude_L2_le period 6 g hgL2) (liftSobolevNorm_nonneg
-      period 6 f))
+        period 6 f))
     (mul_le_mul_of_nonneg_left (totalMagnitude_L2_le period 6 f hfL2) (liftSobolevNorm_nonneg
-      period 6 g))
+        period 6 g))
   have he (A B : ℝ) : A*B+B*A = 2*A*B := by ring
   exact hA.trans (hB.trans_eq (he _ _))
 
@@ -288,9 +199,9 @@ theorem product_word_memLp {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
   apply (productEnvelope_memLp period f g hfL2 hgL2).of_le_mul
     ((smoothField_continuous period _ (iteratedFieldDerivative_smooth period w (f*g)
       (product_smooth period f g hf hg))).aestronglyMeasurable)
-  filter_upwards [] with x
-  rw [Real.norm_of_nonneg (productEnvelope_nonneg period f g x)]
-  exact product_word_pointwise_le period hn w f g hf hg hfL2 hgL2 x
+  · filter_upwards [] with x
+    rw [Real.norm_of_nonneg (productEnvelope_nonneg period f g x)]
+    exact product_word_pointwise_le period hn w f g hf hg hfL2 hgL2 x
 
 /-- An explicit bound for each actual product derivative in L². -/
 theorem product_word_L2_le {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
@@ -303,15 +214,15 @@ theorem product_word_L2_le {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
       MemLp (iteratedFieldDerivative period v g) 2 (liftMeasure period)) :
     (eLpNorm (iteratedFieldDerivative period w (f*g)) 2 (liftMeasure period)).toReal ≤
       128 * lowDerivativeConstant period * liftSobolevNorm period 6 f * liftSobolevNorm period 6 g
-        := by
+          := by
   have hq := productEnvelope_memLp period f g hfL2 hgL2
   have hA := eLpNorm_le_mul_eLpNorm_of_ae_le_mul (μ := liftMeasure period)
     (Filter.Eventually.of_forall (fun x => show ‖iteratedFieldDerivative period w (f*g) x‖ ≤
       (64 * lowDerivativeConstant period) * ‖productEnvelope period f g x‖ by
         rw [Real.norm_of_nonneg (productEnvelope_nonneg period f g x)]
         exact product_word_pointwise_le period hn w f g hf hg hfL2 hgL2 x)) (2 : ℝ≥0∞)
-  have hc : 0 ≤ 64 * lowDerivativeConstant period := mul_nonneg (by norm_num)
-    (lowDerivativeConstant_nonneg period)
+  have hc : 0 ≤ 64 * lowDerivativeConstant period := mul_nonneg (by
+      norm_num) (lowDerivativeConstant_nonneg period)
   have hfin : ENNReal.ofReal (64 * lowDerivativeConstant period) *
       eLpNorm (productEnvelope period f g) 2 (liftMeasure period) ≠ ⊤ := by finiteness
   have hB := ENNReal.toReal_mono hfin hA
@@ -335,7 +246,7 @@ theorem cylinder_H6_algebra (f g : LiftDomain period → ℂ)
   have hA : liftSobolevNorm period 6 (f*g) ≤
       ∑ n ∈ Finset.range 7, ∑ _w : Fin n → Fin 4,
         128 * lowDerivativeConstant period * liftSobolevNorm period 6 f * liftSobolevNorm period 6
-          g := by
+            g := by
     apply Finset.sum_le_sum
     intro n hn
     apply Finset.sum_le_sum

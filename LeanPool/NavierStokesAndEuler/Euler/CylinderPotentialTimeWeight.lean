@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTime
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
+
+/-! Same-radius bounds and literal profile normalization for the constructed potential time
+derivative. -/
 
 @[expose] public section
 
-/-! Same-radius bounds and literal profile normalization for the constructed potential time
-  derivative. -/
 
 noncomputable section
 
@@ -24,30 +26,38 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
 open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] (T : ℝ)
-  (B B₁ : C(Icc (0 : ℝ) T,Space →ᵇ Space →L[ℝ] Space))
+  (B B₁ : C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
   (hB : ContDiff ℝ ∞ (translateCoefficientPath B))
   (hB₁ : ContDiff ℝ ∞ (translateCoefficientPath B₁))
-  (p f : C(Icc (0 : ℝ) T,LiftL2 P))
+  (p f : C(Icc (0 : ℝ) T, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
 
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPotentialTimeWeight1 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPotentialTimeWeight2 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderPotentialTimeWeight3 : NormedAddCommGroup C(Icc (0 : ℝ) T,LiftL2 P) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderPotentialTimeWeight4 : NormedSpace ℝ C(Icc (0 : ℝ) T,LiftL2 P) :=
+    inferInstance
 
 include hB hB₁ hp hf in
 theorem potentialDerivative_block_bound {ι : Type*} [Fintype ι]
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius ι Rc ≤ R)
-    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C*majorant Rc 0 n)
-    (hbB₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B₁) a‖ ≤ C*majorant Rc 0 n)
+    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C * majorant Rc 0 n)
+    (hbB₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B₁) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ)
     (hbp : ∀ n, block directions q (fun a : LiftTangent => pathTranslate P a p) n 0 ≤ D*majorant R
-      d n)
+        d n)
     (hbf : ∀ n, block directions q (fun a : LiftTangent => pathTranslate P a f) n 0 ≤ D*majorant R
-      d n)
+        d n)
     (n : ℕ) :
     block directions q (fun a : LiftTangent =>
       pathTranslate P a (potentialDerivative P T B B₁ p f)) n 0 ≤
@@ -66,7 +76,7 @@ theorem potentialDerivative_block_bound {ι : Type*} [Fintype ι]
     Rc C R D hRc hC hD hR hbB d hbf n
   exact (hs.trans (add_le_add h₁ h₂)).trans_eq (by ring)
 
-theorem potentialDerivative_normalize (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t) :
+theorem potentialDerivative_normalize (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) :
     normalize g hg (potentialDerivative P T B B₁ p f) =
       potentialDerivative P T B B₁ (normalize g hg p) (normalize g hg f) := by
   unfold potentialDerivative EulerContinuousTimeWeight.normalize
@@ -76,12 +86,12 @@ theorem potentialDerivative_normalize (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 
 include hB hB₁ hp hf in
 /-- Estimate Q_t/g from A/g and A_t/g, without differentiating the profile g. -/
 theorem normalized_potentialDerivative_block_bound
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius ι Rc ≤ R)
-    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C*majorant Rc 0 n)
-    (hbB₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B₁) a‖ ≤ C*majorant Rc 0 n)
+    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C * majorant Rc 0 n)
+    (hbB₁ : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B₁) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ)
     (hbp : ∀ n, block directions q
       (fun a : LiftTangent => pathTranslate P a (normalize g hg p)) n 0 ≤ D*majorant R d n)

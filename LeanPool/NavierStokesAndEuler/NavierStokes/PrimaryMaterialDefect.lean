@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.BasePhaseGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # The actual primary material-phase defect
@@ -20,6 +19,9 @@ slot coordinate require polynomial bounds; the angular coordinate and
 the unstripped phase itself need no such bound.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PrimaryMaterialDefect
@@ -27,7 +29,9 @@ namespace NavierStokes.PrimaryMaterialDefect
 open Set WeightedClasses LinearWaveBounds
 open scoped Topology ContDiff
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Slot: an abbreviation for `PhaseCalculus.Slot`. -/
 abbrev Slot := PhaseCalculus.Slot
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -302,8 +306,9 @@ theorem affine_slot_class (s : StripData E) (L : ℕ → E →L[ℝ] ℝ) (c : �
     funext y
     exact ((L n).hasFDerivAt.add_const (c n)).fderiv
   cases j with
-  | zero => simpa only [norm_iteratedFDeriv_zero, Real.norm_eq_abs, PrimaryPulseBounds.phaseDomain]
-    using hv n x hx
+  | zero =>
+      simpa only [norm_iteratedFDeriv_zero, Real.norm_eq_abs, PrimaryPulseBounds.phaseDomain] using
+          hv n x hx
   | succ j =>
       rw [← norm_iteratedFDeriv_fderiv, hd]
       cases j with
@@ -318,6 +323,8 @@ section Primary
 
 variable {U : PhaseJetBounds.Domain ℕ Slow}
 
+/-- Pulled phase, given by `PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n)
+(P.phase.x0 n) (P.phase.F n) (P.phase.G n) (χ n x)`. -/
 noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → E → Slot) (n : ℕ) (x : E) : ℝ :=
   PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
@@ -357,9 +364,11 @@ theorem defect_formula (P : PrimaryPulseBounds.PhaseConstruction U)
         (PhaseCalculus.slowZ (P.phase.F n) (χ n x).1)
         (PhaseCalculus.slowZ (P.phase.G n) (χ n x).1) := by
   have hF := ((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-    (by simp)
+      (by
+      simp)
   have hG := ((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-    (by simp)
+      (by
+      simp)
   have hm := material_pullback (χ n) (s.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
     (b n) (P.phase.F n) (P.phase.G n) (d.radialField n) (fun _ => d.angular)
     (d.axialField s n) (d.fastField n) (fun _ => d.slow)
@@ -395,7 +404,7 @@ theorem defect_class (P : PrimaryPulseBounds.PhaseConstruction U)
     (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ)
     (hχ : NativeCoordinates s d χ)
     (hslow : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) (fun n x => (χ n
-      x).1))
+        x).1))
     (hslot : UnweightedClass s 0 (fun n x => (χ n x).2.2))
     (hscale : ∀ n, U.scale n = s.slow n)
     (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))
@@ -422,7 +431,7 @@ theorem defect_class_of_mean (P : PrimaryPulseBounds.PhaseConstruction U)
     (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ)
     (hχ : NativeCoordinates s d χ)
     (hslow : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) (fun n x => (χ n
-      x).1))
+        x).1))
     (hslot : UnweightedClass s 0 (fun n x => (χ n x).2.2))
     (hscale : ∀ n, U.scale n = s.slow n)
     (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))
@@ -441,7 +450,7 @@ theorem defect_class_of_fields (P : PrimaryPulseBounds.PhaseConstruction U)
     (a : WaveCoefficients E)
     (hχ : NativeCoordinates s d χ)
     (hslow : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) (fun n x => (χ n
-      x).1))
+        x).1))
     (hslot : UnweightedClass s 0 (fun n x => (χ n x).2.2))
     (hscale : ∀ n, U.scale n = s.slow n)
     (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))

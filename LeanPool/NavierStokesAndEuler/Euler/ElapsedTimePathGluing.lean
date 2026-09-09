@@ -8,8 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMatchingFamily
 public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftedTimeGluing
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 # Joining an actual history with a forward elapsed-time path
@@ -18,6 +20,9 @@ The two continuous paths have matching traces. This wrapper uses the fixed
 linear gluing map, proves the true time derivative through the junction,
 and preserves the original ordered-word Sobolev radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,14 +36,17 @@ attribute [local instance] EulerPacketTimePathGluing.compactInterval
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
-  (u : C(Icc (0 : ℝ) τ,E)) (v : C(Icc (0 : ℝ) (S-τ),E))
-  (hmatch : u ⟨τ,hτ0,le_rfl⟩ = v ⟨0,le_rfl,sub_nonneg.mpr hτS⟩)
+  (u : C(Icc (0 : ℝ) τ, E)) (v : C(Icc (0 : ℝ) (S - τ), E))
+  (hmatch : u ⟨τ, hτ0, le_rfl⟩ = v ⟨0, le_rfl, sub_nonneg.mpr hτS⟩)
 
+/-- Pair, given by `⟨(u,shiftPath S τ v),by change u ⟨τ,hτ0,le_rfl⟩-shiftPath S τ v
+⟨τ,le_rfl,hτS⟩ = 0 rw [shiftPath_initial S τ hτS,hmatch,sub_self]⟩`. -/
 def pair : Matching (E := E) S τ hτ0 hτS :=
   ⟨(u,shiftPath S τ v),by
     change u ⟨τ,hτ0,le_rfl⟩-shiftPath S τ v ⟨τ,le_rfl,hτS⟩ = 0
     rw [shiftPath_initial S τ hτS,hmatch,sub_self]⟩
 
+/-- Join, given by `gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)`. -/
 def join : C(Icc (0 : ℝ) S,E) := gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)
 
 theorem join_eq_projection : join S τ hτ0 hτS u v hmatch =
@@ -81,12 +89,12 @@ theorem join_right (t : Icc τ S) :
   rw [glue_right τ _ _ hreal t t.property.1] at he
   simpa only [extendPath,projIcc_of_mem (hτ0.trans hτS) ⟨hτ0.trans t.property.1,t.property.2⟩,
     projIcc_of_mem (sub_nonneg.mpr hτS) ⟨sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2
-      τ⟩] using he
+        τ⟩] using he
 
 /-- Genuine within-time differentiation holds even at the joining time. -/
 theorem join_hasDerivWithinAt
-    (u' : C(Icc (0 : ℝ) τ,E)) (v' : C(Icc (0 : ℝ) (S-τ),E))
-    (hmatch' : u' ⟨τ,hτ0,le_rfl⟩ = v' ⟨0,le_rfl,sub_nonneg.mpr hτS⟩)
+    (u' : C(Icc (0 : ℝ) τ, E)) (v' : C(Icc (0 : ℝ) (S - τ), E))
+    (hmatch' : u' ⟨τ, hτ0, le_rfl⟩ = v' ⟨0, le_rfl, sub_nonneg.mpr hτS⟩)
     (hu : ∀ t : Icc (0 : ℝ) τ,
       HasDerivWithinAt (extendPath τ hτ0 u) (u' t) (Icc (0 : ℝ) τ) t)
     (hv : ∀ t : Icc (0 : ℝ) (S-τ),
@@ -122,9 +130,9 @@ theorem join_hasDerivWithinAt
 section Parameter
 
 variable {X ι : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [Fintype ι]
-  (p : X → C(Icc (0 : ℝ) τ,E)) (q : X → C(Icc (0 : ℝ) (S-τ),E))
+  (p : X → C(Icc (0 : ℝ) τ, E)) (q : X → C(Icc (0 : ℝ) (S - τ), E))
   (hp : ContDiff ℝ ∞ p) (hq : ContDiff ℝ ∞ q)
-  (hm : ∀ x, p x ⟨τ,hτ0,le_rfl⟩ = q x ⟨0,le_rfl,sub_nonneg.mpr hτS⟩)
+  (hm : ∀ x, p x ⟨τ, hτ0, le_rfl⟩ = q x ⟨0, le_rfl, sub_nonneg.mpr hτS⟩)
 
 include hp hq hm in
 theorem join_contDiff : ContDiff ℝ ∞ (fun x => join S τ hτ0 hτS (p x) (q x) (hm x)) := by

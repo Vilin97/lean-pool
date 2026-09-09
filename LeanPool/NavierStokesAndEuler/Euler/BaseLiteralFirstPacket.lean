@@ -8,12 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketChoice
 public import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketScales
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleSequence
-
-@[expose] public section
 
 /-! The literal base scale constructs the first actual smooth Euler
 packet state and its localized source bounds. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -53,6 +53,7 @@ theorem nextRadius_one : supportScale J X 0 ≤ 1 := by
   exact div_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr H.x_pos.le)
     (rpow_nonneg (Nat.cast_nonneg _) _)
 
+/-- Packet, constructed using `Classical.choice`. -/
 def packet (hJ : 1 ≤ J) :
     FirstPacketChoice (X^(-2 : ℝ)) H.tilt_bound (baseRadius X) H.core_pos H.core_one
       (baseHorizon J X) (H.time_pos hJ) H.local_time
@@ -64,8 +65,10 @@ def packet (hJ : 1 ≤ J) :
     (supportScale J X 0) nextRadius_pos H.nextRadius_one H.spike_one H.shear_pos
     H.source_frequency H.label_frequency H.radius_frequency)
 
+/-- Parent, given by `(H.packet hJ).parent`. -/
 def parent (hJ : 1 ≤ J) : Parent := (H.packet hJ).parent
 
+/-- State, given by `(H.packet hJ).state`. -/
 def state (hJ : 1 ≤ J) : SmoothState (H.parent hJ) := (H.packet hJ).state
 
 theorem state_label (hJ : 1 ≤ J) : (H.state hJ).labels.K=(X^D)^80 :=
@@ -75,6 +78,7 @@ theorem parent_time (hJ : 1 ≤ J) : (H.parent hJ).T=baseHorizon J X := rfl
 
 theorem parent_scale (hJ : 1 ≤ J) : (H.parent hJ).ell=supportScale J X 0 := rfl
 
+/-- Low bounds, constructed using `FirstPacketChoice.lowBounds`. -/
 def lowBounds (hJ : 1 ≤ J) : LowBounds (H.parent hJ) :=
   FirstPacketChoice.lowBounds (X^(-2 : ℝ)) H.tilt_bound (baseRadius X) H.core_pos H.core_one
     (baseHorizon J X) (H.time_pos hJ) H.local_time
@@ -89,7 +93,7 @@ theorem lowBounds_values (hJ : 1 ≤ J) :
     (H.lowBounds hJ).r=baseRadius X ∧
     (H.lowBounds hJ).K=initialCoefficientCost+literalInitialPressureCost D X := by
   refine ⟨rfl,rfl,rfl,?_⟩
-  change initialCoefficientCost+2*initialCoefficientCost*X^(-1010 : ℝ)*(X^1000*firstRatio)+
+  change initialCoefficientCost+2*initialCoefficientCost*X^(-1010 : ℝ)*(X^1000*firstRatio) +
     (X^D)^(-(1/4 : ℝ))=initialCoefficientCost+literalInitialPressureCost D X
   unfold literalInitialPressureCost literalInitialError
   ring

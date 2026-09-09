@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketReflection
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
+
+/-! Odd velocity and even normalized pressure for the actual mean provider. -/
 
 @[expose] public section
 
-/-! Odd velocity and even normalized pressure for the actual mean provider. -/
 
 noncomputable section
 
@@ -41,7 +43,7 @@ namespace Forcing
 
 variable {D : Data} {raw : VectorField} (G : Forcing D raw)
   (hD : EvenData D)
-  (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t,(-x,0)) = -raw (t,(x,0)))
+  (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t, (-x, 0)) = -raw (t, (x, 0)))
 
 include hD hodd in
 theorem velocityPath_reflection (t : Icc (0 : ℝ) D.T) :
@@ -54,12 +56,13 @@ theorem velocityPath_reflection (t : Icc (0 : ℝ) D.T) :
       using G.solution.continuousVelocity_eq_physicalPath D.T_pos D.opF_time t
   rw [he]
   exact (multiplier_reflection_of_even (D.F.field t) (hD.frame t) (G.solution.velocity t :
-    L2)).symm.trans
+      L2)).symm.trans
     ((congrArg (multiplier (D.F.field t)) hv).trans
       ((multiplier (D.F.field t)).map_neg (G.solution.velocity t : L2)))
 
 include hD hodd in
-/-- The actual raw velocity is odd at every time; its exterior definition uses the same retraction. -/
+/-- The actual raw velocity is odd at every time; its exterior definition uses the same retraction.
+-/
 theorem vector_odd (t : ℝ) (x : Space) (θ : ℝ) :
     G.vector (t,(-x,θ)) = -G.vector (t,(x,θ)) :=
   representative_odd_of_reflection (G.velocityPath (D.clamp t))
@@ -80,10 +83,10 @@ theorem vectorDerivative_odd (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 
 /-- The pressure-force representative satisfies the already constructed physical equation. -/
 theorem pressureRepresentative_equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
-    G.vectorDerivative (t,(x,θ))+D.M.field t x (G.vector (t,(x,θ)))+
+    G.vectorDerivative (t,(x,θ))+D.M.field t x (G.vector (t,(x,θ))) +
       pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit t x = raw (t,(x,θ)) := by
   have he := pathRepresentative_equation D.T G.velocityPath G.derivativePath G.pressureForcePath
-    G.path
+      G.path
     G.velocityPath_orbit G.derivativePath_orbit G.pressureForcePath_orbit G.path_orbit D.M.field
     (G.solution.pressurePath_equation D.frameLower D.frameLower_pos D.frame_lower G.path
       D.T_pos D.opF_time D.opM D.opStrain_eq) t x
@@ -97,9 +100,9 @@ theorem pressureRepresentative_odd (t : Icc (0 : ℝ) D.T) (x : Space) :
   have hp := G.pressureRepresentative_equation t x 0
   have hn := G.pressureRepresentative_equation t (-x) 0
   rw [G.vectorDerivative_odd hD hodd, G.vector_odd hD hodd, hD.strain t x, map_neg, hodd t x] at hn
-  have hn' : -(G.vectorDerivative (t,(x,0))+D.M.field t x (G.vector (t,(x,0))))+
+  have hn' : -(G.vectorDerivative (t,(x,0))+D.M.field t x (G.vector (t,(x,0)))) +
       pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit t (-x) = -raw (t,(x,0))
-        := by
+          := by
     simpa only [neg_add] using hn
   apply add_left_cancel (a := -(G.vectorDerivative (t,(x,0))+D.M.field t x (G.vector (t,(x,0)))))
   exact hn'.trans ((congrArg Neg.neg hp).symm.trans (neg_add _ _))
@@ -120,7 +123,7 @@ end Forcing
 
 theorem meanSolve_odd (D : Data) (hD : EvenData D) (raw : VectorField)
     (h : Nonempty (Forcing D raw))
-    (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t,(-x,0)) = -raw (t,(x,0)))
+    (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t, (-x, 0)) = -raw (t, (x, 0)))
     (t : ℝ) (x : Space) (θ : ℝ) :
     (meanSolve D raw).1 (t,(-x,-θ)) = -(meanSolve D raw).1 (t,(x,θ)) := by
   rw [meanSolve_of_admissible D raw h]
@@ -128,7 +131,7 @@ theorem meanSolve_odd (D : Data) (hD : EvenData D) (raw : VectorField)
 
 theorem meanSolve_even (D : Data) (hD : EvenData D) (raw : VectorField)
     (h : Nonempty (Forcing D raw))
-    (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t,(-x,0)) = -raw (t,(x,0)))
+    (hodd : ∀ (t : Icc (0 : ℝ) D.T) x, raw (t, (-x, 0)) = -raw (t, (x, 0)))
     (t : ℝ) (x : Space) (θ : ℝ) :
     (meanSolve D raw).2 (t,(-x,-θ)) = (meanSolve D raw).2 (t,(x,θ)) := by
   rw [meanSolve_of_admissible D raw h]

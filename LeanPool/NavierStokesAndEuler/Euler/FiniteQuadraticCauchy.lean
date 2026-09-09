@@ -6,22 +6,33 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.QuadraticCauchy
+public import Mathlib.Analysis.Normed.Group.Defs
+public import Mathlib.Topology.UniformSpace.Cauchy
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Strong Cauchy convergence controlled by finitely many genuine norm observations. -/
 
 @[expose] public section
 
-/-! Strong Cauchy convergence controlled by finitely many genuine norm observations. -/
 
 namespace EulerQuadraticCauchy
 
 open scoped Topology
 
-/-- A finite family of Cauchy observations controlling squared differences forces a sequence to be Cauchy. -/
+/-- A finite family of Cauchy observations controlling squared differences forces a sequence to be
+Cauchy. -/
 theorem cauchy_of_finite_quadratic_bound {X Y Z I : Type*} [Fintype I]
     [NormedAddCommGroup X] [NormedAddCommGroup Y] [NormedAddCommGroup Z]
     (U : ℕ → X) (F : I → ℕ → Y) (V : ℕ → Z)
     (hu : CauchySeq U) (hf : ∀ i, CauchySeq (F i))
-    (hb : ∀ n m, ‖V n-V m‖^2 ≤ ‖U n-U m‖^2 + ∑ i, ‖F i n-F i m‖^2) : CauchySeq V := by
+    (hb : ∀ n m, ‖V n - V m‖ ^ 2 ≤ ‖U n - U m‖ ^ 2 + ∑ i, ‖F i n - F i m‖ ^ 2) : CauchySeq V := by
   have hU : Filter.Tendsto (fun p : ℕ×ℕ => ‖U p.1-U p.2‖^2) Filter.atTop (𝓝 0) := by
     have h := (cauchySeq_iff_tendsto_dist_atTop_0.mp hu).pow 2
     simpa only [dist_eq_norm, zero_pow (by norm_num : (2 : ℕ) ≠ 0)] using h

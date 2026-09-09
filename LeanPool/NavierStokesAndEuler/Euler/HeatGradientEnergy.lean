@@ -7,10 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevLaplacian
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Genuine gradient energy and maximal-regularity estimates for smooth Sobolev heat solutions. -/
 
 @[expose] public section
 
-/-! Genuine gradient energy and maximal-regularity estimates for smooth Sobolev heat solutions. -/
 
 noncomputable section
 
@@ -36,9 +40,10 @@ theorem gradientEnergy_continuous : Continuous (gradientEnergy period) := by
   apply continuous_finsetSum
   intro i _
   exact (((valueOperator period 0).continuous.comp (derivativeOperator period 0
-    i).continuous).norm).pow 2
+      i).continuous).norm).pow 2
 
-/-- Genuine strong-derivative integration by parts identifies the full gradient pairing with the Laplacian. -/
+/-- Genuine strong-derivative integration by parts identifies the full gradient pairing with the
+Laplacian. -/
 theorem gradient_pairing (u : SobolevSpace period 2) (v : SobolevSpace period 1) :
     (∑ i : Fin 4, ⟪value period (derivativeOperator period 1 i u),
       value period (derivativeOperator period 0 i v)⟫_ℝ) =
@@ -46,7 +51,7 @@ theorem gradient_pairing (u : SobolevSpace period 2) (v : SobolevSpace period 1)
   have hi (i : Fin 4) : ⟪value period (derivativeOperator period 1 i u),
       value period (derivativeOperator period 0 i v)⟫_ℝ =
       -⟪value period (derivativeOperator period 0 i (derivativeOperator period 1 i u)), value
-        period v⟫_ℝ := by
+          period v⟫_ℝ := by
     have h := translation_derivative_pairing period (standardDirection i)
       (value period (derivativeOperator period 1 i u))
       (value period (derivativeOperator period 0 i (derivativeOperator period 1 i u)))
@@ -60,15 +65,16 @@ theorem gradient_pairing (u : SobolevSpace period 2) (v : SobolevSpace period 1)
   simp only [hi, Finset.sum_neg_distrib]
   rfl
 
-/-- Actual L² time derivatives of the first spatial derivatives determine the gradient-energy derivative. -/
+/-- Actual L² time derivatives of the first spatial derivatives determine the gradient-energy
+derivative. -/
 theorem gradient_energy_hasDerivAt (u : ℝ → SobolevSpace period 2) (v : SobolevSpace period 1) (t :
-  ℝ)
+    ℝ)
     (hd : ∀ i : Fin 4, HasDerivAt (fun s => value period (derivativeOperator period 1 i (u s)))
       (value period (derivativeOperator period 0 i v)) t) :
     HasDerivAt (fun s => gradientEnergy period (truncateOperator period 1 (u s)))
       (-2 * ⟪laplacianEvaluation period 2 (by norm_num) (u t), value period v⟫_ℝ) t := by
   have h := HasDerivAt.fun_sum (u := Finset.univ) (fun i (_ : i ∈ (Finset.univ : Finset (Fin 4)))
-    => (hd i).norm_sq)
+      => (hd i).norm_sq)
   have he : (∑ i : Fin 4, 2 * ⟪value period (derivativeOperator period 1 i (u t)),
       value period (derivativeOperator period 0 i v)⟫_ℝ) =
       -2 * ⟪laplacianEvaluation period 2 (by norm_num) (u t), value period v⟫_ℝ := by
@@ -87,13 +93,14 @@ theorem viscosity_young (ν x y : ℝ) (hν : 0 < ν) : 2*x*y ≤ ν*x^2 + ν⁻
   rw [he] at h
   linarith
 
-/-- The true heat gradient energy absorbs the source without differentiating the source in its bound. -/
+/-- The true heat gradient energy absorbs the source without differentiating the source in its
+bound. -/
 theorem heat_gradient_energy_hasDerivAt (u : ℝ → SobolevSpace period 3)
     (f : SobolevSpace period 1) (ν t : ℝ)
     (hd : ∀ i : Fin 4, HasDerivAt (fun s => value period (derivativeOperator period 2 i (u s)))
       (value period (derivativeOperator period 0 i (ν • laplacianOperator period 1 (u t) + f))) t) :
-    HasDerivAt (fun s => gradientEnergy period (restrictOperator period (by norm_num : 1 ≤ 3) (u
-      s)))
+    HasDerivAt (fun s => gradientEnergy period (restrictOperator period (by
+        norm_num : 1 ≤ 3) (u s)))
       (-2 * ⟪laplacianEvaluation period 3 (by norm_num) (u t),
         ν • laplacianEvaluation period 3 (by norm_num) (u t) + value period f⟫_ℝ) t := by
   have h := gradient_energy_hasDerivAt period (fun s => truncateOperator period 2 (u s))
@@ -107,7 +114,8 @@ theorem heat_gradient_energy_hasDerivAt (u : ℝ → SobolevSpace period 3)
   rw [he, laplacianOperator_value] at h
   exact h
 
-/-- The actual derivative of gradient energy controls the full L² Laplacian with no source derivative loss. -/
+/-- The actual derivative of gradient energy controls the full L² Laplacian with no source
+derivative loss. -/
 theorem heat_gradient_energy_bound (u : ℝ → SobolevSpace period 3)
     (f : SobolevSpace period 1) (ν t : ℝ) (hν : 0 < ν)
     (hd : ∀ i : Fin 4, HasDerivAt (fun s => value period (derivativeOperator period 2 i (u s)))
@@ -116,12 +124,12 @@ theorem heat_gradient_energy_bound (u : ℝ → SobolevSpace period 3)
       -ν * ‖laplacianEvaluation period 3 (by norm_num) (u t)‖^2 + ν⁻¹ * ‖value period f‖^2 := by
   rw [(heat_gradient_energy_hasDerivAt period u f ν t hd).deriv, inner_add_right, inner_smul_right,
     real_inner_self_eq_norm_sq]
-  have hb := norm_inner_le_norm (𝕜 := ℝ) (laplacianEvaluation period 3 (by norm_num) (u t)) (value
-    period f)
+  have hb := norm_inner_le_norm (𝕜 := ℝ) (laplacianEvaluation period 3 (by
+      norm_num) (u t)) (value period f)
   rw [Real.norm_eq_abs] at hb
   have hc := neg_le_abs ⟪laplacianEvaluation period 3 (by norm_num) (u t), value period f⟫_ℝ
-  have hy := viscosity_young ν ‖laplacianEvaluation period 3 (by norm_num) (u t)‖ ‖value period f‖
-    hν
+  have hy := viscosity_young ν ‖laplacianEvaluation period 3 (by
+      norm_num) (u t)‖ ‖value period f‖ hν
   nlinarith
 
 

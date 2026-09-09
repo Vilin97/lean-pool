@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaCorrector
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldSupport
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaCorrector
+
+/-! Every actual compact high/corrector pair is a member of the closed lifted solenoidal space. -/
 
 @[expose] public section
 
-/-! Every actual compact high/corrector pair is a member of the closed lifted solenoidal space. -/
 
 noncomputable section
 
@@ -27,15 +29,20 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
 
+/-- Packet inverse coefficient, bundling `path`, `orbit`, `raw_eq`. -/
 def packetInverseCoefficient : MatrixCoefficient D.T
     (fun z => D.FInv.field (D.clamp z.1) z.2.1) where
   path := D.FInv.field
   orbit := D.FInv.translation_contDiff
   raw_eq t _ _ := by rw [EulerTransversePacketProvider.Data.clamp_coe]
 
+/-- Piola pair raw, defined pointwise by `D.FInv.field (D.clamp z.1) z.2.1 (κ^p • raw z+κ^(p+1)
+• D.curlCorrector P raw z)`. -/
 def piolaPairRaw (κ : ℝ) (raw : VectorField) (p : ℕ) : VectorField := fun z =>
   D.FInv.field (D.clamp z.1) z.2.1 (κ^p • raw z+κ^(p+1) • D.curlCorrector P raw z)
 
+/-- Piola pair field, given by `(packetInverseCoefficient D).multiply ((G.smul (κ^p)).add
+(C.smul (κ^(p+1))))`. -/
 def piolaPairField {raw : VectorField} (G : Field P D.T raw)
     (C : Field P D.T (D.curlCorrector P raw)) (κ : ℝ) (p : ℕ) :
     Field P D.T (piolaPairRaw (P := P) D κ raw p) :=
@@ -47,8 +54,8 @@ theorem piolaPairField_mem {raw : VectorField} (G : Field P D.T raw)
     (hF : ∀ x, fderiv ℝ Ξ x = D.F.field t x)
     (hdet : ∀ x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
     (hs : G.path t ∈ Supported P Space D.support D.support_measurable)
-    (hm : ∀ x, (∫ θ in (0 : ℝ)..P, raw (t,(x,θ))) = 0)
-    (htan : ∀ x θ, inner ℝ (D.normalField (t,(x,θ))) (raw (t,(x,θ))) = 0) :
+    (hm : ∀ x, (∫ θ in (0 : ℝ)..P, raw (t, (x, θ))) = 0)
+    (htan : ∀ x θ, inner ℝ (D.normalField (t, (x, θ))) (raw (t, (x, θ))) = 0) :
     (piolaPairField D G C κ p).path t ∈ divergenceFreeSpace P κ D.m₀ := by
   let A := pointField P G.path G.orbit t
   have hA : ∀ x, ContDiff ℝ ∞ (localFieldLift P A x) := pointField_smooth P G.path G.orbit t

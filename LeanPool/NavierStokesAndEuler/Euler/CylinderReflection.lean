@@ -6,11 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureSpatialRegularity
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.MeasureTheory.Measure.Haar.Unique
+
+/-! The actual joint spatial and angular reflection on cylinder L² fields. -/
 
 @[expose] public section
 
-/-! The actual joint spatial and angular reflection on cylinder L² fields. -/
 
 noncomputable section
 
@@ -24,14 +28,14 @@ variable (period : ℝ) [Fact (0 < period)]
 /-- Joint negation of the spatial and periodic coordinates preserves cylinder measure. -/
 theorem measurePreserving_reflection :
     MeasurePreserving (fun x : LiftDomain period => -x) (liftMeasure period) (liftMeasure period)
-      := by
+        := by
   exact (Measure.measurePreserving_neg (volume : Measure Vector3)).prod
     (Measure.measurePreserving_neg (volume : Measure (AddCircle period)))
 
 /-- Pullback by joint spatial and angular reflection, as an actual L² isometry. -/
 def reflection : LiftL2 period →ₗᵢ[ℝ] LiftL2 period :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain period => -x) (measurePreserving_reflection
-    period)
+      period)
 
 /-- The L² reflection is represented by literal composition with negation. -/
 theorem reflection_ae (f : LiftL2 period) :
@@ -44,7 +48,7 @@ theorem reflection_ae (f : LiftL2 period) :
   apply Lp.ext
   filter_upwards [reflection_ae period (reflection period f),
     (measurePreserving_reflection period).quasiMeasurePreserving.ae (reflection_ae period f)] with
-      x hx hy
+        x hx hy
   rw [hx, hy, neg_neg]
 
 /-- Reflection preserves the actual L² norm. -/
@@ -76,7 +80,7 @@ theorem reflection_hasDerivAt (a : LiftTangent) {f g : LiftL2 period}
     HasDerivAt (fun t => translation period (translationPath period a t) (reflection period f))
       (-reflection period g) 0 := by
   have h0 : HasDerivAt (fun t => translation period (translationPath period a t) f) g ((-id) (0 :
-    ℝ)) := by
+      ℝ)) := by
     simpa using h
   have hn := h0.scomp 0 ((hasDerivAt_id (0 : ℝ)).neg)
   have hr := (reflection period).toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt 0 hn

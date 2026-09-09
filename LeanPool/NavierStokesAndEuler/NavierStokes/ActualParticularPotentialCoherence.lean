@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularCoherence
 
-@[expose] public section
-
 /-!
 # Coherence of the actual current-band particular potential
 
@@ -18,6 +16,9 @@ potential is transported before taking the physical curl.  The derivative
 identity uses an invertible linear chart and does not require an additional
 smoothness assumption on the phase.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -84,6 +85,7 @@ theorem pressure_weight {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (h : ℝ) :
 
 variable {B N0 : ℕ}
 
+/-- Label: an abbreviation for `ActualParticularStageControls.Label`. -/
 abbrev Label := ActualParticularStageControls.Label
 
 /-- The potential of the actual current common coefficient. -/
@@ -105,7 +107,7 @@ theorem potential_eq_copyData (x : CorrectionStep.CycleState (Label B N0))
     (l : Label B N0) (j : ℤ) (n : ℕ) :
     potential x l j n = (ActualParticularCoherence.copyData x l j).common.curlPotential
       (CorrectionStep.ParticularParameters.nativeStrip
-        ActualParticularStageControls.associatedStrip)
+          ActualParticularStageControls.associatedStrip)
       (ActualParticularStageControls.directions (B := B)) n := rfl
 
 theorem pressureMode_eq_copyData (x : CorrectionStep.CycleState (Label B N0))
@@ -122,7 +124,7 @@ theorem potential_eq (x : CorrectionStep.CycleState (Label B N0))
       (fun _ => (ActualParticularStageControls.directions (B := B)).angular)
       ((ActualParticularStageControls.directions (B := B)).axialField
         (CorrectionStep.ParticularParameters.nativeStrip
-          ActualParticularStageControls.associatedStrip) n)
+            ActualParticularStageControls.associatedStrip) n)
       ((ActualReferenceRebase.actualCoefficients x l j).phase n)
       ((ActualReferenceRebase.actualCoefficients x l j).amplitude n) := rfl
 
@@ -151,7 +153,7 @@ theorem potential_band_of_germ (x : CorrectionStep.CycleState (Label B N0))
       potential x l j m (ActualParticularCoherence.bandMap n m z) := by
   let d := ActualParticularStageControls.directions (B := B)
   let s := CorrectionStep.ParticularParameters.nativeStrip
-    ActualParticularStageControls.associatedStrip
+      ActualParticularStageControls.associatedStrip
   rw [potential_eq, potential_eq]
   rw [PhysicalCurlCovariance.vectorPotential_congr
     ((j : ℝ) * (x.coefficients.blocks l).frequency n) (fun y : WaveSpace => y.1.1.1)

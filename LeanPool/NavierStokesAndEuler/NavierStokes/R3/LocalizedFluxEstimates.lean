@@ -6,11 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedDifferenceEnergy
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedDifferenceEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
+import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Non-pressure terms in the localized difference energy balance
@@ -19,6 +22,9 @@ The velocity difference need not have compact support or globally integrable
 derivatives. The compact cutoff supplies local integrability; the estimates
 use its weighted `L⁶` norm and the unweighted `L²` norm of the difference.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section
@@ -174,7 +180,8 @@ theorem laplacian_flux_bound {χ : Space → ℝ} {w : Space → Space}
     _ = K * l2Sq w := integral_const_mul _ _
     _ = K * comparisonLpNorm 2 w ^ 2 := by rw [← LpNormTools.lpNorm_two_sq_eq_l2Sq hw2]
 
-private def baseWeight (x : Space) : ℝ := ComparisonCutoffs.baseCutoff x ^ 8
+/-- Base weight, given by `ComparisonCutoffs.baseCutoff x ^ 8`. -/
+def baseWeight (x : Space) : ℝ := ComparisonCutoffs.baseCutoff x ^ 8
 
 private theorem baseWeight_smooth : ContDiff ℝ ∞ baseWeight :=
   ComparisonCutoffs.baseCutoff_smooth.pow 8
@@ -183,7 +190,7 @@ private theorem baseWeight_hasCompactSupport : HasCompactSupport baseWeight :=
   ComparisonCutoffs.baseCutoff_hasCompactSupport.comp_left
     (g := fun r : ℝ => r ^ 8) (by norm_num)
 
-private theorem exists_weight_second_derivative_bound :
+theorem exists_weight_second_derivative_bound :
     ∃ C : ℝ, 0 < C ∧ ∀ x : Space, ‖iteratedFDeriv ℝ 2 baseWeight x‖ ≤ C := by
   obtain ⟨C, hC⟩ := (baseWeight_hasCompactSupport.iteratedFDeriv 2).exists_bound_of_continuous
     (ContDiff.continuous_iteratedFDeriv le_rfl (contDiff_infty.1 baseWeight_smooth 2))

@@ -8,13 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInfiniteConstruction
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInitialLimit
-public import LeanPool.NavierStokesAndEuler.Euler.PacketStageLocalExistence
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLifespan
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.PacketStageLocalExistence
 
 /-! The limiting initial datum of the actual recursive packet family.
 Its genuine Euler solutions have a positive, finite maximal horizon. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +27,7 @@ open Set Filter EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2F
   EulerMeanSolenoidal EulerMeanClassical
 open scoped Topology
 
+/-- Initial datum, given by `Stage.initialDataLimit packets le_rfl le_rfl`. -/
 def initialDatum : SmoothL2Field Space := Stage.initialDataLimit packets le_rfl le_rfl
 
 theorem initialDatum_Hm (s : ℕ) :
@@ -61,6 +64,7 @@ theorem initialDatum_finite_lifespan :
     (baseHorizon_pos constructionScales.J constructionScales.j_one constructionScales.x_pos)
     initialDatum_local initialDatum_no_base
 
+/-- Lifespan, given by `initialDatum_finite_lifespan.choose`. -/
 def lifespan : FiniteLifespan initialDatum := initialDatum_finite_lifespan.choose
 
 theorem lifespan_le_base :

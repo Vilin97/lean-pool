@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisEvaluation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisOperators
-public import Mathlib.Analysis.Normed.Ring.InfiniteSum
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Actual profile equations for the coefficient operators
@@ -19,6 +16,9 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 The identities here combine the convergent, smooth evaluation of `AxisSpace`
 with the exact compatible coefficient operators of `AxisOperators`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -89,6 +89,7 @@ theorem profile_iteratedDeriv_Y (I : Window) {ε : ℝ} (hε : 0 < ε)
     iteratedDeriv k (fun y => profile I ε A (y, η)) Y = mixedSeries I ε A k 0 (Y, η) := by
   simpa only [mixedSeries_zero, Nat.zero_add] using iteratedDeriv_Y I hε A 0 0 k hY hη
 
+/-- Radial value, given by `p.1 * mixedSeries I ε A 2 0 p + (r : ℝ) * mixedSeries I ε A 1 0 p`. -/
 def radialValue (I : Window) (ε : ℝ) (r : ℕ) (A : AxisSpace I ε) (p : ℝ × ℝ) : ℝ :=
   p.1 * mixedSeries I ε A 2 0 p + (r : ℝ) * mixedSeries I ε A 1 0 p
 
@@ -526,6 +527,6 @@ theorem average_equation (I : Window) {ε : ℝ} (hε : 0 < ε)
   apply tsum_congr
   intro n
   rw [jet_average_eval I hε A n 0 hη]
-  field_simp ; ring
+  field_simp; ring
 
 end NavierStokes.AxisEvaluationAlgebra

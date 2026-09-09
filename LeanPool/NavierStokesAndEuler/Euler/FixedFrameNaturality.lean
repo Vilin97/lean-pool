@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSpaceInverse
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
 
-@[expose] public section
-
 /-!
 # Naturality of the actual fixed-frame Dirichlet inverse
 
@@ -18,6 +16,9 @@ Bounded spatial maps preserving the coefficients and their adjoint test maps
 commute with the constructed coercive solve. This covers translations and
 spatial support projections on actual L², not just pointwise model solutions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -53,7 +54,7 @@ theorem zeroTraceMap_norm (A : U →L[ℝ] V) : ‖zeroTraceMap T hT A‖ ≤ �
 
 omit [CompleteSpace U] [CompleteSpace V] [CompleteSpace E] [CompleteSpace F] in
 theorem timeMultiplier_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T,V →L[ℝ] F))
+    (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R : C(Icc (0 : ℝ) T, V →L[ℝ] F))
     (hQR : ∀ t u, R t (A u) = B (Q t u)) (u : TimeLp T U) :
     timeMultiplier T hT R (timeLift T A u) = timeLift T B (timeMultiplier T hT Q u) := by
   apply Lp.ext
@@ -64,12 +65,12 @@ theorem timeMultiplier_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 
 omit [CompleteSpace E] [CompleteSpace F] in
 theorem productDerivative_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T,V →L[ℝ] F))
+    (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T, V →L[ℝ] F))
     (hQR : ∀ t u, R t (A u) = B (Q t u))
     (hQR₁ : ∀ t u, R₁ t (A u) = B (Q₁ t u)) (u : TimeLp T U) :
     productDerivative T hT R R₁ (timeLift T A u) = timeLift T B (productDerivative T hT Q Q₁ u) :=
-      by
-  change timeMultiplier T hT R₁ (primitiveTimeLp T hT (timeLift T A u))+
+        by
+  change timeMultiplier T hT R₁ (primitiveTimeLp T hT (timeLift T A u)) +
       timeMultiplier T hT R (timeLift T A u) =
     timeLift T B (timeMultiplier T hT Q₁ (primitiveTimeLp T hT u)+timeMultiplier T hT Q u)
   rw [primitiveTimeLp_timeLift,timeMultiplier_intertwines T hT A B Q₁ R₁ hQR₁,
@@ -77,7 +78,7 @@ theorem productDerivative_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 
 omit [CompleteSpace E] [CompleteSpace F] in
 theorem fixedDerivative_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T,V →L[ℝ] F))
+    (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T, V →L[ℝ] F))
     (hQR : ∀ t u, R t (A u) = B (Q t u))
     (hQR₁ : ∀ t u, R₁ t (A u) = B (Q₁ t u)) (u : zeroTraceDerivatives (U := U) T hT) :
     fixedFrameDerivative T hT R R₁ (zeroTraceMap T hT A u) =
@@ -85,7 +86,7 @@ theorem fixedDerivative_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
   productDerivative_intertwines T hT A B Q Q₁ R R₁ hQR hQR₁ (u : TimeLp T U)
 
 theorem fixedPrimitive_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T,V →L[ℝ] F))
+    (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T, V →L[ℝ] F))
     (hQR : ∀ t u, R t (A u) = B (Q t u))
     (hQR₁ : ∀ t u, R₁ t (A u) = B (Q₁ t u)) (u : zeroTraceDerivatives (U := U) T hT) :
     fixedFramePrimitive T hT R R₁ (zeroTraceMap T hT A u) =
@@ -99,10 +100,10 @@ theorem fixedPrimitive_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 solve, as follows by testing against the genuine pulled-back test field. -/
 theorem fixedFrameSolver_intertwines
     (A : U →L[ℝ] V) (B : E →L[ℝ] F)
-    (Q Q₁ : C(Icc (0 : ℝ) T,U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T,V →L[ℝ] F))
-    (H : C(Icc (0 : ℝ) T,E →L[ℝ] E)) (J : C(Icc (0 : ℝ) T,F →L[ℝ] F))
-    (c : ℝ) (hc : 0 < c) (hQ : ∀ t u, c*‖u‖^2 ≤ ‖Q t u‖^2)
-    (d : ℝ) (hd : 0 < d) (hR : ∀ t v, d*‖v‖^2 ≤ ‖R t v‖^2)
+    (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (R R₁ : C(Icc (0 : ℝ) T, V →L[ℝ] F))
+    (H : C(Icc (0 : ℝ) T, E →L[ℝ] E)) (J : C(Icc (0 : ℝ) T, F →L[ℝ] F))
+    (c : ℝ) (hc : 0 < c) (hQ : ∀ t u, c * ‖u‖ ^ 2 ≤ ‖Q t u‖ ^ 2)
+    (d : ℝ) (hd : 0 < d) (hR : ∀ t v, d * ‖v‖ ^ 2 ≤ ‖R t v‖ ^ 2)
     (hQtime : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
     (hRtime : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT R) (R₁ t) (Icc (0 : ℝ) T) t)
     (K L : ℝ) (hK : 0 ≤ K) (hL : 0 ≤ L)

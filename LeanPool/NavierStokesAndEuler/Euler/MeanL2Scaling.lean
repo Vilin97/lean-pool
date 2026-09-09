@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanMollifierLimit
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicScaling
+import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
+
+/-! Actual dilation identities for L² fields and weak harmonic scalar functions. -/
 
 @[expose] public section
 
-/-! Actual dilation identities for L² fields and weak harmonic scalar functions. -/
 
 noncomputable section
 
@@ -29,7 +32,7 @@ theorem memLp_dilation {V : Type*} [NormedAddCommGroup V]
   exact ((memLp_two_iff_integrable_sq_norm hf.aestronglyMeasurable).1 hf).comp_smul ha
 
 theorem lpNorm_dilation_sq {V : Type*} [NormedAddCommGroup V]
-    [InnerProductSpace ℝ V] [CompleteSpace V]
+    [InnerProductSpace ℝ V]
     (f : Space → V) (hf : MemLp f 2 volume) (a : ℝ) (ha : 0 < a) :
     lpNorm (fun x => f (a • x)) 2 volume ^ 2 = (a^3)⁻¹ * lpNorm f 2 volume ^ 2 := by
   rw [lpNorm_sq_eq_integral_norm_sq _ (memLp_dilation f hf a ha.ne'),

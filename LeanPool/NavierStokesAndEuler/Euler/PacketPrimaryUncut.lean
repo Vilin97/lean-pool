@@ -6,14 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePropagator
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.FixedEndpointClassical
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
+import LeanPool.NavierStokesAndEuler.Euler.TransverseNormalResidual
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
 
 /-! The uncut primary is the genuine homogeneous physical evolution of
 the actual stationary history's initial coordinate.  Its all-time relation
 to the compactly supported packet is proved by ODE uniqueness. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,14 +29,14 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
   EulerTransversePacketProvider EulerTransversePacketPrimary EulerPacketTerminalDatum
   EulerPacketSourcePropagator EulerLinearDuhamel EulerVolterraConvolution
   EulerTransverseGramInverse EulerTransverseNormalResidual EulerFixedEndpointClassical
-    EulerTimeIntervalRestriction
+      EulerTimeIntervalRestriction
   EulerTransverseSourceCoefficientPath EulerPacketPrimaryShear EulerPeriodicProfile
 open scoped ContDiff
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
 private theorem physical_homogeneous_unique (T : ℝ) (hT : 0 ≤ T)
-    (G : C(Icc (0 : ℝ) T,Space →L[ℝ] Space)) (f g : ℝ → Space)
+    (G : C(Icc (0 : ℝ) T, Space →L[ℝ] Space)) (f g : ℝ → Space)
     (hf : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt f (G t (f t)) (Icc (0 : ℝ) T) t)
     (hg : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt g (G t (g t)) (Icc (0 : ℝ) T) t)
     (h0 : f 0=g 0) (t : Icc (0 : ℝ) T) : f t=g t := by
@@ -55,7 +61,7 @@ theorem historyVelocity_homogeneous {D : Data U} (B : HistoryData D)
     (C.labelHessian x) C.lower C.lower_pos (C.labelFrame_lower x) (C.labelFrame_derivative x)
     C.potential C.potential_nonneg (C.labelHessian_upper x) C.small
     (C.labelFrameSecond x) C.time_pos (C.labelFrame_second_derivative x) (C.labelFrame_equation x)
-      ξ t
+        ξ t
   have hd := (C.labelFrame_derivative x t).clm_apply hda
   have hnormal : D.normal.field t x ≠ 0 := HistoryData.normal_ne_zero t x
   have he : gram (D.frame.field t x) b =
@@ -65,7 +71,7 @@ theorem historyVelocity_homogeneous {D : Data U} (B : HistoryData D)
       (C.labelFrame_lower x) (C.labelFrame_derivative x) C.potential C.potential_nonneg
       (C.labelHessian_upper x) C.small ξ t
     change gram (D.frame.field t x) b = (D.frame.field t x).adjoint ((-2 : ℝ) •
-      D.frameDerivative.field t x a) at hp
+        D.frameDerivative.field t x a) at hp
     simpa only [zero_sub,neg_smul] using hp
   have hb := physical_velocity_balance (D.frame.field t x) (D.frameDerivative.field t x)
     (D.M.field t x) (D.normal.field t x) hnormal (D.frame_tangent t x) (D.frame_range t x)
@@ -78,7 +84,7 @@ theorem historyVelocity_homogeneous {D : Data U} (B : HistoryData D)
   apply hd'.congr_deriv
   rw [physicalGenerator_apply]
   change D.frameDerivative.field t x a+D.frame.field t x b =
-    -D.M.field t x (D.frame.field t x a)+
+    -D.M.field t x (D.frame.field t x a) +
       (2*⟪D.normal.field t x,D.M.field t x (D.frame.field t x a)⟫_ℝ/
         ‖D.normal.field t x‖^2) • D.normal.field t x
   simp only [inner_zero_right,zero_sub,neg_div,neg_smul] at hb
@@ -87,6 +93,8 @@ theorem historyVelocity_homogeneous {D : Data U} (B : HistoryData D)
 variable {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) (ξ : U)
 
+/-- Uncut velocity, given by `physical D ⟨0,le_rfl,D.T_pos.le⟩ x (B.coefficients.labelCoordinate
+x ξ ⟨0,le_rfl,hτ.le⟩) t`. -/
 def uncutVelocity (t : ℝ) (x : Space) : Space :=
   physical D ⟨0,le_rfl,D.T_pos.le⟩ x
     (B.coefficients.labelCoordinate x ξ ⟨0,le_rfl,hτ.le⟩) t

@@ -6,15 +6,10 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Normed.Operator.Prod
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatKernelBounds
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Algebra.Order.Algebra
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Data.EReal.Inv
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Normed.Operator.Prod
+import Mathlib.Analysis.RCLike.Basic
 
 /-!
 # Joint parameter derivatives of the normalized flat kernel
@@ -22,6 +17,9 @@ public import Mathlib.Data.EReal.Inv
 The estimates use actual total Fréchet derivatives and finite profile-jet
 bounds. The parameter space need not be finite-dimensional for these bounds.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -150,6 +148,7 @@ theorem norm_iteratedFDeriv_scalar_snd_le {f : ℝ → ℝ}
   exact (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans_eq
     (by simp [norm_iteratedFDeriv_eq_norm_iteratedDeriv, Real.norm_eq_abs])
 
+/-- Coordinate expr, given by `.mul .x .invRoot`. -/
 def coordinateExpr : Expr := .mul .x .invRoot
 
 theorem coordinate_eq_expr (x t : ℝ) :
@@ -172,6 +171,7 @@ theorem coordinate_derivative_bound (n : ℕ) {R : ℝ} (hR : 0 ≤ R) :
   rw [coordinateExpr.iteratedDeriv_eval contDiff_const ht n]
   exact hbound x t hx ht
 
+/-- Transform, given by `(y.1, coordinate y.2 t)`. -/
 def transform (t : ℝ) (y : E × ℝ) : E × ℝ := (y.1, coordinate y.2 t)
 
 theorem transform_contDiff {t : ℝ} (ht : 0 ≤ t) :
@@ -217,6 +217,7 @@ theorem transform_derivative_bound (n : ℕ) {R : ℝ} (hR : 0 ≤ R) :
       _ ≤ 1 + C * (1 + t) ^ N := add_le_add_right (hbound y.2 t hcoord ht) 1
       _ ≤ (C + 1) * (1 + t) ^ N := by nlinarith
 
+/-- Amplitude, given by `denominator x t ^ j / denominator x t ^ 3`. -/
 def amplitude (j : ℕ) (x t : ℝ) : ℝ := denominator x t ^ j / denominator x t ^ 3
 
 theorem amplitude_contDiff (j : ℕ) {t : ℝ} (ht : 0 ≤ t) :
@@ -246,9 +247,12 @@ theorem amplitude_joint_derivative_bound (j n : ℕ) {R : ℝ} (hR : 0 ≤ R) :
   exact (norm_iteratedFDeriv_scalar_snd_le (amplitude_contDiff j ht) n y).trans
     (hbound y.2 t hcoord ht)
 
+/-- Raw kernel, given by `amplitude j y.2 t * b (transform t y)`. -/
 def rawKernel (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) (t : ℝ) : ℝ :=
   amplitude j y.2 t * b (transform t y)
 
+/-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator y.2 t ^ j / denominator y.2
+t ^ 3) * b (y.1, coordinate y.2 t)`. -/
 def kernel (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) (t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (denominator y.2 t ^ j / denominator y.2 t ^ 3) *

@@ -8,13 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPaths
 
-@[expose] public section
-
 /-!
 The actual joined primary solves the homogeneous transverse equation.
 The physical normal field is pointwise; it is never treated as one L²
 vector. All equations below are for genuine cylinder representatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,7 +32,7 @@ variable {P : ℝ} [Fact (0 < P)]
 
 theorem balance_ae (t : Icc (0 : ℝ) D.T) :
     ∀ᵐ x ∂liftMeasure P,
-      derivativePath τ hτ hτT B Y t x+D.M.field t x.1 (velocityPath τ hτ hτT B Y t x)+
+      derivativePath τ hτ hτT B Y t x+D.M.field t x.1 (velocityPath τ hτ hτT B Y t x) +
         (-(2*⟪D.normal.field t x.1,D.M.field t x.1 (velocityPath τ hτ hτT B Y t x)⟫_ℝ)/
           ‖D.normal.field t x.1‖^2) • D.normal.field t x.1 = 0 := by
   by_cases ht : (t : ℝ) ≤ τ

@@ -6,12 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Concatenation of two paths on closed time intervals. Matching
 endpoint values and derivatives give a genuine derivative at the seam. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -20,6 +29,7 @@ namespace EulerIntervalConcatenation
 open Set Filter
 open scoped Topology
 
+/-- Join, with branches according to `t ≤ T`. -/
 def join {E : Type*} (T S : ℝ) (hT : 0 ≤ T) (hS : 0 ≤ S)
     (f : Icc (0 : ℝ) T → E) (g : Icc (0 : ℝ) S → E) (t : ℝ) : E :=
   if t ≤ T then f (projIcc 0 T hT t) else g (projIcc 0 S hS (t-T))
@@ -30,7 +40,7 @@ variable {E : Type*} {T S : ℝ} {hT : 0 ≤ T} {hS : 0 ≤ S}
 theorem join_left {t : ℝ} (ht : t ≤ T) :
     join T S hT hS f g t=f (projIcc 0 T hT t) := by simp only [join,ht,ite_true]
 
-theorem join_right (hfg : f ⟨T,hT,le_rfl⟩=g ⟨0,le_rfl,hS⟩) {t : ℝ} (ht : T ≤ t) :
+theorem join_right (hfg : f ⟨T, hT, le_rfl⟩ = g ⟨0, le_rfl, hS⟩) {t : ℝ} (ht : T ≤ t) :
     join T S hT hS f g t=g (projIcc 0 S hS (t-T)) := by
   by_cases h : t ≤ T
   · have he : t=T := le_antisymm h ht
@@ -41,13 +51,13 @@ theorem join_right (hfg : f ⟨T,hT,le_rfl⟩=g ⟨0,le_rfl,hS⟩) {t : ℝ} (ht
   · simp only [join,h,ite_false]
 
 theorem map_join {F : Type*} (A : E → F) (t : ℝ) :
-    A (join T S hT hS f g t)=
+    A (join T S hT hS f g t) =
       join T S hT hS (fun s => A (f s)) (fun s => A (g s)) t := by
   unfold join
   split <;> rfl
 
 theorem join_continuous [TopologicalSpace E] (hf : Continuous f) (hg : Continuous g)
-    (hfg : f ⟨T,hT,le_rfl⟩=g ⟨0,le_rfl,hS⟩) :
+    (hfg : f ⟨T, hT, le_rfl⟩ = g ⟨0, le_rfl, hS⟩) :
     Continuous (join T S hT hS f g) := by
   apply Continuous.if_le (hf.comp continuous_projIcc)
     (hg.comp (continuous_projIcc.comp (continuous_id.sub continuous_const)))
@@ -64,12 +74,12 @@ section Derivative
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
   (df : Icc (0 : ℝ) T → E) (dg : Icc (0 : ℝ) S → E)
   (hTpos : 0 < T) (hSpos : 0 < S)
-  (hfg : f ⟨T,hT,le_rfl⟩=g ⟨0,le_rfl,hS⟩)
+  (hfg : f ⟨T, hT, le_rfl⟩ = g ⟨0, le_rfl, hS⟩)
   (hdf : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (fun r => f (projIcc 0 T hT r)) (df t) (Icc (0 : ℝ) T) t)
   (hdg : ∀ t : Icc (0 : ℝ) S,
     HasDerivWithinAt (fun r => g (projIcc 0 S hS r)) (dg t) (Icc (0 : ℝ) S) t)
-  (hderiv : df ⟨T,hT,le_rfl⟩=dg ⟨0,le_rfl,hS⟩)
+  (hderiv : df ⟨T, hT, le_rfl⟩ = dg ⟨0, le_rfl, hS⟩)
 
 include hTpos hSpos hfg hdf hdg hderiv
 
@@ -100,7 +110,7 @@ theorem join_hasDerivAt_seam :
   rw [Icc_union_Icc_eq_Icc hT (le_add_of_nonneg_right hS)] at hu
   exact hu.hasDerivAt (Icc_mem_nhds hTpos (lt_add_of_pos_right T hSpos))
 
-theorem join_hasDerivAt (t : ℝ) (ht : t ∈ Ioo 0 (T+S)) :
+theorem join_hasDerivAt (t : ℝ) (ht : t ∈ Ioo 0 (T + S)) :
     HasDerivAt (join T S hT hS f g) (join T S hT hS df dg t) t := by
   rcases lt_trichotomy t T with hlt | heq | hgt
   · have hm : t ∈ Icc (0 : ℝ) T := ⟨ht.1.le,hlt.le⟩

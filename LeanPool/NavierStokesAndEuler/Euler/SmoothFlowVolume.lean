@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowJacobian
-public import LeanPool.NavierStokesAndEuler.Euler.LinearEvolutionDeterminant
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DeformationVolume
+import LeanPool.NavierStokesAndEuler.Euler.LinearEvolutionDeterminant
 
 /-! The actual flow of a trace-free smooth bounded velocity preserves its
 Jacobian determinant and Haar volume, in every finite dimension. -/
+
+@[expose] public section
+
 
 noncomputable section
 

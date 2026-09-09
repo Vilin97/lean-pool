@@ -6,18 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingDilation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingHistories
-public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalEntrance
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ReferencePath
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ShapeTransition
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FiveProfileMoments
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TransitionRamp
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatedOutgoing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationContinuation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ExtendedHeatedOutgoing
-
-@[expose] public section
 
 /-!
 # A common witness for nominal-profile assembly
@@ -28,6 +20,9 @@ and that value of `h`.  The five-row correction is a fixed, constructed local
 inverse applied to the actual debt of the assembled prefix.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -36,18 +31,27 @@ open NavierStokes.OutgoingProfile
 
 namespace NavierStokes.NominalProfile
 
+/-- Point: an abbreviation for `ℝ × ℝ`. -/
 abbrev Point := ℝ × ℝ
+/-- Field: an abbreviation for `Point → ℝ`. -/
 abbrev Field := Point → ℝ
+/-- Debt: an abbreviation for `FiveProfileMoments.Debt`. -/
 abbrev Debt := FiveProfileMoments.Debt
+/-- Coefficient: an abbreviation for `FiveProfileMoments.Coeff`. -/
 abbrev Coeff := FiveProfileMoments.Coeff
 
 /-- The axis choices are made after fixing this particular outgoing profile. -/
 structure AxisPreparation (F : Profile) (j : ℝ) where
+  /-- Delta of `AxisPreparation`, of type `ℝ`. -/
   delta : ℝ
+  /-- Sigma of `AxisPreparation`, of type `ℝ`. -/
   sigma : ℝ
   delta_pos : 0 < delta
   sigma_pos : 0 < sigma
+  /-- Inputs of `AxisPreparation`, of type `NaturalAxisCoefficients.AnalyticInputs F.data.h j
+  sigma F.axisDatum`. -/
   inputs : NaturalAxisCoefficients.AnalyticInputs F.data.h j sigma F.axisDatum
+  /-- Scale bound of `AxisPreparation`, of type `ℝ`. -/
   scaleBound : ℝ
   scaleBound_pos : 0 < scaleBound
   entrances : ∀ Λ : ℝ, scaleBound ≤ Λ → ∀ C : ℝ,
@@ -70,14 +74,20 @@ theorem prepare_axis (F : Profile) (hP : 2 ≤ F.data.core.P) {j : ℝ}
 /-- The scale is selected before the normalization; both retain the same
 outgoing profile and the same analytic axis data. -/
 structure AxisStage (F : Profile) where
+  /-- J of `AxisStage`, of type `ℝ`. -/
   j : ℝ
   small : NaturalAxisData.SmallParameters F.data.h j
+  /-- Preparation of `AxisStage`, of type `AxisPreparation F j`. -/
   preparation : AxisPreparation F j
+  /-- Scale of `AxisStage`, of type `ℝ`. -/
   scale : ℝ
+  /-- Normalization of `AxisStage`, of type `ℝ`. -/
   normalization : ℝ
   scale_large : preparation.scaleBound ≤ scale
   normalization_large :
     NaturalEntrance.entranceNormalization preparation.inputs scale preparation.delta ≤ normalization
+  /-- Chosen natural of `AxisStage`, of type `NaturalEntrance.EntranceProfile preparation.inputs
+  scale normalization`. -/
   chosenNatural : NaturalEntrance.EntranceProfile preparation.inputs scale normalization
 
 namespace AxisStage
@@ -90,10 +100,13 @@ theorem normalization_pos : 0 < A.normalization :=
   (Real.exp_pos _).trans_le ((NaturalEntrance.entranceNormalization_ge A.preparation.inputs
     A.scale_pos A.preparation.delta_pos).trans A.normalization_large)
 
+/-- Natural, given by `A.chosenNatural`. -/
 noncomputable def natural : NaturalEntrance.EntranceProfile A.preparation.inputs A.scale
-  A.normalization :=
+    A.normalization :=
   A.chosenNatural
 
+/-- Reference input, given by `ReferencePath.Input.ofNatural A.scale_pos
+A.natural.profile.family`. -/
 noncomputable def referenceInput : ReferencePath.Input :=
   ReferencePath.Input.ofNatural A.scale_pos A.natural.profile.family
 
@@ -101,6 +114,8 @@ theorem reference_scale : A.referenceInput.scale = A.scale := rfl
 theorem reference_f : A.referenceInput.f = A.natural.profile.family.f := rfl
 theorem reference_U : A.referenceInput.U = A.natural.profile.family.U := rfl
 
+/-- Reference, given by `A.referenceInput.histories hδ hδsmall F.axisDatum
+F.axisDatum_contDiff`. -/
 noncomputable def reference (δ : ℝ) (hδ : 0 < δ) (hδsmall : 2 * δ < ReferencePath.rampLimit) :
     ProfileHistories.Profiles A.referenceInput.radialDomain :=
   A.referenceInput.histories hδ hδsmall F.axisDatum F.axisDatum_contDiff
@@ -148,10 +163,14 @@ theorem exists_axis_stage (F : Profile) (hP : 2 ≤ F.data.core.P) {j : ℝ}
 
 /-! ## Matching geometry: the radius is derived from the same normalization -/
 
+/-- Xi, given by `110`. -/
 noncomputable def Xi : ℝ := 110
+/-- Matching radius, given by `ShapeTransition.resetRadius Xi C F.data.core.P`. -/
 noncomputable def matchingRadius (F : Profile) (C : ℝ) : ℝ :=
   ShapeTransition.resetRadius Xi C F.data.core.P
+/-- Match fraction, given by `Real.exp (-5)`. -/
 noncomputable def matchFraction : ℝ := Real.exp (-5)
+/-- Match radius, given by `matchingRadius F C * matchFraction`. -/
 noncomputable def matchRadius (F : Profile) (C : ℝ) : ℝ := matchingRadius F C * matchFraction
 
 theorem Xi_pos : 0 < Xi := by norm_num [Xi]
@@ -163,8 +182,8 @@ theorem matchFraction_lt_one : matchFraction < 1 := Real.exp_lt_one_iff.mpr (by 
 theorem matchingRadius_tendsto (F : Profile) : Tendsto (matchingRadius F) atTop atTop := by
   have hcp : Tendsto (fun C : ℝ => C * F.data.core.P) atTop atTop :=
     (tendsto_mul_const_atTop_of_pos F.data.core.P_pos).mpr tendsto_id
-  exact (tendsto_const_mul_atTop_of_pos Xi_pos).mpr ((tendsto_pow_atTop (by decide : 10 ≠ 0)).comp
-    hcp)
+  exact (tendsto_const_mul_atTop_of_pos Xi_pos).mpr ((tendsto_pow_atTop (by
+      decide : 10 ≠ 0)).comp hcp)
 
 /-- Any fixed outgoing radius bound and shape-separation test can be met by
 the later choice of `C`; no outgoing parameter is reselected. -/
@@ -176,15 +195,19 @@ theorem eventually_matching_geometry (F : Profile) (T radiusFloor normFloor : �
     ShapeTransition.separation_eventually_before T F.data.core.P_pos (-8)] with C hC hn hr hs
   exact ⟨hC, hn, hr, hs⟩
 
+/-- Reset patch, bundling `left`, `right`, `left_pos`, `ordered`. -/
 noncomputable def resetPatch : FiveProfileMoments.Patch where
   left := Real.exp (-6)
   right := Real.exp (-5)
   left_pos := Real.exp_pos _
   ordered := Real.exp_lt_exp.mpr (by norm_num)
 
+/-- Ideal amplitude, given by `F.data.core.P * OutgoingSchedule.shape eta`. -/
 noncomputable def idealAmplitude (F : Profile) (eta : ℝ) : ℝ :=
   F.data.core.P * OutgoingSchedule.shape eta
+/-- Ideal U, given by `4 * eta`. -/
 noncomputable def idealU (eta : ℝ) : ℝ := 4 * eta
+/-- Ideal E, given by `idealAmplitude F p.2 * p.1 ^ (1 / 10 : ℝ)`. -/
 noncomputable def idealE (F : Profile) (p : Point) : ℝ :=
   idealAmplitude F p.2 * p.1 ^ (1 / 10 : ℝ)
 
@@ -196,8 +219,11 @@ theorem idealU_smooth : ContDiff ℝ ∞ idealU := contDiff_const.mul contDiff_i
 
 /-- One normalized inverse is fixed before the prefix debt is supplied. -/
 structure ResetSolver where
+  /-- Solve of `ResetSolver`, of type `Coeff → Coeff`. -/
   solve : Coeff → Coeff
+  /-- Radius of `ResetSolver`, of type `ℝ`. -/
   radius : ℝ
+  /-- Bound of `ResetSolver`, of type `ℝ`. -/
   bound : ℝ
   radius_pos : 0 < radius
   bound_pos : 0 < bound
@@ -215,14 +241,19 @@ theorem resetSolver_exists : Nonempty ResetSolver := by
   exact ⟨⟨g, r, C, hr, hC, hg, hg0, fun q hq => (he q hq).1,
     fun q hq => (he q hq).2.2.2, fun q hq => (he q hq).2.1⟩⟩
 
+/-- Reset solver, given by `Classical.choice resetSolver_exists`. -/
 noncomputable def resetSolver : ResetSolver := Classical.choice resetSolver_exists
 
+/-- Normalized debt, given by `FiveProfileMoments.normalizedDebt (idealAmplitude F eta) (idealU
+eta) (debt eta)`. -/
 noncomputable def normalizedDebt (F : Profile) (debt : ℝ → Debt) (eta : ℝ) : Coeff :=
   FiveProfileMoments.normalizedDebt (idealAmplitude F eta) (idealU eta) (debt eta)
 
+/-- Reset coefficients, given by `resetSolver.solve (normalizedDebt F debt eta)`. -/
 noncomputable def resetCoefficients (F : Profile) (debt : ℝ → Debt) (eta : ℝ) : Coeff :=
   resetSolver.solve (normalizedDebt F debt eta)
 
+/-- Small debt, given by `‖normalizedDebt F debt eta‖ < resetSolver.radius`. -/
 def SmallDebt (F : Profile) (debt : ℝ → Debt) (eta : ℝ) : Prop :=
   ‖normalizedDebt F debt eta‖ < resetSolver.radius
 
@@ -249,15 +280,23 @@ theorem resetCoefficients_smooth (F : Profile) {debt : ℝ → Debt} {V : Set �
 
 /-! ## Literal row densities and compact edits -/
 
+/-- Density, given by `![U x, Real.sqrt (2 * x) * E x, U x * Real.sqrt (2 * x) * E x, U x ^ 2 -
+E x ^ 2 / 2, E x ^ 2 / (2 * x)]`. -/
 noncomputable def density (U E : ℝ → ℝ) (x : ℝ) : Debt :=
   ![U x, Real.sqrt (2 * x) * E x, U x * Real.sqrt (2 * x) * E x,
     U x ^ 2 - E x ^ 2 / 2, E x ^ 2 / (2 * x)]
 
+/-- Moments, defined pointwise by `∫ x in Ioc 0 r, density (fun x => U (x, eta)) (fun x => E (x,
+eta)) x i`. -/
 noncomputable def moments (U E : Field) (r eta : ℝ) : Debt :=
   fun i => ∫ x in Ioc 0 r, density (fun x => U (x, eta)) (fun x => E (x, eta)) x i
 
+/-- Corrected U, given by `U p + idealAmplitude F p.2 * FiveProfileMoments.u resetPatch
+(resetCoefficients F debt p.2) p.1`. -/
 noncomputable def correctedU (F : Profile) (U : Field) (debt : ℝ → Debt) (p : Point) : ℝ :=
   U p + idealAmplitude F p.2 * FiveProfileMoments.u resetPatch (resetCoefficients F debt p.2) p.1
+/-- Corrected E, given by `E p + idealAmplitude F p.2 * FiveProfileMoments.e resetPatch
+(resetCoefficients F debt p.2) p.1`. -/
 noncomputable def correctedE (F : Profile) (E : Field) (debt : ℝ → Debt) (p : Point) : ℝ :=
   E p + idealAmplitude F p.2 * FiveProfileMoments.e resetPatch (resetCoefficients F debt p.2) p.1
 
@@ -317,6 +356,8 @@ theorem corrected_moments (F : Profile) (U E : Field) (debt : ℝ → Debt) (eta
 
 /-! ## Shape restoration in the same physical radius -/
 
+/-- Restored U, given by `let s := ShapeTransition.radialSwitch (XR * Real.exp (-8)) 1 p.1 (1 -
+s) * old p + s * idealU p.2`. -/
 noncomputable def restoredU (XR : ℝ) (old : Field) (p : Point) : ℝ :=
   let s := ShapeTransition.radialSwitch (XR * Real.exp (-8)) 1 p.1
   (1 - s) * old p + s * idealU p.2
@@ -347,11 +388,14 @@ theorem restoredU_after {XR x : ℝ} (hXR : 0 < XR) (hx : Real.exp (-7) ≤ x)
     OutgoingSchedule.sigma_one (by linarith : 1 ≤ Real.log x + 8)]
   ring
 
+/-- Prepared E, given by `Real.sqrt (2 * (matchingRadius F C * p.1)) *
+ShapeTransition.shapeField Xi T li oldf (matchingRadius F C * p.1, p.2)`. -/
 noncomputable def preparedE (F : Profile) (C T : ℝ) (li : ℝ → ℝ) (oldf : Field)
     (p : Point) : ℝ :=
   Real.sqrt (2 * (matchingRadius F C * p.1)) *
     ShapeTransition.shapeField Xi T li oldf (matchingRadius F C * p.1, p.2)
 
+/-- Prepared U, given by `restoredU (matchingRadius F C) oldU (matchingRadius F C * p.1, p.2)`. -/
 noncomputable def preparedU (F : Profile) (C : ℝ) (oldU : Field) (p : Point) : ℝ :=
   restoredU (matchingRadius F C) oldU (matchingRadius F C * p.1, p.2)
 
@@ -406,6 +450,7 @@ theorem preparedU_ideal (F : Profile) {C x : ℝ} (hC : 0 < C)
 
 /-! ## Splicing and the actual five-row debt -/
 
+/-- Splice, with branches according to `p.1 ≤ r`. -/
 noncomputable def splice (r : ℝ) (inner outer : Field) (p : Point) : ℝ :=
   if p.1 ≤ r then inner p else outer p
 
@@ -415,8 +460,10 @@ theorem splice_inner {r : ℝ} (inner outer : Field) {p : Point} (hp : p.1 ≤ r
 theorem splice_outer {r : ℝ} (inner outer : Field) {p : Point} (hp : r < p.1) :
     splice r inner outer p = outer p := ite_eq_right (not_le.mpr hp)
 
+/-- Base U, given by `splice matchFraction (preparedU F C oldU) F.U`. -/
 noncomputable def baseU (F : Profile) (C : ℝ) (oldU : Field) : Field :=
   splice matchFraction (preparedU F C oldU) F.U
+/-- Base E, given by `splice matchFraction (preparedE F C T li oldf) F.E`. -/
 noncomputable def baseE (F : Profile) (C T : ℝ) (li : ℝ → ℝ) (oldf : Field) : Field :=
   splice matchFraction (preparedE F C T li oldf) F.E
 
@@ -426,8 +473,10 @@ noncomputable def actualDebt (F : Profile) (C T : ℝ) (li : ℝ → ℝ) (oldf 
   moments F.U F.E matchFraction eta -
     moments (baseU F C oldU) (baseE F C T li oldf) matchFraction eta
 
+/-- Joined U, given by `correctedU F (baseU F C oldU) (actualDebt F C T li oldf oldU)`. -/
 noncomputable def joinedU (F : Profile) (C T : ℝ) (li : ℝ → ℝ) (oldf oldU : Field) : Field :=
   correctedU F (baseU F C oldU) (actualDebt F C T li oldf oldU)
+/-- Joined E, given by `correctedE F (baseE F C T li oldf) (actualDebt F C T li oldf oldU)`. -/
 noncomputable def joinedE (F : Profile) (C T : ℝ) (li : ℝ → ℝ) (oldf oldU : Field) : Field :=
   correctedE F (baseE F C T li oldf) (actualDebt F C T li oldf oldU)
 
@@ -519,7 +568,7 @@ theorem corrected_density_integrable (F : Profile) (U E : Field) (debt : ℝ →
       (fun t => correctedU F U debt (t, eta)) (fun t => correctedE F E debt (t, eta)) x i)
         (Ioc 0 r) := by
   apply IntegrableOn.congr_fun ((hint i).add ((FiveProfileMoments.physicalDensity_integrable
-    resetPatch (1 / 10)
+      resetPatch (1 / 10)
     (idealAmplitude F eta) (idealU eta) (idealAmplitude_pos F eta).ne'
     (resetCoefficients F debt eta) i).integrableOn)) _ measurableSet_Ioc
   intro x _
@@ -562,17 +611,22 @@ theorem joined_before_patch (F : Profile) (C T : ℝ) (li : ℝ → ℝ) (oldf o
 /-- These are only scalar clock choices.  No cone inequality or moment
 compatibility is included in the data. -/
 structure Controls {F : Profile} (A : AxisStage F) where
+  /-- Reference width of `Controls`, of type `ℝ`. -/
   referenceWidth : ℝ
   referenceWidth_pos : 0 < referenceWidth
   referenceWidth_small : 2 * referenceWidth < ReferencePath.rampLimit
+  /-- Activation time of `Controls`, of type `ℝ`. -/
   activationTime : ℝ
   activationTime_pos : 0 < activationTime
   activationTime_le : activationTime ≤ referenceWidth
+  /-- Kappa of `Controls`, of type `ℝ`. -/
   kappa : ℝ
   kappa_pos : 0 < kappa
   kappa_le_one : kappa ≤ 1
+  /-- Axial width of `Controls`, of type `ℝ`. -/
   axialWidth : ℝ
   axialWidth_pos : 0 < axialWidth
+  /-- Angular width of `Controls`, of type `ℝ`. -/
   angularWidth : ℝ
   angularWidth_pos : 0 < angularWidth
   before_big : referenceWidth ≤
@@ -580,6 +634,7 @@ structure Controls {F : Profile} (A : AxisStage F) where
   finish : (A.activation referenceWidth referenceWidth_pos referenceWidth_small).bigTime +
     axialWidth + angularWidth ≤
       (A.activation referenceWidth referenceWidth_pos referenceWidth_small).finalTime
+  /-- Shape time of `Controls`, of type `ℝ`. -/
   shapeTime : ℝ
   shapeTime_pos : 0 < shapeTime
 
@@ -587,15 +642,23 @@ namespace Controls
 
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
+/-- Reference, given by `A.activation c.referenceWidth c.referenceWidth_pos
+c.referenceWidth_small`. -/
 noncomputable def reference : TransitionRamp.StockReference ReferencePath.parameterInterval :=
   A.activation c.referenceWidth c.referenceWidth_pos c.referenceWidth_small
 
+/-- Seed F, given by `c.reference.physicalF c.activationTime c.kappa c.axialWidth
+c.angularWidth`. -/
 noncomputable def seedF : Field :=
   c.reference.physicalF c.activationTime c.kappa c.axialWidth c.angularWidth
+/-- Seed U, given by `c.reference.physicalU c.activationTime c.kappa c.axialWidth`. -/
 noncomputable def seedU : Field :=
   c.reference.physicalU c.activationTime c.kappa c.axialWidth
+/-- Initial shape, given by `c.reference.endpointLog c.activationTime c.kappa c.axialWidth
+c.angularWidth A.normalization`. -/
 noncomputable def initialShape : ℝ → ℝ :=
   c.reference.endpointLog c.activationTime c.kappa c.axialWidth c.angularWidth A.normalization
+/-- Initial axial, given by `c.reference.endpointU c.activationTime c.kappa c.axialWidth`. -/
 noncomputable def initialAxial : ℝ → ℝ :=
   c.reference.endpointU c.activationTime c.kappa c.axialWidth
 
@@ -657,7 +720,7 @@ theorem seedU_held {X eta : ℝ} (hX : Xi ≤ X) (hη : eta ∈ ReferencePath.pa
   c.reference.physicalU_held ReferencePath.parameterInterval_open c.axialWidth_pos
     (by
       have hf : c.reference.bigTime + c.axialWidth + c.angularWidth ≤ c.reference.finalTime :=
-        c.finish
+          c.finish
       linarith [c.angularWidth_pos]) c.radius_before_Xi hX hη
 
 theorem initialShape_value {eta : ℝ} (hη : eta ∈ ReferencePath.parameterInterval) :
@@ -668,14 +731,23 @@ theorem initialShape_value {eta : ℝ} (hη : eta ∈ ReferencePath.parameterInt
 /-- The nominal fields are functions of the actual stock-controlled seed. -/
 noncomputable def debt : ℝ → Debt :=
   actualDebt F A.normalization c.shapeTime c.initialShape c.seedF c.seedU
+/-- Normalized E, given by `joinedE F A.normalization c.shapeTime c.initialShape c.seedF
+c.seedU`. -/
 noncomputable def normalizedE : Field :=
   joinedE F A.normalization c.shapeTime c.initialShape c.seedF c.seedU
+/-- Normalized U, given by `joinedU F A.normalization c.shapeTime c.initialShape c.seedF
+c.seedU`. -/
 noncomputable def normalizedU : Field :=
   joinedU F A.normalization c.shapeTime c.initialShape c.seedF c.seedU
+/-- Radius, given by `matchingRadius F A.normalization`. -/
 noncomputable def radius (_c : Controls A) : ℝ := matchingRadius F A.normalization
+/-- E, given by `c.normalizedE (p.1 / c.radius, p.2)`. -/
 noncomputable def E (p : Point) : ℝ := c.normalizedE (p.1 / c.radius, p.2)
+/-- U, given by `c.normalizedU (p.1 / c.radius, p.2)`. -/
 noncomputable def U (p : Point) : ℝ := c.normalizedU (p.1 / c.radius, p.2)
+/-- H, given by `Real.sqrt (2 * p.1) * c.E p`. -/
 noncomputable def H (p : Point) : ℝ := Real.sqrt (2 * p.1) * c.E p
+/-- Pi, given by `F.axisDatum p.2 + moments c.U c.E p.1 p.2 4`. -/
 noncomputable def Pi (p : Point) : ℝ :=
   F.axisDatum p.2 + moments c.U c.E p.1 p.2 4
 
@@ -741,6 +813,7 @@ theorem physical_before_Xi
     rw [mul_div_cancel₀ _ c.radius_pos.ne',
       ShapeTransition.shapeField_before Xi_pos c.shapeTime_pos hp]
 
+/-- F, with branches according to `p.1 ≤ Xi`. -/
 noncomputable def f (p : Point) : ℝ :=
   if p.1 ≤ Xi then c.seedF p else c.E p / Real.sqrt (2 * p.1)
 
@@ -812,6 +885,7 @@ theorem controls_exist {F : Profile} (A : AxisStage F) (hscale : 1 ≤ A.scale)
 
 /-! ## Regular parameter-dependent prefix integrals -/
 
+/-- Scaled domain, bundling `carrier`, `isOpen`, `scale_mem`, `have`. -/
 noncomputable def scaledDomain (D : ProfileHistories.RadialDomain) (R : ℝ) :
     ProfileHistories.RadialDomain where
   carrier := {p | (R * p.1, p.2) ∈ D.carrier}
@@ -822,6 +896,8 @@ noncomputable def scaledDomain (D : ProfileHistories.RadialDomain) (R : ℝ) :
     change (R * (t * p.1), p.2) ∈ D.carrier
     simpa only [mul_left_comm R t] using hs
 
+/-- Regular density, given by `![P.U p, P.H p, P.transportDensity p, P.energyDensity p, P.f p ^
+2]`. -/
 noncomputable def regularDensity {D : ProfileHistories.RadialDomain}
     (P : ProfileHistories.Profiles D) (p : Point) : Debt :=
   ![P.U p, P.H p, P.transportDensity p, P.energyDensity p, P.f p ^ 2]
@@ -866,6 +942,7 @@ namespace Controls
 
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
+/-- Shaped F, given by `ShapeTransition.shapeField Xi c.shapeTime c.initialShape c.seedF`. -/
 noncomputable def shapedF : Field :=
   ShapeTransition.shapeField Xi c.shapeTime c.initialShape c.seedF
 
@@ -874,7 +951,7 @@ theorem shapedF_smooth : ContDiffOn ℝ ∞ c.shapedF A.referenceInput.radialDom
   apply ContDiffOn.exp
   apply ContDiffOn.mul
   · exact ((ShapeTransition.radialSwitch_contDiff Xi_pos c.shapeTime_pos).comp
-    contDiff_fst).contDiffOn
+      contDiff_fst).contDiffOn
   · exact (ShapeTransition.logShape_contDiff.comp contDiff_snd).contDiffOn.sub
       (c.initialShape_smooth.comp contDiffOn_snd (fun _ hp => hp.2))
 
@@ -887,14 +964,17 @@ theorem restored_seed_smooth :
   exact ((contDiffOn_const.sub hs.contDiffOn).mul c.seedU_smooth).add
     (hs.contDiffOn.mul (idealU_smooth.comp contDiff_snd).contDiffOn)
 
+/-- Prepared domain, given by `scaledDomain A.referenceInput.radialDomain c.radius`. -/
 noncomputable def preparedDomain : ProfileHistories.RadialDomain :=
   scaledDomain A.referenceInput.radialDomain c.radius
 
 theorem preparedDomain_nonnegative {p : Point} (hX : 0 ≤ p.1)
     (hη : p.2 ∈ ReferencePath.parameterInterval) : p ∈ c.preparedDomain.carrier := by
-  exact ⟨lt_of_lt_of_le (by norm_num) (mul_nonneg A.scale_pos.le (mul_nonneg c.radius_pos.le hX)),
-    hη⟩
+  exact ⟨lt_of_lt_of_le (by
+      norm_num) (mul_nonneg A.scale_pos.le (mul_nonneg c.radius_pos.le hX)), hη⟩
 
+/-- Prepared profiles, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility
+proofs. -/
 noncomputable def preparedProfiles : ProfileHistories.Profiles c.preparedDomain where
   f := fun p => Real.sqrt c.radius * c.shapedF (c.radius * p.1, p.2)
   U := preparedU F A.normalization c.seedU
@@ -968,6 +1048,7 @@ theorem base_moments_smooth : ContDiffOn ℝ ∞ (fun eta =>
 
 end Controls
 
+/-- Ideal prefix rows as an element of `Debt`. -/
 noncomputable def idealPrefixRows (F : Profile) (r eta : ℝ) : Debt :=
   let a := idealAmplitude F eta
   let u := idealU eta
@@ -1063,7 +1144,7 @@ theorem splice_smoothOn {V : Set Point} (hV : IsOpen V) {r b : ℝ} (hr : 0 < r)
     have hop : IsOpen (V ∩ {q : Point | 0 < q.1}) :=
       hV.inter (isOpen_lt continuous_const continuous_fst)
     apply ((ho.contDiffAt (hop.mem_nhds ⟨hp, hr.trans hpr⟩)).congr_of_eventuallyEq
-      _).contDiffWithinAt
+        _).contDiffWithinAt
     filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hpr)] with q hq
     exact splice_outer _ _ hq
 
@@ -1088,6 +1169,8 @@ theorem prepared_overlap
       c.initialShape c.seedF eta (c.seedF_held (c.shape_clock_after_Xi hxs) hη)]
     exact (F.E_ideal eta hx0 hx1).symm
 
+/-- Base regular F, given by `splice matchFraction c.preparedProfiles.f (fun p => F.E p /
+Real.sqrt (2 * p.1))`. -/
 noncomputable def baseRegularF : Field :=
   splice matchFraction c.preparedProfiles.f (fun p => F.E p / Real.sqrt (2 * p.1))
 
@@ -1118,6 +1201,8 @@ theorem baseU_smooth
     exact (c.prepared_overlap hsep hpr.le
       (hpb.le.trans (Real.exp_le_one_iff.mpr (by norm_num : (-4 : ℝ) ≤ 0))) hp.2).1
 
+/-- Base profiles, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility
+proofs. -/
 noncomputable def baseProfiles
     (hsep : ShapeTransition.separation c.shapeTime A.normalization F.data.core.P ≤ Real.exp (-8)) :
     ProfileHistories.Profiles c.preparedDomain where
@@ -1156,7 +1241,7 @@ theorem base_density_integrable
     {r eta : ℝ} (hr : 0 ≤ r) (hη : eta ∈ ReferencePath.parameterInterval) (i : Fin 5) :
     IntegrableOn (fun x => density (fun t => baseU F A.normalization c.seedU (t, eta))
       (fun t => baseE F A.normalization c.shapeTime c.initialShape c.seedF (t, eta)) x i) (Ioc 0 r)
-        := by
+          := by
   apply IntegrableOn.congr_fun (regularDensity_integrable (c.baseProfiles hsep)
     (c.preparedDomain_nonnegative hr hη) i) _ measurableSet_Ioc
   exact fun x hx => congrArg (fun q : Debt => q i) (c.base_density_eq hsep hx.1 eta).symm
@@ -1243,7 +1328,7 @@ theorem f_smoothAt
     simpa only [mul_comm] using (c.E_eq_sqrt_mul_f hsep hq).symm
   · have hpXi : p.1 < Xi := (le_of_not_gt hX).trans_lt Xi_pos
     apply (c.seedF_smooth.contDiffAt (A.referenceInput.radialDomain.isOpen.mem_nhds
-      hp)).congr_of_eventuallyEq
+        hp)).congr_of_eventuallyEq
     filter_upwards [continuousAt_fst.eventually (Iio_mem_nhds hpXi)] with q hq
     exact c.f_before_Xi hq.le
 
@@ -1321,12 +1406,14 @@ theorem outgoing_density_integrable (F : Profile) (eta r : ℝ) (i : Fin 5) :
   · exact (F.energy_integrable eta).mono_set (fun _ hx => hx.1)
   · apply IntegrableOn.congr_fun
       (((F.canonicalKernel_integrable eta).mono_set (fun _ hx => hx.1)).div_const 2) _
-        measurableSet_Ioc
+          measurableSet_Ioc
     intro x _
     change (F.E (x, eta) ^ 2 / x) / 2 = F.E (x, eta) ^ 2 / (2 * x)
     rw [div_div, mul_comm x 2]
 
+/-- Dilate field, given by `f (p.1 / R, p.2)`. -/
 noncomputable def dilateField (R : ℝ) (f : Field) (p : Point) : ℝ := f (p.1 / R, p.2)
+/-- Dilation factor, given by `![R, R * Real.sqrt R, R * Real.sqrt R, R, 1]`. -/
 noncomputable def dilationFactor (R : ℝ) : Debt := ![R, R * Real.sqrt R, R * Real.sqrt R, R, 1]
 
 theorem density_dilate (R : ℝ) (hR : 0 < R) (U E : Field) (eta : ℝ) {x : ℝ} (hx : 0 < x)
@@ -1374,12 +1461,12 @@ theorem physical_moments
     {X eta : ℝ} (hX : c.radius * matchFraction ≤ X) (hη : eta ∈ ReferencePath.parameterInterval)
     (hs : SmallDebt F c.debt eta) :
     moments c.U c.E X eta = moments (OutgoingDilation.U F c.radius) (OutgoingDilation.E F c.radius)
-      X eta := by
+        X eta := by
   change moments (dilateField c.radius c.normalizedU) (dilateField c.radius c.normalizedE) X eta =
     moments (dilateField c.radius F.U) (dilateField c.radius F.E) X eta
   rw [moments_dilate c.radius c.radius_pos, moments_dilate c.radius c.radius_pos,
-    c.normalized_moments hsep ((le_div_iff₀ c.radius_pos).mpr (by simpa only [mul_comm] using hX))
-      hη hs]
+    c.normalized_moments hsep ((le_div_iff₀ c.radius_pos).mpr (by
+        simpa only [mul_comm] using hX)) hη hs]
 
 theorem physical_mass_after
     (hsep : ShapeTransition.separation c.shapeTime A.normalization F.data.core.P ≤ Real.exp (-8))
@@ -1414,6 +1501,7 @@ theorem moment_difference_split (U E V G : Field) (eta : ℝ) {r b : ℝ} (hr : 
       ((hV i).mono_set (fun _ hx => ⟨hr.trans_lt hx.1, hx.2⟩))]
   ring
 
+/-- Manuscript ideal rows as an element of `Debt`. -/
 noncomputable def manuscriptIdealRows (F : Profile) (r eta : ℝ) : Debt :=
   ![ShapeTransition.idealM idealU r eta, ShapeTransition.idealI (idealAmplitude F) r eta,
     ShapeTransition.idealJ idealU (idealAmplitude F) r eta,
@@ -1455,18 +1543,24 @@ namespace Controls
 
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
+/-- Separation, given by `ShapeTransition.separation c.shapeTime A.normalization F.data.core.P`. -/
 noncomputable def separation : ℝ := ShapeTransition.separation c.shapeTime A.normalization
-  F.data.core.P
+    F.data.core.P
+/-- Raw U, given by `ShapeTransition.scaledFamily c.radius c.seedU`. -/
 noncomputable def rawU : Field := ShapeTransition.scaledFamily c.radius c.seedU
+/-- Raw F, given by `ShapeTransition.scaledFamily c.radius c.shapedF`. -/
 noncomputable def rawF : Field := ShapeTransition.scaledFamily c.radius c.shapedF
+/-- Raw rows as an element of `Debt`. -/
 noncomputable def rawRows (r eta : ℝ) : Debt :=
   ![ShapeTransition.rowM c.rawU r eta, ShapeTransition.rowI c.radius c.rawF r eta,
     ShapeTransition.rowJ c.radius c.rawU c.rawF r eta,
     ShapeTransition.rowS c.radius c.rawU c.rawF r eta, ShapeTransition.rowP c.radius c.rawF r eta]
+/-- Restore rows as an element of `Debt`. -/
 noncomputable def restoreRows (r b eta : ℝ) : Debt :=
   ![ShapeTransition.restoreDebtM c.initialAxial r b eta, 0,
     ShapeTransition.restoreDebtJ c.initialAxial (idealAmplitude F) r b eta,
     ShapeTransition.restoreDebtS c.initialAxial r b eta, 0]
+/-- Manuscript debt as an element of `Debt`. -/
 noncomputable def manuscriptDebt (eta : ℝ) : Debt :=
   ![ShapeTransition.resetDebtM c.rawU c.initialAxial c.separation matchFraction eta,
     ShapeTransition.resetDebtI c.radius c.rawF (idealAmplitude F) c.separation eta,
@@ -1513,7 +1607,7 @@ theorem base_prefix_before_restore {r : ℝ} (hr : 0 ≤ r) (hr8 : r ≤ Real.ex
 theorem base_restore_segment {x eta : ℝ} (hx : c.separation ≤ x) (hxb : x ≤ matchFraction)
     (hη : eta ∈ ReferencePath.parameterInterval) :
     baseU F A.normalization c.seedU (x, eta) = ShapeTransition.restore c.initialAxial (Real.log x,
-      eta) ∧
+        eta) ∧
     baseE F A.normalization c.shapeTime c.initialShape c.seedF (x, eta) = idealE F (x, eta) := by
   have hx0 := c.separation_pos.trans_le hx
   have hXi := c.shape_clock_after_Xi hx
@@ -1614,7 +1708,7 @@ noncomputable def admissibleDomain : ProfileHistories.RadialDomain where
     have hn : ContinuousAt (fun q : Point => ‖normalizedDebt F c.debt q.2‖) p :=
       ((c.normalizedDebt_smooth.contDiffAt
         (ReferencePath.parameterInterval_open.mem_nhds hp.1.2)).continuousAt.norm).comp
-          continuousAt_snd
+            continuousAt_snd
     filter_upwards [A.referenceInput.radialDomain.isOpen.mem_nhds hp.1,
       hn.eventually (Iio_mem_nhds hp.2)] with q hq hqn
     exact ⟨hq, hqn⟩
@@ -1627,6 +1721,7 @@ theorem admissible_nonnegative {p : Point} (hX : 0 ≤ p.1)
     p ∈ c.admissibleDomain.carrier :=
   ⟨⟨lt_of_lt_of_le (by norm_num) (mul_nonneg A.scale_pos.le hX), hη⟩, hs⟩
 
+/-- Profiles, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility proofs. -/
 noncomputable def profiles
     (hsep : c.separation ≤ Real.exp (-8)) : ProfileHistories.Profiles c.admissibleDomain where
   f := c.f
@@ -1651,7 +1746,7 @@ theorem physical_density_integrable (hsep : c.separation ≤ Real.exp (-8))
     {r eta : ℝ} (hr : 0 ≤ r) (hη : eta ∈ ReferencePath.parameterInterval)
     (hs : SmallDebt F c.debt eta) (i : Fin 5) :
     IntegrableOn (fun x => density (fun t => c.U (t, eta)) (fun t => c.E (t, eta)) x i) (Ioc 0 r)
-      := by
+        := by
   apply IntegrableOn.congr_fun (regularDensity_integrable (c.profiles hsep)
     (c.admissible_nonnegative hr hη hs) i) _ measurableSet_Ioc
   exact fun x hx => congrArg (fun q : Debt => q i) (c.physical_density_eq hsep hx.1 eta).symm
@@ -1700,6 +1795,7 @@ theorem canonical_past_identity {k : ℝ → ℝ} (hk : IntegrableOn k (Ioi 0))
   rw [hs]
   ring
 
+/-- Half kernel, given by `E (x, eta) ^ 2 / (2 * x)`. -/
 noncomputable def halfKernel (E : Field) (eta x : ℝ) : ℝ := E (x, eta) ^ 2 / (2 * x)
 
 theorem halfKernel_eq (E : Field) (eta x : ℝ) :
@@ -1726,7 +1822,7 @@ theorem outgoing_axis_halfKernel (F : Profile) (R eta : ℝ) (hR : 0 < R) :
 theorem outgoing_pressure_halfKernel (F : Profile) (R eta : ℝ) (hR : 0 < R)
     {X : ℝ} (hX : 0 < X) :
     OutgoingDilation.Pi F R (X, eta) = -(∫ x in Ioi X, halfKernel (OutgoingDilation.E F R) eta x)
-      := by
+        := by
   rw [OutgoingDilation.Pi_canonical F R eta X hR hX]
   simp_rw [halfKernel_eq]
   rw [integral_div]
@@ -1783,6 +1879,7 @@ end Controls
 
 /-! ## Keeping the actual continuation witness -/
 
+/-- Of entrance, given by `⟨j, hj, prep, Λ, C, hΛ, hC, E⟩`. -/
 noncomputable def AxisStage.ofEntrance {F : Profile} {j : ℝ}
     (hj : NaturalAxisData.SmallParameters F.data.h j) (prep : AxisPreparation F j)
     (Λ C : ℝ) (hΛ : prep.scaleBound ≤ Λ)
@@ -1790,6 +1887,8 @@ noncomputable def AxisStage.ofEntrance {F : Profile} {j : ℝ}
     (E : NaturalEntrance.EntranceProfile prep.inputs Λ C) : AxisStage F :=
   ⟨j, hj, prep, Λ, C, hΛ, hC, E⟩
 
+/-- Of continuation, bundling `referenceWidth`, `referenceWidth_pos`, `referenceWidth_small`,
+`activationTime` and the required compatibility proofs. -/
 noncomputable def Controls.ofContinuation {F : Profile} (A : AxisStage F) {N : ℕ} {eps : ℝ}
     (w : ActivationContinuation.ContinuationWitness A.natural A.scale_pos A.small
       F.axisDatum_contDiff N eps) (T : ℝ) (hT : 0 < T) : Controls A where
@@ -1835,14 +1934,20 @@ namespace Controls
 
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
+/-- Heat join, given by `c.radius * matchFraction`. -/
 noncomputable def heatJoin : ℝ := c.radius * matchFraction
+/-- Heat blend, given by `ShapeTransition.radialSwitch c.heatJoin 1 X`. -/
 noncomputable def heatBlend (X : ℝ) : ℝ := ShapeTransition.radialSwitch c.heatJoin 1 X
+/-- Heated E, given by `c.E p + c.heatBlend p.1 * (HeatedOutgoing.E F c.radius coef p - c.E p)`. -/
 noncomputable def heatedE (coef : ℝ → HeatedOutgoing.Coeff) (p : Point) : ℝ :=
   c.E p + c.heatBlend p.1 * (HeatedOutgoing.E F c.radius coef p - c.E p)
+/-- Heated H, given by `Real.sqrt (2 * p.1) * c.heatedE coef p`. -/
 noncomputable def heatedH (coef : ℝ → HeatedOutgoing.Coeff) (p : Point) : ℝ :=
   Real.sqrt (2 * p.1) * c.heatedE coef p
+/-- Heated pi, given by `F.axisDatum p.2 + moments c.U (c.heatedE coef) p.1 p.2 4`. -/
 noncomputable def heatedPi (coef : ℝ → HeatedOutgoing.Coeff) (p : Point) : ℝ :=
   F.axisDatum p.2 + moments c.U (c.heatedE coef) p.1 p.2 4
+/-- Heatedf, with branches according to `p.1 ≤ Xi`. -/
 noncomputable def heatedf (coef : ℝ → HeatedOutgoing.Coeff) (p : Point) : ℝ :=
   if p.1 ≤ Xi then c.f p else c.heatedE coef p / Real.sqrt (2 * p.1)
 
@@ -1910,10 +2015,10 @@ theorem heatedE_smooth {B : ℝ} (w : HeatedOutgoing.CompensationWitness F c.rad
   have hc : ContDiffOn ℝ ∞ c.E {p | p ∈ HeatedOutgoing.domain ∧ SmallDebt F c.debt p.2} := by
     intro p hp
     exact (c.E_smoothAt hsep hp.1.1 (physical_band_in_parameterInterval hp.1.2)
-      hp.2).contDiffWithinAt
+        hp.2).contDiffWithinAt
   exact hc.add (((c.heatBlend_smooth.comp contDiff_fst).contDiffOn).mul
     ((HeatedOutgoing.E_contDiffOn F c.radius c.radius_pos w.smooth).mono (fun _ hp => hp.1) |>.sub
-      hc))
+        hc))
 
 end Controls
 
@@ -1929,7 +2034,8 @@ theorem density_dilate_integrable (R : ℝ) (hR : 0 < R) (U E : Field) (r eta : 
   rw [mul_div_cancel₀ _ hR.ne'] at he
   calc
     _ = (dilationFactor R i * density (fun t => U (t, eta)) (fun t => E (t, eta)) (x / R) i) / R :=
-      by ring
+        by
+        ring
     _ = _ := (div_eq_iff hR.ne').mpr (by simpa only [mul_comm] using he.symm)
 
 theorem heated_outgoing_density_integrable {F : Profile} {R B : ℝ}
@@ -1946,7 +2052,7 @@ theorem heated_outgoing_density_integrable {F : Profile} {R B : ℝ}
     intro x _
     change Real.sqrt (2 * x) * OutgoingDilation.E F R (x, eta) +
         Real.sqrt (2 * x) * (HeatedOutgoing.E F R w.coefficients (x, eta) - OutgoingDilation.E F R
-          (x, eta)) =
+            (x, eta)) =
       Real.sqrt (2 * x) * HeatedOutgoing.E F R w.coefficients (x, eta)
     ring
   · apply IntegrableOn.congr_fun ((w.angular_integrable eta).mono_set (fun _ hx => hx.1))
@@ -1955,7 +2061,7 @@ theorem heated_outgoing_density_integrable {F : Profile} {R B : ℝ}
     change (Real.sqrt (2 * x) * HeatedOutgoing.E F R w.coefficients (x, eta)) *
         HeatedOutgoing.U F R (x, eta) =
       HeatedOutgoing.U F R (x, eta) * Real.sqrt (2 * x) * HeatedOutgoing.E F R w.coefficients (x,
-        eta)
+          eta)
     ring
   · exact (w.energy_integrable eta hη).mono_set (fun _ hx => hx.1)
   · apply IntegrableOn.congr_fun
@@ -2004,32 +2110,32 @@ theorem heated_moments_at_match {B : ℝ} (w : HeatedOutgoing.CompensationWitnes
     (hη : eta ∈ HeatedOutgoing.parameterDomain) (hs : SmallDebt F c.debt eta) :
     moments c.U (c.heatedE w.coefficients) c.heatJoin eta =
       moments (HeatedOutgoing.U F c.radius) (HeatedOutgoing.E F c.radius w.coefficients) c.heatJoin
-        eta := by
+          eta := by
   have he : moments c.U (c.heatedE w.coefficients) c.heatJoin eta = moments c.U c.E c.heatJoin eta
-    := by
+      := by
     ext i
     apply setIntegral_congr_fun measurableSet_Ioc
     intro x hx
     simp only [density, c.heatedE_before w.coefficients (p := (x, eta)) hx.2]
   rw [he, c.physical_moments hsep (X := c.heatJoin) le_rfl (physical_band_in_parameterInterval hη)
-    hs]
+      hs]
   ext i
   apply setIntegral_congr_fun measurableSet_Ioc
   intro x hx
   have hE := HeatedOutgoing.E_before_patch F c.radius w.coefficients eta x c.radius_pos hx.1
     (hx.2.trans (c.heatJoin_lt_radius.le.trans (HeatedOutgoing.entrance_before_patch F c.radius
-      c.radius_pos).le))
+        c.radius_pos).le))
   simp only [density, hE, HeatedOutgoing.U]
 
 theorem heated_density_integrable_at_match {B : ℝ} (w : HeatedOutgoing.CompensationWitness F
-  c.radius B)
+    c.radius B)
     (hsep : c.separation ≤ Real.exp (-8)) {eta : ℝ}
     (hη : eta ∈ HeatedOutgoing.parameterDomain) (hs : SmallDebt F c.debt eta) (i : Fin 5) :
     IntegrableOn (fun x => density (fun t => c.U (t, eta))
       (fun t => c.heatedE w.coefficients (t, eta)) x i) (Ioc 0 c.heatJoin) := by
   apply IntegrableOn.congr_fun
     (c.physical_density_integrable hsep c.heatJoin_pos.le (physical_band_in_parameterInterval hη)
-      hs i)
+        hs i)
     _ measurableSet_Ioc
   intro x hx
   simp only [density, c.heatedE_before w.coefficients (p := (x, eta)) hx.2]
@@ -2050,7 +2156,7 @@ theorem heated_density_integrable {B : ℝ} (w : HeatedOutgoing.CompensationWitn
 theorem heated_moments {B : ℝ} (w : HeatedOutgoing.CompensationWitness F c.radius B)
     (hsep : c.separation ≤ Real.exp (-8)) {eta r : ℝ}
     (hη : eta ∈ HeatedOutgoing.parameterDomain) (hs : SmallDebt F c.debt eta) (hr : c.heatJoin ≤ r)
-      :
+        :
     moments c.U (c.heatedE w.coefficients) r eta =
       moments (HeatedOutgoing.U F c.radius) (HeatedOutgoing.E F c.radius w.coefficients) r eta :=
   moments_propagate hr (c.heated_density_integrable w hsep hη hs hr)
@@ -2117,13 +2223,13 @@ theorem heated_outgoing_pressure_prefix {F : Profile} {R B : ℝ}
 /-- The five global conditions are stated for the literal final fields. -/
 structure FiveMomentCertificate (U E : Field) (powerH : ℝ → ℝ) (P0 eta : ℝ) : Prop where
   mass_integrable : IntegrableOn (fun x => density (fun t => U (t, eta)) (fun t => E (t, eta)) x 0)
-    (Ioi 0)
+      (Ioi 0)
   transport_integrable : IntegrableOn (fun x => density (fun t => U (t, eta)) (fun t => E (t, eta))
-    x 2) (Ioi 0)
+      x 2) (Ioi 0)
   energy_integrable : IntegrableOn (fun x => density (fun t => U (t, eta)) (fun t => E (t, eta)) x
-    3) (Ioi 0)
+      3) (Ioi 0)
   angular_integrable : IntegrableOn (fun x => density (fun t => U (t, eta)) (fun t => E (t, eta)) x
-    1 - powerH x) (Ioi 0)
+      1 - powerH x) (Ioi 0)
   pressure_integrable : IntegrableOn (halfKernel E eta) (Ioi 0)
   mass_zero : (∫ x in Ioi 0, U (x, eta)) = 0
   transport_zero : (∫ x in Ioi 0, U (x, eta) * Real.sqrt (2 * x) * E (x, eta)) = 0
@@ -2233,6 +2339,7 @@ namespace Controls
 
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
+/-- Seed profiles, constructed using `TransitionRamp.physicalProfiles`. -/
 noncomputable def seedProfiles : ProfileHistories.Profiles A.referenceInput.radialDomain :=
   TransitionRamp.physicalProfiles A.natural.profile.family A.scale_pos A.small
     c.referenceWidth_pos c.referenceWidth_small F.axisDatum_contDiff (κ := c.kappa)
@@ -2289,7 +2396,7 @@ theorem Pi_smoothAt (hsep : c.separation ≤ Real.exp (-8)) {p : Point}
     ContDiffAt ℝ ∞ c.Pi p := by
   have hp := c.admissible_nonnegative hX.le hη hs
   apply ((c.profiles hsep).pressure_smooth.contDiffAt (c.admissibleDomain.isOpen.mem_nhds
-    hp)).congr_of_eventuallyEq
+      hp)).congr_of_eventuallyEq
   filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hX)] with q hq
   exact (c.profiles_pressure hsep hq.le).symm
 
@@ -2312,7 +2419,7 @@ theorem heated_pressure_blend {B : ℝ} (w : HeatedOutgoing.CompensationWitness 
       change HeatedOutgoing.Pi F c.radius w.coefficients p = _
       rw [show c.Pi p = OutgoingDilation.Pi F c.radius p from hi,
         show HeatedOutgoing.Pi F c.radius w.coefficients p = OutgoingDilation.Pi F c.radius p from
-          ho]
+            ho]
       ring
     · rw [c.heatBlend_after (le_of_not_ge hR)]
       ring
@@ -2324,7 +2431,7 @@ theorem heatedPi_smooth {B : ℝ} (w : HeatedOutgoing.CompensationWitness F c.ra
   have hc : ContDiffOn ℝ ∞ c.Pi {p | p ∈ HeatedOutgoing.domain ∧ SmallDebt F c.debt p.2} := by
     intro p hp
     exact (c.Pi_smoothAt hsep hp.1.1 (physical_band_in_parameterInterval hp.1.2)
-      hp.2).contDiffWithinAt
+        hp.2).contDiffWithinAt
   apply (hc.add (((c.heatBlend_smooth.comp contDiff_fst).contDiffOn).mul
     ((w.Pi_contDiffOn.mono (fun _ hp => hp.1)).sub hc))).congr
   intro p hp
@@ -2348,17 +2455,23 @@ namespace Controls
 
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
+/-- Extended E, given by `c.E p + c.heatBlend p.1 * (ExtendedHeatedOutgoing.E F c.radius coef p
+- c.E p)`. -/
 noncomputable def extendedE (coef : ℝ → ExtendedHeatedOutgoing.Coeff) (p : Point) : ℝ :=
   c.E p + c.heatBlend p.1 * (ExtendedHeatedOutgoing.E F c.radius coef p - c.E p)
+/-- Extendedf, with branches according to `p.1 ≤ Xi`. -/
 noncomputable def extendedf (coef : ℝ → ExtendedHeatedOutgoing.Coeff) (p : Point) : ℝ :=
   if p.1 ≤ Xi then c.f p else c.extendedE coef p / Real.sqrt (2 * p.1)
+/-- Extended pi, given by `F.axisDatum p.2 + ProfileHistories.primitive (fun q => c.extendedf
+coef q ^ 2) p`. -/
 noncomputable def extendedPi (coef : ℝ → ExtendedHeatedOutgoing.Coeff) (p : Point) : ℝ :=
   F.axisDatum p.2 + ProfileHistories.primitive (fun q => c.extendedf coef q ^ 2) p
 
+/-- Extended domain, bundling `carrier`, `isOpen`, `scale_mem`. -/
 noncomputable def extendedDomain : ProfileHistories.RadialDomain where
   carrier := {p | p ∈ c.admissibleDomain.carrier ∧ p.2 ∈ ExtendedHeatedOutgoing.parameterDomain}
   isOpen := c.admissibleDomain.isOpen.inter (ExtendedHeatedOutgoing.parameterDomain_open.preimage
-    continuous_snd)
+      continuous_snd)
   scale_mem := by
     intro p hp t ht
     exact ⟨c.admissibleDomain.scale_mem p hp.1 t ht, hp.2⟩
@@ -2404,6 +2517,8 @@ theorem extendedf_smoothAt {B : ℝ} (w : ExtendedHeatedOutgoing.Witness F c.rad
     filter_upwards [continuousAt_fst.eventually (Iio_mem_nhds hb)] with q hq
     exact ite_eq_left hq.le
 
+/-- Extended profiles, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility
+proofs. -/
 noncomputable def extendedProfiles {B : ℝ} (w : ExtendedHeatedOutgoing.Witness F c.radius B)
     (hsep : c.separation ≤ Real.exp (-8)) : ProfileHistories.Profiles c.extendedDomain where
   f := c.extendedf w.coefficients
@@ -2526,11 +2641,16 @@ theorem FiveMomentCertificate.congr {U E V G : Field} {powerH : ℝ → ℝ} {P0
 /-- One common nominal profile. All functions below are computed from these
 retained witnesses; the debt condition is the explicit normalized IFT test. -/
 structure Witness (F : Profile) where
+  /-- Axis of `Witness`, of type `AxisStage F`. -/
   axis : AxisStage F
+  /-- Controls of `Witness`, of type `Controls axis`. -/
   controls : Controls axis
+  /-- Outgoing bound of `Witness`, of type `ℝ`. -/
   outgoingBound : ℝ
   outgoing_specification : OutgoingProfile.Specification F outgoingBound
+  /-- Heat bound of `Witness`, of type `ℝ`. -/
   heatBound : ℝ
+  /-- Heat of `Witness`, of type `ExtendedHeatedOutgoing.Witness F controls.radius heatBound`. -/
   heat : ExtendedHeatedOutgoing.Witness F controls.radius heatBound
   separated : controls.separation ≤ Real.exp (-8)
   debt_small : ∀ eta ∈ HeatedOutgoing.parameterDomain, SmallDebt F controls.debt eta
@@ -2539,12 +2659,19 @@ namespace Witness
 
 variable {F : Profile} (W : Witness F)
 
+/-- F, given by `W.controls.extendedf W.heat.coefficients`. -/
 noncomputable def f : Field := W.controls.extendedf W.heat.coefficients
+/-- U, given by `W.controls.U`. -/
 noncomputable def U : Field := W.controls.U
+/-- E, given by `W.controls.extendedE W.heat.coefficients`. -/
 noncomputable def E : Field := W.controls.extendedE W.heat.coefficients
+/-- H, given by `Real.sqrt (2 * p.1) * W.E p`. -/
 noncomputable def H (p : Point) : ℝ := Real.sqrt (2 * p.1) * W.E p
+/-- Pi, given by `W.controls.extendedPi W.heat.coefficients`. -/
 noncomputable def Pi : Field := W.controls.extendedPi W.heat.coefficients
+/-- Domain, given by `W.controls.extendedDomain`. -/
 noncomputable def domain : ProfileHistories.RadialDomain := W.controls.extendedDomain
+/-- Profiles, given by `W.controls.extendedProfiles W.heat W.separated`. -/
 noncomputable def profiles : ProfileHistories.Profiles W.domain :=
   W.controls.extendedProfiles W.heat W.separated
 
@@ -2582,7 +2709,7 @@ theorem E_positive {p : Point} (hX : 0 < p.1) (hη : p.2 ∈ HeatedOutgoing.para
 
 theorem five_moments {eta : ℝ} (hη : eta ∈ HeatedOutgoing.parameterDomain) :
     FiveMomentCertificate W.U W.E (OutgoingDilation.powerH F W.controls.radius) (F.axisDatum eta)
-      eta := by
+        eta := by
   apply (W.controls.heated_five_moments W.heat.physical W.outgoing_specification W.separated hη
     (W.debt_small eta hη)).congr
   intro x hx
@@ -2593,7 +2720,7 @@ theorem pressure_canonical {X eta : ℝ} (hX : 0 ≤ X) (hη : eta ∈ HeatedOut
   change W.controls.extendedPi W.heat.coefficients (X, eta) = _
   rw [W.controls.extendedPi_physical W.heat.coefficients W.separated hX hη]
   have hc := W.controls.heated_pressure_canonical W.heat.physical W.separated hX hη (W.debt_small
-    eta hη)
+      eta hη)
   rw [show W.heat.physical.coefficients = W.heat.coefficients from rfl] at hc
   rw [hc]
   congr 1
@@ -2676,7 +2803,7 @@ theorem E_outgoing_between_patch_and_switch {X eta : ℝ} (hR : W.controls.radiu
     W.E (X, eta) = OutgoingDilation.E F W.controls.radius (X, eta) := by
   rw [W.E_extended_after_radius hR]
   exact ExtendedHeatedOutgoing.E_between_patch_and_switch F W.controls.radius W.heat.coefficients
-    eta X
+      eta X
     W.controls.radius_pos (W.controls.radius_pos.trans_le hR) hp hK
 
 end Witness

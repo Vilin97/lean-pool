@@ -6,14 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevTower
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSmoothL2Field
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryCauchyInterpolation
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
+import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevTower
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
 /-! The genuine Helmholtz projection preserves ordinary smooth L²
 fields and continuous paths of all their jets. Euler pressure and time
 derivatives are recovered from velocity, not supplied as estimates. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +30,8 @@ open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothL
   EulerVolterraConvolution EulerLpFiniteTensor
 open scoped ContDiff Topology
 
+/-- Solenoidal field, given by `smoothL2Field (solenoidalProjection A.toLp) (solenoidal_orbit
+A)`. -/
 def solenoidalField (A : SmoothL2Field Space) : SmoothL2Field Space :=
   smoothL2Field (solenoidalProjection A.toLp) (solenoidal_orbit A)
 
@@ -67,9 +74,12 @@ theorem advectionField_continuous {K : Type*} [TopologicalSpace K] [CompactSpace
   simp only [he]
   exact EulerSmoothEulerEvolution.advection_jet_continuous A hA n
 
+/-- Pressure field, given by `fieldSub (solenoidalField (advectionField A A)) (advectionField A
+A)`. -/
 def pressureField (A : SmoothL2Field Space) : SmoothL2Field Space :=
   fieldSub (solenoidalField (advectionField A A)) (advectionField A A)
 
+/-- Projected rhs, given by `fieldNeg (solenoidalField (advectionField A A))`. -/
 def projectedRhs (A : SmoothL2Field Space) : SmoothL2Field Space :=
   fieldNeg (solenoidalField (advectionField A A))
 
@@ -79,11 +89,11 @@ def projectedRhs (A : SmoothL2Field Space) : SmoothL2Field Space :=
 
 @[simp] theorem pressureField_toLp (A : SmoothL2Field Space) :
     (pressureField A).toLp = solenoidalProjection (advectionField A A).toLp-(advectionField A
-      A).toLp := by
+        A).toLp := by
   rw [pressureField,toLp_fieldSub,solenoidalField_toLp]
 
 theorem pressureField_mem_gradient (A : SmoothL2Field Space) : (pressureField A).toLp ∈
-  gradientSpace := by
+    gradientSpace := by
   rw [pressureField_toLp,← neg_sub]
   exact gradientSpace.neg_mem (sub_solenoidalProjection_mem_gradient _)
 
@@ -123,7 +133,7 @@ theorem derivative_mem_solenoidal (U : Evolution T hT) (hpos : 0 < T) (t : Icc (
     (U.derivative t).toLp ∈ solenoidalSpace := by
   have hu := U.velocityPath_hasDerivWithinAt t
   have hp := solenoidalProjection.hasFDerivAt.comp_hasDerivWithinAt (t : ℝ) hu
-  have he : (fun r => solenoidalProjection (extendPath T hT U.velocityPath r))=
+  have he : (fun r => solenoidalProjection (extendPath T hT U.velocityPath r)) =
       extendPath T hT U.velocityPath := by
     funext r
     rw [U.velocityPath_extend]
@@ -138,19 +148,21 @@ theorem derivative_toLp_projected (U : Evolution T hT) (hpos : 0 < T) (t : Icc (
     (U.derivative t).toLp = (projectedRhs (U.velocity t)).toLp := by
   have hd : solenoidalProjection (U.derivative t).toLp=(U.derivative t).toLp :=
     solenoidalSpace.starProjection_eq_self_iff.mpr (U.derivative_mem_solenoidal hpos t)
-  have he : (U.derivative t).toLp = -((advectionField (U.velocity t) (U.velocity t)).toLp+
+  have he : (U.derivative t).toLp = -((advectionField (U.velocity t) (U.velocity t)).toLp +
       (U.pressureForce t).toLp) := by
     rw [U.derivative_eq_eulerRhs,eulerRhs,toLp_fieldNeg,toLp_addField]
   rw [he,map_neg,map_add,(solenoidalProjection_eq_zero_iff _).mpr (U.gradient t),add_zero] at hd
   rw [projectedRhs_toLp]
   exact he.trans hd.symm
 
+/-- Projected path, given by `fieldPath (fun t => projectedRhs (U.velocity t))
+(projectedRhs_continuous U.velocity U.velocity_continuous)`. -/
 def projectedPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,L2) :=
   fieldPath (fun t => projectedRhs (U.velocity t)) (projectedRhs_continuous U.velocity
-    U.velocity_continuous)
+      U.velocity_continuous)
 
 theorem velocity_integral_equation (U : Evolution T hT) (hpos : 0 < T) :
-    U.velocityPath = ContinuousMap.const (Icc (0 : ℝ) T) (U.velocityPath ⟨0,le_rfl,hT⟩)+
+    U.velocityPath = ContinuousMap.const (Icc (0 : ℝ) T) (U.velocityPath ⟨0,le_rfl,hT⟩) +
       EulerContinuousTimeIntegral.integral T hT U.projectedPath := by
   apply ContinuousMap.ext
   intro t

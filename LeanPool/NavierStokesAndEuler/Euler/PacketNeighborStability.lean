@@ -6,9 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketWithinStage
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBridge
+import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketPerturbation
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Relative stability with an actual initial velocity discrepancy.  This keeps
@@ -16,34 +17,37 @@ the neighbor-data contribution in the Duhamel estimate rather than requiring
 the perturbed velocity to have exactly the center initial data.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 
 namespace EulerPacketMovingFrame
 
-open Set EulerPacketRay EulerPacketBridge EulerPacketPerturbation EulerPacketGrowth
+open Set EulerPacketRay EulerPacketBridge EulerPacketPerturbation
   EulerClosedIntervalDerivativeExtension
 
 theorem velocity_difference_bound
     {σ Θ T e : ℝ} {F F₁ G G₁ Z Z₁ U U₁ V V₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ)
-    (hT0 : 0 ≤ T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40*e*Θ^21 ≤ 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
+    (hT0 : 0 ≤ T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ 21 ≤ 1)
     (hF : ∀ t, 0 ≤ t → HasDerivAt F (F₁ t) t)
     (hG : ∀ t, 0 ≤ t → HasDerivAt G (G₁ t) t)
-    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*F₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*F t) t)
-    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*G₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*G t) t)
+    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
+    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * G₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * G t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hU : ∀ t ∈ Icc 0 T, HasDerivAt U (U₁ t) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivAt V (V₁ t) t)
     (hU₁c : ContinuousOn U₁ (Icc 0 T)) (hV₁c : ContinuousOn V₁ (Icc 0 T))
     (hZ : ∀ t ∈ Icc 0 T, HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (herror : ∀ t ∈ Icc 0 T,
-      |U₁ t-idealVelocityFirst (σ^2) t (U t) (V t)|+|V₁ t+U t| ≤
-        (e*Θ^12)*(|U t|+|V t|)) :
+      |U₁ t - idealVelocityFirst (σ ^ 2) t (U t) (V t)| + |V₁ t + U t| ≤
+        (e * Θ ^ 12) * (|U t| + |V t|)) :
     ∀ t ∈ Icc 0 T, |V t-Z t|+|U t+Z₁ t| ≤
       20*Θ^8*F t*(|V 0-Z 0|+|U 0+Z₁ 0|)+800*e*Θ^29*F t*(|V 0|+|U 0|) := by
   let f : ℝ → ℝ := fun t => V₁ t+U t
@@ -82,24 +86,24 @@ theorem velocity_difference_bound
 
 theorem velocity_difference_bound_within
     {σ Θ T e : ℝ} {F F₁ G G₁ Z Z₁ U U₁ V V₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4) (hΘ : 1 ≤ Θ)
-    (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40*e*Θ^21 ≤ 1)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
+    (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ 21 ≤ 1)
     (hF : ∀ t, 0 ≤ t → HasDerivAt F (F₁ t) t)
     (hG : ∀ t, 0 ≤ t → HasDerivAt G (G₁ t) t)
-    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*F₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*F t) t)
-    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*G₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*G t) t)
+    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
+    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * G₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * G t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hU : ∀ t ∈ Icc 0 T, HasDerivWithinAt U (U₁ t) (Icc 0 T) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivWithinAt V (V₁ t) (Icc 0 T) t)
     (hU₁c : ContinuousOn U₁ (Icc 0 T)) (hV₁c : ContinuousOn V₁ (Icc 0 T))
     (hZ : ∀ t ∈ Icc 0 T, HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (herror : ∀ t ∈ Icc 0 T,
-      |U₁ t-idealVelocityFirst (σ^2) t (U t) (V t)|+|V₁ t+U t| ≤
-        (e*Θ^12)*(|U t|+|V t|)) :
+      |U₁ t - idealVelocityFirst (σ ^ 2) t (U t) (V t)| + |V₁ t + U t| ≤
+        (e * Θ ^ 12) * (|U t| + |V t|)) :
     ∀ t ∈ Icc 0 T, |V t-Z t|+|U t+Z₁ t| ≤
       20*Θ^8*F t*(|V 0-Z 0|+|U 0+Z₁ 0|)+800*e*Θ^29*F t*(|V 0|+|U 0|) := by
   obtain ⟨U', hUeq, hU'⟩ := exists_extension hT0 hU
@@ -120,8 +124,8 @@ normalization costs no additional power of `Θ`. -/
 theorem neighbor_initial_error_bound
     {Θ e η lam Ft u₀ v₀ L : ℝ}
     (hΘ : 1 ≤ Θ) (he : 0 ≤ e) (hlam : 0 ≤ lam) (hFt : 0 ≤ Ft)
-    (hi : |v₀-1|+|u₀+lam| ≤ η)
-    (hb : L ≤ 20*Θ^8*Ft*(|v₀-1|+|u₀+lam|)+800*e*Θ^29*Ft*(|v₀|+|u₀|)) :
+    (hi : |v₀ - 1| + |u₀ + lam| ≤ η)
+    (hb : L ≤ 20 * Θ ^ 8 * Ft * (|v₀ - 1| + |u₀ + lam|) + 800 * e * Θ ^ 29 * Ft * (|v₀| + |u₀|)) :
     L ≤ (20*η*Θ^8+800*e*Θ^29*(1+lam+η))*Ft := by
   have hv := abs_add_le (v₀-1) 1
   have hu := abs_add_le (u₀+lam) (-lam)

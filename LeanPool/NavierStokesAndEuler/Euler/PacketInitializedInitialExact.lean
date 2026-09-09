@@ -8,12 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedInitial
 public import LeanPool.NavierStokesAndEuler.Euler.PacketExactShearError
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 
 /-! The exact correction has zero initial value, so the two actual
 compactly supported initial increments are precisely the finite-packet
 high and mean fields whose physical Sobolev bounds were proved above. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +27,7 @@ open Set MeasureTheory EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacke
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
@@ -45,7 +47,7 @@ theorem initializedInitial_split (N : ℕ) (k : ℝ) :
 include hTime in
 theorem initializedInitialHigh_memLp (N n : ℕ) (k : ℝ) :
     MemLp (iteratedFDeriv ℝ n (initializedInitialHigh M D τ hτ hτT B δ hδ ξ hs α N k)) 2 volume :=
-      by
+        by
   let G := EulerPacketInitial.highField
     (fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i)
     ⟨0,le_rfl,M.T_pos.le⟩ k⁻¹
@@ -55,7 +57,7 @@ theorem initializedInitialHigh_memLp (N n : ℕ) (k : ℝ) :
 include hTime in
 theorem initializedInitialMean_memLp (N n : ℕ) (k : ℝ) :
     MemLp (iteratedFDeriv ℝ n (initializedInitialMean M D τ hτ hτT B δ hδ ξ hs α N k)) 2 volume :=
-      by
+        by
   let G := EulerPacketInitial.meanField
     (fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i)
     ⟨0,le_rfl,M.T_pos.le⟩ k⁻¹
@@ -64,7 +66,7 @@ theorem initializedInitialMean_memLp (N n : ℕ) (k : ℝ) :
 
 include hTime in
 theorem initializedInitial_compact
-    (hS : D.support ⊆ Metric.closedBall 0 (1/2 : ℝ)) (N : ℕ) (k : ℝ) :
+    (hS : D.support ⊆ Metric.closedBall 0 (1 / 2 : ℝ)) (N : ℕ) (k : ℝ) :
     HasCompactSupport (initializedInitialHigh M D τ hτ hτT B δ hδ ξ hs α N k) ∧
       HasCompactSupport (initializedInitialMean M D τ hτ hτT B δ hδ ξ hs α N k) := by
   have h := initializedInitial_common_support M D hTime τ hτ hτT B δ hδ ξ hs α hS N k

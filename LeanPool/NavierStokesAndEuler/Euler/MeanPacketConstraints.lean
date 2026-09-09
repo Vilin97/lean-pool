@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryPhysicalSupport
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 
 /-!
 # Classical constraints of the actual mean packet provider
@@ -17,6 +17,9 @@ The inverse-frame velocity is the smooth representative of the constructed
 ordinary solenoidal coordinate velocity. Its divergence therefore vanishes
 pointwise. The actual initial boundary condition supplies compact support.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -63,7 +66,7 @@ theorem inverse_vector_eq_coordinate (t : Icc (0 : ℝ) D.T) (x : Space) (θ : �
       pathRepresentative D.T G.coordinateOrdinaryPath G.coordinateOrdinaryPath_orbit t x := by
   have hae : (fun y => D.FInv t y (pathRepresentative D.T G.velocityPath G.velocityPath_orbit t y))
       =ᵐ[volume] pathRepresentative D.T G.coordinateOrdinaryPath G.coordinateOrdinaryPath_orbit t
-        := by
+          := by
     filter_upwards [pathRepresentative_ae D.T G.velocityPath G.velocityPath_orbit t,
       pathRepresentative_ae D.T G.coordinateOrdinaryPath G.coordinateOrdinaryPath_orbit t,
       multiplier_ae (D.FInv t) (G.velocityPath t)] with y hB hv hM
@@ -75,7 +78,7 @@ theorem inverse_vector_eq_coordinate (t : Icc (0 : ℝ) D.T) (x : Space) (θ : �
     ((D.FInv t).continuous.clm_apply
       (pathRepresentative_smooth D.T G.velocityPath G.velocityPath_orbit t).continuous)
     (pathRepresentative_smooth D.T G.coordinateOrdinaryPath G.coordinateOrdinaryPath_orbit
-      t).continuous) x
+        t).continuous) x
   simpa only [Data.inverseFrame, vector, Data.clamp_coe] using he
 
 /-- The source's divergence constraint holds as an ordinary pointwise derivative. -/
@@ -88,7 +91,7 @@ theorem inverse_vector_divergence (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ)
   rw [he]
   exact representative_divergence (G.coordinateOrdinaryPath t) (G.solution.velocity t).property
     (pathTranslation_evaluation_contDiff D.T G.coordinateOrdinaryPath
-      G.coordinateOrdinaryPath_orbit t) x
+        G.coordinateOrdinaryPath_orbit t) x
 
 theorem inverse_vector_smooth (t : Icc (0 : ℝ) D.T) (θ : ℝ) :
     ContDiff ℝ ∞ (fun y => D.inverseFrame (t,(y,θ)) (G.vector (t,(y,θ)))) := by

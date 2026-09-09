@@ -6,111 +6,27 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketPerturbation
-
-@[expose] public section
-
-noncomputable section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketPerturbation
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 The triangular ray system and its perturbation estimates.  These results
 derive ray closeness from the differential equations and coefficient errors.
 -/
 
+@[expose] public section
+
+noncomputable section
+
 namespace EulerPacketRay
 
-open Set Filter Real EulerPacketGrowth EulerPacketPerturbation
+open Set Filter Real EulerPacketPerturbation
 open scoped Topology
 
 /-- The sum norm of three scalar coordinates. -/
@@ -166,8 +82,8 @@ theorem triangular_ray_formula
   have hFP := intervalIntegral.integral_eq_sub_of_hasDerivAt hdP hPi
   have hFQ := intervalIntegral.integral_eq_sub_of_hasDerivAt hdQ hQi
   have hFN := intervalIntegral.integral_eq_sub_of_hasDerivAt (fun s hs => hN s (hsub hs)) hNi
-  simp only [sub_self, zero_mul, mul_zero, zero_pow (by decide : 2 ≠ 0), add_zero, sub_zero] at hFP
-    hFQ
+  simp only [sub_self, zero_mul, mul_zero, zero_pow (by
+      decide : 2 ≠ 0), add_zero, sub_zero] at hFP hFQ
   exact ⟨by linarith, by linarith, by linarith⟩
 
 /-- The triangular ray propagator has a polynomial norm bound. -/
@@ -247,7 +163,7 @@ theorem triangular_ray_forced_bound
     rw [intervalIntegral.integral_add (hi1.add hi2) hi3, intervalIntegral.integral_add hi1 hi2]
     exact add_le_add (add_le_add (intervalIntegral.abs_integral_le_integral_abs ht.1)
       (intervalIntegral.abs_integral_le_integral_abs ht.1))
-        (intervalIntegral.abs_integral_le_integral_abs ht.1)
+          (intervalIntegral.abs_integral_le_integral_abs ht.1)
   have hbase := triangular_ray_kernel_bound (p := P 0) (q := Q 0) (n := N 0)
     hβ hβupper hΘ ht.1 (ht.2.trans hT)
   have hPt : |P t| ≤ |P 0 - t * Q 0 + β * t ^ 2 * N 0| +
@@ -577,7 +493,7 @@ theorem scaled_ray_entry_error
     (hB : ∀ i j, |ε * B i j / a| ≤ e) (hE : ∀ i j, |E i j / a| ≤ e)
     (hH : |ε ^ 2 * h / a - 1| ≤ e) (hκ : |B 2 1 / a - β| ≤ e) :
     ∀ i j, |scaledRayEntry a ε (parentEntry B E h) (frameSkew B) i j - idealRayEntry β i j| ≤ 4 * e
-      := by
+        := by
   intro i j
   rw [scaled_ray_entry_identity ha (ne_of_gt hε)]
   exact normalized_ray_entry_error hε.le hεupper he hB hE hH hκ i j
@@ -641,8 +557,8 @@ theorem ray_geometric_bounds
     rw [abs_div, abs_neg, abs_of_pos hnpos, div_le_iff₀ hnpos]
     have hb : |P * U + Q * V| ≤ 3 * Θ ^ 2 * (|U| + |V|) := by
       calc
-        |P * U + Q * V| ≤ |P| * |U| + |Q| * |V| := by simpa only [abs_mul] using abs_add_le (P * U)
-          (Q * V)
+        |P * U + Q * V| ≤ |P| * |U| + |Q| * |V| := by
+            simpa only [abs_mul] using abs_add_le (P * U) (Q * V)
         _ ≤ (2 * Θ ^ 2) * |U| + (3 * Θ ^ 2) * |V| :=
           add_le_add (mul_le_mul_of_nonneg_right hp (abs_nonneg _))
             (mul_le_mul_of_nonneg_right hq (abs_nonneg _))
@@ -1062,19 +978,20 @@ theorem velocity_rhs_error
     dsimp [j, ρ]
     nlinarith only [hsmall, hm]
   have hJ : |J - J₀| ≤ j * (|U| + |V|) := by
-    have hh := velocity_numerator_error hΘ hρ (by positivity : 0 ≤ 3 * e) hβ hA hp hq hnabs hP hQ
-      hN hw
+    have hh := velocity_numerator_error hΘ hρ (by
+        positivity : 0 ≤ 3 * e) hβ hA hp hq hnabs hP hQ hN hw
     dsimp [J, J₀, W, j]
     nlinarith only [hh]
   have hJ₀ : |J₀| ≤ 2 * Θ ^ 2 * (|U| + |V|) := by
     have hcoef : |P₀ + β| ≤ 2 * Θ ^ 2 := by linarith [abs_add_le P₀ β]
     have hh := three_term_bound (p := V) (q := U) (n := (0 : ℝ)) hcoef hQ₀
-      (show |(0 : ℝ)| ≤ 2 * Θ ^ 2 by simp; positivity)
+      (show |(0 : ℝ)| ≤ 2 * Θ ^ 2 by
+          simp only [abs_zero]; positivity)
     dsimp [J₀]
     simpa only [zero_mul, add_zero, norm3, abs_zero, add_comm] using hh
   have hD₀ : 1 ≤ D₀ := by dsimp [D₀]; nlinarith [sq_nonneg P₀]
   have hproj := velocity_projection_error (ε := ε) hΘ hρ hd hj hjupper hD hD₀ hP hP₀ hp hq hDD hJ
-    hJ₀
+      hJ₀
   have hL : 0 ≤ |U| + |V| := add_nonneg (abs_nonneg _) (abs_nonneg _)
   have hnorm : norm3 U V W ≤ 7 * Θ ^ 2 * (|U| + |V|) := by
     unfold norm3

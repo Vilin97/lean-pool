@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldProducts
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
 
 /-! The actual smooth cylinder paths produced by the packet construction
 give coherent continuous Sobolev realizations at every finite order. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -35,7 +36,7 @@ def toFieldTower (G : Field P T raw) : EulerAllOrderCorrectionData.FieldTower P 
 @[simp] theorem toFieldTower_realization (G : Field P T raw) (q : ℕ) :
     G.toFieldTower.realization q = sobolevPath P q G.path G.orbit := rfl
 
-@[simp] theorem toFieldTower_value (G : Field P T raw) (q : ℕ) (t : Icc (0 : ℝ) T) :
+theorem toFieldTower_value (G : Field P T raw) (q : ℕ) (t : Icc (0 : ℝ) T) :
     value P (G.toFieldTower.realization q t) = G.path t := G.toFieldTower.value_eq q t
 
 /-- The common value has the very same pointwise cylinder representative

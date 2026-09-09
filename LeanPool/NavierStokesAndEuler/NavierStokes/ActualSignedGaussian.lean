@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedStageControls
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialExcluded
-public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
+import LeanPool.NavierStokesAndEuler.NavierStokes.UniformBlockBounds
 
 /-!
 # Gaussian cutoff errors of the actual signed correction
@@ -21,6 +19,9 @@ native cutoff.  The transverse factor has zero fast derivative.  Thus
 the actual error vanishes on the central Gaussian plateau and retains
 the exact square-root edge weight at every decay exponent.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,10 +34,12 @@ open scoped ContDiff Topology BigOperators
 
 variable {B N0 : ℕ}
 
+/-- Copies, given by `(parameters l).copyData ActualPrimaryBounds.strip request`. -/
 noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) : PeriodizedWaveBounds.CopyData FullPoint Frequency :=
   (parameters l).copyData ActualPrimaryBounds.strip request
 
+/-- Local gaussian, given by `(copies request l).localGaussian (directions B) n k`. -/
 noncomputable def localGaussian (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) (n : ℕ) (k : Frequency) : FullPoint → HarmonicCalculus.ComplexVector :=
   (copies request l).localGaussian (directions B) n k
@@ -54,6 +57,8 @@ theorem localGaussian_formula (request : ℕ → FullPoint → SignedWaveUpdate.
   simp only [smul_zero, add_zero]
   rfl
 
+/-- Transverse, given by `PartitionedCovariance.cutoff ActualPrimary.slots.radius (nativePoint l
+n k x).2.1`. -/
 noncomputable def transverse (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : ℝ :=
   PartitionedCovariance.cutoff ActualPrimary.slots.radius (nativePoint l n k x).2.1
@@ -142,6 +147,8 @@ theorem localGaussian_zero_outside_phaseCell (request : ℕ → FullPoint → Si
   · exact localGaussian_zero_of_cutoff request l h
   · exact localGaussian_zero_of_mask request l h
 
+/-- Band scales, bundling `power`, `epsilon_eq`, `boundConstant`, `constant_one_le` and the
+required compatibility proofs. -/
 noncomputable def bandScales : GaussianTailFlat.BandScaleControl fullStrip where
   power := ActualPrimary.h
   epsilon_eq := fun _ => rfl
@@ -225,6 +232,7 @@ theorem localGaussian_all_gains {σ : ℝ}
     · exact Or.inr (localGaussian_zero_outside_phaseCell request i.1 n i.2 hx hc)
   exact hlarge.to_uniformLocalJets
 
+/-- Global gaussian, given by `(copies request l).globalGaussian (directions B)`. -/
 noncomputable def globalGaussian (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) : ℕ → FullPoint → HarmonicCalculus.ComplexVector :=
   (copies request l).globalGaussian (directions B)

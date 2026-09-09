@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-
-@[expose] public section
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-! A continuous Banach-valued path has its strong time derivative once
 that derivative is continuous and is verified through a separating family
 of bounded linear observations. The proof reconstructs the actual Bochner
 primitive and does not infer strong convergence from pointwise convergence. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,11 +27,11 @@ open scoped Topology
 
 variable {E F I : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  (T : ℝ) (hT : 0 ≤ T) (f g : C(Icc (0 : ℝ) T,E))
+  (T : ℝ) (hT : 0 ≤ T) (f g : C(Icc (0 : ℝ) T, E))
   (L : I → E →L[ℝ] F)
   (hsep : Function.Injective (fun u : E => fun i : I => L i u))
   (hd : ∀ i t (ht : t ∈ Ioo 0 T),
-    HasDerivAt (fun r => L i (extendPath T hT f r)) (L i (g ⟨t,ht.1.le,ht.2.le⟩)) t)
+    HasDerivAt (fun r => L i (extendPath T hT f r)) (L i (g ⟨t, ht.1.le, ht.2.le⟩)) t)
 
 include hsep hd in
 theorem eq_initial_add_integral (t : Icc (0 : ℝ) T) :

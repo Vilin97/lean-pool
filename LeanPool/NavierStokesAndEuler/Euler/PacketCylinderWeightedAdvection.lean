@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedProduct
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+
+/-! Same-radius normalized bounds for the literal slow and fast packet jet expressions. -/
 
 @[expose] public section
 
-/-! Same-radius normalized bounds for the literal slow and fast packet jet expressions. -/
 
 noncomputable section
 
@@ -27,7 +29,7 @@ namespace SpatialJetField
 
 variable {P T : ℝ} [Fact (0 < P)] {J K : Domain → VectorJet}
   (G : SpatialJetField P T J) (H : SpatialJetField P T K) (hT : 0 ≤ T)
-  (g h b : C(Icc (0 : ℝ) T,ℝ))
+  (g h b : C(Icc (0 : ℝ) T, ℝ))
   (hg : ∀ t, 0 < g t) (hh : ∀ t, 0 < h t) (hb : ∀ t, 0 < b t)
 
 theorem slowAdvection_normalized_bound
@@ -38,7 +40,7 @@ theorem slowAdvection_normalized_bound
     (hR : 0 ≤ R) (hA : 0 ≤ A) (hB : 0 ≤ B)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
     (hRF : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hF : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath F.path) a‖ ≤ C*majorant Rc 0 n)
+    (hF : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath F.path) a‖ ≤ C * majorant Rc 0 n)
     (c : ℝ) (hc : 0 ≤ c) (hprofile : ∀ t, |productProfileRatio g h b hb t| ≤ c) :
     ((slowAdvection F G H).normalized hT b hb).WordBound 6 R
       (c*(9*productBlockConstant P*(3*sobolevCoefficientAmplitude (Fin 4) 6 Rc C*A)*B))
@@ -58,7 +60,7 @@ theorem fastAdvection_normalized_bound
     (hR : 0 ≤ R) (hA : 0 ≤ A) (hB : 0 ≤ B)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
     (hRN : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hN : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath N.path) a‖ ≤ C*majorant Rc 0 n)
+    (hN : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath N.path) a‖ ≤ C * majorant Rc 0 n)
     (c : ℝ) (hc : 0 ≤ c) (hprofile : ∀ t, |productProfileRatio g h b hb t| ≤ c) :
     ((fastAdvection N G H).normalized hT b hb).WordBound 6 R
       (c*(3*productBlockConstant P*(3*sobolevCoefficientAmplitude (Fin 4) 6 Rc C*A)*B))
@@ -79,7 +81,7 @@ end SpatialJetField
 namespace Field
 
 variable {P T : ℝ} [Fact (0 < P)] (hT : 0 ≤ T)
-  (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+  (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
 theorem WordBound.normalized_slowPressure
     {inverse : Domain → Space →L[ℝ] Space} (F : MatrixCoefficient T inverse)
@@ -87,7 +89,7 @@ theorem WordBound.normalized_slowPressure
     {q d : ℕ} {R A : ℝ} (hG : (G.normalized hT g hg).WordBound q R A d)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hA : 0 ≤ A)
     (hRF : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hF : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath F.path) a‖ ≤ C*majorant Rc 0 n) :
+    (hF : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath F.path) a‖ ≤ C * majorant Rc 0 n) :
     ((slowPressure F p G).normalized hT g hg).WordBound q R
       (3*sobolevCoefficientAmplitude (Fin 4) q Rc C*A) d := by
   have hm := WordBound.normalized_multiply hT hG F.adjoint Rc C hRc hC hA hRF
@@ -104,7 +106,7 @@ theorem WordBound.normalized_linearPart
     (hH : (H.normalized hT g hg).WordBound q R B d)
     (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hA : 0 ≤ A)
     (hRM : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath M.path) a‖ ≤ C*majorant Rc 0 n) :
+    (hM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath M.path) a‖ ≤ C * majorant Rc 0 n) :
     ((linearPart M G H hTpos hd s hs).normalized hT g hg).WordBound q R
       (B+3*sobolevCoefficientAmplitude (Fin 4) q Rc C*A) d := by
   have hm := WordBound.normalized_multiply hT hG M Rc C hRc hC hA hRM hM

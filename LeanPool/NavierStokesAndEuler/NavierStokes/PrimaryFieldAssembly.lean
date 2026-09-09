@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
 
-@[expose] public section
-
 /-!
 # Assembly of the actual primary tangent field
 
@@ -19,6 +17,9 @@ complex harmonic use the same `PairData` as the covariance calculation.
 The exact curl correction remains a separate field.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PrimaryFieldAssembly
@@ -26,7 +27,9 @@ namespace NavierStokes.PrimaryFieldAssembly
 open Set Function PartitionedCovariance HarmonicCalculus
 open scoped BigOperators Topology
 
+/-- Vector: an abbreviation for `Fin 3 → ℝ`. -/
 abbrev Vector := Fin 3 → ℝ
+/-- Signed index: an abbreviation for `UnsignedLabel × Fin 2`. -/
 abbrev SignedIndex := UnsignedLabel × Fin 2
 
 /-- The three components of one literal native pulse. -/
@@ -126,6 +129,7 @@ noncomputable def slotAmplitude {U : UnsignedLabel} (P : PairData sys U)
   fun i => ((outer * amplitude ε (mask D U q x) P.matrix T j *
     coveredVector P hdet j Y i : ℝ) : ℂ)
 
+/-- Slot phase, given by `(P.modes j : ℝ) * z.2 + P.phases j z.1`. -/
 noncomputable def slotPhase {U : UnsignedLabel} (P : PairData sys U)
     (j : Fin 2) (z : Plane × ℝ) : ℝ := (P.modes j : ℝ) * z.2 + P.phases j z.1
 
@@ -209,6 +213,8 @@ private theorem finsum_vector_apply {ι : Type*} (f : ι → Vector) (s : Finset
   rw [hv, hi]
   simp only [Finset.sum_apply]
 
+/-- Principal field, given by `∑ᶠ a : SignedIndex, slotVelocity (P a.1) hdet (outer a.1) (ε a.1)
+(T a.1) q x a.2 Y θ`. -/
 noncomputable def principalField {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
@@ -387,16 +393,22 @@ open LinearWaveBounds WeightedClasses
 
 variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
+/-- Cutoff velocity, defined pointwise by `(vectorMode (a.frequency n) (a.phase n)
+((a.withCutoff ψ).amplitude n) x i).re`. -/
 noncomputable def cutoffVelocity (a : WaveCoefficients X) (ψ : ℕ → X → ℝ)
     (n : ℕ) (x : X) : Vector :=
   fun i => (vectorMode (a.frequency n) (a.phase n)
     ((a.withCutoff ψ).amplitude n) x i).re
 
+/-- Curl velocity, defined pointwise by `(vectorMode (a.frequency n) (a.phase n) ((a.withCutoff
+ψ).curlCorrection s d n) x i).re`. -/
 noncomputable def curlVelocity (a : WaveCoefficients X) (s : StripData X)
     (d : GraphDirections X) (ψ : ℕ → X → ℝ) (n : ℕ) (x : X) : Vector :=
   fun i => (vectorMode (a.frequency n) (a.phase n)
     ((a.withCutoff ψ).curlCorrection s d n) x i).re
 
+/-- Corrected velocity, defined pointwise by `(vectorMode (a.frequency n) (a.phase n)
+((a.corrected s d ψ).amplitude n) x i).re`. -/
 noncomputable def correctedVelocity (a : WaveCoefficients X) (s : StripData X)
     (d : GraphDirections X) (ψ : ℕ → X → ℝ) (n : ℕ) (x : X) : Vector :=
   fun i => (vectorMode (a.frequency n) (a.phase n)
@@ -422,6 +434,8 @@ theorem cutoffVelocity_identification (a : WaveCoefficients X) (ψ : ℕ → X �
 
 end CurlCorrection
 
+/-- Covariance error, given by `V Y θ 0 * R Y θ i.succ + R Y θ 0 * V Y θ i.succ + R Y θ 0 * R Y
+θ i.succ`. -/
 noncomputable def covarianceError (V R : Plane → ℝ → Vector) (i : Fin 2)
     (Y : Plane) (θ : ℝ) : ℝ :=
   V Y θ 0 * R Y θ i.succ + R Y θ 0 * V Y θ i.succ + R Y θ 0 * R Y θ i.succ
@@ -487,28 +501,38 @@ variable {Q : Type} [NormedAddCommGroup Q]
 matrix, or covariance identity is a field of this structure. -/
 structure SourcePair (Q : Type) [NormedAddCommGroup Q]
     {D h : ℝ} {vr vt : Plane} (sys : SlotSystem D h vr vt) (U : UnsignedLabel) where
+  /-- Domain of `SourcePair`, of type `Set Q`. -/
   domain : Set Q
+  /-- Point of `SourcePair`, of type `Q`. -/
   point : Q
   point_mem : point ∈ domain
+  /-- Frame of `SourcePair`, of type `Fin 2 → PrimaryODE.FrameData Q`. -/
   frame : Fin 2 → PrimaryODE.FrameData Q
+  /-- Lam of `SourcePair`, of type `Fin 2 → ℝ`. -/
   lam : Fin 2 → ℝ
+  /-- Rate of `SourcePair`, of type `Fin 2 → ℝ`. -/
   rate : Fin 2 → ℝ
+  /-- Length of `SourcePair`, of type `Fin 2 → ℝ`. -/
   length : Fin 2 → ℝ
   length_pos : ∀ j, 0 < length j
   coefficient_continuous : ∀ j,
     ContinuousOn ((frame j).coefficient 1) (domain ×ˢ Icc 0 (length j))
   kinematics : ∀ j, (frame j).Kinematics point (Icc 0 (length j))
+  /-- Stretch of `SourcePair`, of type `Vec2`. -/
   stretch : Vec2
   stretch_pos : ∀ j, 0 < stretch j
   fits : ∀ j, length j ≤ 2 * sys.radius / stretch j
+  /-- Mode of `SourcePair`, of type `Fin 2 → ℤ`. -/
   mode : Fin 2 → ℤ
   mode_ne : ∀ j, mode j ≠ 0
+  /-- Phase of `SourcePair`, of type `Fin 2 → Plane → ℝ`. -/
   phase : Fin 2 → Plane → ℝ
 
 namespace SourcePair
 
 variable {U : UnsignedLabel} (A : SourcePair Q sys U)
 
+/-- Pair data, bundling `pulses`, `ci`, `ci_pos`, `fits` and the required compatibility proofs. -/
 noncomputable def pairData : PairData sys U where
   pulses := fun j => canonicalPrimaryPulse (A.frame j) (A.lam j) (A.rate j)
     (A.length_pos j) A.domain (A.coefficient_continuous j) A.point A.point_mem (A.kinematics j)
@@ -547,7 +571,7 @@ theorem pulseVector_eq (j : Fin 2) (z : Plane) :
       (A.length_pos j) A.domain (A.coefficient_continuous j) A.point A.point_mem (A.kinematics j) z
   · exact canonicalPrimaryPulse_tangentProfile (A.frame j) (A.lam j) (A.rate j) sys.radius
       (A.length_pos j) A.domain (A.coefficient_continuous j) A.point A.point_mem (A.kinematics j) z
-        k
+          k
 
 /-- The source vector is evaluated from `cutoffPulse`, rather than from
 arbitrarily supplied radial and tangent component functions. -/
@@ -573,6 +597,8 @@ noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
   fun i => ((outer * amplitude ε (mask D U q x) A.sourceMatrix T j *
     A.nativeSource hdet j Y i : ℝ) : ℂ)
 
+/-- Actual amplitude, given by `TorusAverages.periodize (A.nativeCoefficient hdet outer ε T q x
+j) ((SlotGeometry.cover ^ SlotColoring.nativeIndex h U.1) Y)`. -/
 noncomputable def actualAmplitude (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) : ComplexVector :=
@@ -612,6 +638,8 @@ theorem actualAmplitude_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
   funext i
   exact periodize_scaled_real_vector (nativeVector_compact A.pairData hdet j) _ _ i
 
+/-- Actual velocity, defined pointwise by `(vectorMode 1 (slotPhase A.pairData j) (fun z =>
+A.actualAmplitude hdet outer ε T q x j z.1) (Y, θ) i).re`. -/
 noncomputable def actualVelocity (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) (θ : ℝ) : Vector :=
@@ -630,6 +658,8 @@ theorem actualVelocity_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 end SourcePair
 
+/-- Source field, given by `∑ᶠ a : SignedIndex, (A a.1).actualVelocity hdet (outer a.1) (ε a.1)
+(T a.1) q x a.2 Y θ`. -/
 noncomputable def sourceField {N : ℕ}
     (A : (U : UnsignedLabel) → SourcePair Q sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
@@ -681,6 +711,8 @@ open LinearWaveBounds
 variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 variable {Q : Type} [NormedAddCommGroup Q]
 
+/-- Cutoff mode field, given by `∑ᶠ b : SignedIndex, cutoffVelocity (a b) (ψ b) (band b) (point
+b Y θ)`. -/
 noncomputable def cutoffModeField (a : SignedIndex → WaveCoefficients X)
     (ψ : SignedIndex → ℕ → X → ℝ) (band : SignedIndex → ℕ)
     (point : SignedIndex → Plane → ℝ → X) (Y : Plane) (θ : ℝ) : Vector :=
@@ -788,6 +820,7 @@ theorem slot_cross_zero {N : ℕ} (hN : 1 ≤ N)
     signedTailLabel, physicalMask_signedLabel, amplitude, mul_assoc] at hz ⊢
   exact hz
 
+/-- Diagonal covariance as an element of `ℝ`. -/
 noncomputable def diagonalCovariance {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
@@ -796,7 +829,7 @@ noncomputable def diagonalCovariance {N : ℕ}
   (outer a.1 * amplitude (ε a.1) (mask D (tailLabel N a.1) q x) (P a.1).matrix (T a.1) a.2) ^ 2 *
     covered (SlotColoring.nativeIndex h (tailLabel N a.1).1) ((P a.1).rawRadial hdet a.2) Y *
       covered (SlotColoring.nativeIndex h (tailLabel N a.1).1) ((P a.1).rawTangent hdet a.2 i) Y *
-        (1 / 2)
+          (1 / 2)
 
 /-- Both off-diagonal elimination and angular integration are performed
 on the actual finite active family, before descending to the torus. -/
@@ -922,13 +955,13 @@ theorem slotVelocity_continuous {U : UnsignedLabel} (P : PairData sys U)
   have hcov : Continuous (coveredVector P hdet j) :=
     (TorusAverages.periodize_continuous (nativeVector_continuous P hdet j)
       (nativeVector_compact P hdet j)).comp (SlotGeometry.cover ^ SlotColoring.nativeIndex h
-        U.1).continuous
+          U.1).continuous
   apply continuous_pi
   intro i
   simp only [slotVelocity_formula]
   exact (continuous_const.mul (((continuous_apply i).comp hcov).comp continuous_fst)).mul
     (Real.continuous_cos.comp ((continuous_const.mul continuous_snd).add (hphase.comp
-      continuous_fst)))
+        continuous_fst)))
 
 theorem principalField_continuous {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
@@ -956,7 +989,7 @@ theorem physical_source_plus_remainder {Q : Type} [NormedAddCommGroup Q]
     (hphase : ∀ U j, Continuous ((A U).phase j))
     (R : Plane → ℝ → Vector) (hR : Continuous R.uncurry) (i : Fin 2) :
     let V := sourceField A hdet (physicalOuter h N) (physicalViscosity h N) (chartTarget h q N T0)
-      q x
+        q x
     doubleAverage (fun Y θ => (V Y θ + R Y θ) 0 * (V Y θ + R Y θ) i.succ) =
       q ^ (-velocityExponent h - 1 / 2) * T0 i + doubleAverage (covarianceError V R i) := by
   dsimp only

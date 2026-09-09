@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+
+/-! Every actual spatial derivative tensor remains a smooth L² field. -/
 
 @[expose] public section
 
-/-! Every actual spatial derivative tensor remains a smooth L² field. -/
 
 noncomputable section
 
@@ -21,20 +23,22 @@ open scoped ContDiff
 
 universe u v
 
-private def jetFieldAux (n : ℕ) :
+/-- Jet field auxiliary, constructed using `Nat.rec`. -/
+def jetFieldAux (n : ℕ) :
     ∀ (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V],
       SmoothL2Field V → SmoothL2Field (Space [×n]→L[ℝ] V) :=
   Nat.rec (motive := fun n => ∀ (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V],
       SmoothL2Field V → SmoothL2Field (Space [×n]→L[ℝ] V))
     (fun V _ _ A => mapField (V := V) (W := Space [×0]→L[ℝ] V)
       (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-        A)
+          A)
     (fun n ih V _ _ A => mapField
       (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
       (continuousMultilinearCurryRightEquiv' ℝ n Space
-        V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+          V).symm.toContinuousLinearEquiv.toContinuousLinearMap
       (ih (Space →L[ℝ] V) A.derivative)) n
 
+/-- Jet field, given by `jetFieldAux n V A`. -/
 def jetField (n : ℕ) {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (A : SmoothL2Field V) : SmoothL2Field (Space [×n]→L[ℝ] V) := jetFieldAux n V A
 
@@ -42,14 +46,14 @@ def jetField (n : ℕ) {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (A : SmoothL2Field V) :
     jetField 0 A = mapField (V := V) (W := Space [×0]→L[ℝ] V)
       (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-        A := rfl
+          A := rfl
 
 @[simp] theorem jetField_succ {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (A : SmoothL2Field V) (n : ℕ) :
     jetField (n+1) A = mapField
       (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
       (continuousMultilinearCurryRightEquiv' ℝ n Space
-        V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+          V).symm.toContinuousLinearEquiv.toContinuousLinearMap
       (jetField n A.derivative) := rfl
 
 private theorem jetField_field_aux (n : ℕ) :
@@ -91,13 +95,13 @@ private theorem continuous_jetField_jet_aux (n : ℕ) :
     have he : (fun t => (jetField 0 (A t)).jetLp k) =
         (fun t => (mapField (V := V) (W := Space [×0]→L[ℝ] V)
           (continuousMultilinearCurryFin0 ℝ Space
-            V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+              V).symm.toContinuousLinearEquiv.toContinuousLinearMap
           (A t)).jetLp k) :=
       funext fun t => congrArg (fun F => F.jetLp k) (jetField_zero (A t))
     rw [he]
     exact continuous_jetLp_mapField (V := V) (W := Space [×0]→L[ℝ] V)
       (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-        A hA k
+          A hA k
   | succ n ih =>
     intro V _ _ A hA k
     have hd : ∀ j, Continuous (fun t => (A t).derivative.jetLp j) :=
@@ -108,14 +112,14 @@ private theorem continuous_jetField_jet_aux (n : ℕ) :
         (fun t => (mapField
           (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
           (continuousMultilinearCurryRightEquiv' ℝ n Space
-            V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+              V).symm.toContinuousLinearEquiv.toContinuousLinearMap
           (jetField n (A t).derivative)).jetLp k) :=
       funext fun t => congrArg (fun F => F.jetLp k) (jetField_succ (A t) n)
     rw [he]
     apply continuous_jetLp_mapField
       (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
       (continuousMultilinearCurryRightEquiv' ℝ n Space
-        V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+          V).symm.toContinuousLinearEquiv.toContinuousLinearMap
       (fun t => jetField n (A t).derivative) hr
 
 theorem continuous_jetField_jet {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]

@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.PastExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeGluing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactForceDecay
 
-@[expose] public section
-
 /-!
 # Conditional candidate construction from actual residual derivative limits
 
@@ -23,6 +21,9 @@ extension of the traced residual of the activated, zero-extended fields.
 The residual limits and the existence of singular incoming fields remain
 analytic hypotheses. This module does not prove the unconditional candidate.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

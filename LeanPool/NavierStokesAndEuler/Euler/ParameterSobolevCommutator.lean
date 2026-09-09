@@ -7,8 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordProduct
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Positive external-order commutators in actual fixed Sobolev blocks
@@ -17,6 +18,9 @@ The commutator is an explicit difference of genuine derivatives and the
 undifferentiated coefficient action. Its direct word recurrence places at
 least one external derivative on the coefficient in every term.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +36,7 @@ variable {P E F ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- The actual external word commutator of operator multiplication. -/
 def wordCommutator (directions : ι → P) (A : P → E →L[ℝ] F) (f : P → E)
     {n : ℕ} (w : Fin n → ι) : P → F :=
-  wordDerivative directions (fun y => A y (f y)) w-
+  wordDerivative directions (fun y => A y (f y)) w -
     fun y => A y (wordDerivative directions f w y)
 
 omit [Fintype ι] in
@@ -46,17 +50,17 @@ omit [Fintype ι] in
 theorem wordCommutator_snoc (directions : ι → P) (A : P → E →L[ℝ] F) (f : P → E)
     (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f) {n : ℕ} (w : Fin n → ι) (i : ι) :
     wordCommutator directions A f (Fin.snoc w i) =
-      wordCommutator directions A (directional directions f i) w+
+      wordCommutator directions A (directional directions f i) w +
         wordDerivative directions (fun y => directional directions A i y (f y)) w := by
   have hprod := directional_bilinear directions ((ContinuousLinearMap.apply ℝ F).flip) A f hA hf i
   change directional directions (fun y => A y (f y)) i =
-    (fun y => A y (directional directions f i y))+
+    (fun y => A y (directional directions f i y)) +
     (fun y => directional directions A i y (f y)) at hprod
   funext x
-  change wordDerivative directions (fun y => A y (f y)) (Fin.snoc w i) x-
+  change wordDerivative directions (fun y => A y (f y)) (Fin.snoc w i) x -
       A x (wordDerivative directions f (Fin.snoc w i) x) =
-    (wordDerivative directions (fun y => A y (directional directions f i y)) w x-
-      A x (wordDerivative directions (directional directions f i) w x))+
+    (wordDerivative directions (fun y => A y (directional directions f i y)) w x -
+      A x (wordDerivative directions (directional directions f i) w x)) +
     wordDerivative directions (fun y => directional directions A i y (f y)) w x
   rw [wordDerivative_snoc directions _ (hA.clm_apply hf), wordDerivative_snoc directions f hf,
     hprod, wordDerivative_add directions _ _
@@ -64,6 +68,8 @@ theorem wordCommutator_snoc (directions : ι → P) (A : P → E →L[ℝ] F) (f
       ((directional_contDiff directions A hA i).clm_apply hf)]
   abel
 
+/-- Commutator block, given by `∑ w : Fin n → ι, baseSize directions q (wordCommutator
+directions A f w) x`. -/
 def commutatorBlock (directions : ι → P) (q : ℕ) (A : P → E →L[ℝ] F) (f : P → E)
     (n : ℕ) (x : P) : ℝ :=
   ∑ w : Fin n → ι, baseSize directions q (wordCommutator directions A f w) x
@@ -93,7 +99,7 @@ theorem commutatorBlock_succ_le (directions : ι → P) (q : ℕ)
     (A : P → E →L[ℝ] F) (f : P → E) (hA : ContDiff ℝ ∞ A) (hf : ContDiff ℝ ∞ f)
     (n : ℕ) (x : P) :
     commutatorBlock directions q A f (n+1) x ≤
-      ∑ i, (commutatorBlock directions q A (directional directions f i) n x+
+      ∑ i, (commutatorBlock directions q A (directional directions f i) n x +
         block directions q (fun y => directional directions A i y (f y)) n x) := by
   unfold commutatorBlock block
   rw [sum_words_snoc]
@@ -107,7 +113,7 @@ theorem commutatorBlock_succ_le (directions : ι → P) (q : ℕ)
     (wordCommutator_contDiff directions A (directional directions f i) hA
       (directional_contDiff directions f hf i) w)
     (wordDerivative_contDiff directions _ ((directional_contDiff directions A hA i).clm_apply hf)
-      w) x
+        w) x
 
 theorem sum_commutator_convolution_right (A : ℕ → ℝ) (B : ι → ℕ → ℝ) (n : ℕ) :
     (∑ i, commutatorConvolution A (B i) n) =
@@ -124,8 +130,8 @@ theorem commutatorBlock_bound (directions : ι → P) (q : ℕ)
       commutatorConvolution (fun k => coefficientBlock directions q A k x)
         (fun k => block directions q f k x) n := by
   induction n generalizing A f with
-  | zero => simp only [commutatorBlock_zero, commutatorConvolution_eq_sum, range_zero, sum_empty,
-    le_refl]
+  | zero =>
+      simp only [commutatorBlock_zero, commutatorConvolution_eq_sum, range_zero, sum_empty, le_refl]
   | succ n ih =>
     apply (commutatorBlock_succ_le directions q A f hA hf n x).trans
     have ht (i : ι) := add_le_add

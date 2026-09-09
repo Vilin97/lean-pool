@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.HeatGradientEnergy
 
+/-! Integrated genuine heat gradient energy, with the source measured only in L². -/
+
 @[expose] public section
 
-/-! Integrated genuine heat gradient energy, with the source measured only in L². -/
 
 noncomputable section
 
@@ -22,14 +23,15 @@ open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- The actual integrated heat energy gains the full Laplacian in L² time without a source derivative in the bound. -/
+/-- The actual integrated heat energy gains the full Laplacian in L² time without a source
+derivative in the bound. -/
 theorem heat_laplacian_integral_bound (u : ℝ → SobolevSpace period 3)
     (f : ℝ → SobolevSpace period 1) (ν s t : ℝ) (hν : 0 < ν) (hst : s ≤ t)
     (hu : ContinuousOn u (Icc s t)) (hf : ContinuousOn f (Icc s t))
     (hd : ∀ r ∈ Ioo s t, ∀ i : Fin 4,
       HasDerivAt (fun a => value period (derivativeOperator period 2 i (u a)))
         (value period (derivativeOperator period 0 i (ν • laplacianOperator period 1 (u r) + f r)))
-          r) :
+            r) :
     ν * (∫ r in s..t, ‖laplacianEvaluation period 3 (by norm_num) (u r)‖^2) ≤
       gradientEnergy period (restrictOperator period (by norm_num : 1 ≤ 3) (u s)) +
         ν⁻¹ * (∫ r in s..t, ‖value period (f r)‖^2) := by

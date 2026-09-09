@@ -6,11 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryIterated
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryMixed
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketUniformScaleSums
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryDerivative
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryIterated
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Factorial bounds for actual spatial derivatives of the localized Newtonian operator family. -/
 
 @[expose] public section
 
-/-! Factorial bounds for actual spatial derivatives of the localized Newtonian operator family. -/
 
 noncomputable section
 
@@ -42,6 +51,7 @@ theorem majorant_next_four_radius (R : ℝ) (hR : 0 ≤ R) (n : ℕ) :
     pow_succ, mul_pow]
   nlinarith only [H]
 
+/-- Cutoff gevrey amplitude, constructed using `3`. -/
 def cutoffGevreyAmplitude (supportRadius coefficientRadius coefficientSize : ℝ) : ℝ :=
   3 * cutoffCurlConstant * coefficientSize *
     (1 + coefficientRadius *
@@ -114,7 +124,7 @@ theorem mixedBoundaryOperator_iteratedFDeriv_le (χ ψ : Cutoff) (n : ℕ) (a : 
         ‖iteratedFDeriv ℝ (n-k) (fun b : Space => weakPotential (ψ.translate b)) a‖ := by
   have h :=
     (ContinuousLinearMap.compL ℝ L2 homogeneousSpace
-      L2).norm_iteratedFDeriv_le_of_bilinear_of_le_one
+        L2).norm_iteratedFDeriv_le_of_bilinear_of_le_one
       (f := fun b : Space => cutoffCurl (χ.translate b))
       (g := fun b : Space => weakPotential (ψ.translate b))
       (cutoffCurl_contDiff χ) (weakPotential_contDiff ψ) a (n := n) (by simp)

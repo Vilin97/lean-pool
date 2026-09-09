@@ -6,15 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleFromCosts
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
+import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleFromCosts
 
 /-! One starting index and one final base scale suffice for the actual
 geometric guards, pressure series, and any finite list of further packet
 frequency comparisons. No independently chosen index is substituted. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,7 +27,7 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceScaleChoice
   EulerPacketPressureScale EulerPacketGeometryLowBounds
 open scoped Topology
 
-theorem exists_common_guards {ι : Type*} [Fintype ι] (s : ι → CostSpec)
+theorem exists_common_guards {ι : Type*} [Finite ι] (s : ι → CostSpec)
     (D : ℕ) (hD : 1000 ≤ D) (C c K CM CMn CHn cP : ℝ)
     (hC : 4 ≤ C) (hc : 0 ≤ c) (hK : 1 ≤ K)
     (hCM : 0 ≤ CM) (hCMn : 0 ≤ CMn) (hCHn : 0 ≤ CHn) :

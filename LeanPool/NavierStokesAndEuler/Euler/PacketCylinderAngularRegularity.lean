@@ -6,12 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAverage
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
+import LeanPool.NavierStokesAndEuler.Euler.PeriodicDerivativeMean
+
+/-! Genuine periodicity and zero-mean identities for raw cylinder-path witnesses. -/
 
 @[expose] public section
 
-/-! Genuine periodicity and zero-mean identities for raw cylinder-path witnesses. -/
 
 noncomputable section
 
@@ -61,7 +62,7 @@ include G in
 theorem subtract_mean_integral (t : Icc (0 : ℝ) T) (x : Space) :
     (∫ θ in (0 : ℝ)..P, (raw-EulerPacketProfileRecursion.angleMean P raw) (t,(x,θ))) = 0 := by
   have hP : P ≠ 0 := ne_of_gt (Fact.out : 0 < P)
-  change (∫ θ in (0 : ℝ)..P, raw (t,(x,θ))-
+  change (∫ θ in (0 : ℝ)..P, raw (t,(x,θ)) -
     P⁻¹ • (∫ s in (0 : ℝ)..P, raw (t,(x,s)))) = 0
   rw [intervalIntegral.integral_sub ((G.raw_angle_continuous t x).intervalIntegrable 0 P)
     intervalIntegrable_const,intervalIntegral.integral_const,sub_zero,smul_smul,
@@ -74,7 +75,7 @@ variable {P T : ℝ} [Fact (0 < P)] {rawB rawA normal : VectorField}
 /-- A new angle-independent mean cannot contribute angular mean to its primary interaction. -/
 theorem mean_primary_integral_zero (N : VectorCoefficient T normal)
     (A : Field P T rawA) (s : Set ℝ)
-    (hB : ∀ (t : Icc (0 : ℝ) T) x θ, rawB (t,(x,θ)) = rawB (t,(x,0)))
+    (hB : ∀ (t : Icc (0 : ℝ) T) x θ, rawB (t, (x, θ)) = rawB (t, (x, 0)))
     (t : Icc (0 : ℝ) T) (x : Space) :
     (∫ θ in (0 : ℝ)..P, fastAdvection (normal (t,(x,θ)))
       (slicedJet s rawB (t,(x,θ))) (slicedJet s rawA (t,(x,θ)))) = 0 := by

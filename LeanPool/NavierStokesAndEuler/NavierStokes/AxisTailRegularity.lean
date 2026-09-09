@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowResidualMatching
 
-@[expose] public section
-
 /-!
 # Regular finite tail coefficients at the symmetry axis
 
@@ -17,6 +15,9 @@ The radial flux is `V_n = X * beta_n`.  This module uses that identity in the
 actual finite tails.  The resulting coefficient functions contain no division
 by `X`; their finite indices and powers of `q` are unchanged.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -128,7 +129,7 @@ theorem pressureTerm_axisFactor (N : ℕ) (h C : ℝ)
       change omegaCoefficient h (ofBeta phi u beta pressure) N w = _
       rw [omegaCoefficient_eq_omega]
       change AxisSourceRegularity.omega h u (fun n => AxisSourceRegularity.axisFactor (beta n)) N w
-        = _
+          = _
       rw [AxisSourceRegularity.omega_axisFactor h u beta N w hb hL]
       simp only [regularPressureTerm]
       ring

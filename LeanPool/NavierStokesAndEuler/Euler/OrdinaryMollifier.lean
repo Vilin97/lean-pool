@@ -6,13 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
-public import LeanPool.NavierStokesAndEuler.Euler.IsometricActionDerivativeBound
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+import LeanPool.NavierStokesAndEuler.Euler.IsometricActionDerivativeBound
+import LeanPool.NavierStokesAndEuler.Euler.MeanTimeTranslation
+import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+
+/-! Symmetric compact smooth approximate identities on ordinary spatial L². -/
 
 @[expose] public section
 
-/-! Symmetric compact smooth approximate identities on ordinary spatial L². -/
 
 noncomputable section
 
@@ -22,12 +27,14 @@ open Set Filter MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothL
   EulerMeanSolenoidal EulerNoncompactTransport EulerLpTranslation.SmoothL2Field
 open scoped ContDiff Topology Convolution
 
+/-- Bump, bundling `rIn`, `rOut`, `rIn_pos`, `rIn_lt_rOut`. -/
 def bump (n : ℕ) : ContDiffBump (0 : Space) where
   rIn := cutoffScale n
   rOut := 2*cutoffScale n
   rIn_pos := cutoffScale_pos n
   rIn_lt_rOut := by have h := cutoffScale_pos n; linarith
 
+/-- Kernel, given by `(bump n).normed volume`. -/
 def kernel (n : ℕ) : Space → ℝ := (bump n).normed volume
 
 theorem kernel_smooth (n : ℕ) : ContDiff ℝ ∞ (kernel n) := (bump n).contDiff_normed
@@ -37,9 +44,12 @@ theorem kernel_integral (n : ℕ) : ∫ x, kernel n x = 1 := (bump n).integral_n
 theorem kernel_integrable (n : ℕ) : Integrable (kernel n) := (bump n).integrable_normed
 theorem kernel_neg (n : ℕ) (x : Space) : kernel n (-x)=kernel n x := (bump n).normed_neg x
 
+/-- Smooth orbit, given by `convolution (kernel n) (fun a => translation a u)
+(ContinuousLinearMap.lsmul ℝ ℝ) volume`. -/
 def smoothOrbit (n : ℕ) (u : L2) : Space → L2 :=
   convolution (kernel n) (fun a => translation a u) (ContinuousLinearMap.lsmul ℝ ℝ) volume
 
+/-- Mollify, given by `smoothOrbit n u 0`. -/
 def mollify (n : ℕ) (u : L2) : L2 := smoothOrbit n u 0
 
 theorem smoothOrbit_contDiff (n : ℕ) (u : L2) : ContDiff ℝ ∞ (smoothOrbit n u) :=
@@ -61,7 +71,7 @@ theorem kernel_orbit_integrable (n : ℕ) (u : L2) :
     Integrable (fun y : Space => kernel n y • translation (-y) u) :=
   ((kernel_smooth n).continuous.smul
     ((EulerMeanTimeTranslation.translation_continuous u).comp
-      continuous_neg)).integrable_of_hasCompactSupport
+        continuous_neg)).integrable_of_hasCompactSupport
       (kernel_compact n).smul_right
 
 theorem mollify_norm_le (n : ℕ) (u : L2) : ‖mollify n u‖ ≤ ‖u‖ := by
@@ -81,11 +91,14 @@ theorem mollify_smul (n : ℕ) (c : ℝ) (u : L2) : mollify n (c • u)=c • mo
   simp_rw [smul_comm (kernel n _) c]
   exact integral_smul c _
 
+/-- Mollifier linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def mollifierLinear (n : ℕ) : L2 →ₗ[ℝ] L2 where
   toFun := mollify n
   map_add' := mollify_add n
   map_smul' := mollify_smul n
 
+/-- Mollifier, given by `(mollifierLinear n).mkContinuous 1 (fun u => by change ‖mollify n u‖ ≤
+1*‖u‖ simpa only [one_mul] using mollify_norm_le n u)`. -/
 def mollifier (n : ℕ) : L2 →L[ℝ] L2 :=
   (mollifierLinear n).mkContinuous 1 (fun u => by
     change ‖mollify n u‖ ≤ 1*‖u‖
@@ -144,13 +157,13 @@ theorem translation_increment (A : EulerLpTranslation.SmoothL2Field Space) (a : 
   have h := A.translation_hasFDerivAt 0
   simp only [EulerLpTranslation.translation_zero] at h
   exact (EulerIsometricAction.norm_sub_le_of_hasFDerivAt translation translation_add
-    translation_zero
+      translation_zero
     A.toLp _ h a).trans (mul_le_mul_of_nonneg_right
       (EulerLpDerivative.derivativeMap_norm_le _ _) (norm_nonneg _))
 
 theorem mollify_error (n : ℕ) (A : EulerLpTranslation.SmoothL2Field Space) :
     ‖mollify n A.toLp-A.toLp‖ ≤ (2*cutoffScale n)*‖A.derivative.toLp‖ := by
-  have he : mollify n A.toLp-A.toLp=
+  have he : mollify n A.toLp-A.toLp =
       ∫ y : Space, kernel n y • (translation (-y) A.toLp-A.toLp) := by
     simp only [smul_sub,integral_sub (kernel_orbit_integrable n A.toLp)
       ((kernel_integrable n).smul_const A.toLp),integral_smul_const,kernel_integral,

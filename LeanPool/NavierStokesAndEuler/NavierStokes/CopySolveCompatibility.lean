@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverClass
 
-@[expose] public section
-
 /-!
 # Compatibility of the actual copy-path solve with a common-cover change
 
@@ -18,6 +16,9 @@ are pulled back along the covering map.  Equality is proved first for the
 actual coefficient/forcing paths and then for the constructed Volterra
 inverse; no native periodicity of an inhomogeneous solution is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,6 +32,7 @@ theorem coverPower_add (d k : ℕ) (Y : Plane) :
     coverPower (d + k) Y = coverPower d (coverPower k Y) := by
   simp only [coverPower_apply, pow_add, _root_.mul_apply_eq_comp]
 
+/-- Refine geometry, given by `{ g with gap := g.gap + k }`. -/
 noncomputable def refineGeometry (g : Geometry) (k : ℕ) : Geometry :=
   { g with gap := g.gap + k }
 
@@ -79,6 +81,7 @@ noncomputable def transformData (d : LinearData P V E) (φ : Q → P) (k : ℕ) 
   forcingMap z := d.forcingMap (φ z.1, z.2)
   source z := d.source (φ z.1, coverPower k z.2)
 
+/-- Pullback data, given by `transformData d id k`. -/
 noncomputable def pullbackData (d : LinearData P V E) (k : ℕ) : LinearData P V E :=
   transformData d id k
 
@@ -175,7 +178,7 @@ theorem source_periodic_transform (d : LinearData P V E) (φ : Q → P) (k : ℕ
   rw [map_add, coverPower_lattice]
   exact hp (coverPower k Y) (coverIndex k j)
 
-theorem commonOnTorus_refine [NormedAddCommGroup P] [NormedSpace ℝ P]
+theorem commonOnTorus_refine
     (d : LinearData P V E) (g : Geometry) (hab : a ≤ b)
     (k : ℕ) (κ : Plane → ℝ) (p : P) (hp : PeriodicAt d.source p) (Y : Plane) :
     (pullbackData d k).commonOnTorus (refineGeometry g k) hab κ p
@@ -188,6 +191,7 @@ end Paths
 
 /-! ## Changing the integer representative of the native slot center -/
 
+/-- Recenter geometry, given by `{ g with center := g.center + TorusAverages.latticePoint l }`. -/
 noncomputable def recenterGeometry (g : Geometry) (l : Frequency) : Geometry :=
   { g with center := g.center + TorusAverages.latticePoint l }
 
@@ -261,6 +265,7 @@ variable {P V E : Type}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   {a b : ℝ}
 
+/-- Scale source, given by `{ d with source := fun x => c • d.source x }`. -/
 noncomputable def scaleSource (d : LinearData P V E) (c : ℝ) : LinearData P V E :=
   { d with source := fun x => c • d.source x }
 
@@ -340,12 +345,14 @@ end SourceScale
 
 /-! ## Transporting the native clock, its anchor, and its cutoff together -/
 
+/-- Native time map, given by `(z.1, τ + rate * z.2)`. -/
 noncomputable def nativeTimeMap (τ rate : ℝ) (z : Plane) : Plane :=
   (z.1, τ + rate * z.2)
 
 theorem nativeTimeMap_continuous (τ rate : ℝ) : Continuous (nativeTimeMap τ rate) :=
   continuous_fst.prodMk (continuous_const.add (continuous_const.mul continuous_snd))
 
+/-- Time geometry, bundling `gap`, `basis`, `center`. -/
 noncomputable def timeGeometry (g : Geometry) (τ rate : ℝ) (hrate : rate ≠ 0) : Geometry where
   gap := g.gap
   basis := CommonCoverClass.scaledBasis g.basis rate hrate
@@ -389,6 +396,7 @@ section TimeData
 variable {P V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Time data, bundling `coefficient`, `forcingMap`, `source`. -/
 noncomputable def timeData (d : LinearData P V E) (τ rate : ℝ) : LinearData P V E where
   coefficient z := rate • d.coefficient (z.1, nativeTimeMap τ rate z.2)
   forcingMap z := rate • d.forcingMap (z.1, nativeTimeMap τ rate z.2)
@@ -514,10 +522,12 @@ variable {P Q V E X I : Type}
   [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
+/-- Transport data, given by `scaleSource (transformData (timeData d τ rate) φ k) amplitude`. -/
 noncomputable def transportData (d : LinearData P V E) (φ : Q → P) (k : ℕ)
     (τ rate amplitude : ℝ) : LinearData Q V E :=
   scaleSource (transformData (timeData d τ rate) φ k) amplitude
 
+/-- Transport geometry, given by `refineGeometry (timeGeometry g τ rate hrate) k`. -/
 noncomputable def transportGeometry (g : Geometry) (k : ℕ) (τ rate : ℝ) (hrate : rate ≠ 0) :
     Geometry := refineGeometry (timeGeometry g τ rate hrate) k
 
@@ -534,6 +544,7 @@ theorem commonSolve_transport {a b : ℝ} (d : LinearData P V E) (φ : Q → P)
   rw [commonSolve_scaleSource, commonSolve_transform,
     commonSolve_timeData d g τ rate hrate hab hA hB hf κ hκ hq]
 
+/-- Physical output, defined pointwise by `d.commonSolve g hab κ (χ x)`. -/
 noncomputable def physicalOutput {a b : ℝ} (d : LinearData P V E) (g : Geometry)
     (hab : a ≤ b) (κ : Plane → ℝ) (χ : X → P × Plane) : X → E :=
   fun x => d.commonSolve g hab κ (χ x)
@@ -703,6 +714,7 @@ end InputCompatibility
 
 /-! ## Why the anchor must be transported as input data -/
 
+/-- Constant forcing, bundling `coefficient`, `forcingMap`, `source`. -/
 noncomputable def constantForcing : LinearData ℝ ℝ ℝ where
   coefficient := fun _ => 0
   forcingMap := fun _ => ContinuousLinearMap.id ℝ ℝ

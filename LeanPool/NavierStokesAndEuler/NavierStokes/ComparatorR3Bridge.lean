@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorBridge
 
-@[expose] public section
-
 /-!
 # Viscosity normalization for the whole-space comparator
 
@@ -17,6 +15,9 @@ This version retains the comparator's square integrability and uniform kinetic
 energy bound. It makes no periodicity or compact-support assumption on a
 hypothetical global solution.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

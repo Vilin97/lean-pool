@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
+import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Low packet grades retain fixed polynomial costs; higher grades use one common tail base. -/
 
 @[expose] public section
 
-/-! Low packet grades retain fixed polynomial costs; higher grades use one common tail base. -/
 
 noncomputable section
 
@@ -19,6 +24,8 @@ namespace EulerPacketCylinderField
 
 open EulerPacketProfileRecursion EulerPacketShiftArithmetic EulerPacketCoarseMajorant EulerGevrey
 
+/-- Fixed velocity grade cost, given by `(3*H^(2*n))*((4*R)^(highShift n)*((highShift
+n).factorial : ℝ)^2)`. -/
 def fixedVelocityGradeCost (R H : ℝ) (n : ℕ) : ℝ :=
   (3*H^(2*n))*((4*R)^(highShift n)*((highShift n).factorial : ℝ)^2)
 
@@ -39,14 +46,14 @@ theorem WordBound.split_fixed_shift (hG : G.WordBound q R A d) (hR : 0 ≤ R) (h
   exact (hG j).trans ((mul_le_mul_of_nonneg_left (majorant_coarse_split R hR d j) hA).trans_eq
     (by ring))
 
-theorem WordBound.fixed_velocity_grade (hG : G.WordBound q R (3*H^(2*n)) (highShift n))
+theorem WordBound.fixed_velocity_grade (hG : G.WordBound q R (3 * H ^ (2 * n)) (highShift n))
     (hR : 0 ≤ R) (hH : 0 ≤ H) :
     G.WordBound q (4*R) (fixedVelocityGradeCost R H n) 0 :=
   hG.split_fixed_shift hR (mul_nonneg (by norm_num) (pow_nonneg hH _))
 
-theorem WordBound.coarse_velocity_grade (hG : G.WordBound q R (3*H^(2*n)) (highShift n))
+theorem WordBound.coarse_velocity_grade (hG : G.WordBound q R (3 * H ^ (2 * n)) (highShift n))
     (hR : 1 ≤ R) (hH : 1 ≤ H) (C : ℝ) (hC : 1 ≤ C) (N : ℕ) (hN : 1 ≤ N)
-    (hn : n ≤ 2*N+2) : G.WordBound q (4*R) ((tailBase R H C N)^(n+1)) 0 := by
+    (hn : n ≤ 2 * N + 2) : G.WordBound q (4*R) ((tailBase R H C N)^(n+1)) 0 := by
   have hC0 : 0 ≤ C := zero_le_one.trans hC
   have hH0 : 0 ≤ H := zero_le_one.trans hH
   have hNN : (2 : ℝ) ≤ ((N+2 : ℕ) : ℝ) := by exact_mod_cast (show 2 ≤ N+2 by omega)

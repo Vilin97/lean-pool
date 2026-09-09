@@ -6,16 +6,8 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Data.Nat.Factorial.Basic
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Algebraic checks for the natural axis profile
@@ -25,6 +17,9 @@ truncations in Proposition 5.1 of the candidate manuscript.  They do not
 establish convergence of a formal power series, the nonlinear remainder
 estimates, the contraction argument, or the full profile's cone margin.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.AxisProfile
 

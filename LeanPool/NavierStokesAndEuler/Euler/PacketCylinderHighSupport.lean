@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPrefixLocality
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
 
 /-!
 # Support of the literal recursive high forcing
@@ -19,12 +17,15 @@ actual angular mean. The remaining terms use only the already supported
 prefix high fields, correctors and physical pressure gradients.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerPacketCylinderField
 
 open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerPacketPointJets
-  EulerPacketProfileRecursion
+    EulerPacketProfileRecursion
 
 variable {P T : ℝ} [Fact (0 < P)]
 
@@ -45,8 +46,8 @@ variable {O : Operators} {p : ℕ} {a : ℕ → Profile}
 
 theorem PrefixFields.knownForce_angleIndependent (F : PrefixFields P T p a)
     (C : CoefficientData P T O) (hp : 1 ≤ p) (hT : 0 < T)
-    {corrector_t : VectorField} (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
+    {correctorT : VectorField} (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
     (S : Set Space) (hS : IsClosed S) (L : PrefixLocality T p a S)
     (hpressure : ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ : ℝ,
       pressureGradient (a (p-1)).highPressure (t,(x,θ)) = 0)
@@ -71,8 +72,8 @@ theorem PrefixFields.knownForce_angleIndependent (F : PrefixFields P T p a)
 
 theorem PrefixFields.highForce_zero_outside (F : PrefixFields P T p a)
     (C : CoefficientData P T O) (hp : 2 ≤ p) (hT : 0 < T)
-    {corrector_t : VectorField} (Ct : Field P T corrector_t)
-    (hCt : TimeDerivative hT.le (F.corrector (p-1) (by omega)) Ct)
+    {correctorT : VectorField} (Ct : Field P T correctorT)
+    (hCt : TimeDerivative hT.le (F.corrector (p - 1) (Nat.sub_one_lt_of_lt hp)) Ct)
     (S : Set Space) (hS : IsClosed S) (L : PrefixLocality T p a S)
     (hpressure : ∀ (t : Icc (0 : ℝ) T) x, x ∉ S → ∀ θ : ℝ,
       pressureGradient (a (p-1)).highPressure (t,(x,θ)) = 0)

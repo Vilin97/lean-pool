@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedPointwise
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedEvaluationDifferentiation
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BoundedEvaluationDifferentiation
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! The actual exact lifted field is jointly differentiable in time and
 covering-space coordinates. Uniform bounded Sobolev evaluation supplies the
 time remainder estimate, so joint differentiability is a conclusion. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +29,7 @@ open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] (A : FieldTower P T)
 
+/-- Raw field, given by `A.pointField (projIcc 0 T hT q.1) (coveringMap P q.2)`. -/
 def rawField (hT : 0 ≤ T) (q : ℝ × LiftTangent) : Vector3 :=
   A.pointField (projIcc 0 T hT q.1) (coveringMap P q.2)
 
@@ -36,7 +39,7 @@ theorem rawField_hasFDerivAt (hT : 0 ≤ T) (t : ℝ) (ht : t ∈ Icc 0 T)
     HasFDerivAt (A.rawField hT)
       (((toSpanSingleton ℝ (pointEvaluation P (coveringMap P z) u')).comp (fst ℝ ℝ LiftTangent)) +
         (fieldFDeriv P (A.pointField ⟨t,ht⟩) (coveringMap P z)).comp (snd ℝ ℝ LiftTangent)) (t,z)
-          := by
+            := by
   let E := fun y : LiftTangent => pointEvaluation P (coveringMap P y)
   let u := extendPath T hT (A.realization 3)
   have hs : HasFDerivAt (fun y => E y (u t))
@@ -62,7 +65,9 @@ open Set ContinuousLinearMap EulerLiftedGradientSpace EulerAllOrderCorrectionDat
 variable {P T : ℝ} [Fact (0 < P)] {hT : 0 < T} {A : Data P T} {B : Budget P hT A}
   (S : ExactLiftedPacket P hT A B)
 
+/-- Raw velocity, given by `S.velocity.rawField hT.le`. -/
 def rawVelocity : ℝ × LiftTangent → Vector3 := S.velocity.rawField hT.le
+/-- Raw pressure, given by `S.pressure.rawField hT.le`. -/
 def rawPressure : ℝ × LiftTangent → Vector3 := S.pressure.rawField hT.le
 
 theorem rawVelocity_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (z : LiftTangent) :
@@ -91,7 +96,7 @@ theorem rawVelocity_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (z : LiftTangent)
       S.pointTimeDerivative ⟨t,ht.1.le,ht.2.le⟩ (coveringMap P z) := by
     have h := (pointEvaluation P (coveringMap P z)).hasFDerivAt.comp_hasDerivAt t hd
     change HasDerivAt (fun r => S.velocity.pointField (projIcc 0 T hT.le r) (coveringMap P z)) _ t
-      at h
+        at h
     exact h.unique (S.pointField_hasDerivAt (coveringMap P z) t ht)
   have h := S.velocity.rawField_hasFDerivAt hT.le t ⟨ht.1.le,ht.2.le⟩ u' hd z
   rw [hv] at h
@@ -102,7 +107,7 @@ the actual covering-space field, as required by physical coordinate change. -/
 theorem raw_normalized_equation (t : ℝ) (ht : t ∈ Ioo 0 T) (z : LiftTangent) :
     fderiv ℝ S.rawVelocity (t,z) (1,0) +
       (A.linear.coefficient ⟨t,ht.1.le,ht.2.le⟩).coefficient (coveringMap P z) (S.rawVelocity
-        (t,z)) +
+          (t,z)) +
       fderiv ℝ S.rawVelocity (t,z) (0,transportDirection A.κ A.direction (S.rawVelocity (t,z))) +
       (∑ i : Fin 3, (S.rawVelocity (t,z)) i •
         ((A.quadratic i).coefficient ⟨t,ht.1.le,ht.2.le⟩).coefficient (coveringMap P z)

@@ -8,11 +8,14 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderProfileChange
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedAdvection
+
+/-! The old-corrector time term and old pressure term use the same fixed coefficient budget. -/
 
 @[expose] public section
 
-/-! The old-corrector time term and old pressure term use the same fixed coefficient budget. -/
 
 noncomputable section
 
@@ -42,17 +45,19 @@ theorem multiplierCost_le : B.multiplierCost ≤ B.termCost := by
   linarith
 
 variable (hT : 0 < T) (S : Scales (Icc (0 : ℝ) T)) (p : ℕ)
-  (b : C(Icc (0 : ℝ) T,ℝ)) (hb : ∀ t, 0 < b t)
+  (b : C(Icc (0 : ℝ) T, ℝ)) (hb : ∀ t, 0 < b t)
 
 theorem previousLinear_bound {raw raw_t : VectorField}
     (G : Field P T raw) (H : Field P T raw_t) (htime : TimeDerivative hT.le G H)
     {R : ℝ}
-    (hG : (G.normalized hT.le (S.high (p-1)) (S.high_pos (p-1))).WordBound 6 R 1 (highShift (p-1)))
-    (hH : (H.normalized hT.le (S.high (p-1)) (S.high_pos (p-1))).WordBound 6 R 1 (highShift (p-1)))
+    (hG : (G.normalized hT.le (S.high (p - 1)) (S.high_pos (p - 1))).WordBound 6 R 1 (highShift (p
+        - 1)))
+    (hH : (H.normalized hT.le (S.high (p - 1)) (S.high_pos (p - 1))).WordBound 6 R 1 (highShift (p
+        - 1)))
     (hRc : sobolevCoefficientRadius (Fin 4) B.Rc ≤ R)
-    (hprofile : ∀ t, S.high (p-1) t ≤ b t) :
+    (hprofile : ∀ t, S.high (p - 1) t ≤ b t) :
     ((Field.linearPart C.strain G H hT htime O.interval C.interval_eq).normalized hT.le b
-      hb).WordBound
+        hb).WordBound
       6 R B.linearCost (highShift (p-1)) := by
   have hm := Field.WordBound.normalized_linearPart hT.le (S.high (p-1)) (S.high_pos (p-1))
     C.strain G H hT htime O.interval C.interval_eq hG hH
@@ -62,9 +67,10 @@ theorem previousLinear_bound {raw raw_t : VectorField}
 
 theorem previousPressure_bound (q : ScalarField) (G : Field P T (pressureGradient q))
     {R : ℝ}
-    (hG : (G.normalized hT.le (S.high (p-1)) (S.high_pos (p-1))).WordBound 6 R 1 (highShift (p-1)))
+    (hG : (G.normalized hT.le (S.high (p - 1)) (S.high_pos (p - 1))).WordBound 6 R 1 (highShift (p
+        - 1)))
     (hRc : sobolevCoefficientRadius (Fin 4) B.Rc ≤ R)
-    (hprofile : ∀ t, S.high (p-1) t ≤ b t) :
+    (hprofile : ∀ t, S.high (p - 1) t ≤ b t) :
     ((Field.slowPressure C.inverse q G).normalized hT.le b hb).WordBound 6 R B.multiplierCost
       (highShift (p-1)) := by
   have hm := Field.WordBound.normalized_slowPressure hT.le (S.high (p-1)) (S.high_pos (p-1))

@@ -9,11 +9,12 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerTime
 public import LeanPool.NavierStokesAndEuler.Euler.StaticEulerSolution
 
-@[expose] public section
-
 /-! The actual local Euler velocity and pressure force agree with the
 constructed smooth coefficient paths. In particular the local velocity
 has a true one-sided time derivative at the initial and terminal times. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,7 +24,7 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerLpTranslation EulerVolterraCo
 open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] (u : SmoothL2Field Space) (C R : ℝ)
-  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
+  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
 
 theorem velocityCoefficient_apply (t : Icc (0 : ℝ) (amplitude P C R hC hR)) (x : Space) :
     (velocityCoefficient P u C R hC hR hu hdiv).field t x =

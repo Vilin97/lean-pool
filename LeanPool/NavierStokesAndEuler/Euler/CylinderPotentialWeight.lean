@@ -8,11 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialPath
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathWords
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
+
+/-! Exact profile normalization of spatial derivative paths and the vector potential. -/
 
 @[expose] public section
 
-/-! Exact profile normalization of spatial derivative paths and the vector potential. -/
 
 noncomputable section
 
@@ -26,12 +28,17 @@ open scoped ContDiff BoundedContinuousFunction
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ (LiftL2 P) := inferInstance
-private local instance : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
-private local instance : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPotentialWeight1 : NormedAddCommGroup (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPotentialWeight2 : NormedSpace ℝ (LiftL2 P) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(K,LiftL2 P)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderPotentialWeight3 : NormedAddCommGroup C(K,LiftL2 P) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(K,LiftL2 P)` instance to shorten typeclass synthesis. -/
+local instance instCylinderPotentialWeight4 : NormedSpace ℝ C(K,LiftL2 P) := inferInstance
 
-variable (g : C(K,ℝ)) (p : C(K,LiftL2 P))
+variable (g : C(K, ℝ)) (p : C(K, LiftL2 P))
 
 theorem weighted_orbit (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (weight g p)) := by
@@ -61,7 +68,7 @@ theorem pathPrimitive_weight : pathPrimitive P (weight g p) = weight g (pathPrim
   intro t
   exact (EulerCylinderAnglePrimitive.primitive P).map_smul (g t) (p t)
 
-variable (B : C(K,Space →ᵇ Space →L[ℝ] Space))
+variable (B : C(K, Space →ᵇ Space →L[ℝ] Space))
 
 theorem fullMultiplier_weight : fullMultiplierMap P B (weight g p) =
     weight g (fullMultiplierMap P B p) := by
@@ -89,7 +96,7 @@ theorem normalized_potentialPath_block_bound (hg : ∀ t, 0 < g t)
       (fun a : LiftTangent => pathTranslate P a (normalize g hg p)) n 0 ≤ D*majorant R d n)
     (n : ℕ) :
     block directions q (fun a : LiftTangent => pathTranslate P a (normalize g hg (potentialPath P B
-      p))) n 0 ≤
+        p))) n 0 ≤
       (3*sobolevCoefficientAmplitude ι q Rc C*(P*D))*majorant R d n := by
   rw [← potentialPath_normalize P g p B hg]
   exact potentialPath_block_bound P B hB (normalize g hg p) hp directions hd q Rc C R D

@@ -6,11 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordGevrey
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! The finite sum of nested genuine derivative words is the corresponding longer word sum. -/
 
 @[expose] public section
 
-/-! The finite sum of nested genuine derivative words is the corresponding longer word sum. -/
 
 noncomputable section
 

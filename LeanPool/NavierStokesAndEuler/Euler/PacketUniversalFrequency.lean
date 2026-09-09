@@ -6,14 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
-public import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildSourceBound
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalDatum
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevSourceExponent
+import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 
 /-! The only eventual frequency conditions left after the uniform source
 cost comparison form one fixed, parent-independent numerical record. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +24,8 @@ namespace EulerPacketSourceFrequency
 open Filter EulerPacketCorrectionScalar EulerPacketTerminalDatum
   EulerPacketParentLabelBounds EulerSobolevSourceExponent
 
+/-- Universal frequency data, collecting `four`, `expansion_bound`, `log_bound`, `delta_bound`,
+`root_bound`, `trace_bound` and their compatibility conditions. -/
 structure UniversalFrequency (k : ℝ) : Prop where
   four : 4 ≤ k
   expansion_bound : 64 ≤ expansion k

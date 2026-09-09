@@ -7,15 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedHessianError
-public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
 public import LeanPool.NavierStokesAndEuler.Euler.ExactLiftedGraphPressure
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCorrectionPotential
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 
 /-! The canonical scalar pressure of the actual exact packet has the
 finite pressure's Hessian plus the Hessian of its actual correction.
 The normalization of the scalar potential does not affect this identity. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,13 +44,15 @@ variable (M : EulerMeanPacketProvider.Data)
   (Q : Budget period D.T_pos
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk))
 
+/-- Initialized exact physical pressure, given by `(initializedExactPacket M D hTime τ hτ hτT B
+δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘ Y`. -/
 def initializedExactPhysicalPressure (t : Icc (0 : ℝ) D.T) (Y : Space → Space) : Space → ℝ :=
   (initializedExactPacket M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘
-    Y
+      Y
 
 variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hX : ∀ t x, HasFDerivAt (X t) (D.F.field t x) x)
-  (hXY : ∀ t x, X t (Y t x)=x) (hY : Continuous (Function.uncurry Y))
+  (hXY : ∀ t x, X t (Y t x) = x) (hY : Continuous (Function.uncurry Y))
 
 include hX hXY hY in
 theorem initializedExactPhysicalPressure_gradient
@@ -69,10 +75,10 @@ theorem initializedExactPhysicalPressure_gradient
       coordinatePressure D k (initializedPressure M D τ hτ hτT B δ hδ ξ hs α N k⁻¹)
         (t,(Y t x,k*⟪D.m₀,Y t x⟫_ℝ)) :=
     (initializedCoordinatePressureField M D hTime τ hτ hτT B δ hδ ξ hs α N k
-      hk0).toFieldTower_pointField_raw
+        hk0).toFieldTower_pointField_raw
       t (Y t x) (k*⟪D.m₀,Y t x⟫_ℝ)
   have hp := ((initializedPressureWitness M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹).changeTime
-    hTime).smooth t
+      hTime).smooth t
   change gradient (S.graphPotential k t ∘ Y t) x = _
   rw [EulerLagrangian.gradient_pullback _ _ _ _
     (continuousInverse_hasFDerivAt D X Y hX hXY hY t x)
@@ -101,7 +107,7 @@ theorem initializedExactPhysicalPressure_hessian
   have hkk : k*(initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk).κ=1 := mul_inv_cancel₀ hk0
   have hp := ((initializedPressureWitness M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹).changeTime
-    hTime).smooth t
+      hTime).smooth t
   have hYc := continuousInverse_contDiff D X Y hX hXY hY t
   have hfinite : ContDiff ℝ ∞ (fun y => initializedPressure M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
       (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ))) := hp.comp ((graphMap k D.m₀).contDiff.comp hYc)
@@ -124,14 +130,14 @@ variable
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth hX hXY hY in
 theorem initializedExactPhysicalPressure_hessian_error
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ))
-    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ))
+    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖fderiv ℝ (gradient (initializedExactPhysicalPressure M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk Q t (Y t))) x -

@@ -6,11 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRegularForward
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRegularForward
+
+/-! Actual unnormalized forward solutions have smooth mixed translation orbits. -/
 
 @[expose] public section
 
-/-! Actual unnormalized forward solutions have smooth mixed translation orbits. -/
 
 noncomputable section
 
@@ -24,9 +26,9 @@ open scoped ContDiff BoundedContinuousFunction
 variable (period : ℝ) [Fact (0 < period)]
   {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   (T : ℝ) (hT : 0 ≤ T) (S : Set Space) (hS : MeasurableSet S) (hSc : IsCompact S)
-  (B : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
+  (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
   (hB : ContDiff ℝ ∞ (translateCoefficientPath B))
-  (f : C(Icc (0 : ℝ) T,Supported period V S hS)) (a₀ : Supported period V S hS)
+  (f : C(Icc (0 : ℝ) T, Supported period V S hS)) (a₀ : Supported period V S hS)
 
 include hSc hB in
 /-- The constructed unnormalized path is genuinely smooth in all covering parameters.

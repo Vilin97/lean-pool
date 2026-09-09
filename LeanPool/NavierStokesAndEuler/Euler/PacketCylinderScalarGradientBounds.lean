@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradient
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMapBounds
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
+import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMapBounds
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
+
+/-! The actual scalar pressure gradient uses one external word and keeps the same radius. -/
 
 @[expose] public section
 
-/-! The actual scalar pressure gradient uses one external word and keeps the same radius. -/
 
 noncomputable section
 
@@ -28,9 +29,11 @@ variable {P : ℝ} [Fact (0 < P)]
 section Path
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (p : C(K,CylinderL2 P ℝ))
+  (p : C(K, CylinderL2 P ℝ))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
+/-- Scalar gradient path, given by `∑ i : Fin 3, pathMap P (gradientComponent i) (derivativePath
+P (pathMap P scalarEmbed p) i.succ)`. -/
 def scalarGradientPath : C(K,LiftL2 P) := ∑ i : Fin 3,
   pathMap P (gradientComponent i) (derivativePath P (pathMap P scalarEmbed p) i.succ)
 
@@ -94,10 +97,10 @@ end Path
 
 section Field
 
-variable {T : ℝ} (raw : ScalarField) (p : C(Icc (0 : ℝ) T,CylinderL2 P ℝ))
+variable {T : ℝ} (raw : ScalarField) (p : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (he : ∀ (t : Icc (0 : ℝ) T) x θ,
-    raw (t,(x,θ)) = scalarPointField P p hp t (x,(θ : AddCircle P)))
+    raw (t, (x, θ)) = scalarPointField P p hp t (x, (θ : AddCircle P)))
 
 theorem scalarGradientField_path :
     (scalarGradientField raw p hp he).path = scalarGradientPath p := rfl

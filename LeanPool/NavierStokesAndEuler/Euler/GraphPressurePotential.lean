@@ -6,11 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+
+/-! A genuine smooth scalar graph pressure obtained from the closed lifted L² gradient space. -/
 
 @[expose] public section
 
-/-! A genuine smooth scalar graph pressure obtained from the closed lifted L² gradient space. -/
 
 noncomputable section
 
@@ -46,7 +52,8 @@ theorem lifted_symmetry_of_coordinates (κ : ℝ) (m : Vector3)
   rw [hL i j]
   ring
 
-/-- A smooth representative of a lifted L² gradient has a genuine smooth scalar pressure on every physical graph. -/
+/-- A smooth representative of a lifted L² gradient has a genuine smooth scalar pressure on every
+physical graph. -/
 theorem gradientSpace_has_graph_potential (κ k : ℝ) (hκ : k * κ = 1) (m : Vector3)
     (p : LiftL2 period) (hp : p ∈ gradientSpace period κ m)
     (g : LiftDomain period → Vector3)
@@ -69,7 +76,8 @@ theorem gradientSpace_has_graph_potential (κ k : ℝ) (hκ : k * κ = 1) (m : V
   simpa only [P, localFieldLift, Prod.fst_zero, Prod.snd_zero, zero_add,
     graphMap_apply, cylinderGraph] using hq x
 
-/-- All-order coefficient and forcing jets yield an actual smooth scalar potential for the coercive graph pressure. -/
+/-- All-order coefficient and forcing jets yield an actual smooth scalar potential for the coercive
+graph pressure. -/
 theorem coercive_pressure_has_graph_potential (A : SmoothCoefficient period) (f : LiftL2 period)
     (K : ∀ s : ℕ, CoefficientJet period EulerCylinderSobolev.standardDirection s A)
     (J : ∀ s : ℕ, SpatialJet period EulerCylinderSobolev.standardDirection s f)

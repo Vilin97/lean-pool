@@ -7,13 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationNeighbor
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryData
+import LeanPool.NavierStokesAndEuler.Euler.PacketActivationNeighbor
+public import LeanPool.NavierStokesAndEuler.Euler.PacketActivationScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketCoefficientLipschitz
+import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
 
 /-! The actual source ray and selected primary satisfy every analytic
 field of `PhysicalGeometryData`.  Neighbor errors follow from the source
 coefficient derivatives and the genuine stationary-history estimate. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +32,9 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
+/-- Source matrix, given by `D.M.field (D.clamp t) x`. -/
 def sourceMatrix (D : Data U) (x : Space) (t : ℝ) : Space →L[ℝ] Space := D.M.field (D.clamp t) x
+/-- Source ray, given by `D.normal.field (D.clamp t) x`. -/
 def sourceRay (D : Data U) (x : Space) (t : ℝ) : Space := D.normal.field (D.clamp t) x
 
 theorem sourceMatrix_continuous (D : Data U) (x : Space) : Continuous (sourceMatrix D x) :=
@@ -37,6 +44,8 @@ variable [CompleteSpace U] {D : Data U} {τ : ℝ}
   {hτ : 0 < τ} {hτT : τ < D.T} {P : ParentFrame D τ}
   {H : HistoryData (D.initial τ hτ hτT.le)}
 
+/-- Source error, given by `sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t • rankOne ℝ
+(unit (P.v t)) (unit (P.m t))`. -/
 def ParentFrame.sourceError (x : Space) (t : ℝ) : Space →L[ℝ] Space :=
   sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t • rankOne ℝ (unit (P.v t)) (unit (P.m t))
 
@@ -44,6 +53,7 @@ namespace Guards
 
 variable (A : Guards hτ hτT P H)
 
+/-- Source velocity, given by `uncutVelocity τ hτ hτT H A.terminal t x`. -/
 def sourceVelocity (x : Space) (t : ℝ) : Space := uncutVelocity τ hτ hτT H A.terminal t x
 
 omit [CompleteSpace U] in
@@ -60,7 +70,7 @@ theorem sourceRay_equation (x : Space) (t : ℝ) (ht : t ∈ Icc τ D.T) :
 
 theorem sourceVelocity_equation (x : Space) (t : ℝ) (ht : t ∈ Icc τ D.T) :
     HasDerivWithinAt (A.sourceVelocity x)
-      (-(sourceMatrix D x t) (A.sourceVelocity x t)+
+      (-(sourceMatrix D x t) (A.sourceVelocity x t) +
         (2*⟪sourceRay D x t,(sourceMatrix D x t) (A.sourceVelocity x t)⟫_ℝ/
           ‖sourceRay D x t‖^2) • sourceRay D x t) (Icc τ D.T) t := by
   have hsub : Icc τ D.T ⊆ Icc (0 : ℝ) D.T := fun _ hs => ⟨hτ.le.trans hs.1,hs.2⟩
@@ -122,7 +132,7 @@ theorem sourceError_bound (x : Space) (hx : ‖x‖ ≤ A.radius) (t : ℝ) (ht 
     _ = P.totalError hτ hτT H A.CM A.CH A.radius := by unfold ParentFrame.totalError; ring
 
 theorem source_velocity_initial_error (x : Space) (hx : ‖x‖ ≤ A.radius) :
-    |scaledVelocity P.m P.v (A.sourceVelocity x) τ P.a P.epsilon 0 1-1|+
+    |scaledVelocity P.m P.v (A.sourceVelocity x) τ P.a P.epsilon 0 1-1| +
       |scaledVelocity P.m P.v (A.sourceVelocity x) τ P.a P.epsilon 0 0+A.slope| ≤
       P.totalError hτ hτT H A.CM A.CH A.radius := by
   have hp := A.terminal_properties
@@ -236,7 +246,7 @@ def geometryData (Ω : Set Space) (h0 : 0 ∈ Ω) (hΩ : ∀ x ∈ Ω, ‖x‖ �
     (Real.sqrt_pos.mp A.sigma_pos).le
   initial_shear := (activation_shear_match P.c P.m P.v τ P.a A.a_pos A.shear_pos).2
   initial_ray_error := fun x => (A.source_ray_initial_error x (hΩ x x.property)).trans
-    A.error_le_scaled_error
+      A.error_le_scaled_error
   initial_velocity_error := fun x =>
     (A.source_velocity_initial_error x (hΩ x x.property)).trans A.error_le_scaled_error
 

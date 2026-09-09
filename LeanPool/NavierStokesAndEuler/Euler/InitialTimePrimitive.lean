@@ -7,14 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 The initial-zero primitive of an actual Bochner L² time field.  In contrast to
 the terminal-zero primitive, this applies to the nonzero-terminal paths used
 in the activation argument.  The factor `T²/2` is proved from integration.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -74,6 +77,8 @@ theorem initialRealPrimitive_norm_le (T : ℝ) (u : TimeLp T E) (t : ℝ)
   rw [mul_pow, Real.sq_sqrt ht.1]
   exact initialRealPrimitive_norm_sq_le T u t ht
 
+/-- Initial path, given by `⟨fun t => initialRealPrimitive T u t,
+(initialRealPrimitive_continuous T u).comp continuous_subtype_val⟩`. -/
 def initialPath (T : ℝ) (u : TimeLp T E) : C(Icc (0 : ℝ) T, E) :=
   ⟨fun t => initialRealPrimitive T u t,
     (initialRealPrimitive_continuous T u).comp continuous_subtype_val⟩
@@ -118,7 +123,7 @@ def initialPrimitive (T : ℝ) (hT : 0 ≤ T) :
     (t : Icc (0 : ℝ) T) :
     initialPrimitive T hT u t = initialRealPrimitive T u t := rfl
 
-@[simp] theorem initialPrimitive_initial (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
+theorem initialPrimitive_initial (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
     initialPrimitive T hT u ⟨0, le_rfl, hT⟩ = 0 :=
   initialRealPrimitive_initial T u
 
@@ -126,6 +131,7 @@ theorem initialPrimitive_eq_terminal_sub (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T 
     (t : Icc (0 : ℝ) T) :
     initialPrimitive T hT u t = terminalPrimitive T hT u t - initialTrace T hT u := rfl
 
+/-- Initial primitive time Lᵖ, given by `(pathLpOperator T hT).comp (initialPrimitive T hT)`. -/
 def initialPrimitiveTimeLp (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] TimeLp T E :=
   (pathLpOperator T hT).comp (initialPrimitive T hT)
 

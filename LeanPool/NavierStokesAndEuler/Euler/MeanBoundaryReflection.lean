@@ -10,14 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryMixed
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalReflection
 public import LeanPool.NavierStokesAndEuler.Euler.MeanScaledCutoff
 
-@[expose] public section
-
 /-!
 Reflection covariance of the actual cutoff-curl/Riesz boundary operator.
 On homogeneous gradient tensors reflection is componentwise pullback.  It
 is represented by the reflected vector test `-φ(-x)`, so both curl signs
 cancel.  No covariance or parity of an inverse operator is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,6 +28,8 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerVectorCalculus
   EulerMeanSolenoidal EulerMeanCutoffCurl EulerMeanGradientTest
 open scoped ContDiff
 
+/-- Reflect, given by `⟨fun x => χ.field (-x), χ.smooth.comp contDiff_id.neg,
+χ.compact.comp_homeomorph (Homeomorph.neg Space)⟩`. -/
 def Cutoff.reflect (χ : Cutoff) : Cutoff :=
   ⟨fun x => χ.field (-x), χ.smooth.comp contDiff_id.neg,
     χ.compact.comp_homeomorph (Homeomorph.neg Space)⟩
@@ -39,9 +42,13 @@ theorem Cutoff.reflect_reflect (χ : Cutoff) : χ.reflect.reflect = χ := by
 theorem Cutoff.reflect_eq_of_even (χ : Cutoff) (hχ : ∀ x, χ.field (-x) = χ.field x) :
     χ.reflect = χ := Cutoff.ext (funext hχ)
 
+/-- L2 reflection equiv, given by `LinearIsometryEquiv.ofSurjective reflection (fun u =>
+⟨reflection u, reflection_involutive u⟩)`. -/
 def l2ReflectionEquiv : L2 ≃ₗᵢ[ℝ] L2 :=
   LinearIsometryEquiv.ofSurjective reflection (fun u => ⟨reflection u, reflection_involutive u⟩)
 
+/-- Gradient reflection, given by `LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 =>
+l2ReflectionEquiv)`. -/
 def gradientReflection : GradientTensor ≃ₗᵢ[ℝ] GradientTensor :=
   LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 => l2ReflectionEquiv)
 
@@ -53,6 +60,8 @@ theorem gradientReflection_involutive (G : GradientTensor) :
   ext i : 1
   exact reflection_involutive (G i)
 
+/-- Reflected test, given by `⟨fun x => -(f : Space → Space) (-x), (f.smooth.comp
+contDiff_id.neg).neg, (f.compact.comp_homeomorph (Homeomorph.neg Space)).neg⟩`. -/
 def reflectedTest (f : Test) : Test :=
   ⟨fun x => -(f : Space → Space) (-x), (f.smooth.comp contDiff_id.neg).neg,
     (f.compact.comp_homeomorph (Homeomorph.neg Space)).neg⟩
@@ -82,6 +91,7 @@ theorem gradientReflection_homogeneous (u : homogeneousSpace) :
     exact EulerMeanGradientTest.testGradient.range.le_topologicalClosure
       (LinearMap.mem_range_self _ _)
 
+/-- Homogeneous reflection, bundling `toFun`, `map_add`, `map_smul`, `norm_map`. -/
 def homogeneousReflection : homogeneousSpace →ₗᵢ[ℝ] homogeneousSpace where
   toFun u := ⟨gradientReflection (u : GradientTensor), gradientReflection_homogeneous u⟩
   map_add' u v := by apply Subtype.ext; exact map_add gradientReflection _ _

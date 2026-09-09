@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
+
+/-! A genuine bounded angular primitive on the full cylinder L² space. -/
 
 @[expose] public section
 
-/-! A genuine bounded angular primitive on the full cylinder L² space. -/
 
 noncomputable section
 
@@ -22,18 +23,21 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderSobolevSpace
 
 variable (P : ℝ) [Fact (0 < P)]
 
+/-- Angle shift, given by `(0,(s : AddCircle P))`. -/
 def angleShift (s : ℝ) : LiftDomain P := (0,(s : AddCircle P))
 
 omit [Fact (0 < P)] in
 theorem angleShift_continuous : Continuous (angleShift P) :=
   continuous_const.prodMk (AddCircle.continuous_mk' P)
 
+/-- Kernel curve, given by `s • translation P (angleShift P s) u`. -/
 def kernelCurve (u : LiftL2 P) (s : ℝ) : LiftL2 P :=
   s • translation P (angleShift P s) u
 
 theorem kernelCurve_continuous (u : LiftL2 P) : Continuous (kernelCurve P u) :=
   continuous_id.smul ((translation_continuous P u).comp (angleShift_continuous P))
 
+/-- Kernel integral, given by `P⁻¹ • (∫ s in (0 : ℝ)..P, kernelCurve P u s)`. -/
 def kernelIntegral (u : LiftL2 P) : LiftL2 P := P⁻¹ • (∫ s in (0 : ℝ)..P, kernelCurve P u s)
 
 theorem kernelIntegral_add (u v : LiftL2 P) :
@@ -75,11 +79,13 @@ theorem kernelIntegral_norm (u : LiftL2 P) : ‖kernelIntegral P u‖ ≤ P*‖u
     _ ≤ P⁻¹*((P*‖u‖)*P) := mul_le_mul_of_nonneg_left hb (inv_nonneg.mpr hP.le)
     _ = P*‖u‖ := by field_simp
 
+/-- Primitive linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def primitiveLinear : LiftL2 P →ₗ[ℝ] LiftL2 P where
   toFun := kernelIntegral P
   map_add' := kernelIntegral_add P
   map_smul' := kernelIntegral_smul P
 
+/-- Primitive, given by `(primitiveLinear P).mkContinuous P (kernelIntegral_norm P)`. -/
 def primitive : LiftL2 P →L[ℝ] LiftL2 P :=
   (primitiveLinear P).mkContinuous P (kernelIntegral_norm P)
 

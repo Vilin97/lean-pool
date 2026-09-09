@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryData
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalSize
 
 /-! Exact scale normalization from the actual parent frame and shear.
 The physical interval ends at the chosen scaled horizon; no extension
 beyond the source time interval is required. -/
+
+@[expose] public section
+
 
 noncomputable section
 

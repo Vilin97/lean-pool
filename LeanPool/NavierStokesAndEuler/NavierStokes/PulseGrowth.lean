@@ -7,11 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-
-@[expose] public section
 
 /-!
 # Reference pulse growth
@@ -22,6 +17,9 @@ is written as `(1 + u^2) * sqrt (1 + u^2)` to avoid fractional-power notation.
 These results do not assert bounds on the actual variable-coefficient ODE or
 on its parameter derivatives.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.PulseGrowth
 

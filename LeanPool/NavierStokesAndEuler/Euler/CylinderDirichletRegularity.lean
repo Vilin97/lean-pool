@@ -7,9 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionRegularity
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletNaturality
+import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionRegularity
 
 /-!
 # Actual mixed-translation smoothness of the cylinder history
@@ -19,6 +18,9 @@ Smoothness follows from their genuine coercive inverses, and exact covariance
 identifies that family with the translation orbit of the constructed field.
 No regularity assumption is imposed on a solved history field.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,22 +36,54 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (D : Coefficients T U E)
 
-private local instance : NormedAddCommGroup (CylinderL2 P U) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P U) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P U →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P U →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P E) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E) :=
-  inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P U)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderDirichletRegularity1 : NormedAddCommGroup (CylinderL2 P U) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P U)` instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity2 : NormedSpace ℝ (CylinderL2 P U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderDirichletRegularity3 : NormedAddCommGroup (CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E)` instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity4 : NormedSpace ℝ (CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P U →L[ℝ] CylinderL2 P E)` instance to
+shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity5 : NormedAddCommGroup (CylinderL2 P U →L[ℝ]
+    CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P U →L[ℝ] CylinderL2 P E)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderDirichletRegularity6 : NormedSpace ℝ (CylinderL2 P U →L[ℝ] CylinderL2 P
+    E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (CylinderL2 P E →L[ℝ] CylinderL2 P E)` instance to
+shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity7 : NormedAddCommGroup (CylinderL2 P E →L[ℝ]
+    CylinderL2 P E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P E)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderDirichletRegularity8 : NormedSpace ℝ (CylinderL2 P E →L[ℝ] CylinderL2 P
+    E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity9 : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P U
+    →L[ℝ] CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P U →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity10 : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P U
+    →L[ℝ] CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity11 : NormedAddCommGroup C(Icc (0 : ℝ) T,CylinderL2 P
+    E →L[ℝ] CylinderL2 P E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P E →L[ℝ] CylinderL2 P E)`
+instance to shorten typeclass synthesis. -/
+local instance instCylinderDirichletRegularity12 : NormedSpace ℝ C(Icc (0 : ℝ) T,CylinderL2 P E
+    →L[ℝ] CylinderL2 P E) :=
+    inferInstance
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem frameOrbit_contDiff (hQ : ContDiff ℝ ∞ (translateCoefficientPath D.Q)) :
@@ -86,7 +120,7 @@ include hQ hQ₁ hH
 theorem velocityLp_orbit_contDiff (f : TimeLp T (CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap f)) :
     ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap (D.velocityLp P f)) :=
-      by
+        by
   let g : LiftTangent → TimeLp T (CylinderL2 P E) :=
     fun a => timeLift T (translate P a).toContinuousLinearMap f
   change ContDiff ℝ ∞ g at hf
@@ -99,7 +133,7 @@ theorem velocityLp_orbit_contDiff (f : TimeLp T (CylinderL2 P E))
     (fun a => (D.shifted a.1).frame_derivative P)
     D.potential D.potential_nonneg (fun a => (D.shifted a.1).hessian_upper P) D.small
     (D.frameOrbit_contDiff P hQ) (D.frameDerivativeOrbit_contDiff P hQ₁) (D.hessianOrbit_contDiff P
-      hH)
+        hH)
     g hf
   convert hs using 1
   funext a
@@ -108,7 +142,7 @@ theorem velocityLp_orbit_contDiff (f : TimeLp T (CylinderL2 P E))
 theorem accelerationLp_orbit_contDiff (f : TimeLp T (CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap f)) :
     ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap (D.accelerationLp P f))
-      := by
+        := by
   let g : LiftTangent → TimeLp T (CylinderL2 P E) :=
     fun a => timeLift T (translate P a).toContinuousLinearMap f
   change ContDiff ℝ ∞ g at hf
@@ -121,13 +155,13 @@ theorem accelerationLp_orbit_contDiff (f : TimeLp T (CylinderL2 P E))
     (fun a => (D.shifted a.1).frame_derivative P)
     D.potential D.potential_nonneg (fun a => (D.shifted a.1).hessian_upper P) D.small
     (D.frameOrbit_contDiff P hQ) (D.frameDerivativeOrbit_contDiff P hQ₁) (D.hessianOrbit_contDiff P
-      hH)
+        hH)
     g hf
   convert hs using 1
   funext a
   exact (D.accelerationLp_translation P a f).symm
 
-theorem velocityPath_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+theorem velocityPath_orbit_contDiff (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) :
     ContDiff ℝ ∞ (fun a => pathTranslate P a (D.velocityPath P (pathLp T D.time_pos.le f))) := by
   have hs := EulerTransverseFixedEvolution.continuousVelocity_contDiff T D.time_pos.le
@@ -138,7 +172,7 @@ theorem velocityPath_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
     (fun a => (D.shifted a.1).frame_derivative P)
     D.potential D.potential_nonneg (fun a => (D.shifted a.1).hessian_upper P) D.small
     (D.frameOrbit_contDiff P hQ) (D.frameDerivativeOrbit_contDiff P hQ₁) (D.hessianOrbit_contDiff P
-      hH)
+        hH)
     (fun a => pathTranslate P a f) hf
   convert hs using 1
   funext a
@@ -146,7 +180,7 @@ theorem velocityPath_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
   intro t
   exact (D.continuousVelocity_translation P a f t).symm
 
-theorem accelerationPath_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+theorem accelerationPath_orbit_contDiff (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) :
     ContDiff ℝ ∞ (fun a => pathTranslate P a (D.accelerationPath P f)) := by
   have hs := EulerTransverseFixedEvolution.classicalAcceleration_contDiff T D.time_pos.le
@@ -157,7 +191,7 @@ theorem accelerationPath_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
     (fun a => (D.shifted a.1).frame_derivative P)
     D.potential D.potential_nonneg (fun a => (D.shifted a.1).hessian_upper P) D.small
     (D.frameOrbit_contDiff P hQ) (D.frameDerivativeOrbit_contDiff P hQ₁) (D.hessianOrbit_contDiff P
-      hH)
+        hH)
     (fun a => pathTranslate P a f) hf
   convert hs using 1
   funext a
@@ -165,7 +199,7 @@ theorem accelerationPath_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
   intro t
   exact (D.accelerationPath_translation P a f t).symm
 
-theorem physicalVelocity_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+theorem physicalVelocity_orbit_contDiff (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) :
     ContDiff ℝ ∞ (fun a => pathTranslate P a (D.physicalVelocity P f)) := by
   have hs := EulerTransverseFixedEvolution.physicalVelocity_contDiff T D.time_pos.le
@@ -176,7 +210,7 @@ theorem physicalVelocity_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
     (fun a => (D.shifted a.1).frame_derivative P)
     D.potential D.potential_nonneg (fun a => (D.shifted a.1).hessian_upper P) D.small
     (D.frameOrbit_contDiff P hQ) (D.frameDerivativeOrbit_contDiff P hQ₁) (D.hessianOrbit_contDiff P
-      hH)
+        hH)
     (fun a => pathTranslate P a f) hf
   convert hs using 1
   funext a
@@ -184,7 +218,7 @@ theorem physicalVelocity_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
   intro t
   exact (D.physicalVelocity_translation P a f t).symm
 
-theorem physicalDerivative_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+theorem physicalDerivative_orbit_contDiff (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
     (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) :
     ContDiff ℝ ∞ (fun a => pathTranslate P a (D.physicalDerivative P f)) := by
   have hs := EulerTransverseFixedEvolution.physicalDerivative_contDiff T D.time_pos.le
@@ -195,7 +229,7 @@ theorem physicalDerivative_orbit_contDiff (f : C(Icc (0 : ℝ) T,CylinderL2 P E)
     (fun a => (D.shifted a.1).frame_derivative P)
     D.potential D.potential_nonneg (fun a => (D.shifted a.1).hessian_upper P) D.small
     (D.frameOrbit_contDiff P hQ) (D.frameDerivativeOrbit_contDiff P hQ₁) (D.hessianOrbit_contDiff P
-      hH)
+        hH)
     (fun a => pathTranslate P a f) hf
   convert hs using 1
   funext a

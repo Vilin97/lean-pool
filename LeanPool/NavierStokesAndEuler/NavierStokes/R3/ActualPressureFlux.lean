@@ -9,14 +9,15 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureRecovery
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFluxIdentity
 
-@[expose] public section
-
 /-!
 # The actual pressure flux equals the canonical pressure flux
 
 The scalar gradient identification is supplied by the proved pressure recovery
 theorem. The only compact support in this identity is that of the cutoff.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

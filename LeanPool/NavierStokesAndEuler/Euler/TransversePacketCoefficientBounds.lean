@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Explicit polynomial coefficient budgets for the actual transverse potential and slow curl. -/
 
 @[expose] public section
 
-/-! Explicit polynomial coefficient budgets for the actual transverse potential and slow curl. -/
 
 noncomputable section
 
@@ -22,37 +25,81 @@ open Set EulerSmoothLimit EulerMeanCoefficients EulerGevrey EulerOperatorGevreyC
   EulerTimeLpGramGevrey
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Corrector coefficient radius, given by `R+4*Ri+1`. -/
 def correctorCoefficientRadius (R Ri : ℝ) : ℝ := R+4*Ri+1
 
+/-- Corrector coefficient amplitude, given by `1+C+3*C^2+3*Ri*C+27*(3*Ri*C)^2*(3*C^2)`. -/
 def correctorCoefficientAmplitude (C Ri : ℝ) : ℝ :=
   1+C+3*C^2+3*Ri*C+27*(3*Ri*C)^2*(3*C^2)
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup PotentialField := inferInstance
-private local instance : NormedSpace ℝ PotentialField := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,PotentialField) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,PotentialField) := inferInstance
-private local instance : NormedAddCommGroup (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] ℝ) := inferInstance
-private local instance : NormedAddCommGroup NormalField := inferInstance
-private local instance : NormedSpace ℝ NormalField := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,NormalField) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,NormalField) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCoefficientBounds1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCoefficientBounds2 : NormedSpace ℝ (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup PotentialField` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCoefficientBounds3 : NormedAddCommGroup PotentialField :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ PotentialField` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds4 : NormedSpace ℝ PotentialField :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,PotentialField)` instance to
+shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds5 : NormedAddCommGroup C(Icc (0 : ℝ)
+    D.T,PotentialField) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,PotentialField)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds6 : NormedSpace ℝ C(Icc (0 : ℝ)
+    D.T,PotentialField) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] ℝ)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCoefficientBounds7 : NormedAddCommGroup (Space →L[ℝ] ℝ) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] ℝ)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds8 : NormedSpace ℝ (Space →L[ℝ] ℝ) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup NormalField` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds9 : NormedAddCommGroup NormalField :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ NormalField` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds10 : NormedSpace ℝ NormalField := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,NormalField)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds11 : NormedAddCommGroup C(Icc (0 : ℝ)
+    D.T,NormalField) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,NormalField)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds12 : NormedSpace ℝ C(Icc (0 : ℝ)
+    D.T,NormalField) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketCoefficientBounds13 : NormedAddCommGroup (Space →ᵇ Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds14 : NormedSpace ℝ (Space →ᵇ Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space)` instance to
+shorten typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds15 : NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space
+    →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketCoefficientBounds16 : NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ
+    Space) := inferInstance
 
 /-- All four coefficients used in C and C_t follow from the original F⁻¹ and M bounds. -/
 theorem corrector_coefficient_bounds (R C Ri : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hRi : 0 ≤ Ri)
-    (hInv : 2*gramCost D.normalLower C 1*(R+1) ≤ Ri)
+    (hInv : 2 * gramCost D.normalLower C 1 * (R + 1) ≤ Ri)
     (hI : ∀ n t x, ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤
-      C*majorant R 0 n)
+      C * majorant R 0 n)
     (hM : ∀ n t x, ‖iteratedFDeriv ℝ n (D.M.field t : Space → Space →L[ℝ] Space) x‖ ≤
-      C*majorant R 0 n) :
+      C * majorant R 0 n) :
     0 ≤ correctorCoefficientRadius R Ri ∧ 0 ≤ correctorCoefficientAmplitude C Ri ∧
     ∀ n a,
       ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤
@@ -106,17 +153,17 @@ theorem corrector_coefficient_bounds (R C Ri : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C
         (mul_le_mul_of_nonneg_left (majorant_radius_mono (4*Ri) Rc (by positivity) hIR 0 n) hN)
   have hIt (n : ℕ) (a : Space) :
       ‖iteratedFDeriv ℝ n (translateCoefficientPath D.inverseDerivative) a‖ ≤ (3*C^2)*majorant Rc 0
-        n := by
+          n := by
     simpa only [pow_two, mul_assoc] using D.inverseDerivative_bound Rc C C hRc hC hC hIb hMb n a
   have hmt (n : ℕ) (a : Space) :
       ‖iteratedFDeriv ℝ n (translateCoefficientPath D.normalDerivative) a‖ ≤ (3*C^2)*majorant Rc 0
-        n := by
+          n := by
     simpa only [pow_two, mul_assoc] using D.normalDerivative_bound Rc C C hRc hC hC hIb hMb n a
   have hKt (n : ℕ) (a : Space) :
       ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialDerivative) a‖ ≤
         (27*(3*Ri*C)^2*(3*C^2))*majorant Rc 0 n :=
     potentialTimePath_bound D.normal D.normalDerivative D.normalLower D.normalLower_pos
-      D.normal_lower
+        D.normal_lower
       D.normalDerivative_orbit Rc (3*Ri*C) (3*C^2) hRc hN hD hNb hmt n a
   refine ⟨hRc,hCc,fun n a => ?_⟩
   have hmj := majorant_nonneg Rc hRc 0 n

@@ -9,10 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TorusAverages
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlotGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothPathFamily
-public import LeanPool.NavierStokesAndEuler.NavierStokes.JointODE
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedODEJets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.JointODE
+import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedODEJets
 
 /-!
 # Actual slot solves on a common torus
@@ -20,6 +18,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedODEJets
 The source is evaluated on the lifted copy path. Only periodicity on the
 coarsest torus is used; finer native periodicity is not an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +30,7 @@ open Set Function Filter MeasureTheory
 open scoped Topology ContDiff BigOperators InnerProductSpace
 open TorusInverse
 
+/-- Cover equiv, given by `TorusAverages.slotChart (3, 1) (1, 5) (by norm_num)`. -/
 noncomputable def coverEquiv : Plane ≃L[ℝ] Plane :=
   TorusAverages.slotChart (3, 1) (1, 5) (by norm_num)
 
@@ -36,6 +38,8 @@ theorem coverEquiv_apply (Y : Plane) : coverEquiv Y = SlotGeometry.cover Y := by
   rw [coverEquiv, TorusAverages.slotChart_apply, SlotGeometry.cover_apply]
   ext <;> simp [mul_comm]
 
+/-- Cover power as an element of `ℕ → Plane ≃L[ℝ] Plane | 0 => ContinuousLinearEquiv.refl ℝ
+Plane | d + 1 => (coverPower d).trans coverEquiv`. -/
 noncomputable def coverPower : ℕ → Plane ≃L[ℝ] Plane
   | 0 => ContinuousLinearEquiv.refl ℝ Plane
   | d + 1 => (coverPower d).trans coverEquiv
@@ -48,9 +52,11 @@ theorem coverPower_apply (d : ℕ) (Y : Plane) :
       change coverEquiv (coverPower d Y) = _
       rw [coverEquiv_apply, ih, pow_succ', _root_.mul_apply_eq_comp]
 
+/-- Index map, given by `(3 * k.1 + k.2, k.1 + 5 * k.2)`. -/
 noncomputable def indexMap (k : Frequency) : Frequency :=
   (3 * k.1 + k.2, k.1 + 5 * k.2)
 
+/-- Cover index, given by `indexMap^[d] k`. -/
 noncomputable def coverIndex (d : ℕ) (k : Frequency) : Frequency := indexMap^[d] k
 
 theorem coverEquiv_lattice (k : Frequency) :
@@ -81,17 +87,24 @@ theorem norm_coverPower_le_of_gap_le {d D : ℕ} (hd : d ≤ D) (Y : Plane) :
 /-- Fixed geometry for a level whose gap above the common coarsest level is
 `gap`. The columns of `basis` are the native radial and transverse vectors. -/
 structure Geometry where
+  /-- Gap of `Geometry`, of type `ℕ`. -/
   gap : ℕ
+  /-- Basis of `Geometry`, of type `Plane ≃L[ℝ] Plane`. -/
   basis : Plane ≃L[ℝ] Plane
+  /-- Center of `Geometry`, of type `Plane`. -/
   center : Plane
 
 namespace Geometry
 
 variable (g : Geometry)
 
+/-- Coordinates, given by `g.basis.symm (coverPower g.gap Y - g.center -
+TorusAverages.latticePoint k)`. -/
 noncomputable def coordinates (k : Frequency) (Y : Plane) : Plane :=
   g.basis.symm (coverPower g.gap Y - g.center - TorusAverages.latticePoint k)
 
+/-- Point, given by `(coverPower g.gap).symm (g.center + TorusAverages.latticePoint k + g.basis
+z)`. -/
 noncomputable def point (k : Frequency) (z : Plane) : Plane :=
   (coverPower g.gap).symm (g.center + TorusAverages.latticePoint k + g.basis z)
 
@@ -115,6 +128,7 @@ theorem point_add (k : Frequency) (z h : Plane) :
     g.point k (z + h) = g.point k z + (coverPower g.gap).symm (g.basis h) := by
   simp only [point, map_add, add_assoc]
 
+/-- Path, given by `g.point k ((g.coordinates k Y).1, eta)`. -/
 noncomputable def path (k : Frequency) (Y : Plane) (eta : ℝ) : Plane :=
   g.point k ((g.coordinates k Y).1, eta)
 
@@ -188,10 +202,15 @@ The source itself is a function on the common coarsest coordinates. This
 allows the tangent-frame projection to depend on the native slot. -/
 structure LinearData (P V E : Type) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup E] [NormedSpace ℝ E] where
+  /-- Coefficient of `LinearData`, of type `P × Plane → E →L[ℝ] E`. -/
   coefficient : P × Plane → E →L[ℝ] E
+  /-- Forcing map of `LinearData`, of type `P × Plane → V →L[ℝ] E`. -/
   forcingMap : P × Plane → V →L[ℝ] E
+  /-- Source of `LinearData`, of type `P × Plane → V`. -/
   source : P × Plane → V
 
+/-- Periodic at, given by `∀ Y : Plane, ∀ n : Frequency, f (p, Y + TorusAverages.latticePoint n)
+= f (p, Y)`. -/
 def PeriodicAt {P V : Type} (f : P × Plane → V) (p : P) : Prop :=
   ∀ Y : Plane, ∀ n : Frequency,
     f (p, Y + TorusAverages.latticePoint n) = f (p, Y)
@@ -206,9 +225,12 @@ namespace LinearData
 
 variable (d : LinearData P V E) (g : Geometry)
 
+/-- Coefficient along, given by `d.coefficient (w.1.1, ((g.coordinates k w.1.2).1, w.2))`. -/
 noncomputable def coefficientAlong (k : Frequency) (w : (P × Plane) × ℝ) : E →L[ℝ] E :=
   d.coefficient (w.1.1, ((g.coordinates k w.1.2).1, w.2))
 
+/-- Forcing along, given by `d.forcingMap (w.1.1, ((g.coordinates k w.1.2).1, w.2)) (d.source
+(w.1.1, g.path k w.1.2 w.2))`. -/
 noncomputable def forcingAlong (k : Frequency) (w : (P × Plane) × ℝ) : E :=
   d.forcingMap (w.1.1, ((g.coordinates k w.1.2).1, w.2))
     (d.source (w.1.1, g.path k w.1.2 w.2))
@@ -240,8 +262,8 @@ theorem forcingAlong_reanchor (k : Frequency) (p : P) (Y : Plane) (eta s : ℝ) 
 
 end LinearData
 
-theorem pathFamily_congr_slice {Q W : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
-    [NormedAddCommGroup W] [NormedSpace ℝ W] {a b : ℝ}
+theorem pathFamily_congr_slice {Q W : Type}
+    [NormedAddCommGroup W] {a b : ℝ}
     (F G : Q × ℝ → W) (p q : Q)
     (h : ∀ t : Icc a b, F (p, t) = G (q, t)) :
     SmoothPathFamily.pathFamily (a := a) (b := b) F p =
@@ -262,9 +284,11 @@ namespace LinearData
 variable [CompleteSpace E] {a b : ℝ}
 variable (d : LinearData P V E) (g : Geometry) (hab : a ≤ b)
 
+/-- Coefficient path, given by `SmoothPathFamily.pathFamily (d.coefficientAlong g k) p`. -/
 noncomputable def coefficientPath (k : Frequency) (p : P × Plane) :
     ParametricODE.Coefficient a b E := SmoothPathFamily.pathFamily (d.coefficientAlong g k) p
 
+/-- Forcing path, given by `SmoothPathFamily.pathFamily (d.forcingAlong g k) p`. -/
 noncomputable def forcingPath (k : Frequency) (p : P × Plane) :
     ParametricODE.Curve a b E := SmoothPathFamily.pathFamily (d.forcingAlong g k) p
 
@@ -278,6 +302,8 @@ noncomputable def copySolve (k : Frequency) (p : P × Plane) : E :=
   d.anchoredSolve g hab k p (g.coordinates k p.2).2
 
 omit [CompleteSpace E] in
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem coefficientPath_deck (k n : Frequency) (p : P) (Y : Plane) :
     d.coefficientPath (a := a) (b := b) g (k + coverIndex g.gap n)
         (p, Y + TorusAverages.latticePoint n) = d.coefficientPath g k (p, Y) := by
@@ -286,6 +312,8 @@ theorem coefficientPath_deck (k n : Frequency) (p : P) (Y : Plane) :
   exact d.coefficientAlong_deck g k n p Y s
 
 omit [CompleteSpace E] in
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem forcingPath_deck (k n : Frequency) (p : P) (hp : PeriodicAt d.source p) (Y : Plane) :
     d.forcingPath (a := a) (b := b) g (k + coverIndex g.gap n)
         (p, Y + TorusAverages.latticePoint n) = d.forcingPath g k (p, Y) := by
@@ -293,6 +321,8 @@ theorem forcingPath_deck (k n : Frequency) (p : P) (hp : PeriodicAt d.source p) 
   intro s
   exact d.forcingAlong_deck g k n p hp Y s
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem anchoredSolve_deck (k n : Frequency) (p : P) (hp : PeriodicAt d.source p)
     (Y : Plane) (s : ℝ) :
     d.anchoredSolve g hab (k + coverIndex g.gap n) (p, Y + TorusAverages.latticePoint n) s =
@@ -300,12 +330,16 @@ theorem anchoredSolve_deck (k n : Frequency) (p : P) (hp : PeriodicAt d.source p
   unfold anchoredSolve
   rw [d.coefficientPath_deck, d.forcingPath_deck g k n p hp]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copySolve_deck (k n : Frequency) (p : P) (hp : PeriodicAt d.source p) (Y : Plane) :
     d.copySolve g hab (k + coverIndex g.gap n) (p, Y + TorusAverages.latticePoint n) =
       d.copySolve g hab k (p, Y) := by
   unfold copySolve
   rw [g.coordinates_deck, d.anchoredSolve_deck g hab k n p hp]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem anchoredSolve_reanchor (k : Frequency) (p : P) (Y : Plane) (eta s : ℝ) :
     d.anchoredSolve g hab k (p, g.path k Y eta) s = d.anchoredSolve g hab k (p, Y) s := by
   have hA : d.coefficientPath (a := a) (b := b) g k (p, g.path k Y eta) =
@@ -317,6 +351,8 @@ theorem anchoredSolve_reanchor (k : Frequency) (p : P) (Y : Plane) (eta s : ℝ)
   unfold anchoredSolve
   rw [hA, hf]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copySolve_path (k : Frequency) (p : P) (Y : Plane) (s : ℝ) :
     d.copySolve g hab k (p, g.path k Y s) = d.anchoredSolve g hab k (p, Y) s := by
   unfold copySolve
@@ -352,6 +388,8 @@ variable [CompleteSpace E] {a b : ℝ}
 variable (d : LinearData P V E) (g : Geometry) (hab : a ≤ b)
 
 omit [CompleteSpace E] in
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem forcingPath_zero_of_source_zero (k : Frequency) (p : P) (Y : Plane)
     (hf : ∀ s ∈ Icc a b, d.source (p, g.path k Y s) = 0) :
     d.forcingPath (a := a) (b := b) g k (p, Y) = 0 := by
@@ -366,6 +404,8 @@ theorem forcingPath_zero_of_source_zero (k : Frequency) (p : P) (Y : Plane)
   rw [SmoothPathFamily.pathFamily_apply _ _ continuous_const]
   rfl
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 /-- Vanishing along the entire source path forces the constructed zero-entry
 solution to vanish. No vanishing assumption on the output is used. -/
 theorem anchoredSolve_zero_of_source_zero (k : Frequency) (p : P) (Y : Plane)
@@ -375,15 +415,21 @@ theorem anchoredSolve_zero_of_source_zero (k : Frequency) (p : P) (Y : Plane)
   rw [d.forcingPath_zero_of_source_zero g k p Y hf]
   exact solutionExtension_zero hab _ eta
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copySolve_zero_of_source_zero (k : Frequency) (p : P) (Y : Plane)
     (hf : ∀ s ∈ Icc a b, d.source (p, g.path k Y s) = 0) :
     d.copySolve g hab k (p, Y) = 0 := d.anchoredSolve_zero_of_source_zero g hab k p Y hf _
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copySolve_preserves_slow_support {U : Set P}
     (hf : ∀ p ∉ U, ∀ Y, d.source (p, Y) = 0) (k : Frequency) {p : P} (hp : p ∉ U)
     (Y : Plane) : d.copySolve g hab k (p, Y) = 0 :=
   d.copySolve_zero_of_source_zero g hab k p Y (fun _ _ => hf p hp _)
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem copySolve_preserves_transverse_support (k : Frequency) {S : Set ℝ} (p : P)
     (hf : ∀ xi ∉ S, ∀ eta ∈ Icc a b, d.source (p, g.point k (xi, eta)) = 0)
     (Y : Plane) (hY : (g.coordinates k Y).1 ∉ S) : d.copySolve g hab k (p, Y) = 0 :=
@@ -535,6 +581,7 @@ namespace LinearData
 variable [CompleteSpace E] {a b : ℝ}
 variable (d : LinearData P V E) (g : Geometry) (hab : a ≤ b)
 
+/-- Localized copy, given by `κ (g.coordinates k p.2) • d.copySolve g hab k p`. -/
 noncomputable def localizedCopy (κ : Plane → ℝ) (k : Frequency) (p : P × Plane) : E :=
   κ (g.coordinates k p.2) • d.copySolve g hab k p
 
@@ -543,6 +590,8 @@ copies are evaluated at their own absolute-lift points. -/
 noncomputable def commonSolve (κ : Plane → ℝ) (p : P × Plane) : E :=
   ∑' k : Frequency, d.localizedCopy g hab κ k p
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem localizedCopy_deck (κ : Plane → ℝ) (k n : Frequency)
     (p : P) (hp : PeriodicAt d.source p) (Y : Plane) :
     d.localizedCopy g hab κ (k + coverIndex g.gap n) (p, Y + TorusAverages.latticePoint n) =
@@ -550,6 +599,8 @@ theorem localizedCopy_deck (κ : Plane → ℝ) (k n : Frequency)
   unfold localizedCopy
   rw [g.coordinates_deck, d.copySolve_deck g hab k n p hp]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 /-- Common-torus periodicity follows by reindexing the actual copy sum.
 The source is required to be periodic only in the common variable. -/
 theorem commonSolve_periodic (κ : Plane → ℝ) (p : P) (hp : PeriodicAt d.source p)
@@ -568,6 +619,8 @@ theorem commonSolve_periodic (κ : Plane → ℝ) (p : P) (hp : PeriodicAt d.sou
       intro k
       exact d.localizedCopy_deck g hab κ k n p hp Y
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonSolve_preserves_slow_support (κ : Plane → ℝ) {U : Set P}
     (hf : ∀ p ∉ U, ∀ Y, d.source (p, Y) = 0) {p : P} (hp : p ∉ U) (Y : Plane) :
     d.commonSolve g hab κ (p, Y) = 0 := by
@@ -576,6 +629,8 @@ theorem commonSolve_preserves_slow_support (κ : Plane → ℝ) {U : Set P}
     rw [d.copySolve_preserves_slow_support g hab hf k hp Y, smul_zero]
   simp only [commonSolve, hzero, tsum_zero]
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem localizedCopy_preserves_transverse_support (κ : Plane → ℝ) (k : Frequency)
     {S : Set ℝ} (p : P)
     (hf : ∀ xi ∉ S, ∀ eta ∈ Icc a b, d.source (p, g.point k (xi, eta)) = 0)
@@ -616,6 +671,8 @@ end Paths
 
 /-! ## A function on the quotient torus, not merely a periodic lift -/
 
+/-- Lattice periodic, given by `∀ Y : Plane, ∀ k : Frequency, f (Y + TorusAverages.latticePoint
+k) = f Y`. -/
 def LatticePeriodic {W : Type} (f : Plane → W) : Prop :=
   ∀ Y : Plane, ∀ k : Frequency, f (Y + TorusAverages.latticePoint k) = f Y
 
@@ -629,6 +686,7 @@ theorem latticePeriodic_second {W : Type} {f : Plane → W} (hf : LatticePeriodi
   intro y
   simpa [TorusAverages.latticePoint] using hf (x, y) (0, 1)
 
+/-- First descent, given by `(latticePeriodic_first hf y).lift z`. -/
 noncomputable def firstDescent {W : Type} (f : Plane → W) (hf : LatticePeriodic f)
     (z : UnitAddCircle) (y : ℝ) : W := (latticePeriodic_first hf y).lift z
 
@@ -639,6 +697,7 @@ theorem firstDescent_periodic {W : Type} (f : Plane → W) (hf : LatticePeriodic
   change f (x, y + 1) = f (x, y)
   exact latticePeriodic_second hf x y
 
+/-- Torus descent, given by `(firstDescent_periodic f hf z.1).lift z.2`. -/
 noncomputable def torusDescent {W : Type} (f : Plane → W) (hf : LatticePeriodic f)
     (z : Torus) : W := (firstDescent_periodic f hf z.1).lift z.2
 
@@ -664,6 +723,8 @@ noncomputable def commonOnTorus (κ : Plane → ℝ) (p : P) (hp : PeriodicAt d.
     Torus → E := torusDescent (fun Y => d.commonSolve g hab κ (p, Y))
       (d.commonSolve_periodic g hab κ p hp)
 
+omit [NormedSpace ℝ P] in
+omit [NormedAddCommGroup P] in
 theorem commonOnTorus_coe (κ : Plane → ℝ) (p : P) (hp : PeriodicAt d.source p) (Y : Plane) :
     d.commonOnTorus g hab κ p hp (TorusAverages.quotientPoint Y) =
       d.commonSolve g hab κ (p, Y) := rfl
@@ -748,6 +809,8 @@ end LinearData
 
 /-! ## Bounded covering gaps and actual derivative costs -/
 
+/-- Covering bound, given by `1 + ∑ d ∈ Finset.range (D + 1), (‖(coverPower d : Plane →L[ℝ]
+Plane)‖ + ‖((coverPower d).symm : Plane →L[ℝ] Plane)‖)`. -/
 noncomputable def coveringBound (D : ℕ) : ℝ :=
   1 + ∑ d ∈ Finset.range (D + 1),
     (‖(coverPower d : Plane →L[ℝ] Plane)‖ + ‖((coverPower d).symm : Plane →L[ℝ] Plane)‖)
@@ -764,7 +827,7 @@ theorem coveringNorm_le_bound {d D : ℕ} (hd : d ≤ D) :
       ‖((coverPower i).symm : Plane →L[ℝ] Plane)‖)
     (fun i _ => add_nonneg (norm_nonneg _) (norm_nonneg _)) hm
   exact ((le_add_of_nonneg_right (norm_nonneg ((coverPower d).symm : Plane →L[ℝ] Plane))).trans
-    hs).trans
+      hs).trans
     (le_add_of_nonneg_left zero_le_one)
 
 theorem inverseCoveringNorm_le_bound {d D : ℕ} (hd : d ≤ D) :
@@ -781,14 +844,20 @@ namespace Geometry
 
 variable (g : Geometry)
 
+/-- Coordinate linear, given by `(g.basis.symm : Plane →L[ℝ] Plane).comp (coverPower g.gap :
+Plane →L[ℝ] Plane)`. -/
 noncomputable def coordinateLinear : Plane →L[ℝ] Plane :=
   (g.basis.symm : Plane →L[ℝ] Plane).comp (coverPower g.gap : Plane →L[ℝ] Plane)
 
+/-- Point linear, given by `((coverPower g.gap).symm : Plane →L[ℝ] Plane).comp (g.basis : Plane
+→L[ℝ] Plane)`. -/
 noncomputable def pointLinear : Plane →L[ℝ] Plane :=
   ((coverPower g.gap).symm : Plane →L[ℝ] Plane).comp (g.basis : Plane →L[ℝ] Plane)
 
+/-- Horizontal, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).prod 0`. -/
 noncomputable def horizontal : Plane →L[ℝ] Plane := (ContinuousLinearMap.fst ℝ ℝ ℝ).prod 0
 
+/-- Path linear, given by `g.pointLinear.comp (horizontal.comp g.coordinateLinear)`. -/
 noncomputable def pathLinear : Plane →L[ℝ] Plane :=
   g.pointLinear.comp (horizontal.comp g.coordinateLinear)
 
@@ -830,6 +899,8 @@ theorem norm_horizontal_le : ‖horizontal‖ ≤ 1 := by
   rw [norm_zero, max_eq_left (norm_nonneg _), one_mul]
   exact norm_fst_le Y
 
+/-- Path bound, given by `(coveringBound D * ‖(g.basis : Plane →L[ℝ] Plane)‖) * (‖(g.basis.symm
+: Plane →L[ℝ] Plane)‖ * coveringBound D)`. -/
 noncomputable def pathBound (D : ℕ) : ℝ :=
   (coveringBound D * ‖(g.basis : Plane →L[ℝ] Plane)‖) *
     (‖(g.basis.symm : Plane →L[ℝ] Plane)‖ * coveringBound D)
@@ -943,6 +1014,8 @@ theorem LinearData.anchoredSolve_jets_le_polynomial
 
 /-! ## Concrete projected tangent equation -/
 
+/-- Negative tangent projection, given by `-(ContinuousLinearMap.id ℝ H - (innerSL ℝ
+n).smulRight ((⟪n, n⟫_ℝ)⁻¹ • n))`. -/
 noncomputable def negativeTangentProjection {H : Type} [NormedAddCommGroup H]
     [InnerProductSpace ℝ H] (n : H) : H →L[ℝ] H :=
   -(ContinuousLinearMap.id ℝ H - (innerSL ℝ n).smulRight ((⟪n, n⟫_ℝ)⁻¹ • n))
@@ -958,10 +1031,15 @@ theorem negativeTangentProjection_apply {H : Type} [NormedAddCommGroup H]
 /-- All quantities in the actual projected tangent equation, before solving.
 The native normal and its slot derivative are explicit input fields. -/
 structure TangentData (P H : Type) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
+  /-- Normal of `TangentData`, of type `P × Plane → H`. -/
   normal : P × Plane → H
+  /-- Normal dot of `TangentData`, of type `P × Plane → H`. -/
   normalDot : P × Plane → H
+  /-- Action of `TangentData`, of type `P × Plane → H →L[ℝ] H`. -/
   action : P × Plane → H →L[ℝ] H
+  /-- Damping of `TangentData`, of type `P × Plane → ℝ`. -/
   damping : P × Plane → ℝ
+  /-- Source of `TangentData`, of type `P × Plane → H`. -/
   source : P × Plane → H
 
 namespace TangentData
@@ -970,6 +1048,7 @@ variable {P H : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
   (t : TangentData P H) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
 
+/-- Linear data, bundling `coefficient`, `forcingMap`, `source`. -/
 noncomputable def linearData : LinearData P H H where
   coefficient z := TangentODE.projectedOperator (t.normal z) (t.normalDot z)
     (t.action z) (t.damping z)

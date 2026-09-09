@@ -6,14 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
-public import Mathlib.Analysis.Calculus.TangentCone.Prod
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import Mathlib.Analysis.Calculus.TangentCone.Prod
 
 /-! Joint smoothness in the reference bounds spatial derivatives on every fixed
 compact spatial set and closed finite time interval, including time zero. -/
+
+@[expose] public section
+
 
 noncomputable section
 

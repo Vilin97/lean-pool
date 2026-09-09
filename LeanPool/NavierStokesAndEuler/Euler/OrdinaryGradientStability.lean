@@ -7,12 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerGradientControl
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryVariableGronwall
+import Mathlib.Algebra.Order.Star.Real
 
 /-! L² stability with the actual time integral of the reference
 gradient.  The spatial cancellation is exact; no energy differential
 inequality is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 

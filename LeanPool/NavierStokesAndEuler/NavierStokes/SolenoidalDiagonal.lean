@@ -9,10 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalScale
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Topology.LocallyFinite
-
-@[expose] public section
 
 /-!
 # Smooth solenoidal diagonal sums
@@ -25,6 +21,9 @@ is sufficient for local finiteness only. The resulting spatial curl is smooth
 and divergence-free. No residual estimate or singular endpoint regularity is
 assumed or proved here.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -47,6 +46,7 @@ on the positive-scale domain. -/
 def potentialSum (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V) (x : X) : V :=
   ∑' j : ℕ, cutStage a q A j x
 
+/-- Partial potential, given by `∑ j ∈ Finset.range N, cutStage a q A j x`. -/
 def partialPotential (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V)
     (N : ℕ) (x : X) : V :=
   ∑ j ∈ Finset.range N, cutStage a q A j x

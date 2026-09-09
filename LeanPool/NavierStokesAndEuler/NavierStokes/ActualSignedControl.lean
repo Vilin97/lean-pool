@@ -8,9 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryCopyBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedCopyBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalSignedWave
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalSignedWave
 
 /-!
 # Controls from the actual shared primary construction
@@ -20,6 +18,9 @@ are computed from the same prepared primary family. Their native-copy
 estimates have constants before all labels, bands and copies.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSignedControl
@@ -28,8 +29,11 @@ open Set Function Filter PhaseJetBounds PrimaryPulseBounds PrimaryCopyBounds
 open WeightedClasses PeriodizedWaveBounds
 open scoped ContDiff Topology InnerProductSpace BigOperators
 
+/-- Mat2: an abbreviation for `SmoothCovariance.Mat2`. -/
 abbrev Mat2 := SmoothCovariance.Mat2
+/-- Vec2: an abbreviation for `SmoothCovariance.Vec2`. -/
 abbrev Vec2 := SmoothCovariance.Vec2
+/-- Space: an abbreviation for `ProblemStatement.Space`. -/
 abbrev Space := ProblemStatement.Space
 
 variable {ι Λ I D X E : Type}
@@ -37,14 +41,20 @@ variable {ι Λ I D X E : Type}
   [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Phase normal, defined pointwise by `F.phase.normal i (PrimaryCopyBounds.phasePoint F χ i
+x)`. -/
 noncomputable def phaseNormal {U : Domain ι PhaseCalculus.Slow}
     (F : PhaseConstruction U) (χ : ι → D → PhaseCalculus.Slow × ℝ) : ι → D → Space :=
   fun i x => F.phase.normal i (PrimaryCopyBounds.phasePoint F χ i x)
 
+/-- Phase motion, defined pointwise by `F.phase.velocity i (PrimaryCopyBounds.phasePoint F χ i
+x)`. -/
 noncomputable def phaseMotion {U : Domain ι PhaseCalculus.Slow}
     (F : PhaseConstruction U) (χ : ι → D → PhaseCalculus.Slow × ℝ) : ι → D → Space :=
   fun i x => F.phase.velocity i (PrimaryCopyBounds.phasePoint F χ i x)
 
+/-- Phase action, defined pointwise by `PrimaryCopyBridge.baseOperator (F.phase.F i (χ i x).1)
+(F.phase.shear i (PrimaryCopyBounds.phasePoint F χ i x))`. -/
 noncomputable def phaseAction {U : Domain ι PhaseCalculus.Slow}
     (F : PhaseConstruction U) (χ : ι → D → PhaseCalculus.Slow × ℝ) :
     ι → D → Space →L[ℝ] Space :=
@@ -103,8 +113,11 @@ structure ReferenceBounds (V : JetDomain ι D) (U : Domain ι PhaseCalculus.Slow
   target_jets : ∀ q, NativeJets V ζ (fun i x => T i x q)
   mask_jets : PolynomialJets V.toDomain mask
   weight_pos : ∀ i x, x ∈ V.carrier i → 0 < ζ i x
+  /-- Determinant gap of `ReferenceBounds`, of type `ℝ`. -/
   determinantGap : ℝ
+  /-- Entry bound of `ReferenceBounds`, of type `ℝ`. -/
   entryBound : ℝ
+  /-- Primary lower of `ReferenceBounds`, of type `ℝ`. -/
   primaryLower : ℝ
   gap_pos : 0 < determinantGap
   entry_one : 1 ≤ entryBound
@@ -143,8 +156,8 @@ theorem cutoff_jets : PolynomialJets V.toDomain
     (fun i x => GaussianTailFlat.profile (χ i x).2) := by
   apply (h.coordinate_jets.clm (ContinuousLinearMap.snd ℝ PhaseCalculus.Slow ℝ)).compact_comp
     isOpen_univ GaussianTailFlat.profile_contDiff.contDiffOn isCompact_Icc (subset_univ _)
-  intro i x hx
-  exact ⟨(h.coordinate_mem i x hx).2.1.le, (h.coordinate_mem i x hx).2.2.le⟩
+  · intro i x hx
+    exact ⟨(h.coordinate_mem i x hx).2.1.le, (h.coordinate_mem i x hx).2.2.le⟩
 
 end ReferenceBounds
 
@@ -152,16 +165,23 @@ end ReferenceBounds
 stored here. No copied field or copied derivative bound is an input. -/
 structure CopyChart (s : StripData X) (V : JetDomain ι D) (ζ : ι → D → ℝ)
     (K : Λ → ℕ → I → Set X) where
+  /-- Index of `CopyChart`, of type `Λ → ℕ → ι`. -/
   index : Λ → ℕ → ι
+  /-- Linear of `CopyChart`, of type `Λ → ℕ → I → X →L[ℝ] D`. -/
   linear : Λ → ℕ → I → X →L[ℝ] D
+  /-- Shift of `CopyChart`, of type `Λ → ℕ → I → D`. -/
   shift : Λ → ℕ → I → D
   maps : ∀ l n i x, x ∈ s.domain → x ∈ K l n i →
     linear l n i x + shift l n i ∈ V.carrier (index l n)
+  /-- Growth constant of `CopyChart`, of type `ℝ`. -/
   growthConstant : ℝ
+  /-- Linear constant of `CopyChart`, of type `ℝ`. -/
   linearConstant : ℝ
   growth_one : 1 ≤ growthConstant
   linear_one : 1 ≤ linearConstant
+  /-- Growth degree of `CopyChart`, of type `ℕ`. -/
   growthDegree : ℕ
+  /-- Linear degree of `CopyChart`, of type `ℕ`. -/
   linearDegree : ℕ
   growth_bound : ∀ l n i x, x ∈ s.domain → x ∈ K l n i →
     V.growth (index l n) (linear l n i x + shift l n i) ≤
@@ -169,7 +189,9 @@ structure CopyChart (s : StripData X) (V : JetDomain ι D) (ζ : ι → D → �
   linear_bound : ∀ l n i, ‖linear l n i‖ ≤ linearConstant * s.slow n ^ linearDegree
   weight_eq : ∀ l n i x, x ∈ s.domain → x ∈ K l n i →
     ζ (index l n) (linear l n i x + shift l n i) = s.zeta x
+  /-- Ratio lower of `CopyChart`, of type `ℝ`. -/
   ratioLower : ℝ
+  /-- Ratio upper of `CopyChart`, of type `ℝ`. -/
   ratioUpper : ℝ
   ratio_pos : 0 < ratioLower
   ratio_one : 1 ≤ ratioUpper
@@ -181,6 +203,7 @@ namespace CopyChart
 variable {s : StripData X} {V : JetDomain ι D} {ζ : ι → D → ℝ}
   {K : Λ → ℕ → I → Set X} (c : CopyChart s V ζ K)
 
+/-- Pull, given by `affineCopy f c.index c.linear c.shift`. -/
 noncomputable def pull (f : ι → D → E) : Λ → ℕ → I → X → E :=
   affineCopy f c.index c.linear c.shift
 
@@ -224,8 +247,13 @@ variable {F₀ : OutgoingProfile.Profile} {W₀ : NominalProfile.Witness F₀}
 The target, matrix, mask and pulse jets are not fields of this record. -/
 structure PreparedChart (a : PrimaryGeometryAssembly.Prepared H₀ v₀ upper B r0 N0)
     (D : Type) [NormedAddCommGroup D] [NormedSpace ℝ D] where
+  /-- Native of `PreparedChart`, of type `JetDomain (PrimaryGeometryAssembly.Index W₀ a.N) D`. -/
   native : JetDomain (PrimaryGeometryAssembly.Index W₀ a.N) D
+  /-- Slow of `PreparedChart`, of type `JetDomain (PrimaryGeometryAssembly.Index W₀ a.N)
+  PhaseCalculus.Slow`. -/
   slow : JetDomain (PrimaryGeometryAssembly.Index W₀ a.N) PhaseCalculus.Slow
+  /-- Coordinate of `PreparedChart`, of type `PrimaryGeometryAssembly.Index W₀ a.N → D →
+  PhaseCalculus.Slow × ℝ`. -/
   coordinate : PrimaryGeometryAssembly.Index W₀ a.N → D → PhaseCalculus.Slow × ℝ
   scale : ∀ L, (PrimaryGeometryAssembly.domain W₀ a.N).scale L = native.scale L
   coordinate_jets : PolynomialJets native.toDomain coordinate
@@ -235,18 +263,22 @@ structure PreparedChart (a : PrimaryGeometryAssembly.Prepared H₀ v₀ upper B 
     PositiveRepresentatives.positivePart (PrimaryGeometryAssembly.referenceSet W₀)
   slow_maps : ∀ L x, x ∈ native.carrier L → (coordinate L x).1 ∈ slow.carrier L
   slow_growth : ∀ L x, x ∈ native.carrier L → slow.growth L (coordinate L x).1 ≤ native.growth L x
+  /-- Radius lower of `PreparedChart`, of type `ℝ`. -/
   radiusLower : ℝ
+  /-- Norm upper of `PreparedChart`, of type `ℝ`. -/
   normUpper : ℝ
+  /-- Q lower of `PreparedChart`, of type `ℝ`. -/
   qLower : ℝ
+  /-- Q upper of `PreparedChart`, of type `ℝ`. -/
   qUpper : ℝ
   radius_pos : 0 < radiusLower
   q_pos : 0 < qLower
   geometry : BaseChartJets.GeometryBounds slow.toDomain F₀.data.h radiusLower normUpper qLower
-    qUpper
+      qUpper
     (NominalConeAssembly.activeLeft W₀) (NominalConeAssembly.activeRight W₀)
   inverse_edge : ∀ L p, p ∈ slow.carrier L →
     (FinalSlowBase.edgeDistance W₀ (BaseChartJets.normalizedCoordinates F₀.data.h p).2)⁻¹ ≤
-      slow.growth L p
+        slow.growth L p
 
 namespace PreparedChart
 
@@ -254,12 +286,15 @@ variable {H₀ v₀}
   {a : PrimaryGeometryAssembly.Prepared H₀ v₀ upper B r0 N0}
   (c : PreparedChart H₀ v₀ a D)
 
+/-- Target, defined pointwise by `PrimaryTargetBounds.actualTarget v₀ (c.coordinate L x).1 k`. -/
 noncomputable def target : PrimaryGeometryAssembly.Index W₀ a.N → D → Vec2 :=
   fun L x k => PrimaryTargetBounds.actualTarget v₀ (c.coordinate L x).1 k
 
+/-- Weight, defined pointwise by `PrimaryTargetBounds.movingWeight W₀ (c.coordinate L x).1`. -/
 noncomputable def weight : PrimaryGeometryAssembly.Index W₀ a.N → D → ℝ :=
   fun L x => PrimaryTargetBounds.movingWeight W₀ (c.coordinate L x).1
 
+/-- Mask as an element of `PrimaryGeometryAssembly.Index W₀ a.N → D → ℝ`. -/
 noncomputable def mask : PrimaryGeometryAssembly.Index W₀ a.N → D → ℝ :=
   fun L x => PrimaryRepresentatives.nativeMask (PrimaryGeometryAssembly.label W₀ L).1
     (PrimaryGeometryAssembly.label W₀ L).2 (c.coordinate L x).1
@@ -269,7 +304,7 @@ theorem target_jets (hcone : LeadingStressWeights.FullTrueCone v₀) (k : Fin 2)
   have ht := (PrimaryCopyBounds.actualTarget_jets v₀ hcone c.slow
     c.radius_pos c.q_pos c.geometry c.inverse_edge).comp
     (c.coordinate_jets.clm (ContinuousLinearMap.fst ℝ PhaseCalculus.Slow ℝ)) c.slow_maps
-      c.slow_growth
+        c.slow_growth
   exact ht.map (PiLp.proj 2 (fun _ : Fin 2 => ℝ) k)
 
 theorem mask_jets : PolynomialJets c.native.toDomain c.mask := by
@@ -352,8 +387,11 @@ end Prepared
 
 /-- Positive band scalars with uniform primitive zeroth-order margins. -/
 structure PositiveScale (Λ : Type) where
+  /-- Value of `PositiveScale`, of type `Λ → ℕ → ℝ`. -/
   value : Λ → ℕ → ℝ
+  /-- Lower of `PositiveScale`, of type `ℝ`. -/
   lower : ℝ
+  /-- Upper of `PositiveScale`, of type `ℝ`. -/
   upper : ℝ
   lower_pos : 0 < lower
   upper_one : 1 ≤ upper
@@ -378,6 +416,7 @@ theorem square_bandBound (s : StripData X) :
   simpa only [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (a.value l n)), Real.rpow_zero,
     pow_zero, mul_one] using pow_le_pow_left₀ (a.value_pos l n).le (a.bounds l n).2 2
 
+/-- Mul, bundling `value`, `lower`, `upper`, `lower_pos` and the required compatibility proofs. -/
 noncomputable def mul : PositiveScale Λ where
   value l n := a.value l n * b.value l n
   lower := a.lower * b.lower
@@ -386,7 +425,7 @@ noncomputable def mul : PositiveScale Λ where
   upper_one := one_le_mul_of_one_le_of_one_le a.upper_one b.upper_one
   bounds l n := ⟨mul_le_mul (a.bounds l n).1 (b.bounds l n).1 b.lower_pos.le (a.value_pos l n).le,
     mul_le_mul (a.bounds l n).2 (b.bounds l n).2 (b.value_pos l n).le (zero_le_one.trans
-      a.upper_one)⟩
+        a.upper_one)⟩
 
 end PositiveScale
 
@@ -575,7 +614,7 @@ theorem harmonic_frequency_bound (s : StripData X)
     (base : Λ → I → LinearWaveBounds.WaveCoefficients X)
     (harmonic : Λ → ℕ → ℤ) (hn : ∀ l n, harmonic l n ≠ 0)
     (hf : ∀ l i n, (base l i).frequency n = CurlClassBounds.carrierFrequency s n * (harmonic l n :
-      ℝ)) :
+        ℝ)) :
     UniformPrimaryWeights.UniformBandBound s (1 / 2)
       (fun li : Λ × I => fun n => 1 / (base li.1 li.2).frequency n) := by
   obtain ⟨C, hC, p, hb⟩ := UniformPrimaryWeights.harmonic_inverse_bandBound s harmonic hn
@@ -708,13 +747,18 @@ variable {a : PrimaryGeometryAssembly.Prepared H₀ v₀ upper B r0 N0}
   {s : StripData X} {K : Λ → ℕ → I → Set X}
   (copy : CopyChart s C.native C.weight K)
 
+/-- Copied matrix, defined pointwise by `copy.pull (pulseMatrix
+(PrimaryGeometryAssembly.construction H₀ v₀ a hr0) (preparedPrefactor r0 vr vt)
+C.coordinate) l n i`. -/
 noncomputable def copiedMatrix : Λ → I → ℕ → X → Mat2 :=
   fun l i n => copy.pull (pulseMatrix (PrimaryGeometryAssembly.construction H₀ v₀ a hr0)
     (preparedPrefactor r0 vr vt) C.coordinate) l n i
 
+/-- Copied target, defined pointwise by `scale.value l n ^ 2 • copy.pull C.target l n i x`. -/
 noncomputable def copiedTarget (scale : PositiveScale Λ) : Λ → I → ℕ → X → Vec2 :=
   fun l i n x => scale.value l n ^ 2 • copy.pull C.target l n i x
 
+/-- Copied coefficients, constructed using `ReferenceBounds.copiedCoefficients`. -/
 noncomputable def copiedCoefficients (scale normal clock : PositiveScale Λ)
     (base : Λ → I → LinearWaveBounds.WaveCoefficients X)
     (dirs : Λ → I → LinearWaveBounds.GraphDirections X) (request : ℕ → X → Vec2) (j : Fin 2) :
@@ -756,9 +800,9 @@ theorem exists_actual_signed_control
       (∀ l n i x, x ∈ (HarmonicWaveInteraction.productStrip s).domain → x ∈ K l n i →
         (fun y => normal.value l n • copy.pull
           (phaseNormal (PrimaryGeometryAssembly.construction H₀ v₀ (a.restrict N hN) hr0 j)
-            C.coordinate)
+              C.coordinate)
           l n i y) =ᶠ[𝓝 x] (base l i).normal (HarmonicWaveInteraction.productStrip s) (dirs l i) n)
-            →
+              →
       UniformPrimaryWeights.UniformBandBound (HarmonicWaveInteraction.productStrip s) (1 / 2)
         (fun li : Λ × I => fun n => 1 / (base li.1 li.2).frequency n) →
       Nonempty (SignedCopyBounds.UniformNativeCovariance (HarmonicWaveInteraction.productStrip s) K
@@ -776,7 +820,7 @@ theorem exists_actual_signed_control
   obtain ⟨N, hN, hc⟩ := exists_referenceBounds (D := D) H₀ v₀ a hcone hr0 vr vt hdet
   refine ⟨N, hN, ?_⟩
   intro C s K copy scale normal clock base dirs P coord ctx u β W j hzeta hrequest hW henv hnormal
-    hfrequency
+      hfrequency
   obtain ⟨hr⟩ := hc C
   have hζ : ∀ x ∈ (HarmonicWaveInteraction.productStrip s).domain,
       0 < (HarmonicWaveInteraction.productStrip s).zeta x := fun x hx => hzeta x.1 hx

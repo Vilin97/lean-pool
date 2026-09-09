@@ -6,10 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyInversePartitions
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Gevrey bounds from the actual inverse-map differential identity
@@ -19,6 +20,9 @@ of `Y` have the stronger bound `C * L^n * n!²` at order `n+1`, where
 `L = 1 + 2*C*R`.  The proof uses the shifted Faà di Bruno weights and a
 strong induction, rather than iterating the general composition radius.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -45,10 +49,10 @@ lemma predecessor_partition_bound_factorization {n : ℕ} (c : OrderedFinpartiti
 theorem norm_taylorComp_predecessor_le
     (q : FormalMultilinearSeries ℝ F G) (p : FormalMultilinearSeries ℝ E F)
     (n : ℕ) (hn : 0 < n) (A B R S : ℝ)
-    (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S) (hBS : B*S ≤ 1/2)
-    (hq : ∀ j ≤ n, ‖q j‖ ≤ A * S^j * (j.factorial : ℝ)^2)
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S) (hBS : B * S ≤ 1 / 2)
+    (hq : ∀ j ≤ n, ‖q j‖ ≤ A * S ^ j * (j.factorial : ℝ) ^ 2)
     (hp : ∀ j, 0 < j → j ≤ n →
-      ‖p j‖ ≤ B * R^j * ((j-1).factorial : ℝ)^2) :
+      ‖p j‖ ≤ B * R ^ j * ((j - 1).factorial : ℝ) ^ 2) :
     ‖q.taylorComp p n‖ ≤ A * R^n * (B*S) * (n.factorial : ℝ)^2 := by
   have hterm (c : OrderedFinpartition n) :
       ‖q.compAlongOrderedFinpartition p c‖ ≤
@@ -83,16 +87,17 @@ theorem norm_iteratedFDeriv_comp_predecessor_at
     (f : E → F) (g : F → G) (n : ℕ) (hn : 0 < n) (x : E)
     (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g (f x))
     (A B R S : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hS : 0 ≤ S)
-    (hBS : B*S ≤ 1/2)
+    (hBS : B * S ≤ 1 / 2)
     (hgjet : ∀ j ≤ n,
-      ‖iteratedFDeriv ℝ j g (f x)‖ ≤ A * S^j * (j.factorial : ℝ)^2)
+      ‖iteratedFDeriv ℝ j g (f x)‖ ≤ A * S ^ j * (j.factorial : ℝ) ^ 2)
     (hfjet : ∀ j, 0 < j → j ≤ n →
-      ‖iteratedFDeriv ℝ j f x‖ ≤ B * R^j * ((j-1).factorial : ℝ)^2) :
+      ‖iteratedFDeriv ℝ j f x‖ ≤ B * R ^ j * ((j - 1).factorial : ℝ) ^ 2) :
     ‖iteratedFDeriv ℝ n (g ∘ f) x‖ ≤ A * R^n * (B*S) * (n.factorial : ℝ)^2 := by
   rw [iteratedFDeriv_comp hg hf le_rfl]
   exact norm_taylorComp_predecessor_le (ftaylorSeries ℝ g (f x))
     (ftaylorSeries ℝ f x) n hn A B R S hA hB hR hS hBS hgjet hfjet
 
+/-- Inverse map radius, given by `1 + 2*C*R`. -/
 def inverseMapRadius (C R : ℝ) : ℝ := 1 + 2*C*R
 
 lemma inverseMapRadius_ge_one (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
@@ -110,7 +115,7 @@ theorem norm_iteratedFDeriv_of_fderiv_eq_comp
     (hY : ContDiff ℝ ∞ Y) (hA : ContDiff ℝ ∞ A)
     (hDY : ∀ x, fderiv ℝ Y x = A (Y x))
     (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
-    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R^j * (j.factorial : ℝ)^2)
+    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R ^ j * (j.factorial : ℝ) ^ 2)
     (n : ℕ) (x : E) :
     ‖iteratedFDeriv ℝ (n+1) Y x‖ ≤
       C * (inverseMapRadius C R)^n * (n.factorial : ℝ)^2 := by
@@ -142,7 +147,8 @@ theorem norm_iteratedFDeriv_of_fderiv_eq_comp
         rw [hp]
         field_simp
       have hc := norm_iteratedFDeriv_comp_predecessor_at Y A n hnpos x
-        (hY.contDiffAt.of_le (by simp)) (hA.contDiffAt.of_le (by simp))
+        (hY.contDiffAt.of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl _)) (hA.contDiffAt.of_le
+            (ENat.natCast_le_of_coe_top_le_withTop le_rfl _))
         C (C/L) L R hC hCL hL.le hR hhalf (fun j _ => hAjet j (Y x)) hinner
       have hfun : fderiv ℝ Y = A ∘ Y := funext hDY
       calc
@@ -161,7 +167,7 @@ theorem positive_jets_of_fderiv_eq_comp
     (hY : ContDiff ℝ ∞ Y) (hA : ContDiff ℝ ∞ A)
     (hDY : ∀ x, fderiv ℝ Y x = A (Y x))
     (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
-    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R^j * (j.factorial : ℝ)^2)
+    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R ^ j * (j.factorial : ℝ) ^ 2)
     (n : ℕ) (hn : 0 < n) (x : E) :
     ‖iteratedFDeriv ℝ n Y x‖ ≤
       C * (inverseMapRadius C R)^n * (n.factorial : ℝ)^2 := by
@@ -191,7 +197,7 @@ theorem contDiff_of_fderiv_eq_comp
     apply contDiff_succ_iff_fderiv.2
     refine ⟨hY, by simp, ?_⟩
     rw [show fderiv ℝ Y = A ∘ Y from funext hDY]
-    exact (hA.of_le (by simp)).comp ih
+    exact (hA.of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl _)).comp ih
 
 /-- The differential equation follows from an actual inverse identity and
 the actual inverse of the derivative of the original coordinate map. -/
@@ -218,7 +224,7 @@ theorem norm_iteratedFDeriv_inverseMap
     (hXY : ∀ x, X (Y x) = x)
     (hleft : ∀ x v, A x (fderiv ℝ X x v) = v)
     (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
-    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R^j * (j.factorial : ℝ)^2)
+    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R ^ j * (j.factorial : ℝ) ^ 2)
     (n : ℕ) (x : E) :
     ‖iteratedFDeriv ℝ (n+1) Y x‖ ≤
       C * (inverseMapRadius C R)^n * (n.factorial : ℝ)^2 := by
@@ -234,8 +240,8 @@ theorem norm_iteratedFDeriv_comp_of_fderiv_eq_comp
     (hY : Differentiable ℝ Y) (hA : ContDiff ℝ ∞ A) (hg : ContDiff ℝ ∞ g)
     (hDY : ∀ x, fderiv ℝ Y x = A (Y x))
     (C R D S : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) (hD : 0 ≤ D) (hS : 0 ≤ S)
-    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R^j * (j.factorial : ℝ)^2)
-    (hgjet : ∀ j y, ‖iteratedFDeriv ℝ j g y‖ ≤ D * S^j * (j.factorial : ℝ)^2)
+    (hAjet : ∀ j y, ‖iteratedFDeriv ℝ j A y‖ ≤ C * R ^ j * (j.factorial : ℝ) ^ 2)
+    (hgjet : ∀ j y, ‖iteratedFDeriv ℝ j g y‖ ≤ D * S ^ j * (j.factorial : ℝ) ^ 2)
     (n : ℕ) (x : E) :
     ‖iteratedFDeriv ℝ n (g ∘ Y) x‖ ≤
       D * (inverseMapRadius C R * (C*S+2))^n * (n.factorial : ℝ)^2 := by

@@ -6,11 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeDiagonal
+public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeDiagonal
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Which unknown coefficients can enter the slow and fast quadratic terms. -/
 
 @[expose] public section
 
-/-! Which unknown coefficients can enter the slow and fast quadratic terms. -/
 
 noncomputable section
 
@@ -23,8 +33,8 @@ variable {V W : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- With zero constant coefficient, the slow grade p depends only on grades below p. -/
 theorem convolution_strict_congr (M p : ℕ) (hp : 0 < p) (hMp : p ≤ M)
-    (B : V →ₗ[ℝ] V →ₗ[ℝ] W) (u u' : ℕ → V) (hu0 : u 0=0)
-    (hu : ∀ i < p, u' i=u i) :
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] W) (u u' : ℕ → V) (hu0 : u 0 = 0)
+    (hu : ∀ i < p, u' i = u i) :
     convolution M B u' u' p = convolution M B u u p := by
   rw [convolution_eq_range M p hMp, convolution_eq_range M p hMp]
   apply sum_congr rfl
@@ -37,9 +47,9 @@ theorem convolution_strict_congr (M p : ℕ) (hp : 0 < p) (hMp : p ≤ M)
   rw [hu i (by omega), hu (p-i) (by omega)]
 
 /-- The fast grade p has exactly two possible dependencies on the new grade p. -/
-theorem convolution_next_delta (M p : ℕ) (hp : 2 ≤ p) (hMp : p+1 ≤ M)
-    (B : V →ₗ[ℝ] V →ₗ[ℝ] W) (u u' : ℕ → V) (δ : V) (hu0 : u 0=0)
-    (hu : ∀ i < p, u' i=u i) (hδ : u' p=u p+δ) :
+theorem convolution_next_delta (M p : ℕ) (hp : 2 ≤ p) (hMp : p + 1 ≤ M)
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] W) (u u' : ℕ → V) (δ : V) (hu0 : u 0 = 0)
+    (hu : ∀ i < p, u' i = u i) (hδ : u' p = u p + δ) :
     convolution M B u' u' (p+1) = convolution M B u u (p+1) +
       B δ (u 1) + B (u 1) δ := by
   rw [convolution_eq_range M (p+1) hMp, convolution_eq_range M (p+1) hMp]

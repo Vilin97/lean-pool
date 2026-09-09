@@ -6,17 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryCauchyInterpolation
 public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerGraphGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.LpFiniteTensorReconstruction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordTime
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 
 /-! An actual ordinary L² path with coherent Sobolev realizations has
 genuine smooth spatial representatives and continuous L² tensor jets.
 The unit-cylinder lift is only a realization in an already complete
 Sobolev space; the resulting ordinary field equals the prescribed L²
 path. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,10 +29,13 @@ open Set Filter MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTransl
   EulerCylinderSobolevSpace EulerMetricTransport EulerLpFiniteTensor
 open scoped ContDiff Topology
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instOrdinarySobolevTower1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
+/-- Sobolev tower data, collecting `field`, `realization`, `value_eq`. -/
 structure SobolevTower (T : ℝ) where
+  /-- Underlying field of `SobolevTower`, of type `C(Icc (0 : ℝ) T,EulerMeanSolenoidal.L2)`. -/
   field : C(Icc (0 : ℝ) T,EulerMeanSolenoidal.L2)
+  /-- Realization of `SobolevTower`, of type `∀ q, C(Icc (0 : ℝ) T,SobolevSpace 1 q)`. -/
   realization : ∀ q, C(Icc (0 : ℝ) T,SobolevSpace 1 q)
   value_eq : ∀ q t, value 1 (realization q t)=ordinaryLift (field t)
 
@@ -39,11 +43,13 @@ namespace SobolevTower
 
 variable {T : ℝ} (A : SobolevTower T)
 
+/-- Cylinder, bundling `field`, `realization`, `value_eq`. -/
 def cylinder : EulerAllOrderCorrectionData.FieldTower 1 T where
   field := ordinaryLift.toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T) A.field
   realization := A.realization
   value_eq := A.value_eq
 
+/-- Smooth field, given by `A.cylinder.zeroGraphField t`. -/
 def smoothField (t : Icc (0 : ℝ) T) : SmoothL2Field Space := A.cylinder.zeroGraphField t
 
 theorem smoothField_toLp (t : Icc (0 : ℝ) T) : (A.smoothField t).toLp=A.field t := by
@@ -54,7 +60,7 @@ theorem smoothField_toLp (t : Icc (0 : ℝ) T) : (A.smoothField t).toLp=A.field 
   have hrep : (ordinaryLift (A.field t) : LiftDomain 1 → Space) =ᵐ[liftMeasure 1]
       (fun x : LiftDomain 1 => f x.1) :=
     (ordinaryLift_ae (A.field t)).trans
-      (ordinaryProjection_measurePreserving.quasiMeasurePreserving.ae hfa)
+        (ordinaryProjection_measurePreserving.quasiMeasurePreserving.ae hfa)
   have he := A.cylinder.pointField_unique t (fun x : LiftDomain 1 => f x.1)
     (hf.continuous.comp continuous_fst) hrep
   have hv : (A.smoothField t).field=f := by
@@ -71,7 +77,7 @@ theorem smoothField_jet_continuous (n : ℕ) :
 
 theorem smoothField_realization (q : ℕ) (t : Icc (0 : ℝ) T) :
     ordinarySobolev q (A.smoothField t).toLp (A.smoothField t).translation_contDiff=A.realization q
-      t := by
+        t := by
   apply value_injective 1
   erw [ordinarySobolev_value,A.smoothField_toLp,A.value_eq]
 
@@ -82,6 +88,8 @@ theorem smoothField_path (q : ℕ) :
 
 end SobolevTower
 
+/-- Ordinary tensor operator as an element of `SobolevSpace 1 q →L[ℝ] Lp (Space [×q]→L[ℝ] Space)
+2 (volume : Measure Space)`. -/
 def ordinaryTensorOperator (q : ℕ) :
     SobolevSpace 1 q →L[ℝ] Lp (Space [×q]→L[ℝ] Space) 2 (volume : Measure Space) :=
   (tensorLpReassembly (V := Space) (volume : Measure Space) q).comp
@@ -89,9 +97,9 @@ def ordinaryTensorOperator (q : ℕ) :
 
 theorem ordinaryTensorOperator_apply (A : SmoothL2Field Space) (q : ℕ) :
     ordinaryTensorOperator q (ordinarySobolev q A.toLp A.translation_contDiff)=A.jetLp q := by
-  have he : ordinaryTensorOperator q (ordinarySobolev q A.toLp A.translation_contDiff)=
+  have he : ordinaryTensorOperator q (ordinarySobolev q A.toLp A.translation_contDiff) =
       tensorLpReassembly (volume : Measure Space) q (fun w : Fin q → Fin 3 => (wordField A w).toLp)
-        := by
+          := by
     unfold ordinaryTensorOperator
     rw [ContinuousLinearMap.comp_apply]
     congr 1

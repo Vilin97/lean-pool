@@ -6,16 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
 public import Mathlib.Analysis.InnerProductSpace.Positive
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DNSelection
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 The endpoint Schur complement of a coercive quadratic form.  The stationary
 extension is constructed by the inverse of the form on the closed zero-trace
 space.  No stationary extension or Dirichlet-to-Neumann map is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

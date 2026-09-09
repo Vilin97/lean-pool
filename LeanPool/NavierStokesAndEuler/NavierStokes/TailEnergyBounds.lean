@@ -7,11 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingTail
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Energy of the constructed outgoing tail
@@ -21,6 +19,9 @@ The long release plateau is retained in the estimates; bounding the release
 only by its terminal slope would give an incorrect uniformity claim in `h`.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter MeasureTheory
@@ -29,6 +30,7 @@ open NavierStokes.OutgoingSchedule NavierStokes.OutgoingTail
 
 namespace NavierStokes.TailEnergyBounds
 
+/-- Energy density, given by `Real.exp y * finalAngular d (y, eta) ^ 2`. -/
 noncomputable def energyDensity (d : TailData) (eta y : ℝ) : ℝ :=
   Real.exp y * finalAngular d (y, eta) ^ 2
 
@@ -42,6 +44,7 @@ theorem energyDensity_continuous (d : TailData) (eta : ℝ) :
     (((finalAngular_contDiff d).continuous.comp
       (continuous_id.prodMk continuous_const)).pow 2)
 
+/-- Release primitive, given by `primitive (releaseSlope d)`. -/
 noncomputable def releasePrimitive (d : TailData) : ℝ → ℝ :=
   primitive (releaseSlope d)
 
@@ -225,6 +228,8 @@ theorem integral_shift_exp {a : ℝ} (ha : 0 < a) (R : ℝ) :
   rw [neg_mul, Real.exp_neg]
   field_simp
 
+/-- Release envelope, given by `Real.exp 2 * Real.exp (-2 * (y - d.releaseStart)) + d.h ^ 8 *
+Real.exp 8 * Real.exp (-(2 * d.h) * (y - d.releaseStart))`. -/
 noncomputable def releaseEnvelope (d : TailData) (y : ℝ) : ℝ :=
   Real.exp 2 * Real.exp (-2 * (y - d.releaseStart)) +
     d.h ^ 8 * Real.exp 8 * Real.exp (-(2 * d.h) * (y - d.releaseStart))
@@ -246,6 +251,7 @@ theorem integral_releaseEnvelope (d : TailData) :
     integral_shift_exp (mul_pos (by norm_num) d.h_pos)]
   field_simp [d.h_pos.ne']
 
+/-- Release constant, given by `2 * (Real.exp 2 + Real.exp 8)`. -/
 noncomputable def releaseConstant : ℝ := 2 * (Real.exp 2 + Real.exp 8)
 
 theorem releaseConstant_pos : 0 < releaseConstant := by
@@ -331,7 +337,7 @@ theorem energyDensity_prefix_le (d : TailData) (eta : ℝ) (heta : eta ^ 2 ≤ 1
   rw [hid]
   calc
     _ ≤ energyDensity d eta d.core.endpoint * Real.exp (-2 * d.core.lam * (y - d.core.endpoint)) :=
-      by
+        by
       nlinarith [mul_nonneg hE he0]
     _ ≤ energyDensity d eta d.core.endpoint := by nlinarith
 
@@ -344,6 +350,7 @@ theorem energyDensity_integrable_postPulse (d : TailData) (eta : ℝ) :
   exact integrableOn_union.mpr
     ⟨(energyDensity_continuous d eta).integrableOn_Ioc, energyDensity_integrable_release d eta⟩
 
+/-- Post pulse energy, given by `∫ y in Ioi d.core.endpoint, energyDensity d eta y`. -/
 noncomputable def postPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
   ∫ y in Ioi d.core.endpoint, energyDensity d eta y
 
@@ -367,7 +374,7 @@ theorem postPulseEnergy_split (d : TailData) (eta : ℝ) {a : ℝ}
 theorem postPulseEnergy_le_length (d : TailData) (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     postPulseEnergy d eta ≤
       (d.releaseStart - d.core.endpoint + releaseConstant) * energyDensity d eta d.core.endpoint :=
-        by
+          by
   have hle := endpoint_le_releaseStart d
   have hp := intervalIntegral.integral_mono_on (μ := volume) hle
     ((energyDensity_continuous d eta).intervalIntegrable _ _)
@@ -380,6 +387,7 @@ theorem postPulseEnergy_le_length (d : TailData) (eta : ℝ) (heta : eta ^ 2 ≤
   rw [postPulseEnergy_split d eta hle]
   nlinarith
 
+/-- Tail constant, given by `flattenLength + 30 + releaseConstant`. -/
 noncomputable def tailConstant : ℝ := flattenLength + 30 + releaseConstant
 
 theorem tailConstant_pos : 0 < tailConstant := by
@@ -424,7 +432,7 @@ theorem postPulseEnergy_contDiff (d : TailData) : ContDiff ℝ ∞ (postPulseEne
     (fun p : ℝ × ℝ => energyDensity d p.1 p.2) univ isOpen_univ
     (energyDensity_contDiff d).contDiffOn d.core.endpoint d.flattenEnd (flattenEnd_gt_core d).le
   have hi' : ContDiff ℝ ∞ (fun eta => ∫ y in d.core.endpoint..d.flattenEnd, energyDensity d eta y)
-    :=
+      :=
     contDiffOn_univ.mp hi
   have heq : postPulseEnergy d = (fun eta =>
       (∫ y in d.core.endpoint..d.flattenEnd, energyDensity d eta y) +
@@ -433,6 +441,8 @@ theorem postPulseEnergy_contDiff (d : TailData) : ContDiff ℝ ∞ (postPulseEne
   rw [heq]
   exact hi'.add contDiff_const
 
+/-- Eta coefficient, given by `-(4 * (1 - sigma ((y - d.core.endpoint) / flattenLength)) * eta /
+(1 + eta ^ 2))`. -/
 noncomputable def etaCoefficient (d : TailData) (eta y : ℝ) : ℝ :=
   -(4 * (1 - sigma ((y - d.core.endpoint) / flattenLength)) * eta / (1 + eta ^ 2))
 
@@ -458,7 +468,7 @@ theorem finalAngular_hasDerivAt_eta (d : TailData) (eta y : ℝ) :
     (tailShape d (y - tailStart d) / (1 - d.rho))
   convert! hE using 1
   dsimp [finalAngular, flattened, angular, shape, flattenFactor, logShape]
-  field_simp [hn, hrho] ; ring
+  field_simp [hn, hrho]; ring
 
 theorem energyDensity_hasDerivAt_eta (d : TailData) (eta y : ℝ) :
     HasDerivAt (fun q => energyDensity d q y)
@@ -548,7 +558,7 @@ theorem abs_deriv_postPulseEnergy_le (d : TailData) (eta : ℝ) (heta : eta ^ 2 
 theorem energyDensity_endpoint_eq (d : TailData) (eta : ℝ) :
     energyDensity d eta d.core.endpoint =
       (Real.exp d.core.pulseStart * pulseAmplitude d.core ^ 2 * shape eta ^ 2) * Real.exp (-26) :=
-        by
+          by
   have hy : d.core.pulseStart ≤ d.core.endpoint := by
     dsimp [OutgoingSchedule.Parameters.endpoint]
     linarith [d.core.pulseLength_pos]
@@ -560,7 +570,7 @@ theorem energyDensity_endpoint_eq (d : TailData) (eta : ℝ) :
     simp only [pow_two, ← Real.exp_add]
     congr 1
     dsimp [OutgoingSchedule.Parameters.endpoint, OutgoingSchedule.Parameters.pulseLength]
-    field_simp [d.core.lam_pos.ne'] ; ring
+    field_simp [d.core.lam_pos.ne']; ring
   calc
     _ = (pulseAmplitude d.core ^ 2 * shape eta ^ 2) *
       (Real.exp d.core.endpoint *
@@ -612,6 +622,8 @@ theorem normalized_deriv_postPulseEnergy_le (d : TailData) (eta : ℝ) (heta : e
 
 /-! ## Differentiating the fully normalized quotient -/
 
+/-- Normalized post pulse energy, given by `d.core.lam * postPulseEnergy d eta / (Real.exp
+d.core.pulseStart * pulseAmplitude d.core ^ 2 * shape eta ^ 2)`. -/
 noncomputable def normalizedPostPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
   d.core.lam * postPulseEnergy d eta /
     (Real.exp d.core.pulseStart * pulseAmplitude d.core ^ 2 * shape eta ^ 2)

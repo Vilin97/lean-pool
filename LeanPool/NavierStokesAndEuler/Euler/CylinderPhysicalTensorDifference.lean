@@ -6,12 +6,16 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorLp
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorLp
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierUniform
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The physical tensor estimate controls differences of actual L²
 representatives, which supplies time continuity without a domination premise. -/
+
+@[expose] public section
+
 
 noncomputable section
 

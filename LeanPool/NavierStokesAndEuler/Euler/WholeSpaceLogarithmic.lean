@@ -7,12 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianElliptic
-public import LeanPool.NavierStokesAndEuler.Euler.LogarithmicCutoffOptimization
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LogarithmicCutoffOptimization
 
 /-! The actual whole-space logarithmic derivative estimate for a scalar
 elliptic equation whose right-hand side is the derivative of bounded fields. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,6 +24,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit Filter Set
   EulerVectorCalculus Laplacian
 open scoped ContDiff ENNReal RealInnerProductSpace Topology
 
+/-- Split cost, given by `lowCost+middleCost+3`. -/
 def splitCost : ℝ := lowCost+middleCost+3
 
 theorem splitCost_nonneg : 0 ≤ splitCost := by
@@ -36,7 +38,7 @@ theorem splitCost_pos : 0 < splitCost := by
 /-- The bound is proved for the genuine derivative of A.  H only bounds
 its actual third L² derivative tensor; the elliptic equation is literal. -/
 theorem elliptic_derivative_logarithmic (A G J : SmoothL2Field ℝ) (a b j : Fin 3)
-    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y-partialDerivative J.field b y)
+    (hΔ : ∀ y, Δ A.field y = partialDerivative G.field a y - partialDerivative J.field b y)
     (W : ℝ) (hG : ∀ y, ‖G.field y‖ ≤ W) (hJ : ∀ y, ‖J.field y‖ ≤ W)
     (H : ℝ) (hH : ‖A.jetLp 3‖ ≤ H) (x : Space) :
     ‖partialDerivative A.field j x‖ ≤

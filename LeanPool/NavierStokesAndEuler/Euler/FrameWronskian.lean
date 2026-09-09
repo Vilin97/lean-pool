@@ -6,15 +6,16 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 public import Mathlib.Analysis.InnerProductSpace.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-! Conservation of the antisymmetric frame pairing for a particle flow
 whose acceleration gradient is a symmetric operator. -/
+
+@[expose] public section
+
 
 noncomputable section
 

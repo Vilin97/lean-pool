@@ -6,16 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisymmetricResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
-public import LeanPool.NavierStokesAndEuler.NavierStokes.VariableGaugeMean
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualCalculus
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialLocalization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneCorrectionExtensions
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalRankDefect
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualCalculus
 
 /-!
 # Direct angular means in the physical diagonal
@@ -25,6 +19,9 @@ an axial primitive. Axisymmetry proves its divergence equation, and an
 annular zero germ removes the coordinate singularity on the axis.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.DirectAngularDiagonal
@@ -32,21 +29,30 @@ namespace NavierStokes.DirectAngularDiagonal
 open Set Function Filter ProblemStatement
 open scoped Topology ContDiff BigOperators
 
+/-- Slow: an abbreviation for `ℝ × ℝ`. -/
 abbrev Slow := ℝ × ℝ
+/-- Cyl point: an abbreviation for `ℝ × (ℝ × ℝ)`. -/
 abbrev CylPoint := ℝ × (ℝ × ℝ)
+/-- Coefficient: an abbreviation for `CylPoint → ℝ`. -/
 abbrev Coefficient := CylPoint → ℝ
 
+/-- Radius, given by `PolarCharts.radius (PhysicalGraphBounds.radialProjection w)`. -/
 noncomputable def radius (w : SpaceTime) : ℝ :=
   PolarCharts.radius (PhysicalGraphBounds.radialProjection w)
 
+/-- Slow point, given by `(w.1, w.2 2)`. -/
 noncomputable def slowPoint (w : SpaceTime) : Slow := (w.1, w.2 2)
 
+/-- Cyl point, given by `(w.1, (radius w, w.2 2))`. -/
 noncomputable def cylPoint (w : SpaceTime) : CylPoint := (w.1, (radius w, w.2 2))
 
+/-- Slow of cyl, given by `(p.1, p.2.2)`. -/
 noncomputable def slowOfCyl (p : CylPoint) : Slow := (p.1, p.2.2)
 
+/-- Physical domain, given by `slowPoint ⁻¹' U`. -/
 noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := slowPoint ⁻¹' U
 
+/-- Positive domain, given by `{p | slowOfCyl p ∈ U ∧ 0 < p.2.1}`. -/
 noncomputable def positiveDomain (U : Set Slow) : Set CylPoint :=
   {p | slowOfCyl p ∈ U ∧ 0 < p.2.1}
 
@@ -65,9 +71,11 @@ theorem radius_nonneg (w : SpaceTime) : 0 ≤ radius w := PolarCharts.radius_non
 theorem radius_continuous : Continuous radius :=
   PolarCharts.radius_continuous.comp PhysicalGraphBounds.radialProjection.continuous
 
+/-- Profile to cyl, given by `(p.1, (Real.sqrt (2 * p.2.1), p.2.2))`. -/
 noncomputable def profileToCyl (p : AxisymmetricFields.ProfilePoint) : CylPoint :=
   (p.1, (Real.sqrt (2 * p.2.1), p.2.2))
 
+/-- Rate, given by `b (profileToCyl p) / Real.sqrt (2 * p.2.1)`. -/
 noncomputable def rate (b : Coefficient) (p : AxisymmetricFields.ProfilePoint) : ℝ :=
   b (profileToCyl p) / Real.sqrt (2 * p.2.1)
 
@@ -76,6 +84,7 @@ noncomputable def angularField (b : Coefficient) (w : SpaceTime) : Space :=
   (-w.2 1 / radius w * b (cylPoint w)) • coordinateVector 0 +
     (w.2 0 / radius w * b (cylPoint w)) • coordinateVector 1
 
+/-- Rotation field, constructed using `AxisymmetricResidual.pack`. -/
 noncomputable def rotationField (F : AxisymmetricFields.Profile) (w : SpaceTime) : Space :=
   AxisymmetricResidual.pack (-w.2 1 * F (AxisymmetricFields.profilePoint w.1 w.2))
     (w.2 0 * F (AxisymmetricFields.profilePoint w.1 w.2)) 0
@@ -89,7 +98,7 @@ theorem profileToCyl_profilePoint (w : SpaceTime) :
     PolarCharts.radius, PhysicalGraphBounds.radialProjection_apply]
 
 theorem angularField_eq_rotationField (b : Coefficient) : angularField b = rotationField (rate b)
-  := by
+    := by
   funext w
   have hr : Real.sqrt (2 * AxisymmetricFields.radialEnergy w.2) = radius w :=
     congrArg (fun p : CylPoint => p.2.1) (profileToCyl_profilePoint w)
@@ -121,11 +130,11 @@ theorem rotationField_smoothAt {F : AxisymmetricFields.Profile} {w : SpaceTime}
     ContDiffAt ℝ ∞ (rotationField F) w := by
   have hf := hF.comp w AxisymmetricFields.contDiff_profilePoint.contDiffAt
   exact (((((AxisymmetricFields.projection 1).contDiff.comp contDiff_snd).contDiffAt.neg.mul
-    hf).smul
+      hf).smul
     contDiffAt_const).add
     ((((AxisymmetricFields.projection 0).contDiff.comp contDiff_snd).contDiffAt.mul hf).smul
       contDiffAt_const)).add (show ContDiffAt ℝ ∞ (fun _ : SpaceTime => (0 : ℝ) • coordinateVector
-        2) w from contDiffAt_const)
+          2) w from contDiffAt_const)
 
 theorem rate_smoothAt {U : Set Slow} (hU : IsOpen U) {b : Coefficient}
     (hb : ContDiffOn ℝ ∞ b (positiveDomain U)) {w : SpaceTime}
@@ -150,8 +159,10 @@ theorem rate_smoothAt {U : Set Slow} (hU : IsOpen U) {b : Coefficient}
 /-- A moving positive inner support radius is a primitive support datum.
 It may shrink as the physical terminal point is approached. -/
 structure AngularData (U : Set Slow) where
+  /-- Scalar of `AngularData`, of type `Coefficient`. -/
   scalar : Coefficient
   smooth : ContDiffOn ℝ ∞ scalar (positiveDomain U)
+  /-- Inner of `AngularData`, of type `Slow → ℝ`. -/
   inner : Slow → ℝ
   inner_continuous : ContinuousOn inner U
   inner_pos : ∀ s ∈ U, 0 < inner s
@@ -198,8 +209,10 @@ theorem field_divergence (hU : IsOpen U) {w : SpaceTime} (hw : w ∈ physicalDom
     rw [he'.fderiv_eq]
     simp
 
+/-- Multiply, bundling `scalar`, `smooth`, `inner`, `inner_continuous` and the required
+compatibility proofs. -/
 noncomputable def multiply (f : Coefficient) (hf : ContDiffOn ℝ ∞ f (positiveDomain U)) :
-  AngularData U where
+    AngularData U where
   scalar p := f p * D.scalar p
   smooth := hf.mul D.smooth
   inner := D.inner
@@ -219,6 +232,7 @@ theorem angularField_mul (f b : Coefficient) :
   simp only [angularField, smul_add, smul_smul]
   congr 1 <;> congr 1 <;> ring
 
+/-- Cut coefficient, defined pointwise by `SmoothCutoffs.scaledCutoff a (q p) * b p`. -/
 noncomputable def cutCoefficient (a : ℝ) (q b : Coefficient) : Coefficient :=
   fun p => SmoothCutoffs.scaledCutoff a (q p) * b p
 
@@ -227,6 +241,8 @@ theorem cut_angularField (a : ℝ) (q b : Coefficient) :
       fun w => SmoothCutoffs.scaledCutoff a (q (cylPoint w)) • angularField b w :=
   angularField_mul _ _
 
+/-- Cut, given by `D.multiply (fun p => SmoothCutoffs.scaledCutoff a (q p))
+((SmoothCutoffs.scaledCutoff_contDiff a).comp_contDiffOn hq)`. -/
 noncomputable def AngularData.cut {U : Set Slow} (D : AngularData U) (a : ℝ)
     (q : Coefficient) (hq : ContDiffOn ℝ ∞ q (positiveDomain U)) : AngularData U :=
   D.multiply (fun p => SmoothCutoffs.scaledCutoff a (q p))
@@ -236,17 +252,20 @@ theorem divergence_cut_angular {U : Set Slow} (hU : IsOpen U) (D : AngularData U
     (a : ℝ) (q : Coefficient) (hq : ContDiffOn ℝ ∞ q (positiveDomain U))
     {w : SpaceTime} (hw : w ∈ physicalDomain U) :
     spatialDivergence (fun y => SmoothCutoffs.scaledCutoff a (q (cylPoint y)) • angularField
-      D.scalar y)
+        D.scalar y)
       w.1 w.2 = 0 := by
   rw [← cut_angularField]
   exact (D.cut a q hq).field_divergence hU hw
 
 /-! ## Locally finite direct angular sums -/
 
+/-- Angular sum, given by `SolenoidalDiagonal.potentialSum a q (fun j => angularField (b j))`. -/
 noncomputable def angularSum (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (b : ℕ → Coefficient) : VelocityField :=
   SolenoidalDiagonal.potentialSum a q (fun j => angularField (b j))
 
+/-- Angular partial, given by `SolenoidalDiagonal.partialPotential a q (fun j => angularField (b
+j)) N`. -/
 noncomputable def angularPartial (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (b : ℕ → Coefficient) (N : ℕ) : VelocityField :=
   SolenoidalDiagonal.partialPotential a q (fun j => angularField (b j)) N
@@ -310,7 +329,7 @@ theorem angularSum_divergence {U : Set Slow} (hU : IsOpen U) (D : ℕ → Angula
     (hpos : ∀ x ∈ physicalDomain U, 0 < q (cylPoint x))
     {x : SpaceTime} (hx : x ∈ physicalDomain U) :
     spatialDivergence (angularSum a (fun x => q (cylPoint x)) (fun j => (D j).scalar)) x.1 x.2 = 0
-      := by
+        := by
   have hqAt := hqp.contDiffAt ((physicalDomain_open hU).mem_nhds hx)
   obtain ⟨N, hN⟩ := angularSum_eventuallyEq_partial ha hqAt.continuousAt (hpos x hx)
     (fun j => (D j).scalar)
@@ -323,7 +342,7 @@ theorem angularSum_divergence {U : Set Slow} (hU : IsOpen U) (D : ℕ → Angula
         (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp)
   change spatialDivergence (fun y => ∑ j ∈ Finset.range N,
     SolenoidalDiagonal.cutStage a (fun x => q (cylPoint x)) (fun j => angularField (D j).scalar) j
-      y) x.1 x.2 = 0
+        y) x.1 x.2 = 0
   rw [divergence_finset_sum _ _ x (fun j _ => hs j)]
   apply Finset.sum_eq_zero
   intro j _
@@ -352,6 +371,8 @@ theorem angularSum_axis_zero_germ {U : Set Slow} (hU : IsOpen U) (D : ℕ → An
 
 /-! ## Curl potentials plus direct angular velocity -/
 
+/-- Mixed velocity, defined pointwise by `SolenoidalDiagonal.velocitySum a q A x + angularSum a
+q b x`. -/
 noncomputable def mixedVelocity (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (A : ℕ → VelocityField) (b : ℕ → Coefficient) : VelocityField :=
   fun x => SolenoidalDiagonal.velocitySum a q A x + angularSum a q b x
@@ -372,10 +393,10 @@ theorem mixedVelocity_divergence {U : Set Slow} (hU : IsOpen U) (D : ℕ → Ang
     {A : ℕ → VelocityField} (hA : ∀ j, ContDiffOn ℝ ∞ (A j) (physicalDomain U))
     {x : SpaceTime} (hx : x ∈ physicalDomain U) :
     spatialDivergence (mixedVelocity a (fun x => q (cylPoint x)) A (fun j => (D j).scalar)) x.1 x.2
-      = 0 := by
+        = 0 := by
   have hmem := (physicalDomain_open hU).mem_nhds hx
   have hc := (SolenoidalDiagonal.velocitySum_contDiffOn ha (physicalDomain_open hU) hpos hqp
-    hA).contDiffAt hmem
+      hA).contDiffAt hmem
   have hd := (angularSum_smooth hU D ha hqp hpos).contDiffAt hmem
   unfold mixedVelocity
   rw [ResidualCalculus.spatialDivergence_add _ _ _ _
@@ -391,17 +412,19 @@ theorem mixedVelocity_axis (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A : ℕ �
 
 /-! ## The actual similarity cutoff -/
 
+/-- Preterminal slow, given by `{s | s.1 < 1}`. -/
 noncomputable def preterminalSlow : Set Slow := {s | s.1 < 1}
 
 theorem preterminalSlow_open : IsOpen preterminalSlow := isOpen_lt continuous_fst continuous_const
 
+/-- Q coefficient, given by `SimilarityProfile.q h`. -/
 noncomputable def qCoefficient (h : ℝ) : Coefficient := SimilarityProfile.q h
 
 theorem qCoefficient_physical (h : ℝ) (w : SpaceTime) :
     qCoefficient h (cylPoint w) = PhysicalWaveSum.physicalQ h w := rfl
 
 theorem physicalDomain_preterminal : physicalDomain preterminalSlow = PhysicalWaveSum.preterminal
-  := rfl
+    := rfl
 
 theorem qCoefficient_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
     ContDiffOn ℝ ∞ (qCoefficient h) (positiveDomain preterminalSlow) :=
@@ -415,7 +438,7 @@ theorem actual_diagonal_divergence {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (D : ℕ → AngularData preterminalSlow) {a : ℕ → ℝ} (ha : Tendsto a atTop atTop)
     {w : SpaceTime} (hw : w.1 < 1) :
     spatialDivergence (angularSum a (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar)) w.1 w.2
-      = 0 :=
+        = 0 :=
   angularSum_divergence preterminalSlow_open D ha (qCoefficient h) (qCoefficient_smooth hh hh1)
     (physicalQ_smooth hh hh1) (fun _ hx => PhysicalWaveSum.physicalQ_pos hh hh1 hx) hw
 
@@ -431,12 +454,13 @@ theorem actual_mixed_divergence {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {A : ℕ → VelocityField} (hA : ∀ j, ContDiffOn ℝ ∞ (A j) PhysicalWaveSum.preterminal)
     {w : SpaceTime} (hw : w.1 < 1) :
     spatialDivergence (mixedVelocity a (PhysicalWaveSum.physicalQ h) A (fun j => (D j).scalar)) w.1
-      w.2 = 0 :=
+        w.2 = 0 :=
   mixedVelocity_divergence preterminalSlow_open D ha (qCoefficient h) (qCoefficient_smooth hh hh1)
     (physicalQ_smooth hh hh1) (fun _ hx => PhysicalWaveSum.physicalQ_pos hh hh1 hx) hA hw
 
 /-! ## The existing Cartesian spatial cutoff is axisymmetric -/
 
+/-- Spatial profile, given by `SpatialLocalization.cutoffProfile (p.2.1 ^ 2, p.2.2)`. -/
 noncomputable def spatialProfile (p : CylPoint) : ℝ :=
   SpatialLocalization.cutoffProfile (p.2.1 ^ 2, p.2.2)
 
@@ -467,7 +491,7 @@ theorem angularSum_multiply (a : ℕ → ℝ) (q : SpaceTime → ℝ) (f : Coeff
     angularSum a q (fun j p => f p * b j p) = fun w => f (cylPoint w) • angularSum a q b w := by
   funext w
   simp only [angularSum, SolenoidalDiagonal.potentialSum, SolenoidalDiagonal.cutStage,
-    angularField_mul]
+      angularField_mul]
   simp_rw [smul_comm (SmoothCutoffs.scaledCutoff _ _) (f (cylPoint w))]
   exact tsum_const_smul'' _
 
@@ -497,7 +521,7 @@ theorem actual_spatialCut_diagonal_divergence {h : ℝ} (hh : 0 < h) (hh1 : h < 
     spatialDivergence (SpatialLocalization.cutPotential
       (angularSum a (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar))) t x = 0 := by
   have hqp : ContDiffOn ℝ ∞ (fun w => qCoefficient h (cylPoint w)) (physicalDomain preterminalSlow)
-    := by
+      := by
     simpa only [qCoefficient_physical] using physicalQ_smooth hh hh1
   have hpos : ∀ w ∈ physicalDomain preterminalSlow, 0 < qCoefficient h (cylPoint w) :=
     fun _ hw => PhysicalWaveSum.physicalQ_pos hh hh1 hw
@@ -507,6 +531,7 @@ theorem actual_spatialCut_diagonal_divergence {h : ℝ} (hh : 0 < h) (hh1 : h < 
 
 /-! ## Actual full-fiber means restricted to a physical graph -/
 
+/-- Lift: an abbreviation for `PressureStream.Lift Slow`. -/
 abbrev Lift := PressureStream.Lift Slow
 
 /-- The time/axial variables in the actual mean-field convention `(T,Z)`. -/
@@ -514,6 +539,7 @@ noncomputable def graphSlow (G : PhysicalResidualBridge.ScaledGraph) (s : Slow) 
   (G.velocityScale * G.radialScale * G.epsilon * (1 - s.1),
     G.radialScale * G.epsilon * s.2)
 
+/-- Graph point as an element of `Lift`. -/
 noncomputable def graphPoint (G : PhysicalResidualBridge.ScaledGraph) (p : CylPoint) : Lift :=
   (G.radialScale * p.2.1, (graphSlow G (slowOfCyl p),
     (G.frequency * (G.radialScale * p.2.1) ^ G.exponent) • G.radialVector +
@@ -521,7 +547,7 @@ noncomputable def graphPoint (G : PhysicalResidualBridge.ScaledGraph) (p : CylPo
 
 /-- The physical velocity normalization is included here. -/
 noncomputable def graphCoefficient (G : PhysicalResidualBridge.ScaledGraph) (f : Lift → ℝ) :
-  Coefficient :=
+    Coefficient :=
   fun p => G.velocityScale * f (graphPoint G p)
 
 theorem graphPoint_actual (G : PhysicalResidualBridge.ScaledGraph) (p : CylPoint) (theta : ℝ) :
@@ -535,7 +561,7 @@ theorem graphCoefficient_actual (G : PhysicalResidualBridge.ScaledGraph) (f : Li
     (p : CylPoint) (theta : ℝ) :
     graphCoefficient G f p = G.velocityScale *
       f (PhysicalResidualTZ.swapSlow (G.map (p.1, AxisymmetricResidual.pack p.2.1 theta p.2.2)).1)
-        := by
+          := by
   rw [graphCoefficient, graphPoint_actual G p theta]
 
 theorem graphSlow_smooth (G : PhysicalResidualBridge.ScaledGraph) : ContDiff ℝ ∞ (graphSlow G) :=
@@ -578,6 +604,8 @@ noncomputable def graphAngularData (G : PhysicalResidualBridge.ScaledGraph) (hG 
       simpa only [graphPoint, mul_comm G.radialScale p.2.1] using hlt
     simp only [graphCoefficient, hz, mul_zero]
 
+/-- Common angular data, given by `graphAngularData _ (Real.rpow_pos_of_pos hQ _) hU ha ell hell
+hpos f hf hs`. -/
 noncomputable def commonAngularData {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (cover : ℕ)
     {U : Set Slow} (hU : IsOpen U) {a b : ℝ} (ha : 0 < a) (ell : Slow → ℝ)
     (hell : ContinuousOn ell U) (hpos : ∀ s ∈ U, 0 < ell s)
@@ -599,7 +627,7 @@ theorem commonCoefficient_actual (Q h : ℝ) (cover : ℕ) (f : Lift → ℝ) (p
 /-- The direct angular part of the literal temporal update, with its
 regularity and support inherited from the actual input residual. -/
 noncomputable def temporalAngularData (G : PhysicalResidualBridge.ScaledGraph) (hG : 0 <
-  G.radialScale)
+    G.radialScale)
     (g : VariableGaugeMean.GaugeData Slow) (h : ℝ) (index : ℕ → ℕ)
     (axial : Slow × PressureStream.Plane) (c : CorrectionState.Context Lift)
     (u : CorrectionState.State Lift) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
@@ -627,6 +655,8 @@ noncomputable def rankAngularData (G : PhysicalResidualBridge.ScaledGraph) (hG :
 
 /-! ## Agreement with the actual offplane continuation fields -/
 
+/-- Native graph data, bundling `radialScale`, `velocityScale`, `epsilon`, `exponent` and the
+required compatibility proofs. -/
 noncomputable def nativeGraphData (h : ℝ) (n : ℕ) : PhysicalResidualBridge.ScaledGraph where
   radialScale := 1
   velocityScale := 1
@@ -639,7 +669,7 @@ noncomputable def nativeGraphData (h : ℝ) (n : ℕ) : PhysicalResidualBridge.S
 
 theorem native_graphPoint (h : ℝ) (n : ℕ) (w : SpaceTime) :
     graphPoint (nativeGraphData h n) (cylPoint w) = OffplaneCorrectionExtensions.physicalLift h n w
-      := by
+        := by
   simp only [graphPoint, nativeGraphData, cylPoint, graphSlow, slowOfCyl, one_mul,
     OffplaneCorrectionExtensions.physicalLift, OffplaneCorrectionExtensions.physicalSlow,
     PhysicalGraphBounds.nativeGraph_eq, PhysicalGraphBounds.radialProfile,
@@ -658,11 +688,13 @@ theorem native_angularField (h : ℝ) (n : ℕ) (f : Lift → ℝ) :
     OffplaneCorrectionExtensions.physicalScalar, Function.comp_apply]
   rfl
 
+/-- Continuation angular data, constructed using `graphAngularData`. -/
 noncomputable def continuationAngularData {coord a b : ℝ}
     {W : OffplaneCorrectionExtensions.Window coord a b} {f : Lift → ℝ}
     (e : OffplaneCorrectionExtensions.SupportedContinuation W f) (h : ℝ) (n : ℕ) :
     AngularData (graphSlow (nativeGraphData h n) ⁻¹' W.carrier) :=
-  graphAngularData (nativeGraphData h n) (by norm_num [nativeGraphData]) W.isOpen W.lower_pos
+  graphAngularData (b := W.upper) (nativeGraphData h n)
+    (by norm_num [nativeGraphData]) W.isOpen W.lower_pos
     (fun _ => 1) continuousOn_const (fun _ _ => by norm_num) e.value e.smooth (by
       intro p hp hn
       simpa only [one_mul] using W.fixed_support e.supported p hp hn)
@@ -677,7 +709,7 @@ theorem continuation_angular_divergence {coord a b : ℝ}
     (W.isOpen.preimage (graphSlow_smooth _).continuous)
   simpa only [physicalDomain, Set.mem_preimage, slowPoint, graphSlow, nativeGraphData,
     one_mul, OffplaneCorrectionExtensions.physicalDomain,
-      OffplaneCorrectionExtensions.physicalSlow] using hw
+        OffplaneCorrectionExtensions.physicalSlow] using hw
 
 /-! ## Mixed finite prefixes and preservation of every axis jet -/
 

@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionParity
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyRealizations
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevReflection
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionParity
+import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionParity
+
+/-! Odd parity of the actual common correction and pressure assembled from finite genuine solutions.
+-/
 
 @[expose] public section
 
-/-! Odd parity of the actual common correction and pressure assembled from finite genuine
-  solutions. -/
 
 noncomputable section
 

@@ -7329,9 +7329,7 @@ projects:
     provenance: AI
     main_declarations:
     - NavierStokes.Comparator.navier_stokes_breakdown_R3
-    - NavierStokes.Comparator.navier_stokes_breakdown_periodic
     - Euler.euler_breakdown_R3
-    - Euler.exists_compact_smooth_euler_singularity
     main_results:
     - declaration: NavierStokes.Comparator.navier_stokes_breakdown_R3
       informal: For every positive viscosity, there are smooth divergence-free initial data and smooth

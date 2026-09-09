@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
 
-@[expose] public section
-
 /-!
 # Preservation of the axis value under annular corrections
 
@@ -19,6 +17,9 @@ axis point. Local finiteness, first in labels and then in diagonal stages,
 therefore preserves the zeroth potential's curl. No uniform radius in the
 stage number and no estimate on the final velocity are assumed.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.AxisPreservation
 

@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialCostPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedInitialExact
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformBudget
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedInitial
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedInitialExact
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 
 /-! The actual initial increments for the canonical uniformly selected
 packet satisfy source (22), with fixed-order polynomial costs. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +29,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ) (hα : 0 < α)
@@ -37,10 +39,10 @@ variable (M : EulerMeanPacketProvider.Data)
   (W : ℝ)
   (hW : EulerPacketRadiusPolynomial.RadiusPrimitives LM L NB
     (joinedCoefficientBudget period M D hTime τ hτ hτT B NB) δ ξ W)
-  (hprofile : ∀ t, α*L.fullProfile t ≤ W)
+  (hprofile : ∀ t, α * L.fullProfile t ≤ W)
   (k : ℝ) (hk : 4 ≤ k)
   (hfrequency :
-    EulerPacketInitializedCost.uniformConstant*W^EulerPacketInitializedCost.uniformPower ≤
+      EulerPacketInitializedCost.uniformConstant * W ^ EulerPacketInitializedCost.uniformPower ≤
     smallPower k)
 
 open EulerPhysicalL2Scaling EulerPacketPhysicalCost EulerCylinderCoordinates
@@ -66,9 +68,9 @@ theorem initialized_uniform_initial_bounds (s : ℕ) :
   have costs := EulerPacketInitializedCost.initialized_five_costs_bound
     LM L NB BC δ ξ W S.H0 hδ hW S.H0_pos.le hH0
   have hbase : EulerPacketCoarseMajorant.tailBase L'.R S.H0 BC.termCost (truncation k) ≤ k^(1/100 :
-    ℝ) :=
-    tailBase_frequency L'.R S.H0 BC.termCost k BC.termCost_nonneg (by linarith) (costs.1.trans
-      hfrequency)
+      ℝ) :=
+    tailBase_frequency L'.R S.H0 BC.termCost k BC.termCost_nonneg (by
+        linarith) (costs.1.trans hfrequency)
   have hn := (truncation_bounds k (by linarith)).1
   have hh := initializedInitialHigh_Hm M D hTime τ hτ hτT B δ hδ ξ hs α
     L' H' NB' guards.1 LM' guards.2.1 BC guards.2.2.2.2.2 guards.2.2.2.2.1
@@ -80,7 +82,7 @@ theorem initialized_uniform_initial_bounds (s : ℕ) :
   have hp := EulerPacketInitialCost.costs_le_envelope s L'.R S.H0
     (EulerPacketInitializedCost.envelope W) (zero_le_one.trans L'.radius_bounds.1) S.H0_pos.le
     hb.2.1 hb.2.2.1
-  have hhigh : EulerPacketInitial.highCost L'.R S.H0*
+  have hhigh : EulerPacketInitial.highCost L'.R S.H0 *
       physicalDerivativeCost period (4*L'.R)
         (‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖D.m₀‖)) s ≤
       EulerPacketInitialCost.envelope s (EulerPacketInitializedCost.envelope W) := by
@@ -93,8 +95,8 @@ theorem initialized_uniform_initial_bounds (s : ℕ) :
 variable (Cagree : SourceCoefficientAgreement M D)
   (hX : 64 ≤ expansion k) (hlog : 1 ≤ Real.log k)
   (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
-  (hF : ∀ t x, fderiv ℝ (Ξ t) x=D.F.field t x)
-  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+  (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
+  (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
 local notation "Q" => initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
   L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet
@@ -102,8 +104,8 @@ local notation "Q" => initializedUniformBudget M D hTime τ hτ hτT B δ hδ h�
 theorem initializedUniformBudget_initial (s : ℕ) :
     scale M.ℓ (initializedExactPhysicalVelocity M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree (truncation k) (truncation_bounds k (by linarith)).1 k hk Q
-      ⟨0,le_rfl,D.T_pos.le⟩ id)=
-      initializedInitialHigh M D τ hτ hτT B δ hδ ξ hs α (truncation k) k+
+      ⟨0,le_rfl,D.T_pos.le⟩ id) =
+      initializedInitialHigh M D τ hτ hτT B δ hδ ξ hs α (truncation k) k +
       initializedInitialMean M D τ hτ hτT B δ hδ ξ hs α (truncation k) k ∧
     derivativeSum s (initializedInitialHigh M D τ hτ hτT B δ hδ ξ hs α (truncation k) k) ≤
       (M.ℓ⁻¹)^s*k^s*α*EulerPacketInitialCost.envelope s (EulerPacketInitializedCost.envelope W) ∧

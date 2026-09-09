@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
+import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
+
+/-! Compact support of the actual transverse potential, corrector, and their time derivatives. -/
 
 @[expose] public section
 
-/-! Compact support of the actual transverse potential, corrector, and their time derivatives. -/
 
 noncomputable section
 
@@ -19,7 +20,7 @@ namespace EulerTransversePacketProvider.Forcing
 
 open Set EulerSmoothLimit EulerLiftedGradientSpace EulerLpCylinderTranslation
   EulerLpCylinderPaths EulerCylinderSmoothOrbit EulerCylinderLocalSupport
-    EulerPacketProfileRecursion
+      EulerPacketProfileRecursion
 
 variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -37,13 +38,13 @@ theorem potentialTimePath_supported (t : Icc (0 : ℝ) D.T) :
       (G.fullVelocityPath I) D.potentialDerivative (fun s => (G.velocityPath I s).property) t
   · exact EulerCylinderLocalSupport.potentialPath_supported P D.support D.support_measurable
       (G.fullDerivativePath I) D.potentialCoefficientPath (fun s => (G.derivativePath I
-        s).property) t
+          s).property) t
 
 theorem correctorPath_supported (t : Icc (0 : ℝ) D.T) :
     G.correctorPath I t ∈ Supported P Space D.support D.support_measurable :=
   slowCurlPath_supported P D.support D.support_measurable (G.potentialPath I)
     (G.potentialPath_orbit I) D.FInv.field D.support_compact.isClosed (G.potentialPath_supported I)
-      t
+        t
 
 theorem correctorTimePath_supported (t : Icc (0 : ℝ) D.T) :
     G.correctorTimePath I t ∈ Supported P Space D.support D.support_measurable := by
@@ -58,7 +59,7 @@ theorem correctorTimePath_supported (t : Icc (0 : ℝ) D.T) :
 theorem corrector_zero_outside (t : ℝ) (x : Space) (hx : x ∉ D.support) (θ : ℝ) :
     G.corrector I (t,(x,θ)) = 0 :=
   pointField_zero_outside P D.support D.support_measurable (G.correctorPath I)
-    (G.correctorPath_orbit I)
+      (G.correctorPath_orbit I)
     D.support_compact.isClosed (G.correctorPath_supported I) (D.clamp t) (x,(θ : AddCircle P)) hx
 
 theorem correctorDerivative_zero_outside (t : ℝ) (x : Space) (hx : x ∉ D.support) (θ : ℝ) :

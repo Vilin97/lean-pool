@@ -7,13 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedSmallness
-public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowFrequency
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionRapidDecay
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Parent-independent frequency margins. Once every source cost is below
 the same tiny power, these margins yield both small physical errors and
 the genuine small-velocity flow guard. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -21,7 +26,7 @@ namespace EulerPacketSourceFrequency
 
 open Real Filter EulerPacketCorrectionScalar
 
-theorem smallPower_le_power (k p : ℝ) (hk : 1 ≤ k) (hp : theta/100 ≤ p) :
+theorem smallPower_le_power (k p : ℝ) (hk : 1 ≤ k) (hp : theta / 100 ≤ p) :
     smallPower k ≤ k^p := Real.rpow_le_rpow_of_exponent_le hk hp
 
 theorem cost_div_le_inverse_half (C k : ℝ) (hk : 1 ≤ k) (hC : C ≤ smallPower k) :
@@ -35,7 +40,7 @@ theorem cost_div_le_inverse_half (C k : ℝ) (hk : 1 ≤ k) (hC : C ≤ smallPow
         Real.rpow_add hk0 (-(1/2 : ℝ)) 1
 
 theorem cost_delta_le (C k : ℝ) (hk : 1 ≤ k) (hC : C ≤ smallPower k)
-    (hd : delta (expansion k) ≤ k^(-(3 : ℝ))) :
+    (hd : delta (expansion k) ≤ k ^ (-(3 : ℝ))) :
     C*delta (expansion k) ≤ k^(-(5/2 : ℝ)) := by
   have hk0 : 0 < k := zero_lt_one.trans_le hk
   calc
@@ -45,7 +50,7 @@ theorem cost_delta_le (C k : ℝ) (hk : 1 ≤ k) (hC : C ≤ smallPower k)
     _ = _ := by rw [← Real.rpow_add hk0]; norm_num
 
 theorem cost_frequency_delta_le_inverse_half (C k : ℝ) (hk : 1 ≤ k)
-    (hC : C ≤ smallPower k) (hd : delta (expansion k) ≤ k^(-(3 : ℝ))) :
+    (hC : C ≤ smallPower k) (hd : delta (expansion k) ≤ k ^ (-(3 : ℝ))) :
     C*k*delta (expansion k) ≤ k^(-(1/2 : ℝ)) := by
   have hk0 : 0 < k := zero_lt_one.trans_le hk
   calc
@@ -58,13 +63,13 @@ theorem cost_frequency_delta_le_inverse_half (C k : ℝ) (hk : 1 ≤ k)
 
 theorem physical_error_le_inverse_quarter (C E k : ℝ) (hk : 1 ≤ k)
     (hC : C ≤ smallPower k) (hE : E ≤ smallPower k)
-    (hd : delta (expansion k) ≤ k^(-(3 : ℝ))) (hroot : 2 ≤ k^(1/4 : ℝ)) :
+    (hd : delta (expansion k) ≤ k ^ (-(3 : ℝ))) (hroot : 2 ≤ k ^ (1 / 4 : ℝ)) :
     C/k+E*k*delta (expansion k) ≤ k^(-(1/4 : ℝ)) := by
   have hk0 : 0 < k := zero_lt_one.trans_le hk
   calc
     _ ≤ k^(-(1/2 : ℝ))+k^(-(1/2 : ℝ)) :=
       add_le_add (cost_div_le_inverse_half C k hk hC) (cost_frequency_delta_le_inverse_half E k hk
-        hE hd)
+          hE hd)
     _ = 2*k^(-(1/2 : ℝ)) := by ring
     _ ≤ k^(1/4 : ℝ)*k^(-(1/2 : ℝ)) :=
       mul_le_mul_of_nonneg_right hroot (Real.rpow_nonneg hk0.le _)
@@ -73,7 +78,7 @@ theorem physical_error_le_inverse_quarter (C E k : ℝ) (hk : 1 ≤ k)
 theorem liftedAmplitude_small_of_costs (C E R T k : ℝ) (hk : 1 ≤ k)
     (hR : 0 ≤ R) (hT : 0 ≤ T) (hC : C ≤ smallPower k) (hE : E ≤ smallPower k)
     (hRw : R ≤ smallPower k) (hTw : T ≤ smallPower k)
-    (hd : delta (expansion k) ≤ k^(-(3 : ℝ))) (hroot : 16 ≤ k^(1/4 : ℝ)) :
+    (hd : delta (expansion k) ≤ k ^ (-(3 : ℝ))) (hroot : 16 ≤ k ^ (1 / 4 : ℝ)) :
     liftedAmplitude C E k ≤ 2*k^(-(1/2 : ℝ)) ∧
     liftedAmplitude C E k*R*T ≤ 1/8 := by
   have hk0 : 0 < k := zero_lt_one.trans_le hk

@@ -8,11 +8,12 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketSourceData
 
-@[expose] public section
-
 /-! The coefficient factory agrees with the physical velocity gradient
 and pressure Hessian. The only matching data are the literal Lagrangian
 velocity and acceleration laws, not separate coefficient identities. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +27,7 @@ namespace Parent
 
 variable (G : Parent)
 
+/-- Position, given by `x+G.displacement.field t x`. -/
 def position (t : Icc (0 : ℝ) G.T) (x : Space) : Space :=
   x+G.displacement.field t x
 
@@ -34,10 +36,10 @@ def position (t : Icc (0 : ℝ) G.T) (x : Space) : Space :=
   rw [G.initial,add_zero]
 
 theorem position_hasFDerivAt (t : Icc (0 : ℝ) G.T) (x : Space) :
-    HasFDerivAt (G.position t) (ContinuousLinearMap.id ℝ Space+
+    HasFDerivAt (G.position t) (ContinuousLinearMap.id ℝ Space +
       fderiv ℝ (G.displacement.field t : Space → Space) x) x :=
   (hasFDerivAt_id x).add ((G.displacement.smooth t).differentiable (by
-    norm_num)).differentiableAt.hasFDerivAt
+      norm_num)).differentiableAt.hasFDerivAt
 
 theorem position_frame (t : Icc (0 : ℝ) G.T) (x : Space) :
     HasFDerivAt (G.position t) (G.frame.field t x) (G.ell • x) := by
@@ -47,8 +49,8 @@ theorem position_frame (t : Icc (0 : ℝ) G.T) (x : Space) :
 variable (u force : Icc (0 : ℝ) G.T → Space → Space)
   (hu : ∀ t x, DifferentiableAt ℝ (u t) x)
   (hf : ∀ t x, DifferentiableAt ℝ (force t) x)
-  (hvelocity : ∀ t x, G.velocity.field t x=u t (G.position t x))
-  (hacceleration : ∀ t x, G.acceleration.field t x= -(force t (G.position t x)))
+  (hvelocity : ∀ t x, G.velocity.field t x = u t (G.position t x))
+  (hacceleration : ∀ t x, G.acceleration.field t x = -(force t (G.position t x)))
 
 include hu hvelocity in
 theorem first_physical (t : Icc (0 : ℝ) G.T) (x : Space) :
@@ -97,8 +99,8 @@ theorem initialStrain_physical (x : Space) :
 /-- The source low-order hypotheses follow from the actual physical
 gradient at time zero and the actual physical pressure-force derivative. -/
 def lowBoundsOfPhysical (Be Bc L r K : ℝ)
-    (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hL : boundaryLocalizationC1*Bc ≤ L)
-    (hr : 0 ≤ r) (hrq : r ≤ 1/4) (hK : 0 ≤ K)
+    (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hL : boundaryLocalizationC1 * Bc ≤ L)
+    (hr : 0 ≤ r) (hrq : r ≤ 1 / 4) (hK : 0 ≤ K)
     (hexterior : ∀ x, r ≤ ‖x‖ → ∀ v : Space,
       -Be*‖v‖^2 ≤ ⟪fderiv ℝ (u G.zeroTime) x v,v⟫_ℝ)
     (hcore : ∀ x, ‖x‖ < r → ∀ v : Space,

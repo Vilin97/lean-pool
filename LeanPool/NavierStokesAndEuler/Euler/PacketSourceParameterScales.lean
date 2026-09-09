@@ -6,25 +6,32 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Elementary bounds for the literal source parameters in (39).
 Polynomial factors include the growing base core constant and inverse
 time; no parameter depending on the base scale is treated as fixed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
 namespace EulerPacketSourceParameterScales
 
 open Real EulerScale EulerPacketSourceScales EulerPacketSourceScaleChoice
-  EulerPacketSourceScaleSequence EulerPacketBaseGuardScales EulerPacketUniformFrequencyScales
+  EulerPacketSourceScaleSequence EulerPacketBaseGuardScales
 
+/-- Predecessor exponent, given by `scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3`. -/
 def predecessorExponent (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3
 
+/-- Polynomial factor, given by `((J+n : ℕ) : ℝ)^20*(scaleSequence J X n)^1000`. -/
 def polynomialFactor (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   ((J+n : ℕ) : ℝ)^20*(scaleSequence J X n)^1000
 
@@ -83,7 +90,7 @@ theorem current_power_le (J : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 1 ≤ X)
 
 theorem previousFrequency_power_le (J D : ℕ) (hJ : 2 ≤ J) (X c : ℝ)
     (hX : 1 ≤ X) (hc : 0 ≤ c)
-    (hbase : X^D ≤ exp (X/((J-1 : ℕ) : ℝ)^4)) (n : ℕ) :
+    (hbase : X ^ D ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 4)) (n : ℕ) :
     previousFrequency J D X n^c ≤ exp (c*predecessorExponent J X n) := by
   have hk := previousFrequency_le_normal J D (by omega) X hbase n
   have hx0 : 0 < X := zero_lt_one.trans_le hX
@@ -96,7 +103,7 @@ theorem previousFrequency_power_le (J D : ℕ) (hJ : 2 ≤ J) (X c : ℝ)
       (mul_le_mul_of_nonneg_left (predecessor_power_le J hJ X hX n 4 (by decide)) hc)
 
 theorem previousShear_le_exponential (J : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 1 ≤ X)
-    (hbase : X^1000 ≤ exp (X/((J-1 : ℕ) : ℝ)^7)) (n : ℕ) :
+    (hbase : X ^ 1000 ≤ exp (X / ((J - 1 : ℕ) : ℝ) ^ 7)) (n : ℕ) :
     previousShear J X n ≤ exp (predecessorExponent J X n) :=
   (previousShear_le_normal J (by omega) X hbase n).trans
     (exp_le_exp.mpr (predecessor_power_le J hJ X hX n 7 (by decide)))
@@ -109,7 +116,7 @@ theorem spike_inverse_le_exponential (J : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 1 
     (spike J X n)⁻¹ ≤ exp (predecessorExponent J X n) := by
   unfold spike
   rw [← exp_neg]
-  have he : -(-scaleSequence J X n/((J+n : ℕ) : ℝ)^3)=
+  have he : -(-scaleSequence J X n/((J+n : ℕ) : ℝ)^3) =
       scaleSequence J X n/((J+n : ℕ) : ℝ)^3 := by ring
   rw [he]
   exact exp_le_exp.mpr (current_power_le J hJ X hX n 3 le_rfl)

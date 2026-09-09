@@ -6,16 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
 public import LeanPool.NavierStokesAndEuler.Euler.TruncationFamily
-public import LeanPool.NavierStokesAndEuler.Euler.TruncationFamilySmooth
 public import LeanPool.NavierStokesAndEuler.Euler.CompactSmoothTimeField
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
+public import LeanPool.NavierStokesAndEuler.Euler.TruncationFamilySmooth
 
 /-! The actual radial-potential truncation of a Comparator Euler solution
 forms a smooth bounded coefficient family with uniformly bounded energy.
 No integrability of spatial derivatives of the original solution is needed. -/
+
+@[expose] public section
+
 
 noncomputable section
 

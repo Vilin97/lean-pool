@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductBounds
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathWords
+
+/-! A literal product with one mixed cylinder derivative consumes exactly one shift. -/
 
 @[expose] public section
 
-/-! A literal product with one mixed cylinder derivative consumes exactly one shift. -/
 
 noncomputable section
 
@@ -22,7 +24,7 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
 open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (p q : C(K,LiftL2 P))
+  (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (p q : C(K, LiftL2 P))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
   (i : Fin 4)

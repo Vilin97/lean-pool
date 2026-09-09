@@ -6,14 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.HeatMaximalRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.RegularizedTopBlocks
-public import LeanPool.NavierStokesAndEuler.Euler.TopBlockCauchy
+public import LeanPool.NavierStokesAndEuler.Euler.HeatMaximalCauchy
+import LeanPool.NavierStokesAndEuler.Euler.HeatMaximalRegularity
+import LeanPool.NavierStokesAndEuler.Euler.SobolevTopBlocks
+import LeanPool.NavierStokesAndEuler.Euler.TopBlockCauchy
+import Mathlib.Algebra.Order.Star.Real
+
+/-! Actual maximal regularity at arbitrary finite Sobolev order via finitely many top derivative
+equations. -/
 
 @[expose] public section
 
-/-! Actual maximal regularity at arbitrary finite Sobolev order via finitely many top derivative
-  equations. -/
 
 noncomputable section
 
@@ -28,7 +32,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The top block norm estimate in the original q+1 indexing used by actual mild solutions. -/
-theorem top_blocks_norm_sq_original (q : ℕ) (u : SobolevSpace period (2+q)) :
+theorem top_blocks_norm_sq_original (q : ℕ) (u : SobolevSpace period (2 + q)) :
     ‖u‖^2 ≤ ‖restrictOperator period (by omega : q+1 ≤ 2+q) u‖^2 +
       ∑ w : Fin q → Fin 4, ‖wordBlock period 2 q w u‖^2 := by
   have h := top_blocks_norm_sq period q u
@@ -38,10 +42,11 @@ theorem top_blocks_norm_sq_original (q : ℕ) (u : SobolevSpace period (2+q)) :
   nlinarith [norm_nonneg (restrictOperator period (by omega : 1+q ≤ 2+q) u),
     norm_nonneg (restrictOperator period (by omega : q+1 ≤ 2+q) u)]
 
-/-- Every actual top-word regularization is strongly Cauchy in time with its two full extra spatial derivatives. -/
+/-- Every actual top-word regularization is strongly Cauchy in time with its two full extra spatial
+derivatives. -/
 theorem maximalApproximation_word_cauchy {q : ℕ} (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 ≤ T)
-    (u₀ : SobolevSpace period (q+1)) (f : C(Icc (0 : ℝ) T, SobolevSpace period q))
-    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
+    (u₀ : SobolevSpace period (q + 1)) (f : C(Icc (0 : ℝ) T, SobolevSpace period q))
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hsol : ∀ t : Icc (0 : ℝ) T,
       u t = heatOperator period (q+1) (2*ν*t.val).toNNReal u₀ +
         ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (extendPath T hT f (t.val-r)))
@@ -55,10 +60,11 @@ theorem maximalApproximation_word_cauchy {q : ℕ} (ν : ℝ) (hν : 0 < ν) (T 
     (top_word_mild period ν hν T hT u₀ f u hsol w)
   simpa only [maximalApproximation_word, higherTime] using h
 
-/-- The genuine full H^(q+2) heat regularizations form a strong Bochner Cauchy sequence, with no assumed derivative bound. -/
+/-- The genuine full H^(q+2) heat regularizations form a strong Bochner Cauchy sequence, with no
+assumed derivative bound. -/
 theorem maximalApproximation_cauchy {q : ℕ} (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 ≤ T)
-    (u₀ : SobolevSpace period (q+1)) (f : C(Icc (0 : ℝ) T, SobolevSpace period q))
-    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
+    (u₀ : SobolevSpace period (q + 1)) (f : C(Icc (0 : ℝ) T, SobolevSpace period q))
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hsol : ∀ t : Icc (0 : ℝ) T,
       u t = heatOperator period (q+1) (2*ν*t.val).toNNReal u₀ +
         ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (extendPath T hT f (t.val-r))) :

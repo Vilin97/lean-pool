@@ -8,9 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCurrentParticularPhysical
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualPolarGraph
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalChartJets
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
+import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalChartJets
 
 /-!
 # Normalized polar germs of the actual current particular modes
@@ -18,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentPhysicalChartJet
 The native point below uses the actual common-cover index.  The ambient
 germs retain the current solve, its chosen phase, and its Cartesian rotation.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +30,7 @@ open CorrectionState CorrectionStep CorrectionInitialization
 open scoped Topology ContDiff
 
 
+/-- Label: an abbreviation for `ActualCurrentParticularPhysical.Label B N0`. -/
 abbrev Label (B N0 : ℕ) := ActualCurrentParticularPhysical.Label B N0
 
 /-- The cover gap of the actual current-band graph. -/
@@ -126,7 +129,7 @@ theorem physical_polarCoordinates (n : ℕ) {a : ℝ} (ha : 0 < a)
   have hp : PolarCharts.chart (Real.sqrt (ChartScales.Q n) * a) i
       (PhysicalGraphBounds.radialProjection w) =
         (PolarCharts.radius (PhysicalGraphBounds.radialProjection w), ResidualPolarGraph.angle a i
-          n w) :=
+            n w) :=
     Prod.ext (ActualSignedPhysicalData.chart_radius
       (mul_pos (Real.sqrt_pos.mpr (ChartScales.Q_pos n)) ha) i (physical_chart_mem n i hw))
       (physical_chart_angle n ha i hw)
@@ -164,14 +167,14 @@ variable {B N0 : ℕ}
 normalized polar chart. -/
 theorem localPotentialMode_eq (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (hf : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (n : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : PhysicalGraphBounds.scaledRadial n w ∈ PolarCharts.chartDomain a i) :
     ActualCurrentParticularPhysical.localPotentialMode x l j n w =
       ChartScales.Q n ^ (-ActualPrimary.h) • PhysicalCurlCovariance.realVector
         (CartesianCopySource.rotationMap
           (PhysicalGraphBounds.liftXY (PhysicalWaveSum.commonLift ActualPrimary.h n (commonGap n)
-            w))
+              w))
           (ActualCurrentParticularPhysical.nativePotential x l j n
             (PhysicalParticularWave.waveEquiv (ActualSignedPhysicalData.cylinderAt a i
               (PhysicalWaveSum.commonLift ActualPrimary.h n (commonGap n) w))))) := by
@@ -185,7 +188,7 @@ theorem localPotentialMode_eq (x : CycleState (Label B N0)) (l : Label B N0)
 
 theorem localPressureMode_eq (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (hf : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (n : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : PhysicalGraphBounds.scaledRadial n w ∈ PolarCharts.chartDomain a i) :
     ActualCurrentParticularPhysical.localPressureMode x l j n w =
@@ -202,14 +205,14 @@ theorem localPressureMode_eq (x : CycleState (Label B N0)) (l : Label B N0)
 of every order, with the actual common-cover lift. -/
 theorem localPotentialMode_germ (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (hf : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (n : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : PhysicalGraphBounds.scaledRadial n w ∈ PolarCharts.chartDomain a i) :
     ActualCurrentParticularPhysical.localPotentialMode x l j n =ᶠ[𝓝 w] fun y =>
       ChartScales.Q n ^ (-ActualPrimary.h) • PhysicalCurlCovariance.realVector
         (CartesianCopySource.rotationMap
           (PhysicalGraphBounds.liftXY (PhysicalWaveSum.commonLift ActualPrimary.h n (commonGap n)
-            y))
+              y))
           (ActualCurrentParticularPhysical.nativePotential x l j n
             (PhysicalParticularWave.waveEquiv (ActualSignedPhysicalData.cylinderAt a i
               (PhysicalWaveSum.commonLift ActualPrimary.h n (commonGap n) y))))) := by
@@ -218,7 +221,7 @@ theorem localPotentialMode_germ (x : CycleState (Label B N0)) (l : Label B N0)
 
 theorem localPressureMode_germ (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (hf : ∀ n, (x.coefficients.blocks l).frequency n = ChartScales.carrier ActualPrimary.h
-      n)
+        n)
     (n : ℕ) {a : ℝ} (ha : 0 < a) (i : PolarCharts.Index) {w : SpaceTime}
     (hw : PhysicalGraphBounds.scaledRadial n w ∈ PolarCharts.chartDomain a i) :
     ActualCurrentParticularPhysical.localPressureMode x l j n =ᶠ[𝓝 w] fun y =>

@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactSpatialForceDecay
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicResidualLimits
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialLocalization
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicResidualLimits
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # The compact whole-space fields behind the periodic construction
@@ -22,6 +22,9 @@ support. Locality of the derivatives proves the exact equation.
 
 This construction makes no uniqueness assertion about comparison solutions.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -46,8 +49,10 @@ structure Properties (u : VelocityField) (p : PressureField) (f : VelocityField)
   navier_stokes : ∀ t ∈ Ioo (0 : ℝ) 1, ∀ x, navierStokesResidual u p t x = f (t, x)
   speed_unbounded : SpeedUnboundedAtOne u
 
+/-- Outer cutoff, given by `spatialCutoff ((1 / 2 : ℝ) • x)`. -/
 def outerCutoff (x : Space) : ℝ := spatialCutoff ((1 / 2 : ℝ) • x)
 
+/-- Outer support, given by `(fun x : Space => (2 : ℝ) • x) '' supportCylinder`. -/
 def outerSupport : Set Space := (fun x : Space => (2 : ℝ) • x) '' supportCylinder
 
 theorem outerSupport_compact : IsCompact outerSupport :=
@@ -95,6 +100,7 @@ theorem supportCylinder_inner {x : Space} (hx : x ∈ supportCylinder) :
   change |x i| < 1 - 1 / 4
   linarith
 
+/-- Compact force, defined pointwise by `outerCutoff z.2 • f z`. -/
 def compactForce (f : VelocityField) : VelocityField := fun z => outerCutoff z.2 • f z
 
 theorem compactForce_smooth {f : VelocityField} (hf : ContDiffOn ℝ ∞ f futureDomain) :
@@ -208,16 +214,22 @@ theorem of_periodic_local_model {u U : VelocityField} {p P : PressureField} {f :
     exact h.zero_initial_velocity x
   · exact hu 0 x hx
 
+/-- Velocity, given by `TimeLocalization.activatedVelocity (fun z => cutVelocity A z +
+cutPotential B z)`. -/
 def velocity (A B : VelocityField) : VelocityField :=
   TimeLocalization.activatedVelocity (fun z => cutVelocity A z + cutPotential B z)
 
+/-- Pressure, given by `TimeLocalization.activatedPressure (cutPressure P)`. -/
 def pressure (P : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (cutPressure P)
 
+/-- Periodic velocity, constructed using `TimeLocalization.activatedVelocity`. -/
 def periodicVelocity (A B : VelocityField) : VelocityField :=
   TimeLocalization.activatedVelocity (fun z => SpatialLocalization.periodicVelocity A z +
     PeriodicLocalization.periodize (cutPotential B) z)
 
+/-- Periodic pressure, given by `TimeLocalization.activatedPressure
+(SpatialLocalization.periodicPressure P)`. -/
 def periodicPressure (P : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (SpatialLocalization.periodicPressure P)
 

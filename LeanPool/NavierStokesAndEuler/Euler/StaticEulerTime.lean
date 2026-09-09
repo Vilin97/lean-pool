@@ -12,11 +12,12 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedCoefficient
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldPrecomp
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeAmplitudeScaling
 
-@[expose] public section
-
 /-! The constructed static-datum solution and its actual time derivative
 have smooth bounded spatial jets continuous in time. This includes the
 one-sided derivatives at both endpoints. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,18 +29,22 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
 open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] (u : SmoothL2Field Space) (C R : ℝ)
-  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x=0)
+  (hC : 0 ≤ C) (hR : 0 ≤ R) (hu : u.HasJetBound C R) (hdiv : ∀ x, divergence u.field x = 0)
 
+/-- Unit velocity coefficient as an element of `SmoothTimeField (Icc (0 : ℝ) 1) Space Space`. -/
 def unitVelocityCoefficient : SmoothTimeField (Icc (0 : ℝ) 1) Space Space :=
   ((correctionBudget P u C R hC hR hu hdiv).packetCoefficient P
     ((EulerStaticCylinder.field P 1 u).smul (amplitude P C R hC hR))).precompLinear
       (ContinuousLinearMap.inl ℝ Space ℝ)
 
+/-- Unit derivative coefficient as an element of `SmoothTimeField (Icc (0 : ℝ) 1) Space Space`. -/
 def unitDerivativeCoefficient : SmoothTimeField (Icc (0 : ℝ) 1) Space Space :=
   ((correctionBudget P u C R hC hR hu hdiv).packetDerivativeCoefficient P
     ((Field.zero P 1).smul (amplitude P C R hC hR))).precompLinear
       (ContinuousLinearMap.inl ℝ Space ℝ)
 
+/-- Unit force coefficient, given by `(exactPacket P u C R hC hR hu
+hdiv).pressure.toSmoothTimeField.precompLinear (ContinuousLinearMap.inl ℝ Space ℝ)`. -/
 def unitForceCoefficient : SmoothTimeField (Icc (0 : ℝ) 1) Space Space :=
   (exactPacket P u C R hC hR hu hdiv).pressure.toSmoothTimeField.precompLinear
     (ContinuousLinearMap.inl ℝ Space ℝ)
@@ -73,14 +78,18 @@ theorem unitForceCoefficient_apply (t : Icc (0 : ℝ) 1) (x : Space) :
     FieldTower.toSmoothTimeField_apply,EulerConstantEuler.force,ExactLiftedPacket.rawPressure,
     FieldTower.rawField,projIcc_of_mem zero_le_one t.property]
 
+/-- Velocity coefficient, given by `EulerTimeRescaling.coefficient (amplitude P C R hC hR)
+(amplitude_pos P C R hC hR) (unitVelocityCoefficient P u C R hC hR hu hdiv)`. -/
 def velocityCoefficient : SmoothTimeField (Icc (0 : ℝ) (amplitude P C R hC hR)) Space Space :=
   EulerTimeRescaling.coefficient (amplitude P C R hC hR) (amplitude_pos P C R hC hR)
     (unitVelocityCoefficient P u C R hC hR hu hdiv)
 
+/-- Derivative coefficient, constructed using `EulerTimeRescaling.derivativeCoefficient`. -/
 def derivativeCoefficient : SmoothTimeField (Icc (0 : ℝ) (amplitude P C R hC hR)) Space Space :=
   EulerTimeRescaling.derivativeCoefficient (amplitude P C R hC hR) (amplitude_pos P C R hC hR)
     (unitDerivativeCoefficient P u C R hC hR hu hdiv)
 
+/-- Force coefficient, constructed using `EulerTimeRescaling.derivativeCoefficient`. -/
 def forceCoefficient : SmoothTimeField (Icc (0 : ℝ) (amplitude P C R hC hR)) Space Space :=
   EulerTimeRescaling.derivativeCoefficient (amplitude P C R hC hR) (amplitude_pos P C R hC hR)
     (unitForceCoefficient P u C R hC hR hu hdiv)

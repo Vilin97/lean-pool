@@ -8,10 +8,13 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocityAlgebra
 public import Mathlib.LinearAlgebra.CrossProduct
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Exact scaled cross and pressure algebra used by physical frame renewal. -/
 
 @[expose] public section
 
-/-! Exact scaled cross and pressure algebra used by physical frame renewal. -/
 
 noncomputable section
 

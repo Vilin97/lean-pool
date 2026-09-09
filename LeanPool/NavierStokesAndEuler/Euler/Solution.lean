@@ -6,21 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.InitialDataBridge
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorIdentification
-public import LeanPool.NavierStokesAndEuler.Euler.CanonicalVorticityConfinement
-public import LeanPool.NavierStokesAndEuler.Euler.CompactVorticityContradiction
-public import LeanPool.NavierStokesAndEuler.Euler.EulerFiniteLifespan
-public import LeanPool.NavierStokesAndEuler.Euler.ComparatorMaximalSolution
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
+import LeanPool.NavierStokesAndEuler.Euler.CanonicalVorticityConfinement
+import LeanPool.NavierStokesAndEuler.Euler.CompactVorticityContradiction
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorIdentification
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalEvolution
+import LeanPool.NavierStokesAndEuler.Euler.ComparatorMaximalSolution
+import LeanPool.NavierStokesAndEuler.Euler.EulerSingularity
+import LeanPool.NavierStokesAndEuler.Euler.InitialDataBridge
 
 /-!
 The independent solution to the unforced Euler Comparator challenge.
 Its definitions come from `SolutionDefinitions`, never from the reference
 module or its placeholder theorem.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,6 +42,8 @@ private theorem initialDatum_no_global_solution :
       canonical_vorticity_hasCompactSupport compactCurlLocalUpgrade)
     canonical_vorticity_eq_zero_outside
 
+/-- Smooth, rapidly decaying, divergence-free Euler data admitting no global smooth solution
+with uniformly bounded kinetic energy. -/
 theorem euler_breakdown_R3 :
     ∃ u₀ : ℝ³ → ℝ³, InitialVelocityConditionDecay u₀ ∧
       ¬ (∃ v p, EulerExistenceAndSmoothnessR3 u₀ v p) := by
@@ -50,6 +54,10 @@ theorem euler_breakdown_R3 :
 -- Match the reference's elaboration of ENNReal suprema independently of import order.
 attribute [local instance] CompletePartialOrder.toSupSet
 
+/-- Compactly supported smooth Euler data with a finite maximal Sobolev lifespan.
+At the terminal time, the velocity C¹ norm has infinite left limsup and the time integral
+of the vorticity supremum diverges. The solution has uniformly bounded kinetic energy
+throughout its lifespan and admits no global smooth continuation with that energy bound. -/
 theorem exists_compact_smooth_euler_singularity :
     ∃ (u₀ : ℝ³ → ℝ³) (Tstar : ℝ) (v : ℝ³ → ℝ → ℝ³) (p : ℝ³ → ℝ → ℝ),
       InitialVelocityConditionDecay u₀ ∧ HasCompactSupport u₀ ∧ u₀ ≠ 0 ∧

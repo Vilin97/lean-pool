@@ -6,12 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpMap
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
+public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAdvection
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpMap
+import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Addition and transport of the actual cylinder derivative tensors.
 All norm statements concern genuine L² functions on the cylinder. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,8 +32,14 @@ open scoped ContDiff
 variable (P : ℝ) [Fact (0 < P)]
   {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-private local instance (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] V) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] V) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] V)` instance to shorten
+typeclass synthesis. -/
+local instance instCylinderJetLpAlgebra1 (n : ℕ) : NormedAddCommGroup (LiftTangent [×n]→L[ℝ] V) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (LiftTangent [×n]→L[ℝ] V)` instance to shorten typeclass
+synthesis. -/
+local instance instCylinderJetLpAlgebra2 (n : ℕ) : NormedSpace ℝ (LiftTangent [×n]→L[ℝ] V) :=
+    inferInstance
 
 theorem tensor_add (f g : LiftDomain P → V)
     (hf : ∀ q, ContDiff ℝ ∞ (localFieldLift P f q))

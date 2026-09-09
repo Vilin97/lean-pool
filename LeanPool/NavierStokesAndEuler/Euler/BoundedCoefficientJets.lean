@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedCoefficientSmooth
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+
+/-! Actual derivatives and factorial bounds for the translated multiplication operators. -/
 
 @[expose] public section
 
-/-! Actual derivatives and factorial bounds for the translated multiplication operators. -/
 
 noncomputable section
 
@@ -24,7 +26,8 @@ section BoundedFields
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-/-- Evaluating a parameter derivative gives the ordinary spatial derivative at the translated point. -/
+/-- Evaluating a parameter derivative gives the ordinary spatial derivative at the translated point.
+-/
 theorem BoundedSmoothField.iteratedFDeriv_translation_apply (A : BoundedSmoothField V)
     (n : ℕ) (a x : Space) (v : Fin n → Space) :
     (iteratedFDeriv ℝ n (translated A.field) a v) x =
@@ -54,12 +57,20 @@ theorem BoundedSmoothField.norm_iteratedFDeriv_translation_le (A : BoundedSmooth
 
 end BoundedFields
 
-private local instance : NormedAddCommGroup Field := inferInstance
-private local instance : NormedSpace ℝ Field := inferInstance
-private local instance : NormedAddCommGroup (EulerMeanSolenoidal.L2 →L[ℝ] EulerMeanSolenoidal.L2)
-  := inferInstance
-private local instance : NormedSpace ℝ (EulerMeanSolenoidal.L2 →L[ℝ] EulerMeanSolenoidal.L2) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup Field` instance to shorten typeclass synthesis. -/
+local instance instBoundedCoefficientJets1 : NormedAddCommGroup Field := inferInstance
+/-- Cache the standard `NormedSpace ℝ Field` instance to shorten typeclass synthesis. -/
+local instance instBoundedCoefficientJets2 : NormedSpace ℝ Field := inferInstance
+/-- Cache the standard `NormedAddCommGroup (EulerMeanSolenoidal.L2 →L[ℝ]
+EulerMeanSolenoidal.L2)` instance to shorten typeclass synthesis. -/
+local instance instBoundedCoefficientJets3 : NormedAddCommGroup (EulerMeanSolenoidal.L2 →L[ℝ]
+    EulerMeanSolenoidal.L2)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (EulerMeanSolenoidal.L2 →L[ℝ] EulerMeanSolenoidal.L2)`
+instance to shorten typeclass synthesis. -/
+local instance instBoundedCoefficientJets4 : NormedSpace ℝ (EulerMeanSolenoidal.L2 →L[ℝ]
+    EulerMeanSolenoidal.L2) :=
+    inferInstance
 
 theorem multiplierMap_norm_le_one : ‖multiplierMap‖ ≤ 1 :=
   multiplierMap.opNorm_le_bound zero_le_one (fun A => by
@@ -69,7 +80,7 @@ theorem multiplierTranslation_contDiff (A : BoundedSmoothField (Space →L[ℝ] 
     ContDiff ℝ ∞ (fun a => multiplier (translated A.field a)) := by
   exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞) (E := Field)
     (F := EulerMeanSolenoidal.L2 →L[ℝ] EulerMeanSolenoidal.L2) multiplierMap).comp
-      A.translation_contDiff
+        A.translation_contDiff
 
 theorem norm_iteratedFDeriv_multiplierTranslation_le
     (A : BoundedSmoothField (Space →L[ℝ] Space)) (n : ℕ) (C : ℝ) (hC : 0 ≤ C)

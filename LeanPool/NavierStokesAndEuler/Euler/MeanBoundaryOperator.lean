@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanGradientTestSpace
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Construction of the actual mean boundary operator by homogeneous-gradient
 completion and the Hilbert adjoint. No bounded inverse Laplacian on L² is assumed. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,6 +27,7 @@ open scoped ContDiff ENNReal NNReal
 
 /-- The only cutoff data: an actual compactly supported smooth scalar function. -/
 structure Cutoff where
+  /-- Underlying field of `Cutoff`, of type `Space → ℝ`. -/
   field : Space → ℝ
   smooth : ContDiff ℝ ∞ field
   compact : HasCompactSupport field
@@ -157,7 +161,7 @@ theorem cutoffCurl_on_test (χ : Cutoff) (f : Test) :
 
 theorem cutoffCurl_norm_le (χ : Cutoff) : ‖cutoffCurl χ‖ ≤ cutoffBound χ :=
   LinearMap.opNorm_extendOfNorm_le homogeneousGradient_dense (cutoffBound_nonneg χ) (testCurl_bound
-    χ)
+      χ)
 
 /-- The Riesz/weak-Newtonian representation of the cutoff curl functional. -/
 def weakPotential (χ : Cutoff) : L2 →L[ℝ] homogeneousSpace := (cutoffCurl χ).adjoint
@@ -167,7 +171,7 @@ theorem weakPotential_pairing (χ : Cutoff) (z : L2) (f : Test) :
     ⟪weakPotential χ z, homogeneousGradient f⟫_ℝ =
       ∫ x, ⟪z x, vectorCurl (fun y => χ.field y • (f : Space → Space) y) x⟫_ℝ := by
   rw [weakPotential, ContinuousLinearMap.adjoint_inner_left, cutoffCurl_on_test,
-    MeasureTheory.L2.inner_def]
+      MeasureTheory.L2.inner_def]
   apply integral_congr_ae
   filter_upwards [testCurl_ae χ f] with x hx
   rw [hx]

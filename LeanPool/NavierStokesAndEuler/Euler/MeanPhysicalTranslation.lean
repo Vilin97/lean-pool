@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanOperatorTranslation
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityPressure
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Spatial orbit estimates for the actual physical mean fields
@@ -19,6 +22,9 @@ Frame multiplication preserves genuine translation regularity and factorial
 bounds. These identities apply to the physical velocity, its actual time
 derivative, and the pressure residual constructed by the strong mean solve.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -31,18 +37,43 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerTimeLpCoefficientMap EulerTimeLpCoefficientGevrey EulerOperatorGevreyCalculus EulerGevrey
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPhysicalTranslation1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPhysicalTranslation2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanPhysicalTranslation3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (solenoidalSpace →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPhysicalTranslation4 : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (L2 →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanPhysicalTranslation5 : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (L2 →L[ℝ] L2)` instance to shorten typeclass synthesis. -/
+local instance instMeanPhysicalTranslation6 : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanPhysicalTranslation7 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T, L2 →L[ℝ]
+    L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanPhysicalTranslation8 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance
+to shorten typeclass synthesis. -/
+local instance instMeanPhysicalTranslation9 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2)` instance to
+shorten typeclass synthesis. -/
+local instance instMeanPhysicalTranslation10 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,
+    solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
 variable (T : ℝ) (hT : 0 ≤ T)
 
@@ -75,7 +106,7 @@ theorem frameApply_translation_gevrey (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (R CF Cv : ℝ) (hR : 0 ≤ R) (hCF : 0 ≤ CF) (hCv : 0 ≤ Cv) (d : ℕ)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant R 0 n)
     (hvb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b v) a‖ ≤
-      Cv*majorant R d n)
+        Cv*majorant R d n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space =>
       timeTranslation T b (timeMultiplier T hT (solenoidalFrame T F) v)) a‖ ≤
@@ -110,7 +141,7 @@ variable {T : ℝ} {hT : 0 ≤ T}
 theorem velocityDerivative_orbit_eq :
     (fun a : Space => timeTranslation T a s.velocityDerivative) =
       fun a : Space => timeTranslation T a (timeMultiplier T hT (solenoidalFrame T F₁)
-        s.velocityLp) +
+          s.velocityLp) +
         timeTranslation T a (timeMultiplier T hT (solenoidalFrame T F) s.acceleration) :=
   funext (fun a => (timeTranslation T a).map_add _ _)
 
@@ -119,9 +150,9 @@ theorem pressureResidual_orbit_eq :
       fun a : Space => timeTranslation T a f -
         timeTranslation T a (timeMultiplier T hT (solenoidalFrame T F) s.acceleration) -
         (2 : ℝ) • timeTranslation T a (timeMultiplier T hT (solenoidalFrame T F₁) s.velocityLp) :=
-          by
+            by
   funext a
-  change timeTranslation T a (f-timeMultiplier T hT (solenoidalFrame T F) s.acceleration-
+  change timeTranslation T a (f-timeMultiplier T hT (solenoidalFrame T F) s.acceleration -
     (2 : ℝ) • timeMultiplier T hT (solenoidalFrame T F₁) s.velocityLp) = _
   exact ((timeTranslation T a).map_sub _ _).trans
     (congrArg₂ (fun x y : TimeLp T L2 => x-y)
@@ -165,7 +196,7 @@ theorem velocityField_translation_gevrey
     (R CF Cv : ℝ) (hR : 0 ≤ R) (hCF : 0 ≤ CF) (hCv : 0 ≤ Cv) (d : ℕ)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant R 0 n)
     (hvb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b s.velocityLp)
-      a‖ ≤ Cv*majorant R d n)
+        a‖ ≤ Cv*majorant R d n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b s.velocityField) a‖ ≤
       (3*CF*Cv)*majorant R d n :=
@@ -181,11 +212,11 @@ theorem velocityDerivative_translation_gevrey
     (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCv : 0 ≤ Cv) (hCa : 0 ≤ Ca) (d : ℕ)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant R 0 n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant R
-      0 n)
+        0 n)
     (hvb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b s.velocityLp)
-      a‖ ≤ Cv*majorant R d n)
+        a‖ ≤ Cv*majorant R d n)
     (hab : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => timeSolenoidalTranslation T b
-      s.acceleration) a‖ ≤ Ca*majorant R d n)
+        s.acceleration) a‖ ≤ Ca*majorant R d n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => timeTranslation T b s.velocityDerivative) a‖ ≤
       (3*(CF₁*Cv+CF*Ca))*majorant R d n := by
@@ -198,7 +229,7 @@ theorem velocityDerivative_translation_gevrey
   have hs := add_bound
     (fun b : Space => timeTranslation T b (timeMultiplier T hT (solenoidalFrame T F₁) s.velocityLp))
     (fun b : Space => timeTranslation T b (timeMultiplier T hT (solenoidalFrame T F)
-      s.acceleration))
+        s.acceleration))
     hvreg hareg R (3*CF₁*Cv) (3*CF*Ca) d hvb' hab' n a
   exact ((congrArg (fun g : Space → TimeLp T L2 => ‖iteratedFDeriv ℝ n g a‖)
     s.velocityDerivative_orbit_eq).trans_le hs).trans_eq (by ring)

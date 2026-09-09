@@ -7,11 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricModulation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ShapeTransition
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FiveProfileMoments
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
+import LeanPool.NavierStokesAndEuler.NavierStokes.ShapeTransition
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Actual histories and moment repair for radial modulation
@@ -20,6 +20,9 @@ The normalized angular field is modulated multiplicatively, so the unchanged
 axis germ is retained. All history differences below are actual integrals.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter MeasureTheory Function
@@ -27,29 +30,39 @@ open scoped Topology ContDiff BigOperators
 
 namespace NavierStokes.ModulatedHistories
 
+/-- Point: an abbreviation for `ℝ × ℝ`. -/
 abbrev Point := ℝ × ℝ
+/-- Field: an abbreviation for `Point → ℝ`. -/
 abbrev Field := Point → ℝ
+/-- Debt: an abbreviation for `FiveProfileMoments.Debt`. -/
 abbrev Debt := FiveProfileMoments.Debt
+/-- Coefficient: an abbreviation for `FiveProfileMoments.Coeff`. -/
 abbrev Coeff := FiveProfileMoments.Coeff
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   WithTop.coe_le_coe.mpr le_top
 
+/-- Window data, collecting `left`, `right`, `left_pos`, `ordered`. -/
 structure Window where
+  /-- Left of `Window`, of type `ℝ`. -/
   left : ℝ
+  /-- Right of `Window`, of type `ℝ`. -/
   right : ℝ
   left_pos : 0 < left
   ordered : left < right
 
+/-- Clamp, given by `projIcc W.left W.right W.ordered.le X`. -/
 noncomputable def Window.clamp (W : Window) (X : ℝ) : ℝ :=
   projIcc W.left W.right W.ordered.le X
 
 theorem Window.clamp_mem (W : Window) (X : ℝ) : W.clamp X ∈ Icc W.left W.right :=
   (projIcc W.left W.right W.ordered.le X).2
 
+/-- Density at, given by `![U, 2 * X * f, U * (2 * X * f), U ^ 2 - X * f ^ 2, f ^ 2]`. -/
 noncomputable def densityAt (X f U : ℝ) : Debt :=
   ![U, 2 * X * f, U * (2 * X * f), U ^ 2 - X * f ^ 2, f ^ 2]
 
+/-- Density, given by `densityAt p.1 (f p) (U p)`. -/
 noncomputable def density (f U : Field) (p : Point) : Debt := densityAt p.1 (f p) (U p)
 
 theorem density_contDiff (f U : Field) (hf : ContDiff ℝ ∞ f) (hU : ContDiff ℝ ∞ U)
@@ -88,10 +101,12 @@ theorem density_eq_physical (X f U : ℝ) (hX : 0 < X) :
 
 variable {a m p₁ p₂ : Point → ℝ} {K B : Set Point}
 
+/-- Raw F, given by `ParametricModulation.realizedE r f N p.1 p.2`. -/
 noncomputable def rawF (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f : Field) (N : ℝ) (p : Point) : ℝ :=
   ParametricModulation.realizedE r f N p.1 p.2
 
+/-- Raw U, given by `ParametricModulation.realizedU r E U N p.1 p.2`. -/
 noncomputable def rawU (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (E U : Field) (N : ℝ) (p : Point) : ℝ :=
   ParametricModulation.realizedU r E U N p.1 p.2
@@ -103,6 +118,7 @@ theorem rawF_physical (r : ParametricModulation.TrueConeRealization a m p₁ p�
   rw [hE]
   ring
 
+/-- Density family, constructed using `densityAt`. -/
 noncomputable def densityFamily
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B) (f E U : Field)
     (z : RadialModulation.FamilyPoint) : Debt :=
@@ -195,6 +211,7 @@ theorem density_uniform_eta_jets
   exact (hbound ⟨j, Nat.lt_succ_of_le hj⟩ i N hN X hX eta heta).trans
     (div_le_div_of_nonneg_right (hle _ i) (le_trans zero_le_one hN))
 
+/-- Density difference, given by `density (rawF r f N) (rawU r E U N) p - density f U p`. -/
 noncomputable def densityDifference
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f E U : Field) (N : ℝ) (p : Point) : Debt :=
@@ -211,11 +228,13 @@ theorem densityDifference_contDiffAt
     contDiffAt_const.prodMk (contDiffAt_fst.prodMk
       (contDiffAt_snd.prodMk (contDiffAt_const.mul (contDiffAt_fst.log hX))))
   have hcomp := (densityFamily_contDiff r f E U ha hm hp₂ hf hE hU i).contDiffAt.comp (X, eta)
-    hgraph
+      hgraph
   have hd : ContDiffAt ℝ ∞ (fun p : Point => density (rawF r f N) (rawU r E U N) p i) (X, eta) := by
     simpa only [Function.comp_def, densityFamily_frequency, Prod.eta] using hcomp
   exact hd.sub (density_contDiff f U hf hU i).contDiffAt
 
+/-- History difference, defined pointwise by `∫ s in W.left..W.clamp X, densityDifference r f E
+U N (s, eta) i`. -/
 noncomputable def historyDifference (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f E U : Field) (N X eta : ℝ) : Debt :=
@@ -305,6 +324,7 @@ theorem historyDifference_jets (W : Window)
 
 /-! ## Localization and genuine axis histories -/
 
+/-- Splice, with branches according to `p.1 ∈ Ioc W.left W.right`. -/
 noncomputable def splice (W : Window) (base actual : Field) (p : Point) : ℝ :=
   if p.1 ∈ Ioc W.left W.right then actual p else base p
 
@@ -363,10 +383,12 @@ theorem splice_contDiffOn (W : Window) {base actual : Field} {Ω : Set ℝ}
       filter_upwards [hn] with q hq
       exact splice_eq_after W base actual hq
 
+/-- Localized F, given by `splice W f (rawF r f N)`. -/
 noncomputable def localizedF (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f : Field) (N : ℝ) : Field := splice W f (rawF r f N)
 
+/-- Localized U, given by `splice W U (rawU r E U N)`. -/
 noncomputable def localizedU (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (E U : Field) (N : ℝ) : Field := splice W U (rawU r E U N)
@@ -426,6 +448,7 @@ theorem densityDifference_continuousOn (W : Window)
     (g := fun p : Point => densityDifference r f E U N p i) s ho hg
   exact hc.continuousAt.continuousWithinAt
 
+/-- Axis history, defined pointwise by `∫ s in (0 : ℝ)..p.1, density f U (s, p.2) i`. -/
 noncomputable def axisHistory (f U : Field) (p : Point) : Debt :=
   fun i => ∫ s in (0 : ℝ)..p.1, density f U (s, p.2) i
 
@@ -443,7 +466,7 @@ theorem axisHistory_localized_sub (W : Window)
   have hi := (hd.mono_set Ioc_subset_Icc_self).integrable_indicator measurableSet_Ioc
   have hnom : IntervalIntegrable (fun s => density f U (s, eta) i) volume 0 X :=
     ((density_contDiff f U hf hU i).continuous.comp (continuous_id.prodMk
-      continuous_const)).intervalIntegrable 0 X
+        continuous_const)).intervalIntegrable 0 X
   have hnew : IntervalIntegrable
       (fun s => density (localizedF W r f N) (localizedU W r E U N) (s, eta) i) volume 0 X := by
     have hsum := hnom.add hi.intervalIntegrable
@@ -558,8 +581,8 @@ theorem smooth_solver_linear_jets {g : Coeff → Coeff} {r C : ℝ}
       calc
         _ ≤ ‖iteratedFDeriv ℝ k g (L (v eta))‖ * ∏ _ : Fin k, ‖L‖ :=
           ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _
-        _ = ‖iteratedFDeriv ℝ k g (f eta)‖ * ‖L‖ ^ k := by simp only [hLv, Finset.prod_const,
-          Finset.card_univ, Fintype.card_fin]
+        _ = ‖iteratedFDeriv ℝ k g (f eta)‖ * ‖L‖ ^ k := by
+            simp only [hLv, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
         _ ≤ D * delta ^ k := mul_le_mul (hgb k hk _ hxclosed)
           (pow_le_pow_left₀ (norm_nonneg _) hLnorm k) (pow_nonneg (norm_nonneg _) k) hD.le
         _ ≤ D * delta := mul_le_mul_of_nonneg_left hp hD.le
@@ -631,11 +654,13 @@ theorem exists_smooth_localization (W : Window)
   · intro N p hp
     exact ⟨splice_eq_of_eq W (heq N p hp).1, splice_eq_of_eq W (heq N p hp).2⟩
 
+/-- Strip domain, bundling `carrier`, `isOpen`, `scale_mem`. -/
 noncomputable def stripDomain (Ω : Set ℝ) (hΩ : IsOpen Ω) : ProfileHistories.RadialDomain where
   carrier := univ ×ˢ Ω
   isOpen := isOpen_univ.prod hΩ
   scale_mem := fun _ hp _ _ => ⟨mem_univ _, hp.2⟩
 
+/-- Profiles, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility proofs. -/
 noncomputable def profiles (Ω : Set ℝ) (hΩ : IsOpen Ω) (f U : Field) (P0 : ℝ → ℝ)
     (hf : ContDiffOn ℝ ∞ f (univ ×ˢ Ω)) (hU : ContDiffOn ℝ ∞ U (univ ×ˢ Ω))
     (hP0 : ContDiffOn ℝ ∞ P0 Ω) : ProfileHistories.Profiles (stripDomain Ω hΩ) where
@@ -646,6 +671,7 @@ noncomputable def profiles (Ω : Set ℝ) (hΩ : IsOpen Ω) (f U : Field) (P0 : 
   pressure0 := P0
   pressure0_smooth := fun _ hp => hP0.contDiffAt (hΩ.mem_nhds hp.2)
 
+/-- Profile rows, given by `![P.M p, P.I p, P.J p, P.S p, P.pressure p]`. -/
 noncomputable def profileRows {D : ProfileHistories.RadialDomain}
     (P : ProfileHistories.Profiles D) (p : Point) : Debt :=
   ![P.M p, P.I p, P.J p, P.S p, P.pressure p]
@@ -683,7 +709,7 @@ theorem smooth_extension_ball {g : Coeff → Coeff} {r : ℝ} (hr : 0 < r)
     by_cases hz : z ∈ Metric.ball (0 : Coeff) r
     · exact χ.smooth.contDiffAt.smul (hg.contDiffAt (Metric.isOpen_ball.mem_nhds hz))
     · apply (contDiffAt_const : ContDiffAt ℝ ∞ (fun _ : Coeff => (0 : Coeff))
-      z).congr_of_eventuallyEq
+        z).congr_of_eventuallyEq
       filter_upwards [χ.zero_near z hz] with y hy
       change χ.value y • g y = 0
       rw [hy, zero_smul]
@@ -731,7 +757,7 @@ theorem repair_family_rate (P : FiveProfileMoments.Patch) (b : ℝ)
   have hv : ContDiff ℝ ∞ v := FiveProfileMoments.normalizedDebt_contDiff hA hG (hd N)
     (fun eta => (hApos eta).ne')
   have hvb : JetBounds.FiniteJetBound q v S (B0 * D / N) := by
-    convert! hnormal (d N) (hd N) (D / N) (div_nonneg hD.le hNpos.le) (hdb N hN1) using 1 ; ring
+    convert! hnormal (d N) (hd N) (D / N) (div_nonneg hD.le hNpos.le) (hdb N hN1) using 1; ring
   let c : ℝ → Coeff := gext ∘ v
   let V : Set ℝ := v ⁻¹' Metric.ball 0 (r / 2)
   have hV : IsOpen V := Metric.isOpen_ball.preimage hv.continuous
@@ -756,8 +782,9 @@ theorem repair_family_rate (P : FiveProfileMoments.Patch) (b : ℝ)
   · intro j hj eta heta
     have hjb := hjet v hv (B0 * D / N) eta (div_pos (mul_pos hB0 hD) hNpos)
       hsmall (fun k hk => hvb k hk eta heta) j hj
-    convert! hjb using 1 ; ring
+    convert! hjb using 1; ring
 
+/-- Repair debt, given by `-historyDifference W r f E U N W.right eta`. -/
 noncomputable def repairDebt (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f E U : Field) (N eta : ℝ) : Debt := -historyDifference W r f E U N W.right eta
@@ -798,7 +825,7 @@ theorem finiteJet_smul {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
       intro i hi
       have hi' : i ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hi)
       exact mul_le_mul (mul_le_mul_of_nonneg_left (hAb i (hi'.trans hn) eta heta) (Nat.cast_nonneg
-        _))
+          _))
         (hcb (n - i) ((Nat.sub_le _ _).trans hn) eta heta) (norm_nonneg _) (by positivity)
     _ = (2 : ℝ) ^ n * B * C := by
       rw [← Finset.sum_mul, ← Finset.sum_mul]
@@ -806,18 +833,23 @@ theorem finiteJet_smul {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
       exact_mod_cast Nat.sum_range_choose n
     _ ≤ (2 : ℝ) ^ q * B * C := by gcongr; norm_num
 
+/-- Edit U, given by `A p.2 * FiveProfileMoments.u P (c p.2) p.1`. -/
 noncomputable def editU (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (p : Point) : ℝ := A p.2 * FiveProfileMoments.u P (c p.2) p.1
 
+/-- Edit E, given by `A p.2 * FiveProfileMoments.e P (c p.2) p.1`. -/
 noncomputable def editE (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (p : Point) : ℝ := A p.2 * FiveProfileMoments.e P (c p.2) p.1
 
+/-- Edit F, given by `editE P A c p / Real.sqrt (2 * p.1)`. -/
 noncomputable def editF (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (p : Point) : ℝ := editE P A c p / Real.sqrt (2 * p.1)
 
+/-- Apply repair F, given by `f p + editF P A c p`. -/
 noncomputable def applyRepairF (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (f : Field) (p : Point) : ℝ := f p + editF P A c p
 
+/-- Apply repair U, given by `U p + editU P A c p`. -/
 noncomputable def applyRepairU (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (U : Field) (p : Point) : ℝ := U p + editU P A c p
 
@@ -886,9 +918,9 @@ theorem physical_mixed_edits_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
     ∃ K : ℝ, 0 < K ∧ ∀ c : ℝ → Coeff, ContDiff ℝ ∞ c → ∀ eps : ℝ, 0 ≤ eps →
       JetBounds.FiniteJetBound q c S eps → ∀ eta ∈ S, ∀ k ≤ q, ∀ j ≤ q, ∀ X : ℝ,
         ‖iteratedFDeriv ℝ j (fun e => iteratedDeriv k (fun x => editU P A c (x, e)) X) eta‖ ≤ K *
-          eps ∧
+            eps ∧
         ‖iteratedFDeriv ℝ j (fun e => iteratedDeriv k (fun x => editE P A c (x, e)) X) eta‖ ≤ K *
-          eps := by
+            eps := by
   obtain ⟨B0, hB0, hAb⟩ := FiveProfileMoments.compact_global_jet_bound S hS hA q
   obtain ⟨J, hJ, hjets⟩ := FiveProfileMoments.mixed_jet_bound P q
   refine ⟨J * (2 : ℝ) ^ q * B0, by positivity, ?_⟩
@@ -962,7 +994,7 @@ theorem axisHistory_repair_sub (P : FiveProfileMoments.Patch) (b : ℝ) (A G : �
     (hi : ∀ i : Fin 5, IntervalIntegrable (fun x => density f U (x, eta) i) volume 0 X) :
     axisHistory (applyRepairF P A c f) (applyRepairU P A c U) (X, eta) -
       axisHistory f U (X, eta) = FiveProfileMoments.physicalMoments P b (A eta) (G eta) (c eta) :=
-        by
+          by
   ext i
   have hc := FiveProfileMoments.physicalDensity_integrable P b (A eta) (G eta) hA (c eta) i
   have hnew : IntervalIntegrable
@@ -979,12 +1011,12 @@ theorem axisHistory_repair_sub (P : FiveProfileMoments.Patch) (b : ℝ) (A G : �
   simp only [Pi.sub_apply] at he
   simp_rw [he]
   have hs : support (fun x => FiveProfileMoments.physicalDensity P b (A eta) (G eta) (c eta) x i) ⊆
-    Ioc 0 X := by
+      Ioc 0 X := by
     intro x hx
     have hp : x ∈ Ioo P.left P.right := by
       by_contra hp
-      exact hx (by simp [FiveProfileMoments.physicalDensity_zero_outside P b (A eta) (G eta) (c
-        eta) hp])
+      exact hx (by
+          simp [FiveProfileMoments.physicalDensity_zero_outside P b (A eta) (G eta) (c eta) hp])
     exact ⟨P.left_pos.trans hp.1, hp.2.le.trans hX⟩
   rw [intervalIntegral.integral_eq_integral_of_support_subset hs]
   rfl
@@ -995,14 +1027,14 @@ theorem localized_density_integrable (W : Window)
     (hf : ContDiff ℝ ∞ f) (hE : ContDiff ℝ ∞ E) (hU : ContDiff ℝ ∞ U)
     (N X eta : ℝ) (i : Fin 5) :
     IntervalIntegrable (fun s => density (localizedF W r f N) (localizedU W r E U N) (s, eta) i)
-      volume 0 X := by
+        volume 0 X := by
   have hd : IntegrableOn (fun s => densityDifference r f E U N (s, eta) i)
       (Icc W.left W.right) volume :=
     (densityDifference_continuousOn W r f E U ha hm hp₂ hf hE hU N eta i).integrableOn_Icc
   have hi := (hd.mono_set Ioc_subset_Icc_self).integrable_indicator measurableSet_Ioc
   have hnom : IntervalIntegrable (fun s => density f U (s, eta) i) volume 0 X :=
     ((density_contDiff f U hf hU i).continuous.comp (continuous_id.prodMk
-      continuous_const)).intervalIntegrable 0 X
+        continuous_const)).intervalIntegrable 0 X
   apply (hnom.add hi.intervalIntegrable).congr_ae
   filter_upwards with s
   linarith [localized_density_difference W r f E U N s eta i]
@@ -1072,8 +1104,8 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
     (hUb : ∀ j ≤ n, |iteratedDeriv j U eta| ≤ B)
     (hdfb : ∀ j ≤ n, |iteratedDeriv j df eta| ≤ eps)
     (hdUb : ∀ j ≤ n, |iteratedDeriv j dU eta| ≤ eps) (i : Fin 5) :
-    |iteratedDeriv n (fun e => (densityAt X (f e + df e) (U e + dU e) - densityAt X (f e) (U e)) i)
-      eta|
+    |iteratedDeriv n (fun e =>
+        (densityAt X (f e + df e) (U e + dU e) - densityAt X (f e) (U e)) i) eta|
       ≤ ((1 + 2 * R) * (1 + (2 : ℝ) ^ n * (2 * B + 1))) * eps := by
   let H : ℝ := (2 : ℝ) ^ n * (2 * B + 1)
   have hH : 0 ≤ H := by dsimp [H]; positivity
@@ -1087,7 +1119,7 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
   have hJ : |iteratedDeriv n (fun e => U e * df e + f e * dU e + dU e * df e) eta| ≤ H * eps := by
     have h := deriv_add_bound ((hU.mul hdf).add (hf.mul hdU)) (hdU.mul hdf) n eta _ _
       (deriv_add_bound (hU.mul hdf) (hf.mul hdU) n eta _ _ hcross hcross') hsmall
-    convert! h using 1 ; dsimp [H] ; ring
+    convert! h using 1; dsimp [H]; ring
   have square (g dg : ℝ → ℝ) (hg : ContDiff ℝ ∞ g) (hdg : ContDiff ℝ ∞ dg)
       (hgb : ∀ j ≤ n, |iteratedDeriv j g eta| ≤ B)
       (hdgb : ∀ j ≤ n, |iteratedDeriv j dg eta| ≤ eps) :
@@ -1099,7 +1131,7 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
     have hm := deriv_const_mul_bound (hg.mul hdg) n eta 2 _ hp
     rw [abs_of_pos (by norm_num : (0 : ℝ) < 2)] at hm
     have hh := deriv_add_bound (contDiff_const.mul (hg.mul hdg)) (hdg.mul hdg) n eta _ _ hm hs'
-    convert! hh using 1 ; dsimp [H] ; ring
+    convert! hh using 1; dsimp [H]; ring
   have hS := square U dU hU hdU hUb hdUb
   have hP := square f df hf hdf hfb hdfb
   have heq : (fun e => densityAt X (f e + df e) (U e + dU e) - densityAt X (f e) (U e)) =
@@ -1110,7 +1142,7 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
     ext j
     fin_cases j <;> dsimp [densityAt] <;> ring
   change |iteratedDeriv n (fun e => ((fun e => densityAt X (f e + df e) (U e + dU e) - densityAt X
-    (f e) (U e)) e) i) eta| ≤ _
+      (f e) (U e)) e) i) eta| ≤ _
   rw [heq]
   have hK0 : 1 ≤ (1 + 2 * R) * (1 + H) := by nlinarith
   have hK1 : 2 * R ≤ (1 + 2 * R) * (1 + H) := by nlinarith
@@ -1120,24 +1152,26 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
   fin_cases i
   · exact (hdUb n le_rfl).trans (by simpa only [one_mul] using mul_le_mul_of_nonneg_right hK0 heps)
   · have h := deriv_const_mul_bound hdf n eta (2 * X) eps (hdfb n le_rfl)
-    have hc : |2 * X| ≤ 2 * R := by simpa only [abs_mul, abs_of_nonneg (show (0 : ℝ) ≤ 2 by
-      norm_num)] using mul_le_mul_of_nonneg_left hX (by norm_num : (0 : ℝ) ≤ 2)
+    have hc : |2 * X| ≤ 2 * R := by
+        simpa only [abs_mul, abs_of_nonneg (show (0 : ℝ) ≤ 2 by
+            norm_num)] using mul_le_mul_of_nonneg_left hX (by norm_num : (0 : ℝ) ≤ 2)
     exact h.trans (mul_le_mul_of_nonneg_right (hc.trans hK1) heps)
   · have h := deriv_const_mul_bound ((hU.mul hdf).add (hf.mul hdU) |>.add (hdU.mul hdf))
       n eta (2 * X) (H * eps) hJ
-    have hc : |2 * X| ≤ 2 * R := by simpa only [abs_mul, abs_of_nonneg (show (0 : ℝ) ≤ 2 by
-      norm_num)] using mul_le_mul_of_nonneg_left hX (by norm_num : (0 : ℝ) ≤ 2)
+    have hc : |2 * X| ≤ 2 * R := by
+        simpa only [abs_mul, abs_of_nonneg (show (0 : ℝ) ≤ 2 by
+            norm_num)] using mul_le_mul_of_nonneg_left hX (by norm_num : (0 : ℝ) ≤ 2)
     exact h.trans (by calc
       _ ≤ (2 * R) * (H * eps) := mul_le_mul_of_nonneg_right hc (mul_nonneg hH heps)
       _ = ((2 * R) * H) * eps := by ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hK2 heps)
   · have hm := deriv_const_mul_bound ((contDiff_const.mul (hf.mul hdf)).add (hdf.mul hdf)) n eta X
-    _ hP
+      _ hP
     have h := deriv_sub_bound ((contDiff_const.mul (hU.mul hdU)).add (hdU.mul hdU))
       (contDiff_const.mul ((contDiff_const.mul (hf.mul hdf)).add (hdf.mul hdf))) n eta _ _ hS hm
     exact h.trans (by calc
       _ ≤ H * eps + R * (H * eps) := add_le_add_right (mul_le_mul_of_nonneg_right hX (mul_nonneg hH
-        heps)) _
+          heps)) _
       _ = ((1 + R) * H) * eps := by ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hK3 heps)
   · exact hP.trans (mul_le_mul_of_nonneg_right hK4 heps)
@@ -1210,13 +1244,18 @@ theorem normalized_edits_eta_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
     rw [hz]
     simpa only [abs_zero] using (show 0 ≤ ((1 + t) * J) * eps by positivity)
 
+/-- Patch window, given by `⟨P.left, P.right, P.left_pos, P.ordered⟩`. -/
 noncomputable def patchWindow (P : FiveProfileMoments.Patch) : Window :=
   ⟨P.left, P.right, P.left_pos, P.ordered⟩
 
+/-- Repair density, given by `density (applyRepairF P A c f) (applyRepairU P A c U) p - density
+f U p`. -/
 noncomputable def repairDensity (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (f U : Field) (p : Point) : Debt :=
   density (applyRepairF P A c f) (applyRepairU P A c U) p - density f U p
 
+/-- Repair history difference, defined pointwise by `∫ s in P.left..(patchWindow P).clamp X,
+repairDensity P A c f U (s, eta) i`. -/
 noncomputable def repairHistoryDifference (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (f U : Field) (X eta : ℝ) : Debt :=
   fun i => ∫ s in P.left..(patchWindow P).clamp X, repairDensity P A c f U (s, eta) i
@@ -1320,7 +1359,7 @@ theorem repairDensity_localized (W : Window)
     (P : FiveProfileMoments.Patch) (hWP : W.right < P.left) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (N : ℝ) (p : Point) :
     repairDensity P A c (localizedF W r f N) (localizedU W r E U N) p = repairDensity P A c f U p
-      := by
+        := by
   by_cases hp : p.1 ∈ Ioo P.left P.right
   · have hf0 : localizedF W r f N p = f p := splice_eq_after W _ _ (hWP.trans hp.1)
     have hU0 : localizedU W r E U N p = U p := splice_eq_after W _ _ (hWP.trans hp.1)
@@ -1368,7 +1407,7 @@ theorem actual_repair_history_identity (W : Window)
     · exact ⟨hout.1, hout.2.le⟩
     · exact False.elim (hx (by simp [repairDensity_zero_outside P A c f U (p := (x, eta)) hout]))
   have hiw := integral_indicator_window (patchWindow P) (fun x => repairDensity P A c f U (x, eta)
-    i) hX
+      i) hX
   change (∫ s in (0 : ℝ)..X, (Ioc P.left P.right).indicator
       (fun x => repairDensity P A c f U (x, eta) i) s) =
       ∫ s in P.left..(patchWindow P).clamp X, repairDensity P A c f U (s, eta) i at hiw

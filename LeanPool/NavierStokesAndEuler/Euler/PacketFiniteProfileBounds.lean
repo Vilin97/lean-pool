@@ -7,18 +7,23 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileFields
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteAssemblyBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteAssemblyBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
+
+/-! The finite approximate velocity and its genuine time derivative share the profile bounds. -/
 
 @[expose] public section
 
-/-! The finite approximate velocity and its genuine time derivative share the profile bounds. -/
 
 noncomputable section
 
 namespace EulerPacketCylinderField
 
 open Set EulerSmoothLimit EulerPacketProfileRecursion EulerPacketTimeProfile
-  EulerPacketShiftArithmetic
+    EulerPacketShiftArithmetic
 
 theorem rawTimeDerivative_zero (T : ℝ) : rawTimeDerivative T 0=0 := by
   funext z
@@ -30,7 +35,7 @@ variable {P T : ℝ} [Fact (0 < P)] {N : ℕ} {a : ℕ → Profile} {support : S
   (hT : 0 < T) (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le support (a i))
   {S : Scales (Icc (0 : ℝ) T)} {R : ℝ}
   (hG : ∀ i (hi : i ≤ N), 1 ≤ i → ProfileBudget (G i hi) S R i)
-  (hR : 1 ≤ R) (ha : a 0=0)
+  (hR : 1 ≤ R) (ha : a 0 = 0)
 
 include hG hR ha
 
@@ -47,7 +52,7 @@ theorem velocityGrade_bound (n : ℕ) :
         change (0 : Space)+0=0
         exact zero_add 0
       exact (Field.wordBound_of_zero ((G 0 hi).high.add (G 0 hi).mean) hz 6 R (highShift
-        0)).mono_amplitude
+          0)).mono_amplitude
         (zero_le_one.trans hR) (by norm_num)
     · have h := hG i hi (by omega)
       have hm := h.mean_unnormalized.mono_shift hR (pow_nonneg S.H0_pos.le _)

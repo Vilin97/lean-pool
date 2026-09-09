@@ -8,9 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
 
+/-! Actual coordinate derivatives and truncations between the complete cylinder Sobolev spaces. -/
+
 @[expose] public section
 
-/-! Actual coordinate derivatives and truncations between the complete cylinder Sobolev spaces. -/
 
 noncomputable section
 
@@ -44,7 +45,7 @@ def derivativeOperator (q : ℕ) (i : Fin 4) :
     SobolevSpace period (q + 1) →L[ℝ] SobolevSpace period q :=
   ((ContinuousLinearMap.pi (fun w : SobolevWord q =>
     ContinuousLinearMap.proj (derivativeIndex i w))).comp (arrayOperator period (q +
-      1))).codRestrict
+        1))).codRestrict
     (sobolevSubspace period q).toSubmodule (by
       intro u
       apply ClosedSubmodule.mem_iInf.mpr
@@ -55,7 +56,7 @@ def derivativeOperator (q : ℕ) (i : Fin 4) :
         (u.val (derivativeIndex i (edgeParent e))))
         (u.val (derivativeIndex i (edgeChild e))) 0
       simpa only [word, derivativeIndex, edgeParent, edgeChild, Fin.cons_snoc_eq_snoc_cons] using
-        hd)
+          hd)
 
 /-- Truncation acts by the literal inclusion of derivative-word coordinates. -/
 @[simp]

@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseContextAssembly
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AllBandBaseJets
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Weighted classes of the actual base stress
@@ -18,6 +18,9 @@ of the reciprocal edge distance are enlarged.  All derivatives are actual
 Fréchet derivatives, and every estimate is uniform over the dyadic bands.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.BaseStressClasses
@@ -25,8 +28,11 @@ namespace NavierStokes.BaseStressClasses
 open Set Filter Function WeightedClasses
 open scoped ContDiff Topology BigOperators
 
+/-- Point: an abbreviation for `BaseContextAssembly.Point`. -/
 abbrev Point := BaseContextAssembly.Point
+/-- Chart: an abbreviation for `SlowBorelBase.Chart`. -/
 abbrev Chart := SlowBorelBase.Chart
+/-- Inner: an abbreviation for `SlowBorelBase.Inner`. -/
 abbrev Inner := SlowBorelBase.Inner
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -123,7 +129,7 @@ bounded normalized scale `rho`, never the inverse dyadic scale. -/
 theorem scaled_jet_from_blown {f : Chart → V}
     (hf : ContDiffOn ℝ ∞ f BaseChartJets.sumRegion) {Q rho M : ℝ} {w : Inner}
     (hQ : 0 < Q) (hrho : 0 < rho) (hw : 0 < w.1)
-    (hM : 1 ≤ M) (hi : 1/rho ≤ M) (j : ℕ) :
+    (hM : 1 ≤ M) (hi : 1 / rho ≤ M) (j : ℕ) :
     ‖iteratedFDeriv ℝ j (f ∘ SlowBorelBase.scaleMap Q) (rho,w)‖ ≤
       ‖SlowBorelBase.blownJet j f (Q*rho,w)‖ * M^j := by
   have hs : ContDiffOn ℝ ∞ (f ∘ SlowBorelBase.scaleMap (Q*rho)) BaseChartJets.sumRegion :=
@@ -162,7 +168,7 @@ variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 noncomputable def coordinates (x : Point) : Chart :=
   BaseChartJets.normalizedCoordinates F.data.h (BaseContextAssembly.slowCoordinates x)
 
-theorem coordinates_unweighted (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+theorem coordinates_unweighted (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     UnweightedClass (BaseContextAssembly.nativeStrip W U) 0 (fun _ => coordinates (F := F)) := by
   apply BaseContextAssembly.unweighted_polynomial_pullback
     (BaseContextAssembly.nativeStrip W U)
@@ -172,7 +178,7 @@ theorem coordinates_unweighted (U : LocalSignedRequest.SlowRegion (2*F.data.h)) 
 
 /-- The source edge distance is the capped minimum of twice the two radial
 log distances.  Thus it is at least the native strip distance. -/
-theorem native_edgeDistance_le (U : LocalSignedRequest.SlowRegion (2*F.data.h))
+theorem native_edgeDistance_le (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     {x : Point} (hx : x ∈ (BaseContextAssembly.nativeStrip W U).domain) :
     (BaseContextAssembly.nativeStrip W U).delta x ≤
       FinalSlowBase.edgeDistance W (coordinates (F := F) x).2 := by
@@ -221,7 +227,7 @@ theorem native_edgeDistance_le (U : LocalSignedRequest.SlowRegion (2*F.data.h))
   rw [hl, hh]
   exact min_le_min le_rfl (min_le_min (by linarith [hlog.1]) (by linarith [hlog.2]))
 
-theorem inverse_edgeDistance_le_growth (U : LocalSignedRequest.SlowRegion (2*F.data.h))
+theorem inverse_edgeDistance_le_growth (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     (n : ℕ) {x : Point} (hx : x ∈ (BaseContextAssembly.nativeStrip W U).domain) :
     (FinalSlowBase.edgeDistance W (coordinates (F := F) x).2)⁻¹ ≤
       (BaseContextAssembly.nativeStrip W U).growth n x := by
@@ -232,7 +238,7 @@ theorem inverse_edgeDistance_le_growth (U : LocalSignedRequest.SlowRegion (2*F.d
   apply (le_max_right (1:ℝ) ((s.delta x)⁻¹)).trans
   exact le_mul_of_one_le_left (zero_le_one.trans (le_max_left _ _)) (s.one_le_slow n)
 
-theorem coordinates_range (U : LocalSignedRequest.SlowRegion (2*F.data.h))
+theorem coordinates_range (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     {x : Point} (hx : x ∈ (BaseContextAssembly.nativeStrip W U).domain) :
     (coordinates (F := F) x).1 ∈ Ioo (U.qlo/2) (BaseContextAssembly.geometryUpper U) :=
   (BaseContextAssembly.native_geometry W U ℕ).q_range 0 _
@@ -240,7 +246,7 @@ theorem coordinates_range (U : LocalSignedRequest.SlowRegion (2*F.data.h))
 
 /-- Every fixed real power of the normalized positive scale has genuine
 uniform jets on the moving strip, including as physical time tends to zero. -/
-theorem coordinate_power_unweighted (U : LocalSignedRequest.SlowRegion (2*F.data.h)) (a : ℝ) :
+theorem coordinate_power_unweighted (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (a : ℝ) :
     UnweightedClass (BaseContextAssembly.nativeStrip W U) 0
       (fun _ x => (coordinates (F := F) x).1 ^ a) := by
   have hqlo : 0 < U.qlo/2 := div_pos U.qlo_pos (by norm_num)
@@ -293,7 +299,7 @@ theorem correction_weighted_jets (upper : ℝ) (B m : ℕ) :
     change SlowBorelBase.blownJet m (correction H v upper B) (q,w) = 0 at hz
     rw [hz, norm_zero]
     have hw' : w ∈ BaseResidual.activeWindow (FinalSlowBase.logLeft W) (FinalSlowBase.logRight W)
-      := by
+        := by
       rwa [← FinalSlowBase.annulus_eq W]
     have hzeta : 0 ≤ FinalSlowBase.weight W w :=
       (ActiveAnnulusWeight.radialWeight_pos hw'.1).le
@@ -305,7 +311,7 @@ theorem correction_weighted_jets (upper : ℝ) (B m : ℕ) :
 /-- The order-zero tensor, composed with the actual moving chart, keeps
 the exact edge weight.  Its proof uses the checked profile-jet estimates. -/
 theorem leading_composed_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 0
       (fun _ x => BaseResidual.stressPair (FinalSlowBase.coefficients H v) 0
         (coordinates (F := F) x).2) := by
@@ -335,7 +341,7 @@ theorem leading_composed_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
 /-- The actual positive-order normalized tensor is one mean order smaller
 after the band rescaling, uniformly over all bands. -/
 theorem correction_composed_meanClass (upper : ℝ) (B : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (fun n x => correction H v upper B
         (SlowBorelBase.scaleMap (ChartScales.Q n) (coordinates (F := F) x))) := by
@@ -343,10 +349,10 @@ theorem correction_composed_meanClass (upper : ℝ) (B : ℕ)
   have hs n : ContDiffOn ℝ ∞
       (correction H v upper B ∘ SlowBorelBase.scaleMap (ChartScales.Q n)) BaseChartJets.sumRegion :=
     (correction_smooth H v upper B).comp (SlowBorelBase.scaleMap (ChartScales.Q
-      n)).contDiff.contDiffOn
+        n)).contDiff.contDiffOn
       (fun y hy => ⟨mul_pos (ChartScales.Q_pos n) hy.1, hy.2⟩)
   have hmap (n : ℕ) : MapsTo (fun x => coordinates (F := F) x) s.domain BaseChartJets.sumRegion :=
-    by
+      by
     intro x hx
     have hq := coordinates_range W U hx
     have hw := BaseContextAssembly.nativeStrip_active W U hx
@@ -400,7 +406,7 @@ theorem correction_composed_meanClass (upper : ℝ) (B : ℕ)
     _ = _ := by simp only [majorant, Real.rpow_one]; ring
 
 /-- The band scalar is exactly the first power of the class parameter. -/
-theorem epsilon_bandBound (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+theorem epsilon_bandBound (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     BandBound (BaseContextAssembly.nativeStrip W U) 1 (ChartScales.epsilon F.data.h) := by
   refine ⟨1, zero_le_one, 0, fun n => ?_⟩
   change ‖ChartScales.epsilon F.data.h n‖ ≤
@@ -412,7 +418,7 @@ include H in
 /-- Raw positive-radius formula for the literal leading stress, including
 the exact physical power of the normalized similarity scale. -/
 theorem raw_leading_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (fun n x => (ChartScales.epsilon F.data.h n *
         (coordinates (F := F) x).1 ^ (-CoordinateAlgebra.A F.data.h-1/2)) •
@@ -439,7 +445,7 @@ theorem raw_leading_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
 extra mean order follows from the actual weighted Borel estimate and the
 physical band factor, without a lower bound on the flat weight. -/
 theorem raw_higher_meanClass (upper : ℝ) (B : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 2
       (fun n x => (ChartScales.epsilon F.data.h n *
         (coordinates (F := F) x).1 ^ (-CoordinateAlgebra.A F.data.h-1/2)) •
@@ -449,7 +455,7 @@ theorem raw_higher_meanClass (upper : ℝ) (B : ℕ)
   have h0 : MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (fun n x => (coordinates (F := F) x).1 ^ (-CoordinateAlgebra.A F.data.h-1/2) •
         correction H v upper B (SlowBorelBase.scaleMap (ChartScales.Q n) (coordinates (F := F) x)))
-          := by
+            := by
     simpa only [MeanClass, UnweightedClass, one_mul, zero_add] using
       (coordinate_power_unweighted W U (-CoordinateAlgebra.A F.data.h-1/2)).smul
         (correction_composed_meanClass H v upper B U)
@@ -457,7 +463,7 @@ theorem raw_higher_meanClass (upper : ℝ) (B : ℕ)
       (fun n x => (ChartScales.epsilon F.data.h n *
         (coordinates (F := F) x).1 ^ (-CoordinateAlgebra.A F.data.h-1/2)) •
         correction H v upper B (SlowBorelBase.scaleMap (ChartScales.Q n) (coordinates (F := F) x)))
-          := by
+            := by
     simpa only [show (1:ℝ)+1=2 by norm_num, smul_smul] using
       h0.band_smul (epsilon_bandBound (W := W) U)
   apply CurlClassBounds.class_congr h1
@@ -469,7 +475,7 @@ theorem raw_higher_meanClass (upper : ℝ) (B : ℕ)
 
 /-- The full raw stress has mean order one. -/
 theorem raw_stress_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
-    (upper : ℝ) (B : ℕ) (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (upper : ℝ) (B : ℕ) (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (fun n x => (ChartScales.epsilon F.data.h n *
         (coordinates (F := F) x).1 ^ (-CoordinateAlgebra.A F.data.h-1/2)) •
@@ -482,31 +488,31 @@ theorem raw_stress_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
 
 /-- The leading term of the same actual base context belongs to `M₁`. -/
 theorem leadingVirtualStress_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (BaseContextAssembly.leadingVirtualStress H v) := by
   apply CurlClassBounds.class_congr (raw_leading_meanClass H v hcone U)
   intro n x hx
   exact (BaseContextAssembly.leadingVirtualStress_eq H v n
     (BaseContextAssembly.nativeStrip_time W U hx) (BaseContextAssembly.nativeStrip_radius W U
-      hx)).symm
+        hx)).symm
 
 /-- Actual virtual stress, with the signed-radius extension fixed by the
 base context.  On this native strip the radius is strictly positive. -/
 theorem virtualStress_meanClass (hcone : LeadingStressWeights.FullTrueCone v)
-    (upper : ℝ) (B : ℕ) (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (upper : ℝ) (B : ℕ) (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (BaseContextAssembly.virtualStress H v upper B) := by
   apply CurlClassBounds.class_congr (raw_stress_meanClass H v hcone upper B U)
   intro n x hx
   exact (BaseContextAssembly.virtualStress_normalized H v upper B n
     (BaseContextAssembly.nativeStrip_time W U hx) (BaseContextAssembly.nativeStrip_radius W U
-      hx)).symm
+        hx)).symm
 
 /-- The difference between the actual virtual tensor and its actual
 leading term belongs to `M₂`, with constants uniform over every band. -/
 theorem higherStress_meanClass (upper : ℝ) (B : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 2
       (fun n x => BaseContextAssembly.virtualStress H v upper B n x -
         BaseContextAssembly.leadingVirtualStress H v n x) := by
@@ -522,7 +528,7 @@ theorem higherStress_meanClass (upper : ℝ) (B : ℕ)
 /-- The two physical tensor entries can be consumed separately by the
 correction step, retaining the same strip and class exponent. -/
 theorem virtualStress_components (hcone : LeadingStressWeights.FullTrueCone v)
-    (upper : ℝ) (B : ℕ) (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (upper : ℝ) (B : ℕ) (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
       (fun n x => (BaseContextAssembly.virtualStress H v upper B n x).1) ∧
     MeanClass (BaseContextAssembly.nativeStrip W U) 1
@@ -531,7 +537,7 @@ theorem virtualStress_components (hcone : LeadingStressWeights.FullTrueCone v)
   exact ⟨hs.map (ContinuousLinearMap.fst ℝ ℝ ℝ), hs.map (ContinuousLinearMap.snd ℝ ℝ ℝ)⟩
 
 theorem higherStress_components (upper : ℝ) (B : ℕ)
-    (U : LocalSignedRequest.SlowRegion (2*F.data.h)) :
+    (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     MeanClass (BaseContextAssembly.nativeStrip W U) 2
       (fun n x => (BaseContextAssembly.virtualStress H v upper B n x).1 -
         (BaseContextAssembly.leadingVirtualStress H v n x).1) ∧

@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderEquation
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
+import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageEvolution
+
+/-! The actual source transverse solve preserves the angular zero mode constraint. -/
 
 @[expose] public section
 
-/-! The actual source transverse solve preserves the angular zero mode constraint. -/
 
 noncomputable section
 
@@ -28,8 +30,8 @@ variable (P : ℝ) [Fact (0 < P)]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c*‖v‖^2 ≤ ‖Q.field t x v‖^2)
-  (f : C(Icc (0 : ℝ) T,Supported P E S hS)) (a₀ : Supported P U S hS)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (f : C(Icc (0 : ℝ) T, Supported P E S hS)) (a₀ : Supported P U S hS)
 
 theorem projectedForcing_average_zero
     (hf : ∀ t, average P (f t : CylinderL2 P E) = 0) (t : Icc (0 : ℝ) T) :

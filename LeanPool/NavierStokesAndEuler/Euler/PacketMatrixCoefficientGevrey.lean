@@ -7,15 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixCoefficientAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientBounds
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Bounds for the actual composition, scalar multiple and spatial derivative
 of packet matrix-coefficient witnesses.  The derivative radius enlargement
 occurs only in this fixed coefficient budget. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,23 +27,35 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerBounded
   EulerPacketPointJets EulerGevrey EulerOperatorGevreyCalculus
 open scoped ContDiff BoundedContinuousFunction
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketMatrixCoefficientGevrey1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instPacketMatrixCoefficientGevrey2 : NormedSpace ℝ (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketMatrixCoefficientGevrey3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instPacketMatrixCoefficientGevrey4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 variable {T : ℝ} {a b : Domain → Space →L[ℝ] Space}
 
 theorem comp_bound (A : MatrixCoefficient T a) (B : MatrixCoefficient T b)
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
-    (hbA : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C*majorant R 0 n)
-    (hbB : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath B.path) x‖ ≤ D*majorant R 0 n)
+    (hbA : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C * majorant R 0 n)
+    (hbB : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath B.path) x‖ ≤ D * majorant R 0 n)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (A.comp B).path) x‖ ≤
       (3*C*D)*majorant R 0 n := by
   have he : translateCoefficientPath (A.comp B).path =
       fun v => pathCompositionMap (translateCoefficientPath A.path v) (translateCoefficientPath
-        B.path v) := by
+          B.path v) := by
     funext v
     apply ContinuousMap.ext
     intro t
@@ -55,7 +69,7 @@ theorem comp_bound (A : MatrixCoefficient T a) (B : MatrixCoefficient T b)
     A.orbit B.orbit R C D hR hC hD 0 0 hbA hbB n x
 
 theorem smul_bound (A : MatrixCoefficient T a) (c R C : ℝ)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C*majorant R 0 n)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C * majorant R 0 n)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (A.smul c).path) x‖ ≤
       (|c| * C)*majorant R 0 n := by
@@ -67,7 +81,7 @@ theorem smul_bound (A : MatrixCoefficient T a) (c R C : ℝ)
     intro y
     rfl
   rw [he,iteratedFDeriv_const_smul_apply (A.orbit.of_le (by
-    simp)).contDiffAt,norm_smul,Real.norm_eq_abs]
+      simp)).contDiffAt,norm_smul,Real.norm_eq_abs]
   exact (mul_le_mul_of_nonneg_left (hb n x) (abs_nonneg c)).trans_eq (by ring)
 
 theorem spatialDerivative_norm_le (A : MatrixCoefficient T a) (v : Space)
@@ -85,7 +99,7 @@ theorem spatialDerivative_norm_le (A : MatrixCoefficient T a) (v : Space)
 
 theorem spatialDerivative_bound (A : MatrixCoefficient T a) (v : Space) (hv : ‖v‖ ≤ 1)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C*majorant R 0 n)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C * majorant R 0 n)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (A.spatialDerivative v).path) x‖ ≤
       (C*R)*majorant (4*R) 0 n := by
@@ -99,7 +113,7 @@ theorem spatialDerivative_bound (A : MatrixCoefficient T a) (v : Space) (hv : �
 
 theorem bound_mono_radius (A : MatrixCoefficient T a) (R S C : ℝ)
     (hR : 0 ≤ R) (hRS : R ≤ S) (hC : 0 ≤ C)
-    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C*majorant R 0 n)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C * majorant R 0 n)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath A.path) x‖ ≤ C*majorant S 0 n :=
   (hb n x).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono R S hR hRS 0 n) hC)

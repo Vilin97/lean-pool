@@ -6,17 +6,19 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerProof
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureSpatialRegularity
+import Mathlib.Analysis.Calculus.UniformLimitsDeriv
+
+/-! Closed graphs of the genuine strong cylinder translation derivatives. -/
 
 @[expose] public section
 
-/-! Closed graphs of the genuine strong cylinder translation derivatives. -/
 
 noncomputable section
 
 namespace EulerClosedTranslationGraph
 
-open MeasureTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity EulerCylinderMollifier
+open MeasureTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -37,7 +39,7 @@ theorem translation_hasDerivAt_all (a : LiftTangent) (f g : LiftL2 period)
         (translation period (translationPath period a s) f))
       (translation period (translationPath period a t) g) 0 :=
     (translation period (translationPath period a
-      t)).toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt 0 h
+        t)).toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt 0 h
   have hd := hshift.scomp_of_eq t ((hasDerivAt_id t).sub_const t) (by simp)
   have hshape : (fun s => translation period (translationPath period a t)
       (translation period (translationPath period a (s - t)) f)) =
@@ -47,7 +49,8 @@ theorem translation_hasDerivAt_all (a : LiftTangent) (f g : LiftL2 period)
     rw [show t + (s - t) = s by ring]
   simpa only [Function.comp_def, id_eq, hshape, one_smul] using hd
 
-/-- Convergence of L² fields gives uniform convergence of their entire isometric translation orbits. -/
+/-- Convergence of L² fields gives uniform convergence of their entire isometric translation orbits.
+-/
 theorem translation_orbits_tendstoUniformly {ι : Type*} {l : Filter ι}
     (a : LiftTangent) (f : ι → LiftL2 period) (g : LiftL2 period)
     (hf : Filter.Tendsto f l (𝓝 g)) :
@@ -69,12 +72,12 @@ def translationDerivativeGraph (a : LiftTangent) : Submodule ℝ (LiftL2 period 
   add_mem' := by
     intro p q hp hq
     change HasDerivAt (fun t => translation period (translationPath period a t) (p.1 + q.1)) (p.2 +
-      q.2) 0
+        q.2) 0
     simpa only [map_add] using hp.fun_add hq
   smul_mem' := by
     intro r p hp
     change HasDerivAt (fun t => translation period (translationPath period a t) (r • p.1)) (r •
-      p.2) 0
+        p.2) 0
     simpa only [map_smul, Pi.smul_def] using hp.const_smul r
 
 /-- The strong translation derivative is a closed operator on the actual cylinder L² space. -/
@@ -90,11 +93,11 @@ theorem translationDerivativeGraph_closed (a : LiftTangent) :
       HasDerivAt (fun s => translation period (translationPath period a s) (v n).1)
         (translation period (translationPath period a t) (v n).2) t :=
     Filter.Eventually.of_forall (fun n t => translation_hasDerivAt_all period a (v n).1 (v n).2 (hv
-      n) t)
+        n) t)
   have hlim := hasDerivAt_of_tendstoUniformly
     (translation_orbits_tendstoUniformly period a (fun n => (v n).2) p.2 hsnd) hder
     (fun t => (translation period (translationPath period a
-      t)).continuous.continuousAt.tendsto.comp hfst) 0
+        t)).continuous.continuousAt.tendsto.comp hfst) 0
   change HasDerivAt (fun t => translation period (translationPath period a t) p.1) p.2 0
   simpa only [translationPath_zero, translation_zero] using hlim
 

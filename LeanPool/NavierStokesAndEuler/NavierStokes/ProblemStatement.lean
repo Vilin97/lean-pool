@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 
 /-!
 # OPEN target: the candidate forced Navier--Stokes construction
@@ -29,6 +27,9 @@ The `ContDiff` scope's `∞` means all finite differentiability orders. In this
 Mathlib version `⊤` would instead impose the stronger analytic order.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set
@@ -42,7 +43,9 @@ abbrev Space := EuclideanSpace ℝ (Fin 3)
 /-- The first coordinate is time; the second is the lifted spatial coordinate. -/
 abbrev SpaceTime := ℝ × Space
 
+/-- Velocity field: an abbreviation for `SpaceTime → Space`. -/
 abbrev VelocityField := SpaceTime → Space
+/-- Pressure field: an abbreviation for `SpaceTime → ℝ`. -/
 abbrev PressureField := SpaceTime → ℝ
 
 /-- The standard unit coordinate vectors, fixing both the metric and periods. -/

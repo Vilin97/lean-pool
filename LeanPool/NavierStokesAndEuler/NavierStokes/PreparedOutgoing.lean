@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ScheduledProfileChoice
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MatchingDebtBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingCone
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.NominalProfile
+public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalCone
+import LeanPool.NavierStokesAndEuler.NavierStokes.MatchingDebtBounds
+import LeanPool.NavierStokesAndEuler.NavierStokes.ScheduledProfileChoice
 
 /-!
 # One prepared outgoing profile and arbitrarily late nominal matching
@@ -21,6 +21,9 @@ The clean cone below belongs to the unedited outgoing profile. Identification
 with the complete edited nominal stress is a separate construction.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PreparedOutgoing
@@ -30,7 +33,9 @@ open Set Filter OutgoingProfile
 /-- Data obtained from the actual schedule construction, with a clean cone
 available at all sufficiently late matching radii. -/
 structure PreparedProfile where
+  /-- Profile of `PreparedProfile`, of type `Profile`. -/
   profile : Profile
+  /-- Bound of `PreparedProfile`, of type `ℝ`. -/
   bound : ℝ
   bound_pos : 0 < bound
   specification : Specification profile bound

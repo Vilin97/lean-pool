@@ -7,11 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathGluing
-public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderPaths
+public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
+
+/-! Bounded spatial maps and mixed derivative words commute with the actual elapsed-time join. -/
 
 @[expose] public section
 
-/-! Bounded spatial maps and mixed derivative words commute with the actual elapsed-time join. -/
 
 noncomputable section
 
@@ -26,8 +27,8 @@ attribute [local instance] EulerPacketTimePathGluing.compactInterval
 variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
   (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
-  (u : C(Icc (0 : ℝ) τ,E)) (v : C(Icc (0 : ℝ) (S-τ),E))
-  (hm : u ⟨τ,hτ0,le_rfl⟩ = v ⟨0,le_rfl,sub_nonneg.mpr hτS⟩)
+  (u : C(Icc (0 : ℝ) τ, E)) (v : C(Icc (0 : ℝ) (S - τ), E))
+  (hm : u ⟨τ, hτ0, le_rfl⟩ = v ⟨0, le_rfl, sub_nonneg.mpr hτS⟩)
 
 theorem join_map (L : E →L[ℝ] F) :
     L.compLeftContinuous ℝ (Icc (0 : ℝ) S) (join S τ hτ0 hτS u v hm) =
@@ -51,8 +52,8 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
   (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
-  (u : C(Icc (0 : ℝ) τ,CylinderL2 P V)) (v : C(Icc (0 : ℝ) (S-τ),CylinderL2 P V))
-  (hm : u ⟨τ,hτ0,le_rfl⟩ = v ⟨0,le_rfl,sub_nonneg.mpr hτS⟩)
+  (u : C(Icc (0 : ℝ) τ, CylinderL2 P V)) (v : C(Icc (0 : ℝ) (S - τ), CylinderL2 P V))
+  (hm : u ⟨τ, hτ0, le_rfl⟩ = v ⟨0, le_rfl, sub_nonneg.mpr hτS⟩)
 
 theorem join_translation (a : LiftTangent) :
     pathTranslate P a (join S τ hτ0 hτS u v hm) =
@@ -75,9 +76,9 @@ theorem join_orbit_contDiff :
 
 include hu hv in
 theorem join_orbit_block {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q n : ℕ) (a :
-  LiftTangent) :
+    LiftTangent) :
     block directions q (fun b => pathTranslate P b (join S τ hτ0 hτS u v hm)) n a ≤
-      block directions q (fun b => pathTranslate P b u) n a+
+      block directions q (fun b => pathTranslate P b u) n a +
         block directions q (fun b => pathTranslate P b v) n a := by
   have he : (fun b => pathTranslate P b (join S τ hτ0 hτS u v hm)) =
       fun b => join S τ hτ0 hτS (pathTranslate P b u) (pathTranslate P b v)

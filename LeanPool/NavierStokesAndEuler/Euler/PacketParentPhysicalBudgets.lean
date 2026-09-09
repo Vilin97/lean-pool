@@ -11,12 +11,13 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentJoinedBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentForwardBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePropagator
 
-@[expose] public section
-
 /-! Source-budget constructors using the literal parent fields in (21) and
 the physical tangent growth estimate.  H3 for the constructed coordinate
 propagator, the Hessian jets, and every inverse radius guard are conclusions.
 The curvature/smallness hypotheses remain in the genuine source data. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,8 +30,10 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
+/-- Half ball, given by `{x | ‖x‖ ≤ (1/2 : ℝ)}`. -/
 def halfBall : Set Space := {x | ‖x‖ ≤ (1/2 : ℝ)}
 
+/-- Physical cost, given by `3*(frameAmplitude K)^3*Cp`. -/
 def physicalCost (K Cp : ℝ) : ℝ := 3*(frameAmplitude K)^3*Cp
 
 theorem physicalCost_nonneg (K Cp : ℝ) (hCp : 0 ≤ Cp) : 0 ≤ physicalCost K Cp := by
@@ -44,15 +47,15 @@ def forwardBudget (D : Data U) (q : ℕ)
     (A V : Icc (0 : ℝ) D.T → SmoothL2Field Space)
     (ℓ K Cp : ℝ) (hℓ : 0 ≤ ℓ) (hℓ1 : ℓ ≤ 1) (hK : 0 ≤ K) (hCp : 0 ≤ Cp)
     (hA : ∀ t, HasLabelBound K (A t)) (hV : ∀ t, HasLabelBound K (V t))
-    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space+fderiv ℝ (A t).field (ℓ • x))
+    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space + fderiv ℝ (A t).field (ℓ • x))
     (hF₁ : ∀ t x, D.F₁.field t x = fderiv ℝ (V t).field (ℓ • x))
     (hdet : ∀ t x, (operatorMatrix (D.F.field t x)).det = 1)
-    (g : C(Icc (0 : ℝ) D.T,ℝ)) (hg : ∀ t, 0 < g t)
-    (hg0 : g ⟨0,le_rfl,D.T_pos.le⟩ = 1)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
+    (hg0 : g ⟨0, le_rfl, D.T_pos.le⟩ = 1)
     (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
-    (hsub : D.support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1/2 : ℝ))
+    (hsub : D.support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
     (hphysical : PhysicalGrowth D halfBall g Cp) : EulerTransversePacketForward.Budget D (Fin 4) q
-      := by
+        := by
   have hbF := coefficient_deformation_bound D.F A (ℓ • ContinuousLinearMap.id ℝ Space)
     (labelScaling_norm_le ℓ hℓ hℓ1) hF K hK hA
   have hbF₁ := coefficient_gradient_bound D.F₁ V (ℓ • ContinuousLinearMap.id ℝ Space)
@@ -82,7 +85,7 @@ def joinedBudget (D : Data U) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti) (hCp : 0 ≤ Cp)
     (hA : ∀ t, HasLabelBound K (A t)) (hV : ∀ t, HasLabelBound K (V t))
     (hW : ∀ t, HasLabelBound K (W t))
-    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space+fderiv ℝ (A t).field (ℓ • x))
+    (hF : ∀ t x, D.F.field t x = ContinuousLinearMap.id ℝ Space + fderiv ℝ (A t).field (ℓ • x))
     (hF₁ : ∀ t x, D.F₁.field t x = fderiv ℝ (V t).field (ℓ • x))
     (hF₂ : ∀ t x, F₂.field t x = fderiv ℝ (W t).field (ℓ • x))
     (h₂ : ∀ t ∈ Icc (0 : ℝ) τ, ∀ x : Space,

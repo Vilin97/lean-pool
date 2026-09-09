@@ -6,107 +6,20 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Tactic.Abel
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Slope
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Normed.Operator.Bilinear
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Analysis.Distribution.Sobolev
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Analysis.Fourier.Convolution
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Topology.MetricSpace.Cauchy
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Calculus.FDeriv.WithLp
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.Module
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.ODE.PicardLindelof
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
-
-@[expose] public section
-
-noncomputable section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 Relative perturbation estimates for the finite-dimensional scalar ODE in the
 Euler packet proposal.  These results do not assert the PDE packet lemma.
 -/
+
+@[expose] public section
+
+noncomputable section
 
 namespace EulerPacketPerturbation
 
@@ -281,10 +194,10 @@ theorem forced_kernel_formula
     (μ := MeasureTheory.volume)
   have hIv := ((hDc.mul ((hvc.mul hgc).sub (hv₁c.mul hfc))).mono hsubset).intervalIntegrable
     (μ := MeasureTheory.volume)
-  change IntervalIntegrable (fun s => D s * (u s * g s - u₁ s * f s)) MeasureTheory.volume a t at
-    hIu
-  change IntervalIntegrable (fun s => D s * (v s * g s - v₁ s * f s)) MeasureTheory.volume a t at
-    hIv
+  change IntervalIntegrable (fun s => D s * (u s * g s - u₁ s * f s)) MeasureTheory.volume a t
+      at hIu
+  change IntervalIntegrable (fun s => D s * (v s * g s - v₁ s * f s)) MeasureTheory.volume a t
+      at hIv
   have hInt (A B : ℝ) :
       (∫ s in a..t, D s * (A * v₁ s - B * u₁ s) * f s +
         D s * (B * u s - A * v s) * g s) =
@@ -471,10 +384,10 @@ theorem equation30_forced_bound
     fun t ht => (hV t (ha.trans ht.1)).continuousAt.continuousWithinAt
   have hU₁c : ContinuousOn U₁ (Icc a b) :=
     fun t ht => (equation30_second_derivative (hfluxU t (ha.trans
-      ht.1))).continuousAt.continuousWithinAt
+        ht.1))).continuousAt.continuousWithinAt
   have hV₁c : ContinuousOn V₁ (Icc a b) :=
     fun t ht => (equation30_second_derivative (hfluxV t (ha.trans
-      ht.1))).continuousAt.continuousWithinAt
+        ht.1))).continuousAt.continuousWithinAt
   have hDc : ContinuousOn D (Icc a b) := by fun_prop
   have hW : U a * (D a * V₁ a) - (D a * U₁ a) * V a = 1 := by
     have hw := flux_wronskian_constant
@@ -552,7 +465,7 @@ theorem equation30_perturbed_bound
   have hUp := equation30_global_positive hε hεsmall hU hfluxU hU0 (by rw [hU₁0])
   have hUa : 0 < U a := hUp a ha
   have hUc : ContinuousOn U (Icc a b) := fun t ht => (hU t (ha.trans
-    ht.1)).continuousAt.continuousWithinAt
+      ht.1)).continuousAt.continuousWithinAt
   have hYc : ContinuousOn Y (Icc a b) := fun t ht => (hY t ht).continuousAt.continuousWithinAt
   have hY₁c : ContinuousOn Y₁ (Icc a b) := continuousOn_of_flux
     (D := fun s => 1 + (ε ^ 2 * s ^ 2) ^ 2) (by fun_prop)
@@ -636,7 +549,7 @@ theorem equation30_perturbed_difference_bound
   have hUp := equation30_global_positive hε hεsmall hU hfluxU hU0 (by rw [hU₁0])
   have hUa : 0 < U a := hUp a ha
   have hUc : ContinuousOn U (Icc a b) := fun t ht => (hU t (ha.trans
-    ht.1)).continuousAt.continuousWithinAt
+      ht.1)).continuousAt.continuousWithinAt
   have hpert := equation30_perturbed_bound hε hεsmall hΘ ha hab hb hδ hsmall
     hU hV hfluxU hfluxV hU0 hU₁0 hV₁0 hY hfluxY hfc hgc hforcing
   have hE : ∀ t ∈ Icc a b,

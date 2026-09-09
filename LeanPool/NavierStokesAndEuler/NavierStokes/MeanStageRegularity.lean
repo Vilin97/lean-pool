@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MeanStateRegularity
 
-@[expose] public section
-
 /-!
 # Primitive regularity under the actual mean stages
 
@@ -19,6 +17,9 @@ are derived before updating the state.  No new residual regularity or
 quantitative estimate is an input to preservation.
 -/
 
+@[expose] public section
+
+
 namespace NavierStokes.MeanStageRegularity
 
 noncomputable section
@@ -27,8 +28,11 @@ open Set Function Filter
 open scoped ContDiff Topology
 open MeanIncrementBounds CorrectionState LocalSignedRequest MeanStateRegularity
 
+/-- Plane: an abbreviation for `PressureStream.Plane`. -/
 abbrev Plane := PressureStream.Plane
+/-- Point: an abbreviation for `PressureStream.Lift Plane`. -/
 abbrev Point := PressureStream.Lift Plane
+/-- Scalar: an abbreviation for `MeanIncrementBounds.Field Point`. -/
 abbrev Scalar := MeanIncrementBounds.Field Point
 
 namespace MovingField
@@ -106,7 +110,7 @@ theorem streamGamma (hf : GaugeMomentBalances.MovingField U a b f)
     (MeanStateRegularity.MovingField.directional hf (0, (0, v))) ha hab hg hp
   have hd := divideRadius hf ha hab
   convert! MeanStateRegularity.MovingField.add (MeanStateRegularity.MovingField.add hr ht) hd using
-    1
+      1
   funext n x
   exact congrArg (fun t => t + PressureStream.divideRadius (f n) x) (graphDr_eq d (M n) v (f n) x)
 
@@ -154,7 +158,7 @@ theorem temporalStage_primitive (H : PrimitiveData U g.radial.inner g.radial.out
 theorem temporalStage_reconstructed (g : VariableGaugeMean.GaugeData Plane)
     (c : Context Point) (u : State Point) (h : ℝ) (index : ℕ → ℕ) (axial : Plane × Plane) :
     VariableGaugeMean.reconstructState g c (VariableGaugeMean.temporalStageState g h index axial c
-      u) =
+        u) =
       VariableGaugeMean.temporalStageState g h index axial c u := rfl
 
 /-- The primitive invariant and actual pressure reconstruction are both
@@ -167,7 +171,7 @@ theorem temporalStage_preserves (H : PrimitiveData U g.radial.inner g.radial.out
     PrimitiveData U g.radial.inner g.radial.outer c
         (VariableGaugeMean.temporalStageState g h index axial c u) ∧
       VariableGaugeMean.reconstructState g c (VariableGaugeMean.temporalStageState g h index axial
-        c u) =
+          c u) =
         VariableGaugeMean.temporalStageState g h index axial c u :=
   ⟨temporalStage_primitive H ha hd hell hfixed h index axial,
     temporalStage_reconstructed g c u h index axial⟩
@@ -191,7 +195,7 @@ theorem debt_smooth {coord a b : ℝ} {U : SlowRegion coord} {c : Context Point}
   · simp only [CorrectionState.debt, CorrectionState.thetaDefect]
     exact hT
   · simp only [CorrectionState.debt, CorrectionState.axialDefect, Pi.sub_apply, Pi.smul_apply,
-    smul_eq_mul]
+      smul_eq_mul]
     exact hZ.sub (contDiffOn_const.mul hP₂)
 
 /-- The fixed rank geometry can be reused at a new state.  Its only

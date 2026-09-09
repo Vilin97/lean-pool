@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingComposition
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.GevreyFlowBootstrap
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! The finite generating sum for genuine derivatives.  This file derives
 the identity-map contribution and the composition estimate needed by the
 flow bootstrap from actual derivatives, including the exact Faà di Bruno
 formula. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,6 +31,7 @@ variable {E F G : Type*}
   [NormedAddCommGroup F] [NormedSpace ℝ F]
   [NormedAddCommGroup G] [NormedSpace ℝ G]
 
+/-- Derivative sum, given by `generatingSum (ftaylorSeries ℝ f x) N z`. -/
 def derivativeSum (f : E → F) (N : ℕ) (z : ℝ) (x : E) : ℝ :=
   generatingSum (ftaylorSeries ℝ f x) N z
 
@@ -99,8 +103,8 @@ theorem derivativeSum_comp_le (f : E → F) (g : F → G) (N : ℕ)
     (z B R : ℝ) (x : E) (hz : 0 ≤ z) (hB : 0 ≤ B) (hR : 0 ≤ R)
     (hf : ContDiffAt ℝ N f x) (hg : ContDiffAt ℝ N g (f x))
     (hgj : ∀ j ∈ Finset.Icc 1 N,
-      ‖iteratedFDeriv ℝ j g (f x)‖ ≤ B*R^j*(j.factorial : ℝ)^2)
-    (hsmall : R*derivativeSum f N z x < 1) :
+      ‖iteratedFDeriv ℝ j g (f x)‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2)
+    (hsmall : R * derivativeSum f N z x < 1) :
     derivativeSum (g ∘ f) N z x ≤
       B*(R*derivativeSum f N z x)/(1-R*derivativeSum f N z x) := by
   have he := generatingSum_taylorComp_le (ftaylorSeries ℝ f x)
@@ -125,10 +129,10 @@ theorem rational_fraction_mono (B x y : ℝ) (hB : 0 ≤ B)
 /-- The identity part of a flow costs exactly z in its generating sum. -/
 theorem derivativeSum_comp_id_add_le (f : E → E) (g : E → F) (N : ℕ)
     (z B R : ℝ) (x : E) (hz : 0 ≤ z) (hB : 0 ≤ B) (hR : 0 ≤ R)
-    (hf : ContDiffAt ℝ N f x) (hg : ContDiffAt ℝ N g (x+f x))
+    (hf : ContDiffAt ℝ N f x) (hg : ContDiffAt ℝ N g (x + f x))
     (hgj : ∀ j ∈ Finset.Icc 1 N,
-      ‖iteratedFDeriv ℝ j g (x+f x)‖ ≤ B*R^j*(j.factorial : ℝ)^2)
-    (hsmall : R*(z+derivativeSum f N z x) < 1) :
+      ‖iteratedFDeriv ℝ j g (x + f x)‖ ≤ B * R ^ j * (j.factorial : ℝ) ^ 2)
+    (hsmall : R * (z + derivativeSum f N z x) < 1) :
     derivativeSum (g ∘ (id+f)) N z x ≤
       EulerGevreyFlowBootstrap.rationalRate B R z (derivativeSum f N z x) := by
   have hsum := mul_le_mul_of_nonneg_left (derivativeSum_id_add_le f N z x hf hz) hR

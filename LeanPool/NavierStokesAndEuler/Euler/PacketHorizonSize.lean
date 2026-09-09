@@ -6,15 +6,22 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketBeforeTargetSize
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketIdealSize
+public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
+import LeanPool.NavierStokesAndEuler.Euler.PacketBeforeTargetSize
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.ODE.Gronwall
+import Mathlib.Analysis.Calculus.Deriv.Pow
 
 /-!
 The primary size remains controlled on the short interval after target.
 The actual scalar ODE gives the needed uniform logarithmic growth bound;
 there is no separate post-target growth hypothesis.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -24,11 +31,11 @@ namespace EulerPacketMovingFrame
 open Set Real EulerSmoothLimit EulerPacketGrowth EulerPacketFrameStability InnerProductSpace
 
 theorem equation30_short_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
     (hZ : ∀ x, 0 ≤ x → HasDerivAt Z (Z₁ x) x)
-    (hfluxZ : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*Z₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*Z x) x)
-    (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) (hs : 1 ≤ s) (hst : s ≤ t) (hshort : t-s ≤ 1) :
+    (hfluxZ : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * Z₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * Z x) x)
+    (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) (hs : 1 ≤ s) (hst : s ≤ t) (hshort : t - s ≤ 1) :
     idealPrimarySize σ Z t ≤ 2*exp 6*idealPrimarySize σ Z s := by
   let W : ℝ → ℝ := fun x => (1+σ^2*x^2)*Z x
   let W₁ : ℝ → ℝ := fun x => (2*σ^2*x)*Z x+(1+σ^2*x^2)*Z₁ x
@@ -77,11 +84,11 @@ theorem equation30_short_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
   nlinarith only [hleft, hgrowth, hrightExp]
 
 theorem equation30_horizon_size_comparison {σ T H τ : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
+    (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
     (hZ : ∀ x, 0 ≤ x → HasDerivAt Z (Z₁ x) x)
-    (hfluxZ : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1+(σ^2*u^2)^2)*Z₁ u)
-      (2*(1-σ^2*(σ^2*x^2))*Z x) x)
-    (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) (hT : 1 ≤ T) (hshort : H-T ≤ 1)
+    (hfluxZ : ∀ x, 0 ≤ x → HasDerivAt (fun u => (1 + (σ ^ 2 * u ^ 2) ^ 2) * Z₁ u)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * x ^ 2)) * Z x) x)
+    (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0) (hT : 1 ≤ T) (hshort : H - T ≤ 1)
     (hτ : 0 ≤ τ) (hτH : τ ≤ H) :
     idealPrimarySize σ Z τ ≤ 2*exp 6*idealPrimarySize σ Z T := by
   by_cases hpre : τ ≤ T
@@ -96,10 +103,10 @@ theorem equation30_horizon_size_comparison {σ T H τ : ℝ} {Z Z₁ : ℝ → �
 
 theorem physical_horizon_size_bound {α : Type*} (center : α)
     (m v r w : α → ℝ → Space) {s₀ t₀ a ε T H Θ K e σ : ℝ} {Z Z₁ : ℝ → ℝ}
-    (hs₀ : 0 < s₀) (hε : 0 < ε) (hσ : 0 < σ) (hσsmall : σ ≤ 1/4)
-    (hT : 1 ≤ T) (hTH : T ≤ H) (hHΘ : H ≤ Θ) (hshort : H-T ≤ 1)
+    (hs₀ : 0 < s₀) (hε : 0 < ε) (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
+    (hT : 1 ≤ T) (hTH : T ≤ H) (hHΘ : H ≤ Θ) (hshort : H - T ≤ 1)
     (hΘ : 1 ≤ Θ) (hK : 1 ≤ K) (he : 0 ≤ e) (hεe : ε ≤ e)
-    (hsmall : 1000000*K*e*Θ^40 ≤ 1)
+    (hsmall : 1000000 * K * e * Θ ^ 40 ≤ 1)
     (hm : ∀ ξ τ, τ ∈ Icc 1 H → m ξ (physicalTime t₀ a ε τ) ≠ 0)
     (hv : ∀ ξ τ, τ ∈ Icc 1 H → v ξ (physicalTime t₀ a ε τ) ≠ 0)
     (hmv : ∀ ξ τ, τ ∈ Icc 1 H →
@@ -107,21 +114,22 @@ theorem physical_horizon_size_bound {α : Type*} (center : α)
     (hrw : ∀ ξ τ, τ ∈ Icc 1 H →
       ⟪r ξ (physicalTime t₀ a ε τ), w ξ (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hZ : ∀ t, 0 ≤ t → HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-      (2*(1-σ^2*(σ^2*t^2))*Z t) t)
+    (hfluxZ : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
+      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
     (hZ0 : Z 0 = 1) (hZ₁0 : 0 ≤ Z₁ 0)
     (hP : ∀ ξ τ, τ ∈ Icc 1 H →
-      |scaledRay (m ξ) (v ξ) (r ξ) s₀ t₀ a ε τ 0-σ^2*τ^2| ≤ 800*e*Θ^5)
+      |scaledRay (m ξ) (v ξ) (r ξ) s₀ t₀ a ε τ 0 - σ ^ 2 * τ ^ 2| ≤ 800 * e * Θ ^ 5)
     (hQ : ∀ ξ τ, τ ∈ Icc 1 H →
-      |scaledRay (m ξ) (v ξ) (r ξ) s₀ t₀ a ε τ 1-(-2*σ^2*τ)| ≤ 800*e*Θ^5)
+      |scaledRay (m ξ) (v ξ) (r ξ) s₀ t₀ a ε τ 1 - (-2 * σ ^ 2 * τ)| ≤ 800 * e * Θ ^ 5)
     (hN : ∀ ξ τ, τ ∈ Icc 1 H →
-      |scaledRay (m ξ) (v ξ) (r ξ) s₀ t₀ a ε τ 2-1| ≤ 800*e*Θ^5)
+      |scaledRay (m ξ) (v ξ) (r ξ) s₀ t₀ a ε τ 2 - 1| ≤ 800 * e * Θ ^ 5)
     (hVrel : ∀ ξ τ, τ ∈ Icc 1 H →
-      |scaledVelocity (m ξ) (v ξ) (w ξ) t₀ a ε τ 1/Z τ-1| ≤ K*e*Θ^29)
+      |scaledVelocity (m ξ) (v ξ) (w ξ) t₀ a ε τ 1 / Z τ - 1| ≤ K * e * Θ ^ 29)
     (hratio : ∀ ξ τ, τ ∈ Icc 1 H →
-      |scaledVelocity (m ξ) (v ξ) (w ξ) t₀ a ε τ 0/scaledVelocity (m ξ) (v ξ) (w ξ) t₀ a ε τ 1+Z₁
-        τ/Z τ|
-        ≤ 10*(K*e*Θ^29)) :
+      |scaledVelocity (m ξ) (v ξ) (w ξ) t₀ a ε τ 0 / scaledVelocity (m ξ) (v ξ) (w ξ) t₀ a ε τ 1 +
+          Z₁
+          τ / Z τ|
+        ≤ 10 * (K * e * Θ ^ 29)) :
     ∀ ξ τ, τ ∈ Icc 1 H →
       ‖r ξ (physicalTime t₀ a ε τ)‖*‖w ξ (physicalTime t₀ a ε τ)‖ ≤
         64*exp 6*(‖r center (physicalTime t₀ a ε T)‖*‖w center (physicalTime t₀ a ε T)‖) := by

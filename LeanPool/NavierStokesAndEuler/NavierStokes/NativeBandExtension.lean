@@ -8,8 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEdgeExtension
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedGeometry
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-!
 # Smooth attachment at the native dyadic band boundaries
@@ -19,6 +19,9 @@ have a zero germ there.  Local smoothness of the actual raw primary is
 proved from the fixed prepared family before using that flatness.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.NativeBandExtension
@@ -26,12 +29,16 @@ namespace NavierStokes.NativeBandExtension
 open Set Filter Function PrimaryCopyBounds PhaseJetBounds PrimaryPulseBounds
 open scoped Topology ContDiff BigOperators InnerProductSpace
 
+/-- Native: an abbreviation for `WaveEdgeExtension.NativePoint`. -/
 abbrev Native := WaveEdgeExtension.NativePoint
+/-- Slow type used in native band extension. -/
 abbrev Slow := PhaseCalculus.Slow
 
+/-- Use the entrywise matrix norm inherited from the finite function space. -/
 noncomputable local instance : NormedAddCommGroup SmoothCovariance.Mat2 :=
   inferInstanceAs (NormedAddCommGroup (Fin 2 → Fin 2 → ℝ))
 
+/-- Scalar multiplication is the pointwise real vector-space structure on matrices. -/
 noncomputable local instance : NormedSpace ℝ SmoothCovariance.Mat2 :=
   inferInstanceAs (NormedSpace ℝ (Fin 2 → Fin 2 → ℝ))
 
@@ -95,7 +102,7 @@ theorem transverse_endpoint_jets {r : ℝ} (hr : 0 < r) (n : ℕ) :
     iteratedFDeriv ℝ n (PartitionedCovariance.cutoff r) (-r) = 0 ∧
       iteratedFDeriv ℝ n (PartitionedCovariance.cutoff r) r = 0 :=
   scalar_support_endpoint_jets (f := PartitionedCovariance.cutoff r)
-    (SquaredPartition.gridMask_smooth r 0)
+      (SquaredPartition.gridMask_smooth r 0)
     (by rw [PartitionedCovariance.cutoff_support hr]) n
 
 /-- Flatness of a scalar function survives an actual smooth pullback. -/
@@ -198,10 +205,11 @@ theorem projectedPressure_contDiffAt (frequency : ℝ)
     (((hN.inner ℝ ha).sub (hNd.inner ℝ hu)).add (hN.inner ℝ hf)).div
       (hN.inner ℝ hN) (inner_self_ne_zero.mpr hn)
   exact (contDiffAt_const.mul (Complex.ofRealCLM.contDiff.contDiffAt.comp x hp)).div_const
-    (frequency : ℂ)
+      (frequency : ℂ)
 
 end LocalAlgebra
 
+/-- Native Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (x.1.2.2, x.1.2.1)`. -/
 noncomputable def nativeQ (h : ℝ) (x : Native) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (x.1.2.2, x.1.2.1)
 
@@ -240,7 +248,7 @@ theorem phaseCovariance_contDiffAt (F : Fin 2 → PhaseConstruction U)
     (fun j => (F j).lam) (fun j => (F j).u) (fun j => (F j).L)
     hpref (fun j => (F j).pulse_jets) (fun j => (F j).lam_pos)
     (fun j => (F j).u_pos) (fun j => (F j).L_pos) r c).smooth i).contDiffAt ((U.isOpen i).mem_nhds
-      hp)
+        hp)
 
 theorem normalizedPulse_contDiffAt (F : PhaseConstruction U) (i : ι) {z : Slow × ℝ}
     (hp : z.1 ∈ U.carrier i) (ht : z.2 ∈ Ioo (0 : ℝ) 1) :
@@ -287,9 +295,9 @@ theorem phasePressure_contDiffAt (F : PhaseConstruction U)
     F.r_pos F.one_le_M F.constants F.epsilon_ne F.radius F.slot
   have hn := ((hbase.1.smooth i).contDiffAt (((U.slot F.V F.openV).isOpen i).mem_nhds hm)).comp x hz
   have hnd := ((hbase.2.1.smooth i).contDiffAt (((U.slot F.V F.openV).isOpen i).mem_nhds hm)).comp
-    x hz
+      x hz
   have hs := ((hbase.2.2.smooth i).contDiffAt (((U.slot F.V F.openV).isOpen i).mem_nhds hm)).comp x
-    hz
+      hz
   have hF := ((F.baseF.smooth i).contDiffAt ((U.isOpen i).mem_nhds hp)).comp x hχ.fst
   have hA := PrimaryCopyBridge.baseOperatorFamily.contDiff.contDiffAt.comp x (hF.prodMk hs)
   apply projectedPressure_contDiffAt (frequency i) hn hnd hu (hA.clm_apply hu) contDiffAt_const
@@ -310,8 +318,11 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 /-- These are precisely the closed-reference zeroth-order bounds of the
 already selected family. No new family or frequency threshold is selected. -/
 structure ClosedMargins (vr vt : TorusInverse.Plane) where
+  /-- Gap of `ClosedMargins`, of type `ℝ`. -/
   gap : ℝ
+  /-- Entry of `ClosedMargins`, of type `ℝ`. -/
   entry : ℝ
+  /-- Lower of `ClosedMargins`, of type `ℝ`. -/
   lower : ℝ
   gap_pos : 0 < gap
   entry_one : 1 ≤ entry
@@ -324,6 +335,7 @@ structure ClosedMargins (vr vt : TorusInverse.Plane) where
       (PrimaryTargetBounds.preparedCovariance H v a vr vt L p)
       (fun k => PrimaryTargetBounds.actualTarget v p k)
 
+/-- Base velocity, constructed using `primaryVelocity`. -/
 noncomputable def baseVelocity (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : Fin 2) :
     PrimaryGeometryAssembly.Index W a.N → Native → ProblemStatement.Space :=
   primaryVelocity (PrimaryGeometryAssembly.construction H v a hr0)
@@ -333,6 +345,7 @@ noncomputable def baseVelocity (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : 
     (fun L x => PrimaryRepresentatives.nativeMask (PrimaryGeometryAssembly.label W L).1
       (PrimaryGeometryAssembly.label W L).2 x.1) j
 
+/-- Base pressure, constructed using `phasePressure`. -/
 noncomputable def basePressure (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : Fin 2) :
     PrimaryGeometryAssembly.Index W a.N → Native → ℂ :=
   phasePressure (PrimaryGeometryAssembly.construction H v a hr0 j)
@@ -340,14 +353,17 @@ noncomputable def basePressure (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : 
     (fun L => (ChartScales.carrier F.data.h (BaseChartJets.cellBand L) : ℝ))
     (baseVelocity H v a hr0 vr vt j)
 
+/-- Outer factor, constructed using `outerCutoff`. -/
 noncomputable def outerFactor (L : PrimaryGeometryAssembly.Index W a.N) (x : Native) : ℝ :=
   outerCutoff (ActualSignedGeometry.pulseCoordinates H v a L x).2 *
     (SquaredPartition.dyadicProfile (nativeQ F.data.h x) * PartitionedCovariance.cutoff r0 x.2.1)
 
+/-- Band velocity, given by `outerFactor H v a L x • baseVelocity H v a hr0 vr vt j L x`. -/
 noncomputable def bandVelocity (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : Fin 2)
     (L : PrimaryGeometryAssembly.Index W a.N) (x : Native) : ProblemStatement.Space :=
   outerFactor H v a L x • baseVelocity H v a hr0 vr vt j L x
 
+/-- Band pressure, given by `outerFactor H v a L x • basePressure H v a hr0 vr vt j L x`. -/
 noncomputable def bandPressure (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : Fin 2)
     (L : PrimaryGeometryAssembly.Index W a.N) (x : Native) : ℂ :=
   outerFactor H v a L x • basePressure H v a hr0 vr vt j L x
@@ -375,10 +391,11 @@ theorem bandPressure_eq_phasePressure (hr0 : 0 < r0) (vr vt : TorusInverse.Plane
 
 end Prepared
 
+/-- Radial interior, constructed using `WaveEdgeExtension.windowDomain`. -/
 noncomputable def radialInterior {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : Set
-  Native :=
+    Native :=
   WaveEdgeExtension.windowDomain WaveEdgeExtension.nativeSlowDomain (WaveEdgeExtension.nativeRadius
-    F.data.h)
+      F.data.h)
     (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)
 
 theorem radialInterior_open {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) :
@@ -459,14 +476,14 @@ theorem prepared_strictCone (L : PrimaryGeometryAssembly.Index W a.N) {x : Nativ
   have hm := M.covariance L x.1 (reference_of_closed_band W hx hq) hp
   have hc := hm.strictCone
     (Real.sqrt_pos.mpr (zero_lt_one.trans_le ((PrimaryGeometryAssembly.domain W a.N).one_le_scale
-      L)))
+        L)))
     M.lower_pos (radialInterior_spec W hx).2.2.2
   simp only [PrimaryTargetBounds.preparedCovariance_eq_construction H v a vr vt hr0,
     pulseMatrix, ActualSignedGeometry.pulseCoordinates] at hc ⊢
   exact hc
 
 theorem baseVelocity_contDiffAt_closed (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) {x :
-  Native}
+    Native}
     (hx : x ∈ radialInterior W) (hp : x.1 ∈ (PrimaryGeometryAssembly.domain W a.N).carrier L)
     (hq : nativeQ F.data.h x ∈ Icc (1 / 2 : ℝ) 2)
     (hslot : (ActualSignedGeometry.pulseCoordinates H v a L x).2 ∈ Ioo (0 : ℝ) 1) :
@@ -475,7 +492,7 @@ theorem baseVelocity_contDiffAt_closed (j : Fin 2) (L : PrimaryGeometryAssembly.
   have ht := (actualTarget_contDiffAt v hd.1
     ((NominalConeAssembly.activeLeft_pos W).trans hd.2.2.1.1)).comp x contDiffAt_fst
   have htk (k : Fin 2) : ContDiffAt ℝ ∞ (fun y : Native => PrimaryTargetBounds.actualTarget v y.1
-    k) x := by
+      k) x := by
     let Lk : MovingFrameODE.Plane →L[ℝ] ℝ := PiLp.proj 2 (fun _ : Fin 2 => ℝ) k
     have hc := Lk.contDiff.contDiffAt.comp x ht
     exact hc
@@ -492,7 +509,7 @@ theorem baseVelocity_contDiffAt_closed (j : Fin 2) (L : PrimaryGeometryAssembly.
     (prepared_strictCone H v a hr0 vr vt M L hx hp hq)
 
 theorem basePressure_contDiffAt_closed (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) {x :
-  Native}
+    Native}
     (hx : x ∈ radialInterior W) (hp : x.1 ∈ (PrimaryGeometryAssembly.domain W a.N).carrier L)
     (hq : nativeQ F.data.h x ∈ Icc (1 / 2 : ℝ) 2)
     (hslot : (ActualSignedGeometry.pulseCoordinates H v a L x).2 ∈ Ioo (0 : ℝ) 1) :
@@ -503,7 +520,7 @@ theorem basePressure_contDiffAt_closed (j : Fin 2) (L : PrimaryGeometryAssembly.
     (baseVelocity_contDiffAt_closed H v a hr0 vr vt M j L hx hp hq hslot)
 
 theorem band_pair_contDiffAt_closed (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) {x :
-  Native}
+    Native}
     (hx : x ∈ radialInterior W) (hp : x.1 ∈ (PrimaryGeometryAssembly.domain W a.N).carrier L)
     (hq : nativeQ F.data.h x ∈ Icc (1 / 2 : ℝ) 2)
     (hslot : (ActualSignedGeometry.pulseCoordinates H v a L x).2 ∈ Ioo (0 : ℝ) 1) :
@@ -613,7 +630,7 @@ theorem factor_zero_germ_transverse (L : PrimaryGeometryAssembly.Index W a.N) {x
   simp only [outerFactor, hy, mul_zero]
 
 theorem band_pair_zero_germ_factor (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) {x :
-  Native}
+    Native}
     (hz : outerFactor H v a L =ᶠ[𝓝 x] fun _ => 0) :
     (bandVelocity H v a hr0 vr vt j L =ᶠ[𝓝 x] fun _ => 0) ∧
       (bandPressure H v a hr0 vr vt j L =ᶠ[𝓝 x] fun _ => 0) :=
@@ -642,7 +659,7 @@ theorem outerFactor_transverse_jets (L : PrimaryGeometryAssembly.Index W a.N) {x
     (nativeQ_contDiffAt F.data.h_pos F.data.h_lt_half hT)
   have hu := (SquaredPartition.gridMask_smooth r0 0).contDiffAt.comp x contDiffAt_snd.fst
   have hflat : ∀ k, iteratedFDeriv ℝ k (fun y : Native => PartitionedCovariance.cutoff r0 y.2.1) x
-    = 0 := by
+      = 0 := by
     intro k
     apply flat_comp_jets (SquaredPartition.gridMask_smooth r0 0) contDiffAt_snd.fst
     intro m
@@ -694,7 +711,7 @@ theorem band_pair_contDiffOn (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.
     fun _ hx => (band_pair_contDiffAt H v a hr0 vr vt M j L hx).2.contDiffWithinAt⟩
 
 theorem band_pair_edge_jets_closed (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) {x :
-  Native}
+    Native}
     (hx : x ∈ radialInterior W) (hp : x.1 ∈ (PrimaryGeometryAssembly.domain W a.N).carrier L)
     (hq : nativeQ F.data.h x ∈ Icc (1 / 2 : ℝ) 2)
     (hslot : (ActualSignedGeometry.pulseCoordinates H v a L x).2 ∈ Ioo (0 : ℝ) 1)
@@ -707,7 +724,7 @@ theorem band_pair_edge_jets_closed (j : Fin 2) (L : PrimaryGeometryAssembly.Inde
     · exact outerFactor_transverse_jets H v a hr0 L hx.1 hu
   have hf := outerFactor_contDiffAt H v a L hx.1
   exact ⟨flat_smul_jets hf (baseVelocity_contDiffAt_closed H v a hr0 vr vt M j L hx hp hq hslot)
-    hflat n,
+      hflat n,
     flat_smul_jets hf (basePressure_contDiffAt_closed H v a hr0 vr vt M j L hx hp hq hslot) hflat n⟩
 
 end FullBandRegularity
@@ -863,17 +880,21 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (a : PrimaryGeometryAssembly.Prepared H v upper B r0 N0)
   (hr0 : 0 < r0) (vr vt : TorusInverse.Plane)
 
+/-- Envelope, given by `pulseEnvelope (PrimaryGeometryAssembly.construction H v a hr0)
+(ActualSignedGeometry.pulseCoordinates H v a) j`. -/
 noncomputable def envelope (j : Fin 2) : PrimaryGeometryAssembly.Index W a.N → Native → ℝ :=
   pulseEnvelope (PrimaryGeometryAssembly.construction H v a hr0)
     (ActualSignedGeometry.pulseCoordinates H v a) j
 
+/-- Velocity weight, constructed using `Real.sqrt`. -/
 noncomputable def velocityWeight (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) (x : Native)
-  : ℝ :=
+    : ℝ :=
   Real.sqrt (ChartScales.epsilon F.data.h (BaseChartJets.cellBand L)) *
     Real.sqrt (PrimaryTargetBounds.movingWeight W x.1) * envelope H v a hr0 j L x
 
+/-- Pressure weight, constructed using `ChartScales.epsilon`. -/
 noncomputable def pressureWeight (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) (x : Native)
-  : ℝ :=
+    : ℝ :=
   ChartScales.epsilon F.data.h (BaseChartJets.cellBand L) *
     Real.sqrt (PrimaryTargetBounds.movingWeight W x.1) * envelope H v a hr0 j L x
 
@@ -891,9 +912,9 @@ theorem bandVelocity_radial_jets (M : ClosedMargins H v a vr vt) (j : Fin 2)
     (hu : NativeJets (ActualSignedGeometry.nativeDomain H v a) (velocityWeight H v a hr0 j)
       (bandVelocity H v a hr0 vr vt j)) :
     NativeJets (radialDomain H v a) (velocityWeight H v a hr0 j) (bandVelocity H v a hr0 vr vt j)
-      := by
+        := by
   apply NativeJets.on_flat_cover (V' := radialDomain H v a) hu _ (fun L x _ =>
-    velocityWeight_nonneg H v a hr0 j L x)
+      velocityWeight_nonneg H v a hr0 j L x)
     (fun _ _ _ _ => le_rfl)
   intro L x hx
   by_cases hi : x ∈ (ActualSignedGeometry.nativeDomain H v a).carrier L
@@ -905,9 +926,9 @@ theorem bandPressure_radial_jets (M : ClosedMargins H v a vr vt) (j : Fin 2)
     (hp : NativeJets (ActualSignedGeometry.nativeDomain H v a) (pressureWeight H v a hr0 j)
       (bandPressure H v a hr0 vr vt j)) :
     NativeJets (radialDomain H v a) (pressureWeight H v a hr0 j) (bandPressure H v a hr0 vr vt j)
-      := by
+        := by
   apply NativeJets.on_flat_cover (V' := radialDomain H v a) hp _ (fun L x _ =>
-    pressureWeight_nonneg H v a hr0 j L x)
+      pressureWeight_nonneg H v a hr0 j L x)
     (fun _ _ _ _ => le_rfl)
   intro L x hx
   by_cases hi : x ∈ (ActualSignedGeometry.nativeDomain H v a).carrier L
@@ -948,11 +969,15 @@ theorem band_pair_native_regular (M : ClosedMargins H v a vr vt) (j : Fin 2)
   intro L
   exact ⟨⟨(hu' L).1, (hu' L).2.1, (hu' L).2.2⟩, ⟨(hp' L).1, (hp' L).2.1, (hp' L).2.2⟩⟩
 
+/-- Pre outer velocity, given by `(SquaredPartition.dyadicProfile (nativeQ F.data.h x) *
+PartitionedCovariance.cutoff r0 x.2.1) • baseVelocity H v a hr0 vr vt j L x`. -/
 noncomputable def preOuterVelocity (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N)
     (x : Native) : ProblemStatement.Space :=
   (SquaredPartition.dyadicProfile (nativeQ F.data.h x) * PartitionedCovariance.cutoff r0 x.2.1) •
     baseVelocity H v a hr0 vr vt j L x
 
+/-- Pre outer pressure, given by `(SquaredPartition.dyadicProfile (nativeQ F.data.h x) *
+PartitionedCovariance.cutoff r0 x.2.1) • basePressure H v a hr0 vr vt j L x`. -/
 noncomputable def preOuterPressure (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N)
     (x : Native) : ℂ :=
   (SquaredPartition.dyadicProfile (nativeQ F.data.h x) * PartitionedCovariance.cutoff r0 x.2.1) •
@@ -967,7 +992,7 @@ theorem preOuterPressure_eq_phasePressure (j : Fin 2)
         (preOuterVelocity H v a hr0 vr vt j) L x :=
   (phasePressure_smul _ _ _
     (fun _ y => SquaredPartition.dyadicProfile (nativeQ F.data.h y) * PartitionedCovariance.cutoff
-      r0 y.2.1)
+        r0 y.2.1)
     (baseVelocity H v a hr0 vr vt j) L x).symm
 
 theorem bandVelocity_eq_outer (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) (x : Native) :
@@ -1035,9 +1060,9 @@ theorem attached_pair_band_edge_jets (M : ClosedMargins H v a vr vt) (j : Fin 2)
     (L : PrimaryGeometryAssembly.Index W a.N) {x : Native}
     (hT : 0 < x.1.2.2) (he : nativeQ F.data.h x = 1 / 2 ∨ nativeQ F.data.h x = 2) (n : ℕ) :
     iteratedFDeriv ℝ n (WaveEdgeExtension.nativeExtension W (bandVelocity H v a hr0 vr vt j L)) x =
-      0 ∧
+        0 ∧
       iteratedFDeriv ℝ n (WaveEdgeExtension.nativeExtension W (bandPressure H v a hr0 vr vt j L)) x
-        = 0 := by
+          = 0 := by
   obtain ⟨hv, hp'⟩ := band_pair_native_regular_of_raw_jets H v a hr0 vr vt M j hu hp L
   by_cases hi : WaveEdgeExtension.nativeRadius F.data.h x ∈
       Ioo (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)

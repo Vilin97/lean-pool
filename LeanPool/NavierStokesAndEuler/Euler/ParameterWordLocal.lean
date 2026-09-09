@@ -6,11 +6,18 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordGevrey
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
+
+/-! Actual ordered derivative sums depend only on the local function germ. -/
 
 @[expose] public section
 
-/-! Actual ordered derivative sums depend only on the local function germ. -/
 
 noncomputable section
 

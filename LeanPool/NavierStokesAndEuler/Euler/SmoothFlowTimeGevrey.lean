@@ -6,16 +6,23 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothBanachFlow
+import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
+import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.SmoothFlowGevrey
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Polynomial-radius bounds for the velocity and material acceleration
 of the constructed flow.  The second expression is literally
 `(A₁ + D A · A) ∘ Φ`; identifying A₁ as the time derivative is a separate
 qualitative chain rule, not an assumption about its size. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,16 +37,27 @@ open EulerSmoothBanachFlow EulerGevreyGeneratingDerivatives
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
-private local instance (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
-private local instance (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
-private local instance (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E [×n]→L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowTimeGevrey1 (n : ℕ) : NormedAddCommGroup (E [×n]→L[ℝ] E) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E [×n]→L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instSmoothFlowTimeGevrey2 (n : ℕ) : NormedSpace ℝ (E [×n]→L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowTimeGevrey3 (n : ℕ) : NormedAddCommGroup (E →ᵇ (E [×n]→L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instSmoothFlowTimeGevrey4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] E)) :=
+    inferInstance
 
+/-- Flow radius, given by `(4*R+1)*((1+B*T)*S+2)`. -/
 def flowRadius (B R T S : ℝ) : ℝ := (4*R+1)*((1+B*T)*S+2)
 
 omit [FiniteDimensional ℝ E] in
 theorem field_jet_bound (B R : ℝ)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
     ‖iteratedFDeriv ℝ n (A.field t : E → E) x‖ ≤ B*R^n*(n.factorial : ℝ)^2 := by
   rw [← A.jet_eq]
@@ -47,8 +65,8 @@ theorem field_jet_bound (B R : ℝ)
     (((A.jet n).norm_coe_le_norm t).trans (hb n))
 
 theorem forward_positive_bound (B R : ℝ)
-    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (hn : 0 < n) (t : Icc (0 : ℝ) T) (x : E) :
     ‖iteratedFDeriv ℝ n (fun y => (flowData T hT A).forward t y) x‖ ≤
       (1+B*T)*(4*R+1)^n*(n.factorial : ℝ)^2 := by
@@ -84,12 +102,13 @@ theorem forward_positive_bound (B R : ℝ)
     _ ≤ W+B*T*W := add_le_add hW le_rfl
     _ = _ := by dsimp [W]; ring
 
+/-- Material velocity, given by `A.field t ((flowData T hT A).forward t x)`. -/
 def materialVelocity (t : Icc (0 : ℝ) T) (x : E) : E :=
   A.field t ((flowData T hT A).forward t x)
 
 theorem materialVelocity_bound (B R : ℝ)
-    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
+    (hB : 0 ≤ B) (hR : 0 < R) (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
     ‖iteratedFDeriv ℝ n (materialVelocity T hT A t) x‖ ≤
       B*(flowRadius B R T R)^n*(n.factorial : ℝ)^2 := by
@@ -102,6 +121,7 @@ theorem materialVelocity_bound (B R : ℝ)
   · intro j hj y
     exact forward_positive_bound T hT A B R hB hR hsmall hb j hj t y
 
+/-- Acceleration field, given by `A₁.field t x + fderiv ℝ (A.field t : E → E) x (A.field t x)`. -/
 def accelerationField (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (t : Icc (0 : ℝ) T) (x : E) : E :=
   A₁.field t x + fderiv ℝ (A.field t : E → E) x (A.field t x)
@@ -114,8 +134,8 @@ theorem accelerationField_contDiff (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E
 omit [FiniteDimensional ℝ E] in
 theorem accelerationField_bound (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (B R B₁ R₁ : ℝ) (hB : 0 ≤ B) (hR : 0 < R) (hB₁ : 0 ≤ B₁) (hR₁ : 0 ≤ R₁)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
-    (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁*R₁^n*(n.factorial : ℝ)^2)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
+    (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁ * R₁ ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
     ‖iteratedFDeriv ℝ n (accelerationField T A A₁ t) x‖ ≤
       (B₁+3*B^2*R)*majorant (4*R+R₁) 0 n := by
@@ -153,19 +173,21 @@ theorem accelerationField_bound (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (A₁.smooth t) (((A.smooth t).fderiv_right (m := ∞) (by simp)).clm_apply (A.smooth t))
     (4*R+R₁) B₁ (3*(B*R)*B) 0 hA₁ hprod n x
   have hconst : B₁+3*(B*R)*B = B₁+3*B^2*R := by ring
-  change ‖iteratedFDeriv ℝ n (fun y => A₁.field t y+
+  change ‖iteratedFDeriv ℝ n (fun y => A₁.field t y +
     fderiv ℝ (A.field t : E → E) y (A.field t y)) x‖ ≤ _
   simpa only [hconst] using he
 
+/-- Material acceleration, given by `accelerationField T A A₁ t ((flowData T hT A).forward t
+x)`. -/
 def materialAcceleration (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (t : Icc (0 : ℝ) T) (x : E) : E :=
   accelerationField T A A₁ t ((flowData T hT A).forward t x)
 
 theorem materialAcceleration_bound (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (B R B₁ R₁ : ℝ) (hB : 0 ≤ B) (hR : 0 < R) (hB₁ : 0 ≤ B₁) (hR₁ : 0 ≤ R₁)
-    (hsmall : B*R*T ≤ 1/8)
-    (hb : ∀ n, ‖A.jet n‖ ≤ B*R^n*(n.factorial : ℝ)^2)
-    (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁*R₁^n*(n.factorial : ℝ)^2)
+    (hsmall : B * R * T ≤ 1 / 8)
+    (hb : ∀ n, ‖A.jet n‖ ≤ B * R ^ n * (n.factorial : ℝ) ^ 2)
+    (hb₁ : ∀ n, ‖A₁.jet n‖ ≤ B₁ * R₁ ^ n * (n.factorial : ℝ) ^ 2)
     (n : ℕ) (t : Icc (0 : ℝ) T) (x : E) :
     ‖iteratedFDeriv ℝ n (materialAcceleration T hT A A₁ t) x‖ ≤
       (B₁+3*B^2*R)*(flowRadius B R T (4*R+R₁))^n*(n.factorial : ℝ)^2 := by

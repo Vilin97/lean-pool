@@ -6,13 +6,26 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Algebra.BigOperators.Intervals
-public import Mathlib.Algebra.Module.LinearMap.Basic
-public import Mathlib.Tactic
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Algebra.Module.Submodule.LinearMap
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Exact finite graded identities for the literal packet residual. -/
 
 @[expose] public section
 
-/-! Exact finite graded identities for the literal packet residual. -/
 
 noncomputable section
 
@@ -23,11 +36,15 @@ open Finset
 variable {V W Q : Type*} [AddCommGroup V] [Module ℝ V]
   [AddCommGroup W] [Module ℝ W] [AddCommGroup Q] [Module ℝ Q]
 
+/-- Evaluate, given by `∑ n ∈ range (M+1), κ^n • u n`. -/
 def evaluate (M : ℕ) (κ : ℝ) (u : ℕ → V) : V :=
   ∑ n ∈ range (M+1), κ^n • u n
 
+/-- Truncate, with branches according to `n ≤ M`. -/
 def truncate (M : ℕ) (u : ℕ → V) (n : ℕ) : V := if n ≤ M then u n else 0
 
+/-- Convolution, given by `∑ i ∈ range (M+1), ∑ j ∈ range (M+1), if i+j=n then B (u i) (v j)
+else 0`. -/
 def convolution (M : ℕ) (B : V →ₗ[ℝ] W →ₗ[ℝ] Q) (u : ℕ → V) (v : ℕ → W) (n : ℕ) : Q :=
   ∑ i ∈ range (M+1), ∑ j ∈ range (M+1), if i+j=n then B (u i) (v j) else 0
 

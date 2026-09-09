@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
 public import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
 
+/-! The actual continuous-time integral agrees with both Bochner primitive constructions. -/
+
 @[expose] public section
 
-/-! The actual continuous-time integral agrees with both Bochner primitive constructions. -/
 
 noncomputable section
 
@@ -23,7 +24,7 @@ open Set MeasureTheory ContinuousLinearMap EulerTimeLp EulerInitialTimePrimitive
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   (T : ℝ) (hT : 0 ≤ T)
 
-theorem initialPrimitive_pathLp (f : C(Icc (0 : ℝ) T,E)) :
+theorem initialPrimitive_pathLp (f : C(Icc (0 : ℝ) T, E)) :
     initialPrimitive T hT (pathLp T hT f) = EulerContinuousTimeIntegral.integral T hT f := by
   apply ContinuousMap.ext
   intro t
@@ -37,14 +38,14 @@ theorem initialPrimitive_pathLp (f : C(Icc (0 : ℝ) T,E)) :
     (show Ioc (0 : ℝ) (t : ℝ) ⊆ Icc (0 : ℝ) T from
       fun s hs => ⟨hs.1.le,hs.2.trans t.property.2⟩) he
 
-theorem initialTrace_pathLp (f : C(Icc (0 : ℝ) T,E)) :
+theorem initialTrace_pathLp (f : C(Icc (0 : ℝ) T, E)) :
     initialTrace T hT (pathLp T hT f) =
       -EulerContinuousTimeIntegral.integral T hT f ⟨T,hT,le_rfl⟩ := by
   have he := initialPrimitive_eq_terminal_sub T hT (pathLp T hT f) ⟨T,hT,le_rfl⟩
   rw [initialPrimitive_pathLp,terminalPrimitive_terminal,zero_sub] at he
   simpa only [neg_neg] using congrArg Neg.neg he.symm
 
-theorem primitive_eq_path (p q : C(Icc (0 : ℝ) T,E))
+theorem primitive_eq_path (p q : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
     (hzero : p ⟨0,le_rfl,hT⟩ = 0) :
@@ -56,7 +57,7 @@ theorem primitive_eq_path (p q : C(Icc (0 : ℝ) T,E))
   simpa only [extendPath,projIcc_of_mem hT t.property,
     projIcc_of_mem hT (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl,hT⟩),hzero,zero_add] using he.symm
 
-theorem initialTrace_eq_zero (p q : C(Icc (0 : ℝ) T,E))
+theorem initialTrace_eq_zero (p q : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
     (hzero : p ⟨0,le_rfl,hT⟩ = 0) (hterminal : p ⟨T,hT,le_rfl⟩ = 0) :
@@ -65,7 +66,7 @@ theorem initialTrace_eq_zero (p q : C(Icc (0 : ℝ) T,E))
   rw [primitive_eq_path T hT p q hd hzero,hterminal,terminalPrimitive_terminal,zero_sub] at he
   exact neg_eq_zero.mp he.symm
 
-theorem primitiveTimeLp_eq_pathLp (p q : C(Icc (0 : ℝ) T,E))
+theorem primitiveTimeLp_eq_pathLp (p q : C(Icc (0 : ℝ) T, E))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
     (hzero : p ⟨0,le_rfl,hT⟩ = 0) (hterminal : p ⟨T,hT,le_rfl⟩ = 0) :

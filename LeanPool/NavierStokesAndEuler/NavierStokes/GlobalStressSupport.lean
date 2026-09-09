@@ -8,8 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AssembledSlowBase
 
-@[expose] public section
-
 /-!
 # Stress confinement for the coherent repaired slow sequence
 
@@ -19,6 +17,9 @@ therefore vanish past the same outer radius, uniformly over positive orders
 `n ≥ 2`.  The preceding angular coefficient then has an ordinary repaired
 moment; no renormalized order-zero moment is used in this module.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -41,6 +42,7 @@ noncomputable def angularHistory {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n
 noncomputable def fluxHistory {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : ℕ) : Field :=
   SlowResidualMatching.toRadius ((asSlowProfiles s).flux n)
 
+/-- Pressure field, given by `SlowResidualMatching.toRadius ((asSlowProfiles s).pressure n)`. -/
 noncomputable def pressureField {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : ℕ) : Field :=
   SlowResidualMatching.toRadius ((asSlowProfiles s).pressure n)
 
@@ -137,16 +139,16 @@ theorem pressureGradient_eq {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : �
 
 theorem pressureGradient_smooth {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : ℕ) :
     Smooth S (PositiveOrderMoments.jointPressureGradient n (angularHistory s) (previousOmega s n))
-      :=
+        :=
   (actual_pressureGradient_smooth C (fun j => (profiles s j).phi)
     (previousOmegaDivX s.domain (fun j => (profiles s j).axial) (fun j => (profiles s j).beta) n)
-      n).congr
+        n).congr
       (fun _ hw => pressureGradient_eq s n hw.2)
 
 theorem pressureField_eq_primitive {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {n : ℕ} (hn : 0 < n) {w : ℝ × ℝ} (hw : w.2 ∈ S) :
     pressureField s n w = PositiveOrderMoments.pressureHistory n (angularHistory s) (previousOmega
-      s n) w := by
+        s n) w := by
   rw [pressureField_eq s n hw]
   have he := congrFun (profiles_pressureHistory s hn) w
   rw [he]
@@ -160,7 +162,7 @@ theorem moments_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) {n : ℕ}
     (hn : 0 < n) {eta : ℝ} (heta : eta ∈ S) :
     PositiveOrderMoments.moments n (PositiveOrderMoments.slice (axialHistory s) eta)
       (PositiveOrderMoments.slice (angularHistory s) eta) (fun R => previousOmega s n (R, eta)) = 0
-        := by
+          := by
   rw [← profiles_moments s hn heta]
   apply moments_congr_positive
   · intro R _ j
@@ -186,10 +188,10 @@ theorem conservative_moments_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) {
     SlowStressSupport.moment s.B 1 (axialHistory s n) eta = 0 ∧
     SlowStressSupport.moment s.B 2 (angularHistory s n) eta = 0 ∧
     SlowStressSupport.moment s.B 2 (SlowStressSupport.conv n (axialHistory s) (angularHistory s))
-      eta = 0 ∧
+        eta = 0 ∧
     SlowStressSupport.moment s.B 1
       (fun w => SlowStressSupport.conv n (axialHistory s) (axialHistory s) w + pressureField s n w)
-        eta = 0 := by
+          eta = 0 := by
   have hm := SlowStressSupport.repaired_moment_data s.domain.isOpen
     (fun j _ => axialHistory_smooth s j) (pressureGradient_smooth s n) s.B_pos.le
     (fun _ he _ hr => rowDensity_exterior s hn he hr)
@@ -213,7 +215,7 @@ theorem angularDensity_moment_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {n : ℕ} (hn : 2 ≤ n) {eta : ℝ} (heta : eta ∈ S) :
     SlowStressSupport.moment s.B 0
       (SlowStressSupport.angularDensity h n (fluxHistory s) (axialHistory s) (angularHistory s))
-        eta = 0 := by
+          eta = 0 := by
   have hn0 : 0 < n := by omega
   have hprev : 0 < n - 1 := by omega
   exact SlowStressSupport.angular_integral_zero s.domain.isOpen
@@ -230,7 +232,7 @@ theorem axialDensity_moment_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {n : ℕ} (hn : 2 ≤ n) {eta : ℝ} (heta : eta ∈ S) :
     SlowStressSupport.moment s.B 0
       (SlowStressSupport.axialDensity h n (fluxHistory s) (axialHistory s) (pressureField s n)) eta
-        = 0 := by
+          = 0 := by
   have hn0 : 0 < n := by omega
   have hprev : 0 < n - 1 := by omega
   apply SlowStressSupport.axial_integral_zero s.domain.isOpen
@@ -252,7 +254,7 @@ theorem angularDensity_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {n : ℕ} (hn : 2 ≤ n) :
     SlowStressSupport.exterior s.B S
       (SlowStressSupport.angularDensity h n (fluxHistory s) (axialHistory s) (angularHistory s)) :=
-        by
+          by
   have hn0 : 0 < n := by omega
   have hprev : 0 < n - 1 := by omega
   exact SlowStressSupport.exterior_angularDensity s.domain.isOpen
@@ -267,7 +269,7 @@ theorem axialDensity_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {n : ℕ} (hn : 2 ≤ n) :
     SlowStressSupport.exterior s.B S
       (SlowStressSupport.axialDensity h n (fluxHistory s) (axialHistory s) (pressureField s n)) :=
-        by
+          by
   have hn0 : 0 < n := by omega
   exact SlowStressSupport.exterior_axialDensity s.domain.isOpen
     (fun j _ => fluxHistory_smooth s j) (fun j _ => axialHistory_smooth s j)
@@ -284,7 +286,7 @@ theorem radial_divergence {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {w : ℝ × ℝ} (hw : w.2 ∈ S) :
     SlowStressSupport.dr (fluxHistory s n) w =
       -w.1 * SlowStressSupport.axialOp h (SlowStressSupport.orderExponent h n) (axialHistory s n) w
-        := by
+          := by
   have hb : (profiles s n).beta =
       betaFromU s.domain (AxisSourceRegularity.slowOrder h n) (profiles s n).axial := by
     rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -318,7 +320,7 @@ theorem thetaDensity_eq {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
   · exact fun j _ => angularHistory_smooth s j
   · intro w hw hR j _
     exact (xProfile_contDiffAt s.domain.isOpen (profiles s j).phi (w :=
-      SlowResidualMatching.radiusPoint w)
+        SlowResidualMatching.radiusPoint w)
       (div_pos (sq_pos_of_ne_zero hR) (by norm_num)) hw).of_le
         (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2)
   · exact s.domain.denominator
@@ -335,12 +337,12 @@ theorem zDensity_eq {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
   · exact pressureField_smooth s n
   · intro w hw hR j _
     exact (xProfile_contDiffAt s.domain.isOpen (profiles s j).axial (w :=
-      SlowResidualMatching.radiusPoint w)
+        SlowResidualMatching.radiusPoint w)
       (div_pos (sq_pos_of_ne_zero hR) (by norm_num)) hw).of_le
         (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2)
   · intro w hw hR
     exact (xProfile_contDiffAt s.domain.isOpen (profiles s n).pressure (w :=
-      SlowResidualMatching.radiusPoint w)
+        SlowResidualMatching.radiusPoint w)
       (div_pos (sq_pos_of_ne_zero hR) (by norm_num)) hw).differentiableAt (by simp)
   · exact s.domain.denominator
   · exact fun _ hw j _ => radial_divergence s hbase j hw
@@ -351,7 +353,7 @@ theorem thetaDensity_smooth {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
   (SlowStressSupport.smooth_angularDensity s.domain.isOpen
     (fun j _ => fluxHistory_smooth s j) (fun j _ => axialHistory_smooth s j)
     (fun j _ => angularHistory_smooth s j) h s.domain.denominator).congr (thetaDensity_eq s hbase
-      hn)
+        hn)
 
 theorem zDensity_smooth {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 0 < n) :
@@ -366,7 +368,7 @@ theorem thetaDensity_moment_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 2 ≤ n)
     {eta : ℝ} (heta : eta ∈ S) :
     SlowStressSupport.moment s.B 0 (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) n) eta
-      = 0 := by
+        = 0 := by
   rw [← angularDensity_moment_zero s hn heta]
   apply intervalIntegral.integral_congr
   intro R _
@@ -377,7 +379,7 @@ theorem zDensity_moment_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 2 ≤ n)
     {eta : ℝ} (heta : eta ∈ S) :
     SlowStressSupport.moment s.B 0 (SlowResidualMatching.zDensity h (asSlowProfiles s) n) eta = 0
-      := by
+        := by
   rw [← axialDensity_moment_zero s hn heta]
   apply intervalIntegral.integral_congr
   intro R _
@@ -387,7 +389,7 @@ theorem zDensity_moment_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
 theorem thetaDensity_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 2 ≤ n) :
     SlowStressSupport.exterior s.B S (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) n)
-      := by
+        := by
   intro eta heta R hR
   rw [thetaDensity_eq s hbase (by omega : 0 < n) ⟨mem_univ R, heta⟩]
   exact angularDensity_exterior s hn eta heta R hR
@@ -403,10 +405,10 @@ theorem thetaDensity_integrableOn {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 2 ≤ n)
     {eta : ℝ} (heta : eta ∈ S) :
     IntegrableOn (fun R => SlowResidualMatching.thetaDensity h C (asSlowProfiles s) n (R, eta))
-      (Ioi 0) :=
+        (Ioi 0) :=
   PositiveOrderMoments.positive_integrableOn_of_compact
-    (SlowStressSupport.slice_smooth (thetaDensity_smooth s hbase (by omega : 0 < n))
-      heta).continuous.continuousOn
+    (SlowStressSupport.slice_smooth (thetaDensity_smooth s hbase (by
+        omega : 0 < n)) heta).continuous.continuousOn
     (thetaDensity_exterior s hbase hn eta heta)
 
 theorem zDensity_integrableOn {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
@@ -414,17 +416,17 @@ theorem zDensity_integrableOn {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     {eta : ℝ} (heta : eta ∈ S) :
     IntegrableOn (fun R => SlowResidualMatching.zDensity h (asSlowProfiles s) n (R, eta)) (Ioi 0) :=
   PositiveOrderMoments.positive_integrableOn_of_compact
-    (SlowStressSupport.slice_smooth (zDensity_smooth s hbase (by omega : 0 < n))
-      heta).continuous.continuousOn
+    (SlowStressSupport.slice_smooth (zDensity_smooth s hbase (by
+        omega : 0 < n)) heta).continuous.continuousOn
     (zDensity_exterior s hbase hn eta heta)
 
 theorem thetaDensity_positive_integral_zero {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 2 ≤ n)
     {eta : ℝ} (heta : eta ∈ S) :
     (∫ R in Ioi (0 : ℝ), SlowResidualMatching.thetaDensity h C (asSlowProfiles s) n (R, eta)) = 0
-      := by
+        := by
   have he := SlowStressSupport.moment_eq_positive s.B_pos.le (thetaDensity_exterior s hbase hn)
-    heta 0
+      heta 0
   simp only [pow_zero, one_mul, thetaDensity_moment_zero s hbase hn heta] at he
   exact he.symm
 
@@ -441,9 +443,9 @@ radius for all `n ≥ 2`.  There is no output-support hypothesis. -/
 theorem raw_stresses_exterior {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hbase : s.base.beta = betaFromU s.domain 0 s.base.axial) {n : ℕ} (hn : 2 ≤ n) :
     Exterior s.B S (SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity h C
-      (asSlowProfiles s) n)) ∧
+        (asSlowProfiles s) n)) ∧
     Exterior s.B S (SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h (asSlowProfiles s)
-      n)) := by
+        n)) := by
   constructor
   · intro eta heta R hR
     exact SlowStressSupport.stress_exterior 2 s.B_pos.le (thetaDensity_exterior s hbase hn)

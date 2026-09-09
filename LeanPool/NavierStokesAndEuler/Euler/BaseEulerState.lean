@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSign
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerGuards
+import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSign
 
 /-! The initial induction state is completely constructed from the
 compact β-family. A single positive time and a single label constant
 work for the family, with actual low-order guards and pressure sign. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,6 +24,7 @@ namespace EulerBaseDatum
 open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerParentPacketFrames EulerBaseEulerGuards EulerTransverseFrameCoordinates
 
+/-- Initial time, given by `guardTime solutionTime solutionLabelConstant`. -/
 def initialTime : ℝ := guardTime solutionTime solutionLabelConstant
 
 theorem initialTime_pos : 0 < initialTime :=
@@ -31,6 +34,7 @@ theorem initialTime_le : initialTime ≤ solutionTime := guardTime_le _ _
 
 theorem initialTime_le_one : initialTime ≤ 1 := guardTime_le_one _ _
 
+/-- Initial coefficient cost, given by `coefficientCost solutionLabelConstant`. -/
 def initialCoefficientCost : ℝ := coefficientCost solutionLabelConstant
 
 theorem initialCoefficientCost_nonneg : 0 ≤ initialCoefficientCost := coefficientCost_nonneg _
@@ -38,29 +42,40 @@ theorem initialCoefficientCost_nonneg : 0 ≤ initialCoefficientCost := coeffici
 theorem initialTime_small :
     initialCoefficientCost*initialTime ≤ 1/4 ∧
       EulerPacketFirstPressureSign.firstSignRate initialCoefficientCost
-        initialCoefficientCost*initialTime ≤ 1/4 :=
+          initialCoefficientCost*initialTime ≤ 1/4 :=
   guardTime_small _ _
 
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
 
+/-- Initial parent, given by `(solutionParent β hβ ell hell hell1).restrictTime initialTime
+initialTime_pos initialTime_le`. -/
 def initialParent : Parent :=
   (solutionParent β hβ ell hell hell1).restrictTime initialTime initialTime_pos initialTime_le
 
+/-- Initial label data, given by `(solutionLabelData β hβ ell hell hell1).restrictTime
+initialTime initialTime_pos initialTime_le`. -/
 def initialLabelData : LabelData (initialParent β hβ ell hell hell1) :=
   (solutionLabelData β hβ ell hell hell1).restrictTime initialTime initialTime_pos initialTime_le
 
+/-- Initial inverse, given by `(solutionInverse β hβ ell hell hell1).restrictTime initialTime
+initialTime_pos initialTime_le`. -/
 def initialInverse : ParticleInverse (initialParent β hβ ell hell hell1) :=
   (solutionInverse β hβ ell hell hell1).restrictTime initialTime initialTime_pos initialTime_le
 
+/-- Initial evolution, given by `(solutionEvolution β hβ ell hell hell1).restrictTime
+initialTime initialTime_pos initialTime_le`. -/
 def initialEvolution : Evolution (initialParent β hβ ell hell hell1) :=
   (solutionEvolution β hβ ell hell hell1).restrictTime initialTime initialTime_pos initialTime_le
 
+/-- Initial sobolev data, given by `(solutionSobolevData β hβ ell hell hell1).restrictTime
+initialTime initialTime_pos initialTime_le`. -/
 def initialSobolevData : SobolevData (initialEvolution β hβ ell hell hell1) :=
   (solutionSobolevData β hβ ell hell hell1).restrictTime initialTime initialTime_pos initialTime_le
 
 theorem initialOddData : OddData (initialParent β hβ ell hell hell1) :=
   (solutionOddData β hβ ell hell hell1).restrictTime initialTime initialTime_pos initialTime_le
 
+/-- Initial low bounds, given by `lowBounds (solutionLabelData β hβ ell hell hell1)`. -/
 def initialLowBounds : LowBounds (initialParent β hβ ell hell hell1) :=
   lowBounds (solutionLabelData β hβ ell hell hell1)
 
@@ -78,7 +93,7 @@ theorem initialLabelData_constant :
     (initialLabelData β hβ ell hell hell1).K=solutionLabelConstant := rfl
 
 theorem initial_velocity (x : Space) :
-    (initialParent β hβ ell hell hell1).velocity.field ⟨0,le_rfl,initialTime_pos.le⟩ x=
+    (initialParent β hβ ell hell hell1).velocity.field ⟨0,le_rfl,initialTime_pos.le⟩ x =
       velocity (linear β) x :=
   solution_initial_velocity β hβ ell hell hell1 x
 
@@ -118,7 +133,7 @@ theorem initial_origin_fixed (t : Icc (0 : ℝ) initialTime) :
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   (R : U ≃ₗᵢ[ℝ] referencePlane (EuclideanSpace.single 0 1 : Space))
-  (ξ : U) (hξ : (R ξ : Space)=EuclideanSpace.single 1 1)
+  (ξ : U) (hξ : (R ξ : Space) = EuclideanSpace.single 1 1)
   (S : Set Space) (hS : IsCompact S)
 
 include hξ in

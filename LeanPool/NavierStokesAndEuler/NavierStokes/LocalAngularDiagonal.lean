@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedAxisPreservation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CutStageEstimates
 
-@[expose] public section
-
 /-!
 # Direct angular diagonal from local raw data
 
@@ -21,6 +19,9 @@ domain every cutoff vanishes on one common neighborhood, so the original
 sum itself is smooth and divergence-free on the whole preterminal region.
 No global smooth replacement of the raw scalar is chosen.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,6 +35,7 @@ axial coordinate, and not on radius or angle. -/
 noncomputable def slowQ (h : ℝ) (s : DirectAngularDiagonal.Slow) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (1 - s.1, s.2)
 
+/-- Local slow domain, given by `{s | s.1 < 1 ∧ slowQ h s < qbig}`. -/
 noncomputable def localSlowDomain (h qbig : ℝ) : Set DirectAngularDiagonal.Slow :=
   {s | s.1 < 1 ∧ slowQ h s < qbig}
 
@@ -145,7 +147,7 @@ theorem angularSum_smoothAt (hh : 0 < h) (hh1 : h < 1 / 2)
     {w : SpaceTime} (ht : w.1 < 1) :
     ContDiffAt ℝ ∞
       (DirectAngularDiagonal.angularSum a (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar)) w
-        := by
+          := by
   by_cases hq : PhysicalWaveSum.physicalQ h w < qbig
   · exact (DirectAngularDiagonal.angularSum_smooth (localSlowDomain_open hh hh1 qbig) D hat
       (fun _ hx => (PhysicalWaveSum.physicalQ_smoothAt hh hh1 hx.1).contDiffWithinAt)
@@ -170,7 +172,7 @@ theorem qCoefficient_smooth (hh : 0 < h) (hh1 : h < 1 / 2) :
 
 theorem physicalQ_smooth (hh : 0 < h) (hh1 : h < 1 / 2) :
     ContDiffOn ℝ ∞ (fun w => DirectAngularDiagonal.qCoefficient h (DirectAngularDiagonal.cylPoint
-      w))
+        w))
       (DirectAngularDiagonal.physicalDomain (localSlowDomain h qbig)) :=
   fun _ hw => (PhysicalWaveSum.physicalQ_smoothAt hh hh1 hw.1).contDiffWithinAt
 
@@ -199,7 +201,7 @@ theorem spatialCut_angularSum_divergence (hh : 0 < h) (hh1 : h < 1 / 2)
     (t : ℝ) (ht : t < 1) (x : Space) :
     spatialDivergence (SpatialLocalization.cutPotential
       (DirectAngularDiagonal.angularSum a (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar))) t
-        x = 0 := by
+          x = 0 := by
   by_cases hq : PhysicalWaveSum.physicalQ h (t, x) < qbig
   · exact DirectAngularDiagonal.spatialCut_angularSum_divergence
       (localSlowDomain_open hh hh1 qbig) D hat (DirectAngularDiagonal.qCoefficient h)

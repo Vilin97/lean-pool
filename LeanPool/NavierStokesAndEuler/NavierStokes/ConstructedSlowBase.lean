@@ -6,16 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.AssembledSlowBase
-public import LeanPool.NavierStokesAndEuler.NavierStokes.GlobalStressSupport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BasePrefixIdentity
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PreparedOutgoing
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseExterior
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TerminalHistoryBridge
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedProfileAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FirstOrderBaseEdge
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.FirstOrderBaseEdge
+import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCore
+import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 
 /-!
 # The actual constructed slow base
@@ -24,6 +21,9 @@ The finite residual identities, regular axis descriptors, and stress support
 used here are derived from the same repaired coefficient sequence.  No
 residual estimate or infinite-dimensional output certificate is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -279,7 +279,7 @@ theorem nominal_leading_axis {eta : ℝ} (heta : eta ∈ Icc (-1 : ℝ) 1) :
   have h0 : (0 : ℝ) ≤ 4 / W.axis.scale := (div_pos (by norm_num) W.axis.scale_pos).le
   calc
     _ = W.U (0, eta) := (nominalCoefficients_zero_fields W (p := (0, eta)) le_rfl (abs_le.mpr
-      heta)).2.1
+        heta)).2.1
     _ = W.controls.seedU (0, eta) :=
       (W.seed_agreement (p := (0, eta)) le_rfl NominalProfile.Xi_pos.le).2.1
     _ = W.axis.natural.profile.family.U (0, eta) := (W.controls.seed_initial h0).2
@@ -300,7 +300,7 @@ theorem nominal_origin {a : ℕ → ℕ} (ha : StrictMono a) {t : ℝ} (ht : t <
 
 theorem nominal_axis_tendsto {a : ℕ → ℕ} (ha : StrictMono a) :
     Tendsto (fun t : ℝ => ‖baseVelocity a F.data.h W.axis.normalization (nominalCoefficients W) (t,
-      0)‖)
+        0)‖)
       (𝓝[<] 1) atTop := by
   apply BaseResidual.baseVelocity_axis_tendsto_atTop ha (height_pos W) (height_lt_half W)
     (nominalCoefficients_smooth W) W.axis.normalization
@@ -327,19 +327,19 @@ theorem nominal_pressure_smooth {a : ℕ → ℕ} (ha : StrictMono a) :
 
 theorem nominal_stressForce_smooth {a : ℕ → ℕ} (ha : StrictMono a) :
     ContDiffOn ℝ ∞ (BaseResidual.baseStressForce a F.data.h W.axis.normalization
-      (nominalCoefficients W))
+        (nominalCoefficients W))
       BaseResidual.past :=
   BaseResidual.baseStressForce_smooth_past ha (height_pos W) (height_lt_half W)
-    (div_pos (nominalInner_pos W) (by norm_num)) (nominalCoefficients_smooth W)
-      (nominal_stressZeroCore W)
+    (div_pos (nominalInner_pos W) (by
+        norm_num)) (nominalCoefficients_smooth W) (nominal_stressZeroCore W)
 
 theorem nominal_residual_smooth {a : ℕ → ℕ} (ha : StrictMono a) :
     ContDiffOn ℝ ∞ (BaseResidual.baseResidual a F.data.h W.axis.normalization (nominalCoefficients
-      W))
+        W))
       BaseResidual.past :=
   (ResidualRegularity.contDiffOn_residual BaseResidual.past_isOpen
     (nominal_velocity_smooth W ha) (nominal_pressure_smooth W ha)).sub (nominal_stressForce_smooth
-      W ha)
+        W ha)
 
 theorem nominal_divergence_zero {a : ℕ → ℕ} (ha : StrictMono a) {t : ℝ} (ht : t < 1)
     (x : ProblemStatement.Space) :
@@ -384,7 +384,7 @@ theorem modified_jetRate {l : Filter ProblemStatement.SpaceTime} {a : ℕ → �
     (m : ℕ) (n : ℝ) (hn : 0 ≤ n) :
     DiagonalResidual.JetRate l (fun z => (cartesianChart F.data.h z).1)
       (BaseResidual.baseResidual a F.data.h W.axis.normalization (modifiedCoefficients W Q M)) m n
-        :=
+          :=
   repaired_jetRate (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M)
     (modifiedZeroOrder W Q M) M.contains (height_pos W) (height_lt_half W) P ha
     (modified_finiteIdentities W Q M) m n hn
@@ -411,7 +411,7 @@ theorem modified_leading_axis {eta : ℝ} (heta : eta ∈ Icc (-1 : ℝ) 1) :
     (modifiedCoefficients W Q M).axial 0 (0, eta) = 4 * eta + W.axis.j := by
   calc
     _ = Q.U (0, eta) := (modifiedCoefficients_zero_fields W Q M (p := (0, eta)) le_rfl (abs_le.mpr
-      heta)).2.1
+        heta)).2.1
     _ = W.U (0, eta) := (M.fields (0, eta) le_rfl (M.contains heta)
       (Or.inl ((nominalInner_pos W).le.trans M.inner))).2
     _ = (nominalCoefficients W).axial 0 (0, eta) :=
@@ -531,14 +531,19 @@ section FixedGeometry
 
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
+/-- Active left, given by `Real.log (nominalInner W / 16)`. -/
 noncomputable def activeLeft : ℝ := Real.log (nominalInner W / 16)
 
+/-- Terminal shift, given by `TerminalHistoryBridge.shift F W.controls.radius`. -/
 noncomputable def terminalShift : ℝ := TerminalHistoryBridge.shift F W.controls.radius
 
+/-- Active right, given by `terminalShift W + 3`. -/
 noncomputable def activeRight : ℝ := terminalShift W + 3
 
+/-- Active upper, given by `Real.exp (activeRight W)`. -/
 noncomputable def activeUpper : ℝ := Real.exp (activeRight W)
 
+/-- Scale upper, given by `max upper (activeUpper W)`. -/
 noncomputable def scaleUpper (upper : ℝ) : ℝ := max upper (activeUpper W)
 
 theorem exp_activeLeft : Real.exp (activeLeft W) = nominalInner W / 16 :=
@@ -556,7 +561,7 @@ theorem core_before_outer : nominalInner W / 8 < nominalOuterX W := by
   linarith [nominalInner_pos W]
 
 theorem switch_before_collar : BaseExterior.nominalHeatSwitch W < Real.exp (terminalShift W + 2) :=
-  by
+    by
   change BaseExterior.nominalHeatSwitch W <
     Real.exp (Real.log (BaseExterior.nominalHeatSwitch W) - 1 / 5 + 2)
   calc
@@ -605,14 +610,14 @@ theorem nominal_quotients_smooth {c : ℝ} (hc : 0 < c) (j : ℕ) :
     (nominal_higher_support W) j
 
 theorem modified_higher_support {D : ProfileHistories.RadialDomain} (Q : ProfileHistories.Profiles
-  D)
+    D)
     {S : Set ℝ} {lo hi : ℝ} (M : FiniteModification W Q S lo hi) :
     BaseResidual.HigherInteriorSupport (modifiedCoefficients W Q M) (activeLeft W) (activeRight W)
-      :=
+        :=
   modified_higherInteriorSupport W Q M (activeLeft_margin W) (outer_before_upper W)
 
 theorem modified_quotients_smooth {D : ProfileHistories.RadialDomain} (Q :
-  ProfileHistories.Profiles D)
+    ProfileHistories.Profiles D)
     {S : Set ℝ} {lo hi : ℝ} (M : FiniteModification W Q S lo hi) {c : ℝ} (hc : 0 < c) (j : ℕ) :
     ContDiff ℝ ∞ (BaseResidual.higherStressQuotient (modifiedCoefficients W Q M)
       (BaseResidual.activeZeta c (activeLeft W) (activeRight W)) j) :=
@@ -684,16 +689,16 @@ theorem nominalScales_origin {t : ℝ} (ht : t < 1) :
 theorem nominalScales_speedUnbounded :
     ProblemStatement.SpeedUnboundedAtOne
       (baseVelocity (nominalScales W c hc upper B) F.data.h W.axis.normalization
-        (nominalCoefficients W)) :=
+          (nominalCoefficients W)) :=
   nominal_speedUnbounded W (nominalScales_strictMono W c hc upper B)
 
 theorem nominalScales_smooth_and_divergence :
     ContDiffOn ℝ ∞
       (baseVelocity (nominalScales W c hc upper B) F.data.h W.axis.normalization
-        (nominalCoefficients W)) past ∧
+          (nominalCoefficients W)) past ∧
     ContDiffOn ℝ ∞
       (basePressure (nominalScales W c hc upper B) F.data.h W.axis.normalization
-        (nominalCoefficients W)) past ∧
+          (nominalCoefficients W)) past ∧
     ∀ t < (1 : ℝ), ∀ x : ProblemStatement.Space,
       ProblemStatement.spatialDivergence
         (baseVelocity (nominalScales W c hc upper B) F.data.h W.axis.normalization
@@ -705,7 +710,7 @@ theorem nominalScales_smooth_and_divergence :
 theorem nominalScales_potential_smooth :
     ContDiffOn ℝ ∞
       (potential (nominalScales W c hc upper B) F.data.h W.axis.normalization (nominalCoefficients
-        W)) past :=
+          W)) past :=
   potential_smooth (nominalScales_strictMono W c hc upper B) (height_pos W) (height_lt_half W)
     (nominalCoefficients_smooth W) W.axis.normalization
 
@@ -714,11 +719,11 @@ theorem nominalScales_tangential_bound {lo hi : ℝ} (hlo : 0 < lo) (hhi : hi �
     ∃ D : ℝ, 0 < D ∧ ∀ q : ℝ, 0 < q → q ≤ 1 → ∀ w ∈ innerBox lo hi,
       ‖blownJet m (fun y =>
         normalizedSwirl (nominalScales W c hc upper B) F.data.h W.axis.normalization
-          (nominalCoefficients W) y -
+            (nominalCoefficients W) y -
           leadingSwirl W.axis.normalization (nominalCoefficients W) y.2) (q, w)‖ ≤ D * q ^ (2 *
-            F.data.h) ∧
+              F.data.h) ∧
       ‖blownJet m (fun y => slowSum (nominalScales W c hc upper B) F.data.h (nominalCoefficients
-        W).axial y -
+          W).axial y -
         (nominalCoefficients W).axial 0 y.2) (q, w)‖ ≤ D * q ^ (2 * F.data.h) :=
   normalized_tangential_bounds (height_pos W) hlo (nominalCoefficients_smooth W)
     (nominalScales_admissible_on W c hc upper B hlo.le hhi) m
@@ -727,9 +732,9 @@ theorem nominalScales_exterior_residual_zero {z : ProblemStatement.SpaceTime}
     (hz : z ∈ BaseExterior.cartesianExterior F.data.h (BaseExterior.nominalExteriorRadius W)) :
     ProblemStatement.navierStokesResidual
       (baseVelocity (nominalScales W c hc upper B) F.data.h W.axis.normalization
-        (nominalCoefficients W))
+          (nominalCoefficients W))
       (basePressure (nominalScales W c hc upper B) F.data.h W.axis.normalization
-        (nominalCoefficients W)) z.1 z.2 = 0 :=
+          (nominalCoefficients W)) z.1 z.2 = 0 :=
   BaseExterior.nominal_base_residual_zero W (nominalScales_strictMono W c hc upper B) hz
 
 variable {D : ProfileHistories.RadialDomain} (Q : ProfileHistories.Profiles D)
@@ -755,7 +760,7 @@ theorem modifiedScales_admissible :
     AdmissibleScales F.data.h (coefficientBundle W.axis.normalization (modifiedCoefficients W Q M))
       (innerBox 0 (scaleUpper W upper)) (modifiedScales W c hc upper B Q M) :=
   weightedBundle_base_scales (modifiedCoefficients_smooth W Q M) (modified_quotients_smooth W Q M
-    hc)
+      hc)
     (modifiedScales_spec W c hc upper B Q M).2
 
 theorem modifiedScales_strictMono : StrictMono (modifiedScales W c hc upper B Q M) :=
@@ -795,7 +800,7 @@ theorem modifiedScales_smooth_and_divergence :
           (modifiedCoefficients W Q M)) t x = 0 := by
   have ha := modifiedScales_strictMono W c hc upper B Q M
   exact ⟨baseVelocity_smooth ha (height_pos W) (height_lt_half W) (modifiedCoefficients_smooth W Q
-    M) _,
+      M) _,
     basePressure_smooth ha (height_pos W) (height_lt_half W) (modifiedCoefficients_smooth W Q M) _,
     fun _ ht x => baseVelocity_divergence_zero ha (height_pos W) (height_lt_half W)
       (modifiedCoefficients_smooth W Q M) _ ht x⟩
@@ -851,7 +856,7 @@ theorem modifiedScales_weighted_bound
     linarith
   · intro w hw
     have hz := coefficients_stress_zero_left (modifiedLocalization W Q M) (modifiedBaseAgreement W
-      Q M)
+        Q M)
       (modifiedZeroOrder W Q M) M.contains 1 hw.le
     exact Prod.ext hz.1 hz.2
 
@@ -870,6 +875,7 @@ noncomputable def coefficients : Coefficients :=
 theorem coefficients_smooth : SmoothCoefficients (coefficients v) :=
   modifiedCoefficients_smooth W v.profiles v.finiteModification
 
+/-- Scales, given by `modifiedScales W c hc upper B v.profiles v.finiteModification`. -/
 noncomputable def scales (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) : ℕ → ℕ :=
   modifiedScales W c hc upper B v.profiles v.finiteModification
 
@@ -889,23 +895,33 @@ theorem scales_admissible (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
 theorem scales_strictMono (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     StrictMono (scales v c hc upper B) := (scales_spec v c hc upper B).2.strictMono
 
+/-- Velocity, given by `baseVelocity (scales v c hc upper B) F.data.h W.axis.normalization
+(coefficients v)`. -/
 noncomputable def velocity (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.VelocityField :=
   baseVelocity (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)
 
+/-- Pressure, given by `basePressure (scales v c hc upper B) F.data.h W.axis.normalization
+(coefficients v)`. -/
 noncomputable def pressure (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.PressureField :=
   basePressure (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)
 
+/-- Stress force, given by `BaseResidual.baseStressForce (scales v c hc upper B) F.data.h
+W.axis.normalization (coefficients v)`. -/
 noncomputable def stressForce (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.SpaceTime → ProblemStatement.Space :=
   BaseResidual.baseStressForce (scales v c hc upper B) F.data.h W.axis.normalization (coefficients
-    v)
+      v)
 
+/-- Error, given by `BaseResidual.baseResidual (scales v c hc upper B) F.data.h
+W.axis.normalization (coefficients v)`. -/
 noncomputable def error (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.SpaceTime → ProblemStatement.Space :=
   BaseResidual.baseResidual (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)
 
+/-- Vector potential, given by `potential (scales v c hc upper B) F.data.h W.axis.normalization
+(coefficients v)`. -/
 noncomputable def vectorPotential (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.VelocityField :=
   potential (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)
@@ -927,7 +943,7 @@ theorem smooth_and_divergence (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
 theorem origin (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) {t : ℝ} (ht : t < 1) :
     velocity v c hc upper B (t, 0) =
       ((1 - t) ^ (-CoordinateAlgebra.A F.data.h) * W.axis.j) • ProblemStatement.coordinateVector 2
-        :=
+          :=
   modifiedScales_origin W c hc upper B v.profiles v.finiteModification ht
 
 theorem speedUnbounded (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
@@ -940,9 +956,9 @@ theorem finiteIdentities :
   modified_finiteIdentities W v.profiles v.finiteModification
 
 theorem residual_identity (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) (z : ProblemStatement.SpaceTime)
-  :
+    :
     ProblemStatement.navierStokesResidual (velocity v c hc upper B) (pressure v c hc upper B) z.1
-      z.2 =
+        z.2 =
       stressForce v c hc upper B z + error v c hc upper B z :=
   BaseResidual.baseResidual_identity _ _ _ _ z
 
@@ -950,7 +966,7 @@ theorem error_allJetsFlat (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ)
     {l : Filter ProblemStatement.SpaceTime} {radius : ℝ}
     (P : BaseResidual.PhysicalApproach l F.data.h 0 radius) (hr : radius ≤ scaleUpper W upper) :
     ResidualStability.AllJetsFlat l (fun z => (cartesianChart F.data.h z).1) (error v c hc upper B)
-      :=
+        :=
   modifiedScales_allJetsFlat W c hc upper B v.profiles v.finiteModification P hr
 
 /-- Every finite identity and support input of this weighted estimate is
@@ -991,7 +1007,7 @@ theorem exists_actual_base (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
         ProblemStatement.spatialDivergence (Modulated.velocity v c hc upper B) t x = 0) ∧
       (∀ t < (1 : ℝ), Modulated.velocity v c hc upper B (t, 0) =
         ((1 - t) ^ (-CoordinateAlgebra.A F.data.h) * W.axis.j) • ProblemStatement.coordinateVector
-          2) ∧
+            2) ∧
       ProblemStatement.SpeedUnboundedAtOne (Modulated.velocity v c hc upper B) ∧
       ∀ (l : Filter ProblemStatement.SpaceTime), BaseResidual.PhysicalApproach l F.data.h 0 upper →
         ResidualStability.AllJetsFlat l (fun z => (cartesianChart F.data.h z).1)

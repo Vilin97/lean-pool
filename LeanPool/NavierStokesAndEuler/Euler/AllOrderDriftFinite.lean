@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftBudget
-public import LeanPool.NavierStokesAndEuler.Euler.DriftGlobalInviscidGevrey
+import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionCoherence
+import LeanPool.NavierStokesAndEuler.Euler.DriftGlobalInviscidGevrey
+import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
+
+/-! Actual finite inviscid corrections constructed from the all-order drift-aware input budget. -/
 
 @[expose] public section
 
-/-! Actual finite inviscid corrections constructed from the all-order drift-aware input budget. -/
 
 noncomputable section
 
@@ -24,9 +27,10 @@ open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
 
 variable (period : ℝ) [Fact (0 < period)]
 
-/-- Genuine drift-aware input budgets construct an actual finite-order inviscid correction with quantitative retained Gevrey energy.
+/-- Genuine drift-aware input budgets construct an actual finite-order inviscid correction with
+quantitative retained Gevrey energy.
 Finite existence, an energy inequality and convergence are conclusions of the imported actual
-  construction, not hypotheses here. -/
+construction, not hypotheses here. -/
 theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) :
     ∃ e : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)),
@@ -42,7 +46,7 @@ theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget per
   have h := exists_global_inviscid_gevrey_PDE period hq T hT (A.atOrder period ((q+1)+1))
     (A.metric.jet (q+1)) (A.linear.jet (q+1)) (fun i => (A.quadratic i).jet (q+1))
     (A.metric.continuous (q+1)) (A.linear.continuous (q+1)) (fun i => (A.quadratic i).continuous
-      (q+1))
+        (q+1))
     (A.metric.jet q) (A.linear.jet q) (fun i => (A.quadratic i).jet q)
     (A.metric.continuous q) (A.linear.continuous q) (fun i => (A.quadratic i).continuous q)
     A.metric_continuous (q-4) (by omega) (by omega) B.radius (B.spatial q hq)
@@ -65,15 +69,16 @@ def Budget.solution {T : ℝ} {hT : 0 < T} {A : Data period T} (B : Budget perio
 
 /-- The actual selected finite solutions retain both residual and target-error energy estimates. -/
 theorem Budget.solution_energy {T : ℝ} {hT : 0 < T} {A : Data period T} (B : Budget period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (P : ℕ) (hPN : P ≤ q-4) (hP : P+6 ≤ q+1) (t : Icc (0 : ℝ) T) :
+    (q : ℕ) (hq : 6 ≤ q) (P : ℕ) (hPN : P ≤ q - 4) (hP : P + 6 ≤ q + 1) (t : Icc (0 : ℝ) T) :
     energyNorm period P hP (B.radius t) (B.metric.operatorPath period t) (B.solution period q hq t)
-      ≤
+        ≤
       2*(B.spatial q hq).full.residual*Real.exp (3*B.growthCoefficient*t.val) ∧
     energyNorm period P hP (B.radius t) (B.metric.operatorPath period t) (B.solution period q hq t)
-      ≤ B.delta/2 :=
+        ≤ B.delta/2 :=
   (Classical.choose_spec (finite_exists period hT A B q hq)).2.2.1 P hPN hP t
 
-/-- Actual drift-aware data construct the complete finite correction family; no finite-existence hypothesis is supplied. -/
+/-- Actual drift-aware data construct the complete finite correction family; no finite-existence
+hypothesis is supplied. -/
 def Budget.family {T : ℝ} {hT : 0 < T} {A : Data period T} (B : Budget period hT A) :
     FiniteFamily period hT A where
   solution := B.solution period

@@ -6,9 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionPartitions
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
+import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionPartitions
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # A shifted partition estimate for a differential equation
@@ -18,6 +18,9 @@ derivative of `Y` by `(j-1)!²`.  With those inner weights the normalized
 Faà di Bruno partition sum stays bounded at every positive order, provided
 its scalar argument is at most one half.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -53,12 +56,17 @@ lemma sum_partSize_sq_le (c : OrderedFinpartition n) :
       nlinarith
     _ = _ := by rw [← Finset.mul_sum, sum_partSize_real]
 
+/-- Predecessor factorial product, given by `∏ i, ((c.partSize i - 1).factorial : ℝ)`. -/
 def predecessorFactorialProduct (c : OrderedFinpartition n) : ℝ :=
   ∏ i, ((c.partSize i - 1).factorial : ℝ)
 
+/-- Predecessor partition weight, given by `x^c.length * ((c.length.factorial : ℝ) *
+predecessorFactorialProduct c)^2`. -/
 def predecessorPartitionWeight (x : ℝ) (c : OrderedFinpartition n) : ℝ :=
   x^c.length * ((c.length.factorial : ℝ) * predecessorFactorialProduct c)^2
 
+/-- Predecessor partition sum, given by `∑ c : OrderedFinpartition n, predecessorPartitionWeight
+x c`. -/
 def predecessorPartitionSum (n : ℕ) (x : ℝ) : ℝ :=
   ∑ c : OrderedFinpartition n, predecessorPartitionWeight x c
 

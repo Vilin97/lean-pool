@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
+public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOperator
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+
+/-! The literal raw curl-corrector equals the genuine periodic Piola corrector. -/
 
 @[expose] public section
 
-/-! The literal raw curl-corrector equals the genuine periodic Piola corrector. -/
 
 noncomputable section
 
@@ -27,7 +29,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (G : Field P D.T raw) (t : Icc (0 : ℝ) D.T)
 
 theorem rawMean_pointField
-    (hm : ∀ x, (∫ θ in (0 : ℝ)..P, raw (t,(x,θ))) = 0) (x : Space) :
+    (hm : ∀ x, (∫ θ in (0 : ℝ)..P, raw (t, (x, θ))) = 0) (x : Space) :
     (∫ θ in (0 : ℝ)..P, pointField P G.path G.orbit t (x,(θ : AddCircle P))) = 0 := by
   convert hm x using 1
   apply intervalIntegral.integral_congr
@@ -35,7 +37,7 @@ theorem rawMean_pointField
   exact (G.raw_eq t x θ).symm
 
 theorem rawCorrector_eq_lifted
-    (hm : ∀ x, (∫ θ in (0 : ℝ)..P, raw (t,(x,θ))) = 0) (x : Space) (θ : ℝ) :
+    (hm : ∀ x, (∫ θ in (0 : ℝ)..P, raw (t, (x, θ))) = 0) (x : Space) (θ : ℝ) :
     D.curlCorrector P raw (t,(x,θ)) =
       EulerPacketConstructedPiola.corrector P (D.deformationEquiv t) D.m₀
         (pointField P G.path G.orbit t) (x,(θ : AddCircle P)) := by

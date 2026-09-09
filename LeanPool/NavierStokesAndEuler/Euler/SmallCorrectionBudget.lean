@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftBudget
+public import LeanPool.NavierStokesAndEuler.Euler.SmallCorrectionScales
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolevBudget
 
 /-! A genuine all-order correction budget for small smooth data with the
 identity metric. Every field and coefficient estimate is derived from the
 given datum's actual word bound; the amplitude is chosen explicitly. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,6 +33,7 @@ variable {P : ℝ} [Fact (0 < P)] {raw : VectorField}
   (G : Field P 1 raw) {C R : ℝ} (hG : G.WordBound 6 R C 0)
   (hC : 0 ≤ C) (hR : 0 ≤ R) (S : Scale P C R (residualCost P C R))
 
+/-- Spatial budget, bundling `Rc`, `M`, `B`, `B0` and the required compatibility proofs. -/
 def spatialBudget (q : ℕ) (hq : 6 ≤ q) :
     SpatialBudget P (by omega : 6 ≤ (q+1)+1)
       ((input G S.value).atOrder P ((q+1)+1)) (q-4) (S.radius P) where
@@ -77,6 +82,8 @@ def spatialBudget (q : ℕ) (hq : 6 ≤ q) :
     ((q+1)+1) (q-4) (by omega) (S.radius P t)
     (S.radius_positive P hC hR t) (S.radius_small P hC hR t) t
 
+/-- Drift budget, bundling `full`, `drift`, `drift_nonneg`, `drift_bound` and the required
+compatibility proofs. -/
 def driftBudget (q : ℕ) (hq : 6 ≤ q) :
     EulerDriftCorrectionBudget.Budget P (by omega : 6 ≤ (q+1)+1)
       ((input G S.value).atOrder P ((q+1)+1)) (q-4) (S.radius P) where
@@ -96,8 +103,8 @@ def driftBudget (q : ℕ) (hq : 6 ≤ q) :
 theorem driftBudget_growth (q : ℕ) (hq : 6 ≤ q) :
     combinedConstant P (driftBudget G hG hC hR S q hq).full
       ((input G S.value).metricBudget P (by norm_num)
-        (metricBudget P (by norm_num) (G.smul S.value).toFieldTower (residual G
-          S.value).toFieldTower)
+        (metricBudget P (by
+            norm_num) (G.smul S.value).toFieldTower (residual G S.value).toFieldTower)
         (q+1)) = growth P := by
   change energyConstant P
     (growthBudgetBase 1 0 0+growthBudgetSlope 1 0*sobolevEmbeddingConstant P 6*1)
@@ -105,10 +112,12 @@ theorem driftBudget_growth (q : ℕ) (hq : 6 ≤ q) :
     (1/1) 1 pressureBound 1 1 0 0 1 = growth P
   norm_num [growthBudgetBase,growthBudgetSlope,growth]
 
+/-- Budget, bundling `metric`, `radius`, `growthCoefficient`, `delta` and the required
+compatibility proofs. -/
 def budget (hdiv : ∀ t, G.path t ∈ divergenceFreeSpace P 1 (0 : Space)) :
     EulerAllOrderDriftCorrection.Budget P (by norm_num : (0 : ℝ) < 1) (input G S.value) where
-  metric := metricBudget P (by norm_num) (G.smul S.value).toFieldTower (residual G
-    S.value).toFieldTower
+  metric := metricBudget P (by
+      norm_num) (G.smul S.value).toFieldTower (residual G S.value).toFieldTower
   radius := S.radius P
   growthCoefficient := growth P
   delta := S.value

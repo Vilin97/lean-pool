@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathSmooth
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevOperatorCoordinates
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevCoefficientPressure
+import LeanPool.NavierStokesAndEuler.Euler.SobolevOperatorCoordinates
 
 /-! The constructed coefficient jets act continuously in operator norm
 on every finite cylinder Sobolev space. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,15 +29,26 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathSobolev1 : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instCoefficientPathSobolev2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCoefficientPathSobolev3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instCoefficientPathSobolev4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
 
 variable (P : ℝ) [Fact (0 < P)]
   (A : C(K, Space →ᵇ Space →L[ℝ] Space))
   (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
 
+/-- Sobolev operator, given by `coefficientSobolevOperator P (coefficientJet P A hA q t)`. -/
 def sobolevOperator (q : ℕ) (t : K) : SobolevSpace P q →L[ℝ] SobolevSpace P q :=
   coefficientSobolevOperator P (coefficientJet P A hA q t)
 
@@ -51,7 +65,7 @@ theorem sobolevOperator_value_comp (q : ℕ) (t : K) :
   exact sobolevOperator_value P A hA q t u
 
 theorem sobolevOperator_derivative (q : ℕ) (t : K) (i : Fin 4)
-    (u : SobolevSpace P (q+1)) :
+    (u : SobolevSpace P (q + 1)) :
     derivativeOperator P q i (sobolevOperator P A hA (q+1) t u) =
       sobolevOperator P A hA q t (derivativeOperator P q i u) +
       sobolevOperator P (orbitDerivativePath A (standardDirection i).1)
@@ -63,7 +77,7 @@ theorem sobolevOperator_derivative (q : ℕ) (t : K) (i : Fin 4)
     (smoothCoefficient P (orbitDerivativePath A (standardDirection i).1)
       (orbitDerivativePath_orbit A hA (standardDirection i).1) t)
     (standardDirection i) (fun x => (cylinder_fieldDerivative P A hA t (standardDirection i)
-      x).symm)
+        x).symm)
     (value P u) (value P (derivativeOperator P q i u)) (derivativeOperator_hasDerivAt P i u)
   change value P (derivativeOperator P q i (sobolevOperator P A hA (q+1) t u)) =
     value P (sobolevOperator P A hA q t (derivativeOperator P q i u)) +
@@ -77,7 +91,7 @@ theorem sobolevOperator_derivative_comp (q : ℕ) (t : K) (i : Fin 4) :
       (sobolevOperator P A hA q t).comp (derivativeOperator P q i) +
       (sobolevOperator P (orbitDerivativePath A (standardDirection i).1)
         (orbitDerivativePath_orbit A hA (standardDirection i).1) q t).comp (truncateOperator P q)
-          := by
+            := by
   apply ContinuousLinearMap.ext
   intro u
   exact sobolevOperator_derivative P A hA q t i u
@@ -102,7 +116,7 @@ private theorem sobolevOperator_continuous_aux (q : ℕ) :
       exact ((ih A hA).clm_comp_const (derivativeOperator P q i)).add
         ((ih (orbitDerivativePath A (standardDirection i).1)
           (orbitDerivativePath_orbit A hA (standardDirection i).1)).clm_comp_const
-            (truncateOperator P q))
+              (truncateOperator P q))
 
 theorem sobolevOperator_continuous (q : ℕ) :
     Continuous (fun t => sobolevOperator P A hA q t) :=

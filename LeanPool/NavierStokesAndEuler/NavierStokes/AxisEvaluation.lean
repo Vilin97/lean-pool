@@ -7,18 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.AxisCoefficientSpace
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Data.Nat.Choose.Bounds
-public import Mathlib.Algebra.Order.Algebra
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Data.EReal.Inv
-public import Mathlib.Tactic.GCongr
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+import Mathlib.Analysis.Calculus.SmoothSeries
 
 /-!
 # Evaluation of the complete axis coefficient space
@@ -28,6 +20,9 @@ Its mixed derivative series are proved convergent before their derivatives
 and smoothness are established.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 open Set Filter
@@ -36,6 +31,7 @@ open NavierStokes.AxisCoefficientSpace NavierStokes.AxisWeightEstimates
 
 namespace NavierStokes.AxisEvaluation
 
+/-- Polynomial jet, given by `(n.descFactorial k : ℝ) * Y ^ (n - k)`. -/
 def polynomialJet (n k : ℕ) (Y : ℝ) : ℝ :=
   (n.descFactorial k : ℝ) * Y ^ (n - k)
 
@@ -49,12 +45,15 @@ theorem polynomialJet_hasDerivAt (n k : ℕ) (Y : ℝ) :
   rw [he]
   ring
 
+/-- Term, given by `polynomialJet n k p.1 * jet I (weight ε) A.1 n m p.2`. -/
 def term (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m n : ℕ) (p : ℝ × ℝ) : ℝ :=
   polynomialJet n k p.1 * jet I (weight ε) A.1 n m p.2
 
+/-- Mixed series, given by `∑' n : ℕ, term I ε A k m n p`. -/
 def mixedSeries (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m : ℕ) (p : ℝ × ℝ) : ℝ :=
   ∑' n : ℕ, term I ε A k m n p
 
+/-- Profile, given by `∑' n : ℕ, p.1 ^ n * coefficient I (weight ε) A n p.2`. -/
 def profile (I : Window) (ε : ℝ) (A : AxisSpace I ε) (p : ℝ × ℝ) : ℝ :=
   ∑' n : ℕ, p.1 ^ n * coefficient I (weight ε) A n p.2
 
@@ -163,6 +162,7 @@ theorem mixedSeries_uniform (I : Window) {ε R : ℝ} (hε : 0 < ε) (hR20 : R <
     (fun n p hp => term_bound I hε (le_max_left 1 R) A k m n
       (hp.trans (le_max_right 1 R)))
 
+/-- Strip, given by `Ioo (-R) R ×ˢ Ioo I.left I.right`. -/
 def strip (I : Window) (R : ℝ) : Set (ℝ × ℝ) :=
   Ioo (-R) R ×ˢ Ioo I.left I.right
 
@@ -172,6 +172,8 @@ theorem strip_isOpen (I : Window) (R : ℝ) : IsOpen (strip I R) :=
 theorem strip_isPreconnected (I : Window) (R : ℝ) : IsPreconnected (strip I R) :=
   isPreconnected_Ioo.prod isPreconnected_Ioo
 
+/-- Linear form, given by `u • ContinuousLinearMap.fst ℝ ℝ ℝ + v • ContinuousLinearMap.snd ℝ ℝ
+ℝ`. -/
 def linearForm (u v : ℝ) : (ℝ × ℝ) →L[ℝ] ℝ :=
   u • ContinuousLinearMap.fst ℝ ℝ ℝ + v • ContinuousLinearMap.snd ℝ ℝ ℝ
 
@@ -339,6 +341,7 @@ theorem mixed_derivative_profile (I : Window) {ε : ℝ} (hε : 0 < ε)
   rw [heq.iteratedDeriv_eq m, iteratedDeriv_eta I hε A k 0 m hY hη]
   simp only [Nat.zero_add, mixedSeries, term, polynomialJet]
 
+/-- Jet bound, given by `∑' n : ℕ, majorant ε 1 R k m n`. -/
 def jetBound (ε R : ℝ) (k m : ℕ) : ℝ := ∑' n : ℕ, majorant ε 1 R k m n
 
 theorem majorant_scale (ε C R : ℝ) (k m n : ℕ) :
@@ -414,6 +417,7 @@ theorem mixedSeries_sub (I : Window) {ε : ℝ} (hε : 0 < ε)
   simp only [mixedSeries, term_sub]
   exact (mixedSeries_summable I hε A k m hp).tsum_sub (mixedSeries_summable I hε B k m hp)
 
+/-- Evaluation linear map, bundling `toFun`, `map_add`, `map_smul`. -/
 def evaluationLinearMap (I : Window) {ε : ℝ} (hε : 0 < ε)
     (k m : ℕ) (p : ℝ × ℝ) (hp : |p.1| < 20) : AxisSpace I ε →ₗ[ℝ] ℝ where
   toFun A := mixedSeries I ε A k m p

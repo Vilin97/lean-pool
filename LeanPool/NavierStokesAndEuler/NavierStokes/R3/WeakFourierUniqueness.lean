@@ -6,11 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
-public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 
 /-!
 # Weak uniqueness for the weighted Fourier representation
@@ -20,6 +18,9 @@ function annihilating every Schwartz test vanishes almost everywhere. Applied
 to the weighted conjugate of an `L²` function, this removes the Fourier
 Laplacian multiplier away from its single zero at the origin.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

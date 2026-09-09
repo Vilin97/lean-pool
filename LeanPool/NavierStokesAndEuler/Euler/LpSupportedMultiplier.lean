@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedSubspace
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedPressure
 
 /-!
 # Actual coefficient multiplication on supported spatial L²
@@ -19,6 +17,9 @@ ordinary spatial L². Crucially, the operator norm can be bounded using only
 coefficient values on the support set. Thus the localized (H3) propagator
 bound is retained without any estimate outside its stated region.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -34,6 +35,7 @@ variable {α V : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace �
   [NormedAddCommGroup V] [InnerProductSpace ℝ V]
   (S : Set α) (hS : MeasurableSet S)
 
+/-- Field: an abbreviation for `α →ᵇ (V →L[ℝ] V)`. -/
 abbrev Field := α →ᵇ (V →L[ℝ] V)
 
 /-- The ordinary full-space L² coefficient multiplier. -/

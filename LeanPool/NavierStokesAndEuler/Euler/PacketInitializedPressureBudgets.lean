@@ -6,14 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketAngularPressureStepBound
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureStepBound
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketAngularPressureStepBound
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
+import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureStepBound
+import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
 
 /-! The actual initialized recursion has both mean and angular pressure
 budgets at every grade. All bounds are derived from the source solvers. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,9 +28,13 @@ namespace EulerPacketCylinderField
 open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
   EulerPacketTimeProfile EulerPacketShiftArithmetic
 
+/-- Pressure budget data, collecting `mean`, `angular`, `mean_bound`, `angular_bound`. -/
 structure PressureBudget (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T) (m : Space)
     (a : Profile) (S : Scales (Icc (0 : ℝ) T)) (R : ℝ) (p : ℕ) where
+  /-- Mean field of `PressureBudget`, of type `Field P T (pressureGradient a.meanPressure)`. -/
   mean : Field P T (pressureGradient a.meanPressure)
+  /-- Angular of `PressureBudget`, of type `Field P T (fun z => (pressureJet a.highPressure z).2
+  angleDirection • m)`. -/
   angular : Field P T (fun z => (pressureJet a.highPressure z).2 angleDirection • m)
   mean_bound : (mean.normalized hT (S.mean p) (S.mean_pos p)).WordBound 6 R 1 (meanShift p)
   angular_bound : (angular.normalized hT (S.high p) (S.high_pos p)).WordBound 6 R 1 (highShift p)
@@ -40,7 +50,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
   (L : EulerTransversePacketJoin.Budget D τ hτ hτT B (Fin 4) 6)
@@ -53,9 +63,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketPrimary.Budget.GradeGuards (P := period) H NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.fullProfile)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
 
 include H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth
 
@@ -84,7 +94,7 @@ theorem initializedPressureBudget_exists (p : ℕ) :
       simp [pressureJet_zero]
     let Q := (Field.zero period M.T).congr (fun _ _ _ => congrFun hb0 _)
     let A : Field period M.T (fun z => (pressureJet (a 0).highPressure z).2 angleDirection • D.m₀)
-      :=
+        :=
       (Field.zero period M.T).congr (fun _ _ _ => congrFun han _)
     refine ⟨⟨Q,A,?_,?_⟩⟩
     · exact (Field.wordBound_normalized_of_zero Q (fun _ _ _ => congrFun hb0 _)
@@ -108,7 +118,7 @@ theorem initializedPressureBudget_exists (p : ℕ) :
       simp only [a,initializedProfiles,joinedSourceProfiles,profiles_one]
       rfl
     let A : Field period M.T (fun z => (pressureJet (a 1).highPressure z).2 angleDirection • D.m₀)
-      :=
+        :=
       ((angularField τ hτ hτT B (initialData D δ hδ (α • ξ) hs)).changeTime hTime.symm).congr
         (fun _ _ _ => by rw [he])
     refine ⟨⟨Q,A,?_,hb'.of_path_eq _ rfl⟩⟩

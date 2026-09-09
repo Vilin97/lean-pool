@@ -7,14 +7,18 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerSobolevClass
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLimit
+import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
 
 /-! The reverse bridge from ordinary scalar-pressure Euler to the
 projected equation. The only regularity inputs are the velocity and its
 actual strong time derivative in all spatial Sobolev orders. Neither a
 pressure-force regularity hypothesis nor a projected equation is assumed.
 The scalar pressure may be changed by an arbitrary function of time. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,7 +30,7 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
   EulerCylinderSobolevSpace EulerLiftedGradientSpace EulerVolterraConvolution
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instOrdinaryEulerClassicalClass1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 variable {T : ℝ} {hT : 0 ≤ T}
 
@@ -53,14 +57,16 @@ theorem isSmoothProjectedEuler_of_scalarEuler
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n))
     (hd : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (fun r => (A (projIcc 0 T hT r)).toLp)
-        (B ⟨t,ht.1.le,ht.2.le⟩).toLp t)
+        (B ⟨t, ht.1.le, ht.2.le⟩).toLp t)
     (p : ℝ → Space → ℝ)
-    (hdiv : ∀ t x, divergence (A t).field x=0)
+    (hdiv : ∀ t x, divergence (A t).field x = 0)
     (hp : ∀ t ∈ Ioo 0 T, Differentiable ℝ (p t))
     (he : ∀ t (ht : t ∈ Ioo 0 T) x,
-      (B ⟨t,ht.1.le,ht.2.le⟩).field x+
-        fderiv ℝ (A ⟨t,ht.1.le,ht.2.le⟩).field x
-          ((A ⟨t,ht.1.le,ht.2.le⟩).field x)+gradient (p t) x=0) :
+      (B ⟨t, ht.1.le, ht.2.le⟩).field x +
+        fderiv ℝ (A ⟨t, ht.1.le, ht.2.le⟩).field x
+          ((A ⟨t, ht.1.le, ht.2.le⟩).field x) +
+ gradient (p t) x =
+ 0) :
     IsSmoothProjectedEuler (hT := hT) A := by
   have hs (t : Icc (0 : ℝ) T) : (A t).toLp ∈ solenoidalSpace :=
     smooth_mem_solenoidal (A t).field (A t).smooth (A t).memLp (hdiv t)
@@ -74,7 +80,7 @@ theorem isSmoothProjectedEuler_of_scalarEuler
   have hG : G.toLp ∈ EulerMeanSolenoidal.gradientSpace :=
     gradient_mem G (p t) (potential_smooth G (p t) (hp t ht) hg) hg
   have hproj := solenoidalProjection.hasFDerivAt.comp_hasDerivAt t (hd t ht)
-  have hfix : (fun r => solenoidalProjection (A (projIcc 0 T hT r)).toLp)=
+  have hfix : (fun r => solenoidalProjection (A (projIcc 0 T hT r)).toLp) =
       (fun r => (A (projIcc 0 T hT r)).toLp) := by
     funext r
     exact solenoidalSpace.starProjection_eq_self_iff.mpr (hs _)
@@ -82,27 +88,31 @@ theorem isSmoothProjectedEuler_of_scalarEuler
   rw [hfix] at hproj
   have hB : solenoidalProjection (B s).toLp=(B s).toLp := hproj.unique (hd t ht)
   have hzero := (solenoidalProjection_eq_zero_iff G.toLp).mpr hG
-  change solenoidalProjection (fieldNeg (addField (B s) (advectionField (A s) (A s)))).toLp=0 at
-    hzero
+  change solenoidalProjection (fieldNeg (addField (B s) (advectionField (A s) (A s)))).toLp=0
+      at hzero
   rw [toLp_fieldNeg,toLp_addField,map_neg,map_add,hB] at hzero
   have hR : (B s).toLp=(projectedRhs (A s)).toLp := by
     rw [projectedRhs_toLp]
     exact eq_neg_of_add_eq_zero_left (neg_eq_zero.mp hzero)
   exact hR ▸ hd t ht
 
+/-- Evolution of scalar euler, given by `evolutionOfProjectedEquation A
+(isSmoothProjectedEuler_of_scalarEuler A B hA hd p hdiv hp he)`. -/
 def evolutionOfScalarEuler
     (A B : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n))
     (hd : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (fun r => (A (projIcc 0 T hT r)).toLp)
-        (B ⟨t,ht.1.le,ht.2.le⟩).toLp t)
+        (B ⟨t, ht.1.le, ht.2.le⟩).toLp t)
     (p : ℝ → Space → ℝ)
-    (hdiv : ∀ t x, divergence (A t).field x=0)
+    (hdiv : ∀ t x, divergence (A t).field x = 0)
     (hp : ∀ t ∈ Ioo 0 T, Differentiable ℝ (p t))
     (he : ∀ t (ht : t ∈ Ioo 0 T) x,
-      (B ⟨t,ht.1.le,ht.2.le⟩).field x+
-        fderiv ℝ (A ⟨t,ht.1.le,ht.2.le⟩).field x
-          ((A ⟨t,ht.1.le,ht.2.le⟩).field x)+gradient (p t) x=0) : Evolution T hT :=
+      (B ⟨t, ht.1.le, ht.2.le⟩).field x +
+        fderiv ℝ (A ⟨t, ht.1.le, ht.2.le⟩).field x
+          ((A ⟨t, ht.1.le, ht.2.le⟩).field x) +
+ gradient (p t) x =
+ 0) : Evolution T hT :=
   evolutionOfProjectedEquation A (isSmoothProjectedEuler_of_scalarEuler A B hA hd p hdiv hp he)
 
 section Identification
@@ -112,14 +122,16 @@ variable (A B : Icc (0 : ℝ) T → SmoothL2Field Space)
   (hB : ∀ n, Continuous (fun t => (B t).jetLp n))
   (hd : ∀ t (ht : t ∈ Ioo 0 T),
     HasDerivAt (fun r => (A (projIcc 0 T hT r)).toLp)
-      (B ⟨t,ht.1.le,ht.2.le⟩).toLp t)
+      (B ⟨t, ht.1.le, ht.2.le⟩).toLp t)
   (p : ℝ → Space → ℝ)
-  (hdiv : ∀ t x, divergence (A t).field x=0)
+  (hdiv : ∀ t x, divergence (A t).field x = 0)
   (hp : ∀ t ∈ Ioo 0 T, Differentiable ℝ (p t))
   (he : ∀ t (ht : t ∈ Ioo 0 T) x,
-    (B ⟨t,ht.1.le,ht.2.le⟩).field x+
-      fderiv ℝ (A ⟨t,ht.1.le,ht.2.le⟩).field x
-        ((A ⟨t,ht.1.le,ht.2.le⟩).field x)+gradient (p t) x=0)
+    (B ⟨t, ht.1.le, ht.2.le⟩).field x +
+      fderiv ℝ (A ⟨t, ht.1.le, ht.2.le⟩).field x
+        ((A ⟨t, ht.1.le, ht.2.le⟩).field x) +
+ gradient (p t) x =
+ 0)
 
 theorem evolutionOfScalarEuler_velocity :
     (evolutionOfScalarEuler A B hA hd p hdiv hp he).velocity=A := rfl
@@ -141,7 +153,7 @@ theorem evolutionOfScalarEuler_derivative (hpos : 0 < T) (t : Icc (0 : ℝ) T) :
 
 include hB in
 theorem evolutionOfScalarEuler_pressureForce (hpos : 0 < T) (t : Icc (0 : ℝ) T) :
-    (evolutionOfScalarEuler A B hA hd p hdiv hp he).pressureForce t=
+    (evolutionOfScalarEuler A B hA hd p hdiv hp he).pressureForce t =
       scalarEulerForce (A t) (B t) := by
   let U := evolutionOfScalarEuler A B hA hd p hdiv hp he
   have hd' := evolutionOfScalarEuler_derivative A B hA hB hd p hdiv hp he hpos t
@@ -160,7 +172,7 @@ theorem evolutionOfScalarEuler_pressureForce (hpos : 0 < T) (t : Icc (0 : ℝ) T
 include hB in
 theorem evolutionOfScalarEuler_scalarPressure (hpos : 0 < T)
     (t : ℝ) (ht : t ∈ Ioo 0 T) (x : Space) :
-    (evolutionOfScalarEuler A B hA hd p hdiv hp he).scalarPressure ⟨t,ht.1.le,ht.2.le⟩ x=
+    (evolutionOfScalarEuler A B hA hd p hdiv hp he).scalarPressure ⟨t,ht.1.le,ht.2.le⟩ x =
       p t x-p t 0 := by
   let U := evolutionOfScalarEuler A B hA hd p hdiv hp he
   let s : Icc (0 : ℝ) T := ⟨t,ht.1.le,ht.2.le⟩
@@ -182,7 +194,7 @@ theorem l2_timeDerivative_of_sobolev
     (hB : ∀ n, Continuous (fun t => (B t).jetLp n)) (q : ℕ)
     (hd : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (extendPath T hT (sobolevPath A hA q))
-        (sobolevPath B hB q ⟨t,ht.1.le,ht.2.le⟩) t)
+        (sobolevPath B hB q ⟨t, ht.1.le, ht.2.le⟩) t)
     (t : ℝ) (ht : t ∈ Ioo 0 T) :
     HasDerivAt (fun r => (A (projIcc 0 T hT r)).toLp)
       (B ⟨t,ht.1.le,ht.2.le⟩).toLp t := by
@@ -212,7 +224,7 @@ def IsSmoothScalarEuler (A : Icc (0 : ℝ) T → SmoothL2Field Space) : Prop :=
       (∀ t x, divergence (A t).field x=0) ∧
       (∀ t ∈ Ioo 0 T, Differentiable ℝ (p t)) ∧
       (∀ t (ht : t ∈ Ioo 0 T) x,
-        (B ⟨t,ht.1.le,ht.2.le⟩).field x+
+        (B ⟨t,ht.1.le,ht.2.le⟩).field x +
           fderiv ℝ (A ⟨t,ht.1.le,ht.2.le⟩).field x
             ((A ⟨t,ht.1.le,ht.2.le⟩).field x)+gradient (p t) x=0)
 
@@ -222,14 +234,16 @@ theorem isSmoothScalarEuler_of_sobolev
     (hB : ∀ n, Continuous (fun t => (B t).jetLp n)) (q : ℕ)
     (hd : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (extendPath T hT (sobolevPath A hA q))
-        (sobolevPath B hB q ⟨t,ht.1.le,ht.2.le⟩) t)
+        (sobolevPath B hB q ⟨t, ht.1.le, ht.2.le⟩) t)
     (p : ℝ → Space → ℝ)
-    (hdiv : ∀ t x, divergence (A t).field x=0)
+    (hdiv : ∀ t x, divergence (A t).field x = 0)
     (hp : ∀ t ∈ Ioo 0 T, Differentiable ℝ (p t))
     (he : ∀ t (ht : t ∈ Ioo 0 T) x,
-      (B ⟨t,ht.1.le,ht.2.le⟩).field x+
-        fderiv ℝ (A ⟨t,ht.1.le,ht.2.le⟩).field x
-          ((A ⟨t,ht.1.le,ht.2.le⟩).field x)+gradient (p t) x=0) :
+      (B ⟨t, ht.1.le, ht.2.le⟩).field x +
+        fderiv ℝ (A ⟨t, ht.1.le, ht.2.le⟩).field x
+          ((A ⟨t, ht.1.le, ht.2.le⟩).field x) +
+ gradient (p t) x =
+ 0) :
     IsSmoothScalarEuler (hT := hT) A :=
   ⟨hA,B,p,hB,l2_timeDerivative_of_sobolev A B hA hB q hd,hdiv,hp,he⟩
 
@@ -240,14 +254,16 @@ the continuous realizations of the derivative come from its higher orders. -/
 theorem SobolevTower.isSmoothScalarEuler (A B : SobolevTower T)
     (hd : ∀ t (ht : t ∈ Ioo 0 T),
       HasDerivAt (extendPath T hT (A.realization 2))
-        (B.realization 2 ⟨t,ht.1.le,ht.2.le⟩) t)
+        (B.realization 2 ⟨t, ht.1.le, ht.2.le⟩) t)
     (p : ℝ → Space → ℝ)
-    (hdiv : ∀ t x, divergence (A.smoothField t).field x=0)
+    (hdiv : ∀ t x, divergence (A.smoothField t).field x = 0)
     (hp : ∀ t ∈ Ioo 0 T, Differentiable ℝ (p t))
     (he : ∀ t (ht : t ∈ Ioo 0 T) x,
-      (B.smoothField ⟨t,ht.1.le,ht.2.le⟩).field x+
-        fderiv ℝ (A.smoothField ⟨t,ht.1.le,ht.2.le⟩).field x
-          ((A.smoothField ⟨t,ht.1.le,ht.2.le⟩).field x)+gradient (p t) x=0) :
+      (B.smoothField ⟨t, ht.1.le, ht.2.le⟩).field x +
+        fderiv ℝ (A.smoothField ⟨t, ht.1.le, ht.2.le⟩).field x
+          ((A.smoothField ⟨t, ht.1.le, ht.2.le⟩).field x) +
+ gradient (p t) x =
+ 0) :
     IsSmoothScalarEuler (hT := hT) A.smoothField := by
   apply isSmoothScalarEuler_of_sobolev A.smoothField B.smoothField
     A.smoothField_jet_continuous B.smoothField_jet_continuous 2 _ p hdiv hp he
@@ -275,7 +291,7 @@ theorem scalarEuler_iff_projected (A : Icc (0 : ℝ) T → SmoothL2Field Space) 
       rw [projIcc_of_mem hT ⟨ht.1.le,ht.2.le⟩,
         (U.scalarPressure_spec ⟨t,ht.1.le,ht.2.le⟩).2.2 x,U.derivative_field]
       change (-fderiv ℝ (A ⟨t,ht.1.le,ht.2.le⟩).field x
-        ((A ⟨t,ht.1.le,ht.2.le⟩).field x)-
+        ((A ⟨t,ht.1.le,ht.2.le⟩).field x) -
         (U.pressureForce ⟨t,ht.1.le,ht.2.le⟩).field x)+_+_=0
       abel
 

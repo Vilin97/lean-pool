@@ -6,13 +6,15 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
 
 /-! An actual continuous inverse has the inverse Jacobian as its derivative.
 This is the easy half of the inverse function theorem; no differentiability
 of the inverse is an independent assumption. -/
+
+@[expose] public section
+
 
 noncomputable section
 

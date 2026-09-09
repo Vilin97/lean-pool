@@ -7,14 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevL4
-
-@[expose] public section
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+public import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevL4
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 
 /-! Ordinary integration by parts for genuine smooth L² fields. The
 identity needs no compact-support premise because all three pairings
 in the Haar-measure integration theorem are integrable. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -49,7 +54,7 @@ theorem field_directional_ibp (A B : SmoothL2Field V) (v : Space) :
     (field_inner_integrable A (B.directionalField v)) (field_inner_integrable A B)
     (fun x _ => A.smooth.differentiable (by simp) x)
     (fun x _ => B.smooth.differentiable (by simp) x)
-  change (∫ x,⟪A.field x,fderiv ℝ B.field x v⟫_ℝ)=
+  change (∫ x,⟪A.field x,fderiv ℝ B.field x v⟫_ℝ) =
     -∫ x,⟪fderiv ℝ A.field x v,B.field x⟫_ℝ at h
   linarith
 
@@ -59,12 +64,12 @@ theorem field_directional_inner (A B : SmoothL2Field V) (v : Space) :
   rw [field_inner,field_inner]
   exact field_directional_ibp A B v
 
-theorem field_zero_of_toLp_zero (A : SmoothL2Field V) (h : A.toLp=0) : A.field=0 := by
+theorem field_zero_of_toLp_zero (A : SmoothL2Field V) (h : A.toLp = 0) : A.field=0 := by
   have hae : A.field=ᵐ[volume] 0 := A.toLp_ae.symm.trans (by rw [h]; exact Lp.coeFn_zero V 2 volume)
   exact Measure.eq_of_ae_eq hae A.smooth.continuous continuous_const
 
 theorem field_zero_of_derivative_zero (A : SmoothL2Field Space)
-    (hD : ∀ x, fderiv ℝ A.field x=0) : A.field=0 := by
+    (hD : ∀ x, fderiv ℝ A.field x = 0) : A.field=0 := by
   have h6 := memLp_six A.field A.smooth A.memLp A.derivative.memLp
   have hb := eLpNorm_six_le A.field A.smooth A.memLp A.derivative.memLp
   have hz : eLpNorm (fderiv ℝ A.field) 2 (volume : Measure Space)=0 := by
@@ -80,7 +85,7 @@ theorem field_zero_of_derivative_zero (A : SmoothL2Field Space)
   exact Measure.eq_of_ae_eq hae A.smooth.continuous continuous_const
 
 theorem field_zero_of_laplacian_zero (A : SmoothL2Field Space)
-    (hΔ : ∀ x, Δ A.field x=0) : A.field=0 := by
+    (hΔ : ∀ x, Δ A.field x = 0) : A.field=0 := by
   let d := fun i : Fin 3 => A.directionalField (EuclideanSpace.single i 1)
   have hb (i : Fin 3) : ⟪A.toLp,(d i).directionalField (EuclideanSpace.single i 1) |>.toLp⟫_ℝ =
       -‖(d i).toLp‖^2 := by
@@ -88,7 +93,7 @@ theorem field_zero_of_laplacian_zero (A : SmoothL2Field Space)
     rw [real_inner_self_eq_norm_sq] at h
     linarith
   have hi : (∑ i : Fin 3, ⟪A.toLp,((d i).directionalField (EuclideanSpace.single i 1)).toLp⟫_ℝ)=0
-    := by
+      := by
     simp_rw [field_inner]
     rw [← integral_finsetSum Finset.univ (fun i _ => field_inner_integrable A
       ((d i).directionalField (EuclideanSpace.single i 1)))]

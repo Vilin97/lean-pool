@@ -9,10 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPhysicalStageBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCycleResidualBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCyclePreservation
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualIntermediateDebtBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
-
-@[expose] public section
 
 /-!
 # Stage estimates for the fixed actual iteration
@@ -21,6 +17,9 @@ The native step data and the actual physical field representations are
 assembled into the finite-stage obligations of the mixed diagonal theorem.
 No estimate of the output physical residual is an input.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -90,6 +89,7 @@ noncomputable def taggedSource {h : ℝ} {D : Type} [NormedAddCommGroup D] [Norm
 
 /-! ## One fixed native iteration -/
 
+/-- Step data, constructed using `CorrectionAnalyticStep.StepData`. -/
 noncomputable def StepData (B N0 j : ℕ)
     (H : ActualCyclePreservation.Invariant (ActualIterationLedger.sigma j)
       (ActualCyclePreservation.state B N0 j)) : Type :=
@@ -107,6 +107,7 @@ stage-bound or residual-bound oracle. -/
 structure RunData (B N0 : ℕ) where
   invariant : ∀ j, ActualCyclePreservation.Invariant (ActualIterationLedger.sigma j)
     (ActualCyclePreservation.state B N0 j)
+  /-- Step of `RunData`, of type `∀ j, StepData B N0 j (invariant j)`. -/
   step : ∀ j, StepData B N0 j (invariant j)
   particular : ∀ j, ActualParticularMeanGain.Inputs (ActualCyclePreservation.state B N0 j)
     (ActualIterationLedger.sigma j)
@@ -115,14 +116,14 @@ theorem RunData.result {B N0 : ℕ} (R : RunData B N0) (j : ℕ) :
     CorrectionAnalyticStep.StepResult ActualInitialization.geometry h (CommonWindow.index h)
       ActualInitialization.axial
       (fun l => ActualParticularStageControls.canonicalParameters (ActualCycleParameters.swap B N0
-        l))
+          l))
       ActualSignedStageControls.parameters rankData (commonContext B)
       (ActualCyclePreservation.state B N0 j) ActualInitialization.tangentBlock
       ActualInitialization.envelope ActualCoreSupport.refinedCarrier
       (σ := ActualIterationLedger.sigma j) (κ := ChartScales.kappa) :=
   CorrectionAnalyticStep.step _ _ _ _ _ _ _ _ _ _ _ _
     (ActualCyclePreservation.staticData B) (R.invariant j) (ActualIterationLedger.sigma_admissible
-      j)
+        j)
     ActualCyclePreservation.kappa_small (R.step j)
 
 theorem RunData.rank_class {B N0 : ℕ} (R : RunData B N0) (j : ℕ) :
@@ -132,7 +133,7 @@ theorem RunData.rank_class {B N0 : ℕ} (R : RunData B N0) (j : ℕ) :
         (ActualIntermediateDebtBounds.postTemporal (ActualCyclePreservation.state B N0 j))) :=
   ActualIntermediateDebtBounds.afterTemporal_debt_from_stepData
     (ActualCyclePreservation.staticData B) (R.invariant j) (ActualIterationLedger.sigma_admissible
-      j)
+        j)
     (R.particular j) (R.step j)
 
 theorem nativeMean_eq_ledger (j : ℕ) :
@@ -155,24 +156,30 @@ theorem nativePressure_eq_ledger (j : ℕ) :
 
 variable {B N0 N : ℕ}
 
+/-- Temporal input, given by `actualCycleTemporalInput M j hN (R.result j).afterSignedAxial`. -/
 noncomputable def temporalInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
     (hN : 4 ≤ N) (j : ℕ) : MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   actualCycleTemporalInput M j hN (R.result j).afterSignedAxial
 
+/-- Rank input, given by `actualCycleRankInput M j hN (R.rank_class j)`. -/
 noncomputable def rankInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
     (hN : 4 ≤ N) (j : ℕ) : MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   actualCycleRankInput M j hN (R.rank_class j)
 
+/-- Angular input, given by `actualCycleAngularInput M j hN (R.result j).temporal (R.result
+j).rank`. -/
 noncomputable def angularInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
     (hN : 4 ≤ N) (j : ℕ) : MeanInput h (CoordinateAlgebra.A h) :=
   actualCycleAngularInput M j hN (R.result j).temporal (R.result j).rank
 
+/-- Pressure input, given by `actualCyclePressureInput M j hN (R.result j).pressure /-! ##
+Actual wave records and their native exponents -/`. -/
 noncomputable def pressureInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
@@ -181,11 +188,22 @@ noncomputable def pressureInput (R : RunData B N0)
 
 /-! ## Actual wave records and their native exponents -/
 
+/-- Wave inputs data, collecting `particularPotential`, `signedPotential`, `particularPressure`,
+`signedPressure`, `particularPotential_exponent`, `signedPotential_exponent` and their
+compatibility conditions. -/
 structure WaveInputs (DP : Type) [NormedAddCommGroup DP] [NormedSpace ℝ DP]
     (IP KP : Type*) (DS : Type) [NormedAddCommGroup DS] [NormedSpace ℝ DS] (IS KS : Type*) where
+  /-- Particular potential of `WaveInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DP (Fin
+  3 × IP) KP (Fin 3)`. -/
   particularPotential : ℕ → PhysicalStageBounds.WaveData h DP (Fin 3 × IP) KP (Fin 3)
+  /-- Signed potential of `WaveInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DS (Fin 3 ×
+  IS) KS (Fin 3)`. -/
   signedPotential : ℕ → PhysicalStageBounds.WaveData h DS (Fin 3 × IS) KS (Fin 3)
+  /-- Particular pressure of `WaveInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DP IP KP
+  Unit`. -/
   particularPressure : ℕ → PhysicalStageBounds.WaveData h DP IP KP Unit
+  /-- Signed pressure of `WaveInputs`, of type `ℕ → PhysicalStageBounds.WaveData h DS IS KS
+  Unit`. -/
   signedPressure : ℕ → PhysicalStageBounds.WaveData h DS IS KS Unit
   particularPotential_exponent : ∀ j, 1/2 + ActualIterationLedger.sigma j - ChartScales.kappa ≤
     (particularPotential j).alpha
@@ -209,6 +227,8 @@ variable {DP DS : Type} [NormedAddCommGroup DP] [NormedSpace ℝ DP]
     (fun _ => ActualCycleParameters.fixedParameters B N0))
   (hN : 4 ≤ N) (W : WaveInputs DP IP KP DS IS KS)
 
+/-- Cycle inputs, bundling `particularPotential`, `signedPotential`, `particularPressure`,
+`signedPressure` and the required compatibility proofs. -/
 noncomputable def cycleInputs : CycleInputs h DP (Fin 3 × IP) KP DS (Fin 3 × IS) KS where
   particularPotential := W.particularPotential
   signedPotential := W.signedPotential
@@ -329,7 +349,7 @@ theorem Representations.potential_smooth (j : ℕ) :
   | succ j =>
     exact ((cycleInputs R M hN W).potential_smooth (cycleInputs_validScale R M hN W hq)
       outgoing.data.h_pos outgoing.data.h_lt_half j).congr (fun _ hw => (e.potential_succ j
-        hw).symm)
+          hw).symm)
 
 theorem Representations.direct_smooth (j : ℕ) :
     ContDiffOn ℝ ∞ (Bdirect j) (CutStageEstimates.physicalSublevel h qbig) := by
@@ -358,7 +378,7 @@ theorem Representations.pressure_smooth (j : ℕ) :
 /-- The complete estimate record is constructed from native data and
 exact physical realizations. The residual comparison floor is separate
 from the mean-family floor, so it can be chosen one band larger. -/
-noncomputable def stageEstimates_of_representations
+noncomputable def stageEstimatesOfRepresentations
     (hqbig : 0 < qbig) {Nres : ℕ} (hNres : 4 ≤ Nres)
     (hGeom : ActualCarrierGeometry.geometricThreshold ≤ N0)
     (d : ∀ J, ActualCycleResidualBounds.PhysicalData B Nres
@@ -423,7 +443,7 @@ theorem stageEstimates_ledger
       (ActualCyclePreservation.state B N0 J).state
       (MixedDiagonalResidual.uncutVelocity A Bdirect J)
       (DiagonalJetBounds.uncutPrefix P (J + 1))) :
-    let E := stageEstimates_of_representations R M hN W WA WP e hq hqbig hNres hGeom d
+    let E := stageEstimatesOfRepresentations R M hN W WA WP e hq hqbig hNres hGeom d
     E.gain = ActualIterationLedger.gain h ∧
       E.potentialLoss = PhysicalStageBounds.potentialLoss h h 0 ∧
       E.directLoss = PhysicalStageBounds.directLoss h 0 ∧

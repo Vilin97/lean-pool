@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketResidualTailActual
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceResidual
 
+/-! Actual tail-grade and full residual fields for the joined source construction. -/
+
 @[expose] public section
 
-/-! Actual tail-grade and full residual fields for the joined source construction. -/
 
 noncomputable section
 
@@ -27,14 +28,17 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (B : EulerTransversePacketProvider.HistoryData (D.initial τ hτ hτT.le))
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
 
-def joinedTailGradeField (N n : ℕ) (hn : N+1 ≤ n) :
+/-- Joined tail grade field, constructed using `ProfileRegularity.tailGradeField`. -/
+def joinedTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
     Field P M.T (fun z => recursiveGrade (joinedSourceOperators P M D τ hτ hτT B) N
       (joinedSourceProfiles P M D τ hτ hτT B primary) z n) :=
   ProfileRegularity.tailGradeField M.T_pos
     (fun i _ => joinedSourceProfileWitness P M D hT τ hτ hτT B primary hprimary i)
     (joinedSourceCoefficientData P M D τ hτ hτT B hT) (profiles_zero _ _) n hn
 
-def joinedLiteralTailGradeField (N n : ℕ) (hn : N+1 ≤ n) :
+/-- Joined literal tail grade field, constructed using
+`ProfileRegularity.literalTailGradeField`. -/
+def joinedLiteralTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
     Field P M.T (fun z => slicedMomentumGrade (Icc (0 : ℝ) M.T) (N+1)
       ((joinedSourceOperators P M D τ hτ hτT B).inverseFrame z)
       ((joinedSourceOperators P M D τ hτ hτT B).strain z)
@@ -45,10 +49,11 @@ def joinedLiteralTailGradeField (N n : ℕ) (hn : N+1 ≤ n) :
     (fun i _ => joinedSourceProfileWitness P M D hT τ hτ hτT B primary hprimary i)
     (joinedSourceCoefficientData P M D τ hτ hτT B hT) (profiles_zero _ _) n hn
 
-theorem joinedLiteralTailGradeField_path (N n : ℕ) (hn : N+1 ≤ n) :
+theorem joinedLiteralTailGradeField_path (N n : ℕ) (hn : N + 1 ≤ n) :
     (joinedLiteralTailGradeField P M D hT τ hτ hτT B primary hprimary N n hn).path =
       (joinedTailGradeField P M D hT τ hτ hτT B primary hprimary N n hn).path := rfl
 
+/-- Joined tail sum field, constructed using `ProfileRegularity.tailSumField`. -/
 def joinedTailSumField (N : ℕ) (κ : ℝ) :
     Field P M.T (fun z => ∑ n ∈ Ico (N+1) (2*N+3), κ^n •
       recursiveGrade (joinedSourceOperators P M D τ hτ hτT B) N
@@ -58,6 +63,7 @@ def joinedTailSumField (N : ℕ) (κ : ℝ) :
     (joinedSourceCoefficientData P M D τ hτ hτT B hT) (profiles_zero _ _) κ
 
 omit primary hprimary in
+/-- Joined residual field used in packet joined residual fields. -/
 def joinedResidualField (A : VectorField) (π : ScalarField)
     (hprimary : ProfileRegularity P M.T M.T_pos.le D.support
       (primaryProfile (joinedSourceOperators P M D τ hτ hτT B) A π))
@@ -77,6 +83,6 @@ def joinedResidualField (A : VectorField) (π : ScalarField)
   (joinedTailSumField P M D hT τ hτ hτT B
     (primaryProfile (joinedSourceOperators P M D τ hτ hτT B) A π) hprimary N κ).congr
     (joinedSource_residual_tail P M D hT τ hτ hτT B A π hprimary hπ htan hprimaryEquation Cagree N
-      hN κ hκ)
+        hN κ hκ)
 
 end EulerPacketCylinderField

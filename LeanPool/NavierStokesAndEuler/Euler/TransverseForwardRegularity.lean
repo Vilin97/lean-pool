@@ -7,10 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardInverse
-public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelParameter
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramPath
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramPath
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelParameter
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Genuine parameter regularity of the transverse forward inverse
@@ -20,6 +21,9 @@ coefficients. These constructions and the forced forward solve are smooth
 in the uniform time norm, without assuming parameter regularity of the
 homogeneous evolution supplied by (H3).
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,8 +40,8 @@ variable {P V E : Type*}
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-variable (T : ℝ) (hT : 0 ≤ T) (Q Q₁ : P → C(Icc (0 : ℝ) T,V →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ x t v, c*‖v‖^2 ≤ ‖Q x t v‖^2)
+variable (T : ℝ) (hT : 0 ≤ T) (Q Q₁ : P → C(Icc (0 : ℝ) T, V →L[ℝ] E))
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
 
 /-- The actual canonical frame left inverse varies smoothly in parameters. -/
 theorem frameLeftInversePath_contDiff {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) :
@@ -54,14 +58,14 @@ theorem generator_contDiff {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) (hQ₁r : Con
   convert hr using 1 <;> rfl
 
 /-- Applying the actual projected forcing map preserves smooth parameter dependence. -/
-theorem forcing_contDiff (f : P → C(Icc (0 : ℝ) T,E)) {n : ℕ∞ω}
+theorem forcing_contDiff (f : P → C(Icc (0 : ℝ) T, E)) {n : ℕ∞ω}
     (hQr : ContDiff ℝ n Q) (hf : ContDiff ℝ n f) :
     ContDiff ℝ n (fun x => forcingOperator T (Q x) c hc (hQ x) (f x)) :=
   contDiff_apply (fun x => frameLeftInversePath T (Q x) c hc (hQ x)) f
     (frameLeftInversePath_contDiff T Q c hc hQ hQr) hf
 
 variable (U : ∀ x, Evolution T hT (generator T (Q x) (Q₁ x) c hc (hQ x)))
-  (f : P → C(Icc (0 : ℝ) T,E)) (a₀ : P → V)
+  (f : P → C(Icc (0 : ℝ) T, E)) (a₀ : P → V)
 
 /-- The actually constructed coordinates are smooth in external parameters. -/
 theorem coordinates_contDiff {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) (hQ₁r : ContDiff ℝ n Q₁)

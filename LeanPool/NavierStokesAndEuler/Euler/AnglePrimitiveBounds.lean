@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Uniform bounds for the actual mean-zero angular primitive. -/
 
 @[expose] public section
 
-/-! Uniform bounds for the actual mean-zero angular primitive. -/
 
 noncomputable section
 

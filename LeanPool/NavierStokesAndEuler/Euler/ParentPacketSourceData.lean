@@ -8,14 +8,15 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketFrames
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketData
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceEquations
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldOrdinary
 
 /-! The actual parent label fields construct both source-provider data
 records. Their coefficient agreement, inverses and time identities are
 conclusions. Only the manuscript's scalar low-order guards remain inputs. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,11 +27,18 @@ open Set ContinuousLinearMap InnerProductSpace EulerSmoothLimit EulerMeanCoeffic
   EulerTransverseFrameCoordinates
 open scoped ContDiff BoundedContinuousFunction
 
+/-- Low bounds data, collecting `Be`, `Bc`, `L`, `r`, `K`, `Be_nonneg` and their compatibility
+conditions. -/
 structure LowBounds (G : Parent) where
+  /-- Be of `LowBounds`, of type `ℝ`. -/
   Be : ℝ
+  /-- Bc of `LowBounds`, of type `ℝ`. -/
   Bc : ℝ
+  /-- L of `LowBounds`, of type `ℝ`. -/
   L : ℝ
+  /-- R of `LowBounds`, of type `ℝ`. -/
   r : ℝ
+  /-- K of `LowBounds`, of type `ℝ`. -/
   K : ℝ
   Be_nonneg : 0 ≤ Be
   Bc_nonneg : 0 ≤ Bc
@@ -61,6 +69,7 @@ theorem first_within (t : ℝ) (ht : t ∈ Icc (0 : ℝ) G.T) (x : Space) :
   simpa only [extendPath,SmoothTimeField.realField,projIcc_of_mem G.T_pos.le ht]
     using G.first_time ⟨t,ht⟩ x
 
+/-- Mean data, bundling `T`, `T_pos`, `ℓ`, `ℓ_pos` and the required compatibility proofs. -/
 def meanData (H : LowBounds G) : EulerMeanPacketProvider.Data where
   T := G.T
   T_pos := G.T_pos
@@ -99,9 +108,11 @@ def meanData (H : LowBounds G) : EulerMeanPacketProvider.Data where
   small := H.small
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S)
 
+/-- Transverse data, bundling `T`, `T_pos`, `support`, `support_compact` and the required
+compatibility proofs. -/
 def transverseData : EulerTransversePacketProvider.Data U where
   T := G.T
   T_pos := G.T_pos
@@ -121,7 +132,7 @@ def transverseData : EulerTransversePacketProvider.Data U where
 
 theorem sourceAgreement (H : LowBounds G) :
     EulerPacketCylinderField.SourceCoefficientAgreement (G.meanData H) (G.transverseData m hm R S
-      hS) where
+        hS) where
   inverse t x := by
     change G.inverse.field t x = G.inverse.field ((G.transverseData m hm R S hS).clamp t) x
     exact congrArg (fun s => G.inverse.field s x)
@@ -137,8 +148,10 @@ theorem history_small (H : LowBounds G) : H.K*(G.T^2/2) ≤ 1/2 := by
     (pow_nonneg H.r_nonneg 3)) G.T_pos.le
   linarith [H.small]
 
+/-- History data, bundling `H`, `jacobi`, `have`, `potential` and the required compatibility
+proofs. -/
 def historyData (H : LowBounds G) : EulerTransversePacketProvider.HistoryData (G.transverseData m
-  hm R S hS) where
+    hm R S hS) where
   H := G.curvature.toSmoothCoefficientPath
   jacobi t ht x := by
     have h := G.first_within t ht x

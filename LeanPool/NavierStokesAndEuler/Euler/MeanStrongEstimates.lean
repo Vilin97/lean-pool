@@ -6,11 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityOperator
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityPressure
+import LeanPool.NavierStokesAndEuler.Euler.MeanFrameCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityOperator
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
+import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEstimates
 
 /-!
 # Quantitative time estimates for the genuine mean inverse
@@ -20,6 +20,9 @@ coefficient bounds, and the inverse-frame bound. The only square roots are the
 proved finite-time trace/Poincaré factors. These are estimates of the actual
 Bochner fields and continuous representatives constructed by the inverse.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,9 +35,16 @@ open MeasureTheory Set InnerProductSpace ContinuousLinearMap EulerTimeLp
   EulerTransverseStrongEstimates
 
 -- Cache the inherited structures before forming norms of nested operator paths.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanStrongEstimates1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanStrongEstimates2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanStrongEstimates3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
 /-- Restricting F to the actual solenoidal subspace does not increase its norm. -/
 theorem solenoidalFrame_norm_le (T : ℝ) (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) :
@@ -49,7 +59,7 @@ theorem solenoidalFrame_norm_le (T : ℝ) (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L
 /-- The ordinary projection equation is exactly the Gram equation on L²σ. -/
 theorem gram_equation_of_ordinary (F F₁ : L2 →L[ℝ] L2) (f : L2) (a v : solenoidalSpace)
     (h : solenoidalProjection (F.adjoint (F (a : L2))) =
-      solenoidalProjection (F.adjoint (f-(2 : ℝ) • F₁ (v : L2)))) :
+      solenoidalProjection (F.adjoint (f - (2 : ℝ) • F₁ (v : L2)))) :
     gram (F.comp solenoidalSpace.subtypeL) a =
       (F.comp solenoidalSpace.subtypeL).adjoint (f-(2 : ℝ) • F₁ (v : L2)) := by
   apply Subtype.ext
@@ -192,7 +202,7 @@ theorem physicalPath_norm_uniform
     ‖s.physicalPath t‖ ≤ |L| * ‖A‖*Real.sqrt T*‖u‖+Real.sqrt T*‖s.velocityDerivative‖ := by
   have hV := s.physical_h1 hF
   apply (norm_le_initial_add_uniform T hT s.velocityDerivative s.physicalPath hV.1 hV.2.2 t
-    ht).trans
+      ht).trans
   exact add_le_add (s.initialPhysicalVelocity_norm hFInv₀ hF₀) le_rfl
 
 end StrongMeanEvolution

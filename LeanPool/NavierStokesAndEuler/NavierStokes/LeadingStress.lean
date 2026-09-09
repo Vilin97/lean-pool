@@ -6,13 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowDivergence
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SlowExpansionResidual
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.LocalAxisymmetricResidual
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # The leading stress and its genuine divergence
@@ -21,6 +21,9 @@ The lag variables in this file are the regular primitives constructed in
 `ProfileHistories`. Every profile and physical derivative is a Fréchet
 derivative. The physical identities keep the axial-viscosity remainder.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -48,13 +51,15 @@ noncomputable def theta (h : ℝ) (w : Point) : ℝ :=
 noncomputable def axial (h : ℝ) (w : Point) : ℝ :=
   Real.sqrt (2 * w.1) * (partialX P.U w + P.axialLag h w / (2 * L h w.2))
 
+/-- Slope A, given by `-2 * w.1 * partialX P.f w / P.f w`. -/
 noncomputable def slopeA (w : Point) : ℝ := -2 * w.1 * partialX P.f w / P.f w
+/-- Slope B, given by `2 * w.1 * partialX P.U w / P.E w`. -/
 noncomputable def slopeB (w : Point) : ℝ := 2 * w.1 * partialX P.U w / P.E w
 
 theorem theta_eq_lag_minus_slope (h : ℝ) {w : Point} (hf : P.f w ≠ 0) :
     theta P h w = P.f w * (w.1 * P.angularLag h w / L h w.2 - slopeA P w) := by
   unfold theta slopeA
-  field_simp ; ring
+  field_simp; ring
 
 theorem axial_eq_lag_plus_slope (h : ℝ) {w : Point} (hX : 0 < w.1)
     (hf : P.f w ≠ 0) :
@@ -142,7 +147,7 @@ theorem theta_divergence_coefficient (h : ℝ) {w : Point} (hw : w ∈ Ω.carrie
     (1 + w.1 * partialX P.H w / P.H w) * P.angularLag h w = sourceTheta P h w at he
   rw [partialX_theta P h hw hX hf hL, ← he, partialX_H P hw]
   unfold theta Profiles.H
-  field_simp ; ring
+  field_simp; ring
 
 /-- The angular profile divergence in Proposition 3.2. -/
 theorem theta_divergence (h : ℝ) {w : Point} (hw : w ∈ Ω.carrier)
@@ -215,7 +220,7 @@ theorem theta_transport_coefficient (h : ℝ) {w : Point} (hw : w ∈ Ω.carrier
     CoordinateAlgebra.A, CoordinateAlgebra.D, StressAlgebra.axialExponent,
     StressAlgebra.coordinateFactor, CoordinateAlgebra.d, partialX, partialEta,
     radialPartial, parameterPartial]
-  field_simp ; ring
+  field_simp; ring
 
 /-- The axial inviscid residual includes the actual derivative of the constructed pressure. -/
 theorem axial_transport_coefficient (h : ℝ) {w : Point} (hw : w ∈ Ω.carrier)
@@ -233,7 +238,7 @@ theorem axial_transport_coefficient (h : ℝ) {w : Point} (hw : w ∈ Ω.carrier
   dsimp [SlowDivergence.radialFlux, Profiles.Ubar, CoordinateAlgebra.A, CoordinateAlgebra.D,
     StressAlgebra.axialExponent, StressAlgebra.velocityExponent, StressAlgebra.coordinateFactor,
     CoordinateAlgebra.d, partialX, partialEta, radialPartial, parameterPartial]
-  field_simp ; ring
+  field_simp; ring
 
 /-- The exact zeroth-order transport formula. The added term is the full
 axial viscosity, not an estimate or a discarded remainder. -/
@@ -361,28 +366,37 @@ theorem sqrt_radial_two {X : ℝ} (hX : 0 < X) (S SX : ℝ) :
   rw [hr2]
   ring
 
+/-- Flux profile, given by `pullback h 0 (SlowDivergence.radialFlux h 0 P.U)`. -/
 noncomputable def fluxProfile (h : ℝ) : SimilarityProfile.PhysicalProfile :=
   pullback h 0 (SlowDivergence.radialFlux h 0 P.U)
 
+/-- Swirl profile, given by `pullback h (-A h - 1 / 2) P.f`. -/
 noncomputable def swirlProfile (h : ℝ) : SimilarityProfile.PhysicalProfile :=
   pullback h (-A h - 1 / 2) P.f
 
+/-- Axial profile, given by `pullback h (-A h) P.U`. -/
 noncomputable def axialProfile (h : ℝ) : SimilarityProfile.PhysicalProfile :=
   pullback h (-A h) P.U
 
+/-- Pressure profile, given by `pullback h (-2 * A h) P.pressure`. -/
 noncomputable def pressureProfile (h : ℝ) : SimilarityProfile.PhysicalProfile :=
   pullback h (-2 * A h) P.pressure
 
+/-- Physical stress theta, given by `pullback h (-A h - 1 / 2) (theta P h)`. -/
 noncomputable def physicalStressTheta (h : ℝ) : SimilarityProfile.PhysicalProfile :=
   pullback h (-A h - 1 / 2) (theta P h)
 
+/-- Physical stress axial, given by `pullback h (-A h - 1 / 2) (axial P h)`. -/
 noncomputable def physicalStressAxial (h : ℝ) : SimilarityProfile.PhysicalProfile :=
   pullback h (-A h - 1 / 2) (axial P h)
 
+/-- Physical velocity, given by `AxisymmetricResidual.velocity (RadialFluxResidual.radialB
+(fluxProfile P h)) (swirlProfile P h) (axialProfile P h)`. -/
 noncomputable def physicalVelocity (h : ℝ) : ProblemStatement.VelocityField :=
   AxisymmetricResidual.velocity (RadialFluxResidual.radialB (fluxProfile P h))
     (swirlProfile P h) (axialProfile P h)
 
+/-- Physical pressure, given by `AxisymmetricResidual.pressure (pressureProfile P h)`. -/
 noncomputable def physicalPressure (h : ℝ) : ProblemStatement.PressureField :=
   AxisymmetricResidual.pressure (pressureProfile P h)
 
@@ -538,7 +552,8 @@ theorem axial_transport_stress {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
           P.U (inner h p) * SimilarityProfile.Z h (-A h) P.U (inner h p) +
           SimilarityProfile.Z h (-2 * A h) P.pressure (inner h p)) -
           2 * ((inner h p).1 * partialX (partialX P.U) (inner h p) + partialX P.U (inner h p))) :=
-            by ring
+              by
+              ring
     _ = _ := by rw [hc]; ring
 
 /-- The regular swirl coefficient reconstructs precisely `u_theta=q^(-A) E`. -/
@@ -613,7 +628,7 @@ theorem navierStokesResidual_tangential {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hb := RadialFluxResidual.contDiffAt_radialB hv hs.ne'
   have he := LocalAxisymmetricResidual.navierStokesResidual_velocity hb hff hu hp
   change ProblemStatement.navierStokesResidual (physicalVelocity P h) (physicalPressure P h) t x =
-    _ at he
+      _ at he
   rw [he]
   constructor
   · rw [angularComponent_pack hs, SlowExpansionResidual.residualAngular_radialB _ _ _ hs.ne']

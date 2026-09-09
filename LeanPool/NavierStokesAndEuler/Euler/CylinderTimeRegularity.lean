@@ -7,9 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderOrbitSobolev
-public import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivativeWithin
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
+import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
+import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivativeWithin
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-!
 # Actual smooth cylinder fields from continuous mixed-orbit paths
@@ -19,6 +21,9 @@ representative, smooth in all spatial/angular variables. A continuous L² time
 right-hand side lifts through the injective Sobolev inclusion and yields the
 actual pointwise within-time derivative, including both interval endpoints.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,31 +38,31 @@ variable (period : ℝ) [Fact (0 < period)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The genuine representative obtained by bounded H3 point evaluation. -/
-def pointField (p : C(K,LiftL2 period))
+def pointField (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p))
     (t : K) (x : LiftDomain period) : Space :=
   EulerSobolevPointEvaluation.pointEvaluation period x (sobolevPath period 3 p hp t)
 
 /-- The reconstructed field is jointly continuous in time and cylinder position. -/
-theorem pointField_joint_continuous (p : C(K,LiftL2 period))
+theorem pointField_joint_continuous (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p)) :
     Continuous (fun z : K × LiftDomain period => pointField period p hp z.1 z.2) :=
   EulerSobolevJointEvaluation.path_representative_joint_continuous period (sobolevPath period 3 p
-    hp)
+      hp)
 
 /-- The bounded point evaluation is exactly the smooth representative of each actual L² slice. -/
-theorem pointField_eq_representative (p : C(K,LiftL2 period))
+theorem pointField_eq_representative (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p)) (t : K) :
     pointField period p hp t = representative period (p t) (path_evaluation_smooth period p hp t)
-      := by
+        := by
   funext x
   apply EulerSobolevPointEvaluation.pointEvaluation_eq
   · exact smoothField_continuous period _ (representative_smooth period _ _)
   · simpa only [sobolevPath_value] using representative_ae period (p t) (path_evaluation_smooth
-    period p hp t)
+      period p hp t)
 
 /-- Every time slice is genuinely smooth in all three spatial and the angular variable. -/
-theorem pointField_smooth (p : C(K,LiftL2 period))
+theorem pointField_smooth (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p))
     (t : K) (x : LiftDomain period) :
     ContDiff ℝ ∞ (localFieldLift period (pointField period p hp t) x) := by
@@ -65,7 +70,7 @@ theorem pointField_smooth (p : C(K,LiftL2 period))
   exact representative_smooth period _ _ x
 
 /-- The reconstructed field represents the original, rather than a separate chosen solution. -/
-theorem pointField_ae (p : C(K,LiftL2 period))
+theorem pointField_ae (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p)) (t : K) :
     (p t : LiftDomain period → Space) =ᵐ[liftMeasure period] pointField period p hp t := by
   rw [pointField_eq_representative]
@@ -73,13 +78,14 @@ theorem pointField_ae (p : C(K,LiftL2 period))
 
 section Derivative
 
-variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T,LiftL2 period))
+variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 period))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p))
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
 
 include hd in
-/-- The time equation is actual in each complete Sobolev space, by injectivity of its L² inclusion. -/
+/-- The time equation is actual in each complete Sobolev space, by injectivity of its L² inclusion.
+-/
 theorem sobolevPath_hasDerivWithinAt (q : ℕ) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (sobolevPath period q p hp))
       (sobolevPath period q f hf t) (Icc (0 : ℝ) T) t := by

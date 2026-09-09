@@ -6,12 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
+import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Exact coordinate words and tensor norm bounds for the real periodic
 cover of a smooth cylinder field. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -19,7 +22,7 @@ noncomputable section
 namespace EulerCylinderSmoothOrbit
 
 open EulerLiftedGradientSpace EulerMetricTransport EulerCylinderCoordinates
-  EulerCylinderSobolev EulerSobolevDerivativeNorm
+  EulerCylinderSobolev
 open scoped ContDiff
 
 variable (P : ℝ) {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -72,7 +75,7 @@ theorem coverField_tensor_norm_le (n : ℕ) (f : LiftDomain P → V)
     coordinateEquiv.symm.toContinuousLinearMap.iteratedFDeriv_comp_right
       (euclideanLift_smooth P f hf 0) x (by simp)]
   have hc := (iteratedFDeriv ℝ n (euclideanLift P f 0) (coordinateEquiv.symm
-    x)).norm_compContinuousLinearMap_le
+      x)).norm_compContinuousLinearMap_le
     (fun _ : Fin n => coordinateEquiv.symm.toContinuousLinearMap)
   simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at hc
   exact hc.trans ((mul_le_mul_of_nonneg_right ht (pow_nonneg (norm_nonneg _) n)).trans_eq

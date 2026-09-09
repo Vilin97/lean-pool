@@ -6,11 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFrameCoefficients
-public import LeanPool.NavierStokesAndEuler.Euler.MeanMomentumBoundary
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseStrongEquation
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanVariationalInverse
+import LeanPool.NavierStokesAndEuler.Euler.MeanFrameCoefficients
+import LeanPool.NavierStokesAndEuler.Euler.MeanMomentumBoundary
 
 /-!
 # The actual mean strong equation and initial velocity condition
@@ -20,6 +19,9 @@ using its derived AC momentum and the constructed coercive Gram inverse. The
 initial momentum trace then cancels the original M0 boundary term. The final
 fields contain the actual projected equation (9) and `z_t(0)=L A z(0)`.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,10 +38,14 @@ Bochner L² acceleration. Every derivative assertion concerns these functions. -
 structure StrongMeanEvolution (T : ℝ) (hT : 0 ≤ T)
     (FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (A : L2 →L[ℝ] L2) (L : ℝ) (u f : TimeLp T L2) where
+  /-- Label of `StrongMeanEvolution`, of type `ℝ → solenoidalSpace`. -/
   label : ℝ → solenoidalSpace
+  /-- Velocity field of `StrongMeanEvolution`, of type `ℝ → solenoidalSpace`. -/
   velocity : ℝ → solenoidalSpace
+  /-- Velocity Lᵖ of `StrongMeanEvolution`, of type `TimeLp T solenoidalSpace`. -/
   velocityLp : TimeLp T solenoidalSpace
   velocity_ae : (velocityLp : ℝ → solenoidalSpace) =ᵐ[timeMeasure T] velocity
+  /-- Acceleration of `StrongMeanEvolution`, of type `TimeLp T solenoidalSpace`. -/
   acceleration : TimeLp T solenoidalSpace
   label_eq : ∀ t : Icc (0 : ℝ) T,
     (label t : L2) = FInv t (realPrimitive T u t)
@@ -62,7 +68,7 @@ theorem initial_momentum_cancellation (F₀ F₁ M0 A : L2 →L[ℝ] L2) (L : �
     (z v : solenoidalSpace) (hAz : A (z : L2) ∈ solenoidalSpace)
     (hm : gram (F₀.comp solenoidalSpace.subtypeL) v +
       (F₀.comp solenoidalSpace.subtypeL).adjoint (F₁ (z : L2)) =
-      (F₀.comp solenoidalSpace.subtypeL).adjoint ((M0+L • A) (z : L2))) :
+      (F₀.comp solenoidalSpace.subtypeL).adjoint ((M0 + L • A) (z : L2))) :
     (v : L2) = L • A (z : L2) := by
   subst F₀ F₁
   have hm' : v + solenoidalSpace.orthogonalProjectionOnto (M0 (z : L2)) =
@@ -84,7 +90,7 @@ theorem initial_momentum_cancellation (F₀ F₁ M0 A : L2 →L[ℝ] L2) (L : �
 theorem ordinary_projected_equation (F F₁ : L2 →L[ℝ] L2) (f : L2)
     (a v : solenoidalSpace)
     (h : gram (F.comp solenoidalSpace.subtypeL) a =
-      (F.comp solenoidalSpace.subtypeL).adjoint (f-(2 : ℝ) • F₁ (v : L2))) :
+      (F.comp solenoidalSpace.subtypeL).adjoint (f - (2 : ℝ) • F₁ (v : L2))) :
     solenoidalProjection (F.adjoint (F (a : L2))) =
       solenoidalProjection (F.adjoint (f-(2 : ℝ) • F₁ (v : L2))) := by
   have he := congrArg (fun w : solenoidalSpace => (w : L2)) h
@@ -111,9 +117,9 @@ theorem meanWeakSolution_strong
     (hAσ : ∀ z : L2, z ∈ solenoidalSpace → A z ∈ solenoidalSpace)
     (u : meanDerivatives T hT FInv) (f : TimeLp T L2)
     (hu : ∀ w : meanDerivatives T hT FInv,
-      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ-
-        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ+
-        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ+
+      ⟪(u : TimeLp T L2), (w : TimeLp T L2)⟫_ℝ -
+        ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u), meanPrimitive T hT FInv w⟫_ℝ +
+        ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv w⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv w⟫_ℝ) :
     Nonempty (StrongMeanEvolution T hT FInv F F₁ A L (u : TimeLp T L2) f) := by
@@ -130,7 +136,7 @@ theorem meanWeakSolution_strong
       HasDerivWithinAt (extendPath T hT Q₁) (Q₂ t) (Icc (0 : ℝ) T) t :=
     solenoidalFrame_hasDerivWithinAt T hT F₁ F₂ hF₁
   have hRange : ∀ t : Icc (0 : ℝ) T, ∃ x : solenoidalSpace, Q t x = realPrimitive T (u : TimeLp T
-    L2) t :=
+      L2) t :=
     meanPrimitive_in_frame_range T hT FInv F hRight u
   have hframe : ∀ t, Q₂ t = -(H t).comp (Q t) := solenoidalFrame_ode T F F₂ H hODE
   obtain ⟨p, hpAC, hp₀, hp, hpder⟩ :=

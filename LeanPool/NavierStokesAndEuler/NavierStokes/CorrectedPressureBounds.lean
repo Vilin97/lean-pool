@@ -7,9 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.FuturePressureBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.TransportPrimitive
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 /-!
 # Pressure through the actual angular reset
@@ -19,6 +19,9 @@ The difference from the clean pressure is an explicit finite partial-reset
 integral.  Bounds use the first angular coefficient jet supplied by the proved
 reset witness; no parity or second-jet estimate is assumed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,17 +33,22 @@ open NavierStokes.FuturePressureBounds
 
 namespace NavierStokes.CorrectedPressureBounds
 
+/-- Corrected pi, given by `-(1 / 2 : ℝ) * ∫ t in Ioi y, correctedAngular d w.coefficients (t,
+eta) ^ 2`. -/
 noncomputable def correctedPi {d : TailData} {K : ℝ}
     (w : ResetWitness d K) (y eta : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ t in Ioi y, correctedAngular d w.coefficients (t, eta) ^ 2
 
+/-- Edit density, given by `correctedAngular d w.coefficients p ^ 2 - finalAngular d p ^ 2`. -/
 noncomputable def editDensity {d : TailData} {K : ℝ}
     (w : ResetWitness d K) (p : ℝ × ℝ) : ℝ :=
   correctedAngular d w.coefficients p ^ 2 - finalAngular d p ^ 2
 
+/-- Release square, given by `finalAngular d (d.releaseStart, 0) ^ 2`. -/
 noncomputable def releaseSquare (d : TailData) : ℝ :=
   finalAngular d (d.releaseStart, 0) ^ 2
 
+/-- Edit size, given by `K * d.core.lam ^ (28 : ℕ)`. -/
 noncomputable def editSize (d : TailData) (K : ℝ) : ℝ := K * d.core.lam ^ (28 : ℕ)
 
 theorem releaseSquare_pos (d : TailData) : 0 < releaseSquare d :=
@@ -153,6 +161,7 @@ theorem editDensity_zero_outside {d : TailData} {K : ℝ}
     (ht : t ∉ Ioo (d.releaseStart - 4) d.releaseStart) : editDensity w (t, eta) = 0 := by
   rw [editDensity, correctedAngular_unchanged d w.coefficients eta ht, sub_self]
 
+/-- Edit density eta, constructed using `2`. -/
 noncomputable def editDensityEta {d : TailData} {K : ℝ}
     (w : ResetWitness d K) (p : ℝ × ℝ) : ℝ :=
   2 * baseE d.core.lam (referenceAmplitude d) p.1 ^ 2 *
@@ -168,7 +177,7 @@ theorem editDensity_hasDerivAt_eta {d : TailData} {K : ℝ}
     funext (editDensity_eq w t)
   rw [heq]
   convert! ((((relative_eta_hasDerivAt w eta (t - correctionCenter d)).const_add 1).pow
-    2).sub_const 1).const_mul
+      2).sub_const 1).const_mul
     (baseE d.core.lam (referenceAmplitude d) t ^ 2) using 1
   dsimp [editDensityEta]
   ring
@@ -211,8 +220,8 @@ theorem editDensity_abs_le {d : TailData} {K : ℝ}
     have hbase : baseE d.core.lam (referenceAmplitude d) t ^ 2 ≤ Real.exp 5 * releaseSquare d := by
       rw [← original_matches_reference d eta ⟨ht.1.le, ht.2.le⟩]
       exact (window_square_bounds d ⟨ht.1.le, ht.2.le⟩ eta).2
-    have hb := mul_le_mul hbase hprod (abs_nonneg _) (by positivity : 0 ≤ Real.exp 5 *
-      releaseSquare d)
+    have hb := mul_le_mul hbase hprod (abs_nonneg _) (by
+        positivity : 0 ≤ Real.exp 5 * releaseSquare d)
     nlinarith
   · rw [editDensity_zero_outside w eta ht, abs_zero]
     exact mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) (editSize_nonneg w))
@@ -237,8 +246,8 @@ theorem editDensityEta_abs_le {d : TailData} {K : ℝ}
       abs_of_nonneg (sq_nonneg (baseE d.core.lam (referenceAmplitude d) t))]
     norm_num
     have h1 := mul_le_mul_of_nonneg_left hbase (show (0 : ℝ) ≤ 2 by norm_num)
-    have h2 := mul_le_mul h1 ha (abs_nonneg _) (by positivity : 0 ≤ 2 * (Real.exp 5 * releaseSquare
-      d))
+    have h2 := mul_le_mul h1 ha (abs_nonneg _) (by
+        positivity : 0 ≤ 2 * (Real.exp 5 * releaseSquare d))
     have h3 := mul_le_mul h2 hr (abs_nonneg _)
       (by positivity : 0 ≤ 2 * (Real.exp 5 * releaseSquare d) * (3 / 2))
     nlinarith
@@ -293,6 +302,7 @@ theorem correctedPi_eq_partial {d : TailData} {K : ℝ}
   rw [intervalIntegral.integral_sub hn ho]
   ring
 
+/-- Pressure change, given by `correctedPi w y eta - Pi d y eta`. -/
 noncomputable def pressureChange {d : TailData} {K : ℝ}
     (w : ResetWitness d K) (y eta : ℝ) : ℝ := correctedPi w y eta - Pi d y eta
 
@@ -577,6 +587,7 @@ theorem correctedPi_deriv_abs_le {d : TailData} {K : ℝ}
       add_le_add hc (pressureChange_deriv_abs_le_corrected w y eta)
     _ = _ := by ring
 
+/-- Corrected constant, given by `13 * envelopeConstant + 48 * Real.exp 5`. -/
 noncomputable def correctedConstant : ℝ := 13 * envelopeConstant + 48 * Real.exp 5
 
 theorem correctedConstant_pos : 0 < correctedConstant := by
@@ -611,7 +622,7 @@ theorem corrected_bounds_of_small {d : TailData} {K : ℝ}
     (hy : 0 ≤ y) (heta : |eta| ≤ 1) :
     |correctedPi w y eta| ≤ correctedConstant * correctedAngular d w.coefficients (y, eta) ^ 2 ∧
     |deriv (correctedPi w y) eta| ≤ correctedConstant * correctedAngular d w.coefficients (y, eta)
-      ^ 2 := by
+        ^ 2 := by
   have hM := envelopeConstant_pos
   have he := Real.exp_pos (5 : ℝ)
   have hfirst : (9 / 2 : ℝ) * envelopeConstant ≤ correctedConstant := by

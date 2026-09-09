@@ -8,9 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionState
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveResidual
-public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicFields
-
-@[expose] public section
 
 /-!
 # Finite harmonic extraction of the actual cylindrical residual
@@ -18,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicFields
 The coefficient operations below reconstruct genuine differential fields.
 Excluded errors remain explicit inputs with field-evaluation witnesses.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -30,16 +30,21 @@ open scoped Topology ContDiff BigOperators ComplexConjugate
 
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
+/-- Coefficients: an abbreviation for `HarmonicFields.Coefficients D`. -/
 abbrev Coefficients (D : Type) := HarmonicFields.Coefficients D
+/-- Vector coefficients: an abbreviation for `Fin 3 → Coefficients D`. -/
 abbrev VectorCoefficients (D : Type) := Fin 3 → Coefficients D
 
+/-- Lift domain, given by `U ×ˢ univ`. -/
 noncomputable def liftDomain (U : Set D) : Set (D × ℝ) := U ×ˢ univ
 
 omit [NormedSpace ℝ D] in
 theorem liftDomain_open {U : Set D} (hU : IsOpen U) : IsOpen (liftDomain U) :=
   hU.prod isOpen_univ
 
+/-- Lift direction, given by `(V p.1, 0)`. -/
 noncomputable def liftDirection (V : D → D) (p : D × ℝ) : D × ℝ := (V p.1, 0)
+/-- Angular direction, given by `(0, 1)`. -/
 noncomputable def angularDirection (_p : D × ℝ) : D × ℝ := (0, 1)
 
 /-- Smoothness is required of actual coefficient functions. -/
@@ -123,7 +128,7 @@ theorem field_smoothOn {U : Set D} {c : Coefficients D} (hc : SmoothCoefficients
   apply ((hc j).comp contDiffOn_fst hfst).mul
   unfold character
   exact ((contDiffOn_const.mul (Complex.ofRealCLM.contDiff.comp_contDiffOn hphase)).mul
-    contDiffOn_const).cexp
+      contDiffOn_const).cexp
 
 theorem along_liftDirection {f : D × ℝ → ℂ} {x : D} {θ : ℝ}
     (hf : DifferentiableAt ℝ f (x, θ)) (V : D → D) :
@@ -151,7 +156,8 @@ theorem field_differentiate {U : Set D} (hU : IsOpen U) {c : Coefficients D}
     field (differentiate V k Φ c) k Φ kp p = along (liftDirection V) (field c k Φ kp) p := by
   rcases p with ⟨x, θ⟩
   have hd := ((field_smoothOn hc hΦ k kp).contDiffAt ((liftDomain_open hU).mem_nhds
-    hp)).differentiableAt (by simp)
+      hp)).differentiableAt (by
+      simp)
   rw [along_liftDirection hd]
   exact (along_field_slow V k Φ kp c θ
     ((hΦ.contDiffAt (hU.mem_nhds hp.1)).differentiableAt (by simp))
@@ -163,21 +169,29 @@ theorem field_angularDifferentiate {U : Set D} (hU : IsOpen U) {c : Coefficients
     field (angularDifferentiate kp c) k Φ kp p = along angularDirection (field c k Φ kp) p := by
   rcases p with ⟨x, θ⟩
   have hd := ((field_smoothOn hc hΦ k kp).contDiffAt ((liftDomain_open hU).mem_nhds
-    hp)).differentiableAt (by simp)
+      hp)).differentiableAt (by
+      simp)
   rw [along_angularDirection hd]
   exact (field_hasDerivAt_angle c k Φ kp x θ).deriv.symm
 
 /-- The directions and the cylindrical radius of one normalized graph. -/
 structure Frame (D : Type) where
+  /-- Radius of `Frame`, of type `D → ℝ`. -/
   radius : D → ℝ
+  /-- Radial of `Frame`, of type `D → D`. -/
   radial : D → D
+  /-- Axial of `Frame`, of type `D → D`. -/
   axial : D → D
+  /-- Time of `Frame`, of type `D → D`. -/
   time : D → D
+  /-- Viscosity of `Frame`, of type `ℝ`. -/
   viscosity : ℝ
 
+/-- Vector field, defined pointwise by `field (a i) k Φ kp p`. -/
 noncomputable def vectorField (a : VectorCoefficients D) (k : ℝ) (Φ : D → ℝ)
     (kp : ℤ) (p : D × ℝ) : ComplexVector := fun i => field (a i) k Φ kp p
 
+/-- Rotate, given by `![-a 1, a 0, 0]`. -/
 noncomputable def rotate (a : VectorCoefficients D) : VectorCoefficients D := ![-a 1, a 0, 0]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -187,6 +201,7 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
   ext i
   fin_cases i <;> simp [vectorField, rotate, angularGenerator]
 
+/-- Scalar laplacian, constructed using `differentiate`. -/
 noncomputable def scalarLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (c : Coefficients D) : Coefficients D :=
   differentiate g.radial k Φ (differentiate g.radial k Φ c) +
@@ -195,14 +210,16 @@ noncomputable def scalarLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp :
       angularDifferentiate kp (angularDifferentiate kp c) +
     differentiate g.axial k Φ (differentiate g.axial k Φ c)
 
+/-- Vector laplacian as an element of `VectorCoefficients D`. -/
 noncomputable def vectorLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (a : VectorCoefficients D) : VectorCoefficients D := fun i =>
   scalarLaplacian g k Φ kp (a i) +
     constantCoefficient (fun x => (((g.radius x) ^ 2)⁻¹ : ℝ) : D → ℂ) *
       (constantCoefficient (fun _ : D => (2 : ℂ)) * rotate (fun j => angularDifferentiate kp (a j))
-        i +
+          i +
         rotate (rotate a) i)
 
+/-- Transport as an element of `VectorCoefficients D`. -/
 noncomputable def transport (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (a b : VectorCoefficients D) : VectorCoefficients D := fun i =>
   a 0 * differentiate g.radial k Φ (b i) +
@@ -210,6 +227,7 @@ noncomputable def transport (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
       (angularDifferentiate kp (b i) + rotate b i) +
     a 2 * differentiate g.axial k Φ (b i)
 
+/-- Gradient as an element of `VectorCoefficients D`. -/
 noncomputable def gradient (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (p : Coefficients D) : VectorCoefficients D :=
   ![differentiate g.radial k Φ p,
@@ -223,6 +241,8 @@ noncomputable def linearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : 
     gradient g k Φ kp p i -
     constantCoefficient (fun _ : D => (g.viscosity : ℂ)) * vectorLaplacian g k Φ kp a i
 
+/-- Nonlinear residual, defined pointwise by `linearResidual g k Φ kp B a p i + transport g k Φ
+kp a a i`. -/
 noncomputable def nonlinearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (B a : VectorCoefficients D) (p : Coefficients D) : VectorCoefficients D := fun i =>
   linearResidual g k Φ kp B a p i + transport g k Φ kp a a i
@@ -348,7 +368,7 @@ theorem field_nonlinearResidual {U : Set D} (hU : IsOpen U) (g : Frame D)
         (field c k Φ kp) p +
       LinearWaveResidual.transport (fun q => g.radius q.1) (liftDirection g.radial)
         angularDirection (liftDirection g.axial) (vectorField a k Φ kp) (vectorField a k Φ kp) p :=
-          by
+            by
   ext i
   change field (linearResidual _ _ _ _ _ _ _ i + transport _ _ _ _ _ _ i) _ _ _ _ = _
   rw [field_add]
@@ -537,6 +557,7 @@ theorem coefficients_unique {c d : Coefficients D} (k : ℝ) (Φ : D → ℝ)
   ext j x
   rw [← extract_field c k Φ hkp j x, he, extract_field d k Φ hkp j x]
 
+/-- Nonconstant, given by `c.erase 0`. -/
 noncomputable def nonconstant (c : Coefficients D) : Coefficients D := c.erase 0
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -577,14 +598,14 @@ theorem band_nonconstant {c : Coefficients D} {N : ℕ} (hc : BandLimited c N) :
   intro j hj
   exact hc j ((Finset.mem_erase.mp (show j ∈ c.support.erase 0 by
     simpa only [nonconstant, HarmonicFields.Coefficients.support, AddMonoidAlgebra.coeff_erase,
-      Finsupp.support_erase] using hj)).2)
+        Finsupp.support_erase] using hj)).2)
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem nonconstant_support {c : Coefficients D} {j : ℤ}
     (hj : j ∈ (nonconstant c).support) : j ≠ 0 := by
   exact (Finset.mem_erase.mp (show j ∈ c.support.erase 0 by
     simpa only [nonconstant, HarmonicFields.Coefficients.support, AddMonoidAlgebra.coeff_erase,
-      Finsupp.support_erase] using hj)).1
+        Finsupp.support_erase] using hj)).1
 
 theorem SmoothCoefficients.nonconstant {U : Set D} {c : Coefficients D}
     (hc : SmoothCoefficients U c) : SmoothCoefficients U (nonconstant c) := by
@@ -603,7 +624,7 @@ theorem transport_add_left (R : D → ℝ) (Vr Vθ Vz : D → D)
     (a b v : D → ComplexVector) (x : D) :
     LinearWaveResidual.transport R Vr Vθ Vz (a + b) v x =
       LinearWaveResidual.transport R Vr Vθ Vz a v x + LinearWaveResidual.transport R Vr Vθ Vz b v x
-        := by
+          := by
   ext i
   simp only [LinearWaveResidual.transport, Pi.add_apply]
   ring
@@ -614,7 +635,7 @@ theorem transport_add_right (R : D → ℝ) (Vr Vθ Vz : D → D)
     (hb : ∀ i, DifferentiableAt ℝ (fun y => b y i) x) :
     LinearWaveResidual.transport R Vr Vθ Vz u (a + b) x =
       LinearWaveResidual.transport R Vr Vθ Vz u a x + LinearWaveResidual.transport R Vr Vθ Vz u b x
-        := by
+          := by
   ext i
   simp only [LinearWaveResidual.transport, Pi.add_apply, angularGenerator_add,
     along_add _ (ha i) (hb i)]
@@ -675,7 +696,7 @@ theorem gradient_add (R : D → ℝ) (Vr Vθ Vz : D → D)
     {p q : D → ℂ} {x : D} (hp : DifferentiableAt ℝ p x)
     (hq : DifferentiableAt ℝ q x) :
       LinearWaveResidual.gradient R Vr Vθ Vz (p + q) x = LinearWaveResidual.gradient R Vr Vθ Vz p x
-        + LinearWaveResidual.gradient R Vr Vθ Vz q x := by
+          + LinearWaveResidual.gradient R Vr Vθ Vz q x := by
   have hd (V : D → D) : along V (p + q) x = along V p x + along V q x := along_add V hp hq
   ext i
   fin_cases i <;> simp [LinearWaveResidual.gradient, hd, smul_add]
@@ -690,7 +711,7 @@ theorem linearResidual_add {U : Set D} (hU : IsOpen U) (ε : ℝ) (R : D → ℝ
     {x : D} (hx : x ∈ U) :
     LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B (a + b) (p + q) x =
       LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x + LinearWaveResidual.linearResidual
-        ε R Vr Vθ Vz Vt B b q x := by
+          ε R Vr Vθ Vz Vt B b q x := by
   have da i := ((ha i).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
   have db i := ((hb i).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
   have dp := (hp.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
@@ -707,7 +728,7 @@ stress and the separately retained base residual are added. -/
 noncomputable def nonlinearResidual (ε : ℝ) (R : D → ℝ) (Vr Vθ Vz Vt : D → D)
     (B a : D → ComplexVector) (p : D → ℂ) (x : D) : ComplexVector :=
   LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x + LinearWaveResidual.transport R Vr Vθ
-    Vz a a x
+      Vz a a x
 
 theorem nonlinearResidual_add_sub {U : Set D} (hU : IsOpen U) (ε : ℝ) (R : D → ℝ)
     {Vr Vθ Vz : D → D} (Vt : D → D) (hr : ContDiffOn ℝ ∞ Vr U)
@@ -720,9 +741,9 @@ theorem nonlinearResidual_add_sub {U : Set D} (hU : IsOpen U) (ε : ℝ) (R : D 
     nonlinearResidual ε R Vr Vθ Vz Vt B (a + b) (p + q) x -
         nonlinearResidual ε R Vr Vθ Vz Vt B a p x =
       LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B b q x + LinearWaveResidual.transport R Vr
-        Vθ Vz a b x +
+          Vθ Vz a b x +
         LinearWaveResidual.transport R Vr Vθ Vz b a x + LinearWaveResidual.transport R Vr Vθ Vz b b
-          x := by
+            x := by
   have da i := ((ha i).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
   have db i := ((hb i).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
   rw [nonlinearResidual, linearResidual_add hU ε R Vt hr hθ hz B a b p q ha hb hp hq hx,
@@ -911,7 +932,7 @@ theorem smooth_rotate {U : Set D} {a : VectorCoefficients D}
 theorem Frame.Regular.invRadius {g : Frame D} {U : Set D} (hg : g.Regular U) :
     SmoothCoefficients U (constantCoefficient (fun x => ((g.radius x)⁻¹ : ℝ) : D → ℂ)) :=
   smoothCoefficients_constant (Complex.ofRealCLM.contDiff.comp_contDiffOn (hg.radius.inv
-    hg.radius_ne))
+      hg.radius_ne))
 
 theorem Frame.Regular.invSquare {g : Frame D} {U : Set D} (hg : g.Regular U) :
     SmoothCoefficients U (constantCoefficient (fun x => (((g.radius x) ^ 2)⁻¹ : ℝ) : D → ℂ)) :=
@@ -965,9 +986,10 @@ theorem smooth_nonlinearResidual {U : Set D} (hU : IsOpen U) {g : Frame D} (hg :
   (((((ha i).differentiate hU hg.time hΦ k).add (smooth_transport hU hg hΦ k kp hB ha i)).add
     (smooth_transport hU hg hΦ k kp ha hB i)).add (smooth_gradient hU hg hΦ k kp hc i) |>.sub
       ((smoothCoefficients_constant contDiffOn_const).mul (smooth_vectorLaplacian hU hg hΦ k kp ha
-        i))).add
+          i))).add
     (smooth_transport hU hg hΦ k kp ha ha i)
 
+/-- Constant vector, defined pointwise by `constantCoefficient (fun x => a x i)`. -/
 noncomputable def constantVector (a : D → ComplexVector) : VectorCoefficients D :=
   fun i => constantCoefficient (fun x => a x i)
 
@@ -1000,31 +1022,45 @@ theorem field_band_zero {c : Coefficients D} (hc : BandLimited c 0)
 
 /-- A label retains its own slow phase and native angular frequency. -/
 structure LabelData (D : Type) where
+  /-- Frequency of `LabelData`, of type `ℝ`. -/
   frequency : ℝ
+  /-- Phase of `LabelData`, of type `D → ℝ`. -/
   phase : D → ℝ
+  /-- Angular frequency of `LabelData`, of type `ℤ`. -/
   angularFrequency : ℤ
+  /-- Velocity field of `LabelData`, of type `VectorCoefficients D`. -/
   velocity : VectorCoefficients D
+  /-- Pressure field of `LabelData`, of type `Coefficients D`. -/
   pressure : Coefficients D
+  /-- Gaussian of `LabelData`, of type `VectorCoefficients D`. -/
   gaussian : VectorCoefficients D
+  /-- Alias error of `LabelData`, of type `VectorCoefficients D`. -/
   aliasError : VectorCoefficients D
 
+/-- Wave, given by `vectorField d.velocity d.frequency d.phase d.angularFrequency`. -/
 noncomputable def LabelData.wave (d : LabelData D) : D × ℝ → ComplexVector :=
   vectorField d.velocity d.frequency d.phase d.angularFrequency
 
+/-- Pressure field, given by `field d.pressure d.frequency d.phase d.angularFrequency`. -/
 noncomputable def LabelData.pressureField (d : LabelData D) : D × ℝ → ℂ :=
   field d.pressure d.frequency d.phase d.angularFrequency
 
+/-- Gaussian field, given by `vectorField d.gaussian d.frequency d.phase d.angularFrequency`. -/
 noncomputable def LabelData.gaussianField (d : LabelData D) : D × ℝ → ComplexVector :=
   vectorField d.gaussian d.frequency d.phase d.angularFrequency
 
+/-- Alias field, given by `vectorField d.aliasError d.frequency d.phase d.angularFrequency`. -/
 noncomputable def LabelData.aliasField (d : LabelData D) : D × ℝ → ComplexVector :=
   vectorField d.aliasError d.frequency d.phase d.angularFrequency
 
+/-- Regular data, collecting `phase`, `velocity`, `pressure`. -/
 structure LabelData.Regular (d : LabelData D) (U : Set D) : Prop where
   phase : ContDiffOn ℝ ∞ d.phase U
   velocity : ∀ i, SmoothCoefficients U (d.velocity i)
   pressure : SmoothCoefficients U d.pressure
 
+/-- Mean coefficients, given by `nonlinearResidual g 0 (fun _ => 0) 1 (constantVector B)
+(constantVector M) (constantCoefficient p)`. -/
 noncomputable def meanCoefficients (g : Frame D) (B M : D → ComplexVector) (p : D → ℂ) :
     VectorCoefficients D :=
   nonlinearResidual g 0 (fun _ => 0) 1 (constantVector B) (constantVector M) (constantCoefficient p)
@@ -1035,10 +1071,13 @@ noncomputable def LabelData.residualCoefficients (d : LabelData D) (g : Frame D)
   realCoefficients (nonlinearResidual g d.frequency d.phase d.angularFrequency
     (constantVector (B + M)) d.velocity d.pressure i - d.gaussian i - d.aliasError i)
 
+/-- Wave residual coefficients, defined pointwise by `nonconstant (d.residualCoefficients g B M
+i)`. -/
 noncomputable def LabelData.waveResidualCoefficients (d : LabelData D) (g : Frame D)
     (B M : D → ComplexVector) : VectorCoefficients D := fun i =>
   nonconstant (d.residualCoefficients g B M i)
 
+/-- Good residual as an element of `ℝ`. -/
 noncomputable def goodResidual {ι : Type*} (labels : Finset ι) (data : ι → LabelData D)
     (g : Frame D) (B M : D → ComplexVector) (p : D → ℂ) (virtual : D → Fin 3 → ℝ)
     (x : D × ℝ) (i : Fin 3) : ℝ :=
@@ -1111,7 +1150,7 @@ theorem LabelData.residualCoefficients_field {U : Set D} (hU : IsOpen U) (g : Fr
       d.wave d.pressureField x at he
   rw [hconst] at he
   simp only [residualCoefficients, field_realCoefficients, Complex.ofReal_re, field_sub,
-    Complex.sub_re]
+      Complex.sub_re]
   rw [← he]
   rfl
 
@@ -1150,13 +1189,13 @@ theorem goodResidual_grouped {ι : Type*} (labels : Finset ι) (data : ι → La
     ext y
     simp only [Finset.sum_apply]
   have hm := Actual.nonlinearResidual_mean_add (Vθ := angularDirection) hlu g.viscosity (fun y =>
-    g.radius y.1)
+      g.radius y.1)
     (liftDirection g.time) (liftDirection_smooth hg.radial) contDiffOn_const
     (liftDirection_smooth hg.axial) (fun y => B y.1) (fun y => M y.1)
     (∑ l ∈ labels, (data l).wave) (fun y => p y.1) (∑ l ∈ labels, (data l).pressureField)
     hBl hMl hsumv hpl hsump hx
   have hs := Actual.nonlinearResidual_sum (Vθ := angularDirection) labels hlu g.viscosity (fun y =>
-    g.radius y.1)
+      g.radius y.1)
     (liftDirection g.time) (liftDirection_smooth hg.radial) contDiffOn_const
     (liftDirection_smooth hg.axial) ((fun y => B y.1) + (fun y => M y.1))
     (fun l => (data l).wave) (fun l => (data l).pressureField) hvel hpres hdisj hx
@@ -1203,7 +1242,7 @@ theorem LabelData.residualCoefficients_conjugate (d : LabelData D) (g : Frame D)
 
 theorem LabelData.waveResidualCoefficients_conjugate (d : LabelData D) (g : Frame D)
     (B M : D → ComplexVector) (i : Fin 3) : ConjugateSymmetric (d.waveResidualCoefficients g B M i)
-      :=
+        :=
   nonconstant_conjugate (d.residualCoefficients_conjugate g B M i)
 
 theorem LabelData.waveResidualCoefficients_smooth {U : Set D} (hU : IsOpen U)
@@ -1225,6 +1264,7 @@ theorem LabelData.extract_residual (d : LabelData D) (g : Frame D)
       d.frequency d.phase d.angularFrequency j x = d.residualCoefficients g B M i j x :=
   extract_field _ _ _ hkp _ _
 
+/-- Real angular mean, given by `(∫ θ in (0 : ℝ)..period, f θ) / period`. -/
 noncomputable def realAngularMean (f : ℝ → ℝ) : ℝ :=
   (∫ θ in (0 : ℝ)..period, f θ) / period
 
@@ -1236,14 +1276,14 @@ theorem realAngularMean_add {f g : ℝ → ℝ} (hf : Continuous f) (hg : Contin
     realAngularMean (fun θ => f θ + g θ) = realAngularMean f + realAngularMean g := by
   simp only [realAngularMean]
   rw [intervalIntegral.integral_add (hf.intervalIntegrable _ _) (hg.intervalIntegrable _ _),
-    add_div]
+      add_div]
 
 theorem realAngularMean_sum {ι : Type*} (s : Finset ι) (f : ι → ℝ → ℝ)
     (hf : ∀ l ∈ s, Continuous (f l)) :
     realAngularMean (fun θ => ∑ l ∈ s, f l θ) = ∑ l ∈ s, realAngularMean (f l) := by
   simp only [realAngularMean]
   rw [intervalIntegral.integral_finsetSum (fun l hl => (hf l hl).intervalIntegrable _ _),
-    Finset.sum_div]
+      Finset.sum_div]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem realAngularMean_field (c : Coefficients D) (k : ℝ) (Φ : D → ℝ)
@@ -1258,6 +1298,8 @@ theorem realAngularMean_field (c : Coefficients D) (k : ℝ) (Φ : D → ℝ)
   rw [← hi] at he
   simpa only [realAngularMean, div_eq_mul_inv, mul_comm] using he
 
+/-- Mean residual value, given by `(meanCoefficients g B M p i 0 x).re + virtual x i + ∑ l ∈
+labels, (data l |>.residualCoefficients g B M i 0 x).re`. -/
 noncomputable def meanResidualValue {ι : Type*} (labels : Finset ι) (data : ι → LabelData D)
     (g : Frame D) (B M : D → ComplexVector) (p : D → ℂ) (virtual : D → Fin 3 → ℝ)
     (x : D) (i : Fin 3) : ℝ :=
@@ -1297,6 +1339,8 @@ theorem goodResidual_angularMean {ι : Type*} (labels : Finset ι) (data : ι �
   intro l hl
   exact realAngularMean_field _ _ _ (hkp l hl) x
 
+/-- Good wave residual, given by `goodResidual labels data g B M p virtual x i - realAngularMean
+(fun θ => goodResidual labels data g B M p virtual (x.1, θ) i)`. -/
 noncomputable def goodWaveResidual {ι : Type*} (labels : Finset ι) (data : ι → LabelData D)
     (g : Frame D) (B M : D → ComplexVector) (p : D → ℂ) (virtual : D → Fin 3 → ℝ)
     (x : D × ℝ) (i : Fin 3) : ℝ :=
@@ -1320,36 +1364,46 @@ theorem goodWaveResidual_grouped {ι : Type*} (labels : Finset ι) (data : ι �
   rw [goodWaveResidual, goodResidual_grouped labels data hU hg B M p virtual hB hM hp hd hdisj hx i,
     goodResidual_angularMean labels data hU hg B M p virtual hB hM hp hd hdisj hkp hx.1 i]
   simp only [meanResidualValue, LabelData.waveResidualCoefficients, field_nonconstant,
-    Complex.sub_re,
+      Complex.sub_re,
     Finset.sum_sub_distrib]
   ring
 
 /-! ## The stored correction state and its actual grouped residual -/
 
+/-- Context frame, bundling `radius`, `radial`, `axial`, `time` and the required compatibility
+proofs. -/
 noncomputable def contextFrame (c : CorrectionState.Context D) (n : ℕ) : Frame D where
   radius := c.operators.radius
   radial := fun x => c.operators.eR +
     (c.operators.radialFrequency n * c.operators.radialProfile x) • c.operators.vR
   axial := fun _ => c.operators.epsilon n • c.operators.eZ
   time := fun _ => c.operators.fastCoefficient n • c.operators.vT - c.operators.epsilon n •
-    c.operators.eT
+      c.operators.eT
   viscosity := c.operators.epsilon n
 
+/-- Context base, given by `![(c.base.radial n x : ℂ), (c.base.angular n x : ℂ), (c.base.axial n
+x : ℂ)]`. -/
 noncomputable def contextBase (c : CorrectionState.Context D) (n : ℕ) (x : D) : ComplexVector :=
   ![(c.base.radial n x : ℂ), (c.base.angular n x : ℂ), (c.base.axial n x : ℂ)]
 
+/-- State mean, given by `![(s.mean.radial n x : ℂ), (s.mean.angular n x : ℂ), (s.mean.axial n x
+: ℂ)]`. -/
 noncomputable def stateMean (s : CorrectionState.State D) (n : ℕ) (x : D) : ComplexVector :=
   ![(s.mean.radial n x : ℂ), (s.mean.angular n x : ℂ), (s.mean.axial n x : ℂ)]
 
+/-- State perturbation as an element of `ComplexVector`. -/
 noncomputable def statePerturbation (s : CorrectionState.State D) (n : ℕ) (x : D × ℝ) :
-  ComplexVector :=
+    ComplexVector :=
   ![(s.mean.radial n x.1 + s.oscillation n x 0 : ℝ),
     (s.mean.angular n x.1 + s.oscillation n x 1 : ℝ),
     (s.mean.axial n x.1 + s.oscillation n x 2 : ℝ)]
 
+/-- State pressure, given by `(s.totalPressureIncrement n x : ℝ)`. -/
 noncomputable def statePressure (s : CorrectionState.State D) (n : ℕ) (x : D × ℝ) : ℂ :=
   (s.totalPressureIncrement n x : ℝ)
 
+/-- Context virtual, given by `![0, -(c.operators.radialDiv 2 c.virtualTheta n x),
+-(c.operators.radialDiv 1 c.virtualAxial n x)]`. -/
 noncomputable def contextVirtual (c : CorrectionState.Context D) (n : ℕ) (x : D) : Fin 3 → ℝ :=
   ![0, -(c.operators.radialDiv 2 c.virtualTheta n x), -(c.operators.radialDiv 1 c.virtualAxial n x)]
 
@@ -1362,15 +1416,19 @@ noncomputable def stateFullResidual (c : CorrectionState.Context D) (s : Correct
     (fun y => contextBase c n y.1) (statePerturbation s n) (statePressure s n) x i).re +
     contextVirtual c n x.1 i + s.errors.base n x i
 
+/-- State good residual, given by `stateFullResidual c s - s.errors.total`. -/
 noncomputable def stateGoodResidual (c : CorrectionState.Context D) (s : CorrectionState.State D) :
     CorrectionState.Oscillation D := stateFullResidual c s - s.errors.total
 
+/-- State good wave residual, given by `stateGoodResidual c s n x i -
+CorrectionState.angularAverage (fun m y => stateGoodResidual c s m y i) n x.1`. -/
 noncomputable def stateGoodWaveResidual (c : CorrectionState.Context D) (s : CorrectionState.State
-  D)
+    D)
     (n : ℕ) (x : D × ℝ) (i : Fin 3) : ℝ :=
   stateGoodResidual c s n x i -
     CorrectionState.angularAverage (fun m y => stateGoodResidual c s m y i) n x.1
 
+/-- Block coefficients: an abbreviation for `ℕ → VectorCoefficients D`. -/
 abbrev BlockCoefficients (D : Type) := ℕ → VectorCoefficients D
 
 /-- Input blocks are interpreted as their actual real fields. The real projection
@@ -1428,7 +1486,7 @@ The finite label set may vary with the band. -/
 structure BlockRepresentation {ι : Type*} (labels : ℕ → Finset ι)
     (blocks : ι → CorrectionState.HarmonicBlock D)
     (gaussianCoeffs aliasCoeffs : ι → BlockCoefficients D) (s : CorrectionState.State D) : Prop
-      where
+        where
   velocity : ∀ n x i, s.oscillation n x i = ∑ l ∈ labels n, (blocks l).oscillation n x i
   pressure : ∀ n x, s.oscillatoryPressure n x = ∑ l ∈ labels n, (blocks l).oscillatoryPressure n x
   gaussian : ∀ n x i, s.errors.gaussian n x i =
@@ -1440,7 +1498,7 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem BlockRepresentation.perturbation {ι : Type*} {labels : ℕ → Finset ι}
     {blocks : ι → CorrectionState.HarmonicBlock D} {gaussian aliasError : ι → BlockCoefficients D}
     {s : CorrectionState.State D} (hrep : BlockRepresentation labels blocks gaussian aliasError s)
-      (n : ℕ) :
+        (n : ℕ) :
     statePerturbation s n = (fun x => stateMean s n x.1) +
       ∑ l ∈ labels n, (ofBlock (blocks l) (gaussian l) (aliasError l) n).wave := by
   ext x i
@@ -1452,7 +1510,7 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem BlockRepresentation.pressureField {ι : Type*} {labels : ℕ → Finset ι}
     {blocks : ι → CorrectionState.HarmonicBlock D} {gaussian aliasError : ι → BlockCoefficients D}
     {s : CorrectionState.State D} (hrep : BlockRepresentation labels blocks gaussian aliasError s)
-      (n : ℕ) :
+        (n : ℕ) :
     statePressure s n = (fun x => (s.pressure n x.1 : ℂ)) +
       ∑ l ∈ labels n, (ofBlock (blocks l) (gaussian l) (aliasError l) n).pressureField := by
   ext x
@@ -1474,6 +1532,8 @@ theorem BlockRepresentation.goodResidual_eq {ι : Type*} {labels : ℕ → Finse
   rw [hrep.gaussian n x i, hrep.aliasError n x i]
   ring
 
+/-- Residual block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
+compatibility proofs. -/
 noncomputable def residualBlock (c : CorrectionState.Context D) (s : CorrectionState.State D)
     (b : CorrectionState.HarmonicBlock D) (gaussian aliasError : BlockCoefficients D) :
     CorrectionState.HarmonicBlock D where
@@ -1515,7 +1575,7 @@ structure ExtractionRegular {ι : Type*} (U : Set D) (c : CorrectionState.Contex
 theorem ExtractionRegular.dataDisjoint {ι : Type*} {U : Set D} {c : CorrectionState.Context D}
     {s : CorrectionState.State D} {labels : ℕ → Finset ι}
     {blocks : ι → CorrectionState.HarmonicBlock D} {gaussian aliasError : ι → BlockCoefficients D}
-      {n : ℕ}
+        {n : ℕ}
     (h : ExtractionRegular U c s labels blocks gaussian aliasError n) :
     ∀ l ∈ labels n, ∀ j ∈ labels n, l ≠ j →
       Disjoint (tsupport (ofBlock (blocks l) (gaussian l) (aliasError l) n).wave)
@@ -1533,12 +1593,13 @@ theorem stateGoodWaveResidual_grouped {ι : Type*} {U : Set D} (hU : IsOpen U)
     {x : D × ℝ} (hx : x ∈ liftDomain U) (i : Fin 3) :
     stateGoodWaveResidual c s n x i =
       ∑ l ∈ labels n, (residualBlock c s (blocks l) (gaussian l) (aliasError l)).oscillation n x i
-        := by
+          := by
   rw [hrep.goodWaveResidual_eq c n x i]
   exact goodWaveResidual_grouped (labels n) _ hU h.frame _ _ _ _ h.base h.mean
     (Complex.ofRealCLM.contDiff.comp_contDiffOn h.pressure) h.blocks h.dataDisjoint
-      h.angular_nonzero hx i
+        h.angular_nonzero hx i
 
+/-- State mean coefficient value, constructed using `meanResidualValue`. -/
 noncomputable def stateMeanCoefficientValue {ι : Type*} (labels : ℕ → Finset ι)
     (blocks : ι → CorrectionState.HarmonicBlock D) (gaussian aliasError : ι → BlockCoefficients D)
     (c : CorrectionState.Context D) (s : CorrectionState.State D) (n : ℕ) (x : D) (i : Fin 3) : ℝ :=
@@ -1573,23 +1634,23 @@ theorem residualBlock_band (c : CorrectionState.Context D) (s : CorrectionState.
 
 theorem residualBlock_conjugate (c : CorrectionState.Context D) (s : CorrectionState.State D)
     (b : CorrectionState.HarmonicBlock D) (gaussian aliasError : BlockCoefficients D) (n : ℕ) (i :
-      Fin 3) :
+        Fin 3) :
     ConjugateSymmetric ((residualBlock c s b gaussian aliasError).velocity n i) :=
   LabelData.waveResidualCoefficients_conjugate _ _ _ _ _
 
 theorem residualBlock_zero_mode (c : CorrectionState.Context D) (s : CorrectionState.State D)
     (b : CorrectionState.HarmonicBlock D) (gaussian aliasError : BlockCoefficients D) (n : ℕ) (i :
-      Fin 3) :
+        Fin 3) :
     (residualBlock c s b gaussian aliasError).velocity n i 0 = 0 :=
   Finsupp.erase_same
 
 theorem residualBlock_smooth {ι : Type*} {U : Set D} (hU : IsOpen U)
     {c : CorrectionState.Context D} {s : CorrectionState.State D} {labels : ℕ → Finset ι}
     {blocks : ι → CorrectionState.HarmonicBlock D} {gaussian aliasError : ι → BlockCoefficients D}
-      {n : ℕ}
+        {n : ℕ}
     (h : ExtractionRegular U c s labels blocks gaussian aliasError n) {l : ι} (hl : l ∈ labels n) :
     ∀ i, SmoothCoefficients U ((residualBlock c s (blocks l) (gaussian l) (aliasError l)).velocity
-      n i) :=
+        n i) :=
   LabelData.waveResidualCoefficients_smooth hU h.frame _ _ h.base h.mean _
     (h.blocks l hl) (h.gaussian l hl) (h.aliasError l hl)
 
@@ -1647,9 +1708,9 @@ theorem stateFullResidual_reconstructed {ι : Type*} {U : Set D} (hU : IsOpen U)
     {x : D × ℝ} (hx : x ∈ liftDomain U) (i : Fin 3) :
     stateFullResidual c s n x i =
       (∑ l ∈ labels n, (residualBlock c s (blocks l) (gaussian l) (aliasError l)).oscillation n x
-        i) +
+          i) +
       stateMeanCoefficientValue labels blocks gaussian aliasError c s n x.1 i + s.errors.total n x
-        i := by
+          i := by
   rw [← stateGoodWaveResidual_grouped hU hrep h hx i,
     stateMeanCoefficientValue_eq_average hU hrep h hx.1 i]
   simp only [stateGoodWaveResidual, stateGoodResidual, Pi.sub_apply]

@@ -6,13 +6,20 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
 public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
-
-@[expose] public section
+public import Mathlib.Topology.ContinuousMap.Bounded.Normed
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A continuous multilinear operation acts on genuine bounded fields in
 the uniform norm. This includes the finite Faà di Bruno operations. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,11 +32,16 @@ variable {α ι : Type*} [TopologicalSpace α] [Fintype ι]
   {V : ι → Type*} [∀ i, NormedAddCommGroup (V i)] [∀ i, NormedSpace ℝ (V i)]
   {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
-private local instance (i : ι) : NormedAddCommGroup (α →ᵇ V i) := inferInstance
-private local instance (i : ι) : NormedSpace ℝ (α →ᵇ V i) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ W) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ W) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ V i)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldMultilinear1 (i : ι) : NormedAddCommGroup (α →ᵇ V i) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ V i)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldMultilinear2 (i : ι) : NormedSpace ℝ (α →ᵇ V i) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ W)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldMultilinear3 : NormedAddCommGroup (α →ᵇ W) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ W)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldMultilinear4 : NormedSpace ℝ (α →ᵇ W) := inferInstance
 
+/-- Multilinear value, constructed using `BoundedContinuousFunction.ofNormedAddCommGroup`. -/
 def multilinearValue (L : ContinuousMultilinearMap ℝ V W)
     (f : ∀ i, α →ᵇ V i) : α →ᵇ W :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fun x => L (fun i => f i x))
@@ -49,6 +61,7 @@ theorem multilinearValue_norm (L : ContinuousMultilinearMap ℝ V W)
   BoundedContinuousFunction.norm_ofNormedAddCommGroup_le _
     (mul_nonneg (norm_nonneg _) (Finset.prod_nonneg (fun _ _ => norm_nonneg _))) _
 
+/-- Multilinear algebra as an element of `MultilinearMap ℝ (fun i => α →ᵇ V i) (α →ᵇ W)`. -/
 def multilinearAlgebra (L : ContinuousMultilinearMap ℝ V W) :
     MultilinearMap ℝ (fun i => α →ᵇ V i) (α →ᵇ W) := by
   classical
@@ -82,6 +95,8 @@ def multilinearAlgebra (L : ContinuousMultilinearMap ℝ V W) :
     simp only [he, BoundedContinuousFunction.smul_apply]
     exact L.map_update_smul _ _ _ _
 
+/-- Multilinear map, given by `(multilinearAlgebra L).mkContinuous ‖L‖ (multilinearValue_norm
+L)`. -/
 def multilinearMap (L : ContinuousMultilinearMap ℝ V W) :
     ContinuousMultilinearMap ℝ (fun i => α →ᵇ V i) (α →ᵇ W) :=
   (multilinearAlgebra L).mkContinuous ‖L‖ (multilinearValue_norm L)

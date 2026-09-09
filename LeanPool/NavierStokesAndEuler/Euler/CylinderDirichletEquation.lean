@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletMean
-public import LeanPool.NavierStokesAndEuler.Euler.TransverseNormalResidual
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletData
+import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletMean
+import LeanPool.NavierStokesAndEuler.Euler.TransverseNormalResidual
 
 /-!
 # The literal spatial equation of the actual cylinder history
@@ -18,6 +17,9 @@ The Hilbert-space projected equation is an equality of genuine L² fields.
 The adjoint multiplier identity turns it into the pointwise matrix equation
 almost everywhere. Its normal residual is exactly the scalar source in (11).
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,7 +34,7 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (D : Coefficients T U E)
-  (f : C(Icc (0 : ℝ) T,CylinderL2 P E))
+  (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
 
 /-- The exact source equation (10) for the actual cylinder representatives. -/
 theorem coordinate_equation_ae (t : Icc (0 : ℝ) T) :
@@ -77,7 +79,7 @@ theorem physicalVelocity_ae (t : Icc (0 : ℝ) T) :
 
 theorem physicalDerivative_ae (t : Icc (0 : ℝ) T) :
     D.physicalDerivative P f t =ᵐ[liftMeasure P] fun x =>
-      D.Q₁ t x.1 (D.velocityPath P (pathLp T D.time_pos.le f) t x)+
+      D.Q₁ t x.1 (D.velocityPath P (pathLp T D.time_pos.le f) t x) +
         D.Q t x.1 (D.accelerationPath P f t x) := by
   let v := D.velocityPath P (pathLp T D.time_pos.le f) t
   let a := D.accelerationPath P f t
@@ -92,12 +94,12 @@ theorem physicalDerivative_ae (t : Icc (0 : ℝ) T) :
 theorem physical_balance_ae
     (M : Icc (0 : ℝ) T → Space → E →L[ℝ] E) (m : Icc (0 : ℝ) T → Space → E)
     (hm : ∀ t x, m t x ≠ 0)
-    (hTangent : ∀ t x v, ⟪m t x,D.Q t x v⟫_ℝ = 0)
-    (hRange : ∀ t x η, ⟪m t x,η⟫_ℝ = 0 → ∃ v, D.Q t x v = η)
+    (hTangent : ∀ t x v, ⟪m t x, D.Q t x v⟫_ℝ = 0)
+    (hRange : ∀ t x η, ⟪m t x, η⟫_ℝ = 0 → ∃ v, D.Q t x v = η)
     (hFlow : ∀ t x, D.Q₁ t x = (M t x).comp (D.Q t x))
     (t : Icc (0 : ℝ) T) :
     ∀ᵐ x ∂liftMeasure P,
-      D.physicalDerivative P f t x+M t x.1 (D.physicalVelocity P f t x)+
+      D.physicalDerivative P f t x+M t x.1 (D.physicalVelocity P f t x) +
         ((⟪m t x.1,f t x⟫_ℝ-2*⟪m t x.1,M t x.1 (D.physicalVelocity P f t x)⟫_ℝ)/
           ‖m t x.1‖^2) • m t x.1 = f t x := by
   filter_upwards [D.coordinate_equation_ae P f t,D.physicalVelocity_ae P f t,

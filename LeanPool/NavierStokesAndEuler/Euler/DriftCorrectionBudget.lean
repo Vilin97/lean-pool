@@ -9,9 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionBudgetRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevDriftNorm
 
+/-! Genuine correction data with separate full-velocity and transport-drift bounds. -/
+
 @[expose] public section
 
-/-! Genuine correction data with separate full-velocity and transport-drift bounds. -/
 
 noncomputable section
 
@@ -24,8 +25,8 @@ open Set EulerCorrectionOperators EulerCorrectionEnergyData EulerQuadraticSource
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The full coefficient budget is retained, while the actual small drift has its own envelope. -/
-structure Budget {q : ℕ} {T : ℝ} (hq : 6 ≤ q+1)
-    (D : CorrectionData period (q+1) (Icc (0 : ℝ) T))
+structure Budget {q : ℕ} {T : ℝ} (hq : 6 ≤ q + 1)
+    (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (N : ℕ) (R : C(Icc (0 : ℝ) T, ℝ)) where
   /-- All full-velocity and coefficient norms, including the residual, are actual data bounds. -/
   full : SpatialBudget period hq D N R
@@ -38,8 +39,8 @@ structure Budget {q : ℕ} {T : ℝ} (hq : 6 ≤ q+1)
     (velocityMap (velocityComponents D.κ D.direction)) (D.approximation t) ≤ drift
 
 /-- Restricting the time interval preserves both actual norm bounds and all constants. -/
-def Budget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) S)}
+def Budget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) S)}
     {N : ℕ} {R : C(Icc (0 : ℝ) S, ℝ)}
     (B : Budget period hq D N R) (hTS : T ≤ S) :
     Budget period hq (D.comp period (timeInclusion hTS)) N (R.comp (timeInclusion hTS)) where
@@ -49,11 +50,11 @@ def Budget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q+1}
   drift_bound t := B.drift_bound (timeInclusion hTS t)
 
 /-- Only the correction field uses the coarse drift-to-velocity comparison. -/
-theorem Budget.total_drift_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q+1}
-    {D : CorrectionData period (q+1) (Icc (0 : ℝ) T)}
+theorem Budget.total_drift_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
+    {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)}
     {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
-    (B : Budget period hq D N R) (hN : N+6 ≤ (q+1)+1)
-    (t : Icc (0 : ℝ) T) (e : SobolevSpace period ((q+1)+1)) :
+    (B : Budget period hq D N R) (hN : N + 6 ≤ (q + 1) + 1)
+    (t : Icc (0 : ℝ) T) (e : SobolevSpace period ((q + 1) + 1)) :
     weightedDriftNorm period 6 N (R t)
         (velocityMap (velocityComponents D.κ D.direction)) (D.approximation t+e) ≤
       4 * (B.drift + weightedNorm period 6 N (R t) e) := by

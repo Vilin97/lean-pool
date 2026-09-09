@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Commutator
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryTransportCancellation
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
 /-! The genuine spatial H³ difference-energy estimate for ordinary Euler.
 The pressure term vanishes exactly. The constant uses only the reference
 H⁴ norm and the H³ norm of the difference. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,6 +35,8 @@ theorem wordBound_add {s : ℕ} {M N : ℝ} {A B : SmoothL2Field Space}
   rw [wordField_add,toLp_addField]
   exact (norm_add_le _ _).trans (add_le_add (hA n hn w) (hB n hn w))
 
+/-- Difference rhs, given by `fieldNeg (addField (addField (advectionField (addField U W) W)
+(advectionField W U)) P)`. -/
 def differenceRhs (U W P : SmoothL2Field Space) : SmoothL2Field Space :=
   fieldNeg (addField (addField (advectionField (addField U W) W) (advectionField W U)) P)
 
@@ -42,11 +47,11 @@ theorem differenceRhs_field (U W P : SmoothL2Field Space) (x : Space) :
   abel
 
 theorem differenceRhs_pairing (U W P : SmoothL2Field Space)
-    (hdiv : ∀ x, divergence (addField U W).field x=0)
+    (hdiv : ∀ x, divergence (addField U W).field x = 0)
     (hW : W.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace)
     {n : ℕ} (w : Fin n → Fin 3) :
     ⟪(wordField W w).toLp,(wordField (differenceRhs U W P) w).toLp⟫_ℝ =
-      -⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ-
+      -⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ -
         ⟪(wordField (advectionField W U) w).toLp,(wordField W w).toLp⟫_ℝ := by
   have ht : ⟪(wordField W w).toLp,(wordField (advectionField (addField U W) W) w).toLp⟫_ℝ =
       ⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ := by
@@ -62,7 +67,7 @@ theorem differenceRhs_pairing (U W P : SmoothL2Field Space)
 
 theorem differenceRhs_word_bound (U W P : SmoothL2Field Space) (M X : ℝ)
     (hU : WordBound 4 M U) (hWb : WordBound 3 X W)
-    (hdiv : ∀ x, divergence (addField U W).field x=0)
+    (hdiv : ∀ x, divergence (addField U W).field x = 0)
     (hW : W.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace)
     {n : ℕ} (hn : n ≤ 3) (w : Fin n → Fin 3) :
     ⟪(wordField W w).toLp,(wordField (differenceRhs U W P) w).toLp⟫_ℝ ≤
@@ -99,7 +104,7 @@ theorem differenceRhs_word_bound (U W P : SmoothL2Field Space) (M X : ℝ)
     (add_le_add hkb hsb).trans_eq (by ring)
   rw [differenceRhs_pairing U W P hdiv hW hP w]
   calc
-    _ ≤ |⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ|+
+    _ ≤ |⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ| +
         |⟪(wordField (advectionField W U) w).toLp,(wordField W w).toLp⟫_ℝ| := by
       linarith [neg_le_abs ⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ,
         neg_le_abs ⟪(wordField (advectionField W U) w).toLp,(wordField W w).toLp⟫_ℝ]
@@ -112,12 +117,14 @@ theorem differenceRhs_word_bound (U W P : SmoothL2Field Space) (M X : ℝ)
       mul_le_mul hsum (hWb n hn w) (norm_nonneg _) (by positivity)
     _ = _ := by ring
 
+/-- Energy production, given by `2*(∑ n ∈ range 4, ∑ w : Fin n → Fin 3, ⟪(wordField W
+w).toLp,(wordField Q w).toLp⟫_ℝ)`. -/
 def energyProduction (W Q : SmoothL2Field Space) : ℝ :=
   2*(∑ n ∈ range 4, ∑ w : Fin n → Fin 3, ⟪(wordField W w).toLp,(wordField Q w).toLp⟫_ℝ)
 
 theorem difference_energy_bound (U W P : SmoothL2Field Space) (M : ℝ)
     (hU : WordBound 4 M U)
-    (hdiv : ∀ x, divergence (addField U W).field x=0)
+    (hdiv : ∀ x, divergence (addField U W).field x = 0)
     (hW : W.toLp ∈ solenoidalSpace) (hP : P.toLp ∈ gradientSpace) :
     energyProduction W (differenceRhs U W P) ≤
       3600*h3ProductConstant*(M+Real.sqrt (wordEnergy 3 W))*wordEnergy 3 W := by

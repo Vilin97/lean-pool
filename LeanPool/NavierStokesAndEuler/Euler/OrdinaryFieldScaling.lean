@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Norms
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Literal scalar multiplication of smooth ordinary L² fields and all
 of their genuine spatial derivatives. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -25,6 +26,7 @@ open scoped ContDiff
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Scale field, given by `mapField (c • ContinuousLinearMap.id ℝ V) A`. -/
 def scaleField (c : ℝ) (A : SmoothL2Field V) : SmoothL2Field V :=
   mapField (c • ContinuousLinearMap.id ℝ V) A
 

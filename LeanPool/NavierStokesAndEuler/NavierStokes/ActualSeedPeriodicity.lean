@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualInitialization
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualWaveRegularityData
 
-@[expose] public section
-
 /-!
 # Torus periodicity of the actual seed coefficients
 
@@ -19,12 +17,16 @@ cover. Under this ordering, the actual exact-curl velocity, pressure, and
 retained Gaussian coefficients are invariant under every torus deck shift.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualSeedPeriodicity
 
 open CorrectionInitialization HarmonicCalculus
 
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
 abbrev Point := LocalSignedRequest.Point
 
 variable {B N0 : ℕ}
@@ -41,7 +43,7 @@ theorem zeroSlice_add_deck (k : TorusInverse.Frequency) (x : Point) :
     (x + pointDeck k, (0 : ℝ)) = (x, 0) + ActualPrimaryCoherence.chartDeck k := by
   simp [pointDeck, ActualPrimaryCoherence.chartDeck]
 
-theorem conjugatePair_periodic {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem conjugatePair_periodic {E : Type} [NormedAddCommGroup E]
     (f : E → ℂ) (w : E)
     (hf : ∀ x, f (x + w) = f x) (j : ℤ) (x : E) :
     ErrorHarmonics.conjugatePair 1 f j (x + w) =

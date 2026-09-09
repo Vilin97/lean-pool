@@ -6,12 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanCurlTensor
-public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
+public import LeanPool.NavierStokesAndEuler.Euler.MeanGradientTestSpace
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Ordinary smooth vector-calculus identities with the canonical Mathlib Laplacian. -/
 
 @[expose] public section
 
-/-! Ordinary smooth vector-calculus identities with the canonical Mathlib Laplacian. -/
 
 noncomputable section
 
@@ -21,6 +26,7 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerVectorCalcu
   EulerMeanSolenoidal EulerMeanCutoffCurl EulerMeanGradientTest EulerMeanHarmonic
 open scoped ContDiff
 
+/-- Vector partial, given by `fderiv ℝ f x (EuclideanSpace.single i 1)`. -/
 def vectorPartial (f : Space → Space) (i : Fin 3) (x : Space) : Space :=
   fderiv ℝ f x (EuclideanSpace.single i 1)
 
@@ -82,9 +88,13 @@ theorem vectorCurl_compact (f : Space → Space) (hc : HasCompactSupport f) :
     HasCompactSupport (vectorCurl f) := hc.of_isClosed_subset
       (isClosed_tsupport _) (vectorCurl_support f)
 
+/-- Curl test, given by `⟨vectorCurl (f : Space → Space), vectorCurl_smooth f f.smooth,
+vectorCurl_compact f f.compact⟩`. -/
 def curlTest (f : Test) : Test :=
   ⟨vectorCurl (f : Space → Space), vectorCurl_smooth f f.smooth, vectorCurl_compact f f.compact⟩
 
+/-- Laplacian test, given by `⟨Δ (f : Space → Space), vector_laplacian_smooth f f.smooth,
+vector_laplacian_compact f f.smooth f.compact⟩`. -/
 def laplacianTest (f : Test) : Test :=
   ⟨Δ (f : Space → Space), vector_laplacian_smooth f f.smooth,
     vector_laplacian_compact f f.smooth f.compact⟩
@@ -106,7 +116,7 @@ theorem divergence_smooth (f : Space → Space) (hf : ContDiff ℝ ∞ f) :
 theorem partialDerivative_sub (f g : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     (hg : ContDiff ℝ ∞ g) (i : Fin 3) (x : Space) :
     partialDerivative (fun y => f y - g y) i x = partialDerivative f i x - partialDerivative g i x
-      := by
+        := by
   unfold partialDerivative
   rw [fderiv_fun_sub ((hf.differentiable (by simp)).differentiableAt)
     ((hg.differentiable (by simp)).differentiableAt)]

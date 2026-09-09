@@ -7,13 +7,17 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothFieldSobolevTime
-public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientContinuity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
+public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
+import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientContinuity
 
 /-! The classical Euler equation supplies strong evolution in every
 Sobolev norm once the actual velocity and pressure-gradient L² jets are
 continuous. The advection field and its regularity are constructed here. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +30,8 @@ open scoped ContDiff Topology
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
+/-- Advection, given by `product (coefficientPath (fun s => (U s).derivative)
+(continuous_jetLp_derivative U hU)) t (U t)`. -/
 def advection (U : K → SmoothL2Field Space)
     (hU : ∀ n, Continuous (fun t => (U t).jetLp n)) (t : K) : SmoothL2Field Space :=
   product (coefficientPath (fun s => (U s).derivative) (continuous_jetLp_derivative U hU)) t (U t)
@@ -41,6 +47,8 @@ theorem advection_jet_continuous (U : K → SmoothL2Field Space)
     Continuous (fun t => (advection U hU t).jetLp n) :=
   continuous_product_jet _ U hU n
 
+/-- Rhs, given by `mapField (-(ContinuousLinearMap.id ℝ Space)) (addField (advection U hU t) (G
+t))`. -/
 def rhs (U : K → SmoothL2Field Space)
     (hU : ∀ n, Continuous (fun t => (U t).jetLp n))
     (G : K → SmoothL2Field Space) (t : K) : SmoothL2Field Space :=
@@ -69,8 +77,8 @@ variable (T : ℝ) (hT : 0 ≤ T)
 theorem sobolev_evolution
     (hd : ∀ t (ht : t ∈ Ioo 0 T) x,
       HasDerivAt (fun r => (U (projIcc 0 T hT r)).field x)
-        (-fderiv ℝ (U ⟨t,ht.1.le,ht.2.le⟩).field x ((U ⟨t,ht.1.le,ht.2.le⟩).field x)-
-          (G ⟨t,ht.1.le,ht.2.le⟩).field x) t)
+        (-fderiv ℝ (U ⟨t, ht.1.le, ht.2.le⟩).field x ((U ⟨t, ht.1.le, ht.2.le⟩).field x) -
+          (G ⟨t, ht.1.le, ht.2.le⟩).field x) t)
     (q : ℕ) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (sobolevPath U hU q))
       (sobolevPath (rhs U hU G) (rhs_jet_continuous U hU G hG) q t)
@@ -82,13 +90,13 @@ theorem sobolev_evolution
 
 theorem pointwise_time_derivative_of_classical
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ)
-    (hmatch : ∀ (t : Icc (0 : ℝ) T) x, u (t,x)=(U t).field x)
-    (hgradient : ∀ (t : Icc (0 : ℝ) T) x, gradient (fun y => p (t,y)) x=(G t).field x)
-    (hdiff : ∀ t ∈ Ioo 0 T, ∀ x, DifferentiableAt ℝ u (t,x))
-    (heuler : ∀ t ∈ Ioo 0 T, ∀ x, EulerLagrangian.momentumResidual u p (t,x)=0)
+    (hmatch : ∀ (t : Icc (0 : ℝ) T) x, u (t, x) = (U t).field x)
+    (hgradient : ∀ (t : Icc (0 : ℝ) T) x, gradient (fun y => p (t, y)) x = (G t).field x)
+    (hdiff : ∀ t ∈ Ioo 0 T, ∀ x, DifferentiableAt ℝ u (t, x))
+    (heuler : ∀ t ∈ Ioo 0 T, ∀ x, EulerLagrangian.momentumResidual u p (t, x) = 0)
     (t : ℝ) (ht : t ∈ Ioo 0 T) (x : Space) :
     HasDerivAt (fun r => (U (projIcc 0 T hT r)).field x)
-      (-fderiv ℝ (U ⟨t,ht.1.le,ht.2.le⟩).field x ((U ⟨t,ht.1.le,ht.2.le⟩).field x)-
+      (-fderiv ℝ (U ⟨t,ht.1.le,ht.2.le⟩).field x ((U ⟨t,ht.1.le,ht.2.le⟩).field x) -
         (G ⟨t,ht.1.le,ht.2.le⟩).field x) t := by
   let s : Icc (0 : ℝ) T := ⟨t,ht.1.le,ht.2.le⟩
   have hu := (hdiff t ht x).hasFDerivAt
@@ -106,7 +114,7 @@ theorem pointwise_time_derivative_of_classical
   rw [hp,map_add,hmatch s x,hx,hgradient s x] at he
   have htval : fderiv ℝ u (t,x) (1,0) =
       -fderiv ℝ (U s).field x ((U s).field x)-(G s).field x := by
-    have h := eq_neg_of_add_eq_zero_left (show fderiv ℝ u (t,x) (1,0)+
+    have h := eq_neg_of_add_eq_zero_left (show fderiv ℝ u (t,x) (1,0) +
         (fderiv ℝ (U s).field x ((U s).field x)+(G s).field x)=0 from by
       simpa only [add_assoc] using he)
     rw [h]
@@ -121,10 +129,10 @@ theorem pointwise_time_derivative_of_classical
 
 theorem sobolev_evolution_of_classical
     (u : ℝ × Space → Space) (p : ℝ × Space → ℝ)
-    (hmatch : ∀ (t : Icc (0 : ℝ) T) x, u (t,x)=(U t).field x)
-    (hgradient : ∀ (t : Icc (0 : ℝ) T) x, gradient (fun y => p (t,y)) x=(G t).field x)
-    (hdiff : ∀ t ∈ Ioo 0 T, ∀ x, DifferentiableAt ℝ u (t,x))
-    (heuler : ∀ t ∈ Ioo 0 T, ∀ x, EulerLagrangian.momentumResidual u p (t,x)=0)
+    (hmatch : ∀ (t : Icc (0 : ℝ) T) x, u (t, x) = (U t).field x)
+    (hgradient : ∀ (t : Icc (0 : ℝ) T) x, gradient (fun y => p (t, y)) x = (G t).field x)
+    (hdiff : ∀ t ∈ Ioo 0 T, ∀ x, DifferentiableAt ℝ u (t, x))
+    (heuler : ∀ t ∈ Ioo 0 T, ∀ x, EulerLagrangian.momentumResidual u p (t, x) = 0)
     (q : ℕ) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (sobolevPath U hU q))
       (sobolevPath (rhs U hU G) (rhs_jet_continuous U hU G hG) q t)

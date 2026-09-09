@@ -7,14 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimaryBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTimeChange
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalInitialData
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimaryBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTimeChange
 
 /-! All-grade bounds for the actual zero-history source recursion, initialized
 by the literal compact periodic wave.  Every later forcing and solution is
 constructed, and the primary budget is discharged from its actual datum. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,21 +24,25 @@ namespace EulerPacketTerminalDatum
 
 open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
   EulerPacketCylinderField EulerPacketProfileRecursion EulerPacketTimeProfile
-    EulerParameterWordGevrey
+      EulerParameterWordGevrey
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Forward initialized profiles, given by `sourceProfiles period M D (InitialData.zero period
+D) (initialData D δ hδ (α • ξ) hs)`. -/
 def forwardInitializedProfiles : ℕ → Profile :=
   sourceProfiles period M D (InitialData.zero period D) (initialData D δ hδ (α • ξ) hs)
 
+/-- Forward initialized profile witness, given by `sourceProfileWitness period M D hTime
+(InitialData.zero period D) (initialData D δ hδ (α • ξ) hs) p`. -/
 def forwardInitializedProfileWitness (p : ℕ) :
     ProfileRegularity period M.T M.T_pos.le D.support (forwardInitializedProfiles M D δ hδ ξ hs α
-      p) :=
+        p) :=
   sourceProfileWitness period M D hTime (InitialData.zero period D) (initialData D δ hδ (α • ξ) hs)
-    p
+      p
 
 variable (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
   (NB : EulerTransversePacketJoin.NormalBudget D 6 L.R)
@@ -47,9 +53,9 @@ variable (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
   (hRc : sobolevCoefficientRadius (Fin 4) BC.Rc ≤ L.R) (hcost : BC.termCost ≤ L.R)
   (hδ1 : δ ≤ 1) (hα : 0 < α) (hR : wordRadius (Fin 4) δ ≤ L.R)
   (WP : EulerTransversePacketForward.Budget.GradeGuards (P := period) L NB (wordCost (Fin 4) 6
-    δ*‖ξ‖))
+      δ * ‖ξ‖))
   (S : Scales (Icc (0 : ℝ) M.T))
-  (hgrowth : timeProfileChange S.growth hTime=α • L.g)
+  (hgrowth : timeProfileChange S.growth hTime = α • L.g)
 
 include NB hδ1 hα hR WP hgrowth in
 theorem forwardInitialized_primary_budget :

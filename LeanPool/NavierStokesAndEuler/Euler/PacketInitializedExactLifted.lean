@@ -7,13 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedResidualEquation
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionChoice
-public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionParity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionChoice
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionParity
 
 /-! Source budgets and the actual initialized residual construct exact
 corrected lifted packets at every sufficiently large frequency. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -28,7 +30,9 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} (hT : 0 < T) (A : Data P T)
 /-- The output fields and all their properties are conclusions of the
 constructed correction and the verified approximate residual. -/
 structure ExactLiftedPacket (B : Budget P hT A) where
+  /-- Velocity field of `ExactLiftedPacket`, of type `FieldTower P T`. -/
   velocity : FieldTower P T
+  /-- Pressure field of `ExactLiftedPacket`, of type `FieldTower P T`. -/
   pressure : FieldTower P T
   zero_initial_correction : ∀ q,
     velocity.realization q ⟨0,le_rfl,hT.le⟩-A.approximation.realization q ⟨0,le_rfl,hT.le⟩=0
@@ -43,12 +47,14 @@ structure ExactLiftedPacket (B : Budget P hT A) where
   equation : ∀ (q : ℕ) (hq : 6 ≤ q) t (ht : t ∈ Ioo 0 T),
     HasDerivAt (extendPath T hT.le (velocity.realization q))
       (-nonlinearity P (A.atOrder P q) hq ⟨t,ht.1.le,ht.2.le⟩
-        (velocity.realization (q+1) ⟨t,ht.1.le,ht.2.le⟩)-
+        (velocity.realization (q+1) ⟨t,ht.1.le,ht.2.le⟩) -
         coefficientSobolevOperator P (A.metric.jet q ⟨t,ht.1.le,ht.2.le⟩)
           (pressure.realization q ⟨t,ht.1.le,ht.2.le⟩)) t
 
 variable {hT A}
 
+/-- Exact packet of residual, bundling `velocity`, `pressure`, `zero_initial_correction`,
+`divergence` and the required compatibility proofs. -/
 def exactPacketOfResidual (B : Budget P hT A) (R : ApproximationResidual P hT A) :
     ExactLiftedPacket P hT A B where
   velocity := B.correctedFieldTower P
@@ -82,6 +88,8 @@ variable (M : EulerMeanPacketProvider.Data)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
+/-- Initialized exact packet, given by `exactPacketOfResidual period Q
+(initializedApproximationResidual M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk)`. -/
 def initializedExactPacket (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
     (Q : Budget period D.T_pos
@@ -104,9 +112,9 @@ theorem initializedExactPacket_velocity_odd
     (t : Icc (0 : ℝ) D.T) :
     -reflection period
       ((initializedExactPacket M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk Q).velocity.field
-        t) =
+          t) =
       (initializedExactPacket M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk Q).velocity.field t
-        :=
+          :=
   exactPacketOfResidual_velocity_odd period Q _
     (initializedCorrectionParityData M D hTime τ hτ hτT B δ hδ ξ hs α
       eM hSym hF hDM hBH Cagree N hN k hk) t
@@ -122,16 +130,16 @@ theorem initialized_exact_lifted_packets_eventually
     (Cagree : SourceCoefficientAgreement M D)
     (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
     (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
-    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1) :
+    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1) :
     ∃ ρ0 C : ℝ, 0 < ρ0 ∧ 0 < C ∧ ∀ᶠ k : ℝ in atTop,
       ∃ (hk : 4 ≤ k) (hn : 1 ≤ truncation k)
         (Q : Budget period D.T_pos
           (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree (truncation k) hn k
-            hk)),
+              hk)),
         Q.delta=delta (expansion k) ∧ Q.initialRadius=ρ0 ∧ Q.growthCoefficient=C ∧
           Nonempty (ExactLiftedPacket period D.T_pos
             (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree (truncation k) hn k
-              hk) Q) := by
+                hk) Q) := by
   obtain ⟨ρ0,C,hρ,hC,he⟩ := initialized_correction_budgets_eventually M D hTime τ hτ hτT B
     δ hδ hδ1 ξ hs α hα L NB LM Cagree Ξ hΞ hF hdet
   refine ⟨ρ0,C,hρ,hC,?_⟩

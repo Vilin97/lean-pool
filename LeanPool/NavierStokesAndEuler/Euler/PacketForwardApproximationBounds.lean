@@ -8,12 +8,17 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceSolenoidal
-public import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteCoarseBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketApproximationBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
+import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 
 /-! The actual zero-history packet has a bounded normalized velocity and a
 small normal drift, at a single radius inherited from the profile construction. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -40,9 +45,9 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 include NB W LM WM BC hRc hcost hα hgrowth hprimaryBudget
 
 theorem forwardPacket_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     ((sourcePacketPullbackField P M D hTime (InitialData.zero P D) Y N k⁻¹).smul k).WordBound
-      6 (4*L.R) (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 1+
+      6 (4*L.R) (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 1 +
         fixedVelocityGradeCost L.R S.H0 2+1)) 0 := by
   let a := sourceProfiles P M D (InitialData.zero P D) Y
   let G : ∀ i, i ≤ N → ProfileRegularity P M.T M.T_pos.le D.support (a i) :=
@@ -52,10 +57,10 @@ theorem forwardPacket_normalized_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 
       hRc hcost S α hα hgrowth hprimaryBudget i hi
   have h := ProfileRegularity.normalizedVelocity_bound M.T_pos G hG L.radius_one
     (profiles_zero _ _) hN BC hRc k hk hbase
-  exact h.of_raw_eq _ (fun _ _ _ => rfl)
+  exact h.ofRawEq _ (fun _ _ _ => rfl)
 
 theorem forwardPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k^(1/100 : ℝ)) :
+    (hbase : tailBase L.R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (((sourcePacketPullbackField P M D hTime (InitialData.zero P D) Y N k⁻¹).smul k).map
       (normalComponentMap D.m₀)).WordBound 6 (4*L.R)
         (BC.multiplierCost*(fixedVelocityGradeCost L.R S.H0 2+2)/k) 0 := by
@@ -77,6 +82,6 @@ theorem forwardPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 �
     exact h
   have h := ProfileRegularity.normalizedNormal_bound M.T_pos G hG L.radius_one
     (profiles_zero _ _) hb hN BC hRc D.m₀ D.m₀_unit.le ht k hk hbase
-  exact h.of_raw_eq _ (fun _ _ _ => rfl)
+  exact h.ofRawEq _ (fun _ _ _ => rfl)
 
 end EulerPacketCylinderField

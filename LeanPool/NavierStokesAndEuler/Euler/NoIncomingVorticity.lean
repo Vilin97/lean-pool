@@ -6,14 +6,12 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.FlowEscapeBound
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Measure.OpenPos
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Topology.Algebra.Order.Field
-public import Mathlib.Tactic
-
-@[expose] public section
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.NavierStokesAndEuler.Euler.FlowEscapeBound
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # No vorticity arriving from spatial infinity
@@ -25,6 +23,9 @@ from the initial vorticity support. Initial support is trapped by the inverse
 endpoint maps in one common ball. These hypotheses exclude all nonzero
 vorticity outside that ball; no global pointwise velocity bound is needed.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -57,7 +58,9 @@ time parameter `s` runs backward from the endpoint (`s=0`) to the initial
 time (`s=T`). -/
 structure BackwardVorticityFlows
     (T energy supportRadius : ℝ) (K : Set ℝ³) (w₀ w : ℝ³ → ℝ³) where
+  /-- Flow of `BackwardVorticityFlows`, of type `ℝ → ℝ → ℝ³ ≃ₜ ℝ³`. -/
   flow : ℝ → ℝ → ℝ³ ≃ₜ ℝ³
+  /-- Velocity field of `BackwardVorticityFlows`, of type `ℝ → ℝ → ℝ³ → ℝ³`. -/
   velocity : ℝ → ℝ → ℝ³ → ℝ³
   time_nonneg : 0 ≤ T
   preserves_volume : ∀ R s, MeasurePreserving (flow R s) volume volume

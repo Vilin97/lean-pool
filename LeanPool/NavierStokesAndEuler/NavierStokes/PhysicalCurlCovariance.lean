@@ -7,11 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualBridge
-public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialCurl
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CopyAngularInvariance
-
-@[expose] public section
 
 /-!
 # Physical covariance of the actual wave curl
@@ -19,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.CopyAngularInvariance
 The potential is differentiated before any cutoff or carrier is removed.
 All operators below are actual Frechet derivatives.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.PhysicalCurlCovariance
 
@@ -29,12 +28,15 @@ open scoped Topology ContDiff
 noncomputable section
 
 
+/-- Cylinder: an abbreviation for `PhysicalResidualBridge.Cylinder`. -/
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
+/-- Scaled graph: an abbreviation for `PhysicalResidualBridge.ScaledGraph`. -/
 abbrev ScaledGraph := PhysicalResidualBridge.ScaledGraph
 
 variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+/-- Real vector, given by `AxisymmetricResidual.pack (a 0).re (a 1).re (a 2).re`. -/
 noncomputable def realVector (a : ComplexVector) : Space :=
   AxisymmetricResidual.pack (a 0).re (a 1).re (a 2).re
 
@@ -42,6 +44,7 @@ noncomputable def realVector (a : ComplexVector) : Space :=
     realVector a i = (a i).re := by
   fin_cases i <;> simp [realVector]
 
+/-- Real curl as an element of `Fin 3 → ℝ`. -/
 noncomputable def realCurl (R : E → ℝ) (Vr Vθ Vz : E → E)
     (a : E → Fin 3 → ℝ) (x : E) : Fin 3 → ℝ :=
   ![(R x)⁻¹ * along Vθ (fun y => a y 2) x - along Vz (fun y => a y 1) x,
@@ -76,6 +79,7 @@ theorem curlLinear_rotation (L : Space →L[ℝ] Space) (θ : ℝ) :
       -((L (EuclideanSpace.single 0 1)) 1 - (L (EuclideanSpace.single 1 1)) 0) *
         Real.cos_sq_add_sin_sq θ
 
+/-- Cylindrical spatial curl, constructed using `AxisymmetricResidual.pack`. -/
 noncomputable def cylindricalSpatialCurl (a : Space → Space) (q : Space) : Space :=
   AxisymmetricResidual.pack
     (CylindricalResidual.dCoord 1 a q 2 / q 0 - CylindricalResidual.dCoord 2 a q 1)
@@ -145,8 +149,11 @@ theorem cylindricalCurl_pull {Γ : E → F} {R : F → ℝ} {r : E → ℝ}
   have hrc : (r x : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hr
   ext i
   fin_cases i <;>
-    simp [CurlClassBounds.cylindricalCurl, Pi.smul_apply, smul_eq_mul, h1, h2, h3,
-      hR, Complex.real_smul] <;> (try field_simp [hlc, hrc])
+    simp only [CurlClassBounds.cylindricalCurl, Fin.isValue, Pi.smul_apply, smul_eq_mul, h2,
+        Complex.ofReal_one, mul_one, Complex.real_smul, Complex.ofReal_inv, h3, h1, Fin.zero_eta,
+            Matrix.cons_val_zero, hR, mul_inv_rev, Complex.ofReal_mul, Fin.mk_one,
+                Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
+        <;> (try field_simp [hlc, hrc])
 
 theorem phaseNormal_pull {Γ : E → F} {R : F → ℝ} {r : E → ℝ}
     {Vr Vθ Vz : F → F} {Sr Sθ Sz : E → E} {x : E} {l : ℝ}
@@ -280,9 +287,11 @@ theorem realVector_differentiableAt {a : E → ComplexVector} {x : E}
 
 namespace ScaledGraph
 
+/-- Complex potential, given by `(c : ℂ) • B (G.map z)`. -/
 noncomputable def complexPotential (G : ScaledGraph) (c : ℝ) (B : Cylinder → ComplexVector)
     (z : SpaceTime) : ComplexVector := (c : ℂ) • B (G.map z)
 
+/-- Real potential, defined pointwise by `realVector (complexPotential G c B z)`. -/
 noncomputable def realPotential (G : ScaledGraph) (c : ℝ) (B : Cylinder → ComplexVector) :
     VelocityField := fun z => realVector (complexPotential G c B z)
 
@@ -320,6 +329,7 @@ end ScaledGraph
 
 /-! Coordinate reassociation and smooth cutoffs. -/
 
+/-- Reindex vector, given by `e.symm (V (e x))`. -/
 noncomputable def reindexVector (e : E ≃L[ℝ] F) (V : F → F) (x : E) : E :=
   e.symm (V (e x))
 
@@ -394,12 +404,15 @@ theorem cylindricalCurl_congr {R : E → ℝ} {Vr Vθ Vz : E → E}
     exact congrArg (fun L : E →L[ℝ] ℂ => L (V x)) (hcomp i).fderiv_eq
   simp only [CurlClassBounds.cylindricalCurl, hD, hAB.eq_of_nhds]
 
+/-- Radius continuous linear map as an element of `Cylinder →L[ℝ] ℝ`. -/
 noncomputable def radiusCLM : Cylinder →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ (PhysicalResidualBridge.Plane × PhysicalResidualBridge.Plane)).comp
     (ContinuousLinearMap.fst ℝ PhysicalResidualBridge.Lift ℝ)
 
 namespace ScaledGraph
 
+/-- Radial curve, given by `((1, ((0, 0), (G.frequency * GraphCalculus.radialSpeed G.exponent r)
+• G.radialVector)), 0)`. -/
 noncomputable def radialCurve (G : ScaledGraph) (r : ℝ) : Cylinder :=
   ((1, ((0, 0), (G.frequency * GraphCalculus.radialSpeed G.exponent r) • G.radialVector)), 0)
 
@@ -546,7 +559,7 @@ theorem referencePotential_eq_on {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ)
       v z = Q ^ (-CoordinateAlgebra.A h) • a ((commonGraph Q h k).map z)) :
     EqOn (referencePotential K Ψ v)
       (fun z => Q ^ (-h) • CurlClassBounds.vectorPotential L
-        PhysicalResidualBridge.ScaledGraph.radius
+          PhysicalResidualBridge.ScaledGraph.radius
         (commonGraph Q h k).radial PhysicalResidualBridge.ScaledGraph.angular
         (commonGraph Q h k).axial Φ a ((commonGraph Q h k).map z))
       ((commonGraph Q h k).source U) := by
@@ -561,7 +574,7 @@ theorem referencePotential_eq_on {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ)
   unfold referencePotential
   rw [vectorPotential_congr K _ _ _ _
     (b := fun y => Q ^ (-CoordinateAlgebra.A h) • a ((commonGraph Q h k).map y)) he (hamplitude z
-      hz)]
+        hz)]
   exact commonGraph_vectorPotential_pull hQ h k hK hL hz.1
     ((hΦ.contDiffAt (hU.mem_nhds hz.2)).differentiableAt (by simp)) a
 
@@ -604,9 +617,9 @@ theorem reference_correctedWave {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ)
   have he := referencePotential_eq_on hQ h k hU hK hL hΦ a Ψ v hphase hamplitude
   have hre : (fun z : SpaceTime => A (z.1, CylindricalResidual.chart z.2)) =ᶠ[𝓝 (t, q)]
       (fun z => CylindricalResidual.frame (z.2 1) (ScaledGraph.realPotential G (Q ^ (-h)) B z)) :=
-        by
+          by
     filter_upwards [hAvalue, (G.source_open (Real.rpow_pos_of_pos hQ _) hU).mem_nhds hz] with z hAz
-      hzU
+        hzU
     rw [hAz, he hzU]
     congr 2
   have hc := commonGraph_physical_curl hQ h k hz.1 hB hA hre i
@@ -677,10 +690,13 @@ theorem realVector_smooth : ContDiff ℝ ∞ realVector := by
   simp only [realVector_apply]
   exact Complex.reCLM.contDiff.comp (ContinuousLinearMap.proj i : ComplexVector →L[ℝ] ℂ).contDiff
 
+/-- Polar input, given by `PolarCharts.chart a j (PhysicalGraphBounds.radialProjection z)`. -/
 noncomputable def polarInput (a : ℝ) (j : PolarCharts.Index) (z : SpaceTime) :
     PhysicalResidualBridge.Plane :=
   PolarCharts.chart a j (PhysicalGraphBounds.radialProjection z)
 
+/-- Polar coordinates, given by `(z.1, AxisymmetricResidual.pack (polarInput a j z).1
+(polarInput a j z).2 (z.2 2))`. -/
 noncomputable def polarCoordinates (a : ℝ) (j : PolarCharts.Index) (z : SpaceTime) : SpaceTime :=
   (z.1, AxisymmetricResidual.pack (polarInput a j z).1 (polarInput a j z).2 (z.2 2))
 
@@ -707,9 +723,10 @@ theorem cartesianPotential_smoothAt {a : ℝ} (ha : 0 < a) (j : PolarCharts.Inde
     (hB : ContDiffAt ℝ ∞ B (polarCoordinates a j z)) :
     ContDiffAt ℝ ∞ (cartesianPotential a j B) z :=
   (CylindricalResidual.contDiff_frame.contDiffAt.comp z (polarInput_smooth ha
-    j).contDiffAt.snd).clm_apply
+      j).contDiffAt.snd).clm_apply
     (realVector_smooth.contDiffAt.comp z (hB.comp z (polarCoordinates_smooth ha j).contDiffAt))
 
+/-- Valid cylindrical as an element of `Set SpaceTime`. -/
 noncomputable def validCylindrical (a : ℝ) (j : PolarCharts.Index) : Set SpaceTime :=
   {z | 0 < z.2 0 ∧
     (z.2 1 - PolarCharts.offset j) ∈ Ioo (-(Real.pi / 2)) (Real.pi / 2) ∧
@@ -719,7 +736,7 @@ theorem validCylindrical_open (a : ℝ) (j : PolarCharts.Index) :
     IsOpen (validCylindrical a j) :=
   (isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous).inter
     ((isOpen_Ioo.preimage ((PhysicalGraphBounds.coordinateProjection 1).continuous.sub
-      continuous_const)).inter
+        continuous_const)).inter
       ((PolarCharts.chartDomain_open a j).preimage
         (PolarCharts.polar_contDiff.continuous.comp
           ((PhysicalGraphBounds.coordinateProjection 0).continuous.prodMk
@@ -903,15 +920,15 @@ theorem globalCartesianPotential_smooth {a : ℝ} (ha : 0 < a)
     have hrad : 0 < PolarCharts.radius (PhysicalGraphBounds.radialProjection x) := by
       rw [← PolarCharts.radius_rotate j]
       exact PolarCharts.radius_pos_of_fst_pos hrot
-    have hz : 0 < (polarCoordinates a j x).2 0 := by rw [polarCoordinates_radius ha j hj]; exact
-      hrad
+    have hz : 0 < (polarCoordinates a j x).2 0 := by
+        rw [polarCoordinates_radius ha j hj]; exact hrad
     have hopen : IsOpen {z : SpaceTime | 0 < z.2 0} :=
       isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous
     have hs := cartesianPotential_smoothAt ha j (hB.contDiffAt (hopen.mem_nhds hz))
     exact hs.congr_of_eventuallyEq (globalCartesianPotential_germ_local ha B hper j hj)
   · have hnorm : ‖PhysicalGraphBounds.radialProjection x‖ ≤ a / 4 := by
       obtain ⟨j, hj⟩ := PolarCharts.exists_rotate_fst_ge (p := PhysicalGraphBounds.radialProjection
-        x) le_rfl
+          x) le_rfl
       by_contra hh
       apply hex
       exact ⟨j, lt_of_lt_of_le (lt_of_not_ge hh) hj⟩
@@ -919,13 +936,13 @@ theorem globalCartesianPotential_smooth {a : ℝ} (ha : 0 < a)
       have hb := PolarCharts.radius_le_two_norm (PhysicalGraphBounds.radialProjection x)
       linarith
     have hc : Continuous (fun y : SpaceTime => PolarCharts.radius
-      (PhysicalGraphBounds.radialProjection y)) :=
+        (PhysicalGraphBounds.radialProjection y)) :=
       PolarCharts.radius_continuous.comp PhysicalGraphBounds.radialProjection.continuous
     have hn : ∀ᶠ y in 𝓝 x, PolarCharts.radius (PhysicalGraphBounds.radialProjection y) < a :=
       (isOpen_lt hc continuous_const).mem_nhds hrad
     apply contDiffAt_const.congr_of_eventuallyEq
-    filter_upwards [hn] with y hy
-    exact globalCartesianPotential_zero ha hzero hy.le
+    · filter_upwards [hn] with y hy
+      exact globalCartesianPotential_zero ha hzero hy.le
 
 theorem globalCartesianPotential_zero_germ {a : ℝ} (ha : 0 < a)
     {B : SpaceTime → ComplexVector}
@@ -966,11 +983,11 @@ theorem globalCartesianPotential_smoothOn {a : ℝ} (ha : 0 < a)
       (hTimes.preimage continuous_fst).inter
         (isOpen_lt continuous_const (PhysicalGraphBounds.coordinateProjection 0).continuous)
     exact (cartesianPotential_smoothAt ha j (hB.contDiffAt (hopen.mem_nhds
-      hz))).congr_of_eventuallyEq
+        hz))).congr_of_eventuallyEq
       (globalCartesianPotential_germ_local ha B hper j hj)
   · have hnorm : ‖PhysicalGraphBounds.radialProjection x‖ ≤ a / 4 := by
       obtain ⟨j, hj⟩ := PolarCharts.exists_rotate_fst_ge (p := PhysicalGraphBounds.radialProjection
-        x) le_rfl
+          x) le_rfl
       by_contra hh
       exact hex ⟨j, lt_of_lt_of_le (lt_of_not_ge hh) hj⟩
     have hrad : PolarCharts.radius (PhysicalGraphBounds.radialProjection x) < a := by
@@ -978,6 +995,7 @@ theorem globalCartesianPotential_smoothOn {a : ℝ} (ha : 0 < a)
       linarith
     exact contDiffAt_const.congr_of_eventuallyEq (globalCartesianPotential_zero_germ ha hzero hrad)
 
+/-- Cartesian velocity, given by `SpatialCurl.spatialCurl (globalCartesianPotential a B)`. -/
 noncomputable def cartesianVelocity (a : ℝ) (B : SpaceTime → ComplexVector) : VelocityField :=
   SpatialCurl.spatialCurl (globalCartesianPotential a B)
 
@@ -1016,14 +1034,14 @@ theorem globalCartesianPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.In
     {z : SpaceTime} (hz : z ∈ validCylindrical a j) (hB : ContDiffAt ℝ ∞ B z) (i : Fin 3) :
     CylindricalResidual.frame (-(z.2 1))
       (SpatialCurl.spatialCurl (globalCartesianPotential a B) (z.1, CylindricalResidual.chart z.2))
-        i =
+          i =
       (CurlClassBounds.cylindricalCurl LinearWaveResidual.coordinateRadius
         (LinearWaveResidual.spaceDirection 0) (LinearWaveResidual.spaceDirection 1)
         (LinearWaveResidual.spaceDirection 2) B z i).re := by
   have hj : PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart z.2) ∈
       PolarCharts.chartDomain a j := by
     simpa [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart,
-      PolarCharts.polar] using hz.2.2
+        PolarCharts.polar] using hz.2.2
   rw [spatialCurl_congr (globalCartesianPotential_germ_local ha B hper j hj)]
   exact cartesianPotential_curl ha j hz hB i
 
@@ -1037,7 +1055,7 @@ theorem globalCartesianPotential_forward_germ {a : ℝ} (ha : 0 < a) (j : PolarC
   have hj : PhysicalGraphBounds.radialProjection (y.1, CylindricalResidual.chart y.2) ∈
       PolarCharts.chartDomain a j := by
     simpa [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart,
-      PolarCharts.polar] using hy.2.2
+        PolarCharts.polar] using hy.2.2
   rw [globalCartesianPotential_eq_local ha B hper j hj, cartesianPotential_forward ha j B hy]
 
 theorem globalCartesianPotential_smoothAt_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
@@ -1048,7 +1066,7 @@ theorem globalCartesianPotential_smoothAt_forward {a : ℝ} (ha : 0 < a) (j : Po
   have hj : PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart z.2) ∈
       PolarCharts.chartDomain a j := by
     simpa [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart,
-      PolarCharts.polar] using hz.2.2
+        PolarCharts.polar] using hz.2.2
   have hb : ContDiffAt ℝ ∞ B (polarCoordinates a j (z.1, CylindricalResidual.chart z.2)) := by
     rw [polarCoordinates_forward ha j hz]
     exact hB

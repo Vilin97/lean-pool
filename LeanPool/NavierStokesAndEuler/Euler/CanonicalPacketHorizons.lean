@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteLifespan
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVaryingHorizon
+import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
 
 /-!
 # Every packet horizon covers the canonical lifespan
@@ -18,6 +18,9 @@ datum had an evolution through any one of those horizons, comparison
 with the tail of the packet family would bound the divergent activation
 gradients. This applies the proved varying-horizon H³ stability theorem.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

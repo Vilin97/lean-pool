@@ -7,10 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCurlTensor
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+
+/-! Classical integration by parts and its extension to the actual homogeneous gradient space. -/
 
 @[expose] public section
 
-/-! Classical integration by parts and its extension to the actual homogeneous gradient space. -/
 
 noncomputable section
 
@@ -21,6 +24,8 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerVectorCalcu
   EulerMeanCurlTensor
 open scoped ContDiff
 
+/-- Partial test, given by `⟨vectorPartial (f : Space → Space) i, vectorPartial_smooth f
+f.smooth i, vectorPartial_compact f f.compact i⟩`. -/
 def partialTest (f : Test) (i : Fin 3) : Test :=
   ⟨vectorPartial (f : Space → Space) i, vectorPartial_smooth f f.smooth i,
     vectorPartial_compact f f.compact i⟩
@@ -28,6 +33,7 @@ def partialTest (f : Test) (i : Fin 3) : Test :=
 theorem test_memLp (f : Test) : MemLp (f : Space → Space) 2 volume :=
   f.smooth.continuous.memLp_of_hasCompactSupport f.compact
 
+/-- Test value, given by `(test_memLp f).toLp (f : Space → Space)`. -/
 def testValue (f : Test) : L2 := (test_memLp f).toLp (f : Space → Space)
 
 theorem testValue_ae (f : Test) : testValue f =ᵐ[volume] (f : Space → Space) :=
@@ -96,10 +102,10 @@ theorem scalar_partial_ibp (f g : Space → ℝ) (hf : ContDiff ℝ ∞ f)
   have h := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
     (μ := (volume : Measure Space)) (v := EuclideanSpace.single i 1)
     (((contDiff_partialDerivative f hf i).continuous.mul
-      hg.continuous).integrable_of_hasCompactSupport
+        hg.continuous).integrable_of_hasCompactSupport
       ((hfc.fderiv_apply ℝ (EuclideanSpace.single i 1)).mul_right))
     ((hf.continuous.mul (contDiff_partialDerivative g hg
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
       hfc.mul_right)
     ((hf.continuous.mul hg.continuous).integrable_of_hasCompactSupport hgc.mul_left)
     (fun x _ => (hf.differentiable (by simp)).differentiableAt)
@@ -132,11 +138,11 @@ theorem integral_curl_selfadjoint (f g : Test) :
     g.compact.comp_left (g := fun v : Space => v a) rfl
   have hl (a b i : Fin 3) : Integrable (fun x => partialDerivative (fc a) i x * gc b x) :=
     ((contDiff_partialDerivative _ (hfs a) i).continuous.mul (hgs
-      b).continuous).integrable_of_hasCompactSupport
+        b).continuous).integrable_of_hasCompactSupport
       ((hfc a).fderiv_apply ℝ (EuclideanSpace.single i 1)).mul_right
   have hr (a b i : Fin 3) : Integrable (fun x => fc a x * partialDerivative (gc b) i x) :=
     ((hfs a).continuous.mul (contDiff_partialDerivative _ (hgs b)
-      i).continuous).integrable_of_hasCompactSupport
+        i).continuous).integrable_of_hasCompactSupport
       (hfc a).mul_right
   have hleft (x : Space) : ⟪vectorCurl (f : Space → Space) x, (g : Space → Space) x⟫_ℝ =
       (partialDerivative (fc 2) 1 x * gc 0 x - partialDerivative (fc 1) 2 x * gc 0 x) +
@@ -178,7 +184,8 @@ theorem test_gradient_curl_pairing (f g : Test) :
   rw [laplacian_vectorCurl (g : Space → Space) g.smooth]
   exact congrArg Neg.neg (integral_curl_selfadjoint f (laplacianTest g)).symm
 
-/-- Distributional integration by parts survives passage to the closed homogeneous gradient space. -/
+/-- Distributional integration by parts survives passage to the closed homogeneous gradient space.
+-/
 theorem homogeneous_curl_pairing (u : homogeneousSpace) (g : Test) :
     ⟪u, homogeneousGradient (curlTest g)⟫_ℝ =
       -⟪curlTensor (u : GradientTensor), testValue (laplacianTest g)⟫_ℝ := by

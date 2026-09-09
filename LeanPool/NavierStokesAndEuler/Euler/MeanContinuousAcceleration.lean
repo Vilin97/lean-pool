@@ -6,12 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanPointwiseGramTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoordinatePath
-public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationGevrey
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanGramTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramGevrey
+import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientGevrey
+import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+import LeanPool.NavierStokesAndEuler.Euler.MeanPointwiseGramTranslation
 
 /-!
 # Actual spatial orbits of continuous mean acceleration
@@ -20,6 +22,9 @@ The ordinary solenoidal Gram inverse commutes with simultaneous translation
 of its data. This identifies the parameterized continuous solve with the
 genuine spatial orbit of the acceleration, including endpoint times.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,23 +38,49 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
   EulerTimeLpGramGevrey EulerGevrey
 open scoped ContDiff
 
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) := inferInstance
-private local instance : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
-private local instance : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,L2 →L[ℝ] L2) := inferInstance
-private local instance (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
-private local instance (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,solenoidalSpace →L[ℝ] L2) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanContinuousAcceleration1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanContinuousAcceleration2 : InnerProductSpace ℝ solenoidalSpace :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanContinuousAcceleration3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (solenoidalSpace →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanContinuousAcceleration4 : NormedSpace ℝ (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (L2 →L[ℝ] L2)` instance to shorten typeclass
+synthesis. -/
+local instance instMeanContinuousAcceleration5 : NormedAddCommGroup (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (L2 →L[ℝ] L2)` instance to shorten typeclass synthesis. -/
+local instance instMeanContinuousAcceleration6 : NormedSpace ℝ (L2 →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanContinuousAcceleration7 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ) T,L2
+    →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanContinuousAcceleration8 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ) T,L2 →L[ℝ] L2)
+    := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) T,solenoidalSpace →L[ℝ] L2)` instance
+to shorten typeclass synthesis. -/
+local instance instMeanContinuousAcceleration9 (T : ℝ) : NormedAddCommGroup C(Icc (0 : ℝ)
+    T,solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) T,solenoidalSpace →L[ℝ] L2)` instance to
+shorten typeclass synthesis. -/
+local instance instMeanContinuousAcceleration10 (T : ℝ) : NormedSpace ℝ C(Icc (0 : ℝ)
+    T,solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
-variable (T : ℝ) (F F₁ : C(Icc (0 : ℝ) T,L2 →L[ℝ] L2))
+variable (T : ℝ) (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
   (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
-  (v : C(Icc (0 : ℝ) T,solenoidalSpace)) (f : C(Icc (0 : ℝ) T,L2))
+  (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
+  (v : C(Icc (0 : ℝ) T, solenoidalSpace)) (f : C(Icc (0 : ℝ) T, L2))
 
 /-- The continuous mean acceleration constructed at each actual time. -/
 def meanAccelerationPath : C(Icc (0 : ℝ) T,solenoidalSpace) :=
@@ -96,14 +127,14 @@ theorem meanAccelerationPath_translation_gevrey
     (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
     (hstrong : 2*gramCost c CF (3*CF*(Cf+6*CF₁*Cv))*(Rc+1) ≤ R)
     (hFb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant Rc 0
-      n)
+        n)
     (hF₁b : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => translatePath T b F₁) a‖ ≤ CF₁*majorant Rc
-      0 n)
+        0 n)
     (d : ℕ)
     (hfb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => pathTranslation T b f) a‖ ≤ Cf*majorant R d
-      n)
+        n)
     (hvb : ∀ n a, ‖iteratedFDeriv ℝ n (fun b : Space => coordinatePathTranslation T b v) a‖ ≤
-      Cv*majorant R d n)
+        Cv*majorant R d n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space =>
       coordinatePathTranslation T b (meanAccelerationPath T F F₁ c hc hLower v f)) a‖ ≤

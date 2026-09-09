@@ -6,12 +6,11 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramAcceleration
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
-public import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanVelocityPressure
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEstimates
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1ContinuousDerivative
+import LeanPool.NavierStokesAndEuler.Euler.TimeH1Reconstruction
 
 /-!
 # Continuous acceleration and classical time derivatives for the mean inverse
@@ -21,6 +20,9 @@ strong equation constructs continuous coordinate acceleration and physical
 time derivative. The original AC paths have these derivatives at every
 interior time, and within the interval at both endpoints.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,9 +34,16 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerTimeLp
   EulerContinuousGramAcceleration
 
 -- Fix the Hilbert-space instances before forming continuous operator paths.
-private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
-private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
-private local instance : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) := inferInstance
+/-- Cache the standard `NormedAddCommGroup solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanClassicalTime1 : NormedAddCommGroup solenoidalSpace := inferInstance
+/-- Cache the standard `InnerProductSpace ℝ solenoidalSpace` instance to shorten typeclass
+synthesis. -/
+local instance instMeanClassicalTime2 : InnerProductSpace ℝ solenoidalSpace := inferInstance
+/-- Cache the standard `NormedAddCommGroup (solenoidalSpace →L[ℝ] L2)` instance to shorten
+typeclass synthesis. -/
+local instance instMeanClassicalTime3 : NormedAddCommGroup (solenoidalSpace →L[ℝ] L2) :=
+    inferInstance
 
 variable {T : ℝ} {hT : 0 ≤ T}
   {FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)}
@@ -54,7 +63,7 @@ def coordinateVelocityPath : C(Icc (0 : ℝ) T, solenoidalSpace) :=
 /-- This is a continuous representative of the actual L² coordinate velocity. -/
 theorem coordinateVelocityPath_ae :
     (s.velocityLp : ℝ → solenoidalSpace) =ᵐ[timeMeasure T] extendPath T hT s.coordinateVelocityPath
-      := by
+        := by
   filter_upwards [s.velocity_ae, ae_restrict_mem measurableSet_Icc] with t hv ht
   change s.velocityLp t = s.velocity (projIcc 0 T hT t)
   rw [projIcc_of_mem hT ht]
@@ -85,7 +94,7 @@ theorem gram_equation_ae :
     (f t) (s.acceleration t) (s.velocityLp t) (ht.trans hh.symm)
 
 variable (c : ℝ) (hc : 0 < c)
-  (hLower : ∀ t v, c*‖v‖^2 ≤ ‖solenoidalFrame T F t v‖^2)
+  (hLower : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
   (fC : C(Icc (0 : ℝ) T, L2))
 
 /-- Continuous coordinate acceleration constructed by the actual Gram inverse. -/
@@ -116,7 +125,7 @@ theorem classicalAcceleration_ae
       extendPath T hT (s.classicalAcceleration c hc hLower fC) :=
   accelerationPath_ae T (solenoidalFrame T F) (solenoidalFrame T F₁) c hc hLower hT
     s.velocityLp s.acceleration f s.coordinateVelocityPath fC s.coordinateVelocityPath_ae hf
-      s.gram_equation_ae
+        s.gram_equation_ae
 
 /-- Coordinate velocity has the classical acceleration at every time within the interval. -/
 theorem velocity_hasDerivWithinAt
@@ -132,7 +141,7 @@ def classicalPhysicalDerivative : C(Icc (0 : ℝ) T, L2) :=
   ⟨fun t => F₁ t (s.coordinateVelocityPath t : L2) +
       F t (s.classicalAcceleration c hc hLower fC t : L2),
     (F₁.continuous.clm_apply (solenoidalSpace.subtypeL.continuous.comp
-      s.coordinateVelocityPath.continuous)).add
+        s.coordinateVelocityPath.continuous)).add
       (F.continuous.clm_apply (solenoidalSpace.subtypeL.continuous.comp
         (s.classicalAcceleration c hc hLower fC).continuous))⟩
 
@@ -159,7 +168,7 @@ theorem physical_hasDerivWithinAt
   have hp := s.physical_h1 hF
   exact hasDerivWithinAt_of_continuous_representative T hT s.velocityDerivative
     (s.classicalPhysicalDerivative c hc hLower fC) (s.classicalPhysicalDerivative_ae c hc hLower fC
-      hf)
+        hf)
     s.physicalPath hp.1 hp.2.2 t
 
 /-- The physical time-derivative supremum pays only the two coefficient factors. -/
@@ -174,6 +183,6 @@ theorem classicalPhysicalDerivative_norm :
       (s.coordinateVelocityPath.norm_coe_le_norm t) (norm_nonneg _) (norm_nonneg F₁)))
     (((F t).le_opNorm _).trans (mul_le_mul (F.norm_coe_le_norm t)
       ((s.classicalAcceleration c hc hLower fC).norm_coe_le_norm t) (norm_nonneg _) (norm_nonneg
-        F)))
+          F)))
 
 end EulerMeanVariationalInverse.StrongMeanEvolution

@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import Mathlib.Tactic.Positivity.Finset
+
+/-! Compatible spatial maps commute with the genuine positive Gram inverse. -/
 
 @[expose] public section
 
-/-! Compatible spatial maps commute with the genuine positive Gram inverse. -/
 
 noncomputable section
 
@@ -44,8 +46,8 @@ theorem gram_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 
 theorem gramInverse_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
     (Q : U →L[ℝ] E) (R : V →L[ℝ] F)
-    (c : ℝ) (hc : 0 < c) (hQ : ∀ u, c*‖u‖^2 ≤ ‖Q u‖^2)
-    (d : ℝ) (hd : 0 < d) (hR : ∀ v, d*‖v‖^2 ≤ ‖R v‖^2)
+    (c : ℝ) (hc : 0 < c) (hQ : ∀ u, c * ‖u‖ ^ 2 ≤ ‖Q u‖ ^ 2)
+    (d : ℝ) (hd : 0 < d) (hR : ∀ v, d * ‖v‖ ^ 2 ≤ ‖R v‖ ^ 2)
     (hforward : ∀ u, R (A u) = B (Q u))
     (hback : ∀ v, Q (A.adjoint v) = B.adjoint (R v)) (f : U) :
     gramInverse R d hd hR (A f) = A (gramInverse Q c hc hQ f) := by
@@ -59,8 +61,8 @@ theorem gramInverse_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
 coordinate map and physical map. -/
 theorem acceleration_intertwines (A : U →L[ℝ] V) (B : E →L[ℝ] F)
     (Q Q₁ : U →L[ℝ] E) (R R₁ : V →L[ℝ] F)
-    (c : ℝ) (hc : 0 < c) (hQ : ∀ u, c*‖u‖^2 ≤ ‖Q u‖^2)
-    (d : ℝ) (hd : 0 < d) (hR : ∀ v, d*‖v‖^2 ≤ ‖R v‖^2)
+    (c : ℝ) (hc : 0 < c) (hQ : ∀ u, c * ‖u‖ ^ 2 ≤ ‖Q u‖ ^ 2)
+    (d : ℝ) (hd : 0 < d) (hR : ∀ v, d * ‖v‖ ^ 2 ≤ ‖R v‖ ^ 2)
     (hforward : ∀ u, R (A u) = B (Q u))
     (hforward₁ : ∀ u, R₁ (A u) = B (Q₁ u))
     (hback : ∀ v, Q (A.adjoint v) = B.adjoint (R v)) (f : E) (v : U) :

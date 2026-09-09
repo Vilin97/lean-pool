@@ -6,15 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricHeatTail
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
-public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingDilation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HeatedOutgoing
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
+import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
 
 /-!
 # The renormalized angular moment and physical axial viscosity
@@ -23,6 +18,9 @@ The nonintegrable reference power is independent of physical axial position.
 It is subtracted before integration. Local constancy of the exterior heat
 carrier supplies compact support for every axial derivative of the difference.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,6 +34,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 
 /-! ## Smooth integrals of locally uniformly supported differences -/
 
+/-- Parameter jet, given by `iteratedDeriv n (fun z => F (z, p.2)) p.1`. -/
 noncomputable def parameterJet (F : ℝ × ℝ → ℝ) (n : ℕ) (p : ℝ × ℝ) : ℝ :=
   iteratedDeriv n (fun z => F (z, p.2)) p.1
 
@@ -80,7 +79,7 @@ theorem supported_locally_dominated {F : ℝ × ℝ → ℝ} (hF : ContDiff ℝ 
   let bound : ℝ → ℝ := (Icc (0 : ℝ) B).indicator (fun _ => max C 0)
   have hb : Integrable bound (volume.restrict (Ioi 0)) := by
     have hc : IntegrableOn (fun _ : ℝ => max C 0) (Icc (0 : ℝ) B) :=
-      continuous_const.integrableOn_Icc
+        continuous_const.integrableOn_Icc
     exact (hc.integrable_indicator measurableSet_Icc).restrict
   refine ⟨ε / 2, by linarith, bound, hb, ?_⟩
   filter_upwards [ae_restrict_mem measurableSet_Ioi] with r hr
@@ -114,9 +113,11 @@ theorem iteratedDeriv_integral_supported {F : ℝ × ℝ → ℝ} (hF : ContDiff
     (Eventually.of_forall fun r => hF.comp (contDiff_id.prodMk contDiff_const))
     (parameterJet_measurable hF) (supported_locally_dominated hF hs) n z
 
+/-- Centered, given by `p.2 ^ 2 * (u p - u (z0, p.2))`. -/
 noncomputable def centered (u : ℝ × ℝ → ℝ) (z0 : ℝ) (p : ℝ × ℝ) : ℝ :=
   p.2 ^ 2 * (u p - u (z0, p.2))
 
+/-- Renormalized moment, given by `∫ r in Ioi (0 : ℝ), r ^ 2 * (u (z, r) - reference r)`. -/
 noncomputable def renormalizedMoment (u : ℝ × ℝ → ℝ) (reference : ℝ → ℝ) (z : ℝ) : ℝ :=
   ∫ r in Ioi (0 : ℝ), r ^ 2 * (u (z, r) - reference r)
 
@@ -195,12 +196,17 @@ theorem axial_viscosity_moment_zero {u : ℝ × ℝ → ℝ} {reference tail : �
 
 /-! ## The actual implicit physical coordinates -/
 
+/-- A, given by `1 / 2 + h`. -/
 noncomputable def A (h : ℝ) : ℝ := 1 / 2 + h
+/-- Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (τ, z)`. -/
 noncomputable def Q (h τ z : ℝ) : ℝ := SimilarityCoordinates.coordinateQ (2 * h) (τ, z)
+/-- Eta, given by `SimilarityCoordinates.coordinateEta (2 * h) (τ, z)`. -/
 noncomputable def eta (h τ z : ℝ) : ℝ := SimilarityCoordinates.coordinateEta (2 * h) (τ, z)
 
+/-- Reference power, given by `C * (r ^ 2 / 2) ^ (-A h)`. -/
 noncomputable def referencePower (h C r : ℝ) : ℝ := C * (r ^ 2 / 2) ^ (-A h)
 
+/-- Heat carrier, given by `C * RadialHeatProfile.radialProfile (1 + h) τ r`. -/
 noncomputable def heatCarrier (h C τ r : ℝ) : ℝ :=
   C * RadialHeatProfile.radialProfile (1 + h) τ r
 
@@ -321,9 +327,11 @@ theorem velocity_commonExterior {h τ C B : ℝ}
   rw [velocity, he _ (eta_mem hh hh1 hτ y) _ hR]
   exact heatCarrier_scaling h C hq (hBz.trans_le hr) (diffusion_identity hh hh1 hτ y)
 
+/-- Radial difference, given by `r ^ 2 * (F (r, eta) - referencePower h C r)`. -/
 noncomputable def radialDifference (h C : ℝ) (F : ℝ × ℝ → ℝ) (eta r : ℝ) : ℝ :=
   r ^ 2 * (F (r, eta) - referencePower h C r)
 
+/-- Profile moment, given by `∫ r in Ioi (0 : ℝ), radialDifference h C F eta r`. -/
 noncomputable def profileMoment (h C : ℝ) (F : ℝ × ℝ → ℝ) (eta : ℝ) : ℝ :=
   ∫ r in Ioi (0 : ℝ), radialDifference h C F eta r
 
@@ -347,8 +355,8 @@ theorem profileMoment_integrable_physical {h τ C : ℝ} (hh : 0 < h) (hh1 : h <
       (r / Real.sqrt (Q h τ z))) (Ioi 0) := by
     simpa only [div_eq_mul_inv, zero_mul] using
       (integrableOn_Ioi_comp_mul_right_iff (radialDifference h C F (eta h τ z)) 0
-        (inv_pos.mpr (Real.sqrt_pos.mpr hq))).mpr (by simpa only [zero_mul] using hi _ (eta_mem hh
-          hh1 hτ z))
+        (inv_pos.mpr (Real.sqrt_pos.mpr hq))).mpr (by
+            simpa only [zero_mul] using hi _ (eta_mem hh hh1 hτ z))
   apply (hc.const_mul (Q h τ z * Q h τ z ^ (-A h))).congr
   filter_upwards with r
   exact (physical_difference_scaling hh hh1 hτ C F z r).symm
@@ -484,10 +492,10 @@ theorem radialDifference_integrable {h C B : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     rw [Real.norm_eq_abs, radialDifference, he eta hη r hr.le]
     exact weighted_heat_difference_bound hh hν (hB.trans hr) C
   apply ((radialDifference_integrable_near_axis hh1 hF hη).union hout).mono_set
-  intro r hr
-  by_cases hb : r ≤ B
-  · exact Or.inl ⟨hr.le, hb⟩
-  · exact Or.inr (lt_of_not_ge hb)
+  · intro r hr
+    by_cases hb : r ≤ B
+    · exact Or.inl ⟨hr.le, hb⟩
+    · exact Or.inr (lt_of_not_ge hb)
 
 theorem physical_axial_viscosity_moment_zero {h τ C B : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ) (hB : 0 < B)
@@ -525,7 +533,7 @@ theorem squareHalf_injective : InjOn (fun r : ℝ => r ^ 2 / 2) (Ioi 0) := by
   linarith
 
 theorem squareHalf_derivative (r : ℝ) : HasDerivAt (fun r : ℝ => r ^ 2 / 2) r r := by
-  convert! ((hasDerivAt_id r).pow 2).div_const 2 using 1 ; simp
+  convert! ((hasDerivAt_id r).pow 2).div_const 2 using 1; simp
 
 theorem profileMoment_eq_X_integral (h C : ℝ) (F : ℝ × ℝ → ℝ) (eta : ℝ) :
     profileMoment h C F eta =
@@ -545,6 +553,7 @@ theorem profileMoment_eq_X_integral (h C : ℝ) (F : ℝ × ℝ → ℝ) (eta : 
   unfold radialDifference referencePower
   ring
 
+/-- X moment, given by `∫ X in Ioi (0 : ℝ), Real.sqrt (2 * X) * (E (X, eta) - C * X ^ (-A h))`. -/
 noncomputable def xMoment (h C : ℝ) (E : ℝ × ℝ → ℝ) (eta : ℝ) : ℝ :=
   ∫ X in Ioi (0 : ℝ), Real.sqrt (2 * X) * (E (X, eta) - C * X ^ (-A h))
 
@@ -559,9 +568,12 @@ theorem profileMoment_eq_xMoment (h C : ℝ) {F E : ℝ × ℝ → ℝ}
   rw [hFE _ (Real.sqrt_pos.mpr (mul_pos (by norm_num) hX)) eta hη,
     Real.sq_sqrt (show 0 ≤ 2 * X from mul_nonneg (by norm_num) hX.le), show 2 * X / 2 = X by ring]
 
+/-- Profile velocity, given by `Q h τ p.1 ^ (-A h) * E (p.2 ^ 2 / (2 * Q h τ p.1), eta h τ
+p.1)`. -/
 noncomputable def profileVelocity (h τ : ℝ) (E : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Q h τ p.1 ^ (-A h) * E (p.2 ^ 2 / (2 * Q h τ p.1), eta h τ p.1)
 
+/-- U theta, given by `profileVelocity h (1 - t) E (z, r)`. -/
 noncomputable def uTheta (h : ℝ) (E : ℝ × ℝ → ℝ) (t r z : ℝ) : ℝ :=
   profileVelocity h (1 - t) E (z, r)
 
@@ -611,9 +623,9 @@ theorem physical_axial_viscosity_zero_of_X_profile {h τ C T : ℝ}
         RadialHeatProfile.profile (1 + h) (2 * (1 - eta ^ 2) / X))
     (hm : ∀ eta ∈ Ioo (-1 : ℝ) 1, xMoment h C E eta = 0) (z : ℝ) :
     IntegrableOn (fun r => r ^ 2 * iteratedDeriv 2 (fun y => profileVelocity h τ E (y, r)) z) (Ioi
-      0) ∧
+        0) ∧
       (∫ r in Ioi (0 : ℝ), r ^ 2 * iteratedDeriv 2 (fun y => profileVelocity h τ E (y, r)) z) = 0
-        := by
+          := by
   have hrad := radial_exterior_of_X_exterior hT hFE he
   have hmF : ∀ eta ∈ Ioo (-1 : ℝ) 1, profileMoment h C F eta = 0 := by
     intro eta hη
@@ -642,7 +654,7 @@ theorem uTheta_axial_viscosity_integral {h t C T : ℝ}
     (∫ r in Ioi (0 : ℝ), r ^ 2 * deriv (deriv (uTheta h E t r)) z) = 0 := by
   unfold uTheta
   simpa only [show 2 = 1 + 1 from rfl, iteratedDeriv_succ, iteratedDeriv_one, iteratedDeriv_zero]
-    using
+      using
     (physical_axial_viscosity_zero_of_X_profile hh hh1 (sub_pos.mpr ht) hT hF hFE he hm z).2
 
 theorem uTheta_eq_similarity_pullback (h : ℝ) (E : ℝ × ℝ → ℝ) (t r z : ℝ) :
@@ -701,6 +713,7 @@ theorem exterior_second_derivative_zero {u : ℝ × ℝ → ℝ} {tail : ℝ →
 
 /-! ## The reference normalization of the constructed outgoing schedule -/
 
+/-- Outgoing power amplitude, given by `OutgoingTail.powerConstant P.data * XR ^ A P.data.h`. -/
 noncomputable def outgoingPowerAmplitude (P : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
   OutgoingTail.powerConstant P.data * XR ^ A P.data.h
 
@@ -737,6 +750,7 @@ theorem xMoment_eq_outgoing_reference (P : OutgoingProfile.Profile) {XR : ℝ} (
   rw [outgoing_powerH P hXR hX]
   ring
 
+/-- Heat threshold, given by `OutgoingDilation.switchRadius P XR * Real.exp 3`. -/
 noncomputable def heatThreshold (P : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
   OutgoingDilation.switchRadius P XR * Real.exp 3
 
@@ -797,7 +811,7 @@ theorem heated_nominal_axial_viscosity (P : OutgoingProfile.Profile)
     exact w.renormalized_zero eta ⟨hη.1.le, hη.2.le⟩
   unfold uTheta
   simpa only [show 2 = 1 + 1 from rfl, iteratedDeriv_succ, iteratedDeriv_one, iteratedDeriv_zero]
-    using
+      using
     physical_axial_viscosity_zero_of_X_profile P.data.h_pos hh1 (sub_pos.mpr ht)
       hT hF hFE he hm z
 

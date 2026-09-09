@@ -7,14 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBridge
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
 
 /-!
 The actual scaled velocity supplies the first two equations and the scalar
 flux equation used in amplification.  Only the first two transport rows are
 relevant; the auxiliary third row in the scalar estimate is filled explicitly.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -73,15 +78,15 @@ theorem scaledVelocity_firstTwo_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
     (hm : HasDerivWithinAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hv : HasDerivWithinAt v (-B (v (physicalTime t₀ a ε τ)) +
-      (2*⟪m (physicalTime t₀ a ε τ),B (v (physicalTime t₀ a ε τ))⟫_ℝ /
-        ‖m (physicalTime t₀ a ε τ)‖^2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
+      (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
+        ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
     (hw : HasDerivWithinAt w (-M (w (physicalTime t₀ a ε τ)) +
-      (2*⟪r (physicalTime t₀ a ε τ),M (w (physicalTime t₀ a ε τ))⟫_ℝ /
-        ‖r (physicalTime t₀ a ε τ)‖^2) • r (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
+      (2 * ⟪r (physicalTime t₀ a ε τ), M (w (physicalTime t₀ a ε τ))⟫_ℝ /
+        ‖r (physicalTime t₀ a ε τ)‖ ^ 2) • r (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
     (hm0 : m (physicalTime t₀ a ε τ) ≠ 0) (hv0 : v (physicalTime t₀ a ε τ) ≠ 0)
-    (hmv : ⟪m (physicalTime t₀ a ε τ),v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hr0 : r (physicalTime t₀ a ε τ) ≠ 0)
-    (hrw : ⟪r (physicalTime t₀ a ε τ),w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
+    (hrw : ⟪r (physicalTime t₀ a ε τ), w (physicalTime t₀ a ε τ)⟫_ℝ = 0)
     (hN : scaledRay m v r s₀ t₀ a ε τ 2 ≠ 0) :
     let R := scaledRay m v r s₀ t₀ a ε τ
     let V := scaledVelocity m v w t₀ a ε τ

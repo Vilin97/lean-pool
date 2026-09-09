@@ -8,18 +8,22 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressure
 public import LeanPool.NavierStokesAndEuler.Euler.CanonicalGraphPotential
-public import LeanPool.NavierStokesAndEuler.Euler.CommonPressureRepresentative
+public import LeanPool.NavierStokesAndEuler.Euler.GraphPressurePotential
+import LeanPool.NavierStokesAndEuler.Euler.CommonPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+
+/-! Canonical smooth pressure reconstruction for the generic finite-solution assembly. -/
 
 @[expose] public section
 
-/-! Canonical smooth pressure reconstruction for the generic finite-solution assembly. -/
 
 noncomputable section
 
 namespace EulerCorrectionAssembly
 
 open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
-  EulerAllOrderCorrectionData
+    EulerAllOrderCorrectionData
   EulerMetricTransport EulerSmoothPressureRepresentative EulerSobolevPointEvaluation
   EulerSobolevJointEvaluation EulerGraphPressurePotential EulerCanonicalGraphPotential
 
@@ -28,7 +32,8 @@ open scoped ContDiff
 variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
-/-- Bounded evaluation of the actual finite pressure fixes a canonical common pressure representative. -/
+/-- Bounded evaluation of the actual finite pressure fixes a canonical common pressure
+representative. -/
 def FiniteFamily.pointPressure (F : FiniteFamily period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 6)
@@ -48,9 +53,10 @@ theorem FiniteFamily.pointPressure_joint_continuous (F : FiniteFamily period hT 
     ((restrictOperator period (by omega : 3 ≤ 6)).compLeftContinuous ℝ (Icc (0 : ℝ) T)
       (F.signedPressurePath period 6 le_rfl))
 
-/-- Proved pressure coherence supplies spatial smoothness of the canonical pressure representative. -/
+/-- Proved pressure coherence supplies spatial smoothness of the canonical pressure representative.
+-/
 theorem FiniteFamily.pointPressure_smooth (F : FiniteFamily period hT A) (C : ComparisonData period
-  hT A)
+    hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) :
     ContDiff ℝ ∞ (localFieldLift period (F.pointPressure period t) x) := by
   obtain ⟨g, hg, ha⟩ := exists_smooth_representative period (F.commonPressure period t)
@@ -71,9 +77,10 @@ theorem FiniteFamily.graphPressure_joint_continuous (F : FiniteFamily period hT 
   ((F.pointPressure_joint_continuous period).comp
     (continuous_fst.prodMk
       ((EulerCommonPressureRepresentative.cylinderGraph_continuous period k A.direction).comp
-        continuous_snd))).const_smul A.κ
+          continuous_snd))).const_smul A.κ
 
-/-- The actual common pressure has a genuine smooth scalar potential on each reciprocal-frequency graph. -/
+/-- The actual common pressure has a genuine smooth scalar potential on each reciprocal-frequency
+graph. -/
 theorem FiniteFamily.graphPressure_has_potential (F : FiniteFamily period hT A)
     (C : ComparisonData period hT A) (k : ℝ) (hk : k * A.κ = 1) (t : Icc (0 : ℝ) T) :
     ∃ q : Vector3 → ℝ, ContDiff ℝ ∞ q ∧
@@ -94,7 +101,7 @@ theorem FiniteFamily.normalizedGraphPotential_zero (F : FiniteFamily period hT A
 
 /-- The normalized scalar pressure is jointly continuous, including both endpoint time slices. -/
 theorem FiniteFamily.normalizedGraphPotential_joint_continuous (F : FiniteFamily period hT A) (k :
-  ℝ) :
+    ℝ) :
     Continuous (F.normalizedGraphPotential period k).uncurry :=
   radialPotential_joint_continuous _ (F.graphPressure_joint_continuous period k)
 

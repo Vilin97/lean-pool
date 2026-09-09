@@ -8,10 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSobolevBoundedField
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothJetField
-public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPathMap
-public import Mathlib.LinearAlgebra.Multilinear.FiniteDimensional
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
+import Mathlib.LinearAlgebra.Multilinear.FiniteDimensional
 
 /-!
 # Actual bounded smooth coefficient paths from smooth L² jets
@@ -20,6 +18,9 @@ Finite-dimensional Sobolev evaluation supplies the uniform norm at every
 spatial order. The resulting coefficient path contains the original field
 and its actual derivative tensors; no bounded-derivative hypothesis is added.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 

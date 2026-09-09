@@ -9,8 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPrimaryCoherence
 
-@[expose] public section
-
 /-!
 # Full-chart regularity of the initial native copy coefficients
 
@@ -18,6 +16,9 @@ The copied fields use the actual flat radial attachment.  Their regularity
 holds across its boundary, rather than only inside the native estimate
 domain.  The stripped coefficients are independent of the angular variable.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,7 +28,9 @@ open Set Function Filter
 open CorrectionInitialization ActualPrimaryBounds
 open scoped ContDiff Topology BigOperators
 
+/-- Point: an abbreviation for `ActualPrimary.FullPoint`. -/
 abbrev Point := ActualPrimary.FullPoint
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
 
 variable {B N0 : ℕ}
@@ -108,7 +111,7 @@ theorem normal_eq_absolute (l : SignedLabel B N0) (n : ℕ) :
     (cutCoefficients l).normal fullStrip (directions B) n = fun x =>
       ((1 / (ChartScales.carrier ActualPrimary.h n : ℝ)) * Real.sqrt (ChartScales.Q n)) •
         ActualPrimaryCoherence.absoluteNormal l.1 l.2 (ActualPrimaryCoherence.absoluteChart n x) :=
-          by
+            by
   rw [cutNormal_eq]
   funext x
   simpa only [ActualPrimary.piece, fullStrip, strip, directions] using

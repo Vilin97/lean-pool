@@ -7,8 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateWitness
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.AxisPreservation
 
 /-!
 # Mixed candidate assembly from primitive axis zero germs
@@ -19,6 +18,9 @@ All raw estimates, finite residual estimates, shrinking support and finite
 endpoint-extension obligations remain unchanged.  The diagonal schedule, axis
 blow-up, infinite residual limits and candidate consequences are derived.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -110,6 +112,8 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     (H : NominalConeAssembly.Certificate W) {ld : ModulatedProfileAssembly.LoopData W}
     (v : ModulatedProfileAssembly.Witness ld)
 
+/-- Potential stages, given by `initializedSeries (TailGaugePotential.finalPotential H v upper
+bandFloor) initial stages`. -/
 noncomputable def potentialStages (upper : ℝ) (bandFloor : ℕ)
     (initial : VelocityField) (stages : ℕ → VelocityField) : ℕ → VelocityField :=
   initializedSeries (TailGaugePotential.finalPotential H v upper bandFloor) initial stages
@@ -166,7 +170,7 @@ theorem origin_blowup (upper : ℝ) (bandFloor : ℕ) {qbig : ℝ}
         (LocalAngularDiagonal.rawSeries D)) (t, 0)‖) (𝓝[<] 1) atTop := by
   apply (FinalSlowBase.axis_tendsto H v upper bandFloor).congr'
   exact (origin_eventually_base H v upper bandFloor hqbig initial stages D hInitial hStages
-    hs).symm.mono
+      hs).symm.mono
     (fun _ ht => congrArg norm ht)
 
 /-- This has the original finite-stage obligations, with arbitrary physical
@@ -220,7 +224,7 @@ theorem exists_candidate_witness_of_finite_stages (upper : ℝ) (bandFloor : ℕ
           (TimeLocalization.activatedPressure (SpatialLocalization.periodicPressure PSum)) forcing ∧
         Tendsto (fun t => PeriodicSobolev.derivativeH3Norm (fun x =>
           TimeLocalization.activatedVelocity (MixedPeriodicAssembly.periodicVelocity ASum BSum) (t,
-            x)))
+              x)))
           (𝓝[<] (1 : ℝ)) atTop ∧
         (∀ m : ℕ, ∀ K : ℝ, 0 ≤ K → ∃ C : ℝ, 0 < C ∧
           ∀ t : ℝ, 0 ≤ t → ∀ x : Space, ∀ directions : Fin m → Fin 4, ∀ j : Fin 3,
@@ -245,12 +249,12 @@ theorem exists_candidate_witness_of_finite_stages (upper : ℝ) (bandFloor : ℕ
     intro x hx hxz
     exact MixedDiagonalExtensions.initial_add_extension F.data.h_pos F.data.h_lt_half hqbig
       hInitial hx hxz (Classical.choice (TailGaugePotential.finalPotential_awayExtensions H v upper
-        bandFloor x hx))
+          bandFloor x hx))
   have hP0 : ∀ x : Space, x ≠ 0 → x 2 = 0 → Nonempty (OneSidedExtension (P 0) x) := by
     intro x hx hxz
     have h := MixedDiagonalExtensions.initial_add_extension F.data.h_pos F.data.h_lt_half hqbig
       hpInitial hx hxz (Classical.choice ((SlowBaseEndpoint.final_fields_awayExtensions H v upper
-        bandFloor).2 x hx))
+          bandFloor).2 x hx))
     simp only [P]
     exact h
   have hB0 : ∀ x : Space, x ≠ 0 → x 2 = 0 → Nonempty (OneSidedExtension (B 0) x) := by
@@ -276,7 +280,7 @@ theorem exists_candidate_witness_of_finite_stages (upper : ℝ) (bandFloor : ℕ
   have hcut := LocalAngularDiagonal.spatialCut_angularSum_divergence
     F.data.h_pos F.data.h_lt_half D hat ha0 hamin (hgap 0)
   have haxis := origin_blowup H v upper bandFloor hqbig initial stages D hInitialAxis hStagesAxis
-    hat
+      hat
   refine ⟨a, ⟨hal, hap, had, ham, hat, hgap, hs, hz⟩, ea, eb, ep, ?_⟩
   exact CandidateConsequences.mixed_exists_force_with_consequences
     (A := SolenoidalDiagonal.potentialSum ar (PhysicalWaveSum.physicalQ F.data.h) A)
@@ -316,7 +320,7 @@ theorem candidate_of_finite_stages (upper : ℝ) (bandFloor : ℕ)
   obtain ⟨a, _, ea, eb, ep, forcing, hc, _⟩ :=
     exists_candidate_witness_of_finite_stages H v upper bandFloor hqbig initial stages D
       pInitial pStages E hInitial hStages hDirect hpInitial hpStages eA eB eP hInitialAxis
-        hStagesAxis
+          hStagesAxis
   exact ⟨_, _, forcing, hc⟩
 
 end ActualBase

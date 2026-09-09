@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyCompatibility
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyData
+public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
+import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyCompatibility
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
+import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+
+/-! A common actual smooth lifted correction assembled from finite solves and proved uniqueness. -/
 
 @[expose] public section
 
-/-! A common actual smooth lifted correction assembled from finite solves and proved uniqueness. -/
 
 noncomputable section
 
@@ -53,7 +57,7 @@ theorem FiniteFamily.commonPath_divergence (F : FiniteFamily period hT A) (t : I
 /-- The common correction has an actual strong spatial jet at every derivative order. -/
 def FiniteFamily.commonJet (F : FiniteFamily period hT A) (C : ComparisonData period hT A)
     (n : ℕ) (t : Icc (0 : ℝ) T) : SpatialJet period standardDirection n (F.commonPath period t) :=
-      by
+        by
   rw [← F.value_common period C (n+6) (by omega) t]
   exact EulerH6Pressure.SpatialJet.restrict
     (toJet period (F.solution (n+6) (by omega) t)) n (by omega)
@@ -68,9 +72,9 @@ theorem FiniteFamily.commonPath_hasDerivAt (F : FiniteFamily period hT A)
 
 /-- Every other genuine finite-order correction realizes this same common field.
 Consequently bounds proved for any particular finite solver may be transferred to the assembled
-  solution. -/
+solution. -/
 theorem FiniteFamily.realizes_common (F : FiniteFamily period hT A) (C : ComparisonData period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
+    (q : ℕ) (hq : 6 ≤ q) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hi : u ⟨0, le_rfl, hT.le⟩ = 0)
     (hd : ∀ t, value period (u t) ∈ divergenceFreeSpace period A.κ A.direction)
     (hu : ∀ t (ht : t ∈ Ioo 0 T),
@@ -81,7 +85,8 @@ theorem FiniteFamily.realizes_common (F : FiniteFamily period hT A) (C : Compari
   rw [F.unique_at_order period C q hq u hi hd hu]
   exact F.value_common period C q hq t
 
-/-- Bounded H3 evaluation fixes a canonical actual pointwise representative of the common correction. -/
+/-- Bounded H3 evaluation fixes a canonical actual pointwise representative of the common
+correction. -/
 def FiniteFamily.pointField (F : FiniteFamily period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 7) (F.solution 6 le_rfl t))
@@ -89,7 +94,7 @@ def FiniteFamily.pointField (F : FiniteFamily period hT A)
 /-- The canonical common field is an actual representative of its L² path. -/
 theorem FiniteFamily.pointField_ae (F : FiniteFamily period hT A) (t : Icc (0 : ℝ) T) :
     (F.commonPath period t : LiftDomain period → Vector3) =ᵐ[liftMeasure period] F.pointField
-      period t :=
+        period t :=
   representative_ae period (restrictOperator period (by omega : 3 ≤ 7) (F.solution 6 le_rfl t))
 
 /-- The canonical common field is jointly continuous in time and the cylinder point. -/
@@ -99,9 +104,10 @@ theorem FiniteFamily.pointField_joint_continuous (F : FiniteFamily period hT A) 
     ((restrictOperator period (by omega : 3 ≤ 7)).compLeftContinuous ℝ (Icc (0 : ℝ) T)
       (F.solution 6 le_rfl))
 
-/-- Proved compatibility and all finite genuine jets make the canonical common field spatially smooth. -/
+/-- Proved compatibility and all finite genuine jets make the canonical common field spatially
+smooth. -/
 theorem FiniteFamily.pointField_smooth (F : FiniteFamily period hT A) (C : ComparisonData period hT
-  A)
+    A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) :
     ContDiff ℝ ∞ (localFieldLift period (F.pointField period t) x) := by
   obtain ⟨g, hg, ha⟩ := exists_smooth_representative period (F.commonPath period t)
@@ -113,7 +119,7 @@ theorem FiniteFamily.pointField_smooth (F : FiniteFamily period hT A) (C : Compa
 
 /-- The canonical smooth field has pointwise zero lifted divergence. -/
 theorem FiniteFamily.pointField_divergence (F : FiniteFamily period hT A) (C : ComparisonData
-  period hT A)
+    period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) :
     (∑ i : Fin 3, (fieldDerivative period (coordinateDirection A.κ A.direction i)
       (F.pointField period t) x) i) = 0 :=

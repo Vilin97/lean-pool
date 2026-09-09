@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryPolynomialCost
 
-@[expose] public section
-
 /-! The actual zeroth-order history costs are bounded by fixed scalar
 polynomials in the parent coefficient bounds and reciprocal horizon. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -19,6 +20,7 @@ namespace EulerTransverseHistoryBounds
 
 open EulerPacketParentMeanCoercivity
 
+/-- Scalar transport, given by `1+((2*(c⁻¹)^2*q^2*q1+c⁻¹*q1)*T+c⁻¹*q)`. -/
 def scalarTransport (T c q q1 : ℝ) : ℝ :=
   1+((2*(c⁻¹)^2*q^2*q1+c⁻¹*q1)*T+c⁻¹*q)
 
@@ -49,7 +51,7 @@ theorem historyDifferenceCost_le_parentEnvelope
   have hr : scalarTransport T c q q1 ≤ transportEnvelope C C1 := by
     unfold scalarTransport transportEnvelope
     calc
-      _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C1+gramInverseEnvelope C*C1)*1+
+      _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C1+gramInverseEnvelope C*C1)*1 +
           gramInverseEnvelope C*C) := by gcongr
       _ = _ := by ring
   apply (historyDifferenceCost_le_envelope T c Ti (gramInverseEnvelope C) q q1

@@ -8,10 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Normed.Group.Bounded
-
-@[expose] public section
 
 /-!
 # Quantitative stock bounds from actual field and history data
@@ -21,6 +17,9 @@ Lipschitz constants are derived from smoothness and compactness on sets with
 positive angular field and radius. No stock error estimate is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ModulatedStockBounds
@@ -28,7 +27,9 @@ namespace NavierStokes.ModulatedStockBounds
 open Set Filter ProfileHistories
 open scoped Topology ContDiff
 
+/-- Stock data: an abbreviation for `Fin 12 → ℝ`. -/
 abbrev StockData := Fin 12 → ℝ
+/-- Stock argument: an abbreviation for `Point × StockData`. -/
 abbrev StockArgument := Point × StockData
 
 /-- The field values followed by the actual five histories and their first
@@ -38,6 +39,7 @@ noncomputable def profileData {D : RadialDomain} (P : Profiles D) (p : Point) : 
     P.J p, parameterPartial P.J p, P.S p, parameterPartial P.S p,
     P.pressure p, parameterPartial P.pressure p]
 
+/-- Stock map as an element of `ℝ × ℝ`. -/
 noncomputable def stockMap (h : ℝ) (q : StockArgument) : ℝ × ℝ :=
   (ActivationStocks.stockOne h q.1.1 q.1.2 (q.2 0) (q.2 2) (q.2 3)
       (q.2 4) (q.2 5) (q.2 6) (q.2 7),
@@ -70,6 +72,7 @@ theorem profileData_smooth {D : RadialDomain} (P : Profiles D) :
   · exact P.pressure_smooth
   · exact parameterPartial_smooth D P.pressure_smooth
 
+/-- Stock domain, given by `{q | 0 < q.1.1 ∧ NaturalAxisData.L h q.1.2 ≠ 0 ∧ 0 < q.2 0}`. -/
 noncomputable def stockDomain (h : ℝ) : Set StockArgument :=
   {q | 0 < q.1.1 ∧ NaturalAxisData.L h q.1.2 ≠ 0 ∧ 0 < q.2 0}
 
@@ -121,6 +124,7 @@ theorem stockMap_smooth (h : ℝ) : ContDiffOn ℝ ∞ (stockMap h) (stockDomain
       ((hLc.mul hroot).mul (hz 0)) (mul_ne_zero (mul_ne_zero hL hs) hf)
   exact hA.prodMk hC
 
+/-- Data set, given by `Metric.closedBall 0 R ∩ {z | μ ≤ z 0}`. -/
 noncomputable def dataSet (μ R : ℝ) : Set StockData :=
   Metric.closedBall 0 R ∩ {z | μ ≤ z 0}
 
@@ -163,7 +167,7 @@ theorem stockMap_lipschitz_on_dataSet (h μ R : ℝ) (hμ : 0 < μ)
     have hqp : q.1 = p := hq.1
     have hqS : q ∈ S ×ˢ dataSet μ R := ⟨hqp.symm ▸ hp, hq.2⟩
     exact (((stockMap_smooth h).contDiffAt ((isOpen_stockDomain h).mem_nhds (hsub
-      hqS))).differentiableAt
+        hqS))).differentiableAt
       (by simp)).hasFDerivAt.hasFDerivWithinAt
   have hbound : ∀ q ∈ ({p} ×ˢ dataSet μ R), ‖fderiv ℝ (stockMap h) q‖ ≤ max C 0 := by
     intro q hq
@@ -193,9 +197,10 @@ theorem stockMap_small_perturbation (h μ B : ℝ) (hμ : 0 < μ)
     linarith
   have hzmem : z ∈ dataSet μ (B + 1) := by
     refine ⟨?_, ?_⟩
-    simpa only [Metric.mem_closedBall, dist_zero_right] using (hz.trans (by linarith : B ≤ B + 1))
-    change μ ≤ z 0
-    linarith
+    · simpa only [Metric.mem_closedBall, dist_zero_right] using
+        (hz.trans (by linarith : B ≤ B + 1))
+    · change μ ≤ z 0
+      linarith
   have hwmem : w ∈ dataSet μ (B + 1) := by
     refine ⟨?_, hw0⟩
     have hw : ‖w‖ ≤ ‖w - z‖ + ‖z‖ := by
@@ -281,7 +286,7 @@ theorem profile_stocks_from_history_bounds {D : RadialDomain} (Q : Profiles D) (
       0 < P.f p ∧
       |ActivationStocks.profileStockOne P h p - ActivationStocks.profileStockOne Q h p| ≤ C * ε ∧
       |ActivationStocks.profileStockTwo P h p - ActivationStocks.profileStockTwo Q h p| ≤ C * ε :=
-        by
+          by
   obtain ⟨δ, C, hδ, hC, hb⟩ := profile_stocks_lipschitz Q h hS hSD hX hL hpos
   refine ⟨δ, C, hδ, hC, ?_⟩
   intro D' P p hp hpD ε hε hεδ hf hU hH
@@ -322,15 +327,15 @@ theorem profile_stocks_rate {D D' : RadialDomain} (Q : Profiles D) (h : ℝ)
       |(P n).f p - Q.f p| ≤ Cdata / n ∧ |(P n).U p - Q.U p| ≤ Cdata / n ∧
       ∀ r : StressActivation.HistoryRow,
         |StressActivation.profileHistory (P n) r p - StressActivation.profileHistory Q r p| ≤ Cdata
-          / n ∧
+            / n ∧
         |parameterPartial (StressActivation.profileHistory (P n) r) p -
           parameterPartial (StressActivation.profileHistory Q r) p| ≤ Cdata / n) :
     ∃ N : ℕ, ∃ C : ℝ, 0 < N ∧ 0 ≤ C ∧ ∀ n : ℝ, (N : ℝ) ≤ n → ∀ p ∈ S,
       0 < (P n).f p ∧
       |ActivationStocks.profileStockOne (P n) h p - ActivationStocks.profileStockOne Q h p| ≤ C / n
-        ∧
+          ∧
       |ActivationStocks.profileStockTwo (P n) h p - ActivationStocks.profileStockTwo Q h p| ≤ C / n
-        := by
+          := by
   obtain ⟨δ, C, hδ, hC, hb⟩ := profile_stocks_from_history_bounds Q h hS hSD hX hL hpos
   obtain ⟨N, hN⟩ := exists_nat_gt (max 1 (max n₀ (Cdata / δ)))
   have hN1 : (1 : ℝ) < N := (le_max_left _ _).trans_lt hN

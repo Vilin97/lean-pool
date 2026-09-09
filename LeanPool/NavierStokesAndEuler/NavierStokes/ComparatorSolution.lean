@@ -6,10 +6,9 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorR3Theorem
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorTheorem
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorDefinitions
+import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorR3Theorem
+import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorTheorem
 
 /-!
 # Navier–Stokes Comparator submission: options (C) and (D)
@@ -17,6 +16,9 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorTheorem
 Expose the project's proof adapters under the reference theorem names.
 The adapters import `ComparatorDefinitions`, never the challenge module.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.Comparator
 

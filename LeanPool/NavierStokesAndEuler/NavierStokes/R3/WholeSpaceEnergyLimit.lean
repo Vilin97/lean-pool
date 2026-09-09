@@ -7,13 +7,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonGronwall
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedDifferenceEnergy
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.MeasureTheory.Measure.OpenPos
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
+import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonGronwall
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedDifferenceEnergy
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Removing the spatial energy cutoff
@@ -21,6 +19,9 @@ public import Mathlib.MeasureTheory.Measure.OpenPos
 At a fixed time, square integrability gives an integrable dominating function.
 This module removes the cutoff only after that hypothesis has been supplied.
 -/
+
+@[expose] public section
+
 
 
 noncomputable section

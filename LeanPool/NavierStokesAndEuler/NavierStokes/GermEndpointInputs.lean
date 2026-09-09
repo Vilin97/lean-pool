@@ -9,8 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualEndpointInputs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GermCandidateAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.InitialPhysicalData
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.OffplaneJetExtensions
 
 /-!
 # Endpoint inputs for physical fields assembled by germs
@@ -20,6 +19,9 @@ interior smoothness and actual derivative estimates enter the extension
 argument; a representation by a fixed-reference copy family is unnecessary.
 The zeroth potential and pressure retain the separately extended slow base.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -213,7 +215,7 @@ theorem initial_potential_jets (B N0 N : ℕ) (hN : 4 ≤ N)
     {qbig : ℝ} (hq : qbig ≤ ChartScales.Q N) :
     PhysicalJets h qbig
       (fun w => WA.vector w + (ActualMeanPhysicalData.initialStreamFamily B N0 N).angularField w)
-        := by
+          := by
   have ht := mean_angular_jets
     (ActualPhysicalStageBounds.actualInitialTemporalInput B N0 N hN)
     outgoing.data.h_pos outgoing.data.h_lt_half hq

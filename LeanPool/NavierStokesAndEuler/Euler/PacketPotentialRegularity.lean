@@ -6,13 +6,14 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPiolaPair
-public import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveSpatialRegularity
+import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveSpatialRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
+
+/-! Spatial smoothness of the source vector potential, derived from its literal integral. -/
 
 @[expose] public section
 
-/-! Spatial smoothness of the source vector potential, derived from its literal integral. -/
 
 noncomputable section
 
@@ -23,11 +24,13 @@ open EulerSmoothLimit EulerPacketCrossProduct EulerPacketAngularPotential
   EulerTransportDerivatives EulerMeanBoundary Set MeasureTheory InnerProductSpace
 open scoped ContDiff
 
+/-- Curl linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def curlLinear : (Space →L[ℝ] Space) →ₗ[ℝ] Space where
   toFun := curlMatrix
   map_add' := curlMatrix_add
   map_smul' := curlMatrix_smul
 
+/-- Curl operator, given by `curlLinear.toContinuousLinearMap`. -/
 def curlOperator : (Space →L[ℝ] Space) →L[ℝ] Space := curlLinear.toContinuousLinearMap
 
 @[simp] theorem curlOperator_apply (A : Space →L[ℝ] Space) : curlOperator A = curlMatrix A := rfl
@@ -61,7 +64,7 @@ theorem smooth_coveringPotential_pair_piola (P κ : ℝ) (hP : 0 ≤ P)
     (hA : ContDiff ℝ ∞ A) (z : LiftTangent)
     (hF : fderiv ℝ Ξ z.1 = (F z.1).toContinuousLinearMap)
     (hdet : (operatorMatrix (F z.1).toContinuousLinearMap).det = 1)
-    (htan : ⟪(F z.1).symm.toContinuousLinearMap.adjoint m₀,A z⟫_ℝ=0) :
+    (htan : ⟪(F z.1).symm.toContinuousLinearMap.adjoint m₀, A z⟫_ℝ = 0) :
     (F z.1).symm (A z+κ • coveringSlowCurl (F z.1).symm.toContinuousLinearMap
       (coveringPotential P (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀) A) z) =
       coveringCurl κ m₀ (coveringPullbackCovector Ξ

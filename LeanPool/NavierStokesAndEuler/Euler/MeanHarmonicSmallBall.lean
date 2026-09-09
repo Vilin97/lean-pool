@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicInterior
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+
+/-! A dimensional r³ localization estimate, derived from the interior bound. -/
 
 @[expose] public section
 
-/-! A dimensional r³ localization estimate, derived from the interior bound. -/
 
 noncomputable section
 
@@ -20,6 +22,7 @@ namespace EulerMeanHarmonic
 open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit
 open scoped ContDiff
 
+/-- Harmonic small ball constant, given by `(Real.pi * 4 / 3) * harmonicInteriorConstant ^ 2`. -/
 def harmonicSmallBallConstant : ℝ :=
   (Real.pi * 4 / 3) * harmonicInteriorConstant ^ 2
 
@@ -35,7 +38,7 @@ theorem volume_ball_toReal (r : ℝ) (hr : 0 ≤ r) :
 /-- The mass on a ball of radius r is bounded by r³ times the global L² mass. -/
 theorem harmonic_smallBall_energy (h : Space → ℝ) (hh : ContDiff ℝ ∞ h)
     (hLp : MemLp h 2 volume) (hharmonic : ∀ x ∈ Metric.ball 0 (1 : ℝ), Δ h x = 0)
-    (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2) :
+    (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1 / 2) :
     (∫ x in Metric.ball (0 : Space) r, h x ^ 2) ≤
       harmonicSmallBallConstant * r ^ 3 * lpNorm h 2 volume ^ 2 := by
   have hi : Integrable (fun x => h x ^ 2) volume :=

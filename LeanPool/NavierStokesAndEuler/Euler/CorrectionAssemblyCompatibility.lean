@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyData
+import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionCompatibility
+import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionUniqueness
+
+/-! Compatibility of independently supplied actual finite-order corrections, proved from their
+equations. -/
 
 @[expose] public section
 
-/-! Compatibility of independently supplied actual finite-order corrections, proved from their
-  equations. -/
 
 noncomputable section
 
@@ -25,7 +28,8 @@ open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace
 variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
-/-- Adjacent supplied finite corrections coincide after restriction, by actual inviscid uniqueness. -/
+/-- Adjacent supplied finite corrections coincide after restriction, by actual inviscid uniqueness.
+-/
 theorem FiniteFamily.compatible (F : FiniteFamily period hT A) (C : ComparisonData period hT A)
     (q : ℕ) (hq : 6 ≤ q) :
     (truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T)
@@ -65,10 +69,11 @@ theorem FiniteFamily.value_base (F : FiniteFamily period hT A) (C : ComparisonDa
       value period (F.solution 6 le_rfl t)) rfl
     (fun n hn ih => (F.value_succ period C n hn t).trans ih) q hq
 
-/-- Every other actual finite-order correction with zero trace and the same genuine PDE and divergence condition equals the supplied finite correction.
+/-- Every other actual finite-order correction with zero trace and the same genuine PDE and
+divergence condition equals the supplied finite correction.
 No comparison estimate or compatibility is assumed. -/
 theorem FiniteFamily.unique_at_order (F : FiniteFamily period hT A) (C : ComparisonData period hT A)
-    (q : ℕ) (hq : 6 ≤ q) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)))
+    (q : ℕ) (hq : 6 ≤ q) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (hi : u ⟨0, le_rfl, hT.le⟩ = 0)
     (hd : ∀ t, value period (u t) ∈ divergenceFreeSpace period A.κ A.direction)
     (hu : ∀ t (ht : t ∈ Ioo 0 T),

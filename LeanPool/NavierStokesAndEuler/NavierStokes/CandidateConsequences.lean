@@ -8,11 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MaximalLifespan
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicSobolev
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CompactForceDecay
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CandidateFromLimits
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedPeriodicAssembly
-
-@[expose] public section
 
 /-!
 # Consequences of the actual candidate fields
@@ -22,6 +18,9 @@ No candidate existence is asserted here.  The first results use precisely
 physical future half-space.  For the actual globally smooth constructed force
 these are proved equal to its ordinary full derivatives.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -67,7 +66,7 @@ theorem futureJet_periodic {f : VelocityField}
     rintro ⟨s,y⟩ hz
     simpa only [Prod.mk_add_mk, add_zero] using hp s hz.1 y i
   have hc := iteratedFDerivWithin_congr (𝕜 := ℝ) he (show (t, x) ∈ futureDomain from ⟨ht, mem_univ
-    _⟩) m
+      _⟩) m
   have hs := iteratedFDerivWithin_comp_add_right (𝕜 := ℝ) (f := f)
     (s := futureDomain) m (0, coordinateVector i) (t, x)
   rw [future_spatial_translate] at hs
@@ -173,7 +172,7 @@ theorem h3_tendsto_of_speed_tendsto {u : VelocityField} {p : PressureField} {f :
   have hpre : ∀ᶠ t in 𝓝[<] (1 : ℝ), t < 1 := self_mem_nhdsWithin
   filter_upwards [hx.eventually (eventually_ge_atTop (3 * M)), hpos, hpre] with t hlarge ht ht1
   have hslice := TimeLocalization.spatial_smooth_including_initial u h.velocity_smooth t ⟨ht.le,
-    ht1⟩
+      ht1⟩
   have hb := PeriodicSobolev.norm_le_three_derivativeH3Norm hslice
     (h.velocity_periodic t ⟨ht.le, ht1⟩) (x t)
   linarith
@@ -189,7 +188,7 @@ theorem mixed_activated_speed_tendsto {A v : VelocityField}
     filter_upwards [show Ioi (3 / 4 : ℝ) ∈ 𝓝[<] (1 : ℝ) from
       mem_nhdsWithin_of_mem_nhds (Ioi_mem_nhds (by norm_num))] with t ht
     rw [TimeLocalization.activatedVelocity_eq_late _ ht.le,
-      MixedPeriodicAssembly.periodicVelocity_origin]
+        MixedPeriodicAssembly.periodicVelocity_origin]
   exact haxis.congr' he.symm
 
 /-- The exact mixed assembly inputs produce one force carrying all the
@@ -208,7 +207,7 @@ theorem mixed_exists_force_with_consequences {A v : VelocityField} {p : Pressure
       (𝓝[<] (1 : ℝ)) atTop) :
     ∃ F : VelocityField,
       CandidateProperties (TimeLocalization.activatedVelocity
-        (MixedPeriodicAssembly.periodicVelocity A v))
+          (MixedPeriodicAssembly.periodicVelocity A v))
         (TimeLocalization.activatedPressure (SpatialLocalization.periodicPressure p)) F ∧
       ContDiff ℝ ∞ F ∧
       Consequences (TimeLocalization.activatedVelocity (MixedPeriodicAssembly.periodicVelocity A v))
@@ -224,7 +223,7 @@ theorem mixed_exists_force_with_consequences {A v : VelocityField} {p : Pressure
       (∀ n : ℕ, ∀ x : Space, iteratedFDeriv ℝ n F (1, x) =
         MixedPeriodicAssembly.boundaryLimits A v p eA ev ep x n) := by
   obtain ⟨F, hc, hF, hjet⟩ := MixedPeriodicAssembly.exists_candidate_force hA hv hp hd hz eA ev ep
-    haxis
+      haxis
   exact ⟨F, hc, hF, consequences_of_candidate hc,
     h3_tendsto_of_speed_tendsto hc (fun _ => 0) (mixed_activated_speed_tendsto haxis),
     full_forceMixed_decay hc hF, hjet⟩

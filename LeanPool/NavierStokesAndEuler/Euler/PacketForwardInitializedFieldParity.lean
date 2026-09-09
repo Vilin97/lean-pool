@@ -7,13 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfilesParity
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldParityAlgebra
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketReflection
+public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfilesParity
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParity
 
 /-! The literal zero-history initialized packet and its exact residual tail are odd
 as actual cylinder L² paths, before and after coordinate normalization. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -69,7 +75,7 @@ theorem forwardInitializedResidualField_odd (Cagree : SourceCoefficientAgreement
   intro t
   exact (ProfileRegularity.tailSumField M.T_pos G
     (sourceCoefficientData period M D (InitialData.zero period D) hTime) ha
-      κ).reflection_neg_of_raw_odd
+        κ).reflection_neg_of_raw_odd
     t (htail t)
 
 theorem forwardInitializedNormalizedResidualField_odd (Cagree : SourceCoefficientAgreement M D)
@@ -80,6 +86,6 @@ theorem forwardInitializedNormalizedResidualField_odd (Cagree : SourceCoefficien
     eM hSym hF hDM Cagree N hN k⁻¹ (inv_ne_zero (by linarith))
   exact ((h.multiply (sourceCoefficientData period M D (InitialData.zero period D) hTime).inverse
     (sourceCoefficientEven period M D (InitialData.zero period D) hF hDM).inverse).smul
-      k).changeTime hTime
+        k).changeTime hTime
 
 end EulerPacketTerminalDatum

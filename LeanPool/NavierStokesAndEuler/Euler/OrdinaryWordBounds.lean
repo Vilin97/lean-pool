@@ -7,12 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevL4
-public import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothSobolev
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
+import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Gevrey
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+
+/-! Fixed finite-order bounds for genuine ordinary L² derivative words. -/
 
 @[expose] public section
 
-/-! Fixed finite-order bounds for genuine ordinary L² derivative words. -/
 
 noncomputable section
 

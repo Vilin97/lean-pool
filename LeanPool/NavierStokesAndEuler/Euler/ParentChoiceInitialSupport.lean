@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceInitial
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
 
 /-! The actual chosen packet states preserve common compact initial
 support. The forward mean contribution is localized even when its
 boundary coefficient is nonzero. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,7 +26,7 @@ open Set EulerSmoothLimit EulerSpatialCutoffs EulerTransversePacketProvider
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T)
+  (D : Data U) (hTime : M.T = D.T)
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
 include hTime in
@@ -36,7 +39,7 @@ theorem forwardInitializedInitialMean_support (N : ℕ) (k : ℝ) :
 
 include hTime in
 theorem forwardInitializedInitial_common_support
-    (hS : D.support ⊆ Metric.closedBall 0 (1/2 : ℝ)) (N : ℕ) (k : ℝ) :
+    (hS : D.support ⊆ Metric.closedBall 0 (1 / 2 : ℝ)) (N : ℕ) (k : ℝ) :
     tsupport (forwardInitializedInitialHigh M D δ hδ ξ hs α N k) ⊆ Metric.closedBall 0 2 ∧
       tsupport (forwardInitializedInitialMean M D δ hδ ξ hs α N k) ⊆ Metric.closedBall 0 2 := by
   refine ⟨(forwardInitializedInitialHigh_support M D hTime δ hδ ξ hs α hS N k).trans ?_,
@@ -51,11 +54,11 @@ open Set EulerSmoothLimit EulerPacketTerminalDatum EulerPacketSourceFrequency
 
 theorem support_of_difference (f g : Space → Space) (R : ℝ)
     (hf : tsupport f ⊆ Metric.closedBall 0 R)
-    (hd : tsupport (g-f) ⊆ Metric.closedBall 0 R) :
+    (hd : tsupport (g - f) ⊆ Metric.closedBall 0 R) :
     tsupport g ⊆ Metric.closedBall 0 R := by
   have he : g=f+(g-f) := by ext x; simp only [Pi.add_apply,Pi.sub_apply]; abel_nf
   conv_lhs => rw [he]
-  exact (tsupport_add f (g-f)).trans (union_subset hf hd)
+  exact (tsupport_add f (g - f)).trans (union_subset hf hd)
 
 namespace GeometryForwardInput
 
@@ -81,19 +84,19 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (F : GeometryForwardChoice I S k hk nextEll hnext hnext1)
   (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
 
-theorem initial_support (hS : tsupport (fun x => S.evolution.velocity (0,x)) ⊆ Metric.closedBall 0
-  2) :
-    tsupport (fun x => (state I S k hk nextEll hnext hnext1 F hSym).evolution.velocity (0,x)) ⊆
+theorem initial_support (hS : tsupport (fun x => S.evolution.velocity (0, x)) ⊆ Metric.closedBall 0
+    2) :
+    tsupport (fun x => (state I S k hk nextEll hnext hnext1 F hSym).evolution.velocity (0, x)) ⊆
       Metric.closedBall 0 2 := by
   rw [state_velocity_initial I S k hk nextEll hnext hnext1 F hSym]
   have h := I.initial_support k
   exact (tsupport_add _ _).trans
     (union_subset hS ((tsupport_add _ _).trans (union_subset h.1 h.2)))
 
-theorem initial_compact (hS : tsupport (fun x => S.evolution.velocity (0,x)) ⊆ Metric.closedBall 0
-  2) :
+theorem initial_compact (hS : tsupport (fun x => S.evolution.velocity (0, x)) ⊆ Metric.closedBall 0
+    2) :
     HasCompactSupport (fun x => (state I S k hk nextEll hnext hnext1 F hSym).evolution.velocity
-      (0,x)) :=
+        (0, x)) :=
   (isCompact_closedBall (0 : Space) 2).of_isClosed_subset (isClosed_tsupport _)
     (initial_support I S k hk nextEll hnext hnext1 F hSym hS)
 
@@ -108,9 +111,9 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (F : GeometryJoinedChoice I S k hk nextEll hnext hnext1)
   (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
 
-theorem initial_support (hS : tsupport (fun x => S.evolution.velocity (0,x)) ⊆ Metric.closedBall 0
-  2) :
-    tsupport (fun x => (state I S k hk nextEll hnext hnext1 F hSym).evolution.velocity (0,x)) ⊆
+theorem initial_support (hS : tsupport (fun x => S.evolution.velocity (0, x)) ⊆ Metric.closedBall 0
+    2) :
+    tsupport (fun x => (state I S k hk nextEll hnext hnext1 F hSym).evolution.velocity (0, x)) ⊆
       Metric.closedBall 0 2 := by
   rw [state_velocity_initial I S k hk nextEll hnext hnext1 F hSym]
   have h := I.initial_support k

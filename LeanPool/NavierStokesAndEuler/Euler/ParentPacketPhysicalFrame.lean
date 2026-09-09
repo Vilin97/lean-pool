@@ -7,12 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketGeometryFrame
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketPhysicalCoefficients
 
 /-! The next source's center expansion follows from the actual physical
 velocity update. Odd particle displacements fix the origin, and the two
 literal velocity laws identify the source matrices there. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -39,12 +41,12 @@ theorem position_zero_of_odd
     linarith
   simp only [position,hz,zero_add]
 
-variable (N : Parent) (hTime : N.T=G.T)
+variable (N : Parent) (hTime : N.T = G.T)
   (u w : ℝ → Space → Space)
   (hu : ∀ (t : Icc (0 : ℝ) G.T) x, DifferentiableAt ℝ (u t) x)
   (hw : ∀ (t : Icc (0 : ℝ) N.T) x, DifferentiableAt ℝ (w t) x)
-  (hGvelocity : ∀ t x, G.velocity.field t x=u t (G.position t x))
-  (hNvelocity : ∀ t x, N.velocity.field t x=u t (N.position t x)+w t (N.position t x))
+  (hGvelocity : ∀ t x, G.velocity.field t x = u t (G.position t x))
+  (hNvelocity : ∀ t x, N.velocity.field t x = u t (N.position t x) + w t (N.position t x))
   (hGodd : ∀ t, Function.Odd (G.displacement.field t : Space → Space))
   (hNodd : ∀ t, Function.Odd (N.displacement.field t : Space → Space))
 
@@ -67,10 +69,10 @@ theorem center_update_of_odd (t : Icc (0 : ℝ) N.T) :
   exact fderiv_fun_add (hu tg 0) (hw t 0)
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (m : Space) (hm : ‖m‖=1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
+  (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m)
   (S : Set Space) (hS : IsCompact S)
   {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-  (mNew : Space) (hmNew : ‖mNew‖=1) (RNew : V ≃ₗᵢ[ℝ] referencePlane mNew)
+  (mNew : Space) (hmNew : ‖mNew‖ = 1) (RNew : V ≃ₗᵢ[ℝ] referencePlane mNew)
   (SNew : Set Space) (hSNew : IsCompact SNew)
 
 /-- Concrete old/new-parent factory. The source matrix split is derived
@@ -80,12 +82,12 @@ norm bounds, as used by the geometric induction. -/
 def geometryFrameOfPhysicalUpdate (τ : ℝ) (hτ : 0 ≤ τ)
     (η : U) (hη : η ≠ 0) (c CM CH K error : ℝ)
     (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
-    (hMK : CM ≤ K) (hHK : CM^2+CH ≤ K^2)
+    (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
     (hM : ∀ t ∈ Icc τ N.T, ‖G.centerStrain t‖ ≤ CM)
     (hH : ∀ t ∈ Icc τ N.T, ‖G.centerCurvature t‖ ≤ CH)
     (hpacket : ∀ t ∈ Icc τ N.T,
-      ‖fderiv ℝ (w t) 0-c • rankOne ℝ (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
-        error) :
+      ‖fderiv ℝ (w t) 0 - c • rankOne ℝ (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
+          error) :
     ParentFrame (N.transverseData mNew hmNew RNew SNew hSNew) τ :=
   G.geometryFrameOfCenterExpansion m hm R S hS
     (N.transverseData mNew hmNew RNew SNew hSNew) hTime τ hτ η hη w c CM CH K error

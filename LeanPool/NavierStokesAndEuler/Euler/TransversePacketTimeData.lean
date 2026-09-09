@@ -7,13 +7,16 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketData
-public import LeanPool.NavierStokesAndEuler.Euler.DeformationTimeInverse
 public import LeanPool.NavierStokesAndEuler.Euler.SourcePotentialTimePath
+import LeanPool.NavierStokesAndEuler.Euler.DeformationTimeInverse
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+/-! Time identities derived from the source deformation data, including the actual inverse and
+normal paths. -/
 
 @[expose] public section
 
-/-! Time identities derived from the source deformation data, including the actual inverse and
-  normal paths. -/
 
 noncomputable section
 
@@ -26,18 +29,44 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
 
-private local instance : NormedAddCommGroup (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) :=
-  inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) :=
-  inferInstance
-private local instance : NormedAddCommGroup (Space →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ (Space →ᵇ Space) := inferInstance
-private local instance : NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space) := inferInstance
-private local instance : NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketTimeData1 : NormedAddCommGroup (Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →L[ℝ] Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketTimeData2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketTimeData3 : NormedAddCommGroup (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketTimeData4 : NormedSpace ℝ (Space →ᵇ Space →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space)`
+instance to shorten typeclass synthesis. -/
+local instance instTransversePacketTimeData5 : NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space
+    →L[ℝ] Space) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space)` instance to
+shorten typeclass synthesis. -/
+local instance instTransversePacketTimeData6 : NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ]
+    Space) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (Space →ᵇ Space)` instance to shorten typeclass
+synthesis. -/
+local instance instTransversePacketTimeData7 : NormedAddCommGroup (Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (Space →ᵇ Space)` instance to shorten typeclass synthesis. -/
+local instance instTransversePacketTimeData8 : NormedSpace ℝ (Space →ᵇ Space) := inferInstance
+/-- Cache the standard `NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space)` instance to
+shorten typeclass synthesis. -/
+local instance instTransversePacketTimeData9 : NormedAddCommGroup C(Icc (0 : ℝ) D.T,Space →ᵇ Space)
+    := inferInstance
+/-- Cache the standard `NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space)` instance to shorten
+typeclass synthesis. -/
+local instance instTransversePacketTimeData10 : NormedSpace ℝ C(Icc (0 : ℝ) D.T,Space →ᵇ Space) :=
+    inferInstance
 
 /-- The derivative of the inverse is constructed from the original fields. -/
 def inverseDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) :=
@@ -56,7 +85,8 @@ def normalDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space) :=
     -((D.M.field t x).adjoint ((D.FInv.field t x).adjoint D.m₀))
   simp only [map_neg, adjoint_comp, neg_apply, comp_apply]
 
-/-- No differentiability of F⁻¹ is assumed: it follows from the actual inverse identities and F_t=MF. -/
+/-- No differentiability of F⁻¹ is assumed: it follows from the actual inverse identities and
+F_t=MF. -/
 theorem inverse_hasDerivWithinAt (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) (x : Space) :
     HasDerivWithinAt (fun r => extendPath D.T D.T_pos.le D.FInv.field r x)
       (extendPath D.T D.T_pos.le D.inverseDerivative t x) (Icc (0 : ℝ) D.T) t := by
@@ -137,22 +167,24 @@ theorem normalPathMap_norm :
     _ ≤ ‖A‖ := by simpa only [one_mul] using ((A t).norm_coe_le_norm x).trans (A.norm_coe_le_norm t)
 
 theorem inverseDerivative_bound (R CI CM : ℝ) (hR : 0 ≤ R) (hCI : 0 ≤ CI) (hCM : 0 ≤ CM)
-    (hI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ CI*majorant R 0 n)
-    (hM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.M.field) a‖ ≤ CM*majorant R 0 n)
+    (hI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ CI * majorant R 0
+        n)
+    (hM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.M.field) a‖ ≤ CM * majorant R 0 n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath D.inverseDerivative) a‖ ≤ (3*CI*CM)*majorant R 0
-      n := by
+        n := by
   rw [D.inverseDerivative_translation]
   exact neg_bound _ R (3*CI*CM) 0
     (pathComposition_bound _ _ D.FInv.translation_contDiff D.M.translation_contDiff
       R CI CM hR hCI hCM 0 0 hI hM) n a
 
 theorem normalDerivative_bound (R CI CM : ℝ) (hR : 0 ≤ R) (hCI : 0 ≤ CI) (hCM : 0 ≤ CM)
-    (hI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ CI*majorant R 0 n)
-    (hM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.M.field) a‖ ≤ CM*majorant R 0 n)
+    (hI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ CI * majorant R 0
+        n)
+    (hM : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.M.field) a‖ ≤ CM * majorant R 0 n)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath D.normalDerivative) a‖ ≤ (3*CI*CM)*majorant R 0 n
-      := by
+        := by
   rw [D.normalDerivative_translation]
   exact contraction_bound (mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀))
     D.normalPathMap_norm _ D.inverseDerivative_orbit R (3*CI*CM) hR (by positivity) 0

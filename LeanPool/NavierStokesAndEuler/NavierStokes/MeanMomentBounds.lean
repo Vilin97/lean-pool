@@ -6,12 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedRadialPrimitive
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PressureStream
-public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
 public import LeanPool.NavierStokesAndEuler.NavierStokes.IntegratedMeanBalances
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
 
 /-!
 # Actual slow moments of flat weighted mean fields
@@ -21,6 +17,9 @@ the actual derivatives of a supported mean field have global band bounds.
 Finite torus averaging and radial integration preserve these bounds.  All
 derivatives in this file are `iteratedFDeriv` of the actual integral.
 -/
+
+@[expose] public section
+
 
 namespace NavierStokes.MeanMomentBounds
 
@@ -251,6 +250,7 @@ section Torus
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Erase auxiliary X, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def eraseAuxX : PressureStream.Lift P →L[ℝ] PressureStream.Lift P where
   toFun x := (x.1, (x.2.1, (0, x.2.2.2)))
   map_add' := by intros; ext <;> simp
@@ -258,6 +258,7 @@ noncomputable def eraseAuxX : PressureStream.Lift P →L[ℝ] PressureStream.Lif
   cont := continuous_fst.prodMk (continuous_snd.fst.prodMk
     (continuous_const.prodMk continuous_snd.snd.snd))
 
+/-- Erase auxiliary Y, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def eraseAuxY : PressureStream.Lift P →L[ℝ] PressureStream.Lift P where
   toFun x := (x.1, (x.2.1, (x.2.2.1, 0)))
   map_add' := by intros; ext <;> simp
@@ -279,7 +280,9 @@ theorem norm_eraseAuxY_le : ‖eraseAuxY (P := P)‖ ≤ 1 := by
   simp only [one_mul, Prod.norm_def, norm_zero]
   exact max_le_max le_rfl (max_le_max le_rfl (max_le_max le_rfl (norm_nonneg _)))
 
+/-- Aux X, given by `(0, (0, (1, 0)))`. -/
 noncomputable def auxX : PressureStream.Lift P := (0, (0, (1, 0)))
+/-- Aux Y, given by `(0, (0, (0, 1)))`. -/
 noncomputable def auxY : PressureStream.Lift P := (0, (0, (0, 1)))
 
 @[simp] theorem eraseAuxX_add_smul (x : PressureStream.Lift P) (t : ℝ) :
@@ -290,6 +293,7 @@ noncomputable def auxY : PressureStream.Lift P := (0, (0, (0, 1)))
     eraseAuxY x + t • auxY = (x.1, (x.2.1, (x.2.2.1, t))) := by
   ext <;> simp [eraseAuxY, auxY]
 
+/-- Lifted torus average, given by `PressureStream.torusAverage f (x.1, x.2.1)`. -/
 noncomputable def liftedTorusAverage (f : PressureStream.Lift P → ℝ)
     (x : PressureStream.Lift P) : ℝ := PressureStream.torusAverage f (x.1, x.2.1)
 
@@ -336,6 +340,7 @@ theorem totalIntegral_zero_eq (f : ℝ × D → E) (x : ℝ × D) :
   simp only [add_zero]
   exact integral_add_left_eq_self (μ := volume) (fun r => f (r, x.2)) x.1
 
+omit [CompleteSpace E] in
 theorem GlobalBandJets.radialIntegral {ε S : ℕ → ℝ} {α a b : ℝ}
     {f : ℕ → ℝ × D → E} (hjets : GlobalBandJets ε S α f)
     (hf : ∀ n, ContDiff ℝ ∞ (f n))
@@ -356,6 +361,7 @@ section PressureMass
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
+/-- Lifted pressure mass, given by `PressureStream.pressureMass f x.2.1`. -/
 noncomputable def liftedPressureMass (f : PressureStream.Lift P → ℝ)
     (x : PressureStream.Lift P) : ℝ := PressureStream.pressureMass f x.2.1
 
@@ -396,6 +402,7 @@ theorem meanClass_pressureMass_lift
   exact (meanClass_globalBandJets ha hcL hcR ε S hε hεone hS hf hs hclass).liftedPressureMass
     hf hs hab.le
 
+/-- Insert slow, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def insertSlow : P →L[ℝ] PressureStream.Lift P where
   toFun p := (0, (p, (0, 0)))
   map_add' := by intros; ext <;> simp
@@ -444,6 +451,7 @@ theorem radialCoefficient_unweighted
   obtain ⟨C, _, hb⟩ := cutoff_finiteJet_bound (E := P) a b g hg m
   exact ⟨C, fun j hj x hx => hb j hj x ⟨hx.1.le, hx.2.le⟩⟩
 
+/-- Radial weighted, given by `x.1 ^ k * f x`. -/
 noncomputable def radialWeighted (k : ℕ) (f : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
   x.1 ^ k * f x
 

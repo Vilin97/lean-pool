@@ -9,10 +9,14 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpAccelerationForcing
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+
+/-! Actual projected acceleration in the same fixed Sobolev word blocks. -/
 
 @[expose] public section
 
-/-! Actual projected acceleration in the same fixed Sobolev word blocks. -/
 
 noncomputable section
 
@@ -36,11 +40,11 @@ theorem forcing_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i
     (hf : ContDiff ℝ ∞ f) (hv : ContDiff ℝ ∞ v)
     (Rc R C₀ C₁ Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (d : ℕ)
-    (hbf : ∀ n x, block directions q f n x ≤ Cf*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ Cv*majorant R d n)
+    (hbf : ∀ n x, block directions q f n x ≤ Cf * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (forcing T hT Q Q₁ f v) n x ≤
       accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv*majorant R d n :=
@@ -58,19 +62,19 @@ theorem forcing_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i
 fixed Sobolev order and no assumption about solution derivatives. -/
 theorem solution_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (T : ℝ) (hT : 0 ≤ T) (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
-    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t w, c*‖w‖^2 ≤ ‖Q x t w‖^2)
+    (c : ℝ) (hc : 0 < c) (hLower : ∀ x t w, c * ‖w‖ ^ 2 ≤ ‖Q x t w‖ ^ 2)
     (f : P → TimeLp T E) (v : P → TimeLp T U)
     (hQ : ContDiff ℝ ∞ Q) (hQ₁ : ContDiff ℝ ∞ Q₁)
     (hf : ContDiff ℝ ∞ f) (hv : ContDiff ℝ ∞ v)
     (Rc R C₀ C₁ Cf Cv : ℝ) (hRc : 0 ≤ Rc) (hRcR : sobolevCoefficientRadius ι Rc ≤ R)
     (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCf : 0 ≤ Cf) (hCv : 0 ≤ Cv)
-    (hR : 2*gramBlockCost ι q c Rc C₀ (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv)*
-      (sobolevCoefficientRadius ι Rc+1) ≤ R)
-    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀*majorant Rc 0 n)
-    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁*majorant Rc 0 n)
+    (hR : 2 * gramBlockCost ι q c Rc C₀ (accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv) *
+      (sobolevCoefficientRadius ι Rc + 1) ≤ R)
+    (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
+    (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (d : ℕ)
-    (hbf : ∀ n x, block directions q f n x ≤ Cf*majorant R d n)
-    (hbv : ∀ n x, block directions q v n x ≤ Cv*majorant R d n)
+    (hbf : ∀ n x, block directions q f n x ≤ Cf * majorant R d n)
+    (hbv : ∀ n x, block directions q v n x ≤ Cv * majorant R d n)
     (n : ℕ) (x : P) :
     block directions q (fun y => gramSolver T hT (Q y) c hc (hLower y)
       (forcing T hT Q Q₁ f v y)) n x ≤ majorant R (d+1) n :=

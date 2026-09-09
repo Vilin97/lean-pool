@@ -7,10 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInfiniteConstruction
-public import LeanPool.NavierStokesAndEuler.Euler.PacketFirstStageSupport
-public import LeanPool.NavierStokesAndEuler.Euler.CurlSupport
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.BaseFirstPacketSupport
+import LeanPool.NavierStokesAndEuler.Euler.CurlSupport
+import LeanPool.NavierStokesAndEuler.Euler.PacketFirstStageSupport
+import LeanPool.NavierStokesAndEuler.Euler.ParentChoiceInitialSupport
 
 /-!
 # Common initial support of every constructed packet stage
@@ -19,6 +19,9 @@ The selected forward and joined corrections retain the common initial
 support. Therefore every finite stage has initial velocity, all its spatial
 derivatives, and initial vorticity supported in the closed ball of radius two.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -32,8 +35,8 @@ variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B}
 
 theorem joinedNext_initial_support {n : ℕ} (P : Stage S n) (hn : n ≠ 0)
     (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
-    (hP : tsupport (fun x => P.state.evolution.velocity (0,x)) ⊆ Metric.closedBall 0 2) :
-    tsupport (fun x => (P.joinedNext hn hq hB).state.evolution.velocity (0,x)) ⊆
+    (hP : tsupport (fun x => P.state.evolution.velocity (0, x)) ⊆ Metric.closedBall 0 2) :
+    tsupport (fun x => (P.joinedNext hn hq hB).state.evolution.velocity (0, x)) ⊆
       Metric.closedBall 0 2 :=
   GeometryJoinedChoice.initial_support (P.joinedInput hn hq hB) P.restrictedState
     (frequency S.J S.X n) (S.normal_frequency n) (supportScale S.J S.X (n+1))
@@ -41,8 +44,8 @@ theorem joinedNext_initial_support {n : ℕ} (P : Stage S n) (hn : n ≠ 0)
 
 theorem successor_initial_support {n : ℕ} (P : Stage S n)
     (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
-    (hP : tsupport (fun x => P.state.evolution.velocity (0,x)) ⊆ Metric.closedBall 0 2) :
-    tsupport (fun x => (P.successor hq hB).state.evolution.velocity (0,x)) ⊆
+    (hP : tsupport (fun x => P.state.evolution.velocity (0, x)) ⊆ Metric.closedBall 0 2) :
+    tsupport (fun x => (P.successor hq hB).state.evolution.velocity (0, x)) ⊆
       Metric.closedBall 0 2 := by
   cases n with
   | zero => exact P.forwardNext_initial_support hq hB hP

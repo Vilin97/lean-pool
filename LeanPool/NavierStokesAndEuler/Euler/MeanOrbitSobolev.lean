@@ -7,11 +7,13 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
-public import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+
+/-! Genuine Sobolev arrays and bounded spatial evaluation for ordinary L² translation orbits. -/
 
 @[expose] public section
 
-/-! Genuine Sobolev arrays and bounded spatial evaluation for ordinary L² translation orbits. -/
 
 noncomputable section
 
@@ -20,12 +22,13 @@ namespace EulerMeanSmoothRepresentative
 
 open MeasureTheory EulerSmoothLimit EulerMeanSolenoidal EulerMeanOrdinaryLift
   EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerCylinderSobolev
-  EulerPressureSpatialRegularity EulerCylinderSobolevSpace EulerSobolevPointEvaluation
+  EulerPressureSpatialRegularity EulerCylinderSobolevSpace
 
 open scoped ContDiff
 
-private local instance : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
+local instance instMeanOrbitSobolev1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
+/-- Coordinate tuple, defined pointwise by `(standardDirection (w i)).1`. -/
 def coordinateTuple {n : ℕ} (w : Fin n → Fin 4) : Fin n → Space :=
   fun i => (standardDirection (w i)).1
 
@@ -42,9 +45,9 @@ theorem coordinateTuple_norm_le {n : ℕ} (w : Fin n → Fin 4) : ‖coordinateT
 theorem iteratedFDeriv_orbitDerivative (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u)
     (v : Space) (n : ℕ) (a : Space) (m : Fin n → Space) :
     iteratedFDeriv ℝ n (fun b : Space => EulerMeanSolenoidal.translation b (orbitDerivative u v)) a
-      m =
+        m =
       iteratedFDeriv ℝ (n+1) (fun b : Space => EulerMeanSolenoidal.translation b u) a (Fin.snoc m
-        v) := by
+          v) := by
   let F : Space → EulerMeanSolenoidal.L2 := fun b => EulerMeanSolenoidal.translation b u
   have H := (ContinuousLinearMap.apply ℝ EulerMeanSolenoidal.L2 v).iteratedFDeriv_comp_left
     (hu.fderiv_right (m := ∞) (by simp)).contDiffAt (x := a) (i := n) (by simp)
@@ -63,7 +66,7 @@ theorem ordinarySpatialJet_word (n q : ℕ) (hn : n ≤ q) (u : EulerMeanSolenoi
     (hu : SmoothOrbit u) (w : Fin n → Fin 4) :
     (ordinarySpatialJet q u hu).word w = ordinaryLift
       (iteratedFDeriv ℝ n (fun a : Space => EulerMeanSolenoidal.translation a u) 0 (coordinateTuple
-        w)) := by
+          w)) := by
   induction n generalizing q u with
   | zero =>
     simp only [SpatialJet.word_zero, iteratedFDeriv_zero_apply,
@@ -78,7 +81,7 @@ theorem ordinarySpatialJet_word (n q : ℕ) (hn : n ≤ q) (u : EulerMeanSolenoi
       rw [iteratedFDeriv_orbitDerivative u hu]
       congr 2
       change Fin.snoc (Fin.init (coordinateTuple w)) ((coordinateTuple w) (Fin.last n)) =
-        coordinateTuple w
+          coordinateTuple w
       exact Fin.snoc_init_self _
 
 /-- A concrete element of the previously constructed complete cylinder Sobolev space. -/
@@ -105,13 +108,14 @@ theorem ordinarySobolev_norm_le (q : ℕ) (u : EulerMeanSolenoidal.L2) (hu : Smo
   rw [ordinarySobolev_coordinate, LinearIsometry.norm_map]
   have Heval := (iteratedFDeriv ℝ w.1.val
     (fun a : Space => EulerMeanSolenoidal.translation a u) 0).unit_le_opNorm
-      (coordinateTuple_norm_le w.2)
+        (coordinateTuple_norm_le w.2)
   apply Heval.trans
   exact Finset.single_le_sum
     (f := fun n => ‖iteratedFDeriv ℝ n (fun a : Space => EulerMeanSolenoidal.translation a u) 0‖)
     (fun _ _ => norm_nonneg _) (Finset.mem_range.mpr w.1.isLt)
 
-/-- Continuity of finitely many actual derivative tensors gives continuity in genuine Sobolev norm. -/
+/-- Continuity of finitely many actual derivative tensors gives continuity in genuine Sobolev norm.
+-/
 theorem ordinarySobolev_continuous {T : Type*} [TopologicalSpace T]
     (q : ℕ) (u : T → EulerMeanSolenoidal.L2) (hu : ∀ t, SmoothOrbit (u t))
     (hjet : ∀ n ≤ q, Continuous

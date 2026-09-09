@@ -6,16 +6,13 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.CorrectionInitialization
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledActualParticularControl
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledParticularFrameJets
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualParticularBackground
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualCarrierTransportBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ScalarParticularSupport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NativeCutoffJets
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ParticularPaddedBackground
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.NavierStokes.LabelSupportPreservation
+import LeanPool.NavierStokesAndEuler.NavierStokes.MeanBoundsReindex
+import LeanPool.NavierStokesAndEuler.NavierStokes.ScaledParticularFrameJets
 
 /-!
 # Actual particular-wave data on the active label-band pairs
@@ -28,6 +25,9 @@ estimates. The final theorems give uniform bounds for the literal common
 and finite-harmonic fields from the current analytic invariant.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.ActualParticularStageControls
@@ -37,21 +37,30 @@ open CorrectionState CorrectionStep CommonCoverSolve TorusInverse
 open scoped ContDiff Topology BigOperators
 
 
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
 abbrev Slow := PhaseCalculus.Slow
+/-- Parameter: an abbreviation for `PhysicalParticularWave.Parameter`. -/
 abbrev Parameter := PhysicalParticularWave.Parameter
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Native: an abbreviation for `(Parameter × ℝ) × Plane`. -/
 abbrev Native := (Parameter × ℝ) × Plane
+/-- AP: an abbreviation for `CorrectionInitialization.ActualPrimary.FullPoint`. -/
 abbrev AP := CorrectionInitialization.ActualPrimary.FullPoint
+/-- Label: an abbreviation for `Fin 2 × CorrectionInitialization.ActualPrimary.Label B N0 /-!
+Reindexing retains the selected phase, its frame, and all uniform constants. -/`. -/
 abbrev Label (B N0 : ℕ) := Fin 2 × CorrectionInitialization.ActualPrimary.Label B N0
 
 /-! Reindexing retains the selected phase, its frame, and all uniform constants. -/
 
+/-- Reindex domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
 noncomputable def reindexDomain {ι κ : Type} (D : Domain ι Slow) (e : κ → ι) : Domain κ Slow where
   scale i := D.scale (e i)
   carrier i := D.carrier (e i)
   isOpen i := D.isOpen (e i)
   one_le_scale i := D.one_le_scale (e i)
 
+/-- Reindex phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
 noncomputable def reindexPhase {ι κ : Type} (F : PhaseFamily ι) (e : κ → ι) : PhaseFamily κ where
   epsilon i := F.epsilon (e i)
   p i := F.p (e i)
@@ -61,6 +70,8 @@ noncomputable def reindexPhase {ι κ : Type} (F : PhaseFamily ι) (e : κ → �
   F i := F.F (e i)
   G i := F.G (e i)
 
+/-- Reindex construction, bundling `phase`, `V`, `openV`, `lam` and the required compatibility
+proofs. -/
 noncomputable def reindexConstruction {ι κ : Type} {D : Domain ι Slow}
     (F : PhaseConstruction D) (e : κ → ι) : PhaseConstruction (reindexDomain D e) where
   phase := reindexPhase F.phase e
@@ -86,9 +97,9 @@ noncomputable def reindexConstruction {ι κ : Type} {D : Domain ι Slow}
   C_nonneg := F.C_nonneg
   E_nonneg := F.E_nonneg
   baseF := PrimaryGeometryAssembly.polynomial_restrict_reindex F.baseF e (fun _ => rfl) (fun _ _ h
-    => h)
+      => h)
   baseG := PrimaryGeometryAssembly.polynomial_restrict_reindex F.baseG e (fun _ => rfl) (fun _ _ h
-    => h)
+      => h)
   constants i := F.constants (e i)
   epsilon_ne i := F.epsilon_ne (e i)
   radius i := F.radius (e i)
@@ -121,12 +132,18 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 
 variable {B N0 : ℕ}
 
+/-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
+nominal l.2) l.1`. -/
 noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.2) l.1
 
+/-- Reference geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det
+(spatialLabel l) 0`. -/
 noncomputable def referenceGeometry (l : Label B N0) : Geometry :=
   ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0
 
+/-- Gap, given by `ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) - CommonWindow.index h
+n`. -/
 noncomputable def gap (l : Label B N0) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) - CommonWindow.index h n
 
@@ -138,12 +155,16 @@ theorem reference_refine (l : Label B N0) (n : ℕ) :
     chartGeometry, geometry, spatialLabel, gap]
   rfl
 
+/-- Reference cutoff, given by `(clockWindow l.2).cutoff z * GaussianTailFlat.slotCutoff
+((phases B N0 l.1).L l.2) z.2`. -/
 noncomputable def referenceCutoff (l : Label B N0) (z : Plane) : ℝ :=
   (clockWindow l.2).cutoff z * GaussianTailFlat.slotCutoff ((phases B N0 l.1).L l.2) z.2
 
 theorem referenceCutoff_compact (l : Label B N0) : HasCompactSupport (referenceCutoff l) :=
   (clockWindow l.2).cutoff_compact.mul_right
 
+/-- Reference, bundling `band`, `geometry`, `length`, `length_pos` and the required
+compatibility proofs. -/
 noncomputable def reference (l : Label B N0) : ParticularWaveAssembly.Reference Parameter where
   band := BaseChartJets.cellBand l.2
   geometry := referenceGeometry l
@@ -156,23 +177,34 @@ noncomputable def reference (l : Label B N0) : ParticularWaveAssembly.Reference 
   cutoff := referenceCutoff l
   cutoff_compact := referenceCutoff_compact l
 
+/-- Native to full, given by `ParticularWaveAssembly.angleShuffle.symm.trans
+(StateReindex.cylinder cycleAssoc.symm)`. -/
 noncomputable def nativeToFull : Native ≃ₗᵢ[ℝ] AP :=
   ParticularWaveAssembly.angleShuffle.symm.trans (StateReindex.cylinder cycleAssoc.symm)
 
+/-- Background, given by `ParticularWaveBounds.reindexCoefficients nativeToFull
+(chartCoefficients l.1 l.2)`. -/
 noncomputable def background (l : Label B N0) : LinearWaveBounds.WaveCoefficients Native :=
   ParticularWaveBounds.reindexCoefficients nativeToFull (chartCoefficients l.1 l.2)
 
+/-- Directions, given by `ParticularWaveBounds.reindexDirections nativeToFull
+(PrimaryResidualClass.directions (commonContext B))`. -/
 noncomputable def directions : LinearWaveBounds.GraphDirections Native :=
   ParticularWaveBounds.reindexDirections nativeToFull (PrimaryResidualClass.directions
-    (commonContext B))
+      (commonContext B))
 
+/-- Associated context, given by `StateReindex.context cycleAssoc.symm (commonContext B)`. -/
 noncomputable def associatedContext : Context (Parameter × Plane) :=
   StateReindex.context cycleAssoc.symm (commonContext B)
 
+/-- Associated strip, given by `ParticularWaveBounds.reindexStrip cycleAssoc.symm
+(BaseContextAssembly.nativeStrip nominal standardRegion)`. -/
 noncomputable def associatedStrip : StripData (Parameter × Plane) :=
   ParticularWaveBounds.reindexStrip cycleAssoc.symm (BaseContextAssembly.nativeStrip nominal
-    standardRegion)
+      standardRegion)
 
+/-- Assembly, bundling `reference`, `charts`, `parameter`, `gap` and the required compatibility
+proofs. -/
 noncomputable def assembly (x : CycleState (Label B N0)) (l : Label B N0) :
     ParticularWaveAssembly.AssemblyData Parameter where
   reference := reference l
@@ -192,6 +224,7 @@ noncomputable def assembly (x : CycleState (Label B N0)) (l : Label B N0) :
   strip := ParticularParameters.nativeStrip associatedStrip
   directions := directions (B := B)
 
+/-- Parameters, given by `ParticularParameters.fromReference (assembly x l) h (gap l)`. -/
 noncomputable def parameters (x : CycleState (Label B N0)) (l : Label B N0) :
     ParticularParameters Parameter :=
   ParticularParameters.fromReference (assembly x l) h (gap l)
@@ -242,6 +275,7 @@ theorem parameters_eq_canonical (x : CycleState (Label B N0)) (l : Label B N0)
 
 /-! The sign combination is proved before specializing the constructed profile. -/
 
+/-- Signed phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
 noncomputable def signedPhase {ι : Type} {D : Domain ι Slow}
     (F : Fin 2 → PhaseConstruction D) : PhaseFamily (Fin 2 × ι) where
   epsilon l := (F l.1).phase.epsilon l.2
@@ -252,6 +286,8 @@ noncomputable def signedPhase {ι : Type} {D : Domain ι Slow}
   F l := (F l.1).phase.F l.2
   G l := (F l.1).phase.G l.2
 
+/-- Signed construction, bundling `phase`, `V`, `openV`, `lam` and the required compatibility
+proofs. -/
 noncomputable def signedConstruction {ι : Type} {D : Domain ι Slow}
     (F : Fin 2 → PhaseConstruction D)
     (hr : ∀ j, (F j).r = (F 0).r) (hb : ∀ j, (F j).b = (F 0).b)
@@ -339,9 +375,12 @@ noncomputable def signedConstruction {ι : Type} {D : Domain ι Slow}
     simp only [hC] at h
     exact h
 
+/-- Joint domain, given by `reindexDomain (PrimaryGeometryAssembly.domain nominal (choice B
+N0).prepared.N) Prod.snd`. -/
 noncomputable def jointDomain : Domain (Label B N0) Slow :=
   reindexDomain (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) Prod.snd
 
+/-- Joint phase, given by `signedPhase (phases B N0)`. -/
 noncomputable def jointPhase : PhaseFamily (Label B N0) := signedPhase (phases B N0)
 
 theorem phase_common_bounds (j : Fin 2) :
@@ -351,7 +390,7 @@ theorem phase_common_bounds (j : Fin 2) :
     (phases B N0 j).C = (phases B N0 0).C ∧
     (phases B N0 j).E = (phases B N0 0).E :=
   PrimaryGeometryAssembly.common_bounds certificate modulation (choice B N0).prepared
-    slots.radius_pos j 0
+      slots.radius_pos j 0
 
 theorem phase_frequency_eq (j : Fin 2) : (phases B N0 j).phase.F = (phases B N0 0).phase.F := by
   funext L
@@ -367,6 +406,7 @@ theorem phase_axial_eq (j : Fin 2) : (phases B N0 j).phase.G = (phases B N0 0).p
     (PrimaryGeometryAssembly.construction_axial certificate modulation
       (choice B N0).prepared slots.radius_pos 0 L).symm
 
+/-- Joint construction, constructed using `signedConstruction`. -/
 noncomputable def jointConstruction : PhaseConstruction (jointDomain (B := B) (N0 := N0)) :=
   signedConstruction (phases B N0)
     (fun j => (phase_common_bounds j).1)
@@ -419,15 +459,18 @@ theorem copyEnvelope_transport (g : Geometry) (gap : ℕ) (r L rate : ℝ)
 
 /-! The slow/fast association keeps the full moving weight unchanged. -/
 
+/-- Slow insert, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def slowInsert : Parameter →L[ℝ] CyclePoint where
   toFun p := (p.1,(p.2,0))
   map_add' _ _ := by simp
   map_smul' _ _ := by simp
   cont := continuous_fst.prodMk (continuous_snd.prodMk continuous_const)
 
+/-- Slow strip, given by `HarmonicWaveInteraction.pullbackStrip (BaseContextAssembly.nativeStrip
+nominal standardRegion) slowInsert`. -/
 noncomputable def slowStrip : StripData Parameter :=
   HarmonicWaveInteraction.pullbackStrip (BaseContextAssembly.nativeStrip nominal standardRegion)
-    slowInsert
+      slowInsert
 
 theorem sourceStrip_eq : CommonCoverClass.sourceStrip slowStrip = associatedStrip := by
   rfl
@@ -437,17 +480,23 @@ theorem nativeStrip_eq :
       ParticularParameters.nativeStrip associatedStrip := by
   rfl
 
+/-- Pulse envelope, given by `PrimaryPulseBounds.referenceP ((phases B N0 l.1).lam l.2) ((phases
+B N0 l.1).u l.2) ((phases B N0 l.1).L l.2)`. -/
 noncomputable def pulseEnvelope (l : Label B N0) : ℝ → ℝ :=
   PrimaryPulseBounds.referenceP ((phases B N0 l.1).lam l.2) ((phases B N0 l.1).u l.2)
     ((phases B N0 l.1).L l.2)
 
+/-- Envelope, given by `WaveEnvelopeTransport.copyEnvelope (chartGeometry n l.1 l.2)
+slots.radius ((phases B N0 l.1).L l.2) (pulseEnvelope l) z.2`. -/
 noncomputable def envelope (l : Label B N0) (n : ℕ) (z : Parameter × Plane) : ℝ :=
   WaveEnvelopeTransport.copyEnvelope (chartGeometry n l.1 l.2) slots.radius
     ((phases B N0 l.1).L l.2) (pulseEnvelope l) z.2
 
+/-- Mean envelope, given by `envelope l n (cycleAssoc z)`. -/
 noncomputable def meanEnvelope (l : Label B N0) (n : ℕ) (z : CyclePoint) : ℝ :=
   envelope l n (cycleAssoc z)
 
+/-- Native envelope, given by `envelope l n (z.1.1,z.2)`. -/
 noncomputable def nativeEnvelope (l : Label B N0) (n : ℕ) (z : Native) : ℝ :=
   envelope l n (z.1.1,z.2)
 
@@ -455,26 +504,35 @@ theorem envelope_nonneg (l : Label B N0) (n : ℕ) (z : Parameter × Plane) : 0 
   WaveEnvelopeTransport.copyEnvelope_nonneg _ _ _
     (fun t => (PrimaryPulseBounds.referenceP_pos _ _ _ t).le) _
 
+/-- Active, given by `1 ≤ n ∧ BaseChartJets.cellBand l.2 ∈ CommonWindow.levels n`. -/
 noncomputable def Active (l : Label B N0) (n : ℕ) : Prop :=
   1 ≤ n ∧ BaseChartJets.cellBand l.2 ∈ CommonWindow.levels n
 
+/-- Active pair: an abbreviation for `{i : Label B N0 × ℕ // Active i.1 i.2}`. -/
 abbrev ActivePair (B N0 : ℕ) := {i : Label B N0 × ℕ // Active i.1 i.2}
 
 section Selected
 
 variable (e : ℕ → ActivePair B N0)
 
+/-- Selected label, given by `(e n).val.1`. -/
 noncomputable def selectedLabel (n : ℕ) : Label B N0 := (e n).val.1
 
+/-- Selected band, given by `(e n).val.2`. -/
 noncomputable def selectedBand (n : ℕ) : ℕ := (e n).val.2
 
+/-- Selected construction, given by `reindexConstruction (jointConstruction (B := B) (N0 := N0))
+(fun i : Unit × ℕ => selectedLabel e i.2)`. -/
 noncomputable def selectedConstruction :=
   reindexConstruction (jointConstruction (B := B) (N0 := N0))
     (fun i : Unit × ℕ => selectedLabel e i.2)
 
+/-- Selected strip, given by `UniformPrimaryWeights.reindexedStrip slowStrip (fun n =>
+(selectedBand e n, ()))`. -/
 noncomputable def selectedStrip : StripData Parameter :=
   UniformPrimaryWeights.reindexedStrip slowStrip (fun n => (selectedBand e n, ()))
 
+/-- Selected slot, given by `spatialLabel (selectedLabel e n)`. -/
 noncomputable def selectedSlot (_ : Unit) (n : ℕ) : SlotColoring.Label :=
   spatialLabel (selectedLabel e n)
 
@@ -483,24 +541,34 @@ theorem selected_near (u : Unit) (n : ℕ) :
       (selectedSlot e u n).1 ≤ selectedBand e n + 4 :=
   CommonWindow.distance (e n).property.2
 
+/-- Selected clock, given by `ActualSignedGeometry.clockScale (selectedBand e) (fun u n =>
+(selectedSlot e u n).1) (selected_near e) h`. -/
 noncomputable def selectedClock :=
   ActualSignedGeometry.clockScale (selectedBand e) (fun u n => (selectedSlot e u n).1)
     (selected_near e) h
 
+/-- Selected normal, given by `ActualSignedGeometry.normalScale (selectedBand e) (fun u n =>
+(selectedSlot e u n).1) (selected_near e) outgoing.data.h_pos.le`. -/
 noncomputable def selectedNormal :=
   ActualSignedGeometry.normalScale (selectedBand e) (fun u n => (selectedSlot e u n).1)
     (selected_near e) outgoing.data.h_pos.le
 
+/-- Selected gap, given by `gap (selectedLabel e n) (selectedBand e n)`. -/
 noncomputable def selectedGap (_ : Unit) (n : ℕ) : ℕ := gap (selectedLabel e n) (selectedBand e n)
 
+/-- Selected geometry, constructed using `ScaledActualParticularControl.geometry`. -/
 noncomputable def selectedGeometry :=
   ScaledActualParticularControl.geometry
     (ScaledActualParticularControl.slotReference slots vectors_det (selectedSlot e))
     (selectedGap e) (selectedClock e)
 
+/-- Selected length, given by `ScaledActualParticularControl.length (selectedConstruction e)
+(selectedClock e)`. -/
 noncomputable def selectedLength :=
   ScaledActualParticularControl.length (selectedConstruction e) (selectedClock e)
 
+/-- Selected pulse envelope, given by `ScaledActualParticularControl.envelope
+(selectedConstruction e) (selectedClock e)`. -/
 noncomputable def selectedPulseEnvelope :=
   ScaledActualParticularControl.envelope (selectedConstruction e) (selectedClock e)
 
@@ -529,7 +597,7 @@ theorem selected_scale (i : Unit × ℕ) :
 
 theorem selected_length (i : Unit × ℕ) :
     (selectedConstruction e).L i = ChartScales.slotLength slots.radius h (selectedSlot e i.1 i.2).1
-      := rfl
+        := rfl
 
 theorem selected_envelope_eq (n : ℕ) (z : Parameter × Plane) :
     ActualParticularControl.groupedEnvelope (selectedGeometry e) (fun _ _ => slots.radius)
@@ -563,13 +631,14 @@ theorem associated_residual_class (x : CycleState (Label B N0)) {α : ℝ}
       (BaseContextAssembly.nativeStrip nominal standardRegion) meanEnvelope α
       (fun l => HarmonicResidual.residualBlock (commonContext B) x.state
         (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients
-          l))) :
+            l))) :
     UniformHarmonicInteraction.UniformVelocity associatedStrip envelope α
       (fun l => HarmonicResidual.residualBlock (assembly x l).context (assembly x l).state
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput) := by
   exact MeanBoundsReindex.residualBlock_uniform_pull cycleAssoc.symm (commonContext B) x.state
     x.coefficients.blocks x.coefficients.gaussian x.coefficients.aliasCoefficients H
 
+/-- Current source, constructed using `ParticularWaveAssembly.sourceFamily`. -/
 noncomputable def currentSource (x : CycleState (Label B N0)) (j : ℤ)
     (l : Label B N0) : ℕ → Native → HarmonicCalculus.ComplexVector :=
   ParticularWaveAssembly.sourceFamily (assembly x l).context (assembly x l).state
@@ -582,7 +651,7 @@ theorem current_source_class (x : CycleState (Label B N0)) {α : ℝ}
         (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l)))
     (j : ℤ) (hj : j ≠ 0) :
     LabelSumBounds.UniformWaveClass (CommonCoverClass.sourceStrip
-      (ActualParticularControl.angleStrip slowStrip))
+        (ActualParticularControl.angleStrip slowStrip))
       nativeEnvelope α (currentSource x j) := by
   have hs := ActualParticularControl.residualSource_uniform associatedStrip envelope α
     (associatedContext (B := B)) (StateReindex.state cycleAssoc.symm x.state)
@@ -604,7 +673,7 @@ theorem invariant_current_source_class (x : CycleState (Label B N0))
     (hstrip : G.strip = BaseContextAssembly.nativeStrip nominal standardRegion)
     (j : ℤ) (hj : j ≠ 0) :
     LabelSumBounds.UniformWaveClass (CommonCoverClass.sourceStrip
-      (ActualParticularControl.angleStrip slowStrip))
+        (ActualParticularControl.angleStrip slowStrip))
       nativeEnvelope (1/2+σ) (currentSource x j) := by
   apply current_source_class x _ j hj
   simpa only [hstrip] using H.residual
@@ -633,7 +702,7 @@ theorem selected_source_class (x : CycleState (Label B N0)) {α : ℝ}
   have hw : ActualParticularControl.groupedEnvelope (selectedGeometry e) (fun _ _ => slots.radius)
       (selectedLength e) (selectedPulseEnvelope e) =
       (fun (_ : Unit) n (z : Native) => nativeEnvelope (selectedLabel e n) (selectedBand e n) z) :=
-        by
+          by
     funext u n z
     exact selected_envelope_eq e n (z.1.1,z.2)
   rw [hw]
@@ -643,18 +712,25 @@ section ModalConstruction
 
 variable (e : ℕ → ActivePair B N0)
 
+/-- Selected phi, given by `ScaledActualParticularControl.physicalPhi h (selectedBand e) (fun u
+n => (selectedSlot e u n).1)`. -/
 noncomputable def selectedPhi := ScaledActualParticularControl.physicalPhi h
   (selectedBand e) (fun u n => (selectedSlot e u n).1)
 
+/-- Selected chi, given by
+`ActualSignedGeometry.swapParameter.toContinuousLinearEquiv.toContinuousLinearMap.comp
+(ContinuousLinearMap.fst ℝ Parameter ℝ)`. -/
 noncomputable def selectedChi : (Parameter × ℝ) →L[ℝ] Slow :=
   ActualSignedGeometry.swapParameter.toContinuousLinearEquiv.toContinuousLinearMap.comp
     (ContinuousLinearMap.fst ℝ Parameter ℝ)
 
+/-- Selected frame, constructed using `ActualParticularControl.nativeFrame`. -/
 noncomputable def selectedFrame (n : ℕ) : PrimaryODE.FrameData ((Parameter × ℝ) × ℝ) :=
   ActualParticularControl.nativeFrame
     (ScaledActualParticularControl.frame (selectedConstruction e) (selectedPhi e)
       (selectedClock e) (selectedNormal e) ((),n)) selectedChi
 
+/-- Selected patch, constructed using `ScaledActualParticularControl.patch`. -/
 noncomputable def selectedPatch : Unit → ℕ → Frequency → Set Native :=
   ScaledActualParticularControl.patch (ActualParticularControl.angleStrip (selectedStrip e))
     (selectedConstruction e) selectedChi (selectedPhi e) (selectedClock e) (selectedGeometry e)
@@ -740,17 +816,21 @@ theorem selected_tangent_eq (x : CycleState (Label B N0))
   rw [ha]
   exact he
 
+/-- Selected source, given by `currentSource x j (selectedLabel e n) (selectedBand e n)`. -/
 noncomputable def selectedSource (x : CycleState (Label B N0)) (j : ℤ) (_ : Unit) (n : ℕ) :=
   currentSource x j (selectedLabel e n) (selectedBand e n)
 
+/-- Selected tangent, given by `(parameters x (selectedLabel e n)).nativeTangent j (selectedBand
+e n)`. -/
 noncomputable def selectedTangent (x : CycleState (Label B N0)) (j : ℤ) (_ : Unit) (n : ℕ) :=
   (parameters x (selectedLabel e n)).nativeTangent j (selectedBand e n)
 
+/-- Selected background, constructed using `ParticularCopyBounds.reindexedBase`. -/
 noncomputable def selectedBackground (x : CycleState (Label B N0)) (j : ℤ) (_ : Unit) :=
   ParticularCopyBounds.reindexedBase
     (fun l => ((parameters x l).copyData (assembly x l).context (assembly x l).state
       (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput
-        j).background)
+          j).background)
     (fun n => (selectedBand e n, selectedLabel e n))
 
 /-- This is the control of the literal selected `fromReference` tangent,
@@ -789,7 +869,7 @@ theorem selected_inverse_frequency (x : CycleState (Label B N0))
   have he (u : Unit) (n : ℕ) : (selectedBackground e x j u).frequency n =
       (j:ℝ) * CurlClassBounds.carrierFrequency
         (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip (selectedStrip e))) n :=
-          by
+            by
     change (j:ℝ) * (x.coefficients.blocks (selectedLabel e n)).frequency (selectedBand e n) = _
     rw [hfrequency]
     rfl
@@ -853,6 +933,7 @@ section RawSelected
 
 variable (e : ℕ → ActivePair B N0)
 
+/-- Selected weight, constructed using `ActualParticularControl.groupedEnvelope`. -/
 noncomputable def selectedWeight : Unit → ℕ → Native → ℝ :=
   ActualParticularControl.groupedEnvelope (selectedGeometry e) (fun _ _ => slots.radius)
     (selectedLength e) (selectedPulseEnvelope e)
@@ -868,7 +949,7 @@ theorem selectedWeight_nonneg (u : Unit) (n : ℕ) (z : Native) : 0 ≤ selected
 theorem selectedWeight_eq (u : Unit) (n : ℕ) (k : Frequency) {z : Native}
     (hz : z ∈ selectedPatch e u n k) :
     selectedWeight e u n z = selectedPulseEnvelope e u n ((selectedGeometry e u n).coordinates k
-      z.2).2 :=
+        z.2).2 :=
   ScaledActualParticularControl.patch_envelope
     (ActualParticularControl.angleStrip (selectedStrip e)) (selectedConstruction e)
     selectedChi (selectedPhi e) (selectedClock e)
@@ -907,13 +988,13 @@ theorem selected_raw_jets (x : CycleState (Label B N0))
   have he : ScaledParticularFrameJets.tangent (selectedConstruction e) selectedChi
       (selectedPhi e) (selectedClock e) (selectedNormal e) f j =
       fun u n => ParticularWaveBounds.realData (selectedTangent e x j u n) (selectedSource e x j u
-        n) := by
+          n) := by
     funext u n
     exact (selected_tangent_eq e x hfrequency j hj n _).symm
   have hgeo := ScaledParticularFrameJets.native_geometry_jets
     (ActualParticularControl.angleStrip (selectedStrip e)) (selectedConstruction e) selectedChi
     (selectedPhi e) (selectedClock e) (selectedNormal e) (selectedGeometry e) (fun _ _ =>
-      slots.radius)
+        slots.radius)
     f j (ActualSignedGeometry.slowChangeCost_one h) (by norm_num : (1:ℝ) ≤ 25)
     (ScaledActualParticularControl.slotCost_one vectors_det (selectedClock e)
       (CommonWindow.gap h + SlotColoring.nativeGap h))
@@ -925,16 +1006,16 @@ theorem selected_raw_jets (x : CycleState (Label B N0))
     ScaledParticularFrameJets.native_normal_bounds
       (ActualParticularControl.angleStrip (selectedStrip e)) (selectedConstruction e) selectedChi
       (selectedPhi e) (selectedClock e) (selectedNormal e) (selectedGeometry e) (fun _ _ =>
-        slots.radius)
+          slots.radius)
       f j hz
   simp only [he] at hrange
   exact ParticularCopyBounds.uniform_coefficients_jets
     (selectedBackground e x j) (selectedTangent e x j) (selectedSource e x j)
     (selectedGeometry e) (selectedLength e)
     (fun u n => ScaledActualParticularControl.length_pos (selectedConstruction e) (selectedClock e)
-      u n)
+        u n)
     (selectedPulseEnvelope e) (selectedWeight e) (fun (_ : Unit) n => selectedFrame e n) j
-      (selectedPatch e)
+        (selectedPatch e)
     (selectedActualControl e x hfrequency j hj H ParticularWaveBounds.realPart)
     (selectedActualControl e x hfrequency j hj H ParticularWaveBounds.imagPart)
     (fun u n z _ => selectedWeight_nonneg e u n z)
@@ -978,16 +1059,16 @@ theorem raw_jets (x : CycleState (Label B N0))
       exact selected_controlPatch e u q k
     have hw : selectedWeight e =
         (fun (_ : Unit) q (z : Native) => nativeEnvelope (selectedLabel e q) (selectedBand e q) z)
-          := by
+            := by
       funext u q z
       exact selected_envelope_eq e q (z.1.1,z.2)
     have hstrip : CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip (selectedStrip
-      e)) =
+        e)) =
         UniformPrimaryWeights.reindexedStrip
           (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip))
           (fun q => (selectedBand e q, ())) := source_angle_reindex slowStrip (selectedBand e)
     have ha : (fun (_ : Unit) q k => (data x (selectedLabel e q) j).amplitude (selectedBand e q) k)
-      =
+        =
         (fun u q k => (ParticularWaveBounds.complexCopyCoefficients (selectedBackground e x j u)
           (selectedTangent e x j u) (selectedSource e x j u) (selectedGeometry e u) (fun _ => k)
           (selectedLength e u) (fun n => ScaledActualParticularControl.length_pos
@@ -1020,6 +1101,7 @@ theorem raw_jets (x : CycleState (Label B N0))
 
 /-! The support geometry is the same canonical scalar-clock geometry. -/
 
+/-- Support label, given by `(l.2,l.1)`. -/
 noncomputable def supportLabel (l : Label B N0) : ActualCarrierTransportBase.Index B N0 :=
   (l.2,l.1)
 
@@ -1036,7 +1118,7 @@ theorem support_cutoff_eq (x : CycleState (Label B N0)) (l : Label B N0) (n : �
 theorem copyData_ext {D I : Type} {a b : PeriodizedWaveBounds.CopyData D I}
     (hb : a.background = b.background) (ha : a.amplitude = b.amplitude)
     (hp : a.pressure = b.pressure) (hc : a.cutoff = b.cutoff) (hs : a.source = b.source) : a = b :=
-      by
+        by
   cases a
   cases b
   cases hb
@@ -1063,6 +1145,7 @@ theorem data_scalar_eq (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) 
       ((ActualCarrierTransportBase.geometry (supportLabel l) n).coordinates k z.2)
   · rfl
 
+/-- Carrier cells, constructed using `ScalarParticularSupport.scalarCells`. -/
 noncomputable def carrierCells (l : Label B N0) : PeriodizedWaveBounds.Cells Native Frequency :=
   ScalarParticularSupport.scalarCells (P := Parameter)
     (ActualCarrierTransportBase.geometry (supportLabel l)) (fun _ => slots.radius)
@@ -1083,6 +1166,7 @@ theorem data_cutoff_support (x : CycleState (Label B N0)) (l : Label B N0) (j : 
     (ActualCarrierTransportBase.clock_pos (supportLabel l))
     (ActualCarrierTransportBase.geometry_outer_injective (supportLabel l)) n k
 
+/-- Input support type used in actual particular stage controls. -/
 abbrev InputSupport (x : CycleState (Label B N0)) : Prop :=
   ∀ l, HarmonicSourceSupport.InputSupportOn ActualCarrierTransportBase.domain
     (ActualCarrierTransportBase.labelCarrier (supportLabel l))
@@ -1092,11 +1176,11 @@ theorem currentSource_pull (x : CycleState (Label B N0)) (l : Label B N0) (j : �
     currentSource x j l n = fun z =>
       ParticularWaveAssembly.residualSource (commonContext B) x.state (x.coefficients.blocks l)
         (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l) j n (nativeToFull z).1 :=
-          by
+            by
   funext z
   change ParticularWaveAssembly.residualSource
       (StateReindex.context cycleAssoc.symm (commonContext B)) (StateReindex.state cycleAssoc.symm
-        x.state)
+          x.state)
       (StateReindex.block cycleAssoc.symm (x.coefficients.blocks l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.gaussian l))
       (StateReindex.blockCoefficients cycleAssoc.symm (x.coefficients.aliasCoefficients l))
@@ -1111,7 +1195,7 @@ theorem currentSource_zero_germ (x : CycleState (Label B N0)) (hs : InputSupport
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     (l : Label B N0) (j : ℤ) (n : ℕ) {z : Native}
     (hz : z.1.1 ∈ ActualCarrierTransportBase.parameterDomain)
-    (hout : (z.1.1,z.2) ∉ ActualCarrierTransportBase.canonicalSourceRegion (supportLabel l) n) :
+    (hout : (z.1.1, z.2) ∉ ActualCarrierTransportBase.canonicalSourceRegion (supportLabel l) n) :
     currentSource x j l n =ᶠ[𝓝 z] fun _ => 0 := by
   have hnot : (nativeToFull z).1 ∉ ActualCarrierTransportBase.labelCarrier (supportLabel l) n := by
     intro hc
@@ -1130,7 +1214,7 @@ theorem currentSource_zero_germ (x : CycleState (Label B N0)) (hs : InputSupport
 
 theorem native_parameter_domain {z : Native}
     (hz : z ∈ (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)).domain)
-      :
+        :
     z.1.1 ∈ ActualCarrierTransportBase.parameterDomain :=
   ((BaseContextAssembly.nativeStrip_mem nominal standardRegion (nativeToFull z).1).mp hz).1
 
@@ -1138,7 +1222,7 @@ theorem sourceRegion_mem_controlPatch (hN : ActualCarrierGeometry.geometricThres
     (l : Label B N0) (n : ℕ) (k : Frequency) {z : Native}
     (hz : z ∈ (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)).domain)
     (hk : z ∈ (carrierCells l).carrier n k)
-    (hs : (z.1.1,z.2) ∈ ActualCarrierTransportBase.canonicalSourceRegion (supportLabel l) n) :
+    (hs : (z.1.1, z.2) ∈ ActualCarrierTransportBase.canonicalSourceRegion (supportLabel l) n) :
     z ∈ controlPatch l n k := by
   have hc : (nativeToFull z).1 ∈ ActualInitialExcluded.labelCarrier l n :=
     (ActualCarrierTransportBase.labelCarrier_iff_canonicalSourceRegion hN
@@ -1257,7 +1341,7 @@ theorem cutoff_jets (x : CycleState (Label B N0)) (j : ℤ) :
       funext u q k
       exact selected_controlPatch e u q k
     have hstrip : CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip (selectedStrip
-      e)) =
+        e)) =
         UniformPrimaryWeights.reindexedStrip
           (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip))
           (fun q => (selectedBand e q, ())) := source_angle_reindex slowStrip (selectedBand e)
@@ -1338,6 +1422,8 @@ theorem inputs_restrict {D I : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   amplitude j := local_restrict (hf.amplitude j) hsub
   pressure := local_restrict hf.pressure hsub
 
+/-- Preserves carriers: an abbreviation for `∀ l, SameCarrier (x.coefficients.blocks l)
+(ActualParticularBackground.primaryBlock l)`. -/
 abbrev PreservesCarriers (x : CycleState (Label B N0)) : Prop :=
   ∀ l, SameCarrier (x.coefficients.blocks l) (ActualParticularBackground.primaryBlock l)
 
@@ -1374,10 +1460,10 @@ theorem actual_normal_range (x : CycleState (Label B N0)) (hx : PreservesCarrier
     (hk : z ∈ controlPatch l n k) :
     ActualPrimaryBounds.normalFloor B N0 ≤ ‖(data x l j).background.normal
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)) (directions (B
-        := B)) n z‖ ∧
+          := B)) n z‖ ∧
     ‖(data x l j).background.normal
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)) (directions (B
-        := B)) n z‖ ≤
+          := B)) n z‖ ≤
         ActualPrimaryBounds.normalCeiling B N0 := by
   exact ParticularPaddedBackground.background_normal_range
     (fun l => x.coefficients.blocks l) hx j (n := n) (i := (l,k)) (x := z)
@@ -1390,7 +1476,7 @@ theorem actual_inverse_frequency (x : CycleState (Label B N0)) (hx : PreservesCa
       (fun n i (_ : Native) => 1/(data x i.1 j).background.frequency n) := by
   exact local_restrict
     (ParticularPaddedBackground.background_inverse_frequency (fun l => x.coefficients.blocks l) hx
-      j)
+        j)
     (fun n i z _ hz => controlPatch_subset_padded i.1 n i.2 hz)
 
 theorem common_bounds (x : CycleState (Label B N0)) (hx : PreservesCarriers x)
@@ -1404,7 +1490,7 @@ theorem common_bounds (x : CycleState (Label B N0)) (hx : PreservesCarriers x)
     LabelSumBounds.UniformWaveClass s nativeEnvelope α
       (fun l => ((data x l j).commonCorrected s (directions (B := B))).amplitude) ∧
     LabelSumBounds.UniformWaveClass s nativeEnvelope (α+1/2) (fun l => (data x l
-      j).common.pressure) ∧
+        j).common.pressure) ∧
     LabelSumBounds.UniformWaveClass s nativeEnvelope (α+1/2-ChartScales.kappa)
       (fun l => (data x l j).common.curlCorrection s (directions (B := B))) ∧
     LabelSumBounds.UniformWaveClass s nativeEnvelope (α+1/2-3*ChartScales.kappa)
@@ -1433,7 +1519,7 @@ theorem native_wave_to_weighted {E : Type} [NormedAddCommGroup E] [NormedSpace �
     {α : ℝ} {f : Label B N0 → ℕ → Native → E}
     (hf : LabelSumBounds.UniformWaveClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)) nativeEnvelope
-        α f) :
+          α f) :
     LabelSumBounds.UniformClass
       (CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip))
       (fun _ _ z => Real.sqrt ((CommonCoverClass.sourceStrip
@@ -1441,17 +1527,20 @@ theorem native_wave_to_weighted {E : Type} [NormedAddCommGroup E] [NormedSpace �
   hf.mono_weight (fun _ _ _ _ => Real.sqrt_nonneg _)
     (fun l n z _ => mul_le_of_le_one_right (Real.sqrt_nonneg _) (nativeEnvelope_le_one l n z))
 
+/-- Residual bounds type used in actual particular stage controls. -/
 abbrev ResidualBounds (x : CycleState (Label B N0)) (α : ℝ) : Prop :=
   UniformHarmonicInteraction.UniformVelocity
     (BaseContextAssembly.nativeStrip nominal standardRegion) meanEnvelope α
     (fun l => HarmonicResidual.residualBlock (commonContext B) x.state
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l))
 
+/-- Associated update as an element of `HarmonicBlock (Parameter × Plane)`. -/
 noncomputable def associatedUpdate (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock (Parameter × Plane) :=
   (parameters x l).updateBlock associatedStrip (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput N
 
+/-- Associated good as an element of `HarmonicBlock (Parameter × Plane)`. -/
 noncomputable def associatedGood (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock (Parameter × Plane) :=
   (parameters x l).goodBlock associatedStrip (assembly x l).context (assembly x l).state
@@ -1479,9 +1568,11 @@ theorem associated_assembled_bounds (x : CycleState (Label B N0))
     (fun j hj => (hm j hj).2.1) (fun j hj => (hm j hj).2.2.1)
     (fun j hj => (hm j hj).2.2.2.2)
 
+/-- Output block, given by `StateReindex.block cycleAssoc (associatedUpdate x N l)`. -/
 noncomputable def outputBlock (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock CyclePoint := StateReindex.block cycleAssoc (associatedUpdate x N l)
 
+/-- Output good, given by `StateReindex.block cycleAssoc (associatedGood x N l)`. -/
 noncomputable def outputGood (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock CyclePoint := StateReindex.block cycleAssoc (associatedGood x N l)
 

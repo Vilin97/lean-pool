@@ -7,14 +7,19 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradientWeight
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGradient
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.CylinderConstantMapBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradientWeight
+import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
+import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
+import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 
 /-! Retain the actual scalar angular pressure in the quantitative grade
 bounds. Its norm-one embedding supplies genuine vector-valued Sobolev
 evaluation, without changing the radius or the time profile. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -27,16 +32,16 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientSpace
 open scoped ContDiff
 
 variable {P T : ℝ} [Fact (0 < P)] (raw : ScalarField)
-  (p : C(Icc (0 : ℝ) T,CylinderL2 P ℝ))
+  (p : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
   (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
   (he : ∀ (t : Icc (0 : ℝ) T) x θ,
-    raw (t,(x,θ)) = scalarPointField P p hp t (x,(θ : AddCircle P)))
+    raw (t, (x, θ)) = scalarPointField P p hp t (x, (θ : AddCircle P)))
 
 theorem scalarEmbeddingField_normalized_bound (hT : 0 ≤ T)
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     (q : ℕ) (R A : ℝ) (d : ℕ)
     (hb : ∀ n, block standardDirection q
-      (fun a => pathTranslate P a (normalize g hg p)) n 0 ≤ A*majorant R d n) :
+      (fun a => pathTranslate P a (normalize g hg p)) n 0 ≤ A * majorant R d n) :
     ((scalarEmbeddingField raw p hp he).normalized hT g hg).WordBound q R A d := by
   have hc : normalize g hg (pathMap P scalarEmbed p) =
       pathMap P scalarEmbed (normalize g hg p) := by
@@ -53,15 +58,15 @@ theorem scalarEmbeddingField_normalized_bound (hT : 0 ≤ T)
     (mul_le_mul_of_nonneg_left (hb n) (norm_nonneg scalarEmbed))
 
 theorem angularGradientField_normalized_bound (hT : 0 ≤ T)
-    (g : C(Icc (0 : ℝ) T,ℝ)) (hg : ∀ t, 0 < g t)
+    (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     (m : Space) (hm : ‖m‖ ≤ 1) {q d : ℕ} {R A : ℝ} (hR : 0 ≤ R) (hA : 0 ≤ A)
     (hb : ((scalarEmbeddingField raw p hp he).normalized hT g hg).WordBound q R A d) :
     ((EulerPacketPressure.angularGradientField P raw p hp he m).normalized hT g hg).WordBound
       q R A (d+1) := by
   let L := (toSpanSingleton ℝ m).comp scalarProject
   have hL : ‖L‖ ≤ 1 := by
-    exact (opNorm_comp_le _ _).trans (by simpa only
-      [norm_toSpanSingleton,scalarProject_norm,mul_one])
+    exact (opNorm_comp_le _ _).trans (by
+        simpa only [norm_toSpanSingleton,scalarProject_norm,mul_one])
   have hh := (hb.normalized_derivative hT 0).map L
   have hh' := hh.mono_amplitude hR (by simpa only [one_mul] using mul_le_mul_of_nonneg_right hL hA)
   apply hh'.of_path_eq
@@ -85,6 +90,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {B : HistoryData (D.initial τ hτ hτT.le)}
   {raw : VectorField}
 
+/-- Scalar field, constructed using `scalarEmbeddingField`. -/
 def scalarField (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (G : Forcing P D raw) :
     Field P D.T (fun z => scalarEmbed (scalar τ hτ hτT B G z)) :=
@@ -119,6 +125,7 @@ theorem Budget.scalar_grade_bound_pred (L : Budget D τ hτ hτT B (Fin 4) 6)
       simp only [highForceShift,highShift]
       omega)
 
+/-- Angular field, constructed using `EulerPacketPressure.angularGradientField`. -/
 def angularField (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (G : Forcing P D raw) :
     Field P D.T (fun z => (EulerPacketPointJets.pressureJet (scalar τ hτ hτT B G) z).2
@@ -171,6 +178,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T}
   {B : HistoryData (D.initial τ hτ hτT.le)}
 
+/-- Scalar field, constructed using `scalarEmbeddingField`. -/
 def scalarField (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D) :
     Field P D.T (fun z => scalarEmbed (scalar τ hτ hτT B Y z)) :=
@@ -183,10 +191,10 @@ theorem Budget.scalar_grade_bound_pred
     (W : Budget.GradeGuards (P := P) H N C)
     (Y : InitialData P D) (α : ℝ) (hα : 0 < α)
     (hYb : ∀ n, block standardDirection 6
-      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α*C)*majorant L.R 0 n) :
+      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n) :
     ((scalarField τ hτ hτT B Y).normalized D.T_pos.le (α • L.fullProfile)
       (smul_profile_pos L.fullProfile L.fullProfile_pos α hα)).WordBound 6 L.R 1 (highShift 1-1) :=
-        by
+          by
   have hb : ((scalarField τ hτ hτT B Y).normalized D.T_pos.le L.fullProfile
       L.fullProfile_pos).WordBound 6 L.R ((H.pressureAmplitude (P := P) N*C)*α) 3 := by
     apply scalarEmbeddingField_normalized_bound _ _ _ _ D.T_pos.le L.fullProfile L.fullProfile_pos
@@ -199,6 +207,7 @@ theorem Budget.scalar_grade_bound_pred
   exact (hb.scale_profile D.T_pos.le L.fullProfile L.fullProfile_pos α hα).absorb_amplitude_to
     L.radius_bounds.1 hnonneg hcost (by norm_num [highShift])
 
+/-- Angular field, constructed using `EulerPacketPressure.angularGradientField`. -/
 def angularField (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D) :
     Field P D.T (fun z => (EulerPacketPointJets.pressureJet (scalar τ hτ hτT B Y) z).2
@@ -212,7 +221,7 @@ theorem Budget.angular_grade_bound
     (W : Budget.GradeGuards (P := P) H N C)
     (Y : InitialData P D) (α : ℝ) (hα : 0 < α)
     (hYb : ∀ n, block standardDirection 6
-      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α*C)*majorant L.R 0 n) :
+      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n) :
     ((angularField τ hτ hτT B Y).normalized D.T_pos.le (α • L.fullProfile)
       (smul_profile_pos L.fullProfile L.fullProfile_pos α hα)).WordBound 6 L.R 1 (highShift 1) := by
   have hh := angularGradientField_normalized_bound _ _ _ _ D.T_pos.le
@@ -227,7 +236,7 @@ theorem Budget.scalar_grade_bound
     (W : Budget.GradeGuards (P := P) H N C)
     (Y : InitialData P D) (α : ℝ) (hα : 0 < α)
     (hYb : ∀ n, block standardDirection 6
-      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α*C)*majorant L.R 0 n) :
+      (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n) :
     ((scalarField τ hτ hτT B Y).normalized D.T_pos.le (α • L.fullProfile)
       (smul_profile_pos L.fullProfile L.fullProfile_pos α hα)).WordBound 6 L.R 1 (highShift 1) :=
   (H.scalar_grade_bound_pred N C W Y α hα hYb).mono_shift

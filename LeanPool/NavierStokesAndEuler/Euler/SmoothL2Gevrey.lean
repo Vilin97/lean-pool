@@ -7,14 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldAlgebra
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
 public import LeanPool.NavierStokesAndEuler.Euler.PacketParentLabelBudgets
-
-@[expose] public section
+import Mathlib.Algebra.Order.Star.Real
 
 /-! Ordinary spatial L² tensor bounds imply the actual classical label
 Sobolev word bounds. The finite Sobolev order contributes only a fixed
 polynomial amplitude and one fixed enlargement of the radius. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -26,6 +27,7 @@ open scoped ContDiff
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
+/-- Has jet bound, given by `∀ n, ‖A.jetLp n‖ ≤ C*R^n*(n.factorial : ℝ)^2`. -/
 def HasJetBound (A : SmoothL2Field V) (C R : ℝ) : Prop :=
   ∀ n, ‖A.jetLp n‖ ≤ C*R^n*(n.factorial : ℝ)^2
 
@@ -59,7 +61,7 @@ theorem classicalBlockSize_of_jet_bound {ι : Type*} [Fintype ι]
     (q : ℕ) (A : SmoothL2Field Space) (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
     (hb : A.HasJetBound C R) (n : ℕ) :
     classicalBlockSize directions q A.toLp A.translation_contDiff n ≤
-      sobolevCoefficientAmplitude ι q R C*
+      sobolevCoefficientAmplitude ι q R C *
         (sobolevCoefficientRadius ι R)^n*(n.factorial : ℝ)^2 := by
   apply (classicalBlockSize_eq directions q A.toLp A.translation_contDiff n).trans_le
   have hc := coefficientBlock_of_tensor_bound directions hd q

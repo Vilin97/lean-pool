@@ -7,8 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParameterWordProduct
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # The actual inverse estimate at a fixed Sobolev order
@@ -18,6 +18,9 @@ indices. The resulting constant is a fixed polynomial recursion in the
 ordinary inverse norm and the finite coefficient-jet bound. It does not
 depend on any external derivative order or factorial shift.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -84,9 +87,9 @@ theorem baseSize_inverse_bound (directions : ι → P)
       have h := baseSize_succ directions q A hA x
       linarith [norm_nonneg (A x)]
     have hdi (i : ι) : baseSize directions q (directional directions u i) x ≤
-        C*(baseSize directions q (directional directions f i) x+
+        C*(baseSize directions q (directional directions f i) x +
           (2 : ℝ)^q*baseSize directions q (directional directions A i) x*baseSize directions q u x)
-            := by
+              := by
       let fᵢ := directional directions f i-fun y => directional directions A i y (u y)
       have hfᵢ : ContDiff ℝ ∞ fᵢ := (directional_contDiff directions f hf i).sub
         ((directional_contDiff directions A hA i).clm_apply hu)
@@ -99,7 +102,7 @@ theorem baseSize_inverse_bound (directions : ι → P)
         have he := congrArg (fun g : P → E => directional directions g i y) (funext heq)
         exact hd.symm.trans he
       have h := ih (directional directions u i) fᵢ (directional_contDiff directions u hu i) hfᵢ
-        heqᵢ hAbq
+          heqᵢ hAbq
       apply h.trans
       apply mul_le_mul_of_nonneg_left _ hC
       exact (baseSize_sub_le directions q (directional directions f i)
@@ -110,13 +113,13 @@ theorem baseSize_inverse_bound (directions : ι → P)
     have hsum : (∑ i, baseSize directions q (directional directions u i) x) ≤
         C*(N+(2 : ℝ)^q*B*(C*N)) := by
       calc
-        _ ≤ ∑ i, C*(baseSize directions q (directional directions f i) x+
+        _ ≤ ∑ i, C*(baseSize directions q (directional directions f i) x +
             (2 : ℝ)^q*baseSize directions q (directional directions A i) x*baseSize directions q u
-              x) :=
+                x) :=
           sum_le_sum (fun i _ => hdi i)
-        _ = C*((∑ i, baseSize directions q (directional directions f i) x)+
+        _ = C*((∑ i, baseSize directions q (directional directions f i) x) +
             (2 : ℝ)^q*(∑ i, baseSize directions q (directional directions A i) x)*baseSize
-              directions q u x) := by
+                directions q u x) := by
           simp only [← mul_sum, sum_add_distrib, ← sum_mul]
         _ ≤ C*(N+(2 : ℝ)^q*B*(C*N)) := by
           gcongr

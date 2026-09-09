@@ -6,14 +6,15 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ParentChoiceInitialSupport
 public import LeanPool.NavierStokesAndEuler.Euler.BaseInductionStage
-
-@[expose] public section
+import LeanPool.NavierStokesAndEuler.Euler.ParentChoiceInitialSupport
 
 /-! The actual finite initial base of the induction is compactly
 supported: it is the compact smooth datum plus its first packet's
 literal compact initial increment. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -53,7 +54,7 @@ theorem initial_support :
     firstNormal firstNormal_unit firstFrame support compact δ hδ firstCoordinate
     (subset_refl _) (δ*hchild) (truncation k) F.hn k hk.four F.Q S.evolution.inverse
     rfl (subset_halfBall.trans Metric.ball_subset_closedBall) S.evolution.velocity
-  change tsupport ((fun x => F.state.evolution.velocity (0,x))-
+  change tsupport ((fun x => F.state.evolution.velocity (0,x)) -
     (fun x => S.evolution.velocity (0,x))) ⊆ Metric.closedBall 0 (ell/2) at hd
   exact support_of_difference (fun x => S.evolution.velocity (0,x))
     (fun x => F.state.evolution.velocity (0,x)) 2
@@ -79,15 +80,15 @@ theorem firstStage_initial_support :
 theorem firstStage_initial_compact :
     HasCompactSupport (fun x => S.firstStage.state.evolution.velocity (0,x)) :=
   (isCompact_closedBall (0 : Space) 2).of_isClosed_subset (isClosed_tsupport _)
-    S.firstStage_initial_support
+      S.firstStage_initial_support
 
 theorem firstStage_initial_field_support :
     tsupport (S.firstStage.state.regularity.velocity S.firstStage.parent.zeroTime).field ⊆
       Metric.closedBall 0 2 := by
-  have he : (S.firstStage.state.regularity.velocity S.firstStage.parent.zeroTime).field=
+  have he : (S.firstStage.state.regularity.velocity S.firstStage.parent.zeroTime).field =
       fun x => S.firstStage.state.evolution.velocity (0,x) :=
     funext (fun x => (S.firstStage.state.regularity.velocity_match S.firstStage.parent.zeroTime
-      x).symm)
+        x).symm)
   rw [he]
   exact S.firstStage_initial_support
 

@@ -6,13 +6,17 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
-public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.LinearAlgebra.Trace
+import LeanPool.NavierStokesAndEuler.Euler.ClassicalDivergence
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
 
 /-! The four-dimensional transport velocity associated with a lifted
 solenoidal field has zero ordinary trace on the real covering space. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -22,13 +26,15 @@ open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerMetricTranspo
   EulerTransportDerivatives EulerSmoothLimit EulerClassicalDivergence
 open scoped ContDiff
 
+/-- Transport linear, given by `(κ • ContinuousLinearMap.id ℝ Vector3).prod (toDual ℝ Vector3
+m)`. -/
 def transportLinear (κ : ℝ) (m : Vector3) : Vector3 →L[ℝ] LiftTangent :=
   (κ • ContinuousLinearMap.id ℝ Vector3).prod (toDual ℝ Vector3 m)
 
 @[simp] theorem transportLinear_apply (κ : ℝ) (m v : Vector3) :
     transportLinear κ m v = transportDirection κ m v := rfl
 
-@[simp] theorem transportLinear_single (κ : ℝ) (m : Vector3) (i : Fin 3) :
+theorem transportLinear_single (κ : ℝ) (m : Vector3) (i : Fin 3) :
     transportLinear κ m (EuclideanSpace.single i 1) = coordinateDirection κ m i := by
   apply Prod.ext
   · rfl
@@ -47,6 +53,7 @@ theorem trace_transportLinear (κ : ℝ) (m : Vector3) (L : LiftTangent →L[ℝ
 
 variable (P κ : ℝ) (m : Vector3) (g : LiftDomain P → Vector3)
 
+/-- Cover velocity, given by `transportDirection κ m (g (coveringMap P z))`. -/
 def coverVelocity (z : LiftTangent) : LiftTangent :=
   transportDirection κ m (g (coveringMap P z))
 
@@ -62,7 +69,7 @@ theorem coverVelocity_trace
     exact (hg 0).differentiable (by simp)
   have hd := (transportLinear κ m).hasFDerivAt.comp z (hdg z).hasFDerivAt
   change HasFDerivAt (coverVelocity P κ m g) ((transportLinear κ m).comp (fderiv ℝ (g ∘ coveringMap
-    P) z)) z at hd
+      P) z)) z at hd
   rw [hd.fderiv,trace_transportLinear,he]
   apply Finset.sum_congr rfl
   intro i _

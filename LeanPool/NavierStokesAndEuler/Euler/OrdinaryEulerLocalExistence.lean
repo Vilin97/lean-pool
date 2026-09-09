@@ -6,15 +6,21 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedCauchy
-public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLimit
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryAdvectionLimit
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedEnergy
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizer
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerUniqueness
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryRegularizedCauchy
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryStrongTime
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 
 /-! General smooth local Euler existence in ordinary R³. The datum
 has all actual spatial L² derivatives; no Gevrey radius is assumed.
 The solution is the strong Sobolev limit of genuine symmetric
 regularized Euler evolutions on one common positive interval. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -29,10 +35,11 @@ namespace RegularizedEvolution
 
 variable {T : ℝ} {hT : 0 ≤ T} {S : SmoothingOperator} (U : RegularizedEvolution S T hT)
 
+/-- Derivative path, given by `fieldPath U.derivative U.derivative_continuous`. -/
 def derivativePath : C(Icc (0 : ℝ) T,L2) := fieldPath U.derivative U.derivative_continuous
 
 theorem integral_equation (t : Icc (0 : ℝ) T) :
-    (U.velocity t).toLp=(U.velocity ⟨0,le_rfl,hT⟩).toLp+
+    (U.velocity t).toLp=(U.velocity ⟨0,le_rfl,hT⟩).toLp +
       integral T hT U.derivativePath t := by
   have h := eq_initial_add_integral T hT U.derivativePath
     (fun r => (U.velocity (projIcc 0 T hT r)).toLp) U.l2_time t
@@ -63,7 +70,7 @@ theorem regularized_derivative_convergence (M : ℝ)
       (regularizationCost_nonneg M))).mpr
     intro t
     exact regularized_rhs_error n _ ((U n).solenoidal t) M (hM n t)
-  have hz : Tendsto (fun n => (U n).derivativePath-
+  have hz : Tendsto (fun n => (U n).derivativePath -
       projectedRhsPath (U n).velocity (U n).velocity_continuous) atTop (𝓝 0) := by
     apply tendsto_iff_norm_sub_tendsto_zero.mpr
     simp only [sub_zero]
@@ -74,7 +81,7 @@ theorem regularized_derivative_convergence (M : ℝ)
 
 theorem regularized_integral_equation (M : ℝ)
     (hM : ∀ n t, WordBound 4 M ((U n).velocity t)) (t : Icc (0 : ℝ) T) :
-    (L.field t).toLp=(L.field ⟨0,le_rfl,hT⟩).toLp+
+    (L.field t).toLp=(L.field ⟨0,le_rfl,hT⟩).toLp +
       integral T hT (projectedRhsPath L.field L.field_continuous) t := by
   have hi := (ContinuousMap.evalCLM ℝ t).continuous.tendsto
     (integral T hT (projectedRhsPath L.field L.field_continuous)) |>.comp
@@ -88,14 +95,16 @@ theorem regularized_time (M : ℝ) (hM : ∀ n t, WordBound 4 M ((U n).velocity 
     (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (fun r => (L.field (projIcc 0 T hT r)).toLp)
       (projectedRhs (L.field t)).toLp (Icc (0 : ℝ) T) t := by
-  have he : (fun r => (L.field (projIcc 0 T hT r)).toLp)=
-      fun r => (L.field ⟨0,le_rfl,hT⟩).toLp+
+  have he : (fun r => (L.field (projIcc 0 T hT r)).toLp) =
+      fun r => (L.field ⟨0,le_rfl,hT⟩).toLp +
         extendPath T hT (integral T hT (projectedRhsPath L.field L.field_continuous)) r := by
     funext r
     exact L.regularized_integral_equation M hM (projIcc 0 T hT r)
   rw [he]
   exact (integral_hasDerivWithinAt T hT (projectedRhsPath L.field L.field_continuous) t).const_add _
 
+/-- Regularized evolution, bundling `velocity`, `pressureForce`, `velocity_continuous`,
+`pressure_continuous` and the required compatibility proofs. -/
 def regularizedEvolution (M : ℝ) (hM : ∀ n t, WordBound 4 M ((U n).velocity t)) :
     Evolution T hT where
   velocity := L.field
@@ -117,16 +126,18 @@ def regularizedEvolution (M : ℝ) (hM : ∀ n t, WordBound 4 M ((U n).velocity 
 
 end SmoothLimitData
 
+/-- Regularized solution, given by `Classical.choose ((regularizer n).exists_smooth
+(regularizedTime A) (regularizedTime_pos A).le A hA)`. -/
 def regularizedSolution (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace) (n : ℕ) :
     RegularizedEvolution (regularizer n) (regularizedTime A) (regularizedTime_pos A).le :=
   Classical.choose ((regularizer n).exists_smooth (regularizedTime A) (regularizedTime_pos A).le A
-    hA)
+      hA)
 
 theorem regularizedSolution_initial (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace) (n :
-  ℕ) :
+    ℕ) :
     (regularizedSolution A hA n).velocity ⟨0,le_rfl,(regularizedTime_pos A).le⟩=A :=
   Classical.choose_spec ((regularizer n).exists_smooth (regularizedTime A) (regularizedTime_pos
-    A).le A hA)
+      A).le A hA)
 
 theorem regularizedSolution_bounds (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace) :
     ∀ q, ∃ M : ℝ, ∀ n t, tensorNorm q ((regularizedSolution A hA n).velocity t) ≤ M := by
@@ -143,12 +154,15 @@ theorem regularizedSolution_cauchy (A : SmoothL2Field Space) (hA : A.toLp ∈ so
   intro j k
   simp only [regularizedSolution_initial]
 
+/-- Local limit, given by `smoothLimitData (regularizedTime_pos A).le _ _
+(regularizedSolution_bounds A hA) (regularizedSolution_cauchy A hA)`. -/
 def localLimit (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace) :
     SmoothLimitData (fun n => (regularizedSolution A hA n).velocity)
       (fun n => (regularizedSolution A hA n).velocity_continuous) :=
   smoothLimitData (regularizedTime_pos A).le _ _
     (regularizedSolution_bounds A hA) (regularizedSolution_cauchy A hA)
 
+/-- Local evolution, choosing the witness provided by `regularizedSolution_bounds`. -/
 def localEvolution (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace) :
     Evolution (regularizedTime A) (regularizedTime_pos A).le :=
   (localLimit A hA).regularizedEvolution (Classical.choose (regularizedSolution_bounds A hA 4))

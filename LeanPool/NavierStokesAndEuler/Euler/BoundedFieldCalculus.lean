@@ -6,10 +6,10 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathComposition
-public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
+public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Actual bounded-field bilinear and adjoint calculus
@@ -19,6 +19,9 @@ uniform field norm, including on a noncompact spatial domain. Lifting these
 maps to compact time paths preserves their norm bounds. These are the
 coefficient maps used to construct the actual source forward generator.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -36,16 +39,28 @@ variable {E F G : Type*}
   [NormedAddCommGroup F] [NormedSpace ℝ F]
   [NormedAddCommGroup G] [NormedSpace ℝ G]
 
-private local instance : NormedAddCommGroup (F →L[ℝ] G) := inferInstance
-private local instance : NormedSpace ℝ (F →L[ℝ] G) := inferInstance
-private local instance : NormedAddCommGroup (E →L[ℝ] F →L[ℝ] G) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F →L[ℝ] G) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ E) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ E) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ F) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ F) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ G) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ G) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (F →L[ℝ] G)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus1 : NormedAddCommGroup (F →L[ℝ] G) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (F →L[ℝ] G)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus2 : NormedSpace ℝ (F →L[ℝ] G) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F →L[ℝ] G)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus3 : NormedAddCommGroup (E →L[ℝ] F →L[ℝ] G) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F →L[ℝ] G)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus4 : NormedSpace ℝ (E →L[ℝ] F →L[ℝ] G) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus5 : NormedAddCommGroup (α →ᵇ E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus6 : NormedSpace ℝ (α →ᵇ E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus7 : NormedAddCommGroup (α →ᵇ F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus8 : NormedSpace ℝ (α →ᵇ F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ G)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus9 : NormedAddCommGroup (α →ᵇ G) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ G)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus10 : NormedSpace ℝ (α →ᵇ G) := inferInstance
 
 /-- The literal pointwise bounded bilinear field. -/
 def bilinearValue (B : E →L[ℝ] F →L[ℝ] G) (f : α →ᵇ E) (g : α →ᵇ F) : α →ᵇ G :=
@@ -114,21 +129,42 @@ variable {U E F : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
-private local instance : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (U →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ U →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ E →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ U →L[ℝ] F) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ U →L[ℝ] F) := inferInstance
-private local instance : NormedAddCommGroup ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F)) :=
-  inferInstance
-private local instance : NormedSpace ℝ ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus11 : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus12 : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus13 : NormedAddCommGroup (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus14 : NormedSpace ℝ (E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus15 : NormedAddCommGroup (U →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus16 : NormedSpace ℝ (U →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ U →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus17 : NormedAddCommGroup (α →ᵇ U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus18 : NormedSpace ℝ (α →ᵇ U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ E →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus19 : NormedAddCommGroup (α →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ E →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus20 : NormedSpace ℝ (α →ᵇ E →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ U →L[ℝ] F)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus21 : NormedAddCommGroup (α →ᵇ U →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ U →L[ℝ] F)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus22 : NormedSpace ℝ (α →ᵇ U →L[ℝ] F) := inferInstance
+/-- Cache the standard `NormedAddCommGroup ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F))` instance
+to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus23 : NormedAddCommGroup ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U
+    →L[ℝ] F)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F))` instance to
+shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus24 : NormedSpace ℝ ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F))
+    := inferInstance
 
 /-- The literal composition of two bounded operator fields. -/
 def compositionMap : (α →ᵇ E →L[ℝ] F) →L[ℝ] (α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F) :=
@@ -142,20 +178,47 @@ theorem compositionMap_norm : ‖compositionMap (α := α) (U := U) (E := E) (F 
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] F)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] F)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] F)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] F)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,(α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F))) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(K,(α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F))) :=
-  inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F)) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus25 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus26 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] F))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus27 : NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] F)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] F))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus28 : NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] F)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] F))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus29 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] F)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] F))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus30 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] F)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,(α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F)))`
+instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus31 : NormedAddCommGroup (C(K,(α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U
+    →L[ℝ] F))) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,(α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F)))` instance
+to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus32 : NormedSpace ℝ (C(K,(α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ]
+    F))) :=
+    inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F))`
+instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus33 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ
+    U →L[ℝ] F)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F))` instance
+to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus34 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U
+    →L[ℝ] F)) :=
+    inferInstance
 
 /-- Pointwise spatial composition, uniformly along a compact time path. -/
 def pathCompositionMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
@@ -164,12 +227,12 @@ def pathCompositionMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
     (E := α →ᵇ U →L[ℝ] E) (F := α →ᵇ U →L[ℝ] F)).comp
     ((compositionMap (α := α) (U := U) (E := E) (F := F)).compLeftContinuous ℝ K)
 
-@[simp] theorem pathCompositionMap_apply (A : C(K,α →ᵇ E →L[ℝ] F))
-    (B : C(K,α →ᵇ U →L[ℝ] E)) (t : K) (x : α) :
+@[simp] theorem pathCompositionMap_apply (A : C(K, α →ᵇ E →L[ℝ] F))
+    (B : C(K, α →ᵇ U →L[ℝ] E)) (t : K) (x : α) :
     pathCompositionMap A B t x = (A t x).comp (B t x) := rfl
 
 theorem pathCompositionMap_norm : ‖pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F)‖
-  ≤ 1 := by
+    ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
   intro A
   rw [one_mul]
@@ -186,8 +249,8 @@ theorem pathCompositionMap_norm : ‖pathCompositionMap (α := α) (K := K) (U :
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Genuine smoothness of pointwise field composition in the uniform time-space norm. -/
-theorem pathComposition_contDiff (A : P → C(K,α →ᵇ E →L[ℝ] F))
-    (B : P → C(K,α →ᵇ U →L[ℝ] E)) {n : ℕ∞ω} (hA : ContDiff ℝ n A) (hB : ContDiff ℝ n B) :
+theorem pathComposition_contDiff (A : P → C(K, α →ᵇ E →L[ℝ] F))
+    (B : P → C(K, α →ᵇ U →L[ℝ] E)) {n : ℕ∞ω} (hA : ContDiff ℝ n A) (hB : ContDiff ℝ n B) :
     ContDiff ℝ n (fun y => pathCompositionMap (A y) (B y)) :=
   ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
     (E := C(K,α →ᵇ E →L[ℝ] F))
@@ -195,11 +258,11 @@ theorem pathComposition_contDiff (A : P → C(K,α →ᵇ E →L[ℝ] F))
     (pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F))).comp hA).clm_apply hB
 
 /-- The actual field product has the same factorial convolution bound. -/
-theorem pathComposition_bound (A : P → C(K,α →ᵇ E →L[ℝ] F))
-    (B : P → C(K,α →ᵇ U →L[ℝ] E)) (hA : ContDiff ℝ ∞ A) (hB : ContDiff ℝ ∞ B)
+theorem pathComposition_bound (A : P → C(K, α →ᵇ E →L[ℝ] F))
+    (B : P → C(K, α →ᵇ U →L[ℝ] E)) (hA : ContDiff ℝ ∞ A) (hB : ContDiff ℝ ∞ B)
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D) (c d : ℕ)
-    (hbA : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C*majorant R c n)
-    (hbB : ∀ n x, ‖iteratedFDeriv ℝ n B x‖ ≤ D*majorant R d n) (n : ℕ) (x : P) :
+    (hbA : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant R c n)
+    (hbB : ∀ n x, ‖iteratedFDeriv ℝ n B x‖ ≤ D * majorant R d n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => pathCompositionMap (A y) (B y)) x‖ ≤ (3*C*D)*majorant R (c+d) n :=
   bilinear_bound (pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F))
     (pathCompositionMap_norm (α := α) (K := K) (U := U) (E := E) (F := F))
@@ -213,24 +276,40 @@ variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-private local instance : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (E →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (E →L[ℝ] U) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ U →L[ℝ] E) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ U →L[ℝ] E) := inferInstance
-private local instance : NormedAddCommGroup (α →ᵇ E →L[ℝ] U) := inferInstance
-private local instance : NormedSpace ℝ (α →ᵇ E →L[ℝ] U) := inferInstance
-private local instance : NormedAddCommGroup ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U)) :=
-  inferInstance
-private local instance : NormedSpace ℝ ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus35 : NormedAddCommGroup (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus36 : NormedSpace ℝ (U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (E →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus37 : NormedAddCommGroup (E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (E →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus38 : NormedSpace ℝ (E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ U →L[ℝ] E)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus39 : NormedAddCommGroup (α →ᵇ U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ U →L[ℝ] E)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus40 : NormedSpace ℝ (α →ᵇ U →L[ℝ] E) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (α →ᵇ E →L[ℝ] U)` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus41 : NormedAddCommGroup (α →ᵇ E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedSpace ℝ (α →ᵇ E →L[ℝ] U)` instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus42 : NormedSpace ℝ (α →ᵇ E →L[ℝ] U) := inferInstance
+/-- Cache the standard `NormedAddCommGroup ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U))` instance
+to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus43 : NormedAddCommGroup ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E
+    →L[ℝ] U)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U))` instance to
+shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus44 : NormedSpace ℝ ((α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U))
+    := inferInstance
 
 /-- The actual adjoint of every bounded coefficient operator. -/
 def adjointMap : (α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U) :=
   (realAdjoint (U := U) (E := E)).compLeftContinuousBounded α
 
 @[simp] theorem adjointMap_apply (A : α →ᵇ U →L[ℝ] E) (x : α) : adjointMap A x = (A x).adjoint :=
-  rfl
+    rfl
 
 theorem adjointMap_norm : ‖adjointMap (α := α) (U := U) (E := E)‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -244,21 +323,37 @@ theorem adjointMap_norm : ‖adjointMap (α := α) (U := U) (E := E)‖ ≤ 1 :=
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] U)) := inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] U)) := inferInstance
-private local instance : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U)) :=
-  inferInstance
-private local instance : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U)) :=
-  inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus45 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus46 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] U))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus47 : NormedAddCommGroup (C(K,α →ᵇ E →L[ℝ] U)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] U))` instance to shorten typeclass
+synthesis. -/
+local instance instBoundedFieldCalculus48 : NormedSpace ℝ (C(K,α →ᵇ E →L[ℝ] U)) := inferInstance
+/-- Cache the standard `NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U))`
+instance to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus49 : NormedAddCommGroup (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ
+    E →L[ℝ] U)) :=
+    inferInstance
+/-- Cache the standard `NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U))` instance
+to shorten typeclass synthesis. -/
+local instance instBoundedFieldCalculus50 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E
+    →L[ℝ] U)) :=
+    inferInstance
 
 /-- The bounded adjoint map on entire coefficient paths. -/
 def pathAdjointMap : C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U) :=
   (adjointMap (α := α) (U := U) (E := E)).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
-@[simp] theorem pathAdjointMap_apply (A : C(K,α →ᵇ U →L[ℝ] E)) (t : K) (x : α) :
+@[simp] theorem pathAdjointMap_apply (A : C(K, α →ᵇ U →L[ℝ] E)) (t : K) (x : α) :
     pathAdjointMap A t x = (A t x).adjoint := rfl
 
 theorem pathAdjointMap_norm : ‖pathAdjointMap (α := α) (K := K) (U := U) (E := E)‖ ≤ 1 := by

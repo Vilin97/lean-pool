@@ -7,10 +7,12 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageRestriction
+import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+
+/-! Physical estimates on the actual shortened parent state. -/
 
 @[expose] public section
 
-/-! Physical estimates on the actual shortened parent state. -/
 
 noncomputable section
 

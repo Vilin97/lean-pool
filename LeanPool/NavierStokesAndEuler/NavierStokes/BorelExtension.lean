@@ -8,10 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalScale
-public import Mathlib.Analysis.Calculus.SmoothSeries
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-
-@[expose] public section
+import Mathlib.Analysis.Calculus.SmoothSeries
 
 /-!
 # A constructed compactly supported Taylor–Borel extension
@@ -20,6 +17,9 @@ The input is an arbitrary sequence in a real Banach space. We choose increasing
 integer cutoff scales and sum actual cutoff monomials. All derivative bounds,
 convergence, smoothness, support, and prescribed derivatives at zero are proved.
 -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -33,6 +33,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ := by
   exact_mod_cast (le_top : (n : ℕ∞) ≤ ⊤)
 
+/-- Monomial, given by `(s ^ j / (j.factorial : ℝ)) • v`. -/
 def monomial (j : ℕ) (v : E) (s : ℝ) : E := (s ^ j / (j.factorial : ℝ)) • v
 
 theorem monomial_contDiff (j : ℕ) (v : E) : ContDiff ℝ ∞ (monomial j v) := by
@@ -88,6 +89,7 @@ theorem iteratedDeriv_monomial_zero (n j : ℕ) (v : E) :
 def term (b : ℝ) (j : ℕ) (v : E) (s : ℝ) : E :=
   SmoothCutoffs.cutoff (b * s) • monomial j v s
 
+/-- Template, given by `SmoothCutoffs.cutoff s • monomial j v s`. -/
 def template (j : ℕ) (v : E) (s : ℝ) : E :=
   SmoothCutoffs.cutoff s • monomial j v s
 
@@ -115,6 +117,7 @@ theorem exists_template_bound (j k : ℕ) (v : E) :
     ((template_contDiff j v).continuous_iteratedDeriv k (nat_le_infty k))
   exact ⟨max C 0, le_max_right _ _, fun s => (hC s).trans (le_max_left _ _)⟩
 
+/-- Template bound, given by `Classical.choose (exists_template_bound j k v)`. -/
 def templateBound (j k : ℕ) (v : E) : ℝ :=
   Classical.choose (exists_template_bound j k v)
 
@@ -184,6 +187,7 @@ theorem templateBound_le_boundSum {j k : ℕ} (hkj : k < j) (v : E) :
   exact Finset.single_le_sum (fun i _ => templateBound_nonneg j i v)
     (Finset.mem_range.mpr hkj)
 
+/-- Local scale, given by `Classical.choose (exists_nat_gt ((2 : ℝ) ^ j * boundSum j (a j)))`. -/
 def localScale (a : ℕ → E) (j : ℕ) : ℕ :=
   Classical.choose (exists_nat_gt ((2 : ℝ) ^ j * boundSum j (a j)))
 

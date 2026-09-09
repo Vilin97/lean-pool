@@ -7,11 +7,14 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTimePathGluing
-public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
+import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+
+/-! Matching time paths glue without any external-word or fixed-Sobolev loss. -/
 
 @[expose] public section
 
-/-! Matching time paths glue without any external-word or fixed-Sobolev loss. -/
 
 noncomputable section
 

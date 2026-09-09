@@ -8,10 +8,11 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionData
 
-@[expose] public section
-
 /-! The initialized approximation satisfies the actual lifted divergence
 constraint whenever the source deformation is a volume-preserving Jacobian. -/
+
+@[expose] public section
+
 
 noncomputable section
 
@@ -23,7 +24,7 @@ open scoped ContDiff
 
 variable (M : EulerMeanPacketProvider.Data)
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
-  (D : Data U) (hTime : M.T=D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
+  (D : Data U) (hTime : M.T = D.T) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
@@ -34,7 +35,7 @@ include Cagree
 theorem initializedPacketField_mem (N : ℕ) (κ : ℝ) (t : Icc (0 : ℝ) M.T)
     (Ξ : Space → Space) (hΞ : ContDiff ℝ ∞ Ξ)
     (hF : ∀ x, fderiv ℝ Ξ x = D.F.field (sourceTime M D hTime t) x)
-    (hdet : ∀ x, (EulerPacketPiola.operatorMatrix (D.F.field (sourceTime M D hTime t) x)).det=1) :
+    (hdet : ∀ x, (EulerPacketPiola.operatorMatrix (D.F.field (sourceTime M D hTime t) x)).det = 1) :
     (initializedPacketField M D hTime τ hτ hτT B δ hδ ξ hs α N κ).path t ∈
       divergenceFreeSpace period κ D.m₀ :=
   joinedPacketPullbackField_mem period M D hTime τ hτ hτT B
@@ -49,10 +50,10 @@ theorem initializedPacketField_mem (N : ℕ) (κ : ℝ) (t : Icc (0 : ℝ) M.T)
 theorem initializedCorrectionData_divergence (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
     (Ξ : Icc (0 : ℝ) D.T → Space → Space) (hΞ : ∀ t, ContDiff ℝ ∞ (Ξ t))
     (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
-    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det=1)
+    (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
     (t : Icc (0 : ℝ) D.T) :
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k
-      hk).approximation.field t ∈
+        hk).approximation.field t ∈
       divergenceFreeSpace period k⁻¹ D.m₀ := by
   let tm : Icc (0 : ℝ) M.T := ⟨t.val,by simpa only [hTime] using t.property⟩
   let G := initializedPacketField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹

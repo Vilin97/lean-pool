@@ -6,10 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedResidual
 public import LeanPool.NavierStokesAndEuler.Euler.PacketKnownGrade
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureJet
 
 /-!
 The well-founded profile recursion in (14), on literal time/space/angle fields.
@@ -18,32 +16,54 @@ linear inverse maps are the interface to the analytic source constructions;
 this file proves the recursion and its dependence only on earlier grades.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace EulerPacketProfileRecursion
 
 open EulerSmoothLimit EulerPacketPointJets Set
 
+/-- Vector field: an abbreviation for `Domain → Space`. -/
 abbrev VectorField := Domain → Space
+/-- Scalar field: an abbreviation for `Domain → ℝ`. -/
 abbrev ScalarField := Domain → ℝ
 
+/-- Profile data, collecting `high`, `mean`, `corrector`, `highPressure`, `meanPressure`,
+`instance`. -/
 structure Profile where
+  /-- High-frequency field of `Profile`, of type `VectorField`. -/
   high : VectorField
+  /-- Mean field of `Profile`, of type `VectorField`. -/
   mean : VectorField
+  /-- Correction field of `Profile`, of type `VectorField`. -/
   corrector : VectorField
+  /-- High-frequency pressure of `Profile`, of type `ScalarField`. -/
   highPressure : ScalarField
+  /-- Mean pressure of `Profile`, of type `ScalarField`. -/
   meanPressure : ScalarField
 
 instance : Zero Profile := ⟨⟨0,0,0,0,0⟩⟩
 
+/-- Operators data, collecting `interval`, `period`, `inverseFrame`, `strain`, `normal`,
+`meanSolve` and their compatibility conditions. -/
 structure Operators where
+  /-- Interval of `Operators`, of type `Set ℝ`. -/
   interval : Set ℝ
+  /-- Period of `Operators`, of type `ℝ`. -/
   period : ℝ
+  /-- Inverse frame of `Operators`, of type `Domain → Space →L[ℝ] Space`. -/
   inverseFrame : Domain → Space →L[ℝ] Space
+  /-- Strain of `Operators`, of type `Domain → Space →L[ℝ] Space`. -/
   strain : Domain → Space →L[ℝ] Space
+  /-- Normal of `Operators`, of type `VectorField`. -/
   normal : VectorField
+  /-- Mean solve of `Operators`, of type `VectorField → VectorField × ScalarField`. -/
   meanSolve : VectorField → VectorField × ScalarField
+  /-- High solve of `Operators`, of type `VectorField → VectorField × ScalarField`. -/
   highSolve : VectorField → VectorField × ScalarField
+  /-- Curl corrector of `Operators`, of type `VectorField → VectorField`. -/
   curlCorrector : VectorField → VectorField
 
 /-- Literal angular averaging at each time and spatial label. -/
@@ -52,57 +72,63 @@ def angleMean (P : ℝ) (f : VectorField) : VectorField :=
 
 /-- The stored coefficients determine the jets of V_i=A_i+B_i+C_{i-1}. -/
 def velocityJet (s : Set ℝ) (a : ℕ → Profile) (z : Domain) (i : ℕ) : VectorJet :=
-  if i=0 then 0 else slicedJet s (a i).high z+slicedJet s (a i).mean z+
+  if i=0 then 0 else slicedJet s (a i).high z+slicedJet s (a i).mean z +
     slicedJet s (a (i-1)).corrector z
 
+/-- Known jets, given by `history p (velocityJet O.interval a z) (slicedJet O.interval (a
+(p-1)).corrector z)`. -/
 def knownJets (O : Operators) (p : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → VectorJet :=
   history p (velocityJet O.interval a z) (slicedJet O.interval (a (p-1)).corrector z)
 
 /-- All terms of the grade-p forcing that are already determined. -/
 def knownForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
-  fun z => -(linearPart (O.strain z) (slicedJet O.interval (a (p-1)).corrector z)+
-    slowPressure (O.inverseFrame z) (pressureJet (a (p-1)).highPressure z)+
+  fun z => -(linearPart (O.strain z) (slicedJet O.interval (a (p-1)).corrector z) +
+    slowPressure (O.inverseFrame z) (pressureJet (a (p-1)).highPressure z) +
     nonlinearGrade (p+1) p (O.inverseFrame z) (O.normal z) (knownJets O p a z))
 
+/-- Mean force, given by `angleMean O.period (knownForce O p a)`. -/
 def meanForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
   angleMean O.period (knownForce O p a)
 
+/-- Mean result, given by `O.meanSolve (meanForce O p a)`. -/
 def meanResult (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField × ScalarField :=
   O.meanSolve (meanForce O p a)
 
 /-- The sole new mean-primary interaction is added after solving the mean. -/
 def highForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
-  fun z => knownForce O p a z-meanForce O p a z-
+  fun z => knownForce O p a z-meanForce O p a z -
     fastAdvection (O.normal z) (slicedJet O.interval (meanResult O p a).1 z)
       (slicedJet O.interval (a 1).high z)
 
+/-- Step, given by `let b := meanResult O p a let h := O.highSolve (highForce O p a)
+⟨h.1,b.1,O.curlCorrector h.1,h.2,b.2⟩`. -/
 def step (O : Operators) (p : ℕ) (a : ℕ → Profile) : Profile :=
   let b := meanResult O p a
   let h := O.highSolve (highForce O p a)
   ⟨h.1,b.1,O.curlCorrector h.1,h.2,b.2⟩
 
 theorem velocityJet_congr (s : Set ℝ) (p : ℕ) (a b : ℕ → Profile)
-    (h : ∀ i<p, a i=b i) (z : Domain) (i : ℕ) (hi : i<p) :
+    (h : ∀ i < p, a i = b i) (z : Domain) (i : ℕ) (hi : i < p) :
     velocityJet s a z i=velocityJet s b z i := by
   by_cases hz : i=0
   · simp only [velocityJet, hz, ite_true]
   · simp only [velocityJet, hz, ite_false, h i hi, h (i-1) (by omega)]
 
 theorem knownJets_congr (O : Operators) (p : ℕ) (hp : 1 ≤ p) (a b : ℕ → Profile)
-    (h : ∀ i<p, a i=b i) (z : Domain) : knownJets O p a z=knownJets O p b z := by
+    (h : ∀ i < p, a i = b i) (z : Domain) : knownJets O p a z=knownJets O p b z := by
   unfold knownJets
   rw [h (p-1) (by omega)]
   exact history_congr p _ _ _ (fun i hi => velocityJet_congr O.interval p a b h z i hi)
 
 theorem knownForce_congr (O : Operators) (p : ℕ) (hp : 1 ≤ p) (a b : ℕ → Profile)
-    (h : ∀ i<p, a i=b i) : knownForce O p a=knownForce O p b := by
+    (h : ∀ i < p, a i = b i) : knownForce O p a=knownForce O p b := by
   funext z
   unfold knownForce
   rw [h (p-1) (by omega), knownJets_congr O p hp a b h z]
 
 /-- At p≥2 the complete new profile depends only on the strict prefix. -/
 theorem step_congr (O : Operators) (p : ℕ) (hp : 2 ≤ p) (a b : ℕ → Profile)
-    (h : ∀ i<p, a i=b i) : step O p a=step O p b := by
+    (h : ∀ i < p, a i = b i) : step O p a=step O p b := by
   have hf := knownForce_congr O p (by omega) a b h
   have h₁ := h 1 (by omega)
   have hh : highForce O p a=highForce O p b := by
@@ -110,8 +136,9 @@ theorem step_congr (O : Operators) (p : ℕ) (hp : 2 ≤ p) (a b : ℕ → Profi
     simp only [highForce, meanResult, meanForce, hf, h₁]
   simp only [step, meanResult, meanForce, hf, hh]
 
+/-- Recursion step, with branches according to `p=0`. -/
 def recursionStep (O : Operators) (primary : Profile) (p : ℕ)
-    (a : (i : ℕ) → i<p → Profile) : Profile :=
+    (a : (i : ℕ) → i < p → Profile) : Profile :=
   if p=0 then 0 else if p=1 then primary else
     step O p (fun i => if hi : i<p then a i hi else 0)
 
@@ -128,7 +155,7 @@ theorem profiles_unfold (O : Operators) (primary : Profile) (p : ℕ) :
   simp only [recursionStep, ite_true]
 
 @[simp] theorem profiles_one (O : Operators) (primary : Profile) : profiles O primary 1=primary :=
-  by
+    by
   rw [profiles_unfold]
   simp only [recursionStep, one_ne_zero, ite_false, ite_true]
 

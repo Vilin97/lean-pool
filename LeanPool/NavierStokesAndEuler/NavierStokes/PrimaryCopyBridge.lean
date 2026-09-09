@@ -8,8 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryODE
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CommonCoverSolve
-
-@[expose] public section
+public import LeanPool.NavierStokesAndEuler.NavierStokes.JointODE
 
 /-!
 # The reconstructed forced solution is the actual copy solve
@@ -20,6 +19,9 @@ identifies the two constructed solutions from their common zero entry value.
 No energy inequality for the ambient projected operator is assumed.
 -/
 
+@[expose] public section
+
+
 noncomputable section
 
 namespace NavierStokes.PrimaryCopyBridge
@@ -27,13 +29,19 @@ namespace NavierStokes.PrimaryCopyBridge
 open Set Filter
 open scoped Topology ContDiff InnerProductSpace
 
+/-- Plane: an abbreviation for `TorusInverse.Plane`. -/
 abbrev Plane := TorusInverse.Plane
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
 abbrev Frequency := TorusInverse.Frequency
+/-- State: an abbreviation for `PrimaryODE.State`. -/
 abbrev State := PrimaryODE.State
+/-- Space: an abbreviation for `PrimaryODE.Space /-! ## Exact reindexing of primitive frame data
+-/`. -/
 abbrev Space := PrimaryODE.Space
 
 /-! ## Exact reindexing of primitive frame data -/
 
+/-- Reindex, bundling `beta`, `betaDot`, `rho`, `rhoDot` and the required compatibility proofs. -/
 noncomputable def reindex {P Q : Type} (d : PrimaryODE.FrameData P) (φ : Q → P) :
     PrimaryODE.FrameData Q where
   beta z := d.beta (φ z.1, z.2)
@@ -54,13 +62,16 @@ theorem reindex_kinematics {P Q : Type} (d : PrimaryODE.FrameData P) (φ : Q →
   exact ⟨h.beta_ne_zero, h.eigenvector_ne_zero, h.beta_deriv, h.rho_deriv,
     h.eigenvector_deriv, h.frameK_deriv, h.frameN_deriv⟩
 
+/-- Copy parameter, given by `(q.1, (g.coordinates k q.2).1)`. -/
 noncomputable def copyParameter {P : Type} (g : CommonCoverSolve.Geometry)
     (k : Frequency) (q : P × Plane) : P × ℝ := (q.1, (g.coordinates k q.2).1)
 
+/-- Copy frame, given by `reindex d (copyParameter g k)`. -/
 noncomputable def copyFrame {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (g : CommonCoverSolve.Geometry) (k : Frequency) : PrimaryODE.FrameData (P × Plane) :=
   reindex d (copyParameter g k)
 
+/-- Copy source, given by `f (z.1.1, g.path k z.1.2 z.2)`. -/
 noncomputable def copySource {P : Type} (f : P × Plane → Space)
     (g : CommonCoverSolve.Geometry) (k : Frequency) (z : (P × Plane) × ℝ) : Space :=
   f (z.1.1, g.path k z.1.2 z.2)
@@ -84,6 +95,7 @@ theorem ambient_zero {P : Type} (d : PrimaryODE.FrameData P) (z : P × ℝ) :
 
 /-! ## The native tangent data can be built directly from the frame -/
 
+/-- Base operator, constructed using `MovingFrameODE.packCLM.comp`. -/
 noncomputable def baseOperator (F : ℝ) (g : State) : Space →L[ℝ] Space :=
   MovingFrameODE.packCLM.comp
     (((-2 * F) • PiLp.proj 2 (fun _ : Fin 3 => ℝ) 1).prod
@@ -93,9 +105,12 @@ noncomputable def baseOperator (F : ℝ) (g : State) : Space →L[ℝ] Space :=
 @[simp] theorem baseOperator_apply (F : ℝ) (g : State) (x : Space) :
     baseOperator F g x = MovingFrameODE.baseAction F g x := rfl
 
+/-- Native point, given by `((z.1, z.2.1), z.2.2)`. -/
 noncomputable def nativePoint {P : Type} (z : P × Plane) : (P × ℝ) × ℝ :=
   ((z.1, z.2.1), z.2.2)
 
+/-- Frame tangent data, bundling `normal`, `normalDot`, `action`, `damping` and the required
+compatibility proofs. -/
 noncomputable def frameTangentData {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (j : ℤ) (f : P × Plane → Space) : CommonCoverSolve.TangentData P Space where
   normal z := d.normal (nativePoint z)
@@ -140,7 +155,7 @@ theorem anchoredSolve_hasDerivAt_along
     {q : P × Plane} (hq : q ∈ Ω) {v : ℝ} (hv : v ∈ Icc a b) :
     HasDerivAt (d.anchoredSolve g hab k q)
       (d.coefficientAlong g k (q, v) (d.anchoredSolve g hab k q v) + d.forcingAlong g k (q, v)) v
-        := by
+          := by
   have hAc := SmoothPathFamily.slice_continuous hA hq
   have hfc := SmoothPathFamily.slice_continuous hf hq
   have hd := ParametricODE.solutionExtension_hasDerivAt hab
@@ -184,9 +199,12 @@ structure Inputs (Ω : Set (P × Plane)) (a b : ℝ) : Prop where
   kinematics : ∀ q ∈ Ω, d.Kinematics (copyParameter g k q) (Icc a b)
   compatibility : ∀ q ∈ Ω, FrameMatchesAt d t j (copyParameter g k q) (Icc a b)
 
+/-- Reconstructed path, given by `PrimaryODE.ambientSolution hab (copyFrame d g k) j (fun _ =>
+0) (copySource t.source g k) q`. -/
 noncomputable def reconstructedPath (hab : a ≤ b) (q : P × Plane) : ℝ → Space :=
   PrimaryODE.ambientSolution hab (copyFrame d g k) j (fun _ => 0) (copySource t.source g k) q
 
+/-- Reconstructed copy, given by `reconstructedPath d t j g k hab q (g.coordinates k q.2).2`. -/
 noncomputable def reconstructedCopy (hab : a ≤ b) (q : P × Plane) : Space :=
   reconstructedPath d t j g k hab q (g.coordinates k q.2).2
 
@@ -256,11 +274,13 @@ theorem reconstructedCopy_eq_copySolve (hab : a ≤ b) {Ω : Set (P × Plane)}
 /-! The smooth endpoint-rescaled modal representative used by the jet
 estimates identifies with the very same copy solve. -/
 
+/-- Reparam path as an element of `Space`. -/
 noncomputable def reparamPath (a : ℝ) (z : (P × Plane) × ℝ) : Space :=
   (copyFrame d g k).ambient z
     (JointODE.reparamSolution a ((copyFrame d g k).coefficient j) (fun _ => 0)
       ((copyFrame d g k).forcing (copySource t.source g k)) z)
 
+/-- Reparam copy, given by `reparamPath d t j g k a (q, (g.coordinates k q.2).2)`. -/
 noncomputable def reparamCopy (a : ℝ) (q : P × Plane) : Space :=
   reparamPath d t j g k a (q, (g.coordinates k q.2).2)
 
@@ -287,11 +307,13 @@ theorem reparamCopy_eq_copySolve (hab : a ≤ b) {Ω : Set (P × Plane)}
 
 variable [NormedSpace ℝ P]
 
+/-- Current time, given by `(g.coordinates k q.2).2`. -/
 noncomputable def currentTime (q : P × Plane) : ℝ := (g.coordinates k q.2).2
 
 theorem currentTime_contDiff : ContDiff ℝ ∞ (currentTime (P := P) g k) :=
   ((g.coordinates_contDiff k).comp contDiff_snd).snd
 
+/-- Copy interior, given by `Ω ∩ (currentTime (P := P) g k) ⁻¹' Ioo a b`. -/
 noncomputable def copyInterior (Ω : Set (P × Plane)) (a b : ℝ) : Set (P × Plane) :=
   Ω ∩ (currentTime (P := P) g k) ⁻¹' Ioo a b
 
@@ -322,7 +344,7 @@ theorem reparamPath_iteratedFDeriv_eq (hab : a ≤ b) {Ω : Set (P × Plane)}
     (hz : z ∈ Ω ×ˢ Ioo a b) (n : ℕ) :
     iteratedFDeriv ℝ n (reparamPath d t j g k a) z =
       iteratedFDeriv ℝ n (fun w : (P × Plane) × ℝ => t.linearData.anchoredSolve g hab k w.1 w.2) z
-        := by
+          := by
   have he : EqOn (reparamPath d t j g k a)
       (fun w : (P × Plane) × ℝ => t.linearData.anchoredSolve g hab k w.1 w.2) (Ω ×ˢ Ioo a b) := by
     intro w hw
@@ -334,6 +356,7 @@ end Bridge
 
 /-! ## Smooth primitive data discharge the continuity requirements -/
 
+/-- Base operator family, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def baseOperatorFamily : (ℝ × State) →L[ℝ] (Space →L[ℝ] Space) :=
   LinearMap.toContinuousLinearMap {
     toFun := fun z => baseOperator z.1 z.2
@@ -342,14 +365,14 @@ noncomputable def baseOperatorFamily : (ℝ × State) →L[ℝ] (Space →L[ℝ]
       ext x i
       fin_cases i <;>
         simp [baseOperator_apply, MovingFrameODE.baseAction, MovingFrameODE.pack,
-          MovingFrameODE.tail] <;>
+            MovingFrameODE.tail] <;>
         ring
     map_smul' := by
       intro c z
       ext x i
       fin_cases i <;>
         simp [baseOperator_apply, MovingFrameODE.baseAction, MovingFrameODE.pack,
-          MovingFrameODE.tail] <;>
+            MovingFrameODE.tail] <;>
         ring }
 
 @[simp] theorem baseOperatorFamily_apply (z : ℝ × State) :
@@ -506,6 +529,8 @@ variable {P : Type} [NormedAddCommGroup P]
   (d : PrimaryODE.FrameData (P × ℝ)) (t : CommonCoverSolve.TangentData P Space)
   (j : ℤ) (g : CommonCoverSolve.Geometry) (k : Frequency) {a b : ℝ}
 
+/-- Seeded reconstructed path, given by `PrimaryODE.ambientSolution hab (copyFrame d g k) j x₀
+(copySource t.source g k) q`. -/
 noncomputable def seededReconstructedPath (hab : a ≤ b) (x₀ : P × Plane → State)
     (q : P × Plane) : ℝ → Space :=
   PrimaryODE.ambientSolution hab (copyFrame d g k) j x₀ (copySource t.source g k) q
@@ -537,7 +562,7 @@ theorem seededReconstructedPath_hasDerivAt (hab : a ≤ b) (x₀ : P × Plane �
       (copySource t.source g k) h.modal_coefficient h.modal_forcing hq
       (reindex_kinematics d (copyParameter g k) (h.kinematics q hq)) hv
   simpa only [CommonCoverSolve.LinearData.coefficientAlong,
-    CommonCoverSolve.LinearData.forcingAlong,
+      CommonCoverSolve.LinearData.forcingAlong,
     CommonCoverSolve.TangentData.linearData, CommonCoverSolve.negativeTangentProjection_apply,
     ← sub_eq_add_neg, TangentODE.projectedOperator_apply] using hd
 
