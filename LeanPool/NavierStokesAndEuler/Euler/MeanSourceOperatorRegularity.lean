@@ -1,0 +1,93 @@
+/-
+Copyright (c) 2026 OpenAI. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: OpenAI
+-/
+
+module
+
+public import LeanPool.NavierStokesAndEuler.Euler.MeanConcreteTranslation
+public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
+public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
+public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
+public import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedInverse
+
+@[expose] public section
+
+/-!
+# Spatial regularity of the actual source mean operator
+
+All coefficient families here are formed from literal bounded smooth matrix
+fields and smooth compact cutoffs. Their operator regularity is proved by
+those constructions and then passed through the genuine fixed mean inverse.
+-/
+
+noncomputable section
+
+namespace EulerMeanSourceOperatorRegularity
+
+open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
+  EulerMeanCoefficients
+  EulerMeanBoundary EulerMeanOperatorTranslation EulerMeanTimeTranslation EulerMeanFixedTranslation
+  EulerMeanFixedCoefficientRegularity EulerMeanFixedSpaceInverse EulerMeanTranslatedInverse
+  EulerTimeLp EulerCoerciveProjection
+open scoped ContDiff
+
+-- Reuse the nested Hilbert-space instances before forming operator families.
+private local instance : NormedAddCommGroup solenoidalSpace := inferInstance
+private local instance : InnerProductSpace ℝ solenoidalSpace := inferInstance
+private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T L2) := inferInstance
+private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T L2) := inferInstance
+private local instance (T : ℝ) : NormedAddCommGroup (TimeLp T solenoidalSpace) := inferInstance
+private local instance (T : ℝ) : InnerProductSpace ℝ (TimeLp T solenoidalSpace) := inferInstance
+
+variable (T : ℝ) (hT : 0 ≤ T)
+  (F F₁ H : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
+  (M0 : BoundedSmoothField (Space →L[ℝ] Space)) (χ : Cutoff) (L : ℝ)
+
+/-- The entire translated source mean operator is genuinely smooth in the spatial shift. -/
+theorem translatedSourceOperator_contDiff :
+    ContDiff ℝ ∞ (fun a : Space => translatedMeanOperator T hT a
+      (operatorPath T F.field) (operatorPath T F₁.field) (operatorPath T H.field)
+      (multiplier M0.field) (boundaryOperator χ) L) := by
+  have hA : ContDiff ℝ ∞ (fun a : Space => boundaryOperator (χ.translate a)) :=
+    mixedBoundaryOperator_contDiff χ χ
+  have h := contDiff_fixedMeanOperator T hT
+    (fun a => operatorPath T (translatedPath T F.field a))
+    (fun a => operatorPath T (translatedPath T F₁.field a))
+    (fun a => operatorPath T (translatedPath T H.field a))
+    (fun a => multiplier (translated M0.field a))
+    (fun a => boundaryOperator (χ.translate a)) L
+    (operatorPathTranslation_contDiff T F) (operatorPathTranslation_contDiff T F₁)
+    (operatorPathTranslation_contDiff T H) (multiplierTranslation_contDiff M0) hA
+  simpa only [translatedMeanOperator, translatePath_operatorPath,
+    translateOperator_multiplier, translateOperator_boundary] using h
+
+/-- The translated primitive in the forcing term is a genuinely smooth operator family. -/
+theorem translatedSourcePrimitive_contDiff :
+    ContDiff ℝ ∞ (fun a : Space => translatedMeanPrimitive T hT a
+      (operatorPath T F.field) (operatorPath T F₁.field)) := by
+  have h := contDiff_fixedMeanPrimitive T hT
+    (fun a => operatorPath T (translatedPath T F.field a))
+    (fun a => operatorPath T (translatedPath T F₁.field a))
+    (operatorPathTranslation_contDiff T F) (operatorPathTranslation_contDiff T F₁)
+  simpa only [translatedMeanPrimitive, translatePath_operatorPath] using h
+
+/-- The actual source inverse has a smooth spatial orbit when the given forcing does.
+The coercivity certificate is supplied by the already proved source boundary estimate. -/
+theorem sourceSolution_translation_contDiff (c : ℝ) (hc : 0 < c)
+    (hcoercive : ∀ v, c*‖v‖^2 ≤
+      ⟪fixedMeanOperator T hT (operatorPath T F.field) (operatorPath T F₁.field)
+        (operatorPath T H.field) (multiplier M0.field) (boundaryOperator χ) L v,v⟫_ℝ)
+    (f : TimeLp T L2) (hf : ContDiff ℝ ∞ (fun a : Space => timeTranslation T a f)) :
+    ContDiff ℝ ∞ (fun a : Space => timeSolenoidalTranslation T a
+      (coerciveInverse (fixedMeanOperator T hT (operatorPath T F.field) (operatorPath T F₁.field)
+        (operatorPath T H.field) (multiplier M0.field) (boundaryOperator χ) L) c hc hcoercive
+          (-(fixedMeanPrimitive T hT (operatorPath T F.field) (operatorPath T F₁.field)).adjoint
+            f))) :=
+  solution_translation_contDiff T hT (operatorPath T F.field) (operatorPath T F₁.field)
+    (operatorPath T H.field) (multiplier M0.field) (boundaryOperator χ) L c hc hcoercive f
+    (translatedSourceOperator_contDiff T hT F F₁ H M0 χ L)
+    (translatedSourcePrimitive_contDiff T hT F F₁) hf
+
+end EulerMeanSourceOperatorRegularity
