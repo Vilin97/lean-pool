@@ -27,8 +27,6 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Data.Set.FiniteExhaustion
 import Mathlib.LinearAlgebra.Matrix.Unique
 import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.RingTheory.Radical.NatInt
