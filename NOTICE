@@ -126,6 +126,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
                                      https://github.com/lyfar/gkp-carry-lean
   LeanPool/Odlyzko                   https://github.com/ImperialCollegeLondon/FLT
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
+  LeanPool/PFR                       https://github.com/teorth/pfr
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
   LeanPool/PermanentFormulaLowerBound
