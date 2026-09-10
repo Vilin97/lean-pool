@@ -56,7 +56,7 @@ instance instIsScalarTowerAdeleSpace : IsScalarTower k K (AdeleSpace k K) :=
     rw [Algebra.smul_def, Algebra.smul_def, mul_assoc]⟩
 
 omit [IsFullConstantField k K] in
-/-- The sandwich quotient `A(D') ⧸ (A(D) + K̃) ⊓ A(D')` is finite-dimensional. -/
+/-- The sandwich quotient `A(D') ⧸ (A(D) + diag(K)) ⊓ A(D')` is finite-dimensional. -/
 theorem finite_adeleFilt_sub_quotient {D D' : DivisorA k K} (hle : D ≤ D') :
     Module.Finite k ((adeleFilt k K D') ⧸
       Submodule.comap (adeleFilt k K D').subtype
@@ -74,7 +74,7 @@ theorem finite_adeleFilt_sub_quotient {D D' : DivisorA k K} (hle : D ≤ D') :
       rw [Submodule.add_eq_sup]
       exact le_sup_left)))
 
-/-- The adele class space `𝒜_K ⧸ (A(D) + K̃)` is finite-dimensional over `k`. -/
+/-- The adele class space `𝒜_K ⧸ (A(D) + diag(K))` is finite-dimensional over `k`. -/
 instance finiteDimensional_adeleQuotient (D : DivisorA k K) :
     FiniteDimensional k
       ((AdeleSpace k K) ⧸ (adeleFilt k K D + diagonalSubmodule k K)) := by
@@ -122,11 +122,11 @@ theorem eq_of_le_of_deg_le {D D' : DivisorA k K} (h : D ≤ D')
   have hzero : D' - D = 0 := eq_zero_of_effective_deg_zero k K hE hdeg0
   exact (sub_eq_zero.mp hzero).symm
 
-/-- A Weil differential: a k-linear functional on adeles vanishing on some `A(D)+K̃`. -/
+/-- A Weil differential: a k-linear functional on adeles vanishing on some `A(D)+diag(K)`. -/
 structure WeilDifferential where
   /-- The underlying `k`-linear functional on adeles. -/
   toFun : AdeleSpace k K →ₗ[k] k
-  /-- The functional vanishes on `A(D) + K̃` for some divisor `D`. -/
+  /-- The functional vanishes on `A(D) + diag(K)` for some divisor `D`. -/
   vanishes_on : ∃ D : DivisorA k K,
     ∀ α ∈ adeleFilt k K D + diagonalSubmodule k K, toFun α = 0
 
@@ -137,7 +137,7 @@ variable {k K}
 /-- A Weil differential is nonzero. -/
 def IsNonzero (ω : WeilDifferential k K) : Prop := ω.toFun ≠ 0
 
-/-- The space `Ω(D)` of k-linear functionals vanishing on `A(D)+K̃`. -/
+/-- The space `Ω(D)` of k-linear functionals vanishing on `A(D)+diag(K)`. -/
 def differentialSpace (D : DivisorA k K) : Submodule k (AdeleSpace k K →ₗ[k] k) where
   carrier := {φ | ∀ a ∈ adeleFilt k K D + diagonalSubmodule k K, φ a = 0}
   zero_mem' := by simp
@@ -192,7 +192,7 @@ theorem exists_nontrivial_omega :
   omega
 
 omit [IsFullConstantField k K] in
-/-- Multiplication by a unit sends `A(D + (x)) + K̃` into `A(D) + K̃`. -/
+/-- Multiplication by a unit sends `A(D + (x)) + diag(K)` into `A(D) + diag(K)`. -/
 theorem mul_mem_adeleFilt_add_diagonal (x : Kˣ) (D : DivisorA k K)
     {a : AdeleSpace k K}
     (ha : a ∈ adeleFilt k K (D + principalDivisorA k K (Additive.ofMul x)) +
@@ -346,7 +346,7 @@ theorem smulWeil_eq_zero_iff (x : K) (hx : x ≠ 0) (ω : WeilDifferential k K) 
     exact smul_zero x
 
 omit [IsFullConstantField k K] in
-/-- `Ω(D)` is the dual annihilator of `A(D) + K̃`. -/
+/-- `Ω(D)` is the dual annihilator of `A(D) + diag(K)`. -/
 theorem differentialSpace_eq_dualAnnihilator (D : DivisorA k K) :
     differentialSpace (k := k) (K := K) D =
       (adeleFilt k K D + diagonalSubmodule k K).dualAnnihilator := by
@@ -362,7 +362,7 @@ instance instFiniteDimensionalDifferentialSpace (D : DivisorA k K) :
     (Submodule.dualQuotEquivDualAnnihilator
       (adeleFilt k K D + diagonalSubmodule k K))
 
-/-- Divisors `D` for which `ω` vanishes on `A(D)+K̃`. -/
+/-- Divisors `D` for which `ω` vanishes on `A(D)+diag(K)`. -/
 def vanishingDivisors (ω : WeilDifferential k K) : Set (DivisorA k K) :=
   {D | ∀ α ∈ adeleFilt k K D + diagonalSubmodule k K, ω.toFun α = 0}
 
@@ -384,8 +384,8 @@ theorem add_toFun (ω η : WeilDifferential k K) :
     (ω + η).toFun = ω.toFun + η.toFun := rfl
 
 omit [IsFullConstantField k K] in
-/-- If `ω` vanishes on `A(D₀)+K̃` and `f ∈ L(E)`, then `f•ω` vanishes on
-`A(D₀−E)+K̃`. -/
+/-- If `ω` vanishes on `A(D₀)+diag(K)` and `f ∈ L(E)`, then `f•ω` vanishes on
+`A(D₀−E)+diag(K)`. -/
 theorem smulWeil_toFun_mem_differentialSpace (ω : WeilDifferential k K) {D₀ : DivisorA k K}
     (h : D₀ ∈ vanishingDivisors ω) {E : DivisorA k K} (f : RRspace k K E) :
     (smulWeil (f : K) ω).toFun ∈ differentialSpace (k := k) (K := K) (D₀ - E) := by
@@ -780,7 +780,7 @@ theorem duality {W : DivisorA k K} (hW : IsCanonical k K W) (D : DivisorA k K) :
     set φ : AdeleSpace k K →ₗ[k] k := (ψ : AdeleSpace k K →ₗ[k] k) with hφdef
     by_cases hψ0 : φ = 0
     · exact ⟨0, by rw [map_zero]; exact (Subtype.ext hψ0).symm⟩
-    · -- Package `ψ` as a nonzero differential vanishing on `A(D)+K̃`.
+    · -- Package `ψ` as a nonzero differential vanishing on `A(D)+diag(K)`.
       have hψmem : ∀ α ∈ adeleFilt k K D + diagonalSubmodule k K, φ α = 0 := by
         have hp : ∀ α ∈ adeleFilt k K (W - (W - D)) + diagonalSubmodule k K, φ α = 0 :=
           ψ.property

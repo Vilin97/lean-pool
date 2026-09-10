@@ -135,7 +135,7 @@ def diagonal : K →ₗ[k] AdeleSpace k K where
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
-/-- The image `K̃` of the diagonal embedding. -/
+/-- The image `diag(K)` of the diagonal embedding. -/
 def diagonalSubmodule : Submodule k (AdeleSpace k K) := LinearMap.range (diagonal k K)
 
 theorem adeleFilt_inf_diagonal (D : DivisorA k K) :
@@ -167,7 +167,7 @@ noncomputable def finrankAdeleFiltDiff (D D' : DivisorA k K) : ℕ := by
     (adeleFilt k K D') ⧸
       Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
 
-/-- Rank of `(A(D') + K̃) ⧸ (A(D) + K̃)` from the sandwich bookkeeping. -/
+/-- Rank of `(A(D') + diag(K)) ⧸ (A(D) + diag(K))` from the sandwich bookkeeping. -/
 noncomputable def sandwichRank (D D' : DivisorA k K) : ℤ :=
   by
   letI : AddCommGroup (adeleFilt k K D' + diagonalSubmodule k K) :=

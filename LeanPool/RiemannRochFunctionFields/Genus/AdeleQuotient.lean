@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.Valuation.ValuationSubring
 
 /-!
 # Adele quotient rank and the index of specialty
-This file proves Stichtenoth 1.5.4: the rank of `𝒜_K/(A(D)+K̃)` equals the specialty
+This file proves Stichtenoth 1.5.4: the rank of `𝒜_K/(A(D)+diag(K))` equals the specialty
 index `i(D)`.
 -/
 

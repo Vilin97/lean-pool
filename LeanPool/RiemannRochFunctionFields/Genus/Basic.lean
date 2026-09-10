@@ -265,7 +265,7 @@ theorem indexOfSpecialty_eq (D : DivisorA k K) :
   rw [indexOfSpecialty, Int.toNat_of_nonneg]
   omega
 
-/-- `finrank k (A_K ⧸ (A(D) + K̃))`. -/
+/-- `finrank k (A_K ⧸ (A(D) + diag(K)))`. -/
 noncomputable def finrankAdeleQuotient (D : DivisorA k K) : ℕ :=
   Module.finrank k <|
     (AdeleSpace k K) ⧸ (adeleFilt k K D + diagonalSubmodule k K)

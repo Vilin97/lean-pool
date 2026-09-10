@@ -127,7 +127,7 @@ lemma coordinate_equation (W : WeierstrassCurve.Affine k) :
   simp only [polynomial, map_add, map_sub, map_mul, map_pow] at h
   convert sub_eq_zero.mp h using 1 <;>
     simp [WeierstrassCurve.baseChange, WeierstrassCurve.map,
-      IsScalarTower.algebraMap_apply k k[X] W.CoordinateRing] ; ring
+      IsScalarTower.algebraMap_apply k k[X] W.CoordinateRing]; ring
 
 lemma derivative_polynomial_eq (W : WeierstrassCurve.Affine k) :
     W.polynomial.derivative = W.polynomialY := by
