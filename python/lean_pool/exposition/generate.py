@@ -22,6 +22,7 @@ from pathlib import Path
 
 import yaml
 
+from lean_pool.exposition.cones import compute_cone_metrics
 from lean_pool.exposition.layout import compute_layout
 from lean_pool.exposition.source_text import (
     ModuleSkeleton,
@@ -65,13 +66,13 @@ class SourceCache:
 
     def __init__(self, repo_root: Path) -> None:
         """Remember the repository root that module paths resolve against."""
-        self._repo_root = repo_root
+        self.repo_root = repo_root
         self._files: dict[str, SourceFile | None] = {}
 
     def get(self, module: str) -> SourceFile | None:
         """Return the parsed source for ``module``, or ``None`` if missing."""
         if module not in self._files:
-            path = self._repo_root.joinpath(*module.split(".")).with_suffix(".lean")
+            path = self.repo_root.joinpath(*module.split(".")).with_suffix(".lean")
             if path.is_file():
                 text = path.read_text(encoding="utf-8")
                 self._files[module] = SourceFile.from_text(text)
@@ -335,6 +336,25 @@ def _build_node(
     return node
 
 
+def _count_lines(path: Path) -> int:
+    """Count raw newline-delimited lines in one file (``wc -l`` semantics)."""
+    with path.open("rb") as handle:
+        return sum(1 for _ in handle)
+
+
+def count_project_loc(repo_root: Path, slug: str) -> int:
+    """Total lines of Lean in ``LeanPool/<slug>.lean`` and ``LeanPool/<slug>/``.
+
+    Counts every ``.lean`` file under the project directory, whether or not
+    the extractor exposed declarations from it, so the figure matches what
+    ``wc -l`` reports for the project tree.
+    """
+    pool_directory = Path(repo_root) / "LeanPool"
+    paths = [pool_directory / f"{slug}.lean"]
+    paths.extend(sorted((pool_directory / slug).rglob("*.lean")))
+    return sum(_count_lines(path) for path in paths if path.is_file())
+
+
 def _kind_counts(kinds: list[str]) -> dict[str, int]:
     """Count kinds, ordered by descending count then name for determinism."""
     counts = Counter(kinds)
@@ -441,6 +461,7 @@ def build_project_shard(
     average = sum(layout.node_layers) / node_count if node_count else 0.0
     stats = {
         "nodes": node_count,
+        "loc": count_project_loc(source_cache.repo_root, slug),
         "edges": sum(len(dependencies) for dependencies in dependency_lists),
         "maxDepth": max(layout.node_layers, default=0),
         "avgDepth": round(average, 2),
@@ -498,6 +519,7 @@ def build_index(shards: dict[str, dict], commit: str) -> dict:
                 "title": shard["title"],
                 "provenance": shard["provenance"],
                 "nodes": stats["nodes"],
+                "loc": stats["loc"],
                 "edges": stats["edges"],
                 "maxDepth": stats["maxDepth"],
                 "avgDepth": stats["avgDepth"],
@@ -510,6 +532,7 @@ def build_index(shards: dict[str, dict], commit: str) -> dict:
     totals = {
         "projects": len(project_rows),
         "decls": sum(row["nodes"] for row in project_rows),
+        "loc": sum(row["loc"] for row in project_rows),
         "edges": sum(row["edges"] for row in project_rows),
         "maxDepth": max((row["maxDepth"] for row in project_rows), default=0),
         "kinds": dict(
@@ -527,19 +550,32 @@ def build_index(shards: dict[str, dict], commit: str) -> dict:
 
 
 def build_declaration_index(shards: dict[str, dict], index: dict) -> dict:
-    """Build the compact ``data/decls.json`` payload for the viewer."""
+    """Build the compact ``data/decls.json`` payload for the viewer.
+
+    Each row is ``[name, kindIdx, projectIdx, declId, main, deps,
+    dependents, depCone, dependentCone]`` (schema 1.2): the main-result
+    flag (0/1), direct dependency and dependent counts, and the sizes of
+    the transitive dependency and dependent cones within the project.
+    """
     kinds = list(index["totals"]["kinds"])
     kind_indices = {kind: position for position, kind in enumerate(kinds)}
     slugs = [row["slug"] for row in index["projects"]]
     rows = []
     for project_position, slug in enumerate(slugs):
-        for declaration_id, node in enumerate(shards[slug]["decls"]):
+        nodes = shards[slug]["decls"]
+        metrics = compute_cone_metrics([node["deps"] for node in nodes])
+        for declaration_id, node in enumerate(nodes):
             rows.append(
                 [
                     node["name"],
                     kind_indices[node["kind"]],
                     project_position,
                     declaration_id,
+                    1 if node.get("main") else 0,
+                    len(node["deps"]),
+                    metrics.dependent_counts[declaration_id],
+                    metrics.dependency_cone_sizes[declaration_id],
+                    metrics.dependent_cone_sizes[declaration_id],
                 ]
             )
     return {"schema": 1, "kinds": kinds, "projects": slugs, "decls": rows}
