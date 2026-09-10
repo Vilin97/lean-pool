@@ -44,7 +44,7 @@ def compute_layout(dependencies: list[list[int]]) -> Layout:
     )
 
 
-def _strongly_connected_components(adjacency: list[list[int]]) -> list[list[int]]:
+def strongly_connected_components(adjacency: list[list[int]]) -> list[list[int]]:
     """Return SCCs via iterative Tarjan, dependencies-first.
 
     With edges pointing node -> dependency, Tarjan emits each component
@@ -99,7 +99,7 @@ def _strongly_connected_components(adjacency: list[list[int]]) -> list[list[int]
 
 def _longest_path_layers(dependencies: list[list[int]]) -> list[int]:
     """Return the longest-path layer of every node (SCCs share a layer)."""
-    components = _strongly_connected_components(dependencies)
+    components = strongly_connected_components(dependencies)
     component_of = [0] * len(dependencies)
     for component_index, members in enumerate(components):
         for node in members:

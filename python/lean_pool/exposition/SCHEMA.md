@@ -61,7 +61,7 @@ GitHub source: `https://github.com/Vilin97/lean-pool/blob/main/<LeanPool/A/B.lea
  "project": "ABCExceptions",
  "title": "…",                 // from projects.yml; null for pseudo-projects
  "provenance": "human",        // "human" | "AI" | "mix" | null
- "stats": {"nodes": 235, "edges": 817, "maxDepth": 14, "avgDepth": 3.71,
+ "stats": {"nodes": 235, "loc": 4120, "edges": 817, "maxDepth": 14, "avgDepth": 3.71,
            "kinds": {"lemma": 120, "theorem": 75, "def": 37, "structure": 3}},
  "modules": ["LeanPool.ABCExceptions.Section2", …],
  "layers": [40, 31, …],        // node count per layer, index = layer
@@ -88,7 +88,9 @@ GitHub source: `https://github.com/Vilin97/lean-pool/blob/main/<LeanPool/A/B.lea
 Depth definitions: `layer(n) = 0` if `n` has no intra-project deps, else
 `1 + max(layer(dep))` (cycles collapsed via SCC condensation — every member of
 an SCC shares the layer). `maxDepth = max layer`, `avgDepth = mean layer`
-(2 decimals). `edges = Σ len(deps)`.
+(2 decimals). `edges = Σ len(deps)`. `loc` (schema 1.2) is the raw line
+count of `LeanPool/<Project>.lean` plus every `.lean` file under
+`LeanPool/<Project>/`, exposed or not (`wc -l` semantics).
 
 ### Card metadata (schema 1.1, additive)
 
@@ -164,17 +166,18 @@ it needs module sources not yet fetched; callers fetch and retry.
 
 ```json
 {"schema": 1, "commit": "abc123", "generated": "2026-07-21T12:00:00Z",
- "totals": {"projects": 126, "decls": 55600, "edges": 210000,
+ "totals": {"projects": 126, "decls": 55600, "loc": 1200000, "edges": 210000,
             "maxDepth": 41, "kinds": {"lemma": …}},
  "projects": [{"slug": "ABCExceptions", "title": "…", "provenance": "human",
-               "nodes": 235, "edges": 817, "maxDepth": 14, "avgDepth": 3.71,
+               "nodes": 235, "loc": 4120, "edges": 817, "maxDepth": 14, "avgDepth": 3.71,
                "authors": ["…"], "license": "Apache-2.0",
                "branch": "analytic number theory", "mainResults": 3}, …]}
 ```
 
-Sorted by slug. `totals.maxDepth` is the max over projects. The last four
-fields are schema 1.1 additions (null / 0 for pseudo-projects); the landing
-table shows branch and license columns and an authors line under the title.
+Sorted by slug. `totals.maxDepth` is the max over projects; `totals.loc`
+is the sum. The last four fields are schema 1.1 additions (null / 0 for
+pseudo-projects); the landing table shows branch and license columns and an
+authors line under the title. `loc` (schema 1.2) is the project's line count.
 
 ## `data/decls.json` (all-declarations viewer index)
 
@@ -184,11 +187,18 @@ Compact arrays to keep the file small (~55K rows):
 {"schema": 1,
  "kinds": ["lemma", "theorem", …],
  "projects": ["ABCExceptions", …],       // slugs, same order as index.json
- "decls": [["Foo.aux", 0, 0, 12], …]}    // [name, kindIdx, projectIdx, declId]
+ "decls": [["Foo.aux", 0, 0, 12, 1, 3, 7, 5, 41], …]}
+ // [name, kindIdx, projectIdx, declId, main, deps, dependents, depCone, dependentCone]
 ```
 
 `declId` indexes into that project's shard `decls`; the viewer links a row to
-`p/<slug>/index.html#d<declId>`.
+`p/<slug>/index.html#d<declId>`. The remaining five columns (schema 1.2) are
+graph metrics within the project: `main` is 1 when the declaration is one of
+the card's main results, `deps`/`dependents` are the direct intra-project
+in/out counts, and `depCone`/`dependentCone` are the sizes of the transitive
+dependency and dependent cones (excluding the declaration itself; members of
+a dependency cycle count each other). The viewer sorts main results first by
+default.
 
 ## Page shells
 
