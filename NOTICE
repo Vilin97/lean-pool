@@ -96,6 +96,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/JohnsonLindenstraussLean  https://github.com/claytomode/johnson-lindenstrauss-lean
   LeanPool/KahnKalai                 https://github.com/dcposch/kahn-kalai-lean
   LeanPool/KasamiCyclicAdditive      https://github.com/dsm054/kasami_cyclic_additive
+  LeanPool/Koethe                    https://github.com/tadamcz/koethe
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
@@ -325,6 +326,25 @@ the original authors.
           Gupta, D. (2026). Formal Learning Theory Kernel: Lean4 Formalization
           of the Fundamental Theorem of Statistical Learning.
           https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+
+  LeanPool/Koethe                    https://github.com/tadamcz/koethe
+      The upstream repository ships a NOTICE file (Apache License, Version 2.0,
+      Section 4(d)). Its attribution notice reads:
+
+          Köthe conjecture: disproof (Krempa's matrix form)
+          Copyright 2026 Tom Adamczewski / Epoch AI
+
+          This repository includes a definition and a conjecture statement copied
+          from Formal Conjectures (https://github.com/google-deepmind/formal-conjectures,
+          file FormalConjectures/Wikipedia/Koethe.lean at commit
+          9cbe1d3c12998c786b7c2cd99ce28a21b6631f66), Copyright 2025 The Formal
+          Conjectures Authors, licensed under the Apache License, Version 2.0.
+
+          The formal statement was given to the AI system by Epoch AI's
+          LeanOpenProblems harness (https://github.com/epoch-research/LeanOpenProblems,
+          branch wikipedia-dataset, commit 0ef96d7b12cfa96a93761b4bba1c635f4546c5ca),
+          MIT License. The Lean proof was produced by a pre-release version of
+          GPT-6 Astra (OpenAI) running in that harness.
 
   LeanPool/ZhangYeungInequality      https://github.com/cboone/zhang-yeung-inequality
       The upstream repository ships a NOTICE file (Apache License, Version 2.0,
