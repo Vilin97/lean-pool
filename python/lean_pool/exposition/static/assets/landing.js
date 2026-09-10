@@ -20,6 +20,7 @@
     { key: "provenance", label: "Provenance", numeric: false },
     { key: "license", label: "License", numeric: false },
     { key: "nodes", label: "Decls", numeric: true },
+    { key: "loc", label: "LOC", numeric: true },
     { key: "edges", label: "Edges", numeric: true },
     { key: "maxDepth", label: "Max depth", numeric: true },
     { key: "avgDepth", label: "Avg depth", numeric: true },
@@ -47,6 +48,7 @@
     const tiles = [
       ["Projects", totals.projects],
       ["Declarations", totals.decls],
+      ["Lines of Lean", totals.loc || 0],
       ["Dependency edges", totals.edges],
       ["Deepest chain", totals.maxDepth],
     ];
@@ -204,6 +206,7 @@
     tr.appendChild(licenseCell);
 
     tr.appendChild(numericCell(formatCount(project.nodes)));
+    tr.appendChild(numericCell(formatCount(project.loc || 0)));
     tr.appendChild(numericCell(formatCount(project.edges)));
     tr.appendChild(numericCell(formatCount(project.maxDepth)));
     tr.appendChild(numericCell(Number(project.avgDepth || 0).toFixed(2)));
