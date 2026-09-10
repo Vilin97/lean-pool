@@ -37,7 +37,13 @@
   let kindOf = null;     // Uint8Array
   let projectOf = null;  // Uint16Array
   let declIdOf = null;   // Uint32Array
+  let mainOf = null;     // Uint8Array: 1 when listed as a project main result
+  let depsOf = null;     // Uint32Array: direct intra-project dependencies
+  let dependentsOf = null;    // Uint32Array: direct intra-project dependents
+  let depConeOf = null;       // Uint32Array: transitive dependency cone size
+  let dependentConeOf = null; // Uint32Array: transitive dependent cone size
   let kindRank = null;   // Uint8Array: kind index -> canonical display rank
+  const NUMERIC_COLUMNS = new Set(["deps", "dependents", "depCone", "dependentCone"]);
 
   const sortedOrders = new Map(); // column name -> ascending Uint32Array
   let filtered = null;            // Uint32Array scratch; first filteredCount valid
@@ -45,9 +51,11 @@
   let kindFacetCounts = null;     // Uint32Array: per-kind counts under project+search
   let chipCountEls = [];          // kind index -> chip count element
 
+  // Default sort: main results first (descending on the 0/1 flag), then by
+  // name within each group.
   const state = {
-    column: "name",
-    descending: false,
+    column: "main",
+    descending: true,
     query: "",
     project: -1,       // -1 = all projects
     kindActive: [],    // boolean per kind index
@@ -84,10 +92,28 @@
       compare = (a, b) => kindRank[kindOf[a]] - kindRank[kindOf[b]] || nameCompare(a, b);
     } else if (column === "project") {
       compare = (a, b) => projectOf[a] - projectOf[b] || nameCompare(a, b);
+    } else if (column === "main") {
+      // Ascending order puts non-main first; the default (descending) walk
+      // of this array is then main-first, still alphabetical within groups.
+      compare = (a, b) => mainOf[a] - mainOf[b] || nameCompare(b, a);
+    } else if (NUMERIC_COLUMNS.has(column)) {
+      const values = numericColumn(column);
+      // Same trick: descending is the natural reading of a count column, so
+      // the ascending array reverses the name tie-break.
+      compare = (a, b) => values[a] - values[b] || nameCompare(b, a);
     }
     order.sort(compare);
     sortedOrders.set(column, order);
     return order;
+  }
+
+  function numericColumn(column) {
+    switch (column) {
+      case "deps": return depsOf;
+      case "dependents": return dependentsOf;
+      case "depCone": return depConeOf;
+      default: return dependentConeOf;
+    }
   }
 
   // ---------- filtering ----------
@@ -133,16 +159,26 @@
     const row = document.createElement("div");
     row.className = "vrow";
     // A real link gives keyboard focus, Enter activation, and open-in-new-tab.
+    const main = document.createElement("span");
+    main.className = "vcell-main";
     const name = document.createElement("a");
     name.className = "vcell-name";
     const kind = document.createElement("span");
     kind.className = "kchip";
     const project = document.createElement("a");
     project.className = "vcell-project";
-    row.append(name, kind, project);
+    row.append(main, name, kind, project);
+    row._main = main;
     row._name = name;
     row._kind = kind;
     row._project = project;
+    row._nums = [];
+    for (let c = 0; c < 4; c++) {
+      const cell = document.createElement("span");
+      cell.className = "vcell-num";
+      row.appendChild(cell);
+      row._nums.push(cell);
+    }
     return row;
   }
 
@@ -156,6 +192,10 @@
 
   function fillRow(row, i) {
     row.dataset.index = i;
+    const isMain = mainOf[i] === 1;
+    row._main.textContent = isMain ? "★" : "";
+    row._main.title = isMain ? "Main result" : "";
+    row.classList.toggle("vrow-main", isMain);
     row._name.textContent = names[i];
     const slug = projects[projectOf[i]];
     row._name.href = `../p/${encodeURIComponent(slug)}/index.html#d${declIdOf[i]}`;
@@ -164,6 +204,10 @@
     row._kind.className = `kchip ${kindClass(kindName)}`;
     row._project.textContent = slug;
     row._project.href = `../p/${encodeURIComponent(slug)}/`;
+    row._nums[0].textContent = formatCount(depsOf[i]);
+    row._nums[1].textContent = formatCount(dependentsOf[i]);
+    row._nums[2].textContent = formatCount(depConeOf[i]);
+    row._nums[3].textContent = formatCount(dependentConeOf[i]);
   }
 
   function renderWindow() {
@@ -289,7 +333,8 @@
         state.descending = !state.descending;
       } else {
         state.column = column;
-        state.descending = false;
+        // Flag and count columns read naturally largest/starred first.
+        state.descending = column === "main" || NUMERIC_COLUMNS.has(column);
       }
       updateSortIndicators();
       refresh(true);
@@ -309,6 +354,11 @@
     kindOf = new Uint8Array(total);
     projectOf = new Uint16Array(total);
     declIdOf = new Uint32Array(total);
+    mainOf = new Uint8Array(total);
+    depsOf = new Uint32Array(total);
+    dependentsOf = new Uint32Array(total);
+    depConeOf = new Uint32Array(total);
+    dependentConeOf = new Uint32Array(total);
     const kindCounts = new Array(kinds.length).fill(0);
     for (let i = 0; i < total; i++) {
       const row = raw[i];
@@ -317,6 +367,11 @@
       kindOf[i] = row[1];
       projectOf[i] = row[2];
       declIdOf[i] = row[3];
+      mainOf[i] = row[4] || 0;
+      depsOf[i] = row[5] || 0;
+      dependentsOf[i] = row[6] || 0;
+      depConeOf[i] = row[7] || 0;
+      dependentConeOf[i] = row[8] || 0;
       kindCounts[row[1]] += 1;
     }
 
