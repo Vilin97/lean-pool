@@ -3887,7 +3887,6 @@ import LeanPool.SpectralPositivity.Operator.Jentzsch
 import LeanPool.SpectralPositivity.Operator.JentzschProof
 import LeanPool.SpectralPositivity.Operator.KernelPositivity
 import LeanPool.SpectralPositivity.Operator.SpectralRadius
-import LeanPool.SpherePacking
 import LeanPool.SteinhausThreeGap
 import LeanPool.SteinhausThreeGap.Basic
 import LeanPool.SumsThreeSquares
