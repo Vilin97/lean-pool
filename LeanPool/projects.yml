@@ -1,4 +1,78 @@
 projects:
+  - slug: koethe-conjecture-disproof
+    title: Disproof of the Köthe conjecture (Krempa's matrix form)
+    summary: >-
+      Refutes Köthe's 1930 conjecture in Krempa's matrix form: there is a ring
+      R (the unitization of a nil algebra of three weighted backward shifts
+      over the algebraic closure of F_2) with a nil two-sided ideal I such
+      that the matrix ideal M_2(I) contains a non-nilpotent matrix. The
+      compared theorem is exactly the negation of the research-open statement
+      `Koethe.KotherConjecture.variants.general_matrix` from Google DeepMind's
+      Formal Conjectures, in every universe. The supporting library proves a
+      multiprojective common-zero theorem via the Segre cone, the
+      Nullstellensatz and Krull's height theorem, a mask-mortality theorem for
+      one-row matrix pencils, a diagonal construction of universal mortal
+      sequences, and a linearization theorem reducing nilness of a
+      three-generator algebra to nilness of its root-row pencils.
+    branch: noncommutative ring theory
+    entry_module: LeanPool.Koethe
+    authors:
+      - Tom Adamczewski
+    source:
+      title: A counterexample to Köthe's conjecture and a question of Rowen
+      authors:
+        - Tom Adamczewski
+        - Bernhard Böhmler
+        - Rene Marczinzik
+      arxiv: '2609.07996'
+      url: https://github.com/tadamcz/koethe
+      github_repo: tadamcz/koethe
+      commit: a94a72aec957cb28d76aa30fb97a01d440990d7f
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Koethe.KotherConjecture.variants.general_matrix.disproof
+    main_results:
+      - declaration: Koethe.KotherConjecture.variants.general_matrix.disproof
+        informal: >-
+          It is not the case that for every ring R, every nil two-sided ideal
+          I of R and every finite index type n, the matrix ideal M_n(I) of
+          M_n(R) is nil. This is the negation of Krempa's matrix form of
+          Köthe's conjecture, stated verbatim as in Formal Conjectures.
+      - declaration: KoetheCounterexample.counterexample
+        informal: >-
+          In every universe there is a ring R with a nil two-sided ideal I
+          such that some 2 x 2 matrix with entries in I is not nilpotent.
+      - declaration: KoetheMultiProjective.exists_common_zero
+        informal: >-
+          Over an algebraically closed field, at most 2N polynomials that are
+          multihomogeneous of a common positive degree in each of N blocks of
+          three variables have a common zero with no block equal to zero.
+      - declaration: KoetheCounterexample.maskMortality
+        informal: >-
+          Over an algebraically closed field, every one-row matrix pencil and
+          every periodic mask with more than half of its residues free admit a
+          mask-compatible word of nonzero letters whose forward product is
+          the zero matrix.
+      - declaration: KoetheCounterexample.exists_universalMortalSequence
+        informal: >-
+          Over a countable field satisfying mask mortality there is a
+          sequence of nonzero letter triples such that every pencil has all
+          its windows of some fixed positive length equal to zero.
+      - declaration: KoetheCounterexample.nil_of_all_pencils_nil
+        informal: >-
+          If every root-row pencil lifted along three elements of an algebra
+          is nilpotent, then the non-unital subalgebra they generate is nil.
+    tags:
+      - ring-theory
+      - nil-ideals
+      - koethe-conjecture
+      - counterexample
+      - matrix-rings
+    msc:
+      - 16N40
+      - 16S50
   - slug: long-gaps-between-primes
     title: Improved long gaps between consecutive primes
     summary: >-
