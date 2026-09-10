@@ -8509,38 +8509,35 @@ private theorem kEAction_iota (n : ℕ) (k : K) (v : V) :
       ZMod.toCircle ((Multiplicative.toAdd z).linear (kLinear k v))
   rw [kXLinear_apply, inv_inv]
 
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private def kEAddAction (n : ℕ) (k : K) : E n ≃+ E n :=
-  MulEquiv.toAdditive (kEAction n k)
 
 
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[simp]
-private theorem kEAddAction_iota (n : ℕ) (k : K) (v : V) :
-    kEAddAction n k (iota n v) = iota n (kLinear k v) := by
+private theorem carryEAddAction_iota (n : ℕ) (k : K) (v : V) :
+    carryEAddAction n k (iota n v) = iota n (kLinear k v) := by
   exact congrArg Multiplicative.toAdd (kEAction_iota n k v)
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem kEAddAction_iota_orbit_infinite
+private theorem carryEAddAction_iota_orbit_infinite
     (n : ℕ) (v : V) (hv : v ≠ 0) :
-    (Set.range fun k : K => kEAddAction n k (iota n v)).Infinite := by
+    (Set.range fun k : K => carryEAddAction n k (iota n v)).Infinite := by
   have hinfinite :
       ((iota n) '' (Set.range fun k : K => kLinear k v)).Infinite :=
     (k_vector_orbit_infinite v hv).image (iota_injective n).injOn
   apply hinfinite.mono
   rintro _ ⟨w, ⟨k, rfl⟩, rfl⟩
-  rw [← kEAddAction_iota n k v]
+  rw [← carryEAddAction_iota n k v]
   exact Set.mem_range_self k
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem kEAddAction_orbit_infinite_of_exact
+private theorem carryEAddAction_orbit_infinite_of_exact
     (n : ℕ) (sigma : E n →+ B)
     (hsigma_ker : sigma.ker = (iota n).range)
     (hsigma_equivariant : ∀ (k : K) (η : E n),
-      sigma (kEAddAction n k η) = kDividedSquareLinear k (sigma η))
+      sigma (carryEAddAction n k η) = kDividedSquareLinear k (sigma η))
     (η : E n) (hη : η ≠ 0) :
-    (Set.range fun k : K => kEAddAction n k η).Infinite := by
+    (Set.range fun k : K => carryEAddAction n k η).Infinite := by
   by_cases hquadratic : sigma η = 0
   · have hkernel : η ∈ sigma.ker := hquadratic
     rw [hsigma_ker] at hkernel
@@ -8550,11 +8547,11 @@ private theorem kEAddAction_orbit_infinite_of_exact
       apply hη
       simpa only [hzero, map_zero] using hv.symm
     rw [← hv]
-    exact kEAddAction_iota_orbit_infinite n v hvzero
+    exact carryEAddAction_iota_orbit_infinite n v hvzero
   · apply Set.Infinite.of_image sigma
     apply (k_dividedSquare_orbit_infinite (sigma η) hquadratic).mono
     rintro _ ⟨k, rfl⟩
-    exact ⟨kEAddAction n k η, ⟨k, rfl⟩,
+    exact ⟨carryEAddAction n k η, ⟨k, rfl⟩,
       hsigma_equivariant k η⟩
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -8570,7 +8567,7 @@ private theorem gamma_isICC_of_infinite_orbits
 private theorem gamma_isICC_of_additive_infinite_orbits
     (n : ℕ)
     (horbit : ∀ η : E n, η ≠ 0 →
-      (Set.range fun k : K => kEAddAction n k η).Infinite) :
+      (Set.range fun k : K => carryEAddAction n k η).Infinite) :
     IsICC (gammaGroup n) := by
   apply gamma_isICC_of_infinite_orbits n
   intro η hη
@@ -8588,16 +8585,16 @@ private theorem gamma_isICC_of_exact
     (n : ℕ) (sigma : E n →+ B)
     (hsigma_ker : sigma.ker = (iota n).range)
     (hsigma_equivariant : ∀ (k : K) (η : E n),
-      sigma (kEAddAction n k η) = kDividedSquareLinear k (sigma η)) :
+      sigma (carryEAddAction n k η) = kDividedSquareLinear k (sigma η)) :
     IsICC (gammaGroup n) :=
   gamma_isICC_of_additive_infinite_orbits n
-    (kEAddAction_orbit_infinite_of_exact n sigma hsigma_ker
+    (carryEAddAction_orbit_infinite_of_exact n sigma hsigma_ker
       hsigma_equivariant)
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem kEAddAction_quadratic_value (n : ℕ) (k : K)
+private theorem carryEAddAction_quadratic_value (n : ℕ) (k : K)
     (η : E n) (q : Y) :
-    Additive.toMul (kEAddAction n k η)
+    Additive.toMul (carryEAddAction n k η)
       (Multiplicative.ofAdd (⟨0, q⟩ : CarryGroup n)) =
       Additive.toMul η
         (Multiplicative.ofAdd
@@ -8620,20 +8617,20 @@ private theorem sigma_equivariant_of_characterization
         Additive.toMul η
           (Multiplicative.ofAdd (⟨0, q⟩ : CarryGroup n)))
     (k : K) (η : E n) :
-    s (kEAddAction n k η) = kDividedSquareLinear k (s η) := by
+    s (carryEAddAction n k η) = kDividedSquareLinear k (s η) := by
   apply Module.eval_apply_injective F
   apply LinearMap.ext
   intro q
   apply ZMod.injective_toCircle
   calc
-    ZMod.toCircle (q (s (kEAddAction n k η))) =
-        Additive.toMul (kEAddAction n k η)
+    ZMod.toCircle (q (s (carryEAddAction n k η))) =
+        Additive.toMul (carryEAddAction n k η)
           (Multiplicative.ofAdd (⟨0, q⟩ : CarryGroup n)) :=
-      hs (kEAddAction n k η) q
+      hs (carryEAddAction n k η) q
     _ = Additive.toMul η
           (Multiplicative.ofAdd
             (⟨0, kYLinear k⁻¹ q⟩ : CarryGroup n)) :=
-      kEAddAction_quadratic_value n k η q
+      carryEAddAction_quadratic_value n k η q
     _ = ZMod.toCircle ((kYLinear k⁻¹ q) (s η)) :=
       (hs η (kYLinear k⁻¹ q)).symm
     _ = ZMod.toCircle (q (kDividedSquareLinear k (s η))) := by
@@ -8653,7 +8650,7 @@ private theorem gamma_isICC_of_characterized_exact
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem sigma_equivariant (n : ℕ) (k : K) (η : E n) :
-    sigma n (kEAddAction n k η) =
+    sigma n (carryEAddAction n k η) =
       kDividedSquareLinear k (sigma n η) :=
   sigma_equivariant_of_characterization n (sigma n)
     (sigma_characterization n) k η

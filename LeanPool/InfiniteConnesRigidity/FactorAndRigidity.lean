@@ -2630,14 +2630,10 @@ local instance dualProductMeasurable : MeasurableSpace (X × Y) :=
 public
 local instance dualProductBorel : BorelSpace (X × Y) := ⟨rfl⟩
 
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private def dualPointAction (k : K) (z : X × Y) : X × Y :=
-  (z.1.comp (kLinear k⁻¹).toLinearMap,
-    z.2.comp (kDividedSquareLinear k⁻¹).toLinearMap)
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem continuous_dualPointAction (k : K) :
-    Continuous (dualPointAction k) := by
+private theorem continuous_dualPairAction (k : K) :
+    Continuous (dualPairAction k) := by
   exact ((continuous_X_precomp (kLinear k⁻¹).toLinearMap).comp
     continuous_fst).prodMk
       ((continuous_Y_precomp (kDividedSquareLinear k⁻¹).toLinearMap).comp
@@ -2645,7 +2641,7 @@ private theorem continuous_dualPointAction (k : K) :
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def IsInvariantDualProbability (μ : ProbabilityMeasure (X × Y)) : Prop :=
-  ∀ k : K, (μ : Measure (X × Y)).map (dualPointAction k) = μ
+  ∀ k : K, (μ : Measure (X × Y)).map (dualPairAction k) = μ
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def dualDetects (z : X × Y) (v : V) : Prop :=
@@ -2669,7 +2665,7 @@ private theorem dualDetectionSet_measurable (v : V) :
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem dualDetects_action (k : K) (z : X × Y) (v : V) :
-    dualDetects (dualPointAction k z) (kLinear k v) ↔
+    dualDetects (dualPairAction k z) (kLinear k v) ↔
       dualDetects z v := by
   have hv : kLinear k⁻¹ (kLinear k v) = v := by
     rw [map_inv]
@@ -2685,7 +2681,7 @@ private theorem dualDetects_action (k : K) (z : X × Y) (v : V) :
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem dualDetectionSet_action_preimage (k : K) (v : V) :
-    dualPointAction k ⁻¹' dualDetectionSet (kLinear k v) =
+    dualPairAction k ⁻¹' dualDetectionSet (kLinear k v) =
       dualDetectionSet v := by
   ext z
   exact dualDetects_action k z v
@@ -2700,9 +2696,9 @@ private theorem invariantDual_detection_measure
   obtain ⟨k, hk⟩ := primitiveVector_actingGroup_completion v hv
   have hmap := congrArg
     (fun ν : Measure (X × Y) ↦ ν (dualDetectionSet v)) (hμ k)
-  rw [Measure.map_apply (continuous_dualPointAction k).measurable
+  rw [Measure.map_apply (continuous_dualPairAction k).measurable
     (dualDetectionSet_measurable v)] at hmap
-  have hpre : dualPointAction k ⁻¹' dualDetectionSet v =
+  have hpre : dualPairAction k ⁻¹' dualDetectionSet v =
       dualDetectionSet e := by
     rw [← hk]
     exact dualDetectionSet_action_preimage k e
@@ -3015,7 +3011,7 @@ private theorem gammaPairHomeomorph_equivariant (k : K)
     (χ : DiscreteCharacterSpace (E n)) :
     gammaPairHomeomorph n bidual
         (dualCharacterAction (gammaSplitAbelianExtension n).action k χ) =
-      dualPointAction k (gammaPairHomeomorph n bidual χ) := by
+      dualPairAction k (gammaPairHomeomorph n bidual χ) := by
   have hcarry :
       bidual.symm
           (dualCharacterAction (gammaSplitAbelianExtension n).action k χ) =
@@ -3032,7 +3028,7 @@ private theorem gammaPairHomeomorph_equivariant (k : K)
     carryHomeomorph n
         (bidual.symm
           (dualCharacterAction (gammaSplitAbelianExtension n).action k χ)) =
-      dualPointAction k (carryHomeomorph n (bidual.symm χ))
+      dualPairAction k (carryHomeomorph n (bidual.symm χ))
   rw [hcarry]
   rfl
 
@@ -3040,13 +3036,13 @@ private theorem gammaPairHomeomorph_equivariant (k : K)
 private theorem gammaDualCharacterAction_continuous (k : K) :
     Continuous (dualCharacterAction (gammaSplitAbelianExtension n).action k) := by
   have h := (gammaPairHomeomorph n bidual).symm.continuous.comp
-    ((continuous_dualPointAction k).comp
+    ((continuous_dualPairAction k).comp
       (gammaPairHomeomorph n bidual).continuous)
   apply h.congr
   intro χ
   change
     (gammaPairHomeomorph n bidual).symm
-        (dualPointAction k (gammaPairHomeomorph n bidual χ)) =
+        (dualPairAction k (gammaPairHomeomorph n bidual χ)) =
       dualCharacterAction (gammaSplitAbelianExtension n).action k χ
   rw [← gammaPairHomeomorph_equivariant n bidual hbidual k χ,
     Homeomorph.symm_apply_apply]
@@ -3067,9 +3063,9 @@ private theorem gammaPairProbability_invariant
     (gammaPairHomeomorph n bidual) μ
     (fun k : K ↦
       dualCharacterAction (gammaSplitAbelianExtension n).action k)
-    dualPointAction
+    dualPairAction
     (fun k ↦ (gammaDualCharacterAction_continuous n bidual hbidual k).measurable)
-    (fun k ↦ (continuous_dualPointAction k).measurable)
+    (fun k ↦ (continuous_dualPairAction k).measurable)
     (gammaPairHomeomorph_equivariant n bidual hbidual)
     hμ
 
@@ -4604,7 +4600,7 @@ private theorem pairDualHomeomorph_zero :
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem spectralPairAction_equivariance
     (k : K) (χ : DiscreteCharacterSpace D) :
-    dualPointAction k (pairDualHomeomorph.symm χ) =
+    dualPairAction k (pairDualHomeomorph.symm χ) =
       pairDualHomeomorph.symm
         (dualCharacterAction moduleAddAction k χ) := by
   apply pairDualHomeomorph.injective
@@ -4621,11 +4617,11 @@ private theorem spectralDualCharacterAction_continuous (k : K) :
     Continuous (dualCharacterAction (A := D) (H := actingGroup)
       moduleAddAction k) := by
   have hcont := pairDualHomeomorph.continuous.comp
-    ((continuous_dualPointAction k).comp pairDualHomeomorph.symm.continuous)
+    ((continuous_dualPairAction k).comp pairDualHomeomorph.symm.continuous)
   apply hcont.congr
   intro χ
   change pairDualHomeomorph
-      (dualPointAction k (pairDualHomeomorph.symm χ)) =
+      (dualPairAction k (pairDualHomeomorph.symm χ)) =
     dualCharacterAction moduleAddAction k χ
   rw [spectralPairAction_equivariance k χ,
     pairDualHomeomorph.apply_symm_apply]
@@ -4644,9 +4640,9 @@ private theorem spectralPairProbability_invariant
   exact homeomorphPushProbability_invariant
     pairDualHomeomorph.symm μ
     (fun k : K ↦ dualCharacterAction moduleAddAction k)
-    dualPointAction
+    dualPairAction
     (fun k ↦ (spectralDualCharacterAction_continuous k).measurable)
-    (fun k ↦ (continuous_dualPointAction k).measurable)
+    (fun k ↦ (continuous_dualPairAction k).measurable)
     (fun k χ ↦ (spectralPairAction_equivariance k χ).symm)
     hμ
 
