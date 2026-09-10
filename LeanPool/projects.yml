@@ -110,8 +110,8 @@ projects:
     - declaration: FunctionField.riemann_ineq
       informal: Riemann's inequality ℓ(D) ≥ deg D + 1 − g holds for every divisor D.
     - declaration: FunctionField.clifford
-      informal: Clifford's inequality 2(ℓ(D) − 1) ≤ deg D holds for every special divisor D
-        with 0 ≤ deg D ≤ 2g − 2.
+      informal: Clifford's inequality 2(ℓ(D) − 1) ≤ deg D holds for every divisor D with
+        0 ≤ deg D ≤ 2g − 2, ℓ(D) > 0, and ℓ(W − D) > 0 for a canonical divisor W.
     - declaration: FunctionField.exists_isCanonical
       informal: Every function field admits a canonical divisor, namely the divisor of a
         nonzero Weil differential.
