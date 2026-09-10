@@ -257,27 +257,27 @@ private theorem rooted_markov_real_iterate_sq_error
     (p : ι → Equiv.Perm V) (T : Finset V) (k : ℕ) :
     ‖((permutationMarkov p)^[k])
         (indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T)) -
+          (KunDirectedIndicatorJensen.realIndicator T)) -
         indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T)‖ ^ 2 =
+          (KunDirectedIndicatorJensen.realIndicator T)‖ ^ 2 =
       ∑ x : V,
         ((((KunFinitePermutationMarkovMass.realPermutationMarkov p)^[k])
-            (KunFinitePermutationMarkovMass.realIndicator T)) x -
+            (KunDirectedIndicatorJensen.realIndicator T)) x -
           if x ∈ T then (1 : ℝ) else 0) ^ 2 := by
   have h :=
     KunRealComplexMarkovBridge.norm_iterate_permutationMarkov_indicator_sub_sq
-      p (KunFinitePermutationMarkovMass.realIndicator T) k
+      p (KunDirectedIndicatorJensen.realIndicator T) k
   have hcomplex :
       KunRealComplexMarkovBridge.permutationMarkov p =
         KunRootedIndicatorCrossing.permutationMarkov p := rfl
   have hvector :
       KunRealComplexMarkovBridge.indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T) =
+          (KunDirectedIndicatorJensen.realIndicator T) =
         KunRootedIndicatorCrossing.indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T) := rfl
+          (KunDirectedIndicatorJensen.realIndicator T) := rfl
   rw [rooted_realMarkov_eq_mass_realPermutationMarkov] at h
   rw [hcomplex, hvector] at h
-  simpa only [KunFinitePermutationMarkovMass.realIndicator] using h
+  simpa only [KunDirectedIndicatorJensen.realIndicator] using h
 
 private theorem rooted_indicator_defect_sq_le_boundary
     {ι V : Type*} [Fintype ι] [Nonempty ι]
@@ -285,9 +285,9 @@ private theorem rooted_indicator_defect_sq_le_boundary
     (p : ι → Equiv.Perm V) (T : Finset V) :
     ‖permutationMarkov p
         (indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T)) -
+          (KunDirectedIndicatorJensen.realIndicator T)) -
         indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T)‖ ^ 2 ≤
+          (KunDirectedIndicatorJensen.realIndicator T)‖ ^ 2 ≤
       2 * (boundary p T : ℝ) /
         (Fintype.card ι : ℝ) := by
   have hcomplex :
@@ -308,10 +308,10 @@ private theorem rooted_indicator_defect_sq_le_boundary
       p (KunDirectedIndicatorJensen.realIndicator T)
   rw [hcomplex, hvector, hreal] at henergy
   have hindicator :
-      KunFinitePermutationMarkovMass.realIndicator T =
+      KunDirectedIndicatorJensen.realIndicator T =
         KunDirectedIndicatorJensen.realIndicator T := by
     funext x
-    simp only [KunFinitePermutationMarkovMass.realIndicator,
+    simp only [KunDirectedIndicatorJensen.realIndicator,
       KunDirectedIndicatorJensen.realIndicator]
   rw [hindicator]
   calc
@@ -2554,7 +2554,7 @@ private theorem exists_rooted_word_radius_real_markov_sq_error_le_boundary
         (∑ x : X.carrier,
           ((((KunFinitePermutationMarkovMass.realPermutationMarkov
               X.generator)^[k])
-            (KunFinitePermutationMarkovMass.realIndicator T)) x -
+            (KunDirectedIndicatorJensen.realIndicator T)) x -
               if x ∈ T then (1 : ℝ) else 0) ^ 2) ≤
           8 * (boundary X.generator T : ℝ) /
             ((S.card : ℝ) *
@@ -2572,11 +2572,11 @@ private theorem exists_rooted_word_radius_real_markov_sq_error_le_boundary
   refine ⟨r, ?_⟩
   intro X hgenerated hroot T hindicator
   let χ : X.carrier → ℝ :=
-    KunFinitePermutationMarkovMass.realIndicator T
+    KunDirectedIndicatorJensen.realIndicator T
   have hχ : X.indicator = χ := by
     funext x
     simpa [χ,
-      KunFinitePermutationMarkovMass.realIndicator]
+      KunDirectedIndicatorJensen.realIndicator]
       using hindicator x
   have hgeo := hr X hgenerated hroot
   rw [hχ] at hgeo
@@ -2643,26 +2643,26 @@ private theorem rooted_real_markov_iterate_residual_sqrt_eq
       (∑ x : V,
         (KunActualFinalRestrictedVariation.realMarkov p
           ((((KunFinitePermutationMarkovMass.realPermutationMarkov p)^[k])
-            (KunFinitePermutationMarkovMass.realIndicator T))) x -
+            (KunDirectedIndicatorJensen.realIndicator T))) x -
           ((((KunFinitePermutationMarkovMass.realPermutationMarkov p)^[k])
-            (KunFinitePermutationMarkovMass.realIndicator T)) x)) ^ 2) =
+            (KunDirectedIndicatorJensen.realIndicator T)) x)) ^ 2) =
       ‖((permutationMarkov p)^[k + 1])
           (indicatorVector
-            (KunFinitePermutationMarkovMass.realIndicator T)) -
+            (KunDirectedIndicatorJensen.realIndicator T)) -
         ((permutationMarkov p)^[k])
           (indicatorVector
-            (KunFinitePermutationMarkovMass.realIndicator T))‖ := by
+            (KunDirectedIndicatorJensen.realIndicator T))‖ := by
   have hcomplex :
       KunRealComplexMarkovBridge.permutationMarkov p =
         KunRootedIndicatorCrossing.permutationMarkov p := rfl
   have hvector :
       KunRealComplexMarkovBridge.indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T) =
+          (KunDirectedIndicatorJensen.realIndicator T) =
         KunRootedIndicatorCrossing.indicatorVector
-          (KunFinitePermutationMarkovMass.realIndicator T) := rfl
+          (KunDirectedIndicatorJensen.realIndicator T) := rfl
   have henergy :=
     KunRealComplexMarkovBridge.norm_iterate_permutationMarkov_indicator_sub_iterate_sq
-      p (KunFinitePermutationMarkovMass.realIndicator T) k
+      p (KunDirectedIndicatorJensen.realIndicator T) k
   rw [hcomplex, hvector,
     rooted_realMarkov_eq_mass_realPermutationMarkov] at henergy
   have hfinal := rooted_final_realMarkov_eq_mass_realPermutationMarkov p
@@ -2670,15 +2670,15 @@ private theorem rooted_real_markov_iterate_residual_sqrt_eq
       (∑ x : V,
         (KunActualFinalRestrictedVariation.realMarkov p
           ((((KunFinitePermutationMarkovMass.realPermutationMarkov p)^[k])
-            (KunFinitePermutationMarkovMass.realIndicator T))) x -
+            (KunDirectedIndicatorJensen.realIndicator T))) x -
           ((((KunFinitePermutationMarkovMass.realPermutationMarkov p)^[k])
-            (KunFinitePermutationMarkovMass.realIndicator T)) x)) ^ 2) =
+            (KunDirectedIndicatorJensen.realIndicator T)) x)) ^ 2) =
       ‖((permutationMarkov p)^[k + 1])
           (indicatorVector
-            (KunFinitePermutationMarkovMass.realIndicator T)) -
+            (KunDirectedIndicatorJensen.realIndicator T)) -
         ((permutationMarkov p)^[k])
           (indicatorVector
-            (KunFinitePermutationMarkovMass.realIndicator T))‖ ^ 2 := by
+            (KunDirectedIndicatorJensen.realIndicator T))‖ ^ 2 := by
     rw [hfinal]
     simpa only [Function.iterate_succ_apply'] using henergy.symm
   rw [hsum, Real.sqrt_sq (norm_nonneg _)]
@@ -2747,7 +2747,7 @@ private theorem exists_rooted_word_radius_sparse_cut_of_boundary
             9 * (∑ x : X.carrier,
               ((((KunFinitePermutationMarkovMass.realPermutationMarkov
                 X.generator)^[k])
-                  (KunFinitePermutationMarkovMass.realIndicator T)) x -
+                  (KunDirectedIndicatorJensen.realIndicator T)) x -
                 if x ∈ T then (1 : ℝ) else 0) ^ 2) ∧
           (((U ∆ T).card : ℝ)) ≤
             72 * (boundary X.generator T : ℝ) /
@@ -2786,7 +2786,7 @@ private theorem exists_rooted_word_radius_sparse_cut_of_boundary
   have hrootnear := hroot.mono (le_max_left rnear rfinal)
   have hrootfinal := hroot.mono (le_max_right rnear rfinal)
   let χ : X.carrier → ℝ :=
-    KunFinitePermutationMarkovMass.realIndicator T
+    KunDirectedIndicatorJensen.realIndicator T
   let f : X.carrier → ℝ :=
     ((KunFinitePermutationMarkovMass.realPermutationMarkov
       X.generator)^[k]) χ
@@ -2796,7 +2796,7 @@ private theorem exists_rooted_word_radius_sparse_cut_of_boundary
   have hχ : X.indicator = χ := by
     funext x
     simpa [χ,
-      KunFinitePermutationMarkovMass.realIndicator]
+      KunDirectedIndicatorJensen.realIndicator]
       using hindicator x
   have hD :
       (∑ x : X.carrier,
@@ -5896,21 +5896,12 @@ end KunExactKazhdanGeneratorChange
 
 namespace KunExactActualSourceAmbientGenerators
 
+export SourceGeneratedWordCrossing (sourceAlphaInclusion)
+
 section
 
 open KunExactKazhdanGeneratorChange
 
-/-- Internal interface connecting the split non-sofic proof modules. -/
-public
-def sourceAlphaInclusion :
-    prefixElementaryGroup alphaPrefixCode →*
-      prefixElementaryGroup ninePrefixCode where
-  toFun g :=
-    ⟨g.val,
-      SourceGeneration.alphaPrefixElementaryGroup_le_nine
-        g.property⟩
-  map_one' := rfl
-  map_mul' _ _ := rfl
 
 private theorem sourceAlphaInclusion_injective :
     Function.Injective sourceAlphaInclusion := by
@@ -7980,13 +7971,11 @@ end KunAdditiveMedianPoincare
 
 namespace KunCompletedComponentMidrankVariation
 
+export KunAdditiveMedianPoincare (permutationRealVariation)
+
 open Filter Topology
 open scoped BigOperators
 
-private def permutationRealVariation
-    {V ι : Type*} [Fintype V] [Fintype ι]
-    (σ : ι → Equiv.Perm V) (f : V → ℝ) : ℝ :=
-  ∑ i : ι, ∑ x : V, |f (σ i x) - f x|
 
 private theorem permutationRealVariation_sq_le_card_mul_energy
     {V ι : Type*} [Fintype V] [Fintype ι]
@@ -8230,7 +8219,7 @@ private theorem weighted_component_midrankVariance_additive_bound
           (C.card : ℝ) *
             midrankVariance
               (componentRankMassList C b)) ≤
-      KunCompletedComponentMidrankVariation.permutationRealVariation
+      KunAdditiveMedianPoincare.permutationRealVariation
         σ (MidrankPermutationEnergy.partitionVertexMidrank P b) +
         5 * (∑ C ∈ P.parts, (boundary σ C : ℝ)) := by
   classical
@@ -8244,7 +8233,7 @@ private theorem weighted_component_midrankVariance_additive_bound
       2 * γ * (C.card : ℝ) *
           midrankVariance
             (componentRankMassList C b) ≤
-        KunCompletedComponentMidrankVariation.permutationRealVariation
+        KunAdditiveMedianPoincare.permutationRealVariation
           (τ C) (fun x : {x : V // x ∈ C} => f (x : V)) +
           4 * (boundary σ C : ℝ) := by
     have hCne : C.Nonempty := P.nonempty_of_mem_parts hC
@@ -8287,7 +8276,7 @@ private theorem weighted_component_midrankVariance_additive_bound
     rw [← hrestrict] at hp
     simpa only
       [KunAdditiveMedianPoincare.permutationRealVariation,
-       KunCompletedComponentMidrankVariation.permutationRealVariation]
+       KunAdditiveMedianPoincare.permutationRealVariation]
       using hp
   have hsummed :
       2 * γ *
@@ -8296,7 +8285,7 @@ private theorem weighted_component_midrankVariance_additive_bound
               midrankVariance
                 (componentRankMassList C b)) ≤
         (∑ C ∈ P.parts,
-          KunCompletedComponentMidrankVariation.permutationRealVariation
+          KunAdditiveMedianPoincare.permutationRealVariation
             (τ C) (fun x : {x : V // x ∈ C} => f (x : V))) +
           4 * (∑ C ∈ P.parts, (boundary σ C : ℝ)) := by
     calc
@@ -8314,14 +8303,14 @@ private theorem weighted_component_midrankVariance_additive_bound
               intro C _
               ring
       _ ≤ ∑ C ∈ P.parts,
-          (KunCompletedComponentMidrankVariation.permutationRealVariation
+          (KunAdditiveMedianPoincare.permutationRealVariation
             (τ C) (fun x : {x : V // x ∈ C} => f (x : V)) +
             4 * (boundary σ C : ℝ)) := by
               apply Finset.sum_le_sum
               intro C hC
               exact hcomponent C hC
       _ = (∑ C ∈ P.parts,
-          KunCompletedComponentMidrankVariation.permutationRealVariation
+          KunAdditiveMedianPoincare.permutationRealVariation
             (τ C) (fun x : {x : V // x ∈ C} => f (x : V))) +
           4 * (∑ C ∈ P.parts, (boundary σ C : ℝ)) := by
               rw [Finset.sum_add_distrib, Finset.mul_sum]
@@ -8334,7 +8323,7 @@ private theorem weighted_component_midrankVariance_additive_bound
           (C.card : ℝ) *
             midrankVariance
               (componentRankMassList C b)) ≤
-      KunCompletedComponentMidrankVariation.permutationRealVariation
+      KunAdditiveMedianPoincare.permutationRealVariation
         σ f +
         5 * (∑ C ∈ P.parts, (boundary σ C : ℝ))
   linarith
@@ -8389,7 +8378,7 @@ private theorem weighted_component_midrankVariance_tendsto_zero_of_additive_expa
     exact_mod_cast Fintype.card_pos_iff.mpr inferInstance
   have hvariation : Tendsto
       (fun n =>
-        KunCompletedComponentMidrankVariation.permutationRealVariation
+        KunAdditiveMedianPoincare.permutationRealVariation
           (σ n) (f n) / (Fintype.card (V n) : ℝ))
       atTop (nhds 0) := by
     apply
@@ -8417,7 +8406,7 @@ private theorem weighted_component_midrankVariance_tendsto_zero_of_additive_expa
           midrankVariance
             (componentRankMassList C (b n))) /
               (Fintype.card (V n) : ℝ) ≤
-        (KunCompletedComponentMidrankVariation.permutationRealVariation
+        (KunAdditiveMedianPoincare.permutationRealVariation
           (σ n) (f n) / (Fintype.card (V n) : ℝ) +
           5 * ((∑ C ∈ (P n).parts,
             (boundary (σ n) C : ℝ)) /
@@ -8442,20 +8431,20 @@ private theorem weighted_component_midrankVariance_tendsto_zero_of_additive_expa
                   (componentRankMassList C (b n)))) /
                     (Fintype.card (V n) : ℝ) := by ring
       _ ≤
-          (KunCompletedComponentMidrankVariation.permutationRealVariation
+          (KunAdditiveMedianPoincare.permutationRealVariation
             (σ n) (f n) +
             5 * (∑ C ∈ (P n).parts,
               (boundary (σ n) C : ℝ))) /
                 (Fintype.card (V n) : ℝ) := hfinite'
       _ =
-          KunCompletedComponentMidrankVariation.permutationRealVariation
+          KunAdditiveMedianPoincare.permutationRealVariation
             (σ n) (f n) / (Fintype.card (V n) : ℝ) +
             5 * ((∑ C ∈ (P n).parts,
               (boundary (σ n) C : ℝ)) /
                 (Fintype.card (V n) : ℝ)) := by ring
   have hlimit : Tendsto
       (fun n =>
-        (KunCompletedComponentMidrankVariation.permutationRealVariation
+        (KunAdditiveMedianPoincare.permutationRealVariation
           (σ n) (f n) / (Fintype.card (V n) : ℝ) +
           5 * ((∑ C ∈ (P n).parts,
             (boundary (σ n) C : ℝ)) /

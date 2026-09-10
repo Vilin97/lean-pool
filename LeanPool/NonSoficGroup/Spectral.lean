@@ -8256,13 +8256,10 @@ end KunDirectedIndicatorJensen
 
 namespace KunFinitePermutationMarkovMass
 
+export KunDirectedIndicatorJensen (realIndicator)
+
 open scoped BigOperators
 
-/-- Internal interface connecting the split non-sofic proof modules. -/
-public
-def realIndicator {V : Type*} [DecidableEq V]
-    (T : Finset V) (x : V) : ℝ :=
-  if x ∈ T then 1 else 0
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
 public

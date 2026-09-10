@@ -2276,7 +2276,7 @@ private theorem exists_source_common_log_rank_with_ambient_midrank_variance
           (boundary
             (fun i : ↥SΓ =>
               (A.model n).action
-                (KunExactActualSourceAmbientGenerators.sourceAlphaInclusion
+                (SourceGeneratedWordCrossing.sourceAlphaInclusion
                   (i : prefixElementaryGroup
                     alphaPrefixCode))) C : ℝ)) /
               (A.model n).size)
@@ -2346,7 +2346,7 @@ private theorem exists_source_common_log_rank_with_ambient_midrank_variance
   let σ : (n : ℕ) → ↥SΓ → Equiv.Perm (Fin (A.model n).size) :=
     fun n i =>
       (A.model n).action
-        (KunExactActualSourceAmbientGenerators.sourceAlphaInclusion
+        (SourceGeneratedWordCrossing.sourceAlphaInclusion
           (i : prefixElementaryGroup
             alphaPrefixCode))
   let T : (n : ℕ) → Fin 2 → Equiv.Perm (Fin (A.model n).size) :=
