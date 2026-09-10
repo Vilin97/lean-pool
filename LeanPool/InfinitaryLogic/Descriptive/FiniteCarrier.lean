@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
 import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
 import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
 import Mathlib.GroupTheory.Perm.Basic
