@@ -358,37 +358,11 @@ theorem TwoBQO.lexSigmaQO_reflect {ι : Type*} (r : ι → ι → Prop) (s : ι 
 `s i` is 2-BQO, then `Σ i, s i` with `LexSumRelQO r s t` is 2-BQO. -/
 theorem TwoBQO.lexSigmaQO {ι : Type*} (r : ι → ι → Prop) (hr : TwoBQO r) (s : ι → Type*)
     (t : ∀ i, s i → s i → Prop) (ht : ∀ i, TwoBQO (t i)) : TwoBQO (TwoBQO.LexSumRelQO r s t) := by
-  intro f
-  let f₁ : PairSeq ι := fun m n h => (f m n h).1
-  obtain ⟨e, he, hperf | hbad⟩ := PairSeq.perfect_or_bad r f₁
-  · by_cases hconst : ∀ m n l : ℕ, (hmn : m < n) → (hnl : n < l) →
-        (f (e m) (e n) (he hmn)).1 = (f (e n) (e l) (he hnl)).1
-    · set c := (f (e 0) (e 1) (he (by norm_num : (0 : ℕ) < 1))).1
-      have hmem : ∀ m n : ℕ, (hmn : m < n) → (f (e m) (e n) (he hmn)).1 = c := by
-        have hsucc : ∀ n : ℕ, (f (e n) (e (n + 1)) (he (Nat.lt_succ_self n))).1 = c := by
-          intro n
-          induction n with
-          | zero => rfl
-          | succ n ih =>
-            exact (hconst n (n + 1) (n + 2) (Nat.lt_succ_self n)
-              (Nat.lt_succ_self (n + 1))).symm.trans ih
-        intro m n hmn
-        exact (hconst m n (n + 1) hmn (Nat.lt_succ_self n)).trans (hsucc n)
-      let g : PairSeq (s c) := fun m n hmn => (hmem m n hmn) ▸ (f (e m) (e n) (he hmn)).2
-      obtain ⟨m, n, l, hmn, hnl, hrel⟩ := ht c g
-      refine ⟨e m, e n, e l, he hmn, he hnl, ?_⟩
-      show TwoBQO.LexSumRelQO r s t (f (e m) (e n) (he hmn)) (f (e n) (e l) (he hnl))
-      have h_mn : (f (e m) (e n) (he hmn)).fst = c := hmem m n hmn
-      have h_nl : (f (e n) (e l) (he hnl)).fst = c := hmem n l hnl
-      refine Or.inr ⟨h_mn.trans h_nl.symm, ?_⟩
-      revert hrel; simp only [g]; intro hrel; convert hrel using 1 <;> simp
-    · push Not at hconst
-      obtain ⟨m, n, l, hmn, hnl, hne⟩ := hconst
-      refine ⟨e m, e n, e l, he hmn, he hnl, ?_⟩
-      exact Or.inl ⟨hperf m n l hmn hnl, hne⟩
-  · exfalso
-    rw [TwoBQO.iff_noBad] at hr
-    exact hr ⟨PairSeq.restrict f₁ e he, hbad⟩
+  rw [TwoBQO.iff_noBad]
+  rintro ⟨f, hf⟩
+  obtain ⟨e, he, hbad | ⟨i, hmem, hbad⟩⟩ := TwoBQO.lexSigmaQO_reflect r s t f hf
+  · exact (TwoBQO.iff_noBad r).mp hr ⟨_, hbad⟩
+  · exact (TwoBQO.iff_noBad (t i)).mp (ht i) ⟨_, hbad⟩
 
 /-!
 ## Domination order on subsets

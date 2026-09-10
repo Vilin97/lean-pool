@@ -7313,7 +7313,9 @@ projects:
       proves the finite-color Nash-Williams theorem, and derives the infinite Ramsey theorem for
       arbitrary finite arity. The order-theoretic development proves that 2-better-quasi-orders
       are well-quasi-orders and establishes closure under finite products, lexicographic sums,
-      domination of subsets, and pointwise embedding of sequences.
+      domination of subsets, and pointwise embedding of sequences. Throughout, TwoBQO r is the
+      good-triple property of an arbitrary binary relation r (every pair-sequence has m < n < l
+      with f(m,n) related to f(n,l)); it assumes no reflexivity or transitivity of r.
     branch: infinitary combinatorics and order theory
     entry_module: LeanPool.NashWilliams
     authors:
@@ -7350,8 +7352,11 @@ projects:
           Every 2-better-quasi-order is a well-quasi-order.
       - declaration: TwoBQO.lexSigmaQO
         informal: >-
-          A lexicographic sum of 2-better-quasi-orders over a 2-better-quasi-ordered index is
-          itself a 2-better-quasi-order.
+          The 2-BQO good-triple property is preserved by lexicographic sums: if the index
+          relation and every fibre relation have it, so does the lexicographic-sum relation on
+          the sigma type. This asserts nothing about reflexivity or transitivity of the sum;
+          those are proved separately (LexSumRelQO.refl and LexSumRelQO.trans) under the
+          corresponding order hypotheses on the index and fibres.
       - declaration: TwoBQO.embedForAll_wqo
         informal: >-
           If a preorder is a 2-better-quasi-order, then its infinite sequences are
