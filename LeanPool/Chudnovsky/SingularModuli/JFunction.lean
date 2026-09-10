@@ -4,11 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
 
-import Mathlib.NumberTheory.ModularForms.Discriminant
-import Mathlib.NumberTheory.ModularForms.QExpansion
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.QExpansion
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.RingTheory.PowerSeries.Inverse
 import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 import LeanPool.Chudnovsky.Ramanujan
 
@@ -109,14 +104,11 @@ theorem j_smul (γ : SL(2, ℤ)) (τ : ℍ) : j (γ • τ) = j τ := by
 
 /-- `T`-invariance: `j (τ + 1) = j τ`. -/
 theorem j_vadd_one (τ : ℍ) : j ((1 : ℝ) +ᵥ τ) = j τ := by
-  rw [j_def, j_def]
-  congr 1
-  rw [J, J]
   have hE₄ : E₄ ((1 : ℝ) +ᵥ τ) = E₄ τ :=
     SlashInvariantForm.vAdd_apply_of_mem_strictPeriods E₄ τ one_mem_strictPeriods_SL
   have hE₆ : E₆ ((1 : ℝ) +ᵥ τ) = E₆ τ :=
     SlashInvariantForm.vAdd_apply_of_mem_strictPeriods E₆ τ one_mem_strictPeriods_SL
-  rw [hE₄, hE₆]
+  rw [j_def, j_def, J, J, hE₄, hE₆]
 
 /-- `S`-invariance: `j (-1/τ) = j τ`. -/
 theorem j_S_smul (τ : ℍ) : j (ModularGroup.S • τ) = j τ := j_smul ModularGroup.S τ

@@ -4,12 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
 
-import LeanPool.Chudnovsky.Basic
-import LeanPool.Chudnovsky.Estimates
-import LeanPool.Chudnovsky.Clausen
-import LeanPool.Chudnovsky.Ramanujan
 import LeanPool.Chudnovsky.Kummer
-import Mathlib.Analysis.SpecialFunctions.OrdinaryHypergeometric
 
 /-!
 # The Main Theorem (Milla, ch. 9)
@@ -385,7 +380,7 @@ private lemma norm_Gsq_sub_one_le {z : ℂ} (hz : ‖z‖ ≤ 0.9125) : ‖Gsq z
     ring
   rw [hsplit]
   have hSnorm1 : Summable fun n : ℕ => ‖mainCoeff (n + 1) * z ^ (n + 1)‖ :=
-    (summable_nat_add_iff 1).mpr hSnorm
+    (summable_nat_add_iff (f := fun n : ℕ => ‖mainCoeff n * z ^ n‖) 1).mpr hSnorm
   refine le_trans (norm_tsum_le_tsum_norm hSnorm1) ?_
   -- split off the first six terms
   rw [← hSnorm1.sum_add_tsum_nat_add 6]
@@ -427,7 +422,8 @@ private lemma norm_Gsq_sub_one_le {z : ℂ} (hz : ‖z‖ ≤ 0.9125) : ‖Gsq z
       (summable_geometric_of_lt_one (by norm_num) (by norm_num)).mul_left _
     calc ∑' i : ℕ, ‖mainCoeff (i + 6 + 1) * z ^ (i + 6 + 1)‖
         ≤ ∑' i : ℕ, (0.00467 * 0.9125 ^ 7 : ℝ) * 0.9125 ^ i :=
-          ((summable_nat_add_iff 6).mpr hSnorm1).tsum_le_tsum hmaj hgeom
+          ((summable_nat_add_iff (f := fun n : ℕ => ‖mainCoeff (n + 1) * z ^ (n + 1)‖) 6).mpr
+            hSnorm1).tsum_le_tsum hmaj hgeom
       _ = (0.00467 * 0.9125 ^ 7) * (1 - 0.9125)⁻¹ := by
           rw [tsum_mul_left, tsum_geometric_of_lt_one (by norm_num) (by norm_num)]
   refine le_trans (add_le_add hhead htail) ?_
