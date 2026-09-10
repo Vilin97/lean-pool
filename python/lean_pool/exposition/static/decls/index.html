@@ -34,9 +34,19 @@
 
     <div class="vscroll" id="vscroll">
       <div class="vhead" id="vhead">
+        <button type="button" class="vsort" data-col="main"
+                title="Listed as a main result on the project's card">Main</button>
         <button type="button" class="vsort" data-col="name">Name</button>
         <button type="button" class="vsort" data-col="kind">Kind</button>
         <button type="button" class="vsort" data-col="project">Project</button>
+        <button type="button" class="vsort num" data-col="deps"
+                title="Direct intra-project dependencies">Deps</button>
+        <button type="button" class="vsort num" data-col="dependents"
+                title="Direct intra-project dependents">Dependents</button>
+        <button type="button" class="vsort num" data-col="depCone"
+                title="Transitive dependency cone size">Dep cone</button>
+        <button type="button" class="vsort num" data-col="dependentCone"
+                title="Transitive dependent cone size">Dependent cone</button>
       </div>
       <div class="vspacer" id="vspacer">
         <div class="vwindow" id="vwindow"></div>
