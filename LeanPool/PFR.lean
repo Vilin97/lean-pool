@@ -21,9 +21,9 @@ MSC: 11B30, 11P70, 20K01, 94A17
 
 /-
 Formalization contributors:
-Aaron Anderson; Mantas Bakšys; Jonas Bayer; Mauricio Collares; Rémy Degenne;
-Yaël Dillies; Bhavik Mehta; Ben Eltschig; Sébastien Gouëzel; Kalle Kytölä; Rob Lewis;
-Paul Lezeau; Lorenzo Luccioli;
-Heather Macbeth; Patrick Massot; Arend Mellendijk; Kyle Miller; Pietro Monticone; Kim Morrison;
-Oliver Nash; Utensil Song; Terence Tao; Floris van Doorn; Sky Wilshaw; Lawrence Wu.
+Aaron Anderson; Mantas Bakšys; Jonas Bayer; Mauricio Collares; Rémy Degenne; Yaël Dillies;
+Bhavik Mehta; Ella Yu; Ben Eltschig; Sébastien Gouëzel; Kalle Kytölä; Rob Lewis; Paul Lezeau;
+Lorenzo Luccioli; Heather Macbeth; Patrick Massot; Arend Mellendijk; Kyle Miller;
+Pietro Monticone; Kim Morrison; Oliver Nash; Utensil Song; Terence Tao; Floris van Doorn;
+Sky Wilshaw; Lawrence Wu.
 -/
