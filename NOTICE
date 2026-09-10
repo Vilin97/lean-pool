@@ -66,6 +66,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Erdos367                  https://github.com/scottdhughes/erdos367
   LeanPool/Erdos403                  https://github.com/gotrevor/erdos-403
   LeanPool/Erdos81PaperIContrib      https://github.com/jtraverso/erdos-81-chordal-clique-partitions
+  LeanPool/Erdos81PaperIIContrib     https://github.com/jtraverso/lean-pool
   LeanPool/Erdos81PaperIIIContrib    https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/Erdos865                  https://github.com/mrricky22/erdos-865-lean
   LeanPool/Erdos97ConvexOctagon      https://github.com/lyfar/erdos-97-octagon-lean
@@ -96,6 +97,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/JohnsonLindenstraussLean  https://github.com/claytomode/johnson-lindenstrauss-lean
   LeanPool/KahnKalai                 https://github.com/dcposch/kahn-kalai-lean
   LeanPool/KasamiCyclicAdditive      https://github.com/dsm054/kasami_cyclic_additive
+  LeanPool/Koethe                    https://github.com/tadamcz/koethe
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
