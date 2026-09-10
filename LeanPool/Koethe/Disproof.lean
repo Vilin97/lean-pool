@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Tom Adamczewski and contributors. All rights reserved.
+Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
