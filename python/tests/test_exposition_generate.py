@@ -247,6 +247,7 @@ def test_project_shard_schema_and_stats(site: tuple[Path, SiteSummary]) -> None:
     assert shard["provenance"] == "AI"
     assert shard["stats"] == {
         "nodes": 4,
+        "loc": 9,  # One.lean (7 lines) + Two.lean (2 lines)
         "edges": 2,
         "maxDepth": 2,
         "avgDepth": 0.75,
@@ -377,6 +378,7 @@ def test_index_json(site: tuple[Path, SiteSummary]) -> None:
     assert index["totals"] == {
         "projects": 2,
         "decls": 7,
+        "loc": 14,
         "edges": 3,
         "maxDepth": 2,
         "kinds": {"theorem": 3, "def": 2, "lemma": 2},
@@ -387,6 +389,7 @@ def test_index_json(site: tuple[Path, SiteSummary]) -> None:
         "title": "Alpha & Co",
         "provenance": "AI",
         "nodes": 4,
+        "loc": 9,
         "edges": 2,
         "maxDepth": 2,
         "avgDepth": 0.75,
@@ -399,26 +402,32 @@ def test_index_json(site: tuple[Path, SiteSummary]) -> None:
     assert beta_row["title"] is None  # pseudo-project: no registry card
     assert beta_row["provenance"] is None
     assert beta_row["avgDepth"] == 0.33
+    assert beta_row["loc"] == 5
     assert beta_row["authors"] is None
     assert beta_row["license"] is None
     assert beta_row["mainResults"] == 0
 
 
 def test_decls_json(site: tuple[Path, SiteSummary]) -> None:
-    """decls.json rows are [name, kindIdx, projectIdx, declId]."""
+    """decls.json rows carry the viewer columns and per-node graph metrics.
+
+    Row layout: [name, kindIdx, projectIdx, declId, main, deps, dependents,
+    depCone, dependentCone]. In Alpha the chain is a4 -> a2 -> a1, so a1 has
+    two transitive dependents and a4 a two-node dependency cone.
+    """
     out, _ = site
     declarations = _load(out, "data/decls.json")
     assert declarations["schema"] == 1
     assert declarations["kinds"] == ["theorem", "def", "lemma"]
     assert declarations["projects"] == ["Alpha", "Beta"]
     assert declarations["decls"] == [
-        ["a1", 2, 0, 0],
-        ["a2", 0, 0, 1],
-        ["a3", 1, 0, 2],
-        ["a4", 0, 0, 3],
-        ["b1", 1, 1, 0],
-        ["b2", 2, 1, 1],
-        ["b3", 0, 1, 2],
+        ["a1", 2, 0, 0, 0, 0, 1, 0, 2],
+        ["a2", 0, 0, 1, 1, 1, 1, 1, 1],
+        ["a3", 1, 0, 2, 1, 0, 0, 0, 0],
+        ["a4", 0, 0, 3, 0, 1, 0, 2, 0],
+        ["b1", 1, 1, 0, 0, 0, 1, 0, 1],
+        ["b2", 2, 1, 1, 0, 1, 0, 1, 0],
+        ["b3", 0, 1, 2, 0, 0, 0, 0, 0],
     ]
 
 
