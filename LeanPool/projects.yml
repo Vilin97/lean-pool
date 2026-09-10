@@ -7689,3 +7689,69 @@ projects:
       - "03C75"
       - "03E15"
       - "03C30"
+  - slug: nash-williams
+    title: Nash-Williams fronts and 2-better-quasi-orders
+    summary: >-
+      Formalizes Nash-Williams fronts through their well-founded prefix trees and ordinal ranks,
+      proves the finite-color Nash-Williams theorem, and derives the infinite Ramsey theorem for
+      arbitrary finite arity. The order-theoretic development proves that 2-better-quasi-orders
+      are well-quasi-orders and establishes closure under finite products, lexicographic sums,
+      domination of subsets, and pointwise embedding of sequences. Throughout, TwoBQO r is the
+      good-triple property of an arbitrary binary relation r (every pair-sequence has m < n < l
+      with f(m,n) related to f(n,l)); it assumes no reflexivity or transitivity of r.
+    branch: infinitary combinatorics and order theory
+    entry_module: LeanPool.NashWilliams
+    authors:
+      - Yann Pequignot
+    source:
+      title: "Towards better: A motivated introduction to better-quasi-orders"
+      authors:
+        - Yann Pequignot
+      doi: 10.4171/EMSS/4-2-2
+      url: https://github.com/yannpequignot/TwoBQO
+      github_repo: yannpequignot/TwoBQO
+      commit: 8adea92d7fa41700372ba16b9ff816dc7500579b
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - Front.IsFront.nash_williams
+      - TwoBQO.wellQuasiOrdered
+    main_results:
+      - declaration: Front.IsFront.nash_williams
+        informal: >-
+          Every two-coloring of a Nash-Williams front on an infinite set has an infinite
+          restriction whose front is monochromatic.
+      - declaration: Front.IsFront.nash_williams_fin
+        informal: >-
+          Every finite coloring of a Nash-Williams front has an infinite restriction whose
+          front is monochromatic.
+      - declaration: infinite_ramsey
+        informal: >-
+          Every finite coloring of the r-element subsets of an infinite set of natural numbers
+          is constant on all r-element subsets of some infinite subset.
+      - declaration: TwoBQO.wellQuasiOrdered
+        informal: >-
+          Every 2-better-quasi-order is a well-quasi-order.
+      - declaration: TwoBQO.lexSigmaQO
+        informal: >-
+          The 2-BQO good-triple property is preserved by lexicographic sums: if the index
+          relation and every fibre relation have it, so does the lexicographic-sum relation on
+          the sigma type. This asserts nothing about reflexivity or transitivity of the sum;
+          those are proved separately (LexSumRelQO.refl and LexSumRelQO.trans) under the
+          corresponding order hypotheses on the index and fibres.
+      - declaration: TwoBQO.embedForAll_wqo
+        informal: >-
+          If a preorder is a 2-better-quasi-order, then its infinite sequences are
+          well-quasi-ordered by the relation admitting a strictly monotone reindexing along
+          which corresponding terms are related.
+    tags:
+      - infinitary-combinatorics
+      - ramsey-theory
+      - better-quasi-orders
+      - well-quasi-orders
+      - ordinal-ranks
+    msc:
+      - "03E05"
+      - "05D10"
+      - "06A07"
