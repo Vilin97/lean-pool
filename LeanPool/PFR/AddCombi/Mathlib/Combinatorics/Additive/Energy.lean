@@ -177,21 +177,4 @@ lemma card_sq_le_card_mul_addEnergy' {G : Type*} [Fintype G] [DecidableEq G] [Ad
 
 end Group
 
-open scoped Combinatorics.Additive'
-
-section CommGroup
-variable [CommGroup G]
-
-
-
-end CommGroup
-
-section CommGroup
-variable [CommGroup G] (s t : Finset G)
-
-
-
-
-
-end CommGroup
 end Finset

@@ -847,13 +847,3 @@ theorem entropic_PFR_conjecture_improv (hpη : p.η = 1 / 8) :
 
 
 end EntropicPFR
-
-section PFR
-
-open Pointwise Set MeasureTheory ProbabilityTheory Real Fintype Function
-
-variable {G Ω : Type*} [AddCommGroup G] [Module (ZMod 2) G] [Finite G]
-    {A B : Set G} {K : ℝ}
-
-
-end PFR
