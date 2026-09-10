@@ -9,9 +9,6 @@ module
 public import Mathlib.Analysis.Convex.Basic
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.BoxIntegral.UnitPartition
 import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
@@ -22,28 +19,16 @@ import Mathlib.Analysis.Convex.Measure
 import Mathlib.Analysis.Fourier.AddCircleMulti
 import Mathlib.Analysis.InnerProductSpace.JointEigenspace
 import Mathlib.Analysis.SpecialFunctions.Choose
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Data.NNRat.Floor
-import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Data.Sym.Card
-import Mathlib.Geometry.Euclidean.Altitude
 import Mathlib.MeasureTheory.Integral.Layercake
 import Mathlib.MeasureTheory.Integral.ExpDecay
 import Mathlib.MeasureTheory.SpecificCodomains.Pi
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.Height.NumberField
-import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Finiteness.Lattice
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.ENatToNat
-import Mathlib.Tactic.Monotonicity.Lemmas
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
