@@ -1927,10 +1927,6 @@ private theorem quotient_radialSymmetrization
 
 end SpherePacking.Alternative
 
-namespace SpherePacking.Alternative
-
-end SpherePacking.Alternative
-
 end
 
 section

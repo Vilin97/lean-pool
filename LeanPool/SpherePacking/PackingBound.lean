@@ -7,14 +7,8 @@ Authors: OpenAI, Sidharth Hariharan, Gareth Ma, Dean Cureton
 module
 
 import all LeanPool.SpherePacking.RadialConstruction
-public import Mathlib.Analysis.Fourier.Notation
-public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-public import Mathlib.Data.ENNReal.Basic
-public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 import Mathlib.Algebra.Module.ZLattice.Covolume
 import Mathlib.Algebra.Module.ZLattice.Summable
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
@@ -24,8 +18,6 @@ import Mathlib.Analysis.RCLike.Inner
 import Mathlib.Data.Finset.Functor
 import Mathlib.Dynamics.Ergodic.Action.Regular
 import Mathlib.LinearAlgebra.BilinearForm.DualLattice
-import Mathlib.RingTheory.Coalgebra.CoassocSimps
-import Mathlib.Topology.Compactness.Paracompact
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.Instances.ENat
 import Mathlib.Topology.Separation.Lemmas

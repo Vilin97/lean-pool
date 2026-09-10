@@ -7,9 +7,7 @@ Authors: OpenAI, Sidharth Hariharan, Gareth Ma, Dean Cureton
 module
 
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-import Mathlib.Algebra.Order.Star.Real
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Analysis.Complex.RemovableSingularity
 import Mathlib.Analysis.Convex.Contractible
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
@@ -24,13 +22,9 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.Probability.Moments.ComplexMGF
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.UniformSpace.Uniformizable
-import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Foundations

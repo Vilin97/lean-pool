@@ -14,11 +14,6 @@ import Mathlib.Analysis.Calculus.Taylor
 import Mathlib.Analysis.Real.Pi.Wallis
 import Mathlib.Analysis.SumIntegralComparisons
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.Monotonicity.Lemmas
-import Mathlib.Topology.Sheaves.Presheaf
 
 /-!
 # MellinAnalysis
