@@ -73,6 +73,64 @@ projects:
     msc:
       - 16N40
       - 16S50
+  - slug: riemann-roch-function-fields
+    title: Riemann–Roch for algebraic function fields
+    summary: Formalizes the Riemann–Roch theorem for algebraic function fields of one variable
+      through the adelic route. Divisors are indexed by intrinsic places (discrete rank-one
+      valuation subrings containing the constants), with an equivalence to a two-chart
+      coordinate model via Ostrowski's theorem. The development builds Riemann–Roch spaces,
+      the genus, an intrinsic adele space, Weil differentials and the canonical class, and
+      proves Riemann's inequality, the duality theorem, Riemann–Roch, Clifford's inequality,
+      and the standard corollaries. As an application it shows that a Weierstrass elliptic
+      curve has genus one and identifies its degree-one places with the class group of the
+      coordinate ring compatibly with the group law.
+    branch: algebraic curves and function fields
+    entry_module: LeanPool.RiemannRochFunctionFields
+    authors:
+    - Guanghao Li
+    source:
+      title: Riemann–Roch for function fields, in Lean 4
+      authors:
+      - Guanghao Li
+      url: https://github.com/vaca22/riemann-roch-function-fields
+      github_repo: vaca22/riemann-roch-function-fields
+      commit: dbca5beed1da77e2ecd1eec207d0451fa57e8aa6
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - FunctionField.riemann_roch
+    main_results:
+    - declaration: FunctionField.riemann_roch
+      informal: For a function field K over its full constant field k, a canonical divisor W,
+        and any divisor D indexed by intrinsic places, ℓ(D) = deg D + 1 − g + ℓ(W − D).
+    - declaration: FunctionField.duality
+      informal: For a canonical divisor W and any divisor D, ℓ(W − D) equals the index of
+        specialty i(D), the codimension of L(D) plus K inside the adele space.
+    - declaration: FunctionField.riemann_ineq
+      informal: Riemann's inequality ℓ(D) ≥ deg D + 1 − g holds for every divisor D.
+    - declaration: FunctionField.clifford
+      informal: Clifford's inequality 2(ℓ(D) − 1) ≤ deg D holds for every special divisor D
+        with 0 ≤ deg D ≤ 2g − 2.
+    - declaration: FunctionField.exists_isCanonical
+      informal: Every function field admits a canonical divisor, namely the divisor of a
+        nonzero Weil differential.
+    - declaration: WeierstrassCurve.Affine.genus_eq_one
+      informal: The function field of a Weierstrass elliptic curve over an algebraically closed
+        field of characteristic zero has genus one.
+    - declaration: WeierstrassCurve.Affine.picTorsor_compat_groupLaw
+      informal: The bijection between degree-one places of an elliptic function field and the
+        class group of the coordinate ring is compatible with the elliptic group law.
+    tags:
+    - riemann-roch
+    - function-fields
+    - algebraic-curves
+    - weil-differentials
+    - elliptic-curves
+    msc:
+    - 14H05
+    - 11R58
+    - 14H52
   - slug: long-gaps-between-primes
     title: Improved long gaps between consecutive primes
     summary: >-
