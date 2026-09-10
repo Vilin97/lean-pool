@@ -348,7 +348,7 @@
   flex-direction: column;
   height: calc(100vh - var(--header-h, 49px));
   height: calc(100dvh - var(--header-h, 49px));
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 16px 24px 16px;
   box-sizing: border-box;
@@ -435,7 +435,8 @@
 .vhead,
 .vrow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 110px 200px;
+  /* main ★ | name | kind | project | deps | dependents | dep cone | dependent cone */
+  grid-template-columns: 28px minmax(0, 1fr) 100px 180px 56px 88px 76px 112px;
   gap: 12px;
   align-items: center;
   padding: 0 14px;
@@ -473,6 +474,29 @@
 
 .vsort[data-dir="desc"]::after {
   content: " ↓";
+}
+
+.vsort.num,
+.vcell-num {
+  text-align: right;
+}
+
+.vcell-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.vcell-main {
+  color: var(--star);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.vrow-main .vcell-name {
+  font-weight: 600;
 }
 
 .vspacer {
@@ -557,7 +581,14 @@ a.vcell-name:focus-visible {
 
   .vhead,
   .vrow {
-    grid-template-columns: minmax(0, 1fr) 92px 150px;
+    grid-template-columns: 24px minmax(0, 1fr) 92px 130px 52px 84px;
     gap: 8px;
+  }
+
+  /* drop the two cone columns; the direct counts stay */
+  .vsort[data-col="depCone"],
+  .vsort[data-col="dependentCone"],
+  .vcell-num:nth-last-child(-n + 2) {
+    display: none;
   }
 }
