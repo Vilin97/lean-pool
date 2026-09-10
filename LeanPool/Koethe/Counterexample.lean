@@ -45,12 +45,10 @@ theorem exists_nilideal_nonnil_matrix_of_universal_mortal
 universe so that the counterexample exists in every universe. -/
 abbrev GroundField : Type u := AlgebraicClosure (ULift.{u} (ZMod 2))
 
-instance : Countable (GroundField.{u}) := by
-  apply Set.countable_univ_iff.mp
-  have halg : ∀ x : GroundField.{u}, IsAlgebraic (ULift.{u} (ZMod 2)) x :=
-    Algebra.IsAlgebraic.isAlgebraic
-  simpa only [halg, Set.ofPred_true] using
-    Algebraic.countable (ULift.{u} (ZMod 2)) (GroundField.{u})
+instance countable_groundField : Countable (GroundField.{u}) :=
+  Set.countable_univ_iff.mp <|
+    (Algebraic.countable (ULift.{u} (ZMod 2)) (GroundField.{u})).mono
+      fun x _ => Algebra.IsAlgebraic.isAlgebraic x
 
 /-- **A counterexample to nilness of finite matrix ideals.** In every universe there is a
 ring `R` with a nil two-sided ideal `I` such that the matrix ideal `M_2(I)` of `M_2(R)`

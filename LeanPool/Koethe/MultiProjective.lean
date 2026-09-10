@@ -637,8 +637,8 @@ theorem card_le_height_killedIdeal (s : Finset (Vars N))
     have hs : ∀ b, (b, (2 : Fin 3)) ∉ s := by
       intro b hb
       exact hprotect b (Finset.mem_insert_of_mem hb)
-    have hlt := Ideal.height_add_one_le_of_lt_of_isPrime
-      (killedIdeal_lt_insert (k := k) hs hv)
+    have hlt : (killedIdeal (k := k) s).height + 1 ≤ (killedIdeal (k := k) (insert v s)).height :=
+      Ideal.height_add_one_le_of_lt_of_isPrime (killedIdeal_lt_insert (k := k) hs hv)
     calc
       ((insert v s).card : ℕ∞) = (s.card : ℕ∞) + 1 := by simp [hv]
       _ ≤ (killedIdeal (k := k) s).height + 1 := add_le_add (ih hs) le_rfl
@@ -655,8 +655,8 @@ theorem vertexIdeal_height_lower_bound [NeZero N] :
     simp [s]
   have hcard : s.card = 2 * N := by
     simp [s, Finset.card_product, Nat.mul_comm]
-  have hlt := Ideal.height_add_one_le_of_lt_of_isPrime
-    (killedIdeal_lt_vertexIdeal (k := k) hs)
+  have hlt : (killedIdeal (k := k) s).height + 1 ≤ (vertexIdeal k N).height :=
+    Ideal.height_add_one_le_of_lt_of_isPrime (killedIdeal_lt_vertexIdeal (k := k) hs)
   calc
     (2 * N + 1 : ℕ∞) = (s.card : ℕ∞) + 1 := by simp [hcard]
     _ ≤ (killedIdeal (k := k) s).height + 1 :=
