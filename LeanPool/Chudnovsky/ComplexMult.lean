@@ -6,7 +6,6 @@ Authors: Xuanji Li
 
 import LeanPool.Chudnovsky.DivisionValues
 import LeanPool.Chudnovsky.Fourier
-import Mathlib.NumberTheory.ModularForms.DedekindEta
 
 /-!
 # Complex multiplication and the integrality of `E₂*` (Milla, Appendix B)

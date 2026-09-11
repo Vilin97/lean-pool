@@ -5,7 +5,6 @@ Authors: Xuanji Li
 -/
 
 import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
-import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 import Mathlib.Algebra.GCDMonoid.IntegrallyClosed
 
 /-!
