@@ -275,7 +275,7 @@ theorem weightedDriftNorm_restrict {s t : ℕ} (h : t ≤ s) (q N : ℕ) (hN : N
         L u := by
   apply Finset.sum_congr rfl
   intro n hn
-  congr 1
+  refine congrArg (fun x => EulerPacketWeights.weight ρ n * x) ?_
   apply Finset.sum_congr rfl
   intro r hr
   exact driftLevelNorm_restrict period h
