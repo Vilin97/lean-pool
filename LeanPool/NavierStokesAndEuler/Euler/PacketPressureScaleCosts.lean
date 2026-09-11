@@ -78,7 +78,7 @@ theorem initial_history_size_le_difference :
   have hx : ‖D.frame.field‖ ≤ L.frameDifferenceCost := by
     apply hq.trans
     unfold frameDifferenceCost
-    nlinarith only [mul_le_mul_of_nonneg_left hR (frameAmplitude_nonneg L.K)]
+    linarith only [mul_le_mul_of_nonneg_left hR (frameAmplitude_nonneg L.K)]
   apply historyCost_le_differenceCost τ D.frameLower _ _ _ _ _ _ _ _ hτ.le D.frameLower_pos.le
     (norm_nonneg _) (norm_nonneg _) (by positivity) (by positivity)
     (historyTransportCost_nonneg (D := D)) hx
@@ -249,7 +249,7 @@ theorem badRatio_polynomial :
   have hX : 1 ≤ 1+L.K+Ti+P.shear⁻¹+A.CM+A.CH := by
     have ht := (inv_pos.mpr hτ).le.trans hTi
     have hi := (inv_pos.mpr A.shear_pos).le
-    nlinarith only [L.K_one,ht,hi,A.CM_nonneg,A.CH_nonneg]
+    linarith only [L.K_one,ht,hi,A.CM_nonneg,A.CH_nonneg]
   have hh := L.historySizeRatio_polynomial m hm R S hS H τ hτ hτT P A Ti hτ1 hTi
   rw [A.badRatio_formula]
   calc
@@ -319,7 +319,7 @@ def badCostSpec (Cθ CM CMn CHn c : ℝ) (hθ : 0 ≤ Cθ)
 
 theorem sigma_exponential_bound (σ x : ℝ) (hσ : 0 < σ) (hσx : σ * x ≤ 2) :
     exp (-(1/(4*σ))) ≤ exp (-x/8) := by
-  have hdiv : x/8 ≤ 1/(4*σ) := (le_div_iff₀ (by positivity : 0 < 4*σ)).2 (by nlinarith)
+  have hdiv : x/8 ≤ 1/(4*σ) := (le_div_iff₀ (by positivity : 0 < 4*σ)).2 (by linarith)
   apply exp_le_exp.mpr
   linarith only [hdiv]
 
@@ -327,7 +327,7 @@ theorem parameter_sum_le (K Ti Hi cm ch CMn CHn E : ℝ)
     (hE : 1 ≤ E) (hK : K ≤ E) (hTi : Ti ≤ E) (hHi : Hi ≤ 1)
     (hcm : cm ≤ CMn) (hch : ch ≤ CHn) (hMn : 0 ≤ CMn) (hHn : 0 ≤ CHn) :
     1+K+Ti+Hi+cm+ch ≤ (4+CMn+CHn)*E := by
-  nlinarith only [hE,hK,hTi,hHi,hcm,hch,
+  linarith only [hE,hK,hTi,hHi,hcm,hch,
     mul_nonneg (sub_nonneg.mpr hE) hMn,mul_nonneg (sub_nonneg.mpr hE) hHn]
 
 theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
@@ -439,7 +439,7 @@ theorem parameters_le_source_exponential (J D : ℕ) (hJ : 3 ≤ J) (X c : ℝ)
     calc
       _ ≤ z := div_le_div_of_nonneg_left hxp.le (by positivity)
         (pow_le_pow_right₀ hp (by decide : 4 ≤ 7))
-      _ ≤ c*z := by nlinarith only [mul_le_mul_of_nonneg_right hc hz]
+      _ ≤ c*z := by linarith only [mul_le_mul_of_nonneg_right hc hz]
   exact parameter_sum_le K Ti Hi cm ch CMn CHn (exp (c*z))
     (one_le_exp (mul_nonneg (zero_le_one.trans hc) hz)) hK' hTi' hHi hcm hch hMn hHn
 

@@ -123,12 +123,12 @@ theorem corrector_coefficient_bounds (R C Ri : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C
   have hD : 0 ≤ 3*C^2 := by positivity
   have hDt : 0 ≤ 27*(3*Ri*C)^2*(3*C^2) := by positivity
   have hCc : 0 ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; positivity
-  have hC0 : C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; nlinarith
-  have hC1 : 3*C^2 ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; nlinarith
-  have hCN : 3*Ri*C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; nlinarith
+  have hC0 : C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith
+  have hC1 : 3*C^2 ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith
+  have hCN : 3*Ri*C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith
   have hCT : 27*(3*Ri*C)^2*(3*C^2) ≤ Cc := by
     dsimp [Cc,correctorCoefficientAmplitude]
-    nlinarith
+    linarith
   have hIb (n : ℕ) (a : Space) :
       ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ C*majorant Rc 0 n :=
     (D.FInv.norm_iteratedFDeriv_translation_le n (C*majorant R 0 n)

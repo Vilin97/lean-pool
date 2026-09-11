@@ -122,7 +122,7 @@ theorem localized_boundary_lower_bound {E : Type*} [NormedAddCommGroup E]
       ⟪M z, z⟫_ℝ + L * ⟪A z, z⟫_ℝ := by
   have h1 := mul_le_mul_of_nonneg_left (hR z) hBc
   have h2 := mul_nonneg hC (hA z)
-  nlinarith [hM z]
+  linarith [hM z]
 
 theorem mean_form_coercive {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -156,7 +156,7 @@ theorem mean_form_coercive {E : Type*} [NormedAddCommGroup E]
     intervalIntegral.integral_nonneg hS0 (fun t _ => sq_nonneg ‖v t‖)
   have h3 := mul_le_mul_of_nonneg_right hsmall he
   rw [intervalIntegral.integral_sub hvi hHi]
-  nlinarith [hboundary (η 0)]
+  linarith [hboundary (η 0)]
 
 end EulerTerminalEnergy
 

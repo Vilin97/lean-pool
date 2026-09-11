@@ -70,7 +70,7 @@ theorem source_radius_le (T R C C1 Cp W : ℝ) (hW : 1 ≤ W)
     _ ≤ 1+16*V+16*(4*V)+2*forwardEnvelope V*(16*(4*V)+1) := by gcongr
     _ ≤ sourceRadiusEnvelope W := by
       change _ ≤ 1+V+6*weakEnvelope V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)
-      nlinarith only [hV0,mul_nonneg (sub_nonneg.mpr hw1) (by positivity : 0 ≤ 16*V+1)]
+      linarith only [hV0,mul_nonneg (sub_nonneg.mpr hw1) (by positivity : 0 ≤ 16*V+1)]
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : Data U} (L : EulerTransversePacketForward.Budget D (Fin 4) 6)
@@ -94,7 +94,7 @@ theorem common_le (W : ℝ) (hW : 0 ≤ W) (hR : L.Rc ≤ W)
     _ ≤ 3*coeff W W+physicalEnvelope W := add_le_add (by gcongr) hp
     _ ≤ commonEnvelope W := by
       unfold commonEnvelope
-      nlinarith only [ha,mul_nonneg ha (by positivity : 0 ≤ 2*W+2)]
+      linarith only [ha,mul_nonneg ha (by positivity : 0 ≤ 2*W+2)]
 
 theorem grade_sum_le (N : EulerTransversePacketJoin.NormalBudget D 6 L.R)
     (W : ℝ) (hW : 0 ≤ W) (hNR : N.Rc ≤ W) (hNC : N.C ≤ W) (hNI : N.Ri ≤ W)
@@ -198,7 +198,7 @@ theorem canonicalRadius_le_envelope (W : ℝ) (hδ : 0 < δ)
   have hforward := forwardEnvelope_nonneg W hW0
   have hreq : W+16*jetEnvelope W ≤ requiredEnvelope W := by
     unfold requiredEnvelope
-    nlinarith only [mul_nonneg (add_nonneg hweak hstrong) (by positivity : 0 ≤ 16*W+1),
+    linarith only [mul_nonneg (add_nonneg hweak hstrong) (by positivity : 0 ≤ 16*W+1),
       mul_nonneg hforward (by positivity : 0 ≤ 64*W+1)]
   have hjW : W ≤ 16*jetEnvelope W := by
     unfold jetEnvelope
@@ -207,7 +207,7 @@ theorem canonicalRadius_le_envelope (W : ℝ) (hδ : 0 < δ)
   rw [coefficientRadius_eq]
   have hb : 16*BC.Rc ≤ 16*W := by gcongr; exact H.coefficient_radius
   unfold radiusEnvelope
-  nlinarith only
+  linarith only
       [H.original_mean,H.original_forward,H.coefficient_cost,hb,hm,hg1,hgT,hextra,hreq,hjW]
 
 theorem canonicalRadius_power (W : ℝ) (hδ : 0 < δ)

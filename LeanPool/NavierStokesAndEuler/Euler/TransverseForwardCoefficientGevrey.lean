@@ -140,7 +140,7 @@ theorem inverseRadius_bounds (c C Rc R : ℝ) (hc : 0 < c) (hRc : 0 ≤ Rc)
     nlinarith [sq_nonneg C]
   have hp : 0 ≤ (gramCost c C 1-1)*(Rc+1) :=
     mul_nonneg (sub_nonneg.mpr hcost) (by linarith)
-  constructor <;> nlinarith
+  constructor <;> linarith
 
 variable {P V E : Type*}
   [NormedAddCommGroup P] [NormedSpace ℝ P]

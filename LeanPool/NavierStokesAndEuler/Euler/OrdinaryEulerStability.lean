@@ -65,7 +65,7 @@ theorem quadratic_stability_within (X X' : ℝ → ℝ) (C ε T : ℝ)
       rw [he] at hb
       have hfsq : (F t)^2 ≤ F t := by nlinarith [hFp t]
       have hh := mul_le_mul_of_nonneg_left hfsq hC.le
-      nlinarith [mul_pos hC (hFp t)]
+      linarith [mul_pos hC (hFp t)]
   intro t ht
   apply (hbound t ht).trans
   dsimp [F]
@@ -104,9 +104,9 @@ theorem regularized_energy_bound (e ep M δ : ℝ) (he : 0 ≤ e) (hM : 0 ≤ M)
   let s := sqrt (e+δ^2)
   have hs : 0 < s := sqrt_pos.mpr (by nlinarith)
   have hs2 : s^2=e+δ^2 := sq_sqrt (by positivity)
-  have he2 : e ≤ s^2 := by nlinarith [sq_nonneg δ]
+  have he2 : e ≤ s^2 := by linarith [sq_nonneg δ]
   have hse : sqrt e ≤ 40*s := by
-    have hl : sqrt e ≤ s := sqrt_le_sqrt (by nlinarith [sq_nonneg δ])
+    have hl : sqrt e ≤ s := sqrt_le_sqrt (by linarith [sq_nonneg δ])
     linarith
   have hC := h3ProductConstant_nonneg
   have hb : ep ≤ 3600*h3ProductConstant*(M+40*s)*s^2 := by
@@ -119,7 +119,7 @@ theorem regularized_energy_bound (e ep M δ : ℝ) (he : 0 ≤ e) (hM : 0 ≤ M)
   apply hd.trans
   have hx : 0 ≤ 40*s := by positivity
   have ha : (M+40*s)*(40*s) ≤ (1+M)*(40*s+(40*s)^2) := by
-    nlinarith [mul_nonneg hM (sq_nonneg (40*s))]
+    linarith [mul_nonneg hM (sq_nonneg (40*s))]
   calc
     _ = (1800*h3ProductConstant)*((M+40*s)*(40*s)) := by ring
     _ ≤ (1800*h3ProductConstant)*((1+M)*(40*s+(40*s)^2)) :=
@@ -193,7 +193,7 @@ theorem normEnvelope_initial (U V : Evolution T hT) (ε : ℝ) (hε : 0 < ε)
     change U.energyPath V ⟨0,le_rfl,hT⟩ ≤ _ at hb
     nlinarith [sqrt_nonneg (U.energyPath V ⟨0,le_rfl,hT⟩+ε^2)]
   change 40*sqrt _ ≤ 320*ε
-  nlinarith
+  linarith
 
 theorem h3_stability (U V : Evolution T hT) (M ε : ℝ)
     (hM : ∀ t, WordBound 4 M (U.velocity t)) (hε : 0 < ε)
@@ -206,7 +206,7 @@ theorem h3_stability (U V : Evolution T hT) (M ε : ℝ)
     (extendPath T hT (U.normEnvelope V ε))
     (fun r => U.envelopeDerivative V ε (projIcc 0 T hT r))
     (stabilityConstant M) (320*ε) T hMp (by positivity) hT
-    (by nlinarith [hsmall]) (extendPath_continuous T hT (U.normEnvelope V ε)).continuousOn
+    (by linarith [hsmall]) (extendPath_continuous T hT (U.normEnvelope V ε)).continuousOn
     (by
         simpa only [extendPath,projIcc_of_mem hT ⟨le_rfl,hT⟩] using U.normEnvelope_initial V ε hε
             hinit)

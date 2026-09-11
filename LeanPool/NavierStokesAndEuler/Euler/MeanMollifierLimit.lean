@@ -64,13 +64,13 @@ theorem scalarMollification_sq_le (φ : ContDiffBump (0 : Space))
       m^2 * φ.normed volume y ≤ φ.normed volume y * f (x-y)^2
     have h := mul_nonneg (φ.nonneg_normed (μ := (volume : Measure Space)) y)
       (sq_nonneg (f (x-y)-m))
-    nlinarith
+    linarith
   rw [integral_sub (hi.const_mul (2*m)) (hi0.const_mul (m^2)),
     integral_const_mul, integral_const_mul, φ.integral_normed] at H
   have hm : (∫ y, φ.normed volume y * f (x-y)) = m := rfl
   rw [hm] at H
   change m^2 ≤ ∫ y, φ.normed volume y * f (x-y)^2
-  nlinarith
+  linarith
 
 theorem scalarMollification_sq_integrable (φ : ContDiffBump (0 : Space))
     (f : Space → ℝ) (hf : MemLp f 2 volume) :
@@ -143,7 +143,7 @@ def interiorMollifier (n : ℕ) : ContDiffBump (0 : Space) where
   rIn_pos := mul_pos (by norm_num) (cutoffScale_pos n)
   rIn_lt_rOut := by
     have hc := cutoffScale_pos n
-    nlinarith
+    linarith
 
 theorem interiorMollifier_rOut_le (n : ℕ) : (interiorMollifier n).rOut ≤ 1/4 := by
   change (1/8 : ℝ) * cutoffScale n ≤ 1/4

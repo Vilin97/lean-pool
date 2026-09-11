@@ -108,13 +108,13 @@ theorem norm_coverEquiv_symm_le (y : TorusInverse.Plane) :
     apply (div_le_iff₀ (by norm_num : (0 : ℝ) < 14)).mpr
     have ha := abs_sub (5 * y.1) y.2
     rw [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 5)] at ha
-    nlinarith [norm_nonneg y]
+    linarith [norm_nonneg y]
   have hY : |x.2| ≤ ‖y‖ := by
     rw [hy, abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 14)]
     apply (div_le_iff₀ (by norm_num : (0 : ℝ) < 14)).mpr
     have ha := abs_sub (3 * y.2) y.1
     rw [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 3)] at ha
-    nlinarith [norm_nonneg y]
+    linarith [norm_nonneg y]
   exact max_le hX hY
 
 theorem norm_coverPower_symm_le (d : ℕ) (y : TorusInverse.Plane) :
@@ -1202,7 +1202,7 @@ theorem primitive_annulus (hh0 : 0 < h) (hh1 : h < 1 / 2)
   have hs := Real.sqrt_pos.mpr hq
   have hslow := normalized_slow_norm hh0 hh1 hx hy.1 hy.2.1
   have hlo : 1 / 2 ≤ Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) y.2.1) :=
-    (Real.le_sqrt (by norm_num) hq.le).mpr (by nlinarith [hy.1])
+    (Real.le_sqrt (by norm_num) hq.le).mpr (by linarith [hy.1])
   have hhi : Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) y.2.1) ≤ 2 :=
     (Real.sqrt_le_left (by norm_num)).mpr (by linarith [hy.2.1])
   have hradlo := (le_div_iff₀ hs).mp hy.2.2.1

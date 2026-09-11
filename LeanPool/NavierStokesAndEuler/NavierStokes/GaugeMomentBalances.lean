@@ -1243,7 +1243,7 @@ theorem basePressureCoefficient_lower {a b : ℝ} (ha : 0 < a) (hab : a < b) :
     · simp only [hr, mul_zero, le_refl]
     · have har := (PressureStream.rho_support a b hab hr).1
       apply mul_le_mul_of_nonneg_right _ (PressureStream.rho_nonneg a b hab r)
-      nlinarith [mul_nonneg (sub_nonneg.mpr har) (add_nonneg (ha.le.trans har) ha.le)]
+      linarith [mul_nonneg (sub_nonneg.mpr har) (add_nonneg (ha.le.trans har) ha.le)]
   rw [integral_const_mul, PressureStream.rho_integral, mul_one] at hm
   exact div_le_div_of_nonneg_right hm (by norm_num)
 

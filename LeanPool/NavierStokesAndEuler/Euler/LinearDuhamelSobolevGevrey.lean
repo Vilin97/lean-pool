@@ -325,7 +325,7 @@ theorem block_inverse_gevrey_at (directions : ι → P) (q : ℕ)
   have h₁ := mul_le_mul_of_nonneg_right hMC hS
   have h₂ := mul_le_mul_of_nonneg_right hMD (majorant_nonneg R hR0 d k)
   change block directions q u k x ≤ M*(majorant R d k+S)
-  nlinarith
+  linarith
 
 end EulerParameterWordGevrey
 
@@ -425,10 +425,10 @@ theorem weightedSolution_block_gevrey_at
     exact le_add_of_nonneg_right (mul_nonneg hcost (add_nonneg hCF hDF))
   have hMC : sobolevInverseCost 1 CF q*CF ≤ M := by
     rw [hMeq]
-    nlinarith [mul_nonneg hcost hDF]
+    linarith [mul_nonneg hcost hDF]
   have hMD : sobolevInverseCost 1 CF q*DF ≤ M := by
     rw [hMeq]
-    nlinarith [mul_nonneg hcost hCF]
+    linarith [mul_nonneg hcost hCF]
   have hAₓ : ContDiff ℝ ∞ Aₓ := frozenOperator_contDiff T hT B U g hg hB x
   have hFₓ : ContDiff ℝ ∞ Fₓ := frozenForcing_contDiff T hT B U g hg f a₀ hf ha₀ x
   have hu : ContDiff ℝ ∞ u := weightedSolution_contDiff T hT B U g hg f a₀ hB hf ha₀

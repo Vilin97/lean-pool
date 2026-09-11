@@ -281,7 +281,7 @@ theorem integral_quadratic_bounds {D : Set ℝ} {rate : ℝ → ℝ}
       intro x hx
       have h := hhi x (hsub hx) midpoint hm hx.2
       rw [hzero] at h
-      nlinarith
+      linarith
     have hu : (∫ x in time..midpoint, rate x) ≤
         ∫ x in time..midpoint, lower * (x - midpoint) := by
       apply intervalIntegral.integral_mono_on htm hint
@@ -289,10 +289,10 @@ theorem integral_quadratic_bounds {D : Set ℝ} {rate : ℝ → ℝ}
       intro x hx
       have h := hlo x (hsub hx) midpoint hm hx.2
       rw [hzero] at h
-      nlinarith
+      linarith
     rw [integral_centered_linear] at hl hu
     rw [intervalIntegral.integral_symm time midpoint]
-    constructor <;> nlinarith
+    constructor <;> linarith
 
 /-- Gaussian upper and lower bounds with the manuscript's slot-length normalization. -/
 theorem gaussian_envelope_bounds {D : Set ℝ} {rate : ℝ → ℝ}
@@ -384,7 +384,7 @@ theorem referenceSlope_bounds {lam u s : ℝ} (hlam : 0 < lam) (hu : 0 < u)
       referenceSlope lam u s ≤ -referenceMinSlope lam u := by
   have hspos : 0 < s := by linarith [hs.1]
   have hn : 0 ≤ lam * s := le_of_lt (mul_pos hlam hspos)
-  have hS : 1 ≤ 1 + s ^ 2 := by nlinarith [sq_nonneg s]
+  have hS : 1 ≤ 1 + s ^ 2 := by linarith [sq_nonneg s]
   have hroot : 1 ≤ Real.sqrt (1 + s ^ 2) := Real.one_le_sqrt.2 hS
   have hden : 1 ≤ (1 + s ^ 2) * Real.sqrt (1 + s ^ 2) := by
     calc
@@ -393,14 +393,14 @@ theorem referenceSlope_bounds {lam u s : ℝ} (hlam : 0 < lam) (hu : 0 < u)
         mul_le_mul hS hroot (by norm_num) (le_of_lt (PulseGrowth.one_add_sq_pos s))
   have hfirst : lam * s / ((1 + s ^ 2) * Real.sqrt (1 + s ^ 2)) ≤ lam * s := by
     apply (div_le_iff₀ (PulseGrowth.dampingDenominator_pos s)).2
-    nlinarith [mul_le_mul_of_nonneg_left hden hn]
+    linarith [mul_le_mul_of_nonneg_left hden hn]
   have hfirst0 : 0 ≤ lam * s / ((1 + s ^ 2) * Real.sqrt (1 + s ^ 2)) :=
     div_nonneg hn (le_of_lt (PulseGrowth.dampingDenominator_pos s))
   have hfirstUpper : lam * s ≤ 3 * lam * u / 2 := by nlinarith [hs.2]
   have hsecondUpper : 2 * lam * s / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) ≤
       3 * lam * u / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) := by
     apply (div_le_div_iff_of_pos_right (PulseGrowth.dampingDenominator_pos u)).2
-    nlinarith [hs.2]
+    linarith [hs.2]
   have hsecondLower : lam * u / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) ≤
       2 * lam * s / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) := by
     apply (div_le_div_iff_of_pos_right (PulseGrowth.dampingDenominator_pos u)).2

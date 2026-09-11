@@ -96,13 +96,13 @@ theorem profileRadius_mem_iff_active {w : SpaceTime} (ht : w.1 < 1) :
   · intro hs
     have hl := (sq_le_sq₀ ha.le hr).mpr hs.1
     have hu := (sq_le_sq₀ hr hb.le).mpr hs.2
-    constructor <;> nlinarith
+    constructor <;> linarith
   · intro hs
     constructor
     · apply (sq_le_sq₀ ha.le hr).mp
-      nlinarith [hs.1]
+      linarith [hs.1]
     · apply (sq_le_sq₀ hr hb.le).mp
-      nlinarith [hs.2]
+      linarith [hs.2]
 
 /-- The normalized radius of the actual scaled graph agrees with the
 band-independent physical ratio, also at the axis. -/

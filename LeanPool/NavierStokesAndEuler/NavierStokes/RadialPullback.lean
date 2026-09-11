@@ -1685,7 +1685,7 @@ theorem delta_scale_lower {d L x : ℝ} (hd : 0 < d) (hx : x ∈ Ioo 0 L) :
   · apply le_min
     · exact mul_le_mul (min_le_right _ _) (delta_le_left L x) hδ hd.le
     · have h := mul_le_mul (min_le_right (1 : ℝ) d) (delta_le_right L x) hδ hd.le
-      nlinarith
+      linarith
 
 theorem delta_scale_reverse_lower {d L x : ℝ} (hd : 0 < d) (hx : x ∈ Ioo 0 L) :
     min 1 d⁻¹ * delta (d * L) (d * x) ≤ delta L x := by

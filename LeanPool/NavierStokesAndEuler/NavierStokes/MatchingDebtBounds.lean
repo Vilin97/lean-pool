@@ -105,7 +105,7 @@ theorem radialClamp_mem {scale : ℝ} (hscale : 0 < scale) (X : ℝ) :
       have hm : scale * X ≤ scale * X * OutgoingSchedule.sigma (scale * X + 2) := by
         nlinarith [mul_nonpos_of_nonneg_of_nonpos hscale.le hXn]
       dsimp [radialClamp]
-      nlinarith
+      linarith
 
 /-- Strip, given by `{p | -20 < scale * p.1 ∧ p.2 ∈ ReferencePath.parameterInterval}`. -/
 noncomputable def strip (scale : ℝ) : Set Point :=
@@ -604,7 +604,7 @@ theorem driftBudget_weighted {F : OutgoingProfile.Profile} {N : ℕ}
   have hm := (le_div_iff₀ (mul_pos (by norm_num : (0 : ℝ) < 4) (mul_pos q.normalizer_pos hd))).mp
     (min_le_right 1 (rho / (4 * (q.normalizer * driftFactor N q.axial q.angular))))
   change driftBudget q rho * (4 * (q.normalizer * driftFactor N q.axial q.angular)) ≤ rho at hm
-  nlinarith
+  linarith
 
 theorem normalized_debt_small_of_budgets {F : OutgoingProfile.Profile} {A :
     NominalProfile.AxisStage F}
@@ -621,10 +621,10 @@ theorem normalized_debt_small_of_budgets {F : OutgoingProfile.Profile} {A :
     (driftBudget_pos q hrho).le (driftBudget_le_one q rho) hC hsep hdef
   have hpre : q.normalizer * prefixBudget q B K BJ c.shapeTime A.normalization < rho / 4 := by
     have hh := (lt_div_iff₀ (mul_pos (by norm_num : (0 : ℝ) < 4) q.normalizer_pos)).mp hp
-    nlinarith
+    linarith
   have hrest := driftBudget_weighted q rho
   intro n hn eta hη
-  exact (hb n hn eta hη).trans_lt (by nlinarith)
+  exact (hb n hn eta hη).trans_lt (by linarith)
 
 /-- Matching bounds data, collecting `separation`, `normalized_jets`, `shape_slope`. -/
 structure MatchingBounds {F : OutgoingProfile.Profile} {A : NominalProfile.AxisStage F}
@@ -743,7 +743,7 @@ theorem exists_ordered_matching_threshold (F : OutgoingProfile.Profile) (N : ℕ
       ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 n / Λ ≤ delta / 3 := by
     apply (div_le_iff₀ hΛ).mpr
     have hm := (div_le_iff₀ hd).mp hLD
-    nlinarith [hDb n hn]
+    linarith [hDb n hn]
   obtain ⟨B, hB, K, hK, BJ0, hBJ0, hseed⟩ := TransitionRamp.ordered_seed_bounds
     prep.inputs hΛ hj prep.sigma_pos hnatural F.axisDatum_contDiff N
   let BJ := max BJ0 q.logarithm

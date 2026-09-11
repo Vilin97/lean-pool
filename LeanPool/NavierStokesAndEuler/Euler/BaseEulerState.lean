@@ -959,8 +959,8 @@ theorem velocity_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (x : Space) :
 
 theorem velocity_joint_continuous : Continuous (velocity S) := by
   have hc : Continuous (projIcc 0 T hT.le) := continuous_projIcc
-  change Continuous (fun q : ℝ × Space => S.velocity.pointField
-    (projIcc 0 T hT.le q.1) (coveringMap P (q.2,0)))
+  change Continuous (Function.uncurry S.velocity.pointField ∘
+    fun q : ℝ × Space => (projIcc 0 T hT.le q.1, coveringMap P (q.2,0)))
   exact S.velocity.pointField_joint_continuous.comp
     ((hc.comp continuous_fst).prodMk
       ((EulerLiftedGradientSpace.coveringMap_isOpenQuotient P).continuous.comp
@@ -968,8 +968,8 @@ theorem velocity_joint_continuous : Continuous (velocity S) := by
 
 theorem force_joint_continuous : Continuous (force S) := by
   have hc : Continuous (projIcc 0 T hT.le) := continuous_projIcc
-  change Continuous (fun q : ℝ × Space => S.pressure.pointField
-    (projIcc 0 T hT.le q.1) (coveringMap P (q.2,0)))
+  change Continuous (Function.uncurry S.pressure.pointField ∘
+    fun q : ℝ × Space => (projIcc 0 T hT.le q.1, coveringMap P (q.2,0)))
   exact S.pressure.pointField_joint_continuous.comp
     ((hc.comp continuous_fst).prodMk
       ((EulerLiftedGradientSpace.coveringMap_isOpenQuotient P).continuous.comp

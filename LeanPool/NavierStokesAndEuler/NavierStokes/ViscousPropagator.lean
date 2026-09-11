@@ -295,7 +295,7 @@ theorem inner_diagonal (lam : ℝ) (x : Plane) :
 theorem diagonal_energy_le {lam : ℝ} (hlam : 0 ≤ lam) (x : Plane) :
     ⟪x, diagonal lam x⟫_ℝ ≤ lam * ‖x‖ ^ 2 := by
   rw [inner_diagonal, plane_norm_sq]
-  nlinarith [mul_nonneg hlam (sq_nonneg (x 1))]
+  linarith [mul_nonneg hlam (sq_nonneg (x 1))]
 
 /-- Operator norm controls its quadratic form without losing the sign of damping. -/
 theorem error_energy_le (E : H →L[ℝ] H) (x : H) :
@@ -313,7 +313,7 @@ theorem coefficient_energy_le {lam : ℝ} (hlam : 0 ≤ lam)
   simp only [coefficient, add_apply, sub_apply,
     smul_apply, ContinuousLinearMap.id_apply, inner_add_right,
     inner_sub_right, inner_smul_right, real_inner_self_eq_norm_sq]
-  nlinarith [diagonal_energy_le hlam x, error_energy_le E x]
+  linarith [diagonal_energy_le hlam x, error_energy_le E x]
 
 /-- The exponential-integral envelope has the required scalar ODE exactly. -/
 theorem hasDerivAt_envelope {rate : ℝ → ℝ} (hrate : Continuous rate)

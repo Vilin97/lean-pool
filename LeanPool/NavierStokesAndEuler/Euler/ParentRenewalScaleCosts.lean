@@ -105,8 +105,8 @@ theorem renewal_series_small {J D : ℕ} (hJ : 2 ≤ J) {C c CF X δ η : ℝ}
     (hfloor : 12000 / η ≤ X) (hsmall : 2 * (1 + errorConstant CF) * δ ≤ η) :
     SmallSeries (renewalCost J D C c CF X) η := by
   have hf := (div_le_iff₀ hη).mp hfloor
-  have hfirst : 6000/X ≤ η/2 := (div_le_iff₀ hX).mpr (by nlinarith only [hf])
-  have hc : errorConstant CF*δ ≤ η/2 := by nlinarith only [hsmall,hδ]
+  have hfirst : 6000/X ≤ η/2 := (div_le_iff₀ hX).mpr (by linarith only [hf])
+  have hc : errorConstant CF*δ ≤ η/2 := by linarith only [hsmall,hδ]
   exact (renewal_series hJ hX hb).weaken (by linarith only [hfirst,hc])
 
 /-- This uses only the coupling at the present stage. -/
@@ -143,7 +143,7 @@ theorem physical_error_le_maximum {ι : Type*} (G : PhysicalGeometryData ι)
   have herr : G.error ≤ CF^2*geometryError J D C c X (fun _ => 2) n := by
     unfold PhysicalGeometryData.error geometryError
     dsimp only
-    nlinarith only [hmain,hds]
+    linarith only [hmain,hds]
   have hpow : G.Θ^40 ≤ sourceTheta J C (scaleSequence J X) n^60 :=
     (pow_le_pow_left₀ G.Theta_pos.le htheta 40).trans (pow_le_pow_right₀ hthetaOne (by omega))
   have hmax0 := geometryError_nonneg J D C c X (fun _ => 2) n (zero_le_one.trans hC) hXp
@@ -164,7 +164,7 @@ theorem coupling_polynomial_le {ι : Type*} (G : PhysicalGeometryData ι) :
   have hs2 : G.σ^2 ≤ 1 := pow_le_one₀ G.sigma_pos.le hs1
   have h2 := mul_le_mul hs2 hy2 (sq_nonneg G.y) (by norm_num : (0 : ℝ) ≤ 1)
   have h3 := mul_le_mul hs1 hy3 (pow_nonneg G.y_pos.le 3) (by norm_num : (0 : ℝ) ≤ 1)
-  nlinarith only [hy4,h2,h3]
+  linarith only [hy4,h2,h3]
 
 theorem actual_errors_le_cost {ι : Type*} (G : PhysicalGeometryData ι)
     (J D : ℕ) (hJ : 2 ≤ J) (C c CF X a : ℝ) (hC : 1 ≤ C) (hCF : 1 ≤ CF)
@@ -193,7 +193,7 @@ theorem actual_errors_le_cost {ι : Type*} (G : PhysicalGeometryData ι)
   have hnorm : 30000000*neighborStabilityConstant*G.error*G.Θ^40 ≤
       errorConstant CF*maximumError J D C c X n := by
     unfold errorConstant
-    nlinarith only [hm]
+    linarith only [hm]
   have hp := coupling_polynomial_le G
   have hyp := mul_le_mul_of_nonneg_left hy' (by norm_num : (0 : ℝ) ≤ 10)
   have hsp := mul_le_mul_of_nonneg_left hs (by norm_num : (0 : ℝ) ≤ 1500)
@@ -201,10 +201,10 @@ theorem actual_errors_le_cost {ι : Type*} (G : PhysicalGeometryData ι)
   constructor
   · unfold PhysicalGeometryData.couplingError renewalCost
     simp only [div_eq_mul_inv,one_mul] at hyp hi ⊢
-    nlinarith only [hp,hyp,hnorm,hi]
+    linarith only [hp,hyp,hnorm,hi]
   · unfold PhysicalGeometryData.tiltError renewalCost
     simp only [div_eq_mul_inv] at hsp ⊢
-    nlinarith only [hsp,hnorm]
+    linarith only [hsp,hnorm]
 
 /-- Optional explicit extra cost for the next activation. The existing
 parent-square cost also controls it after multiplication by 2*CF+1. -/
@@ -247,11 +247,11 @@ theorem activation_ratio_le {J D : ℕ} (hJ : 1 ≤ J) {C c CF X δ : ℝ}
       (activationCostSpec CF hCF).cost J (scaleSequence J X) n := by
   have hp := previousShear_one_le J hJ X hX n
   have h1 : 1+previousShear J X n ≤ 2*(previousShear J X n)^2 := by
-    nlinarith only [hp,sq_nonneg (previousShear J X n-1)]
+    linarith only [hp,sq_nonneg (previousShear J X n-1)]
   have h2 := mul_le_mul_of_nonneg_left h1 (zero_le_one.trans hCF)
   have he' : e ≤ (previousShear J X n)^2 := he.trans (one_le_pow₀ hp)
   have hn : CF*(1+previousShear J X n)+e ≤ (2*CF+1)*(previousShear J X n)^2 := by
-    nlinarith only [h2,he']
+    linarith only [h2,he']
   have hd := div_le_div_of_nonneg_right hn (show 0 ≤ shear J X n from (Real.exp_pos _).le)
   have hb' := mul_le_mul_of_nonneg_left
     (actualParentRatio_le J hJ X (zero_lt_one.trans_le hX) hb.initial_shear n)

@@ -207,15 +207,15 @@ theorem weightedSolution_gevrey
   have hCT : 0 ≤ C*T := mul_nonneg hC hT
   have hM : 1 ≤ M := by
     dsimp [M,forwardCost]
-    nlinarith [mul_nonneg hC hA, mul_nonneg hCT (add_nonneg hD hCB)]
+    linarith [mul_nonneg hC hA, mul_nonneg hCT (add_nonneg hD hCB)]
   have hR0 : 0 ≤ R := le_trans
     (mul_nonneg (mul_nonneg (by norm_num) (le_trans zero_le_one hM)) (by linarith)) hR
   have htop : C*A + C*T*D ≤ M := by
     dsimp [M,forwardCost]
-    nlinarith [mul_nonneg hCT hCB]
+    linarith [mul_nonneg hCT hCB]
   have hcoef : C*T*CB ≤ M := by
     dsimp [M,forwardCost]
-    nlinarith [mul_nonneg hC hA, mul_nonneg hCT hD]
+    linarith [mul_nonneg hC hA, mul_nonneg hCT hD]
   apply triangular_inverse_majorant M Rc R hM hRc hR d
     (fun k => majorant R d k) (fun k => ‖iteratedFDeriv ℝ k u x‖) (fun _ => le_rfl) _ n
   intro k

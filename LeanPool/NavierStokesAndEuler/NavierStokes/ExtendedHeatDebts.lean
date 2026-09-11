@@ -677,7 +677,7 @@ theorem enlargedBand_diffusion_bound {η : ℝ} (hη : η ∈ enlargedBand) : |d
     mul_nonneg (by linarith) (by linarith)
   rw [abs_le]
   dsimp [diffusion]
-  constructor <;> nlinarith [sq_nonneg η]
+  constructor <;> linarith [sq_nonneg η]
 
 theorem enlargedBand_diffusion_derivative_bound {η : ℝ} (hη : η ∈ enlargedBand)
     (n : ℕ) (hn : 1 ≤ n) : ‖iteratedFDeriv ℝ n diffusion η‖ ≤ (3 : ℝ) ^ n := by
@@ -994,7 +994,7 @@ theorem diffusion_abs_bound {L η : ℝ} (hη : |η| ≤ L) : |diffusion η| ≤
     mul_nonneg (by linarith [(abs_le.mp hη).2]) (by linarith [(abs_le.mp hη).1])
   rw [abs_le]
   dsimp [diffusion]
-  constructor <;> nlinarith [sq_nonneg η, sq_nonneg L]
+  constructor <;> linarith [sq_nonneg η, sq_nonneg L]
 
 theorem diffusion_iterated_bound {L η : ℝ} (hL : 0 ≤ L) (hη : |η| ≤ L)
     (n : ℕ) (hn : 1 ≤ n) : ‖iteratedFDeriv ℝ n diffusion η‖ ≤ (2 * (L + 1)) ^ n := by

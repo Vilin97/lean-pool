@@ -276,12 +276,12 @@ theorem inputEnvelope_bounds (K X : ℝ) (hK : 1 ≤ K) (hKX : K ≤ X) :
       hl
   have ha : a ≤ inputEnvelope X := by
     change a ≤ 1+X+a+3*a^3*X
-    nlinarith only [hX0,mul_nonneg (pow_nonneg ha0 3) hX0]
+    linarith only [hX0,mul_nonneg (pow_nonneg ha0 3) hX0]
   refine ⟨?_,?_,hl.trans ha,hp.trans ha,?_⟩
   · change 1 ≤ 1+X+a+3*a^3*X
-    nlinarith only [hX0,ha0,mul_nonneg (pow_nonneg ha0 3) hX0]
+    linarith only [hX0,ha0,mul_nonneg (pow_nonneg ha0 3) hX0]
   · change X ≤ 1+X+a+3*a^3*X
-    nlinarith only [ha0,mul_nonneg (pow_nonneg ha0 3) hX0]
+    linarith only [ha0,mul_nonneg (pow_nonneg ha0 3) hX0]
   · intro Cp hCp hCpX
     have hprod : physicalCost K Cp ≤ 3*a^3*X := by
       unfold physicalCost

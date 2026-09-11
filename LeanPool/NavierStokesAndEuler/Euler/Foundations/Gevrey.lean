@@ -239,16 +239,16 @@ theorem triangular_inverse_majorant (A Rc R : ℝ)
     ∀ n, Z n ≤ majorant R (d + 1) n := by
   have hA0 : 0 ≤ A := by linarith
   have hARc : 0 ≤ A * Rc := mul_nonneg hA0 hRc
-  have hR : 0 < R := by nlinarith
+  have hR : 0 < R := by linarith
   have hq0 : 0 ≤ Rc / R := div_nonneg hRc hR.le
   have hqhalf : Rc / R ≤ 1 / 2 := by
     apply (div_le_iff₀ hR).2
-    nlinarith [mul_nonneg (show 0 ≤ A - 1 by linarith) hRc]
+    linarith [mul_nonneg (show 0 ≤ A - 1 by linarith) hRc]
   have hscale : Rc ≤ (Rc / R) * R := by rw [div_mul_cancel₀ _ hR.ne']
   have hbudget : A / R + 2 * A * (Rc / R) ≤ 1 := by
     calc
       _ = (A + 2 * A * Rc) / R := by ring
-      _ ≤ 1 := (div_le_one hR).2 (by nlinarith)
+      _ ≤ 1 := (div_le_one hR).2 (by linarith)
   intro n
   induction n using Nat.strong_induction_on with
   | h n ih =>
@@ -295,7 +295,7 @@ theorem triangular_inverse_polynomial_radius (P : ℝ) (hP : 2 ≤ P) (c d : ℕ
     ∀ n, Z n ≤ majorant (P ^ (2 * c + 2)) (d + 1) n := by
   have hPc : 1 ≤ P ^ c := one_le_pow₀ (by linarith)
   have hPc0 : 0 ≤ P ^ c := by linarith
-  have hP2 : 4 ≤ P ^ 2 := by nlinarith [sq_nonneg (P - 2)]
+  have hP2 : 4 ≤ P ^ 2 := by linarith [sq_nonneg (P - 2)]
   have heq : P ^ (2 * c + 2) = (P ^ c) ^ 2 * P ^ 2 := by
     rw [show 2 * c + 2 = c * 2 + 2 by omega, pow_add, pow_mul]
   have hlarge : 2 * P ^ c * (P ^ c + 1) ≤ P ^ (2 * c + 2) := by

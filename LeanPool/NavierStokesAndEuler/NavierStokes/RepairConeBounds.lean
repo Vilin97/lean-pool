@@ -837,7 +837,7 @@ theorem model_margins (F : Profile) (hh : F.data.h ≤ 1 / 100) :
   have he := (hb v (hv.trans (min_le_left _ _)) p hp).2
   have hn : L * ‖v‖ ≤ m := by
     have hd := (le_div_iff₀ (by linarith : 0 < L + 1)).mp (hv.trans (min_le_right _ _))
-    nlinarith [norm_nonneg v]
+    linarith [norm_nonneg v]
   have hcomp (i : Fin 22) : |observations F (v, p) i - observations F (0, p) i| ≤ m := by
     have hi := norm_le_pi_norm (observations F (v, p) - observations F (0, p)) i
     exact hi.trans (he.trans hn)
@@ -1038,7 +1038,7 @@ theorem physical_transport {F : Profile} {A : NominalProfile.AxisStage F}
   apply (eq_div_iff (Real.exp_ne_zero p.1)).mpr
   apply (mul_left_cancel₀ c.radius_pos.ne')
   dsimp only [chart]
-  nlinarith [hw]
+  linarith [hw]
 
 theorem physical_lags {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (hsep : c.separation ≤ Real.exp (-8))
@@ -1341,7 +1341,7 @@ theorem exists_repair_cone_log (F : Profile) :
         (ActivationContinuation.shearB (c.profiles hsep) (chart c.radius p)) := by
       rw [physical_projection c hsep hp.1 heta hs]
       have hl := mul_le_mul_of_nonneg_left hb.2.2 c.radius_pos.le
-      nlinarith
+      linarith
     refine ⟨?_, hproj, ConeAlgebra.relaxed_cone_of_le_two hproj (hspeed.trans (by norm_num))⟩
     rw [ha]
     exact lt_of_lt_of_le (by norm_num : (0 : ℝ) < 3 / 5) hb.1
@@ -1367,9 +1367,9 @@ theorem exists_repair_cone (F : Profile) :
   have hx : 0 < p.1 := (mul_pos c.radius_pos (Real.exp_pos (-8))).trans_le hp.1
   have hxR : 0 < p.1 / c.radius := div_pos hx c.radius_pos
   have hlo : Real.exp (-8) ≤ p.1 / c.radius :=
-    (le_div_iff₀ c.radius_pos).mpr (by nlinarith [hp.1])
+    (le_div_iff₀ c.radius_pos).mpr (by linarith [hp.1])
   have hhi : p.1 / c.radius ≤ Real.exp (-5) :=
-    (div_le_iff₀ c.radius_pos).mpr (by nlinarith [hp.2])
+    (div_le_iff₀ c.radius_pos).mpr (by linarith [hp.2])
   have hy : Real.log (p.1 / c.radius) ∈ Icc (-8) (-5) := by
     constructor
     · simpa only [Real.log_exp] using Real.log_le_log (Real.exp_pos (-8)) hlo

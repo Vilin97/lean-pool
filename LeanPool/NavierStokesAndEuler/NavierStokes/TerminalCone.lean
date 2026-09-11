@@ -123,7 +123,7 @@ theorem profileRadius_annulus (y0 : ℝ) {δ : ℝ} (hδ : δ ≤ 5 / 2) :
   have he : Real.exp (y0 + 3 - 0) ≤ Real.exp 3 * Real.exp (y0 + 3 - δ) := by
     rw [← Real.exp_add]
     exact Real.exp_le_exp.mpr (by linarith)
-  nlinarith
+  linarith
 
 theorem le_on_closed_band {f g : ℝ → ℝ} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ eta ∈ Ioo (-1 : ℝ) 1, f eta ≤ g eta) {eta : ℝ} (heta : eta ∈ Icc (-1 : ℝ) 1) :
@@ -132,7 +132,7 @@ theorem le_on_closed_band {f g : ℝ → ℝ} (hf : Continuous f) (hg : Continuo
   simpa only [closure_Ioo (by norm_num : (-1 : ℝ) ≠ 1)] using heta
 
 theorem eta_sq_lt_one {eta : ℝ} (heta : eta ∈ Ioo (-1 : ℝ) 1) : eta ^ 2 < 1 := by
-  nlinarith [mul_pos (show 0 < eta + 1 by linarith [heta.1])
+  linarith [mul_pos (show 0 < eta + 1 by linarith [heta.1])
     (show 0 < 1 - eta by linarith [heta.2])]
 
 /-! ## Uniform small-argument heat slope, including zero diffusion -/
@@ -163,10 +163,10 @@ theorem heatSlope_bounds (d : OutgoingTail.TailData) (hh : d.h ≤ 1 / 4)
   have hdh : (1 + d.h) * d.h ≤ 2 * d.h := by nlinarith [d.h_pos]
   have hn : -deriv (HeatProfileExtension.extension (1 + d.h)) z ≤ 2 * d.h := by
     have he := (abs_le.mp hder).1
-    nlinarith
+    linarith
   have hprod : 2 * d.h * z ≤ d.h / 8 := by nlinarith [d.h_pos]
   have hhprod : d.h * (1 + d.h) * z ≤ d.h / 8 :=
-    (mul_le_mul_of_nonneg_right (by nlinarith : d.h * (1 + d.h) ≤ 2 * d.h) hz).trans hprod
+    (mul_le_mul_of_nonneg_right (by linarith : d.h * (1 + d.h) ≤ 2 * d.h) hz).trans hprod
   have hHhalf : 1 / 2 ≤ HeatProfileExtension.extension (1 + d.h) z := by
     have hl := (abs_le.mp hdev).1
     linarith
@@ -175,7 +175,7 @@ theorem heatSlope_bounds (d : OutgoingTail.TailData) (hh : d.h ≤ 1 / 4)
   · exact div_nonneg (mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hz) hneg.le) hH.le
   · apply (div_le_iff₀ hH).mpr
     have hnprod := mul_le_mul_of_nonneg_left hn hz
-    nlinarith [mul_le_mul_of_nonneg_left hHhalf (div_nonneg d.h_pos.le (by norm_num : (0 : ℝ) ≤ 4))]
+    linarith [mul_le_mul_of_nonneg_left hHhalf (div_nonneg d.h_pos.le (by norm_num : (0 : ℝ) ≤ 4))]
 
 theorem profileZ_small (_d : OutgoingTail.TailData) {K δ eta : ℝ}
     (hK : 32 ≤ K) (hδ : δ ≤ 5 / 2) (heta : eta ^ 2 ≤ 1) :
@@ -187,7 +187,7 @@ theorem profileZ_small (_d : OutgoingTail.TailData) {K δ eta : ℝ}
   unfold TerminalEdgeFactor.profileZ
   apply (div_le_iff₀ (TerminalEdgeFactor.profileS_pos _ _)).mpr
   dsimp only
-  nlinarith [sq_nonneg eta]
+  linarith [sq_nonneg eta]
 
 theorem profileSpeed_eq {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailData) (y0 : ℝ)
     {eta δ : ℝ} (heta : eta ^ 2 ≤ 1) :
@@ -352,7 +352,7 @@ theorem release_small (d : OutgoingTail.TailData) (hsmall : SmallTail d) :
       _ ≤ d.h * 1 ^ 3 := mul_le_mul_of_nonneg_left (pow_le_pow_left₀ d.h_pos.le hh1 3) d.h_pos.le
       _ = _ := by ring
   have hs := (le_div_iff₀ (show 0 < 1 + releaseBudget d.core by linarith)).mp hsmall.2
-  nlinarith [mul_le_mul_of_nonneg_left hhpow hB, d.h_pos]
+  linarith [mul_le_mul_of_nonneg_left hhpow hB, d.h_pos]
 
 theorem profileAxialStress_le_angular (d : OutgoingTail.TailData) (hsmall : SmallTail d)
     {K δ eta : ℝ} (hK : 0 < K) (hδ : 0 < δ) (hδ' : δ ≤ 5 / 2)
@@ -449,7 +449,7 @@ theorem profile_cone_margin (d : OutgoingTail.TailData) (hsmall : SmallTail d)
       (Real.log K - 1 / 5) (eta, δ) - 2 := by linarith [d.h_pos]
   have hm := mul_le_mul_of_nonneg_left ht2 hv
   unfold TerminalEdgeFactor.profileConeGap
-  nlinarith [hsmall.1]
+  linarith [hsmall.1]
 
 theorem profile_relative_cone (d : OutgoingTail.TailData) (hsmall : SmallTail d)
     {K δ eta : ℝ} (hK : 32 ≤ K) (hδ : 0 < δ) (hδ' : δ ≤ 5 / 2)

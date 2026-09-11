@@ -48,10 +48,10 @@ theorem integral_absorb
   have hKi := mul_le_mul_of_nonneg_left hi hK
   have hKc : K * (c - a) ≤ 1 / 2 := by
     have hm := mul_le_mul_of_nonneg_left hc.2 hK
-    nlinarith
+    linarith
   have hmaxn : 0 ≤ g c := hgn c hc
   have hscaled := mul_le_mul_of_nonneg_right hKc hmaxn
-  have hgc : g c ≤ 2 * A := by nlinarith [hineq c hc]
+  have hgc : g c ≤ 2 * A := by linarith [hineq c hc]
   intro t ht
   exact (hmax ht).trans hgc
 
@@ -145,8 +145,8 @@ theorem forced_variation_of_constants
   dsimp only
   rw [← hWu, ← hWv]
   constructor
-  · nlinarith [congrArg (fun r : ℝ => r * Y t) hW]
-  · nlinarith [congrArg (fun r : ℝ => r * Y₁ t) hW]
+  · linarith [congrArg (fun r : ℝ => r * Y t) hW]
+  · linarith [congrArg (fun r : ℝ => r * Y₁ t) hW]
 
 /-- First displacement component of the scalar fundamental propagator. -/
 def kernel11 (D u u₁ v v₁ : ℝ → ℝ) (t s : ℝ) : ℝ :=
@@ -277,7 +277,7 @@ theorem equation30_kernel_bound
         (hfluxU r (hs.trans hr.1)) (hfluxV r (hs.trans hr.1))).2)
   constructor
   · have hb := hlin (D s * V₁ s) (-(D s * U₁ s))
-    have hfirst : D s * V₁ s * U s + -(D s * U₁ s) * V s = 1 := by nlinarith [hW]
+    have hfirst : D s * V₁ s * U s + -(D s * U₁ s) * V s = 1 := by linarith [hW]
     have hsecond : D s * V₁ s * U₁ s + -(D s * U₁ s) * V₁ s = 0 := by ring
     rw [hfirst, hsecond] at hb
     norm_num at hb
@@ -285,7 +285,7 @@ theorem equation30_kernel_bound
     congr 2 <;> dsimp [kernel11, kernel21, D] <;> ring
   · have hb := hlin (-(D s * V s)) (D s * U s)
     have hfirst : -(D s * V s) * U s + D s * U s * V s = 0 := by ring
-    have hsecond : -(D s * V s) * U₁ s + D s * U s * V₁ s = 1 := by nlinarith [hW]
+    have hsecond : -(D s * V s) * U₁ s + D s * U s * V₁ s = 1 := by linarith [hW]
     rw [hfirst, hsecond] at hb
     norm_num at hb
     convert! hb using 1
@@ -300,7 +300,7 @@ theorem two_column_bound {a b c d x y C : ℝ}
   simp only [abs_mul] at hfirst hsecond
   have hx := mul_le_mul_of_nonneg_right h1 (abs_nonneg x)
   have hy := mul_le_mul_of_nonneg_right h2 (abs_nonneg y)
-  nlinarith
+  linarith
 
 /-- Passing from Duhamel's formula and relative kernel bounds to a scalar
 relative integral inequality, with the forcing in both components. -/
@@ -633,7 +633,7 @@ theorem equation30_relative_error_order29
   have hδ : 0 ≤ e * Θ ^ 12 := by positivity
   have hsmall' : 20 * Θ ^ 8 * (e * Θ ^ 12) * (b - 0) ≤ 1 / 2 := by
     have hm := mul_le_mul_of_nonneg_left hb (show 0 ≤ 20 * e * Θ ^ 20 by positivity)
-    nlinarith
+    linarith
   have hdiff := equation30_perturbed_difference_bound hε hεsmall hΘ
     (by norm_num : (0 : ℝ) ≤ 0) hb0 hb hδ hsmall'
     hU hV hfluxU hfluxV hU0 hU₁0 hV₁0 hY hfluxY hZ hfluxZ hfc hgc hforcing

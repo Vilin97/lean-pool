@@ -34,7 +34,7 @@ theorem rootTerm_nonneg (P J : ℝ) : 0 ≤ rootTerm P J := by
 
 theorem rootTerm_sq {P J : ℝ} (hP : 2 < P) :
     rootTerm P J ^ 2 = J ^ 2 * ((P - 2) / 2 + J ^ 2 / 16) := by
-  have hrad : 0 ≤ (P - 2) / 2 + J ^ 2 / 16 := by nlinarith [sq_nonneg J]
+  have hrad : 0 ≤ (P - 2) / 2 + J ^ 2 / 16 := by linarith [sq_nonneg J]
   unfold rootTerm
   rw [mul_pow, sq_abs, Real.sq_sqrt hrad]
 
@@ -89,14 +89,14 @@ theorem true_cone_iff {P J v : ℝ} (hv : 2 < v) :
       linarith
     have hdiff := mul_pos (sub_pos.mpr hlt)
       (show 0 < P + J ^ 2 / 4 - v + rootTerm P J by linarith)
-    nlinarith
+    linarith
   · rintro ⟨hvP, hquad⟩
     have hP : 2 < P := lt_trans hv hvP
     refine ⟨hP, ?_⟩
     have hsq := rootTerm_sq (J := J) hP
     have hr := rootTerm_nonneg P J
     have hid := square_difference P J v
-    have hpos : 0 < P + J ^ 2 / 4 - v := by nlinarith [sq_nonneg J]
+    have hpos : 0 < P + J ^ 2 / 4 - v := by linarith [sq_nonneg J]
     have hlt : rootTerm P J < P + J ^ 2 / 4 - v := by nlinarith
     change v < P + J ^ 2 / 4 - rootTerm P J
     linarith
@@ -118,7 +118,7 @@ theorem normalized_test_negative {a b w : ℝ} (ha : 0 < a)
     (a * (1 + (b / a) ^ 2) - 2) * (w + b / a) ^ 2 -
       2 * (1 - b * w / a) ^ 2 < 0 := by
   rw [normalized_factorization a b w (ne_of_gt ha)]
-  exact mul_neg_of_pos_of_neg (by nlinarith [sq_nonneg (b / a)]) (by linarith)
+  exact mul_neg_of_pos_of_neg (by linarith [sq_nonneg (b / a)]) (by linarith)
 
 /-- An explicit finite-amplitude sufficient condition, prior to taking any limit. -/
 theorem finite_amplitude_cone {c j v p : ℝ} (hp : 0 < p)
@@ -132,7 +132,7 @@ theorem finite_amplitude_cone {c j v p : ℝ} (hp : 0 < p)
     have hid : 2 * (p * c - v) ^ 2 - (v - 2) * (p * j) ^ 2 =
         p * (p * (2 * c ^ 2 - (v - 2) * j ^ 2) - 4 * c * v) + 2 * v ^ 2 := by
       ring
-    nlinarith [sq_nonneg v]
+    linarith [sq_nonneg v]
   · exact relaxed_cone_of_le_two hP (le_of_not_gt hv)
 
 /-- For fixed normalized parameters, a positive leading coefficient and strict

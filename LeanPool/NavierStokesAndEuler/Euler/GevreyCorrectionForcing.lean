@@ -786,6 +786,6 @@ theorem correctionForcing_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient 
   change externalPressureNorm period K N ρ p0 + basePressureNorm period K0 N hN ρ p0 ≤ _ at hp0
   change externalPressureNorm period K N ρ p1 ≤ _ at hp1e
   change basePressureNorm period K0 N hN ρ p1 ≤ _ at hp1b
-  nlinarith only [h, hp0, hp1e, hp1b]
+  linarith only [h, hp0, hp1e, hp1b]
 
 end EulerGevreyCorrectionForcing

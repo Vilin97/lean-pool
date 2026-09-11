@@ -1172,7 +1172,7 @@ theorem stageHarmonics_bound {initial : Finset ℤ} {M : ℝ} (hM : 0 ≤ M)
     have hgrow : 2 ^ stage * M ≤ 2 ^ (stage + 1) * M := by
       rw [pow_succ]
       have hnonneg : 0 ≤ (2 : ℝ) ^ stage * M := mul_nonneg (by positivity) hM
-      nlinarith
+      linarith
     rw [stageHarmonics, Finset.mem_union, Finset.mem_union] at hj
     rcases hj with (hj | hj) | hj
     · exact (ih hj).trans hgrow

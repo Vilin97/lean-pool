@@ -257,17 +257,17 @@ theorem exactPacket_whole_horizon_low_bounds
   · obtain ⟨hv,hp,hq⟩ := E.exactPacket_good_low_bounds m hm J support hSupport B residual k hk
       G hball hs hδ hδ1 ev ep CM CH Kupper herr t ht x (hCM t x) (hCH t x) (hupper t x)
     refine ⟨hv.trans ?_,hp.trans ?_,fun z => (hq z).trans ?_⟩
-    · nlinarith only [mul_nonneg hchild hbad]
-    · nlinarith only [mul_nonneg (mul_nonneg hCM0 hchild) hbad]
+    · linarith only [mul_nonneg hchild hbad]
+    · linarith only [mul_nonneg (mul_nonneg hCM0 hchild) hbad]
     · apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
-      nlinarith only [mul_nonneg (mul_nonneg hCM0 hchild) hbad]
+      linarith only [mul_nonneg (mul_nonneg hCM0 hchild) hbad]
   · obtain ⟨hv,hp,hq⟩ := E.exactPacket_bad_low_bounds m hm J support hSupport B residual k hk
       G hball hs hδ hδ1 ev ep CM CH Kupper herr t (le_of_not_ge ht) x (hCM t x) (hCH t x) (hupper t
           x)
     refine ⟨hv.trans ?_,hp.trans ?_,fun z => (hq z).trans ?_⟩
-    · nlinarith only [mul_nonneg hchild hgood]
-    · nlinarith only [mul_nonneg (mul_nonneg hCM0 hchild) hgood]
+    · linarith only [mul_nonneg hchild hgood]
+    · linarith only [mul_nonneg (mul_nonneg hCM0 hchild) hgood]
     · apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
-      nlinarith only [mul_nonneg (mul_nonneg (mul_nonneg hCM0 hchild) G.delta_nonneg) hgood]
+      linarith only [mul_nonneg (mul_nonneg (mul_nonneg hCM0 hchild) G.delta_nonneg) hgood]
 
 end EulerParentPacketFrames.Evolution

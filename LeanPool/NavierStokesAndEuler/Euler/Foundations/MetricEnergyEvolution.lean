@@ -68,7 +68,7 @@ theorem energy_derivative_bound (K K' : H →L[ℝ] H) (e transport forcing : H)
     exact (real_inner_le_norm _ _).trans
       (mul_le_mul_of_nonneg_right (K.le_opNorm e) (norm_nonneg _))
   have ht' := (abs_le.mp ht).1
-  nlinarith
+  linarith
 
 /-- A positive regularization gives a differentiable metric norm even at zero. -/
 theorem regularized_metric_norm_hasDerivAt (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
@@ -121,7 +121,7 @@ theorem regularized_metric_norm_evolution (K : ℝ → H →L[ℝ] H) (e : ℝ �
   calc
     _ ≤ (‖K'‖ + 2 * B) * ‖e t‖ ^ 2 + 2 * ‖K t‖ * ‖e t‖ * ‖forcing‖ := hb
     _ ≤ (‖K'‖ + 2 * B) * (E ^ 2 / c ^ 2) +
-        2 * ‖K t‖ * (E / c) * ‖forcing‖ := by nlinarith
+        2 * ‖K t‖ * (E / c) * ‖forcing‖ := by linarith
     _ = _ := by dsimp [E]; field_simp
 
 end EulerMetricEnergyEvolution

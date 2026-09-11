@@ -1649,7 +1649,7 @@ theorem profiles_radial_inner_beta_axis {n : ℕ} (hn : 0 < n) {eta : ℝ} (heta
     have hi : R ^ 2 / 2 ≤ inner := by
       have hh := (sq_le_sq₀ hR.1.le hs.le).2 hR.2.le
       rw [Real.sq_sqrt L.inner_pos.le] at hh
-      nlinarith [sq_nonneg R]
+      linarith [sq_nonneg R]
     change (profiles s n).beta (R, eta) = localExtension L n 4 (R, eta)
     rw [profiles_radial_inner_beta_pos L hn hR.1 hi heta, localExtension_radial L n 4 hR.1.le hi]
   have hc := he.closure (slice_smooth (profiles s n).beta.smooth heta).continuous

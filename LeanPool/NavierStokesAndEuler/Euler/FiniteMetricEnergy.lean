@@ -144,13 +144,13 @@ theorem family_energy_derivative_bound (K K' : H →L[ℝ] H)
     have hb := energy_derivative_bound K K' (e i) (transport i) (forcing i) B hB (ht i)
     have hh := mul_le_mul_of_nonneg_left (hheat i) (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hν)
     rw [inner_add_right, real_inner_smul_right]
-    nlinarith
+    linarith
   have hs := Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset ι)) => hcomp i)
   simp only [Finset.sum_add_distrib, ← Finset.mul_sum] at hs
   have hcs := mul_le_mul_of_nonneg_left (family_cauchy_schwarz e forcing)
     (show 0 ≤ 2 * ‖K‖ by positivity)
   change _ ≤ _ * familySquaredNorm e + _ at hs
-  exact hs.trans (by dsimp [familySquaredNorm]; nlinarith)
+  exact hs.trans (by dsimp [familySquaredNorm]; linarith)
 
 /-- Regularized root energy for a finite family, with constants independent of its cardinality. -/
 theorem family_regularized_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ι → ℝ → H)
@@ -198,7 +198,7 @@ theorem family_regularized_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ι 
     _ ≤ (‖K'‖ + 2 * B + 2 * ν * C) * familySquaredNorm v +
         2 * ‖K t‖ * familyNorm v * familyNorm forcing := hb
     _ ≤ (‖K'‖ + 2 * B + 2 * ν * C) * (E ^ 2 / c ^ 2) +
-        2 * ‖K t‖ * (E / c) * familyNorm forcing := by nlinarith
+        2 * ‖K t‖ * (E / c) * familyNorm forcing := by linarith
     _ = _ := by dsimp [E, v]; field_simp
 
 end EulerFiniteMetricEnergy

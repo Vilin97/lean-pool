@@ -160,7 +160,7 @@ theorem localized_coefficient_lower (M : Space → Space →L[ℝ] Space)
   by_cases hxs : x ∈ s
   · rw [Set.indicator_of_mem hxs]
     have H := hcore x hxs (z x)
-    nlinarith only [H, mul_nonneg hBe (sq_nonneg ‖z x‖)]
+    linarith only [H, mul_nonneg hBe (sq_nonneg ‖z x‖)]
   · rw [Set.indicator_of_notMem hxs, mul_zero, sub_zero]
     exact hext x hxs (z x)
 
@@ -200,7 +200,7 @@ theorem mean_boundary_lower_bound (χ : Cutoff) (R : ℝ) (hR : 0 < R)
   have hloc := mul_le_mul_of_nonneg_left
     (boundary_localization_form χ R hR z hz hχ r hr hrquarter) hBc
   have hcomp := mul_le_mul_of_nonneg_right hL (boundaryOperator_positive χ z)
-  nlinarith only [hcoeff, hloc, hcomp]
+  linarith only [hcoeff, hloc, hcomp]
 
 /-- The exact cutoff and physical-label core from source (7)–(8). -/
 theorem scaled_mean_boundary_lower_bound (ℓ : ℝ) (hℓ : 0 < ℓ)

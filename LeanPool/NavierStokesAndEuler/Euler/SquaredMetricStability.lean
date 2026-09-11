@@ -56,9 +56,9 @@ theorem metric_derivative_bound (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
   have hraw : ⟪K' (e t),e t⟫_ℝ+2*⟪K t (e t),forcing+ν • lap⟫_ℝ-2*⟪K t (e t),transport⟫_ℝ ≤
       (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*‖e t‖^2+(‖K t‖*M)^2*ε^2 := by
     rw [inner_add_right,real_inner_smul_right]
-    nlinarith
+    linarith
   have hn : ‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ/c^2 := (le_div_iff₀ (sq_pos_of_pos hc)).mpr (by
-      nlinarith [hcoer])
+      linarith [hcoer])
   have ha : 0 ≤ ‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1 := by positivity
   calc
     _ ≤ (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*‖e t‖^2+(‖K t‖*M)^2*ε^2 := hraw
@@ -96,7 +96,7 @@ theorem linear_growth_bound (E E' : ℝ → ℝ) (A B T : ℝ) (hA : 0 ≤ A) (h
       have h := mul_le_mul_of_nonneg_left (hineq t ht) (exp_pos (-A*t)).le
       have hexp : exp (-A*t) ≤ 1 := exp_le_one_iff.mpr (by nlinarith [ht.1])
       have hBexp := mul_le_mul_of_nonneg_right hexp hB
-      nlinarith
+      linarith
   intro t ht
   have hF := hanti ⟨le_rfl,hT⟩ ht ht.1
   have hscaled : exp (-A*t)*E t ≤ B*t := by

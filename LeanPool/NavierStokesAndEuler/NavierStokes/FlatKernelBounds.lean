@@ -53,7 +53,7 @@ theorem denominator_sq {x t : ℝ} (ht : 0 ≤ t) :
 
 theorem one_le_denominator {x t : ℝ} (ht : 0 ≤ t) : 1 ≤ denominator x t := by
   apply Real.one_le_sqrt.2
-  nlinarith [mul_nonneg (sq_nonneg x) ht]
+  linarith [mul_nonneg (sq_nonneg x) ht]
 
 theorem hasDerivAt_denominator {x t : ℝ} (ht : 0 ≤ t) :
     HasDerivAt (fun y => denominator y t)
@@ -79,7 +79,7 @@ theorem hasDerivAt_coordinate {x t : ℝ} (ht : 0 ≤ t) :
   have hsq := denominator_sq (x := x) ht
   simp only [id_eq] at *
   field_simp [hd]
-  nlinarith [congrArg (fun z : ℝ => z * denominator x t) hsq]
+  linarith [congrArg (fun z : ℝ => z * denominator x t) hsq]
 
 /-- Finite expressions in the variables needed by every kernel derivative. -/
 inductive Expr where
@@ -176,12 +176,12 @@ theorem denominator_le_polynomial {R x t : ℝ} (hR : 0 ≤ R)
     (hx : |x| ≤ R) (ht : 0 ≤ t) :
     denominator x t ≤ (1 + R ^ 2) * (1 + t) := by
   have hsq : x ^ 2 ≤ R ^ 2 := by
-    nlinarith [sq_abs x,
+    linarith [sq_abs x,
       mul_nonneg (sub_nonneg.mpr hx) (add_nonneg hR (abs_nonneg x))]
   have hd : denominator x t ≤ 1 + x ^ 2 * t := by
-    nlinarith [denominator_sq (x := x) ht, one_le_denominator (x := x) ht,
+    linarith [denominator_sq (x := x) ht, one_le_denominator (x := x) ht,
       sq_nonneg (denominator x t - 1)]
-  exact hd.trans (by nlinarith [mul_le_mul_of_nonneg_right hsq ht, sq_nonneg R])
+  exact hd.trans (by linarith [mul_le_mul_of_nonneg_right hsq ht, sq_nonneg R])
 
 theorem abs_inv_denominator_le_one {x t : ℝ} (ht : 0 ≤ t) :
     |(denominator x t)⁻¹| ≤ 1 := by

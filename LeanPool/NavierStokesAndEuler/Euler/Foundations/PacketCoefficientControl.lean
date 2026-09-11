@@ -58,13 +58,13 @@ theorem multiplicative_motion_bound
   have htri := abs_add_le (H c - 1) 1
   norm_num at htri
   have hscaled := mul_le_mul_of_nonneg_right hsmall (abs_nonneg (H c))
-  have hM : |H c| ≤ 2 := by nlinarith only [hcdiff, htri, hscaled]
+  have hM : |H c| ≤ 2 := by linarith only [hcdiff, htri, hscaled]
   intro t ht
   refine ⟨(hmax ht).trans hM, ?_⟩
   have hh := hdiff t ht
   rw [hH0] at hh
   have hm := mul_le_mul_of_nonneg_right hM (mul_nonneg hk hΘ)
-  nlinarith only [hh, hm]
+  linarith only [hh, hm]
 
 /-- Raw moving-frame coefficient motion implies the normalized error
 bounds used in the ray and velocity reductions. -/
@@ -97,19 +97,19 @@ theorem normalized_motion_errors
   have hG2 : G ≤ G ^ 2 := by nlinarith only [hG]
   have hΘG2 : G ^ 2 ≤ Θ * G ^ 2 := by
     have hh := mul_le_mul_of_nonneg_right hΘ (sq_nonneg G)
-    nlinarith only [hh]
+    linarith only [hh]
   have hεG : ε * G ≤ ε * Θ * G ^ 2 := by
     have hh := mul_le_mul_of_nonneg_left (hG2.trans hΘG2) hε.le
-    nlinarith only [hh]
+    linarith only [hh]
   have hεBase : ε ≤ ε * Θ * G ^ 2 := by
     have hh := mul_le_mul_of_nonneg_left hG hε.le
-    nlinarith only [hh, hεG]
+    linarith only [hh, hεG]
   have hbase0 : 0 ≤ ε * Θ * G ^ 2 := by positivity
   have he : 0 ≤ e := by dsimp [e]; positivity
-  have hεe : ε ≤ e := by dsimp [e]; nlinarith only [hεBase, hd, hε]
+  have hεe : ε ≤ e := by dsimp [e]; linarith only [hεBase, hd, hε]
   have hShearSmall : (4 * ε * G) * Θ ≤ 1 / 2 := by
     have hh := mul_le_mul_of_nonneg_left hG2 (by positivity : 0 ≤ ε * Θ)
-    nlinarith only [hh, hsmall, hd]
+    linarith only [hh, hsmall, hd]
   let H : ℝ → ℝ := fun t => ε ^ 2 * h t / a
   let H₁ : ℝ → ℝ := fun t => ε ^ 2 * h₁ t / a
   have hH : ∀ t ∈ Icc 0 Θ, HasDerivAt H (H₁ t) t := by
@@ -137,18 +137,18 @@ theorem normalized_motion_errors
     have hm := mul_le_mul_of_nonneg_left (hB t ht i j) hε.le
     have heA := mul_le_mul_of_nonneg_left ha he
     dsimp [e] at heA ⊢
-    nlinarith only [hm, heA, hεG, hd, hbase0]
+    linarith only [hm, heA, hεG, hd, hbase0]
   · intro i j
     rw [abs_div, abs_of_pos haPos, div_le_iff₀ haPos]
     have heA := mul_le_mul_of_nonneg_left ha he
     have hbb := hE t ht i j
     have hpos : 0 ≤ ε * Θ * G ^ 2 := by positivity
     dsimp [e] at heA ⊢
-    nlinarith only [hbb, heA, hpos, hd]
+    linarith only [hbb, heA, hpos, hd]
   · have hh := (hHclose t ht).2
     have hm := mul_le_mul_of_nonneg_left hG2 (by positivity : 0 ≤ ε * Θ)
     dsimp [H, e] at hh ⊢
-    nlinarith only [hh, hm, hd, hbase0]
+    linarith only [hh, hm, hd, hbase0]
   · have hh := hBclose t ht
     rw [hb0] at hh
     have hid : B t 0 1 / a - 1 = (B t 0 1 - a) / a := by field_simp
@@ -156,7 +156,7 @@ theorem normalized_motion_errors
     have heA := mul_le_mul_of_nonneg_left ha he
     have hpos : 0 ≤ ε * Θ * G ^ 2 := by positivity
     dsimp [e] at heA ⊢
-    nlinarith only [hh, heA, hd, hpos]
+    linarith only [hh, heA, hd, hpos]
   · have hh := hKclose t ht
     rw [hk0] at hh
     have hid : B t 2 1 / a - β = (B t 2 1 - a * β) / a := by field_simp
@@ -164,7 +164,7 @@ theorem normalized_motion_errors
     have heA := mul_le_mul_of_nonneg_left ha he
     have hpos : 0 ≤ ε * Θ * G ^ 2 := by positivity
     dsimp [e] at heA ⊢
-    nlinarith only [hh, heA, hd, hpos]
+    linarith only [hh, heA, hd, hpos]
 
 /-- The exact raw moving-frame matrices satisfy the coefficient-error
 hypotheses of the controlled-stage theorem. -/

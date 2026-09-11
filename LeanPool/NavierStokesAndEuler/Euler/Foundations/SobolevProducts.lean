@@ -33,7 +33,7 @@ theorem sobolevNorm_zero (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
 
 theorem besselWeight_mono (d : ℕ) {s t : ℝ} (hst : s ≤ t) (ξ : Domain d) :
     besselWeight d s ξ ≤ besselWeight d t ξ := by
-  apply Real.rpow_le_rpow_of_exponent_le (by nlinarith [sq_nonneg ‖ξ‖])
+  apply Real.rpow_le_rpow_of_exponent_le (by linarith [sq_nonneg ‖ξ‖])
   exact div_le_div_of_nonneg_right hst (by norm_num)
 
 theorem sobolevNorm_mono (d : ℕ) {s t : ℝ} (hst : s ≤ t) (f : 𝓢(Domain d, ℂ)) :
@@ -182,7 +182,7 @@ theorem sobolevNorm_six_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)) 
       simp_rw [← mul_assoc, hp, one_mul]
       rw [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
-    nlinarith [mul_le_mul_of_nonneg_right (besselWeight_six_le_pure_six d ξ) (norm_nonneg (𝓕 f ξ))]
+    linarith [mul_le_mul_of_nonneg_right (besselWeight_six_le_pure_six d ξ) (norm_nonneg (𝓕 f ξ))]
   have h := normLp_le_sum d (weightedFourier d 6 f) g (((d : ℝ) + 1) ^ 2)
     (sq_nonneg _) hpoint
   have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +

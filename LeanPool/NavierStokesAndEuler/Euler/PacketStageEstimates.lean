@@ -56,7 +56,7 @@ theorem joined_bad_pressure_cost_bound :
   have hx := quadratic_growth_one_le J (by omega) (scaleSequence J X) hX (scaleSequence_succ J X)
   have hs : 1 ≤ P.shear := by
     have hh := mul_le_mul_of_nonneg_left hτ1 A.shear_pos.le
-    nlinarith only [hh,A.history_layer]
+    linarith only [hh,A.history_layer]
   have hi : P.shear⁻¹ ≤ 1 := (inv_le_one₀ A.shear_pos).2 hs
   have hQ := parameters_le_source_exponential J D hJ X c hX hc hbaseH hbaseK n
     L.K Ti P.shear⁻¹ A.CM A.CH CMn CHn hK hTib hi hCMb hCHb hCMn hCHn
@@ -90,7 +90,7 @@ theorem joined_initial_gradient_cost_bound (hMone : 1 ≤ M) (ev : ℝ) :
     J D hJ X Cθ CM CMn CHn c hX hCθ hCM hCMn hCHn hc hbaseH hbaseK n M
     hK hTib hCMb hCHb hTheta hSigma hchild hMb
   have hbase : A.hchild*A.badRatio ≤ 2*M*A.hchild*A.badRatio := by
-    nlinarith only [mul_nonneg (by linarith only [hMone] : 0 ≤ 2*M-1)
+    linarith only [mul_nonneg (by linarith only [hMone] : 0 ≤ 2*M-1)
       (mul_nonneg A.child_nonneg A.badRatio_nonneg)]
   exact add_le_add (hbase.trans hb) le_rfl
 
@@ -136,7 +136,7 @@ theorem bad_pressure_cost_bound :
   have hz : 0 ≤ c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^4) := by positivity [hx n]
   have he := one_le_exp hz
   have hQ : 1 ≤ (4+CMn+CHn)*exp (c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^4)) := by
-    nlinarith only [he,mul_nonneg hCMn (zero_le_one.trans he),mul_nonneg hCHn (zero_le_one.trans
+    linarith only [he,mul_nonneg hCMn (zero_le_one.trans he),mul_nonneg hCHn (zero_le_one.trans
         he)]
   have hM' := hMb.trans (mul_le_mul_of_nonneg_left
     (previousShear_le_normal J (by omega) X hbaseH n) hCM)
@@ -163,7 +163,7 @@ theorem initial_gradient_cost_bound (hMone : 1 ≤ M) (ev : ℝ) :
   have hb := A.bad_pressure_cost_bound J hJ X Cθ CM CMn CHn c hX hCθ hCM hCMn hCHn hc
     hbaseH n M hTheta hSigma hchild hMb
   have hbase : A.hchild*A.earlyRatio ≤ 2*M*A.hchild*A.earlyRatio := by
-    nlinarith only [mul_nonneg (by linarith only [hMone] : 0 ≤ 2*M-1)
+    linarith only [mul_nonneg (by linarith only [hMone] : 0 ≤ 2*M-1)
       (mul_nonneg A.child_nonneg A.earlyRatio_nonneg)]
   exact add_le_add (hbase.trans hb) le_rfl
 
@@ -230,11 +230,11 @@ theorem joined_initial_cost :
   have hb := P.joined_bad_cost hn hq hB
   have hm : 1 ≤ 2*(gradientConstant*previousShear S.J S.X n) := by
     have h := mul_le_mul_of_nonneg_left (S.previousShear_one n) gradient_nonneg
-    nlinarith only [gradient_properties.1,h]
+    linarith only [gradient_properties.1,h]
   have hn0 := mul_nonneg (G).child_nonneg (G).badRatio_nonneg
   have hh := mul_le_mul_of_nonneg_right hm hn0
   unfold initialIncrement
-  nlinarith only [hb,hh]
+  linarith only [hb,hh]
 
 theorem joined_pressure_cost :
     2*(gradientConstant*previousShear S.J S.X n)*(G).hchild*((G).δ*goodRatio+(G).badRatio) +
@@ -297,11 +297,11 @@ theorem forward_initial_cost :
   have hb := P.forward_bad_cost hq hB
   have hm : 1 ≤ 2*(gradientConstant*previousShear S.J S.X 0) := by
     have h := mul_le_mul_of_nonneg_left (S.previousShear_one 0) gradient_nonneg
-    nlinarith only [gradient_properties.1,h]
+    linarith only [gradient_properties.1,h]
   have hn0 := mul_nonneg (G).child_nonneg (G).earlyRatio_nonneg
   have hh := mul_le_mul_of_nonneg_right hm hn0
   unfold initialIncrement
-  nlinarith only [hb,hh]
+  linarith only [hb,hh]
 
 theorem forward_pressure_cost :
     2*(gradientConstant*previousShear S.J S.X 0)*(G).hchild*((G).δ*goodRatio+(G).earlyRatio) +

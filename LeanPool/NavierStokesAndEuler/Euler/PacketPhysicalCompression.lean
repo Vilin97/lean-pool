@@ -45,45 +45,45 @@ theorem target_compression_order40
   let M := K * e * Θ ^ 40
   have hΘpos : 0 < Θ := by linarith
   have hρ : 0 ≤ ρ := by dsimp [ρ]; positivity
-  have hMb : 1000000 * M ≤ 1 := by dsimp [M]; nlinarith only [hsmall]
+  have hMb : 1000000 * M ≤ 1 := by dsimp [M]; linarith only [hsmall]
   have hp (n : ℕ) (hn : n ≤ 40) : e * Θ ^ n ≤ M := scaled_power_le hΘ hK he hn
   have hρsmall : ρ ≤ 1 / 2 := by
     have hh := hp 5 (by decide)
     dsimp [ρ]
-    nlinarith only [hh, hMb]
+    linarith only [hh, hMb]
   have hρΘ : ρ * Θ ≤ 1 := by
     have hh := hp 6 (by decide)
     dsimp [ρ]
-    nlinarith only [hh, hMb]
+    linarith only [hh, hMb]
   have hβtΘ : 1 ≤ β * t * Θ := by
     have hh := mul_le_mul_of_nonneg_left htΘ (mul_nonneg hβ.le ht.le)
-    nlinarith only [hh, hscale]
+    linarith only [hh, hscale]
   have hρQ : ρ ≤ β * t := by
     apply (mul_le_mul_iff_right₀ hΘpos).mp
-    nlinarith only [hρΘ, hβtΘ]
+    linarith only [hρΘ, hβtΘ]
   have hQ₀ : |-2 * β * t| ≤ 2 * Θ ^ 2 := by
     rw [abs_mul, abs_mul, abs_of_pos hβ, abs_of_pos ht]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
     have hh := mul_le_mul_of_nonneg_right hβupper ht.le
     have hΘ2 : Θ ≤ Θ ^ 2 := by nlinarith only [hΘ]
-    nlinarith only [hh, htΘ, hΘ2]
+    linarith only [hh, htΘ, hΘ2]
   have hQabs : |Q| ≤ 3 * Θ ^ 2 := by
     have hh := abs_add_le (Q + 2 * β * t) (-2 * β * t)
     have hid : Q + 2 * β * t + -2 * β * t = Q := by ring
     rw [hid] at hh
     have hΘ2 : 1 ≤ Θ ^ 2 := one_le_pow₀ hΘ
     change |Q + 2 * β * t| ≤ ρ at hQ
-    nlinarith only [hh, hQ, hQ₀, hρsmall, hΘ2]
+    linarith only [hh, hQ, hQ₀, hρsmall, hΘ2]
   have hεQ : |ε * Q| ≤ 1 / 2 := by
     rw [abs_mul, abs_of_nonneg hε]
     have hh := mul_le_mul hεe hQabs (abs_nonneg Q) he
     have hm := hp 2 (by decide)
-    nlinarith only [hh, hm, hMb]
+    linarith only [hh, hm, hMb]
   have hPpos : 0 < P := by
     have hh := (abs_le.mp hP).1
     change ρ ≤ 1 / 2 at hρsmall
     dsimp [ρ] at hρsmall
-    nlinarith only [hh, hρsmall, hscale]
+    linarith only [hh, hρsmall, hscale]
   have hDpos : 0 < rayDenominator ε P Q N := by
     unfold rayDenominator
     have hh : 0 < P ^ 2 := sq_pos_of_pos hPpos
@@ -101,9 +101,9 @@ theorem full_target_compression_negative
     quadraticForm3 (parentEntry B E H) P (ε * Q) N / rayDenominator ε P Q N < 0 := by
   have hfull := parent_ray_compression (H := H) hD hB
   have hdom : 3 * G < H * ε / (10 * t) := (lt_div_iff₀ (by positivity : 0 < 10 * t)).mpr
-    (by nlinarith only [hdominates])
+    (by linarith only [hdominates])
   rw [neg_div] at hShear
-  nlinarith only [hfull, hShear, hdom]
+  linarith only [hfull, hShear, hdom]
 
 end EulerPacketTargetCompression
 
@@ -199,7 +199,7 @@ theorem physical_target_compression (B M E : Space →L[ℝ] Space) (h : ℝ) (m
   refine ⟨hbound, ?_⟩
   intro hdom
   have hd : 3*(‖B‖+‖E‖) < h*ε/(10*τ) :=
-    (lt_div_iff₀ (by positivity : 0 < 10*τ)).mpr (by nlinarith only [hdom])
+    (lt_div_iff₀ (by positivity : 0 < 10*τ)).mpr (by linarith only [hdom])
   rw [neg_div] at hbound
   linarith only [hbound, hd]
 

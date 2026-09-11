@@ -1016,7 +1016,7 @@ def initialFrame : ParentFrame (F.parent.transverseData m hm R S hS) 0 := by
   exact B.forwardRenewal F.state rfl firstNormal firstNormal_unit firstFrame support compact
     m hm R S hS 0 le_rfl initialCoefficientCost initialCoefficientCost (1+initialCoefficientCost)
     (k^(-(1/4 : ℝ))) h0 (le_add_of_nonneg_right h0) (Real.rpow_nonneg hk.pos.le _)
-    (le_add_of_nonneg_left zero_le_one) (by nlinarith only [h0])
+    (le_add_of_nonneg_left zero_le_one) (by linarith only [h0])
     (fun t _ => packetBase_strain_bound β hβ ell hell hell1 T hT hTB (projIcc 0 T hT.le t) 0)
     (fun t _ => packetBase_curvature_bound β hβ ell hell hell1 T hT hTB (projIcc 0 T hT.le t) 0)
     δ hδ (δ*hchild) k firstCoordinate

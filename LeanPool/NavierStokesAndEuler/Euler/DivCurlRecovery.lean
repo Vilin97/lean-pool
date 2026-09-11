@@ -137,7 +137,7 @@ theorem gradient_energy_recovery (M : ℝ)
       intro x
       have hp := mul_le_mul_of_nonneg_left
         (pow_le_pow_left₀ (norm_nonneg _) (hgrad n x) 2) (sq_nonneg (h x))
-      nlinarith
+      linarith
     have hp : -(∫ x, cutoff n x ^ 2 * (h x * Δ h x)) ≤ ∫ x, |h x * Δ h x| := by
       rw [← integral_neg]
       apply integral_mono hsource.neg hs
@@ -211,7 +211,7 @@ theorem exists_gradient_energy_square_bound : ∃ C : ℝ, 0 ≤ C ∧
     intro x
     change |h x * Δ h x| ≤ h x ^ 2 + (Δ h x) ^ 2
     apply abs_le.mpr
-    constructor <;> nlinarith [sq_nonneg (h x - Δ h x), sq_nonneg (h x + Δ h x)]
+    constructor <;> linarith [sq_nonneg (h x - Δ h x), sq_nonneg (h x + Δ h x)]
   linarith [(hM h hh hL2 hcΔ).2]
 
 /-- Compact vorticity forces the Laplacian to be compactly supported. No

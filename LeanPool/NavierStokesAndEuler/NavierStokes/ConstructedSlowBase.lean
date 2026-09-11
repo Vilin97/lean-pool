@@ -749,7 +749,7 @@ theorem near_one_in_exterior {h R : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hR : 0 
   have hRp : 0 < R + 1 := by linarith
   have hsmall : 1 - t < AxisymmetricFields.radialEnergy x / (R + 1) := by linarith [ht.1]
   have hprod := (lt_div_iff₀ hRp).mp hsmall
-  nlinarith [sub_pos.mpr ht.2]
+  linarith [sub_pos.mpr ht.2]
 
 open AssembledSlowBase
 
@@ -1020,7 +1020,7 @@ theorem inner_mem_profileWindow {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   refine ⟨LeadingStress.inner_X_pos hh hh1 ht hs, ?_⟩
   have he := SimilarityProfile.eta_sq_lt_one hh hh1 ht
   change -1 < SimilarityProfile.eta h p ∧ SimilarityProfile.eta h p < 1
-  constructor <;> nlinarith [sq_nonneg (SimilarityProfile.eta h p + 1),
+  constructor <;> linarith [sq_nonneg (SimilarityProfile.eta h p + 1),
     sq_nonneg (SimilarityProfile.eta h p - 1)]
 
 /-- Only scalar coefficient values and the actual flux identity are needed
@@ -1168,7 +1168,7 @@ theorem VelocityMatches.flux_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hs : w.2 ^ 2 ≤ 1 := by
     have h1 := hw.2.1
     have h2 := hw.2.2
-    nlinarith [mul_nonneg (show 0 ≤ 1 - w.2 by linarith) (show 0 ≤ 1 + w.2 by linarith)]
+    linarith [mul_nonneg (show 0 ≤ 1 - w.2 by linarith) (show 0 ≤ 1 + w.2 by linarith)]
   have hL := (CoordinateAlgebra.L_pos hh.le hh1 hs).ne'
   exact (SlowDivergence.radialFlux_smoothAt SlowBorelBase.globalRadialDomain
     (hd.axial n).contDiffOn h (SlowExpansionResidual.slowOrder h n) (mem_univ _)

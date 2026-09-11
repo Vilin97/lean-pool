@@ -278,23 +278,23 @@ theorem localized_second_pointwise (h : Space → ℝ) (hh : ContDiff ℝ ∞ h)
       (fun _ hx => middle_one_on_inner_support hx) x
   have ha : (h x * partialDerivative (partialDerivative innerCutoff i) i x) ^ 2 ≤
       innerSecondBound ^ 2 * h x ^ 2 := by
-    nlinarith [mul_le_mul_of_nonneg_left hη₂ (sq_nonneg (h x))]
+    linarith [mul_le_mul_of_nonneg_left hη₂ (sq_nonneg (h x))]
   have hb : (2 * partialDerivative innerCutoff i x * partialDerivative h i x) ^ 2 ≤
       4 * innerDerivativeBound ^ 2 * (outerCutoff x ^ 2 * ‖gradient h x‖ ^ 2) := by
     have H := mul_le_mul hη₁ (partialDerivative_sq_le_gradient_sq h i x)
       (sq_nonneg (partialDerivative h i x)) (by positivity)
-    nlinarith
+    linarith
   have hc : (innerCutoff x * partialDerivative (partialDerivative h i) i x) ^ 2 ≤
       middleCutoff x ^ 2 * ‖gradient (partialDerivative h i) x‖ ^ 2 := by
     have H := mul_le_mul hη₀ (partialDerivative_sq_le_gradient_sq (partialDerivative h i) i x)
       (sq_nonneg _) (sq_nonneg _)
-    nlinarith
+    linarith
   rw [secondPartial_mul innerCutoff h inner_smooth hh i x]
   have H := sq_add_three_le
     (h x * partialDerivative (partialDerivative innerCutoff i) i x)
     (2 * partialDerivative innerCutoff i x * partialDerivative h i x)
     (innerCutoff x * partialDerivative (partialDerivative h i) i x)
-  nlinarith
+  linarith
 
 /-- Interior second energy constant, constructed using `3`. -/
 def interiorSecondEnergyConstant : ℝ :=

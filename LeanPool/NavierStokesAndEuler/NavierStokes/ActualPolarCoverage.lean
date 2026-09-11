@@ -1242,9 +1242,9 @@ theorem graph_profileRadius_mem {F : OutgoingProfile.Profile}
     Real.sq_sqrt (mul_nonneg (by norm_num) (LeadingStressWeights.activeRight_pos W).le)
   constructor
   · apply (sq_le_sq₀ ha.le hr).mp
-    nlinarith [hactive.1]
+    linarith [hactive.1]
   · apply (sq_le_sq₀ hr hb.le).mp
-    nlinarith [hactive.2]
+    linarith [hactive.2]
 
 /-! ## Closure of a moving strip, including both radial endpoints -/
 

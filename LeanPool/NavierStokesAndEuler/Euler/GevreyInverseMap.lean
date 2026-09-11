@@ -64,7 +64,7 @@ lemma sum_partSize_sq_le (c : OrderedFinpartition n) :
       have hmul := mul_le_mul_of_nonneg_right
         (show (c.partSize i : ℝ) ≤ (n : ℝ) - c.length + 1 by linarith)
         (show 0 ≤ (c.partSize i : ℝ) by positivity)
-      nlinarith
+      linarith
     _ = _ := by rw [← Finset.mul_sum, sum_partSize_real]
 
 /-- Predecessor factorial product, given by `∏ i, ((c.partSize i - 1).factorial : ℝ)`. -/
@@ -160,7 +160,7 @@ lemma predecessorPartitionSum_succ_le (n : ℕ) (hn : 0 < n)
     (show 0 ≤ (c.length : ℝ)+1 by positivity)
   have hscalar := mul_le_mul_of_nonneg_right hxhalf (sq_nonneg ((c.length : ℝ)+1))
   have hs := sum_partSize_sq_le c
-  nlinarith
+  linarith
 
 /-- Unlike the unshifted weights, these weights have a uniformly bounded
 normalized sum on the scalar interval `[0, 1/2]`. -/
@@ -273,7 +273,7 @@ def inverseMapRadius (C R : ℝ) : ℝ := 1 + 2*C*R
 lemma inverseMapRadius_ge_one (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     1 ≤ inverseMapRadius C R := by
   unfold inverseMapRadius
-  nlinarith [mul_nonneg hC hR]
+  linarith [mul_nonneg hC hR]
 
 lemma inverseMapRadius_pos (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     0 < inverseMapRadius C R := lt_of_lt_of_le zero_lt_one (inverseMapRadius_ge_one C R hC hR)
@@ -295,7 +295,7 @@ theorem norm_iteratedFDeriv_of_fderiv_eq_comp
   have hhalf : (C/L)*R ≤ 1/2 := by
     rw [div_mul_eq_mul_div, div_le_iff₀ hL]
     dsimp [L, inverseMapRadius]
-    nlinarith
+    linarith
   change ‖iteratedFDeriv ℝ (n+1) Y x‖ ≤ C * L^n * (n.factorial : ℝ)^2
   induction n using Nat.strong_induction_on generalizing x with
   | h n ih =>

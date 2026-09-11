@@ -419,7 +419,7 @@ theorem rationalRate_le (B R a u : ℝ) (hB : 0 ≤ B)
   have hd : 0 < 1-R*(a+u) := by linarith
   unfold rationalRate
   apply (div_le_iff₀ hd).2
-  nlinarith [mul_le_mul_of_nonneg_left hu hB]
+  linarith [mul_le_mul_of_nonneg_left hu hB]
 
 /-- The nonlinear generating-sum inequality closes at BRT≤1/8.  The bound
 is linear in the velocity size B and time, with no exponential factor. -/
@@ -436,14 +436,14 @@ theorem rational_integral_bootstrap (f : ℝ → ℝ) (T B R : ℝ)
     by_contra h
     have hm := mul_le_mul_of_nonneg_left (le_of_not_gt h) hR.le
     rw [hRa] at hm
-    nlinarith
+    linarith
   have hb : ∀ t ∈ Icc 0 T, f t ≤ B*t := by
     apply continuous_barrier f T B ((4*R)⁻¹) hT hB ha hBT hf hf0
     intro t ht hbefore
     have hhalf : ∀ s ∈ Icc 0 t, R*((4*R)⁻¹+f s) ≤ 1/2 := by
       intro s hs
       have hm := mul_le_mul_of_nonneg_left (hbefore s hs) hR.le
-      nlinarith
+      linarith
     have hden : ∀ s ∈ Icc 0 t, 1-R*((4*R)⁻¹+f s) ≠ 0 := by
       intro s hs
       have hh := hhalf s hs
@@ -463,7 +463,7 @@ theorem rational_integral_bootstrap (f : ℝ → ℝ) (T B R : ℝ)
   refine ⟨hb t ht,?_⟩
   have hm := mul_le_mul_of_nonneg_left (hb t ht) hR.le
   have htB := mul_le_mul_of_nonneg_left ht.2 (mul_nonneg hB hR.le)
-  nlinarith
+  linarith
 
 end EulerGevreyFlowBootstrap
 
@@ -580,7 +580,7 @@ theorem rational_fraction_mono (B x y : ℝ) (hB : 0 ≤ B)
   have hx : 0 < 1-x := by linarith
   have hy' : 0 < 1-y := by linarith
   apply (div_le_div_iff₀ hx hy').2
-  nlinarith [mul_le_mul_of_nonneg_left hxy hB]
+  linarith [mul_le_mul_of_nonneg_left hxy hB]
 
 /-- The identity part of a flow costs exactly z in its generating sum. -/
 theorem derivativeSum_comp_id_add_le (f : E → E) (g : E → F) (N : ℕ)

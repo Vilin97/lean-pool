@@ -113,7 +113,7 @@ theorem velocity_relative_error_order29
       rw [neg_add_eq_sub, abs_sub_comm]
     rw [hg, abs_neg]
     dsimp [f]
-    nlinarith only [hh]
+    linarith only [hh]
   have hminusU0 : -U 0 = lam := by rw [hU0, neg_neg]
   have hresult := equation30_relative_error_order29 hσ hσsmall hΘ hT0 hT he hlam hsmall
     hF hG hfluxF hfluxG hF0 hF₁0 hG₁0 hY hfluxY hZ hfluxZ
@@ -149,7 +149,7 @@ theorem ray_controlled_velocity_error
   have hΘ0 : 0 ≤ Θ := by linarith
   have hsmallR : 400 * (4 * e) * Θ ^ 5 ≤ 1 := by
     have hnonneg : 0 ≤ e * Θ ^ 5 := by positivity
-    nlinarith only [hsmall, hnonneg]
+    linarith only [hsmall, hnonneg]
   have hinitialR : norm3 (P 0) (Q 0) (N 0 - 1) ≤ 4 * e := by linarith
   have hray := ray_closeness_of_coefficient_error hβ hβupper hΘ hT0 hT
     (by positivity : 0 ≤ 4 * e) hsmallR hRc hP hQ hN hRclose hinitialR
@@ -159,27 +159,27 @@ theorem ray_controlled_velocity_error
   intro U V
   have herrorP : |P t - β * t ^ 2| ≤ 800 * e * Θ ^ 5 := by
     unfold norm3 at herr
-    nlinarith only [herr, abs_nonneg (Q t + 2 * β * t), abs_nonneg (N t - 1)]
+    linarith only [herr, abs_nonneg (Q t + 2 * β * t), abs_nonneg (N t - 1)]
   have herrorQ : |Q t - (-2 * β * t)| ≤ 800 * e * Θ ^ 5 := by
     unfold norm3 at herr
     have hid : Q t - (-2 * β * t) = Q t + 2 * β * t := by ring
     rw [hid]
-    nlinarith only [herr, abs_nonneg (P t - β * t ^ 2), abs_nonneg (N t - 1)]
+    linarith only [herr, abs_nonneg (P t - β * t ^ 2), abs_nonneg (N t - 1)]
   have herrorN : |N t - 1| ≤ 800 * e * Θ ^ 5 := by
     unfold norm3 at herr
-    nlinarith only [herr, abs_nonneg (P t - β * t ^ 2), abs_nonneg (Q t + 2 * β * t)]
+    linarith only [herr, abs_nonneg (P t - β * t ^ 2), abs_nonneg (Q t + 2 * β * t)]
   have htΘ : t ≤ Θ := ht.2.trans hT
   have ht2 : t ^ 2 ≤ Θ ^ 2 := (sq_le_sq₀ ht.1 hΘ0).mpr htΘ
   have hP₀ : |β * t ^ 2| ≤ Θ ^ 2 := by
     rw [abs_of_nonneg (mul_nonneg hβ (sq_nonneg t))]
     have hh := mul_le_mul_of_nonneg_right hβupper (sq_nonneg t)
-    nlinarith only [hh, ht2]
+    linarith only [hh, ht2]
   have hQ₀ : |-2 * β * t| ≤ 2 * Θ ^ 2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg hβ, abs_of_nonneg ht.1]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
     have htTheta2 : t ≤ Θ ^ 2 := by nlinarith only [htΘ, hΘ]
     have hh := mul_le_mul_of_nonneg_right hβupper ht.1
-    nlinarith only [hh, htTheta2]
+    linarith only [hh, htTheta2]
   have hβabs : |β| ≤ 1 := by rwa [abs_of_nonneg hβ]
   exact velocity_rhs_error hΘ he hε hεe hsmall hβabs
     (hAclose t ht) (hCclose t ht) hP₀ hQ₀ herrorP herrorQ herrorN
@@ -261,7 +261,7 @@ theorem controlled_velocity_relative_error
     have hh := pow_le_pow_right₀ hΘ (show 5 ≤ 21 by decide)
     have hm := mul_le_mul_of_nonneg_left hh he
     have hp : 0 ≤ e * Θ ^ 21 := by positivity
-    nlinarith only [hsmall, hm, hp]
+    linarith only [hsmall, hm, hp]
   have hcontrol := ray_controlled_velocity_error (sq_nonneg σ) hσsq hΘ hT0 hT he hε hεe
     hgeomSmall hRc hP hQ hN hRclose hAclose hCclose hrayInitial
   have hPc : ContinuousOn P (Icc 0 T) := fun t ht => (hP t ht).continuousAt.continuousWithinAt
@@ -274,7 +274,7 @@ theorem controlled_velocity_relative_error
     have hh := (hcontrol t ht).1
     linarith
   obtain ⟨hU₁c, hV₁c⟩ := continuousOn_velocity_rhs (ε := ε) hAc hCc hPc hQc hNc hUc hVc hNne
-  have hsmall' : 40 * (200000 * e) * Θ ^ 21 ≤ 1 := by nlinarith only [hsmall]
+  have hsmall' : 40 * (200000 * e) * Θ ^ 21 ≤ 1 := by linarith only [hsmall]
   have herror : ∀ t ∈ Icc 0 T,
       |velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t) -
         idealVelocityFirst (σ ^ 2) t (U t) (V t)| +
@@ -287,6 +287,6 @@ theorem controlled_velocity_relative_error
     hF hG hfluxF hfluxG hF0 hF₁0 hG₁0 hU hV hU₁c hV₁c hZ hfluxZ hU0 hV0 hZ0 hZ₁0 herror
   intro t ht
   have h := hh t ht
-  nlinarith only [h]
+  linarith only [h]
 
 end EulerPacketBridge

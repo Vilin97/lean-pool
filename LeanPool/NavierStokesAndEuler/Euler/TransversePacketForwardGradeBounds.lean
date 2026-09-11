@@ -322,7 +322,7 @@ theorem correctorTimePath_normalized_bound (n : ℕ) :
     have hn := mul_nonneg
       (show 0 ≤ sobolevCoefficientAmplitude (Fin 4) q Rc C*(P*A) by positivity)
       (majorant_nonneg R hRn d j)
-    nlinarith
+    linarith
   have h := EulerCylinderSlowCurl.normalized_derivative_block_bound P D.T g hg
     D.FInv.field D.inverseDerivative (G.potentialPath I) (G.potentialTimePath I)
     (G.potentialPath_orbit I) (G.potentialTimePath_orbit I) D.FInv.translation_contDiff

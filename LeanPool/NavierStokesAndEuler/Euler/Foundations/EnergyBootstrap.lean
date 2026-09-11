@@ -46,7 +46,7 @@ theorem shrinking_radius_cancels_loss (C B Δ ρ R₀ X : ℝ)
     (-2 * C * (B + Δ)) / ρ + C * (ρ⁻¹ + R₀) * (B + X) ≤ 0 := by
   have hinv : R₀ ≤ ρ⁻¹ := by
     rw [inv_eq_one_div]
-    exact (le_div_iff₀ hρ).2 (by nlinarith)
+    exact (le_div_iff₀ hρ).2 (by linarith)
   have hp : C * (ρ⁻¹ + R₀) * (B + X) ≤ C * (ρ⁻¹ + R₀) * (B + Δ) := by
     gcongr
   have hq : C * (ρ⁻¹ + R₀) * (B + Δ) ≤ 2 * C * (B + Δ) / ρ := by
@@ -108,7 +108,7 @@ theorem close_energy_estimate
       have hCsq := mul_le_mul_of_nonneg_left hFsq hC.le
       have hCr := mul_le_mul_of_nonneg_left hFr hC.le
       have hpos := mul_pos hC hFt
-      nlinarith
+      linarith
   intro t ht
   exact ⟨hbound t ht, (hbound t ht).trans (hFle t ht)⟩
 
@@ -123,7 +123,7 @@ theorem quadratic_stability (X X' : ℝ → ℝ) (C ε S : ℝ)
   have hρ : 0 < 4 * C * S + 1 := by positivity
   have h := close_energy_estimate X X' (fun _ => 0) C 0 1 ε (4 * C * S + 1) S 0
     hC (by norm_num) (by norm_num) (by norm_num) hε hρ hS (by norm_num)
-    (by nlinarith) (by simp) hsmall hcont (by linarith) hder
+    (by linarith) (by simp) hsmall hcont (by linarith) hder
     (fun _ _ => le_rfl) (fun t ht => by
       have hi := hineq t ht
       simp only [mul_zero, add_zero]

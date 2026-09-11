@@ -141,7 +141,7 @@ private theorem cutoff_energy_le_of_pairing_bound {f : Space → ℂ}
     rw [hpair_eq, Complex.norm_real, Real.norm_of_nonneg hY] at hp
     exact hp.trans (mul_le_mul_of_nonneg_left (Real.sqrt_le_sqrt hφY)
       (Real.sqrt_nonneg C))
-  nlinarith [sq_nonneg (Real.sqrt C - Real.sqrt (∫ x : Space, χ x * ‖f x‖ ^ 2)),
+  linarith [sq_nonneg (Real.sqrt C - Real.sqrt (∫ x : Space, χ x * ‖f x‖ ^ 2)),
     Real.sq_sqrt hC, Real.sq_sqrt hY]
 
 /-- A smooth function satisfying the `L²` dual estimate on Schwartz tests is square

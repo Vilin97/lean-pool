@@ -29,10 +29,10 @@ theorem positive_cross_sq_le {E : Type*} [NormedAddCommGroup E]
     have ht := hΛ.inner_nonneg_left (t • p + q)
     simp only [map_add, map_smul, inner_add_left, inner_add_right,
       real_inner_smul_left, real_inner_smul_right, hsym] at ht
-    nlinarith
+    linarith
   have hd := discrim_le_zero hquad
   unfold discrim at hd
-  nlinarith
+  linarith
 
 /-- A positive semidefinite endpoint matrix, perturbed by a unit shear and a small
 matrix with negative first diagonal entry, allows the required polarized output. -/
@@ -49,7 +49,7 @@ theorem select_endpoint
       (a - cpp) * yp + (b - cpq) * yq ≤ 0 ∧
       |yp| + |yq| ≤ 8 * (C + 1) := by
   have hεsmall : ε ≤ 1 / 16 := by
-    nlinarith [mul_nonneg (show 0 ≤ C by linarith) hε]
+    linarith [mul_nonneg (show 0 ≤ C by linarith) hε]
   have hu : 0 < a - cpp := by linarith
   have huC : a - cpp ≤ C + ε := by
     have := (abs_le.mp hppε).1
@@ -64,7 +64,7 @@ theorem select_endpoint
     have hDne : D ≠ 0 := ne_of_gt hDpos
     have hquot : (a - cpp) / D ≤ 8 * (C + 1) := by
       apply (div_le_iff₀ hDpos).2
-      nlinarith [mul_nonneg (show 0 ≤ C + 1 by linarith)
+      linarith [mul_nonneg (show 0 ≤ C + 1 by linarith)
         (show 0 ≤ D - 1 / 3 by linarith)]
     have hinv : 1 / D ≤ 3 := (div_le_iff₀ hDpos).2 (by linarith)
     refine ⟨-1 / D, 0, ?_, ?_, ?_, ?_⟩
@@ -83,18 +83,18 @@ theorem select_endpoint
     have hbpos : 0 ≤ b := by linarith
     have hb_bound : b ≤ C := (abs_le.mp hbC).2
     have hud : b ^ 2 ≤ (a - cpp) * d := by
-      nlinarith [mul_nonneg (show 0 ≤ -cpp by linarith) hd]
+      linarith [mul_nonneg (show 0 ≤ -cpp by linarith) hd]
     have hucqq : (a - cpp) * cqq ≤ (C + ε) * ε :=
       (mul_le_mul_of_nonneg_left (abs_le.mp hqq).2 hu.le).trans
         (mul_le_mul_of_nonneg_right huC hε)
     have hbpq : -(C * ε) ≤ b * cpq := by
       have h₁ := mul_le_mul_of_nonneg_left (abs_le.mp hpq).1 hbpos
       have h₂ := mul_le_mul_of_nonneg_right hb_bound hε
-      nlinarith
+      linarith
     have hbqp : -(C * ε) ≤ b * cqp := by
       have h₁ := mul_le_mul_of_nonneg_left (abs_le.mp hqp).1 hbpos
       have h₂ := mul_le_mul_of_nonneg_right hb_bound hε
-      nlinarith
+      linarith
     have hprod : cqp * cpq ≤ ε ^ 2 := by
       calc
         cqp * cpq ≤ |cqp * cpq| := le_abs_self _
@@ -105,7 +105,7 @@ theorem select_endpoint
       have hpq_upper := (abs_le.mp hpq).2
       have hεsq : ε ^ 2 ≤ ε := by nlinarith
       dsimp [Δ]
-      nlinarith
+      linarith
     have hΔpos : 0 < Δ := by linarith
     have hΔne : Δ ≠ 0 := ne_of_gt hΔpos
     have hnum : |b - cpq| ≤ C + ε :=
@@ -114,7 +114,7 @@ theorem select_endpoint
     have hnorm : |-(b - cpq) / Δ| + |(a - cpp) / Δ| ≤ 8 * (C + 1) := by
       rw [abs_div, abs_div, abs_neg, abs_of_pos hΔpos, ← add_div]
       apply (div_le_iff₀ hΔpos).2
-      nlinarith [mul_nonneg (show 0 ≤ C + 1 by linarith)
+      linarith [mul_nonneg (show 0 ≤ C + 1 by linarith)
         (show 0 ≤ Δ - 1 / 4 by linarith)]
     refine ⟨-(b - cpq) / Δ, (a - cpp) / Δ, ?_, ?_, ?_, hnorm⟩
     · field_simp [hΔne]

@@ -218,7 +218,7 @@ theorem coordinateProduct_gradient (A : SmoothL2Field Space) (K N : ℝ)
     ‖(coordinateProduct i (wordField A w) (wordField A v)).toLp‖ ≤ 9*K*N := by
   have hK0 : 0 ≤ K := (norm_nonneg (fderiv ℝ A.field 0)).trans (hK 0)
   have hN0 := wordBound_nonneg hN
-  have hc : K*N ≤ 9*K*N := by nlinarith [mul_nonneg hK0 hN0]
+  have hc : K*N ≤ 9*K*N := by linarith [mul_nonneg hK0 hN0]
   by_cases hk1 : k=1
   · subst k
     have hs (x : Space) :

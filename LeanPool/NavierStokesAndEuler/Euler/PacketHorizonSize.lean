@@ -57,7 +57,7 @@ theorem equation30_short_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
     have hx2 : x ≤ x^2 := by nlinarith only [hx]
     have hcoef := mul_le_mul_of_nonneg_right hx2 (show 0 ≤ 2*σ^2*Z x by positivity)
     dsimp [W₁, W]
-    nlinarith only [ht, hh, hcoef, hzx]
+    linarith only [ht, hh, hcoef, hzx]
   have hcont : ContinuousOn W (Icc s t) := fun x hx =>
     (hW x (by linarith only [hs, hx.1])).continuousAt.continuousWithinAt
   have hright : ∀ x ∈ Ico s t, HasDerivWithinAt W (W₁ x) (Ici x) x :=
@@ -81,7 +81,7 @@ theorem equation30_short_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
   have hrightExp := mul_le_mul_of_nonneg_right hright' (exp_pos (6:ℝ)).le
   dsimp [W] at hgrowth
   dsimp [idealPrimarySize]
-  nlinarith only [hleft, hgrowth, hrightExp]
+  linarith only [hleft, hgrowth, hrightExp]
 
 theorem equation30_horizon_size_comparison {σ T H τ : ℝ} {Z Z₁ : ℝ → ℝ}
     (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4)
@@ -97,7 +97,7 @@ theorem equation30_horizon_size_comparison {σ T H τ : ℝ} {Z Z₁ : ℝ → �
       (equation30_global_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0 T (by linarith only [hT])).le
     have he : 1 ≤ exp (6:ℝ) := one_le_exp_iff.mpr (by norm_num)
     have hh := mul_le_mul_of_nonneg_right he hpos
-    nlinarith only [hbound, hh]
+    linarith only [hbound, hh]
   · exact equation30_short_size_comparison hσ hσsmall hZ hfluxZ hZ0 hZ₁0 hT
       (le_of_not_ge hpre) (by linarith only [hshort, hτH])
 
@@ -145,6 +145,6 @@ theorem physical_horizon_size_bound {α : Type*} (center : α)
     (by linarith only [hτ.1] : 0 ≤ τ) hτ.2
   have hh := mul_le_mul_of_nonneg_left hideal hs₀.le
   have ht := mul_le_mul_of_nonneg_left htarget (exp_pos (6:ℝ)).le
-  nlinarith only [ht, hcurrent, hh]
+  linarith only [ht, hcurrent, hh]
 
 end EulerPacketMovingFrame

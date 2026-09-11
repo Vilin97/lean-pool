@@ -193,7 +193,7 @@ theorem coerciveSolution_gevrey_amplitudes
   have ha := mul_le_mul_of_nonneg_right hMC hS
   have hf' := mul_le_mul_of_nonneg_right hMD (majorant_nonneg R hR0 d k)
   change ‖iteratedFDeriv ℝ k u x‖ ≤ M * (majorant R d k + S)
-  nlinarith
+  linarith
 
 end Hilbert
 

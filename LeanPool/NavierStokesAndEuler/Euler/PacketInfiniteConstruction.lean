@@ -133,7 +133,7 @@ def joinedNext : Stage S (n+1) := by
         (scaleSequence S.J S.X) n := by
     have h := P.joined_bad_cost hn hq hB
     change 2*(gradientConstant*previousShear S.J S.X n)*shear S.J S.X n*(G).badRatio ≤ _ at h
-    nlinarith only [h]
+    linarith only [h]
   have habsorb := ratio_absorption (S := S) (n := n) (G).badRatio (G).badRatio_nonneg hbad
   have hparams := literal_step (P.joinedRenewal_matches hn hq hB) S.J S.X n S.renewal_series
     (by norm_num) (P.joined_renewal_errors hn hq hB) rfl
@@ -180,7 +180,7 @@ def joinedNext : Stage S (n+1) := by
       2*(gradientConstant*previousShear S.J S.X n)*shear S.J S.X n *
         (goodRatio+(G).badRatio)+k^(-(1/4 : ℝ)) ≤
       hessianConstant*shear S.J S.X n*previousShear S.J S.X n
-    nlinarith only [habsorb.2]
+    linarith only [habsorb.2]
   · exact (P.initial_step_bound _ (P.joined_initial_cost hn hq hB)).1
   · exact (P.initial_step_bound _ (P.joined_initial_cost hn hq hB)).2
   · change P.low.K+2*(gradientConstant*previousShear S.J S.X n)*(G).hchild *

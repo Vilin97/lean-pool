@@ -360,7 +360,7 @@ theorem profile_stocks_rate {D D' : RadialDomain} (Q : Profiles D) (h : ℝ)
   have hsmall : Cdata / n ≤ δ := by
     apply (div_le_iff₀ hnpos).mpr
     have := (div_le_iff₀ hδ).mp hδn
-    nlinarith
+    linarith
   obtain ⟨hf, hU, hH⟩ := hdata n hn₀ hn1 p hp
   obtain ⟨hPpos, hs₁, hs₂⟩ := hb (P n) p hp (hSD' hp) (Cdata / n)
     (div_nonneg hCdata hnpos.le) hsmall hf hU hH
@@ -1684,14 +1684,14 @@ theorem profile_stocks_rate {D D' : RadialDomain}
     have hb : Cc / δr ≤ n :=
       ((le_max_left _ _).trans ((le_max_right _ _).trans (le_max_right _ _))).trans (hN.le.trans hn)
     have := (div_le_iff₀ hδr).mp hb
-    nlinarith
+    linarith
   have hsmalls : Ddata / n ≤ δs := by
     apply (div_le_iff₀ hnpos).mpr
     have hb : Ddata / δs ≤ n :=
       ((le_max_right _ _).trans ((le_max_right _ _).trans (le_max_right _ _))).trans (hN.le.trans
           hn)
     have := (div_le_iff₀ hδs).mp hb
-    nlinarith
+    linarith
   have hdatap := hdata n hn1 (c n) (hc n) (Cc / n) (div_nonneg hCc hnpos.le) hsmallr
     (hcoeff n hnr hn1) (P n) Q (hPf n) (hPU n) hQf hQU (hP0 n) p (hX p hp).le
     (hTJ p hp) (hTD hp) (hTD' hp)

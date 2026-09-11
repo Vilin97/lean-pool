@@ -154,7 +154,7 @@ def geometryGuardsOfStage
     simp only [inv_inv,hsigma,targetTime]
   have htarget_ge : 1 ≤ targetTime J X (β n) n := by
     have hfirst : 1 ≤ 1/Real.sqrt (β n) :=
-      (le_div_iff₀ stage.sigma_pos).2 (by nlinarith only [stage.sigma_small])
+      (le_div_iff₀ stage.sigma_pos).2 (by linarith only [stage.sigma_small])
     exact hfirst.trans stage.target_from_sigma
   have htarget_le : targetTime J X (β n) n ≤ P.horizon := by
     rw [htime]
@@ -210,7 +210,7 @@ def geometryGuardsOfStage
   have hN1 : 1 ≤ 1000000*neighborStabilityConstant := by
     have he : 1 ≤ Real.exp 6 := Real.one_le_exp_iff.mpr (by norm_num)
     unfold neighborStabilityConstant
-    nlinarith only [he]
+    linarith only [he]
   have hN : 0 ≤ 1000000*neighborStabilityConstant := zero_le_one.trans hN1
   have hsmall :
       1000000*neighborStabilityConstant *
@@ -230,7 +230,7 @@ def geometryGuardsOfStage
     have hh : 1 ≤ 1000000*neighborStabilityConstant*P.horizon^40 :=
       one_le_mul_of_one_le_of_one_le hN1 (one_le_pow₀ hhor)
     have hb := mul_le_mul_of_nonneg_right hh hcoef0
-    nlinarith only [hb,hsmall]
+    linarith only [hb,hsmall]
   have hcompress :
       60*(P.G+P.totalError hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) CM CH ρ) *
         (targetTime J X (β n) n)*P.epsilon < P.a :=

@@ -435,8 +435,8 @@ theorem radialInterior_spec {F : OutgoingProfile.Profile} (W : NominalProfile.Wi
       (WaveEdgeExtension.nativeRadius F.data.h x) ^ 2 / 2 <
         (PrimaryTargetBounds.rightRadius W) ^ 2 / 2
     constructor
-    · nlinarith [mul_pos (sub_pos.mpr hx.2.1) (add_pos hr ha)]
-    · nlinarith [mul_pos (sub_pos.mpr hx.2.2) (add_pos (hr.trans hx.2.2) hr)]
+    · linarith [mul_pos (sub_pos.mpr hx.2.1) (add_pos hr ha)]
+    · linarith [mul_pos (sub_pos.mpr hx.2.2) (add_pos (hr.trans hx.2.2) hr)]
   refine ⟨ht, hR, hX, ?_⟩
   exact WeightedRadialPrimitive.zeta_pos _ _ (WeightedRadialPrimitive.logPosition_mem ha hx.2)
 

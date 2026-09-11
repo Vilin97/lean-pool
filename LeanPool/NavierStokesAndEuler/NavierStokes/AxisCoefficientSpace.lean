@@ -81,7 +81,7 @@ theorem squareDecay_succ_le (n : ℕ) : squareDecay (n + 1) ≤ squareDecay n :=
   unfold squareDecay
   apply one_div_le_one_div_of_le (by positivity)
   push_cast
-  nlinarith [show (0 : ℝ) ≤ n by positivity]
+  linarith [show (0 : ℝ) ≤ n by positivity]
 
 theorem squareDecay_le_four_succ (n : ℕ) : squareDecay n ≤ 4 * squareDecay (n + 1) := by
   unfold squareDecay
@@ -135,7 +135,7 @@ theorem squareDecay_product_le (i j : ℕ) :
   have hpoly : (((i + j : ℕ) : ℝ) + 1) ^ 2 ≤
       2 * (((i : ℝ) + 1) ^ 2 + ((j : ℝ) + 1) ^ 2) := by
     push_cast
-    nlinarith [sq_nonneg ((i : ℝ) - (j : ℝ))]
+    linarith [sq_nonneg ((i : ℝ) - (j : ℝ))]
   have hh := div_le_div_of_nonneg_right hpoly (le_of_lt
     (mul_pos (mul_pos (sq_pos_of_pos hi) (sq_pos_of_pos hj)) (sq_pos_of_pos hij)))
   convert! hh using 1 <;> unfold squareDecay <;>

@@ -242,7 +242,7 @@ theorem normalized_coordinates {h e : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hτ : 0 < 1 - e ^ 2 := by
     have hp := mul_pos (show 0 < 1 - e by linarith [he.2])
       (show 0 < 1 + e by linarith [he.1])
-    nlinarith
+    linarith
   have hq : Q h (1 - e ^ 2) e = 1 :=
     (SimilarityCoordinates.eq_coordinateQ (by linarith : 0 < 2 * h)
       (by linarith : 2 * h < 1) (p := (1 - e ^ 2, e)) hτ zero_lt_one
@@ -602,7 +602,7 @@ theorem radial_exterior_of_X_exterior {h C T : ℝ} (hT : 0 < T) {F E : ℝ × �
   have hXT : T ≤ R ^ 2 / 2 := by
     have hs := Real.sq_sqrt (show 0 ≤ 2 * T from mul_nonneg (by norm_num) hT.le)
     have hsq := sq_le_sq₀ (Real.sqrt_nonneg (2 * T)) hRp.le
-    nlinarith [(hsq.mpr hR)]
+    linarith [(hsq.mpr hR)]
   rw [hFE R hRp eta hη, he eta hη _ hXT]
   have hexp : RadialHeatProfile.spatialExponent (1 + h) = -A h := by
     unfold RadialHeatProfile.spatialExponent A

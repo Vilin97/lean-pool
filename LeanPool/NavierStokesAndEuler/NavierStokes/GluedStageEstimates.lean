@@ -941,10 +941,10 @@ theorem refinedCarrier_window (l : Label B N0) (n : ℕ) {w : SpaceTime}
   rw [chartPoint_scale n hw.1] at he
   have hleft : ChartScales.Q (BaseChartJets.cellBand l.2) / 2 ≤ PhysicalWaveSum.physicalQ h w := by
     have hb := mul_le_mul_of_nonneg_left hq.1 (ChartScales.Q_pos (BaseChartJets.cellBand l.2)).le
-    nlinarith
+    linarith
   have hright : PhysicalWaveSum.physicalQ h w ≤ 2 * ChartScales.Q (BaseChartJets.cellBand l.2) := by
     have hb := mul_le_mul_of_nonneg_left hq.2 (ChartScales.Q_pos (BaseChartJets.cellBand l.2)).le
-    nlinarith
+    linarith
   have hlog := PhysicalWaveSum.logCoordinate_in_band
     (PhysicalWaveSum.physicalQ_pos outgoing.data.h_pos outgoing.data.h_lt_half hw.1) hleft hright
   refine ⟨?_, hbox⟩
@@ -1838,7 +1838,7 @@ theorem current_loss_le_wave (degree : ℝ) (m : ℕ) :
   have hh : 0 ≤ 2 - 3 * h := by linarith [outgoing.data.h_lt_half]
   have hb := mul_nonneg hh hm
   unfold PhysicalGraphBounds.waveLoss
-  nlinarith
+  linarith
 
 omit R in
 theorem current_potential_loss_le (m : ℕ) :

@@ -107,8 +107,8 @@ theorem radius_guards (q : ℕ) (T Ti R C C₁ C₂ L : ℝ)
   have hgc' := mul_nonneg hgc hr
   unfold radius
   constructor
-  · nlinarith
-  constructor <;> nlinarith
+  · linarith
+  constructor <;> linarith
 
 variable (D : EulerMeanPacketProvider.Data) (q : ℕ) (Ti R C C₁ C₂ : ℝ)
   (hT : D.T ≤ 1) (hTi : D.T⁻¹ ≤ Ti) (hR : 1024 ≤ R)
@@ -144,18 +144,18 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
       weakCost q D.T R C C₁ C₂ D.L := by
     apply (mul_le_mul_of_nonneg_right hs ho).trans
     unfold weakCost
-    nlinarith [mul_nonneg hs0 hf]
+    linarith [mul_nonneg hs0 hf]
   have hfp : sobolevInverseCost (sourceFixedCoercivity D.T D.F D.F₁ D.opInv)⁻¹
       (operatorCost q D.T R C C₁ C₂ D.L) q*forcingCost q D.T R C C₁ ≤
       weakCost q D.T R C C₁ C₂ D.L := by
     apply (mul_le_mul_of_nonneg_right hs hf).trans
     unfold weakCost
-    nlinarith [mul_nonneg hs0 ho]
+    linarith [mul_nonneg hs0 ho]
   have hsqrt : sqrt D.T ≤ 1 := by nlinarith [sqrt_nonneg D.T, sq_sqrt D.T_pos.le]
   have htrace : coordinateTraceCost D.T ≤ Ti+2 := by
     unfold coordinateTraceCost
     have hmul := mul_le_mul hTi hsqrt (sqrt_nonneg D.T) hTi0
-    nlinarith
+    linarith
   have ht0 := coordinateTraceCost_nonneg D.T D.T_pos.le
   have hg0 : 0 ≤ D.frameLower⁻¹ := inv_nonneg.mpr D.frameLower_pos.le
   have hd0 := accelerationBlockAmplitude_nonneg (ι := Fin 4) q R C C₁ 1 1 hR0 hC hC₁ zero_le_one
