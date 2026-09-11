@@ -4,10 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
 
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
-import LeanPool.Chudnovsky.Basic
-import LeanPool.Chudnovsky.SingularModuli.Kronecker
-import LeanPool.Chudnovsky.SingularModuli.Rationality
 import LeanPool.Chudnovsky.SingularModuli.MasserA1
 
 /-!

@@ -286,7 +286,7 @@ private theorem DiscSummable.shift {c : ℕ → ℂ} (hc : DiscSummable c) :
   have hg : Summable fun m : ℕ => (m : ℝ) * ‖c m‖ * ρ ^ m := by
     simpa using hc.weighted 1 hρ0 hρ1
   have hg1 : Summable fun n : ℕ => ((n + 1 : ℕ) : ℝ) * ‖c (n + 1)‖ * ρ ^ (n + 1) :=
-    (summable_nat_add_iff 1).2 hg
+    (summable_nat_add_iff (f := fun m : ℕ => (m : ℝ) * ‖c m‖ * ρ ^ m) 1).2 hg
   have hbnd : Summable fun n : ℕ => ((n : ℝ) + 1) * ‖c (n + 1)‖ * ρ ^ n := by
     refine (hg1.mul_left ρ⁻¹).congr (fun n => ?_)
     push_cast; rw [pow_succ]; field_simp
