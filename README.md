@@ -66,3 +66,10 @@ Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io
 - Lean Pool accepts human-written projects, not just AI projects.
 - Lean Pool is not a unified library like mathlib. Most projects are independent of each other.
 - Lean Pool only accepts completed formalization projects.
+
+[Palomar Registry](https://palomar-registry.org/) is also similar to Lean Pool. The differences are:
+- Lean Pool maintains accepted projects.
+- Lean Pool provides tools like search and documentation.
+- Palomar is a registry, not a unified repository.
+
+Projects accepted to the Palomar Registry may be submitted to Lean Pool, and priority will be given to them.
