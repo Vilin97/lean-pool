@@ -22,6 +22,150 @@ namespace CohnElkies
 section
 
 open Filter MeasureTheory Set
+open scoped ContDiff Topology
+
+/-! ### Sign-indexed saddle data
+
+The plus and minus saddle constructions differ only in their polynomial factor
+(`plusPolynomial` versus `minusPolynomial`).  `SaddleSign` selects one of the two, and the
+dictionary below transports the facts both constructions share, so that the remaining
+analysis is carried out once for both signs. -/
+
+private inductive SaddleSign
+  | plus
+  | minus
+
+private noncomputable def SaddleSign.polynomial : SaddleSign → ℝ → ℂ → ℂ
+  | .plus => plusPolynomial
+  | .minus => minusPolynomial
+
+private noncomputable def SaddleSign.mellinData : SaddleSign → ℝ → ℝ → ℂ → ℂ
+  | .plus => plusSaddleMellinData
+  | .minus => minusSaddleMellinData
+
+private noncomputable def SaddleSign.profile : SaddleSign → ℝ → ℝ → ℝ → ℂ
+  | .plus => plusSaddleProfile
+  | .minus => minusSaddleProfile
+
+private noncomputable def SaddleSign.saddleFunction :
+    SaddleSign → ℝ → (d : ℕ) → Euclidean d → ℂ
+  | .plus => plusSaddleFunction
+  | .minus => minusSaddleFunction
+
+private noncomputable def SaddleSign.poleResidue : SaddleSign → ℝ → ℝ → ℕ → ℂ
+  | .plus => plusSaddlePoleResidue
+  | .minus => minusSaddlePoleResidue
+
+private noncomputable def SaddleSign.taylorRemainder : SaddleSign → ℝ → ℝ → ℕ → ℝ → ℂ
+  | .plus => plusSaddleTaylorRemainder
+  | .minus => minusSaddleTaylorRemainder
+
+private theorem SaddleSign.mellinData_def (s : SaddleSign) (ε ℓ : ℝ) (z : ℂ) :
+    s.mellinData ε ℓ z =
+      saddleMellinEnvelope ε ℓ z *
+        s.polynomial ε (Complex.I * (z - (ℓ : ℂ)) / (ℓ : ℂ)) := by
+  cases s <;> rfl
+
+private theorem SaddleSign.profile_def (s : SaddleSign) (ε ℓ r : ℝ) :
+    s.profile ε ℓ r =
+      if r = 0 then (saddleOriginValue ε ℓ : ℂ) else mellinInv ℓ (s.mellinData ε ℓ) r := by
+  cases s <;> rfl
+
+private theorem SaddleSign.saddleFunction_def (s : SaddleSign) (ε : ℝ) (d : ℕ)
+    (x : Euclidean d) :
+    s.saddleFunction ε d x = s.profile ε ((d : ℝ) / 2) ‖x‖ := by
+  cases s <;> rfl
+
+private theorem SaddleSign.taylorRemainder_def (s : SaddleSign) (ε ℓ : ℝ) (N : ℕ) (r : ℝ) :
+    s.taylorRemainder ε ℓ N r =
+      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
+        (∫ t : ℝ,
+          saddleMellinInversePower r
+              ((saddleTaylorContour N : ℂ) + (t : ℂ) * Complex.I) *
+            s.mellinData ε ℓ ((saddleTaylorContour N : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s <;> rfl
+
+private theorem SaddleSign.mellinData_differentiableOn_rightHalfPlane (s : SaddleSign)
+    {ε : ℝ} (hε : 0 < ε) (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (ℓ : ℝ) :
+    DifferentiableOn ℂ (s.mellinData ε ℓ) {z : ℂ | 0 < z.re} := by
+  cases s
+  · exact plusSaddleMellinData_differentiableOn_rightHalfPlane hε horder ℓ
+  · exact minusSaddleMellinData_differentiableOn_rightHalfPlane hε horder ℓ
+
+private theorem SaddleSign.mellinData_shiftedLine_moment_integrable (s : SaddleSign)
+    {ε ℓ a : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (hpole : ∀ n : ℕ, a ≠ -((2 * n : ℕ) : ℝ)) (j : ℕ) :
+    Integrable (fun t : ℝ =>
+      (t : ℂ) ^ j * s.mellinData ε ℓ ((a : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s
+  · exact plusSaddleMellinData_shiftedLine_moment_integrable hε hℓ horder hpole j
+  · exact minusSaddleMellinData_shiftedLine_moment_integrable hε hℓ horder hpole j
+
+private theorem SaddleSign.mellinData_shiftedLine_weighted_integrable (s : SaddleSign)
+    {ε ℓ a r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (hpole : ∀ n : ℕ, a ≠ -((2 * n : ℕ) : ℝ)) (hr : 0 < r) :
+    Integrable (fun t : ℝ =>
+      saddleMellinInversePower r ((a : ℂ) + (t : ℂ) * Complex.I) *
+        s.mellinData ε ℓ ((a : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s
+  · exact plusSaddleMellinData_shiftedLine_weighted_integrable hε hℓ horder hpole hr
+  · exact minusSaddleMellinData_shiftedLine_weighted_integrable hε hℓ horder hpole hr
+
+private theorem SaddleSign.mellinData_weighted_horizontalIntegral_tendsto_zero (s : SaddleSign)
+    {ε ℓ r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (hr : 0 < r)
+    {A B : ℝ} (hAB : A ≤ B) (c : ℝ) (hc : |c| = 1) :
+    Tendsto
+      (fun T : ℝ =>
+        ∫ a in A..B,
+          saddleMellinInversePower r ((a : ℂ) + ((c * T : ℝ) : ℂ) * Complex.I) *
+            s.mellinData ε ℓ ((a : ℂ) + ((c * T : ℝ) : ℂ) * Complex.I))
+      Filter.atTop (𝓝 0) := by
+  cases s
+  · exact plusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero hε hℓ horder hr hAB c hc
+  · exact minusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero hε hℓ horder hr hAB c hc
+
+private theorem SaddleSign.saddleFunction_contDiffOn (s : SaddleSign) {ε : ℝ} (hε : 0 < ε)
+    {d : ℕ} (hd : 0 < d) (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
+    ContDiffOn ℝ ∞ (s.saddleFunction ε d) ({0}ᶜ : Set (Euclidean d)) := by
+  cases s
+  · exact plusSaddleFunction_contDiffOn hε hd horder
+  · exact minusSaddleFunction_contDiffOn hε hd horder
+
+private theorem SaddleSign.poleResidue_zero (s : SaddleSign) {ε ℓ : ℝ} (hℓ : 0 < ℓ) :
+    s.poleResidue ε ℓ 0 = (saddleOriginValue ε ℓ : ℂ) := by
+  cases s
+  · exact plusSaddlePoleResidue_zero hℓ
+  · exact minusSaddlePoleResidue_zero hℓ
+
+private theorem SaddleSign.profile_eq_normalized_vertical_integral (s : SaddleSign)
+    {ε ℓ r : ℝ} (hr : 0 < r) :
+    s.profile ε ℓ r =
+      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
+        (∫ t : ℝ,
+          saddleMellinInversePower r ((ℓ : ℂ) + (t : ℂ) * Complex.I) *
+            s.mellinData ε ℓ ((ℓ : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s
+  · exact plusSaddleProfile_eq_normalized_vertical_integral hr
+  · exact minusSaddleProfile_eq_normalized_vertical_integral hr
+
+private theorem SaddleSign.profile_eq_residue_sum_add_remainder (s : SaddleSign)
+    {ε ℓ r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (hr : 0 < r) (N : ℕ) :
+    s.profile ε ℓ r =
+      (∑ n ∈ Finset.range (N + 1), s.poleResidue ε ℓ n * ((r ^ (2 * n) : ℝ) : ℂ)) +
+      s.taylorRemainder ε ℓ N r := by
+  cases s
+  · exact plusSaddleProfile_eq_residue_sum_add_remainder hε hℓ horder hr N
+  · exact minusSaddleProfile_eq_residue_sum_add_remainder hε hℓ horder hr N
+
+end
+
+section
+
+open Filter MeasureTheory Set
 open scoped Topology
 
 private noncomputable def saddleSourceMellinContour (ℓ u T : ℝ) : ℂ :=
@@ -4120,143 +4264,6 @@ private theorem saddleMellinInversePower_eq_squaredPositiveCpow
         ne_eq] using! hpositive.ne'
     simp only [saddlePositiveCpow, max_self, Complex.ofReal_zero, Complex.zero_cpow hexp, zero_mul]
   rw [hzero, integral_zero]
-
-/-! ### Sign-indexed saddle data
-
-The plus and minus saddle constructions differ only in their polynomial factor
-(`plusPolynomial` versus `minusPolynomial`).  `SaddleSign` selects one of the two, and the
-dictionary below transports the facts both constructions share, so that the remaining
-analysis is carried out once for both signs. -/
-
-private inductive SaddleSign
-  | plus
-  | minus
-
-private noncomputable def SaddleSign.polynomial : SaddleSign → ℝ → ℂ → ℂ
-  | .plus => plusPolynomial
-  | .minus => minusPolynomial
-
-private noncomputable def SaddleSign.mellinData : SaddleSign → ℝ → ℝ → ℂ → ℂ
-  | .plus => plusSaddleMellinData
-  | .minus => minusSaddleMellinData
-
-private noncomputable def SaddleSign.profile : SaddleSign → ℝ → ℝ → ℝ → ℂ
-  | .plus => plusSaddleProfile
-  | .minus => minusSaddleProfile
-
-private noncomputable def SaddleSign.saddleFunction :
-    SaddleSign → ℝ → (d : ℕ) → Euclidean d → ℂ
-  | .plus => plusSaddleFunction
-  | .minus => minusSaddleFunction
-
-private noncomputable def SaddleSign.poleResidue : SaddleSign → ℝ → ℝ → ℕ → ℂ
-  | .plus => plusSaddlePoleResidue
-  | .minus => minusSaddlePoleResidue
-
-private noncomputable def SaddleSign.taylorRemainder : SaddleSign → ℝ → ℝ → ℕ → ℝ → ℂ
-  | .plus => plusSaddleTaylorRemainder
-  | .minus => minusSaddleTaylorRemainder
-
-private theorem SaddleSign.mellinData_def (s : SaddleSign) (ε ℓ : ℝ) (z : ℂ) :
-    s.mellinData ε ℓ z =
-      saddleMellinEnvelope ε ℓ z *
-        s.polynomial ε (Complex.I * (z - (ℓ : ℂ)) / (ℓ : ℂ)) := by
-  cases s <;> rfl
-
-private theorem SaddleSign.profile_def (s : SaddleSign) (ε ℓ r : ℝ) :
-    s.profile ε ℓ r =
-      if r = 0 then (saddleOriginValue ε ℓ : ℂ) else mellinInv ℓ (s.mellinData ε ℓ) r := by
-  cases s <;> rfl
-
-private theorem SaddleSign.saddleFunction_def (s : SaddleSign) (ε : ℝ) (d : ℕ)
-    (x : Euclidean d) :
-    s.saddleFunction ε d x = s.profile ε ((d : ℝ) / 2) ‖x‖ := by
-  cases s <;> rfl
-
-private theorem SaddleSign.taylorRemainder_def (s : SaddleSign) (ε ℓ : ℝ) (N : ℕ) (r : ℝ) :
-    s.taylorRemainder ε ℓ N r =
-      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
-        (∫ t : ℝ,
-          saddleMellinInversePower r
-              ((saddleTaylorContour N : ℂ) + (t : ℂ) * Complex.I) *
-            s.mellinData ε ℓ ((saddleTaylorContour N : ℂ) + (t : ℂ) * Complex.I)) := by
-  cases s <;> rfl
-
-private theorem SaddleSign.mellinData_differentiableOn_rightHalfPlane (s : SaddleSign)
-    {ε : ℝ} (hε : 0 < ε) (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (ℓ : ℝ) :
-    DifferentiableOn ℂ (s.mellinData ε ℓ) {z : ℂ | 0 < z.re} := by
-  cases s
-  · exact plusSaddleMellinData_differentiableOn_rightHalfPlane hε horder ℓ
-  · exact minusSaddleMellinData_differentiableOn_rightHalfPlane hε horder ℓ
-
-private theorem SaddleSign.mellinData_shiftedLine_moment_integrable (s : SaddleSign)
-    {ε ℓ a : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (hpole : ∀ n : ℕ, a ≠ -((2 * n : ℕ) : ℝ)) (j : ℕ) :
-    Integrable (fun t : ℝ =>
-      (t : ℂ) ^ j * s.mellinData ε ℓ ((a : ℂ) + (t : ℂ) * Complex.I)) := by
-  cases s
-  · exact plusSaddleMellinData_shiftedLine_moment_integrable hε hℓ horder hpole j
-  · exact minusSaddleMellinData_shiftedLine_moment_integrable hε hℓ horder hpole j
-
-private theorem SaddleSign.mellinData_shiftedLine_weighted_integrable (s : SaddleSign)
-    {ε ℓ a r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (hpole : ∀ n : ℕ, a ≠ -((2 * n : ℕ) : ℝ)) (hr : 0 < r) :
-    Integrable (fun t : ℝ =>
-      saddleMellinInversePower r ((a : ℂ) + (t : ℂ) * Complex.I) *
-        s.mellinData ε ℓ ((a : ℂ) + (t : ℂ) * Complex.I)) := by
-  cases s
-  · exact plusSaddleMellinData_shiftedLine_weighted_integrable hε hℓ horder hpole hr
-  · exact minusSaddleMellinData_shiftedLine_weighted_integrable hε hℓ horder hpole hr
-
-private theorem SaddleSign.mellinData_weighted_horizontalIntegral_tendsto_zero (s : SaddleSign)
-    {ε ℓ r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (hr : 0 < r)
-    {A B : ℝ} (hAB : A ≤ B) (c : ℝ) (hc : |c| = 1) :
-    Tendsto
-      (fun T : ℝ =>
-        ∫ a in A..B,
-          saddleMellinInversePower r ((a : ℂ) + ((c * T : ℝ) : ℂ) * Complex.I) *
-            s.mellinData ε ℓ ((a : ℂ) + ((c * T : ℝ) : ℂ) * Complex.I))
-      Filter.atTop (𝓝 0) := by
-  cases s
-  · exact plusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero hε hℓ horder hr hAB c hc
-  · exact minusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero hε hℓ horder hr hAB c hc
-
-private theorem SaddleSign.saddleFunction_contDiffOn (s : SaddleSign) {ε : ℝ} (hε : 0 < ε)
-    {d : ℕ} (hd : 0 < d) (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    ContDiffOn ℝ ∞ (s.saddleFunction ε d) ({0}ᶜ : Set (Euclidean d)) := by
-  cases s
-  · exact plusSaddleFunction_contDiffOn hε hd horder
-  · exact minusSaddleFunction_contDiffOn hε hd horder
-
-private theorem SaddleSign.poleResidue_zero (s : SaddleSign) {ε ℓ : ℝ} (hℓ : 0 < ℓ) :
-    s.poleResidue ε ℓ 0 = (saddleOriginValue ε ℓ : ℂ) := by
-  cases s
-  · exact plusSaddlePoleResidue_zero hℓ
-  · exact minusSaddlePoleResidue_zero hℓ
-
-private theorem SaddleSign.profile_eq_normalized_vertical_integral (s : SaddleSign)
-    {ε ℓ r : ℝ} (hr : 0 < r) :
-    s.profile ε ℓ r =
-      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
-        (∫ t : ℝ,
-          saddleMellinInversePower r ((ℓ : ℂ) + (t : ℂ) * Complex.I) *
-            s.mellinData ε ℓ ((ℓ : ℂ) + (t : ℂ) * Complex.I)) := by
-  cases s
-  · exact plusSaddleProfile_eq_normalized_vertical_integral hr
-  · exact minusSaddleProfile_eq_normalized_vertical_integral hr
-
-private theorem SaddleSign.profile_eq_residue_sum_add_remainder (s : SaddleSign)
-    {ε ℓ r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (hr : 0 < r) (N : ℕ) :
-    s.profile ε ℓ r =
-      (∑ n ∈ Finset.range (N + 1), s.poleResidue ε ℓ n * ((r ^ (2 * n) : ℝ) : ℂ)) +
-      s.taylorRemainder ε ℓ N r := by
-  cases s
-  · exact plusSaddleProfile_eq_residue_sum_add_remainder hε hℓ horder hr N
-  · exact minusSaddleProfile_eq_residue_sum_add_remainder hε hℓ horder hr N
 
 private noncomputable def SaddleSign.squaredRemainder (s : SaddleSign)
     (ε ℓ : ℝ) (N : ℕ) (u : ℝ) : ℂ :=
