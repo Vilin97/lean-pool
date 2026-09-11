@@ -51,6 +51,8 @@ on:
       - 'bump/**'
     paths:
       - 'README.md'
+      # Attribution-only PRs must still produce the required checks.
+      - 'NOTICE.extra.yml'
       - '**/*.lean'
       - 'lakefile.toml'
       - 'lean-toolchain'
@@ -123,16 +125,19 @@ jobs:
         run: |
           set -euo pipefail
           diff_available=true
-          changed_files=""
+          # A file, not an environment variable: a large import's path list
+          # exceeds the kernel's 128 KiB limit on a single environment string.
+          changed_files="$RUNNER_TEMP/changed-files.txt"
+          : > "$changed_files"
           case "$EVENT_NAME" in
             pull_request)
-              changed_files=$(git diff --name-only "$BASE_SHA"...HEAD | tr '\n' ' ')
+              git diff --name-only "$BASE_SHA"...HEAD > "$changed_files"
               ;;
             push)
               if [ -n "$BEFORE_SHA" ] \
                  && ! printf '%s' "$BEFORE_SHA" | grep -q '^0*$' \
                  && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
-                changed_files=$(git diff --name-only "$BEFORE_SHA"..HEAD | tr '\n' ' ')
+                git diff --name-only "$BEFORE_SHA"..HEAD > "$changed_files"
               else
                 diff_available=false
               fi
@@ -143,7 +148,7 @@ jobs:
           esac
           cold=false
           if [ -z "$CACHE_MATCHED" ]; then cold=true; fi
-          plan=$(CHANGED_FILES="$changed_files" DIFF_AVAILABLE="$diff_available" \
+          plan=$(CHANGED_FILES_PATH="$changed_files" DIFF_AVAILABLE="$diff_available" \
                  COLD="$cold" FORCE_FULL="$FORCE_FULL" \
                  python3 scripts/ci/plan-build-shards.py)
           echo "Plan: $plan"
