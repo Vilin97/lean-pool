@@ -7805,3 +7805,57 @@ projects:
       - "03E05"
       - "05D10"
       - "06A07"
+  - slug: lean4evm
+    title: Verified Ethereum Virtual Machine primitives
+    summary: >-
+      Formalizes reusable fixed-width unsigned integers and fixed-size byte values for the
+      Ethereum Virtual Machine, including wrapping arithmetic, shifts, signed operations,
+      modular arithmetic, byte extraction, sign extension, and checked width conversions.
+    branch: verified systems and blockchain semantics
+    entry_module: LeanPool.Lean4EVM
+    authors:
+      - mrLSD
+    source:
+      title: Lean4EVM
+      authors:
+        - mrLSD
+      url: https://github.com/mrLSD/Lean4EVM
+      github_repo: mrLSD/Lean4EVM
+      commit: 0109646545bc1f29c719c1268bad7c561d2035f8
+    license: MIT
+    status: verified
+    provenance: human
+    main_declarations:
+      - Lean4EVM.FixedUInt.toNat_add
+      - Lean4EVM.FixedUInt.toNat_mul
+      - Lean4EVM.U256.toNat_addmod
+      - Lean4EVM.U256.toNat_mulmod
+      - Lean4EVM.U256.toNat_byteAt_of_lt
+    main_results:
+      - declaration: Lean4EVM.FixedUInt.toNat_add
+        informal: >-
+          The natural value of fixed-width wrapping addition is the sum of the operand values
+          reduced modulo the width's power-of-two modulus.
+      - declaration: Lean4EVM.FixedUInt.toNat_mul
+        informal: >-
+          The natural value of fixed-width wrapping multiplication is the product of the operand
+          values reduced modulo the width's power-of-two modulus.
+      - declaration: Lean4EVM.U256.toNat_addmod
+        informal: >-
+          EVM ADDMOD returns zero for modulus zero and otherwise the exact sum of two 256-bit
+          words reduced modulo the supplied modulus.
+      - declaration: Lean4EVM.U256.toNat_mulmod
+        informal: >-
+          EVM MULMOD returns zero for modulus zero and otherwise the exact product of two 256-bit
+          words reduced modulo the supplied modulus.
+      - declaration: Lean4EVM.U256.toNat_byteAt_of_lt
+        informal: >-
+          Extracting any byte position below 32 from a 256-bit word yields a value below 256.
+    tags:
+      - verified-algorithms
+      - ethereum
+      - fixed-width-arithmetic
+      - blockchain-semantics
+    msc:
+      - "68Q60"
+      - "68V20"
