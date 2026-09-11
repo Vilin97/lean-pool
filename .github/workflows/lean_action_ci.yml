@@ -51,6 +51,8 @@ on:
       - 'bump/**'
     paths:
       - 'README.md'
+      # Attribution-only PRs must still produce the required checks.
+      - 'NOTICE.extra.yml'
       - '**/*.lean'
       - 'lakefile.toml'
       - 'lean-toolchain'

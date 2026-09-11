@@ -19,6 +19,8 @@ on:
       - main
     paths:
       - 'README.md'
+      # Attribution-only PRs must still produce the required checks.
+      - 'NOTICE.extra.yml'
       - '**/*.lean'
       - 'LeanPool/projects.yml'
       - 'Challenge/challenges.yml'
