@@ -5,11 +5,7 @@ Authors: Xuanji Li
 -/
 
 import LeanPool.Chudnovsky.Basic
-import Mathlib.Geometry.Manifold.Notation
 import Mathlib.NumberTheory.ModularForms.Derivative
-import Mathlib.NumberTheory.ModularForms.LevelOne.DimensionFormula
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
-import Mathlib.NumberTheory.ModularForms.Discriminant
 
 /-!
 # Ramanujan's derivative identities
@@ -185,7 +181,8 @@ lemma tendsto_E2_atImInfty : Tendsto E2 atImInfty (𝓝 1) := by
       rw [E2_eq_one_sub_tsum τ]; ring
     have hsum1 : Summable fun n : ℕ ↦
         (ArithmeticFunction.sigma 1 (n + 1) : ℝ) * ‖q τ‖ ^ (n + 1) :=
-      (summable_nat_add_iff 1).mpr (summable_sigma_one_norm_q τ)
+      (summable_nat_add_iff (f := fun n : ℕ ↦ (ArithmeticFunction.sigma 1 n : ℝ) * ‖q τ‖ ^ n) 1).mpr
+        (summable_sigma_one_norm_q τ)
     have hsumnorm : Summable fun n : ℕ ↦
         ‖(ArithmeticFunction.sigma 1 (n + 1) : ℂ) * q τ ^ (n + 1)‖ := by
       refine hsum1.congr fun n ↦ ?_
