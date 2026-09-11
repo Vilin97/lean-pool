@@ -27,6 +27,13 @@ namespace EulerGevrey
 
 open Finset
 
+/-- A radius chosen for the inverse estimate dominates one and the coefficient radius. -/
+theorem radius_bounds {coefficientRadius inverseCost radius : ℝ}
+    (hCoefficient : 0 ≤ coefficientRadius) (hInverse : 1 ≤ inverseCost)
+    (hRadius : 2 * inverseCost * (coefficientRadius + 1) ≤ radius) :
+    1 ≤ radius ∧ coefficientRadius ≤ radius := by
+  constructor <;> nlinarith only [hCoefficient, hInverse, hRadius]
+
 /-- Every interior entry of the `n`th binomial row is at least `n`. -/
 theorem le_choose_of_interior (n k : ℕ) (hk : 0 < k) (hkn : k < n) :
     n ≤ n.choose k := by

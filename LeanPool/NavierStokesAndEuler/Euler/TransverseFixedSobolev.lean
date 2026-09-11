@@ -319,8 +319,8 @@ theorem fixedFrameSolution_gevrey
   have hrhs : ContDiff ℝ ∞ rhs :=
     (contDiff_adjoint (contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁)).neg.clm_apply hf
   have hM := solveCost_one_le T C₀ C₁ CH c hT hC₀ hC₁ hCH
-  have hR0 : 0 ≤ R := by nlinarith
-  have hRcR : Rc ≤ R := by nlinarith
+  have hRcR : Rc ≤ R := (radius_bounds hRc hM hR).2
+  have hR0 : 0 ≤ R := hRc.trans hRcR
   have hCR : 0 ≤ formCost T C₀ C₁ CH := by unfold formCost; positivity
   have hFR : 0 ≤ forcingCost T C₀ C₁ := by unfold forcingCost derivativeCost; positivity
   have hI : 0 ≤ inverseCost T C₀ C₁ c := by unfold inverseCost; positivity
@@ -411,8 +411,8 @@ theorem transverseVelocity_gevrey
   have hb := transverseCoordinates_gevrey T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall
     hQ hQ₁ hH Rc C₀ C₁ CH hRc hC₀ hC₁ hCH hbQ hbQ₁ hbH m hTangent hRange R hR f hf d hbf
   have hM := solveCost_one_le T C₀ C₁ CH c hT hC₀ hC₁ hCH
-  have hR0 : 0 ≤ R := by nlinarith
-  have hRcR : Rc ≤ R := by nlinarith
+  have hRcR : Rc ≤ R := (radius_bounds hRc hM hR).2
+  have hR0 : 0 ≤ R := hRc.trans hRcR
   have hbQR (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j Q y‖ ≤ C₀*majorant R 0 j :=
     (hbQ j y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 j) hC₀)
   have h := clm_apply_bound (fun y => timeMultiplier T hT (Q y)) v
@@ -550,7 +550,7 @@ theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d 
     sobolevCoefficientAmplitude_nonneg q Rc _ hRc hCJ
   have hM := blockCost_one_le ι q T Rc C₀ C₁ CH c Cf hT hRc hC₀ hC₁ hCH hCf
   have hr0 := sobolevCoefficientRadius_nonneg (ι := ι) Rc hRc
-  have hrR : sobolevCoefficientRadius ι Rc ≤ R := by nlinarith
+  have hrR : sobolevCoefficientRadius ι Rc ≤ R := (radius_bounds hr0 hM hR).2
   have hAb (k y) : ‖iteratedFDeriv ℝ k A y‖ ≤ formCost T C₀ C₁ CH*majorant Rc 0 k :=
     fixedFrameOperator_bound T hT Q Q₁ H hQ hQ₁ hH Rc C₀ C₁ CH hRc hC₀ hC₁ hCH hbQ hbQ₁ hbH k y
   have hJb (k y) : ‖iteratedFDeriv ℝ k J y‖ ≤ (T*derivativeCost T C₀ C₁)*majorant Rc 0 k :=

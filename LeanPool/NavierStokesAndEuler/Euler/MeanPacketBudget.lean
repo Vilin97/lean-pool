@@ -476,7 +476,7 @@ theorem solution_translation_gevrey
     ‖iteratedFDeriv ℝ n (fun a : Space => timeSolenoidalTranslation T a
       (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
         (-(fixedMeanPrimitive T hT F F₁).adjoint f))) x‖ ≤ majorant R (d+1) n := by
-  have hRcR : Rc ≤ R := by nlinarith
+  have hRcR : Rc ≤ R := (radius_bounds hRc hM hR).2
   have hR0 : 0 ≤ R := hRc.trans hRcR
   have hFbr (k a) : ‖iteratedFDeriv ℝ k (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant R 0
       k :=
@@ -707,7 +707,7 @@ theorem solution_translation_block_gevrey
     unfold forcingBlockAmplitude
     positivity
   have hr₀ : 0 ≤ sobolevCoefficientRadius ι Rc := sobolevCoefficientRadius_nonneg Rc hRc
-  have hrR : sobolevCoefficientRadius ι Rc ≤ R := by nlinarith
+  have hrR : sobolevCoefficientRadius ι Rc ≤ R := (radius_bounds hr₀ hM hR).2
   have hbO (k a) := coefficientBlock_of_tensor_bound directions hd q O hO Rc _ hRc hO0 hOb k a
   have hbJ (k a) := coefficientBlock_of_tensor_bound directions hd q J hJ Rc _ hRc
     (show 0 ≤ T*(T*CF₁+CF) by positivity) hJb k a
@@ -1673,8 +1673,8 @@ theorem source_strong_time_block_bounds
         (solenoidalFrame_lower T FInv (operatorPath T F.field) hInv) fC t) (Icc (0 : ℝ) T) t) := by
   have hRc0 : 0 ≤ Rc := (by norm_num : (0 : ℝ) ≤ 1024).trans hRc
   have hrc : 0 ≤ sobolevCoefficientRadius ι Rc := sobolevCoefficientRadius_nonneg Rc hRc0
-  have hR1 : 1 ≤ R := by nlinarith
-  have hRcR : sobolevCoefficientRadius ι Rc ≤ R := by nlinarith
+  have hR1 : 1 ≤ R := (radius_bounds hrc hM hR).1
+  have hRcR : sobolevCoefficientRadius ι Rc ≤ R := (radius_bounds hrc hM hR).2
   have hFr : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F.field)) := by
     simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T F
   have hF₁r : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F₁.field)) := by
@@ -1934,8 +1934,8 @@ theorem source_pressure_block_bounds
         6*sobolevCoefficientAmplitude ι q Rc CF₁*coordinateTraceCost T)*majorant R (d+3) n) := by
   have hRc0 : 0 ≤ Rc := (by norm_num : (0 : ℝ) ≤ 1024).trans hRc
   have hrc : 0 ≤ sobolevCoefficientRadius ι Rc := sobolevCoefficientRadius_nonneg Rc hRc0
-  have hR1 : 1 ≤ R := by nlinarith
-  have hRcR : sobolevCoefficientRadius ι Rc ≤ R := by nlinarith
+  have hR1 : 1 ≤ R := (radius_bounds hrc hM hR).1
+  have hRcR : sobolevCoefficientRadius ι Rc ≤ R := (radius_bounds hrc hM hR).2
   have hFr : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F.field)) := by
     simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T F
   have hF₁r : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F₁.field)) := by
