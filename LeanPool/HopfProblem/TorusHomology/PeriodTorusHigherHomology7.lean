@@ -1690,7 +1690,6 @@ private theorem PeriodTorusHigherHomology.formalAssociatorHomotopy_zero {V W Z :
     (c : SingularMayerVietoris.FormalChains Z 1) : formalAssociatorHomotopy 0 a b c = 0 :=
   rfl
 
-@[simp]
 private theorem
     PeriodTorusHigherHomology.formalAssociatorHomotopy_simplex_succ {V W Z : Type*} (q : ℕ)
     (v : Fin 2 → V) (w : Fin 2 → W) (z : Fin (q + 2) → Z) :
