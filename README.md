@@ -7,6 +7,7 @@
 [![Lean Action CI](https://github.com/Vilin97/lean-pool/actions/workflows/lean_action_ci.yml/badge.svg)](https://github.com/Vilin97/lean-pool/actions/workflows/lean_action_ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-blue)](https://vilin97.github.io/lean-pool/)
 [![Exposition](https://img.shields.io/badge/exposition-online-8a4fff)](https://vilin97.github.io/lean-pool/exposition/)
+[![Zulip](https://img.shields.io/badge/Zulip-Lean_Pool-6492FE?logo=zulip&logoColor=white)](https://leanprover.zulipchat.com/#narrow/channel/619231-Lean-Pool)
 [![Semantic Search](https://img.shields.io/badge/semantic_search-Octo-2f80ed)](https://octo.axiomatic-ai.com/search?scopes=repo%3AVilin97%2Flean-pool)
 [![License](https://img.shields.io/github/license/Vilin97/lean-pool)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20513444.svg)](https://doi.org/10.5281/zenodo.20513444)
@@ -16,7 +17,7 @@ Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathl
 Semantic search is also available via the [API](https://search.octo.axiomatic-ai.com/api/search).
 
 <!-- BEGIN STATS -->
-**179** formalization projects · **1,560,807** lines of Lean · **2** open challenges
+**179** formalization projects · **1,560,804** lines of Lean · **2** open challenges
 <!-- END STATS -->
 
 <sub>(stats above are refreshed automatically by the [generated-metadata workflow](.github/workflows/notice.yml) — edit [`python/lean_pool/stats.py`](python/lean_pool/stats.py), not the numbers)</sub>
@@ -65,3 +66,10 @@ Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io
 - Lean Pool accepts human-written projects, not just AI projects.
 - Lean Pool is not a unified library like mathlib. Most projects are independent of each other.
 - Lean Pool only accepts completed formalization projects.
+
+[Palomar Registry](https://palomar-registry.org/) is also similar to Lean Pool. The differences are:
+- Lean Pool maintains accepted projects.
+- Lean Pool provides tools like search and documentation.
+- Palomar is a registry, not a unified repository.
+
+Projects accepted to the Palomar Registry may be submitted to Lean Pool, and priority will be given to them.
