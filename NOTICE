@@ -149,6 +149,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/RamanujanNagell           https://github.com/BarinderBanwait/ramanujan_nagell
   LeanPool/RellichKondrachov         https://github.com/abenenson/rellich-kondrachov
   LeanPool/RiemannMappingTheorem     https://github.com/vbeffara/RMT4
+  LeanPool/RiemannRochFunctionFields https://github.com/vaca22/riemann-roch-function-fields
   LeanPool/RootSystem                https://github.com/Antoine-dSG/root_system
   LeanPool/RungeKuttaOrderConditions https://github.com/karlesmarin/runge-kutta-order-conditions-lean
   LeanPool/Rupert                    https://github.com/dwrensha/Rupert.lean
