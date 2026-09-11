@@ -88,21 +88,21 @@ def ladderLang (α : Ordinal.{0}) : Language.{0, 0} :=
 variable {α : Ordinal.{0}}
 
 /-- The `n`-th constant, as a term over any variable type. -/
-private def const (n : ℕ) {γ : Type} : (ladderLang α).Term γ :=
+def const (n : ℕ) {γ : Type} : (ladderLang α).Term γ :=
   Term.func (show (ladderLang α).Functions 0 from n) Fin.elim0
 
 /-- The level atom `U_i t`. -/
-private def levelAtom (i : Index α) {γ : Type} {n : ℕ} (t : (ladderLang α).Term (γ ⊕ Fin n)) :
+def levelAtom (i : Index α) {γ : Type} {n : ℕ} (t : (ladderLang α).Term (γ ⊕ Fin n)) :
     (ladderLang α).BoundedFormulaω γ n :=
   BoundedFormulaω.rel (show (ladderLang α).Relations 1 from i) (fun _ => t)
 
 /-- The edge atom `E t u`. -/
-private def eAtom {γ : Type} {n : ℕ} (t u : (ladderLang α).Term (γ ⊕ Fin n)) :
+def eAtom {γ : Type} {n : ℕ} (t u : (ladderLang α).Term (γ ⊕ Fin n)) :
     (ladderLang α).BoundedFormulaω γ n :=
   BoundedFormulaω.rel (show (ladderLang α).Relations 2 from ()) ![t, u]
 
 /-- Variable `i` at arity `n`, over `Empty` free variables. -/
-private abbrev bvar {n : ℕ} (i : Fin n) : (ladderLang α).Term (Empty ⊕ Fin n) :=
+abbrev bvar {n : ℕ} (i : Fin n) : (ladderLang α).Term (Empty ⊕ Fin n) :=
   Term.var (Sum.inr i)
 
 section Clauses
@@ -111,32 +111,32 @@ variable (α)
 variable [Countable (Index α)]
 
 /-- Base, `⊇`: every constant is in the bottom level. -/
-private noncomputable def baseInC : (ladderLang α).Sentenceω :=
+noncomputable def baseInC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.iInf fun n => levelAtom ⊥ (const n)
 
 /-- Base, `⊆`: every bottom-level element is a constant. -/
-private noncomputable def baseOutC : (ladderLang α).Sentenceω :=
+noncomputable def baseOutC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.all ((levelAtom ⊥ (bvar 0)).imp
     (BoundedFormulaω.iSup fun n => BoundedFormulaω.equal (bvar 0) (const n)))
 
 /-- Top: every element is in the top level. -/
-private noncomputable def topC : (ladderLang α).Sentenceω :=
+noncomputable def topC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.all (levelAtom ⊤ (bvar 0))
 
 /-- Nesting: `U_i ⊆ U_j` for `i < j`. -/
-private noncomputable def nestedC : (ladderLang α).Sentenceω :=
+noncomputable def nestedC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.ciInf fun p : {p : Index α × Index α // p.1 < p.2} =>
     BoundedFormulaω.all ((levelAtom p.1.1 (bvar 0)).imp (levelAtom p.1.2 (bvar 0)))
 
 /-- Limit covering: at an order-limit level `j`, `U_j x → ⋁_{i<j} U_i x`. -/
-private noncomputable def limitC : (ladderLang α).Sentenceω :=
+noncomputable def limitC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.ciInf fun j : {j : Index α // Order.IsSuccLimit j} =>
     BoundedFormulaω.all ((levelAtom j.1 (bvar 0)).imp
       (BoundedFormulaω.ciSup fun i : {i : Index α // i < j.1} => levelAtom i.1 (bvar 0)))
 
 /-- Predecessor descent: for adjacent `i ⋖ j`, `U_j x → E y x → U_i y`
 (`x` = bound variable `0`, `y` = bound variable `1`). -/
-private noncomputable def predC : (ladderLang α).Sentenceω :=
+noncomputable def predC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.ciInf fun p : {p : Index α × Index α // p.1 ⋖ p.2} =>
     BoundedFormulaω.all (BoundedFormulaω.all
       ((levelAtom p.1.2 (bvar 0)).imp
@@ -144,7 +144,7 @@ private noncomputable def predC : (ladderLang α).Sentenceω :=
 
 /-- Extensionality, curried: `(∀x, E x y → E x z) → (∀x, E x z → E x y) → y = z`
 (`y` = bound variable `0`, `z` = bound variable `1`, `x` = bound variable `2`). -/
-private def extC : (ladderLang α).Sentenceω :=
+def extC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.all (BoundedFormulaω.all
     ((BoundedFormulaω.all ((eAtom (bvar 2) (bvar 0)).imp (eAtom (bvar 2) (bvar 1)))).imp
       ((BoundedFormulaω.all ((eAtom (bvar 2) (bvar 1)).imp (eAtom (bvar 2) (bvar 0)))).imp

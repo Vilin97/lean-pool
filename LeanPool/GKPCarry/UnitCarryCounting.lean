@@ -186,18 +186,22 @@ theorem ternaryDoubleCarryCount_word_eq_value {length : ℕ}
     (word : List.Vector (Fin 3) length) :
     ternaryDoubleCarryCount (ternaryWordDigits word) =
       ternaryDoubleCarryCount (Nat.digits 3 (ternaryWordValue word)) := by
-  have hword :
-      ternaryWordDigits word ∈
-        {digits : List ℕ |
-          digits.length = length ∧ ∀ digit ∈ digits, digit < 3} := by
-    simp [ternaryWordDigits]
-  have hinverse :
-      Nat.digitsAppend 3 length (ternaryWordValue word) =
-        ternaryWordDigits word := by
-    simpa [ternaryWordValue] using
-      (Nat.setInvOn_digitsAppend_ofDigits (b := 3) (by decide) length).1 hword
-  rw [← hinverse, Nat.digitsAppend,
-    ternaryDoubleCarryCount_append_replicate_zero]
+  let digits := Nat.digits 3 (ternaryWordValue word)
+  have hlength : digits.length ≤ length :=
+    (Nat.digits_length_le_iff (by decide) _).mpr (ternaryWordValue_lt word)
+  have hpad : ternaryWordDigits word =
+      digits ++ List.replicate (length - digits.length) 0 := by
+    apply Nat.ofDigits_inj_of_len_eq (b := 3) (by decide)
+    · simp [ternaryWordDigits, Nat.add_sub_cancel' hlength]
+    · simp [ternaryWordDigits]
+    · intro digit hd
+      rcases List.mem_append.mp hd with hd | hd
+      · exact Nat.digits_lt_base (by decide) hd
+      · have : digit = 0 := (List.mem_replicate.mp hd).2
+        omega
+    · simp only [Nat.ofDigits_append_replicate_zero]
+      exact (Nat.ofDigits_digits 3 (ternaryWordValue word)).symm
+  rw [hpad, ternaryDoubleCarryCount_append_replicate_zero]
 
 /-! ## Deficient-carry unit words -/
 

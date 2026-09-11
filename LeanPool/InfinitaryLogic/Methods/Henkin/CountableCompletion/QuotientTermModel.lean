@@ -68,7 +68,7 @@ private theorem qtConst_constTerm (c : ℕ) : qtConst (constTerm (L' := L) (J :=
 /-! ## The quotient carrier -/
 
 /-- The equality relation on closed terms: their collapsed constants are `S`-equal. -/
-private def qRel (t u : L[[ℕ]].Term Empty) : Prop := constEq (L := L) (qtConst t) (qtConst u) ∈ S
+def qRel (t u : L[[ℕ]].Term Empty) : Prop := constEq (L := L) (qtConst t) (qtConst u) ∈ S
 
 /-- The equality relation is an equivalence (from the atomic equality fields of `S`). -/
 private theorem qRel_equiv (hsc : HenkinComplete U S) : Equivalence (qRel (L := L) (S := S)) where
@@ -78,7 +78,7 @@ private theorem qRel_equiv (hsc : HenkinComplete U S) : Equivalence (qRel (L := 
 
 /-- The setoid on closed terms. -/
 def qSetoid (hsc : HenkinComplete U S) : Setoid (L[[ℕ]].Term Empty) :=
-  ⟨qRel (S := S), qRel_equiv hsc⟩
+  ⟨qRel (S := S), by exact qRel_equiv hsc⟩
 
 /-- The quotient term model. -/
 def QModel (hsc : HenkinComplete U S) := Quotient (qSetoid hsc)

@@ -5,6 +5,10 @@ Authors: ruplet
 -/
 module
 
+public meta import Lean.Elab.Tactic.Conv.Congr
+public meta import Lean.Elab.Tactic.Conv.Rewrite
+public meta import Lean.Elab.Tactic.Conv.Unfold
+
 public import Lean.Elab.Command
 
 public import Mathlib.ModelTheory.Semantics

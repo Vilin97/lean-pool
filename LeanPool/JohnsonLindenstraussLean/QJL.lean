@@ -5,6 +5,8 @@ Authors: claytomode
 -/
 module
 
+import Mathlib.Probability.Distributions.Gaussian.Fernique
+import Mathlib.Probability.Independence.Integration
 public import Mathlib.Data.Real.Sign
 public import LeanPool.JohnsonLindenstraussLean.Rotation
 

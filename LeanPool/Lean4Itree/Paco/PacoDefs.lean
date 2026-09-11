@@ -5,6 +5,7 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 module
 
+import all Init.Internal.Order.Basic
 public import Lean.Meta
 public import Lean.Elab
 

@@ -51,13 +51,13 @@ section Construction
 variable (X : Type) [LinearOrder X]
 
 /-- The lexicographic value group of the construction. -/
-private abbrev hahnGamma : Type := Lex (X →₀ ℤ)
+abbrev hahnGamma : Type := Lex (X →₀ ℤ)
 
 /-- The ambient lexicographically ordered Hahn-series field. -/
-private abbrev hahnField : Type := Lex (HahnSeries (hahnGamma X) ℚ)
+abbrev hahnField : Type := Lex (HahnSeries (hahnGamma X) ℚ)
 
 /-- The monomial embedding of the index type. -/
-private noncomputable def hahnMonomial (x : X) : hahnField X :=
+noncomputable def hahnMonomial (x : X) : hahnField X :=
   toLex (HahnSeries.single (toLex (Finsupp.single x 1)) (1 : ℚ))
 
 private theorem hahnMonomial_injective : Function.Injective (hahnMonomial X) := by
@@ -74,7 +74,7 @@ private theorem hahnMonomial_injective : Function.Injective (hahnMonomial X) := 
   exact one_ne_zero h1.symm
 
 /-- The generated subfield: the ordered field of cardinality `#X`. -/
-private noncomputable def hahnSubfield : Subfield (hahnField X) :=
+noncomputable def hahnSubfield : Subfield (hahnField X) :=
   Subfield.closure (Set.range (hahnMonomial X))
 
 private theorem mk_hahnSubfield [Infinite X] : Cardinal.mk (hahnSubfield X) = Cardinal.mk X := by
@@ -97,7 +97,7 @@ noncomputable def highlyTransitiveOrderAt (κ : Cardinal.{0}) (hκ : Cardinal.al
       (Subtype.val : hahnSubfield X → hahnField X) rfl rfl
       (fun _ _ => rfl) (fun _ _ => rfl) (fun {_ _} => Iff.rfl) (fun {_ _} => Iff.rfl)
   refine ⟨hahnSubfield X, inferInstance, ?_, ?_⟩
-  · rw [mk_hahnSubfield, Cardinal.mk_toType, Cardinal.card_ord]
+  · exact private_decl% (by rw [mk_hahnSubfield, Cardinal.mk_toType, Cardinal.card_ord])
   · exact HighlyOrderTransitive.of_field _
 
 end FirstOrder

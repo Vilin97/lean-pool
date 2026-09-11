@@ -77,7 +77,7 @@ noncomputable def isolatingFormula
   haveI := hcount.to_subtype
   BoundedFormulaω.ciInf fun q : RealizedInfinitaryTypes (L := L) M n =>
     if h : q.1 = p then BoundedFormulaω.falsum.imp BoundedFormulaω.falsum
-    else (exists_separator (M := M) fun he => h he.symm).choose
+    else (private_decl% (exists_separator (M := M) fun he => h he.symm)).choose
 
 /-- **The decisive characterization**: `χ_p` holds at a tuple exactly when its complete type is
 `p`. -/
@@ -101,7 +101,7 @@ theorem realize_isolatingFormula_iff
       rw [BoundedFormulaω.realize_imp]
       exact fun hf => hf
     · rw [dite_eq_right h]
-      exact (exists_separator (M := M) fun he => h he.symm).choose_spec.1 a htp
+      exact (private_decl% (exists_separator (M := M) fun he => h he.symm)).choose_spec.1 a htp
 
 /-! ## Universe regression
 

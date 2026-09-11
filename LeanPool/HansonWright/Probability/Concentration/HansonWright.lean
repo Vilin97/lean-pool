@@ -5,6 +5,8 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 module
 
+import Mathlib.Probability.Independence.Integration
+
 public import LeanPool.HansonWright.Probability.Concentration.Bernstein
 public import LeanPool.HansonWright.Probability.Process.SubGaussian
 public import LeanPool.HansonWright.Probability.Moments.Exponential

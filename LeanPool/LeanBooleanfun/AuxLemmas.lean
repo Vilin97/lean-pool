@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import Mathlib.Algebra.BigOperators.Finprod
 public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Fintype.Powerset
 
 /-!
 General lemmas not specific to analysis of Boolean functions.

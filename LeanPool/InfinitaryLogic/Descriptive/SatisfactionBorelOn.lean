@@ -52,7 +52,7 @@ variable [L.IsRelational] {α : Type*}
 
 /-- The set of codes in `StructureSpaceOn L α` where a bounded formula is realized,
 given variable assignments. -/
-private def ModelsOfBoundedOn
+def ModelsOfBoundedOn
     {β : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω β n) (v : β → α) (xs : Fin n → α) :
     Set (StructureSpaceOn L α) :=

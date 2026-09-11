@@ -177,13 +177,13 @@ def DenseWords (S : Set (List Bool)) : Prop :=
 /-! ### A canonical dense and sparse set of words -/
 
 /-- An enumeration of all finite binary words. -/
-private def wordEnum (n : ℕ) : List Bool := (Encodable.decode (α := List Bool) n).getD []
+def wordEnum (n : ℕ) : List Bool := (Encodable.decode (α := List Bool) n).getD []
 
 private theorem wordEnum_encode (w : List Bool) : wordEnum (Encodable.encode w) = w := by
   simp [wordEnum, Encodable.encodek]
 
 /-- Pad a word with `false` up to length `n`. -/
-private def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
+def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
 
 private theorem length_padTo {w : List Bool} {n : ℕ} (h : w.length ≤ n) : (padTo w n).length
   = n := by

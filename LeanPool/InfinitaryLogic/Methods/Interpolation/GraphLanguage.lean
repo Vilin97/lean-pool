@@ -72,7 +72,7 @@ variable {L : Language.{0, 0}}
 /-- Realization of a graph-language relation symbol in the graph expansion of an `L`-structure:
 base relations unchanged, and `G_f(xs, y)` reads `f(xs) = y` (the first `n` coordinates feed `f`,
 the last is its value). -/
-private def graphRelMap (M : Type) [L.Structure M] :
+def graphRelMap (M : Type) [L.Structure M] :
     ∀ {n : ℕ}, GraphRelation L n → (Fin n → M) → Prop
   | _, .base r, v => Structure.RelMap r v
   | _, .graph f, v => Structure.funMap f (Fin.init v) = v (Fin.last _)

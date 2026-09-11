@@ -350,23 +350,23 @@ Total weight = p + q = 1. Every item has frequency exactly q
 Symmetrically for the augmented negative collection B.
 -/
 
-private noncomputable def augPosWeight
+noncomputable def augPosWeight
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M) :
     Finset U ⊕ Finset U → ℝ
   | Sum.inl S => max (cert.lam S) 0
   | Sum.inr S => max (-cert.lam S) 0
 
-private def augPosSets : Finset U ⊕ Finset U → Finset U
+def augPosSets : Finset U ⊕ Finset U → Finset U
   | Sum.inl S => S
   | Sum.inr S => Sᶜ
 
-private noncomputable def augNegWeight
+noncomputable def augNegWeight
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M) :
     Finset U ⊕ Finset U → ℝ
   | Sum.inl S => max (-cert.lam S) 0
   | Sum.inr S => max (cert.lam S) 0
 
-private def augNegSets : Finset U ⊕ Finset U → Finset U
+def augNegSets : Finset U ⊕ Finset U → Finset U
   | Sum.inl S => S
   | Sum.inr S => Sᶜ
 

@@ -48,7 +48,7 @@ universe u v w uCode uIndex
 variable {L : Language.{0, 0}}
 
 /-- The all-arity first-order image: every formula containing no infinitary node. -/
-private def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
+def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
   {p | p.2.IsFirstOrder}
 
 /-- **The HF fragment.**  Each field is now one appeal to the first-order-image API: three

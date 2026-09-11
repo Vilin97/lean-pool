@@ -67,7 +67,7 @@ namespace Canon
 The constructor is private so callers cannot supply arrays with inconsistent dimensions or
 contents. Use `Graph.ofOracle`, which builds both representations from the same oracle. -/
 structure Graph where
-  private mk ::
+  mk ::
   /-- Number of vertices. -/
   n : Nat
   /-- `adj[v]![w]!` is `true` iff `v` and `w` are adjacent. -/

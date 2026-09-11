@@ -12,6 +12,7 @@ the companion paper.
 -/
 module
 
+public import Mathlib.Data.Fintype.Order
 public import LeanPool.KaltonRoberts.Defs
 public import LeanPool.KaltonRoberts.DualCert
 

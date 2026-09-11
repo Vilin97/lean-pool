@@ -165,13 +165,13 @@ private theorem extClass_postcomp_bijective_of_subsingleton_middle
 
 /-- The connecting morphism in the covariant long exact sequence as an additive equivalence,
     assuming the middle cohomology groups in degrees `n` and `n + 1` vanish. -/
-private noncomputable def extClass_postcompAddEquiv_of_subsingleton_middle
+noncomputable def extClass_postcompAddEquiv_of_subsingleton_middle
     (Z : C') {S : ShortComplex C'} (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Ext Z S.X₂ n))
     (h₂succ : Subsingleton (Ext Z S.X₂ (n + 1))) :
     Ext Z S.X₃ n ≃+ Ext Z S.X₁ (n + 1) :=
   AddEquiv.ofBijective (hS.extClass.postcomp Z (rfl : n + 1 = n + 1))
-    (extClass_postcomp_bijective_of_subsingleton_middle Z hS n h₂n h₂succ)
+    (private_decl% (extClass_postcomp_bijective_of_subsingleton_middle Z hS n h₂n h₂succ))
 
 /-- Naturality of the extension class: given a morphism `φ : S₁ ⟶ S₂` of short exact sequences,
     the connecting homomorphism commutes with the induced maps on Ext groups.
@@ -250,7 +250,7 @@ noncomputable def sheafHSuccMap {X : TopCat.{u}}
       (fun y ↦ y.comp hS.extClass rfl)
       (fun a b ↦ Ext.add_comp a b hS.extClass rfl)
 
-private theorem sheafH_succ_map_apply {X : TopCat.{u}}
+theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
     (n : ℕ)
@@ -717,7 +717,7 @@ noncomputable def sheafH0NatIsoSections {X : TopCat.{u}} :
 /-- Higher-degree connecting additive equivalence for a short exact sequence of sheaves:
 if the middle cohomology groups in degrees `n` and `n + 1` are subsingleton, then the
 connecting morphism induces an additive equivalence `H^n(S.X₃) ≃+ H^(n+1)(S.X₁)`. -/
-private noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : TopCat.{u}}
+noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))

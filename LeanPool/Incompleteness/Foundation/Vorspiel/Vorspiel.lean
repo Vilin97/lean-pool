@@ -102,12 +102,12 @@ open Lean PrettyPrinter Delaborator SubExpr
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Matrix.vecEmpty]
-def unexpandVecEmpty : Unexpander
+meta def unexpandVecEmpty : Unexpander
   | `($(_)) => `(![])
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Matrix.vecCons]
-def unexpandVecCons : Unexpander
+meta def unexpandVecCons : Unexpander
   | `($(_) $a ![])      => `(![$a])
   | `($(_) $a ![$as,*]) => `(![$a, $as,*])
   | _                   => throw ()

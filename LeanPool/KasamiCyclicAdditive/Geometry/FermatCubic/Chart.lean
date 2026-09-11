@@ -76,7 +76,8 @@ private lemma fermat_symm {w t : K} (h : w ^ 3 + t ^ 3 = 1) : t ^ 3 + w ^ 3 = 1 
   linear_combination h
 
 /-- Negation on the Fermat cubic swaps the two affine coordinates. -/
-theorem neg_pt {w t : K} (h : w ^ 3 + t ^ 3 = 1) : -(pt w t h) = pt t w (fermat_symm h) := by
+theorem neg_pt {w t : K} (h : w ^ 3 + t ^ 3 = 1) :
+    -(pt w t h) = pt t w (by exact fermat_symm h) := by
   rw [pt, pt, Affine.Point.neg_some]
   refine some_eq_some _ _ ?_ ?_
   · rw [show t + w = w + t by ring]

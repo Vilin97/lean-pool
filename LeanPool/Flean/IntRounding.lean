@@ -321,7 +321,7 @@ lemma round_near_eq_iff (q : ℚ) (z : ℤ) :
 open Lean Meta Qq Mathlib.Meta.Positivity in
 /-- A `positivity` extension proving `0 ≤ roundNearInt q` from `0 ≤ q`. -/
 @[positivity roundNearInt _]
-def evalRoundNearInt : PositivityExt where eval {u α} _ pα? e := do
+meta def evalRoundNearInt : PositivityExt where eval {u α} _ pα? e := do
   match u, α, e with
   | 0, ~q(ℤ), ~q(roundNearInt $a) =>
     match (dependent := true) pα? with

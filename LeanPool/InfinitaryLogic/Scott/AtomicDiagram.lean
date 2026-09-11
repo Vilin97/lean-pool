@@ -90,7 +90,7 @@ private theorem holds_comp_eq_holds_pushforward {m : ℕ} (idx : L.AtomicIdx m)
 end AtomicIdx
 
 /-- Builds an atomic formula from an index. The formula uses free variables for the tuple. -/
-private def atomicFormula (idx : L.AtomicIdx n) : L.BoundedFormula (Fin n) 0 :=
+def atomicFormula (idx : L.AtomicIdx n) : L.BoundedFormula (Fin n) 0 :=
   match idx with
   | .eq i j => Term.equal (Term.var i) (Term.var j)
   | .rel R f => R.formula fun k => Term.var (f k)

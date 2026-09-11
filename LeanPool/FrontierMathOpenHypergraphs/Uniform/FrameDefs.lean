@@ -48,7 +48,7 @@ def FrameSpec.t (spec : FrameSpec) : ℕ :=
 def FrameSpec.cap (spec : FrameSpec) : Fin spec.t → ℕ :=
   fun i => spec.parts.get i
 
-private def supportPatternOfList {t : ℕ} (s : List ℕ)
+def supportPatternOfList {t : ℕ} (s : List ℕ)
     (hIn : ∀ i ∈ s, i < t) (hNodup : s.Nodup) (hCard : 2 ≤ s.length) :
     SupportPattern t := by
   let finList : List (Fin t) := s.pmap (fun i hi => (⟨i, hi⟩ : Fin t)) hIn
@@ -96,14 +96,14 @@ instance (spec : FrameSpec) : Decidable spec.IsValid := by
   unfold FrameSpec.IsValid FrameSpec.countWitnesses
   infer_instance
 
-private def sup2 (a b : ℕ) : List ℕ := [a, b]
-private def sup3 (a b c : ℕ) : List ℕ := [a, b, c]
-private def sup4 (a b c d : ℕ) : List ℕ := [a, b, c, d]
-private def sup5 (a b c d e : ℕ) : List ℕ := [a, b, c, d, e]
-private def sup6 (a b c d e f : ℕ) : List ℕ := [a, b, c, d, e, f]
-private def sup7 (a b c d e f g : ℕ) : List ℕ := [a, b, c, d, e, f, g]
-private def sup8 (a b c d e f g h : ℕ) : List ℕ := [a, b, c, d, e, f, g, h]
-private def sup9 (a b c d e f g h i : ℕ) : List ℕ := [a, b, c, d, e, f, g, h, i]
+def sup2 (a b : ℕ) : List ℕ := [a, b]
+def sup3 (a b c : ℕ) : List ℕ := [a, b, c]
+def sup4 (a b c d : ℕ) : List ℕ := [a, b, c, d]
+def sup5 (a b c d e : ℕ) : List ℕ := [a, b, c, d, e]
+def sup6 (a b c d e f : ℕ) : List ℕ := [a, b, c, d, e, f]
+def sup7 (a b c d e f g : ℕ) : List ℕ := [a, b, c, d, e, f, g]
+def sup8 (a b c d e f g h : ℕ) : List ℕ := [a, b, c, d, e, f, g, h]
+def sup9 (a b c d e f g h i : ℕ) : List ℕ := [a, b, c, d, e, f, g, h, i]
 
 local notation "s2" => sup2
 local notation "s3" => sup3
@@ -114,7 +114,7 @@ local notation "s7" => sup7
 local notation "s8" => sup8
 local notation "s9" => sup9
 
-private def mkFrame (parts : List ℕ) (rawSupports : List (List ℕ))
+def mkFrame (parts : List ℕ) (rawSupports : List (List ℕ))
     (h : ∀ s ∈ rawSupports, s.Nodup ∧ (∀ i ∈ s, i < parts.length) ∧ 2 ≤ s.length) :
     FrameSpec where
   parts := parts
@@ -147,7 +147,7 @@ private structure ChoiceSpec where
   bonus : ℕ
 deriving Inhabited
 
-private def core4Supports : List (List ℕ) :=
+def core4Supports : List (List ℕ) :=
   [ s2 0 1
   , s2 0 2
   , s2 0 3
@@ -1452,7 +1452,7 @@ private theorem bit_testBit_gt {n i : Nat} (hi : n < i) :
     · cases htest : Nat.testBit 1 (i - n) <;> simp_all
   simp_all
 
-private def maskFinset (spec : FrameSpec) (mask : Nat) : Finset (Fin spec.t) :=
+def maskFinset (spec : FrameSpec) (mask : Nat) : Finset (Fin spec.t) :=
   Finset.univ.filter fun i => mask.testBit i.1
 
 /-- Recursively check the maximal witness set for each right-hand side support mask. -/

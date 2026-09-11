@@ -327,7 +327,7 @@ theorem realize_defaultAxiom [Countable (Σ l, L.Relations l)]
 variable (L) in
 /-- The tree atom at level `n`: `tree n` applied to the bit-numerals of `σ` followed by the
 numerals of `τ`. -/
-private def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).Sentenceω :=
+def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).Sentenceω :=
   BoundedFormulaω.rel (Sum.inr (WitnessRel.tree n) : (MidLang L).Relations (2 * n))
     (fun i : Fin (2 * n) =>
       if h : (i : ℕ) < n then mNum L _ (cond (σ ⟨i, h⟩) 1 0)
