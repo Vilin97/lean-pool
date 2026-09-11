@@ -8018,9 +8018,10 @@ projects:
           the two largest adjacency eigenvalues satisfy λ₁(G)² + λ₂(G)² ≤ 2 (1 - 1/ω(G)) |E(G)|,
           with ω(G) the clique number and |E(G)| the number of edges.
       - declaration: BollobasNikiforov.weighted
-        informal: If B is a real symmetric matrix that is entrywise nonnegative, has zero diagonal
-          and vanishes off the edges of a graph G, then the sum of the squares of its two largest
-          positive eigenvalues is at most (1 - 1/ω(G)) times its squared Frobenius norm.
+        informal: If B is a real symmetric matrix, indexed by a finite type with at least two
+          elements, that is entrywise nonnegative, has zero diagonal and vanishes off the edges
+          of a graph G on that type, then the sum of the squares of its two largest positive
+          eigenvalues is at most (1 - 1/ω(G)) times its squared Frobenius norm.
       - declaration: BollobasNikiforov.matrix_theorem
         informal: If planar vectors z₁, …, zₙ lie in a closed half-plane through the origin and
           X is their Gram matrix, then X ∘ X plus the weighted Laplacian with weights X_ij² on
@@ -8029,10 +8030,10 @@ projects:
         informal: For every real positive semidefinite matrix X of rank at most two,
           ∑_{i,j} (A_G)_ij (X_ij)₊² ≤ (1 - 1/ω(G)) ‖X‖_F², where (·)₊ is the positive part.
       - declaration: BollobasNikiforov.chiVec3_eq_cliqueNum
-        informal: The rank-two conic parameter χ''_{vec,3}(G) of Coutinho, Spier and Zhang,
-          defined as the supremum of ‖X‖_F² over positive semidefinite X of rank at most two
-          with nonnegative entries on the edges and unit off-edge mass, equals the clique
-          number ω(G).
+        informal: For every graph G on a nonempty finite vertex type, the rank-two conic
+          parameter χ''_{vec,3}(G) of Coutinho, Spier and Zhang, defined as the supremum of
+          ‖X‖_F² over positive semidefinite X of rank at most two with nonnegative entries on
+          the edges and unit off-edge mass, equals the clique number ω(G).
       - declaration: BollobasNikiforov.motzkinStraus
         informal: Motzkin–Straus inequality; for every entrywise nonnegative vector y,
           yᵀ A_G y ≤ (1 - 1/ω(G)) (∑ᵢ yᵢ)².
@@ -8045,8 +8046,8 @@ projects:
         informal: Cauchy–Binet; the product of two totally nonnegative real matrices is totally
           nonnegative.
       - declaration: BollobasNikiforov.exists_nonneg_eigenvector_lambdaMax
-        informal: Perron; a symmetric entrywise nonnegative matrix has an entrywise nonnegative
-          unit eigenvector for its largest eigenvalue.
+        informal: Perron; a real symmetric entrywise nonnegative matrix on a nonempty finite
+          index type has an entrywise nonnegative unit eigenvector for its largest eigenvalue.
     tags:
       - spectral-graph-theory
       - clique-number
