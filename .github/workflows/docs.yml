@@ -19,6 +19,11 @@ on:
       - main
     paths:
       - 'README.md'
+      # Attribution-only and CI-only PRs must still produce the required
+      # `Documentation preflight` check.
+      - 'NOTICE.extra.yml'
+      - '.github/workflows/lean_action_ci.yml'
+      - 'scripts/ci/**'
       - '**/*.lean'
       - 'LeanPool/projects.yml'
       - 'Challenge/challenges.yml'
