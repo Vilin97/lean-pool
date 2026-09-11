@@ -130,7 +130,7 @@ def jetMap (n : ℕ) : L2 →L[ℝ] Lp (Space [×n]→L[ℝ] Space) 2 (volume : 
   (ordinaryTensorOperator n).comp (S.lift n)
 
 theorem field_jetLp (u : L2) (n : ℕ) : (S.field u).jetLp n=S.jetMap n u := by
-  rw [jetMap,ContinuousLinearMap.comp_apply,lift_apply]
+  change (S.field u).jetLp n = ordinaryTensorOperator n (ordinarySobolev n (S.op u) (S.smooth u))
   have h := ordinaryTensorOperator_apply (S.field u) n
   simpa only [field_toLp] using h.symm
 
@@ -142,8 +142,7 @@ theorem field_jet_continuous {K : Type*} [TopologicalSpace K]
 
 theorem field_jet_norm (u : L2) (n : ℕ) :
     ‖(S.field u).jetLp n‖ ≤ ‖S.jetMap n‖*‖u‖ := by
-  rw [field_jetLp]
-  exact (S.jetMap n).le_opNorm u
+  simpa only [field_jetLp] using (S.jetMap n).le_opNorm u
 
 theorem field_add (u v : L2) : S.field (u+v)=addField (S.field u) (S.field v) := by
   apply smoothField_eq_of_toLp_eq
@@ -555,8 +554,8 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
         ((extendPath_continuous T hT a).intervalIntegrable 0 t)]
       change -S.op (realIntegral T hT a t)=S.op (-realIntegral T hT a t)
       rw [map_neg]
-    rw [hu0,hi] at he
-    simpa only [v,toLp_addField,field_toLp] using he.symm
+    have he' := he.trans (congrArg₂ (fun x y : L2 => x + y) hu0 hi)
+    simpa only [v,toLp_addField,field_toLp] using he'.symm
   have hvcont : ∀ n, Continuous (fun t => (v t).jetLp n) :=
     fun n => continuous_jetLp_addField _ _ (fun _ => continuous_const)
       (S.field_jet_continuous z z.continuous) n
@@ -1168,7 +1167,8 @@ theorem regularized_l2_comparison {T : ℝ} {hT : 0 ≤ T} {j k : ℕ}
     simp only [X,projIcc_of_mem hT t.property] at h
     have hs := Real.sq_sqrt ((Real.exp_pos (C*T)).le)
     have he : 0 ≤ E*Real.sqrt (Real.exp (C*T)) := mul_nonneg hE (Real.sqrt_nonneg _)
-    nlinarith [norm_nonneg ((V.velocity t).toLp-(U.velocity t).toLp)]
+    apply le_of_sq_le_sq _ he
+    simpa only [mul_pow, hs] using h
   apply (ContinuousMap.norm_le _ (mul_nonneg
     (add_nonneg (regularizerError_nonneg j) (regularizerError_nonneg k))
     (regularizedComparisonCost_nonneg T M))).mpr
