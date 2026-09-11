@@ -8,6 +8,7 @@ module
 
 public import LeanPool.EhrhartVolumeInequality.Regularization
 import all LeanPool.EhrhartVolumeInequality.Regularization
+import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 import Mathlib.Analysis.Normed.Lp.SmoothApprox
 
 /-!
@@ -61,13 +62,15 @@ private theorem normalizedCoverBump_convolution_sq_le_convolution_sq
       (volume : Measure (LogSpace n)) := by
     have hexists := hκcompact.convolutionExists_right L
       (hh.locallyIntegrable (by norm_num)) hκ x
-    simpa [L, mul_comm] using hexists.integrable_swap
+    simpa only [L, mul_comm, ContinuousLinearMap.lsmul_apply, smul_eq_mul]
+      using hexists.integrable_swap
   have hsecond : Integrable
       (fun y : LogSpace n => κ y * h (x - y) ^ 2)
       (volume : Measure (LogSpace n)) := by
     have hexists := hκcompact.convolutionExists_right L
       hh.integrable_sq.locallyIntegrable hκ x
-    simpa [L, mul_comm] using hexists.integrable_swap
+    simpa only [L, mul_comm, ContinuousLinearMap.lsmul_apply, smul_eq_mul]
+      using hexists.integrable_swap
   let m : ℝ :=
     ∫ y : LogSpace n, κ y * h (x - y)
       ∂(volume : Measure (LogSpace n))
@@ -317,7 +320,7 @@ private theorem norm_normalizedCoverComplexDriftCommutator_le_driftOscillation
       (fun y : LogSpace n => ‖h y‖ * κ (x - y))
       (volume : Measure (LogSpace n)) := by
     have hi := hκcompact.convolutionExists_right L hhnorm hκ x
-    simpa [L] using hi.integrable
+    simpa only [L, ContinuousLinearMap.lsmul_apply, smul_eq_mul] using hi.integrable
   have hmajor : Integrable
       (fun y : LogSpace n => c * (‖h y‖ * κ (x - y)))
       (volume : Measure (LogSpace n)) := hbase.const_mul c
@@ -474,7 +477,7 @@ private theorem setIntegral_norm_sq_normalizedCoverComplexDriftCommutator_le
     have hJ' :
         (∫ z : LogSpace n, κ z * ‖t (x - z)‖
           ∂(volume : Measure (LogSpace n))) ^ 2 ≤ q x := by
-      simpa [κ, q, L, MeasureTheory.convolution_def] using hJ
+      simpa only [L, q, κ, convolution_def, ContinuousLinearMap.mul_apply'] using hJ
     calc
       ‖normalizedCoverComplexDriftCommutator b h k x‖ ^ 2 ≤
         (c *
@@ -605,13 +608,15 @@ private theorem setIntegral_norm_sq_normalizedCoverComplexDriftCommutator_tendst
     setIntegral_norm_sq_normalizedCoverComplexDriftCommutator_le
       hh hb k hK hS (hlocal hS) (c := η) hreach hosc
   have hηsq : η ^ 2 ≤ η := by
-    nlinarith [hη.le, hηone]
+    rw [sq]
+    exact mul_le_of_le_one_right hη.le hηone
   have hfirst : η ^ 2 * M ≤ η * M :=
     mul_le_mul_of_nonneg_right hηsq hM
   have hsecond : η * M ≤ η * (M + 1) :=
     mul_le_mul_of_nonneg_left (by linarith) hη.le
   have hhalf : η * (M + 1) ≤ ε / 2 := by
-    nlinarith [hηscale]
+    rw [le_div_iff₀ two_pos]
+    linarith [hηscale]
   have hbound : η ^ 2 * M < ε :=
     lt_of_le_of_lt (hfirst.trans (hsecond.trans hhalf)) (by linarith)
   have hnonneg :
@@ -2994,7 +2999,7 @@ private theorem normalizedCoverMollification_memLp
   apply hq.mono' (hc.norm.pow 2).aestronglyMeasurable
   filter_upwards [] with x
   rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
-  simpa [q, κ, L, MeasureTheory.convolution_def] using
+  simpa only [L, κ, q, Pi.pow_apply, convolution_def, ContinuousLinearMap.mul_apply'] using
     normalizedCoverMollification_norm_sq_le_convolution_norm_sq hh k x
 
 private theorem integral_norm_sq_normalizedCoverMollification_le
@@ -6843,8 +6848,7 @@ private theorem angularClosedMollifiedRadialMatrixCommutatorL2_sub_norm_sq_le
   have hM :
       (fun q : LogTorus n => M q) =ᵐ[μ]
         sourceCutoffDerivativeCommutator m V := by
-    simpa [M, μ, V,
-      angularClosedMollifiedRadialMatrixCommutatorL2]
+    simpa only [V, μ, M, angularClosedMollifiedRadialMatrixCommutatorL2]
       using hMmem.coeFn_toLp
   have hR :
       (fun q : LogTorus n => R q) =ᵐ[μ]
@@ -8083,8 +8087,7 @@ private theorem angularClosedMollifiedRadialAdjointCommutatorL2_sub_norm_sq_le
   have hM :
       (fun q : LogTorus n => M q) =ᵐ[μ]
         angularSourceCutoffAdjointCommutator m V := by
-    simpa [M, μ, V,
-      angularClosedMollifiedRadialAdjointCommutatorL2]
+    simpa only [V, μ, M, angularClosedMollifiedRadialAdjointCommutatorL2]
       using hMmem.coeFn_toLp
   have hR :
       (fun q : LogTorus n => R q) =ᵐ[μ]
@@ -8462,12 +8465,12 @@ private theorem angularClosedMollifiedRootVectorL2_sub_norm_sq_le
   have hU :
       (fun q : LogTorus n => U q) =ᵐ[μ]
         angularSmoothCompactHessianRootVector a V m := by
-    simpa [U, V, μ, angularClosedMollifiedRootVectorL2]
+    simpa only [μ, V, U, angularClosedMollifiedRootVectorL2]
       using hsmooth.coeFn_toLp
   have hR :
       (fun q : LogTorus n => R q) =ᵐ[μ]
         angularPhysicalResolventRootCutoffField a W m := by
-    simpa [R, μ, angularPhysicalResolventRootCutoffL2]
+    simpa only [μ, R, angularPhysicalResolventRootCutoffL2]
       using hweak.coeFn_toLp
   have hroot :
       ‖U - R‖ ^ 2 =

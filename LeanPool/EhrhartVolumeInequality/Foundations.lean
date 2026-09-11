@@ -10,7 +10,6 @@ public import Mathlib.Analysis.Convex.Basic
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Analysis.BoxIntegral.UnitPartition
-import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 import Mathlib.Analysis.Calculus.Rademacher
 import Mathlib.Analysis.Complex.ValueDistribution.LogCounting.Basic
@@ -23,29 +22,7 @@ import Mathlib.Data.Sym.Card
 import Mathlib.MeasureTheory.Integral.Layercake
 import Mathlib.MeasureTheory.Integral.ExpDecay
 import Mathlib.MeasureTheory.SpecificCodomains.Pi
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.NormNum.IsCoprime
-import Mathlib.Tactic.NormNum.IsSquare
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.ModEq
-import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NormNum.NatLog
-import Mathlib.Tactic.NormNum.NatSqrt
-import Mathlib.Tactic.NormNum.Ordinal
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Polynomial.Basic
-import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Metrizable.ContinuousMap
 import Mathlib.Topology.UniformSpace.Ascoli
-import Mathlib.Topology.UniformSpace.Uniformizable
 
 /-!
 # Ehrhart volume inequality: Foundations
@@ -373,9 +350,8 @@ private theorem interior_gap {n : ℕ} {K : Set (Space n)}
     interior_subset (hball hmem_ball)
   have hsupport := pairing_le_supportFunction hcompact hmem x
   rw [pairing_add_left, pairing_smul_left, pairing_signVector] at hsupport
-  have hnorm := norm_le_sum_abs x
-  have hscaled := mul_le_mul_of_nonneg_left hnorm hhalf.le
-  linarith
+  have hscaled := mul_le_mul_of_nonneg_left (norm_le_sum_abs x) hhalf.le
+  exact hscaled.trans (le_sub_iff_add_le'.mpr hsupport)
 
 end SupportFunction
 
@@ -427,7 +403,8 @@ private theorem integrable_exp_neg_mul_sum_abs (n : ℕ) {a : ℝ}
       Integrable (fun x : Space n =>
         ∏ i, Real.exp (-a * |x i|))
         (Measure.pi fun _ : Fin n => (volume : Measure ℝ)) :=
-    Integrable.fintype_prod (fun _ => integrable_exp_neg_mul_abs ha)
+    Integrable.fintype_prod (f := fun _ : Fin n => fun y : ℝ => Real.exp (-a * |y|))
+      (fun _ => integrable_exp_neg_mul_abs ha)
   rw [volume_pi]
   have hfun :
       (fun x : Space n => Real.exp (-a * ∑ i, |x i|)) =
@@ -457,7 +434,7 @@ private theorem integrable_exp_neg_mul_norm {n : ℕ} (hn : 0 < n)
           (a / (n : ℝ)) * ((n : ℝ) * ‖x‖) :=
         mul_le_mul_of_nonneg_left hsum hb.le
       _ = a * ‖x‖ := by
-        field_simp
+        rw [div_mul_eq_mul_div, mul_div_assoc, mul_div_cancel_left₀ _ hnreal.ne']
   linarith
 
 private def monomialWeight {n : ℕ} (k : ℝ) (u : Space n)
@@ -511,7 +488,7 @@ private theorem interior_sum_abs_gap {n : ℕ}
   rw [SupportFunction.pairing_add_left,
     SupportFunction.pairing_smul_left,
     SupportFunction.pairing_signVector] at hsupport
-  linarith
+  exact le_sub_iff_add_le'.mpr hsupport
 
 private theorem integrable_monomialWeight_of_support_le {n : ℕ}
     {K : Set (Space n)} (hcompact : IsCompact K)
@@ -1823,12 +1800,17 @@ private theorem convexOn_mollifiedSupport {n : ℕ}
     (hcompact : IsCompact K) (hnonempty : K.Nonempty)
     (ρ : ContDiffBump (0 : Space n)) :
     ConvexOn ℝ Set.univ (mollifiedSupport K ρ) := by
-  change ConvexOn ℝ Set.univ
-    (fun x : Space n =>
-      ∫ t : Space n,
-        ρ.normed (volume : Measure (Space n)) t *
-          SupportFunction.supportFunction K (x - t)
-        ∂(volume : Measure (Space n)))
+  have hrepr :
+      mollifiedSupport K ρ =
+        fun x : Space n =>
+          ∫ t : Space n,
+            ρ.normed (volume : Measure (Space n)) t *
+              SupportFunction.supportFunction K (x - t)
+            ∂(volume : Measure (Space n)) := by
+    funext x
+    simp only [mollifiedSupport, MeasureTheory.convolution_def, ContinuousLinearMap.lsmul_apply,
+      smul_eq_mul]
+  rw [hrepr]
   apply MeasureTheory.integral_convexOn_of_integrand_ae convex_univ
   · filter_upwards [] with t
     have htranslate :
@@ -1987,7 +1969,7 @@ private theorem exists_orthonormalBasis_simultaneously_adapted_finite
     funext i
     apply Fin.ext
     have hi : ((σ i).val : ℂ) = ((τ i).val : ℂ) := by
-      simpa [code] using congrFun hστ i
+      simpa only [code, Nat.cast_inj] using congrFun hστ i
     exact_mod_cast hi
   let J : (ι → Fin 2) → Submodule ℂ V :=
     fun σ => ⨅ i, Module.End.eigenspace (T i) (code σ i)
@@ -2012,7 +1994,8 @@ private theorem exists_orthonormalBasis_simultaneously_adapted_finite
       (((Submodule.mem_iInf _).mp hx) i)
     apply Module.End.mem_eigenspace_iff.mpr
     by_cases hzero : χ i = 0
-    · simpa [code, σ, hzero] using heig
+    · simpa only [σ, code, Fin.isValue, hzero, ↓reduceIte, Fin.coe_ofNat_eq_mod, Nat.zero_mod,
+      CharP.cast_eq_zero, zero_smul] using heig
     · have hscaled : χ i • x ∈ F i := by
         rw [← heig]
         exact (F i).starProjection_apply_mem x
@@ -2022,7 +2005,8 @@ private theorem exists_orthonormalBasis_simultaneously_adapted_finite
           hmem
       have hfix : (F i).starProjection x = x :=
         Submodule.starProjection_eq_self_iff.mpr hxF
-      simpa [T, code, σ, hzero] using hfix
+      simpa only [σ, code, T, ContinuousLinearMap.coe_coe, Fin.isValue, hzero, ↓reduceIte,
+        Fin.coe_ofNat_eq_mod, Nat.mod_succ, Nat.cast_one, one_smul] using hfix
   have hinternal : DirectSum.IsInternal J := by
     apply horth.isInternal_iff.mpr
     rw [Submodule.orthogonal_eq_bot_iff]
@@ -2041,7 +2025,7 @@ private theorem exists_orthonormalBasis_simultaneously_adapted_finite
   by_cases hzero : code σ j = 0
   · right
     have hproj : (F j).starProjection (b i) = 0 := by
-      simpa [T, hzero] using heig
+      simpa only [T, ContinuousLinearMap.coe_coe, hzero, zero_smul] using heig
     have hker : b i ∈ (F j).starProjection.ker :=
       (LinearMap.mem_ker).2 hproj
     simpa only [Submodule.ker_starProjection] using hker
@@ -2091,9 +2075,9 @@ private theorem exists_orthonormalBasis_simultaneously_adapted
     obtain ⟨j, hj⟩ := b.property
     rcases le_total i j with hij | hji
     · right
-      simpa [G, ← hi, ← hj] using hF hij
+      simpa only [G, ← hj, ← hi] using hF hij
     · left
-      simpa [G, ← hi, ← hj] using hF hji
+      simpa only [G, ← hi, ← hj] using hF hji
   obtain ⟨b, hb⟩ :=
     exists_orthonormalBasis_simultaneously_adapted_finite G hchain
   refine ⟨b, ?_⟩
@@ -2803,22 +2787,14 @@ private theorem exponentialMoment_sq_le_partition_mul_second
     exponentialMoment w order 1 t ^ 2 ≤
       exponentialPartition w order t *
         exponentialMoment w order 2 t := by
-  classical
-  let a : ι → ℝ := fun i =>
-    w i * Real.exp (t * (order i : ℝ))
-  have ha : ∀ i, 0 ≤ a i := fun i =>
-    mul_nonneg (hw i) (Real.exp_pos _).le
-  have hcauchy := Finset.sum_sq_le_sum_mul_sum_of_sq_le_mul
-    (Finset.univ : Finset ι)
-    (r := fun i => a i * (order i : ℝ))
-    (f := a)
-    (g := fun i => a i * (order i : ℝ) ^ 2)
-    (fun i _ => ha i)
-    (fun i _ => mul_nonneg (ha i) (sq_nonneg _))
-    (fun i _ => (by ring : (a i * (order i : ℝ)) ^ 2 =
-      a i * (a i * (order i : ℝ) ^ 2)).le)
-  simpa [exponentialMoment, exponentialPartition, a,
-    mul_assoc, mul_left_comm, mul_comm] using hcauchy
+  unfold exponentialPartition exponentialMoment
+  refine Finset.sum_sq_le_sum_mul_sum_of_sq_le_mul Finset.univ ?_ ?_ ?_
+  · intro i _
+    exact mul_nonneg (mul_nonneg (hw i) (pow_nonneg (Nat.cast_nonneg _) _)) (Real.exp_pos _).le
+  · intro i _
+    exact mul_nonneg (mul_nonneg (hw i) (pow_nonneg (Nat.cast_nonneg _) _)) (Real.exp_pos _).le
+  · intro i _
+    exact le_of_eq (by ring)
 
 private def logarithmicPotential {ι : Type*} [Fintype ι]
     (w : ι → ℝ) (order : ι → ℕ) (k : ℝ) (t : ℝ) : ℝ :=
@@ -3624,7 +3600,7 @@ private theorem centeredSimplex_coordinate_tail {n : ℕ}
   have hvnonneg (j : Fin n) : 0 ≤ v j := by
     by_cases hji : j = i
     · subst j
-      simpa [v] using ht0
+      simpa only [v, Pi.single_eq_same] using ht0
     · simp only [ne_eq, hji, not_false_eq_true, Pi.single_eq_of_ne, Std.le_refl, v]
   have hp : 0 < (n : ℝ) + 1 - t := sub_pos.mpr ht1
   ext y
@@ -4021,7 +3997,7 @@ private theorem log_norm_le_circleAverage_of_differentiable
   have hGanalytic : AnalyticOnNhd ℂ G (Set.univ : Set ℂ) :=
     hG.differentiableOn.analyticOnNhd isOpen_univ
   have hGzero : G 0 ≠ 0 := by
-    simpa [G] using hzero
+    simpa only [G, mul_zero, ne_eq] using hzero
   have hmeromorphic : Meromorphic G := by
     intro w
     exact (hG.analyticAt w).meromorphicAt
@@ -4050,7 +4026,8 @@ private theorem log_norm_le_circleAverage_of_differentiable
           (fun w : ℂ => Real.log ‖G w‖) 0 1 := by
     rw [hjensen'] at hcount
     linarith
-  simpa [G, Real.circleAverage_eq_circleAverage_zero_one] using hcenter
+  simpa only [G, Real.circleAverage_eq_circleAverage_zero_one, add_zero, Complex.ofReal_one,
+    one_mul, ge_iff_le, mul_zero] using hcenter
 
 private theorem log_hilbert_norm_le_circleAverage_all_radius
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -4186,9 +4163,9 @@ private theorem roundedLatticeExponent_mem_scaledIntegerLattice {n : ℕ}
   rw [LatticeAsymptotics.mem_scaledIntegerLattice_iff hk]
   intro i
   refine ⟨⌊(k : ℝ) * u i⌋, ?_⟩
-  dsimp [roundedLatticeExponent]
   have hkreal : (k : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hk
-  field_simp
+  rw [eq_intCast]
+  exact (mul_div_cancel₀ _ hkreal).symm
 
 private theorem roundedLatticeExponent_coordinate_error {n : ℕ}
     {k : ℕ} (hk : 0 < k)
@@ -4608,7 +4585,7 @@ private theorem sourceMomentLegendre_integrableOn
     (sourceMomentLegendre_aestronglyMeasurable_restrict D)
   filter_upwards [MeasureTheory.ae_restrict_mem
     K.compact.measurableSet] with p hp
-  simpa [Real.norm_eq_abs, B] using
+  simpa only [B, Real.norm_eq_abs, le_sup_iff] using
     abs_sourceMomentLegendre_le D hp
 
 private def sourceMomentPartition {n : ℕ}
@@ -4784,6 +4761,58 @@ private theorem sourceMomentBodyFenchel_le {n : ℕ}
 
 end MomentMinimizer
 
+namespace MinimizerNormalization
+
+/-!
+Normalising a function at a minimiser: `x ↦ g (x + z) - g z`. Both the smooth source potential
+of `MomentCoercivityCompactness` and the target geodesic of `MomentTargetGeodesicVariation` are
+normalised this way at their minimum points, and the facts below are shared by the two.
+-/
+
+open scoped NNReal
+
+/-- The continuous map `x ↦ g (x + z) - g z`. -/
+private def normalizedAt {n : ℕ} (g : C(Space n, ℝ)) (z : Space n) : C(Space n, ℝ) where
+  toFun x := g (x + z) - g z
+  continuous_toFun :=
+    (g.continuous.comp (continuous_id.add continuous_const)).sub continuous_const
+
+private theorem normalizedAt_apply {n : ℕ} (g : C(Space n, ℝ)) (z x : Space n) :
+    normalizedAt g z x = g (x + z) - g z :=
+  rfl
+
+private theorem normalizedAt_zero {n : ℕ} (g : C(Space n, ℝ)) (z : Space n) :
+    normalizedAt g z 0 = 0 := by
+  rw [normalizedAt_apply, zero_add, sub_self]
+
+private theorem normalizedAt_nonneg {n : ℕ} (g : C(Space n, ℝ)) {z : Space n}
+    (hz : ∀ x, g z ≤ g x) (x : Space n) :
+    0 ≤ normalizedAt g z x :=
+  sub_nonneg.mpr (hz (x + z))
+
+private theorem normalizedAt_le {n : ℕ} (g : C(Space n, ℝ)) (z : Space n)
+    {f : Space n → ℝ} (hg : ∀ x y, g (x + y) - g y ≤ f x) (x : Space n) :
+    normalizedAt g z x ≤ f x :=
+  hg x z
+
+private theorem normalizedAt_lipschitz {n : ℕ} {g : C(Space n, ℝ)} {L : ℝ≥0}
+    (hg : LipschitzWith L g) (z : Space n) :
+    LipschitzWith L (normalizedAt g z) := by
+  apply LipschitzWith.of_dist_le_mul
+  intro x y
+  simpa only [normalizedAt_apply, dist_sub_right, dist_add_right] using
+    hg.dist_le_mul (x + z) (y + z)
+
+private theorem convexOn_normalizedAt {n : ℕ} {g : C(Space n, ℝ)}
+    (hg : ConvexOn ℝ Set.univ g) (z : Space n) :
+    ConvexOn ℝ Set.univ (normalizedAt g z) := by
+  have h := (hg.translate_left z).add_const (-g z)
+  rw [Set.preimage_univ] at h
+  exact h.congr fun x _ => by
+    simp only [Pi.add_apply, Function.comp_apply, normalizedAt_apply, sub_eq_add_neg]
+
+end MinimizerNormalization
+
 namespace MomentCoercivityCompactness
 
 open Set Function Filter MeasureTheory
@@ -4810,100 +4839,49 @@ private theorem sourceMomentMinimumPoint_le {n : ℕ}
 private def minimumNormalizedSourceContinuousMap {n : ℕ}
     {K : CenteredBody n}
     (D : SourceMomentPotential K) :
-    C(Space n, ℝ) where
-  toFun x :=
-    D.potential (x + sourceMomentMinimumPoint D) -
-      D.potential (sourceMomentMinimumPoint D)
-  continuous_toFun :=
-    (D.smooth.continuous.comp
-      (continuous_id.add continuous_const)).sub continuous_const
+    C(Space n, ℝ) :=
+  MinimizerNormalization.normalizedAt ⟨D.potential, D.smooth.continuous⟩
+    (sourceMomentMinimumPoint D)
 
 private theorem minimumNormalizedSourceContinuousMap_zero {n : ℕ}
     {K : CenteredBody n}
     (D : SourceMomentPotential K) :
-    minimumNormalizedSourceContinuousMap D 0 = 0 := by
-  simp only [minimumNormalizedSourceContinuousMap, ContinuousMap.coe_mk, zero_add, sub_self]
+    minimumNormalizedSourceContinuousMap D 0 = 0 :=
+  MinimizerNormalization.normalizedAt_zero _ _
 
 private theorem minimumNormalizedSourceContinuousMap_nonneg {n : ℕ}
     {K : CenteredBody n}
     (D : SourceMomentPotential K)
     (x : Space n) :
-    0 ≤ minimumNormalizedSourceContinuousMap D x := by
-  change 0 ≤ D.potential (x + sourceMomentMinimumPoint D) -
-    D.potential (sourceMomentMinimumPoint D)
-  exact sub_nonneg.mpr
-    (sourceMomentMinimumPoint_le D
-      (x + sourceMomentMinimumPoint D))
+    0 ≤ minimumNormalizedSourceContinuousMap D x :=
+  MinimizerNormalization.normalizedAt_nonneg _ (sourceMomentMinimumPoint_le D) x
 
 private theorem minimumNormalizedSourceContinuousMap_le_support {n : ℕ}
     {K : CenteredBody n}
     (D : SourceMomentPotential K)
     (x : Space n) :
     minimumNormalizedSourceContinuousMap D x ≤
-      SupportFunction.supportFunction K.carrier x := by
-  have h :=
-    GlobalBergmanKernelBound.convex_supportCompatible_sub_le_support
-      K D.convex D.supportBound
-      (x + sourceMomentMinimumPoint D)
-      (sourceMomentMinimumPoint D)
-  simpa only [minimumNormalizedSourceContinuousMap, ContinuousMap.coe_mk, tsub_le_iff_right,
-    ge_iff_le, add_sub_cancel_right] using h
+      SupportFunction.supportFunction K.carrier x :=
+  MinimizerNormalization.normalizedAt_le _ _
+    (fun x y =>
+      (GlobalBergmanKernelBound.convex_supportCompatible_sub_le_support
+        K D.convex D.supportBound (x + y) y).trans_eq
+        (congrArg _ (add_sub_cancel_right x y)))
+    x
 
 private theorem convexOn_minimumNormalizedSourceContinuousMap {n : ℕ}
     {K : CenteredBody n}
     (D : SourceMomentPotential K) :
-    ConvexOn ℝ Set.univ (minimumNormalizedSourceContinuousMap D) := by
-  let z := sourceMomentMinimumPoint D
-  change ConvexOn ℝ Set.univ
-    (fun x => D.potential (x + z) - D.potential z)
-  refine ⟨convex_univ, ?_⟩
-  intro x hx y hy a b ha hb hab
-  have hcombo :
-      a • (x + z) + b • (y + z) =
-        (a • x + b • y) + z := by
-    calc
-      a • (x + z) + b • (y + z) =
-          (a • x + b • y) + (a • z + b • z) := by
-        rw [smul_add, smul_add]
-        abel
-      _ = (a • x + b • y) + z := by
-        rw [← add_smul, hab, one_smul]
-  have h := D.convex.2 (Set.mem_univ (x + z))
-    (Set.mem_univ (y + z)) ha hb hab
-  rw [hcombo] at h
-  change D.potential ((a • x + b • y) + z) ≤
-    a * D.potential (x + z) + b * D.potential (y + z) at h
-  change D.potential ((a • x + b • y) + z) - D.potential z ≤
-    a * (D.potential (x + z) - D.potential z) +
-      b * (D.potential (y + z) - D.potential z)
-  calc
-    D.potential ((a • x + b • y) + z) - D.potential z ≤
-        (a * D.potential (x + z) +
-          b * D.potential (y + z)) - D.potential z :=
-      sub_le_sub_right h _
-    _ = (a * D.potential (x + z) +
-          b * D.potential (y + z)) - (a + b) * D.potential z := by
-      simp only [hab, one_mul]
-    _ = a * (D.potential (x + z) - D.potential z) +
-          b * (D.potential (y + z) - D.potential z) := by
-      ring
+    ConvexOn ℝ Set.univ (minimumNormalizedSourceContinuousMap D) :=
+  MinimizerNormalization.convexOn_normalizedAt D.convex _
 
 private theorem minimumNormalizedSourceContinuousMap_lipschitz {n : ℕ}
     {K : CenteredBody n}
     (D : SourceMomentPotential K) :
     LipschitzWith (sourceBodyLipschitzConstant K)
-      (minimumNormalizedSourceContinuousMap D) := by
-  apply LipschitzWith.of_dist_le_mul
-  intro x y
-  have hD :=
-    GlobalBergmanKernelBound.convex_supportCompatible_lipschitz
-      K D.convex D.supportBound
-  simpa only [minimumNormalizedSourceContinuousMap, ContinuousMap.coe_mk,
-    dist_sub_eq_dist_add_right, sub_add_cancel, Real.dist_eq, sourceBodyLipschitzConstant,
-    Real.coe_toNNReal', ge_iff_le, dist_add_right] using
-    hD.dist_le_mul
-      (x + sourceMomentMinimumPoint D)
-      (y + sourceMomentMinimumPoint D)
+      (minimumNormalizedSourceContinuousMap D) :=
+  MinimizerNormalization.normalizedAt_lipschitz
+    (GlobalBergmanKernelBound.convex_supportCompatible_lipschitz K D.convex D.supportBound) _
 
 private theorem minimumNormalizedSourceContinuousMap_mem {n : ℕ}
     {K : CenteredBody n}
@@ -5581,7 +5559,9 @@ private theorem exists_uniform_inner_supportBall {n : ℕ}
     have hden : 0 < 4 * ((n : ℝ) + 1) := by
       positivity
     have hmul := (le_div_iff₀ hden).mp hfrac
-    nlinarith [mul_nonneg (Nat.cast_nonneg n) hρ.le]
+    have hexpand : ρ * (4 * ((n : ℝ) + 1)) = 4 * ((n : ℝ) * ρ) + 4 * ρ := by ring
+    rw [le_div_iff₀ (by norm_num : (0 : ℝ) < 4)]
+    linarith [hρ.le]
   refine ⟨ρ, d / 4, hρ, by positivity, ?_⟩
   intro x
   obtain ⟨v, hv, hmax⟩ :=
@@ -6713,12 +6693,17 @@ private theorem convexOn_mollifiedSourceSupportClipping {n : ℕ}
     (R : ℝ) (ρ : ContDiffBump (0 : Space n)) :
     ConvexOn ℝ Set.univ
       (mollifiedSourceSupportClipping F R ρ) := by
-  change ConvexOn ℝ Set.univ
-    (fun x : Space n =>
-      ∫ y : Space n,
-        ρ.normed (volume : Measure (Space n)) y *
-          sourceSupportClipping F R (x - y)
-        ∂(volume : Measure (Space n)))
+  have hrepr :
+      mollifiedSourceSupportClipping F R ρ =
+        fun x : Space n =>
+          ∫ y : Space n,
+            ρ.normed (volume : Measure (Space n)) y *
+              sourceSupportClipping F R (x - y)
+            ∂(volume : Measure (Space n)) := by
+    funext x
+    simp only [mollifiedSourceSupportClipping, MeasureTheory.convolution_def,
+      ContinuousLinearMap.lsmul_apply, smul_eq_mul]
+  rw [hrepr]
   apply MeasureTheory.integral_convexOn_of_integrand_ae convex_univ
   · filter_upwards with y
     have htranslate :
@@ -7277,7 +7262,8 @@ private theorem finiteEnergySourcePhase_actualGradient_le
     simpa only [preimage_univ, comp_def] using F.convex.comp_affineMap line
   have hline : HasDerivAt
       (fun t : ℝ => line t) (z - x) 0 := by
-    simpa [line, AffineMap.lineMap_apply, Function.comp_def] using
+    simpa only [line, AffineMap.lineMap_apply, vsub_eq_sub, vadd_eq_add, hasDerivAt_add_const_iff,
+      id_eq, one_smul] using
       ((hasDerivAt_id (0 : ℝ)).smul_const (z - x)).add_const x
   have hlinezero : line (0 : ℝ) = x := by
     simp only [AffineMap.lineMap_apply_zero, line]
@@ -7293,7 +7279,8 @@ private theorem finiteEnergySourcePhase_actualGradient_le
   have htangent :
       (fderiv ℝ F.potential x) (z - x) ≤
         F.potential z - F.potential x := by
-    simpa [slope_def_field, line] using hslope
+    simpa only [line, map_sub, tsub_le_iff_right, slope_def_field, AffineMap.lineMap_apply_one,
+      AffineMap.lineMap_apply_zero, sub_zero, div_one] using hslope
   rw [← SpatialBergmanFatouScheffe.pairing_actualGradient_eq_fderiv]
     at htangent
   unfold phase
@@ -8277,38 +8264,27 @@ private def minimumNormalizedTargetGeodesicContinuousMap
     {n : ℕ} {K : CenteredBody n}
     (F : SourceFiniteEnergyPotential K)
     (v : C(Space n, ℝ))
-    (t : ℝ) : C(Space n, ℝ) where
-  toFun x :=
-    finiteEnergyTargetGeodesic F v t
-        (x + finiteEnergyTargetGeodesicMinimumPoint F v t) -
-      finiteEnergyTargetGeodesic F v t
-        (finiteEnergyTargetGeodesicMinimumPoint F v t)
-  continuous_toFun :=
-    ((continuous_finiteEnergyTargetGeodesic F v t).comp
-      (continuous_id.add continuous_const)).sub continuous_const
+    (t : ℝ) : C(Space n, ℝ) :=
+  MinimizerNormalization.normalizedAt
+    ⟨finiteEnergyTargetGeodesic F v t, continuous_finiteEnergyTargetGeodesic F v t⟩
+    (finiteEnergyTargetGeodesicMinimumPoint F v t)
 
 private theorem minimumNormalizedTargetGeodesicContinuousMap_zero
     {n : ℕ} {K : CenteredBody n}
     (F : SourceFiniteEnergyPotential K)
     (v : C(Space n, ℝ))
     (t : ℝ) :
-    minimumNormalizedTargetGeodesicContinuousMap F v t 0 = 0 := by
-  simp only [minimumNormalizedTargetGeodesicContinuousMap, ContinuousMap.coe_mk, zero_add, sub_self]
+    minimumNormalizedTargetGeodesicContinuousMap F v t 0 = 0 :=
+  MinimizerNormalization.normalizedAt_zero _ _
 
 private theorem minimumNormalizedTargetGeodesicContinuousMap_nonneg
     {n : ℕ} {K : CenteredBody n}
     (F : SourceFiniteEnergyPotential K)
     (v : C(Space n, ℝ))
     (t : ℝ) (x : Space n) :
-    0 ≤ minimumNormalizedTargetGeodesicContinuousMap F v t x := by
-  change
-    0 ≤ finiteEnergyTargetGeodesic F v t
-        (x + finiteEnergyTargetGeodesicMinimumPoint F v t) -
-      finiteEnergyTargetGeodesic F v t
-        (finiteEnergyTargetGeodesicMinimumPoint F v t)
-  exact sub_nonneg.mpr
-    (finiteEnergyTargetGeodesicMinimumPoint_le
-      F v t (x + finiteEnergyTargetGeodesicMinimumPoint F v t))
+    0 ≤ minimumNormalizedTargetGeodesicContinuousMap F v t x :=
+  MinimizerNormalization.normalizedAt_nonneg _
+    (finiteEnergyTargetGeodesicMinimumPoint_le F v t) x
 
 private theorem minimumNormalizedTargetGeodesicContinuousMap_le_support
     {n : ℕ} {K : CenteredBody n}
@@ -8316,9 +8292,9 @@ private theorem minimumNormalizedTargetGeodesicContinuousMap_le_support
     (v : C(Space n, ℝ))
     (t : ℝ) (x : Space n) :
     minimumNormalizedTargetGeodesicContinuousMap F v t x ≤
-      SupportFunction.supportFunction K.carrier x := by
-  exact finiteEnergyTargetGeodesic_sub_le_support F v t x
-    (finiteEnergyTargetGeodesicMinimumPoint F v t)
+      SupportFunction.supportFunction K.carrier x :=
+  MinimizerNormalization.normalizedAt_le _ _
+    (finiteEnergyTargetGeodesic_sub_le_support F v t) x
 
 private theorem minimumNormalizedTargetGeodesicContinuousMap_lipschitz
     {n : ℕ} {K : CenteredBody n}
@@ -8326,15 +8302,9 @@ private theorem minimumNormalizedTargetGeodesicContinuousMap_lipschitz
     (v : C(Space n, ℝ))
     (t : ℝ) :
     LipschitzWith (sourceBodyLipschitzConstant K)
-      (minimumNormalizedTargetGeodesicContinuousMap F v t) := by
-  apply LipschitzWith.of_dist_le_mul
-  intro x y
-  have h :=
-    (finiteEnergyTargetGeodesic_lipschitz F v t).dist_le_mul
-      (x + finiteEnergyTargetGeodesicMinimumPoint F v t)
-      (y + finiteEnergyTargetGeodesicMinimumPoint F v t)
-  simpa only [minimumNormalizedTargetGeodesicContinuousMap, ContinuousMap.coe_mk,
-    dist_sub_eq_dist_add_right, sub_add_cancel, Real.dist_eq, ge_iff_le, dist_add_right] using h
+      (minimumNormalizedTargetGeodesicContinuousMap F v t) :=
+  MinimizerNormalization.normalizedAt_lipschitz
+    (finiteEnergyTargetGeodesic_lipschitz F v t) _
 
 private theorem convexOn_minimumNormalizedTargetGeodesicContinuousMap
     {n : ℕ} {K : CenteredBody n}
@@ -8342,37 +8312,9 @@ private theorem convexOn_minimumNormalizedTargetGeodesicContinuousMap
     (v : C(Space n, ℝ))
     (t : ℝ) :
     ConvexOn ℝ Set.univ
-      (minimumNormalizedTargetGeodesicContinuousMap F v t) := by
-  let g := finiteEnergyTargetGeodesic F v t
-  let z := finiteEnergyTargetGeodesicMinimumPoint F v t
-  change ConvexOn ℝ Set.univ (fun x => g (x + z) - g z)
-  refine ⟨convex_univ, ?_⟩
-  intro x hx y hy a b ha hb hab
-  have hcombo :
-      a • (x + z) + b • (y + z) =
-        (a • x + b • y) + z := by
-    calc
-      a • (x + z) + b • (y + z) =
-          (a • x + b • y) + (a • z + b • z) := by
-        rw [smul_add, smul_add]
-        abel
-      _ = (a • x + b • y) + z := by
-        rw [← add_smul, hab, one_smul]
-  have h := (convexOn_finiteEnergyTargetGeodesic F v t).2
-    (Set.mem_univ (x + z)) (Set.mem_univ (y + z)) ha hb hab
-  rw [hcombo] at h
-  change g ((a • x + b • y) + z) ≤
-    a * g (x + z) + b * g (y + z) at h
-  change g ((a • x + b • y) + z) - g z ≤
-    a * (g (x + z) - g z) + b * (g (y + z) - g z)
-  calc
-    g ((a • x + b • y) + z) - g z ≤
-        (a * g (x + z) + b * g (y + z)) - g z :=
-      sub_le_sub_right h _
-    _ = (a * g (x + z) + b * g (y + z)) -
-        (a + b) * g z := by simp only [hab, one_mul]
-    _ = a * (g (x + z) - g z) +
-        b * (g (y + z) - g z) := by ring
+      (minimumNormalizedTargetGeodesicContinuousMap F v t) :=
+  MinimizerNormalization.convexOn_normalizedAt
+    (convexOn_finiteEnergyTargetGeodesic F v t) _
 
 private theorem minimumNormalizedTargetGeodesic_densityIntegrable
     {n : ℕ} {K : CenteredBody n}

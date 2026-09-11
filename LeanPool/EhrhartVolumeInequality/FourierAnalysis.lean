@@ -11,7 +11,6 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 import all LeanPool.EhrhartVolumeInequality.Variation
 import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.SpecialFunctions.PolarCoord
-import Mathlib.Geometry.Manifold.Sheaf.Basic
 
 /-!
 # Ehrhart volume inequality: FourierAnalysis
@@ -3640,7 +3639,7 @@ private theorem productRadialWeighted_integral_eq_coordinateFubini
           (TorusCharacters.LogSpace n)))
       (volume : Measure
         (TorusCharacters.LogSpace (n + 1))) := by
-    simpa [e, MeasureTheory.volume_pi] using
+    simpa only [e, MeasurableEquiv.piFinSuccAbove_symm_apply, volume_pi] using
       (MeasureTheory.measurePreserving_piFinSuccAbove
         (fun _ : Fin (n + 1) => (volume : Measure ℂ)) i).symm
   have hi :
@@ -3653,9 +3652,8 @@ private theorem productRadialWeighted_integral_eq_coordinateFubini
             (TorusCharacters.LogSpace n))) := by
     have h := he.integrable_comp_of_integrable
       (integrable_productRadialWeightedIntegrand hF)
-    simpa [e, Function.comp_def,
-      MeasurableEquiv.piFinSuccAbove_symm_apply,
-      Fin.insertNthEquiv] using h
+    simpa only [e, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv, Equiv.coe_fn_mk,
+      Function.comp_def] using h
   calc
     (∫ w : TorusCharacters.LogSpace (n + 1),
       productRadialWeightedIntegrand F w) =

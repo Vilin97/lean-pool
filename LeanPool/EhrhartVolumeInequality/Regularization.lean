@@ -6032,7 +6032,7 @@ private theorem momentWeakJointCoverFiniteGeodesic_complex_line_submean_all_radi
             Complex.exp_ne_zero y.2)
     linarith
   have hzero : G 0 ≠ 0 := by
-    simpa [G] using hsection q
+    simpa only [G, zero_smul, add_zero, ne_eq, Nat.succ_eq_add_one] using hsection q
   have hboundary :
       ∀ w ∈ Metric.sphere (0 : ℂ) |R|, G w ≠ 0 := by
     intro w _
@@ -7810,7 +7810,8 @@ private theorem convexOn_momentBodyStrictRadialPotential
     let L : Space n →ₗ[ℝ] ℝ :=
       momentBodyStrictScale K • (LinearMap.proj i)
     have h := convexOn_momentStrictRadialCoordinate.comp_linearMap L
-    simpa [L, Function.comp_def] using h
+    simpa only [L, LinearMap.coe_smul, LinearMap.coe_proj, preimage_univ, comp_def, Pi.smul_apply,
+      eval, smul_eq_mul] using h
   have hsum (s : Finset (Fin n)) :
       ConvexOn ℝ (Set.univ : Set (Space n))
         (fun x : Space n =>
@@ -7939,8 +7940,9 @@ private theorem momentBodyStrictJointCoverReference_complex_line_submean_all_rad
     sourceJointCircleAverage_eq_setAverage
       (fun w : ℂ => momentBodyStrictRadialPotential K (f w)) R
   rw [hcenter, htarget] at hmean
-  simpa [f, momentBodyStrictJointCoverReference,
-    matrixSourceCoverPotential, sourceCoverRadialLinear] using hmean
+  simpa only [f, momentBodyStrictJointCoverReference, matrixSourceCoverPotential, Prod.fst_add,
+    Prod.smul_fst, map_add, ge_iff_le, sourceCoverRadialLinear, ContinuousLinearMap.comp_apply,
+    ContinuousLinearEquiv.coe_coe, ContinuousLinearMap.coe_fst'] using hmean
 
 private theorem momentWeakHolomorphicStrictJointCoverWeight_complex_line_submean_all_radius
     {n : ℕ} (K : CenteredBody n)
@@ -9040,8 +9042,8 @@ private theorem barPartial_complexReal_convolution_eq_of_compact_green
           (L (g t)) ((fderiv ℝ κ (x - t)) v₁) ∂μ) =
         (2 : ℂ) *
           (∫ t : E, G j t * (κ (x - t) : ℂ) ∂μ) := by
-    simpa [L, complexRealMultiplication,
-      Complex.real_smul, mul_comm] using
+    simpa only [L, complexRealMultiplication, ContinuousLinearMap.lsmul_flip_apply,
+      ContinuousLinearMap.toSpanSingleton_apply, Complex.real_smul, mul_comm] using
       (hsplit.symm.trans hpositive)
   change
     ((∫ t : E,

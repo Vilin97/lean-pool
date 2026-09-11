@@ -208,7 +208,8 @@ private theorem finiteEnergySourceLegendre_gradient_eq_phaseMaximizer
     have hcomm : pairing v x = pairing x v := by
       simp only [pairing, mul_comm]
     linarith
-  simpa [v, pairing, Pi.single_apply] using hcoordinate
+  simpa only [v, pairing, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
+    Finset.mem_univ, ↓reduceIte] using hcoordinate
 
 private theorem momentNormalized_phaseMaximizer_iff
     {n : ℕ} {K : CenteredBody n}
@@ -480,9 +481,10 @@ private theorem concave_radial_gap_of_off_ball
       _ ≤ -η := htbound
   have hscale : r * (f x - f x₀) ≤ -η * d :=
     (div_le_iff₀ hd).mp hquot
-  have hratio : (η / r) * r = η :=
-    div_mul_cancel₀ η hr.ne'
-  nlinarith
+  have h1 : f x - f x₀ ≤ (-η * d) / r := (le_div_iff₀' hr).mpr hscale
+  have h2 : (-η * d) / r = -((η / r) * d) := by ring
+  rw [h2] at h1
+  linarith
 
 private theorem exists_eventual_momentNormalized_moving_phase_gap_outside_ball
     {n : ℕ} {K : CenteredBody n}
@@ -740,7 +742,7 @@ private theorem exists_eventual_momentNormalized_moving_off_ball_exponential
   have hptendsto :
       Tendsto (fun k : ℕ => phase (u k) φ x₀)
         atTop (𝓝 P₀) := by
-    simpa [phase, P₀] using
+    simpa only [P₀, phase, comp_apply] using
       (((continuous_pairing_left x₀).continuousAt.tendsto.comp hu).sub_const
         (φ x₀))
   have hplower :
@@ -1065,7 +1067,7 @@ private theorem tendsto_integral_bounded_continuous_of_concentrating_normalized_
             w k x ∂(volume : Measure (Space n))) := by
       have hb :=
         mul_le_mul_of_nonneg_left hballmass (half_pos hε).le
-      nlinarith
+      exact add_le_add_left (hb.trans_eq (mul_one _)) _
     _ < ε := by linarith
 
 private theorem tendsto_momentNormalized_moving_monomial_bounded_observable
@@ -1139,11 +1141,11 @@ private theorem tendsto_momentNormalized_moving_monomial_bounded_observable
     intro r hr
     have ht := tendsto_momentNormalized_moving_off_ball_probability
       F htransport hu₀ hdu₀ x₀ hmax u hu hr
-    simpa [w, φ, MeasureTheory.integral_div] using ht
+    simpa only [w, φ, integral_div] using ht
   have ht :=
     tendsto_integral_bounded_continuous_of_concentrating_normalized_density
       w hwint hwnonneg hwmass x₀ hwtail f hf C hC
-  simpa [w, φ, ← mul_div_assoc, MeasureTheory.integral_div] using ht
+  simpa only [w, φ, ← mul_div_assoc, integral_div] using ht
 
 end BergmanJetMovingMonomialObservableConvergence
 
@@ -1380,7 +1382,7 @@ private theorem tendsto_moving_lattice_sum_of_ae_tag_convergence {n : ℕ}
         exact BoxIntegral.unitPartition.tag_mem_smul_span
           (k + 1) (BoxIntegral.unitPartition.index (k + 1) x)
       by_cases hu : u ∈ s
-      · simpa [u, Set.indicator_of_mem hu] using
+      · simpa only [u, Set.indicator_of_mem hu, Real.norm_eq_abs, ge_iff_le] using
           hbound (k + 1) (Nat.zero_lt_succ k) u hu hulattice
       · rw [Set.indicator_of_notMem hu]
         simpa only [norm_zero, ge_iff_le] using hC

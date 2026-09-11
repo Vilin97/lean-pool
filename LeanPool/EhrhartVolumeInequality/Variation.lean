@@ -9,7 +9,6 @@ module
 public import LeanPool.EhrhartVolumeInequality.Foundations
 public import Mathlib.Analysis.Complex.Exponential
 import all LeanPool.EhrhartVolumeInequality.Foundations
-import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.MeasureTheory.Measure.FiniteMeasure
@@ -101,7 +100,8 @@ private theorem finiteEnergySourceGradient_eq_of_phase_maximizer
         SupportFunction.pairing p w := by
     rw [SpatialBergmanFatouScheffe.pairing_actualGradient_eq_fderiv]
     linarith
-  simpa [w, SupportFunction.pairing, Pi.single_apply]
+  simpa only [w, SupportFunction.pairing, Pi.single_apply, mul_ite, mul_one, mul_zero,
+    Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
     using hpairing
 
 private theorem exists_finiteEnergyTargetGeodesic_approximateMaximizer
@@ -540,7 +540,7 @@ private theorem finiteEnergyTargetDensityDifferenceQuotient_le
     -(finiteEnergyTargetGeodesic F v t x - F.potential x)
   have hM : 0 ≤ M := finiteEnergyTargetTestBound_nonneg K v
   have hd : |d| ≤ |t| * M := by
-    simpa [d, M, abs_sub_comm] using
+    simpa only [M, d, neg_sub, abs_sub_comm] using
       finiteEnergyTargetGeodesic_uniform_error F v t x
   have hdM : |d| ≤ M := by
     calc
@@ -1448,7 +1448,7 @@ private theorem exists_finiteEnergySource_interior_phase_linear_coercivity
       rw [norm_smul, Real.norm_eq_abs, abs_of_pos hδ]
       exact mul_le_of_le_one_right hδ.le
         (norm_signVector_le_one x)
-    simpa [p] using hscaled
+    simpa only [p, add_sub_cancel_left, ge_iff_le] using hscaled
   have hpi : p ∈ interior K.carrier := hclosed hp
   have hphase :
       pairing p x - F.potential x ≤
@@ -5437,7 +5437,7 @@ private theorem angularBoxIntegral_eq_of_coordinate_slice
   have he :
       MeasurePreserving e ((μ i).prod ν)
         (angularBoxMeasure (n + 1)) := by
-    simpa [angularBoxMeasure, μ, ν, e] using
+    simpa only [e, ν, μ, MeasurableEquiv.piFinSuccAbove_symm_apply, angularBoxMeasure] using
       (MeasureTheory.measurePreserving_piFinSuccAbove μ i).symm
   have hgi :
       Integrable
@@ -5446,9 +5446,8 @@ private theorem angularBoxIntegral_eq_of_coordinate_slice
         ((μ i).prod ν) := by
     have h' := he.integrable_comp_of_integrable
       (continuous_integrable_angularBox hg)
-    simpa [e, Function.comp_def,
-      MeasurableEquiv.piFinSuccAbove_symm_apply,
-      Fin.insertNthEquiv] using h'
+    simpa only [e, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv, Equiv.coe_fn_mk,
+      Function.comp_def] using h'
   have hhi :
       Integrable
         (fun z : ℝ × (Fin n → ℝ) =>
@@ -5456,9 +5455,8 @@ private theorem angularBoxIntegral_eq_of_coordinate_slice
         ((μ i).prod ν) := by
     have h' := he.integrable_comp_of_integrable
       (continuous_integrable_angularBox hh)
-    simpa [e, Function.comp_def,
-      MeasurableEquiv.piFinSuccAbove_symm_apply,
-      Fin.insertNthEquiv] using h'
+    simpa only [e, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv, Equiv.coe_fn_mk,
+      Function.comp_def] using h'
   calc
     (∫ t : Space (n + 1),
       g t ∂(angularBoxMeasure (n + 1))) =
@@ -5811,7 +5809,10 @@ private theorem angularFourierCoefficient_of_holomorphic_representative_ae
     unfold WeightedTorusHilbert.weightedTorusMeasure
       at hrepresentative
     exact MeasureTheory.Measure.ae_ae_eq_curry_of_prod
-      hrepresentative
+      (μ := WeightedTorusHilbert.radialMeasure k φ)
+      (ν := WeightedTorusHilbert.angularMeasure n)
+      (f := fun z : WeightedTorusHilbert.LogTorus n => f z)
+      (g := fun z => coverRepresentative F z.1 z.2) hrepresentative
   filter_upwards [hslices] with x hx
   calc
     HolomorphicLaurentFourierCompletenessBridge.angularFourierCoefficient
@@ -6380,10 +6381,12 @@ private def complexContinuousOfCoordinateCR {n : ℕ}
       let L : ℂ →L[ℝ] ℂ := D.comp
         (ContinuousLinearMap.single ℝ (fun _ : Fin n => ℂ) i)
       have hL : L Complex.I = Complex.I • L 1 := by
-        simpa [L, ContinuousLinearMap.comp_apply] using hI i
+        simpa only [L, ContinuousLinearMap.comp_apply, ContinuousLinearMap.single_apply,
+          smul_eq_mul] using hI i
       have h := real_linearMap_map_smul_complex
         (ℓ := L.toLinearMap) hL b d
-      simpa [L, ContinuousLinearMap.comp_apply] using h
+      simpa only [L, smul_eq_mul, ContinuousLinearMap.toLinearMap_comp, LinearMap.coe_comp,
+        ContinuousLinearMap.coe_coe, ContinuousLinearMap.single_apply, comp_apply] using h
     calc
       D (a • x) = ∑ i : Fin n,
           D (Pi.single i ((a • x) i)) := by
@@ -6601,8 +6604,8 @@ private theorem weak_barPartial_convolution_barPartial_eq_zero {n : ℕ}
       Complex.I *
         (∫ t : E,
           (L (g t)) ((fderiv ℝ κ (x - t)) v₁) ∂μ) = 0 := by
-    simpa [L, complexRealMultiplication,
-      Complex.real_smul, mul_comm] using
+    simpa only [L, complexRealMultiplication, ContinuousLinearMap.lsmul_flip_apply,
+      ContinuousLinearMap.toSpanSingleton_apply, Complex.real_smul, mul_comm] using
       (hsplit.symm.trans hzero)
   rw [hgoal]
   simp only [zero_div]
@@ -8658,8 +8661,8 @@ private theorem sourceTorusCoverPoint_mem_shrinkingBall_of_mem_box
           Real.exp (-t / 2) := by ring
       _ ≤ (R / 2) * Real.exp (-t / 2) := by
         gcongr
-      _ < R * Real.exp (-t / 2) := by
-        nlinarith [mul_pos hR he]
+      _ < R * Real.exp (-t / 2) :=
+        mul_lt_mul_of_pos_right (half_lt_self hR) he
   simpa only [sourceTorusCoverPoint, JointHolomorphicLaurentFourierCompatibility.logarithmicPoint,
     Pi.zero_apply, dist_zero_right, gt_iff_lt] using
       lt_of_le_of_lt htriangle (hstrict.trans hradius)
@@ -8887,7 +8890,7 @@ private theorem sourceJointSpatialLine_circleAverage
     fun_prop
   have hdc : DiffContOnCl ℂ f (Metric.ball (0 : ℂ) |R|) :=
     hf.diffContOnCl
-  simpa [f] using hdc.circleAverage
+  simpa only [f, Prod.fst_add, Prod.smul_fst, zero_smul, add_zero] using hdc.circleAverage
 
 end JetEnvelopeGlobalPlurisubharmonic
 

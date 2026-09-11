@@ -212,7 +212,7 @@ private theorem momentWeakHolomorphicStrictJointTorusWeight_norm_coercivity
     simp only [sourceJointTimeEmbedding, sourceTorusCoverPoint,
       matrixSourceCoverPotential_logarithmicPoint]
   rw [href]
-  nlinarith
+  linarith [hweak', hrad']
 
 private theorem integrable_exp_neg_momentWeakHolomorphicStrictJointTorusWeight
     {n : ℕ} (K : CenteredBody n)
@@ -602,7 +602,7 @@ private theorem momentWeakHolomorphicStrictJointTorusWeight_uniform_norm_coerciv
   rw [href]
   change m * ‖q.1‖ - B ≤ _
   dsimp [δ, s, C, B, m] at *
-  nlinarith
+  linarith [hweak', hrad', hmδ', hms', hC', hεB]
 
 private def momentWeakHolomorphicUniformDensityMajorant
     {n : ℕ} (K : CenteredBody n)
@@ -1255,7 +1255,8 @@ private theorem limsup_momentTorusJetSlope_le_tail_positive_secant
           (sourcePositiveJointTimePoint z t ht)
     rw [momentPositiveJointGeodesic_eq_momentJetGeodesic,
       jointLogTime_sourcePositiveJointTimePoint] at hfinite
-    simpa [hkadd, N, B, sourcePositiveJointTimePoint]
+    simpa only [B, N, sourcePositiveJointTimePoint, Complex.ofReal_exp, Complex.ofReal_div,
+      Complex.ofReal_ofNat, ge_iff_le, Nat.succ_eq_add_one, hkadd]
       using hfinite
   have hzeroeq :
       momentJetGeodesic K hkpos F htransport p N z 0 =
@@ -6039,7 +6040,7 @@ private theorem eventually_momentJetBasisWeight_exp_le_local
         (momentSimultaneousJetBasis
           K hk F htransport p i) z‖ ≤
         Real.sqrt A * q ^ j := by
-    simpa [A, q, j] using hsch hk N i z hball
+    simpa only [A, q, j] using hsch hk N i z hball
   have hq : 0 ≤ q := by
     dsimp [q]
     exact div_nonneg dist_nonneg hR.le
@@ -6087,8 +6088,7 @@ private theorem eventually_momentJetBasisWeight_exp_le_local
     _ = A * (q ^ 2 * Real.exp t) ^ j := by
       rw [mul_pow]
       ring
-    _ ≤ A := by
-      nlinarith
+    _ ≤ A := mul_le_of_le_one_right hA hpow
 
 private theorem eventually_momentJetPartition_local_bound
     {n : ℕ} (K : CenteredBody n)
@@ -7567,9 +7567,9 @@ private theorem momentTorusJetSlope_le_tail_zeroTimeSecant
           (sourcePositiveJointTimePoint z t ht)
     rw [momentPositiveJointGeodesic_eq_momentJetGeodesic,
       jointLogTime_sourcePositiveJointTimePoint] at hfinite
-    simpa [hkadd, N, B, z,
-      momentTorusTailUpperEnvelopeTimeSlice,
-      sourcePositiveJointTimePoint] using hfinite
+    simpa only [z, B, N, momentTorusTailUpperEnvelopeTimeSlice, sourcePositiveJointTimePoint,
+      Complex.ofReal_exp, Complex.ofReal_div, Complex.ofReal_ofNat, ge_iff_le, Nat.succ_eq_add_one,
+      hkadd] using hfinite
   have hzeroeq :
       momentJetGeodesic K hkpos F htransport p N z 0 =
         Real.log
@@ -8432,7 +8432,7 @@ private theorem momentTorusBergmanProbability_eq_base_withDensity
   have hweight :
       weightedTorusMeasure k (momentNormalizedPotential F) =
         base.withDensity w := by
-    simpa [base, w, sourceTorusBaseMeasure] using
+    simpa only [w, base, sourceTorusBaseMeasure] using
       weightedTorusMeasure_eq_withDensity k
         (continuous_momentNormalizedPotential F)
   change
