@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
 
-import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
-import Mathlib.NumberTheory.Modular
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 
 /-!
 # Binary quadratic forms and CM points (Phase C, Track 3)
