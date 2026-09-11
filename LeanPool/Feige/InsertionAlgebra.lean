@@ -6,7 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.ChainCalibration
-public import LeanPool.Feige.TransferAlgebra
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Algebraic bookkeeping for chain insertion

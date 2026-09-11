@@ -5,8 +5,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.ConditionalProductKernel
-public import Mathlib.MeasureTheory.Measure.Real
+public import Mathlib.Probability.Kernel.Composition.CompNotation
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Averaging conditional probability bounds

@@ -5,7 +5,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.ProductSplit
+public import LeanPool.Feige.InsertionExpectation
+public import LeanPool.Feige.TwoPointInduction
+import LeanPool.Feige.ProductSplit
 
 /-!
 # Constructing a dominating chain for ordered two-point systems

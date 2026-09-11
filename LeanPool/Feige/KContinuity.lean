@@ -6,8 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.KStatistic
-public import Mathlib.MeasureTheory.Integral.Indicator
-public import Mathlib.Topology.Instances.ENNReal.Lemmas
+import Mathlib.MeasureTheory.Integral.Indicator
 
 /-!
 # Continuity core for the Dirichlet statistic

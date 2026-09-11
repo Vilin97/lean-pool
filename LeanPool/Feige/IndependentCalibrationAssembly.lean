@@ -5,11 +5,14 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.AugmentedLatentSupport
-public import LeanPool.Feige.MarginalLaw
-public import LeanPool.Feige.MixtureCalibration
-public import LeanPool.Feige.RecursiveLatentProbability
 public import LeanPool.Feige.Calibration
+public import LeanPool.Feige.ConditionalTwoPointCalibration
+import LeanPool.Feige.AugmentedLatentSupport
+import LeanPool.Feige.MarginalLaw
+import LeanPool.Feige.MeanOneReduction
+import LeanPool.Feige.MixtureCalibration
+import LeanPool.Feige.RecursiveLatentProbability
+import LeanPool.Feige.TwoPointProductLaw
 
 /-!
 # Assembly of calibration for independent variables

@@ -6,8 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.HighSetLaw
-public import LeanPool.Feige.BoundaryNull
 public import LeanPool.Feige.TwoPointMixture
+import LeanPool.Feige.BoundaryNull
 
 /-!
 # Product laws for two-point random variables

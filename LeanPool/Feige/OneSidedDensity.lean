@@ -6,6 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.LikelihoodRatio
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Log-concavity of scaled one-sided exponential densities

@@ -5,8 +5,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.Lemma43Relations
-public import LeanPool.Feige.Lemma43Density
+public import LeanPool.Feige.Lemma43
+import LeanPool.Feige.Lemma43Density
+import LeanPool.Feige.Lemma43Relations
 
 /-!
 # Fully automatic local exponential transfer interface

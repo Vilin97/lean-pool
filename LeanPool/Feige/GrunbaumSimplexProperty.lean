@@ -5,8 +5,14 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.GrunbaumWeightedForm
 public import LeanPool.Feige.SimplexMeasure
+import LeanPool.Feige.Grunbaum.Main
+import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
+import LeanPool.Feige.GrunbaumWeightedForm
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Grünbaum property for the standard simplex

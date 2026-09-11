@@ -6,8 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.TransferProbability23
-public import LeanPool.Feige.TransferAlgebra
 public import LeanPool.Feige.LikelihoodRatio
+import LeanPool.Feige.TransferAlgebra
 
 /-!
 # Complete interface for the local exponential transfer step

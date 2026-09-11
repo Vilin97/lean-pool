@@ -6,11 +6,11 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.Reduction
-public import Mathlib.MeasureTheory.Measure.Real
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.Probability.Independence.Basic
-public import Mathlib.Probability.ProbabilityMassFunction.Integrals
 public import Mathlib.Probability.Distributions.Uniform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The fixed-dimensional extremal example

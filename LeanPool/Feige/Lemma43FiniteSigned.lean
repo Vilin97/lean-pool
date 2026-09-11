@@ -6,7 +6,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.InsertionCommonDensity
-public import LeanPool.Feige.Lemma43Complete
+public import LeanPool.Feige.Lemma43
+import LeanPool.Feige.Lemma43Complete
+import LeanPool.Feige.Lemma43Density
 
 /-!
 # Local transfer for finite signed-exponential common parts

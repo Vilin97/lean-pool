@@ -5,8 +5,12 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.InsertionAnalyticAssembly
-public import LeanPool.Feige.InsertionLastCoordinateLaw
+public import LeanPool.Feige.InsertionCommonLaw
+public import LeanPool.Feige.InsertionK
+public import LeanPool.Feige.Lemma43Insertion
+import LeanPool.Feige.InsertionLastCoordinateLaw
+import LeanPool.Feige.Lemma43Endpoints
+import LeanPool.Feige.Lemma43Relations
 
 /-!
 # Realizing the genuine edges of an insertion chain

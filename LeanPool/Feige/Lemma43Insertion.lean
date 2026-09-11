@@ -6,8 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.InsertionAlgebra
-public import LeanPool.Feige.Lemma43ArbitraryBase
 public import LeanPool.Feige.Lemma43FiniteSigned
+import LeanPool.Feige.Lemma43ArbitraryBase
 
 /-!
 # The local transfer result in the insertion-sequence interface

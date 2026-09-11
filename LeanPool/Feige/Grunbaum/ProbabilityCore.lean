@@ -5,15 +5,12 @@ Authors: OpenAI
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
-public import Mathlib.Analysis.Convex.Integral
 public import Mathlib.MeasureTheory.Integral.Average
-public import Mathlib.MeasureTheory.Integral.Layercake
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
 public import Mathlib.Probability.CDF
-public import Mathlib.Topology.Order.IntermediateValue
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Convex.Integral
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Integral.Layercake
 
 /-!
 # Probability lemmas for Grünbaum's inequality

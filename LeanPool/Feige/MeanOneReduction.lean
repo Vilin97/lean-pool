@@ -6,7 +6,6 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.KStatistic
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.Probability.Independence.Basic
 
 /-!

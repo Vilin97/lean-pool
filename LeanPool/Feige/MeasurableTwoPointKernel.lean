@@ -6,12 +6,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.TwoPointMixture
-public import Mathlib.Probability.Kernel.Basic
-public import Mathlib.Probability.Kernel.Composition.MeasureComp
-public import Mathlib.MeasureTheory.Measure.Prod
-public import Mathlib.MeasureTheory.Measure.WithDensity
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Map
+public import Mathlib.Probability.Kernel.Composition.CompNotation
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # A measurable kernel of mean-one two-point laws

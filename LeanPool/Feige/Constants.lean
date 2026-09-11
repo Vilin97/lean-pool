@@ -5,8 +5,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
-public import Mathlib.Topology.Instances.ENNReal.Lemmas
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
 
 /-!
 # The sharp finite-dimensional constant

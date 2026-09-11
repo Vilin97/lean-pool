@@ -5,10 +5,6 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Measure.Real
 public import Mathlib.Probability.Distributions.Exponential
 
 /-!

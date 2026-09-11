@@ -6,8 +6,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.AugmentedTwoPointKernel
-public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-public import Mathlib.Probability.Kernel.Composition.Lemmas
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Probability.Kernel.Composition.ParallelComp
+import Mathlib.Probability.Kernel.Composition.Lemmas
 
 /-!
 # Coordinatewise two-point mixtures

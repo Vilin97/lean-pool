@@ -7,9 +7,11 @@ module
 
 public import LeanPool.Feige.Grunbaum.ProbabilityCore
 public import LeanPool.Feige.Grunbaum.TruncationConcavity
-public import LeanPool.Feige.Grunbaum.FinalBridge
-public import Mathlib.MeasureTheory.Measure.MeasureSpace
-public import Mathlib.MeasureTheory.Measure.Restrict
+import LeanPool.Feige.Grunbaum.FinalBridge
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Grünbaum's centroid halfspace theorem

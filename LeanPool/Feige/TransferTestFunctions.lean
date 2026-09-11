@@ -5,7 +5,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.SteinIdentity
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.Feige.SteinIdentity
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Test functions for the exponential transfer identity

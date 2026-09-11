@@ -6,7 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.KContinuity
-public import LeanPool.Feige.TransferProbability
+import LeanPool.Feige.TransferProbability
 
 /-!
 # Nullity of the moving halfspace boundary

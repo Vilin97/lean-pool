@@ -6,7 +6,6 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.Lemma43
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 
 /-!
 # Density identification for the local transfer step

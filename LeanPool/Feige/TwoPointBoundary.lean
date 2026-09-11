@@ -5,9 +5,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.StrictLocalInsertion
 public import LeanPool.Feige.ConditionalTwoPointCalibration
-public import LeanPool.Feige.BoundaryNull
+import LeanPool.Feige.BoundaryNull
+import LeanPool.Feige.StrictLocalInsertion
 
 /-!
 # Removing strict positivity from the finite two-point bound

@@ -7,7 +7,9 @@ module
 
 public import LeanPool.Feige.Constants
 public import LeanPool.Feige.SimplexGeometry
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Uniform measure and halfspace statistic on the simplex

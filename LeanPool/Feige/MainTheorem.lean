@@ -5,8 +5,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.GrunbaumSimplexProperty
-public import LeanPool.Feige.PaperAssembly
+public import LeanPool.Feige.Sharpness
+import LeanPool.Feige.GrunbaumSimplexProperty
+import LeanPool.Feige.PaperAssembly
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # The unit-slack case of the sharp Feige main theorem

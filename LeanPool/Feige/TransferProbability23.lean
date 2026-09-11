@@ -6,6 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.TransferStein
+public import Mathlib.Probability.Distributions.Exponential
+import LeanPool.Feige.TransferProbability
 
 /-!
 # Probability-law formulation of the transfer Stein identities

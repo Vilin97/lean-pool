@@ -6,7 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.TransferTestFunctions
-public import LeanPool.Feige.TransferProbability
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Measure-level transfer Stein identities

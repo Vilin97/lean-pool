@@ -6,6 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.MeanOneAugmentedMixture
+public import LeanPool.Feige.AugmentedParameterization
 
 /-!
 # Support of the augmented latent parameterization

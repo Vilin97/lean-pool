@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Feige.BooleanChain
 public import LeanPool.Feige.ChainCalibration
+public import LeanPool.Feige.TwoPoint
 
 /-!
 # Calibrated statistic sequences along maximal Boolean chains

@@ -6,7 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.ConditionalTwoPointCalibration
-public import LeanPool.Feige.KernelAveraging
+import LeanPool.Feige.KernelAveraging
+import LeanPool.Feige.TwoPointProductLaw
 
 /-!
 # Calibration after latent mixing

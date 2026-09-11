@@ -5,8 +5,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Algebraic core of the two-point mixture lemma

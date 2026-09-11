@@ -5,9 +5,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.TwoPointInduction
 public import Mathlib.Probability.Independence.Basic
 public import Mathlib.Probability.ProbabilityMassFunction.Constructions
+public import LeanPool.Feige.TwoPoint
 
 /-!
 # The discrete law of the high set

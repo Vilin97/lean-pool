@@ -6,7 +6,6 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.MeasurableTwoPointKernel
-public import Mathlib.Probability.Kernel.Composition.MapComap
 
 /-!
 # An augmented latent kernel

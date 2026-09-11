@@ -7,6 +7,10 @@ module
 
 public import LeanPool.Feige.Constants
 public import LeanPool.Feige.GrunbaumImport
+import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Weighted halfspaces on the Euclidean standard simplex

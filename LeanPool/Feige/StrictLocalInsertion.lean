@@ -5,8 +5,11 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.InsertionTerminalLaw
-public import LeanPool.Feige.TwoPointReindex
+public import LeanPool.Feige.OrderedTwoPointInduction
+import LeanPool.Feige.InsertionAnalyticAssembly
+import LeanPool.Feige.InsertionEdgeRealization
+import LeanPool.Feige.InsertionTerminalLaw
+import LeanPool.Feige.TwoPointReindex
 
 /-!
 # Strict local insertion and the strict two-point bound

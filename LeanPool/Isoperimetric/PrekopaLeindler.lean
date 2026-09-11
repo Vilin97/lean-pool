@@ -5,8 +5,10 @@ Authors: Jonathan Ho
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-public import LeanPool.Isoperimetric.Basic
+public import Mathlib.MeasureTheory.Integral.Marginal
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.Isoperimetric.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # The Prékopa–Leindler inequality

@@ -5,7 +5,6 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.ChainInsertion
 public import LeanPool.Feige.ChainMeasure
 
 /-!

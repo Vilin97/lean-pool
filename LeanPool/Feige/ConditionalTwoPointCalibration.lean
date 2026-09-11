@@ -6,7 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.AugmentedParameterization
-public import LeanPool.Feige.TwoPointProductLaw
+import LeanPool.Feige.ConditionalProductKernel
+import LeanPool.Feige.TwoPointProductLaw
 
 /-!
 # Conditional calibration of augmented two-point products

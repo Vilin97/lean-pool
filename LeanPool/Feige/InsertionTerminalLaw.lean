@@ -5,7 +5,12 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.InsertionEdgeRealization
+public import LeanPool.Feige.InsertionCommonLaw
+public import LeanPool.Feige.InsertionK
+public import LeanPool.Feige.Lemma43Insertion
+import LeanPool.Feige.InsertionEdgeRealization
+import LeanPool.Feige.Lemma43ArbitraryBase
+import LeanPool.Feige.NNRealExponentialLaw
 
 /-!
 # The terminal law in the insertion argument

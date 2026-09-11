@@ -5,8 +5,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.NormalizedExponentialProbability
-public import LeanPool.Feige.GeometryBridge
+public import LeanPool.Feige.NormalizedExponential
+public import LeanPool.Feige.SimplexMeasure
+import LeanPool.Feige.NormalizedExponentialProbability
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Uniform simplex law from normalized exponentials

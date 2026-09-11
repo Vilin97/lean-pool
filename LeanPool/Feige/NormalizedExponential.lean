@@ -6,14 +6,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.SimplexGeometry
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import Mathlib.LinearAlgebra.Matrix.Block
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Normalized exponentials and simplex coordinates

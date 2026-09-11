@@ -9,8 +9,8 @@ public import LeanPool.Feige.TwoPoint
 public import LeanPool.Feige.SignedExpLaw
 public import LeanPool.Feige.TransferProbability23
 public import LeanPool.Feige.InsertionCommonDensity
-public import LeanPool.Feige.NNRealExponentialLaw
 public import Mathlib.Probability.Independence.Basic
+import LeanPool.Feige.NNRealExponentialLaw
 
 /-!
 # Signed-sum laws along a Boolean insertion edge

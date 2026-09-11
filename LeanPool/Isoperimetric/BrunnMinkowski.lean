@@ -5,8 +5,11 @@ Authors: Jonathan Ho
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import LeanPool.Isoperimetric.PrekopaLeindler
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.Isoperimetric.PrekopaLeindler
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 /-!
 # The Brunn–Minkowski inequality

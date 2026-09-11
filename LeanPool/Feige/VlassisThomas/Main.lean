@@ -5,8 +5,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.IndependentCalibrationAssembly
-public import LeanPool.Feige.TwoPointBoundary
+public import LeanPool.Feige.Calibration
+public import LeanPool.Feige.KStatistic
+import LeanPool.Feige.IndependentCalibrationAssembly
+import LeanPool.Feige.TwoPointBoundary
 
 /-!
 # Exact calibration for means of nonnegative random variables

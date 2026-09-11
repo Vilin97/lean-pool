@@ -5,8 +5,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-public import Mathlib.Probability.Distributions.Exponential
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Exponential Stein identity

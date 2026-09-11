@@ -6,10 +6,11 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.SimplexGeometry
-public import LeanPool.Feige.Grunbaum.Main
 public import LeanPool.Feige.Grunbaum.Sharpness
-public import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
-public import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Basic interface to the Grünbaum formalization

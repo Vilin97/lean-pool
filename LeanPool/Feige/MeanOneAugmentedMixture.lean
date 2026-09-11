@@ -5,7 +5,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.AugmentedParameterization
+public import LeanPool.Feige.ProductTwoPointKernel
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # A total augmented mixture for mean-one laws

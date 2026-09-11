@@ -6,6 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.MainTheorem
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Feige's sharp unit-slack inequality

@@ -5,11 +5,9 @@ Authors: OpenAI
 -/
 module
 
-public import Mathlib.Analysis.Convex.Body
-public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.MeasureTheory.Integral.Average
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Measure.OpenPos
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
 # Definitions for Grünbaum's centroid halfspace theorem

@@ -7,9 +7,10 @@ module
 
 public import LeanPool.Feige.Calibration
 public import LeanPool.Feige.Constants
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.Real
-public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Reduction from exact calibration to Feige's inequality

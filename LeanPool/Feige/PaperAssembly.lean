@@ -5,9 +5,11 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.VlassisThomas.Main
-public import LeanPool.Feige.ConditionalMainTheorem
-public import LeanPool.Feige.SimplexExponentialIdentification
+public import LeanPool.Feige.Sharpness
+public import LeanPool.Feige.SimplexMeasure
+import LeanPool.Feige.ConditionalMainTheorem
+import LeanPool.Feige.SimplexExponentialIdentification
+import LeanPool.Feige.VlassisThomas.Main
 
 /-!
 # Final assembly of the unit-slack theorem

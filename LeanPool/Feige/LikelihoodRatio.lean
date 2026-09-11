@@ -5,7 +5,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Likelihood-ratio comparison for exponential convolutions

@@ -5,8 +5,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.Lemma43Complete
-public import LeanPool.Feige.Lemma43Endpoints
+public import LeanPool.Feige.Lemma43
+import LeanPool.Feige.Lemma43Complete
+import LeanPool.Feige.Lemma43Endpoints
+import LeanPool.Feige.Lemma43Relations
 
 /-!
 # Local transfer identity for an arbitrary base law

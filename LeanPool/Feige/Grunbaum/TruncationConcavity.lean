@@ -6,8 +6,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.Feige.Grunbaum.Definitions
-public import LeanPool.Isoperimetric.BrunnMinkowski
-public import Mathlib.Analysis.Convex.Function
+import LeanPool.Isoperimetric.BrunnMinkowski
+import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-!
 # Concavity of truncated-volume roots

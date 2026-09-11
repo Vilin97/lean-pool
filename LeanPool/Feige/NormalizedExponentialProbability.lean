@@ -6,7 +6,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.NormalizedExponential
-public import Mathlib.MeasureTheory.Integral.IntegrableOn
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Probability normalization for independent unit exponentials

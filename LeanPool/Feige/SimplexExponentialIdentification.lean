@@ -6,7 +6,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.SimplexExponentialLaw
-public import LeanPool.Feige.NNRealExponentialLaw
+public import LeanPool.Feige.GeometryBridge
+public import LeanPool.Feige.NormalizedExponentialProbability
+import LeanPool.Feige.NNRealExponentialLaw
 
 /-!
 # Event bridge for the exponential and simplex statistics

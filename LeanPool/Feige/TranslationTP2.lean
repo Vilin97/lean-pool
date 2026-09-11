@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Feige.ConvolutionLogConcave
 public import LeanPool.Feige.LikelihoodRatio
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Translation TP2 and convolution

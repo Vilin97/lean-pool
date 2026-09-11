@@ -5,9 +5,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import Mathlib.Data.Fintype.Fin
 public import Mathlib.Data.Finset.Card
-public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Fintype.Fin
 
 /-!
 # Maximal chains in the Boolean lattice

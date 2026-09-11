@@ -6,6 +6,10 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.Grunbaum.Sharpness
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Coordinates of the standard-simplex centroid

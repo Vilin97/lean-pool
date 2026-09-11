@@ -5,8 +5,8 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.ConditionalProductKernel
 public import LeanPool.Feige.TwoPoint
+public import LeanPool.Feige.ProductTwoPointKernel
 
 /-!
 # Two-point parameters for augmented latent coordinates

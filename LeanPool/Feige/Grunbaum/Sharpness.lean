@@ -6,15 +6,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.Feige.Grunbaum.Definitions
-public import Mathlib.Analysis.Convex.Measure
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.Layercake
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Integral.Layercake
 
 /-!
 # Sharpness of Grünbaum's centroid halfspace constant

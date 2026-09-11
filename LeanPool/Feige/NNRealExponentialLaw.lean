@@ -6,7 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import LeanPool.Feige.KStatistic
-public import LeanPool.Feige.TransferProbability
+import LeanPool.Feige.TransferProbability
 
 /-!
 # The nonnegative-real exponential law

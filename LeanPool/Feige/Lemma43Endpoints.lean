@@ -5,8 +5,9 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
 module
 
-public import LeanPool.Feige.Lemma43Relations
-public import LeanPool.Feige.TransferProbability23
+public import LeanPool.Feige.Lemma43
+import LeanPool.Feige.Lemma43Relations
+import LeanPool.Feige.TransferProbability
 
 /-!
 # Endpoint tail identities for the local transfer step

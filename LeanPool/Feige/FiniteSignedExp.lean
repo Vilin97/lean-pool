@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Feige.TranslationTP2
 public import Mathlib.Probability.Distributions.Exponential
+public import LeanPool.Feige.OneSidedDensity
 
 /-!
 # Finite signed exponential sums
