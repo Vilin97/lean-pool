@@ -6,7 +6,6 @@ Authors: Xuanji Li
 
 import LeanPool.Chudnovsky.Basic
 import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Certified numeric facts for the Chudnovsky formula (Phase D1)

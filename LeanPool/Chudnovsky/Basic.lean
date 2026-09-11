@@ -5,8 +5,6 @@ Authors: Xuanji Li
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Defs
 import Mathlib.NumberTheory.ModularForms.LevelOne.GradedRing
 
 /-!

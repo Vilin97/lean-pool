@@ -5,10 +5,7 @@ Authors: Xuanji Li
 -/
 
 import LeanPool.Chudnovsky.SigmaZeta
-import Mathlib.MeasureTheory.Integral.CircleIntegral
 import Mathlib.Analysis.Meromorphic.NormalForm
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Calculus.LogDeriv
 
 /-!
 # Elliptic functions and the Liouville theorems

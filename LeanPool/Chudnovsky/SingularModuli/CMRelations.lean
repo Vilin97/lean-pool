@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
 
-import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
 import LeanPool.Chudnovsky.SingularModuli.FormReduction
 
 /-!
