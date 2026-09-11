@@ -209,7 +209,12 @@ def JetSystem (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
 omit [CharZero K] in
 theorem A1_shape (h r eta : K) (b : BaseJet K) (i j : Fin 6)
     (hij : i.val < 4 ∨ 4 ≤ j.val) : A1 h r eta b i j = 0 := by
-  fin_cases i <;> fin_cases j <;> norm_num [A1] at hij <;> norm_num [A1]
+  rcases hij with hi | hj
+  · have hi' : i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 := by omega
+    have hzero : (![0, 0, 0, 0, 0, 0] : Fin 6 → K) j = 0 := by fin_cases j <;> rfl
+    rcases hi' with rfl | rfl | rfl | rfl <;> exact hzero
+  · have hj' : j = 4 ∨ j = 5 := by omega
+    rcases hj' with rfl | rfl <;> fin_cases i <;> rfl
 
 omit [CharZero K] in
 theorem A1_high_parameters_irrelevant (h r eta : K) (b : BaseJet K)
@@ -230,9 +235,13 @@ theorem matrixRHS_jet (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
         2 * axialRHS h lam eta (r ^ 2) b s phi u k {p with radial := pressureValue C b s phi}] := by
   ext i
   fin_cases i <;>
-    simp [matrixRHS, A0, A1, forcing, jetVector, parameterJetVector,
+    simp only [matrixRHS, A0, A1, forcing, jetVector, parameterJetVector,
       pressureValue, pressureSource, angularRHS, axialRHS, timeValue, axialValue,
-      betaValue, div_eq_mul_inv] <;> ring
+      betaValue, div_eq_mul_inv, Matrix.mulVec_cons, Matrix.mulVec_empty,
+      Pi.add_apply, Pi.smul_apply, Function.comp_apply, Matrix.cons_val,
+      Matrix.head_cons, Matrix.tail_cons, smul_eq_mul, Fin.reduceFinMk, Fin.isValue,
+      Nat.succ_eq_add_one, Nat.reduceAdd, add_zero, zero_add, mul_zero,
+      mul_one, neg_mul, mul_neg, neg_add_rev] <;> ring
 
 private theorem average_row_iff {r : K} (hr : r ≠ 0) (ux kx kv : K) :
     2 * r * kx + 2 / r * kv = -(2 * r * ux) ↔ r ^ 2 * (ux + kx) + kv = 0 := by
@@ -836,13 +845,23 @@ theorem coefficient0_parity (h lam C : ℂ) (F : CoefficientData) :
     CoefficientParity (coefficient0 h lam C F) := by
   intro r z i j
   simp only [coefficient0, neg_sq, Complex.ofReal_neg]
-  fin_cases i <;> fin_cases j <;> simp [A0, paritySign, axialValue]
+  fin_cases i <;> fin_cases j <;>
+    simp only [A0, mul_neg, neg_mul, axialValue, even_two, Even.neg_pow, neg_add_rev, Fin.zero_eta,
+      Fin.isValue, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
+      Matrix.cons_val_fin_one, paritySign, Nat.ofNat_pos, ite_true, mul_one, mul_zero, Fin.mk_one,
+      Matrix.cons_val_one, Nat.one_lt_ofNat, Fin.reduceFinMk, Matrix.cons_val, Nat.reduceLT,
+      Nat.lt_add_one, lt_self_iff_false, neg_neg, one_mul, ite_false]
 
 theorem coefficient1_parity (h : ℂ) (F : CoefficientData) :
     CoefficientParity (coefficient1 h F) := by
   intro r z i j
   simp only [coefficient1, neg_sq, Complex.ofReal_neg]
-  fin_cases i <;> fin_cases j <;> simp [A1, paritySign]
+  fin_cases i <;> fin_cases j <;>
+    simp only [A1, neg_mul, even_two, Even.neg_pow, Fin.zero_eta, Fin.isValue, Matrix.of_apply,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, paritySign, Nat.ofNat_pos,
+      ite_true, mul_one, mul_zero, Fin.mk_one, Matrix.cons_val_one, Nat.one_lt_ofNat,
+      Fin.reduceFinMk, Matrix.cons_val, Nat.reduceLT, Nat.lt_add_one, lt_self_iff_false, mul_neg,
+      neg_neg, one_mul, ite_false]
 
 theorem sourceField_parity (h C : ℂ) (F : CoefficientData) :
     ForcingParity (sourceField h C F) := by
@@ -865,10 +884,14 @@ theorem coefficient0_contDiffAt_of_pullback {n : WithTop ℕ∞} {h lam C : ℂ}
     (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
-  fin_cases i <;> fin_cases j <;>
-    simp only [coefficient0, A0, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
-        edge, neg_mul, neg_add_rev, Fin.zero_eta, Matrix.of_apply, Matrix.cons_val',
-            Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one,
+  fin_cases i <;>
+    simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    fin_cases j <;>
+    simp only [coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
+        edge, neg_mul, neg_add_rev, Fin.zero_eta,
+            Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
                 Fin.reduceFinMk, Matrix.cons_val] <;>
     (repeat' first
       | exact contDiffAt_const
@@ -891,10 +914,14 @@ theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : 
     (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
-  fin_cases i <;> fin_cases j <;>
-    simp only [coefficient1, A1, edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
-        Fin.zero_eta, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
-            Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+  fin_cases i <;>
+    simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    fin_cases j <;>
+    simp only [edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
+        Fin.zero_eta, Matrix.cons_val_zero,
+            Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
                 Matrix.cons_val] <;>
     (repeat' first
       | exact contDiffAt_const
@@ -937,10 +964,14 @@ theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} 
   change 1 - 2 * h * z ^ 2 ≠ 0 at hL
   have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
     (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
-  fin_cases i <;> fin_cases j <;>
-    simp only [coefficient0, A0, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
-        edge, neg_mul, neg_add_rev, Fin.zero_eta, Matrix.of_apply, Matrix.cons_val',
-            Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one,
+  fin_cases i <;>
+    simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    fin_cases j <;>
+    simp only [coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
+        edge, neg_mul, neg_add_rev, Fin.zero_eta,
+            Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
                 Fin.reduceFinMk, Matrix.cons_val] <;>
     (repeat' first
       | exact analyticAt_const
@@ -958,10 +989,14 @@ theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : �
   change 1 - 2 * h * z ^ 2 ≠ 0 at hL
   have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
     (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
-  fin_cases i <;> fin_cases j <;>
-    simp only [coefficient1, A1, edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
-        Fin.zero_eta, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
-            Matrix.cons_val_fin_one, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+  fin_cases i <;>
+    simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    fin_cases j <;>
+    simp only [edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
+        Fin.zero_eta, Matrix.cons_val_zero,
+            Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
                 Matrix.cons_val] <;>
     (repeat' first
       | exact analyticAt_const
@@ -1098,9 +1133,13 @@ theorem A0_ofReal (h lam C r eta : ℝ) (b : BaseJet ℝ) :
 theorem A1_ofReal (h r eta : ℝ) (b : BaseJet ℝ) :
     A1 (h : ℂ) (r : ℂ) (eta : ℂ) (complexBase b) =
       (A1 h r eta b).map Complex.ofReal := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [A1, complexBase, complexJet, Matrix.map, dScale, ell, edge]
+  simp only [A1, complexBase, complexJet, dScale, ell, edge,
+    ← Complex.ofReal_zero, ← Complex.ofReal_one, ← Complex.ofReal_ofNat,
+    ← Complex.ofReal_add, ← Complex.ofReal_sub, ← Complex.ofReal_mul,
+    ← Complex.ofReal_div, ← Complex.ofReal_neg, ← Complex.ofReal_pow]
+  apply Matrix.ext
+  intro i j
+  fin_cases i <;> fin_cases j <;> rfl
 
 theorem forcing_ofReal (h C r eta : ℝ) (s : SourceJet ℝ) :
     forcing (h : ℂ) (C : ℂ) (r : ℂ) (eta : ℂ) (complexSource s) =
