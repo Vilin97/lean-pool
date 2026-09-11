@@ -7,7 +7,7 @@ module
 
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
 public import LeanPool.QuasiBorelSpaces.Prod
-import LeanPool.QuasiBorelSpaces.Basic
+public import LeanPool.QuasiBorelSpaces.Basic
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
 import LeanPool.QuasiBorelSpaces.Prop

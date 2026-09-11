@@ -31,11 +31,13 @@ def packedComponentTreeB
   | first :: remaining =>
       decide (first = root) && packedExtendsTreeB code {root} remaining
 
+/-- Test whether a packed code selects an edge incident to the given component. -/
 def packedTreeLabelledEdgeB
     (code : UInt64) (component : List Vertex) (a b : Vertex) : Bool :=
   (decide (a ∈ component) && packedSelectsB code a b) ||
     (decide (b ∈ component) && packedSelectsB code b a)
 
+/-- Check the residual certificate encoded by a packed code and payload. -/
 def packedResidualValidB (code payload : UInt64) : Bool :=
   let classIndex := payloadClass payload
   let forward := decodeMap (payloadForwardCode payload)

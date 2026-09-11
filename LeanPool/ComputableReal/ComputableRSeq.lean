@@ -5,12 +5,17 @@ Authors: Alex Meiburg
 -/
 module
 
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+
+public import Mathlib.Data.Rat.Cast.Order
+
+public import Mathlib.Algebra.Order.Archimedean.Basic
+
 public import Mathlib.Algebra.Order.Interval.Basic
 public import Mathlib.Data.Sign.Defs
 
 public import LeanPool.ComputableReal.AuxLemmas
 public import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
 import Mathlib.Tactic.Rify
 
 /-!

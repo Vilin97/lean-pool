@@ -5,6 +5,8 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
+public import Mathlib.FieldTheory.Finite.GaloisField
+
 public import Mathlib.Algebra.Field.Defs
 public import Mathlib.Algebra.Ring.Parity
 public import Mathlib.Data.Fintype.Card

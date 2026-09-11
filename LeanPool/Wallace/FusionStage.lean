@@ -52,9 +52,11 @@ section Coefficients
 
 variable (A Y : Finset G)
 
+/-- Enumerate the union of two finite sets by a finite index type. -/
 abbrev unionEquiv : Fin (A ∪ Y).card ≃ (A ∪ Y : Finset G) :=
   (A ∪ Y).equivFin.symm
 
+/-- The tuple enumerating the union of the two finite sets. -/
 def unionTuple : Fin (A ∪ Y).card → G :=
   fun i ↦ (unionEquiv A Y i : G)
 

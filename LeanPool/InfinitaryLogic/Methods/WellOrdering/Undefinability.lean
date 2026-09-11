@@ -32,7 +32,7 @@ every other arity as empty — this avoids deciding equality against the disting
 
 namespace FirstOrder.Language
 
-open FirstOrder Structure
+open FirstOrder
 
 /-- The all-arities relation family on an ordinal's type: binary positions get the ordinal
 order, every other arity is empty. -/

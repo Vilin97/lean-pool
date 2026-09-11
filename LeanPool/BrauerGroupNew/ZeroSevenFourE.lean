@@ -5,16 +5,13 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Mathlib.LinearAlgebra.Matrix.Action
-public import Mathlib.RingTheory.SimpleModule.Basic
-import LeanPool.BrauerGroupNew.MoritaEquivalence
-import LeanPool.BrauerGroupNew.Wedderburn
-import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
-import Mathlib.Algebra.Category.ModuleCat.Products
 import Mathlib.CategoryTheory.Adjunction.Limits
-import Mathlib.RingTheory.HopkinsLevitzki
-import Mathlib.RingTheory.LittleWedderburn
+
+public import LeanPool.BrauerGroupNew.MoritaEquivalence
+public import LeanPool.BrauerGroupNew.Wedderburn
+public import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
+public import Mathlib.Algebra.Category.ModuleCat.Products
+public import Mathlib.RingTheory.LittleWedderburn
 
 /-!
 # The Stacks Project tag 074E

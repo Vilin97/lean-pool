@@ -5,6 +5,8 @@ Authors: Humiliati
 -/
 module
 
+public import Mathlib.Data.Fintype.Pi
+
 public import Mathlib.Logic.Basic
 public import Aesop.BuiltinRules
 public import Mathlib.Algebra.Group.Nat.Defs

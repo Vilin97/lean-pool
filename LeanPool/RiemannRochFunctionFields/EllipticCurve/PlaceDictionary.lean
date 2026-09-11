@@ -6,7 +6,7 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Infinity
-import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!

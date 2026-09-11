@@ -11,7 +11,7 @@ import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
 import LeanPool.JacobianDiffgeo.Surface.Bridges
 import Mathlib.Analysis.Complex.LocallyUniformLimit
 import Mathlib.Combinatorics.Matroid.Init
-import Mathlib.Geometry.Manifold.ContMDiff.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Basic
 
 /-!
 # `BddHoloOn`: bounded-holomorphic Banach spaces, and the germ bridges (`finiteness-and-chi`)

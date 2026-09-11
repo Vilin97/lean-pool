@@ -33,10 +33,13 @@ abbrev F := ZMod 2
 /-- Symplectic group carrier. Paper: §§2, 6. -/
 abbrev Group := Matrix.symplecticGroup (Fin 2) F
 
+/-- Four-by-four matrices with the symplectic block indexing. -/
 abbrev Matrix4 := Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) F
 
+/-- The finite set of all four-by-four matrices over the coefficient field. -/
 def allMatrices : Finset Matrix4 := Finset.univ
 
+/-- Matrices preserving the standard symplectic form. -/
 def symplecticMatrices : Finset Matrix4 :=
   allMatrices.filter (fun A =>
     A * Matrix.J (Fin 2) F * A.transpose = Matrix.J (Fin 2) F)

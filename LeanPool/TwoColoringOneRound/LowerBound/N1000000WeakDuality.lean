@@ -40,6 +40,7 @@ abbrev Mu := Fin muSupport.size
 def xEdge (x : Var → Q) : Q :=
   x ⟨edgeVar, by decide⟩
 
+/-- The empty dual-certificate entry used as a default value. -/
 def defaultMu : Nat × Array Int × Int := (0, #[], 0)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/

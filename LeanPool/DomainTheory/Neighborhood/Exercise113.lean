@@ -126,6 +126,6 @@ theorem branch_isTotal (p : ℕ → Bool) : B.IsTotal (branch p) := by
   · exact (branch_mem_iff p).mpr ⟨σ.length, h⟩
   · have hlen : (prefixSeq p σ.length).length = σ.length := prefixSeq_length p σ.length
     have hσ : prefixSeq p σ.length = σ := h.eq_of_length hlen
-    exact (branch_mem_iff p).mpr ⟨σ.length, by rw [hσ]⟩
+    exact (branch_mem_iff p).mpr ⟨σ.length, by rw [hσ]; exact List.prefix_rfl⟩
 
 end Domain.Neighborhood.Exercise113

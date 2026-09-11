@@ -18,7 +18,7 @@ import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 
 @[expose] public section
 
-open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set
+open EisensteinSeries UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex
 
 open scoped Interval Real NNReal ENNReal Topology BigOperators Nat

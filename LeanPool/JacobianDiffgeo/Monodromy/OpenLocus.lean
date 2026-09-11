@@ -5,6 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
+public import Mathlib.Analysis.Complex.Basic
+
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
 public import Mathlib.Data.Complex.Basic
 import Mathlib.CategoryTheory.Category.Init

@@ -109,6 +109,7 @@ lemma pSocleAt_map_iso {G H : Type u} [AddCommGroup G] [AddCommGroup H]
         simpa using hxy
       simpa [this] using hx
 
+/-- Restrict a group isomorphism to the p-socles at the same ordinal stage. -/
 noncomputable def pSocleAtIso {G H : Type u} [AddCommGroup G] [AddCommGroup H]
     (φ : G ≃+ H) (α : Ordinal) : pSocleAt p α (G := G) ≃+ pSocleAt p α (G := H) where
   toFun x := ⟨φ x, by

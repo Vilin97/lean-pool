@@ -24,7 +24,7 @@ natural numbers.
 
 The set of all natural numbers is defined as the smallest inductive set. Because of the axiom of
 separation, the definition relies on the existence of an infinite set, which is provided by the
-`some_inf` constant. It can be shown that the choice of `some_inf` does not affect the definition of
+`someInf` constant. It can be shown that the choice of `someInf` does not affect the definition of
 the natural numbers and leads to isomorphic definitions.
 
 The file also includes the definition of the `ZFNat` type for ZF natural numbers, and provides
@@ -94,10 +94,10 @@ notation "ω" => omega
 theorem omega_inductive : inductiveSet ω := ⟨omega_zero, fun _ => omega_succ⟩
 
 /-- Witness for an infinite set, meant to be used for definitional purpose only. -/
-abbrev some_inf := @Classical.choose _ inductiveSet ⟨_, omega_inductive⟩
+abbrev someInf := @Classical.choose _ inductiveSet ⟨_, omega_inductive⟩
 
-/-- The set `some_inf` is inductive. -/
-private lemma inductive_some_inf : inductiveSet some_inf := Classical.choose_spec _
+/-- The set `someInf` is inductive. -/
+private lemma inductive_some_inf : inductiveSet someInf := Classical.choose_spec _
 
 
 /-! ## Natural numbers -/
@@ -107,7 +107,7 @@ private lemma inductive_some_inf : inductiveSet some_inf := Classical.choose_spe
 The set of natural numbers `Nat` is defined as the smallest inductive set.
 This definition avoids the use of `ω`, even though `ω` may be thought of as `ℕ`.
 -/
-def Nat : ZFSet := ⋂₀ ((powerset some_inf).sep inductiveSet)
+def Nat : ZFSet := ⋂₀ ((powerset someInf).sep inductiveSet)
 
 /-- The type of natural numbers `ZFNat` is defined as the subtype of `Nat`. -/
 abbrev ZFNat := {x // x ∈ Nat}
@@ -115,32 +115,32 @@ abbrev ZFNat := {x // x ∈ Nat}
 namespace ZFNat
 
 /--
-`some_inf` is an inductive subset of `some_inf`:
-`some_inf ∈ { a ⊆ some_inf | inductiveSet a }`.
+`someInf` is an inductive subset of `someInf`:
+`someInf ∈ { a ⊆ someInf | inductiveSet a }`.
 -/
 private theorem some_inf_mem_powerset_some_inf_ind :
-  some_inf ∈ some_inf.powerset.sep inductiveSet :=
+  someInf ∈ someInf.powerset.sep inductiveSet :=
   mem_sep.mpr ⟨mem_powerset.mpr fun _ => id, inductive_some_inf⟩
 
 /-- `Nat` is an infinite inductive set. -/
-theorem Nat_subset_some_inf : Nat ⊆ some_inf := by
+theorem Nat_subset_some_inf : Nat ⊆ someInf := by
   intro n hn
   unfold Nat at hn
   rw [mem_sInter] at hn
   · have aux :
-      n ∈ (⋃₀ (powerset some_inf).sep inductiveSet : ZFSet) ∧
-      (fun b => ∀ c, c ∈ (powerset some_inf).sep inductiveSet → b ∈ c) n := by
+      n ∈ (⋃₀ (powerset someInf).sep inductiveSet : ZFSet) ∧
+      (fun b => ∀ c, c ∈ (powerset someInf).sep inductiveSet → b ∈ c) n := by
         simp only [mem_sUnion, mem_sep, and_imp] at *
         exact ⟨
-          ⟨some_inf,
+          ⟨someInf,
             ⟨mem_powerset.mpr fun _ => id, inductive_some_inf⟩,
-            hn some_inf (mem_powerset.mpr fun _ => id) (inductive_some_inf)⟩,
+            hn someInf (mem_powerset.mpr fun _ => id) (inductive_some_inf)⟩,
           fun _ _ _ => hn _ ‹_› ‹_›⟩
     simp only [mem_sep, mem_powerset, and_imp, mem_sUnion] at aux
     obtain ⟨⟨_, ⟨left, _⟩, _⟩, _⟩ := aux
     apply left
     assumption
-  · exact ⟨some_inf, some_inf_mem_powerset_some_inf_ind⟩
+  · exact ⟨someInf, some_inf_mem_powerset_some_inf_ind⟩
 
 theorem zero_in_Nat : ∅ ∈ Nat := by
   unfold Nat
@@ -148,7 +148,7 @@ theorem zero_in_Nat : ∅ ∈ Nat := by
   · intro x hx
     rw [mem_sep] at hx
     exact hx.right.left
-  · exact ⟨some_inf, some_inf_mem_powerset_some_inf_ind⟩
+  · exact ⟨someInf, some_inf_mem_powerset_some_inf_ind⟩
 
 instance natZero : Zero ZFNat := ⟨∅, zero_in_Nat⟩
 lemma natZero_eq : (0 : ZFNat) = ⟨∅, zero_in_Nat⟩ := rfl
@@ -169,30 +169,30 @@ lemma zero_mem_inductive {a} (h : inductiveSet a) : ↑(0 : ZFNat).val ∈ a := 
 theorem insert_mem_inductive {a n} (h : inductiveSet a) (h' : n ∈ a) : insert n n ∈ a :=
   h.right n h'
 
-theorem some_inf_powerset_sep_inductive_nonempty : (some_inf.powerset.sep inductiveSet).Nonempty :=
-  ⟨some_inf, some_inf_mem_powerset_some_inf_ind⟩
+theorem some_inf_powerset_sep_inductive_nonempty : (someInf.powerset.sep inductiveSet).Nonempty :=
+  ⟨someInf, some_inf_mem_powerset_some_inf_ind⟩
 
-/-- Any inductive set is a subset of `some_inf`. -/
-theorem inductive_subset_some_inf_contains_Nat {a} (h : inductiveSet a) (h' : a ⊆ some_inf) :
+/-- Any inductive set is a subset of `someInf`. -/
+theorem inductive_subset_some_inf_contains_Nat {a} (h : inductiveSet a) (h' : a ⊆ someInf) :
   Nat ⊆ a := by
   intro n hn
   unfold Nat at hn
   rw [mem_sInter] at hn
   · have aux :
-      n ∈ (⋃₀ (powerset some_inf).sep inductiveSet : ZFSet) ∧
-      (fun b => ∀ c, c ∈ (powerset some_inf).sep inductiveSet → b ∈ c) n := by
+      n ∈ (⋃₀ (powerset someInf).sep inductiveSet : ZFSet) ∧
+      (fun b => ∀ c, c ∈ (powerset someInf).sep inductiveSet → b ∈ c) n := by
         simp only [mem_sUnion, mem_sep, and_imp] at *
         exact ⟨
-          ⟨some_inf,
+          ⟨someInf,
             ⟨mem_powerset.mpr fun _ => id, inductive_some_inf⟩,
-            hn some_inf (mem_powerset.mpr fun _ => id) (inductive_some_inf)⟩,
+            hn someInf (mem_powerset.mpr fun _ => id) (inductive_some_inf)⟩,
             fun _ _ _ => hn _ ‹_› ‹_›⟩
     simp only [mem_sep, mem_powerset, and_imp, mem_sUnion] at aux
     exact aux.2 _ h' h
   · exact some_inf_powerset_sep_inductive_nonempty
 
 theorem succ_mem_Nat' {n} (h : n ∈ Nat) : insert n n ∈ Nat := by
-  have all_sub_ind : ∀ a, a ∈ some_inf.powerset.sep inductiveSet → insert n n ∈ a := by
+  have all_sub_ind : ∀ a, a ∈ someInf.powerset.sep inductiveSet → insert n n ∈ a := by
     intro a ha
     rw [mem_sep] at ha
     exact ha.2.2 n (inductive_subset_some_inf_contains_Nat ha.2 (mem_powerset.mp ha.1) h)

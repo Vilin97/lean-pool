@@ -5,8 +5,9 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+
 public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathlib.Order.Fin.Finset
 
 /-!

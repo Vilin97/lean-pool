@@ -208,6 +208,7 @@ def linesQuotientEquiv (L : Lattice R) :
   left_inv M := by simp only [OrderIso.symm_apply_apply, Subtype.coe_eta]
   right_inv M := by simp only [ne_eq, OrderIso.apply_symm_apply, Subtype.coe_eta]
 
+/-- Identify nontrivial quotient submodules with lattices strictly between the two bounds. -/
 def Lattice.submoduleNeAndNeEquivLtAndLt (L : Lattice R) :
     { M : { M : Submodule R L.M // maximalIdeal R • ⊤ ≤ M } // M ≠ ⊥ ∧ M ≠ ⊤ } ≃
       { M : Submodule R (Fin 2 → K) // maximalIdeal R • L.M < M ∧ M < L.M } where

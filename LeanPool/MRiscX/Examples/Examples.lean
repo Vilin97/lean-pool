@@ -5,6 +5,10 @@ Authors: Julius Marx
 -/
 module
 
+public import LeanPool.MRiscX.Tactics.ApplySpec
+
+public import LeanPool.MRiscX.Basic
+
 public import Aesop.BuiltinRules
 public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 import LeanPool.MRiscX.Elab.HoareElaborator

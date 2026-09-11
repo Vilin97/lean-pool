@@ -5,6 +5,8 @@ Authors: Wei Wang
 -/
 module
 
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Data.Nat.Factorial.DoubleFactorial
 

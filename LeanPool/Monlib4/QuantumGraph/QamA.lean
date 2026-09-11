@@ -122,14 +122,14 @@ theorem qamA.toMatrix [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
   rw [Matrix.conj, ← this, ← _root_.map_mul]
 
 @[reducible, instance]
-noncomputable def has_smul.units_matrix_ne_zero : SMul ℂˣ { x : Matrix n n ℂ // x ≠ 0 }
+noncomputable def hasSmul.unitsMatrixNeZero : SMul ℂˣ { x : Matrix n n ℂ // x ≠ 0 }
     where smul α x :=
     (⟨((α : ℂ) • x.1 : Matrix n n ℂ),
         smul_ne_zero (Units.ne_zero α) (Set.mem_ofPred.mp (Subtype.mem x))⟩ :
       { x : Matrix n n ℂ // x ≠ 0 })
 
 omit [Fintype n] [DecidableEq n] in
-private theorem has_smul.units_matrix_ne_zero_coe (x : { x : Matrix n n ℂ // x ≠ 0 }) (α : ℂˣ) :
+private theorem hasSmul.units_matrix_ne_zero_coe (x : { x : Matrix n n ℂ // x ≠ 0 }) (α : ℂˣ) :
     (α • x : { x : Matrix n n ℂ // x ≠ 0 }).1 = (α : ℂ) • x.1 :=
   rfl
 
@@ -153,7 +153,7 @@ theorem qamA.ne_zero [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x 
 theorem qamA.smul [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠ 0 }) (α : ℂˣ) :
     qamA hφ (α • x) = qamA hφ x := by
   withMatrixQuantumCtx[φ]
-  simp_rw [qamA_eq, has_smul.units_matrix_ne_zero_coe, norm_smul, smul_mul, Matrix.mul_smul,
+  simp_rw [qamA_eq, hasSmul.units_matrix_ne_zero_coe, norm_smul, smul_mul, Matrix.mul_smul,
     LinearMap.mulRight_smul, LinearMap.adjoint_smul, LinearMap.mulLeft_smul, smul_mul_smul,
     smul_smul, Complex.mul_conj, Complex.ofReal_mul, mul_pow, ← one_div_mul_one_div_rev, mul_assoc,
     ← Complex.ofReal_pow, Complex.normSq_eq_norm_sq]

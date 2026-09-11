@@ -73,12 +73,15 @@ inductive BranchClaim where
   /-- The five remaining rows are covered by postorder local claims. -/
   | search (claims : BranchClaims)
 
+/-- The empty node claim used when a lookup has no matching entry. -/
 def defaultNodeClaim : NodeClaim :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0, #[]⟩
 
+/-- An empty word claim retaining the requested word index. -/
 def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
   ⟨wordIndex, [], [], [], []⟩
 
+/-- Search a bounded suffix of the word-claim array for the requested index. -/
 def nodeWordClaimAtAux
   (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
     Nat → NodeWordClaim
@@ -120,14 +123,22 @@ def pairStateFromAssignments (assignments : List RowAssignment) : PairState :=
 def columnStateFromAssignments (assignments : List RowAssignment) : ColumnState :=
   assignments.foldl (fun state assignment => state.add assignment.2) ColumnState.empty
 
+/-- Accumulated verification status and outgoing references for a node claim. -/
 structure LocalCursor where
+  /-- Whether every processed row has passed its checks. -/
   ok : Bool
+  /-- Pattern origins collected from the processed rows. -/
   patternOrigins : List Nat
+  /-- Child claim identifiers collected from the processed rows. -/
   childIds : List Nat
+  /-- Hard-case origins collected from the processed rows. -/
   hardOrigins : List Nat
 
+/-- Accumulated verification status and targets for rejected rows. -/
 structure RejectionCursor where
+  /-- Whether every processed rejection has passed its checks. -/
   ok : Bool
+  /-- Targets collected from the processed rejected rows. -/
   targets : List Nat
 
 private theorem foldl_fixed_of_false
@@ -201,6 +212,7 @@ def conflictCoverLookup (identifier : Nat) : Option ConflictCover :=
   | none => none
   | some group => group[identifier % 64]?
 
+/-- Check one certificate row and update its accumulated references. -/
 def processRow
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
@@ -351,6 +363,7 @@ def rejectedRowValidB
       decide (count + remainingColumnCapacity remaining targetVertex < 4)
   else false
 
+/-- Check one rejected row and record its target. -/
 def processRejectedRow
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (cursor : RejectionCursor) (index : Nat) : RejectionCursor :=

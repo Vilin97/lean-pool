@@ -25,7 +25,6 @@ namespace Distributed2Coloring.LowerBound
 
 namespace N1000000MuWitness
 
-open Distributed2Coloring.LowerBound.N1000000Data
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev LabelTriple := Nat × Nat × Nat

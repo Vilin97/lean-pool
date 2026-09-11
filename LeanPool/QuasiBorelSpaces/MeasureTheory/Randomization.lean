@@ -104,7 +104,9 @@ lemma volume_restrict_normalize : volume.restrict (Set.Ico 0 (1 : I)) = volume :
   apply MeasureTheory.measure_inter_conull
   simp_all
 
+/-- Encode a standard Borel space into the unit interval. -/
 noncomputable def packI [StandardBorelSpace A] : A → I := unpack ∘ pack
+/-- Decode the unit-interval representation of a nonempty standard Borel space. -/
 noncomputable def unpackI [StandardBorelSpace A] [Nonempty A] : I → A := unpack ∘ pack
 
 @[local simp, local fun_prop]

@@ -9,8 +9,8 @@ public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
-import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
-import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
 import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

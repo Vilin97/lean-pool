@@ -5,6 +5,8 @@ Authors: Vincent Trélat
 -/
 module
 
+public import Mathlib.Data.NNRat.Defs
+
 public import LeanPool.ZFLean.Functions
 import LeanPool.ZFLean.Tactics
 import Mathlib.CategoryTheory.Category.Init
@@ -224,6 +226,7 @@ noncomputable abbrev the {S : ZFSet} (S_nemp : S ≠ ∅) (x : Option S) : {x //
 
 
 open Classical in
+/-- Convert a set-theoretic option to a Lean option of members of the underlying set. -/
 noncomputable def into {T : ZFSet} : Option T → _root_.Option {x // x ∈ T} := fun x ↦
   if hx : x = none then .none else .some <| Classical.choose <| Or.resolve_left (casesOn x) hx
 
@@ -292,6 +295,7 @@ noncomputable def instEquivZFOptionOption {T : ZFSet} :
 
 
 
+/-- Convert a Lean option of set members to the set-theoretic option encoding. -/
 def outof {T : ZFSet} : _root_.Option {x // x ∈ T} → Option T
   | .some ⟨x, hx⟩ => some ⟨x, hx⟩
   | .none => none

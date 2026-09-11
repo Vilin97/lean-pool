@@ -5,6 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
+public import Mathlib.Topology.Instances.AddCircle.Defs
+
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 public import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Topology.Instances.AddCircle.DenseSubgroup

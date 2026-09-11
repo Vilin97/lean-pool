@@ -14,7 +14,6 @@ import Mathlib.Algebra.Order.Group.Indicator
 # Ordered indicator functions
 -/
 
-open scoped Indicator
 
 namespace Set
 variable {α M : Type*} [Zero M] [One M]

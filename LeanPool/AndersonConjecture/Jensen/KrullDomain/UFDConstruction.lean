@@ -5,6 +5,8 @@ Authors: FrenzyMath
 -/
 module
 
+public import Mathlib.RingTheory.AdicCompletion.Basic
+
 public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
 import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
 import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata

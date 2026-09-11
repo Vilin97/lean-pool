@@ -5,6 +5,8 @@ Authors: The FLT Project
 -/
 module
 
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+
 public import LeanPool.Odlyzko.Theta.TraceDualIdeal
 public import Mathlib.RingTheory.ClassGroup.Basic
 import Mathlib.Analysis.SpecialFunctions.Bernstein

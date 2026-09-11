@@ -68,6 +68,7 @@ theorem graphTreeRootPath_cons {a b : V} (e : a ⟶ b) :
   rw [h]
   rfl
 
+/-- The interval coordinate used while contracting a tree edge. -/
 def treeContractionCoordinate (t s : I) : I :=
   ⟨(1 - (s : ℝ)) * ((1 + (t : ℝ)) / 2), by
     have hs : 0 ≤ 1 - (s : ℝ) := by linarith [s.2.2]

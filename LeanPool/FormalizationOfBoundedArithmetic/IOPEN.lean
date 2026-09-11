@@ -13,7 +13,7 @@ public import LeanPool.FormalizationOfBoundedArithmetic.Complexity
 public import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
 import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
 import LeanPool.FormalizationOfBoundedArithmetic.Register
-import LeanPool.FormalizationOfBoundedArithmetic.Semantics
+public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
 import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 import Mathlib.Tactic.Positivity.Finset
 import Std.Tactic.BVDecide.Normalize.Prop

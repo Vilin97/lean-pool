@@ -44,6 +44,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {p : ℝ≥0∞} [Fact (1 ≤ p)]
 variable {s : Set α} (hs : MeasurableSet s)
 
+/-- Extend an Lp function from a restricted measure by zero outside the set. -/
 noncomputable def extendByZeroFun (f : Lp E p (μ.restrict s)) : Lp E p μ :=
   let hf : MemLp (fun x : α => f x) p (μ.restrict s) := Lp.memLp f
   let hfi : MemLp (s.indicator fun x : α => f x) p μ :=

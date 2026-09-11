@@ -53,12 +53,14 @@ variable [T2Space M] [CompactSpace M]
 local instance instMeasurableSpaceLocalization : MeasurableSpace M := borel M
 local instance instBorelSpaceLocalization : BorelSpace M := ⟨rfl⟩
 
+/-- The standard model with corners on the real line. -/
 abbrev Iℝ : ModelWithCorners ℝ ℝ ℝ := 𝓘(ℝ, ℝ)
 
 namespace FiniteChartData
 
 variable (d : FiniteChartData (H := H) (M := M) I)
 
+/-- The extended chart centered at the selected point of the finite chart family. -/
 abbrev chart (i : d.ι) : PartialEquiv M E :=
   extChartAt I (d.center i)
 

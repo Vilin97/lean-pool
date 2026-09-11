@@ -43,7 +43,7 @@ coordinates; everything is exact modular arithmetic — no square roots.
 namespace ThreeGap.LinftyRecords3
 
 open scoped Real
-open ThreeGap.SimApprox ThreeGap.DeltaCost ThreeGap.Chevallier ThreeGap.SimDirichlet
+open ThreeGap.SimApprox ThreeGap.DeltaCost ThreeGap.Chevallier
 open ThreeGap.LinftyRecords (abs_residue_le)
 open ThreeGap.EuclideanRecords (inf_lt_inf)
 

@@ -210,7 +210,7 @@ def PartsGadgetCertificate.Verifies
   PartsGadgetVerifiesNodeB certificate.nodes (certificate.nodeCount + 1)
     certificate.roots 0 = true
 
-instance (certificate : PartsGadgetCertificate) :
+instance instDecidableGadgetVerifies (certificate : PartsGadgetCertificate) :
     Decidable certificate.Verifies := by
   unfold PartsGadgetCertificate.Verifies
   infer_instance

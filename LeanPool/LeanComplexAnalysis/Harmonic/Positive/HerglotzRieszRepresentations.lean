@@ -19,7 +19,7 @@ import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
 import Mathlib.MeasureTheory.Measure.Support
-import Mathlib.Topology.ContinuousMap.SecondCountableSpace
+public import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 
 /-!
 # The Herglotz–Riesz Representation Theorem

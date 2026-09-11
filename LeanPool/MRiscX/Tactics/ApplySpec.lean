@@ -5,6 +5,8 @@ Authors: Julius Marx
 -/
 module
 
+public import LeanPool.MRiscX.Semantics.Specification
+
 public meta import LeanPool.MRiscX.Tactics.TacticUtil
 
 public import LeanPool.MRiscX.Elab.HandleExpr
@@ -12,7 +14,7 @@ public import LeanPool.MRiscX.Elab.HandleExpr
 public meta import Mathlib.Tactic.ToAdditive
 public meta import Mathlib.Tactic.ToDual
 public meta import Std.Do.Triple.SpecLemmas
-import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+public import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 import Mathlib.Tactic.Finiteness.Attr
 
 /-!

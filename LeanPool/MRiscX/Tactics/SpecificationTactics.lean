@@ -5,6 +5,8 @@ Authors: Julius Marx
 -/
 module
 
+public import LeanPool.MRiscX.AbstractSyntax.MState
+
 public meta import Lean.Elab.Tactic.Basic
 import LeanPool.MRiscX.Tactics.GeneralCustomTactics
 import Mathlib.Tactic.Finiteness.Attr

@@ -5,6 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
+public import Mathlib.Geometry.Manifold.VectorBundle.Hom
+
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.Geometry.Manifold.VectorBundle.ContMDiffSection
 public import Mathlib.Topology.VectorBundle.Hom

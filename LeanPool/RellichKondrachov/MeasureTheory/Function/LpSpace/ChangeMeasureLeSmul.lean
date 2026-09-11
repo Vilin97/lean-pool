@@ -46,6 +46,7 @@ private lemma memLp_changeMeasure {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν �
     MeasureTheory.MemLp.of_measure_le_smul
       (μ := μ) (μ' := ν) (p := p) (f := fun x : α => f x) hc hν hfμ
 
+/-- View an Lp function under a measure bounded by a finite multiple of the original measure. -/
 noncomputable def changeMeasureFun {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν ≤ c • μ) (f : Lp E p μ) :
     Lp E p ν :=
   (private_decl% (memLp_changeMeasure (μ := μ) (ν := ν) (p := p) hc hν f)).toLp fun x : α => f x

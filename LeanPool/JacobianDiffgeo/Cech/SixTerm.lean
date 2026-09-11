@@ -772,6 +772,7 @@ theorem exists_realization (_h : D ≤ D') (w : Window D D') :
 
 /-! ### The connecting map `windowConnect` (§6.9(d)) -/
 
+/-- The first-cohomology class associated to a section in the divisor window. -/
 noncomputable def windowConnectRaw (h : D ≤ D') (w : Window D D') : H1 D :=
   mlClass (exists_realization h w).choose (exists_realization h w).choose_spec.choose
     (exists_realization h w).choose_spec.choose_spec.choose

@@ -53,8 +53,6 @@ between weak and strong exactness is added, following [PalomaresPukelsheimRamire
 
 @[expose] public section
 
-open BigOperators
-
 /-- An apportionment is a vector of natural numbers representing the number of seats allocated to
 each party (at the corresponding index). -/
 abbrev Apportionment (n : ℕ) : Type := Vector ℕ n

@@ -5,6 +5,8 @@ Authors: Kalle Kytölä
 -/
 module
 
+public import Mathlib.Algebra.Torsor.Defs
+
 public import LeanPool.VirasoroProject.VirasoroAlgebra
 public import LeanPool.VirasoroProject.HeisenbergAlgebra
 public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis

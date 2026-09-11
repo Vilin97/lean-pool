@@ -5,6 +5,8 @@ Authors: ruplet
 -/
 module
 
+public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
+
 
 
 public import LeanPool.FormalizationOfBoundedArithmetic.Order

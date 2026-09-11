@@ -26,7 +26,6 @@ namespace PaperDualActionConjugacyQuadratic
 
 open Construction
 open Construction.PaperKernel
-open PaperDualActions
 open PaperDualCoordinates
 open PaperFactorIsomorphism
 open PaperDualActionConjugacyAlgebra

@@ -61,6 +61,7 @@ attribute [simp_isPosition]
   ite_eq_iff eq_ite_iff ite_prop_iff_or
   --apply_ite
   --maybe reduce priority to stop (apply_ite (Eq _))
+/-- Constructor equality reduction for the position simplifier. -/
 simproc_decl playerReduceCtorEq (_ = _) := reduceCtorEq
 attribute [simp_isPosition] playerReduceCtorEq
 /-- Tactic support used by the Borel determinacy formalization. -/

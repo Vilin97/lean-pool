@@ -19,7 +19,7 @@ import Mathlib.Order.Filter.Basic
 
 @[expose] public section
 
-open Finset Real Filter
+open Finset Filter
 open scoped BigOperators
 
 namespace Filter

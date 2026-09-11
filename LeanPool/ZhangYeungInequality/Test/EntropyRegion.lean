@@ -5,6 +5,10 @@ Authors: Christopher Boone
 -/
 module
 
+public import LeanPool.ZhangYeungInequality.Theorem4
+
+public import LeanPool.ZhangYeungInequality.EntropyRegion
+
 import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!

@@ -15,7 +15,6 @@ public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 
 @[expose] public section
 
-open RLTheory
 open MeasureTheory MeasureTheory.Measure Filtration
 open ProbabilityTheory.Kernel
 open ProbabilityTheory

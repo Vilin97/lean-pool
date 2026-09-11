@@ -300,10 +300,12 @@ theorem add_eq_sub_iff {a b c : ZFRat} : a + b = c ↔ a = c - b where
   mpr := fun h => by rw [h, sub_add_cancel]
 
 
+/-- Repeated addition by a natural-number scalar. -/
 noncomputable abbrev nsmul : ℕ → ZFRat → ZFRat
   | 0, _ => 0
   | n+1, m => m + nsmul n m
 
+/-- Integer scalar multiplication defined using repeated addition and negation. -/
 noncomputable abbrev zsmul (n : ℤ) (x : ZFRat) : ZFRat :=
   match n with
   | .ofNat n => nsmul n x
@@ -473,8 +475,10 @@ theorem inv_mul {a : ZFRat} (ha : a ≠ 0) : a⁻¹ * a = 1 := by
 noncomputable instance : RatCast ZFRat where
   ratCast q := ((q.num : ZFRat) / (q.den : ZFRat))
 
+/-- Rational scalar multiplication through the encoded rational field. -/
 noncomputable def qsmul (k : ℚ) (m : ZFRat) : ZFRat := (k : ZFRat) * m
 
+/-- Nonnegative rational scalar multiplication through the encoded rational field. -/
 noncomputable def nnqsmul : ℚ≥0 → ZFRat → ZFRat :=
   fun ⟨k, _⟩ m ↦ qsmul k m
 

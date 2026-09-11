@@ -2210,7 +2210,7 @@ private lemma rapidDecay_pointwise_seminorm_leNd (d : ℕ) (a : RapidDecaySeq) (
           h_ptwise (rapidDecay_seminorm_summableNd d a k l)
 
 /-- The Schwartz function from a rapid-decay multi-d Hermite expansion. -/
-noncomputable def rapidDecay_schwartzMapNd (d : ℕ) (a : RapidDecaySeq) :
+noncomputable def rapidDecaySchwartzMapNd (d : ℕ) (a : RapidDecaySeq) :
     SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ where
   toFun x := ∑' n, a.val n * flatBasisNd d n x
   smooth' := by exact rapidDecay_hermite_contDiffNd d a
@@ -2218,7 +2218,7 @@ noncomputable def rapidDecay_schwartzMapNd (d : ℕ) (a : RapidDecaySeq) :
 
 private lemma rapidDecay_schwartzMapNd_apply (d : ℕ) (a : RapidDecaySeq)
     (x : EuclideanSpace ℝ (Fin (d + 1))) :
-    rapidDecay_schwartzMapNd d a x = ∑' n, a.val n * flatBasisNd d n x := rfl
+    rapidDecaySchwartzMapNd d a x = ∑' n, a.val n * flatBasisNd d n x := rfl
 
 private noncomputable instance schwartzMapNd_T2Space (d : ℕ) :
     T2Space (SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ) := by
@@ -2228,12 +2228,12 @@ private noncomputable instance schwartzMapNd_T2Space (d : ℕ) :
         norm_le_zero_iff.mp ((SchwartzMap.norm_le_seminorm ℝ f x).trans (le_of_eq h)))⟩
   exact inferInstance
 
-/-- The multi-d Hermite expansion converges to `rapidDecay_schwartzMapNd d a`
+/-- The multi-d Hermite expansion converges to `rapidDecaySchwartzMapNd d a`
 in the Schwartz topology.
 -/
 private theorem rapidDecay_hermite_hasSumNd (d : ℕ) (a : RapidDecaySeq) :
-    HasSum (fun n => a.val n • flatBasisNd d n) (rapidDecay_schwartzMapNd d a) :=
-  rapidDecay_hasSum_generic (flatBasisNd d) a (rapidDecay_schwartzMapNd d a)
+    HasSum (fun n => a.val n • flatBasisNd d n) (rapidDecaySchwartzMapNd d a) :=
+  rapidDecay_hasSum_generic (flatBasisNd d) a (rapidDecaySchwartzMapNd d a)
     (rapidDecay_schwartzMapNd_apply d a) (rapidDecay_seminorm_summableNd d a)
     (fun c n l x => scalar_flatBasisNd_iFDeriv_bound d c n l x)
 
@@ -2242,9 +2242,10 @@ private theorem rapidDecay_hermite_summableNd (d : ℕ) (a : RapidDecaySeq) :
     Summable (fun n => a.val n • flatBasisNd d n) :=
   ⟨_, rapidDecay_hermite_hasSumNd d a⟩
 
+/-- The linear map reconstructing a multidimensional Schwartz function from its coefficients. -/
 noncomputable def fromRapidDecayNdLM (d : ℕ) :
     RapidDecaySeq →ₗ[ℝ] SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ where
-  toFun := rapidDecay_schwartzMapNd d
+  toFun := rapidDecaySchwartzMapNd d
   map_add' a b := SchwartzMap.ext fun x => by
     change ∑' n, (a + b).val n * flatBasisNd d n x =
       (∑' n, a.val n * flatBasisNd d n x) + (∑' n, b.val n * flatBasisNd d n x)
@@ -2321,9 +2322,9 @@ Schwartz function exactly match the input sequence.
 -/
 private lemma hermiteCoeffNd_rapidDecay_schwartzMapNd (d' : ℕ) (a : RapidDecaySeq) (n : ℕ) :
     hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n)
-      (rapidDecay_schwartzMapNd d' a) = a.val n := by
+      (rapidDecaySchwartzMapNd d' a) = a.val n := by
   -- Rewrite the pointwise-tsum Schwartz map to the module-level tsum
-  rw [show (rapidDecay_schwartzMapNd d' a : SchwartzMap _ _) =
+  rw [show (rapidDecaySchwartzMapNd d' a : SchwartzMap _ _) =
       ∑' m, a.val m • flatBasisNd d' m from
     (rapidDecay_hermite_hasSumNd d' a).tsum_eq.symm]
   -- Push hermiteCoeffNd (as CLM) through the tsum
@@ -2399,10 +2400,10 @@ theorem schwartzRapidDecayEquivNd_symm_apply (d' : ℕ) (a : RapidDecaySeq)
   simp only [schwartzRapidDecayEquivNd]
   -- Now the goal is fromRapidDecayNdCLM (d'+1) a x = tsum
   -- fromRapidDecayNdCLM (d'+1) for d'+1 ≥ 1 gives fromRapidDecayNdLM d' a
-  -- which is rapidDecay_schwartzMapNd d' a
+  -- which is rapidDecaySchwartzMapNd d' a
   change fromRapidDecayNdCLM (d' + 1) a x = _
-  -- Unfold fromRapidDecayNdCLM to fromRapidDecayNdLM, then to rapidDecay_schwartzMapNd
-  change rapidDecay_schwartzMapNd d' a x = _
+  -- Unfold fromRapidDecayNdCLM to fromRapidDecayNdLM, then to rapidDecaySchwartzMapNd
+  change rapidDecaySchwartzMapNd d' a x = _
   -- By definition, this is ∑' n, a.val n * flatBasisNd d' n x
   change ∑' n, a.val n * flatBasisNd d' n x = _
   -- flatBasisNd d' n = schwartzHermiteBasisNd (d'+1) ((multiIndexEquiv d').symm n)

@@ -9,7 +9,7 @@ public import Mathlib.MeasureTheory.Measure.DiracProba
 public import LeanPool.QuasiBorelSpaces.Hom
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-import LeanPool.QuasiBorelSpaces.Basic
+public import LeanPool.QuasiBorelSpaces.Basic
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
 import LeanPool.QuasiBorelSpaces.Prop

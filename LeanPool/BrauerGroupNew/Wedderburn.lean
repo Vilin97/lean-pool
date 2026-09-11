@@ -5,6 +5,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
+public import Mathlib.Algebra.Module.Torsion.Basic
+
 public import Mathlib.Algebra.Central.Defs
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.Artinian.Defs

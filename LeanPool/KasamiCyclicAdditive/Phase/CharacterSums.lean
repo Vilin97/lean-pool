@@ -9,7 +9,7 @@ public import Mathlib.Data.FunLike.Fintype
 public import Mathlib.NumberTheory.GaussSum
 import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
 import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.NumberTheory.MulChar.Duality
+public import Mathlib.NumberTheory.MulChar.Duality
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 
 /-!

@@ -50,7 +50,6 @@ namespace LeanPool
 
 open MeasureTheory Real Set Metric Filter
 open _root_.ProbabilityTheory
-open _root_.LeanPool.ProbabilityTheory
 open scoped ENNReal BigOperators NNReal Topology
 
 noncomputable section

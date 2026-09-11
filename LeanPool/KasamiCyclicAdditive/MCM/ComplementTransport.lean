@@ -5,6 +5,8 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
+public import Mathlib.RingTheory.SimpleRing.Basic
+
 public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
 public import Mathlib.Algebra.CharP.Lemmas
 import Mathlib.CategoryTheory.Category.Init

@@ -5,6 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
+public import Mathlib.Algebra.CharZero.Defs
+
 public import Mathlib.Data.Vector.Basic
 public import Mathlib.Data.Fin.VecNotation
 public import Mathlib.Data.Set.Finite.Range

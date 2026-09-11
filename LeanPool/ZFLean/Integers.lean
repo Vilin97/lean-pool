@@ -9,7 +9,7 @@ public import LeanPool.ZFLean.Naturals
 public import Mathlib.Algebra.Order.Ring.Defs
 public import Mathlib.Algebra.Group.End
 import LeanPool.ZFLean.Basic
-import Mathlib.SetTheory.Cardinal.SchroederBernstein
+public import Mathlib.SetTheory.Cardinal.SchroederBernstein
 import Mathlib.Tactic.NormNum.Inv
 import Mathlib.Tactic.NormNum.Pow
 /-! # ZFC Integers
@@ -198,9 +198,11 @@ theorem sub_right_cancel (a b c : ZFInt) : c - a = c - b → a = b := by
 theorem add_eq_sub_iff {a b c : ZFInt} : a + b = c ↔ a = c - b where
   mp := fun h => by rw [← h, add_sub_cancel]
   mpr := fun h => by rw [h, sub_add_cancel]
+/-- Repeated addition by a natural-number scalar. -/
 noncomputable abbrev nsmul : ℕ → ZFInt → ZFInt
   | 0, _ => 0
   | n+1, m => m + nsmul n m
+/-- Integer scalar multiplication defined using repeated addition and negation. -/
 noncomputable abbrev zsmul (n : ℤ) (x : ZFInt) : ZFInt :=
   match n with
   | .ofNat n => nsmul n x
@@ -844,6 +846,7 @@ noncomputable def ofInt : ℤ → ZFSet
 noncomputable def toZFInt : ℤ → ZFInt
   | .ofNat n => ZFInt.mk (0, ↑n)
   | .negSucc n => ZFInt.mk (↑n+1, 0)
+/-- The pre-set representative of an integer in the set-theoretic encoding. -/
 def ofInt' : (n : ℤ) → PSet
   | .ofNat 0 => {{∅}}
   | .ofNat (n+1) => {{∅}, {∅, .ofNat n}} -- (0, n)
@@ -936,6 +939,7 @@ theorem mem_Int_proj' {x : ZFSet} :
 namespace ZFInt
 
 open Classical in
+/-- Decode a member of the set-theoretic integers into its quotient representation. -/
 noncomputable def outof : {x // x ∈ Int} → ZFInt := fun ⟨n, hn⟩ =>
   have := mem_Int_proj' hn
   if case : n.π₁ = ∅ ∧ n.π₂ ∈ Nat then

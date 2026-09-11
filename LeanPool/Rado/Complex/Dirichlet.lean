@@ -8,7 +8,7 @@ module
 public import LeanPool.Rado.Complex.SubMean
 public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import LeanPool.Rado.Complex.Poisson
+public import LeanPool.Rado.Complex.Poisson
 import Mathlib.Analysis.Complex.Harmonic.MeanValue
 import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 

@@ -18,7 +18,7 @@ This module provides label resolution inside MRiscX Hoare syntax.
 -/
 
 public meta section
-open Lean Elab
+open Lean Elab Term
 
 /-
 This file contains a logic to replace the labelname with the actual pc index

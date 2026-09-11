@@ -361,7 +361,7 @@ lemma embeddingMap_norm_sq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
             conv_rhs => arg 2; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
 
 /-- ℝ-linear view of the Lp multiplication CLM (avoiding `restrictScalars`). -/
-noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fact (0 < m)] :
+noncomputable def momentumWeightSqrtMathlibMulCLMReal (m : ℝ) [Fact (0 < m)] :
     Lp ℂ 2 (volume : Measure SpaceTime) →L[ℝ]
       Lp ℂ 2 (volume : Measure SpaceTime) where
   toLinearMap :=
@@ -374,7 +374,7 @@ noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fact (0 < m
 /-- Continuous linear map obtained by composing the proven building blocks. -/
 noncomputable def embeddingMapCLM (m : ℝ) [Fact (0 < m)] :
     TestFunction →L[ℝ] Lp ℂ 2 (volume : Measure SpaceTime) :=
-  ((momentumWeightSqrt_mathlib_mul_CLM_real m).comp (schwartzToL2CLMReal m)).comp
+  ((momentumWeightSqrtMathlibMulCLMReal m).comp (schwartzToL2CLMReal m)).comp
     ((fourierTransformCLMReal).comp toComplexCLM)
 
 lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : TestFunction) :

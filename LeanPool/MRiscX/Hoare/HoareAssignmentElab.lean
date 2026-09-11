@@ -16,7 +16,7 @@ This module provides elaboration of MRiscX Hoare assignment chains.
 -/
 
 public meta section
-open Lean Elab
+open Lean Elab Term
 
 /-- The total number of nodes in a syntax tree, an upper bound on its depth. -/
 private def assignmentSyntaxSize : Syntax → Nat

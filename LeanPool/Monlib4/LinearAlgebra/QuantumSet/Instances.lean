@@ -439,6 +439,7 @@ variable {k : Type*} [Fintype k] [DecidableEq k] {s : k → Type*} [Π i, Fintyp
 
 
 
+/-- Apply the modular automorphism to each matrix block in a family. -/
 noncomputable def piSig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     (z : ℝ) : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s where
   toFun x i := sig (hψ i) z (x i)

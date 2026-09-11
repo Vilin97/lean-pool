@@ -23,8 +23,6 @@ The characteristic component of the Connes rigidity formalization.
 namespace Connes
 namespace PaperCharacteristic
 
-open Construction
-open Construction.PaperKernel
 
 noncomputable section
 

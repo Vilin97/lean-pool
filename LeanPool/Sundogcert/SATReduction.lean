@@ -66,7 +66,7 @@ public import LeanPool.Sundogcert.MatchingNPHard
 
 @[expose] public section
 
-open Sundog.SATNPHard Sundog.VarWheel Sundog.ClauseGadget Sundog.MatchingNPHard
+open Sundog.SATNPHard Sundog.MatchingNPHard
 
 namespace Sundog.SATReduction
 

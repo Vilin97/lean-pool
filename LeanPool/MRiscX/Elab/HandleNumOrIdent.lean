@@ -17,7 +17,7 @@ This module provides elaboration helpers for numeric/identifier operands.
 -/
 
 public meta section
-open Nat Lean PrettyPrinter Expr Meta Elab
+open Nat Lean PrettyPrinter Expr Meta Elab Term
 
 /-
 Next, we introduce utility functions to streamline the conversion of syntax into an Expr.

@@ -58,6 +58,7 @@ theorem Entails_rename_by_idx (idx : Nat) :
 
 end
 
+/-- Reduction rules used after renaming a proof-mode hypothesis. -/
 meta def renameTacDSimps := #[``renameHyp, ``modifyHypByName, ``List.findIdx?, ``List.findIdx?.go, ``String.reduceBEq, ``String.reduceBNe,
     ``dreduceIte, ``Option.elim, ``Bool.false_eq_true, ``List.modify, ``List.modifyTailIdx,
     ``List.modifyTailIdx.go, ``List.modifyHead]

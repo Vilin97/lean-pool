@@ -74,9 +74,11 @@ lemma remap₂_val_lt (N G₁ G₂ : Nat) (w : Fin (N + G₂))
     (remap₂ N G₁ G₂ w).val < N + bound := by
   unfold remap₂; split_ifs <;> dsimp <;> omega
 
+/-- The wire feeding the selected input of a binary AND/OR gate. -/
 def gw (idx : Nat) {W : Nat} (g : Gate Basis.andOr2 W)
     (_ : idx < 2 := by omega) : Fin W :=
   g.inputs ⟨idx, by rw [andOr2_fanIn]; omega⟩
+/-- Whether the selected input of a binary AND/OR gate is negated. -/
 def gn (idx : Nat) {W : Nat} (g : Gate Basis.andOr2 W)
     (_ : idx < 2 := by omega) : Bool :=
   g.negated ⟨idx, by rw [andOr2_fanIn]; omega⟩

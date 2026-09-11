@@ -5,6 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.CategoryTheory.Category.Init

@@ -16,7 +16,7 @@ public meta import Lean.Elab.Tactic.Basic
 public meta import Lean.Meta.Tactic.Apply
 import Lean.Exception
 import Lean.Meta.ArgsPacker.Basic
-meta import Lean.Meta.Tactic.Rewrite
+public meta import Lean.Meta.Tactic.Rewrite
 import LeanPool.Lean4Itree.Paco.PacoDefs
 
 /-!

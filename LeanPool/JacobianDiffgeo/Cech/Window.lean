@@ -31,7 +31,7 @@ needed); the *structural* exactness in this file does not depend on them.
 @[expose] public section
 
 open scoped ContDiff Manifold Topology
-open Set TopologicalSpace RS.Cech Filter
+open Set TopologicalSpace Filter
 
 namespace RS.Cech
 

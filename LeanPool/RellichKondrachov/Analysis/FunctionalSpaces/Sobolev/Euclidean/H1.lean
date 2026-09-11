@@ -65,8 +65,11 @@ local instance instOpensMeasurableSpaceH1 : OpensMeasurableSpace E := by infer_i
 
 variable (μ : Measure E) [IsFiniteMeasureOnCompacts μ]
 
+/-- The space of square-integrable real-valued functions. -/
 abbrev L2ℝ : Type _ := ↥(E →₂[μ] ℝ)
+/-- The space of square-integrable vector-valued functions. -/
 abbrev L2E : Type _ := ↥(E →₂[μ] E)
+/-- The product space containing a function and its first derivative. -/
 abbrev H1Target : Type _ := L2ℝ (μ := μ) × L2E (μ := μ)
 
 /-- `C¹` real-valued functions on `E` with compact support, as a submodule of `E → ℝ`. -/

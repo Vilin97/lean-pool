@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 @[expose] public section
 
-open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
+open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset Bornology NNReal ENNReal Preorder Filter
 
 namespace ProbabilityTheory.Kernel

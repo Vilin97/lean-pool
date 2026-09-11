@@ -104,7 +104,7 @@ theorem perfect_or_bad {α : Type*} (r : α → α → Prop) (f : PairSeq α) :
 end PairSeq
 
 /-- `r` is **2-BQO** if there is no bad pair-sequence for `r`. -/
-def TwoBQO_n {α : Type*} (r : α → α → Prop) : Prop :=
+def TwoBQON {α : Type*} (r : α → α → Prop) : Prop :=
   ¬ ∃ f : PairSeq α, PairSeq.IsBad r f
 
 /-- `r` is **2-BQO** if every pair-sequence has a good triple `m < n < l`, i.e.
@@ -112,8 +112,8 @@ def TwoBQO_n {α : Type*} (r : α → α → Prop) : Prop :=
 def TwoBQO {α : Type*} (r : α → α → Prop) : Prop :=
   ∀ f : PairSeq α, ∃ m n l : ℕ, ∃ (hmn : m < n) (hnl : n < l), r (f m n hmn) (f n l hnl)
 
-theorem TwoBQO.iff_noBad {α : Type*} (r : α → α → Prop) : TwoBQO r ↔ TwoBQO_n r := by
-  simp only [TwoBQO_n, PairSeq.IsBad, not_exists, not_forall, not_not]
+theorem TwoBQO.iff_noBad {α : Type*} (r : α → α → Prop) : TwoBQO r ↔ TwoBQON r := by
+  simp only [TwoBQON, PairSeq.IsBad, not_exists, not_forall, not_not]
   exact Iff.symm (Eq.to_iff rfl)
 
 /-!

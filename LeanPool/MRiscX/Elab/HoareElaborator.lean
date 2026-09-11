@@ -11,7 +11,7 @@ public import LeanPool.MRiscX.Hoare.HoareAssignmentElab
 public import LeanPool.MRiscX.Parser.HoareSyntax
 public meta import Mathlib.Tactic.ToAdditive
 public meta import Mathlib.Tactic.ToDual
-import LeanPool.MRiscX.Hoare.HoareCore
+public import LeanPool.MRiscX.Hoare.HoareCore
 import Mathlib.Tactic.Finiteness.Attr
 
 /-!

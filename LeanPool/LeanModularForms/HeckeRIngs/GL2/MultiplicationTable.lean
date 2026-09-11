@@ -723,7 +723,7 @@ private lemma T_pp_comm_T_sum_ppow (k : ℕ) : TPp p * TSum ⟨p ^ k, pow_pos hp
     exact T_pp_comm_T_elem p hp _
       (fun i' => by fin_cases i' <;> first | exact pow_pos hp.pos i | exact pow_pos hp.pos (k - i))
       (fun i' hi' => by (have : i' = 0 := by omega); subst this; simpa using hdvd)
-  · simp [T_ad_eq_zero h, HA_mul_zero, HA_zero_mul]
+  · simp [T_ad_eq_zero h]
 
 private lemma T_pp_pow_comm_T_sum_ppow (i k : ℕ) : TPp p ^ i *
     TSum ⟨p ^ k, pow_pos hp.pos k⟩ = TSum ⟨p ^ k, pow_pos hp.pos k⟩ * TPp p ^ i := by

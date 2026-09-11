@@ -28,7 +28,7 @@ finite-subcover gluing in cocone points.
 
 universe u
 
-open CategoryTheory TopologicalSpace Abelian Limits Opposite TopCat
+open CategoryTheory TopologicalSpace Limits Opposite TopCat
 
 /-- Zero is preserved under filtered transitions: if restricting a transition to an open
     gives 0, then restricting any further transition also gives 0. -/

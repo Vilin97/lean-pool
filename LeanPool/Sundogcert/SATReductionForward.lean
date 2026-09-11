@@ -55,7 +55,7 @@ public import LeanPool.Sundogcert.ThreeDMReindex
 
 @[expose] public section
 
-open Sundog.SATReduction Sundog.SATNPHard Sundog.VarWheel
+open Sundog.SATReduction Sundog.SATNPHard
 open Sundog.SATReductionIncidence Sundog.ThreeDMReindex
 
 namespace Sundog.SATReductionForward

@@ -6,7 +6,7 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Cech.Colimit
-import LeanPool.JacobianDiffgeo.Cech.Injectivity
+public import LeanPool.JacobianDiffgeo.Cech.Injectivity
 import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
 import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
 import Mathlib.Combinatorics.Matroid.Init

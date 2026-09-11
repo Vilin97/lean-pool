@@ -31,7 +31,6 @@ open PaperDualHaar
 open PaperDualTopology
 open PaperDualAutomorphism
 open PaperFactorIsomorphism
-open CrossedProduct
 
 noncomputable section
 

@@ -11,7 +11,7 @@ public import LeanPool.DomainTheory.Neighborhood.Exercise419
 public import LeanPool.DomainTheory.Neighborhood.Exercise510
 public import Mathlib.Tactic.Attr.Core
 import LeanPool.DomainTheory.Neighborhood.Exercise516
-import LeanPool.DomainTheory.Neighborhood.Theorem69
+public import LeanPool.DomainTheory.Neighborhood.Theorem69
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.NormNum.Abs

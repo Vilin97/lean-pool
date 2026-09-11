@@ -9,7 +9,7 @@ public import Mathlib.Topology.Germ
 public import Mathlib.Analysis.Analytic.Basic
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
-import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Constructions
 import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 import Mathlib.Tactic.Positivity.Finset
 

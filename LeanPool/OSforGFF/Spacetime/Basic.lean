@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import LeanPool.OSforGFF.General.FunctionalAnalysis
+public import LeanPool.OSforGFF.General.FunctionalAnalysis
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Data.Nat.Factorial.DoubleFactorial
 

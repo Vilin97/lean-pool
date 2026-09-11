@@ -20,6 +20,7 @@ open Lean Meta Elab Tactic
 
 -- NOTE: The following approach to restoring binder names is inspired by
 -- `binderNameHint` and `resolveBinderNameHint`
+/-- Attach a binder-name hint without changing the underlying function. -/
 def binderNameHintAsString (_n : String) (p : α → β) : α → β := p
 
 private meta def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do

@@ -31,7 +31,6 @@ shortest record `r(qₙ₊₄)` cannot lie in the open cone of two others, becau
 namespace ThreeGap.SimApprox
 
 open scoped Real
-open ThreeGap.EuclideanPacking
 
 variable {n : ℕ}
 

@@ -6,6 +6,8 @@ Authors: PFR contributors
 
 module
 
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+
 public import Mathlib.Algebra.Algebra.Defs
 public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.Algebra.Module.ZMod

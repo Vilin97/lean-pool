@@ -5,6 +5,14 @@ Authors: Elan Roth
 -/
 module
 
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+
+public import Mathlib.Algebra.Module.Torsion.Basic
+
+public import Mathlib.RingTheory.FractionalIdeal.Basic
+
+public import Mathlib.CategoryTheory.Types.Basic
+
 public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
 public import LeanPool.UlmsTheorem.Ulm.Pure
 public import Mathlib.RingTheory.Finiteness.Defs

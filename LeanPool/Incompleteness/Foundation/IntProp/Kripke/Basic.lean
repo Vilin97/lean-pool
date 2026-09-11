@@ -19,7 +19,6 @@ import Mathlib.Tactic.Bound.Init
 namespace LO
 namespace IntProp
 
-open Entailment
 
 
 namespace Kripke

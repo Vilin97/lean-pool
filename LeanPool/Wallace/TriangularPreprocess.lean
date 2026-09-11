@@ -252,13 +252,17 @@ theorem exists_index_gt_avoiding_finset
 /-- State of the recursive block selector.  `values l` contains the values already selected in
 block `l`; `last` is the last source index used. -/
 structure BlockSelectionState (G : Type*) where
+  /-- The most recently selected block index. -/
   last : ℕ
+  /-- The finite set selected at each block index. -/
   values : ℕ → Finset G
 
+/-- The block-selection state with no selected values. -/
 def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
   last := 0
   values := fun _ => ∅
 
+/-- The finite set of values excluded at the next block-selection stage. -/
 noncomputable def excludedAt
     {G : Type*} [AddCommGroup G] (M block : ℕ → ℕ) (n : ℕ)
     (st : BlockSelectionState G) : Finset G := by
@@ -301,6 +305,7 @@ private theorem nextBlockIndex_not_forbidden
   exact (nextBlockIndex_spec u hu M block n st).2
     (Finset.mem_union_right _ <| forbidden_mem_forbiddenFinset h)
 
+/-- Advance block selection by choosing values outside the excluded set. -/
 noncomputable def blockSelectionStep
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :

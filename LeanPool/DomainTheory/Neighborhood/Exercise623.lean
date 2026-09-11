@@ -8,7 +8,7 @@ module
 public import LeanPool.DomainTheory.Neighborhood.Exercise621
 public import LeanPool.DomainTheory.Neighborhood.Definition63
 public import LeanPool.DomainTheory.Neighborhood.Proposition612
-import LeanPool.DomainTheory.Neighborhood.Theorem69
+public import LeanPool.DomainTheory.Neighborhood.Theorem69
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.Continuity.Init

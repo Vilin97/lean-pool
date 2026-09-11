@@ -25,7 +25,7 @@ Auxiliary declarations for the Borel determinacy formalization.
 
 
 namespace GaleStewartGame.BorelDet.Zero
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}

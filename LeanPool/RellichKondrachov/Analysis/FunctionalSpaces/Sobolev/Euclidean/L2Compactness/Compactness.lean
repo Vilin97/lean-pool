@@ -65,6 +65,7 @@ lemma isCompact_Kψ (hK : IsCompact K) (hψcs : HasCompactSupport ψ) :
     IsCompact (Kψ (K := K) (ψ := ψ)) :=
   IsCompact.add hK hψcs.isCompact
 
+/-- Restrict the smoothed function to its compact domain as a continuous map. -/
 def smoothOn (hKm : MeasurableSet K) (hψc : Continuous ψ) (hψcs : HasCompactSupport ψ)
     (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) :
     C(↥(Kψ (K := K) (ψ := ψ)), ℝ) where

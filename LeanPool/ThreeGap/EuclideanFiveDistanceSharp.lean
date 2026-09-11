@@ -30,7 +30,7 @@ yields `≤ 4 + 1 = 5` distances. Axiom-clean.
 namespace ThreeGap.EuclideanRecords
 
 open scoped Real
-open ThreeGap.SimApprox ThreeGap.Chevallier ThreeGap.DeltaCost ThreeGap.SimDirichlet
+open ThreeGap.SimApprox ThreeGap.Chevallier
 
 /-- **The sharp Euclidean growth `2 qₖ ≤ qₖ₊₄` for the record denominators (Haynes–Marklof).** -/
 theorem bestDenom_euclidean_growth_four (α : Fin 2 → ℝ) {k₀ : Fin 2} (hirr : Irrational (α k₀))

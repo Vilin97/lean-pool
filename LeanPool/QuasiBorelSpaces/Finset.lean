@@ -25,6 +25,7 @@ variable
   {B : Type*} [QuasiBorelSpace B]
   {C : Type*} [QuasiBorelSpace C]
 
+/-- View a finite set as its underlying nodup multiset. -/
 irreducible_def toSubtype : Finset A → { xs : Multiset A // Multiset.Nodup xs }
   | ⟨x, h⟩ => ⟨x, h⟩
 

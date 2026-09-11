@@ -33,20 +33,3 @@ variable {α : Type*}
     appendr u v (i.addNat m) = v i := by simp [appendr, vecAppend_eq_ite]
 
 end Matrix
-
-namespace LO
-namespace FirstOrder
-
-variable {L : Language}
-
-namespace Semiformula
-
-open Rew
-
-variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
-
-
-end Semiformula
-
-end FirstOrder
-end LO

@@ -5,10 +5,12 @@ Authors: BochaoKong
 -/
 module
 
+public import Mathlib.Analysis.Analytic.Linear
+
 public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # Germs of local biholomorphisms

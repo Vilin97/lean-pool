@@ -127,7 +127,8 @@ theorem Matrix.KroneckerProduct.ext_iff {R P n₁ n₂ : Type _} [Finite n₁] [
   rw [Matrix.kmul_representation x]
   simp_rw [map_sum, _root_.map_smul, h _ _]
 
-def mul_map_aux (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [NormedSpace 𝕜 X]
+/-- Multiplication as a linear map into continuous linear endomorphisms. -/
+def mulMapAux (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [NormedSpace 𝕜 X]
     [SMulCommClass 𝕜 X X] [IsScalarTower 𝕜 X X] [FiniteDimensional 𝕜 X] : X →ₗ[𝕜] X →L[𝕜] X
     where
   toFun x :=
@@ -147,7 +148,7 @@ namespace LinearMap
 def mulToClm (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [NormedSpace 𝕜 X]
     [SMulCommClass 𝕜 X X] [IsScalarTower 𝕜 X X] [FiniteDimensional 𝕜 X] : X →L[𝕜] X →L[𝕜] X
     where
-  toFun := mul_map_aux 𝕜 X
+  toFun := mulMapAux 𝕜 X
   map_add' := map_add _
   map_smul' := _root_.map_smul _
   cont := map_continuous _

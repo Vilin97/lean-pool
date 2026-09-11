@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2019 Reid Barton and coauthors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Mathlib contributors
+-/
+
+/-
 Copyright (c) 2019 Reid Barton, Johan Commelin, Jesse Michael Han, Chris Hughes, Robert Y. Lewis,
 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
@@ -157,14 +163,12 @@ end Q
 
 
 /-- The free vector space on vertices of a hypercube, defined inductively. -/
-def V : ℕ → Type
+abbrev V : ℕ → Type
   | 0 => ℝ
   | n + 1 => V n × V n
 
-@[simp]
 theorem V_zero : V 0 = ℝ := rfl
 
-@[simp]
 theorem V_succ {n : ℕ} : V (n + 1) = (V n × V n) := rfl
 
 namespace V
@@ -181,7 +185,6 @@ instance : DecidableEq (V n) := by induction n <;> · dsimp only [V]; infer_inst
 
 instance : AddCommGroup (V n) := by induction n <;> · dsimp only [V]; infer_instance
 
-set_option backward.isDefEq.respectTransparency false in
 instance : Module ℝ (V n) := by induction n <;> · dsimp only [V]; infer_instance
 
 end V
@@ -203,7 +206,6 @@ noncomputable def ε : ∀ {n : ℕ}, Q n → V n →ₗ[ℝ] ℝ
 
 variable {n : ℕ}
 
-set_option backward.isDefEq.respectTransparency false in
 theorem duality (p q : Q n) : ε p (e q) = if p = q then 1 else 0 := by
   induction n with
   | zero => simp [Subsingleton.elim (α := Q 0) p q, ε, e]
@@ -287,7 +289,6 @@ is necessary since otherwise `n • v` refers to the multiplication defined
 using only the addition of `V`. -/
 
 
-set_option backward.isDefEq.respectTransparency false in
 theorem f_squared (v : V n) : (f n) (f n v) = (n : ℝ) • v := by
   induction n with
   | zero => simp only [Nat.cast_zero, zero_smul, f_zero, LinearMap.zero_apply]
@@ -297,14 +298,12 @@ theorem f_squared (v : V n) : (f n) (f n v) = (n : ℝ) • v := by
 /-! We now compute the matrix of `f` in the `e` basis (`p` is the line index,
 `q` the column index). -/
 
-set_option backward.isDefEq.respectTransparency false in
 open scoped Classical in
 theorem f_matrix (p q : Q n) : |ε q (f n (e p))| = if p ∈ q.adjacent then 1 else 0 := by
   induction n with
   | zero =>
     dsimp [f]
     simp [Q.not_adjacent_zero]
-    rfl
   | succ n IH =>
     have ite_nonneg : ite (π q = π p) (1 : ℝ) 0 ≥ 0 := by split_ifs <;> norm_num
     dsimp only [e, ε, f, V]; rw [LinearMap.prod_apply]; dsimp; cases hp : p 0 <;> cases hq : q 0
@@ -326,18 +325,15 @@ variable {m : ℕ}
 /-! Again we unpack what are the values of `g`. -/
 
 
-set_option backward.isDefEq.respectTransparency false in
 theorem g_apply : ∀ v, g m v = (f m v + √(m + 1) • v, v) := by
   delta g; intro v; simp
 
-set_option backward.isDefEq.respectTransparency false in
 theorem g_injective : Injective (g m) := by
   rw [g]
   intro x₁ x₂ h
   simp only [V, LinearMap.prod_apply, LinearMap.id_apply, Prod.mk_inj, Function.prod_apply] at h
   exact h.right
 
-set_option backward.isDefEq.respectTransparency false in
 theorem f_image_g (w : V m.succ) (hv : ∃ v, g m v = w) : f m.succ w = √(m + 1) • w := by
   rcases hv with ⟨v, rfl⟩
   have : √(m + 1) * √(m + 1) = m + 1 := Real.mul_self_sqrt (mod_cast zero_le)
@@ -412,7 +408,6 @@ theorem exists_eigenvalue (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
   rw [Set.toFinset_card] at hH
   linarith
 
-set_option backward.isDefEq.respectTransparency false in
 open scoped Classical in
 /-- **Huang sensitivity theorem** also known as the **Huang degree theorem** -/
 theorem huang_degree_theorem (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
@@ -445,7 +440,10 @@ theorem huang_degree_theorem (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
     _ ≤ ∑ p ∈ (coeffs y).support, |coeffs y p * (ε q <| f m.succ <| e p)| :=
       (norm_sum_le _ fun p => coeffs y p * _)
     _ = ∑ p ∈ (coeffs y).support, |coeffs y p| * ite (p ∈ q.adjacent) 1 0 := by
-      simp only [abs_mul, f_matrix]
+      simp only [abs_mul]
+      apply Finset.sum_congr rfl
+      intro p _
+      exact congrArg (fun t => |coeffs y p| * t) (f_matrix p q)
     _ = ∑ p ∈ (coeffs y).support with p ∈ q.adjacent, |coeffs y p| := by
       simp [sum_filter]
     _ ≤ ∑ p ∈ (coeffs y).support with p ∈ q.adjacent, |coeffs y q| := sum_le_sum fun p _ ↦ H_max p

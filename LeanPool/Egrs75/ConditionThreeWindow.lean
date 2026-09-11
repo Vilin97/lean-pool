@@ -63,7 +63,6 @@ open Finset
 open Egrs75
 open Egrs75.LeafInduction
 open Egrs75.RepairDV
-open Egrs75.RepairPaperfaithful
 
 /-! ## The base-`q` geometric sum and the GOLDEN place-value identity -/
 

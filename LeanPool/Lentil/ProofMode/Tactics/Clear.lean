@@ -56,6 +56,7 @@ leaves only `hq : q` in the proof-mode context.
 -/
 syntax (name := tlaClearTac) "tla_clear" (ppSpace colGt ident)+ : tactic
 
+/-- Reduction rules used after clearing a proof-mode hypothesis. -/
 meta def clearTacDSimps := #[``List.filter, ``List.contains, ``List.elem, ``or, ``and, ``not,
   ``String.reduceBEq, ``String.reduceBNe, ``Bool.false_or, ``Bool.or_false]
 

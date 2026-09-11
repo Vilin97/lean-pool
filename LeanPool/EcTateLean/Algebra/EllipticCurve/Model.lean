@@ -5,6 +5,8 @@ Authors: Alex J. Best
 -/
 module
 
+public import Mathlib.Algebra.Order.Sub.Basic
+
 public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
 public import Mathlib.Algebra.Field.Defs
 import LeanPool.EcTateLean.Algebra.Ring.Basic

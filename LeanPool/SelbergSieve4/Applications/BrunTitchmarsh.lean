@@ -8,7 +8,7 @@ module
 public import Mathlib.NumberTheory.Primorial
 public import LeanPool.SelbergSieve4.Selberg
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
+public import LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
 import LeanPool.SelbergSieve4.Tactic.AesopInit
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan

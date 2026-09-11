@@ -14,7 +14,7 @@ public import Mathlib.Topology.GDelta.MetrizableSpace
 import LeanPool.SardMoreira.ContDiff
 import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
 import Mathlib.Analysis.Calculus.ContDiff.Comp
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
 import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathlib.MeasureTheory.Covering.Besicovitch

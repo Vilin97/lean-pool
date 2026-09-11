@@ -5,12 +5,24 @@ Authors: Jukka Suomela
 -/
 module
 
+public import Mathlib.Algebra.Regular.Basic
+
+public import Mathlib.Algebra.GroupWithZero.Invertible
+
+public import Mathlib.Data.NNRat.Defs
+
+public import Mathlib.Algebra.GroupWithZero.Units.Basic
+
+public import Mathlib.Algebra.CharZero.Defs
+
+public import Mathlib.Data.Sym.Basic
+
 
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Fintype.CardEmbedding
-import Mathlib.Data.Nat.Bitwise
+public import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum.Abs
@@ -70,6 +82,7 @@ theorem card_freeCoord (a d : DirIdx) :
   exact Fintype.card_subtype
     (fun j : Fin 3 => colMatch (maskAt a) j = none ∧ rowMatch (maskAt d) j = none)
 
+/-- The symbols occupying the free coordinates of a base orbit. -/
 noncomputable def freeSyms {k : DirIdx} (u : BaseOrbit k) : Finset SymN :=
   (Finset.univ : Finset (FreeCol k)).image (fun j => u.1.1 j.1)
 

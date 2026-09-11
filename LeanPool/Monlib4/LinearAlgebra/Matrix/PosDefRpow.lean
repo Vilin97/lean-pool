@@ -124,6 +124,8 @@ noncomputable def _root_.Matrix.PosDef.eigenvaluesInvertible' {Q : Matrix n n �
     (hQ : Q.PosDef) :
     Invertible (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1) : n → 𝕜) := by
   letI := hQ.eigenvaluesInvertible
+  letI (i : n) : Invertible (hQ.1.eigenvalues i) :=
+    invertibleOfNonzero (ne_of_gt (hQ.pos_eigenvalues i))
   use (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1)⁻¹ : n → 𝕜) <;>
     · ext i
       simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,

@@ -150,6 +150,7 @@ lemma toFun_eq_coe (f : Limit S) : toFun f = ⇑f := rfl
 @[simp]
 lemma project_coe (n) (f : Limit S) : Sequence.project n (f (n + 1)) = f n := f.property n
 
+/-- View a sequence limit as a compatible family of coordinates. -/
 def toSubtype {S} [Sequence S] (x : Limit S)
     : { f : ∀ n, S n // ∀ n, Sequence.project n (f (n + 1)) = f n } :=
   ⟨x.toFun, x.property⟩
@@ -175,12 +176,16 @@ lemma isHom_coe
 
 end Limit
 
+/-- A type bundled with its quasi-Borel space structure. -/
 structure Bundle.{u} : Type _ where
+  /-- The underlying type of a bundled quasi-Borel space. -/
   Carrier : Type u
+  /-- The quasi-Borel structure on the bundled carrier. -/
   [quasiBorelSpace : QuasiBorelSpace Carrier]
 
 attribute [local instance] Bundle.quasiBorelSpace
 
+/-- Iterate the functor starting at the one-point quasi-Borel space. -/
 def Iter₀ (F) [Functor F] : ℕ → Bundle
   | 0 => .mk PUnit
   | n + 1 => .mk (F (Iter₀ F n).Carrier)
@@ -258,6 +263,7 @@ lemma unsucc_succ {n} (x : F (Iter F n)) : unsucc (succ x) = x := by
 lemma succ_injective {n} {x y : F (Iter F n)} (h : succ x = succ y) : x = y := by
   rw [← unsucc_succ x, ← unsucc_succ y, h]
 
+/-- The projection between successive iterates of the functor. -/
 def project : ∀ n, Iter F (n + 1) →𝒒 Iter F n
   | 0 => .mk fun _ ↦ .zero
   | n + 1 => succ.comp ((Functor.map (project n)).comp unsucc)
@@ -333,6 +339,7 @@ lemma isHom_get : IsHom (get (F := F)) :=
 lemma isHom_mk : IsHom (mk (F := F)) := by
   simp only [isHom_to_lift (A := Nu F), isHom_id']
 
+/-- Shift a compatible family to a family in the functor-composed sequence. -/
 @[simps]
 def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
   toFun x := {
@@ -346,6 +353,7 @@ def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
       rw [this]
   }
 
+/-- Recover a compatible family from the functor-composed sequence. -/
 @[simps -fullyApplied]
 def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
   toFun x := {

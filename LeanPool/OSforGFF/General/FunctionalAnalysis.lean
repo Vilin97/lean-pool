@@ -71,7 +71,6 @@ focusing on integrability, Schwartz function properties, and L² embeddings.
 
 open MeasureTheory NNReal ENNReal Complex
 open TopologicalSpace Measure
-open scoped FourierTransform
 
 noncomputable section
 

@@ -5,6 +5,10 @@ Authors: Jukka Suomela
 -/
 module
 
+public import Mathlib.Data.NNRat.Defs
+
+public import Mathlib.Data.Sym.Basic
+
 public import LeanPool.TwoColoringOneRound.LowerBound.Defs
 public import Mathlib.Data.Nat.Factorial.Basic
 public import Mathlib.Order.Interval.Set.Basic

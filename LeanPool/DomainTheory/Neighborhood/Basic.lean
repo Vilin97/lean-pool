@@ -5,8 +5,10 @@ Authors: Catskills Research Company
 -/
 module
 
+public import Mathlib.Data.Set.Lattice
+
 public import Mathlib.Order.Hom.Basic
-import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Set.Basic
 
 /-!
 # Neighborhood systems (Scott 1981, PRG-19, §1) — foundations

@@ -427,6 +427,7 @@ def collectBoxOr' (h : 𝓢 ⊢ □φ ⋎ □ψ) : 𝓢 ⊢ □(φ ⋎ ψ) := co
 omit [DecidableEq F] in lemma collectBoxOr'! (h : 𝓢 ⊢! □φ ⋎ □ψ) : 𝓢 ⊢! □(φ ⋎ ψ) :=
   ⟨collectBoxOr' h.some⟩
 
+/-- Lift an implication with a disjunctive conclusion through possibility. -/
 def diaOrInstOf (h : 𝓢 ⊢ χ ==> φ ⋎ ψ) : 𝓢 ⊢ ◇χ ==> ◇(φ ⋎ ψ) := by
   apply impTrans'' (and₁' diaDuality);
   apply impTrans'' ?h (and₂' diaDuality);

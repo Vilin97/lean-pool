@@ -7,8 +7,8 @@ module
 
 
 public meta import Lean.Elab.Tactic.Basic
-meta import LeanPool.Lentil.ProofMode.Basic
-import LeanPool.Lentil.ProofMode.Location
+public meta import LeanPool.Lentil.ProofMode.Basic
+public import LeanPool.Lentil.ProofMode.Location
 meta import LeanPool.Lentil.ProofMode.Location
 
 @[expose] public section

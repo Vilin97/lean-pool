@@ -86,6 +86,8 @@ variable (d : FiniteChartData (H := H) (M := M) I)
 
 variable (μ : Measure M) [IsFiniteMeasure μ]
 
+/-- Localize a continuously differentiable manifold function to a compactly supported chart
+function. -/
 noncomputable def localizeToC1c (i : d.ι) :
     ↥(C1 (E := E) (H := H) (M := M) (I := I)) →ₗ[ℝ]
       ↥(RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.C1c (E := E)) where

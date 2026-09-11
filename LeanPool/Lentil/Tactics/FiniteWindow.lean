@@ -378,9 +378,13 @@ instance hasFiniteWindowExists {σ : Type u} {α : Sort v} (p : α → pred σ) 
     HasFiniteWindow (tlaExists p) n where
   finite := finiteWindowExists p n fun _ => finiteWindowOfHasFiniteWindow
 
+/-- Natural-number addition reduction for finite-window normalization. -/
 dsimproc_decl finiteWindowReduceNatAdd ((_ + _ : Nat)) := Nat.reduceAdd
+/-- Natural-number comparison reduction for finite-window normalization. -/
 simproc_decl finiteWindowReduceNatLe ((_ : Nat) ≤ _) := Nat.reduceLeDiff
+/-- Definitional conditional reduction for finite-window normalization. -/
 dsimproc_decl finiteWindowDReduceIte (ite _ _ _) := dreduceIte
+/-- Conditional simplification for finite-window normalization. -/
 simproc_decl finiteWindowReduceIte (ite _ _ _) := reduceIte
 
 attribute [tla_finite_window_def]

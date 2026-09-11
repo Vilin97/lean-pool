@@ -32,7 +32,6 @@ open PaperDualActions
 open PaperDualCoordinates
 open PaperFactorIsomorphism
 open PaperDualActionConjugacyAlgebra
-open PaperDualActionConjugacyFirst
 
 noncomputable section
 

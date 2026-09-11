@@ -10,7 +10,7 @@ public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
 public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
 public import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
 import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
-import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
+public import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
 /-!
 # The schema term model as a local-EM source
 

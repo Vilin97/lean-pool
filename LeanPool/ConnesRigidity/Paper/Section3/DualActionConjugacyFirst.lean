@@ -27,7 +27,6 @@ namespace PaperDualActionConjugacyFirst
 
 open Construction
 open Construction.PaperKernel
-open PaperDualActions
 open PaperDualCoordinates
 open PaperFactorIsomorphism
 open PaperDualActionConjugacyAlgebra

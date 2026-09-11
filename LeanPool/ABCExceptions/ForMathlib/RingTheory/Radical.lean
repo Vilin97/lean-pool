@@ -5,6 +5,8 @@ Authors: Bhavik Mehta, Arend Mellendijk
 -/
 module
 
+public import Mathlib.RingTheory.Radical.Basic
+
 public meta import Aesop.BuiltinRules
 public import Mathlib.Tactic.Positivity.Core
 import Mathlib.RingTheory.Radical.NatInt

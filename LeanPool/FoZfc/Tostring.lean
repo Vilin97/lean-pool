@@ -5,6 +5,8 @@ Authors: Tetsuya Ishiu
 -/
 module
 
+public import LeanPool.FoZfc.BoundedFormulaOps
+
 public import LeanPool.FoZfc.Basic
 
 /-!

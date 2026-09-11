@@ -5,6 +5,8 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
+public meta import Aesop.Frontend.Extension
+
 public import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
 public import LeanPool.Polylean.UnitConjecture.Tactics.ReduceGoal
 

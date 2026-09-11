@@ -23,7 +23,6 @@ namespace Egrs75.Probe
 
 open Nat
 open Egrs75
-open Egrs75.RepairDV
 open Egrs75.RepairPaperfaithful
 
 /-- Goodness of the high block: if `q^j ≤ m < 2*q^j` and `q ≥ 3`, then every base-`q`

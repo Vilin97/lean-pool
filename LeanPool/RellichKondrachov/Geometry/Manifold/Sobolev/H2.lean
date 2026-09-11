@@ -98,6 +98,7 @@ abbrev h2TargetE (μ : Measure M) (i : d.ι) : Type _ :=
 /-- The product-of-charts target type used to define manifold `H²`. -/
 abbrev h2Target (μ : Measure M) : Type _ := ∀ i : d.ι, h2TargetE (d := d) (I := I) μ i
 
+/-- The chart measure viewed on the model vector space. -/
 abbrev chartMeasureE (i : d.ι) : Measure E :=
   chartMeasure (d := d) (I := I) μ i
 
@@ -113,6 +114,8 @@ private abbrev H2TargetE (i : d.ι) : Type _ :=
 
 private abbrev H2Target : Type _ := ∀ i : d.ι, H2TargetE (d := d) (I := I) (μ := μ) i
 
+/-- Localize a twice continuously differentiable manifold function to a compactly supported chart
+function. -/
 noncomputable def localizeToC2c (i : d.ι) :
     ↥(C2 (E := E) (H := H) (M := M) (I := I)) →ₗ[ℝ]
       ↥(RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.C2c (E := E)) where

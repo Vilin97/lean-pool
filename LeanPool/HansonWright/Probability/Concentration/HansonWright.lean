@@ -55,7 +55,6 @@ namespace LeanPool
 
 open MeasureTheory Real
 open _root_.ProbabilityTheory
-open _root_.LeanPool.ProbabilityTheory
 open scoped BigOperators NNReal
 
 noncomputable section

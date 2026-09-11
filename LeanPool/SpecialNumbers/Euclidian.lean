@@ -159,6 +159,7 @@ theorem euclid_strictMono : StrictMono euclid := by
 
 -- An auxiliary sequence that converges to the constant in the explicit formula for
 -- the Euclid numbers.
+/-- The normalized logarithmic lower approximation for the Euclid sequence. -/
 noncomputable def logEuclidSub (n : ℕ) : ℝ := 1 / 2 ^ n * Real.log (euclid n - 1 / 2)
 
 private theorem reuclid_ge_one (n : ℕ) : (1 : ℝ) ≤ euclid n := Nat.one_le_cast.mpr euclid_ge_one
@@ -240,6 +241,7 @@ private theorem bddAbove_logEuclidSub : BddAbove (Set.range logEuclidSub) := by
 
 open Filter
 
+/-- The supremum of the normalized logarithmic Euclid approximations. -/
 noncomputable def euclidLogConstant : ℝ := ⨆ i, logEuclidSub i
 
 /--

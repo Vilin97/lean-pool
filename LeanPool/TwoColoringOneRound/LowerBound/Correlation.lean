@@ -5,6 +5,10 @@ Authors: Jukka Suomela
 -/
 module
 
+public import Mathlib.Data.Fintype.Perm
+
+public import Mathlib.Data.Fintype.EquivFin
+
 public import LeanPool.TwoColoringOneRound.LowerBound.Defs
 public import Mathlib.Algebra.Group.Action.Defs
 public import Mathlib.Algebra.Group.End

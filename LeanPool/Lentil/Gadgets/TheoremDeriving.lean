@@ -5,6 +5,10 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public import LeanPool.Lentil.Rules.Basic
+
+public meta import Batteries.Linter.UnreachableTactic
+
 public meta import LeanPool.Lentil.Expr
 
 public import LeanPool.Lentil.Utils.MetaUtil

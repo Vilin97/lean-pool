@@ -8,7 +8,7 @@ module
 
 public import LeanPool.Lentil.ProofMode.Tactics.Rename
 import LeanPool.Lentil.ProofMode.Tactics.Clear
-import LeanPool.Lentil.ProofMode.Tactics.Specialize
+public import LeanPool.Lentil.ProofMode.Tactics.Specialize
 import LeanPool.Lentil.Rules.Basic
 
 @[expose] public section

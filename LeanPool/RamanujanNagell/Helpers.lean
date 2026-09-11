@@ -253,6 +253,7 @@ private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
     nlinarith [hv_bd, huv_bd]
   nlinarith [h_chain, h_bd, hN_pos, sq N]
 
+/-- The natural absolute value of the quadratic-algebra norm. -/
 noncomputable def normMeasure (a : R) : ℕ := Int.natAbs (QuadraticAlgebra.norm a)
 
 private lemma natAbs_norm_rem_lt (a : R) {b : R} (hb : b ≠ 0) :

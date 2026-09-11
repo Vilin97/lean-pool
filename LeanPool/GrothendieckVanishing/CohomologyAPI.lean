@@ -164,7 +164,7 @@ private theorem extClass_postcomp_bijective_of_subsingleton_middle
 
 /-- The connecting morphism in the covariant long exact sequence as an additive equivalence,
     assuming the middle cohomology groups in degrees `n` and `n + 1` vanish. -/
-noncomputable def extClass_postcompAddEquiv_of_subsingleton_middle
+noncomputable def extClassPostcompAddEquivOfSubsingletonMiddle
     (Z : C') {S : ShortComplex C'} (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Ext Z S.X₂ n))
     (h₂succ : Subsingleton (Ext Z S.X₂ (n + 1))) :
@@ -716,13 +716,13 @@ noncomputable def sheafH0NatIsoSections {X : TopCat.{u}} :
 /-- Higher-degree connecting additive equivalence for a short exact sequence of sheaves:
 if the middle cohomology groups in degrees `n` and `n + 1` are subsingleton, then the
 connecting morphism induces an additive equivalence `H^n(S.X₃) ≃+ H^(n+1)(S.X₁)`. -/
-noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : TopCat.{u}}
+noncomputable def sheafHExtClassAddEquivOfSubsingletonMiddle {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1))) :
     Sheaf.H S.X₃ n ≃+ Sheaf.H S.X₁ (n + 1) :=
-  extClass_postcompAddEquiv_of_subsingleton_middle _ hS n h₂n h₂succ
+  extClassPostcompAddEquivOfSubsingletonMiddle _ hS n h₂n h₂succ
 
 @[simp] private theorem sheafH_extClassAddEquiv_of_subsingleton_middle_apply
     {X : TopCat.{u}} {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -730,7 +730,7 @@ noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : TopCat.{u}
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1)))
     (y : Sheaf.H S.X₃ n) :
-    sheafH_extClassAddEquiv_of_subsingleton_middle hS n h₂n h₂succ y =
+    sheafHExtClassAddEquivOfSubsingletonMiddle hS n h₂n h₂succ y =
       y.comp hS.extClass rfl := rfl
 
 /-- Higher-degree connecting isomorphism for a short exact sequence of sheaves: if the
@@ -742,7 +742,7 @@ noncomputable def sheafHSuccIsoOfSubsingletonMiddle {X : TopCat.{u}}
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1))) :
     AddCommGrpCat.of (Sheaf.H S.X₃ n) ≅ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) :=
-  (sheafH_extClassAddEquiv_of_subsingleton_middle hS n h₂n h₂succ).toAddCommGrpIso
+  (sheafHExtClassAddEquivOfSubsingletonMiddle hS n h₂n h₂succ).toAddCommGrpIso
 
 private theorem sheafH_succ_iso_of_subsingleton_middle_hom_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}

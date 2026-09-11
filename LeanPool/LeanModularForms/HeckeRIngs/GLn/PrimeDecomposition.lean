@@ -189,6 +189,7 @@ end RpSubring
 
 section FullFactorization
 
+/-- The Hecke elements represented by monotone prime-power diagonal matrices. -/
 def ppowClosureSet (n : ℕ) [NeZero n] : Set (HeckeAlgebra n) :=
   { f | ∃ (p : ℕ) (_hp : p.Prime) (e : Fin n → ℕ) (_hmono : Monotone e),
     f = TElem (ppowDiag n p e) }

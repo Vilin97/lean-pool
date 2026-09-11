@@ -75,6 +75,7 @@ existential body and of all finite-stage component conjunctions. -/
 def tupleAllVars (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Finset Nat :=
   p.allVars ∪ Finset.univ.biUnion (fun i => (Phi i).allVars)
 
+/-- An upper bound on all variable indices in a pattern and its tuple of parameters. -/
 def tupleFreshBase (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Nat :=
   (insert 0 (tupleAllVars p Phi)).max' (by simp)
 

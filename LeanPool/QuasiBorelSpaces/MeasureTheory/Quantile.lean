@@ -44,6 +44,7 @@ private lemma exists_unitIntervalRat_btwn
   obtain ⟨k, hk₁, hk₂⟩ := exists_rat_btwn h
   exact ⟨⟨⟨k, by grind⟩, by use k⟩, hk₁, hk₂⟩
 
+/-- The cumulative distribution function as a map from the unit interval to itself. -/
 noncomputable def cdf (μ : Measure I) (i : I) : I where
   val := ProbabilityTheory.cdf (μ.map Subtype.val) i
   property := by

@@ -54,7 +54,7 @@ needed on `Y` itself).
 
 @[expose] public section
 
-open scoped ContDiff Manifold OnePoint
+open scoped ContDiff Manifold
 open Filter Set Function Topology
 
 namespace RS.MTrace

@@ -913,6 +913,7 @@ private theorem c_le_X_pow : c ≤ (X : ℝ) ^ ε := calc
     · norm_cast
       linarith
 
+/-- The distinguished index `K - 1`, viewed in `Fin d`. -/
 noncomputable def KIndex : Fin d := Fin.ofNat d (K - 1)
 
 @[simp]

@@ -5,6 +5,8 @@ Authors: Matt Hunzinger
 -/
 module
 
+public import Mathlib.CategoryTheory.Monoidal.Category
+
 public import LeanPool.Circuitlib.Circuit.Category.Basic
 public import LeanPool.Circuitlib.Circuit.Belnap.Gate
 

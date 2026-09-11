@@ -5,6 +5,8 @@ Authors: Jineon Baek
 -/
 module
 
+public import Mathlib.Data.NNRat.Defs
+
 public import LeanPool.ErdosTuzaValtr.Config.Lemmas
 public import LeanPool.ErdosTuzaValtr.Config.Mirror
 public import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas

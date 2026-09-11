@@ -18,8 +18,6 @@ only the project-owned sphere abbreviation and the index type used by the normal
 
 @[expose] public section
 
-open scoped Manifold
-
 namespace LeanEval
 namespace Topology
 namespace ClassificationOfSurfaces

@@ -217,7 +217,7 @@ theorem tmList_length (n : ℕ) : (tmList n).length = n := by
 /-- Thue–Morse prefixes are nested in the prefix order. -/
 theorem tmList_prefix {n m : ℕ} (h : n ≤ m) : tmList n <+: tmList m := by
   induction m with
-  | zero => rw [Nat.le_zero.mp h]
+  | zero => rw [Nat.le_zero.mp h]; exact List.prefix_rfl
   | succ m ih =>
     rcases Nat.lt_succ_iff_lt_or_eq.mp (Nat.lt_succ_of_le h) with hlt | rfl
     · exact (ih (Nat.lt_succ_iff.mp hlt)).trans (by rw [tmList_succ]; exact List.prefix_append _ _)

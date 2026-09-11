@@ -8,7 +8,7 @@ module
 public meta import LeanPool.Lentil.ProofMode.Basic
 
 
-meta import LeanPool.Lentil.Expr
+public meta import LeanPool.Lentil.Expr
 import LeanPool.Lentil.ProofMode.Basic
 
 public meta section

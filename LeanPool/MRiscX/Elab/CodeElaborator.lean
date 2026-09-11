@@ -18,7 +18,7 @@ This module provides the elaborator turning MRiscX assembly syntax into `Code`.
 -/
 
 public meta section
-open Lean.Elab Command Term
+open Lean.Elab Term
 open Nat
 open Lean Lean.Expr Lean.Meta Lean.Parser
 

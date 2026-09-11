@@ -107,6 +107,7 @@ theorem edgeOrbit_inv (K : SurfaceCellComplex) (d : K.Dart) :
 noncomputable instance edgeOrbitFintype (K : SurfaceCellComplex) : Fintype K.EdgeOrbit :=
   Fintype.ofFinite _
 
+/-- Choose a dart representing an unoriented edge orbit. -/
 noncomputable def edgeRepresentative
     (K : SurfaceCellComplex) (e : K.EdgeOrbit) : K.Dart :=
   Quotient.out e
@@ -117,6 +118,7 @@ private theorem edgeOrbit_representative
     K.edgeOrbit (K.edgeRepresentative e) = e :=
   Quotient.out_eq e
 
+/-- Realize a signed edge orbit by its chosen dart or the inverse dart. -/
 noncomputable def signedDartToDart (K : SurfaceCellComplex) :
     SignedDart K.EdgeOrbit → K.Dart
   | .pos e => K.edgeRepresentative e

@@ -8,7 +8,7 @@ module
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
 import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!

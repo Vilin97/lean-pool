@@ -5,6 +5,12 @@ Authors: Julius Marx
 -/
 module
 
+public import LeanPool.MRiscX.Semantics.MsTheory
+
+public import LeanPool.MRiscX.AbstractSyntax.MState
+
+public import LeanPool.MRiscX.Hoare.HoareCore
+
 public import LeanPool.MRiscX.Elab.HandleExpr
 public meta import Lean.Elab.Tactic.RCases
 public meta import Std.Do.Triple.SpecLemmas

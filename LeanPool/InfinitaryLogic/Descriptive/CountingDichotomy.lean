@@ -50,7 +50,6 @@ def SilverBurgessDichotomy : Prop :=
     MeasurableSet {p : X × X | r.r p.1 p.2} →
     (#(Quotient r) ≤ ℵ₀) ∨ (#(Quotient r) = Cardinal.continuum)
 
-variable {L : Language.{u, v}} [L.IsRelational] [Countable (Σ l, L.Relations l)]
 
 end Language
 

@@ -7,7 +7,7 @@ module
 
 public import LeanPool.VirasoroProject.IsCentralExtension
 public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
-import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
+public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
 import Mathlib.LinearAlgebra.Basis.Bilinear
 
 /-!

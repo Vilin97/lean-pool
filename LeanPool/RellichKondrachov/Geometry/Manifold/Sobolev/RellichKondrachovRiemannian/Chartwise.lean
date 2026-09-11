@@ -87,6 +87,7 @@ open RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean
 
 variable (i : dR.d.ι)
 
+/-- Embed the local square-integrable range using the chart volume measure. -/
 noncomputable def eL2RangeChartVol (i : dR.d.ι)
     (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] :
     let μM :=

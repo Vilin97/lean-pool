@@ -5,12 +5,14 @@ Authors: Sven Manthe
 -/
 module
 
+public import Mathlib.Data.NNRat.Defs
+
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.LenTreeHom
 public import Mathlib.CategoryTheory.Limits.FunctorCategory.Basic
 public meta import Mathlib.Tactic.Basic
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
 import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.ApplyFun
 import Mathlib.Tactic.Linarith.Frontend

@@ -5,6 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
+import LeanPool.JacobianDiffgeo.GenusSphereHeadline.Basic
+
 public import LeanPool.JacobianDiffgeo.CechCount.Final
 public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
 public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree

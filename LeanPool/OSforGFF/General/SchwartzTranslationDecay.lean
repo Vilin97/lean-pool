@@ -44,7 +44,7 @@ Apply this pattern three times:
 
 @[expose] public section
 
-open MeasureTheory Complex SchwartzMap Filter Convolution Set Function Metric
+open MeasureTheory Complex SchwartzMap Filter Set Function Metric
 open scoped Real Topology Pointwise
 
 noncomputable section

@@ -5,6 +5,10 @@ Authors: Wondermonger-daydreaming
 -/
 module
 
+public import Mathlib.GroupTheory.Perm.Cycle.Type
+
+public import Mathlib.GroupTheory.Perm.Fin
+
 public import Mathlib.Algebra.Group.End
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Sym.Sym2.Init

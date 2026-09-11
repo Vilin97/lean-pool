@@ -3142,6 +3142,7 @@ private theorem not_mem_inside_and_outside_of_count_eq_two {n : ℕ}
     have hpositive : 0 < outside.count edge := List.count_pos_iff.mpr hmem
     omega
 
+/-- Disjointness conditions needed to commute a boundary block past a cancellable pair. -/
 structure BoundaryBlockCommuteConditions {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3298,6 +3299,7 @@ def toCrosscapBlockCommute {n : ℕ}
   outer_not_mem_inside := houterInside
   outer_not_mem_outside := houterOutside
 
+/-- Disjointness conditions needed to commute a crosscap block past a cancellable pair. -/
 structure CrosscapBlockCommuteConditions {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3480,6 +3482,7 @@ def toHandleBlockCommute {n : ℕ}
   outer_not_mem_inside := houterInside
   outer_not_mem_outside := houterOutside
 
+/-- Disjointness conditions needed to commute a handle block past a cancellable pair. -/
 structure HandleBlockCommuteConditions {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -6185,6 +6188,7 @@ private theorem shortenBoundaryPair_targetPair_betweenTokens {n : ℕ}
           loweredInside := by
   rfl
 
+/-- Shorten a residual pair by commuting its leading completed block. -/
 noncomputable def shortenCompletedBlock {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -6203,6 +6207,7 @@ noncomputable def shortenCompletedBlock {n : ℕ}
   | handle first second =>
       exact pair.shortenHandleBlock state protectedNonempty first second insideTokens hbetween
 
+/-- Shorten a residual pair past a boundary followed by a completed block. -/
 noncomputable def shortenBoundaryThenCompletedBlock {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -6530,6 +6535,7 @@ private theorem resolveBoundary_rawBoundaryCount_eq_tail {n : ℕ}
       ReductionToken.rawBoundaryCount pair.tailTokens :=
   resolution_rawBoundaryCount_eq_tail (pair.resolveBoundary state hole holeNegative hbetween)
 
+/-- A completed resolution or a certified shortening that permits another recursive step. -/
 inductive CertifiedResolutionStep {n : ℕ}
     {tokens : List (ReductionToken n)}
     (pair : MarkedResidualCancellablePair tokens)
@@ -6537,6 +6543,7 @@ inductive CertifiedResolutionStep {n : ℕ}
   | resolved (resolution : MarkedResidualPairResolution pair state)
   | shortened (shortening : MarkedResidualPairShortening pair state)
 
+/-- Choose the next certified step in resolving a marked residual pair. -/
 noncomputable def nextResolutionStep {n : ℕ}
     {tokens : List (ReductionToken n)}
     (pair : MarkedResidualCancellablePair tokens)
@@ -6600,6 +6607,7 @@ private theorem nextResolutionStep_shortening_decreases {n : ℕ}
   | resolved => trivial
   | shortened shortening => exact shortening.betweenLengthLt
 
+/-- Transport a resolution back across its preceding shortening step. -/
 def finishShorteningResolution {n : ℕ}
     {tokens : List (ReductionToken n)}
     {pair : MarkedResidualCancellablePair tokens}

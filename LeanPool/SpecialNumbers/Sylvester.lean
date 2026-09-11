@@ -113,6 +113,7 @@ theorem sylvester_coprime {m n : ℕ} (h : m ≠ n) : Coprime (sylvester m) (syl
 These two auxiliary sequences converge (from below and from above, respectively) to the constant
 that appears in the explicit formula for the Sylvester sequence.
 -/
+/-- The lower approximation to the Sylvester growth constant. -/
 noncomputable def sylvesterBelow (n : ℕ) : ℝ :=
   (sylvester n - 2⁻¹) ^ (((2 : ℝ) ^ (n + 1))⁻¹)
 private noncomputable def sylvesterAbove (n : ℕ) : ℝ :=

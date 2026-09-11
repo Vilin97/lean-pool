@@ -145,6 +145,7 @@ theorem baseOrbit_freeCoord_outside {k : DirIdx} (u : BaseOrbit k) (j : FreeCol 
     ge_three_of_ne_base (x := u.1.1 j.1)
       (h0 := hne ⟨0, by decide⟩) (h1 := hne ⟨1, by decide⟩) (h2 := hne ⟨2, by decide⟩)
 
+/-- Encode the free coordinates of a base orbit as an embedding into available symbols. -/
 def encodeBaseOrbit (k : DirIdx) (u : BaseOrbit k) : FreeCol k ↪ AvailFrom3 :=
   ⟨fun j => ⟨u.1.1 j.1, baseOrbit_freeCoord_outside (u := u) (j := j)⟩, by
     intro j₁ j₂ hEq

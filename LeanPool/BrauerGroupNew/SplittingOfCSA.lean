@@ -10,11 +10,11 @@ public import Mathlib.Algebra.BrauerGroup.Defs
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.TwoSidedIdeal.Operations
 import LeanPool.BrauerGroupNew.AlgClosedUnion
-import LeanPool.BrauerGroupNew.CentralSimple
+public import LeanPool.BrauerGroupNew.CentralSimple
 import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
 import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
 import LeanPool.BrauerGroupNew.TwoSidedIdeal
-import LeanPool.BrauerGroupNew.Wedderburn
+public import LeanPool.BrauerGroupNew.Wedderburn
 import Mathlib.Algebra.Azumaya.Basic
 import Mathlib.Algebra.Central.Matrix
 import Mathlib.Analysis.Normed.Group.Basic

@@ -105,6 +105,7 @@ omit [AddCommGroup G] in
   rw [coefficientPatterns, Fintype.mem_piFinset]
   simp only [mem_boundedIntFinset_iff]
 
+/-- Choose a solution to the finite integer equation when one exists, and zero otherwise. -/
 noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
   by
     classical
@@ -221,10 +222,13 @@ abbrev BoundedInt (Q : ℕ) := ↑(boundedIntFinset Q)
 
 /-- All bounded vector families of every dimension at most `r`. -/
 structure BoundedVectorFamily (r Q : ℕ) where
+  /-- The dimension of the bounded integer vectors. -/
   size : Fin (r + 1)
+  /-- A family of one more bounded integer vectors than its dimension. -/
   vec : Fin (size + 1) → Fin size → BoundedInt Q
 deriving Fintype
 
+/-- Choose a nontrivial integer dependence among the bounded vectors. -/
 noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
     Fin (B.size + 1) → ℤ :=
   Classical.choose <| exists_integer_dependence B.size fun i j ↦ B.vec i j
@@ -234,6 +238,7 @@ private theorem chosenIntegerDependence_spec {r Q : ℕ} (B : BoundedVectorFamil
       ∀ j, ∑ i, chosenIntegerDependence B i * (B.vec i j : ℤ) = 0 :=
   Classical.choose_spec <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
+/-- Bound the absolute values of the chosen integer dependence coefficients. -/
 noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
   Finset.univ.sup fun i ↦ Int.natAbs (chosenIntegerDependence B i)
 

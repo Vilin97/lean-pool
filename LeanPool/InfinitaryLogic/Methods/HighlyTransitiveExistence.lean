@@ -11,7 +11,7 @@ public import Mathlib.Data.Finsupp.Lex
 public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
 public import Mathlib.Algebra.Field.Subfield.Basic
 public import Mathlib.SetTheory.Ordinal.Basic
-import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
+public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
 import Mathlib.SetTheory.Cardinal.Subfield
 
 /-!

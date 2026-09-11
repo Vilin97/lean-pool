@@ -583,7 +583,8 @@ theorem Pi.transposeAlgEquiv_symm_op_apply (A : PiMat ℂ k s) :
     (Pi.transposeAlgEquiv k s).symm (MulOpposite.op A) = fun i => (A i)ᵀ :=
   rfl
 
-noncomputable def f₂_equiv :
+/-- Distribute the tensor product of matrix families over pairs of indices. -/
+noncomputable def f₂Equiv :
     (PiMat ℂ k s) ⊗[ℂ] (PiMat ℂ k s) ≃ₐ[ℂ] (Π i : k × k,
       Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) := by
   let this :=
@@ -592,7 +593,8 @@ noncomputable def f₂_equiv :
       (fun i => Matrix.instAlgebra) fun i => Matrix.instAlgebra
   exact this
 
-noncomputable def f₃_equiv :
+/-- Identify each tensor product of matrix blocks with a matrix on product indices. -/
+noncomputable def f₃Equiv :
     (Π i : k × k, Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) ≃ₐ[ℂ]
       (Π i : k × k, Matrix (s i.1 × s i.2) (s i.1 × s i.2) ℂ) := by
   apply AlgEquiv.piCongrRight
@@ -605,7 +607,7 @@ noncomputable def tensorProductMulOpEquiv :
       Matrix (s i.1 × s i.2) (s i.1 × s i.2) ℂ) :=
   (AlgEquiv.TensorProduct.map (1 : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s)
         (Pi.transposeAlgEquiv k s : PiMat ℂ k s ≃ₐ[ℂ] (PiMat ℂ k s)ᵐᵒᵖ).symm).trans
-    (f₂_equiv.trans f₃_equiv)
+    (f₂Equiv.trans f₃Equiv)
 
 /-- Inverse map underlying `psi` for faithful positive functionals on matrix-block products. -/
 noncomputable def Module.Dual.pi.IsFaithfulPosMap.psiInvFun'

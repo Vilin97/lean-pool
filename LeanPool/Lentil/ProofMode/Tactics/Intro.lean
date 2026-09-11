@@ -33,6 +33,7 @@ theorem Entails_intro_temporal {σ : Type u} {hyps : List (NamedPred σ)}
   Entails hyps [tlafml| newHyp → goal ] := by
   unfold Entails; simp [impl_intro_add_r, repeatedAnd_append]; rfl
 
+/-- Reduction rules used after introducing a proof-mode hypothesis. -/
 meta def introTacDSimps := #[``List.cons_append, ``List.nil_append]
 
 /-- Introduce one proof-mode hypothesis with the given name. -/

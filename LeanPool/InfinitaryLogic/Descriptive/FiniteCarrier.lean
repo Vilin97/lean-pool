@@ -5,6 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+
 public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
 public import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
 public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy

@@ -5,6 +5,10 @@ Authors: Christopher Boone
 -/
 module
 
+public import LeanPool.ZhangYeungInequality.Theorem5
+
+public import Mathlib.MeasureTheory.MeasurableSpace.Defs
+
 public import Mathlib.Data.Nat.Notation
 import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 

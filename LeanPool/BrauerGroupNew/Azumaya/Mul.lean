@@ -9,7 +9,7 @@ public import LeanPool.BrauerGroupNew.Azumaya.Basic
 public import Mathlib.LinearAlgebra.Contraction
 public import Mathlib.LinearAlgebra.TensorProduct.Opposite
 public import Mathlib.Tactic.Continuity
-import Mathlib.Algebra.Azumaya.Matrix
+public import Mathlib.Algebra.Azumaya.Matrix
 import Mathlib.Algebra.Module.CharacterModule
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

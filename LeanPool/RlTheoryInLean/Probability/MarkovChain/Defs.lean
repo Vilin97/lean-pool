@@ -14,7 +14,7 @@ public import Mathlib.Probability.Kernel.Composition.Comp
 
 @[expose] public section
 
-open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
+open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function
 
 namespace ProbabilityTheory

@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Set.Countable
 public import Mathlib.Data.Finsupp.Defs
-import Mathlib.Data.Finsupp.Encodable
+public import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # Enumeration of a countable local direct sum

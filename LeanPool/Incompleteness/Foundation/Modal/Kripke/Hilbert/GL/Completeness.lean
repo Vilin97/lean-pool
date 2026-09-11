@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.ComplementClosedConsisten
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
 import LeanPool.Incompleteness.Foundation.Modal.Entailment.GL
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundness
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundness
 
 /-! # Completeness -/
 

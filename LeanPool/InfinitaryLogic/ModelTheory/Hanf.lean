@@ -45,7 +45,7 @@ namespace Language
 
 variable {L : Language.{u, v}}
 
-open FirstOrder Structure Cardinal Ordinal
+open FirstOrder Structure Cardinal
 
 /-- A sentence has arbitrarily large models if for every cardinal κ, there
 exists a model of size ≥ κ. -/

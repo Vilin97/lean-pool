@@ -345,7 +345,7 @@ noncomputable def finish {P : ValidPresentation}
 end CancellationResult
 
 /-- If cancelling a displayed inverse pair leaves no tail, the source normalizes to the sphere. -/
-noncomputable def cancellationResult_sphere_of_lowerTail_eq_nil {n : ℕ}
+noncomputable def cancellationResultSphereOfLowerTailEqNil {n : ℕ}
     {word : List (SignedDart (Fin (n + 1)))} (pair : CancellablePair word)
     (ha : pair.edge ∉ pair.tail.map edgeOfDart)
     (hlower : Cancellation.lowerTail pair.edge pair.tail = [])
@@ -544,7 +544,7 @@ noncomputable def cancelInversePairsFuel (fuel : ℕ) {n : ℕ}
         have hlowerBound : lower.length ≤ fuel - 1 := by
           omega
         by_cases hlower : lower = []
-        · exact cancellationResult_sphere_of_lowerTail_eq_nil pair ha hlower valid
+        · exact cancellationResultSphereOfLowerTailEqNil pair ha hlower valid
         · let stepWitness :=
             exists_cancellationStep_of_lowerTail_ne_nil pair ha hlower valid
           let validLower := Classical.choose stepWitness

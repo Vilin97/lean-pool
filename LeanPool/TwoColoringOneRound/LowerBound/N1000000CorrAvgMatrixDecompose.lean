@@ -28,7 +28,6 @@ open Distributed2Coloring.LowerBound.N1000000AvailFrom
 open Distributed2Coloring.LowerBound.N1000000MaskComplete
 open Distributed2Coloring.LowerBound.N1000000OrbitalBasis
 open Distributed2Coloring.LowerBound.N1000000OrbitCounting
-open Distributed2Coloring.LowerBound.N1000000Relaxation
 open Distributed2Coloring.LowerBound.N1000000PairTransitivity
 open Distributed2Coloring.LowerBound.N1000000Transitivity
 

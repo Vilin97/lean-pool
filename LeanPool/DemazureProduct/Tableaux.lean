@@ -5,6 +5,8 @@ Authors: Nathan Pflueger
 -/
 module
 
+public import Mathlib.Data.NNRat.Defs
+
 public import LeanPool.DemazureProduct.Avoiding321
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Data.Rat.Cast.Order

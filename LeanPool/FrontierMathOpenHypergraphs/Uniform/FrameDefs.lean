@@ -5,6 +5,8 @@ Authors: Dean Cureton
 -/
 module
 
+public import Mathlib.Algebra.CharZero.Defs
+
 public import LeanPool.FrontierMathOpenHypergraphs.Substitution
 public import Mathlib.Data.Fintype.Powerset
 public meta import Mathlib.Tactic.Basic
@@ -45,6 +47,7 @@ def FrameSpec.t (spec : FrameSpec) : ℕ :=
 def FrameSpec.cap (spec : FrameSpec) : Fin spec.t → ℕ :=
   fun i => spec.parts.get i
 
+/-- Encode a list of support indices as a support pattern. -/
 def supportPatternOfList {t : ℕ} (s : List ℕ)
     (hIn : ∀ i ∈ s, i < t) (hNodup : s.Nodup) (hCard : 2 ≤ s.length) :
     SupportPattern t := by
@@ -93,13 +96,21 @@ instance (spec : FrameSpec) : Decidable spec.IsValid := by
   unfold FrameSpec.IsValid FrameSpec.countWitnesses
   infer_instance
 
+/-- A support list with 2 specified indices. -/
 def sup2 (a b : ℕ) : List ℕ := [a, b]
+/-- A support list with 3 specified indices. -/
 def sup3 (a b c : ℕ) : List ℕ := [a, b, c]
+/-- A support list with 4 specified indices. -/
 def sup4 (a b c d : ℕ) : List ℕ := [a, b, c, d]
+/-- A support list with 5 specified indices. -/
 def sup5 (a b c d e : ℕ) : List ℕ := [a, b, c, d, e]
+/-- A support list with 6 specified indices. -/
 def sup6 (a b c d e f : ℕ) : List ℕ := [a, b, c, d, e, f]
+/-- A support list with 7 specified indices. -/
 def sup7 (a b c d e f g : ℕ) : List ℕ := [a, b, c, d, e, f, g]
+/-- A support list with 8 specified indices. -/
 def sup8 (a b c d e f g h : ℕ) : List ℕ := [a, b, c, d, e, f, g, h]
+/-- A support list with 9 specified indices. -/
 def sup9 (a b c d e f g h i : ℕ) : List ℕ := [a, b, c, d, e, f, g, h, i]
 
 local notation "s2" => sup2
@@ -111,6 +122,7 @@ local notation "s7" => sup7
 local notation "s8" => sup8
 local notation "s9" => sup9
 
+/-- Build a frame specification from its parts and raw support lists. -/
 def mkFrame (parts : List ℕ) (rawSupports : List (List ℕ))
     (h : ∀ s ∈ rawSupports, s.Nodup ∧ (∀ i ∈ s, i < parts.length) ∧ 2 ≤ s.length) :
     FrameSpec where
@@ -136,14 +148,18 @@ private inductive ChoiceKind where
   | boost31
   | boost32
   | boost33
-deriving DecidableEq, Repr, Inhabited
+deriving DecidableEq, Repr
+
+private instance : Inhabited ChoiceKind := ⟨.base⟩
 
 private structure ChoiceSpec where
   kind : ChoiceKind
   parts : List ℕ
   bonus : ℕ
-deriving Inhabited
 
+private instance : Inhabited ChoiceSpec := ⟨⟨.base, [], 0⟩⟩
+
+/-- The support lists of the four-core frame. -/
 def core4Supports : List (List ℕ) :=
   [ s2 0 1
   , s2 0 2
@@ -1449,6 +1465,7 @@ private theorem bit_testBit_gt {n i : Nat} (hi : n < i) :
     · cases htest : Nat.testBit 1 (i - n) <;> simp_all
   simp_all
 
+/-- The frame coordinates selected by a natural-number bit mask. -/
 def maskFinset (spec : FrameSpec) (mask : Nat) : Finset (Fin spec.t) :=
   Finset.univ.filter fun i => mask.testBit i.1
 

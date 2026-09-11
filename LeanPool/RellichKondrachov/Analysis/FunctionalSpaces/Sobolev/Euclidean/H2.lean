@@ -45,7 +45,9 @@ local instance instOpensMeasurableSpaceH2 : OpensMeasurableSpace E := by infer_i
 
 variable (μ : Measure E) [IsFiniteMeasureOnCompacts μ]
 
+/-- Square-integrable functions taking values in continuous linear endomorphisms. -/
 abbrev L2EE : Type _ := ↥(E →₂[μ] (E →L[ℝ] E))
+/-- The product space containing a function and its first two derivatives. -/
 abbrev H2Target : Type _ := L2ℝ (μ := μ) × (L2E (μ := μ) × L2EE (μ := μ))
 
 /-- `C²` real-valued functions on `E` with compact support, as a submodule of `E → ℝ`. -/

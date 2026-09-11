@@ -5,6 +5,8 @@ Authors: Christopher Boone
 -/
 module
 
+public import LeanPool.ZhangYeungInequality.Theorem4
+
 import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
 
 /-!

@@ -5,6 +5,10 @@ Authors: Monica Omar
 -/
 module
 
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
@@ -28,7 +32,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 -- import quantum_graph.basic
 open TensorProduct Matrix
 
-open scoped TensorProduct BigOperators Kronecker Matrix Functional
+open scoped TensorProduct BigOperators Kronecker Matrix
 
 variable {p : Type _} [Fintype p] [DecidableEq p] {n : p → Type _} [∀ i, Fintype (n i)]
   [∀ i, DecidableEq (n i)]
@@ -104,7 +108,11 @@ lemma Qam.Nontracial.CompleteGraph.adjoint_eq {E₁ E₂ : Type _} [NormedAddCom
     [NormedAddCommGroupOfRing E₂] [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂]
     [FiniteDimensional ℂ E₁] [FiniteDimensional ℂ E₂] :
   LinearMap.adjoint (Qam.completeGraph E₁ E₂) = Qam.completeGraph E₂ E₁ :=
-by rw [completeGraph_eq, ContinuousLinearMap.linearMap_adjoint, rankOne_adjoint]; rfl
+by
+  let := FiniteDimensional.complete ℂ E₁
+  let := FiniteDimensional.complete ℂ E₂
+  rw [completeGraph_eq, ContinuousLinearMap.linearMap_adjoint, rankOne_adjoint]
+  rfl
 
 theorem Qam.Nontracial.CompleteGraph.isSelfAdjoint {E : Type _} [One E] [NormedAddCommGroup E]
     [InnerProductSpace ℂ E] [FiniteDimensional ℂ E] :

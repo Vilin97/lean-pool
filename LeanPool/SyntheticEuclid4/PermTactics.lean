@@ -5,6 +5,8 @@ Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
 module
 
+public meta import LeanPool.SyntheticEuclid4.Tactics
+
 public meta import Aesop.BuiltinRules
 public meta import Lean.Elab.Tactic.Conv.Basic
 public meta import Mathlib.Tactic.Basic
@@ -30,8 +32,8 @@ the symmetry lemmas from `Tactics`.
 
 public meta section
 
-open SyntheticEuclid4
-open IncidenceGeometry
+open SyntheticEuclid4 IncidenceGeometry
+
 
 namespace Lean.Elab.Tactic
 

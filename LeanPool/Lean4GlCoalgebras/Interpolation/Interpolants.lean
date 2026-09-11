@@ -13,7 +13,7 @@ public import Mathlib.Data.Fintype.EquivFin
 public import Mathlib.Tactic.Linarith.Lemmas
 public import Mathlib.Tactic.Ring.Basic
 public import Mathlib.Tactic.Zify
-import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
+public import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
 import LeanPool.Lean4GlCoalgebras.Split.Completeness
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.Linarith.Frontend

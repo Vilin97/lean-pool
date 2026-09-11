@@ -5,6 +5,8 @@ Authors: Vincent Beffara
 -/
 module
 
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.RiemannMappingTheorem.DerivInj

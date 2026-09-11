@@ -8,8 +8,8 @@ module
 public import Mathlib.GroupTheory.Perm.Cycle.Type
 public import LeanPool.SemicircleCheck.ShiftTwoEquiv
 public import Mathlib.Logic.Equiv.Fin.Rotate
-import LeanPool.SemicircleCheck.FinRotateLemmas
-import LeanPool.SemicircleCheck.RotationArithmetic
+public import LeanPool.SemicircleCheck.FinRotateLemmas
+public import LeanPool.SemicircleCheck.RotationArithmetic
 import Mathlib.GroupTheory.Perm.Fin
 
 /-!

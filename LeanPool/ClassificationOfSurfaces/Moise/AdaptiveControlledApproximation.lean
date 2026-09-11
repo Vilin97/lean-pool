@@ -254,6 +254,7 @@ namespace ControlledAdaptiveComplex
 variable (hU : IsOpen U) (f : U → Plane) (hf : Continuous f)
   (phi : U → ℝ) (hphi : StronglyPositiveOn Set.univ phi)
 
+/-- The locally finite complex obtained from the controlled adaptive construction. -/
 noncomputable abbrev L : LocallyFiniteTriangleComplex U :=
   K.controlledAdaptiveComplex U hU f hf phi hphi
 
@@ -454,6 +455,7 @@ variable (hU : IsOpen U) (V : Set Plane) (hV : IsOpen V)
   (f : U → Plane) (hf : Continuous f) (hmem : ∀ x, f x ∈ V)
   (phi : U → ℝ) (hphi : StronglyPositiveOn Set.univ phi)
 
+/-- The locally finite complex obtained from the region-controlled adaptive construction. -/
 noncomputable abbrev R : LocallyFiniteTriangleComplex U :=
   K.regionControlledAdaptiveComplex U hU V hV f hf hmem phi hphi
 

@@ -5,6 +5,10 @@ Authors: Vincent Beffara
 -/
 module
 
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+
 public import LeanPool.RiemannMappingTheorem.Defs
 import Mathlib.Analysis.Complex.Schwarz
 import Mathlib.MeasureTheory.Covering.Besicovitch

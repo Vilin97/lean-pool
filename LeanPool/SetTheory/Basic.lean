@@ -5,6 +5,8 @@ Authors: Shuhao Song
 -/
 module
 
+public import LeanPool.SetTheory.Realize
+
 public import Mathlib.SetTheory.ZFC.VonNeumann
 public import LeanPool.SetTheory.RealizeCore
 public import LeanPool.SetTheory.SimpAttr

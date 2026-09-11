@@ -79,6 +79,7 @@ abbrev SectionIndex {C : Type*} [Category C] {FC : C → C → Type*} {CC : C �
     (F : TopCat.Presheaf C X) :=
   Σ U : Opens X, ToType (F.obj (op U))
 
+/-- The presheaf morphism associated to a section. -/
 noncomputable def sectionHom {X : TopCat.{u}}
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
     (σ : SectionIndex F) :

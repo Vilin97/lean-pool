@@ -5,6 +5,10 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+
 public import LeanPool.Wallace.RationalTriangularPreprocess
 public import Mathlib.GroupTheory.DivisibleHull
 public import Mathlib.LinearAlgebra.Basis.SMul
@@ -17,7 +21,6 @@ import Mathlib.Data.Nat.Totient
 import Mathlib.Data.Rat.Encodable
 import Mathlib.Data.Sym.Sym2.Init
 import Mathlib.GroupTheory.OreLocalization.Cardinality
-import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.LinearAlgebra.Dimension.Free
 import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 import Mathlib.Tactic.ContinuousFunctionalCalculus

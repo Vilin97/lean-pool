@@ -100,25 +100,25 @@ private lemma not_mem_of_ge (asps : AspSet) {m n : ℤ} (n_le_m : n ≤ m) : ⟨
   asps.not_mem_of_ge (le_refl n)
 
 /-- The order on indices after the inversions in `asps` are applied. -/
-def post_lt (asps : AspSet) (m n : ℤ) : Prop :=
+def postLt (asps : AspSet) (m n : ℤ) : Prop :=
   (m < n ∧ ⟨m, n⟩ ∉ asps) ∨ (n < m ∧ ⟨n, m⟩ ∈ asps)
 
-@[simp] private lemma not_post_lt_self (asps : AspSet) (n : ℤ) : ¬ asps.post_lt n n := by
-  simp only [post_lt, lt_self_iff_false, mem_AspSet, false_and, or_self, not_false_eq_true]
+@[simp] private lemma not_post_lt_self (asps : AspSet) (n : ℤ) : ¬ asps.postLt n n := by
+  simp only [postLt, lt_self_iff_false, mem_AspSet, false_and, or_self, not_false_eq_true]
 
 private lemma post_lt_iff_not_mem (asps : AspSet) {m n : ℤ} (m_lt_n : m < n) :
-    asps.post_lt m n ↔ ⟨m, n⟩ ∉ asps := by
-  simp only [post_lt, m_lt_n, mem_AspSet, true_and, not_lt_of_gt m_lt_n, false_and, or_false]
+    asps.postLt m n ↔ ⟨m, n⟩ ∉ asps := by
+  simp only [postLt, m_lt_n, mem_AspSet, true_and, not_lt_of_gt m_lt_n, false_and, or_false]
 
 private lemma post_lt_swap_iff_mem (asps : AspSet) {m n : ℤ} (m_le_n : m ≤ n) :
-    asps.post_lt n m ↔ ⟨m, n⟩ ∈ asps := by
+    asps.postLt n m ↔ ⟨m, n⟩ ∈ asps := by
   rcases lt_or_eq_of_le m_le_n with m_lt_n | rfl
-  · simp only [post_lt, not_lt_of_gt m_lt_n, mem_AspSet, false_and, m_lt_n, true_and, false_or]
+  · simp only [postLt, not_lt_of_gt m_lt_n, mem_AspSet, false_and, m_lt_n, true_and, false_or]
   · exact iff_of_false (not_post_lt_self asps m) (not_mem_self asps m)
 
 private lemma post_lt_trans (asps : AspSet) {l m n : ℤ}
-  (hlm : asps.post_lt l m) (hmn : asps.post_lt m n) :
-  asps.post_lt l n := by
+  (hlm : asps.postLt l m) (hmn : asps.postLt m n) :
+  asps.postLt l n := by
   rcases hlm with (⟨l_lt_m, lm_nI⟩ | ⟨m_lt_l, ml_I⟩)
   · rcases hmn with (⟨m_lt_n, mn_nI⟩ | ⟨n_lt_m, nm_I⟩)
     · left
@@ -149,7 +149,7 @@ private lemma post_lt_trans (asps : AspSet) {l m n : ℤ}
       refine ⟨lt_trans n_lt_m m_lt_l, ?_⟩
       apply asps.closed n m l <;> assumption
 
-private theorem post_lt_trichotomous (asps : AspSet) : Std.Trichotomous asps.post_lt := by
+private theorem post_lt_trichotomous (asps : AspSet) : Std.Trichotomous asps.postLt := by
   -- Proof written by Codex.
   exact Std.trichotomous_of_rel_or_eq_or_rel_swap fun {m n} => by
     rcases lt_trichotomy m n with m_lt_n | rfl | n_lt_m
@@ -161,7 +161,7 @@ private theorem post_lt_trichotomous (asps : AspSet) : Std.Trichotomous asps.pos
       · exact Or.inl <| (post_lt_swap_iff_mem asps (le_of_lt n_lt_m)).mpr nm_I
       · exact Or.inr <| Or.inr <| (post_lt_iff_not_mem asps n_lt_m).mpr nm_I
 
-instance (asps : AspSet) : IsStrictTotalOrder ℤ asps.post_lt where
+instance (asps : AspSet) : IsStrictTotalOrder ℤ asps.postLt where
   toTrichotomous := post_lt_trichotomous asps
   irrefl := not_post_lt_self asps
   trans _ _ _ := post_lt_trans asps
@@ -209,10 +209,10 @@ lemma mem_outset (asps : AspSet) (n x : ℤ) :
     x ∈ asps.outset n ↔ ⟨n, x⟩ ∈ asps := by
   simp only [outset, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, mem_AspSet]
 
-/-- The half-open interval for the order `post_lt`. These are the elements
+/-- The half-open interval for the order `postLt`. These are the elements
 `l` with `m ≤ l < n` in the post-inversion order. -/
 private lemma post_Ico_set_finite (asps : AspSet) (m n : ℤ) :
-    ({l : ℤ | asps.post_lt l n ∧ ¬ asps.post_lt l m} : Set ℤ).Finite := by
+    ({l : ℤ | asps.postLt l n ∧ ¬ asps.postLt l m} : Set ℤ).Finite := by
   -- Proof written by GPT 5.5.
   refine (Finset.finite_toSet (Finset.Ico m n ∪ (asps.inset m ∪ asps.outset n))).subset ?_
   intro l hl
@@ -232,10 +232,10 @@ private noncomputable def post_Ico (asps : AspSet) (m n : ℤ) : Finset ℤ :=
   (asps.post_Ico_set_finite m n).toFinset
 
 @[simp] private lemma mem_post_Ico (asps : AspSet) (m n l : ℤ) :
-    l ∈ asps.post_Ico m n ↔ asps.post_lt l n ∧ ¬ asps.post_lt l m := by
+    l ∈ asps.post_Ico m n ↔ asps.postLt l n ∧ ¬ asps.postLt l m := by
   simp only [post_Ico, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
 
-private lemma post_Ico_swap_eq_empty_of_post_lt (asps : AspSet) {m n : ℤ} (hmn : asps.post_lt m n) :
+private lemma post_Ico_swap_eq_empty_of_post_lt (asps : AspSet) {m n : ℤ} (hmn : asps.postLt m n) :
     asps.post_Ico n m = ∅ := by
   -- Proof written by GPT 5.5.
   apply Finset.eq_empty_iff_forall_notMem.mpr
@@ -257,7 +257,7 @@ open Utils
 
 private lemma endpointIndicator_eq_post_lt (a k : ℤ) :
     oneIf (k < a) - oneIf (k ∈ asps.inset a) + oneIf (k ∈ asps.outset a) =
-      oneIf (asps.post_lt k a) := by
+      oneIf (asps.postLt k a) := by
   classical
   rcases lt_trichotomy k a with k_lt_a | rfl | a_lt_k
   · have not_out : k ∉ asps.outset a := fun hk =>
@@ -378,7 +378,7 @@ private lemma finsum_postIndicator :
   · simpa [U] using postIndicator_support_subset asps m n
 
 private lemma sigmaIndicator_eq_post_lt_sub (m_le_n : m ≤ n) (k : ℤ) :
-    sigmaIndicator asps m n k = oneIf (asps.post_lt k n) - oneIf (asps.post_lt k m) := by
+    sigmaIndicator asps m n k = oneIf (asps.postLt k n) - oneIf (asps.postLt k m) := by
   -- Proof written by GPT 5.5.
   classical
   calc
@@ -392,14 +392,14 @@ private lemma sigmaIndicator_eq_post_lt_sub (m_le_n : m ≤ n) (k : ℤ) :
     _ = (oneIf (k < n) - oneIf (k ∈ asps.inset n) + oneIf (k ∈ asps.outset n))
           - (oneIf (k < m) - oneIf (k ∈ asps.inset m) + oneIf (k ∈ asps.outset m)) := by
             ring
-    _ = oneIf (asps.post_lt k n) - oneIf (asps.post_lt k m) := by
+    _ = oneIf (asps.postLt k n) - oneIf (asps.postLt k m) := by
       rw [endpointIndicator_eq_post_lt asps n k, endpointIndicator_eq_post_lt asps m k]
 
 private lemma postIndicator_eq_post_lt_sub (k : ℤ) :
-    postIndicator asps m n k = oneIf (asps.post_lt k n) - oneIf (asps.post_lt k m) := by
+    postIndicator asps m n k = oneIf (asps.postLt k n) - oneIf (asps.postLt k m) := by
   -- Proof written by GPT 5.5.
   classical
-  by_cases hn : asps.post_lt k n <;> by_cases hm : asps.post_lt k m <;>
+  by_cases hn : asps.postLt k n <;> by_cases hm : asps.postLt k m <;>
     simp only [postIndicator, mem_post_Ico, oneIf, hn, hm, ite_true, ite_false,
       true_and, false_and, not_true_eq_false, not_false_eq_true, sub_self,
       sub_zero, zero_sub]
@@ -422,7 +422,7 @@ private lemma σ_diff_post (m_le_n : m ≤ n) : asps.σ χ n - asps.σ χ m =
     _ = ((asps.post_Ico m n).card : ℤ) - (asps.post_Ico n m).card :=
       finsum_postIndicator asps m n
 
-private lemma σ_diff_of_post_lt (hmn : asps.post_lt m n) :
+private lemma σ_diff_of_post_lt (hmn : asps.postLt m n) :
     asps.σ χ n - asps.σ χ m = (asps.post_Ico m n).card := by
   rcases hmn with ⟨m_lt_n, mn_nI⟩ | ⟨n_lt_m, nm_I⟩
   · simpa [post_Ico_swap_eq_empty_of_post_lt asps ((post_lt_iff_not_mem asps m_lt_n).mpr mn_nI)]
@@ -433,7 +433,7 @@ private lemma σ_diff_of_post_lt (hmn : asps.post_lt m n) :
     simp only [h_swap, Finset.card_empty, Nat.cast_zero, zero_sub] at key
     omega
 
-private lemma σ_lt_of_post_lt (hmn : asps.post_lt m n) : asps.σ χ m < asps.σ χ n := by
+private lemma σ_lt_of_post_lt (hmn : asps.postLt m n) : asps.σ χ m < asps.σ χ n := by
   -- Proof written by GPT 5.5.
   have diff := σ_diff_of_post_lt asps m n χ hmn
   suffices (asps.post_Ico m n).card > 0 by linarith
@@ -449,18 +449,18 @@ private lemma σ_dec (m_lt_n : m < n) (mn_I : ⟨m, n⟩ ∈ asps) : asps.σ χ 
   -- Proof written by GPT 5.5.
   exact σ_lt_of_post_lt asps n m χ ((post_lt_swap_iff_mem asps (le_of_lt m_lt_n)).mpr mn_I)
 
-private lemma post_lt_iff_σ_lt : asps.post_lt m n ↔ asps.σ χ m < asps.σ χ n := by
+private lemma post_lt_iff_σ_lt : asps.postLt m n ↔ asps.σ χ m < asps.σ χ n := by
   -- Proof written by GPT 5.5.
   constructor
   · exact σ_lt_of_post_lt asps m n χ
   · intro hσ
-    rcases trichotomous_of asps.post_lt m n with hmn | rfl | hnm
+    rcases trichotomous_of asps.postLt m n with hmn | rfl | hnm
     · exact hmn
     · exact (lt_irrefl _ hσ).elim
     · exact ((not_lt_of_gt (σ_lt_of_post_lt asps n m χ hnm)) hσ).elim
 
 private lemma not_post_lt_iff_σ_le :
-    ¬ asps.post_lt m n ↔ asps.σ χ n ≤ asps.σ χ m := by
+    ¬ asps.postLt m n ↔ asps.σ χ n ≤ asps.σ χ m := by
   rw [post_lt_iff_σ_lt]
   exact not_lt
 
@@ -471,7 +471,7 @@ private lemma mem_iff_lt (m_le_n : m ≤ n) : ⟨m, n⟩ ∈ asps ↔ asps.σ χ
 private theorem func_injective (asps : AspSet) : Function.Injective (asps.recon χ) := by
   -- Proof written by GPT 5.5.
   intro m n hσ
-  rcases trichotomous_of asps.post_lt m n with hmn | rfl | hnm
+  rcases trichotomous_of asps.postLt m n with hmn | rfl | hnm
   · have hlt := σ_lt_of_post_lt asps m n χ hmn
     exact ((ne_of_lt hlt) hσ).elim
   · rfl

@@ -5,6 +5,8 @@ Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
 module
 
+public import Mathlib.Algebra.Ring.Divisibility.Basic
+
 public import Mathlib.Data.Nat.Fib.Basic
 public import Mathlib.Data.Nat.Cast.Order.Ring
 import Mathlib.Algebra.Order.Field.Basic

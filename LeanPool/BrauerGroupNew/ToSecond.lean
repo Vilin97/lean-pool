@@ -9,7 +9,7 @@ public import LeanPool.BrauerGroupNew.CrossProductAlgebra
 public import LeanPool.BrauerGroupNew.RelativeBrauer
 public import Mathlib.Tactic.Continuity
 import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
-import LeanPool.BrauerGroupNew.SkolemNoether
+public import LeanPool.BrauerGroupNew.SkolemNoether
 import LeanPool.BrauerGroupNew.Subfield.Splitting
 import LeanPool.BrauerGroupNew.Subfield.Subfield
 import LeanPool.BrauerGroupNew.Wedderburn

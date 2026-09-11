@@ -29,17 +29,23 @@ symplectic-matrix carrier for the public theorem used in Zhou §6.
 namespace Connes
 namespace Sp4
 
+/-- A four-by-four Boolean matrix packed into sixteen bits. -/
 abbrev BVMatrix := BitVec 16
+/-- A four-by-four matrix with Boolean entries. -/
 abbrev BMatrix := Fin 4 → Fin 4 → Bool
 
+/-- Decode a packed matrix in row-major order. -/
 def bvEntry (x : BVMatrix) : BMatrix := fun i j =>
   x.getLsbD (4 * i.val + j.val)
 
+/-- The row-column dot product over the field with two elements. -/
 def boolDot (a b : BMatrix) (i j : Fin 4) : Bool :=
   (a i 0 && b 0 j) ^^ (a i 1 && b 1 j) ^^
   (a i 2 && b 2 j) ^^ (a i 3 && b 3 j)
 
+/-- Multiply Boolean matrices over the field with two elements. -/
 def boolMul (a b : BMatrix) : BMatrix := boolDot a b
+/-- Transpose a Boolean matrix. -/
 def boolTranspose (a : BMatrix) : BMatrix := fun i j => a j i
 
 private def boolMatrixEq (a b : BMatrix) : Prop :=
@@ -48,6 +54,7 @@ private def boolMatrixEq (a b : BMatrix) : Prop :=
   a 2 0 = b 2 0 ∧ a 2 1 = b 2 1 ∧ a 2 2 = b 2 2 ∧ a 2 3 = b 2 3 ∧
   a 3 0 = b 3 0 ∧ a 3 1 = b 3 1 ∧ a 3 2 = b 3 2 ∧ a 3 3 = b 3 3
 
+/-- Decide entrywise equality of Boolean matrices. -/
 def boolMatrixEqB (a b : BMatrix) : Bool :=
   (a 0 0 == b 0 0) && (a 0 1 == b 0 1) &&
   (a 0 2 == b 0 2) && (a 0 3 == b 0 3) &&
@@ -63,20 +70,28 @@ private theorem boolMatrixEqB_eq_true_iff (a b : BMatrix) :
   simp only [boolMatrixEqB, Bool.and_eq_true, beq_iff_eq, boolMatrixEq]
   tauto
 
+/-- The identity matrix in the Boolean representation. -/
 def boolOne : BMatrix := bvEntry (BitVec.ofNat 16 0x8421)
+/-- The standard symplectic form in the Boolean representation. -/
 def boolJ : BMatrix := bvEntry (BitVec.ofNat 16 0x2184)
+/-- The first chosen symplectic generator in the Boolean representation. -/
 def boolG1 : BMatrix := bvEntry (BitVec.ofNat 16 0x13DB)
+/-- The inverse of the first chosen symplectic generator. -/
 def boolG1Inv : BMatrix := bvEntry (BitVec.ofNat 16 0x5FC8)
+/-- The second chosen symplectic generator in the Boolean representation. -/
 def boolG2 : BMatrix := bvEntry (BitVec.ofNat 16 0x21B7)
+/-- The inverse of the second chosen symplectic generator. -/
 def boolG2Inv : BMatrix := bvEntry (BitVec.ofNat 16 0xED84)
 
 private def boolSymplectic (x : BMatrix) : Prop :=
   boolMatrixEq (boolMul (boolMul x boolJ) (boolTranspose x)) boolJ
 
+/-- Conjugate a Boolean matrix using a supplied matrix and its inverse. -/
 def boolConj (g gi x : BMatrix) : BMatrix := boolMul (boolMul g x) gi
 private def boolCommutes (a b : BMatrix) : Prop :=
   boolMatrixEq (boolMul a b) (boolMul b a)
 
+/-- Decide whether two Boolean matrices commute. -/
 def boolCommutesB (a b : BMatrix) : Bool :=
   boolMatrixEqB (boolMul a b) (boolMul b a)
 

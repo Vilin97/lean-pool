@@ -249,10 +249,12 @@ lemma symmetrified_tree_set_card [Fintype V] [∀ a b : V, Fintype (a ⟶ b)]
   rw [← Fintype.card_congr (wideTotalEquiv (wideSubquiverSymmetrify T))]
   exact symmetrified_tree_card T
 
+/-- The root of the chosen spanning arborescence, viewed in the ambient groupoid. -/
 abbrev spanningRoot {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T] : G :=
   show T from root T
 
+/-- Interpret an oriented spanning-tree path as an ambient groupoid morphism. -/
 @[reducible]
 def spanningHomOfPath {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T] :
@@ -262,6 +264,7 @@ def spanningHomOfPath {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
       spanningHomOfPath T p ≫
         Sum.recOn f.val (fun e => IsFreeGroupoid.of e) fun e => inv (IsFreeGroupoid.of e)
 
+/-- The ambient groupoid morphism represented by the chosen tree path. -/
 @[reducible]
 def spanningTreeHom {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T]
@@ -279,6 +282,7 @@ private lemma spanningTreeHom_root {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid
     spanningTreeHom T (spanningRoot T) = 𝟙 _ := by
   rw [spanningTreeHom_eq T Path.nil]
 
+/-- Close a groupoid morphism into a loop using the spanning-tree paths. -/
 @[reducible]
 def spanningLoopOfHom {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T]

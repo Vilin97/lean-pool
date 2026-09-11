@@ -33,7 +33,6 @@ open scoped BigOperators
 
 open Distributed2Coloring.LowerBound.Correlation
 open Distributed2Coloring.LowerBound.N1000000Data
-open Distributed2Coloring.LowerBound.N1000000StructureConstants
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev n : Nat := N1000000Data.n

@@ -41,7 +41,6 @@ namespace Sundog.Certificate.Degradation
 
 open Sundog.Certificate
 open Sundog.Certificate.Scaling
-open Sundog.Certificate.Looseness
 
 variable {F : Type*} [Field F] [Fintype F] [DecidableEq F]
 
