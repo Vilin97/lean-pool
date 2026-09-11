@@ -1225,6 +1225,7 @@ theorem ordered_of_carrier (hN : ActualCarrierGeometry.geometricThreshold ≤ N0
   obtain ⟨hnm, hmn⟩ := carrier_band_distance hN l n hx hc
   have hm4 : 4 ≤ BaseChartJets.cellBand l.1 := ActualPrimaryBounds.label_large (l.2,l.1)
   apply CommonWindow.index_le
+  unfold CommonWindow.levels
   apply Finset.mem_insert_of_mem
   exact Finset.mem_Icc.mpr ⟨max_le (by omega) (by omega), hmn⟩
 

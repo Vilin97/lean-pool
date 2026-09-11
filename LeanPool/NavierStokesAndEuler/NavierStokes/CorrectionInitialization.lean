@@ -3931,20 +3931,24 @@ namespace CommonWindow
 open Set Function
 
 /-- Levels, given by `insert n (Finset.Icc (max 1 (n - 2)) (n + 2))`. -/
-noncomputable def levels (n : ℕ) : Finset ℕ :=
+@[irreducible] noncomputable def levels (n : ℕ) : Finset ℕ :=
   insert n (Finset.Icc (max 1 (n - 2)) (n + 2))
 
-theorem self_mem (n : ℕ) : n ∈ levels n := Finset.mem_insert_self _ _
+theorem self_mem (n : ℕ) : n ∈ levels n := by
+  unfold levels
+  exact Finset.mem_insert_self _ _
 
 theorem levels_nonempty (n : ℕ) : (levels n).Nonempty := ⟨n, self_mem n⟩
 
 theorem distance {n m : ℕ} (hm : m ∈ levels n) : n ≤ m + 4 ∧ m ≤ n + 4 := by
+  unfold levels at hm
   rcases Finset.mem_insert.mp hm with rfl | hm
   · omega
   · have he := Finset.mem_Icc.mp hm
     omega
 
 theorem positive {n m : ℕ} (hn : 1 ≤ n) (hm : m ∈ levels n) : 1 ≤ m := by
+  unfold levels at hm
   rcases Finset.mem_insert.mp hm with rfl | hm
   · exact hn
   · exact (le_max_left _ _).trans (Finset.mem_Icc.mp hm).1
@@ -4001,6 +4005,7 @@ theorem active_level_mem {D q : ℝ} {n : ℕ} {L : SlotColoring.Label}
   have hmn : L.1 ≤ n + 2 := by
     have he : (L.1 : ℝ) ≤ (n : ℝ) + 2 := by linarith [hm.1, hn.2]
     exact_mod_cast he
+  unfold levels
   apply Finset.mem_insert_of_mem
   exact Finset.mem_Icc.mpr ⟨max_le hL (by omega), hmn⟩
 

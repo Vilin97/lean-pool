@@ -199,7 +199,9 @@ theorem labelCarrier_near (hN : geometricThreshold ≤ N0)
     (hc : x ∈ ActualInitialExcluded.labelCarrier l n) : ActualPrimaryBounds.near l n := by
   obtain ⟨hnm, hmn⟩ := labelCarrier_band_distance hN l n hx hc
   have hm4 : 4 ≤ BaseChartJets.cellBand l.2 := ActualPrimaryBounds.label_large l
-  refine ⟨by omega, Finset.mem_insert_of_mem (Finset.mem_Icc.mpr ?_)⟩
+  refine ⟨by omega, ?_⟩
+  unfold CommonWindow.levels
+  refine Finset.mem_insert_of_mem (Finset.mem_Icc.mpr ?_)
   exact ⟨max_le (by omega) (by omega), hmn⟩
 
 theorem labelCarrier_phaseCell (hN : geometricThreshold ≤ N0)

@@ -1175,6 +1175,7 @@ theorem near_of_native_band (l : Index B N0) (n : ℕ) {p : PhaseCalculus.Slow}
     ((ActualPrimary.choice B N0).prepared.large _ l.1.property).four_le
   change 1 ≤ n ∧ BaseChartJets.cellBand l.1 ∈ CommonWindow.levels n
   refine ⟨by omega, ?_⟩
+  unfold CommonWindow.levels
   apply Finset.mem_insert_of_mem
   exact Finset.mem_Icc.mpr ⟨max_le (by omega) (by omega), hmn⟩
 

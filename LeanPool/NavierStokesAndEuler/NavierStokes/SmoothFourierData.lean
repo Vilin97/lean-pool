@@ -1300,7 +1300,7 @@ theorem summable_integer_weight_inv_two :
     Real.summable_one_div_nat_pow.mpr (by decide)
   have hNat : Summable (fun n : ℕ => 1 / ((n : ℝ) + 1) ^ 2) := by
     have h : Summable (fun n : ℕ => 1 / ((n + 1 : ℕ) : ℝ) ^ 2) :=
-      (summable_nat_add_iff 1).mpr hbase
+      (summable_nat_add_iff (f := fun n : ℕ => 1 / (n : ℝ) ^ 2) 1).mpr hbase
     simpa only [Nat.cast_add, Nat.cast_one] using h
   apply Summable.of_nat_of_neg
   · simpa only [Int.cast_natCast, Nat.abs_cast, add_comm, one_div] using hNat

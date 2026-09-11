@@ -252,7 +252,7 @@ theorem summable_norm_term (k : ℕ) (t : ℝ) :
 
 theorem summable_term_tail (k j : ℕ) (t : ℝ) :
     Summable (fun n : ℕ => term k (n + j) t) :=
-  (summable_nat_add_iff j).mpr (summable_term k t)
+  (summable_nat_add_iff (f := fun n : ℕ => term k n t) j).mpr (summable_term k t)
 
 /-- Differentiating a successor-index term cancels one factorial factor. -/
 theorem hasDerivAt_term_succ (k n : ℕ) (t : ℝ) :
@@ -514,7 +514,8 @@ theorem alternating_tail_nonneg (k j : ℕ) (hj : 1 ≤ j)
     0 ≤ ∑' n : ℕ, (-1 : ℝ) ^ n * term k (n + j) (-t) := by
   have hs : Summable (fun n : ℕ => (-1 : ℝ) ^ n * term k (n + j) (-t)) := by
     apply Summable.of_norm_bounded
-      ((summable_nat_add_iff j).mpr (summable_norm_term k (-t)))
+      ((summable_nat_add_iff (f := fun n : ℕ => ‖term k n (-t)‖) j).mpr
+        (summable_norm_term k (-t)))
     intro n
     simp
   have hb := Antitone.alternating_series_le_tendsto hs.hasSum.tendsto_sum_nat

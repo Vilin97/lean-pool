@@ -631,7 +631,9 @@ theorem near_of_closed_band (l : SignedLabel B N0) (n : ℕ) {p : PhaseCalculus.
     have hh : (BaseChartJets.cellBand l.2 : ℝ) ≤ (n : ℝ) + 2 := by linarith [hL.1, hn.2]
     exact_mod_cast hh
   have hm4 : 4 ≤ BaseChartJets.cellBand l.2 := label_large l
-  refine ⟨by omega, Finset.mem_insert_of_mem ?_⟩
+  refine ⟨by omega, ?_⟩
+  unfold CommonWindow.levels
+  refine Finset.mem_insert_of_mem ?_
   exact Finset.mem_Icc.mpr ⟨max_le (by omega) (by omega), hmn⟩
 
 theorem attached_zero_inactive (l : SignedLabel B N0) (n : ℕ) {p : PhaseCalculus.Slow}
