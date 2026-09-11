@@ -710,7 +710,8 @@ theorem inverted_riccati_squared_error
     have hti := Ico_subset_Icc_self ht
     have hyt := hy t hti
     have hy0 := hyt.1
-    have hy2 : (1 - ε * t) ^ 2 ≤ 1 := by nlinarith [hyt.1, hyt.2]
+    have hy2 : (1 - ε * t) ^ 2 ≤ 1 := by
+      simpa only [one_pow] using pow_le_pow_left₀ hyt.1 hyt.2 2
     have hdge : 1 ≤ 1 + (1 - ε * t) ^ 4 := by
       have : 0 ≤ (1 - ε * t) ^ 4 := by positivity
       linarith
@@ -735,9 +736,11 @@ theorem inverted_riccati_squared_error
       unfold invertedRiccati
       field_simp
       ring
+    have hqupper' := hqupper.trans (show 2 * ε ^ 2 ≤ 20 * ε by
+      nlinarith only [hε, hεsmall])
     rw [heq]
-    apply abs_le.mpr
-    constructor <;> nlinarith
+    exact abs_le.mpr ⟨by linarith only [hqupper', hmulnonneg],
+      by linarith only [hqnonneg, hmulupper, hε]⟩
   have hμderiv : ∀ t ∈ Ico 0 T, |riccatiRootDeriv ε t| ≤ 4 * ε := by
     intro t ht
     have hp := riccatiRootDeriv_bounds hε.le (hy t (Ico_subset_Icc_self ht))
@@ -1845,7 +1848,7 @@ theorem ideal_frame_bounds
         y ^ 4 + ε ^ 2 * y ^ 2 + 8 * ε * y ^ 3 ∧
       |idealFrameNumerator ε y z / idealFrameDenominator ε y z - 1| ≤ 1500 * ε := by
   have hy1 : y ≤ 1 := by linarith
-  have hy2 : y ^ 2 ≤ 1 := by nlinarith
+  have hy2 : y ^ 2 ≤ 1 := by simpa only [one_pow] using pow_le_pow_left₀ hy hy1 2
   have hy3 : y ^ 3 ≤ 1 := by simpa using pow_le_pow_left₀ hy hy1 3
   have hy4 : y ^ 4 ≤ 1 := by simpa using pow_le_pow_left₀ hy hy1 4
   have hy3n : 0 ≤ y ^ 3 := by positivity
@@ -1853,12 +1856,11 @@ theorem ideal_frame_bounds
   have hDpos : 0 < 1 + y ^ 4 := by positivity
   have hDn : 0 ≤ 1 + y ^ 4 := hDpos.le
   have hTn : 0 ≤ ε ^ 2 * y ^ 2 := by positivity
-  have hTsmall : ε ^ 2 * y ^ 2 ≤ 1 / 16 := by
-    have hm := mul_le_mul_of_nonneg_left hy2 (sq_nonneg ε)
-    nlinarith
-  have hTε : ε ^ 2 * y ^ 2 ≤ ε := by
-    have hm := mul_le_mul_of_nonneg_left hy2 (sq_nonneg ε)
-    nlinarith
+  have hTsquare : ε ^ 2 * y ^ 2 ≤ ε ^ 2 := mul_le_of_le_one_right (sq_nonneg ε) hy2
+  have hTsmall : ε ^ 2 * y ^ 2 ≤ 1 / 16 :=
+    hTsquare.trans (by nlinarith only [hε, hεsmall])
+  have hTε : ε ^ 2 * y ^ 2 ≤ ε :=
+    hTsquare.trans (by nlinarith only [hε, hεsmall])
   have hUn : 0 ≤ 2 * ε * z * y ^ 3 := by positivity
   have hUlocal : 2 * ε * z * y ^ 3 ≤ 8 * ε * y ^ 3 := by
     have hm := mul_le_mul_of_nonneg_right hzupper (show 0 ≤ 2 * ε * y ^ 3 by positivity)
