@@ -162,6 +162,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/SetTheory                 https://github.com/znssong/SetTheory
   LeanPool/SingularModuli            https://github.com/ElodinLaarz/lean-thesis
   LeanPool/SpectralPositivity        https://github.com/mrdouglasny/spectral-positivity
+  LeanPool/SpherePacking             https://github.com/openai/ten-proofs
   LeanPool/SumsThreeSquares          https://github.com/pitmonticone/SumsThreeSquares
   LeanPool/Sundogcert                https://github.com/humiliati/sundogcert
   LeanPool/SyntheticEuclid4          https://github.com/ah1112/synthetic_euclid_4
