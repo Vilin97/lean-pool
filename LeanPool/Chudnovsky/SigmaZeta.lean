@@ -5,7 +5,6 @@ Authors: Xuanji Li
 -/
 
 import LeanPool.Chudnovsky.Basic
-import Mathlib.Analysis.Calculus.LogDeriv
 
 /-!
 # The Weierstrass σ- and ζ-functions
@@ -638,7 +637,10 @@ private lemma differentiableOn_weierstrassZetaTerm (l : {l : L.lattice // l ≠ 
   have hw : (l.1 : ℂ) ≠ 0 := by simpa using l.2
   have hrw : r - (l.1 : ℂ) ≠ 0 := sub_ne_zero.mpr hrne
   unfold weierstrassZetaTerm
-  fun_prop (disch := assumption)
+  refine DifferentiableAt.differentiableWithinAt (((?_ : DifferentiableAt ℂ
+    (fun z : ℂ ↦ 1 / (z - (l.1 : ℂ))) r).add (differentiableAt_const _)).add
+    (differentiableAt_id.div_const _))
+  exact (differentiableAt_const _).div (differentiableAt_id.sub_const _) hrw
 
 /-- The partial sums of the ζ-series converge locally uniformly away from the lattice. -/
 private lemma tendstoLocallyUniformlyOn_zetaSum :
