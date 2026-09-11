@@ -5,11 +5,7 @@ Authors: Xuanji Li
 -/
 
 import LeanPool.Chudnovsky.SingularModuli.CosetOrbit
-import Mathlib.Algebra.Field.GeomSum
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
-import Mathlib.RingTheory.Polynomial.Vieta
 
 /-!
 # The modular polynomial `Φ_m ∈ ℚ[X, Y]` (Phase C, chunks B3–B5)

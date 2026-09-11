@@ -7,14 +7,6 @@ Authors: Xuanji Li
 import LeanPool.Chudnovsky.SingularModuli.JFunction
 import LeanPool.Chudnovsky.Fourier
 import LeanPool.Chudnovsky.DivisionValues
-import Mathlib.NumberTheory.Modular
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Analysis.Analytic.Uniqueness
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-import Mathlib.Data.Nat.Choose.Cast
 import Mathlib.Analysis.Complex.OpenMapping
 import LeanPool.Chudnovsky.Estimates
 
