@@ -8058,3 +8058,44 @@ projects:
       - "15B48"
       - "05C35"
       - "15A18"
+  - slug: minimum-degree-matchings
+    title: Perfect and near-perfect matchings from minimum degree
+    summary: >-
+      Derives perfect matchings in finite graphs of even order whose minimum degree is at
+      least half their order, and matchings covering all but one vertex in the odd case
+      under the corresponding sharp minimum-degree hypothesis. The even result is obtained
+      from Tutte's theorem; the odd result follows through a universal-apex construction.
+    branch: graph theory
+    entry_module: LeanPool.MinimumDegreeMatching
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+    source:
+      title: >-
+        Matching.lean, a reusable formalization byproduct accompanying
+        Linear-Error Clique Partitions of Split Graphs via Structured Triangle Packing
+      authors:
+        - Juan Pablo Traverso Gianini
+        - Aristotle
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/PaperIII/Contrib/Submission
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SimpleGraph.exists_isPerfectMatching_of_minDegree
+    main_results:
+      - declaration: SimpleGraph.exists_isPerfectMatching_of_minDegree
+        informal: >-
+          Every finite simple graph of even order whose minimum degree is at least half its
+          order has a perfect matching.
+      - declaration: SimpleGraph.exists_isMatching_compl_singleton_of_minDegree
+        informal: >-
+          Every finite simple graph of odd order n and minimum degree at least (n - 1) / 2
+          has a matching whose vertex set is the complement of a singleton.
+    tags:
+      - graph-theory
+      - perfect-matchings
+      - minimum-degree
+    msc:
+      - "05C70"
