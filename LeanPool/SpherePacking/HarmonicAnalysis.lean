@@ -1282,6 +1282,37 @@ private theorem saddleSourceCenteredPolynomial_centralGaussianError_le
           ∫ T : ℝ, saddleSourceGaussianKernel ε ℓ u T := by
       rw [integral_const_mul]
 
+private theorem SaddleSign.centeredIntegrand_centralGaussianError_le (s : SaddleSign)
+    {ε ℓ u R q p : ℝ}
+    (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (hmargin : ∀ a ∈ Icc (ε ^ 3) (10 * Real.log (1 / ε)),
+      0 ≤ (1 - 10 * ε * (1 + a)))
+    (hV : 0 < saddleSourceGaussianVariance ε ℓ u)
+    (hR : 0 ≤ R) (hq : 0 ≤ q) (hqone : q ≤ 1)
+    (hp : 0 ≤ p)
+    (hcubic : ∀ T : ℝ, |T| ≤ R →
+      (ℓ * upperSaddleThirdMoment ε ℓ (u - 1) / 6) *
+        |T| ^ 3 ≤ q)
+    (hpoly : ∀ T : ℝ, |T| ≤ R →
+      ‖s.polynomial ε
+          ((T : ℂ) + Complex.I * (u : ℂ)) -
+        s.polynomial ε (Complex.I * (u : ℂ))‖ ≤
+          p * ‖s.polynomial ε (Complex.I * (u : ℂ))‖) :
+    ‖∫ T : ℝ in Icc (-R) R,
+        (s.centeredIntegrand ε ℓ u
+          (saddleSourceStationaryLogRadius ε ℓ u) T -
+            s.gaussianIntegrand ε ℓ u T)‖ ≤
+      (2 * q + (1 + 2 * q) * p) *
+        ‖s.polynomial ε (Complex.I * (u : ℂ))‖ *
+          ∫ T : ℝ, saddleSourceGaussianKernel ε ℓ u T := by
+  exact saddleSourceCenteredPolynomial_centralGaussianError_le
+    hε hℓ hu horder hmargin hV hR hq hqone hp
+    (s.polynomial ε)
+    (s.centeredIntegrand_integrable
+      hε hℓ hu horder (saddleSourceStationaryLogRadius ε ℓ u))
+    hcubic hpoly
+
 private theorem saddleSourceCenteredPlusIntegrand_centralGaussianError_le
     {ε ℓ u R q p : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
@@ -1305,13 +1336,9 @@ private theorem saddleSourceCenteredPlusIntegrand_centralGaussianError_le
             saddleSourceGaussianPlusIntegrand ε ℓ u T)‖ ≤
       (2 * q + (1 + 2 * q) * p) *
         ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ *
-          ∫ T : ℝ, saddleSourceGaussianKernel ε ℓ u T := by
-  exact saddleSourceCenteredPolynomial_centralGaussianError_le
-    hε hℓ hu horder hmargin hV hR hq hqone hp
-    (plusPolynomial ε)
-    (saddleSourceCenteredPlusIntegrand_integrable
-      hε hℓ hu horder (saddleSourceStationaryLogRadius ε ℓ u))
-    hcubic hpoly
+          ∫ T : ℝ, saddleSourceGaussianKernel ε ℓ u T :=
+  SaddleSign.centeredIntegrand_centralGaussianError_le .plus
+    hε hℓ hu horder hmargin hV hR hq hqone hp hcubic hpoly
 
 private theorem saddleSourceCenteredMinusIntegrand_centralGaussianError_le
     {ε ℓ u R q p : ℝ}
@@ -1336,13 +1363,9 @@ private theorem saddleSourceCenteredMinusIntegrand_centralGaussianError_le
             saddleSourceGaussianMinusIntegrand ε ℓ u T)‖ ≤
       (2 * q + (1 + 2 * q) * p) *
         ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ *
-          ∫ T : ℝ, saddleSourceGaussianKernel ε ℓ u T := by
-  exact saddleSourceCenteredPolynomial_centralGaussianError_le
-    hε hℓ hu horder hmargin hV hR hq hqone hp
-    (minusPolynomial ε)
-    (saddleSourceCenteredMinusIntegrand_integrable
-      hε hℓ hu horder (saddleSourceStationaryLogRadius ε ℓ u))
-    hcubic hpoly
+          ∫ T : ℝ, saddleSourceGaussianKernel ε ℓ u T :=
+  SaddleSign.centeredIntegrand_centralGaussianError_le .minus
+    hε hℓ hu horder hmargin hV hR hq hqone hp hcubic hpoly
 
 end
 
@@ -3032,6 +3055,26 @@ section
 open Filter Set
 open scoped Topology
 
+private theorem plusPolynomial_imaginary_norm_pos
+    {ε u : ℝ} (hε : 0 < ε) (hu : -1 ≤ u) :
+    0 < ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  (div_pos hε four_pos).trans_le (plusPolynomial_imaginary_norm_ge_beta hε hu)
+
+private theorem minusPolynomial_imaginary_norm_pos
+    {ε u : ℝ} (hε : 0 < ε) (hu : 1 + ε / 4 ≤ u) :
+    0 < ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  (mul_pos three_pos (div_pos hε four_pos)).trans_le
+    (minusPolynomial_imaginary_norm_ge_three_beta hε hu)
+
+/-- Clearing the denominator in a uniform ratio bound `num / den ≤ C * weight`. -/
+private theorem exists_uniform_bound_of_ratio
+    {D : ℝ → Prop} {num : ℝ → ℝ → ℝ} {den weight : ℝ → ℝ}
+    (hden : ∀ u : ℝ, D u → 0 < den u)
+    (hratio : ∃ C : ℝ, 0 < C ∧ ∀ u : ℝ, D u → ∀ T : ℝ, num u T / den u ≤ C * weight T) :
+    ∃ C : ℝ, 0 < C ∧ ∀ u : ℝ, D u → ∀ T : ℝ, num u T ≤ C * weight T * den u := by
+  obtain ⟨C, hC, hbound⟩ := hratio
+  exact ⟨C, hC, fun u hu T => (div_le_iff₀ (hden u hu)).mp (hbound u hu T)⟩
+
 private theorem exists_plusPolynomial_uniform_weighted_bound
     {ε : ℝ} (hε : 0 < ε) :
     ∃ C : ℝ, 0 < C ∧
@@ -3039,16 +3082,9 @@ private theorem exists_plusPolynomial_uniform_weighted_bound
         ‖plusPolynomial ε
           ((T : ℂ) + Complex.I * (u : ℂ))‖ ≤
           C * (1 + |T| ^ 3) *
-            ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-  obtain ⟨C, hC, hbound⟩ :=
-    exists_plusPolynomial_uniform_norm_ratio hε
-  refine ⟨C, hC, ?_⟩
-  intro u hu T
-  have hden : 0 <
-      ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
-    (div_pos hε four_pos).trans_le
-      (plusPolynomial_imaginary_norm_ge_beta hε hu)
-  exact (div_le_iff₀ hden).mp (hbound u hu T)
+            ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  exists_uniform_bound_of_ratio (fun _ hu => plusPolynomial_imaginary_norm_pos hε hu)
+    (exists_plusPolynomial_uniform_norm_ratio hε)
 
 private theorem exists_minusPolynomial_uniform_weighted_bound
     {ε : ℝ} (hε : 0 < ε) :
@@ -3057,18 +3093,9 @@ private theorem exists_minusPolynomial_uniform_weighted_bound
         ‖minusPolynomial ε
           ((T : ℂ) + Complex.I * (u : ℂ))‖ ≤
           C * (1 + |T| ^ 3) *
-            ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-  obtain ⟨C, hC, hbound⟩ :=
-    exists_minusPolynomial_uniform_norm_ratio hε
-  refine ⟨C, hC, ?_⟩
-  intro u hu T
-  have hden : 0 <
-      ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-    have hbeta := div_pos hε four_pos
-    have hnorm :=
-      minusPolynomial_imaginary_norm_ge_three_beta hε hu
-    linarith
-  exact (div_le_iff₀ hden).mp (hbound u hu T)
+            ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  exists_uniform_bound_of_ratio (fun _ hu => minusPolynomial_imaginary_norm_pos hε hu)
+    (exists_minusPolynomial_uniform_norm_ratio hε)
 
 private theorem exists_plusPolynomial_uniform_difference_bound
     {ε : ℝ} (hε : 0 < ε) :
@@ -3078,16 +3105,9 @@ private theorem exists_plusPolynomial_uniform_difference_bound
             ((T : ℂ) + Complex.I * (u : ℂ)) -
           plusPolynomial ε (Complex.I * (u : ℂ))‖ ≤
           C * (|T| + |T| ^ 3) *
-            ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-  obtain ⟨C, hC, hbound⟩ :=
-    exists_plusPolynomial_uniform_difference_ratio hε
-  refine ⟨C, hC, ?_⟩
-  intro u hu T
-  have hden : 0 <
-      ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
-    (div_pos hε four_pos).trans_le
-      (plusPolynomial_imaginary_norm_ge_beta hε hu)
-  exact (div_le_iff₀ hden).mp (hbound u hu T)
+            ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  exists_uniform_bound_of_ratio (fun _ hu => plusPolynomial_imaginary_norm_pos hε hu)
+    (exists_plusPolynomial_uniform_difference_ratio hε)
 
 private theorem exists_minusPolynomial_uniform_difference_bound
     {ε : ℝ} (hε : 0 < ε) :
@@ -3097,18 +3117,56 @@ private theorem exists_minusPolynomial_uniform_difference_bound
             ((T : ℂ) + Complex.I * (u : ℂ)) -
           minusPolynomial ε (Complex.I * (u : ℂ))‖ ≤
           C * (|T| + |T| ^ 3) *
-            ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-  obtain ⟨C, hC, hbound⟩ :=
-    exists_minusPolynomial_uniform_difference_ratio hε
-  refine ⟨C, hC, ?_⟩
-  intro u hu T
-  have hden : 0 <
-      ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-    have hbeta := div_pos hε four_pos
-    have hnorm :=
-      minusPolynomial_imaginary_norm_ge_three_beta hε hu
+            ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  exists_uniform_bound_of_ratio (fun _ hu => minusPolynomial_imaginary_norm_pos hε hu)
+    (exists_minusPolynomial_uniform_difference_ratio hε)
+
+/-- A uniform `|T| + |T| ^ 3` difference bound yields a central window on which the relative
+difference is at most `κ`. -/
+private theorem exists_polynomial_uniform_central_window
+    {P : ℂ → ℂ} {D : ℝ → Prop} {κ : ℝ} (hκ : 0 < κ)
+    (hbound : ∃ C : ℝ, 0 < C ∧
+      ∀ u : ℝ, D u → ∀ T : ℝ,
+        ‖P ((T : ℂ) + Complex.I * (u : ℂ)) - P (Complex.I * (u : ℂ))‖ ≤
+          C * (|T| + |T| ^ 3) * ‖P (Complex.I * (u : ℂ))‖) :
+    ∃ R : ℝ, 0 < R ∧
+      ∀ u : ℝ, D u →
+        ∀ T : ℝ, |T| ≤ R →
+          ‖P ((T : ℂ) + Complex.I * (u : ℂ)) - P (Complex.I * (u : ℂ))‖ ≤
+            κ * ‖P (Complex.I * (u : ℂ))‖ := by
+  obtain ⟨C, hC, hbound⟩ := hbound
+  let R : ℝ := min 1 (κ / (2 * C))
+  have hR : 0 < R := by
+    try dsimp [R]
+    positivity
+  refine ⟨R, hR, ?_⟩
+  intro u hu T hT
+  have hTunit : |T| ≤ 1 :=
+    hT.trans (min_le_left _ _)
+  have hcube : |T| ^ 3 ≤ |T| := by
+    have hfactor :
+        0 ≤ |T| * (1 - |T|) * (1 + |T|) := by
+      exact mul_nonneg
+        (mul_nonneg (abs_nonneg T) (sub_nonneg.mpr hTunit))
+        (by positivity)
     linarith
-  exact (div_le_iff₀ hden).mp (hbound u hu T)
+  have hscale : 2 * C * R ≤ κ := by
+    have hmin : R ≤ κ / (2 * C) := min_le_right _ _
+    have hfactor : 0 < 2 * C := by positivity
+    linarith [(le_div_iff₀ hfactor).mp hmin]
+  calc
+    ‖P ((T : ℂ) + Complex.I * (u : ℂ)) - P (Complex.I * (u : ℂ))‖ ≤
+      C * (|T| + |T| ^ 3) * ‖P (Complex.I * (u : ℂ))‖ :=
+      hbound u hu T
+    _ ≤ (2 * C * R) * ‖P (Complex.I * (u : ℂ))‖ := by
+      apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
+      calc
+        C * (|T| + |T| ^ 3) ≤ C * (2 * R) := by
+          apply mul_le_mul_of_nonneg_left _ hC.le
+          linarith
+        _ = 2 * C * R := by ring
+    _ ≤ κ * ‖P (Complex.I * (u : ℂ))‖ := by
+      exact mul_le_mul_of_nonneg_right hscale (norm_nonneg _)
 
 private theorem exists_plusPolynomial_uniform_central_window
     {ε κ : ℝ} (hε : 0 < ε) (hκ : 0 < κ) :
@@ -3118,45 +3176,9 @@ private theorem exists_plusPolynomial_uniform_central_window
           ‖plusPolynomial ε
               ((T : ℂ) + Complex.I * (u : ℂ)) -
             plusPolynomial ε (Complex.I * (u : ℂ))‖ ≤
-            κ * ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-  obtain ⟨C, hC, hbound⟩ :=
-    exists_plusPolynomial_uniform_difference_bound hε
-  let R : ℝ := min 1 (κ / (2 * C))
-  have hR : 0 < R := by
-    try dsimp [R]
-    positivity
-  refine ⟨R, hR, ?_⟩
-  intro u hu T hT
-  have hTunit : |T| ≤ 1 :=
-    hT.trans (min_le_left _ _)
-  have hcube : |T| ^ 3 ≤ |T| := by
-    have hfactor :
-        0 ≤ |T| * (1 - |T|) * (1 + |T|) := by
-      exact mul_nonneg
-        (mul_nonneg (abs_nonneg T) (sub_nonneg.mpr hTunit))
-        (by positivity)
-    linarith
-  have hscale : 2 * C * R ≤ κ := by
-    have hmin : R ≤ κ / (2 * C) := min_le_right _ _
-    have hfactor : 0 < 2 * C := by positivity
-    linarith [(le_div_iff₀ hfactor).mp hmin]
-  calc
-    ‖plusPolynomial ε
-        ((T : ℂ) + Complex.I * (u : ℂ)) -
-      plusPolynomial ε (Complex.I * (u : ℂ))‖ ≤
-      C * (|T| + |T| ^ 3) *
-        ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
-      hbound u hu T
-    _ ≤ (2 * C * R) *
-        ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-      apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-      calc
-        C * (|T| + |T| ^ 3) ≤ C * (2 * R) := by
-          apply mul_le_mul_of_nonneg_left _ hC.le
-          linarith
-        _ = 2 * C * R := by ring
-    _ ≤ κ * ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-      exact mul_le_mul_of_nonneg_right hscale (norm_nonneg _)
+            κ * ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  exists_polynomial_uniform_central_window (P := plusPolynomial ε) hκ
+    (exists_plusPolynomial_uniform_difference_bound hε)
 
 private theorem exists_minusPolynomial_uniform_central_window
     {ε κ : ℝ} (hε : 0 < ε) (hκ : 0 < κ) :
@@ -3166,45 +3188,9 @@ private theorem exists_minusPolynomial_uniform_central_window
           ‖minusPolynomial ε
               ((T : ℂ) + Complex.I * (u : ℂ)) -
             minusPolynomial ε (Complex.I * (u : ℂ))‖ ≤
-            κ * ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-  obtain ⟨C, hC, hbound⟩ :=
-    exists_minusPolynomial_uniform_difference_bound hε
-  let R : ℝ := min 1 (κ / (2 * C))
-  have hR : 0 < R := by
-    try dsimp [R]
-    positivity
-  refine ⟨R, hR, ?_⟩
-  intro u hu T hT
-  have hTunit : |T| ≤ 1 :=
-    hT.trans (min_le_left _ _)
-  have hcube : |T| ^ 3 ≤ |T| := by
-    have hfactor :
-        0 ≤ |T| * (1 - |T|) * (1 + |T|) := by
-      exact mul_nonneg
-        (mul_nonneg (abs_nonneg T) (sub_nonneg.mpr hTunit))
-        (by positivity)
-    linarith
-  have hscale : 2 * C * R ≤ κ := by
-    have hmin : R ≤ κ / (2 * C) := min_le_right _ _
-    have hfactor : 0 < 2 * C := by positivity
-    linarith [(le_div_iff₀ hfactor).mp hmin]
-  calc
-    ‖minusPolynomial ε
-        ((T : ℂ) + Complex.I * (u : ℂ)) -
-      minusPolynomial ε (Complex.I * (u : ℂ))‖ ≤
-      C * (|T| + |T| ^ 3) *
-        ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ :=
-      hbound u hu T
-    _ ≤ (2 * C * R) *
-        ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-      apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-      calc
-        C * (|T| + |T| ^ 3) ≤ C * (2 * R) := by
-          apply mul_le_mul_of_nonneg_left _ hC.le
-          linarith
-        _ = 2 * C * R := by ring
-    _ ≤ κ * ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-      exact mul_le_mul_of_nonneg_right hscale (norm_nonneg _)
+            κ * ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ :=
+  exists_polynomial_uniform_central_window (P := minusPolynomial ε) hκ
+    (exists_minusPolynomial_uniform_difference_bound hε)
 
 end
 
@@ -6056,6 +6042,37 @@ private theorem saddleSource_weighted_tail_integral_le
         (∫ T : ℝ in saddleGaussianTailSet R, W T) := by
       rw [integral_const_mul]
 
+private theorem SaddleSign.centeredIntegrand_weighted_tail_integral_le (s : SaddleSign)
+    {ε ℓ u C : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (hpoly : ∀ T : ℝ,
+      ‖s.polynomial ε ((T : ℂ) + Complex.I * (u : ℂ))‖ ≤
+        C * (1 + |T| ^ 3) * ‖s.polynomial ε (Complex.I * (u : ℂ))‖)
+    (v R : ℝ)
+    (hweighted : Integrable (fun T : ℝ =>
+      saddleGaussianTailWeight T *
+        Real.exp (-saddleSourceContourDamping ε ℓ u T))) :
+    (∫ T : ℝ in saddleGaussianTailSet R, ‖s.centeredIntegrand ε ℓ u v T‖) ≤
+      C * ‖s.polynomial ε (Complex.I * (u : ℂ))‖ *
+        (∫ T : ℝ in saddleGaussianTailSet R,
+          saddleGaussianTailWeight T *
+            Real.exp (-saddleSourceContourDamping ε ℓ u T)) := by
+  apply saddleSource_weighted_tail_integral_le
+    (s.centeredIntegrand_integrable hε hℓ hu horder v) hweighted
+  intro T hT
+  rw [s.centeredIntegrand_norm hε hℓ hu horder]
+  have hp := hpoly T
+  unfold saddleGaussianTailWeight
+  calc
+    Real.exp (-saddleSourceContourDamping ε ℓ u T) *
+        ‖s.polynomial ε ((T : ℂ) + Complex.I * (u : ℂ))‖ ≤
+      Real.exp (-saddleSourceContourDamping ε ℓ u T) *
+        (C * (1 + |T| ^ 3) * ‖s.polynomial ε (Complex.I * (u : ℂ))‖) := by
+        gcongr
+    _ = (C * ‖s.polynomial ε (Complex.I * (u : ℂ))‖) *
+        ((1 + |T| ^ 3) * Real.exp (-saddleSourceContourDamping ε ℓ u T)) := by
+        ring
+
 private theorem exists_saddleSourceCenteredPlusIntegrand_weighted_tail_integral_bound
     {ε : ℝ} (hε : 0 < ε)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
@@ -6072,30 +6089,10 @@ private theorem exists_saddleSourceCenteredPlusIntegrand_weighted_tail_integral_
                 (∫ T : ℝ in saddleGaussianTailSet R,
                   saddleGaussianTailWeight T *
                     Real.exp (-saddleSourceContourDamping ε ℓ u T)) := by
-  obtain ⟨C, hC, hpoly⟩ :=
-    exists_plusPolynomial_uniform_weighted_bound hε
-  refine ⟨C, hC, ?_⟩
-  intro ℓ hℓ u hu v R hweighted
-  apply saddleSource_weighted_tail_integral_le
-    (saddleSourceCenteredPlusIntegrand_integrable
-      hε hℓ hu horder v) hweighted
-  intro T hT
-  rw [saddleSourceCenteredPlusIntegrand_norm
-    hε hℓ hu horder]
-  have hp := hpoly u hu.le T
-  unfold saddleGaussianTailWeight
-  calc
-    Real.exp (-saddleSourceContourDamping ε ℓ u T) *
-        ‖plusPolynomial ε
-          ((T : ℂ) + Complex.I * (u : ℂ))‖ ≤
-      Real.exp (-saddleSourceContourDamping ε ℓ u T) *
-        (C * (1 + |T| ^ 3) *
-          ‖plusPolynomial ε (Complex.I * (u : ℂ))‖) := by
-        gcongr
-    _ = (C * ‖plusPolynomial ε (Complex.I * (u : ℂ))‖) *
-        ((1 + |T| ^ 3) *
-          Real.exp (-saddleSourceContourDamping ε ℓ u T)) := by
-        ring
+  obtain ⟨C, hC, hpoly⟩ := exists_plusPolynomial_uniform_weighted_bound hε
+  exact ⟨C, hC, fun ℓ hℓ u hu v R hweighted =>
+    SaddleSign.centeredIntegrand_weighted_tail_integral_le .plus
+      hε hℓ hu horder (hpoly u hu.le) v R hweighted⟩
 
 private theorem exists_saddleSourceCenteredMinusIntegrand_weighted_tail_integral_bound
     {ε : ℝ} (hε : 0 < ε)
@@ -6113,31 +6110,36 @@ private theorem exists_saddleSourceCenteredMinusIntegrand_weighted_tail_integral
                 (∫ T : ℝ in saddleGaussianTailSet R,
                   saddleGaussianTailWeight T *
                     Real.exp (-saddleSourceContourDamping ε ℓ u T)) := by
-  obtain ⟨C, hC, hpoly⟩ :=
-    exists_minusPolynomial_uniform_weighted_bound hε
-  refine ⟨C, hC, ?_⟩
-  intro ℓ hℓ u hu v R hweighted
-  have hu' : -1 < u := by linarith
-  apply saddleSource_weighted_tail_integral_le
-    (saddleSourceCenteredMinusIntegrand_integrable
-      hε hℓ hu' horder v) hweighted
-  intro T hT
-  rw [saddleSourceCenteredMinusIntegrand_norm
-    hε hℓ hu' horder]
-  have hp := hpoly u hu T
-  unfold saddleGaussianTailWeight
+  obtain ⟨C, hC, hpoly⟩ := exists_minusPolynomial_uniform_weighted_bound hε
+  exact ⟨C, hC, fun ℓ hℓ u hu v R hweighted =>
+    SaddleSign.centeredIntegrand_weighted_tail_integral_le .minus
+      hε hℓ (by linarith) horder (hpoly u hu) v R hweighted⟩
+
+private theorem SaddleSign.gaussianIntegrand_tail_norm_eq (s : SaddleSign)
+    (ε ℓ u R : ℝ) :
+    (∫ T : ℝ in saddleGaussianTailSet R,
+      ‖s.gaussianIntegrand ε ℓ u T‖) =
+      ‖s.polynomial ε (Complex.I * (u : ℂ))‖ *
+        (∫ T : ℝ in saddleGaussianTailSet R,
+          saddleSourceGaussianKernel ε ℓ u T) := by
   calc
-    Real.exp (-saddleSourceContourDamping ε ℓ u T) *
-        ‖minusPolynomial ε
-          ((T : ℂ) + Complex.I * (u : ℂ))‖ ≤
-      Real.exp (-saddleSourceContourDamping ε ℓ u T) *
-        (C * (1 + |T| ^ 3) *
-          ‖minusPolynomial ε (Complex.I * (u : ℂ))‖) := by
-        gcongr
-    _ = (C * ‖minusPolynomial ε (Complex.I * (u : ℂ))‖) *
-        ((1 + |T| ^ 3) *
-          Real.exp (-saddleSourceContourDamping ε ℓ u T)) := by
-        ring
+    (∫ T : ℝ in saddleGaussianTailSet R,
+      ‖s.gaussianIntegrand ε ℓ u T‖) =
+      ∫ T : ℝ in saddleGaussianTailSet R,
+        saddleSourceGaussianKernel ε ℓ u T *
+          ‖s.polynomial ε (Complex.I * (u : ℂ))‖ := by
+      apply MeasureTheory.integral_congr_ae
+      filter_upwards [] with T
+      unfold SaddleSign.gaussianIntegrand
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs,
+        abs_of_pos (show 0 < saddleSourceGaussianKernel ε ℓ u T by
+          unfold saddleSourceGaussianKernel
+          positivity)]
+    _ = ‖s.polynomial ε (Complex.I * (u : ℂ))‖ *
+        (∫ T : ℝ in saddleGaussianTailSet R,
+          saddleSourceGaussianKernel ε ℓ u T) := by
+      rw [integral_mul_const]
+      ring
 
 private theorem saddleSourceGaussianPlusIntegrand_tail_norm_eq
     (ε ℓ u R : ℝ) :
@@ -6145,25 +6147,8 @@ private theorem saddleSourceGaussianPlusIntegrand_tail_norm_eq
       ‖saddleSourceGaussianPlusIntegrand ε ℓ u T‖) =
       ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ *
         (∫ T : ℝ in saddleGaussianTailSet R,
-          saddleSourceGaussianKernel ε ℓ u T) := by
-  calc
-    (∫ T : ℝ in saddleGaussianTailSet R,
-      ‖saddleSourceGaussianPlusIntegrand ε ℓ u T‖) =
-      ∫ T : ℝ in saddleGaussianTailSet R,
-        saddleSourceGaussianKernel ε ℓ u T *
-          ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-      apply MeasureTheory.integral_congr_ae
-      filter_upwards [] with T
-      unfold saddleSourceGaussianPlusIntegrand
-      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs,
-        abs_of_pos (show 0 < saddleSourceGaussianKernel ε ℓ u T by
-          unfold saddleSourceGaussianKernel
-          positivity)]
-    _ = ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ *
-        (∫ T : ℝ in saddleGaussianTailSet R,
-          saddleSourceGaussianKernel ε ℓ u T) := by
-      rw [integral_mul_const]
-      ring
+          saddleSourceGaussianKernel ε ℓ u T) :=
+  SaddleSign.gaussianIntegrand_tail_norm_eq .plus ε ℓ u R
 
 private theorem saddleSourceGaussianMinusIntegrand_tail_norm_eq
     (ε ℓ u R : ℝ) :
@@ -6171,25 +6156,8 @@ private theorem saddleSourceGaussianMinusIntegrand_tail_norm_eq
       ‖saddleSourceGaussianMinusIntegrand ε ℓ u T‖) =
       ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ *
         (∫ T : ℝ in saddleGaussianTailSet R,
-          saddleSourceGaussianKernel ε ℓ u T) := by
-  calc
-    (∫ T : ℝ in saddleGaussianTailSet R,
-      ‖saddleSourceGaussianMinusIntegrand ε ℓ u T‖) =
-      ∫ T : ℝ in saddleGaussianTailSet R,
-        saddleSourceGaussianKernel ε ℓ u T *
-          ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
-      apply MeasureTheory.integral_congr_ae
-      filter_upwards [] with T
-      unfold saddleSourceGaussianMinusIntegrand
-      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs,
-        abs_of_pos (show 0 < saddleSourceGaussianKernel ε ℓ u T by
-          unfold saddleSourceGaussianKernel
-          positivity)]
-    _ = ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ *
-        (∫ T : ℝ in saddleGaussianTailSet R,
-          saddleSourceGaussianKernel ε ℓ u T) := by
-      rw [integral_mul_const]
-      ring
+          saddleSourceGaussianKernel ε ℓ u T) :=
+  SaddleSign.gaussianIntegrand_tail_norm_eq .minus ε ℓ u R
 
 private theorem saddleGaussian_fullLine_error_lt_of_central_and_normalized_tails
     {ε ℓ u R A κcentral κsource κgaussian : ℝ}

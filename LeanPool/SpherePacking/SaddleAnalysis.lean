@@ -4124,32 +4124,159 @@ private theorem saddleMellinInversePower_eq_squaredPositiveCpow
     simp only [saddlePositiveCpow, max_self, Complex.ofReal_zero, Complex.zero_cpow hexp, zero_mul]
   rw [hzero, integral_zero]
 
-private noncomputable def plusSaddleSquaredRemainder
+/-! ### Sign-indexed saddle data
+
+The plus and minus saddle constructions differ only in their polynomial factor
+(`plusPolynomial` versus `minusPolynomial`).  `SaddleSign` selects one of the two, and the
+dictionary below transports the facts both constructions share, so that the remaining
+analysis is carried out once for both signs. -/
+
+private inductive SaddleSign
+  | plus
+  | minus
+
+private noncomputable def SaddleSign.polynomial : SaddleSign → ℝ → ℂ → ℂ
+  | .plus => plusPolynomial
+  | .minus => minusPolynomial
+
+private noncomputable def SaddleSign.mellinData : SaddleSign → ℝ → ℝ → ℂ → ℂ
+  | .plus => plusSaddleMellinData
+  | .minus => minusSaddleMellinData
+
+private noncomputable def SaddleSign.profile : SaddleSign → ℝ → ℝ → ℝ → ℂ
+  | .plus => plusSaddleProfile
+  | .minus => minusSaddleProfile
+
+private noncomputable def SaddleSign.saddleFunction :
+    SaddleSign → ℝ → (d : ℕ) → Euclidean d → ℂ
+  | .plus => plusSaddleFunction
+  | .minus => minusSaddleFunction
+
+private noncomputable def SaddleSign.poleResidue : SaddleSign → ℝ → ℝ → ℕ → ℂ
+  | .plus => plusSaddlePoleResidue
+  | .minus => minusSaddlePoleResidue
+
+private noncomputable def SaddleSign.taylorRemainder : SaddleSign → ℝ → ℝ → ℕ → ℝ → ℂ
+  | .plus => plusSaddleTaylorRemainder
+  | .minus => minusSaddleTaylorRemainder
+
+private theorem SaddleSign.mellinData_def (s : SaddleSign) (ε ℓ : ℝ) (z : ℂ) :
+    s.mellinData ε ℓ z =
+      saddleMellinEnvelope ε ℓ z *
+        s.polynomial ε (Complex.I * (z - (ℓ : ℂ)) / (ℓ : ℂ)) := by
+  cases s <;> rfl
+
+private theorem SaddleSign.profile_def (s : SaddleSign) (ε ℓ r : ℝ) :
+    s.profile ε ℓ r =
+      if r = 0 then (saddleOriginValue ε ℓ : ℂ) else mellinInv ℓ (s.mellinData ε ℓ) r := by
+  cases s <;> rfl
+
+private theorem SaddleSign.saddleFunction_def (s : SaddleSign) (ε : ℝ) (d : ℕ)
+    (x : Euclidean d) :
+    s.saddleFunction ε d x = s.profile ε ((d : ℝ) / 2) ‖x‖ := by
+  cases s <;> rfl
+
+private theorem SaddleSign.taylorRemainder_def (s : SaddleSign) (ε ℓ : ℝ) (N : ℕ) (r : ℝ) :
+    s.taylorRemainder ε ℓ N r =
+      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
+        (∫ t : ℝ,
+          saddleMellinInversePower r
+              ((saddleTaylorContour N : ℂ) + (t : ℂ) * Complex.I) *
+            s.mellinData ε ℓ ((saddleTaylorContour N : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s <;> rfl
+
+private theorem SaddleSign.mellinData_differentiableOn_rightHalfPlane (s : SaddleSign)
+    {ε : ℝ} (hε : 0 < ε) (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (ℓ : ℝ) :
+    DifferentiableOn ℂ (s.mellinData ε ℓ) {z : ℂ | 0 < z.re} := by
+  cases s
+  · exact plusSaddleMellinData_differentiableOn_rightHalfPlane hε horder ℓ
+  · exact minusSaddleMellinData_differentiableOn_rightHalfPlane hε horder ℓ
+
+private theorem SaddleSign.mellinData_shiftedLine_moment_integrable (s : SaddleSign)
+    {ε ℓ a : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (hpole : ∀ n : ℕ, a ≠ -((2 * n : ℕ) : ℝ)) (j : ℕ) :
+    Integrable (fun t : ℝ =>
+      (t : ℂ) ^ j * s.mellinData ε ℓ ((a : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s
+  · exact plusSaddleMellinData_shiftedLine_moment_integrable hε hℓ horder hpole j
+  · exact minusSaddleMellinData_shiftedLine_moment_integrable hε hℓ horder hpole j
+
+private theorem SaddleSign.mellinData_shiftedLine_weighted_integrable (s : SaddleSign)
+    {ε ℓ a r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (hpole : ∀ n : ℕ, a ≠ -((2 * n : ℕ) : ℝ)) (hr : 0 < r) :
+    Integrable (fun t : ℝ =>
+      saddleMellinInversePower r ((a : ℂ) + (t : ℂ) * Complex.I) *
+        s.mellinData ε ℓ ((a : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s
+  · exact plusSaddleMellinData_shiftedLine_weighted_integrable hε hℓ horder hpole hr
+  · exact minusSaddleMellinData_shiftedLine_weighted_integrable hε hℓ horder hpole hr
+
+private theorem SaddleSign.mellinData_weighted_horizontalIntegral_tendsto_zero (s : SaddleSign)
+    {ε ℓ r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (hr : 0 < r)
+    {A B : ℝ} (hAB : A ≤ B) (c : ℝ) (hc : |c| = 1) :
+    Tendsto
+      (fun T : ℝ =>
+        ∫ a in A..B,
+          saddleMellinInversePower r ((a : ℂ) + ((c * T : ℝ) : ℂ) * Complex.I) *
+            s.mellinData ε ℓ ((a : ℂ) + ((c * T : ℝ) : ℂ) * Complex.I))
+      Filter.atTop (𝓝 0) := by
+  cases s
+  · exact plusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero hε hℓ horder hr hAB c hc
+  · exact minusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero hε hℓ horder hr hAB c hc
+
+private theorem SaddleSign.saddleFunction_contDiffOn (s : SaddleSign) {ε : ℝ} (hε : 0 < ε)
+    {d : ℕ} (hd : 0 < d) (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
+    ContDiffOn ℝ ∞ (s.saddleFunction ε d) ({0}ᶜ : Set (Euclidean d)) := by
+  cases s
+  · exact plusSaddleFunction_contDiffOn hε hd horder
+  · exact minusSaddleFunction_contDiffOn hε hd horder
+
+private theorem SaddleSign.poleResidue_zero (s : SaddleSign) {ε ℓ : ℝ} (hℓ : 0 < ℓ) :
+    s.poleResidue ε ℓ 0 = (saddleOriginValue ε ℓ : ℂ) := by
+  cases s
+  · exact plusSaddlePoleResidue_zero hℓ
+  · exact minusSaddlePoleResidue_zero hℓ
+
+private theorem SaddleSign.profile_eq_normalized_vertical_integral (s : SaddleSign)
+    {ε ℓ r : ℝ} (hr : 0 < r) :
+    s.profile ε ℓ r =
+      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
+        (∫ t : ℝ,
+          saddleMellinInversePower r ((ℓ : ℂ) + (t : ℂ) * Complex.I) *
+            s.mellinData ε ℓ ((ℓ : ℂ) + (t : ℂ) * Complex.I)) := by
+  cases s
+  · exact plusSaddleProfile_eq_normalized_vertical_integral hr
+  · exact minusSaddleProfile_eq_normalized_vertical_integral hr
+
+private theorem SaddleSign.profile_eq_residue_sum_add_remainder (s : SaddleSign)
+    {ε ℓ r : ℝ} (hε : 0 < ε) (hℓ : 0 < ℓ)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) (hr : 0 < r) (N : ℕ) :
+    s.profile ε ℓ r =
+      (∑ n ∈ Finset.range (N + 1), s.poleResidue ε ℓ n * ((r ^ (2 * n) : ℝ) : ℂ)) +
+      s.taylorRemainder ε ℓ N r := by
+  cases s
+  · exact plusSaddleProfile_eq_residue_sum_add_remainder hε hℓ horder hr N
+  · exact minusSaddleProfile_eq_residue_sum_add_remainder hε hℓ horder hr N
+
+private noncomputable def SaddleSign.squaredRemainder (s : SaddleSign)
     (ε ℓ : ℝ) (N : ℕ) (u : ℝ) : ℂ :=
   ((1 / (2 * Real.pi) : ℝ) : ℂ) *
     saddlePositiveContourMoment (saddleTaylorContour N) 0
       (fun t : ℝ =>
-        plusSaddleMellinData ε ℓ
+        s.mellinData ε ℓ
           ((saddleTaylorContour N : ℂ) +
             (t : ℂ) * Complex.I)) u
 
-private noncomputable def minusSaddleSquaredRemainder
-    (ε ℓ : ℝ) (N : ℕ) (u : ℝ) : ℂ :=
-  ((1 / (2 * Real.pi) : ℝ) : ℂ) *
-    saddlePositiveContourMoment (saddleTaylorContour N) 0
-      (fun t : ℝ =>
-        minusSaddleMellinData ε ℓ
-          ((saddleTaylorContour N : ℂ) +
-            (t : ℂ) * Complex.I)) u
-
-private theorem plusSaddleTaylorRemainder_eq_squared
+private theorem SaddleSign.taylorRemainder_eq_squared (s : SaddleSign)
     (ε ℓ : ℝ) (N : ℕ)
     {r : ℝ} (hr : 0 < r) :
-    plusSaddleTaylorRemainder ε ℓ N r =
-      plusSaddleSquaredRemainder ε ℓ N (r ^ 2) := by
-  unfold plusSaddleTaylorRemainder
-    plusSaddleSquaredRemainder
-    saddlePositiveContourMoment
+    s.taylorRemainder ε ℓ N r =
+      s.squaredRemainder ε ℓ N (r ^ 2) := by
+  rw [SaddleSign.taylorRemainder_def]
+  unfold SaddleSign.squaredRemainder saddlePositiveContourMoment
   congr 1
   apply MeasureTheory.integral_congr_ae
   filter_upwards [] with t
@@ -4167,32 +4294,7 @@ private theorem plusSaddleTaylorRemainder_eq_squared
     map_natCast,
     Finset.prod_empty, Polynomial.eval_one, one_mul]
 
-private theorem minusSaddleTaylorRemainder_eq_squared
-    (ε ℓ : ℝ) (N : ℕ)
-    {r : ℝ} (hr : 0 < r) :
-    minusSaddleTaylorRemainder ε ℓ N r =
-      minusSaddleSquaredRemainder ε ℓ N (r ^ 2) := by
-  unfold minusSaddleTaylorRemainder
-    minusSaddleSquaredRemainder
-    saddlePositiveContourMoment
-  congr 1
-  apply MeasureTheory.integral_congr_ae
-  filter_upwards [] with t
-  rw [saddleMellinInversePower_eq_squaredPositiveCpow
-    hr ((saddleTaylorContour N : ℂ) +
-      (t : ℂ) * Complex.I)]
-  have hq :
-      -((saddleTaylorContour N : ℂ) +
-          (t : ℂ) * Complex.I) / 2 =
-        saddleContourExponent (saddleTaylorContour N) t := by
-    unfold saddleContourExponent
-    ring
-  rw [hq]
-  simp only [CharP.cast_eq_zero, sub_zero, saddleContourFallingPolynomial, Finset.range_zero,
-    map_natCast,
-    Finset.prod_empty, Polynomial.eval_one, one_mul]
-
-private theorem plusSaddleSquaredRemainder_contDiffOn
+private theorem SaddleSign.squaredRemainder_contDiffOn (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
@@ -4200,43 +4302,17 @@ private theorem plusSaddleSquaredRemainder_contDiffOn
     (hshift : (n : ℝ) + 1 <
       -(saddleTaylorContour N) / 2) :
     ContDiffOn ℝ n
-      (plusSaddleSquaredRemainder ε ℓ N)
+      (s.squaredRemainder ε ℓ N)
       (Set.Ioo (-1 : ℝ) 1) := by
   have hmoment :
       ∀ k : ℕ,
         Integrable (fun t : ℝ =>
           (t : ℂ) ^ k *
-            plusSaddleMellinData ε ℓ
+            s.mellinData ε ℓ
               ((saddleTaylorContour N : ℂ) +
                 (t : ℂ) * Complex.I)) := by
     intro k
-    exact plusSaddleMellinData_shiftedLine_moment_integrable
-      hε hℓ horder
-      (fun j : ℕ => saddleTaylorContour_ne_pole N j) k
-  have hsmooth :=
-    saddlePositiveContourMoment_contDiffOn hmoment
-      n 0 (by simpa only [CharP.cast_eq_zero, add_zero] using! hshift)
-  exact (contDiff_const.contDiffOn.mul hsmooth)
-
-private theorem minusSaddleSquaredRemainder_contDiffOn
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (n N : ℕ)
-    (hshift : (n : ℝ) + 1 <
-      -(saddleTaylorContour N) / 2) :
-    ContDiffOn ℝ n
-      (minusSaddleSquaredRemainder ε ℓ N)
-      (Set.Ioo (-1 : ℝ) 1) := by
-  have hmoment :
-      ∀ k : ℕ,
-        Integrable (fun t : ℝ =>
-          (t : ℂ) ^ k *
-            minusSaddleMellinData ε ℓ
-              ((saddleTaylorContour N : ℂ) +
-                (t : ℂ) * Complex.I)) := by
-    intro k
-    exact minusSaddleMellinData_shiftedLine_moment_integrable
+    exact s.mellinData_shiftedLine_moment_integrable
       hε hℓ horder
       (fun j : ℕ => saddleTaylorContour_ne_pole N j) k
   have hsmooth :=
@@ -4276,71 +4352,34 @@ private theorem saddleSquaredResiduePolynomial_contDiff
   exact contDiff_const.mul
     (Complex.ofRealCLM.contDiff.pow j)
 
-@[simp] private theorem plusSaddleSquaredRemainder_zero
+@[simp] private theorem SaddleSign.squaredRemainder_zero (s : SaddleSign)
     (ε ℓ : ℝ) (N : ℕ) :
-    plusSaddleSquaredRemainder ε ℓ N 0 = 0 := by
-  unfold plusSaddleSquaredRemainder
+    s.squaredRemainder ε ℓ N 0 = 0 := by
+  unfold SaddleSign.squaredRemainder
   rw [saddlePositiveContourMoment_zero 0
     (by simpa only [CharP.cast_eq_zero, Nat.ofNat_pos, div_pos_iff_of_pos_right,
       Left.neg_pos_iff] using! saddleTaylorContour_negativeHalf_pos N)]
   simp only [one_div, mul_inv_rev, Complex.ofReal_mul, Complex.ofReal_inv, Complex.ofReal_ofNat,
     mul_zero]
 
-@[simp] private theorem minusSaddleSquaredRemainder_zero
-    (ε ℓ : ℝ) (N : ℕ) :
-    minusSaddleSquaredRemainder ε ℓ N 0 = 0 := by
-  unfold minusSaddleSquaredRemainder
-  rw [saddlePositiveContourMoment_zero 0
-    (by simpa only [CharP.cast_eq_zero, Nat.ofNat_pos, div_pos_iff_of_pos_right,
-      Left.neg_pos_iff] using! saddleTaylorContour_negativeHalf_pos N)]
-  simp only [one_div, mul_inv_rev, Complex.ofReal_mul, Complex.ofReal_inv, Complex.ofReal_ofNat,
-    mul_zero]
-
-private theorem plusSaddleProfile_eq_squaredTaylor
+private theorem SaddleSign.profile_eq_squaredTaylor (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (N : ℕ) {r : ℝ} (hr : 0 ≤ r) :
-    plusSaddleProfile ε ℓ r =
+    s.profile ε ℓ r =
       saddleSquaredResiduePolynomial
-        (plusSaddlePoleResidue ε ℓ) N (r ^ 2) +
-      plusSaddleSquaredRemainder ε ℓ N (r ^ 2) := by
+        (s.poleResidue ε ℓ) N (r ^ 2) +
+      s.squaredRemainder ε ℓ N (r ^ 2) := by
   rcases hr.eq_or_lt with hzero | hpositive
   · subst r
-    simp only [plusSaddleProfile, ↓reduceIte, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+    simp only [SaddleSign.profile_def, ↓reduceIte, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
       zero_pow,
-      saddleSquaredResiduePolynomial_zero, plusSaddlePoleResidue_zero hℓ,
-        plusSaddleSquaredRemainder_zero, add_zero]
-  · rw [plusSaddleProfile_eq_residue_sum_add_remainder
+      saddleSquaredResiduePolynomial_zero, s.poleResidue_zero hℓ,
+        SaddleSign.squaredRemainder_zero, add_zero]
+  · rw [s.profile_eq_residue_sum_add_remainder
       hε hℓ horder hpositive N,
-      plusSaddleTaylorRemainder_eq_squared
-        ε ℓ N hpositive]
-    congr 1
-    unfold saddleSquaredResiduePolynomial
-    apply Finset.sum_congr rfl
-    intro j _
-    congr 1
-    push_cast
-    rw [← pow_mul]
-
-private theorem minusSaddleProfile_eq_squaredTaylor
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (N : ℕ) {r : ℝ} (hr : 0 ≤ r) :
-    minusSaddleProfile ε ℓ r =
-      saddleSquaredResiduePolynomial
-        (minusSaddlePoleResidue ε ℓ) N (r ^ 2) +
-      minusSaddleSquaredRemainder ε ℓ N (r ^ 2) := by
-  rcases hr.eq_or_lt with hzero | hpositive
-  · subst r
-    simp only [minusSaddleProfile, ↓reduceIte, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
-      zero_pow,
-      saddleSquaredResiduePolynomial_zero, minusSaddlePoleResidue_zero hℓ,
-        minusSaddleSquaredRemainder_zero, add_zero]
-  · rw [minusSaddleProfile_eq_residue_sum_add_remainder
-      hε hℓ horder hpositive N,
-      minusSaddleTaylorRemainder_eq_squared
+      s.taylorRemainder_eq_squared
         ε ℓ N hpositive]
     congr 1
     unfold saddleSquaredResiduePolynomial
@@ -4357,12 +4396,12 @@ private theorem saddleTaylorContour_smoothShift (n : ℕ) :
   push_cast
   linarith
 
-private theorem plusSaddleFunction_contDiff_nat
+private theorem SaddleSign.saddleFunction_contDiff_nat (s : SaddleSign)
     {ε : ℝ} (hε : 0 < ε)
     {d : ℕ} (hd : 0 < d)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (n : ℕ) :
-    ContDiff ℝ n (plusSaddleFunction ε d) := by
+    ContDiff ℝ n (s.saddleFunction ε d) := by
   have hdimension : 0 < (d : ℝ) / 2 :=
     div_pos (by exact_mod_cast hd) (by norm_num)
   apply contDiff_iff_contDiffAt.mpr
@@ -4376,11 +4415,11 @@ private theorem plusSaddleFunction_contDiff_nat
       exact saddleTaylorContour_smoothShift n
     have hremScalar :
         ContDiffAt ℝ n
-          (plusSaddleSquaredRemainder
+          (s.squaredRemainder
             ε ((d : ℝ) / 2) N)
           (‖(0 : Euclidean d)‖ ^ 2) := by
       simpa only [norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow] using!
-        (plusSaddleSquaredRemainder_contDiffOn
+        (s.squaredRemainder_contDiffOn
           hε hdimension horder n N hshift).contDiffAt
             (isOpen_Ioo.mem_nhds
               (show (0 : ℝ) ∈ Set.Ioo (-1 : ℝ) 1 by
@@ -4388,7 +4427,7 @@ private theorem plusSaddleFunction_contDiff_nat
     have hrem :
         ContDiffAt ℝ n
           (fun y : Euclidean d =>
-            plusSaddleSquaredRemainder
+            s.squaredRemainder
               ε ((d : ℝ) / 2) N (‖y‖ ^ 2))
           (0 : Euclidean d) :=
       hremScalar.fun_comp
@@ -4399,106 +4438,35 @@ private theorem plusSaddleFunction_contDiff_nat
         ContDiffAt ℝ n
           (fun y : Euclidean d =>
             saddleSquaredResiduePolynomial
-              (plusSaddlePoleResidue
+              (s.poleResidue
                 ε ((d : ℝ) / 2)) N (‖y‖ ^ 2))
           (0 : Euclidean d) :=
       (saddleSquaredResiduePolynomial_contDiff
-        (plusSaddlePoleResidue ε ((d : ℝ) / 2))
+        (s.poleResidue ε ((d : ℝ) / 2))
           N n).contDiffAt.fun_comp
             (f := fun y : Euclidean d => ‖y‖ ^ 2)
             (0 : Euclidean d)
             (contDiff_norm_sq ℝ).contDiffAt
     refine (hpoly.add hrem).congr_of_eventuallyEq
       (Filter.Eventually.of_forall (fun y : Euclidean d => ?_))
-    exact plusSaddleProfile_eq_squaredTaylor
+    rw [SaddleSign.saddleFunction_def]
+    exact s.profile_eq_squaredTaylor
       hε hdimension horder N (norm_nonneg y)
   · exact
-      ((plusSaddleFunction_contDiffOn hε hd horder).contDiffAt
+      ((s.saddleFunction_contDiffOn hε hd horder).contDiffAt
           ((isOpen_compl_singleton
             (x := (0 : Euclidean d))).mem_nhds
               (by simpa only [mem_compl_iff, mem_singleton_iff] using! hx))).of_le
                 (mod_cast le_top)
 
-private theorem minusSaddleFunction_contDiff_nat
-    {ε : ℝ} (hε : 0 < ε)
-    {d : ℕ} (hd : 0 < d)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (n : ℕ) :
-    ContDiff ℝ n (minusSaddleFunction ε d) := by
-  have hdimension : 0 < (d : ℝ) / 2 :=
-    div_pos (by exact_mod_cast hd) (by norm_num)
-  apply contDiff_iff_contDiffAt.mpr
-  intro x
-  by_cases hx : x = 0
-  · subst x
-    let N : ℕ := n + 2
-    have hshift :
-        (n : ℝ) + 1 <
-          -(saddleTaylorContour N) / 2 := by
-      exact saddleTaylorContour_smoothShift n
-    have hremScalar :
-        ContDiffAt ℝ n
-          (minusSaddleSquaredRemainder
-            ε ((d : ℝ) / 2) N)
-          (‖(0 : Euclidean d)‖ ^ 2) := by
-      simpa only [norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow] using!
-        (minusSaddleSquaredRemainder_contDiffOn
-          hε hdimension horder n N hshift).contDiffAt
-            (isOpen_Ioo.mem_nhds
-              (show (0 : ℝ) ∈ Set.Ioo (-1 : ℝ) 1 by
-                constructor <;> norm_num))
-    have hrem :
-        ContDiffAt ℝ n
-          (fun y : Euclidean d =>
-            minusSaddleSquaredRemainder
-              ε ((d : ℝ) / 2) N (‖y‖ ^ 2))
-          (0 : Euclidean d) :=
-      hremScalar.fun_comp
-        (f := fun y : Euclidean d => ‖y‖ ^ 2)
-        (0 : Euclidean d)
-        (contDiff_norm_sq ℝ).contDiffAt
-    have hpoly :
-        ContDiffAt ℝ n
-          (fun y : Euclidean d =>
-            saddleSquaredResiduePolynomial
-              (minusSaddlePoleResidue
-                ε ((d : ℝ) / 2)) N (‖y‖ ^ 2))
-          (0 : Euclidean d) :=
-      (saddleSquaredResiduePolynomial_contDiff
-        (minusSaddlePoleResidue ε ((d : ℝ) / 2))
-          N n).contDiffAt.fun_comp
-            (f := fun y : Euclidean d => ‖y‖ ^ 2)
-            (0 : Euclidean d)
-            (contDiff_norm_sq ℝ).contDiffAt
-    refine (hpoly.add hrem).congr_of_eventuallyEq
-      (Filter.Eventually.of_forall (fun y : Euclidean d => ?_))
-    exact minusSaddleProfile_eq_squaredTaylor
-      hε hdimension horder N (norm_nonneg y)
-  · exact
-      ((minusSaddleFunction_contDiffOn hε hd horder).contDiffAt
-          ((isOpen_compl_singleton
-            (x := (0 : Euclidean d))).mem_nhds
-              (by simpa only [mem_compl_iff, mem_singleton_iff] using! hx))).of_le
-                (mod_cast le_top)
-
-private theorem plusSaddleFunction_contDiff
+private theorem SaddleSign.saddleFunction_contDiff (s : SaddleSign)
     {ε : ℝ} (hε : 0 < ε)
     {d : ℕ} (hd : 0 < d)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    ContDiff ℝ ∞ (plusSaddleFunction ε d) := by
+    ContDiff ℝ ∞ (s.saddleFunction ε d) := by
   exact contDiff_infty.mpr
-    (fun n => plusSaddleFunction_contDiff_nat
+    (fun n => s.saddleFunction_contDiff_nat
       hε hd horder n)
-
-private theorem minusSaddleFunction_contDiff
-    {ε : ℝ} (hε : 0 < ε)
-    {d : ℕ} (hd : 0 < d)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    ContDiff ℝ ∞ (minusSaddleFunction ε d) := by
-  exact contDiff_infty.mpr
-    (fun n => minusSaddleFunction_contDiff_nat
-      hε hd horder n)
-
 end
 
 section
@@ -4554,7 +4522,7 @@ private theorem saddleRightHalfPlane_boundary_rectangle
   simpa [z, w, Complex.mul_re, Complex.mul_im,
     smul_eq_mul] using! h
 
-private theorem plusSaddleMellinData_positive_vertical_integral_eq
+private theorem SaddleSign.mellinData_positive_vertical_integral_eq (s : SaddleSign)
     {ε ℓ r A B : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
@@ -4563,32 +4531,32 @@ private theorem plusSaddleMellinData_positive_vertical_integral_eq
     (∫ t : ℝ,
       saddleMellinInversePower r
           ((B : ℂ) + (t : ℂ) * Complex.I) *
-        plusSaddleMellinData ε ℓ
+        s.mellinData ε ℓ
           ((B : ℂ) + (t : ℂ) * Complex.I)) =
     (∫ t : ℝ,
       saddleMellinInversePower r
           ((A : ℂ) + (t : ℂ) * Complex.I) *
-        plusSaddleMellinData ε ℓ
+        s.mellinData ε ℓ
           ((A : ℂ) + (t : ℂ) * Complex.I)) := by
   let F : ℂ → ℂ := fun z =>
     saddleMellinInversePower r z *
-      plusSaddleMellinData ε ℓ z
+      s.mellinData ε ℓ z
   have hhol :
       DifferentiableOn ℂ F {z : ℂ | 0 < z.re} :=
     (saddleMellinInversePower_differentiable
       hr).differentiableOn.mul
-        (plusSaddleMellinData_differentiableOn_rightHalfPlane
+        (s.mellinData_differentiableOn_rightHalfPlane
           hε horder ℓ)
   have hleft :
       Integrable (fun t : ℝ =>
         F ((A : ℂ) + (t : ℂ) * Complex.I)) :=
-    plusSaddleMellinData_shiftedLine_weighted_integrable
+    s.mellinData_shiftedLine_weighted_integrable
       hε hℓ horder
       (fun n => saddlePositiveContour_ne_pole hA n) hr
   have hright :
       Integrable (fun t : ℝ =>
         F ((B : ℂ) + (t : ℂ) * Complex.I)) :=
-    plusSaddleMellinData_shiftedLine_weighted_integrable
+    s.mellinData_shiftedLine_weighted_integrable
       hε hℓ horder
       (fun n => saddlePositiveContour_ne_pole hB n) hr
   have hlower :
@@ -4598,7 +4566,7 @@ private theorem plusSaddleMellinData_positive_vertical_integral_eq
             F ((a : ℂ) + ((-T : ℝ) : ℂ) * Complex.I))
         Filter.atTop (𝓝 0) := by
     simpa only [Complex.ofReal_neg, neg_mul, one_mul] using!
-      plusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero
+      s.mellinData_weighted_horizontalIntegral_tendsto_zero
         hε hℓ horder hr hAB (-1) (by norm_num)
   have hupper :
       Tendsto
@@ -4607,170 +4575,53 @@ private theorem plusSaddleMellinData_positive_vertical_integral_eq
             F ((a : ℂ) + (T : ℂ) * Complex.I))
         Filter.atTop (𝓝 0) := by
     simpa only [one_mul] using!
-      plusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero
+      s.mellinData_weighted_horizontalIntegral_tendsto_zero
         hε hℓ horder hr hAB 1 (by norm_num)
   exact saddleInfiniteRectangle_vertical_integral_eq
     hleft hright hlower hupper
     (fun T => saddleRightHalfPlane_boundary_rectangle
       hhol hA hB T)
 
-private theorem minusSaddleMellinData_positive_vertical_integral_eq
-    {ε ℓ r A B : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (hr : 0 < r)
-    (hA : 0 < A) (hB : 0 < B) (hAB : A ≤ B) :
-    (∫ t : ℝ,
-      saddleMellinInversePower r
-          ((B : ℂ) + (t : ℂ) * Complex.I) *
-        minusSaddleMellinData ε ℓ
-          ((B : ℂ) + (t : ℂ) * Complex.I)) =
-    (∫ t : ℝ,
-      saddleMellinInversePower r
-          ((A : ℂ) + (t : ℂ) * Complex.I) *
-        minusSaddleMellinData ε ℓ
-          ((A : ℂ) + (t : ℂ) * Complex.I)) := by
-  let F : ℂ → ℂ := fun z =>
-    saddleMellinInversePower r z *
-      minusSaddleMellinData ε ℓ z
-  have hhol :
-      DifferentiableOn ℂ F {z : ℂ | 0 < z.re} :=
-    (saddleMellinInversePower_differentiable
-      hr).differentiableOn.mul
-        (minusSaddleMellinData_differentiableOn_rightHalfPlane
-          hε horder ℓ)
-  have hleft :
-      Integrable (fun t : ℝ =>
-        F ((A : ℂ) + (t : ℂ) * Complex.I)) :=
-    minusSaddleMellinData_shiftedLine_weighted_integrable
-      hε hℓ horder
-      (fun n => saddlePositiveContour_ne_pole hA n) hr
-  have hright :
-      Integrable (fun t : ℝ =>
-        F ((B : ℂ) + (t : ℂ) * Complex.I)) :=
-    minusSaddleMellinData_shiftedLine_weighted_integrable
-      hε hℓ horder
-      (fun n => saddlePositiveContour_ne_pole hB n) hr
-  have hlower :
-      Tendsto
-        (fun T : ℝ =>
-          ∫ a in A..B,
-            F ((a : ℂ) + ((-T : ℝ) : ℂ) * Complex.I))
-        Filter.atTop (𝓝 0) := by
-    simpa only [Complex.ofReal_neg, neg_mul, one_mul] using!
-      minusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero
-        hε hℓ horder hr hAB (-1) (by norm_num)
-  have hupper :
-      Tendsto
-        (fun T : ℝ =>
-          ∫ a in A..B,
-            F ((a : ℂ) + (T : ℂ) * Complex.I))
-        Filter.atTop (𝓝 0) := by
-    simpa only [one_mul] using!
-      minusSaddleMellinData_weighted_horizontalIntegral_tendsto_zero
-        hε hℓ horder hr hAB 1 (by norm_num)
-  exact saddleInfiniteRectangle_vertical_integral_eq
-    hleft hright hlower hupper
-    (fun T => saddleRightHalfPlane_boundary_rectangle
-      hhol hA hB T)
-
-private theorem plusSaddleProfile_eq_positive_contour
+private theorem SaddleSign.profile_eq_positive_contour (s : SaddleSign)
     {ε ℓ r a : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (hr : 0 < r) (ha : 0 < a) :
-    plusSaddleProfile ε ℓ r =
+    s.profile ε ℓ r =
       ((1 / (2 * Real.pi) : ℝ) : ℂ) *
         (∫ t : ℝ,
           saddleMellinInversePower r
               ((a : ℂ) + (t : ℂ) * Complex.I) *
-            plusSaddleMellinData ε ℓ
+            s.mellinData ε ℓ
               ((a : ℂ) + (t : ℂ) * Complex.I)) := by
-  rw [plusSaddleProfile_eq_normalized_vertical_integral hr]
+  rw [s.profile_eq_normalized_vertical_integral hr]
   congr 1
   rcases le_total ℓ a with hleft | hright
   · exact
-      (plusSaddleMellinData_positive_vertical_integral_eq
+      (s.mellinData_positive_vertical_integral_eq
         hε hℓ horder hr hℓ ha hleft).symm
   · exact
-      plusSaddleMellinData_positive_vertical_integral_eq
+      s.mellinData_positive_vertical_integral_eq
         hε hℓ horder hr ha hℓ hright
 
-private theorem minusSaddleProfile_eq_positive_contour
-    {ε ℓ r a : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (hr : 0 < r) (ha : 0 < a) :
-    minusSaddleProfile ε ℓ r =
-      ((1 / (2 * Real.pi) : ℝ) : ℂ) *
-        (∫ t : ℝ,
-          saddleMellinInversePower r
-              ((a : ℂ) + (t : ℂ) * Complex.I) *
-            minusSaddleMellinData ε ℓ
-              ((a : ℂ) + (t : ℂ) * Complex.I)) := by
-  rw [minusSaddleProfile_eq_normalized_vertical_integral hr]
-  congr 1
-  rcases le_total ℓ a with hleft | hright
-  · exact
-      (minusSaddleMellinData_positive_vertical_integral_eq
-        hε hℓ horder hr hℓ ha hleft).symm
-  · exact
-      minusSaddleMellinData_positive_vertical_integral_eq
-        hε hℓ horder hr ha hℓ hright
-
-private noncomputable def plusSaddlePositiveSquaredContour
+private noncomputable def SaddleSign.positiveSquaredContour (s : SaddleSign)
     (ε ℓ a u : ℝ) : ℂ :=
   ((1 / (2 * Real.pi) : ℝ) : ℂ) *
     saddlePositiveContourMoment a 0
       (fun t : ℝ =>
-        plusSaddleMellinData ε ℓ
+        s.mellinData ε ℓ
           ((a : ℂ) + (t : ℂ) * Complex.I)) u
 
-private noncomputable def minusSaddlePositiveSquaredContour
-    (ε ℓ a u : ℝ) : ℂ :=
-  ((1 / (2 * Real.pi) : ℝ) : ℂ) *
-    saddlePositiveContourMoment a 0
-      (fun t : ℝ =>
-        minusSaddleMellinData ε ℓ
-          ((a : ℂ) + (t : ℂ) * Complex.I)) u
-
-private theorem plusSaddleProfile_eq_positive_squaredContour
+private theorem SaddleSign.profile_eq_positive_squaredContour (s : SaddleSign)
     {ε ℓ r a : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (hr : 0 < r) (ha : 0 < a) :
-    plusSaddleProfile ε ℓ r =
-      plusSaddlePositiveSquaredContour ε ℓ a (r ^ 2) := by
-  rw [plusSaddleProfile_eq_positive_contour
+    s.profile ε ℓ r =
+      s.positiveSquaredContour ε ℓ a (r ^ 2) := by
+  rw [s.profile_eq_positive_contour
     hε hℓ horder hr ha]
-  unfold plusSaddlePositiveSquaredContour
-    saddlePositiveContourMoment
-  congr 1
-  apply MeasureTheory.integral_congr_ae
-  filter_upwards [] with t
-  rw [saddleMellinInversePower_eq_squaredPositiveCpow
-    hr ((a : ℂ) + (t : ℂ) * Complex.I)]
-  have hq :
-      -((a : ℂ) + (t : ℂ) * Complex.I) / 2 =
-        saddleContourExponent a t := by
-    unfold saddleContourExponent
-    ring
-  rw [hq]
-  simp only [CharP.cast_eq_zero, sub_zero, saddleContourFallingPolynomial, Finset.range_zero,
-    map_natCast,
-    Finset.prod_empty, Polynomial.eval_one, one_mul]
-
-private theorem minusSaddleProfile_eq_positive_squaredContour
-    {ε ℓ r a : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (hr : 0 < r) (ha : 0 < a) :
-    minusSaddleProfile ε ℓ r =
-      minusSaddlePositiveSquaredContour ε ℓ a (r ^ 2) := by
-  rw [minusSaddleProfile_eq_positive_contour
-    hε hℓ horder hr ha]
-  unfold minusSaddlePositiveSquaredContour
-    saddlePositiveContourMoment
+  unfold SaddleSign.positiveSquaredContour saddlePositiveContourMoment
   congr 1
   apply MeasureTheory.integral_congr_ae
   filter_upwards [] with t
@@ -5092,86 +4943,45 @@ private theorem saddlePositiveContourMoment_norm_le
               (t : ℂ) * D t‖) := by
           exact integral_const_mul_of_integrable hW.norm
 
-private theorem plusSaddlePositiveSquaredContour_contDiffOn
+private theorem SaddleSign.positiveSquaredContour_contDiffOn (s : SaddleSign)
     {ε ℓ a : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (ha : 0 < a) :
     ContDiffOn ℝ ∞
-      (plusSaddlePositiveSquaredContour ε ℓ a)
+      (s.positiveSquaredContour ε ℓ a)
       (Set.Ioi (1 : ℝ)) := by
-  unfold plusSaddlePositiveSquaredContour
+  unfold SaddleSign.positiveSquaredContour
   apply contDiffOn_const.mul
   apply saddlePositiveContourMoment_contDiffOn_infty_of_positiveContour
       (a := a) (j := 0) _ ha
   intro k
-  exact plusSaddleMellinData_shiftedLine_moment_integrable
+  exact s.mellinData_shiftedLine_moment_integrable
     hε hℓ horder
     (fun n => saddlePositiveContour_ne_pole ha n) k
 
-private theorem minusSaddlePositiveSquaredContour_contDiffOn
-    {ε ℓ a : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (ha : 0 < a) :
-    ContDiffOn ℝ ∞
-      (minusSaddlePositiveSquaredContour ε ℓ a)
-      (Set.Ioi (1 : ℝ)) := by
-  unfold minusSaddlePositiveSquaredContour
-  apply contDiffOn_const.mul
-  apply saddlePositiveContourMoment_contDiffOn_infty_of_positiveContour
-      (a := a) (j := 0) _ ha
-  intro k
-  exact minusSaddleMellinData_shiftedLine_moment_integrable
-    hε hℓ horder
-    (fun n => saddlePositiveContour_ne_pole ha n) k
-
-private theorem plusSaddlePositiveSquaredContour_eq_of_pos
+private theorem SaddleSign.positiveSquaredContour_eq_of_pos (s : SaddleSign)
     {ε ℓ a b u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (ha : 0 < a) (hb : 0 < b) (hu : 0 < u) :
-    plusSaddlePositiveSquaredContour ε ℓ a u =
-      plusSaddlePositiveSquaredContour ε ℓ b u := by
+    s.positiveSquaredContour ε ℓ a u =
+      s.positiveSquaredContour ε ℓ b u := by
   have hroot : 0 < Real.sqrt u := Real.sqrt_pos.2 hu
   have hsquare : (Real.sqrt u) ^ 2 = u :=
     Real.sq_sqrt hu.le
   calc
-    plusSaddlePositiveSquaredContour ε ℓ a u =
-      plusSaddlePositiveSquaredContour ε ℓ a
+    s.positiveSquaredContour ε ℓ a u =
+      s.positiveSquaredContour ε ℓ a
         ((Real.sqrt u) ^ 2) := by rw [hsquare]
-    _ = plusSaddleProfile ε ℓ (Real.sqrt u) :=
-      (plusSaddleProfile_eq_positive_squaredContour
+    _ = s.profile ε ℓ (Real.sqrt u) :=
+      (s.profile_eq_positive_squaredContour
         hε hℓ horder hroot ha).symm
-    _ = plusSaddlePositiveSquaredContour ε ℓ b
+    _ = s.positiveSquaredContour ε ℓ b
         ((Real.sqrt u) ^ 2) :=
-      plusSaddleProfile_eq_positive_squaredContour
+      s.profile_eq_positive_squaredContour
         hε hℓ horder hroot hb
-    _ = plusSaddlePositiveSquaredContour ε ℓ b u := by
-      rw [hsquare]
-
-private theorem minusSaddlePositiveSquaredContour_eq_of_pos
-    {ε ℓ a b u : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (ha : 0 < a) (hb : 0 < b) (hu : 0 < u) :
-    minusSaddlePositiveSquaredContour ε ℓ a u =
-      minusSaddlePositiveSquaredContour ε ℓ b u := by
-  have hroot : 0 < Real.sqrt u := Real.sqrt_pos.2 hu
-  have hsquare : (Real.sqrt u) ^ 2 = u :=
-    Real.sq_sqrt hu.le
-  calc
-    minusSaddlePositiveSquaredContour ε ℓ a u =
-      minusSaddlePositiveSquaredContour ε ℓ a
-        ((Real.sqrt u) ^ 2) := by rw [hsquare]
-    _ = minusSaddleProfile ε ℓ (Real.sqrt u) :=
-      (minusSaddleProfile_eq_positive_squaredContour
-        hε hℓ horder hroot ha).symm
-    _ = minusSaddlePositiveSquaredContour ε ℓ b
-        ((Real.sqrt u) ^ 2) :=
-      minusSaddleProfile_eq_positive_squaredContour
-        hε hℓ horder hroot hb
-    _ = minusSaddlePositiveSquaredContour ε ℓ b u := by
+    _ = s.positiveSquaredContour ε ℓ b u := by
       rw [hsquare]
 
 private noncomputable def saddleOuterCutoff (u : ℝ) : ℂ :=
@@ -5184,31 +4994,27 @@ private theorem saddleOuterCutoff_contDiff :
     (Real.smoothTransition.contDiff.comp
       (contDiff_id.sub contDiff_const))
 
-private noncomputable def plusSaddleOuterSquaredProfile (ε ℓ u : ℝ) : ℂ :=
+private noncomputable def SaddleSign.outerSquaredProfile (s : SaddleSign) (ε ℓ u : ℝ) : ℂ :=
   saddleOuterCutoff u *
-    plusSaddlePositiveSquaredContour ε ℓ 2 u
+    s.positiveSquaredContour ε ℓ 2 u
 
-private noncomputable def minusSaddleOuterSquaredProfile (ε ℓ u : ℝ) : ℂ :=
-  saddleOuterCutoff u *
-    minusSaddlePositiveSquaredContour ε ℓ 2 u
-
-private theorem plusSaddleOuterSquaredProfile_contDiff
+private theorem SaddleSign.outerSquaredProfile_contDiff (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    ContDiff ℝ ∞ (plusSaddleOuterSquaredProfile ε ℓ) := by
+    ContDiff ℝ ∞ (s.outerSquaredProfile ε ℓ) := by
   apply contDiff_iff_contDiffAt.mpr
   intro u
   by_cases hu : u < (2 : ℝ)
   · have hevent :
-        plusSaddleOuterSquaredProfile ε ℓ =ᶠ[𝓝 u]
+        s.outerSquaredProfile ε ℓ =ᶠ[𝓝 u]
           (fun _ : ℝ => (0 : ℂ)) := by
       filter_upwards [Iio_mem_nhds hu] with v hv
       change v < 2 at hv
       have hvzero :
           Real.smoothTransition (v - 2) = 0 :=
         Real.smoothTransition.zero_of_nonpos (by linarith)
-      simp only [plusSaddleOuterSquaredProfile, saddleOuterCutoff, hvzero, Complex.ofReal_zero,
+      simp only [SaddleSign.outerSquaredProfile, saddleOuterCutoff, hvzero, Complex.ofReal_zero,
         zero_mul]
     exact contDiffAt_const.congr_of_eventuallyEq hevent
   · have hone : u ∈ Set.Ioi (1 : ℝ) := by
@@ -5216,84 +5022,32 @@ private theorem plusSaddleOuterSquaredProfile_contDiff
       linarith
     have hcontour :
         ContDiffAt ℝ ∞
-          (plusSaddlePositiveSquaredContour ε ℓ 2) u :=
-      (plusSaddlePositiveSquaredContour_contDiffOn
+          (s.positiveSquaredContour ε ℓ 2) u :=
+      (s.positiveSquaredContour_contDiffOn
         hε hℓ horder (by norm_num)).contDiffAt
           (isOpen_Ioi.mem_nhds hone)
     exact saddleOuterCutoff_contDiff.contDiffAt.mul hcontour
 
-private theorem minusSaddleOuterSquaredProfile_contDiff
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    ContDiff ℝ ∞ (minusSaddleOuterSquaredProfile ε ℓ) := by
-  apply contDiff_iff_contDiffAt.mpr
-  intro u
-  by_cases hu : u < (2 : ℝ)
-  · have hevent :
-        minusSaddleOuterSquaredProfile ε ℓ =ᶠ[𝓝 u]
-          (fun _ : ℝ => (0 : ℂ)) := by
-      filter_upwards [Iio_mem_nhds hu] with v hv
-      change v < 2 at hv
-      have hvzero :
-          Real.smoothTransition (v - 2) = 0 :=
-        Real.smoothTransition.zero_of_nonpos (by linarith)
-      simp only [minusSaddleOuterSquaredProfile, saddleOuterCutoff, hvzero, Complex.ofReal_zero,
-        zero_mul]
-    exact contDiffAt_const.congr_of_eventuallyEq hevent
-  · have hone : u ∈ Set.Ioi (1 : ℝ) := by
-      change 1 < u
-      linarith
-    have hcontour :
-        ContDiffAt ℝ ∞
-          (minusSaddlePositiveSquaredContour ε ℓ 2) u :=
-      (minusSaddlePositiveSquaredContour_contDiffOn
-        hε hℓ horder (by norm_num)).contDiffAt
-          (isOpen_Ioi.mem_nhds hone)
-    exact saddleOuterCutoff_contDiff.contDiffAt.mul hcontour
-
-private theorem plusSaddleOuterSquaredProfile_eq_zero
+private theorem SaddleSign.outerSquaredProfile_eq_zero (s : SaddleSign)
     (ε ℓ : ℝ) {u : ℝ} (hu : u < 2) :
-    plusSaddleOuterSquaredProfile ε ℓ u = 0 := by
+    s.outerSquaredProfile ε ℓ u = 0 := by
   have hcut : Real.smoothTransition (u - 2) = 0 :=
     Real.smoothTransition.zero_of_nonpos (by linarith)
-  simp only [plusSaddleOuterSquaredProfile, saddleOuterCutoff, hcut, Complex.ofReal_zero, zero_mul]
+  simp only [SaddleSign.outerSquaredProfile, saddleOuterCutoff, hcut, Complex.ofReal_zero, zero_mul]
 
-private theorem minusSaddleOuterSquaredProfile_eq_zero
-    (ε ℓ : ℝ) {u : ℝ} (hu : u < 2) :
-    minusSaddleOuterSquaredProfile ε ℓ u = 0 := by
-  have hcut : Real.smoothTransition (u - 2) = 0 :=
-    Real.smoothTransition.zero_of_nonpos (by linarith)
-  simp only [minusSaddleOuterSquaredProfile, saddleOuterCutoff, hcut, Complex.ofReal_zero, zero_mul]
-
-private theorem plusSaddleOuterSquaredProfile_eq_positiveContour
+private theorem SaddleSign.outerSquaredProfile_eq_positiveContour (s : SaddleSign)
     {ε ℓ a u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (ha : 0 < a) (hu : 3 < u) :
-    plusSaddleOuterSquaredProfile ε ℓ u =
-      plusSaddlePositiveSquaredContour ε ℓ a u := by
+    s.outerSquaredProfile ε ℓ u =
+      s.positiveSquaredContour ε ℓ a u := by
   have hcut : Real.smoothTransition (u - 2) = 1 :=
     Real.smoothTransition.one_of_one_le (by linarith)
-  unfold plusSaddleOuterSquaredProfile saddleOuterCutoff
+  unfold SaddleSign.outerSquaredProfile saddleOuterCutoff
   rw [hcut]
   norm_num
-  exact plusSaddlePositiveSquaredContour_eq_of_pos
-    hε hℓ horder (by norm_num) ha (by linarith)
-
-private theorem minusSaddleOuterSquaredProfile_eq_positiveContour
-    {ε ℓ a u : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (ha : 0 < a) (hu : 3 < u) :
-    minusSaddleOuterSquaredProfile ε ℓ u =
-      minusSaddlePositiveSquaredContour ε ℓ a u := by
-  have hcut : Real.smoothTransition (u - 2) = 1 :=
-    Real.smoothTransition.one_of_one_le (by linarith)
-  unfold minusSaddleOuterSquaredProfile saddleOuterCutoff
-  rw [hcut]
-  norm_num
-  exact minusSaddlePositiveSquaredContour_eq_of_pos
+  exact s.positiveSquaredContour_eq_of_pos
     hε hℓ horder (by norm_num) ha (by linarith)
 
 private theorem saddleOuterSquaredProfile_schwartz_decay
@@ -5418,7 +5172,7 @@ private theorem saddleOuterSquaredProfile_schwartz_decay
         ((le_max_right B (‖c‖ * L)).trans
           (le_max_right 0 _))
 
-private theorem plusSaddleOuterSquaredProfile_schwartz_decay
+private theorem SaddleSign.outerSquaredProfile_schwartz_decay (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
@@ -5426,72 +5180,34 @@ private theorem plusSaddleOuterSquaredProfile_schwartz_decay
     ∃ C : ℝ, ∀ u : ℝ,
       ‖u‖ ^ k *
         ‖iteratedFDeriv ℝ n
-          (plusSaddleOuterSquaredProfile ε ℓ) u‖ ≤ C := by
+          (s.outerSquaredProfile ε ℓ) u‖ ≤ C := by
   apply saddleOuterSquaredProfile_schwartz_decay
-    (plusSaddleOuterSquaredProfile_contDiff hε hℓ horder)
+    (s.outerSquaredProfile_contDiff hε hℓ horder)
     (fun u hu =>
-      plusSaddleOuterSquaredProfile_eq_zero ε ℓ hu)
+      s.outerSquaredProfile_eq_zero ε ℓ hu)
     (fun a t =>
-      plusSaddleMellinData ε ℓ
+      s.mellinData ε ℓ
         ((a : ℂ) + (t : ℂ) * Complex.I))
     _ _ k n
   · intro a ha j
-    exact plusSaddleMellinData_shiftedLine_moment_integrable
+    exact s.mellinData_shiftedLine_moment_integrable
       hε hℓ horder
       (fun m => saddlePositiveContour_ne_pole ha m) j
   · intro a ha u hu
     simpa only [one_div, mul_inv_rev, Complex.ofReal_mul, Complex.ofReal_inv, Complex.ofReal_ofNat,
-      plusSaddlePositiveSquaredContour] using!
-      plusSaddleOuterSquaredProfile_eq_positiveContour
+      SaddleSign.positiveSquaredContour] using!
+      s.outerSquaredProfile_eq_positiveContour
         hε hℓ horder ha hu
 
-private theorem minusSaddleOuterSquaredProfile_schwartz_decay
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (k n : ℕ) :
-    ∃ C : ℝ, ∀ u : ℝ,
-      ‖u‖ ^ k *
-        ‖iteratedFDeriv ℝ n
-          (minusSaddleOuterSquaredProfile ε ℓ) u‖ ≤ C := by
-  apply saddleOuterSquaredProfile_schwartz_decay
-    (minusSaddleOuterSquaredProfile_contDiff hε hℓ horder)
-    (fun u hu =>
-      minusSaddleOuterSquaredProfile_eq_zero ε ℓ hu)
-    (fun a t =>
-      minusSaddleMellinData ε ℓ
-        ((a : ℂ) + (t : ℂ) * Complex.I))
-    _ _ k n
-  · intro a ha j
-    exact minusSaddleMellinData_shiftedLine_moment_integrable
-      hε hℓ horder
-      (fun m => saddlePositiveContour_ne_pole ha m) j
-  · intro a ha u hu
-    simpa only [one_div, mul_inv_rev, Complex.ofReal_mul, Complex.ofReal_inv, Complex.ofReal_ofNat,
-      minusSaddlePositiveSquaredContour] using!
-      minusSaddleOuterSquaredProfile_eq_positiveContour
-        hε hℓ horder ha hu
-
-private noncomputable def plusSaddleOuterScalarSchwartz
+private noncomputable def SaddleSign.outerScalarSchwartz (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
     𝓢(ℝ, ℂ) where
-  toFun := plusSaddleOuterSquaredProfile ε ℓ
-  smooth' := plusSaddleOuterSquaredProfile_contDiff
+  toFun := s.outerSquaredProfile ε ℓ
+  smooth' := s.outerSquaredProfile_contDiff
     hε hℓ horder
-  decay' := plusSaddleOuterSquaredProfile_schwartz_decay
-    hε hℓ horder
-
-private noncomputable def minusSaddleOuterScalarSchwartz
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    𝓢(ℝ, ℂ) where
-  toFun := minusSaddleOuterSquaredProfile ε ℓ
-  smooth' := minusSaddleOuterSquaredProfile_contDiff
-    hε hℓ horder
-  decay' := minusSaddleOuterSquaredProfile_schwartz_decay
+  decay' := s.outerSquaredProfile_schwartz_decay
     hε hℓ horder
 
 private noncomputable def saddleSquaredSchwartzPullback (d : ℕ) :
@@ -5504,46 +5220,30 @@ private noncomputable def saddleSquaredSchwartzPullback (d : ℕ) :
   rw [one_mul, pow_one, Real.norm_of_nonneg (sq_nonneg _)]
   linarith [sq_nonneg (‖x‖ - (1 / 2 : ℝ))]
 
-private noncomputable def plusSaddleOuterSchwartz
+private noncomputable def SaddleSign.outerSchwartz (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (d : ℕ) : TestFunction d :=
   saddleSquaredSchwartzPullback d
-    (plusSaddleOuterScalarSchwartz hε hℓ horder)
+    (s.outerScalarSchwartz hε hℓ horder)
 
-private noncomputable def minusSaddleOuterSchwartz
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (d : ℕ) : TestFunction d :=
-  saddleSquaredSchwartzPullback d
-    (minusSaddleOuterScalarSchwartz hε hℓ horder)
-
-@[simp] private theorem plusSaddleOuterSchwartz_apply
+@[simp] private theorem SaddleSign.outerSchwartz_apply (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (d : ℕ) (x : Euclidean d) :
-    plusSaddleOuterSchwartz hε hℓ horder d x =
-      plusSaddleOuterSquaredProfile ε ℓ (‖x‖ ^ 2) := rfl
+    s.outerSchwartz hε hℓ horder d x =
+      s.outerSquaredProfile ε ℓ (‖x‖ ^ 2) := rfl
 
-@[simp] private theorem minusSaddleOuterSchwartz_apply
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (d : ℕ) (x : Euclidean d) :
-    minusSaddleOuterSchwartz hε hℓ horder d x =
-      minusSaddleOuterSquaredProfile ε ℓ (‖x‖ ^ 2) := rfl
-
-private theorem plusSaddleOuterDifference_hasCompactSupport
+private theorem SaddleSign.outerDifference_hasCompactSupport (s : SaddleSign)
     {ε ℓ : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (d : ℕ) :
     HasCompactSupport (fun x : Euclidean d =>
-      plusSaddleProfile ε ℓ ‖x‖ -
-        plusSaddleOuterSchwartz hε hℓ horder d x) := by
+      s.profile ε ℓ ‖x‖ -
+        s.outerSchwartz hε hℓ horder d x) := by
   apply HasCompactSupport.of_support_subset_isCompact
     (isCompact_closedBall (0 : Euclidean d) 2)
   intro x hx
@@ -5556,137 +5256,75 @@ private theorem plusSaddleOuterDifference_hasCompactSupport
   have hsquare : (3 : ℝ) < ‖x‖ ^ 2 := by
     linarith [sq_nonneg (‖x‖ - 2)]
   change
-    plusSaddleProfile ε ℓ ‖x‖ -
-      plusSaddleOuterSchwartz hε hℓ horder d x ≠ 0 at hx
+    s.profile ε ℓ ‖x‖ -
+      s.outerSchwartz hε hℓ horder d x ≠ 0 at hx
   have houter :
-      plusSaddleOuterSchwartz hε hℓ horder d x =
-        plusSaddlePositiveSquaredContour ε ℓ 2 (‖x‖ ^ 2) := by
-    rw [plusSaddleOuterSchwartz_apply]
-    exact plusSaddleOuterSquaredProfile_eq_positiveContour
+      s.outerSchwartz hε hℓ horder d x =
+        s.positiveSquaredContour ε ℓ 2 (‖x‖ ^ 2) := by
+    rw [SaddleSign.outerSchwartz_apply]
+    exact s.outerSquaredProfile_eq_positiveContour
       (a := (2 : ℝ)) hε hℓ horder (by norm_num) hsquare
   have hsource :
-      plusSaddleProfile ε ℓ ‖x‖ =
-        plusSaddlePositiveSquaredContour ε ℓ 2 (‖x‖ ^ 2) :=
-    plusSaddleProfile_eq_positive_squaredContour
+      s.profile ε ℓ ‖x‖ =
+        s.positiveSquaredContour ε ℓ 2 (‖x‖ ^ 2) :=
+    s.profile_eq_positive_squaredContour
       (a := (2 : ℝ)) hε hℓ horder hr (by norm_num)
   exact hx (by rw [hsource, houter, sub_self])
 
-private theorem minusSaddleOuterDifference_hasCompactSupport
-    {ε ℓ : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (d : ℕ) :
-    HasCompactSupport (fun x : Euclidean d =>
-      minusSaddleProfile ε ℓ ‖x‖ -
-        minusSaddleOuterSchwartz hε hℓ horder d x) := by
-  apply HasCompactSupport.of_support_subset_isCompact
-    (isCompact_closedBall (0 : Euclidean d) 2)
-  intro x hx
-  by_contra houtside
-  have hr2 : (2 : ℝ) < ‖x‖ := by
-    by_contra hnot
-    apply houtside
-    exact mem_closedBall_zero_iff.mpr (le_of_not_gt hnot)
-  have hr : 0 < ‖x‖ := by linarith
-  have hsquare : (3 : ℝ) < ‖x‖ ^ 2 := by
-    linarith [sq_nonneg (‖x‖ - 2)]
-  change
-    minusSaddleProfile ε ℓ ‖x‖ -
-      minusSaddleOuterSchwartz hε hℓ horder d x ≠ 0 at hx
-  have houter :
-      minusSaddleOuterSchwartz hε hℓ horder d x =
-        minusSaddlePositiveSquaredContour ε ℓ 2 (‖x‖ ^ 2) := by
-    rw [minusSaddleOuterSchwartz_apply]
-    exact minusSaddleOuterSquaredProfile_eq_positiveContour
-      (a := (2 : ℝ)) hε hℓ horder (by norm_num) hsquare
-  have hsource :
-      minusSaddleProfile ε ℓ ‖x‖ =
-        minusSaddlePositiveSquaredContour ε ℓ 2 (‖x‖ ^ 2) :=
-    minusSaddleProfile_eq_positive_squaredContour
-      (a := (2 : ℝ)) hε hℓ horder hr (by norm_num)
-  exact hx (by rw [hsource, houter, sub_self])
+private noncomputable def SaddleSign.schwartz (s : SaddleSign)
+    {ε : ℝ} (hε : 0 < ε)
+    {d : ℕ} (hd : 0 < d)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
+    TestFunction d where
+  toFun := s.saddleFunction ε d
+  smooth' := s.saddleFunction_contDiff hε hd horder
+  decay' := by
+    intro k n
+    let ℓ : ℝ := (d : ℝ) / 2
+    have hℓ : 0 < ℓ := by
+      try dsimp [ℓ]
+      exact div_pos (by exact_mod_cast hd) (by norm_num)
+    let tail : TestFunction d :=
+      s.outerSchwartz hε hℓ horder d
+    have hcompact :
+        HasCompactSupport (fun x : Euclidean d =>
+          s.saddleFunction ε d x - tail x) := by
+      simpa only [SaddleSign.saddleFunction_def, SaddleSign.outerSchwartz_apply] using!
+        s.outerDifference_hasCompactSupport
+          hε hℓ horder d
+    have hsmooth :
+        ContDiff ℝ ∞ (fun x : Euclidean d =>
+          s.saddleFunction ε d x - tail x) :=
+      (s.saddleFunction_contDiff hε hd horder).sub
+        (tail.smooth ⊤)
+    let correction : TestFunction d :=
+      hcompact.toSchwartzMap hsmooth
+    let full : TestFunction d := tail + correction
+    have hfun :
+        s.saddleFunction ε d =
+          (fun x : Euclidean d => full x) := by
+      funext x
+      change
+        s.saddleFunction ε d x =
+          tail x +
+            (s.saddleFunction ε d x - tail x)
+      ring
+    rw [hfun]
+    exact full.decay' k n
 
 private noncomputable def plusSaddleSchwartz
     {ε : ℝ} (hε : 0 < ε)
     {d : ℕ} (hd : 0 < d)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    TestFunction d where
-  toFun := plusSaddleFunction ε d
-  smooth' := plusSaddleFunction_contDiff hε hd horder
-  decay' := by
-    intro k n
-    let ℓ : ℝ := (d : ℝ) / 2
-    have hℓ : 0 < ℓ := by
-      try dsimp [ℓ]
-      exact div_pos (by exact_mod_cast hd) (by norm_num)
-    let tail : TestFunction d :=
-      plusSaddleOuterSchwartz hε hℓ horder d
-    have hcompact :
-        HasCompactSupport (fun x : Euclidean d =>
-          plusSaddleFunction ε d x - tail x) := by
-      simpa only [plusSaddleFunction, plusSaddleOuterSchwartz_apply] using!
-        plusSaddleOuterDifference_hasCompactSupport
-          hε hℓ horder d
-    have hsmooth :
-        ContDiff ℝ ∞ (fun x : Euclidean d =>
-          plusSaddleFunction ε d x - tail x) :=
-      (plusSaddleFunction_contDiff hε hd horder).sub
-        (tail.smooth ⊤)
-    let correction : TestFunction d :=
-      hcompact.toSchwartzMap hsmooth
-    let full : TestFunction d := tail + correction
-    have hfun :
-        plusSaddleFunction ε d =
-          (fun x : Euclidean d => full x) := by
-      funext x
-      change
-        plusSaddleFunction ε d x =
-          tail x +
-            (plusSaddleFunction ε d x - tail x)
-      ring
-    rw [hfun]
-    exact full.decay' k n
+    TestFunction d :=
+  SaddleSign.schwartz .plus hε hd horder
 
 private noncomputable def minusSaddleSchwartz
     {ε : ℝ} (hε : 0 < ε)
     {d : ℕ} (hd : 0 < d)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε))) :
-    TestFunction d where
-  toFun := minusSaddleFunction ε d
-  smooth' := minusSaddleFunction_contDiff hε hd horder
-  decay' := by
-    intro k n
-    let ℓ : ℝ := (d : ℝ) / 2
-    have hℓ : 0 < ℓ := by
-      try dsimp [ℓ]
-      exact div_pos (by exact_mod_cast hd) (by norm_num)
-    let tail : TestFunction d :=
-      minusSaddleOuterSchwartz hε hℓ horder d
-    have hcompact :
-        HasCompactSupport (fun x : Euclidean d =>
-          minusSaddleFunction ε d x - tail x) := by
-      simpa only [minusSaddleFunction, minusSaddleOuterSchwartz_apply] using!
-        minusSaddleOuterDifference_hasCompactSupport
-          hε hℓ horder d
-    have hsmooth :
-        ContDiff ℝ ∞ (fun x : Euclidean d =>
-          minusSaddleFunction ε d x - tail x) :=
-      (minusSaddleFunction_contDiff hε hd horder).sub
-        (tail.smooth ⊤)
-    let correction : TestFunction d :=
-      hcompact.toSchwartzMap hsmooth
-    let full : TestFunction d := tail + correction
-    have hfun :
-        minusSaddleFunction ε d =
-          (fun x : Euclidean d => full x) := by
-      funext x
-      change
-        minusSaddleFunction ε d x =
-          tail x +
-            (minusSaddleFunction ε d x - tail x)
-      ring
-    rw [hfun]
-    exact full.decay' k n
+    TestFunction d :=
+  SaddleSign.schwartz .minus hε hd horder
 
 private noncomputable def saddleSourceContourEnvelopeScale
     (ε ℓ u : ℝ) : ℝ :=
@@ -5828,39 +5466,29 @@ private theorem saddleSourceCenteredEnvelope_norm
       hε hℓ hu horder T,
     Complex.norm_exp_I_mul_ofReal, mul_one]
 
-private noncomputable def saddleSourceCenteredPlusIntegrand
+private noncomputable def SaddleSign.centeredIntegrand (s : SaddleSign)
     (ε ℓ u v T : ℝ) : ℂ :=
   saddleSourceCenteredEnvelope ε ℓ u v T *
-    plusPolynomial ε ((T : ℂ) + Complex.I * (u : ℂ))
+    s.polynomial ε ((T : ℂ) + Complex.I * (u : ℂ))
+
+private noncomputable def saddleSourceCenteredPlusIntegrand
+    (ε ℓ u v T : ℝ) : ℂ :=
+  SaddleSign.centeredIntegrand .plus ε ℓ u v T
 
 private noncomputable def saddleSourceCenteredMinusIntegrand
     (ε ℓ u v T : ℝ) : ℂ :=
-  saddleSourceCenteredEnvelope ε ℓ u v T *
-    minusPolynomial ε ((T : ℂ) + Complex.I * (u : ℂ))
+  SaddleSign.centeredIntegrand .minus ε ℓ u v T
 
-private theorem saddleSourceCenteredPlusIntegrand_norm
+private theorem SaddleSign.centeredIntegrand_norm (s : SaddleSign)
     {ε ℓ u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (v T : ℝ) :
-    ‖saddleSourceCenteredPlusIntegrand ε ℓ u v T‖ =
+    ‖s.centeredIntegrand ε ℓ u v T‖ =
       Real.exp (-saddleSourceContourDamping ε ℓ u T) *
-        ‖plusPolynomial ε
+        ‖s.polynomial ε
           ((T : ℂ) + Complex.I * (u : ℂ))‖ := by
-  unfold saddleSourceCenteredPlusIntegrand
-  rw [norm_mul,
-    saddleSourceCenteredEnvelope_norm hε hℓ hu horder]
-
-private theorem saddleSourceCenteredMinusIntegrand_norm
-    {ε ℓ u : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (v T : ℝ) :
-    ‖saddleSourceCenteredMinusIntegrand ε ℓ u v T‖ =
-      Real.exp (-saddleSourceContourDamping ε ℓ u T) *
-        ‖minusPolynomial ε
-          ((T : ℂ) + Complex.I * (u : ℂ))‖ := by
-  unfold saddleSourceCenteredMinusIntegrand
+  unfold SaddleSign.centeredIntegrand
   rw [norm_mul,
     saddleSourceCenteredEnvelope_norm hε hℓ hu horder]
 
@@ -5930,51 +5558,27 @@ private theorem saddleSourceMellinContour_integral_change
   rw [← mul_assoc,
     mul_inv_cancel₀ (by exact_mod_cast hℓ.ne'), one_mul]
 
-private theorem plusSaddleProfile_eq_sourceContourIntegral
+private theorem SaddleSign.profile_eq_sourceContourIntegral (s : SaddleSign)
     {ε ℓ r u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (hr : 0 < r) (hu : -1 < u) :
-    plusSaddleProfile ε ℓ r =
+    s.profile ε ℓ r =
       ((ℓ / (2 * Real.pi) : ℝ) : ℂ) *
         (∫ T : ℝ,
           saddleMellinInversePower r
               (saddleSourceMellinContour ℓ u T) *
-            plusSaddleMellinData ε ℓ
+            s.mellinData ε ℓ
               (saddleSourceMellinContour ℓ u T)) := by
   have ha : 0 < ℓ * (1 + u) := by
     have hη : 0 < 1 + u := by linarith
     positivity
-  rw [plusSaddleProfile_eq_positive_contour
+  rw [s.profile_eq_positive_contour
     (a := ℓ * (1 + u)) hε hℓ horder hr ha]
   rw [saddleSourceMellinContour_integral_change
     hℓ u (fun z : ℂ =>
       saddleMellinInversePower r z *
-        plusSaddleMellinData ε ℓ z)]
-  push_cast
-  ring
-
-private theorem minusSaddleProfile_eq_sourceContourIntegral
-    {ε ℓ r u : ℝ}
-    (hε : 0 < ε) (hℓ : 0 < ℓ)
-    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
-    (hr : 0 < r) (hu : -1 < u) :
-    minusSaddleProfile ε ℓ r =
-      ((ℓ / (2 * Real.pi) : ℝ) : ℂ) *
-        (∫ T : ℝ,
-          saddleMellinInversePower r
-              (saddleSourceMellinContour ℓ u T) *
-            minusSaddleMellinData ε ℓ
-              (saddleSourceMellinContour ℓ u T)) := by
-  have ha : 0 < ℓ * (1 + u) := by
-    have hη : 0 < 1 + u := by linarith
-    positivity
-  rw [minusSaddleProfile_eq_positive_contour
-    (a := ℓ * (1 + u)) hε hℓ horder hr ha]
-  rw [saddleSourceMellinContour_integral_change
-    hℓ u (fun z : ℂ =>
-      saddleMellinInversePower r z *
-        minusSaddleMellinData ε ℓ z)]
+        s.mellinData ε ℓ z)]
   push_cast
   ring
 
@@ -6028,54 +5632,53 @@ private theorem saddleSourceContour_envelope_eq_scale_mul_normalized
         (ε := ε) hℓ hu).ne'
   field_simp [hn]
 
-private theorem plusSaddleProfile_exp_eq_centeredIntegral
+private theorem SaddleSign.profile_exp_eq_centeredIntegral (s : SaddleSign)
     {ε ℓ u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (v : ℝ) :
-    plusSaddleProfile ε ℓ (Real.exp v) =
+    s.profile ε ℓ (Real.exp v) =
       (saddleSourceCenteredPrefactor ε ℓ u v : ℂ) *
         (∫ T : ℝ,
-          saddleSourceCenteredPlusIntegrand ε ℓ u v T) := by
-  rw [plusSaddleProfile_eq_sourceContourIntegral
+          s.centeredIntegrand ε ℓ u v T) := by
+  rw [s.profile_eq_sourceContourIntegral
     hε hℓ horder (Real.exp_pos v) hu]
   have hpoint (T : ℝ) :
       saddleMellinInversePower (Real.exp v)
           (saddleSourceMellinContour ℓ u T) *
-        plusSaddleMellinData ε ℓ
+        s.mellinData ε ℓ
           (saddleSourceMellinContour ℓ u T) =
       ((Real.exp (-(ℓ * (1 + u) * v)) *
           saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-        saddleSourceCenteredPlusIntegrand ε ℓ u v T := by
+        s.centeredIntegrand ε ℓ u v T := by
     rw [saddleSourceContour_inversePower_exp,
-      plusSaddleMellinData,
+      SaddleSign.mellinData_def,
       saddleSourceMellinContour_shellArgument hℓ,
       saddleSourceContour_envelope_eq_scale_mul_normalized
         hℓ hu T]
-    unfold saddleSourceCenteredPlusIntegrand
-      saddleSourceCenteredEnvelope
+    unfold SaddleSign.centeredIntegrand saddleSourceCenteredEnvelope
     push_cast
     ring
   have hintegral :
       (∫ T : ℝ,
         saddleMellinInversePower (Real.exp v)
             (saddleSourceMellinContour ℓ u T) *
-          plusSaddleMellinData ε ℓ
+          s.mellinData ε ℓ
             (saddleSourceMellinContour ℓ u T)) =
         ((Real.exp (-(ℓ * (1 + u) * v)) *
             saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
           (∫ T : ℝ,
-            saddleSourceCenteredPlusIntegrand ε ℓ u v T) := by
+            s.centeredIntegrand ε ℓ u v T) := by
     calc
       (∫ T : ℝ,
         saddleMellinInversePower (Real.exp v)
             (saddleSourceMellinContour ℓ u T) *
-          plusSaddleMellinData ε ℓ
+          s.mellinData ε ℓ
             (saddleSourceMellinContour ℓ u T)) =
         ∫ T : ℝ,
           ((Real.exp (-(ℓ * (1 + u) * v)) *
               saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-            saddleSourceCenteredPlusIntegrand ε ℓ u v T := by
+            s.centeredIntegrand ε ℓ u v T := by
               apply MeasureTheory.integral_congr_ae
               filter_upwards [] with T
               exact hpoint T
@@ -6085,6 +5688,17 @@ private theorem plusSaddleProfile_exp_eq_centeredIntegral
   push_cast
   ring
 
+private theorem plusSaddleProfile_exp_eq_centeredIntegral
+    {ε ℓ u : ℝ}
+    (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (v : ℝ) :
+    plusSaddleProfile ε ℓ (Real.exp v) =
+      (saddleSourceCenteredPrefactor ε ℓ u v : ℂ) *
+        (∫ T : ℝ,
+          saddleSourceCenteredPlusIntegrand ε ℓ u v T) :=
+  SaddleSign.profile_exp_eq_centeredIntegral .plus hε hℓ hu horder v
+
 private theorem minusSaddleProfile_exp_eq_centeredIntegral
     {ε ℓ u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
@@ -6093,54 +5707,8 @@ private theorem minusSaddleProfile_exp_eq_centeredIntegral
     minusSaddleProfile ε ℓ (Real.exp v) =
       (saddleSourceCenteredPrefactor ε ℓ u v : ℂ) *
         (∫ T : ℝ,
-          saddleSourceCenteredMinusIntegrand ε ℓ u v T) := by
-  rw [minusSaddleProfile_eq_sourceContourIntegral
-    hε hℓ horder (Real.exp_pos v) hu]
-  have hpoint (T : ℝ) :
-      saddleMellinInversePower (Real.exp v)
-          (saddleSourceMellinContour ℓ u T) *
-        minusSaddleMellinData ε ℓ
-          (saddleSourceMellinContour ℓ u T) =
-      ((Real.exp (-(ℓ * (1 + u) * v)) *
-          saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-        saddleSourceCenteredMinusIntegrand ε ℓ u v T := by
-    rw [saddleSourceContour_inversePower_exp,
-      minusSaddleMellinData,
-      saddleSourceMellinContour_shellArgument hℓ,
-      saddleSourceContour_envelope_eq_scale_mul_normalized
-        hℓ hu T]
-    unfold saddleSourceCenteredMinusIntegrand
-      saddleSourceCenteredEnvelope
-    push_cast
-    ring
-  have hintegral :
-      (∫ T : ℝ,
-        saddleMellinInversePower (Real.exp v)
-            (saddleSourceMellinContour ℓ u T) *
-          minusSaddleMellinData ε ℓ
-            (saddleSourceMellinContour ℓ u T)) =
-        ((Real.exp (-(ℓ * (1 + u) * v)) *
-            saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-          (∫ T : ℝ,
-            saddleSourceCenteredMinusIntegrand ε ℓ u v T) := by
-    calc
-      (∫ T : ℝ,
-        saddleMellinInversePower (Real.exp v)
-            (saddleSourceMellinContour ℓ u T) *
-          minusSaddleMellinData ε ℓ
-            (saddleSourceMellinContour ℓ u T)) =
-        ∫ T : ℝ,
-          ((Real.exp (-(ℓ * (1 + u) * v)) *
-              saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-            saddleSourceCenteredMinusIntegrand ε ℓ u v T := by
-              apply MeasureTheory.integral_congr_ae
-              filter_upwards [] with T
-              exact hpoint T
-      _ = _ := integral_const_mul _ _
-  rw [hintegral]
-  unfold saddleSourceCenteredPrefactor
-  push_cast
-  ring
+          saddleSourceCenteredMinusIntegrand ε ℓ u v T) :=
+  SaddleSign.profile_exp_eq_centeredIntegral .minus hε hℓ hu horder v
 
 private noncomputable def saddleSourceGaussianVariance
     (ε ℓ u : ℝ) : ℝ :=
@@ -6151,15 +5719,18 @@ private noncomputable def saddleSourceGaussianKernel
   Real.exp
     (-(ℓ * saddleSourceGaussianVariance ε ℓ u / 2) * T ^ 2)
 
-private noncomputable def saddleSourceGaussianPlusIntegrand
+private noncomputable def SaddleSign.gaussianIntegrand (s : SaddleSign)
     (ε ℓ u T : ℝ) : ℂ :=
   (saddleSourceGaussianKernel ε ℓ u T : ℂ) *
-    plusPolynomial ε (Complex.I * (u : ℂ))
+    s.polynomial ε (Complex.I * (u : ℂ))
+
+private noncomputable def saddleSourceGaussianPlusIntegrand
+    (ε ℓ u T : ℝ) : ℂ :=
+  SaddleSign.gaussianIntegrand .plus ε ℓ u T
 
 private noncomputable def saddleSourceGaussianMinusIntegrand
     (ε ℓ u T : ℝ) : ℂ :=
-  (saddleSourceGaussianKernel ε ℓ u T : ℂ) *
-    minusPolynomial ε (Complex.I * (u : ℂ))
+  SaddleSign.gaussianIntegrand .minus ε ℓ u T
 
 private theorem saddleSourceGaussianKernel_integrable
     {ε ℓ u : ℝ}
@@ -6186,21 +5757,38 @@ private theorem saddleSourceGaussianKernel_integral_pos
   rw [saddleSourceGaussianKernel_integral]
   positivity
 
+private theorem SaddleSign.gaussianIntegrand_integrable (s : SaddleSign)
+    {ε ℓ u : ℝ}
+    (hℓ : 0 < ℓ)
+    (hV : 0 < saddleSourceGaussianVariance ε ℓ u) :
+    Integrable (s.gaussianIntegrand ε ℓ u) := by
+  unfold SaddleSign.gaussianIntegrand
+  exact (saddleSourceGaussianKernel_integrable hℓ hV).ofReal.mul_const _
+
 private theorem saddleSourceGaussianPlusIntegrand_integrable
     {ε ℓ u : ℝ}
     (hℓ : 0 < ℓ)
     (hV : 0 < saddleSourceGaussianVariance ε ℓ u) :
-    Integrable (saddleSourceGaussianPlusIntegrand ε ℓ u) := by
-  unfold saddleSourceGaussianPlusIntegrand
-  exact (saddleSourceGaussianKernel_integrable hℓ hV).ofReal.mul_const _
+    Integrable (saddleSourceGaussianPlusIntegrand ε ℓ u) :=
+  SaddleSign.gaussianIntegrand_integrable .plus hℓ hV
 
 private theorem saddleSourceGaussianMinusIntegrand_integrable
     {ε ℓ u : ℝ}
     (hℓ : 0 < ℓ)
     (hV : 0 < saddleSourceGaussianVariance ε ℓ u) :
-    Integrable (saddleSourceGaussianMinusIntegrand ε ℓ u) := by
-  unfold saddleSourceGaussianMinusIntegrand
-  exact (saddleSourceGaussianKernel_integrable hℓ hV).ofReal.mul_const _
+    Integrable (saddleSourceGaussianMinusIntegrand ε ℓ u) :=
+  SaddleSign.gaussianIntegrand_integrable .minus hℓ hV
+
+private theorem SaddleSign.gaussianIntegrand_integral (s : SaddleSign)
+    (ε ℓ u : ℝ) :
+    (∫ T : ℝ, s.gaussianIntegrand ε ℓ u T) =
+      (Real.sqrt
+        (Real.pi /
+          (ℓ * saddleSourceGaussianVariance ε ℓ u / 2)) : ℂ) *
+        s.polynomial ε (Complex.I * (u : ℂ)) := by
+  unfold SaddleSign.gaussianIntegrand
+  rw [MeasureTheory.integral_mul_const, integral_complex_ofReal,
+    saddleSourceGaussianKernel_integral]
 
 private theorem saddleSourceGaussianPlusIntegrand_integral
     (ε ℓ u : ℝ) :
@@ -6208,10 +5796,8 @@ private theorem saddleSourceGaussianPlusIntegrand_integral
       (Real.sqrt
         (Real.pi /
           (ℓ * saddleSourceGaussianVariance ε ℓ u / 2)) : ℂ) *
-        plusPolynomial ε (Complex.I * (u : ℂ)) := by
-  unfold saddleSourceGaussianPlusIntegrand
-  rw [MeasureTheory.integral_mul_const, integral_complex_ofReal,
-    saddleSourceGaussianKernel_integral]
+        plusPolynomial ε (Complex.I * (u : ℂ)) :=
+  SaddleSign.gaussianIntegrand_integral .plus ε ℓ u
 
 private theorem saddleSourceGaussianMinusIntegrand_integral
     (ε ℓ u : ℝ) :
@@ -6219,10 +5805,8 @@ private theorem saddleSourceGaussianMinusIntegrand_integral
       (Real.sqrt
         (Real.pi /
           (ℓ * saddleSourceGaussianVariance ε ℓ u / 2)) : ℂ) *
-        minusPolynomial ε (Complex.I * (u : ℂ)) := by
-  unfold saddleSourceGaussianMinusIntegrand
-  rw [MeasureTheory.integral_mul_const, integral_complex_ofReal,
-    saddleSourceGaussianKernel_integral]
+        minusPolynomial ε (Complex.I * (u : ℂ)) :=
+  SaddleSign.gaussianIntegrand_integral .minus ε ℓ u
 
 private theorem eventually_saddleSourceGaussianVariance_secondBranch_pos :
     ∀ᶠ ε : ℝ in 𝓝[>] (0 : ℝ),
@@ -6512,158 +6096,96 @@ private theorem eventually_saddleSourceGaussianVariance_firstBranch_pos :
   exact (mul_pos (by positivity : 0 < 4 * ε)
     hgammaPos).trans_le hbound
 
-private theorem saddleSourceCenteredPlusIntegrand_sourcePointwise
+private theorem SaddleSign.centeredIntegrand_sourcePointwise (s : SaddleSign)
     {ε ℓ u : ℝ}
     (hℓ : 0 < ℓ) (hu : -1 < u)
     (v T : ℝ) :
     saddleMellinInversePower (Real.exp v)
         (saddleSourceMellinContour ℓ u T) *
-      plusSaddleMellinData ε ℓ
+      s.mellinData ε ℓ
         (saddleSourceMellinContour ℓ u T) =
     ((Real.exp (-(ℓ * (1 + u) * v)) *
         saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-      saddleSourceCenteredPlusIntegrand ε ℓ u v T := by
+      s.centeredIntegrand ε ℓ u v T := by
   rw [saddleSourceContour_inversePower_exp,
-    plusSaddleMellinData,
+    SaddleSign.mellinData_def,
     saddleSourceMellinContour_shellArgument hℓ,
     saddleSourceContour_envelope_eq_scale_mul_normalized
       hℓ hu T]
-  unfold saddleSourceCenteredPlusIntegrand
-    saddleSourceCenteredEnvelope
+  unfold SaddleSign.centeredIntegrand saddleSourceCenteredEnvelope
   push_cast
   ring
 
-private theorem saddleSourceCenteredMinusIntegrand_sourcePointwise
+private theorem SaddleSign.centeredIntegrand_integrable (s : SaddleSign)
     {ε ℓ u : ℝ}
-    (hℓ : 0 < ℓ) (hu : -1 < u)
-    (v T : ℝ) :
-    saddleMellinInversePower (Real.exp v)
-        (saddleSourceMellinContour ℓ u T) *
-      minusSaddleMellinData ε ℓ
-        (saddleSourceMellinContour ℓ u T) =
+    (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
+    (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
+    (v : ℝ) :
+    Integrable (s.centeredIntegrand ε ℓ u v) := by
+  let a : ℝ := ℓ * (1 + u)
+  let c : ℂ :=
     ((Real.exp (-(ℓ * (1 + u) * v)) *
-        saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ) *
-      saddleSourceCenteredMinusIntegrand ε ℓ u v T := by
-  rw [saddleSourceContour_inversePower_exp,
-    minusSaddleMellinData,
-    saddleSourceMellinContour_shellArgument hℓ,
-    saddleSourceContour_envelope_eq_scale_mul_normalized
-      hℓ hu T]
-  unfold saddleSourceCenteredMinusIntegrand
-    saddleSourceCenteredEnvelope
-  push_cast
-  ring
+      saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ)
+  have ha : 0 < a := by
+    try dsimp [a]
+    have : 0 < 1 + u := by linarith
+    positivity
+  have hline :=
+    s.mellinData_shiftedLine_weighted_integrable
+      (a := a) (r := Real.exp v)
+      hε hℓ horder
+      (fun n => saddlePositiveContour_ne_pole ha n)
+      (Real.exp_pos v)
+  have hcomp := hline.comp_mul_left'
+    (neg_ne_zero.mpr hℓ.ne')
+  have hcontour : Integrable (fun T : ℝ =>
+      saddleMellinInversePower (Real.exp v)
+          (saddleSourceMellinContour ℓ u T) *
+        s.mellinData ε ℓ
+          (saddleSourceMellinContour ℓ u T)) := by
+    apply hcomp.congr
+    filter_upwards [] with T
+    have harg :
+        (a : ℂ) + (((-ℓ) * T : ℝ) : ℂ) * Complex.I =
+          saddleSourceMellinContour ℓ u T := by
+      try dsimp [a]
+      unfold saddleSourceMellinContour
+      push_cast
+      ring
+    rw [harg]
+  have hscaled : Integrable
+      (fun T : ℝ => c *
+        s.centeredIntegrand ε ℓ u v T) := by
+    apply hcontour.congr
+    filter_upwards [] with T
+    exact s.centeredIntegrand_sourcePointwise
+      hℓ hu v T
+  have hc : c ≠ 0 := by
+    try dsimp [c]
+    apply Complex.ofReal_ne_zero.mpr
+    exact (mul_pos (Real.exp_pos _)
+      (saddleSourceContourEnvelopeScale_pos
+        (ε := ε) hℓ hu)).ne'
+  have hinverse := hscaled.const_mul c⁻¹
+  apply hinverse.congr
+  filter_upwards [] with T
+  rw [← mul_assoc, inv_mul_cancel₀ hc, one_mul]
 
 private theorem saddleSourceCenteredPlusIntegrand_integrable
     {ε ℓ u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (v : ℝ) :
-    Integrable (saddleSourceCenteredPlusIntegrand ε ℓ u v) := by
-  let a : ℝ := ℓ * (1 + u)
-  let c : ℂ :=
-    ((Real.exp (-(ℓ * (1 + u) * v)) *
-      saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ)
-  have ha : 0 < a := by
-    try dsimp [a]
-    have : 0 < 1 + u := by linarith
-    positivity
-  have hline :=
-    plusSaddleMellinData_shiftedLine_weighted_integrable
-      (a := a) (r := Real.exp v)
-      hε hℓ horder
-      (fun n => saddlePositiveContour_ne_pole ha n)
-      (Real.exp_pos v)
-  have hcomp := hline.comp_mul_left'
-    (neg_ne_zero.mpr hℓ.ne')
-  have hcontour : Integrable (fun T : ℝ =>
-      saddleMellinInversePower (Real.exp v)
-          (saddleSourceMellinContour ℓ u T) *
-        plusSaddleMellinData ε ℓ
-          (saddleSourceMellinContour ℓ u T)) := by
-    apply hcomp.congr
-    filter_upwards [] with T
-    have harg :
-        (a : ℂ) + (((-ℓ) * T : ℝ) : ℂ) * Complex.I =
-          saddleSourceMellinContour ℓ u T := by
-      try dsimp [a]
-      unfold saddleSourceMellinContour
-      push_cast
-      ring
-    rw [harg]
-  have hscaled : Integrable
-      (fun T : ℝ => c *
-        saddleSourceCenteredPlusIntegrand ε ℓ u v T) := by
-    apply hcontour.congr
-    filter_upwards [] with T
-    exact saddleSourceCenteredPlusIntegrand_sourcePointwise
-      hℓ hu v T
-  have hc : c ≠ 0 := by
-    try dsimp [c]
-    apply Complex.ofReal_ne_zero.mpr
-    exact (mul_pos (Real.exp_pos _)
-      (saddleSourceContourEnvelopeScale_pos
-        (ε := ε) hℓ hu)).ne'
-  have hinverse := hscaled.const_mul c⁻¹
-  apply hinverse.congr
-  filter_upwards [] with T
-  rw [← mul_assoc, inv_mul_cancel₀ hc, one_mul]
+    Integrable (saddleSourceCenteredPlusIntegrand ε ℓ u v) :=
+  SaddleSign.centeredIntegrand_integrable .plus hε hℓ hu horder v
 
 private theorem saddleSourceCenteredMinusIntegrand_integrable
     {ε ℓ u : ℝ}
     (hε : 0 < ε) (hℓ : 0 < ℓ) (hu : -1 < u)
     (horder : (ε ^ 3) ≤ (10 * Real.log (1 / ε)))
     (v : ℝ) :
-    Integrable (saddleSourceCenteredMinusIntegrand ε ℓ u v) := by
-  let a : ℝ := ℓ * (1 + u)
-  let c : ℂ :=
-    ((Real.exp (-(ℓ * (1 + u) * v)) *
-      saddleSourceContourEnvelopeScale ε ℓ u : ℝ) : ℂ)
-  have ha : 0 < a := by
-    try dsimp [a]
-    have : 0 < 1 + u := by linarith
-    positivity
-  have hline :=
-    minusSaddleMellinData_shiftedLine_weighted_integrable
-      (a := a) (r := Real.exp v)
-      hε hℓ horder
-      (fun n => saddlePositiveContour_ne_pole ha n)
-      (Real.exp_pos v)
-  have hcomp := hline.comp_mul_left'
-    (neg_ne_zero.mpr hℓ.ne')
-  have hcontour : Integrable (fun T : ℝ =>
-      saddleMellinInversePower (Real.exp v)
-          (saddleSourceMellinContour ℓ u T) *
-        minusSaddleMellinData ε ℓ
-          (saddleSourceMellinContour ℓ u T)) := by
-    apply hcomp.congr
-    filter_upwards [] with T
-    have harg :
-        (a : ℂ) + (((-ℓ) * T : ℝ) : ℂ) * Complex.I =
-          saddleSourceMellinContour ℓ u T := by
-      try dsimp [a]
-      unfold saddleSourceMellinContour
-      push_cast
-      ring
-    rw [harg]
-  have hscaled : Integrable
-      (fun T : ℝ => c *
-        saddleSourceCenteredMinusIntegrand ε ℓ u v T) := by
-    apply hcontour.congr
-    filter_upwards [] with T
-    exact saddleSourceCenteredMinusIntegrand_sourcePointwise
-      hℓ hu v T
-  have hc : c ≠ 0 := by
-    try dsimp [c]
-    apply Complex.ofReal_ne_zero.mpr
-    exact (mul_pos (Real.exp_pos _)
-      (saddleSourceContourEnvelopeScale_pos
-        (ε := ε) hℓ hu)).ne'
-  have hinverse := hscaled.const_mul c⁻¹
-  apply hinverse.congr
-  filter_upwards [] with T
-  rw [← mul_assoc, inv_mul_cancel₀ hc, one_mul]
-
+    Integrable (saddleSourceCenteredMinusIntegrand ε ℓ u v) :=
+  SaddleSign.centeredIntegrand_integrable .minus hε hℓ hu horder v
 end
 
 section
