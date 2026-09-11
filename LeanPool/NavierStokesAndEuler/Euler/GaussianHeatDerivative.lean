@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
 import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.Probability.Distributions.Gaussian.Real
@@ -48,7 +50,7 @@ theorem lineOrbit_continuous (a : LiftTangent) (f : LiftL2 period) :
 theorem lineOrbit_integrable (a : LiftTangent) (f : LiftL2 period) (μ : Measure ℝ) [IsFiniteMeasure
     μ] :
     Integrable (lineOrbit period a f) μ :=
-  Integrable.of_bound (lineOrbit_continuous period a f).aestronglyMeasurable ‖f‖
+  Integrable.of_bound (lineOrbit_continuous period a f).aestronglyMeasurable_of_secondCountable ‖f‖
     (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f x).le))
 
 /-- Gaussian averaging with variance v along a cylinder direction. -/
@@ -113,7 +115,7 @@ theorem jointOrbit_integrable (a : LiftTangent) (f : LiftL2 period)
     (μ ν : Measure ℝ) [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     Integrable (fun p : ℝ × ℝ => lineOrbit period a f (p.1 + p.2)) (μ.prod ν) := by
   apply Integrable.of_bound ((lineOrbit_continuous period a f).comp
-    (continuous_fst.add continuous_snd)).aestronglyMeasurable ‖f‖
+    (continuous_fst.add continuous_snd)).aestronglyMeasurable_of_secondCountable ‖f‖
   exact Filter.Eventually.of_forall (fun p => (lineOrbit_norm period a f (p.1+p.2)).le)
 
 /-- Addition of Gaussian variances gives the semigroup law on actual cylinder L² fields. -/
@@ -177,7 +179,7 @@ theorem lineHeat_continuous (a : LiftTangent) (f : LiftL2 period) :
     (bound := fun _ : ℝ => ‖f‖)
   · intro v
     exact ((lineOrbit_continuous period a f).comp (continuous_const.mul
-        continuous_id)).aestronglyMeasurable
+        continuous_id)).aestronglyMeasurable_of_secondCountable
   · intro v
     exact Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f _).le)
   · exact integrable_const _
@@ -210,7 +212,7 @@ variable (period : ℝ) [Fact (0 < period)]
 theorem kernelOrbit_integrable (a : LiftTangent) (f : LiftL2 period)
     (k : ℝ → ℝ) (hk : Integrable k) : Integrable (fun x => k x • lineOrbit period a f x) := by
   apply (hk.norm.mul_const ‖f‖).mono'
-    (hk.1.smul (lineOrbit_continuous period a f).aestronglyMeasurable)
+    (hk.1.smul (lineOrbit_continuous period a f).aestronglyMeasurable_of_secondCountable)
   apply Filter.Eventually.of_forall
   intro x
   change ‖k x • lineOrbit period a f x‖ ≤ ‖k x‖ * ‖f‖
@@ -272,7 +274,8 @@ theorem gaussianAbsMoment_scale (v : ℝ≥0) :
 theorem gaussianMomentOrbit_integrable (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
     Integrable (fun x : ℝ => x • lineOrbit period a f x) (gaussianReal 0 v) := by
   apply ((gaussianId_integrable v).norm.mul_const ‖f‖).mono'
-    ((gaussianId_integrable v).1.smul (lineOrbit_continuous period a f).aestronglyMeasurable)
+    ((gaussianId_integrable v).1.smul (lineOrbit_continuous period a
+      f).aestronglyMeasurable_of_secondCountable)
   apply Filter.Eventually.of_forall
   intro x
   change ‖x • lineOrbit period a f x‖ ≤ ‖x‖ * ‖f‖

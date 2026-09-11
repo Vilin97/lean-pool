@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSmoothRepresentative
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
@@ -88,7 +90,8 @@ theorem representative_fderiv_memLp (u : EulerMeanSolenoidal.L2) (hu : SmoothOrb
   have hs : MemLp (∑ i : Fin 3, f i) 2 (volume : Measure Space) :=
     memLp_finsetSum' Finset.univ (fun i _ => hf i)
   apply hs.mono'
-    ((representative_smooth u hu).fderiv_right (m := ∞) (by simp)).continuous.aestronglyMeasurable
+    ((representative_smooth u hu).fderiv_right (m := ∞) (by
+      simp)).continuous.aestronglyMeasurable_of_secondCountable
   apply Filter.Eventually.of_forall
   intro x
   simpa only [Finset.sum_apply, f] using opNorm_le_sum_columns (fderiv ℝ (representative u hu) x)

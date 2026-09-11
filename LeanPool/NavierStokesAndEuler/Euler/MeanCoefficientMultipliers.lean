@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.Order.Star.Real
@@ -25,17 +27,18 @@ open scoped NNReal BoundedContinuousFunction
 /-- Field: an abbreviation for `Space →ᵇ (Space →L[ℝ] Space)`. -/
 abbrev Field := Space →ᵇ (Space →L[ℝ] Space)
 
-/-- Multiplier, given by `coefficientOperator A A.continuous.aestronglyMeasurable ‖A‖₊
-A.norm_coe_le_norm`. -/
+/-- Pointwise multiplication by a bounded continuous coefficient field. -/
 def multiplier (A : Field) : L2 →L[ℝ] L2 :=
-  coefficientOperator A A.continuous.aestronglyMeasurable ‖A‖₊ A.norm_coe_le_norm
+  coefficientOperator A A.continuous.aestronglyMeasurable_of_secondCountable ‖A‖₊ A.norm_coe_le_norm
 
 theorem multiplier_ae (A : Field) (u : L2) :
     multiplier A u =ᵐ[volume] fun x => A x (u x) :=
-  coefficientOperator_ae A A.continuous.aestronglyMeasurable ‖A‖₊ A.norm_coe_le_norm u
+  coefficientOperator_ae A A.continuous.aestronglyMeasurable_of_secondCountable ‖A‖₊
+    A.norm_coe_le_norm u
 
 theorem multiplier_norm_le (A : Field) : ‖multiplier A‖ ≤ ‖A‖ :=
-  coefficientOperator_norm_le A A.continuous.aestronglyMeasurable ‖A‖₊ A.norm_coe_le_norm
+  coefficientOperator_norm_le A A.continuous.aestronglyMeasurable_of_secondCountable ‖A‖₊
+    A.norm_coe_le_norm
 
 theorem multiplier_add (A B : Field) : multiplier (A+B) = multiplier A + multiplier B := by
   apply ContinuousLinearMap.ext
@@ -114,12 +117,13 @@ theorem multiplier_adjoint (A B : Field) (hB : ∀ x, B x = (A x).adjoint) :
 
 theorem multiplier_eq_coefficientOperator (A : Field) (C : ℝ≥0)
     (hC : ∀ x, ‖A x‖ ≤ C) :
-    multiplier A = coefficientOperator A A.continuous.aestronglyMeasurable C hC := by
+    multiplier A = coefficientOperator A A.continuous.aestronglyMeasurable_of_secondCountable C
+      hC := by
   apply ContinuousLinearMap.ext
   intro u
   apply Lp.ext
   exact (multiplier_ae A u).trans
-    (coefficientOperator_ae A A.continuous.aestronglyMeasurable C hC u).symm
+    (coefficientOperator_ae A A.continuous.aestronglyMeasurable_of_secondCountable C hC u).symm
 
 theorem multiplier_quadratic_upper (A : Field) (K : ℝ)
     (hA : ∀ x v, ⟪A x v, v⟫_ℝ ≤ K * ‖v‖ ^ 2) (u : L2) :

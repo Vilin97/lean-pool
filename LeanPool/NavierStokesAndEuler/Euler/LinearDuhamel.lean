@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
@@ -140,7 +142,7 @@ theorem solution_derivative (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) (t : Icc (0 :
   have hcont := U.transformedForcing_continuous f
   have hi := intervalIntegral.integral_hasDerivAt_right (a := (0 : ℝ))
     (hcont.intervalIntegrable (0 : ℝ) (t : ℝ))
-    hcont.aestronglyMeasurable.stronglyMeasurableAtFilter hcont.continuousAt
+    hcont.aestronglyMeasurable_of_secondCountable.stronglyMeasurableAtFilter hcont.continuousAt
   have hv := hi.const_add (U.backward ⟨0,le_rfl,hT⟩ a₀)
   have hd := (U.derivative t).clm_apply hv.hasDerivWithinAt
   convert hd using 1

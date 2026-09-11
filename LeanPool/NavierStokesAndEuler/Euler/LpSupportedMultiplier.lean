@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedSubspace
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedPressure
 
@@ -40,12 +42,13 @@ abbrev Field := α →ᵇ (V →L[ℝ] V)
 
 /-- The ordinary full-space L² coefficient multiplier. -/
 def full (A : Field (α := α) (V := V)) : Lp V 2 μ →L[ℝ] Lp V 2 μ :=
-  coefficientOperator A A.continuous.aestronglyMeasurable ‖A‖₊ A.norm_coe_le_norm
+  coefficientOperator A A.continuous.aestronglyMeasurable_of_secondCountable ‖A‖₊ A.norm_coe_le_norm
 
 /-- Its representative is actual pointwise multiplication. -/
 theorem full_ae (A : Field (α := α) (V := V)) (u : Lp V 2 μ) :
     full μ A u =ᵐ[μ] fun x => A x (u x) :=
-  coefficientOperator_ae A A.continuous.aestronglyMeasurable ‖A‖₊ A.norm_coe_le_norm u
+  coefficientOperator_ae A A.continuous.aestronglyMeasurable_of_secondCountable
+    ‖A‖₊ A.norm_coe_le_norm u
 
 /-- Coefficient multiplication cannot enlarge support. -/
 theorem full_mem (A : Field (α := α) (V := V)) (u : supportedSpace (V := V) μ S hS) :

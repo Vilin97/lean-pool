@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 public import Mathlib.Analysis.Calculus.Gradient.Basic
@@ -44,7 +46,7 @@ theorem homogeneous_sobolev (f : Space → Space)
     (by norm_num) (by simp [Space]) (by norm_num [Space])
   have hr := ENNReal.toReal_mono (by finiteness [hdm.eLpNorm_ne_top]) h
   simpa [ENNReal.toReal_mul, ENNReal.coe_toReal,
-    toReal_eLpNorm hf.continuous.aestronglyMeasurable,
+    toReal_eLpNorm hf.continuous.aestronglyMeasurable_of_secondCountable,
     toReal_eLpNorm hd.aestronglyMeasurable, sobolevConstant] using hr
 
 /-- A three-vector's Euclidean norm is at most the sum of its component norms. -/
@@ -107,7 +109,7 @@ theorem vectorCurl_memLp (f : Space → Space) (hf : ContDiff ℝ ∞ f)
   have hdm : MemLp (fderiv ℝ f) 2 volume := hd.memLp_of_hasCompactSupport (hfc.fderiv ℝ)
   have hc : ContDiff ℝ ∞ (vectorCurl f) :=
     contDiff_curl _ ((contDiff_piLp 2).mp hf)
-  exact hdm.of_le_mul hc.continuous.aestronglyMeasurable
+  exact hdm.of_le_mul hc.continuous.aestronglyMeasurable_of_secondCountable
     (Filter.Eventually.of_forall fun x =>
       norm_vectorCurl_le f x ((hf.differentiable (by simp)).differentiableAt))
 

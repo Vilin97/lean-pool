@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderDescentJets
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
 import LeanPool.NavierStokesAndEuler.Euler.CylinderCoverTensor
@@ -61,7 +63,7 @@ theorem tensor_memLp (f : LiftDomain P → V)
   have hs : MemLp (fun q => ∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w f q‖)
       2 (liftMeasure P) := memLp_finsetSum _ (fun w _ => (hLp w).norm)
   apply (hs.const_mul (‖coordinateEquiv.symm.toContinuousLinearMap‖^n)).of_le
-    (tensor_continuous P f hf n).aestronglyMeasurable
+    (tensor_continuous P f hf n).aestronglyMeasurable_of_secondCountable
   filter_upwards [] with q
   rw [Real.norm_of_nonneg (mul_nonneg (pow_nonneg (norm_nonneg _) n)
     (Finset.sum_nonneg (fun _ _ => norm_nonneg _)))]

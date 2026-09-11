@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeat
 import Mathlib.Algebra.Order.Star.Real
@@ -55,7 +57,7 @@ theorem realLineHeat_continuous (a : LiftTangent) (f : LiftL2 period) :
   apply continuous_of_dominated (bound := fun _ : ℝ => ‖f‖)
   · intro t
     exact ((lineOrbit_continuous period a f).comp (continuous_const.mul
-        continuous_id)).aestronglyMeasurable
+        continuous_id)).aestronglyMeasurable_of_secondCountable
   · intro t
     exact Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f _).le)
   · exact integrable_const _
@@ -102,7 +104,7 @@ theorem realLineHeat_hasDerivAt_moment (a : LiftTangent) (f g : LiftL2 period)
         (mul_le_mul_of_nonneg_left (Real.sqrt_le_sqrt hs.le) (by norm_num))) (norm_nonneg g)
   have hFint : Integrable (F t) (gaussianReal 0 1) :=
     Integrable.of_bound ((lineOrbit_continuous period a f).comp (continuous_const.mul
-        continuous_id)).aestronglyMeasurable
+        continuous_id)).aestronglyMeasurable_of_secondCountable
       ‖f‖ (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f _).le))
   have hBint : Integrable B (gaussianReal 0 1) :=
     ((gaussianId_integrable 1).norm.div_const (2 * Real.sqrt (t/2))).mul_const ‖g‖
@@ -110,11 +112,11 @@ theorem realLineHeat_hasDerivAt_moment (a : LiftTangent) (f g : LiftL2 period)
     (F := F) (F' := F') (bound := B) (Ioi_mem_nhds (by linarith : t/2 < t))
     (Filter.Eventually.of_forall (fun s =>
       ((lineOrbit_continuous period a f).comp (continuous_const.mul
-          continuous_id)).aestronglyMeasurable))
+          continuous_id)).aestronglyMeasurable_of_secondCountable))
     hFint
     (((continuous_id.div_const (2 * Real.sqrt t)).smul
       ((lineOrbit_continuous period a g).comp (continuous_const.mul
-          continuous_id))).aestronglyMeasurable)
+          continuous_id))).aestronglyMeasurable_of_secondCountable)
     (Filter.Eventually.of_forall hbound) hBint (Filter.Eventually.of_forall hder)
   exact h.2
 

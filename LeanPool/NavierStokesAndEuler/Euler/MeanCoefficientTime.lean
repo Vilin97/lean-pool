@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientMultipliers
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
@@ -82,7 +84,7 @@ theorem field_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
         ℝ) T) t := by
   have hc := extendPath_continuous (Y := Field) T hT A'
   have hd := intervalIntegral.integral_hasDerivAt_right (hc.intervalIntegrable 0 t)
-    hc.aestronglyMeasurable.stronglyMeasurableAtFilter hc.continuousAt
+    hc.aestronglyMeasurable_of_secondCountable.stronglyMeasurableAtFilter hc.continuousAt
   apply (hd.const_add (extendPath (Y := Field) T hT A 0)).hasDerivWithinAt.congr_of_mem ?_ ht
   intro s hs
   rw [field_integral_eq_sub T hT A A' hpoint s hs]
