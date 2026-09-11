@@ -7,7 +7,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
+public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceLow
+public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceRenewal
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageEstimates
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 public import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalScaleApplication
 

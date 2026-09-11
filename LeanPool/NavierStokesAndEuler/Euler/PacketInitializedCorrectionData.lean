@@ -18,6 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
 import LeanPool.NavierStokesAndEuler.Euler.PacketApproximationBounds
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear

@@ -12,6 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryFields
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
 
 /-! Uniform recursive packet bounds with the literal primary initialization discharged. -/

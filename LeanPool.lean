@@ -4055,6 +4055,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceOperators
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceRegularity
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepRegularity
+import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketKnownDecomposition
 import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceScales
@@ -4184,6 +4185,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketStageGrowth
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageGuards
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageInitialLimit
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
+import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
 import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageRestriction
 import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
@@ -4229,6 +4231,8 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
 import LeanPool.NavierStokesAndEuler.Euler.ParentForwardUniformCosts
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceCenter
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceInitial
+import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceLow
+import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceRenewal
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryForwardChoice
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryJoinedChoice
 import LeanPool.NavierStokesAndEuler.Euler.ParentHistoryCostPolynomial
