@@ -21,7 +21,9 @@ longest-processing-time assignment, deterministically (ties break on
 name).
 
 Environment:
-    CHANGED_FILES   Newline-separated changed paths (empty when none).
+    CHANGED_FILES_PATH
+                    File listing the changed paths, one per line (unset or
+                    empty when none).
     DIFF_AVAILABLE  "false" when no diff exists for this event
                     (workflow_dispatch, force-push); default "true".
     COLD            "true" when no warm Actions build cache matched.
@@ -88,7 +90,10 @@ def assign_shards(targets: dict[str, int], shard_count: int) -> list[list[str]]:
 
 def main() -> None:
     """Read the change set from the environment and print the build plan."""
-    changed_files = os.environ.get("CHANGED_FILES", "").split()
+    changed_files_path = os.environ.get("CHANGED_FILES_PATH", "")
+    changed_files = (
+        Path(changed_files_path).read_text().split() if changed_files_path else []
+    )
     diff_available = os.environ.get("DIFF_AVAILABLE", "true") != "false"
     cold = os.environ.get("COLD", "") == "true"
     force_full = os.environ.get("FORCE_FULL", "") == "true"
