@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpSubintervalBound
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyRestriction
-import LeanPool.NavierStokesAndEuler.Euler.MildMajorantEnergy
 import LeanPool.NavierStokesAndEuler.Euler.SobolevMaximalRegularity
 
 /-! Actual nonlinear correction mild solutions obey the full-order continuous scalar integral energy

@@ -11,9 +11,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 public import LeanPool.NavierStokesAndEuler.Euler.WeightedCylinderEnergy
 import LeanPool.NavierStokesAndEuler.Euler.TimeLpSubinterval
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
-import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedEnergy
-import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
 import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
+import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
 import Mathlib.Algebra.Order.Star.Real
 
 /-! Genuine finite-Sobolev PDE energy passage on every time subinterval. -/

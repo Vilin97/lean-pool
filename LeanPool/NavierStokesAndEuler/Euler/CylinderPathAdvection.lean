@@ -5,11 +5,10 @@ Authors: OpenAI
 -/
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinear
+public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductBounds
 import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeGradient
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductBounds
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathWords
 
 /-! Literal spatial advection of smooth continuous cylinder paths, with unchanged word radius. -/

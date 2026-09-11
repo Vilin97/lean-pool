@@ -3347,7 +3347,6 @@ import LeanPool.NavierStokesAndEuler.Euler.BaseInductionStage
 import LeanPool.NavierStokesAndEuler.Euler.BasePacketSetup
 import LeanPool.NavierStokesAndEuler.Euler.BasePacketUniformCosts
 import LeanPool.NavierStokesAndEuler.Euler.BasePressureCommutator
-import LeanPool.NavierStokesAndEuler.Euler.BoundedCoefficientJets
 import LeanPool.NavierStokesAndEuler.Euler.BoundedCoefficientSmooth
 import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
 import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldTimeDerivative
@@ -3379,10 +3378,8 @@ import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalCompactVorticity
 import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalEvolution
 import LeanPool.NavierStokesAndEuler.Euler.ComparatorMaximalSolution
 import LeanPool.NavierStokesAndEuler.Euler.ComparatorSobolevEvolution
-import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
 import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationForcing
 import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationGevrey
-import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationSobolev
 import LeanPool.NavierStokesAndEuler.Euler.ContinuousForcingTranslation
 import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramAcceleration
 import LeanPool.NavierStokesAndEuler.Euler.ContinuousGramGevrey
@@ -3401,7 +3398,6 @@ import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressureParity
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyReconstruction
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblySourceTower
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionBudgetRestriction
-import LeanPool.NavierStokesAndEuler.Euler.CorrectionContinuation
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifference
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifferenceMetric
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifferencePDE
@@ -3412,7 +3408,6 @@ import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyRestriction
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyScalar
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyTime
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionFamilyCompactness
-import LeanPool.NavierStokesAndEuler.Euler.CorrectionLimitEquation
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionLimitPathDerivative
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionMildEnergy
@@ -3462,13 +3457,11 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
 import LeanPool.NavierStokesAndEuler.Euler.CylinderGraphGevrey
 import LeanPool.NavierStokesAndEuler.Euler.CylinderJetGraphTrace
 import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
-import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpAlgebra
 import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpMap
 import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
 import LeanPool.NavierStokesAndEuler.Euler.CylinderMeasureDescent
 import LeanPool.NavierStokesAndEuler.Euler.CylinderOrbitSobolev
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPathAdvection
-import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinear
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProduct
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductBounds
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPathWords
@@ -3476,7 +3469,6 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensor
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorLp
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialPath
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTime
-import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTimeWeight
 import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
 import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
 import LeanPool.NavierStokesAndEuler.Euler.CylinderReflection
@@ -3613,7 +3605,6 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedConvolution
-import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedEnergy
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedPressure
 import LeanPool.NavierStokesAndEuler.Euler.FunctionalVelocity
 import LeanPool.NavierStokesAndEuler.Euler.GainedMildFormula
@@ -3629,8 +3620,6 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionForcing
 import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionSourceBounds
 import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionSplit
 import LeanPool.NavierStokesAndEuler.Euler.GevreyDifferentiatedEquation
-import LeanPool.NavierStokesAndEuler.Euler.GevreyEnergyPathLimit
-import LeanPool.NavierStokesAndEuler.Euler.GevreyFamilyCompactness
 import LeanPool.NavierStokesAndEuler.Euler.GevreyFixedShift
 import LeanPool.NavierStokesAndEuler.Euler.GevreyGeneratingDerivatives
 import LeanPool.NavierStokesAndEuler.Euler.GevreyGrowthCoefficient
@@ -3643,7 +3632,6 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricEstimate
 import LeanPool.NavierStokesAndEuler.Euler.GevreyNonlinearEstimate
 import LeanPool.NavierStokesAndEuler.Euler.GevreyOrderZero
 import LeanPool.NavierStokesAndEuler.Euler.GevreyPathNorm
-import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureComplete
 import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureEnergy
 import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureShifted
 import LeanPool.NavierStokesAndEuler.Euler.GevreyProductLp
@@ -3669,7 +3657,6 @@ import LeanPool.NavierStokesAndEuler.Euler.InitialH1OperatorProduct
 import LeanPool.NavierStokesAndEuler.Euler.InitialTimePrimitive
 import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivative
 import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivativeWithin
-import LeanPool.NavierStokesAndEuler.Euler.IntegralEnergyBootstrap
 import LeanPool.NavierStokesAndEuler.Euler.IntegralPathLimit
 import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionCompatibility
 import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionUniqueness
@@ -3730,7 +3717,6 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryPhysicalSupport
 import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryReflection
 import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryTranslation
 import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
-import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalSpatialTime
 import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalTime
 import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalWordBounds
 import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
@@ -3825,7 +3811,6 @@ import LeanPool.NavierStokesAndEuler.Euler.MetricHeatEnergy
 import LeanPool.NavierStokesAndEuler.Euler.MetricPathConvergence
 import LeanPool.NavierStokesAndEuler.Euler.MetricRootLimit
 import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
-import LeanPool.NavierStokesAndEuler.Euler.MildMajorantEnergy
 import LeanPool.NavierStokesAndEuler.Euler.MildTopWord
 import LeanPool.NavierStokesAndEuler.Euler.MildWordEquation
 import LeanPool.NavierStokesAndEuler.Euler.NonlinearEnergyConstants
@@ -3903,7 +3888,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCofactorOperator
 import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
 import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateResidual
-import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateSobolev
 import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientBudget
 import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionCoefficientParity
 import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionConstants
@@ -4033,7 +4017,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryProfileEnvelope
 import LeanPool.NavierStokesAndEuler.Euler.PacketGeometrySourceGrowth
 import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
 import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
-import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowExplicitBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
 import LeanPool.NavierStokesAndEuler.Euler.PacketHorizonSize
 import LeanPool.NavierStokesAndEuler.Euler.PacketIdealSize
@@ -4064,7 +4047,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedResidualEquation
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformCosts
 import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
-import LeanPool.NavierStokesAndEuler.Euler.PacketJetAssembly
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedCoefficientBudgets
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
@@ -4073,7 +4055,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceOperators
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceRegularity
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedStepRegularity
-import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketKnownDecomposition
 import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketKnownPieceScales
@@ -4091,10 +4072,8 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketLowGrades
 import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
 import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixCoefficientAlgebra
 import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixCoefficientGevrey
-import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixNormalization
 import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureGradient
-import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureStepBound
 import LeanPool.NavierStokesAndEuler.Euler.PacketMovingFrame
 import LeanPool.NavierStokesAndEuler.Euler.PacketMovingRay
 import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborControlled
@@ -4115,7 +4094,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPeriodicPotential
 import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
 import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCompression
 import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCorrectionPotential
-import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCostPolynomial
 import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalEulerTransform
 import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrameRenewal
 import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalFrequencyBounds
@@ -4133,7 +4111,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPressureCovector
 import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastHessian
 import LeanPool.NavierStokesAndEuler.Euler.PacketPressureJet
-import LeanPool.NavierStokesAndEuler.Euler.PacketPressureRemainder
 import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
 import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
 import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryCommonRadius
@@ -4187,7 +4164,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceFrequency
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryAssembly
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryData
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryGrowth
-import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceOperators
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParity
@@ -4208,7 +4184,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketStageGrowth
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageGuards
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageInitialLimit
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
-import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
 import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageRestriction
 import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
@@ -4227,8 +4202,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
 import LeanPool.NavierStokesAndEuler.Euler.PacketUniversalFrequency
 import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
-import LeanPool.NavierStokesAndEuler.Euler.PacketWeightedPhysicalErrors
-import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
@@ -4256,8 +4229,6 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
 import LeanPool.NavierStokesAndEuler.Euler.ParentForwardUniformCosts
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceCenter
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceInitial
-import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceLow
-import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceRenewal
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryForwardChoice
 import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryJoinedChoice
 import LeanPool.NavierStokesAndEuler.Euler.ParentHistoryCostPolynomial
@@ -4521,9 +4492,9 @@ import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianEvolution
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianFields
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
-import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianLow
 import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteSum
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationCone
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationContinuation
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
@@ -4574,7 +4545,6 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCurrentSupport
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedDynamics
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedGeometry
-import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedOutputBounds
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalBinding
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalCoherence
@@ -4795,14 +4765,12 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryRepresentatives
 import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryTargetBounds
 import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
 import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
-import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileSpectralCone
 import LeanPool.NavierStokesAndEuler.NavierStokes.PulseAmplitude
 import LeanPool.NavierStokesAndEuler.NavierStokes.PulseCone
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactSchwartz
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ConservativeDifference
@@ -4810,11 +4778,9 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierSobolevWeights
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HarmonicTestFunctionals
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernel
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCancellation
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCommutator
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelPairedBound
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFlux

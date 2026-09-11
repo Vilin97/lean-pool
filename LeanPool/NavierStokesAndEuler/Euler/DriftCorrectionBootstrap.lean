@@ -8,9 +8,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyBootstrap
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyScalar
-import LeanPool.NavierStokesAndEuler.Euler.IntegralEnergyBootstrap
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyRestriction
-import LeanPool.NavierStokesAndEuler.Euler.MildMajorantEnergy
 import LeanPool.NavierStokesAndEuler.Euler.SobolevMaximalRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBudget
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
@@ -19,9 +17,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevDriftNorm
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionBound
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyOrderZero
 import LeanPool.NavierStokesAndEuler.Euler.GevreyNonlinearEstimate
-import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureComplete
-import LeanPool.NavierStokesAndEuler.Euler.GevreyUniformConstants
 import LeanPool.NavierStokesAndEuler.Euler.WeightedForcingAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.GevreyUniformConstants
 import Mathlib.Algebra.Order.Star.Real
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureShifted
 import LeanPool.NavierStokesAndEuler.Euler.HeatAllOrders

@@ -8,7 +8,6 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCancellation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RadialKernelBounds
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernel
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 

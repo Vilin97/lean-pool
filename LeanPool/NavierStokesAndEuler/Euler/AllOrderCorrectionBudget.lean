@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
 import LeanPool.NavierStokesAndEuler.Euler.AllOrderCorrectionCoherence
 import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
-import LeanPool.NavierStokesAndEuler.Euler.CorrectionLimitEquation
 import LeanPool.NavierStokesAndEuler.Euler.GevreyInviscidEnergyCompactness
 
 /-! Concrete uniform Gevrey budgets for one coherent family of prescribed data. -/

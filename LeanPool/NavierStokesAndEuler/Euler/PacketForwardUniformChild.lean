@@ -18,13 +18,11 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 import LeanPool.NavierStokesAndEuler.Euler.PacketForwardExactPressureError
 import LeanPool.NavierStokesAndEuler.Euler.PacketForwardOutputCosts
 import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformBudget
-import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowExplicitBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedResidualEquation
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
 import LeanPool.NavierStokesAndEuler.Euler.PacketExponentialTail
 import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteApproximationBounds
-import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixNormalization
 
 /-! The uniform source comparison gives the actual child label estimate
 at exponent 10(q+2), retaining the same exact correction and its errors. -/

@@ -11,7 +11,6 @@ import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
 public import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBudget
-import LeanPool.NavierStokesAndEuler.Euler.CorrectionLimitEquation
 import LeanPool.NavierStokesAndEuler.Euler.DriftGevreyInviscidEnergyCompactness
 
 /-! Actual finite inviscid corrections constructed from the all-order drift-aware input budget. -/

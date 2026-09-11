@@ -14,10 +14,8 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFunctionals
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HarmonicTestFunctionals
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
 public import Mathlib.Analysis.Calculus.ContDiff.Defs

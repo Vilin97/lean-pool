@@ -17,7 +17,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.SourceNormalResidualBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderScalarGradientWeight
 import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderPressureWeight
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrector
-import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTimeWeight
 import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlWeight
 import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
 import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight

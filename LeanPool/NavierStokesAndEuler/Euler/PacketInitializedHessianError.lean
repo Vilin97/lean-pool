@@ -12,7 +12,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
 import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
 import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastHessian
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer

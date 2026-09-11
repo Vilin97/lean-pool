@@ -9,7 +9,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardPrimaryShear
 import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardRemainder
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPressureFastHessian
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
@@ -21,13 +20,12 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
 import LeanPool.NavierStokesAndEuler.Euler.PacketForcingBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
-import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureStepBound
+import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 public import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGradient
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardGradeBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
-import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
 import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 

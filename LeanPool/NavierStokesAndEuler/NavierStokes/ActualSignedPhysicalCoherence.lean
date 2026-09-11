@@ -12,7 +12,6 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedReferenceGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCurlCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPotentialCoherence
-import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 

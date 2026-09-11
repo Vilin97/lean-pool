@@ -5,7 +5,6 @@ Authors: OpenAI
 -/
 module
 
-import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureComplete
 import LeanPool.NavierStokesAndEuler.Euler.WeightedForcingAlgebra
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyPressureEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricComparison

@@ -8,11 +8,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedCoefficient
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLp
 import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftFieldDecomposition
-import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpAlgebra
+import LeanPool.NavierStokesAndEuler.Euler.PacketFieldJetLp
 import LeanPool.NavierStokesAndEuler.Euler.CylinderJetLpMap
 import LeanPool.NavierStokesAndEuler.Euler.FieldTowerJetLp
 import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
-import LeanPool.NavierStokesAndEuler.Euler.PacketFieldJetLp
 public import LeanPool.NavierStokesAndEuler.Euler.LiftedSmoothTimeField
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldAlgebra
 import Mathlib.Algebra.Order.Star.Real

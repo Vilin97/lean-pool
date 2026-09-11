@@ -7,9 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformBounds
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCostPolynomial
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedFlowData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketWeightedPhysicalErrors
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 
 /-! One fixed polynomial controls both correction admissibility and every

@@ -10,13 +10,12 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevAcceleration
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpGramSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseFixedClassical
-import LeanPool.NavierStokesAndEuler.Euler.ContinuousAccelerationSobolev
+import LeanPool.NavierStokesAndEuler.Euler.TimeLpAccelerationSobolev
 import LeanPool.NavierStokesAndEuler.Euler.FixedEvolutionRegularity
 import LeanPool.NavierStokesAndEuler.Euler.MeanPathLpBlocks
 import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 import LeanPool.NavierStokesAndEuler.Euler.TimeH1SobolevReconstruction
-import LeanPool.NavierStokesAndEuler.Euler.TimeLpAccelerationSobolev
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.ContDiff.Comp
 

@@ -14,7 +14,6 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianLow
 public import Mathlib.Analysis.InnerProductSpace.Laplacian
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
 import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities

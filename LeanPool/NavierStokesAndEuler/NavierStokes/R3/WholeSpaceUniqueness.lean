@@ -5,7 +5,7 @@ Authors: OpenAI
 -/
 module
 
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFiniteEnergy
+import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFlux
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
@@ -19,10 +19,8 @@ public import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LocalizedTransport
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.MeasureTheory.Function.LocallyIntegrable

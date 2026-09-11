@@ -12,7 +12,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCancellati
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PairedKernelBound
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RadialKernelBounds
 import Mathlib.MeasureTheory.Integral.Prod
-public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernel
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszTestOperators
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup

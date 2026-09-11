@@ -10,7 +10,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighPartBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
 import LeanPool.NavierStokesAndEuler.Euler.PacketGevreyProfileChoice
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
-import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureStepBound
 import LeanPool.NavierStokesAndEuler.Euler.PacketScalarPressureGrade
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTermBudget

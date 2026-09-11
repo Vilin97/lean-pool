@@ -20,9 +20,8 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
 import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialTimeWeight
-import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
 import LeanPool.NavierStokesAndEuler.Euler.CylinderSlowCurlWeight
+import LeanPool.NavierStokesAndEuler.Euler.CylinderPotentialWeight
 import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForwardBounds
 import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryBounds
 

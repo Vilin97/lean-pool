@@ -10,8 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCanonicalRadius
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudgets
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedUniformBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketLiftedFlowData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCostPolynomial
-public import LeanPool.NavierStokesAndEuler.Euler.PacketWeightedPhysicalErrors
 import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformCosts
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardRemainder

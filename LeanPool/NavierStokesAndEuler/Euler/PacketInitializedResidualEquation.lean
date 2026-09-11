@@ -6,11 +6,10 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureGradient
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileFields
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftEquation
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureGradient
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
 public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
 

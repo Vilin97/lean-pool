@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ParentGeometryChoiceInitial
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
-import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
 
 /-! The actual chosen packet states preserve common compact initial
 support. The forward mean contribution is localized even when its

@@ -7,7 +7,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EntranceAlignedBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStressWeights
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileSpectralCone
 import LeanPool.NavierStokesAndEuler.NavierStokes.AlignedProfileSpectralCone
 import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalCore
 import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity

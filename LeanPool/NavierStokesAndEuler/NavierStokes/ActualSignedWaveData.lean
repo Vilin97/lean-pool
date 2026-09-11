@@ -6,7 +6,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedReferenceGeometry
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
 public import LeanPool.NavierStokesAndEuler.NavierStokes.GluedStageEstimates
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalBinding

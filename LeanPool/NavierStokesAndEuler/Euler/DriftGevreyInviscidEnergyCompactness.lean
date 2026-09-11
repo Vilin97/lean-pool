@@ -10,9 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
 public import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBudget
 public import LeanPool.NavierStokesAndEuler.Euler.ViscosityDefect
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionFamilyCompactness
-import LeanPool.NavierStokesAndEuler.Euler.GevreyEnergyPathLimit
-import LeanPool.NavierStokesAndEuler.Euler.GevreyFamilyCompactness
-import LeanPool.NavierStokesAndEuler.Euler.CorrectionContinuation
 import LeanPool.NavierStokesAndEuler.Euler.GevreyPathNorm
 import LeanPool.NavierStokesAndEuler.Euler.DriftCorrectionBootstrap
 

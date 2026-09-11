@@ -10,13 +10,12 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileRecursion
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothField
 public import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPressure
 import LeanPool.NavierStokesAndEuler.Euler.ContinuousForcingTranslation
-import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalSpatialTime
+import LeanPool.NavierStokesAndEuler.Euler.MeanStrongGevrey
 import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 import LeanPool.NavierStokesAndEuler.Euler.MeanConcreteTranslation
 import LeanPool.NavierStokesAndEuler.Euler.MeanContinuousPhysical
 import LeanPool.NavierStokesAndEuler.Euler.MeanPhysicalTranslation
 import LeanPool.NavierStokesAndEuler.Euler.MeanSourceSpatialRegularity
-import LeanPool.NavierStokesAndEuler.Euler.MeanStrongGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
 import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets

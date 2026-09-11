@@ -18,7 +18,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedGradeBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
 import LeanPool.NavierStokesAndEuler.Euler.PacketApproximationBounds
-import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedUniformProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketNormalDriftBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
@@ -30,7 +29,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceEquations
 import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceRegularity
 import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveResidual
 public import LeanPool.NavierStokesAndEuler.Euler.PacketJoinedSourceConstraints
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJetAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePiola
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaPair

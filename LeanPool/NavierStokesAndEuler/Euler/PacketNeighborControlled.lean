@@ -9,7 +9,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBridge
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
 import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocitySystem
-import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
 import Mathlib.Algebra.Order.Star.Real
 import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketPerturbation

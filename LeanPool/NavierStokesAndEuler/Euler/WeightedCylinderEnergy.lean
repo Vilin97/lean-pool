@@ -9,7 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderViscousEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
-import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedEnergy
 import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
 import Mathlib.Algebra.Order.Star.Real
 

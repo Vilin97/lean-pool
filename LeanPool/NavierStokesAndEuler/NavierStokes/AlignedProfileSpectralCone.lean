@@ -6,7 +6,6 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileSpectralCone
 public import LeanPool.NavierStokesAndEuler.NavierStokes.EntranceAlignedBase
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LeadingStressWeights
 

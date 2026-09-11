@@ -6,12 +6,11 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedCorrectionData
-public import LeanPool.NavierStokesAndEuler.Euler.PacketCoordinateSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureGradient
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteProfileFields
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftEquation
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
 public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedProfiles
-public import LeanPool.NavierStokesAndEuler.Euler.PacketMeanPressureGradient
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceProfiles
 
 /-! The literal zero-history initialized packet supplies the all-order approximation

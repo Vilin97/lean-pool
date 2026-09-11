@@ -25,7 +25,6 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
 public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalCoefficients
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
 import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocitySystem
-import LeanPool.NavierStokesAndEuler.Euler.PacketWithinRay
 public import LeanPool.NavierStokesAndEuler.Euler.PacketNeighborControlled
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Topology.Algebra.Module.ModuleTopology

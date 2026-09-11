@@ -14,7 +14,6 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
 import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
-public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathBilinear
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderPathProductBounds
 
 /-! Same-radius word bounds on the actual raw-field witnesses used by the packet recursion. -/

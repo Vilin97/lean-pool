@@ -6,9 +6,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TruncationFamily
-import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
-import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
 import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
+import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
 public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
 public import Mathlib.Analysis.Calculus.Deriv.Basic

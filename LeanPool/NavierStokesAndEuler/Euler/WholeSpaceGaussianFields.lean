@@ -6,7 +6,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianEvolution
-public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianLow
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSobolevBoundedField
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian

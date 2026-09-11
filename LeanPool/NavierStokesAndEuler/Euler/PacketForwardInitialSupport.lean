@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardExactFields
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialFields
 public import LeanPool.NavierStokesAndEuler.Euler.PhysicalL2Scaling
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
-import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
 
 /-! With the base boundary parameter zero, the entire actual forward
 initial increment is supported in the small physical packet ball. The

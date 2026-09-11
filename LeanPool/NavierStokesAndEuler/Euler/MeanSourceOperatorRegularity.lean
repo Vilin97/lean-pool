@@ -10,12 +10,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedTranslation
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
-import LeanPool.NavierStokesAndEuler.Euler.BoundedCoefficientJets
+import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedInverse
 import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
 import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 import LeanPool.NavierStokesAndEuler.Euler.MeanConcreteTranslation
 import LeanPool.NavierStokesAndEuler.Euler.MeanFixedCoefficientRegularity
-import LeanPool.NavierStokesAndEuler.Euler.MeanTranslatedInverse
 
 /-!
 # Spatial regularity of the actual source mean operator

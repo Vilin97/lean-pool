@@ -18,13 +18,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevSourceExponent
 import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildSourceBound
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2GevreyCalculus
 import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
-import LeanPool.NavierStokesAndEuler.Euler.PacketGraphFlowExplicitBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedResidualEquation
 import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderBoundTransfer
 import LeanPool.NavierStokesAndEuler.Euler.PacketExponentialTail
 import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteApproximationBounds
-import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixNormalization
 
 /-! Actual activation geometry and one uniform frequency comparison
 construct the joined packet, its physical state, and both source errors. -/

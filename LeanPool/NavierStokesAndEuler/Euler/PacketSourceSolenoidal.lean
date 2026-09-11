@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePiola
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderMeanSolenoidal
-public import LeanPool.NavierStokesAndEuler.Euler.PacketJetAssembly
 
 /-!
 # The actual finite source packet satisfies the lifted L² constraint

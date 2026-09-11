@@ -10,13 +10,12 @@ public import LeanPool.NavierStokesAndEuler.Euler.ClassicalBridge
 import LeanPool.NavierStokesAndEuler.Euler.CompactProjectedEulerLaw
 import LeanPool.NavierStokesAndEuler.Euler.CompactVorticityTimeUpgrade
 import LeanPool.NavierStokesAndEuler.Euler.ComparatorLocalCompactVorticity
-import LeanPool.NavierStokesAndEuler.Euler.ComparatorTruncationFamily
+import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
 public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
 public import LeanPool.NavierStokesAndEuler.Euler.SolutionDefinitions
 import LeanPool.NavierStokesAndEuler.Euler.DivCurlRecovery
 import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
-import LeanPool.NavierStokesAndEuler.Euler.ScalarEulerVorticity
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
 import Mathlib.Algebra.Order.Star.Real

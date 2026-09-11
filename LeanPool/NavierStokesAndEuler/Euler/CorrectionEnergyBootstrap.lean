@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionMildEnergy
 import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyScalar
-import LeanPool.NavierStokesAndEuler.Euler.IntegralEnergyBootstrap
 import Mathlib.Algebra.Order.Star.Real
 
 /-! The actual nonlinear viscous correction closes its shrinking-radius Gevrey bootstrap from the

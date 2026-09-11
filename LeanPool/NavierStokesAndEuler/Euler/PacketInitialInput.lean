@@ -18,7 +18,6 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPressureScaleCosts
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedProfiles
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
 import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRemainder
-import LeanPool.NavierStokesAndEuler.Euler.PacketSourceInitialMean
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldPhysicalSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteCoarseBounds
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialFields
