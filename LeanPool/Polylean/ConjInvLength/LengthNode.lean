@@ -73,7 +73,7 @@ initialize proofCache :
     IO.Ref (Std.HashMap Wrd ProofNode) ← IO.mkRef Std.HashMap.emptyWithCapacity
 
 /-- Look up a cached floating-point length bound. -/
-def cacheLength? (w : Wrd) : IO (Option Float) :=
+def cachedLength (w : Wrd) : IO (Option Float) :=
     do
     let cache ← floatNormCache.get
     match cache.get? w with
@@ -82,7 +82,7 @@ def cacheLength? (w : Wrd) : IO (Option Float) :=
 
 /-- Compute a floating-point length bound while caching the proof nodes used. -/
 def lengthNodes (w : Wrd) : IO Float := do
-  match ← cacheLength? w with
+  match ← cachedLength w with
   | some n =>
       pure n
   | none =>
@@ -122,7 +122,7 @@ def powerLength : Wrd → Nat → IO Float
 | w, n => do
   let pl ← lengthNodes (w ^ n)
   let res := pl / n.toFloat
-  match ← cacheLength? w with
+  match ← cachedLength w with
   | none =>
     floatNormCache.set <| (← floatNormCache.get).insert w res
     if n > 1 then

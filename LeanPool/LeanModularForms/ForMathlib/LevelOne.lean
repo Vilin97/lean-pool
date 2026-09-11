@@ -5,6 +5,13 @@ Authors: Chris Birkbeck
 -/
 module
 
+public import Mathlib.Analysis.Complex.AbsMax
+public import Mathlib.NumberTheory.Modular
+public import LeanPool.LeanModularForms.ForMathlib.QExpansion
+public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
+public import LeanPool.LeanModularForms.ForMathlib.Identities
+public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
+
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

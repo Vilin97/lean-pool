@@ -5,6 +5,8 @@ Authors: Lazar Milikic
 -/
 module
 
+public import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
+
 public import LeanPool.PythagoreanPolynomialParametrization.Main
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Nat.Totient

@@ -5,6 +5,8 @@ Authors: Michael R. Douglas
 -/
 module
 
+public import LeanPool.SpectralPositivity.Operator.JentzschProof
+
 public import LeanPool.SpectralPositivity.Matrix.MetzlerExp
 public import LeanPool.SpectralPositivity.Matrix.NonnegPower
 public import LeanPool.SpectralPositivity.Operator.Jentzsch

@@ -5,6 +5,8 @@ Authors: Michael R. Douglas
 -/
 module
 
+public import LeanPool.SpectralPositivity.Operator.JentzschProof
+
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Tactic.Positivity.Finset
 

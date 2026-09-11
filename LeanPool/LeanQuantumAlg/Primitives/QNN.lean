@@ -6,6 +6,8 @@ Authors: QudeLeap Team
 
 module
 
+public import LeanPool.LeanQuantumAlg.Init
+
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.DynamicalLieAlgebra
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.Overparametrization
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.Trainability

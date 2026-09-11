@@ -6,6 +6,8 @@ Authors: QudeLeap Team
 
 module
 
+public import LeanPool.LeanQuantumAlg.Init
+
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fidelity
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fourier
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Concentration

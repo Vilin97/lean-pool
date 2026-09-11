@@ -5,6 +5,11 @@ Authors: Jineon Baek
 -/
 module
 
+public import LeanPool.ErdosTuzaValtr.Etv.Defs
+public import LeanPool.ErdosTuzaValtr.Etv.Label
+public import LeanPool.ErdosTuzaValtr.Etv.Mirror
+public import LeanPool.ErdosTuzaValtr.Etv.AlphaBeta
+
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.NormNum.Abs

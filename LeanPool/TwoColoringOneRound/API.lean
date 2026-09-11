@@ -5,6 +5,9 @@ Authors: Jukka Suomela
 -/
 module
 
+public import LeanPool.TwoColoringOneRound.Definitions
+public import LeanPool.TwoColoringOneRound.MainResults
+
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathlib.MeasureTheory.Covering.Besicovitch
 import Mathlib.Tactic.Positivity.Finset

@@ -5,6 +5,8 @@ Authors: Sven Manthe
 -/
 module
 
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
+
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
 import Mathlib.CategoryTheory.Category.Init

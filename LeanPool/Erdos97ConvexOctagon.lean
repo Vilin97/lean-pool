@@ -5,6 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
+public import LeanPool.Erdos97ConvexOctagon.Classification
+
 public import LeanPool.Erdos97ConvexOctagon.Main
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal

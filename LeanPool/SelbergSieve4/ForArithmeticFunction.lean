@@ -5,7 +5,14 @@ Authors: Arend Mellendijk
 -/
 module
 
-import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+public import Mathlib.NumberTheory.ArithmeticFunction.Defs
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+public import Mathlib.Data.Real.Basic
+public import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+
 
 /-!
 # LeanPool.SelbergSieve4.ForArithmeticFunction

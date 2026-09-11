@@ -5,6 +5,8 @@ Authors: Elan Roth
 -/
 module
 
+public import LeanPool.UlmsTheorem.Basic
+
 import Mathlib.Tactic.Finiteness.Attr
 import Mathlib.Tactic.SetLike
 

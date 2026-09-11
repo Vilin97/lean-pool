@@ -6,6 +6,8 @@ Authors: QudeLeap Team
 
 module
 
+public import LeanPool.LeanQuantumAlg.Init
+
 public import LeanPool.LeanQuantumAlg.Algorithms.QPE
 public import LeanPool.LeanQuantumAlg.Algorithms.GHZ
 public import LeanPool.LeanQuantumAlg.Algorithms.SuperdenseCoding

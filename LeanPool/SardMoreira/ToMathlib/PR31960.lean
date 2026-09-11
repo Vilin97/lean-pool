@@ -5,6 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
+
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathlib.MeasureTheory.Covering.Besicovitch
 import Mathlib.Tactic.Positivity.Finset

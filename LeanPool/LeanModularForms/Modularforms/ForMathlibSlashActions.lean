@@ -5,6 +5,9 @@ Authors: Chris Birkbeck
 -/
 module
 
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.ModularForms.SlashActions
+
 public import LeanPool.LeanModularForms.ForMathlib.SlashActions
 
 /-! Compatibility import for the canonical lemmas in `LeanModularForms.ForMathlib`. -/

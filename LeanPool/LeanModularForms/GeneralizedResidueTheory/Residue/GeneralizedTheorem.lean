@@ -5,6 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.GeneralizedResidueTheorem
+
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathlib.CategoryTheory.Category.Init
 import Mathlib.Combinatorics.Matroid.Init

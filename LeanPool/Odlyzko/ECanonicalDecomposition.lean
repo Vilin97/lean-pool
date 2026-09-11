@@ -5,6 +5,10 @@ Authors: Stefan Kebekus
 -/
 module
 
+public import Mathlib.Analysis.Complex.CanonicalDecomposition
+public import Mathlib.Analysis.Meromorphic.TrailingCoefficient
+public import Mathlib.Analysis.Normed.Module.Connected
+
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.Measurability.Init

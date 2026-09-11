@@ -5,6 +5,8 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
+public import LeanPool.GrothendieckVanishing.GrothendieckVanishing
+
 public import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
 import Mathlib.CategoryTheory.Category.Init
 import Mathlib.Data.Finset.Attr

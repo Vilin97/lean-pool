@@ -5,6 +5,8 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
+public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Internal
+
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.Combinatorics.SimpleGraph.Init
 import Mathlib.Data.Nat.Totient
